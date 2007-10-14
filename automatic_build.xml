@@ -1,0 +1,199 @@
+<project name="Imebra" default="build all" basedir=".">
+
+	<!-- Tag the repository -->
+	<target name="build all" depends="ZIP GPL" description="Tag the repository">
+		<exec dir="${src}" executable="svn">
+			<arg value="copy"/>
+			<arg value="${puntoexeLibrary_repo}"/>
+			<arg value="${puntoexeLibrary_repo_tags}/${productName}"/>
+			<arg value="-m"/>
+			<arg value='"Tagging the repository for Imebra"'/>
+		</exec>
+	</target>
+
+	<!-- Make a zip file and a gzip file of the GPL build -->
+	<target name="ZIP GPL" depends="Copy GPL" description ="Compress the GPL build">
+		<zip basedir="${gpl}/temp" destfile="${gpl}/imebra_gpl_${fullVersionReadable}.zip" />
+	</target>
+
+	<!-- Copy the GPL build -->
+	<target name="Copy GPL" depends="CHM, PDF, PDF hyperlinked" description="Copy the library in the GPL build">
+		<mkdir dir="${gpl}/temp" />
+		<mkdir dir="${gpl}/temp/documentation" />
+		<mkdir dir="${gpl}/temp/puntoexe_library/base" />
+		<mkdir dir="${gpl}/temp/puntoexe_library/imebra" />
+		<mkdir dir="${gpl}/temp/puntoexe_library/docs" />
+		<copy file="generated_doc/chm/index.chm" tofile="${gpl}/temp/documentation/imebra.chm" />
+		<copy file="generated_doc/latex/refman.pdf" tofile="${gpl}/temp/documentation/imebra.pdf" />
+		<copy file="generated_doc/latexH/refman.pdf" tofile="${gpl}/temp/documentation/imebraLinks.pdf" />
+		<copy file="DoxyFileCHM" tofile="${gpl}/temp/puntoexe_library/DoxyFileCHM" />
+		<copy file="DoxyFileHTML" tofile="${gpl}/temp/puntoexe_library/DoxyFileHTML" />
+		<copy file="DoxyFilePDF" tofile="${gpl}/temp/puntoexe_library/DoxyFilePDF" />
+		<copy file="DoxyFilePDFH" tofile="${gpl}/temp/puntoexe_library/DoxyFilePDFH" />
+		<copy todir="${gpl}/temp/puntoexe_library/base">
+			<fileset dir="base" />
+		</copy>
+		<copy todir="${gpl}/temp/puntoexe_library/imebra">
+			<fileset dir="imebra" />
+		</copy>
+		<copy todir="${gpl}/temp/puntoexe_library/docs">
+			<fileset dir="docs" />
+		</copy>
+		<move file="${gpl}/temp/puntoexe_library/docs/gpl.txt" tofile="${gpl}/temp/license.txt" />
+		<replace dir="${gpl}/temp/puntoexe_library" token="$fileHeader$">
+			<replacevalue><![CDATA[
+Imebra: a C++ dicom library.
+Copyright (C) 2003, 2004, 2005, 2006  by Paolo Brandoli
+
+This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License version 2 as published by
+ the Free Software Foundation.
+
+This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+-------------------
+
+If you want to use Imebra commercially then you have to buy the commercial
+ support available at http://puntoexe.com
+ 
+After you buy the commercial support then you can use Imebra according
+ to the terms described in the Imebra Commercial License Version 1.
+A copy of the Imebra Commercial License Version 1 is available in the 
+ documentation pages.
+
+Imebra is available at http://puntoexe.com
+
+The author can be contacted by email at paolo@puntoexe.com or by mail at
+ the following address:
+ Paolo Brandoli
+ Rjava Cesta 2/a
+ 1000 Ljubljana
+ Slovenia
+
+]]></replacevalue>
+		</replace>
+	</target>
+
+	<!-- Build the documentation -->
+	<target name="Documentation version" depends="version" description="Replace the documentation version">
+		<mkdir dir="generated_doc" />
+		<replace file="doxyfileCHM" token="1.0.0.1" value='"${fullVersionReadable}"'/>
+		<replace file="doxyfileHTML" token="1.0.0.1" value='"${fullVersionReadable}"'/>
+		<replace file="doxyfilePDF" token="1.0.0.1" value='"${fullVersionReadable}"'/>
+		<replace file="doxyfilePDFH" token="1.0.0.1" value='"${fullVersionReadable}"'/>
+	</target>
+
+	<!-- Build the CHM documentation -->
+	<target name="CHM" depends="Documentation version" description="Build the CHM document">
+		<exec dir="." executable="doxygen" failonerror="true">
+			<arg value="doxyfileCHM"/>
+		</exec>
+		<exec dir="generated_doc/chm" executable="${hhc_executable}">
+			<arg file="generated_doc/chm/index.hhp"/>
+		</exec>
+	</target>
+
+	<!-- Build the HTML documentation -->
+	<target name="HTML" depends="Documentation version" description="Build the HTML documents">
+		<exec dir="." executable="doxygen" failonerror="true">
+			<arg value="doxyfileHTML"/>
+		</exec>
+	</target>
+
+	<!-- Build the PDF documentation -->
+	<target name="PDF" depends="Documentation version" description="Build the PDF document">
+		<exec dir="." executable="doxygen" failonerror="true">
+			<arg value="doxyfilePDF"/>
+		</exec>
+		<exec dir="generated_doc/latex" executable="pdflatex">
+			<arg value="refman.tex"/>
+		</exec>
+		<exec dir="generated_doc/latex" executable="makeindex">
+			<arg value="refman.idx"/>
+		</exec>
+		<exec dir="generated_doc/latex" executable="pdflatex">
+			<arg value="refman.tex"/>
+		</exec>
+		<exec dir="generated_doc/latex" executable="pdflatex">
+			<arg value="refman.tex"/>
+		</exec>
+		<exec dir="generated_doc/latex" executable="pdflatex">
+			<arg value="refman.tex"/>
+		</exec>
+	</target>
+
+	<!-- Build the Hyperlinked PDF documentation -->
+	<target name="PDF hyperlinked" depends="Documentation version" description="Build the hyperlinked PDF document">
+		<exec dir="." executable="doxygen" failonerror="true">
+			<arg value="doxyfilePDFH"/>
+		</exec>
+		<exec dir="generated_doc/latexH" executable="pdflatex">
+			<arg value="refman.tex"/>
+		</exec>
+		<exec dir="generated_doc/latexH" executable="makeindex">
+			<arg value="refman.idx"/>
+		</exec>
+		<exec dir="generated_doc/latexH" executable="pdflatex">
+			<arg value="refman.tex"/>
+		</exec>
+		<exec dir="generated_doc/latexH" executable="pdflatex">
+			<arg value="refman.tex"/>
+		</exec>
+		<exec dir="generated_doc/latexH" executable="pdflatex">
+			<arg value="refman.tex"/>
+		</exec>
+	</target>
+
+	<!-- Initialize the version number -->
+	<target name="version" depends="Run test cases, Run test cases posix" description="Initialize the build number">
+		<buildnumber file="../../build.number" />
+		<property name="fullVersionReadable" value="0.0.${build.number}_Alpha"/>
+		<property name="productName" value="Imebra ${fullVersionReadable}"/>
+	</target>
+
+	<!-- Run the test cases -->
+	<target name="Run test cases" depends="Build test cases" description="Run the test cases">
+		<exec executable="tests/CImbx_tests/debug/CImbx_tests.exe" resolveexecutable="true" failonerror="true" />
+	</target>
+
+	<!-- Run the test cases posix -->
+	<target name="Run test cases posix" depends="Build test cases posix" description="Run the test cases">
+		<exec executable="tests/CImbx_tests/debug_iconv/CImbx_tests.exe" resolveexecutable="true" failonerror="true" />
+	</target>
+
+
+	<!-- Build the test cases -->
+	<target name="Build test cases" description="Build the Imebra test cases">
+		<exec executable="${devenv_executable}" failonerror="true">
+			<arg value="/out"/>
+			<arg value="../../testCasesBuildLog.txt"/>
+			<arg value="/rebuild"/>
+			<arg value="debug"/>
+			<arg value="/project"/>
+			<arg file="tests\CImbx_tests\CImbx_tests.vcproj"/>
+			<arg file="puntoexe_library.sln"/>
+		</exec>
+		</target>
+
+	<!-- Build the test cases posix -->
+	<target name="Build test cases posix" description="Build the Imebra test cases posix">
+		<exec executable="${devenv_executable}" failonerror="true">
+			<arg value="/out"/>
+			<arg value="../../testCasesPosixBuildLog.txt"/>
+			<arg value="/rebuild"/>
+			<arg value="debug_posix"/>
+			<arg value="/project"/>
+			<arg file="tests\CImbx_tests\CImbx_tests.vcproj"/>
+			<arg file="puntoexe_library.sln"/>
+		</exec>
+		</target>
+
+
+</project>

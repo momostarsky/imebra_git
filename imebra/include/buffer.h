@@ -1,0 +1,351 @@
+/*
+$fileHeader$
+*/
+
+/*! \file buffer.h
+    \brief Declaration of the buffer class.
+
+*/
+
+#if !defined(imebraBuffer_DE3F98A9_664E_47c0_A29B_B681F9AEB118__INCLUDED_)
+#define imebraBuffer_DE3F98A9_664E_47c0_A29B_B681F9AEB118__INCLUDED_
+
+#include "../../base/include/baseObject.h"
+#include "../../base/include/streamController.h"
+#include "../../base/include/memory.h"
+#include "charsetsList.h"
+
+///////////////////////////////////////////////////////////
+//
+// Everything is in the namespace puntoexe::imebra
+//
+///////////////////////////////////////////////////////////
+namespace puntoexe
+{
+	class streamReader;
+	class streamWriter;
+
+namespace imebra
+{
+
+namespace handlers
+{
+	class dataHandler;
+	class dataHandlerRaw;
+}
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+/// \brief This class manages a memory area containing
+///         data in dicom format.
+///
+/// A buffer also stores the data type of the 
+///  elements stored in it.
+/// The data type is in Dicom format (two upper case
+///  chars).
+///
+/// The memory can be accessed through a 
+///  \ref handlers::dataHandler derived object
+///  obtained by calling the function getDataHandler().
+///  
+/// Data handlers work on a copy of the buffer, then most
+///  of the problem related to the multithreading
+///  enviroments are avoided.
+///
+/// The data handlers supply several functions that
+///  allow to access to the data in several formats
+///  (strings, numeric, time, and so on).
+///
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+class buffer : public baseObject, public charsetsList
+{
+
+public:
+	///////////////////////////////////////////////////////////
+	/// \name Constructor
+	///
+	///////////////////////////////////////////////////////////
+	//@{
+
+	/// \brief Constructor. Initialize the buffer object and
+	///        set the default data type.
+	///
+	/// If no data type is specified, then the Dicom data
+	///  type "OB" is used.
+	///
+	/// @param externalLock a pointer to an object to be
+	///                      used to lock this one
+	///                      (see baseObject).
+	///                     If set to zero then a local
+	///                      locker will be used
+	/// @param defaultType  a string with the buffer's type.
+	///                     The buffer's type must be one of
+	///                      the Dicom data types.
+	///                     A dicom's data type is formed by
+	///                      two uppercase chars
+	///
+	///////////////////////////////////////////////////////////
+	buffer(ptr<baseObject> externalLock, std::string defaultType="");
+
+	/// \brief Constructor. Initialize the buffer object and
+	///         declare the buffer's content on demand.
+	///
+	/// On demand content is loaded from the original stream
+	///  when the application requires the access to the
+	///  buffer.
+	///
+	/// @param externalLock a pointer to an object to be
+	///                      used to lock this one
+	///                      (see baseObject).
+	///                     If set to zero then a local
+	///                      locker will be used
+	/// @param defaultType  a string with the buffer's type.
+	///                     The buffer's type must be one of
+	///                      the Dicom data types.
+	///                     A dicom's data type is formed by
+	///                      two uppercase chars
+	/// @param originalStream the stream from which the content
+	///                      can be read
+	/// @param bufferPosition the first stream's byte that 
+	///                      contains the buffer's content
+	/// @param bufferLength the buffer's content length, in
+	///                      bytes
+	/// @param wordLength   the size of a buffer's element,
+	///                      in bytes
+	/// @param endianType   the stream's endian type
+	///
+	///////////////////////////////////////////////////////////
+	buffer(ptr<baseObject> externalLock, 
+		std::string defaultType,
+		ptr<baseStream> originalStream,
+		imbxUint32 bufferPosition,
+		imbxUint32 bufferLength,
+		imbxUint32 wordLength,
+		streamController::tByteOrdering endianType);
+
+	//@}
+
+	///////////////////////////////////////////////////////////
+	/// \name Data handlers
+	///
+	///////////////////////////////////////////////////////////
+	//@{
+public:
+	/// \brief Retrieve a data handler that can be used to
+	///         read, write and resize the memory controlled by 
+	///         the buffer.
+	///
+	/// The data handler will have access to a local copy
+	///  of the buffer, then it will not have to worry about
+	///  multithreading related problems.
+	/// If a writing handler is requested, then the handler's
+	///  local buffer will be copied back into the buffer when
+	///  the handler will be destroyed.
+	///
+	/// @param bWrite set to true if you want to write into
+	///                the buffer
+	/// @param size   this parameter is used only when the
+	///                parameter bWrite is set to true and the
+	///                buffer is empty: in this case, the
+	///                returned buffer will be resized to the
+	///                number of elements (NOT bytes) declared
+	///                in this parameter
+	/// @return a pointer to a dataHandler object
+	///
+	///////////////////////////////////////////////////////////
+	ptr<handlers::dataHandler> getDataHandler(bool bWrite, imbxUint32 size = 0);
+
+	/// \brief Retrieve a raw data handler that can be used to
+	///         read, write and resize the memory controlled by 
+	///         the buffer.
+	///
+	/// Raw data handlers always see a collection of bytes,
+	///  regardless of the original buffer's type.
+	///
+	/// The data handler will have access to a local copy
+	///  of the buffer, then it will not have to worry about
+	///  multithreading related problems.
+	/// If a writing handler is requested, then the handler's
+	///  local buffer will be copied back into the buffer when
+	///  the handler will be destroyed.
+	///
+	/// @param bWrite set to true if you want to write into
+	///                the buffer
+	/// @param size   this parameter is used only when the
+	///                parameter bWrite is set to true and the
+	///                buffer is empty: in this case, the
+	///                returned buffer will be resized to the
+	///                number of bytes declared in this
+	///                parameter
+	/// @return a pointer to a dataHandler object
+	///
+	///////////////////////////////////////////////////////////
+	ptr<handlers::dataHandlerRaw> getDataHandlerRaw(bool bWrite, imbxUint32 size = 0);
+
+	//@}
+
+
+	///////////////////////////////////////////////////////////
+	/// \name Stream
+	///
+	///////////////////////////////////////////////////////////
+	//@{
+	
+	/// \brief Return the current buffer's size in bytes
+	///
+	/// If the buffer is currently loaded then return the
+	///  memory's size, otherwise return the size that the
+	///  buffer would have when it is loaded.
+	///
+	/// @return the buffer's size, in bytes
+	///////////////////////////////////////////////////////////
+	imbxUint32 getBufferSizeBytes();
+
+	//@}
+
+
+	///////////////////////////////////////////////////////////
+	/// \name Stream
+	///
+	///////////////////////////////////////////////////////////
+	//@{
+
+	/// \brief Return a stream reader connected to the 
+	///         buffer's content.
+	///
+	/// The stream works on a local copy of the buffer's data,
+	///  then it doesn't have to worry about multithreading
+	///  related problems.
+	///
+	/// @return          a pointer to a stream reader
+	///
+	///////////////////////////////////////////////////////////
+	ptr<streamReader> getStreamReader();
+
+	/// \brief Return a stream writer connected to the 
+	///         buffer's content.
+	///
+	/// The stream works on a local copy of the buffer's data,
+	///  then it doesn't have to worry about multithreading
+	///  related problems.
+	///
+	/// @return          a pointer to a stream writer
+	///
+	///////////////////////////////////////////////////////////
+	ptr<streamWriter> getStreamWriter();
+
+	//@}
+
+
+	///////////////////////////////////////////////////////////
+	/// \name Buffer's data type
+	///
+	///////////////////////////////////////////////////////////
+	//@{
+
+	/// \brief Returns the buffer's data type.
+	///
+	/// Return a string with the buffer's data type.
+	///
+	/// @return a string with the buffer's data type in Dicom
+	///          format.
+	//
+	///////////////////////////////////////////////////////////
+	std::string getDataType();
+
+	//@}
+
+	// Disconnect a data handler.
+	// Called by the handler during its destruction
+	///////////////////////////////////////////////////////////
+	void copyBack(handlers::dataHandler* pDisconnectHandler);
+	void commit();
+
+	virtual void setCharsetsList(tCharsetsList* pCharsetsList);
+	virtual void getCharsetsList(tCharsetsList* pCharsetsList);
+
+protected:
+	// Return a data handler.
+	///////////////////////////////////////////////////////////
+	ptr<handlers::dataHandler> getDataHandler(bool bWrite, bool bRaw, imbxUint32 size);
+
+	//
+	// Attributes
+	//
+	///////////////////////////////////////////////////////////
+private:
+	// The memory buffer
+	///////////////////////////////////////////////////////////
+	ptr<memory> m_memory;
+
+	// Temporary memory buffer and charsets list, used for
+	//  the two phase operation copyBack/commit
+	///////////////////////////////////////////////////////////
+	ptr<memory> m_temporaryMemory;
+	tCharsetsList m_temporaryCharsets;
+	std::string m_temporaryBufferType;
+	
+protected:
+	// The buffer's type, in Dicom standard
+	///////////////////////////////////////////////////////////
+	std::string m_bufferType;
+
+protected:
+	// The following variables are used to reread the buffer
+	//  from the stream.
+	///////////////////////////////////////////////////////////
+	ptr<baseStream> m_originalStream;    // < Original stream
+	imbxUint32 m_originalBufferPosition; // < Original buffer's position
+	imbxUint32 m_originalBufferLength;   // < Original buffer's length
+	imbxUint32 m_originalWordLength;     // < Original word's length (for low/high endian adjustment)
+	streamController::tByteOrdering m_originalEndianType; // < Original endian type
+	
+private:
+	// Buffer's version
+	///////////////////////////////////////////////////////////
+	imbxUint32 m_version;
+	
+};
+
+
+///////////////////////////////////////////////////////////
+/// \brief This is the base class for the exceptions thrown
+///         by the buffer class.
+///
+///////////////////////////////////////////////////////////
+class bufferException: public std::runtime_error
+{
+public:
+	/// \brief Build a buffer exception
+	///
+	/// @param message the message to store into the exception
+	///
+	///////////////////////////////////////////////////////////
+	bufferException(const std::string& message): std::runtime_error(message){}
+};
+
+
+///////////////////////////////////////////////////////////
+/// \brief This exception is throw by the buffer when an
+///         handler for an unknown data type is asked.
+///
+///////////////////////////////////////////////////////////
+class bufferExceptionUnknownType: public bufferException
+{
+public:
+	/// \brief Build a wrong data type exception
+	///
+	/// @param message the message to store into the exception
+	///
+	///////////////////////////////////////////////////////////
+	bufferExceptionUnknownType(const std::string& message): bufferException(message){}
+};
+
+
+
+} // End of namespace imebra
+
+} // End of namespace puntoexe
+
+#endif // !defined(imebraBuffer_DE3F98A9_664E_47c0_A29B_B681F9AEB118__INCLUDED_)

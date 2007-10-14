@@ -1,0 +1,134 @@
+#include <cppunit/extensions/HelperMacros.h>
+#include "dataSetTest.h"
+
+#include "../../imebra/include/imebra.h"
+#include "buildImageForTest.h"
+#include <list>
+
+namespace puntoexe
+{
+
+namespace imebra
+{
+
+namespace tests
+{
+
+CPPUNIT_TEST_SUITE_REGISTRATION(puntoexe::imebra::tests::dataSetTest);
+
+using namespace puntoexe::imebra;
+
+void dataSetTest::testFragmentation()
+{
+	ptr<image> testImage0(buildImageForTest(
+		400, 
+		300, 
+		puntoexe::imebra::image::depthU8,
+		7, 
+		400, 
+		300, 
+		L"RGB", 
+		50));
+
+	ptr<image> testImage1(buildImageForTest(
+		400, 
+		300, 
+		puntoexe::imebra::image::depthU8,
+		7, 
+		400, 
+		300, 
+		L"RGB", 
+		20));
+
+	ptr<dataSet> testDataSet(new dataSet);
+	testDataSet->setImage(0, testImage0, L"1.2.840.10008.1.2.1", codecs::codec::high);
+	testDataSet->setImage(1, testImage1, L"1.2.840.10008.1.2.1", codecs::codec::high);
+
+	// Now defragment the stored buffer
+	ptr<data> imageTag = testDataSet->getTag(0x7fe0, 0, 0x0010, false);
+	CPPUNIT_ASSERT(imageTag != 0);
+
+	std::list<ptr<buffer> > newBuffers;
+	ptr<buffer> newTableOffsetBuffer(new buffer(ptr<baseObject>(testDataSet.get())));
+	newBuffers.push_back(newTableOffsetBuffer);
+	imbxUint32 offset(0);
+	for(imbxUint32 scanBuffers = 1; imageTag->bufferExists(scanBuffers); ++scanBuffers)
+	{
+		ptr<handlers::dataHandlerRaw> offsetHandler = newTableOffsetBuffer->getDataHandlerRaw(true, 8);
+		imbxUint32* pOffsetMemory = (imbxUint32*)(offsetHandler->getMemoryBuffer());
+		pOffsetMemory[scanBuffers - 1] = offset;
+		ptr<handlers::dataHandlerRaw> wholeHandler = imageTag->getDataHandlerRaw(scanBuffers, false, "");
+		imbxUint8* pWholeHandler = wholeHandler->getMemoryBuffer();
+		imbxUint32 totalSize = wholeHandler->getSize();
+		imbxUint32 fragmentedSize = totalSize / 3;
+		while(totalSize != 0)
+		{
+			imbxUint32 thisSize = totalSize;
+			if(thisSize > fragmentedSize)
+			{
+				thisSize = fragmentedSize;
+			}
+			ptr<buffer> newBuffer(new buffer(ptr<baseObject>(0), "OB", ptr<baseStream>(0), 0, thisSize, 1, streamController::tByteOrdering::lowByteEndian) );
+			ptr<handlers::dataHandlerRaw> newBufferHandler = newBuffer->getDataHandlerRaw(true, thisSize);
+			imbxUint8* pNewBuffer = newBufferHandler->getMemoryBuffer();
+			::memcpy(pNewBuffer, pWholeHandler, thisSize);
+			newBufferHandler.release();
+			newBuffers.push_back(newBuffer);
+			offset += newBuffer->getDataHandlerRaw(false)->getSize() + 8;
+			totalSize -= thisSize;
+			pWholeHandler += thisSize;
+		}
+	}
+
+	imbxUint32 bufferId(0);
+	for(std::list<ptr<buffer> >::iterator addBuffers = newBuffers.begin(); addBuffers != newBuffers.end(); ++addBuffers)
+	{
+		imageTag->setBuffer(bufferId++, *addBuffers);
+	}
+
+	ptr<image> compareImage0 = testDataSet->getImage(0);
+	CPPUNIT_ASSERT(compareImages(testImage0, compareImage0) < 0.000001);
+	ptr<image> compareImage1 = testDataSet->getImage(1);
+	CPPUNIT_ASSERT(compareImages(testImage1, compareImage1) < 0.000001);
+
+	CPPUNIT_ASSERT(compareImages(testImage0, compareImage1) > 30);
+
+	ptr<image> testImage2(buildImageForTest(
+		400, 
+		300, 
+		puntoexe::imebra::image::depthU8,
+		7, 
+		400, 
+		300, 
+		L"RGB", 
+		64));
+	testDataSet->setImage(0, testImage2, L"1.2.840.10008.1.2.1", codecs::codec::high);
+
+	ptr<image> testImage3(buildImageForTest(
+		400, 
+		300, 
+		puntoexe::imebra::image::depthU8,
+		7, 
+		400, 
+		300, 
+		L"RGB", 
+		64));
+	testDataSet->setImage(2, testImage3, L"1.2.840.10008.1.2.1", codecs::codec::high);
+
+	ptr<image> compareImage0_2attempt = testDataSet->getImage(0);
+	CPPUNIT_ASSERT(compareImages(testImage2, compareImage0_2attempt) < 0.000001);
+	ptr<image> compareImage1_2attempt = testDataSet->getImage(1);
+	CPPUNIT_ASSERT(compareImages(testImage1, compareImage1) < 0.000001);
+	ptr<image> compareImage2 = testDataSet->getImage(2);
+	CPPUNIT_ASSERT(compareImages(testImage3, compareImage2) < 0.000001);
+
+	CPPUNIT_ASSERT(compareImages(testImage2, testImage0) > 30);
+
+}
+
+
+} // namespace tests
+
+} // namespace imebra
+
+} // namespace puntoexe
