@@ -321,18 +321,6 @@ void thread::yield()
 #endif
 }
 
-#ifdef PUNTOEXE_WINDOWS // WINDOWS
-
-#if(_WIN32_WINNT>=0x0400)
-			SwitchToThread();
-#else
-			Sleep(0);
-#endif
-
-#else // POSIX
-			sched_yield();
-#endif
-
 
 #ifdef PUNTOEXE_POSIX
 

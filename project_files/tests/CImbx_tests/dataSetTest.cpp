@@ -68,7 +68,7 @@ void dataSetTest::testFragmentation()
 			{
 				thisSize = fragmentedSize;
 			}
-			ptr<buffer> newBuffer(new buffer(ptr<baseObject>(0), "OB", ptr<baseStream>(0), 0, thisSize, 1, streamController::tByteOrdering::lowByteEndian) );
+			ptr<buffer> newBuffer(new buffer(ptr<baseObject>(0), "OB", ptr<baseStream>(0), 0, thisSize, 1, streamController::lowByteEndian) );
 			ptr<handlers::dataHandlerRaw> newBufferHandler = newBuffer->getDataHandlerRaw(true, thisSize);
 			imbxUint8* pNewBuffer = newBufferHandler->getMemoryBuffer();
 			::memcpy(pNewBuffer, pWholeHandler, thisSize);
