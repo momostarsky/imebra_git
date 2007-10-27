@@ -14,6 +14,40 @@ $fileHeader$
 namespace puntoexe
 {
 
+
+basePtr::basePtr() : object(0)
+{
+}
+
+///////////////////////////////////////////////////////////
+basePtr::basePtr(baseObject* pObject): object(pObject)
+{
+	addRef();
+}
+
+basePtr::~basePtr()
+{
+	release();
+}
+
+void basePtr::release()
+{
+	if(object != 0)
+	{
+		object->release();
+		object = 0;
+	}
+}
+
+void basePtr::addRef()
+{
+	if(object != 0)
+	{
+		object->addRef();
+	}
+}
+
+
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -37,7 +71,7 @@ namespace puntoexe
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-	baseObject::baseObject():m_lockCounter(0), m_bValid(true), m_pExceptionsManager(exceptionsManager::getExceptionsManager())
+baseObject::baseObject():m_lockCounter(0), m_bValid(true), m_pExceptionsManager(exceptionsManager::getExceptionsManager())
 {
 }
 

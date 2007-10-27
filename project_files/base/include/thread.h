@@ -174,7 +174,7 @@ private:
 
 #ifdef PUNTOEXE_POSIX
 public:
-	static pthread_key_t* thread::getSharedKey();
+	static pthread_key_t* getSharedKey();
 	static void* getNextId();
 
 	// Force the construction of the creation of a shared

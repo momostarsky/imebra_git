@@ -33,6 +33,55 @@ $fileHeader$
 namespace puntoexe
 {
 
+class baseObject;
+class basePtr
+{
+protected:
+	// Default constructor
+	//
+	// Set the internal pointer to null.
+	//
+	///////////////////////////////////////////////////////////
+	basePtr();
+
+	// Construct the ptr object and keeps track of 
+	//         the object referenced by the pointer pObject.
+	//
+	// @param pObject a pointer to the allocated object.
+	//        The allocated object will be automatically
+	//         released by the class' destructor.\n
+	//        The object must be allocated by the C++ new
+	//         statement.\n
+	//        The object's reference counter is increased by
+	//         this function.
+	//
+	///////////////////////////////////////////////////////////
+	basePtr(baseObject* pObject);
+
+public:
+	// The destructor.
+	//
+	// The reference to the tracked object is decreased
+	//  automatically.
+	//
+	///////////////////////////////////////////////////////////
+	virtual ~basePtr();
+
+	// Release the tracked object and reset the 
+	//         internal pointer.
+	//
+	///////////////////////////////////////////////////////////
+	void release();
+
+protected:
+	void addRef();
+
+	// A pointer to the tracked object
+	///////////////////////////////////////////////////////////
+	baseObject* object;
+};
+
+
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 /// \brief This class must be used to allocate objects
@@ -48,7 +97,7 @@ namespace puntoexe
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 template<class objectType>
-class ptr
+class ptr: public basePtr
 {
 public:
 	/// \brief Default constructor
@@ -56,10 +105,7 @@ public:
 	/// Set the internal pointer to null.
 	///
 	///////////////////////////////////////////////////////////
-	ptr() : object(0)
-	{
-	}
-
+	ptr(): basePtr(0){}
 
 	/// \brief Construct the ptr object and keeps track of 
 	///         the object referenced by the pointer pObject.
@@ -73,16 +119,9 @@ public:
 	///         this function.
 	///
 	///////////////////////////////////////////////////////////
-	ptr(objectType* pObject)
-	{
-		object = pObject;
-		if(object)
-		{
-			object->addRef();
-		}
-	}
+	ptr(objectType* pObject): basePtr(pObject){}
 
-	
+
 	/// \brief Copy constructor (with casting)
 	///
 	/// The object tracked by another ptr is copied into the
@@ -97,54 +136,18 @@ public:
 	///
 	///////////////////////////////////////////////////////////
 	template <class sourcePtrType>
-	ptr (ptr<sourcePtrType> const &ptrSource)
+	ptr (ptr<sourcePtrType> const &ptrSource):
+		basePtr(static_cast<objectType*>(ptrSource.get()))
 	{
-		object = static_cast<objectType*>(ptrSource.get());
-		if(object)
-		{
-			object->addRef();
-		}
 	}
 
 	// This constructor is present because the previous one
 	//  is not recognized by the compiler when the ptr is
 	//  contained in a std::list
 	///////////////////////////////////////////////////////////
-	ptr (ptr<objectType> const &ptrSource)
+	ptr (ptr<objectType> const &ptrSource):
+		basePtr(ptrSource.object)
 	{
-		object = ptrSource.object;
-		if(object)
-		{
-			object->addRef();
-		}
-	}
-
-	/// \brief The destructor.
-	///
-	/// The reference to the tracked object is decreased
-	///  automatically.
-	///
-	///////////////////////////////////////////////////////////
-	~ptr()
-	{
-		if(object)
-		{
-			object->release();
-		}
-	}
-
-	
-	/// \brief Release the tracked object and reset the 
-	///         internal pointer.
-	///
-	///////////////////////////////////////////////////////////
-	void release()
-	{
-		if(object)
-		{
-			object->release();
-			object = 0;
-		}
 	}
 
 	/// \brief Copy the object tracked by another
@@ -166,15 +169,9 @@ public:
 		objectType* ptrSourceObject = static_cast<objectType*>(ptrSource.get());
 		if(ptrSourceObject != object)
 		{
-			if(object)
-			{
-				object->release();
-			}
+			release();
 			object = ptrSourceObject;
-			if(object)
-			{
-				object->addRef();
-			}
+			addRef();
 		}
 		return *this;
 	}
@@ -183,15 +180,9 @@ public:
 	{
 		if(ptrSource.object != object)
 		{
-			if(object)
-			{
-				object->release();
-			}
+			release();
 			object = ptrSource.object;
-			if(object)
-			{
-				object->addRef();
-			}
+			addRef();
 		}
 		return *this;
 	}
@@ -242,7 +233,7 @@ public:
 	///////////////////////////////////////////////////////////
 	inline objectType* operator ->() const
 	{
-		return object;
+		return (objectType*)object;
 	}
 
 	/// \brief Return the pointer to the tracked object.
@@ -252,13 +243,9 @@ public:
 	///////////////////////////////////////////////////////////
 	inline objectType* get() const
 	{
-		return object;
+		return (objectType*)object;
 	}
 
-private:
-	/// \brief A pointer to the tracked object
-	///////////////////////////////////////////////////////////
-	objectType* object;
 };
 
 class lockObject;
@@ -300,7 +287,7 @@ class baseObject
 {
 	friend class lockObject; 
 	friend class lockMultipleObjects;
-	friend class ptr;
+	friend class basePtr;
 	friend class exceptionsManager;
 
 public:
