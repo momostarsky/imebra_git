@@ -1,46 +1,81 @@
+<?xml version="1.0" encoding="utf-8" ?> 
 <project name="Imebra" default="build all" basedir=".">
 
-	<!-- Tag the repository -->
-	<target name="build all" depends="ZIP GPL" description="Tag the repository">
-		<exec dir="${src}" executable="svn">
+	<!-- Before calling this project, set the following properties:
+	
+	puntoexeLibrary: path to the SVN repository for imebra (root, not trunk)
+	userName: user name to be used to access to the SVN repository
+	password: password to be used to access to the SVN repository
+	devenv_executable: full path to the MSVC executable	
+	build_with_version: define if the build has to increase the version number
+	
+	-->
+
+
+
+	<!-- Build all -->
+	<target name="build all" depends="ZIP_GPL" description="Tag the repository">
+		<antcall target="copy_svn" /> 
+		<antcall target="revert_svn" /> 
+
+	</target>
+	
+	<target name="copy_svn" if="build_with_version">
+		<exec dir="." executable="svn">
 			<arg value="copy"/>
-			<arg value="${puntoexeLibrary_repo}"/>
-			<arg value="${puntoexeLibrary_repo_tags}/${productName}"/>
+			<arg dir="."/>
+			<arg value="${puntoexeLibrary}/tags/imebra_${fileVersion}"/>
 			<arg value="-m"/>
 			<arg value='"Tagging the repository for Imebra"'/>
 		</exec>
+		<buildnumber file="build.number" /> 
+		<exec dir="." executable="svn">
+			<arg value="commit"/>
+			<arg value="build.number"/>
+			<arg value="-m"/>
+			<arg value='"Increasing the build number"'/>
+		</exec>
 	</target>
 
+	<target name="revert_svn" if="build_with_version">
+		<exec dir="." executable="svn">
+			<arg value="revert"/>
+			<arg value="--recursive"/>
+			<arg dir="./project_files"/>
+		</exec>
+	</target>
+
+
 	<!-- Make a zip file and a gzip file of the GPL build -->
-	<target name="ZIP GPL" depends="Copy GPL" description ="Compress the GPL build">
-		<zip basedir="${gpl}/temp" destfile="${gpl}/imebra_gpl_${fullVersionReadable}.zip" />
+	<target name="ZIP_GPL" depends="create_GPL" description ="Compress the build">
+		<zip basedir="${build_dir}" destfile="${builds}/imebra_${fileVersion}.zip" />
 	</target>
 
 	<!-- Copy the GPL build -->
-	<target name="Copy GPL" depends="CHM, PDF, PDF hyperlinked" description="Copy the library in the GPL build">
-		<mkdir dir="${gpl}/temp" />
-		<mkdir dir="${gpl}/temp/documentation" />
-		<mkdir dir="${gpl}/temp/puntoexe_library/base" />
-		<mkdir dir="${gpl}/temp/puntoexe_library/imebra" />
-		<mkdir dir="${gpl}/temp/puntoexe_library/docs" />
-		<copy file="generated_doc/chm/index.chm" tofile="${gpl}/temp/documentation/imebra.chm" />
-		<copy file="generated_doc/latex/refman.pdf" tofile="${gpl}/temp/documentation/imebra.pdf" />
-		<copy file="generated_doc/latexH/refman.pdf" tofile="${gpl}/temp/documentation/imebraLinks.pdf" />
-		<copy file="DoxyFileCHM" tofile="${gpl}/temp/puntoexe_library/DoxyFileCHM" />
-		<copy file="DoxyFileHTML" tofile="${gpl}/temp/puntoexe_library/DoxyFileHTML" />
-		<copy file="DoxyFilePDF" tofile="${gpl}/temp/puntoexe_library/DoxyFilePDF" />
-		<copy file="DoxyFilePDFH" tofile="${gpl}/temp/puntoexe_library/DoxyFilePDFH" />
-		<copy todir="${gpl}/temp/puntoexe_library/base">
-			<fileset dir="base" />
+	<target name="create_GPL" depends="CHM, PDF, PDF hyperlinked" description="Copy the library in the GPL build">
+		<mkdir dir="${build_dir}" />
+		<mkdir dir="${build_dir}/documentation" />
+		<mkdir dir="${build_dir}/puntoexe_library/base" />
+		<mkdir dir="${build_dir}/puntoexe_library/imebra" />
+		<mkdir dir="${build_dir}/puntoexe_library/docs" />
+		<copy file="project_files/generated_doc/chm/index.chm" tofile="${build_dir}/documentation/imebra.chm" />
+		<copy file="project_files/generated_doc/latex/refman.pdf" tofile="${build_dir}/documentation/imebra.pdf" />
+		<copy file="project_files/generated_doc/latexH/refman.pdf" tofile="${build_dir}/documentation/imebraLinks.pdf" />
+		<copy file="DoxyFileCHM" tofile="${build_dir}/puntoexe_library/DoxyFileCHM" />
+		<copy file="DoxyFileHTML" tofile="${build_dir}/puntoexe_library/DoxyFileHTML" />
+		<copy file="DoxyFilePDF" tofile="${build_dir}/puntoexe_library/DoxyFilePDF" />
+		<copy file="DoxyFilePDFH" tofile="${build_dir}/puntoexe_library/DoxyFilePDFH" />
+		<copy todir="${build_dir}/puntoexe_library/base">
+			<fileset dir="project_files/base" />
 		</copy>
-		<copy todir="${gpl}/temp/puntoexe_library/imebra">
-			<fileset dir="imebra" />
+		<copy todir="${build_dir}/puntoexe_library/imebra">
+			<fileset dir="project_files/imebra" />
 		</copy>
-		<copy todir="${gpl}/temp/puntoexe_library/docs">
-			<fileset dir="docs" />
+		<copy todir="${build_dir}/puntoexe_library/docs">
+			<fileset dir="project_files/docs" />
 		</copy>
-		<move file="${gpl}/temp/puntoexe_library/docs/gpl.txt" tofile="${gpl}/temp/license.txt" />
-		<replace dir="${gpl}/temp/puntoexe_library" token="$fileHeader$">
+		<move file="project_files/puntoexe_library/docs/gpl.txt" tofile="${build_dir}/license.txt" />
+		<replace dir="${build_dir}/puntoexe_library" token="$fileHeader$">
 			<replacevalue><![CDATA[
 Imebra: a C++ dicom library.
 Copyright (C) 2003, 2004, 2005, 2006  by Paolo Brandoli
@@ -81,81 +116,73 @@ The author can be contacted by email at paolo@puntoexe.com or by mail at
 		</replace>
 	</target>
 
-	<!-- Build the documentation -->
-	<target name="Documentation version" depends="version" description="Replace the documentation version">
-		<mkdir dir="generated_doc" />
-		<replace file="doxyfileCHM" token="1.0.0.1" value='"${fullVersionReadable}"'/>
-		<replace file="doxyfileHTML" token="1.0.0.1" value='"${fullVersionReadable}"'/>
-		<replace file="doxyfilePDF" token="1.0.0.1" value='"${fullVersionReadable}"'/>
-		<replace file="doxyfilePDFH" token="1.0.0.1" value='"${fullVersionReadable}"'/>
-	</target>
-
 	<!-- Build the CHM documentation -->
-	<target name="CHM" depends="Documentation version" description="Build the CHM document">
-		<exec dir="." executable="doxygen" failonerror="true">
+	<target name="CHM" depends="documentation_version" description="Build the CHM document">
+		<exec dir="./project_files" executable="doxygen" failonerror="true">
 			<arg value="doxyfileCHM"/>
 		</exec>
-		<exec dir="generated_doc/chm" executable="${hhc_executable}">
-			<arg file="generated_doc/chm/index.hhp"/>
+		<exec dir="./project_files/generated_doc/chm" executable="${hhc_executable}">
+			<arg file="./project_files/generated_doc/chm/index.hhp"/>
 		</exec>
 	</target>
 
 	<!-- Build the HTML documentation -->
-	<target name="HTML" depends="Documentation version" description="Build the HTML documents">
-		<exec dir="." executable="doxygen" failonerror="true">
+	<target name="HTML" depends="documentation_version" description="Build the HTML documents">
+		<exec dir="./project_files" executable="doxygen" failonerror="true">
 			<arg value="doxyfileHTML"/>
 		</exec>
 	</target>
 
 	<!-- Build the PDF documentation -->
 	<target name="PDF" depends="Documentation version" description="Build the PDF document">
-		<exec dir="." executable="doxygen" failonerror="true">
+		<exec dir="./project_files" executable="doxygen" failonerror="true">
 			<arg value="doxyfilePDF"/>
 		</exec>
-		<exec dir="generated_doc/latex" executable="pdflatex">
+		<exec dir="./project_files/generated_doc/latex" executable="pdflatex">
 			<arg value="refman.tex"/>
 		</exec>
-		<exec dir="generated_doc/latex" executable="makeindex">
+		<exec dir="./project_files/generated_doc/latex" executable="makeindex">
 			<arg value="refman.idx"/>
 		</exec>
-		<exec dir="generated_doc/latex" executable="pdflatex">
+		<exec dir="./project_files/generated_doc/latex" executable="pdflatex">
 			<arg value="refman.tex"/>
 		</exec>
-		<exec dir="generated_doc/latex" executable="pdflatex">
+		<exec dir="./project_files/generated_doc/latex" executable="pdflatex">
 			<arg value="refman.tex"/>
 		</exec>
-		<exec dir="generated_doc/latex" executable="pdflatex">
+		<exec dir="./project_files/generated_doc/latex" executable="pdflatex">
 			<arg value="refman.tex"/>
 		</exec>
 	</target>
 
 	<!-- Build the Hyperlinked PDF documentation -->
-	<target name="PDF hyperlinked" depends="Documentation version" description="Build the hyperlinked PDF document">
-		<exec dir="." executable="doxygen" failonerror="true">
+	<target name="PDF_hyperlinked" depends="documentation_version" description="Build the hyperlinked PDF document">
+		<exec dir="./project_files" executable="doxygen" failonerror="true">
 			<arg value="doxyfilePDFH"/>
 		</exec>
-		<exec dir="generated_doc/latexH" executable="pdflatex">
+		<exec dir="./project_files/generated_doc/latexH" executable="pdflatex">
 			<arg value="refman.tex"/>
 		</exec>
-		<exec dir="generated_doc/latexH" executable="makeindex">
+		<exec dir="./project_files/generated_doc/latexH" executable="makeindex">
 			<arg value="refman.idx"/>
 		</exec>
-		<exec dir="generated_doc/latexH" executable="pdflatex">
+		<exec dir="./project_files/generated_doc/latexH" executable="pdflatex">
 			<arg value="refman.tex"/>
 		</exec>
-		<exec dir="generated_doc/latexH" executable="pdflatex">
+		<exec dir="./project_files/generated_doc/latexH" executable="pdflatex">
 			<arg value="refman.tex"/>
 		</exec>
-		<exec dir="generated_doc/latexH" executable="pdflatex">
+		<exec dir="./project_files/generated_doc/latexH" executable="pdflatex">
 			<arg value="refman.tex"/>
 		</exec>
 	</target>
 
-	<!-- Initialize the version number -->
-	<target name="version" depends="Run test cases, Run test cases posix" description="Initialize the build number">
-		<buildnumber file="../../build.number" />
-		<property name="fullVersionReadable" value="0.0.${build.number}_Alpha"/>
-		<property name="productName" value="Imebra ${fullVersionReadable}"/>
+	<!-- Build the documentation -->
+	<target name="documentation_version" depends="version" if="build_with_version" description="Replace the documentation version">
+		<replace file="doxyfileCHM" token="1.0.0.1" value='"${fullVersionReadable}"'/>
+		<replace file="doxyfileHTML" token="1.0.0.1" value='"${fullVersionReadable}"'/>
+		<replace file="doxyfilePDF" token="1.0.0.1" value='"${fullVersionReadable}"'/>
+		<replace file="doxyfilePDFH" token="1.0.0.1" value='"${fullVersionReadable}"'/>
 	</target>
 
 	<!-- Run the test cases -->
@@ -170,30 +197,49 @@ The author can be contacted by email at paolo@puntoexe.com or by mail at
 
 
 	<!-- Build the test cases -->
-	<target name="Build test cases" description="Build the Imebra test cases">
+	<target name="Build test cases" depends="create_build_dir" description="Build the Imebra test cases">
 		<exec executable="${devenv_executable}" failonerror="true">
 			<arg value="/out"/>
-			<arg value="../../testCasesBuildLog.txt"/>
+			<arg file="builds/testCasesBuildLog.txt"/>
 			<arg value="/rebuild"/>
 			<arg value="debug"/>
 			<arg value="/project"/>
-			<arg file="tests\CImbx_tests\CImbx_tests.vcproj"/>
-			<arg file="puntoexe_library.sln"/>
+			<arg file="./project_files/tests/CImbx_tests/CImbx_tests.vcproj"/>
+			<arg file="./project_files/puntoexe_library.sln"/>
 		</exec>
-		</target>
+	</target>
 
 	<!-- Build the test cases posix -->
-	<target name="Build test cases posix" description="Build the Imebra test cases posix">
+	<target name="Build test cases posix" depends="create_build_dir" description="Build the Imebra test cases posix">
 		<exec executable="${devenv_executable}" failonerror="true">
 			<arg value="/out"/>
-			<arg value="../../testCasesPosixBuildLog.txt"/>
+			<arg file="builds/testCasesPosixBuildLog.txt"/>
 			<arg value="/rebuild"/>
 			<arg value="debug_posix"/>
 			<arg value="/project"/>
-			<arg file="tests\CImbx_tests\CImbx_tests.vcproj"/>
-			<arg file="puntoexe_library.sln"/>
+			<arg file="./project_files/tests/CImbx_tests/CImbx_tests.vcproj"/>
+			<arg file="./project_files/puntoexe_library.sln"/>
 		</exec>
-		</target>
+	</target>
+
+	<!-- Create the directory for the final build -->
+	<target name="create_build_dir" depends="version" description="Create the directory for the final build">
+		<property name="builds" value="builds" />
+		<property name="build_dir" value="${builds}/imebra_${fileVersion}" />
+		<mkdir dir="${builds}" />
+		<delete dir="${build_dir}" failonerror="false" /> 
+		<mkdir dir="${build_dir}" />
+		<delete dir="./project_files/generated_doc" failonerror="false" /> 
+		<mkdir dir="./project_files/generated_doc" />
+	</target>
+
+	<!-- Initialize the version number -->
+	<target name="version" description="Initialize the build number">
+		<property file="./build.number" /> 
+		<property name="fileVersion" value="0_0_${build.number}_Alpha"/>
+		<property name="fullVersionReadable" value="0.0.${build.number}_Alpha"/>
+		<property name="productName" value="Imebra ${fullVersionReadable}"/>
+	</target>
 
 
 </project>

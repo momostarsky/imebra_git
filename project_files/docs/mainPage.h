@@ -63,6 +63,14 @@ A detailed reference of the C++ classes that compose Imebra is included in
 
 \section changeLog Changes log
 
+\subsection since_0_0_32 Changes since version 0.0.32 (Alpha)
+
+- Corrected the ptr class so baseObject compiles on GCC
+- Corrected thread (removed orphan functions)
+- Now charsetConversion throws an exception if a charset is not
+   supported by the system
+
+
 \subsection since_0_0_31 Changes since version 0.0.31 (Alpha)
 
 - The PDF documentation is back

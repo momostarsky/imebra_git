@@ -177,11 +177,30 @@ public:
 	charsetConversionException(std::string message): std::runtime_error(message){}
 };
 
+
+///////////////////////////////////////////////////////////
+/// \brief Exception thrown when the requested charset
+///         is not supported by the DICOM standard.
+///
+///////////////////////////////////////////////////////////
 class charsetConversionExceptionNoTable: public charsetConversionException
 {
 public:
 	charsetConversionExceptionNoTable(std::string message): charsetConversionException(message){}
 };
+
+
+///////////////////////////////////////////////////////////
+/// \brief Exception thrown when the requested charset
+///         is not supported by the system.
+///
+///////////////////////////////////////////////////////////
+class charsetConversionExceptionNoSupportedTable: public charsetConversionException
+{
+public:
+	charsetConversionExceptionNoSupportedTable(std::string message): charsetConversionException(message){}
+};
+
 
 
 } // namespace puntoexe

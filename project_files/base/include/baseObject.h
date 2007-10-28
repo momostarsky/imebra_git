@@ -34,6 +34,7 @@ namespace puntoexe
 {
 
 class baseObject;
+
 class basePtr
 {
 protected:

@@ -264,29 +264,37 @@ std::string dataHandlerStringUnicode::convertFromUnicode(std::wstring value)
 			{
 				continue;
 			}
-			m_charsetConversion.initialize(m_dicomCharsets[scanCharsets].m_isoRegistration);
-			if(!m_charsetConversion.fromUnicode(code).empty())
-			{
-				asciiString += m_dicomCharsets[scanCharsets].m_escapeSequence;
-				bSequenceFound = true;
 
-				// Add the dicom charset to the charsets
-				///////////////////////////////////////////////////////////
-				std::wstring dicomCharset = m_dicomCharsets[scanCharsets].m_dicomName;
-				bool bAlreadyUsed = false;
-				for(tCharsetsList::iterator scanUsedCharsets = m_charsets.begin(); scanUsedCharsets != m_charsets.end(); ++scanUsedCharsets)
+			try
+			{
+				m_charsetConversion.initialize(m_dicomCharsets[scanCharsets].m_isoRegistration);
+				if(!m_charsetConversion.fromUnicode(code).empty())
 				{
-					if(*scanUsedCharsets == dicomCharset)
+					asciiString += m_dicomCharsets[scanCharsets].m_escapeSequence;
+					bSequenceFound = true;
+
+					// Add the dicom charset to the charsets
+					///////////////////////////////////////////////////////////
+					std::wstring dicomCharset = m_dicomCharsets[scanCharsets].m_dicomName;
+					bool bAlreadyUsed = false;
+					for(tCharsetsList::iterator scanUsedCharsets = m_charsets.begin(); scanUsedCharsets != m_charsets.end(); ++scanUsedCharsets)
 					{
-						bAlreadyUsed = true;
-						break;
+						if(*scanUsedCharsets == dicomCharset)
+						{
+							bAlreadyUsed = true;
+							break;
+						}
 					}
+					if(!bAlreadyUsed)
+					{
+						m_charsets.push_back(dicomCharset);
+					}
+					break;
 				}
-				if(!bAlreadyUsed)
-				{
-					m_charsets.push_back(dicomCharset);
-				}
-				break;
+			}
+			catch(charsetConversionExceptionNoSupportedTable)
+			{
+				continue;
 			}
 		}
 		if(!bSequenceFound)

@@ -135,8 +135,12 @@ void charsetConversion::initialize(std::string tableName)
 	static imbxUint16 m_endianCheck=0x00ff;
 	const char* utf16code = (*((imbxUint8*)&m_endianCheck) == 0xff) ? "UTF-16LE" : "UTF-16BE";
 	
-	m_iconvToUnicode = iconv_open(utf16code, toCodeIgnore.c_str());
-	m_iconvFromUnicode = iconv_open(m_charsetTable[requestedTable].m_iconvName, utf16code);
+	m_iconvToUnicode = iconv_open(utf16code, m_charsetTable[requestedTable].m_iconvName);
+	m_iconvFromUnicode = iconv_open(toCodeIgnore.c_str(), utf16code);
+	if(m_iconvToUnicode == (iconv_t)-1 || m_iconvFromUnicode == (iconv_t)-1)
+	{
+		PUNTOEXE_THROW(charsetConversionExceptionNoSupportedTable, "The requested ISO table is not supported by the system");
+	}
 #else
 	m_codePage = m_charsetTable[requestedTable].m_codePage;
 	m_bZeroFlag = m_charsetTable[requestedTable].m_bZeroFlag;
