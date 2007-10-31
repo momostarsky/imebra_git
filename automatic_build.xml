@@ -13,9 +13,6 @@
 
 	<!-- Build all -->
 	<target name="build all">
-		<exec dir="." executable="svn">
-			<arg value="update"/>
-		</exec>
 		<antcall target="ZIP_GPL" description="Tag the repository" />
 		<antcall target="copy_svn" /> 
 	</target>
