@@ -12,7 +12,7 @@
 	-->
 
 	<!-- Build all -->
-	<target name="build all" depends="ZIP_GPL" description="Tag the repository" />
+	<target name="build all" depends="ZIP_GPL" description="Tag the repository" >
 		<antcall target="copy_svn" /> 
 	</target>
 	
