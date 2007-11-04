@@ -58,7 +58,7 @@
 		<copy todir="${build_dir}/puntoexe_library/docs">
 			<fileset dir="project_files/docs" />
 		</copy>
-		<move file="project_files/docs/gpl.txt" tofile="${build_dir}/license.txt" />
+		<copy file="project_files/docs/gpl.txt" tofile="${build_dir}/license.txt" />
 		<replace dir="${build_dir}/puntoexe_library" token="$fileHeader$">
 			<replacevalue><![CDATA[
 Imebra: a C++ dicom library.

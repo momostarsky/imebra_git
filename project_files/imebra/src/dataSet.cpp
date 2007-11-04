@@ -141,10 +141,6 @@ ptr<image> dataSet::getImage(imbxUint32 frameNumber)
 	///////////////////////////////////////////////////////////
 	lockObject lockAccess(this);
 
-	// Shared pointer used to reference this dataset
-	///////////////////////////////////////////////////////////
-	ptr<dataSet> thisDataSet(this);
-
 	// Retrieve the transfer syntax
 	///////////////////////////////////////////////////////////
 	std::wstring transferSyntax=getUnicodeString(0x0002, 0x0, 0x0010, 0x0);
@@ -269,7 +265,7 @@ ptr<image> dataSet::getImage(imbxUint32 frameNumber)
 			imbxUint32 offsetPosition = m_imagesPositions[readImages];
 			if(offsetPosition == 0)
 			{
-				ptr<image> tempImage = pCodec->getImage(thisDataSet, imageStream, imageStreamDataType);
+				ptr<image> tempImage = pCodec->getImage(this, imageStream, imageStreamDataType);
 				m_imagesPositions[readImages] = imageStream->position();
 				continue;
 			}
@@ -288,7 +284,7 @@ ptr<image> dataSet::getImage(imbxUint32 frameNumber)
 	}
 
 	ptr<image> pImage;
-	pImage = pCodec->getImage(thisDataSet, imageStream, imageStreamDataType);
+	pImage = pCodec->getImage(this, imageStream, imageStreamDataType);
 	
 	if(!bDontNeedImagesPositions && m_imagesPositions.size() > frameNumber)
 	{
@@ -331,10 +327,6 @@ void dataSet::setImage(imbxUint32 frameNumber, ptr<image> pImage, std::wstring t
 	// All the commit are in one transaction
 	///////////////////////////////////////////////////////////
 	transaction localTransaction(true);
-
-	// Shared pointer used to reference this dataset
-	///////////////////////////////////////////////////////////
-	ptr<dataSet> thisDataSet(this);
 
 	// The group, order, tag and buffer where the image must
 	//  be stored
@@ -785,7 +777,7 @@ void dataSet::updateFrameBufferTable(
 		*(pOffsets++) = currentOffset;
 	}
 
-	streamController::adjustEndian((imbxUint8*)pOffsets, sizeof(imbxUint32), streamController::lowByteEndian, (imbxUint32)(pFrameFirstBufferList->size()));
+	streamController::adjustEndian((imbxUint8*)framesPointer->getMemoryBuffer(), sizeof(imbxUint32), streamController::lowByteEndian, (imbxUint32)(pFrameFirstBufferList->size()));
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -805,10 +797,6 @@ ptr<image> dataSet::convertImageForDataSet(ptr<image> sourceImage)
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::convertImageForDataSet");
 
-	// Shared pointer used to reference this dataset
-	///////////////////////////////////////////////////////////
-	ptr<dataSet> thisDataSet(this);
-
 	imbxUint32 imageWidth, imageHeight;
 	sourceImage->getSize(&imageWidth, &imageHeight);
 
@@ -816,7 +804,7 @@ ptr<image> dataSet::convertImageForDataSet(ptr<image> sourceImage)
 	imbxUint32 highBit = sourceImage->getHighBit();
 
 	transforms::transformsChain chain;
-	chain.declareDataSet(thisDataSet);
+	chain.declareDataSet(this);
 	chain.declareInputImage(0, sourceImage);
 
 	imbxUint32 currentWidth  = getUnsignedLong(0x0028, 0x0, 0x0011, 0x0);

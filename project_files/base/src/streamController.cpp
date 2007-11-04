@@ -83,12 +83,12 @@ void streamController::adjustEndian(imbxUint8* pBuffer, const imbxUint32 wordLen
 		return;
 	}
 
-	imbxUint8 tempByte;
 	switch(wordLength)
 	{
 	case 2:
 		{ // Block needed by evc4. Prevent error on multiple definitions of scanWords
-			for(imbxUint32 scanWords=0; scanWords<words; ++scanWords)
+			imbxUint8 tempByte;
+			for(imbxUint32 scanWords = words; scanWords != 0; --scanWords)
 			{
 				tempByte=*pBuffer;
 				*pBuffer=*(pBuffer+1);
@@ -99,16 +99,16 @@ void streamController::adjustEndian(imbxUint8* pBuffer, const imbxUint32 wordLen
 		return;
 	case 4:
 		{ // Block needed by evc4. Prevent error on multiple definitions of scanWords
-			for(imbxUint32 scanWords=0; scanWords<words; ++scanWords)
+			imbxUint8 tempByte0;
+			imbxUint8 tempByte1;
+			for(imbxUint32 scanWords = words; scanWords != 0; --scanWords)
 			{
-				tempByte = *pBuffer;
+				tempByte0 = *pBuffer;
 				*pBuffer = *(pBuffer+3);
-				*(pBuffer+3) = tempByte;
-				tempByte = *(++pBuffer);
-				*(pBuffer) = *(pBuffer+1);
-				*(++pBuffer) = tempByte;
-
-				++pBuffer;
+				tempByte1 = *(++pBuffer);
+				*pBuffer = *(pBuffer + 1);
+				*(++pBuffer) = tempByte1;
+				*(++pBuffer) = tempByte0;
 				++pBuffer;
 			}
 		}
