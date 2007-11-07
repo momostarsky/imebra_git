@@ -133,10 +133,21 @@ void charsetConversion::initialize(std::string tableName)
 	// Check little endian/big endian
 	///////////////////////////////////////////////////////////
 	static imbxUint16 m_endianCheck=0x00ff;
-	const char* utf16code = (*((imbxUint8*)&m_endianCheck) == 0xff) ? "UTF-16LE" : "UTF-16BE";
+	const char* utfCode;
+	switch(sizeof(wchar_t))
+	{
+	case 2:
+		utfCode = (*((imbxUint8*)&m_endianCheck) == 0xff) ? "UTF-16LE" : "UTF-16BE";
+		break;
+	case 4:
+		utfCode = (*((imbxUint8*)&m_endianCheck) == 0xff) ? "UTF-32LE" : "UTF-32BE";
+		break;
+	default:
+		PUNTOEXE_THROW(charsetConversionExceptionUtfSizeNotSupported, "The system utf size is not supported");
+	}
 	
-	m_iconvToUnicode = iconv_open(utf16code, m_charsetTable[requestedTable].m_iconvName);
-	m_iconvFromUnicode = iconv_open(toCodeIgnore.c_str(), utf16code);
+	m_iconvToUnicode = iconv_open(utfCode, m_charsetTable[requestedTable].m_iconvName);
+	m_iconvFromUnicode = iconv_open(toCodeIgnore.c_str(), utfCode);
 	if(m_iconvToUnicode == (iconv_t)-1 || m_iconvFromUnicode == (iconv_t)-1)
 	{
 		PUNTOEXE_THROW(charsetConversionExceptionNoSupportedTable, "The requested ISO table is not supported by the system");
@@ -209,9 +220,7 @@ std::string charsetConversion::fromUnicode(std::wstring unicodeString)
 		return std::string();
 	}
 #if defined(PUNTOEXE_USEICONV)
-	size_t requiredChars = 0;
-	std::auto_ptr<char> convertedString( myIconv(m_iconvFromUnicode, (const char*)(unicodeString.c_str()), (unicodeString.length()) << 1, &requiredChars) );
-	std::string returnString(convertedString.get(), requiredChars);
+	return myIconv(m_iconvFromUnicode, (const char*)(unicodeString.c_str()), unicodeString.length() * sizeof(wchar_t));
 #else
 	BOOL bUsedDefault = false;
 	int requiredChars = ::WideCharToMultiByte(m_codePage, m_bZeroFlag ? 0 : WC_NO_BEST_FIT_CHARS | WC_COMPOSITECHECK | WC_DEFAULTCHAR, unicodeString.c_str(), (int)(unicodeString.length()), 0, 0, 0, m_bZeroFlag ? 0 : &bUsedDefault);
@@ -222,8 +231,8 @@ std::string charsetConversion::fromUnicode(std::wstring unicodeString)
 		return std::string();
 	}
 	std::string returnString(convertedString.get(), requiredChars);
-#endif
 	return returnString;
+#endif
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -243,9 +252,8 @@ std::wstring charsetConversion::toUnicode(std::string asciiString)
 		return std::wstring();
 	}
 #if defined(PUNTOEXE_USEICONV)
-	size_t requiredChars = 0;
-	std::auto_ptr<wchar_t> convertedString( (wchar_t*)myIconv(m_iconvToUnicode, asciiString.c_str(), asciiString.length(), &requiredChars) );
-	std::wstring returnString(convertedString.get(), requiredChars >> 1);
+	std::string convertedString(myIconv(m_iconvToUnicode, asciiString.c_str(), asciiString.length()));
+	std::wstring returnString((wchar_t*)convertedString.c_str(), convertedString.size() / sizeof(wchar_t));
 #else
 	int requiredWChars = ::MultiByteToWideChar(m_codePage, 0, asciiString.c_str(), (int)(asciiString.length()), 0, 0);
 	std::auto_ptr<wchar_t> convertedString(new wchar_t[requiredWChars]);
@@ -264,30 +272,45 @@ std::wstring charsetConversion::toUnicode(std::string asciiString)
 //
 ///////////////////////////////////////////////////////////
 #if defined(PUNTOEXE_USEICONV)
-char* charsetConversion::myIconv(iconv_t context, const char* inputString, size_t inputStringLengthBytes, size_t* pOutputLengthBytes)
+std::string charsetConversion::myIconv(iconv_t context, const char* inputString, size_t inputStringLengthBytes)
 {
 	PUNTOEXE_FUNCTION_START(L"charsetConversion::myIconv");
 
-	// Allocate the return buffer
-	///////////////////////////////////////////////////////////
-	size_t outputBufferSize = (inputStringLengthBytes + 10) << 3;
-	std::auto_ptr<char> returnBufferPtr(new char[outputBufferSize]);
-	char* returnBuffer = returnBufferPtr.get();
-	
-	// Reset the shift status
-	///////////////////////////////////////////////////////////
-	size_t progressiveOutputBufferSize = outputBufferSize;
-	iconv(context, 0, &inputStringLengthBytes, &returnBuffer, &progressiveOutputBufferSize);
+	std::string finalString;
 
-	// Executes the conversion
+	// Reset the state
 	///////////////////////////////////////////////////////////
-	iconv(context, &inputString, &inputStringLengthBytes, &returnBuffer, &progressiveOutputBufferSize);
+	iconv(context, 0, 0, 0, 0);
 
-	// Update buffer's size
+	// Buffer for the conversion
 	///////////////////////////////////////////////////////////
-	*pOutputLengthBytes = outputBufferSize - progressiveOutputBufferSize;
+	char conversionBuffer[1024];
 
-	return returnBufferPtr.release();
+	// Convert the string
+	///////////////////////////////////////////////////////////
+	for(size_t iconvReturn = (size_t)-1; iconvReturn == (size_t)-1;)
+	{
+		// Executes the conversion
+		///////////////////////////////////////////////////////////
+		size_t progressiveOutputBufferSize = sizeof(conversionBuffer);
+		char* progressiveOutputBuffer(conversionBuffer);
+		iconvReturn = iconv(context, &inputString, &inputStringLengthBytes, &progressiveOutputBuffer, &progressiveOutputBufferSize);
+
+		// Update buffer's size
+		///////////////////////////////////////////////////////////
+		size_t outputLengthBytes = sizeof(conversionBuffer) - progressiveOutputBufferSize;
+
+		finalString.append(conversionBuffer, outputLengthBytes);
+
+		// Throw if an invalid sequence is found
+		///////////////////////////////////////////////////////////
+		if(iconvReturn == -1 && errno != E2BIG)
+		{
+			PUNTOEXE_THROW(charsetConversionInvalidSequence, "Invalid sequence");
+		}
+	}
+
+	return finalString;
 
 	PUNTOEXE_FUNCTION_END();
 }

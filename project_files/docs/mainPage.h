@@ -63,6 +63,13 @@ A detailed reference of the C++ classes that compose Imebra is included in
 
 \section changeLog Changes log
 
+\subsection since_0_0_33 Changes since version 0.0.33 (Alpha)
+
+- Closes #2 (The code assumes that wchar_t is 2 bytes long, while some systems have wchar_t=4 bytes long)
+- Closes #3 (Usage of ICONV should check for return value E2BIG)
+- Added casting operators () to puntoexe::ptr
+
+
 \subsection since_0_0_32 Changes since version 0.0.32 (Alpha)
 
 - Corrected the ptr class so baseObject compiles on GCC

@@ -127,24 +127,10 @@ public:
 	///
 	/// The object tracked by another ptr is copied into the
 	///  current ptr and the reference counter is increased.
-	/// This constructor is able to cast the object's type to
-	///  the type controlled by the smart pointer.
-	/// If the casting is not possible then the compiler 
-	///  fails.
 	///
 	/// @param ptrSource  the source ptr object that must be
 	///                    copied into the current \ref ptr.
 	///
-	///////////////////////////////////////////////////////////
-	template <class sourcePtrType>
-	ptr (ptr<sourcePtrType> const &ptrSource):
-		basePtr(static_cast<objectType*>(ptrSource.get()))
-	{
-	}
-
-	// This constructor is present because the previous one
-	//  is not recognized by the compiler when the ptr is
-	//  contained in a std::list
 	///////////////////////////////////////////////////////////
 	ptr (ptr<objectType> const &ptrSource):
 		basePtr(ptrSource.object)
@@ -164,19 +150,6 @@ public:
 	/// @return a reference to the ptr object.
 	///
 	///////////////////////////////////////////////////////////
-	template <class sourcePtrType>
-	ptr<objectType>& operator=(const ptr<sourcePtrType>& ptrSource)
-	{
-		objectType* ptrSourceObject = static_cast<objectType*>(ptrSource.get());
-		if(ptrSourceObject != object)
-		{
-			release();
-			object = ptrSourceObject;
-			addRef();
-		}
-		return *this;
-	}
-
 	ptr<objectType>& operator=(const ptr<objectType>& ptrSource)
 	{
 		if(ptrSource.object != object)
@@ -187,7 +160,6 @@ public:
 		}
 		return *this;
 	}
-
 
 	/// \brief Compare the pointer to the tracked object with
 	///         the pointer specified in the parameter.
@@ -247,6 +219,36 @@ public:
 		return (objectType*)object;
 	}
 
+	/// \brief Return the pointer to the tracked object, 
+	///         type casted in the specified class pointer.
+	///
+	/// The cast is static, so its validity is checked at
+	///  compile time.
+	///
+	/// @return the pointer to the tracked object
+	///
+	///////////////////////////////////////////////////////////
+	template <class destType>
+		inline operator destType*()
+	{
+		return static_cast<destType*>((objectType*)object);
+	}
+
+	/// \brief Return a new ptr object tracking the object
+	///         tracked by this ptr. A type cast is performed
+	///         if necessary.
+	///
+	/// The type cast is static, so its validity is checked at
+	///  compile time.
+	///
+	/// @return the pointer to the tracked object
+	///
+	///////////////////////////////////////////////////////////
+	template <class destType>
+		inline operator ptr<destType>()
+	{
+		return ptr<destType>(static_cast<destType*>((objectType*)object));
+	}
 };
 
 class lockObject;

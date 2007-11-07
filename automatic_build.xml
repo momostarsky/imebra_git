@@ -18,11 +18,15 @@
 	
 	<target name="copy_svn" if="build_with_version">
 		<exec dir="." executable="svn">
-			<arg value="copy"/>
-			<arg path="."/>
-			<arg value="${puntoexeLibrary}/tags/imebra_${fileVersion}"/>
-			<arg value="-m"/>
-			<arg value='"Tagging the repository for Imebra"'/>
+			<arg value="copy" />
+			<arg path="." />
+			<arg value="${puntoexeLibrary}/tags/imebra_${fileVersion}" />
+			<arg value="-m" />
+			<arg value='"Tagging the repository for Imebra"' />
+			<arg value="--username" />
+			<arg value="${userName}" />
+			<arg value="--password" />
+			<arg value="${password}" />
 		</exec>
 		<buildnumber file="build.number" /> 
 		<exec dir="." executable="svn">
@@ -30,6 +34,10 @@
 			<arg value="build.number"/>
 			<arg value="-m"/>
 			<arg value='"Increasing the build number"'/>
+			<arg value="--username" />
+			<arg value="${userName}" />
+			<arg value="--password" />
+			<arg value="${password}" />
 		</exec>
 	</target>
 

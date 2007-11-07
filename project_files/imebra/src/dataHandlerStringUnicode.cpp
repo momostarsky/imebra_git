@@ -214,18 +214,21 @@ std::string dataHandlerStringUnicode::convertFromUnicode(std::wstring value)
 			
 			// Check UTF-16 extension
 			///////////////////////////////////////////////////////////
-			if(value[until] >= 0xd800 && value[until] <=0xdfff && until < (valueSize - 1))
+			if(sizeof(wchar_t) == 2)
 			{
-				code += value[until+increaseUntil];
-				++increaseUntil;
-			}
+				if(value[until] >= 0xd800 && value[until] <=0xdfff && until < (valueSize - 1))
+				{
+					code += value[until+increaseUntil];
+					++increaseUntil;
+				}
 
-			// Check composed chars extension
-			///////////////////////////////////////////////////////////
-			if((until + increaseUntil) < (valueSize - 1) && value[until + increaseUntil] >= 0x0300 && value[until + increaseUntil] <= 0x036f)
-			{
-				code += value[until+increaseUntil];
-				++increaseUntil;
+				// Check composed chars extension
+				///////////////////////////////////////////////////////////
+				if((until + increaseUntil) < (valueSize - 1) && value[until + increaseUntil] >= 0x0300 && value[until + increaseUntil] <= 0x036f)
+				{
+					code += value[until+increaseUntil];
+					++increaseUntil;
+				}
 			}
 			
 			// If the conversion doesn't succeed, exit from the loop

@@ -120,7 +120,7 @@ protected:
 
 	std::string m_isoCharset;
 #if defined(PUNTOEXE_USEICONV)
-	char* myIconv(iconv_t context, const char* inputString, size_t inputStringLengthBytes, size_t* pOutputLengthBytes);
+	std::string myIconv(iconv_t context, const char* inputString, size_t inputStringLengthBytes);
 	iconv_t m_iconvToUnicode;
 	iconv_t m_iconvFromUnicode;
 #else
@@ -171,10 +171,28 @@ protected:
 	charsetConversion* m_pConversion;
 };
 
+
+///////////////////////////////////////////////////////////
+/// \brief Base class for the exceptions thrown by
+///         charsetConversion.
+///
+///////////////////////////////////////////////////////////
 class charsetConversionException: public std::runtime_error
 {
 public:
 	charsetConversionException(std::string message): std::runtime_error(message){}
+};
+
+
+///////////////////////////////////////////////////////////
+/// \brief Exception thrown when an invalid sequence is
+///         found in a string.
+///
+///////////////////////////////////////////////////////////
+class charsetConversionInvalidSequence: public charsetConversionException
+{
+public:
+	charsetConversionInvalidSequence(std::string message): charsetConversionException(message){}
 };
 
 
@@ -201,6 +219,17 @@ public:
 	charsetConversionExceptionNoSupportedTable(std::string message): charsetConversionException(message){}
 };
 
+
+///////////////////////////////////////////////////////////
+/// \brief Exception thrown when the system doesn't have
+///         a supported size for wchar_t
+///
+///////////////////////////////////////////////////////////
+class charsetConversionExceptionUtfSizeNotSupported: public charsetConversionException
+{
+public:
+	charsetConversionExceptionUtfSizeNotSupported(std::string message): charsetConversionException(message){}
+};
 
 
 } // namespace puntoexe
