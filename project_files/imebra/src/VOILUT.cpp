@@ -187,7 +187,10 @@ void VOILUT::setVOILUT(imbxUint32 VOILUTId)
 	if((VOILUTId & 0x00100000))
 	{
 		setLUT(lutDataSet->getLut(0x0028, 0x3010, VOILUTNumber));
+		return;
 	}
+
+	setCenterWidth(0, 0);
 
 	PUNTOEXE_FUNCTION_END();
 }

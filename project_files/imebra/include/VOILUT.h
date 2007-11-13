@@ -115,7 +115,10 @@ public:
 	/// The VOI/LUT ID can be obtained by calling
 	///  getVOILUTId().
 	///
+	/// Disable the VOI/LUT transform if the parameter is 0.
+	///
 	/// @param VOILUTId the ID of the VOI/LUT to use for the
+	///                  transformation, or 0 to disable the
 	///                  transformation
 	///
 	///////////////////////////////////////////////////////////

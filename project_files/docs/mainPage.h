@@ -63,6 +63,14 @@ A detailed reference of the C++ classes that compose Imebra is included in
 
 \section changeLog Changes log
 
+\subsection since_0_0_34 Changes since version 0.0.34 (Alpha)
+
+- Closes #4 (The function jpegCodec::writeTag() always writes a tagId=0 on high-endian architectures)
+- Closes #5 (The unit test streamBitsTest doesn't flush the write buffer)
+- puntoexe::imebra::transforms::VOILUT now disables any VOI/LUT if 
+   puntoexe::imebra::transforms::VOILUT::setVOILUT is called with an ID=0
+
+
 \subsection since_0_0_33 Changes since version 0.0.33 (Alpha)
 
 - Closes #2 (The code assumes that wchar_t is 2 bytes long, while some systems have wchar_t=4 bytes long)
