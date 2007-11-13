@@ -229,7 +229,7 @@ public:
 	///
 	///////////////////////////////////////////////////////////
 	template <class destType>
-		inline operator destType*()
+		inline operator destType*() const
 	{
 		return static_cast<destType*>((objectType*)object);
 	}
@@ -245,7 +245,7 @@ public:
 	///
 	///////////////////////////////////////////////////////////
 	template <class destType>
-		inline operator ptr<destType>()
+		inline operator ptr<destType>() const
 	{
 		return ptr<destType>(static_cast<destType*>((objectType*)object));
 	}

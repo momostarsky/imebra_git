@@ -57,6 +57,7 @@ void dataSetTest::testFragmentation()
 		ptr<handlers::dataHandlerRaw> offsetHandler = newTableOffsetBuffer->getDataHandlerRaw(true, 8);
 		imbxUint32* pOffsetMemory = (imbxUint32*)(offsetHandler->getMemoryBuffer());
 		pOffsetMemory[scanBuffers - 1] = offset;
+		streamController::adjustEndian((imbxUint8*)&(pOffsetMemory[scanBuffers - 1]), sizeof(pOffsetMemory[0]), streamController::lowByteEndian, 1);
 		ptr<handlers::dataHandlerRaw> wholeHandler = imageTag->getDataHandlerRaw(scanBuffers, false, "");
 		imbxUint8* pWholeHandler = wholeHandler->getMemoryBuffer();
 		imbxUint32 totalSize = wholeHandler->getSize();

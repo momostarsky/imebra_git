@@ -75,7 +75,7 @@ transaction::~transaction()
 			lockMultipleObjects::tObjectsList objectsList;
 			for(tHandlersList::iterator findBuffers = m_transactionHandlers.begin(); findBuffers != m_transactionHandlers.end(); ++findBuffers)
 			{
-				objectsList.push_back(ptr<baseObject>((*findBuffers)->m_buffer));
+				objectsList.push_back((*findBuffers)->m_buffer);
 			}
 			lockMultipleObjects lockAccess(&objectsList);
 

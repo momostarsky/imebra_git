@@ -19,6 +19,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(puntoexe::imebra::tests::streamBitsTest);
 
 void streamBitsTest::test()
 {
+	std::srand(100);
 	ptr<memory> myMemory(new memory);
 	ptr<baseStream> theMemoryStream(new memoryStream(myMemory));
 	ptr<streamWriter> writer(new streamWriter(theMemoryStream));
@@ -33,12 +34,13 @@ void streamBitsTest::test()
 		imbxUint8 bits =  rand() * 16 / RAND_MAX;
 		if(bits == 0) bits = 4;
 		imbxUint32 maxValue = (1 << bits) - 1;
-		imbxUint32 value = rand() * maxValue / RAND_MAX;
+		imbxUint32 value = std::rand() * maxValue / RAND_MAX;
 		bitsNumber[fillValues] = bits;
 		bitsValue[fillValues] = value;
 		writer->writeBits(&value, bits);
 	}
 	writer->resetOutBitsBuffer();
+	writer->flushDataBuffer();
 
 	ptr<streamReader> reader(new streamReader(theMemoryStream));
 	reader->m_pTagByte = &tagByte;

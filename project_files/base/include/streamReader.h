@@ -135,7 +135,7 @@ public:
 	///////////////////////////////////////////////////////////
 	inline bool readBits(imbxUint32* const pBuffer, int bitsNum)
 	{
-		static const int bufferSize(sizeof(m_inBitsBuffer) * 8);
+		int bufferSize(sizeof(m_inBitsBuffer) * 8);
 
 		// All the requested bits are already in the buffer.
 		// Just return them.
@@ -156,7 +156,7 @@ public:
 		if(m_inBitsNum != 0)
 		{
 			bitsNum -= m_inBitsNum;
-			*pBuffer = (imbxUint32)(m_inBitsBuffer >> (bufferSize - m_inBitsNum)) << bitsNum;
+			*pBuffer = ((imbxUint32)(m_inBitsBuffer >> (bufferSize - m_inBitsNum))) << bitsNum;
 		}
 		else
 		{
@@ -184,7 +184,7 @@ public:
 			}
 
 			bitsNum -= m_inBitsNum;
-			*pBuffer |= (imbxUint32)m_inBitsBuffer << bitsNum;
+			*pBuffer |= ((imbxUint32)m_inBitsBuffer) << bitsNum;
 		}
 		
 		PUNTOEXE_FUNCTION_END();
@@ -343,13 +343,6 @@ public:
 			///////////////////////////////////////////////////////////
 			if(fillDataBuffer() == 0)
 			{
-				// If EOF was already active, then throw
-				///////////////////////////////////////////////////////////
-				if(m_bEof)
-				{
-					//throw
-				}
-				
 				// Set the EOF flag
 				///////////////////////////////////////////////////////////
 				m_bEof = true;

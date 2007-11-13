@@ -1905,9 +1905,10 @@ void jpegCodec::writeTag(streamWriter* pDestinationStream, tTagId tagId)
 	{
 		return;
 	}
-	imbxUint8 ff = 0xff;
+	static imbxUint8 ff(0xff);
+	imbxUint8 byteTagId(tagId);
 	pDestinationStream->write(&ff, 1);
-	pDestinationStream->write((imbxUint8*)&tagId, 1);
+	pDestinationStream->write(&byteTagId, 1);
 	findTag->second->writeTag(pDestinationStream, this);
 
 	PUNTOEXE_FUNCTION_END();

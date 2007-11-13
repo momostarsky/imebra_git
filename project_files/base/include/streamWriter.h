@@ -110,17 +110,17 @@ public:
 
 		while(bitsNum != 0)
 		{
-			tempBuffer&=((imbxUint32)1<<bitsNum)-1;
+			tempBuffer &= (((imbxUint32)1) << bitsNum) - 1;
 			
 			if(bitsNum <= (8 - m_outBitsNum))
 			{
-				m_outBitsBuffer |= tempBuffer << (8 - m_outBitsNum - bitsNum);
+				m_outBitsBuffer |= (imbxUint8)(tempBuffer << (8 - m_outBitsNum - bitsNum));
 				m_outBitsNum += bitsNum;
 				bitsNum = 0;
 			}
 			else
 			{
-				m_outBitsBuffer |= tempBuffer >> (bitsNum + m_outBitsNum - 8);
+				m_outBitsBuffer |= (imbxUint8)(tempBuffer >> (bitsNum + m_outBitsNum - 8));
 				bitsNum -= (8-m_outBitsNum);
 				m_outBitsNum = 8;
 			}
