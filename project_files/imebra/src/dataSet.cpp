@@ -753,6 +753,8 @@ void dataSet::updateFrameBufferTable(
 	imbxUint32 currentBuffer(1);
 	imbxUint32 currentOffset(0);
 
+	ptr<data> imageTag(getTag(0x7fe0, 0, 0x0010, false));
+
 	imbxUint32* pOffsets = (imbxUint32*)framesPointer->getMemoryBuffer();
 	for(tFrameFirstBufferList::const_iterator scanFrames = pFrameFirstBufferList->begin(); scanFrames != pFrameFirstBufferList->end(); ++scanFrames)
 	{
@@ -764,10 +766,9 @@ void dataSet::updateFrameBufferTable(
 			}
 			else
 			{
-				if(currentBuffer <= currentFrameFirstBufferId || currentBuffer >= currentFrameEndBufferId)
+				if(imageTag != 0 && (currentBuffer <= currentFrameFirstBufferId || currentBuffer >= currentFrameEndBufferId))
 				{
-					ptr<handlers::dataHandlerRaw> bufferHandler = getDataHandlerRaw(0x7fe0, 0x0, 0x0010, currentBuffer, false);
-					currentOffset += bufferHandler->getSize();
+					currentOffset += imageTag->getBufferSize(currentBuffer);
 				}
 			}
 			currentOffset += 4; // 1 word for the group id, 1 word for the tag id

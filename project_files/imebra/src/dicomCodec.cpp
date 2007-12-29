@@ -362,28 +362,20 @@ imbxUint32 dicomCodec::getTagLength(ptr<data> pData, bool bExplicitDataType, imb
 	*pbSequence = (dataType == "SQ");
 	imbxUint32 numberOfElements = 0;
 	imbxUint32 totalLength = 0;
-	for(imbxUint32 scanBuffers = 0; ; ++scanBuffers)
+	for(imbxUint32 scanBuffers = 0; ; ++scanBuffers, ++numberOfElements)
 	{
-		imbxUint32 elementLength = 0;
-		ptr<handlers::dataHandlerRaw> pDataHandlerRaw = pData->getDataHandlerRaw(scanBuffers, false, "");
-		if(pDataHandlerRaw != 0)
+		ptr<dataSet> pDataSet = pData->getDataSet(scanBuffers);
+		if(pDataSet != 0)
 		{
-			elementLength = pDataHandlerRaw->getSize();
-		}
-		else
-		{
-			ptr<dataSet> pDataSet = pData->getDataSet(scanBuffers);
-			if(pDataSet == 0)
-			{
-				break;
-			}
-			elementLength = getDataSetLength(pDataSet, bExplicitDataType);
+			totalLength += getDataSetLength(pDataSet, bExplicitDataType);
 			*pbSequence = true;
+			continue;
 		}
-
-		totalLength += elementLength;
-
-		++numberOfElements;
+		if(!pData->bufferExists(scanBuffers))
+		{
+			break;
+		}
+		totalLength += pData->getBufferSize(scanBuffers);
 	}
 
 	(*pbSequence) |= (numberOfElements > 1);

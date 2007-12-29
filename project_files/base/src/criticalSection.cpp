@@ -63,7 +63,7 @@ tCriticalSectionsList* lockMultipleCriticalSections(tCriticalSectionsList* pList
 
 	// Build a list that lists all the locked critical sections
 	///////////////////////////////////////////////////////////
-	tCriticalSectionsList* pLockedList = new tCriticalSectionsList;
+	std::auto_ptr<tCriticalSectionsList> pLockedList(new tCriticalSectionsList);
 
 	// Use the normal lockCriticalSection if the list contains
 	//  only one critical section
@@ -72,7 +72,7 @@ tCriticalSectionsList* lockMultipleCriticalSections(tCriticalSectionsList* pList
 	{
 		CSmap.begin()->first->lock();
 		pLockedList->push_back(CSmap.begin()->first);
-		return pLockedList;
+		return pLockedList.release();
 	}
 
 	// Try to lock all the critical sections. Give way to
@@ -91,7 +91,7 @@ tCriticalSectionsList* lockMultipleCriticalSections(tCriticalSectionsList* pList
 			}
 
 			bOK = false;
-			unlockMultipleCriticalSections(pLockedList);
+			unlockMultipleCriticalSections(pLockedList.get());
 
 #ifdef PUNTOEXE_WINDOWS // WINDOWS
 
@@ -108,7 +108,7 @@ tCriticalSectionsList* lockMultipleCriticalSections(tCriticalSectionsList* pList
 		}
 	}
 
-	return pLockedList;
+	return pLockedList.release();
 
 	PUNTOEXE_FUNCTION_END();
 }

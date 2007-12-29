@@ -371,6 +371,10 @@ protected:
 
 };
 
+#ifdef SWIG
+	%template(groupCollection) dataCollection<dataGroup>;
+	%template(tagCollection) dataCollection<data>;
+#endif
 
 } // namespace imebra
 

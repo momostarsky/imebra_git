@@ -35,27 +35,9 @@ namespace puntoexe
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-memory::memory()
+memory::memory():
+	m_pMemoryBuffer(new stringUint8)
 {
-	m_pMemoryBuffer = new stringUint8;
-}
-	
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Destructor
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-memory::~memory()
-{
-	if(m_pMemoryBuffer)
-	{
-		delete m_pMemoryBuffer;
-	}
 }
 
 
@@ -70,7 +52,7 @@ memory::~memory()
 ///////////////////////////////////////////////////////////
 stringUint8* memory::getStringPointer()
 {
-	return m_pMemoryBuffer;
+	return m_pMemoryBuffer.get();
 }
 
 
@@ -85,9 +67,7 @@ stringUint8* memory::getStringPointer()
 ///////////////////////////////////////////////////////////
 stringUint8* memory::detach()
 {
-	stringUint8* pTemp = m_pMemoryBuffer;
-	m_pMemoryBuffer = 0;
-	return pTemp;
+	return m_pMemoryBuffer.release();
 }
 
 
@@ -102,11 +82,7 @@ stringUint8* memory::detach()
 ///////////////////////////////////////////////////////////
 void memory::attach(stringUint8* pString)
 {
-	if(m_pMemoryBuffer)
-	{
-		delete m_pMemoryBuffer;
-	}
-	m_pMemoryBuffer = pString;
+	m_pMemoryBuffer.reset(pString);
 }
 
 
@@ -121,9 +97,9 @@ void memory::attach(stringUint8* pString)
 ///////////////////////////////////////////////////////////
 void memory::copyFrom(ptr<memory> sourceMemory)
 {
-	if(m_pMemoryBuffer == 0)
+	if(m_pMemoryBuffer.get() == 0)
 	{
-		m_pMemoryBuffer = new stringUint8;
+		m_pMemoryBuffer.reset(new stringUint8);
 	}
 	stringUint8* pSourceString = sourceMemory->getStringPointer();
 	m_pMemoryBuffer->assign(pSourceString->data(), pSourceString->length());
@@ -141,7 +117,7 @@ void memory::copyFrom(ptr<memory> sourceMemory)
 ///////////////////////////////////////////////////////////
 void memory::clear()
 {
-	if(m_pMemoryBuffer != 0)
+	if(m_pMemoryBuffer.get() != 0)
 	{
 		m_pMemoryBuffer->clear();
 	}
@@ -159,7 +135,7 @@ void memory::clear()
 ///////////////////////////////////////////////////////////
 imbxUint32 memory::size()
 {
-	if(m_pMemoryBuffer == 0)
+	if(m_pMemoryBuffer.get() == 0)
 	{
 		return 0;
 	}
@@ -178,7 +154,7 @@ imbxUint32 memory::size()
 ///////////////////////////////////////////////////////////
 bool memory::empty()
 {
-	if(m_pMemoryBuffer == 0)
+	if(m_pMemoryBuffer.get() == 0)
 	{
 		return true;
 	}
@@ -197,9 +173,9 @@ bool memory::empty()
 ///////////////////////////////////////////////////////////
 void memory::assign(imbxUint8* pSource, imbxUint32 sourceLength)
 {
-	if(m_pMemoryBuffer == 0)
+	if(m_pMemoryBuffer.get() == 0)
 	{
-		m_pMemoryBuffer = new stringUint8;
+		m_pMemoryBuffer.reset(new stringUint8);
 	}
 	m_pMemoryBuffer->assign(pSource, sourceLength);
 }
@@ -280,13 +256,14 @@ bool memoryPool::reuseMemory(memory* pMemoryToReuse)
 	
 	// Ok to reuse
 	///////////////////////////////////////////////////////////
+	lockCriticalSection lockThis(&m_criticalSection);
 
 	// Store the memory object in the pool
 	///////////////////////////////////////////////////////////
 	m_memorySize[m_firstFreeCell] = memorySize;
-	m_memoryPointer[m_firstFreeCell++] = pMemoryToReuse;
+	m_memoryPointer[m_firstFreeCell] = pMemoryToReuse;
 	m_actualSize += memorySize;
-	if(m_firstFreeCell >= IMEBRA_MEMORY_POOL_SLOTS)
+	if(++m_firstFreeCell >= IMEBRA_MEMORY_POOL_SLOTS)
 	{
 		m_firstFreeCell = 0;
 	}
@@ -296,8 +273,8 @@ bool memoryPool::reuseMemory(memory* pMemoryToReuse)
 	if(m_firstFreeCell == m_firstUsedCell)
 	{
 		m_actualSize -= m_memorySize[m_firstUsedCell];
-		delete m_memoryPointer[m_firstUsedCell++];
-		if(m_firstUsedCell >= IMEBRA_MEMORY_POOL_SLOTS)
+		delete m_memoryPointer[m_firstUsedCell];
+		if(++m_firstUsedCell >= IMEBRA_MEMORY_POOL_SLOTS)
 		{
 			m_firstUsedCell = 0;
 		}
@@ -309,8 +286,8 @@ bool memoryPool::reuseMemory(memory* pMemoryToReuse)
 	while(m_actualSize != 0 && m_actualSize > IMEBRA_MEMORY_POOL_MAX_SIZE)
 	{
 		m_actualSize -= m_memorySize[m_firstUsedCell];
-		delete m_memoryPointer[m_firstUsedCell++];
-		if(m_firstUsedCell >= IMEBRA_MEMORY_POOL_SLOTS)
+		delete m_memoryPointer[m_firstUsedCell];
+		if(++m_firstUsedCell >= IMEBRA_MEMORY_POOL_SLOTS)
 		{
 			m_firstUsedCell = 0;
 		}
@@ -332,6 +309,8 @@ bool memoryPool::reuseMemory(memory* pMemoryToReuse)
 ///////////////////////////////////////////////////////////
 void memoryPool::flush()
 {
+	lockCriticalSection lockThis(&m_criticalSection);
+
 	while(m_firstUsedCell != m_firstFreeCell)
 	{
 		delete m_memoryPointer[m_firstUsedCell];
@@ -373,14 +352,15 @@ memoryPool* memoryPool::getMemoryPool()
 ///////////////////////////////////////////////////////////
 memory* memoryPool::getMemory(imbxUint32 requestedSize)
 {
+	lockCriticalSection lockThis(&m_criticalSection);
+
 	// Look for an object to reuse
 	///////////////////////////////////////////////////////////
 	for(imbxUint32 findCell = m_firstUsedCell; findCell != m_firstFreeCell;)
 	{
 		if(m_memorySize[findCell] != requestedSize)
 		{
-			++findCell;
-			if(findCell >= IMEBRA_MEMORY_POOL_SLOTS)
+			if(++findCell >= IMEBRA_MEMORY_POOL_SLOTS)
 			{
 				findCell = 0;
 			}
@@ -407,28 +387,12 @@ memory* memoryPool::getMemory(imbxUint32 requestedSize)
 			return pMemory;
 		}
 
-		if(findCell > lastUsedCell)
+		m_memorySize[findCell] = m_memorySize[m_firstUsedCell];
+		m_memoryPointer[findCell] = m_memoryPointer[m_firstUsedCell];
+		if(++m_firstUsedCell >= IMEBRA_MEMORY_POOL_SLOTS)
 		{
-			imbxUint32 nextCell = findCell + 1;
-			if(nextCell < IMEBRA_MEMORY_POOL_SLOTS)
-			{
-				imbxUint32 cellsToMove = IMEBRA_MEMORY_POOL_SLOTS - nextCell;
-				::memmove(&(m_memorySize[findCell]), &(m_memorySize[nextCell]), cellsToMove * sizeof(m_memorySize[0]));
-				::memmove(&(m_memoryPointer[findCell]), &(m_memoryPointer[nextCell]), cellsToMove * sizeof(m_memoryPointer[0]));
-			}
-			m_memorySize[IMEBRA_MEMORY_POOL_SLOTS - 1] = m_memorySize[0];
-			m_memoryPointer[IMEBRA_MEMORY_POOL_SLOTS - 1] = m_memoryPointer[0];
-			findCell = 0;
+			m_firstUsedCell = 0;
 		}
-		if(findCell < lastUsedCell)
-		{
-			imbxUint32 nextCell = findCell + 1;
-			imbxUint32 cellsToMove = lastUsedCell - findCell;
-			::memmove(&(m_memorySize[findCell]), &(m_memorySize[nextCell]), cellsToMove * sizeof(m_memorySize[0]));
-			::memmove(&(m_memoryPointer[findCell]), &(m_memoryPointer[nextCell]), cellsToMove * sizeof(m_memoryPointer[0]));
-		}
-		m_firstFreeCell = lastUsedCell;
-
 		return pMemory;
 	}
 

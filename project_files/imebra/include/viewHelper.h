@@ -139,7 +139,8 @@ public:
 	///     client area
 	///
 	/// @param pImage       the image to be displayed in the
-	///                      window
+	///                      window, or a null pointer to
+	///                      remove the image from the window
 	/// @param pDataSet     the dataSet from which the image
 	///                      was retrieved
 	///

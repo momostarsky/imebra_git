@@ -1897,6 +1897,13 @@
 					RelativePath="..\..\imebra\include\YBRPARTIALToRGB.h">
 				</File>
 			</Filter>
+			<Filter
+				Name="swig"
+				Filter="">
+				<File
+					RelativePath="..\..\swig\swig_interface.i">
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="base"

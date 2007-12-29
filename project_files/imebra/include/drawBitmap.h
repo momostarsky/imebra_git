@@ -108,6 +108,13 @@ public:
 	///         visibleBottomRightX, visibleBottomRightY in
 	///         the function declareBitmapType().
 	///
+	/// The pointer refers to a memory area that is managed by
+	///  this transform; DO NOT FREE THE MEMORY, THE TRANSFORM
+	///  WILL.
+	///
+	/// Subsequent calls to doTransform() will reuse the
+	///  memory area referred by the returned pointer.
+	///
 	/// @param pWidthPixels      a pointer to a variable that
 	///                           will by filled with the
 	///                           returned bitmap's width, in
@@ -120,6 +127,10 @@ public:
 	///                           will be filled with the
 	///                           image's rows' length, in
 	///                           bytes
+	/// @return a pointer to a memory area containing the
+	///          bitmap data. The memory is managed by the
+	///          transform and must NOT be freed by the
+	///          caller
 	///
 	///////////////////////////////////////////////////////////
 	imbxUint8* getOutputBitmap(imbxInt32* pWidthPixels, imbxInt32* pHeightPixels, imbxInt32* pRowLengthBytes);

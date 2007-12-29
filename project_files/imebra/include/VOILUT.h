@@ -91,7 +91,9 @@ public:
 	///                       when all the VOIs have been
 	///                       scanned
 	/// @return an ID that can be used with 
-	///          getVOILUTDescription() and setVOILUT()
+	///          getVOILUTDescription() and setVOILUT(), or 0
+	///                       if the requested VOI/LUT doesn't
+	///                       exist
 	///
 	///////////////////////////////////////////////////////////
 	imbxUint32 getVOILUTId(imbxUint32 VOILUTNumber);

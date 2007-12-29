@@ -1078,6 +1078,12 @@ ptr<image> view::getImage()
 ///////////////////////////////////////////////////////////
 void view::setImage(ptr<image> pImage, ptr<dataSet> pDataSet)
 {
+	if(pImage == 0)
+	{
+		m_originalImage = 0;
+		setScrollSize(1, 1, true);
+		return;
+	}
 	imbxUint32 oldSizeX = 0;
 	imbxUint32 oldSizeY = 0;
 	double oldSizeMmX = 0;
@@ -1107,6 +1113,7 @@ void view::setImage(ptr<image> pImage, ptr<dataSet> pDataSet)
 		invalidate(m_leftPosition, m_topPosition, m_rightPosition, m_bottomPosition);
 		return;
 	}
+
 	setZoomFactor(-1, -1, -1);
 }
 

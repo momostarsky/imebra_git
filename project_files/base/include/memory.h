@@ -11,8 +11,10 @@ $fileHeader$
 #define imebraMemory_DE3F98A9_664E_47c0_A29B_B681F9AEB118__INCLUDED_
 
 #include "baseObject.h"
+#include "criticalSection.h"
 #include <list>
 #include <map>
+#include <memory>
 
 
 ///////////////////////////////////////////////////////////
@@ -44,7 +46,6 @@ class memory : public baseObject
 {
 public:
 	memory();
-	virtual ~memory();
 
 	/// \brief Return a pointer to the string of bytes.
 	///
@@ -154,7 +155,7 @@ public:
 	virtual bool preDelete();
 
 protected:
-	stringUint8* m_pMemoryBuffer;
+	std::auto_ptr<stringUint8> m_pMemoryBuffer;
 };
 
 
@@ -268,6 +269,7 @@ protected:
 	///////////////////////////////////////////////////////////
 	bool reuseMemory(memory* pMemoryToReuse);
 
+	criticalSection m_criticalSection;
 
 };
 

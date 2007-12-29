@@ -129,7 +129,7 @@ std::wstring VOILUT::getVOILUTDescription(imbxUint32 VOILUTId)
 	///////////////////////////////////////////////////////////
 	if((VOILUTId & 0x00200000))
 	{
-		VOILUTDescription = lutDataSet->getUnicodeString(0x0028, 0, 0x1052, VOILUTNumber);
+		VOILUTDescription = lutDataSet->getUnicodeString(0x0028, 0, 0x1055, VOILUTNumber);
 	}
 
 	// LUT

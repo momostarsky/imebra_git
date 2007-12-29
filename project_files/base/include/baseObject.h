@@ -123,7 +123,7 @@ public:
 	ptr(objectType* pObject): basePtr(pObject){}
 
 
-	/// \brief Copy constructor (with casting)
+	/// \brief Copy constructor
 	///
 	/// The object tracked by another ptr is copied into the
 	///  current ptr and the reference counter is increased.
