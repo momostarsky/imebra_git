@@ -567,6 +567,33 @@ void view::endCursorDef(imbxInt32 cursorHotSpotX, imbxInt32 cursorHotSpotY)
 	invalidateLines(&m_cursorLines);
 }
 
+
+///////////////////////////////////////////////////////////
+//
+// End the cursor definition
+//
+///////////////////////////////////////////////////////////
+void view::endCursorDef()
+{
+	// Remove the current cursor's lines
+	///////////////////////////////////////////////////////////
+	invalidateLines(&m_cursorLines);
+
+	// Copy the temporary lines into cursor's lines
+	///////////////////////////////////////////////////////////
+	m_cursorLines.clear();
+	for(tCursorLinesList::iterator copyLines = m_tempCursorLines.begin(); copyLines != m_tempCursorLines.end(); ++copyLines)
+	{
+		m_cursorLines.push_back(*copyLines);
+	}
+	m_tempCursorLines.clear();
+
+	// Invalidate the new lines
+	///////////////////////////////////////////////////////////
+	invalidateLines(&m_cursorLines);
+}
+
+
 ///////////////////////////////////////////////////////////
 //
 // Define a cursor's line
