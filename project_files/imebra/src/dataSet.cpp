@@ -19,6 +19,7 @@ $fileHeader$
 #include "../include/codec.h"
 #include "../include/image.h"
 #include "../include/LUT.h"
+#include "../include/waveform.h"
 #include "../include/colorTransformsFactory.h"
 #include "../include/transformsChain.h"
 #include "../include/transformHighBit.h"
@@ -197,7 +198,7 @@ ptr<image> dataSet::getImage(imbxUint32 frameNumber)
 			else
 			{
 				ptr<memory> temporaryMemory(memoryPool::getMemoryPool()->getMemory(totalLength));
-				const imbxUint8* pDest = temporaryMemory->getStringPointer()->data();
+				const imbxUint8* pDest = temporaryMemory->data();
 				for(imbxUint32 scanBuffers = firstBufferId; scanBuffers != endBufferId; ++scanBuffers)
 				{
 					ptr<handlers::dataHandlerRaw> bufferHandler = imageTag->getDataHandlerRaw(scanBuffers, false, "");
@@ -914,6 +915,33 @@ ptr<lut> dataSet::getLut(imbxUint16 groupId, imbxUint16 tagId, imbxUint32 lutId)
 			embeddedLUT->getUnicodeString(0x0028, 0x0, 0x3003, 0x0));
 	}
 	return pLUT;
+
+	PUNTOEXE_FUNCTION_END();
+}
+
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
+// Retrieve a waveform
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+ptr<waveform> dataSet::getWaveform(imbxUint32 waveformId)
+{
+	PUNTOEXE_FUNCTION_START(L"dataSet::getWaveform");
+
+	lockObject lockAccess(this);
+
+	ptr<dataSet> embeddedWaveform(getSequenceItem(0x5400, 0, 0x0100, waveformId));
+	if(embeddedWaveform == 0)
+	{
+		return 0;
+	}
+
+	return new waveform(embeddedWaveform);
 
 	PUNTOEXE_FUNCTION_END();
 }

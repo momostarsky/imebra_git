@@ -52,7 +52,7 @@ void dataHandlerString::parseBuffer(ptr<memory> memoryBuffer)
 
 	m_strings.clear();
 
-	std::string tempBuffer((char*)(memoryBuffer->getStringPointer()->c_str()));
+	std::string tempBuffer((char*)(memoryBuffer->data()), memoryBuffer->size());
 	std::wstring tempBufferUnicode = convertToUnicode(tempBuffer);
 
 	// Remove the extra spaces and zero bytes
@@ -116,8 +116,7 @@ void dataHandlerString::buildBuffer(ptr<memory> memoryBuffer)
 
 	std::string asciiString = convertFromUnicode(completeString);
 
-	stringUint8* pString = memoryBuffer->getStringPointer();
-	*pString = (imbxUint8*)asciiString.c_str();
+	memoryBuffer->assign((imbxUint8*)asciiString.c_str(), (imbxUint32)asciiString.size());
 
 	PUNTOEXE_FUNCTION_END();
 }

@@ -43,16 +43,17 @@ void dateTimeHandlerTest::dateTest()
 
 	{
 		ptr<handlers::dataHandlerRaw> hTag= tag->getDataHandlerRaw(0, true, "DA");
-		CPPUNIT_ASSERT(*(hTag->getMemory()->getStringPointer()) == (imbxUint8*)"20041105");
+		std::basic_string<imbxUint8> checkString(hTag->getMemory()->data(), hTag->getMemory()->size());
+		CPPUNIT_ASSERT(checkString == (imbxUint8*)"20041105");
 		hTag->getMemory()->assign((imbxUint8*)"2004-11-5", 9);
 	}
 
 	{
 		ptr<handlers::dataHandlerRaw> hTag= tag->getDataHandlerRaw(0, false, "DA");
-		stringUint8 tempString = *(hTag->getMemory()->getStringPointer());
+		std::basic_string<imbxUint8> checkString(hTag->getMemory()->data(), hTag->getMemory()->size());
 		stringUint8 compString((imbxUint8*)"2004-11-5", 9);
 		compString += (imbxUint8)0; // buffer's size is always even!
-		CPPUNIT_ASSERT(tempString == compString);
+		CPPUNIT_ASSERT(checkString == compString);
 	}
 
 	{
@@ -104,7 +105,8 @@ void dateTimeHandlerTest::timeTest()
 		ptr<handlers::dataHandlerRaw> hTag= tag->getDataHandlerRaw(0, true, "TM");
 		stringUint8 compString((imbxUint8*)"092040.005000");
 		compString += (imbxUint8)0;
-		CPPUNIT_ASSERT(*(hTag->getMemory()->getStringPointer()) == compString);
+		std::basic_string<imbxUint8> checkString(hTag->getMemory()->data(), hTag->getMemory()->size());
+		CPPUNIT_ASSERT(checkString == compString);
 		hTag->getMemory()->assign((imbxUint8*)"9:20:40", 7);
 	}
 
@@ -155,7 +157,8 @@ void dateTimeHandlerTest::dateTimeTest()
 
 	{
 		ptr<handlers::dataHandlerRaw> hTag= tag->getDataHandlerRaw(0, false, "DT");
-		CPPUNIT_ASSERT(*(hTag->getMemory()->getStringPointer()) == (imbxUint8*)"20041105092040.005000+0102");
+		std::basic_string<imbxUint8> checkString(hTag->getMemory()->data(), hTag->getMemory()->size());
+		CPPUNIT_ASSERT(checkString == (imbxUint8*)"20041105092040.005000+0102");
 	}
 
 	{
@@ -191,7 +194,8 @@ void dateTimeHandlerTest::dateTimeTest()
 
 	{
 		ptr<handlers::dataHandlerRaw> hTag= tag->getDataHandlerRaw(0, true, "DT");
-		CPPUNIT_ASSERT(*(hTag->getMemory()->getStringPointer()) == (imbxUint8*)"20051206102141.005001-0405");
+		std::basic_string<imbxUint8> checkString(hTag->getMemory()->data(), hTag->getMemory()->size());
+		CPPUNIT_ASSERT(checkString == (imbxUint8*)"20051206102141.005001-0405");
 		hTag->getMemory()->assign((imbxUint8*)"19990305", 8);
 	}
 

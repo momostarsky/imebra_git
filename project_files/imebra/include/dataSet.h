@@ -35,6 +35,7 @@ namespace imebra
 class dataGroup;
 class image;
 class lut;
+class waveform;
 
 
 ///////////////////////////////////////////////////////////
@@ -407,6 +408,22 @@ public:
 	///
 	///////////////////////////////////////////////////////////
 	ptr<lut> getLut(imbxUint16 groupId, imbxUint16 tagId, imbxUint32 lutId);
+
+	/// \brief Retrieve a waveform from the dataSet.
+	///
+	/// Each waveforms is stored in a sequence item;
+	/// the function retrieves the proper sequence item and
+	///  connects it to the class waveform which can be used
+	///  to retrieve the waveform data.
+	///
+	/// @param waveformId   the zero based index of the 
+	///                      waveform to retrieve
+	/// @return an object waveform that can be used to read
+	///          the waveform data, or a null pointer if
+	///          the requested waveform doesn't exist
+	///
+	///////////////////////////////////////////////////////////
+	ptr<waveform> getWaveform(imbxUint32 waveformId);
 
 	//@}
 

@@ -47,46 +47,21 @@ class memory : public baseObject
 public:
 	memory();
 
-	/// \brief Return a pointer to the string of bytes.
+	/// \brief Transfer the content from another memory object.
 	///
-	/// Please note that the string of bytes may be detached
-	///  from this class by a call to attach() or detach().
+	/// The source memory object will transfer the ownership
+	///  of the managed memory to this object and then will
+	///  reference an empty memory area (size = 0)
 	///
-	/// @return     a pointer to the string of bytes used by
-	///              the memory object
-	///
-	///////////////////////////////////////////////////////////
-	stringUint8* getStringPointer();
-
-	/// \brief Detach a string of bytes from the memory object.
-	///
-	/// Subsequent calls to a function of this class will
-	///  cause an allocation of a new string (except for
-	///  getStringPointer() that will return 0).
-	///
-	/// @return a pointer to the detached string of bytes
+	/// @param transferFrom the object from which the memory
+	///                      must be transferred
 	///
 	///////////////////////////////////////////////////////////
-	stringUint8* detach();
+	void transfer(ptr<memory> transferFrom);
 
-	/// \brief Attach a string of bytes to the memory object.
-	///
-	/// The previously attached string will be deleted.
-	///
-	/// @param pString a pointer to the string of bytes to
-	///                 attach to the memory object
-	///
-	///////////////////////////////////////////////////////////
-	void attach(stringUint8* pString);
-
-	/// \brief Copy the content of the string of bytes managed
-	///         by another memory object into the string of 
-	///         bytes managed by the memory object for which
-	///         the function is called.
-	///
-	/// If the object doesn't have any managed string, then a
-	///  new string of bytes is created and attached to the
-	///  memory object.
+	/// \brief Copy the content of the memory managed
+	///         by another memory object into the memory 
+	///         managed by this object.
 	///
 	/// @param sourceMemory a pointer to the memory object from
 	///                      which the data has to be copied
@@ -100,41 +75,56 @@ public:
 	///////////////////////////////////////////////////////////
 	void clear();
 
-	/// \brief Return the size, in bytes, of the managed
-	///         string of bytes.
+	/// \brief Resize the memory buffer.
 	///
-	/// @return the size of the managed string of bytes, in
-	///          bytes, or 0 if there isn't any string managed
-	///          by the memory object
+	/// @param newSize  the new size of the buffer, in bytes
+	///
+	///////////////////////////////////////////////////////////
+	void resize(imbxUint32 newSize);
+
+	/// \brief Reserve the specified quantity of bytes for
+	///         the memory object. This doesn't modify the
+	///         actual size of the memory object.
+	///
+	/// @param reserveSize   the number of bytes to reserve for
+	///                       the memory object.
+	///
+	///////////////////////////////////////////////////////////
+	void reserve(imbxUint32 reserveSize);
+
+	/// \brief Return the size of the managed
+	///         memory in bytes.
+	///
+	/// @return the size of the managed memory, in bytes
 	///
 	///////////////////////////////////////////////////////////
 	imbxUint32 size();
 
-	/// \brief Return true if the managed string of bytes is
-	///         empty (its size is 0) or if there isn't any
-	///         string of bytes managed by the memory object.
+	/// \brief Return a pointer to the memory managed by the
+	///         object.
 	///
-	/// @return true if the managed string of bytes is empty
-	///          (its size is 0) or if there isn't any string
-	///          of bytes managed by the memory object (a
-	///          call to getStringPointer() returns 0),
-	///          otherwise it returns false
+	/// @return a pointer to the data managed by the object
+	///
+	///////////////////////////////////////////////////////////
+	imbxUint8* data();
+
+	/// \brief Return true if the size of the managed memory
+	///         is 0.
+	///
+	/// @return true if the managed memory's size is 0 or
+	///          false otherwise
 	///
 	///////////////////////////////////////////////////////////
 	bool empty();
 
 	/// \brief Copy the specified array of bytes into the
-	///         managed string.
-	///
-	/// If the object doesn't have any managed string, then a
-	///  new string of bytes is created and attached to the
-	///  memory object.
+	///         managed memory.
 	///
 	/// @param pSource      a pointer to the buffer containing
 	///                      the bytes to be copied
 	/// @param sourceLength the number of bytes stored in the
 	///                      buffer pSource and to be copied
-	///                      into the managed string of bytes.
+	///                      into the managed memory
 	///
 	///////////////////////////////////////////////////////////
 	void assign(imbxUint8* pSource, imbxUint32 sourceLength);

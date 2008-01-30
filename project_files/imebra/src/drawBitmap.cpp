@@ -168,7 +168,7 @@ imbxUint8* drawBitmap::getOutputBitmap(imbxInt32* pWidthPixels, imbxInt32* pHeig
 	*pWidthPixels = m_destBitmapWidth;
 	*pHeightPixels = m_destBitmapHeight;
 	*pRowLengthBytes = m_destBitmapRowSize;
-	return (imbxUint8*)(m_finalBitmap->getStringPointer()->data());
+	return (imbxUint8*)(m_finalBitmap->data());
 }
 
 
@@ -238,7 +238,7 @@ void drawBitmap::doTransform()
 		m_sourcePixelIndex.get()[scanPixelsX - m_visibleTopLeftX] = scanPixelsX * (imageSizeX << leftShiftX) / m_totalWidthPixels;
 	}
 
-	imbxUint8* pFinalBuffer = (imbxUint8*)(m_finalBitmap->getStringPointer()->data());
+	imbxUint8* pFinalBuffer = (imbxUint8*)(m_finalBitmap->data());
 	imbxInt32 nextRowGap = m_destBitmapRowSize - m_destBitmapWidth * 3;
 
 	for(imbxInt32 scanY = m_visibleTopLeftY; scanY != m_visibleBottomRightY; ++scanY)

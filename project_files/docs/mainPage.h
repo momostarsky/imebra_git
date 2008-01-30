@@ -63,6 +63,20 @@ A detailed reference of the C++ classes that compose Imebra is included in
 
 \section changeLog Changes log
 
+\subsection since_0_0_35 Changes since version 0.0.35 (Alpha)
+
+- Closes #7 (memoryPool isn't thread safe)
+- The memory string now is managed by an auto_ptr
+- In the memoryPool minimized the number of moved pointers when a memory object is reused
+- The dataSet doesn't need to retrieve the images handlers anymore when updating the offsets table
+- The dicom codec doesn't need to retrieve the handlers anymore when calculating the tag size
+- viewHelper now accepts a null pointer as image
+- VOILUT now returns the right voilut description
+- puntoexe::memory hides the string of bytes
+- Added the class puntoexe::imebra::waveform to handle waveforms embedded in puntoexe::imebra::dataSet
+- Added SWIG headers (partial)
+
+
 \subsection since_0_0_34 Changes since version 0.0.34 (Alpha)
 
 - Closes #4 (The function jpegCodec::writeTag() always writes a tagId=0 on high-endian architectures)

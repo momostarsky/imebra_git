@@ -63,22 +63,17 @@ void memoryStream::write(imbxUint32 startPosition, imbxUint8* pBuffer, imbxUint3
 
 	lockObject lockThis(this);
 
-	// Get a pointer to the memory
+	// Copy the buffer into the memory
 	///////////////////////////////////////////////////////////
-	stringUint8* pString = m_memory->getStringPointer();
-
-	if(startPosition == pString->size())
+	if(startPosition + bufferLength > m_memory->size())
 	{
-		pString->append(pBuffer, bufferLength);
+		imbxUint32 newSize = startPosition + bufferLength;
+		imbxUint32 reserveSize = ((newSize + 1023) >> 10) << 10; // preallocate blocks of 1024 bytes
+		m_memory->reserve(reserveSize);
+		m_memory->resize(startPosition + bufferLength);
 	}
-	else
-	{
-		if(startPosition + bufferLength > pString->size())
-		{
-			pString->resize(startPosition + bufferLength);
-		}
-		pString->replace(startPosition, bufferLength, pBuffer);
-	}
+	
+	::memcpy(m_memory->data() + startPosition, pBuffer, bufferLength);
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -104,14 +99,9 @@ imbxUint32 memoryStream::read(imbxUint32 startPosition, imbxUint8* pBuffer, imbx
 
 	lockObject lockThis(this);
 
-	// Get a pointer to the memory
-	///////////////////////////////////////////////////////////
-	stringUint8* pString = m_memory->getStringPointer();
-
-	imbxUint32 memorySize = (imbxUint32)pString->size();
-	
 	// Don't read if the requested position isn't valid
 	///////////////////////////////////////////////////////////
+	imbxUint32 memorySize = m_memory->size();
 	if(startPosition >= memorySize)
 	{
 		return 0;
@@ -130,7 +120,7 @@ imbxUint32 memoryStream::read(imbxUint32 startPosition, imbxUint8* pBuffer, imbx
 		return 0;
 	}
 
-	::memcpy(pBuffer, pString->data() + startPosition, copySize);
+	::memcpy(pBuffer, m_memory->data() + startPosition, copySize);
 
 	return copySize;
 

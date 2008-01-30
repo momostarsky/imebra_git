@@ -73,6 +73,10 @@ class dataHandler : public baseObject, public charsetsList
 	friend class puntoexe::imebra::transaction;
 
 public:
+	// Contructor
+	///////////////////////////////////////////////////////////
+	dataHandler(): m_bCommitted(false){}
+
 	// The data handler is disconnected
 	///////////////////////////////////////////////////////////
 	virtual bool preDelete();
@@ -646,6 +650,10 @@ public:
 	//@}
 
 protected:
+	// true if the buffer has been committed
+	///////////////////////////////////////////////////////////
+	bool m_bCommitted;
+
 	// Pointer to the connected buffer
 	///////////////////////////////////////////////////////////
 	ptr<buffer> m_buffer;

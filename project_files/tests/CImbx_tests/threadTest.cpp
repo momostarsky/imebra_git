@@ -117,7 +117,7 @@ void threadTest::testThreads()
 	DWORD startTime = GetTickCount();
 	test.release();
 	DWORD endTime = GetTickCount();
-	CPPUNIT_ASSERT(endTime - startTime >= 290 && endTime - startTime <= 380);
+	CPPUNIT_ASSERT(endTime - startTime >= 250 && endTime - startTime <= 380);
 
 	test = ptr<thread>(new thread(300, 200));
 	CPPUNIT_ASSERT(!test->isRunning());

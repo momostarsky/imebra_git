@@ -40,6 +40,7 @@ Please note that the file doesn't include the file viewHelper.h.
 #include "dicomCodec.h"
 #include "dicomDict.h"
 #include "image.h"
+#include "waveform.h"
 #include "jpegCodec.h"
 #include "LUT.h"
 #include "modalityVOILUT.h"

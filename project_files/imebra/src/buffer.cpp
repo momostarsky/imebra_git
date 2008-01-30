@@ -633,9 +633,11 @@ void buffer::copyBack(handlers::dataHandler* pDisconnectHandler)
 	
 	// The buffer's size must be an even number
 	///////////////////////////////////////////////////////////
-	if(m_temporaryMemory->size() & 0x1)
+	imbxUint32 memorySize = m_temporaryMemory->size();
+	if((memorySize & 0x1) != 0)
 	{
-		*(m_temporaryMemory->getStringPointer()) += pDisconnectHandler->getPaddingByte();
+		m_temporaryMemory->resize(++memorySize);
+		*(m_temporaryMemory->data() + (memorySize - 1)) = pDisconnectHandler->getPaddingByte();
 	}
 
 	// Adjust the buffer's type

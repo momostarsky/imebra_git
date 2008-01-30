@@ -113,7 +113,7 @@ void channel::allocate(imbxUint32 sizeX, imbxUint32 sizeY)
 	m_sizeY = sizeY;
 	m_bufferSize = sizeX * sizeY;
 	m_memory = ptr<memory>(memoryPool::getMemoryPool()->getMemory(m_bufferSize * sizeof(imbxInt32) ));
-	m_pBuffer = (imbxInt32*)(m_memory->getStringPointer()->c_str());
+	m_pBuffer = (imbxInt32*)(m_memory->data());
 
 	::memset(m_pBuffer, 0, m_bufferSize * sizeof(imbxInt32));
 

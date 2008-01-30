@@ -1659,6 +1659,27 @@
 					</FileConfiguration>
 				</File>
 				<File
+					RelativePath="..\..\imebra\src\waveform.cpp">
+					<FileConfiguration
+						Name="Debug|Win32">
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32">
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug_iconv|Win32">
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"/>
+					</FileConfiguration>
+				</File>
+				<File
 					RelativePath="..\..\imebra\src\YBRFULLToMONOCHROME2.cpp">
 					<FileConfiguration
 						Name="Debug|Win32">
@@ -1886,6 +1907,9 @@
 				</File>
 				<File
 					RelativePath="..\..\imebra\include\VOILUT.h">
+				</File>
+				<File
+					RelativePath="..\..\imebra\include\waveform.h">
 				</File>
 				<File
 					RelativePath="..\..\imebra\include\YBRFULLToMONOCHROME2.h">
@@ -2219,6 +2243,31 @@
 			Filter="">
 			<File
 				RelativePath="..\..\..\automatic_build.xml">
+			</File>
+		</Filter>
+		<Filter
+			Name="documentation"
+			Filter="">
+			<File
+				RelativePath="..\..\docs\a_license.h">
+			</File>
+			<File
+				RelativePath="..\..\docs\b_imebra_structure.h">
+			</File>
+			<File
+				RelativePath="..\..\docs\c_quick_tour.h">
+			</File>
+			<File
+				RelativePath="..\..\docs\d_addToProject.h">
+			</File>
+			<File
+				RelativePath="..\..\docs\e_unicode.h">
+			</File>
+			<File
+				RelativePath="..\..\docs\f_transactions_locks.h">
+			</File>
+			<File
+				RelativePath="..\..\docs\mainPage.h">
 			</File>
 		</Filter>
 		<File

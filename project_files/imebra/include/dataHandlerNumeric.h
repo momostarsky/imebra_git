@@ -545,9 +545,9 @@ public:
 	{
 		PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::setSize");
 
-		m_memory->getStringPointer()->resize(elementsNumber * getUnitSize(), 0);
-		m_pMemoryString = (dataHandlerType*)m_memory->getStringPointer()->data();
-		m_pMemoryStringEnd = (imbxUint8*)m_pMemoryString + m_memory->getStringPointer()->length();
+		m_memory->resize(elementsNumber * getUnitSize());
+		m_pMemoryString = (dataHandlerType*)m_memory->data();
+		m_pMemoryStringEnd = (imbxUint8*)m_pMemoryString + m_memory->size();
 		setPointer(0);
 
 		PUNTOEXE_FUNCTION_END();
@@ -560,8 +560,8 @@ public:
 		PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::parseBuffer");
 
 		m_memory = memoryBuffer;
-		m_pMemoryString = (dataHandlerType*)memoryBuffer->getStringPointer()->data();
-		m_pMemoryStringEnd = (imbxUint8*)m_pMemoryString + memoryBuffer->getStringPointer()->length() / sizeof(dataHandlerType);
+		m_pMemoryString = (dataHandlerType*)memoryBuffer->data();
+		m_pMemoryStringEnd = (imbxUint8*)m_pMemoryString + memoryBuffer->size() / sizeof(dataHandlerType);
 
 		PUNTOEXE_FUNCTION_END();
 	}
@@ -572,7 +572,7 @@ public:
 	{
 		PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::buildBuffer");
 
-		memoryBuffer->attach(m_memory->detach());
+		memoryBuffer->transfer(m_memory);
 
 		PUNTOEXE_FUNCTION_END();
 	}

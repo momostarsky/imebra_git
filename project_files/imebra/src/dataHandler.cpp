@@ -46,14 +46,12 @@ bool dataHandler::preDelete()
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandler::preDelete");
 
-	if(m_buffer != 0)
+	if(!m_bCommitted)
 	{
-		{ // lock context
-			lockObject lockAccess(m_buffer.get());
+		lockObject lockAccess(m_buffer.get());
 
-			copyBack();
-			commit();
-		}
+		copyBack();
+		commit();
 	}
 	return true;
 
@@ -84,7 +82,7 @@ void dataHandler::commit()
 	}
 
 	m_buffer->commit();
-	m_buffer.release();
+	m_bCommitted = true;
 
 	PUNTOEXE_FUNCTION_END();
 }
