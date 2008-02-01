@@ -92,16 +92,6 @@ public:
 	///////////////////////////////////////////////////////////
 	imbxUint32 getBitsAllocated();
 
-	/// \brief Retrieve the padding value.
-	///         (tag 5400,100A).
-	///
-	/// @return the padding value, or the value that represents
-	///          a discarded sample (e.g.: probes not 
-	///          connected)
-	///
-	///////////////////////////////////////////////////////////
-	imbxUint32 getPaddingValue();
-
 	/// \brief Return the data interpretation string 
 	///         (tag 5400,1006).
 	///
@@ -131,8 +121,8 @@ public:
 	/// @param paddingValue the value that the function must
 	///                      write in the returned data in
 	///                      place of the original padding
-	///                      value returned by 
-	///                      getPaddingValue()
+	///                      value. Specify a number
+	///                      outside the range -32768..65535
 	/// @return a data handler attached to ready to use data.
 	///        Use handlers::dataHandler->GetSignedLong() or 
 	///        handlers::dataHandler->GetSignedLongIncPointer()
