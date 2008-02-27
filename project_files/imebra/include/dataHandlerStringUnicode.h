@@ -16,6 +16,7 @@ $fileHeader$
 #include "charsetsList.h"
 
 
+
 ///////////////////////////////////////////////////////////
 //
 // Everything is in the namespace puntoexe::imebra
@@ -58,7 +59,7 @@ public:
 	///                      the string
 	/// 
 	///////////////////////////////////////////////////////////
-	virtual void setCharsetsList(tCharsetsList* pCharsetsList);
+	virtual void setCharsetsList(charsetsList::tCharsetsList* pCharsetsList);
 	
 	/// \internal
 	/// \brief Retrieve the charset used in the encoded string
@@ -67,7 +68,7 @@ public:
 	///                      dicom charsets used in the string
 	///
 	///////////////////////////////////////////////////////////
-	virtual void getCharsetsList(tCharsetsList* pCharsetsList);
+	virtual void getCharsetsList(charsetsList::tCharsetsList* pCharsetsList);
 
 protected:
 	// Convert a string to unicode, using the dicom charsets

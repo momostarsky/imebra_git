@@ -24,7 +24,7 @@ void unicodeStringHandlerTest::unicodeTest()
 
 	{
 		ptr<dataSet> testDataSet(new dataSet);
-		tCharsetsList charsets;
+		charsetsList::tCharsetsList charsets;
 		charsets.push_back(L"ISO_IR 192");
 		testDataSet->setCharsetsList(&charsets);
 
@@ -43,7 +43,7 @@ void unicodeStringHandlerTest::unicodeTest()
 		CPPUNIT_ASSERT(testDataSet->getUnicodeString(0x0010, 0, 0x0010, 0) == patientName0);
 		CPPUNIT_ASSERT(testDataSet->getUnicodeString(0x0010, 0, 0x0010, 1) == patientName1);
 		
-		tCharsetsList charsets;
+		charsetsList::tCharsetsList charsets;
 		testDataSet->getCharsetsList(&charsets);
 		CPPUNIT_ASSERT(charsets.size() == 1 && charsets.front()==L"ISO_IR 192");
 	}
@@ -77,7 +77,7 @@ void unicodeStringHandlerTest::iso2022Test()
 		CPPUNIT_ASSERT(check0 == patientName0);
 		CPPUNIT_ASSERT(check1 == patientName1);
 		
-		tCharsetsList charsets;
+		charsetsList::tCharsetsList charsets;
 		testDataSet->getCharsetsList(&charsets);
 		CPPUNIT_ASSERT(charsets.size() == 4 && charsets.front()==L"ISO 2022 IR 6");
 	}

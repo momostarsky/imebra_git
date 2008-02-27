@@ -17,6 +17,9 @@ namespace puntoexe
 namespace imebra
 {
 
+namespace charsetsList
+{
+
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -42,7 +45,7 @@ namespace imebra
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void charsetsList::updateCharsets(tCharsetsList* pCharsetsList, tCharsetsList* pDestinationCharsetsList)
+void updateCharsets(tCharsetsList* pCharsetsList, tCharsetsList* pDestinationCharsetsList)
 {
 	PUNTOEXE_FUNCTION_START(L"charsetsList::updateCharsets");
 
@@ -88,7 +91,7 @@ void charsetsList::updateCharsets(tCharsetsList* pCharsetsList, tCharsetsList* p
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void charsetsList::copyCharsets(tCharsetsList* pSourceCharsetsList, tCharsetsList* pDestinationCharsetsList)
+void copyCharsets(tCharsetsList* pSourceCharsetsList, tCharsetsList* pDestinationCharsetsList)
 {
 	PUNTOEXE_FUNCTION_START(L"charsetsList::copyCharsets");
 
@@ -100,6 +103,7 @@ void charsetsList::copyCharsets(tCharsetsList* pSourceCharsetsList, tCharsetsLis
 	PUNTOEXE_FUNCTION_END();
 }
 
+} // namespace charsetsList
 
 } // namespace imebra
 

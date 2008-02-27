@@ -426,12 +426,12 @@ void dataHandler::setDate(
 	return;
 }
 
-void dataHandler::setCharsetsList(tCharsetsList* /* pCharsetsList */)
+void dataHandler::setCharsetsList(charsetsList::tCharsetsList* /* pCharsetsList */)
 {
 	// Intentionally empty
 }
 
-void dataHandler::getCharsetsList(tCharsetsList* /* pCharsetsList */)
+void dataHandler::getCharsetsList(charsetsList::tCharsetsList* /* pCharsetsList */)
 {
 	// Intentionally empty
 }

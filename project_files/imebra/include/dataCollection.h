@@ -15,6 +15,7 @@ $fileHeader$
 #include "data.h"
 #include "charsetsList.h"
 
+
 #include <map>
 #include <string>
 
@@ -223,10 +224,10 @@ public:
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 template <class collectionType>
-class dataCollection : public baseObject, public charsetsList
+class dataCollection : public baseObject
 {
 public:
-	dataCollection(ptr<baseObject> externalLock): baseObject(externalLock), charsetsList(){}
+	dataCollection(ptr<baseObject> externalLock): baseObject(externalLock) {}
 
 	/// \internal
 	/// \brief Set the charsets used in the collection
@@ -240,10 +241,10 @@ public:
 	///                       a local list
 	///
 	///////////////////////////////////////////////////////////
-	virtual void setCharsetsList(tCharsetsList* pCharsetsList)
+	virtual void setCharsetsList(charsetsList::tCharsetsList* pCharsetsList)
 	{
-		m_charsets.clear();
-		updateCharsets(pCharsetsList, &m_charsets);
+		m_charsetsList.clear();
+		charsetsList::updateCharsets(pCharsetsList, &m_charsetsList);
 		
 		for(
 			typename std::map<imbxUint32, ptr<collectionType> >::iterator dataIterator=m_collection.begin(); 
@@ -266,20 +267,20 @@ public:
 	///                       be filled with the used charsets
 	///
 	///////////////////////////////////////////////////////////
-	virtual void getCharsetsList(tCharsetsList* pCharsetsList)
+	virtual void getCharsetsList(charsetsList::tCharsetsList* pCharsetsList)
 	{
-		m_charsets.clear();
+		m_charsetsList.clear();
 		for(
 			typename std::map<imbxUint32, ptr<collectionType> >::iterator dataIterator=m_collection.begin(); 
 			dataIterator!=m_collection.end(); 
 			++dataIterator)
 		{
-			tCharsetsList charsets;
+			charsetsList::tCharsetsList charsets;
 			dataIterator->second->getCharsetsList(&charsets);
-			updateCharsets(&charsets, &m_charsets);
+			charsetsList::updateCharsets(&charsets, &m_charsetsList);
 		}
 
-		copyCharsets(&m_charsets, pCharsetsList);
+		charsetsList::copyCharsets(&m_charsetsList, pCharsetsList);
 	}
 
 
@@ -322,7 +323,7 @@ protected:
 
 		imbxUint32 dataUid = (((imbxUint32)dataId)<<16) | (imbxUint32)order;
 		m_collection[dataUid]=pData;
-		pData->setCharsetsList(&m_charsets);
+		pData->setCharsetsList(&m_charsetsList);
 
 		PUNTOEXE_FUNCTION_END();
 	}
@@ -369,11 +370,11 @@ protected:
 	///////////////////////////////////////////////////////////
 	std::map<imbxUint32, ptr<collectionType> > m_collection;
 
+	charsetsList::tCharsetsList m_charsetsList;
 };
 
 #ifdef SWIG
-	%template(groupCollection) dataCollection<dataGroup>;
-	%template(tagCollection) dataCollection<data>;
+	%template() dataCollection<data>;
 #endif
 
 } // namespace imebra

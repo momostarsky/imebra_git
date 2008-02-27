@@ -15,6 +15,7 @@ $fileHeader$
 #include "charsetsList.h"
 
 
+
 ///////////////////////////////////////////////////////////
 //
 // Everything is in the namespace puntoexe::imebra
@@ -65,7 +66,7 @@ namespace handlers
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class dataHandler : public baseObject, public charsetsList
+class dataHandler : public baseObject
 {
 	// buffer & transaction are friend of this class
 	///////////////////////////////////////////////////////////
@@ -269,7 +270,7 @@ public:
 	/// @param pCharsetsList a list of dicom charsets
 	///
 	///////////////////////////////////////////////////////////
-	virtual void setCharsetsList(tCharsetsList* pCharsetsList);
+	virtual void setCharsetsList(charsetsList::tCharsetsList* pCharsetsList);
 
 	/// \internal
 	/// \brief Retrieve the charsets used in the string.
@@ -278,7 +279,7 @@ public:
 	///                      dicom charsets used in the string
 	///
 	///////////////////////////////////////////////////////////
-	virtual void getCharsetsList(tCharsetsList* pCharsetsList);
+	virtual void getCharsetsList(charsetsList::tCharsetsList* pCharsetsList);
 
 	//@}
 
@@ -659,6 +660,8 @@ protected:
 	ptr<buffer> m_buffer;
 
 	std::string m_bufferType;
+
+	charsetsList::tCharsetsList m_charsetsList;
 };
 
 } // namespace handlers

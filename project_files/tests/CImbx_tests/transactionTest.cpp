@@ -18,7 +18,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(puntoexe::imebra::tests::transactionTest);
 void transactionTest::testOneTransaction()
 {
 	ptr<dataSet> newDataSet(new dataSet);
-	tCharsetsList charsets;
+	charsetsList::tCharsetsList charsets;
 	charsets.push_back(L"ISO_IR 100");
 	newDataSet->setCharsetsList(&charsets);
 
@@ -57,7 +57,7 @@ void transactionTest::testOneTransaction()
 void transactionTest::testNestedTransactions0()
 {
 	ptr<dataSet> newDataSet(new dataSet);
-	tCharsetsList charsets;
+	charsetsList::tCharsetsList charsets;
 	charsets.push_back(L"ISO_IR 100");
 	newDataSet->setCharsetsList(&charsets);
 
@@ -108,7 +108,7 @@ void transactionTest::testNestedTransactions0()
 void transactionTest::testNestedTransactions1()
 {
 	ptr<dataSet> newDataSet(new dataSet);
-	tCharsetsList charsets;
+	charsetsList::tCharsetsList charsets;
 	charsets.push_back(L"ISO_IR 100");
 	newDataSet->setCharsetsList(&charsets);
 
@@ -160,7 +160,7 @@ void transactionTest::testNestedTransactions1()
 void transactionTest::testNestedTransactionsFail0()
 {
 	ptr<dataSet> newDataSet(new dataSet);
-	tCharsetsList charsets;
+	charsetsList::tCharsetsList charsets;
 	charsets.push_back(L"ISO_IR 6");
 	newDataSet->setCharsetsList(&charsets);
 
@@ -208,7 +208,7 @@ void transactionTest::testNestedTransactionsFail0()
 void transactionTest::testNestedTransactionsFail1()
 {
 	ptr<dataSet> newDataSet(new dataSet);
-	tCharsetsList charsets;
+	charsetsList::tCharsetsList charsets;
 	charsets.push_back(L"ISO_IR 100");
 	newDataSet->setCharsetsList(&charsets);
 

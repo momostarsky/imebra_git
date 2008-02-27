@@ -13,6 +13,7 @@ $fileHeader$
 #include "../../base/include/baseObject.h"
 #include "../../base/include/streamController.h"
 #include "../../base/include/memory.h"
+
 #include "charsetsList.h"
 
 ///////////////////////////////////////////////////////////
@@ -24,6 +25,7 @@ namespace puntoexe
 {
 	class streamReader;
 	class streamWriter;
+
 
 namespace imebra
 {
@@ -58,7 +60,7 @@ namespace handlers
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class buffer : public baseObject, public charsetsList
+class buffer : public baseObject
 {
 
 public:
@@ -262,8 +264,70 @@ public:
 	void copyBack(handlers::dataHandler* pDisconnectHandler);
 	void commit();
 
-	virtual void setCharsetsList(tCharsetsList* pCharsetsList);
-	virtual void getCharsetsList(tCharsetsList* pCharsetsList);
+	///////////////////////////////////////////////////////////
+	/// \name Charsets
+	///
+	///////////////////////////////////////////////////////////
+	//@{
+
+	/// \brief Defines the charsets that should be used by
+	///         the object.
+	///
+	/// The valid charsets are:
+	/// - ""
+    /// - "ISO_IR 6"
+	/// - "ISO_IR 100"
+	/// - "ISO_IR 101"
+	/// - "ISO_IR 109"
+	/// - "ISO_IR 110"
+	/// - "ISO_IR 144"
+	/// - "ISO_IR 127"
+	/// - "ISO_IR 126"
+	/// - "ISO_IR 138"
+	/// - "ISO_IR 148"
+	/// - "ISO_IR 13"
+	/// - "ISO_IR 166"
+	/// - "ISO 2022 IR 6"
+	/// - "ISO 2022 IR 100"
+	/// - "ISO 2022 IR 101"
+	/// - "ISO 2022 IR 109"
+	/// - "ISO 2022 IR 110"
+	/// - "ISO 2022 IR 144"
+	/// - "ISO 2022 IR 127"
+	/// - "ISO 2022 IR 126"
+	/// - "ISO 2022 IR 138"
+	/// - "ISO 2022 IR 148"
+	/// - "ISO 2022 IR 13"
+	/// - "ISO 2022 IR 166"
+	/// - "ISO 2022 IR 87"
+	/// - "ISO 2022 IR 159"
+	/// - "ISO 2022 IR 149"
+	/// - "ISO_IR 192" (UTF-8)
+	/// - "GB18030"
+	///
+	/// @param pCharsetsList  a list of charsets that can be
+	///                        used by the dicom object.
+	///                       The default charsets must be 
+	///                        the first item in the list
+	///
+	///////////////////////////////////////////////////////////
+	virtual void setCharsetsList(charsetsList::tCharsetsList* pCharsetsList);
+	
+	/// \brief Retrieve the charsets used by the dicom object.
+	///
+	/// If during the operation an error is detected (diffetent
+	///  objects use different default charsets) then
+	///  the exception charsetListExceptionDiffDefault is 
+	///  thrown.
+	///
+	/// @param pCharsetsList  a pointer to a list that will
+	///                        be filled with the used 
+	///                        charsets
+	///
+	///////////////////////////////////////////////////////////
+	virtual void getCharsetsList(charsetsList::tCharsetsList* pCharsetsList);
+
+	//@}
 
 protected:
 	// Return a data handler.
@@ -283,7 +347,7 @@ private:
 	//  the two phase operation copyBack/commit
 	///////////////////////////////////////////////////////////
 	ptr<memory> m_temporaryMemory;
-	tCharsetsList m_temporaryCharsets;
+	charsetsList::tCharsetsList m_temporaryCharsets;
 	std::string m_temporaryBufferType;
 	
 protected:
@@ -302,12 +366,15 @@ protected:
 	streamController::tByteOrdering m_originalEndianType; // < Original endian type
 	
 private:
+	// Charset list
+	///////////////////////////////////////////////////////////
+	charsetsList::tCharsetsList m_charsetsList;
+
 	// Buffer's version
 	///////////////////////////////////////////////////////////
 	imbxUint32 m_version;
 	
 };
-
 
 ///////////////////////////////////////////////////////////
 /// \brief This is the base class for the exceptions thrown

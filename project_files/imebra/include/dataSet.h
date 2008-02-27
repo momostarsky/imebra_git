@@ -14,6 +14,7 @@ $fileHeader$
 #include "dataGroup.h"
 #include "../../base/include/exception.h"
 #include "codec.h"
+
 #include <vector>
 
 
@@ -32,11 +33,9 @@ namespace imebra
 {
 
 //The following classes are used in this declaration file
-class dataGroup;
 class image;
 class lut;
 class waveform;
-
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////

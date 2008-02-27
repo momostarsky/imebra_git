@@ -1401,12 +1401,12 @@ std::string dataSet::getDataType(imbxUint16 groupId, imbxUint16 order, imbxUint1
 
 void dataSet::updateCharsetTag()
 {
-	tCharsetsList charsets;
+	charsetsList::tCharsetsList charsets;
 	getCharsetsList(&charsets);
 	ptr<handlers::dataHandler> charsetHandler(getDataHandler(0x0008, 0, 0x0005, 0, true));
 	charsetHandler->setSize((imbxUint32)(charsets.size()));
 	charsetHandler->setPointer(0);
-	for(tCharsetsList::iterator scanCharsets = charsets.begin(); scanCharsets != charsets.end(); ++scanCharsets)
+	for(charsetsList::tCharsetsList::iterator scanCharsets = charsets.begin(); scanCharsets != charsets.end(); ++scanCharsets)
 	{
 		charsetHandler->setUnicodeString(*scanCharsets);
 		charsetHandler->incPointer();
@@ -1425,7 +1425,7 @@ void dataSet::updateCharsetTag()
 ///////////////////////////////////////////////////////////
 void dataSet::updateTagsCharset()
 {
-	tCharsetsList charsets;
+	charsetsList::tCharsetsList charsets;
 	ptr<handlers::dataHandler> charsetHandler(getDataHandler(0x0008, 0, 0x0005, 0, false));
 	if(charsetHandler != 0)
 	{

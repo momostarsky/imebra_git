@@ -64,7 +64,6 @@ namespace imebra
 ///////////////////////////////////////////////////////////
 buffer::buffer(ptr<baseObject> externalLock, std::string defaultType /* ="" */): 
 	baseObject(externalLock), 
-		charsetsList(),
 		m_version(0),
 		m_originalBufferPosition(0),
 		m_originalBufferLength(0),
@@ -103,7 +102,6 @@ buffer::buffer(ptr<baseObject> externalLock,
 		imbxUint32 wordLength,
 		streamController::tByteOrdering endianType):
 	baseObject(externalLock), 
-		charsetsList(),
 		m_version(0),
 		m_originalStream(originalStream),
 		m_originalBufferPosition(bufferPosition),
@@ -431,7 +429,7 @@ ptr<handlers::dataHandler> buffer::getDataHandler(bool bWrite, bool bRaw, imbxUi
 		transactionsManager::addHandlerToTransaction(handler);
 	}
 	handler->m_bufferType = m_bufferType;
-	handler->setCharsetsList(&m_charsets);
+	handler->setCharsetsList(&m_charsetsList);
 	handler->parseBuffer(parseMemory);
 
 	// Rewind the data pointer
@@ -626,10 +624,10 @@ void buffer::copyBack(handlers::dataHandler* pDisconnectHandler)
 	// Update the charsets
 	///////////////////////////////////////////////////////////
 	m_temporaryCharsets.clear();
-	copyCharsets(&m_charsets, &m_temporaryCharsets);
-	tCharsetsList charsets;
+	charsetsList::copyCharsets(&m_charsetsList, &m_temporaryCharsets);
+	charsetsList::tCharsetsList charsets;
 	pDisconnectHandler->getCharsetsList(&charsets);
-	updateCharsets(&charsets, &m_temporaryCharsets);
+	charsetsList::updateCharsets(&charsets, &m_temporaryCharsets);
 	
 	// The buffer's size must be an even number
 	///////////////////////////////////////////////////////////
@@ -675,8 +673,8 @@ void buffer::commit()
 
 	// Commit the charsets
 	///////////////////////////////////////////////////////////
-	m_charsets.clear();
-	copyCharsets(&m_temporaryCharsets, &m_charsets);
+	m_charsetsList.clear();
+	charsetsList::copyCharsets(&m_temporaryCharsets, &m_charsetsList);
 	m_temporaryCharsets.clear();
 
 	// Increase the buffer's version
@@ -718,14 +716,14 @@ std::string buffer::getDataType()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void buffer::setCharsetsList(tCharsetsList* pCharsetsList)
+void buffer::setCharsetsList(charsetsList::tCharsetsList* pCharsetsList)
 {
 	PUNTOEXE_FUNCTION_START(L"buffer::setCharsetsList");
 
 	lockObject lockAccess(this);
 
-	m_charsets.clear();
-	updateCharsets(pCharsetsList, &m_charsets);
+	m_charsetsList.clear();
+	charsetsList::updateCharsets(pCharsetsList, &m_charsetsList);
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -740,11 +738,11 @@ void buffer::setCharsetsList(tCharsetsList* pCharsetsList)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void buffer::getCharsetsList(tCharsetsList* pCharsetsList)
+void buffer::getCharsetsList(charsetsList::tCharsetsList* pCharsetsList)
 {
 	PUNTOEXE_FUNCTION_START(L"buffer::getCharsetsList");
 
-	copyCharsets(&m_charsets, pCharsetsList);
+	charsetsList::copyCharsets(&m_charsetsList, pCharsetsList);
 
 	PUNTOEXE_FUNCTION_END();
 }

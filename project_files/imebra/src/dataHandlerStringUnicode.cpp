@@ -91,7 +91,7 @@ std::wstring dataHandlerStringUnicode::convertToUnicode(std::string value)
 
 	// Should we take care of the escape sequences...?
 	///////////////////////////////////////////////////////////
-	if(m_charsets.size() < 2)
+	if(m_charsetsList.size() < 2)
 	{
 		// No, there isn't any escape sequence
 		///////////////////////////////////////////////////////////
@@ -177,9 +177,9 @@ std::string dataHandlerStringUnicode::convertFromUnicode(std::wstring value)
 
 	// We don't have to deal with multiple charsets here
 	///////////////////////////////////////////////////////////
-	if(m_charsets.size() == 1)
+	if(m_charsetsList.size() == 1)
 	{
-		dicomCharsetInformation* pCharset = getCharsetInfo(m_charsets.front());
+		dicomCharsetInformation* pCharset = getCharsetInfo(m_charsetsList.front());
 		if(pCharset != 0 && pCharset->m_escapeSequence.empty())
 		{
 			return m_charsetConversion.fromUnicode(value);
@@ -280,7 +280,7 @@ std::string dataHandlerStringUnicode::convertFromUnicode(std::wstring value)
 					///////////////////////////////////////////////////////////
 					std::wstring dicomCharset = m_dicomCharsets[scanCharsets].m_dicomName;
 					bool bAlreadyUsed = false;
-					for(tCharsetsList::iterator scanUsedCharsets = m_charsets.begin(); scanUsedCharsets != m_charsets.end(); ++scanUsedCharsets)
+					for(charsetsList::tCharsetsList::iterator scanUsedCharsets = m_charsetsList.begin(); scanUsedCharsets != m_charsetsList.end(); ++scanUsedCharsets)
 					{
 						if(*scanUsedCharsets == dicomCharset)
 						{
@@ -290,7 +290,7 @@ std::string dataHandlerStringUnicode::convertFromUnicode(std::wstring value)
 					}
 					if(!bAlreadyUsed)
 					{
-						m_charsets.push_back(dicomCharset);
+						m_charsetsList.push_back(dicomCharset);
 					}
 					break;
 				}
@@ -350,26 +350,26 @@ dicomCharsetInformation* dataHandlerStringUnicode::getCharsetInfo(std::wstring d
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerStringUnicode::setCharsetsList(tCharsetsList* pCharsetsList)
+void dataHandlerStringUnicode::setCharsetsList(charsetsList::tCharsetsList* pCharsetsList)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerStringUnicode::setCharsetInfo");
 
 	// Copy the specified charsets into the tag
 	///////////////////////////////////////////////////////////
-	m_charsets.clear();
-	updateCharsets(pCharsetsList, &m_charsets);
+	m_charsetsList.clear();
+	charsetsList::updateCharsets(pCharsetsList, &m_charsetsList);
 
 	// If no charset has been defined then we use the default 
 	//  one
 	///////////////////////////////////////////////////////////
-	if(m_charsets.empty())
+	if(m_charsetsList.empty())
 	{
-		m_charsets.push_back(m_dicomCharsets[0].m_dicomName);
+		m_charsetsList.push_back(m_dicomCharsets[0].m_dicomName);
 	}
 
 	// Check for the dicom charset's name
 	///////////////////////////////////////////////////////////
-	dicomCharsetInformation* pCharset = getCharsetInfo(m_charsets.front());
+	dicomCharsetInformation* pCharset = getCharsetInfo(m_charsetsList.front());
 	if(pCharset == 0 || pCharset->m_isoRegistration.empty())
 	{
 		PUNTOEXE_THROW(dataHandlerStringUnicodeExceptionUnknownCharset, "Unknown charset");
@@ -393,11 +393,11 @@ void dataHandlerStringUnicode::setCharsetsList(tCharsetsList* pCharsetsList)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerStringUnicode::getCharsetsList(tCharsetsList* pCharsetsList)
+void dataHandlerStringUnicode::getCharsetsList(charsetsList::tCharsetsList* pCharsetsList)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerStringUnicode::getCharsetList");
 
-	copyCharsets(&m_charsets, pCharsetsList);
+	charsetsList::copyCharsets(&m_charsetsList, pCharsetsList);
 
 	PUNTOEXE_FUNCTION_END();
 }

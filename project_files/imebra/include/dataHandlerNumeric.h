@@ -17,6 +17,7 @@ $fileHeader$
 #include "dataHandler.h"
 
 
+
 ///////////////////////////////////////////////////////////
 //
 // Everything is in the namespace puntoexe::imebra
@@ -56,6 +57,9 @@ public:
 	/// @return a reference to the requested value
 	///
 	///////////////////////////////////////////////////////////
+#ifdef SWIG
+	%rename (at) operator[];
+#endif
 	dataHandlerType& operator[](int nSubscript)
 	{
 		return m_pMemoryString[nSubscript];
@@ -590,16 +594,6 @@ protected:
 	ptr<memory> m_memory;
 };
 
-#ifdef SWIG
-	%template(signedByteDataHandler) dataHandlerNumeric<imbxUint8>;
-	%template(unsignedByteDataHandler) dataHandlerNumeric<imbxInt8>;
-	%template(signedWordDataHandler) dataHandlerNumeric<imbxUint16>;
-	%template(unsignedWordDataHandler) dataHandlerNumeric<imbxInt16>;
-	%template(signedDWordDataHandler) dataHandlerNumeric<imbxUint32>;
-	%template(unsignedDWordDataHandler) dataHandlerNumeric<imbxInt32>;
-	%template(doubleDataHandler) dataHandlerNumeric<double>;
-	%template(floatDataHandler) dataHandlerNumeric<float>;
-#endif
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////

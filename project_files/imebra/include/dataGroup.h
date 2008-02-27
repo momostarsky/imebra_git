@@ -14,6 +14,7 @@ $fileHeader$
 #include "dataHandler.h"
 
 
+
 ///////////////////////////////////////////////////////////
 //
 // Everything is in the namespace puntoexe::imebra
@@ -27,7 +28,6 @@ namespace puntoexe
 
 namespace imebra
 {
-
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -189,6 +189,10 @@ public:
 	std::string getDataType(imbxUint16 tagId);
 
 };
+
+#ifdef SWIG
+	%template(dataGroup) dataCollection<dataGroup>;
+#endif
 
 } // namespace imebra
 

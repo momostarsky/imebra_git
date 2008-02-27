@@ -15,6 +15,7 @@ $fileHeader$
 #include "dataSet.h"
 
 
+
 #include <list>
 
 
@@ -131,8 +132,7 @@ public:
 protected:
 	// The list of the registered codecs
 	///////////////////////////////////////////////////////////
-	typedef ptr<codec> ptrCodec;
-	std::list<ptrCodec> m_codecsList;
+	std::list<ptr<codec> > m_codecsList;
 
 
 public:

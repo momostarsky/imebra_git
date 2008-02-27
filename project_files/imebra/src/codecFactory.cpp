@@ -79,7 +79,7 @@ ptr<codec> codecFactory::getCodec(std::wstring transferSyntax)
 	ptr<codecFactory> pFactory(getCodecFactory());
 	lockObject lockAccess(pFactory.get());
 
-	for(std::list<ptrCodec>::iterator scanCodecs=pFactory->m_codecsList.begin(); scanCodecs!=pFactory->m_codecsList.end(); ++scanCodecs)
+	for(std::list<ptr<codec> >::iterator scanCodecs=pFactory->m_codecsList.begin(); scanCodecs!=pFactory->m_codecsList.end(); ++scanCodecs)
 	{
 		if((*scanCodecs)->canHandleTransferSyntax(transferSyntax))
 		{
@@ -127,11 +127,11 @@ ptr<dataSet> codecFactory::load(ptr<streamReader> pStream, imbxUint32 maxSizeBuf
 	// Copy the list of codecs in a local list so we don't have
 	//  to lock the object for a long time
 	///////////////////////////////////////////////////////////
-	std::list<ptrCodec> localCodecsList;
+	std::list<ptr<codec> > localCodecsList;
 	ptr<codecFactory> pFactory(getCodecFactory());
 	{
 		lockObject lockAccess(pFactory.get());
-		for(std::list<ptrCodec>::iterator scanCodecs=pFactory->m_codecsList.begin(); scanCodecs!=pFactory->m_codecsList.end(); ++scanCodecs)
+		for(std::list<ptr<codec> >::iterator scanCodecs=pFactory->m_codecsList.begin(); scanCodecs!=pFactory->m_codecsList.end(); ++scanCodecs)
 		{
 			ptr<codec> copyCodec((*scanCodecs)->createCodec());
 			localCodecsList.push_back(copyCodec);
@@ -139,7 +139,7 @@ ptr<dataSet> codecFactory::load(ptr<streamReader> pStream, imbxUint32 maxSizeBuf
 	}
 
 	ptr<dataSet> pDataSet;
-	for(std::list<ptrCodec>::iterator scanCodecs=localCodecsList.begin(); scanCodecs != localCodecsList.end() && pDataSet == 0; ++scanCodecs)
+	for(std::list<ptr<codec> >::iterator scanCodecs=localCodecsList.begin(); scanCodecs != localCodecsList.end() && pDataSet == 0; ++scanCodecs)
 	{
 		try
 		{

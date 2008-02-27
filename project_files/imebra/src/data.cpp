@@ -229,9 +229,8 @@ ptr<handlers::dataHandler> data::getDataHandler(imbxUint32 bufferId, bool bWrite
 	///////////////////////////////////////////////////////////
 	if(pTempBuffer == 0 && bWrite)
 	{
-		ptr<buffer> ptrBuffer(new buffer(m_externalLock, defaultType));
-		pTempBuffer=ptrBuffer;
-		pTempBuffer->setCharsetsList(&m_charsets);
+		pTempBuffer = new buffer(m_externalLock, defaultType);
+		pTempBuffer->setCharsetsList(&m_charsetsList);
 		m_buffers[bufferId]=pTempBuffer;
 	}
 
@@ -287,9 +286,8 @@ ptr<handlers::dataHandlerRaw> data::getDataHandlerRaw(imbxUint32 bufferId, bool 
 	///////////////////////////////////////////////////////////
 	if( pTempBuffer == 0 && bWrite )
 	{
-		ptr<buffer> ptrBuffer(new buffer(m_externalLock, defaultType));
-		pTempBuffer=ptrBuffer;
-		pTempBuffer->setCharsetsList(&m_charsets);
+		pTempBuffer = new buffer(m_externalLock, defaultType);
+		pTempBuffer->setCharsetsList(&m_charsetsList);
 		m_buffers[bufferId]=pTempBuffer;
 	}
 
@@ -378,8 +376,7 @@ ptr<streamWriter> data::getStreamWriter(imbxUint32 bufferId, std::string dataTyp
 	///////////////////////////////////////////////////////////
 	if(pTempBuffer == 0)
 	{
-		ptr<buffer> ptrBuffer(new buffer(m_externalLock, dataType));
-		pTempBuffer=ptrBuffer;
+		pTempBuffer = new buffer(m_externalLock, dataType);
 		m_buffers[bufferId]=pTempBuffer;
 	}
 
@@ -467,14 +464,14 @@ void data::setDataSet(imbxUint32 dataSetId, ptr<dataSet> pDataSet)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void data::setCharsetsList(tCharsetsList* pCharsetsList)
+void data::setCharsetsList(charsetsList::tCharsetsList* pCharsetsList)
 {
 	PUNTOEXE_FUNCTION_START(L"data::setCharsetsList");
 
 	lockObject lockAccess(this);
 
-	m_charsets.clear();
-	updateCharsets(pCharsetsList, &m_charsets);
+	m_charsetsList.clear();
+	charsetsList::updateCharsets(pCharsetsList, &m_charsetsList);
 
 	for(tEmbeddedDatasetsMap::iterator scanEmbeddedDataSets = m_embeddedDataSets.begin(); scanEmbeddedDataSets != m_embeddedDataSets.end(); ++scanEmbeddedDataSets)
 	{
@@ -500,29 +497,29 @@ void data::setCharsetsList(tCharsetsList* pCharsetsList)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void data::getCharsetsList(tCharsetsList* pCharsetsList)
+void data::getCharsetsList(charsetsList::tCharsetsList* pCharsetsList)
 {
 	PUNTOEXE_FUNCTION_START(L"data::getCharsetsList");
 
 	lockObject lockAccess(this);
 	
-	m_charsets.clear();
+	m_charsetsList.clear();
 
 	for(tEmbeddedDatasetsMap::iterator scanEmbeddedDataSets = m_embeddedDataSets.begin(); scanEmbeddedDataSets != m_embeddedDataSets.end(); ++scanEmbeddedDataSets)
 	{
-		tCharsetsList charsets;
+		charsetsList::tCharsetsList charsets;
 		scanEmbeddedDataSets->second->getCharsetsList(&charsets);
-		updateCharsets(&charsets, &m_charsets);
+		charsetsList::updateCharsets(&charsets, &m_charsetsList);
 	}
 
 	for(tBuffersMap::iterator scanBuffers = m_buffers.begin(); scanBuffers != m_buffers.end(); ++scanBuffers)
 	{
-		tCharsetsList charsets;
+		charsetsList::tCharsetsList charsets;
 		scanBuffers->second->getCharsetsList(&charsets);
-		updateCharsets(&charsets, &m_charsets);
+		charsetsList::updateCharsets(&charsets, &m_charsetsList);
 	}
 
-	copyCharsets(&m_charsets, pCharsetsList);
+	charsetsList::copyCharsets(&m_charsetsList, pCharsetsList);
 
 	PUNTOEXE_FUNCTION_END();
 }

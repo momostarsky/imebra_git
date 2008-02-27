@@ -11,6 +11,7 @@ $fileHeader$
 #define imebraData_20A41D11_C650_410b_B3AA_CD5B3FF63222__INCLUDED_
 
 #include "../../base/include/baseObject.h"
+
 #include "charsetsList.h"
 
 #include <map>
@@ -57,10 +58,10 @@ namespace handlers
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class data : public baseObject, public charsetsList
+class data : public baseObject
 {
 public:
-	data(ptr<baseObject> externalLock): baseObject(externalLock), charsetsList(){}
+	data(ptr<baseObject> externalLock): baseObject(externalLock) {}
 
 	virtual ~data();
 
@@ -293,8 +294,8 @@ public:
 
 	//@}
 
-	virtual void setCharsetsList(tCharsetsList* pCharsetsList);
-	virtual void getCharsetsList(tCharsetsList* pCharsetsList);
+	virtual void setCharsetsList(charsetsList::tCharsetsList* pCharsetsList);
+	virtual void getCharsetsList(charsetsList::tCharsetsList* pCharsetsList);
 
 	// Set a buffer
 	///////////////////////////////////////////////////////////
@@ -312,6 +313,8 @@ protected:
 	typedef ptr<dataSet> ptrDataSet;
 	typedef std::map<imbxUint32, ptrDataSet> tEmbeddedDatasetsMap;
 	tEmbeddedDatasetsMap m_embeddedDataSets;
+
+	charsetsList::tCharsetsList m_charsetsList;
 };
 
 } // namespace imebra
