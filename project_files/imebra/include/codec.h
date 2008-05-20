@@ -275,6 +275,18 @@ public:
 	///////////////////////////////////////////////////////////
 	virtual bool canHandleTransferSyntax(std::wstring transferSyntax)=0;
 
+	/// \brief This function returns true if the codec 
+	///         transfer syntax handled by the code has to be
+	///         encapsulated
+	///
+	/// @param transferSyntax the transfer syntax to check
+	///                         for
+	/// @return true if the transfer syntax specified in
+	///         transferSyntax has to be encapsulated
+	///
+	///////////////////////////////////////////////////////////
+	virtual bool encapsulated(std::wstring transferSyntax)=0;
+
 	//@}
 
 
@@ -401,6 +413,24 @@ public:
 	///
 	///////////////////////////////////////////////////////////
 	codecExceptionCorruptedFile(const std::string& message): codecException(message){}
+};
+
+
+///////////////////////////////////////////////////////////
+/// \brief This exception is thrown when the transfer
+///         syntax is not recognized by the codec.
+///
+///////////////////////////////////////////////////////////
+class codecExceptionWrongTransferSyntax: public codecException
+{
+public:
+	/// \brief Build a codecExceptionWrongTransferSyntax
+	///         exception
+	///
+	/// @param message the message to store into the exception
+	///
+	///////////////////////////////////////////////////////////
+	codecExceptionWrongTransferSyntax(const std::string& message): codecException(message){}
 };
 
 class registerCodec

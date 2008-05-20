@@ -132,6 +132,12 @@ public:
 	///////////////////////////////////////////////////////////
 	virtual bool canHandleTransferSyntax(std::wstring transferSyntax);
 
+	// Returns true if the transfer syntax has to be 
+	//  encapsulated
+	//
+	///////////////////////////////////////////////////////////
+	virtual bool encapsulated(std::wstring transferSyntax);
+
 	// Returns the maximum supported high bit
 	///////////////////////////////////////////////////////////
 	virtual imbxUint32 getMaxHighBit(std::string transferSyntax);

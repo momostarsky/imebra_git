@@ -1073,6 +1073,30 @@ bool jpegCodec::canHandleTransferSyntax(std::wstring transferSyntax)
 }
 
 
+////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////
+//
+//
+// Returns true if the transfer syntax has to be 
+//  encapsulated
+//
+//
+////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////
+bool jpegCodec::encapsulated(std::wstring transferSyntax)
+{
+	PUNTOEXE_FUNCTION_START(L"jpegCodec::canHandleTransferSyntax");
+
+	if(!canHandleTransferSyntax(transferSyntax))
+	{
+		PUNTOEXE_THROW(codecExceptionWrongTransferSyntax, "Cannot handle the transfer syntax");
+	}
+	return true;
+
+	PUNTOEXE_FUNCTION_END();
+}
+
+
 /////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
 //
@@ -1653,13 +1677,15 @@ void jpegCodec::copyImageToJpegChannels(
 			}
 		}
 
-		if(m_bLossless && b2complement)
+		pChannelBuffer = pChannel->m_pBuffer;
+		imbxInt32 or   = ((imbxInt32) - 1) << m_precision;
+		for(imbxUint32 adjustHighBits = pChannel->m_bufferSize; adjustHighBits != 0; --adjustHighBits)
 		{
-			pChannelBuffer = pChannel->m_pBuffer;
-			for(imbxUint32 adjust2complement = pChannel->m_bufferSize; adjust2complement; --adjust2complement)
+			if((*pChannelBuffer & offsetValue) != 0)
 			{
-				*(pChannelBuffer++) &= (((imbxInt32)1)<<m_precision) - 1;
+				*pChannelBuffer |= or;
 			}
+			++pChannelBuffer;
 		}
 	}
 
@@ -1712,7 +1738,7 @@ void jpegCodec::setImage(
 
 	// Write the SOF tag
 	////////////////////////////////////////////////////////////////
-	writeTag(pDestinationStream, m_bLossless ? sof7 : (m_precision <= 8 ? sof0 : sof1));
+	writeTag(pDestinationStream, m_bLossless ? sof3 : (m_precision <= 8 ? sof0 : sof1));
 
 	// Write the quantization tables
 	////////////////////////////////////////////////////////////////
@@ -1803,14 +1829,15 @@ void jpegCodec::writeScan(streamWriter* pDestinationStream, bool bCalcHuffman)
 				
 				for(int scanBlock = pChannel->m_blockMcuXY; scanBlock != 0; --scanBlock)
 				{
-					imbxInt32 value = *(pBuffer++);
+					imbxInt32 value(*pBuffer);
 					if(pChannel->m_losslessPositionX == 0 && pChannel->m_losslessPositionY != 0)
 					{
 						lastValue = *(pBuffer - pChannel->m_sizeX);
 					}
+					++pBuffer;
 					imbxInt32 diff = value - lastValue;
-					imbxInt32 diff1 = value + (1 << m_precision) - lastValue;
-					imbxInt32 diff2 = value - (1 << m_precision) - lastValue;
+					imbxInt32 diff1 = value + ((imbxInt32)1 << m_precision) - lastValue;
+					imbxInt32 diff2 = value - ((imbxInt32)1 << m_precision) - lastValue;
 					if(labs(diff1) < labs(diff))
 					{
 						diff = diff1;

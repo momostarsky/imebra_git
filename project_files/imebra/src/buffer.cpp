@@ -529,9 +529,8 @@ ptr<streamWriter> buffer::getStreamWriter()
 	ptr<handlers::dataHandlerRaw> tempHandlerRaw = getDataHandlerRaw(true);
 	if(tempHandlerRaw != 0)
 	{
-		tempHandlerRaw->setSize(0);
 		ptr<baseStream> localStream(new bufferStream(tempHandlerRaw));
-		writer = ptr<streamWriter>(new streamWriter(localStream));
+		writer = ptr<streamWriter>(new streamWriter(localStream, tempHandlerRaw->getSize()));
 	}
 
 	return writer;

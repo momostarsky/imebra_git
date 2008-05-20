@@ -159,8 +159,6 @@ public:
 	/// A tag can store several buffers: the application
 	///  must specify the buffer's id it wants to deal with.
 	///
-	/// The retrieved stream is always empty.
-	///
 	/// @param tagId    the tag's id, without the group's id.
 	/// @param bufferId the buffer's id (zero based). See
 	///                  data::getDataHandler() for more 

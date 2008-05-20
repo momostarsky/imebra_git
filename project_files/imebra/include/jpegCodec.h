@@ -99,6 +99,12 @@ public:
 	///////////////////////////////////////////////////////////
 	virtual bool canHandleTransferSyntax(std::wstring transferSyntax);
 
+	// Returns true if the transfer syntax has to be 
+	//  encapsulated
+	//
+	///////////////////////////////////////////////////////////
+	virtual bool encapsulated(std::wstring transferSyntax);
+
 	// Return the highest bit that the transfer syntax can
 	//  handle
 	///////////////////////////////////////////////////////////

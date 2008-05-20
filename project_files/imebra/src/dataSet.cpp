@@ -339,25 +339,46 @@ void dataSet::setImage(imbxUint32 frameNumber, ptr<image> pImage, std::wstring t
 	///////////////////////////////////////////////////////////
 	tFrameFirstBufferList frameFirstBufferList;
 
-	// This flag will become true if some images already exist
-	//  in the dataset and we must save the new image using
-	//  the attributes already stored in the dataset
+	// bDontChangeAttributes is true if some images already 
+	//  exist in the dataset and we must save the new image 
+	//  using the attributes already stored
 	///////////////////////////////////////////////////////////
-	bool bDontChangeAttributes = (frameNumber != 0);
+	imbxUint32 numberOfFrames = getUnsignedLong(0x0028, 0, 0x0008, 0);
+	if(frameNumber != numberOfFrames)
+	{
+		PUNTOEXE_THROW(dataSetExceptionWrongFrame, "The frames must be inserted in sequence");
+	}
+	bool bDontChangeAttributes = (numberOfFrames != 0);
+	if(bDontChangeAttributes)
+	{
+		transferSyntax = getUnicodeString(0x0002, 0x0, 0x0010, 0x0);
+	}
+
+	// Select the right codec
+	///////////////////////////////////////////////////////////
+	ptr<codecs::codec> saveCodec(codecs::codecFactory::getCodec(transferSyntax));
+	if(saveCodec == 0L)
+	{
+		PUNTOEXE_THROW(dataSetExceptionUnknownTransferSyntax, "None of the codec support the requested transfer syntax");
+	}
+
+	// Do we have to save the basic offset table?
+	///////////////////////////////////////////////////////////
+	bool bEncapsulated = saveCodec->encapsulated(transferSyntax) || 
+		                 (getDataHandlerRaw(groupId, 0x0, tagId, 0x1, false) != 0);
 
 	// Check if we are dealing with an old Dicom format...
 	///////////////////////////////////////////////////////////
 	std::string dataHandlerType = getDataType(0x7fe0, 0x1, 0x0010);
-	if( !dataHandlerType.empty() )
+	if(!dataHandlerType.empty())
 	{
-		orderId=(imbxUint16)frameNumber;
-		bDontChangeAttributes = true;
+		orderId = (imbxUint16)frameNumber;
+		bEncapsulated = false;
 	}
 	
-	// ...this is a new Dicom format.
-	// The first buffer is reserverd for the images offsets
+	// Encapsulated mode. Check if we have the offsets table
 	///////////////////////////////////////////////////////////
-	else
+	if(bEncapsulated)
 	{
 		// We have to add the offsets buffer
 		///////////////////////////////////////////////////////////
@@ -366,7 +387,7 @@ void dataSet::setImage(imbxUint32 frameNumber, ptr<image> pImage, std::wstring t
 		if(imageHandler0 != 0L && imageHandler0->getSize() != 0 && imageHandler1 == 0L)
 		{
 			// The first image must be moved forward, in order to
-			//  make some room for the offsets buffer
+			//  make some room for the offset table
 			///////////////////////////////////////////////////////////
 			dataHandlerType = imageHandler0->getDataType();
 			ptr<handlers::dataHandlerRaw> moveFirstImage = getDataHandlerRaw(groupId, 0x0, tagId, 0x1, true, dataHandlerType);
@@ -378,14 +399,12 @@ void dataSet::setImage(imbxUint32 frameNumber, ptr<image> pImage, std::wstring t
 			imbxUint32 bufferSize=imageHandler0->getSize();
 			moveFirstImage->setSize(bufferSize);
 			::memcpy(moveFirstImage->getMemoryBuffer(), imageHandler0->getMemoryBuffer(), bufferSize);
-			bDontChangeAttributes = true;
 		}
 
 		// An image in the first buffer already exists.
 		///////////////////////////////////////////////////////////
 		if(imageHandler1 != 0)
 		{
-			bDontChangeAttributes = true;
 			dataHandlerType = imageHandler1->getDataType();
 		}
 
@@ -417,35 +436,6 @@ void dataSet::setImage(imbxUint32 frameNumber, ptr<image> pImage, std::wstring t
 		}
 	}
 
-	// Find the number of frames. We cannot skip frames while
-	//  saving images.
-	///////////////////////////////////////////////////////////
-	imbxUint32 numberOfFrames = getUnsignedLong(0x0028, 0, 0x0008, 0);
-	if(numberOfFrames == 0 && bDontChangeAttributes)
-	{
-		++numberOfFrames;
-	}
-	if(frameNumber > numberOfFrames)
-	{
-		PUNTOEXE_THROW(dataSetExceptionWrongFrame, "The frames must be inserted in sequence");
-	}
-
-	// If the attributes cannot be changed, then load the 
-	//  transfer syntax from the dataset
-	///////////////////////////////////////////////////////////
-	if(bDontChangeAttributes)
-	{
-		transferSyntax = getUnicodeString(0x0002, 0x0, 0x0010, 0x0);
-	}
-
-	// Select the right codec
-	///////////////////////////////////////////////////////////
-	ptr<codecs::codec> saveCodec=codecs::codecFactory::getCodec(transferSyntax);
-	if(saveCodec == 0L)
-	{
-		PUNTOEXE_THROW(dataSetExceptionUnknownTransferSyntax, "None of the codec support the requested transfer syntax");
-	}
-
 	// Set the subsampling flags
 	///////////////////////////////////////////////////////////
 	bool bSubSampledX = quality < codecs::codec::high;
@@ -455,7 +445,8 @@ void dataSet::setImage(imbxUint32 frameNumber, ptr<image> pImage, std::wstring t
 		bSubSampledX = bSubSampledY = false;
 	}
 	bool bInterleaved = false;
-	bool b2complement = false;
+	image::bitDepth depth = pImage->getDepth();
+	bool b2complement = (depth == image::depthS16 || depth == image::depthS8);
 	imbxUint32 channelsNumber = pImage->getChannelsNumber();
 	imbxUint8 allocatedBits = (imbxUint8)(saveCodec->suggestAllocatedBits(transferSyntax, pImage->getHighBit()));
 
@@ -479,7 +470,7 @@ void dataSet::setImage(imbxUint32 frameNumber, ptr<image> pImage, std::wstring t
 	///////////////////////////////////////////////////////////
 	if(dataHandlerType.empty())
 	{
-		dataHandlerType = "OB";
+		dataHandlerType = (bEncapsulated || allocatedBits <= 8) ? "OB" : "OW";
 	}
 
 	// Get a stream to save the image
@@ -517,6 +508,7 @@ void dataSet::setImage(imbxUint32 frameNumber, ptr<image> pImage, std::wstring t
 		setUnsignedLong(0x0028, 0x0, 0x0100, 0x0, allocatedBits);            // allocated bits
 		setUnsignedLong(0x0028, 0x0, 0x0101, 0x0, pImage->getHighBit() + 1); // stored bits
 		setUnsignedLong(0x0028, 0x0, 0x0102, 0x0, pImage->getHighBit());     // high bit
+		setUnsignedLong(0x0028, 0x0, 0x0103, 0x0, b2complement ? 1 : 0);
 		setUnsignedLong(0x0028, 0x0, 0x0002, 0x0, channelsNumber);
 		imbxUint32 imageSizeX, imageSizeY;
 		pImage->getSize(&imageSizeX, &imageSizeY);
@@ -540,7 +532,7 @@ void dataSet::setImage(imbxUint32 frameNumber, ptr<image> pImage, std::wstring t
 
 	// Update the offsets tag with the image's offsets
 	///////////////////////////////////////////////////////////
-	if(firstBufferId == 0)
+	if(!bEncapsulated)
 	{
 		return;
 	}

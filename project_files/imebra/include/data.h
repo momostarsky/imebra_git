@@ -196,8 +196,6 @@ public:
 
 	/// \brief Get a streamWriter connected to a buffer's data.
 	///
-	/// The retrieved stream is always empty.
-	///
 	/// @param bufferId   the id of the buffer for which the
 	///                    streamWriter is required. This 
 	///                    parameter is usually 0

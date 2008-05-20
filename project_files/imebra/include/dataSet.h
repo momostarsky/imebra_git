@@ -860,8 +860,6 @@ public:
 	/// A tag can store several buffers, then the application
 	///  must specify the buffer's id it wants to deal with.
 	///
-	/// The retrieved stream is always empty.
-	///
 	/// @param groupId the group to which the tag belongs
 	/// @param order   if the group is recurring in the file
 	///                 (it appears several times), then use
