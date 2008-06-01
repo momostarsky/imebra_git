@@ -188,10 +188,6 @@ public:
 
 };
 
-#ifdef SWIG
-	%template(dataGroup) dataCollection<dataGroup>;
-#endif
-
 } // namespace imebra
 
 } // namespace puntoexe

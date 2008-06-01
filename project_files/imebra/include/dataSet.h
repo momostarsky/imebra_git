@@ -306,31 +306,6 @@ public:
 	///////////////////////////////////////////////////////////
 	imbxUint32 getFirstAvailFrameBufferId();
 
-	typedef std::list<imbxUint32> tFrameFirstBufferList;
-
-	/// \internal
-	/// \brief Update the frame offset table.
-	///
-	/// This function works only with the new Dicom3 streams,
-	///  not with the old NEMA format.
-	///
-	/// There is no need to call this function; it is 
-	///  called automatically by setImage().
-	///
-	/// Since this function is usually called inside a 
-	///  transaction, the buffer just written could not be
-	///  available to the dataset yet: this is why the
-	///  function needs to know the first and the last buffer
-	///  id used by the added image and the total buffer's
-	///  size.
-	///
-	///////////////////////////////////////////////////////////
-	void updateFrameBufferTable(
-		tFrameFirstBufferList* pFrameFirstBufferList,
-		imbxUint32 currentFrameFirstBufferId,
-		imbxUint32 currentFrameEndBufferId,
-		imbxUint32 currentFrameFirstBufferSize);
-	
 	//@}
 
 
@@ -1018,6 +993,24 @@ public:
 	///
 	///////////////////////////////////////////////////////////
 	dataSetImageDoesntExist(const std::string& message): dataSetException(message){}
+};
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+/// \brief This exception is thrown when the basic offset
+///         table is corrupted.
+///
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+class dataSetCorruptedOffsetTable: public dataSetException
+{
+public:
+	/// \brief Build a dataSetImageDoesntExist exception
+	///
+	/// @param message the message to store into the exception
+	///
+	///////////////////////////////////////////////////////////
+	dataSetCorruptedOffsetTable(const std::string& message): dataSetException(message){}
 };
 
 

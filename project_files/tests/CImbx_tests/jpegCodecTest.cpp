@@ -214,7 +214,7 @@ void jpegCodecTest::testBaselineSubsampled()
 
 void jpegCodecTest::testLossless()
 {
-	imbxUint32 sizeX = 600;
+	imbxUint32 sizeX = 115;
 	imbxUint32 sizeY = 400;
 	ptr<image> baselineImage(new image);
 	baselineImage->create(sizeX, sizeY, image::depthU8, L"RGB", 7);

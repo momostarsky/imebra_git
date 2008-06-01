@@ -3,9 +3,31 @@
 %{
 	/* Includes the header in the wrapper code */
 	#include "../imebra/include/imebra.h"
+	
+	class ptrImageHandler: public puntoexe::ptr<puntoexe::imebra::handlers::imageHandler>
+	{
+	};
+	class ptrImage: public puntoexe::ptr<puntoexe::imebra::image>
+	{
+		public:
+		ptrImageHandler create(const imbxUint32 sizeX, const imbxUint32 sizeY, const puntoexe::imebra::bitDepth depth, std::wstring colorSpace, const imbxUint8  highBit)
+		{
+			return (*this)->create(sizeX, sizeY, depth, colorSpace, highBit);
+		}
+	}
 %}
+	%include "./csharp/std_wstring.i"
+	%include "./csharp/std_except.i"
+	
+	%ignore transactionsManager;
+	%ignore thread;
+	
+	%rename (equal) operator=;
+	%rename (isEqual) operator==;
+	%rename (isDifferent) operator!=;
+
 	%include "../base/include/configuration.h"
-	%include "../base/include/baseObject.h"
+	%ignore puntoexe::ptr::operator->;
 	%include "../base/include/baseStream.h"
 	%include "../base/include/exception.h"
 	%include "../base/include/memory.h"
@@ -41,12 +63,12 @@
 	%include "../imebra/include/transformsChain.h"
 	%include "../imebra/include/transformHighBit.h"
  
-	%template(signedByteDataHandler) puntoexe::imebra::handlers::dataHandlerNumeric<imbxUint8>;
-	%template(unsignedByteDataHandler) puntoexe::imebra::handlers::dataHandlerNumeric<imbxInt8>;
-	%template(signedWordDataHandler) puntoexe::imebra::handlers::dataHandlerNumeric<imbxUint16>;
-	%template(unsignedWordDataHandler) puntoexe::imebra::handlers::dataHandlerNumeric<imbxInt16>;
-	%template(signedDWordDataHandler) puntoexe::imebra::handlers::dataHandlerNumeric<imbxUint32>;
-	%template(unsignedDWordDataHandler) puntoexe::imebra::handlers::dataHandlerNumeric<imbxInt32>;
+	%template(unsignedByteDataHandler) puntoexe::imebra::handlers::dataHandlerNumeric<imbxUint8>;
+	%template(signedByteDataHandler) puntoexe::imebra::handlers::dataHandlerNumeric<imbxInt8>;
+	%template(unsignedWordDataHandler) puntoexe::imebra::handlers::dataHandlerNumeric<imbxUint16>;
+	%template(signedWordDataHandler) puntoexe::imebra::handlers::dataHandlerNumeric<imbxInt16>;
+	%template(unsignedDWordDataHandler) puntoexe::imebra::handlers::dataHandlerNumeric<imbxUint32>;
+	%template(signedDWordDataHandler) puntoexe::imebra::handlers::dataHandlerNumeric<imbxInt32>;
 	%template(doubleDataHandler) puntoexe::imebra::handlers::dataHandlerNumeric<double>;
 	%template(floatDataHandler) puntoexe::imebra::handlers::dataHandlerNumeric<float>;
 

@@ -254,7 +254,7 @@ void dicomCodec::writeTag(ptr<streamWriter> pDestStream, ptr<data> pData, imbxUi
 
 		if(bSequence | dicomDictionary::getDicomDictionary()->getLongLength(dataType))
 		{
-			imbxUint32 tagLengthDWord = bSequence ? 0xffffffff : tagLengthWord;
+			imbxUint32 tagLengthDWord = bSequence ? 0xffffffff : tagLength;
 			tagLengthWord = 0;
 			pDestStream->adjustEndian((imbxUint8*)&tagLengthDWord, 4, endianType);
 			pDestStream->write((imbxUint8*)&tagLengthWord, 2);

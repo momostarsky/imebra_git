@@ -41,8 +41,13 @@ void dataSetTest::testFragmentation()
 		20));
 
 	ptr<dataSet> testDataSet(new dataSet);
-	testDataSet->setImage(0, testImage0, L"1.2.840.10008.1.2.1", codecs::codec::high);
-	testDataSet->setImage(1, testImage1, L"1.2.840.10008.1.2.1", codecs::codec::high);
+	testDataSet->setImage(0, testImage0, L"1.2.840.10008.1.2.4.70", codecs::codec::high);
+	testDataSet->setImage(1, testImage1, L"1.2.840.10008.1.2.4.70", codecs::codec::high);
+
+	ptr<image> verifyImage0 = testDataSet->getImage(0);
+	CPPUNIT_ASSERT(compareImages(testImage0, verifyImage0) < 0.000001);
+	ptr<image> verifyImage1 = testDataSet->getImage(1);
+	CPPUNIT_ASSERT(compareImages(testImage1, verifyImage1) < 0.000001);
 
 	// Now defragment the stored buffer
 	ptr<data> imageTag = testDataSet->getTag(0x7fe0, 0, 0x0010, false);
@@ -62,6 +67,10 @@ void dataSetTest::testFragmentation()
 		imbxUint8* pWholeHandler = wholeHandler->getMemoryBuffer();
 		imbxUint32 totalSize = wholeHandler->getSize();
 		imbxUint32 fragmentedSize = totalSize / 3;
+		if(fragmentedSize & 0x1)
+		{
+			++fragmentedSize;
+		}
 		while(totalSize != 0)
 		{
 			imbxUint32 thisSize = totalSize;
@@ -75,7 +84,7 @@ void dataSetTest::testFragmentation()
 			::memcpy(pNewBuffer, pWholeHandler, thisSize);
 			newBufferHandler.release();
 			newBuffers.push_back(newBuffer);
-			offset += newBuffer->getDataHandlerRaw(false)->getSize() + 8;
+			offset += newBuffer->getBufferSizeBytes() + 8;
 			totalSize -= thisSize;
 			pWholeHandler += thisSize;
 		}
@@ -91,40 +100,7 @@ void dataSetTest::testFragmentation()
 	CPPUNIT_ASSERT(compareImages(testImage0, compareImage0) < 0.000001);
 	ptr<image> compareImage1 = testDataSet->getImage(1);
 	CPPUNIT_ASSERT(compareImages(testImage1, compareImage1) < 0.000001);
-
 	CPPUNIT_ASSERT(compareImages(testImage0, compareImage1) > 30);
-
-	ptr<image> testImage2(buildImageForTest(
-		400, 
-		300, 
-		puntoexe::imebra::image::depthU8,
-		7, 
-		400, 
-		300, 
-		L"RGB", 
-		64));
-	testDataSet->setImage(0, testImage2, L"1.2.840.10008.1.2.1", codecs::codec::high);
-
-	ptr<image> testImage3(buildImageForTest(
-		400, 
-		300, 
-		puntoexe::imebra::image::depthU8,
-		7, 
-		400, 
-		300, 
-		L"RGB", 
-		64));
-	testDataSet->setImage(2, testImage3, L"1.2.840.10008.1.2.1", codecs::codec::high);
-
-	ptr<image> compareImage0_2attempt = testDataSet->getImage(0);
-	CPPUNIT_ASSERT(compareImages(testImage2, compareImage0_2attempt) < 0.000001);
-	ptr<image> compareImage1_2attempt = testDataSet->getImage(1);
-	CPPUNIT_ASSERT(compareImages(testImage1, compareImage1) < 0.000001);
-	ptr<image> compareImage2 = testDataSet->getImage(2);
-	CPPUNIT_ASSERT(compareImages(testImage3, compareImage2) < 0.000001);
-
-	CPPUNIT_ASSERT(compareImages(testImage2, testImage0) > 30);
-
 }
 
 

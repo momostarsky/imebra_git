@@ -57,9 +57,6 @@ public:
 	/// @return a reference to the requested value
 	///
 	///////////////////////////////////////////////////////////
-#ifdef SWIG
-	%rename (at) operator[];
-#endif
 	dataHandlerType& operator[](int nSubscript)
 	{
 		return m_pMemoryString[nSubscript];

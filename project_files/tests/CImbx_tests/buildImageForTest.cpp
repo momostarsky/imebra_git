@@ -24,12 +24,13 @@ puntoexe::ptr<puntoexe::imebra::image> buildImageForTest(
 	puntoexe::ptr<puntoexe::imebra::handlers::imageHandler> imgHandler = newImage->create(pixelsX, pixelsY, depth, colorSpace, highBit);
 	imbxUint32 channelsNumber = newImage->getChannelsNumber();
 
-	imbxInt32 range = (imbxUint32)1 < highBit;
+	imbxInt32 range = (imbxUint32)1 << highBit;
 	imbxInt32 minValue = 0;
 	if(depth == puntoexe::imebra::image::depthS16 || depth == puntoexe::imebra::image::depthS8)
 	{
 		minValue = -1 << (highBit - 1);
 	}
+	imbxInt32 maxValue(minValue + range);
 
 	imbxInt32* pData = imgHandler->getMemoryBuffer();
 	for(imbxUint32 scanY(0); scanY != pixelsY; ++scanY)
@@ -38,7 +39,16 @@ puntoexe::ptr<puntoexe::imebra::image> buildImageForTest(
 		{
 			for(imbxUint32 scanChannels = 0; scanChannels != channelsNumber; ++scanChannels)
 			{
-				*(pData++) = ((scanX + scanY * 2 + scanChannels * 20) % continuity) * range + minValue;
+				imbxInt32 value = (imbxInt32)(((double)((scanX * channelsNumber+ scanY + scanChannels) % continuity) / (double)continuity) * (double)range)  + minValue;
+ 				if(value < minValue)
+				{
+					value = minValue;
+				}
+				if(value >= maxValue)
+				{
+					value = maxValue - 1;
+				}
+				*(pData++) = value;
 			}
 		}
 	}
@@ -71,7 +81,7 @@ double compareImages(ptr<image> image0, ptr<image> image1)
 	imbxUint32 highBit1 = image1->getHighBit();
 	if(highBit0 != highBit1)
 	{
-		return 0;
+		return 1000;
 	}
 
 	image::bitDepth depth0 = image0->getDepth();

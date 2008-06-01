@@ -335,10 +335,6 @@ void dataSet::setImage(imbxUint32 frameNumber, ptr<image> pImage, std::wstring t
 	imbxUint16 groupId(0x7fe0), orderId(0), tagId(0x0010);
 	imbxUint32 firstBufferId(0), endBufferId(0);
 
-	// Will store the current frame offsets
-	///////////////////////////////////////////////////////////
-	tFrameFirstBufferList frameFirstBufferList;
-
 	// bDontChangeAttributes is true if some images already 
 	//  exist in the dataset and we must save the new image 
 	//  using the attributes already stored
@@ -376,65 +372,6 @@ void dataSet::setImage(imbxUint32 frameNumber, ptr<image> pImage, std::wstring t
 		bEncapsulated = false;
 	}
 	
-	// Encapsulated mode. Check if we have the offsets table
-	///////////////////////////////////////////////////////////
-	if(bEncapsulated)
-	{
-		// We have to add the offsets buffer
-		///////////////////////////////////////////////////////////
-		ptr<handlers::dataHandlerRaw> imageHandler0 = getDataHandlerRaw(groupId, 0x0, tagId, 0x0, false);
-		ptr<handlers::dataHandlerRaw> imageHandler1 = getDataHandlerRaw(groupId, 0x0, tagId, 0x1, false);
-		if(imageHandler0 != 0L && imageHandler0->getSize() != 0 && imageHandler1 == 0L)
-		{
-			// The first image must be moved forward, in order to
-			//  make some room for the offset table
-			///////////////////////////////////////////////////////////
-			dataHandlerType = imageHandler0->getDataType();
-			ptr<handlers::dataHandlerRaw> moveFirstImage = getDataHandlerRaw(groupId, 0x0, tagId, 0x1, true, dataHandlerType);
-
-			if(moveFirstImage == 0L)
-			{
-				PUNTOEXE_THROW(dataSetExceptionOldFormat, "Cannot move the first image");
-			}
-			imbxUint32 bufferSize=imageHandler0->getSize();
-			moveFirstImage->setSize(bufferSize);
-			::memcpy(moveFirstImage->getMemoryBuffer(), imageHandler0->getMemoryBuffer(), bufferSize);
-		}
-
-		// An image in the first buffer already exists.
-		///////////////////////////////////////////////////////////
-		if(imageHandler1 != 0)
-		{
-			dataHandlerType = imageHandler1->getDataType();
-		}
-
-		// Calculate the buffer ID to use
-		///////////////////////////////////////////////////////////
-		for(imbxUint32 scanFrames = 0; ; ++scanFrames)
-		{
-			try
-			{
-				imbxUint32 frameFirstBuffer, frameEndBuffer;
-				getFrameBufferIds(scanFrames, &frameFirstBuffer, &frameEndBuffer);
-				frameFirstBufferList.push_back(frameFirstBuffer);
-				if(scanFrames == frameNumber)
-				{
-					firstBufferId = frameFirstBuffer;
-					endBufferId = frameEndBuffer;
-				}
-			}
-			catch(dataSetImageDoesntExist)
-			{
-				break;
-			}
-		}
-		if(firstBufferId == 0)
-		{
-			firstBufferId = getFirstAvailFrameBufferId();
-			endBufferId = firstBufferId + 1;
-			frameFirstBufferList.push_back(firstBufferId);
-		}
-	}
 
 	// Set the subsampling flags
 	///////////////////////////////////////////////////////////
@@ -473,9 +410,55 @@ void dataSet::setImage(imbxUint32 frameNumber, ptr<image> pImage, std::wstring t
 		dataHandlerType = (bEncapsulated || allocatedBits <= 8) ? "OB" : "OW";
 	}
 
+	// Encapsulated mode. Check if we have the offsets table
+	///////////////////////////////////////////////////////////
+	if(bEncapsulated)
+	{
+		// We have to add the offsets buffer
+		///////////////////////////////////////////////////////////
+		ptr<handlers::dataHandlerRaw> imageHandler0 = getDataHandlerRaw(groupId, 0x0, tagId, 0x0, false);
+		ptr<handlers::dataHandlerRaw> imageHandler1 = getDataHandlerRaw(groupId, 0x0, tagId, 0x1, false);
+		if(imageHandler0 != 0L && imageHandler0->getSize() != 0 && imageHandler1 == 0L)
+		{
+			// The first image must be moved forward, in order to
+			//  make some room for the offset table
+			///////////////////////////////////////////////////////////
+			dataHandlerType = imageHandler0->getDataType();
+			ptr<handlers::dataHandlerRaw> moveFirstImage = getDataHandlerRaw(groupId, 0x0, tagId, 0x1, true, dataHandlerType);
+
+			if(moveFirstImage == 0L)
+			{
+				PUNTOEXE_THROW(dataSetExceptionOldFormat, "Cannot move the first image");
+			}
+			imbxUint32 bufferSize=imageHandler0->getSize();
+			moveFirstImage->setSize(bufferSize);
+			::memcpy(moveFirstImage->getMemoryBuffer(), imageHandler0->getMemoryBuffer(), bufferSize);
+		}
+
+		// An image in the first buffer already exists.
+		///////////////////////////////////////////////////////////
+		if(imageHandler1 != 0)
+		{
+			dataHandlerType = imageHandler1->getDataType();
+		}
+
+		firstBufferId = getFirstAvailFrameBufferId();
+		endBufferId = firstBufferId + 1;
+	}
+
 	// Get a stream to save the image
 	///////////////////////////////////////////////////////////
-	ptr<streamWriter> outputStream = getStreamWriter(groupId, orderId, tagId, firstBufferId, dataHandlerType);
+	ptr<streamWriter> outputStream;
+	ptr<memory> uncompressedImage(new memory);
+	if(bEncapsulated || frameNumber == 0)
+	{
+		outputStream = getStreamWriter(groupId, orderId, tagId, firstBufferId, dataHandlerType);
+	}
+	else
+	{
+		ptr<puntoexe::memoryStream> memoryStream(new memoryStream(uncompressedImage));
+		outputStream = new streamWriter(memoryStream);
+	}
 	
 	// Save the image in the stream
 	///////////////////////////////////////////////////////////
@@ -489,6 +472,17 @@ void dataSet::setImage(imbxUint32 frameNumber, ptr<image> pImage, std::wstring t
 		bSubSampledX, bSubSampledY,
 		bInterleaved,
 		b2complement);
+	outputStream->flushDataBuffer();
+
+	if(!bEncapsulated && frameNumber != 0)
+	{
+		ptr<puntoexe::memoryStream> memoryStream(outputStream->getControlledStream());
+		ptr<handlers::dataHandlerRaw> copyUncompressed(getDataHandlerRaw(groupId, orderId, tagId, firstBufferId, true));
+		copyUncompressed->setSize((frameNumber + 1) * uncompressedImage->size());
+		imbxUint8* pSource = uncompressedImage->data();
+		imbxUint8* pDest = copyUncompressed->getMemoryBuffer() + (frameNumber * uncompressedImage->size());
+		::memcpy(pDest, pSource, uncompressedImage->size());
+	}
 
 	// The images' positions calculated by getImage are not
 	//  valid now. They must be recalculated.
@@ -522,13 +516,10 @@ void dataSet::setImage(imbxUint32 frameNumber, ptr<image> pImage, std::wstring t
 
 	// Update the number of frames
 	///////////////////////////////////////////////////////////
-	if(frameNumber >= numberOfFrames)
-	{
-		numberOfFrames = frameNumber + 1;
-		ptr<handlers::dataHandler> framesNumberHandler = getDataHandler(0x0028, 0, 0x0008, 0, true, "IS");
-		framesNumberHandler->setSize(1);
-		framesNumberHandler->setUnsignedLong(numberOfFrames);
-	}
+	numberOfFrames = frameNumber + 1;
+	ptr<handlers::dataHandler> framesNumberHandler = getDataHandler(0x0028, 0, 0x0008, 0, true, "IS");
+	framesNumberHandler->setSize(1);
+	framesNumberHandler->setUnsignedLong(numberOfFrames);
 
 	// Update the offsets tag with the image's offsets
 	///////////////////////////////////////////////////////////
@@ -537,12 +528,18 @@ void dataSet::setImage(imbxUint32 frameNumber, ptr<image> pImage, std::wstring t
 		return;
 	}
 
-	for(imbxUint32 resetBuffers = firstBufferId + 1; resetBuffers < endBufferId; ++resetBuffers)
+	imbxUint32 calculatePosition(0);
+	ptr<data> tag(getTag(groupId, 0, tagId, true));
+	for(imbxUint32 scanBuffers = 1; scanBuffers != firstBufferId; ++scanBuffers)
 	{
-		ptr<handlers::dataHandlerRaw> resetBufferHandler = getDataHandlerRaw(groupId, 0L, tagId, resetBuffers, true);
-		resetBufferHandler->setSize(0);
+		calculatePosition += tag->getBufferSize(scanBuffers);
+		calculatePosition += 8;
 	}
-	updateFrameBufferTable(&frameFirstBufferList, firstBufferId, endBufferId, outputStream->position());
+	ptr<handlers::dataHandlerRaw> offsetHandler(getDataHandlerRaw(groupId, 0, tagId, 0, true, dataHandlerType));
+	offsetHandler->setSize(4 * (frameNumber + 1));
+	imbxUint8* pOffsetFrame(offsetHandler->getMemoryBuffer() + (frameNumber * 4));
+	*( (imbxUint32*)pOffsetFrame  ) = calculatePosition;
+	streamController::adjustEndian(pOffsetFrame, 4, streamController::lowByteEndian, 1);
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -616,6 +613,16 @@ imbxUint32 dataSet::getFrameBufferId(imbxUint32 offset, imbxUint32* pLengthToBuf
 	//  the offset table
 	///////////////////////////////////////////////////////////
 	imbxUint32 scanBuffers(1);
+
+	if(offset == 0xffffffff)
+	{
+		while(imageTag->bufferExists(scanBuffers))
+		{
+			++scanBuffers;
+		}
+		return scanBuffers;
+	}
+
 	while(offset != 0)
 	{
 		// If the handler isn't connected to any buffer, then
@@ -639,6 +646,11 @@ imbxUint32 dataSet::getFrameBufferId(imbxUint32 offset, imbxUint32* pLengthToBuf
 		}
 		offset -= bufferSize;
 		++scanBuffers;
+	}
+
+	if(offset != 0)
+	{
+		PUNTOEXE_THROW(dataSetCorruptedOffsetTable, "The basic offset table is corrupted");
 	}
 
 	return scanBuffers;
@@ -673,7 +685,17 @@ imbxUint32 dataSet::getFrameBufferIds(imbxUint32 frameNumber, imbxUint32* pFirst
 	*pFirstBuffer = getFrameBufferId(startOffset, &startLength);
 	*pEndBuffer = getFrameBufferId(endOffset, &endLength);
 
-	return endLength - startLength;
+	ptr<data> imageTag = getTag(0x7fe0, 0, 0x0010, false);
+	if(imageTag == 0)
+	{
+		return 0;
+	}
+	imbxUint32 totalSize(0);
+	for(imbxUint32 scanBuffers(*pFirstBuffer); scanBuffers != *pEndBuffer; ++scanBuffers)
+	{
+		totalSize += imageTag->getBufferSize(scanBuffers);
+	}
+	return totalSize;
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -706,72 +728,6 @@ imbxUint32 dataSet::getFirstAvailFrameBufferId()
 	}
 
 	return availableId;
-
-	PUNTOEXE_FUNCTION_END();
-}
-
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Update the frame offset table
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-void dataSet::updateFrameBufferTable(
-	tFrameFirstBufferList* pFrameFirstBufferList,
-	imbxUint32 currentFrameFirstBufferId,
-	imbxUint32 currentFrameEndBufferId,
-	imbxUint32 currentFrameFirstBufferSize)
-{
-	PUNTOEXE_FUNCTION_START(L"dataSet::updateFrameBufferTable");
-
-	// The size must be a multiple of 2
-	///////////////////////////////////////////////////////////
-	if((currentFrameFirstBufferSize & 0x00000001) != 0)
-	{
-		++currentFrameFirstBufferSize;
-	}
-
-	// Retrieve the buffer containing the offsets
-	///////////////////////////////////////////////////////////
-	ptr<handlers::dataHandlerRaw> framesPointer = getDataHandlerRaw(0x7fe0, 0x0, 0x0010, 0, true);
-
-	framesPointer->setSize((imbxUint32)(pFrameFirstBufferList->size()) * sizeof(imbxUint32));
-
-	// Update all the offsets
-	///////////////////////////////////////////////////////////
-	imbxUint32 currentBuffer(1);
-	imbxUint32 currentOffset(0);
-
-	ptr<data> imageTag(getTag(0x7fe0, 0, 0x0010, false));
-
-	imbxUint32* pOffsets = (imbxUint32*)framesPointer->getMemoryBuffer();
-	for(tFrameFirstBufferList::const_iterator scanFrames = pFrameFirstBufferList->begin(); scanFrames != pFrameFirstBufferList->end(); ++scanFrames)
-	{
-		while(currentBuffer != *scanFrames)
-		{
-			if(currentBuffer == currentFrameFirstBufferId)
-			{
-				currentOffset += currentFrameFirstBufferSize;
-			}
-			else
-			{
-				if(imageTag != 0 && (currentBuffer <= currentFrameFirstBufferId || currentBuffer >= currentFrameEndBufferId))
-				{
-					currentOffset += imageTag->getBufferSize(currentBuffer);
-				}
-			}
-			currentOffset += 4; // 1 word for the group id, 1 word for the tag id
-			currentOffset += 4; // tag's length
-			++currentBuffer;
-		}
-		*(pOffsets++) = currentOffset;
-	}
-
-	streamController::adjustEndian((imbxUint8*)framesPointer->getMemoryBuffer(), sizeof(imbxUint32), streamController::lowByteEndian, (imbxUint32)(pFrameFirstBufferList->size()));
 
 	PUNTOEXE_FUNCTION_END();
 }
