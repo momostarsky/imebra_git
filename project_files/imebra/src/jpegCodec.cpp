@@ -1026,19 +1026,24 @@ void jpegCodec::readStream(ptr<streamReader> pSourceStream, ptr<dataSet> pDataSe
 		sizeYHandler->setSize(1);
 		sizeYHandler->setUnsignedLong(m_imageSizeY);
 	}
-		
+	
+	// Insert the basic offset table
+	////////////////////////////////////////////////////////////////
+	ptr<handlers::dataHandlerRaw> offsetHandler=pDataSet->getDataHandlerRaw(0x7fe0, 0, 0x0010, 0, true, "OB");
+	offsetHandler->setSize(4);
+	::memset(offsetHandler->getMemoryBuffer(), 0, offsetHandler->getSize());
+
 	// Reread all the stream's content and write it into the dataset
 	////////////////////////////////////////////////////////////////
 	imbxUint32 finalPosition=pStream->position();
 	imbxUint32 streamLength=(imbxUint32)(finalPosition-startPosition);
 	pStream->seek((imbxInt32)startPosition);
 	
-	ptr<handlers::dataHandler> imageHandler=pDataSet->getDataHandler(0x7fe0, 0, 0x0010, 0, true, "OB");
+	ptr<handlers::dataHandlerRaw> imageHandler=pDataSet->getDataHandlerRaw(0x7fe0, 0, 0x0010, 1, true, "OB");
 	if(imageHandler != 0 && streamLength != 0)
 	{
-		std::vector<imbxUint8> pImageBuffer(streamLength);
-		pStream->read(&pImageBuffer[0], streamLength);
-		imageHandler->parseBuffer(&pImageBuffer[0], streamLength);
+		imageHandler->setSize(streamLength);
+		pStream->read(imageHandler->getMemoryBuffer(), streamLength);
 	}
 
 	// Reset the tag's marker in the stream
