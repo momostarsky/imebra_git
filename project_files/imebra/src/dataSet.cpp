@@ -517,9 +517,7 @@ void dataSet::setImage(imbxUint32 frameNumber, ptr<image> pImage, std::wstring t
 	// Update the number of frames
 	///////////////////////////////////////////////////////////
 	numberOfFrames = frameNumber + 1;
-	ptr<handlers::dataHandler> framesNumberHandler = getDataHandler(0x0028, 0, 0x0008, 0, true, "IS");
-	framesNumberHandler->setSize(1);
-	framesNumberHandler->setUnsignedLong(numberOfFrames);
+	setUnsignedLong(0x0028, 0, 0x0008, 0, numberOfFrames );
 
 	// Update the offsets tag with the image's offsets
 	///////////////////////////////////////////////////////////

@@ -63,6 +63,17 @@ A detailed reference of the C++ classes that compose Imebra is included in
 
 \section changeLog Changes log
 
+\subsection since_0_0_36 Changes since version 0.0.36 (Alpha)
+
+- Removed dependence from charsetsList in data, buffer, dataSet, dataGroup, dataHandler
+- Closes #9 (The lossless jpeg codec saves corrupted images)
+- Closes #10 (A basic offset table is added even when it shouldn't)
+- Now non encapsulated images are saved one after another even when their length is odd: no padding bytes are inserted
+- closes #11 (The 32 bits tag's length is truncated (only the lower 16 bits are correct) )
+- The images build during the test had a reduced range
+- Now the jpeg codec creates the offset table when loading an image
+
+
 \subsection since_0_0_35 Changes since version 0.0.35 (Alpha)
 
 - Closes #7 (memoryPool isn't thread safe)

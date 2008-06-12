@@ -931,101 +931,60 @@ void jpegCodec::readStream(ptr<streamReader> pSourceStream, ptr<dataSet> pDataSe
 	
 	// Color space
 	///////////////////////////////////////////////////////////
-	ptr<handlers::dataHandler> colorHandle=pDataSet->getDataHandler(0x0028, 0, 0x0004, 0, true);
-	if(colorHandle != 0)
-	{
-		colorHandle->setSize(1);
-		if(m_channelsMap.size()==1)
-			colorHandle->setUnicodeString(L"MONOCHROME2");
-		else
-			colorHandle->setUnicodeString(L"YBR_FULL");
-	}
+	if(m_channelsMap.size()==1)
+		pDataSet->setUnicodeString(0x0028, 0, 0x0004, 0, L"MONOCHROME2");
+	else
+		pDataSet->setUnicodeString(0x0028, 0, 0x0004, 0, L"YBR_FULL");
 
 	// Transfer syntax
 	///////////////////////////////////////////////////////////
-	ptr<handlers::dataHandler> transferHandler=pDataSet->getDataHandler(0x0002, 0, 0x0010, 0, true);
-	if(transferHandler != 0)
+	switch(m_process)
 	{
-		transferHandler->setSize(1);
-		switch(m_process)
-		{
-		case 0x00:
-			transferHandler->setUnicodeString(L"1.2.840.10008.1.2.4.50");
-			break;
-		case 0x01:
-			transferHandler->setUnicodeString(L"1.2.840.10008.1.2.4.51");
-			break;
-		case 0x02:
-			transferHandler->setUnicodeString(L"");
-			break;
-		case 0x03:
-			transferHandler->setUnicodeString(L"1.2.840.10008.1.2.4.57");
-			break;
-		case 0x04:
-			transferHandler->setUnicodeString(L"");
-			break;
-		case 0x05:
-			transferHandler->setUnicodeString(L"");
-			break;
-		case 0x06:
-			transferHandler->setUnicodeString(L"");
-			break;
-		case 0x07:
-			transferHandler->setUnicodeString(L"1.2.840.10008.1.2.4.57");
-			break;
-		case 0x08:
-			transferHandler->setUnicodeString(L"");
-			break;
-		case 0x09:
-			transferHandler->setUnicodeString(L"");
-			break;
-		case 0x0a:
-			transferHandler->setUnicodeString(L"");
-			break;
-		case 0x0b:
-			transferHandler->setUnicodeString(L"");
-			break;
-		case 0x0c:
-			transferHandler->setUnicodeString(L"");
-			break;
-		case 0x0d:
-			transferHandler->setUnicodeString(L"");
-			break;
-		case 0x0e:
-			transferHandler->setUnicodeString(L"");
-			break;
-		case 0x0f:
-			transferHandler->setUnicodeString(L"");
-			break;
-		}
+	case 0x00:
+		pDataSet->setUnicodeString(0x0002, 0, 0x0010, 0, L"1.2.840.10008.1.2.4.50");
+		break;
+	case 0x01:
+		pDataSet->setUnicodeString(0x0002, 0, 0x0010, 0, L"1.2.840.10008.1.2.4.51");
+		break;
+	case 0x03:
+		pDataSet->setUnicodeString(0x0002, 0, 0x0010, 0, L"1.2.840.10008.1.2.4.57");
+		break;
+	case 0x07:
+		pDataSet->setUnicodeString(0x0002, 0, 0x0010, 0, L"1.2.840.10008.1.2.4.57");
+		break;
+	default:
+		throw jpegCodecCannotHandleSyntax("Jpeg SOF not supported");
 	}
 
 	// Number of planes
 	///////////////////////////////////////////////////////////
-	ptr<handlers::dataHandler> planesHandler=pDataSet->getDataHandler(0x0028, 0, 0x0002, 0, true);
-	if(planesHandler != 0)
-	{
-		planesHandler->setSize(1);
-		planesHandler->setUnsignedLong((imbxUint32)m_channelsMap.size());
-	}
+	pDataSet->setUnsignedLong(0x0028, 0, 0x0002, 0, (imbxUint32)m_channelsMap.size());
 
 	// Image's width
 	/////////////////////////////////////////////////////////////////
-	ptr<handlers::dataHandler> sizeXHandler=pDataSet->getDataHandler(0x0028, 0, 0x0011, 0, true);
-	if(sizeXHandler != 0)
-	{
-		sizeXHandler->setSize(1);
-		sizeXHandler->setUnsignedLong(m_imageSizeX);
-	}
+	pDataSet->setUnsignedLong(0x0028, 0, 0x0011, 0, m_imageSizeX);
 		
 	// Image's height
 	/////////////////////////////////////////////////////////////////
-	ptr<handlers::dataHandler> sizeYHandler=pDataSet->getDataHandler(0x0028, 0, 0x0010, 0, true);
-	if(sizeYHandler != 0)
-	{
-		sizeYHandler->setSize(1);
-		sizeYHandler->setUnsignedLong(m_imageSizeY);
-	}
+	pDataSet->setUnsignedLong(0x0028, 0, 0x0010, 0, m_imageSizeY);
+
+	// Number of frames
+	/////////////////////////////////////////////////////////////////
+	pDataSet->setUnsignedLong(0x0028, 0, 0x0008, 0, 1);
+
+	// Pixel representation
+	/////////////////////////////////////////////////////////////////
+	pDataSet->setUnsignedLong(0x0028, 0x0, 0x0103, 0x0, 0);
+
+	// Allocated, stored bits and high bit
+	/////////////////////////////////////////////////////////////////
+	pDataSet->setUnsignedLong(0x0028, 0x0, 0x0100, 0x0, m_precision);
+	pDataSet->setUnsignedLong(0x0028, 0x0, 0x0101, 0x0, m_precision);
+	pDataSet->setUnsignedLong(0x0028, 0x0, 0x0102, 0x0, m_precision - 1);
+
+	// Interleaved
+	/////////////////////////////////////////////////////////////////
+	pDataSet->setUnsignedLong(0x0028, 0x0, 0x0006, 0x0, m_channelsList.size() > 1);
 	
 	// Insert the basic offset table
 	////////////////////////////////////////////////////////////////
