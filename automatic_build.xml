@@ -17,9 +17,9 @@
 	</target>
 	
 	<target name="copy_svn" if="build_with_version">
-		<exec dir="." executable="svn">
+		<exec dir="." executable="svn" failonerror="true">
 			<arg value="copy" />
-			<arg path="." />
+			<arg value="${puntoexeLibrary}/trunk" />
 			<arg value="${puntoexeLibrary}/tags/imebra_${fileVersion}" />
 			<arg value="-m" />
 			<arg value='"Tagging the repository for Imebra"' />
@@ -27,9 +27,10 @@
 			<arg value="${userName}" />
 			<arg value="--password" />
 			<arg value="${password}" />
+			<arg value="--no-auth-cache" />
 		</exec>
 		<buildnumber file="build.number" /> 
-		<exec dir="." executable="svn">
+		<exec dir="." executable="svn" failonerror="true">
 			<arg value="commit"/>
 			<arg value="build.number"/>
 			<arg value="-m"/>
@@ -38,6 +39,9 @@
 			<arg value="${userName}" />
 			<arg value="--password" />
 			<arg value="${password}" />
+		</exec>
+		<exec dir="." executable="svn">
+			<arg value="revert"/>
 		</exec>
 	</target>
 
@@ -228,12 +232,20 @@ The author can be contacted by email at paolo@puntoexe.com or by mail at
 	</target>
 
 	<!-- Initialize the version number -->
-	<target name="version" description="Initialize the build number">
+	<target name="version" depends="update" description="Initialize the build number">
 		<property file="./build.number" /> 
 		<property name="fileVersion" value="0_0_${build.number}_Alpha"/>
 		<property name="fullVersionReadable" value="0.0.${build.number}_Alpha"/>
 		<property name="productName" value="Imebra ${fullVersionReadable}"/>
 	</target>
 
+	<target name="update" if="build_with_version">
+		<exec dir="." executable="svn" failonerror="true">
+			<arg value="update"/>
+		</exec>
+		<exec dir="." executable="svn" failonerror="true">
+			<arg value="revert"/>
+		</exec>
+	</target>
 
 </project>

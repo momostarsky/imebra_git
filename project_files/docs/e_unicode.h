@@ -51,15 +51,5 @@ If the application writes in the dataSet some values that need different charset
  modifications will be rolled back (see \ref imebra_transactions).
 
 
-\section imebra_unicode_wstring The std::wstring
-
-Imebra uses the std::wstring classes to deal with Unicode strings.
-
-std::wstring stores a string of wchar_t elements; because a wchar_t can store
- only 16 bits values and Unicode uses 20 bits values, the strings are encoded
- using UTF-16.
-
-This means that the Unicode values up to 0xFFFF are encoded using one wchar_t,
- while the Unicode values above 0xFFFF are encoded in two wchar_t elements.
 
 */

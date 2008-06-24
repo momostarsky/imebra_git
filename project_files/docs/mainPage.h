@@ -13,7 +13,7 @@ Copyright 2003, 2004, 2005, 2006 by Paolo Brandoli.
 
 Please read the \ref license_agreement first!
 
-Imebra is a Dicom library from Puntoexe software.
+Imebra is an open source Dicom library.
 The library has been designed to handle Dicom files, but it includes also some
  classes that manage jpeg and other image files.
 
@@ -70,7 +70,7 @@ A detailed reference of the C++ classes that compose Imebra is included in
 - Closes #10 (A basic offset table is added even when it shouldn't)
 - Now non encapsulated images are saved one after another even when their length is odd: no padding bytes are inserted
 - closes #11 (The 32 bits tag's length is truncated (only the lower 16 bits are correct) )
-- The images build during the test had a reduced range
+- The images build during the test units had a reduced range. Corrected
 - Now the jpeg codec creates the offset table when loading an image
 
 
@@ -238,7 +238,7 @@ Also, the smart pointer wasn't able to cast the objects' types when copying data
  care of this.
 
 Now the reference counter is initialized to 0 and not to 1 during the baseObject's
- construction: this implies that puntoexe::baseObject::addRef() has to be manually
+ construction: this implies that puntoexe::baseObject::addRef() has to be 
  called immediatly after the object construction: anyway this operation is performed
  automatically by the smart pointer puntoexe::ptr.
 
@@ -248,7 +248,7 @@ This simplified the behaviour of other functions in the ptr class: for instance 
 
 Also the user is now forced to use the smart pointer because more baseObject's functions 
  have been made protected or private (addRef() and release() now are callable
- by the smart pointer only).
+ by the smart pointers only).
 
 The smart pointer is now able to cast the object containing in other smart pointers
  during the assignment or the construction of a new pointer.
