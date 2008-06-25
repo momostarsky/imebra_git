@@ -42,6 +42,7 @@
 		</exec>
 		<exec dir="." executable="svn">
 			<arg value="revert"/>
+			<arg path="."/>
 		</exec>
 	</target>
 
@@ -241,10 +242,11 @@ The author can be contacted by email at paolo@puntoexe.com or by mail at
 
 	<target name="update" if="build_with_version">
 		<exec dir="." executable="svn" failonerror="true">
-			<arg value="update"/>
+			<arg value="revert"/>
+			<arg path="."/>
 		</exec>
 		<exec dir="." executable="svn" failonerror="true">
-			<arg value="revert"/>
+			<arg value="update"/>
 		</exec>
 	</target>
 
