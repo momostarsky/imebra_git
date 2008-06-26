@@ -63,6 +63,13 @@ A detailed reference of the C++ classes that compose Imebra is included in
 
 \section changeLog Changes log
 
+\subsection since_0_0_38 Changes since version 0.0.38 (Alpha)
+
+- Closes #12 (Subsampled images are saved/loaded incorrectly by the jpeg codec)
+- Closes #13 (When saving a jpeg image from a dataset and it doesn't need to be converted an exception is thrown)
+- Closes #14 (When saving an image the subsampling flags don't match the quality)
+
+
 \subsection since_0_0_36 Changes since version 0.0.36 (Alpha)
 
 - Removed dependence from charsetsList in data, buffer, dataSet, dataGroup, dataHandler

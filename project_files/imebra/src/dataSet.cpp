@@ -375,8 +375,8 @@ void dataSet::setImage(imbxUint32 frameNumber, ptr<image> pImage, std::wstring t
 
 	// Set the subsampling flags
 	///////////////////////////////////////////////////////////
-	bool bSubSampledX = quality < codecs::codec::high;
-	bool bSubSampledY = quality < codecs::codec::medium;
+	bool bSubSampledX = quality > codecs::codec::high;
+	bool bSubSampledY = quality > codecs::codec::medium;
 	if( !transforms::colorTransforms::colorTransformsFactory::canSubsample(pImage->getColorSpace()) )
 	{
 		bSubSampledX = bSubSampledY = false;

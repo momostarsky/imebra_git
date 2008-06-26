@@ -492,7 +492,7 @@ void jpegCodec::writeStream(ptr<streamWriter> pStream, ptr<dataSet> pDataSet)
 	if(canHandleTransferSyntax(transferSyntax))
 	{
 		ptr<data> imageData = pDataSet->getTag(0x7fe0, 0, 0x0010, false);
-		if(imageData == 0 || imageData->bufferExists(0))
+		if(imageData == 0 || !imageData->bufferExists(0))
 		{
 			PUNTOEXE_THROW(dataSetImageDoesntExist, "The requested image doesn't exist");
 		}
@@ -826,11 +826,19 @@ void jpegCodec::findMcuSize()
 
 	// Find the MCU size, in image's pixels
 	///////////////////////////////////////////////////////////
-	imbxUint32 scanImageSizeX = m_jpegImageSizeX * minSamplingFactorX / maxSamplingFactorChannelsX;
-	imbxUint32 scanImageSizeY = m_jpegImageSizeY * minSamplingFactorY / maxSamplingFactorChannelsY;
+	if(m_bLossless)
+	{
+		m_mcuNumberX = m_jpegImageSizeX * minSamplingFactorX / maxSamplingFactorChannelsX;
+		m_mcuNumberY = m_jpegImageSizeY * minSamplingFactorY / maxSamplingFactorChannelsY;
+	}
+	else
+	{
+		imbxUint32 xBoundary = 8 * maxSamplingFactorChannelsX / minSamplingFactorX;
+		imbxUint32 yBoundary = 8 * maxSamplingFactorChannelsY / minSamplingFactorY;
 
-	m_mcuNumberX = scanImageSizeX / (m_bLossless ? 1 : 8);
-	m_mcuNumberY = scanImageSizeY / (m_bLossless ? 1 : 8);
+		m_mcuNumberX = (m_imageSizeX + xBoundary - 1) / xBoundary;
+		m_mcuNumberY = (m_imageSizeY + yBoundary - 1) / yBoundary;
+	}
 	m_mcuNumberTotal = m_mcuNumberX*m_mcuNumberY;
 	m_mcuProcessed = 0;
 	m_mcuProcessedX = 0;
@@ -1263,8 +1271,7 @@ ptr<image> jpegCodec::getImage(ptr<dataSet> sourceDataSet, ptr<streamReader> pSt
 				
 				// Read a lossy MCU
 				///////////////////////////////////////////////////////////
-				bufferPointer = (m_mcuProcessedY * pChannel->m_blockMcuY * m_mcuNumberX + m_mcuProcessedX) * 64 * pChannel->m_blockMcuX ;
-
+				bufferPointer = (m_mcuProcessedY * pChannel->m_blockMcuY * ((m_jpegImageSizeX * pChannel->m_samplingFactorX / m_maxSamplingFactorX) >> 3)  + m_mcuProcessedX) * 64 * pChannel->m_blockMcuX;
 				for(scanBlockY = pChannel->m_blockMcuY; (scanBlockY != 0) && (m_entryByte == 0); --scanBlockY)
 				{
 					for(scanBlockX = pChannel->m_blockMcuX; (scanBlockX != 0 ) && (m_entryByte == 0); --scanBlockX)
@@ -1847,7 +1854,7 @@ void jpegCodec::writeScan(streamWriter* pDestinationStream, bool bCalcHuffman)
 			
 			// write a lossy MCU
 			///////////////////////////////////////////////////////////
-			imbxUint32 bufferPointer = (m_mcuProcessedY * pChannel->m_blockMcuY * m_mcuNumberX + m_mcuProcessedX) * 64 * pChannel->m_blockMcuX;
+			imbxUint32 bufferPointer = (m_mcuProcessedY * pChannel->m_blockMcuY * ((m_jpegImageSizeX * pChannel->m_samplingFactorX / m_maxSamplingFactorX) >> 3)  + m_mcuProcessedX) * 64 * pChannel->m_blockMcuX;
 			
 			for(int scanBlockY = 0; scanBlockY < pChannel->m_blockMcuY; ++scanBlockY)
 			{

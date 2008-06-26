@@ -3,6 +3,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CImbx_tests", "tests\CImbx_
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dicom2jpeg", "examples\dicom2jpeg\dicom2jpeg.vcproj", "{3BEA72B3-38C2-490A-92A8-E45368A2300D}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -16,6 +20,12 @@ Global
 		{466FDECD-8464-4B9C-B51E-E54DE2EE9736}.Debug_posix.Build.0 = Debug_iconv|Win32
 		{466FDECD-8464-4B9C-B51E-E54DE2EE9736}.Release.ActiveCfg = Release|Win32
 		{466FDECD-8464-4B9C-B51E-E54DE2EE9736}.Release.Build.0 = Release|Win32
+		{3BEA72B3-38C2-490A-92A8-E45368A2300D}.Debug.ActiveCfg = Debug|Win32
+		{3BEA72B3-38C2-490A-92A8-E45368A2300D}.Debug.Build.0 = Debug|Win32
+		{3BEA72B3-38C2-490A-92A8-E45368A2300D}.Debug_posix.ActiveCfg = Debug|Win32
+		{3BEA72B3-38C2-490A-92A8-E45368A2300D}.Debug_posix.Build.0 = Debug|Win32
+		{3BEA72B3-38C2-490A-92A8-E45368A2300D}.Release.ActiveCfg = Release|Win32
+		{3BEA72B3-38C2-490A-92A8-E45368A2300D}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
