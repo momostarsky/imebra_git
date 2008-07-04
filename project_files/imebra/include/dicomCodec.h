@@ -182,7 +182,7 @@ protected:
 	
 	// Read an uncompressed interleaved image
 	///////////////////////////////////////////////////////////
-	void dicomCodec::readUncompressedInterleaved(
+	void readUncompressedInterleaved(
 		imbxUint32 channelsNumber, 
 		bool bSubSampledX,
 		bool bSubSampledY, 
@@ -194,7 +194,7 @@ protected:
 
 	// Write an uncompressed interleaved image
 	///////////////////////////////////////////////////////////
-	void dicomCodec::writeUncompressedInterleaved(
+	void writeUncompressedInterleaved(
 		imbxUint32 channelsNumber, 
 		bool bSubSampledX,
 		bool bSubSampledY,
@@ -206,7 +206,7 @@ protected:
 
 	// Read an uncompressed not interleaved image
 	///////////////////////////////////////////////////////////
-	void dicomCodec::readUncompressedNotInterleaved(
+	void readUncompressedNotInterleaved(
 		imbxUint32 channelsNumber, 
 		streamReader* pSourceStream,
 		imbxUint8 wordSizeBytes,
@@ -216,7 +216,7 @@ protected:
 
 	// Write an uncompressed not interleaved image
 	///////////////////////////////////////////////////////////
-	void dicomCodec::writeUncompressedNotInterleaved(
+	void writeUncompressedNotInterleaved(
 		imbxUint32 channelsNumber, 
 		streamWriter* pDestStream,
 		imbxUint8 wordSizeBytes,
@@ -226,7 +226,7 @@ protected:
 
 	// Write an RLE compressed image
 	///////////////////////////////////////////////////////////
-	void dicomCodec::writeRLECompressed(
+	void writeRLECompressed(
 		imbxUint32 imageSizeX, 
 		imbxUint32 imageSizeY, 
 		imbxUint32 channelsNumber, 
@@ -237,7 +237,7 @@ protected:
 
 	// Read an RLE compressed image
 	///////////////////////////////////////////////////////////
-	void dicomCodec::readRLECompressed(
+	void readRLECompressed(
 		imbxUint32 imageSizeX, 
 		imbxUint32 imageSizeY, 
 		imbxUint32 channelsNumber, 
@@ -258,7 +258,7 @@ protected:
 	
 	// Write a single pixel of a RAW dicom image
 	///////////////////////////////////////////////////////////
-	void dicomCodec::writePixel(
+	void writePixel(
 					streamWriter* pDestStream,
 					imbxInt32 pixelValue,
 					imbxUint8*  pBitPointer,

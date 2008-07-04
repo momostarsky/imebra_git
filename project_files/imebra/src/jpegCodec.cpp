@@ -1649,12 +1649,12 @@ void jpegCodec::copyImageToJpegChannels(
 		}
 
 		pChannelBuffer = pChannel->m_pBuffer;
-		imbxInt32 or   = ((imbxInt32) - 1) << m_precision;
+		imbxInt32 orValue   = ((imbxInt32) - 1) << m_precision;
 		for(imbxUint32 adjustHighBits = pChannel->m_bufferSize; adjustHighBits != 0; --adjustHighBits)
 		{
 			if((*pChannelBuffer & offsetValue) != 0)
 			{
-				*pChannelBuffer |= or;
+				*pChannelBuffer |= orValue;
 			}
 			++pChannelBuffer;
 		}

@@ -25,6 +25,7 @@ The class hides the platform specific implementations and supplies a common
 
 #if defined(PUNTOEXE_USEICONV)
 #include <iconv.h>
+#include <errno.h>
 #else
 #include "windows.h"
 #endif
@@ -119,8 +120,14 @@ protected:
 	int findTable(std::string tableName);
 
 	std::string m_isoCharset;
+
 #if defined(PUNTOEXE_USEICONV)
+
+#if defined(WIN32)
 	std::string myIconv(iconv_t context, const char* inputString, size_t inputStringLengthBytes);
+#else
+	std::string myIconv(iconv_t context, char* inputString, size_t inputStringLengthBytes);
+#endif
 	iconv_t m_iconvToUnicode;
 	iconv_t m_iconvFromUnicode;
 #else

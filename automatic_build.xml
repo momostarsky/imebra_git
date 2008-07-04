@@ -47,7 +47,7 @@
 	</target>
 
 	<!-- Make a zip file and a gzip file of the GPL build -->
-	<target name="ZIP_GPL" depends="CHM, PDF, PDF_hyperlinked, create_GPL" description ="Compress the build">
+	<target name="ZIP_GPL" depends="CHM, PDF, create_GPL" description ="Compress the build">
 		<delete dir="${build_dir}/puntoexe_library/generated_doc" />
 		<zip basedir="${build_dir}" destfile="${builds}/imebra_${fileVersion}.zip" />
 	</target>
@@ -152,29 +152,6 @@ The author can be contacted by email at paolo@puntoexe.com or by mail at
 			<arg value="refman.tex"/>
 		</exec>
 		<copy file="${build_dir}/puntoexe_library/generated_doc/latex/refman.pdf" tofile="${build_dir}/documentation/imebra.pdf" />
-	</target>
-
-	<!-- Build the Hyperlinked PDF documentation -->
-	<target name="PDF_hyperlinked" depends="documentation_version, create_build_dir" description="Build the hyperlinked PDF document">
-		<exec dir="${build_dir}/puntoexe_library" executable="doxygen" failonerror="true">
-			<arg value="doxyfilePDFH"/>
-		</exec>
-		<exec dir="${build_dir}/puntoexe_library/generated_doc/latexH" executable="pdflatex">
-			<arg value="refman.tex"/>
-		</exec>
-		<exec dir="${build_dir}/puntoexe_library/generated_doc/latexH" executable="makeindex">
-			<arg value="refman.idx"/>
-		</exec>
-		<exec dir="${build_dir}/puntoexe_library/generated_doc/latexH" executable="pdflatex">
-			<arg value="refman.tex"/>
-		</exec>
-		<exec dir="${build_dir}/puntoexe_library/generated_doc/latexH" executable="pdflatex">
-			<arg value="refman.tex"/>
-		</exec>
-		<exec dir="${build_dir}/puntoexe_library/generated_doc/latexH" executable="pdflatex">
-			<arg value="refman.tex"/>
-		</exec>
-		<copy file="${build_dir}/puntoexe_library/generated_doc/latexH/refman.pdf" tofile="${build_dir}/documentation/imebraLinks.pdf" />
 	</target>
 
 	<!-- Build the documentation -->

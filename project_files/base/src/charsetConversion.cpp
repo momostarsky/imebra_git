@@ -220,7 +220,7 @@ std::string charsetConversion::fromUnicode(std::wstring unicodeString)
 		return std::string();
 	}
 #if defined(PUNTOEXE_USEICONV)
-	return myIconv(m_iconvFromUnicode, (const char*)(unicodeString.c_str()), unicodeString.length() * sizeof(wchar_t));
+	return myIconv(m_iconvFromUnicode, (char*)unicodeString.c_str(), unicodeString.length() * sizeof(wchar_t));
 #else
 	BOOL bUsedDefault = false;
 	int requiredChars = ::WideCharToMultiByte(m_codePage, m_bZeroFlag ? 0 : WC_NO_BEST_FIT_CHARS | WC_COMPOSITECHECK | WC_DEFAULTCHAR, unicodeString.c_str(), (int)(unicodeString.length()), 0, 0, 0, m_bZeroFlag ? 0 : &bUsedDefault);
@@ -252,7 +252,7 @@ std::wstring charsetConversion::toUnicode(std::string asciiString)
 		return std::wstring();
 	}
 #if defined(PUNTOEXE_USEICONV)
-	std::string convertedString(myIconv(m_iconvToUnicode, asciiString.c_str(), asciiString.length()));
+	std::string convertedString(myIconv(m_iconvToUnicode, (char*)asciiString.c_str(), asciiString.length()));
 	std::wstring returnString((wchar_t*)convertedString.c_str(), convertedString.size() / sizeof(wchar_t));
 #else
 	int requiredWChars = ::MultiByteToWideChar(m_codePage, 0, asciiString.c_str(), (int)(asciiString.length()), 0, 0);
@@ -272,7 +272,12 @@ std::wstring charsetConversion::toUnicode(std::string asciiString)
 //
 ///////////////////////////////////////////////////////////
 #if defined(PUNTOEXE_USEICONV)
+
+#if defined(WIN32)
 std::string charsetConversion::myIconv(iconv_t context, const char* inputString, size_t inputStringLengthBytes)
+#else
+std::string charsetConversion::myIconv(iconv_t context, char* inputString, size_t inputStringLengthBytes)
+#endif
 {
 	PUNTOEXE_FUNCTION_START(L"charsetConversion::myIconv");
 

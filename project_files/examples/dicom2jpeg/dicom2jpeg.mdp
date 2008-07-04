@@ -1,0 +1,170 @@
+<Project name="dicom2jpeg" fileversion="2.0" language="CPP" ctype="CProject">
+  <Configurations active="Debug">
+    <Configuration name="Debug" SourceDirectory="." ctype="CProjectConfiguration">
+      <Output directory="bin/Debug" output="dicom2jpeg" />
+      <Build debugmode="True" target="Bin" />
+      <Execution runwithwarnings="True" commandlineparameters="'/media/Ext HD_____/dicomImages/Immagini Dicom/XA-MONO2-8-12x-catheter.dcm' '/media/Ext HD_____/dicomImages/Immagini Dicom/testjpeg.jpg'" consolepause="True" />
+      <Libs>
+        <Lib>pthread</Lib>
+      </Libs>
+      <CodeGeneration WarningLevel="All" WarningsAsErrors="False" OptimizationLevel="0" ExtraCompilerArguments="" ExtraLinkerArguments="-wmain" DefineSymbols="DEBUG MONODEVELOP" ctype="CCompilationParameters" />
+    </Configuration>
+    <Configuration name="Release" SourceDirectory="." ctype="CProjectConfiguration">
+      <Output directory="bin/Release" output="dicom2jpeg" />
+      <Build debugmode="False" target="Bin" />
+      <Execution runwithwarnings="True" consolepause="True" />
+      <Libs>
+        <Lib>pthread</Lib>
+      </Libs>
+      <CodeGeneration WarningLevel="All" WarningsAsErrors="False" OptimizationLevel="3" ExtraCompilerArguments="" ExtraLinkerArguments="" DefineSymbols="MONODEVELOP" ctype="CCompilationParameters" />
+    </Configuration>
+  </Configurations>
+  <Contents>
+    <File name="dicom2jpeg.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../base/src/baseObject.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../base/src/baseStream.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../base/src/charsetConversion.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../base/src/criticalSection.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../base/src/exception.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../base/src/huffmanTable.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../base/src/memory.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../base/src/memoryStream.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../base/src/stream.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../base/src/streamController.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../base/src/streamReader.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../base/src/streamWriter.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../base/src/thread.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/buffer.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/charsetsList.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/codec.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/codecFactory.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/colorTransform.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/colorTransformsFactory.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/data.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/dataGroup.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/dataHandler.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/dataHandlerDate.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/dataHandlerDateTime.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/dataHandlerDateTimeBase.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/dataHandlerString.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/dataHandlerStringAE.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/dataHandlerStringAS.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/dataHandlerStringCS.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/dataHandlerStringDS.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/dataHandlerStringIS.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/dataHandlerStringLO.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/dataHandlerStringLT.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/dataHandlerStringPN.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/dataHandlerStringSH.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/dataHandlerStringST.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/dataHandlerStringUI.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/dataHandlerStringUnicode.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/dataHandlerStringUT.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/dataHandlerTime.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/dataSet.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/dibCodec.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/dicomCodec.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/dicomDict.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/drawBitmap.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/image.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/jpegCodec.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/LUT.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/modalityVOILUT.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/MONOCHROME1ToMONOCHROME2.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/MONOCHROME1ToRGB.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/MONOCHROME2ToRGB.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/MONOCHROME2ToYBRFULL.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/PALETTECOLORToRGB.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/RGBToMONOCHROME2.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/RGBToPALETTECOLOR.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/RGBToYBRFULL.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/RGBToYBRPARTIAL.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/transaction.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/transform.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/transformBuffers.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/transformHighBit.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/transformsChain.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/viewHelper.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/VOILUT.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/waveform.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/YBRFULLToMONOCHROME2.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/YBRFULLToRGB.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/src/YBRPARTIALToRGB.cpp" subtype="Code" buildaction="Compile" />
+    <File name="../../imebra/include/buffer.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/bufferStream.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/charsetsList.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/codec.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/codecFactory.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/colorTransform.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/colorTransformsFactory.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/data.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/dataCollection.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/dataGroup.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/dataHandler.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/dataHandlerDate.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/dataHandlerDateTime.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/dataHandlerDateTimeBase.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/dataHandlerNumeric.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/dataHandlerString.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/dataHandlerStringAE.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/dataHandlerStringAS.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/dataHandlerStringCS.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/dataHandlerStringDS.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/dataHandlerStringIS.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/dataHandlerStringLO.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/dataHandlerStringLT.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/dataHandlerStringPN.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/dataHandlerStringSH.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/dataHandlerStringST.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/dataHandlerStringUI.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/dataHandlerStringUnicode.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/dataHandlerStringUT.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/dataHandlerTime.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/dataSet.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/dibCodec.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/dicomCodec.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/dicomDict.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/drawBitmap.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/image.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/imebra.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/imebraDoc.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/jpegCodec.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/LUT.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/modalityVOILUT.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/MONOCHROME1ToMONOCHROME2.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/MONOCHROME1ToRGB.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/MONOCHROME2ToRGB.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/MONOCHROME2ToYBRFULL.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/PALETTECOLORToRGB.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/RGBToMONOCHROME2.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/RGBToPALETTECOLOR.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/RGBToYBRFULL.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/RGBToYBRPARTIAL.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/transaction.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/transform.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/transformBuffers.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/transformHighBit.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/transformsChain.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/viewHelper.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/VOILUT.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/waveform.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/YBRFULLToMONOCHROME2.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/YBRFULLToRGB.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../imebra/include/YBRPARTIALToRGB.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../base/include/baseObject.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../base/include/baseStream.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../base/include/charsetConversion.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../base/include/configuration.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../base/include/criticalSection.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../base/include/exception.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../base/include/huffmanTable.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../base/include/memory.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../base/include/memoryStream.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../base/include/stream.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../base/include/streamController.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../base/include/streamReader.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../base/include/streamWriter.h" subtype="Code" buildaction="Nothing" />
+    <File name="../../base/include/thread.h" subtype="Code" buildaction="Nothing" />
+  </Contents>
+  <compiler ctype="GppCompiler" />
+</Project>

@@ -1,0 +1,20 @@
+<Combine name="imebra" fileversion="2.0">
+  <Configurations active="Debug">
+    <Configuration name="Debug" ctype="CombineConfiguration">
+      <Entry build="True" name="imebra" configuration="Debug" />
+      <Entry build="True" name="dicom2jpeg" configuration="Debug" />
+    </Configuration>
+    <Configuration name="Release" ctype="CombineConfiguration">
+      <Entry build="True" name="imebra" configuration="Release" />
+      <Entry build="True" name="dicom2jpeg" configuration="Release" />
+    </Configuration>
+  </Configurations>
+  <StartMode startupentry="dicom2jpeg" single="True">
+    <Execute type="None" entry="imebra" />
+    <Execute type="None" entry="dicom2jpeg" />
+  </StartMode>
+  <Entries>
+    <Entry filename="imebra.mdp" />
+    <Entry filename="examples/dicom2jpeg/dicom2jpeg.mdp" />
+  </Entries>
+</Combine>

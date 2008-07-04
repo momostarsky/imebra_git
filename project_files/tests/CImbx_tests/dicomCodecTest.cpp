@@ -100,6 +100,15 @@ void dicomCodecTest::testUncompressedNotInterleaved()
 			20, 
 			L"RGB", 
 			100));
+		ptr<image> dicomImage2(buildImageForTest(
+			601, 
+			401, 
+			depth,
+			highBit, 
+			30, 
+			20, 
+			L"RGB", 
+			150));
 
 		ptr<memory> streamMemory(new memory);
 		{
@@ -109,6 +118,7 @@ void dicomCodecTest::testUncompressedNotInterleaved()
 			testDataSet->setString(0x0010, 0, 0x0010, 2, "");
 			testDataSet->setImage(0, dicomImage0, L"1.2.840.10008.1.2.1", codecs::codec::veryHigh);
 			testDataSet->setImage(1, dicomImage1, L"1.2.840.10008.1.2.1", codecs::codec::veryHigh);
+			testDataSet->setImage(2, dicomImage2, L"1.2.840.10008.1.2.1", codecs::codec::veryHigh);
 
 			ptr<memoryStream> writeStream(new memoryStream(streamMemory));
 
@@ -125,9 +135,11 @@ void dicomCodecTest::testUncompressedNotInterleaved()
 
 		ptr<image> checkImage0 = testDataSet->getImage(0);
 		ptr<image> checkImage1 = testDataSet->getImage(1);
+		ptr<image> checkImage2 = testDataSet->getImage(2);
 
 		CPPUNIT_ASSERT(compareImages(checkImage0, dicomImage0) < 0.0001);
 		CPPUNIT_ASSERT(compareImages(checkImage1, dicomImage1) < 0.0001);
+		CPPUNIT_ASSERT(compareImages(checkImage2, dicomImage2) < 0.0001);
 	}
 }
 

@@ -456,8 +456,8 @@ void dataSet::setImage(imbxUint32 frameNumber, ptr<image> pImage, std::wstring t
 	}
 	else
 	{
-		ptr<puntoexe::memoryStream> memoryStream(new memoryStream(uncompressedImage));
-		outputStream = new streamWriter(memoryStream);
+		ptr<puntoexe::memoryStream> memStream(new memoryStream(uncompressedImage));
+		outputStream = new streamWriter(memStream);
 	}
 	
 	// Save the image in the stream
@@ -476,7 +476,6 @@ void dataSet::setImage(imbxUint32 frameNumber, ptr<image> pImage, std::wstring t
 
 	if(!bEncapsulated && frameNumber != 0)
 	{
-		ptr<puntoexe::memoryStream> memoryStream(outputStream->getControlledStream());
 		ptr<handlers::dataHandlerRaw> copyUncompressed(getDataHandlerRaw(groupId, orderId, tagId, firstBufferId, true));
 		copyUncompressed->setSize((frameNumber + 1) * uncompressedImage->size());
 		imbxUint8* pSource = uncompressedImage->data();

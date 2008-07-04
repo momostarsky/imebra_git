@@ -68,6 +68,10 @@
 			CharacterSet="1">
 			<Tool
 				Name="VCCLCompilerTool"
+				GlobalOptimizations="TRUE"
+				InlineFunctionExpansion="2"
+				EnableIntrinsicFunctions="TRUE"
+				FavorSizeOrSpeed="1"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_WIN32_WINNT=0x0501 "
 				RuntimeLibrary="0"
 				ForceConformanceInForLoopScope="TRUE"

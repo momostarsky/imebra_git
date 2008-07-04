@@ -52,8 +52,14 @@ void dataHandlerString::parseBuffer(ptr<memory> memoryBuffer)
 
 	m_strings.clear();
 
-	std::string tempBuffer((char*)(memoryBuffer->data()), memoryBuffer->size());
-	std::wstring tempBufferUnicode = convertToUnicode(tempBuffer);
+	// Convert the string to unicode
+	///////////////////////////////////////////////////////////
+	std::wstring tempBufferUnicode;
+	imbxUint32 tempBufferSize(memoryBuffer->size());
+	if(tempBufferSize != 0)
+	{
+		tempBufferUnicode = convertToUnicode(std::string((char*)(memoryBuffer->data()), tempBufferSize));
+	}
 
 	// Remove the extra spaces and zero bytes
 	///////////////////////////////////////////////////////////

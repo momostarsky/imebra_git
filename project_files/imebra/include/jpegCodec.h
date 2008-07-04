@@ -284,7 +284,7 @@ protected:
 	
 	// Write a lossy block of pixels
 	///////////////////////////////////////////////////////////
-	inline void jpegCodec::writeBlock(streamWriter* pStream, imbxInt32* pBuffer, jpeg::jpegChannel* pChannel, bool bCalcHuffman);
+	inline void writeBlock(streamWriter* pStream, imbxInt32* pBuffer, jpeg::jpegChannel* pChannel, bool bCalcHuffman);
 
 	// Reset the internal variables
 	///////////////////////////////////////////////////////////

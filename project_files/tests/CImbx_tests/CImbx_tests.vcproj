@@ -123,7 +123,7 @@
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="3"
 				WarningLevel="4"
-				Detect64BitPortabilityProblems="TRUE"
+				Detect64BitPortabilityProblems="FALSE"
 				DebugInformationFormat="4"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
