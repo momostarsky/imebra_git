@@ -63,6 +63,11 @@ A detailed reference of the C++ classes that compose Imebra is included in
 
 \section changeLog Changes log
 
+\subsection since_0_0_40 Changes since version 0.0.40 (Alpha)
+
+- Added the example dicom2jpeg
+
+
 \subsection since_0_0_38 Changes since version 0.0.38 (Alpha)
 
 - Closes #12 (Subsampled images are saved/loaded incorrectly by the jpeg codec)

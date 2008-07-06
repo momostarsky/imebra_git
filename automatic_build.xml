@@ -39,6 +39,7 @@
 			<arg value="${userName}" />
 			<arg value="--password" />
 			<arg value="${password}" />
+			<arg value="--no-auth-cache" />
 		</exec>
 		<exec dir="." executable="svn">
 			<arg value="revert"/>
@@ -58,6 +59,7 @@
 		<mkdir dir="${build_dir}/puntoexe_library/base" />
 		<mkdir dir="${build_dir}/puntoexe_library/imebra" />
 		<mkdir dir="${build_dir}/puntoexe_library/docs" />
+		<mkdir dir="${build_dir}/puntoexe_library/examples" />
 		<copy file="project_files/DoxyFileCHM" tofile="${build_dir}/puntoexe_library/DoxyFileCHM" />
 		<copy file="project_files/DoxyFileHTML" tofile="${build_dir}/puntoexe_library/DoxyFileHTML" />
 		<copy file="project_files/DoxyFilePDF" tofile="${build_dir}/puntoexe_library/DoxyFilePDF" />
@@ -70,6 +72,9 @@
 		</copy>
 		<copy todir="${build_dir}/puntoexe_library/docs">
 			<fileset dir="project_files/docs" />
+		</copy>
+		<copy todir="${build_dir}/puntoexe_library/examples">
+			<fileset dir="project_files/examples" />
 		</copy>
 		<copy file="project_files/docs/gpl.txt" tofile="${build_dir}/license.txt" />
 		<replace dir="${build_dir}/puntoexe_library" token="$fileHeader$">
