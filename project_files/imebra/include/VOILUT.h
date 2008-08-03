@@ -143,6 +143,17 @@ public:
 	///////////////////////////////////////////////////////////
 	void setCenterWidth(imbxInt32 center, imbxInt32 width);
 
+	/// \brief Returns the VOI width/center used for the
+	///         transformation.
+	///
+	/// @param pCenter  pointer to the recipient for the VOI 
+	///                  center
+	/// @param width    pointer to the recipient for the VOI
+	///                  width
+	///
+	///////////////////////////////////////////////////////////
+	void getCenterWidth(imbxInt32* pCenter, imbxInt32* pWidth);
+
 protected:
 	ptr<lut> m_pLUT;
 	imbxInt32 m_windowCenter;
