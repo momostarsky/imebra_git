@@ -1322,6 +1322,7 @@ ptr<image> jpegCodec::getImage(ptr<dataSet> sourceDataSet, ptr<streamReader> pSt
 	// If the compression is jpeg baseline or jpeg extended
 	//  then the color space cannot be "RGB"
 	///////////////////////////////////////////////////////////
+#if defined(IMEBRA_REPLACE_JPEG_RGB_YBR)
 	if(colorSpace == L"RGB")
 	{
 		std::wstring transferSyntax(sourceDataSet->getUnicodeString(0x0002, 0, 0x0010, 0));
@@ -1331,7 +1332,7 @@ ptr<image> jpegCodec::getImage(ptr<dataSet> sourceDataSet, ptr<streamReader> pSt
 			colorSpace = L"YBR_FULL";
 		}
 	}
-	
+#endif
 
 	ptr<image> returnImage(new image);
 	copyJpegChannelsToImage(returnImage, b2complement, colorSpace);
