@@ -1319,6 +1319,20 @@ ptr<image> jpegCodec::getImage(ptr<dataSet> sourceDataSet, ptr<streamReader> pSt
 	bool b2complement = sourceDataSet->getUnsignedLong(0x0028, 0, 0x0103, 0) != 0;
 	std::wstring colorSpace = sourceDataSet->getUnicodeString(0x0028, 0, 0x0004, 0);
 
+	// If the compression is jpeg baseline or jpeg extended
+	//  then the color space cannot be "RGB"
+	///////////////////////////////////////////////////////////
+	if(colorSpace == L"RGB")
+	{
+		std::wstring transferSyntax(sourceDataSet->getUnicodeString(0x0002, 0, 0x0010, 0));
+		if(transferSyntax == L"1.2.840.10008.1.2.4.50" ||  // baseline (8 bits lossy)
+		   transferSyntax == L"1.2.840.10008.1.2.4.51")    // extended (12 bits lossy)
+		{
+			colorSpace = L"YBR_FULL";
+		}
+	}
+	
+
 	ptr<image> returnImage(new image);
 	copyJpegChannelsToImage(returnImage, b2complement, colorSpace);
 
