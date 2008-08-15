@@ -20,8 +20,8 @@ $fileHeader$
 ///         color space "YBR_FULL" even when the original
 ///         dataset specifies the color space "RGB" when
 ///         an image is compressed using the transfer
-///         syntax "1.2.840.10008.1.2.4.50" (baseline 8 
-///         bits lossy) or "1.2.840.10008.1.2.4.51" 
+///         syntax "1.2.840.10008.1.2.4.50" (baseline 8
+///         bits lossy) or "1.2.840.10008.1.2.4.51"
 ///         (extended 12 bits lossy)
 ///////////////////////////////////////////////////////////
 
@@ -58,7 +58,7 @@ namespace jpeg
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class jpegCodec : public codec 
+class jpegCodec : public codec
 {
 	friend class jpeg::tag;
 
@@ -74,7 +74,7 @@ public:
 	// Allocate the image's channels
 	///////////////////////////////////////////////////////////
 	void allocChannels();
-	
+
 	// Find the mcu's size
 	///////////////////////////////////////////////////////////
 	void findMcuSize();
@@ -82,7 +82,7 @@ public:
 	// Recalculate the tables for dequantization/quantization
 	void recalculateQuantizationTables(int table);
 
-	
+
 	// Erase the allocated channels
 	///////////////////////////////////////////////////////////
 	void eraseChannels();
@@ -90,13 +90,13 @@ public:
 	// Retrieve the image from a dataset
 	///////////////////////////////////////////////////////////
 	virtual ptr<image> getImage(ptr<dataSet> sourceDataSet, ptr<streamReader> pStream, std::string dataType);
-	
+
 	// Insert a jpeg compressed image into a dataset
 	///////////////////////////////////////////////////////////
 	virtual void setImage(
 		ptr<streamWriter> pDestStream,
-		ptr<image> pImage, 
-		std::wstring transferSyntax, 
+		ptr<image> pImage,
+		std::wstring transferSyntax,
 		quality imageQuality,
 		std::string dataType,
 		imbxUint8 allocatedBits,
@@ -109,7 +109,7 @@ public:
 	///////////////////////////////////////////////////////////
 	virtual bool canHandleTransferSyntax(std::wstring transferSyntax);
 
-	// Returns true if the transfer syntax has to be 
+	// Returns true if the transfer syntax has to be
 	//  encapsulated
 	//
 	///////////////////////////////////////////////////////////
@@ -132,7 +132,7 @@ protected:
 	// Read a jpeg stream and build a Dicom dataset
 	///////////////////////////////////////////////////////////
 	virtual void readStream(ptr<streamReader> pSourceStream, ptr<dataSet> pDataSet, imbxUint32 maxSizeBufferLoad = 0xffffffff);
-	
+
 	// Write a Dicom dataset as a Jpeg stream
 	///////////////////////////////////////////////////////////
 	virtual void writeStream(ptr<streamWriter> pSourceStream, ptr<dataSet> pDataSet);
@@ -147,7 +147,7 @@ public:
 	///////////////////////////////////////////////////////////
 	imbxUint32 m_imageSizeX;
 	imbxUint32 m_imageSizeY;
-	
+
 	// Encoding process
 	///////////////////////////////////////////////////////////
 	imbxUint8  m_process;
@@ -156,7 +156,7 @@ public:
 	///////////////////////////////////////////////////////////
 	int m_precision;
 	imbxInt32 m_valuesMask;
-	
+
 	// true when the end of the image has been reached
 	///////////////////////////////////////////////////////////
 	bool m_bEndOfImage;
@@ -166,17 +166,17 @@ public:
 	typedef ptr<jpeg::jpegChannel> ptrChannel;
 	typedef std::map<imbxUint8, ptrChannel> tChannelsMap;
 	tChannelsMap m_channelsMap;
-	
-	// The list of the channels in the active scan
+
+	// The list of the channels in the active scan, zero
+	//  terminated
 	///////////////////////////////////////////////////////////
-	typedef std::list<ptrChannel> tChannelsList;
-	tChannelsList m_channelsList;
+	jpeg::jpegChannel* m_channelsList[257]; // 256 channels + terminator
 
 	// Huffman tables
 	///////////////////////////////////////////////////////////
 	ptr<huffmanTable> m_pHuffmanTableDC[16];
 	ptr<huffmanTable> m_pHuffmanTableAC[16];
-	
+
 	//
 	// Quantization tables
 	//
@@ -196,7 +196,7 @@ public:
 	// The length of the EOB run
 	///////////////////////////////////////////////////////////
 	imbxUint32 m_eobRun;
-	
+
 	// The last found restart interval
 	///////////////////////////////////////////////////////////
 	imbxUint32 m_mcuLastRestart;
@@ -253,9 +253,9 @@ protected:
 		sof1 = 0xc1,
 		sof2 = 0xc2,
 		sof3 = 0xc3,
-		
+
 		dht = 0xc4,
-		
+
 		sof5 = 0xc5,
 		sof6 = 0xc6,
 		sof7 = 0xc7,
@@ -291,7 +291,7 @@ protected:
 	// Read a lossy block of pixels
 	///////////////////////////////////////////////////////////
 	inline void readBlock(streamReader* pStream, imbxInt32* pBuffer, jpeg::jpegChannel* pChannel);
-	
+
 	// Write a lossy block of pixels
 	///////////////////////////////////////////////////////////
 	inline void writeBlock(streamWriter* pStream, imbxInt32* pBuffer, jpeg::jpegChannel* pChannel, bool bCalcHuffman);
@@ -321,8 +321,8 @@ protected:
 	float m_dctTempMatrix[64];
 };
 
-/// \brief Base class for the exceptions thrown by the 
-///        jpeg codec        
+/// \brief Base class for the exceptions thrown by the
+///        jpeg codec
 ///
 ///////////////////////////////////////////////////////////
 class jpegCodecException: public codecException
@@ -365,7 +365,7 @@ class jpegChannel : public channel
 public:
 	// Constructor
 	///////////////////////////////////////////////////////////
-	jpegChannel(): 
+	jpegChannel():
 		m_quantTable(0),
 		m_blockMcuX(0),
 		m_blockMcuY(0),
@@ -406,7 +406,7 @@ public:
 	// Default DC value
 	///////////////////////////////////////////////////////////
 	imbxInt32 m_defaultDCValue;
-	
+
 	// Lossless position
 	///////////////////////////////////////////////////////////
 	imbxUint32 m_losslessPositionX;
@@ -466,7 +466,7 @@ public:
 	// The function should call WriteLength first.
 	///////////////////////////////////////////////////////////
 	virtual void writeTag(streamWriter* pStream, jpegCodec* pCodec)=0;
-	
+
 	// Read the tag's content. The function should call
 	//  ReadLength first.
 	///////////////////////////////////////////////////////////
@@ -476,7 +476,7 @@ protected:
 	// Write the tag's length
 	///////////////////////////////////////////////////////////
 	void writeLength(streamWriter* pStream, imbxUint16 length);
-	
+
 	// Read the tag's length
 	///////////////////////////////////////////////////////////
 	imbxInt32 readLength(streamReader* pStream);
@@ -500,7 +500,7 @@ public:
 	// Write the tag's content.
 	///////////////////////////////////////////////////////////
 	virtual void writeTag(streamWriter* pStream, jpegCodec* pCodec);
-	
+
 	// Read the tag's content.
 	///////////////////////////////////////////////////////////
 	virtual void readTag(streamReader* pStream, jpegCodec* pCodec, imbxUint8 tagEntry);
@@ -525,7 +525,7 @@ public:
 	// Write the tag's content.
 	///////////////////////////////////////////////////////////
 	virtual void writeTag(streamWriter* pStream, jpegCodec* pCodec);
-	
+
 	// Read the tag's content.
 	///////////////////////////////////////////////////////////
 	virtual void readTag(streamReader* pStream, jpegCodec* pCodec, imbxUint8 tagEntry);
@@ -548,7 +548,7 @@ public:
 	// Write the tag's content.
 	///////////////////////////////////////////////////////////
 	virtual void writeTag(streamWriter* pStream, jpegCodec* pCodec);
-	
+
 	// Read the tag's content.
 	///////////////////////////////////////////////////////////
 	virtual void readTag(streamReader* pStream, jpegCodec* pCodec, imbxUint8 tagEntry);
@@ -571,7 +571,7 @@ public:
 	// Write the tag's content.
 	///////////////////////////////////////////////////////////
 	virtual void writeTag(streamWriter* pStream, jpegCodec* pCodec);
-	
+
 	// Read the tag's content.
 	///////////////////////////////////////////////////////////
 	virtual void readTag(streamReader* pStream, jpegCodec* pCodec, imbxUint8 tagEntry);
@@ -594,7 +594,7 @@ public:
 	// Write the tag's content.
 	///////////////////////////////////////////////////////////
 	virtual void writeTag(streamWriter* pStream, jpegCodec* pCodec);
-	
+
 	// Read the tag's content.
 	///////////////////////////////////////////////////////////
 	virtual void readTag(streamReader* pStream, jpegCodec* pCodec, imbxUint8 tagEntry);
@@ -617,7 +617,7 @@ public:
 	// Write the tag's content.
 	///////////////////////////////////////////////////////////
 	virtual void writeTag(streamWriter* pStream, jpegCodec* pCodec);
-	
+
 	// Read the tag's content.
 	///////////////////////////////////////////////////////////
 	virtual void readTag(streamReader* pStream, jpegCodec* pCodec, imbxUint8 tagEntry);
@@ -640,7 +640,7 @@ public:
 	// Write the tag's content.
 	///////////////////////////////////////////////////////////
 	virtual void writeTag(streamWriter* pStream, jpegCodec* pCodec);
-	
+
 	// Read the tag's content.
 	///////////////////////////////////////////////////////////
 	virtual void readTag(streamReader* pStream, jpegCodec* pCodec, imbxUint8 tagEntry);
@@ -663,7 +663,7 @@ public:
 	// Write the tag's content.
 	///////////////////////////////////////////////////////////
 	virtual void writeTag(streamWriter* pStream, jpegCodec* pCodec);
-	
+
 	// Read the tag's content.
 	///////////////////////////////////////////////////////////
 	virtual void readTag(streamReader* pStream, jpegCodec* pCodec, imbxUint8 tagEntry);

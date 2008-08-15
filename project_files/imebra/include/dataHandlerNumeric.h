@@ -38,7 +38,7 @@ namespace handlers
 /// \brief This data handler accesses to the numeric data
 ///         stored in a puntoexe::imebra::buffer class.
 ///
-/// A special definition of this class 
+/// A special definition of this class
 ///  (puntoexe::imebra::handlers::imageHandler) is used
 ///  to access to the images' raw pixels.
 ///
@@ -117,7 +117,7 @@ public:
 	virtual imbxInt32 getSignedLong()
 	{
 		return (imbxInt32) (*m_elementPointer);
-	}	
+	}
 
 	// Retrieve the data element an unsigned long
 	///////////////////////////////////////////////////////////
@@ -139,9 +139,9 @@ public:
 	virtual imbxInt32 getSignedLongIncPointer()
 	{
 		return (imbxInt32) (*(m_elementPointer++));
-	}	
+	}
 
-	// Retrieve the data element as an unsigned long and 
+	// Retrieve the data element as an unsigned long and
 	//  increase the data element's pointer
 	///////////////////////////////////////////////////////////
 	virtual imbxUint32 getUnsignedLongIncPointer()
@@ -188,7 +188,7 @@ public:
 	virtual imbxUint32 getSize()
 	{
 		PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::getSize");
-		
+
 		return m_memory->size()/getUnitSize();
 
 		PUNTOEXE_FUNCTION_END();
@@ -267,7 +267,7 @@ public:
 		PUNTOEXE_FUNCTION_END();
 	}
 
-	/// \brief Returns a pointer to the physical %memory that 
+	/// \brief Returns a pointer to the physical %memory that
 	///         stores the data managed by the handler.
 	///
 	/// Warning: the %memory that stores the managed data may
@@ -315,7 +315,7 @@ public:
 		PUNTOEXE_FUNCTION_END();
 	}
 
-	// Copy the data from the handler into an array of 
+	// Copy the data from the handler into an array of
 	//  imbxInt32 values
 	///////////////////////////////////////////////////////////
 	virtual void copyToInt32(imbxInt32* pDest, imbxUint32 length)
@@ -346,23 +346,23 @@ public:
 	///  related to a single channel.
 	/// @param pSource      a pointer to the source array of
 	///                      imbxInt32 values
-	/// @param sourceReplicateX the horizontal subsamplig 
-	///                      factor of the source buffer 
+	/// @param sourceReplicateX the horizontal subsamplig
+	///                      factor of the source buffer
 	///                      (1=not subsampled, 2=subsampled)
-	/// @param sourceReplicateY the vertical subsamplig 
-	///                      factor of the source buffer 
+	/// @param sourceReplicateY the vertical subsamplig
+	///                      factor of the source buffer
 	///                      (1=not subsampled, 2=subsampled)
-	/// @param destStartCol the horizontal coordinate of the 
+	/// @param destStartCol the horizontal coordinate of the
 	///                      top left corner of the destination
 	///                      rectangle
-	/// @param destStartRow the vertical coordinate of the 
+	/// @param destStartRow the vertical coordinate of the
 	///                      top left corner of the destination
 	///                      rectangle
-	/// @param destEndCol   the horizontal coordinate of the 
-	///                      bottom right corner of the 
+	/// @param destEndCol   the horizontal coordinate of the
+	///                      bottom right corner of the
 	///                      destination rectangle
-	/// @param destEndRow   the vertical coordinate of the 
-	///                      bottom right corner of the 
+	/// @param destEndRow   the vertical coordinate of the
+	///                      bottom right corner of the
 	///                      destination rectangle
 	/// @param destStartChannel the destination channel
 	/// @param destWidth    the destination buffer's width in
@@ -373,7 +373,7 @@ public:
 	///                      destination buffer
 	///
 	///////////////////////////////////////////////////////////
-	virtual void copyFromInt32Interleaved(imbxInt32* pSource, 
+	virtual void copyFromInt32Interleaved(imbxInt32* pSource,
 		imbxUint32 sourceReplicateX,
 		imbxUint32 sourceReplicateY,
 		imbxUint32 destStartCol,
@@ -398,17 +398,27 @@ public:
 
 		dataHandlerType *pDestColScan;
 		imbxInt32* pSourceColScan;
-		
-		for(imbxUint32 scanRow = destStartRow; scanRow < destEndRow && scanRow < destHeight; ++scanRow)
+
+        if(destHeight < destEndRow)
+        {
+            destEndRow = destHeight;
+        }
+        if(destWidth < destEndCol)
+        {
+            destEndCol = destWidth;
+        }
+        imbxUint32 numColumns(destEndCol - destStartCol);
+
+		for(imbxUint32 numYCopies(destEndRow - destStartRow); numYCopies != 0; --numYCopies)
 		{
 			pDestColScan = pDestRowScan;
 			pSourceColScan = pSourceRowScan;
 			replicateXCount = sourceReplicateX;
 
-			for(imbxUint32 scanCol = destStartCol; scanCol < destEndCol && scanCol < destWidth; ++scanCol)
+			for(imbxUint32 scanCol(numColumns); scanCol != 0; --scanCol)
 			{
 				*pDestColScan = (dataHandlerType)(*pSourceColScan);
-				pDestColScan+=destNumChannels;
+				pDestColScan += destNumChannels;
 				if(--replicateXCount == 0)
 				{
 					replicateXCount = sourceReplicateX;
@@ -426,32 +436,32 @@ public:
 
 
 	/// \brief Copy the buffer controlled by the handler into
-	///         an array of imbxInt32 values, considering that 
+	///         an array of imbxInt32 values, considering that
 	///         the destination buffer could be subsampled
 	///
-	/// The destination buffer is supposed to have the 
+	/// The destination buffer is supposed to have the
 	///  information related to a single channel.
 	/// @param pDest        a pointer to the destination array
 	///                      of imbxInt32 values
-	/// @param destSubSampleX the horizontal subsamplig 
-	///                      factor of the destination buffer 
+	/// @param destSubSampleX the horizontal subsamplig
+	///                      factor of the destination buffer
 	///                      (1=not subsampled, 2=subsampled)
-	/// @param destSubSampleY the vertical subsamplig 
-	///                      factor of the destination buffer 
+	/// @param destSubSampleY the vertical subsamplig
+	///                      factor of the destination buffer
 	///                      (1=not subsampled, 2=subsampled)
-	/// @param sourceStartCol the horizontal coordinate of the 
+	/// @param sourceStartCol the horizontal coordinate of the
 	///                      top left corner of the source
 	///                      rectangle
-	/// @param sourceStartRow the vertical coordinate of the 
+	/// @param sourceStartRow the vertical coordinate of the
 	///                      top left corner of the source
 	///                      rectangle
-	/// @param sourceEndCol   the horizontal coordinate of the 
-	///                      bottom right corner of the 
+	/// @param sourceEndCol   the horizontal coordinate of the
+	///                      bottom right corner of the
 	///                      source rectangle
-	/// @param sourceEndRow   the vertical coordinate of the 
-	///                      bottom right corner of the 
+	/// @param sourceEndRow   the vertical coordinate of the
+	///                      bottom right corner of the
 	///                      source rectangle
-	/// @param sourceStartChannel the source channel to be 
+	/// @param sourceStartChannel the source channel to be
 	///                      copied
 	/// @param sourceWidth  the source buffer's width in
 	///                      pixels
@@ -461,7 +471,7 @@ public:
 	///                      source buffer
 	///
 	///////////////////////////////////////////////////////////
-	virtual void copyToInt32Interleaved(imbxInt32* pDest, 
+	virtual void copyToInt32Interleaved(imbxInt32* pDest,
 		imbxUint32 destSubSampleX,
 		imbxUint32 destSubSampleY,
 		imbxUint32 sourceStartCol,
@@ -488,7 +498,7 @@ public:
 		imbxInt32* pDestColScan;
 
 		imbxInt32 lastValue = (imbxInt32)*pSourceRowScan;
-		
+
 		for(imbxUint32 scanRow = sourceStartRow; scanRow < sourceEndRow; ++scanRow)
 		{
 			pSourceColScan = pSourceRowScan;
@@ -587,7 +597,7 @@ protected:
 	///////////////////////////////////////////////////////////
 	dataHandlerType* m_pMemoryString;
 	const imbxUint8* m_pMemoryStringEnd;
-	
+
 	ptr<memory> m_memory;
 };
 

@@ -95,12 +95,12 @@ static const imbxUint32 JpegStdChrominanceQuantTbl[] =
 ///////////////////////////////////////////////////////////
 static const float JpegDctScaleFactor[]=
 {
-	(float)1.0, 
-		(float)1.387039845, 
-		(float)1.306562965, 
+	(float)1.0,
+		(float)1.387039845,
+		(float)1.306562965,
 		(float)1.175875602,
-		(float)1.0, 
-		(float)0.785694958, 
+		(float)1.0,
+		(float)0.785694958,
 		(float)0.541196100,
 		(float)0.275899379
 };
@@ -148,7 +148,7 @@ static const imbxUint32 JpegValDcLuminance[]=
 //
 //
 //
-// Default Huffman table for DC values of chrominance 
+// Default Huffman table for DC values of chrominance
 //  channel (Values per length)
 //
 //
@@ -166,7 +166,7 @@ static const int JpegBitsDcChrominance[]=
 //
 //
 //
-// Default Huffman table for DC values of chrominance 
+// Default Huffman table for DC values of chrominance
 //  channel (Values to code)
 //
 //
@@ -232,7 +232,7 @@ static const imbxUint32 JpegValAcLuminance[]=
 		0xd5, 0xd6, 0xd7, 0xd8, 0xd9, 0xda, 0xe1, 0xe2,
 		0xe3, 0xe4, 0xe5, 0xe6, 0xe7, 0xe8, 0xe9, 0xea,
 		0xf1, 0xf2, 0xf3, 0xf4, 0xf5, 0xf6, 0xf7, 0xf8,
-		0xf9, 0xfa 
+		0xf9, 0xfa
 };
 
 
@@ -259,7 +259,7 @@ static const int JpegBitsAcChrominance[] =
 ///////////////////////////////////////////////////////////
 //
 //
-// Default Huffman table for AC values of chrominance 
+// Default Huffman table for AC values of chrominance
 //  channel (Values to code)
 //
 //
@@ -289,7 +289,7 @@ static const imbxUint32 JpegValAcChrominance[] =
 		0xd3, 0xd4, 0xd5, 0xd6, 0xd7, 0xd8, 0xd9, 0xda,
 		0xe2, 0xe3, 0xe4, 0xe5, 0xe6, 0xe7, 0xe8, 0xe9,
 		0xea, 0xf2, 0xf3, 0xf4, 0xf5, 0xf6, 0xf7, 0xf8,
-		0xf9, 0xfa 
+		0xf9, 0xfa
 };
 
 
@@ -346,6 +346,10 @@ jpegCodec::jpegCodec()
 {
 	PUNTOEXE_FUNCTION_START(L"jpegCodec::jpegCodec");
 
+	// Resets the channels list
+	///////////////////////////////////////////////////////////
+	memset(m_channelsList, 0, sizeof(m_channelsList));
+
 	// Allocate the huffman tables
 	///////////////////////////////////////////////////////////
 	for(int resetHuffmanTables = 0; resetHuffmanTables<16; ++resetHuffmanTables)
@@ -359,7 +363,7 @@ jpegCodec::jpegCodec()
 
 	// Register all the tag classes
 	///////////////////////////////////////////////////////////
-	
+
 	// Unknown tag must be registered
 	///////////////////////////////////////////////////////////
 	registerTag(unknown, ptr<jpeg::tag>(new jpeg::tagUnknown));
@@ -537,7 +541,7 @@ void jpegCodec::eraseChannels()
 	PUNTOEXE_FUNCTION_START(L"jpegCodec::eraseChannels");
 
 	m_channelsMap.clear();
-	m_channelsList.clear();
+	memset(m_channelsList, 0, sizeof(m_channelsList));
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -564,14 +568,14 @@ void jpegCodec::resetInternal(bool bCompression, quality compQuality)
 	eraseChannels();
 
 	m_imageSizeX = m_imageSizeY = 0;
-	
+
 	m_precision = 8;
 	m_valuesMask = ((imbxInt32)1 << m_precision)-1;
 
 	m_process = 0;
-	
+
 	m_mcuPerRestartInterval = 0;
-	
+
 	m_mcuLastRestart = 0;
 
 	m_spectralIndexStart = 0;
@@ -605,7 +609,7 @@ void jpegCodec::resetInternal(bool bCompression, quality compQuality)
 	for(int resetQT = 0; resetQT<16; ++resetQT)
 	{
 		const imbxUint32* pSourceTable = (resetQT == 0) ? JpegStdLuminanceQuantTbl : JpegStdChrominanceQuantTbl;
-		
+
 		imbxUint8 tableIndex = 0;
 		for(imbxUint8 row = 0; row < 8; ++row)
 		{
@@ -794,9 +798,11 @@ void jpegCodec::findMcuSize()
 	imbxUint32 maxSamplingFactorY=1;
 	imbxUint32 minSamplingFactorX=256;
 	imbxUint32 minSamplingFactorY=256;
-	for(tChannelsList::iterator channelsIterator0=m_channelsList.begin(); channelsIterator0!=m_channelsList.end(); ++channelsIterator0)
+
+	jpeg::jpegChannel* pChannel; // Used in the lòops
+	for(jpeg::jpegChannel** channelsIterator(m_channelsList); *channelsIterator != 0; ++channelsIterator)
 	{
-		ptr<jpeg::jpegChannel> pChannel=*channelsIterator0;
+		pChannel = *channelsIterator;
 
 		if(pChannel->m_samplingFactorX > maxSamplingFactorX)
 			maxSamplingFactorX = pChannel->m_samplingFactorX;
@@ -810,9 +816,9 @@ void jpegCodec::findMcuSize()
 
 	// Find the number of blocks per MCU per channel
 	///////////////////////////////////////////////////////////
-	for(tChannelsList::iterator channelsIterator1=m_channelsList.begin(); channelsIterator1!=m_channelsList.end(); ++channelsIterator1)
+	for(jpeg::jpegChannel** channelsIterator(m_channelsList); *channelsIterator != 0; ++channelsIterator)
 	{
-		ptr<jpeg::jpegChannel> pChannel=*channelsIterator1;
+		pChannel=*channelsIterator;
 
 		pChannel->m_blockMcuX=pChannel->m_samplingFactorX/minSamplingFactorX;
 		pChannel->m_blockMcuY=pChannel->m_samplingFactorY/minSamplingFactorY;
@@ -936,7 +942,7 @@ void jpegCodec::readStream(ptr<streamReader> pSourceStream, ptr<dataSet> pDataSe
 	// Build the dataset
 	//
 	///////////////////////////////////////////////////////////
-	
+
 	// Color space
 	///////////////////////////////////////////////////////////
 	if(m_channelsMap.size()==1)
@@ -971,7 +977,7 @@ void jpegCodec::readStream(ptr<streamReader> pSourceStream, ptr<dataSet> pDataSe
 	// Image's width
 	/////////////////////////////////////////////////////////////////
 	pDataSet->setUnsignedLong(0x0028, 0, 0x0011, 0, m_imageSizeX);
-		
+
 	// Image's height
 	/////////////////////////////////////////////////////////////////
 	pDataSet->setUnsignedLong(0x0028, 0, 0x0010, 0, m_imageSizeY);
@@ -990,10 +996,10 @@ void jpegCodec::readStream(ptr<streamReader> pSourceStream, ptr<dataSet> pDataSe
 	pDataSet->setUnsignedLong(0x0028, 0x0, 0x0101, 0x0, m_precision);
 	pDataSet->setUnsignedLong(0x0028, 0x0, 0x0102, 0x0, m_precision - 1);
 
-	// Interleaved
+	// Interleaved (more than 1 channel in the channels list)
 	/////////////////////////////////////////////////////////////////
-	pDataSet->setUnsignedLong(0x0028, 0x0, 0x0006, 0x0, m_channelsList.size() > 1);
-	
+	pDataSet->setUnsignedLong(0x0028, 0x0, 0x0006, 0x0, m_channelsList[0] != 0 && m_channelsList[1] != 0);
+
 	// Insert the basic offset table
 	////////////////////////////////////////////////////////////////
 	ptr<handlers::dataHandlerRaw> offsetHandler=pDataSet->getDataHandlerRaw(0x7fe0, 0, 0x0010, 0, true, "OB");
@@ -1005,7 +1011,7 @@ void jpegCodec::readStream(ptr<streamReader> pSourceStream, ptr<dataSet> pDataSe
 	imbxUint32 finalPosition=pStream->position();
 	imbxUint32 streamLength=(imbxUint32)(finalPosition-startPosition);
 	pStream->seek((imbxInt32)startPosition);
-	
+
 	ptr<handlers::dataHandlerRaw> imageHandler=pDataSet->getDataHandlerRaw(0x7fe0, 0, 0x0010, 1, true, "OB");
 	if(imageHandler != 0 && streamLength != 0)
 	{
@@ -1049,7 +1055,7 @@ bool jpegCodec::canHandleTransferSyntax(std::wstring transferSyntax)
 ////////////////////////////////////////////////////////////////
 //
 //
-// Returns true if the transfer syntax has to be 
+// Returns true if the transfer syntax has to be
 //  encapsulated
 //
 //
@@ -1146,7 +1152,7 @@ ptr<image> jpegCodec::getImage(ptr<dataSet> sourceDataSet, ptr<streamReader> pSt
 	// Activate the tags in the stream
 	///////////////////////////////////////////////////////////
 	pSourceStream->m_pTagByte=&m_entryByte;
-	
+
 	// Read the Jpeg signature
 	///////////////////////////////////////////////////////////
 	imbxUint8 jpegSignature[2];
@@ -1169,7 +1175,7 @@ ptr<image> jpegCodec::getImage(ptr<dataSet> sourceDataSet, ptr<streamReader> pSt
 	// Preallocate the variables used in the loop
 	//
 	///////////////////////////////////////////////////////////
-	
+
 	int scanBlock;              // scan lossless blocks
 	int scanBlockX, scanBlockY; // scan lossy blocks
 	imbxUint32 amplitudeLength; // lossless amplitude's length
@@ -1178,7 +1184,7 @@ ptr<image> jpegCodec::getImage(ptr<dataSet> sourceDataSet, ptr<streamReader> pSt
 	// Used to read a single byte
 	///////////////////////////////////////////////////////////
 	imbxUint8 singleByte;
-	
+
 	// Used to read the channels' content
 	///////////////////////////////////////////////////////////
 	imbxUint32 bufferPointer = 0;
@@ -1199,7 +1205,7 @@ ptr<image> jpegCodec::getImage(ptr<dataSet> sourceDataSet, ptr<streamReader> pSt
 				pTag=m_tagsMap[0xff];
 
 			pTag->readTag(pSourceStream, this, m_entryByte);
-			
+
 			m_entryByte = 0;
 
 			continue;
@@ -1226,6 +1232,7 @@ ptr<image> jpegCodec::getImage(ptr<dataSet> sourceDataSet, ptr<streamReader> pSt
 			continue;
 		}
 
+        jpeg::jpegChannel* pChannel; // Used in the loops
 		while(m_entryByte == 0 && m_mcuProcessed < nextMcuStop && !pSourceStream->m_bEof)
 		{
 			// Read an MCU
@@ -1233,18 +1240,18 @@ ptr<image> jpegCodec::getImage(ptr<dataSet> sourceDataSet, ptr<streamReader> pSt
 
 			// Scan all components
 			///////////////////////////////////////////////////////////
-			for(tChannelsList::iterator channelsIterator=m_channelsList.begin(); channelsIterator!=m_channelsList.end() && m_entryByte == 0; ++channelsIterator)
+			for(jpeg::jpegChannel** channelsIterator(m_channelsList); *channelsIterator != 0 && m_entryByte == 0; ++channelsIterator)
 			{
-				jpeg::jpegChannel* pChannel = (*channelsIterator).get();
+				pChannel = *channelsIterator;
 
 				// Read a lossless pixel
 				///////////////////////////////////////////////////////////
 				if(m_bLossless)
 				{
 					for(
-						scanBlock = 0; 
+						scanBlock = 0;
 						scanBlock != pChannel->m_blockMcuXY &&
-						pChannel->m_pActiveHuffmanTableDC->readHuffmanCode(&amplitudeLength, pSourceStream); 
+						pChannel->m_pActiveHuffmanTableDC->readHuffmanCode(&amplitudeLength, pSourceStream);
 						++scanBlock)
 					{
 						if(amplitudeLength)
@@ -1263,12 +1270,12 @@ ptr<image> jpegCodec::getImage(ptr<dataSet> sourceDataSet, ptr<streamReader> pSt
 							amplitude = 0;
 						}
 
-						pChannel->addUnprocessedAmplitude(amplitude, m_spectralIndexStart, m_mcuLastRestart == m_mcuProcessed && scanBlock == 0); 
+						pChannel->addUnprocessedAmplitude(amplitude, m_spectralIndexStart, m_mcuLastRestart == m_mcuProcessed && scanBlock == 0);
 					}
 
 					continue;
 				}
-				
+
 				// Read a lossy MCU
 				///////////////////////////////////////////////////////////
 				bufferPointer = (m_mcuProcessedY * pChannel->m_blockMcuY * ((m_jpegImageSizeX * pChannel->m_samplingFactorX / m_maxSamplingFactorX) >> 3) + m_mcuProcessedX * pChannel->m_blockMcuX) * 64;
@@ -1277,7 +1284,7 @@ ptr<image> jpegCodec::getImage(ptr<dataSet> sourceDataSet, ptr<streamReader> pSt
 					for(scanBlockX = pChannel->m_blockMcuX; (scanBlockX != 0 ) && (m_entryByte == 0); --scanBlockX)
 					{
 						readBlock(pSourceStream, &(pChannel->m_pBuffer[bufferPointer]), pChannel);
-						
+
 						if(m_spectralIndexEnd>=63 && m_bitLow==0)
 						{
 							IDCT(
@@ -1306,8 +1313,8 @@ ptr<image> jpegCodec::getImage(ptr<dataSet> sourceDataSet, ptr<streamReader> pSt
 
 	// Process unprocessed lossless amplitudes
 	///////////////////////////////////////////////////////////
-	for(tChannelsMap::iterator processLosslessIterator = m_channelsMap.begin(); 
-		processLosslessIterator != m_channelsMap.end(); 
+	for(tChannelsMap::iterator processLosslessIterator = m_channelsMap.begin();
+		processLosslessIterator != m_channelsMap.end();
 		++processLosslessIterator)
 	{
 		processLosslessIterator->second->processUnprocessedAmplitudes();
@@ -1322,7 +1329,6 @@ ptr<image> jpegCodec::getImage(ptr<dataSet> sourceDataSet, ptr<streamReader> pSt
 	// If the compression is jpeg baseline or jpeg extended
 	//  then the color space cannot be "RGB"
 	///////////////////////////////////////////////////////////
-#if defined(IMEBRA_REPLACE_JPEG_RGB_YBR)
 	if(colorSpace == L"RGB")
 	{
 		std::wstring transferSyntax(sourceDataSet->getUnicodeString(0x0002, 0, 0x0010, 0));
@@ -1332,7 +1338,6 @@ ptr<image> jpegCodec::getImage(ptr<dataSet> sourceDataSet, ptr<streamReader> pSt
 			colorSpace = L"YBR_FULL";
 		}
 	}
-#endif
 
 	ptr<image> returnImage(new image);
 	copyJpegChannelsToImage(returnImage, b2complement, colorSpace);
@@ -1381,8 +1386,8 @@ void jpegCodec::copyJpegChannelsToImage(ptr<image> destImage, bool b2complement,
 	// Copy the jpeg channels into the new image
 	///////////////////////////////////////////////////////////
 	imbxUint32 destChannelNumber = 0;
-	for(tChannelsMap::iterator copyChannelsIterator=m_channelsMap.begin(); 
-		copyChannelsIterator!=m_channelsMap.end(); 
+	for(tChannelsMap::iterator copyChannelsIterator=m_channelsMap.begin();
+		copyChannelsIterator!=m_channelsMap.end();
 		++copyChannelsIterator)
 	{
 		ptr<jpeg::jpegChannel> pChannel = copyChannelsIterator->second;
@@ -1419,7 +1424,7 @@ void jpegCodec::copyJpegChannelsToImage(ptr<image> destImage, bool b2complement,
 			{
 				*pChannelBuffer = minClipValue;
 			}
-			if(*pChannelBuffer > maxClipValue)
+			else if(*pChannelBuffer > maxClipValue)
 			{
 				*pChannelBuffer = maxClipValue;
 			}
@@ -1441,41 +1446,41 @@ void jpegCodec::copyJpegChannelsToImage(ptr<image> destImage, bool b2complement,
 		if(m_bLossless)
 		{
 			handler->copyFromInt32Interleaved(
-				pChannel->m_pBuffer, 
-				runX, runY, 
-				0, 0, pChannel->m_sizeX * runX, pChannel->m_sizeY * runY, 
-				destChannelNumber++, 
-				m_imageSizeX, m_imageSizeY, 
+				pChannel->m_pBuffer,
+				runX, runY,
+				0, 0, pChannel->m_sizeX * runX, pChannel->m_sizeY * runY,
+				destChannelNumber++,
+				m_imageSizeX, m_imageSizeY,
 				(imbxUint32)m_channelsMap.size());
-			
+
 			continue;
 		}
 
 		// Lossy interleaved
 		///////////////////////////////////////////////////////////
-		imbxUint32 totalBlocksY = (pChannel->m_sizeY >> 3);
-		imbxUint32 totalBlocksX = (pChannel->m_sizeX >> 3);
+		imbxUint32 totalBlocksY(pChannel->m_sizeY >> 3);
+		imbxUint32 totalBlocksX(pChannel->m_sizeX >> 3);
 
-		imbxInt32* pSourceBuffer = pChannel->m_pBuffer;
+		imbxInt32* pSourceBuffer(pChannel->m_pBuffer);
 
-		imbxUint32 startRow = 0;
+		imbxUint32 startRow(0);
 		for(imbxUint32 scanBlockY = 0; scanBlockY < totalBlocksY; ++scanBlockY)
 		{
-			imbxUint32 startCol = 0;
-			imbxUint32 endRow = startRow + (runY << 3);
+			imbxUint32 startCol(0);
+			imbxUint32 endRow(startRow + (runY << 3));
 
 			for(imbxUint32 scanBlockX = 0; scanBlockX < totalBlocksX; ++scanBlockX)
 			{
 				imbxUint32 endCol = startCol + (runX << 3);
 				handler->copyFromInt32Interleaved(
-					pSourceBuffer, 
-					runX, runY, 
-					startCol, 
+					pSourceBuffer,
+					runX, runY,
+					startCol,
 					startRow,
-					endCol, 
-					endRow, 
-					destChannelNumber, 
-					m_imageSizeX, m_imageSizeY, 
+					endCol,
+					endRow,
+					destChannelNumber,
+					m_imageSizeX, m_imageSizeY,
 					(imbxUint32)m_channelsMap.size());
 
 				pSourceBuffer += 64;
@@ -1500,10 +1505,10 @@ void jpegCodec::copyJpegChannelsToImage(ptr<image> destImage, bool b2complement,
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
 void jpegCodec::copyImageToJpegChannels(
-	ptr<image> sourceImage, 
-	bool b2complement, 
-	imbxUint8 allocatedBits, 
-	bool bSubSampledX, 
+	ptr<image> sourceImage,
+	bool b2complement,
+	imbxUint8 allocatedBits,
+	bool bSubSampledX,
 	bool bSubSampledY)
 {
 	PUNTOEXE_FUNCTION_START(L"jpegCodec::copyImageToJpegChannels");
@@ -1526,7 +1531,7 @@ void jpegCodec::copyImageToJpegChannels(
 		pChannel->m_pActiveHuffmanTableAC = m_pHuffmanTableAC[0].get();
 		pChannel->m_huffmanTableDC = 0;
 		pChannel->m_pActiveHuffmanTableDC = m_pHuffmanTableDC[0].get();
-		
+
 		if(channelId == 0)
 		{
 			if(bSubSampledX)
@@ -1563,8 +1568,8 @@ void jpegCodec::copyImageToJpegChannels(
 	// Copy the image into the jpeg channels
 	///////////////////////////////////////////////////////////
 	imbxUint32 sourceChannelNumber = 0;
-	for(tChannelsMap::iterator copyChannelsIterator=m_channelsMap.begin(); 
-		copyChannelsIterator!=m_channelsMap.end(); 
+	for(tChannelsMap::iterator copyChannelsIterator=m_channelsMap.begin();
+		copyChannelsIterator!=m_channelsMap.end();
 		++copyChannelsIterator)
 	{
 		ptr<jpeg::jpegChannel> pChannel = copyChannelsIterator->second;
@@ -1584,13 +1589,13 @@ void jpegCodec::copyImageToJpegChannels(
 		if(m_bLossless)
 		{
 			imageDataHandler->copyToInt32Interleaved(
-				pChannel->m_pBuffer, 
-				runX, runY, 
-				0, 0, pChannel->m_sizeX * runX, pChannel->m_sizeY * runY, 
-				sourceChannelNumber++, 
-				m_imageSizeX, m_imageSizeY, 
+				pChannel->m_pBuffer,
+				runX, runY,
+				0, 0, pChannel->m_sizeX * runX, pChannel->m_sizeY * runY,
+				sourceChannelNumber++,
+				m_imageSizeX, m_imageSizeY,
 				(imbxUint32)m_channelsMap.size());
-			
+
 			continue;
 		}
 
@@ -1611,14 +1616,14 @@ void jpegCodec::copyImageToJpegChannels(
 			{
 				imbxUint32 endCol = startCol + (runX << 3);
 				imageDataHandler->copyToInt32Interleaved(
-					pDestBuffer, 
-					runX, runY, 
-					startCol, 
+					pDestBuffer,
+					runX, runY,
+					startCol,
 					startRow,
-					endCol, 
-					endRow, 
-					sourceChannelNumber, 
-					m_imageSizeX, m_imageSizeY, 
+					endCol,
+					endRow,
+					sourceChannelNumber,
+					m_imageSizeX, m_imageSizeY,
 					(imbxUint32)m_channelsMap.size());
 
 				pDestBuffer += 64;
@@ -1630,8 +1635,8 @@ void jpegCodec::copyImageToJpegChannels(
 	}
 
 
-	for(tChannelsMap::iterator clipChannelsIterator = m_channelsMap.begin(); 
-		clipChannelsIterator != m_channelsMap.end(); 
+	for(tChannelsMap::iterator clipChannelsIterator = m_channelsMap.begin();
+		clipChannelsIterator != m_channelsMap.end();
 		++clipChannelsIterator)
 	{
 		ptr<jpeg::jpegChannel> pChannel = clipChannelsIterator->second;
@@ -1690,8 +1695,8 @@ void jpegCodec::copyImageToJpegChannels(
 /////////////////////////////////////////////////////////////////
 void jpegCodec::setImage(
 		ptr<streamWriter> pDestStream,
-		ptr<image> pImage, 
-		std::wstring transferSyntax, 
+		ptr<image> pImage,
+		std::wstring transferSyntax,
 		quality imageQuality,
 		std::string dataType,
 		imbxUint8 allocatedBits,
@@ -1741,25 +1746,25 @@ void jpegCodec::setImage(
 
 		// Write the scans
 		////////////////////////////////////////////////////////////////
-		m_channelsList.clear();
+		memset(m_channelsList, 0, sizeof(m_channelsList));
 		if(bInterleaved)
 		{
-			for(tChannelsMap::iterator channelsIterator=m_channelsMap.begin(); 
-				channelsIterator!=m_channelsMap.end(); 
+		    size_t scanChannels(0);
+			for(tChannelsMap::iterator channelsIterator=m_channelsMap.begin();
+				channelsIterator!=m_channelsMap.end();
 				++channelsIterator)
 			{
-				m_channelsList.push_back(channelsIterator->second);
+				m_channelsList[scanChannels++] = channelsIterator->second.get();
 			}
 			writeScan(pDestinationStream, phase == 0);
 		}
 		else
 		{
-			for(tChannelsMap::iterator channelsIterator=m_channelsMap.begin(); 
-				channelsIterator!=m_channelsMap.end(); 
+			for(tChannelsMap::iterator channelsIterator=m_channelsMap.begin();
+				channelsIterator!=m_channelsMap.end();
 				++channelsIterator)
 			{
-				m_channelsList.clear();
-				m_channelsList.push_back(channelsIterator->second);
+				m_channelsList[0] = channelsIterator->second.get();
 				writeScan(pDestinationStream, phase == 0);
 			}
 		}
@@ -1795,6 +1800,7 @@ void jpegCodec::writeScan(streamWriter* pDestinationStream, bool bCalcHuffman)
 		writeTag(pDestinationStream, sos);
 	}
 
+    jpeg::jpegChannel* pChannel; // Used in the loops
 	while(m_mcuProcessed < m_mcuNumberTotal)
 	{
 		// Write an MCU
@@ -1802,9 +1808,9 @@ void jpegCodec::writeScan(streamWriter* pDestinationStream, bool bCalcHuffman)
 
 		// Scan all components
 		///////////////////////////////////////////////////////////
-		for(tChannelsList::iterator channelsIterator=m_channelsList.begin(); channelsIterator!=m_channelsList.end() && m_entryByte == 0; ++channelsIterator)
+		for(jpeg::jpegChannel** channelsIterator(m_channelsList); *channelsIterator != 0 && m_entryByte == 0; ++channelsIterator)
 		{
-			jpeg::jpegChannel* pChannel=channelsIterator->get();
+			pChannel = *channelsIterator;
 
 			// Write a lossless pixel
 			///////////////////////////////////////////////////////////
@@ -1812,7 +1818,7 @@ void jpegCodec::writeScan(streamWriter* pDestinationStream, bool bCalcHuffman)
 			{
 				imbxInt32 lastValue = pChannel->m_lastDCValue;
 				imbxInt32* pBuffer = pChannel->m_pBuffer + pChannel->m_losslessPositionY * pChannel->m_sizeX + pChannel->m_losslessPositionX;
-				
+
 				for(int scanBlock = pChannel->m_blockMcuXY; scanBlock != 0; --scanBlock)
 				{
 					imbxInt32 value(*pBuffer);
@@ -1835,10 +1841,10 @@ void jpegCodec::writeScan(streamWriter* pDestinationStream, bool bCalcHuffman)
 
 					// Calculate amplitude and build the huffman table
 					imbxUint32 amplitudeLength = 0;
-					imbxUint32 amplitude = 0; 
+					imbxUint32 amplitude = 0;
 					if(diff != 0)
 					{
-						amplitude = diff > 0 ? diff : -diff; 
+						amplitude = diff > 0 ? diff : -diff;
 						for(amplitudeLength = 32; (amplitude & ((imbxUint32)1 << (amplitudeLength -1))) == 0; --amplitudeLength){};
 
 						if(diff < 0)
@@ -1866,11 +1872,11 @@ void jpegCodec::writeScan(streamWriter* pDestinationStream, bool bCalcHuffman)
 
 				continue;
 			}
-			
+
 			// write a lossy MCU
 			///////////////////////////////////////////////////////////
 			imbxUint32 bufferPointer = (m_mcuProcessedY * pChannel->m_blockMcuY * ((m_jpegImageSizeX * pChannel->m_samplingFactorX / m_maxSamplingFactorX) >> 3) + m_mcuProcessedX * pChannel->m_blockMcuX) * 64;
-			
+
 			for(int scanBlockY = 0; scanBlockY < pChannel->m_blockMcuY; ++scanBlockY)
 			{
 				for(int scanBlockX = 0; scanBlockX < pChannel->m_blockMcuX; ++scanBlockX)
@@ -1894,7 +1900,7 @@ void jpegCodec::writeScan(streamWriter* pDestinationStream, bool bCalcHuffman)
 	{
 		pDestinationStream->resetOutBitsBuffer();
 	}
-	
+
 	PUNTOEXE_FUNCTION_END();
 }
 
@@ -1941,14 +1947,6 @@ inline void jpegCodec::readBlock(streamReader* pStream, imbxInt32* pBuffer, jpeg
 {
 	PUNTOEXE_FUNCTION_START(L"jpegCodec::readBlock");
 
-	imbxUint32 amplitude;
-	imbxUint32 hufCode;
-	imbxInt32 value = 0;
-	imbxInt32 oldValue;
-	imbxUint8 amplitudeLength;
-	int runLength;
-	imbxUint32 tempEobRun;
-
 	if(m_entryByte != 0)
 	{
 		return;
@@ -1956,14 +1954,24 @@ inline void jpegCodec::readBlock(streamReader* pStream, imbxInt32* pBuffer, jpeg
 
 	// Scan all the requested spectral values
 	/////////////////////////////////////////////////////////////////
-	imbxUint32 spectralIndex=m_spectralIndexStart;
-	
+	imbxUint32 spectralIndex(m_spectralIndexStart);
+
 	// If an eob-run is defined, then don't read the DC value
 	/////////////////////////////////////////////////////////////////
 	if(m_eobRun && spectralIndex == 0)
 	{
 		++spectralIndex;
 	}
+
+	imbxUint32 amplitude;
+	imbxUint32 hufCode;
+	imbxInt32 value = 0;
+	imbxInt32 oldValue;
+	imbxUint8 amplitudeLength;
+	int runLength;
+	imbxUint32 tempEobRun;
+	imbxInt32 positiveBitLow((imbxInt32)1 << m_bitLow);
+	imbxInt32 negativeBitLow((imbxInt32)-1 << m_bitLow);
 
 	// Scan the specified spectral values
 	/////////////////////////////////////////////////////////////////
@@ -1984,16 +1992,16 @@ inline void jpegCodec::readBlock(streamReader* pStream, imbxInt32* pBuffer, jpeg
 				return; // an entry byte has been found
 			}
 
-			if(amplitude!=0 && (oldValue & ((imbxInt32)1<<m_bitLow))==0)
+			if(amplitude!=0 && (oldValue & positiveBitLow)==0)
 			{
-				oldValue += (oldValue>0 ? (imbxInt32)1 : (imbxInt32)-1)<<m_bitLow;
-				pBuffer[JpegDeZigZagOrder[spectralIndex]]=oldValue;
+				oldValue += (oldValue>0 ? positiveBitLow : negativeBitLow);
+				pBuffer[JpegDeZigZagOrder[spectralIndex]] = oldValue;
 			}
 			continue;
 		}
 
 		//
-		// If no EOB run is active, then read this block				
+		// If no EOB run is active, then read this block
 		//
 		/////////////////////////////////////////////////////////////////
 		if(m_eobRun == 0 && m_entryByte == 0)
@@ -2031,7 +2039,7 @@ inline void jpegCodec::readBlock(streamReader* pStream, imbxInt32* pBuffer, jpeg
 				}
 			}
 
-  
+
 			//
 			// Get AC or DC amplitude or zero run
 			//
@@ -2071,7 +2079,7 @@ inline void jpegCodec::readBlock(streamReader* pStream, imbxInt32* pBuffer, jpeg
 						// Read coeff
 						/////////////////////////////////////////////////////////////////
 						value = 0;
-						
+
 						if(amplitudeLength)
 						{
 							if(!pStream->readBits(&amplitude, amplitudeLength))
@@ -2098,10 +2106,10 @@ inline void jpegCodec::readBlock(streamReader* pStream, imbxInt32* pBuffer, jpeg
 									{
 										return; // an entry byte has been found
 									}
-									if(amplitude && (oldValue & ((imbxInt32)1<<m_bitLow)) == 0)
+									if(amplitude && (oldValue & positiveBitLow) == 0)
 									{
-										oldValue+=(oldValue>0 ? (imbxInt32)1 : (imbxInt32)-1)<<m_bitLow;
-										pBuffer[JpegDeZigZagOrder[spectralIndex]]=oldValue;
+										oldValue+=(oldValue>0 ? positiveBitLow : negativeBitLow);
+										pBuffer[JpegDeZigZagOrder[spectralIndex]] = oldValue;
 									}
 								}
 								else
@@ -2121,7 +2129,7 @@ inline void jpegCodec::readBlock(streamReader* pStream, imbxInt32* pBuffer, jpeg
 							runLength = 0;
 						}
 					}
-					
+
 					// Store coeff.
 					/////////////////////////////////////////////////////////////////
 					if(m_entryByte == 0 && spectralIndex<=m_spectralIndexEnd)
@@ -2266,7 +2274,7 @@ inline void jpegCodec::writeBlock(streamWriter* pStream, imbxInt32* pBuffer, jpe
 	{
 		return;
 	}
-	
+
 	static imbxUint32 zero = 0;
 	if(bCalcHuffman)
 	{
@@ -2335,13 +2343,13 @@ void jpegCodec::FDCT(imbxInt32* pIOMatrix, float* pDescaleFactors)
 		pointerOperator1 = &(pIOMatrix[scanBlockY + 7]);
         tmp0 = (float)(*pointerOperator0 + *pointerOperator1);
         tmp7 = (float)(*pointerOperator0 - *pointerOperator1);
-        
+
 		tmp1 = (float)(*(++pointerOperator0) + *(--pointerOperator1));
         tmp6 = (float)(*pointerOperator0 - *pointerOperator1);
-        
+
 		tmp2 = (float)(*(++pointerOperator0) + *(--pointerOperator1));
         tmp5 = (float)(*pointerOperator0 - *pointerOperator1);
-        
+
 		tmp3 = (float)(*(++pointerOperator0) + *(--pointerOperator1));
         tmp4 = (float)(*pointerOperator0 - *pointerOperator1);
 
@@ -2368,7 +2376,7 @@ void jpegCodec::FDCT(imbxInt32* pIOMatrix, float* pDescaleFactors)
 		tmp12 = tmp6 + tmp7;
 
 		// The rotator is modified from fig 4-8 to avoid extra negations.
-		z5 =  (tmp10 - tmp12)*0.382683433f;    // c6 
+		z5 =  (tmp10 - tmp12)*0.382683433f;    // c6
 		z2 =  tmp10*0.541196100f + z5;         // c2-c6
 		z4 =  tmp12*1.306562965f + z5;         // c2+c6
 		z3 =  tmp11*0.707106781f;              // c4
@@ -2391,20 +2399,20 @@ void jpegCodec::FDCT(imbxInt32* pIOMatrix, float* pDescaleFactors)
     {
 		pointerOperatorFloat0 = &(m_dctTempMatrix[scanBlockX]);
 		pointerOperatorFloat1 = &(m_dctTempMatrix[scanBlockX + 56]);
-		
+
 		tmp0 = *pointerOperatorFloat0 + *pointerOperatorFloat1;
 		tmp7 = *pointerOperatorFloat0 - *pointerOperatorFloat1;
-		
+
 		pointerOperatorFloat0 += 8;
 		pointerOperatorFloat1 -= 8;
 		tmp1 = *pointerOperatorFloat0 + *pointerOperatorFloat1;
 		tmp6 = *pointerOperatorFloat0 - *pointerOperatorFloat1;
-		
+
 		pointerOperatorFloat0 += 8;
 		pointerOperatorFloat1 -= 8;
 		tmp2 = *pointerOperatorFloat0 + *pointerOperatorFloat1;
 		tmp5 = *pointerOperatorFloat0 - *pointerOperatorFloat1;
-		
+
 		pointerOperatorFloat0 += 8;
 		pointerOperatorFloat1 -= 8;
 		tmp3 = *pointerOperatorFloat0 + *pointerOperatorFloat1;
@@ -2422,7 +2430,7 @@ void jpegCodec::FDCT(imbxInt32* pIOMatrix, float* pDescaleFactors)
 		m_dctTempMatrix[scanBlockX+32] = tmp10 - tmp11;
 
 		z1 = (tmp12 + tmp13)*0.707106781f;     // c4
-		
+
 		// Phase 5
 		m_dctTempMatrix[scanBlockX+16] = (tmp13 + z1);
 		m_dctTempMatrix[scanBlockX+48] = (tmp13 - z1);
@@ -2490,7 +2498,7 @@ void jpegCodec::IDCT(imbxInt32* pIOMatrix, float* pScaleFactors)
 		// If they are all NULL, then apply the DC value to all
 		/////////////////////////////////////////////////////////////////
 		if(
-			(*(pMatrix+8)  | 
+			(*(pMatrix+8)  |
 			 *(pMatrix+16) |
 			 *(pMatrix+24) |
 			 *(pMatrix+32) |
@@ -2507,7 +2515,7 @@ void jpegCodec::IDCT(imbxInt32* pIOMatrix, float* pScaleFactors)
 				*(pTempMatrix+40)=
 				*(pTempMatrix+48)=
 				*(pTempMatrix+56)=((float)(*pMatrix)) * (*(pScaleFactors++));
-			
+
 			++pMatrix;
 			++pTempMatrix;
 			continue;
@@ -2678,7 +2686,7 @@ void jpegChannel::processUnprocessedAmplitudes()
 	}
 
 	imbxInt32* pDest = m_pBuffer + (m_losslessPositionY * m_sizeX + m_losslessPositionX);
-	imbxInt32* pSource = &(m_unprocessedAmplitudesBuffer[0]);
+	imbxInt32* pSource = m_unprocessedAmplitudesBuffer;
 
 	if(m_unprocessedAmplitudesPredictor == 0)
 	{
@@ -2715,32 +2723,35 @@ void jpegChannel::processUnprocessedAmplitudes()
 		switch(applyPrediction)
 		{
 		case 1:
-			*pDest = *(pSource++) + m_lastDCValue;
+            m_lastDCValue += *(pSource++);
 			break;
 		case 2:
-			*pDest = *(pSource++) + *pPreviousLine;
+			m_lastDCValue = *(pSource++) + *pPreviousLine;
 			break;
 		case 3:
-			*pDest = *(pSource++) + *pPreviousLineColumn;
+			m_lastDCValue = *(pSource++) + *pPreviousLineColumn;
 			break;
 		case 4:
-			*pDest = *(pSource++) + m_lastDCValue + *pPreviousLine - *pPreviousLineColumn;
+			m_lastDCValue += *(pSource++) + *pPreviousLine - *pPreviousLineColumn;
 			break;
 		case 5:
-			*pDest = *(pSource++) + m_lastDCValue + ((*pPreviousLine - *pPreviousLineColumn)>>1);
+			m_lastDCValue += *(pSource++) + ((*pPreviousLine - *pPreviousLineColumn)>>1);
 			break;
 		case 6:
-			*pDest = *(pSource++) + *pPreviousLine + ((m_lastDCValue - *pPreviousLineColumn)>>1);
+            m_lastDCValue -= *pPreviousLineColumn;
+            m_lastDCValue >>= 1;
+            m_lastDCValue += *(pSource++) + *pPreviousLine;
 			break;
 		case 7:
-			*pDest = *(pSource++) + ((m_lastDCValue + *pPreviousLine)>>1);
+            m_lastDCValue += *pPreviousLine;
+            m_lastDCValue >>= 1;
+            m_lastDCValue += *(pSource++);
 			break;
 		}
-		
-		*pDest &= m_valuesMask;
-		m_lastDCValue = *pDest;
 
-		++pDest;
+		m_lastDCValue &= m_valuesMask;
+		*pDest++ = m_lastDCValue;
+
 		++pPreviousLine;
 		++pPreviousLineColumn;
 		if(++m_losslessPositionX == m_sizeX)
@@ -2784,7 +2795,7 @@ void tag::writeLength(streamWriter* pStream, imbxUint16 length)
 
 	PUNTOEXE_FUNCTION_END();
 }
-	
+
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -2859,7 +2870,7 @@ void tagUnknown::readTag(streamReader* pStream, jpegCodec* /* pCodec */, imbxUin
 
 	imbxInt32 tagLength=readLength(pStream);
 	pStream->seek(tagLength, true);
-	
+
 	PUNTOEXE_FUNCTION_END();
 }
 
@@ -2898,7 +2909,7 @@ void tagSOF::writeTag(streamWriter* pStream, jpegCodec* pCodec)
 	// Write the tag's length
 	///////////////////////////////////////////////////////////
 	writeLength(pStream, 6+componentsNumber*3);
-	
+
 	// Write the precision, in bits
 	///////////////////////////////////////////////////////////
 	imbxUint8 precisionBits=(imbxUint8)pCodec->m_precision;
@@ -2957,7 +2968,7 @@ void tagSOF::readTag(streamReader* pStream, jpegCodec* pCodec, imbxUint8 tagEntr
 
 	pCodec->m_bLossless=(tagEntry==0xc3) || (tagEntry==0xc7);
 	pCodec->m_process=tagEntry-0xc0;
-	
+
 	// Read the precision, in bits
 	///////////////////////////////////////////////////////////
 	imbxUint8 precisionBits;
@@ -3087,7 +3098,7 @@ void tagDHT::writeTag(streamWriter* pStream, jpegCodec* pCodec)
 					continue;
 				}
 				ptr<huffmanTable> pHuffman;
-				
+
 				if(DcAc==0)
 				{
 					pHuffman=pCodec->m_pHuffmanTableDC[tableNum];
@@ -3114,7 +3125,7 @@ void tagDHT::writeTag(streamWriter* pStream, jpegCodec* pCodec)
 					}
 					continue;
 				}
-				
+
 				// Write the huffman table
 				/////////////////////////////////////////////////////////////////
 
@@ -3131,7 +3142,7 @@ void tagDHT::writeTag(streamWriter* pStream, jpegCodec* pCodec)
 					byte=(imbxUint8)(pHuffman->m_valuesPerLength[++scanLength]);
 					pStream->write(&byte, 1);
 				}
-			
+
 				// Write the table values
 				/////////////////////////////////////////////////////////////////
 				imbxUint32 valueIndex = 0;
@@ -3179,7 +3190,7 @@ void tagDHT::readTag(streamReader* pStream, jpegCodec* pCodec, imbxUint8 /* tagE
 		/////////////////////////////////////////////////////////////////
         pStream->read(&byte, 1);
 		tagLength--;
-        
+
 		// Get a pointer to the right table
 		/////////////////////////////////////////////////////////////////
 		ptr<huffmanTable> pHuffman;
@@ -3194,7 +3205,7 @@ void tagDHT::readTag(streamReader* pStream, jpegCodec* pCodec, imbxUint8 /* tagE
 
 		// Used to scan all the codes lengths
 		/////////////////////////////////////////////////////////////////
-		int scanLength; 
+		int scanLength;
 
 		// Read the number of codes per length
 		/////////////////////////////////////////////////////////////////
@@ -3208,7 +3219,7 @@ void tagDHT::readTag(streamReader* pStream, jpegCodec* pCodec, imbxUint8 /* tagE
 		// Used to store the values into the table
 		/////////////////////////////////////////////////////////////////
 		imbxUint32 valueIndex = 0;
-        
+
 		// Read all the values and store them into the huffman table
 		/////////////////////////////////////////////////////////////////
 		for(scanLength = 0; scanLength < 16; ++scanLength)
@@ -3220,7 +3231,7 @@ void tagDHT::readTag(streamReader* pStream, jpegCodec* pCodec, imbxUint8 /* tagE
 				--tagLength;
             }
         }
-        
+
 		// Calculate the huffman tables
 		/////////////////////////////////////////////////////////////////
 		pHuffman->calcHuffmanTables();
@@ -3235,7 +3246,7 @@ void tagDHT::readTag(streamReader* pStream, jpegCodec* pCodec, imbxUint8 /* tagE
 	/////////////////////////////////////////////////////////////////
 	if(tagLength > 0)
 		pStream->seek(tagLength, true);
-	
+
 	PUNTOEXE_FUNCTION_END();
 }
 
@@ -3271,8 +3282,12 @@ void tagSOS::writeTag(streamWriter* pStream, jpegCodec* pCodec)
 
 	// Calculate the components number
 	/////////////////////////////////////////////////////////////////
-	imbxUint8 componentsNumber=(imbxUint8)pCodec->m_channelsList.size();
-	
+	imbxUint8 componentsNumber(0);
+	while(pCodec->m_channelsList[componentsNumber] != 0)
+	{
+	    ++componentsNumber;
+	}
+
 	// Write the tag's length
 	/////////////////////////////////////////////////////////////////
 	writeLength(pStream, 4+2*componentsNumber);
@@ -3283,10 +3298,12 @@ void tagSOS::writeTag(streamWriter* pStream, jpegCodec* pCodec)
 
 	// Scan all the channels in the current scan
 	/////////////////////////////////////////////////////////////////
-	for(jpegCodec::tChannelsList::iterator listIterator=pCodec->m_channelsList.begin(); listIterator!=pCodec->m_channelsList.end(); ++listIterator)
+	jpeg::jpegChannel* pChannel; // used in the loop
+	for(jpeg::jpegChannel** listIterator(pCodec->m_channelsList); *listIterator != 0; ++listIterator)
 	{
-		ptrChannel pChannel = *listIterator;
-		imbxUint8 channelId = 0;
+	    pChannel = *listIterator;
+
+		imbxUint8 channelId(0);
 
 		pChannel->m_lastDCValue = pChannel->m_defaultDCValue;
 
@@ -3294,7 +3311,7 @@ void tagSOS::writeTag(streamWriter* pStream, jpegCodec* pCodec)
 		/////////////////////////////////////////////////////////////////
 		for(jpegCodec::tChannelsMap::iterator mapIterator=pCodec->m_channelsMap.begin(); mapIterator != pCodec->m_channelsMap.end(); ++mapIterator)
 		{
-			if(mapIterator->second == pChannel)
+			if(mapIterator->second.get() == pChannel)
 			{
 				channelId=mapIterator->first;
 				break;
@@ -3353,7 +3370,7 @@ void tagSOS::readTag(streamReader* pStream, jpegCodec* pCodec, imbxUint8 /* tagE
 	imbxInt32 tagLength=readLength(pStream);
 
 	pCodec->m_eobRun = 0;
-	pCodec->m_channelsList.clear();
+	memset(pCodec->m_channelsList, sizeof(pCodec->m_channelsList), 0);
 
 	imbxUint8 componentsNumber;
 	pStream->read(&componentsNumber, 1);
@@ -3366,7 +3383,7 @@ void tagSOS::readTag(streamReader* pStream, jpegCodec* pCodec, imbxUint8 /* tagE
 		--tagLength;
 
 		ptrChannel pChannel=pCodec->m_channelsMap[byte];
-		
+
 		pChannel->processUnprocessedAmplitudes();
 
 		pStream->read(&byte, 1);
@@ -3379,8 +3396,8 @@ void tagSOS::readTag(streamReader* pStream, jpegCodec* pCodec, imbxUint8 /* tagE
 
 		pChannel->m_lastDCValue = pChannel->m_defaultDCValue;
 
-		pCodec->m_channelsList.push_back(pChannel);
-	
+		pCodec->m_channelsList[scanComponents] = pChannel.get();
+
 	}
 
 	pStream->read(&byte, 1);
@@ -3405,7 +3422,7 @@ void tagSOS::readTag(streamReader* pStream, jpegCodec* pCodec, imbxUint8 /* tagE
 	/////////////////////////////////////////////////////////////////
 	if(tagLength > 0)
 		pStream->seek(tagLength, true);
-	
+
 	pCodec->findMcuSize();
 
 	PUNTOEXE_FUNCTION_END();
@@ -3447,7 +3464,7 @@ void tagDQT::writeTag(streamWriter* pStream, jpegCodec* pCodec)
     imbxUint8  tablePrecision;
 	imbxUint8  tableValue8;
 	imbxUint16 tableValue16;
-	
+
 	for(int phase = 0; phase < 2; ++phase)
 	{
 		if(phase != 0)
@@ -3506,7 +3523,7 @@ void tagDQT::writeTag(streamWriter* pStream, jpegCodec* pCodec)
 					}
 				}
 			}
-			
+
 			pCodec->recalculateQuantizationTables(tableId);
 		}
 	}
@@ -3553,7 +3570,7 @@ void tagDQT::readTag(streamReader* pStream, jpegCodec* pCodec, imbxUint8 /* tagE
 				pStream->adjustEndian((imbxUint8*)&tableValue16, 2, streamController::highByteEndian);
 				pCodec->m_quantizationTable[tablePrecision & 0x0f][JpegDeZigZagOrder[tableIndex]]=tableValue16;
             }
-            
+
             // 8 bits precision
             /////////////////////////////////////////////////////////////////
             else
@@ -3573,7 +3590,7 @@ void tagDQT::readTag(streamReader* pStream, jpegCodec* pCodec, imbxUint8 /* tagE
 	{
 		PUNTOEXE_THROW(codecExceptionCorruptedFile, "Corrupted tag DQT found");
 	}
-    
+
 	// Move to the end of the tag
 	/////////////////////////////////////////////////////////////////
 	if(tagLength > 0)
@@ -3657,7 +3674,7 @@ void tagDRI::readTag(streamReader* pStream, jpegCodec* pCodec, imbxUint8 /* tagE
 	/////////////////////////////////////////////////////////////////
 	if(tagLength > 0)
 		pStream->seek(tagLength, true);
-	
+
 	PUNTOEXE_FUNCTION_END();
 }
 
@@ -3707,7 +3724,7 @@ void tagRST::readTag(streamReader* /* pStream */, jpegCodec* pCodec, imbxUint8 t
 
 	// Reset the channels last dc value
 	/////////////////////////////////////////////////////////////////
-	for(jpegCodec::tChannelsList::iterator channelsIterator=pCodec->m_channelsList.begin(); channelsIterator!=pCodec->m_channelsList.end(); ++channelsIterator)
+	for(jpeg::jpegChannel** channelsIterator(pCodec->m_channelsList); *channelsIterator != 0; ++channelsIterator)
 	{
 		(*channelsIterator)->processUnprocessedAmplitudes();
 		(*channelsIterator)->m_lastDCValue = (*channelsIterator)->m_defaultDCValue;
@@ -3731,16 +3748,16 @@ void tagRST::readTag(streamReader* /* pStream */, jpegCodec* pCodec, imbxUint8 t
 
 		// Update the lossless pixel's counter in the channels
 		/////////////////////////////////////////////////////////////////
-		for(jpegCodec::tChannelsList::iterator channelsIterator=pCodec->m_channelsList.begin(); channelsIterator!=pCodec->m_channelsList.end(); ++channelsIterator)
+		for(jpeg::jpegChannel** channelsIterator(pCodec->m_channelsList); *channelsIterator != 0; ++channelsIterator)
 		{
-			ptr<jpegChannel> pChannel = *channelsIterator;
+			jpeg::jpegChannel* pChannel(*channelsIterator);
 			pChannel->m_losslessPositionX = pCodec->m_mcuProcessedX / pChannel->m_blockMcuX;
 			pChannel->m_losslessPositionY = pCodec->m_mcuProcessedY / pChannel->m_blockMcuY;
 		}
 	}
 
 	pCodec->m_eobRun = 0;
-	
+
 	PUNTOEXE_FUNCTION_END();
 }
 
@@ -3774,7 +3791,7 @@ void tagEOI::writeTag(streamWriter* pStream, jpegCodec* /* pCodec */)
 	PUNTOEXE_FUNCTION_START(L"jpeg::tagEOI::writeTag");
 
 	writeLength(pStream, 0);
-	
+
 	PUNTOEXE_FUNCTION_END();
 }
 

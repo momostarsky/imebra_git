@@ -36,7 +36,7 @@ namespace puntoexe
 ///  streamReaded's client thinks that he is using a
 ///  whole stream, while the reader limits its view
 ///  to allowed stream's bytes only.
-/// 
+///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 class streamReader: public streamController
@@ -48,11 +48,11 @@ public:
 	/// The stream reader can also be connected to only a part
 	///  of the stream.
 	///
-	/// When the streamReader is connected to a part of a 
+	/// When the streamReader is connected to a part of a
 	///  stream then all the its functions will act on the
 	///  viewable stream's part only.
 	///
-	/// @param pControlledStream  the stream that will be 
+	/// @param pControlledStream  the stream that will be
 	///                            controlled by the reader
 	/// @param virtualStart       the first stream's byte
 	///                            visible to the reader
@@ -60,13 +60,13 @@ public:
 	///                            to the reader. A value of 0
 	///                            means that all the bytes
 	///                            are visible
-	///  
+	///
 	///////////////////////////////////////////////////////////
 	streamReader(ptr<baseStream> pControlledStream, imbxUint32 virtualStart = 0, imbxUint32 virtualLength = 0);
 
 	/// \brief Read raw data from the stream.
 	///
-	/// The number of bytes specified in the parameter 
+	/// The number of bytes specified in the parameter
 	///  bufferLength will be read from the stream and copied
 	///  into a buffer referenced by the parameter pBuffer.
 	/// The buffer's size must be equal or greater than
@@ -95,7 +95,7 @@ public:
 	/// The read position is moved to the specified byte in the
 	///  stream.
 	/// Subsequent calls to the read operations like read(),
-	///  readBits(), readBit(), addBit() and readByte() will 
+	///  readBits(), readBit(), addBit() and readByte() will
 	///  read data from the position specified here.
 	///
 	/// @param newPosition the new position to use for read
@@ -131,11 +131,11 @@ public:
 	/// @return true if the function succeeded and no tag has
 	///                   been found (see m_pTagByte), false
 	///                   otherwise
-	///                   
+	///
 	///////////////////////////////////////////////////////////
 	inline bool readBits(imbxUint32* const pBuffer, int bitsNum)
 	{
-		int bufferSize(sizeof(m_inBitsBuffer) * 8);
+		static const int bufferSize(sizeof(m_inBitsBuffer) * 8);
 
 		// All the requested bits are already in the buffer.
 		// Just return them.
@@ -150,17 +150,17 @@ public:
 
 		PUNTOEXE_FUNCTION_START(L"streamReader::readBits");
 
+		// Fill a local variable with the read bits
+		///////////////////////////////////////////////////////////
+		imbxUint32 localBuffer(0);
+
 		// Some bits are in the bits buffer, copy them and reset
 		//  the bits buffer
 		///////////////////////////////////////////////////////////
 		if(m_inBitsNum != 0)
 		{
 			bitsNum -= m_inBitsNum;
-			*pBuffer = ((imbxUint32)(m_inBitsBuffer >> (bufferSize - m_inBitsNum))) << bitsNum;
-		}
-		else
-		{
-			*pBuffer = 0;
+			localBuffer = ((imbxUint32)(m_inBitsBuffer >> (bufferSize - m_inBitsNum))) << bitsNum;
 		}
 
 		// Read the requested number of bits
@@ -170,6 +170,7 @@ public:
 			if(!readByte(&m_inBitsBuffer))
 			{
 				m_inBitsNum = 0;
+				*pBuffer = localBuffer;
 				return false;
 			}
 
@@ -177,22 +178,22 @@ public:
 
 			if(bitsNum <= m_inBitsNum)
 			{
-				*pBuffer |= m_inBitsBuffer >> (bufferSize - bitsNum);
+				*pBuffer = localBuffer | (m_inBitsBuffer >> (bufferSize - bitsNum));
 				m_inBitsBuffer <<= bitsNum;
 				m_inBitsNum -= bitsNum;
 				return true;
 			}
 
 			bitsNum -= m_inBitsNum;
-			*pBuffer |= ((imbxUint32)m_inBitsBuffer) << bitsNum;
+			localBuffer |= ((imbxUint32)m_inBitsBuffer) << bitsNum;
 		}
-		
+
 		PUNTOEXE_FUNCTION_END();
 	}
 
 	/// \brief Read one bit from the stream.
 	///
-	/// The returned buffer will store the value 0 or 1, 
+	/// The returned buffer will store the value 0 or 1,
 	///  depending on the value of the read bit.
 	///
 	/// The function throws a streamExceptionRead if an error
@@ -236,11 +237,11 @@ public:
 		PUNTOEXE_FUNCTION_END();
 	}
 
-	
+
 	/// \brief Read one bit from the stream and add its value
 	///         to the specified buffer.
 	///
-	/// The buffer pointed by the pBuffer parameter is 
+	/// The buffer pointed by the pBuffer parameter is
 	///  left-shifted before the read bit is inserted in the
 	///  least significant bit of the buffer.
 	///
@@ -248,7 +249,7 @@ public:
 	///  occurs.
 	///
 	/// @param pBuffer   a pointer to a imbxUint32 value that
-	///                   will be left shifted and filled 
+	///                   will be left shifted and filled
 	///                   with the read bit.
 	/// @return true if the function succeeded and no tag has
 	///                   been found (see m_pTagByte), false
@@ -286,10 +287,10 @@ public:
 		PUNTOEXE_FUNCTION_END();
 	}
 
-	/// \brief Reset the bit pointer used by readBits(), 
+	/// \brief Reset the bit pointer used by readBits(),
 	///         readBit() and addBit().
 	///
-	/// A subsequent call to readBits(), readBit and 
+	/// A subsequent call to readBits(), readBit and
 	///  addBit() will read data from a byte-aligned boundary.
 	///
 	///////////////////////////////////////////////////////////
@@ -321,12 +322,12 @@ public:
 	///    the location pointed by m_pTagByte and the function
 	///    returns false.
 	///
-	/// This mechanism is used to parse the jpeg tags in a 
+	/// This mechanism is used to parse the jpeg tags in a
 	///  stream.
 	///
 	/// @param pBuffer   a pointer to the location where the
 	///                   value of the read byte is stored
-	/// @return          true if the byte has been read 
+	/// @return          true if the byte has been read
 	///                   normally, or false if a jpeg tag
 	///                   has been found and its value has
 	///                   been stored in m_pTagByte (only

@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="CImbx_tests" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug Win32">
+				<Option output="Debug/CImbx_tests" prefix_auto="1" extension_auto="1" />
+				<Option object_output="Debug" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-DWIN32" />
+					<Add option="-D_DEBUG" />
+					<Add option="-D_CONSOLE" />
+					<Add option="-D_WIN32_WINNT=0x0400" />
+					<Add option="-Wall" />
+					<Add option="-g" />
+					<Add option="-O0" />
+					<Add option="-frtti" />
+				</Compiler>
+				<Linker>
+					<Add library="cppunitd" />
+				</Linker>
+			</Target>
+			<Target title="Release Win32">
+				<Option output="Release/CImbx_tests" prefix_auto="1" extension_auto="1" />
+				<Option object_output="Release" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-DWIN32" />
+					<Add option="-DNDEBUG" />
+					<Add option="-D_CONSOLE" />
+					<Add option="-D_WIN32_WINNT = 0x0400" />
+					<Add option="-W" />
+				</Compiler>
+			</Target>
+			<Target title="Debug_iconv Win32">
+				<Option output="Debug_iconv Win32/CImbx_tests" prefix_auto="1" extension_auto="1" />
+				<Option object_output="Debug_iconv Win32" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-DWIN32" />
+					<Add option="-D_DEBUG" />
+					<Add option="-D_CONSOLE" />
+					<Add option="-DPUNTOEXE_POSIX" />
+					<Add option="-Wall" />
+					<Add option="-g" />
+					<Add option="-O0" />
+					<Add option="-frtti" />
+				</Compiler>
+				<Linker>
+					<Add library="cppunitd" />
+					<Add library="libiconv" />
+					<Add library="libcharset" />
+					<Add library="pthreadvc2" />
+				</Linker>
+			</Target>
+		</Build>
+		<Unit filename="ReadMe.txt" />
+		<Unit filename="ageStringHandlerTest.cpp" />
+		<Unit filename="bitTransformTest.cpp" />
+		<Unit filename="bufferTest.cpp" />
+		<Unit filename="buildImageForTest.cpp" />
+		<Unit filename="CImbx_tests.cpp" />
+		<Unit filename="dataSetTest.cpp" />
+		<Unit filename="dateTimeHandlerTest.cpp" />
+		<Unit filename="decimalStringHandlerTest.cpp" />
+		<Unit filename="dicomCodecTest.cpp" />
+		<Unit filename="exceptionsTest.cpp" />
+		<Unit filename="huffmanTest.cpp" />
+		<Unit filename="jpegCodecTest.cpp" />
+		<Unit filename="memoryStreamTest.cpp" />
+		<Unit filename="numericHandlerTest.cpp" />
+		<Unit filename="paletteTest.cpp" />
+		<Unit filename="stdafx.cpp" />
+		<Unit filename="streamBitsTest.cpp" />
+		<Unit filename="threadTest.cpp" />
+		<Unit filename="transactionTest.cpp" />
+		<Unit filename="unicodeStringHandlerTest.cpp" />
+		<Unit filename="ageStringHandlerTest.h" />
+		<Unit filename="bitTransformTest.h" />
+		<Unit filename="bufferTest.h" />
+		<Unit filename="buildImageForTest.h" />
+		<Unit filename="dataSetTest.h" />
+		<Unit filename="dateTimeHandlerTest.h" />
+		<Unit filename="decimalStringHandlerTest.h" />
+		<Unit filename="dicomCodecTest.h" />
+		<Unit filename="exceptionsTest.h" />
+		<Unit filename="huffmanTest.h" />
+		<Unit filename="jpegCodecTest.h" />
+		<Unit filename="memoryStreamTest.h" />
+		<Unit filename="numericHandlerTest.h" />
+		<Unit filename="paletteTest.h" />
+		<Unit filename="resource.h" />
+		<Unit filename="stdafx.h" />
+		<Unit filename="streamBitsTest.h" />
+		<Unit filename="threadTest.h" />
+		<Unit filename="transactionTest.h" />
+		<Unit filename="unicodeStringHandlerTest.h" />
+		<Unit filename="CImbx_tests.rc" />
+		<Unit filename="../../imebra/src/buffer.cpp" />
+		<Unit filename="../../imebra/src/charsetsList.cpp" />
+		<Unit filename="../../imebra/src/codec.cpp" />
+		<Unit filename="../../imebra/src/codecFactory.cpp" />
+		<Unit filename="../../imebra/src/colorTransform.cpp" />
+		<Unit filename="../../imebra/src/colorTransformsFactory.cpp" />
+		<Unit filename="../../imebra/src/data.cpp" />
+		<Unit filename="../../imebra/src/dataGroup.cpp" />
+		<Unit filename="../../imebra/src/dataHandler.cpp" />
+		<Unit filename="../../imebra/src/dataHandlerDate.cpp" />
+		<Unit filename="../../imebra/src/dataHandlerDateTime.cpp" />
+		<Unit filename="../../imebra/src/dataHandlerDateTimeBase.cpp" />
+		<Unit filename="../../imebra/src/dataHandlerString.cpp" />
+		<Unit filename="../../imebra/src/dataHandlerStringAE.cpp" />
+		<Unit filename="../../imebra/src/dataHandlerStringAS.cpp" />
+		<Unit filename="../../imebra/src/dataHandlerStringCS.cpp" />
+		<Unit filename="../../imebra/src/dataHandlerStringDS.cpp" />
+		<Unit filename="../../imebra/src/dataHandlerStringIS.cpp" />
+		<Unit filename="../../imebra/src/dataHandlerStringLO.cpp" />
+		<Unit filename="../../imebra/src/dataHandlerStringLT.cpp" />
+		<Unit filename="../../imebra/src/dataHandlerStringPN.cpp" />
+		<Unit filename="../../imebra/src/dataHandlerStringSH.cpp" />
+		<Unit filename="../../imebra/src/dataHandlerStringST.cpp" />
+		<Unit filename="../../imebra/src/dataHandlerStringUI.cpp" />
+		<Unit filename="../../imebra/src/dataHandlerStringUnicode.cpp" />
+		<Unit filename="../../imebra/src/dataHandlerStringUT.cpp" />
+		<Unit filename="../../imebra/src/dataHandlerTime.cpp" />
+		<Unit filename="../../imebra/src/dataSet.cpp" />
+		<Unit filename="../../imebra/src/dicomCodec.cpp" />
+		<Unit filename="../../imebra/src/dicomDict.cpp" />
+		<Unit filename="../../imebra/src/drawBitmap.cpp" />
+		<Unit filename="../../imebra/src/image.cpp" />
+		<Unit filename="../../imebra/src/jpegCodec.cpp" />
+		<Unit filename="../../imebra/src/LUT.cpp" />
+		<Unit filename="../../imebra/src/modalityVOILUT.cpp" />
+		<Unit filename="../../imebra/src/MONOCHROME1ToMONOCHROME2.cpp" />
+		<Unit filename="../../imebra/src/MONOCHROME1ToRGB.cpp" />
+		<Unit filename="../../imebra/src/MONOCHROME2ToRGB.cpp" />
+		<Unit filename="../../imebra/src/MONOCHROME2ToYBRFULL.cpp" />
+		<Unit filename="../../imebra/src/PALETTECOLORToRGB.cpp" />
+		<Unit filename="../../imebra/src/RGBToMONOCHROME2.cpp" />
+		<Unit filename="../../imebra/src/RGBToPALETTECOLOR.cpp" />
+		<Unit filename="../../imebra/src/RGBToYBRFULL.cpp" />
+		<Unit filename="../../imebra/src/RGBToYBRPARTIAL.cpp" />
+		<Unit filename="../../imebra/src/transaction.cpp" />
+		<Unit filename="../../imebra/src/transform.cpp" />
+		<Unit filename="../../imebra/src/transformBuffers.cpp" />
+		<Unit filename="../../imebra/src/transformHighBit.cpp" />
+		<Unit filename="../../imebra/src/transformsChain.cpp" />
+		<Unit filename="../../imebra/src/viewHelper.cpp" />
+		<Unit filename="../../imebra/src/VOILUT.cpp" />
+		<Unit filename="../../imebra/src/waveform.cpp" />
+		<Unit filename="../../imebra/src/YBRFULLToMONOCHROME2.cpp" />
+		<Unit filename="../../imebra/src/YBRFULLToRGB.cpp" />
+		<Unit filename="../../imebra/src/YBRPARTIALToRGB.cpp" />
+		<Unit filename="../../imebra/include/buffer.h" />
+		<Unit filename="../../imebra/include/charsetsList.h" />
+		<Unit filename="../../imebra/include/codec.h" />
+		<Unit filename="../../imebra/include/codecFactory.h" />
+		<Unit filename="../../imebra/include/colorTransform.h" />
+		<Unit filename="../../imebra/include/colorTransformsFactory.h" />
+		<Unit filename="../../imebra/include/data.h" />
+		<Unit filename="../../imebra/include/dataCollection.h" />
+		<Unit filename="../../imebra/include/dataGroup.h" />
+		<Unit filename="../../imebra/include/dataHandler.h" />
+		<Unit filename="../../imebra/include/dataHandlerDate.h" />
+		<Unit filename="../../imebra/include/dataHandlerDateTime.h" />
+		<Unit filename="../../imebra/include/dataHandlerDateTimeBase.h" />
+		<Unit filename="../../imebra/include/dataHandlerNumeric.h" />
+		<Unit filename="../../imebra/include/dataHandlerString.h" />
+		<Unit filename="../../imebra/include/dataHandlerStringAE.h" />
+		<Unit filename="../../imebra/include/dataHandlerStringAS.h" />
+		<Unit filename="../../imebra/include/dataHandlerStringCS.h" />
+		<Unit filename="../../imebra/include/dataHandlerStringDS.h" />
+		<Unit filename="../../imebra/include/dataHandlerStringIS.h" />
+		<Unit filename="../../imebra/include/dataHandlerStringLO.h" />
+		<Unit filename="../../imebra/include/dataHandlerStringLT.h" />
+		<Unit filename="../../imebra/include/dataHandlerStringPN.h" />
+		<Unit filename="../../imebra/include/dataHandlerStringSH.h" />
+		<Unit filename="../../imebra/include/dataHandlerStringST.h" />
+		<Unit filename="../../imebra/include/dataHandlerStringUI.h" />
+		<Unit filename="../../imebra/include/dataHandlerStringUnicode.h" />
+		<Unit filename="../../imebra/include/dataHandlerStringUT.h" />
+		<Unit filename="../../imebra/include/dataHandlerTime.h" />
+		<Unit filename="../../imebra/include/dataSet.h" />
+		<Unit filename="../../imebra/include/dicomCodec.h" />
+		<Unit filename="../../imebra/include/dicomDict.h" />
+		<Unit filename="../../imebra/include/drawBitmap.h" />
+		<Unit filename="../../imebra/include/image.h" />
+		<Unit filename="../../imebra/include/imebra.h" />
+		<Unit filename="../../imebra/include/jpegCodec.h" />
+		<Unit filename="../../imebra/include/LUT.h" />
+		<Unit filename="../../imebra/include/modalityVOILUT.h" />
+		<Unit filename="../../imebra/include/MONOCHROME1ToMONOCHROME2.h" />
+		<Unit filename="../../imebra/include/MONOCHROME1ToRGB.h" />
+		<Unit filename="../../imebra/include/MONOCHROME2ToRGB.h" />
+		<Unit filename="../../imebra/include/MONOCHROME2ToYBRFULL.h" />
+		<Unit filename="../../imebra/include/PALETTECOLORToRGB.h" />
+		<Unit filename="../../imebra/include/RGBToMONOCHROME2.h" />
+		<Unit filename="../../imebra/include/RGBToPALETTECOLOR.h" />
+		<Unit filename="../../imebra/include/RGBToYBRFULL.h" />
+		<Unit filename="../../imebra/include/RGBToYBRPARTIAL.h" />
+		<Unit filename="../../imebra/include/transaction.h" />
+		<Unit filename="../../imebra/include/transform.h" />
+		<Unit filename="../../imebra/include/transformBuffers.h" />
+		<Unit filename="../../imebra/include/transformHighBit.h" />
+		<Unit filename="../../imebra/include/transformsChain.h" />
+		<Unit filename="../../imebra/include/viewHelper.h" />
+		<Unit filename="../../imebra/include/VOILUT.h" />
+		<Unit filename="../../imebra/include/waveform.h" />
+		<Unit filename="../../imebra/include/YBRFULLToMONOCHROME2.h" />
+		<Unit filename="../../imebra/include/YBRFULLToRGB.h" />
+		<Unit filename="../../imebra/include/YBRPARTIALToRGB.h" />
+		<Unit filename="../../swig/swig_header.h" />
+		<Unit filename="../../swig/swig_interface.i" />
+		<Unit filename="../../base/src/baseObject.cpp" />
+		<Unit filename="../../base/src/baseStream.cpp" />
+		<Unit filename="../../base/src/charsetConversion.cpp" />
+		<Unit filename="../../base/src/criticalSection.cpp" />
+		<Unit filename="../../base/src/exception.cpp" />
+		<Unit filename="../../base/src/huffmanTable.cpp" />
+		<Unit filename="../../base/src/memory.cpp" />
+		<Unit filename="../../base/src/memoryStream.cpp" />
+		<Unit filename="../../base/src/stream.cpp" />
+		<Unit filename="../../base/src/streamController.cpp" />
+		<Unit filename="../../base/src/streamReader.cpp" />
+		<Unit filename="../../base/src/streamWriter.cpp" />
+		<Unit filename="../../base/src/thread.cpp" />
+		<Unit filename="../../base/include/baseObject.h" />
+		<Unit filename="../../base/include/baseStream.h" />
+		<Unit filename="../../base/include/charsetConversion.h" />
+		<Unit filename="../../base/include/configuration.h" />
+		<Unit filename="../../base/include/criticalSection.h" />
+		<Unit filename="../../base/include/exception.h" />
+		<Unit filename="../../base/include/huffmanTable.h" />
+		<Unit filename="../../base/include/memory.h" />
+		<Unit filename="../../base/include/memoryStream.h" />
+		<Unit filename="../../base/include/stream.h" />
+		<Unit filename="../../base/include/streamController.h" />
+		<Unit filename="../../base/include/streamReader.h" />
+		<Unit filename="../../base/include/streamWriter.h" />
+		<Unit filename="../../base/include/thread.h" />
+		<Unit filename="../../../automatic_build.xml" />
+		<Unit filename="../../docs/a_license.h" />
+		<Unit filename="../../docs/b_imebra_structure.h" />
+		<Unit filename="../../docs/c_quick_tour.h" />
+		<Unit filename="../../docs/d_addToProject.h" />
+		<Unit filename="../../docs/e_unicode.h" />
+		<Unit filename="../../docs/f_transactions_locks.h" />
+		<Unit filename="../../docs/mainPage.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
