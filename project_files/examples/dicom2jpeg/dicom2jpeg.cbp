@@ -6,7 +6,7 @@
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
-			<Target title="Debug Win32">
+			<Target title="Debug">
 				<Option output="Debug/dicom2jpeg" prefix_auto="1" extension_auto="1" />
 				<Option object_output="Debug" />
 				<Option type="1" />
@@ -24,20 +24,17 @@
 					<Add option="-pg" />
 				</Linker>
 			</Target>
-			<Target title="Release Win32">
+			<Target title="Release">
 				<Option output="Release/dicom2jpeg" prefix_auto="1" extension_auto="1" />
 				<Option object_output="Release" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O3" />
-					<Add option="-O2" />
 					<Add option="-Wall" />
 					<Add option="-frtti" />
-					<Add option="-DWIN32" />
 					<Add option="-DNDEBUG" />
 					<Add option="-D_CONSOLE" />
-					<Add option="-D_WIN32_WINNT=0x0501" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />

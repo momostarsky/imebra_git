@@ -34,12 +34,12 @@ namespace handlers
 /// \brief Represents a Lookup table (LUT).
 ///
 /// The lookup table maps a value stored into an image
-///  into another value that must be used for the 
+///  into another value that must be used for the
 ///  visualization or for the analysis of the image.
 ///
 /// 3 lookups tables can be joined together to form a
 ///  color palette, also used by the transforms
-///  transforms::PALETTECOLORToRGB and 
+///  transforms::PALETTECOLORToRGB and
 ///  transforms::RGBToPALETTECOLOR.
 ///
 ///////////////////////////////////////////////////////////
@@ -50,8 +50,8 @@ public:
 	///////////////////////////////////////////////////////////
 	lut():
 	  m_size(0),
-		m_bits(0),
 		m_firstMapped(0),
+		m_bits(0),
 		m_pMappedValues(0){}
 
 
@@ -64,7 +64,7 @@ public:
 	///         a dataset.
 	///
 	/// @param pDescriptor   the handler that manages the
-	///                       lut descriptor (size, first 
+	///                       lut descriptor (size, first
 	///                       mapped value and number of bits)
 	/// @param pData         the handler that manages the
 	///                       lut data
@@ -76,7 +76,7 @@ public:
 
 	/// \brief Create an empty lut.
 	///
-	/// Subsequent calls to setLutValue() must be made in 
+	/// Subsequent calls to setLutValue() must be made in
 	///  order to fill the lut with the data.
 	///
 	/// @param size          the number of mapped values that

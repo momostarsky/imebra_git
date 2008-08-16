@@ -18,9 +18,9 @@ namespace puntoexe
 //
 ///////////////////////////////////////////////////////////
 streamWriter::streamWriter(ptr<baseStream> pControlledStream, imbxUint32 virtualStart /* =0 */, imbxUint32 virtualLength /* =0 */):
+	streamController(pControlledStream, virtualStart, virtualLength),
 	m_outBitsBuffer(0),
-	m_outBitsNum(0),
-	streamController(pControlledStream, virtualStart, virtualLength)
+	m_outBitsNum(0)
 {
 }
 

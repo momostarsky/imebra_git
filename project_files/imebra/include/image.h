@@ -86,15 +86,15 @@ public:
 	///////////////////////////////////////////////////////////
 	image():
 		baseObject(ptr<baseObject>(new baseObject) ),
+			m_rowLength(0),
 			m_channelPixelSize(0),
 			m_channelsNumber(0),
-			m_rowLength(0),
-			m_sizeMmX(0),
-			m_sizeMmY(0),
+			m_imageDepth(depthUnknown),
+			m_highBit(0),
 			m_sizeX(0),
 			m_sizeY(0),
-			m_imageDepth(depthUnknown),
-			m_highBit(0){}
+			m_sizeMmX(0),
+			m_sizeMmY(0){}
 
 
 	/// \brief Create the image.
@@ -185,8 +185,8 @@ public:
 	/// - when multiple channels are present, then the channels
 	///   are ALWAYS interleaved
 	/// - the channels are NEVER subsampled or oversampled.
-	///   The subsampling/oversampling is done by the codecs 
-	///   when the image is stored or loaded from the dicom 
+	///   The subsampling/oversampling is done by the codecs
+	///   when the image is stored or loaded from the dicom
 	///   structure.
 	/// - the first stored value represent the first channel of
 	///   the top/left pixel.
@@ -211,14 +211,14 @@ public:
 	///////////////////////////////////////////////////////////
 	ptr<handlers::imageHandler> getDataHandler(
 		const bool bWrite,
-		imbxUint32* pRowSize, 
-		imbxUint32* pChannelPixelSize, 
+		imbxUint32* pRowSize,
+		imbxUint32* pChannelPixelSize,
 		imbxUint32* pChannelsNumber);
 
 	/// \brief Get the image's color space (DICOM standard)
 	///
 	/// @return a string with the image's color space
-	///         
+	///
 	///////////////////////////////////////////////////////////
 	std::wstring getColorSpace();
 
@@ -253,11 +253,11 @@ protected:
 	// Lenght of a buffer's row (in bytes)
 	///////////////////////////////////////////////////////////
 	imbxUint32 m_rowLength;
-	
+
 	// Length of a pixel's component (in bytes)
 	///////////////////////////////////////////////////////////
 	imbxUint32 m_channelPixelSize;
-	
+
 	// Number of channels
 	///////////////////////////////////////////////////////////
 	imbxUint32  m_channelsNumber;
@@ -265,7 +265,7 @@ protected:
 	// Color space
 	///////////////////////////////////////////////////////////
 	std::wstring m_colorSpace;
-	
+
 	// Depth (enum)
 	///////////////////////////////////////////////////////////
 	bitDepth  m_imageDepth;
@@ -326,7 +326,7 @@ public:
 
 ///////////////////////////////////////////////////////////
 /// \brief This exception is thrown when an invalid size
-///         in pixels is specified in the function 
+///         in pixels is specified in the function
 ///         create().
 ///
 ///////////////////////////////////////////////////////////

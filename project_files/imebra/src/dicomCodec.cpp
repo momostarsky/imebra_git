@@ -84,11 +84,11 @@ void dicomCodec::writeStream(ptr<streamWriter> pStream, ptr<dataSet> pDataSet)
 	// Adjust the flags
 	///////////////////////////////////////////////////////////
 	bool bExplicitDataType = (transferSyntax != L"1.2.840.10008.1.2");        // Implicit VR little endian
-	
+
 	// Explicit VR big endian
 	///////////////////////////////////////////////////////////
 	streamController::tByteOrdering endianType = (transferSyntax == L"1.2.840.10008.1.2.2") ? streamController::highByteEndian : streamController::lowByteEndian;
-	
+
 	// Write the dicom header
 	///////////////////////////////////////////////////////////
 	imbxUint8 zeroBuffer[128];
@@ -158,7 +158,7 @@ void dicomCodec::writeGroup(ptr<streamWriter> pDestStream, ptr<dataGroup> pGroup
 
 	imbxUint16 adjustedGroupId = groupId;
 	pDestStream->adjustEndian((imbxUint8*)&adjustedGroupId, 2, endianType);
-	
+
 	imbxUint16 tagId = 0;
 	pDestStream->write((imbxUint8*)&adjustedGroupId, 2);
 	pDestStream->write((imbxUint8*)&tagId, 2);
@@ -237,7 +237,7 @@ void dicomCodec::writeTag(ptr<streamWriter> pDestStream, ptr<data> pData, imbxUi
 	{
 		dataType = "OB";
 	}
-	
+
 	// Adjust the tag id endian and write it
 	///////////////////////////////////////////////////////////
 	imbxUint16 adjustedTagId = tagId;
@@ -304,7 +304,7 @@ void dicomCodec::writeTag(ptr<streamWriter> pDestStream, ptr<data> pData, imbxUi
 				pDestStream->write(pTempBuffer.get(), bufferSize);
 				continue;
 			}
-			
+
 			pDestStream->write(pDataHandlerRaw->getMemoryBuffer(), bufferSize);
 			continue;
 		}
@@ -480,7 +480,7 @@ imbxUint32 dicomCodec::getDataSetLength(ptr<dataSet> pDataSet, bool bExplicitDat
 //
 //
 ///////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////// 
+///////////////////////////////////////////////////////////
 void dicomCodec::readStream(ptr<streamReader> pStream, ptr<dataSet> pDataSet, imbxUint32 maxSizeBufferLoad /* = 0xffffffff */)
 {
 	PUNTOEXE_FUNCTION_START(L"dicomCodec::readStream");
@@ -516,7 +516,7 @@ void dicomCodec::readStream(ptr<streamReader> pStream, ptr<dataSet> pDataSet, im
 	pStream->read(dicomSignature, 4);
 	// Check the DICM signature
 	///////////////////////////////////////////////////////////
-	char* checkSignature="DICM";
+	const char* checkSignature="DICM";
 	if(::memcmp(dicomSignature, checkSignature, 4) != 0)
 	{
 		bFailed=true;
@@ -536,15 +536,15 @@ void dicomCodec::readStream(ptr<streamReader> pStream, ptr<dataSet> pDataSet, im
 		///////////////////////////////////////////////////////////
 		if(
 			oldDicomSignature[0]!=0x8 ||
-			oldDicomSignature[1]!=0x0 || 
-			oldDicomSignature[3]!=0x0 || 
+			oldDicomSignature[1]!=0x0 ||
+			oldDicomSignature[3]!=0x0 ||
 			oldDicomSignature[6]!=0x0 ||
 			oldDicomSignature[7]!=0x0
 			)
 		{
 			PUNTOEXE_THROW(codecExceptionWrongFormat, "detected a wrong format (checked old NEMA signature)");
 		}
-		
+
 		// Go back to the beginning of the file
 		///////////////////////////////////////////////////////////
 		pStream->seek((imbxInt32)position);
@@ -570,12 +570,12 @@ void dicomCodec::readStream(ptr<streamReader> pStream, ptr<dataSet> pDataSet, im
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dicomCodec::parseStream(ptr<streamReader> pStream, 
-							 ptr<dataSet> pDataSet, 
-							 bool bExplicitDataType, 
-							 streamController::tByteOrdering endianType, 
-							 imbxUint32 maxSizeBufferLoad /* = 0xffffffff */, 
-							 imbxUint32 subItemLength /* = 0xffffffff */, 
+void dicomCodec::parseStream(ptr<streamReader> pStream,
+							 ptr<dataSet> pDataSet,
+							 bool bExplicitDataType,
+							 streamController::tByteOrdering endianType,
+							 imbxUint32 maxSizeBufferLoad /* = 0xffffffff */,
+							 imbxUint32 subItemLength /* = 0xffffffff */,
 							 imbxUint32* pReadSubItemLength /* = 0 */)
 {
 	PUNTOEXE_FUNCTION_START(L"dicomCodec::parseStream");
@@ -611,7 +611,7 @@ void dicomCodec::parseStream(ptr<streamReader> pStream,
 	// Read all the tags
 	//
 	///////////////////////////////////////////////////////////
-	while(!bStopped && !(pStream->m_bEof) && (*pReadSubItemLength < subItemLength))
+	while(!bStopped && !pStream->endReached() && (*pReadSubItemLength < subItemLength))
 	{
 		// Get the tag's ID
 		///////////////////////////////////////////////////////////
@@ -621,21 +621,21 @@ void dicomCodec::parseStream(ptr<streamReader> pStream,
 
 		// Check for EOF
 		///////////////////////////////////////////////////////////
-		if(pStream->m_bEof)
+		if(pStream->endReached())
 		{
 			break;
 		}
-		
+
 		// Check the byte order
 		///////////////////////////////////////////////////////////
 		if(bFirstTag && tagId==0x0200)
 		{
 			// Reverse the last adjust
 			pStream->adjustEndian((imbxUint8*)&tagId, sizeof(tagId), endianType);
-			
+
 			// Fix the byte adjustment
 			endianType=streamController::highByteEndian;
-			
+
 			// Redo the byte adjustment
 			pStream->adjustEndian((imbxUint8*)&tagId, sizeof(tagId), endianType);
 		}
@@ -649,7 +649,7 @@ void dicomCodec::parseStream(ptr<streamReader> pStream,
 			pStream->adjustEndian((imbxUint8*)&tagId, sizeof(tagId), endianType);
 
 			std::wstring transferSyntax=pDataSet->getUnicodeString(0x0002, 0x0, 0x0010, 0x0);
-			
+
 			if(transferSyntax == L"1.2.840.10008.1.2.2")
 				endianType=streamController::highByteEndian;
 			if(transferSyntax == L"1.2.840.10008.1.2")
@@ -668,7 +668,7 @@ void dicomCodec::parseStream(ptr<streamReader> pStream,
 		// Set the word's length to the default value
 		///////////////////////////////////////////////////////////
 		wordSize = 1;
-		
+
 		// Get the tag's sub ID
 		///////////////////////////////////////////////////////////
 		pStream->read((imbxUint8*)&tagSubId, sizeof(tagSubId));
@@ -715,7 +715,7 @@ void dicomCodec::parseStream(ptr<streamReader> pStream,
 					(*pReadSubItemLength) += sizeof(tagLengthDWord);
 				}
 			}
-			
+
 			// The data type is not valid. Switch to implicit data type
 			///////////////////////////////////////////////////////////
 			else
@@ -729,7 +729,7 @@ void dicomCodec::parseStream(ptr<streamReader> pStream,
 
 		} // End of the explicit data type read block
 
-		
+
 		///////////////////////////////////////////////////////////
 		//
 		// Implicit data type
@@ -756,7 +756,7 @@ void dicomCodec::parseStream(ptr<streamReader> pStream,
 			///////////////////////////////////////////////////////////
 			if(tagSubId == 0)
 			{
-				tagType[0]='U'; 
+				tagType[0]='U';
 				tagType[1]='L';
 			}
 			else
@@ -789,7 +789,7 @@ void dicomCodec::parseStream(ptr<streamReader> pStream,
 		//
 		///////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////
-		
+
 		///////////////////////////////////////////////////////////
 		//
 		// Adjust the order when multiple groups with the same
@@ -879,7 +879,7 @@ void dicomCodec::parseStream(ptr<streamReader> pStream,
 				}
 				continue;
 			}
-			
+
 			///////////////////////////////////////////////////////////
 			// Read a buffer's element
 			///////////////////////////////////////////////////////////
@@ -890,7 +890,7 @@ void dicomCodec::parseStream(ptr<streamReader> pStream,
 				tagLengthDWord -= sequenceItemLength;
 			}
 		}
-		
+
 	} // End of the tags-read block
 
 	PUNTOEXE_FUNCTION_END();
@@ -958,7 +958,7 @@ ptr<image> dicomCodec::getImage(ptr<dataSet> pData, ptr<streamReader> pStream, s
 	// Check for 2's complement
 	///////////////////////////////////////////////////////////
 	bool b2Complement=pData->getUnsignedLong(0x0028, 0x0, 0x0103, 0x0)!=0x0;
-	
+
 	// Retrieve the allocated/stored/high bits
 	///////////////////////////////////////////////////////////
 	imbxUint8 allocatedBits=(imbxUint8)pData->getUnsignedLong(0x0028, 0x0, 0x0100, 0x0);
@@ -1012,7 +1012,7 @@ ptr<image> dicomCodec::getImage(ptr<dataSet> pData, ptr<streamReader> pStream, s
 		if(bInterleaved)
 		{
 			readUncompressedInterleaved(
-				channelsNumber, 
+				channelsNumber,
 				bSubSampledX,
 				bSubSampledY,
 				pSourceStream,
@@ -1023,7 +1023,7 @@ ptr<image> dicomCodec::getImage(ptr<dataSet> pData, ptr<streamReader> pStream, s
 		else
 		{
 			readUncompressedNotInterleaved(
-				channelsNumber, 
+				channelsNumber,
 				pSourceStream,
 				wordSizeBytes,
 				allocatedBits,
@@ -1043,7 +1043,7 @@ ptr<image> dicomCodec::getImage(ptr<dataSet> pData, ptr<streamReader> pStream, s
 		}
 
 		readRLECompressed(imageSizeX, imageSizeY, channelsNumber, pSourceStream, allocatedBits, mask, bInterleaved);
-	
+
 	} // ...End of RLE decoding
 
 	// Adjust b2complement buffers
@@ -1089,13 +1089,13 @@ ptr<image> dicomCodec::getImage(ptr<dataSet> pData, ptr<streamReader> pStream, s
 			imageSizeY,
 			channelsNumber);
 	}
-	
+
 	// Return OK
 	///////////////////////////////////////////////////////////
 	return pImage;
 
 	PUNTOEXE_FUNCTION_END();
-	
+
 }
 
 
@@ -1175,9 +1175,9 @@ void dicomCodec::allocChannels(imbxUint32 channelsNumber, imbxUint32 sizeX, imbx
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 void dicomCodec::readUncompressedInterleaved(
-	imbxUint32 channelsNumber, 
+	imbxUint32 channelsNumber,
 	bool bSubSampledX,
-	bool bSubSampledY, 
+	bool bSubSampledY,
 	streamReader* pSourceStream,
 	imbxUint8 wordSizeBytes,
 	imbxUint8 allocatedBits,
@@ -1208,7 +1208,7 @@ void dicomCodec::readUncompressedInterleaved(
 		}
 		return;
 	}
-	
+
 	// Read the subsampled channels.
 	// Find the number of blocks to read
 	///////////////////////////////////////////////////////////
@@ -1259,7 +1259,7 @@ void dicomCodec::readUncompressedInterleaved(
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 void dicomCodec::writeUncompressedInterleaved(
-	imbxUint32 channelsNumber, 
+	imbxUint32 channelsNumber,
 	bool bSubSampledX,
 	bool bSubSampledY,
 	streamWriter* pDestStream,
@@ -1346,7 +1346,7 @@ void dicomCodec::writeUncompressedInterleaved(
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 void dicomCodec::readUncompressedNotInterleaved(
-	imbxUint32 channelsNumber, 
+	imbxUint32 channelsNumber,
 	streamReader* pSourceStream,
 	imbxUint8 wordSizeBytes,
 	imbxUint8 allocatedBits,
@@ -1382,7 +1382,7 @@ void dicomCodec::readUncompressedNotInterleaved(
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 void dicomCodec::writeUncompressedNotInterleaved(
-	imbxUint32 channelsNumber, 
+	imbxUint32 channelsNumber,
 	streamWriter* pDestStream,
 	imbxUint8 wordSizeBytes,
 	imbxUint8 allocatedBits,
@@ -1419,9 +1419,9 @@ void dicomCodec::writeUncompressedNotInterleaved(
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 void dicomCodec::writeRLECompressed(
-	imbxUint32 imageSizeX, 
-	imbxUint32 imageSizeY, 
-	imbxUint32 channelsNumber, 
+	imbxUint32 imageSizeX,
+	imbxUint32 imageSizeY,
+	imbxUint32 channelsNumber,
 	streamWriter* pDestStream,
 	imbxUint8 allocatedBits,
 	imbxUint32 mask
@@ -1446,7 +1446,7 @@ void dicomCodec::writeRLECompressed(
 		imbxUint32 segmentNumber = 0;
 		imbxUint32 offset = 64;
 		imbxUint8 command;
-		
+
 		for(imbxUint32 scanChannels = 0; scanChannels < channelsNumber; ++scanChannels)
 		{
 			std::auto_ptr<imbxUint8> rowBytes(new imbxUint8[imageSizeX]);
@@ -1517,7 +1517,7 @@ void dicomCodec::writeRLECompressed(
 
 							scanBytes += writeBytes;
 						}
-						
+
 						// Write a run length
 						if(startRun >= imageSizeX)
 						{
@@ -1551,11 +1551,11 @@ void dicomCodec::writeRLECompressed(
 						pDestStream->write(&command, 1);
 					}
 				}
-				
+
 			} // for(imbxInt32 rightShift = ((allocatedBits + 7) & 0xfffffff8) -8; rightShift >= 0; rightShift -= 8)
-		
+
 		} // for(int scanChannels = 0; scanChannels < channelsNumber; ++scanChannels)
-	
+
 	} // for(int phase = 0; phase < 2; ++phase)
 
 	PUNTOEXE_FUNCTION_END();
@@ -1572,9 +1572,9 @@ void dicomCodec::writeRLECompressed(
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 void dicomCodec::readRLECompressed(
-	imbxUint32 imageSizeX, 
-	imbxUint32 imageSizeY, 
-	imbxUint32 channelsNumber, 
+	imbxUint32 imageSizeX,
+	imbxUint32 imageSizeY,
+	imbxUint32 channelsNumber,
 	streamReader* pSourceStream,
 	imbxUint8 allocatedBits,
 	imbxUint32 mask,
@@ -1587,11 +1587,9 @@ void dicomCodec::readRLECompressed(
 	///////////////////////////////////////////////////////////
 	imbxUint32 segmentsOffset[16];
 	::memset(segmentsOffset, 0, sizeof(segmentsOffset));
-	if(pSourceStream->read((imbxUint8*)segmentsOffset, 64) == 64)
-	{
-		pSourceStream->adjustEndian((imbxUint8*)segmentsOffset, 4, streamController::lowByteEndian, sizeof(segmentsOffset) / sizeof(segmentsOffset[0]));
-	}
-	
+	pSourceStream->read((imbxUint8*)segmentsOffset, 64);
+    pSourceStream->adjustEndian((imbxUint8*)segmentsOffset, 4, streamController::lowByteEndian, sizeof(segmentsOffset) / sizeof(segmentsOffset[0]));
+
 	//
 	// Scan all the RLE segments
 	//
@@ -1623,15 +1621,17 @@ void dicomCodec::readRLECompressed(
 
 			// Read the RLE segment
 			///////////////////////////////////////////////////////////
-			currentSegmentOffset += pSourceStream->read(&rleByte, 1);
-			while(!pSourceStream->m_bEof && channelSize != 0)
+			pSourceStream->read(&rleByte, 1);
+			++currentSegmentOffset;
+			while(channelSize != 0)
 			{
 				if(rleByte==0x80)
 				{
-					currentSegmentOffset += pSourceStream->read(&rleByte, 1);
+				    pSourceStream->read(&rleByte, 1);
+					++currentSegmentOffset;
 					continue;
 				}
-				
+
 				// Copy the specified number of bytes
 				///////////////////////////////////////////////////////////
 				if(rleByte<0x80)
@@ -1639,12 +1639,14 @@ void dicomCodec::readRLECompressed(
 					copyBytes = ++rleByte;
 					if(copyBytes < channelSize)
 					{
-						currentSegmentOffset += pSourceStream->read(copyBytesBuffer, copyBytes + 1);
+					    pSourceStream->read(copyBytesBuffer, copyBytes + 1);
+						currentSegmentOffset += copyBytes + 1;
 						rleByte = copyBytesBuffer[copyBytes];
 					}
 					else
 					{
-						currentSegmentOffset += pSourceStream->read(copyBytesBuffer, copyBytes);
+					    pSourceStream->read(copyBytesBuffer, copyBytes);
+						currentSegmentOffset += copyBytes;
 					}
 					pScanCopyBytes = copyBytesBuffer;
 					while(copyBytes-- && channelSize != 0)
@@ -1655,19 +1657,21 @@ void dicomCodec::readRLECompressed(
 					}
 					continue;
 				}
-				
+
 				// Copy the same byte several times
 				///////////////////////////////////////////////////////////
 				runLength = (imbxUint8)0x1-rleByte;
 				if(runLength < channelSize)
 				{
-					currentSegmentOffset += pSourceStream->read(copyBytesBuffer, 2);
+				    pSourceStream->read(copyBytesBuffer, 2);
+					currentSegmentOffset += 2;
 					runByte = copyBytesBuffer[0];
 					rleByte = copyBytesBuffer[1];
 				}
 				else
 				{
-					currentSegmentOffset += pSourceStream->read(&runByte, 1);
+				    pSourceStream->read(&runByte, 1);
+					++currentSegmentOffset;
 				}
 				while(runLength-- && channelSize != 0)
 				{
@@ -1675,9 +1679,9 @@ void dicomCodec::readRLECompressed(
 					++pChannelMemory;
 					--channelSize;
 				}
-			
+
 			} // ...End of the segment scanning loop
-		
+
 		} // ...End of the leftshift calculation
 
 	} // ...Channels scanning loop
@@ -1698,8 +1702,8 @@ void dicomCodec::readRLECompressed(
 imbxInt32 dicomCodec::readPixel(
 					streamReader* pSourceStream,
 					imbxUint8*  pBitPointer,
-					imbxUint8 wordSizeBytes, 
-					imbxUint8 allocatedBits, 
+					imbxUint8 wordSizeBytes,
+					imbxUint8 allocatedBits,
 					imbxUint32 mask)
 {
 	PUNTOEXE_FUNCTION_START(L"dicomCodec::readPixel");
@@ -1757,7 +1761,7 @@ imbxInt32 dicomCodec::readPixel(
 
 	PUNTOEXE_FUNCTION_END();
 }
-	
+
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -1772,8 +1776,8 @@ void dicomCodec::writePixel(
 					streamWriter* pDestStream,
 					imbxInt32 pixelValue,
 					imbxUint8*  pBitPointer,
-					imbxUint8 wordSizeBytes, 
-					imbxUint8 allocatedBits, 
+					imbxUint8 wordSizeBytes,
+					imbxUint8 allocatedBits,
 					imbxUint32 mask)
 {
 	PUNTOEXE_FUNCTION_START(L"dicomCodec::writePixel");
@@ -1871,7 +1875,7 @@ void dicomCodec::flushUnwrittenPixels(streamWriter* pDestStream, imbxUint8* pBit
 
 	PUNTOEXE_FUNCTION_END();
 }
-	
+
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -1884,8 +1888,8 @@ void dicomCodec::flushUnwrittenPixels(streamWriter* pDestStream, imbxUint8* pBit
 ///////////////////////////////////////////////////////////
 void dicomCodec::setImage(
 		ptr<streamWriter> pDestStream,
-		ptr<image> pImage, 
-		std::wstring transferSyntax, 
+		ptr<image> pImage,
+		std::wstring transferSyntax,
 		quality /*imageQuality*/,
 		std::string dataType,
 		imbxUint8 allocatedBits,
@@ -1930,17 +1934,17 @@ void dicomCodec::setImage(
 			imageHeight,
 			channelsNumber);
 	}
-	
+
 	imbxUint32 mask = ((imbxUint32)1 << (highBit + 1)) - 1;
 
 	if(bRleCompressed)
 	{
 		writeRLECompressed(
-			imageWidth, 
-			imageHeight, 
-			channelsNumber, 
-			pDestStream.get(), 
-			allocatedBits, 
+			imageWidth,
+			imageHeight,
+			channelsNumber,
+			pDestStream.get(),
+			allocatedBits,
 			mask);
 		return;
 	}
@@ -1950,7 +1954,7 @@ void dicomCodec::setImage(
 	if(bInterleaved || channelsNumber == 1)
 	{
 		writeUncompressedInterleaved(
-			channelsNumber, 
+			channelsNumber,
 			bSubSampledX, bSubSampledY,
 			pDestStream.get(),
 			wordSizeBytes,
@@ -1960,7 +1964,7 @@ void dicomCodec::setImage(
 	}
 
 	writeUncompressedNotInterleaved(
-		channelsNumber, 
+		channelsNumber,
 		pDestStream.get(),
 		wordSizeBytes,
 		allocatedBits,
@@ -2000,7 +2004,7 @@ bool dicomCodec::canHandleTransferSyntax(std::wstring transferSyntax)
 ////////////////////////////////////////////////////////////////
 //
 //
-// Returns true if the transfer syntax has to be 
+// Returns true if the transfer syntax has to be
 //  encapsulated
 //
 //
@@ -2071,14 +2075,14 @@ imbxUint32 dicomCodec::suggestAllocatedBits(std::wstring transferSyntax, imbxUin
 ///////////////////////////////////////////////////////////
 imbxUint32 dicomCodec::readTag(
 	ptr<streamReader> pStream,
-	ptr<dataSet> pDataSet, 
-	imbxUint32 tagLengthDWord, 
-	imbxUint16 tagId, 
+	ptr<dataSet> pDataSet,
+	imbxUint32 tagLengthDWord,
+	imbxUint16 tagId,
 	imbxUint16 order,
-	imbxUint16 tagSubId, 
-	std::string tagType, 
-	streamController::tByteOrdering endianType, 
-	short wordSize, 
+	imbxUint16 tagSubId,
+	std::string tagType,
+	streamController::tByteOrdering endianType,
+	short wordSize,
 	imbxUint32 bufferId,
 	imbxUint32 maxSizeBufferLoad /* = 0xffffffff */
 	)
@@ -2104,12 +2108,12 @@ imbxUint32 dicomCodec::readTag(
 		ptr<data>      writeData  = writeGroup->getTag(tagSubId, true);
 		ptr<buffer> newBuffer(
 			new buffer(
-				writeData->getExternalLock(), 
-				tagType, 
-				pStream->getControlledStream(), 
-				streamPosition, 
-				bufferLength, 
-				wordSize, 
+				writeData->getExternalLock(),
+				tagType,
+				pStream->getControlledStream(),
+				streamPosition,
+				bufferLength,
+				wordSize,
 				endianType));
 
 		writeData->setBuffer(bufferId, newBuffer);
@@ -2138,7 +2142,7 @@ imbxUint32 dicomCodec::readTag(
 	//  of memory actually stored in the source file is
 	//  allocated
 	///////////////////////////////////////////////////////////
-	
+
 	// List of small buffers
 	///////////////////////////////////////////////////////////
 	std::list<std::vector<imbxUint8> > buffers;
@@ -2157,17 +2161,10 @@ imbxUint32 dicomCodec::readTag(
 		imbxUint32 thisBufferSize=(remainingBytes > smallBuffersSize) ? smallBuffersSize : remainingBytes;
 		buffers.push_back(std::vector<imbxUint8>());
 		buffers.back().resize(thisBufferSize);
-		
+
 		// Fill the buffer
 		///////////////////////////////////////////////////////////
-		imbxUint32 readBytes = pStream->read(&buffers.back()[0], thisBufferSize);
-
-		// If an end of file has been found then throw an exception
-		///////////////////////////////////////////////////////////
-		if(readBytes != thisBufferSize)
-		{
-			PUNTOEXE_THROW(codecExceptionCorruptedFile, "dicomCodec::readTag detected a corrupted tag");
-		}
+		pStream->read(&buffers.back()[0], thisBufferSize);
 
 		// Decrease the number of the remaining bytes
 		///////////////////////////////////////////////////////////
@@ -2187,7 +2184,7 @@ imbxUint32 dicomCodec::readTag(
 	///////////////////////////////////////////////////////////
 	std::vector<imbxUint8> finalBuffer;
 	finalBuffer.resize(tagLengthDWord);
-	
+
 	// Scan all the small buffers and copy their content into
 	//  the final buffer
 	///////////////////////////////////////////////////////////
@@ -2204,7 +2201,7 @@ imbxUint32 dicomCodec::readTag(
 
 	// Adjust the buffer's byte endian
 	///////////////////////////////////////////////////////////
-	if(wordSize != 0)			
+	if(wordSize != 0)
 		pStream->adjustEndian(&finalBuffer[0], wordSize, endianType, tagLengthDWord/wordSize);
 
 	// Copy the buffer into the tag object
@@ -2215,7 +2212,7 @@ imbxUint32 dicomCodec::readTag(
 		imbxUint8* pHandlerBuffer = handler->getMemoryBuffer();
 		::memcpy(pHandlerBuffer, &finalBuffer[0], tagLengthDWord);
 	}
-	
+
 	// Return the tag's length in bytes
 	///////////////////////////////////////////////////////////
 	return (imbxUint32)tagLengthDWord;

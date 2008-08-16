@@ -31,7 +31,7 @@ namespace colorTransforms
 {
 
 ///////////////////////////////////////////////////////////
-/// \brief Transforms an image from the colorspace 
+/// \brief Transforms an image from the colorspace
 ///         RGB into the color space PALETTE COLOR.
 ///
 /// The input image has to have the colorspace RGB,
@@ -46,7 +46,7 @@ namespace colorTransforms
 ///  or the dataSet nor the palette have been defined then
 ///  the function calculate a new palette and stores it
 ///  in the declared dataSet (if any).
-/// The calculated lut will also be used for the 
+/// The calculated lut will also be used for the
 ///  conversion.
 ///
 /// When multiple image have been declared as input
@@ -57,7 +57,7 @@ namespace colorTransforms
 class RGBToPALETTECOLOR: public PALETTECOLORToRGB
 {
 public:
-	RGBToPALETTECOLOR(): m_leavesCount(0), m_octreeBits(8), m_octreeMask(0x0080){}
+	RGBToPALETTECOLOR(): m_octreeBits(8), m_octreeMask(0x0080), m_leavesCount(0) {}
 
 	virtual void declareDataSet(ptr<dataSet> pDataSet);
 	virtual void setLut(ptr<lut> red, ptr<lut> green, ptr<lut> blue);
@@ -95,7 +95,6 @@ protected:
 	imbxInt32 m_octreeMask;
 
 	imbxUint32 m_leavesCount;
-
 
 	void resetOctree(char bits);
 	void insertOctreeColor(imbxInt32 red, imbxInt32 green, imbxUint32 blue, imbxInt32 index);

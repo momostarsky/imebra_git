@@ -4,7 +4,7 @@
 	"../include/exception.h"
 	<iostream>
 
-1218791761 /home/paolo/Documents/imebra/trunk/project_files/base/include/baseObject.h
+1218839557 /home/paolo/Documents/imebra/trunk/project_files/base/include/baseObject.h
 	"configuration.h"
 	"criticalSection.h"
 	<string>
@@ -57,7 +57,7 @@
 	"../include/charsetConversion.h"
 	<memory>
 
-1218791761 /home/paolo/Documents/imebra/trunk/project_files/base/include/charsetConversion.h
+1218840388 /home/paolo/Documents/imebra/trunk/project_files/base/include/charsetConversion.h
 	"configuration.h"
 	"baseObject.h"
 	<string>
@@ -91,10 +91,10 @@
 	<vector>
 	<map>
 
-1218795235 /home/paolo/Documents/imebra/trunk/project_files/base/include/streamReader.h
+1218839039 /home/paolo/Documents/imebra/trunk/project_files/base/include/streamReader.h
 	"streamController.h"
 
-1218791761 /home/paolo/Documents/imebra/trunk/project_files/base/include/streamController.h
+1218840107 /home/paolo/Documents/imebra/trunk/project_files/base/include/streamController.h
 	"baseObject.h"
 	"baseStream.h"
 	<memory>
@@ -102,7 +102,7 @@
 1218791761 /home/paolo/Documents/imebra/trunk/project_files/base/include/streamWriter.h
 	"streamController.h"
 
-1218791762 source:/home/paolo/Documents/imebra/trunk/project_files/base/src/memory.cpp
+1218839846 source:/home/paolo/Documents/imebra/trunk/project_files/base/src/memory.cpp
 	"../include/memory.h"
 
 1218791761 /home/paolo/Documents/imebra/trunk/project_files/base/include/memory.h
@@ -131,10 +131,10 @@
 	<ios>
 	<stdio.h>
 
-1218791762 source:/home/paolo/Documents/imebra/trunk/project_files/base/src/streamController.cpp
+1218839053 source:/home/paolo/Documents/imebra/trunk/project_files/base/src/streamController.cpp
 	"../include/streamController.h"
 
-1218791762 source:/home/paolo/Documents/imebra/trunk/project_files/base/src/streamReader.cpp
+1218839039 source:/home/paolo/Documents/imebra/trunk/project_files/base/src/streamReader.cpp
 	"../include/streamReader.h"
 
 1218791762 source:/home/paolo/Documents/imebra/trunk/project_files/base/src/streamWriter.cpp
@@ -356,7 +356,7 @@
 	"../../base/include/baseObject.h"
 	<map>
 
-1218791748 /home/paolo/Documents/imebra/trunk/project_files/imebra/include/image.h
+1218840802 /home/paolo/Documents/imebra/trunk/project_files/imebra/include/image.h
 	"../../base/include/baseObject.h"
 	"dataHandlerNumeric.h"
 
@@ -368,7 +368,7 @@
 	<map>
 	<list>
 
-1218791748 /home/paolo/Documents/imebra/trunk/project_files/imebra/include/LUT.h
+1218840659 /home/paolo/Documents/imebra/trunk/project_files/imebra/include/LUT.h
 	<map>
 	"../../base/include/baseObject.h"
 
@@ -399,7 +399,7 @@
 1218791748 /home/paolo/Documents/imebra/trunk/project_files/imebra/include/RGBToMONOCHROME2.h
 	"colorTransform.h"
 
-1218791748 /home/paolo/Documents/imebra/trunk/project_files/imebra/include/RGBToPALETTECOLOR.h
+1218840900 /home/paolo/Documents/imebra/trunk/project_files/imebra/include/RGBToPALETTECOLOR.h
 	<memory>
 	"PALETTECOLORToRGB.h"
 
@@ -731,7 +731,7 @@
 1218791748 /home/paolo/Documents/imebra/trunk/project_files/imebra/include/dibCodec.h
 	"codec.h"
 
-1218791755 source:/home/paolo/Documents/imebra/trunk/project_files/imebra/src/dicomCodec.cpp
+1218839248 source:/home/paolo/Documents/imebra/trunk/project_files/imebra/src/dicomCodec.cpp
 	<list>
 	<vector>
 	"../../base/include/exception.h"
@@ -759,7 +759,7 @@
 	"../include/image.h"
 	"../include/colorTransformsFactory.h"
 
-1218825311 source:/home/paolo/Documents/imebra/trunk/project_files/imebra/src/jpegCodec.cpp
+1218839340 source:/home/paolo/Documents/imebra/trunk/project_files/imebra/src/jpegCodec.cpp
 	"../../base/include/exception.h"
 	"../../base/include/streamReader.h"
 	"../../base/include/streamWriter.h"

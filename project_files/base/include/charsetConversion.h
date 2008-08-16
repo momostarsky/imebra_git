@@ -41,14 +41,14 @@ namespace puntoexe
 
 ///////////////////////////////////////////////////////////
 /// \internal
-/// \brief Stores the information related to a single 
+/// \brief Stores the information related to a single
 ///         charset.
 ///
 ///////////////////////////////////////////////////////////
 struct charsetInformation
 {
-	char* m_isoRegistration;   ///< ISO name for the charset
-	char* m_iconvName;         ///< Name used by the iconv function
+	const char* m_isoRegistration;   ///< ISO name for the charset
+	const char* m_iconvName;         ///< Name used by the iconv function
 	unsigned long m_codePage;  ///< codePage used by Windows
 	bool m_bZeroFlag;          ///< needs flags=0 in Windows
 };
@@ -59,7 +59,7 @@ struct charsetInformation
 ///         unicode and viceversa.
 ///
 /// The class uses the function iconv on Posix systems and
-///  the functions MultiByteToWideChars and 
+///  the functions MultiByteToWideChars and
 ///  WideCharsToMultiByte on Windows systems.
 ///
 ///////////////////////////////////////////////////////////
@@ -71,7 +71,7 @@ public:
 
 	/// \brief Initialize the charsetConversion object.
 	///
-	/// This function must be called before any other 
+	/// This function must be called before any other
 	///  function's method can be called.
 	///
 	/// @param tableName the ISO name of the charset that will
@@ -79,7 +79,7 @@ public:
 	///
 	///////////////////////////////////////////////////////////
 	void initialize(std::string tableName);
-	
+
 	/// \brief Retrieve the ISO name of the charset currently
 	///         used for the conversion.
 	///

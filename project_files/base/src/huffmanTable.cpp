@@ -206,7 +206,7 @@ void huffmanTable::calcHuffmanCodesLength(const imbxUint32 maxCodeLength)
 			imbxInt32 reduceLengths1;
 			for(reduceLengths1=reduceLengths-2; reduceLengths1 != -1 && m_valuesPerLength[reduceLengths1] == 0; --reduceLengths1){}
 
-			if(reduceLengths==-1)
+			if(reduceLengths1==-1)
 			{
 				break;
 			}

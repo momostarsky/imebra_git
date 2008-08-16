@@ -82,13 +82,18 @@ public:
 	///                  bufferLength parameter.
 	/// @param bufferLength the number of bytes to read from
 	///                  the stream.
-	/// @return the number of bytes read from the stream.
-	///                  This value may be smaller than the
-	///                  value specified in the parameter
-	///                  bufferLength.
 	///
 	///////////////////////////////////////////////////////////
-	imbxUint32 read(imbxUint8* pBuffer, imbxUint32 bufferLength);
+	void read(imbxUint8* pBuffer, imbxUint32 bufferLength);
+
+	/// \brief Returns true if the last byte in the stream
+	///         has already been read.
+	///
+	/// @return true if the last byte in the stream has already
+	///          been read
+	///
+	///////////////////////////////////////////////////////////
+	bool endReached();
 
 	/// \brief Seek the stream's read position.
 	///
@@ -338,18 +343,10 @@ public:
 	{
 		// Update the data buffer if it is empty
 		///////////////////////////////////////////////////////////
-		if(m_pDataBufferCurrent == m_pDataBufferEnd)
-		{
-			// EOF?
-			///////////////////////////////////////////////////////////
-			if(fillDataBuffer() == 0)
-			{
-				// Set the EOF flag
-				///////////////////////////////////////////////////////////
-				m_bEof = true;
-				return true;
-			}
-		}
+		if(m_pDataBufferCurrent == m_pDataBufferEnd && fillDataBuffer() == 0)
+        {
+            throw(streamExceptionEOF("Attempt to read past the end of the file"));
+        }
 
 		// Read one byte. Return immediatly if the tags are not
 		//  activated
@@ -368,14 +365,10 @@ public:
 		{
 			// Load more data into the data buffer if necessary
 			///////////////////////////////////////////////////////////
-			if(m_pDataBufferCurrent == m_pDataBufferEnd)
-			{
-				m_bEof = (fillDataBuffer() == 0);
-				if(m_bEof)
-				{
-					return true;
-				}
-			}
+			if(m_pDataBufferCurrent == m_pDataBufferEnd && fillDataBuffer() == 0)
+            {
+                throw(streamExceptionEOF("Attempt to read past the end of the file"));
+            }
 
 			// Check the byte
 			///////////////////////////////////////////////////////////

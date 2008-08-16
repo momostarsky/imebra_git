@@ -25,10 +25,10 @@ namespace puntoexe
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 /// \brief This class represents a stream controller.
-///        A stream controller can read or write data 
+///        A stream controller can read or write data
 ///         from/to a stream.
 ///
-/// Do not use this class directly: use 
+/// Do not use this class directly: use
 ///  puntoexe::streamWriter or puntoexe::streamReader
 ///  instead.
 ///
@@ -51,7 +51,7 @@ public:
 	/// @param pControlledStream pointer to the controlled
 	///                           stream
 	/// @param virtualStart      position in the stream that
-	///                           is considered as the position 
+	///                           is considered as the position
 	///                           0 by the stream controller
 	/// @param virtualLength     the number of bytes in the
 	///                           connected stream that the
@@ -70,7 +70,7 @@ public:
 	/// The position is measured in bytes from the beginning
 	///  of the stream.
 	///
-	/// The position represents the byte in the stream that 
+	/// The position represents the byte in the stream that
 	///  the next reading or writing function will use.
 	///
 	/// If the virtual start position has been set in the
@@ -90,12 +90,12 @@ public:
 	///
 	///////////////////////////////////////////////////////////
 	ptr<baseStream> getControlledStream();
-	
+
 	/// \brief Return the position in bytes from the beginning
 	///         of the stream.
 	///
 	/// It acts like the function position(), but it doesn't
-	///  adjust the position to the virtual stream position 
+	///  adjust the position to the virtual stream position
 	///  specified in the constructor.
 	///
 	/// @return the stream's read position, in bytes from the
@@ -118,7 +118,7 @@ public:
 		lowByteEndian=1,  ///< the byte ordering is low endian: the least significant bytes of a word are stored first
 		highByteEndian=2  ///< the byte ordering is high endian: the most significant bytes of a word are stored first
 	};
-	
+
 	/// \brief Adjust the pBuffer's content according to the
 	///         specified byte ordering
 	///
@@ -129,8 +129,8 @@ public:
 	///
 	/// @param pBuffer  a pointer to the buffer that stores
 	///                  the data to order
-	/// @param wordLength the size, in bytes, of the elements 
-	///                  stored in the buffer pointed by 
+	/// @param wordLength the size, in bytes, of the elements
+	///                  stored in the buffer pointed by
 	///                  pBuffer.
 	///                 E.g.: if the buffer stores a collection
 	///                  of words, this parameter will be 2.
@@ -139,7 +139,7 @@ public:
 	///                  be 4.
 	/// @param endianType the desidered byte ordering.
 	///                 If it differs from the platform's byte
-	///                  ordering, then the content of the 
+	///                  ordering, then the content of the
 	///                  memory pointed by pBuffer will be
 	///                  modified.
 	/// @param words    The number of elements stored in the
@@ -173,24 +173,16 @@ public:
 	imbxUint8* m_pTagByte;
 
 
-	/// \name Flags
-	///
-	///////////////////////////////////////////////////////////
-	//@{
-
-	/// \brief This flag is set to true when an attempt to read
-	///         data past the end of the file is made.
-	///
-	///////////////////////////////////////////////////////////
-	bool m_bEof;
-
-	//@}
-
 protected:
 	/// \brief Stream controlled by the stream controller.
 	///
 	///////////////////////////////////////////////////////////
 	ptr<baseStream> m_pControlledStream;
+
+	/// \brief Used for buffered IO
+	///
+	///////////////////////////////////////////////////////////
+	std::auto_ptr<imbxUint8> m_dataBuffer;
 
 	/// \brief Byte in the stream that represents the byte 0
 	///         in the stream controller.
@@ -203,14 +195,13 @@ protected:
 	///         signal will be raised when trying to read
 	///         past the maximum length.
 	///
-	/// If this value is 0 then there are no limits on the 
+	/// If this value is 0 then there are no limits on the
 	///  maximum length.
 	///
 	///////////////////////////////////////////////////////////
 	imbxUint32 m_virtualLength;
 
 	imbxUint32 m_dataBufferStreamPosition;
-	std::auto_ptr<imbxUint8> m_dataBuffer;
 	imbxUint8* m_pDataBufferStart;
 	imbxUint8* m_pDataBufferCurrent;
 	imbxUint8* m_pDataBufferEnd;

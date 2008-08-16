@@ -145,7 +145,7 @@ void charsetConversion::initialize(std::string tableName)
 	default:
 		PUNTOEXE_THROW(charsetConversionExceptionUtfSizeNotSupported, "The system utf size is not supported");
 	}
-	
+
 	m_iconvToUnicode = iconv_open(utfCode, m_charsetTable[requestedTable].m_iconvName);
 	m_iconvFromUnicode = iconv_open(toCodeIgnore.c_str(), utfCode);
 	if(m_iconvToUnicode == (iconv_t)-1 || m_iconvFromUnicode == (iconv_t)-1)
@@ -309,7 +309,7 @@ std::string charsetConversion::myIconv(iconv_t context, char* inputString, size_
 
 		// Throw if an invalid sequence is found
 		///////////////////////////////////////////////////////////
-		if(iconvReturn == -1 && errno != E2BIG)
+		if(iconvReturn == (size_t)-1 && errno != E2BIG)
 		{
 			PUNTOEXE_THROW(charsetConversionInvalidSequence, "Invalid sequence");
 		}

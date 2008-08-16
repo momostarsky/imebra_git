@@ -51,10 +51,10 @@ static thread::forceKeyConstruction forceKey;
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-thread::thread(): 
-	m_bIsRunning(false), 
-		m_bTerminate(false), 
-		m_bThreadHandleValid(false)
+thread::thread():
+    m_bThreadHandleValid(false),
+        m_bTerminate(false),
+        m_bIsRunning(false)
 {
 }
 
@@ -72,7 +72,7 @@ bool thread::preDelete()
 {
 	PUNTOEXE_FUNCTION_START(L"thread::preDelete");
 
-	// If the thread's handle is not valid (not started yet), 
+	// If the thread's handle is not valid (not started yet),
 	//  then return immediatly
 	///////////////////////////////////////////////////////////
 	{
@@ -97,7 +97,7 @@ bool thread::preDelete()
 	lockCriticalSection lockThreadHandle(&m_lockThreadHandle);
 	::CloseHandle(m_threadHandle);
 	m_bThreadHandleValid = false;
-	
+
 #else
 
 	// Join the thread, then invalidate the handle
@@ -141,14 +141,14 @@ void* thread::privateThreadFunction(void* pParameter)
 		// Get the thread object that launched the function
 		///////////////////////////////////////////////////////////
 		thread* pThread = (thread*)pParameter;
-		
+
 		// Enable the "isRunning" flag
 		///////////////////////////////////////////////////////////
 		{
 			lockCriticalSection lockRunningFlag(&(pThread->m_lockRunningFlag));
 			pThread->m_bIsRunning = true;
 		}
-		
+
 		// Call the virtual thread function
 		///////////////////////////////////////////////////////////
 		pThread->threadFunction();
@@ -215,7 +215,7 @@ void thread::start()
 		PUNTOEXE_THROW(threadExceptionFailedToLaunch, "Failed to launch the thread");
 	}
 #endif
-	
+
 	m_bThreadHandleValid = true;
 
 	PUNTOEXE_FUNCTION_END();

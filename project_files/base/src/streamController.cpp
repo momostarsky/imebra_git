@@ -24,13 +24,12 @@ static const streamController::tByteOrdering m_platformByteOrder((*pBytePointer)
 //
 ///////////////////////////////////////////////////////////
 streamController::streamController(ptr<baseStream> pControlledStream, imbxUint32 virtualStart /* =0 */, imbxUint32 virtualLength /* =0 */):
-	m_pControlledStream(pControlledStream),
+	m_pTagByte(0),
+        m_pControlledStream(pControlledStream),
 		m_dataBuffer(new imbxUint8[IMEBRA_STREAM_CONTROLLER_MEMORY_SIZE]),
 		m_virtualStart(virtualStart),
 		m_virtualLength(virtualLength),
-		m_dataBufferStreamPosition(0),
-		m_bEof(false),
-		m_pTagByte(0)
+		m_dataBufferStreamPosition(0)
 {
 	m_pDataBufferStart = m_pDataBufferEnd = m_pDataBufferCurrent = m_dataBuffer.get();
 	m_pDataBufferMaxEnd = m_pDataBufferStart + IMEBRA_STREAM_CONTROLLER_MEMORY_SIZE;

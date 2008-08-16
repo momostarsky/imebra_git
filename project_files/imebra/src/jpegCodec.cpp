@@ -885,7 +885,11 @@ void jpegCodec::readStream(ptr<streamReader> pSourceStream, ptr<dataSet> pDataSe
 		// Read the Jpeg signature
 		///////////////////////////////////////////////////////////
 		imbxUint8 jpegSignature[2];
-		if(pStream->read(jpegSignature, 2)!=0x02)
+		try
+		{
+            pStream->read(jpegSignature, 2);
+		}
+		catch(streamExceptionEOF&)
 		{
 			PUNTOEXE_THROW(codecExceptionWrongFormat, "readStream detected a wrong format");
 		}
@@ -915,7 +919,7 @@ void jpegCodec::readStream(ptr<streamReader> pSourceStream, ptr<dataSet> pDataSe
 
 	// Read all the tags in the stream
 	///////////////////////////////////////////////////////////
-	for(m_bEndOfImage=false; !m_bEndOfImage && !pStream->m_bEof; )
+	for(m_bEndOfImage=false; !m_bEndOfImage && !pStream->endReached(); /* empty */)
 	{
 		// Reset the entry byte
 		///////////////////////////////////////////////////////////
@@ -1157,7 +1161,11 @@ ptr<image> jpegCodec::getImage(ptr<dataSet> sourceDataSet, ptr<streamReader> pSt
 	///////////////////////////////////////////////////////////
 	imbxUint8 jpegSignature[2];
 
-	if(pSourceStream->read(jpegSignature, 2)!=0x02)
+	try
+	{
+	    pSourceStream->read(jpegSignature, 2);
+	}
+	catch(streamExceptionEOF&)
 	{
 		PUNTOEXE_THROW(codecExceptionWrongFormat, "Jpeg signature not present");
 	}
@@ -1191,7 +1199,7 @@ ptr<image> jpegCodec::getImage(ptr<dataSet> sourceDataSet, ptr<streamReader> pSt
 
 	// Read until the end of the image is reached
 	///////////////////////////////////////////////////////////
-	for(m_bEndOfImage=false; !m_bEndOfImage && !pSourceStream->m_bEof; )
+	for(m_bEndOfImage=false; !m_bEndOfImage && !pSourceStream->endReached(); /* empty */)
 	{
 		// An entry has been found. Process it
 		///////////////////////////////////////////////////////////
@@ -1233,7 +1241,7 @@ ptr<image> jpegCodec::getImage(ptr<dataSet> sourceDataSet, ptr<streamReader> pSt
 		}
 
         jpeg::jpegChannel* pChannel; // Used in the loops
-		while(m_entryByte == 0 && m_mcuProcessed < nextMcuStop && !pSourceStream->m_bEof)
+		while(m_entryByte == 0 && m_mcuProcessed < nextMcuStop && !pSourceStream->endReached())
 		{
 			// Read an MCU
 			///////////////////////////////////////////////////////////
@@ -2487,66 +2495,49 @@ void jpegCodec::IDCT(imbxInt32* pIOMatrix, float* pScaleFactors)
     float z5, z10, z11, z12, z13;
 
 	//
-	// Columns IDCT
+	// Rows IDCT
 	//
 	/////////////////////////////////////////////////////////////////
 	imbxInt32* pMatrix = pIOMatrix;
 	float* pTempMatrix = m_dctTempMatrix;
-	for(int scanBlockX = 8; scanBlockX != 0; --scanBlockX)
+	for(int scanBlockY=8; scanBlockY; --scanBlockY)
 	{
 		// Check for AC coefficients value.
 		// If they are all NULL, then apply the DC value to all
 		/////////////////////////////////////////////////////////////////
 		if(
-			(*(pMatrix+8)  |
-			 *(pMatrix+16) |
-			 *(pMatrix+24) |
-			 *(pMatrix+32) |
-			 *(pMatrix+40) |
-			 *(pMatrix+48) |
-			 *(pMatrix+56)) ==0)
+			(*(pMatrix+1) |
+			 *(pMatrix+2) |
+			 *(pMatrix+3) |
+			 *(pMatrix+4) |
+			 *(pMatrix+5) |
+			 *(pMatrix+6) |
+			 *(pMatrix+7)) ==0)
 
 		{
-			*pTempMatrix=
-				*(pTempMatrix+8)=
-				*(pTempMatrix+16)=
-				*(pTempMatrix+24)=
-				*(pTempMatrix+32)=
-				*(pTempMatrix+40)=
-				*(pTempMatrix+48)=
-				*(pTempMatrix+56)=((float)(*pMatrix)) * (*(pScaleFactors++));
+		    tmp0 = ((float)(*pMatrix)) * (*pScaleFactors);
+			*(pTempMatrix++) = tmp0;
+			*(pTempMatrix++) = tmp0;
+			*(pTempMatrix++) = tmp0;
+			*(pTempMatrix++) = tmp0;
+			*(pTempMatrix++) = tmp0;
+			*(pTempMatrix++) = tmp0;
+			*(pTempMatrix++) = tmp0;
+			*(pTempMatrix++) = tmp0;
 
-			++pMatrix;
-			++pTempMatrix;
+			pMatrix += 8;
+			pScaleFactors += 8;
 			continue;
 		}
 
-		// Non NULL AC coefficients have been found. Find IDCT
-		/////////////////////////////////////////////////////////////////
-		tmp0=(float)(*pMatrix) * (*pScaleFactors);
-		pScaleFactors += 8;
-		pMatrix += 8;
-		tmp4=(float)(*pMatrix) * (*pScaleFactors);
-		pScaleFactors += 8;
-		pMatrix += 8;
-		tmp1=(float)(*pMatrix) * (*pScaleFactors);
-		pScaleFactors += 8;
-		pMatrix += 8;
-		tmp5=(float)(*pMatrix) * (*pScaleFactors);
-		pScaleFactors += 8;
-		pMatrix += 8;
-		tmp2=(float)(*pMatrix) * (*pScaleFactors);
-		pScaleFactors += 8;
-		pMatrix += 8;
-		tmp6=(float)(*pMatrix) * (*pScaleFactors);
-		pScaleFactors += 8;
-		pMatrix += 8;
-		tmp3=(float)(*pMatrix) * (*pScaleFactors);
-		pScaleFactors += 8;
-		pMatrix += 8;
-		tmp7=(float)(*pMatrix) * (*pScaleFactors);
-		pScaleFactors -= 55; // bring back pScaleFactor to the initial value + 1
-		pMatrix -= 55;
+		tmp0 = (float)(*(pMatrix++)) * (*(pScaleFactors++));
+		tmp4 = (float)(*(pMatrix++)) * (*(pScaleFactors++));
+		tmp1 = (float)(*(pMatrix++)) * (*(pScaleFactors++));
+		tmp5 = (float)(*(pMatrix++)) * (*(pScaleFactors++));
+		tmp2 = (float)(*(pMatrix++)) * (*(pScaleFactors++));
+		tmp6 = (float)(*(pMatrix++)) * (*(pScaleFactors++));
+		tmp3 = (float)(*(pMatrix++)) * (*(pScaleFactors++));
+		tmp7 = (float)(*(pMatrix++)) * (*(pScaleFactors++));
 
 		// Phase 3
 		tmp10 = tmp0 + tmp2;
@@ -2581,40 +2572,41 @@ void jpegCodec::IDCT(imbxInt32* pIOMatrix, float* pScaleFactors)
 		tmp5 = tmp11 - tmp6;
 		tmp4 = tmp10 + tmp5;
 
-		*pTempMatrix = tmp0 + tmp7;
-		pTempMatrix += 8;
-		*pTempMatrix = tmp1 + tmp6;
-		pTempMatrix += 8;
-		*pTempMatrix = tmp2 + tmp5;
-		pTempMatrix += 8;
-		*pTempMatrix = tmp3 - tmp4;
-		pTempMatrix += 8;
-		*pTempMatrix = tmp3 + tmp4;
-		pTempMatrix += 8;
-		*pTempMatrix = tmp2 - tmp5;
-		pTempMatrix += 8;
-		*pTempMatrix = tmp1 - tmp6;
-		pTempMatrix += 8;
-		*pTempMatrix = tmp0 - tmp7;
-		pTempMatrix -= 55;
+		*(pTempMatrix++) = tmp0 + tmp7;
+		*(pTempMatrix++) = tmp1 + tmp6;
+		*(pTempMatrix++) = tmp2 + tmp5;
+		*(pTempMatrix++) = tmp3 - tmp4;
+		*(pTempMatrix++) = tmp3 + tmp4;
+		*(pTempMatrix++) = tmp2 - tmp5;
+		*(pTempMatrix++) = tmp1 - tmp6;
+		*(pTempMatrix++) = tmp0 - tmp7;
 	}
 
+
 	//
-	// Rows IDCT
+	// Columns IDCT
 	//
 	/////////////////////////////////////////////////////////////////
 	pMatrix = pIOMatrix;
 	pTempMatrix = m_dctTempMatrix;
-	for(int scanBlockY=8; scanBlockY; --scanBlockY)
+	for(int scanBlockX = 8; scanBlockX != 0; --scanBlockX)
 	{
-		tmp0=*pTempMatrix++;
-		tmp4=*pTempMatrix++;
-		tmp1=*pTempMatrix++;
-		tmp5=*pTempMatrix++;
-		tmp2=*pTempMatrix++;
-		tmp6=*pTempMatrix++;
-		tmp3=*pTempMatrix++;
-		tmp7=*pTempMatrix++;
+		tmp0 = *pTempMatrix;
+		pTempMatrix += 8;
+		tmp4 = *pTempMatrix;
+		pTempMatrix += 8;
+		tmp1 = *pTempMatrix;
+		pTempMatrix += 8;
+		tmp5 = *pTempMatrix;
+		pTempMatrix += 8;
+		tmp2 = *pTempMatrix;
+		pTempMatrix += 8;
+		tmp6 = *pTempMatrix;
+		pTempMatrix += 8;
+		tmp3 = *pTempMatrix;
+		pTempMatrix += 8;
+		tmp7 = *pTempMatrix;
+		pTempMatrix -= 55;
 
 		// Phase 3
 		tmp10 = tmp0 + tmp2;
@@ -2650,14 +2642,22 @@ void jpegCodec::IDCT(imbxInt32* pIOMatrix, float* pScaleFactors)
 		tmp4 = tmp10 + tmp5;
 
 		// Final output stage: scale down by a factor of 8
-		*pMatrix++ = ((imbxInt32)(tmp0+tmp7+.5))>>3;
-		*pMatrix++ = ((imbxInt32)(tmp1+tmp6+.5))>>3;
-		*pMatrix++ = ((imbxInt32)(tmp2+tmp5+.5))>>3;
-		*pMatrix++ = ((imbxInt32)(tmp3-tmp4+.5))>>3;
-		*pMatrix++ = ((imbxInt32)(tmp3+tmp4+.5))>>3;
-		*pMatrix++ = ((imbxInt32)(tmp2-tmp5+.5))>>3;
-		*pMatrix++ = ((imbxInt32)(tmp1-tmp6+.5))>>3;
-		*pMatrix++ = ((imbxInt32)(tmp0-tmp7+.5))>>3;
+		*pMatrix = ((imbxInt32)(tmp0+tmp7+.5))>>3;
+		pMatrix += 8;
+		*pMatrix = ((imbxInt32)(tmp1+tmp6+.5))>>3;
+		pMatrix += 8;
+		*pMatrix = ((imbxInt32)(tmp2+tmp5+.5))>>3;
+		pMatrix += 8;
+		*pMatrix = ((imbxInt32)(tmp3-tmp4+.5))>>3;
+		pMatrix += 8;
+		*pMatrix = ((imbxInt32)(tmp3+tmp4+.5))>>3;
+		pMatrix += 8;
+		*pMatrix = ((imbxInt32)(tmp2-tmp5+.5))>>3;
+		pMatrix += 8;
+		*pMatrix = ((imbxInt32)(tmp1-tmp6+.5))>>3;
+		pMatrix += 8;
+		*pMatrix = ((imbxInt32)(tmp0-tmp7+.5))>>3;
+		pMatrix -= 55;
 	}
 }
 

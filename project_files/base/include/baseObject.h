@@ -10,12 +10,6 @@ $fileHeader$
 #if !defined(CImbxBaseObject_F1BAF067_21DE_466b_AEA1_6CC4F006FAFA__INCLUDED_)
 #define CImbxBaseObject_F1BAF067_21DE_466b_AEA1_6CC4F006FAFA__INCLUDED_
 
-
-// Disable warning messages regarding the loooong function
-//  names
-///////////////////////////////////////////////////////////
-#pragma warning(disable: 4786)
-
 #include "configuration.h"
 #include "criticalSection.h"
 
@@ -45,7 +39,7 @@ protected:
 	///////////////////////////////////////////////////////////
 	basePtr();
 
-	// Construct the ptr object and keeps track of 
+	// Construct the ptr object and keeps track of
 	//         the object referenced by the pointer pObject.
 	//
 	// @param pObject a pointer to the allocated object.
@@ -68,7 +62,7 @@ public:
 	///////////////////////////////////////////////////////////
 	virtual ~basePtr();
 
-	// Release the tracked object and reset the 
+	// Release the tracked object and reset the
 	//         internal pointer.
 	//
 	///////////////////////////////////////////////////////////
@@ -108,7 +102,7 @@ public:
 	///////////////////////////////////////////////////////////
 	ptr(): basePtr(0){}
 
-	/// \brief Construct the ptr object and keeps track of 
+	/// \brief Construct the ptr object and keeps track of
 	///         the object referenced by the pointer pObject.
 	///
 	/// @param pObject a pointer to the allocated object.
@@ -178,7 +172,7 @@ public:
 	/// \brief Compare the pointer to the tracked object with
 	///         the pointer tracked by another ptr.
 	///
-	/// @param ptrCompare the ptr tracking the object to be 
+	/// @param ptrCompare the ptr tracking the object to be
 	///                    compared
 	/// @return true if the ptrCompare pointer is equal to
 	///                    the pointer of the tracked object
@@ -219,7 +213,7 @@ public:
 		return (objectType*)object;
 	}
 
-	/// \brief Return the pointer to the tracked object, 
+	/// \brief Return the pointer to the tracked object,
 	///         type casted in the specified class pointer.
 	///
 	/// The cast is static, so its validity is checked at
@@ -266,7 +260,7 @@ class exceptionsManager;
 ///  class \ref ptr.
 ///
 /// At construction time the reference counter is set to
-///  0 and must be incremented with addRef(); the helper 
+///  0 and must be incremented with addRef(); the helper
 ///  class ptr does this automatically.\n
 ///
 /// Use release() to decrement the reference counter.\n
@@ -288,14 +282,14 @@ class exceptionsManager;
 ///////////////////////////////////////////////////////////
 class baseObject
 {
-	friend class lockObject; 
+	friend class lockObject;
 	friend class lockMultipleObjects;
 	friend class basePtr;
 	friend class exceptionsManager;
 
 public:
     /// \internal
-	/// \brief Creates the baseObject object. The reference 
+	/// \brief Creates the baseObject object. The reference
 	///         counter is set to 0.
 	///
 	/// The object should be unallocated by the release()
@@ -309,8 +303,8 @@ public:
 	///////////////////////////////////////////////////////////
 	baseObject();
 
-	/// \brief Creates the baseObject object and set an 
-	///         external object to be used for the lock. 
+	/// \brief Creates the baseObject object and set an
+	///         external object to be used for the lock.
 	///        The reference counter is set to 0.
 	///
 	/// The object should be unallocated by the release()
@@ -327,8 +321,8 @@ public:
 	///////////////////////////////////////////////////////////
 	baseObject(ptr<baseObject> externalLock);
 
-	/// \brief Creates the baseObject object and set an 
-	///         external object to be used for the lock. 
+	/// \brief Creates the baseObject object and set an
+	///         external object to be used for the lock.
 	///        The reference counter is set to 0.
 	///
 	/// The object should be unallocated by the release()
@@ -339,7 +333,7 @@ public:
 	///  derived from baseObject should be assigned to a
 	///  \ref ptr object.
 	///
-	/// @param bIncreaseExceptionsManager the exceptions 
+	/// @param bIncreaseExceptionsManager the exceptions
 	///            manager references counter is increased if
 	///            this value is true
 	///
@@ -367,7 +361,7 @@ public:
 	bool isReferencedOnce();
 
 protected:
-	// The destructor is protected because the object must 
+	// The destructor is protected because the object must
 	//  be deleted using release()
 	///////////////////////////////////////////////////////////
 	virtual ~baseObject();
@@ -392,7 +386,7 @@ private:
 	void addRef();
 
 	/// \brief Decreases the object's references counter.
-	///        When the references counter reaches zero, then 
+	///        When the references counter reaches zero, then
 	///         the object is deleted.
 	///
 	/// This function is called by the smart pointer \ref ptr.
@@ -408,9 +402,9 @@ private:
 	///
 	/// The base version of this function just returns true.
 	/// When the function returns true then the function
-	///  release() deletes the object normally when its 
-	///  references counter reaches 0, otherwise the object 
-	///  will NOT be deleted when the references counter 
+	///  release() deletes the object normally when its
+	///  references counter reaches 0, otherwise the object
+	///  will NOT be deleted when the references counter
 	///  reaches 0.
 	///
 	/// @return true if the object should be deleted when
@@ -449,7 +443,7 @@ private:
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-/// \brief Locks the access to an object of type 
+/// \brief Locks the access to an object of type
 ///         baseObject.
 ///
 ///////////////////////////////////////////////////////////
@@ -479,7 +473,7 @@ public:
 	///
 	///////////////////////////////////////////////////////////
 	void unlock();
-	
+
 protected:
 	// Pointer to the locked object
 	///////////////////////////////////////////////////////////
@@ -517,13 +511,13 @@ public:
 	///
 	///////////////////////////////////////////////////////////
 	lockMultipleObjects(tObjectsList* pObjectsList);
-	
+
 	/// \brief Destroy the locker and unlock all the locked
 	///         objects
 	///
 	///////////////////////////////////////////////////////////
 	virtual ~lockMultipleObjects();
-	
+
 	/// \brief Unlock all the locked objects
 	///
 	///////////////////////////////////////////////////////////

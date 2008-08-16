@@ -275,7 +275,7 @@ bool memoryPool::reuseMemory(memory* pMemoryToReuse)
 	{
 		return false;
 	}
-	
+
 	// Ok to reuse
 	///////////////////////////////////////////////////////////
 	lockCriticalSection lockThis(&m_criticalSection);

@@ -62,13 +62,13 @@ namespace imebra
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-buffer::buffer(ptr<baseObject> externalLock, std::string defaultType /* ="" */): 
-	baseObject(externalLock), 
-		m_version(0),
+buffer::buffer(ptr<baseObject> externalLock, std::string defaultType /* ="" */):
+	baseObject(externalLock),
 		m_originalBufferPosition(0),
 		m_originalBufferLength(0),
 		m_originalWordLength(1),
-		m_originalEndianType(streamController::lowByteEndian)
+		m_originalEndianType(streamController::lowByteEndian),
+		m_version(0)
 {
 	PUNTOEXE_FUNCTION_START(L"buffer::buffer");
 
@@ -94,20 +94,20 @@ buffer::buffer(ptr<baseObject> externalLock, std::string defaultType /* ="" */):
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-buffer::buffer(ptr<baseObject> externalLock, 
+buffer::buffer(ptr<baseObject> externalLock,
 		std::string defaultType,
 		ptr<baseStream> originalStream,
 		imbxUint32 bufferPosition,
 		imbxUint32 bufferLength,
 		imbxUint32 wordLength,
 		streamController::tByteOrdering endianType):
-	baseObject(externalLock), 
-		m_version(0),
+	baseObject(externalLock),
 		m_originalStream(originalStream),
 		m_originalBufferPosition(bufferPosition),
 		m_originalBufferLength(bufferLength),
 		m_originalWordLength(wordLength),
-		m_originalEndianType(endianType)
+		m_originalEndianType(endianType),
+		m_version(0)
 {
 	PUNTOEXE_FUNCTION_START(L"buffer::buffer (on demand)");
 
@@ -163,7 +163,7 @@ ptr<handlers::dataHandler> buffer::getDataHandler(bool bWrite, bool bRaw, imbxUi
 			localMemory->assign(&localBuffer[0], m_originalBufferLength);
 		}
 	}
-	
+
 	// Reset the pointer to the data handler
 	///////////////////////////////////////////////////////////
 	ptr<handlers::dataHandler> handler;
@@ -208,7 +208,7 @@ ptr<handlers::dataHandler> buffer::getDataHandler(bool bWrite, bool bRaw, imbxUi
 			ptr<handlers::dataHandler> tempHandler(new handlers::dataHandlerStringDS);
 			handler = tempHandler;
 		}
-		
+
 		// Retrieve an Integer string data handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="IS")
@@ -232,7 +232,7 @@ ptr<handlers::dataHandler> buffer::getDataHandler(bool bWrite, bool bRaw, imbxUi
 			ptr<handlers::dataHandler> tempHandler(new handlers::dataHandlerStringLT);
 			handler = tempHandler;
 		}
-		
+
 		// Retrieve a Person Name data handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="PN")
@@ -264,7 +264,7 @@ ptr<handlers::dataHandler> buffer::getDataHandler(bool bWrite, bool bRaw, imbxUi
 			ptr<handlers::dataHandler> tempHandler(new handlers::dataHandlerStringUI);
 			handler = tempHandler;
 		}
-		
+
 		// Retrieve an Unlimited text data handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="UT")
@@ -313,7 +313,7 @@ ptr<handlers::dataHandler> buffer::getDataHandler(bool bWrite, bool bRaw, imbxUi
 			ptr<handlers::dataHandler> tempHandler(new handlers::dataHandlerNumeric<imbxUint16>);
 			handler = tempHandler;
 		}
-		
+
 		// Retrieve a float handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="FL")
@@ -321,7 +321,7 @@ ptr<handlers::dataHandler> buffer::getDataHandler(bool bWrite, bool bRaw, imbxUi
 			ptr<handlers::dataHandler> tempHandler(new handlers::dataHandlerNumeric<float>);
 			handler = tempHandler;
 		}
-		
+
 		// Retrieve a double float handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="FD")
@@ -385,7 +385,7 @@ ptr<handlers::dataHandler> buffer::getDataHandler(bool bWrite, bool bRaw, imbxUi
 			ptr<handlers::dataHandler> tempHandler(new handlers::dataHandlerTime);
 			handler = tempHandler;
 		}
-	
+
 	} // check bRaw
 
 	// If an error occurred during the data handler creation,
@@ -435,7 +435,7 @@ ptr<handlers::dataHandler> buffer::getDataHandler(bool bWrite, bool bRaw, imbxUi
 	// Rewind the data pointer
 	///////////////////////////////////////////////////////////
 	handler->setPointer(0);
-	
+
 	// Return the allocated handler
 	///////////////////////////////////////////////////////////
 	return handler;
@@ -627,7 +627,7 @@ void buffer::copyBack(handlers::dataHandler* pDisconnectHandler)
 	charsetsList::tCharsetsList charsets;
 	pDisconnectHandler->getCharsetsList(&charsets);
 	charsetsList::updateCharsets(&charsets, &m_temporaryCharsets);
-	
+
 	// The buffer's size must be an even number
 	///////////////////////////////////////////////////////////
 	imbxUint32 memorySize = m_temporaryMemory->size();
