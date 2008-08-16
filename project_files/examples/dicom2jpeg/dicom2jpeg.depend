@@ -52,7 +52,7 @@
 	<map>
 	<stdexcept>
 
-1218791762 source:/home/paolo/Documents/imebra/trunk/project_files/base/src/charsetConversion.cpp
+1218840439 source:/home/paolo/Documents/imebra/trunk/project_files/base/src/charsetConversion.cpp
 	"../include/exception.h"
 	"../include/charsetConversion.h"
 	<memory>
@@ -79,7 +79,7 @@
 	"../include/exception.h"
 	"../include/charsetConversion.h"
 
-1218802151 source:/home/paolo/Documents/imebra/trunk/project_files/base/src/huffmanTable.cpp
+1218840549 source:/home/paolo/Documents/imebra/trunk/project_files/base/src/huffmanTable.cpp
 	"../include/exception.h"
 	"../include/huffmanTable.h"
 	"../include/streamReader.h"
@@ -131,16 +131,16 @@
 	<ios>
 	<stdio.h>
 
-1218839053 source:/home/paolo/Documents/imebra/trunk/project_files/base/src/streamController.cpp
+1218840214 source:/home/paolo/Documents/imebra/trunk/project_files/base/src/streamController.cpp
 	"../include/streamController.h"
 
-1218839039 source:/home/paolo/Documents/imebra/trunk/project_files/base/src/streamReader.cpp
+1218839846 source:/home/paolo/Documents/imebra/trunk/project_files/base/src/streamReader.cpp
 	"../include/streamReader.h"
 
-1218791762 source:/home/paolo/Documents/imebra/trunk/project_files/base/src/streamWriter.cpp
+1218839846 source:/home/paolo/Documents/imebra/trunk/project_files/base/src/streamWriter.cpp
 	"../include/streamWriter.h"
 
-1218791762 source:/home/paolo/Documents/imebra/trunk/project_files/base/src/thread.cpp
+1218839846 source:/home/paolo/Documents/imebra/trunk/project_files/base/src/thread.cpp
 	"../include/thread.h"
 	"../include/exception.h"
 	<map>
@@ -363,7 +363,7 @@
 1218791748 /home/paolo/Documents/imebra/trunk/project_files/imebra/include/waveform.h
 	"../../base/include/baseObject.h"
 
-1218818499 /home/paolo/Documents/imebra/trunk/project_files/imebra/include/jpegCodec.h
+1218920973 /home/paolo/Documents/imebra/trunk/project_files/imebra/include/jpegCodec.h
 	"codec.h"
 	<map>
 	<list>
@@ -399,7 +399,7 @@
 1218791748 /home/paolo/Documents/imebra/trunk/project_files/imebra/include/RGBToMONOCHROME2.h
 	"colorTransform.h"
 
-1218840900 /home/paolo/Documents/imebra/trunk/project_files/imebra/include/RGBToPALETTECOLOR.h
+1218841054 /home/paolo/Documents/imebra/trunk/project_files/imebra/include/RGBToPALETTECOLOR.h
 	<memory>
 	"PALETTECOLORToRGB.h"
 
@@ -539,7 +539,7 @@
 	"../include/dataSet.h"
 	"../include/image.h"
 
-1218791755 source:/home/paolo/Documents/imebra/trunk/project_files/imebra/src/buffer.cpp
+1218841110 source:/home/paolo/Documents/imebra/trunk/project_files/imebra/src/buffer.cpp
 	"../../base/include/exception.h"
 	"../../base/include/streamReader.h"
 	"../../base/include/streamWriter.h"
@@ -565,11 +565,11 @@
 	"../include/transaction.h"
 	<vector>
 
-1218791748 /home/paolo/Documents/imebra/trunk/project_files/imebra/include/bufferStream.h
+1218841054 /home/paolo/Documents/imebra/trunk/project_files/imebra/include/bufferStream.h
 	"../../base/include/memoryStream.h"
 	"dataHandlerNumeric.h"
 
-1218791755 source:/home/paolo/Documents/imebra/trunk/project_files/imebra/src/charsetsList.cpp
+1218841130 source:/home/paolo/Documents/imebra/trunk/project_files/imebra/src/charsetsList.cpp
 	"../../base/include/exception.h"
 	"../include/charsetsList.h"
 
@@ -725,13 +725,13 @@
 	"../include/transaction.h"
 	<iostream>
 
-1218791755 source:/home/paolo/Documents/imebra/trunk/project_files/imebra/src/dibCodec.cpp
+1218841329 source:/home/paolo/Documents/imebra/trunk/project_files/imebra/src/dibCodec.cpp
 	"../include/dibCodec.h"
 
 1218791748 /home/paolo/Documents/imebra/trunk/project_files/imebra/include/dibCodec.h
 	"codec.h"
 
-1218839248 source:/home/paolo/Documents/imebra/trunk/project_files/imebra/src/dicomCodec.cpp
+1218841329 source:/home/paolo/Documents/imebra/trunk/project_files/imebra/src/dicomCodec.cpp
 	<list>
 	<vector>
 	"../../base/include/exception.h"
@@ -759,7 +759,7 @@
 	"../include/image.h"
 	"../include/colorTransformsFactory.h"
 
-1218839340 source:/home/paolo/Documents/imebra/trunk/project_files/imebra/src/jpegCodec.cpp
+1218921028 source:/home/paolo/Documents/imebra/trunk/project_files/imebra/src/jpegCodec.cpp
 	"../../base/include/exception.h"
 	"../../base/include/streamReader.h"
 	"../../base/include/streamWriter.h"

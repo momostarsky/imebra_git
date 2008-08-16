@@ -2314,7 +2314,7 @@ void jpegCodec::recalculateQuantizationTables(int table)
 	{
 		for(imbxUint8 col = 0; col<8; ++col)
 		{
-			m_decompressionQuantizationTable[table][tableIndex]=(float)(m_quantizationTable[table][tableIndex])*JpegDctScaleFactor[col]*JpegDctScaleFactor[row];
+			m_decompressionQuantizationTable[table][tableIndex]=(long long)((float)((m_quantizationTable[table][tableIndex])<<16)*JpegDctScaleFactor[col]*JpegDctScaleFactor[row]);
 			m_compressionQuantizationTable[table][tableIndex]=1.0f/((float)((m_quantizationTable[table][tableIndex])<<3)*JpegDctScaleFactor[col]*JpegDctScaleFactor[row]);
 			++tableIndex;
 		}
@@ -2368,14 +2368,14 @@ void jpegCodec::FDCT(imbxInt32* pIOMatrix, float* pDescaleFactors)
 		tmp12 = tmp1 - tmp2;
 
 		// Phase 3
-		m_dctTempMatrix[scanBlockY]   = tmp10 + tmp11;
-		m_dctTempMatrix[scanBlockY+4] = tmp10 - tmp11;
+		m_fdctTempMatrix[scanBlockY]   = tmp10 + tmp11;
+		m_fdctTempMatrix[scanBlockY+4] = tmp10 - tmp11;
 
 		z1 = (tmp12 + tmp13)*0.707106781f;     // c4
 
 		// Phase 5
-		m_dctTempMatrix[scanBlockY+2] = tmp13 + z1;
-		m_dctTempMatrix[scanBlockY+6] = tmp13 - z1;
+		m_fdctTempMatrix[scanBlockY+2] = tmp13 + z1;
+		m_fdctTempMatrix[scanBlockY+6] = tmp13 - z1;
 
 		// Odd part
 		// Phase 2
@@ -2394,10 +2394,10 @@ void jpegCodec::FDCT(imbxInt32* pIOMatrix, float* pDescaleFactors)
 		z13 = tmp7 - z3;
 
 		// Phase 6
-		m_dctTempMatrix[scanBlockY+5] = z13 + z2;
-		m_dctTempMatrix[scanBlockY+3] = z13 - z2;
-		m_dctTempMatrix[scanBlockY+1] = z11 + z4;
-		m_dctTempMatrix[scanBlockY+7] = z11 - z4;
+		m_fdctTempMatrix[scanBlockY+5] = z13 + z2;
+		m_fdctTempMatrix[scanBlockY+3] = z13 - z2;
+		m_fdctTempMatrix[scanBlockY+1] = z11 + z4;
+		m_fdctTempMatrix[scanBlockY+7] = z11 - z4;
     }
 
     // Columns FDCT
@@ -2405,8 +2405,8 @@ void jpegCodec::FDCT(imbxInt32* pIOMatrix, float* pDescaleFactors)
     float *pointerOperatorFloat0, *pointerOperatorFloat1;
     for(int scanBlockX = 0; scanBlockX < 8; ++scanBlockX)
     {
-		pointerOperatorFloat0 = &(m_dctTempMatrix[scanBlockX]);
-		pointerOperatorFloat1 = &(m_dctTempMatrix[scanBlockX + 56]);
+		pointerOperatorFloat0 = &(m_fdctTempMatrix[scanBlockX]);
+		pointerOperatorFloat1 = &(m_fdctTempMatrix[scanBlockX + 56]);
 
 		tmp0 = *pointerOperatorFloat0 + *pointerOperatorFloat1;
 		tmp7 = *pointerOperatorFloat0 - *pointerOperatorFloat1;
@@ -2434,14 +2434,14 @@ void jpegCodec::FDCT(imbxInt32* pIOMatrix, float* pDescaleFactors)
 		tmp12 = tmp1 - tmp2;
 
 		// Phase 3
-		m_dctTempMatrix[scanBlockX   ] = tmp10 + tmp11;
-		m_dctTempMatrix[scanBlockX+32] = tmp10 - tmp11;
+		m_fdctTempMatrix[scanBlockX   ] = tmp10 + tmp11;
+		m_fdctTempMatrix[scanBlockX+32] = tmp10 - tmp11;
 
 		z1 = (tmp12 + tmp13)*0.707106781f;     // c4
 
 		// Phase 5
-		m_dctTempMatrix[scanBlockX+16] = (tmp13 + z1);
-		m_dctTempMatrix[scanBlockX+48] = (tmp13 - z1);
+		m_fdctTempMatrix[scanBlockX+16] = (tmp13 + z1);
+		m_fdctTempMatrix[scanBlockX+48] = (tmp13 - z1);
 
 		// Odd part
 		// Phase 2
@@ -2460,16 +2460,16 @@ void jpegCodec::FDCT(imbxInt32* pIOMatrix, float* pDescaleFactors)
 		z13 = tmp7 - z3;
 
 		// Phase 6
-		m_dctTempMatrix[scanBlockX+40] = (z13 + z2);
-		m_dctTempMatrix[scanBlockX+24] = (z13 - z2);
-		m_dctTempMatrix[scanBlockX+ 8] = (z11 + z4);
-		m_dctTempMatrix[scanBlockX+56] = (z11 - z4);
+		m_fdctTempMatrix[scanBlockX+40] = (z13 + z2);
+		m_fdctTempMatrix[scanBlockX+24] = (z13 - z2);
+		m_fdctTempMatrix[scanBlockX+ 8] = (z11 + z4);
+		m_fdctTempMatrix[scanBlockX+56] = (z11 - z4);
     }
 
 	// Descale FDCT results
 	/////////////////////////////////////////////////////////////////
 	for(int descale = 0; descale < 64; ++descale)
-		pIOMatrix[descale]=(imbxInt32)(m_dctTempMatrix[descale]*pDescaleFactors[descale]+.5f);
+		pIOMatrix[descale]=(imbxInt32)(m_fdctTempMatrix[descale]*pDescaleFactors[descale]+.5f);
 
 }
 
@@ -2486,20 +2486,28 @@ void jpegCodec::FDCT(imbxInt32* pIOMatrix, float* pDescaleFactors)
 //
 /////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
-void jpegCodec::IDCT(imbxInt32* pIOMatrix, float* pScaleFactors)
+void jpegCodec::IDCT(imbxInt32* pIOMatrix, long long* pScaleFactors)
 {
+    static const long long multiplier_1_414213562f_16bits((long long)(65536.0f * 1.414213562f + .5f));
+    static const long long multiplier_1_847759065f_16bits((long long)(65536.0f * 1.847759065f + .5f));
+    static const long long multiplier_1_0823922f_16bits((long long)(65536.0f * 1.0823922f + .5f));
+    static const long long multiplier_2_61312593f_16bits((long long)(65536.0f * 2.61312593f + .5f));
+    static const long long zero_point_five((long long)65546.0f * 0.5f);
+    static const long long zero_point_five_by_8(zero_point_five << 3);
+
+
 	// Temporary values
 	/////////////////////////////////////////////////////////////////
-	float tmp0, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7;
-    float tmp10, tmp11, tmp12, tmp13;
-    float z5, z10, z11, z12, z13;
+	long long tmp0, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7;
+    long long tmp10, tmp11, tmp12, tmp13;
+    long long z5, z10, z11, z12, z13;
 
 	//
 	// Rows IDCT
 	//
 	/////////////////////////////////////////////////////////////////
-	imbxInt32* pMatrix = pIOMatrix;
-	float* pTempMatrix = m_dctTempMatrix;
+	imbxInt32* pMatrix(pIOMatrix);
+	long long* pTempMatrix(m_idctTempMatrix);
 	for(int scanBlockY=8; scanBlockY; --scanBlockY)
 	{
 		// Check for AC coefficients value.
@@ -2515,7 +2523,7 @@ void jpegCodec::IDCT(imbxInt32* pIOMatrix, float* pScaleFactors)
 			 *(pMatrix+7)) ==0)
 
 		{
-		    tmp0 = ((float)(*pMatrix)) * (*pScaleFactors);
+		    tmp0 = (long long)(*pMatrix) * (*pScaleFactors);
 			*(pTempMatrix++) = tmp0;
 			*(pTempMatrix++) = tmp0;
 			*(pTempMatrix++) = tmp0;
@@ -2525,19 +2533,19 @@ void jpegCodec::IDCT(imbxInt32* pIOMatrix, float* pScaleFactors)
 			*(pTempMatrix++) = tmp0;
 			*(pTempMatrix++) = tmp0;
 
-			pMatrix += 8;
+            pMatrix += 8;
 			pScaleFactors += 8;
 			continue;
 		}
 
-		tmp0 = (float)(*(pMatrix++)) * (*(pScaleFactors++));
-		tmp4 = (float)(*(pMatrix++)) * (*(pScaleFactors++));
-		tmp1 = (float)(*(pMatrix++)) * (*(pScaleFactors++));
-		tmp5 = (float)(*(pMatrix++)) * (*(pScaleFactors++));
-		tmp2 = (float)(*(pMatrix++)) * (*(pScaleFactors++));
-		tmp6 = (float)(*(pMatrix++)) * (*(pScaleFactors++));
-		tmp3 = (float)(*(pMatrix++)) * (*(pScaleFactors++));
-		tmp7 = (float)(*(pMatrix++)) * (*(pScaleFactors++));
+		tmp0 = (long long)*(pMatrix++) * (*(pScaleFactors++));
+		tmp4 = (long long)*(pMatrix++) * (*(pScaleFactors++));
+		tmp1 = (long long)*(pMatrix++) * (*(pScaleFactors++));
+		tmp5 = (long long)*(pMatrix++) * (*(pScaleFactors++));
+		tmp2 = (long long)*(pMatrix++) * (*(pScaleFactors++));
+		tmp6 = (long long)*(pMatrix++) * (*(pScaleFactors++));
+		tmp3 = (long long)*(pMatrix++) * (*(pScaleFactors++));
+		tmp7 = (long long)*(pMatrix++) * (*(pScaleFactors++));
 
 		// Phase 3
 		tmp10 = tmp0 + tmp2;
@@ -2545,7 +2553,7 @@ void jpegCodec::IDCT(imbxInt32* pIOMatrix, float* pScaleFactors)
 
 		// Phases 5-3
 		tmp13 = tmp1 + tmp3;
-		tmp12 = (tmp1 - tmp3)*1.414213562f - tmp13; // 2*c4
+		tmp12 = (((tmp1 - tmp3) * multiplier_1_414213562f_16bits + zero_point_five) >> 16) - tmp13; // 2*c4
 
 		// Phase 2
 		tmp0 = tmp10 + tmp13;
@@ -2561,11 +2569,11 @@ void jpegCodec::IDCT(imbxInt32* pIOMatrix, float* pScaleFactors)
 
 		// Phase 5
 		tmp7 = z11 + z13;
-		tmp11 = (z11 - z13)*1.414213562f; // 2*c4
+		tmp11 = ((z11 - z13) * multiplier_1_414213562f_16bits + zero_point_five) >> 16; // 2*c4
 
-		z5 = (z10 + z12)*1.847759065f;    // 2*c2
-		tmp10 = z12*1.0823922f - z5;    // 2*(c2-c6)
-		tmp12 = z5-z10*2.61312593f;      // -2*(c2+c6)
+		z5 = ((z10 + z12) * multiplier_1_847759065f_16bits + zero_point_five) >> 16;    // 2*c2
+		tmp10 = ((z12 * multiplier_1_0823922f_16bits + zero_point_five) >> 16) - z5;    // 2*(c2-c6)
+		tmp12 = z5 - ((z10 *multiplier_2_61312593f_16bits + zero_point_five) >> 16);      // -2*(c2+c6)
 
 		// Phase 2
 		tmp6 = tmp12 - tmp7;
@@ -2582,13 +2590,12 @@ void jpegCodec::IDCT(imbxInt32* pIOMatrix, float* pScaleFactors)
 		*(pTempMatrix++) = tmp0 - tmp7;
 	}
 
-
 	//
 	// Columns IDCT
 	//
 	/////////////////////////////////////////////////////////////////
 	pMatrix = pIOMatrix;
-	pTempMatrix = m_dctTempMatrix;
+	pTempMatrix = m_idctTempMatrix;
 	for(int scanBlockX = 8; scanBlockX != 0; --scanBlockX)
 	{
 		tmp0 = *pTempMatrix;
@@ -2614,7 +2621,7 @@ void jpegCodec::IDCT(imbxInt32* pIOMatrix, float* pScaleFactors)
 
 		// Phases 5-3
 		tmp13 = tmp1 + tmp3;
-		tmp12 = (tmp1 - tmp3)*1.414213562f - tmp13; // 2*c4
+		tmp12 = (((tmp1 - tmp3) * multiplier_1_414213562f_16bits + zero_point_five) >> 16) - tmp13; // 2*c4
 
 		// Phase 2
 		tmp0 = tmp10 + tmp13;
@@ -2630,33 +2637,33 @@ void jpegCodec::IDCT(imbxInt32* pIOMatrix, float* pScaleFactors)
 
 		// Phase 5
 		tmp7 = z11 + z13;
-		tmp11 = (z11 - z13)*1.414213562f; // 2*c4
+		tmp11 = ((z11 - z13) * multiplier_1_414213562f_16bits + zero_point_five) >> 16; // 2*c4
 
-		z5 = (z10 + z12)*1.847759065f;    // 2*c2
-		tmp10 = z12*1.0823922f - z5;    // 2*(c2-c6)
-		tmp12 = z5-z10*2.61312593f;      // -2*(c2+c6)
+		z5 = ((z10 + z12) * multiplier_1_847759065f_16bits + zero_point_five) >> 16;    // 2*c2
+		tmp10 = ((z12 * multiplier_1_0823922f_16bits + zero_point_five) >> 16) - z5;    // 2*(c2-c6)
+		tmp12 = z5 - ((z10 *multiplier_2_61312593f_16bits + zero_point_five) >> 16);      // -2*(c2+c6)
 
 		// Phase 2
 		tmp6 = tmp12 - tmp7;
 		tmp5 = tmp11 - tmp6;
 		tmp4 = tmp10 + tmp5;
 
-		// Final output stage: scale down by a factor of 8
-		*pMatrix = ((imbxInt32)(tmp0+tmp7+.5))>>3;
+		// Final output stage: scale down by a factor of 8 (+16 bits)
+		*pMatrix = (imbxInt32)((tmp0 + tmp7 + zero_point_five_by_8)>>19);
 		pMatrix += 8;
-		*pMatrix = ((imbxInt32)(tmp1+tmp6+.5))>>3;
+		*pMatrix = (imbxInt32)((tmp1 + tmp6 + zero_point_five_by_8)>>19);
 		pMatrix += 8;
-		*pMatrix = ((imbxInt32)(tmp2+tmp5+.5))>>3;
+		*pMatrix = (imbxInt32)((tmp2 + tmp5 + zero_point_five_by_8)>>19);
 		pMatrix += 8;
-		*pMatrix = ((imbxInt32)(tmp3-tmp4+.5))>>3;
+		*pMatrix = (imbxInt32)((tmp3 - tmp4 + zero_point_five_by_8)>>19);
 		pMatrix += 8;
-		*pMatrix = ((imbxInt32)(tmp3+tmp4+.5))>>3;
+		*pMatrix = (imbxInt32)((tmp3 + tmp4 + zero_point_five_by_8)>>19);
 		pMatrix += 8;
-		*pMatrix = ((imbxInt32)(tmp2-tmp5+.5))>>3;
+		*pMatrix = (imbxInt32)((tmp2 - tmp5 + zero_point_five_by_8)>>19);
 		pMatrix += 8;
-		*pMatrix = ((imbxInt32)(tmp1-tmp6+.5))>>3;
+		*pMatrix = (imbxInt32)((tmp1 - tmp6 + zero_point_five_by_8)>>19);
 		pMatrix += 8;
-		*pMatrix = ((imbxInt32)(tmp0-tmp7+.5))>>3;
+		*pMatrix = (imbxInt32)((tmp0 - tmp7 + zero_point_five_by_8)>>19);
 		pMatrix -= 55;
 	}
 }

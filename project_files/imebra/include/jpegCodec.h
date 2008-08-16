@@ -238,7 +238,7 @@ public:
 	///////////////////////////////////////////////////////////
 public:
 	void FDCT(imbxInt32* pIOMatrix, float* pDescaleFactors);
-	void IDCT(imbxInt32* pIOMatrix, float* pScaleFactors);
+	void IDCT(imbxInt32* pIOMatrix, long long* pScaleFactors);
 
 protected:
 	/// \internal
@@ -307,7 +307,7 @@ protected:
 
 	void writeTag(streamWriter* pDestinationStream, tTagId tagId);
 
-	float m_decompressionQuantizationTable[16][64];
+	long long m_decompressionQuantizationTable[16][64];
 	float m_compressionQuantizationTable[16][64];
 
 	// Map of the available Jpeg tags
@@ -316,9 +316,13 @@ protected:
 	typedef std::map<imbxUint8, ptrTag> tTagsMap;
 	tTagsMap m_tagsMap;
 
-	// temporary matrix used by FDCT/IDCT
+	// temporary matrix used by FDCT
 	///////////////////////////////////////////////////////////
-	float m_dctTempMatrix[64];
+	float m_fdctTempMatrix[64];
+
+	// temporary matrix used by IDCT
+	///////////////////////////////////////////////////////////
+	long long m_idctTempMatrix[64];
 };
 
 /// \brief Base class for the exceptions thrown by the
