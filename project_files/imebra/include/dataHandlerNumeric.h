@@ -408,23 +408,35 @@ public:
             destEndCol = destWidth;
         }
         imbxUint32 numColumns(destEndCol - destStartCol);
+        imbxUint32 scanCol(0); // Used in the loop to scan the columns
 
 		for(imbxUint32 numYCopies(destEndRow - destStartRow); numYCopies != 0; --numYCopies)
 		{
 			pDestColScan = pDestRowScan;
 			pSourceColScan = pSourceRowScan;
-			replicateXCount = sourceReplicateX;
 
-			for(imbxUint32 scanCol(numColumns); scanCol != 0; --scanCol)
-			{
-				*pDestColScan = (dataHandlerType)(*pSourceColScan);
-				pDestColScan += destNumChannels;
-				if(--replicateXCount == 0)
-				{
-					replicateXCount = sourceReplicateX;
-					++pSourceColScan;
-				}
-			}
+            if(sourceReplicateX == 1)
+            {
+                for(scanCol = numColumns; scanCol != 0; --scanCol)
+                {
+                    *pDestColScan = (dataHandlerType)(*(pSourceColScan++));
+                    pDestColScan += destNumChannels;
+                }
+            }
+            else
+            {
+                replicateXCount = sourceReplicateX;
+                for(scanCol = numColumns; scanCol != 0; --scanCol)
+                {
+                    *pDestColScan = (dataHandlerType)(*pSourceColScan);
+                    pDestColScan += destNumChannels;
+                    if(--replicateXCount == 0)
+                    {
+                        replicateXCount = sourceReplicateX;
+                        ++pSourceColScan;
+                    }
+                }
+            }
 			pDestRowScan += destWidth * destNumChannels;
 			if(--replicateYCount == 0)
 			{
