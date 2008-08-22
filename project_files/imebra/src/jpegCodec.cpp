@@ -801,7 +801,7 @@ void jpegCodec::findMcuSize()
 	imbxUint32 minSamplingFactorY=256;
 
 	jpeg::jpegChannel* pChannel; // Used in the lòops
-	for(jpeg::jpegChannel** channelsIterator(m_channelsList); *channelsIterator != 0; ++channelsIterator)
+	for(jpeg::jpegChannel** channelsIterator = m_channelsList; *channelsIterator != 0; ++channelsIterator)
 	{
 		pChannel = *channelsIterator;
 
@@ -817,7 +817,7 @@ void jpegCodec::findMcuSize()
 
 	// Find the number of blocks per MCU per channel
 	///////////////////////////////////////////////////////////
-	for(jpeg::jpegChannel** channelsIterator(m_channelsList); *channelsIterator != 0; ++channelsIterator)
+	for(jpeg::jpegChannel** channelsIterator = m_channelsList; *channelsIterator != 0; ++channelsIterator)
 	{
 		pChannel=*channelsIterator;
 
@@ -1249,7 +1249,7 @@ ptr<image> jpegCodec::getImage(ptr<dataSet> sourceDataSet, ptr<streamReader> pSt
 
 			// Scan all components
 			///////////////////////////////////////////////////////////
-			for(jpeg::jpegChannel** channelsIterator(m_channelsList); *channelsIterator != 0 && m_entryByte == 0; ++channelsIterator)
+			for(jpeg::jpegChannel** channelsIterator = m_channelsList; *channelsIterator != 0 && m_entryByte == 0; ++channelsIterator)
 			{
 				pChannel = *channelsIterator;
 
@@ -1817,7 +1817,7 @@ void jpegCodec::writeScan(streamWriter* pDestinationStream, bool bCalcHuffman)
 
 		// Scan all components
 		///////////////////////////////////////////////////////////
-		for(jpeg::jpegChannel** channelsIterator(m_channelsList); *channelsIterator != 0 && m_entryByte == 0; ++channelsIterator)
+		for(jpeg::jpegChannel** channelsIterator = m_channelsList; *channelsIterator != 0 && m_entryByte == 0; ++channelsIterator)
 		{
 			pChannel = *channelsIterator;
 
@@ -3316,7 +3316,7 @@ void tagSOS::writeTag(streamWriter* pStream, jpegCodec* pCodec)
 	// Scan all the channels in the current scan
 	/////////////////////////////////////////////////////////////////
 	jpeg::jpegChannel* pChannel; // used in the loop
-	for(jpeg::jpegChannel** listIterator(pCodec->m_channelsList); *listIterator != 0; ++listIterator)
+	for(jpeg::jpegChannel** listIterator = pCodec->m_channelsList; *listIterator != 0; ++listIterator)
 	{
 	    pChannel = *listIterator;
 
@@ -3741,7 +3741,7 @@ void tagRST::readTag(streamReader* /* pStream */, jpegCodec* pCodec, imbxUint8 t
 
 	// Reset the channels last dc value
 	/////////////////////////////////////////////////////////////////
-	for(jpeg::jpegChannel** channelsIterator(pCodec->m_channelsList); *channelsIterator != 0; ++channelsIterator)
+	for(jpeg::jpegChannel** channelsIterator = pCodec->m_channelsList; *channelsIterator != 0; ++channelsIterator)
 	{
 		(*channelsIterator)->processUnprocessedAmplitudes();
 		(*channelsIterator)->m_lastDCValue = (*channelsIterator)->m_defaultDCValue;
@@ -3765,7 +3765,7 @@ void tagRST::readTag(streamReader* /* pStream */, jpegCodec* pCodec, imbxUint8 t
 
 		// Update the lossless pixel's counter in the channels
 		/////////////////////////////////////////////////////////////////
-		for(jpeg::jpegChannel** channelsIterator(pCodec->m_channelsList); *channelsIterator != 0; ++channelsIterator)
+		for(jpeg::jpegChannel** channelsIterator = pCodec->m_channelsList; *channelsIterator != 0; ++channelsIterator)
 		{
 			jpeg::jpegChannel* pChannel(*channelsIterator);
 			pChannel->m_losslessPositionX = pCodec->m_mcuProcessedX / pChannel->m_blockMcuX;

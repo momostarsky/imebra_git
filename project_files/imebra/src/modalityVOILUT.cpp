@@ -184,7 +184,6 @@ void modalityVOILUTInverse::doTransformBuffers(
 		*pOutputBuffer = (imbxInt32)(((double)(*pOutputBuffer) - rescaleIntercept)/rescaleSlope+0.5);
 		++pOutputBuffer;
 	}
-	return;
 
 	PUNTOEXE_FUNCTION_END();
 }

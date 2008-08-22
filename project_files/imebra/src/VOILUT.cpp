@@ -336,7 +336,6 @@ void VOILUT::doTransformBuffers(
 			*pOutputBuffer = finalRange-1;
 		++pOutputBuffer;
 	}
-	return;
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -405,8 +404,6 @@ void VOILUTInverse::doTransformBuffers(
 		*pOutputBuffer = (imbxInt32)((double)*pOutputBuffer*multFactor+0.5+minValue);
 		++pOutputBuffer;
 	}
-
-	return;
 
 	PUNTOEXE_FUNCTION_END();
 }
