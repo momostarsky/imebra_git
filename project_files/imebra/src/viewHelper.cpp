@@ -1109,6 +1109,7 @@ void view::setImage(ptr<image> pImage, ptr<dataSet> pDataSet)
 	{
 		m_originalImage = 0;
 		setScrollSize(1, 1, true);
+		m_drawBitmap->declareDataSet(0);
 		return;
 	}
 	imbxUint32 oldSizeX = 0;
