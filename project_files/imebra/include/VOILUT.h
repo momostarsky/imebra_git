@@ -39,26 +39,25 @@ namespace transforms
 ///  default the transform uses the first VOI or LUT
 ///  defined in the dataset.
 ///
-/// To control which VOI/LUT is used for the 
+/// To control which VOI/LUT is used for the
 ///  transformation the application must use the functions
 ///  getVOILUTId(), getVOILUTDescription(), setVOILUT() or
 ///  set the VOI or the LUT directly by calling
 ///  setCenterWidth() or setLUT().
 ///
 ///////////////////////////////////////////////////////////
-class VOILUT: public transformBuffers
+class VOILUT: public transformBuffersInPlace
 {
 public:
 	VOILUT():m_windowCenter(0), m_windowWidth(0){}
 
-	virtual void doTransformBuffers(
-		imbxUint32 sizeX, 
+	virtual void doTransformBuffersInPlace(
+		imbxUint32 sizeX,
 		imbxUint32 sizeY,
 		imbxUint32 inputChannelsNumber,
 		std::wstring inputColorSpace,
 		image::bitDepth inputDepth,
 		imbxUint32 inputHighBit,
-		imbxInt32* pInputBuffer,
 		imbxInt32* pOutputBuffer,
 		imbxUint32 buffersSize,
 		image::bitDepth* pOutputDepth,
@@ -73,8 +72,8 @@ public:
 	/// The function returns 0 when the requested VOI/LUT
 	///  doesn't exist.
 	///
-	/// The parameter VOILUTNumber is a zero based index used 
-	///  to scan all the available VOIs first and then all the 
+	/// The parameter VOILUTNumber is a zero based index used
+	///  to scan all the available VOIs first and then all the
 	///  LUTs.
 	/// For instance, if VOILUTNumber is 3 and the dataSet
 	///  contains 2 VOIs and 3 LUTs, then the function will
@@ -84,13 +83,13 @@ public:
 	///                       VOI or the LUT for which the
 	///                       ID is requested.
 	///                      The value 0 refers to the first
-	///                       VOI in the dataSet or to the 
+	///                       VOI in the dataSet or to the
 	///                       first LUT if there isn't any
 	///                       defined VOI. Bigger values refer
 	///                       to the following VOIs or LUTs
 	///                       when all the VOIs have been
 	///                       scanned
-	/// @return an ID that can be used with 
+	/// @return an ID that can be used with
 	///          getVOILUTDescription() and setVOILUT(), or 0
 	///                       if the requested VOI/LUT doesn't
 	///                       exist
@@ -101,17 +100,17 @@ public:
 	/// \brief Return a description for the VOI or LUT with
 	///         the specified ID.
 	///
-	/// The VOI/LUT ID can be obtained by calling 
+	/// The VOI/LUT ID can be obtained by calling
 	///  getVOILUTId().
 	///
-	/// @param VOILUTId the id of the VOI/LUT for which the 
+	/// @param VOILUTId the id of the VOI/LUT for which the
 	///                  description is required
 	/// @return         the VOI/LUT description
 	///
 	///////////////////////////////////////////////////////////
 	std::wstring getVOILUTDescription(imbxUint32 VOILUTId);
 
-	/// \brief Define the VOI/LUT to use for the 
+	/// \brief Define the VOI/LUT to use for the
 	///         transformation.
 	///
 	/// The VOI/LUT ID can be obtained by calling
@@ -128,7 +127,7 @@ public:
 
 	/// \brief Define the LUT to use for the transformation.
 	///
-	/// @param pLut the lut that will be used for the 
+	/// @param pLut the lut that will be used for the
 	///              transformation
 	///
 	///////////////////////////////////////////////////////////
@@ -146,7 +145,7 @@ public:
 	/// \brief Returns the VOI width/center used for the
 	///         transformation.
 	///
-	/// @param pCenter  pointer to the recipient for the VOI 
+	/// @param pCenter  pointer to the recipient for the VOI
 	///                  center
 	/// @param width    pointer to the recipient for the VOI
 	///                  width
@@ -161,7 +160,7 @@ protected:
 };
 
 ///////////////////////////////////////////////////////////
-/// \brief Execute the inverse of the transformation 
+/// \brief Execute the inverse of the transformation
 ///         executed by VOILUT.
 ///
 ///////////////////////////////////////////////////////////
@@ -169,7 +168,7 @@ class VOILUTInverse: public VOILUT
 {
 public:
 	virtual void doTransformBuffers(
-		imbxUint32 sizeX, 
+		imbxUint32 sizeX,
 		imbxUint32 sizeY,
 		imbxUint32 inputChannelsNumber,
 		std::wstring InputColorSpace,

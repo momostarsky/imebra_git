@@ -41,11 +41,11 @@ void transformBuffers::doTransform()
 		// Get the input image
 		///////////////////////////////////////////////////////////
 		ptr<image> inputImage = getInputImage(scanImages);
-		
+
 		// Get the output image
 		///////////////////////////////////////////////////////////
 		ptr<image> outputImage = getOutputImage(scanImages);
-		
+
 		// If both the input and the output images are empty,
 		//  then exit
 		///////////////////////////////////////////////////////////
@@ -67,8 +67,7 @@ void transformBuffers::doTransform()
 		inputImage->getSizeMm(&sizeMmX, &sizeMmY);
 		image::bitDepth inputBitDepth = inputImage->getDepth();
 		imbxUint32 inputHighBit = inputImage->getHighBit();
-		imbxUint32 inputBufferSize = inputSizeX * inputSizeY * inputImage->getChannelsNumber();
-		
+
 		image::bitDepth outputBitDepth = inputBitDepth;
 		imbxUint32 outputHighBit = inputHighBit;
 
@@ -93,42 +92,111 @@ void transformBuffers::doTransform()
 			outputImage->setSizeMm(sizeMmX, sizeMmY);
 		}
 
-		// Get the input image's attributes and the data handler
-		///////////////////////////////////////////////////////////
-		imbxUint32 rowSize, pixelSize, channelsNumber;
-		
-		ptr<handlers::imageHandler> inputDataHandler=inputImage->getDataHandler(false, &rowSize, &pixelSize, &channelsNumber);
-		ptr<handlers::imageHandler> outputDataHandler=outputImage->getDataHandler(true, &rowSize, &pixelSize, &channelsNumber);
-		
-		// Process the buffers
-		///////////////////////////////////////////////////////////
+		processDataBuffers(inputImage, outputImage,
+                        inputSizeX, inputSizeY,
+                        inputColorSpace, inputBitDepth, inputHighBit,
+                        &outputBitDepth, &outputHighBit);
 
-		imbxInt32* pInputMemory = inputDataHandler->getMemoryBuffer();
-		imbxInt32* pOutputMemory = outputDataHandler->getMemoryBuffer();
-		::memcpy(pOutputMemory, pInputMemory, inputBufferSize * sizeof(imbxInt32));
-		
-		doTransformBuffers(
-			inputSizeX, 
-			inputSizeY, 
-			channelsNumber, 
-			inputColorSpace, 
-			inputBitDepth, 
-			inputHighBit, 
-			pInputMemory,
-			pOutputMemory,
-			inputBufferSize,
-			&outputBitDepth,
-			&outputHighBit
-			);
-
-		outputDataHandler.release();
-
-		// If the bit depth is unknown, then calculate it
-		///////////////////////////////////////////////////////////
-		outputImage->setBitDepthAndHighBit(outputHighBit, outputBitDepth);
+        // If the bit depth is unknown, then calculate it
+        ///////////////////////////////////////////////////////////
+        outputImage->setBitDepthAndHighBit(outputHighBit, outputBitDepth);
 	}
 
 	PUNTOEXE_FUNCTION_END();
+}
+
+
+void transformBuffersInputOutput::processDataBuffers(ptr<image> inputImage, ptr<image> outputImage,
+		imbxUint32 sizeX,
+		imbxUint32 sizeY,
+		std::wstring inputColorSpace,
+		image::bitDepth inputDepth,
+		imbxUint32 inputHighBit,
+		image::bitDepth* pOutputDepth,
+		imbxUint32* pOutputHighBit)
+
+{
+    PUNTOEXE_FUNCTION_START(L"transformBuffers::processDataBuffers");
+
+    // Get the input image's attributes and the data handler
+    ///////////////////////////////////////////////////////////
+    imbxUint32 rowSize, pixelSize, channelsNumber;
+
+    ptr<handlers::imageHandler> inputDataHandler=inputImage->getDataHandler(false, &rowSize, &pixelSize, &channelsNumber);
+    ptr<handlers::imageHandler> outputDataHandler=outputImage->getDataHandler(true, &rowSize, &pixelSize, &channelsNumber);
+
+    // Process the buffers
+    ///////////////////////////////////////////////////////////
+    imbxInt32* pInputMemory = inputDataHandler->getMemoryBuffer();
+    imbxInt32* pOutputMemory = outputDataHandler->getMemoryBuffer();
+
+    // Calculate the buffer's size
+    ///////////////////////////////////////////////////////////
+    imbxUint32 inputBufferSize = sizeX * sizeY * channelsNumber;
+
+    doTransformBuffersInputOutput(
+        sizeX,
+        sizeY,
+        channelsNumber,
+        inputColorSpace,
+        inputDepth,
+        inputHighBit,
+        pInputMemory,
+        pOutputMemory,
+        inputBufferSize,
+        pOutputDepth,
+        pOutputHighBit
+        );
+
+    PUNTOEXE_FUNCTION_END();
+}
+
+
+void transformBuffersInPlace::processDataBuffers(ptr<image> inputImage, ptr<image> outputImage,
+		imbxUint32 sizeX,
+		imbxUint32 sizeY,
+		std::wstring inputColorSpace,
+		image::bitDepth inputDepth,
+		imbxUint32 inputHighBit,
+		image::bitDepth* pOutputDepth,
+		imbxUint32* pOutputHighBit)
+{
+    PUNTOEXE_FUNCTION_START(L"transformBuffersInPlace::processDataBuffers");
+
+    // Get the input image's attributes and the data handler
+    ///////////////////////////////////////////////////////////
+    imbxUint32 rowSize, pixelSize, channelsNumber;
+
+    ptr<handlers::imageHandler> outputDataHandler=outputImage->getDataHandler(true, &rowSize, &pixelSize, &channelsNumber);
+    imbxInt32* pOutputMemory = outputDataHandler->getMemoryBuffer();
+    if(inputImage != outputImage)
+    {
+        ptr<handlers::imageHandler> inputDataHandler=inputImage->getDataHandler(false, &rowSize, &pixelSize, &channelsNumber);
+        imbxInt32* pInputMemory = inputDataHandler->getMemoryBuffer();
+        ::memcpy(pOutputMemory, pInputMemory, sizeX * sizeY * channelsNumber * sizeof(imbxInt32));
+    }
+
+    // Calculate the buffer's size
+    ///////////////////////////////////////////////////////////
+    imbxUint32 inputBufferSize = sizeX * sizeY * channelsNumber;
+
+    // Process the buffers
+    ///////////////////////////////////////////////////////////
+    doTransformBuffersInPlace(
+        sizeX,
+        sizeY,
+        channelsNumber,
+        inputColorSpace,
+        inputDepth,
+        inputHighBit,
+        pOutputMemory,
+        inputBufferSize,
+        pOutputDepth,
+        pOutputHighBit
+        );
+
+    PUNTOEXE_FUNCTION_END();
+
 }
 
 } // namespace transforms

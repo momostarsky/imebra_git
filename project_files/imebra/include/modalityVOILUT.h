@@ -43,7 +43,7 @@ namespace transforms
 ///
 /// In order to perform the transformation the class needs
 ///  to know the dataset from which the image has been
-///  retrieved, then the function 
+///  retrieved, then the function
 ///  transform::declareDataSet() must be called.
 ///
 /// If the dataset doesn't define any modality VOI/LUT
@@ -52,19 +52,18 @@ namespace transforms
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class modalityVOILUT: public transformBuffers
+class modalityVOILUT: public transformBuffersInPlace
 {
 public:
 	// Reimplemented from the base class
 	///////////////////////////////////////////////////////////
-	virtual void doTransformBuffers(
-		imbxUint32 sizeX, 
+	virtual void doTransformBuffersInPlace(
+		imbxUint32 sizeX,
 		imbxUint32 sizeY,
 		imbxUint32 inputChannelsNumber,
 		std::wstring inputColorSpace,
 		image::bitDepth inputDepth,
 		imbxUint32 inputHighBit,
-		imbxInt32* pInputBuffer,
 		imbxInt32* pOutputBuffer,
 		imbxUint32 buffersSize,
 		image::bitDepth* pOutputDepth,
@@ -79,7 +78,7 @@ public:
 ///
 /// In order to perform the transformation the class needs
 ///  to know the dataset in which the output image will be
-///  stored, then the function 
+///  stored, then the function
 ///  transform::declareDataSet() must be called.
 ///
 /// If the dataset doesn't define any modality VOI/LUT
@@ -92,7 +91,7 @@ class modalityVOILUTInverse: public modalityVOILUT
 {
 public:
 	virtual void doTransformBuffers(
-		imbxUint32 sizeX, 
+		imbxUint32 sizeX,
 		imbxUint32 sizeY,
 		imbxUint32 inputChannelsNumber,
 		std::wstring inputColorSpace,

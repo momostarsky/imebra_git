@@ -33,19 +33,9 @@ namespace transforms
 /// \brief This class is used as a base class by some
 ///         transforms that work on the image's pixels.
 ///
-/// The class takes the input image and automatically
-///  allocate an output image if it hasn't been declared.
-/// Two temporary buffer are automatically allocated
-///  (one for the input image and one for the output one)
-///  and both of them are defined as signed long
-///  (imbxInt32).
-///
-/// Then the virtual function doTransformBuffers() is 
-///  called.
-/// This function can change the output buffer's content.
-///
-/// doTransformBuffers() can modify the bit depth and
-///  the high bit of the output buffer.
+/// Don't use this class directly but allocate
+///  CTransformBuffersInputOutput or
+///  CTransformBuffersInPlace.
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -53,42 +43,66 @@ class transformBuffers : public transform
 {
 
 public:
-	/// \brief This function takes care of allocating
-	///         the temporary buffers and calling the 
-	///         doTransformBuffers() function.
-	///
-	///////////////////////////////////////////////////////////
-	virtual void doTransform();
-	
-	/// \brief This function, implemented in the derived 
-	///         classes, modifies the content of the output
-	///         buffer and sets its attributes.
-	///
-	/// @param sizeX      the width of the image in pixels
-	/// @param sizeY      the height of the image in pixels
-	/// @param inputChannelsNumber the number of color 
-	///                    channels stored in the input buffer
-	/// @param inputColorSpace the color space used by the
-	///                    input buffer
-	/// @param inputDepth the depth of the input buffer
-	/// @param inputHighBit the high bit of the input buffer
-	/// @param pInputBuffer a pointer to the first element of
-	///                    the input buffer
-	/// @param pOutputBuffer a pointer to the first element of
-	///                    the output buffer
-	/// @param buffersSize the size of the buffers, in pixels
-	///                     (a pixel may include more than one
-	///                     color channel)
-	/// @param pOutputDepth a pointer to a variable that this
-	///                     function fills with the output
-	///                     buffer's bit depth.
-	/// @param pOutputHighBit a pointer to a variable that 
-	///                     this function fills with the
-	///                     output buffer's high bit
-	///
-	///////////////////////////////////////////////////////////
-	virtual void doTransformBuffers(
-		imbxUint32 sizeX, 
+    void doTransform();
+
+protected:
+    /// \brief Get the data buffers and calls the
+    ///         doTransformBuffers().
+    ///
+    /// Retrieve the data buffers from the input and output
+    ///  images and call the derived class processing
+    ///  function.
+    ///
+    /// @param inputImage  the input image
+    /// @param outputImage the output image
+    /// @param sizeX       the buffer's width, in pixels
+    /// @param sizeY       the buffer's height, in pixels
+    /// @param inputChannelsNumber the number of channels in
+    ///                     the input image
+    /// @param inputColorSpace the color space of the input
+    ///                     image
+    /// @param inputDepth  the bit depth of the input image
+    /// @param inputHighBit the input image's high bit
+    /// @param pOutputDepth pointer to the variable that
+    ///                     the function fills with the output
+    ///                     image's bit depth
+    /// @param pOutputHighBit pointer to the variable that
+    ///                     the function fills with the output
+    ///                     image's high bit
+    ///
+    ///////////////////////////////////////////////////////////
+    virtual void processDataBuffers(ptr<image> inputImage, ptr<image> outputImage,
+		imbxUint32 sizeX,
+		imbxUint32 sizeY,
+		std::wstring inputColorSpace,
+		image::bitDepth inputDepth,
+		imbxUint32 inputHighBit,
+		image::bitDepth* pOutputDepth,
+		imbxUint32* pOutputHighBit) = 0;
+};
+
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+/// \brief This class is used as a base class by some
+///         transforms that work on the image's pixels and
+///         need two different buffers (one for the input
+///         image and one for the outpu image).
+///
+/// The class takes the input image and automatically
+///  allocate an output image if it hasn't been declared.
+///
+/// Then the virtual function
+///  doTransformBuffersInputOutput() is called.
+///
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+class transformBuffersInputOutput : public transformBuffers
+{
+
+protected:
+	virtual void doTransformBuffersInputOutput(
+		imbxUint32 sizeX,
 		imbxUint32 sizeY,
 		imbxUint32 inputChannelsNumber,
 		std::wstring inputColorSpace,
@@ -100,7 +114,62 @@ public:
 		image::bitDepth* pOutputDepth,
 		imbxUint32* pOutputHighBit
 		)=0;
+
+    virtual void processDataBuffers(ptr<image> inputImage, ptr<image> outputImage,
+		imbxUint32 sizeX,
+		imbxUint32 sizeY,
+		std::wstring inputColorSpace,
+		image::bitDepth inputDepth,
+		imbxUint32 inputHighBit,
+		image::bitDepth* pOutputDepth,
+		imbxUint32* pOutputHighBit);
 };
+
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+/// \brief This class is used as a base class by some
+///         transforms that work on the image's pixels and
+///         don't need two different buffers (input &
+///         output) but can work on a single buffer that
+///         contains the input and output data.
+///
+/// The class takes the input image and automatically
+///  allocate an output image if it hasn't been declared.
+///
+/// Then the virtual function doTransformBuffersInPlace()
+///  is called.
+///
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+class transformBuffersInPlace : public transformBuffers
+{
+
+protected:
+	virtual void doTransformBuffersInPlace(
+		imbxUint32 sizeX,
+		imbxUint32 sizeY,
+		imbxUint32 inputChannelsNumber,
+		std::wstring inputColorSpace,
+		image::bitDepth inputDepth,
+		imbxUint32 inputHighBit,
+		imbxInt32* pBuffer,
+		imbxUint32 buffersSize,
+		image::bitDepth* pOutputDepth,
+		imbxUint32* pOutputHighBit
+		)=0;
+
+    virtual void processDataBuffers(ptr<image> inputImage, ptr<image> outputImage,
+		imbxUint32 sizeX,
+		imbxUint32 sizeY,
+		std::wstring inputColorSpace,
+		image::bitDepth inputDepth,
+		imbxUint32 inputHighBit,
+		image::bitDepth* pOutputDepth,
+		imbxUint32* pOutputHighBit);
+};
+
+
 
 } // namespace transforms
 

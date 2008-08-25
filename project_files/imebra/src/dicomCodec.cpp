@@ -1195,15 +1195,28 @@ void dicomCodec::readUncompressedInterleaved(
 		channelsMemory[copyChannelsPntr] = m_channels[copyChannelsPntr]->m_pBuffer;
 	}
 
+    imbxUint32 numValuesPerBlock(channelsNumber);
+    if(bSubSampledX)
+    {
+        ++numValuesPerBlock;
+    }
+    if(bSubSampledY)
+    {
+        numValuesPerBlock += 2;
+    }
+    std::auto_ptr<imbxInt32> readBlockValuesAutoPtr(new imbxInt32[numValuesPerBlock]);
+
 	// No subsampling here
 	///////////////////////////////////////////////////////////
 	if(!bSubSampledX && !bSubSampledY)
 	{
 		for(imbxUint32 totalSize = m_channels[0]->m_bufferSize; totalSize != 0; --totalSize)
 		{
+            imbxInt32* readBlockValuesPtr(readBlockValuesAutoPtr.get());
+            readPixel(pSourceStream, readBlockValuesPtr, numValuesPerBlock, &bitPointer, wordSizeBytes, allocatedBits, mask);
 			for(imbxUint32 scanChannels = 0; scanChannels != channelsNumber; ++scanChannels)
 			{
-				*(channelsMemory[scanChannels]++) = readPixel(pSourceStream, &bitPointer, wordSizeBytes, allocatedBits, mask);
+				*(channelsMemory[scanChannels]++) = *readBlockValuesPtr++;
 			}
 		}
 		return;
@@ -1225,23 +1238,26 @@ void dicomCodec::readUncompressedInterleaved(
 		numBlocks != 0;
 		--numBlocks)
 	{
+        imbxInt32* readBlockValuesPtr(readBlockValuesAutoPtr.get());
+	    readPixel(pSourceStream, readBlockValuesPtr, numValuesPerBlock, &bitPointer, wordSizeBytes, allocatedBits, mask);
+
 		// Read channel 0 (not subsampled)
 		///////////////////////////////////////////////////////////
-		*(channelsMemory[0]++) = readPixel(pSourceStream, &bitPointer, wordSizeBytes, allocatedBits, mask);
+		*(channelsMemory[0]++) = *readBlockValuesPtr++;
 		if(bSubSampledX)
 		{
-			*(channelsMemory[0]++) = readPixel(pSourceStream, &bitPointer, wordSizeBytes, allocatedBits, mask);
+			*(channelsMemory[0]++) = *readBlockValuesPtr++;
 		}
 		if(bSubSampledY)
 		{
-			*(channelsMemory[0]+adjSizeX-2) = readPixel(pSourceStream, &bitPointer, wordSizeBytes, allocatedBits, mask);
-			*(channelsMemory[0]+adjSizeX-1) = readPixel(pSourceStream, &bitPointer, wordSizeBytes, allocatedBits, mask);
+			*(channelsMemory[0]+adjSizeX-2) = *readBlockValuesPtr++;
+			*(channelsMemory[0]+adjSizeX-1) = *readBlockValuesPtr++;
 		}
 		// Read channels 1... (subsampled)
 		///////////////////////////////////////////////////////////
 		for(imbxUint32 scanSubSampled = 1; scanSubSampled < channelsNumber; ++scanSubSampled)
 		{
-			*(channelsMemory[scanSubSampled]++) = readPixel(pSourceStream, &bitPointer, wordSizeBytes, allocatedBits, mask);
+			*(channelsMemory[scanSubSampled]++) = *readBlockValuesPtr++;
 		}
 	}
 
@@ -1362,10 +1378,7 @@ void dicomCodec::readUncompressedNotInterleaved(
 	for(imbxUint32 channel = 0; channel < channelsNumber; ++channel)
 	{
 		imbxInt32* pMemoryDest = m_channels[channel]->m_pBuffer;
-		for(imbxUint32 scanPixels = m_channels[channel]->m_bufferSize; scanPixels != 0; --scanPixels)
-		{
-			*pMemoryDest++ = readPixel(pSourceStream, &bitPointer, wordSizeBytes, allocatedBits, mask);
-		}
+		readPixel(pSourceStream, pMemoryDest, m_channels[channel]->m_bufferSize, &bitPointer, wordSizeBytes, allocatedBits, mask);
 	}
 
 	PUNTOEXE_FUNCTION_END();
@@ -1699,65 +1712,77 @@ void dicomCodec::readRLECompressed(
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxInt32 dicomCodec::readPixel(
+void dicomCodec::readPixel(
 					streamReader* pSourceStream,
-					imbxUint8*  pBitPointer,
-					imbxUint8 wordSizeBytes,
-					imbxUint8 allocatedBits,
-					imbxUint32 mask)
+					imbxInt32* pDest,
+					imbxUint32 numPixels,
+					imbxUint8* pBitPointer,
+					const imbxUint8 wordSizeBytes,
+					const imbxUint8 allocatedBits,
+					const imbxUint32 mask)
 {
 	PUNTOEXE_FUNCTION_START(L"dicomCodec::readPixel");
 
 	if(allocatedBits == 8)
 	{
-		pSourceStream->read(&m_ioByte, sizeof(m_ioByte));
-		return (imbxUint32)m_ioByte & mask;
+	    while(numPixels-- != 0)
+	    {
+            pSourceStream->read(&m_ioByte, sizeof(m_ioByte));
+            *pDest++ = (imbxUint32)m_ioByte & mask;
+	    }
+		return;
 	}
 
 	if(allocatedBits == 16)
 	{
-		pSourceStream->read((imbxUint8*)&m_ioWord, sizeof(m_ioWord));
-		if(wordSizeBytes == 1)
-		{
-			pSourceStream->adjustEndian((imbxUint8*)&m_ioWord, 2, streamController::lowByteEndian);
-		}
-		return (imbxUint32)m_ioWord & mask;
+	    while(numPixels-- != 0)
+	    {
+            pSourceStream->read((imbxUint8*)&m_ioWord, sizeof(m_ioWord));
+            if(wordSizeBytes == 1)
+            {
+                pSourceStream->adjustEndian((imbxUint8*)&m_ioWord, 2, streamController::lowByteEndian);
+            }
+            *pDest++ = (imbxUint32)m_ioWord & mask;
+	    }
+	    return;
 	}
 
-	imbxUint32 pixelValue=0x0;
+    while(numPixels-- != 0)
+    {
+        *pDest = 0;
+        for(imbxUint8 bitsToRead = allocatedBits; bitsToRead != 0;)
+        {
+            if(*pBitPointer == 0)
+            {
+                if(wordSizeBytes==0x2)
+                {
+                    pSourceStream->read((imbxUint8*)&m_ioWord, sizeof(m_ioWord));
+                    *pBitPointer = 16;
+                }
+                else
+                {
+                    pSourceStream->read(&m_ioByte, 1);
+                    m_ioWord = (imbxUint16)m_ioByte;
+                    *pBitPointer = 8;
+                }
+            }
 
-	for(imbxUint8 bitsToRead = allocatedBits; bitsToRead != 0;)
-	{
-		if(*pBitPointer == 0)
-		{
-			if(wordSizeBytes==0x2)
-			{
-				pSourceStream->read((imbxUint8*)&m_ioWord, sizeof(m_ioWord));
-				*pBitPointer = 16;
-			}
-			else
-			{
-				pSourceStream->read(&m_ioByte, 1);
-				m_ioWord = (imbxUint16)m_ioByte;
-				*pBitPointer = 8;
-			}
-		}
+            if(*pBitPointer <= bitsToRead)
+            {
+                *pDest |= m_ioWord << (allocatedBits - bitsToRead);
+                bitsToRead -= *pBitPointer;
+                *pBitPointer = 0;
+                continue;
+            }
 
-		if(*pBitPointer <= bitsToRead)
-		{
-			pixelValue |= m_ioWord << (allocatedBits - bitsToRead);
-			bitsToRead -= *pBitPointer;
-			*pBitPointer = 0;
-			continue;
-		}
+            *pDest |= (m_ioWord & (((imbxUint16)1<<bitsToRead) - 1)) << (allocatedBits - bitsToRead);
+            m_ioWord >>= bitsToRead;
+            *pBitPointer -= bitsToRead;
+            bitsToRead = 0;
+        }
+        *pDest++ &= mask;
+    }
 
-		pixelValue |= (m_ioWord & (((imbxUint16)1<<bitsToRead) - 1)) << (allocatedBits - bitsToRead);
-		m_ioWord >>= bitsToRead;
-		*pBitPointer -= bitsToRead;
-		bitsToRead = 0;
-	}
-
-	return (imbxInt32)pixelValue & mask;
 
 	PUNTOEXE_FUNCTION_END();
 }

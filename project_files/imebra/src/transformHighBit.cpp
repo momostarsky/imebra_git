@@ -30,14 +30,13 @@ namespace transforms
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void transformHighBit::doTransformBuffers(
-	imbxUint32 /* sizeX */, 
+void transformHighBit::doTransformBuffersInPlace(
+	imbxUint32 /* sizeX */,
 	imbxUint32 /* sizeY */,
 	imbxUint32 /* inputChannelsNumber */,
 	std::wstring /* inputColorSpace */,
 	image::bitDepth /* inputDepth */,
 	imbxUint32 inputHighBit,
-	imbxInt32* /* pInputBuffer */,
 	imbxInt32* pOutputBuffer,
 	imbxUint32 buffersSize,
 	image::bitDepth* /* pOutputDepth */,

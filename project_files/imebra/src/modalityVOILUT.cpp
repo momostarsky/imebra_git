@@ -31,14 +31,13 @@ namespace transforms
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void modalityVOILUT::doTransformBuffers(
-		imbxUint32 /* sizeX */, 
+void modalityVOILUT::doTransformBuffersInPlace(
+		imbxUint32 /* sizeX */,
 		imbxUint32 /* sizeY */,
 		imbxUint32 /* inputChannelsNumber */,
 		std::wstring /* inputColorSpace */,
 		image::bitDepth /* inputDepth */,
 		imbxUint32 /* inputHighBit */,
-		imbxInt32* /* pInputBuffer */,
 		imbxInt32* pOutputBuffer,
 		imbxUint32 buffersSize,
 		image::bitDepth* pOutputDepth,
@@ -55,7 +54,7 @@ void modalityVOILUT::doTransformBuffers(
 	// Get the modality LUT
 	///////////////////////////////////////////////////////////
 	ptr<lut> voiLut=voiDataSet->getLut(0x0028, 0x3000, 0);
-	
+
 	//
 	// Modality LUT found
 	//
@@ -90,7 +89,7 @@ void modalityVOILUT::doTransformBuffers(
 	if(rescaleSlope==0.0)
 		rescaleSlope=1.0;
 
-	// Scale/Intercept 
+	// Scale/Intercept
 	///////////////////////////////////////////////////////////
 	if(rescaleSlope==1.0 && rescaleIntercept==0.0)
 	{
@@ -121,7 +120,7 @@ void modalityVOILUT::doTransformBuffers(
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 void modalityVOILUTInverse::doTransformBuffers(
-		imbxUint32 /* sizeX */, 
+		imbxUint32 /* sizeX */,
 		imbxUint32 /* sizeY */,
 		imbxUint32 /* inputChannelsNumber */,
 		std::wstring /* inputColorSpace */,
@@ -144,7 +143,7 @@ void modalityVOILUTInverse::doTransformBuffers(
 	// Get the modality LUT
 	///////////////////////////////////////////////////////////
 	ptr<lut> voiLut=voiDataSet->getLut(0x0028, 0x3000, 0);
-	
+
 	//
 	// Modality LUT found
 	//
@@ -172,7 +171,7 @@ void modalityVOILUTInverse::doTransformBuffers(
 	if(rescaleSlope==0.0)
 		rescaleSlope=1.0;
 
-	// Scale/Intercept 
+	// Scale/Intercept
 	///////////////////////////////////////////////////////////
 	if(rescaleSlope==1.0 && rescaleIntercept==0.0)
 	{

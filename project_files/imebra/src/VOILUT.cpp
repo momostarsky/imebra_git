@@ -64,7 +64,7 @@ imbxUint32 VOILUT::getVOILUTId(imbxUint32 VOILUTNumber)
 		windowWidth =lutDataSet->getSignedLong(0x0028, 0, 0x1051, scanWindow);
 	}
 	++scanWindow;
-	
+
 	// If the window's center/width has not been found or it
 	//  is not inside the VOILUTNumber parameter, then
 	//  look in the LUTs
@@ -82,7 +82,7 @@ imbxUint32 VOILUT::getVOILUTId(imbxUint32 VOILUTNumber)
 			VOILUTId=VOILUTNumber | 0x00100000;
 		}
 	}
-	
+
 	// The window's center/width has been found
 	///////////////////////////////////////////////////////////
 	else
@@ -255,14 +255,13 @@ void VOILUT::getCenterWidth(imbxInt32* pCenter, imbxInt32* pWidth)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void VOILUT::doTransformBuffers(
+void VOILUT::doTransformBuffersInPlace(
 		imbxUint32 /* sizeX */,
 		imbxUint32 /* sizeY */,
 		imbxUint32 /* inputChannelsNumber */,
 		std::wstring /* inputColorSpace */,
 		image::bitDepth /* inputDepth */,
 		imbxUint32 /* inputHighBit */,
-		imbxInt32* /* pInputBuffer */,
 		imbxInt32* pOutputBuffer,
 		imbxUint32 buffersSize,
 		image::bitDepth* pOutputDepth,
@@ -351,7 +350,7 @@ void VOILUT::doTransformBuffers(
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 void VOILUTInverse::doTransformBuffers(
-		imbxUint32 /* sizeX */, 
+		imbxUint32 /* sizeX */,
 		imbxUint32 /* sizeY */,
 		imbxUint32 /* inputChannelsNumber */,
 		std::wstring /* inputColorSpace */,

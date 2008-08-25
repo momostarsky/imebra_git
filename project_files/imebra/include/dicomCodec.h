@@ -38,19 +38,19 @@ namespace codecs
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class dicomCodec : public codec 
+class dicomCodec : public codec
 {
 public:
 	// Get an image from a dicom structure
 	///////////////////////////////////////////////////////////
 	virtual ptr<image> getImage(ptr<dataSet> pData, ptr<streamReader> pSourceStream, std::string dataType);
-	
+
 	// Write an image into a dicom structure
 	///////////////////////////////////////////////////////////
 	virtual void setImage(
 		ptr<streamWriter> pDestStream,
-		ptr<image> pImage, 
-		std::wstring transferSyntax, 
+		ptr<image> pImage,
+		std::wstring transferSyntax,
 		quality imageQuality,
 		std::string dataType,
 		imbxUint8 allocatedBits,
@@ -88,16 +88,16 @@ public:
 	///                    is detected during the decoding
 	///                    procedure
 	/// @param subItemLength the number of bytes to parse.
-	///                   If this parameter is set to 
+	///                   If this parameter is set to
 	///                    0xffffffff then the function will
-	///                    stop parsing at the end of the 
+	///                    stop parsing at the end of the
 	///                    sequence or at the end of the file
 	/// @param maxSizeBufferLoad if a loaded buffer is exceedes
 	///                    the size in the parameter then it is
 	///                    not loaded immediatly but it will be
-	///                    loaded on demand. Some codecs may 
+	///                    loaded on demand. Some codecs may
 	///                    ignore this parameter.
-	///                   Set to -1 to load all the buffers 
+	///                   Set to -1 to load all the buffers
 	///                    immediatly
 	/// @param pReadSubItemLength a pointer to a imbxUint32
 	///                    that the function will fill with
@@ -105,12 +105,12 @@ public:
 	///
 	///////////////////////////////////////////////////////////
 	void parseStream(
-		ptr<streamReader> pStream, 
-		ptr<dataSet> pDataSet, 
-		bool bExplicitDataType, 
-		streamController::tByteOrdering endianType, 
+		ptr<streamReader> pStream,
+		ptr<dataSet> pDataSet,
+		bool bExplicitDataType,
+		streamController::tByteOrdering endianType,
 		imbxUint32 maxSizeBufferLoad = 0xffffffff,
-		imbxUint32 subItemLength = 0xffffffff, 
+		imbxUint32 subItemLength = 0xffffffff,
 		imbxUint32* pReadSubItemLength = 0);
 
 	/// \brief Write the dataSet to the specified stream
@@ -132,7 +132,7 @@ public:
 	///////////////////////////////////////////////////////////
 	virtual bool canHandleTransferSyntax(std::wstring transferSyntax);
 
-	// Returns true if the transfer syntax has to be 
+	// Returns true if the transfer syntax has to be
 	//  encapsulated
 	//
 	///////////////////////////////////////////////////////////
@@ -179,13 +179,13 @@ protected:
 	// Write a single tag
 	///////////////////////////////////////////////////////////
 	void writeTag(ptr<streamWriter> pDestStream, ptr<data> pData, imbxUint16 tagId, bool bExplicitDataType, streamController::tByteOrdering endianType);
-	
+
 	// Read an uncompressed interleaved image
 	///////////////////////////////////////////////////////////
 	void readUncompressedInterleaved(
-		imbxUint32 channelsNumber, 
+		imbxUint32 channelsNumber,
 		bool bSubSampledX,
-		bool bSubSampledY, 
+		bool bSubSampledY,
 		streamReader* pSourceStream,
 		imbxUint8 wordSizeBytes,
 		imbxUint8 allocatedBits,
@@ -195,7 +195,7 @@ protected:
 	// Write an uncompressed interleaved image
 	///////////////////////////////////////////////////////////
 	void writeUncompressedInterleaved(
-		imbxUint32 channelsNumber, 
+		imbxUint32 channelsNumber,
 		bool bSubSampledX,
 		bool bSubSampledY,
 		streamWriter* pDestStream,
@@ -207,7 +207,7 @@ protected:
 	// Read an uncompressed not interleaved image
 	///////////////////////////////////////////////////////////
 	void readUncompressedNotInterleaved(
-		imbxUint32 channelsNumber, 
+		imbxUint32 channelsNumber,
 		streamReader* pSourceStream,
 		imbxUint8 wordSizeBytes,
 		imbxUint8 allocatedBits,
@@ -217,7 +217,7 @@ protected:
 	// Write an uncompressed not interleaved image
 	///////////////////////////////////////////////////////////
 	void writeUncompressedNotInterleaved(
-		imbxUint32 channelsNumber, 
+		imbxUint32 channelsNumber,
 		streamWriter* pDestStream,
 		imbxUint8 wordSizeBytes,
 		imbxUint8 allocatedBits,
@@ -227,9 +227,9 @@ protected:
 	// Write an RLE compressed image
 	///////////////////////////////////////////////////////////
 	void writeRLECompressed(
-		imbxUint32 imageSizeX, 
-		imbxUint32 imageSizeY, 
-		imbxUint32 channelsNumber, 
+		imbxUint32 imageSizeX,
+		imbxUint32 imageSizeY,
+		imbxUint32 channelsNumber,
 		streamWriter* pDestStream,
 		imbxUint8 allocatedBits,
 		imbxUint32 mask
@@ -238,9 +238,9 @@ protected:
 	// Read an RLE compressed image
 	///////////////////////////////////////////////////////////
 	void readRLECompressed(
-		imbxUint32 imageSizeX, 
-		imbxUint32 imageSizeY, 
-		imbxUint32 channelsNumber, 
+		imbxUint32 imageSizeX,
+		imbxUint32 imageSizeY,
+		imbxUint32 channelsNumber,
 		streamReader* pSourceStream,
 		imbxUint8 allocatedBits,
 		imbxUint32 mask,
@@ -249,21 +249,23 @@ protected:
 
 	// Read a single pixel of a RAW dicom image
 	///////////////////////////////////////////////////////////
-	imbxInt32 readPixel(
-					streamReader* pSourceStream, 
-					imbxUint8* bitPointer, 
-					imbxUint8 wordSizeBytes, 
-					imbxUint8 allocatedBits, 
-					imbxUint32 mask);
-	
+	void readPixel(
+					streamReader* pSourceStream,
+					imbxInt32* pDest,
+					imbxUint32 numPixels,
+					imbxUint8* bitPointer,
+					const imbxUint8 wordSizeBytes,
+					const imbxUint8 allocatedBits,
+					const imbxUint32 mask);
+
 	// Write a single pixel of a RAW dicom image
 	///////////////////////////////////////////////////////////
 	void writePixel(
 					streamWriter* pDestStream,
 					imbxInt32 pixelValue,
 					imbxUint8*  pBitPointer,
-					imbxUint8 wordSizeBytes, 
-					imbxUint8 allocatedBits, 
+					imbxUint8 wordSizeBytes,
+					imbxUint8 allocatedBits,
 					imbxUint32 mask);
 
 	// Flush the unwritten bytes of an uncompressed image

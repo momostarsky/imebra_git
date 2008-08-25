@@ -34,17 +34,16 @@ namespace transforms
 ///  output image's high bit settings.
 ///
 ///////////////////////////////////////////////////////////
-class transformHighBit: public transformBuffers
+class transformHighBit: public transformBuffersInPlace
 {
 public:
-	virtual void doTransformBuffers(
-		imbxUint32 sizeX, 
+	virtual void doTransformBuffersInPlace(
+		imbxUint32 sizeX,
 		imbxUint32 sizeY,
 		imbxUint32 inputChannelsNumber,
 		std::wstring inputColorSpace,
 		image::bitDepth inputDepth,
 		imbxUint32 inputHighBit,
-		imbxInt32* pInputBuffer,
 		imbxInt32* pOutputBuffer,
 		imbxUint32 buffersSize,
 		image::bitDepth* pOutputDepth,
