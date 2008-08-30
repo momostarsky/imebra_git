@@ -217,8 +217,8 @@ The author can be contacted by email at paolo@puntoexe.com or by mail at
 	<!-- Initialize the version number -->
 	<target name="version" depends="update" description="Initialize the build number">
 		<property file="./build.number" /> 
-		<property name="fileVersion" value="0_0_${build.number}_Alpha"/>
-		<property name="fullVersionReadable" value="0.0.${build.number}_Alpha"/>
+		<property name="fileVersion" value="0_0_${build.number}_Beta"/>
+		<property name="fullVersionReadable" value="0.0.${build.number}_Beta"/>
 		<property name="productName" value="Imebra ${fullVersionReadable}"/>
 	</target>
 
@@ -226,9 +226,11 @@ The author can be contacted by email at paolo@puntoexe.com or by mail at
 		<exec dir="." executable="svn" failonerror="true">
 			<arg value="revert"/>
 			<arg path="."/>
+			<arg value="--no-auth-cache" />
 		</exec>
 		<exec dir="." executable="svn" failonerror="true">
 			<arg value="update"/>
+			<arg value="--no-auth-cache" />
 		</exec>
 	</target>
 

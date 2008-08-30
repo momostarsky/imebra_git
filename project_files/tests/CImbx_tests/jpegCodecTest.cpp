@@ -18,99 +18,114 @@ CPPUNIT_TEST_SUITE_REGISTRATION(puntoexe::imebra::tests::jpegCodecTest);
 // A buffer initialized to a default data type should use the data type OB
 void jpegCodecTest::testBaseline()
 {
-	imbxUint32 sizeX = 600;
-	imbxUint32 sizeY = 400;
-	ptr<image> baselineImage(new image);
-	baselineImage->create(sizeX, sizeY, image::depthU8, L"RGB", 7);
-
-	imbxUint32 rowSize, channelsPixelSize, channelsNumber;
-	ptr<handlers::imageHandler> imageHandler = baselineImage->getDataHandler(true, &rowSize, &channelsPixelSize, &channelsNumber);
-
-	// Make 3 bands (RGB)
-	for(imbxUint32 y=0; y<sizeY; ++y)
+	for(int precision=0; precision != 2; ++precision)
 	{
-		for(imbxUint32 x=0; x<sizeX; ++x)
+		ptr<imebra::dataSet> dataset(new imebra::dataSet);
+
+		imbxUint32 sizeX = 600;
+		imbxUint32 sizeY = 400;
+		ptr<image> baselineImage(new image);
+		baselineImage->create(sizeX, sizeY, precision == 0 ? image::depthU8 : image::depthU16, L"RGB", precision == 0 ? 7 : 11);
+
+		imbxUint32 rowSize, channelsPixelSize, channelsNumber;
+		ptr<handlers::imageHandler> imageHandler = baselineImage->getDataHandler(true, &rowSize, &channelsPixelSize, &channelsNumber);
+
+		// Make 3 bands (RGB)
+		for(imbxUint32 y=0; y<sizeY; ++y)
 		{
-			imbxInt32 r, g, b;
-			imbxUint32 value = y * 255 / sizeY;
-			r = g = 0;
-			b = value;
-			if(x < sizeX - sizeX/3)
+			for(imbxUint32 x=0; x<sizeX; ++x)
 			{
-				r = 0;
-				g = value;
-				b = 0;
-			}
-			if(x < sizeX / 3)
-			{
-				r = value;
-				g = 0;
-				b = 0;
-			}
-			imageHandler->setUnsignedLongIncPointer(r);
-			imageHandler->setUnsignedLongIncPointer(g);
-			imageHandler->setUnsignedLongIncPointer(b);
-		}
-	}
-	imageHandler.release();
-
-	ptr<transforms::colorTransforms::colorTransformsFactory> colorFactory;
-	colorFactory = transforms::colorTransforms::colorTransformsFactory::getColorTransformsFactory();
-	ptr<transforms::transform> colorTransform = colorFactory->getTransform(L"RGB", L"YBR_FULL");
-	colorTransform->declareInputImage(0, baselineImage);
-	colorTransform->doTransform();
-	ptr<image> ybrImage = colorTransform->getOutputImage(0);
-
-	ptr<memory> streamMemory(new memory);
-	{
-		ptr<baseStream> writeStream(new memoryStream(streamMemory));
-		ptr<streamWriter> writer(new streamWriter(writeStream));
-		codecs::jpegCodec testCodec;
-		testCodec.setImage(writer, ybrImage, L"1.2.840.10008.1.2.4.50", codecs::codec::medium, "OB", 8, false, false, false, false);
-	}
-
-	ptr<baseStream> readStream(new memoryStream(streamMemory));
-	ptr<streamReader> reader(new streamReader(readStream));
-		
-	codecs::jpegCodec testCodec;
-	ptr<dataSet> readDataSet = testCodec.read(reader);
-	ptr<image> checkImage = readDataSet->getImage(0);
-	imbxUint32 checkSizeX, checkSizeY;
-	checkImage->getSize(&checkSizeX, &checkSizeY);
-
-	colorTransform = colorFactory->getTransform(L"YBR_FULL", L"RGB");
-	colorTransform->declareInputImage(0, checkImage);
-	colorTransform->doTransform();
-	ptr<image> rgbImage = colorTransform->getOutputImage(0);
-	ptr<handlers::imageHandler> rgbHandler = rgbImage->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
-	ptr<handlers::imageHandler> originalHandler = baselineImage->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
-
-	// Compare the buffers. A little difference is allowed
-	CPPUNIT_ASSERT(checkSizeX == sizeX);
-	CPPUNIT_ASSERT(checkSizeY == sizeY);
-
-	imbxUint32 difference = 0;
-	for(imbxUint32 checkY = 0; checkY < sizeY; ++checkY)
-	{
-		for(imbxUint32 checkX = 0; checkX < sizeX; ++checkX)
-		{
-			for(imbxUint32 channel = 3; channel != 0; --channel)
-			{
-				imbxInt32 value0 = rgbHandler->getUnsignedLongIncPointer();
-				imbxInt32 value1 = originalHandler->getUnsignedLongIncPointer();
-				if(value0 > value1)
+				imbxInt32 r, g, b;
+				imbxUint32 value = y * (precision == 0 ? 255 : 4095) / sizeY;
+				r = g = 0;
+				b = value;
+				if(x < sizeX - sizeX/3)
 				{
-					difference += value0 - value1;
+					r = 0;
+					g = value;
+					b = 0;
 				}
-				else
+				if(x < sizeX / 3)
 				{
-					difference += value1 - value0;
+					r = value;
+					g = 0;
+					b = 0;
 				}
+				imageHandler->setUnsignedLongIncPointer(r);
+				imageHandler->setUnsignedLongIncPointer(g);
+				imageHandler->setUnsignedLongIncPointer(b);
 			}
 		}
-	}
-	CPPUNIT_ASSERT(difference < sizeX * sizeY * 12);
+		imageHandler.release();
 
+		ptr<transforms::colorTransforms::colorTransformsFactory> colorFactory;
+		colorFactory = transforms::colorTransforms::colorTransformsFactory::getColorTransformsFactory();
+		ptr<transforms::transform> colorTransform = colorFactory->getTransform(L"RGB", L"YBR_FULL");
+		colorTransform->declareInputImage(0, baselineImage);
+		colorTransform->doTransform();
+		ptr<image> ybrImage = colorTransform->getOutputImage(0);
+
+		std::wstring fileName;
+		if(precision == 0)
+		{
+			fileName = L"testDicomLossyJpeg8bit.dcm";
+			dataset->setImage(0, ybrImage, L"1.2.840.10008.1.2.4.50", codecs::codec::veryHigh);
+		}
+		else
+		{
+			fileName = L"testDicomLossyJpeg12bit.dcm";
+			dataset->setImage(0, ybrImage, L"1.2.840.10008.1.2.4.51", codecs::codec::veryHigh);
+		}
+
+		ptr<imebra::codecs::dicomCodec> saveDicom(new imebra::codecs::dicomCodec);
+		ptr<puntoexe::stream> saveDicomStream(new puntoexe::stream);
+		saveDicomStream->openFile(fileName, std::ios_base::out | std::ios_base::trunc);
+		ptr<puntoexe::streamWriter> saveDicomStreamWriter(new puntoexe::streamWriter(saveDicomStream));
+		saveDicom->write(saveDicomStreamWriter, dataset);
+		saveDicomStreamWriter.release();
+		saveDicomStream.release();
+
+		ptr<image> checkImage = dataset->getImage(0);
+		imbxUint32 checkSizeX, checkSizeY;
+		checkImage->getSize(&checkSizeX, &checkSizeY);
+
+		colorTransform = colorFactory->getTransform(L"YBR_FULL", L"RGB");
+		colorTransform->declareInputImage(0, checkImage);
+		colorTransform->doTransform();
+		ptr<image> rgbImage = colorTransform->getOutputImage(0);
+		ptr<handlers::imageHandler> rgbHandler = rgbImage->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
+		ptr<handlers::imageHandler> originalHandler = baselineImage->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
+
+		// Compare the buffers. A little difference is allowed
+		CPPUNIT_ASSERT(checkSizeX == sizeX);
+		CPPUNIT_ASSERT(checkSizeY == sizeY);
+
+		imbxUint32 difference = 0;
+		for(imbxUint32 checkY = 0; checkY < sizeY; ++checkY)
+		{
+			for(imbxUint32 checkX = 0; checkX < sizeX; ++checkX)
+			{
+				for(imbxUint32 channel = 3; channel != 0; --channel)
+				{
+					imbxInt32 value0 = rgbHandler->getUnsignedLongIncPointer();
+					imbxInt32 value1 = originalHandler->getUnsignedLongIncPointer();
+					if(value0 > value1)
+					{
+						difference += value0 - value1;
+					}
+					else
+					{
+						difference += value1 - value0;
+					}
+					if(difference >12)
+					{
+						int stop=1;
+					}
+				}
+			}
+		}
+		CPPUNIT_ASSERT(difference < sizeX * sizeY);
+	}
 }
 
 

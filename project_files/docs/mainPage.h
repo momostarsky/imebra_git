@@ -63,6 +63,14 @@ A detailed reference of the C++ classes that compose Imebra is included in
 
 \section changeLog Changes log
 
+\subsection since_0_0_41 Changes since version 0.0.41 (Alpha)
+
+- Added the function puntoexe::imebra::transforms::VOILUT::getCenterWidth()
+- When the preprocessor symbol \ref IMEBRA_REPLACE_JPEG_RGB_YBR is defined then
+  the jpegCodec returns an image with color space "YBR_FULL" when the image is
+  compressed in lossy mode and the dataset specifies the color space "RGB"
+
+
 \subsection since_0_0_40 Changes since version 0.0.40 (Alpha)
 
 - Added the example dicom2jpeg

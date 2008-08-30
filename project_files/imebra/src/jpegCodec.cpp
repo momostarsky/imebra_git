@@ -318,7 +318,7 @@ static const imbxUint32 JpegDeZigZagOrder[]=
 		53, 60, 61, 54, 47, 55, 62, 63
 };
 
-#define JPEG_DECOMPRESSION_BITS_PRECISION 16
+#define JPEG_DECOMPRESSION_BITS_PRECISION 14
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -3505,7 +3505,7 @@ void tagDQT::writeTag(streamWriter* pStream, jpegCodec* pCodec)
 				continue;
 			}
 			// Calculate the table's precision
-			bool b16Bits=false;
+			bool b16Bits = pCodec->m_precision > 8;
 			for(int tableIndex = 0; !b16Bits && (tableIndex < 64); ++tableIndex)
 			{
 				if(pCodec->m_quantizationTable[tableId][tableIndex] >= 256)

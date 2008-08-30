@@ -18,8 +18,8 @@ CPPUNIT_TEST_SUITE_REGISTRATION(puntoexe::imebra::tests::bitTransformTest);
 // A buffer initialized to a default data type should use the data type OB
 void bitTransformTest::testBitTransform()
 {
-	imbxUint32 sizeX = 600;
-	imbxUint32 sizeY = 400;
+	imbxUint32 sizeX = 41;
+	imbxUint32 sizeY = 13;
 	ptr<image> bits8Image(new image);
 	ptr<image> bits16Image(new image);
 	ptr<image> bits4Image(new image);

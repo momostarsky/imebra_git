@@ -74,6 +74,17 @@ ptr<colorTransform> RGBToYBRFULL::createColorTransform()
 ///////////////////////////////////////////////////////////
 void RGBToYBRFULL::doColorTransform(imbxInt32* pSourceMem, imbxInt32* pDestMem, imbxUint32 pixelsNumber, imbxInt32 /* inputMinValue */, imbxInt32 /* inputMaxValue */, imbxInt32 outputMinValue, imbxInt32 outputMaxValue)
 {
+	static const precisionBits(14);
+	static const double multiplier((double)((imbxInt32)1 << precisionBits));
+	static const imbxInt32 multiplier0_5((imbxUint32)1 << (precisionBits - 1));
+	static const imbxInt32 multiplier0_2990((imbxInt32)(0.2990f * multiplier + 0.5));
+	static const imbxInt32 multiplier0_5870((imbxInt32)(0.5870f * multiplier + 0.5));
+	static const imbxInt32 multiplier0_1140((imbxInt32)(0.1140f * multiplier + 0.5));
+	static const imbxInt32 multiplier0_1687((imbxInt32)(0.1687f * multiplier + 0.5));
+	static const imbxInt32 multiplier0_3313((imbxInt32)(0.3313f * multiplier + 0.5));
+	static const imbxInt32 multiplier0_4187((imbxInt32)(0.4187f * multiplier + 0.5));
+	static const imbxInt32 multiplier0_0813((imbxInt32)(0.0813f * multiplier + 0.5));
+
 	imbxInt32 sourcePixelR;
 	imbxInt32 sourcePixelG;
 	imbxInt32 sourcePixelB;
@@ -90,22 +101,36 @@ void RGBToYBRFULL::doColorTransform(imbxInt32* pSourceMem, imbxInt32* pDestMem, 
 		///////////////////////////////////////////////////////////
 		// Conversion
 		///////////////////////////////////////////////////////////
-		destPixelY=((imbxInt32)1225*sourcePixelR+(imbxInt32)2404*sourcePixelG+(imbxInt32)581*sourcePixelB)>>12;
-		destPixelB=middleValue+(((imbxInt32)2048*sourcePixelB-(imbxInt32)691*sourcePixelR-(imbxInt32)1357*sourcePixelG)>>12);
-		destPixelR=middleValue+(((imbxInt32)2048*sourcePixelR-(imbxInt32)1715*sourcePixelG-(imbxInt32)333*sourcePixelB)>>12);
+		destPixelY = (multiplier0_2990 * sourcePixelR + multiplier0_5870 * sourcePixelG + multiplier0_1140 * sourcePixelB + multiplier0_5) >> precisionBits;
+		destPixelB = middleValue + ((multiplier0_5 * sourcePixelB - multiplier0_1687 * sourcePixelR - multiplier0_3313 * sourcePixelG + multiplier0_5) >> precisionBits);
+		destPixelR = middleValue + ((multiplier0_5 * sourcePixelR - multiplier0_4187 * sourcePixelG - multiplier0_0813 * sourcePixelB + multiplier0_5) >> precisionBits);
 
 		if(destPixelY<outputMinValue)
+		{
 			destPixelY=outputMinValue;
-		if(destPixelY>outputMaxValue)
+		}
+		else if(destPixelY>outputMaxValue)
+		{
 			destPixelY=outputMaxValue;
-		if(destPixelB<outputMinValue)
+		}
+
+        if(destPixelB<outputMinValue)
+		{
 			destPixelB=outputMinValue;
-		if(destPixelB>outputMaxValue)
+		}
+		else if(destPixelB>outputMaxValue)
+		{
 			destPixelB=outputMaxValue;
+		}
+		
 		if(destPixelR<outputMinValue)
+		{
 			destPixelR=outputMinValue;
-		if(destPixelR>outputMaxValue)
+		}
+		else if(destPixelR>outputMaxValue)
+		{
 			destPixelR=outputMaxValue;
+		}
 
 		*pDestMem++ = destPixelY;
 		*pDestMem++ = destPixelB;
