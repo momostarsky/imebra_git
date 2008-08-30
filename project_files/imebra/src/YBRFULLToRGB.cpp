@@ -84,7 +84,7 @@ ptr<colorTransform> YBRFULLToRGB::createColorTransform()
 ///////////////////////////////////////////////////////////
 void YBRFULLToRGB::doColorTransform(imbxInt32* pSourceMem, imbxInt32* pDestMem, imbxUint32 pixelsNumber, imbxInt32 inputMinValue, imbxInt32 inputMaxValue, imbxInt32 outputMinValue, imbxInt32 outputMaxValue)
 {
-	static const precisionBits(14);
+	static const int precisionBits(14);
 	static const double multiplier((double)((imbxInt32)1 << precisionBits));
 	static const imbxInt32 multiplier0_5((imbxUint32)1 << (precisionBits - 1));
 	static const imbxInt32 multiplier1_4020((imbxInt32)(1.402f * multiplier + 0.5));
@@ -120,7 +120,7 @@ void YBRFULLToRGB::doColorTransform(imbxInt32* pSourceMem, imbxInt32* pDestMem, 
 		{
 			destPixelR=outputMaxValue;
 		}
-		
+
 		if(destPixelG<outputMinValue)
 		{
 			destPixelG=outputMinValue;
@@ -129,7 +129,7 @@ void YBRFULLToRGB::doColorTransform(imbxInt32* pSourceMem, imbxInt32* pDestMem, 
 		{
 			destPixelG=outputMaxValue;
 		}
-		
+
 		if(destPixelB<outputMinValue)
 		{
 			destPixelB=outputMinValue;
