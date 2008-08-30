@@ -66,9 +66,21 @@ A detailed reference of the C++ classes that compose Imebra is included in
 \subsection since_0_0_41 Changes since version 0.0.41 (Alpha)
 
 - Added the function puntoexe::imebra::transforms::VOILUT::getCenterWidth()
-- When the preprocessor symbol \ref IMEBRA_REPLACE_JPEG_RGB_YBR is defined then
-  the jpegCodec returns an image with color space "YBR_FULL" when the image is
+- The jpegCodec returns an image with color space "YBR_FULL" when the image is
   compressed in lossy mode and the dataset specifies the color space "RGB"
+- Enhanced precision in the RGB to YBR_FULL color conversion
+- Enhanced precision in the YBR_FULL to RGB color conversion
+- Several optimization in the uncompressed Dicom image decoder
+- Added the class puntoexe::imebra::trasforms::transformBuffersInPlace
+- puntoexe::imebra::VOILUT and puntoexe::imebra::modalityVOILUT now derive
+  from puntoexe::imebra::trasforms::transformBuffersInPlace
+- puntoexe::imebra::viewHelper releases the dataset when no images are displayed
+- Several optimizations in the Jpeg image decoder
+- puntoexe::streamReader::read() throws an exception when the end of file is
+  reached
+- added puntoexe::streamReader::endReached()
+- Several optimizations in puntoexe::streamReader
+- Several optimizations in the Huffman decoder
 
 
 \subsection since_0_0_40 Changes since version 0.0.40 (Alpha)

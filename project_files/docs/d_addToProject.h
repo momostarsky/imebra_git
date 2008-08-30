@@ -94,12 +94,6 @@ If you are compiling the application for Windows NT, 2000, XP or Vista, then
  define the preprocessor symbol _WIN32_WINNT to 0x0400 or greater.
 
 
-\section preprocessor_symbols Settings controlled by preprocessor symbols
-
-\subsection symbol_imabra_replace_jpeg_rgb_ybr Symbol IMEBRA_REPLACE_JPEG_RGB_YBR
-
-See \ref IMEBRA_REPLACE_JPEG_RGB_YBR.
-
 
 \section add_to_project_checklist Adding Imebra to your project: Checklist
 

@@ -14,17 +14,6 @@ $fileHeader$
 #include <map>
 #include <list>
 
-/// \def IMEBRA_REPLACE_JPEG_RGB_YBR
-/// \brief If this preprocessor symbol is defined then the
-///         jpeg codec will return an image with the
-///         color space "YBR_FULL" even when the original
-///         dataset specifies the color space "RGB" when
-///         an image is compressed using the transfer
-///         syntax "1.2.840.10008.1.2.4.50" (baseline 8
-///         bits lossy) or "1.2.840.10008.1.2.4.51"
-///         (extended 12 bits lossy)
-///////////////////////////////////////////////////////////
-
 ///////////////////////////////////////////////////////////
 //
 // Everything is in the namespace puntoexe::imebra
