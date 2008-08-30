@@ -51,11 +51,11 @@ The library doesn't check for a Dicom stream validity; this feature will be
 
 \section start Where to start
 
-After reading the \subpage license_agreement, you should read the \subpage quick_tour
- and the section \subpage imebra_structure.
+After reading the \ref license_agreement, you should read the \ref quick_tour
+ and the section \ref imebra_structure.
 
 A guide that will help you to include Imebra in your project can be
- found in \subpage add_to_project.
+ found in \ref add_to_project.
 
 A detailed reference of the C++ classes that compose Imebra is included in
  this manual.
