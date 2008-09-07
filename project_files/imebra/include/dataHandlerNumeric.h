@@ -89,7 +89,7 @@ public:
 	{
 		if(m_pMemoryString == 0 || elementNumber >= getSize())
 		{
-			throw(std::runtime_error("dataHandler::setPointer out of range"));
+			m_elementPointer = 0;
 		}
 		m_elementPointer = &(m_pMemoryString[elementNumber]);
 	}
@@ -105,7 +105,7 @@ public:
 	///////////////////////////////////////////////////////////
 	virtual bool pointerIsValid()
 	{
-		return m_elementPointer < (dataHandlerType*)m_pMemoryStringEnd;
+		return m_elementPointer != 0 && m_elementPointer < (dataHandlerType*)m_pMemoryStringEnd;
 	}
 
 	// Increase the data element's pointer by the specified
