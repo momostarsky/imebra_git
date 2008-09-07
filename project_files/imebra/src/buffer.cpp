@@ -428,13 +428,17 @@ ptr<handlers::dataHandler> buffer::getDataHandler(bool bWrite, bool bRaw, imbxUi
 		///////////////////////////////////////////////////////////
 		transactionsManager::addHandlerToTransaction(handler);
 	}
+
 	handler->m_bufferType = m_bufferType;
 	handler->setCharsetsList(&m_charsetsList);
 	handler->parseBuffer(parseMemory);
 
 	// Rewind the data pointer
 	///////////////////////////////////////////////////////////
-	handler->setPointer(0);
+	if(handler->getSize() != 0)
+	{
+		handler->setPointer(0);
+	}
 
 	// Return the allocated handler
 	///////////////////////////////////////////////////////////

@@ -48,6 +48,10 @@ void lut::setLut(ptr<handlers::dataHandler> pDescriptor, ptr<handlers::dataHandl
 {
 	PUNTOEXE_FUNCTION_START(L"lut::setLut");
 
+	if(pDescriptor->getSize() < 3)
+	{
+		PUNTOEXE_THROW(lutExceptionCorrupted, "The LUT is corrupted");
+	}
 	pDescriptor->setPointer(0);
 	imbxInt32 lutSize=pDescriptor->getSignedLongIncPointer();
 	if(lutSize == 0)
@@ -58,11 +62,13 @@ void lut::setLut(ptr<handlers::dataHandler> pDescriptor, ptr<handlers::dataHandl
 	imbxInt32 lutFirstMapped=pDescriptor->getSignedLongIncPointer();
 	imbxUint32 lutBits=pDescriptor->getUnsignedLongIncPointer();
 
-	if(lutSize!=0 && pData != 0)
+	if(pData == 0 || (imbxUint32)lutSize != pData->getSize())
 	{
-		create(lutSize, lutFirstMapped, (imbxUint8)lutBits, description);
-		pData->copyToInt32(m_pMappedValues, lutSize);
+		PUNTOEXE_THROW(lutExceptionCorrupted, "The LUT is corrupted");
 	}
+
+	create(lutSize, lutFirstMapped, (imbxUint8)lutBits, description);
+	pData->copyToInt32(m_pMappedValues, lutSize);
 
 	PUNTOEXE_FUNCTION_END();
 }

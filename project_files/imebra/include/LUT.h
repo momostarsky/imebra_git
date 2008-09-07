@@ -212,6 +212,17 @@ public:
 };
 
 
+///////////////////////////////////////////////////////////
+/// \brief This exception is thrown by the lut class when
+///         the the LUT information is corrupted.
+///
+///////////////////////////////////////////////////////////
+class lutExceptionCorrupted: public lutException
+{
+public:
+	lutExceptionCorrupted(const std::string& message): lutException(message){}
+};
+
 
 } // namespace imebra
 

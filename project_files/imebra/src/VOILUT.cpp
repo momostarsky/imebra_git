@@ -299,6 +299,10 @@ void VOILUT::doTransformBuffersInPlace(
 	// Use the window's center/width
 	//
 	///////////////////////////////////////////////////////////
+	if(m_windowWidth <= 1)
+	{
+		return;
+	}
 
 	// The output is always positive
 	if(*pOutputDepth==image::depthS8)
@@ -311,10 +315,6 @@ void VOILUT::doTransformBuffersInPlace(
 	imbxInt32 minValue=m_windowCenter-(m_windowWidth/2);
 	imbxInt32 maxValue=m_windowCenter+(m_windowWidth/2);
 	float multFactor=(float)finalRange/(float)(maxValue-minValue);
-	if(m_windowWidth <= 0)
-	{
-		return;
-	}
 
 	while(buffersSize--)
 	{

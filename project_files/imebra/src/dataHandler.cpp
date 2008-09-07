@@ -299,6 +299,11 @@ void dataHandler::copyFromInt32(imbxInt32* pSource, imbxUint32 length)
 	PUNTOEXE_FUNCTION_START(L"dataHandler::copyFromInt32");
 
 	setSize(length);
+
+	if(length == 0)
+	{
+		return;
+	}
 	setPointer(0);
 	while(length--)
 	{
@@ -322,6 +327,10 @@ void dataHandler::copyToInt32(imbxInt32* pDest, imbxUint32 length)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandler::copyToInt32");
 
+	if(length == 0)
+	{
+		return;
+	}
 	setPointer(0);
 	while(length--)
 	{

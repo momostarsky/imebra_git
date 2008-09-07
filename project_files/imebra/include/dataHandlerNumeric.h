@@ -87,6 +87,10 @@ public:
 	///////////////////////////////////////////////////////////
 	virtual void setPointer(imbxUint32 elementNumber)
 	{
+		if(m_pMemoryString == 0 || elementNumber >= getSize())
+		{
+			throw(std::runtime_error("dataHandler::setPointer out of range"));
+		}
 		m_elementPointer = &(m_pMemoryString[elementNumber]);
 	}
 
