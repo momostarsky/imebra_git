@@ -16,6 +16,17 @@ $fileHeader$
 #include "dataSet.h"
 
 
+/// \def IMEBRA_DATASET_MAX_DEPTH
+/// \brief Max number of datasets embedded into each 
+///        others.
+///
+/// This value is used to prevent a stack when reading a
+///  malformed dataset that has too many datasets embedded
+///   into each others.
+///
+///////////////////////////////////////////////////////////
+#define IMEBRA_DATASET_MAX_DEPTH 16 
+
 ///////////////////////////////////////////////////////////
 //
 // Everything is in the namespace puntoexe::imebra
@@ -102,6 +113,11 @@ public:
 	/// @param pReadSubItemLength a pointer to a imbxUint32
 	///                    that the function will fill with
 	///                    the number of bytes read
+	/// @param depth      the current dataSet depth:
+	///                    - 0 = root dataset
+	///                    - >=1 = dataset embedded into 
+	///                      another dataset. This value is
+	///                      used to prevent a stack overflow
 	///
 	///////////////////////////////////////////////////////////
 	void parseStream(
@@ -111,7 +127,8 @@ public:
 		streamController::tByteOrdering endianType,
 		imbxUint32 maxSizeBufferLoad = 0xffffffff,
 		imbxUint32 subItemLength = 0xffffffff,
-		imbxUint32* pReadSubItemLength = 0);
+		imbxUint32* pReadSubItemLength = 0,
+		imbxUint32 depth = 0);
 
 	/// \brief Write the dataSet to the specified stream
 	///         in Dicom format, without the file header and
@@ -281,10 +298,38 @@ protected:
 	std::vector<ptrChannel> m_channels;
 };
 
+
+/// \brief This is the base class for the exceptions thrown
+///         by the dicom codec (dicomCodec).
+///
+///////////////////////////////////////////////////////////
 class dicomCodecException: public codecException
 {
 public:
+	/// \brief Build a dicomCodecException exception
+	///
+	/// @param message the message to store into the exception
+	///
+	///////////////////////////////////////////////////////////
 	dicomCodecException(const std::string& message): codecException(message){}
+};
+
+/// \brief This exception is thrown when 
+///         dicomCodec::parseStream reaches the maximum 
+///         depth for embedded datasets.
+///
+///////////////////////////////////////////////////////////
+class dicomCodecExceptionDepthLimitReached: public dicomCodecException
+{
+public:
+	/// \brief Build a dicomCodecExceptionDepthLimitReached
+	///        exception
+	///
+	/// @param message the message to store into the exception
+	///
+	///////////////////////////////////////////////////////////
+	dicomCodecExceptionDepthLimitReached(const std::string&message): dicomCodecException(message){}
+
 };
 
 

@@ -576,9 +576,15 @@ void dicomCodec::parseStream(ptr<streamReader> pStream,
 							 streamController::tByteOrdering endianType,
 							 imbxUint32 maxSizeBufferLoad /* = 0xffffffff */,
 							 imbxUint32 subItemLength /* = 0xffffffff */,
-							 imbxUint32* pReadSubItemLength /* = 0 */)
+							 imbxUint32* pReadSubItemLength /* = 0 */,
+							 imbxUint32 depth)
 {
 	PUNTOEXE_FUNCTION_START(L"dicomCodec::parseStream");
+
+	if(depth > IMEBRA_DATASET_MAX_DEPTH)
+	{
+		PUNTOEXE_THROW(dicomCodecExceptionDepthLimitReached, "Depth for embedded dataset reached");
+	}
 
 	imbxUint16 tagId;
 	imbxUint16 tagSubId;
@@ -869,7 +875,7 @@ void dicomCodec::parseStream(ptr<streamReader> pStream,
 				if(sequenceDataSet != 0)
 				{
 					imbxUint32 effectiveLength;
-					parseStream(pStream, sequenceDataSet, bExplicitDataType, endianType, maxSizeBufferLoad, sequenceItemLength, &effectiveLength);
+					parseStream(pStream, sequenceDataSet, bExplicitDataType, endianType, maxSizeBufferLoad, sequenceItemLength, &effectiveLength, depth + 1);
 					(*pReadSubItemLength) += effectiveLength;
 					if(tagLengthDWord!=0xffffffff)
 						tagLengthDWord-=effectiveLength;
