@@ -313,6 +313,27 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\dicomDirTest.cpp">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug_iconv|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath=".\exceptionsTest.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">
@@ -541,6 +562,9 @@
 			</File>
 			<File
 				RelativePath=".\dicomCodecTest.h">
+			</File>
+			<File
+				RelativePath=".\dicomDirTest.h">
 			</File>
 			<File
 				RelativePath=".\exceptionsTest.h">
@@ -1224,6 +1248,15 @@
 					</FileConfiguration>
 				</File>
 				<File
+					RelativePath="..\..\imebra\src\dicomDir.cpp">
+					<FileConfiguration
+						Name="Debug|Win32">
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"/>
+					</FileConfiguration>
+				</File>
+				<File
 					RelativePath="..\..\imebra\src\drawBitmap.cpp">
 					<FileConfiguration
 						Name="Debug|Win32">
@@ -1849,6 +1882,9 @@
 					RelativePath="..\..\imebra\include\dicomDict.h">
 				</File>
 				<File
+					RelativePath="..\..\imebra\include\dicomDir.h">
+				</File>
+				<File
 					RelativePath="..\..\imebra\include\drawBitmap.h">
 				</File>
 				<File
@@ -2229,6 +2265,9 @@
 				</File>
 				<File
 					RelativePath="..\..\base\include\memoryStream.h">
+				</File>
+				<File
+					RelativePath="..\..\base\include\nullStream.h">
 				</File>
 				<File
 					RelativePath="..\..\base\include\stream.h">

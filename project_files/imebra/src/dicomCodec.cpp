@@ -149,8 +149,7 @@ void dicomCodec::writeGroup(ptr<streamWriter> pDestStream, ptr<dataGroup> pGroup
 
 	// Calculate the group's length
 	///////////////////////////////////////////////////////////
-	imbxUint32 groupHeader;
-	imbxUint32 groupLength = getGroupLength(pGroup, bExplicitDataType, &groupHeader);
+	imbxUint32 groupLength = getGroupLength(pGroup, bExplicitDataType);
 
 	// Write the group's length
 	///////////////////////////////////////////////////////////
@@ -235,7 +234,14 @@ void dicomCodec::writeTag(ptr<streamWriter> pDestStream, ptr<data> pData, imbxUi
 	std::string dataType = pData->getDataType();
 	if(!(dicomDictionary::getDicomDictionary()->isDataTypeValid(dataType)))
 	{
-		dataType = "OB";
+		if(pData->getDataSet(0) != 0)
+		{
+			dataType = "SQ";
+		}
+		else
+		{
+			dataType = "OB";
+		}
 	}
 
 	// Adjust the tag id endian and write it
@@ -317,17 +323,20 @@ void dicomCodec::writeTag(ptr<streamWriter> pDestStream, ptr<data> pData, imbxUi
 			break;
 		}
 
+		// Remember the position at which the item has been written
+		///////////////////////////////////////////////////////////
+		pDataSet->setItemOffset(pDestStream->getControlledStreamPosition());
+
 		// write the sequence item header
 		///////////////////////////////////////////////////////////
-		if(bSequence)
-		{
-			pDestStream->write((imbxUint8*)&sequenceItemGroup, 2);
-			pDestStream->write((imbxUint8*)&sequenceItemDelimiter, 2);
-			imbxUint32 sequenceItemLength = getDataSetLength(pDataSet, bExplicitDataType);
-			pDestStream->adjustEndian((imbxUint8*)&sequenceItemLength, 4, endianType);
-			pDestStream->write((imbxUint8*)&sequenceItemLength, 4);
-		}
+		pDestStream->write((imbxUint8*)&sequenceItemGroup, 2);
+		pDestStream->write((imbxUint8*)&sequenceItemDelimiter, 2);
+		imbxUint32 sequenceItemLength = getDataSetLength(pDataSet, bExplicitDataType);
+		pDestStream->adjustEndian((imbxUint8*)&sequenceItemLength, 4, endianType);
+		pDestStream->write((imbxUint8*)&sequenceItemLength, 4);
 
+		// write the dataset
+		///////////////////////////////////////////////////////////
 		buildStream(pDestStream, pDataSet, bExplicitDataType, endianType);
 	}
 
@@ -368,6 +377,7 @@ imbxUint32 dicomCodec::getTagLength(ptr<data> pData, bool bExplicitDataType, imb
 		if(pDataSet != 0)
 		{
 			totalLength += getDataSetLength(pDataSet, bExplicitDataType);
+			totalLength += 8; // item tag and item length
 			*pbSequence = true;
 			continue;
 		}
@@ -409,7 +419,7 @@ imbxUint32 dicomCodec::getTagLength(ptr<data> pData, bool bExplicitDataType, imb
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint32 dicomCodec::getGroupLength(ptr<dataGroup> pDataGroup, bool bExplicitDataType, imbxUint32* pHeaderLength)
+imbxUint32 dicomCodec::getGroupLength(ptr<dataGroup> pDataGroup, bool bExplicitDataType)
 {
 	PUNTOEXE_FUNCTION_START(L"dicomCodec::getGroupLength");
 
@@ -417,7 +427,7 @@ imbxUint32 dicomCodec::getGroupLength(ptr<dataGroup> pDataGroup, bool bExplicitD
 
 	imbxUint32 totalLength = 0;
 
-	while(pIterator->isValid())
+	for(;pIterator->isValid(); pIterator->incIterator())
 	{
 		if(pIterator->getId() == 0)
 		{
@@ -428,11 +438,7 @@ imbxUint32 dicomCodec::getGroupLength(ptr<dataGroup> pDataGroup, bool bExplicitD
 		bool bSequence;
 		totalLength += getTagLength(pIterator->getData(), bExplicitDataType, &tagHeaderLength, &bSequence);
 		totalLength += tagHeaderLength;
-
-		pIterator->incIterator();
 	}
-
-	*pHeaderLength = 8;
 
 	return totalLength;
 
@@ -459,9 +465,14 @@ imbxUint32 dicomCodec::getDataSetLength(ptr<dataSet> pDataSet, bool bExplicitDat
 
 	while(pIterator->isValid())
 	{
-		imbxUint32 headerLength;
-		totalLength += getGroupLength(pIterator->getData(), bExplicitDataType, &headerLength);
-		totalLength += headerLength;
+		totalLength += getGroupLength(pIterator->getData(), bExplicitDataType);
+		totalLength += 4; // Add space for the tag 0
+		if(bExplicitDataType) // Add space for the data type
+		{
+			totalLength += 2;
+		}
+		totalLength += 2; // Add space for the tag's length
+		totalLength += 4; // Add space for the group's length
 
 		pIterator->incIterator();
 	}
@@ -836,6 +847,11 @@ void dicomCodec::parseStream(ptr<streamReader> pStream,
 		imbxUint32 bufferId = 0;
 		while(tagLengthDWord)
 		{
+			// Remember the item's position (used by DICOMDIR 
+			//  structures)
+			///////////////////////////////////////////////////////////
+			imbxUint32 itemOffset(pStream->getControlledStreamPosition());
+
 			// Read the sequence item's group
 			///////////////////////////////////////////////////////////
 			pStream->read((imbxUint8*)&subItemGroupId, sizeof(subItemGroupId));
@@ -872,17 +888,16 @@ void dicomCodec::parseStream(ptr<streamReader> pStream,
 			if((sequenceItemLength == 0xffffffff) || (::memcmp(tagType, "SQ", 2) == 0))
 			{
 				ptr<dataSet> sequenceDataSet(new dataSet);
-				if(sequenceDataSet != 0)
-				{
-					imbxUint32 effectiveLength;
-					parseStream(pStream, sequenceDataSet, bExplicitDataType, endianType, maxSizeBufferLoad, sequenceItemLength, &effectiveLength, depth + 1);
-					(*pReadSubItemLength) += effectiveLength;
-					if(tagLengthDWord!=0xffffffff)
-						tagLengthDWord-=effectiveLength;
-					ptr<data> sequenceTag=pDataSet->getTag(tagId, 0x0, tagSubId, true);
-					sequenceTag->setDataSet(bufferId, sequenceDataSet);
-					++bufferId;
-				}
+				sequenceDataSet->setItemOffset(itemOffset);
+				imbxUint32 effectiveLength(0);
+				parseStream(pStream, sequenceDataSet, bExplicitDataType, endianType, maxSizeBufferLoad, sequenceItemLength, &effectiveLength, depth + 1);
+				(*pReadSubItemLength) += effectiveLength;
+				if(tagLengthDWord!=0xffffffff)
+					tagLengthDWord-=effectiveLength;
+				ptr<data> sequenceTag=pDataSet->getTag(tagId, 0x0, tagSubId, true);
+				sequenceTag->setDataSet(bufferId, sequenceDataSet);
+				++bufferId;
+
 				continue;
 			}
 
@@ -2125,18 +2140,18 @@ imbxUint32 dicomCodec::readTag(
 	///////////////////////////////////////////////////////////
 	if(tagLengthDWord > maxSizeBufferLoad)
 	{
-		imbxUint32 bufferPosition = pStream->position();
-		imbxUint32 streamPosition = pStream->getControlledStreamPosition();
+		imbxUint32 bufferPosition(pStream->position());
+		imbxUint32 streamPosition(pStream->getControlledStreamPosition());
 		pStream->seek(tagLengthDWord, true);
-		imbxUint32 bufferLength = pStream->position() - bufferPosition;
+		imbxUint32 bufferLength(pStream->position() - bufferPosition);
 
 		if(bufferLength != tagLengthDWord)
 		{
 			PUNTOEXE_THROW(codecExceptionCorruptedFile, "dicomCodec::readTag detected a corrupted tag");
 		}
 
-		ptr<dataGroup> writeGroup = pDataSet->getGroup(tagId, order, true);
-		ptr<data>      writeData  = writeGroup->getTag(tagSubId, true);
+		ptr<dataGroup> writeGroup(pDataSet->getGroup(tagId, order, true));
+		ptr<data>      writeData (writeGroup->getTag(tagSubId, true));
 		ptr<buffer> newBuffer(
 			new buffer(
 				writeData->getExternalLock(),
@@ -2174,33 +2189,61 @@ imbxUint32 dicomCodec::readTag(
 	//  allocated
 	///////////////////////////////////////////////////////////
 
-	// List of small buffers
+	// If the buffer size is bigger than the following const
+	//  variable, then read the buffer in small chunks
 	///////////////////////////////////////////////////////////
-	std::list<std::vector<imbxUint8> > buffers;
-	imbxUint32 smallBuffersSize=32768;
+	static const imbxUint32 smallBuffersSize(32768);
 
-	// Used to keep track of the read bytes
-	///////////////////////////////////////////////////////////
-	imbxUint32 remainingBytes;
-
-	// Fill all the small buffers
-	///////////////////////////////////////////////////////////
-	for(remainingBytes = tagLengthDWord; remainingBytes != 0; )
+	if(tagLengthDWord <= smallBuffersSize) // Read in one go
 	{
-		// Calculate the small buffer's size and allocate it
-		///////////////////////////////////////////////////////////
-		imbxUint32 thisBufferSize=(remainingBytes > smallBuffersSize) ? smallBuffersSize : remainingBytes;
-		buffers.push_back(std::vector<imbxUint8>());
-		buffers.back().resize(thisBufferSize);
-
-		// Fill the buffer
-		///////////////////////////////////////////////////////////
-		pStream->read(&buffers.back()[0], thisBufferSize);
-
-		// Decrease the number of the remaining bytes
-		///////////////////////////////////////////////////////////
-		remainingBytes -= thisBufferSize;
+		handler->setSize(tagLengthDWord);
+		pStream->read(handler->getMemoryBuffer(), tagLengthDWord);
 	}
+	else // Read in small chunks
+	{
+		std::list<std::vector<imbxUint8> > buffers;
+
+		// Used to keep track of the read bytes
+		///////////////////////////////////////////////////////////
+		imbxUint32 remainingBytes(tagLengthDWord);
+
+		// Fill all the small buffers
+		///////////////////////////////////////////////////////////
+		while(remainingBytes != 0)
+		{
+			// Calculate the small buffer's size and allocate it
+			///////////////////////////////////////////////////////////
+			imbxUint32 thisBufferSize( (remainingBytes > smallBuffersSize) ? smallBuffersSize : remainingBytes);
+			buffers.push_back(std::vector<imbxUint8>());
+			buffers.back().resize(thisBufferSize);
+
+			// Fill the buffer
+			///////////////////////////////////////////////////////////
+			pStream->read(&buffers.back()[0], thisBufferSize);
+
+			// Decrease the number of the remaining bytes
+			///////////////////////////////////////////////////////////
+			remainingBytes -= thisBufferSize;
+		}
+
+		// Copy the small buffers into the tag object
+		///////////////////////////////////////////////////////////
+		handler->setSize(tagLengthDWord);
+		imbxUint8* pHandlerBuffer(handler->getMemoryBuffer());
+
+		// Scan all the small buffers and copy their content into
+		//  the final buffer
+		///////////////////////////////////////////////////////////
+		std::list<std::vector<imbxUint8> >::iterator smallBuffersIterator;
+		remainingBytes = tagLengthDWord;
+		for(smallBuffersIterator=buffers.begin(); smallBuffersIterator != buffers.end(); ++smallBuffersIterator)
+		{
+			imbxUint32 copySize=(remainingBytes>smallBuffersSize) ? smallBuffersSize : remainingBytes;
+			::memcpy(pHandlerBuffer, &(*smallBuffersIterator)[0], copySize);
+			pHandlerBuffer += copySize;
+			remainingBytes -= copySize;
+		}
+	} // end of reading from stream
 
 	// All the bytes have been read, now rebuild the tag's
 	//  buffer. Don't rebuild the tag if it is 0xfffc,0xfffc
@@ -2211,37 +2254,11 @@ imbxUint32 dicomCodec::readTag(
 		return (imbxUint32)tagLengthDWord;
 	}
 
-	// Allocate the final buffer
-	///////////////////////////////////////////////////////////
-	std::vector<imbxUint8> finalBuffer;
-	finalBuffer.resize(tagLengthDWord);
-
-	// Scan all the small buffers and copy their content into
-	//  the final buffer
-	///////////////////////////////////////////////////////////
-	std::list<std::vector<imbxUint8> >::iterator smallBuffersIterator;
-	imbxUint32 startByte = 0;
-	remainingBytes=tagLengthDWord;
-	for(smallBuffersIterator=buffers.begin(); smallBuffersIterator != buffers.end(); ++smallBuffersIterator)
-	{
-		imbxUint32 copySize=(remainingBytes>smallBuffersSize) ? smallBuffersSize : remainingBytes;
-		::memcpy(&finalBuffer[startByte], &(*smallBuffersIterator)[0], copySize);
-		startByte+=copySize;
-		remainingBytes-=copySize;
-	}
-
 	// Adjust the buffer's byte endian
 	///////////////////////////////////////////////////////////
 	if(wordSize != 0)
-		pStream->adjustEndian(&finalBuffer[0], wordSize, endianType, tagLengthDWord/wordSize);
-
-	// Copy the buffer into the tag object
-	///////////////////////////////////////////////////////////
-	if(handler != 0)
 	{
-		handler->setSize(tagLengthDWord);
-		imbxUint8* pHandlerBuffer = handler->getMemoryBuffer();
-		::memcpy(pHandlerBuffer, &finalBuffer[0], tagLengthDWord);
+		pStream->adjustEndian(handler->getMemoryBuffer(), wordSize, endianType, tagLengthDWord / wordSize);
 	}
 
 	// Return the tag's length in bytes

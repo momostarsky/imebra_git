@@ -71,7 +71,7 @@ class dataSet : public dataCollection<dataGroup>
 public:
 	// Costructor
 	///////////////////////////////////////////////////////////
-	dataSet(): dataCollection<dataGroup>(ptr<baseObject>(new baseObject)) {}
+	dataSet(): dataCollection<dataGroup>(ptr<baseObject>(new baseObject)), m_itemOffset(0) {}
 
 	///////////////////////////////////////////////////////////
 	/// \name Get/set groups/tags
@@ -809,7 +809,7 @@ public:
 	/// \brief Return a streamReader connected to the specified
 	///         tag's buffer's memory.
 	///
-	/// A tag can store several buffers, then the application
+	/// A tag can store several buffers: the application
 	///  must specify the buffer's id it wants to deal with.
 	///
 	/// @param groupId the group to which the tag belongs
@@ -885,6 +885,37 @@ public:
 	///////////////////////////////////////////////////////////
 	void updateTagsCharset();
 
+	//@}
+
+
+	///////////////////////////////////////////////////////////
+	/// \name Set/get the item offset.
+	///
+	///////////////////////////////////////////////////////////
+	//@{
+	
+	/// \brief Called by codecs::dicomCodec when the dataset
+	///         is written into a stream.
+	///        Tells the dataSet the position at which it has
+	///         been written into the stream
+	///
+	/// @param offset   the position at which the dataSet has
+	///                  been written into the stream
+	///
+	///////////////////////////////////////////////////////////
+	void setItemOffset(imbxUint32 offset);
+
+	/// \brief Retrieve the offset at which the dataSet is
+	///         located in the dicom stream.
+	///
+	/// @return the position at which the dataSet is located
+	///          in the dicom stream
+	///
+	///////////////////////////////////////////////////////////
+	imbxUint32 getItemOffset();
+
+	//@}
+
 protected:
 	// Convert an image using the attributes specified in the
 	//  the dataset
@@ -892,6 +923,11 @@ protected:
 	ptr<image> convertImageForDataSet(ptr<image> sourceImage);
 
 	std::vector<imbxUint32> m_imagesPositions;
+
+	// Position of the sequence item in the stream. Used to
+	//  parse DICOMDIR items
+	///////////////////////////////////////////////////////////
+	imbxUint32 m_itemOffset;
 };
 
 

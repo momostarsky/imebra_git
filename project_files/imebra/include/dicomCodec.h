@@ -183,7 +183,7 @@ protected:
 
 	// Calculate the group's length
 	///////////////////////////////////////////////////////////
-	imbxUint32 getGroupLength(ptr<dataGroup>, bool bExplicitDataType, imbxUint32* pheaderLength);
+	imbxUint32 getGroupLength(ptr<dataGroup>, bool bExplicitDataType);
 
 	// Calculate the dataset's length
 	///////////////////////////////////////////////////////////

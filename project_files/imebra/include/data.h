@@ -15,6 +15,7 @@ $fileHeader$
 #include "charsetsList.h"
 
 #include <map>
+#include <vector>
 
 
 ///////////////////////////////////////////////////////////
@@ -236,7 +237,7 @@ public:
 	///////////////////////////////////////////////////////////
 	ptr<dataSet> getDataSet(imbxUint32 dataSetId);
 
-	/// \brief Set an embedded dataSet.
+	/// \brief Set an embedded dataSet to the sequence.
 	///
 	/// Several data sets can be nested one inside each other.
 	/// When a data set is embedded into a tag, then the
@@ -253,6 +254,21 @@ public:
 	///
 	///////////////////////////////////////////////////////////
 	void setDataSet(imbxUint32 dataSetId, ptr<dataSet> pDataSet);
+
+	/// \brief Append an embedded dataSet to the sequence.
+	///
+	/// Several data sets can be nested one inside each other.
+	/// When a data set is embedded into a tag, then the
+	///  tag will have a sequence type (dicom type=SQ).
+	///
+	/// Sequences are used to build dicom directories and
+	///  other tags in normal data sets.
+	///
+	/// @param pDataSet   A pointer to the dataSet to store
+	///                   into the tag
+	///
+	///////////////////////////////////////////////////////////
+	void appendDataSet(ptr<dataSet> pDataSet);
 	
 	//@}
 
@@ -309,7 +325,7 @@ protected:
 	// Pointers to the embedded datasets
 	///////////////////////////////////////////////////////////
 	typedef ptr<dataSet> ptrDataSet;
-	typedef std::map<imbxUint32, ptrDataSet> tEmbeddedDatasetsMap;
+	typedef std::vector<ptrDataSet> tEmbeddedDatasetsMap;
 	tEmbeddedDatasetsMap m_embeddedDataSets;
 
 	charsetsList::tCharsetsList m_charsetsList;
