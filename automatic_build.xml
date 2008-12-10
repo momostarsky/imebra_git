@@ -79,8 +79,10 @@
 		<copy file="project_files/docs/gpl.txt" tofile="${build_dir}/license.txt" />
 		<replace dir="${build_dir}/puntoexe_library" token="$fileHeader$">
 			<replacevalue><![CDATA[
+$imebraVersion$
+
 Imebra: a C++ dicom library.
-Copyright (C) 2003, 2004, 2005, 2006  by Paolo Brandoli
+Copyright (C) 2003, 2004, 2005, 2006, 2007, 2008  by Paolo Brandoli
 
 This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License version 2 as published by
@@ -116,6 +118,7 @@ The author can be contacted by email at paolo@puntoexe.com or by mail at
 
 ]]></replacevalue>
 		</replace>
+		<replace dir="${build_dir}/puntoexe_library" token="$imebraVersion$" value="${fullVersionReadable}" />
 	</target>
 
 	<!-- Build the CHM documentation -->
