@@ -27,27 +27,45 @@ namespace imebra
 namespace handlers
 {
 
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-/// \brief Handles the Dicom type "PN" (patient name).
-///
-/// This class separates the components of the name.
-///
-/// This means that to read or set all the patient name
-///  you have to move the pointer to the internal element
-///  by using setPointer(), incPointer() or skip().
-///
-/// For instance, to set the name "Brandoli^Paolo" you
-///  have to use the following code:
-///
-/// - myDataSet->getDataHandler(group, 0, tag, 0, true, "PN");
-/// - myDataSet->setSize(2);
-/// - myDataSet->setUnicodeString(L"Brandoli");
-/// - myDataSet->incPointer();
-/// - myDataSet->setUnicodeString(L"Paolo");
-///
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
+/*!
+\brief Handles the Dicom type "PN" (person name).
+
+This class separates the component groups of the name.
+
+The person name can be formed by three groups:
+ one or more groups can be absent.
+- the first components group contains a character
+  representation of the person name
+- the second components group contains an ideographic
+  representation of the person name
+- the third components group contains a phonetic
+  representation of the patient name
+
+Inside a components group, the name components
+ (first name, middle name, surname, etc) must be
+ separated by a ^.
+
+This class doesn't insert or parse the ^ separator
+ which must be inserted and handled by the calling
+ application, but handles the = separator which
+ separates the components groups.\n
+This means that to read or set all the patient name
+ you have to move the pointer to the internal element
+ by using setPointer(), incPointer() or skip().
+
+For instance, to set the name "Left^Arrow" both
+ with a character and an ideographic representation you
+ have to use the following code:
+
+\code
+myDataSet->getDataHandler(group, 0, tag, 0, true, "PN");
+myDataSet->setSize(2);
+myDataSet->setUnicodeString(L"Left^Arrow");
+myDataSet->incPointer();
+myDataSet->setUnicodeString(L"<-"); // :-)
+\endcode
+
+*/
 class dataHandlerStringPN : public dataHandlerStringUnicode
 {
 public:
@@ -60,7 +78,7 @@ protected:
 	///////////////////////////////////////////////////////////
 	virtual imbxUint32 maxSize();
 
-	// Returns the separator ^
+	// Returns the separator =
 	///////////////////////////////////////////////////////////
 	virtual wchar_t getSeparator();
 };
