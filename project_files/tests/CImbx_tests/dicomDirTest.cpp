@@ -31,12 +31,11 @@ void dicomDirTest::createDicomDir()
 	pRootRecord->setNextRecord(pNextRecord);
 
 	ptr<directoryRecord> pImageRecord(newDicomDir->getNewRecord());
-	pImageRecord->getRecordDataSet()->setUnicodeString(0x8, 0, 0x24, 0, L"1.2.840.34.56.78999654.235");
+	pImageRecord->getRecordDataSet()->setUnicodeString(0x8, 0, 0x18, 0, L"1.2.840.34.56.78999654.235");
 	pImageRecord->setType(directoryRecord::image);
 	pNextRecord->setFirstChildRecord(pImageRecord);
 
-	ptr<dataSet> dicomDirDataSet(newDicomDir->getDirectoryDataSet());
-	newDicomDir.release();
+	ptr<dataSet> dicomDirDataSet(newDicomDir->buildDataSet());
 
 	ptr<memory> streamMemory(new memory);
 	ptr<memoryStream> memStream(new memoryStream(streamMemory));
@@ -58,9 +57,9 @@ void dicomDirTest::createDicomDir()
 	CPPUNIT_ASSERT(testNextRecord->getType() == directoryRecord::patient);
 	CPPUNIT_ASSERT(testNextRecord->getRecordDataSet()->getUnicodeString(0x10, 0, 0x10, 0) == L"Surname 1");
 
-	ptr<directoryRecord> testImageRecord(testRootRecord->getFirstChildRecord());
+	ptr<directoryRecord> testImageRecord(testNextRecord->getFirstChildRecord());
 	CPPUNIT_ASSERT(testImageRecord->getType() == directoryRecord::image);
-	CPPUNIT_ASSERT(testNextRecord->getRecordDataSet()->getUnicodeString(0x8, 0, 0x24, 0) == L"1.2.840.34.56.78999654.235");
+	CPPUNIT_ASSERT(testImageRecord->getRecordDataSet()->getUnicodeString(0x8, 0, 0x18, 0) == L"1.2.840.34.56.78999654.235");
 }
 
 

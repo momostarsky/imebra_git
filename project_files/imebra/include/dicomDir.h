@@ -3,7 +3,8 @@ $fileHeader$
 */
 
 /*! \file dicomDir.h
-    \brief Declaration of the class dicomDir.
+    \brief Declaration of the classes that parse/create a DICOMDIR
+	        structure (dicomDir and directoryRecord).
 
 */
 
@@ -29,12 +30,14 @@ class dataSet; // Used in this class
 class dicomDir;
 
 
-
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 /// \brief directoryRecord represents a single record in
-///         a DICOMDIR structure. DICOMDIR is represented
-///         by the class dicomDir.
+///         a DICOMDIR structure (see dicomDir).
+///
+/// A new directoryRecord object cannot be constructed 
+///  directly but only by calling dicomDir::getNewRecord() 
+///  on the directory the new record will belong to.
 ///
 /// 
 ///////////////////////////////////////////////////////////
@@ -43,6 +46,10 @@ class directoryRecord: public baseObject
 {
 	friend class dicomDir;
 public:
+
+	/// \brief Specifies the item's type.
+	///
+	///////////////////////////////////////////////////////////
 	enum tDirectoryRecordType
 	{
 		patient,
@@ -75,16 +82,15 @@ public:
 		endOfDirectoryRecordTypes
 	};
 
-
 public:
-	/// \brief Returns the dataSet object that contains the
-	///         information related to the record.
+	/// \brief Returns the dataSet that contains the
+	///         record's information.
 	///
-	/// The DICOMDIR dataSet contains several records' dataSets
-	///  embedded into a sequence tag.
+	/// The record's dataSet is embedded in a sequence in the
+	///  DICOMDIR dataset.
 	///
-	/// @return the dataSet that contains the information 
-	///          related to the record.
+	/// @return the dataSet that contains the record's 
+	///          information
 	///
 	///////////////////////////////////////////////////////////
 	ptr<dataSet> getRecordDataSet();
@@ -186,11 +192,23 @@ public:
 	///////////////////////////////////////////////////////////
 	std::wstring getTypeString();
 
+	/// \brief Sets the record's type.
+	///
+	/// @param recordType  the record's type
+	///
+	///////////////////////////////////////////////////////////
 	void setType(tDirectoryRecordType recordType);
+
+	/// \brief Sets the record's type.
+	///
+	/// @param recordType  the string representing the record's
+	///                     type
+	///
+	///////////////////////////////////////////////////////////
 	void setTypeString(std::wstring recordType);
 
 
-protected:
+private:
 	/// \brief Constructor. A directoryRecord object must be
 	///         connected to a dataSet object, which contains
 	///         the record's information.
@@ -222,39 +240,127 @@ protected:
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-/// \brief A dicomDir contains the information about the
-///        tree structure of the DICOMDIR.
+/// \brief A dicomDir object contains the information about
+///         the tree structure of a DICOMDIR dataset.
 ///
+/// The dicomDir class parses the DICOMDIR dataset 
+///  in the constructor and detects DICOMDIR tree
+///  structure the specified.
+///
+/// Each directory record in the DICOMDIR structure is
+///  represented by the directoryRecord class.
+///
+/// The first root directoryRecord can be obtained with
+///  a call to getFirstRootRecord().
 /// 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 class dicomDir: public baseObject
 {
 public:
-	/// \brief Build a dicomDir object and attach it to an
-	///         existing dataset.
+	/// \brief Initializes a dicomDir object and attach it to 
+	///         an existing dataset.
+	///
+	/// If a dataSet is specified then the constructor parses
+	///  it and build an in memory representation of the
+	///  directory tree and its records. The first root record
+	///  can be retrieved with a call to getFirstRootRecord().
+	///
+	/// @param pDataSet   the dataSet that contains or will 
+	///                    contain the DICOMDIR structure. 
+	///                   If a null pointer is passed, then a
+	///                    new dataSet is created by this
+	///                    constructor
 	///
 	///////////////////////////////////////////////////////////
 	dicomDir(ptr<dataSet> pDataSet);
 
+	/// \brief Returns the DICOMDIR dataset.
+	///
+	/// This is the same dataset specified in the constructor
+	///  dicomDir::dicomDir() and returned by buildDataSet().
+	///
+	///////////////////////////////////////////////////////////
 	ptr<dataSet> getDirectoryDataSet();
 
+	/// \brief Creates a new directoryRecord and embeds its
+	///         dataSet into the DICOMDIR sequence of items.
+	///
+	/// Once the new directoryRecord has been returned, the
+	///  calling application should set the proper record's
+	///  values and specify the relationship with other items
+	///  by calling setFirstRootRecord() or 
+	///  directoryRecord::setNextRecord() or 
+	///  directoryRecord::setFirstChildRecord() or
+	///  directoryRecord::setReferencedRecord().
+	///
+	/// @return a new directoryRecord object belonging to the
+	///         DICOMDIR
+	///
+	///////////////////////////////////////////////////////////
 	ptr<directoryRecord> getNewRecord();
 
+	/// \brief Returns the first root record in the DICOMDIR.
+	///
+	/// Once the first root record has been retrieved, the
+	///  application can retrieve sibling root records by
+	///  calling directoryRecord::getNextRecord().
+	///
+	/// @return the first root record in the DICOMDIR.
+	///
+	///////////////////////////////////////////////////////////
 	ptr<directoryRecord> getFirstRootRecord();
+
+	/// \brief Sets the first root record in the DICOMDIR.
+	///
+	/// @param pFirstRootRecord a directoryRecord obtained with
+	///                          a call to getNewRecord().
+	///                         The directoryRecord will be the
+	///                          first root record in the 
+	///                          directory
+	///////////////////////////////////////////////////////////
 	void setFirstRootRecord(ptr<directoryRecord> pFirstRootRecord);
 
-protected:
-	// Destructor
+	/// \brief Updates the dataSet containing the DICOMDIR
+	///         with the information contained in the directory
+	///         records.
+	///
+	/// Before building the DICOMDIR dataSet remember to set
+	///  the following values in the dataSet (call
+	///  getDirectoryDataSet() to get the dataSet):
+	/// - tag 0x2,0x3: Media Storage SOP instance UID
+	/// - tag 0x2,0x12: Implementation class UID
+	/// - tag 0x2,0x13: Implementation version name
+	/// - tag 0x2,0x16: Source application Entity Title
+	///
+	/// Please note that if any data is added to the directory
+	///  or any of the directoryItem objects after a call to
+	///  buildDataSet() then the dataset has to be rebuilt once
+	///  more with another call to buildDataSet().
+	///
+	/// buildDataSet() doesn't return a new dataSet but 
+	///  modifies the dataSet specified in the constructor.
+	///
+	/// @return a pointer to the updated dataSet
+	///
 	///////////////////////////////////////////////////////////
-	virtual bool preDelete();
+	ptr<dataSet> buildDataSet();
 
+protected:
 	ptr<dataSet> m_pDataSet;
 
 	ptr<directoryRecord> m_pFirstRootRecord;
 };
 
 
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+/// \brief Base class from which the exceptions thrown
+///         by directoryRecord and dicomDir derive.
+///
+///
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
 class dicomDirException: public std::runtime_error
 {
 public:
@@ -266,10 +372,25 @@ public:
 	dicomDirException(const std::string& message): std::runtime_error(message){}
 };
 
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+/// \brief This exception is thrown when a call to
+///        dicomDir::setFirstRootRecord() or 
+///        directoryRecord::setNextRecord() or 
+///        directoryRecord::setFirstChildRecord() or
+///        directoryRecord::setReferencedRecord() causes
+///        a circular reference between directoryRecord
+///        objects.
+///
+///
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
 class dicomDirCircularReferenceException: public dicomDirException
 {
 public:
-	/// \brief Build a dicomDirException exception.
+	/// \brief Build a dicomDirCircularReferenceException
+	///         exception.
 	///
 	/// @param message the message to store into the exception
 	///
@@ -277,9 +398,26 @@ public:
 	dicomDirCircularReferenceException(const std::string& message): dicomDirException(message){}
 };
 
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+/// \brief Exception thrown when an unknown record type
+///        is detected in directoryRecord::getType(),
+///        directoryRecord::getTypeString(), 
+///        directoryRecord::setType() or 
+///        directoryRecord::setTypeString().
+///
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
 class dicomDirUnknownDirectoryRecordType: public dicomDirException
 {
 public:
+	/// \brief Build a dicomDirUnknownDirectoryRecordType 
+	///         exception.
+	///
+	/// @param message the message to store into the exception
+	///
+	///////////////////////////////////////////////////////////
 	dicomDirUnknownDirectoryRecordType(const std::string& message): dicomDirException(message){}
 };
 

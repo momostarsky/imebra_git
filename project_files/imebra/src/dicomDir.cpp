@@ -2,15 +2,15 @@
 $fileHeader$
 */
 
-/*! \file dataSet.cpp
-    \brief Implementation of the class dataSet.
+/*! \file dicomDir.cpp
+    \brief Implementation of the classes dicomDir and directoryRecord.
 
 */
 
 #include "../include/dicomDir.h"
 #include "../include/dataSet.h"
 #include "../include/dicomCodec.h"
-#include "../include/transaction.h"
+#include "../include/dataHandlerNumeric.h"
 #include "../../base/include/nullStream.h"
 #include "../../base/include/streamWriter.h"
 #include <map>
@@ -60,6 +60,19 @@ namespace imebra
 		{L"", directoryRecord::endOfDirectoryRecordTypes}
 	};
 
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
+//
+// directoryRecord
+//
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -229,6 +242,8 @@ directoryRecord::tDirectoryRecordType directoryRecord::getType()
 		}
 	}
 
+	// Invalid value found . Throw an exception
+	///////////////////////////////////////////////////////////
 	throw dicomDirUnknownDirectoryRecordType("Unknown directory record type");
 }
 
@@ -248,6 +263,15 @@ std::wstring directoryRecord::getTypeString()
 }
 
 
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
+// Set the item's type
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
 void directoryRecord::setType(tDirectoryRecordType recordType)
 {
 	for(size_t scanTypes(0); typesList[scanTypes].m_type != endOfDirectoryRecordTypes; ++scanTypes)
@@ -259,10 +283,21 @@ void directoryRecord::setType(tDirectoryRecordType recordType)
 		}
 	}
 
+	// Trying to set an invalid type. Throw an exception
+	///////////////////////////////////////////////////////////
 	throw dicomDirUnknownDirectoryRecordType("Unknown directory record type");
 }
 
 
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
+// Set the item's type
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
 void directoryRecord::setTypeString(std::wstring recordType)
 {
 	getRecordDataSet()->setUnicodeString(0x0004, 0, 0x1430, 0, recordType);
@@ -280,6 +315,8 @@ void directoryRecord::setTypeString(std::wstring recordType)
 ///////////////////////////////////////////////////////////
 void directoryRecord::updateOffsets()
 {
+	// Update offset for the next record
+	///////////////////////////////////////////////////////////
 	if(m_pNextRecord == 0)
 	{
 		getRecordDataSet()->setUnsignedLong(0x0004, 0, 0x1400, 0, 0);
@@ -290,6 +327,8 @@ void directoryRecord::updateOffsets()
 		m_pNextRecord->updateOffsets();
 	}
 
+	// Update offset for the first child record
+	///////////////////////////////////////////////////////////
 	if(m_pFirstChildRecord == 0)
 	{
 		getRecordDataSet()->setUnsignedLong(0x0004, 0, 0x1420, 0, 0);
@@ -300,6 +339,8 @@ void directoryRecord::updateOffsets()
 		m_pFirstChildRecord->updateOffsets();
 	}
 
+	// Update offset for the referenced record
+	///////////////////////////////////////////////////////////
 	if(m_pReferencedRecord == 0)
 	{
 		getRecordDataSet()->setUnsignedLong(0x0004, 0, 0x1504, 0, 0);
@@ -309,10 +350,19 @@ void directoryRecord::updateOffsets()
 		getRecordDataSet()->setUnsignedLong(0x0004, 0, 0x1504, 0, m_pReferencedRecord->getRecordDataSet()->getItemOffset());
 		m_pReferencedRecord->updateOffsets();
 	}
-
 }
 
 
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
+// Check circular (recursive) references between the
+//  dicomdir's items
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
 void directoryRecord::checkCircularReference(directoryRecord* pStartRecord)
 {
 	if(this == pStartRecord)
@@ -337,6 +387,31 @@ void directoryRecord::checkCircularReference(directoryRecord* pStartRecord)
 }
 
 
+
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
+//
+// dicomDir class
+//
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
+// Constructor
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
 dicomDir::dicomDir(ptr<dataSet> pDataSet):
 	m_pDataSet(pDataSet)
 {
@@ -346,9 +421,11 @@ dicomDir::dicomDir(ptr<dataSet> pDataSet):
 	}
 
 	// Parse the dataset
+	///////////////////////////////////////////////////////////
 	lockObject lockDataSet(pDataSet);
 
 	// Get the DICOMDIR sequence
+	///////////////////////////////////////////////////////////
 	typedef std::map<imbxUint32, ptr<directoryRecord> > tOffsetsToRecords;
 	tOffsetsToRecords offsetsToRecords;
 	for(imbxUint32 scanItems(0); ; ++scanItems)
@@ -362,6 +439,7 @@ dicomDir::dicomDir(ptr<dataSet> pDataSet):
 	}
 
 	// Scan all the records and update the pointers
+	///////////////////////////////////////////////////////////
 	for(tOffsetsToRecords::iterator scanRecords(offsetsToRecords.begin()); scanRecords != offsetsToRecords.end(); ++scanRecords)
 	{
 		imbxUint32 nextRecordOffset(scanRecords->second->getRecordDataSet()->getUnsignedLong(0x0004, 0, 0x1400, 0));
@@ -388,6 +466,7 @@ dicomDir::dicomDir(ptr<dataSet> pDataSet):
 	}
 
 	// Get the position of the first record
+	///////////////////////////////////////////////////////////
 	tOffsetsToRecords::iterator findRecord(offsetsToRecords.find(m_pDataSet->getUnsignedLong(0x0004, 0, 0x1200, 0)));
 	if(findRecord == offsetsToRecords.end())
 	{
@@ -397,12 +476,31 @@ dicomDir::dicomDir(ptr<dataSet> pDataSet):
 }
 
 
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
+// Returns the dataSet
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
 ptr<dataSet> dicomDir::getDirectoryDataSet()
 {
 	return m_pDataSet;
 }
 
 
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
+// Returns a new record that can be inserted in the
+//  folder
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
 ptr<directoryRecord> dicomDir::getNewRecord()
 {
 	ptr<data> recordsTag(m_pDataSet->getTag(0x0004, 0, 0x1220, true));
@@ -413,15 +511,46 @@ ptr<directoryRecord> dicomDir::getNewRecord()
 }
 
 
-bool dicomDir::preDelete()
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
+// Build the a dicom dataset that contain the directory's
+//  information.
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+ptr<dataSet> dicomDir::buildDataSet()
 {
 	// Adjust the transfer syntax if it isn't already set
-	if(m_pDataSet->getString(2, 0, 16, 0) == "")
+	///////////////////////////////////////////////////////////
+	if(m_pDataSet->getString(0x2, 0, 0x10, 0) == "")
 	{
-		m_pDataSet->setString(2, 0, 16, 0, "1.2.840.10008.1.2.1");
+		m_pDataSet->setString(0x2, 0, 0x10, 0, "1.2.840.10008.1.2.1");
+	}
+
+	// Adjust the version if it isn't already set
+	///////////////////////////////////////////////////////////
+	ptr<handlers::dataHandlerRaw> versionHandler(m_pDataSet->getDataHandlerRaw(0x2, 0, 0x1, 0, true, "OB"));
+	if(versionHandler->getSize() != 2)
+	{
+		versionHandler->setSize(2);
+		versionHandler->setPointer(0);
+		versionHandler->setUnsignedLongIncPointer(0);
+		versionHandler->setUnsignedLong(1);
+	}
+	versionHandler.release();
+
+	// Adjust the SOP class UID if it isn't already set
+	///////////////////////////////////////////////////////////
+	if(m_pDataSet->getString(0x2, 0, 0x2, 0) == "")
+	{
+		m_pDataSet->setString(0x2, 0, 0x2, 0, "1.2.840.10008.1.3.10");
 	}
 
 	// Allocate offset fields
+	///////////////////////////////////////////////////////////
 	if(m_pFirstRootRecord != 0)
 	{
 		m_pFirstRootRecord->updateOffsets();
@@ -430,29 +559,49 @@ bool dicomDir::preDelete()
 
 
 	// Save to a null stream in order to update the offsets
+	///////////////////////////////////////////////////////////
 	ptr<nullStream> saveStream(new nullStream);
 	ptr<streamWriter> writer(new streamWriter(saveStream));
 	ptr<codecs::dicomCodec> writerCodec(new codecs::dicomCodec);
 	writerCodec->write(writer, m_pDataSet);
 
 	// Scan all the records and update the pointers
+	///////////////////////////////////////////////////////////
 	if(m_pFirstRootRecord != 0)
 	{
 		m_pFirstRootRecord->updateOffsets();
 		m_pDataSet->setUnsignedLong(0x0004, 0, 0x1200, 0, m_pFirstRootRecord->getRecordDataSet()->getItemOffset());
 	}
 
-	return true;
+	return m_pDataSet;
 
 }
 
 
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
+// Returns the first root record
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
 ptr<directoryRecord> dicomDir::getFirstRootRecord()
 {
 	return m_pFirstRootRecord;
 }
 
 
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
+// Set the first root record
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
 void dicomDir::setFirstRootRecord(ptr<directoryRecord> pFirstRootRecord)
 {
 	m_pFirstRootRecord = pFirstRootRecord;
