@@ -114,7 +114,7 @@ public:
 	///                If the codec cannot parse the stream's
 	///                 content, then the stream is rewinded to
 	///                 its initial position.
-	/// @param maxSizeBufferLoad if a loaded buffer is exceedes
+	/// @param maxSizeBufferLoad if a loaded buffer exceedes
 	///                 the size in the parameter then it is
 	///                 not loaded immediatly but it will be
 	///                 loaded on demand. Some codecs may 
