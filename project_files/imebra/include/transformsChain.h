@@ -33,7 +33,7 @@ namespace transforms
 ///  previous transform as input.
 ///
 /// When all the transforms have been defined, call
-///  endTransformsChain.
+///  endTransformsChain().
 ///
 /// The first defined transform takes the input images
 ///  defined in the transformsChain object, the last
