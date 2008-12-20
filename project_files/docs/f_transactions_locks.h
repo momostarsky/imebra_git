@@ -85,7 +85,7 @@ myDataSet->setUnicodeString(0x0010, 0, 0x0010, 0, L"Initial^name");
 myDataSet->setUnsignedLong(0x0010, 0, 0x1010, 0, 10); // ten years old
 
 IMEBRA_TRANSACTION_START();
-// If an error occurs here then the two tags will retail their
+// If an error occurs here then the two tags will retain their
 //  initial state
 myDataSet->setUnicodeString(0x0010, 0, 0x0010, 0, L"Surname^name");
 myDataSet->setUnsignedLong(0x0010, 0, 0x1010, 0, 20); // twenty years old
