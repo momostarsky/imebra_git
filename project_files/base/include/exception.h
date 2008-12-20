@@ -35,8 +35,8 @@ namespace puntoexe
 /// The application can use the macros
 ///  PUNTOEXE_FUNCTION_START(),
 ///  PUNTOEXE_FUNCTION_END(), 
-///  PUNTOEXE_FUNCTION_THROW() and
-///  PUNTOEXE_FUNCTION_RETHROW()
+///  PUNTOEXE_THROW() and
+///  PUNTOEXE_RETHROW()
 ///  inside its function: the macros take care of logging
 ///  in the exceptions manager the source code's lines
 ///  travelled by an exception while it is being thrown
