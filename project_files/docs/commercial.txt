@@ -27,9 +27,7 @@ LICENSE GRANT
 
 REDISTRIBUTABLES
 
-The Imebra's source code cannot be redistributed; the Imebra library can be 
- redistributed only in machine-executable form, statically or dinamically linked to 
- the product developed by the license holder.
+The Imebra's source code doesn't need to be redistributed with your application.
 
 
 TERMINATION
