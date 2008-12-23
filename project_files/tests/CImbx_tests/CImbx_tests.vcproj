@@ -2315,6 +2315,12 @@
 				RelativePath="..\..\docs\f_transactions_locks.h">
 			</File>
 			<File
+				RelativePath="..\..\docs\g_examples.h">
+			</File>
+			<File
+				RelativePath="..\..\docs\html_header.html">
+			</File>
+			<File
 				RelativePath="..\..\docs\mainPage.h">
 			</File>
 		</Filter>
