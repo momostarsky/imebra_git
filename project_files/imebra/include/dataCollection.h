@@ -373,10 +373,6 @@ protected:
 	charsetsList::tCharsetsList m_charsetsList;
 };
 
-#ifdef SWIG
-	%template() dataCollection<data>;
-#endif
-
 } // namespace imebra
 
 } // namespace puntoexe
