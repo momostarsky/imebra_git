@@ -7,9 +7,27 @@ $fileHeader$
 
 #include "../../imebra/include/imebra.h"
 #include <sstream>
+#include <process.h>
+#include <memory>
+#include <list>
 
 using namespace puntoexe;
 using namespace puntoexe::imebra;
+
+int findArgument(const char* argument, int argc, char* argv[])
+{
+	for(int scanArg(0); scanArg != argc; ++scanArg)
+	{
+		if(std::string(argv[scanArg]) == argument)
+		{
+			return scanArg;
+		}
+	}
+	return -1;
+}
+
+
+
 int main(int argc, char* argv[])
 {
 	try
@@ -17,11 +35,22 @@ int main(int argc, char* argv[])
 
 	if(argc < 3)
 	{
-		std::wcout << L"Usage: dicom2jpeg dicomFileName jpegFileName [-presentation]\r\n";
-		std::wcout << L" dicomFileName = name of the dicom file\r\n";
-		std::wcout << L" jpegFileName  = name of the final jpeg file\r\n";
-		std::wcout << L" -presentation = if present then the presentation VOI/LUT are applied\r\n";
-		std::wcout << L"                 The modality VOI/LUT is always applied\r\n";
+		std::wcout << 
+L"\
+Usage: dicom2jpeg dicomFileName jpegFileName [-presentation] [-ffmpeg FFMPEGPATH FFMPEGOPT]\n\
+\n\
+dicomFileName        = name of the dicom file\n\
+jpegFileName         = name of the final jpeg file\n\
+-presentation        = if present then the presentation VOI/LUT are\n\
+                       applied\n\
+                       The modality VOI/LUT is always applied\n\
+-ffmpeg FFMPEGPATH   = launches FFMPEG after generating the jpeg images.\n\
+                       FFMPEGPATH is the path to FFMPEG and FFMPEGOPT\n\
+                       are the options for ffmpeg.n\
+                       The input images and the frame rate are\n\
+                       added automatically to the options\
+";
+		return 1;
 	}
 
 	// Separate the extension from the file name
@@ -51,6 +80,12 @@ int main(int argc, char* argv[])
 	ptr<codecs::codecFactory> codecsFactory(codecs::codecFactory::getCodecFactory());
 	ptr<dataSet> loadedDataSet(codecsFactory->load(reader, 2048));
 	
+	// Check for the -presentation flag
+	int presentationFlag(findArgument("-presentation", argc, argv));
+	int ffmpegFlag(findArgument("-ffmpeg", argc, argv));
+
+	size_t framesCount(0);
+
 	try
 	{
 		for(imbxUint32 frameNumber(0); ; ++frameNumber)
@@ -63,7 +98,7 @@ int main(int argc, char* argv[])
 			ptr<image> finalImage(modVOILUT->getOutputImage(0));
 
 			// Apply the presentation VOI/LUT
-			if(argc == 4 && std::string(argv[3]) == "-presentation")
+			if(presentationFlag >= 0)
 			{
 				ptr<transforms::VOILUT> presentationVOILUT(new transforms::VOILUT);
 				presentationVOILUT->declareDataSet(loadedDataSet);
@@ -103,15 +138,12 @@ int main(int argc, char* argv[])
 				finalImage = eightBitImage;
 			}
 
-			// Create a jpeg dataset
-			std::wstring jpegTransferSyntax(L"1.2.840.10008.1.2.4.50");
-			ptr<dataSet> jpegDataSet(new dataSet);
-			jpegDataSet->setImage(0, finalImage, jpegTransferSyntax, codecs::codec::veryHigh);
 
 			// Open a stream for the jpeg
+			const std::wstring jpegTransferSyntax(L"1.2.840.10008.1.2.4.50");
 			std::ostringstream jpegFileName;
 			jpegFileName << outputFileName;
-			if(frameNumber != 0)
+			if(frameNumber != 0 || ffmpegFlag >= 0)
 			{
 				jpegFileName << "_" << frameNumber;
 			}
@@ -120,8 +152,11 @@ int main(int argc, char* argv[])
 			jpegStream->openFile(jpegFileName.str(), std::ios_base::out | std::ios_base::trunc);
 			ptr<puntoexe::streamWriter> jpegWriter(new streamWriter(jpegStream));
 			ptr<codecs::codec> outputCodec(codecsFactory->getCodec(jpegTransferSyntax));
-			outputCodec->write(jpegWriter, jpegDataSet);
+			outputCodec->setImage(jpegWriter, finalImage, jpegTransferSyntax, codecs::codec::veryHigh,
+				"OB", 8, false, false, false, false);
+			++framesCount;
 		}
+
 	}
 	catch(dataSetImageDoesntExist&)
 	{
@@ -129,7 +164,53 @@ int main(int argc, char* argv[])
 		//  end of the images list
 		exceptionsManager::getMessage(); 
 	}
-	return 0;
+
+		// All the images have been generated.
+		// Should we launch FFMPEG?
+		if(ffmpegFlag >= 0 && framesCount != 0)
+		{
+			typedef std::list<std::string> tOptionsList;
+			tOptionsList options;
+
+			options.push_back(argv[ffmpegFlag + 1]);
+
+			imbxUint32 framesPerSecond(loadedDataSet->getUnsignedLong(0x0018, 0x0, 0x0040, 0x0));
+			if(framesPerSecond != 0)
+			{
+				options.push_back("-r");
+				std::ostringstream frameRate;
+				frameRate << framesPerSecond;
+				options.push_back(frameRate.str());
+			}
+
+			options.push_back("-i");
+			options.push_back(outputFileName + "_%d" + extension);
+
+			options.push_back("-dframes");
+
+			std::ostringstream frameCount;
+			frameCount << (unsigned long)framesCount;
+			options.push_back(frameCount.str());
+
+			for(int copyArguments(ffmpegFlag + 2); copyArguments < argc; ++copyArguments)
+			{
+				options.push_back(argv[copyArguments]);
+			}
+
+			std::auto_ptr<const char*> ffArgv(new const char*[options.size() + 1]);
+			size_t insertPosition(0);
+			for(tOptionsList::iterator scanOptions(options.begin()); scanOptions != options.end(); ++scanOptions, ++insertPosition)
+			{
+				ffArgv.get()[insertPosition] = (*scanOptions).c_str();
+			}
+			ffArgv.get()[options.size()] = 0;
+
+			// Launch ffmpeg
+			return (int)_spawnvp(_P_WAIT , argv[ffmpegFlag + 1], ffArgv.get());
+
+		}
+
+		return 0;
 
 	}
 	catch(...)
