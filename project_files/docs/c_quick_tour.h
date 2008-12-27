@@ -64,12 +64,18 @@ The previous code gets the pointer to the \ref puntoexe::imebra::codecs::codecFa
 Once the dataSet has been created or loaded, your application can load or write
  values into the dataSet's tags.
 
-In the following example we read the first two components of the patient's name.
-A patient name can have up to 5 components (last name, middle name, first name,...).
-Refer to the Dicom standard for more informations regarding the patient name.
+In the following example we read the the patient's name.
+A person name can have up to 5 components (last name, middle name, first name,...)
+ separated by ^ and can be represented in 3 different ways (character representation,
+ ideographic representation or phonetic representation) separated by a =.
+
+Refer to the Dicom standard for more informations regarding the person name.
+
+The Person Name handler in Imebra automatically separates the name's representation,
+ while the name's components have to be separated by the application.
 \code
-std::string patientName0 = testDataSet->getString(0x0010, 0, 0x0010, 0);
-std::string patientName1 = testDataSet->getString(0x0010, 0, 0x0010, 1);
+std::string patientNameCharacter = testDataSet->getString(0x0010, 0, 0x0010, 0);
+std::string patientNameIdeographic = testDataSet->getString(0x0010, 0, 0x0010, 1);
 \endcode
 
 
