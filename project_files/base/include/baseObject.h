@@ -487,7 +487,10 @@ protected:
 ///         baseObject.
 ///
 /// The class lock ALL the objects listed in the
-///  constructor's parameter
+///  constructor's parameter.
+/// If the objects cannot be locked at once, then all of
+///  them are left unlocked until all of them can be locked
+///  all togheter.
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
