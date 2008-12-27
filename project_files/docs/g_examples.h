@@ -5,15 +5,53 @@ $fileHeader$
 /*!
 
 \example dicom2jpeg/dicom2jpeg.cpp
-This application converts dicom file into one or more jpeg files.\n
-Usage:
+This application converts dicom file into one or more jpeg files, or into movies.\n
+
+<b>FFMPEG</b>
+To convert dicom files into movies this application needs the open source
+ program ffmpeg, available for Windows and linux platforms.\n
+Ffmpeg is not redistributed with Imebra and must be downloaded from here:
+- http://ffmpeg.mplayerhq.hu/ (Linux)
+- http://ffmpeg.arrozcru.org/ (Windows)
+- http://winff.org/html/ (Linux and Windows, with GUI)
+
+<b>Usage</b>
 \code
-dicom2jpeg dicomFileName jpegFileName [-presentation]
+dicom2jpeg dicomFileName jpegFileName [-ffmpeg mpegPath [mpegOptions]]
 \endcode
 - dicomFileName: the name of the dicom file to convert
 - jpegFileName: the name of the resulting jpeg file
-- -presentation: applies the presentation VOI/LUT to the image before saving it
-  into the jpeg file
+- mpegPath: the path to the ffmpeg executable
+- mpegOptions: the list of options to be passed to ffmpeg, using the ffmpeg format.
+  The input file and the frame rate are added automatically by dicom2jpeg
+
+<b>Examples</b>
+
+The following code converts a dicom file named "input.dcm" to a jpeg file named 
+ "output.jpg". If the file output.jpg already exists then it will be overwritten.
+\code
+dicom2jpeg input.dcm output.jpg
+\endcode
+
+The following code converts a multiframe file named "multiframe.dcm" to 
+ several jpeg files named "output.jpg", "output1.jpg", "output2.jpg", ...,
+ "outputN.jpg" (N=number of frames-1)
+\code
+dicom2jpeg multiframe.dcm output.jpg
+\endcode
+
+The following code converts a multiframe file named "multiframe.dcm" to 
+ a swf movie named "movie.swf".\n
+Before producing the movie, dicom2jpeg creates a serie of jpg images
+ named output0.jpg, output1.jpg, ..., outputN.jpg (N=number of frames-1).
+Then dicom2jpeg executes ffmpeg and specifies the created jpg images as
+ input images and also specifies the frame rate; other options must be
+ specified in the call to dicom2jpeg.
+\code
+dicom2jpeg multiframe.dcm output.jpg -ffmpeg ffmpeg.exe movie.swf
+\endcode
+
+
 
 
 \example dicomdirItems/dicomdirItems.cpp
