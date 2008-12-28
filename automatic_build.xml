@@ -137,6 +137,9 @@ The author can be contacted by email at paolo@puntoexe.com or by mail at
 		<exec dir="${build_dir}/puntoexe_library" executable="doxygen" failonerror="true">
 			<arg value="doxyfileHTML"/>
 		</exec>
+		<copy todir="${build_dir_html_doc}">
+			<fileset dir="${build_dir}/puntoexe_library/generated_doc/html" />
+		</copy>
 	</target>
 
 	<!-- Build the PDF documentation -->
@@ -212,9 +215,12 @@ The author can be contacted by email at paolo@puntoexe.com or by mail at
 	<target name="create_build_dir" depends="version" description="Create the directory for the final build">
 		<property name="builds" value="builds" />
 		<property name="build_dir" value="${builds}/imebra_${fileVersion}" />
+		<property name="build_dir_html_doc" value="${builds}/imebra_${fileVersion}_html_doc" />
 		<mkdir dir="${builds}" />
 		<delete dir="${build_dir}" failonerror="false" /> 
 		<mkdir dir="${build_dir}" />
+		<delete dir="${build_dir_html_doc}" failonerror="false" /> 
+		<mkdir dir="${build_dir_html_doc}" />
 		<delete file="${builds}/imebra_${fileVersion}.zip" failonerror="false" /> 
 	</target>
 
