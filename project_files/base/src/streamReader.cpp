@@ -8,6 +8,7 @@ $fileHeader$
 */
 
 #include "../include/streamReader.h"
+#include <string.h>
 
 namespace puntoexe
 {

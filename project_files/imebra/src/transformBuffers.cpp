@@ -9,6 +9,7 @@ $fileHeader$
 
 #include "../../base/include/exception.h"
 #include "../include/transformBuffers.h"
+#include <string.h>
 
 
 namespace puntoexe

@@ -2,6 +2,7 @@
 <CodeBlocks_workspace_file>
 	<Workspace title="puntoexe_library workspace">
 		<Project filename="tests/CImbx_tests/CImbx_tests.cbp" />
-		<Project filename="examples/dicom2jpeg/dicom2jpeg.cbp" active="1" />
+		<Project filename="examples/dicom2jpeg/dicom2jpeg.cbp" />
+		<Project filename="examples/dicomdirItems/dicomdirItems.cbp" active="1" />
 	</Workspace>
 </CodeBlocks_workspace_file>

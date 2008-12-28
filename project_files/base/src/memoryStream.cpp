@@ -9,6 +9,7 @@ $fileHeader$
 
 #include "../include/exception.h"
 #include "../include/memoryStream.h"
+#include <string.h>
 
 namespace puntoexe
 {
@@ -72,7 +73,7 @@ void memoryStream::write(imbxUint32 startPosition, imbxUint8* pBuffer, imbxUint3
 		m_memory->reserve(reserveSize);
 		m_memory->resize(startPosition + bufferLength);
 	}
-	
+
 	::memcpy(m_memory->data() + startPosition, pBuffer, bufferLength);
 
 	PUNTOEXE_FUNCTION_END();

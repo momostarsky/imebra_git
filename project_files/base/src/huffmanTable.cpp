@@ -13,6 +13,7 @@ $fileHeader$
 #include "../include/streamWriter.h"
 
 #include <list>
+#include <string.h>
 
 namespace puntoexe
 {

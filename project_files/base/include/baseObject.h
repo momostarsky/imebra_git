@@ -14,6 +14,7 @@ $fileHeader$
 #include "criticalSection.h"
 
 #include <string>
+#include <memory>
 
 ///////////////////////////////////////////////////////////
 /// \namespace puntoexe

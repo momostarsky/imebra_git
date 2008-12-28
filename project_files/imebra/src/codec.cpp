@@ -13,6 +13,7 @@ $fileHeader$
 #include "../include/codec.h"
 #include "../include/dataSet.h"
 #include "../include/codecFactory.h"
+#include <string.h>
 
 
 namespace puntoexe

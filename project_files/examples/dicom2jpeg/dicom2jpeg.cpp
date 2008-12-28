@@ -7,7 +7,14 @@ $fileHeader$
 
 #include "../../imebra/include/imebra.h"
 #include <sstream>
+
+#ifdef PUNTOEXE_WINDOWS
 #include <process.h>
+#else
+#include <spawn.h>
+#include <sys/wait.h>
+#endif
+
 #include <memory>
 #include <list>
 
@@ -35,7 +42,7 @@ int main(int argc, char* argv[])
 
 		if(argc < 3)
 		{
-			std::wcout << 
+			std::wcout <<
 L"\
 Usage: dicom2jpeg dicomFileName jpegFileName [-ffmpeg FFMPEGPATH FFMPEGOPT]\n\
 \n\
@@ -76,7 +83,7 @@ jpegFileName         = name of the final jpeg file\n\
 		//  from the input stream
 		ptr<codecs::codecFactory> codecsFactory(codecs::codecFactory::getCodecFactory());
 		ptr<dataSet> loadedDataSet(codecsFactory->load(reader, 2048));
-		
+
 		// Check for the -ffmpeg flag
 		int ffmpegFlag(findArgument("-ffmpeg", argc, argv));
 
@@ -150,7 +157,7 @@ jpegFileName         = name of the final jpeg file\n\
 				// Write the jpeg image to the stream
 				outputCodec->setImage(jpegWriter, finalImage, jpegTransferSyntax, codecs::codec::veryHigh,
 					"OB", 8, false, false, false, false);
-				
+
 				++framesCount;
 			}
 
@@ -159,7 +166,7 @@ jpegFileName         = name of the final jpeg file\n\
 		{
 			// Ignore this exception. It is thrown when we reach the
 			//  end of the images list
-			exceptionsManager::getMessage(); 
+			exceptionsManager::getMessage();
 		}
 
 		// All the images have been generated.
@@ -188,7 +195,7 @@ jpegFileName         = name of the final jpeg file\n\
 			{
 				framesPerSecond = loadedDataSet->getUnsignedLong(0x0008, 0x0, 0x2144, 0x0);
 			}
-			
+
 			// Add the ffmpeg argument for the frames per second
 			if(framesPerSecond > 0.1)
 			{
@@ -224,7 +231,16 @@ jpegFileName         = name of the final jpeg file\n\
 			ffArgv.get()[options.size()] = 0;
 
 			// Launch ffmpeg
-			return (int)_spawnvp(_P_WAIT , argv[ffmpegFlag + 1], ffArgv.get());
+#ifdef PUNTOEXE_WINDOWS
+            return (int)_spawnvp(_P_WAIT , argv[ffmpegFlag + 1], ffArgv.get());
+#else
+            char *environment[] = {0};
+
+            pid_t process_id;
+            posix_spawnp (&process_id, argv[ffmpegFlag + 1],
+                            0, 0, (char* const*)ffArgv.get(), (char* const*)environment);
+            wait(0);
+#endif
 
 		}
 

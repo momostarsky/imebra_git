@@ -9,6 +9,7 @@ $fileHeader$
 
 #include <list>
 #include <vector>
+#include <string.h>
 #include "../../base/include/exception.h"
 #include "../../base/include/streamReader.h"
 #include "../../base/include/streamWriter.h"
@@ -847,7 +848,7 @@ void dicomCodec::parseStream(ptr<streamReader> pStream,
 		imbxUint32 bufferId = 0;
 		while(tagLengthDWord)
 		{
-			// Remember the item's position (used by DICOMDIR 
+			// Remember the item's position (used by DICOMDIR
 			//  structures)
 			///////////////////////////////////////////////////////////
 			imbxUint32 itemOffset(pStream->getControlledStreamPosition());

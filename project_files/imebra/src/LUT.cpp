@@ -10,6 +10,7 @@ $fileHeader$
 #include "../../base/include/exception.h"
 #include "../include/LUT.h"
 #include "../include/dataHandler.h"
+#include <string.h>
 
 namespace puntoexe
 {
@@ -202,7 +203,7 @@ void lut::setLutValue(imbxInt32 startValue, imbxInt32 lutValue)
 		m_pMappedValues[startValue]=lutValue;
 		m_mappedValuesRev.clear();
 	}
-	
+
 	PUNTOEXE_FUNCTION_END();
 }
 
@@ -255,11 +256,11 @@ imbxInt32 lut::mappedValue(imbxInt32 id)
 	{
 		return 0;
 	}
-	
+
 	// Subtract the first mapped value
 	///////////////////////////////////////////////////////////
 	id -= m_firstMapped;
-	
+
 	if(id <= 0)
 	{
 		return m_pMappedValues[0];
@@ -326,7 +327,7 @@ imbxInt32 lut::mappedValueRev(imbxInt32 lutValue)
 		return lutIterator->second;
 
 	lutIterator=m_mappedValuesRev.lower_bound(lutValue);
-	
+
 	if(lutIterator!=m_mappedValuesRev.end())
 		return lutIterator->second;
 

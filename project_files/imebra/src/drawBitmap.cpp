@@ -11,6 +11,7 @@ $fileHeader$
 #include "../include/image.h"
 #include "../include/colorTransformsFactory.h"
 #include "../include/transformHighBit.h"
+#include <string.h>
 
 namespace puntoexe
 {
@@ -40,7 +41,7 @@ void drawBitmap::declareInputImage(long imageNumber, ptr<image> pInputImage)
 {
 	PUNTOEXE_FUNCTION_START(L"");
 
-	// If the dataset hasn't been declared then throw an 
+	// If the dataset hasn't been declared then throw an
 	//  exception
 	///////////////////////////////////////////////////////////
 	if(getDataSet() == 0)
@@ -63,7 +64,7 @@ void drawBitmap::declareInputImage(long imageNumber, ptr<image> pInputImage)
 		m_pTemporaryImage = new image;
 	}
 
-	// Get the color transform 
+	// Get the color transform
 	///////////////////////////////////////////////////////////
 	ptr<transforms::colorTransforms::colorTransformsFactory> pColorFactory =
 		transforms::colorTransforms::colorTransformsFactory::getColorTransformsFactory();
@@ -108,7 +109,7 @@ void drawBitmap::declareInputImage(long imageNumber, ptr<image> pInputImage)
 // Setup the portion of the bitmap that has to be retrieved
 //
 ///////////////////////////////////////////////////////////
-void drawBitmap::declareBitmapType(imbxInt32 totalWidthPixels, imbxInt32 totalHeightPixels, 
+void drawBitmap::declareBitmapType(imbxInt32 totalWidthPixels, imbxInt32 totalHeightPixels,
 		imbxInt32 visibleTopLeftX, imbxInt32 visibleTopLeftY, imbxInt32 visibleBottomRightX, imbxInt32 visibleBottomRightY,
 		imbxInt32 alignByte,
 		bool bBGR)
@@ -132,8 +133,8 @@ void drawBitmap::declareBitmapType(imbxInt32 totalWidthPixels, imbxInt32 totalHe
 	// Check if the image is visible in the specified area
 	///////////////////////////////////////////////////////////
 	if(
-		m_visibleBottomRightX > m_totalWidthPixels || 
-		m_visibleBottomRightY > m_totalHeightPixels || 
+		m_visibleBottomRightX > m_totalWidthPixels ||
+		m_visibleBottomRightY > m_totalHeightPixels ||
 		m_visibleTopLeftX < 0 ||
 		m_visibleTopLeftY < 0 ||
 		m_visibleTopLeftX > m_visibleBottomRightX ||
@@ -143,15 +144,15 @@ void drawBitmap::declareBitmapType(imbxInt32 totalWidthPixels, imbxInt32 totalHe
 		PUNTOEXE_THROW(drawBitmapExceptionInvalidArea, "Destination area not valid");
 	}
 
-	if(m_destBitmapWidth != m_visibleBottomRightX - m_visibleTopLeftX || 
-		m_destBitmapHeight != m_visibleBottomRightY - m_visibleTopLeftY) 
+	if(m_destBitmapWidth != m_visibleBottomRightX - m_visibleTopLeftX ||
+		m_destBitmapHeight != m_visibleBottomRightY - m_visibleTopLeftY)
 	{
 		m_destBitmapRowSize = ((m_visibleBottomRightX - m_visibleTopLeftX) * 3 + m_alignByte - 1) / m_alignByte;
 		m_destBitmapRowSize *= m_alignByte;
 
 		m_finalBitmap = memoryPool::getMemoryPool()->getMemory(m_destBitmapRowSize * (m_visibleBottomRightY - m_visibleTopLeftY));
 		m_destBitmapHeight = m_visibleBottomRightY - m_visibleTopLeftY;
-		
+
 	}
 
 	PUNTOEXE_FUNCTION_END();
@@ -251,9 +252,9 @@ void drawBitmap::doTransform()
 		{
 			imbxInt32* pAveragePointer = m_averagePixels.get();
 			imbxUint32* pNextSourceXIndex = m_sourcePixelIndex.get();
-			
+
 			imbxInt32* pImagePointer = &(imageMemory[(scanImageY >> leftShiftY) * imageSizeX * channelsNumber + ((*pNextSourceXIndex) >> leftShiftX) * channelsNumber]);
-			
+
 			for(imbxInt32 scanX = m_visibleTopLeftX; scanX != m_visibleBottomRightX; ++scanX)
 			{
 				for(imbxUint32 scanImageX = *(pNextSourceXIndex++); scanImageX != *pNextSourceXIndex; ++scanImageX)

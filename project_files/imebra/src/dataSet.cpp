@@ -25,6 +25,7 @@ $fileHeader$
 #include "../include/transformHighBit.h"
 #include "../include/transaction.h"
 #include <iostream>
+#include <string.h>
 
 
 namespace puntoexe
@@ -66,7 +67,7 @@ ptr<data> dataSet::getTag(imbxUint16 groupId, imbxUint16 order, imbxUint16 tagId
 
 	ptr<dataGroup>	group=getGroup(groupId, order, bCreate);
 	if(group != 0)
-	{	
+	{
 		pData=group->getTag(tagId, bCreate);
 	}
 
@@ -90,7 +91,7 @@ ptr<dataGroup> dataSet::getGroup(imbxUint16 groupId, imbxUint16 order, bool bCre
 	PUNTOEXE_FUNCTION_START(L"dataSet::getGroup");
 
 	lockObject lockAccess(this);
-	
+
 	ptr<dataGroup> pData=getData(groupId, order);
 
 	if(pData == 0 && bCreate)
@@ -252,7 +253,7 @@ ptr<image> dataSet::getImage(imbxUint32 frameNumber)
 		if(m_imagesPositions.size() != numberOfFrames)
 		{
 			m_imagesPositions.resize(numberOfFrames);
-			
+
 			for(imbxUint32 resetImagesPositions = 0; resetImagesPositions < numberOfFrames; m_imagesPositions[resetImagesPositions++] = 0)
 			{}// empty loop
 
@@ -286,12 +287,12 @@ ptr<image> dataSet::getImage(imbxUint32 frameNumber)
 
 	ptr<image> pImage;
 	pImage = pCodec->getImage(this, imageStream, imageStreamDataType);
-	
+
 	if(!bDontNeedImagesPositions && m_imagesPositions.size() > frameNumber)
 	{
 		m_imagesPositions[frameNumber] = imageStream->position();
 	}
-	
+
 	// If the image has been returned correctly, then set
 	//  the image's size
 	///////////////////////////////////////////////////////////
@@ -335,8 +336,8 @@ void dataSet::setImage(imbxUint32 frameNumber, ptr<image> pImage, std::wstring t
 	imbxUint16 groupId(0x7fe0), orderId(0), tagId(0x0010);
 	imbxUint32 firstBufferId(0), endBufferId(0);
 
-	// bDontChangeAttributes is true if some images already 
-	//  exist in the dataset and we must save the new image 
+	// bDontChangeAttributes is true if some images already
+	//  exist in the dataset and we must save the new image
 	//  using the attributes already stored
 	///////////////////////////////////////////////////////////
 	imbxUint32 numberOfFrames = getUnsignedLong(0x0028, 0, 0x0008, 0);
@@ -360,7 +361,7 @@ void dataSet::setImage(imbxUint32 frameNumber, ptr<image> pImage, std::wstring t
 
 	// Do we have to save the basic offset table?
 	///////////////////////////////////////////////////////////
-	bool bEncapsulated = saveCodec->encapsulated(transferSyntax) || 
+	bool bEncapsulated = saveCodec->encapsulated(transferSyntax) ||
 		                 (getDataHandlerRaw(groupId, 0x0, tagId, 0x1, false) != 0);
 
 	// Check if we are dealing with an old Dicom format...
@@ -371,7 +372,7 @@ void dataSet::setImage(imbxUint32 frameNumber, ptr<image> pImage, std::wstring t
 		orderId = (imbxUint16)frameNumber;
 		bEncapsulated = false;
 	}
-	
+
 
 	// Set the subsampling flags
 	///////////////////////////////////////////////////////////
@@ -459,14 +460,14 @@ void dataSet::setImage(imbxUint32 frameNumber, ptr<image> pImage, std::wstring t
 		ptr<puntoexe::memoryStream> memStream(new memoryStream(uncompressedImage));
 		outputStream = new streamWriter(memStream);
 	}
-	
+
 	// Save the image in the stream
 	///////////////////////////////////////////////////////////
 	saveCodec->setImage(
 		outputStream,
-		pImage, 
-		transferSyntax, 
-		quality, 
+		pImage,
+		transferSyntax,
+		quality,
 		dataHandlerType,
 		allocatedBits,
 		bSubSampledX, bSubSampledY,
@@ -558,12 +559,12 @@ imbxUint32 dataSet::getFrameOffset(imbxUint32 frameNumber)
 	{
 		return 0xffffffff;
 	}
-	
+
 	// Get the offset table's size, in number of offsets
 	///////////////////////////////////////////////////////////
 	imbxUint32 offsetsCount = framesPointer->getSize() / sizeof(imbxUint32);
-	
-	// If the requested frame doesn't exist then return 
+
+	// If the requested frame doesn't exist then return
 	//  0xffffffff (the maximum value)
 	///////////////////////////////////////////////////////////
 	if(frameNumber >= offsetsCount && frameNumber != 0)
@@ -853,10 +854,10 @@ ptr<lut> dataSet::getLut(imbxUint16 groupId, imbxUint16 tagId, imbxUint32 lutId)
 		pLUT = tempLut;
 		ptr<handlers::dataHandler> descriptorHandle=embeddedLUT->getDataHandler(0x0028, 0x0, 0x3002, 0x0, false);
 		ptr<handlers::dataHandler> dataHandle=embeddedLUT->getDataHandler(0x0028, 0x0, 0x3006, 0x0, false);
-		
+
 		pLUT->setLut(
-			descriptorHandle, 
-			dataHandle, 
+			descriptorHandle,
+			dataHandle,
 			embeddedLUT->getUnicodeString(0x0028, 0x0, 0x3003, 0x0));
 	}
 	return pLUT;
@@ -964,7 +965,7 @@ imbxUint32 dataSet::getUnsignedLong(imbxUint16 groupId, imbxUint16 order, imbxUi
 	{
 		return 0;
 	}
-	
+
 	dataHandler->setPointer(elementNumber);
 	return dataHandler->pointerIsValid() ? dataHandler->getUnsignedLong() : 0;
 

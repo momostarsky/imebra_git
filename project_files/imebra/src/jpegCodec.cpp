@@ -16,6 +16,7 @@ $fileHeader$
 #include "../include/image.h"
 #include <vector>
 #include <stdlib.h>
+#include <string.h>
 
 namespace puntoexe
 {
