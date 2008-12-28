@@ -29,7 +29,7 @@
 			<arg value="imebra_${fileVersion}" />
 		</exec>
 		<buildnumber file="build.number" /> 
-		<exec dir="." executable="svn" failonerror="true">
+		<exec dir="." executable="hg" failonerror="true">
 			<arg value="commit"/>
 			<arg value="-m"/>
 			<arg value='"Increasing the build number"'/>
@@ -69,6 +69,11 @@
 		<copy todir="${build_dir}/puntoexe_library/docs">
 			<fileset dir="project_files/docs" />
 		</copy>
+		
+		<delete dir="${build_dir}/puntoexe_library/examples/dicom2jpeg/Debug" failonerror="false" /> 
+		<delete dir="${build_dir}/puntoexe_library/examples/dicom2jpeg/Release" failonerror="false" /> 
+		<delete dir="${build_dir}/puntoexe_library/examples/dicomdirItems/Debug" failonerror="false" /> 
+		<delete dir="${build_dir}/puntoexe_library/examples/dicomdirItems/Release" failonerror="false" /> 
 		<copy todir="${build_dir}/puntoexe_library/examples">
 			<fileset dir="project_files/examples" />
 		</copy>
@@ -202,6 +207,7 @@ The author can be contacted by email at paolo@puntoexe.com or by mail at
 		</exec>
 	</target>
 
+
 	<!-- Create the directory for the final build -->
 	<target name="create_build_dir" depends="version" description="Create the directory for the final build">
 		<property name="builds" value="builds" />
@@ -215,8 +221,8 @@ The author can be contacted by email at paolo@puntoexe.com or by mail at
 	<!-- Initialize the version number -->
 	<target name="version" description="Initialize the build number">
 		<property file="./build.number" /> 
-		<property name="fileVersion" value="0_0_${build.number}_Beta"/>
-		<property name="fullVersionReadable" value="0.0.${build.number}_Beta"/>
+		<property name="fileVersion" value="0_0_${build.number}"/>
+		<property name="fullVersionReadable" value="0.0.${build.number}"/>
 		<property name="productName" value="Imebra ${fullVersionReadable}"/>
 	</target>
 

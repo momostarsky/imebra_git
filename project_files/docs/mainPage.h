@@ -34,6 +34,7 @@ At the moment the library provides the following features:
 - color space conversion
 - support for nested datasets (sequences)
 - support for Unicode and different Dicom charsets
+- DICOMDIR parser and writer
 - support for transactions
 - load the larger tags only when necessary
 
@@ -62,6 +63,21 @@ A detailed reference of the C++ classes that compose Imebra is included in
 
 
 \section changeLog Changes log
+
+\subsection since_0_0_44 Changes since version 0.0.44 (Beta)
+
+- Fixes #1 (The library's version should be visible in the source code)
+- Added DICOMDIR creator/parser
+- Added an example that extract a DICOMDIR to an XML file
+- Fixes #4 (A sequence tag should have the type set to SQ, but the 
+  writer uses the first buffer's type, therefore the data type is incorrect)
+- Fixes #5 (When writing sequences, the tag's length is not calculated correctly)
+- Fixes #6 (dicomCodec::getDataSetLength doesn't calculate the correct size)
+- dicom2jpeg can now invoke ffmpeg and create movies
+- Mercurial is now used as version control (was SVN)
+- Corrected documentation
+- Changed open source license to Affero GPL 3
+
 
 \subsection since_0_0_41 Changes since version 0.0.41 (Alpha)
 
