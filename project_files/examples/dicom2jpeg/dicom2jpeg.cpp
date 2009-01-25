@@ -37,6 +37,9 @@ int findArgument(const char* argument, int argc, char* argv[])
 
 int main(int argc, char* argv[])
 {
+	std::wstring version(L"1.0.0.1");
+	std::wcout << L"dicom2jpeg version " << version << L"\n";
+
 	try
 	{
 
