@@ -2308,6 +2308,9 @@
 				RelativePath="..\..\docs\g_examples.h">
 			</File>
 			<File
+				RelativePath="..\..\docs\html_footer.html">
+			</File>
+			<File
 				RelativePath="..\..\docs\html_header.html">
 			</File>
 			<File
