@@ -64,6 +64,15 @@ A detailed reference of the C++ classes that compose Imebra is included in
 
 \section changeLog Changes log
 
+\subsection since_0_0_45 Changes since version 0.0.45
+
+- Fixes #32 (When launched without parameters, dicom2jpeg should display the version)
+- Fixes #34 (The on-line documentation should have to Google Analytics tracking code)
+- Fixes #37 (Change the title of the documentation to: Imebra - Open source dicom 
+  library)
+- Fixes #39 (The class dataHandlerNumeric calculates the wrong size)
+
+
 \subsection since_0_0_44 Changes since version 0.0.44 (Beta)
 
 - Fixes #1 (The library's version should be visible in the source code)
