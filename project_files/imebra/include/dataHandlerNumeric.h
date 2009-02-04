@@ -588,7 +588,7 @@ public:
 
 		m_memory = memoryBuffer;
 		m_pMemoryString = (dataHandlerType*)memoryBuffer->data();
-		m_pMemoryStringEnd = (imbxUint8*)m_pMemoryString + memoryBuffer->size() / sizeof(dataHandlerType);
+		m_pMemoryStringEnd = (imbxUint8*)m_pMemoryString + memoryBuffer->size();
 
 		PUNTOEXE_FUNCTION_END();
 	}

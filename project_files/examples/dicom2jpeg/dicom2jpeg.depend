@@ -885,7 +885,7 @@
 	<errno.h>
 	"windows.h"
 
-1228765144 source:/media/Ext HD_____/VisualCWorkingCopies/imebra_hg/project_files/base/src/criticalSection.cpp
+1230497032 source:/media/Ext HD_____/VisualCWorkingCopies/imebra_hg/project_files/base/src/criticalSection.cpp
 	"../include/criticalSection.h"
 	"../include/exception.h"
 	<map>
@@ -1627,4 +1627,38 @@
 	"../../base/include/exception.h"
 	"../include/transform.h"
 	"../include/image.h"
+
+1230496405 source:/media/Ext HD_____/VisualCWorkingCopies/imebra_hg/project_files/imebra/src/transformBuffers.cpp
+	"../../base/include/exception.h"
+	"../include/transformBuffers.h"
+	<string.h>
+
+1228765146 source:/media/Ext HD_____/VisualCWorkingCopies/imebra_hg/project_files/imebra/src/transformHighBit.cpp
+	"../../base/include/exception.h"
+	"../include/transformHighBit.h"
+	"../include/dataSet.h"
+
+1228765146 source:/media/Ext HD_____/VisualCWorkingCopies/imebra_hg/project_files/imebra/src/transformsChain.cpp
+	"../../base/include/exception.h"
+	"../include/transformsChain.h"
+	"../include/image.h"
+	"../include/dataSet.h"
+
+1228765146 source:/media/Ext HD_____/VisualCWorkingCopies/imebra_hg/project_files/imebra/src/viewHelper.cpp
+	"../include/viewHelper.h"
+	"../include/image.h"
+	"../include/colorTransformsFactory.h"
+	"../include/transformHighBit.h"
+
+1228765145 /media/Ext HD_____/VisualCWorkingCopies/imebra_hg/project_files/imebra/include/viewHelper.h
+	"../../base/include/baseObject.h"
+	"image.h"
+	"dataSet.h"
+	"drawBitmap.h"
+	<list>
+
+1228765146 source:/media/Ext HD_____/VisualCWorkingCopies/imebra_hg/project_files/imebra/src/waveform.cpp
+	"../include/waveform.h"
+	"../include/dataHandlerNumeric.h"
+	"../include/dataSet.h"
 

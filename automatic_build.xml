@@ -44,7 +44,7 @@
 	</target>
 
 	<!-- Make a zip file and a gzip file of the GPL build -->
-	<target name="ZIP_GPL" depends="CHM, PDF, create_GPL" description ="Compress the build">
+	<target name="ZIP_GPL" depends="CHM, PDF, HTML, create_GPL" description ="Compress the build">
 		<delete dir="${build_dir}/puntoexe_library/generated_doc" />
 		<zip basedir="${build_dir}" destfile="${builds}/imebra_${fileVersion}.zip" />
 	</target>
@@ -171,6 +171,9 @@ The author can be contacted by email at paolo@puntoexe.com or by mail at
 		<replace file="${build_dir}/puntoexe_library/doxyfileHTML" token="1.0.0.1" value='"${fullVersionReadable}"'/>
 		<replace file="${build_dir}/puntoexe_library/doxyfilePDF" token="1.0.0.1" value='"${fullVersionReadable}"'/>
 		<replace file="${build_dir}/puntoexe_library/doxyfilePDFH" token="1.0.0.1" value='"${fullVersionReadable}"'/>
+		<replace dir="${build_dir}/puntoexe_library" includes="*.rc,*.h,*.cpp" token="1.0.0.1" value="${fullVersionReadable}" />
+		<replace dir="${build_dir}/puntoexe_library" includes="*.rc,*.h,*.cpp" token="&quot;1.0.0.1&quot;" value="&quot;${fullVersionReadable}&quot;" />
+		<replace dir="${build_dir}/puntoexe_library" includes="*.rc,*.h,*.cpp" token="L&quot;1.0.0.1&quot;" value="L&quot;${fullVersionReadable}&quot;" />
 	</target>
 
 	<!-- Run the test cases -->

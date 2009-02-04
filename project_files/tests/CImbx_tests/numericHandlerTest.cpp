@@ -14,6 +14,41 @@ namespace tests
 
 CPPUNIT_TEST_SUITE_REGISTRATION(puntoexe::imebra::tests::numericHandlerTest);
 
+// Check the function pointerIsValid
+void numericHandlerTest::validPointer()
+{
+	ptr<buffer> buffer0(new buffer(0, "OW"));
+
+
+	ptr<handlers::dataHandler> handlerBuffer0(buffer0->getDataHandler(true, 0));
+	CPPUNIT_ASSERT(handlerBuffer0->getUnitSize() == 2);
+	imbxUint32 bufferSize(4);
+	handlerBuffer0->setSize(bufferSize);
+	
+	imbxUint32 checkSize0(0);
+	while(handlerBuffer0->pointerIsValid())
+	{
+		CPPUNIT_ASSERT(checkSize0 < bufferSize);
+		handlerBuffer0->incPointer();
+		++checkSize0;
+	}
+
+	CPPUNIT_ASSERT(checkSize0 == bufferSize);
+	handlerBuffer0.release();
+
+	ptr<handlers::dataHandler> handlerBuffer1(buffer0->getDataHandler(true, 0));
+	CPPUNIT_ASSERT(handlerBuffer1->getUnitSize() == 2);
+	
+	imbxUint32 checkSize1(0);
+	while(handlerBuffer1->pointerIsValid())
+	{
+		CPPUNIT_ASSERT(checkSize1 < bufferSize);
+		handlerBuffer1->incPointer();
+		++checkSize1;
+	}
+
+	CPPUNIT_ASSERT(checkSize1 == bufferSize);
+}
 
 // A buffer initialized to a default data type should use the data type OB
 void numericHandlerTest::interleavedCopy()

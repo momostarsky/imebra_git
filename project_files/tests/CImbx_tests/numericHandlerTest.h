@@ -20,11 +20,14 @@ class numericHandlerTest: public CppUnit::TestFixture
 
 	CPPUNIT_TEST(stringConversion);
 
+	CPPUNIT_TEST(validPointer);
+
 	CPPUNIT_TEST_SUITE_END();
 
 public:
 	void interleavedCopy();
 	void stringConversion();
+	void validPointer();
 
 };
 

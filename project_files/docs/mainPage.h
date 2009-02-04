@@ -2,7 +2,7 @@
 $fileHeader$
 */
 
-/*! \mainpage Imebra manual
+/*! \mainpage Imebra open source Dicom library
 
 \section copyright Copyright
 
