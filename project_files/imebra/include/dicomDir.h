@@ -252,6 +252,13 @@ private:
 ///
 /// The first root directoryRecord can be obtained with
 ///  a call to getFirstRootRecord().
+///
+/// WARNING: all the directoryRecord allocated by this
+///  class are released only when the dicomDir itself
+///  is released, even if the directoryRecord are 
+///  explicitly released by your application.\n
+/// This resolves a stack overflow when a large number of
+///  sibling records is present.
 /// 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -274,6 +281,11 @@ public:
 	///
 	///////////////////////////////////////////////////////////
 	dicomDir(ptr<dataSet> pDataSet);
+
+	// Destructor.
+	//
+	///////////////////////////////////////////////////////////
+	virtual ~dicomDir();
 
 	/// \brief Returns the DICOMDIR dataset.
 	///
@@ -350,6 +362,9 @@ protected:
 	ptr<dataSet> m_pDataSet;
 
 	ptr<directoryRecord> m_pFirstRootRecord;
+
+	typedef std::list<ptr<directoryRecord> > tRecordsList;
+	tRecordsList m_recordsList;
 };
 
 

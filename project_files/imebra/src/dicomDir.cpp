@@ -435,7 +435,9 @@ dicomDir::dicomDir(ptr<dataSet> pDataSet):
 		{
 			break;
 		}
-		offsetsToRecords[pDataSet->getItemOffset()] = new directoryRecord(pDataSet);
+		ptr<directoryRecord> newRecord(new directoryRecord(pDataSet));
+		offsetsToRecords[pDataSet->getItemOffset()] = newRecord;
+		m_recordsList.push_back(newRecord);
 	}
 
 	// Scan all the records and update the pointers
@@ -480,6 +482,25 @@ dicomDir::dicomDir(ptr<dataSet> pDataSet):
 ///////////////////////////////////////////////////////////
 //
 //
+// Destructor, make sure that the records are released
+//  after the root record.
+// This resolves a stack overflow when a large number
+//  sibling records is present
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+dicomDir::~dicomDir()
+{
+	m_pFirstRootRecord.release();
+	m_recordsList.clear();
+}
+
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
 // Returns the dataSet
 //
 //
@@ -507,7 +528,10 @@ ptr<directoryRecord> dicomDir::getNewRecord()
 	ptr<dataSet> recordDataSet(new dataSet);
 	recordsTag->appendDataSet(recordDataSet);
 
-	return new directoryRecord(recordDataSet);
+	ptr<directoryRecord> newRecord(new directoryRecord(recordDataSet));
+	m_recordsList.push_back(newRecord);
+
+	return newRecord;
 }
 
 
