@@ -141,6 +141,15 @@ public:
 	///////////////////////////////////////////////////////////
 	imbxUint32 getSize();
 
+	/// \brief Checks if the data in the LUT is consistent
+	///         with the number of bits specified in number
+	///         of bits.
+	///
+	/// @return true if the data is correct, false otherwise
+	///
+	///////////////////////////////////////////////////////////
+	bool checkValidDataRange();
+
 	/// \brief Return the id of the first mapped value
 	///
 	/// @return the id of the first mapped value

@@ -59,7 +59,7 @@ void modalityVOILUT::doTransformBuffersInPlace(
 	// Modality LUT found
 	//
 	///////////////////////////////////////////////////////////
-	if(voiLut != 0 && voiLut->getSize())
+	if(voiLut != 0 && voiLut->getSize() != 0 && voiLut->checkValidDataRange())
 	{
 		imbxUint8 bits=voiLut->getBits();
 
