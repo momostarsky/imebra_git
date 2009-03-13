@@ -52,6 +52,8 @@ public:
 	  m_size(0),
 		m_firstMapped(0),
 		m_bits(0),
+		m_bChecked(false),
+		m_bValid(false),
 		m_pMappedValues(0){}
 
 
@@ -189,6 +191,9 @@ protected:
 	imbxUint32 m_size;
 	imbxInt32 m_firstMapped;
 	imbxUint8 m_bits;
+
+	bool m_bChecked;
+	bool m_bValid;
 
 	std::wstring m_description;
 

@@ -72,6 +72,8 @@ void lut::setLut(ptr<handlers::dataHandler> pDescriptor, ptr<handlers::dataHandl
 
     pData->copyToInt32(m_pMappedValues, lutSize);
 
+    m_bChecked = false; // LUT has to be checked again
+
 	PUNTOEXE_FUNCTION_END();
 }
 
@@ -97,6 +99,8 @@ void lut::create(imbxUint32 size, imbxInt32 firstMapped, imbxUint8 bits, std::ws
 		m_pMappedValues= 0;
 	}
 	m_mappedValuesRev.clear();
+
+	m_bChecked = false;
 
 	m_size = 0;
 
@@ -176,6 +180,10 @@ imbxUint32 lut::getSize()
 ///////////////////////////////////////////////////////////
 bool lut::checkValidDataRange()
 {
+    if(m_bChecked)
+    {
+        return m_bValid;
+    }
     imbxInt32 maxValue(65535);
     imbxInt32 minValue(-32768);
     if(m_bits == 8)
@@ -188,11 +196,15 @@ bool lut::checkValidDataRange()
     {
         if(*pScanValues < minValue || *pScanValues > maxValue)
         {
-            return false;
+            m_bValid = false;
+            m_bChecked = true;
+            return m_bValid;
         }
         ++pScanValues;
     }
-    return true;
+    m_bValid = true;
+    m_bChecked = true;
+    return m_bValid;
 }
 
 
