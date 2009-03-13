@@ -89,7 +89,7 @@ void outputTag(ptr<dataSet> pDataSet, imbxUint16 group, imbxUint16 tag, std::wos
 
 ///////////////////////////////////////////////////////////
 //
-// Scan all the sibling records (and their children) of 
+// Scan all the sibling records (and their children) of
 //  the specified one
 //
 ///////////////////////////////////////////////////////////
@@ -98,12 +98,12 @@ void scanChildren(ptr<directoryRecord> pRecord, std::wostream* pOutputStream)
 	for(;pRecord != 0; pRecord = pRecord->getNextRecord())
 	{
 		ptr<dataSet> pRecordDataSet(pRecord->getRecordDataSet());
-		
+
 		// Output the record
-		(*pOutputStream) << 
-			L"<record id=\"" << 
-			pRecordDataSet->getItemOffset() << 
-			L"\" type=\"" << 
+		(*pOutputStream) <<
+			L"<record id=\"" <<
+			pRecordDataSet->getItemOffset() <<
+			L"\" type=\"" <<
 			pRecord->getTypeString() << L"\">\n";
 
 		// Output the file parts
@@ -143,8 +143,8 @@ void scanChildren(ptr<directoryRecord> pRecord, std::wostream* pOutputStream)
 			*pOutputStream << L"</group>";
 
 		}
-		
-		
+
+
 		// Output the child records
 		(*pOutputStream) << L"<children>\n";
 		scanChildren(pRecord->getFirstChildRecord(), pOutputStream);
@@ -163,12 +163,14 @@ void scanChildren(ptr<directoryRecord> pRecord, std::wostream* pOutputStream)
 ///////////////////////////////////////////////////////////
 int main(int argc, char* argv[])
 {
-	
-	
+
+
 	// Output the help if the parameters have not been
 	//  specified
 	if(argc < 2)
 	{
+        std::wstring version(L"1.0.0.1");
+        std::wcout << L"dicomdirItems version " << version << L"\n";
 		std::wcout << L"Usage: dicomdirItems dicomdirFileName outputFileName\n";
 		std::wcout << L" dicomdirFileName = name of the DICOMDIR file\n";
 		return 1;
