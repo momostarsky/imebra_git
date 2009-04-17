@@ -20,7 +20,7 @@ namespace puntoexe
 //
 ///////////////////////////////////////////////////////////
 static charsetInformation m_charsetTable[]={
-	{"LOCALE", "char", 0, false},
+	{"LOCALE", "", 0, false},
 	{"ISO-IR 6", "ASCII", 20127, false},
 	{"ISO-8859-1", "ISO-8859-1", 28591, false},
 	{"ISO-8859-2", "ISO-8859-2", 28592, false},
@@ -311,7 +311,7 @@ std::string charsetConversion::myIconv(iconv_t context, char* inputString, size_
 		///////////////////////////////////////////////////////////
 		if(iconvReturn == (size_t)-1 && errno != E2BIG)
 		{
-			PUNTOEXE_THROW(charsetConversionInvalidSequence, "Invalid sequence");
+		    return std::string();
 		}
 	}
 

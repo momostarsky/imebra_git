@@ -192,18 +192,6 @@ public:
 
 
 ///////////////////////////////////////////////////////////
-/// \brief Exception thrown when an invalid sequence is
-///         found in a string.
-///
-///////////////////////////////////////////////////////////
-class charsetConversionInvalidSequence: public charsetConversionException
-{
-public:
-	charsetConversionInvalidSequence(std::string message): charsetConversionException(message){}
-};
-
-
-///////////////////////////////////////////////////////////
 /// \brief Exception thrown when the requested charset
 ///         is not supported by the DICOM standard.
 ///
