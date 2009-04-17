@@ -16,7 +16,7 @@ typedef unsigned char  imbxUint8;
 typedef unsigned short imbxUint16;
 
 /// This type represents a 4 bytes unsigned integer.
-typedef unsigned long  imbxUint32;
+typedef unsigned int  imbxUint32;
 
 /// This type represents an 1 byte signed integer.
 typedef signed char    imbxInt8;
@@ -25,7 +25,7 @@ typedef signed char    imbxInt8;
 typedef signed short   imbxInt16;
 
 /// This type represents a 4 bytes signed integer.
-typedef signed long    imbxInt32;
+typedef signed int    imbxInt32;
 
 
 #if !defined(PUNTOEXE_WINDOWS) && !defined(PUNTOEXE_POSIX)
