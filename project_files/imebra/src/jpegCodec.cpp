@@ -3388,7 +3388,7 @@ void tagSOS::readTag(streamReader* pStream, jpegCodec* pCodec, imbxUint8 /* tagE
 	imbxInt32 tagLength=readLength(pStream);
 
 	pCodec->m_eobRun = 0;
-	memset(pCodec->m_channelsList, sizeof(pCodec->m_channelsList), 0);
+	memset(pCodec->m_channelsList, 0, sizeof(pCodec->m_channelsList));
 
 	imbxUint8 componentsNumber;
 	pStream->read(&componentsNumber, 1);
