@@ -1,5 +1,5 @@
 #include "buildImageForTest.h"
-
+#include <stdlib.h>
 namespace puntoexe
 {
 

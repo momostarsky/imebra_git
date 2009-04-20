@@ -4,6 +4,7 @@
 #include "../../imebra/include/imebra.h"
 
 #include <vector>
+#include <stdlib.h>
 
 namespace puntoexe
 {

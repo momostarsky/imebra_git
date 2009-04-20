@@ -2,6 +2,7 @@
 #include "numericHandlerTest.h"
 
 #include "../../imebra/include/imebra.h"
+#include <string.h>
 
 namespace puntoexe
 {
