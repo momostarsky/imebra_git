@@ -1,0 +1,1375 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="45">
+  <logicalFolder name="root" displayName="root" projectFiles="true">
+    <logicalFolder name="HeaderFiles"
+                   displayName="Header Files"
+                   projectFiles="true">
+      <logicalFolder name="f1" displayName="base" projectFiles="true">
+        <itemPath>../base/include/baseObject.h</itemPath>
+        <itemPath>../base/include/baseStream.h</itemPath>
+        <itemPath>../base/include/charsetConversion.h</itemPath>
+        <itemPath>../base/include/configuration.h</itemPath>
+        <itemPath>../base/include/criticalSection.h</itemPath>
+        <itemPath>../base/include/exception.h</itemPath>
+        <itemPath>../base/include/huffmanTable.h</itemPath>
+        <itemPath>../base/include/memory.h</itemPath>
+        <itemPath>../base/include/memoryStream.h</itemPath>
+        <itemPath>../base/include/nullStream.h</itemPath>
+        <itemPath>../base/include/stream.h</itemPath>
+        <itemPath>../base/include/streamController.h</itemPath>
+        <itemPath>../base/include/streamReader.h</itemPath>
+        <itemPath>../base/include/streamWriter.h</itemPath>
+        <itemPath>../base/include/thread.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f2" displayName="imebra" projectFiles="true">
+        <itemPath>../imebra/include/buffer.h</itemPath>
+        <itemPath>../imebra/include/bufferStream.h</itemPath>
+        <itemPath>../imebra/include/charsetsList.h</itemPath>
+        <itemPath>../imebra/include/codec.h</itemPath>
+        <itemPath>../imebra/include/codecFactory.h</itemPath>
+        <itemPath>../imebra/include/colorTransform.h</itemPath>
+        <itemPath>../imebra/include/colorTransformsFactory.h</itemPath>
+        <itemPath>../imebra/include/data.h</itemPath>
+        <itemPath>../imebra/include/dataCollection.h</itemPath>
+        <itemPath>../imebra/include/dataGroup.h</itemPath>
+        <itemPath>../imebra/include/dataHandler.h</itemPath>
+        <itemPath>../imebra/include/dataHandlerDate.h</itemPath>
+        <itemPath>../imebra/include/dataHandlerDateTime.h</itemPath>
+        <itemPath>../imebra/include/dataHandlerDateTimeBase.h</itemPath>
+        <itemPath>../imebra/include/dataHandlerNumeric.h</itemPath>
+        <itemPath>../imebra/include/dataHandlerString.h</itemPath>
+        <itemPath>../imebra/include/dataHandlerStringAE.h</itemPath>
+        <itemPath>../imebra/include/dataHandlerStringAS.h</itemPath>
+        <itemPath>../imebra/include/dataHandlerStringCS.h</itemPath>
+        <itemPath>../imebra/include/dataHandlerStringDS.h</itemPath>
+        <itemPath>../imebra/include/dataHandlerStringIS.h</itemPath>
+        <itemPath>../imebra/include/dataHandlerStringLO.h</itemPath>
+        <itemPath>../imebra/include/dataHandlerStringLT.h</itemPath>
+        <itemPath>../imebra/include/dataHandlerStringPN.h</itemPath>
+        <itemPath>../imebra/include/dataHandlerStringSH.h</itemPath>
+        <itemPath>../imebra/include/dataHandlerStringST.h</itemPath>
+        <itemPath>../imebra/include/dataHandlerStringUI.h</itemPath>
+        <itemPath>../imebra/include/dataHandlerStringUnicode.h</itemPath>
+        <itemPath>../imebra/include/dataHandlerStringUT.h</itemPath>
+        <itemPath>../imebra/include/dataHandlerTime.h</itemPath>
+        <itemPath>../imebra/include/dataSet.h</itemPath>
+        <itemPath>../imebra/include/dibCodec.h</itemPath>
+        <itemPath>../imebra/include/dicomCodec.h</itemPath>
+        <itemPath>../imebra/include/dicomDict.h</itemPath>
+        <itemPath>../imebra/include/dicomDir.h</itemPath>
+        <itemPath>../imebra/include/drawBitmap.h</itemPath>
+        <itemPath>../imebra/include/image.h</itemPath>
+        <itemPath>../imebra/include/imebra.h</itemPath>
+        <itemPath>../imebra/include/imebraDoc.h</itemPath>
+        <itemPath>../imebra/include/jpegCodec.h</itemPath>
+        <itemPath>../imebra/include/LUT.h</itemPath>
+        <itemPath>../imebra/include/modalityVOILUT.h</itemPath>
+        <itemPath>../imebra/include/MONOCHROME1ToMONOCHROME2.h</itemPath>
+        <itemPath>../imebra/include/MONOCHROME1ToRGB.h</itemPath>
+        <itemPath>../imebra/include/MONOCHROME2ToRGB.h</itemPath>
+        <itemPath>../imebra/include/MONOCHROME2ToYBRFULL.h</itemPath>
+        <itemPath>../imebra/include/PALETTECOLORToRGB.h</itemPath>
+        <itemPath>../imebra/include/RGBToMONOCHROME2.h</itemPath>
+        <itemPath>../imebra/include/RGBToPALETTECOLOR.h</itemPath>
+        <itemPath>../imebra/include/RGBToYBRFULL.h</itemPath>
+        <itemPath>../imebra/include/RGBToYBRPARTIAL.h</itemPath>
+        <itemPath>../imebra/include/transaction.h</itemPath>
+        <itemPath>../imebra/include/transform.h</itemPath>
+        <itemPath>../imebra/include/transformBuffers.h</itemPath>
+        <itemPath>../imebra/include/transformHighBit.h</itemPath>
+        <itemPath>../imebra/include/transformsChain.h</itemPath>
+        <itemPath>../imebra/include/viewHelper.h</itemPath>
+        <itemPath>../imebra/include/VOILUT.h</itemPath>
+        <itemPath>../imebra/include/waveform.h</itemPath>
+        <itemPath>../imebra/include/YBRFULLToMONOCHROME2.h</itemPath>
+        <itemPath>../imebra/include/YBRFULLToRGB.h</itemPath>
+        <itemPath>../imebra/include/YBRPARTIALToRGB.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f3" displayName="tests" projectFiles="true">
+        <itemPath>CImbx_tests/ageStringHandlerTest.h</itemPath>
+        <itemPath>CImbx_tests/bitTransformTest.h</itemPath>
+        <itemPath>CImbx_tests/bufferTest.h</itemPath>
+        <itemPath>CImbx_tests/buildImageForTest.h</itemPath>
+        <itemPath>CImbx_tests/dataSetTest.h</itemPath>
+        <itemPath>CImbx_tests/dateTimeHandlerTest.h</itemPath>
+        <itemPath>CImbx_tests/decimalStringHandlerTest.h</itemPath>
+        <itemPath>CImbx_tests/dicomCodecTest.h</itemPath>
+        <itemPath>CImbx_tests/dicomDirTest.h</itemPath>
+        <itemPath>CImbx_tests/exceptionsTest.h</itemPath>
+        <itemPath>CImbx_tests/huffmanTest.h</itemPath>
+        <itemPath>CImbx_tests/jpegCodecTest.h</itemPath>
+        <itemPath>CImbx_tests/memoryStreamTest.h</itemPath>
+        <itemPath>CImbx_tests/numericHandlerTest.h</itemPath>
+        <itemPath>CImbx_tests/paletteTest.h</itemPath>
+        <itemPath>CImbx_tests/stdafx.h</itemPath>
+        <itemPath>CImbx_tests/streamBitsTest.h</itemPath>
+        <itemPath>CImbx_tests/threadTest.h</itemPath>
+        <itemPath>CImbx_tests/transactionTest.h</itemPath>
+        <itemPath>CImbx_tests/unicodeStringHandlerTest.h</itemPath>
+      </logicalFolder>
+    </logicalFolder>
+    <logicalFolder name="ResourceFiles"
+                   displayName="Resource Files"
+                   projectFiles="true">
+    </logicalFolder>
+    <logicalFolder name="SourceFiles"
+                   displayName="Source Files"
+                   projectFiles="true">
+      <logicalFolder name="f1" displayName="base" projectFiles="true">
+        <itemPath>../base/src/baseObject.cpp</itemPath>
+        <itemPath>../base/src/baseStream.cpp</itemPath>
+        <itemPath>../base/src/charsetConversion.cpp</itemPath>
+        <itemPath>../base/src/criticalSection.cpp</itemPath>
+        <itemPath>../base/src/exception.cpp</itemPath>
+        <itemPath>../base/src/huffmanTable.cpp</itemPath>
+        <itemPath>../base/src/memory.cpp</itemPath>
+        <itemPath>../base/src/memoryStream.cpp</itemPath>
+        <itemPath>../base/src/stream.cpp</itemPath>
+        <itemPath>../base/src/streamController.cpp</itemPath>
+        <itemPath>../base/src/streamReader.cpp</itemPath>
+        <itemPath>../base/src/streamWriter.cpp</itemPath>
+        <itemPath>../base/src/thread.cpp</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f2" displayName="imebra" projectFiles="true">
+        <itemPath>../imebra/src/buffer.cpp</itemPath>
+        <itemPath>../imebra/src/charsetsList.cpp</itemPath>
+        <itemPath>../imebra/src/codec.cpp</itemPath>
+        <itemPath>../imebra/src/codecFactory.cpp</itemPath>
+        <itemPath>../imebra/src/colorTransform.cpp</itemPath>
+        <itemPath>../imebra/src/colorTransformsFactory.cpp</itemPath>
+        <itemPath>../imebra/src/data.cpp</itemPath>
+        <itemPath>../imebra/src/dataGroup.cpp</itemPath>
+        <itemPath>../imebra/src/dataHandler.cpp</itemPath>
+        <itemPath>../imebra/src/dataHandlerDate.cpp</itemPath>
+        <itemPath>../imebra/src/dataHandlerDateTime.cpp</itemPath>
+        <itemPath>../imebra/src/dataHandlerDateTimeBase.cpp</itemPath>
+        <itemPath>../imebra/src/dataHandlerString.cpp</itemPath>
+        <itemPath>../imebra/src/dataHandlerStringAE.cpp</itemPath>
+        <itemPath>../imebra/src/dataHandlerStringAS.cpp</itemPath>
+        <itemPath>../imebra/src/dataHandlerStringCS.cpp</itemPath>
+        <itemPath>../imebra/src/dataHandlerStringDS.cpp</itemPath>
+        <itemPath>../imebra/src/dataHandlerStringIS.cpp</itemPath>
+        <itemPath>../imebra/src/dataHandlerStringLO.cpp</itemPath>
+        <itemPath>../imebra/src/dataHandlerStringLT.cpp</itemPath>
+        <itemPath>../imebra/src/dataHandlerStringPN.cpp</itemPath>
+        <itemPath>../imebra/src/dataHandlerStringSH.cpp</itemPath>
+        <itemPath>../imebra/src/dataHandlerStringST.cpp</itemPath>
+        <itemPath>../imebra/src/dataHandlerStringUI.cpp</itemPath>
+        <itemPath>../imebra/src/dataHandlerStringUnicode.cpp</itemPath>
+        <itemPath>../imebra/src/dataHandlerStringUT.cpp</itemPath>
+        <itemPath>../imebra/src/dataHandlerTime.cpp</itemPath>
+        <itemPath>../imebra/src/dataSet.cpp</itemPath>
+        <itemPath>../imebra/src/dibCodec.cpp</itemPath>
+        <itemPath>../imebra/src/dicomCodec.cpp</itemPath>
+        <itemPath>../imebra/src/dicomDict.cpp</itemPath>
+        <itemPath>../imebra/src/dicomDir.cpp</itemPath>
+        <itemPath>../imebra/src/drawBitmap.cpp</itemPath>
+        <itemPath>../imebra/src/image.cpp</itemPath>
+        <itemPath>../imebra/src/jpegCodec.cpp</itemPath>
+        <itemPath>../imebra/src/LUT.cpp</itemPath>
+        <itemPath>../imebra/src/modalityVOILUT.cpp</itemPath>
+        <itemPath>../imebra/src/MONOCHROME1ToMONOCHROME2.cpp</itemPath>
+        <itemPath>../imebra/src/MONOCHROME1ToRGB.cpp</itemPath>
+        <itemPath>../imebra/src/MONOCHROME2ToRGB.cpp</itemPath>
+        <itemPath>../imebra/src/MONOCHROME2ToYBRFULL.cpp</itemPath>
+        <itemPath>../imebra/src/PALETTECOLORToRGB.cpp</itemPath>
+        <itemPath>../imebra/src/RGBToMONOCHROME2.cpp</itemPath>
+        <itemPath>../imebra/src/RGBToPALETTECOLOR.cpp</itemPath>
+        <itemPath>../imebra/src/RGBToYBRFULL.cpp</itemPath>
+        <itemPath>../imebra/src/RGBToYBRPARTIAL.cpp</itemPath>
+        <itemPath>../imebra/src/transaction.cpp</itemPath>
+        <itemPath>../imebra/src/transform.cpp</itemPath>
+        <itemPath>../imebra/src/transformBuffers.cpp</itemPath>
+        <itemPath>../imebra/src/transformHighBit.cpp</itemPath>
+        <itemPath>../imebra/src/transformsChain.cpp</itemPath>
+        <itemPath>../imebra/src/viewHelper.cpp</itemPath>
+        <itemPath>../imebra/src/VOILUT.cpp</itemPath>
+        <itemPath>../imebra/src/waveform.cpp</itemPath>
+        <itemPath>../imebra/src/YBRFULLToMONOCHROME2.cpp</itemPath>
+        <itemPath>../imebra/src/YBRFULLToRGB.cpp</itemPath>
+        <itemPath>../imebra/src/YBRPARTIALToRGB.cpp</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f3" displayName="tests" projectFiles="true">
+        <itemPath>CImbx_tests/ageStringHandlerTest.cpp</itemPath>
+        <itemPath>CImbx_tests/bitTransformTest.cpp</itemPath>
+        <itemPath>CImbx_tests/bufferTest.cpp</itemPath>
+        <itemPath>CImbx_tests/buildImageForTest.cpp</itemPath>
+        <itemPath>CImbx_tests/CImbx_tests.cpp</itemPath>
+        <itemPath>CImbx_tests/dataSetTest.cpp</itemPath>
+        <itemPath>CImbx_tests/dateTimeHandlerTest.cpp</itemPath>
+        <itemPath>CImbx_tests/decimalStringHandlerTest.cpp</itemPath>
+        <itemPath>CImbx_tests/dicomCodecTest.cpp</itemPath>
+        <itemPath>CImbx_tests/dicomDirTest.cpp</itemPath>
+        <itemPath>CImbx_tests/exceptionsTest.cpp</itemPath>
+        <itemPath>CImbx_tests/huffmanTest.cpp</itemPath>
+        <itemPath>CImbx_tests/jpegCodecTest.cpp</itemPath>
+        <itemPath>CImbx_tests/memoryStreamTest.cpp</itemPath>
+        <itemPath>CImbx_tests/numericHandlerTest.cpp</itemPath>
+        <itemPath>CImbx_tests/paletteTest.cpp</itemPath>
+        <itemPath>CImbx_tests/streamBitsTest.cpp</itemPath>
+        <itemPath>CImbx_tests/transactionTest.cpp</itemPath>
+        <itemPath>CImbx_tests/unicodeStringHandlerTest.cpp</itemPath>
+      </logicalFolder>
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false">
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <sourceEncoding>UTF-8</sourceEncoding>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Debug" type="1">
+      <toolsSet>
+        <compilerSet>GNU|GNU</compilerSet>
+        <platform>2</platform>
+      </toolsSet>
+      <compileType>
+        <linkerTool>
+          <linkerLibItems>
+            <linkerLibStdlibItem>PosixThreads</linkerLibStdlibItem>
+            <linkerLibLibItem>cppunit</linkerLibLibItem>
+          </linkerLibItems>
+        </linkerTool>
+      </compileType>
+      <item path="../base/include/baseObject.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../base/include/baseStream.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../base/include/charsetConversion.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../base/include/configuration.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../base/include/criticalSection.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../base/include/exception.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../base/include/huffmanTable.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../base/include/memory.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../base/include/memoryStream.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../base/include/nullStream.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../base/include/stream.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../base/include/streamController.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../base/include/streamReader.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../base/include/streamWriter.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../base/include/thread.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../base/src/baseObject.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../base/src/baseStream.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../base/src/charsetConversion.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../base/src/criticalSection.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../base/src/exception.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../base/src/huffmanTable.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../base/src/memory.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../base/src/memoryStream.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../base/src/stream.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../base/src/streamController.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../base/src/streamReader.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../base/src/streamWriter.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../base/src/thread.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/include/LUT.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/MONOCHROME1ToMONOCHROME2.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/MONOCHROME1ToRGB.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/MONOCHROME2ToRGB.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/MONOCHROME2ToYBRFULL.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/PALETTECOLORToRGB.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/RGBToMONOCHROME2.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/RGBToPALETTECOLOR.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/RGBToYBRFULL.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/RGBToYBRPARTIAL.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/VOILUT.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/YBRFULLToMONOCHROME2.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/YBRFULLToRGB.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/YBRPARTIALToRGB.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/buffer.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/bufferStream.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/charsetsList.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/codec.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/codecFactory.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/colorTransform.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/colorTransformsFactory.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/data.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dataCollection.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dataGroup.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dataHandler.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dataHandlerDate.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dataHandlerDateTime.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dataHandlerDateTimeBase.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dataHandlerNumeric.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dataHandlerString.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dataHandlerStringAE.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dataHandlerStringAS.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dataHandlerStringCS.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dataHandlerStringDS.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dataHandlerStringIS.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dataHandlerStringLO.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dataHandlerStringLT.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dataHandlerStringPN.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dataHandlerStringSH.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dataHandlerStringST.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dataHandlerStringUI.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dataHandlerStringUT.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dataHandlerStringUnicode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dataHandlerTime.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dataSet.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dibCodec.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dicomCodec.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dicomDict.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dicomDir.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/drawBitmap.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/image.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/imebra.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/imebraDoc.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/jpegCodec.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/modalityVOILUT.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/transaction.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/transform.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/transformBuffers.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/transformHighBit.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/transformsChain.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/viewHelper.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/waveform.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/src/LUT.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/MONOCHROME1ToMONOCHROME2.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/MONOCHROME1ToRGB.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/MONOCHROME2ToRGB.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/MONOCHROME2ToYBRFULL.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/PALETTECOLORToRGB.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/RGBToMONOCHROME2.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/RGBToPALETTECOLOR.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/RGBToYBRFULL.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/RGBToYBRPARTIAL.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/VOILUT.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/YBRFULLToMONOCHROME2.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/YBRFULLToRGB.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/YBRPARTIALToRGB.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/buffer.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/charsetsList.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/codec.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/codecFactory.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/colorTransform.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/colorTransformsFactory.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/data.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/dataGroup.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/dataHandler.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/dataHandlerDate.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/dataHandlerDateTime.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/dataHandlerDateTimeBase.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/dataHandlerString.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/dataHandlerStringAE.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/dataHandlerStringAS.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/dataHandlerStringCS.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/dataHandlerStringDS.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/dataHandlerStringIS.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/dataHandlerStringLO.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/dataHandlerStringLT.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/dataHandlerStringPN.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/dataHandlerStringSH.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/dataHandlerStringST.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/dataHandlerStringUI.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/dataHandlerStringUT.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/dataHandlerStringUnicode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/dataHandlerTime.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/dataSet.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/dibCodec.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/dicomCodec.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/dicomDict.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/dicomDir.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/drawBitmap.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/image.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/jpegCodec.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/modalityVOILUT.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/transaction.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/transform.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/transformBuffers.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/transformHighBit.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/transformsChain.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/viewHelper.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/waveform.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="CImbx_tests/CImbx_tests.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="CImbx_tests/ageStringHandlerTest.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="CImbx_tests/ageStringHandlerTest.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="CImbx_tests/bitTransformTest.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="CImbx_tests/bitTransformTest.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="CImbx_tests/bufferTest.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="CImbx_tests/bufferTest.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="CImbx_tests/buildImageForTest.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="CImbx_tests/buildImageForTest.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="CImbx_tests/dataSetTest.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="CImbx_tests/dataSetTest.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="CImbx_tests/dateTimeHandlerTest.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="CImbx_tests/dateTimeHandlerTest.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="CImbx_tests/decimalStringHandlerTest.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="CImbx_tests/decimalStringHandlerTest.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="CImbx_tests/dicomCodecTest.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="CImbx_tests/dicomCodecTest.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="CImbx_tests/dicomDirTest.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="CImbx_tests/dicomDirTest.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="CImbx_tests/exceptionsTest.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="CImbx_tests/exceptionsTest.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="CImbx_tests/huffmanTest.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="CImbx_tests/huffmanTest.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="CImbx_tests/jpegCodecTest.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="CImbx_tests/jpegCodecTest.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="CImbx_tests/memoryStreamTest.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="CImbx_tests/memoryStreamTest.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="CImbx_tests/numericHandlerTest.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="CImbx_tests/numericHandlerTest.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="CImbx_tests/paletteTest.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="CImbx_tests/paletteTest.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="CImbx_tests/stdafx.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="CImbx_tests/streamBitsTest.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="CImbx_tests/streamBitsTest.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="CImbx_tests/threadTest.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="CImbx_tests/transactionTest.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="CImbx_tests/transactionTest.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="CImbx_tests/unicodeStringHandlerTest.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="CImbx_tests/unicodeStringHandlerTest.h">
+        <itemTool>3</itemTool>
+      </item>
+    </conf>
+    <conf name="Release" type="1">
+      <toolsSet>
+        <compilerSet>GNU|GNU</compilerSet>
+        <platform>2</platform>
+      </toolsSet>
+      <compileType>
+        <cCompilerTool>
+          <developmentMode>5</developmentMode>
+        </cCompilerTool>
+        <ccCompilerTool>
+          <developmentMode>5</developmentMode>
+        </ccCompilerTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <linkerTool>
+          <linkerLibItems>
+          </linkerLibItems>
+        </linkerTool>
+      </compileType>
+      <item path="../base/include/baseObject.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../base/include/baseStream.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../base/include/charsetConversion.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../base/include/configuration.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../base/include/criticalSection.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../base/include/exception.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../base/include/huffmanTable.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../base/include/memory.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../base/include/memoryStream.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../base/include/nullStream.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../base/include/stream.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../base/include/streamController.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../base/include/streamReader.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../base/include/streamWriter.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../base/include/thread.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../base/src/baseObject.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../base/src/baseStream.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../base/src/charsetConversion.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../base/src/criticalSection.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../base/src/exception.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../base/src/huffmanTable.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../base/src/memory.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../base/src/memoryStream.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../base/src/stream.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../base/src/streamController.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../base/src/streamReader.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../base/src/streamWriter.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../base/src/thread.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/include/LUT.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/MONOCHROME1ToMONOCHROME2.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/MONOCHROME1ToRGB.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/MONOCHROME2ToRGB.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/MONOCHROME2ToYBRFULL.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/PALETTECOLORToRGB.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/RGBToMONOCHROME2.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/RGBToPALETTECOLOR.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/RGBToYBRFULL.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/RGBToYBRPARTIAL.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/VOILUT.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/YBRFULLToMONOCHROME2.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/YBRFULLToRGB.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/YBRPARTIALToRGB.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/buffer.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/bufferStream.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/charsetsList.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/codec.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/codecFactory.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/colorTransform.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/colorTransformsFactory.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/data.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dataCollection.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dataGroup.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dataHandler.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dataHandlerDate.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dataHandlerDateTime.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dataHandlerDateTimeBase.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dataHandlerNumeric.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dataHandlerString.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dataHandlerStringAE.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dataHandlerStringAS.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dataHandlerStringCS.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dataHandlerStringDS.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dataHandlerStringIS.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dataHandlerStringLO.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dataHandlerStringLT.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dataHandlerStringPN.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dataHandlerStringSH.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dataHandlerStringST.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dataHandlerStringUI.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dataHandlerStringUT.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dataHandlerStringUnicode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dataHandlerTime.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dataSet.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dibCodec.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dicomCodec.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dicomDict.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/dicomDir.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/drawBitmap.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/image.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/imebra.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/imebraDoc.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/jpegCodec.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/modalityVOILUT.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/transaction.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/transform.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/transformBuffers.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/transformHighBit.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/transformsChain.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/viewHelper.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/include/waveform.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="../imebra/src/LUT.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/MONOCHROME1ToMONOCHROME2.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/MONOCHROME1ToRGB.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/MONOCHROME2ToRGB.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/MONOCHROME2ToYBRFULL.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/PALETTECOLORToRGB.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/RGBToMONOCHROME2.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/RGBToPALETTECOLOR.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/RGBToYBRFULL.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/RGBToYBRPARTIAL.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/VOILUT.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/YBRFULLToMONOCHROME2.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/YBRFULLToRGB.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/YBRPARTIALToRGB.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/buffer.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/charsetsList.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/codec.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/codecFactory.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/colorTransform.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/colorTransformsFactory.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/data.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/dataGroup.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/dataHandler.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/dataHandlerDate.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/dataHandlerDateTime.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/dataHandlerDateTimeBase.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/dataHandlerString.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/dataHandlerStringAE.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/dataHandlerStringAS.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/dataHandlerStringCS.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/dataHandlerStringDS.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/dataHandlerStringIS.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/dataHandlerStringLO.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/dataHandlerStringLT.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/dataHandlerStringPN.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/dataHandlerStringSH.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/dataHandlerStringST.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/dataHandlerStringUI.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/dataHandlerStringUT.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/dataHandlerStringUnicode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/dataHandlerTime.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/dataSet.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/dibCodec.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/dicomCodec.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/dicomDict.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/dicomDir.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/drawBitmap.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/image.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/jpegCodec.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/modalityVOILUT.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/transaction.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/transform.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/transformBuffers.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/transformHighBit.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/transformsChain.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/viewHelper.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="../imebra/src/waveform.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="CImbx_tests/CImbx_tests.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="CImbx_tests/ageStringHandlerTest.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="CImbx_tests/ageStringHandlerTest.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="CImbx_tests/bitTransformTest.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="CImbx_tests/bitTransformTest.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="CImbx_tests/bufferTest.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="CImbx_tests/bufferTest.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="CImbx_tests/buildImageForTest.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="CImbx_tests/buildImageForTest.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="CImbx_tests/dataSetTest.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="CImbx_tests/dataSetTest.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="CImbx_tests/dateTimeHandlerTest.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="CImbx_tests/dateTimeHandlerTest.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="CImbx_tests/decimalStringHandlerTest.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="CImbx_tests/decimalStringHandlerTest.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="CImbx_tests/dicomCodecTest.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="CImbx_tests/dicomCodecTest.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="CImbx_tests/dicomDirTest.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="CImbx_tests/dicomDirTest.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="CImbx_tests/exceptionsTest.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="CImbx_tests/exceptionsTest.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="CImbx_tests/huffmanTest.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="CImbx_tests/huffmanTest.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="CImbx_tests/jpegCodecTest.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="CImbx_tests/jpegCodecTest.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="CImbx_tests/memoryStreamTest.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="CImbx_tests/memoryStreamTest.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="CImbx_tests/numericHandlerTest.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="CImbx_tests/numericHandlerTest.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="CImbx_tests/paletteTest.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="CImbx_tests/paletteTest.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="CImbx_tests/stdafx.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="CImbx_tests/streamBitsTest.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="CImbx_tests/streamBitsTest.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="CImbx_tests/threadTest.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="CImbx_tests/transactionTest.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="CImbx_tests/transactionTest.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="CImbx_tests/unicodeStringHandlerTest.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="CImbx_tests/unicodeStringHandlerTest.h">
+        <itemTool>3</itemTool>
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>
