@@ -21,7 +21,7 @@ FC=
 include Makefile
 
 # Object Directory
-OBJECTDIR=build/Release/GNU-Linux-x86
+OBJECTDIR=build/Release_64/GNU-Linux-x86
 
 # Object Files
 OBJECTFILES= \
@@ -101,21 +101,21 @@ OBJECTFILES= \
 CFLAGS=
 
 # CC Compiler Flags
-CCFLAGS=
-CXXFLAGS=
+CCFLAGS=-m64
+CXXFLAGS=-m64
 
 # Fortran Compiler Flags
 FFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=
+LDLIBSOPTIONS=-lpthread
 
 # Build Targets
-.build-conf: ${BUILD_SUBPROJECTS} dist/Release/GNU-Linux-x86/dicom2jpeg
+.build-conf: ${BUILD_SUBPROJECTS} dist/Release_64/GNU-Linux-x86/dicom2jpeg
 
-dist/Release/GNU-Linux-x86/dicom2jpeg: ${OBJECTFILES}
-	${MKDIR} -p dist/Release/GNU-Linux-x86
-	${LINK.cc} -o dist/Release/GNU-Linux-x86/dicom2jpeg ${OBJECTFILES} ${LDLIBSOPTIONS} 
+dist/Release_64/GNU-Linux-x86/dicom2jpeg: ${OBJECTFILES}
+	${MKDIR} -p dist/Release_64/GNU-Linux-x86
+	${LINK.cc} -o dist/Release_64/GNU-Linux-x86/dicom2jpeg ${OBJECTFILES} ${LDLIBSOPTIONS} 
 
 ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/examples/dicom2jpeg/../../imebra/src/dataHandlerStringUT.o: ../../imebra/src/dataHandlerStringUT.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/examples/dicom2jpeg/../../imebra/src
@@ -406,8 +406,8 @@ ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/examples/dico
 
 # Clean Targets
 .clean-conf:
-	${RM} -r build/Release
-	${RM} dist/Release/GNU-Linux-x86/dicom2jpeg
+	${RM} -r build/Release_64
+	${RM} dist/Release_64/GNU-Linux-x86/dicom2jpeg
 
 # Subprojects
 .clean-subprojects:
