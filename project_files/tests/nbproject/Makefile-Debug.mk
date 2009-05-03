@@ -32,8 +32,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/transformsChain.o \
 	${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../base/src/streamController.o \
 	${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../base/src/criticalSection.o \
-	${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/buffer.o \
 	${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/waveform.o \
+	${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/buffer.o \
 	${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/data.o \
 	${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/colorTransform.o \
 	${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/dataHandlerStringUI.o \
@@ -53,15 +53,15 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/MONOCHROME1ToMONOCHROME2.o \
 	${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../base/src/streamWriter.o \
 	${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/dibCodec.o \
-	${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/dataHandlerStringSH.o \
 	${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/dataHandlerStringUT.o \
+	${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/dataHandlerStringSH.o \
 	${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../base/src/huffmanTable.o \
 	${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/image.o \
 	${OBJECTDIR}/CImbx_tests/dateTimeHandlerTest.o \
 	${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../base/src/streamReader.o \
 	${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/transformHighBit.o \
-	${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/codec.o \
 	${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/VOILUT.o \
+	${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/codec.o \
 	${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/dataHandlerString.o \
 	${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/RGBToYBRFULL.o \
 	${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/charsetsList.o \
@@ -75,8 +75,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/MONOCHROME1ToRGB.o \
 	${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/dataHandler.o \
 	${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../base/src/baseStream.o \
-	${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/dataHandlerStringAE.o \
 	${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/YBRFULLToRGB.o \
+	${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/dataHandlerStringAE.o \
 	${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/dataHandlerStringAS.o \
 	${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/transaction.o \
 	${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/dataHandlerStringCS.o \
@@ -106,8 +106,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/CImbx_tests/memoryStreamTest.o \
 	${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../base/src/memoryStream.o \
 	${OBJECTDIR}/CImbx_tests/bufferTest.o \
-	${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/dataHandlerTime.o \
 	${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/dataSet.o \
+	${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/dataHandlerTime.o \
 	${OBJECTDIR}/CImbx_tests/CImbx_tests.o \
 	${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/dataHandlerStringUnicode.o \
 	${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/dataHandlerStringIS.o \
@@ -163,13 +163,13 @@ ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../base
 	${MKDIR} -p ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../base/src
 	$(COMPILE.cc) -g -o ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../base/src/criticalSection.o ../base/src/criticalSection.cpp
 
-${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/buffer.o: ../imebra/src/buffer.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src
-	$(COMPILE.cc) -g -o ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/buffer.o ../imebra/src/buffer.cpp
-
 ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/waveform.o: ../imebra/src/waveform.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src
 	$(COMPILE.cc) -g -o ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/waveform.o ../imebra/src/waveform.cpp
+
+${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/buffer.o: ../imebra/src/buffer.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src
+	$(COMPILE.cc) -g -o ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/buffer.o ../imebra/src/buffer.cpp
 
 ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/data.o: ../imebra/src/data.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src
@@ -247,13 +247,13 @@ ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imeb
 	${MKDIR} -p ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src
 	$(COMPILE.cc) -g -o ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/dibCodec.o ../imebra/src/dibCodec.cpp
 
-${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/dataHandlerStringSH.o: ../imebra/src/dataHandlerStringSH.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src
-	$(COMPILE.cc) -g -o ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/dataHandlerStringSH.o ../imebra/src/dataHandlerStringSH.cpp
-
 ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/dataHandlerStringUT.o: ../imebra/src/dataHandlerStringUT.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src
 	$(COMPILE.cc) -g -o ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/dataHandlerStringUT.o ../imebra/src/dataHandlerStringUT.cpp
+
+${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/dataHandlerStringSH.o: ../imebra/src/dataHandlerStringSH.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src
+	$(COMPILE.cc) -g -o ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/dataHandlerStringSH.o ../imebra/src/dataHandlerStringSH.cpp
 
 ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../base/src/huffmanTable.o: ../base/src/huffmanTable.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../base/src
@@ -275,13 +275,13 @@ ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imeb
 	${MKDIR} -p ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src
 	$(COMPILE.cc) -g -o ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/transformHighBit.o ../imebra/src/transformHighBit.cpp
 
-${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/codec.o: ../imebra/src/codec.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src
-	$(COMPILE.cc) -g -o ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/codec.o ../imebra/src/codec.cpp
-
 ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/VOILUT.o: ../imebra/src/VOILUT.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src
 	$(COMPILE.cc) -g -o ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/VOILUT.o ../imebra/src/VOILUT.cpp
+
+${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/codec.o: ../imebra/src/codec.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src
+	$(COMPILE.cc) -g -o ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/codec.o ../imebra/src/codec.cpp
 
 ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/dataHandlerString.o: ../imebra/src/dataHandlerString.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src
@@ -335,13 +335,13 @@ ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../base
 	${MKDIR} -p ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../base/src
 	$(COMPILE.cc) -g -o ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../base/src/baseStream.o ../base/src/baseStream.cpp
 
-${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/dataHandlerStringAE.o: ../imebra/src/dataHandlerStringAE.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src
-	$(COMPILE.cc) -g -o ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/dataHandlerStringAE.o ../imebra/src/dataHandlerStringAE.cpp
-
 ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/YBRFULLToRGB.o: ../imebra/src/YBRFULLToRGB.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src
 	$(COMPILE.cc) -g -o ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/YBRFULLToRGB.o ../imebra/src/YBRFULLToRGB.cpp
+
+${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/dataHandlerStringAE.o: ../imebra/src/dataHandlerStringAE.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src
+	$(COMPILE.cc) -g -o ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/dataHandlerStringAE.o ../imebra/src/dataHandlerStringAE.cpp
 
 ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/dataHandlerStringAS.o: ../imebra/src/dataHandlerStringAS.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src
@@ -459,13 +459,13 @@ ${OBJECTDIR}/CImbx_tests/bufferTest.o: CImbx_tests/bufferTest.cpp
 	${MKDIR} -p ${OBJECTDIR}/CImbx_tests
 	$(COMPILE.cc) -g -o ${OBJECTDIR}/CImbx_tests/bufferTest.o CImbx_tests/bufferTest.cpp
 
-${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/dataHandlerTime.o: ../imebra/src/dataHandlerTime.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src
-	$(COMPILE.cc) -g -o ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/dataHandlerTime.o ../imebra/src/dataHandlerTime.cpp
-
 ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/dataSet.o: ../imebra/src/dataSet.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src
 	$(COMPILE.cc) -g -o ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/dataSet.o ../imebra/src/dataSet.cpp
+
+${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/dataHandlerTime.o: ../imebra/src/dataHandlerTime.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src
+	$(COMPILE.cc) -g -o ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/dataHandlerTime.o ../imebra/src/dataHandlerTime.cpp
 
 ${OBJECTDIR}/CImbx_tests/CImbx_tests.o: CImbx_tests/CImbx_tests.cpp 
 	${MKDIR} -p ${OBJECTDIR}/CImbx_tests
