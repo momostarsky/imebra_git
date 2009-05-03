@@ -6,7 +6,9 @@ $fileHeader$
 
 \section copyright Copyright
 
-Copyright 2003, 2004, 2005, 2006 by Paolo Brandoli.
+Copyright 2003, 2004, 2005, 2006, 2007, 2008, 2009 by Paolo Brandoli.
+
+The online version of this document can be found here: http://imebra.com/documentation/html/index.html
 
 
 \section section_Introduction Introduction
@@ -63,6 +65,18 @@ A detailed reference of the C++ classes that compose Imebra is included in
 
 
 \section changeLog Changes log
+
+\subsection since_0_0_46 Changes since version 0.0.46
+
+- Makefiles for the example applications are being provided
+- Fixes #33 (When launched without parameters, dicomdirItems should display the version)
+- Fixes #42 (When a dicomdir destructor is called, the it delete all the children elements. This may cause a stack overflow when an element call release on the next sibling item and the number of siblings is high)
+- Fixes #46 (Checking for LUT validity will help dicom2jpeg to ignore the LUT if it contains invalid data)
+- Fixes #49 (The codepage "CHAR" used to indicate the locale charset in charsetConversion.cpp causes an exception during the initialization of ICONV. The usage of "" instead of "char" works properly)
+- Fixes #50 (mbxInt32 and imbxUint32 are wrongly mapped to long and unsigned long. It should be mapped to int and unsigned int)
+- Fixes #51 (wrong parameters in memset)
+- Fixes #52 (The charset conversion uses different error reporting in ICONV and Windows API)
+
 
 \subsection since_0_0_45 Changes since version 0.0.45
 

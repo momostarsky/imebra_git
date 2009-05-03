@@ -67,13 +67,13 @@ The application must be linked to the iconv and the pthread libraries.
 \section add_to_project_files Adding the source files to your project
 
 Imebra is part of the Puntoexe Library and all its source code files are located
- in subfolders of the "puntoexe_library" directory, included in the distribution
+ in subfolders of the "library" directory, included in the distribution
  package.
 
 The first step to add the Imebra library to your project is to add all the files
  in the following directories to your project:
- - puntoexe_library/imebra/src
- - puntoexe_library/base/src
+ - library/imebra/src
+ - library/base/src
 
 The files in those directories are cpp source files.
 <b>You must disable the use of the precompiled header for all the imebra source
@@ -82,8 +82,8 @@ The files in those directories are cpp source files.
 The files in the following directories are header files and don't need to be
  included in your project, but nothing harmful happen if you do include them
  (please note that EVC4 needs them):
- - puntoexe_library/imebra/include
- - puntoexe_library/base/include
+ - library/imebra/include
+ - library/base/include
 
 The compiler must support the RTTI.
 
@@ -101,9 +101,9 @@ Please check that all the following tasks have been performed:
 - A modern STL library is available and the path to its header files has been
   added to the paths searched by the "include" statement
 - Iconv and Pthread are available on Posix systems (non necessary on Windows systems)
-- All the cpp files in the directory "puntoexe_library/base/src" have been added 
+- All the cpp files in the directory "library/base/src" have been added 
   to your project
-- All the cpp files in the directory "puntoexe_library/imebra/src" have been 
+- All the cpp files in the directory "library/imebra/src" have been 
   added to your project
 - When compiling on Windows (desktop versions) define the symbol WIN32 in the
   preprocessor definitions
@@ -112,7 +112,7 @@ Please check that all the following tasks have been performed:
 - When compiling for windows Desktop define the symbol _WIN32_WINNT to 0x0400
   or greater
 - Enable the RTTI informations in the C++ compiler
-- Include the file "puntoexe_library/imebra/imebra.h" in all the files that
+- Include the file "library/imebra/imebra.h" in all the files that
   reference an imebra class
 
 
@@ -122,7 +122,7 @@ If you want to call or reference an Imebra class or function you have to include
  the Imebra header to all the files that intend to deal with Imebra.
 
 For your convenience, a single include file called "imebra.h" is available in
- the directory "puntoexe_library/imebra/include".
+ the directory "library/imebra/include".
 The "imebra.h" file includes all the main header files used by the Imebra sources.
 
 If your compiler supports the precompiled headers, then a better place where to

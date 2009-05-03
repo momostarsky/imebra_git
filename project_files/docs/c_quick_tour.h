@@ -12,10 +12,10 @@ You should read \ref add_to_project to learn how to include Imebra to your
  project.
 
 A quick explanation:
- - Add all the files in the directories puntoexe_library/base and 
-   puntoexe_library/imebra to your project
+ - Add all the files in the directories library/base and 
+   library/imebra to your project
  - Disable the use of the precompiled header for all the Imebra source files (.cpp)
- - Include the file "puntoexe_library/imebra/include/imebra.h" in all the
+ - Include the file "library/imebra/include/imebra.h" in all the
    files that use the Imebra classes, or include it in the precompiled headers
  - If you are compiling the application on Windows, then define the preprocessor
    symbol WIN32

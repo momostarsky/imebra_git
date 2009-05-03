@@ -27,7 +27,7 @@ dicom2jpeg dicomFileName jpegFileName [-ffmpeg mpegPath [mpegOptions]]
 
 <b>Examples</b>
 
-The following code converts a dicom file named "input.dcm" to a jpeg file named 
+The following command converts a dicom file named "input.dcm" to a jpeg file named 
  "output.jpg". If the file output.jpg already exists then it will be overwritten.
 \code
 dicom2jpeg input.dcm output.jpg
@@ -40,7 +40,7 @@ The following code converts a multiframe file named "multiframe.dcm" to
 dicom2jpeg multiframe.dcm output.jpg
 \endcode
 
-The following code converts a multiframe file named "multiframe.dcm" to 
+The following command converts a multiframe file named "multiframe.dcm" to 
  a swf movie named "movie.swf".\n
 Before producing the movie, dicom2jpeg creates a serie of jpg images
  named output0.jpg, output1.jpg, ..., outputN.jpg (N=number of frames-1).
