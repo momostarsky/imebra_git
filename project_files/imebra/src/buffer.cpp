@@ -172,8 +172,7 @@ ptr<handlers::dataHandler> buffer::getDataHandler(bool bWrite, bool bRaw, imbxUi
 	///////////////////////////////////////////////////////////
 	if(bRaw)
 	{
-		ptr<handlers::dataHandler> tempHandler(new handlers::dataHandlerRaw);
-		handler = tempHandler;
+		handler = new handlers::dataHandlerRaw;
 	}
 	else
 	{
@@ -181,104 +180,91 @@ ptr<handlers::dataHandler> buffer::getDataHandler(bool bWrite, bool bRaw, imbxUi
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="AE")
 		{
-			ptr<handlers::dataHandler> tempHandler(new handlers::dataHandlerStringAE);
-			handler = tempHandler;
+			handler = new handlers::dataHandlerStringAE;
 		}
 
 		// Retrieve an Age string data handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="AS")
 		{
-			ptr<handlers::dataHandler> tempHandler(new handlers::dataHandlerStringAS);
-			handler = tempHandler;
+			handler = new handlers::dataHandlerStringAS;
 		}
 
 		// Retrieve a Code string data handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="CS")
 		{
-			ptr<handlers::dataHandler> tempHandler(new handlers::dataHandlerStringCS);
-			handler = tempHandler;
+			handler = new handlers::dataHandlerStringCS;
 		}
 
 		// Retrieve a Decimal string data handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="DS")
 		{
-			ptr<handlers::dataHandler> tempHandler(new handlers::dataHandlerStringDS);
-			handler = tempHandler;
+			handler = new handlers::dataHandlerStringDS;
 		}
 
 		// Retrieve an Integer string data handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="IS")
 		{
-			ptr<handlers::dataHandler> tempHandler(new handlers::dataHandlerStringIS);
-			handler = tempHandler;
+			handler = new handlers::dataHandlerStringIS;
 		}
 
 		// Retrieve a Long string data handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="LO")
 		{
-			ptr<handlers::dataHandler> tempHandler(new handlers::dataHandlerStringLO);
-			handler = tempHandler;
+			handler = new handlers::dataHandlerStringLO;
 		}
 
 		// Retrieve a Long text data handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="LT")
 		{
-			ptr<handlers::dataHandler> tempHandler(new handlers::dataHandlerStringLT);
-			handler = tempHandler;
+			handler = new handlers::dataHandlerStringLT;
 		}
 
 		// Retrieve a Person Name data handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="PN")
 		{
-			ptr<handlers::dataHandler> tempHandler(new handlers::dataHandlerStringPN);
-			handler = tempHandler;
+			handler = new handlers::dataHandlerStringPN;
 		}
 
 		// Retrieve a Short string data handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="SH")
 		{
-			ptr<handlers::dataHandler> tempHandler(new handlers::dataHandlerStringSH);
-			handler = tempHandler;
+			handler = new handlers::dataHandlerStringSH;
 		}
 
 		// Retrieve a Short text data handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="ST")
 		{
-			ptr<handlers::dataHandler> tempHandler(new handlers::dataHandlerStringST);
-			handler = tempHandler;
+			handler = new handlers::dataHandlerStringST;
 		}
 
 		// Retrieve an Unique Identifier data handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="UI")
 		{
-			ptr<handlers::dataHandler> tempHandler(new handlers::dataHandlerStringUI);
-			handler = tempHandler;
+			handler = new handlers::dataHandlerStringUI;
 		}
 
 		// Retrieve an Unlimited text data handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="UT")
 		{
-			ptr<handlers::dataHandler> tempHandler(new handlers::dataHandlerStringUT);
-			handler = tempHandler;
+			handler = new handlers::dataHandlerStringUT;
 		}
 
 		// Retrieve an object handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="OB")
 		{
-			ptr<handlers::dataHandler> tempHandler(new handlers::dataHandlerNumeric<imbxUint8>);
-			handler = tempHandler;
+			handler = new handlers::dataHandlerNumeric<imbxUint8>;
 		}
 
 		// Retrieve a signed-byte object handler.
@@ -286,104 +272,91 @@ ptr<handlers::dataHandler> buffer::getDataHandler(bool bWrite, bool bRaw, imbxUi
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="SB")
 		{
-			ptr<handlers::dataHandler> tempHandler(new handlers::dataHandlerNumeric<imbxInt8>);
-			handler = tempHandler;
+			handler = new handlers::dataHandlerNumeric<imbxInt8>;
 		}
 
 		// Retrieve an unknown object handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="UN")
 		{
-			ptr<handlers::dataHandler> tempHandler(new handlers::dataHandlerNumeric<imbxUint8>);
-			handler = tempHandler;
+			handler = new handlers::dataHandlerNumeric<imbxUint8>;
 		}
 
 		// Retrieve a WORD handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="OW")
 		{
-			ptr<handlers::dataHandler> tempHandler(new handlers::dataHandlerNumeric<imbxUint16>);
-			handler = tempHandler;
+			handler = new handlers::dataHandlerNumeric<imbxUint16>;
 		}
 
 		// Retrieve a WORD handler (AT)
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="AT")
 		{
-			ptr<handlers::dataHandler> tempHandler(new handlers::dataHandlerNumeric<imbxUint16>);
-			handler = tempHandler;
+			handler = new handlers::dataHandlerNumeric<imbxUint16>;
 		}
 
 		// Retrieve a float handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="FL")
 		{
-			ptr<handlers::dataHandler> tempHandler(new handlers::dataHandlerNumeric<float>);
-			handler = tempHandler;
+			handler = new handlers::dataHandlerNumeric<float>;
 		}
 
 		// Retrieve a double float handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="FD")
 		{
-			ptr<handlers::dataHandler> tempHandler(new handlers::dataHandlerNumeric<double>);
-			handler = tempHandler;
+			handler = new handlers::dataHandlerNumeric<double>;
 		}
 
 		// Retrieve a signed long handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="SL")
 		{
-			ptr<handlers::dataHandler> tempHandler(new handlers::dataHandlerNumeric<imbxInt32>);
-			handler = tempHandler;
+			handler = new handlers::dataHandlerNumeric<imbxInt32>;
 		}
 
 		// Retrieve a signed short handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="SS")
 		{
-			ptr<handlers::dataHandler> tempHandler(new handlers::dataHandlerNumeric<imbxInt16>);
-			handler = tempHandler;
+			handler = new handlers::dataHandlerNumeric<imbxInt16>;
 		}
 
 		// Retrieve an unsigned long handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="UL")
 		{
-			ptr<handlers::dataHandler> tempHandler(new handlers::dataHandlerNumeric<imbxUint32>);
-			handler = tempHandler;
+			handler = new handlers::dataHandlerNumeric<imbxUint32>;
 		}
 
 		// Retrieve an unsigned short handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="US")
 		{
-			ptr<handlers::dataHandler> tempHandler(new handlers::dataHandlerNumeric<imbxUint16>);
-			handler = tempHandler;
+			handler = new handlers::dataHandlerNumeric<imbxUint16>;
 		}
 
 		// Retrieve date
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="DA")
 		{
-			ptr<handlers::dataHandler> tempHandler(new handlers::dataHandlerDate);
-			handler = tempHandler;
+			handler = new handlers::dataHandlerDate;
 		}
 
 		// Retrieve date-time
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="DT")
 		{
-			ptr<handlers::dataHandler> tempHandler(new handlers::dataHandlerDateTime);
-			handler = tempHandler;
+			handler = new handlers::dataHandlerDateTime;
 		}
 
 		// Retrieve time
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="TM")
 		{
-			ptr<handlers::dataHandler> tempHandler(new handlers::dataHandlerTime);
-			handler = tempHandler;
+			handler = new handlers::dataHandlerTime;
 		}
 
 	} // check bRaw
@@ -408,21 +381,19 @@ ptr<handlers::dataHandler> buffer::getDataHandler(bool bWrite, bool bRaw, imbxUi
 	///////////////////////////////////////////////////////////
 	if(bWrite)
 	{
-		ptr<buffer> tempBuffer(this);
-		handler->m_buffer = tempBuffer;
+		handler->m_buffer = this;
 
-		imbxUint32 actualMemorySize = localMemory->size();
-		imbxUint32 newMemorySize = actualMemorySize;
+		imbxUint32 currentMemorySize(localMemory->size());
+                imbxUint32 newMemorySize(currentMemorySize);
 		if(newMemorySize == 0)
 		{
 			newMemorySize = size * handler->getUnitSize();
 		}
-		ptr<memory> newMemoryBuffer(memoryPool::getMemoryPool()->getMemory(newMemorySize));
-		if(actualMemorySize != 0)
+		parseMemory = memoryPool::getMemoryPool()->getMemory(newMemorySize);
+		if(currentMemorySize != 0)
 		{
-			newMemoryBuffer->copyFrom(localMemory);
+			parseMemory->copyFrom(localMemory);
 		}
-		parseMemory = newMemoryBuffer;
 
 		// Add writing handlers to the current transaction
 		///////////////////////////////////////////////////////////
