@@ -46,7 +46,7 @@ namespace handlers
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint32 dataHandlerDate::getUnitSize()
+imbxUint32 dataHandlerDate::getUnitSize() const
 {
 	return 8;
 }
@@ -61,7 +61,7 @@ imbxUint32 dataHandlerDate::getUnitSize()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint32 dataHandlerDate::maxSize()
+imbxUint32 dataHandlerDate::maxSize() const
 {
 	return 10;
 }
@@ -85,7 +85,7 @@ void dataHandlerDate::getDate(
 		imbxInt32* pSeconds,
 		imbxInt32* pNanoseconds,
 		imbxInt32* pOffsetHours,
-		imbxInt32* pOffsetMinutes)
+		imbxInt32* pOffsetMinutes) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerDate::getDate");
 
@@ -144,7 +144,7 @@ void dataHandlerDate::setDate(
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::wstring dataHandlerDate::getUnicodeString()
+std::wstring dataHandlerDate::getUnicodeString() const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerDate::getUnicodeString");
 
@@ -174,7 +174,7 @@ std::wstring dataHandlerDate::getUnicodeString()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerDate::setUnicodeString(std::wstring value)
+void dataHandlerDate::setUnicodeString(const std::wstring& value)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerDate::setUnicodeString");
 
@@ -211,7 +211,7 @@ void dataHandlerDate::setUnicodeString(std::wstring value)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerDate::parseBuffer(ptr<memory> memoryBuffer)
+void dataHandlerDate::parseBuffer(const ptr<memory>& memoryBuffer)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerDate::parseBuffer");
 
@@ -246,15 +246,15 @@ void dataHandlerDate::parseBuffer(ptr<memory> memoryBuffer)
 	{
 		if(components.size() > 0)
 		{
-			normalizedTime = padLeft(components[0], L"0", 4);
+			normalizedTime = padLeft(components[0], L'0', 4);
 		}
 		if(components.size() > 1)
 		{
-			normalizedTime += padLeft(components[1], L"0", 2);
+			normalizedTime += padLeft(components[1], L'0', 2);
 		}
 		if(components.size() > 2)
 		{
-			normalizedTime += padLeft(components[2], L"0", 2);
+			normalizedTime += padLeft(components[2], L'0', 2);
 		}
 	}
 

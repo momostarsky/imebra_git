@@ -367,7 +367,7 @@ bool huffmanTable::readHuffmanCode(imbxUint32* pBuffer, streamReader* pStream)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void huffmanTable::writeHuffmanCode(imbxUint32* pBuffer, streamWriter* pStream)
+void huffmanTable::writeHuffmanCode(const imbxUint32* pBuffer, streamWriter* pStream)
 {
 	PUNTOEXE_FUNCTION_START(L"huffmanTable::writeHuffmanCode");
 

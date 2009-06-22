@@ -78,14 +78,14 @@ public:
 	// Returns the size of an element managed by the
 	//  handler.
 	///////////////////////////////////////////////////////////
-	virtual imbxUint32 getUnitSize()
+	virtual imbxUint32 getUnitSize() const
 	{
 		return sizeof(dataHandlerType);
 	}
 
 	// Set the data element's pointer
 	///////////////////////////////////////////////////////////
-	virtual void setPointer(imbxUint32 elementNumber)
+	virtual void setPointer(const imbxUint32 elementNumber)
 	{
 		if(m_pMemoryString == 0 || elementNumber >= getSize())
 		{
@@ -103,7 +103,7 @@ public:
 
 	// Returns true if the pointer is valid
 	///////////////////////////////////////////////////////////
-	virtual bool pointerIsValid()
+	virtual bool pointerIsValid() const
 	{
 		return m_elementPointer != 0 && m_elementPointer < (dataHandlerType*)m_pMemoryStringEnd;
 	}
@@ -111,28 +111,28 @@ public:
 	// Increase the data element's pointer by the specified
 	//  amount of steps
 	///////////////////////////////////////////////////////////
-	virtual void skip(int skip)
+	virtual void skip(const int skip)
 	{
-		m_elementPointer+=skip;
+		m_elementPointer += skip;
 	}
 
 	// Retrieve the data element as a signed long
 	///////////////////////////////////////////////////////////
-	virtual imbxInt32 getSignedLong()
+	virtual imbxInt32 getSignedLong() const
 	{
 		return (imbxInt32) (*m_elementPointer);
 	}
 
 	// Retrieve the data element an unsigned long
 	///////////////////////////////////////////////////////////
-	virtual imbxUint32 getUnsignedLong()
+	virtual imbxUint32 getUnsignedLong() const
 	{
 		return (imbxUint32) (*m_elementPointer);
 	}
 
 	// Retrieve the data element as a double
 	///////////////////////////////////////////////////////////
-	virtual double getDouble()
+	virtual double getDouble() const
 	{
 		return (double) (*m_elementPointer);
 	}
@@ -163,7 +163,7 @@ public:
 
 	// Retrieve the data element as a string
 	///////////////////////////////////////////////////////////
-	virtual std::string getString()
+	virtual std::string getString() const
 	{
 		PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::getString");
 
@@ -176,7 +176,7 @@ public:
 
 	// Retrieve the data element as a unicode string
 	///////////////////////////////////////////////////////////
-	virtual std::wstring getUnicodeString()
+	virtual std::wstring getUnicodeString() const
 	{
 		PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::getUnicodeString");
 
@@ -189,7 +189,7 @@ public:
 
 	// Retrieve the buffer's size in elements
 	///////////////////////////////////////////////////////////
-	virtual imbxUint32 getSize()
+	virtual imbxUint32 getSize() const
 	{
 		PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::getSize");
 
@@ -200,21 +200,21 @@ public:
 
 	// Set the data element as a signed long
 	///////////////////////////////////////////////////////////
-	virtual void setSignedLong(imbxInt32 value)
+	virtual void setSignedLong(const imbxInt32 value)
 	{
 		*m_elementPointer = (dataHandlerType)value;
 	}
 
 	// Set the data element as an unsigned long
 	///////////////////////////////////////////////////////////
-	virtual void setUnsignedLong(imbxUint32 value)
+	virtual void setUnsignedLong(const imbxUint32 value)
 	{
 		*m_elementPointer = (dataHandlerType)value;
 	}
 
 	// Set the data element as a double
 	///////////////////////////////////////////////////////////
-	virtual void setDouble(double value)
+	virtual void setDouble(const double value)
 	{
 		*m_elementPointer = (dataHandlerType)value;
 	}
@@ -222,7 +222,7 @@ public:
 	// Set the data element as a signed long and increase the
 	//  data element's pointer
 	///////////////////////////////////////////////////////////
-	virtual void setSignedLongIncPointer(imbxInt32 value)
+	virtual void setSignedLongIncPointer(const imbxInt32 value)
 	{
 		*(m_elementPointer++) = (dataHandlerType)value;
 	}
@@ -230,7 +230,7 @@ public:
 	// Set the data element as an unsigned long and increase
 	//  the data element's pointer
 	///////////////////////////////////////////////////////////
-	virtual void setUnsignedLongIncPointer(imbxUint32 value)
+	virtual void setUnsignedLongIncPointer(const imbxUint32 value)
 	{
 		*(m_elementPointer++) = (dataHandlerType)value;
 	}
@@ -238,14 +238,14 @@ public:
 	// Set the data element as a double and increase the data
 	//  element's pointer
 	///////////////////////////////////////////////////////////
-	virtual void setDoubleIncPointer(double value)
+	virtual void setDoubleIncPointer(const double value)
 	{
 		*(m_elementPointer++) = (dataHandlerType)value;
 	}
 
 	// Set the data element as a string
 	///////////////////////////////////////////////////////////
-	virtual void setString(std::string value)
+	virtual void setString(const std::string& value)
 	{
 		PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::setString");
 
@@ -259,7 +259,7 @@ public:
 
 	// Set the data element as an unicode string
 	///////////////////////////////////////////////////////////
-	virtual void setUnicodeString(std::wstring value)
+	virtual void setUnicodeString(const std::wstring& value)
 	{
 		PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::setUnicodeString");
 
@@ -281,7 +281,7 @@ public:
 	///          the data managed by the handler
 	///
 	///////////////////////////////////////////////////////////
-	dataHandlerType* getMemoryBuffer()
+	dataHandlerType* getMemoryBuffer() const
 	{
 		return m_pMemoryString;
 	}
@@ -301,7 +301,7 @@ public:
 	// Copy the data from an array of imbxInt32 values
 	//  into the memory managed by the handler.
 	///////////////////////////////////////////////////////////
-	virtual void copyFromInt32(imbxInt32* pSource, imbxUint32 length)
+	virtual void copyFromInt32(const imbxInt32* pSource, const imbxUint32 length)
 	{
 		PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::copyFromInt32");
 
@@ -322,7 +322,7 @@ public:
 	// Copy the data from the handler into an array of
 	//  imbxInt32 values
 	///////////////////////////////////////////////////////////
-	virtual void copyToInt32(imbxInt32* pDest, imbxUint32 length)
+	virtual void copyToInt32(imbxInt32* pDest, const imbxUint32 length) const
 	{
 		PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::copyToInt32");
 
@@ -377,7 +377,7 @@ public:
 	///                      destination buffer
 	///
 	///////////////////////////////////////////////////////////
-	virtual void copyFromInt32Interleaved(imbxInt32* pSource,
+	virtual void copyFromInt32Interleaved(const imbxInt32* pSource,
 		imbxUint32 sourceReplicateX,
 		imbxUint32 sourceReplicateY,
 		imbxUint32 destStartCol,
@@ -394,14 +394,14 @@ public:
 			return;
 		}
 		dataHandlerType *pDestRowScan = &(m_pMemoryString[(destStartRow*destWidth+destStartCol)*destNumChannels+destStartChannel]);
-		imbxInt32* pSourceRowScan = pSource;
+		const imbxInt32* pSourceRowScan = pSource;
 
 		imbxUint32 replicateXCount;
 		imbxUint32 replicateYCount = sourceReplicateY;
 		imbxUint32 replicateYIncrease = (destEndCol - destStartCol) / sourceReplicateX;
 
 		dataHandlerType *pDestColScan;
-		imbxInt32* pSourceColScan;
+		const imbxInt32* pSourceColScan;
 
         if(destHeight < destEndRow)
         {
@@ -497,7 +497,7 @@ public:
 		imbxUint32 sourceStartChannel,
 		imbxUint32 sourceWidth,
 		imbxUint32 sourceHeight,
-		imbxUint32 sourceNumChannels)
+		imbxUint32 sourceNumChannels) const
 	{
 		if(sourceStartCol >= sourceWidth || sourceStartRow >= sourceHeight)
 		{
@@ -568,7 +568,7 @@ public:
 
 	// Set the buffer's size, in data elements
 	///////////////////////////////////////////////////////////
-	virtual void setSize(imbxUint32 elementsNumber)
+	virtual void setSize(const imbxUint32 elementsNumber)
 	{
 		PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::setSize");
 
@@ -582,7 +582,7 @@ public:
 
 	// Parse the tag's buffer and extract its content
 	///////////////////////////////////////////////////////////
-	virtual void parseBuffer(ptr<memory> memoryBuffer)
+	virtual void parseBuffer(const ptr<memory>& memoryBuffer)
 	{
 		PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::parseBuffer");
 
@@ -595,7 +595,7 @@ public:
 
 	// Rebuild the tag's buffer
 	///////////////////////////////////////////////////////////
-	virtual void buildBuffer(ptr<memory> memoryBuffer)
+	virtual void buildBuffer(const ptr<memory>& memoryBuffer)
 	{
 		PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::buildBuffer");
 

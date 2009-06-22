@@ -42,35 +42,35 @@ namespace handlers
 class dataHandlerDateTimeBase : public dataHandlerString {
 
 public:
-	virtual imbxInt32 getSignedLong();
-	virtual imbxUint32 getUnsignedLong();
-	virtual double getDouble();
-	virtual void setSignedLong(imbxInt32 value);
-	virtual void setUnsignedLong(imbxUint32 value);
-	virtual void setDouble(double value);
+	virtual imbxInt32 getSignedLong() const;
+	virtual imbxUint32 getUnsignedLong() const;
+	virtual double getDouble() const;
+	virtual void setSignedLong(const imbxInt32 value);
+	virtual void setUnsignedLong(const imbxUint32 value);
+	virtual void setDouble(const double value);
 
 protected:
-	virtual wchar_t getSeparator();
+	virtual wchar_t getSeparator() const;
 
 	void parseDate(
-		std::wstring dateString, 		
+		std::wstring dateString,
 		imbxInt32* pYear, 
 		imbxInt32* pMonth, 
-		imbxInt32* pDay);
+		imbxInt32* pDay) const;
 
 	std::wstring buildDate(
 		imbxUint32 year,
 		imbxUint32 month,
-		imbxUint32 day);
+		imbxUint32 day) const;
 	
 	void parseTime(
-		std::wstring timeString, 		
+		std::wstring timeString,
 		imbxInt32* pHour, 
 		imbxInt32* pMinutes,
 		imbxInt32* pSeconds,
 		imbxInt32* pNanoseconds,
 		imbxInt32* pOffsetHours,
-		imbxInt32* pOffsetMinutes);
+		imbxInt32* pOffsetMinutes) const;
 
 	std::wstring buildTime(
 		imbxInt32 hour,
@@ -79,10 +79,10 @@ protected:
 		imbxInt32 nanoseconds,
 		imbxInt32 offsetHours,
 		imbxInt32 offsetMinutes
-		);
+		) const;
 
-	void split(std::wstring timeString, std::wstring separators, std::vector<std::wstring> *pComponents);
-	std::wstring padLeft(std::wstring source, std::wstring fillChar, size_t length);
+	void split(const std::wstring& timeString, const std::wstring& separators, std::vector<std::wstring> *pComponents) const;
+	std::wstring padLeft(const std::wstring& source, const wchar_t fillChar, const size_t length) const;
 };
 
 } // namespace handlers

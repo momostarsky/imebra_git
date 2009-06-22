@@ -46,7 +46,7 @@ namespace handlers
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxInt32 dataHandlerDateTimeBase::getSignedLong()
+imbxInt32 dataHandlerDateTimeBase::getSignedLong() const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTimeBase::getSignedLong");
 
@@ -83,7 +83,7 @@ imbxInt32 dataHandlerDateTimeBase::getSignedLong()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint32 dataHandlerDateTimeBase::getUnsignedLong()
+imbxUint32 dataHandlerDateTimeBase::getUnsignedLong() const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTimeBase::getUnsignedLong");
 
@@ -102,7 +102,7 @@ imbxUint32 dataHandlerDateTimeBase::getUnsignedLong()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-double dataHandlerDateTimeBase::getDouble()
+double dataHandlerDateTimeBase::getDouble() const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTimeBase::getDouble");
 
@@ -121,7 +121,7 @@ double dataHandlerDateTimeBase::getDouble()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerDateTimeBase::setSignedLong(imbxInt32 value)
+void dataHandlerDateTimeBase::setSignedLong(const imbxInt32 value)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTimeBase::setSignedLong");
 
@@ -151,7 +151,7 @@ void dataHandlerDateTimeBase::setSignedLong(imbxInt32 value)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerDateTimeBase::setUnsignedLong(imbxUint32 value)
+void dataHandlerDateTimeBase::setUnsignedLong(const imbxUint32 value)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTimeBase::setUnsignedLong");
 
@@ -170,7 +170,7 @@ void dataHandlerDateTimeBase::setUnsignedLong(imbxUint32 value)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerDateTimeBase::setDouble(double value)
+void dataHandlerDateTimeBase::setDouble(const double value)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTimeBase::setDouble");
 
@@ -189,7 +189,7 @@ void dataHandlerDateTimeBase::setDouble(double value)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-wchar_t dataHandlerDateTimeBase::getSeparator()
+wchar_t dataHandlerDateTimeBase::getSeparator() const
 {
 	return 0;
 }
@@ -205,10 +205,10 @@ wchar_t dataHandlerDateTimeBase::getSeparator()
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 void dataHandlerDateTimeBase::parseDate(
-		std::wstring dateString, 		
+		std::wstring dateString,
 		imbxInt32* pYear, 
 		imbxInt32* pMonth, 
-		imbxInt32* pDay)
+		imbxInt32* pDay) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTimeBase::parseDate");
 
@@ -244,7 +244,7 @@ void dataHandlerDateTimeBase::parseDate(
 std::wstring dataHandlerDateTimeBase::buildDate(
 		imbxUint32 year,
 		imbxUint32 month,
-		imbxUint32 day)
+		imbxUint32 day) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTimeBase::buildDate");
 
@@ -275,13 +275,13 @@ std::wstring dataHandlerDateTimeBase::buildDate(
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 void dataHandlerDateTimeBase::parseTime(
-		std::wstring timeString, 		
+		std::wstring timeString,
 		imbxInt32* pHour, 
 		imbxInt32* pMinutes,
 		imbxInt32* pSeconds,
 		imbxInt32* pNanoseconds,
 		imbxInt32* pOffsetHours,
-		imbxInt32* pOffsetMinutes)
+		imbxInt32* pOffsetMinutes) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTimeBase::parseTime");
 
@@ -356,7 +356,7 @@ std::wstring dataHandlerDateTimeBase::buildTime(
 		imbxInt32 nanoseconds,
 		imbxInt32 offsetHours,
 		imbxInt32 offsetMinutes
-		)
+		) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTimeBase::buildTime");
 
@@ -405,19 +405,30 @@ std::wstring dataHandlerDateTimeBase::buildTime(
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerDateTimeBase::split(std::wstring timeString, std::wstring separators, std::vector<std::wstring> *pComponents)
+void dataHandlerDateTimeBase::split(const std::wstring& timeString, const std::wstring& separators, std::vector<std::wstring> *pComponents) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTimeBase::split");
 
-	for(size_t sepPos = timeString.find_first_of(separators); sepPos != timeString.npos; sepPos = timeString.find_first_of(separators))
-	{
-		std::wstring left = timeString.substr(0, sepPos);
-		std::wstring right = timeString.substr(++sepPos);
+        if(timeString.empty())
+        {
+            return;
+        }
 
-		pComponents->push_back(left);
-		timeString = right;
+	for(size_t startPos(0), sepPos(timeString.find_first_of(separators)); /* empty */; sepPos = timeString.find_first_of(separators, startPos))
+	{
+                if(sepPos == timeString.npos)
+                {
+                    pComponents->push_back(timeString.substr(startPos));
+                    break;
+                }
+		pComponents->push_back(timeString.substr(startPos, sepPos - startPos));
+		startPos = ++sepPos;
+                if(startPos == timeString.size())
+                {
+                    pComponents->push_back(L"");
+                    break;
+                }
 	}
-	pComponents->push_back(timeString);
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -433,15 +444,19 @@ void dataHandlerDateTimeBase::split(std::wstring timeString, std::wstring separa
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::wstring dataHandlerDateTimeBase::padLeft(std::wstring source, std::wstring fillChar, size_t length)
+std::wstring dataHandlerDateTimeBase::padLeft(const std::wstring& source, const wchar_t fillChar, const size_t length) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTimeBase::padLeft");
+        
+        if(source.size() >= length)
+        {
+            return source;
+        }
 
-	while(source.size() < length)
-	{
-		source.insert(0, fillChar);
-	}
-	return source;
+        std::wstring paddedString(length - source.size(), fillChar);
+        paddedString += source;
+
+	return paddedString;
 
 	PUNTOEXE_FUNCTION_END();
 }

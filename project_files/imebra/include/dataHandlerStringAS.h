@@ -67,7 +67,7 @@ public:
 	/// @param unit  the units used for the parameter age
 	///
 	///////////////////////////////////////////////////////////
-	virtual void setAge(imbxUint32 age, tAgeUnit unit);
+	virtual void setAge(const imbxUint32 age, const tAgeUnit unit);
 
 	/// \brief Retrieve the age value and its unit from the
 	///         buffer handled by this handler.
@@ -80,7 +80,7 @@ public:
 	///               pUnit
 	///
 	///////////////////////////////////////////////////////////
-	virtual imbxUint32 getAge(tAgeUnit* pUnit);
+	virtual imbxUint32 getAge(tAgeUnit* pUnit) const;
 
 	/// \brief Retrieve the age from the handled buffer.
 	///
@@ -90,7 +90,7 @@ public:
 	///          years
 	///
 	///////////////////////////////////////////////////////////
-	virtual imbxInt32 getSignedLong();
+	virtual imbxInt32 getSignedLong() const;
 
 	/// \brief Retrieve the age from the handled buffer.
 	///
@@ -100,7 +100,7 @@ public:
 	///          years
 	///
 	///////////////////////////////////////////////////////////
-	virtual imbxUint32 getUnsignedLong();
+	virtual imbxUint32 getUnsignedLong() const;
 
 	/// \brief Retrieve the age from the handled buffer.
 	///
@@ -113,21 +113,21 @@ public:
 	///          years
 	///
 	///////////////////////////////////////////////////////////
-	virtual double getDouble();
+	virtual double getDouble() const;
 
 	/// \brief Write the specified age into the handled buffer.
 	///
 	/// @param value the age to be written, in years
 	///
 	///////////////////////////////////////////////////////////
-	virtual void setSignedLong(imbxInt32 value);
+	virtual void setSignedLong(const imbxInt32 value);
 
 	/// \brief Write the specified age into the handled buffer.
 	///
 	/// @param value the age to be written, in years
 	///
 	///////////////////////////////////////////////////////////
-	virtual void setUnsignedLong(imbxUint32 value);
+	virtual void setUnsignedLong(const imbxUint32 value);
 
 	/// \brief Write the specified age into the handled buffer.
 	///
@@ -138,17 +138,17 @@ public:
 	/// @param value the age to be written, in years
 	///
 	///////////////////////////////////////////////////////////
-	virtual void setDouble(double value);
+	virtual void setDouble(const double value);
 
 
-	virtual imbxUint8 getPaddingByte();
+	virtual imbxUint8 getPaddingByte() const;
 
-	virtual imbxUint32 getUnitSize();
+	virtual imbxUint32 getUnitSize() const;
 
 protected:
 	// Return the maximum string's length
 	///////////////////////////////////////////////////////////
-	virtual imbxUint32 maxSize();
+	virtual imbxUint32 maxSize() const;
 };
 
 } // namespace handlers

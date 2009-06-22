@@ -46,7 +46,7 @@ namespace handlers
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint32 dataHandlerTime::maxSize()
+imbxUint32 dataHandlerTime::maxSize() const
 {
 	return 16;
 }
@@ -61,7 +61,7 @@ imbxUint32 dataHandlerTime::maxSize()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint32 dataHandlerTime::getUnitSize()
+imbxUint32 dataHandlerTime::getUnitSize() const
 {
 	return 0;
 }
@@ -76,7 +76,7 @@ imbxUint32 dataHandlerTime::getUnitSize()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerTime::parseBuffer(ptr<memory> memoryBuffer)
+void dataHandlerTime::parseBuffer(const ptr<memory>& memoryBuffer)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerTime::parseBuffer");
 
@@ -113,11 +113,11 @@ void dataHandlerTime::parseBuffer(ptr<memory> memoryBuffer)
 	{
 		if(components.size() > 0)
 		{
-			normalizedTime = padLeft(components[0], L"0", 2);
+			normalizedTime = padLeft(components[0], L'0', 2);
 		}
 		if(components.size() > 1)
 		{
-			normalizedTime += padLeft(components[1], L"0", 2);
+			normalizedTime += padLeft(components[1], L'0', 2);
 		}
 		if(components.size() > 2)
 		{
@@ -125,7 +125,7 @@ void dataHandlerTime::parseBuffer(ptr<memory> memoryBuffer)
 			split(components[2], L".", &secondsComponents);
 			if(secondsComponents.size() > 0)
 			{
-				normalizedTime += padLeft(secondsComponents[0], L"0", 2);
+				normalizedTime += padLeft(secondsComponents[0], L'0', 2);
 			}
 			if(secondsComponents.size() > 1)
 			{
@@ -188,7 +188,7 @@ void dataHandlerTime::getDate(
 		 imbxInt32* pSeconds,
 		 imbxInt32* pNanoseconds,
 		 imbxInt32* pOffsetHours,
-		 imbxInt32* pOffsetMinutes)
+		 imbxInt32* pOffsetMinutes) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerTime::getDate");
 
@@ -218,7 +218,7 @@ void dataHandlerTime::getDate(
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::wstring dataHandlerTime::getUnicodeString()
+std::wstring dataHandlerTime::getUnicodeString() const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerTime::getUnicodeString");
 
@@ -257,7 +257,7 @@ std::wstring dataHandlerTime::getUnicodeString()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerTime::setUnicodeString(std::wstring value)
+void dataHandlerTime::setUnicodeString(const std::wstring& value)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerTime::setUnicodeString");
 

@@ -41,7 +41,7 @@ namespace handlers
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint8 dataHandlerStringAE::getPaddingByte()
+imbxUint8 dataHandlerStringAE::getPaddingByte() const
 {
 	return 0x20;
 }
@@ -56,7 +56,7 @@ imbxUint8 dataHandlerStringAE::getPaddingByte()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint32 dataHandlerStringAE::getUnitSize()
+imbxUint32 dataHandlerStringAE::getUnitSize() const
 {
 	return 0;
 }
@@ -71,7 +71,7 @@ imbxUint32 dataHandlerStringAE::getUnitSize()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint32 dataHandlerStringAE::maxSize()
+imbxUint32 dataHandlerStringAE::maxSize() const
 {
 	return 16;
 }

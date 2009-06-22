@@ -51,7 +51,7 @@ memoryStream::memoryStream(ptr<memory> memoryStream): m_memory(memoryStream)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void memoryStream::write(imbxUint32 startPosition, imbxUint8* pBuffer, imbxUint32 bufferLength)
+void memoryStream::write(imbxUint32 startPosition, const imbxUint8* pBuffer, imbxUint32 bufferLength)
 {
 	PUNTOEXE_FUNCTION_START(L"memoryStream::write");
 

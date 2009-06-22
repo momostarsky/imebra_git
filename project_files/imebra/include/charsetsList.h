@@ -43,8 +43,8 @@ typedef std::list<std::wstring> tCharsetsList;
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 
-void updateCharsets(tCharsetsList* pCharsetsList, tCharsetsList* pDestinationCharsetsList);
-void copyCharsets(tCharsetsList* pSourceCharsetsList, tCharsetsList* pDestinationCharsetsList);
+void updateCharsets(const tCharsetsList* pCharsetsList, tCharsetsList* pDestinationCharsetsList);
+void copyCharsets(const tCharsetsList* pSourceCharsetsList, tCharsetsList* pDestinationCharsetsList);
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////

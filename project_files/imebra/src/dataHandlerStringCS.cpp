@@ -32,17 +32,17 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 
-imbxUint8 dataHandlerStringCS::getPaddingByte()
+imbxUint8 dataHandlerStringCS::getPaddingByte() const
 {
 	return 0x20;
 }
 
-imbxUint32 dataHandlerStringCS::getUnitSize()
+imbxUint32 dataHandlerStringCS::getUnitSize() const
 {
 	return 0;
 }
 
-imbxUint32 dataHandlerStringCS::maxSize()
+imbxUint32 dataHandlerStringCS::maxSize() const
 {
 	return 16;
 }

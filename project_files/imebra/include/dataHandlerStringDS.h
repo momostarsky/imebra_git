@@ -38,36 +38,36 @@ class dataHandlerStringDS : public dataHandlerString
 public:
 	// Overwritten to use getDouble()
 	///////////////////////////////////////////////////////////
-	virtual imbxInt32 getSignedLong();
+	virtual imbxInt32 getSignedLong() const;
 
 	// Overwritten to use getDouble()
 	///////////////////////////////////////////////////////////
-	virtual imbxUint32 getUnsignedLong();
+	virtual imbxUint32 getUnsignedLong() const;
 
 	// Overwritten to use setDouble()
 	///////////////////////////////////////////////////////////
-	virtual void setSignedLong(imbxInt32 value);
+	virtual void setSignedLong(const imbxInt32 value);
 
 	// Overwritten to use setDouble()
 	///////////////////////////////////////////////////////////
-	virtual void setUnsignedLong(imbxUint32 value);
+	virtual void setUnsignedLong(const imbxUint32 value);
 
 	// Overwritten to use the exponential form if needed
 	///////////////////////////////////////////////////////////
-	virtual void setDouble(double value);
+	virtual void setDouble(const double value);
 
 	// Get the padding byte
 	///////////////////////////////////////////////////////////
-	virtual imbxUint8 getPaddingByte();
+	virtual imbxUint8 getPaddingByte() const;
 
 	// Get the element size
 	///////////////////////////////////////////////////////////
-	virtual imbxUint32 getUnitSize();
+	virtual imbxUint32 getUnitSize() const;
 
 protected:
 	// Return the maximum string's length
 	///////////////////////////////////////////////////////////
-	virtual imbxUint32 maxSize();
+	virtual imbxUint32 maxSize() const;
 
 };
 

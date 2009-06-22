@@ -68,33 +68,33 @@ public:
 	///                      dicom charsets used in the string
 	///
 	///////////////////////////////////////////////////////////
-	virtual void getCharsetsList(charsetsList::tCharsetsList* pCharsetsList);
+	virtual void getCharsetsList(charsetsList::tCharsetsList* pCharsetsList) const;
 
 protected:
 	// Convert a string to unicode, using the dicom charsets
 	///////////////////////////////////////////////////////////
-	virtual std::wstring convertToUnicode(std::string value);
+	virtual std::wstring convertToUnicode(const std::string& value) const;
 
 	// Convert a string from unicode, using the dicom charsets
 	///////////////////////////////////////////////////////////
-	virtual std::string convertFromUnicode(std::wstring value);
+	virtual std::string convertFromUnicode(const std::wstring& value, charsetsList::tCharsetsList* pCharsetsList) const;
 
 	charsetConversion m_charsetConversion;
 	charsetConversion m_localeCharsetConversion;
 
-	dicomCharsetInformation* getCharsetInfo(std::wstring dicomName);
+	dicomCharsetInformation* getCharsetInfo(const std::wstring& dicomName) const;
 };
 
 class dataHandlerStringUnicodeException: public std::runtime_error
 {
 public:
-	dataHandlerStringUnicodeException(std::string message): std::runtime_error(message){}
+	dataHandlerStringUnicodeException(const std::string& message): std::runtime_error(message){}
 };
 
 class dataHandlerStringUnicodeExceptionUnknownCharset: public dataHandlerStringUnicodeException
 {
 public:
-	dataHandlerStringUnicodeExceptionUnknownCharset(std::string message): dataHandlerStringUnicodeException(message){}
+	dataHandlerStringUnicodeExceptionUnknownCharset(const std::string& message): dataHandlerStringUnicodeException(message){}
 };
 
 } // namespace handlers

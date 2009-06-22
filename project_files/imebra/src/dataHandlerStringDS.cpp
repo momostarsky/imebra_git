@@ -46,7 +46,7 @@ namespace handlers
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxInt32 dataHandlerStringDS::getSignedLong()
+imbxInt32 dataHandlerStringDS::getSignedLong() const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerStringDS::getSignedLong");
 
@@ -66,7 +66,7 @@ imbxInt32 dataHandlerStringDS::getSignedLong()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint32 dataHandlerStringDS::getUnsignedLong()
+imbxUint32 dataHandlerStringDS::getUnsignedLong() const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerStringDS::getUnsignedLong");
 
@@ -86,7 +86,7 @@ imbxUint32 dataHandlerStringDS::getUnsignedLong()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerStringDS::setSignedLong(imbxInt32 value)
+void dataHandlerStringDS::setSignedLong(const imbxInt32 value)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerStringDS::setSignedLong");
 
@@ -106,7 +106,7 @@ void dataHandlerStringDS::setSignedLong(imbxInt32 value)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerStringDS::setUnsignedLong(imbxUint32 value)
+void dataHandlerStringDS::setUnsignedLong(const imbxUint32 value)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerStringDS::setUnsignedLong");
 
@@ -126,7 +126,7 @@ void dataHandlerStringDS::setUnsignedLong(imbxUint32 value)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerStringDS::setDouble(double value)
+void dataHandlerStringDS::setDouble(const double value)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerStringDS::setDouble");
 
@@ -137,17 +137,17 @@ void dataHandlerStringDS::setDouble(double value)
 	PUNTOEXE_FUNCTION_END();
 }
 
-imbxUint8 dataHandlerStringDS::getPaddingByte()
+imbxUint8 dataHandlerStringDS::getPaddingByte() const
 {
 	return 0x20;
 }
 
-imbxUint32 dataHandlerStringDS::getUnitSize()
+imbxUint32 dataHandlerStringDS::getUnitSize() const
 {
 	return 0;
 }
 
-imbxUint32 dataHandlerStringDS::maxSize()
+imbxUint32 dataHandlerStringDS::maxSize() const
 {
 	return 16;
 }

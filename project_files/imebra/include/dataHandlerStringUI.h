@@ -39,18 +39,18 @@ namespace handlers
 class dataHandlerStringUI : public dataHandlerString
 {
 public:
-	virtual imbxUint8 getPaddingByte();
+	virtual imbxUint8 getPaddingByte() const;
 
-	virtual imbxUint32 getUnitSize();
+	virtual imbxUint32 getUnitSize() const;
 
 protected:
 	// Return the maximum string's length
 	///////////////////////////////////////////////////////////
-	virtual imbxUint32 maxSize();
+	virtual imbxUint32 maxSize() const;
 
 	// Returns the separator
 	///////////////////////////////////////////////////////////
-	virtual wchar_t getSeparator();
+	virtual wchar_t getSeparator() const;
 };
 
 } // namespace handlers

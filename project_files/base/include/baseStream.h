@@ -69,7 +69,7 @@ public:
 	///                        buffer that has to be written
 	///
 	///////////////////////////////////////////////////////////
-	virtual void write(imbxUint32 startPosition, imbxUint8* pBuffer, imbxUint32 bufferLength) = 0;
+	virtual void write(imbxUint32 startPosition, const imbxUint8* pBuffer, imbxUint32 bufferLength) = 0;
 	
 	/// \brief Read raw data from the stream.
 	///
@@ -102,7 +102,7 @@ public:
 class streamException: public std::runtime_error
 {
 public:
-	streamException(std::string message): std::runtime_error(message){}
+	streamException(const std::string& message): std::runtime_error(message){}
 };
 
 
@@ -115,7 +115,7 @@ public:
 class streamExceptionOpen : public streamException
 {
 public:
-	streamExceptionOpen(std::string message): streamException(message){}
+	streamExceptionOpen(const std::string& message): streamException(message){}
 };
 
 
@@ -129,7 +129,7 @@ public:
 class streamExceptionRead : public streamException
 {
 public:
-	streamExceptionRead(std::string message): streamException(message){}
+	streamExceptionRead(const std::string& message): streamException(message){}
 };
 
 
@@ -143,7 +143,7 @@ public:
 class streamExceptionWrite : public streamException
 {
 public:
-	streamExceptionWrite(std::string message): streamException(message){}
+	streamExceptionWrite(const std::string& message): streamException(message){}
 };
 
 
@@ -157,7 +157,7 @@ public:
 class streamExceptionClose : public streamException
 {
 public:
-	streamExceptionClose(std::string message): streamException(message){}
+	streamExceptionClose(const std::string& message): streamException(message){}
 };
 
 } // namespace puntoexe

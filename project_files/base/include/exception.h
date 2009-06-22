@@ -61,7 +61,7 @@ public:
 	///                       exception being rethrown
 	///
 	///////////////////////////////////////////////////////////
-	exceptionInfo(std::wstring functionName, std::string fileName, long lineNumber, std::string exceptionType, std::string exceptionMessage);
+	exceptionInfo(const std::wstring& functionName, const std::string& fileName, const long lineNumber, const std::string& exceptionType, const std::string& exceptionMessage);
 
 	exceptionInfo();
 	

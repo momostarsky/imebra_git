@@ -32,22 +32,22 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 
-imbxUint8 dataHandlerStringUI::getPaddingByte()
+imbxUint8 dataHandlerStringUI::getPaddingByte() const
 {
 	return 0x0;
 }
 
-imbxUint32 dataHandlerStringUI::getUnitSize()
+imbxUint32 dataHandlerStringUI::getUnitSize() const
 {
 	return 0;
 }
 
-imbxUint32 dataHandlerStringUI::maxSize()
+imbxUint32 dataHandlerStringUI::maxSize() const
 {
 	return 64;
 }
 
-wchar_t dataHandlerStringUI::getSeparator()
+wchar_t dataHandlerStringUI::getSeparator() const
 {
 	return 0;
 }

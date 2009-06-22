@@ -112,11 +112,11 @@ void dataHandler::abort()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandler::skip(int skip)
+void dataHandler::skip(const int skip)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandler::skip");
 
-	while(skip--)
+	for( int skipCount(skip); skipCount != 0; --skipCount)
 	{
 		incPointer();
 	}
@@ -134,7 +134,7 @@ void dataHandler::skip(int skip)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint32 dataHandler::getUnitSize()
+imbxUint32 dataHandler::getUnitSize() const
 {
 	return 0;
 }
@@ -149,7 +149,7 @@ imbxUint32 dataHandler::getUnitSize()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint8 dataHandler::getPaddingByte()
+imbxUint8 dataHandler::getPaddingByte() const
 {
 	return 0;
 }
@@ -232,7 +232,7 @@ double dataHandler::getDoubleIncPointer()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandler::setSignedLongIncPointer(imbxInt32 value)
+void dataHandler::setSignedLongIncPointer(const imbxInt32 value)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandler::setSignedLongIncPointer");
 
@@ -253,7 +253,7 @@ void dataHandler::setSignedLongIncPointer(imbxInt32 value)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandler::setUnsignedLongIncPointer(imbxUint32 value)
+void dataHandler::setUnsignedLongIncPointer(const imbxUint32 value)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandler::setUnsignedLongIncPointer");
 
@@ -274,7 +274,7 @@ void dataHandler::setUnsignedLongIncPointer(imbxUint32 value)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandler::setDoubleIncPointer(double value)
+void dataHandler::setDoubleIncPointer(const double value)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandler::setDoubleIncPointer");
 
@@ -289,68 +289,12 @@ void dataHandler::setDoubleIncPointer(double value)
 ///////////////////////////////////////////////////////////
 //
 //
-// Copy data from an array of imbxInt32
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-void dataHandler::copyFromInt32(imbxInt32* pSource, imbxUint32 length)
-{
-	PUNTOEXE_FUNCTION_START(L"dataHandler::copyFromInt32");
-
-	setSize(length);
-
-	if(length == 0)
-	{
-		return;
-	}
-	setPointer(0);
-	while(length--)
-	{
-		setSignedLongIncPointer(*(pSource++));
-	}
-
-	PUNTOEXE_FUNCTION_END();
-}
-
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Copy data to an array of imbxInt32
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-void dataHandler::copyToInt32(imbxInt32* pDest, imbxUint32 length)
-{
-	PUNTOEXE_FUNCTION_START(L"dataHandler::copyToInt32");
-
-	if(length == 0)
-	{
-		return;
-	}
-	setPointer(0);
-	while(length--)
-	{
-		*(pDest++) = getSignedLongIncPointer();
-	}
-
-	PUNTOEXE_FUNCTION_END();
-}
-
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
 // Retrieve the data 's type
 //
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::string dataHandler::getDataType()
+std::string dataHandler::getDataType() const
 {
 	return m_bufferType;
 }
@@ -365,7 +309,7 @@ std::string dataHandler::getDataType()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandler::parseBuffer(imbxUint8* pBuffer, imbxUint32 bufferLength)
+void dataHandler::parseBuffer(const imbxUint8* pBuffer, const imbxUint32 bufferLength)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandler::parseBuffer");
 
@@ -398,7 +342,7 @@ void dataHandler::getDate(
 		imbxInt32* pSeconds,
 		imbxInt32* pNanoseconds,
 		imbxInt32* pOffsetHours,
-		imbxInt32* pOffsetMinutes)
+		imbxInt32* pOffsetMinutes) const
 {
 	*pYear = 0;
 	*pMonth = 0;
@@ -440,7 +384,7 @@ void dataHandler::setCharsetsList(charsetsList::tCharsetsList* /* pCharsetsList 
 	// Intentionally empty
 }
 
-void dataHandler::getCharsetsList(charsetsList::tCharsetsList* /* pCharsetsList */)
+void dataHandler::getCharsetsList(charsetsList::tCharsetsList* /* pCharsetsList */) const
 {
 	// Intentionally empty
 }

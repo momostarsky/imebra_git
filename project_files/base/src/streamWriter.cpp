@@ -60,7 +60,7 @@ void streamWriter::flushDataBuffer()
 // Write into the stream
 //
 ///////////////////////////////////////////////////////////
-void streamWriter::write(imbxUint8* pBuffer, imbxUint32 bufferLength)
+void streamWriter::write(const imbxUint8* pBuffer, imbxUint32 bufferLength)
 {
 	while(bufferLength != 0)
 	{

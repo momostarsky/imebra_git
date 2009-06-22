@@ -142,7 +142,7 @@ public:
 	/// @param elementNumber The element number to activate.
 	///
 	///////////////////////////////////////////////////////////
-	virtual void setPointer(imbxUint32 elementNumber) =0;
+	virtual void setPointer(const imbxUint32 elementNumber) =0;
 
 	/// \brief Increase the internal pointer by one element.
 	///
@@ -165,7 +165,7 @@ public:
 	///             current value of the data handler's
 	///             internal pointer
 	///////////////////////////////////////////////////////////
-	virtual void skip(int skip);
+	virtual void skip(const int skip);
 
 	/// \brief Returns true if the data handler's internal
 	///        pointer is valid.
@@ -182,7 +182,7 @@ public:
 	///         false=invalid).
 	///
 	///////////////////////////////////////////////////////////
-	virtual bool pointerIsValid() =0;
+	virtual bool pointerIsValid() const=0;
 
 	//@}
 
@@ -202,7 +202,7 @@ public:
 	///                        in data elements
 	///
 	///////////////////////////////////////////////////////////
-	virtual void setSize(imbxUint32 elementsNumber) =0;
+	virtual void setSize(const imbxUint32 elementsNumber) =0;
 
 	/// \brief Retrieve the data handler's local buffer buffer
 	///         size (in elements).
@@ -210,7 +210,7 @@ public:
 	/// @return the buffer's size in elements
 	///
 	///////////////////////////////////////////////////////////
-	virtual imbxUint32 getSize() =0;
+	virtual imbxUint32 getSize() const=0;
 
 	/// \brief Returns a single element's size in bytes.
 	///
@@ -221,7 +221,7 @@ public:
 	///         element doesn't have a fixed size
 	///
 	///////////////////////////////////////////////////////////
-	virtual imbxUint32 getUnitSize() =0;
+	virtual imbxUint32 getUnitSize() const=0;
 
 	//@}
 	
@@ -240,7 +240,7 @@ public:
 	///                      \ref buffer
 	///
 	///////////////////////////////////////////////////////////
-	virtual void parseBuffer(ptr<memory> memoryBuffer)=0;
+	virtual void parseBuffer(const ptr<memory>& memoryBuffer)=0;
 	
 	/// \internal
 	/// \brief This function copies the %data from the 
@@ -252,7 +252,7 @@ public:
 	///                 pBuffer
 	///
 	///////////////////////////////////////////////////////////
-	void parseBuffer(imbxUint8* pBuffer, imbxUint32 bufferLength);
+	void parseBuffer(const imbxUint8* pBuffer, const imbxUint32 bufferLength);
 
 	/// \internal
 	/// \brief Copies the local %buffer into the original
@@ -262,7 +262,7 @@ public:
 	///                      \ref buffer
 	///
 	///////////////////////////////////////////////////////////
-	virtual void buildBuffer(ptr<memory> memoryBuffer)=0;
+	virtual void buildBuffer(const ptr<memory>& memoryBuffer)=0;
 
 	/// \internal
 	/// \brief Defines the charsets used in the string
@@ -279,7 +279,7 @@ public:
 	///                      dicom charsets used in the string
 	///
 	///////////////////////////////////////////////////////////
-	virtual void getCharsetsList(charsetsList::tCharsetsList* pCharsetsList);
+	virtual void getCharsetsList(charsetsList::tCharsetsList* pCharsetsList) const;
 
 	//@}
 
@@ -299,7 +299,7 @@ public:
 	/// @return the data handler's dicom data type
 	///
 	///////////////////////////////////////////////////////////
-	std::string getDataType();
+	std::string getDataType() const;
 
 	/// \brief Return the byte that this handler uses to fill
 	///         its content to make its size even.
@@ -307,7 +307,7 @@ public:
 	/// @return the byte used to make the content's size even
 	///
 	///////////////////////////////////////////////////////////
-	virtual imbxUint8 getPaddingByte();
+	virtual imbxUint8 getPaddingByte() const;
 
 	//@}
 
@@ -329,7 +329,7 @@ public:
 	///          transformed into a signed long
 	///
 	///////////////////////////////////////////////////////////
-	virtual imbxInt32 getSignedLong() =0;
+	virtual imbxInt32 getSignedLong() const=0;
 
 	/// \brief Retrieve the active %data element as an unsigned
 	///         long.
@@ -342,7 +342,7 @@ public:
 	///          transformed into an unsigned long
 	///
 	///////////////////////////////////////////////////////////
-	virtual imbxUint32 getUnsignedLong() =0;
+	virtual imbxUint32 getUnsignedLong() const =0;
 
 	/// \brief Retrieve the active %data element as a double.
 	///
@@ -354,7 +354,7 @@ public:
 	///          transformed into a double
 	///
 	///////////////////////////////////////////////////////////
-	virtual double getDouble() =0;
+	virtual double getDouble() const=0;
 
 	/// \brief Retrieve the active %data element as a signed
 	///         long and increase the %data handler's internal
@@ -414,7 +414,7 @@ public:
 	///         transformed into a string.
 	///
 	///////////////////////////////////////////////////////////
-	virtual std::string getString() = 0;
+	virtual std::string getString() const= 0;
 
 	/// \brief Retrieve the active %data element as an
 	///         unicode string.
@@ -431,7 +431,7 @@ public:
 	///         transformed into a string.
 	///
 	///////////////////////////////////////////////////////////
-	virtual std::wstring getUnicodeString() = 0;
+	virtual std::wstring getUnicodeString() const = 0;
 
 	/// \brief Retrieve the active %data element as a date.
 	///
@@ -470,7 +470,7 @@ public:
 		imbxInt32* pSeconds,
 		imbxInt32* pNanoseconds,
 		imbxInt32* pOffsetHours,
-		imbxInt32* pOffsetMinutes);
+		imbxInt32* pOffsetMinutes) const;
 
 	/// \brief Set the active %data element as a date.
 	///
@@ -513,7 +513,7 @@ public:
 	///				  %data element.
 	///
 	///////////////////////////////////////////////////////////
-	virtual void setSignedLong(imbxInt32 value) =0;
+	virtual void setSignedLong(const imbxInt32 value) =0;
 
 	/// \brief Set the active %data element from an unsigned
 	///        long.
@@ -526,7 +526,7 @@ public:
 	///				  %data element.
 	///
 	///////////////////////////////////////////////////////////
-	virtual void setUnsignedLong(imbxUint32 value) =0;
+	virtual void setUnsignedLong(const imbxUint32 value) =0;
 
 	/// \brief Set the active %data element from a double
 	///
@@ -538,7 +538,7 @@ public:
 	///				  %data element.
 	///
 	///////////////////////////////////////////////////////////
-	virtual void setDouble(double value) =0;
+	virtual void setDouble(const double value) =0;
 
 	/// \brief Set the active %data element from a signed
 	///         long and increase the data handler's internal
@@ -552,7 +552,7 @@ public:
 	///				  %data element.
 	///
 	///////////////////////////////////////////////////////////
-	virtual void setSignedLongIncPointer(imbxInt32 value);
+	virtual void setSignedLongIncPointer(const imbxInt32 value);
 
 	/// \brief Set the active %data element from an unsigned
 	///         long and increase the data handler's internal
@@ -566,7 +566,7 @@ public:
 	///				  %data element.
 	///
 	///////////////////////////////////////////////////////////
-	virtual void setUnsignedLongIncPointer(imbxUint32 value);
+	virtual void setUnsignedLongIncPointer(const imbxUint32 value);
 
 	/// \brief Set the active %data element from a double
 	///         and increase the data handler's internal
@@ -580,7 +580,7 @@ public:
 	///				  %data element.
 	///
 	///////////////////////////////////////////////////////////
-	virtual void setDoubleIncPointer(double value);
+	virtual void setDoubleIncPointer(const double value);
 
 	/// \brief Set the active %data element from a string.
 	///        SetUnicodeString() is preferred over 
@@ -593,7 +593,7 @@ public:
 	/// @param value the value to write into the active
 	///				  %data element.
 	///////////////////////////////////////////////////////////
-	virtual void setString(std::string value) =0;
+	virtual void setString(const std::string& value) =0;
 
 	/// \brief Set the active %data element from an unicode
 	///          string.
@@ -608,7 +608,7 @@ public:
 	/// @param value the value to write into the active
 	///				  %data element.
 	///////////////////////////////////////////////////////////
-	virtual void setUnicodeString(std::wstring value) =0;
+	virtual void setUnicodeString(const std::wstring& value) =0;
 
 	//@}
 
@@ -635,7 +635,7 @@ public:
 	///                      handler.
 	///
 	///////////////////////////////////////////////////////////
-	virtual void copyFromInt32(imbxInt32* pSource, imbxUint32 length);
+	virtual void copyFromInt32(const imbxInt32* pSource, const imbxUint32 length) = 0;
 	
 	/// \brief Copy the content of the %buffer controlled by
 	///         the handler into an array of imbxInt32 values.
@@ -646,7 +646,7 @@ public:
 	///                      copy into the destination array
 	///
 	///////////////////////////////////////////////////////////
-	virtual void copyToInt32(imbxInt32* pDest, imbxUint32 length);
+	virtual void copyToInt32(imbxInt32* pDest, const imbxUint32 length) const = 0;
 	
 	//@}
 

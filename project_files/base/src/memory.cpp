@@ -50,7 +50,7 @@ memory::memory():
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void memory::transfer(ptr<memory> transferFrom)
+void memory::transfer(const ptr<memory>& transferFrom)
 {
 	m_pMemoryBuffer.reset(transferFrom->m_pMemoryBuffer.release());
 }
@@ -65,7 +65,7 @@ void memory::transfer(ptr<memory> transferFrom)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void memory::copyFrom(ptr<memory> sourceMemory)
+void memory::copyFrom(const ptr<memory>& sourceMemory)
 {
 	if(m_pMemoryBuffer.get() == 0)
 	{
@@ -193,7 +193,7 @@ bool memory::empty()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void memory::assign(imbxUint8* pSource, imbxUint32 sourceLength)
+void memory::assign(const imbxUint8* pSource, const imbxUint32 sourceLength)
 {
 	if(m_pMemoryBuffer.get() == 0)
 	{

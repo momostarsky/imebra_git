@@ -111,7 +111,7 @@ exceptionsManager* exceptionsManager::getExceptionsManager()
 ///////////////////////////////////////////////////////////
 // Construct the exceptionInfo object
 ///////////////////////////////////////////////////////////
-exceptionInfo::exceptionInfo(std::wstring functionName, std::string fileName, long lineNumber, std::string exceptionType, std::string exceptionMessage):
+exceptionInfo::exceptionInfo(const std::wstring& functionName, const std::string& fileName, const long lineNumber, const std::string& exceptionType, const std::string& exceptionMessage):
 	m_functionName(functionName), 
 	m_fileName(fileName),
 	m_lineNumber(lineNumber),

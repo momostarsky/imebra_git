@@ -88,7 +88,7 @@ public:
 	///                      two uppercase chars
 	///
 	///////////////////////////////////////////////////////////
-	buffer(ptr<baseObject> externalLock, std::string defaultType="");
+	buffer(const ptr<baseObject>& externalLock, const std::string& defaultType="");
 
 	/// \brief Constructor. Initialize the buffer object and
 	///         declare the buffer's content on demand.
@@ -118,9 +118,9 @@ public:
 	/// @param endianType   the stream's endian type
 	///
 	///////////////////////////////////////////////////////////
-	buffer(ptr<baseObject> externalLock, 
-		std::string defaultType,
-		ptr<baseStream> originalStream,
+	buffer(const ptr<baseObject>& externalLock,
+		const std::string& defaultType,
+		const ptr<baseStream>& originalStream,
 		imbxUint32 bufferPosition,
 		imbxUint32 bufferLength,
 		imbxUint32 wordLength,

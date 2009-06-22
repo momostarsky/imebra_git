@@ -57,7 +57,7 @@ void dataHandlerDateTime::getDate(
 		imbxInt32* pSeconds,
 		imbxInt32* pNanoseconds,
 		imbxInt32* pOffsetHours,
-		imbxInt32* pOffsetMinutes)
+		imbxInt32* pOffsetMinutes) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTime::getDate");
 
@@ -112,7 +112,7 @@ void dataHandlerDateTime::setDate(
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::wstring dataHandlerDateTime::getUnicodeString()
+std::wstring dataHandlerDateTime::getUnicodeString() const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTime::getUnicodeString");
 
@@ -157,7 +157,7 @@ std::wstring dataHandlerDateTime::getUnicodeString()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerDateTime::setUnicodeString(std::wstring value)
+void dataHandlerDateTime::setUnicodeString(const std::wstring& value)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTime::setUnicodeString");
 
@@ -252,7 +252,7 @@ void dataHandlerDateTime::setUnicodeString(std::wstring value)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint32 dataHandlerDateTime::maxSize()
+imbxUint32 dataHandlerDateTime::maxSize() const
 {
 	return 26;
 }
@@ -267,7 +267,7 @@ imbxUint32 dataHandlerDateTime::maxSize()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint32 dataHandlerDateTime::getUnitSize()
+imbxUint32 dataHandlerDateTime::getUnitSize() const
 {
 	return 0;
 }

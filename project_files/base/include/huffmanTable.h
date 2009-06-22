@@ -175,7 +175,7 @@ public:
 	///                  write the code
 	///
 	///////////////////////////////////////////////////////////
-	void writeHuffmanCode(imbxUint32* pBuffer, streamWriter* pStream);
+	void writeHuffmanCode(const imbxUint32* pBuffer, streamWriter* pStream);
 
 	//@}
 
@@ -245,19 +245,19 @@ public:
 class huffmanException: public std::runtime_error
 {
 public:
-	huffmanException(std::string message): std::runtime_error(message){}
+	huffmanException(const std::string& message): std::runtime_error(message){}
 };
 
 class huffmanExceptionRead : public huffmanException
 {
 public:
-	huffmanExceptionRead(std::string message): huffmanException(message){}
+	huffmanExceptionRead(const std::string& message): huffmanException(message){}
 };
 
 class huffmanExceptionWrite : public huffmanException
 {
 public:
-	huffmanExceptionWrite(std::string message): huffmanException(message){}
+	huffmanExceptionWrite(const std::string& message): huffmanException(message){}
 };
 
 

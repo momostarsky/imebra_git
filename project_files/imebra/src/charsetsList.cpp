@@ -45,7 +45,7 @@ namespace charsetsList
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void updateCharsets(tCharsetsList* pCharsetsList, tCharsetsList* pDestinationCharsetsList)
+void updateCharsets(const tCharsetsList* pCharsetsList, tCharsetsList* pDestinationCharsetsList)
 {
 	PUNTOEXE_FUNCTION_START(L"charsetsList::updateCharsets");
 
@@ -59,7 +59,7 @@ void updateCharsets(tCharsetsList* pCharsetsList, tCharsetsList* pDestinationCha
 	// Copy the charsets in the local list (if they are not
 	//  already there)
 	///////////////////////////////////////////////////////////
-	for(tCharsetsList::iterator scanCharsets = pCharsetsList->begin(); scanCharsets != pCharsetsList->end(); ++scanCharsets)
+	for(tCharsetsList::const_iterator scanCharsets = pCharsetsList->begin(); scanCharsets != pCharsetsList->end(); ++scanCharsets)
 	{
 		bool bExist = false;
 		for(tCharsetsList::iterator scanExistingCharsets = pDestinationCharsetsList->begin(); scanExistingCharsets != pDestinationCharsetsList->end(); ++scanExistingCharsets)
@@ -91,11 +91,11 @@ void updateCharsets(tCharsetsList* pCharsetsList, tCharsetsList* pDestinationCha
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void copyCharsets(tCharsetsList* pSourceCharsetsList, tCharsetsList* pDestinationCharsetsList)
+void copyCharsets(const tCharsetsList* pSourceCharsetsList, tCharsetsList* pDestinationCharsetsList)
 {
 	PUNTOEXE_FUNCTION_START(L"charsetsList::copyCharsets");
 
-	for(tCharsetsList::iterator scanCharsets = pSourceCharsetsList->begin(); scanCharsets != pSourceCharsetsList->end(); ++scanCharsets)
+	for(tCharsetsList::const_iterator scanCharsets = pSourceCharsetsList->begin(); scanCharsets != pSourceCharsetsList->end(); ++scanCharsets)
 	{
 		pDestinationCharsetsList->push_back(*scanCharsets);
 	}

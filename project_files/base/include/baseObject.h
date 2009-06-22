@@ -320,7 +320,7 @@ public:
 	///                      to lock this one
 	///
 	///////////////////////////////////////////////////////////
-	baseObject(ptr<baseObject> externalLock);
+	baseObject(const ptr<baseObject>& externalLock);
 
 	/// \brief Creates the baseObject object and set an
 	///         external object to be used for the lock.

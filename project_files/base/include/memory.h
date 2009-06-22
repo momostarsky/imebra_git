@@ -57,7 +57,7 @@ public:
 	///                      must be transferred
 	///
 	///////////////////////////////////////////////////////////
-	void transfer(ptr<memory> transferFrom);
+	void transfer(const ptr<memory>& transferFrom);
 
 	/// \brief Copy the content of the memory managed
 	///         by another memory object into the memory 
@@ -67,7 +67,7 @@ public:
 	///                      which the data has to be copied
 	///
 	///////////////////////////////////////////////////////////
-	void copyFrom(ptr<memory> sourceMemory);
+	void copyFrom(const ptr<memory>& sourceMemory);
 
 	/// \brief Clear the content of the managed string of 
 	///         bytes.
@@ -127,7 +127,7 @@ public:
 	///                      into the managed memory
 	///
 	///////////////////////////////////////////////////////////
-	void assign(imbxUint8* pSource, imbxUint32 sourceLength);
+	void assign(const imbxUint8* pSource, const imbxUint32 sourceLength);
 
 	/// \internal
 	/// \brief This function is called by 

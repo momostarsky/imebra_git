@@ -77,7 +77,7 @@ charsetConversion::~charsetConversion()
 // Find the ID of the charset with the specified name
 //
 ///////////////////////////////////////////////////////////
-int charsetConversion::findTable(std::string tableName)
+int charsetConversion::findTable(const std::string& tableName) const
 {
 	PUNTOEXE_FUNCTION_START(L"charsetConversion::findTable");
 
@@ -100,7 +100,7 @@ int charsetConversion::findTable(std::string tableName)
 // Initialize the charsetConversion object
 //
 ///////////////////////////////////////////////////////////
-void charsetConversion::initialize(std::string tableName)
+void charsetConversion::initialize(const std::string& tableName)
 {
 	PUNTOEXE_FUNCTION_START(L"charsetConversion::initialize");
 
@@ -200,7 +200,7 @@ void charsetConversion::close()
 // Return the ISO name of the active charset
 //
 ///////////////////////////////////////////////////////////
-std::string charsetConversion::getIsoCharset()
+std::string charsetConversion::getIsoCharset() const
 {
 	return m_isoCharset;
 }
@@ -211,7 +211,7 @@ std::string charsetConversion::getIsoCharset()
 // Convert a string from unicode to multibyte
 //
 ///////////////////////////////////////////////////////////
-std::string charsetConversion::fromUnicode(std::wstring unicodeString)
+std::string charsetConversion::fromUnicode(const std::wstring& unicodeString) const
 {
 	PUNTOEXE_FUNCTION_START(L"charsetConversion::fromUnicode");
 
@@ -243,7 +243,7 @@ std::string charsetConversion::fromUnicode(std::wstring unicodeString)
 // Convert a string from multibyte to unicode
 //
 ///////////////////////////////////////////////////////////
-std::wstring charsetConversion::toUnicode(std::string asciiString)
+std::wstring charsetConversion::toUnicode(const std::string& asciiString) const
 {
 	PUNTOEXE_FUNCTION_START(L"charsetConversion::toUnicode");
 

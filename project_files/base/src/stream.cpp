@@ -56,7 +56,7 @@ stream::~stream()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void stream::openFile(std::string fileName, int mode)
+void stream::openFile(const std::string& fileName, const int mode)
 {
 	PUNTOEXE_FUNCTION_START(L"stream::openFile (ansi)");
 
@@ -82,7 +82,7 @@ void stream::openFile(std::string fileName, int mode)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void stream::openFile(std::wstring fileName, int mode)
+void stream::openFile(const std::wstring& fileName, const int mode)
 {
 	PUNTOEXE_FUNCTION_START(L"stream::openFile (unicode)");
 	if(m_openFile)
@@ -161,7 +161,7 @@ void stream::openFile(std::wstring fileName, int mode)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void stream::write(imbxUint32 startPosition, imbxUint8* pBuffer, imbxUint32 bufferLength)
+void stream::write(imbxUint32 startPosition, const imbxUint8* pBuffer, imbxUint32 bufferLength)
 {
 	PUNTOEXE_FUNCTION_START(L"stream::write");
 

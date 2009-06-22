@@ -40,7 +40,7 @@ public:
 		imbxInt32* pSeconds,
 		imbxInt32* pNanoseconds,
 		imbxInt32* pOffsetHours,
-		imbxInt32* pOffsetMinutes);
+		imbxInt32* pOffsetMinutes) const;
 
 	virtual void setDate(
 		imbxInt32 year, 
@@ -71,7 +71,7 @@ public:
 	///          buffer
 	///
 	///////////////////////////////////////////////////////////
-	virtual std::wstring getUnicodeString();
+	virtual std::wstring getUnicodeString() const;
 
 	/// \brief Set the date from a string.
 	///
@@ -89,12 +89,12 @@ public:
 	/// @param value the string representing the date to be set
 	///
 	///////////////////////////////////////////////////////////
-	virtual void setUnicodeString(std::wstring value);
+	virtual void setUnicodeString(const std::wstring& value);
 
-	virtual imbxUint32 getUnitSize();
+	virtual imbxUint32 getUnitSize() const;
 
 protected:
-	virtual imbxUint32 maxSize();
+	virtual imbxUint32 maxSize() const;
 };
 
 } // namespace handlers

@@ -78,7 +78,7 @@ public:
 	///                   be used for the conversion
 	///
 	///////////////////////////////////////////////////////////
-	void initialize(std::string tableName);
+	void initialize(const std::string& tableName);
 
 	/// \brief Retrieve the ISO name of the charset currently
 	///         used for the conversion.
@@ -86,7 +86,7 @@ public:
 	/// @return the ISO name of the active charset
 	///
 	///////////////////////////////////////////////////////////
-	std::string getIsoCharset();
+	std::string getIsoCharset() const;
 
 	/// \brief Transform a multibyte string into an unicode
 	///         string using the charset declared with the
@@ -98,7 +98,7 @@ public:
 	/// @param unicodeStr
 	///
 	///////////////////////////////////////////////////////////
-	std::string fromUnicode(std::wstring unicodeString);
+	std::string fromUnicode(const std::wstring& unicodeString) const;
 
 	/// \brief Transform a multibyte string into an unicode
 	///         string using the charset declared with the
@@ -112,21 +112,21 @@ public:
 	/// @return            the converted unicode string
 	///
 	///////////////////////////////////////////////////////////
-	std::wstring toUnicode(std::string asciiString);
+	std::wstring toUnicode(const std::string& asciiString) const;
 
 protected:
 	void close();
 
-	int findTable(std::string tableName);
+	int findTable(const std::string& tableName) const;
 
 	std::string m_isoCharset;
 
 #if defined(PUNTOEXE_USEICONV)
 
 #if defined(WIN32)
-	std::string myIconv(iconv_t context, const char* inputString, size_t inputStringLengthBytes);
+	static std::string myIconv(iconv_t context, const char* inputString, size_t inputStringLengthBytes);
 #else
-	std::string myIconv(iconv_t context, char* inputString, size_t inputStringLengthBytes);
+	static std::string myIconv(iconv_t context, char* inputString, size_t inputStringLengthBytes);
 #endif
 	iconv_t m_iconvToUnicode;
 	iconv_t m_iconvFromUnicode;
@@ -187,7 +187,7 @@ protected:
 class charsetConversionException: public std::runtime_error
 {
 public:
-	charsetConversionException(std::string message): std::runtime_error(message){}
+	charsetConversionException(const std::string& message): std::runtime_error(message){}
 };
 
 
@@ -199,7 +199,7 @@ public:
 class charsetConversionExceptionNoTable: public charsetConversionException
 {
 public:
-	charsetConversionExceptionNoTable(std::string message): charsetConversionException(message){}
+	charsetConversionExceptionNoTable(const std::string& message): charsetConversionException(message){}
 };
 
 
@@ -211,7 +211,7 @@ public:
 class charsetConversionExceptionNoSupportedTable: public charsetConversionException
 {
 public:
-	charsetConversionExceptionNoSupportedTable(std::string message): charsetConversionException(message){}
+	charsetConversionExceptionNoSupportedTable(const std::string& message): charsetConversionException(message){}
 };
 
 
@@ -223,7 +223,7 @@ public:
 class charsetConversionExceptionUtfSizeNotSupported: public charsetConversionException
 {
 public:
-	charsetConversionExceptionUtfSizeNotSupported(std::string message): charsetConversionException(message){}
+	charsetConversionExceptionUtfSizeNotSupported(const std::string& message): charsetConversionException(message){}
 };
 
 

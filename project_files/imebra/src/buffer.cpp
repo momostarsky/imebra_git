@@ -62,7 +62,7 @@ namespace imebra
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-buffer::buffer(ptr<baseObject> externalLock, std::string defaultType /* ="" */):
+buffer::buffer(const ptr<baseObject>& externalLock, const std::string& defaultType /* ="" */):
 	baseObject(externalLock),
 		m_originalBufferPosition(0),
 		m_originalBufferLength(0),
@@ -94,9 +94,9 @@ buffer::buffer(ptr<baseObject> externalLock, std::string defaultType /* ="" */):
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-buffer::buffer(ptr<baseObject> externalLock,
-		std::string defaultType,
-		ptr<baseStream> originalStream,
+buffer::buffer(const ptr<baseObject>& externalLock,
+		const std::string& defaultType,
+		const ptr<baseStream>& originalStream,
 		imbxUint32 bufferPosition,
 		imbxUint32 bufferLength,
 		imbxUint32 wordLength,

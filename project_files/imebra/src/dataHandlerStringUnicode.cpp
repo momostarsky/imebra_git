@@ -85,7 +85,7 @@ static dicomCharsetInformation m_dicomCharsets[]={
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::wstring dataHandlerStringUnicode::convertToUnicode(std::string value)
+std::wstring dataHandlerStringUnicode::convertToUnicode(const std::string& value) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerStringUnicode::convertToUnicode");
 
@@ -98,10 +98,8 @@ std::wstring dataHandlerStringUnicode::convertToUnicode(std::string value)
 		return m_charsetConversion.toUnicode(value);
 	}
 
-	// We have to take care of the escape sequences.
-	// Here we save the status of the conversion state.
-	///////////////////////////////////////////////////////////
-	saveCharsetConversionState saveConversionState(&m_charsetConversion);
+        charsetConversion localCharsetConversion;
+        localCharsetConversion.initialize(m_charsetConversion.getIsoCharset());
 
 	// Here we store the value to be returned
 	///////////////////////////////////////////////////////////
@@ -139,7 +137,7 @@ std::wstring dataHandlerStringUnicode::convertToUnicode(std::string value)
 		///////////////////////////////////////////////////////////
 		if(escapePosition > scanString)
 		{
-			returnString += m_charsetConversion.toUnicode(value.substr(scanString, escapePosition - scanString));
+			returnString += localCharsetConversion.toUnicode(value.substr(scanString, escapePosition - scanString));
 		}
 
 		// Move the char pointer to the next char that has to be
@@ -151,7 +149,7 @@ std::wstring dataHandlerStringUnicode::convertToUnicode(std::string value)
 		///////////////////////////////////////////////////////////
 		if(!isoTable.empty())
 		{
-			m_charsetConversion.initialize(isoTable);
+			localCharsetConversion.initialize(isoTable);
 		}
 	}
 
@@ -171,25 +169,23 @@ std::wstring dataHandlerStringUnicode::convertToUnicode(std::string value)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::string dataHandlerStringUnicode::convertFromUnicode(std::wstring value)
+std::string dataHandlerStringUnicode::convertFromUnicode(const std::wstring& value, charsetsList::tCharsetsList* pCharsetsList) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerStringUnicode::convertFromUnicode");
 
 	// We don't have to deal with multiple charsets here
 	///////////////////////////////////////////////////////////
-	if(m_charsetsList.size() == 1)
+	if(pCharsetsList->size() == 1)
 	{
-		dicomCharsetInformation* pCharset = getCharsetInfo(m_charsetsList.front());
+		dicomCharsetInformation* pCharset = getCharsetInfo(pCharsetsList->front());
 		if(pCharset != 0 && pCharset->m_escapeSequence.empty())
 		{
 			return m_charsetConversion.fromUnicode(value);
 		}
 	}
 
-	// Save the conversion state. Ready to deal with multiple
-	//  charsets.
-	///////////////////////////////////////////////////////////
-	saveCharsetConversionState saveConversionState(&m_charsetConversion);
+        charsetConversion localCharsetConversion;
+        localCharsetConversion.initialize(m_charsetConversion.getIsoCharset());
 
 	// Returned string
 	///////////////////////////////////////////////////////////
@@ -233,7 +229,7 @@ std::string dataHandlerStringUnicode::convertFromUnicode(std::wstring value)
 			
 			// If the conversion doesn't succeed, exit from the loop
 			///////////////////////////////////////////////////////////
-			if(m_charsetConversion.fromUnicode(code).empty())
+			if(localCharsetConversion.fromUnicode(code).empty())
 			{
 				break;
 			}
@@ -246,7 +242,7 @@ std::string dataHandlerStringUnicode::convertFromUnicode(std::wstring value)
 		if(until > scanString)
 		{
 			std::wstring partialString = value.substr(scanString, until - scanString);
-			asciiString += m_charsetConversion.fromUnicode(partialString);
+			asciiString += localCharsetConversion.fromUnicode(partialString);
 			scanString = until;
 		}
 
@@ -259,7 +255,7 @@ std::string dataHandlerStringUnicode::convertFromUnicode(std::wstring value)
 
 		// Find the escape sequence
 		///////////////////////////////////////////////////////////
-		std::string activeIso = m_charsetConversion.getIsoCharset();
+		std::string activeIso = localCharsetConversion.getIsoCharset();
 		bool bSequenceFound = false;
 		for(int scanCharsets = 0; m_dicomCharsets[scanCharsets].m_dicomName != 0; ++scanCharsets)
 		{
@@ -270,8 +266,8 @@ std::string dataHandlerStringUnicode::convertFromUnicode(std::wstring value)
 
 			try
 			{
-				m_charsetConversion.initialize(m_dicomCharsets[scanCharsets].m_isoRegistration);
-				if(!m_charsetConversion.fromUnicode(code).empty())
+				localCharsetConversion.initialize(m_dicomCharsets[scanCharsets].m_isoRegistration);
+				if(!localCharsetConversion.fromUnicode(code).empty())
 				{
 					asciiString += m_dicomCharsets[scanCharsets].m_escapeSequence;
 					bSequenceFound = true;
@@ -280,7 +276,7 @@ std::string dataHandlerStringUnicode::convertFromUnicode(std::wstring value)
 					///////////////////////////////////////////////////////////
 					std::wstring dicomCharset = m_dicomCharsets[scanCharsets].m_dicomName;
 					bool bAlreadyUsed = false;
-					for(charsetsList::tCharsetsList::iterator scanUsedCharsets = m_charsetsList.begin(); scanUsedCharsets != m_charsetsList.end(); ++scanUsedCharsets)
+					for(charsetsList::tCharsetsList::const_iterator scanUsedCharsets = pCharsetsList->begin(); scanUsedCharsets != pCharsetsList->end(); ++scanUsedCharsets)
 					{
 						if(*scanUsedCharsets == dicomCharset)
 						{
@@ -290,7 +286,7 @@ std::string dataHandlerStringUnicode::convertFromUnicode(std::wstring value)
 					}
 					if(!bAlreadyUsed)
 					{
-						m_charsetsList.push_back(dicomCharset);
+						pCharsetsList->push_back(dicomCharset);
 					}
 					break;
 				}
@@ -302,7 +298,7 @@ std::string dataHandlerStringUnicode::convertFromUnicode(std::wstring value)
 		}
 		if(!bSequenceFound)
 		{
-			m_charsetConversion.initialize(activeIso);
+			localCharsetConversion.initialize(activeIso);
 			++scanString;
 		}
 
@@ -324,7 +320,7 @@ std::string dataHandlerStringUnicode::convertFromUnicode(std::wstring value)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-dicomCharsetInformation* dataHandlerStringUnicode::getCharsetInfo(std::wstring dicomName)
+dicomCharsetInformation* dataHandlerStringUnicode::getCharsetInfo(const std::wstring& dicomName) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerStringUnicode::getCharsetInfo");
 
@@ -393,7 +389,7 @@ void dataHandlerStringUnicode::setCharsetsList(charsetsList::tCharsetsList* pCha
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerStringUnicode::getCharsetsList(charsetsList::tCharsetsList* pCharsetsList)
+void dataHandlerStringUnicode::getCharsetsList(charsetsList::tCharsetsList* pCharsetsList) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerStringUnicode::getCharsetList");
 

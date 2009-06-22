@@ -46,7 +46,7 @@ public:
 public:
 	// Set the data element's pointer
 	///////////////////////////////////////////////////////////
-	virtual void setPointer(imbxUint32 elementNumber);
+	virtual void setPointer(imbxUint32 const elementNumber);
 
 	// Increase the data element's pointer
 	///////////////////////////////////////////////////////////
@@ -54,82 +54,94 @@ public:
 
 	// Returns true if the pointer is valid
 	///////////////////////////////////////////////////////////
-	virtual bool pointerIsValid();
+	virtual bool pointerIsValid() const;
 
 	// Get the data element as a signed long
 	///////////////////////////////////////////////////////////
-	virtual imbxInt32 getSignedLong();
+	virtual imbxInt32 getSignedLong() const;
 
 	// Get the data element as an unsigned long
 	///////////////////////////////////////////////////////////
-	virtual imbxUint32 getUnsignedLong();
+	virtual imbxUint32 getUnsignedLong() const;
 	
 	// Get the data element as a double
 	///////////////////////////////////////////////////////////
-	virtual double getDouble();
+	virtual double getDouble() const;
 
 	// Get the data element as a string
 	///////////////////////////////////////////////////////////
-	virtual std::string getString();
+	virtual std::string getString() const;
 
 	// Get the data element as an unicode string
 	///////////////////////////////////////////////////////////
-	virtual std::wstring getUnicodeString();
+	virtual std::wstring getUnicodeString() const;
 
 	// Retrieve the data element as a string
 	///////////////////////////////////////////////////////////
-	virtual imbxUint32 getSize();
+	virtual imbxUint32 getSize() const;
 	
 	// Set the data element as a signed long
 	///////////////////////////////////////////////////////////
-	virtual void setSignedLong(imbxInt32 value);
+	virtual void setSignedLong(const imbxInt32 value);
 	
 	// Set the data element as an unsigned long
 	///////////////////////////////////////////////////////////
-	virtual void setUnsignedLong(imbxUint32 value);
+	virtual void setUnsignedLong(const imbxUint32 value);
 	
 	// Set the data element as a double
 	///////////////////////////////////////////////////////////
-	virtual void setDouble(double value);
+	virtual void setDouble(const double value);
 	
 	// Set the data element as a string
 	///////////////////////////////////////////////////////////
-	virtual void setString(std::string value);
+	virtual void setString(const std::string& value);
 
 	// Set the data element as an unicode string
 	///////////////////////////////////////////////////////////
-	virtual void setUnicodeString(std::wstring value);
+	virtual void setUnicodeString(const std::wstring& value);
 	
 	// Set the buffer's size, in data elements
 	///////////////////////////////////////////////////////////
-	virtual void setSize(imbxUint32 elementsNumber);
+	virtual void setSize(const imbxUint32 elementsNumber);
 
 	// Parse the buffer
 	///////////////////////////////////////////////////////////
-	virtual void parseBuffer(ptr<memory> memoryBuffer);
+	virtual void parseBuffer(const ptr<memory>& memoryBuffer);
 
 	// Build the buffer
 	///////////////////////////////////////////////////////////
-	virtual void buildBuffer(ptr<memory> memoryBuffer);
+	virtual void buildBuffer(const ptr<memory>& memoryBuffer);
+
+	// Copy the content of an array of imbxInt32 values
+	//         into the buffer controlled by the handler.
+	///////////////////////////////////////////////////////////
+	virtual void copyFromInt32(const imbxInt32* pSource, const imbxUint32 length);
+
+	// Copy the content of the buffer to an array of imbxInt32
+	//         values.
+	///////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////
+	virtual void copyToInt32(imbxInt32* pDest, const imbxUint32 length) const;
+
 
 protected:
 	// Convert a string to unicode, without using the dicom 
 	//  charsets
 	///////////////////////////////////////////////////////////
-	virtual std::wstring convertToUnicode(std::string value);
+	virtual std::wstring convertToUnicode(const std::string& value) const;
 
 	// Convert a string from unicode, without using the dicom 
 	//  charsets
 	///////////////////////////////////////////////////////////
-	virtual std::string convertFromUnicode(std::wstring value);
+	virtual std::string convertFromUnicode(const std::wstring& value, charsetsList::tCharsetsList* pCharsetsList) const;
 
 	// Return the maximum string's length
 	///////////////////////////////////////////////////////////
-	virtual imbxUint32 maxSize();
+	virtual imbxUint32 maxSize() const;
 
 	// Return the separator
 	///////////////////////////////////////////////////////////
-	virtual wchar_t getSeparator();
+	virtual wchar_t getSeparator() const;
 
 	imbxUint32 m_elementNumber;
 

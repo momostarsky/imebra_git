@@ -45,7 +45,7 @@ namespace handlers
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerStringAS::setAge(imbxUint32 age, tAgeUnit unit)
+void dataHandlerStringAS::setAge(const imbxUint32 age, const tAgeUnit unit)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerStringAS::setAge");
 
@@ -69,7 +69,7 @@ void dataHandlerStringAS::setAge(imbxUint32 age, tAgeUnit unit)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint32 dataHandlerStringAS::getAge(tAgeUnit* pUnit)
+imbxUint32 dataHandlerStringAS::getAge(tAgeUnit* pUnit) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerStringAS::getAge");
 
@@ -102,7 +102,7 @@ imbxUint32 dataHandlerStringAS::getAge(tAgeUnit* pUnit)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxInt32 dataHandlerStringAS::getSignedLong()
+imbxInt32 dataHandlerStringAS::getSignedLong() const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerStringAS::getSignedLong");
 
@@ -121,7 +121,7 @@ imbxInt32 dataHandlerStringAS::getSignedLong()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint32 dataHandlerStringAS::getUnsignedLong()
+imbxUint32 dataHandlerStringAS::getUnsignedLong() const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerStringAS::getUnsignedLong");
 
@@ -140,7 +140,7 @@ imbxUint32 dataHandlerStringAS::getUnsignedLong()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-double dataHandlerStringAS::getDouble()
+double dataHandlerStringAS::getDouble() const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerStringAS::getDouble");
 
@@ -174,7 +174,7 @@ double dataHandlerStringAS::getDouble()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerStringAS::setSignedLong(imbxInt32 value)
+void dataHandlerStringAS::setSignedLong(const imbxInt32 value)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerStringAS::setSignedLong");
 
@@ -193,7 +193,7 @@ void dataHandlerStringAS::setSignedLong(imbxInt32 value)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerStringAS::setUnsignedLong(imbxUint32 value)
+void dataHandlerStringAS::setUnsignedLong(const imbxUint32 value)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerStringAS::setUnsignedLong");
 
@@ -212,13 +212,13 @@ void dataHandlerStringAS::setUnsignedLong(imbxUint32 value)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerStringAS::setDouble(double value)
+void dataHandlerStringAS::setDouble(const double value)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerStringAS::setDouble");
 
 	if(value < 0)
 	{
-		value = 0;
+		setAge(0, days);
 	}
 	if(value < 0.08)
 	{
@@ -250,7 +250,7 @@ void dataHandlerStringAS::setDouble(double value)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint8 dataHandlerStringAS::getPaddingByte()
+imbxUint8 dataHandlerStringAS::getPaddingByte() const
 {
 	return 0x20;
 }
@@ -265,7 +265,7 @@ imbxUint8 dataHandlerStringAS::getPaddingByte()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint32 dataHandlerStringAS::getUnitSize()
+imbxUint32 dataHandlerStringAS::getUnitSize() const
 {
 	return 4L;
 }
@@ -280,7 +280,7 @@ imbxUint32 dataHandlerStringAS::getUnitSize()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint32 dataHandlerStringAS::maxSize()
+imbxUint32 dataHandlerStringAS::maxSize() const
 {
 	return 4L;
 }

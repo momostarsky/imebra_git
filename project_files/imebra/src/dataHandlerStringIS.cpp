@@ -43,7 +43,7 @@ namespace handlers
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-double dataHandlerStringIS::getDouble()
+double dataHandlerStringIS::getDouble() const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerStringIS::getDouble");
 
@@ -63,7 +63,7 @@ double dataHandlerStringIS::getDouble()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerStringIS::setDouble(double value)
+void dataHandlerStringIS::setDouble(const double value)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerStringIS::setDouble");
 
@@ -82,7 +82,7 @@ void dataHandlerStringIS::setDouble(double value)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint8 dataHandlerStringIS::getPaddingByte()
+imbxUint8 dataHandlerStringIS::getPaddingByte() const
 {
 	return 0x20;
 }
@@ -97,7 +97,7 @@ imbxUint8 dataHandlerStringIS::getPaddingByte()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint32 dataHandlerStringIS::getUnitSize()
+imbxUint32 dataHandlerStringIS::getUnitSize() const
 {
 	return 0;
 }
@@ -112,7 +112,7 @@ imbxUint32 dataHandlerStringIS::getUnitSize()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint32 dataHandlerStringIS::maxSize()
+imbxUint32 dataHandlerStringIS::maxSize() const
 {
 	return 12;
 }

@@ -146,7 +146,7 @@ baseObject::baseObject():m_lockCounter(0), m_bValid(true), m_pExceptionsManager(
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-baseObject::baseObject(ptr<baseObject> externalLock): m_externalLock(externalLock),
+baseObject::baseObject(const ptr<baseObject>& externalLock): m_externalLock(externalLock),
 	m_lockCounter(0), m_bValid(true), m_pExceptionsManager(exceptionsManager::getExceptionsManager())
 {
 }

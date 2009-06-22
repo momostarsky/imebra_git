@@ -84,7 +84,7 @@ public:
 	///                   written to the stream
 	///
 	///////////////////////////////////////////////////////////
-	void write(imbxUint8* pBuffer, imbxUint32 bufferLength);
+	void write(const imbxUint8* pBuffer, imbxUint32 bufferLength);
 
 	/// \brief Write the specified amount of bits to the
 	///         stream.
@@ -102,7 +102,7 @@ public:
 	///                  The function can write 32 bits maximum
 	///                   
 	///////////////////////////////////////////////////////////
-	inline void writeBits(imbxUint32* const pBuffer, int bitsNum)
+	inline void writeBits(const imbxUint32* pBuffer, int bitsNum)
 	{
 		PUNTOEXE_FUNCTION_START(L"streamWriter::writeBits");
 

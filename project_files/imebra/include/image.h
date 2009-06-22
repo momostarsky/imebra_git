@@ -36,7 +36,7 @@ namespace handlers
 	///  subsampled.
 	///
 	/// The application never needs to resize the data managed
-	///  by this handler because the object image does this.
+	///  by this handler because the image object does this.
 	///
 	///////////////////////////////////////////////////////////
 	typedef dataHandlerNumeric<imbxInt32> imageHandler;

@@ -74,16 +74,16 @@ public:
 	///                   the files ARE OPENED IN BINARY MODE.
 	///
 	///////////////////////////////////////////////////////////
-	void openFile(std::string fileName, int mode);
+	void openFile(const std::string& fileName, const int mode);
 
-	void openFile(std::wstring fileName, int mode);
+	void openFile(const std::wstring& fileName, const int mode);
 
 	///////////////////////////////////////////////////////////
 	//
 	// Virtual stream's functions
 	//
 	///////////////////////////////////////////////////////////
-	virtual void write(imbxUint32 startPosition, imbxUint8* pBuffer, imbxUint32 bufferLength);
+	virtual void write(imbxUint32 startPosition, const imbxUint8* pBuffer, imbxUint32 bufferLength);
 	virtual imbxUint32 read(imbxUint32 startPosition, imbxUint8* pBuffer, imbxUint32 bufferLength);
 
 protected:
