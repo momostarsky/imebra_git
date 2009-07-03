@@ -341,7 +341,84 @@ public:
 	}
 
 
-	/// \brief Copy the content of an array of imbxInt32 values
+
+        template<int subsampleX>
+	inline void copyFromInt32Interleaved(
+                const imbxInt32* pSource,
+		imbxUint32 sourceReplicateY,
+		imbxUint32 destStartCol,
+		imbxUint32 destStartRow,
+		imbxUint32 destEndCol,
+		imbxUint32 destEndRow,
+		imbxUint32 destStartChannel,
+		imbxUint32 destWidth,
+		imbxUint32 destHeight,
+		imbxUint32 destNumChannels)
+        {
+		dataHandlerType *pDestRowScan = &(m_pMemoryString[(destStartRow*destWidth+destStartCol)*destNumChannels+destStartChannel]);
+		const imbxInt32* pSourceRowScan = pSource;
+
+		imbxUint32 replicateYCount = sourceReplicateY;
+		imbxUint32 replicateYIncrease = (destEndCol - destStartCol) / subsampleX;
+
+		dataHandlerType *pDestColScan;
+		const imbxInt32* pSourceColScan;
+
+                if(destHeight < destEndRow)
+                {
+                    destEndRow = destHeight;
+                }
+                if(destWidth < destEndCol)
+                {
+                    destEndCol = destWidth;
+                }
+
+                imbxUint32 numColumns(destEndCol - destStartCol);
+
+                imbxUint32 horizontalCopyOperations = numColumns / subsampleX;
+                imbxUint32 horizontalFinalCopyDest = numColumns - horizontalCopyOperations * subsampleX;
+
+                imbxInt32 copyValue;
+                imbxInt32 scanDest;
+
+                imbxUint32 scanHorizontalCopyOperations;
+                imbxUint32 scanHorizontalFinalCopyDest;
+
+		for(imbxUint32 numYCopies(destEndRow - destStartRow); numYCopies != 0; --numYCopies)
+		{
+			pDestColScan = pDestRowScan;
+			pSourceColScan = pSourceRowScan;
+
+                        for(scanHorizontalCopyOperations = horizontalCopyOperations; scanHorizontalCopyOperations != 0; --scanHorizontalCopyOperations)
+                        {
+                            copyValue = (dataHandlerType)(*(pSourceColScan++));
+                            for(scanDest = subsampleX; scanDest != 0; --scanDest)
+                            {
+                                *pDestColScan = copyValue;
+                                pDestColScan += destNumChannels;
+                            }
+                        }
+
+                        if(subsampleX != 1)
+                        {
+                            for(scanHorizontalFinalCopyDest = horizontalFinalCopyDest; scanHorizontalFinalCopyDest != 0; --scanHorizontalFinalCopyDest)
+                            {
+                                *pDestColScan = *pSourceColScan;
+                                pDestColScan += destNumChannels;
+                            }
+                        }
+
+                        pDestRowScan += destWidth * destNumChannels;
+			if(--replicateYCount == 0)
+			{
+				replicateYCount = sourceReplicateY;
+				pSourceRowScan += replicateYIncrease;
+			}
+		}
+        }
+
+
+        /// \brief Copy the content of an array of imbxInt32 values
 	///         into the buffer controlled by the handler,
 	///         considering that the source buffer could
 	///         have subsampled data.
@@ -393,61 +470,49 @@ public:
 		{
 			return;
 		}
-		dataHandlerType *pDestRowScan = &(m_pMemoryString[(destStartRow*destWidth+destStartCol)*destNumChannels+destStartChannel]);
-		const imbxInt32* pSourceRowScan = pSource;
 
-		imbxUint32 replicateXCount;
-		imbxUint32 replicateYCount = sourceReplicateY;
-		imbxUint32 replicateYIncrease = (destEndCol - destStartCol) / sourceReplicateX;
-
-		dataHandlerType *pDestColScan;
-		const imbxInt32* pSourceColScan;
-
-        if(destHeight < destEndRow)
-        {
-            destEndRow = destHeight;
-        }
-        if(destWidth < destEndCol)
-        {
-            destEndCol = destWidth;
-        }
-        imbxUint32 numColumns(destEndCol - destStartCol);
-        imbxUint32 scanCol(0); // Used in the loop to scan the columns
-
-		for(imbxUint32 numYCopies(destEndRow - destStartRow); numYCopies != 0; --numYCopies)
-		{
-			pDestColScan = pDestRowScan;
-			pSourceColScan = pSourceRowScan;
-
-            if(sourceReplicateX == 1)
-            {
-                for(scanCol = numColumns; scanCol != 0; --scanCol)
+                switch(sourceReplicateX)
                 {
-                    *pDestColScan = (dataHandlerType)(*(pSourceColScan++));
-                    pDestColScan += destNumChannels;
+                    case 1:
+                        copyFromInt32Interleaved< 1 > (
+                            pSource,
+                            sourceReplicateY,
+                            destStartCol,
+                            destStartRow,
+                            destEndCol,
+                            destEndRow,
+                            destStartChannel,
+                            destWidth,
+                            destHeight,
+                            destNumChannels);
+                        break;
+                    case 2:
+                        copyFromInt32Interleaved< 2 > (
+                            pSource,
+                            sourceReplicateY,
+                            destStartCol,
+                            destStartRow,
+                            destEndCol,
+                            destEndRow,
+                            destStartChannel,
+                            destWidth,
+                            destHeight,
+                            destNumChannels);
+                        break;
+                    default:
+                        copyFromInt32Interleaved< 4 > (
+                            pSource,
+                            sourceReplicateY,
+                            destStartCol,
+                            destStartRow,
+                            destEndCol,
+                            destEndRow,
+                            destStartChannel,
+                            destWidth,
+                            destHeight,
+                            destNumChannels);
+                        break;
                 }
-            }
-            else
-            {
-                replicateXCount = sourceReplicateX;
-                for(scanCol = numColumns; scanCol != 0; --scanCol)
-                {
-                    *pDestColScan = (dataHandlerType)(*pSourceColScan);
-                    pDestColScan += destNumChannels;
-                    if(--replicateXCount == 0)
-                    {
-                        replicateXCount = sourceReplicateX;
-                        ++pSourceColScan;
-                    }
-                }
-            }
-			pDestRowScan += destWidth * destNumChannels;
-			if(--replicateYCount == 0)
-			{
-				replicateYCount = sourceReplicateY;
-				pSourceRowScan += replicateYIncrease;
-			}
-		}
 	}
 
 
