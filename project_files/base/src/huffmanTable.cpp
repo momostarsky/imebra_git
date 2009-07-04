@@ -367,15 +367,15 @@ bool huffmanTable::readHuffmanCode(imbxUint32* pBuffer, streamReader* pStream)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void huffmanTable::writeHuffmanCode(const imbxUint32* pBuffer, streamWriter* pStream)
+void huffmanTable::writeHuffmanCode(const imbxUint32 code, streamWriter* pStream)
 {
 	PUNTOEXE_FUNCTION_START(L"huffmanTable::writeHuffmanCode");
 
-	if(m_valuesToHuffmanLength[*pBuffer] == 0)
+	if(m_valuesToHuffmanLength[code] == 0)
 	{
 		PUNTOEXE_THROW(huffmanExceptionWrite, "Trying to write an invalid huffman code");
 	}
-	pStream->writeBits(&(m_valuesToHuffman[*pBuffer]), m_valuesToHuffmanLength[*pBuffer]);
+	pStream->writeBits(m_valuesToHuffman[code], m_valuesToHuffmanLength[code]);
 
 	PUNTOEXE_FUNCTION_END();
 }

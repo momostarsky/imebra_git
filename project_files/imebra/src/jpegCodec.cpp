@@ -1876,8 +1876,8 @@ void jpegCodec::writeScan(streamWriter* pDestinationStream, bool bCalcHuffman)
 						pChannel->m_pActiveHuffmanTableDC->incValueFreq(amplitudeLength);
 						continue;
 					}
-					pChannel->m_pActiveHuffmanTableDC->writeHuffmanCode(&amplitudeLength, pDestinationStream);
-					pDestinationStream->writeBits((imbxUint32*)&amplitude, amplitudeLength);
+					pChannel->m_pActiveHuffmanTableDC->writeHuffmanCode(amplitudeLength, pDestinationStream);
+					pDestinationStream->writeBits(amplitude, amplitudeLength);
 				}
 
 				continue;
@@ -2214,7 +2214,7 @@ inline void jpegCodec::writeBlock(streamWriter* pStream, imbxInt32* pBuffer, jpe
 		{
 			value = 32767;
 		}
-		if(value < -32767)
+                else if(value < -32767)
 		{
 			value = -32767;
 		}
@@ -2246,7 +2246,7 @@ inline void jpegCodec::writeBlock(streamWriter* pStream, imbxInt32* pBuffer, jpe
 				pActiveHuffmanTable->incValueFreq(zeroRunCode);
 				continue;
 			}
-			pActiveHuffmanTable->writeHuffmanCode(&zeroRunCode, pStream);
+			pActiveHuffmanTable->writeHuffmanCode(zeroRunCode, pStream);
 		}
 
 		imbxUint32 hufCode = (zeroRun << 4);
@@ -2273,10 +2273,10 @@ inline void jpegCodec::writeBlock(streamWriter* pStream, imbxInt32* pBuffer, jpe
 			pActiveHuffmanTable->incValueFreq(hufCode);
 			continue;
 		}
-		pActiveHuffmanTable->writeHuffmanCode(&hufCode, pStream);
+		pActiveHuffmanTable->writeHuffmanCode(hufCode, pStream);
 		if(amplitudeLength != 0)
 		{
-			pStream->writeBits(&amplitude, amplitudeLength);
+			pStream->writeBits(amplitude, amplitudeLength);
 		}
 	}
 
@@ -2291,7 +2291,7 @@ inline void jpegCodec::writeBlock(streamWriter* pStream, imbxInt32* pBuffer, jpe
 		pChannel->m_pActiveHuffmanTableAC->incValueFreq(zero);
 		return;
 	}
-	pChannel->m_pActiveHuffmanTableAC->writeHuffmanCode(&zero, pStream);
+	pChannel->m_pActiveHuffmanTableAC->writeHuffmanCode(zero, pStream);
 
 	PUNTOEXE_FUNCTION_END();
 }

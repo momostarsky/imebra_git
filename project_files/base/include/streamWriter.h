@@ -95,43 +95,49 @@ public:
 	/// The function throws a streamExceptionWrite exception
 	///  if an error occurs.
 	///
-	/// @param pBuffer   a pointer to a imbxUint32 value that
-	///                   will be stores the bits to be written
-	///                  The bits must be right aligned.
+	/// @param buffer    bits to be written.
+	///                  The bits must be right aligned
 	/// @param bitsNum   the number of bits to write.
-	///                  The function can write 32 bits maximum
+	///                  The function can write max 32 bits
 	///                   
 	///////////////////////////////////////////////////////////
-	inline void writeBits(const imbxUint32* pBuffer, int bitsNum)
+	inline void writeBits(const imbxUint32 buffer, int bitsNum)
 	{
 		PUNTOEXE_FUNCTION_START(L"streamWriter::writeBits");
 
-		imbxUint32 tempBuffer=*pBuffer;
+		imbxUint32 tempBuffer(buffer);
 
 		while(bitsNum != 0)
 		{
-			tempBuffer &= (((imbxUint32)1) << bitsNum) - 1;
-			
 			if(bitsNum <= (8 - m_outBitsNum))
 			{
 				m_outBitsBuffer |= (imbxUint8)(tempBuffer << (8 - m_outBitsNum - bitsNum));
 				m_outBitsNum += bitsNum;
-				bitsNum = 0;
+                                if(m_outBitsNum==8)
+                                {
+                                        m_outBitsNum = 0;
+                                        writeByte(m_outBitsBuffer);
+                                        m_outBitsBuffer = 0;
+                                }
+                                return;
 			}
-			else
-			{
-				m_outBitsBuffer |= (imbxUint8)(tempBuffer >> (bitsNum + m_outBitsNum - 8));
-				bitsNum -= (8-m_outBitsNum);
-				m_outBitsNum = 8;
-			}
+			if(m_outBitsNum == 0 && bitsNum >= 8)
+                        {
+                                bitsNum -= 8;
+                                writeByte(tempBuffer >> bitsNum);
+                        }
+                        else
+                        {
+                            m_outBitsBuffer |= (imbxUint8)(tempBuffer >> (bitsNum + m_outBitsNum - 8));
+                            bitsNum -= (8-m_outBitsNum);
+                            writeByte(m_outBitsBuffer);
+                            m_outBitsBuffer = 0;
+                            m_outBitsNum = 0;
+                        }
 
-			if(m_outBitsNum==8)
-			{
-				m_outBitsNum = 0;
-				writeByte(&m_outBitsBuffer);
-				m_outBitsBuffer = 0;
-			}
-		}
+                        tempBuffer &= (((imbxUint32)1) << bitsNum) - 1;
+
+                }
 
 		PUNTOEXE_FUNCTION_END();
 	}
@@ -149,7 +155,7 @@ public:
 		if(m_outBitsNum == 0)
 			return;
 
-		writeByte(&m_outBitsBuffer);
+		writeByte(m_outBitsBuffer);
 		flushDataBuffer();
 		m_outBitsBuffer = 0;
 		m_outBitsNum = 0;
@@ -172,19 +178,17 @@ public:
 	/// This mechanism is used to avoid the generation of
 	///  the jpeg tags in a stream.
 	///
-	/// @param pBuffer   a pointer to the location where the
-	///                   value of the byte to be written
-	///                   is stored
+	/// @param buffer    byte to be written
 	///
 	///////////////////////////////////////////////////////////
-	inline void writeByte(imbxUint8* pBuffer)
+	inline void writeByte(const imbxUint8 buffer)
 	{
 		if(m_pDataBufferCurrent == m_pDataBufferMaxEnd)
 		{
 			flushDataBuffer();
 		}
-		*(m_pDataBufferCurrent++) = *pBuffer;
-		if(m_pTagByte != 0 && *pBuffer==(imbxUint8)0xff)
+		*(m_pDataBufferCurrent++) = buffer;
+		if(m_pTagByte != 0 && buffer==(imbxUint8)0xff)
 		{
 			if(m_pDataBufferCurrent == m_pDataBufferMaxEnd)
 			{

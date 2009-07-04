@@ -169,13 +169,13 @@ public:
 	/// The function throws a huffmanExceptionWrite exception
 	///  if the specified value cannot be encoded.
 	///
-	/// @param pBuffer  a pointer to the value to be encoded 
-	///                  and written to the stream
+	/// @param code     the value to be encoded and written to
+	///                  the stream
 	/// @param pStream  a pointer to the stream writer used to
 	///                  write the code
 	///
 	///////////////////////////////////////////////////////////
-	void writeHuffmanCode(const imbxUint32* pBuffer, streamWriter* pStream);
+	void writeHuffmanCode(const imbxUint32 code, streamWriter* pStream);
 
 	//@}
 

@@ -61,7 +61,7 @@ void memoryStreamTest::testBytes()
 			value = 0xff;
 		}
 		values[fillValues] = value;
-		writer->writeByte(&value);
+		writer->writeByte(value);
 	}
 	writer->flushDataBuffer();
 

@@ -38,7 +38,7 @@ void streamBitsTest::test()
 		imbxUint32 value = std::rand() * maxValue / RAND_MAX;
 		bitsNumber[fillValues] = bits;
 		bitsValue[fillValues] = value;
-		writer->writeBits(&value, bits);
+		writer->writeBits(value, bits);
 	}
 	writer->resetOutBitsBuffer();
 	writer->flushDataBuffer();

@@ -40,7 +40,7 @@ void huffmanTest::test()
 	for(size_t writeValues = 0; writeValues < values.size(); ++writeValues)
 	{
 		imbxUint32 value = values[writeValues];
-		huffman.writeHuffmanCode(&value, writer.get());
+		huffman.writeHuffmanCode(value, writer.get());
 	}
 	writer->resetOutBitsBuffer();
 
