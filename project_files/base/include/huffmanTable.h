@@ -156,13 +156,12 @@ public:
 	/// The function throws a huffmanExceptionRead exception
 	///  if the read code cannot be decoded.
 	///
-	/// @param pBuffer  a pointer to the location where the
-	///                  decoded value will be stored
 	/// @param pStream  a pointer to the stream reader used to
 	///                  read the code
+        /// @return the decoded value
 	///
 	///////////////////////////////////////////////////////////
-	bool readHuffmanCode(imbxUint32* pBuffer, streamReader* pStream);
+	imbxUint32 readHuffmanCode(streamReader* pStream);
 
 	/// \brief Write an huffman code to the specified stream.
 	///

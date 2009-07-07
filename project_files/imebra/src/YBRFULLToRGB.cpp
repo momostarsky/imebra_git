@@ -95,9 +95,7 @@ void YBRFULLToRGB::doColorTransform(imbxInt32* pSourceMem, imbxInt32* pDestMem, 
 	imbxInt32 sourcePixelY;
 	imbxInt32 sourcePixelB;
 	imbxInt32 sourcePixelR;
-	imbxInt32 destPixelR;
-	imbxInt32 destPixelG;
-	imbxInt32 destPixelB;
+	imbxInt32 destPixel;
 	imbxInt32 middleValue=(inputMaxValue-inputMinValue+1)>>1;
 	while(pixelsNumber--)
 	{
@@ -108,40 +106,38 @@ void YBRFULLToRGB::doColorTransform(imbxInt32* pSourceMem, imbxInt32* pDestMem, 
 		///////////////////////////////////////////////////////////
 		// Conversion
 		///////////////////////////////////////////////////////////
-		destPixelR = sourcePixelY + ( ( multiplier1_4020 * sourcePixelR + multiplier0_5) >> precisionBits);
-		destPixelG = sourcePixelY - ( ( multiplier0_34414 * sourcePixelB + multiplier0_71414 * sourcePixelR + multiplier0_5) >> precisionBits);
-		destPixelB = sourcePixelY + ( ( multiplier1_772 * sourcePixelB + multiplier0_5) >> precisionBits);
+		destPixel = sourcePixelY + ( ( multiplier1_4020 * sourcePixelR + multiplier0_5) >> precisionBits);
+		if(destPixel < outputMinValue)
+		{
+			destPixel = outputMinValue;
+		}
+		else if(destPixel > outputMaxValue)
+		{
+			destPixel = outputMaxValue;
+		}
+                *pDestMem++ = destPixel;
 
-		if(destPixelR<outputMinValue)
+		destPixel = sourcePixelY - ( ( multiplier0_34414 * sourcePixelB + multiplier0_71414 * sourcePixelR + multiplier0_5) >> precisionBits);
+                if(destPixel < outputMinValue)
 		{
-			destPixelR=outputMinValue;
+			destPixel = outputMinValue;
 		}
-		else if(destPixelR>outputMaxValue)
+		else if(destPixel > outputMaxValue)
 		{
-			destPixelR=outputMaxValue;
+			destPixel = outputMaxValue;
 		}
+                *pDestMem++ = destPixel;
 
-		if(destPixelG<outputMinValue)
+		destPixel = sourcePixelY + ( ( multiplier1_772 * sourcePixelB + multiplier0_5) >> precisionBits);
+                if(destPixel < outputMinValue)
 		{
-			destPixelG=outputMinValue;
+			destPixel = outputMinValue;
 		}
-		else if(destPixelG>outputMaxValue)
+		else if(destPixel > outputMaxValue)
 		{
-			destPixelG=outputMaxValue;
+			destPixel = outputMaxValue;
 		}
-
-		if(destPixelB<outputMinValue)
-		{
-			destPixelB=outputMinValue;
-		}
-		else if(destPixelB>outputMaxValue)
-		{
-			destPixelB=outputMaxValue;
-		}
-
-		*pDestMem++ = destPixelR;
-		*pDestMem++ = destPixelG;
-		*pDestMem++ = destPixelB;
+                *pDestMem++ = destPixel;
 	}
 }
 

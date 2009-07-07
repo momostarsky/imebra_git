@@ -25,8 +25,7 @@ void streamBitsTest::test()
 	ptr<baseStream> theMemoryStream(new memoryStream(myMemory));
 	ptr<streamWriter> writer(new streamWriter(theMemoryStream));
 	
-	imbxUint8 tagByte;
-	writer->m_pTagByte = &tagByte;
+	writer->m_bJpegTags = true;
 
 	std::vector<imbxUint8> bitsNumber(4000);
 	std::vector<imbxUint32> bitsValue(4000);
@@ -43,15 +42,48 @@ void streamBitsTest::test()
 	writer->resetOutBitsBuffer();
 	writer->flushDataBuffer();
 
-	ptr<streamReader> reader(new streamReader(theMemoryStream));
-	reader->m_pTagByte = &tagByte;
+        {
+            ptr<streamReader> reader(new streamReader(theMemoryStream));
+            reader->m_bJpegTags = true;
 
-	for(size_t readValues = 0; readValues < bitsValue.size(); ++readValues)
-	{
-		imbxUint32 value;
-		reader->readBits(&value, bitsNumber[readValues]);
-		CPPUNIT_ASSERT(value == bitsValue[readValues]);
-	}
+            for(size_t readValues = 0; readValues < bitsValue.size(); ++readValues)
+            {
+                    imbxUint32 value(reader->readBits(bitsNumber[readValues]));
+                    CPPUNIT_ASSERT(value == bitsValue[readValues]);
+            }
+        }
+
+        {
+            ptr<streamReader> reader(new streamReader(theMemoryStream));
+            reader->m_bJpegTags = true;
+
+            for(size_t readValues = 0; readValues < bitsValue.size(); ++readValues)
+            {
+                imbxUint32 value(0);
+                for(imbxUint8 count(bitsNumber[readValues]); count != 0; --count)
+                {
+                    value <<= 1;
+                    value |= reader->readBit();
+                }
+                CPPUNIT_ASSERT(value == bitsValue[readValues]);
+            }
+        }
+
+        {
+            ptr<streamReader> reader(new streamReader(theMemoryStream));
+            reader->m_bJpegTags = true;
+
+            for(size_t readValues = 0; readValues < bitsValue.size(); ++readValues)
+            {
+                imbxUint32 value(0);
+                for(imbxUint8 count(bitsNumber[readValues]); count != 0; --count)
+                {
+                    reader->addBit(&value);
+                }
+                CPPUNIT_ASSERT(value == bitsValue[readValues]);
+            }
+        }
+
 }
 
 

@@ -20,6 +20,17 @@ $fileHeader$
 namespace puntoexe
 {
 
+/// \brief Exception thrown when a jpeg tag is found but
+///         wasn't expected.
+///
+///////////////////////////////////////////////////////////
+class streamJpegTagInStream : public streamException
+{
+public:
+	streamJpegTagInStream(std::string message): streamException(message){}
+};
+
+
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 /// \brief Represents a stream reader.
@@ -128,17 +139,13 @@ public:
 	/// The function throws a streamExceptionRead exception if
 	///  an error occurs.
 	///
-	/// @param pBuffer   a pointer to a imbxUint32 value that
-	///                   will be filled with the read bits.
-	///                  The read bits will be right aligned.
 	/// @param bitsNum   the number of bits to read.
 	///                  The function can read 32 bits maximum
-	/// @return true if the function succeeded and no tag has
-	///                   been found (see m_pTagByte), false
-	///                   otherwise
+	/// @return an integer containing the fetched bits, right
+	///                   aligned
 	///
 	///////////////////////////////////////////////////////////
-	inline bool readBits(imbxUint32* const pBuffer, int bitsNum)
+	inline imbxUint32 readBits(int bitsNum)
 	{
 		static const int bufferSize(sizeof(m_inBitsBuffer) * 8);
 
@@ -147,17 +154,17 @@ public:
 		///////////////////////////////////////////////////////////
 		if(bitsNum <= m_inBitsNum)
 		{
-			*pBuffer = m_inBitsBuffer >> (bufferSize - bitsNum);
+			imbxUint32 returnValue(m_inBitsBuffer >> (bufferSize - bitsNum));
 			m_inBitsBuffer <<= bitsNum;
 			m_inBitsNum -= bitsNum;
-			return true;
+			return returnValue;
 		}
 
 		PUNTOEXE_FUNCTION_START(L"streamReader::readBits");
 
 		// Fill a local variable with the read bits
 		///////////////////////////////////////////////////////////
-		imbxUint32 localBuffer(0);
+		imbxUint32 returnValue(0);
 
 		// Some bits are in the bits buffer, copy them and reset
 		//  the bits buffer
@@ -165,32 +172,24 @@ public:
 		if(m_inBitsNum != 0)
 		{
 			bitsNum -= m_inBitsNum;
-			localBuffer = ((imbxUint32)(m_inBitsBuffer >> (bufferSize - m_inBitsNum))) << bitsNum;
+			returnValue = ((imbxUint32)(m_inBitsBuffer >> (bufferSize - m_inBitsNum))) << bitsNum;
 		}
 
 		// Read the requested number of bits
 		///////////////////////////////////////////////////////////
 		for(;;)
 		{
-			if(!readByte(&m_inBitsBuffer))
+			if(bitsNum <= 8)
 			{
-				m_inBitsNum = 0;
-				*pBuffer = localBuffer;
-				return false;
-			}
-
-			m_inBitsNum = 8;
-
-			if(bitsNum <= m_inBitsNum)
-			{
-				*pBuffer = localBuffer | (m_inBitsBuffer >> (bufferSize - bitsNum));
+                                m_inBitsBuffer = readByte();
+				returnValue |= (m_inBitsBuffer >> (bufferSize - bitsNum));
 				m_inBitsBuffer <<= bitsNum;
-				m_inBitsNum -= bitsNum;
-				return true;
+				m_inBitsNum = 8 - bitsNum;
+				return returnValue;
 			}
 
-			bitsNum -= m_inBitsNum;
-			localBuffer |= ((imbxUint32)m_inBitsBuffer) << bitsNum;
+			bitsNum -= 8;
+			returnValue |= ((imbxUint32)readByte()) << bitsNum;
 		}
 
 		PUNTOEXE_FUNCTION_END();
@@ -204,40 +203,34 @@ public:
 	/// The function throws a streamExceptionRead if an error
 	///  occurs.
 	///
-	/// @param pBuffer   a pointer to a imbxUint32 value that
-	///                   will be filled with the read bit.
-	/// @return true if the function succeeded and no tag has
-	///                   been found (see m_pTagByte), false
-	///                   otherwise
+	/// @return true if the read bit was 1, false otherwise
+        ///
 	///////////////////////////////////////////////////////////
-	inline bool readBit(imbxUint32* const pBuffer)
+	inline imbxUint32 readBit()
 	{
-		*pBuffer = 0;
-
 		if(m_inBitsNum != 0)
 		{
+			--m_inBitsNum;
 			if((imbxInt8)m_inBitsBuffer < 0)
 			{
-				++(*pBuffer);
+                            m_inBitsBuffer <<= 1;
+                            return 1;
 			}
-			--m_inBitsNum;
-			m_inBitsBuffer <<= 1;
-			return true;
+                        m_inBitsBuffer <<= 1;
+			return 0;
 		}
 
 		PUNTOEXE_FUNCTION_START(L"streamReader::readBit");
 
-		if(readByte(&m_inBitsBuffer))
-		{
-			m_inBitsNum = 7; // We consider that one bit will go away
-			if((imbxInt8)m_inBitsBuffer < 0)
-			{
-				++(*pBuffer);
-			}
-			m_inBitsBuffer <<= 1;
-			return true;
-		}
-		return false;
+		m_inBitsBuffer = readByte();
+                m_inBitsNum = 7; // We consider that one bit will go away
+                if((imbxInt8)m_inBitsBuffer < 0)
+                {
+                        m_inBitsBuffer <<= 1;
+                        return 1;
+                }
+                m_inBitsBuffer <<= 1;
+                return 0;
 
 		PUNTOEXE_FUNCTION_END();
 	}
@@ -260,34 +253,30 @@ public:
 	///                   been found (see m_pTagByte), false
 	///                   otherwise
 	///////////////////////////////////////////////////////////
-	inline bool addBit(imbxUint32* const pBuffer)
+	inline void addBit(imbxUint32* const pBuffer)
 	{
+        	(*pBuffer) <<= 1;
+                
 		if(m_inBitsNum != 0)
 		{
-			(*pBuffer) <<= 1;
 			if((imbxInt8)m_inBitsBuffer < 0)
 			{
 				++(*pBuffer);
 			}
 			--m_inBitsNum;
 			m_inBitsBuffer <<= 1;
-			return true;
+                        return;
 		}
 
 		PUNTOEXE_FUNCTION_START(L"streamReader::addBit");
 
-		if(readByte(&m_inBitsBuffer))
-		{
-			m_inBitsNum = 7; // We consider that one bit will go away
-			(*pBuffer) <<= 1;
-			if((imbxInt8)m_inBitsBuffer < 0)
-			{
-				++(*pBuffer);
-			}
-			m_inBitsBuffer <<= 1;
-			return true;
-		}
-		return false;
+		m_inBitsBuffer = readByte();
+                m_inBitsNum = 7; // We consider that one bit will go away
+                if((imbxInt8)m_inBitsBuffer < 0)
+                {
+                        ++(*pBuffer);
+                }
+                m_inBitsBuffer <<= 1;
 
 		PUNTOEXE_FUNCTION_END();
 	}
@@ -330,60 +319,39 @@ public:
 	/// This mechanism is used to parse the jpeg tags in a
 	///  stream.
 	///
-	/// @param pBuffer   a pointer to the location where the
-	///                   value of the read byte is stored
-	/// @return          true if the byte has been read
-	///                   normally, or false if a jpeg tag
-	///                   has been found and its value has
-	///                   been stored in m_pTagByte (only
-	///                   when m_pTagByte is not zero).
+	/// @return          the read byte
 	///
 	///////////////////////////////////////////////////////////
-	inline bool readByte(imbxUint8* const pBuffer)
+	inline imbxUint8 readByte()
 	{
 		// Update the data buffer if it is empty
 		///////////////////////////////////////////////////////////
 		if(m_pDataBufferCurrent == m_pDataBufferEnd && fillDataBuffer() == 0)
-        {
-            throw(streamExceptionEOF("Attempt to read past the end of the file"));
-        }
+                {
+                    throw(streamExceptionEOF("Attempt to read past the end of the file"));
+                }
 
 		// Read one byte. Return immediatly if the tags are not
 		//  activated
 		///////////////////////////////////////////////////////////
-		*pBuffer = *(m_pDataBufferCurrent++);
-		if(*pBuffer != (imbxUint8)0xff || m_pTagByte == 0)
-		{
-			return true;
-		}
+                if(*m_pDataBufferCurrent != 0xff || !m_bJpegTags)
+                {
+                    return *(m_pDataBufferCurrent++);
+                }
+                do
+                {
+                    if(++m_pDataBufferCurrent == m_pDataBufferEnd && fillDataBuffer() == 0)
+                    {
+                        throw(streamExceptionEOF("Attempt to read past the end of the file"));
+                    }
+                }while(*m_pDataBufferCurrent == 0xff);
 
-		// Tag found. Skip all the 0xff. If the first non 0xff
-		//  byte is 0, then return a byte 0xff (no tag), otherwise
-		//  a tag has been found
-		///////////////////////////////////////////////////////////
-		for(;;)
-		{
-			// Load more data into the data buffer if necessary
-			///////////////////////////////////////////////////////////
-			if(m_pDataBufferCurrent == m_pDataBufferEnd && fillDataBuffer() == 0)
-            {
-                throw(streamExceptionEOF("Attempt to read past the end of the file"));
-            }
+                if(*(m_pDataBufferCurrent++) != 0)
+                {
+                    throw(streamJpegTagInStream("Corrupted jpeg stream"));
+                }
 
-			// Check the byte
-			///////////////////////////////////////////////////////////
-			*pBuffer = *(m_pDataBufferCurrent++);
-			if(*pBuffer == 0)
-			{
-				*pBuffer = 0xff;
-				return true;
-			}
-			if(*pBuffer != (imbxUint8)0xff)
-			{
-				*m_pTagByte = *pBuffer;
-				return false;
-			}
-		}
+                return 0xff;
 	}
 
 private:
@@ -401,6 +369,7 @@ private:
 	int       m_inBitsNum;
 
 };
+
 
 } // namespace puntoexe
 

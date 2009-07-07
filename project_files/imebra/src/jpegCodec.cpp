@@ -587,8 +587,6 @@ void jpegCodec::resetInternal(bool bCompression, quality compQuality)
 
 	m_bLossless = false;
 
-	m_entryByte = 0;
-
 	// The number of MCUs (horizontal, vertical, total)
 	///////////////////////////////////////////////////////////
 	m_mcuNumberX = 0;
@@ -910,29 +908,32 @@ void jpegCodec::readStream(ptr<streamReader> pSourceStream, ptr<dataSet> pDataSe
 		PUNTOEXE_THROW(codecExceptionWrongFormat, "detected a wrong format");
 	}
 
-	// Activate the FF marker in the stream class.
-	///////////////////////////////////////////////////////////
-	imbxUint8* pOldEntryByte=pStream->m_pTagByte;
-	pStream->m_pTagByte=&m_entryByte;
-
 	// Used to read discharged chars
 	///////////////////////////////////////////////////////////
 	imbxUint8 dummy;
 
+        imbxUint8 entryByte;
+
 	// Read all the tags in the stream
 	///////////////////////////////////////////////////////////
-	for(m_bEndOfImage=false; !m_bEndOfImage && !pStream->endReached(); /* empty */)
+	for(m_bEndOfImage=false; !m_bEndOfImage; /* empty */)
 	{
-		// Reset the entry byte
-		///////////////////////////////////////////////////////////
-		m_entryByte = 0;
-
 		// If a tag has been found, then parse it
 		///////////////////////////////////////////////////////////
-		if(!pStream->readByte(&dummy))
+                pStream->read(&entryByte, 1);
+                if(entryByte != 0xff)
+                {
+                    continue;
+                }
+                while(entryByte == 0xff)
+                {
+                    pStream->read(&entryByte, 1);
+                }
+
+		if(entryByte != 0)
 		{
 			ptr<jpeg::tag> pTag;
-			tTagsMap::iterator findTag = m_tagsMap.find(m_entryByte);
+			tTagsMap::iterator findTag = m_tagsMap.find(entryByte);
 			if(findTag != m_tagsMap.end())
 				pTag = findTag->second;
 			else
@@ -940,7 +941,7 @@ void jpegCodec::readStream(ptr<streamReader> pSourceStream, ptr<dataSet> pDataSe
 
 			// Parse the tag
 			///////////////////////////////////////////////////////////
-			pTag->readTag(pStream, this, m_entryByte);
+			pTag->readTag(pStream, this, entryByte);
 		}
 	}
 
@@ -1024,10 +1025,6 @@ void jpegCodec::readStream(ptr<streamReader> pSourceStream, ptr<dataSet> pDataSe
 		imageHandler->setSize(streamLength);
 		pStream->read(imageHandler->getMemoryBuffer(), streamLength);
 	}
-
-	// Reset the tag's marker in the stream
-	////////////////////////////////////////////////////////////////
-	pStream->m_pTagByte=pOldEntryByte;
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -1157,7 +1154,7 @@ ptr<image> jpegCodec::getImage(ptr<dataSet> sourceDataSet, ptr<streamReader> pSt
 
 	// Activate the tags in the stream
 	///////////////////////////////////////////////////////////
-	pSourceStream->m_pTagByte=&m_entryByte;
+	pSourceStream->m_bJpegTags = true;
 
 	// Read the Jpeg signature
 	///////////////////////////////////////////////////////////
@@ -1201,28 +1198,8 @@ ptr<image> jpegCodec::getImage(ptr<dataSet> sourceDataSet, ptr<streamReader> pSt
 
 	// Read until the end of the image is reached
 	///////////////////////////////////////////////////////////
-	for(m_bEndOfImage=false; !m_bEndOfImage && !pSourceStream->endReached(); /* empty */)
+	for(m_bEndOfImage=false; !m_bEndOfImage; pSourceStream->resetInBitsBuffer())
 	{
-		// An entry has been found. Process it
-		///////////////////////////////////////////////////////////
-		if(m_entryByte)
-		{
-			pSourceStream->resetInBitsBuffer();
-			ptr<jpeg::tag> pTag;
-			if(m_tagsMap.find(m_entryByte)!=m_tagsMap.end())
-				pTag=m_tagsMap[m_entryByte];
-			else
-				pTag=m_tagsMap[0xff];
-
-			pTag->readTag(pSourceStream, this, m_entryByte);
-
-			m_entryByte = 0;
-
-			continue;
-		}
-
-		// Read MCU or tag?
-		///////////////////////////////////////////////////////////
 		imbxUint32 nextMcuStop = m_mcuNumberTotal;
 		if(m_mcuPerRestartInterval != 0)
 		{
@@ -1233,24 +1210,45 @@ ptr<image> jpegCodec::getImage(ptr<dataSet> sourceDataSet, ptr<streamReader> pSt
 			}
 		}
 
-		if(nextMcuStop == m_mcuProcessed)
-		{
-			// Read a TAG
-			///////////////////////////////////////////////////////////
-			pSourceStream->resetInBitsBuffer();
-			pSourceStream->readByte(&singleByte);
-			continue;
-		}
+		if(nextMcuStop <= m_mcuProcessed)
+                {
+                    
 
-        jpeg::jpegChannel* pChannel; // Used in the loops
-		while(m_entryByte == 0 && m_mcuProcessed < nextMcuStop && !pSourceStream->endReached())
+                    // Look for a tag. Skip all the FF bytes
+                    imbxUint8 tagId(0xff);
+                    pSourceStream->read(&tagId, 1);
+                    if(tagId != 0xff)
+                    {
+                        continue;
+                    }
+
+                    while(tagId == 0xff)
+                    {
+                        pSourceStream->read(&tagId, 1);
+                    }
+
+
+                    // An entry has been found. Process it
+                    ///////////////////////////////////////////////////////////
+                    ptr<jpeg::tag> pTag;
+                    if(m_tagsMap.find(tagId)!=m_tagsMap.end())
+                            pTag=m_tagsMap[tagId];
+                    else
+                            pTag=m_tagsMap[0xff];
+
+                    pTag->readTag(pSourceStream, this, tagId);
+                    continue;
+                }
+
+                jpeg::jpegChannel* pChannel; // Used in the loops
+		while(m_mcuProcessed < nextMcuStop && !pSourceStream->endReached())
 		{
 			// Read an MCU
 			///////////////////////////////////////////////////////////
 
 			// Scan all components
 			///////////////////////////////////////////////////////////
-			for(jpeg::jpegChannel** channelsIterator = m_channelsList; *channelsIterator != 0 && m_entryByte == 0; ++channelsIterator)
+			for(jpeg::jpegChannel** channelsIterator = m_channelsList; *channelsIterator != 0; ++channelsIterator)
 			{
 				pChannel = *channelsIterator;
 
@@ -1260,19 +1258,16 @@ ptr<image> jpegCodec::getImage(ptr<dataSet> sourceDataSet, ptr<streamReader> pSt
 				{
 					for(
 						scanBlock = 0;
-						scanBlock != pChannel->m_blockMcuXY &&
-						pChannel->m_pActiveHuffmanTableDC->readHuffmanCode(&amplitudeLength, pSourceStream);
+						scanBlock != pChannel->m_blockMcuXY;
 						++scanBlock)
 					{
-						if(amplitudeLength)
+                                                amplitudeLength = pChannel->m_pActiveHuffmanTableDC->readHuffmanCode(pSourceStream);
+                                                if(amplitudeLength)
 						{
-							if( !pSourceStream->readBits((imbxUint32*)&amplitude, amplitudeLength))
+							amplitude = pSourceStream->readBits(amplitudeLength);
+							if(amplitude < ((imbxInt32)1<<(amplitudeLength-1)))
 							{
-								break;
-							}
-							if(amplitude<((imbxInt32)1<<(amplitudeLength-1)))
-							{
-								amplitude-=((imbxInt32)1<<amplitudeLength)-1;
+								amplitude -= ((imbxInt32)1<<amplitudeLength)-1;
 							}
 						}
 						else
@@ -1289,9 +1284,9 @@ ptr<image> jpegCodec::getImage(ptr<dataSet> sourceDataSet, ptr<streamReader> pSt
 				// Read a lossy MCU
 				///////////////////////////////////////////////////////////
 				bufferPointer = (m_mcuProcessedY * pChannel->m_blockMcuY * ((m_jpegImageSizeX * pChannel->m_samplingFactorX / m_maxSamplingFactorX) >> 3) + m_mcuProcessedX * pChannel->m_blockMcuX) * 64;
-				for(scanBlockY = pChannel->m_blockMcuY; (scanBlockY != 0) && (m_entryByte == 0); --scanBlockY)
+				for(scanBlockY = pChannel->m_blockMcuY; (scanBlockY != 0); --scanBlockY)
 				{
-					for(scanBlockX = pChannel->m_blockMcuX; (scanBlockX != 0 ) && (m_entryByte == 0); --scanBlockX)
+					for(scanBlockX = pChannel->m_blockMcuX; scanBlockX != 0; --scanBlockX)
 					{
 						readBlock(pSourceStream, &(pChannel->m_pBuffer[bufferPointer]), pChannel);
 
@@ -1308,10 +1303,6 @@ ptr<image> jpegCodec::getImage(ptr<dataSet> sourceDataSet, ptr<streamReader> pSt
 				}
 			}
 
-			if(m_entryByte != 0)
-			{
-				continue;
-			}
 			++m_mcuProcessed;
 			if(++m_mcuProcessedX == m_mcuNumberX)
 			{
@@ -1721,7 +1712,7 @@ void jpegCodec::setImage(
 
 	// Activate the tags in the stream
 	///////////////////////////////////////////////////////////
-	pDestinationStream->m_pTagByte = &m_entryByte;
+	pDestinationStream->m_bJpegTags = true;
 
 	// Reset the internal variables
 	////////////////////////////////////////////////////////////////
@@ -1818,7 +1809,7 @@ void jpegCodec::writeScan(streamWriter* pDestinationStream, bool bCalcHuffman)
 
 		// Scan all components
 		///////////////////////////////////////////////////////////
-		for(jpeg::jpegChannel** channelsIterator = m_channelsList; *channelsIterator != 0 && m_entryByte == 0; ++channelsIterator)
+		for(jpeg::jpegChannel** channelsIterator = m_channelsList; *channelsIterator != 0; ++channelsIterator)
 		{
 			pChannel = *channelsIterator;
 
@@ -1957,11 +1948,6 @@ inline void jpegCodec::readBlock(streamReader* pStream, imbxInt32* pBuffer, jpeg
 {
 	PUNTOEXE_FUNCTION_START(L"jpegCodec::readBlock");
 
-	if(m_entryByte != 0)
-	{
-		return;
-	}
-
 	// Scan all the requested spectral values
 	/////////////////////////////////////////////////////////////////
 	imbxUint32 spectralIndex(m_spectralIndexStart);
@@ -1997,12 +1983,9 @@ inline void jpegCodec::readBlock(streamReader* pStream, imbxInt32* pBuffer, jpeg
 				continue;
 			}
 
-			if(!pStream->readBit(&amplitude))
-			{
-				return; // an entry byte has been found
-			}
+			amplitude = pStream->readBit();
 
-			if(amplitude!=0 && (oldValue & positiveBitLow)==0)
+			if(amplitude != 0 && (oldValue & positiveBitLow)==0)
 			{
 				oldValue += (oldValue>0 ? positiveBitLow : negativeBitLow);
 				pBuffer[JpegDeZigZagOrder[spectralIndex]] = oldValue;
@@ -2014,7 +1997,7 @@ inline void jpegCodec::readBlock(streamReader* pStream, imbxInt32* pBuffer, jpeg
 		// If no EOB run is active, then read this block
 		//
 		/////////////////////////////////////////////////////////////////
-		if(m_eobRun == 0 && m_entryByte == 0)
+		if(m_eobRun == 0)
 		{
 			//
 			// AC/DC pass
@@ -2022,10 +2005,7 @@ inline void jpegCodec::readBlock(streamReader* pStream, imbxInt32* pBuffer, jpeg
 			/////////////////////////////////////////////////////////////////
 			if(spectralIndex)
 			{
-				if(!pChannel->m_pActiveHuffmanTableAC->readHuffmanCode(&hufCode, pStream))
-				{
-					return; // an entry byte has been found
-				}
+				hufCode = pChannel->m_pActiveHuffmanTableAC->readHuffmanCode(pStream);
 			}
 			else
 			{
@@ -2033,19 +2013,13 @@ inline void jpegCodec::readBlock(streamReader* pStream, imbxInt32* pBuffer, jpeg
 				/////////////////////////////////////////////////////////////////
 				if(m_bitHigh)
 				{
-					if(!pStream->readBit(&hufCode))
-					{
-						return; // an entry byte has been found
-					}
+					hufCode = pStream->readBit();
 					value=(int)hufCode;
 					hufCode = 0;
 				}
 				else
 				{
-					if(!pChannel->m_pActiveHuffmanTableDC->readHuffmanCode(&hufCode, pStream))
-					{
-						return; // an entry byte has been found
-					}
+					hufCode = pChannel->m_pActiveHuffmanTableDC->readHuffmanCode(pStream);
 				}
 			}
 
@@ -2092,13 +2066,10 @@ inline void jpegCodec::readBlock(streamReader* pStream, imbxInt32* pBuffer, jpeg
 
 						if(amplitudeLength)
 						{
-							if(!pStream->readBits(&amplitude, amplitudeLength))
-							{
-								return; // an entry byte has been found
-							}
-							value=(int)amplitude;
-							if(amplitude<((imbxUint32)1<<(amplitudeLength-1)))
-								value-=(int)(((imbxUint32)1<<amplitudeLength)-1);
+							amplitude = pStream->readBits(amplitudeLength);
+							value = (int)amplitude;
+							if(amplitude < ((imbxUint32)1<<(amplitudeLength-1)))
+								value -= (int)(((imbxUint32)1<<amplitudeLength)-1);
 						}
 
 						// Move spectral index forward by zero run length
@@ -2112,10 +2083,7 @@ inline void jpegCodec::readBlock(streamReader* pStream, imbxInt32* pBuffer, jpeg
 								oldValue=pBuffer[JpegDeZigZagOrder[spectralIndex]];
 								if(oldValue != 0)
 								{
-									if(!pStream->readBit(&amplitude))
-									{
-										return; // an entry byte has been found
-									}
+									amplitude = pStream->readBit();
 									if(amplitude && (oldValue & positiveBitLow) == 0)
 									{
 										oldValue+=(oldValue>0 ? positiveBitLow : negativeBitLow);
@@ -2142,7 +2110,7 @@ inline void jpegCodec::readBlock(streamReader* pStream, imbxInt32* pBuffer, jpeg
 
 					// Store coeff.
 					/////////////////////////////////////////////////////////////////
-					if(m_entryByte == 0 && spectralIndex<=m_spectralIndexEnd)
+					if(spectralIndex<=m_spectralIndexEnd)
 					{
 						oldValue=value<<m_bitLow;
 						if(m_bitHigh)
@@ -2163,10 +2131,7 @@ inline void jpegCodec::readBlock(streamReader* pStream, imbxInt32* pBuffer, jpeg
 				/////////////////////////////////////////////////////////////////
 				else
 				{
-					if(!pStream->readBits(&tempEobRun, runLength))
-					{
-						return; // an entry byte has been found
-					}
+					tempEobRun = pStream->readBits(runLength);
 					m_eobRun+=(imbxUint32)1<<runLength;
 					m_eobRun+=tempEobRun;
 					spectralIndex--;

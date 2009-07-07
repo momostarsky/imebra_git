@@ -24,7 +24,7 @@ static const streamController::tByteOrdering m_platformByteOrder((*pBytePointer)
 //
 ///////////////////////////////////////////////////////////
 streamController::streamController(ptr<baseStream> pControlledStream, imbxUint32 virtualStart /* =0 */, imbxUint32 virtualLength /* =0 */):
-	m_pTagByte(0),
+	m_bJpegTags(false),
         m_pControlledStream(pControlledStream),
 		m_dataBuffer(new imbxUint8[IMEBRA_STREAM_CONTROLLER_MEMORY_SIZE]),
 		m_virtualStart(virtualStart),

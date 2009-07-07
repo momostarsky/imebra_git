@@ -156,21 +156,12 @@ public:
 
 public:
 
-	/// \brief The byte referenced by this pointer is used
-	///         by readByte() and writeByte() to read/write
-	///         jpeg streams.
-	///
-	/// When this pointer is set to zero, then readByte() and
-	///  writeByte() will work normally, without parsing
-	///  any byte.
-	///
-	/// When this pointer references a valid memory location,
-	///  then readByte() and writeByte() will work differently.
-	/// See the documentation of readByte() and writeByte()
-	///  for further details.
+	/// \brief true writeByte() must write all 0xff as
+        ///         0xff, 0x00 anf readByte() as to convert all
+        ///         0xff,0x00 to 0xff, as in jpeg streams.
 	///
 	///////////////////////////////////////////////////////////
-	imbxUint8* m_pTagByte;
+	bool m_bJpegTags;
 
 
 protected:
@@ -208,6 +199,10 @@ protected:
 	imbxUint8* m_pDataBufferMaxEnd;
 };
 
+/// \brief Exception thrown when an attempt to read past
+///         the end of the file is made.
+///
+///////////////////////////////////////////////////////////
 class streamExceptionEOF : public streamException
 {
 public:

@@ -259,16 +259,15 @@ void drawBitmap::doTransform()
 			{
 				for(imbxUint32 scanImageX = *(pNextSourceXIndex++); scanImageX != *pNextSourceXIndex; ++scanImageX)
 				{
-					++(*(pAveragePointer++));
-					*(pAveragePointer++) += *(pImagePointer++);
-					*(pAveragePointer++) += *(pImagePointer++);
-					*(pAveragePointer++) += *(pImagePointer++);
-					pAveragePointer -= 4;
-					if( (scanImageX & maskX) == 0)
+					++(*(pAveragePointer));
+					*(++pAveragePointer) += *(pImagePointer++);
+					*(++pAveragePointer) += *(pImagePointer++);
+					*(++pAveragePointer) += *(pImagePointer++);
+					pAveragePointer -= 3;
+					if( (scanImageX & maskX) != 0)
 					{
-						continue;
+						pImagePointer -= 3;
 					}
-					pImagePointer -= 3;
 				}
 				pAveragePointer += 4;
 			}

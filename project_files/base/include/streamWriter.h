@@ -188,7 +188,7 @@ public:
 			flushDataBuffer();
 		}
 		*(m_pDataBufferCurrent++) = buffer;
-		if(m_pTagByte != 0 && buffer==(imbxUint8)0xff)
+		if(m_bJpegTags && buffer == (imbxUint8)0xff)
 		{
 			if(m_pDataBufferCurrent == m_pDataBufferMaxEnd)
 			{

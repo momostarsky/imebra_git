@@ -49,8 +49,7 @@ void memoryStreamTest::testBytes()
 	ptr<memory> myMemory(new memory);
 	ptr<baseStream> theMemoryStream(new memoryStream(myMemory));
 	ptr<streamWriter> writer(new streamWriter(theMemoryStream));
-	imbxUint8 tagByte;
-	writer->m_pTagByte = &tagByte;
+	writer->m_bJpegTags = true;
 
 	std::vector<imbxUint8> values(4000);
 	for(size_t fillValues = 0; fillValues < values.size(); ++fillValues)
@@ -66,12 +65,11 @@ void memoryStreamTest::testBytes()
 	writer->flushDataBuffer();
 
 	ptr<streamReader> reader(new streamReader(theMemoryStream));
-	reader->m_pTagByte = &tagByte;
+	reader->m_bJpegTags = true;
 
 	for(size_t readValues = 0; readValues < values.size(); ++readValues)
 	{
-		imbxUint8 value;
-		reader->readByte(&value);
+		imbxUint8 value(reader->readByte());
 		CPPUNIT_ASSERT(value == values[readValues]);
 	}
 }

@@ -47,9 +47,9 @@ void huffmanTest::test()
 	ptr<streamReader> reader(new streamReader(theMemoryStream));
 	for(size_t readValues = 0; readValues < values.size(); ++readValues)
 	{
-		imbxUint32 value;
-		huffman.readHuffmanCode(&value, reader.get());
-		CPPUNIT_ASSERT((imbxUint8)value == values[readValues]);
+		imbxUint32 value(huffman.readHuffmanCode(reader.get()));
+
+                CPPUNIT_ASSERT((imbxUint8)value == values[readValues]);
 	}
 }
 

@@ -273,17 +273,13 @@ void huffmanTable::calcHuffmanTables()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-bool huffmanTable::readHuffmanCode(imbxUint32* pBuffer, streamReader* pStream)
+imbxUint32 huffmanTable::readHuffmanCode(streamReader* pStream)
 {
 	PUNTOEXE_FUNCTION_START(L"huffmanTable::readHuffmanCode");
 
 	// Buffer with the original huffman code
 	///////////////////////////////////////////////////////////
 	imbxUint32 readBuffer(0);
-
-	// Used to add multiple bits to the read buffer
-	///////////////////////////////////////////////////////////
-    imbxUint32 addBitsReadBuffer(0);
 
 	// Active ordered value
 	///////////////////////////////////////////////////////////
@@ -297,7 +293,7 @@ bool huffmanTable::readHuffmanCode(imbxUint32* pBuffer, streamReader* pStream)
 	///////////////////////////////////////////////////////////
 	for(imbxUint8 scanSize(1); scanSize<sizeof(m_valuesPerLength)/sizeof(m_valuesPerLength[0]); ++scanSize)
 	{
-        ++missingBits;
+                ++missingBits;
 
 		// If the active length is empty, then continue the loop
 		///////////////////////////////////////////////////////////
@@ -310,47 +306,36 @@ bool huffmanTable::readHuffmanCode(imbxUint32* pBuffer, streamReader* pStream)
 		///////////////////////////////////////////////////////////
 		if(missingBits == scanSize) // Nothing in the buffer yet, we don't need to shift
 		{
-		    if(!pStream->readBits(&readBuffer, scanSize))
-		    {
-		        return false;
-		    }
+		    readBuffer = pStream->readBits(scanSize);
 		}
 		else
 		{
+                    readBuffer <<= missingBits;
 		    if(missingBits == 1)
 		    {
-                if(!pStream->addBit(&readBuffer))
-                {
-                    return false;
-                }
+                        readBuffer |= pStream->readBit();
 		    }
 		    else
 		    {
-                if(!pStream->readBits(&addBitsReadBuffer, missingBits))
-                {
-                    return false;
-                }
-		        readBuffer <<= missingBits;
-		        readBuffer |= addBitsReadBuffer;
+		        readBuffer |= pStream->readBits(missingBits);
 		    }
 		}
-
-		// Reset the number of bits to read in one go
-		///////////////////////////////////////////////////////////
-		missingBits = 0;
 
 		// Validate the current Huffman code. If it's OK, then
 		//  return the ordered value
 		///////////////////////////////////////////////////////////
 		if(readBuffer<=m_maxValuePerLength[scanSize])
 		{
-			*pBuffer = m_orderedValues[orderedValue + readBuffer - m_minValuePerLength[scanSize]];
-			return true;
+			return m_orderedValues[orderedValue + readBuffer - m_minValuePerLength[scanSize]];
 		}
-		orderedValue += m_valuesPerLength[scanSize];
-	}
 
-	*pBuffer = 0;
+                orderedValue += m_valuesPerLength[scanSize];
+
+                // Reset the number of bits to read in one go
+		///////////////////////////////////////////////////////////
+		missingBits = 0;
+
+	}
 
 	PUNTOEXE_THROW(huffmanExceptionRead, "Invalid huffman code found while reading from a stream");
 
