@@ -203,7 +203,7 @@ public:
 	/// The function throws a streamExceptionRead if an error
 	///  occurs.
 	///
-	/// @return true if the read bit was 1, false otherwise
+	/// @return the value of the read bit (1 or 0)
         ///
 	///////////////////////////////////////////////////////////
 	inline imbxUint32 readBit()
@@ -249,9 +249,7 @@ public:
 	/// @param pBuffer   a pointer to a imbxUint32 value that
 	///                   will be left shifted and filled
 	///                   with the read bit.
-	/// @return true if the function succeeded and no tag has
-	///                   been found (see m_pTagByte), false
-	///                   otherwise
+        ///
 	///////////////////////////////////////////////////////////
 	inline void addBit(imbxUint32* const pBuffer)
 	{
