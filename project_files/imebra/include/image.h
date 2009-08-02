@@ -85,7 +85,6 @@ public:
 	// Constructor
 	///////////////////////////////////////////////////////////
 	image():
-		baseObject(ptr<baseObject>(new baseObject) ),
 			m_rowLength(0),
 			m_channelPixelSize(0),
 			m_channelsNumber(0),

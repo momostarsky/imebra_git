@@ -37,18 +37,6 @@ namespace imebra
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Destructor
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-data::~data()
-{
-}
 
 
 ///////////////////////////////////////////////////////////
@@ -60,7 +48,7 @@ data::~data()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void data::setBuffer(imbxUint32 bufferId, ptr<buffer> newBuffer)
+void data::setBuffer(imbxUint32 bufferId, const ptr<buffer>& newBuffer)
 {
 	PUNTOEXE_FUNCTION_START(L"data::setBuffer");
 
@@ -229,7 +217,7 @@ ptr<handlers::dataHandler> data::getDataHandler(imbxUint32 bufferId, bool bWrite
 	///////////////////////////////////////////////////////////
 	if(pTempBuffer == 0 && bWrite)
 	{
-		pTempBuffer = new buffer(m_externalLock, defaultType);
+		pTempBuffer = new buffer(this, defaultType);
 		pTempBuffer->setCharsetsList(&m_charsetsList);
 		m_buffers[bufferId]=pTempBuffer;
 	}
@@ -286,7 +274,7 @@ ptr<handlers::dataHandlerRaw> data::getDataHandlerRaw(imbxUint32 bufferId, bool 
 	///////////////////////////////////////////////////////////
 	if( pTempBuffer == 0 && bWrite )
 	{
-		pTempBuffer = new buffer(m_externalLock, defaultType);
+		pTempBuffer = new buffer(this, defaultType);
 		pTempBuffer->setCharsetsList(&m_charsetsList);
 		m_buffers[bufferId]=pTempBuffer;
 	}
@@ -376,7 +364,7 @@ ptr<streamWriter> data::getStreamWriter(imbxUint32 bufferId, std::string dataTyp
 	///////////////////////////////////////////////////////////
 	if(pTempBuffer == 0)
 	{
-		pTempBuffer = new buffer(m_externalLock, dataType);
+		pTempBuffer = new buffer(this, dataType);
 		m_buffers[bufferId]=pTempBuffer;
 	}
 

@@ -117,10 +117,6 @@ void jpegCodecTest::testBaseline()
 					{
 						difference += value1 - value0;
 					}
-					if(difference >12)
-					{
-						int stop=1;
-					}
 				}
 			}
 		}
@@ -179,15 +175,15 @@ void jpegCodecTest::testBaselineSubsampled()
 		ptr<baseStream> writeStream(new memoryStream(streamMemory));
 		ptr<streamWriter> writer(new streamWriter(writeStream));
 
-		codecs::jpegCodec testCodec;
-		testCodec.setImage(writer, ybrImage, L"1.2.840.10008.1.2.4.50", codecs::codec::medium, "OB", 8, true, true, false, false);
+		ptr<codecs::jpegCodec> testCodec(new codecs::jpegCodec);
+		testCodec->setImage(writer, ybrImage, L"1.2.840.10008.1.2.4.50", codecs::codec::medium, "OB", 8, true, true, false, false);
 	}
 
 	ptr<baseStream> readStream(new memoryStream(streamMemory));
 	ptr<streamReader> reader(new streamReader(readStream));
 		
-	codecs::jpegCodec testCodec;
-	ptr<dataSet> readDataSet = testCodec.read(reader);
+	ptr<codecs::jpegCodec> testCodec(new codecs::jpegCodec);
+	ptr<dataSet> readDataSet = testCodec->read(reader);
 	ptr<image> checkImage = readDataSet->getImage(0);
 	imbxUint32 checkSizeX, checkSizeY;
 	checkImage->getSize(&checkSizeX, &checkSizeY);
@@ -269,15 +265,15 @@ void jpegCodecTest::testLossless()
 	{
 		ptr<baseStream> writeStream(new memoryStream(streamMemory));
 		ptr<streamWriter> writer(new streamWriter(writeStream));
-		codecs::jpegCodec testCodec;
-		testCodec.setImage(writer, baselineImage, L"1.2.840.10008.1.2.4.57", codecs::codec::medium, "OB", 8, false, false, false, false);
+		ptr<codecs::jpegCodec> testCodec(new codecs::jpegCodec);
+		testCodec->setImage(writer, baselineImage, L"1.2.840.10008.1.2.4.57", codecs::codec::medium, "OB", 8, false, false, false, false);
 	}
 
 	ptr<baseStream> readStream(new memoryStream(streamMemory));
 	ptr<streamReader> reader(new streamReader(readStream));
 		
-	codecs::jpegCodec testCodec;
-	ptr<dataSet> readDataSet = testCodec.read(reader);
+	ptr<codecs::jpegCodec> testCodec(new codecs::jpegCodec);
+	ptr<dataSet> readDataSet = testCodec->read(reader);
 	ptr<image> checkImage = readDataSet->getImage(0);
 	imbxUint32 checkSizeX, checkSizeY;
 	checkImage->getSize(&checkSizeX, &checkSizeY);

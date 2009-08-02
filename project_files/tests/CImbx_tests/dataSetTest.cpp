@@ -21,6 +21,7 @@ using namespace puntoexe::imebra;
 
 void dataSetTest::testFragmentation()
 {
+    // Add two images to a dataset, then fragment the first image
 	ptr<image> testImage0(buildImageForTest(
 		400, 
 		300, 
@@ -55,9 +56,10 @@ void dataSetTest::testFragmentation()
 	CPPUNIT_ASSERT(imageTag != 0);
 
 	std::list<ptr<buffer> > newBuffers;
-	ptr<buffer> newTableOffsetBuffer(new buffer(ptr<baseObject>(testDataSet.get())));
+	ptr<buffer> newTableOffsetBuffer(new buffer(testDataSet));
 	newBuffers.push_back(newTableOffsetBuffer);
 	imbxUint32 offset(0);
+
 	for(imbxUint32 scanBuffers = 1; imageTag->bufferExists(scanBuffers); ++scanBuffers)
 	{
 		ptr<handlers::dataHandlerRaw> offsetHandler = newTableOffsetBuffer->getDataHandlerRaw(true, 8);
@@ -90,9 +92,9 @@ void dataSetTest::testFragmentation()
 			pWholeHandler += thisSize;
 		}
 	}
-
+        
 	imbxUint32 bufferId(0);
-	for(std::list<ptr<buffer> >::iterator addBuffers = newBuffers.begin(); addBuffers != newBuffers.end(); ++addBuffers)
+	for(std::list<ptr<buffer> >::const_iterator addBuffers = newBuffers.begin(); addBuffers != newBuffers.end(); ++addBuffers)
 	{
 		imageTag->setBuffer(bufferId++, *addBuffers);
 	}

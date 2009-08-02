@@ -315,14 +315,14 @@ protected:
 	
 	// Set the data (tag or group)
 	///////////////////////////////////////////////////////////
-	void setData(imbxUint16 dataId, imbxUint16 order, ptr<collectionType> pData)
+	void setData(imbxUint16 dataId, imbxUint16 order, const ptr<collectionType>& pData)
 	{
 		PUNTOEXE_FUNCTION_START(L"dataCollection::setData");
 
 		lockObject lockAccess(this);
 
 		imbxUint32 dataUid = (((imbxUint32)dataId)<<16) | (imbxUint32)order;
-		m_collection[dataUid]=pData;
+		m_collection[dataUid] = pData;
 		pData->setCharsetsList(&m_charsetsList);
 
 		PUNTOEXE_FUNCTION_END();

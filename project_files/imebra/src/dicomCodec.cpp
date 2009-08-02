@@ -2155,7 +2155,7 @@ imbxUint32 dicomCodec::readTag(
 		ptr<data>      writeData (writeGroup->getTag(tagSubId, true));
 		ptr<buffer> newBuffer(
 			new buffer(
-				writeData->getExternalLock(),
+				writeData,
 				tagType,
 				pStream->getControlledStream(),
 				streamPosition,

@@ -96,8 +96,7 @@ ptr<dataGroup> dataSet::getGroup(imbxUint16 groupId, imbxUint16 order, bool bCre
 
 	if(pData == 0 && bCreate)
 	{
-		ptr<dataGroup> tempGroup(new dataGroup(m_externalLock));
-		pData = tempGroup;
+		pData = new dataGroup(this);
 		setGroup(groupId, order, pData);
 	}
 

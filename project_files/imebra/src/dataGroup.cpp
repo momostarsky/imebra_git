@@ -52,7 +52,7 @@ ptr<data> dataGroup::getTag(imbxUint16 tagId, bool bCreate /* =false */)
 	ptr<data> pData=getData(tagId, 0);
 	if(pData == 0 && bCreate)
 	{
-		ptr<data> tempData(new data(m_externalLock));
+		ptr<data> tempData(new data(this));
 		pData = tempData;
 		setData(tagId, 0, pData);
 	}

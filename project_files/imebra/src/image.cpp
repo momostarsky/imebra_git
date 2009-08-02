@@ -110,7 +110,7 @@ ptr<handlers::imageHandler> image::create(
 	///////////////////////////////////////////////////////////
 	if(m_buffer == 0 || !(m_buffer->isReferencedOnce()) )
 	{
-		ptr<buffer> tempBuffer(new buffer(m_externalLock, "SL"));
+		ptr<buffer> tempBuffer(new buffer(this, "SL"));
 		m_buffer = tempBuffer;
 	}
 
