@@ -340,7 +340,7 @@ void RGBToPALETTECOLOR::resetOctree(char bits)
 {
 	for(unsigned char scanChildren = 0; scanChildren < 8; ++scanChildren)
 	{
-		m_rootNode.m_children[scanChildren].release();
+		m_rootNode.m_children[scanChildren].reset();
 	}
 	m_leavesCount = 0;
 	m_octreeBits = bits;
@@ -451,7 +451,7 @@ void RGBToPALETTECOLOR::reduceOctreeColor(imbxUint32 size)
 		}
 		for(char resetChildren = 0; resetChildren < 8; ++resetChildren)
 		{
-			pNode->m_children[resetChildren].release();
+			pNode->m_children[resetChildren].reset();
 		}
 		m_leavesCount -= pNode->m_childrenCount - 1;
 		pNode->m_childrenCount = 0;
