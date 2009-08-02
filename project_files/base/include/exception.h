@@ -117,10 +117,6 @@ public:
 class exceptionsManager: public baseObject
 {
 public:
-	// Construct without increasing my own reference counter
-	///////////////////////////////////////////////////////////
-	exceptionsManager();
-
 	/// \brief Add an exceptionInfo object to the active
 	///         thread's information list.
 	///
@@ -172,7 +168,7 @@ public:
 	// Return a pointer to the statically allocated
 	//         instance of exceptionsManager.
 	///////////////////////////////////////////////////////////
-	static exceptionsManager* getExceptionsManager();
+	static ptr<exceptionsManager> getExceptionsManager();
 
 protected:
 	typedef std::map<thread::tThreadId, tExceptionInfoList> tInfoMap;

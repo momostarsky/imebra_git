@@ -57,10 +57,6 @@ public:
 		m_pMappedValues(0){}
 
 
-	// Destructor
-	///////////////////////////////////////////////////////////
-	virtual ~lut();
-
 	/// \brief Initializes the lut with the values stored in
 	///         three data handlers, usually retrieved from
 	///         a dataset.
@@ -188,6 +184,10 @@ public:
 	void copyToInt32(imbxInt32* pDestination, imbxUint32 destSize, imbxInt32* pFirstMapped);
 
 protected:
+	// Destructor
+	///////////////////////////////////////////////////////////
+	virtual ~lut();
+
 	imbxUint32 m_size;
 	imbxInt32 m_firstMapped;
 	imbxUint8 m_bits;

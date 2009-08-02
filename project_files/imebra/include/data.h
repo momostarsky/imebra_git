@@ -64,8 +64,6 @@ class data : public baseObject
 public:
 	data(ptr<baseObject> externalLock): baseObject(externalLock) {}
 
-	virtual ~data();
-
 	///////////////////////////////////////////////////////////
 	/// \name Data handlers
 	///
@@ -313,13 +311,12 @@ public:
 
 	// Set a buffer
 	///////////////////////////////////////////////////////////
-	void setBuffer(imbxUint32 bufferId, ptr<buffer> newBuffer);
+	void setBuffer(imbxUint32 bufferId, const ptr<buffer>& newBuffer);
 
 protected:
 	// Pointers to the internal buffers
 	///////////////////////////////////////////////////////////
-	typedef ptr<buffer> ptrBuffer;
-	typedef std::map<imbxUint32, ptrBuffer> tBuffersMap;
+	typedef std::map<imbxUint32, ptr<buffer> > tBuffersMap;
 	tBuffersMap m_buffers;
 
 	// Pointers to the embedded datasets

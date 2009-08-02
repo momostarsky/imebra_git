@@ -21,8 +21,8 @@ public:
 	bufferStream(ptr<handlers::dataHandlerRaw> pDataHandler):
 	  memoryStream(pDataHandler->getMemory()),
 	  m_pDataHandler(pDataHandler){}
-	virtual ~bufferStream(){}
 protected:
+
 	ptr<handlers::dataHandlerRaw> m_pDataHandler;
 };
 

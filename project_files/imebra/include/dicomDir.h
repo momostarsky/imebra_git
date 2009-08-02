@@ -282,11 +282,6 @@ public:
 	///////////////////////////////////////////////////////////
 	dicomDir(ptr<dataSet> pDataSet);
 
-	// Destructor.
-	//
-	///////////////////////////////////////////////////////////
-	virtual ~dicomDir();
-
 	/// \brief Returns the DICOMDIR dataset.
 	///
 	/// This is the same dataset specified in the constructor
@@ -359,6 +354,11 @@ public:
 	ptr<dataSet> buildDataSet();
 
 protected:
+	// Destructor.
+	//
+	///////////////////////////////////////////////////////////
+	virtual ~dicomDir();
+
 	ptr<dataSet> m_pDataSet;
 
 	ptr<directoryRecord> m_pFirstRootRecord;

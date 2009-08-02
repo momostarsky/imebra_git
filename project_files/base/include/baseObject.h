@@ -201,7 +201,7 @@ public:
 	///////////////////////////////////////////////////////////
 	inline objectType* operator ->() const
 	{
-		return (objectType*)object;
+		return static_cast<objectType*>(object);
 	}
 
 	/// \brief Return the pointer to the tracked object.
@@ -211,7 +211,7 @@ public:
 	///////////////////////////////////////////////////////////
 	inline objectType* get() const
 	{
-		return (objectType*)object;
+		return static_cast<objectType*>(object);
 	}
 
 	/// \brief Return the pointer to the tracked object,
@@ -226,7 +226,7 @@ public:
 	template <class destType>
 		inline operator destType*() const
 	{
-		return static_cast<destType*>((objectType*)object);
+		return static_cast<destType*>(object);
 	}
 
 	/// \brief Return a new ptr object tracking the object
@@ -242,7 +242,7 @@ public:
 	template <class destType>
 		inline operator ptr<destType>() const
 	{
-		return ptr<destType>(static_cast<destType*>((objectType*)object));
+		return ptr<destType>(static_cast<destType*>(object));
 	}
 };
 
@@ -322,38 +322,6 @@ public:
 	///////////////////////////////////////////////////////////
 	baseObject(const ptr<baseObject>& externalLock);
 
-	/// \brief Creates the baseObject object and set an
-	///         external object to be used for the lock.
-	///        The reference counter is set to 0.
-	///
-	/// The object should be unallocated by the release()
-	///  function, not by deleting it using the C++ instruction
-	///  delete.
-	///
-	/// In order to avoid mistakes and memory leaks, objects
-	///  derived from baseObject should be assigned to a
-	///  \ref ptr object.
-	///
-	/// @param bIncreaseExceptionsManager the exceptions
-	///            manager references counter is increased if
-	///            this value is true
-	///
-	///////////////////////////////////////////////////////////
-private:
-	baseObject(bool bIncreaseExceptionsManager);
-
-public:
-	/// \brief Retrieve the object used to lock this one.
-	///
-	/// Most of the times the baseObject uses itself during
-	///  the lock, but sometimes it may uses external objects.
-	/// See \ref imebra_locks for more information.
-	///
-	/// @return the object used to lock this one
-	///
-	///////////////////////////////////////////////////////////
-	baseObject* getExternalLock();
-
 	/// \brief Returns one if the reference count is set to 1.
 	///
 	/// @return true if the reference counter is set to 1
@@ -366,14 +334,6 @@ protected:
 	//  be deleted using release()
 	///////////////////////////////////////////////////////////
 	virtual ~baseObject();
-
-protected:
-	/// \internal
-	/// \brief Pointer to an object used to lock this one, or
-	///         0 if an external object is not used
-	///
-	///////////////////////////////////////////////////////////
-	ptr<baseObject> m_externalLock;
 
 private:
 	/// \brief Increase the object's references counter.
@@ -427,6 +387,7 @@ private:
 	///
 	///////////////////////////////////////////////////////////
 	volatile long m_lockCounter;
+        criticalSection m_counterCriticalSection;
 
 	// Lock/Unlock the objects.
 	///////////////////////////////////////////////////////////
@@ -435,9 +396,17 @@ private:
 
 	bool m_bValid;
 
-	criticalSection m_criticalSection;
-
-	ptr<exceptionsManager> m_pExceptionsManager;
+        class CObjectCriticalSection
+        {
+        public:
+            CObjectCriticalSection(): m_counter(0){}
+            criticalSection m_criticalSection;
+            void addRef(){++m_counter;}
+            void release(){if(--m_counter == 0)delete this;}
+        private:
+            unsigned long m_counter;
+        };
+        CObjectCriticalSection* m_pCriticalSection;
 
 };
 

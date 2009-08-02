@@ -146,7 +146,7 @@ public:
 	///         unlock the previously locked criticalSection.
 	///
 	///////////////////////////////////////////////////////////
-	~lockCriticalSection();
+	virtual ~lockCriticalSection();
 private:
 	criticalSection* m_pCriticalSection;
 };

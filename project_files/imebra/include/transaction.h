@@ -131,7 +131,7 @@ public:
 	///  back to the buffers.
 	///
 	///////////////////////////////////////////////////////////
-	~transaction();
+	virtual ~transaction();
 
 	/// \brief Rollback all the changes made to far.
 	///
