@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?> 
 <project name="Imebra" default="build_all" basedir=".">
 
+	<!-- Launch me with "ant -buildfile automatic_build.xml" -->
+
 	<!-- Build all -->
 	<target name="build_all" depends="ZIP_GPL" >
 		<exec dir="." executable="hg" failonerror="true">

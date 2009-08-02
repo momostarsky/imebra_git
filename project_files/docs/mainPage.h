@@ -66,6 +66,20 @@ A detailed reference of the C++ classes that compose Imebra is included in
 
 \section changeLog Changes log
 
+\subsection since_0_0_47 Changes since version 0.0.47
+
+- Fixes #44 (Add the "const" modifier to all the relevant functions in the data handlers)
+- Fixes #55 (Add const qualifier to functions that require them)
+- Fixes #56 (The external lock in baseObject may create circular references)
+- Fixes #57 (RGBToPALETTECOLOR causes memory leaks)
+- Fixes #58 (The destructors of objects derived from baseObject must be protected, since they can be deleted only by themself)
+- Increased the speed of CopyFromInt32Interleaved
+- Increased the speed of dicomCodec::ReadPixel when bitsAllocated == 8 or 16
+- Improved the speed of streamWriter::write()
+- Increased the speed of streamWriter::writeBits
+- The file reading related function now return the read byte or bits by value 
+
+
 \subsection since_0_0_46 Changes since version 0.0.46
 
 - Makefiles for the example applications are being provided
