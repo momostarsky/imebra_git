@@ -21,12 +21,6 @@ static exceptionsManager::forceExceptionsConstruction forceConstruction;
 
 	
 ///////////////////////////////////////////////////////////
-// Construct without increasing my reference counter
-///////////////////////////////////////////////////////////
-exceptionsManager::exceptionsManager(): baseObject(false)
-{}
-
-///////////////////////////////////////////////////////////
 // Return the message info for the specified thread
 ///////////////////////////////////////////////////////////
 std::wstring exceptionsManager::getMessage()
@@ -99,12 +93,10 @@ void exceptionsManager::clearExceptionInfo()
 ///////////////////////////////////////////////////////////
 // Return a pointer to the exceptions manager
 ///////////////////////////////////////////////////////////
-exceptionsManager* exceptionsManager::getExceptionsManager()
+ptr<exceptionsManager> exceptionsManager::getExceptionsManager()
 {
 	static ptr<exceptionsManager> m_manager(new exceptionsManager);
-	static exceptionsManager* const m_pManager(m_manager.get());
-	
-	return m_pManager;
+	return m_manager;
 }
 
 

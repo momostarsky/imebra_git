@@ -132,8 +132,9 @@ void basePtr::addRef()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-baseObject::baseObject():m_lockCounter(0), m_bValid(true), m_pExceptionsManager(exceptionsManager::getExceptionsManager())
+baseObject::baseObject(): m_pCriticalSection(new CObjectCriticalSection), m_lockCounter(0), m_bValid(true)
 {
+    m_pCriticalSection->addRef();
 }
 
 
@@ -146,47 +147,18 @@ baseObject::baseObject():m_lockCounter(0), m_bValid(true), m_pExceptionsManager(
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-baseObject::baseObject(const ptr<baseObject>& externalLock): m_externalLock(externalLock),
-	m_lockCounter(0), m_bValid(true), m_pExceptionsManager(exceptionsManager::getExceptionsManager())
+baseObject::baseObject(const ptr<baseObject>& externalLock): 
+	m_lockCounter(0), m_bValid(true)
 {
-}
-
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Constructor with optional increase of the exceptions
-//  manager's counter
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-baseObject::baseObject(bool bIncreaseExceptionsManager) : m_lockCounter(0), m_bValid(true)
-{
-	if(bIncreaseExceptionsManager)
-	{
-		m_pExceptionsManager = exceptionsManager::getExceptionsManager();
-	}
-}
-
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Return the object used to lock this one
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-baseObject* baseObject::getExternalLock()
-{
-	if(m_externalLock == 0)
-	{
-		return this;
-	}
-	return m_externalLock->getExternalLock();
+    if(externalLock == 0)
+    {
+        m_pCriticalSection = new CObjectCriticalSection;
+    }
+    else
+    {
+        m_pCriticalSection = externalLock->m_pCriticalSection;
+    }
+    m_pCriticalSection->addRef();
 }
 
 
@@ -201,7 +173,7 @@ baseObject* baseObject::getExternalLock()
 ///////////////////////////////////////////////////////////
 bool baseObject::isReferencedOnce()
 {
-	lockCriticalSection lockThis(&m_criticalSection);
+	lockCriticalSection lockThis(&m_counterCriticalSection);
 	return m_lockCounter == 1;
 }
 
@@ -217,7 +189,8 @@ bool baseObject::isReferencedOnce()
 ///////////////////////////////////////////////////////////
 baseObject::~baseObject()
 {
-	m_bValid = false;
+    m_pCriticalSection->release();
+    m_bValid = false;
 }
 
 
@@ -237,9 +210,8 @@ void baseObject::addRef()
 		return;
 	}
 
-	m_criticalSection.lock();
+        lockCriticalSection lockThis(&m_counterCriticalSection);
 	++m_lockCounter;
-	m_criticalSection.unlock();
 }
 
 
@@ -266,7 +238,7 @@ void baseObject::release()
 	// Decrease the reference counter
 	///////////////////////////////////////////////////////////
 	{
-		lockCriticalSection lockThis(&m_criticalSection);
+                lockCriticalSection lockThis(&m_counterCriticalSection);
 		if(--m_lockCounter != 0)
 		{
 			return;
@@ -313,12 +285,7 @@ void baseObject::lock()
 	{
 		return;
 	}
-	if(m_externalLock != 0)
-	{
-		m_externalLock->lock();
-		return;
-	}
-	m_criticalSection.lock();
+	m_pCriticalSection->m_criticalSection.lock();
 }
 
 
@@ -337,13 +304,7 @@ void baseObject::unlock()
 	{
 		return;
 	}
-	if(m_externalLock != 0)
-	{
-		m_externalLock->unlock();
-		return;
-	}
-	
-	m_criticalSection.unlock();
+	m_pCriticalSection->m_criticalSection.unlock();
 }
 
 
@@ -448,8 +409,7 @@ lockMultipleObjects::lockMultipleObjects(tObjectsList* pObjectsList)
 		{
 			continue;
 		}
-		ptr<baseObject> lockObject = (*scanObjects)->getExternalLock();
-		csList.push_back(&( (*scanObjects)->m_criticalSection) );
+		csList.push_back(&( (*scanObjects)->m_pCriticalSection->m_criticalSection) );
 	}
 	m_pLockedCS.reset(puntoexe::lockMultipleCriticalSections(&csList));
 }
@@ -485,7 +445,8 @@ void lockMultipleObjects::unlock()
 	{
 		return;
 	}
-	puntoexe::unlockMultipleCriticalSections(m_pLockedCS.release());
+	puntoexe::unlockMultipleCriticalSections(m_pLockedCS.get());
+        m_pLockedCS.reset();
 }
 
 
