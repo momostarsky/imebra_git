@@ -54,12 +54,6 @@ public:
 	///////////////////////////////////////////////////////////
 	streamWriter(ptr<baseStream> pControlledStream, imbxUint32 virtualStart = 0, imbxUint32 virtualLength = 0);
 
-	/// \brief Flushes the internal buffer, disconnects the 
-	///         stream and destroys the streamWriter.
-	///
-	///////////////////////////////////////////////////////////
-	~streamWriter();
-
 	/// \brief Writes the internal buffer into the connected
 	///         stream. This function is automatically called
 	///         when needed, but your application can call it
@@ -197,6 +191,13 @@ public:
 			*(m_pDataBufferCurrent++) = 0;
 		}
 	}
+
+protected:
+	/// \brief Flushes the internal buffer, disconnects the
+	///         stream and destroys the streamWriter.
+	///
+	///////////////////////////////////////////////////////////
+	virtual ~streamWriter();
 
 private:
 	imbxUint8 m_outBitsBuffer;
