@@ -57,8 +57,6 @@ protected:
     /// @param outputImage the output image
     /// @param sizeX       the buffer's width, in pixels
     /// @param sizeY       the buffer's height, in pixels
-    /// @param inputChannelsNumber the number of channels in
-    ///                     the input image
     /// @param inputColorSpace the color space of the input
     ///                     image
     /// @param inputDepth  the bit depth of the input image

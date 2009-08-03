@@ -134,7 +134,7 @@ public:
 	/// The new child record takes the place of the old child
 	///  record, if it was already set.
 	///
-	/// @param pFirstChildRecordRecord the first child record
+	/// @param pFirstChildRecord the first child record
 	///
 	///////////////////////////////////////////////////////////
 	void setFirstChildRecord(ptr<directoryRecord> pFirstChildRecord);

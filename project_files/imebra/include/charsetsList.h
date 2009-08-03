@@ -24,24 +24,13 @@ namespace imebra
 namespace charsetsList
 {
 
+/// \typedef std::list<std::wstring> tCharsetsList
 /// \brief Defines a list of widechar strings.
 ///
 /// It is used to set or retrieve a list of charsets
 ///
 ///////////////////////////////////////////////////////////
 typedef std::list<std::wstring> tCharsetsList;
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-/// \brief This is the base class for the classes that
-///         need to deal with the Dicom charsets.
-///
-/// The class supplies a list of charsets and exposes
-///  two functions used to set or retrieve the list of
-///  charsets.
-///
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
 
 void updateCharsets(const tCharsetsList* pCharsetsList, tCharsetsList* pDestinationCharsetsList);
 void copyCharsets(const tCharsetsList* pSourceCharsetsList, tCharsetsList* pDestinationCharsetsList);

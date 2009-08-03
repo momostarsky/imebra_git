@@ -147,7 +147,7 @@ public:
 	///
 	/// @param pCenter  pointer to the recipient for the VOI
 	///                  center
-	/// @param width    pointer to the recipient for the VOI
+	/// @param pWidth    pointer to the recipient for the VOI
 	///                  width
 	///
 	///////////////////////////////////////////////////////////

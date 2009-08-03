@@ -106,7 +106,7 @@ public:
 	/// @param rowByteAlign   the number of bytes each bitmap's
 	///                        row has to be aligned to.
 	///                       Usually is for bytes on Windows
-	/// @bBGR                 true if the RGB components in
+	/// @param bBGR           true if the RGB components in
 	///                        the bitmap has to be blue, green
 	///                        and then red. false if the
 	///                        order has to be red, green, blue
