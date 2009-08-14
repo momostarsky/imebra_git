@@ -547,12 +547,9 @@ void dicomCodec::readStream(ptr<streamReader> pStream, ptr<dataSet> pDataSet, im
 		//       and the lower two bytes of the tag's length
 		///////////////////////////////////////////////////////////
 		if(
-			oldDicomSignature[0]!=0x8 ||
+			(oldDicomSignature[0]!=0x8 && oldDicomSignature[0]!=0x2) ||
 			oldDicomSignature[1]!=0x0 ||
-			oldDicomSignature[3]!=0x0 ||
-			oldDicomSignature[6]!=0x0 ||
-			oldDicomSignature[7]!=0x0
-			)
+			oldDicomSignature[3]!=0x0)
 		{
 			PUNTOEXE_THROW(codecExceptionWrongFormat, "detected a wrong format (checked old NEMA signature)");
 		}
@@ -563,7 +560,7 @@ void dicomCodec::readStream(ptr<streamReader> pStream, ptr<dataSet> pDataSet, im
 
 		// Set "explicit data type" to false
 		///////////////////////////////////////////////////////////
-		bExplicitDataType=false;
+		bExplicitDataType = (oldDicomSignature[4] == 'U' && oldDicomSignature[5] == 'I');
 	}
 
 	// Signature OK. Now scan all the tags.
