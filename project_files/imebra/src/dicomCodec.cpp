@@ -538,13 +538,7 @@ void dicomCodec::readStream(ptr<streamReader> pStream, ptr<dataSet> pDataSet, im
 	streamController::tByteOrdering endianType=streamController::lowByteEndian;
 	if(bFailed)
 	{
-		// Why do we check only few bytes of the NEMA signature?
-		// Because:
-		//  we accept the first group id=8, tag id<256
-		//  tag's length<65546
-		//
-		// Then: we don't check the lower byte of the tag id
-		//       and the lower two bytes of the tag's length
+		// Tags 0x8 and 0x2 are accepted in the begin of the file
 		///////////////////////////////////////////////////////////
 		if(
 			(oldDicomSignature[0]!=0x8 && oldDicomSignature[0]!=0x2) ||
@@ -558,9 +552,13 @@ void dicomCodec::readStream(ptr<streamReader> pStream, ptr<dataSet> pDataSet, im
 		///////////////////////////////////////////////////////////
 		pStream->seek((imbxInt32)position);
 
-		// Set "explicit data type" to false
+		// Set "explicit data type" to true if a valid data type
+                //  is found
 		///////////////////////////////////////////////////////////
-		bExplicitDataType = (oldDicomSignature[4] == 'U' && oldDicomSignature[5] == 'I');
+                std::string firstDataType;
+                firstDataType.push_back(oldDicomSignature[4]);
+                firstDataType.push_back(oldDicomSignature[5]);
+                bExplicitDataType = dicomDictionary::getDicomDictionary()->isDataTypeValid(firstDataType);
 	}
 
 	// Signature OK. Now scan all the tags.
