@@ -95,6 +95,7 @@
         <itemPath>CImbx_tests/decimalStringHandlerTest.h</itemPath>
         <itemPath>CImbx_tests/dicomCodecTest.h</itemPath>
         <itemPath>CImbx_tests/dicomDirTest.h</itemPath>
+        <itemPath>CImbx_tests/drawBitmapTest.h</itemPath>
         <itemPath>CImbx_tests/exceptionsTest.h</itemPath>
         <itemPath>CImbx_tests/huffmanTest.h</itemPath>
         <itemPath>CImbx_tests/jpegCodecTest.h</itemPath>
@@ -200,6 +201,7 @@
         <itemPath>CImbx_tests/decimalStringHandlerTest.cpp</itemPath>
         <itemPath>CImbx_tests/dicomCodecTest.cpp</itemPath>
         <itemPath>CImbx_tests/dicomDirTest.cpp</itemPath>
+        <itemPath>CImbx_tests/drawBitmapTest.cpp</itemPath>
         <itemPath>CImbx_tests/exceptionsTest.cpp</itemPath>
         <itemPath>CImbx_tests/huffmanTest.cpp</itemPath>
         <itemPath>CImbx_tests/jpegCodecTest.cpp</itemPath>
@@ -731,6 +733,12 @@
       <item path="CImbx_tests/dicomDirTest.h">
         <itemTool>3</itemTool>
       </item>
+      <item path="CImbx_tests/drawBitmapTest.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="CImbx_tests/drawBitmapTest.h">
+        <itemTool>3</itemTool>
+      </item>
       <item path="CImbx_tests/exceptionsTest.cpp">
         <itemTool>1</itemTool>
       </item>
@@ -804,6 +812,7 @@
         </cCompilerTool>
         <ccCompilerTool>
           <developmentMode>5</developmentMode>
+          <commandLine>-fopenmp</commandLine>
           <warningLevel>2</warningLevel>
         </ccCompilerTool>
         <fortranCompilerTool>
@@ -1312,6 +1321,12 @@
         <itemTool>1</itemTool>
       </item>
       <item path="CImbx_tests/dicomDirTest.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="CImbx_tests/drawBitmapTest.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="CImbx_tests/drawBitmapTest.h">
         <itemTool>3</itemTool>
       </item>
       <item path="CImbx_tests/exceptionsTest.cpp">
@@ -1888,6 +1903,12 @@
         <itemTool>1</itemTool>
       </item>
       <item path="CImbx_tests/dicomDirTest.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="CImbx_tests/drawBitmapTest.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="CImbx_tests/drawBitmapTest.h">
         <itemTool>3</itemTool>
       </item>
       <item path="CImbx_tests/exceptionsTest.cpp">

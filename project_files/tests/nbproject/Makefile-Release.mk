@@ -103,6 +103,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/dataHandlerDateTimeBase.o \
 	${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/dicomDict.o \
 	${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/YBRFULLToMONOCHROME2.o \
+	${OBJECTDIR}/CImbx_tests/drawBitmapTest.o \
 	${OBJECTDIR}/CImbx_tests/ageStringHandlerTest.o \
 	${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/RGBToMONOCHROME2.o \
 	${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/YBRPARTIALToRGB.o \
@@ -122,8 +123,8 @@ OBJECTFILES= \
 CFLAGS=
 
 # CC Compiler Flags
-CCFLAGS=
-CXXFLAGS=
+CCFLAGS=-fopenmp
+CXXFLAGS=-fopenmp
 
 # Fortran Compiler Flags
 FFLAGS=
@@ -513,6 +514,11 @@ ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imeb
 	${MKDIR} -p ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -Wall -MMD -MP -MF $@.d -o ${OBJECTDIR}/_ext/home/paolo/NetBeansProjects/imebra/project_files/tests/../imebra/src/YBRFULLToMONOCHROME2.o ../imebra/src/YBRFULLToMONOCHROME2.cpp
+
+${OBJECTDIR}/CImbx_tests/drawBitmapTest.o: CImbx_tests/drawBitmapTest.cpp 
+	${MKDIR} -p ${OBJECTDIR}/CImbx_tests
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -Wall -MMD -MP -MF $@.d -o ${OBJECTDIR}/CImbx_tests/drawBitmapTest.o CImbx_tests/drawBitmapTest.cpp
 
 ${OBJECTDIR}/CImbx_tests/ageStringHandlerTest.o: CImbx_tests/ageStringHandlerTest.cpp 
 	${MKDIR} -p ${OBJECTDIR}/CImbx_tests

@@ -219,9 +219,12 @@ void drawBitmap::doTransform()
 	}
 
 	imbxUint8 leftShiftY(0);
+	imbxUint32 maskY(0);
 	while( (imageSizeY << leftShiftY) < (imbxUint32)m_totalHeightPixels)
 	{
 		++leftShiftY;
+		maskY <<= 1;
+		++maskY;
 	}
 
 	// Allocate an horizontal buffer that stores the pixels
@@ -248,29 +251,63 @@ void drawBitmap::doTransform()
 
 		imbxInt32 firstPixelY = scanY * (imageSizeY << leftShiftY) / m_totalHeightPixels;
 		imbxInt32 lastPixelY = (scanY + 1) * (imageSizeY << leftShiftY) / m_totalHeightPixels;
-		for(imbxInt32 scanImageY = firstPixelY; scanImageY != lastPixelY; ++ scanImageY)
+		for(imbxInt32 scanImageY = firstPixelY; scanImageY != lastPixelY; /* increased in the loop */)
 		{
 			imbxInt32* pAveragePointer = m_averagePixels.get();
 			imbxUint32* pNextSourceXIndex = m_sourcePixelIndex.get();
 
-			imbxInt32* pImagePointer = &(imageMemory[(scanImageY >> leftShiftY) * imageSizeX * channelsNumber + ((*pNextSourceXIndex) >> leftShiftX) * channelsNumber]);
+                        imbxInt32* pImagePointer = &(imageMemory[(scanImageY >> leftShiftY) * imageSizeX * channelsNumber + ((*pNextSourceXIndex) >> leftShiftX) * channelsNumber]);
 
-			for(imbxInt32 scanX = m_visibleTopLeftX; scanX != m_visibleBottomRightX; ++scanX)
-			{
-				for(imbxUint32 scanImageX = *(pNextSourceXIndex++); scanImageX != *pNextSourceXIndex; ++scanImageX)
-				{
-					++(*(pAveragePointer));
-					*(++pAveragePointer) += *(pImagePointer++);
-					*(++pAveragePointer) += *(pImagePointer++);
-					*(++pAveragePointer) += *(pImagePointer++);
-					pAveragePointer -= 3;
-					if( (scanImageX & maskX) != 0)
-					{
-						pImagePointer -= 3;
-					}
-				}
-				pAveragePointer += 4;
-			}
+                        imbxInt32 scanYBlock ( (scanImageY & (~maskY)) + ((imbxInt32)1 << leftShiftY) );
+                        if(scanYBlock > lastPixelY)
+                        {
+                            scanYBlock = lastPixelY;
+                        }
+                        imbxInt32 numRows(scanYBlock - scanImageY);
+                        scanImageY += numRows;
+
+                        if(numRows == 1)
+                        {
+                            for(imbxInt32 scanX (m_visibleBottomRightX - m_visibleTopLeftX); scanX != 0; --scanX)
+                            {
+                                    for(imbxUint32 scanImageX = *(pNextSourceXIndex++); scanImageX != *pNextSourceXIndex; ++scanImageX)
+                                    {
+                                            ++(*pAveragePointer);
+                                            *(++pAveragePointer) += *(pImagePointer);
+                                            *(++pAveragePointer) += *(++pImagePointer);
+                                            *(++pAveragePointer) += *(++pImagePointer);
+                                            pAveragePointer -= 3;
+                                            if( (scanImageX & maskX) != 0)
+                                            {
+                                                    pImagePointer -= 2;
+                                                    continue;
+                                            }
+                                            ++pImagePointer;
+                                    }
+                                    pAveragePointer += 4;
+                            }
+                        }
+                        else
+                        {
+                            for(imbxInt32 scanX (m_visibleBottomRightX - m_visibleTopLeftX); scanX != 0; --scanX)
+                            {
+                                    for(imbxUint32 scanImageX = *(pNextSourceXIndex++); scanImageX != *pNextSourceXIndex; ++scanImageX)
+                                    {
+                                            *pAveragePointer += numRows;
+                                            *(++pAveragePointer) += *(pImagePointer) * numRows;
+                                            *(++pAveragePointer) += *(++pImagePointer) * numRows;
+                                            *(++pAveragePointer) += *(++pImagePointer) * numRows;
+                                            pAveragePointer -= 3;
+                                            if( (scanImageX & maskX) != 0)
+                                            {
+                                                    pImagePointer -= 2;
+                                                    continue;
+                                            }
+                                            ++pImagePointer;
+                                    }
+                                    pAveragePointer += 4;
+                            }
+                        }
 		}
 
 		// Copy the average to the bitmap
@@ -280,7 +317,7 @@ void drawBitmap::doTransform()
 		if(m_bBGR)
 		{
 			imbxUint32 r, g;
-			for(imbxInt32 scanX = m_visibleTopLeftX; scanX != m_visibleBottomRightX; ++scanX)
+			for(imbxInt32 scanX (m_visibleBottomRightX - m_visibleTopLeftX); scanX != 0; --scanX)
 			{
 				counter = (imbxUint32)*(pAveragePointer++);
 				r = (imbxUint8) (((imbxUint32)*(pAveragePointer++) / counter) & 0xff);
@@ -292,7 +329,7 @@ void drawBitmap::doTransform()
 		}
 		else
 		{
-			for(imbxInt32 scanX = m_visibleTopLeftX; scanX != m_visibleBottomRightX; ++scanX)
+			for(imbxInt32 scanX (m_visibleBottomRightX - m_visibleTopLeftX); scanX != 0; --scanX)
 			{
 				counter = (imbxUint32)*(pAveragePointer++);
 				*(pFinalBuffer++) = (imbxUint8) (((imbxUint32)*(pAveragePointer++) / counter) & 0xff);
