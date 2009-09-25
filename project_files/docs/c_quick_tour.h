@@ -4,7 +4,7 @@ $fileHeader$
 
 /*!
 
-\page quick_tour Quick tour
+\page quick_tour Getting started
 
 \section quick_tour_project Adding the Imebra library to your project
 

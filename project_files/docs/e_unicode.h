@@ -40,8 +40,8 @@ If the dataSet is created by the application then the list of charsets should be
  specified: just create a list with the type \ref puntoexe::imebra::tCharsetsList 
  (is a std::list of std::wstring) and fill the list with the charsets that should 
  be stored in the tag 0008,0005, then pass the list to the function 
- dataSet::setCharsetsList() (see \ref puntoexe::imebra::charsetsList::setCharsetsList() 
- since dataSet derives from \ref puntoexe::imebra::charsetsList).
+ dataSet::setCharsetsList() (see \ref puntoexe::imebra::dataCollection::setCharsetsList() 
+ since dataSet derives from \ref puntoexe::imebra::dataCollection).
 
 If the application writes in the dataSet some values that need different charsets
  from the ones already specified, then new charsets will be added to the dataSet

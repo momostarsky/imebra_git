@@ -243,22 +243,23 @@ private:
 /// \brief A dicomDir object contains the information about
 ///         the tree structure of a DICOMDIR dataset.
 ///
-/// The dicomDir class parses the DICOMDIR dataset 
-///  in the constructor and detects DICOMDIR tree
-///  structure the specified.
+/// The dicomDir class connects to the DICOMDIR dataset
+///  specified in the constructor and detects the DICOMDIR
+///  tree structure that it contains.
 ///
 /// Each directory record in the DICOMDIR structure is
-///  represented by the directoryRecord class.
+///  represented by a directoryRecord class.
 ///
 /// The first root directoryRecord can be obtained with
 ///  a call to getFirstRootRecord().
+///
+/// Any change made to the dicomDir class is immediately
+///  reflected into the connected dataset.
 ///
 /// WARNING: all the directoryRecord allocated by this
 ///  class are released only when the dicomDir itself
 ///  is released, even if the directoryRecord are 
 ///  explicitly released by your application.\n
-/// This resolves a stack overflow when a large number of
-///  sibling records is present.
 /// 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -266,7 +267,7 @@ class dicomDir: public baseObject
 {
 public:
 	/// \brief Initializes a dicomDir object and attach it to 
-	///         an existing dataset.
+	///         a dataset.
 	///
 	/// If a dataSet is specified then the constructor parses
 	///  it and build an in memory representation of the

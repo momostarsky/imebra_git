@@ -4,7 +4,7 @@ $fileHeader$
 
 /*!
 
-\page imebra_structure The imebra's structure
+\page imebra_structure The Imebra's structure
 
 \section imebra_structure_introduction Introduction
 
