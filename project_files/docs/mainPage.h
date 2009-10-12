@@ -69,6 +69,7 @@ A detailed reference of the C++ classes that compose Imebra is included in
 \subsection since_0_0_48 Changes since version 0.0.48
 
 - Fixes #63 (Regression when reading uncompressed non interleaved images)
+- Fixes #66 (The dataset doesn't consider the planar configuration)
 
 
 \subsection since_0_0_47 Changes since version 0.0.47

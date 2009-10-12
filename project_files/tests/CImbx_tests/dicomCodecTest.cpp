@@ -57,8 +57,11 @@ ptr<image> dicomCodecTest::makeTestImage()
 
 
 // A buffer initialized to a default data type should use the data type OB
-void dicomCodecTest::testUncompressedNotInterleaved()
+void dicomCodecTest::testUncompressed()
 {
+    for(int interleaved(0); interleaved != 2; ++interleaved)
+    {
+
 	for(int trial(0); trial != 4; ++trial)
 	{
 		puntoexe::imebra::image::bitDepth depth;
@@ -116,6 +119,7 @@ void dicomCodecTest::testUncompressedNotInterleaved()
 			testDataSet->setString(0x0010, 0, 0x0010, 0, "AAAaa");
 			testDataSet->setString(0x0010, 0, 0x0010, 1, "BBBbbb");
 			testDataSet->setString(0x0010, 0, 0x0010, 2, "");
+                        testDataSet->setUnsignedLong(0x0028, 0x0, 0x0006, 0x0, interleaved);
 			testDataSet->setImage(0, dicomImage0, L"1.2.840.10008.1.2.1", codecs::codec::veryHigh);
 			testDataSet->setImage(1, dicomImage1, L"1.2.840.10008.1.2.1", codecs::codec::veryHigh);
 			testDataSet->setImage(2, dicomImage2, L"1.2.840.10008.1.2.1", codecs::codec::veryHigh);
@@ -132,6 +136,7 @@ void dicomCodecTest::testUncompressedNotInterleaved()
 		CPPUNIT_ASSERT(testDataSet->getString(0x0010, 0, 0x0010, 0) == "AAAaa");
 		CPPUNIT_ASSERT(testDataSet->getString(0x0010, 0, 0x0010, 1) == "BBBbbb");
 		CPPUNIT_ASSERT(testDataSet->getString(0x0010, 0, 0x0010, 2) == "");
+                CPPUNIT_ASSERT(testDataSet->getUnsignedLong(0x0028, 0, 0x0006, 0) == interleaved);
 
 		ptr<image> checkImage0 = testDataSet->getImage(0);
 		ptr<image> checkImage1 = testDataSet->getImage(1);
@@ -141,6 +146,7 @@ void dicomCodecTest::testUncompressedNotInterleaved()
 		CPPUNIT_ASSERT(compareImages(checkImage1, dicomImage1) < 0.0001);
 		CPPUNIT_ASSERT(compareImages(checkImage2, dicomImage2) < 0.0001);
 	}
+    }
 }
 
 

@@ -381,7 +381,11 @@ void dataSet::setImage(imbxUint32 frameNumber, ptr<image> pImage, std::wstring t
 	{
 		bSubSampledX = bSubSampledY = false;
 	}
-	bool bInterleaved = false;
+	bool bInterleaved(false);
+        if( !(getDataType(0x0028, 0, 0x0006).empty()) )
+        {
+            bInterleaved = (getUnsignedLong(0x0028, 0x0, 0x0006, 0x0) == 0x0);
+        }
 	image::bitDepth depth = pImage->getDepth();
 	bool b2complement = (depth == image::depthS16 || depth == image::depthS8);
 	imbxUint32 channelsNumber = pImage->getChannelsNumber();
@@ -396,7 +400,6 @@ void dataSet::setImage(imbxUint32 frameNumber, ptr<image> pImage, std::wstring t
 		std::wstring currentColorSpace = getUnicodeString(0x0028, 0x0, 0x0004, 0x0);
 		bSubSampledX = transforms::colorTransforms::colorTransformsFactory::isSubsampledX(currentColorSpace);
 		bSubSampledY = transforms::colorTransforms::colorTransformsFactory::isSubsampledY(currentColorSpace);
-		bInterleaved = (getUnsignedLong(0x0028, 0x0, 0x0006, 0x0) == 0x0);
 		b2complement = (getUnsignedLong(0x0028, 0, 0x0103, 0) != 0);
 		allocatedBits = (imbxUint8)getUnsignedLong(0x0028, 0x0, 0x0100, 0x0);
 		channelsNumber = getUnsignedLong(0x0028, 0x0, 0x0002, 0x0);

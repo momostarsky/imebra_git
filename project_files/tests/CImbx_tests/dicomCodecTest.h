@@ -17,13 +17,13 @@ class dicomCodecTest: public CppUnit::TestFixture
 {
 	CPPUNIT_TEST_SUITE(dicomCodecTest);
 	
-	CPPUNIT_TEST(testUncompressedNotInterleaved);
+	CPPUNIT_TEST(testUncompressed);
 	CPPUNIT_TEST(testRLENotInterleaved);
 
 	CPPUNIT_TEST_SUITE_END();
 
 public:
-	void testUncompressedNotInterleaved();
+	void testUncompressed();
 	void testRLENotInterleaved();
 protected:
 	ptr<image> makeTestImage();
