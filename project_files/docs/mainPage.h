@@ -66,6 +66,11 @@ A detailed reference of the C++ classes that compose Imebra is included in
 
 \section changeLog Changes log
 
+\subsection since_0_0_48 Changes since version 0.0.48
+
+- Fixes #63 (Regression when reading uncompressed non interleaved images)
+
+
 \subsection since_0_0_47 Changes since version 0.0.47
 
 - Fixes #44 (Add the "const" modifier to all the relevant functions in the data handlers)

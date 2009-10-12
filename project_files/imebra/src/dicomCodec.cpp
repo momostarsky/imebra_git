@@ -967,10 +967,8 @@ ptr<image> dicomCodec::getImage(ptr<dataSet> pData, ptr<streamReader> pStream, s
 	}
 
 	// Check for interleaved planes.
-	// When the number of channels is 1 then we use the
-	//  algorithm used for interleaved planes (is faster).
 	///////////////////////////////////////////////////////////
-	bool bInterleaved=channelsNumber == 1 || pData->getUnsignedLong(0x0028, 0x0, 0x0006, 0x0)==0x0;
+	bool bInterleaved(pData->getUnsignedLong(0x0028, 0x0, 0x0006, 0x0)==0x0);
 
 	// Check for 2's complement
 	///////////////////////////////////////////////////////////
@@ -1026,7 +1024,7 @@ ptr<image> dicomCodec::getImage(ptr<dataSet> pData, ptr<streamReader> pStream, s
 
 		// The planes are interleaved
 		///////////////////////////////////////////////////////////
-		if(bInterleaved)
+		if(bInterleaved && channelsNumber != 1)
 		{
 			readUncompressedInterleaved(
 				channelsNumber,
@@ -1212,34 +1210,32 @@ void dicomCodec::readUncompressedInterleaved(
 		channelsMemory[copyChannelsPntr] = m_channels[copyChannelsPntr]->m_pBuffer;
 	}
 
-    imbxUint32 numValuesPerBlock(channelsNumber);
-    if(bSubSampledX)
-    {
-        ++numValuesPerBlock;
-    }
-    if(bSubSampledY)
-    {
-        numValuesPerBlock += 2;
-    }
-    std::auto_ptr<imbxInt32> readBlockValuesAutoPtr(new imbxInt32[numValuesPerBlock]);
-
 	// No subsampling here
 	///////////////////////////////////////////////////////////
 	if(!bSubSampledX && !bSubSampledY)
 	{
 		for(imbxUint32 totalSize = m_channels[0]->m_bufferSize; totalSize != 0; --totalSize)
 		{
-            imbxInt32* readBlockValuesPtr(readBlockValuesAutoPtr.get());
-        readPixel(pSourceStream, readBlockValuesPtr, numValuesPerBlock, &bitPointer, wordSizeBytes, allocatedBits, mask);
 			for(imbxUint32 scanChannels = 0; scanChannels != channelsNumber; ++scanChannels)
 			{
-				*(channelsMemory[scanChannels]++) = *readBlockValuesPtr++;
+                            readPixel(pSourceStream, channelsMemory[scanChannels]++, 1, &bitPointer, wordSizeBytes, allocatedBits, mask);
 			}
 		}
 		return;
 	}
 
-	// Read the subsampled channels.
+        imbxUint32 numValuesPerBlock(channelsNumber);
+        if(bSubSampledX)
+        {
+            ++numValuesPerBlock;
+        }
+        if(bSubSampledY)
+        {
+            numValuesPerBlock += 2;
+        }
+        std::auto_ptr<imbxInt32> readBlockValuesAutoPtr(new imbxInt32[numValuesPerBlock]);
+
+        // Read the subsampled channels.
 	// Find the number of blocks to read
 	///////////////////////////////////////////////////////////
 	imbxUint32 adjSizeX = m_channels[0]->m_sizeX;
