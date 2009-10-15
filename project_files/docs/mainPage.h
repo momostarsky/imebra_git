@@ -70,6 +70,7 @@ A detailed reference of the C++ classes that compose Imebra is included in
 
 - Fixes #63 (Regression when reading uncompressed non interleaved images)
 - Fixes #66 (The dataset doesn't consider the planar configuration)
+- Fixes #67 (When an undefined-length sequence doesn't contains the end-of-sequence then an exception is thrown when the end of the file is reached)
 
 
 \subsection since_0_0_47 Changes since version 0.0.47

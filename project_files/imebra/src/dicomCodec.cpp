@@ -841,7 +841,7 @@ void dicomCodec::parseStream(ptr<streamReader> pStream,
 		imbxUint16 subItemTagId;
 		imbxUint32 sequenceItemLength;
 		imbxUint32 bufferId = 0;
-		while(tagLengthDWord)
+		while(tagLengthDWord && !pStream->endReached())
 		{
 			// Remember the item's position (used by DICOMDIR
 			//  structures)
