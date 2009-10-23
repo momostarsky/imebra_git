@@ -33,6 +33,9 @@ void dicomDirTest::createDicomDir()
 	ptr<directoryRecord> pImageRecord(newDicomDir->getNewRecord());
 	pImageRecord->getRecordDataSet()->setUnicodeString(0x8, 0, 0x18, 0, L"1.2.840.34.56.78999654.235");
 	pImageRecord->setType(directoryRecord::image);
+        pImageRecord->setFilePart(0, L"folder");
+        pImageRecord->setFilePart(1, L"file.dcm");
+
 	pNextRecord->setFirstChildRecord(pImageRecord);
 
 	ptr<dataSet> dicomDirDataSet(newDicomDir->buildDataSet());
@@ -60,6 +63,8 @@ void dicomDirTest::createDicomDir()
 	ptr<directoryRecord> testImageRecord(testNextRecord->getFirstChildRecord());
 	CPPUNIT_ASSERT(testImageRecord->getType() == directoryRecord::image);
 	CPPUNIT_ASSERT(testImageRecord->getRecordDataSet()->getUnicodeString(0x8, 0, 0x18, 0) == L"1.2.840.34.56.78999654.235");
+	CPPUNIT_ASSERT(testImageRecord->getFilePart(0) == L"folder");
+	CPPUNIT_ASSERT(testImageRecord->getFilePart(1) == L"file.dcm");
 }
 
 

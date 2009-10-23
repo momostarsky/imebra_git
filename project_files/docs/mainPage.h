@@ -68,6 +68,7 @@ A detailed reference of the C++ classes that compose Imebra is included in
 
 \subsection since_0_0_48 Changes since version 0.0.48
 
+- Fixes #61 (directoryRecord must have a method setFilePart())
 - Fixes #63 (Regression when reading uncompressed non interleaved images)
 - Fixes #65 (When a tag is set twice using the default VR in a transaction then the second write operation reset the VR)
 - Fixes #66 (The dataset doesn't consider the planar configuration)

@@ -166,6 +166,8 @@ public:
 	///
 	/// The function returns an empty string if the
 	///  specified part doesn't exist.
+        ///
+        /// See also setFilePart().
 	/// 
 	/// @param part the part to be returned, 0 based.
 	/// @return the part's name (folder or file), or an
@@ -174,6 +176,34 @@ public:
 	///
 	///////////////////////////////////////////////////////////
 	std::wstring getFilePart(imbxUint32 part);
+
+	/// \brief Set the full path to the  file referenced by
+	///         the record.
+	///
+	/// Several calls to this function may have to be made to
+	///  set the full file path.
+	///
+	/// The full file path is formed by a list of folder and
+	///  by the file name; for each call to this function
+	///  the caller has to specify a zero based part number.
+	///
+	/// The last valid part contains the file name, while
+	///  the parts before the last one contain the folder
+	///  in which the file is stored; each folder is a child
+	///  of the folder set in the previous part.
+	///
+        /// For instance, the file /folder/file.dcm is set
+        ///  with two calls to setFilePart():
+        /// - setFilePart(0, "folder")
+        /// - setFilePart(1, "file.dcm")
+        ///
+        /// See also getFilePart().
+	///
+	/// @param part the part to be set, 0 based.
+        /// @param partName tha value to set for the part
+	///
+	///////////////////////////////////////////////////////////
+	void setFilePart(imbxUint32 part, const std::wstring partName);
 
 	/// \brief Returns the record's type.
 	///
