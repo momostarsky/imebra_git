@@ -106,6 +106,34 @@ void dataSetTest::testFragmentation()
 	CPPUNIT_ASSERT(compareImages(testImage0, compareImage1) > 30);
 }
 
+void dataSetTest::testSetTagTwice()
+{
+    ptr<dataSet> testDataset(new dataSet);
+
+    IMEBRA_TRANSACTION_START();
+
+    testDataset->setUnicodeString(0x0008, 0x0, 0x0070, 0x0, L"Puntoexe");
+    testDataset->setUnicodeString(0x0008, 0x0, 0x0070, 0x0, L"Puntoexe");
+
+    IMEBRA_TRANSACTION_END();
+
+    CPPUNIT_ASSERT(testDataset->getUnicodeString(0x0008, 0x0, 0x0070, 0x0) == L"Puntoexe");
+
+
+    IMEBRA_TRANSACTION_START();
+
+    testDataset->setUnicodeString(0x0008, 0x0, 0x0070, 0x0, L"Puntoexe");
+
+    IMEBRA_TRANSACTION_START();
+    testDataset->setUnicodeString(0x0008, 0x0, 0x0070, 0x0, L"Puntoexe");
+    IMEBRA_TRANSACTION_END();
+
+    IMEBRA_TRANSACTION_END();
+
+    CPPUNIT_ASSERT(testDataset->getUnicodeString(0x0008, 0x0, 0x0070, 0x0) == L"Puntoexe");
+
+}
+
 
 } // namespace tests
 

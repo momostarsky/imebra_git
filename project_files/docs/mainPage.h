@@ -69,6 +69,7 @@ A detailed reference of the C++ classes that compose Imebra is included in
 \subsection since_0_0_48 Changes since version 0.0.48
 
 - Fixes #63 (Regression when reading uncompressed non interleaved images)
+- Fixes #65 (When a tag is set twice using the default VR in a transaction then the second write operation reset the VR)
 - Fixes #66 (The dataset doesn't consider the planar configuration)
 - Fixes #67 (When an undefined-length sequence doesn't contains the end-of-sequence then an exception is thrown when the end of the file is reached)
 

@@ -157,7 +157,7 @@ protected:
 	void addHandler(ptr<handlers::dataHandler> newHandler);
 
 	typedef ptr<handlers::dataHandler> tDataHandlerPtr;
-	typedef std::list<tDataHandlerPtr> tHandlersList;
+	typedef std::map<buffer*, tDataHandlerPtr> tHandlersList;
 	tHandlersList m_transactionHandlers;
 
 	thread::tThreadId m_threadId;

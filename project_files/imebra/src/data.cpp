@@ -208,9 +208,9 @@ ptr<handlers::dataHandler> data::getDataHandler(imbxUint32 bufferId, bool bWrite
 	// If a buffer already exists, then use the already defined
 	//  datatype
 	///////////////////////////////////////////////////////////
-	if( !m_buffers.empty() )
+	if( !m_buffers.empty() && !m_buffers.begin()->second->getDataType().empty() )
 	{
-		defaultType = (m_buffers.begin())->second->getDataType();
+		defaultType = m_buffers.begin()->second->getDataType();
 	}
 
 	// If the buffer doesn't exist, then create a new one
