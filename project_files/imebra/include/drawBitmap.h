@@ -52,6 +52,13 @@ public:
 	// Documented in transform
 	virtual void doTransform();
 
+        enum tBitmapType
+        {
+            monochrome,
+            rgb,
+            bgr
+        };
+
 	/// \brief Declare the total size of a bitmap that contains
 	///         the entire image and the rectangle of that
 	///         bitmap that has to be generated.
@@ -100,7 +107,7 @@ public:
 	void declareBitmapType(imbxInt32 totalWidthPixels, imbxInt32 totalHeightPixels, 
 		imbxInt32 visibleTopLeftX, imbxInt32 visibleTopLeftY, imbxInt32 visibleBottomRightX, imbxInt32 visibleBottomRightY,
 		imbxInt32 alignByte,
-		bool bBGR);
+		tBitmapType bitmapType);
 
 	/// \brief Returns a pointer to a bitmap that can be used
 	///         to update the area defined by the parameters
@@ -160,23 +167,26 @@ protected:
 	imbxInt32 m_visibleBottomRightX;
 	imbxInt32 m_visibleBottomRightY;
 
-	imbxInt32 m_alignByte;
-	bool m_bBGR;
-
 
 	// Width of the latest generated bitmap, in pixels
 	imbxInt32 m_destBitmapWidth;
 	imbxInt32 m_destBitmapHeight;
 	imbxInt32 m_destBitmapRowSize;
 
-	std::auto_ptr<imbxInt32> m_averagePixels;
+	imbxInt32 m_alignByte;
+	tBitmapType m_bitmapType;
+
+        std::auto_ptr<imbxInt32> m_averagePixels;
 	std::auto_ptr<imbxUint32> m_sourcePixelIndex;
 
 
 	ptr<memory> m_finalBitmap;
 
+        ptr<image> m_originalImage;
+
 private:
-	ptr<image> m_pTemporaryImage;
+        void createTransform();
+        ptr<image> m_pTemporaryImage;
 };
 
 

@@ -897,10 +897,18 @@ void view::draw(void* pDeviceContext, imbxInt32 left, imbxInt32 top, imbxInt32 r
 	if(bitmapRight > m_rightPosition) bitmapRight = m_rightPosition;
 	if(bitmapBottom > m_bottomPosition) bitmapBottom = m_bottomPosition;
 
-	m_drawBitmap->declareBitmapType(m_rightPosition - m_leftPosition, m_bottomPosition - m_topPosition, 
+        ptr<transforms::colorTransforms::colorTransformsFactory> colorFactory(transforms::colorTransforms::colorTransformsFactory::getColorTransformsFactory());
+        transforms::drawBitmap::tBitmapType bitmapType(transforms::drawBitmap::monochrome);
+        if(!colorFactory->isMonochrome(m_originalImage->getColorSpace()))
+        {
+            bitmapType = m_bBGR ? transforms::drawBitmap::bgr : transforms::drawBitmap::rgb;
+
+        }
+
+        m_drawBitmap->declareBitmapType(m_rightPosition - m_leftPosition, m_bottomPosition - m_topPosition,
 		bitmapLeft - m_leftPosition, bitmapTop - m_topPosition, bitmapRight - m_leftPosition, bitmapBottom - m_topPosition,
 		m_bitmapAlign,
-		m_bBGR);
+		bitmapType);
 
 	m_drawBitmap->doTransform();
 
@@ -908,7 +916,7 @@ void view::draw(void* pDeviceContext, imbxInt32 left, imbxInt32 top, imbxInt32 r
 	imbxUint8* pFinalBuffer = m_drawBitmap->getOutputBitmap(&bitmapWidth, &bitmapHeight, &bitmapRowLength);
 	if(bitmapWidth != 0 && bitmapHeight != 0)
 	{
-		drawBitmap(pDeviceContext, bitmapLeft, bitmapTop, bitmapRight, bitmapBottom, bitmapWidth, bitmapHeight, bitmapRowLength, pFinalBuffer);
+		drawBitmap(pDeviceContext, bitmapLeft, bitmapTop, bitmapRight, bitmapBottom, bitmapWidth, bitmapHeight, bitmapRowLength, pFinalBuffer, bitmapType == transforms::drawBitmap::monochrome);
 	}
 
 	if(top < m_topPosition)

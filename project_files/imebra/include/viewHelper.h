@@ -638,9 +638,11 @@ public:
 	///                        the order of the color 
 	///                        components is reversed in the
 	///                        Window's bitmaps)
+        /// @param bMonochrome    true if the bitmap is monochrome,
+        ///                        false if the bitmap is RGB
 	///
 	///////////////////////////////////////////////////////////
-	virtual void drawBitmap(void* pDeviceContext, imbxInt32 left, imbxInt32 top, imbxInt32 right, imbxInt32 bottom, imbxUint32 bufferWidth, imbxUint32 bufferHeight, imbxUint32 bufferRowSizeBytes, imbxUint8* pBuffer)=0;
+	virtual void drawBitmap(void* pDeviceContext, imbxInt32 left, imbxInt32 top, imbxInt32 right, imbxInt32 bottom, imbxUint32 bufferWidth, imbxUint32 bufferHeight, imbxUint32 bufferRowSizeBytes, imbxUint8* pBuffer, bool bMonochrome)=0;
 	
 	/// \brief Overwrite this method with a function that
 	///         draws a line on the specified device context.
@@ -737,26 +739,31 @@ private:
 	typedef std::list<cursorLine> tCursorLinesList;
 	void invalidateLines(tCursorLinesList* pLines);
 
-	ptr<transforms::drawBitmap> m_drawBitmap;
+	imbxInt32 m_bitmapAlign;
 
-	ptr<image> m_originalImage;
+        bool m_bBGR;
 
-	// Active image's zoom
-	///////////////////////////////////////////////////////////
-	double m_zoom;
-
-	// Image's position
+        // Image's position
 	///////////////////////////////////////////////////////////
 	imbxInt32 m_leftPosition;
 	imbxInt32 m_topPosition;
 	imbxInt32 m_rightPosition;
 	imbxInt32 m_bottomPosition;
 
-	// Background color
+        // Background color
 	///////////////////////////////////////////////////////////
 	imbxUint8 m_backgroundRed;
 	imbxUint8 m_backgroundGreen;
 	imbxUint8 m_backgroundBlue;
+
+	// Active image's zoom
+	///////////////////////////////////////////////////////////
+	double m_zoom;
+
+        ptr<transforms::drawBitmap> m_drawBitmap;
+
+	ptr<image> m_originalImage;
+
 
 	// Cursor lines
 	///////////////////////////////////////////////////////////
@@ -766,8 +773,6 @@ private:
 	///////////////////////////////////////////////////////////
 	tCursorLinesList m_tempCursorLines;
 
-	imbxInt32 m_bitmapAlign;
-	bool m_bBGR;
 };
 
 
