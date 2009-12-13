@@ -50,10 +50,10 @@ cursorLine::cursorLine():
 //
 ///////////////////////////////////////////////////////////
 cursorLine::cursorLine(
-		imbxInt32 x0, 
-		imbxInt32 y0, 
-		imbxInt32 x1, 
-		imbxInt32 y1, 
+		imbxInt32 x0,
+		imbxInt32 y0,
+		imbxInt32 x1,
+		imbxInt32 y1,
 		imbxUint8 red,
 		imbxUint8 green,
 		imbxUint8 blue,
@@ -101,7 +101,7 @@ void cursorLine::copy(const cursorLine& right)
 	m_red = right.m_red;
 	m_green = right.m_green;
 	m_blue = right.m_blue;
-	
+
 	m_style = right.m_style;
 	m_width = right.m_width;
 }
@@ -153,7 +153,7 @@ void view::getBackgroundColor(imbxUint8* pRed, imbxUint8* pGreen, imbxUint8* pBl
 	*pGreen = m_backgroundGreen;
 	*pBlue  = m_backgroundBlue;
 }
-	
+
 
 ///////////////////////////////////////////////////////////
 //
@@ -221,7 +221,7 @@ void view::setZoomFactor(double zoomFactor, imbxInt32 centerPointX /* =-1 */, im
 	{
 		return;
 	}
-	
+
 	// Not automatic zoom
 	///////////////////////////////////////////////////////////
 	if(m_zoom > 0)
@@ -235,7 +235,7 @@ void view::setZoomFactor(double zoomFactor, imbxInt32 centerPointX /* =-1 */, im
 	setScrollSize(1, 1, true);
 	imbxUint32 imageSizeX, imageSizeY;
 	m_originalImage->getSize(&imageSizeX, &imageSizeY);
-	
+
 	setZoomRect(0, 0, imageSizeX, imageSizeY);
 }
 
@@ -305,7 +305,7 @@ void view::setZoomRect(imbxInt32 left, imbxInt32 top, imbxInt32 right, imbxInt32
 
 ///////////////////////////////////////////////////////////
 //
-// Zoom in/out. The selected pixel will be centered into the 
+// Zoom in/out. The selected pixel will be centered into the
 //  window
 //
 ///////////////////////////////////////////////////////////
@@ -321,7 +321,7 @@ void view::zoomInOut(bool bZoomIn, imbxInt32 centerPointX /* =-1 */, imbxInt32 c
 	}
 	updateImageRect(centerPointX, centerPointY);
 }
-	
+
 
 ///////////////////////////////////////////////////////////
 //
@@ -419,7 +419,7 @@ void view::setCenterPoint(imbxInt32 centerPointX, imbxInt32 centerPointY)
 
 	imbxInt32 newScrollPosX = oldScrollPosX;
 	imbxInt32 newScrollPosY = oldScrollPosY;
-	
+
 	// Get the image's size
 	///////////////////////////////////////////////////////////
 	imbxUint32 imageSizeX, imageSizeY;
@@ -534,7 +534,7 @@ void view::endCursorDef(imbxInt32 cursorHotSpotX, imbxInt32 cursorHotSpotY)
 	///////////////////////////////////////////////////////////
 	imbxUint32 windowSizeX, windowSizeY;
 	getWindowSize(&windowSizeX, &windowSizeY);
-	
+
 	imbxInt32 limitX = windowSizeX / 10;
 	imbxInt32 limitY = windowSizeY / 10;
 
@@ -688,7 +688,7 @@ void view::invalidateLines(tCursorLinesList* pLines)
 
 ///////////////////////////////////////////////////////////
 //
-// Translate the cursor's position into a 
+// Translate the cursor's position into a
 //  coordinate relative to the image's pixels
 //
 ///////////////////////////////////////////////////////////
@@ -716,7 +716,7 @@ imbxInt32 view::windowPosToImageX(imbxInt32 windowPosX)
 
 ///////////////////////////////////////////////////////////
 //
-// Translate the cursor's position into a 
+// Translate the cursor's position into a
 //  coordinate relative to the image's pixels
 //
 ///////////////////////////////////////////////////////////
@@ -745,7 +745,7 @@ imbxInt32 view::windowPosToImageY(imbxInt32 windowPosY)
 
 ///////////////////////////////////////////////////////////
 //
-// Return a pixel's horizontal position in millimiters 
+// Return a pixel's horizontal position in millimiters
 //
 ///////////////////////////////////////////////////////////
 double view::imagePosToMillimitersX(imbxInt32 imagePosX)
@@ -772,7 +772,7 @@ double view::imagePosToMillimitersX(imbxInt32 imagePosX)
 
 ///////////////////////////////////////////////////////////
 //
-// Return a pixel's vertical position in millimiters 
+// Return a pixel's vertical position in millimiters
 //
 ///////////////////////////////////////////////////////////
 double view::imagePosToMillimitersY(imbxInt32 imagePosY)
@@ -799,7 +799,7 @@ double view::imagePosToMillimitersY(imbxInt32 imagePosY)
 
 ///////////////////////////////////////////////////////////
 //
-// Return the pixel horizontal index at the specified 
+// Return the pixel horizontal index at the specified
 //  position in millimeters
 //
 ///////////////////////////////////////////////////////////
@@ -826,7 +826,7 @@ imbxInt32 view::millimitersToImagePosX(double millimitersX)
 
 ///////////////////////////////////////////////////////////
 //
-// Return the pixel vertical index at the specified 
+// Return the pixel vertical index at the specified
 //  position in millimeters
 //
 ///////////////////////////////////////////////////////////
@@ -871,8 +871,8 @@ void view::draw(void* pDeviceContext, imbxInt32 left, imbxInt32 top, imbxInt32 r
 	// Check if the image is visible in the specified area
 	///////////////////////////////////////////////////////////
 	if(m_originalImage == 0 ||
-		left >= m_rightPosition || 
-		top >= m_bottomPosition || 
+		left >= m_rightPosition ||
+		top >= m_bottomPosition ||
 		right <= m_leftPosition ||
 		bottom <= m_topPosition)
 	{
@@ -897,18 +897,10 @@ void view::draw(void* pDeviceContext, imbxInt32 left, imbxInt32 top, imbxInt32 r
 	if(bitmapRight > m_rightPosition) bitmapRight = m_rightPosition;
 	if(bitmapBottom > m_bottomPosition) bitmapBottom = m_bottomPosition;
 
-        ptr<transforms::colorTransforms::colorTransformsFactory> colorFactory(transforms::colorTransforms::colorTransformsFactory::getColorTransformsFactory());
-        transforms::drawBitmap::tBitmapType bitmapType(transforms::drawBitmap::monochrome);
-        if(!colorFactory->isMonochrome(m_originalImage->getColorSpace()))
-        {
-            bitmapType = m_bBGR ? transforms::drawBitmap::bgr : transforms::drawBitmap::rgb;
-
-        }
-
-        m_drawBitmap->declareBitmapType(m_rightPosition - m_leftPosition, m_bottomPosition - m_topPosition,
+	m_drawBitmap->declareBitmapType(m_rightPosition - m_leftPosition, m_bottomPosition - m_topPosition,
 		bitmapLeft - m_leftPosition, bitmapTop - m_topPosition, bitmapRight - m_leftPosition, bitmapBottom - m_topPosition,
 		m_bitmapAlign,
-		bitmapType);
+		m_bBGR);
 
 	m_drawBitmap->doTransform();
 
@@ -916,7 +908,7 @@ void view::draw(void* pDeviceContext, imbxInt32 left, imbxInt32 top, imbxInt32 r
 	imbxUint8* pFinalBuffer = m_drawBitmap->getOutputBitmap(&bitmapWidth, &bitmapHeight, &bitmapRowLength);
 	if(bitmapWidth != 0 && bitmapHeight != 0)
 	{
-		drawBitmap(pDeviceContext, bitmapLeft, bitmapTop, bitmapRight, bitmapBottom, bitmapWidth, bitmapHeight, bitmapRowLength, pFinalBuffer, bitmapType == transforms::drawBitmap::monochrome);
+		drawBitmap(pDeviceContext, bitmapLeft, bitmapTop, bitmapRight, bitmapBottom, bitmapWidth, bitmapHeight, bitmapRowLength, pFinalBuffer);
 	}
 
 	if(top < m_topPosition)
@@ -962,8 +954,8 @@ void view::drawCursor(void* pDeviceContext)
 		imbxInt32 x1 = scanLines->m_x1 * (m_rightPosition - m_leftPosition) / imageSizeX + m_leftPosition;
 		imbxInt32 y1 = scanLines->m_y1 * (m_bottomPosition - m_topPosition) / imageSizeY + m_topPosition;
 
-		drawCursorLine(pDeviceContext, 
-			x0, y0, x1, y1, 
+		drawCursorLine(pDeviceContext,
+			x0, y0, x1, y1,
 			scanLines->m_red, scanLines->m_green, scanLines->m_blue,
 			scanLines->m_style, scanLines->m_width);
 	}
@@ -1001,7 +993,7 @@ void view::updateImageRect(imbxInt32 centerPointX, imbxInt32 centerPointY)
 	imbxUint32 scrollSizeX = 0;
 	imbxUint32 scrollSizeY = 0;
 	getScrollSize(&scrollSizeX, &scrollSizeY);
-	
+
 	// Get the scroll position
 	///////////////////////////////////////////////////////////
 	imbxInt32 scrollPosX = 0;
@@ -1041,7 +1033,7 @@ void view::updateImageRect(imbxInt32 centerPointX, imbxInt32 centerPointY)
 		}
 
 
-		// Calculate the area occupied by the image, in screen's 
+		// Calculate the area occupied by the image, in screen's
 		//  pixels
 		///////////////////////////////////////////////////////////
 		imbxUint32 displayAreaWidth=(imbxUint32)((double)imageSizeMmX*m_zoom*(double)screenHorzDPI/25.4+0.5);
@@ -1056,7 +1048,7 @@ void view::updateImageRect(imbxInt32 centerPointX, imbxInt32 centerPointY)
 			leftPosition = (windowSizeX-displayAreaWidth)>>1;
 			rightPosition = leftPosition+displayAreaWidth;
 		}
-		
+
 		if(displayAreaHeight>windowSizeY)
 		{
 			bottomPosition = displayAreaHeight;

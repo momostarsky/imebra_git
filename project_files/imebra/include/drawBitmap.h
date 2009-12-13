@@ -52,13 +52,6 @@ public:
 	// Documented in transform
 	virtual void doTransform();
 
-        enum tBitmapType
-        {
-            monochrome,
-            rgb,
-            bgr
-        };
-
 	/// \brief Declare the total size of a bitmap that contains
 	///         the entire image and the rectangle of that
 	///         bitmap that has to be generated.
@@ -107,7 +100,7 @@ public:
 	void declareBitmapType(imbxInt32 totalWidthPixels, imbxInt32 totalHeightPixels, 
 		imbxInt32 visibleTopLeftX, imbxInt32 visibleTopLeftY, imbxInt32 visibleBottomRightX, imbxInt32 visibleBottomRightY,
 		imbxInt32 alignByte,
-		tBitmapType bitmapType);
+		bool bBGR);
 
 	/// \brief Returns a pointer to a bitmap that can be used
 	///         to update the area defined by the parameters
@@ -174,7 +167,7 @@ protected:
 	imbxInt32 m_destBitmapRowSize;
 
 	imbxInt32 m_alignByte;
-	tBitmapType m_bitmapType;
+	bool m_bBGR;
 
         std::auto_ptr<imbxInt32> m_averagePixels;
 	std::auto_ptr<imbxUint32> m_sourcePixelIndex;
@@ -186,7 +179,6 @@ protected:
 
 private:
         void createTransform();
-        ptr<image> m_pTemporaryImage;
 };
 
 

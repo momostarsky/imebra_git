@@ -45,7 +45,7 @@ public:
 	imbxUint8 m_red;
 	imbxUint8 m_green;
 	imbxUint8 m_blue;
-	
+
 	enum tStyle
 	{
 		line,
@@ -56,10 +56,10 @@ public:
 public:
 	cursorLine();
 	cursorLine(
-		imbxInt32 x0, 
-		imbxInt32 y0, 
-		imbxInt32 x1, 
-		imbxInt32 y1, 
+		imbxInt32 x0,
+		imbxInt32 y0,
+		imbxInt32 x1,
+		imbxInt32 y1,
 		imbxUint8 red,
 		imbxUint8 green,
 		imbxUint8 blue,
@@ -77,7 +77,7 @@ protected:
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-/// \brief This class can be used as a base class by 
+/// \brief This class can be used as a base class by
 ///         the windows that need to display a Dicom image.
 ///
 /// The is an abstract class, so it cannot be used alone;
@@ -113,7 +113,7 @@ public:
 	///
 	///////////////////////////////////////////////////////////
 	view(imbxInt32 rowByteAlign, bool bBGR);
-	
+
 	///////////////////////////////////////////////////////////
 	/// \name Get/Set the image to be show
 	///
@@ -122,7 +122,7 @@ public:
 
 	/// \brief Define the image that the window must display
 	///
-	/// After the image has been set the function will 
+	/// After the image has been set the function will
 	///  invalidate the window and the operating framework
 	///  will take care of sending a repaint message to it.
 	///
@@ -176,10 +176,10 @@ public:
 	///
 	///////////////////////////////////////////////////////////
 	void getBackgroundColor(imbxUint8* pRed, imbxUint8* pGreen, imbxUint8* pBlue);
-	
+
 	/// \brief Set the color to be used to draw the
 	///         background around the image.
-	/// 
+	///
 	/// @param red   the red component of the background color
 	/// @param green the green component of the background
 	///               color
@@ -208,7 +208,7 @@ public:
 	///  by updateImageRect().
 	///
 	/// @param pLeft    a pointer to a variable filled with the
-	///                  horizontal coordinate of the 
+	///                  horizontal coordinate of the
 	///                  rectangle's top-left corner
 	/// @param pTop     a pointer to a variable filled with the
 	///                  vertical coordinate of the rectangle's
@@ -235,18 +235,18 @@ public:
 	/// - zoomInOut()
 	///
 	/// Even when the zoom factor has been set to an automatic
-	///  value (-1) this function retrieve the real zoom 
+	///  value (-1) this function retrieve the real zoom
 	///  factor.
 	///
 	/// @return the active zoom factor.
-	/// 
+	///
 	///////////////////////////////////////////////////////////
 	double getZoomFactor();
 
 	/// \brief Set the active zoom factor.
 	///
 	/// The active zoom factor uses the display's size and the
-	///  image's size (in millimeters) to calculate the 
+	///  image's size (in millimeters) to calculate the
 	///  rectangle in which the image is displayed.
 	///
 	/// When the zoom factor is 1 then the image's size on the
@@ -266,39 +266,39 @@ public:
 	///                          drawing the image
 	/// @param centerPointX     the horizontal coordinate of
 	///                          the image's pixel that should
-	///                          be centered in the window's 
+	///                          be centered in the window's
 	///                          area. If -1 then the function
-	///                          calculates its value 
+	///                          calculates its value
 	///                          automatically
 	/// @param centerPointY     the vertical coordinate of the
 	///                          image's pixek that should be
 	///                          centered in the window's area.
 	///                          If -1 then the function
-	///                          calculates its value 
+	///                          calculates its value
 	///                          automatically
 	///
 	///////////////////////////////////////////////////////////
 	void setZoomFactor(double zoomFactor, imbxInt32 centerPointX=-1, imbxInt32 centerPointY=-1);
 
-	/// \brief Zoom to the selected image's area. 
-	///        The rectangle's coordinates are in image's 
+	/// \brief Zoom to the selected image's area.
+	///        The rectangle's coordinates are in image's
 	///         pixels.
 	///
 	/// This function calls updateImageRect() and updates the
 	///  window.
 	///
 	/// @param left    the horizontal coordinate of the
-	///                 top-left corner of the image's 
+	///                 top-left corner of the image's
 	///                 rectangle that must be shown in the
 	///                 window
 	/// @param top     the vertical coordinate of the top-left
 	///                 corner of the image's rectangle that
 	///                 must be shown in the window
-	/// @param right   the horizontal coordinate of the 
+	/// @param right   the horizontal coordinate of the
 	///                 bottom-right corner of the image's
 	///                 rectangle that must be shown in the
 	///                 window
-	/// @param bottom  the vertical coordinate of the 
+	/// @param bottom  the vertical coordinate of the
 	///                 bottom-right corner of the image's
 	///                 rectangle that must be shown in the
 	///                 window
@@ -312,10 +312,10 @@ public:
 	///  window.
 	///
 	/// @param bZoomIn      when true the function increase the
-	///                      zoom factor, otherwise it 
+	///                      zoom factor, otherwise it
 	///                      decreases the zoom factor
 	/// @param centerPointX the horizontal coordinate of the
-	///                      image's pixel that must be 
+	///                      image's pixel that must be
 	///                      centered in the window's area
 	/// @param centerPointY the vertical coordinate of the
 	///                      image's pixel that must be
@@ -341,7 +341,7 @@ public:
 
 	void getCenterPoint(imbxInt32* pCenterPointX, imbxInt32* pCenterPointY);
 	void setCenterPoint(imbxInt32 centerPointX, imbxInt32 centerPointY);
-	
+
 	//@}
 
 
@@ -373,29 +373,29 @@ public:
 	/// Use in pair with windowPosToImageY to translate the
 	///  horizontal and the vertical coordinates.
 	///
-	/// The window's coordinates must include any scroll 
+	/// The window's coordinates must include any scroll
 	///  adjustment.
-	/// 
+	///
 	/// @param windowPosX  the horizontal window's coordinate,
-	///                     adjusted with the current 
+	///                     adjusted with the current
 	///                     horizontal scroll position
 	/// @return            the image's horizontal coordinate.
-	///                    The returned is always adjusted to 
+	///                    The returned is always adjusted to
 	///                     the valid range (is never less than
-	///                     0 and never more than the image's 
+	///                     0 and never more than the image's
 	///                     horizontal size)
 	///
 	///////////////////////////////////////////////////////////
 	imbxInt32 windowPosToImageX(imbxInt32 windowPosX);
 
-	/// \brief Translate the window's vertical coordinate into 
+	/// \brief Translate the window's vertical coordinate into
 	///         the image's vertical coordinate.
 	///
 	/// Use in pair with windowPosToImageX to translate the
 	///  horizontal and the vertical coordinates.
 	///
 	/// The window's coordinates must include any scroll adjustment.
-	/// 
+	///
 	/// @param windowPosY  the vertical window's coordinate,
 	///                     adjusted with the current vertical
 	///                     scroll position
@@ -411,8 +411,8 @@ public:
 	/// \brief Return a pixel's horizontal position in
 	///         millimeters.
 	///
-	/// @param imagePosX   the horizontal pixel position for 
-	///                     which the position in millimeters 
+	/// @param imagePosX   the horizontal pixel position for
+	///                     which the position in millimeters
 	///                     has to be retrieved
 	/// @return the horizontal position of the specified pixel,
 	///          in millimeters
@@ -423,8 +423,8 @@ public:
 	/// \brief Return a pixel's vertical position in
 	///         millimeters.
 	///
-	/// @param imagePosY   the vertical pixel position for 
-	///                     which the position in millimeters 
+	/// @param imagePosY   the vertical pixel position for
+	///                     which the position in millimeters
 	///                     has to be retrieved
 	/// @return the vertical position of the specified pixel,
 	///          in millimeters
@@ -432,25 +432,25 @@ public:
 	///////////////////////////////////////////////////////////
 	double imagePosToMillimitersY(imbxInt32 imagePosY);
 
-	/// \brief Return the horizontal pixel's index that 
+	/// \brief Return the horizontal pixel's index that
 	///         lays at the specified horizontal position, in
 	///         millimeters
 	///
-	/// @param millimitersX the horizontal position in 
+	/// @param millimitersX the horizontal position in
 	///                      millimiters
-	/// @return the index of the pixel that lays at the 
+	/// @return the index of the pixel that lays at the
 	///          specified position
 	///
 	///////////////////////////////////////////////////////////
 	imbxInt32 millimitersToImagePosX(double millimitersX);
 
-	/// \brief Return the vertical pixel's index that 
+	/// \brief Return the vertical pixel's index that
 	///         lays at the specified vertical position, in
 	///         millimeters
 	///
-	/// @param millimitersY the vertical position in 
+	/// @param millimitersY the vertical position in
 	///                      millimiters
-	/// @return the index of the pixel that lays at the 
+	/// @return the index of the pixel that lays at the
 	///          specified position
 	///
 	///////////////////////////////////////////////////////////
@@ -477,7 +477,7 @@ public:
 	///                          rectangle
 	/// @param top              the top side of the visible
 	///                          rectangle
-	/// @param right            the right side of the visible 
+	/// @param right            the right side of the visible
 	///                          rectangle
 	/// @param bottom           the bottom side of the visible
 	///                          rectangle
@@ -498,16 +498,16 @@ public:
 	///         retrieve the size of the window's client area,
 	///         in screen's pixels.
 	///
-	/// @param pSizeX    a pointer to the value that the 
-	///                   function fills with the window's 
+	/// @param pSizeX    a pointer to the value that the
+	///                   function fills with the window's
 	///                   width, in pixels
-	/// @param pSizeY    a pointer to the value that the 
-	///                   function fills with the window's 
+	/// @param pSizeY    a pointer to the value that the
+	///                   function fills with the window's
 	///                   height, in pixels
 	///
 	///////////////////////////////////////////////////////////
 	virtual void getWindowSize(imbxUint32* pSizeX, imbxUint32* pSizeY) = 0;
-	
+
 	/// \brief Overwrite this method with a function that
 	///         retrieves the total virtual size of the window.
 	///
@@ -523,7 +523,7 @@ public:
 	///
 	///////////////////////////////////////////////////////////
 	virtual void getScrollSize(imbxUint32* pScrollSizeX, imbxUint32* pScrollSizeY) = 0;
-	
+
 	/// \brief Overwrite this method with a function that sets
 	///         the window's virtual size.
 	///
@@ -535,7 +535,7 @@ public:
 	/// @param newScrollSizeY  the virtual window's height that
 	///                         must be set
 	/// @param bInvalidate     is true if the function must
-	///                         invalidate the window after 
+	///                         invalidate the window after
 	///                         changing the virtual size,
 	///                         false otherwise.
 	///                         Note that the background
@@ -543,21 +543,21 @@ public:
 	///
 	///////////////////////////////////////////////////////////
 	virtual void setScrollSize(imbxUint32 newScrollSizeX, imbxUint32 newScrollSizeY, bool bInvalidate) = 0;
-	
+
 	/// \brief Overwrite this method with a function that
 	///         retrieves the current position in the scroll
 	///         bars, in screen's pixels.
 	///
 	/// @param pScrollX    a pointer to a variable that the
-	///                     function must fill with the 
+	///                     function must fill with the
 	///                     horizontal scroll bar's position
 	/// @param pScrollY    a pointer to a variable that the
-	///                     function must fill with the 
+	///                     function must fill with the
 	///                     vertical scroll bar's position
 	///
 	///////////////////////////////////////////////////////////
 	virtual void getScrollPosition(imbxInt32* pScrollX, imbxInt32* pScrollY) = 0;
-	
+
 	/// \brief Overwrite this method with a function that
 	///         changes the position in the scroll bars, in
 	///         screen's pixels.
@@ -569,14 +569,14 @@ public:
 	///
 	///////////////////////////////////////////////////////////
 	virtual void setScrollPosition(imbxInt32 scrollX, imbxInt32 scrollY)=0;
-	
-	/// \brief Overwrite this method with a function that 
+
+	/// \brief Overwrite this method with a function that
 	///         draws a rectangle on a device context.
 	///
 	/// @param pDeviceContext a pointer to a device context
 	///                        class. Is the same pointer
 	///                        that your application passes
-	///                        to the draw() or the 
+	///                        to the draw() or the
 	///                        drawCursor() functions.
 	/// @param left           the horizontal coordinate of the
 	///                        rectangle's top-left corner
@@ -586,16 +586,16 @@ public:
 	///                        rectangle's bottom-right corner
 	/// @param bottom         the vertical coordinate of the
 	///                        rectangle's bottom-right corner
-	/// @param colorRed       the red component of the 
+	/// @param colorRed       the red component of the
 	///                        rectangle's color
-	/// @param colorGreen     the green component of the 
+	/// @param colorGreen     the green component of the
 	///                        rectangle's color
-	/// @param colorBlue      the blue component of the 
+	/// @param colorBlue      the blue component of the
 	///                        rectangle's color
 	///
 	///////////////////////////////////////////////////////////
 	virtual void drawRectangle(void* pDeviceContext, imbxInt32 left, imbxInt32 top, imbxInt32 right, imbxInt32 bottom, imbxUint8 colorRed, imbxUint8 colorGreen, imbxUint8 colorBlue)=0;
-	
+
 	/// \brief Overwrite this method with a function that
 	///         draws a bitmap on the screen in the specified
 	///         window's rectangle.
@@ -611,16 +611,16 @@ public:
 	///                        top-left corner of the rectangle
 	///                        that contains the bitmap
 	/// @param right          the horizontal coordinate of the
-	///                        bottom-right corner of the 
-	///                        rectangle that contains the 
+	///                        bottom-right corner of the
+	///                        rectangle that contains the
 	///                        bitmap
 	/// @param bottom         the vertical coordinate of the
-	///                        bottom-right corner of the 
-	///                        rectangle that contains the 
+	///                        bottom-right corner of the
+	///                        rectangle that contains the
 	///                        bitmap
 	/// @param bufferWidth    the width of the bitmap contained
 	///                        in pBuffer, in pixels
-	/// @param bufferHeight   the height of the bitmap 
+	/// @param bufferHeight   the height of the bitmap
 	///                        contained in pBuffer, in pixels
 	/// @param bufferRowSizeBytes the size of a bitmap's row,
 	///                        in bytes
@@ -629,46 +629,46 @@ public:
 	///                       The array contains all the bitmap
 	///                        pixels, from the top-left to
 	///                        the bottom-right, row by row.
-	///                       The rows are contiguous, not 
+	///                       The rows are contiguous, not
 	///                        aligned to 4 bytes boundaries as
 	///                        in the Window's bitmaps.
-	///                       Each pixels has 3 bytes 
+	///                       Each pixels has 3 bytes
 	///                        representing the red, green and
 	///                        blue component (please note that
-	///                        the order of the color 
+	///                        the order of the color
 	///                        components is reversed in the
 	///                        Window's bitmaps)
         /// @param bMonochrome    true if the bitmap is monochrome,
         ///                        false if the bitmap is RGB
 	///
 	///////////////////////////////////////////////////////////
-	virtual void drawBitmap(void* pDeviceContext, imbxInt32 left, imbxInt32 top, imbxInt32 right, imbxInt32 bottom, imbxUint32 bufferWidth, imbxUint32 bufferHeight, imbxUint32 bufferRowSizeBytes, imbxUint8* pBuffer, bool bMonochrome)=0;
-	
+	virtual void drawBitmap(void* pDeviceContext, imbxInt32 left, imbxInt32 top, imbxInt32 right, imbxInt32 bottom, imbxUint32 bufferWidth, imbxUint32 bufferHeight, imbxUint32 bufferRowSizeBytes, imbxUint8* pBuffer)=0;
+
 	/// \brief Overwrite this method with a function that
 	///         draws a line on the specified device context.
 	///
 	/// @param pDeviceContext the device context to use for
 	///                        the drawing. This is the same
 	///                        value that your application
-	///                        passes to the drawCursor() 
+	///                        passes to the drawCursor()
 	///                        function
 	/// @param startPointX    the horizontal coordinate of the
-	///                        line's starting point, in 
+	///                        line's starting point, in
 	///                        pixels
 	/// @param startPointY    the vertical coordinate of the
-	///                        line's starting point, in 
+	///                        line's starting point, in
 	///                        pixels
 	/// @param endPointX      the horizontal coordinate of the
-	///                        line's ending point, in 
+	///                        line's ending point, in
 	///                        pixels
 	/// @param endPointY      the vertical coordinate of the
-	///                        line's ending point, in 
+	///                        line's ending point, in
 	///                        pixels
-	/// @param colorRed       the red component of the 
+	/// @param colorRed       the red component of the
 	///                        line's color
-	/// @param colorGreen     the green component of the 
+	/// @param colorGreen     the green component of the
 	///                        line's color
-	/// @param colorBlue      the blue component of the 
+	/// @param colorBlue      the blue component of the
 	///                        line's color
 	/// @param style          the line's style. It can be one
 	///                        of the following values:
@@ -679,14 +679,14 @@ public:
 	///
 	///////////////////////////////////////////////////////////
 	virtual void drawCursorLine(void* pDeviceContext, imbxInt32 startPointX, imbxInt32 startPointY, imbxInt32 endPointX, imbxInt32 endPointY, imbxUint8 colorRed, imbxUint8 colorGreen, imbxUint8 colorBlue, cursorLine::tStyle style, imbxUint32 width)=0;
-	
-	/// \brief Overwrite this method with a function that 
-	///         invalidate a portion of the window, without 
-	///         redrawing it immediatly. The code doesn't 
+
+	/// \brief Overwrite this method with a function that
+	///         invalidate a portion of the window, without
+	///         redrawing it immediatly. The code doesn't
 	///         have to invalidate the background.
 	///
-	/// The coordinates of the invalidated area are passed in 
-	///  window's pixels and relative to the window top-left corner, 
+	/// The coordinates of the invalidated area are passed in
+	///  window's pixels and relative to the window top-left corner,
 	///  without any scroll adjustment.
 	///
 	/// @param left      the horizontal coordinate of the top-left
@@ -695,20 +695,20 @@ public:
 	/// @param top       the vertical coordinate of the top-left
 	///                   corner of the rectangle that must be
 	///                   invalidated, in window's pixels
-	/// @param right     the horizontal coordinate of the 
-	///                   bottom-right corner of the rectangle 
-	///                   that must be invalidated, in window's 
+	/// @param right     the horizontal coordinate of the
+	///                   bottom-right corner of the rectangle
+	///                   that must be invalidated, in window's
 	///                   pixels
-	/// @param bottom    the vertical coordinate of the 
-	///                   bottom-right corner of the rectangle 
-	///                   that must be invalidated, in window's 
+	/// @param bottom    the vertical coordinate of the
+	///                   bottom-right corner of the rectangle
+	///                   that must be invalidated, in window's
 	///                   pixels
 	///
 	///////////////////////////////////////////////////////////
 	virtual void invalidate(imbxInt32 left, imbxInt32 top, imbxInt32 right, imbxInt32 bottom)=0;
-	
+
 	/// \brief Overwrite this method with a function that
-	///         launches a redraw of the invalidated areas of 
+	///         launches a redraw of the invalidated areas of
 	///         the window.
 	///
 	///////////////////////////////////////////////////////////
@@ -718,11 +718,11 @@ public:
 	///         retrieve the screen's resolution, in pixels
 	///         per inch.
 	///
-	/// @param pHorzDPI a pointer to a variable that the 
+	/// @param pHorzDPI a pointer to a variable that the
 	///                  function must fill with the
 	///                  horizontal resolution, in pixels
 	///                  per inch
-	/// @param pVertDPI a pointer to a variable that the 
+	/// @param pVertDPI a pointer to a variable that the
 	///                  function must fill with the
 	///                  vertical resolution, in pixels
 	///                  per inch

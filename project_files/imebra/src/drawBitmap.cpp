@@ -27,7 +27,7 @@ drawBitmap::drawBitmap():
 	m_visibleTopLeftX(0), m_visibleTopLeftY(0),	m_visibleBottomRightX(0), m_visibleBottomRightY(0),
 	m_destBitmapWidth(0), m_destBitmapHeight(0),
 	m_destBitmapRowSize(0),
-	m_alignByte(1),	m_bitmapType(rgb)
+	m_alignByte(1),	m_bBGR(false)
 {
 }
 
@@ -63,7 +63,7 @@ void drawBitmap::declareInputImage(long imageNumber, ptr<image> pInputImage)
 void drawBitmap::declareBitmapType(imbxInt32 totalWidthPixels, imbxInt32 totalHeightPixels,
 		imbxInt32 visibleTopLeftX, imbxInt32 visibleTopLeftY, imbxInt32 visibleBottomRightX, imbxInt32 visibleBottomRightY,
 		imbxInt32 alignByte,
-		tBitmapType bitmapType)
+		bool bBGR)
 {
 	PUNTOEXE_FUNCTION_START(L"drawBitmap::declareBitmapType");
 
@@ -79,7 +79,7 @@ void drawBitmap::declareBitmapType(imbxInt32 totalWidthPixels, imbxInt32 totalHe
 	m_visibleBottomRightX = visibleBottomRightX;
 	m_visibleBottomRightY = visibleBottomRightY;
 	m_alignByte = alignByte;
-	m_bitmapType = bitmapType;
+	m_bBGR = bBGR;
 
 	// Check if the image is visible in the specified area
 	///////////////////////////////////////////////////////////
@@ -98,7 +98,7 @@ void drawBitmap::declareBitmapType(imbxInt32 totalWidthPixels, imbxInt32 totalHe
 	if(m_destBitmapWidth != m_visibleBottomRightX - m_visibleTopLeftX ||
 		m_destBitmapHeight != m_visibleBottomRightY - m_visibleTopLeftY)
 	{
-		m_destBitmapRowSize = ((m_visibleBottomRightX - m_visibleTopLeftX) * (bitmapType == monochrome ? 1 : 3) + m_alignByte - 1) / m_alignByte;
+		m_destBitmapRowSize = ((m_visibleBottomRightX - m_visibleTopLeftX) * 3 + m_alignByte - 1) / m_alignByte;
 		m_destBitmapRowSize *= m_alignByte;
 
 		m_finalBitmap = memoryPool::getMemoryPool()->getMemory(m_destBitmapRowSize * (m_visibleBottomRightY - m_visibleTopLeftY));
@@ -127,18 +127,12 @@ void drawBitmap::createTransform()
 		pFinalImage = new image;
 	}
 
-	// Create a temporary image if it isn't available
-	///////////////////////////////////////////////////////////
-	if(m_pTemporaryImage == 0)
-	{
-		m_pTemporaryImage = new image;
-	}
-
 	// Get the color transform
 	///////////////////////////////////////////////////////////
 	ptr<transforms::colorTransforms::colorTransformsFactory> pColorFactory =
 		transforms::colorTransforms::colorTransformsFactory::getColorTransformsFactory();
-	ptr<transforms::transform> rgbTransform = pColorFactory->getTransform(m_originalImage->getColorSpace(), m_bitmapType == monochrome ? L"MONOCHROME2" : L"RGB");
+        std::wstring finalColorSpace(pColorFactory->isMonochrome(m_originalImage->getColorSpace()) ? L"MONOCHROME2" : L"RGB");
+	ptr<transforms::transform> rgbTransform = pColorFactory->getTransform(m_originalImage->getColorSpace(), finalColorSpace);
 
 	// Get the high bit transform
 	///////////////////////////////////////////////////////////
@@ -151,24 +145,13 @@ void drawBitmap::createTransform()
 	{
 		rgbTransform->declareDataSet(getDataSet());
 		rgbTransform->declareInputImage(0, m_originalImage);
-		rgbTransform->declareOutputImage(0, m_pTemporaryImage);
 		rgbTransform->doTransform();
-		highBit->declareInputImage(0, m_pTemporaryImage);
+		highBit->declareInputImage(0, rgbTransform->getOutputImage(0));
 	}
 	else
 	{
-		highBit->declareInputImage(0, m_originalImage);
+		transform::declareInputImage(0, m_originalImage);
 	}
-
-	// Convert to 8 bits
-	///////////////////////////////////////////////////////////
-	imbxUint32 sizeX, sizeY;
-	m_originalImage->getSize(&sizeX, &sizeY);
-	pFinalImage->create(sizeX, sizeY, image::depthU8, L"RGB", 7);
-	highBit->declareOutputImage(0, pFinalImage);
-	highBit->doTransform();
-
-	transform::declareInputImage(0, pFinalImage);
 
 }
 
@@ -214,6 +197,17 @@ void drawBitmap::doTransform()
 	imbxUint32 rowSize, channelSize, channelsNumber;
 	ptr<handlers::imageHandler> handler = inputImage->getDataHandler(false, &rowSize, &channelSize, &channelsNumber);
 	imbxInt32* imageMemory = handler->getMemoryBuffer();
+
+        imbxUint32 highBit(inputImage->getHighBit());
+        imbxUint8 leftShift(0), rightShift(0);
+        if(highBit > 7)
+        {
+            rightShift = highBit - 7;
+        }
+        else
+        {
+            leftShift = 7 - highBit;
+        }
 
 	// Find the multiplier that make the image bigger than
 	//  the rendering area
@@ -282,12 +276,12 @@ void drawBitmap::doTransform()
                         {
                             for(imbxInt32 scanX (m_visibleBottomRightX - m_visibleTopLeftX); scanX != 0; --scanX)
                             {
-                                if(m_bitmapType == monochrome)
+                                if(channelsNumber == 1)
                                 {
                                     for(imbxUint32 scanImageX = *(pNextSourceXIndex++); scanImageX != *pNextSourceXIndex; ++scanImageX)
                                     {
                                             ++(*pAveragePointer);
-                                            *(++pAveragePointer) += *(pImagePointer);
+                                            *(++pAveragePointer) += ((*(pImagePointer)) >> rightShift) << leftShift;
                                             --pAveragePointer;
                                             if( (scanImageX & maskX) != 0)
                                             {
@@ -301,9 +295,9 @@ void drawBitmap::doTransform()
                                 for(imbxUint32 scanImageX = *(pNextSourceXIndex++); scanImageX != *pNextSourceXIndex; ++scanImageX)
                                 {
                                         ++(*pAveragePointer);
-                                        *(++pAveragePointer) += *(pImagePointer);
-                                        *(++pAveragePointer) += *(++pImagePointer);
-                                        *(++pAveragePointer) += *(++pImagePointer);
+                                        *(++pAveragePointer) += ((*(pImagePointer)) >> rightShift) << leftShift;
+                                        *(++pAveragePointer) += ((*(++pImagePointer)) >> rightShift) << leftShift;
+                                        *(++pAveragePointer) += ((*(++pImagePointer)) >> rightShift) << leftShift;
                                         pAveragePointer -= 3;
                                         if( (scanImageX & maskX) != 0)
                                         {
@@ -319,7 +313,7 @@ void drawBitmap::doTransform()
                         {
                             for(imbxInt32 scanX (m_visibleBottomRightX - m_visibleTopLeftX); scanX != 0; --scanX)
                             {
-                                if(m_bitmapType == monochrome)
+                                if(channelsNumber == 1)
                                 {
                                     for(imbxUint32 scanImageX = *(pNextSourceXIndex++); scanImageX != *pNextSourceXIndex; ++scanImageX)
                                     {
@@ -360,15 +354,19 @@ void drawBitmap::doTransform()
 		imbxInt32* pAveragePointer = m_averagePixels.get();
 		imbxUint32 counter;
 
-		if(m_bitmapType == monochrome)
+		if(channelsNumber == 1)
                 {
+                        imbxUint8 averageValue;
 			for(imbxInt32 scanX (m_visibleBottomRightX - m_visibleTopLeftX); scanX != 0; --scanX)
 			{
 				counter = (imbxUint32)*(pAveragePointer++);
-				*(pFinalBuffer++) = (imbxUint8) (((imbxUint32)*(pAveragePointer++) / counter) & 0xff);
+                                averageValue = (imbxUint8) (((imbxUint32)*(pAveragePointer++) / counter) & 0xff);
+				*(pFinalBuffer++) = averageValue;
+				*(pFinalBuffer++) = averageValue;
+				*(pFinalBuffer++) = averageValue;
 			}
                 }
-                else if(m_bitmapType == bgr)
+                else if(m_bBGR)
 		{
 			imbxUint32 r, g;
 			for(imbxInt32 scanX (m_visibleBottomRightX - m_visibleTopLeftX); scanX != 0; --scanX)
