@@ -103,6 +103,7 @@ void drawBitmap::declareBitmapType(imbxInt32 totalWidthPixels, imbxInt32 totalHe
 
 		m_finalBitmap = memoryPool::getMemoryPool()->getMemory(m_destBitmapRowSize * (m_visibleBottomRightY - m_visibleTopLeftY));
 		m_destBitmapHeight = m_visibleBottomRightY - m_visibleTopLeftY;
+		m_destBitmapWidth = m_visibleBottomRightX - m_visibleTopLeftX;
 
 	}
 
@@ -236,12 +237,8 @@ void drawBitmap::doTransform()
 	// Allocate an horizontal buffer that stores the pixels
 	//  average colors
 	///////////////////////////////////////////////////////////
-	if(m_destBitmapWidth != m_visibleBottomRightX - m_visibleTopLeftX)
-	{
-		m_averagePixels.reset(new imbxInt32[(m_visibleBottomRightX - m_visibleTopLeftX) * (channelsNumber + 1)]);
-		m_sourcePixelIndex.reset(new imbxUint32[m_visibleBottomRightX - m_visibleTopLeftX + 1]);
-		m_destBitmapWidth = m_visibleBottomRightX - m_visibleTopLeftX;
-	}
+	m_averagePixels.reset(new imbxInt32[m_destBitmapWidth * (channelsNumber + 1)]);
+	m_sourcePixelIndex.reset(new imbxUint32[m_destBitmapWidth + 1]);
 
 	for(imbxInt32 scanPixelsX = m_visibleTopLeftX; scanPixelsX != m_visibleBottomRightX + 1; ++scanPixelsX)
 	{
@@ -249,7 +246,7 @@ void drawBitmap::doTransform()
 	}
 
 	imbxUint8* pFinalBuffer = (imbxUint8*)(m_finalBitmap->data());
-	imbxInt32 nextRowGap = m_destBitmapRowSize - m_destBitmapWidth * channelsNumber;
+	imbxInt32 nextRowGap = m_destBitmapRowSize - m_destBitmapWidth * 3;
 
 	for(imbxInt32 scanY = m_visibleTopLeftY; scanY != m_visibleBottomRightY; ++scanY)
 	{
@@ -274,7 +271,7 @@ void drawBitmap::doTransform()
 
                         if(numRows == 1)
                         {
-                            for(imbxInt32 scanX (m_visibleBottomRightX - m_visibleTopLeftX); scanX != 0; --scanX)
+                            for(imbxInt32 scanX (m_destBitmapWidth); scanX != 0; --scanX)
                             {
                                 if(channelsNumber == 1)
                                 {
@@ -311,7 +308,7 @@ void drawBitmap::doTransform()
                         }
                         else
                         {
-                            for(imbxInt32 scanX (m_visibleBottomRightX - m_visibleTopLeftX); scanX != 0; --scanX)
+                            for(imbxInt32 scanX (m_destBitmapWidth); scanX != 0; --scanX)
                             {
                                 if(channelsNumber == 1)
                                 {
@@ -357,7 +354,7 @@ void drawBitmap::doTransform()
 		if(channelsNumber == 1)
                 {
                         imbxUint8 averageValue;
-			for(imbxInt32 scanX (m_visibleBottomRightX - m_visibleTopLeftX); scanX != 0; --scanX)
+			for(imbxInt32 scanX (m_destBitmapWidth); scanX != 0; --scanX)
 			{
 				counter = (imbxUint32)*(pAveragePointer++);
                                 averageValue = (imbxUint8) (((imbxUint32)*(pAveragePointer++) / counter) & 0xff);
@@ -369,7 +366,7 @@ void drawBitmap::doTransform()
                 else if(m_bBGR)
 		{
 			imbxUint32 r, g;
-			for(imbxInt32 scanX (m_visibleBottomRightX - m_visibleTopLeftX); scanX != 0; --scanX)
+			for(imbxInt32 scanX (m_destBitmapWidth); scanX != 0; --scanX)
 			{
 				counter = (imbxUint32)*(pAveragePointer++);
 				r = (imbxUint8) (((imbxUint32)*(pAveragePointer++) / counter) & 0xff);
@@ -381,7 +378,7 @@ void drawBitmap::doTransform()
 		}
 		else
 		{
-			for(imbxInt32 scanX (m_visibleBottomRightX - m_visibleTopLeftX); scanX != 0; --scanX)
+			for(imbxInt32 scanX (m_destBitmapWidth); scanX != 0; --scanX)
 			{
 				counter = (imbxUint32)*(pAveragePointer++);
 				*(pFinalBuffer++) = (imbxUint8) (((imbxUint32)*(pAveragePointer++) / counter) & 0xff);
