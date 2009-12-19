@@ -315,7 +315,7 @@ void drawBitmap::doTransform()
                                     for(imbxUint32 scanImageX = *(pNextSourceXIndex++); scanImageX != *pNextSourceXIndex; ++scanImageX)
                                     {
                                             *pAveragePointer += numRows;
-                                            *(++pAveragePointer) += *(pImagePointer) * numRows;
+                                            *(++pAveragePointer) +=  (((*(pImagePointer)) >> rightShift) << leftShift) * numRows;
                                             --pAveragePointer;
                                             if( (scanImageX & maskX) != 0)
                                             {
@@ -330,9 +330,9 @@ void drawBitmap::doTransform()
                                     for(imbxUint32 scanImageX = *(pNextSourceXIndex++); scanImageX != *pNextSourceXIndex; ++scanImageX)
                                     {
                                             *pAveragePointer += numRows;
-                                            *(++pAveragePointer) += *(pImagePointer) * numRows;
-                                            *(++pAveragePointer) += *(++pImagePointer) * numRows;
-                                            *(++pAveragePointer) += *(++pImagePointer) * numRows;
+	                                    *(++pAveragePointer) += (((*(pImagePointer)) >> rightShift) << leftShift) * numRows;
+		                            *(++pAveragePointer) += (((*(++pImagePointer)) >> rightShift) << leftShift) * numRows;
+			                    *(++pAveragePointer) += (((*(++pImagePointer)) >> rightShift) << leftShift) * numRows;
                                             pAveragePointer -= 3;
                                             if( (scanImageX & maskX) != 0)
                                             {
