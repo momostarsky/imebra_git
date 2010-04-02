@@ -41,7 +41,7 @@ class dataHandlerDate : public dataHandlerDateTimeBase
 public:
 	virtual imbxUint32 getUnitSize() const;
 
-	virtual void getDate(
+	virtual void getDate(const imbxUint32 index,
 		imbxInt32* pYear, 
 		imbxInt32* pMonth, 
 		imbxInt32* pDay, 
@@ -52,7 +52,7 @@ public:
 		imbxInt32* pOffsetHours,
 		imbxInt32* pOffsetMinutes) const;
 
-	virtual void setDate(
+	virtual void setDate(const imbxUint32 index,
 		imbxInt32 year, 
 		imbxInt32 month, 
 		imbxInt32 day, 
@@ -76,7 +76,7 @@ public:
 	///          buffer
 	///
 	///////////////////////////////////////////////////////////
-	virtual std::wstring getUnicodeString() const;
+	virtual std::wstring getUnicodeString(const imbxUint32 index) const;
 
 	/// \brief Set the date from a string.
 	///
@@ -89,7 +89,7 @@ public:
 	/// @param value the string representing the date to be set
 	///
 	///////////////////////////////////////////////////////////
-	virtual void setUnicodeString(const std::wstring& value);
+	virtual void setUnicodeString(const imbxUint32 index, const std::wstring& value);
 
 	void parseBuffer(const ptr<memory>& memoryBuffer);
 

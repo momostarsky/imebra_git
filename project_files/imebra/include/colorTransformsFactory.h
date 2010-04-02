@@ -250,7 +250,7 @@ public:
 	///          same value
 	///
 	///////////////////////////////////////////////////////////
-	ptr<transform> getTransform(std::wstring startColorSpace, std::wstring endColorSpace);
+	ptr<colorTransform> getTransform(std::wstring startColorSpace, std::wstring endColorSpace);
 
 	//@}
 
@@ -279,10 +279,10 @@ public:
 ///         thrown by colorTransformsFactory.
 ///
 ///////////////////////////////////////////////////////////
-class colorTransformsFactoryException: public transformException
+class colorTransformsFactoryException: public baseTransformException
 {
 public:
-	colorTransformsFactoryException(const std::string& message): transformException(message){}
+	colorTransformsFactoryException(const std::string& message): baseTransformException(message){}
 };
 
 ///////////////////////////////////////////////////////////

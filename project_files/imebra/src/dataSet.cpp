@@ -302,6 +302,16 @@ ptr<image> dataSet::getImage(imbxUint32 frameNumber)
 		pImage->setSizeMm(pixelDistanceX*(double)sizeX, pixelDistanceY*(double)sizeY);
 	}
 
+	if(pImage->getColorSpace() == L"PALETTECOLOR")
+	{
+		ptr<lut> red, green, blue;
+		red->setLut(getDataHandler(0x0028, 0x0, 0x1101, 0, false), getDataHandler(0x0028, 0x0, 0x1201, 0, false), L"");
+		green->setLut(getDataHandler(0x0028, 0x0, 0x1102, 0, false), getDataHandler(0x0028, 0x0, 0x1202, 0, false), L"");
+		blue->setLut(getDataHandler(0x0028, 0x0, 0x1103, 0, false), getDataHandler(0x0028, 0x0, 0x1203, 0, false), L"");
+		ptr<palette> imagePalette(new palette(red, green, blue));
+		pImage->setPalette(imagePalette);
+	}
+
 	return pImage;
 
 	PUNTOEXE_FUNCTION_END();
@@ -496,7 +506,7 @@ void dataSet::setImage(imbxUint32 frameNumber, ptr<image> pImage, std::wstring t
 	if(!bDontChangeAttributes)
 	{
 		ptr<handlers::dataHandler> dataHandlerTransferSyntax = getDataHandler(0x0002, 0x0, 0x0010, 0x0, true);
-		dataHandlerTransferSyntax->setUnicodeString(transferSyntax);
+		dataHandlerTransferSyntax->setUnicodeString(0, transferSyntax);
 
 		std::wstring colorSpace = pImage->getColorSpace();
 		setUnicodeString(0x0028, 0x0, 0x0004, 0x0, transforms::colorTransforms::colorTransformsFactory::makeSubsampled(colorSpace, bSubSampledX, bSubSampledY));
@@ -510,6 +520,18 @@ void dataSet::setImage(imbxUint32 frameNumber, ptr<image> pImage, std::wstring t
 		pImage->getSize(&imageSizeX, &imageSizeY);
 		setUnsignedLong(0x0028, 0x0, 0x0011, 0x0, imageSizeX);
 		setUnsignedLong(0x0028, 0x0, 0x0010, 0x0, imageSizeY);
+
+		if(colorSpace == L"PALETTECOLOR")
+		{
+			ptr<palette> imagePalette(pImage->getPalette());
+			if(imagePalette != 0)
+			{
+				imagePalette->getRed()->fillHandlers(getDataHandler(0x0028, 0x0, 0x1101, 0, true), getDataHandler(0x0028, 0x0, 0x1201, 0, true));
+				imagePalette->getGreen()->fillHandlers(getDataHandler(0x0028, 0x0, 0x1102, 0, true), getDataHandler(0x0028, 0x0, 0x1202, 0, true));
+				imagePalette->getBlue()->fillHandlers(getDataHandler(0x0028, 0x0, 0x1103, 0, true), getDataHandler(0x0028, 0x0, 0x1203, 0, true));
+			}
+
+		}
 
 		double imageSizeMmX, imageSizeMmY;
 		pImage->getSizeMm(&imageSizeMmX, &imageSizeMmY);
@@ -753,13 +775,14 @@ ptr<image> dataSet::convertImageForDataSet(ptr<image> sourceImage)
 	std::wstring colorSpace = sourceImage->getColorSpace();
 	imbxUint32 highBit = sourceImage->getHighBit();
 
-	transforms::transformsChain chain;
-	chain.declareDataSet(this);
-	chain.declareInputImage(0, sourceImage);
-
 	imbxUint32 currentWidth  = getUnsignedLong(0x0028, 0x0, 0x0011, 0x0);
 	imbxUint32 currentHeight = getUnsignedLong(0x0028, 0x0, 0x0010, 0x0);
 	imbxUint32 currentHighBit = getUnsignedLong(0x0028, 0x0, 0x0102, 0x0);
+
+
+
+
+
 	std::wstring currentColorSpace = transforms::colorTransforms::colorTransformsFactory::normalizeColorSpace(getUnicodeString(0x0028, 0x0, 0x0004, 0x0));
 
 	if(currentWidth != imageWidth || currentHeight != imageHeight)
@@ -777,30 +800,40 @@ ptr<image> dataSet::convertImageForDataSet(ptr<image> sourceImage)
 		PUNTOEXE_THROW(dataSetExceptionDifferentFormat, "The requested color space doesn't match the one already stored in the dataset");
 	}
 
+	ptr<transforms::transformsChain> chain(new transforms::transformsChain);
 	if(colorSpace != currentColorSpace)
 	{
 		ptr<transforms::colorTransforms::colorTransformsFactory> pColorFactory(transforms::colorTransforms::colorTransformsFactory::getColorTransformsFactory());
-		ptr<transforms::transform> colorChain = pColorFactory->getTransform(colorSpace, currentColorSpace);
+		ptr<transforms::baseTransform> colorChain = pColorFactory->getTransform(colorSpace, currentColorSpace);
 		if(colorChain->isEmpty())
 		{
 			PUNTOEXE_THROW(dataSetExceptionDifferentFormat, "The image color space cannot be converted to the dataset color space");
 		}
-		chain.addTransform(colorChain);
+		chain->addTransform(colorChain);
 	}
 
 	if(currentHighBit != highBit)
 	{
-		chain.addTransform(ptr<transforms::transform>(new transforms::transformHighBit));
+		chain->addTransform(new transforms::transformHighBit);
 	}
 
-	if(chain.isEmpty())
+	if(chain->isEmpty())
 	{
 		return sourceImage;
 	}
 
-	chain.doTransform();
+	ptr<image> destImage(new image);
+	bool b2Complement(getUnsignedLong(0x0028, 0x0, 0x0103, 0x0)!=0x0);
+	image::bitDepth depth;
+	if(b2Complement)
+		depth=highBit>=8 ? image::depthS16 : image::depthS8;
+	else
+		depth=highBit>=8 ? image::depthU16 : image::depthU8;
+	destImage->create(currentWidth, currentHeight, depth, currentColorSpace, currentHighBit);
 
-	return chain.getOutputImage(0);
+	chain->runTransform(sourceImage, 0, 0, imageWidth, imageHeight, destImage, 0, 0);
+
+	return destImage;
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -914,8 +947,7 @@ imbxInt32 dataSet::getSignedLong(imbxUint16 groupId, imbxUint16 order, imbxUint1
 		return 0;
 	}
 
-	dataHandler->setPointer(elementNumber);
-	return dataHandler->pointerIsValid() ? dataHandler->getSignedLong() : 0;
+	return dataHandler->pointerIsValid(elementNumber) ? dataHandler->getSignedLong(elementNumber) : 0;
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -941,8 +973,7 @@ void dataSet::setSignedLong(imbxUint16 groupId, imbxUint16 order, imbxUint16 tag
 		{
 			dataHandler->setSize(elementNumber + 1);
 		}
-		dataHandler->setPointer(elementNumber);
-		dataHandler->setSignedLong(newValue);
+		dataHandler->setSignedLong(elementNumber, newValue);
 	}
 
 	PUNTOEXE_FUNCTION_END();
@@ -968,8 +999,7 @@ imbxUint32 dataSet::getUnsignedLong(imbxUint16 groupId, imbxUint16 order, imbxUi
 		return 0;
 	}
 
-	dataHandler->setPointer(elementNumber);
-	return dataHandler->pointerIsValid() ? dataHandler->getUnsignedLong() : 0;
+	return dataHandler->pointerIsValid(elementNumber) ? dataHandler->getUnsignedLong(elementNumber) : 0;
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -995,8 +1025,7 @@ void dataSet::setUnsignedLong(imbxUint16 groupId, imbxUint16 order, imbxUint16 t
 		{
 			dataHandler->setSize(elementNumber + 1);
 		}
-		dataHandler->setPointer(elementNumber);
-		dataHandler->setUnsignedLong(newValue);
+		dataHandler->setUnsignedLong(elementNumber, newValue);
 	}
 
 	PUNTOEXE_FUNCTION_END();
@@ -1022,8 +1051,7 @@ double dataSet::getDouble(imbxUint16 groupId, imbxUint16 order, imbxUint16 tagId
 		return 0.0;
 	}
 
-	dataHandler->setPointer(elementNumber);
-	return dataHandler->pointerIsValid() ? dataHandler->getDouble() : 0.0;
+	return dataHandler->pointerIsValid(elementNumber) ? dataHandler->getDouble(elementNumber) : 0.0;
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -1049,8 +1077,7 @@ void dataSet::setDouble(imbxUint16 groupId, imbxUint16 order, imbxUint16 tagId, 
 		{
 			dataHandler->setSize(elementNumber + 1);
 		}
-		dataHandler->setPointer(elementNumber);
-		dataHandler->setDouble(newValue);
+		dataHandler->setDouble(elementNumber, newValue);
 	}
 
 	PUNTOEXE_FUNCTION_END();
@@ -1074,10 +1101,9 @@ std::string dataSet::getString(imbxUint16 groupId, imbxUint16 order, imbxUint16 
 	std::string returnValue;
 	if(dataHandler != 0)
 	{
-		dataHandler->setPointer(elementNumber);
-		if(dataHandler->pointerIsValid())
+		if(dataHandler->pointerIsValid(elementNumber))
 		{
-			returnValue = dataHandler->getString();
+			returnValue = dataHandler->getString(elementNumber);
 		}
 	}
 
@@ -1104,10 +1130,9 @@ std::wstring dataSet::getUnicodeString(imbxUint16 groupId, imbxUint16 order, imb
 	std::wstring returnValue;
 	if(dataHandler != 0)
 	{
-		dataHandler->setPointer(elementNumber);
-		if(dataHandler->pointerIsValid())
+		if(dataHandler->pointerIsValid(elementNumber))
 		{
-			returnValue = dataHandler->getUnicodeString();
+			returnValue = dataHandler->getUnicodeString(elementNumber);
 		}
 	}
 
@@ -1137,8 +1162,7 @@ void dataSet::setString(imbxUint16 groupId, imbxUint16 order, imbxUint16 tagId, 
 		{
 			dataHandler->setSize(elementNumber + 1);
 		}
-		dataHandler->setPointer(elementNumber);
-		dataHandler->setString(newString);
+		dataHandler->setString(elementNumber, newString);
 	}
 
 	PUNTOEXE_FUNCTION_END();
@@ -1165,8 +1189,7 @@ void dataSet::setUnicodeString(imbxUint16 groupId, imbxUint16 order, imbxUint16 
 		{
 			dataHandler->setSize(elementNumber + 1);
 		}
-		dataHandler->setPointer(elementNumber);
-		dataHandler->setUnicodeString(newString);
+		dataHandler->setUnicodeString(elementNumber, newString);
 	}
 
 	PUNTOEXE_FUNCTION_END();
@@ -1353,11 +1376,10 @@ void dataSet::updateCharsetTag()
 	getCharsetsList(&charsets);
 	ptr<handlers::dataHandler> charsetHandler(getDataHandler(0x0008, 0, 0x0005, 0, true));
 	charsetHandler->setSize((imbxUint32)(charsets.size()));
-	charsetHandler->setPointer(0);
+	imbxUint32 pointer(0);
 	for(charsetsList::tCharsetsList::iterator scanCharsets = charsets.begin(); scanCharsets != charsets.end(); ++scanCharsets)
 	{
-		charsetHandler->setUnicodeString(*scanCharsets);
-		charsetHandler->incPointer();
+		charsetHandler->setUnicodeString(pointer++, *scanCharsets);
 	}
 }
 
@@ -1377,9 +1399,9 @@ void dataSet::updateTagsCharset()
 	ptr<handlers::dataHandler> charsetHandler(getDataHandler(0x0008, 0, 0x0005, 0, false));
 	if(charsetHandler != 0)
 	{
-		for(charsetHandler->setPointer(0); charsetHandler->pointerIsValid(); charsetHandler->incPointer())
+		for(imbxUint32 pointer(0); charsetHandler->pointerIsValid(pointer); ++pointer)
 		{
-			charsets.push_back(charsetHandler->getUnicodeString());
+			charsets.push_back(charsetHandler->getUnicodeString(pointer));
 		}
 	}
 	setCharsetsList(&charsets);

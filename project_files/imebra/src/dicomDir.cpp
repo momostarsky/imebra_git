@@ -575,9 +575,8 @@ ptr<dataSet> dicomDir::buildDataSet()
 	if(versionHandler->getSize() != 2)
 	{
 		versionHandler->setSize(2);
-		versionHandler->setPointer(0);
-		versionHandler->setUnsignedLongIncPointer(0);
-		versionHandler->setUnsignedLong(1);
+		versionHandler->setUnsignedLong(0, 0);
+		versionHandler->setUnsignedLong(1, 1);
 	}
 	versionHandler.release();
 

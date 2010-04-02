@@ -18,7 +18,7 @@ A quick explanation:
  - Include the file "library/imebra/include/imebra.h" in all the
    files that use the Imebra classes, or include it in the precompiled headers
  - If you are compiling the application on Windows, then define the preprocessor
-   symbol WIN32
+   symbol WIN32 and _WIN32_WINNT=0x0500 or higher
 
 
 \section quick_tour_dataSet Let's read a dataSet

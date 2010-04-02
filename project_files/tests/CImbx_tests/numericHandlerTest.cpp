@@ -27,10 +27,9 @@ void numericHandlerTest::validPointer()
 	handlerBuffer0->setSize(bufferSize);
 	
 	imbxUint32 checkSize0(0);
-	while(handlerBuffer0->pointerIsValid())
+	while(handlerBuffer0->pointerIsValid(checkSize0))
 	{
 		CPPUNIT_ASSERT(checkSize0 < bufferSize);
-		handlerBuffer0->incPointer();
 		++checkSize0;
 	}
 
@@ -41,10 +40,9 @@ void numericHandlerTest::validPointer()
 	CPPUNIT_ASSERT(handlerBuffer1->getUnitSize() == 2);
 	
 	imbxUint32 checkSize1(0);
-	while(handlerBuffer1->pointerIsValid())
+	while(handlerBuffer1->pointerIsValid(checkSize1))
 	{
 		CPPUNIT_ASSERT(checkSize1 < bufferSize);
-		handlerBuffer1->incPointer();
 		++checkSize1;
 	}
 
@@ -59,8 +57,9 @@ void numericHandlerTest::interleavedCopy()
 	ptr<image> testImage(new image);
 	testImage->create(sizeX, sizeY, image::depthS16, L"RGB", 7);
 	imbxUint32 rowSize, channelSize, channelsNumber;
-	ptr<handlers::imageHandler> testHandler = testImage->getDataHandler(true, &rowSize, &channelSize, &channelsNumber);
+	ptr<handlers::dataHandlerNumericBase> testHandler = testImage->getDataHandler(true, &rowSize, &channelSize, &channelsNumber);
 
+	size_t pointer(0);
 	for(int y = 0; y < sizeY; ++y)
 	{
 		for(int x = 0; x < sizeX; ++x)
@@ -71,9 +70,9 @@ void numericHandlerTest::interleavedCopy()
 			int squareX2 = squareX >> 1;
 			int squareY2 = squareY >> 1;
 
-			testHandler->setSignedLongIncPointer(squareY * 100 + squareX);
-			testHandler->setSignedLongIncPointer(-squareY2 * 100 - squareX2);
-			testHandler->setSignedLongIncPointer(-squareY2 * 100 + squareX2);
+			testHandler->setSignedLong(pointer++, squareY * 100 + squareX);
+			testHandler->setSignedLong(pointer++, -squareY2 * 100 - squareX2);
+			testHandler->setSignedLong(pointer++, -squareY2 * 100 + squareX2);
 		}
 	}
 
@@ -214,20 +213,20 @@ void numericHandlerTest::stringConversion()
 	testHandler0->parseBuffer(handlerBuffer0);
 	testHandler0->setSize(1);
 
-	testHandler0->setString("13");
-	CPPUNIT_ASSERT(testHandler0->getSignedLong() == 13);
-	testHandler0->setString("45.7");
-	CPPUNIT_ASSERT(testHandler0->getSignedLong() == 45);
+	testHandler0->setString(0, "13");
+	CPPUNIT_ASSERT(testHandler0->getSignedLong(0) == 13);
+	testHandler0->setString(0, "45.7");
+	CPPUNIT_ASSERT(testHandler0->getSignedLong(0) == 45);
 
 	ptr<memory> handlerBuffer1(new memory);
 	ptr<handlers::dataHandlerNumeric<double> > testHandler1(new handlers::dataHandlerNumeric<double>);
 	testHandler1->parseBuffer(handlerBuffer1);
 	testHandler1->setSize(1);
 
-	testHandler1->setString("13");
-	CPPUNIT_ASSERT(testHandler1->getSignedLong() == 13);
-	testHandler1->setString("45.7");
-	CPPUNIT_ASSERT(testHandler1->getDouble() == 45.7);
+	testHandler1->setString(0, "13");
+	CPPUNIT_ASSERT(testHandler1->getSignedLong(0) == 13);
+	testHandler1->setString(0, "45.7");
+	CPPUNIT_ASSERT(testHandler1->getDouble(0) == 45.7);
 }
 
 

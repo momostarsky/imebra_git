@@ -11,7 +11,6 @@ $fileHeader$
 #define imebraImage_A807A3CA_FA04_44f4_85D2_C7AA2FE103C4__INCLUDED_
 
 #include "../../base/include/baseObject.h"
-#include "dataHandlerNumeric.h"
 
 
 ///////////////////////////////////////////////////////////
@@ -25,22 +24,13 @@ namespace puntoexe
 namespace imebra
 {
 
-class lut;
+    namespace handlers
+    {
+        class dataHandlerNumericBase;
+    }
 
-namespace handlers
-{
-	/// \brief Represents an handler specialized to work with
-	///         the image data.
-	///
-	/// The image data is always interleaved and is never
-	///  subsampled.
-	///
-	/// The application never needs to resize the data managed
-	///  by this handler because the image object does this.
-	///
-	///////////////////////////////////////////////////////////
-	typedef dataHandlerNumeric<imbxInt32> imageHandler;
-}
+class palette;
+class buffer;
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -75,11 +65,12 @@ public:
 	///////////////////////////////////////////////////////////
 	enum bitDepth
 	{
-		depthUnknown,   ///< the bit depth is unknown
 			depthU8,    ///< unsigned integer, 1 byte
 			depthS8,    ///< signed integer, 1 byte
 			depthU16,   ///< unsigned integer, 2 bytes
-			depthS16    ///< signed integer, 2 bytes
+			depthS16,   ///< signed integer, 2 bytes
+                        endOfDepths
+
 	};
 
 	// Constructor
@@ -88,7 +79,7 @@ public:
 			m_rowLength(0),
 			m_channelPixelSize(0),
 			m_channelsNumber(0),
-			m_imageDepth(depthUnknown),
+			m_imageDepth(depthU8),
 			m_highBit(0),
 			m_sizeX(0),
 			m_sizeY(0),
@@ -112,8 +103,8 @@ public:
 	///                 - "RGB"
 	///                 - "YBR_FULL"
 	///                 - "YBR_PARTIAL"
-	///                 - "YBR_RCT"
-	///                 - "YBR_ICT"
+	///                 - "YBR_RCT" (Not yet supported)
+	///                 - "YBR_ICT" (Not yet supported)
 	///                 - "PALETTE COLOR"
 	///                 - "MONOCHROME2"
 	///                 - "MONOCHROME1"
@@ -123,7 +114,7 @@ public:
 	///                  data
 	///
 	///////////////////////////////////////////////////////////
-	ptr<handlers::imageHandler> create(
+	ptr<handlers::dataHandlerNumericBase> create(
 		const imbxUint32 sizeX,
 		const imbxUint32 sizeY,
 		const bitDepth depth,
@@ -131,17 +122,17 @@ public:
 		const imbxUint8  highBit);
 
 	/// \internal
-	/// \brief Set the bit depth and the high bit.
-	///
-	/// This function is used by the transforms to set the
-	///  bit depth and the high bit AFTER the image has been
-	///  created and filled with the information.
+	/// \brief Set the high bit.
 	///
 	/// @param highBit       the image's high bit
-	/// @param imageBitDepth the image's bit depth
 	///
 	///////////////////////////////////////////////////////////
-	void setBitDepthAndHighBit(imbxUint32 highBit, bitDepth imageBitDepth);
+	void setHighBit(imbxUint32 highBit);
+
+	/// \brief Set the palette.
+	///
+	///////////////////////////////////////////////////////////
+        void setPalette(ptr<palette> imagePalette);
 
 	/// \brief Retrieve the image's size, in millimeters.
 	///
@@ -208,7 +199,7 @@ public:
 	///         buffer.
 	///
 	///////////////////////////////////////////////////////////
-	ptr<handlers::imageHandler> getDataHandler(
+	ptr<handlers::dataHandlerNumericBase> getDataHandler(
 		const bool bWrite,
 		imbxUint32* pRowSize,
 		imbxUint32* pChannelPixelSize,
@@ -243,6 +234,9 @@ public:
 	///
 	///////////////////////////////////////////////////////////
 	imbxUint32 getHighBit();
+
+        ptr<palette> getPalette();
+
 
 protected:
 	// Image's buffer
@@ -282,6 +276,11 @@ protected:
 	///////////////////////////////////////////////////////////
 	double m_sizeMmX;
 	double m_sizeMmY;
+
+	// Image's lut (only if the colorspace is PALETTECOLOR
+	///////////////////////////////////////////////////////////
+        ptr<palette> m_palette;
+
 };
 
 

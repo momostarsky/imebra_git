@@ -42,12 +42,12 @@ namespace handlers
 class dataHandlerDateTimeBase : public dataHandlerString {
 
 public:
-	virtual imbxInt32 getSignedLong() const;
-	virtual imbxUint32 getUnsignedLong() const;
-	virtual double getDouble() const;
-	virtual void setSignedLong(const imbxInt32 value);
-	virtual void setUnsignedLong(const imbxUint32 value);
-	virtual void setDouble(const double value);
+	virtual imbxInt32 getSignedLong(const imbxUint32 index) const;
+	virtual imbxUint32 getUnsignedLong(const imbxUint32 index) const;
+	virtual double getDouble(const imbxUint32 index) const;
+	virtual void setSignedLong(const imbxUint32 index, const imbxInt32 value);
+	virtual void setUnsignedLong(const imbxUint32 index, const imbxUint32 value);
+	virtual void setDouble(const imbxUint32 index, const double value);
 
 protected:
 	virtual wchar_t getSeparator() const;

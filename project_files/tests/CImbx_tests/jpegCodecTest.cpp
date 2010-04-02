@@ -28,9 +28,10 @@ void jpegCodecTest::testBaseline()
 		baselineImage->create(sizeX, sizeY, precision == 0 ? image::depthU8 : image::depthU16, L"RGB", precision == 0 ? 7 : 11);
 
 		imbxUint32 rowSize, channelsPixelSize, channelsNumber;
-		ptr<handlers::imageHandler> imageHandler = baselineImage->getDataHandler(true, &rowSize, &channelsPixelSize, &channelsNumber);
+		ptr<handlers::dataHandlerNumericBase> imageHandler = baselineImage->getDataHandler(true, &rowSize, &channelsPixelSize, &channelsNumber);
 
 		// Make 3 bands (RGB)
+		int elementPointer(0);
 		for(imbxUint32 y=0; y<sizeY; ++y)
 		{
 			for(imbxUint32 x=0; x<sizeX; ++x)
@@ -51,19 +52,18 @@ void jpegCodecTest::testBaseline()
 					g = 0;
 					b = 0;
 				}
-				imageHandler->setUnsignedLongIncPointer(r);
-				imageHandler->setUnsignedLongIncPointer(g);
-				imageHandler->setUnsignedLongIncPointer(b);
+				imageHandler->setUnsignedLong(elementPointer++, r);
+				imageHandler->setUnsignedLong(elementPointer++, g);
+				imageHandler->setUnsignedLong(elementPointer++, b);
 			}
 		}
 		imageHandler.release();
 
 		ptr<transforms::colorTransforms::colorTransformsFactory> colorFactory;
 		colorFactory = transforms::colorTransforms::colorTransformsFactory::getColorTransformsFactory();
-		ptr<transforms::transform> colorTransform = colorFactory->getTransform(L"RGB", L"YBR_FULL");
-		colorTransform->declareInputImage(0, baselineImage);
-		colorTransform->doTransform();
-		ptr<image> ybrImage = colorTransform->getOutputImage(0);
+		ptr<transforms::colorTransforms::colorTransform> colorTransform = colorFactory->getTransform(L"RGB", L"YBR_FULL");
+		ptr<image> ybrImage = colorTransform->allocateOutputImage(baselineImage, sizeX, sizeY);
+		colorTransform->runTransform(baselineImage, 0, 0, sizeX, sizeY, ybrImage, 0, 0);
 
 		std::wstring fileName;
 		if(precision == 0)
@@ -90,15 +90,16 @@ void jpegCodecTest::testBaseline()
 		checkImage->getSize(&checkSizeX, &checkSizeY);
 
 		colorTransform = colorFactory->getTransform(L"YBR_FULL", L"RGB");
-		colorTransform->declareInputImage(0, checkImage);
-		colorTransform->doTransform();
-		ptr<image> rgbImage = colorTransform->getOutputImage(0);
-		ptr<handlers::imageHandler> rgbHandler = rgbImage->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
-		ptr<handlers::imageHandler> originalHandler = baselineImage->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
+		ptr<image> rgbImage = colorTransform->allocateOutputImage(checkImage, checkSizeX, checkSizeY);
+		colorTransform->runTransform(checkImage, 0, 0, checkSizeX, checkSizeY, rgbImage, 0, 0);
+		ptr<handlers::dataHandlerNumericBase> rgbHandler = rgbImage->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
+		ptr<handlers::dataHandlerNumericBase> originalHandler = baselineImage->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
 
 		// Compare the buffers. A little difference is allowed
 		CPPUNIT_ASSERT(checkSizeX == sizeX);
 		CPPUNIT_ASSERT(checkSizeY == sizeY);
+
+		elementPointer = 0;
 
 		imbxUint32 difference = 0;
 		for(imbxUint32 checkY = 0; checkY < sizeY; ++checkY)
@@ -107,8 +108,8 @@ void jpegCodecTest::testBaseline()
 			{
 				for(imbxUint32 channel = 3; channel != 0; --channel)
 				{
-					imbxInt32 value0 = rgbHandler->getUnsignedLongIncPointer();
-					imbxInt32 value1 = originalHandler->getUnsignedLongIncPointer();
+					imbxInt32 value0 = rgbHandler->getUnsignedLong(elementPointer);
+					imbxInt32 value1 = originalHandler->getUnsignedLong(elementPointer++);
 					if(value0 > value1)
 					{
 						difference += value0 - value1;
@@ -133,9 +134,10 @@ void jpegCodecTest::testBaselineSubsampled()
 	baselineImage->create(sizeX, sizeY, image::depthU8, L"RGB", 7);
 
 	imbxUint32 rowSize, channelsPixelSize, channelsNumber;
-	ptr<handlers::imageHandler> imageHandler = baselineImage->getDataHandler(true, &rowSize, &channelsPixelSize, &channelsNumber);
+	ptr<handlers::dataHandlerNumericBase> imageHandler = baselineImage->getDataHandler(true, &rowSize, &channelsPixelSize, &channelsNumber);
 
 	// Make 3 bands (RGB)
+	imbxUint32 elementNumber(0);
 	for(imbxUint32 y=0; y<sizeY; ++y)
 	{
 		for(imbxUint32 x=0; x<sizeX; ++x)
@@ -156,19 +158,18 @@ void jpegCodecTest::testBaselineSubsampled()
 				g = 0;
 				b = 0;
 			}
-			imageHandler->setUnsignedLongIncPointer(r);
-			imageHandler->setUnsignedLongIncPointer(g);
-			imageHandler->setUnsignedLongIncPointer(b);
+			imageHandler->setUnsignedLong(elementNumber++, r);
+			imageHandler->setUnsignedLong(elementNumber++, g);
+			imageHandler->setUnsignedLong(elementNumber++, b);
 		}
 	}
 	imageHandler.release();
 
 	ptr<transforms::colorTransforms::colorTransformsFactory> colorFactory;
 	colorFactory = transforms::colorTransforms::colorTransformsFactory::getColorTransformsFactory();
-	ptr<transforms::transform> colorTransform = colorFactory->getTransform(L"RGB", L"YBR_FULL");
-	colorTransform->declareInputImage(0, baselineImage);
-	colorTransform->doTransform();
-	ptr<image> ybrImage = colorTransform->getOutputImage(0);
+	ptr<transforms::colorTransforms::colorTransform> colorTransform = colorFactory->getTransform(L"RGB", L"YBR_FULL");
+	ptr<image> ybrImage = colorTransform->allocateOutputImage(baselineImage, sizeX, sizeY);
+	colorTransform->runTransform(baselineImage, 0, 0, sizeX, sizeY, ybrImage, 0, 0);
 
 	ptr<memory> streamMemory(new memory);
 	{
@@ -189,25 +190,25 @@ void jpegCodecTest::testBaselineSubsampled()
 	checkImage->getSize(&checkSizeX, &checkSizeY);
 
 	colorTransform = colorFactory->getTransform(L"YBR_FULL", L"RGB");
-	colorTransform->declareInputImage(0, checkImage);
-	colorTransform->doTransform();
-	ptr<image> rgbImage = colorTransform->getOutputImage(0);
-	ptr<handlers::imageHandler> rgbHandler = rgbImage->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
-	ptr<handlers::imageHandler> originalHandler = baselineImage->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
+	ptr<image> rgbImage = colorTransform->allocateOutputImage(checkImage, checkSizeX, checkSizeY);
+	colorTransform->runTransform(checkImage, 0, 0, checkSizeX, checkSizeY, rgbImage, 0, 0);
+	ptr<handlers::dataHandlerNumericBase> rgbHandler = rgbImage->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
+	ptr<handlers::dataHandlerNumericBase> originalHandler = baselineImage->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
 
 	// Compare the buffers. A little difference is allowed
 	CPPUNIT_ASSERT(checkSizeX == sizeX);
 	CPPUNIT_ASSERT(checkSizeY == sizeY);
 
 	imbxUint32 difference = 0;
+	elementNumber = 0;
 	for(imbxUint32 checkY = 0; checkY < sizeY; ++checkY)
 	{
 		for(imbxUint32 checkX = 0; checkX < sizeX; ++checkX)
 		{
 			for(imbxUint32 channel = 3; channel != 0; --channel)
 			{
-				imbxInt32 value0 = rgbHandler->getUnsignedLongIncPointer();
-				imbxInt32 value1 = originalHandler->getUnsignedLongIncPointer();
+				imbxInt32 value0 = rgbHandler->getUnsignedLong(elementNumber);
+				imbxInt32 value1 = originalHandler->getUnsignedLong(elementNumber++);
 				if(value0 > value1)
 				{
 					difference += value0 - value1;
@@ -231,9 +232,10 @@ void jpegCodecTest::testLossless()
 	baselineImage->create(sizeX, sizeY, image::depthU8, L"RGB", 7);
 
 	imbxUint32 rowSize, channelsPixelSize, channelsNumber;
-	ptr<handlers::imageHandler> imageHandler = baselineImage->getDataHandler(true, &rowSize, &channelsPixelSize, &channelsNumber);
+	ptr<handlers::dataHandlerNumericBase> imageHandler = baselineImage->getDataHandler(true, &rowSize, &channelsPixelSize, &channelsNumber);
 
 	// Make 3 bands (RGB)
+	imbxUint32 elementNumber(0);
 	for(imbxUint32 y=0; y<sizeY; ++y)
 	{
 		for(imbxUint32 x=0; x<sizeX; ++x)
@@ -254,9 +256,9 @@ void jpegCodecTest::testLossless()
 				g = 0;
 				b = 0;
 			}
-			imageHandler->setUnsignedLongIncPointer(r);
-			imageHandler->setUnsignedLongIncPointer(g);
-			imageHandler->setUnsignedLongIncPointer(b);
+			imageHandler->setUnsignedLong(elementNumber++, r);
+			imageHandler->setUnsignedLong(elementNumber++, g);
+			imageHandler->setUnsignedLong(elementNumber++, b);
 		}
 	}
 	imageHandler.release();
@@ -278,12 +280,14 @@ void jpegCodecTest::testLossless()
 	imbxUint32 checkSizeX, checkSizeY;
 	checkImage->getSize(&checkSizeX, &checkSizeY);
 
-	ptr<handlers::imageHandler> rgbHandler = checkImage->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
-	ptr<handlers::imageHandler> originalHandler = baselineImage->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
+	ptr<handlers::dataHandlerNumericBase> rgbHandler = checkImage->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
+	ptr<handlers::dataHandlerNumericBase> originalHandler = baselineImage->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
 
 	// Compare the buffers. A little difference is allowed
 	CPPUNIT_ASSERT(checkSizeX == sizeX);
 	CPPUNIT_ASSERT(checkSizeY == sizeY);
+
+	elementNumber = 0;
 
 	for(imbxUint32 checkY = 0; checkY < sizeY; ++checkY)
 	{
@@ -291,8 +295,8 @@ void jpegCodecTest::testLossless()
 		{
 			for(imbxUint32 channel = 3; channel != 0; --channel)
 			{
-				imbxInt32 value0 = rgbHandler->getUnsignedLongIncPointer();
-				imbxInt32 value1 = originalHandler->getUnsignedLongIncPointer();
+				imbxInt32 value0 = rgbHandler->getUnsignedLong(elementNumber);
+				imbxInt32 value1 = originalHandler->getUnsignedLong(elementNumber++);
 				CPPUNIT_ASSERT(value0 == value1);
 			}
 		}

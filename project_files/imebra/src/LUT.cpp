@@ -9,7 +9,7 @@ $fileHeader$
 
 #include "../../base/include/exception.h"
 #include "../include/LUT.h"
-#include "../include/dataHandler.h"
+#include "../include/dataHandlerNumeric.h"
 #include <string.h>
 
 namespace puntoexe
@@ -53,15 +53,14 @@ void lut::setLut(ptr<handlers::dataHandler> pDescriptor, ptr<handlers::dataHandl
 	{
 		PUNTOEXE_THROW(lutExceptionCorrupted, "The LUT is corrupted");
 	}
-	pDescriptor->setPointer(0);
-	imbxInt32 lutSize=pDescriptor->getSignedLongIncPointer();
+	imbxInt32 lutSize=pDescriptor->getSignedLong(0);
 	if(lutSize == 0)
 		lutSize=0x00010000;
 	if(lutSize < 0)
 		lutSize&=0x0000FFFF;
 
-	imbxInt32 lutFirstMapped=pDescriptor->getSignedLongIncPointer();
-	imbxUint32 lutBits=pDescriptor->getUnsignedLongIncPointer();
+	imbxInt32 lutFirstMapped=pDescriptor->getSignedLong(1);
+	imbxUint32 lutBits=pDescriptor->getUnsignedLong(2);
 
 	if(pData == 0 || (imbxUint32)lutSize != pData->getSize())
 	{
@@ -70,7 +69,7 @@ void lut::setLut(ptr<handlers::dataHandler> pDescriptor, ptr<handlers::dataHandl
 
 	create(lutSize, lutFirstMapped, (imbxUint8)lutBits, description);
 
-    pData->copyToInt32(m_pMappedValues, lutSize);
+    dynamic_cast<handlers::dataHandlerNumericBase*>(pData.get())->copyTo(m_pMappedValues, lutSize);
 
     m_bChecked = false; // LUT has to be checked again
 
@@ -132,25 +131,24 @@ void lut::fillHandlers(ptr<handlers::dataHandler> pDescriptor, ptr<handlers::dat
 	PUNTOEXE_FUNCTION_START(L"lut::fillHandlers");
 
 	pDescriptor->setSize(3);
-	pDescriptor->setPointer(0);
 	imbxUint32 lutSize = getSize();
 	if(lutSize == 0x00010000)
 	{
-		pDescriptor->setSignedLongIncPointer(0);
+		pDescriptor->setSignedLong(0, 0);
 	}
 	else
 	{
-		pDescriptor->setUnsignedLongIncPointer(lutSize);
+		pDescriptor->setUnsignedLong(0, lutSize);
 	}
 
 	imbxInt32 lutFirstMapped = getFirstMapped();
-	pDescriptor->setSignedLongIncPointer(lutFirstMapped);
+	pDescriptor->setSignedLong(1, lutFirstMapped);
 
 	imbxUint8 bits = getBits();
-	pDescriptor->setUnsignedLong(bits);
+	pDescriptor->setUnsignedLong(2, bits);
 
 	pData->setSize(lutSize);
-	pData->copyFromInt32(m_pMappedValues, lutSize);
+	dynamic_cast<handlers::dataHandlerNumericBase*>(pData.get())->copyFrom(m_pMappedValues, lutSize);
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -375,6 +373,33 @@ imbxInt32 lut::mappedValueRev(imbxInt32 lutValue)
 		return lutIterator->second;
 
 	return 0;
+}
+
+
+palette::palette(ptr<lut> red, ptr<lut> green, ptr<lut> blue):
+m_redLut(red), m_greenLut(green), m_blueLut(blue)
+{}
+
+void palette::setLuts(ptr<lut> red, ptr<lut> green, ptr<lut> blue)
+{
+	m_redLut = red;
+	m_greenLut = green;
+	m_blueLut = blue;
+}
+
+ptr<lut> palette::getRed()
+{
+	return m_redLut;
+}
+
+ptr<lut> palette::getGreen()
+{
+	return m_greenLut;
+}
+
+ptr<lut> palette::getBlue()
+{
+	return m_blueLut;
 }
 
 } // namespace imebra

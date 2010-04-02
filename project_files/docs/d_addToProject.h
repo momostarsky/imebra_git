@@ -109,7 +109,7 @@ Please check that all the following tasks have been performed:
   preprocessor definitions
 - When compiling for Windows Mobile define the symbol _WIN32_WCE in the 
   preprocessor definitions
-- When compiling for windows Desktop define the symbol _WIN32_WINNT to 0x0400
+- When compiling for windows Desktop define the symbol _WIN32_WINNT to 0x0500
   or greater
 - Enable the RTTI informations in the C++ compiler
 - Include the file "library/imebra/imebra.h" in all the files that

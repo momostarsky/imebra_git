@@ -11,7 +11,7 @@ $fileHeader$
 #define imebraTransformsChain_5DB89BFD_F105_45e7_B9D9_3756AC93C821__INCLUDED_
 
 #include <list>
-#include "transform.h"
+#include "baseTransform.h"
 
 namespace puntoexe
 {
@@ -42,26 +42,10 @@ namespace transforms
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class transformsChain: public transform
+class transformsChain: public baseTransform
 {
 public:
 	transformsChain();
-
-	// Declare an input image for the transform
-	///////////////////////////////////////////////////////////
-	virtual void declareInputImage(long imageNumber, ptr<image> pInputImage);
-
-	// Declare an output image for the transform
-	///////////////////////////////////////////////////////////
-	virtual void declareOutputImage(long imageNumber, ptr<image> pOutputImage);
-
-	// Set the dataset to use for the transformations
-	///////////////////////////////////////////////////////////
-	virtual void declareDataSet(ptr<dataSet> pDataSet);
-	
-	// Start the transform
-	///////////////////////////////////////////////////////////
-	virtual void doTransform();
 
 	/// \brief Add a transform to the transforms chain.
 	///
@@ -79,32 +63,63 @@ public:
 	///                    transformsChain
 	///
 	///////////////////////////////////////////////////////////
-	void addTransform(ptr<transform> pTransform);
+	void addTransform(ptr<baseTransform> pTransform);
 
-	/// \brief Returns true if no transform has been defined
+        virtual void runTransform(
+            ptr<image> inputImage,
+            imbxUint32 inputTopLeftX, imbxUint32 inputTopLeftY, imbxUint32 inputWidth, imbxUint32 inputHeight,
+            ptr<image> outputImage,
+            imbxUint32 outputTopLeftX, imbxUint32 outputTopLeftY);
+
+	/// \brief Returns true if the transform doesn't do
+	///         anything.
 	///
-	/// @return true if the transforms chain is empty and will
-	///               not perform any transformation
+	/// It always return false, but it is overwritten in the
+	///  transformsChain class.
+	///
+	/// @return false if the transform does something, or true
+	///          if the transform doesn't do anything (e.g. an
+	///          empty transformsChain object).
 	///
 	///////////////////////////////////////////////////////////
 	virtual bool isEmpty();
 
-	/// \brief Tells to the transformsChain object that no more 
-	///         transforms will be added to the chain.
-	///
-	/// This function MUST be called after all the transforms
-	///  have been added to the chain by addTransform() and
-	///  before calling doTransform().
+
+	/// \brief Allocate an output image that is compatible with
+	///         the transform given the specified input image.
 	///
 	///////////////////////////////////////////////////////////
-	void endTransformsChain();
+        virtual ptr<image> allocateOutputImage(ptr<image> pInputImage, imbxUint32 width, imbxUint32 height);
 
 protected:
-	typedef std::list<ptr<transform> > tTransformsList;
+        imbxUint32 m_inputWidth;
+        imbxUint32 m_inputHeight;
+	std::wstring m_inputColorSpace;
+	image::bitDepth m_inputDepth;
+	imbxUint32 m_inputHighBit;
+	std::wstring m_outputColorSpace;
+	image::bitDepth m_outputDepth;
+	imbxUint32 m_outputHighBit;
+
+	typedef std::list<ptr<baseTransform> > tTransformsList;
 	tTransformsList m_transformsList;
-	bool m_bEndTransformsChainCalled;
+
+	typedef std::list<ptr<image> > tTemporaryImagesList;
+	tTemporaryImagesList m_temporaryImages;
+
 };
 
+class transformsChainException: public baseTransformException
+{
+public:
+    transformsChainException(const std::string& what): baseTransformException(what){}
+};
+
+class transformsChainEmptyChainException: public transformsChainException
+{
+public:
+    transformsChainEmptyChainException(const std::string& what): transformsChainException(what){}
+};
 
 } // namespace transforms
 

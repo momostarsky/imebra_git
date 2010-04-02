@@ -38,11 +38,11 @@ class dataHandlerStringIS : public dataHandlerString
 public:
 	// Overwritten to use getSignedLong()
 	///////////////////////////////////////////////////////////
-	virtual double getDouble() const;
+	virtual double getDouble(const imbxUint32 index) const;
 
 	// Overwritten to use setSignedLong()
 	///////////////////////////////////////////////////////////
-	virtual void setDouble(const double value);
+	virtual void setDouble(const imbxUint32 index, const double value);
 
 	// Get the padding byte
 	///////////////////////////////////////////////////////////

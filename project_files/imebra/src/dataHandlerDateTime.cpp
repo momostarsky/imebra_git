@@ -48,7 +48,7 @@ namespace handlers
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerDateTime::getDate(
+void dataHandlerDateTime::getDate(const imbxUint32 index,
 		imbxInt32* pYear, 
 		imbxInt32* pMonth, 
 		imbxInt32* pDay, 
@@ -61,7 +61,7 @@ void dataHandlerDateTime::getDate(
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTime::getDate");
 
-	std::wstring dateTimeString=dataHandlerDateTimeBase::getUnicodeString();
+	std::wstring dateTimeString=dataHandlerDateTimeBase::getUnicodeString(index);
 	std::wstring dateString=dateTimeString.substr(0, 8);
 	std::wstring timeString=dateTimeString.substr(8);
 
@@ -81,7 +81,7 @@ void dataHandlerDateTime::getDate(
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerDateTime::setDate(
+void dataHandlerDateTime::setDate(const imbxUint32 index,
 		imbxInt32 year, 
 		imbxInt32 month, 
 		imbxInt32 day, 
@@ -97,7 +97,7 @@ void dataHandlerDateTime::setDate(
 	std::wstring dateTimeString;
 	dateTimeString = buildDate(year, month, day);
 	dateTimeString += buildTime(hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes);
-	dataHandlerDateTimeBase::setUnicodeString(dateTimeString);
+	dataHandlerDateTimeBase::setUnicodeString(index, dateTimeString);
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -112,12 +112,12 @@ void dataHandlerDateTime::setDate(
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::wstring dataHandlerDateTime::getUnicodeString() const
+std::wstring dataHandlerDateTime::getUnicodeString(const imbxUint32 index) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTime::getUnicodeString");
 
 	imbxInt32 year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes;
-	getDate(&year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
+	getDate(index, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
 
 	std::wostringstream convStream;
 	convStream << std::setfill(L'0');
@@ -157,7 +157,7 @@ std::wstring dataHandlerDateTime::getUnicodeString() const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerDateTime::setUnicodeString(const std::wstring& value)
+void dataHandlerDateTime::setUnicodeString(const imbxUint32 index, const std::wstring& value)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTime::setUnicodeString");
 
@@ -236,7 +236,7 @@ void dataHandlerDateTime::setUnicodeString(const std::wstring& value)
 	}
 
 
-	setDate(year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes);
+	setDate(index, year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes);
 
 	PUNTOEXE_FUNCTION_END();
 }

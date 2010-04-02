@@ -39,42 +39,29 @@ namespace handlers
 class dataHandlerString : public dataHandler
 {
 public:
-	// Constructor
-	///////////////////////////////////////////////////////////
-	dataHandlerString(): m_elementNumber(0){}
-
-public:
-	// Set the data element's pointer
-	///////////////////////////////////////////////////////////
-	virtual void setPointer(imbxUint32 const elementNumber);
-
-	// Increase the data element's pointer
-	///////////////////////////////////////////////////////////
-	virtual void incPointer();
-
 	// Returns true if the pointer is valid
 	///////////////////////////////////////////////////////////
-	virtual bool pointerIsValid() const;
+	virtual bool pointerIsValid(const imbxUint32 index) const;
 
 	// Get the data element as a signed long
 	///////////////////////////////////////////////////////////
-	virtual imbxInt32 getSignedLong() const;
+	virtual imbxInt32 getSignedLong(const imbxUint32 index) const;
 
 	// Get the data element as an unsigned long
 	///////////////////////////////////////////////////////////
-	virtual imbxUint32 getUnsignedLong() const;
+	virtual imbxUint32 getUnsignedLong(const imbxUint32 index) const;
 	
 	// Get the data element as a double
 	///////////////////////////////////////////////////////////
-	virtual double getDouble() const;
+	virtual double getDouble(const imbxUint32 index) const;
 
 	// Get the data element as a string
 	///////////////////////////////////////////////////////////
-	virtual std::string getString() const;
+	virtual std::string getString(const imbxUint32 index) const;
 
 	// Get the data element as an unicode string
 	///////////////////////////////////////////////////////////
-	virtual std::wstring getUnicodeString() const;
+	virtual std::wstring getUnicodeString(const imbxUint32 index) const;
 
 	// Retrieve the data element as a string
 	///////////////////////////////////////////////////////////
@@ -82,23 +69,23 @@ public:
 	
 	// Set the data element as a signed long
 	///////////////////////////////////////////////////////////
-	virtual void setSignedLong(const imbxInt32 value);
+	virtual void setSignedLong(const imbxUint32 index, const imbxInt32 value);
 	
 	// Set the data element as an unsigned long
 	///////////////////////////////////////////////////////////
-	virtual void setUnsignedLong(const imbxUint32 value);
+	virtual void setUnsignedLong(const imbxUint32 index, const imbxUint32 value);
 	
 	// Set the data element as a double
 	///////////////////////////////////////////////////////////
-	virtual void setDouble(const double value);
+	virtual void setDouble(const imbxUint32 index, const double value);
 	
 	// Set the data element as a string
 	///////////////////////////////////////////////////////////
-	virtual void setString(const std::string& value);
+	virtual void setString(const imbxUint32 index, const std::string& value);
 
 	// Set the data element as an unicode string
 	///////////////////////////////////////////////////////////
-	virtual void setUnicodeString(const std::wstring& value);
+	virtual void setUnicodeString(const imbxUint32 index, const std::wstring& value);
 	
 	// Set the buffer's size, in data elements
 	///////////////////////////////////////////////////////////
@@ -111,18 +98,6 @@ public:
 	// Build the buffer
 	///////////////////////////////////////////////////////////
 	virtual void buildBuffer(const ptr<memory>& memoryBuffer);
-
-	// Copy the content of an array of imbxInt32 values
-	//         into the buffer controlled by the handler.
-	///////////////////////////////////////////////////////////
-	virtual void copyFromInt32(const imbxInt32* pSource, const imbxUint32 length);
-
-	// Copy the content of the buffer to an array of imbxInt32
-	//         values.
-	///////////////////////////////////////////////////////////
-	///////////////////////////////////////////////////////////
-	virtual void copyToInt32(imbxInt32* pDest, const imbxUint32 length) const;
-
 
 protected:
 	// Convert a string to unicode, without using the dicom 

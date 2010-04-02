@@ -23,10 +23,10 @@ void dateTimeHandlerTest::dateTest()
 		ptr<handlers::dataHandler> hTag= tag->getDataHandler(0, true, "DA");
 		hTag->setSize(1);
 
-		hTag->setDate(2004, 11, 5, 9, 20, 30, 5000, 1, 2);
+		hTag->setDate(0, 2004, 11, 5, 9, 20, 30, 5000, 1, 2);
 
 		imbxInt32 year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes;
-		hTag->getDate(&year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
+		hTag->getDate(0, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
 
 		CPPUNIT_ASSERT(year == 2004);
 		CPPUNIT_ASSERT(month == 11);
@@ -38,7 +38,7 @@ void dateTimeHandlerTest::dateTest()
 		CPPUNIT_ASSERT(offsetHours == 0);
 		CPPUNIT_ASSERT(offsetMinutes == 0);
 
-		CPPUNIT_ASSERT(hTag->getUnicodeString() == L"2004-11-05");
+		CPPUNIT_ASSERT(hTag->getUnicodeString(0) == L"2004-11-05");
 	}
 
 	{
@@ -60,7 +60,7 @@ void dateTimeHandlerTest::dateTest()
 		ptr<handlers::dataHandler> hTag= tag->getDataHandler(0, false, "DA");
 
 		imbxInt32 year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes;
-		hTag->getDate(&year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
+		hTag->getDate(0, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
 
 		CPPUNIT_ASSERT(year == 2004);
 		CPPUNIT_ASSERT(month == 11);
@@ -72,7 +72,7 @@ void dateTimeHandlerTest::dateTest()
 		CPPUNIT_ASSERT(offsetHours == 0);
 		CPPUNIT_ASSERT(offsetMinutes == 0);
 
-		CPPUNIT_ASSERT(hTag->getUnicodeString() == L"2004-11-05");
+		CPPUNIT_ASSERT(hTag->getUnicodeString(0) == L"2004-11-05");
 	}
 }
 
@@ -83,10 +83,10 @@ void dateTimeHandlerTest::timeTest()
 		ptr<handlers::dataHandler> hTag= tag->getDataHandler(0, true, "TM");
 		hTag->setSize(1);
 
-		hTag->setDate(2004, 11, 5, 9, 20, 40, 5000, 1, 2);
+		hTag->setDate(0, 2004, 11, 5, 9, 20, 40, 5000, 1, 2);
 
 		imbxInt32 year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes;
-		hTag->getDate(&year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
+		hTag->getDate(0, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
 
 		CPPUNIT_ASSERT(year == 0);
 		CPPUNIT_ASSERT(month == 0);
@@ -98,7 +98,7 @@ void dateTimeHandlerTest::timeTest()
 		CPPUNIT_ASSERT(offsetHours == 0);
 		CPPUNIT_ASSERT(offsetMinutes == 0);
 
-		CPPUNIT_ASSERT(hTag->getUnicodeString() == L"09:20:40.005000");
+		CPPUNIT_ASSERT(hTag->getUnicodeString(0) == L"09:20:40.005000");
 	}
 
 	{
@@ -114,7 +114,7 @@ void dateTimeHandlerTest::timeTest()
 		ptr<handlers::dataHandler> hTag= tag->getDataHandler(0, false, "TM");
 
 		imbxInt32 year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes;
-		hTag->getDate(&year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
+		hTag->getDate(0, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
 
 		CPPUNIT_ASSERT(year == 0);
 		CPPUNIT_ASSERT(month == 0);
@@ -126,7 +126,7 @@ void dateTimeHandlerTest::timeTest()
 		CPPUNIT_ASSERT(offsetHours == 0);
 		CPPUNIT_ASSERT(offsetMinutes == 0);
 
-		CPPUNIT_ASSERT(hTag->getUnicodeString() == L"09:20:40.000000");
+		CPPUNIT_ASSERT(hTag->getUnicodeString(0) == L"09:20:40.000000");
 	}
 }
 
@@ -137,10 +137,10 @@ void dateTimeHandlerTest::dateTimeTest()
 		ptr<handlers::dataHandler> hTag= tag->getDataHandler(0, true, "DT");
 		hTag->setSize(1);
 
-		hTag->setDate(2004, 11, 5, 9, 20, 40, 5000, 1, 2);
+		hTag->setDate(0, 2004, 11, 5, 9, 20, 40, 5000, 1, 2);
 
 		imbxInt32 year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes;
-		hTag->getDate(&year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
+		hTag->getDate(0, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
 
 		CPPUNIT_ASSERT(year == 2004);
 		CPPUNIT_ASSERT(month == 11);
@@ -152,7 +152,7 @@ void dateTimeHandlerTest::dateTimeTest()
 		CPPUNIT_ASSERT(offsetHours == 1);
 		CPPUNIT_ASSERT(offsetMinutes == 2);
 
-		CPPUNIT_ASSERT(hTag->getUnicodeString() == L"2004-11-05 09:20:40.005000+01:02");
+		CPPUNIT_ASSERT(hTag->getUnicodeString(0) == L"2004-11-05 09:20:40.005000+01:02");
 	}
 
 	{
@@ -165,7 +165,7 @@ void dateTimeHandlerTest::dateTimeTest()
 		ptr<handlers::dataHandler> hTag= tag->getDataHandler(0, true, "DT");
 
 		imbxInt32 year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes;
-		hTag->getDate(&year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
+		hTag->getDate(0, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
 
 		CPPUNIT_ASSERT(year == 2004);
 		CPPUNIT_ASSERT(month == 11);
@@ -177,10 +177,10 @@ void dateTimeHandlerTest::dateTimeTest()
 		CPPUNIT_ASSERT(offsetHours == 1);
 		CPPUNIT_ASSERT(offsetMinutes == 2);
 
-		CPPUNIT_ASSERT(hTag->getUnicodeString() == L"2004-11-05 09:20:40.005000+01:02");
+		CPPUNIT_ASSERT(hTag->getUnicodeString(0) == L"2004-11-05 09:20:40.005000+01:02");
 
-		hTag->setString("2005-12-06 10:21:41.005001-4:5");
-		hTag->getDate(&year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
+		hTag->setString(0, "2005-12-06 10:21:41.005001-4:5");
+		hTag->getDate(0, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
 		CPPUNIT_ASSERT(year == 2005);
 		CPPUNIT_ASSERT(month == 12);
 		CPPUNIT_ASSERT(day == 6);
@@ -203,7 +203,7 @@ void dateTimeHandlerTest::dateTimeTest()
 		ptr<handlers::dataHandler> hTag= tag->getDataHandler(0, false, "DT");
 
 		imbxInt32 year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes;
-		hTag->getDate(&year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
+		hTag->getDate(0, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
 
 		CPPUNIT_ASSERT(year == 1999);
 		CPPUNIT_ASSERT(month == 03);
@@ -225,7 +225,7 @@ void dateTimeHandlerTest::dateTimeTest()
 		ptr<handlers::dataHandler> hTag= tag->getDataHandler(0, false, "DT");
 
 		imbxInt32 year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes;
-		hTag->getDate(&year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
+		hTag->getDate(0, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
 
 		CPPUNIT_ASSERT(year == 1999);
 		CPPUNIT_ASSERT(month == 03);

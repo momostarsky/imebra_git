@@ -10,7 +10,8 @@ $fileHeader$
 #if !defined(imebraTransformHighBit_8347C70F_1FC8_4df8_A887_8DE9E968B2CF__INCLUDED_)
 #define imebraTransformHighBit_8347C70F_1FC8_4df8_A887_8DE9E968B2CF__INCLUDED_
 
-#include "transformBuffers.h"
+#include "baseTransform.h"
+#include "colorTransformsFactory.h"
 
 namespace puntoexe
 {
@@ -34,21 +35,60 @@ namespace transforms
 ///  output image's high bit settings.
 ///
 ///////////////////////////////////////////////////////////
-class transformHighBit: public transformBuffersInPlace
+class transformHighBit: public transformHandlers
 {
 public:
-	virtual void doTransformBuffersInPlace(
-		imbxUint32 sizeX,
-		imbxUint32 sizeY,
-		imbxUint32 inputChannelsNumber,
-		std::wstring inputColorSpace,
-		image::bitDepth inputDepth,
-		imbxUint32 inputHighBit,
-		imbxInt32* pOutputBuffer,
-		imbxUint32 buffersSize,
-		image::bitDepth* pOutputDepth,
-		imbxUint32* pOutputHighBit
-		);
+        virtual ptr<image> allocateOutputImage(ptr<image> pInputImage, imbxUint32 width, imbxUint32 height);
+
+        DEFINE_RUN_TEMPLATE_TRANSFORM;
+
+        template <class inputType, class outputType>
+        void templateTransform(
+            inputType* inputHandlerData, size_t inputHandlerSize, imbxUint32 inputHandlerWidth, const std::wstring& inputHandlerColorSpace,
+            ptr<palette> /* inputPalette */,
+            imbxInt32 inputHandlerMinValue, imbxUint32 inputHandlerNumValues,
+            imbxInt32 inputTopLeftX, imbxInt32 inputTopLeftY, imbxInt32 inputWidth, imbxInt32 inputHeight,
+            outputType* outputHandlerData, size_t outputHandlerSize, imbxInt32 outputHandlerWidth, const std::wstring& outputHandlerColorSpace,
+            ptr<palette> /* outputPalette */,
+            imbxInt32 outputHandlerMinValue, imbxUint32 outputHandlerNumValues,
+            imbxInt32 outputTopLeftX, imbxInt32 outputTopLeftY)
+
+        {
+            imbxInt32 numChannels(colorTransforms::colorTransformsFactory::getNumberOfChannels(inputHandlerColorSpace));
+
+            inputType* pInputMemory(inputHandlerData);
+            outputType* pOutputMemory(outputHandlerData);
+
+            pInputMemory += (inputTopLeftY * inputHandlerWidth + inputTopLeftX) * numChannels;
+            pOutputMemory += (outputTopLeftY * outputHandlerWidth + outputTopLeftX) * numChannels;
+
+            if(inputHandlerNumValues == outputHandlerNumValues)
+            {
+                imbxInt32 offset(inputHandlerMinValue - outputHandlerMinValue);
+                for(; inputHeight != 0; --inputHeight)
+                {
+                    for(int scanPixels(inputWidth * numChannels); scanPixels != 0; --scanPixels)
+                    {
+                        *(pOutputMemory++) = (outputType)((imbxInt32)*(pInputMemory++) - offset);
+                    }
+                    pInputMemory += (inputHandlerWidth - inputWidth) * numChannels;
+                    pOutputMemory += (outputHandlerWidth - inputWidth) * numChannels;
+                }
+            }
+            else
+            {
+                for(; inputHeight != 0; --inputHeight)
+                {
+                    for(int scanPixels(inputWidth * numChannels); scanPixels != 0; --scanPixels)
+                    {
+                        *pOutputMemory++ = (outputType)((((imbxInt32)*(pInputMemory++) - inputHandlerMinValue) * outputHandlerNumValues) / inputHandlerNumValues + outputHandlerMinValue);
+                    }
+                    pInputMemory += (inputHandlerWidth - inputWidth) * numChannels;
+                    pOutputMemory += (outputHandlerWidth - inputWidth) * numChannels;
+                }
+            }
+        }
+
 };
 
 } // namespace transforms

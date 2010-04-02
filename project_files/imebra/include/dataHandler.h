@@ -15,7 +15,6 @@ $fileHeader$
 #include "charsetsList.h"
 
 
-
 ///////////////////////////////////////////////////////////
 //
 // Everything is in the namespace puntoexe::imebra
@@ -128,45 +127,6 @@ public:
 	///////////////////////////////////////////////////////////
 	//@{
 
-	/// \brief Move the internal pointer to the required.
-	///         data element.
-	///
-	/// Subsequent calls to the reading/writing functions will
-	///  read/write the element specified by using this
-	///  function.
-	///
-	/// Note that the pointer is in "data elements", not in
-	///  bytes.
-	/// See also incPointer() and skip().
-	///
-	/// @param elementNumber The element number to activate.
-	///
-	///////////////////////////////////////////////////////////
-	virtual void setPointer(const imbxUint32 elementNumber) =0;
-
-	/// \brief Increase the internal pointer by one element.
-	///
-	/// The internal pointer references the element that will
-	///  be read/written by the reading/writing functions.
-	///
-	/// See also setPointer() and skip().
-	///////////////////////////////////////////////////////////
-	virtual void incPointer() =0;
-
-	/// \brief Increase the data handler's internal pointer by
-	///        the specified number of elements.
-	///
-	/// The internal pointer references the element that will
-	///  be read/written by the reading/writing functions.
-	///
-	/// See also setPointer() and incPointer().
-	///
-	/// @param skip the number of element the to add to the
-	///             current value of the data handler's
-	///             internal pointer
-	///////////////////////////////////////////////////////////
-	virtual void skip(const int skip);
-
 	/// \brief Returns true if the data handler's internal
 	///        pointer is valid.
 	///
@@ -182,7 +142,7 @@ public:
 	///         false=invalid).
 	///
 	///////////////////////////////////////////////////////////
-	virtual bool pointerIsValid() const=0;
+	virtual bool pointerIsValid(const imbxUint32 index) const=0;
 
 	//@}
 
@@ -329,7 +289,7 @@ public:
 	///          transformed into a signed long
 	///
 	///////////////////////////////////////////////////////////
-	virtual imbxInt32 getSignedLong() const=0;
+	virtual imbxInt32 getSignedLong(const imbxUint32 index) const=0;
 
 	/// \brief Retrieve the active %data element as an unsigned
 	///         long.
@@ -342,7 +302,7 @@ public:
 	///          transformed into an unsigned long
 	///
 	///////////////////////////////////////////////////////////
-	virtual imbxUint32 getUnsignedLong() const =0;
+	virtual imbxUint32 getUnsignedLong(const imbxUint32 index) const =0;
 
 	/// \brief Retrieve the active %data element as a double.
 	///
@@ -354,50 +314,8 @@ public:
 	///          transformed into a double
 	///
 	///////////////////////////////////////////////////////////
-	virtual double getDouble() const=0;
+	virtual double getDouble(const imbxUint32 index) const=0;
 
-	/// \brief Retrieve the active %data element as a signed
-	///         long and increase the %data handler's internal
-	///         pointer by 1.
-	///
-	/// The active %data element is referenced by the data
-	///  handler's internal pointer, set by the method
-	///  setPointer(), incPointer() and skip().
-	///
-	/// @return the value of the active data element
-	///         transformed into a signed long
-	///
-	///////////////////////////////////////////////////////////
-	virtual imbxInt32 getSignedLongIncPointer();
-
-	/// \brief Retrieve the active %data element as an unsigned
-	///         long and increase the %data handler's internal
-	///         pointer by 1.
-	///
-	/// The active %data element is referenced by the data
-	///  handler's internal pointer, set by the method
-	///  setPointer(), incPointer() and skip().
-	///
-	/// @return the value of the active data element
-	///         transformed into an unsigned long
-	///
-	///////////////////////////////////////////////////////////
-	virtual imbxUint32 getUnsignedLongIncPointer();
-
-	/// \brief Retrieve the active %data element as a double
-	///         and increase the %data handler's internal
-	///         pointer by 1.
-	///
-	/// The active %data element is referenced by the data
-	///  handler's internal pointer, set by the method
-	///  setPointer(), incPointer() and skip().
-	///
-	/// @return the value of the active data element
-	///         transformed into a double
-	///
-	///////////////////////////////////////////////////////////
-	virtual double getDoubleIncPointer();
-	
 	/// \brief Retrieve the active %data element as a string
 	///
 	/// The retrieved string is converted using  the active 
@@ -414,7 +332,7 @@ public:
 	///         transformed into a string.
 	///
 	///////////////////////////////////////////////////////////
-	virtual std::string getString() const= 0;
+	virtual std::string getString(const imbxUint32 index) const= 0;
 
 	/// \brief Retrieve the active %data element as an
 	///         unicode string.
@@ -431,7 +349,7 @@ public:
 	///         transformed into a string.
 	///
 	///////////////////////////////////////////////////////////
-	virtual std::wstring getUnicodeString() const = 0;
+	virtual std::wstring getUnicodeString(const imbxUint32 index) const = 0;
 
 	/// \brief Retrieve the active %data element as a date.
 	///
@@ -461,7 +379,7 @@ public:
 	///                 date time zone and the UTC time zone
 	///
 	///////////////////////////////////////////////////////////
-	virtual void getDate(
+	virtual void getDate(const imbxUint32 index,
 		imbxInt32* pYear, 
 		imbxInt32* pMonth, 
 		imbxInt32* pDay, 
@@ -491,7 +409,7 @@ public:
 	///                time zone and the UTC time zone
 	///
 	///////////////////////////////////////////////////////////
-	virtual void setDate(
+	virtual void setDate(const imbxUint32 index,
 		imbxInt32 year, 
 		imbxInt32 month, 
 		imbxInt32 day, 
@@ -513,7 +431,7 @@ public:
 	///				  %data element.
 	///
 	///////////////////////////////////////////////////////////
-	virtual void setSignedLong(const imbxInt32 value) =0;
+	virtual void setSignedLong(const imbxUint32 index, const imbxInt32 value) =0;
 
 	/// \brief Set the active %data element from an unsigned
 	///        long.
@@ -526,7 +444,7 @@ public:
 	///				  %data element.
 	///
 	///////////////////////////////////////////////////////////
-	virtual void setUnsignedLong(const imbxUint32 value) =0;
+	virtual void setUnsignedLong(const imbxUint32 index, const imbxUint32 value) =0;
 
 	/// \brief Set the active %data element from a double
 	///
@@ -538,49 +456,7 @@ public:
 	///				  %data element.
 	///
 	///////////////////////////////////////////////////////////
-	virtual void setDouble(const double value) =0;
-
-	/// \brief Set the active %data element from a signed
-	///         long and increase the data handler's internal
-	///         pointer by one element.
-	///
-	/// The active %data element is referenced by the data
-	///  handler's internal pointer, set by the method
-	///  setPointer(), incPointer() and skip().
-	///
-	/// @param value the value to write into the active
-	///				  %data element.
-	///
-	///////////////////////////////////////////////////////////
-	virtual void setSignedLongIncPointer(const imbxInt32 value);
-
-	/// \brief Set the active %data element from an unsigned
-	///         long and increase the data handler's internal
-	///         pointer by one element.
-	///
-	/// The active %data element is referenced by the data
-	///  handler's internal pointer, set by the method
-	///  setPointer(), incPointer() and skip().
-	///
-	/// @param value the value to write into the active
-	///				  %data element.
-	///
-	///////////////////////////////////////////////////////////
-	virtual void setUnsignedLongIncPointer(const imbxUint32 value);
-
-	/// \brief Set the active %data element from a double
-	///         and increase the data handler's internal
-	///         pointer by one element.
-	///
-	/// The active %data element is referenced by the data
-	///  handler's internal pointer, set by the method
-	///  setPointer(), incPointer() and skip().
-	///
-	/// @param value the value to write into the active
-	///				  %data element.
-	///
-	///////////////////////////////////////////////////////////
-	virtual void setDoubleIncPointer(const double value);
+	virtual void setDouble(const imbxUint32 index, const double value) =0;
 
 	/// \brief Set the active %data element from a string.
 	///        SetUnicodeString() is preferred over 
@@ -593,7 +469,7 @@ public:
 	/// @param value the value to write into the active
 	///				  %data element.
 	///////////////////////////////////////////////////////////
-	virtual void setString(const std::string& value) =0;
+	virtual void setString(const imbxUint32 index, const std::string& value) =0;
 
 	/// \brief Set the active %data element from an unicode
 	///          string.
@@ -608,47 +484,10 @@ public:
 	/// @param value the value to write into the active
 	///				  %data element.
 	///////////////////////////////////////////////////////////
-	virtual void setUnicodeString(const std::wstring& value) =0;
+	virtual void setUnicodeString(const imbxUint32 index, const std::wstring& value) =0;
 
 	//@}
 
-
-	///////////////////////////////////////////////////////////
-	/// \name Copy from/to imbxUint32 arrays
-	///
-	///////////////////////////////////////////////////////////
-	//@{
-
-	/// \brief Copy the content of an array of imbxInt32 values
-	///         into the %buffer controlled by the handler.
-	///
-	/// The function doesn't resize the handler's %memory
-	///  before copying the values. If the size of the source
-	///  buffer is too big, then a partial copy will be
-	///  performed.
-	///
-	/// @param pSource      the pointer to the array of 
-	///                      imbxInt32 values.
-	/// @param length       the number of imbxInt32 values that
-	///                      must be copied from pSource into
-	///                      the buffer controlled by the 
-	///                      handler.
-	///
-	///////////////////////////////////////////////////////////
-	virtual void copyFromInt32(const imbxInt32* pSource, const imbxUint32 length) = 0;
-	
-	/// \brief Copy the content of the %buffer controlled by
-	///         the handler into an array of imbxInt32 values.
-	///
-	/// @param pDest        the pointer to the destination
-	///                      array of imbxInt32 values
-	/// @param length       the number of imbxInt32 values to
-	///                      copy into the destination array
-	///
-	///////////////////////////////////////////////////////////
-	virtual void copyToInt32(imbxInt32* pDest, const imbxUint32 length) const = 0;
-	
-	//@}
 
 protected:
 	// true if the buffer has been committed

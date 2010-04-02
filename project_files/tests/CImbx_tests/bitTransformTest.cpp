@@ -28,9 +28,10 @@ void bitTransformTest::testBitTransform()
 	bits4Image->create(sizeX, sizeY, image::depthU8, L"RGB", 3);
 
 	imbxUint32 rowSize, channelsPixelSize, channelsNumber;
-	ptr<handlers::imageHandler> imageHandler = bits8Image->getDataHandler(true, &rowSize, &channelsPixelSize, &channelsNumber);
+	ptr<handlers::dataHandlerNumericBase> imageHandler = bits8Image->getDataHandler(true, &rowSize, &channelsPixelSize, &channelsNumber);
 
-	// Make 3 bands (RGB)
+	// Make 3 bands (RGB
+	imbxUint32 elementNumber(0);
 	for(imbxUint32 y=0; y<sizeY; ++y)
 	{
 		for(imbxUint32 x=0; x<sizeX; ++x)
@@ -51,9 +52,9 @@ void bitTransformTest::testBitTransform()
 				g = 0;
 				b = 0;
 			}
-			imageHandler->setUnsignedLongIncPointer(r);
-			imageHandler->setUnsignedLongIncPointer(g);
-			imageHandler->setUnsignedLongIncPointer(b);
+			imageHandler->setUnsignedLong(elementNumber++, r);
+			imageHandler->setUnsignedLong(elementNumber++, g);
+			imageHandler->setUnsignedLong(elementNumber++, b);
 		}
 	}
 	imageHandler.release();
@@ -67,10 +68,10 @@ void bitTransformTest::testBitTransform()
 	highBit->declareOutputImage(0, bits4Image);
 	highBit->doTransform();
 
-	ptr<handlers::imageHandler> bits8Handler = bits8Image->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
-	ptr<handlers::imageHandler> bits16Handler = bits16Image->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
-	ptr<handlers::imageHandler> bits4Handler = bits4Image->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
-
+	ptr<handlers::dataHandlerNumericBase> bits8Handler = bits8Image->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
+	ptr<handlers::dataHandlerNumericBase> bits16Handler = bits16Image->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
+	ptr<handlers::dataHandlerNumericBase> bits4Handler = bits4Image->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
+	elementNumber = 0;
 	for(imbxUint32 checkY = 0; checkY < sizeY; ++checkY)
 	{
 		for(imbxUint32 checkX = 0; checkX < sizeX; ++checkX)
@@ -92,17 +93,17 @@ void bitTransformTest::testBitTransform()
 				b = 0;
 			}
 
-			imbxInt32 value0r = bits8Handler->getUnsignedLongIncPointer();
-			imbxInt32 value1r = bits16Handler->getUnsignedLongIncPointer();
-			imbxInt32 value2r = bits4Handler->getUnsignedLongIncPointer();
+			imbxInt32 value0r = bits8Handler->getUnsignedLong(elementNumber);
+			imbxInt32 value1r = bits16Handler->getUnsignedLong(elementNumber);
+			imbxInt32 value2r = bits4Handler->getUnsignedLong(elementNumber++);
 			
-			imbxInt32 value0g = bits8Handler->getUnsignedLongIncPointer();
-			imbxInt32 value1g = bits16Handler->getUnsignedLongIncPointer();
-			imbxInt32 value2g = bits4Handler->getUnsignedLongIncPointer();
+			imbxInt32 value0g = bits8Handler->getUnsignedLong(elementNumber);
+			imbxInt32 value1g = bits16Handler->getUnsignedLong(elementNumber);
+			imbxInt32 value2g = bits4Handler->getUnsignedLong(elementNumber++);
 			
-			imbxInt32 value0b = bits8Handler->getUnsignedLongIncPointer();
-			imbxInt32 value1b = bits16Handler->getUnsignedLongIncPointer();
-			imbxInt32 value2b = bits4Handler->getUnsignedLongIncPointer();
+			imbxInt32 value0b = bits8Handler->getUnsignedLong(elementNumber);
+			imbxInt32 value1b = bits16Handler->getUnsignedLong(elementNumber);
+			imbxInt32 value2b = bits4Handler->getUnsignedLong(elementNumber++);
 			
 			CPPUNIT_ASSERT(value0r == r);
 			CPPUNIT_ASSERT(value0g == g);

@@ -205,7 +205,7 @@ ptr<handlers::dataHandler> waveform::getIntegerData(imbxUint32 channel, imbxInt3
 	ptr<handlers::dataHandler> paddingTagHandler(m_pDataSet->getDataHandler(0x5400, 0, 0x100A, 0, false));
 	if(paddingTagHandler != 0)
 	{
-		originalPaddingValue = paddingTagHandler->getUnsignedLong();
+		originalPaddingValue = paddingTagHandler->getUnsignedLong(0);
 		bPaddingValueExists = true;
 	}
 
@@ -217,21 +217,21 @@ ptr<handlers::dataHandler> waveform::getIntegerData(imbxUint32 channel, imbxInt3
 
 	// Copy the data to the destination for unsigned values
 	///////////////////////////////////////////////////////////
-	waveformData->setPointer(channel);
+	imbxUint32 waveformPointer(channel);
+	imbxUint32 destinationPointer(0);
 	if(sourceDataType == "UB" || sourceDataType == "US")
 	{
 		for(imbxUint32 copySamples (numSamples); copySamples != 0; --copySamples)
 		{
-			imbxUint32 unsignedData(waveformData->getUnsignedLong());
-			waveformData->skip(numChannels);
+			imbxUint32 unsignedData(waveformData->getUnsignedLong(waveformPointer));
+			waveformPointer += numChannels;
 			if(bPaddingValueExists && unsignedData == originalPaddingValue)
 			{
-				destinationHandler->setSignedLongIncPointer(paddingValue);
+				destinationHandler->setSignedLong(destinationPointer++, paddingValue);
 				continue;
 			}
-			destinationHandler->setUnsignedLongIncPointer(unsignedData);
+			destinationHandler->setUnsignedLong(destinationPointer++, unsignedData);
 		}
-		destinationHandler->setPointer(0);
 		return destinationHandler;
 	}
 
@@ -242,55 +242,50 @@ ptr<handlers::dataHandler> waveform::getIntegerData(imbxUint32 channel, imbxInt3
 	imbxUint32 orBits = ((imbxUint32)((imbxInt32)-1)) << highBit;
 	for(imbxUint32 copySamples (numSamples); copySamples != 0; --copySamples)
 	{
-		imbxUint32 unsignedData = waveformData->getUnsignedLong();
-		waveformData->skip(numChannels);
+		imbxUint32 unsignedData = waveformData->getUnsignedLong(waveformPointer);
+		waveformPointer += numChannels;
 		if(bPaddingValueExists && unsignedData == originalPaddingValue)
 		{
-			destinationHandler->setSignedLongIncPointer(paddingValue);;
+			destinationHandler->setSignedLong(destinationPointer++, paddingValue);;
 			continue;
 		}
 		if((unsignedData & testBit) != 0)
 		{
 			unsignedData |= orBits;
 		}
-		destinationHandler->setSignedLongIncPointer((imbxInt32)unsignedData);
+		destinationHandler->setSignedLong(destinationPointer++, (imbxInt32)unsignedData);
 	}
-
-	destinationHandler->setPointer(0);
 
 	// Now decompress uLaw or aLaw
 	if(waveformInterpretation == "AB") // 8bits aLaw
 	{
-		for(imbxUint32 aLawSamples(numSamples); aLawSamples != 0; --aLawSamples)
+		for(imbxUint32 aLawSamples(0); aLawSamples != numSamples; ++aLawSamples)
 		{
-			imbxUint32 compressed(destinationHandler->getUnsignedLong());
+			imbxUint32 compressed(destinationHandler->getUnsignedLong(aLawSamples));
 			if(bPaddingValueExists && compressed == originalPaddingValue)
 			{
-				destinationHandler->incPointer();
 				continue;
 			}
 			imbxInt32 decompressed(aLawDecompressTable[compressed]);
-			destinationHandler->setSignedLongIncPointer(decompressed);
+			destinationHandler->setSignedLong(aLawSamples, decompressed);
 		}
 	}
 
 	// Now decompress uLaw or aLaw
 	if(waveformInterpretation == "MB") // 8bits aLaw
 	{
-		for(imbxUint32 uLawSamples(numSamples); uLawSamples != 0; --uLawSamples)
+		for(imbxUint32 uLawSamples(0); uLawSamples != numSamples; ++uLawSamples)
 		{
-			imbxUint32 compressed(destinationHandler->getUnsignedLong());
+			imbxUint32 compressed(destinationHandler->getUnsignedLong(uLawSamples));
 			if(bPaddingValueExists && compressed == originalPaddingValue)
 			{
-				destinationHandler->incPointer();
 				continue;
 			}
-			imbxInt32 decompressed(aLawDecompressTable[compressed]);
-			destinationHandler->setSignedLongIncPointer(decompressed);
+			imbxInt32 decompressed(uLawDecompressTable[compressed]);
+			destinationHandler->setSignedLong(uLawSamples, decompressed);
 		}
 	}
 
-	destinationHandler->setPointer(0);
 	return destinationHandler;
 
 	PUNTOEXE_FUNCTION_END();

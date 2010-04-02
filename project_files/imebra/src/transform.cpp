@@ -123,55 +123,46 @@ ptr<image> transform::getInputImage(long imageNumber)
 }
 
 
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Declare the dataset to use for the transformations.
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-void transform::declareDataSet(ptr<dataSet> pDataSet)
+void transform::doTransform()
 {
-	PUNTOEXE_FUNCTION_START(L"transform::declareDataSet");
+	PUNTOEXE_FUNCTION_START(L"transform::doTransform")
 
-	lockObject lockAccess(this);
-	m_pDataSet=pDataSet;
+	for(int scanImages = 0; ; ++scanImages)
+	{
+		// Get the input image
+		///////////////////////////////////////////////////////////
+		ptr<image> pInputImage (getInputImage(scanImages));
+		ptr<image> pOutputImage (getOutputImage(scanImages));
+
+		// If the input image doesn't exist, then exit
+		///////////////////////////////////////////////////////////
+		if(pInputImage == 0 && pOutputImage == 0)
+		{
+			break;
+		}
+
+		if(pInputImage == 0)
+		{
+			pInputImage = pOutputImage;
+		}
+
+		imbxUint32 imageWidth(0), imageHeight(0);
+		pInputImage->getSize(&imageWidth, &imageHeight);
+
+		if(pOutputImage == 0)
+		{
+			pOutputImage = allocateOutputImage(pInputImage, imageWidth, imageHeight);
+		}
+
+
+		runTransform(pInputImage, 0, 0, imageWidth, imageHeight, pOutputImage, 0, 0);
+
+	}
 
 	PUNTOEXE_FUNCTION_END();
+
 }
 
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Retrieve the active dataset
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-ptr<dataSet> transform::getDataSet()
-{
-	lockObject lockAccess(this);
-	return m_pDataSet;
-}
-
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Returns true if the transform doesn't do anything.
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-bool transform::isEmpty()
-{
-	return false;
-}
 
 } // namespace transforms
 

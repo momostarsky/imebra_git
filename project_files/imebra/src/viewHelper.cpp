@@ -9,8 +9,6 @@ $fileHeader$
 
 #include "../include/viewHelper.h"
 #include "../include/image.h"
-#include "../include/colorTransformsFactory.h"
-#include "../include/transformHighBit.h"
 
 namespace puntoexe
 {
@@ -136,8 +134,7 @@ view::view(imbxInt32 rowByteAlign, bool bBGR):
 	m_backgroundRed(192),
 	m_backgroundGreen(192),
 	m_backgroundBlue(192),
-	m_zoom(1.0),
-	m_drawBitmap(new transforms::drawBitmap)
+	m_zoom(1.0)
 {
 }
 
@@ -863,77 +860,6 @@ imbxInt32 view::millimitersToImagePosY(double millimitersY)
 
 ///////////////////////////////////////////////////////////
 //
-// Draw the window's content
-//
-///////////////////////////////////////////////////////////
-void view::draw(void* pDeviceContext, imbxInt32 left, imbxInt32 top, imbxInt32 right, imbxInt32 bottom)
-{
-	// Check if the image is visible in the specified area
-	///////////////////////////////////////////////////////////
-	if(m_originalImage == 0 ||
-		left >= m_rightPosition ||
-		top >= m_bottomPosition ||
-		right <= m_leftPosition ||
-		bottom <= m_topPosition)
-	{
-		drawRectangle(pDeviceContext, left, top, right, bottom, m_backgroundRed, m_backgroundGreen, m_backgroundBlue);
-		return;
-	}
-
-	if(left==right || top==bottom)
-	{
-		return;
-	}
-
-	// Adjust the area to be drawn
-	///////////////////////////////////////////////////////////
-	imbxInt32 bitmapLeft   = left;
-	imbxInt32 bitmapTop    = top;
-	imbxInt32 bitmapRight  = right;
-	imbxInt32 bitmapBottom = bottom;
-
-	if(bitmapLeft < m_leftPosition) bitmapLeft = m_leftPosition;
-	if(bitmapTop < m_topPosition) bitmapTop = m_topPosition;
-	if(bitmapRight > m_rightPosition) bitmapRight = m_rightPosition;
-	if(bitmapBottom > m_bottomPosition) bitmapBottom = m_bottomPosition;
-
-	m_drawBitmap->declareBitmapType(m_rightPosition - m_leftPosition, m_bottomPosition - m_topPosition,
-		bitmapLeft - m_leftPosition, bitmapTop - m_topPosition, bitmapRight - m_leftPosition, bitmapBottom - m_topPosition,
-		m_bitmapAlign,
-		m_bBGR);
-
-	m_drawBitmap->doTransform();
-
-	imbxInt32 bitmapWidth, bitmapHeight, bitmapRowLength;
-	imbxUint8* pFinalBuffer = m_drawBitmap->getOutputBitmap(&bitmapWidth, &bitmapHeight, &bitmapRowLength);
-	if(bitmapWidth != 0 && bitmapHeight != 0)
-	{
-		drawBitmap(pDeviceContext, bitmapLeft, bitmapTop, bitmapRight, bitmapBottom, bitmapWidth, bitmapHeight, bitmapRowLength, pFinalBuffer);
-	}
-
-	if(top < m_topPosition)
-	{
-		drawRectangle(pDeviceContext, left, top, right, m_topPosition, m_backgroundRed, m_backgroundGreen, m_backgroundBlue);
-	}
-
-	if(bottom > m_bottomPosition)
-	{
-		drawRectangle(pDeviceContext, left, m_bottomPosition, right, bottom, m_backgroundRed, m_backgroundGreen, m_backgroundBlue);
-	}
-
-	if(left < m_leftPosition)
-	{
-		drawRectangle(pDeviceContext, left, top, m_leftPosition, bottom, m_backgroundRed, m_backgroundGreen, m_backgroundBlue);
-	}
-
-	if(right > m_rightPosition)
-	{
-		drawRectangle(pDeviceContext, m_rightPosition, top, right, bottom, m_backgroundRed, m_backgroundGreen, m_backgroundBlue);
-	}
-}
-
-///////////////////////////////////////////////////////////
-//
 // Draw the cursor
 //
 ///////////////////////////////////////////////////////////
@@ -1103,15 +1029,17 @@ ptr<image> view::getImage()
 // Set the active image
 //
 ///////////////////////////////////////////////////////////
-void view::setImage(ptr<image> pImage, ptr<dataSet> pDataSet)
+void view::setImage(ptr<image> pImage, ptr<transforms::transformsChain> pChain)
 {
 	if(pImage == 0)
 	{
 		m_originalImage = 0;
 		setScrollSize(1, 1, true);
-		m_drawBitmap->declareDataSet(0);
+		m_drawBitmap.release();
 		return;
 	}
+	m_drawBitmap = new imebra::drawBitmap(pImage, pChain);
+
 	imbxUint32 oldSizeX = 0;
 	imbxUint32 oldSizeY = 0;
 	double oldSizeMmX = 0;
@@ -1124,9 +1052,6 @@ void view::setImage(ptr<image> pImage, ptr<dataSet> pDataSet)
 	}
 
 	m_originalImage = pImage;
-
-	m_drawBitmap->declareDataSet(pDataSet);
-	m_drawBitmap->declareInputImage(0, m_originalImage);
 
 	imbxUint32 newSizeX, newSizeY;
 	m_originalImage->getSize(&newSizeX, &newSizeY);

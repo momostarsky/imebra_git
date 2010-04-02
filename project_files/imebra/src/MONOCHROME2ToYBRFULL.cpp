@@ -62,33 +62,6 @@ ptr<colorTransform> MONOCHROME2ToYBRFULL::createColorTransform()
 	return ptr<colorTransform>(new MONOCHROME2ToYBRFULL);
 }
 
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// MONOCHROME2 to YBR_FULL transformation
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-void MONOCHROME2ToYBRFULL::doColorTransform(imbxInt32* pSourceMem, imbxInt32* pDestMem, imbxUint32 pixelsNumber, imbxInt32 inputMinValue, imbxInt32 /* inputMaxValue */, imbxInt32 outputMinValue, imbxInt32 outputMaxValue)
-{
-	imbxInt32 sourcePixel;
-	imbxInt32 middleValue=(outputMaxValue-outputMinValue+1)>>1;
-	while(pixelsNumber--)
-	{
-		sourcePixel=*pSourceMem++ - inputMinValue;
-
-		if(sourcePixel<outputMinValue)
-			sourcePixel=outputMinValue;
-		if(sourcePixel>outputMaxValue)
-			sourcePixel=outputMaxValue;
-
-		*pDestMem++ = sourcePixel;
-		*pDestMem++ = middleValue;
-		*pDestMem++ = middleValue;
-	}
-}
 
 } // namespace colorTransforms
 

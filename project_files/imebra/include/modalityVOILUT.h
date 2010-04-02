@@ -10,8 +10,10 @@ $fileHeader$
 #if !defined(imebraModalityVOILUT_8347C70F_1FC8_4df8_A887_8DE9E968B2CF__INCLUDED_)
 #define imebraModalityVOILUT_8347C70F_1FC8_4df8_A887_8DE9E968B2CF__INCLUDED_
 
-#include "transformBuffers.h"
+#include "baseTransform.h"
 #include "image.h"
+#include "dataSet.h"
+#include "LUT.h"
 
 
 ///////////////////////////////////////////////////////////
@@ -52,58 +54,80 @@ namespace transforms
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class modalityVOILUT: public transformBuffersInPlace
+class modalityVOILUT: public baseTransform
 {
 public:
-	// Reimplemented from the base class
-	///////////////////////////////////////////////////////////
-	virtual void doTransformBuffersInPlace(
-		imbxUint32 sizeX,
-		imbxUint32 sizeY,
-		imbxUint32 inputChannelsNumber,
-		std::wstring inputColorSpace,
-		image::bitDepth inputDepth,
-		imbxUint32 inputHighBit,
-		imbxInt32* pOutputBuffer,
-		imbxUint32 buffersSize,
-		image::bitDepth* pOutputDepth,
-		imbxUint32* pOutputHighBit);
+    modalityVOILUT(ptr<dataSet> pDataSet);
+
+        DEFINE_RUN_TEMPLATE_TRANSFORM;
+
+        template <class inputType, class outputType>
+        void templateTransform(
+            inputType* inputHandlerData, size_t inputHandlerSize, imbxUint32 inputHandlerWidth, const std::wstring& inputHandlerColorSpace,
+            ptr<palette> /* inputPalette */,
+            imbxInt32 inputHandlerMinValue, imbxUint32 inputHandlerNumValues,
+            imbxInt32 inputTopLeftX, imbxInt32 inputTopLeftY, imbxInt32 inputWidth, imbxInt32 inputHeight,
+            outputType* outputHandlerData, size_t outputHandlerSize, imbxInt32 outputHandlerWidth, const std::wstring& outputHandlerColorSpace,
+            ptr<palette> /* outputPalette */,
+            imbxInt32 outputHandlerMinValue, imbxUint32 outputHandlerNumValues,
+            imbxInt32 outputTopLeftX, imbxInt32 outputTopLeftY)
+
+        {
+            inputType* pInputMemory(inputHandlerData);
+            outputType* pOutputMemory(outputHandlerData);
+
+            pInputMemory += inputTopLeftY * inputHandlerWidth + inputTopLeftX;
+            pOutputMemory += outputTopLeftY * outputHandlerWidth + outputTopLeftX;
+
+            //
+            // Modality LUT found
+            //
+            ///////////////////////////////////////////////////////////
+            if(m_voiLut != 0 && m_voiLut->getSize() != 0 && m_voiLut->checkValidDataRange())
+            {
+                    for(; inputHeight != 0; --inputHeight)
+                    {
+                        for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
+                        {
+                            *(pOutputMemory++) = m_voiLut->mappedValue(*(pInputMemory++));
+                        }
+                        pInputMemory += (inputHandlerWidth - inputWidth);
+                        pOutputMemory += (outputHandlerWidth - inputWidth);
+                    }
+                    return;
+            }
+
+            //
+            // Modality LUT not found
+            //
+            ///////////////////////////////////////////////////////////
+
+            // Retrieve the intercept/scale pair
+            ///////////////////////////////////////////////////////////
+            for(; inputHeight != 0; --inputHeight)
+            {
+                for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
+                {
+                    *(pOutputMemory++) = (imbxInt32)((double)(*(pInputMemory++)) * m_rescaleSlope + m_rescaleIntercept + 0.5);
+                }
+                pInputMemory += (inputHandlerWidth - inputWidth);
+                pOutputMemory += (outputHandlerWidth - inputWidth);
+            }
+        }
+
+        virtual ptr<image> allocateOutputImage(ptr<image> pInputImage, imbxUint32 width, imbxUint32 height);
+
+
+private:
+    ptr<dataSet> m_pDataSet;
+    ptr<lut> m_voiLut;
+    double m_rescaleIntercept;
+    double m_rescaleSlope;
+
 };
 
 
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-/// \brief Executes the inverse modality VOI/LUT
-///         transformation (see modalityVOILUT).
-///
-/// In order to perform the transformation the class needs
-///  to know the dataset in which the output image will be
-///  stored, then the function
-///  transform::declareDataSet() must be called.
-///
-/// If the dataset doesn't define any modality VOI/LUT
-///  transformation, then the input image is simply copied
-///  into the output image.
-///
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-class modalityVOILUTInverse: public modalityVOILUT
-{
-public:
-	virtual void doTransformBuffers(
-		imbxUint32 sizeX,
-		imbxUint32 sizeY,
-		imbxUint32 inputChannelsNumber,
-		std::wstring inputColorSpace,
-		image::bitDepth inputDepth,
-		imbxUint32 inputHighBit,
-		imbxInt32* pInputBuffer,
-		imbxInt32* pOutputBuffer,
-		imbxUint32 buffersSize,
-		image::bitDepth* pOutputDepth,
-		imbxUint32* pOutputHighBit);
 
-};
 
 } // namespace transforms
 

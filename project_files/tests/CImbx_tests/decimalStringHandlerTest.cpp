@@ -23,10 +23,10 @@ void decimalStringHandlerTest::decimalTest()
 		ptr<handlers::dataHandler> hTag= tag->getDataHandler(0, true, "DS");
 		hTag->setSize(1);
 
-		hTag->setDouble(0.000001);
-		std::wstring decimalString = hTag->getUnicodeString();
+		hTag->setDouble(0, 0.000001);
+		std::wstring decimalString = hTag->getUnicodeString(0);
 		CPPUNIT_ASSERT(decimalString == L"1e-006" || decimalString == L"1e-06" || decimalString == L"1e-6");
-		double decimal = hTag->getDouble();
+		double decimal = hTag->getDouble(0);
 		CPPUNIT_ASSERT(decimal > 0.0000009 && decimal < 0.0000011);
 	}
 }

@@ -14,6 +14,7 @@ $fileHeader$
 #include "../include/jpegCodec.h"
 #include "../include/dataSet.h"
 #include "../include/image.h"
+#include "../include/dataHandlerNumeric.h"
 #include <vector>
 #include <stdlib.h>
 #include <string.h>
@@ -910,8 +911,6 @@ void jpegCodec::readStream(ptr<streamReader> pSourceStream, ptr<dataSet> pDataSe
 
 	// Used to read discharged chars
 	///////////////////////////////////////////////////////////
-	imbxUint8 dummy;
-
         imbxUint8 entryByte;
 
 	// Read all the tags in the stream
@@ -1188,10 +1187,6 @@ ptr<image> jpegCodec::getImage(ptr<dataSet> sourceDataSet, ptr<streamReader> pSt
 	imbxUint32 amplitudeLength; // lossless amplitude's length
 	imbxInt32 amplitude;        // lossless amplitude
 
-	// Used to read a single byte
-	///////////////////////////////////////////////////////////
-	imbxUint8 singleByte;
-
 	// Used to read the channels' content
 	///////////////////////////////////////////////////////////
 	imbxUint32 bufferPointer = 0;
@@ -1368,7 +1363,7 @@ void jpegCodec::copyJpegChannelsToImage(ptr<image> destImage, bool b2complement,
 	else
 		depth = (m_precision==8) ? image::depthU8 : image::depthU16;
 
-	ptr<handlers::imageHandler> handler = destImage->create(m_imageSizeX, m_imageSizeY, depth, colorSpace, (imbxUint8)(m_precision-1));
+	ptr<handlers::dataHandlerNumericBase> handler = destImage->create(m_imageSizeX, m_imageSizeY, depth, colorSpace, (imbxUint8)(m_precision-1));
 
 	imbxInt32 offsetValue=(imbxInt32)1<<(m_precision-1);
 	imbxInt32 maxClipValue=((imbxInt32)1<<m_precision)-1;
@@ -1436,7 +1431,7 @@ void jpegCodec::copyJpegChannelsToImage(ptr<image> destImage, bool b2complement,
 		///////////////////////////////////////////////////////////
 		if(m_bLossless && m_channelsMap.size() == 1)
 		{
-			handler->copyFromInt32(pChannel->m_pBuffer, pChannel->m_bufferSize);
+			handler->copyFrom(pChannel->m_pBuffer, pChannel->m_bufferSize);
 			return;
 		}
 
@@ -1521,7 +1516,7 @@ void jpegCodec::copyImageToJpegChannels(
 	// Create the channels
 	////////////////////////////////////////////////////////////////
 	imbxUint32 rowSize, channelSize, channelsNumber;
-	ptr<handlers::imageHandler>imageDataHandler = sourceImage->getDataHandler(false, &rowSize, &channelSize, &channelsNumber);
+	ptr<handlers::dataHandlerNumericBase>imageDataHandler = sourceImage->getDataHandler(false, &rowSize, &channelSize, &channelsNumber);
 
 	for(imbxUint8 channelId = 0; channelId < (imbxUint8)channelsNumber; ++channelId)
 	{
@@ -1579,7 +1574,7 @@ void jpegCodec::copyImageToJpegChannels(
 		///////////////////////////////////////////////////////////
 		if(m_bLossless && m_channelsMap.size() == 1)
 		{
-			imageDataHandler->copyToInt32(pChannel->m_pBuffer, pChannel->m_bufferSize);
+			imageDataHandler->copyTo(pChannel->m_pBuffer, pChannel->m_bufferSize);
 			continue;
 		}
 

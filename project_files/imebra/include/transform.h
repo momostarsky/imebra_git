@@ -10,7 +10,7 @@ $fileHeader$
 #if !defined(imebraTransform_5DB89BFD_F105_45e7_B9D9_3756AC93C821__INCLUDED_)
 #define imebraTransform_5DB89BFD_F105_45e7_B9D9_3756AC93C821__INCLUDED_
 
-#include "../../base/include/baseObject.h"
+#include "baseTransform.h"
 #include "dataSet.h"
 
 #include <map>
@@ -53,7 +53,7 @@ namespace transforms
 ///  called.
 ///
 ///////////////////////////////////////////////////////////
-class transform : public baseObject
+class transform : public baseTransform
 {
 
 public:
@@ -116,54 +116,19 @@ public:
 	///////////////////////////////////////////////////////////
 	ptr<image> getInputImage(long imageNumber);
 
-	/// \brief Set the dataset to use for the transformations
-	///
-	/// Some transformations need additional data from a
-	///  dataset.
-	/// E.G.: the modalityVOILUT transform needs to load
-	///       the LUT table or the rescale/intercept values
-	///       from the dataset.
-	///
-	/// @param pDataSet the dataset to use for the 
-	///                  transformation
-	///                  
-	///////////////////////////////////////////////////////////
-	virtual void declareDataSet(ptr<dataSet> pDataSet);
-	
-	/// \brief Retrieve the dataset used for the
-	///        transformation.
-	///
-	/// The dataSet can be set by calling declareDataSet().
-	///
-	/// @return a pointer to the active data set, or 0 if
-	///          the dataset has not been set
-	///////////////////////////////////////////////////////////
-	ptr<dataSet> getDataSet();
 
 	/// \brief Executes the transform.
 	///
+        /// \deprecated Use baseTransform::doTransform() instead.
+        ///
 	///////////////////////////////////////////////////////////
-	virtual void doTransform()=0;
-
-	/// \brief Returns true if the transform doesn't do
-	///         anything.
-	///
-	/// It always return false, but it is overwritten in the
-	///  transformsChain class.
-	///
-	/// @return false if the transform does something, or true
-	///          if the transform doesn't do anything (e.g. an
-	///          empty transformsChain object).
-	///
-	///////////////////////////////////////////////////////////
-	virtual bool isEmpty();
+	virtual void doTransform();
 
 private:
 	typedef std::map<int, ptr<image> > tImagesMap;
 	tImagesMap m_inputImages;
 	tImagesMap m_outputImages;
 
-	ptr<dataSet> m_pDataSet;
 };
 
 

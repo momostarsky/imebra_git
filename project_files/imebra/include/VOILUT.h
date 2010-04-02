@@ -10,8 +10,10 @@ $fileHeader$
 #if !defined(imebraVOILUT_8347C70F_1FC8_4df8_A887_8DE9E968B2CF__INCLUDED_)
 #define imebraVOILUT_8347C70F_1FC8_4df8_A887_8DE9E968B2CF__INCLUDED_
 
-#include "transformBuffers.h"
 #include "image.h"
+#include "LUT.h"
+#include "baseTransform.h"
+
 
 
 ///////////////////////////////////////////////////////////
@@ -46,23 +48,10 @@ namespace transforms
 ///  setCenterWidth() or setLUT().
 ///
 ///////////////////////////////////////////////////////////
-class VOILUT: public transformBuffersInPlace
+class VOILUT: public transforms::transformHandlers
 {
 public:
-	VOILUT():m_windowCenter(0), m_windowWidth(0){}
-
-	virtual void doTransformBuffersInPlace(
-		imbxUint32 sizeX,
-		imbxUint32 sizeY,
-		imbxUint32 inputChannelsNumber,
-		std::wstring inputColorSpace,
-		image::bitDepth inputDepth,
-		imbxUint32 inputHighBit,
-		imbxInt32* pOutputBuffer,
-		imbxUint32 buffersSize,
-		image::bitDepth* pOutputDepth,
-		imbxUint32* pOutputHighBit
-		);
+	VOILUT(ptr<dataSet> pDataSet): m_pDataSet(pDataSet), m_windowCenter(0), m_windowWidth(0){}
 
 	/// \brief Retrieve an ID for a VOI or a LUT.
 	///
@@ -153,35 +142,112 @@ public:
 	///////////////////////////////////////////////////////////
 	void getCenterWidth(imbxInt32* pCenter, imbxInt32* pWidth);
 
+        DEFINE_RUN_TEMPLATE_TRANSFORM;
+
+        template <class inputType, class outputType>
+        void templateTransform(
+            inputType* inputHandlerData, size_t inputHandlerSize, imbxUint32 inputHandlerWidth, const std::wstring& inputHandlerColorSpace,
+            ptr<palette> /* inputPalette */,
+            imbxInt32 inputHandlerMinValue, imbxUint32 inputHandlerNumValues,
+            imbxInt32 inputTopLeftX, imbxInt32 inputTopLeftY, imbxInt32 inputWidth, imbxInt32 inputHeight,
+            outputType* outputHandlerData, size_t outputHandlerSize, imbxInt32 outputHandlerWidth, const std::wstring& outputHandlerColorSpace,
+            ptr<palette> /* outputPalette */,
+            imbxInt32 outputHandlerMinValue, imbxUint32 outputHandlerNumValues,
+            imbxInt32 outputTopLeftX, imbxInt32 outputTopLeftY)
+
+        {
+            inputType* pInputMemory(inputHandlerData);
+            outputType* pOutputMemory(outputHandlerData);
+
+            pInputMemory += inputTopLeftY * inputHandlerWidth + inputTopLeftX;
+            pOutputMemory += outputTopLeftY * outputHandlerWidth + outputTopLeftX;
+
+            //
+            // LUT found
+            //
+            ///////////////////////////////////////////////////////////
+            if(m_pLUT != 0 && m_pLUT->getSize())
+            {
+                    lut* pLUT = m_pLUT.get();
+                    inputHandlerNumValues = ((imbxUint32)1) << pLUT->getBits();
+                    inputHandlerMinValue = 0;
+
+                    if(inputHandlerNumValues == outputHandlerNumValues)
+                    {
+                        for(; inputHeight != 0; --inputHeight)
+                        {
+                            for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
+                            {
+                                *(pOutputMemory++) = outputHandlerMinValue + pLUT->mappedValue(*(pInputMemory++));
+                            }
+                            pInputMemory += (inputHandlerWidth - inputWidth);
+                            pOutputMemory += (outputHandlerWidth - inputWidth);
+                        }
+                    }
+                    else
+                    {
+                        for(; inputHeight != 0; --inputHeight)
+                        {
+                            for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
+                            {
+                                *(pOutputMemory++) = outputHandlerMinValue + (pLUT->mappedValue(*(pInputMemory++)) * outputHandlerNumValues ) / inputHandlerNumValues;
+                            }
+                            pInputMemory += (inputHandlerWidth - inputWidth);
+                            pOutputMemory += (outputHandlerWidth - inputWidth);
+                        }
+                    }
+
+                    return;
+            }
+
+            //
+            // LUT not found.
+            // Use the window's center/width
+            //
+            ///////////////////////////////////////////////////////////
+            if(m_windowWidth <= 1)
+            {
+                    return;
+            }
+
+            imbxInt32 minValue = m_windowCenter-(m_windowWidth/2);
+            imbxInt32 maxValue = m_windowCenter+(m_windowWidth/2);
+            inputHandlerNumValues = maxValue - minValue;
+
+            imbxInt32 value;
+            for(; inputHeight != 0; --inputHeight)
+            {
+
+                for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
+                {
+                    value = *(pInputMemory++);
+                    if(value <= minValue)
+                    {
+                        *(pOutputMemory++) = outputHandlerMinValue;
+                        continue;
+                    }
+                    if(value >= maxValue)
+                    {
+                        *(pOutputMemory++) = outputHandlerMinValue + outputHandlerNumValues - 1;
+                        continue;
+                    }
+                    *(pOutputMemory++) = (value - minValue) * outputHandlerNumValues / inputHandlerNumValues + outputHandlerMinValue;
+                }
+                pInputMemory += (inputHandlerWidth - inputWidth);
+                pOutputMemory += (outputHandlerWidth - inputWidth);
+            }
+        }
+
+        virtual ptr<image> allocateOutputImage(ptr<image> pInputImage, imbxUint32 width, imbxUint32 height);
+
 protected:
+        ptr<dataSet> m_pDataSet;
 	ptr<lut> m_pLUT;
 	imbxInt32 m_windowCenter;
 	imbxInt32 m_windowWidth;
 };
 
-///////////////////////////////////////////////////////////
-/// \brief Execute the inverse of the transformation
-///         executed by VOILUT.
-///
-///////////////////////////////////////////////////////////
-class VOILUTInverse: public VOILUT
-{
-public:
-	virtual void doTransformBuffers(
-		imbxUint32 sizeX,
-		imbxUint32 sizeY,
-		imbxUint32 inputChannelsNumber,
-		std::wstring InputColorSpace,
-		image::bitDepth inputDepth,
-		imbxUint32 inputHighBit,
-		imbxInt32* pInputBuffer,
-		imbxInt32* pOutputBuffer,
-		imbxUint32 buffersSize,
-		image::bitDepth* pOutputDepth,
-		imbxUint32* pOutputHighBit
-		);
 
-};
 
 } // namespace transforms
 

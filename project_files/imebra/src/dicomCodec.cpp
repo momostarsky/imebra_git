@@ -312,7 +312,7 @@ void dicomCodec::writeTag(ptr<streamWriter> pDestStream, ptr<data> pData, imbxUi
 				continue;
 			}
 
-			pDestStream->write(pDataHandlerRaw->getMemoryBuffer(), bufferSize);
+			pDestStream->write((imbxUint8*)pDataHandlerRaw->getMemoryBuffer(), bufferSize);
 			continue;
 		}
 
@@ -998,7 +998,7 @@ ptr<image> dicomCodec::getImage(ptr<dataSet> pData, ptr<streamReader> pStream, s
 		depth=highBit>=8 ? image::depthU16 : image::depthU8;
 
 	ptr<image> pImage(new image);
-	ptr<handlers::imageHandler> handler = pImage->create(imageSizeX, imageSizeY, depth, colorSpace, highBit);
+	ptr<handlers::dataHandlerNumericBase> handler = pImage->create(imageSizeX, imageSizeY, depth, colorSpace, highBit);
 	imbxUint32 tempChannelsNumber = pImage->getChannelsNumber();
 
 	if(handler == 0 || tempChannelsNumber != channelsNumber)
@@ -1950,7 +1950,7 @@ void dicomCodec::setImage(
 	bool bRleCompressed = (transferSyntax == L"1.2.840.10008.1.2.5");
 
 	imbxUint32 rowSize, channelPixelSize, channelsNumber;
-	ptr<handlers::imageHandler> imageHandler = pImage->getDataHandler(false, &rowSize, &channelPixelSize, &channelsNumber);
+	ptr<handlers::dataHandlerNumericBase> imageHandler = pImage->getDataHandler(false, &rowSize, &channelPixelSize, &channelsNumber);
 
 	// Copy the image into the dicom channels
 	///////////////////////////////////////////////////////////

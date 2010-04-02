@@ -21,7 +21,7 @@ puntoexe::ptr<puntoexe::imebra::image> buildImageForTest(
 	imbxUint32 continuity)
 {
 	puntoexe::ptr<puntoexe::imebra::image> newImage(new puntoexe::imebra::image);
-	puntoexe::ptr<puntoexe::imebra::handlers::imageHandler> imgHandler = newImage->create(pixelsX, pixelsY, depth, colorSpace, highBit);
+	puntoexe::ptr<puntoexe::imebra::handlers::dataHandlerNumericBase> imgHandler = newImage->create(pixelsX, pixelsY, depth, colorSpace, highBit);
 	imbxUint32 channelsNumber = newImage->getChannelsNumber();
 
 	imbxInt32 range = (imbxUint32)1 << highBit;
@@ -32,7 +32,7 @@ puntoexe::ptr<puntoexe::imebra::image> buildImageForTest(
 	}
 	imbxInt32 maxValue(minValue + range);
 
-	imbxInt32* pData = imgHandler->getMemoryBuffer();
+	imbxUint32 index(0);
 	for(imbxUint32 scanY(0); scanY != pixelsY; ++scanY)
 	{
 		for(imbxUint32 scanX(0); scanX != pixelsX; ++scanX)
@@ -48,7 +48,7 @@ puntoexe::ptr<puntoexe::imebra::image> buildImageForTest(
 				{
 					value = maxValue - 1;
 				}
-				*(pData++) = value;
+				imgHandler->setSignedLong(index++, value);
 			}
 		}
 	}
@@ -70,8 +70,8 @@ double compareImages(ptr<image> image0, ptr<image> image1)
 	}
 
 	imbxUint32 rowSize, channelSize, channelsNumber0, channelsNumber1;
-	ptr<handlers::imageHandler> hImage0 = image0->getDataHandler(false, &rowSize, &channelSize, &channelsNumber0);
-	ptr<handlers::imageHandler> hImage1 = image1->getDataHandler(false, &rowSize, &channelSize, &channelsNumber1);
+	ptr<handlers::dataHandlerNumericBase> hImage0 = image0->getDataHandler(false, &rowSize, &channelSize, &channelsNumber0);
+	ptr<handlers::dataHandlerNumericBase> hImage1 = image1->getDataHandler(false, &rowSize, &channelSize, &channelsNumber1);
 	if(channelsNumber0 != channelsNumber1)
 	{
 		return 1000;
@@ -96,15 +96,15 @@ double compareImages(ptr<image> image0, ptr<image> image1)
 		return 0;
 	}
 
-	imbxInt32* pImage0 = hImage0->getMemoryBuffer();
-	imbxInt32* pImage1 = hImage1->getMemoryBuffer();
 	imbxUint32 valuesNum = sizeX0 * sizeY0 * channelsNumber0;
 	double divisor = double(valuesNum);
 	double range = (double)(1 << image0->getHighBit());
 	double difference(0);
+	int index(0);
 	while(valuesNum--)
 	{
-		difference += 1000 * (double)labs(*(pImage0++) - *(pImage1++)) / range;
+		difference += 1000 * (double)labs(hImage0->getSignedLong(index) - hImage1->getSignedLong(index)) / range;
+		++index;
 	}
 	difference /= divisor;
 

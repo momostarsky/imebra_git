@@ -12,7 +12,6 @@ $fileHeader$
 
 #include "colorTransform.h"
 
-
 ///////////////////////////////////////////////////////////
 //
 // Everything is in the namespace puntoexe::imebra
@@ -45,8 +44,57 @@ public:
 	virtual std::wstring getFinalColorSpace();
 	virtual ptr<colorTransform> createColorTransform();
 
-protected:
-	virtual void doColorTransform(imbxInt32* pSourceMem, imbxInt32* pDestMem, imbxUint32 pixelsNumber, imbxInt32 inputMinValue, imbxInt32 inputMaxValue, imbxInt32 outputMinValue, imbxInt32 outputMaxValue);
+        DEFINE_RUN_TEMPLATE_TRANSFORM;
+
+        template <class inputType, class outputType>
+        void templateTransform(
+            inputType* inputHandlerData, size_t inputHandlerSize, imbxUint32 inputHandlerWidth, const std::wstring& inputHandlerColorSpace,
+            ptr<palette> /* inputPalette */,
+            imbxInt32 inputHandlerMinValue, imbxUint32 inputHandlerNumValues,
+            imbxInt32 inputTopLeftX, imbxInt32 inputTopLeftY, imbxInt32 inputWidth, imbxInt32 inputHeight,
+            outputType* outputHandlerData, size_t outputHandlerSize, imbxInt32 outputHandlerWidth, const std::wstring& outputHandlerColorSpace,
+            ptr<palette> /* outputPalette */,
+            imbxInt32 outputHandlerMinValue, imbxUint32 outputHandlerNumValues,
+            imbxInt32 outputTopLeftX, imbxInt32 outputTopLeftY)
+
+        {
+            checkColorSpaces(inputHandlerColorSpace, outputHandlerColorSpace);
+
+            inputType* pInputMemory(inputHandlerData);
+            outputType* pOutputMemory(outputHandlerData);
+
+            pInputMemory += inputTopLeftY * inputHandlerWidth + inputTopLeftX;
+            pOutputMemory += outputTopLeftY * outputHandlerWidth + outputTopLeftX;
+            
+            imbxInt32 inputHandlerNumValuesMinusOne(inputHandlerNumValues - 1);
+
+            if(inputHandlerNumValues == outputHandlerNumValues)
+            {
+                imbxInt32 offset(inputHandlerNumValuesMinusOne + outputHandlerMinValue);
+                for(; inputHeight != 0; --inputHeight)
+                {
+                    for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
+                    {
+                        *(pOutputMemory++) = (outputType)(offset - (imbxInt32)*(pInputMemory++));
+                    }
+                    pInputMemory += inputHandlerWidth - inputWidth;
+                    pOutputMemory += outputHandlerWidth - inputWidth;
+                }
+            }
+            else
+            {
+                for(; inputHeight != 0; --inputHeight)
+                {
+                    for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
+                    {
+                        *pOutputMemory++ = (outputType)(((inputHandlerNumValuesMinusOne - (imbxInt32)*(pInputMemory++)) * outputHandlerNumValues) / inputHandlerNumValues + outputHandlerMinValue);
+                    }
+                    pInputMemory += inputHandlerWidth - inputWidth;
+                    pOutputMemory += outputHandlerWidth - inputWidth;
+                }
+            }
+        }
+
 };
 
 

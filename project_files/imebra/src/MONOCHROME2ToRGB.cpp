@@ -64,32 +64,6 @@ ptr<colorTransform> MONOCHROME2ToRGB::createColorTransform()
 }
 
 
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// MONOCHROME2 to RGB transformation
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-void MONOCHROME2ToRGB::doColorTransform(imbxInt32* pSourceMem, imbxInt32* pDestMem, imbxUint32 pixelsNumber, imbxInt32 inputMinValue, imbxInt32 /* inputMaxValue */, imbxInt32 outputMinValue, imbxInt32 outputMaxValue)
-{
-	imbxInt32 sourcePixel;
-	while(pixelsNumber--)
-	{
-		sourcePixel=*pSourceMem++ - inputMinValue + outputMinValue;
-
-		if(sourcePixel<outputMinValue)
-			sourcePixel=outputMinValue;
-		if(sourcePixel>outputMaxValue)
-			sourcePixel=outputMaxValue;
-
-		*pDestMem++ = sourcePixel;
-		*pDestMem++ = sourcePixel;
-		*pDestMem++ = sourcePixel;
-	}
-}
 
 } // namespace colorTransforms
 

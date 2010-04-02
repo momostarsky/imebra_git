@@ -43,11 +43,11 @@ namespace handlers
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-double dataHandlerStringIS::getDouble() const
+double dataHandlerStringIS::getDouble(const imbxUint32 index) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerStringIS::getDouble");
 
-	return (double)getSignedLong();
+	return (double)getSignedLong(index);
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -63,11 +63,11 @@ double dataHandlerStringIS::getDouble() const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerStringIS::setDouble(const double value)
+void dataHandlerStringIS::setDouble(const imbxUint32 index, const double value)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerStringIS::setDouble");
 
-	setSignedLong((imbxInt32)value);
+	setSignedLong(index, (imbxInt32)value);
 
 	PUNTOEXE_FUNCTION_END();
 }

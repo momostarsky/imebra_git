@@ -41,7 +41,7 @@ namespace imebra
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<handlers::imageHandler> image::create(
+ptr<handlers::dataHandlerNumericBase> image::create(
 						const imbxUint32 sizeX, 
 						const imbxUint32 sizeY, 
 						const bitDepth depth, 
@@ -77,22 +77,25 @@ ptr<handlers::imageHandler> image::create(
 	m_channelPixelSize = 0;
 	imbxUint8 defaultHighBit = 0;
 
+	std::string bufferDataType;
+
 	switch(depth)
 	{
 	case depthU8:
+		bufferDataType = "OB";
 		defaultHighBit=7;
 		break;
 	case depthS8:
+		bufferDataType = "SB";
 		defaultHighBit=7;
 		break;
 	case depthU16:
+		bufferDataType = "US";
 		defaultHighBit=15;
 		break;
 	case depthS16:
+		bufferDataType = "SS";
 		defaultHighBit=15;
-		break;
-	case depthUnknown:
-		defaultHighBit=0;
 		break;
 	default:
 		PUNTOEXE_THROW(imageExceptionUnknownDepth, "Unknown depth");
@@ -110,13 +113,13 @@ ptr<handlers::imageHandler> image::create(
 	///////////////////////////////////////////////////////////
 	if(m_buffer == 0 || !(m_buffer->isReferencedOnce()) )
 	{
-		ptr<buffer> tempBuffer(new buffer(this, "SL"));
+		ptr<buffer> tempBuffer(new buffer(this, bufferDataType));
 		m_buffer = tempBuffer;
 	}
 
 	m_sizeX = m_sizeY = 0;
 	
-	ptr<handlers::dataHandler> imageHandler = m_buffer->getDataHandler(true, sizeX * sizeY * (imbxUint32)m_channelsNumber);
+	ptr<handlers::dataHandler> imageHandler(m_buffer->getDataHandler(true, sizeX * sizeY * (imbxUint32)m_channelsNumber) );
 	if(imageHandler != 0)
 	{
 		m_rowLength = m_channelsNumber*sizeX;
@@ -131,7 +134,7 @@ ptr<handlers::imageHandler> image::create(
 		m_sizeY=sizeY;
 	}
 
-	return ptr<handlers::imageHandler>(dynamic_cast<handlers::imageHandler*>(imageHandler.get()) );
+	return ptr<handlers::dataHandlerNumericBase>(dynamic_cast<handlers::dataHandlerNumericBase*>(imageHandler.get()) );
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -146,94 +149,28 @@ ptr<handlers::imageHandler> image::create(
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void image::setBitDepthAndHighBit(imbxUint32 highBit, bitDepth imageBitDepth)
+void image::setHighBit(imbxUint32 highBit)
 {
-	PUNTOEXE_FUNCTION_START(L"image::setBitDepthAndHighBit");
+	PUNTOEXE_FUNCTION_START(L"image::setHighBit");
 
 	lockObject lockAccess(this);
 
-	if(highBit != 0)
-	{
-		m_highBit = highBit;
-	}
-
-	if(imageBitDepth != depthUnknown)
-	{
-		m_imageDepth = imageBitDepth;
-	}
-
-	// If the bit depth is unknown, then calculate it
-	///////////////////////////////////////////////////////////
-	if(m_imageDepth != depthUnknown && m_imageDepth != 0)
-	{
-		return;
-	}
-
-	// Find the requested bit depth
-	///////////////////////////////////////////////////////////
-	bitDepth finalBitDepth = image::depthU8;
-	imbxUint32 finalHighBit = 7;
-
-	imbxUint32 rowSize, pixelSize, channelsNumber;
-	ptr<handlers::imageHandler> imageDataHandler = getDataHandler(false, &rowSize, &pixelSize, &channelsNumber);
-	imbxInt32* pBuffer = imageDataHandler->getMemoryBuffer();
-
-	imbxInt32 minimumValue=*pBuffer;
-	imbxInt32 maximumValue=*pBuffer;
-	imbxInt32 tempValue;
-	for(imbxUint32 bufferSize = m_sizeX * m_sizeY * channelsNumber; bufferSize != 0; --bufferSize)
-	{
-		tempValue=*(pBuffer++);
-		if(tempValue<minimumValue)
-			minimumValue=tempValue;
-		if(tempValue>maximumValue)
-			maximumValue=tempValue;
-	}
-
-	// Signed bit depth
-	///////////////////////////////////////////////////////////
-	if(minimumValue < 0)
-	{
-		finalBitDepth = depthS8;
-		if(minimumValue < -128L || maximumValue >= 128L)
-		{
-			finalBitDepth = depthS16;
-			finalHighBit = 15;
-		}
-	}
-	
-	// Unsigned bit depth
-	///////////////////////////////////////////////////////////
-	else if(maximumValue >= 256L)
-	{
-		finalBitDepth = depthU16;
-		finalHighBit = 15;
-	}
-
-	if(m_highBit > 7)
-	{
-		if(finalBitDepth == depthU8)
-		{
-			finalBitDepth = depthU16;
-		}
-		if(finalBitDepth == depthS8)
-		{
-			finalBitDepth = depthS16;
-		}
-	}
-
-	if(m_imageDepth == depthUnknown)
-	{
-		m_imageDepth = finalBitDepth;
-	}
-
-	if(m_highBit == 0)
-	{
-		m_highBit = finalHighBit;
-	}
+	m_highBit = highBit;
 
 	PUNTOEXE_FUNCTION_END();
 }
+
+void image::setPalette(ptr<palette> imagePalette)
+{
+	PUNTOEXE_FUNCTION_START(L"image::getPalette");
+
+	lockObject lockAccess(this);
+
+	m_palette = imagePalette;
+
+	PUNTOEXE_FUNCTION_END();
+}
+
 
 
 ///////////////////////////////////////////////////////////
@@ -246,7 +183,7 @@ void image::setBitDepthAndHighBit(imbxUint32 highBit, bitDepth imageBitDepth)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<handlers::imageHandler> image::getDataHandler(const bool bWrite, imbxUint32* pRowSize, imbxUint32* pChannelPixelSize, imbxUint32* pChannelsNumber)
+ptr<handlers::dataHandlerNumericBase> image::getDataHandler(const bool bWrite, imbxUint32* pRowSize, imbxUint32* pChannelPixelSize, imbxUint32* pChannelsNumber)
 {
 	PUNTOEXE_FUNCTION_START(L"image::getDataHandler");
 
@@ -254,18 +191,16 @@ ptr<handlers::imageHandler> image::getDataHandler(const bool bWrite, imbxUint32*
 
 	if(m_buffer == 0)
 	{
-		return ptr<handlers::imageHandler>(0);
+		return ptr<handlers::dataHandlerNumericBase>(0);
 	}
 
 	*pRowSize=m_rowLength;
 	*pChannelPixelSize=m_channelPixelSize;
 	*pChannelsNumber=m_channelsNumber;
 
-	ptr<handlers::dataHandler> ptrDataHandler = m_buffer->getDataHandler(bWrite, m_sizeX * m_sizeY * m_channelsNumber);
-	handlers::imageHandler* pDataHandlerImage = dynamic_cast<handlers::imageHandler*> (ptrDataHandler.get());
-	ptr<handlers::imageHandler> ptrDataHandlerImage(pDataHandlerImage);
+	ptr<handlers::dataHandler> imageHandler(m_buffer->getDataHandler(bWrite, m_sizeX * m_sizeY * m_channelsNumber));
 
-	return ptrDataHandlerImage;
+	return ptr<handlers::dataHandlerNumericBase>(dynamic_cast<handlers::dataHandlerNumericBase*>(imageHandler.get()) );
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -306,6 +241,17 @@ imbxUint32 image::getHighBit()
 
 	lockObject lockAccess(this);
 	return m_highBit;
+
+	PUNTOEXE_FUNCTION_END();
+}
+
+ptr<palette> image::getPalette()
+{
+	PUNTOEXE_FUNCTION_START(L"image::getPalette");
+
+	lockObject lockAccess(this);
+
+	return m_palette;
 
 	PUNTOEXE_FUNCTION_END();
 }

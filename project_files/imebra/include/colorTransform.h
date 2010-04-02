@@ -11,7 +11,7 @@ $fileHeader$
 #if !defined(imebraColorTransform_E27C63E7_A907_4899_9BD3_8026AD7D110C__INCLUDED_)
 #define imebraColorTransform_E27C63E7_A907_4899_9BD3_8026AD7D110C__INCLUDED_
 
-#include "transform.h"
+#include "baseTransform.h"
 
 
 ///////////////////////////////////////////////////////////
@@ -53,13 +53,9 @@ namespace colorTransforms
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class colorTransform: public transform
+class colorTransform: public transformHandlers
 {
 public:
-	// Performs the color transform
-	///////////////////////////////////////////////////////////
-	virtual void doTransform();
-
 	/// \brief Return the name of the color space that this 
 	///         colorTransform can convert.
 	///
@@ -90,34 +86,21 @@ public:
 	///
 	///////////////////////////////////////////////////////////
 	virtual ptr<colorTransform> createColorTransform()=0;
-	
+
+        virtual ptr<image> allocateOutputImage(ptr<image> pInputImage, imbxUint32 width, imbxUint32 height);
+
 protected:
-	/// \internal
-	/// \brief Performs the color conversion.
-	///
-	/// @param pSourceMem   the buffer of the source image
-	/// @param pDestMem     the buffer of the destination image
-	/// @param pixelsNumber the number of pixels to be 
-	///                      converted
-	/// @param inputMinValue the minimum allowed value in the
-	///                      pSourceMem buffer
-	/// @param inputMaxValue the maximum allowed value in the
-	///                      pSourceMem buffer
-	/// @param outputMinValue the minimum allowed value in the
-	///                      pDestMem buffer
-	/// @param outputMaxValue the maximum allowed value in the
-	///                      pDestMem buffer
-	///
+	// Performs the color transform
 	///////////////////////////////////////////////////////////
-	virtual void doColorTransform(imbxInt32* pSourceMem, imbxInt32* pDestMem, imbxUint32 pixelsNumber, imbxInt32 inputMinValue, imbxInt32 inputMaxValue, imbxInt32 outputMinValue, imbxInt32 outputMaxValue)=0;
+        void checkColorSpaces(const std::wstring& inputHandlerColorSpace, const std::wstring& outputHandlerColorSpace);
 
 };
 
 
-class colorTransformException: public transformException
+class colorTransformException: public baseTransformException
 {
 public:
-	colorTransformException(const std::string& message): transformException(message){}
+	colorTransformException(const std::string& message): baseTransformException(message){}
 };
 
 class colorTransformExceptionWrongColorSpace: public colorTransformException

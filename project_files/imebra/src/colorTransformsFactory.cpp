@@ -299,7 +299,7 @@ imbxUint32 colorTransformsFactory::getNumberOfChannels(std::wstring colorSpace)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<transform> colorTransformsFactory::getTransform(std::wstring startColorSpace, std::wstring endColorSpace)
+ptr<colorTransform> colorTransformsFactory::getTransform(std::wstring startColorSpace, std::wstring endColorSpace)
 {
 	PUNTOEXE_FUNCTION_START(L"colorTransformsFactory::getTransform");
 
@@ -310,7 +310,7 @@ ptr<transform> colorTransformsFactory::getTransform(std::wstring startColorSpace
 
 	if(normalizedStartColorSpace == normalizedEndColorSpace)
 	{
-		return ptr<transform>(0);
+		return ptr<colorTransform>(0);
 	}
 
 	for(tTransformsList::iterator scanSingleTransform = m_transformsList.begin(); scanSingleTransform != m_transformsList.end(); ++scanSingleTransform)

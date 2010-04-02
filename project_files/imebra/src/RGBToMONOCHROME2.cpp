@@ -61,42 +61,6 @@ ptr<colorTransform> RGBToMONOCHROME2::createColorTransform()
 	return ptr<colorTransform>(new RGBToMONOCHROME2);
 }
 
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// RGB to MONOCHROME2 transformation
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-void RGBToMONOCHROME2::doColorTransform(imbxInt32* pSourceMem, imbxInt32* pDestMem, imbxUint32 pixelsNumber, imbxInt32 inputMinValue, imbxInt32 /* inputMaxValue */, imbxInt32 outputMinValue, imbxInt32 outputMaxValue)
-{
-	imbxInt32 sourcePixelR;
-	imbxInt32 sourcePixelG;
-	imbxInt32 sourcePixelB;
-	imbxInt32 destPixelY;
-	while(pixelsNumber--)
-	{
-		sourcePixelR=*pSourceMem++ - inputMinValue;
-		sourcePixelG=*pSourceMem++ - inputMinValue;
-		sourcePixelB=*pSourceMem++ - inputMinValue;
-
-		///////////////////////////////////////////////////////////
-		// Conversion
-		///////////////////////////////////////////////////////////
-		destPixelY=((imbxInt32)1225*sourcePixelR+(imbxInt32)2404*sourcePixelG+(imbxInt32)581*sourcePixelB)>>12;
-
-		if(destPixelY<outputMinValue)
-			destPixelY=outputMinValue;
-		if(destPixelY>outputMaxValue)
-			destPixelY=outputMaxValue;
-
-		*pDestMem++ = destPixelY;
-	}
-}
-
 } // namespace colorTransforms
 
 } // namespace transforms

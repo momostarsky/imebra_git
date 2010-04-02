@@ -10,7 +10,6 @@ $fileHeader$
 #include "../../base/include/exception.h"
 #include "../include/modalityVOILUT.h"
 #include "../include/dataSet.h"
-#include "../include/LUT.h"
 
 namespace puntoexe
 {
@@ -31,161 +30,66 @@ namespace transforms
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void modalityVOILUT::doTransformBuffersInPlace(
-		imbxUint32 /* sizeX */,
-		imbxUint32 /* sizeY */,
-		imbxUint32 /* inputChannelsNumber */,
-		std::wstring /* inputColorSpace */,
-		image::bitDepth /* inputDepth */,
-		imbxUint32 /* inputHighBit */,
-		imbxInt32* pOutputBuffer,
-		imbxUint32 buffersSize,
-		image::bitDepth* pOutputDepth,
-		imbxUint32* pOutputHighBit)
+modalityVOILUT::modalityVOILUT(ptr<dataSet> pDataSet): m_pDataSet(pDataSet)
 {
-	PUNTOEXE_FUNCTION_START(L"modalityVOILUT::doTransformBuffers");
+	m_voiLut = m_pDataSet->getLut(0x0028, 0x3000, 0);
 
-	ptr<dataSet> voiDataSet = getDataSet();
-	if(voiDataSet == 0)
-	{
-		PUNTOEXE_THROW(transformExceptionDataSetNotDefined, "VOI dataset missed");
-	}
+	m_rescaleIntercept = m_pDataSet->getDouble(0x0028, 0, 0x1052, 0x0);
+	m_rescaleSlope = m_pDataSet->getDouble(0x0028, 0, 0x1053, 0x0);
+	if(m_rescaleSlope == 0.0)
+	    m_rescaleSlope = 1.0;
 
-	// Get the modality LUT
-	///////////////////////////////////////////////////////////
-	ptr<lut> voiLut=voiDataSet->getLut(0x0028, 0x3000, 0);
-
-	//
-	// Modality LUT found
-	//
-	///////////////////////////////////////////////////////////
-	if(voiLut != 0 && voiLut->getSize() != 0 && voiLut->checkValidDataRange())
-	{
-		imbxUint8 bits=voiLut->getBits();
-
-		*pOutputDepth=image::depthU8;
-		if(bits>8)
-			*pOutputDepth=image::depthU16;
-		*pOutputHighBit=bits-1;
-
-		while(buffersSize--)
-		{
-			*pOutputBuffer=voiLut->mappedValue(*pOutputBuffer);
-			++pOutputBuffer;
-		}
-
-		return;
-	}
-
-	//
-	// Modality LUT not found
-	//
-	///////////////////////////////////////////////////////////
-
-	// Retrieve the intercept/scale pair
-	///////////////////////////////////////////////////////////
-	double rescaleIntercept=voiDataSet->getDouble(0x0028, 0, 0x1052, 0x0);
-	double rescaleSlope=voiDataSet->getDouble(0x0028, 0, 0x1053, 0x0);
-	if(rescaleSlope==0.0)
-		rescaleSlope=1.0;
-
-	// Scale/Intercept
-	///////////////////////////////////////////////////////////
-	if(rescaleSlope==1.0 && rescaleIntercept==0.0)
-	{
-		return;
-	}
-
-	*pOutputDepth=image::depthUnknown;
-	*pOutputHighBit = 0;
-
-	while(buffersSize--)
-	{
-		*pOutputBuffer=(imbxInt32)((double)(*pOutputBuffer)*rescaleSlope+rescaleIntercept+0.5);
-		++pOutputBuffer;
-	}
-	return;
-
-	PUNTOEXE_FUNCTION_END();
 }
 
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Inverse Modality VOILUT transform
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-void modalityVOILUTInverse::doTransformBuffers(
-		imbxUint32 /* sizeX */,
-		imbxUint32 /* sizeY */,
-		imbxUint32 /* inputChannelsNumber */,
-		std::wstring /* inputColorSpace */,
-		image::bitDepth /* inputDepth */,
-		imbxUint32 /* inputHighBit */,
-		imbxInt32* /* pInputBuffer */,
-		imbxInt32* pOutputBuffer,
-		imbxUint32 buffersSize,
-		image::bitDepth* /* pOutputDepth */,
-		imbxUint32* /* pOutputHighBit */)
+ptr<image> modalityVOILUT::allocateOutputImage(ptr<image> pInputImage, imbxUint32 width, imbxUint32 height)
 {
-	PUNTOEXE_FUNCTION_START(L"modalityVOILUTInverse::doTransformBuffers");
-
-	ptr<dataSet> voiDataSet=getDataSet();
-	if(voiDataSet == 0)
+	if(m_voiLut != 0 && m_voiLut->getSize() != 0 && m_voiLut->checkValidDataRange())
 	{
-		PUNTOEXE_THROW(transformExceptionDataSetNotDefined, "VOI dataset missed");
-	}
+		imbxUint8 bits(m_voiLut->getBits());
 
-	// Get the modality LUT
-	///////////////////////////////////////////////////////////
-	ptr<lut> voiLut=voiDataSet->getLut(0x0028, 0x3000, 0);
-
-	//
-	// Modality LUT found
-	//
-	///////////////////////////////////////////////////////////
-	if(voiLut != 0 && voiLut->getSize())
-	{
-		while(buffersSize--)
+		// Look for negative outputs
+		bool bNegative(false);
+		for(imbxInt32 index(m_voiLut->getFirstMapped()), size(m_voiLut->getSize()); !bNegative && size != 0; --size, ++index)
 		{
-			*pOutputBuffer = voiLut->mappedValueRev(*pOutputBuffer);
-			++pOutputBuffer;
+			bNegative = (m_voiLut->mappedValue(index) < 0);
 		}
 
-		return;
+		image::bitDepth depth;
+		if(bNegative)
+		{
+			depth = bits > 8 ? image::depthS16 : image::depthS8;
+		}
+		else
+		{
+			depth = bits > 8 ? image::depthU16 : image::depthU8;
+		}
+		ptr<image> returnImage(new image);
+		returnImage->create(width, height, depth, L"MONOCHROME2", bits - 1);
+		return returnImage;
 	}
 
-	//
-	// Modality LUT not found
-	//
-	///////////////////////////////////////////////////////////
+	image::bitDepth inputDepth(pInputImage->getDepth());
+	imbxUint32 highBit(pInputImage->getHighBit());
 
-	// Retrieve the intercept/scale pair
-	///////////////////////////////////////////////////////////
-	double rescaleIntercept=voiDataSet->getDouble(0x0028, 0, 0x1052, 0x0);
-	double rescaleSlope=voiDataSet->getDouble(0x0028, 0, 0x1053, 0x0);
-	if(rescaleSlope==0.0)
-		rescaleSlope=1.0;
-
-	// Scale/Intercept
-	///////////////////////////////////////////////////////////
-	if(rescaleSlope==1.0 && rescaleIntercept==0.0)
+	imbxInt32 minInputValue = 0;
+	if(inputDepth == image::depthS16 || inputDepth == image::depthS8)
 	{
-		return;
+		minInputValue = ((imbxInt32)(-1) << highBit) + m_rescaleIntercept;
 	}
 
-	while(buffersSize--)
+	ptr<image> returnImage(new image);
+	if(minInputValue < 0)
 	{
-		*pOutputBuffer = (imbxInt32)(((double)(*pOutputBuffer) - rescaleIntercept)/rescaleSlope+0.5);
-		++pOutputBuffer;
+		returnImage->create(width, height, image::depthS16, L"MONOCHROME2", 15);
 	}
+	else
+	{
+		returnImage->create(width, height, image::depthU16, L"MONOCHROME2", 15);
+	}
+	return returnImage;
 
-	PUNTOEXE_FUNCTION_END();
 }
+
 
 
 } // namespace transforms

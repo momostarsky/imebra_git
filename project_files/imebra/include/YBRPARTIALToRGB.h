@@ -46,8 +46,146 @@ public:
 	virtual std::wstring getFinalColorSpace();
 	virtual ptr<colorTransform> createColorTransform();
 
-protected:
-	virtual void doColorTransform(imbxInt32* pSourceMem, imbxInt32* pDestMem, imbxUint32 pixelsNumber, imbxInt32 inputMinValue, imbxInt32 inputMaxValue, imbxInt32 outputMinValue, imbxInt32 outputMaxValue);
+        DEFINE_RUN_TEMPLATE_TRANSFORM;
+
+        template <class inputType, class outputType>
+        void templateTransform(
+            inputType* inputHandlerData, size_t inputHandlerSize, imbxUint32 inputHandlerWidth, const std::wstring& inputHandlerColorSpace,
+            ptr<palette> /* inputPalette */,
+            imbxInt32 inputHandlerMinValue, imbxUint32 inputHandlerNumValues,
+            imbxInt32 inputTopLeftX, imbxInt32 inputTopLeftY, imbxInt32 inputWidth, imbxInt32 inputHeight,
+            outputType* outputHandlerData, size_t outputHandlerSize, imbxInt32 outputHandlerWidth, const std::wstring& outputHandlerColorSpace,
+            ptr<palette> /* outputPalette */,
+            imbxInt32 outputHandlerMinValue, imbxUint32 outputHandlerNumValues,
+            imbxInt32 outputTopLeftX, imbxInt32 outputTopLeftY)
+
+        {
+            checkColorSpaces(inputHandlerColorSpace, outputHandlerColorSpace);
+
+            inputType* pInputMemory(inputHandlerData);
+            outputType* pOutputMemory(outputHandlerData);
+
+            pInputMemory += (inputTopLeftY * inputHandlerWidth + inputTopLeftX) * 3;
+            pOutputMemory += (outputTopLeftY * outputHandlerWidth + outputTopLeftX) * 3;
+
+            imbxInt32 inputMiddleValue(inputHandlerMinValue + inputHandlerNumValues / 2);
+            imbxInt32 sourceY, sourceB, sourceR, destination;
+
+
+
+            if(inputHandlerNumValues == outputHandlerNumValues)
+            {
+                for(; inputHeight != 0; --inputHeight)
+                {
+                    for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
+                    {
+                        sourceY = *(pInputMemory++);
+                        sourceB = *(pInputMemory++) - inputMiddleValue;
+                        sourceR = *(pInputMemory++) - inputMiddleValue;
+
+                        destination = sourceY + ((22970 * sourceR + 8192) >> 14);
+                        if(destination < 0)
+                        {
+                            *(pOutputMemory++) = outputHandlerMinValue;
+                        }
+                        else if (destination >= (imbxInt32)inputHandlerNumValues)
+                        {
+                            *(pOutputMemory++) = outputHandlerMinValue + outputHandlerNumValues - 1;
+                        }
+                        else
+                        {
+                            *(pOutputMemory++) = outputHandlerMinValue + destination;
+                        }
+
+                        destination = sourceY - ((5638 * sourceB + 11700 * sourceR + 8192) >> 14);
+                        if(destination < 0)
+                        {
+                            *(pOutputMemory++) = outputHandlerMinValue;
+                        }
+                        else if (destination >= (imbxInt32)inputHandlerNumValues)
+                        {
+                            *(pOutputMemory++) = outputHandlerMinValue + outputHandlerNumValues - 1;
+                        }
+                        else
+                        {
+                            *(pOutputMemory++) = outputHandlerMinValue + destination;
+                        }
+
+                        destination = sourceY + ((29032 * sourceB + 8192) >> 14);
+                        if(destination < 0)
+                        {
+                            *(pOutputMemory++) = outputHandlerMinValue;
+                        }
+                        else if (destination >= (imbxInt32)inputHandlerNumValues)
+                        {
+                            *(pOutputMemory++) = outputHandlerMinValue + outputHandlerNumValues - 1;
+                        }
+                        else
+                        {
+                            *(pOutputMemory++) = outputHandlerMinValue + destination;
+                        }
+                    }
+                    pInputMemory += (inputHandlerWidth - inputWidth) * 3;
+                    pOutputMemory += (outputHandlerWidth - inputWidth) * 3;
+                }
+            }
+            else
+            {
+                for(; inputHeight != 0; --inputHeight)
+                {
+                    for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
+                    {
+                        sourceY = *(pInputMemory++);
+                        sourceB = *(pInputMemory++) - inputMiddleValue;
+                        sourceR = *(pInputMemory++) - inputMiddleValue;
+
+                        destination = sourceY + ((22970 * sourceR + 8192) >> 14);
+                        if(destination < 0)
+                        {
+                            *(pOutputMemory++) = outputHandlerMinValue;
+                        }
+                        else if (destination >= (imbxInt32)inputHandlerNumValues)
+                        {
+                            *(pOutputMemory++) = outputHandlerMinValue + outputHandlerNumValues - 1;
+                        }
+                        else
+                        {
+                            *(pOutputMemory++) = outputHandlerMinValue + (destination * outputHandlerNumValues) / inputHandlerNumValues;
+                        }
+
+                        destination = sourceY - ((5638 * sourceB + 11700 * sourceR + 8192) >> 14);
+                        if(destination < 0)
+                        {
+                            *(pOutputMemory++) = outputHandlerMinValue;
+                        }
+                        else if (destination >= (imbxInt32)inputHandlerNumValues)
+                        {
+                            *(pOutputMemory++) = outputHandlerMinValue + outputHandlerNumValues - 1;
+                        }
+                        else
+                        {
+                            *(pOutputMemory++) = outputHandlerMinValue + (destination * outputHandlerNumValues) / inputHandlerNumValues;
+                        }
+
+                        destination = sourceY + ((29032 * sourceB + 8192) >> 14);
+                        if(destination < 0)
+                        {
+                            *(pOutputMemory++) = outputHandlerMinValue;
+                        }
+                        else if (destination >= (imbxInt32)inputHandlerNumValues)
+                        {
+                            *(pOutputMemory++) = outputHandlerMinValue + outputHandlerNumValues - 1;
+                        }
+                        else
+                        {
+                            *(pOutputMemory++) = outputHandlerMinValue + (destination * outputHandlerNumValues) / inputHandlerNumValues;
+                        }
+                    }
+                    pInputMemory += (inputHandlerWidth - inputWidth) * 3;
+                    pOutputMemory += (outputHandlerWidth - inputWidth) * 3;
+                }
+            }
+        }
 };
 
 } // namespace colorTransforms

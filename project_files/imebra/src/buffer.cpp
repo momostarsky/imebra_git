@@ -404,13 +404,6 @@ ptr<handlers::dataHandler> buffer::getDataHandler(bool bWrite, bool bRaw, imbxUi
 	handler->setCharsetsList(&m_charsetsList);
 	handler->parseBuffer(parseMemory);
 
-	// Rewind the data pointer
-	///////////////////////////////////////////////////////////
-	if(handler->getSize() != 0)
-	{
-		handler->setPointer(0);
-	}
-
 	// Return the allocated handler
 	///////////////////////////////////////////////////////////
 	return handler;

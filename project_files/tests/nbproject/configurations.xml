@@ -29,13 +29,13 @@
         <itemPath>../imebra/include/MONOCHROME2ToYBRFULL.h</itemPath>
         <itemPath>../imebra/include/PALETTECOLORToRGB.h</itemPath>
         <itemPath>../imebra/include/RGBToMONOCHROME2.h</itemPath>
-        <itemPath>../imebra/include/RGBToPALETTECOLOR.h</itemPath>
         <itemPath>../imebra/include/RGBToYBRFULL.h</itemPath>
         <itemPath>../imebra/include/RGBToYBRPARTIAL.h</itemPath>
         <itemPath>../imebra/include/VOILUT.h</itemPath>
         <itemPath>../imebra/include/YBRFULLToMONOCHROME2.h</itemPath>
         <itemPath>../imebra/include/YBRFULLToRGB.h</itemPath>
         <itemPath>../imebra/include/YBRPARTIALToRGB.h</itemPath>
+        <itemPath>../imebra/include/baseTransform.h</itemPath>
         <itemPath>../imebra/include/buffer.h</itemPath>
         <itemPath>../imebra/include/bufferStream.h</itemPath>
         <itemPath>../imebra/include/charsetsList.h</itemPath>
@@ -78,8 +78,6 @@
         <itemPath>../imebra/include/jpegCodec.h</itemPath>
         <itemPath>../imebra/include/modalityVOILUT.h</itemPath>
         <itemPath>../imebra/include/transaction.h</itemPath>
-        <itemPath>../imebra/include/transform.h</itemPath>
-        <itemPath>../imebra/include/transformBuffers.h</itemPath>
         <itemPath>../imebra/include/transformHighBit.h</itemPath>
         <itemPath>../imebra/include/transformsChain.h</itemPath>
         <itemPath>../imebra/include/viewHelper.h</itemPath>
@@ -139,13 +137,13 @@
         <itemPath>../imebra/src/MONOCHROME2ToYBRFULL.cpp</itemPath>
         <itemPath>../imebra/src/PALETTECOLORToRGB.cpp</itemPath>
         <itemPath>../imebra/src/RGBToMONOCHROME2.cpp</itemPath>
-        <itemPath>../imebra/src/RGBToPALETTECOLOR.cpp</itemPath>
         <itemPath>../imebra/src/RGBToYBRFULL.cpp</itemPath>
         <itemPath>../imebra/src/RGBToYBRPARTIAL.cpp</itemPath>
         <itemPath>../imebra/src/VOILUT.cpp</itemPath>
         <itemPath>../imebra/src/YBRFULLToMONOCHROME2.cpp</itemPath>
         <itemPath>../imebra/src/YBRFULLToRGB.cpp</itemPath>
         <itemPath>../imebra/src/YBRPARTIALToRGB.cpp</itemPath>
+        <itemPath>../imebra/src/baseTransform.cpp</itemPath>
         <itemPath>../imebra/src/buffer.cpp</itemPath>
         <itemPath>../imebra/src/charsetsList.cpp</itemPath>
         <itemPath>../imebra/src/codec.cpp</itemPath>
@@ -183,8 +181,6 @@
         <itemPath>../imebra/src/jpegCodec.cpp</itemPath>
         <itemPath>../imebra/src/modalityVOILUT.cpp</itemPath>
         <itemPath>../imebra/src/transaction.cpp</itemPath>
-        <itemPath>../imebra/src/transform.cpp</itemPath>
-        <itemPath>../imebra/src/transformBuffers.cpp</itemPath>
         <itemPath>../imebra/src/transformHighBit.cpp</itemPath>
         <itemPath>../imebra/src/transformsChain.cpp</itemPath>
         <itemPath>../imebra/src/viewHelper.cpp</itemPath>
@@ -193,7 +189,6 @@
       <logicalFolder name="f3" displayName="tests" projectFiles="true">
         <itemPath>CImbx_tests/CImbx_tests.cpp</itemPath>
         <itemPath>CImbx_tests/ageStringHandlerTest.cpp</itemPath>
-        <itemPath>CImbx_tests/bitTransformTest.cpp</itemPath>
         <itemPath>CImbx_tests/bufferTest.cpp</itemPath>
         <itemPath>CImbx_tests/buildImageForTest.cpp</itemPath>
         <itemPath>CImbx_tests/dataSetTest.cpp</itemPath>
@@ -228,6 +223,9 @@
         <platform>2</platform>
       </toolsSet>
       <compileType>
+        <ccTool>
+          <warningLevel>2</warningLevel>
+        </ccTool>
         <linkerTool>
           <linkerLibItems>
             <linkerLibStdlibItem>PosixThreads</linkerLibStdlibItem>

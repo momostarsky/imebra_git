@@ -12,6 +12,7 @@ $fileHeader$
 
 #include "colorTransform.h"
 #include "LUT.h"
+#include "dataSet.h"
 
 ///////////////////////////////////////////////////////////
 //
@@ -47,39 +48,73 @@ namespace colorTransforms
 class PALETTECOLORToRGB: public colorTransform
 {
 public:
-	virtual void declareDataSet(ptr<dataSet> pDataSet);
-
-	/// \brief Specify the palette to use for the conversion.
-	///
-	/// If the application doesn't call this function before
-	///  calling doTransform(), then the transform uses the
-	///  palette declared in the dataSet.
-	///
-	/// @param red    the lut that stores the red components 
-	///                of the mapped values
-	/// @param green  the lut that stores the green components 
-	///                of the mapped values
-	/// @param blue   the lut that stores the blue components 
-	///                of the mapped values
-	///
-	///////////////////////////////////////////////////////////
-	virtual void setLut(ptr<lut> red, ptr<lut> green, ptr<lut> blue);
-
-	virtual void doTransform();
-
 	virtual std::wstring getInitialColorSpace();
 	virtual std::wstring getFinalColorSpace();
 	virtual ptr<colorTransform> createColorTransform();
 
-protected:
-	virtual void doColorTransform(imbxInt32* pSourceMem, imbxInt32* pDestMem, imbxUint32 pixelsNumber, imbxInt32 inputMinValue, imbxInt32 inputMaxValue, imbxInt32 outputMinValue, imbxInt32 outputMaxValue);
+        DEFINE_RUN_TEMPLATE_TRANSFORM;
 
-	// Color palette
-	///////////////////////////////////////////////////////////
-protected:
-	ptr<lut> m_redPalette;
-	ptr<lut> m_greenPalette;
-	ptr<lut> m_bluePalette;
+        template <class inputType, class outputType>
+        void templateTransform(
+            inputType* inputHandlerData, size_t inputHandlerSize, imbxUint32 inputHandlerWidth, const std::wstring& inputHandlerColorSpace,
+            ptr<palette> inputPalette,
+            imbxInt32 inputHandlerMinValue, imbxUint32 inputHandlerNumValues,
+            imbxInt32 inputTopLeftX, imbxInt32 inputTopLeftY, imbxInt32 inputWidth, imbxInt32 inputHeight,
+            outputType* outputHandlerData, size_t outputHandlerSize, imbxInt32 outputHandlerWidth, const std::wstring& outputHandlerColorSpace,
+            ptr<palette> /* outputPalette */,
+            imbxInt32 outputHandlerMinValue, imbxUint32 outputHandlerNumValues,
+            imbxInt32 outputTopLeftX, imbxInt32 outputTopLeftY)
+
+        {
+            checkColorSpaces(inputHandlerColorSpace, outputHandlerColorSpace);
+
+            inputType* pInputMemory(inputHandlerData);
+            outputType* pOutputMemory(outputHandlerData);
+
+            lut* pRed = inputPalette->getRed().get();
+            lut* pGreen = inputPalette->getGreen().get();
+            lut* pBlue = inputPalette->getBlue().get();
+
+            inputHandlerMinValue = 0;
+            inputHandlerNumValues = (imbxUint32)1 << (pRed->getBits());
+
+            pInputMemory += inputTopLeftY * inputHandlerWidth + inputTopLeftX;
+            pOutputMemory += (outputTopLeftY * outputHandlerWidth + outputTopLeftX) * 3;
+
+            imbxInt32 paletteValue;
+            if(inputHandlerNumValues == outputHandlerNumValues)
+            {
+                for(; inputHeight != 0; --inputHeight)
+                {
+                    for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
+                    {
+                        paletteValue = *pInputMemory++;
+                        *pOutputMemory++ = (outputType)(pRed->mappedValue(paletteValue) + outputHandlerMinValue);
+                        *pOutputMemory++ = (outputType)(pGreen->mappedValue(paletteValue) + outputHandlerMinValue);
+                        *pOutputMemory++ = (outputType)(pBlue->mappedValue(paletteValue) + outputHandlerMinValue);
+                    }
+                    pInputMemory += inputHandlerWidth - inputWidth;
+                    pOutputMemory += (outputHandlerWidth - inputWidth) * 3;
+                }
+            }
+            else
+            {
+                for(; inputHeight != 0; --inputHeight)
+                {
+                    for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
+                    {
+                        paletteValue = *pInputMemory++;
+                        *pOutputMemory++ = (outputType)((pRed->mappedValue(paletteValue) * outputHandlerNumValues) / inputHandlerNumValues + outputHandlerMinValue);
+                        *pOutputMemory++ = (outputType)((pGreen->mappedValue(paletteValue) * outputHandlerNumValues) / inputHandlerNumValues + outputHandlerMinValue);
+                        *pOutputMemory++ = (outputType)((pBlue->mappedValue(paletteValue) * outputHandlerNumValues) / inputHandlerNumValues + outputHandlerMinValue);
+                    }
+                    pInputMemory += inputHandlerWidth - inputWidth;
+                    pOutputMemory += (outputHandlerWidth - inputWidth) * 3;
+                }
+            }
+
+        }
+
 
 };
 

@@ -23,26 +23,26 @@ void ageStringHandlerTest::ageTest()
 		ptr<handlers::dataHandler> hTag= tag->getDataHandler(0, true, "AS");
 		hTag->setSize(1);
 
-		hTag->setDouble(0.01);
-		std::wstring ageString = hTag->getUnicodeString();
+		hTag->setDouble(0, 0.01);
+		std::wstring ageString = hTag->getUnicodeString(0);
 		CPPUNIT_ASSERT(ageString == L"003D");
 
-		hTag->setDouble(0.2);
-		ageString = hTag->getUnicodeString();
+		hTag->setDouble(0, 0.2);
+		ageString = hTag->getUnicodeString(0);
 		CPPUNIT_ASSERT(ageString == L"010W");
 
-		hTag->setDouble(0.9);
-		ageString = hTag->getUnicodeString();
+		hTag->setDouble(0, 0.9);
+		ageString = hTag->getUnicodeString(0);
 		CPPUNIT_ASSERT(ageString == L"010M");
 
-		hTag->setDouble(0.5);
-		ageString = hTag->getUnicodeString();
+		hTag->setDouble(0, 0.5);
+		ageString = hTag->getUnicodeString(0);
 		CPPUNIT_ASSERT(ageString == L"006M");
 
-		hTag->setDouble(2.3);
-		ageString = hTag->getUnicodeString();
+		hTag->setDouble(0, 2.3);
+		ageString = hTag->getUnicodeString(0);
 		CPPUNIT_ASSERT(ageString == L"002Y");
-		imbxUint32 ageInt = hTag->getUnsignedLong();
+		imbxUint32 ageInt = hTag->getUnsignedLong(0);
 		CPPUNIT_ASSERT(ageInt == 2);
 	}
 }

@@ -22,9 +22,10 @@ ptr<image> dicomCodecTest::makeTestImage()
 	dicomImage->create(sizeX, sizeY, image::depthU16, L"RGB", 15);
 
 	imbxUint32 rowSize, channelsPixelSize, channelsNumber;
-	ptr<handlers::imageHandler> imageHandler = dicomImage->getDataHandler(true, &rowSize, &channelsPixelSize, &channelsNumber);
+	ptr<handlers::dataHandlerNumericBase> imageHandler = dicomImage->getDataHandler(true, &rowSize, &channelsPixelSize, &channelsNumber);
 
 	// Make 3 bands (RGB)
+	size_t pointer(0);
 	for(imbxUint32 y=0; y<sizeY; ++y)
 	{
 		for(imbxUint32 x=0; x<sizeX; ++x)
@@ -45,9 +46,9 @@ ptr<image> dicomCodecTest::makeTestImage()
 				g = 0;
 				b = 0;
 			}
-			imageHandler->setUnsignedLongIncPointer(r);
-			imageHandler->setUnsignedLongIncPointer(g);
-			imageHandler->setUnsignedLongIncPointer(b);
+			imageHandler->setUnsignedLong(pointer++, r);
+			imageHandler->setUnsignedLong(pointer++, g);
+			imageHandler->setUnsignedLong(pointer++, b);
 		}
 	}
 	imageHandler.release();
@@ -183,21 +184,22 @@ void dicomCodecTest::testRLENotInterleaved()
 		imbxUint32 checkSizeX, checkSizeY;
 		checkImage->getSize(&checkSizeX, &checkSizeY);
 
-		ptr<handlers::imageHandler> checkHandler = checkImage->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
-		ptr<handlers::imageHandler> originalHandler = dicomImage->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
+		ptr<handlers::dataHandlerNumericBase> checkHandler = checkImage->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
+		ptr<handlers::dataHandlerNumericBase> originalHandler = dicomImage->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
 
 		// Compare the buffers. A little difference is allowed
 		CPPUNIT_ASSERT(checkSizeX == sizeX);
 		CPPUNIT_ASSERT(checkSizeY == sizeY);
 
+		size_t pointer(0);
 		for(imbxUint32 checkY = 0; checkY < sizeY; ++checkY)
 		{
 			for(imbxUint32 checkX = 0; checkX < sizeX; ++checkX)
 			{
 				for(imbxUint32 channel = 3; channel != 0; --channel)
 				{
-					imbxInt32 value0 = checkHandler->getUnsignedLongIncPointer();
-					imbxInt32 value1 = originalHandler->getUnsignedLongIncPointer();
+					imbxInt32 value0 = checkHandler->getUnsignedLong(pointer);
+					imbxInt32 value1 = originalHandler->getUnsignedLong(pointer++);
 					CPPUNIT_ASSERT(value0 == value1);
 				}
 			}

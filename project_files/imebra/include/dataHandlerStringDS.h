@@ -38,23 +38,23 @@ class dataHandlerStringDS : public dataHandlerString
 public:
 	// Overwritten to use getDouble()
 	///////////////////////////////////////////////////////////
-	virtual imbxInt32 getSignedLong() const;
+	virtual imbxInt32 getSignedLong(const imbxUint32 index) const;
 
 	// Overwritten to use getDouble()
 	///////////////////////////////////////////////////////////
-	virtual imbxUint32 getUnsignedLong() const;
+	virtual imbxUint32 getUnsignedLong(const imbxUint32 index) const;
 
 	// Overwritten to use setDouble()
 	///////////////////////////////////////////////////////////
-	virtual void setSignedLong(const imbxInt32 value);
+	virtual void setSignedLong(const imbxUint32 index, const imbxInt32 value);
 
 	// Overwritten to use setDouble()
 	///////////////////////////////////////////////////////////
-	virtual void setUnsignedLong(const imbxUint32 value);
+	virtual void setUnsignedLong(const imbxUint32 index, const imbxUint32 value);
 
 	// Overwritten to use the exponential form if needed
 	///////////////////////////////////////////////////////////
-	virtual void setDouble(const double value);
+	virtual void setDouble(const imbxUint32 index, const double value);
 
 	// Get the padding byte
 	///////////////////////////////////////////////////////////

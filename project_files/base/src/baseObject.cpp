@@ -132,7 +132,7 @@ void basePtr::addRef()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-baseObject::baseObject(): m_pCriticalSection(new CObjectCriticalSection), m_lockCounter(0), m_bValid(true)
+baseObject::baseObject(): m_lockCounter(0), m_bValid(true), m_pCriticalSection(new CObjectCriticalSection)
 {
     m_pCriticalSection->addRef();
 }

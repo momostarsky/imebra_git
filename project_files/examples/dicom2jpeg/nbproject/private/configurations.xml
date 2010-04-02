@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configurationDescriptor version="45">
+<configurationDescriptor version="62">
   <projectmakefile>Makefile</projectmakefile>
-  <defaultConf>2</defaultConf>
+  <defaultConf>0</defaultConf>
   <confs>
     <conf name="Debug" type="1">
       <gdbdebugger version="2">
         <gdb_command>gdb</gdb_command>
         <array_repeat_threshold>10</array_repeat_threshold>
       </gdbdebugger>
+      <gizmo_options version="1">
+      </gizmo_options>
       <runprofile version="5">
-        <args></args>
+        <args> '/home/paolo/Desktop/XA3904_3904_5.dcm' out.jpg
+</args>
         <rundir></rundir>
         <buildfirst>true</buildfirst>
         <console-type>0</console-type>
@@ -23,6 +26,8 @@
         <gdb_command>gdb</gdb_command>
         <array_repeat_threshold>10</array_repeat_threshold>
       </gdbdebugger>
+      <gizmo_options version="1">
+      </gizmo_options>
       <runprofile version="5">
         <args></args>
         <rundir></rundir>
@@ -38,6 +43,8 @@
         <gdb_command>gdb</gdb_command>
         <array_repeat_threshold>10</array_repeat_threshold>
       </gdbdebugger>
+      <gizmo_options version="1">
+      </gizmo_options>
       <runprofile version="5">
         <args></args>
         <rundir></rundir>

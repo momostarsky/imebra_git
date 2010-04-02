@@ -141,11 +141,12 @@ public:
 	/// @param pImage       the image to be displayed in the
 	///                      window, or a null pointer to
 	///                      remove the image from the window
-	/// @param pDataSet     the dataSet from which the image
-	///                      was retrieved
+	/// @param pChain       the chain of transforms to be
+        ///                      applied to the image before it is
+        ///                      displayed. Can be null
 	///
 	///////////////////////////////////////////////////////////
-	void setImage(ptr<image> pImage, ptr<dataSet> pDataSet);
+	void setImage(ptr<image> pImage, ptr<transforms::transformsChain> pChain);
 
 	/// \brief Retrieve the image currently displayed in the
 	///         window
@@ -483,7 +484,68 @@ public:
 	///                          rectangle
 	///
 	///////////////////////////////////////////////////////////
-	void draw(void* pDeviceContext, imbxInt32 left, imbxInt32 top, imbxInt32 right, imbxInt32 bottom);
+        template <tDrawBitmapType drawBitmapType, int rowAlignBytes>
+	void draw(void* pDeviceContext, imbxInt32 left, imbxInt32 top, imbxInt32 right, imbxInt32 bottom)
+        {
+            // Check if the image is visible in the specified area
+            ///////////////////////////////////////////////////////////
+            if(m_originalImage == 0 ||
+                    left >= m_rightPosition ||
+                    top >= m_bottomPosition ||
+                    right <= m_leftPosition ||
+                    bottom <= m_topPosition)
+            {
+                    drawRectangle(pDeviceContext, left, top, right, bottom, m_backgroundRed, m_backgroundGreen, m_backgroundBlue);
+                    return;
+            }
+
+            if(left==right || top==bottom)
+            {
+                    return;
+            }
+
+            // Adjust the area to be drawn
+            ///////////////////////////////////////////////////////////
+            imbxInt32 bitmapLeft   = left;
+            imbxInt32 bitmapTop    = top;
+            imbxInt32 bitmapRight  = right;
+            imbxInt32 bitmapBottom = bottom;
+
+            if(bitmapLeft < m_leftPosition) bitmapLeft = m_leftPosition;
+            if(bitmapTop < m_topPosition) bitmapTop = m_topPosition;
+            if(bitmapRight > m_rightPosition) bitmapRight = m_rightPosition;
+            if(bitmapBottom > m_bottomPosition) bitmapBottom = m_bottomPosition;
+
+
+            if(bitmapRight > bitmapLeft && bitmapBottom > bitmapTop)
+            {
+                imbxUint32 bitmapRowLength = ((3 * (bitmapRight - bitmapLeft) + rowAlignBytes - 1) / rowAlignBytes) * rowAlignBytes;
+                    m_bitmapMemory = m_drawBitmap->getBitmap<drawBitmapType, rowAlignBytes>(m_rightPosition - m_leftPosition, m_bottomPosition - m_topPosition,
+                        bitmapLeft - m_leftPosition, bitmapTop - m_topPosition, bitmapRight - m_leftPosition, bitmapBottom - m_topPosition, m_bitmapMemory);
+                    drawBitmap(pDeviceContext, bitmapLeft, bitmapTop, bitmapRight, bitmapBottom, bitmapRowLength, m_bitmapMemory->data());
+            }
+
+            if(top < m_topPosition)
+            {
+                    drawRectangle(pDeviceContext, left, top, right, m_topPosition, m_backgroundRed, m_backgroundGreen, m_backgroundBlue);
+            }
+
+            if(bottom > m_bottomPosition)
+            {
+                    drawRectangle(pDeviceContext, left, m_bottomPosition, right, bottom, m_backgroundRed, m_backgroundGreen, m_backgroundBlue);
+            }
+
+            if(left < m_leftPosition)
+            {
+                    drawRectangle(pDeviceContext, left, top, m_leftPosition, bottom, m_backgroundRed, m_backgroundGreen, m_backgroundBlue);
+            }
+
+            if(right > m_rightPosition)
+            {
+                    drawRectangle(pDeviceContext, m_rightPosition, top, right, bottom, m_backgroundRed, m_backgroundGreen, m_backgroundBlue);
+            }
+
+        }
 
 	void drawCursor(void* pDeviceContext);
 
@@ -618,10 +680,6 @@ public:
 	///                        bottom-right corner of the
 	///                        rectangle that contains the
 	///                        bitmap
-	/// @param bufferWidth    the width of the bitmap contained
-	///                        in pBuffer, in pixels
-	/// @param bufferHeight   the height of the bitmap
-	///                        contained in pBuffer, in pixels
 	/// @param bufferRowSizeBytes the size of a bitmap's row,
 	///                        in bytes
 	/// @param pBuffer        a pointer to an array if bytes
@@ -642,7 +700,7 @@ public:
         ///                        false if the bitmap is RGB
 	///
 	///////////////////////////////////////////////////////////
-	virtual void drawBitmap(void* pDeviceContext, imbxInt32 left, imbxInt32 top, imbxInt32 right, imbxInt32 bottom, imbxUint32 bufferWidth, imbxUint32 bufferHeight, imbxUint32 bufferRowSizeBytes, imbxUint8* pBuffer)=0;
+	virtual void drawBitmap(void* pDeviceContext, imbxInt32 left, imbxInt32 top, imbxInt32 right, imbxInt32 bottom, imbxUint32 bufferRowSizeBytes, imbxUint8* pBuffer)=0;
 
 	/// \brief Overwrite this method with a function that
 	///         draws a line on the specified device context.
@@ -760,9 +818,11 @@ private:
 	///////////////////////////////////////////////////////////
 	double m_zoom;
 
-        ptr<transforms::drawBitmap> m_drawBitmap;
+        ptr<imebra::drawBitmap> m_drawBitmap;
 
 	ptr<image> m_originalImage;
+
+        ptr<memory> m_bitmapMemory;
 
 
 	// Cursor lines

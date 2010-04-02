@@ -21,115 +21,25 @@ namespace imebra
 namespace transforms
 {
 
-///////////////////////////////////////////////////////////
-//
-// Constructor
-//
-///////////////////////////////////////////////////////////
-transformsChain::transformsChain()
-{
-	m_bEndTransformsChainCalled = false;
-}
 
-///////////////////////////////////////////////////////////
-//
-// Declare an input image
-//
-///////////////////////////////////////////////////////////
-void transformsChain::declareInputImage(long imageNumber, ptr<image> pInputImage)
-{
-	PUNTOEXE_FUNCTION_START(L"transformsChain::declareInputImage");
 
-	transform::declareInputImage(imageNumber, pInputImage);
-	if(m_transformsList.size() != 0)
-	{
-		m_transformsList.front()->declareInputImage(imageNumber, pInputImage);
-	}
-
-	PUNTOEXE_FUNCTION_END();
-}
-
-///////////////////////////////////////////////////////////
-//
-// Declare an output image
-//
-///////////////////////////////////////////////////////////
-void transformsChain::declareOutputImage(long imageNumber, ptr<image> pOutputImage)
-{
-	PUNTOEXE_FUNCTION_START(L"transformsChain::declareOutputImage");
-
-	transform::declareOutputImage(imageNumber, pOutputImage);
-	if(m_bEndTransformsChainCalled && m_transformsList.size() != 0)
-	{
-		m_transformsList.back()->declareOutputImage(imageNumber, pOutputImage);
-	}
-
-	PUNTOEXE_FUNCTION_END();
-}
-
-///////////////////////////////////////////////////////////
-//
-// Set the dataset to use for the transformations
-//
-///////////////////////////////////////////////////////////
-void transformsChain::declareDataSet(ptr<dataSet> pDataSet)
-{
-	PUNTOEXE_FUNCTION_START(L"transformsChain::declareDataSet");
-
-	transform::declareDataSet(pDataSet);
-
-	// All the transforms in the chain will use the dataset
-	///////////////////////////////////////////////////////////
-	for(tTransformsList::iterator scanTransforms = m_transformsList.begin(); scanTransforms != m_transformsList.end(); ++scanTransforms)
-	{
-		(*scanTransforms)->declareDataSet(pDataSet);
-	}
-
-	PUNTOEXE_FUNCTION_END();
-}
+transformsChain::transformsChain():
+        m_inputWidth(0),
+        m_inputHeight(0),
+	m_inputDepth(image::endOfDepths),
+	m_inputHighBit(0),
+	m_outputDepth(image::endOfDepths),
+	m_outputHighBit(0)
+{}
 
 ///////////////////////////////////////////////////////////
 //
 // Add a new transform to the chain
 //
 ///////////////////////////////////////////////////////////
-void transformsChain::addTransform(ptr<transform> pTransform)
+void transformsChain::addTransform(ptr<baseTransform> pTransform)
 {
 	PUNTOEXE_FUNCTION_START(L"transformsChain::addTransform");
-
-	// If the function endTransformsChain has already been
-	//  called then reset the chain and restart
-	///////////////////////////////////////////////////////////
-	if(m_bEndTransformsChainCalled)
-	{
-		m_transformsList.clear();
-		m_bEndTransformsChainCalled = false;
-	}
-
-	// This is the first transform. Copy the input images
-	//  into it.
-	///////////////////////////////////////////////////////////
-	if(m_transformsList.size() == 0)
-	{
-		for(long copyInputImages = 0; ; ++copyInputImages)
-		{
-			ptr<image> inputImage = getInputImage(copyInputImages);
-			if(inputImage == 0)
-			{
-				break;
-			}
-			pTransform->declareInputImage(copyInputImages, inputImage);
-		}
-	}
-
-	// The transform will use the same dataset defined for
-	//  the chain.
-	///////////////////////////////////////////////////////////
-	ptr<dataSet> pDataSet = getDataSet();
-	if(pDataSet != 0)
-	{
-		pTransform->declareDataSet(pDataSet);
-	}
 
 	// Store the transform in the chain.
 	///////////////////////////////////////////////////////////
@@ -150,120 +60,153 @@ bool transformsChain::isEmpty()
 }
 
 
-///////////////////////////////////////////////////////////
-//
-// Tells that no more transforms will be inserted in the
-//  chain.
-//
-///////////////////////////////////////////////////////////
-void transformsChain::endTransformsChain()
+void transformsChain::runTransform(
+            ptr<image> inputImage,
+            imbxUint32 inputTopLeftX, imbxUint32 inputTopLeftY, imbxUint32 inputWidth, imbxUint32 inputHeight,
+            ptr<image> outputImage,
+            imbxUint32 outputTopLeftX, imbxUint32 outputTopLeftY)
 {
-	PUNTOEXE_FUNCTION_START(L"transformsChain::endTransformsChain");
-
-	// If this function has already been called, then return
-	///////////////////////////////////////////////////////////
-	if(m_bEndTransformsChainCalled || m_transformsList.size() == 0)
+	if(isEmpty())
 	{
+		throw transformsChainEmptyChainException("Empty transforms chain");
+	}
+
+	if(m_transformsList.size() == 1)
+	{
+		m_transformsList.front()->runTransform(inputImage, inputTopLeftX, inputTopLeftY, inputWidth, inputHeight,
+			outputImage, outputTopLeftX, outputTopLeftY);
 		return;
 	}
 
-	// Remember we was called
+	// Get the position of the last transform
 	///////////////////////////////////////////////////////////
-	m_bEndTransformsChainCalled = true;
+	tTransformsList::iterator lastTransform(m_transformsList.end());
+	--lastTransform;
 
-	// Copy all the defined output images to the last transform
-	//  in the chain.
-	///////////////////////////////////////////////////////////
-	for(long copyOutputImages = 0; ; ++copyOutputImages)
+	std::wstring inputColorSpace(inputImage->getColorSpace());
+	image::bitDepth inputDepth(inputImage->getDepth());
+	imbxUint32 inputHighBit(inputImage->getHighBit());
+	std::wstring outputColorSpace(outputImage->getColorSpace());
+	image::bitDepth outputDepth(outputImage->getDepth());
+	imbxUint32 outputHighBit(outputImage->getHighBit());
+	if(
+		m_inputWidth != inputWidth ||
+		m_inputHeight != inputHeight ||
+		m_inputColorSpace != inputColorSpace ||
+		m_inputDepth != inputDepth ||
+		m_inputHighBit != inputHighBit ||
+		m_outputColorSpace != outputColorSpace ||
+		m_outputDepth != outputDepth ||
+		m_outputHighBit != outputHighBit)
 	{
-		ptr<image> outputImage = getOutputImage(copyOutputImages);
-		if(outputImage == 0)
+		m_inputWidth = inputWidth;
+		m_inputHeight = inputHeight;
+		m_inputColorSpace = inputColorSpace;
+		m_inputDepth = inputDepth;
+		m_inputHighBit = inputHighBit;
+		m_outputColorSpace = outputColorSpace;
+		m_outputDepth = outputDepth;
+		m_outputHighBit = outputHighBit;
+
+		m_temporaryImages.clear();
+
+		// Allocate temporary images
+		///////////////////////////////////////////////////////////
+		imbxUint32 allocateRows = 65536 / inputWidth;
+		if(allocateRows < 1)
 		{
-			break;
+			allocateRows = 1;
 		}
-		m_transformsList.back()->declareOutputImage(copyOutputImages, outputImage);
+
+		for(tTransformsList::iterator scanTransforms(m_transformsList.begin()); scanTransforms != lastTransform; ++scanTransforms)
+		{
+			if(scanTransforms == m_transformsList.begin())
+			{
+				m_temporaryImages.push_back((*scanTransforms)->allocateOutputImage(inputImage, inputWidth, allocateRows));
+			}
+			else
+			{
+				m_temporaryImages.push_back((*scanTransforms)->allocateOutputImage(m_temporaryImages.back(), inputWidth, allocateRows));
+			}
+		}
 	}
 
-	PUNTOEXE_FUNCTION_END();
-}
-
-///////////////////////////////////////////////////////////
-//
-// Execute all the transforms in the chain
-//
-///////////////////////////////////////////////////////////
-void transformsChain::doTransform()
-{
-	PUNTOEXE_FUNCTION_START(L"transformsChain::doTransform");
-
-	// Just to be sure...
+	// Ron all the transforms. Split the images into several
+	//  parts
 	///////////////////////////////////////////////////////////
-	endTransformsChain();
-
-	// The last executed transform
-	///////////////////////////////////////////////////////////
-	transform* pPreviousTransform = 0;
-	
-	// Scan all the transforms
-	///////////////////////////////////////////////////////////
-	for(tTransformsList::iterator scanTransforms = m_transformsList.begin(); scanTransforms != m_transformsList.end(); ++scanTransforms)
+	while(inputHeight != 0)
 	{
-		// If we already execute one transform, then use its output
-		//  as input for the next transform.
-		///////////////////////////////////////////////////////////
-		if(pPreviousTransform != 0)
+		imbxUint32 rows = 65536 / inputWidth;
+		if(rows < 1)
 		{
-			for(long copyOutputImages = 0; ; ++copyOutputImages)
-			{
-				ptr<image> outputImage = pPreviousTransform->getOutputImage(copyOutputImages);
-				if(outputImage == 0)
-				{
-					break;
-				}
-				(*scanTransforms)->declareInputImage(copyOutputImages, outputImage);
-			}
+			rows = 1;
+		}
+		if(rows > inputHeight)
+		{
+			rows = inputHeight;
+		}
+		inputHeight -= rows;
+		
+		tTransformsList::iterator scanTransforms(m_transformsList.begin());
+		tTemporaryImagesList::iterator scanTemporaryImages(m_temporaryImages.begin());
+		
+		(*scanTransforms)->runTransform(inputImage, inputTopLeftX, inputTopLeftY++, inputWidth, rows, *scanTemporaryImages, 0, 0);
+		inputTopLeftY += rows;
+
+		while(scanTransforms != lastTransform)
+		{
+			ptr<image> temporaryInput(*(scanTemporaryImages++));
+			ptr<image> temporaryOutput(*scanTemporaryImages);
+
+			(*scanTransforms)->runTransform(temporaryInput, 0, 0, inputWidth, 1, temporaryOutput, 0, 0);
+
+			++scanTransforms;
 		}
 		
-		// Execute the transform
-		///////////////////////////////////////////////////////////
-		(*scanTransforms)->doTransform();
+		(*lastTransform)->runTransform(*scanTemporaryImages, 0, 0, inputWidth, rows, outputImage, outputTopLeftX, outputTopLeftY);
+		outputTopLeftY += rows;
+	}
+}
 
-		// Remember the last transform
-		///////////////////////////////////////////////////////////
-		pPreviousTransform = scanTransforms->get();
+
+/// \brief Allocate an output image that is compatible with
+///         the transform given the specified input image.
+///
+///////////////////////////////////////////////////////////
+ptr<image> transformsChain::allocateOutputImage(ptr<image> pInputImage, imbxUint32 width, imbxUint32 height)
+{
+	if(isEmpty())
+	{
+		throw transformsChainEmptyChainException("Empty transforms chain");
 	}
 
-	// Copy the results back to this object
+	if(m_transformsList.size() == 1)
+	{
+		return m_transformsList.front()->allocateOutputImage(pInputImage, width, height);
+	}
+
+	// Get the position of the last transform
 	///////////////////////////////////////////////////////////
-	if(pPreviousTransform != 0)
+	tTransformsList::iterator lastTransform(m_transformsList.end());
+	--lastTransform;
+
+	ptr<image> temporaryImage;
+
+	for(tTransformsList::iterator scanTransforms(m_transformsList.begin()); scanTransforms != lastTransform; ++scanTransforms)
 	{
-		for(long copyOutputImages = 0; ; ++copyOutputImages)
+		if(scanTransforms == m_transformsList.begin())
 		{
-			ptr<image> outputImage = pPreviousTransform->getOutputImage(copyOutputImages);
-			if(outputImage == 0)
-			{
-				break;
-			}
-			declareOutputImage(copyOutputImages, outputImage);
+			temporaryImage = (*scanTransforms)->allocateOutputImage(pInputImage, 1, 1);
 		}
-
-		return;
-	}
-
-	// No transform performed.
-	for(long copyInputImages = 0; ; ++copyInputImages)
-	{
-		ptr<image> inputImage = getOutputImage(copyInputImages);
-		declareOutputImage(copyInputImages, inputImage);
-		if(inputImage == 0)
+		else
 		{
-			break;
+			ptr <image> newImage( (*scanTransforms)->allocateOutputImage(temporaryImage, 1, 1) );
+			temporaryImage = newImage;
 		}
 	}
+	return (*lastTransform)->allocateOutputImage(temporaryImage, width, height);
 
-	return;
 
-	PUNTOEXE_FUNCTION_END();
 }
 
 

@@ -381,13 +381,6 @@ public:
 	int m_blockMcuY;
 	int m_blockMcuXY;
 
-	// Huffman tables' id
-	///////////////////////////////////////////////////////////
-	int m_huffmanTableDC;
-	int m_huffmanTableAC;
-	huffmanTable* m_pActiveHuffmanTableDC;
-	huffmanTable* m_pActiveHuffmanTableAC;
-
 	// Last DC value
 	///////////////////////////////////////////////////////////
 	imbxInt32 m_lastDCValue;
@@ -404,6 +397,13 @@ public:
 	imbxInt32 m_unprocessedAmplitudesBuffer[1024];
 	imbxUint32 m_unprocessedAmplitudesCount;
 	imbxUint32 m_unprocessedAmplitudesPredictor;
+
+	// Huffman tables' id
+	///////////////////////////////////////////////////////////
+	int m_huffmanTableDC;
+	int m_huffmanTableAC;
+	huffmanTable* m_pActiveHuffmanTableDC;
+	huffmanTable* m_pActiveHuffmanTableAC;
 
 	imbxInt32 m_valuesMask;
 

@@ -16,7 +16,89 @@ $fileHeader$
 #include "../../base/include/exception.h"
 #include "dataHandler.h"
 
+#define HANDLER_CALL_TEMPLATE_FUNCTION(functionName, handlerPointer)\
+{\
+        puntoexe::imebra::handlers::dataHandlerNumericBase* pHandler(handlerPointer.get()); \
+	if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::dataHandlerNumeric<imbxUint8>) || \
+            typeid(*pHandler)== typeid(puntoexe::imebra::handlers::dataHandlerRaw))\
+	{\
+                functionName<imbxUint8> ((imbxUint8*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize());\
+	}\
+	else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::dataHandlerNumeric<imbxInt8>))\
+	{\
+                functionName<imbxInt8> ((imbxInt8*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize());\
+	}\
+	else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::dataHandlerNumeric<imbxUint16>))\
+	{\
+                functionName<imbxUint16> ((imbxUint16*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize());\
+	}\
+	else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::dataHandlerNumeric<imbxInt16>))\
+	{\
+                functionName<imbxInt16> ((imbxInt16*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize());\
+	}\
+	else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::dataHandlerNumeric<imbxUint32>))\
+	{\
+                functionName<imbxUint32> ((imbxUint32*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize());\
+	}\
+	else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::dataHandlerNumeric<imbxInt32>))\
+	{\
+                functionName<imbxInt32> ((imbxInt32*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize());\
+	}\
+	else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::dataHandlerNumeric<float>))\
+	{\
+                functionName<float> ((float*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize());\
+	}\
+	else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::dataHandlerNumeric<double>))\
+	{\
+                functionName<double> ((double*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize());\
+	}\
+        else\
+        {\
+            throw std::runtime_error("Data type not valid");\
+        }\
+}
 
+#define HANDLER_CALL_TEMPLATE_FUNCTION_WITH_PARAMS(functionName, handlerPointer, ...)\
+{\
+        puntoexe::imebra::handlers::dataHandlerNumericBase* pHandler(handlerPointer.get()); \
+	if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::dataHandlerNumeric<imbxUint8>) || \
+            typeid(*pHandler) == typeid(puntoexe::imebra::handlers::dataHandlerRaw))\
+	{\
+                functionName<imbxUint8> ((imbxUint8*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize(), __VA_ARGS__);\
+	}\
+	else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::dataHandlerNumeric<imbxInt8>))\
+	{\
+                functionName<imbxInt8> ((imbxInt8*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize(), __VA_ARGS__);\
+	}\
+	else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::dataHandlerNumeric<imbxUint16>))\
+	{\
+                functionName<imbxUint16> ((imbxUint16*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize(), __VA_ARGS__);\
+	}\
+	else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::dataHandlerNumeric<imbxInt16>))\
+	{\
+                functionName<imbxInt16> ((imbxInt16*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize(), __VA_ARGS__);\
+	}\
+	else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::dataHandlerNumeric<imbxUint32>))\
+	{\
+                functionName<imbxUint32> ((imbxUint32*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize(), __VA_ARGS__);\
+	}\
+	else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::dataHandlerNumeric<imbxInt32>))\
+	{\
+                functionName<imbxInt32> ((imbxInt32*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize(), __VA_ARGS__);\
+	}\
+	else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::dataHandlerNumeric<float>))\
+	{\
+                functionName<float> ((float*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize(), __VA_ARGS__);\
+	}\
+	else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::dataHandlerNumeric<double>))\
+	{\
+                functionName<double> ((double*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize(), __VA_ARGS__);\
+	}\
+        else\
+        {\
+            throw std::runtime_error("Data type not valid");\
+        }\
+}
 
 ///////////////////////////////////////////////////////////
 //
@@ -32,6 +114,128 @@ namespace imebra
 namespace handlers
 {
 
+class dataHandlerNumericBase: public dataHandler
+{
+    friend class buffer;
+
+public:
+	imbxUint8* getMemoryBuffer() const
+	{
+		return m_pMemoryString;
+	}
+
+        size_t getMemorySize() const
+        {
+            return m_memorySize;
+        }
+
+	/// \brief Return the memory object that stores the data
+	///         managed by the handler.
+	///
+	/// @return the memory object that stores the data managed
+	///          by the handler
+	///
+	///////////////////////////////////////////////////////////
+	ptr<memory> getMemory()
+	{
+		return m_memory;
+	}
+
+	// Set the buffer's size, in data elements
+	///////////////////////////////////////////////////////////
+	virtual void setSize(const imbxUint32 elementsNumber)
+	{
+		PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::setSize");
+
+		m_memory->resize(elementsNumber * getUnitSize());
+		m_pMemoryString = m_memory->data();
+                m_memorySize = m_memory->size();
+
+		PUNTOEXE_FUNCTION_END();
+	}
+
+	// Parse the tag's buffer and extract its content
+	///////////////////////////////////////////////////////////
+	virtual void parseBuffer(const ptr<memory>& memoryBuffer)
+	{
+		PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::parseBuffer");
+
+		m_memory = memoryBuffer;
+		m_pMemoryString = m_memory->data();
+                m_memorySize = m_memory->size();
+
+		PUNTOEXE_FUNCTION_END();
+	}
+
+	// Rebuild the tag's buffer
+	///////////////////////////////////////////////////////////
+	virtual void buildBuffer(const ptr<memory>& memoryBuffer)
+	{
+		PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::buildBuffer");
+
+		memoryBuffer->transfer(m_memory);
+
+		PUNTOEXE_FUNCTION_END();
+	}
+
+
+	virtual void copyFrom(ptr<dataHandlerNumericBase> pSource) = 0;
+
+        virtual void copyFrom(imbxUint8* pMemory, size_t memorySize) = 0;
+        virtual void copyFrom(imbxInt8* pMemory, size_t memorySize) = 0;
+        virtual void copyFrom(imbxUint16* pMemory, size_t memorySize) = 0;
+        virtual void copyFrom(imbxInt16* pMemory, size_t memorySize) = 0;
+        virtual void copyFrom(imbxUint32* pMemory, size_t memorySize) = 0;
+        virtual void copyFrom(imbxInt32* pMemory, size_t memorySize) = 0;
+        virtual void copyFrom(float* pMemory, size_t memorySize) = 0;
+        virtual void copyFrom(double* pMemory, size_t memorySize) = 0;
+
+        virtual void copyTo(imbxUint8* pMemory, size_t memorySize) = 0;
+        virtual void copyTo(imbxInt8* pMemory, size_t memorySize) = 0;
+        virtual void copyTo(imbxUint16* pMemory, size_t memorySize) = 0;
+        virtual void copyTo(imbxInt16* pMemory, size_t memorySize) = 0;
+        virtual void copyTo(imbxUint32* pMemory, size_t memorySize) = 0;
+        virtual void copyTo(imbxInt32* pMemory, size_t memorySize) = 0;
+        virtual void copyTo(float* pMemory, size_t memorySize) = 0;
+        virtual void copyTo(double* pMemory, size_t memorySize) = 0;
+
+	virtual void copyFromInt32Interleaved(const imbxInt32* pSource,
+		imbxUint32 sourceReplicateX,
+		imbxUint32 sourceReplicateY,
+		imbxUint32 destStartCol,
+		imbxUint32 destStartRow,
+		imbxUint32 destEndCol,
+		imbxUint32 destEndRow,
+		imbxUint32 destStartChannel,
+		imbxUint32 destWidth,
+		imbxUint32 destHeight,
+		imbxUint32 destNumChannels) = 0;
+
+	virtual void copyToInt32Interleaved(imbxInt32* pDest,
+		imbxUint32 destSubSampleX,
+		imbxUint32 destSubSampleY,
+		imbxUint32 sourceStartCol,
+		imbxUint32 sourceStartRow,
+		imbxUint32 sourceEndCol,
+		imbxUint32 sourceEndRow,
+		imbxUint32 sourceStartChannel,
+		imbxUint32 sourceWidth,
+		imbxUint32 sourceHeight,
+		imbxUint32 sourceNumChannels) const = 0;
+
+
+        virtual bool pointerIsValid(const imbxUint32 index) const
+        {
+            return index < getSize();
+        }
+
+protected:
+	// Memory buffer
+	///////////////////////////////////////////////////////////
+	imbxUint8* m_pMemoryString;
+        size_t m_memorySize;
+	ptr<memory> m_memory;
+};
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -45,9 +249,8 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 template<class dataHandlerType>
-class dataHandlerNumeric : public dataHandler
+class dataHandlerNumeric : public dataHandlerNumericBase
 {
-	friend class buffer;
 public:
 	/// \brief Provides a direct access to the data managed by
 	///         the handler.
@@ -59,7 +262,7 @@ public:
 	///////////////////////////////////////////////////////////
 	dataHandlerType& operator[](int nSubscript)
 	{
-		return m_pMemoryString[nSubscript];
+		return ((dataHandlerType*)m_pMemoryString)[nSubscript];
 	}
 
 	/// \brief Provides a direct access to the data managed by
@@ -72,7 +275,7 @@ public:
 	///////////////////////////////////////////////////////////
 	dataHandlerType& at(int nSubscript)
 	{
-		return m_pMemoryString[nSubscript];
+		return ((dataHandlerType*)m_pMemoryString)[nSubscript];
 	}
 
 	// Returns the size of an element managed by the
@@ -83,92 +286,35 @@ public:
 		return sizeof(dataHandlerType);
 	}
 
-	// Set the data element's pointer
-	///////////////////////////////////////////////////////////
-	virtual void setPointer(const imbxUint32 elementNumber)
-	{
-		if(m_pMemoryString == 0 || elementNumber >= getSize())
-		{
-			m_elementPointer = 0;
-		}
-		m_elementPointer = &(m_pMemoryString[elementNumber]);
-	}
-
-	// Increase the data element's pointer
-	///////////////////////////////////////////////////////////
-	virtual void incPointer()
-	{
-		++m_elementPointer;
-	}
-
-	// Returns true if the pointer is valid
-	///////////////////////////////////////////////////////////
-	virtual bool pointerIsValid() const
-	{
-		return m_elementPointer != 0 && m_elementPointer < (dataHandlerType*)m_pMemoryStringEnd;
-	}
-
-	// Increase the data element's pointer by the specified
-	//  amount of steps
-	///////////////////////////////////////////////////////////
-	virtual void skip(const int skip)
-	{
-		m_elementPointer += skip;
-	}
-
 	// Retrieve the data element as a signed long
 	///////////////////////////////////////////////////////////
-	virtual imbxInt32 getSignedLong() const
+	virtual imbxInt32 getSignedLong(const imbxUint32 index) const
 	{
-		return (imbxInt32) (*m_elementPointer);
+		return (imbxInt32) (((dataHandlerType*)m_pMemoryString)[index]);
 	}
 
 	// Retrieve the data element an unsigned long
 	///////////////////////////////////////////////////////////
-	virtual imbxUint32 getUnsignedLong() const
+	virtual imbxUint32 getUnsignedLong(const imbxUint32 index) const
 	{
-		return (imbxUint32) (*m_elementPointer);
+		return (imbxUint32) (((dataHandlerType*)m_pMemoryString)[index]);
 	}
 
 	// Retrieve the data element as a double
 	///////////////////////////////////////////////////////////
-	virtual double getDouble() const
+	virtual double getDouble(const imbxUint32 index) const
 	{
-		return (double) (*m_elementPointer);
-	}
-
-	// Retrieve the data element as a signed long and increase
-	//  the data element's pointer
-	///////////////////////////////////////////////////////////
-	virtual imbxInt32 getSignedLongIncPointer()
-	{
-		return (imbxInt32) (*(m_elementPointer++));
-	}
-
-	// Retrieve the data element as an unsigned long and
-	//  increase the data element's pointer
-	///////////////////////////////////////////////////////////
-	virtual imbxUint32 getUnsignedLongIncPointer()
-	{
-		return (imbxUint32) (*(m_elementPointer++));
-	}
-
-	// Retrieve the data element as a double and increase the
-	//  data element's pointer
-	///////////////////////////////////////////////////////////
-	virtual double getDoubleIncPointer()
-	{
-		return (double) (*(m_elementPointer++));
+		return (double) (((dataHandlerType*)m_pMemoryString)[index]);
 	}
 
 	// Retrieve the data element as a string
 	///////////////////////////////////////////////////////////
-	virtual std::string getString() const
+	virtual std::string getString(const imbxUint32 index) const
 	{
 		PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::getString");
 
 		std::ostringstream convStream;
-		convStream << std::fixed << getDouble();
+		convStream << std::fixed << getDouble(index);
 		return convStream.str();
 
 		PUNTOEXE_FUNCTION_END();
@@ -176,12 +322,12 @@ public:
 
 	// Retrieve the data element as a unicode string
 	///////////////////////////////////////////////////////////
-	virtual std::wstring getUnicodeString() const
+	virtual std::wstring getUnicodeString(const imbxUint32 index) const
 	{
 		PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::getUnicodeString");
 
 		std::wostringstream convStream;
-		convStream << std::fixed << getDouble();
+		convStream << std::fixed << getDouble(index);
 		return convStream.str();
 
 		PUNTOEXE_FUNCTION_END();
@@ -193,80 +339,56 @@ public:
 	{
 		PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::getSize");
 
-		return m_memory->size()/getUnitSize();
+		return m_memorySize/getUnitSize();
 
 		PUNTOEXE_FUNCTION_END();
 	}
 
 	// Set the data element as a signed long
 	///////////////////////////////////////////////////////////
-	virtual void setSignedLong(const imbxInt32 value)
+	virtual void setSignedLong(const imbxUint32 index, const imbxInt32 value)
 	{
-		*m_elementPointer = (dataHandlerType)value;
+		((dataHandlerType*)m_pMemoryString)[index] = (dataHandlerType)value;
 	}
 
 	// Set the data element as an unsigned long
 	///////////////////////////////////////////////////////////
-	virtual void setUnsignedLong(const imbxUint32 value)
+	virtual void setUnsignedLong(const imbxUint32 index, const imbxUint32 value)
 	{
-		*m_elementPointer = (dataHandlerType)value;
+		((dataHandlerType*)m_pMemoryString)[index] = (dataHandlerType)value;
 	}
 
 	// Set the data element as a double
 	///////////////////////////////////////////////////////////
-	virtual void setDouble(const double value)
+	virtual void setDouble(const imbxUint32 index, const double value)
 	{
-		*m_elementPointer = (dataHandlerType)value;
-	}
-
-	// Set the data element as a signed long and increase the
-	//  data element's pointer
-	///////////////////////////////////////////////////////////
-	virtual void setSignedLongIncPointer(const imbxInt32 value)
-	{
-		*(m_elementPointer++) = (dataHandlerType)value;
-	}
-
-	// Set the data element as an unsigned long and increase
-	//  the data element's pointer
-	///////////////////////////////////////////////////////////
-	virtual void setUnsignedLongIncPointer(const imbxUint32 value)
-	{
-		*(m_elementPointer++) = (dataHandlerType)value;
-	}
-
-	// Set the data element as a double and increase the data
-	//  element's pointer
-	///////////////////////////////////////////////////////////
-	virtual void setDoubleIncPointer(const double value)
-	{
-		*(m_elementPointer++) = (dataHandlerType)value;
+		((dataHandlerType*)m_pMemoryString)[index] = (dataHandlerType)value;
 	}
 
 	// Set the data element as a string
 	///////////////////////////////////////////////////////////
-	virtual void setString(const std::string& value)
+	virtual void setString(const imbxUint32 index, const std::string& value)
 	{
 		PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::setString");
 
 		std::istringstream convStream(value);
 		double tempValue;
 		convStream >> tempValue;
-		setDouble(tempValue);
+		setDouble(index, tempValue);
 
 		PUNTOEXE_FUNCTION_END();
 	}
 
 	// Set the data element as an unicode string
 	///////////////////////////////////////////////////////////
-	virtual void setUnicodeString(const std::wstring& value)
+	virtual void setUnicodeString(const imbxUint32 index, const std::wstring& value)
 	{
 		PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::setUnicodeString");
 
 		std::wistringstream convStream(value);
 		double tempValue;
 		convStream >> tempValue;
-		setDouble(tempValue);
+		setDouble(index, tempValue);
 
 		PUNTOEXE_FUNCTION_END();
 	}
@@ -281,65 +403,115 @@ public:
 	///          the data managed by the handler
 	///
 	///////////////////////////////////////////////////////////
-	dataHandlerType* getMemoryBuffer() const
-	{
-		return m_pMemoryString;
-	}
 
-	/// \brief Return the memory object that stores the data
-	///         managed by the handler.
-	///
-	/// @return the memory object that stores the data managed
-	///          by the handler
-	///
-	///////////////////////////////////////////////////////////
-	ptr<memory> getMemory()
-	{
-		return m_memory;
-	}
+        template<class sourceHandlerType>
+        void copyFromMemory(sourceHandlerType* pSource, size_t sourceSize)
+        {
+            setSize(sourceSize);
+            if(getSize() < sourceSize)
+            {
+                sourceSize = getSize();
+            }
+            dataHandlerType* pDest((dataHandlerType*)m_pMemoryString);
+            while(sourceSize-- != 0)
+            {
+                *(pDest++) = (dataHandlerType)*(pSource++);
+            }
+        }
 
-	// Copy the data from an array of imbxInt32 values
+        // Copy the data from an array of imbxInt32 values
 	//  into the memory managed by the handler.
 	///////////////////////////////////////////////////////////
-	virtual void copyFromInt32(const imbxInt32* pSource, const imbxUint32 length)
+	virtual void copyFrom(ptr<dataHandlerNumericBase> pSource)
 	{
-		PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::copyFromInt32");
+		PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::copyFrom");
 
-		imbxUint32 myLength = getSize();
-		if(length < myLength)
-		{
-			myLength = length;
-		}
-		dataHandlerType* pDest = m_pMemoryString;
-		while(myLength--)
-		{
-			*(pDest++) = (dataHandlerType)( *(pSource++) );
-		}
+                HANDLER_CALL_TEMPLATE_FUNCTION(copyFromMemory, pSource);
 
-		PUNTOEXE_FUNCTION_END();
-	}
+                PUNTOEXE_FUNCTION_END();
 
-	// Copy the data from the handler into an array of
-	//  imbxInt32 values
-	///////////////////////////////////////////////////////////
-	virtual void copyToInt32(imbxInt32* pDest, const imbxUint32 length) const
-	{
-		PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::copyToInt32");
+        }
 
-		imbxUint32 myLength = getSize();
-		if(length < myLength)
-		{
-			myLength = length;
-		}
-		dataHandlerType* pSource = m_pMemoryString;
-		while(myLength--)
-		{
-			*(pDest++) = (imbxInt32)( *(pSource++) );
-		}
+        virtual void copyFrom(imbxUint8* pMemory, size_t memorySize)
+        {
+            copyFromMemory(pMemory, memorySize);
+        }
+        virtual void copyFrom(imbxInt8* pMemory, size_t memorySize)
+        {
+            copyFromMemory(pMemory, memorySize);
+        }
+        virtual void copyFrom(imbxUint16* pMemory, size_t memorySize)
+        {
+            copyFromMemory(pMemory, memorySize);
+        }
+        virtual void copyFrom(imbxInt16* pMemory, size_t memorySize)
+        {
+            copyFromMemory(pMemory, memorySize);
+        }
+        virtual void copyFrom(imbxUint32* pMemory, size_t memorySize)
+        {
+            copyFromMemory(pMemory, memorySize);
+        }
+        virtual void copyFrom(imbxInt32* pMemory, size_t memorySize)
+        {
+            copyFromMemory(pMemory, memorySize);
+        }
+        virtual void copyFrom(float* pMemory, size_t memorySize)
+        {
+            copyFromMemory(pMemory, memorySize);
+        }
+        virtual void copyFrom(double* pMemory, size_t memorySize)
+        {
+            copyFromMemory(pMemory, memorySize);
+        }
 
-		PUNTOEXE_FUNCTION_END();
-	}
 
+        template<class destHandlerType>
+        void copyToMemory(destHandlerType* pDestination, size_t destSize)
+        {
+            if(getSize() < destSize)
+            {
+                destSize = getSize();
+            }
+            dataHandlerType* pSource((dataHandlerType*)m_pMemoryString);
+            while(destSize-- != 0)
+            {
+                *(pDestination++) = (destHandlerType)*(pSource++);
+            }
+        }
+
+        virtual void copyTo(imbxUint8* pMemory, size_t memorySize)
+        {
+            copyToMemory(pMemory, memorySize);
+        }
+        virtual void copyTo(imbxInt8* pMemory, size_t memorySize)
+        {
+            copyToMemory(pMemory, memorySize);
+        }
+        virtual void copyTo(imbxUint16* pMemory, size_t memorySize)
+        {
+            copyToMemory(pMemory, memorySize);
+        }
+        virtual void copyTo(imbxInt16* pMemory, size_t memorySize)
+        {
+            copyToMemory(pMemory, memorySize);
+        }
+        virtual void copyTo(imbxUint32* pMemory, size_t memorySize)
+        {
+            copyToMemory(pMemory, memorySize);
+        }
+        virtual void copyTo(imbxInt32* pMemory, size_t memorySize)
+        {
+            copyToMemory(pMemory, memorySize);
+        }
+        virtual void copyTo(float* pMemory, size_t memorySize)
+        {
+            copyToMemory(pMemory, memorySize);
+        }
+        virtual void copyTo(double* pMemory, size_t memorySize)
+        {
+            copyToMemory(pMemory, memorySize);
+        }
 
 
         template<int subsampleX>
@@ -355,7 +527,7 @@ public:
 		imbxUint32 destHeight,
 		imbxUint32 destNumChannels)
         {
-		dataHandlerType *pDestRowScan = &(m_pMemoryString[(destStartRow*destWidth+destStartCol)*destNumChannels+destStartChannel]);
+		dataHandlerType *pDestRowScan = &(((dataHandlerType*)m_pMemoryString)[(destStartRow*destWidth+destStartCol)*destNumChannels+destStartChannel]);
 		const imbxInt32* pSourceRowScan = pSource;
 
 		imbxUint32 replicateYCount = sourceReplicateY;
@@ -568,7 +740,7 @@ public:
 		{
 			return;
 		}
-		dataHandlerType *pSourceRowScan = &(m_pMemoryString[(sourceStartRow*sourceWidth+sourceStartCol)*sourceNumChannels+sourceStartChannel]);
+		dataHandlerType *pSourceRowScan = &(((dataHandlerType*)m_pMemoryString)[(sourceStartRow*sourceWidth+sourceStartCol)*sourceNumChannels+sourceStartChannel]);
 		imbxInt32* pDestRowScan = pDest;
 
 		imbxUint32 subSampleXCount;
@@ -631,55 +803,7 @@ public:
 
 	}
 
-	// Set the buffer's size, in data elements
-	///////////////////////////////////////////////////////////
-	virtual void setSize(const imbxUint32 elementsNumber)
-	{
-		PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::setSize");
 
-		m_memory->resize(elementsNumber * getUnitSize());
-		m_pMemoryString = (dataHandlerType*)m_memory->data();
-		m_pMemoryStringEnd = (imbxUint8*)m_pMemoryString + m_memory->size();
-		setPointer(0);
-
-		PUNTOEXE_FUNCTION_END();
-	}
-
-	// Parse the tag's buffer and extract its content
-	///////////////////////////////////////////////////////////
-	virtual void parseBuffer(const ptr<memory>& memoryBuffer)
-	{
-		PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::parseBuffer");
-
-		m_memory = memoryBuffer;
-		m_pMemoryString = (dataHandlerType*)memoryBuffer->data();
-		m_pMemoryStringEnd = (imbxUint8*)m_pMemoryString + memoryBuffer->size();
-
-		PUNTOEXE_FUNCTION_END();
-	}
-
-	// Rebuild the tag's buffer
-	///////////////////////////////////////////////////////////
-	virtual void buildBuffer(const ptr<memory>& memoryBuffer)
-	{
-		PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::buildBuffer");
-
-		memoryBuffer->transfer(m_memory);
-
-		PUNTOEXE_FUNCTION_END();
-	}
-
-protected:
-	// Pointer to the data element
-	///////////////////////////////////////////////////////////
-	dataHandlerType* m_elementPointer;
-
-	// Memory buffer
-	///////////////////////////////////////////////////////////
-	dataHandlerType* m_pMemoryString;
-	const imbxUint8* m_pMemoryStringEnd;
-
-	ptr<memory> m_memory;
 };
 
 

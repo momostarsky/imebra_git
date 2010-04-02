@@ -46,8 +46,67 @@ public:
 	virtual std::wstring getFinalColorSpace();
 	virtual ptr<colorTransform> createColorTransform();
 
-protected:
-	virtual void doColorTransform(imbxInt32* pSourceMem, imbxInt32* pDestMem, imbxUint32 pixelsNumber, imbxInt32 inputMinValue, imbxInt32 inputMaxValue, imbxInt32 outputMinValue, imbxInt32 outputMaxValue);
+        DEFINE_RUN_TEMPLATE_TRANSFORM;
+
+        template <class inputType, class outputType>
+        void templateTransform(
+            inputType* inputHandlerData, size_t inputHandlerSize, imbxUint32 inputHandlerWidth, const std::wstring& inputHandlerColorSpace,
+            ptr<palette> /* inputPalette */,
+            imbxInt32 inputHandlerMinValue, imbxUint32 inputHandlerNumValues,
+            imbxInt32 inputTopLeftX, imbxInt32 inputTopLeftY, imbxInt32 inputWidth, imbxInt32 inputHeight,
+            outputType* outputHandlerData, size_t outputHandlerSize, imbxInt32 outputHandlerWidth, const std::wstring& outputHandlerColorSpace,
+            ptr<palette> /* outputPalette */,
+            imbxInt32 outputHandlerMinValue, imbxUint32 outputHandlerNumValues,
+            imbxInt32 outputTopLeftX, imbxInt32 outputTopLeftY)
+
+        {
+            checkColorSpaces(inputHandlerColorSpace, outputHandlerColorSpace);
+
+            inputType* pInputMemory(inputHandlerData);
+            outputType* pOutputMemory(outputHandlerData);
+
+            pInputMemory += (inputTopLeftY * inputHandlerWidth + inputTopLeftX) * 3;
+            pOutputMemory += (outputTopLeftY * outputHandlerWidth + outputTopLeftX) * 3;
+
+            imbxInt32 minY(outputHandlerMinValue + outputHandlerNumValues / 16);
+            imbxInt32 outputMiddleValue(outputHandlerMinValue + outputHandlerNumValues / 2);
+
+            imbxInt32 sourceR, sourceG, sourceB;
+            if(inputHandlerNumValues == outputHandlerNumValues)
+            {
+                for(; inputHeight != 0; --inputHeight)
+                {
+                    for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
+                    {
+                        sourceR = *(pInputMemory++) - inputHandlerMinValue;
+                        sourceG = *(pInputMemory++) - inputHandlerMinValue;
+                        sourceB = *(pInputMemory++) - inputHandlerMinValue;
+        		*(pOutputMemory++) = minY + (((imbxInt32)4207 * sourceR+(imbxInt32)8259 * sourceG+(imbxInt32)1604 * sourceB) >> 14);
+                        *(pOutputMemory++) = outputMiddleValue + (((imbxInt32)7196 * sourceB - (imbxInt32)2428 * sourceR - (imbxInt32)4768 * sourceG + (imbxInt32)8192) >> 14);
+                        *(pOutputMemory++) = outputMiddleValue + (((imbxInt32)7196 * sourceR - (imbxInt32)6026 * sourceG - (imbxInt32)1170 * sourceB + (imbxInt32)8192) >> 14);
+                    }
+                    pInputMemory += (inputHandlerWidth - inputWidth) * 3;
+                    pOutputMemory += (outputHandlerWidth - inputWidth) * 3;
+                }
+            }
+            else
+            {
+                for(; inputHeight != 0; --inputHeight)
+                {
+                    for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
+                    {
+                        sourceR = *(pInputMemory++) - inputHandlerMinValue;
+                        sourceG = *(pInputMemory++) - inputHandlerMinValue;
+                        sourceB = *(pInputMemory++) - inputHandlerMinValue;
+        		*(pOutputMemory++) = minY + ((((imbxInt32)4207 * sourceR+(imbxInt32)8259 * sourceG+(imbxInt32)1604 * sourceB) >> 14)  * outputHandlerNumValues) / inputHandlerNumValues;
+                        *(pOutputMemory++) = outputMiddleValue + ((((imbxInt32)7196 * sourceB - (imbxInt32)2428 * sourceR - (imbxInt32)4768 * sourceG + (imbxInt32)8192) >> 14) * outputHandlerNumValues) / inputHandlerNumValues;
+                        *(pOutputMemory++) = outputMiddleValue + ((((imbxInt32)7196 * sourceR - (imbxInt32)6026 * sourceG - (imbxInt32)1170 * sourceB + (imbxInt32)8192) >> 14) * outputHandlerNumValues) / inputHandlerNumValues;
+                    }
+                    pInputMemory += (inputHandlerWidth - inputWidth) * 3;
+                    pOutputMemory += (outputHandlerWidth - inputWidth) * 3;
+                }
+            }
+        }
 };
 
 } // namespace colorTransforms

@@ -63,35 +63,6 @@ ptr<colorTransform> MONOCHROME1ToMONOCHROME2::createColorTransform()
 }
 
 
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// MONOCHROME1 to MONOCHROME2 transformation
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-void MONOCHROME1ToMONOCHROME2::doColorTransform(imbxInt32* pSourceMem, imbxInt32* pDestMem, imbxUint32 pixelsNumber, imbxInt32 /* inputMinValue */, imbxInt32 inputMaxValue, imbxInt32 outputMinValue, imbxInt32 outputMaxValue)
-{
-	imbxInt32 destPixel;
-	imbxInt32 offset=inputMaxValue+outputMinValue;
-	while(pixelsNumber--)
-	{
-		///////////////////////////////////////////////////////////
-		// Conversion
-		///////////////////////////////////////////////////////////
-		destPixel=offset - *pSourceMem++;
-
-		if(destPixel<outputMinValue)
-			destPixel=outputMinValue;
-		if(destPixel>outputMaxValue)
-			destPixel=outputMaxValue;
-
-		*pDestMem++ = destPixel;
-	}
-}
-
 
 
 ///////////////////////////////////////////////////////////
@@ -127,6 +98,8 @@ ptr<colorTransform> MONOCHROME2ToMONOCHROME1::createColorTransform()
 {
 	return ptr<colorTransform> (new MONOCHROME2ToMONOCHROME1);
 }
+
+
 
 } // namespace colorTransforms
 

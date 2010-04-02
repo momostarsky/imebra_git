@@ -21,53 +21,11 @@ namespace imebra
 namespace transforms
 {
 
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Modify the high bit of an image
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-void transformHighBit::doTransformBuffersInPlace(
-	imbxUint32 /* sizeX */,
-	imbxUint32 /* sizeY */,
-	imbxUint32 /* inputChannelsNumber */,
-	std::wstring /* inputColorSpace */,
-	image::bitDepth /* inputDepth */,
-	imbxUint32 inputHighBit,
-	imbxInt32* pOutputBuffer,
-	imbxUint32 buffersSize,
-	image::bitDepth* /* pOutputDepth */,
-	imbxUint32* pOutputHighBit
-	)
+ptr<image> transformHighBit::allocateOutputImage(ptr<image> pInputImage, imbxUint32 width, imbxUint32 height)
 {
-	PUNTOEXE_FUNCTION_START(L"transformHighBit::doTransformBuffers");
-
-	if(inputHighBit == *pOutputHighBit)
-	{
-		return;
-	}
-
-	if(inputHighBit < *pOutputHighBit)
-	{
-		imbxUint32 leftShift = *pOutputHighBit - inputHighBit;
-		while(buffersSize--)
-		{
-			*(pOutputBuffer++) <<= leftShift;
-		}
-		return;
-	}
-
-	imbxUint32 rightShift = inputHighBit - *pOutputHighBit;
-	while(buffersSize--)
-	{
-		*(pOutputBuffer++) >>= rightShift;
-	}
-	return;
-
-	PUNTOEXE_FUNCTION_END();
+	ptr<image> newImage(new image);
+	newImage->create(width, height, pInputImage->getDepth(), pInputImage->getColorSpace(), pInputImage->getHighBit());
+	return newImage;
 }
 
 } // namespace transforms

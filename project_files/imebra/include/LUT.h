@@ -201,6 +201,21 @@ protected:
 	std::map<imbxInt32, imbxInt32> m_mappedValuesRev;
 };
 
+class palette: public baseObject
+{
+public:
+    palette(ptr<lut> red, ptr<lut> green, ptr<lut> blue);
+
+    void setLuts(ptr<lut> red, ptr<lut> green, ptr<lut> blue);
+    ptr<lut> getRed();
+    ptr<lut> getGreen();
+    ptr<lut> getBlue();
+protected:
+    ptr<lut> m_redLut;
+    ptr<lut> m_greenLut;
+    ptr<lut> m_blueLut;
+};
+
 ///////////////////////////////////////////////////////////
 /// \brief This is the base class for the exceptions thrown
 ///         by the lut class

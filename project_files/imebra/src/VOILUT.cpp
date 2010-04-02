@@ -10,7 +10,6 @@ $fileHeader$
 #include "../../base/include/exception.h"
 #include "../include/VOILUT.h"
 #include "../include/dataSet.h"
-#include "../include/LUT.h"
 
 
 namespace puntoexe
@@ -44,8 +43,7 @@ imbxUint32 VOILUT::getVOILUTId(imbxUint32 VOILUTNumber)
 
 	// If the dataset has not been set, then return NULL
 	///////////////////////////////////////////////////////////
-	ptr<dataSet> lutDataSet=getDataSet();
-	if(lutDataSet == 0)
+	if(m_pDataSet == 0)
 	{
 		return 0;
 	}
@@ -60,8 +58,8 @@ imbxUint32 VOILUT::getVOILUTId(imbxUint32 VOILUTNumber)
 	imbxUint32 scanWindow;
 	for(scanWindow=VOILUTNumber; (windowWidth == 0) && (scanWindow!=0xffffffff); --scanWindow)
 	{
-		windowCenter=lutDataSet->getSignedLong(0x0028, 0, 0x1050, scanWindow);
-		windowWidth =lutDataSet->getSignedLong(0x0028, 0, 0x1051, scanWindow);
+		windowCenter = m_pDataSet->getSignedLong(0x0028, 0, 0x1050, scanWindow);
+		windowWidth  = m_pDataSet->getSignedLong(0x0028, 0, 0x1051, scanWindow);
 	}
 	++scanWindow;
 
@@ -74,7 +72,7 @@ imbxUint32 VOILUT::getVOILUTId(imbxUint32 VOILUTNumber)
 		// Find the LUT's ID
 		///////////////////////////////////////////////////////////
 		VOILUTNumber-=scanWindow;
-		ptr<dataSet> voiLut=lutDataSet->getSequenceItem(0x0028, 0, 0x3010, VOILUTNumber);
+		ptr<dataSet> voiLut = m_pDataSet->getSequenceItem(0x0028, 0, 0x3010, VOILUTNumber);
 		if(voiLut != 0)
 		{
 			// Set the VOILUTId
@@ -117,8 +115,7 @@ std::wstring VOILUT::getVOILUTDescription(imbxUint32 VOILUTId)
 
 	// If the dataset has not been, then return NULL
 	///////////////////////////////////////////////////////////
-	ptr<dataSet> lutDataSet=getDataSet();
-	if(lutDataSet == 0)
+	if(m_pDataSet == 0)
 	{
 		return VOILUTDescription;
 	}
@@ -129,14 +126,14 @@ std::wstring VOILUT::getVOILUTDescription(imbxUint32 VOILUTId)
 	///////////////////////////////////////////////////////////
 	if((VOILUTId & 0x00200000))
 	{
-		VOILUTDescription = lutDataSet->getUnicodeString(0x0028, 0, 0x1055, VOILUTNumber);
+		VOILUTDescription = m_pDataSet->getUnicodeString(0x0028, 0, 0x1055, VOILUTNumber);
 	}
 
 	// LUT
 	///////////////////////////////////////////////////////////
 	if((VOILUTId & 0x00100000))
 	{
-		ptr<lut> voiLut = lutDataSet->getLut(0x0028, 0x3010, VOILUTNumber);
+		ptr<lut> voiLut = m_pDataSet->getLut(0x0028, 0x3010, VOILUTNumber);
 		if(voiLut != 0)
 		{
 			VOILUTDescription=voiLut->getDescription();
@@ -166,9 +163,10 @@ void VOILUT::setVOILUT(imbxUint32 VOILUTId)
 
 	// If the dataset has not been set, then return NULL
 	///////////////////////////////////////////////////////////
-	ptr<dataSet> lutDataSet = getDataSet();
-	if(lutDataSet == 0)
+	if(m_pDataSet == 0)
+	{
 		return;
+	}
 
 	imbxUint32 VOILUTNumber=VOILUTId & 0x0000ffff;
 
@@ -177,8 +175,8 @@ void VOILUT::setVOILUT(imbxUint32 VOILUTId)
 	if((VOILUTId & 0x00200000))
 	{
 		setCenterWidth(
-			lutDataSet->getSignedLong(0x0028, 0, 0x1050, VOILUTNumber),
-			lutDataSet->getSignedLong(0x0028, 0, 0x1051, VOILUTNumber));
+			m_pDataSet->getSignedLong(0x0028, 0, 0x1050, VOILUTNumber),
+			m_pDataSet->getSignedLong(0x0028, 0, 0x1051, VOILUTNumber));
 		return;
 	}
 
@@ -186,7 +184,7 @@ void VOILUT::setVOILUT(imbxUint32 VOILUTId)
 	///////////////////////////////////////////////////////////
 	if((VOILUTId & 0x00100000))
 	{
-		setLUT(lutDataSet->getLut(0x0028, 0x3010, VOILUTNumber));
+		setLUT(m_pDataSet->getLut(0x0028, 0x3010, VOILUTNumber));
 		return;
 	}
 
@@ -246,52 +244,32 @@ void VOILUT::getCenterWidth(imbxInt32* pCenter, imbxInt32* pWidth)
 }
 
 
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// VOILUT transformation
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-void VOILUT::doTransformBuffersInPlace(
-		imbxUint32 /* sizeX */,
-		imbxUint32 /* sizeY */,
-		imbxUint32 /* inputChannelsNumber */,
-		std::wstring /* inputColorSpace */,
-		image::bitDepth /* inputDepth */,
-		imbxUint32 /* inputHighBit */,
-		imbxInt32* pOutputBuffer,
-		imbxUint32 buffersSize,
-		image::bitDepth* pOutputDepth,
-		imbxUint32* pOutputHighBit)
+ptr<image> VOILUT::allocateOutputImage(ptr<image> pInputImage, imbxUint32 width, imbxUint32 height)
 {
-	PUNTOEXE_FUNCTION_START(L"VOILUT::doTransformBuffers");
+	ptr<image> outputImage(new image);
 
-	//
-	// LUT found
-	//
-	///////////////////////////////////////////////////////////
+	image::bitDepth depth = pInputImage->getDepth();
 	if(m_pLUT != 0 && m_pLUT->getSize())
 	{
-		lut* pLUT = m_pLUT.get();
-		imbxUint8 bits = pLUT->getBits();
+		imbxUint8 bits = m_pLUT->getBits();
 
-		*pOutputDepth = image::depthU8;
-		if(bits>8)
+		bool bNegative(false);
+		for(imbxInt32 index(m_pLUT->getFirstMapped()), size(m_pLUT->getSize()); !bNegative && size != 0; --size, ++index)
 		{
-			*pOutputDepth = image::depthU16;
-		}
-		*pOutputHighBit = bits-1;
-
-		while(buffersSize--)
-		{
-			*pOutputBuffer=pLUT->mappedValue(*pOutputBuffer);
-			++pOutputBuffer;
+			bNegative = (m_pLUT->mappedValue(index) < 0);
 		}
 
-		return;
+		if(bNegative)
+		{
+			depth = bits > 8 ? image::depthS16 : image::depthS8;
+		}
+		else
+		{
+			depth = bits > 8 ? image::depthU16 : image::depthU8;
+		}
+		ptr<image> returnImage(new image);
+		returnImage->create(width, height, depth, L"MONOCHROME2", bits - 1);
+		return returnImage;
 	}
 
 	//
@@ -301,111 +279,22 @@ void VOILUT::doTransformBuffersInPlace(
 	///////////////////////////////////////////////////////////
 	if(m_windowWidth <= 1)
 	{
-		return;
+		outputImage->create(width, height, depth, L"MONOCHROME2", pInputImage->getHighBit());
+		return outputImage;
 	}
 
-	// The output is always positive
-	if(*pOutputDepth==image::depthS8)
-		*pOutputDepth=image::depthU8;
-	if(*pOutputDepth==image::depthS16)
-		*pOutputDepth=image::depthU16;
+	if(depth == image::depthS8)
+		depth = image::depthU8;
+	if(depth == image::depthS16)
+		depth = image::depthU16;
 
-	imbxInt32 finalRange=((imbxInt32)1)<<(*pOutputHighBit + 1);
+	outputImage->create(width, height, depth, L"MONOCHROME2", pInputImage->getHighBit());
 
-	imbxInt32 minValue=m_windowCenter-(m_windowWidth/2);
-	imbxInt32 maxValue=m_windowCenter+(m_windowWidth/2);
-	float multFactor=(float)finalRange/(float)(maxValue-minValue);
-
-	while(buffersSize--)
-	{
-		if(*pOutputBuffer  <= minValue)
-		{
-			*pOutputBuffer++ = 0;
-			continue;
-		}
-		if(*pOutputBuffer >=maxValue)
-		{
-			*pOutputBuffer++ = finalRange-1;
-			continue;
-		}
-		*pOutputBuffer = (imbxInt32)((float)(*pOutputBuffer - minValue)*multFactor+0.5);
-		if(*pOutputBuffer < 0)
-			*pOutputBuffer = 0;
-		if(*pOutputBuffer >= finalRange)
-			*pOutputBuffer = finalRange-1;
-		++pOutputBuffer;
-	}
-
-	PUNTOEXE_FUNCTION_END();
+	return outputImage;
 }
 
 
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Inverse VOILUT transformation
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-void VOILUTInverse::doTransformBuffers(
-		imbxUint32 /* sizeX */,
-		imbxUint32 /* sizeY */,
-		imbxUint32 /* inputChannelsNumber */,
-		std::wstring /* inputColorSpace */,
-		image::bitDepth /* inputDepth */,
-		imbxUint32 inputHighBit,
-		imbxInt32* /* pInputBuffer */,
-		imbxInt32* pOutputBuffer,
-		imbxUint32 buffersSize,
-		image::bitDepth* pOutputDepth,
-		imbxUint32* pOutputHighBit)
-{
-	PUNTOEXE_FUNCTION_START(L"VOILUTInverse::doTransformBuffers");
 
-	//
-	// LUT found
-	//
-	///////////////////////////////////////////////////////////
-	if(m_pLUT != 0 && m_pLUT->getSize())
-	{
-		*pOutputDepth=image::depthUnknown;
-		*pOutputHighBit = 0;
-		while(buffersSize--)
-		{
-			*pOutputBuffer = m_pLUT->mappedValueRev(*pOutputBuffer);
-			++pOutputBuffer;
-		}
-
-		return;
-	}
-
-	//
-	// LUT not found.
-	// Use the window's center/width
-	//
-	///////////////////////////////////////////////////////////
-	imbxInt32 initialRange = ((imbxInt32)1)<<(inputHighBit+1);
-
-	imbxInt32 minValue = m_windowCenter-(m_windowWidth/2);
-	imbxInt32 maxValue = m_windowCenter+(m_windowWidth/2);
-	double multFactor = (double)(maxValue-minValue)/(double)initialRange;
-	if(m_windowWidth <= 0)
-	{
-		return;
-	}
-
-	*pOutputDepth=image::depthUnknown;
-	*pOutputHighBit = 0;
-	while(buffersSize--)
-	{
-		*pOutputBuffer = (imbxInt32)((double)*pOutputBuffer*multFactor+0.5+minValue);
-		++pOutputBuffer;
-	}
-
-	PUNTOEXE_FUNCTION_END();
-}
 
 } // namespace transforms
 

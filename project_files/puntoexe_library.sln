@@ -1,44 +1,12 @@
-Microsoft Visual Studio Solution File, Format Version 8.00
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CImbx_tests", "tests\CImbx_tests\CImbx_tests.vcproj", "{466FDECD-8464-4B9C-B51E-E54DE2EE9736}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dicom2jpeg", "examples\dicom2jpeg\dicom2jpeg.vcproj", "{3BEA72B3-38C2-490A-92A8-E45368A2300D}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dicomdirItems", "examples\dicomdirItems\dicomdirItems.vcproj", "{AF2069BE-9D41-493C-ABEA-127FF3CFC446}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
-EndProject
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
 Global
-	GlobalSection(SolutionConfiguration) = preSolution
-		Debug = Debug
-		Debug_posix = Debug_posix
-		Release = Release
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 	EndGlobalSection
-	GlobalSection(ProjectConfiguration) = postSolution
-		{466FDECD-8464-4B9C-B51E-E54DE2EE9736}.Debug.ActiveCfg = Debug|Win32
-		{466FDECD-8464-4B9C-B51E-E54DE2EE9736}.Debug.Build.0 = Debug|Win32
-		{466FDECD-8464-4B9C-B51E-E54DE2EE9736}.Debug_posix.ActiveCfg = Debug_iconv|Win32
-		{466FDECD-8464-4B9C-B51E-E54DE2EE9736}.Debug_posix.Build.0 = Debug_iconv|Win32
-		{466FDECD-8464-4B9C-B51E-E54DE2EE9736}.Release.ActiveCfg = Release|Win32
-		{466FDECD-8464-4B9C-B51E-E54DE2EE9736}.Release.Build.0 = Release|Win32
-		{3BEA72B3-38C2-490A-92A8-E45368A2300D}.Debug.ActiveCfg = Debug|Win32
-		{3BEA72B3-38C2-490A-92A8-E45368A2300D}.Debug.Build.0 = Debug|Win32
-		{3BEA72B3-38C2-490A-92A8-E45368A2300D}.Debug_posix.ActiveCfg = Debug|Win32
-		{3BEA72B3-38C2-490A-92A8-E45368A2300D}.Debug_posix.Build.0 = Debug|Win32
-		{3BEA72B3-38C2-490A-92A8-E45368A2300D}.Release.ActiveCfg = Release|Win32
-		{3BEA72B3-38C2-490A-92A8-E45368A2300D}.Release.Build.0 = Release|Win32
-		{AF2069BE-9D41-493C-ABEA-127FF3CFC446}.Debug.ActiveCfg = Debug|Win32
-		{AF2069BE-9D41-493C-ABEA-127FF3CFC446}.Debug.Build.0 = Debug|Win32
-		{AF2069BE-9D41-493C-ABEA-127FF3CFC446}.Debug_posix.ActiveCfg = Debug|Win32
-		{AF2069BE-9D41-493C-ABEA-127FF3CFC446}.Debug_posix.Build.0 = Debug|Win32
-		{AF2069BE-9D41-493C-ABEA-127FF3CFC446}.Release.ActiveCfg = Release|Win32
-		{AF2069BE-9D41-493C-ABEA-127FF3CFC446}.Release.Build.0 = Release|Win32
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-	EndGlobalSection
-	GlobalSection(ExtensibilityAddIns) = postSolution
+	GlobalSection(MonoDevelopProperties) = preSolution
+		version = 0.1
 	EndGlobalSection
 EndGlobal

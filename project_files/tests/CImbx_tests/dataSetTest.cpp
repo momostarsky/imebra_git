@@ -67,7 +67,7 @@ void dataSetTest::testFragmentation()
 		pOffsetMemory[scanBuffers - 1] = offset;
 		streamController::adjustEndian((imbxUint8*)&(pOffsetMemory[scanBuffers - 1]), sizeof(pOffsetMemory[0]), streamController::lowByteEndian, 1);
 		ptr<handlers::dataHandlerRaw> wholeHandler = imageTag->getDataHandlerRaw(scanBuffers, false, "");
-		imbxUint8* pWholeHandler = wholeHandler->getMemoryBuffer();
+		imbxUint8* pWholeHandler = (imbxUint8*)wholeHandler->getMemoryBuffer();
 		imbxUint32 totalSize = wholeHandler->getSize();
 		imbxUint32 fragmentedSize = totalSize / 3;
 		if(fragmentedSize & 0x1)
@@ -83,7 +83,7 @@ void dataSetTest::testFragmentation()
 			}
 			ptr<buffer> newBuffer(new buffer(ptr<baseObject>(0), "OB", ptr<baseStream>(0), 0, thisSize, 1, streamController::lowByteEndian) );
 			ptr<handlers::dataHandlerRaw> newBufferHandler = newBuffer->getDataHandlerRaw(true, thisSize);
-			imbxUint8* pNewBuffer = newBufferHandler->getMemoryBuffer();
+			imbxUint8* pNewBuffer = (imbxUint8*)newBufferHandler->getMemoryBuffer();
 			::memcpy(pNewBuffer, pWholeHandler, thisSize);
 			newBufferHandler.release();
 			newBuffers.push_back(newBuffer);
