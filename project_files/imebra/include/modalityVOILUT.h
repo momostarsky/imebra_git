@@ -54,7 +54,7 @@ namespace transforms
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class modalityVOILUT: public baseTransform
+class modalityVOILUT: public transformHandlers
 {
 public:
     modalityVOILUT(ptr<dataSet> pDataSet);

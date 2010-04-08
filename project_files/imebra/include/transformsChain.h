@@ -66,9 +66,9 @@ public:
 	void addTransform(ptr<baseTransform> pTransform);
 
         virtual void runTransform(
-            ptr<image> inputImage,
+            const ptr<image>& inputImage,
             imbxUint32 inputTopLeftX, imbxUint32 inputTopLeftY, imbxUint32 inputWidth, imbxUint32 inputHeight,
-            ptr<image> outputImage,
+            const ptr<image>& outputImage,
             imbxUint32 outputTopLeftX, imbxUint32 outputTopLeftY);
 
 	/// \brief Returns true if the transform doesn't do

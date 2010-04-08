@@ -301,6 +301,11 @@ void dicomCodec::writeTag(ptr<streamWriter> pDestStream, ptr<data> pData, imbxUi
 				pDestStream->write((imbxUint8*)&sequenceItemLength, 4);
 			}
 
+			if(bufferSize == 0)
+			{
+				continue;
+			}
+
 			// Adjust the buffer's endian
 			///////////////////////////////////////////////////////////
 			if(wordSize > 1)

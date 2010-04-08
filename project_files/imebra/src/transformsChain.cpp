@@ -61,9 +61,9 @@ bool transformsChain::isEmpty()
 
 
 void transformsChain::runTransform(
-            ptr<image> inputImage,
+            const ptr<image>& inputImage,
             imbxUint32 inputTopLeftX, imbxUint32 inputTopLeftY, imbxUint32 inputWidth, imbxUint32 inputHeight,
-            ptr<image> outputImage,
+            const ptr<image>& outputImage,
             imbxUint32 outputTopLeftX, imbxUint32 outputTopLeftY)
 {
 	if(isEmpty())
