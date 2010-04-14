@@ -157,7 +157,17 @@ ptr<image> dataSet::getImage(imbxUint32 frameNumber)
 		PUNTOEXE_THROW(dataSetExceptionUnknownTransferSyntax, "None of the codecs support the specified transfer syntax");
 	}
 
-	ptr<imebra::data> imageTag = getTag(0x7fe0, 0x0, 0x0010, false);
+	ptr<imebra::data> imageTag;
+	for(imbxUint16 groupNumber(0); imageTag == 0; ++groupNumber)
+	{
+		ptr<imebra::dataGroup> group(this->getData(0x7fe0, groupNumber));
+		if(group == 0)
+		{
+			break;
+		}
+		imageTag = getTag(0x7fe0, groupNumber, 0x0010, false);
+	}
+	
 	if(imageTag == 0)
 	{
 		PUNTOEXE_THROW(dataSetImageDoesntExist, "The requested image doesn't exist");
