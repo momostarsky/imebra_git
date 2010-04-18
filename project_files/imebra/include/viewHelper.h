@@ -696,8 +696,6 @@ public:
 	///                        the order of the color
 	///                        components is reversed in the
 	///                        Window's bitmaps)
-        /// @param bMonochrome    true if the bitmap is monochrome,
-        ///                        false if the bitmap is RGB
 	///
 	///////////////////////////////////////////////////////////
 	virtual void drawBitmap(void* pDeviceContext, imbxInt32 left, imbxInt32 top, imbxInt32 right, imbxInt32 bottom, imbxUint32 bufferRowSizeBytes, imbxUint8* pBuffer)=0;

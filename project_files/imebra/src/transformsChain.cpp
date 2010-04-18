@@ -118,18 +118,13 @@ void transformsChain::runTransform(
 			allocateRows = 1;
 		}
 
+		m_temporaryImages.push_back(inputImage);
 		for(tTransformsList::iterator scanTransforms(m_transformsList.begin()); scanTransforms != lastTransform; ++scanTransforms)
 		{
-			if(scanTransforms == m_transformsList.begin())
-			{
-				m_temporaryImages.push_back((*scanTransforms)->allocateOutputImage(inputImage, inputWidth, allocateRows));
-			}
-			else
-			{
-				m_temporaryImages.push_back((*scanTransforms)->allocateOutputImage(m_temporaryImages.back(), inputWidth, allocateRows));
-			}
+			m_temporaryImages.push_back((*scanTransforms)->allocateOutputImage(m_temporaryImages.back(), inputWidth, allocateRows));
 		}
 	}
+	m_temporaryImages.push_back(outputImage);
 
 	// Ron all the transforms. Split the images into several
 	//  parts
@@ -153,7 +148,7 @@ void transformsChain::runTransform(
 		(*scanTransforms)->runTransform(inputImage, inputTopLeftX, inputTopLeftY++, inputWidth, rows, *scanTemporaryImages, 0, 0);
 		inputTopLeftY += rows;
 
-		while(scanTransforms != lastTransform)
+		while(scanTransforms != m_transformsList.end())
 		{
 			ptr<image> temporaryInput(*(scanTemporaryImages++));
 			ptr<image> temporaryOutput(*scanTemporaryImages);
@@ -163,7 +158,6 @@ void transformsChain::runTransform(
 			++scanTransforms;
 		}
 		
-		(*lastTransform)->runTransform(*scanTemporaryImages, 0, 0, inputWidth, rows, outputImage, outputTopLeftX, outputTopLeftY);
 		outputTopLeftY += rows;
 	}
 }

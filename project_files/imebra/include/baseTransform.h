@@ -83,7 +83,7 @@ void runTemplateTransform2(\
             outputTopLeftX, outputTopLeftY);\
 }\
 \
-virtual void runTransform(\
+virtual void runTransformHandlers(\
     puntoexe::ptr<puntoexe::imebra::handlers::dataHandlerNumericBase> inputHandler, imbxUint32 inputHandlerWidth, const std::wstring& inputHandlerColorSpace,\
     puntoexe::ptr<puntoexe::imebra::palette> inputPalette,\
     imbxInt32 inputHandlerMinValue, imbxUint32 inputHandlerNumValues,\
@@ -166,7 +166,7 @@ public:
             const ptr<image>& outputImage,
             imbxUint32 outputTopLeftX, imbxUint32 outputTopLeftY);
 
-        virtual void runTransform(
+        virtual void runTransformHandlers(
             ptr<handlers::dataHandlerNumericBase> inputHandler, imbxUint32 inputHandlerWidth, const std::wstring& inputHandlerColorSpace,
             ptr<palette> inputPalette,
             imbxInt32 inputHandlerMinValue, imbxUint32 inputHandlerNumValues,

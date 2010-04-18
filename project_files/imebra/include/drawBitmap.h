@@ -129,7 +129,7 @@ public:
 		imbxInt32 visibleTopLeftX, imbxInt32 visibleTopLeftY, imbxInt32 visibleBottomRightX, imbxInt32 visibleBottomRightY,
                 ptr<memory> reuseMemory)
     {
-        PUNTOEXE_FUNCTION_START("drawBitmap::getBitmap");
+        PUNTOEXE_FUNCTION_START(L"drawBitmap::getBitmap");
 
 	if(visibleTopLeftX == visibleBottomRightX || visibleTopLeftY == visibleBottomRightY)
 	{
@@ -234,7 +234,7 @@ public:
 			imbxInt32* pAveragePointer = averagePixels.get();
 			imbxUint32* pNextSourceXIndex = sourcePixelIndex.get();
 
-                        imbxInt32* pImagePointer(0);
+			imbxUint8* pImagePointer(0);
 			if(m_transformsChain->isEmpty())
 			{
 				pImagePointer = &(imageMemory[(scanImageY >> leftShiftY) * imageSizeX * 3 + ((*pNextSourceXIndex) >> leftShiftX) * 3]);
@@ -242,6 +242,7 @@ public:
 			else
 			{
 				m_transformsChain->runTransform(m_image, (*pNextSourceXIndex) >> leftShiftX, scanImageY >> leftShiftY, lastPixelX - firstPixelX, 1, rgbImage, 0, 0);
+				pImagePointer = imageMemory;
 			}
 
                         imbxInt32 scanYBlock ( (scanImageY & (~maskY)) + ((imbxInt32)1 << leftShiftY) );

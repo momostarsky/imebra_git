@@ -71,7 +71,7 @@ void transformHandlers::runTransform(
 		outputMinValue -= (imbxInt32)(outputNumValues >> 1);
 	}
 
-	runTransform(inputHandler, inputImageWidth, inputColorSpace, inputPalette, inputMinValue, inputNumValues,
+	runTransformHandlers(inputHandler, inputImageWidth, inputColorSpace, inputPalette, inputMinValue, inputNumValues,
 		inputTopLeftX, inputTopLeftY, inputWidth, inputHeight,
 		outputHandler, outputImageWidth, outputColorSpace, outputPalette, outputMinValue, outputNumValues,
 		outputTopLeftX, outputTopLeftY);
