@@ -89,6 +89,18 @@ void transformsChain::runTransform(
 	std::wstring outputColorSpace(outputImage->getColorSpace());
 	image::bitDepth outputDepth(outputImage->getDepth());
 	imbxUint32 outputHighBit(outputImage->getHighBit());
+	imbxUint32 allocateRows = 65536 / inputWidth;
+	if(allocateRows < 1)
+	{
+		allocateRows = 1;
+	}
+	if(allocateRows > inputHeight)
+	{
+		allocateRows = inputHeight;
+	}
+
+	// Allocate temporary images
+	///////////////////////////////////////////////////////////
 	if(
 		m_inputWidth != inputWidth ||
 		m_inputHeight != inputHeight ||
@@ -109,33 +121,20 @@ void transformsChain::runTransform(
 		m_outputHighBit = outputHighBit;
 
 		m_temporaryImages.clear();
-
-		// Allocate temporary images
-		///////////////////////////////////////////////////////////
-		imbxUint32 allocateRows = 65536 / inputWidth;
-		if(allocateRows < 1)
-		{
-			allocateRows = 1;
-		}
-
-		m_temporaryImages.push_back(inputImage);
-		for(tTransformsList::iterator scanTransforms(m_transformsList.begin()); scanTransforms != lastTransform; ++scanTransforms)
+		tTransformsList::iterator scanTransforms(m_transformsList.begin());
+		m_temporaryImages.push_back((*scanTransforms)->allocateOutputImage(inputImage, inputWidth, allocateRows));
+		while(++scanTransforms != lastTransform)
 		{
 			m_temporaryImages.push_back((*scanTransforms)->allocateOutputImage(m_temporaryImages.back(), inputWidth, allocateRows));
 		}
 	}
-	m_temporaryImages.push_back(outputImage);
 
-	// Ron all the transforms. Split the images into several
+	// Run all the transforms. Split the images into several
 	//  parts
 	///////////////////////////////////////////////////////////
 	while(inputHeight != 0)
 	{
-		imbxUint32 rows = 65536 / inputWidth;
-		if(rows < 1)
-		{
-			rows = 1;
-		}
+		imbxUint32 rows = allocateRows;
 		if(rows > inputHeight)
 		{
 			rows = inputHeight;
@@ -145,19 +144,18 @@ void transformsChain::runTransform(
 		tTransformsList::iterator scanTransforms(m_transformsList.begin());
 		tTemporaryImagesList::iterator scanTemporaryImages(m_temporaryImages.begin());
 		
-		(*scanTransforms)->runTransform(inputImage, inputTopLeftX, inputTopLeftY++, inputWidth, rows, *scanTemporaryImages, 0, 0);
+		(*scanTransforms)->runTransform(inputImage, inputTopLeftX, inputTopLeftY, inputWidth, rows, *scanTemporaryImages, 0, 0);
 		inputTopLeftY += rows;
 
-		while(scanTransforms != m_transformsList.end())
+		while(++scanTransforms != lastTransform)
 		{
 			ptr<image> temporaryInput(*(scanTemporaryImages++));
 			ptr<image> temporaryOutput(*scanTemporaryImages);
 
-			(*scanTransforms)->runTransform(temporaryInput, 0, 0, inputWidth, 1, temporaryOutput, 0, 0);
-
-			++scanTransforms;
+			(*scanTransforms)->runTransform(temporaryInput, 0, 0, inputWidth, rows, temporaryOutput, 0, 0);
 		}
-		
+
+		m_transformsList.back()->runTransform(*scanTemporaryImages, 0, 0, inputWidth, rows, outputImage, outputTopLeftX, outputTopLeftY);
 		outputTopLeftY += rows;
 	}
 }

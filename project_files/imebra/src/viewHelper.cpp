@@ -134,6 +134,13 @@ view::view(imbxInt32 rowByteAlign, bool bBGR):
 	m_backgroundRed(192),
 	m_backgroundGreen(192),
 	m_backgroundBlue(192),
+	m_cachedWidth(0),
+	m_cachedHeight(0),
+	m_cachedVisibleTop(0),
+	m_cachedVisibleLeft(0),
+	m_cachedVisibleBottom(0),
+	m_cachedVisibleRight(0),
+	m_bUpdateImage(true),
 	m_zoom(1.0)
 {
 }
@@ -162,7 +169,7 @@ void view::setBackgroundColor(imbxUint8 red, imbxUint8 green, imbxUint8 blue)
 	m_backgroundRed   = red;
 	m_backgroundGreen = green;
 	m_backgroundBlue  = blue;
-	invalidate(-1, -1, -1, -1);
+	invalidate();
 }
 
 
@@ -493,10 +500,6 @@ void view::startCursorDef()
 ///////////////////////////////////////////////////////////
 void view::endCursorDef(imbxInt32 cursorHotSpotX, imbxInt32 cursorHotSpotY)
 {
-	// Remove the current cursor's lines
-	///////////////////////////////////////////////////////////
-	invalidateLines(&m_cursorLines);
-
 	// Copy the temporary lines into cursor's lines
 	///////////////////////////////////////////////////////////
 	m_cursorLines.clear();
@@ -512,7 +515,7 @@ void view::endCursorDef(imbxInt32 cursorHotSpotX, imbxInt32 cursorHotSpotY)
 	///////////////////////////////////////////////////////////
 	if(!isMouseCaptured() || m_originalImage == 0)
 	{
-		invalidateLines(&m_cursorLines);
+		invalidate();
 		return;
 	}
 
@@ -561,7 +564,7 @@ void view::endCursorDef(imbxInt32 cursorHotSpotX, imbxInt32 cursorHotSpotY)
 		setScrollPosition(scrollX + executeScrollX, scrollY + executeScrollY);
 	}
 
-	invalidateLines(&m_cursorLines);
+	invalidate();
 }
 
 
@@ -572,10 +575,6 @@ void view::endCursorDef(imbxInt32 cursorHotSpotX, imbxInt32 cursorHotSpotY)
 ///////////////////////////////////////////////////////////
 void view::endCursorDef()
 {
-	// Remove the current cursor's lines
-	///////////////////////////////////////////////////////////
-	invalidateLines(&m_cursorLines);
-
 	// Copy the temporary lines into cursor's lines
 	///////////////////////////////////////////////////////////
 	m_cursorLines.clear();
@@ -587,7 +586,7 @@ void view::endCursorDef()
 
 	// Invalidate the new lines
 	///////////////////////////////////////////////////////////
-	invalidateLines(&m_cursorLines);
+	invalidate();
 }
 
 
@@ -602,86 +601,6 @@ void view::defCursorLine(imbxInt32 startPointX, imbxInt32 startPointY, imbxInt32
 	m_tempCursorLines.push_back(newLine);
 }
 
-///////////////////////////////////////////////////////////
-//
-// Invalidate the specified lines
-//
-///////////////////////////////////////////////////////////
-void view::invalidateLines(tCursorLinesList* pLines)
-{
-	if(pLines->empty() || m_originalImage == 0)
-	{
-		return;
-	}
-
-	imbxInt32 scrollX, scrollY;
-	getScrollPosition(&scrollX, &scrollY);
-
-	imbxUint32 windowWidth, windowHeight;
-	getWindowSize(&windowWidth, &windowHeight);
-
-	imbxUint32 imageSizeX, imageSizeY;
-	m_originalImage->getSize(&imageSizeX, &imageSizeY);
-
-	for(tCursorLinesList::iterator scanLines = pLines->begin(); scanLines != pLines->end(); ++scanLines)
-	{
-		imbxInt32 lineLeft = scanLines->m_x0 * (m_rightPosition - m_leftPosition) / imageSizeX + m_leftPosition;
-		imbxInt32 lineTop = scanLines->m_y0 * (m_bottomPosition - m_topPosition) / imageSizeY + m_topPosition;
-		imbxInt32 lineRight = scanLines->m_x1 * (m_rightPosition - m_leftPosition) / imageSizeX + m_leftPosition;
-		imbxInt32 lineBottom = scanLines->m_y1 * (m_bottomPosition - m_topPosition) / imageSizeY + m_topPosition;
-
-		if(lineRight < lineLeft)
-		{
-			imbxInt32 temp = lineLeft;
-			lineLeft = lineRight;
-			lineRight = temp;
-		}
-
-		if(lineBottom < lineTop)
-		{
-			imbxInt32 temp = lineTop;
-			lineTop = lineBottom;
-			lineBottom = temp;
-		}
-
-		lineLeft   -= scanLines->m_width + 2;
-		lineTop    -= scanLines->m_width + 2;
-		lineRight  += scanLines->m_width + 2;
-		lineBottom += scanLines->m_width + 2;
-
-		lineLeft -= scrollX;
-		lineTop -= scrollY;
-		lineRight -= scrollX;
-		lineBottom -= scrollY;
-
-		if(lineLeft < 0)
-		{
-			lineLeft = 0;
-		}
-
-		if(lineTop < 0)
-		{
-			lineTop = 0;
-		}
-
-		if(lineRight > (imbxInt32)windowWidth)
-		{
-			lineRight = (imbxInt32)windowWidth;
-		}
-
-		if(lineBottom > (imbxInt32)windowHeight)
-		{
-			lineBottom = (imbxInt32)windowHeight;
-		}
-
-		if(lineLeft >= lineRight || lineTop >= lineBottom)
-		{
-			continue;
-		}
-
-		invalidate(lineLeft, lineTop, lineRight, lineBottom);
-	}
-}
 
 ///////////////////////////////////////////////////////////
 //
@@ -1000,7 +919,7 @@ void view::updateImageRect(imbxInt32 centerPointX, imbxInt32 centerPointY)
 
 	setCenterPoint(centerPointX, centerPointY);
 
-	invalidate(0, 0, windowSizeX, windowSizeY);
+	invalidate();
 }
 
 
@@ -1063,7 +982,7 @@ void view::setImage(ptr<image> pImage, ptr<transforms::transformsChain> pChain)
 		oldSizeMmX == newSizeMmX &&
 		oldSizeMmY == newSizeMmY)
 	{
-		invalidate(m_leftPosition, m_topPosition, m_rightPosition, m_bottomPosition);
+		invalidate();
 		return;
 	}
 

@@ -99,17 +99,11 @@ public:
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-/// \brief This transform takes an image as an input and
+/// \brief This class takes an image as an input and
 ///         returns an 8 bit RGB bitmap of the requested
 ///         image's area; the image's area is expanded or
 ///         reduced to fit into the destination bitmap's
 ///         size.
-///
-/// The transform processes only the first declared image.
-/// A requirement of this transform is that the dataSet has
-///  to be declared before the input image; this means
-///  that declareDataSet() has to be called before
-///  declareInputImage().
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -131,191 +125,253 @@ public:
     {
         PUNTOEXE_FUNCTION_START(L"drawBitmap::getBitmap");
 
-	if(visibleTopLeftX == visibleBottomRightX || visibleTopLeftY == visibleBottomRightY)
-	{
-		return reuseMemory;
-	}
-
-	// Check if the image is visible in the specified area
-	///////////////////////////////////////////////////////////
-	if(
-		visibleBottomRightX > totalWidthPixels ||
-		visibleBottomRightY > totalHeightPixels ||
-		visibleTopLeftX < 0 ||
-		visibleTopLeftY < 0 ||
-		visibleTopLeftX > visibleBottomRightX ||
-		visibleTopLeftY > visibleBottomRightY
-		)
-	{
-		PUNTOEXE_THROW(drawBitmapExceptionInvalidArea, "Destination area not valid");
-	}
-
-	imbxUint32 rowSizeBytes = ((visibleBottomRightX - visibleTopLeftX) * 3 + rowAlignBytes - 1) / rowAlignBytes;
-	rowSizeBytes *= rowAlignBytes;
-
-	imbxUint32 memorySize(rowSizeBytes * (visibleBottomRightY - visibleTopLeftY));
-	if(reuseMemory == 0)
-	{
-		reuseMemory = memoryPool::getMemoryPool()->getMemory(memorySize);
-	}
-	else
-	{
-		reuseMemory->resize(memorySize);
-	}
-
-	// Find the multiplier that make the image bigger than
-	//  the rendering area
-	///////////////////////////////////////////////////////////
-	imbxUint32 imageSizeX, imageSizeY;
-	m_image->getSize(&imageSizeX, &imageSizeY);
-
-	imbxUint8 leftShiftX(0);
-	imbxUint32 maskX(0);
-	while( (imageSizeX << leftShiftX) < (imbxUint32)totalWidthPixels)
-	{
-		++leftShiftX;
-		maskX <<= 1;
-		++maskX;
-	}
-
-	imbxUint8 leftShiftY(0);
-	imbxUint32 maskY(0);
-	while( (imageSizeY << leftShiftY) < (imbxUint32)totalHeightPixels)
-	{
-		++leftShiftY;
-		maskY <<= 1;
-		++maskY;
-	}
-
-	// Allocate an horizontal buffer that stores the pixels
-	//  average colors
-	///////////////////////////////////////////////////////////
-	imbxUint32 destBitmapWidth(visibleBottomRightX - visibleTopLeftX);
-	std::auto_ptr<imbxInt32> averagePixels(new imbxInt32[destBitmapWidth * 4]);
-	std::auto_ptr<imbxUint32> sourcePixelIndex(new imbxUint32[destBitmapWidth + 1]);
-
-	for(imbxInt32 scanPixelsX = visibleTopLeftX; scanPixelsX != visibleBottomRightX + 1; ++scanPixelsX)
-	{
-		sourcePixelIndex.get()[scanPixelsX - visibleTopLeftX] = scanPixelsX * (imageSizeX << leftShiftX) / totalWidthPixels;
-	}
-
-	imbxInt32 firstPixelX(sourcePixelIndex.get()[0]);
-	imbxInt32 lastPixelX(sourcePixelIndex.get()[visibleBottomRightX - visibleTopLeftX]);
-
-	ptr<handlers::dataHandlerNumericBase> imageHandler;
-	imbxUint32 rowSize, channelSize, channelsNumber;
-	ptr<image> rgbImage(new image);
-	if(m_transformsChain->isEmpty())
-	{
-		imageHandler = m_image->getDataHandler(false, &rowSize, &channelSize, &channelsNumber);
-	}
-	else
-	{
-		rgbImage->create(lastPixelX - firstPixelX, 1, image::depthU8, L"RGB", 7);
-		imageHandler = rgbImage->getDataHandler(false, &rowSize, &channelSize, &channelsNumber);
-	}
-	imbxUint8* imageMemory = imageHandler->getMemoryBuffer();
-
-	// Retrieve the image's buffer
-	///////////////////////////////////////////////////////////
-
-
-	imbxUint8* pFinalBuffer = (imbxUint8*)(reuseMemory->data());
-	imbxInt32 nextRowGap = rowSizeBytes - destBitmapWidth * 3;
-
-	for(imbxInt32 scanY = visibleTopLeftY; scanY != visibleBottomRightY; ++scanY)
-	{
-		::memset(averagePixels.get(), 0, destBitmapWidth * 4 * sizeof(averagePixels.get()[0]));
-
-		imbxInt32 firstPixelY = scanY * (imageSizeY << leftShiftY) / totalHeightPixels;
-		imbxInt32 lastPixelY = (scanY + 1) * (imageSizeY << leftShiftY) / totalHeightPixels;
-		for(imbxInt32 scanImageY = firstPixelY; scanImageY != lastPixelY; /* increased in the loop */)
+		// Just return if there is nothing to show
+		///////////////////////////////////////////////////////////
+		if(visibleTopLeftX == visibleBottomRightX || visibleTopLeftY == visibleBottomRightY)
 		{
-			imbxInt32* pAveragePointer = averagePixels.get();
-			imbxUint32* pNextSourceXIndex = sourcePixelIndex.get();
-
-			imbxUint8* pImagePointer(0);
-			if(m_transformsChain->isEmpty())
+			if(reuseMemory != 0)
 			{
-				pImagePointer = &(imageMemory[(scanImageY >> leftShiftY) * imageSizeX * 3 + ((*pNextSourceXIndex) >> leftShiftX) * 3]);
+				reuseMemory->resize(0);
+			}
+			return reuseMemory;
+		}
+
+		// Check if the image is visible in the specified area
+		///////////////////////////////////////////////////////////
+		if(
+			visibleBottomRightX > totalWidthPixels ||
+			visibleBottomRightY > totalHeightPixels ||
+			visibleTopLeftX < 0 ||
+			visibleTopLeftY < 0 ||
+			visibleTopLeftX > visibleBottomRightX ||
+			visibleTopLeftY > visibleBottomRightY
+			)
+		{
+			PUNTOEXE_THROW(drawBitmapExceptionInvalidArea, "Destination area not valid");
+		}
+
+		// Calculate the row' size, in bytes
+		///////////////////////////////////////////////////////////
+		imbxUint32 rowSizeBytes = ((visibleBottomRightX - visibleTopLeftX) * 3 + rowAlignBytes - 1) / rowAlignBytes;
+		rowSizeBytes *= rowAlignBytes;
+
+		// Allocate the memory for the final bitmap
+		///////////////////////////////////////////////////////////
+		imbxUint32 memorySize(rowSizeBytes * (visibleBottomRightY - visibleTopLeftY));
+		if(reuseMemory == 0)
+		{
+			reuseMemory = memoryPool::getMemoryPool()->getMemory(memorySize);
+		}
+		else
+		{
+			reuseMemory->resize(memorySize);
+		}
+
+		// Find the multiplier that make the image bigger than
+		//  the rendering area
+		///////////////////////////////////////////////////////////
+		imbxUint32 imageSizeX, imageSizeY;
+		m_image->getSize(&imageSizeX, &imageSizeY);
+
+		imbxUint8 leftShiftX(0), leftShiftY(0);
+		imbxUint32 maskX(0), maskY(0);
+		while( (imageSizeX << leftShiftX) < (imbxUint32)totalWidthPixels)
+		{
+			++leftShiftX;
+			maskX <<= 1;
+			++maskX;
+		}
+		while( (imageSizeY << leftShiftY) < (imbxUint32)totalHeightPixels)
+		{
+			++leftShiftY;
+			maskY <<= 1;
+			++maskY;
+		}
+
+		// Allocate an horizontal buffer that stores the pixels
+		//  average colors and a buffer that indicates the pixels
+		//  in the source image mapped to the final bitmap
+		///////////////////////////////////////////////////////////
+		imbxUint32 destBitmapWidth(visibleBottomRightX - visibleTopLeftX);
+		std::auto_ptr<imbxInt32> averagePixels(new imbxInt32[destBitmapWidth * 4]);
+		std::auto_ptr<imbxUint32> sourcePixelIndex(new imbxUint32[destBitmapWidth + 1]);
+		for(imbxInt32 scanPixelsX = visibleTopLeftX; scanPixelsX != visibleBottomRightX + 1; ++scanPixelsX)
+		{
+			sourcePixelIndex.get()[scanPixelsX - visibleTopLeftX] = scanPixelsX * (imageSizeX << leftShiftX) / totalWidthPixels;
+		}
+
+		// Get the index of the first and last+1 pixel to be ž
+		//  displayed
+		///////////////////////////////////////////////////////////
+		imbxInt32 firstPixelX(sourcePixelIndex.get()[0]);
+		imbxInt32 lastPixelX(sourcePixelIndex.get()[visibleBottomRightX - visibleTopLeftX]);
+
+		// If a transform chain is active then allocate a temporary
+		//  output image
+		///////////////////////////////////////////////////////////
+		imbxUint32 rowSize, channelSize, channelsNumber;
+		ptr<image> sourceImage(m_image);
+		imbxUint32 sourceHeight;
+		if(m_transformsChain->isEmpty())
+		{
+			sourceHeight = imageSizeY;
+		}
+		else
+		{
+			sourceHeight = 65536 / (lastPixelX - firstPixelX) * 3;
+			if(sourceHeight < 1)
+			{
+				sourceHeight = 1;
+			}
+			if(sourceHeight > imageSizeY)
+			{
+				sourceHeight = imageSizeY;
+			}
+			sourceImage = new image;
+			sourceImage->create(lastPixelX - firstPixelX, sourceHeight, image::depthU8, L"RGB", 7);
+		}
+
+		// Retrieve the final bitmap's buffer
+		///////////////////////////////////////////////////////////
+		imbxUint8* pFinalBuffer = (imbxUint8*)(reuseMemory->data());
+		imbxInt32 nextRowGap = rowSizeBytes - destBitmapWidth * 3;
+
+		// First Y pixel not transformed by the transforms chain
+		///////////////////////////////////////////////////////////
+		imbxUint32 transformChainStartY(0); 
+
+		imbxInt32 firstImagePixelY = visibleTopLeftY * (imageSizeY << leftShiftY) / totalHeightPixels;
+		imbxInt32 lastImagePixelY = visibleBottomRightY * (imageSizeY << leftShiftY) / totalHeightPixels;
+
+		// Scan all the final bitmap's rows
+		///////////////////////////////////////////////////////////
+		for(imbxInt32 scanY = visibleTopLeftY; scanY != visibleBottomRightY; ++scanY)
+		{
+			::memset(averagePixels.get(), 0, destBitmapWidth * 4 * sizeof(averagePixels.get()[0]));
+
+			// Scan all the image's rows that go in the bitmap's row
+			///////////////////////////////////////////////////////////
+			imbxInt32 firstPixelY = scanY * (imageSizeY << leftShiftY) / totalHeightPixels;
+			imbxInt32 lastPixelY = (scanY + 1) * (imageSizeY << leftShiftY) / totalHeightPixels;
+			for(imbxInt32 scanImageY = firstPixelY; scanImageY != lastPixelY; /* increased in the loop */)
+			{
+				imbxInt32* pAveragePointer = averagePixels.get();
+				imbxUint32* pNextSourceXIndex = sourcePixelIndex.get();
+
+				imbxUint8* pImagePointer(0);
+				imbxUint8* imageMemory(0);
+
+				ptr<handlers::dataHandlerNumericBase> imageHandler;
+				if(m_transformsChain->isEmpty())
+				{
+					imageHandler = sourceImage->getDataHandler(false, &rowSize, &channelSize, &channelsNumber);
+					pImagePointer = &(imageMemory[(scanImageY >> leftShiftY) * imageSizeX * 3 + ((*pNextSourceXIndex) >> leftShiftX) * 3]);
+					imageMemory = imageHandler->getMemoryBuffer();
+				}
+				else
+				{
+					imbxInt32 currentImageY = (scanImageY >> leftShiftY);
+					if((currentImageY - firstImagePixelY) % sourceHeight == 0 || scanImageY == firstImagePixelY)
+					{
+						imbxInt32 lastTransformY(currentImageY + sourceHeight);
+						if(lastTransformY > lastImagePixelY)
+						{
+							lastTransformY = lastImagePixelY;
+						}
+						m_transformsChain->runTransform(m_image, firstPixelX, currentImageY, lastPixelX - firstPixelX, lastTransformY - currentImageY, sourceImage, 0, 0);
+						transformChainStartY = currentImageY;
+					}
+					imageHandler = sourceImage->getDataHandler(false, &rowSize, &channelSize, &channelsNumber);
+					imageMemory = imageHandler->getMemoryBuffer();
+					
+					pImagePointer = &(imageMemory[(currentImageY - transformChainStartY) * (lastPixelX - firstPixelX) * 3]);
+				}
+
+				imbxInt32 scanYBlock ( (scanImageY & (~maskY)) + ((imbxInt32)1 << leftShiftY) );
+				if(scanYBlock > lastPixelY)
+				{
+					scanYBlock = lastPixelY;
+				}
+				imbxInt32 numRows(scanYBlock - scanImageY);
+				scanImageY += numRows;
+
+				if(numRows == 1)
+				{
+					for(imbxInt32 scanX (destBitmapWidth); scanX != 0; --scanX)
+					{
+						for(imbxUint32 scanImageX = *(pNextSourceXIndex++); scanImageX != *pNextSourceXIndex; ++scanImageX)
+						{
+								++(*pAveragePointer);
+								*(++pAveragePointer) += *pImagePointer;
+								*(++pAveragePointer) += *(++pImagePointer);
+								*(++pAveragePointer) += *(++pImagePointer);
+								pAveragePointer -= 3;
+								if( (scanImageX & maskX) != 0)
+								{
+										pImagePointer -= 2;
+										continue;
+								}
+								++pImagePointer;
+						}
+						pAveragePointer += 4;
+					}
+				}
+				else
+				{
+					for(imbxInt32 scanX (destBitmapWidth); scanX != 0; --scanX)
+					{
+						for(imbxUint32 scanImageX = *(pNextSourceXIndex++); scanImageX != *pNextSourceXIndex; ++scanImageX)
+						{
+							*pAveragePointer += numRows;
+							*(++pAveragePointer) += *pImagePointer  * numRows;
+							*(++pAveragePointer) += *(++pImagePointer)  * numRows;
+							*(++pAveragePointer) += *(++pImagePointer)  * numRows;
+							pAveragePointer -= 3;
+							if( (scanImageX & maskX) != 0)
+							{
+								pImagePointer -= 2;
+								continue;
+							}
+							++pImagePointer;
+						}
+						pAveragePointer += 4;
+					}
+				}
+			}
+
+			// Copy the average to the bitmap
+			imbxInt32* pAveragePointer = averagePixels.get();
+			imbxUint32 counter;
+
+			if(drawBitmapType == drawBitmapRGB)
+			{
+				for(imbxInt32 scanX (destBitmapWidth); scanX != 0; --scanX)
+				{
+					counter = (imbxUint32)*(pAveragePointer++);
+					*(pFinalBuffer++) = (imbxUint8) (((imbxUint32)*(pAveragePointer++) / counter) & 0xff);
+					*(pFinalBuffer++) = (imbxUint8) (((imbxUint32)*(pAveragePointer++) / counter) & 0xff);
+					*(pFinalBuffer++) = (imbxUint8) (((imbxUint32)*(pAveragePointer++) / counter) & 0xff);
+				}
 			}
 			else
 			{
-				m_transformsChain->runTransform(m_image, (*pNextSourceXIndex) >> leftShiftX, scanImageY >> leftShiftY, lastPixelX - firstPixelX, 1, rgbImage, 0, 0);
-				pImagePointer = imageMemory;
+				for(imbxInt32 scanX (destBitmapWidth); scanX != 0; --scanX)
+				{
+					counter = (imbxUint32)*(pAveragePointer++);
+					imbxUint32 r = (imbxUint8) (((imbxUint32)*(pAveragePointer++) / counter) & 0xff);
+					imbxUint32 g = (imbxUint8) (((imbxUint32)*(pAveragePointer++) / counter) & 0xff);
+					imbxUint32 b = (imbxUint8) (((imbxUint32)*(pAveragePointer++) / counter) & 0xff);
+					*(pFinalBuffer++) = (imbxUint8)b;
+					*(pFinalBuffer++) = (imbxUint8)g;
+					*(pFinalBuffer++) = (imbxUint8)r;
+				}
 			}
-
-                        imbxInt32 scanYBlock ( (scanImageY & (~maskY)) + ((imbxInt32)1 << leftShiftY) );
-                        if(scanYBlock > lastPixelY)
-                        {
-                            scanYBlock = lastPixelY;
-                        }
-                        imbxInt32 numRows(scanYBlock - scanImageY);
-                        scanImageY += numRows;
-
-                        if(numRows == 1)
-                        {
-                            for(imbxInt32 scanX (destBitmapWidth); scanX != 0; --scanX)
-                            {
-                                for(imbxUint32 scanImageX = *(pNextSourceXIndex++); scanImageX != *pNextSourceXIndex; ++scanImageX)
-                                {
-                                        ++(*pAveragePointer);
-                                        *(++pAveragePointer) += *pImagePointer;
-                                        *(++pAveragePointer) += *(++pImagePointer);
-                                        *(++pAveragePointer) += *(++pImagePointer);
-                                        pAveragePointer -= 3;
-                                        if( (scanImageX & maskX) != 0)
-                                        {
-                                                pImagePointer -= 2;
-                                                continue;
-                                        }
-                                        ++pImagePointer;
-                                }
-                                pAveragePointer += 4;
-                            }
-                        }
-                        else
-                        {
-                            for(imbxInt32 scanX (destBitmapWidth); scanX != 0; --scanX)
-                            {
-				    for(imbxUint32 scanImageX = *(pNextSourceXIndex++); scanImageX != *pNextSourceXIndex; ++scanImageX)
-				    {
-					    *pAveragePointer += numRows;
-					    *(++pAveragePointer) += *pImagePointer  * numRows;
-					    *(++pAveragePointer) += *(++pImagePointer)  * numRows;
-					    *(++pAveragePointer) += *(++pImagePointer)  * numRows;
-					    pAveragePointer -= 3;
-					    if( (scanImageX & maskX) != 0)
-					    {
-						    pImagePointer -= 2;
-						    continue;
-					    }
-					    ++pImagePointer;
-				    }
-				    pAveragePointer += 4;
-                            }
-                        }
+			pFinalBuffer += nextRowGap;
 		}
-
-		// Copy the average to the bitmap
-		imbxInt32* pAveragePointer = averagePixels.get();
-		imbxUint32 counter;
-
-		imbxUint32 r, g;
-		for(imbxInt32 scanX (destBitmapWidth); scanX != 0; --scanX)
-		{
-			counter = (imbxUint32)*(pAveragePointer++);
-			r = (imbxUint8) (((imbxUint32)*(pAveragePointer++) / counter) & 0xff);
-			g = (imbxUint8) (((imbxUint32)*(pAveragePointer++) / counter) & 0xff);
-			*(pFinalBuffer++) = (imbxUint8) (((imbxUint32)*(pAveragePointer++) / counter) & 0xff);
-			*(pFinalBuffer++) = (imbxUint8)g;
-			*(pFinalBuffer++) = (imbxUint8)r;
-		}
-		pFinalBuffer += nextRowGap;
-	}
-        PUNTOEXE_FUNCTION_END();
 
         return reuseMemory;
+
+		PUNTOEXE_FUNCTION_END();
 
     }
 

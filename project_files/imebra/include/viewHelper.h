@@ -520,9 +520,27 @@ public:
             if(bitmapRight > bitmapLeft && bitmapBottom > bitmapTop)
             {
                 imbxUint32 bitmapRowLength = ((3 * (bitmapRight - bitmapLeft) + rowAlignBytes - 1) / rowAlignBytes) * rowAlignBytes;
-                    m_bitmapMemory = m_drawBitmap->getBitmap<drawBitmapType, rowAlignBytes>(m_rightPosition - m_leftPosition, m_bottomPosition - m_topPosition,
-                        bitmapLeft - m_leftPosition, bitmapTop - m_topPosition, bitmapRight - m_leftPosition, bitmapBottom - m_topPosition, m_bitmapMemory);
-                    drawBitmap(pDeviceContext, bitmapLeft, bitmapTop, bitmapRight, bitmapBottom, bitmapRowLength, m_bitmapMemory->data());
+				if(
+					m_bUpdateImage ||
+					m_cachedWidth != (m_rightPosition - m_leftPosition) ||
+					m_cachedHeight != (m_bottomPosition - m_topPosition) ||
+					m_cachedVisibleLeft != (bitmapLeft - m_leftPosition) ||
+					m_cachedVisibleTop != (bitmapTop - m_topPosition) ||
+					m_cachedVisibleRight != (bitmapRight - m_leftPosition) ||
+					m_cachedVisibleBottom != (bitmapBottom - m_topPosition) ||
+					m_bitmapMemory == 0)
+				{
+					m_cachedWidth = m_rightPosition - m_leftPosition;
+					m_cachedHeight = m_bottomPosition - m_topPosition;
+					m_cachedVisibleLeft = bitmapLeft - m_leftPosition;
+					m_cachedVisibleTop = bitmapTop - m_topPosition;
+					m_cachedVisibleRight = bitmapRight - m_leftPosition;
+					m_cachedVisibleBottom = bitmapBottom - m_topPosition;
+					m_bUpdateImage = false;
+					m_bitmapMemory = m_drawBitmap->getBitmap<drawBitmapType, rowAlignBytes>(m_cachedWidth, m_cachedHeight,
+                        m_cachedVisibleLeft, m_cachedVisibleTop, m_cachedVisibleRight, m_cachedVisibleBottom, m_bitmapMemory);
+				}
+                drawBitmap(pDeviceContext, bitmapLeft, bitmapTop, bitmapRight, bitmapBottom, bitmapRowLength, m_bitmapMemory->data());
             }
 
             if(top < m_topPosition)
@@ -684,18 +702,6 @@ public:
 	///                        in bytes
 	/// @param pBuffer        a pointer to an array if bytes
 	///                        representing the bitmap.
-	///                       The array contains all the bitmap
-	///                        pixels, from the top-left to
-	///                        the bottom-right, row by row.
-	///                       The rows are contiguous, not
-	///                        aligned to 4 bytes boundaries as
-	///                        in the Window's bitmaps.
-	///                       Each pixels has 3 bytes
-	///                        representing the red, green and
-	///                        blue component (please note that
-	///                        the order of the color
-	///                        components is reversed in the
-	///                        Window's bitmaps)
 	///
 	///////////////////////////////////////////////////////////
 	virtual void drawBitmap(void* pDeviceContext, imbxInt32 left, imbxInt32 top, imbxInt32 right, imbxInt32 bottom, imbxUint32 bufferRowSizeBytes, imbxUint8* pBuffer)=0;
@@ -737,31 +743,12 @@ public:
 	virtual void drawCursorLine(void* pDeviceContext, imbxInt32 startPointX, imbxInt32 startPointY, imbxInt32 endPointX, imbxInt32 endPointY, imbxUint8 colorRed, imbxUint8 colorGreen, imbxUint8 colorBlue, cursorLine::tStyle style, imbxUint32 width)=0;
 
 	/// \brief Overwrite this method with a function that
-	///         invalidate a portion of the window, without
+	///         invalidate the window, without
 	///         redrawing it immediatly. The code doesn't
 	///         have to invalidate the background.
 	///
-	/// The coordinates of the invalidated area are passed in
-	///  window's pixels and relative to the window top-left corner,
-	///  without any scroll adjustment.
-	///
-	/// @param left      the horizontal coordinate of the top-left
-	///                   corner of the rectangle that must be
-	///                   invalidated, in window's pixels
-	/// @param top       the vertical coordinate of the top-left
-	///                   corner of the rectangle that must be
-	///                   invalidated, in window's pixels
-	/// @param right     the horizontal coordinate of the
-	///                   bottom-right corner of the rectangle
-	///                   that must be invalidated, in window's
-	///                   pixels
-	/// @param bottom    the vertical coordinate of the
-	///                   bottom-right corner of the rectangle
-	///                   that must be invalidated, in window's
-	///                   pixels
-	///
 	///////////////////////////////////////////////////////////
-	virtual void invalidate(imbxInt32 left, imbxInt32 top, imbxInt32 right, imbxInt32 bottom)=0;
+	virtual void invalidate()=0;
 
 	/// \brief Overwrite this method with a function that
 	///         launches a redraw of the invalidated areas of
@@ -793,7 +780,6 @@ public:
 
 private:
 	typedef std::list<cursorLine> tCursorLinesList;
-	void invalidateLines(tCursorLinesList* pLines);
 
 	imbxInt32 m_bitmapAlign;
 
@@ -821,6 +807,16 @@ private:
 	ptr<image> m_originalImage;
 
         ptr<memory> m_bitmapMemory;
+
+	// Values used to retrieve the last bitmap
+		bool m_bUpdateImage;
+	imbxUint32 m_cachedWidth;
+	imbxUint32 m_cachedHeight;
+	imbxInt32 m_cachedVisibleLeft;
+	imbxInt32 m_cachedVisibleTop;
+	imbxInt32 m_cachedVisibleRight;
+	imbxInt32 m_cachedVisibleBottom;
+
 
 
 	// Cursor lines
