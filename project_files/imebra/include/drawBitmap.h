@@ -211,14 +211,35 @@ public:
 		///////////////////////////////////////////////////////////
 		imbxUint32 rowSize, channelSize, channelsNumber;
 		ptr<image> sourceImage(m_image);
+
+		// Retrieve the final bitmap's buffer
+		///////////////////////////////////////////////////////////
+		imbxUint8* pFinalBuffer = (imbxUint8*)(reuseMemory->data());
+		imbxInt32 nextRowGap = rowSizeBytes - destBitmapWidth * 3;
+
+		// First Y pixel not transformed by the transforms chain
+		///////////////////////////////////////////////////////////
+		imbxUint32 transformChainStartY(0), transformChainNextY(0); 
+
+		imbxInt32 firstImagePixelY = visibleTopLeftY * (imageSizeY << leftShiftY) / totalHeightPixels;
+		imbxInt32 lastImagePixelY = visibleBottomRightY * (imageSizeY << leftShiftY) / totalHeightPixels;
+
 		imbxUint32 sourceHeight;
+		imbxUint32 sourceWidth;
 		if(m_transformsChain->isEmpty())
 		{
 			sourceHeight = imageSizeY;
+			sourceWidth = imageSizeX;
 		}
 		else
 		{
-			sourceHeight = 65536 / (lastPixelX - firstPixelX) * 3;
+
+			sourceWidth = (lastPixelX >> leftShiftX) - (firstPixelX >> leftShiftX) + 1;
+			if((firstPixelX >> leftShiftX) + sourceWidth > imageSizeX)
+			{
+				sourceWidth = imageSizeX - (firstPixelX >> leftShiftX);
+			}
+			sourceHeight = 65536 / (sourceWidth * 3);
 			if(sourceHeight < 1)
 			{
 				sourceHeight = 1;
@@ -228,20 +249,9 @@ public:
 				sourceHeight = imageSizeY;
 			}
 			sourceImage = new image;
-			sourceImage->create(lastPixelX - firstPixelX, sourceHeight, image::depthU8, L"RGB", 7);
+			sourceImage->create(sourceWidth, sourceHeight, image::depthU8, L"RGB", 7);
 		}
 
-		// Retrieve the final bitmap's buffer
-		///////////////////////////////////////////////////////////
-		imbxUint8* pFinalBuffer = (imbxUint8*)(reuseMemory->data());
-		imbxInt32 nextRowGap = rowSizeBytes - destBitmapWidth * 3;
-
-		// First Y pixel not transformed by the transforms chain
-		///////////////////////////////////////////////////////////
-		imbxUint32 transformChainStartY(0); 
-
-		imbxInt32 firstImagePixelY = visibleTopLeftY * (imageSizeY << leftShiftY) / totalHeightPixels;
-		imbxInt32 lastImagePixelY = visibleBottomRightY * (imageSizeY << leftShiftY) / totalHeightPixels;
 
 		// Scan all the final bitmap's rows
 		///////////////////////////////////////////////////////////
@@ -255,6 +265,7 @@ public:
 			imbxInt32 lastPixelY = (scanY + 1) * (imageSizeY << leftShiftY) / totalHeightPixels;
 			for(imbxInt32 scanImageY = firstPixelY; scanImageY != lastPixelY; /* increased in the loop */)
 			{
+				imbxInt32 currentImageY = (scanImageY >> leftShiftY);
 				imbxInt32* pAveragePointer = averagePixels.get();
 				imbxUint32* pNextSourceXIndex = sourcePixelIndex.get();
 
@@ -265,26 +276,25 @@ public:
 				if(m_transformsChain->isEmpty())
 				{
 					imageHandler = sourceImage->getDataHandler(false, &rowSize, &channelSize, &channelsNumber);
-					pImagePointer = &(imageMemory[(scanImageY >> leftShiftY) * imageSizeX * 3 + ((*pNextSourceXIndex) >> leftShiftX) * 3]);
+					pImagePointer = &(imageMemory[currentImageY * imageSizeX * 3 + ((*pNextSourceXIndex) >> leftShiftX) * 3]);
 					imageMemory = imageHandler->getMemoryBuffer();
 				}
 				else
 				{
-					imbxInt32 currentImageY = (scanImageY >> leftShiftY);
-					if((currentImageY - firstImagePixelY) % sourceHeight == 0 || scanImageY == firstImagePixelY)
+					if(currentImageY >= transformChainNextY)
 					{
-						imbxInt32 lastTransformY(currentImageY + sourceHeight);
-						if(lastTransformY > lastImagePixelY)
+						transformChainNextY = currentImageY + sourceHeight;
+						if(transformChainNextY > imageSizeY)
 						{
-							lastTransformY = lastImagePixelY;
+							transformChainNextY = imageSizeY;
 						}
-						m_transformsChain->runTransform(m_image, firstPixelX, currentImageY, lastPixelX - firstPixelX, lastTransformY - currentImageY, sourceImage, 0, 0);
+						m_transformsChain->runTransform(m_image, firstPixelX >> leftShiftX, currentImageY, sourceWidth, transformChainNextY - currentImageY, sourceImage, 0, 0);
 						transformChainStartY = currentImageY;
 					}
 					imageHandler = sourceImage->getDataHandler(false, &rowSize, &channelSize, &channelsNumber);
 					imageMemory = imageHandler->getMemoryBuffer();
 					
-					pImagePointer = &(imageMemory[(currentImageY - transformChainStartY) * (lastPixelX - firstPixelX) * 3]);
+					pImagePointer = &(imageMemory[(currentImageY - transformChainStartY) * sourceWidth * 3]);
 				}
 
 				imbxInt32 scanYBlock ( (scanImageY & (~maskY)) + ((imbxInt32)1 << leftShiftY) );

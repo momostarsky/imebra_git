@@ -356,7 +356,13 @@ public:
 	///////////////////////////////////////////////////////////
 	void startCursorDef();
 
-	// End the cursor definition and make the hotspot visible
+	/// End the cursor definition and make the hotspot visible
+	///
+	/// @param cursorHotSpotX the current horizontal position 
+	///                        of the mouse, in image's pixels
+	/// @param cursorHotSpotY the current vertical position of
+	///                        the mouse, in image's pixels
+	///          
 	///////////////////////////////////////////////////////////
 	void endCursorDef(imbxInt32 cursorHotSpotX, imbxInt32 cursorHotSpotY);
 
