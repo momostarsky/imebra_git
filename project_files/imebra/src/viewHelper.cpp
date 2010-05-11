@@ -950,6 +950,7 @@ ptr<image> view::getImage()
 ///////////////////////////////////////////////////////////
 void view::setImage(ptr<image> pImage, ptr<transforms::transformsChain> pChain)
 {
+	m_bUpdateImage = true;
 	if(pImage == 0)
 	{
 		m_originalImage = 0;

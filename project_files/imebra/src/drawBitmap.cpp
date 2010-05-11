@@ -20,11 +20,11 @@ namespace imebra
 
 
 drawBitmap::drawBitmap(ptr<image> sourceImage, ptr<transforms::transformsChain> transformsChain):
-	m_image(sourceImage), m_transformsChain(transformsChain)
+	m_image(sourceImage), m_transformsChain(new transforms::transformsChain)
 {
-	if(m_transformsChain == 0)
+	if(transformsChain != 0 && !transformsChain->isEmpty())
 	{
-		m_transformsChain = new transforms::transformsChain;
+		m_transformsChain->addTransform(transformsChain);
 	}
 
 	// Allocate the transforms that obtain an RGB24 image
