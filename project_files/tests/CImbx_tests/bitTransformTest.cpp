@@ -60,13 +60,9 @@ void bitTransformTest::testBitTransform()
 	imageHandler.release();
 
 	ptr<transforms::transformHighBit> highBit(new transforms::transformHighBit);
-	highBit->declareInputImage(0, bits8Image);
-	highBit->declareOutputImage(0, bits16Image);
-	highBit->doTransform();
+        highBit->runTransform(bits8Image, 0, 0, sizeX, sizeY, bits16Image, 0, 0);
+        highBit->runTransform(bits8Image, 0, 0, sizeX, sizeY, bits4Image, 0, 0);
 
-	highBit->declareInputImage(0, bits8Image);
-	highBit->declareOutputImage(0, bits4Image);
-	highBit->doTransform();
 
 	ptr<handlers::dataHandlerNumericBase> bits8Handler = bits8Image->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
 	ptr<handlers::dataHandlerNumericBase> bits16Handler = bits16Image->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
