@@ -16,7 +16,7 @@ At the moment, 2 codecs are distributed with imebra:
 - a Dicom codec
 - a Jpeg codec
 
-When a codec reads a stream, it generates a Dicom structure (from now "dataSet", 
+When a codec reads a stream, it generates a Dicom structure (from now on "dataSet", 
  see \ref puntoexe::imebra::dataSet) in memory and fill it with all the informations 
  available in the stream; please note that also the jpeg codec generates a Dicom 
  structure.
