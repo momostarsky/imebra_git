@@ -137,7 +137,7 @@ void dicomCodecTest::testUncompressed()
 		CPPUNIT_ASSERT(testDataSet->getString(0x0010, 0, 0x0010, 0) == "AAAaa");
 		CPPUNIT_ASSERT(testDataSet->getString(0x0010, 0, 0x0010, 1) == "BBBbbb");
 		CPPUNIT_ASSERT(testDataSet->getString(0x0010, 0, 0x0010, 2) == "");
-                CPPUNIT_ASSERT(testDataSet->getUnsignedLong(0x0028, 0, 0x0006, 0) == interleaved);
+                CPPUNIT_ASSERT(testDataSet->getSignedLong(0x0028, 0, 0x0006, 0) == interleaved);
 
 		ptr<image> checkImage0 = testDataSet->getImage(0);
 		ptr<image> checkImage1 = testDataSet->getImage(1);

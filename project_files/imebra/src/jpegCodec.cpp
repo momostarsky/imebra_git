@@ -630,7 +630,8 @@ void jpegCodec::resetInternal(bool bCompression, quality compQuality)
 					m_quantizationTable[resetQT][tableIndex++] = quant;
 					continue;
 				}
-				m_quantizationTable[resetQT][tableIndex++]=pSourceTable[tableIndex];
+                                m_quantizationTable[resetQT][tableIndex] = pSourceTable[tableIndex];
+                                ++tableIndex;
 			}
 		}
 		recalculateQuantizationTables(resetQT);
@@ -1694,7 +1695,7 @@ void jpegCodec::setImage(
 		ptr<image> pImage,
 		std::wstring transferSyntax,
 		quality imageQuality,
-		std::string dataType,
+                std::string /* dataType */,
 		imbxUint8 allocatedBits,
 		bool bSubSampledX,
 		bool bSubSampledY,

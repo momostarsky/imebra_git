@@ -103,7 +103,7 @@ std::wstring colorTransformsFactory::normalizeColorSpace(std::wstring colorSpace
 
 	std::wstring normalizedColorSpace;
 
-	unsigned int c42position = (unsigned int)colorSpace.find(L"_42");
+        size_t c42position = colorSpace.find(L"_42");
 	if(c42position != colorSpace.npos)
 		normalizedColorSpace=colorSpace.substr(0, c42position);
 	else

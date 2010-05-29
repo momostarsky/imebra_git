@@ -200,7 +200,7 @@ protected:
 	};
 	struct freqValueCompare
 	{
-		const bool operator()(const freqValue& left, const freqValue& right) const
+                bool operator()(const freqValue& left, const freqValue& right) const
 		{
 			return left.m_freq < right.m_freq || (left.m_freq == right.m_freq && left.m_value > right.m_value);
 		}
@@ -217,7 +217,7 @@ protected:
 	};
 	struct lengthValueCompare
 	{
-		const bool operator()(const lengthValue& left, const lengthValue& right) const
+                bool operator()(const lengthValue& left, const lengthValue& right) const
 		{
 			return left.m_length < right.m_length || (left.m_length == right.m_length && left.m_value < right.m_value);
 		}
