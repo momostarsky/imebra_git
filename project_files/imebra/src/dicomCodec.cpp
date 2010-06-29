@@ -2077,7 +2077,7 @@ bool dicomCodec::encapsulated(std::wstring transferSyntax)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint32 dicomCodec::getMaxHighBit(std::string transferSyntax)
+imbxUint32 dicomCodec::getMaxHighBit(std::string /* transferSyntax */)
 {
 	return 15;
 }

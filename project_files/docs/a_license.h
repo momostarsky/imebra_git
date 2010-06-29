@@ -4,17 +4,16 @@ $fileHeader$
 
 /*! \page license_agreement License agreement
 
-Since Puntoexe owns the copyright to the Imebra's source code, it is able 
- to employ Dual Licensing, which means that the same product is available
- under GPL and under a commercial license. This does not in any way affect the
- Open Source commitment of Puntoexe.
+Imebra is available under GPL and under a commercial license.
+<b>To use Imebra under the commercial license you have to purchase the Imebra's 
+ commercial license from http://puntoexe.com</b>
 
 Imebra is available for free under the \ref gpl_license.
 
 If you do not want to be bound by the GPL terms (such as the requirement
  that your application must also be GPL), you may purchase a commercial license
  (see \ref commercial_license) for Imebra from the puntoexe's website 
- (http://www.puntoexe.com).
+ (http://puntoexe.com).
 
 
 \section gpl_license GNU AFFERO GENERAL PUBLIC LICENSE (Version 3, 19 November 2007)

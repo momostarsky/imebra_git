@@ -22,6 +22,19 @@ namespace imebra
 namespace transforms
 {
 
+class transformHighBitException: public baseTransformException
+{
+public:
+        transformHighBitException(const std::string& message): baseTransformException(message){}
+};
+
+class transformHighBitDifferentColorSpaces: public transformHighBitException
+{
+public:
+    transformHighBitDifferentColorSpaces(const std::string& message): transformHighBitException(message){}
+};
+
+
 ///////////////////////////////////////////////////////////
 /// \brief Shift the image's content to adapt it to the
 ///         specified high bit.
@@ -44,16 +57,22 @@ public:
 
         template <class inputType, class outputType>
         void templateTransform(
-            inputType* inputHandlerData, size_t inputHandlerSize, imbxUint32 inputHandlerWidth, const std::wstring& inputHandlerColorSpace,
+            inputType* inputHandlerData, size_t /* inputHandlerSize */, imbxUint32 inputHandlerWidth, const std::wstring& inputHandlerColorSpace,
             ptr<palette> /* inputPalette */,
             imbxInt32 inputHandlerMinValue, imbxUint32 inputHandlerNumValues,
             imbxInt32 inputTopLeftX, imbxInt32 inputTopLeftY, imbxInt32 inputWidth, imbxInt32 inputHeight,
-            outputType* outputHandlerData, size_t outputHandlerSize, imbxInt32 outputHandlerWidth, const std::wstring& outputHandlerColorSpace,
+            outputType* outputHandlerData, size_t /* outputHandlerSize */, imbxInt32 outputHandlerWidth, const std::wstring& outputHandlerColorSpace,
             ptr<palette> /* outputPalette */,
             imbxInt32 outputHandlerMinValue, imbxUint32 outputHandlerNumValues,
             imbxInt32 outputTopLeftX, imbxInt32 outputTopLeftY)
 
         {
+            if(colorTransforms::colorTransformsFactory::normalizeColorSpace(inputHandlerColorSpace) !=
+               colorTransforms::colorTransformsFactory::normalizeColorSpace(outputHandlerColorSpace))
+            {
+                throw transformHighBitDifferentColorSpaces("The input and output image must have the same color space");
+            }
+
             imbxInt32 numChannels(colorTransforms::colorTransformsFactory::getNumberOfChannels(inputHandlerColorSpace));
 
             inputType* pInputMemory(inputHandlerData);

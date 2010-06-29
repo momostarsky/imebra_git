@@ -94,19 +94,20 @@ jpegFileName         = name of the final jpeg file\n\
 
 		try
 		{
+			ptr<transforms::modalityVOILUT> modVOILUT(new transforms::modalityVOILUT(loadedDataSet));
+			ptr<transforms::VOILUT> presentationVOILUT(new transforms::VOILUT(loadedDataSet));
+
 			// Scan through the frames
 			for(imbxUint32 frameNumber(0); ; ++frameNumber)
 			{
 				// Apply the modality VOI/LUT
-				ptr<transforms::modalityVOILUT> modVOILUT(new transforms::modalityVOILUT);
-				modVOILUT->declareDataSet(loadedDataSet);
-				modVOILUT->declareInputImage(0, loadedDataSet->getImage(frameNumber));
-				modVOILUT->doTransform();
-				ptr<image> finalImage(modVOILUT->getOutputImage(0));
+				ptr<image> dataSetImage(loadedDataSet->getImage(frameNumber));
+				imbxUint32 width, height;
+				dataSetImage->getSize(&width, &height);
+				ptr<image> finalImage(modVOILUT->allocateOutputImage(dataSetImage, width, height));
+				modVOILUT->runTransform(dataSetImage, 0, 0, width, height, finalImage, 0, 0);
 
 				// Apply the presentation VOI/LUT
-				ptr<transforms::VOILUT> presentationVOILUT(new transforms::VOILUT);
-				presentationVOILUT->declareDataSet(loadedDataSet);
 				imbxUint32 firstVOILUTID(presentationVOILUT->getVOILUTId(0));
 				if(firstVOILUTID != 0)
 				{

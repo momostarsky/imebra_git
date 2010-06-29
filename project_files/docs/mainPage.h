@@ -2,7 +2,7 @@
 $fileHeader$
 */
 
-/*! \mainpage Imebra open source Dicom library
+/*! \mainpage Imebra 2010 open source Dicom library
 
 \section copyright Copyright
 
@@ -20,9 +20,6 @@ The library has been designed to handle Dicom files, but it includes also some
  classes that manage jpeg and other image files.
 
 At the moment the library provides the following features:
-- multi platform
-- self contained (the library uses only functions from the standard C library
-                  and the standard template library)
 - dicom files parser and builder
 - jpeg files parser and builder
 - image decompression and compression in the following formats:
@@ -31,19 +28,15 @@ At the moment the library provides the following features:
   - jpeg lossless (up to 16 bits per color channel lossless)
   - raw dicom (up to 16 bits per color channel lossless)
   - rle dicom (up to 16 bits per color channel lossless)
-  .
-  All the formats are supported both in compression and decompression mode
+- multi platform
+- self contained (the library uses only functions from the standard C library
+                  and the standard template library)
 - color space conversion
 - support for nested datasets (sequences)
 - support for Unicode and different Dicom charsets
 - DICOMDIR parser and writer
 - support for transactions
 - load the larger tags only when necessary
-
-Other features have been planned but have not been included in this release.
-The missed features are the following:
-- support for dicom objects (like patient, procedure, image, and so on)
-- network support for communication between Dicom devices
 
 
 \section is_not What Imebra does NOT do?
@@ -310,46 +303,6 @@ A detailed reference of the C++ classes that compose Imebra is included in
    per exception)
 
 
-\section new_ptr_behaviour New smart pointer's behaviour
-
-Several users had difficulties in understanding the behaviour of the smart
- pointer implemented by the \ref puntoexe::ptr class and the reference count
- mechanism in the \ref puntoexe::baseObject. To solve the reported problems
- the reference counter mechanism has been changed from the version 0.0.31.
-
-Up to the version 0.0.30 the reference counter was initialized to 1 by the
- constructor of \ref puntoexe::baseObject, so a call to puntoexe::baseObject::addRef()
- wasn't necessary after the construction of a baseObject.
-
-This was intended to simplify the usage of the reference counter (one less call to
- addRef()), but ended up adding more complications to the product.
-Anyway the final application shouldn't had made any call to addRef() and release()
- if the proper smart pointer was used.
-
-Also, the smart pointer wasn't able to cast the objects' types when copying data
- from other smart pointer: in the beginning this behaviour was intentional
- (I wanted the end programmer to specify his intentions and use the casting
- operators when needed), but most of the users expected the smart pointer to take 
- care of this.
-
-Now the reference counter is initialized to 0 and not to 1 during the baseObject's
- construction: this implies that puntoexe::baseObject::addRef() has to be 
- called immediatly after the object construction: anyway this operation is performed
- automatically by the smart pointer puntoexe::ptr.
-
-This simplified the behaviour of other functions in the ptr class: for instance the
- function puntoexe::ptr::get() doesn't need to increase the reference counter
- anymore.
-
-Also the user is now forced to use the smart pointer because more baseObject's functions 
- have been made protected or private (addRef() and release() now are callable
- by the smart pointers only).
-
-The smart pointer is now able to cast the object containing in other smart pointers
- during the assignment or the construction of a new pointer.
-
-The changes shouldn't affect your old source code if you used the puntoexe::ptr
- class to control the puntoexe::baseObject derived objects.
 
 */
 

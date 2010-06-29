@@ -138,10 +138,10 @@ Now the variable presentationImage contains an RGB image ready to be displayed.
 
 \section quick_tour_image_pixels How to access the image's pixels
 
-You have to retrieve an image data handler to access to the pixels:
+In order to access to the image's pixels you have to retrieve a data handler:
 \code
 imbxUint32 rowSize, channelPixelSize, channelsNumber;
-ptr<imebra::handlers::imageHandler> myHandler = presentationImage->getDataHandler(false, &rowSize, &channelPixelSize, &channelsNumber);
+ptr<imebra::handlers::dataHandlerNumericBase> myHandler = presentationImage->getDataHandler(false, &rowSize, &channelPixelSize, &channelsNumber);
 
 // Retrieve the image's size in pixels
 imbxUint32 sizeX, sizeY;
@@ -165,10 +165,13 @@ for(imbxUint32 scanY = 0; scanY < sizeY; ++scanY)
 }
 \endcode
 
-A faster function accesses directly to the memory:
+The data handler 
+
+
+
 \code
 imbxUint32 rowSize, channelPixelSize, channelsNumber;
-ptr<imebra::handlers::imageHandler> myHandler = presentationImage->getDataHandler(false, &rowSize, &channelPixelSize, &channelsNumber);
+ptr<imebra::handlers::dataHandlerNumericBase> myHandler = presentationImage->getDataHandler(false, &rowSize, &channelPixelSize, &channelsNumber);
 imbxInt32* pBuffer = myHandler->getMemoryBuffer();
 
 // Retrieve the image's size in pixels

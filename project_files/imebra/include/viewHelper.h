@@ -818,10 +818,10 @@ private:
 		bool m_bUpdateImage;
 	imbxUint32 m_cachedWidth;
 	imbxUint32 m_cachedHeight;
-	imbxInt32 m_cachedVisibleLeft;
-	imbxInt32 m_cachedVisibleTop;
-	imbxInt32 m_cachedVisibleRight;
-	imbxInt32 m_cachedVisibleBottom;
+        imbxInt32 m_cachedVisibleTop;
+        imbxInt32 m_cachedVisibleLeft;
+        imbxInt32 m_cachedVisibleBottom;
+        imbxInt32 m_cachedVisibleRight;
 
 
 

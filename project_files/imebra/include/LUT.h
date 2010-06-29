@@ -38,9 +38,7 @@ namespace handlers
 ///  visualization or for the analysis of the image.
 ///
 /// 3 lookups tables can be joined together to form a
-///  color palette, also used by the transforms
-///  transforms::PALETTECOLORToRGB and
-///  transforms::RGBToPALETTECOLOR.
+///  color palette.
 ///
 ///////////////////////////////////////////////////////////
 class lut : public baseObject
@@ -201,20 +199,61 @@ protected:
 	std::map<imbxInt32, imbxInt32> m_mappedValuesRev;
 };
 
+
+/// \brief Represents an RGB color palette.
+///
+/// A color palette uses 3 lut objects to represent the
+///  colors.
+///
+///////////////////////////////////////////////////////////
 class palette: public baseObject
 {
 public:
+    /// \brief Construct the color palette.
+    ///
+    /// @param red   the lut containing the red components
+    /// @param green the lut containing the green components
+    /// @param blue  the lut containing the blue components
+    ///
+    ///////////////////////////////////////////////////////////
     palette(ptr<lut> red, ptr<lut> green, ptr<lut> blue);
 
+    /// \brief Set the luts that form the color palette.
+    ///
+    /// @param red   the lut containing the red components
+    /// @param green the lut containing the green components
+    /// @param blue  the lut containing the blue components
+    ///
+    ///////////////////////////////////////////////////////////
     void setLuts(ptr<lut> red, ptr<lut> green, ptr<lut> blue);
+
+    /// \brief Retrieve the lut containing the red components.
+    ///
+    /// @return the lut containing the red components
+    ///
+    ///////////////////////////////////////////////////////////
     ptr<lut> getRed();
+
+    /// \brief Retrieve the lut containing the green components.
+    ///
+    /// @return the lut containing the green components
+    ///
+    ///////////////////////////////////////////////////////////
     ptr<lut> getGreen();
+
+    /// \brief Retrieve the lut containing the blue components.
+    ///
+    /// @return the lut containing the blue components
+    ///
+    ///////////////////////////////////////////////////////////
     ptr<lut> getBlue();
+
 protected:
     ptr<lut> m_redLut;
     ptr<lut> m_greenLut;
     ptr<lut> m_blueLut;
 };
+
 
 ///////////////////////////////////////////////////////////
 /// \brief This is the base class for the exceptions thrown

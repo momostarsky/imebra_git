@@ -68,7 +68,7 @@ cursorLine::cursorLine(
 // Copy constructor
 //
 ///////////////////////////////////////////////////////////
-cursorLine::cursorLine(const cursorLine& right)
+cursorLine::cursorLine(const cursorLine& right): baseObject()
 {
 	copy(right);
 }
@@ -134,14 +134,14 @@ view::view(imbxInt32 rowByteAlign, bool bBGR):
 	m_backgroundRed(192),
 	m_backgroundGreen(192),
 	m_backgroundBlue(192),
-	m_cachedWidth(0),
-	m_cachedHeight(0),
-	m_cachedVisibleTop(0),
+        m_zoom(1.0),
+        m_bUpdateImage(true),
+        m_cachedWidth(0),
+        m_cachedHeight(0),
+        m_cachedVisibleTop(0),
 	m_cachedVisibleLeft(0),
 	m_cachedVisibleBottom(0),
-	m_cachedVisibleRight(0),
-	m_bUpdateImage(true),
-	m_zoom(1.0)
+        m_cachedVisibleRight(0)
 {
 }
 

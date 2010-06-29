@@ -248,7 +248,7 @@ std::wstring dataHandlerDateTimeBase::buildDate(
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTimeBase::buildDate");
 
-	if((year < 0) || (year > 9999) || (month < 1) || (month>12) || (day<1) || (day>31))
+        if((year > 9999) || (month < 1) || (month>12) || (day<1) || (day>31))
 	{
 		year = month = day = 0;
 	}

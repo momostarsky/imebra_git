@@ -478,7 +478,7 @@ std::wstring dataHandlerString::convertToUnicode(const std::string& value) const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::string dataHandlerString::convertFromUnicode(const std::wstring& value, charsetsList::tCharsetsList* pCharsetsList) const
+std::string dataHandlerString::convertFromUnicode(const std::wstring& value, charsetsList::tCharsetsList* /* pCharsetsList */) const
 {
 	size_t stringLength = value.size();
 	std::string returnString;

@@ -1,5 +1,6 @@
 #include "buildImageForTest.h"
 #include <stdlib.h>
+#include <cppunit/extensions/HelperMacros.h>
 namespace puntoexe
 {
 
@@ -101,11 +102,14 @@ double compareImages(ptr<image> image0, ptr<image> image1)
 	double range = (double)(1 << image0->getHighBit());
 	double difference(0);
 	int index(0);
+	unsigned long long total(0);
 	while(valuesNum--)
 	{
 		difference += 1000 * (double)labs(hImage0->getSignedLong(index) - hImage1->getSignedLong(index)) / range;
+		total += labs(hImage0->getSignedLong(index));
 		++index;
 	}
+	CPPUNIT_ASSERT(total > 0);
 	difference /= divisor;
 
 	return difference;

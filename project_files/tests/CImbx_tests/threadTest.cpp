@@ -15,7 +15,7 @@ namespace tests
 CPPUNIT_TEST_SUITE_REGISTRATION(puntoexe::imebra::tests::threadTest);
 
 thread::thread(long setWaitMsec, long endWaitMsec):
-	m_bVariable(false), m_setWaitMsec(setWaitMsec), m_endWaitMsec(endWaitMsec)
+        m_setWaitMsec(setWaitMsec), m_endWaitMsec(endWaitMsec), m_bVariable(false)
 {
 }
 
