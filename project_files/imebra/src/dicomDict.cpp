@@ -697,6 +697,7 @@ dicomDictionary::dicomDictionary()
 	registerTag(0x00281351, L"Partial View Description","ST");
 	registerTag(0x00282110, L"Lossy Image Compression","CS");
 	registerTag(0x00282112, L"Lossy Image Compression Ratio","DS");
+	registerTag(0x00282114, L"Lossy Image Compression Method","CS");
 	registerTag(0x00283000, L"Modality LUT Sequence","SQ");
 	registerTag(0x00283002, L"LUT Descriptor","SS");
 	registerTag(0x00283003, L"LUT Explanation","LO");
