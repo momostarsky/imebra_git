@@ -643,7 +643,8 @@ The software based on Imebra and developed by the license holder will be referre
 -# The product based on Imebra must add significant and primary functionality to the 
     functionalities provided by Imebra.
 -# The license holder is allowed to make modifications to the Imebra source code 
-    but in no event will the original copyright holders of this library be held responsible for action or actions resulting from any modifications of the source.
+    but in no event will the original copyright holders of this library be held responsible
+    for action or actions resulting from any modifications of the source.
 -# The license holder is not required to publicize or otherwise make available any 
     software used in conjunction with Imebra.
 -# In no event shall the copyright notice in any of the source files supplied in 
@@ -651,7 +652,7 @@ The software based on Imebra and developed by the license holder will be referre
 
 <center><em><b>Redistributables</b></em></center>
 
-The Imebra's source code doesn't need to be redistributed with your application.
+The Imebra's source code cannot be redistributed with your application.
 
 <center><em><b>Termination</b></em></center>
 

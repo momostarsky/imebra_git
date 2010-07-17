@@ -121,7 +121,6 @@ public:
 		std::wstring colorSpace,
 		const imbxUint8  highBit);
 
-	/// \internal
 	/// \brief Set the high bit.
 	///
 	/// @param highBit       the image's high bit

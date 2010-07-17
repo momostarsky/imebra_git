@@ -30,6 +30,10 @@ namespace puntoexe
 
 class baseObject;
 
+/// \brief This is the base class for the template class
+///         ptr.
+///
+///////////////////////////////////////////////////////////
 class basePtr
 {
 protected:
@@ -80,15 +84,20 @@ protected:
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-/// \brief This class must be used to allocate objects
-///         derived from the class baseObject.
+/// \brief This class represents a shared pointer which
+///         keeps track of the allocated objects that
+///         derive from the class baseObject.
 ///
-/// The object type specified in the template will be
-///  deleted by this class when the object's reference
-///  counter reaches zero.
+/// Most of the classes in this library derive from
+///  baseObject.
 ///
-/// The references counter is managed automatically
-///  by this class.
+/// When a ptr object is initialized with a pointer
+///  to a baseObject derived object then it increases by 1
+///  the reference counter of baseObject.\n
+/// When ptr goes out of scope (destroyed) then the
+///  reference counter of baseObject is decreased by 1,
+///  and eventually baseObject is destroyed when its
+///  reference counter reaches 0.
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -96,15 +105,20 @@ template<class objectType>
 class ptr: public basePtr
 {
 public:
-	/// \brief Default constructor
+        /// \brief Default constructor.
 	///
-	/// Set the internal pointer to null.
+        /// Set the internal pointer to null.
 	///
 	///////////////////////////////////////////////////////////
 	ptr(): basePtr(0){}
 
-	/// \brief Construct the ptr object and keeps track of
-	///         the object referenced by the pointer pObject.
+        /// \brief Initializes the ptr object with a reference to
+        ///         a baseObject.
+        ///
+        /// The baseObject's reference counter is increased by
+        ///  one: this will keep the baseObject allocate at least
+        ///  until ptr stays allocated, release() is called
+        ///  or a new baseObject is associated to ptr.
 	///
 	/// @param pObject a pointer to the allocated object.
 	///        The allocated object will be automatically
@@ -118,7 +132,7 @@ public:
 	ptr(objectType* pObject): basePtr(pObject){}
 
 
-	/// \brief Copy constructor
+        /// \brief Copy constructor.
 	///
 	/// The object tracked by another ptr is copied into the
 	///  current ptr and the reference counter is increased.
