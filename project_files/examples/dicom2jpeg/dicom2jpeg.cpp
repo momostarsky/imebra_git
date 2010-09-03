@@ -5,7 +5,7 @@ $fileHeader$
 #include <iostream>
 
 
-#include "../../imebra/include/imebra.h"
+#include "../../library/imebra/include/imebra.h"
 #include <sstream>
 
 #ifdef PUNTOEXE_WINDOWS
@@ -38,26 +38,21 @@ int findArgument(const char* argument, int argc, char* argv[])
 int main(int argc, char* argv[])
 {
 	std::wstring version(L"1.0.0.1");
-	std::wcout << L"dicom2jpeg version " << version << L"\n";
+        std::wcout << L"dicom2jpeg version " << version << std::endl;
 
 	try
 	{
 
 		if(argc < 3)
 		{
-			std::wcout <<
-L"\
-Usage: dicom2jpeg dicomFileName jpegFileName [-ffmpeg FFMPEGPATH FFMPEGOPT]\n\
-\n\
-dicomFileName        = name of the dicom file\n\
-jpegFileName         = name of the final jpeg file\n\
--ffmpeg FFMPEGPATH   = launches FFMPEG after generating the jpeg images.\n\
-                       FFMPEGPATH is the path to FFMPEG and FFMPEGOPT\n\
-                       are the options for ffmpeg.n\
-                       The input images and the frame rate are\n\
-                       added automatically to the options\
-";
-			return 1;
+                    std::wcout << L"Usage: dicom2jpeg dicomFileName jpegFileName [-ffmpeg FFMPEGPATH FFMPEGOPT]" << std::endl;
+                    std::wcout << "dicomFileName        = name of the dicom file" << std::endl;
+                    std::wcout << "jpegFileName         = name of the final jpeg file" << std::endl;
+                    std::wcout << "-ffmpeg FFMPEGPATH   = launches FFMPEG after generating the jpeg images." << std::endl;
+                    std::wcout << " FFMPEGPATH is the path to FFMPEG" << std::endl;
+                    std::wcout << " FFMPEGOPT are the options for ffmpeg" << std::endl;
+                    std::wcout << " The input images and the frame rate are added automatically to the options" << std::endl;
+                    return 1;
 		}
 
 		// Separate the extension from the file name
@@ -74,96 +69,128 @@ jpegFileName         = name of the final jpeg file\n\
 			extension = ".jpg";
 		}
 
-		// Open the file containing the dicom dataset
-		ptr<puntoexe::stream> inputStream(new puntoexe::stream);
-		inputStream->openFile(argv[1], std::ios_base::in);
+                // Check for the -ffmpeg flag
+                int ffmpegFlag(findArgument("-ffmpeg", argc, argv));
+                size_t framesCount(0);
+                ptr<dataSet> loadedDataSet;
 
-		// Connect a stream reader to the dicom stream. Several stream reader
-		//  can share the same stream
-		ptr<puntoexe::streamReader> reader(new streamReader(inputStream));
+                try
+                {
 
-		// Get a codec factory and let it use the right codec to create a dataset
-		//  from the input stream
-		ptr<codecs::codecFactory> codecsFactory(codecs::codecFactory::getCodecFactory());
-		ptr<dataSet> loadedDataSet(codecsFactory->load(reader, 2048));
+                    // Open the file containing the dicom dataset
+                    ptr<puntoexe::stream> inputStream(new puntoexe::stream);
+                    inputStream->openFile(argv[1], std::ios_base::in);
 
-		// Check for the -ffmpeg flag
-		int ffmpegFlag(findArgument("-ffmpeg", argc, argv));
+                    // Connect a stream reader to the dicom stream. Several stream reader
+                    //  can share the same stream
+                    ptr<puntoexe::streamReader> reader(new streamReader(inputStream));
 
-		size_t framesCount(0);
-
-		try
-		{
-			ptr<transforms::modalityVOILUT> modVOILUT(new transforms::modalityVOILUT(loadedDataSet));
-			ptr<transforms::VOILUT> presentationVOILUT(new transforms::VOILUT(loadedDataSet));
-
-			// Scan through the frames
-			for(imbxUint32 frameNumber(0); ; ++frameNumber)
-			{
-				// Apply the modality VOI/LUT
-				ptr<image> dataSetImage(loadedDataSet->getImage(frameNumber));
-				imbxUint32 width, height;
-				dataSetImage->getSize(&width, &height);
-				ptr<image> finalImage(modVOILUT->allocateOutputImage(dataSetImage, width, height));
-				modVOILUT->runTransform(dataSetImage, 0, 0, width, height, finalImage, 0, 0);
-
-				// Apply the presentation VOI/LUT
-				imbxUint32 firstVOILUTID(presentationVOILUT->getVOILUTId(0));
-				if(firstVOILUTID != 0)
-				{
-					presentationVOILUT->setVOILUT(firstVOILUTID);
-					presentationVOILUT->declareInputImage(0, finalImage);
-					presentationVOILUT->doTransform();
-					finalImage = presentationVOILUT->getOutputImage(0);
-				}
-
-				// Color transform to YCrCb
-				ptr<transforms::colorTransforms::colorTransformsFactory> colorFactory(transforms::colorTransforms::colorTransformsFactory::getColorTransformsFactory());
-				ptr<transforms::transform> colorTransform(colorFactory->getTransform(finalImage->getColorSpace(), L"YBR_FULL"));
-				if(colorTransform != 0)
-				{
-					colorTransform->declareDataSet(loadedDataSet);
-					colorTransform->declareInputImage(0, finalImage);
-					colorTransform->doTransform();
-					finalImage = colorTransform->getOutputImage(0);
-				}
-
-				// Adjust high bit
-				if(finalImage->getHighBit() != 7)
-				{
-					ptr<image> eightBitImage(new image);
-					imbxUint32 width, height;
-					finalImage->getSize(&width, &height);
-					eightBitImage->create(width, height, image::depthU8, L"YBR_FULL", 7);
-					ptr<transforms::transformHighBit> modifyHighBit(new transforms::transformHighBit);
-					modifyHighBit->declareDataSet(loadedDataSet);
-					modifyHighBit->declareInputImage(0, finalImage);
-					modifyHighBit->declareOutputImage(0, eightBitImage);
-					modifyHighBit->doTransform();
-					finalImage = eightBitImage;
-				}
+                    // Get a codec factory and let it use the right codec to create a dataset
+                    //  from the input stream
+                    ptr<codecs::codecFactory> codecsFactory(codecs::codecFactory::getCodecFactory());
+                    loadedDataSet = codecsFactory->load(reader, 2048);
 
 
-				// Open a stream for the jpeg
-				const std::wstring jpegTransferSyntax(L"1.2.840.10008.1.2.4.50");
-				std::ostringstream jpegFileName;
-				jpegFileName << outputFileName;
-				if(frameNumber != 0 || ffmpegFlag >= 0)
-				{
-					jpegFileName << "_" << frameNumber;
-				}
-				jpegFileName << extension;
-				ptr<puntoexe::stream> jpegStream(new puntoexe::stream);
-				jpegStream->openFile(jpegFileName.str(), std::ios_base::out | std::ios_base::trunc);
-				ptr<puntoexe::streamWriter> jpegWriter(new streamWriter(jpegStream));
-				ptr<codecs::codec> outputCodec(codecsFactory->getCodec(jpegTransferSyntax));
+                    // Get the first image. We use it in case there isn't any presentation VOI/LUT
+                    //  and we have to calculate the optimal one
+                    ptr<image> dataSetImage(loadedDataSet->getImage(0));
+                    imbxUint32 width, height;
+                    dataSetImage->getSize(&width, &height);
 
-				// Write the jpeg image to the stream
-				outputCodec->setImage(jpegWriter, finalImage, jpegTransferSyntax, codecs::codec::veryHigh,
-					"OB", 8, false, false, false, false);
 
-				++framesCount;
-			}
+                    // Build the transforms chain
+                    ptr<transforms::transformsChain> chain(new transforms::transformsChain);
+
+                    chain->addTransform(new transforms::modalityVOILUT(loadedDataSet));
+
+                    ptr<transforms::colorTransforms::colorTransformsFactory> colorFactory(transforms::colorTransforms::colorTransformsFactory::getColorTransformsFactory());
+                    if(colorFactory->isMonochrome(dataSetImage->getColorSpace()))
+                    {
+                        ptr<transforms::VOILUT> presentationVOILUT(new transforms::VOILUT(loadedDataSet));
+                        imbxUint32 firstVOILUTID(presentationVOILUT->getVOILUTId(0));
+                        if(firstVOILUTID != 0)
+                        {
+                                presentationVOILUT->setVOILUT(firstVOILUTID);
+                                chain->addTransform((presentationVOILUT));
+                        }
+                        else
+                        {
+                            // Calculate optimal VOI/LUT
+                            imbxUint32 rowSize, channelPixelSize, channelsNumber;
+                            ptr<handlers::dataHandlerNumericBase> imagePixels(dataSetImage->getDataHandler(false, &rowSize, &channelPixelSize, &channelsNumber));
+                            imbxInt32 minValue, maxValue;
+                            minValue = maxValue = imagePixels->getSignedLong(0);
+                            imbxUint32 numPixels(width * height);
+                            for(imbxUint32 scanPixels(1); scanPixels != numPixels; ++scanPixels)
+                            {
+                                imbxInt32 value(imagePixels->getSignedLong(scanPixels));
+                                if(value > maxValue)
+                                {
+                                    maxValue = value;
+                                }
+                                else if(value < minValue)
+                                {
+                                    minValue = value;
+                                }
+                            }
+                            presentationVOILUT->setCenterWidth((maxValue - minValue) / 2 + minValue, maxValue - minValue);
+                            chain->addTransform((presentationVOILUT));
+                        }
+                    }
+
+                    // Color transform to YCrCb
+                    ptr<transforms::colorTransforms::colorTransform> colorTransform(colorFactory->getTransform(loadedDataSet->getUnicodeString(0x0028, 0x0, 0x0004, 0x0), L"YBR_FULL"));
+                    if(colorTransform != 0)
+                    {
+                        chain->addTransform((colorTransform));
+                    }
+
+                    ptr<image> finalImage(new image);
+                    finalImage->create(width, height, image::depthU8, L"YBR_FULL", 7);
+
+                    // Scan through the frames
+                    for(imbxUint32 frameNumber(0); ; ++frameNumber)
+                    {
+                        if(frameNumber != 0)
+                        {
+                            dataSetImage = loadedDataSet->getImage(frameNumber);
+                        }
+
+
+                        if(chain->isEmpty() && dataSetImage->getDepth() != finalImage->getDepth() && dataSetImage->getHighBit() != finalImage->getHighBit())
+                        {
+                            chain->addTransform(new transforms::transformHighBit);
+                        }
+
+                        if(!chain->isEmpty())
+                        {
+                            chain->runTransform(dataSetImage, 0, 0, width, height, finalImage, 0, 0);
+                        }
+                        else
+                        {
+                            finalImage = dataSetImage;
+                        }
+
+                        // Open a stream for the jpeg
+                        const std::wstring jpegTransferSyntax(L"1.2.840.10008.1.2.4.50");
+                        std::ostringstream jpegFileName;
+                        jpegFileName << outputFileName;
+                        if(frameNumber != 0 || ffmpegFlag >= 0)
+                        {
+                                jpegFileName << "_" << frameNumber;
+                        }
+                        jpegFileName << extension;
+                        ptr<puntoexe::stream> jpegStream(new puntoexe::stream);
+                        jpegStream->openFile(jpegFileName.str(), std::ios_base::out | std::ios_base::trunc);
+                        ptr<puntoexe::streamWriter> jpegWriter(new streamWriter(jpegStream));
+                        ptr<codecs::codec> outputCodec(codecsFactory->getCodec(jpegTransferSyntax));
+
+                        // Write the jpeg image to the stream
+                        outputCodec->setImage(jpegWriter, finalImage, jpegTransferSyntax, codecs::codec::veryHigh,
+                                "OB", 8, false, false, false, false);
+
+                        ++framesCount;
+                    }
 
 		}
 		catch(dataSetImageDoesntExist&)
