@@ -1,7 +1,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "dataSetTest.h"
 
-#include "../../imebra/include/imebra.h"
+#include "../library/imebra/include/imebra.h"
 #include "buildImageForTest.h"
 #include <list>
 #include <string.h>

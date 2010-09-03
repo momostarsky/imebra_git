@@ -4,7 +4,7 @@
 #include "stdafx.h"
 
 #include <fstream>
-#include "../../imebra/include/imebra.h"
+#include "../library/imebra/include/imebra.h"
 
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <cppunit/ui/text/TestRunner.h>

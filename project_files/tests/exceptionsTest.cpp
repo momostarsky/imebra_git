@@ -7,7 +7,7 @@
 #include <pthread.h>
 #endif
 
-#include "../../imebra/include/imebra.h"
+#include "../library/imebra/include/imebra.h"
 
 namespace puntoexe
 {

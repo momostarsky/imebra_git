@@ -1,7 +1,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "numericHandlerTest.h"
 
-#include "../../imebra/include/imebra.h"
+#include "../library/imebra/include/imebra.h"
 #include <string.h>
 
 namespace puntoexe

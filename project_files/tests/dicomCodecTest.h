@@ -2,7 +2,7 @@
 #define imebraDicomCodecTest_DE3F98A9_664E_47c0_A29B_B681F9AEB118__INCLUDED_
 
 #include <cppunit/TestCase.h>
-#include "../../imebra/include/image.h"
+#include "../library/imebra/include/image.h"
 
 namespace puntoexe
 {
