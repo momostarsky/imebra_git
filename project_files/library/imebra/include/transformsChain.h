@@ -32,9 +32,6 @@ namespace transforms
 /// Each specified transforms take the output of the 
 ///  previous transform as input.
 ///
-/// When all the transforms have been defined, call
-///  endTransformsChain().
-///
 /// The first defined transform takes the input images
 ///  defined in the transformsChain object, the last
 ///  defined transforms uses the output images defined
@@ -55,10 +52,6 @@ public:
 	///  an output of the transformsChain if it is the
 	///  last added transform.
 	///
-	/// After all the transforms have been added the 
-	///  application must call endTransformsChain() before
-	///  calling doTransform().
-	///
 	/// @param pTransform the transform to be added to
 	///                    transformsChain
 	///
@@ -72,10 +65,7 @@ public:
             imbxUint32 outputTopLeftX, imbxUint32 outputTopLeftY);
 
 	/// \brief Returns true if the transform doesn't do
-	///         anything.
-	///
-	/// It always return false, but it is overwritten in the
-	///  transformsChain class.
+        ///         anything.
 	///
 	/// @return false if the transform does something, or true
 	///          if the transform doesn't do anything (e.g. an

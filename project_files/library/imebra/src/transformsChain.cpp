@@ -41,9 +41,12 @@ void transformsChain::addTransform(ptr<baseTransform> pTransform)
 {
 	PUNTOEXE_FUNCTION_START(L"transformsChain::addTransform");
 
-	// Store the transform in the chain.
-	///////////////////////////////////////////////////////////
-	m_transformsList.push_back(pTransform);
+        if(pTransform != 0 && !pTransform->isEmpty())
+        {
+            // Store the transform in the chain.
+            ///////////////////////////////////////////////////////////
+            m_transformsList.push_back(pTransform);
+        }
 
 	PUNTOEXE_FUNCTION_END();
 }
