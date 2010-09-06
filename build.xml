@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?> 
 <project name="Imebra" default="build_all" basedir=".">
 
-	<!-- Launch me with "ant -buildfile automatic_build.xml" -->
+	<!-- Thsi is an ant build file" -->
 
 	<!-- Build all -->
 	<target name="build_all" depends="ZIP_GPL" >
@@ -114,14 +114,8 @@
 
 	<!-- Build dicom2jpeg -->
 	<target name="build_dicom2jpeg" depends="run_test_cases" description="Build the dicom2jpeg">
-		<exec executable="make" failonerror="true" dir="${build_dir}/examples/dicom2jpeg">
-			<arg value="build"/>
-			<arg value="CONF=Release_32"/>
-		</exec>
-		<exec executable="make" failonerror="true" dir="${build_dir}/examples/dicom2jpeg">
-			<arg value="build"/>
-			<arg value="CONF=Release_64"/>
-		</exec>
+		<exex executable="qmake" failonerror="true" dir="${build_dir}/examples/dicom2jpeg" />
+		<exec executable="make" failonerror="true" dir="${build_dir}/examples/dicom2jpeg" />
 	</target>
 
 	<!-- Run the test cases posix -->
