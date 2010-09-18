@@ -536,25 +536,25 @@ public:
 		dataHandlerType *pDestColScan;
 		const imbxInt32* pSourceColScan;
 
-                if(destHeight < destEndRow)
-                {
-                    destEndRow = destHeight;
-                }
-                if(destWidth < destEndCol)
-                {
-                    destEndCol = destWidth;
-                }
+        if(destHeight < destEndRow)
+        {
+            destEndRow = destHeight;
+        }
+        if(destWidth < destEndCol)
+        {
+            destEndCol = destWidth;
+        }
 
-                imbxUint32 numColumns(destEndCol - destStartCol);
+        imbxUint32 numColumns(destEndCol - destStartCol);
 
-                imbxUint32 horizontalCopyOperations = numColumns / subsampleX;
-                imbxUint32 horizontalFinalCopyDest = numColumns - horizontalCopyOperations * subsampleX;
+        imbxUint32 horizontalCopyOperations = numColumns / subsampleX;
+        imbxUint32 horizontalFinalCopyDest = numColumns - horizontalCopyOperations * subsampleX;
 
-                imbxInt32 copyValue;
-                imbxInt32 scanDest;
+        dataHandlerType copyValue;
+        imbxInt32 scanDest;
 
-                imbxUint32 scanHorizontalCopyOperations;
-                imbxUint32 scanHorizontalFinalCopyDest;
+        imbxUint32 scanHorizontalCopyOperations;
+        imbxUint32 scanHorizontalFinalCopyDest;
 
 		for(imbxUint32 numYCopies(destEndRow - destStartRow); numYCopies != 0; --numYCopies)
 		{
@@ -575,7 +575,7 @@ public:
                         {
                             for(scanHorizontalFinalCopyDest = horizontalFinalCopyDest; scanHorizontalFinalCopyDest != 0; --scanHorizontalFinalCopyDest)
                             {
-                                *pDestColScan = *pSourceColScan;
+                                *pDestColScan = (dataHandlerType) *pSourceColScan;
                                 pDestColScan += destNumChannels;
                             }
                         }

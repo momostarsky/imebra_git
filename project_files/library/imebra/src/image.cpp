@@ -97,6 +97,14 @@ ptr<handlers::dataHandlerNumericBase> image::create(
 		bufferDataType = "SS";
 		defaultHighBit=15;
 		break;
+	case depthU32:
+		bufferDataType = "UL";
+		defaultHighBit=31;
+		break;
+	case depthS32:
+		bufferDataType = "SL";
+		defaultHighBit=31;
+		break;
 	default:
 		PUNTOEXE_THROW(imageExceptionUnknownDepth, "Unknown depth");
 	}

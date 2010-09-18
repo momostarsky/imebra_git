@@ -68,26 +68,63 @@ ptr<image> modalityVOILUT::allocateOutputImage(ptr<image> pInputImage, imbxUint3
 		return returnImage;
 	}
 
+	if(m_rescaleSlope == 0)
+	{
+		ptr<image> returnImage(new image);
+		returnImage->create(width, height, pInputImage->getDepth(), L"MONOCHROME2", pInputImage->getHighBit());
+		return returnImage;
+	}
+
 	image::bitDepth inputDepth(pInputImage->getDepth());
 	imbxUint32 highBit(pInputImage->getHighBit());
 
-	imbxInt32 minInputValue = 0;
+	imbxInt32 value0 = 0;
+	imbxInt32 value1 = ((imbxInt32)1 << (highBit + 1)) - 1;
 	if(inputDepth == image::depthS16 || inputDepth == image::depthS8)
 	{
-		minInputValue = ((imbxInt32)(-1) << highBit) + m_rescaleIntercept;
+		value0 = ((imbxInt32)(-1) << highBit) + m_rescaleIntercept;
+		value1 = ((imbxInt32)1 << highBit) + m_rescaleIntercept;
 	}
+	value0 *= m_rescaleSlope;
+	value0 += m_rescaleIntercept;
+	value1 *= m_rescaleSlope;
+	value1 += m_rescaleIntercept;
 
-	ptr<image> returnImage(new image);
-	if(minInputValue < 0)
+	imbxInt32 minValue, maxValue;
+	if(value0 < value1)
 	{
-		returnImage->create(width, height, image::depthS16, L"MONOCHROME2", 15);
+		minValue = value0;
+		maxValue = value1;
 	}
 	else
 	{
-		returnImage->create(width, height, image::depthU16, L"MONOCHROME2", 15);
+		minValue = value1;
+		maxValue = value0;
 	}
-	return returnImage;
 
+	ptr<image> returnImage(new image);
+	if(minValue >= 0 && maxValue <= 255)
+	{
+		returnImage->create(width, height, image::depthU8, L"MONOCHROME2", 7);
+		return returnImage;
+	}
+	if(minValue >= -128 && maxValue <= 127)
+	{
+		returnImage->create(width, height, image::depthS8, L"MONOCHROME2", 7);
+		return returnImage;
+	}
+	if(minValue >= 0 && maxValue <= 65535)
+	{
+		returnImage->create(width, height, image::depthU16, L"MONOCHROME2", 15);
+		return returnImage;
+	}
+	if(minValue >= -32768 && maxValue <= 32767)
+	{
+		returnImage->create(width, height, image::depthS16, L"MONOCHROME2", 15);
+		return returnImage;
+	}
+	returnImage->create(width, height, image::depthS32, L"MONOCHROME2", 31);
+	return returnImage;
 }
 
 

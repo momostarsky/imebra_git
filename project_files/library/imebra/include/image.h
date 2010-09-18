@@ -69,7 +69,9 @@ public:
 			depthS8,    ///< signed integer, 1 byte
 			depthU16,   ///< unsigned integer, 2 bytes
 			depthS16,   ///< signed integer, 2 bytes
-                        endOfDepths
+			depthU32,   ///< unsigned integer, 4 bytes
+			depthS32,   ///< signed integer, 4 bytes
+            endOfDepths
 
 	};
 
