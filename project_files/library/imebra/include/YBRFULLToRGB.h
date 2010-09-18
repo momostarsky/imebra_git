@@ -86,43 +86,43 @@ public:
                         destination = sourceY + ((22970 * sourceR + 8192) >> 14);
                         if(destination < 0)
                         {
-                            *(pOutputMemory++) = outputHandlerMinValue;
+                            *(pOutputMemory++) = (outputType)outputHandlerMinValue;
                         }
                         else if (destination >= (imbxInt32)inputHandlerNumValues)
                         {
-                            *(pOutputMemory++) = outputHandlerMinValue + outputHandlerNumValues - 1;
+                            *(pOutputMemory++) = (outputType)(outputHandlerMinValue + outputHandlerNumValues - 1);
                         }
                         else
                         {
-                            *(pOutputMemory++) = outputHandlerMinValue + destination;
+                            *(pOutputMemory++) = (outputType)(outputHandlerMinValue + destination);
                         }
 
                         destination = sourceY - ((5638 * sourceB + 11700 * sourceR + 8192) >> 14);
                         if(destination < 0)
                         {
-                            *(pOutputMemory++) = outputHandlerMinValue;
+                            *(pOutputMemory++) = (outputType)outputHandlerMinValue;
                         }
                         else if (destination >= (imbxInt32)inputHandlerNumValues)
                         {
-                            *(pOutputMemory++) = outputHandlerMinValue + outputHandlerNumValues - 1;
+                            *(pOutputMemory++) = (outputType)(outputHandlerMinValue + outputHandlerNumValues - 1);
                         }
                         else
                         {
-                            *(pOutputMemory++) = outputHandlerMinValue + destination;
+                            *(pOutputMemory++) = (outputType)(outputHandlerMinValue + destination);
                         }
 
                         destination = sourceY + ((29032 * sourceB + 8192) >> 14);
                         if(destination < 0)
                         {
-                            *(pOutputMemory++) = outputHandlerMinValue;
+                            *(pOutputMemory++) = (outputType)outputHandlerMinValue;
                         }
                         else if (destination >= (imbxInt32)inputHandlerNumValues)
                         {
-                            *(pOutputMemory++) = outputHandlerMinValue + outputHandlerNumValues - 1;
+                            *(pOutputMemory++) = (outputType)(outputHandlerMinValue + outputHandlerNumValues - 1);
                         }
                         else
                         {
-                            *(pOutputMemory++) = outputHandlerMinValue + destination;
+                            *(pOutputMemory++) = (outputType)(outputHandlerMinValue + destination);
                         }
                     }
                     pInputMemory += (inputHandlerWidth - inputWidth) * 3;
@@ -142,43 +142,43 @@ public:
                         destination = sourceY + ((22970 * sourceR + 8192) >> 14);
                         if(destination < 0)
                         {
-                            *(pOutputMemory++) = outputHandlerMinValue;
+                            *(pOutputMemory++) = (outputType)outputHandlerMinValue;
                         }
                         else if (destination >= (imbxInt32)inputHandlerNumValues)
                         {
-                            *(pOutputMemory++) = outputHandlerMinValue + outputHandlerNumValues - 1;
+                            *(pOutputMemory++) = (outputType)(outputHandlerMinValue + outputHandlerNumValues - 1);
                         }
                         else
                         {
-                            *(pOutputMemory++) = outputHandlerMinValue + (destination * outputHandlerNumValues) / inputHandlerNumValues;
+                            *(pOutputMemory++) = (outputType)(outputHandlerMinValue + (destination * outputHandlerNumValues) / inputHandlerNumValues);
                         }
 
                         destination = sourceY - ((5638 * sourceB + 11700 * sourceR + 8192) >> 14);
                         if(destination < 0)
                         {
-                            *(pOutputMemory++) = outputHandlerMinValue;
+                            *(pOutputMemory++) = (outputType)outputHandlerMinValue;
                         }
                         else if (destination >= (imbxInt32)inputHandlerNumValues)
                         {
-                            *(pOutputMemory++) = outputHandlerMinValue + outputHandlerNumValues - 1;
+                            *(pOutputMemory++) = (outputType)(outputHandlerMinValue + outputHandlerNumValues - 1);
                         }
                         else
                         {
-                            *(pOutputMemory++) = outputHandlerMinValue + (destination * outputHandlerNumValues) / inputHandlerNumValues;
+                            *(pOutputMemory++) = (outputType)(outputHandlerMinValue + (destination * outputHandlerNumValues) / inputHandlerNumValues);
                         }
 
                         destination = sourceY + ((29032 * sourceB + 8192) >> 14);
                         if(destination < 0)
                         {
-                            *(pOutputMemory++) = outputHandlerMinValue;
+                            *(pOutputMemory++) = (outputType)outputHandlerMinValue;
                         }
                         else if (destination >= (imbxInt32)inputHandlerNumValues)
                         {
-                            *(pOutputMemory++) = outputHandlerMinValue + outputHandlerNumValues - 1;
+                            *(pOutputMemory++) = (outputType)(outputHandlerMinValue + outputHandlerNumValues - 1);
                         }
                         else
                         {
-                            *(pOutputMemory++) = outputHandlerMinValue + (destination * outputHandlerNumValues) / inputHandlerNumValues;
+                            *(pOutputMemory++) = (outputType)(outputHandlerMinValue + (destination * outputHandlerNumValues) / inputHandlerNumValues);
                         }
                     }
                     pInputMemory += (inputHandlerWidth - inputWidth) * 3;
