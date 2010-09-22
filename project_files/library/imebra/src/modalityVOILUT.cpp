@@ -43,6 +43,8 @@ modalityVOILUT::modalityVOILUT(ptr<dataSet> pDataSet): m_pDataSet(pDataSet)
 
 ptr<image> modalityVOILUT::allocateOutputImage(ptr<image> pInputImage, imbxUint32 width, imbxUint32 height)
 {
+	// LUT
+	///////////////////////////////////////////////////////////
 	if(m_voiLut != 0 && m_voiLut->getSize() != 0 && m_voiLut->checkValidDataRange())
 	{
 		imbxUint8 bits(m_voiLut->getBits());
@@ -68,6 +70,8 @@ ptr<image> modalityVOILUT::allocateOutputImage(ptr<image> pInputImage, imbxUint3
 		return returnImage;
 	}
 
+	// Rescale
+	///////////////////////////////////////////////////////////
 	if(m_rescaleSlope == 0)
 	{
 		ptr<image> returnImage(new image);

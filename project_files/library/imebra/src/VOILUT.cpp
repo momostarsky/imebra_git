@@ -285,7 +285,7 @@ ptr<image> VOILUT::allocateOutputImage(ptr<image> pInputImage, imbxUint32 width,
 
 	if(depth == image::depthS8)
 		depth = image::depthU8;
-	if(depth == image::depthS16)
+	if(depth == image::depthS16 || depth == image::depthU32 || depth == image::depthS32)
 		depth = image::depthU16;
 
 	outputImage->create(width, height, depth, L"MONOCHROME2", pInputImage->getHighBit());
