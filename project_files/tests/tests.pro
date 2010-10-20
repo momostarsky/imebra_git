@@ -1,14 +1,19 @@
-QT     -= gui core
-LIBS   -= -lQtGui -lQtCore
+TEMPLATE = app
 
-unix:LIBS += -lcppunit \
+QT -= gui
+QT += core testlib
+
+unix:LIBS = -lcppunit \
     -lgcov
 
 OTHER_FILES += \
     ReadMe.txt \
     CImbx_tests.vcproj \
     CImbx_tests.rc \
-    CImbx_tests.cbp
+    CImbx_tests.cbp \
+    ../../build.xml \
+    ../DoxyfileHTML \
+    ../DoxyfilePDF
 
 HEADERS += \
     unicodeStringHandlerTest.h \
@@ -39,7 +44,6 @@ HEADERS += \
     ../library/imebra/include/viewHelper.h \
     ../library/imebra/include/transformsChain.h \
     ../library/imebra/include/transformHighBit.h \
-    ../library/imebra/include/transform.h \
     ../library/imebra/include/transaction.h \
     ../library/imebra/include/RGBToYBRPARTIAL.h \
     ../library/imebra/include/RGBToYBRFULL.h \
@@ -138,7 +142,6 @@ SOURCES += \
     ../library/imebra/src/viewHelper.cpp \
     ../library/imebra/src/transformsChain.cpp \
     ../library/imebra/src/transformHighBit.cpp \
-    ../library/imebra/src/transform.cpp \
     ../library/imebra/src/transaction.cpp \
     ../library/imebra/src/RGBToYBRPARTIAL.cpp \
     ../library/imebra/src/RGBToYBRFULL.cpp \

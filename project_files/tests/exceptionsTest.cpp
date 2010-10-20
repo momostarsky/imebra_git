@@ -1,4 +1,3 @@
-#include <cppunit/extensions/HelperMacros.h>
 #include "exceptionsTest.h"
 
 #if defined(WIN32) | defined(WIN32_WCE)
@@ -17,9 +16,6 @@ namespace imebra
 
 namespace tests
 {
-
-CPPUNIT_TEST_SUITE_REGISTRATION(puntoexe::imebra::tests::exceptionsTest);
-
 
 // A buffer initialized to a default data type should use the data type OB
 void exceptionsTest::testExceptions()
@@ -42,18 +38,18 @@ void exceptionsTest::testExceptions()
 	catch(...)
 	{
 		std::wstring exceptionMessage = puntoexe::exceptionsManager::getMessage();
-		CPPUNIT_ASSERT(!exceptionMessage.empty());
+		QVERIFY(!exceptionMessage.empty());
 
 		std::wstring exceptionMessageEmpty = puntoexe::exceptionsManager::getMessage();
-		CPPUNIT_ASSERT(exceptionMessageEmpty.empty());
+		QVERIFY(exceptionMessageEmpty.empty());
 
-		CPPUNIT_ASSERT(exceptionMessage.find(L"exceptionTest_Phase1") != exceptionMessage.npos);
-		CPPUNIT_ASSERT(exceptionMessage.find(L"exceptionTest_Phase2") != exceptionMessage.npos);
-		CPPUNIT_ASSERT(exceptionMessage.find(L"exceptionTest_Phase3") != exceptionMessage.npos);
-		CPPUNIT_ASSERT(exceptionMessage.find(L"testPhase3") != exceptionMessage.npos);
+		QVERIFY(exceptionMessage.find(L"exceptionTest_Phase1") != exceptionMessage.npos);
+		QVERIFY(exceptionMessage.find(L"exceptionTest_Phase2") != exceptionMessage.npos);
+		QVERIFY(exceptionMessage.find(L"exceptionTest_Phase3") != exceptionMessage.npos);
+		QVERIFY(exceptionMessage.find(L"testPhase3") != exceptionMessage.npos);
 		return;
 	}
-	CPPUNIT_ASSERT(false);
+	QVERIFY(false);
 }
 
 

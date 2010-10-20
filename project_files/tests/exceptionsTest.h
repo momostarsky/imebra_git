@@ -1,7 +1,7 @@
 #if !defined(imebraExceptionsTest_DE3F98A9_664E_47c0_A29B_B681F9AEB118__INCLUDED_)
 #define imebraExceptionsTest_DE3F98A9_664E_47c0_A29B_B681F9AEB118__INCLUDED_
 
-#include <cppunit/TestCase.h>
+#include <QtTest/QtTest>
 
 namespace puntoexe
 {
@@ -12,15 +12,11 @@ namespace imebra
 namespace tests
 {
 
-class exceptionsTest: public CppUnit::TestFixture
+class exceptionsTest: public QObject
 {
-	CPPUNIT_TEST_SUITE(exceptionsTest);
-	
-	CPPUNIT_TEST(testExceptions);
+	Q_OBJECT
 
-	CPPUNIT_TEST_SUITE_END();
-
-public:
+private slots:
 	void testExceptions();
 };
 

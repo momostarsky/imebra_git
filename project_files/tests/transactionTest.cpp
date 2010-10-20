@@ -1,4 +1,3 @@
-#include <cppunit/extensions/HelperMacros.h>
 #include "transactionTest.h"
 
 #include "../library/imebra/include/imebra.h"
@@ -11,9 +10,6 @@ namespace imebra
 
 namespace tests
 {
-
-CPPUNIT_TEST_SUITE_REGISTRATION(puntoexe::imebra::tests::transactionTest);
-
 
 void transactionTest::testOneTransaction()
 {
@@ -28,10 +24,10 @@ void transactionTest::testOneTransaction()
 	newDataSet->setUnicodeString(20, 0, 12, 0, L"test 2", "PN");
 	newDataSet->setUnicodeString(20, 0, 13, 0, L"test 3", "PN");
 
-	CPPUNIT_ASSERT(newDataSet->getUnicodeString(20, 0, 10, 0) == L"test 0");
-	CPPUNIT_ASSERT(newDataSet->getUnicodeString(20, 0, 11, 0) == L"test 1");
-	CPPUNIT_ASSERT(newDataSet->getUnicodeString(20, 0, 12, 0) == L"test 2");
-	CPPUNIT_ASSERT(newDataSet->getUnicodeString(20, 0, 13, 0) == L"test 3");
+	QVERIFY(newDataSet->getUnicodeString(20, 0, 10, 0) == L"test 0");
+	QVERIFY(newDataSet->getUnicodeString(20, 0, 11, 0) == L"test 1");
+	QVERIFY(newDataSet->getUnicodeString(20, 0, 12, 0) == L"test 2");
+	QVERIFY(newDataSet->getUnicodeString(20, 0, 13, 0) == L"test 3");
 
 	// Test one transaction
 	IMEBRA_TRANSACTION_START();
@@ -41,17 +37,17 @@ void transactionTest::testOneTransaction()
 		newDataSet->setUnicodeString(10, 0, 12, 0, L"test 2", "PN");
 		newDataSet->setUnicodeString(10, 0, 13, 0, L"test 3", "PN");
 
-		CPPUNIT_ASSERT(newDataSet->getUnicodeString(10, 0, 10, 0) != L"test 0");
-		CPPUNIT_ASSERT(newDataSet->getUnicodeString(10, 0, 11, 0) != L"test 1");
-		CPPUNIT_ASSERT(newDataSet->getUnicodeString(10, 0, 12, 0) != L"test 2");
-		CPPUNIT_ASSERT(newDataSet->getUnicodeString(10, 0, 13, 0) != L"test 3");
+		QVERIFY(newDataSet->getUnicodeString(10, 0, 10, 0) != L"test 0");
+		QVERIFY(newDataSet->getUnicodeString(10, 0, 11, 0) != L"test 1");
+		QVERIFY(newDataSet->getUnicodeString(10, 0, 12, 0) != L"test 2");
+		QVERIFY(newDataSet->getUnicodeString(10, 0, 13, 0) != L"test 3");
 
 	IMEBRA_TRANSACTION_END();
 
-	CPPUNIT_ASSERT(newDataSet->getUnicodeString(10, 0, 10, 0) == L"test 0");
-	CPPUNIT_ASSERT(newDataSet->getUnicodeString(10, 0, 11, 0) == L"test 1");
-	CPPUNIT_ASSERT(newDataSet->getUnicodeString(10, 0, 12, 0) == L"test 2");
-	CPPUNIT_ASSERT(newDataSet->getUnicodeString(10, 0, 13, 0) == L"test 3");
+	QVERIFY(newDataSet->getUnicodeString(10, 0, 10, 0) == L"test 0");
+	QVERIFY(newDataSet->getUnicodeString(10, 0, 11, 0) == L"test 1");
+	QVERIFY(newDataSet->getUnicodeString(10, 0, 12, 0) == L"test 2");
+	QVERIFY(newDataSet->getUnicodeString(10, 0, 13, 0) == L"test 3");
 }
 
 void transactionTest::testNestedTransactions0()
@@ -75,34 +71,34 @@ void transactionTest::testNestedTransactions0()
 			newDataSet->setUnicodeString(20, 0, 12, 0, L"test 6", "PN");
 			newDataSet->setUnicodeString(20, 0, 13, 0, L"test 7", "PN");
 
-			CPPUNIT_ASSERT(newDataSet->getUnicodeString(20, 0, 10, 0) != L"test 4");
-			CPPUNIT_ASSERT(newDataSet->getUnicodeString(20, 0, 11, 0) != L"test 5");
-			CPPUNIT_ASSERT(newDataSet->getUnicodeString(20, 0, 12, 0) != L"test 6");
-			CPPUNIT_ASSERT(newDataSet->getUnicodeString(20, 0, 13, 0) != L"test 7");
+			QVERIFY(newDataSet->getUnicodeString(20, 0, 10, 0) != L"test 4");
+			QVERIFY(newDataSet->getUnicodeString(20, 0, 11, 0) != L"test 5");
+			QVERIFY(newDataSet->getUnicodeString(20, 0, 12, 0) != L"test 6");
+			QVERIFY(newDataSet->getUnicodeString(20, 0, 13, 0) != L"test 7");
 		
 		IMEBRA_TRANSACTION_END();
 
-		CPPUNIT_ASSERT(newDataSet->getUnicodeString(10, 0, 10, 0) != L"test 0");
-		CPPUNIT_ASSERT(newDataSet->getUnicodeString(10, 0, 11, 0) != L"test 1");
-		CPPUNIT_ASSERT(newDataSet->getUnicodeString(10, 0, 12, 0) != L"test 2");
-		CPPUNIT_ASSERT(newDataSet->getUnicodeString(10, 0, 13, 0) != L"test 3");
+		QVERIFY(newDataSet->getUnicodeString(10, 0, 10, 0) != L"test 0");
+		QVERIFY(newDataSet->getUnicodeString(10, 0, 11, 0) != L"test 1");
+		QVERIFY(newDataSet->getUnicodeString(10, 0, 12, 0) != L"test 2");
+		QVERIFY(newDataSet->getUnicodeString(10, 0, 13, 0) != L"test 3");
 
-		CPPUNIT_ASSERT(newDataSet->getUnicodeString(20, 0, 10, 0) != L"test 4");
-		CPPUNIT_ASSERT(newDataSet->getUnicodeString(20, 0, 11, 0) != L"test 5");
-		CPPUNIT_ASSERT(newDataSet->getUnicodeString(20, 0, 12, 0) != L"test 6");
-		CPPUNIT_ASSERT(newDataSet->getUnicodeString(20, 0, 13, 0) != L"test 7");
+		QVERIFY(newDataSet->getUnicodeString(20, 0, 10, 0) != L"test 4");
+		QVERIFY(newDataSet->getUnicodeString(20, 0, 11, 0) != L"test 5");
+		QVERIFY(newDataSet->getUnicodeString(20, 0, 12, 0) != L"test 6");
+		QVERIFY(newDataSet->getUnicodeString(20, 0, 13, 0) != L"test 7");
 	
 	IMEBRA_TRANSACTION_END();
 
-	CPPUNIT_ASSERT(newDataSet->getUnicodeString(10, 0, 10, 0) == L"test 0");
-	CPPUNIT_ASSERT(newDataSet->getUnicodeString(10, 0, 11, 0) == L"test 1");
-	CPPUNIT_ASSERT(newDataSet->getUnicodeString(10, 0, 12, 0) == L"test 2");
-	CPPUNIT_ASSERT(newDataSet->getUnicodeString(10, 0, 13, 0) == L"test 3");
+	QVERIFY(newDataSet->getUnicodeString(10, 0, 10, 0) == L"test 0");
+	QVERIFY(newDataSet->getUnicodeString(10, 0, 11, 0) == L"test 1");
+	QVERIFY(newDataSet->getUnicodeString(10, 0, 12, 0) == L"test 2");
+	QVERIFY(newDataSet->getUnicodeString(10, 0, 13, 0) == L"test 3");
 
-	CPPUNIT_ASSERT(newDataSet->getUnicodeString(20, 0, 10, 0) == L"test 4");
-	CPPUNIT_ASSERT(newDataSet->getUnicodeString(20, 0, 11, 0) == L"test 5");
-	CPPUNIT_ASSERT(newDataSet->getUnicodeString(20, 0, 12, 0) == L"test 6");
-	CPPUNIT_ASSERT(newDataSet->getUnicodeString(20, 0, 13, 0) == L"test 7");
+	QVERIFY(newDataSet->getUnicodeString(20, 0, 10, 0) == L"test 4");
+	QVERIFY(newDataSet->getUnicodeString(20, 0, 11, 0) == L"test 5");
+	QVERIFY(newDataSet->getUnicodeString(20, 0, 12, 0) == L"test 6");
+	QVERIFY(newDataSet->getUnicodeString(20, 0, 13, 0) == L"test 7");
 }
 
 void transactionTest::testNestedTransactions1()
@@ -127,34 +123,34 @@ void transactionTest::testNestedTransactions1()
 			newDataSet->setUnicodeString(20, 0, 12, 0, L"test 6", "PN");
 			newDataSet->setUnicodeString(20, 0, 13, 0, L"test 7", "PN");
 
-			CPPUNIT_ASSERT(newDataSet->getUnicodeString(20, 0, 10, 0) != L"test 4");
-			CPPUNIT_ASSERT(newDataSet->getUnicodeString(20, 0, 11, 0) != L"test 5");
-			CPPUNIT_ASSERT(newDataSet->getUnicodeString(20, 0, 12, 0) != L"test 6");
-			CPPUNIT_ASSERT(newDataSet->getUnicodeString(20, 0, 13, 0) != L"test 7");
+			QVERIFY(newDataSet->getUnicodeString(20, 0, 10, 0) != L"test 4");
+			QVERIFY(newDataSet->getUnicodeString(20, 0, 11, 0) != L"test 5");
+			QVERIFY(newDataSet->getUnicodeString(20, 0, 12, 0) != L"test 6");
+			QVERIFY(newDataSet->getUnicodeString(20, 0, 13, 0) != L"test 7");
 		
 		IMEBRA_TRANSACTION_END();
 
-		CPPUNIT_ASSERT(newDataSet->getUnicodeString(10, 0, 10, 0) != L"test 0");
-		CPPUNIT_ASSERT(newDataSet->getUnicodeString(10, 0, 11, 0) != L"test 1");
-		CPPUNIT_ASSERT(newDataSet->getUnicodeString(10, 0, 12, 0) != L"test 2");
-		CPPUNIT_ASSERT(newDataSet->getUnicodeString(10, 0, 13, 0) != L"test 3");
+		QVERIFY(newDataSet->getUnicodeString(10, 0, 10, 0) != L"test 0");
+		QVERIFY(newDataSet->getUnicodeString(10, 0, 11, 0) != L"test 1");
+		QVERIFY(newDataSet->getUnicodeString(10, 0, 12, 0) != L"test 2");
+		QVERIFY(newDataSet->getUnicodeString(10, 0, 13, 0) != L"test 3");
 
-		CPPUNIT_ASSERT(newDataSet->getUnicodeString(20, 0, 10, 0) == L"test 4");
-		CPPUNIT_ASSERT(newDataSet->getUnicodeString(20, 0, 11, 0) == L"test 5");
-		CPPUNIT_ASSERT(newDataSet->getUnicodeString(20, 0, 12, 0) == L"test 6");
-		CPPUNIT_ASSERT(newDataSet->getUnicodeString(20, 0, 13, 0) == L"test 7");
+		QVERIFY(newDataSet->getUnicodeString(20, 0, 10, 0) == L"test 4");
+		QVERIFY(newDataSet->getUnicodeString(20, 0, 11, 0) == L"test 5");
+		QVERIFY(newDataSet->getUnicodeString(20, 0, 12, 0) == L"test 6");
+		QVERIFY(newDataSet->getUnicodeString(20, 0, 13, 0) == L"test 7");
 	
 	IMEBRA_TRANSACTION_END();
 
-	CPPUNIT_ASSERT(newDataSet->getUnicodeString(10, 0, 10, 0) == L"test 0");
-	CPPUNIT_ASSERT(newDataSet->getUnicodeString(10, 0, 11, 0) == L"test 1");
-	CPPUNIT_ASSERT(newDataSet->getUnicodeString(10, 0, 12, 0) == L"test 2");
-	CPPUNIT_ASSERT(newDataSet->getUnicodeString(10, 0, 13, 0) == L"test 3");
+	QVERIFY(newDataSet->getUnicodeString(10, 0, 10, 0) == L"test 0");
+	QVERIFY(newDataSet->getUnicodeString(10, 0, 11, 0) == L"test 1");
+	QVERIFY(newDataSet->getUnicodeString(10, 0, 12, 0) == L"test 2");
+	QVERIFY(newDataSet->getUnicodeString(10, 0, 13, 0) == L"test 3");
 
-	CPPUNIT_ASSERT(newDataSet->getUnicodeString(20, 0, 10, 0) == L"test 4");
-	CPPUNIT_ASSERT(newDataSet->getUnicodeString(20, 0, 11, 0) == L"test 5");
-	CPPUNIT_ASSERT(newDataSet->getUnicodeString(20, 0, 12, 0) == L"test 6");
-	CPPUNIT_ASSERT(newDataSet->getUnicodeString(20, 0, 13, 0) == L"test 7");
+	QVERIFY(newDataSet->getUnicodeString(20, 0, 10, 0) == L"test 4");
+	QVERIFY(newDataSet->getUnicodeString(20, 0, 11, 0) == L"test 5");
+	QVERIFY(newDataSet->getUnicodeString(20, 0, 12, 0) == L"test 6");
+	QVERIFY(newDataSet->getUnicodeString(20, 0, 13, 0) == L"test 7");
 }
 
 void transactionTest::testNestedTransactionsFail0()
@@ -194,15 +190,15 @@ void transactionTest::testNestedTransactionsFail0()
 
 	IMEBRA_TRANSACTION_END();
 
-	CPPUNIT_ASSERT(newDataSet->getUnicodeString(10, 0, 10, 0) == L"initial test 0");
-	CPPUNIT_ASSERT(newDataSet->getUnicodeString(10, 0, 11, 0) == L"initial test 1");
-	CPPUNIT_ASSERT(newDataSet->getUnicodeString(10, 0, 12, 0) == L"initial test 2");
-	CPPUNIT_ASSERT(newDataSet->getUnicodeString(10, 0, 13, 0) == L"initial test 3");
+	QVERIFY(newDataSet->getUnicodeString(10, 0, 10, 0) == L"initial test 0");
+	QVERIFY(newDataSet->getUnicodeString(10, 0, 11, 0) == L"initial test 1");
+	QVERIFY(newDataSet->getUnicodeString(10, 0, 12, 0) == L"initial test 2");
+	QVERIFY(newDataSet->getUnicodeString(10, 0, 13, 0) == L"initial test 3");
 
-	CPPUNIT_ASSERT(newDataSet->getUnicodeString(20, 0, 10, 0) == L"initial test 4");
-	CPPUNIT_ASSERT(newDataSet->getUnicodeString(20, 0, 11, 0) == L"initial test 5");
-	CPPUNIT_ASSERT(newDataSet->getUnicodeString(20, 0, 12, 0) == L"initial test 6");
-	CPPUNIT_ASSERT(newDataSet->getUnicodeString(20, 0, 13, 0) == L"initial test 7");
+	QVERIFY(newDataSet->getUnicodeString(20, 0, 10, 0) == L"initial test 4");
+	QVERIFY(newDataSet->getUnicodeString(20, 0, 11, 0) == L"initial test 5");
+	QVERIFY(newDataSet->getUnicodeString(20, 0, 12, 0) == L"initial test 6");
+	QVERIFY(newDataSet->getUnicodeString(20, 0, 13, 0) == L"initial test 7");
 }
 
 void transactionTest::testNestedTransactionsFail1()
@@ -247,18 +243,18 @@ void transactionTest::testNestedTransactionsFail1()
 	catch(std::runtime_error&)
 	{
 		std::wstring message = puntoexe::exceptionsManager::getMessage();
-		CPPUNIT_ASSERT(message.find(L"test abort") != std::string::npos);
+		QVERIFY(message.find(L"test abort") != std::string::npos);
 	}
 
-	CPPUNIT_ASSERT(newDataSet->getUnicodeString(10, 0, 10, 0) == L"initial test 0");
-	CPPUNIT_ASSERT(newDataSet->getUnicodeString(10, 0, 11, 0) == L"initial test 1");
-	CPPUNIT_ASSERT(newDataSet->getUnicodeString(10, 0, 12, 0) == L"initial test 2");
-	CPPUNIT_ASSERT(newDataSet->getUnicodeString(10, 0, 13, 0) == L"initial test 3");
+	QVERIFY(newDataSet->getUnicodeString(10, 0, 10, 0) == L"initial test 0");
+	QVERIFY(newDataSet->getUnicodeString(10, 0, 11, 0) == L"initial test 1");
+	QVERIFY(newDataSet->getUnicodeString(10, 0, 12, 0) == L"initial test 2");
+	QVERIFY(newDataSet->getUnicodeString(10, 0, 13, 0) == L"initial test 3");
 
-	CPPUNIT_ASSERT(newDataSet->getUnicodeString(20, 0, 10, 0) == L"test 4");
-	CPPUNIT_ASSERT(newDataSet->getUnicodeString(20, 0, 11, 0) == L"test 5");
-	CPPUNIT_ASSERT(newDataSet->getUnicodeString(20, 0, 12, 0) == L"test 6");
-	CPPUNIT_ASSERT(newDataSet->getUnicodeString(20, 0, 13, 0) == L"test 7");
+	QVERIFY(newDataSet->getUnicodeString(20, 0, 10, 0) == L"test 4");
+	QVERIFY(newDataSet->getUnicodeString(20, 0, 11, 0) == L"test 5");
+	QVERIFY(newDataSet->getUnicodeString(20, 0, 12, 0) == L"test 6");
+	QVERIFY(newDataSet->getUnicodeString(20, 0, 13, 0) == L"test 7");
 }
 
 

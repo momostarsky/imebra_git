@@ -1,4 +1,3 @@
-#include <cppunit/extensions/HelperMacros.h>
 #include "huffmanTest.h"
 
 #include "../library/imebra/include/imebra.h"
@@ -14,9 +13,6 @@ namespace imebra
 
 namespace tests
 {
-
-CPPUNIT_TEST_SUITE_REGISTRATION(puntoexe::imebra::tests::huffmanTest);
-
 
 // A buffer initialized to a default data type should use the data type OB
 void huffmanTest::test()
@@ -49,7 +45,7 @@ void huffmanTest::test()
 	{
 		imbxUint32 value(huffman.readHuffmanCode(reader.get()));
 
-                CPPUNIT_ASSERT((imbxUint8)value == values[readValues]);
+		QCOMPARE((imbxUint8)value, values[readValues]);
 	}
 }
 

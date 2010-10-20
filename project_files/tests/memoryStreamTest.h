@@ -1,7 +1,7 @@
 #if !defined(imebraMemoryStreamTest_DE3F98A9_664E_47c0_A29B_B681F9AEB118__INCLUDED_)
 #define imebraMemoryStreamTest_DE3F98A9_664E_47c0_A29B_B681F9AEB118__INCLUDED_
 
-#include <cppunit/TestCase.h>
+#include <QtTest/QtTest>
 
 namespace puntoexe
 {
@@ -12,18 +12,12 @@ namespace imebra
 namespace tests
 {
 
-class memoryStreamTest: public CppUnit::TestFixture
+class memoryStreamTest: public QObject
 {
-	CPPUNIT_TEST_SUITE(memoryStreamTest);
-	
-	CPPUNIT_TEST(test);
-	CPPUNIT_TEST(testBytes);
+	Q_OBJECT
 
-	CPPUNIT_TEST_SUITE_END();
-
-public:
+private slots:
 	void test();
-
 	void testBytes();
 
 };

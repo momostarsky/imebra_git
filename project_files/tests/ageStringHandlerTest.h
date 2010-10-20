@@ -1,7 +1,7 @@
 #if !defined(imebraageStringHandlerTest_DE3F98A9_664E_47c0_A29B_B681F9AEB118__INCLUDED_)
 #define imebraageStringHandlerTest_DE3F98A9_664E_47c0_A29B_B681F9AEB118__INCLUDED_
 
-#include <cppunit/TestCase.h>
+#include <QtTest/QtTest>
 
 namespace puntoexe
 {
@@ -12,15 +12,11 @@ namespace imebra
 namespace tests
 {
 
-class ageStringHandlerTest: public CppUnit::TestFixture
+class ageStringHandlerTest: public QObject
 {
-	CPPUNIT_TEST_SUITE(ageStringHandlerTest);
-	
-	CPPUNIT_TEST(ageTest);
+    Q_OBJECT
 
-	CPPUNIT_TEST_SUITE_END();
-
-public:
+private slots:
 	void ageTest();
 
 };

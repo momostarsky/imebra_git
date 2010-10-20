@@ -1,4 +1,3 @@
-#include <cppunit/extensions/HelperMacros.h>
 #include "numericHandlerTest.h"
 
 #include "../library/imebra/include/imebra.h"
@@ -13,8 +12,6 @@ namespace imebra
 namespace tests
 {
 
-CPPUNIT_TEST_SUITE_REGISTRATION(puntoexe::imebra::tests::numericHandlerTest);
-
 // Check the function pointerIsValid
 void numericHandlerTest::validPointer()
 {
@@ -22,31 +19,31 @@ void numericHandlerTest::validPointer()
 
 
 	ptr<handlers::dataHandler> handlerBuffer0(buffer0->getDataHandler(true, 0));
-	CPPUNIT_ASSERT(handlerBuffer0->getUnitSize() == 2);
+	QVERIFY(handlerBuffer0->getUnitSize() == 2);
 	imbxUint32 bufferSize(4);
 	handlerBuffer0->setSize(bufferSize);
 	
 	imbxUint32 checkSize0(0);
 	while(handlerBuffer0->pointerIsValid(checkSize0))
 	{
-		CPPUNIT_ASSERT(checkSize0 < bufferSize);
+		QVERIFY(checkSize0 < bufferSize);
 		++checkSize0;
 	}
 
-	CPPUNIT_ASSERT(checkSize0 == bufferSize);
+	QCOMPARE(checkSize0, bufferSize);
 	handlerBuffer0.release();
 
 	ptr<handlers::dataHandler> handlerBuffer1(buffer0->getDataHandler(true, 0));
-	CPPUNIT_ASSERT(handlerBuffer1->getUnitSize() == 2);
+	QVERIFY(handlerBuffer1->getUnitSize() == 2);
 	
 	imbxUint32 checkSize1(0);
 	while(handlerBuffer1->pointerIsValid(checkSize1))
 	{
-		CPPUNIT_ASSERT(checkSize1 < bufferSize);
+		QVERIFY(checkSize1 < bufferSize);
 		++checkSize1;
 	}
 
-	CPPUNIT_ASSERT(checkSize1 == bufferSize);
+	QCOMPARE(checkSize1, bufferSize);
 }
 
 // A buffer initialized to a default data type should use the data type OB
@@ -185,19 +182,19 @@ void numericHandlerTest::interleavedCopy()
 			imbxInt32* pTestBuffer0 = buffer0.get() + squareX * 64 + squareY * mcuX * 128;
 			for(int scanValues0 = 0; scanValues0 < 64; ++scanValues0)
 			{
-				CPPUNIT_ASSERT(pTestBuffer0[scanValues0] == squareY * 100 + squareX);
+				QCOMPARE(pTestBuffer0[scanValues0], (imbxInt32)(squareY * 100 + squareX) );
 			}
 
 			imbxInt32* pTestBuffer1 = buffer1.get() + squareX2 * 64 + squareY2 * mcuX * 64;
 			for(int scanValues1 = 0; scanValues1 < 64; ++scanValues1)
 			{
-				CPPUNIT_ASSERT(pTestBuffer1[scanValues1] == -squareY2 * 100 - squareX2);
+				QCOMPARE(pTestBuffer1[scanValues1], (imbxInt32)(-squareY2 * 100 - squareX2) );
 			}
 
 			imbxInt32* pTestBuffer2 = buffer2.get() + squareX2 * 64 + squareY2 * mcuX * 64;
 			for(int scanValues2 = 0; scanValues2 < 64; ++scanValues2)
 			{
-				CPPUNIT_ASSERT(pTestBuffer2[scanValues2] == -squareY2 * 100 + squareX2);
+				QCOMPARE(pTestBuffer2[scanValues2], (imbxInt32)(-squareY2 * 100 + squareX2) );
 			}
 
 		}
@@ -214,9 +211,9 @@ void numericHandlerTest::stringConversion()
 	testHandler0->setSize(1);
 
 	testHandler0->setString(0, "13");
-	CPPUNIT_ASSERT(testHandler0->getSignedLong(0) == 13);
+	QVERIFY(testHandler0->getSignedLong(0) == 13);
 	testHandler0->setString(0, "45.7");
-	CPPUNIT_ASSERT(testHandler0->getSignedLong(0) == 45);
+	QVERIFY(testHandler0->getSignedLong(0) == 45);
 
 	ptr<memory> handlerBuffer1(new memory);
 	ptr<handlers::dataHandlerNumeric<double> > testHandler1(new handlers::dataHandlerNumeric<double>);
@@ -224,9 +221,9 @@ void numericHandlerTest::stringConversion()
 	testHandler1->setSize(1);
 
 	testHandler1->setString(0, "13");
-	CPPUNIT_ASSERT(testHandler1->getSignedLong(0) == 13);
+	QVERIFY(testHandler1->getSignedLong(0) == 13);
 	testHandler1->setString(0, "45.7");
-	CPPUNIT_ASSERT(testHandler1->getDouble(0) == 45.7);
+	QVERIFY(testHandler1->getDouble(0) == 45.7);
 }
 
 

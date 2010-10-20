@@ -1,7 +1,7 @@
 #if !defined(imebraBufferTest_DE3F98A9_664E_47c0_A29B_B681F9AEB118__INCLUDED_)
 #define imebraBufferTest_DE3F98A9_664E_47c0_A29B_B681F9AEB118__INCLUDED_
 
-#include <cppunit/TestCase.h>
+#include <QtTest/QtTest>
 
 namespace puntoexe
 {
@@ -12,22 +12,14 @@ namespace imebra
 namespace tests
 {
 
-class bufferTest: public CppUnit::TestFixture
+class bufferTest: public QObject
 {
-	CPPUNIT_TEST_SUITE(bufferTest);
-	
-	CPPUNIT_TEST(testDefaultType);
-	CPPUNIT_TEST(testReadWrite);
-	CPPUNIT_TEST(testOddLength);
+    Q_OBJECT
 
-	CPPUNIT_TEST_SUITE_END();
-
-public:
-	void testDefaultType();
-
-	void testReadWrite();
-
-	void testOddLength();
+private slots:
+    void testDefaultType();
+    void testReadWrite();
+    void testOddLength();
 };
 
 } // namespace tests

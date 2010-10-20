@@ -1,4 +1,3 @@
-#include <cppunit/extensions/HelperMacros.h>
 #include "memoryStreamTest.h"
 
 #include "../library/imebra/include/imebra.h"
@@ -14,8 +13,6 @@ namespace imebra
 
 namespace tests
 {
-
-CPPUNIT_TEST_SUITE_REGISTRATION(puntoexe::imebra::tests::memoryStreamTest);
 
 
 // A buffer initialized to a default data type should use the data type OB
@@ -40,7 +37,7 @@ void memoryStreamTest::test()
 	{
 		imbxUint8 value;
 		reader->read(&value, 1);
-		CPPUNIT_ASSERT(value == values[readValues]);
+		QCOMPARE(value, values[readValues]);
 	}
 }
 
@@ -70,7 +67,7 @@ void memoryStreamTest::testBytes()
 	for(size_t readValues = 0; readValues < values.size(); ++readValues)
 	{
 		imbxUint8 value(reader->readByte());
-		CPPUNIT_ASSERT(value == values[readValues]);
+		QCOMPARE(value, values[readValues]);
 	}
 }
 

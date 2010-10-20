@@ -1,6 +1,4 @@
-#include <cppunit/extensions/HelperMacros.h>
 #include "ageStringHandlerTest.h"
-
 #include "../library/imebra/include/imebra.h"
 
 namespace puntoexe
@@ -12,10 +10,6 @@ namespace imebra
 namespace tests
 {
 
-CPPUNIT_TEST_SUITE_REGISTRATION(puntoexe::imebra::tests::ageStringHandlerTest);
-
-
-
 void ageStringHandlerTest::ageTest()
 {
 	ptr<data> tag(new data(ptr<baseObject>(0)));
@@ -25,25 +19,26 @@ void ageStringHandlerTest::ageTest()
 
 		hTag->setDouble(0, 0.01);
 		std::wstring ageString = hTag->getUnicodeString(0);
-		CPPUNIT_ASSERT(ageString == L"003D");
+                QCOMPARE(ageString, std::wstring(L"003D"));
 
 		hTag->setDouble(0, 0.2);
 		ageString = hTag->getUnicodeString(0);
-		CPPUNIT_ASSERT(ageString == L"010W");
+                QVERIFY(ageString == L"010W");
 
 		hTag->setDouble(0, 0.9);
 		ageString = hTag->getUnicodeString(0);
-		CPPUNIT_ASSERT(ageString == L"010M");
+                QVERIFY(ageString == L"010M");
 
 		hTag->setDouble(0, 0.5);
 		ageString = hTag->getUnicodeString(0);
-		CPPUNIT_ASSERT(ageString == L"006M");
+                QVERIFY(ageString == L"006M");
 
 		hTag->setDouble(0, 2.3);
 		ageString = hTag->getUnicodeString(0);
-		CPPUNIT_ASSERT(ageString == L"002Y");
-		imbxUint32 ageInt = hTag->getUnsignedLong(0);
-		CPPUNIT_ASSERT(ageInt == 2);
+                QVERIFY(ageString == L"002Y");
+
+                imbxUint32 ageInt = hTag->getUnsignedLong(0);
+                QVERIFY(ageInt == 2);
 	}
 }
 

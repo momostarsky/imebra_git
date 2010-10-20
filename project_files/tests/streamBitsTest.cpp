@@ -1,4 +1,3 @@
-#include <cppunit/extensions/HelperMacros.h>
 #include "streamBitsTest.h"
 
 #include "../library/imebra/include/imebra.h"
@@ -14,8 +13,6 @@ namespace imebra
 
 namespace tests
 {
-
-CPPUNIT_TEST_SUITE_REGISTRATION(puntoexe::imebra::tests::streamBitsTest);
 
 
 void streamBitsTest::test()
@@ -42,47 +39,47 @@ void streamBitsTest::test()
 	writer->resetOutBitsBuffer();
 	writer->flushDataBuffer();
 
-        {
-            ptr<streamReader> reader(new streamReader(theMemoryStream));
-            reader->m_bJpegTags = true;
+	{
+		ptr<streamReader> reader(new streamReader(theMemoryStream));
+		reader->m_bJpegTags = true;
 
-            for(size_t readValues = 0; readValues < bitsValue.size(); ++readValues)
-            {
-                    imbxUint32 value(reader->readBits(bitsNumber[readValues]));
-                    CPPUNIT_ASSERT(value == bitsValue[readValues]);
-            }
-        }
+		for(size_t readValues = 0; readValues < bitsValue.size(); ++readValues)
+		{
+			imbxUint32 value(reader->readBits(bitsNumber[readValues]));
+			QCOMPARE(value, bitsValue[readValues]);
+		}
+	}
 
-        {
-            ptr<streamReader> reader(new streamReader(theMemoryStream));
-            reader->m_bJpegTags = true;
+	{
+		ptr<streamReader> reader(new streamReader(theMemoryStream));
+		reader->m_bJpegTags = true;
 
-            for(size_t readValues = 0; readValues < bitsValue.size(); ++readValues)
-            {
-                imbxUint32 value(0);
-                for(imbxUint8 count(bitsNumber[readValues]); count != 0; --count)
-                {
-                    value <<= 1;
-                    value |= reader->readBit();
-                }
-                CPPUNIT_ASSERT(value == bitsValue[readValues]);
-            }
-        }
+		for(size_t readValues = 0; readValues < bitsValue.size(); ++readValues)
+		{
+			imbxUint32 value(0);
+			for(imbxUint8 count(bitsNumber[readValues]); count != 0; --count)
+			{
+				value <<= 1;
+				value |= reader->readBit();
+			}
+			QCOMPARE(value, bitsValue[readValues]);
+		}
+	}
 
-        {
-            ptr<streamReader> reader(new streamReader(theMemoryStream));
-            reader->m_bJpegTags = true;
+	{
+		ptr<streamReader> reader(new streamReader(theMemoryStream));
+		reader->m_bJpegTags = true;
 
-            for(size_t readValues = 0; readValues < bitsValue.size(); ++readValues)
-            {
-                imbxUint32 value(0);
-                for(imbxUint8 count(bitsNumber[readValues]); count != 0; --count)
-                {
-                    reader->addBit(&value);
-                }
-                CPPUNIT_ASSERT(value == bitsValue[readValues]);
-            }
-        }
+		for(size_t readValues = 0; readValues < bitsValue.size(); ++readValues)
+		{
+			imbxUint32 value(0);
+			for(imbxUint8 count(bitsNumber[readValues]); count != 0; --count)
+			{
+				reader->addBit(&value);
+			}
+			QCOMPARE(value, bitsValue[readValues]);
+		}
+	}
 
 }
 

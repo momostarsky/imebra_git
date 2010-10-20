@@ -1,7 +1,7 @@
 #if !defined(imebraNumericHandlerTest_DE3F98A9_664E_47c0_A29B_B681F9AEB118__INCLUDED_)
 #define imebraNumericHandlerTest_DE3F98A9_664E_47c0_A29B_B681F9AEB118__INCLUDED_
 
-#include <cppunit/TestCase.h>
+#include <QtTest/QtTest>
 
 namespace puntoexe
 {
@@ -12,19 +12,11 @@ namespace imebra
 namespace tests
 {
 
-class numericHandlerTest: public CppUnit::TestFixture
+class numericHandlerTest: public QObject
 {
-	CPPUNIT_TEST_SUITE(numericHandlerTest);
-	
-	CPPUNIT_TEST(interleavedCopy);
+	Q_OBJECT
 
-	CPPUNIT_TEST(stringConversion);
-
-	CPPUNIT_TEST(validPointer);
-
-	CPPUNIT_TEST_SUITE_END();
-
-public:
+private slots:
 	void interleavedCopy();
 	void stringConversion();
 	void validPointer();

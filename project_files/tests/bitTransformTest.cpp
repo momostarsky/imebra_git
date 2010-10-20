@@ -1,6 +1,4 @@
-#include <cppunit/extensions/HelperMacros.h>
 #include "bitTransformTest.h"
-
 #include "../library/imebra/include/imebra.h"
 
 namespace puntoexe
@@ -11,9 +9,6 @@ namespace imebra
 
 namespace tests
 {
-
-CPPUNIT_TEST_SUITE_REGISTRATION(puntoexe::imebra::tests::bitTransformTest);
-
 
 // A buffer initialized to a default data type should use the data type OB
 void bitTransformTest::testBitTransform()
@@ -101,23 +96,21 @@ void bitTransformTest::testBitTransform()
 			imbxInt32 value1b = bits16Handler->getUnsignedLong(elementNumber);
 			imbxInt32 value2b = bits4Handler->getUnsignedLong(elementNumber++);
 			
-			CPPUNIT_ASSERT(value0r == r);
-			CPPUNIT_ASSERT(value0g == g);
-			CPPUNIT_ASSERT(value0b == b);
+                        QCOMPARE(value0r, r);
+                        QCOMPARE(value0g, g);
+                        QCOMPARE(value0b, b);
 
-			CPPUNIT_ASSERT(value0r == (value1r>>8));
-			CPPUNIT_ASSERT(value0g == (value1g>>8));
-			CPPUNIT_ASSERT(value0b == (value1b>>8));
+                        QCOMPARE(value0r, (value1r>>8));
+                        QCOMPARE(value0g, (value1g>>8));
+                        QCOMPARE(value0b, (value1b>>8));
 
-			CPPUNIT_ASSERT((value0r >> 4) == value2r);
-			CPPUNIT_ASSERT((value0g >> 4) == value2g);
-			CPPUNIT_ASSERT((value0b >> 4) == value2b);
+                        QCOMPARE((value0r >> 4), value2r);
+                        QCOMPARE((value0g >> 4), value2g);
+                        QCOMPARE((value0b >> 4), value2b);
 
 		}
 	}
 }
-
-
 
 } // namespace tests
 

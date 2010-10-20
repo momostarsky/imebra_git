@@ -1,4 +1,3 @@
-#include <cppunit/extensions/HelperMacros.h>
 #include "drawBitmapTest.h"
 
 #include "../library/imebra/include/imebra.h"
@@ -12,8 +11,6 @@ namespace imebra
 
 namespace tests
 {
-
-CPPUNIT_TEST_SUITE_REGISTRATION(puntoexe::imebra::tests::drawBitmapTest);
 
 using namespace puntoexe::imebra;
 

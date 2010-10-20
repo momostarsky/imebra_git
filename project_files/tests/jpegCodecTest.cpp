@@ -1,4 +1,3 @@
-#include <cppunit/extensions/HelperMacros.h>
 #include "jpegCodecTest.h"
 
 #include "../library/imebra/include/imebra.h"
@@ -11,9 +10,6 @@ namespace imebra
 
 namespace tests
 {
-
-CPPUNIT_TEST_SUITE_REGISTRATION(puntoexe::imebra::tests::jpegCodecTest);
-
 
 // A buffer initialized to a default data type should use the data type OB
 void jpegCodecTest::testBaseline()
@@ -96,8 +92,8 @@ void jpegCodecTest::testBaseline()
 		ptr<handlers::dataHandlerNumericBase> originalHandler = baselineImage->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
 
 		// Compare the buffers. A little difference is allowed
-		CPPUNIT_ASSERT(checkSizeX == sizeX);
-		CPPUNIT_ASSERT(checkSizeY == sizeY);
+		QCOMPARE(checkSizeX, sizeX);
+		QCOMPARE(checkSizeY, sizeY);
 
 		elementPointer = 0;
 
@@ -121,7 +117,7 @@ void jpegCodecTest::testBaseline()
 				}
 			}
 		}
-		CPPUNIT_ASSERT(difference < sizeX * sizeY);
+		QVERIFY(difference < sizeX * sizeY);
 	}
 }
 
@@ -196,8 +192,8 @@ void jpegCodecTest::testBaselineSubsampled()
 	ptr<handlers::dataHandlerNumericBase> originalHandler = baselineImage->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
 
 	// Compare the buffers. A little difference is allowed
-	CPPUNIT_ASSERT(checkSizeX == sizeX);
-	CPPUNIT_ASSERT(checkSizeY == sizeY);
+	QCOMPARE(checkSizeX, sizeX);
+	QCOMPARE(checkSizeY, sizeY);
 
 	imbxUint32 difference = 0;
 	elementNumber = 0;
@@ -220,7 +216,7 @@ void jpegCodecTest::testBaselineSubsampled()
 			}
 		}
 	}
-	CPPUNIT_ASSERT(difference < sizeX * sizeY * 12);
+	QVERIFY(difference < sizeX * sizeY * 12);
 
 }
 
@@ -284,8 +280,8 @@ void jpegCodecTest::testLossless()
 	ptr<handlers::dataHandlerNumericBase> originalHandler = baselineImage->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
 
 	// Compare the buffers. A little difference is allowed
-	CPPUNIT_ASSERT(checkSizeX == sizeX);
-	CPPUNIT_ASSERT(checkSizeY == sizeY);
+	QCOMPARE(checkSizeX, sizeX);
+	QCOMPARE(checkSizeY, sizeY);
 
 	elementNumber = 0;
 
@@ -297,7 +293,7 @@ void jpegCodecTest::testLossless()
 			{
 				imbxInt32 value0 = rgbHandler->getUnsignedLong(elementNumber);
 				imbxInt32 value1 = originalHandler->getUnsignedLong(elementNumber++);
-				CPPUNIT_ASSERT(value0 == value1);
+				QCOMPARE(value0, value1);
 			}
 		}
 	}

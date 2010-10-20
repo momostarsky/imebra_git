@@ -4,7 +4,7 @@
 #include "windows.h"
 #include "../../imebra/include/imebra.h"
 
-#include <cppunit/TestCase.h>
+#include <QtTest/QtTest>
 
 namespace puntoexe
 {
@@ -29,18 +29,15 @@ public:
 };
 
 
-class threadTest: public CppUnit::TestFixture
+class threadTest: public QObject
 {
-	CPPUNIT_TEST_SUITE(threadTest);
-	CPPUNIT_TEST(testThreadsTransactions);
-	CPPUNIT_TEST(testThreadsExceptions);
-	CPPUNIT_TEST(testThreads);
+	Q_OBJECT
 
-	CPPUNIT_TEST_SUITE_END();
-
-public:
+private slots:
 	void testThreadsTransactions();
 	void testThreads();
+
+private:
 	static DWORD WINAPI testTransaction(LPVOID lpParam);
 	DWORD m_transactionTestWait;
 	ptr<dataSet> m_dataSet0;

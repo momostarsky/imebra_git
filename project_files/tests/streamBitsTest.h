@@ -1,7 +1,7 @@
 #if !defined(imebraStreamBitsTest_DE3F98A9_664E_47c0_A29B_B681F9AEB118__INCLUDED_)
 #define imebraStreamBitsTest_DE3F98A9_664E_47c0_A29B_B681F9AEB118__INCLUDED_
 
-#include <cppunit/TestCase.h>
+#include <QtTest/QtTest>
 
 namespace puntoexe
 {
@@ -12,15 +12,11 @@ namespace imebra
 namespace tests
 {
 
-class streamBitsTest: public CppUnit::TestFixture
+class streamBitsTest: public QObject
 {
-	CPPUNIT_TEST_SUITE(streamBitsTest);
-	
-	CPPUNIT_TEST(test);
+	Q_OBJECT
 
-	CPPUNIT_TEST_SUITE_END();
-
-public:
+private slots:
 	void test();
 
 };

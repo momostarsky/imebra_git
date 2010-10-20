@@ -1,7 +1,7 @@
 #if !defined(imebraTransactionTest_DE3F98A9_664E_47c0_A29B_B681F9AEB118__INCLUDED_)
 #define imebraTransactionTest_DE3F98A9_664E_47c0_A29B_B681F9AEB118__INCLUDED_
 
-#include <cppunit/TestCase.h>
+#include <QtTest/QtTest>
 
 namespace puntoexe
 {
@@ -12,21 +12,11 @@ namespace imebra
 namespace tests
 {
 
-class transactionTest: public CppUnit::TestFixture
+class transactionTest: public QObject
 {
-	CPPUNIT_TEST_SUITE(transactionTest);
-	
-	CPPUNIT_TEST(testOneTransaction);
+	Q_OBJECT
 
-	CPPUNIT_TEST(testNestedTransactions0);
-	CPPUNIT_TEST(testNestedTransactions1);
-
-	CPPUNIT_TEST(testNestedTransactionsFail0);
-	CPPUNIT_TEST(testNestedTransactionsFail1);
-
-	CPPUNIT_TEST_SUITE_END();
-
-public:
+private slots:
 	void testOneTransaction();
 	void testNestedTransactions0();
 	void testNestedTransactions1();

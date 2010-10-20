@@ -1,4 +1,3 @@
-#include <cppunit/extensions/HelperMacros.h>
 #include "dicomDirTest.h"
 
 #include "../library/imebra/include/imebra.h"
@@ -11,8 +10,6 @@ namespace imebra
 
 namespace tests
 {
-
-CPPUNIT_TEST_SUITE_REGISTRATION(puntoexe::imebra::tests::dicomDirTest);
 
 using namespace puntoexe::imebra;
 
@@ -53,18 +50,18 @@ void dicomDirTest::createDicomDir()
 
 	ptr<dicomDir> testDicomDir(new dicomDir(readDataSet));
 	ptr<directoryRecord> testRootRecord(testDicomDir->getFirstRootRecord());
-	CPPUNIT_ASSERT(testRootRecord->getType() == directoryRecord::patient);
-	CPPUNIT_ASSERT(testRootRecord->getRecordDataSet()->getUnicodeString(0x10, 0, 0x10, 0) == L"Surname");
+	QVERIFY(testRootRecord->getType() == directoryRecord::patient);
+	QVERIFY(testRootRecord->getRecordDataSet()->getUnicodeString(0x10, 0, 0x10, 0) == L"Surname");
 
 	ptr<directoryRecord> testNextRecord(testRootRecord->getNextRecord());
-	CPPUNIT_ASSERT(testNextRecord->getType() == directoryRecord::patient);
-	CPPUNIT_ASSERT(testNextRecord->getRecordDataSet()->getUnicodeString(0x10, 0, 0x10, 0) == L"Surname 1");
+	QVERIFY(testNextRecord->getType() == directoryRecord::patient);
+	QVERIFY(testNextRecord->getRecordDataSet()->getUnicodeString(0x10, 0, 0x10, 0) == L"Surname 1");
 
 	ptr<directoryRecord> testImageRecord(testNextRecord->getFirstChildRecord());
-	CPPUNIT_ASSERT(testImageRecord->getType() == directoryRecord::image);
-	CPPUNIT_ASSERT(testImageRecord->getRecordDataSet()->getUnicodeString(0x8, 0, 0x18, 0) == L"1.2.840.34.56.78999654.235");
-	CPPUNIT_ASSERT(testImageRecord->getFilePart(0) == L"folder");
-	CPPUNIT_ASSERT(testImageRecord->getFilePart(1) == L"file.dcm");
+	QVERIFY(testImageRecord->getType() == directoryRecord::image);
+	QVERIFY(testImageRecord->getRecordDataSet()->getUnicodeString(0x8, 0, 0x18, 0) == L"1.2.840.34.56.78999654.235");
+	QVERIFY(testImageRecord->getFilePart(0) == L"folder");
+	QVERIFY(testImageRecord->getFilePart(1) == L"file.dcm");
 }
 
 

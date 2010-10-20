@@ -1,4 +1,3 @@
-#include <cppunit/extensions/HelperMacros.h>
 #include "unicodeStringHandlerTest.h"
 
 #include "../library/imebra/include/imebra.h"
@@ -11,8 +10,6 @@ namespace imebra
 
 namespace tests
 {
-
-CPPUNIT_TEST_SUITE_REGISTRATION(puntoexe::imebra::tests::unicodeStringHandlerTest);
 
 void unicodeStringHandlerTest::unicodeTest()
 {
@@ -40,12 +37,12 @@ void unicodeStringHandlerTest::unicodeTest()
 		ptr<baseStream> readStream(new memoryStream(streamMemory));
 		ptr<dataSet> testDataSet = codecs::codecFactory::getCodecFactory()->load(ptr<streamReader>(new streamReader(readStream)));
 
-		CPPUNIT_ASSERT(testDataSet->getUnicodeString(0x0010, 0, 0x0010, 0) == patientName0);
-		CPPUNIT_ASSERT(testDataSet->getUnicodeString(0x0010, 0, 0x0010, 1) == patientName1);
+		QCOMPARE(testDataSet->getUnicodeString(0x0010, 0, 0x0010, 0), patientName0);
+		QCOMPARE(testDataSet->getUnicodeString(0x0010, 0, 0x0010, 1), patientName1);
 		
 		charsetsList::tCharsetsList charsets;
 		testDataSet->getCharsetsList(&charsets);
-		CPPUNIT_ASSERT(charsets.size() == 1 && charsets.front()==L"ISO_IR 192");
+		QVERIFY(charsets.size() == 1 && charsets.front()==L"ISO_IR 192");
 	}
 }
 
@@ -74,12 +71,12 @@ void unicodeStringHandlerTest::iso2022Test()
 
 		std::wstring check0 = testDataSet->getUnicodeString(0x0010, 0, 0x0010, 0);
 		std::wstring check1 = testDataSet->getUnicodeString(0x0010, 0, 0x0010, 1);
-		CPPUNIT_ASSERT(check0 == patientName0);
-		CPPUNIT_ASSERT(check1 == patientName1);
+		QCOMPARE(check0, patientName0);
+		QCOMPARE(check1, patientName1);
 		
 		charsetsList::tCharsetsList charsets;
 		testDataSet->getCharsetsList(&charsets);
-		CPPUNIT_ASSERT(charsets.size() == 4 && charsets.front()==L"ISO 2022 IR 6");
+		QVERIFY(charsets.size() == 4 && charsets.front()==L"ISO 2022 IR 6");
 	}
 }
 

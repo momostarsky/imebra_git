@@ -1,4 +1,3 @@
-#include <cppunit/extensions/HelperMacros.h>
 #include "paletteTest.h"
 
 #include "../library/imebra/include/imebra.h"
@@ -11,8 +10,6 @@ namespace imebra
 
 namespace tests
 {
-
-CPPUNIT_TEST_SUITE_REGISTRATION(puntoexe::imebra::tests::paletteTest);
 
 
 // A buffer initialized to a default data type should use the data type OB

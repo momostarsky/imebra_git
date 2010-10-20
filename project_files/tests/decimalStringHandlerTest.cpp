@@ -1,4 +1,3 @@
-#include <cppunit/extensions/HelperMacros.h>
 #include "decimalStringHandlerTest.h"
 
 #include "../library/imebra/include/imebra.h"
@@ -12,10 +11,6 @@ namespace imebra
 namespace tests
 {
 
-CPPUNIT_TEST_SUITE_REGISTRATION(puntoexe::imebra::tests::decimalStringHandlerTest);
-
-
-
 void decimalStringHandlerTest::decimalTest()
 {
 	ptr<data> tag(new data(ptr<baseObject>(0)));
@@ -25,9 +20,9 @@ void decimalStringHandlerTest::decimalTest()
 
 		hTag->setDouble(0, 0.000001);
 		std::wstring decimalString = hTag->getUnicodeString(0);
-		CPPUNIT_ASSERT(decimalString == L"1e-006" || decimalString == L"1e-06" || decimalString == L"1e-6");
+		QVERIFY(decimalString == L"1e-006" || decimalString == L"1e-06" || decimalString == L"1e-6");
 		double decimal = hTag->getDouble(0);
-		CPPUNIT_ASSERT(decimal > 0.0000009 && decimal < 0.0000011);
+		QVERIFY(decimal > 0.0000009 && decimal < 0.0000011);
 	}
 }
 

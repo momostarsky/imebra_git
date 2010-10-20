@@ -1,4 +1,3 @@
-#include <cppunit/extensions/HelperMacros.h>
 #include "threadTest.h"
 
 #include "../../imebra/include/imebra.h"
@@ -11,8 +10,6 @@ namespace imebra
 
 namespace tests
 {
-
-CPPUNIT_TEST_SUITE_REGISTRATION(puntoexe::imebra::tests::threadTest);
 
 thread::thread(long setWaitMsec, long endWaitMsec):
         m_setWaitMsec(setWaitMsec), m_endWaitMsec(endWaitMsec), m_bVariable(false)
