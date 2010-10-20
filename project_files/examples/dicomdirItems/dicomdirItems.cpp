@@ -5,7 +5,7 @@
 #include <string>
 #include <sstream>
 #include <fstream>
-#include "../../imebra/include/imebra.h"
+#include "../../library/imebra/include/imebra.h"
 
 using namespace puntoexe;
 using namespace puntoexe::imebra;
@@ -73,14 +73,13 @@ void outputTag(ptr<dataSet> pDataSet, imbxUint16 group, imbxUint16 tag, std::wos
 	}
 	*pOutputStream << L">";
 
-	for(bool bSeparator(false); tagHandler->pointerIsValid(); bSeparator = true)
+        for(size_t scanValues(0); tagHandler->pointerIsValid(scanValues); ++scanValues)
 	{
-		if(bSeparator)
+                if(scanValues != 0)
 		{
 			*pOutputStream << L"\\";
 		}
-		*pOutputStream << xmlEntities(tagHandler->getUnicodeString());
-		tagHandler->incPointer();
+                *pOutputStream << xmlEntities(tagHandler->getUnicodeString(scanValues));
 	}
 
 	*pOutputStream << L"</" << tagName << L">\n";
