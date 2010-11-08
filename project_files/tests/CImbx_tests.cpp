@@ -2,8 +2,6 @@
 //
 
 
-#include "stdafx.h"
-
 #include "ageStringHandlerTest.h"
 #include "bitTransformTest.h"
 #include "bufferTest.h"

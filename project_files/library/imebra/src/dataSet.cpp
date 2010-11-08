@@ -848,7 +848,7 @@ ptr<image> dataSet::convertImageForDataSet(ptr<image> sourceImage)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<dataSet> dataSet::getSequenceItem(imbxUint16 groupId, imbxUint16 order, imbxUint16 tagId, imbxUint32 bufferId)
+ptr<dataSet> dataSet::getSequenceItem(imbxUint16 groupId, imbxUint16 order, imbxUint16 tagId, imbxUint32 itemId)
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getSequenceItem");
 
@@ -856,7 +856,7 @@ ptr<dataSet> dataSet::getSequenceItem(imbxUint16 groupId, imbxUint16 order, imbx
 	ptr<dataSet> pDataSet;
 	if(tag != 0)
 	{
-		pDataSet = tag->getDataSet(bufferId);
+		pDataSet = tag->getDataSet(itemId);
 	}
 
 	return pDataSet;

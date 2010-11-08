@@ -3,8 +3,7 @@ TEMPLATE = app
 QT -= gui
 QT += core testlib
 
-unix:LIBS = -lcppunit \
-    -lgcov
+unix:LIBS = -lgcov
 
 OTHER_FILES += \
     ReadMe.txt \
@@ -13,13 +12,16 @@ OTHER_FILES += \
     CImbx_tests.cbp \
     ../../build.xml \
     ../DoxyfileHTML \
-    ../DoxyfilePDF
+    ../DoxyfilePDF \
+    ../docs/html_header.html \
+    ../docs/html_footer.html \
+    ../docs/gpl.txt \
+    ../docs/commercial.txt
 
 HEADERS += \
     unicodeStringHandlerTest.h \
     transactionTest.h \
     streamBitsTest.h \
-    stdafx.h \
     paletteTest.h \
     numericHandlerTest.h \
     memoryStreamTest.h \
@@ -110,13 +112,20 @@ HEADERS += \
     ../library/base/include/configuration.h \
     ../library/base/include/charsetConversion.h \
     ../library/base/include/baseStream.h \
-    ../library/base/include/baseObject.h
+    ../library/base/include/baseObject.h \
+    ../docs/mainPage.h \
+    ../docs/g_examples.h \
+    ../docs/f_transactions_locks.h \
+    ../docs/e_unicode.h \
+    ../docs/d_addToProject.h \
+    ../docs/c_quick_tour.h \
+    ../docs/b_imebra_structure.h \
+    ../docs/a_license.h
 
 SOURCES += \
     unicodeStringHandlerTest.cpp \
     transactionTest.cpp \
     streamBitsTest.cpp \
-    stdafx.cpp \
     paletteTest.cpp \
     numericHandlerTest.cpp \
     memoryStreamTest.cpp \

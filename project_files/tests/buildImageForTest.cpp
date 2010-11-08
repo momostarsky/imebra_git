@@ -1,6 +1,8 @@
 #include "buildImageForTest.h"
 #include <stdlib.h>
-#include <cppunit/extensions/HelperMacros.h>
+
+#include <QtTest/QtTest>
+
 namespace puntoexe
 {
 
@@ -109,7 +111,7 @@ double compareImages(ptr<image> image0, ptr<image> image1)
 		total += labs(hImage0->getSignedLong(index));
 		++index;
 	}
-	CPPUNIT_ASSERT(total > 0);
+
 	difference /= divisor;
 
 	return difference;
