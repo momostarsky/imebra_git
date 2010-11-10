@@ -804,7 +804,7 @@ ptr<image> dataSet::convertImageForDataSet(ptr<image> sourceImage)
 	if(colorSpace != currentColorSpace)
 	{
 		ptr<transforms::colorTransforms::colorTransformsFactory> pColorFactory(transforms::colorTransforms::colorTransformsFactory::getColorTransformsFactory());
-		ptr<transforms::baseTransform> colorChain = pColorFactory->getTransform(colorSpace, currentColorSpace);
+		ptr<transforms::transform> colorChain = pColorFactory->getTransform(colorSpace, currentColorSpace);
 		if(colorChain->isEmpty())
 		{
 			PUNTOEXE_THROW(dataSetExceptionDifferentFormat, "The image color space cannot be converted to the dataset color space");

@@ -279,10 +279,10 @@ public:
 ///         thrown by colorTransformsFactory.
 ///
 ///////////////////////////////////////////////////////////
-class colorTransformsFactoryException: public baseTransformException
+class colorTransformsFactoryException: public transformException
 {
 public:
-	colorTransformsFactoryException(const std::string& message): baseTransformException(message){}
+	colorTransformsFactoryException(const std::string& message): transformException(message){}
 };
 
 ///////////////////////////////////////////////////////////

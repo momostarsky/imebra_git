@@ -11,7 +11,7 @@ $fileHeader$
 #if !defined(imebraColorTransform_E27C63E7_A907_4899_9BD3_8026AD7D110C__INCLUDED_)
 #define imebraColorTransform_E27C63E7_A907_4899_9BD3_8026AD7D110C__INCLUDED_
 
-#include "baseTransform.h"
+#include "transform.h"
 
 
 ///////////////////////////////////////////////////////////
@@ -97,10 +97,10 @@ protected:
 };
 
 
-class colorTransformException: public baseTransformException
+class colorTransformException: public transformException
 {
 public:
-	colorTransformException(const std::string& message): baseTransformException(message){}
+	colorTransformException(const std::string& message): transformException(message){}
 };
 
 class colorTransformExceptionWrongColorSpace: public colorTransformException

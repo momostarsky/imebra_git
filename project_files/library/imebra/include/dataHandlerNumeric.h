@@ -124,10 +124,10 @@ public:
 		return m_pMemoryString;
 	}
 
-        size_t getMemorySize() const
-        {
-            return m_memorySize;
-        }
+	size_t getMemorySize() const
+	{
+		return m_memorySize;
+	}
 
 	/// \brief Return the memory object that stores the data
 	///         managed by the handler.
@@ -178,26 +178,25 @@ public:
 		PUNTOEXE_FUNCTION_END();
 	}
 
-
 	virtual void copyFrom(ptr<dataHandlerNumericBase> pSource) = 0;
 
-        virtual void copyFrom(imbxUint8* pMemory, size_t memorySize) = 0;
-        virtual void copyFrom(imbxInt8* pMemory, size_t memorySize) = 0;
-        virtual void copyFrom(imbxUint16* pMemory, size_t memorySize) = 0;
-        virtual void copyFrom(imbxInt16* pMemory, size_t memorySize) = 0;
-        virtual void copyFrom(imbxUint32* pMemory, size_t memorySize) = 0;
-        virtual void copyFrom(imbxInt32* pMemory, size_t memorySize) = 0;
-        virtual void copyFrom(float* pMemory, size_t memorySize) = 0;
-        virtual void copyFrom(double* pMemory, size_t memorySize) = 0;
+	virtual void copyFrom(imbxUint8* pMemory, size_t memorySize) = 0;
+	virtual void copyFrom(imbxInt8* pMemory, size_t memorySize) = 0;
+	virtual void copyFrom(imbxUint16* pMemory, size_t memorySize) = 0;
+	virtual void copyFrom(imbxInt16* pMemory, size_t memorySize) = 0;
+	virtual void copyFrom(imbxUint32* pMemory, size_t memorySize) = 0;
+	virtual void copyFrom(imbxInt32* pMemory, size_t memorySize) = 0;
+	virtual void copyFrom(float* pMemory, size_t memorySize) = 0;
+	virtual void copyFrom(double* pMemory, size_t memorySize) = 0;
 
-        virtual void copyTo(imbxUint8* pMemory, size_t memorySize) = 0;
-        virtual void copyTo(imbxInt8* pMemory, size_t memorySize) = 0;
-        virtual void copyTo(imbxUint16* pMemory, size_t memorySize) = 0;
-        virtual void copyTo(imbxInt16* pMemory, size_t memorySize) = 0;
-        virtual void copyTo(imbxUint32* pMemory, size_t memorySize) = 0;
-        virtual void copyTo(imbxInt32* pMemory, size_t memorySize) = 0;
-        virtual void copyTo(float* pMemory, size_t memorySize) = 0;
-        virtual void copyTo(double* pMemory, size_t memorySize) = 0;
+	virtual void copyTo(imbxUint8* pMemory, size_t memorySize) = 0;
+	virtual void copyTo(imbxInt8* pMemory, size_t memorySize) = 0;
+	virtual void copyTo(imbxUint16* pMemory, size_t memorySize) = 0;
+	virtual void copyTo(imbxInt16* pMemory, size_t memorySize) = 0;
+	virtual void copyTo(imbxUint32* pMemory, size_t memorySize) = 0;
+	virtual void copyTo(imbxInt32* pMemory, size_t memorySize) = 0;
+	virtual void copyTo(float* pMemory, size_t memorySize) = 0;
+	virtual void copyTo(double* pMemory, size_t memorySize) = 0;
 
 	virtual void copyFromInt32Interleaved(const imbxInt32* pSource,
 		imbxUint32 sourceReplicateX,
@@ -223,11 +222,12 @@ public:
 		imbxUint32 sourceHeight,
 		imbxUint32 sourceNumChannels) const = 0;
 
+	virtual bool isSigned() const = 0;
 
-        virtual bool pointerIsValid(const imbxUint32 index) const
-        {
-            return index < getSize();
-        }
+	virtual bool pointerIsValid(const imbxUint32 index) const
+	{
+		return index < getSize();
+	}
 
 protected:
 	// Memory buffer
@@ -284,6 +284,18 @@ public:
 	virtual imbxUint32 getUnitSize() const
 	{
 		return sizeof(dataHandlerType);
+	}
+
+	/// \brief Returns truen if the buffer's elements are
+	///         signed, false otherwise.
+	///
+	/// @return true if the buffer's elements are signed,
+	///          or false otherwise
+	///
+	///////////////////////////////////////////////////////////
+	virtual bool isSigned() const
+	{
+		return (dataHandlerType)-1 < (dataHandlerType)0;
 	}
 
 	// Retrieve the data element as a signed long

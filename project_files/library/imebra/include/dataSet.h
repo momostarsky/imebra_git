@@ -347,7 +347,7 @@ public:
 	///                 achieve the same result.
 	///                It should be set to zero
 	/// @param tagId   The id of the tag to parse
-	/// @param bufferId The id of the tag's item to parse
+	/// @param itemId  The id of the tag's item to parse
 	///                (zero based)
 	/// @return        A pointer to the retrieved data set.
 	///                If the requested group, tag or buffer
@@ -358,7 +358,7 @@ public:
 	///                 dataset is returned
 	///
 	///////////////////////////////////////////////////////////
-	ptr<dataSet> getSequenceItem(imbxUint16 groupId, imbxUint16 order, imbxUint16 tagId, imbxUint32 bufferId);
+	ptr<dataSet> getSequenceItem(imbxUint16 groupId, imbxUint16 order, imbxUint16 tagId, imbxUint32 itemId);
 
 	/// \brief Retrieve a LUT.
 	///

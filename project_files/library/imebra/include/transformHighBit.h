@@ -10,7 +10,7 @@ $fileHeader$
 #if !defined(imebraTransformHighBit_8347C70F_1FC8_4df8_A887_8DE9E968B2CF__INCLUDED_)
 #define imebraTransformHighBit_8347C70F_1FC8_4df8_A887_8DE9E968B2CF__INCLUDED_
 
-#include "baseTransform.h"
+#include "transform.h"
 #include "colorTransformsFactory.h"
 
 namespace puntoexe
@@ -22,10 +22,10 @@ namespace imebra
 namespace transforms
 {
 
-class transformHighBitException: public baseTransformException
+class transformHighBitException: public transformException
 {
 public:
-        transformHighBitException(const std::string& message): baseTransformException(message){}
+		transformHighBitException(const std::string& message): transformException(message){}
 };
 
 class transformHighBitDifferentColorSpaces: public transformHighBitException

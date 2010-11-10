@@ -1,27 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?> 
 <project name="Imebra" default="build_all" basedir=".">
 
-	<!-- Thsi is an ant build file" -->
+        <!-- This is an ant build file" -->
 
 	<!-- Build all -->
 	<target name="build_all" depends="ZIP_GPL" >
-		<exec dir="." executable="hg" failonerror="true">
-			<arg value="tag" />
-			<arg value="-m" />
-			<arg value='"Tagging the repository for Imebra"' />
-			<arg value="-u" />
-			<arg value="automatic_build" />
-			<arg value="imebra_${fileVersion}" />
-		</exec>
-		<buildnumber file="build.number" /> 
-		<exec dir="." executable="hg" failonerror="true">
-			<arg value="commit"/>
-			<arg value="-m"/>
-			<arg value='"Increasing the build number"'/>
-			<arg value="-u" />
-			<arg value="automatic_build" />
-			<arg value="build.number"/>
-		</exec>
 	</target>
 
 	<!-- Make a zip file and a gzip file of the GPL build -->
@@ -57,7 +40,7 @@
 
 	<!-- Zip dicomdirItems -->
 	<target name="zip_dicomdirItems" depends="build_dicomdirItems" >
-		<zip basedir="${build_dir}/examples/dicomdirItems/dist/Release_32/GNU-Linux-x86" destfile="${builds}/dicomdirItems_32bit_${fileVersion}.zip" />
+                <zip basedir="${build_dir_dicomdir}" destfile="${builds}/dicomdirItems_32bit_${fileVersion}.zip" />
 		<zip basedir="${build_dir}/examples/dicomdirItems/dist/Release_64/GNU-Linux-x86" destfile="${builds}/dicomdirItems_64bit_${fileVersion}.zip" />
 	</target>
 
@@ -78,8 +61,9 @@
 	</target>
 
 	<!-- Build the PDF documentation -->
+
 	<target name="PDF" depends="run_test_cases" description="Build the PDF document">
-		<exec dir="${build_dir}" executable="doxygen" failonerror="true">
+                <exec dir="${build_dir}" executable="doxygen" failonerror="true">
 			<arg value="DoxyfilePDF"/>
 		</exec>
 		<exec dir="${build_dir}/generated_doc/latex" executable="pdflatex">
@@ -98,39 +82,75 @@
 			<arg value="refman.tex"/>
 		</exec>
 		<copy file="${build_dir}/generated_doc/latex/refman.pdf" tofile="${build_dir}/documentation/imebra.pdf" />
+
 	</target>
 
 	<!-- Build dicomdirItems -->
 	<target name="build_dicomdirItems" depends="run_test_cases" description="Build the dicomdirItems">
-		<exec executable="make" failonerror="true" dir="${build_dir}/examples/dicomdirItems">
-			<arg value="build"/>
-			<arg value="CONF=Release_32"/>
-		</exec>
-		<exec executable="make" failonerror="true" dir="${build_dir}/examples/dicomdirItems">
-			<arg value="build"/>
-			<arg value="CONF=Release_64"/>
-		</exec>
-	</target>
+            <exec executable="qmake" failonerror="true" dir="${build_dir_dicomdir_64}">
+                    <arg path="${build_dir}/examples/dicomdirItems/dicomdiritems.pro"/>
+                    <arg value="-r"/>
+                    <arg value="CONFIG+=Release"/>
+                    <arg value="-spec"/>
+                    <arg value="linux-g++-64"/>
+            </exec>
+            <exec executable="make" failonerror="true" dir="${build_dir_dicomdir_64}" />
+            <exec executable="qmake" failonerror="true" dir="${build_dir_dicomdir_32}">
+                    <arg path="${build_dir}/examples/dicomdirItems/dicomdiritems.pro"/>
+                    <arg value="-r"/>
+                    <arg value="CONFIG+=Release"/>
+                    <arg value="-spec"/>
+                    <arg value="linux-g++-32"/>
+            </exec>
+            <exec executable="make" failonerror="true" dir="${build_dir_dicomdir_32}" />
+        </target>
 
 	<!-- Build dicom2jpeg -->
 	<target name="build_dicom2jpeg" depends="run_test_cases" description="Build the dicom2jpeg">
-		<exex executable="qmake" failonerror="true" dir="${build_dir}/examples/dicom2jpeg" />
-		<exec executable="make" failonerror="true" dir="${build_dir}/examples/dicom2jpeg" />
-	</target>
+            <exec executable="qmake" failonerror="true" dir="${build_dir_dicom2jpeg_64}">
+                    <arg path="${build_dir}/examples/dicom2jpeg/dicom2jpeg.pro"/>
+                    <arg value="-r"/>
+                    <arg value="CONFIG+=Release"/>
+                    <arg value="-spec"/>
+                    <arg value="linux-g++-64"/>
+            </exec>
+            <exec executable="make" failonerror="true" dir="${build_dir_dicom2jpeg_64}" />
+            <exec executable="qmake" failonerror="true" dir="${build_dir_dicom2jpeg_32}">
+                    <arg path="${build_dir}/examples/dicom2jpeg/dicom2jpeg.pro"/>
+                    <arg value="-r"/>
+                    <arg value="CONFIG+=Release"/>
+                    <arg value="-spec"/>
+                    <arg value="linux-g++-32"/>
+            </exec>
+            <exec executable="make" failonerror="true" dir="${build_dir_dicom2jpeg_32}" />
+        </target>
 
 	<!-- Run the test cases posix -->
 	<target name="run_test_cases" depends="build_test_cases" description="Run the test cases">
-		<exec executable="${build_dir}/tests/dist/Release/GNU-Linux-x86/tests" dir="${build_dir}/tests/dist/Release/GNU-Linux-x86" resolveexecutable="true" failonerror="true" />
+				<exec executable="${build_dir_tests_64}/tests" dir="${build_dir_tests_64}" resolveexecutable="true" failonerror="true" />
+				<exec executable="${build_dir_tests_32}/tests" dir="${build_dir_tests_32}" resolveexecutable="true" failonerror="true" />
 	</target>
 
 
-	<!-- Build the test cases posix -->
-	<target name="build_test_cases" depends="replace_version" description="Build the Imebra test cases posix">
-		<exec executable="make" failonerror="true" dir="${build_dir}/tests">
-			<arg value="build"/>
-			<arg value="CONF=Release"/>
-		</exec>
-	</target>
+	<!-- Build the test cases -->
+        <target name="build_test_cases" depends="replace_version" description="Build the Imebra test cases">
+				<exec executable="qmake" failonerror="true" dir="${build_dir_tests_64}">
+                        <arg path="${build_dir}/tests/tests.pro"/>
+						<arg value="-r"/>
+						<arg value="CONFIG+=Release"/>
+						<arg value="-spec"/>
+						<arg value="linux-g++-64"/>
+				</exec>
+				<exec executable="make" failonerror="true" dir="${build_dir_tests_64}" />
+				<exec executable="qmake" failonerror="true" dir="${build_dir_tests_32}">
+						<arg path="${build_dir}/tests/tests.pro"/>
+						<arg value="-r"/>
+						<arg value="CONFIG+=Release"/>
+						<arg value="-spec"/>
+						<arg value="linux-g++-32"/>
+				</exec>
+				<exec executable="make" failonerror="true" dir="${build_dir_tests_32}" />
+		</target>
 
 	<!-- Replace the version number and license info -->
 	<target name="replace_version" depends="create_build_dir">
@@ -172,12 +192,7 @@ A copy of the Imebra Commercial License Version 1 is available in the
 
 Imebra is available at http://puntoexe.com
 
-The author can be contacted by email at paolo@puntoexe.com or by mail at
- the following address:
- Paolo Brandoli
- Preglov trg 6
- 1000 Ljubljana
- Slovenia
+The author can be contacted by email at paolo@puntoexe.com
 
 ]]></replacevalue>
 		</replace>
@@ -191,12 +206,28 @@ The author can be contacted by email at paolo@puntoexe.com or by mail at
 		<mkdir dir="${builds}" />
 		<property name="build_dir" value="${builds}/temp_build" />
 		<mkdir dir="${build_dir}" />
-		<property name="build_dir_html_doc" value="${builds}/imebra_${fileVersion}_html_doc" />
+                <property name="build_dir_applications" value="${build_dir}/applications" />
+                <mkdir dir="${build_dir_applications}" />
+				<property name="build_dir_tests_64" value="${build_dir_applications}/tests_64" />
+				<mkdir dir="${build_dir_tests_64}" />
+				<property name="build_dir_tests_32" value="${build_dir_applications}/tests_32" />
+				<mkdir dir="${build_dir_tests_32}" />
+				<property name="build_dir_dicom2jpeg_64" value="${build_dir_applications}/dicom2jpeg_64" />
+                <mkdir dir="${build_dir_dicom2jpeg_64}" />
+                <property name="build_dir_dicom2jpeg_32" value="${build_dir_applications}/dicom2jpeg_32" />
+                <mkdir dir="${build_dir_dicom2jpeg_32}" />
+                <property name="build_dir_dicomdir_64" value="${build_dir_applications}/dicomdir_64" />
+                <mkdir dir="${build_dir_dicomdir_64}" />
+                <property name="build_dir_dicomdir_32" value="${build_dir_applications}/dicomdir_32" />
+                <mkdir dir="${build_dir_dicomdir_32}" />
+                <property name="build_dir_html_doc" value="${builds}/imebra_${fileVersion}_html_doc" />
 		<mkdir dir="${build_dir_html_doc}" />
 		<copy todir="${build_dir}">
 			 <fileset dir="project_files"/>
 		</copy>
-	</target>
+                <property name="build_dir_html_doc" value="${builds}/imebra_${fileVersion}_html_doc" />
+                <mkdir dir="${build_dir_html_doc}" />
+        </target>
 
 	<!-- Initialize the version number -->
 	<target name="version" description="Initialize the build number">

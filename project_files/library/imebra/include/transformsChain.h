@@ -11,7 +11,7 @@ $fileHeader$
 #define imebraTransformsChain_5DB89BFD_F105_45e7_B9D9_3756AC93C821__INCLUDED_
 
 #include <list>
-#include "baseTransform.h"
+#include "transform.h"
 
 namespace puntoexe
 {
@@ -39,7 +39,7 @@ namespace transforms
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class transformsChain: public baseTransform
+class transformsChain: public transform
 {
 public:
 	transformsChain();
@@ -56,7 +56,7 @@ public:
 	///                    transformsChain
 	///
 	///////////////////////////////////////////////////////////
-	void addTransform(ptr<baseTransform> pTransform);
+	void addTransform(ptr<transform> pTransform);
 
         virtual void runTransform(
             const ptr<image>& inputImage,
@@ -91,7 +91,7 @@ protected:
 	image::bitDepth m_outputDepth;
 	imbxUint32 m_outputHighBit;
 
-	typedef std::list<ptr<baseTransform> > tTransformsList;
+	typedef std::list<ptr<transform> > tTransformsList;
 	tTransformsList m_transformsList;
 
 	typedef std::list<ptr<image> > tTemporaryImagesList;
@@ -99,10 +99,10 @@ protected:
 
 };
 
-class transformsChainException: public baseTransformException
+class transformsChainException: public transformException
 {
 public:
-    transformsChainException(const std::string& what): baseTransformException(what){}
+	transformsChainException(const std::string& what): transformException(what){}
 };
 
 class transformsChainEmptyChainException: public transformsChainException

@@ -12,7 +12,7 @@ $fileHeader$
 
 #include "image.h"
 #include "LUT.h"
-#include "baseTransform.h"
+#include "transform.h"
 
 
 

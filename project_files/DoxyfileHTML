@@ -25,7 +25,7 @@ ABBREVIATE_BRIEF       = "The $name class " \
 ALWAYS_DETAILED_SEC    = YES
 INLINE_INHERITED_MEMB  = NO
 FULL_PATH_NAMES        = NO
-STRIP_FROM_PATH        = "C:/Documents and Settings/Paolo Brandoli/ "
+STRIP_FROM_PATH        = .
 STRIP_FROM_INC_PATH    = 
 SHORT_NAMES            = NO
 JAVADOC_AUTOBRIEF      = NO
@@ -94,8 +94,8 @@ WARN_LOGFILE           =
 #---------------------------------------------------------------------------
 # configuration options related to the input files
 #---------------------------------------------------------------------------
-INPUT                  = ./base \
-                         ./imebra \
+INPUT                  = ./library \
+                         ./examples \
                          ./tests \
                          ./docs
 INPUT_ENCODING         = ISO-8859-1
@@ -183,7 +183,7 @@ QHP_VIRTUAL_FOLDER     = doc
 QHG_LOCATION           = 
 DISABLE_INDEX          = NO
 ENUM_VALUES_PER_LINE   = 4
-GENERATE_TREEVIEW      = FRAME
+GENERATE_TREEVIEW      = YES
 TREEVIEW_WIDTH         = 250
 FORMULA_FONTSIZE       = 10
 #---------------------------------------------------------------------------
@@ -289,4 +289,4 @@ DOT_CLEANUP            = YES
 #---------------------------------------------------------------------------
 # Configuration::additions related to the search engine   
 #---------------------------------------------------------------------------
-SEARCHENGINE           = NO
+SEARCHENGINE           = YES

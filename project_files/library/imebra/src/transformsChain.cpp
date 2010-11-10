@@ -37,7 +37,7 @@ transformsChain::transformsChain():
 // Add a new transform to the chain
 //
 ///////////////////////////////////////////////////////////
-void transformsChain::addTransform(ptr<baseTransform> pTransform)
+void transformsChain::addTransform(ptr<transform> pTransform)
 {
 	PUNTOEXE_FUNCTION_START(L"transformsChain::addTransform");
 

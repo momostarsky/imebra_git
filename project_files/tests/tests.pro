@@ -97,7 +97,7 @@ HEADERS += \
     ../library/imebra/include/charsetsList.h \
     ../library/imebra/include/bufferStream.h \
     ../library/imebra/include/buffer.h \
-    ../library/imebra/include/baseTransform.h \
+	../library/imebra/include/transform.h \
     ../library/base/include/thread.h \
     ../library/base/include/streamWriter.h \
     ../library/base/include/streamReader.h \
@@ -197,7 +197,7 @@ SOURCES += \
     ../library/imebra/src/codec.cpp \
     ../library/imebra/src/charsetsList.cpp \
     ../library/imebra/src/buffer.cpp \
-    ../library/imebra/src/baseTransform.cpp \
+	../library/imebra/src/transform.cpp \
     ../library/base/src/thread.cpp \
     ../library/base/src/streamWriter.cpp \
     ../library/base/src/streamReader.cpp \

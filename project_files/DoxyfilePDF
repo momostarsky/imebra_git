@@ -94,8 +94,9 @@ WARN_LOGFILE           =
 #---------------------------------------------------------------------------
 # configuration options related to the input files
 #---------------------------------------------------------------------------
-INPUT                  = ./base \
-                         ./imebra \
+INPUT                  = ./library \
+                         ./examples \
+                         ./tests \
                          ./docs
 INPUT_ENCODING         = ISO-8859-1
 FILE_PATTERNS          = *.c \

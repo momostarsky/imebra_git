@@ -10,7 +10,7 @@ $fileHeader$
 #if !defined(imebraModalityVOILUT_8347C70F_1FC8_4df8_A887_8DE9E968B2CF__INCLUDED_)
 #define imebraModalityVOILUT_8347C70F_1FC8_4df8_A887_8DE9E968B2CF__INCLUDED_
 
-#include "baseTransform.h"
+#include "transform.h"
 #include "image.h"
 #include "dataSet.h"
 #include "LUT.h"
