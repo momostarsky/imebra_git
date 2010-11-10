@@ -21,7 +21,7 @@
 #include "transactionTest.h"
 #include "unicodeStringHandlerTest.h"
 
-int main(int  argc , char**  argv )
+int main(int  , char**  )
 {
     puntoexe::imebra::tests::ageStringHandlerTest m_ageStringHandlerTest;
     puntoexe::imebra::tests::bitTransformTest m_bitTransformTest;
