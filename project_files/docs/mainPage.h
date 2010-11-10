@@ -41,8 +41,9 @@ At the moment the library provides the following features:
 
 \section is_not What Imebra does NOT do?
 
-The library doesn't check for a Dicom stream validity; this feature will be 
- introduced with the support for dicom objects.
+- the library doesn't check for a Dicom stream validity; this feature will be
+   introduced with the support for dicom objects.
+- the library doesn't support network communication
 
 
 \section start Where to start
@@ -87,23 +88,34 @@ The changes that affect the interface of the transform classes (and therefore ne
 
 \section changeLog Changes log
 
+Imebra 2010 v 1.0.0.1
+
+
 \subsection since_0_0_48 Changes since version 0.0.48
 
-- Fixes #61 (directoryRecord must have a method setFilePart())
-- Fixes #63 (Regression when reading uncompressed non interleaved images)
-- Fixes #65 (When a tag is set twice using the default VR in a transaction then the second write operation resets the VR)
-- Fixes #66 (The dataset doesn't consider the planar configuration)
-- Fixes #67 (When an undefined-length sequence doesn't contains the end-of-sequence then an exception is thrown when the end of the file is reached)
-- Fixes #68 (drawBitmap should be able to draw b/w images)
+During the development of Imebra 2010 the repository hosting was changed from bitbucket.org to repositoryhosting.com
+
+As a result of this change, some bugs were tracked by bitbucket while other ones were filed in repositoryhosting.
+
+- new folders structure
+- puntoexe::imebra::image now returns a puntoexe::imebra::handlers::dataHandlerNumericBase instead of puntoexe::imebra::handlers::imageHandler
+- breaking changes in puntoexe::imebra::handlers::dataHandlerNumeric
+- breaking changes in puntoexe::imebra::transforms::transform (now the transforms work with new dataHandlerNumeric)
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/61">#61</a> (directoryRecord must have a method setFilePart())
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/63">#63</a> (Regression when reading uncompressed non interleaved images)
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/65">#65</a> (When a tag is set twice using the default VR in a transaction then the second write operation resets the VR)
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/66">#66</a> (The dataset doesn't consider the planar configuration)
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/67">#67</a> (When an undefined-length sequence doesn't contains the end-of-sequence then an exception is thrown when the end of the file is reached)
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/68">#68</a> (drawBitmap should be able to draw b/w images)
 
 
 \subsection since_0_0_47 Changes since version 0.0.47
 
-- Fixes #44 (Add the "const" modifier to all the relevant functions in the data handlers)
-- Fixes #55 (Add const qualifier to functions that require them)
-- Fixes #56 (The external lock in baseObject may create circular references)
-- Fixes #57 (RGBToPALETTECOLOR causes memory leaks)
-- Fixes #58 (The destructors of objects derived from baseObject must be protected, since they can be deleted only by themself)
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/44">#44</a> (Add the "const" modifier to all the relevant functions in the data handlers)
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/55">#55</a> (Add const qualifier to functions that require them)
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/56">#56</a> (The external lock in baseObject may create circular references)
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/57">#57</a> (RGBToPALETTECOLOR causes memory leaks)
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/58">#58</a> (The destructors of objects derived from baseObject must be protected, since they can be deleted only by themself)
 - Increased the speed of CopyFromInt32Interleaved
 - Increased the speed of dicomCodec::ReadPixel when bitsAllocated == 8 or 16
 - Improved the speed of streamWriter::write()
@@ -114,33 +126,33 @@ The changes that affect the interface of the transform classes (and therefore ne
 \subsection since_0_0_46 Changes since version 0.0.46
 
 - Makefiles for the example applications are being provided
-- Fixes #33 (When launched without parameters, dicomdirItems should display the version)
-- Fixes #42 (When a dicomdir destructor is called, the it delete all the children elements. This may cause a stack overflow when an element call release on the next sibling item and the number of siblings is high)
-- Fixes #46 (Checking for LUT validity will help dicom2jpeg to ignore the LUT if it contains invalid data)
-- Fixes #49 (The codepage "CHAR" used to indicate the locale charset in charsetConversion.cpp causes an exception during the initialization of ICONV. The usage of "" instead of "char" works properly)
-- Fixes #50 (mbxInt32 and imbxUint32 are wrongly mapped to long and unsigned long. It should be mapped to int and unsigned int)
-- Fixes #51 (wrong parameters in memset)
-- Fixes #52 (The charset conversion uses different error reporting in ICONV and Windows API)
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/33">#33</a> (When launched without parameters, dicomdirItems should display the version)
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/42">#42</a> (When a dicomdir destructor is called, the it delete all the children elements. This may cause a stack overflow when an element call release on the next sibling item and the number of siblings is high)
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/46">#46</a> (Checking for LUT validity will help dicom2jpeg to ignore the LUT if it contains invalid data)
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/49">#49</a> (The codepage "CHAR" used to indicate the locale charset in charsetConversion.cpp causes an exception during the initialization of ICONV. The usage of "" instead of "char" works properly)
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/50">#50</a> (mbxInt32 and imbxUint32 are wrongly mapped to long and unsigned long. It should be mapped to int and unsigned int)
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/51">#51</a> (wrong parameters in memset)
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/52">#52</a> (The charset conversion uses different error reporting in ICONV and Windows API)
 
 
 \subsection since_0_0_45 Changes since version 0.0.45
 
-- Fixes #32 (When launched without parameters, dicom2jpeg should display the version)
-- Fixes #34 (The on-line documentation should have to Google Analytics tracking code)
-- Fixes #37 (Change the title of the documentation to: Imebra - Open source dicom 
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/32">#32</a> (When launched without parameters, dicom2jpeg should display the version)
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/34">#34</a> (The on-line documentation should have to Google Analytics tracking code)
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/37">#37</a> (Change the title of the documentation to: Imebra - Open source dicom
   library)
-- Fixes #39 (The class dataHandlerNumeric calculates the wrong size)
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/39">#39</a> (The class dataHandlerNumeric calculates the wrong size)
 
 
 \subsection since_0_0_44 Changes since version 0.0.44 (Beta)
 
-- Fixes #1 (The library's version should be visible in the source code)
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/1">#1</a> (The library's version should be visible in the source code)
 - Added DICOMDIR creator/parser
 - Added an example that extract a DICOMDIR to an XML file
-- Fixes #4 (A sequence tag should have the type set to SQ, but the 
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/4">#4</a> (A sequence tag should have the type set to SQ, but the
   writer uses the first buffer's type, therefore the data type is incorrect)
-- Fixes #5 (When writing sequences, the tag's length is not calculated correctly)
-- Fixes #6 (dicomCodec::getDataSetLength doesn't calculate the correct size)
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/5">#5</a> (When writing sequences, the tag's length is not calculated correctly)
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/6">#6</a> (dicomCodec::getDataSetLength doesn't calculate the correct size)
 - dicom2jpeg can now invoke ffmpeg and create movies
 - Mercurial is now used as version control (was SVN)
 - Corrected documentation
