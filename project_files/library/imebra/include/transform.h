@@ -2,13 +2,13 @@
 $fileHeader$
 */
 
-/*! \file baseTransform.h
+/*! \file transform.h
     \brief Declaration of the base class used by all the transforms.
  
 */
 
-#if !defined(imebraBaseTransform_5DB89BFD_F105_45e7_B9D9_3756AC93C821__INCLUDED_)
-#define imebraBaseTransform_5DB89BFD_F105_45e7_B9D9_3756AC93C821__INCLUDED_
+#if !defined(imebraTransform_5DB89BFD_F105_45e7_B9D9_3756AC93C821__INCLUDED_)
+#define imebraTransform_5DB89BFD_F105_45e7_B9D9_3756AC93C821__INCLUDED_
 
 #include "../../base/include/baseObject.h"
 #include "dataHandlerNumeric.h"
@@ -124,8 +124,15 @@ namespace transforms
 
 
 
-
-class baseTransform : public baseObject
+/// \brief This is the base class for the transforms.
+///
+/// A transform takes one input and one output image:
+///  the output image is modified according to the
+///  transform's type, input image's content and
+///  transform's parameter.
+///
+///////////////////////////////////////////////////////////
+class transform : public baseObject
 {
 
 public:
@@ -157,7 +164,7 @@ public:
 
 };
 
-class transformHandlers: public baseTransform
+class transformHandlers: public transform
 {
 public:
         virtual void runTransform(
@@ -179,10 +186,10 @@ public:
 };
 
 
-class baseTransformException: public std::runtime_error
+class transformException: public std::runtime_error
 {
 public:
-	baseTransformException(const std::string& message): std::runtime_error(message){}
+	transformException(const std::string& message): std::runtime_error(message){}
 };
 
 
@@ -193,4 +200,4 @@ public:
 
 } // namespace puntoexe
 
-#endif // !defined(imebraBaseTransform_5DB89BFD_F105_45e7_B9D9_3756AC93C821__INCLUDED_)
+#endif // !defined(imebraTransform_5DB89BFD_F105_45e7_B9D9_3756AC93C821__INCLUDED_)

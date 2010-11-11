@@ -2,13 +2,13 @@
 $fileHeader$
 */
 
-/*! \file baseTransform.cpp
+/*! \file transform.cpp
     \brief Implementation of the base class used by the transforms.
 
 */
 
 #include "../../base/include/exception.h"
-#include "../include/baseTransform.h"
+#include "../include/transform.h"
 #include "../include/image.h"
 
 
@@ -30,7 +30,7 @@ namespace transforms
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-bool baseTransform::isEmpty()
+bool transform::isEmpty()
 {
 	return false;
 }
