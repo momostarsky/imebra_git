@@ -15,8 +15,7 @@ OTHER_FILES += \
     ../DoxyfilePDF \
     ../docs/html_header.html \
     ../docs/html_footer.html \
-    ../docs/gpl.txt \
-    ../docs/commercial.txt
+    ../docs/bsd.txt
 
 HEADERS += \
     unicodeStringHandlerTest.h \
