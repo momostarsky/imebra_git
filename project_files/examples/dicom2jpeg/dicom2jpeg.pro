@@ -1,7 +1,6 @@
 QT     -= gui core
-LIBS   -= -lQtGui -lQtCore
-
-unix:LIBS += -lcppunit
+LIBS -= -lQtGui -lQtCore
+unix:LIBS += -lpthread
 
 SOURCES += \
     dicom2jpeg.cpp \

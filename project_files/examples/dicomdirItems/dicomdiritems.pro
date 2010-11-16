@@ -1,5 +1,5 @@
 QT     -= gui core
-unix:LIBS -= -lQtGui -lQtCore
+LIBS -= -lQtGui -lQtCore
 unix:LIBS += -lpthread
 
 HEADERS += \
