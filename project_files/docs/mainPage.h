@@ -10,10 +10,17 @@ Copyright 2003, 2004, 2005, 2006, 2007, 2008, 2009 by Paolo Brandoli.
 
 The online version of this document can be found here: http://imebra.com/documentation/html/index.html
 
+Imebra is available for free under the \ref freebsd_license.
+
+\section section_donation Donations
+
+Want to keep Imebra free and updated? Consider making a donation to the developer.
+
+- <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=paolo%2ebrandoli%40gmail%2ecom&lc=GB&item_name=Imebra&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted">Donations via Paypal</a>
+- <a href="http://www.amazon.co.uk/wishlist/1GESO4Z6VYG4W">Amazon wishlist</a>
+
 
 \section section_Introduction Introduction
-
-Please read the \ref license_agreement first!
 
 Imebra is an open source Dicom library.
 The library has been designed to handle Dicom files, but it includes also some
@@ -88,7 +95,7 @@ The changes that affect the interface of the transform classes (and therefore ne
 
 \section changeLog Changes log
 
-Imebra 2010 v 1.0.0.1
+Imebra 2010 1.0.0.1
 
 
 \subsection since_0_0_48 Changes since version 0.0.48
