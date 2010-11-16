@@ -15,39 +15,47 @@
 	<!-- Make the GPL build -->
 	<target name="make_distribution" depends="run_test_cases, HTML, PDF, zip_dicomdirItems, zip_dicom2jpeg">
 		<property name="distribution" value="${build_dir}/distribution" />
+		<mkdir dir="${distribution}" />
 		<property name="librarySource" value="${distribution}/library" />
+		<mkdir dir="${librarySource}" />
 		<property name="documentation" value="${distribution}/documentation" />
+		<mkdir dir="${documentation}/html" />
+		<mkdir dir="${documentation}/pdf" />
+		<property name="examples" value="${distribution}/examples" />
+		<mkdir dir="${examples}/dicom2jpeg" />
+		<mkdir dir="${examples}/dicomdirItems" />
+		<property name="tests" value="${distribution}/tests" />
+		<mkdir dir="${tests}" />
 
-		<copy todir="${librarySource}/base">
-			<fileset dir="${build_dir}/base" />
-		</copy>
-		<copy todir="${librarySource}/imebra">
-			<fileset dir="${build_dir}/imebra" />
+		<copy todir="${librarySource}">
+			<fileset dir="${build_dir}/library" />
 		</copy>
 		<copy file="${build_dir}/generated_doc/latex/refman.pdf" tofile="${documentation}/pdf/imebra.pdf" />
 		<copy todir="${documentation}/html">
 			<fileset dir="${build_dir}/generated_doc/html" />
 		</copy>
-		<delete dir="${build_dir}/examples/dicom2jpeg/build" failonerror="true" /> 
-		<delete dir="${build_dir}/examples/dicom2jpeg/dist" failonerror="true" /> 
-		<delete dir="${build_dir}/examples/dicomdirItems/build" failonerror="true" /> 
-		<delete dir="${build_dir}/examples/dicomdirItems/dist" failonerror="true" /> 
-		<copy todir="${librarySource}/examples">
-			<fileset dir="${build_dir}/examples" />
+		<copy todir="${examples}/dicom2jpeg">
+			<fileset dir="${build_dir}/examples/dicom2jpeg" />
+		</copy>
+		<copy todir="${examples}/dicomdirItems">
+			<fileset dir="${build_dir}/examples/dicomdirItems" />
+		</copy>
+		<copy todir="${tests}">
+			<fileset dir="${build_dir}/tests" />
 		</copy>
 		<copy file="${build_dir}/docs/bsd.txt" tofile="${distribution}/license.txt" />
 	</target>
 
 	<!-- Zip dicomdirItems -->
 	<target name="zip_dicomdirItems" depends="build_dicomdirItems" >
-		<zip basedir="${build_dir}/examples/dicomdirItems/dist/Release_32/GNU-Linux-x86" destfile="${builds}/dicomdirItems_32bit_${fileVersion}.zip" />
-		<zip basedir="${build_dir}/examples/dicomdirItems/dist/Release_64/GNU-Linux-x86" destfile="${builds}/dicomdirItems_64bit_${fileVersion}.zip" />
+		<gzip src="${build_dir_dicomdir_32}/dicomdiritems" destfile="${builds}/dicomdirItems_32bit_${fileVersion}.gzip" />
+		<gzip src="${build_dir_dicomdir_64}/dicomdiritems" destfile="${builds}/dicomdirItems_64bit_${fileVersion}.gzip" />
 	</target>
 
 	<!-- Zip dicom2jpeg -->
 	<target name="zip_dicom2jpeg" depends="build_dicom2jpeg" >
-		<zip basedir="${build_dir}/examples/dicom2jpeg/dist/Release_32/GNU-Linux-x86" destfile="${builds}/dicom2jpeg_32bit_${fileVersion}.zip" />
-		<zip basedir="${build_dir}/examples/dicom2jpeg/dist/Release_64/GNU-Linux-x86" destfile="${builds}/dicom2jpeg_64bit_${fileVersion}.zip" />
+		<gzip src="${build_dir_dicom2jpeg_32}/dicom2jpeg" destfile="${builds}/dicom2jpeg_32bit_${fileVersion}.gzip" />
+		<gzip src="${build_dir_dicom2jpeg_64}/dicom2jpeg" destfile="${builds}/dicom2jpeg_64bit_${fileVersion}.gzip" />
 	</target>
 
 	<!-- Build the HTML documentation -->
@@ -154,36 +162,34 @@
 			<replacevalue><![CDATA[
 $imebraVersion$
 
-Imebra: a C++ dicom library.
+Imebra: a C++ Dicom library
+
 Copyright (c) 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 by Paolo Brandoli
 All rights reserved.
 
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
-- Redistributions of source code must retain the above copyright
-  notice, this list of conditions and the following disclaimer.
-- Redistributions in binary form must reproduce the above copyright
-  notice, this list of conditions and the following disclaimer in the
-  documentation and/or other materials provided with the distribution.
-- Neither the name of the <organization> nor the
-  names of its contributors may be used to endorse or promote products
-  derived from this software without specific prior written permission.
-.
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
-DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+Redistribution and use in source and binary forms, with or without modification,
+ are permitted provided that the following conditions are met:
+- Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
+- Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
 
+THIS SOFTWARE IS PROVIDED BY THE FREEBSD PROJECT ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
+INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE FREEBSD PROJECT OR CONTRIBUTORS BE
+LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
+OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+The views and conclusions contained in the software and documentation are those of the authors
+ and should not be interpreted as representing official policies, either expressed or implied,
+ of the Imebra Project.
 
 Imebra is available at http://imebra.com
 
-The author can be contacted by email at paolo@puntoexe.com
 
 ]]></replacevalue>
 		</replace>
@@ -221,9 +227,9 @@ The author can be contacted by email at paolo@puntoexe.com
 	<!-- Initialize the version number -->
 	<target name="version" description="Initialize the build number">
 		<property file="./build.number" /> 
-		<property name="fileVersion" value="0_0_${build.number}"/>
-		<property name="fullVersionReadable" value="0.0.${build.number}"/>
-		<property name="productName" value="Imebra ${fullVersionReadable}"/>
+		<property name="fileVersion" value="build_${build.number}"/>
+		<property name="fullVersionReadable" value="build ${build.number}"/>
+		<property name="productName" value="Imebra 2010 ${fullVersionReadable}"/>
 	</target>
 
 
