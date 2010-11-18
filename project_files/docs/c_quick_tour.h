@@ -113,7 +113,6 @@ ptr<imebra::transforms::transform> myVoiLut(
 imbxUint32 lutId = myVoiLut->getVOILUTId(0);
 myVoiLut->setVOILUT(lutId);
 
-myVoiLut->doTransform();
 ptr<imebra::image> presentationImage(myVoiLut->allocateOutputImage(convertedImage, width, height));
 myVoiLut->runTransform(convertedImage, 0, 0 width, height, presentationImage, 0, 0);
 \endcode
