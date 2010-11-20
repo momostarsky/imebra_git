@@ -74,7 +74,7 @@ public:
                 {
                     for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
                     {
-                        *(pOutputMemory++) = outputHandlerMinValue + *pInputMemory - outputHandlerMinValue;
+                        *(pOutputMemory++) = (outputType)( outputHandlerMinValue + *pInputMemory - outputHandlerMinValue );
                         pInputMemory += 3;
                     }
                     pInputMemory += (inputHandlerWidth - inputWidth) * 3;
@@ -87,7 +87,7 @@ public:
                 {
                     for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
                     {
-                        *(pOutputMemory++) = outputHandlerMinValue + ((*pInputMemory - outputHandlerMinValue) * outputHandlerNumValues) / inputHandlerNumValues;
+                        *(pOutputMemory++) = (outputType)( outputHandlerMinValue + ((*pInputMemory - outputHandlerMinValue) * outputHandlerNumValues) / inputHandlerNumValues );
                         pInputMemory += 3;
                     }
                     pInputMemory += (inputHandlerWidth - inputWidth) * 3;

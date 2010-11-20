@@ -86,24 +86,22 @@ ptr<image> modalityVOILUT::allocateOutputImage(ptr<image> pInputImage, imbxUint3
 	imbxInt32 value1 = ((imbxInt32)1 << (highBit + 1)) - 1;
 	if(inputDepth == image::depthS16 || inputDepth == image::depthS8)
 	{
-		value0 = ((imbxInt32)(-1) << highBit) + m_rescaleIntercept;
-		value1 = ((imbxInt32)1 << highBit) + m_rescaleIntercept;
+		value0 = ((imbxInt32)(-1) << highBit);
+		value1 = ((imbxInt32)1 << highBit);
 	}
-	value0 *= m_rescaleSlope;
-	value0 += m_rescaleIntercept;
-	value1 *= m_rescaleSlope;
-	value1 += m_rescaleIntercept;
+	imbxInt32 finalValue0((imbxInt32) ((double)value0 * m_rescaleSlope + m_rescaleIntercept + 0.5) );
+	imbxInt32 finalValue1((imbxInt32) ((double)value1 * m_rescaleSlope + m_rescaleIntercept + 0.5) );
 
 	imbxInt32 minValue, maxValue;
-	if(value0 < value1)
+	if(finalValue0 < finalValue1)
 	{
-		minValue = value0;
-		maxValue = value1;
+		minValue = finalValue0;
+		maxValue = finalValue1;
 	}
 	else
 	{
-		minValue = value1;
-		maxValue = value0;
+		minValue = finalValue1;
+		maxValue = finalValue0;
 	}
 
 	ptr<image> returnImage(new image);

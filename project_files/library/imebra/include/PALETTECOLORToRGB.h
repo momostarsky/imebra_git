@@ -88,7 +88,7 @@ public:
                 {
                     for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
                     {
-                        paletteValue = *pInputMemory++;
+                        paletteValue = (imbxInt32) (*pInputMemory++);
                         *pOutputMemory++ = (outputType)(pRed->mappedValue(paletteValue) + outputHandlerMinValue);
                         *pOutputMemory++ = (outputType)(pGreen->mappedValue(paletteValue) + outputHandlerMinValue);
                         *pOutputMemory++ = (outputType)(pBlue->mappedValue(paletteValue) + outputHandlerMinValue);
@@ -103,7 +103,7 @@ public:
                 {
                     for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
                     {
-                        paletteValue = *pInputMemory++;
+                        paletteValue = (imbxInt32) (*pInputMemory++);
                         *pOutputMemory++ = (outputType)((pRed->mappedValue(paletteValue) * outputHandlerNumValues) / inputHandlerNumValues + outputHandlerMinValue);
                         *pOutputMemory++ = (outputType)((pGreen->mappedValue(paletteValue) * outputHandlerNumValues) / inputHandlerNumValues + outputHandlerMinValue);
                         *pOutputMemory++ = (outputType)((pBlue->mappedValue(paletteValue) * outputHandlerNumValues) / inputHandlerNumValues + outputHandlerMinValue);

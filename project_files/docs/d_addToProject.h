@@ -88,7 +88,7 @@ The files in the following directories are header files and don't need to be
 The compiler must support the RTTI.
 
 If you are compiling the application on Windows, define the preprocessor symbol
- WIN32 (_WIN32_WCE on EVC4) in your project's properties.
+ WIN32 in your project's properties.
 
 If you are compiling the application for Windows NT, 2000, XP or Vista, then
  define the preprocessor symbol _WIN32_WINNT to 0x0400 or greater.
@@ -106,8 +106,6 @@ Please check that all the following tasks have been performed:
 - All the cpp files in the directory "library/imebra/src" have been 
   added to your project
 - When compiling on Windows (desktop versions) define the symbol WIN32 in the
-  preprocessor definitions
-- When compiling for Windows Mobile define the symbol _WIN32_WCE in the 
   preprocessor definitions
 - When compiling for windows Desktop define the symbol _WIN32_WINNT to 0x0500
   or greater

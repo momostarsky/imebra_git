@@ -89,7 +89,7 @@ public:
                     {
                         for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
                         {
-                            *(pOutputMemory++) = m_voiLut->mappedValue(*(pInputMemory++));
+                            *(pOutputMemory++) = (outputType) ( m_voiLut->mappedValue((imbxInt32) *(pInputMemory++)) );
                         }
                         pInputMemory += (inputHandlerWidth - inputWidth);
                         pOutputMemory += (outputHandlerWidth - inputWidth);
@@ -108,7 +108,7 @@ public:
             {
                 for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
                 {
-                    *(pOutputMemory++) = (imbxInt32)((double)(*(pInputMemory++)) * m_rescaleSlope + m_rescaleIntercept + 0.5);
+                    *(pOutputMemory++) = (outputType)((double)(*(pInputMemory++)) * m_rescaleSlope + m_rescaleIntercept + 0.5);
                 }
                 pInputMemory += (inputHandlerWidth - inputWidth);
                 pOutputMemory += (outputHandlerWidth - inputWidth);

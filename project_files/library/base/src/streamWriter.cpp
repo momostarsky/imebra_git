@@ -67,7 +67,7 @@ void streamWriter::write(const imbxUint8* pBuffer, imbxUint32 bufferLength)
 		if(m_pDataBufferCurrent == m_pDataBufferMaxEnd)
 		{
 			flushDataBuffer();
-                        if(bufferLength > m_pDataBufferMaxEnd - m_pDataBufferCurrent)
+                        if(bufferLength > (imbxUint32)(m_pDataBufferMaxEnd - m_pDataBufferCurrent) )
                         {
                             m_pControlledStream->write(m_dataBufferStreamPosition + m_virtualStart, pBuffer, bufferLength);
                             m_dataBufferStreamPosition += bufferLength;

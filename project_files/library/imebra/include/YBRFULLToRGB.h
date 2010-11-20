@@ -79,9 +79,9 @@ public:
                 {
                     for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
                     {
-                        sourceY = *(pInputMemory++);
-                        sourceB = *(pInputMemory++) - inputMiddleValue;
-                        sourceR = *(pInputMemory++) - inputMiddleValue;
+                        sourceY = (imbxInt32) (*(pInputMemory++));
+                        sourceB = (imbxInt32) (*(pInputMemory++)) - inputMiddleValue;
+                        sourceR = (imbxInt32) (*(pInputMemory++)) - inputMiddleValue;
 
                         destination = sourceY + ((22970 * sourceR + 8192) >> 14);
                         if(destination < 0)
@@ -135,9 +135,9 @@ public:
                 {
                     for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
                     {
-                        sourceY = *(pInputMemory++);
-                        sourceB = *(pInputMemory++) - inputMiddleValue;
-                        sourceR = *(pInputMemory++) - inputMiddleValue;
+                        sourceY = (imbxInt32)( *(pInputMemory++) );
+                        sourceB = (imbxInt32)( *(pInputMemory++) ) - inputMiddleValue;
+                        sourceR = (imbxInt32)( *(pInputMemory++) ) - inputMiddleValue;
 
                         destination = sourceY + ((22970 * sourceR + 8192) >> 14);
                         if(destination < 0)

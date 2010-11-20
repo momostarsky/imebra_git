@@ -50,9 +50,6 @@ imbxInt32 dataHandlerDateTimeBase::getSignedLong(const imbxUint32 index) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTimeBase::getSignedLong");
 
-#ifdef _WIN32_WCE
-	return -1;
-#else
 	imbxInt32 year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes;
 	getDate(index, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
 
@@ -68,7 +65,6 @@ imbxInt32 dataHandlerDateTimeBase::getSignedLong(const imbxUint32 index) const
 	timeStructure.tm_sec = seconds;
 	
 	return (imbxInt32)mktime(&timeStructure);
-#endif
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -125,10 +121,12 @@ void dataHandlerDateTimeBase::setSignedLong(const imbxUint32 index, const imbxIn
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTimeBase::setSignedLong");
 
-#ifdef _WIN32_WCE
-	return;
+#ifdef PUNTOEXE_WINDOWS
+	std::auto_ptr<tm> timeStructure(new tm);
+	localtime_s(timeStructure.get(), ((time_t*)&value));
 #else
 	tm* timeStructure = localtime((time_t*)&value);
+#endif
 	imbxInt32 year = timeStructure->tm_year;
 	imbxInt32 month = timeStructure->tm_mon + 1;
 	imbxInt32 day = timeStructure->tm_mday;
@@ -136,7 +134,6 @@ void dataHandlerDateTimeBase::setSignedLong(const imbxUint32 index, const imbxIn
 	imbxInt32 minutes = timeStructure->tm_min;
 	imbxInt32 seconds = timeStructure->tm_sec;
 	setDate(index, year, month, day, hour, minutes, seconds, 0, 0, 0);
-#endif
 
 	PUNTOEXE_FUNCTION_END();
 }

@@ -77,12 +77,12 @@ public:
                 {
                     for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
                     {
-                        sourceR = *(pInputMemory++) - inputHandlerMinValue;
-                        sourceG = *(pInputMemory++) - inputHandlerMinValue;
-                        sourceB = *(pInputMemory++) - inputHandlerMinValue;
-        		*(pOutputMemory++) = (((imbxInt32)4899 * sourceR + (imbxInt32)9617 * sourceG + (imbxInt32)1868 * sourceB) >> 14) + outputHandlerMinValue;
-                        *(pOutputMemory++) = outputMiddleValue + (((imbxInt32)8192 * sourceB - (imbxInt32)2764 * sourceR - (imbxInt32)5428 * sourceG + (imbxInt32)8192) >> 14);
-                        *(pOutputMemory++) = outputMiddleValue + (((imbxInt32)8192 * sourceR - (imbxInt32)6860 * sourceG - (imbxInt32)1332 * sourceB + (imbxInt32)8192) >> 14);
+                        sourceR = (imbxInt32) (*(pInputMemory++)) - inputHandlerMinValue;
+                        sourceG = (imbxInt32) (*(pInputMemory++)) - inputHandlerMinValue;
+                        sourceB = (imbxInt32) (*(pInputMemory++)) - inputHandlerMinValue;
+        				*(pOutputMemory++) = (outputType) ( (((imbxInt32)4899 * sourceR + (imbxInt32)9617 * sourceG + (imbxInt32)1868 * sourceB) >> 14) + outputHandlerMinValue );
+                        *(pOutputMemory++) = (outputType) ( outputMiddleValue + (((imbxInt32)8192 * sourceB - (imbxInt32)2764 * sourceR - (imbxInt32)5428 * sourceG + (imbxInt32)8192) >> 14) );
+                        *(pOutputMemory++) = (outputType) ( outputMiddleValue + (((imbxInt32)8192 * sourceR - (imbxInt32)6860 * sourceG - (imbxInt32)1332 * sourceB + (imbxInt32)8192) >> 14) );
                     }
                     pInputMemory += (inputHandlerWidth - inputWidth) * 3;
                     pOutputMemory += (outputHandlerWidth - inputWidth) * 3;
@@ -94,12 +94,12 @@ public:
                 {
                     for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
                     {
-                        sourceR = *(pInputMemory++) - inputHandlerMinValue;
-                        sourceG = *(pInputMemory++) - inputHandlerMinValue;
-                        sourceB = *(pInputMemory++) - inputHandlerMinValue;
-        		*(pOutputMemory++) = ((((imbxInt32)4899 * sourceR+(imbxInt32)9617 * sourceG+(imbxInt32)1868 * sourceB) >> 14) * outputHandlerNumValues) / inputHandlerNumValues + outputHandlerMinValue;
-                        *(pOutputMemory++) = outputMiddleValue + ((((imbxInt32)8192 * sourceB - (imbxInt32)2764 * sourceR - (imbxInt32)5428 * sourceG + (imbxInt32)8192) >> 14) * outputHandlerNumValues) / inputHandlerNumValues;
-                        *(pOutputMemory++) = outputMiddleValue + ((((imbxInt32)8192 * sourceR - (imbxInt32)6860 * sourceG - (imbxInt32)1332 * sourceB + (imbxInt32)8192) >> 14) * outputHandlerNumValues) / inputHandlerNumValues;
+                        sourceR = (imbxInt32) (*(pInputMemory++)) - inputHandlerMinValue;
+                        sourceG = (imbxInt32) (*(pInputMemory++)) - inputHandlerMinValue;
+                        sourceB = (imbxInt32) (*(pInputMemory++)) - inputHandlerMinValue;
+        				*(pOutputMemory++) = (outputType) ( ((((imbxInt32)4899 * sourceR+(imbxInt32)9617 * sourceG+(imbxInt32)1868 * sourceB) >> 14) * outputHandlerNumValues) / inputHandlerNumValues + outputHandlerMinValue );
+                        *(pOutputMemory++) = (outputType) ( outputMiddleValue + ((((imbxInt32)8192 * sourceB - (imbxInt32)2764 * sourceR - (imbxInt32)5428 * sourceG + (imbxInt32)8192) >> 14) * outputHandlerNumValues) / inputHandlerNumValues );
+                        *(pOutputMemory++) = (outputType) ( outputMiddleValue + ((((imbxInt32)8192 * sourceR - (imbxInt32)6860 * sourceG - (imbxInt32)1332 * sourceB + (imbxInt32)8192) >> 14) * outputHandlerNumValues) / inputHandlerNumValues );
                     }
                     pInputMemory += (inputHandlerWidth - inputWidth) * 3;
                     pOutputMemory += (outputHandlerWidth - inputWidth) * 3;

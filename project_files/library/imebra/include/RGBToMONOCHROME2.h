@@ -75,10 +75,10 @@ public:
                 {
                     for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
                     {
-                        sourceR = *(pInputMemory++) - inputHandlerMinValue;
-                        sourceG = *(pInputMemory++) - inputHandlerMinValue;
-                        sourceB = *(pInputMemory++) - inputHandlerMinValue;
-        		*(pOutputMemory++) = (((imbxInt32)4899 * sourceR+(imbxInt32)9617 * sourceG+(imbxInt32)1868 * sourceB) >> 14) + outputHandlerMinValue;
+                        sourceR = (imbxInt32) (*(pInputMemory++)) - inputHandlerMinValue;
+                        sourceG = (imbxInt32) (*(pInputMemory++)) - inputHandlerMinValue;
+                        sourceB = (imbxInt32) (*(pInputMemory++)) - inputHandlerMinValue;
+						*(pOutputMemory++) = (outputType) ( (((imbxInt32)4899 * sourceR+(imbxInt32)9617 * sourceG+(imbxInt32)1868 * sourceB) >> 14) + outputHandlerMinValue );
                     }
                     pInputMemory += (inputHandlerWidth - inputWidth) * 3;
                     pOutputMemory += outputHandlerWidth - inputWidth;
@@ -90,10 +90,10 @@ public:
                 {
                     for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
                     {
-                        sourceR = *(pInputMemory++) - inputHandlerMinValue;
-                        sourceG = *(pInputMemory++) - inputHandlerMinValue;
-                        sourceB = *(pInputMemory++) - inputHandlerMinValue;
-        		*(pOutputMemory++) = ((((imbxInt32)4899 * sourceR+(imbxInt32)9617 * sourceG+(imbxInt32)1868 * sourceB) >> 14) * outputHandlerNumValues) / inputHandlerNumValues + outputHandlerMinValue;
+                        sourceR = (imbxInt32) (*(pInputMemory++)) - inputHandlerMinValue;
+                        sourceG = (imbxInt32) (*(pInputMemory++)) - inputHandlerMinValue;
+                        sourceB = (imbxInt32) (*(pInputMemory++)) - inputHandlerMinValue;
+        				*(pOutputMemory++) = (outputType) ( ((((imbxInt32)4899 * sourceR+(imbxInt32)9617 * sourceG+(imbxInt32)1868 * sourceB) >> 14) * outputHandlerNumValues) / inputHandlerNumValues + outputHandlerMinValue );
                     }
                     pInputMemory += (inputHandlerWidth - inputWidth) * 3;
                     pOutputMemory += outputHandlerWidth - inputWidth;

@@ -34,10 +34,6 @@ typedef signed int    imbxInt32;
 #define PUNTOEXE_WINDOWS 1
 #endif
 
-#ifdef _WIN32_WCE
-#define PUNTOEXE_WINDOWS 1
-#endif
-
 #ifndef PUNTOEXE_WINDOWS
 #define PUNTOEXE_POSIX 1
 #endif

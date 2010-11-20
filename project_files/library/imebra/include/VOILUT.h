@@ -178,7 +178,7 @@ public:
                         {
                             for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
                             {
-                                *(pOutputMemory++) = outputHandlerMinValue + pLUT->mappedValue(*(pInputMemory++));
+                                *(pOutputMemory++) = (outputType)( outputHandlerMinValue + pLUT->mappedValue((imbxInt32) (*(pInputMemory++))) );
                             }
                             pInputMemory += (inputHandlerWidth - inputWidth);
                             pOutputMemory += (outputHandlerWidth - inputWidth);
@@ -190,7 +190,7 @@ public:
                         {
                             for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
                             {
-                                *(pOutputMemory++) = outputHandlerMinValue + (pLUT->mappedValue(*(pInputMemory++)) * outputHandlerNumValues ) / inputHandlerNumValues;
+                                *(pOutputMemory++) = (outputType)( outputHandlerMinValue + (pLUT->mappedValue((imbxInt32) (*(pInputMemory++)) ) * outputHandlerNumValues ) / inputHandlerNumValues );
                             }
                             pInputMemory += (inputHandlerWidth - inputWidth);
                             pOutputMemory += (outputHandlerWidth - inputWidth);
@@ -220,18 +220,18 @@ public:
 
                 for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
                 {
-                    value = *(pInputMemory++);
+                    value = (imbxInt32) *(pInputMemory++);
                     if(value <= minValue)
                     {
-                        *(pOutputMemory++) = outputHandlerMinValue;
+                        *(pOutputMemory++) = (outputType)outputHandlerMinValue;
                         continue;
                     }
                     if(value >= maxValue)
                     {
-                        *(pOutputMemory++) = outputHandlerMinValue + outputHandlerNumValues - 1;
+                        *(pOutputMemory++) = (outputType)( outputHandlerMinValue + outputHandlerNumValues - 1 );
                         continue;
                     }
-                    *(pOutputMemory++) = (value - minValue) * outputHandlerNumValues / inputHandlerNumValues + outputHandlerMinValue;
+                    *(pOutputMemory++) = (outputType)( (value - minValue) * outputHandlerNumValues / inputHandlerNumValues + outputHandlerMinValue );
                 }
                 pInputMemory += (inputHandlerWidth - inputWidth);
                 pOutputMemory += (outputHandlerWidth - inputWidth);
