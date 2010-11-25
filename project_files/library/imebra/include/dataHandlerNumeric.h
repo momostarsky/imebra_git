@@ -295,7 +295,9 @@ public:
 	///////////////////////////////////////////////////////////
 	virtual bool isSigned() const
 	{
-		return (dataHandlerType)-1 < (dataHandlerType)0;
+		dataHandlerType firstValue((dataHandlerType) -1);
+		dataHandlerType secondValue((dataHandlerType) 0);
+		return firstValue < secondValue;
 	}
 
 	// Retrieve the data element as a signed long
