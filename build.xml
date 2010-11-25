@@ -198,7 +198,7 @@ Imebra is available at http://imebra.com
 
 	<!-- Create the directory for the final build -->
 	<target name="create_build_dir" depends="version" description="Create the directory for the final build">
-		<property name="builds" value="../builds/imebra_${fileVersion}" />
+		<property name="builds" value="./build" />
 		<delete dir="${builds}" failonerror="false" /> 
 		<mkdir dir="${builds}" />
 		<property name="build_dir" value="${builds}/temp_build" />
