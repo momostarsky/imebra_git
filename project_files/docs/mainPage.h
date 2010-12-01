@@ -93,10 +93,7 @@ The changes that affect the interface of the transform classes (and therefore ne
 
 
 
-\section changeLog Changes log
-
-Imebra 2010 1.0.0.1
-
+\section changeLog Changes log for $imebraVersion$
 
 \subsection since_0_0_48 Changes since version 0.0.48
 

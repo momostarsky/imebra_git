@@ -25,7 +25,6 @@ The following sections describes how to include the Imebra source code in your
 
 Imebra heavily uses the stl library; if your development environment doesn't provide 
  a modern stl, try to install stlport (http://www.stlport.org).
- Visual Studio 6 and Embedded Visual C++ 4 need stlport.
 
 Imebra also needs the standard C library.
 
@@ -38,18 +37,6 @@ The path to the window.h file must be in the list of paths searched by the "incl
 The library uses the functions TryEnterCriticalSection() and SwitchToThread()
  which require the definition of the symbol _WIN32_WINNT in the C++ preprocessor.
 _WIN32_WINNT has to be set to 0x0400 or greater.
-If you are compiling the library for Windows CE then the symbol _WIN32_WINNT doesn't
- have to be defined.
-
-
-\section add_to_project_evc4 Prerequisites for Embedded Visual C++ 4 (EVC4)
-
-In order to compile the Imebra library with Embedded Visual C++ 4 (EVC4), a
- reliable STL library must be installed.
-
-The suggested STL library is STLPort (http://www.stlport.org). Please note that
- the STLPort library needs the EVC4 service pack 4 and the RTTI patch for EVC4,
- available on the Microsoft's website and called RITTI.EXE.
 
 
 \section add_to_project_posix Prerequisites for the Posix systems

@@ -1,153 +1,46 @@
 <?xml version="1.0" encoding="utf-8" ?> 
-<project name="Imebra" default="build_all" basedir=".">
+<project name="Imebra" default="ZIP_GPL" basedir=".">
 
-        <!-- This is an ant build file" -->
+	<!-- This is an ant build file" -->
 
-	<!-- Build all -->
-	<target name="build_all" depends="ZIP_GPL" >
+
+	<!-- Initialize the version number -->
+	<target name="version" description="Initialize the build number">
+		<property environment="env"/>
+		<property name="fileVersion" value="build_${env.BUILD_NUMBER}"/>
+		<property name="fullVersionReadable" value="build ${env.BUILD_NUMBER}"/>
+		<property name="productName" value="Imebra 2010 ${fullVersionReadable}"/>
 	</target>
 
-	<!-- Make a zip file and a gzip file of the GPL build -->
-	<target name="ZIP_GPL" depends="make_distribution" description ="Compress the build">
-		<zip basedir="${build_dir}/distribution" destfile="${builds}/imebra_${fileVersion}.zip" />
-	</target>
 
-	<!-- Make the GPL build -->
-	<target name="make_distribution" depends="run_test_cases, HTML, PDF, zip_dicomdirItems, zip_dicom2jpeg">
-		<property name="distribution" value="${build_dir}/distribution" />
-		<mkdir dir="${distribution}" />
-		<property name="librarySource" value="${distribution}/library" />
-		<mkdir dir="${librarySource}" />
-		<property name="documentation" value="${distribution}/documentation" />
-		<mkdir dir="${documentation}/html" />
-		<mkdir dir="${documentation}/pdf" />
-		<property name="examples" value="${distribution}/examples" />
-		<mkdir dir="${examples}/dicom2jpeg" />
-		<mkdir dir="${examples}/dicomdirItems" />
-		<property name="tests" value="${distribution}/tests" />
-		<mkdir dir="${tests}" />
-
-		<copy todir="${librarySource}">
-			<fileset dir="${build_dir}/library" />
+	<!-- Create the directory for the final build -->
+	<target name="create_build_dir" depends="version" description="Create the directory for the final build">
+		<property name="builds" value="./build" />
+		<delete dir="${builds}" failonerror="false" />
+		<mkdir dir="${builds}" />
+		<property name="build_dir" value="${builds}/temp_build" />
+		<mkdir dir="${build_dir}" />
+				<property name="build_dir_applications" value="${build_dir}/applications" />
+				<mkdir dir="${build_dir_applications}" />
+		<property name="build_dir_tests" value="${build_dir_applications}/tests" />
+		<mkdir dir="${build_dir_tests}" />
+		<property name="build_dir_dicom2jpeg_64" value="${build_dir_applications}/dicom2jpeg_64" />
+				<mkdir dir="${build_dir_dicom2jpeg_64}" />
+				<property name="build_dir_dicom2jpeg_32" value="${build_dir_applications}/dicom2jpeg_32" />
+				<mkdir dir="${build_dir_dicom2jpeg_32}" />
+				<property name="build_dir_dicomdir_64" value="${build_dir_applications}/dicomdir_64" />
+				<mkdir dir="${build_dir_dicomdir_64}" />
+				<property name="build_dir_dicomdir_32" value="${build_dir_applications}/dicomdir_32" />
+				<mkdir dir="${build_dir_dicomdir_32}" />
+				<property name="build_dir_html_doc" value="${builds}/imebra_${fileVersion}_html_doc" />
+		<mkdir dir="${build_dir_html_doc}" />
+		<copy todir="${build_dir}">
+			 <fileset dir="project_files"/>
 		</copy>
-		<copy file="${build_dir}/generated_doc/latex/refman.pdf" tofile="${documentation}/pdf/imebra.pdf" />
-		<copy todir="${documentation}/html">
-			<fileset dir="${build_dir}/generated_doc/html" />
-		</copy>
-		<copy todir="${examples}/dicom2jpeg">
-			<fileset dir="${build_dir}/examples/dicom2jpeg" />
-		</copy>
-		<copy todir="${examples}/dicomdirItems">
-			<fileset dir="${build_dir}/examples/dicomdirItems" />
-		</copy>
-		<copy todir="${tests}">
-			<fileset dir="${build_dir}/tests" />
-		</copy>
-		<copy file="${build_dir}/docs/bsd.txt" tofile="${distribution}/license.txt" />
+		<property name="build_dir_html_doc" value="${builds}/imebra_${fileVersion}_html_doc" />
+		<mkdir dir="${build_dir_html_doc}" />
 	</target>
 
-	<!-- Zip dicomdirItems -->
-	<target name="zip_dicomdirItems" depends="build_dicomdirItems" >
-		<gzip src="${build_dir_dicomdir_32}/dicomdiritems" destfile="${builds}/dicomdirItems_32bit_${fileVersion}.gzip" />
-		<gzip src="${build_dir_dicomdir_64}/dicomdiritems" destfile="${builds}/dicomdirItems_64bit_${fileVersion}.gzip" />
-	</target>
-
-	<!-- Zip dicom2jpeg -->
-	<target name="zip_dicom2jpeg" depends="build_dicom2jpeg" >
-		<gzip src="${build_dir_dicom2jpeg_32}/dicom2jpeg" destfile="${builds}/dicom2jpeg_32bit_${fileVersion}.gzip" />
-		<gzip src="${build_dir_dicom2jpeg_64}/dicom2jpeg" destfile="${builds}/dicom2jpeg_64bit_${fileVersion}.gzip" />
-	</target>
-
-	<!-- Build the HTML documentation -->
-	<target name="HTML" depends="run_test_cases" description="Build the HTML documents">
-		<exec dir="${build_dir}" executable="doxygen" failonerror="true">
-			<arg value="DoxyfileHTML"/>
-		</exec>
-		<copy todir="${build_dir_html_doc}">
-			<fileset dir="${build_dir}/generated_doc/html" />
-		</copy>
-	</target>
-
-	<!-- Build the PDF documentation -->
-
-	<target name="PDF" depends="run_test_cases" description="Build the PDF document">
-                <exec dir="${build_dir}" executable="doxygen" failonerror="true">
-			<arg value="DoxyfilePDF"/>
-		</exec>
-		<exec dir="${build_dir}/generated_doc/latex" executable="pdflatex">
-			<arg value="refman.tex"/>
-		</exec>
-		<exec dir="${build_dir}/generated_doc/latex" executable="makeindex">
-			<arg value="refman.idx"/>
-		</exec>
-		<exec dir="${build_dir}/generated_doc/latex" executable="pdflatex">
-			<arg value="refman.tex"/>
-		</exec>
-		<exec dir="${build_dir}/generated_doc/latex" executable="pdflatex">
-			<arg value="refman.tex"/>
-		</exec>
-		<exec dir="${build_dir}/generated_doc/latex" executable="pdflatex">
-			<arg value="refman.tex"/>
-		</exec>
-		<copy file="${build_dir}/generated_doc/latex/refman.pdf" tofile="${build_dir}/documentation/imebra.pdf" />
-
-	</target>
-
-	<!-- Build dicomdirItems -->
-	<target name="build_dicomdirItems" depends="run_test_cases" description="Build the dicomdirItems">
-            <exec executable="qmake" failonerror="true" dir="${build_dir_dicomdir_64}">
-                    <arg path="${build_dir}/examples/dicomdirItems/dicomdiritems.pro"/>
-                    <arg value="-r"/>
-                    <arg value="CONFIG+=Release"/>
-                    <arg value="-spec"/>
-                    <arg value="linux-g++-64"/>
-            </exec>
-            <exec executable="make" failonerror="true" dir="${build_dir_dicomdir_64}" />
-            <exec executable="qmake" failonerror="true" dir="${build_dir_dicomdir_32}">
-                    <arg path="${build_dir}/examples/dicomdirItems/dicomdiritems.pro"/>
-                    <arg value="-r"/>
-                    <arg value="CONFIG+=Release"/>
-                    <arg value="-spec"/>
-                    <arg value="linux-g++-32"/>
-            </exec>
-            <exec executable="make" failonerror="true" dir="${build_dir_dicomdir_32}" />
-        </target>
-
-	<!-- Build dicom2jpeg -->
-	<target name="build_dicom2jpeg" depends="run_test_cases" description="Build the dicom2jpeg">
-            <exec executable="qmake" failonerror="true" dir="${build_dir_dicom2jpeg_64}">
-                    <arg path="${build_dir}/examples/dicom2jpeg/dicom2jpeg.pro"/>
-                    <arg value="-r"/>
-                    <arg value="CONFIG+=Release"/>
-                    <arg value="-spec"/>
-                    <arg value="linux-g++-64"/>
-            </exec>
-            <exec executable="make" failonerror="true" dir="${build_dir_dicom2jpeg_64}" />
-            <exec executable="qmake" failonerror="true" dir="${build_dir_dicom2jpeg_32}">
-                    <arg path="${build_dir}/examples/dicom2jpeg/dicom2jpeg.pro"/>
-                    <arg value="-r"/>
-                    <arg value="CONFIG+=Release"/>
-                    <arg value="-spec"/>
-                    <arg value="linux-g++-32"/>
-            </exec>
-            <exec executable="make" failonerror="true" dir="${build_dir_dicom2jpeg_32}" />
-        </target>
-
-	<!-- Run the test cases posix -->
-	<target name="run_test_cases" depends="build_test_cases" description="Run the test cases">
-				<exec executable="${build_dir_tests}/tests" dir="${build_dir_tests}" resolveexecutable="true" failonerror="true" />
-	</target>
-
-
-	<!-- Build the test cases -->
-        <target name="build_test_cases" depends="replace_version" description="Build the Imebra test cases">
-				<exec executable="qmake" failonerror="true" dir="${build_dir_tests}">
-                        <arg path="${build_dir}/tests/tests.pro"/>
-						<arg value="-r"/>
-						<arg value="CONFIG+=Release"/>
-				</exec>
-				<exec executable="make" failonerror="true" dir="${build_dir_tests}" />
-		</target>
 
 	<!-- Replace the version number and license info -->
 	<target name="replace_version" depends="create_build_dir">
@@ -193,43 +86,154 @@ Imebra is available at http://imebra.com
 
 ]]></replacevalue>
 		</replace>
-		<replace dir="${build_dir}" token="$imebraVersion$" value="Imebra v. ${fullVersionReadable}" />
+		<replace dir="${build_dir}" token="$imebraVersion$" value="${productName}" />
 	</target>
 
-	<!-- Create the directory for the final build -->
-	<target name="create_build_dir" depends="version" description="Create the directory for the final build">
-		<property name="builds" value="./build" />
-		<delete dir="${builds}" failonerror="false" /> 
-		<mkdir dir="${builds}" />
-		<property name="build_dir" value="${builds}/temp_build" />
-		<mkdir dir="${build_dir}" />
-                <property name="build_dir_applications" value="${build_dir}/applications" />
-                <mkdir dir="${build_dir_applications}" />
-		<property name="build_dir_tests" value="${build_dir_applications}/tests" />
-		<mkdir dir="${build_dir_tests}" />
-		<property name="build_dir_dicom2jpeg_64" value="${build_dir_applications}/dicom2jpeg_64" />
-                <mkdir dir="${build_dir_dicom2jpeg_64}" />
-                <property name="build_dir_dicom2jpeg_32" value="${build_dir_applications}/dicom2jpeg_32" />
-                <mkdir dir="${build_dir_dicom2jpeg_32}" />
-                <property name="build_dir_dicomdir_64" value="${build_dir_applications}/dicomdir_64" />
-                <mkdir dir="${build_dir_dicomdir_64}" />
-                <property name="build_dir_dicomdir_32" value="${build_dir_applications}/dicomdir_32" />
-                <mkdir dir="${build_dir_dicomdir_32}" />
-                <property name="build_dir_html_doc" value="${builds}/imebra_${fileVersion}_html_doc" />
-		<mkdir dir="${build_dir_html_doc}" />
-		<copy todir="${build_dir}">
-			 <fileset dir="project_files"/>
-		</copy>
-                <property name="build_dir_html_doc" value="${builds}/imebra_${fileVersion}_html_doc" />
-                <mkdir dir="${build_dir_html_doc}" />
-        </target>
 
-	<!-- Initialize the version number -->
-	<target name="version" description="Initialize the build number">
-		<property file="./build.number" /> 
-		<property name="fileVersion" value="build_${build.number}"/>
-		<property name="fullVersionReadable" value="build ${build.number}"/>
-		<property name="productName" value="Imebra 2010 ${fullVersionReadable}"/>
+	<!-- Build the test cases -->
+	<target name="build_test_cases" depends="replace_version" description="Build the Imebra test cases">
+		<exec executable="qmake" failonerror="true" dir="${build_dir_tests}">
+		<arg path="${build_dir}/tests/tests.pro"/>
+		<arg value="-r"/>
+		<arg value="CONFIG+=Release"/>
+		</exec>
+		<exec executable="make" failonerror="true" dir="${build_dir_tests}" />
+	</target>
+
+
+	<!-- Run the test cases posix -->
+	<target name="run_test_cases" depends="build_test_cases" description="Run the test cases">
+				<exec executable="${build_dir_tests}/tests" dir="${build_dir_tests}" resolveexecutable="true" failonerror="true" />
+	</target>
+
+
+	<!-- Build dicomdirItems -->
+	<target name="build_dicomdirItems" depends="run_test_cases" description="Build the dicomdirItems">
+			<exec executable="qmake" failonerror="true" dir="${build_dir_dicomdir_64}">
+					<arg path="${build_dir}/examples/dicomdirItems/dicomdiritems.pro"/>
+					<arg value="-r"/>
+					<arg value="CONFIG+=Release"/>
+					<arg value="-spec"/>
+					<arg value="linux-g++-64"/>
+			</exec>
+			<exec executable="make" failonerror="true" dir="${build_dir_dicomdir_64}" />
+			<exec executable="qmake" failonerror="true" dir="${build_dir_dicomdir_32}">
+					<arg path="${build_dir}/examples/dicomdirItems/dicomdiritems.pro"/>
+					<arg value="-r"/>
+					<arg value="CONFIG+=Release"/>
+					<arg value="-spec"/>
+					<arg value="linux-g++-32"/>
+			</exec>
+			<exec executable="make" failonerror="true" dir="${build_dir_dicomdir_32}" />
+		</target>
+
+	<!-- Build dicom2jpeg -->
+	<target name="build_dicom2jpeg" depends="run_test_cases" description="Build the dicom2jpeg">
+			<exec executable="qmake" failonerror="true" dir="${build_dir_dicom2jpeg_64}">
+					<arg path="${build_dir}/examples/dicom2jpeg/dicom2jpeg.pro"/>
+					<arg value="-r"/>
+					<arg value="CONFIG+=Release"/>
+					<arg value="-spec"/>
+					<arg value="linux-g++-64"/>
+			</exec>
+			<exec executable="make" failonerror="true" dir="${build_dir_dicom2jpeg_64}" />
+			<exec executable="qmake" failonerror="true" dir="${build_dir_dicom2jpeg_32}">
+					<arg path="${build_dir}/examples/dicom2jpeg/dicom2jpeg.pro"/>
+					<arg value="-r"/>
+					<arg value="CONFIG+=Release"/>
+					<arg value="-spec"/>
+					<arg value="linux-g++-32"/>
+			</exec>
+			<exec executable="make" failonerror="true" dir="${build_dir_dicom2jpeg_32}" />
+	</target>
+
+
+	<!-- Build the PDF documentation -->
+	<target name="PDF" depends="run_test_cases" description="Build the PDF document">
+				<exec dir="${build_dir}" executable="doxygen" failonerror="true">
+			<arg value="DoxyfilePDF"/>
+		</exec>
+		<exec dir="${build_dir}/generated_doc/latex" executable="pdflatex">
+			<arg value="refman.tex"/>
+		</exec>
+		<exec dir="${build_dir}/generated_doc/latex" executable="makeindex">
+			<arg value="refman.idx"/>
+		</exec>
+		<exec dir="${build_dir}/generated_doc/latex" executable="pdflatex">
+			<arg value="refman.tex"/>
+		</exec>
+		<exec dir="${build_dir}/generated_doc/latex" executable="pdflatex">
+			<arg value="refman.tex"/>
+		</exec>
+		<exec dir="${build_dir}/generated_doc/latex" executable="pdflatex">
+			<arg value="refman.tex"/>
+		</exec>
+		<copy file="${build_dir}/generated_doc/latex/refman.pdf" tofile="${build_dir}/documentation/imebra.pdf" />
+	</target>
+
+
+	<!-- Build the HTML documentation -->
+	<target name="HTML" depends="run_test_cases" description="Build the HTML documents">
+		<exec dir="${build_dir}" executable="doxygen" failonerror="true">
+			<arg value="DoxyfileHTML"/>
+		</exec>
+		<copy todir="${build_dir_html_doc}">
+			<fileset dir="${build_dir}/generated_doc/html" />
+		</copy>
+	</target>
+
+
+	<!-- Zip dicomdirItems -->
+	<target name="zip_dicomdirItems" depends="build_dicomdirItems" >
+		<gzip src="${build_dir_dicomdir_32}/dicomdiritems" destfile="${builds}/dicomdirItems_32bit_${fileVersion}.gzip" />
+		<gzip src="${build_dir_dicomdir_64}/dicomdiritems" destfile="${builds}/dicomdirItems_64bit_${fileVersion}.gzip" />
+	</target>
+
+	<!-- Zip dicom2jpeg -->
+	<target name="zip_dicom2jpeg" depends="build_dicom2jpeg" >
+		<gzip src="${build_dir_dicom2jpeg_32}/dicom2jpeg" destfile="${builds}/dicom2jpeg_32bit_${fileVersion}.gzip" />
+		<gzip src="${build_dir_dicom2jpeg_64}/dicom2jpeg" destfile="${builds}/dicom2jpeg_64bit_${fileVersion}.gzip" />
+	</target>
+
+
+	<!-- Make the GPL build -->
+	<target name="make_distribution" depends="run_test_cases, HTML, PDF, zip_dicomdirItems, zip_dicom2jpeg">
+		<property name="distribution" value="${build_dir}/distribution" />
+		<mkdir dir="${distribution}" />
+		<property name="librarySource" value="${distribution}/library" />
+		<mkdir dir="${librarySource}" />
+		<property name="documentation" value="${distribution}/documentation" />
+		<mkdir dir="${documentation}/html" />
+		<mkdir dir="${documentation}/pdf" />
+		<property name="examples" value="${distribution}/examples" />
+		<mkdir dir="${examples}/dicom2jpeg" />
+		<mkdir dir="${examples}/dicomdirItems" />
+		<property name="tests" value="${distribution}/tests" />
+		<mkdir dir="${tests}" />
+
+		<copy todir="${librarySource}">
+			<fileset dir="${build_dir}/library" />
+		</copy>
+		<copy file="${build_dir}/generated_doc/latex/refman.pdf" tofile="${documentation}/pdf/imebra.pdf" />
+		<copy todir="${documentation}/html">
+			<fileset dir="${build_dir}/generated_doc/html" />
+		</copy>
+		<copy todir="${examples}/dicom2jpeg">
+			<fileset dir="${build_dir}/examples/dicom2jpeg" />
+		</copy>
+		<copy todir="${examples}/dicomdirItems">
+			<fileset dir="${build_dir}/examples/dicomdirItems" />
+		</copy>
+		<copy todir="${tests}">
+			<fileset dir="${build_dir}/tests" />
+		</copy>
+		<copy file="${build_dir}/docs/bsd.txt" tofile="${distribution}/license.txt" />
+	</target>
+
+
+	<!-- Make a zip file and a gzip file of the GPL build -->
+	<target name="ZIP_GPL" depends="make_distribution" description ="Compress the build">
+		<zip basedir="${build_dir}/distribution" destfile="${builds}/imebra_${fileVersion}.zip" />
 	</target>
 
 
