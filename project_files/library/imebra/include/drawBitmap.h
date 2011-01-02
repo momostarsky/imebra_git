@@ -276,8 +276,8 @@ public:
 				if(m_transformsChain->isEmpty())
 				{
 					imageHandler = sourceImage->getDataHandler(false, &rowSize, &channelSize, &channelsNumber);
-					pImagePointer = &(imageMemory[currentImageY * imageSizeX * 3 + ((*pNextSourceXIndex) >> leftShiftX) * 3]);
 					imageMemory = imageHandler->getMemoryBuffer();
+					pImagePointer = &(imageMemory[currentImageY * imageSizeX * 3 + ((*pNextSourceXIndex) >> leftShiftX) * 3]);
 				}
 				else
 				{
