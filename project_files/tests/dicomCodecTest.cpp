@@ -58,94 +58,112 @@ ptr<image> dicomCodecTest::makeTestImage()
 // A buffer initialized to a default data type should use the data type OB
 void dicomCodecTest::testUncompressed()
 {
-    for(int interleaved(0); interleaved != 2; ++interleaved)
-    {
-
-		for(int trial(0); trial != 4; ++trial)
+	for(int transferSyntaxId(0); transferSyntaxId != 3; ++transferSyntaxId)
+	{
+		for(int interleaved(0); interleaved != 2; ++interleaved)
 		{
-			puntoexe::imebra::image::bitDepth depth;
-			imbxUint32 highBit;
-			switch(trial)
+
+			for(int trial(0); trial != 4; ++trial)
 			{
-			case 0:
-				depth = puntoexe::imebra::image::depthU8;
-				highBit = 7;
-				break;
-			case 1:
-				depth = puntoexe::imebra::image::depthS8;
-				highBit = 7;
-				break;
-			case 2:
-				depth = puntoexe::imebra::image::depthU16;
-				highBit = 15;
-				break;
-			case 3:
-				depth = puntoexe::imebra::image::depthS16;
-				highBit = 15;
-				break;
+				puntoexe::imebra::image::bitDepth depth;
+				imbxUint32 highBit;
+				switch(trial)
+				{
+				case 0:
+					depth = puntoexe::imebra::image::depthU8;
+					highBit = 7;
+					break;
+				case 1:
+					depth = puntoexe::imebra::image::depthS8;
+					highBit = 7;
+					break;
+				case 2:
+					depth = puntoexe::imebra::image::depthU16;
+					highBit = 15;
+					break;
+				case 3:
+					depth = puntoexe::imebra::image::depthS16;
+					highBit = 15;
+					break;
+				}
+				ptr<image> dicomImage0(buildImageForTest(
+						601,
+						401,
+						depth,
+						highBit,
+						30,
+						20,
+						L"RGB",
+						50));
+				ptr<image> dicomImage1(buildImageForTest(
+						601,
+						401,
+						depth,
+						highBit,
+						30,
+						20,
+						L"RGB",
+						100));
+				ptr<image> dicomImage2(buildImageForTest(
+						601,
+						401,
+						depth,
+						highBit,
+						30,
+						20,
+						L"RGB",
+						150));
+
+				std::wstring transferSyntax;
+
+				switch(transferSyntaxId)
+				{
+				case 0:
+					transferSyntax = L"1.2.840.10008.1.2";
+					break;
+				case 1:
+					transferSyntax = L"1.2.840.10008.1.2.1";
+					break;
+				case 2:
+					transferSyntax = L"1.2.840.10008.1.2.2";
+					break;
+				}
+
+				ptr<memory> streamMemory(new memory);
+				{
+					ptr<dataSet> testDataSet(new dataSet);
+					testDataSet->setString(0x0010, 0, 0x0010, 0, "AAAaa");
+					testDataSet->setString(0x0010, 0, 0x0010, 1, "BBBbbb");
+					testDataSet->setString(0x0010, 0, 0x0010, 2, "");
+					testDataSet->setUnsignedLong(0x0028, 0x0, 0x0006, 0x0, interleaved);
+					testDataSet->setImage(0, dicomImage0, transferSyntax, codecs::codec::veryHigh);
+					testDataSet->setImage(1, dicomImage1, transferSyntax, codecs::codec::veryHigh);
+					testDataSet->setImage(2, dicomImage2, transferSyntax, codecs::codec::veryHigh);
+
+					ptr<memoryStream> writeStream(new memoryStream(streamMemory));
+
+					ptr<codecs::dicomCodec> testCodec(new codecs::dicomCodec);
+					testCodec->write(ptr<streamWriter>(new streamWriter(writeStream)), testDataSet);
+				}
+
+				ptr<baseStream> readStream(new memoryStream(streamMemory));
+				ptr<dataSet> testDataSet = codecs::codecFactory::getCodecFactory()->load(ptr<streamReader>(new streamReader(readStream)));
+
+				QVERIFY(testDataSet->getString(0x0010, 0, 0x0010, 0) == "AAAaa");
+				QVERIFY(testDataSet->getString(0x0010, 0, 0x0010, 1) == "BBBbbb");
+				QVERIFY(testDataSet->getString(0x0010, 0, 0x0010, 2) == "");
+				QVERIFY(testDataSet->getSignedLong(0x0028, 0, 0x0006, 0) == interleaved);
+
+				ptr<image> checkImage0 = testDataSet->getImage(0);
+				ptr<image> checkImage1 = testDataSet->getImage(1);
+				ptr<image> checkImage2 = testDataSet->getImage(2);
+
+				QVERIFY(compareImages(checkImage0, dicomImage0) < 0.0001);
+				QVERIFY(compareImages(checkImage1, dicomImage1) < 0.0001);
+				QVERIFY(compareImages(checkImage2, dicomImage2) < 0.0001);
 			}
-			ptr<image> dicomImage0(buildImageForTest(
-					601,
-					401,
-					depth,
-					highBit,
-					30,
-					20,
-					L"RGB",
-					50));
-			ptr<image> dicomImage1(buildImageForTest(
-					601,
-					401,
-					depth,
-					highBit,
-					30,
-					20,
-					L"RGB",
-					100));
-			ptr<image> dicomImage2(buildImageForTest(
-					601,
-					401,
-					depth,
-					highBit,
-					30,
-					20,
-					L"RGB",
-					150));
-
-			ptr<memory> streamMemory(new memory);
-			{
-				ptr<dataSet> testDataSet(new dataSet);
-				testDataSet->setString(0x0010, 0, 0x0010, 0, "AAAaa");
-				testDataSet->setString(0x0010, 0, 0x0010, 1, "BBBbbb");
-				testDataSet->setString(0x0010, 0, 0x0010, 2, "");
-				testDataSet->setUnsignedLong(0x0028, 0x0, 0x0006, 0x0, interleaved);
-				testDataSet->setImage(0, dicomImage0, L"1.2.840.10008.1.2.1", codecs::codec::veryHigh);
-				testDataSet->setImage(1, dicomImage1, L"1.2.840.10008.1.2.1", codecs::codec::veryHigh);
-				testDataSet->setImage(2, dicomImage2, L"1.2.840.10008.1.2.1", codecs::codec::veryHigh);
-
-				ptr<memoryStream> writeStream(new memoryStream(streamMemory));
-
-				ptr<codecs::dicomCodec> testCodec(new codecs::dicomCodec);
-				testCodec->write(ptr<streamWriter>(new streamWriter(writeStream)), testDataSet);
-			}
-
-			ptr<baseStream> readStream(new memoryStream(streamMemory));
-			ptr<dataSet> testDataSet = codecs::codecFactory::getCodecFactory()->load(ptr<streamReader>(new streamReader(readStream)));
-
-			QVERIFY(testDataSet->getString(0x0010, 0, 0x0010, 0) == "AAAaa");
-			QVERIFY(testDataSet->getString(0x0010, 0, 0x0010, 1) == "BBBbbb");
-			QVERIFY(testDataSet->getString(0x0010, 0, 0x0010, 2) == "");
-			QVERIFY(testDataSet->getSignedLong(0x0028, 0, 0x0006, 0) == interleaved);
-
-			ptr<image> checkImage0 = testDataSet->getImage(0);
-			ptr<image> checkImage1 = testDataSet->getImage(1);
-			ptr<image> checkImage2 = testDataSet->getImage(2);
-
-			QVERIFY(compareImages(checkImage0, dicomImage0) < 0.0001);
-			QVERIFY(compareImages(checkImage1, dicomImage1) < 0.0001);
-			QVERIFY(compareImages(checkImage2, dicomImage2) < 0.0001);
 		}
-    }
+	} // transferSyntaxId
 }
 
 

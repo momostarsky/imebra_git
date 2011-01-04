@@ -148,6 +148,12 @@ void dicomCodec::writeGroup(ptr<streamWriter> pDestStream, ptr<dataGroup> pGroup
 {
 	PUNTOEXE_FUNCTION_START(L"dicomCodec::writeGroup");
 
+	if(groupId == 2)
+	{
+		bExplicitDataType = true;
+		endianType = streamController::lowByteEndian;
+	}
+
 	// Calculate the group's length
 	///////////////////////////////////////////////////////////
 	imbxUint32 groupLength = getGroupLength(pGroup, bExplicitDataType);
