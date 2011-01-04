@@ -238,6 +238,8 @@ public:
             }
         }
 
+		virtual bool isEmpty();
+
         virtual ptr<image> allocateOutputImage(ptr<image> pInputImage, imbxUint32 width, imbxUint32 height);
 
 protected:

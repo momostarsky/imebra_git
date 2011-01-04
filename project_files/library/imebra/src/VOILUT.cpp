@@ -244,6 +244,11 @@ void VOILUT::getCenterWidth(imbxInt32* pCenter, imbxInt32* pWidth)
 }
 
 
+bool VOILUT::isEmpty()
+{
+	return m_windowWidth <= 1 && m_pLUT == 0;
+}
+
 ptr<image> VOILUT::allocateOutputImage(ptr<image> pInputImage, imbxUint32 width, imbxUint32 height)
 {
 	ptr<image> outputImage(new image);
@@ -279,7 +284,7 @@ ptr<image> VOILUT::allocateOutputImage(ptr<image> pInputImage, imbxUint32 width,
 	///////////////////////////////////////////////////////////
 	if(m_windowWidth <= 1)
 	{
-		outputImage->create(width, height, depth, L"MONOCHROME2", pInputImage->getHighBit());
+		outputImage->create(width, height, depth, pInputImage->getColorSpace(), pInputImage->getHighBit());
 		return outputImage;
 	}
 
