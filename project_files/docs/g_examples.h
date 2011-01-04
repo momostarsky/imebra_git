@@ -56,8 +56,9 @@ dicom2jpeg multiframe.dcm output.jpg -ffmpeg ffmpeg.exe movie.swf
 
 \example dicomdirItems/dicomdirItems.cpp
 This application reads a DICOMDIR file and output the file's content in
- XML format to the standard output stream.\n
-Usage:
+ XML format to the standard output stream.
+
+<b>Usage</b>
 \code
 dicomdirItems dicomdirFile
 \endcode
@@ -86,5 +87,24 @@ Each tag has the attribute id which specifies the tag id in decimal format.\n
 The <tag> item contains the dicom tag's content.
 
 
+
+\example changeTransferSyntax/changeTransferSyntax.cpp
+This application reads a dicom file and writes it back to disk using a different
+ transfer syntax.
+
+<b>Usage</b>
+\code
+changeTransferSyntax originalDicomFile outputDicomFile transferSyntaxEnum
+\endcode
+- originalDicomFile: the name of the dicom file to be converted
+- outputDicomFile: the name of the generated dicom file
+- transferSyntaxEnum: the id of the transfer syntax used to generate the dicom file\n
+  The possible values are:
+  - 0 = Explicit VR little endian
+  - 1 = Explicit VR big endian
+  - 2 = RLE compression
+  - 3 = Jpeg baseline (8 bits lossy)
+  - 4 = Jpeg extended (12 bits lossy)
+  - 5 = Jpeg lossless NH
 
 */
