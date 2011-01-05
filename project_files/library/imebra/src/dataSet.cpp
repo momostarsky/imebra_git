@@ -302,9 +302,9 @@ ptr<image> dataSet::getImage(imbxUint32 frameNumber)
 		pImage->setSizeMm(pixelDistanceX*(double)sizeX, pixelDistanceY*(double)sizeY);
 	}
 
-	if(pImage->getColorSpace() == L"PALETTECOLOR")
+	if(pImage->getColorSpace() == L"PALETTE COLOR")
 	{
-		ptr<lut> red, green, blue;
+		ptr<lut> red(new lut), green(new lut), blue(new lut);
 		red->setLut(getDataHandler(0x0028, 0x0, 0x1101, 0, false), getDataHandler(0x0028, 0x0, 0x1201, 0, false), L"");
 		green->setLut(getDataHandler(0x0028, 0x0, 0x1102, 0, false), getDataHandler(0x0028, 0x0, 0x1202, 0, false), L"");
 		blue->setLut(getDataHandler(0x0028, 0x0, 0x1103, 0, false), getDataHandler(0x0028, 0x0, 0x1203, 0, false), L"");

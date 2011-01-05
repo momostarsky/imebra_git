@@ -1225,11 +1225,12 @@ void dicomCodec::readUncompressedInterleaved(
 	///////////////////////////////////////////////////////////
 	if(!bSubSampledX && !bSubSampledY)
 	{
+		imbxUint8 readBuffer[4];
 		for(imbxUint32 totalSize = m_channels[0]->m_bufferSize; totalSize != 0; --totalSize)
 		{
 			for(imbxUint32 scanChannels = 0; scanChannels != channelsNumber; ++scanChannels)
 			{
-                            readPixel(pSourceStream, channelsMemory[scanChannels]++, 1, &bitPointer, wordSizeBytes, allocatedBits, mask);
+                            readPixel(pSourceStream, channelsMemory[scanChannels]++, 1, &bitPointer, readBuffer, (allocatedBits >> 3), wordSizeBytes, allocatedBits, mask);
 			}
 		}
 		return;
@@ -1255,6 +1256,8 @@ void dicomCodec::readUncompressedInterleaved(
 	imbxUint32 maxSamplingFactorX = bSubSampledX ? 2 : 1;
 	imbxUint32 maxSamplingFactorY = bSubSampledY ? 2 : 1;
 
+	ptr<memory> readBuffer(memoryPool::getMemoryPool()->getMemory(numValuesPerBlock * ((7+allocatedBits) >> 3)));
+
 	// Read all the blocks
 	///////////////////////////////////////////////////////////
 	for(
@@ -1263,7 +1266,7 @@ void dicomCodec::readUncompressedInterleaved(
 		--numBlocks)
 	{
         imbxInt32* readBlockValuesPtr(readBlockValuesAutoPtr.get());
-	    readPixel(pSourceStream, readBlockValuesPtr, numValuesPerBlock, &bitPointer, wordSizeBytes, allocatedBits, mask);
+		readPixel(pSourceStream, readBlockValuesPtr, numValuesPerBlock, &bitPointer, readBuffer->data(), readBuffer->size(), wordSizeBytes, allocatedBits, mask);
 
 		// Read channel 0 (not subsampled)
 		///////////////////////////////////////////////////////////
@@ -1397,12 +1400,20 @@ void dicomCodec::readUncompressedNotInterleaved(
 
 	imbxUint8  bitPointer=0x0;
 
+	ptr<memory> readBuffer;
+	imbxUint32 lastBufferSize(0);
+
 	// Read all the pixels
 	///////////////////////////////////////////////////////////
 	for(imbxUint32 channel = 0; channel < channelsNumber; ++channel)
 	{
+		if(m_channels[channel]->m_bufferSize != lastBufferSize)
+		{
+			lastBufferSize = m_channels[channel]->m_bufferSize;
+			readBuffer = memoryPool::getMemoryPool()->getMemory(lastBufferSize * ((7+allocatedBits) >> 3));
+		}
 		imbxInt32* pMemoryDest = m_channels[channel]->m_pBuffer;
-		readPixel(pSourceStream, pMemoryDest, m_channels[channel]->m_bufferSize, &bitPointer, wordSizeBytes, allocatedBits, mask);
+		readPixel(pSourceStream, pMemoryDest, m_channels[channel]->m_bufferSize, &bitPointer, readBuffer->data(), readBuffer->size(), wordSizeBytes, allocatedBits, mask);
 	}
 
 	PUNTOEXE_FUNCTION_END();
@@ -1741,27 +1752,26 @@ void dicomCodec::readPixel(
 					imbxInt32* pDest,
 					imbxUint32 numPixels,
 					imbxUint8* pBitPointer,
+					imbxUint8* pReadBuffer,
+					const imbxUint32 readBufferSize,
 					const imbxUint8 wordSizeBytes,
 					const imbxUint8 allocatedBits,
 					const imbxUint32 mask)
 {
-	PUNTOEXE_FUNCTION_START(L"dicomCodec::readPixel");
-
         if(allocatedBits == 8 || allocatedBits == 16)
         {
-            ptr<memory> readBuffer(memoryPool::getMemoryPool()->getMemory(numPixels * (allocatedBits >> 3)));
-            pSourceStream->read(readBuffer->data(), readBuffer->size());
+            pSourceStream->read(pReadBuffer, numPixels * (allocatedBits >> 3));
             if(allocatedBits == 8)
             {
-                imbxUint8* pSource(readBuffer->data());
+                imbxUint8* pSource(pReadBuffer);
                 while(numPixels-- != 0)
                 {
                     *pDest++ = (imbxUint32)(*pSource++) & mask;
                 }
                 return;
             }
-            pSourceStream->adjustEndian(readBuffer->data(), allocatedBits >> 3, streamController::lowByteEndian, numPixels);
-            imbxUint16* pSource((imbxUint16*)(readBuffer->data()));
+            pSourceStream->adjustEndian(pReadBuffer, allocatedBits >> 3, streamController::lowByteEndian, numPixels);
+            imbxUint16* pSource((imbxUint16*)(pReadBuffer));
             while(numPixels-- != 0)
             {
                 *pDest++ = (imbxUint32)(*pSource++) & mask;
@@ -1806,9 +1816,6 @@ void dicomCodec::readPixel(
             }
             *pDest++ &= mask;
         }
-
-
-	PUNTOEXE_FUNCTION_END();
 }
 
 
