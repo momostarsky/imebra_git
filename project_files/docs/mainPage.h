@@ -2,11 +2,11 @@
 $fileHeader$
 */
 
-/*! \mainpage Imebra 2010 open source Dicom library
+/*! \mainpage $imebraVersion$ open source Dicom library
 
 \section copyright Copyright
 
-Copyright 2003, 2004, 2005, 2006, 2007, 2008, 2009 by Paolo Brandoli.
+Copyright 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011 by Paolo Brandoli.
 
 The online version of this document can be found here: http://imebra.com/documentation/html/index.html
 
@@ -43,7 +43,7 @@ At the moment the library provides the following features:
 - support for Unicode and different Dicom charsets
 - DICOMDIR parser and writer
 - support for transactions
-- load the larger tags only when necessary
+- load larger tags only when necessary
 
 
 \section is_not What Imebra does NOT do?
@@ -65,9 +65,9 @@ A detailed reference of the C++ classes that compose Imebra is included in
  this manual.
 
 
-\section migration_2010 Migrating projects written for older version of Imebra
+\section migration_2011 Migrating projects written for older versions of Imebra
 
-Imebra 2010 introduces some breaking changes in the transform classes and access to the images' pixels.
+Imebra 2011 introduces some breaking changes in the transform classes and access to the images' pixels.
 
 Most of the changes are due to the fact that now the imageHandler class has been replaced by a
  dataHandlerNumericBase class, which is a template class (now image classes store the pixels
@@ -97,20 +97,19 @@ The changes that affect the interface of the transform classes (and therefore ne
 
 \subsection since_0_0_48 Changes since version 0.0.48
 
-During the development of Imebra 2010 the repository hosting was changed from bitbucket.org to repositoryhosting.com
-
-As a result of this change, some bugs were tracked by bitbucket while other ones were filed in repositoryhosting.
-
+- License changed from GPL3 to FreeBSD
 - new folders structure
 - puntoexe::imebra::image now returns a puntoexe::imebra::handlers::dataHandlerNumericBase instead of puntoexe::imebra::handlers::imageHandler
 - breaking changes in puntoexe::imebra::handlers::dataHandlerNumeric
 - breaking changes in puntoexe::imebra::transforms::transform (now the transforms work with new dataHandlerNumeric)
+- The palette tags now are embedded in the puntoexe::imebra::image objects
 - Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/61">#61</a> (directoryRecord must have a method setFilePart())
 - Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/63">#63</a> (Regression when reading uncompressed non interleaved images)
 - Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/65">#65</a> (When a tag is set twice using the default VR in a transaction then the second write operation resets the VR)
 - Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/66">#66</a> (The dataset doesn't consider the planar configuration)
 - Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/67">#67</a> (When an undefined-length sequence doesn't contains the end-of-sequence then an exception is thrown when the end of the file is reached)
 - Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/68">#68</a> (drawBitmap should be able to draw b/w images)
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/71">#71</a> (File Meta should always use Explicit VR Little Endian Transfer Syntax)
 
 
 \subsection since_0_0_47 Changes since version 0.0.47
