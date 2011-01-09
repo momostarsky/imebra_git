@@ -7,8 +7,8 @@
 	<!-- Initialize the version number -->
 	<target name="version" description="Initialize the build number">
 		<property environment="env"/>
-		<property name="fileVersion" value="build_${env.BUILD_NUMBER}"/>
-		<property name="fullVersionReadable" value="build ${env.BUILD_NUMBER}"/>
+		<property name="fileVersion" value="build_${env.BUILD_ID}"/>
+		<property name="fullVersionReadable" value="build ${env.BUILD_ID}"/>
 		<property name="productName" value="Imebra 2011 ${fullVersionReadable}"/>
 	</target>
 
