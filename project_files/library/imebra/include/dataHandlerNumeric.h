@@ -114,6 +114,10 @@ namespace imebra
 namespace handlers
 {
 
+/// \brief This is the base class for the %data handlers
+///         that manage numeric values.
+///
+///////////////////////////////////////////////////////////
 class dataHandlerNumericBase: public dataHandler
 {
     friend class buffer;
@@ -129,7 +133,7 @@ public:
 		return m_memorySize;
 	}
 
-	/// \brief Return the memory object that stores the data
+	/// \brief Returns the memory object that stores the data
 	///         managed by the handler.
 	///
 	/// @return the memory object that stores the data managed
@@ -222,6 +226,13 @@ public:
 		imbxUint32 sourceHeight,
 		imbxUint32 sourceNumChannels) const = 0;
 
+	/// \brief Returns truen if the buffer's elements are
+	///         signed, false otherwise.
+	///
+	/// @return true if the buffer's elements are signed,
+	///          or false otherwise
+	///
+	///////////////////////////////////////////////////////////
 	virtual bool isSigned() const = 0;
 
 	virtual bool pointerIsValid(const imbxUint32 index) const
@@ -286,13 +297,6 @@ public:
 		return sizeof(dataHandlerType);
 	}
 
-	/// \brief Returns truen if the buffer's elements are
-	///         signed, false otherwise.
-	///
-	/// @return true if the buffer's elements are signed,
-	///          or false otherwise
-	///
-	///////////////////////////////////////////////////////////
 	virtual bool isSigned() const
 	{
 		dataHandlerType firstValue((dataHandlerType) -1);

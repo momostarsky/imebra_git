@@ -57,7 +57,7 @@ namespace handlers
 ///
 /// Data handlers are also used to access to the
 ///  decompressed image's pixels (see image and 
-///  handlers::imageHandler).
+///  handlers::dataHandlerNumericBase).
 ///
 /// To obtain a data handler your application has to
 ///  call buffer::getDataHandler() or 
@@ -127,19 +127,14 @@ public:
 	///////////////////////////////////////////////////////////
 	//@{
 
-	/// \brief Returns true if the data handler's internal
-	///        pointer is valid.
+	/// \brief Returns true if the specified index points to
+	///        a valid element in the buffer.
 	///
-	/// The internal pointer references the element that will
-	///  be read/written by the reading/writing functions.
+	/// If the index is out of the valid range, then this
+	///  method returns false.
 	///
-	/// If the internal pointer is out of the valid range, then
-	///  this method returns false.
-	///
-	/// See also setPointer(), incPointer and skip().
-	///
-	/// @return the internal pointer's status (true=valid,
-	///         false=invalid).
+	/// @return true if the index is valid, false if it is out
+	///          of range
 	///
 	///////////////////////////////////////////////////////////
 	virtual bool pointerIsValid(const imbxUint32 index) const=0;
@@ -278,85 +273,102 @@ public:
 	///////////////////////////////////////////////////////////
 	//@{
 
-	/// \brief Retrieve the active %data element as a signed 
-	///         long.
+	/// \brief Retrieve the buffer's element referenced by the
+	///         zero-based index specified in the parameter and
+	///         returns it as a signed long value.
 	///
-	/// The active %data element is referenced by the %data
-	///  handler's internal pointer, set by the method
-	///  setPointer(), incPointer() and skip().
+	/// Returns 0 if the specified index is out of range.
+	/// You can check the validity of the index by using the
+	///  function pointerIsValid().
 	///
-	/// @return the value of the active data element
-	///          transformed into a signed long
+	/// @param index   the zero base index of the buffer's
+	///                 element to retrieve
+	/// @return the value of the data element referenced by
+	///          the index, transformed into a signed long, or
+	///          0 if the index is out of range
 	///
 	///////////////////////////////////////////////////////////
 	virtual imbxInt32 getSignedLong(const imbxUint32 index) const=0;
 
-	/// \brief Retrieve the active %data element as an unsigned
-	///         long.
+	/// \brief Retrieve the buffer's element referenced by the
+	///         zero-based index specified in the parameter and
+	///         returns it as an unsigned long value.
 	///
-	/// The active %data element is referenced by the %data
-	///  handler's internal pointer, set by the method
-	///  setPointer(), incPointer() and skip().
+	/// Returns 0 if the specified index is out of range.
+	/// You can check the validity of the index by using the
+	///  function pointerIsValid().
 	///
-	/// @return the value of the active data element
-	///          transformed into an unsigned long
+	/// @param index   the zero base index of the buffer's
+	///                 element to retrieve
+	/// @return the value of the data element referenced by
+	///          the index, transformed into an unsigned long,
+	///          or 0 if the index is out of range
 	///
 	///////////////////////////////////////////////////////////
 	virtual imbxUint32 getUnsignedLong(const imbxUint32 index) const =0;
 
-	/// \brief Retrieve the active %data element as a double.
+	/// \brief Retrieve the buffer's element referenced by the
+	///         zero-based index specified in the parameter and
+	///         returns it as a double floating point value.
 	///
-	/// The active %data element is referenced by the %data
-	///  handler's internal pointer, set by the method
-	///  setPointer(), incPointer() and skip().
+	/// Returns 0 if the specified index is out of range.
+	/// You can check the validity of the index by using the
+	///  function pointerIsValid().
 	///
-	/// @return the value of the active data element
-	///          transformed into a double
+	/// @param index   the zero base index of the buffer's
+	///                 element to retrieve
+	/// @return the value of the data element referenced by
+	///          the index, transformed into a double floating
+	///          point, or 0 if the index is out of range
 	///
 	///////////////////////////////////////////////////////////
 	virtual double getDouble(const imbxUint32 index) const=0;
 
-	/// \brief Retrieve the active %data element as a string
+	/// \brief Retrieve the buffer's element referenced by the
+	///         zero-based index specified in the parameter and
+	///         returns it as a string value.
 	///
-	/// The retrieved string is converted using  the active 
-	///  locale settings.
-	/// The usage of getUnicodeString() is preferred
-	///  because the retrieved string can represent all
-	///  the chars stored in the dicom tag.
+	/// Returns 0 if the specified index is out of range.
+	/// You can check the validity of the index by using the
+	///  function pointerIsValid().
 	///
-	/// The active data element is referenced by the data
-	///  handler's internal pointer, set by the method
-	///  setPointer(), incPointer() and skip().
-	///
-	/// @return the value of the active data element
-	///         transformed into a string.
+	/// @param index   the zero base index of the buffer's
+	///                 element to retrieve
+	/// @return the value of the data element referenced by
+	///          the index, transformed into a string, or
+	///          0 if the index is out of range
 	///
 	///////////////////////////////////////////////////////////
 	virtual std::string getString(const imbxUint32 index) const= 0;
 
-	/// \brief Retrieve the active %data element as an
-	///         unicode string.
+	/// \brief Retrieve the buffer's element referenced by the
+	///         zero-based index specified in the parameter and
+	///         returns it as an unicode string value.
 	///
-	/// The chars used in the dicom tag are converted to
-	///  unicode using the charsets defined in the dicom
-	///  dataSet.
+	/// Returns 0 if the specified index is out of range.
+	/// You can check the validity of the index by using the
+	///  function pointerIsValid().
 	///
-	/// The active data element is referenced by the data
-	///  handler's internal pointer, set by the method
-	///  setPointer(), incPointer() and skip().
-	///
-	/// @return the value of the active data element
-	///         transformed into a string.
+	/// @param index   the zero base index of the buffer's
+	///                 element to retrieve
+	/// @return the value of the data element referenced by
+	///          the index, transformed into an unicode string,
+	///          or 0 if the index is out of range
 	///
 	///////////////////////////////////////////////////////////
 	virtual std::wstring getUnicodeString(const imbxUint32 index) const = 0;
 
-	/// \brief Retrieve the active %data element as a date.
+	/// \brief Retrieve the buffer's element referenced by the
+	///         zero-based index specified in the parameter and
+	///         returns it as a date/time value.
 	///
-	/// The active %data element is referenced by the data
-	///  handler's internal pointer, set by the method
-	///  setPointer(), incPointer() and skip().
+	/// Returns all zeros if the specified index is out of
+	///  range.
+	/// You can check the validity of the index by using the
+	///  function pointerIsValid().
 	///
+	/// @param index   the zero base index of the buffer's
+	///                 element to retrieve
 	/// @param pYear   a pointer to a value that will be filled
 	///                 with the UTC date's year
 	/// @param pMonth  a pointer to a value that will be filled
@@ -390,12 +402,17 @@ public:
 		imbxInt32* pOffsetHours,
 		imbxInt32* pOffsetMinutes) const;
 
-	/// \brief Set the active %data element as a date.
+	/// \brief Set the buffer's element referenced by the
+	///         zero-based index specified in the parameter
+	///         to a date/time value.
 	///
-	/// The active %data element is referenced by the data
-	///  handler's internal pointer, set by the method
-	///  setPointer(), incPointer() and skip().
+	/// Does nothing if the specified index is out of range
+	/// You can check the validity of the index by using the
+	///  function pointerIsValid(), you can resize the buffer
+	///  by using the function setSize().
 	///
+	/// @param index   the zero base index of the buffer's
+	///                 element to be set
 	/// @param year   the UTC date's year
 	/// @param month  the UTC date's month
 	/// @param day    the UTC date's day of the month
@@ -420,67 +437,84 @@ public:
 		imbxInt32 offsetHours,
 		imbxInt32 offsetMinutes);
 
-	/// \brief Set the active %data element from a signed
-	///        long.
+	/// \brief Set the buffer's element referenced by the
+	///         zero-based index specified in the parameter
+	///         to a signed long value.
 	///
-	/// The active %data element is referenced by the data
-	///  handler's internal pointer, set by the method
-	///  setPointer(), incPointer() and skip().
+	/// Does nothing if the specified index is out of range
+	/// You can check the validity of the index by using the
+	///  function pointerIsValid(), you can resize the buffer
+	///  by using the function setSize().
 	///
+	/// @param index   the zero base index of the buffer's
+	///                 element to be set
 	/// @param value the value to write into the active
 	///				  %data element.
 	///
 	///////////////////////////////////////////////////////////
 	virtual void setSignedLong(const imbxUint32 index, const imbxInt32 value) =0;
 
-	/// \brief Set the active %data element from an unsigned
-	///        long.
+	/// \brief Set the buffer's element referenced by the
+	///         zero-based index specified in the parameter
+	///         to an unsigned long value.
 	///
-	/// The active %data element is referenced by the data
-	///  handler's internal pointer, set by the method
-	///  setPointer(), incPointer() and skip().
+	/// Does nothing if the specified index is out of range
+	/// You can check the validity of the index by using the
+	///  function pointerIsValid(), you can resize the buffer
+	///  by using the function setSize().
 	///
+	/// @param index   the zero base index of the buffer's
+	///                 element to be set
 	/// @param value the value to write into the active
 	///				  %data element.
 	///
 	///////////////////////////////////////////////////////////
 	virtual void setUnsignedLong(const imbxUint32 index, const imbxUint32 value) =0;
 
-	/// \brief Set the active %data element from a double
+	/// \brief Set the buffer's element referenced by the
+	///         zero-based index specified in the parameter
+	///         to a double floating point value.
 	///
-	/// The active %data element is referenced by the data
-	///  handler's internal pointer, set by the method
-	///  setPointer(), incPointer() and skip().
+	/// Does nothing if the specified index is out of range
+	/// You can check the validity of the index by using the
+	///  function pointerIsValid(), you can resize the buffer
+	///  by using the function setSize().
 	///
+	/// @param index   the zero base index of the buffer's
+	///                 element to be set
 	/// @param value the value to write into the active
 	///				  %data element.
 	///
 	///////////////////////////////////////////////////////////
 	virtual void setDouble(const imbxUint32 index, const double value) =0;
 
-	/// \brief Set the active %data element from a string.
-	///        SetUnicodeString() is preferred over 
-	///         setString().
-	///         
-	/// The active %data element is referenced by the %data
-	///  handler's internal pointer, set by the method
-	///  setPointer(), incPointer() and skip().
+	/// \brief Set the buffer's element referenced by the
+	///         zero-based index specified in the parameter
+	///         to a string value. See also setUnicodeString().
 	///
+	/// Does nothing if the specified index is out of range
+	/// You can check the validity of the index by using the
+	///  function pointerIsValid(), you can resize the buffer
+	///  by using the function setSize().
+	///
+	/// @param index   the zero base index of the buffer's
+	///                 element to be set
 	/// @param value the value to write into the active
 	///				  %data element.
 	///////////////////////////////////////////////////////////
 	virtual void setString(const imbxUint32 index, const std::string& value) =0;
 
-	/// \brief Set the active %data element from an unicode
-	///          string.
+	/// \brief Set the buffer's element referenced by the
+	///         zero-based index specified in the parameter
+	///         to a string value. See also seString().
 	///
-	/// The unicode string is converted to multibyte using the
-	///  dicom charsets when copied back to the tag's buffer.
+	/// Does nothing if the specified index is out of range
+	/// You can check the validity of the index by using the
+	///  function pointerIsValid(), you can resize the buffer
+	///  by using the function setSize().
 	///
-	/// The active %data element is referenced by the %data
-	///  handler's internal pointer, set by the method
-	///  setPointer(), incPointer() and skip().
-	///
+	/// @param index   the zero base index of the buffer's
+	///                 element to be set
 	/// @param value the value to write into the active
 	///				  %data element.
 	///////////////////////////////////////////////////////////

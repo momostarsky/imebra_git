@@ -41,8 +41,8 @@ namespace handlers
 /// \brief This class manages a memory area containing
 ///         data in dicom format.
 ///
-/// A buffer also stores the data type of the 
-///  elements stored in it.
+/// A buffer also knows the data type of the
+///  elements it stores.
 /// The data type is in Dicom format (two upper case
 ///  chars).
 ///
@@ -50,7 +50,7 @@ namespace handlers
 ///  \ref handlers::dataHandler derived object
 ///  obtained by calling the function getDataHandler().
 ///  
-/// Data handlers work on a copy of the buffer, then most
+/// Data handlers work on a copy of the buffer, so most
 ///  of the problem related to the multithreading
 ///  enviroments are avoided.
 ///
