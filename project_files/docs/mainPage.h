@@ -4,6 +4,9 @@ $fileHeader$
 
 /*! \mainpage $imebraVersion$ open source Dicom library
 
+\image html logo.png
+\image latex logo.png "" width=10cm
+
 \section copyright Copyright
 
 Copyright 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011 by Paolo Brandoli.
@@ -250,11 +253,9 @@ The changes that affect the interface of the transform classes (and therefore ne
 \subsection since_0_0_30 Changes since version 0.0.30 (Alpha)
 
 - The smart pointer \ref puntoexe::ptr is able to cast the object's type.
-  See \ref new_ptr_behaviour for more information.
 - The reference counter in puntoexe::baseObject now is set to 0 at
    construction time and should be increased by the application.
   It doesn't affect your code if you used the smart pointer puntoexe::ptr.
-  See \ref new_ptr_behaviour for more information.
 - Updated the documentation to reflect recent changes
 - The criticalSection now has its own class
 - Added the class thread
