@@ -65,26 +65,26 @@ dicomdirItems dicomdirFile
 - dicomdirFile: the name of the dicom file containing the DICOMDIR structure
 
 In the generated XML file, all the information regarding the DICOMDIR structure
- is enclosed in the root tag <dicomdir>.
+ is enclosed in the root tag "dicomdir".
 
-Each DICOMDIR item is enclosed in the tag <record>, which has the attributes
+Each DICOMDIR item is enclosed in the tag "record", which has the attributes
  id (unique numeric id) and type (could be "IMAGE", "SERIES", "PATIENT" and
  others. See puntoexe::imebra::directoryRecord::tDirectoryRecordType for
  more information).\n
-A <record> item can include:
-- a <children> item which includes the children records (a sequence of 0 or
-  more <record> items
-- a <file> item which specifies the name of the file referenced by the record
-- a <class> item which specifies the class UID
-- a <instance> item which specifies the instance UID
-- a <transfer> item which specifies the transfer syntax
-- one or more <group> items, containing the record's tags
+A "record" item can include:
+- a "children" item which includes the children records (a sequence of 0 or
+  more "record" items
+- a "file" item which specifies the name of the file referenced by the record
+- a "class" item which specifies the class UID
+- a "instance" item which specifies the instance UID
+- a "transfer" item which specifies the transfer syntax
+- one or more "group" items, containing the record's tags
 
-A <group> item has the attribute id which specifies the dicom group id in
+A "group" item has the attribute id which specifies the dicom group id in
  decimal format.
-A <group> item may contain 0 or more <tag> items.\n
+A "group" item may contain 0 or more "tag" items.\n
 Each tag has the attribute id which specifies the tag id in decimal format.\n
-The <tag> item contains the dicom tag's content.
+The "tag" item contains the dicom tag's content.
 
 
 

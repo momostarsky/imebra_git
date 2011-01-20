@@ -229,7 +229,6 @@ class dataCollection : public baseObject
 public:
 	dataCollection(ptr<baseObject> externalLock): baseObject(externalLock) {}
 
-	/// \internal
 	/// \brief Set the charsets used in the collection
 	///
 	/// The charsets contained in the list are copied in a

@@ -37,7 +37,7 @@ When the dataSet is loaded (see \ref puntoexe::imebra::dataSet) from a stream,
  the tag 0008,0005 is checked and its content is transferred in the charsets list.
 
 If the dataSet is created by the application then the list of charsets should be 
- specified: just create a list with the type \ref puntoexe::imebra::tCharsetsList 
+ specified: just create a list with the type \ref puntoexe::imebra::charsetsList::tCharsetsList
  (is a std::list of std::wstring) and fill the list with the charsets that should 
  be stored in the tag 0008,0005, then pass the list to the function 
  dataSet::setCharsetsList() (see \ref puntoexe::imebra::dataCollection::setCharsetsList() 
@@ -46,7 +46,7 @@ If the dataSet is created by the application then the list of charsets should be
 If the application writes in the dataSet some values that need different charsets
  from the ones already specified, then new charsets will be added to the dataSet
  if they are compatible with the charsets already specified. If the needed charsets
- cannot be added then an exception of type \ref puntoexe::imebra::charsetsListException 
+ cannot be added then an exception of type \ref puntoexe::imebra::charsetsList::charsetsListException
  will be thrown; if a transaction is active when the exception is thrown then all the 
  modifications will be rolled back (see \ref imebra_transactions).
 

@@ -481,6 +481,7 @@ protected:
 class lockMultipleObjects
 {
 public:
+	/// \typedef std::list<ptr<baseObject> > tObjectsList
 	/// \brief Represents a std::list of pointers to the
 	///         objects to be locked (see puntoexe::ptr).
 	///

@@ -21,7 +21,7 @@ When a codec reads a stream, it generates a Dicom structure (from now on "dataSe
  available in the stream; please note that also the jpeg codec generates a Dicom 
  structure.
 
-If some images are embedded in the stream being parsed, then they are embedded
+If some images are embedded in the stream being parsed, then they are loaded
  into the \ref puntoexe::imebra::dataSet, but they are not decompressed nor 
  interpreted; in order to retrieve an image from the dataSet, the application must 
  call the function \ref puntoexe::imebra::dataSet::getImage() that retrieves the 
