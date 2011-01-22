@@ -106,6 +106,7 @@ The changes that affect the interface of the transform classes (and therefore ne
 - breaking changes in puntoexe::imebra::handlers::dataHandlerNumeric
 - breaking changes in puntoexe::imebra::transforms::transform (now the transforms work with new dataHandlerNumeric)
 - The palette tags now are embedded in the puntoexe::imebra::image objects
+- Added the example changeTransferSyntax
 - Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/61">#61</a> (directoryRecord must have a method setFilePart())
 - Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/63">#63</a> (Regression when reading uncompressed non interleaved images)
 - Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/65">#65</a> (When a tag is set twice using the default VR in a transaction then the second write operation resets the VR)
