@@ -9,7 +9,7 @@ $fileHeader$
 */
 
 
-/// This type represents an 1 byte unsigned integer.
+/// This type represents a 1 byte unsigned integer.
 typedef unsigned char  imbxUint8;
 
 /// This type represents a 2 bytes unsigned integer.

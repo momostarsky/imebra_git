@@ -30,6 +30,7 @@ namespace puntoexe
 
 class baseObject;
 
+/// \internal
 /// \brief This is the base class for the template class
 ///         ptr.
 ///
@@ -105,20 +106,20 @@ template<class objectType>
 class ptr: public basePtr
 {
 public:
-        /// \brief Default constructor.
+	/// \brief Default constructor.
 	///
-        /// Set the internal pointer to null.
+	/// Set the internal pointer to null.
 	///
 	///////////////////////////////////////////////////////////
 	ptr(): basePtr(0){}
 
-        /// \brief Initializes the ptr object with a reference to
-        ///         a baseObject.
-        ///
-        /// The baseObject's reference counter is increased by
-        ///  one: this will keep the baseObject allocate at least
-        ///  until ptr stays allocated, release() is called
-        ///  or a new baseObject is associated to ptr.
+	/// \brief Initializes the ptr object with a reference to
+	///         a baseObject.
+	///
+	/// The baseObject's reference counter is increased by
+	///  one: this will keep the baseObject allocate at least
+	///  until ptr stays allocated, release() is called
+	///  or a new baseObject is associated to ptr.
 	///
 	/// @param pObject a pointer to the allocated object.
 	///        The allocated object will be automatically
@@ -131,8 +132,7 @@ public:
 	///////////////////////////////////////////////////////////
 	ptr(objectType* pObject): basePtr(pObject){}
 
-
-        /// \brief Copy constructor.
+	/// \brief Copy constructor.
 	///
 	/// The object tracked by another ptr is copied into the
 	///  current ptr and the reference counter is increased.
@@ -142,7 +142,7 @@ public:
 	///
 	///////////////////////////////////////////////////////////
 	ptr (ptr<objectType> const &ptrSource):
-		basePtr(ptrSource.object)
+			basePtr(ptrSource.object)
 	{
 	}
 
