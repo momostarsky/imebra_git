@@ -64,6 +64,8 @@ After reading the \ref license_agreement, you should read the \ref quick_tour
 A guide that will help you to include Imebra in your project can be
  found in \ref add_to_project.
 
+If you want to build the examples and the test units you should read \ref compile_examples.
+
 A detailed reference of the C++ classes that compose Imebra is included in
  this manual.
 

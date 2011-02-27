@@ -187,4 +187,59 @@ The informations returned by puntoexe::exceptionsManager include the complete
 Please note that your application MUST query puntoexe::exceptionsManager for the 
  extend informations even if they are not used.
 
+
+
+\page compile_examples Compiling the examples and the test units
+
+\section compile_examples_introduction Introduction
+
+The distribution contains a Qt project file for all the examples and the test units.
+
+All the Qt project files have the extension .pro and are located in each example's folder
+ and in the test units folder.
+
+You can build the projects very easily by opening them in QtCreator and launching the
+ build, or from the command line using QMake.
+
+Even if the library contains Qt project files, the only project that needs the Qt
+ libraries is the test units project: the Imebra library and the examples don't need
+ any Qt library and just use the Qt build system QMake.
+
+
+\section compile_examples_qt_creator Building the examples and the test units with QtCreator
+
+QtCreator is a lightweight IDE from Nokie, specialized for the usage of the Qt libraries.
+
+In order to compile one of the project distributed with Imebra just launch QtCreator, click
+ on "File" and on "Open file or project" and then select the .pro file related to the project
+ you want to build.
+
+QtCreator will ask you which Qt library path should be used for the project: this information
+ is useful only when building the test units which depend on the Qt test libraries, while the
+ other projects don't use the Qt libraries at all.
+
+After the project has been loaded you can click on "Build" and "Build all" to build the example.
+
+
+\section compile_examples_qmake Building the examples and the test units with QMake
+
+From the command line, cd to the folder containing the project, then run:
+\code
+qmake projectFile.pro
+\endcode
+where projectFile is the name of the .pro file related to the project you want to build.
+
+
+\section compile_examples_visual_studio Building the examples with Visual Studio
+
+The Visual Studio project files are not distributed with the library, but they can be created
+ very easily by using the Qt tool QMake (Windows version only).
+
+From the command line, cd to the folder containing the project, then run:
+\code
+qmake -spec win32-msvc2008 -tp vc
+\endcode
+Replace msvc2008 with the VC version installed on your machine.
+This will generate an sln file ready to be used in Visual Studio.
+
 */
