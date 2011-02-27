@@ -291,6 +291,7 @@ protected:
 	///////////////////////////////////////////////////////////
 	void flushUnwrittenPixels(streamWriter* pDestStream, imbxUint8* pBitPointer, imbxUint8 wordSizeBytes);
 
+	imbxUint32 m_ioDWord;
 	imbxUint16 m_ioWord;
 	imbxUint8  m_ioByte;
 

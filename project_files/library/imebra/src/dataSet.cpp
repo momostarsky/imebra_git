@@ -397,7 +397,7 @@ void dataSet::setImage(imbxUint32 frameNumber, ptr<image> pImage, std::wstring t
             bInterleaved = (getUnsignedLong(0x0028, 0x0, 0x0006, 0x0) == 0x0);
         }
 	image::bitDepth depth = pImage->getDepth();
-	bool b2complement = (depth == image::depthS16 || depth == image::depthS8);
+	bool b2complement = (depth == image::depthS32 || depth == image::depthS16 || depth == image::depthS8);
 	imbxUint32 channelsNumber = pImage->getChannelsNumber();
 	imbxUint8 allocatedBits = (imbxUint8)(saveCodec->suggestAllocatedBits(transferSyntax, pImage->getHighBit()));
 
@@ -420,7 +420,14 @@ void dataSet::setImage(imbxUint32 frameNumber, ptr<image> pImage, std::wstring t
 	///////////////////////////////////////////////////////////
 	if(dataHandlerType.empty())
 	{
-		dataHandlerType = (bEncapsulated || allocatedBits <= 8) ? "OB" : "OW";
+		if(transferSyntax == L"1.2.840.10008.1.2")
+		{
+			dataHandlerType = getDefaultDataType(0x7FE0, 0x0010);
+		}
+		else
+		{
+			dataHandlerType = (bEncapsulated || allocatedBits <= 8) ? "OB" : "OW";
+		}
 	}
 
 	// Encapsulated mode. Check if we have the offsets table

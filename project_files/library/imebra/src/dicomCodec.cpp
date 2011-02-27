@@ -1004,9 +1004,35 @@ ptr<image> dicomCodec::getImage(ptr<dataSet> pData, ptr<streamReader> pStream, s
 	///////////////////////////////////////////////////////////
 	image::bitDepth depth;
 	if(b2Complement)
-		depth=highBit>=8 ? image::depthS16 : image::depthS8;
+	{
+		if(highBit >= 16)
+		{
+			depth = image::depthS32;
+		}
+		else if(highBit >= 8)
+		{
+			depth = image::depthS16;
+		}
+		else
+		{
+			depth = image::depthS8;
+		}
+	}
 	else
-		depth=highBit>=8 ? image::depthU16 : image::depthU8;
+	{
+		if(highBit >= 16)
+		{
+			depth = image::depthU32;
+		}
+		else if(highBit >= 8)
+		{
+			depth = image::depthU16;
+		}
+		else
+		{
+			depth = image::depthU8;
+		}
+	}
 
 	ptr<image> pImage(new image);
 	ptr<handlers::dataHandlerNumericBase> handler = pImage->create(imageSizeX, imageSizeY, depth, colorSpace, highBit);
@@ -1021,8 +1047,9 @@ ptr<image> dicomCodec::getImage(ptr<dataSet> pData, ptr<streamReader> pStream, s
 	///////////////////////////////////////////////////////////
 	allocChannels(channelsNumber, imageSizeX, imageSizeY, bSubSampledX, bSubSampledY);
 
-	imbxUint32 mask=(imbxUint32)0x1<<(highBit+1);
-	mask--;
+	imbxUint32 mask( (imbxUint32)0x1 << highBit );
+	mask <<= 1;
+	--mask;
 	mask-=((imbxUint32)0x1<<(highBit+1-storedBits))-1;
 
 	//
@@ -1758,7 +1785,7 @@ void dicomCodec::readPixel(
 					const imbxUint8 allocatedBits,
 					const imbxUint32 mask)
 {
-        if(allocatedBits == 8 || allocatedBits == 16)
+		if(allocatedBits == 8 || allocatedBits == 16 || allocatedBits == 32)
         {
             pSourceStream->read(pReadBuffer, numPixels * (allocatedBits >> 3));
             if(allocatedBits == 8)
@@ -1771,13 +1798,22 @@ void dicomCodec::readPixel(
                 return;
             }
             pSourceStream->adjustEndian(pReadBuffer, allocatedBits >> 3, streamController::lowByteEndian, numPixels);
-            imbxUint16* pSource((imbxUint16*)(pReadBuffer));
-            while(numPixels-- != 0)
-            {
-                *pDest++ = (imbxUint32)(*pSource++) & mask;
-            }
-            return;
-            
+			if(allocatedBits == 16)
+			{
+				imbxUint16* pSource((imbxUint16*)(pReadBuffer));
+				while(numPixels-- != 0)
+				{
+					*pDest++ = (imbxUint32)(*pSource++) & mask;
+				}
+				return;
+			}
+			imbxUint32* pSource((imbxUint32*)(pReadBuffer));
+			while(numPixels-- != 0)
+			{
+				*pDest++ = (*pSource++) & mask;
+			}
+			return;
+
         }
 
 
@@ -1858,6 +1894,17 @@ void dicomCodec::writePixel(
 		return;
 	}
 
+	if(allocatedBits == 32)
+	{
+		m_ioDWord = (imbxUint32)pixelValue;
+		if(wordSizeBytes == 1)
+		{
+			pDestStream->adjustEndian((imbxUint8*)&m_ioDWord, 4, streamController::lowByteEndian);
+		}
+		pDestStream->write((imbxUint8*)&m_ioDWord, sizeof(m_ioDWord));
+		return;
+	}
+
 	imbxUint8 maxBits = (imbxUint8)(wordSizeBytes << 3);
 
 	for(imbxUint8 writeBits = allocatedBits; writeBits != 0;)
@@ -1869,14 +1916,14 @@ void dicomCodec::writePixel(
 		}
 		if( freeBits <= writeBits )
 		{
-			m_ioWord |= (pixelValue & (((imbxInt32)1 << freeBits) -1 ))<< *pBitPointer;
+			m_ioWord |= (pixelValue & (((imbxInt32)1 << freeBits) -1 ))<< (*pBitPointer);
 			*pBitPointer = maxBits;
 			writeBits -= freeBits;
 			pixelValue >>= freeBits;
 		}
 		else
 		{
-			m_ioWord |= pixelValue << (*pBitPointer);
+			m_ioWord |= (pixelValue & (((imbxInt32)1 << writeBits) -1 ))<< (*pBitPointer);
 			(*pBitPointer) += writeBits;
 			writeBits = 0;
 		}
@@ -1921,6 +1968,10 @@ void dicomCodec::flushUnwrittenPixels(streamWriter* pDestStream, imbxUint8* pBit
 	if(wordSizeBytes == 2)
 	{
 		pDestStream->write((imbxUint8*)&m_ioWord, 2);
+	}
+	else if(wordSizeBytes == 4)
+	{
+		pDestStream->write((imbxUint8*)&m_ioDWord, 4);
 	}
 	else
 	{
