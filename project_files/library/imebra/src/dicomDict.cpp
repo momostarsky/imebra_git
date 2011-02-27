@@ -1700,7 +1700,7 @@ dicomDictionary::dicomDictionary()
 	registerTag(0x5400100A, L"Waveform Padding Value","OW");
 	registerTag(0x54001010, L"Waveform Data","OW");
 	registerTag(0x7FE00000, L"Pixel data elements","UL");
-	registerTag(0x7FE00010, L"Pixel Data","OB");
+	registerTag(0x7FE00010, L"Pixel Data","OW");
 	registerTag(0xFFFAFFFA, L"Digital Signatures Sequence","OB");
 	registerTag(0xFFFCFFFC, L"Data Set Trailing Padding","OB");
 	registerTag(0xFFFEE000, L"Item","OB");
