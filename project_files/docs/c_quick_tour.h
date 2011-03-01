@@ -95,7 +95,7 @@ Note that an image should be processed by the modalityVOILUT transform to conver
 The following example apply the modalityVOILUT transform to the image:
 \code
 ptr<imebra::transforms::transform> modVOILUT(
-	new imebra::transforms::modalityVOILUT);
+	new imebra::transforms::modalityVOILUT(testDataSet));
 imbxUint32 width, height;
 firstImage->getSize(&width, &height);
 ptr<imebra::image> convertedImage(modVOILUT->allocateOutputImage(firstImage, width, height);
