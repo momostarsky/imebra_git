@@ -154,9 +154,28 @@ public:
 	///         the transform given the specified input image.
 	///
 	///////////////////////////////////////////////////////////
-        virtual ptr<image> allocateOutputImage(ptr<image> pInputImage, imbxUint32 width, imbxUint32 height) = 0;
+	virtual ptr<image> allocateOutputImage(ptr<image> pInputImage, imbxUint32 width, imbxUint32 height) = 0;
 
-        virtual void runTransform(
+	/// \brief Executes the transform.
+	///
+	/// @param inputImage    the input image for the transform
+	/// @param inputTopLeftX the horizontal position of the
+	///                       top left corner of the area to
+	///                       process
+	/// @param inputTopLeftY the vertical position of the top
+	///                       left corner of the area to
+	///                       process
+	/// @param inputWidth    the width of the area to process
+	/// @param inputHeight   the height of the area to process
+	/// @param outputImage   the output image for the transform
+	/// @param outputTopLeftX the horizontal position of the
+	///                       top left corner of the output
+	///                       area
+	/// @param outputTopLeftY the vertical position of the top
+	///                        left corner of the output area
+	///
+	///////////////////////////////////////////////////////////
+	virtual void runTransform(
             const ptr<image>& inputImage,
             imbxUint32 inputTopLeftX, imbxUint32 inputTopLeftY, imbxUint32 inputWidth, imbxUint32 inputHeight,
             const ptr<image>& outputImage,
@@ -164,16 +183,47 @@ public:
 
 };
 
+
+/// \brief This is the base class for transforms that use
+///         templates.
+///
+/// Transforms derived from transformHandlers
+///  have the macro DEFINE_RUN_TEMPLATE_TRANSFORM in
+///  their class definition and implement the template
+///  function templateTransform().
+///
+///////////////////////////////////////////////////////////
 class transformHandlers: public transform
 {
 public:
-        virtual void runTransform(
+	/// \brief Reimplemented from transform: calls the
+	///         templated function templateTransform().
+	///
+	/// @param inputImage    the input image for the transform
+	/// @param inputTopLeftX the horizontal position of the
+	///                       top left corner of the area to
+	///                       process
+	/// @param inputTopLeftY the vertical position of the top
+	///                       left corner of the area to
+	///                       process
+	/// @param inputWidth    the width of the area to process
+	/// @param inputHeight   the height of the area to process
+	/// @param outputImage   the output image for the transform
+	/// @param outputTopLeftX the horizontal position of the
+	///                       top left corner of the output
+	///                       area
+	/// @param outputTopLeftY the vertical position of the top
+	///                        left corner of the output area
+	///
+	///////////////////////////////////////////////////////////
+	virtual void runTransform(
             const ptr<image>& inputImage,
             imbxUint32 inputTopLeftX, imbxUint32 inputTopLeftY, imbxUint32 inputWidth, imbxUint32 inputHeight,
             const ptr<image>& outputImage,
             imbxUint32 outputTopLeftX, imbxUint32 outputTopLeftY);
 
-        virtual void runTransformHandlers(
+	/// \internal
+	virtual void runTransformHandlers(
             ptr<handlers::dataHandlerNumericBase> inputHandler, imbxUint32 inputHandlerWidth, const std::wstring& inputHandlerColorSpace,
             ptr<palette> inputPalette,
             imbxInt32 inputHandlerMinValue, imbxUint32 inputHandlerNumValues,
@@ -186,9 +236,18 @@ public:
 };
 
 
+/// \brief Base class for the exceptions thrown by the
+///         transforms.
+///
+///////////////////////////////////////////////////////////
 class transformException: public std::runtime_error
 {
 public:
+	/// \brief Constructor.
+	///
+	/// @param message the cause of the exception
+	///
+	///////////////////////////////////////////////////////////
 	transformException(const std::string& message): std::runtime_error(message){}
 };
 
