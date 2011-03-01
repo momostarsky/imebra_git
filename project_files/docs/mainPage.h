@@ -100,6 +100,15 @@ The changes that affect the interface of the transform classes (and therefore ne
 
 \section changeLog Changes log for $imebraVersion$
 
+\subsection since_0_0_2011_01_22_13_58_55 Changes since version 2011-01-22_13-58-55
+
+- Improved tests of the Dicom codec (now test all the bit depths)
+- Added detailed documentation for compilation of the examples
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/73">#73</a> (The Dicom codec returns black images when highbit=31)
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/74">#74</a> (When the transfer syntax as implicit VRs then the VR for image data should be OW)
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/74">#75</a> (The dataset doesn't set the b2complement flag when the data is stored in signed 32bit)
+
+
 \subsection since_0_0_48 Changes since version 0.0.48
 
 - License changed from GPL3 to FreeBSD
