@@ -490,7 +490,7 @@ public:
 	///                          rectangle
 	///
 	///////////////////////////////////////////////////////////
-        template <tDrawBitmapType drawBitmapType, int rowAlignBytes>
+	template <tDrawBitmapType drawBitmapType, int rowAlignBytes>
 	void draw(void* pDeviceContext, imbxInt32 left, imbxInt32 top, imbxInt32 right, imbxInt32 bottom)
         {
             // Check if the image is visible in the specified area

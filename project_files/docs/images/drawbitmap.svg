@@ -894,9 +894,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.24359581"
-     inkscape:cx="-950.80079"
-     inkscape:cy="1037.7568"
+     inkscape:zoom="0.97438325"
+     inkscape:cx="589.64276"
+     inkscape:cy="724.01887"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -1530,18 +1530,20 @@
          style="font-size:28px">visible top left magnified Y</tspan></text>
     <path
        style="fill:none;stroke:#000000;stroke-width:4;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-       d="m 787.2969,32.36218 320,0 0,0 0,120 0,0 0,0 0,0"
+       d="m 1107.2969,32.36218 0,0 0,120 0,0 0,0 0,0"
        id="path5934"
        inkscape:export-filename="/home/paolo/Documents/imebra/project_files/docs/images/rect3058.png"
        inkscape:export-xdpi="32.799999"
-       inkscape:export-ydpi="32.799999" />
+       inkscape:export-ydpi="32.799999"
+       sodipodi:nodetypes="cccccc" />
     <path
        style="fill:none;stroke:#000000;stroke-width:4;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-       d="m 567.2969,152.36218 0,220 0,0 220,0"
+       d="m 567.2969,372.36218 0,0 220,0"
        id="path5936"
        inkscape:export-filename="/home/paolo/Documents/imebra/project_files/docs/images/rect3058.png"
        inkscape:export-xdpi="32.799999"
-       inkscape:export-ydpi="32.799999" />
+       inkscape:export-ydpi="32.799999"
+       sodipodi:nodetypes="ccc" />
     <text
        xml:space="preserve"
        style="font-size:40px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
@@ -1555,12 +1557,12 @@
          id="tspan5940"
          x="905.87891"
          y="9.9045105"
-         style="font-size:28px">visible magnified width</tspan></text>
+         style="font-size:28px">visible bottom right magnified X</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:40px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
-       x="-532.36218"
-       y="547.29688"
+       x="-622.36218"
+       y="550"
        id="text5942"
        transform="matrix(0,-1,1,0,0,0)"
        inkscape:export-filename="/home/paolo/Documents/imebra/project_files/docs/images/rect3058.png"
@@ -1568,8 +1570,8 @@
        inkscape:export-ydpi="32.799999"><tspan
          sodipodi:role="line"
          id="tspan5944"
-         x="-532.36218"
-         y="547.29688"
-         style="font-size:28px">visible magnified height</tspan></text>
+         x="-622.36218"
+         y="550"
+         style="font-size:28px">visible bottomright magnified Y</tspan></text>
   </g>
 </svg>

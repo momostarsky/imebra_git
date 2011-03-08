@@ -3,6 +3,8 @@ TEMPLATE = app
 QT -= gui
 QT += core testlib
 
+CONFIG += warn_on
+
 unix:LIBS = -lgcov
 
 OTHER_FILES += \
