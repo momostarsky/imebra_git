@@ -86,9 +86,9 @@ namespace puntoexe
 			/// \brief Renders the image specified in the constructor
 			///         into an RGB or BGR buffer.
 			///
-			/// The caller can pass a memory object to the function
-			///  and the function will try to reuse it for the RGB/BGR
-			///  buffer.
+			/// The caller can pass to the function a memory object
+			///  that will be used to store the RGB/BGR buffer,
+			///  otherwise the function will allocate a new one.
 			///
 			/// Each row of pixels in the RGB/BGR buffer will be
 			///  aligned according to the template parameter

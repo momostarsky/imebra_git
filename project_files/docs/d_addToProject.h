@@ -175,7 +175,7 @@ In this case, your application should catch the exception and try to resolve
 All the Imebra exceptions are tracked by the statically allocated object
  puntoexe::exceptionsManager.
 This object follows an exception while it travels through all the functions until
- it finally reach your application: when your application catch an Imebra exception
+ it finally reach your application: when your application catches an Imebra exception
  it MUST query the puntoexe::exceptionsManager in order to retrieve extended 
  informations related to the exception.
 

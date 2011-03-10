@@ -100,7 +100,15 @@ The changes that affect the interface of the transform classes (and therefore ne
 
 \section changeLog Changes log for $imebraVersion$
 
-\subsection since_0_0_2011_01_22_13_58_55 Changes since version 2011-01-22_13-58-55
+\subsection since_2011-03_01_21_54_48 Changes since version 2011-03-01_21-54-48
+
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/73">#76</a> (The example in quick_tour_tag Let's read or set a tag in the dataSet is wrong)
+- Added explanatory images for the documentation of the class drawBitmap
+- Updated the documentation for puntoexe::imebra::drawBitmap
+- Updated the test units for puntoexe::imebra::drawBitmap
+
+
+\subsection since_2011_01_22_13_58_55 Changes since version 2011-01-22_13-58-55
 
 - Improved tests of the Dicom codec (now test all the bit depths)
 - Added detailed documentation for compilation of the examples
@@ -118,7 +126,9 @@ The changes that affect the interface of the transform classes (and therefore ne
 - breaking changes in puntoexe::imebra::transforms::transform (now the transforms work with new dataHandlerNumeric)
 - The palette tags now are embedded in the puntoexe::imebra::image objects
 - Added the example changeTransferSyntax
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/59">#59</a> (Old Dicom formats may not be recognized)
 - Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/61">#61</a> (directoryRecord must have a method setFilePart())
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/62">#62</a> (Speed up the drawBitmap class)
 - Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/63">#63</a> (Regression when reading uncompressed non interleaved images)
 - Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/65">#65</a> (When a tag is set twice using the default VR in a transaction then the second write operation resets the VR)
 - Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/66">#66</a> (The dataset doesn't consider the planar configuration)
