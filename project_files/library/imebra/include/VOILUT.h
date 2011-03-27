@@ -142,108 +142,112 @@ public:
 	///////////////////////////////////////////////////////////
 	void getCenterWidth(imbxInt32* pCenter, imbxInt32* pWidth);
 
-        DEFINE_RUN_TEMPLATE_TRANSFORM;
+	DEFINE_RUN_TEMPLATE_TRANSFORM;
 
-        template <class inputType, class outputType>
-        void templateTransform(
-            inputType* inputHandlerData, size_t /* inputHandlerSize */, imbxUint32 inputHandlerWidth, const std::wstring& /* inputHandlerColorSpace */,
-            ptr<palette> /* inputPalette */,
-            imbxInt32 inputHandlerMinValue, imbxUint32 inputHandlerNumValues,
-            imbxInt32 inputTopLeftX, imbxInt32 inputTopLeftY, imbxInt32 inputWidth, imbxInt32 inputHeight,
-            outputType* outputHandlerData, size_t /* outputHandlerSize */, imbxInt32 outputHandlerWidth, const std::wstring& /* outputHandlerColorSpace */,
-            ptr<palette> /* outputPalette */,
-            imbxInt32 outputHandlerMinValue, imbxUint32 outputHandlerNumValues,
-            imbxInt32 outputTopLeftX, imbxInt32 outputTopLeftY)
+	template <class inputType, class outputType>
+			void templateTransform(
+					inputType* inputHandlerData, size_t /* inputHandlerSize */, imbxUint32 inputHandlerWidth, const std::wstring& /* inputHandlerColorSpace */,
+					ptr<palette> /* inputPalette */,
+					imbxInt32 inputHandlerMinValue, imbxUint32 inputHandlerNumValues,
+					imbxInt32 inputTopLeftX, imbxInt32 inputTopLeftY, imbxInt32 inputWidth, imbxInt32 inputHeight,
+					outputType* outputHandlerData, size_t /* outputHandlerSize */, imbxInt32 outputHandlerWidth, const std::wstring& /* outputHandlerColorSpace */,
+					ptr<palette> /* outputPalette */,
+					imbxInt32 outputHandlerMinValue, imbxUint32 outputHandlerNumValues,
+					imbxInt32 outputTopLeftX, imbxInt32 outputTopLeftY)
 
-        {
-            inputType* pInputMemory(inputHandlerData);
-            outputType* pOutputMemory(outputHandlerData);
+	{
+		inputType* pInputMemory(inputHandlerData);
+		outputType* pOutputMemory(outputHandlerData);
 
-            pInputMemory += inputTopLeftY * inputHandlerWidth + inputTopLeftX;
-            pOutputMemory += outputTopLeftY * outputHandlerWidth + outputTopLeftX;
+		pInputMemory += inputTopLeftY * inputHandlerWidth + inputTopLeftX;
+		pOutputMemory += outputTopLeftY * outputHandlerWidth + outputTopLeftX;
 
-            //
-            // LUT found
-            //
-            ///////////////////////////////////////////////////////////
-            if(m_pLUT != 0 && m_pLUT->getSize())
-            {
-                    lut* pLUT = m_pLUT.get();
-                    inputHandlerNumValues = ((imbxUint32)1) << pLUT->getBits();
-                    inputHandlerMinValue = 0;
+		//
+		// LUT found
+		//
+		///////////////////////////////////////////////////////////
+		if(m_pLUT != 0 && m_pLUT->getSize() != 0)
+		{
+			lut* pLUT = m_pLUT.get();
+			inputHandlerNumValues = ((imbxUint32)1) << pLUT->getBits();
+			inputHandlerMinValue = 0;
 
-                    if(inputHandlerNumValues == outputHandlerNumValues)
-                    {
-                        for(; inputHeight != 0; --inputHeight)
-                        {
-                            for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
-                            {
-                                *(pOutputMemory++) = (outputType)( outputHandlerMinValue + pLUT->mappedValue((imbxInt32) (*(pInputMemory++))) );
-                            }
-                            pInputMemory += (inputHandlerWidth - inputWidth);
-                            pOutputMemory += (outputHandlerWidth - inputWidth);
-                        }
-                    }
-                    else
-                    {
-                        for(; inputHeight != 0; --inputHeight)
-                        {
-                            for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
-                            {
-                                *(pOutputMemory++) = (outputType)( outputHandlerMinValue + (pLUT->mappedValue((imbxInt32) (*(pInputMemory++)) ) * outputHandlerNumValues ) / inputHandlerNumValues );
-                            }
-                            pInputMemory += (inputHandlerWidth - inputWidth);
-                            pOutputMemory += (outputHandlerWidth - inputWidth);
-                        }
-                    }
+			if(inputHandlerNumValues == outputHandlerNumValues)
+			{
+				for(; inputHeight != 0; --inputHeight)
+				{
+					for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
+					{
+						*(pOutputMemory++) = (outputType)( outputHandlerMinValue + pLUT->mappedValue((imbxInt32) (*(pInputMemory++))) );
+					}
+					pInputMemory += (inputHandlerWidth - inputWidth);
+					pOutputMemory += (outputHandlerWidth - inputWidth);
+				}
+			}
+			else
+			{
+				for(; inputHeight != 0; --inputHeight)
+				{
+					for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
+					{
+						*(pOutputMemory++) = (outputType)( outputHandlerMinValue + (pLUT->mappedValue((imbxInt32) (*(pInputMemory++)) ) * outputHandlerNumValues ) / inputHandlerNumValues );
+					}
+					pInputMemory += (inputHandlerWidth - inputWidth);
+					pOutputMemory += (outputHandlerWidth - inputWidth);
+				}
+			}
 
-                    return;
-            }
+			return;
+		}
 
-            //
-            // LUT not found.
-            // Use the window's center/width
-            //
-            ///////////////////////////////////////////////////////////
-            if(m_windowWidth <= 1)
-            {
-                    return;
-            }
+		//
+		// LUT not found.
+		// Use the window's center/width
+		//
+		///////////////////////////////////////////////////////////
+		imbxInt32 minValue = m_windowCenter-(m_windowWidth/2);
+		imbxInt32 maxValue = m_windowCenter+(m_windowWidth/2);
+		if(m_windowWidth <= 1)
+		{
+			minValue = inputHandlerMinValue ;
+			maxValue = inputHandlerMinValue + inputHandlerNumValues;
+		}
+		else
+		{
+			inputHandlerNumValues = maxValue - minValue;
+		}
 
-            imbxInt32 minValue = m_windowCenter-(m_windowWidth/2);
-            imbxInt32 maxValue = m_windowCenter+(m_windowWidth/2);
-            inputHandlerNumValues = maxValue - minValue;
 
-            imbxInt32 value;
-            for(; inputHeight != 0; --inputHeight)
-            {
+		imbxInt32 value;
+		for(; inputHeight != 0; --inputHeight)
+		{
 
-                for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
-                {
-                    value = (imbxInt32) *(pInputMemory++);
-                    if(value <= minValue)
-                    {
-                        *(pOutputMemory++) = (outputType)outputHandlerMinValue;
-                        continue;
-                    }
-                    if(value >= maxValue)
-                    {
-                        *(pOutputMemory++) = (outputType)( outputHandlerMinValue + outputHandlerNumValues - 1 );
-                        continue;
-                    }
-                    *(pOutputMemory++) = (outputType)( (value - minValue) * outputHandlerNumValues / inputHandlerNumValues + outputHandlerMinValue );
-                }
-                pInputMemory += (inputHandlerWidth - inputWidth);
-                pOutputMemory += (outputHandlerWidth - inputWidth);
-            }
-        }
+			for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
+			{
+				value = (imbxInt32) *(pInputMemory++);
+				if(value <= minValue)
+				{
+					*(pOutputMemory++) = (outputType)outputHandlerMinValue;
+					continue;
+				}
+				if(value >= maxValue)
+				{
+					*(pOutputMemory++) = (outputType)( outputHandlerMinValue + outputHandlerNumValues - 1 );
+					continue;
+				}
+				*(pOutputMemory++) = (outputType)( (value - minValue) * outputHandlerNumValues / inputHandlerNumValues + outputHandlerMinValue );
+			}
+			pInputMemory += (inputHandlerWidth - inputWidth);
+			pOutputMemory += (outputHandlerWidth - inputWidth);
+		}
+	}
 
-		virtual bool isEmpty();
+	virtual bool isEmpty();
 
-        virtual ptr<image> allocateOutputImage(ptr<image> pInputImage, imbxUint32 width, imbxUint32 height);
+	virtual ptr<image> allocateOutputImage(ptr<image> pInputImage, imbxUint32 width, imbxUint32 height);
 
 protected:
-        ptr<dataSet> m_pDataSet;
+	ptr<dataSet> m_pDataSet;
 	ptr<lut> m_pLUT;
 	imbxInt32 m_windowCenter;
 	imbxInt32 m_windowWidth;
