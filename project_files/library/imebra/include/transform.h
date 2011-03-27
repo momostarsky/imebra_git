@@ -179,7 +179,7 @@ public:
             const ptr<image>& inputImage,
             imbxUint32 inputTopLeftX, imbxUint32 inputTopLeftY, imbxUint32 inputWidth, imbxUint32 inputHeight,
             const ptr<image>& outputImage,
-            imbxUint32 outputTopLeftX, imbxUint32 outputTopLeftY) = 0;
+			imbxUint32 outputTopLeftX, imbxUint32 outputTopLeftY) = 0;
 
 };
 
@@ -217,21 +217,21 @@ public:
 	///
 	///////////////////////////////////////////////////////////
 	virtual void runTransform(
-            const ptr<image>& inputImage,
-            imbxUint32 inputTopLeftX, imbxUint32 inputTopLeftY, imbxUint32 inputWidth, imbxUint32 inputHeight,
-            const ptr<image>& outputImage,
-            imbxUint32 outputTopLeftX, imbxUint32 outputTopLeftY);
+			const ptr<image>& inputImage,
+			imbxUint32 inputTopLeftX, imbxUint32 inputTopLeftY, imbxUint32 inputWidth, imbxUint32 inputHeight,
+			const ptr<image>& outputImage,
+			imbxUint32 outputTopLeftX, imbxUint32 outputTopLeftY);
 
 	/// \internal
 	virtual void runTransformHandlers(
-            ptr<handlers::dataHandlerNumericBase> inputHandler, imbxUint32 inputHandlerWidth, const std::wstring& inputHandlerColorSpace,
-            ptr<palette> inputPalette,
-            imbxInt32 inputHandlerMinValue, imbxUint32 inputHandlerNumValues,
-            imbxInt32 inputTopLeftX, imbxInt32 inputTopLeftY, imbxInt32 inputWidth, imbxInt32 inputHeight,
-            ptr<handlers::dataHandlerNumericBase> outputHandler, imbxInt32 outputHandlerWidth, const std::wstring& outputHandlerColorSpace,
-            ptr<palette> outputPalette,
-            imbxInt32 outputHandlerMinValue, imbxUint32 outputHandlerNumValues,
-            imbxInt32 outputTopLeftX, imbxInt32 outputTopLeftY) = 0;
+			ptr<handlers::dataHandlerNumericBase> inputHandler, imbxUint32 inputHandlerWidth, const std::wstring& inputHandlerColorSpace,
+			ptr<palette> inputPalette,
+			imbxInt32 inputHandlerMinValue, imbxUint32 inputHandlerNumValues,
+			imbxInt32 inputTopLeftX, imbxInt32 inputTopLeftY, imbxInt32 inputWidth, imbxInt32 inputHeight,
+			ptr<handlers::dataHandlerNumericBase> outputHandler, imbxInt32 outputHandlerWidth, const std::wstring& outputHandlerColorSpace,
+			ptr<palette> outputPalette,
+			imbxInt32 outputHandlerMinValue, imbxUint32 outputHandlerNumValues,
+			imbxInt32 outputTopLeftX, imbxInt32 outputTopLeftY) = 0;
 
 };
 
