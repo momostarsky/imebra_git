@@ -30,19 +30,38 @@ namespace transforms
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-modalityVOILUT::modalityVOILUT(ptr<dataSet> pDataSet): m_pDataSet(pDataSet)
-{
-	m_voiLut = m_pDataSet->getLut(0x0028, 0x3000, 0);
+modalityVOILUT::modalityVOILUT(ptr<dataSet> pDataSet):
+		m_pDataSet(pDataSet), m_voiLut(pDataSet->getLut(0x0028, 0x3000, 0)), m_rescaleIntercept(pDataSet->getDouble(0x0028, 0, 0x1052, 0x0)), m_rescaleSlope(1.0), m_bEmpty(true)
 
-	m_rescaleIntercept = m_pDataSet->getDouble(0x0028, 0, 0x1052, 0x0);
-	m_rescaleSlope = m_pDataSet->getDouble(0x0028, 0, 0x1053, 0x0);
-	if(m_rescaleSlope == 0.0)
-	    m_rescaleSlope = 1.0;
+{
+	ptr<handlers::dataHandler> rescaleHandler(m_pDataSet->getDataHandler(0x0028, 0, 0x1053, 0x0, false));
+	if(rescaleHandler != 0)
+	{
+		m_rescaleSlope = rescaleHandler->getDouble(0);
+		m_bEmpty = false;
+	}
+	if(m_voiLut != 0 && m_voiLut->getSize() != 0)
+	{
+		m_bEmpty = false;
+	}
 
 }
 
+bool modalityVOILUT::isEmpty()
+{
+	return m_bEmpty;
+}
+
+
 ptr<image> modalityVOILUT::allocateOutputImage(ptr<image> pInputImage, imbxUint32 width, imbxUint32 height)
 {
+	if(isEmpty())
+	{
+		ptr<image> newImage(new image);
+		newImage->create(width, height, pInputImage->getDepth(), pInputImage->getColorSpace(), pInputImage->getHighBit());
+		return newImage;
+	}
+
 	// LUT
 	///////////////////////////////////////////////////////////
 	if(m_voiLut != 0 && m_voiLut->getSize() != 0 && m_voiLut->checkValidDataRange())

@@ -58,14 +58,14 @@ public:
 	///////////////////////////////////////////////////////////
 	void addTransform(ptr<transform> pTransform);
 
-        virtual void runTransform(
+	virtual void runTransform(
             const ptr<image>& inputImage,
             imbxUint32 inputTopLeftX, imbxUint32 inputTopLeftY, imbxUint32 inputWidth, imbxUint32 inputHeight,
             const ptr<image>& outputImage,
             imbxUint32 outputTopLeftX, imbxUint32 outputTopLeftY);
 
 	/// \brief Returns true if the transform doesn't do
-        ///         anything.
+	///         anything.
 	///
 	/// @return false if the transform does something, or true
 	///          if the transform doesn't do anything (e.g. an
@@ -74,16 +74,15 @@ public:
 	///////////////////////////////////////////////////////////
 	virtual bool isEmpty();
 
-
 	/// \brief Allocate an output image that is compatible with
 	///         the transform given the specified input image.
 	///
 	///////////////////////////////////////////////////////////
-        virtual ptr<image> allocateOutputImage(ptr<image> pInputImage, imbxUint32 width, imbxUint32 height);
+	virtual ptr<image> allocateOutputImage(ptr<image> pInputImage, imbxUint32 width, imbxUint32 height);
 
 protected:
-        imbxUint32 m_inputWidth;
-        imbxUint32 m_inputHeight;
+	imbxUint32 m_inputWidth;
+	imbxUint32 m_inputHeight;
 	std::wstring m_inputColorSpace;
 	image::bitDepth m_inputDepth;
 	imbxUint32 m_inputHighBit;
@@ -105,11 +104,6 @@ public:
 	transformsChainException(const std::string& what): transformException(what){}
 };
 
-class transformsChainEmptyChainException: public transformsChainException
-{
-public:
-    transformsChainEmptyChainException(const std::string& what): transformsChainException(what){}
-};
 
 } // namespace transforms
 

@@ -11,6 +11,7 @@ $fileHeader$
 #include "../include/transformsChain.h"
 #include "../include/image.h"
 #include "../include/dataSet.h"
+#include "../include/transformHighBit.h"
 
 namespace puntoexe
 {
@@ -71,7 +72,9 @@ void transformsChain::runTransform(
 {
 	if(isEmpty())
 	{
-		throw transformsChainEmptyChainException("Empty transforms chain");
+		ptr<transformHighBit> highBit(new transformHighBit);
+		highBit->runTransform(inputImage, inputTopLeftX, inputTopLeftY, inputWidth, inputHeight, outputImage, outputTopLeftX, outputTopLeftY);
+		return;
 	}
 
 	if(m_transformsList.size() == 1)
@@ -172,7 +175,9 @@ ptr<image> transformsChain::allocateOutputImage(ptr<image> pInputImage, imbxUint
 {
 	if(isEmpty())
 	{
-		throw transformsChainEmptyChainException("Empty transforms chain");
+		ptr<image> newImage(new image);
+		newImage->create(width, height, pInputImage->getDepth(), pInputImage->getColorSpace(), pInputImage->getHighBit());
+		return newImage;
 	}
 
 	if(m_transformsList.size() == 1)

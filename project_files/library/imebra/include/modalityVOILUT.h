@@ -115,6 +115,8 @@ public:
             }
         }
 
+		virtual bool isEmpty();
+
         virtual ptr<image> allocateOutputImage(ptr<image> pInputImage, imbxUint32 width, imbxUint32 height);
 
 
@@ -123,6 +125,7 @@ private:
     ptr<lut> m_voiLut;
     double m_rescaleIntercept;
     double m_rescaleSlope;
+	bool m_bEmpty;
 
 };
 

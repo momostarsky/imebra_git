@@ -244,17 +244,32 @@ void VOILUT::getCenterWidth(imbxInt32* pCenter, imbxInt32* pWidth)
 }
 
 
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
+// Returns true if the transform is empty
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
 bool VOILUT::isEmpty()
 {
-	return m_windowWidth <= 1 && m_pLUT == 0;
+	return m_windowWidth <= 1 && (m_pLUT == 0 || m_pLUT->getSize() == 0);
 }
 
 ptr<image> VOILUT::allocateOutputImage(ptr<image> pInputImage, imbxUint32 width, imbxUint32 height)
 {
-	ptr<image> outputImage(new image);
+	if(isEmpty())
+	{
+		ptr<image> newImage(new image);
+		newImage->create(width, height, pInputImage->getDepth(), pInputImage->getColorSpace(), pInputImage->getHighBit());
+		return newImage;
+	}
 
+	ptr<image> outputImage(new image);
 	image::bitDepth depth = pInputImage->getDepth();
-	if(m_pLUT != 0 && m_pLUT->getSize())
+	if(m_pLUT != 0 && m_pLUT->getSize() != 0)
 	{
 		imbxUint8 bits = m_pLUT->getBits();
 

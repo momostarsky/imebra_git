@@ -10,6 +10,7 @@ $fileHeader$
 #include "../../base/include/exception.h"
 #include "../include/transform.h"
 #include "../include/image.h"
+#include "../include/transformHighBit.h"
 
 
 namespace puntoexe
@@ -69,6 +70,16 @@ void transformHandlers::runTransform(
 	if(outputDepth == image::depthS16 || outputDepth == image::depthS8)
 	{
 		outputMinValue -= (imbxInt32)(outputNumValues >> 1);
+	}
+
+	if(isEmpty())
+	{
+		ptr<transformHighBit> emptyTransform(new transformHighBit);
+		emptyTransform->runTransformHandlers(inputHandler, inputImageWidth, inputColorSpace, inputPalette, inputMinValue, inputNumValues,
+											 inputTopLeftX, inputTopLeftY, inputWidth, inputHeight,
+											 outputHandler, outputImageWidth, outputColorSpace, outputPalette, outputMinValue, outputNumValues,
+											 outputTopLeftX, outputTopLeftY);
+		return;
 	}
 
 	runTransformHandlers(inputHandler, inputImageWidth, inputColorSpace, inputPalette, inputMinValue, inputNumValues,
