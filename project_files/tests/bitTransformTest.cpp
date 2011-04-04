@@ -10,8 +10,31 @@ namespace imebra
 namespace tests
 {
 
-// A buffer initialized to a default data type should use the data type OB
 void bitTransformTest::testBitTransform()
+{
+	testEmptyTransform(new transforms::transformHighBit);
+}
+
+void bitTransformTest::testEmptyTransformsChain()
+{
+	testEmptyTransform(new transforms::transformsChain);
+}
+
+void bitTransformTest::testEmptyVOILUT()
+{
+	ptr<dataSet> tempDataSet(new dataSet);
+	testEmptyTransform(new transforms::VOILUT(tempDataSet));
+}
+
+void bitTransformTest::testEmptyModalityVOILUT()
+{
+	ptr<dataSet> tempDataSet(new dataSet);
+	testEmptyTransform(new transforms::modalityVOILUT(tempDataSet));
+}
+
+
+// A buffer initialized to a default data type should use the data type OB
+void bitTransformTest::testEmptyTransform(ptr<transforms::transform> pTransform)
 {
 	imbxUint32 sizeX = 41;
 	imbxUint32 sizeY = 13;
@@ -54,9 +77,8 @@ void bitTransformTest::testBitTransform()
 	}
 	imageHandler.release();
 
-	ptr<transforms::transformHighBit> highBit(new transforms::transformHighBit);
-        highBit->runTransform(bits8Image, 0, 0, sizeX, sizeY, bits16Image, 0, 0);
-        highBit->runTransform(bits8Image, 0, 0, sizeX, sizeY, bits4Image, 0, 0);
+	pTransform->runTransform(bits8Image, 0, 0, sizeX, sizeY, bits16Image, 0, 0);
+	pTransform->runTransform(bits8Image, 0, 0, sizeX, sizeY, bits4Image, 0, 0);
 
 
 	ptr<handlers::dataHandlerNumericBase> bits8Handler = bits8Image->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
@@ -96,17 +118,17 @@ void bitTransformTest::testBitTransform()
 			imbxInt32 value1b = bits16Handler->getUnsignedLong(elementNumber);
 			imbxInt32 value2b = bits4Handler->getUnsignedLong(elementNumber++);
 			
-                        QCOMPARE(value0r, r);
-                        QCOMPARE(value0g, g);
-                        QCOMPARE(value0b, b);
+			QCOMPARE(value0r, r);
+			QCOMPARE(value0g, g);
+			QCOMPARE(value0b, b);
 
-                        QCOMPARE(value0r, (value1r>>8));
-                        QCOMPARE(value0g, (value1g>>8));
-                        QCOMPARE(value0b, (value1b>>8));
+			QCOMPARE(value0r, (value1r>>8));
+			QCOMPARE(value0g, (value1g>>8));
+			QCOMPARE(value0b, (value1b>>8));
 
-                        QCOMPARE((value0r >> 4), value2r);
-                        QCOMPARE((value0g >> 4), value2g);
-                        QCOMPARE((value0b >> 4), value2b);
+			QCOMPARE((value0r >> 4), value2r);
+			QCOMPARE((value0g >> 4), value2g);
+			QCOMPARE((value0b >> 4), value2b);
 
 		}
 	}
