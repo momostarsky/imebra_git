@@ -106,6 +106,9 @@ The changes that affect the interface of the transform classes (and therefore ne
 - Added explanatory images for the documentation of the class drawBitmap
 - Updated the documentation for puntoexe::imebra::drawBitmap
 - Updated the test units for puntoexe::imebra::drawBitmap
+- Added several Dicom tags used in radiology to dicomDict.cpp.\n
+  Patch by Derek Dolney, Ph.D. (Division of Medical Physics - Department of Radiation Oncology - University of Pennsylvania)
+- All the transforms now act as puntoexe::imebra::transforms::transformHighBit when puntoexe::imebra::transforms::transform::isEmpty() returns true
 
 
 \subsection since_2011_01_22_13_58_55 Changes since version 2011-01-22_13-58-55
