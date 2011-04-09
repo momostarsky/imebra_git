@@ -47,11 +47,6 @@ namespace transforms
 ///  convert the original values into optical density
 ///  or other known measure units.
 ///
-/// In order to perform the transformation the class needs
-///  to know the dataset from which the image has been
-///  retrieved, then the function
-///  transform::declareDataSet() must be called.
-///
 /// If the dataset doesn't define any modality VOI/LUT
 ///  transformation, then the input image is simply copied
 ///  into the output image.
@@ -61,68 +56,72 @@ namespace transforms
 class modalityVOILUT: public transformHandlers
 {
 public:
+	/// \brief Constructor.
+	///
+	/// @param pDataSet the dataSet from which the input
+	///         images come from
+	///
+	///////////////////////////////////////////////////////////
     modalityVOILUT(ptr<dataSet> pDataSet);
 
-        DEFINE_RUN_TEMPLATE_TRANSFORM;
+	DEFINE_RUN_TEMPLATE_TRANSFORM;
 
-        template <class inputType, class outputType>
-        void templateTransform(
-            inputType* inputHandlerData, size_t /* inputHandlerSize */, imbxUint32 inputHandlerWidth, const std::wstring& /* inputHandlerColorSpace */,
-            ptr<palette> /* inputPalette */,
-            imbxInt32 /* inputHandlerMinValue */, imbxUint32 /* inputHandlerNumValues */,
-            imbxInt32 inputTopLeftX, imbxInt32 inputTopLeftY, imbxInt32 inputWidth, imbxInt32 inputHeight,
-            outputType* outputHandlerData, size_t /* outputHandlerSize */, imbxInt32 outputHandlerWidth, const std::wstring& /* outputHandlerColorSpace */,
-            ptr<palette> /* outputPalette */,
-            imbxInt32 /* outputHandlerMinValue */, imbxUint32 /* outputHandlerNumValues */,
-            imbxInt32 outputTopLeftX, imbxInt32 outputTopLeftY)
+	template <class inputType, class outputType>
+			void templateTransform(
+					inputType* inputHandlerData, size_t /* inputHandlerSize */, imbxUint32 inputHandlerWidth, const std::wstring& /* inputHandlerColorSpace */,
+					ptr<palette> /* inputPalette */,
+					imbxInt32 /* inputHandlerMinValue */, imbxUint32 /* inputHandlerNumValues */,
+					imbxInt32 inputTopLeftX, imbxInt32 inputTopLeftY, imbxInt32 inputWidth, imbxInt32 inputHeight,
+					outputType* outputHandlerData, size_t /* outputHandlerSize */, imbxInt32 outputHandlerWidth, const std::wstring& /* outputHandlerColorSpace */,
+					ptr<palette> /* outputPalette */,
+					imbxInt32 /* outputHandlerMinValue */, imbxUint32 /* outputHandlerNumValues */,
+					imbxInt32 outputTopLeftX, imbxInt32 outputTopLeftY)
+	{
+		inputType* pInputMemory(inputHandlerData);
+		outputType* pOutputMemory(outputHandlerData);
 
-        {
-            inputType* pInputMemory(inputHandlerData);
-            outputType* pOutputMemory(outputHandlerData);
+		pInputMemory += inputTopLeftY * inputHandlerWidth + inputTopLeftX;
+		pOutputMemory += outputTopLeftY * outputHandlerWidth + outputTopLeftX;
 
-            pInputMemory += inputTopLeftY * inputHandlerWidth + inputTopLeftX;
-            pOutputMemory += outputTopLeftY * outputHandlerWidth + outputTopLeftX;
+		//
+		// Modality LUT found
+		//
+		///////////////////////////////////////////////////////////
+		if(m_voiLut != 0 && m_voiLut->getSize() != 0 && m_voiLut->checkValidDataRange())
+		{
+			for(; inputHeight != 0; --inputHeight)
+			{
+				for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
+				{
+					*(pOutputMemory++) = (outputType) ( m_voiLut->mappedValue((imbxInt32) *(pInputMemory++)) );
+				}
+				pInputMemory += (inputHandlerWidth - inputWidth);
+				pOutputMemory += (outputHandlerWidth - inputWidth);
+			}
+			return;
+		}
 
-            //
-            // Modality LUT found
-            //
-            ///////////////////////////////////////////////////////////
-            if(m_voiLut != 0 && m_voiLut->getSize() != 0 && m_voiLut->checkValidDataRange())
-            {
-                    for(; inputHeight != 0; --inputHeight)
-                    {
-                        for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
-                        {
-                            *(pOutputMemory++) = (outputType) ( m_voiLut->mappedValue((imbxInt32) *(pInputMemory++)) );
-                        }
-                        pInputMemory += (inputHandlerWidth - inputWidth);
-                        pOutputMemory += (outputHandlerWidth - inputWidth);
-                    }
-                    return;
-            }
+		//
+		// Modality LUT not found
+		//
+		///////////////////////////////////////////////////////////
 
-            //
-            // Modality LUT not found
-            //
-            ///////////////////////////////////////////////////////////
+		// Retrieve the intercept/scale pair
+		///////////////////////////////////////////////////////////
+		for(; inputHeight != 0; --inputHeight)
+		{
+			for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
+			{
+				*(pOutputMemory++) = (outputType)((double)(*(pInputMemory++)) * m_rescaleSlope + m_rescaleIntercept + 0.5);
+			}
+			pInputMemory += (inputHandlerWidth - inputWidth);
+			pOutputMemory += (outputHandlerWidth - inputWidth);
+		}
+	}
 
-            // Retrieve the intercept/scale pair
-            ///////////////////////////////////////////////////////////
-            for(; inputHeight != 0; --inputHeight)
-            {
-                for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
-                {
-                    *(pOutputMemory++) = (outputType)((double)(*(pInputMemory++)) * m_rescaleSlope + m_rescaleIntercept + 0.5);
-                }
-                pInputMemory += (inputHandlerWidth - inputWidth);
-                pOutputMemory += (outputHandlerWidth - inputWidth);
-            }
-        }
+	virtual bool isEmpty();
 
-		virtual bool isEmpty();
-
-        virtual ptr<image> allocateOutputImage(ptr<image> pInputImage, imbxUint32 width, imbxUint32 height);
-
+	virtual ptr<image> allocateOutputImage(ptr<image> pInputImage, imbxUint32 width, imbxUint32 height);
 
 private:
     ptr<dataSet> m_pDataSet;
@@ -130,7 +129,6 @@ private:
     double m_rescaleIntercept;
     double m_rescaleSlope;
 	bool m_bEmpty;
-
 };
 
 } // namespace transforms
