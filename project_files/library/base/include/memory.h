@@ -16,6 +16,9 @@ $fileHeader$
 #include <map>
 #include <memory>
 
+/// \addtogroup group_baseclasses
+///
+/// @{
 
 ///////////////////////////////////////////////////////////
 //
@@ -264,5 +267,7 @@ protected:
 };
 
 } // namespace puntoexe
+
+///@}
 
 #endif // !defined(imebraMemory_DE3F98A9_664E_47c0_A29B_B681F9AEB118__INCLUDED_)

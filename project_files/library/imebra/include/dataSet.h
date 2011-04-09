@@ -37,13 +37,21 @@ class image;
 class lut;
 class waveform;
 
+/// \addtogroup group_dataset Dicom data
+/// \brief The Dicom dataset is represented by the
+///         class dataSet.
+///
+/// @{
+
+
+
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 /// \brief A data set is a collection of groups of tags
 ///        (see dataGroup).
 ///
 /// The dataSet is usually built from a dicom stream by
-///  using the codec codec::dicomCodec.
+///  using the codec codecs::dicomCodec.
 ///
 /// Also the tags with the data type SQ (sequence) contains
 ///  one or more embedded dataSets that can be retrieved
@@ -1048,6 +1056,8 @@ public:
 	///////////////////////////////////////////////////////////
 	dataSetCorruptedOffsetTable(const std::string& message): dataSetException(message){}
 };
+
+/// @}
 
 
 

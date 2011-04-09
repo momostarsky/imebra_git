@@ -29,6 +29,10 @@ namespace imebra
 
 class lut;
 
+/// \addtogroup group_transforms
+///
+/// @{
+
 namespace transforms
 {
 
@@ -253,9 +257,9 @@ protected:
 	imbxInt32 m_windowWidth;
 };
 
-
-
 } // namespace transforms
+
+/// @}
 
 } // namespace imebra
 

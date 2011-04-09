@@ -27,13 +27,17 @@ The class in this file hide the platform specific features and supply a common
 
 #include <typeinfo>
 
+/// \addtogroup group_baseclasses
+///
+/// @{
+
 namespace puntoexe
 {
 
 /// \brief This class represents a thread.
 ///
 /// The thread can be started with thread::start().
-/// Once the thread is started, the virtual functionù
+/// Once the thread is started, the virtual function
 ///  threadFunction() is executed in a separate thread.
 ///
 /// The code in threadFunction() can call shouldTerminate()
@@ -233,5 +237,7 @@ public:
 };
 
 } // namespace puntoexe
+
+///@}
 
 #endif // !defined(CImbxThread_F1BAF067_21DE_466b_AEA1_6CC4F006FAFA__INCLUDED_)

@@ -21,6 +21,10 @@ namespace puntoexe
 namespace imebra
 {
 
+/// \addtogroup group_dataset
+///
+/// @{
+
 namespace charsetsList
 {
 
@@ -68,6 +72,8 @@ public:
 };
 
 } // namespace charsetsList
+
+/// @}
 
 } // namespace imebra
 

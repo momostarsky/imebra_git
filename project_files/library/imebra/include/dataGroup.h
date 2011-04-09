@@ -29,6 +29,10 @@ namespace puntoexe
 namespace imebra
 {
 
+/// \addtogroup group_dataset
+///
+/// @{
+
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 /// \brief Represents a Dicom group which stores a group 
@@ -187,6 +191,8 @@ public:
 	std::string getDataType(imbxUint16 tagId);
 
 };
+
+/// @}
 
 } // namespace imebra
 

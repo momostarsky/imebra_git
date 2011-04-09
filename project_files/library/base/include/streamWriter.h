@@ -13,6 +13,10 @@ $fileHeader$
 
 #include "streamController.h"
 
+/// \addtogroup group_baseclasses
+///
+/// @{
+
 ///////////////////////////////////////////////////////////
 //
 // Everything is in the namespace puntoexe
@@ -206,5 +210,7 @@ private:
 };
 
 } // namespace puntoexe
+
+///@}
 
 #endif // !defined(imebraStreamWriter_2C008538_F046_401C_8C83_2F76E1077DB0__INCLUDED_)

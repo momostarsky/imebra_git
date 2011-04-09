@@ -30,6 +30,9 @@ The class hides the platform specific implementations and supplies a common
 #include "windows.h"
 #endif
 
+/// \addtogroup group_baseclasses
+///
+/// @{
 
 ///////////////////////////////////////////////////////////
 //
@@ -228,6 +231,8 @@ public:
 
 
 } // namespace puntoexe
+
+///@}
 
 
 #endif // !defined(imebraCharsetConversion_3146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_)

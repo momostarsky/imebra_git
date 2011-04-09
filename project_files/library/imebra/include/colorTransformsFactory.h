@@ -21,6 +21,10 @@ namespace puntoexe
 namespace imebra
 {
 
+/// \addtogroup group_transforms
+///
+/// @{
+
 namespace transforms
 {
 
@@ -303,6 +307,8 @@ public:
 } // namespace colorTransforms
 
 } // namespace transforms
+
+/// @}
 
 } // namespace imebra
 

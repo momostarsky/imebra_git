@@ -40,6 +40,11 @@ namespace handlers
 	class dataHandlerRaw;
 }
 
+/// \addtogroup group_dataset
+///
+/// @{
+
+
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 /// \brief Represents a single Dicom Tag.
@@ -327,6 +332,8 @@ protected:
 
 	charsetsList::tCharsetsList m_charsetsList;
 };
+
+/// @}
 
 } // namespace imebra
 

@@ -26,6 +26,10 @@ namespace puntoexe
 namespace imebra
 {
 
+/// \addtogroup group_dictionary
+///
+/// @{
+
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 /// \brief The Dicom Dictionary.
@@ -134,6 +138,8 @@ protected:
 	tVRDictionary m_vrDict;
 
 };
+
+/// @}
 
 } // namespace imebra
 

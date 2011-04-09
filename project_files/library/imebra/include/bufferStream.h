@@ -15,6 +15,10 @@ namespace puntoexe
 namespace imebra
 {
 
+/// \addtogroup group_dataset
+///
+/// @{
+
 class bufferStream: public memoryStream
 {
 public:
@@ -25,6 +29,8 @@ protected:
 
 	ptr<handlers::dataHandlerRaw> m_pDataHandler;
 };
+
+/// @}
 
 } // namespace imebra
 

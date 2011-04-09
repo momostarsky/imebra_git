@@ -30,6 +30,10 @@ namespace handlers
 	class dataHandler;
 }
 
+/// \addtogroup group_waveform Waveforms
+///
+/// @{
+
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 /// \brief Represents a single waveform of a dicom dataset. 
@@ -142,7 +146,7 @@ private:
 	ptr<dataSet> m_pDataSet;
 };
 
-
+/// @}
 
 } // namespace imebra
 

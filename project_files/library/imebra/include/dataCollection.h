@@ -33,6 +33,10 @@ namespace imebra
 // The following classes are used in the declaration
 class data;
 
+/// \addtogroup group_dataset
+///
+/// @{
+
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 /// \brief This class accesses to all the %data stored
@@ -44,7 +48,7 @@ class data;
 ///  when retrieved from a dataGroup it accesses all the
 ///  tags (class data) in the dataGroup.
 ///
-/// When retrieved the iterator references the first
+/// After the creation the iterator references the first
 ///  data or dataGroup in the collection.
 ///
 ///////////////////////////////////////////////////////////
@@ -371,6 +375,8 @@ protected:
 
 	charsetsList::tCharsetsList m_charsetsList;
 };
+
+/// @}
 
 } // namespace imebra
 

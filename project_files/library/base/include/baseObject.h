@@ -16,6 +16,11 @@ $fileHeader$
 #include <string>
 #include <memory>
 
+/// \addtogroup group_baseclasses Base classes
+///
+/// @{
+
+
 ///////////////////////////////////////////////////////////
 /// \namespace puntoexe
 /// \brief The base services and classes are defined
@@ -520,6 +525,8 @@ protected:
 };
 
 } // namespace puntoexe
+
+///@}
 
 #endif // !defined(CImbxBaseObject_F1BAF067_21DE_466b_AEA1_6CC4F006FAFA__INCLUDED_)
 

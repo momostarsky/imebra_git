@@ -36,6 +36,10 @@ namespace handlers
 	class dataHandlerRaw;
 }
 
+/// \addtogroup group_dataset
+///
+/// @{
+
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 /// \brief This class manages a memory area containing
@@ -409,7 +413,7 @@ public:
 	bufferExceptionUnknownType(const std::string& message): bufferException(message){}
 };
 
-
+/// @}
 
 } // End of namespace imebra
 

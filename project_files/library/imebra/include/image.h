@@ -32,6 +32,28 @@ namespace imebra
 class palette;
 class buffer;
 
+/// \addtogroup group_image Image data
+/// \brief The class image contains one image's data.
+///
+/// The image's data includes:
+/// - the image's size, in pixels
+/// - the image's size, in millimeters
+/// - the bit depth (bytes per color channel) and high
+///   bit
+/// - the color palette (if available)
+/// - the pixels' data
+///
+/// An image can be obtained from a dataSet object by
+///  calling dataSet::getImage(), or it can be initialized
+///  with image::create().
+///
+/// Images can also be allocated by the transforms
+///  by calling
+///  transforms::transform::allocateOutputImage().
+///
+/// @{
+
+
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 /// \brief Represents a single image of a dicom data set.
@@ -133,7 +155,7 @@ public:
 	/// \brief Set the palette.
 	///
 	///////////////////////////////////////////////////////////
-        void setPalette(ptr<palette> imagePalette);
+	void setPalette(ptr<palette> imagePalette);
 
 	/// \brief Retrieve the image's size, in millimeters.
 	///
@@ -335,6 +357,7 @@ public:
 	imageExceptionInvalidSize(const std::string& message): imageException(message){}
 };
 
+/// @}
 
 } // namespace imebra
 

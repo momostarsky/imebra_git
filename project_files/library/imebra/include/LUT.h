@@ -30,6 +30,11 @@ namespace handlers
 	class dataHandler;
 }
 
+/// \addtogroup group_image
+///
+/// @{
+
+
 ///////////////////////////////////////////////////////////
 /// \brief Represents a Lookup table (LUT).
 ///
@@ -290,6 +295,8 @@ class lutExceptionCorrupted: public lutException
 public:
 	lutExceptionCorrupted(const std::string& message): lutException(message){}
 };
+
+/// @}
 
 
 } // namespace imebra

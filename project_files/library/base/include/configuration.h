@@ -8,6 +8,10 @@ $fileHeader$
 
 */
 
+/// \addtogroup group_baseclasses
+///
+/// @{
+
 
 /// This type represents a 1 byte unsigned integer.
 typedef unsigned char  imbxUint8;
@@ -37,6 +41,8 @@ typedef signed int    imbxInt32;
 #ifndef PUNTOEXE_WINDOWS
 #define PUNTOEXE_POSIX 1
 #endif
+
+///@}
 
 #endif
 

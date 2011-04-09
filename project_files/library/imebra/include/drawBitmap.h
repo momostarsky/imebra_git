@@ -23,6 +23,9 @@ namespace puntoexe
 	namespace imebra
 	{
 
+		/// \addtogroup group_helpers Helpers
+		///
+		/// @{
 
 		///////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////
@@ -423,6 +426,9 @@ namespace puntoexe
 			// Transform that calculates an 8 bit per channel RGB image
 			ptr<transforms::transformsChain> m_transformsChain;
 		};
+
+		/// @}
+
 	} // namespace imebra
 
 } // namespace puntoexe

@@ -26,6 +26,11 @@ namespace puntoexe
 namespace imebra
 {
 
+/// \addtogroup group_helpers
+///
+/// @{
+
+
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 /// \internal
@@ -835,9 +840,7 @@ private:
 
 };
 
-
-
-
+/// @}
 
 } // namespace imebra
 

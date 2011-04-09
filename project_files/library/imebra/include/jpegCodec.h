@@ -27,6 +27,10 @@ class huffmanTable;
 namespace imebra
 {
 
+/// \addtogroup group_codecs
+///
+/// @{
+
 namespace codecs
 {
 
@@ -662,6 +666,8 @@ public:
 } // namespace jpegCodec
 
 } // namespace codecs
+
+/// @}
 
 } // namespace imebra
 

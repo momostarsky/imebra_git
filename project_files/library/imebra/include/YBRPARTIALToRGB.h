@@ -192,6 +192,8 @@ public:
 
 } // namespace transforms
 
+/// @}
+
 } // namespace imebra
 
 } // namespace puntoexe

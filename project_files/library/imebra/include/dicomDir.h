@@ -29,6 +29,9 @@ namespace imebra
 class dataSet; // Used in this class
 class dicomDir;
 
+/// \addtogroup group_dicomdir
+///
+/// @{
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -467,6 +470,7 @@ public:
 	dicomDirUnknownDirectoryRecordType(const std::string& message): dicomDirException(message){}
 };
 
+/// @}
 
 } // namespace imebra
 

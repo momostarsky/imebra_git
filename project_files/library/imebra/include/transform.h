@@ -119,10 +119,72 @@ class image;
 class dataSet;
 class lut;
 
+/*! \addtogroup group_transforms Transforms
+\brief The transform classes apply a transformation to
+		one input image and return the result of the
+		transformation into an output image.
+
+Usually the transforms require that the input and the
+ output images use the same color space, but the
+ color transforms are able to copy the pixel data
+ from the color space of the input image into the
+ color space of the output image.
+
+The application can call
+ transforms::transform::allocateOutputImage() to
+ allocate an output image that is compatible with the
+ selected transform and input image.\n
+For instance, once an image has been retrieved from
+ a dataSet we can ask the modalityVOILUT transform
+ to allocate an output image for us, and it will
+ allocate an image with the right color space and
+ bit depth;
+
+\code
+// loadedDataSet is a ptr<dataSet> previously loaded
+// Here we get the first image in the dataSet
+ptr<image> inputImage(loadedDataSet->getImage(0));
+
+// We need to get the image's size because we have to
+//  tell the transform on which area we want to apply
+//  the transform (we want all the image area)
+imbxUint32 width, height;
+inputImage->getSize(&width, &height);
+
+// Allocate the modality transform. The modality transform
+//  gets the transformation parameters from the dataset
+ptr<transforms::modalityVOILUT> modalityTransform(new transforms::modalityVOILUT(loadedDataSet));
+
+// We ask the transform to allocate a proper output image
+ptr<image> outputImage(modalityTransform->allocateOutputImage(inputImage, width, height));
+
+// And now we run the transform
+modalityTransform->runTransform(inputImage, 0, 0, width, height, outputImage, 0, 0);
+\endcode
+
+All the transforms but the modalityVOILUT can convert
+ the result to the bit depth of the output image, so for
+ instance the transform colorTransforms::YBRFULLToRGB
+ can take a 16 bits per channel input image and
+ write the result to a 8 bits per color channel output
+ image.\n
+modalityVOILUT cannot do this because its output has
+ to conform to the value in the tag 0028,1054; the
+ tag 0028,1054 specifies the units of the modality VOI-LUT
+ transform. modalityVOILUT::allocateOutputImage() is able
+ output image that can hold the result of the
+ to allocate the modality transformation.
+
+*/
+/// @{
+
+/// \namespace transforms
+/// \brief All the transforms are declared in this
+///         namespace.
+///
+///////////////////////////////////////////////////////////
 namespace transforms
 {
-
-
 
 /// \brief This is the base class for the transforms.
 ///
@@ -251,9 +313,9 @@ public:
 	transformException(const std::string& message): std::runtime_error(message){}
 };
 
-
-
 } // namespace transforms
+
+/// @}
 
 } // namespace imebra
 

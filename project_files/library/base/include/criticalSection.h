@@ -24,6 +24,10 @@ $fileHeader$
 
 #include <typeinfo>
 
+/// \addtogroup group_baseclasses
+///
+/// @{
+
 namespace puntoexe
 {
 
@@ -203,5 +207,7 @@ public:
 };
 
 } // namespace puntoexe
+
+///@}
 
 #endif // !defined(CImbxCriticalSection_5092DA6B_EF16_4EF9_A1CF_DC8651AA7873__INCLUDED_)

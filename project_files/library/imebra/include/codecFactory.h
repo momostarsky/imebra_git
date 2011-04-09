@@ -35,6 +35,10 @@ namespace imebra
 // Classes used in the declaration
 class dataSet;
 
+/// \addtogroup group_codecs
+///
+/// @{
+
 namespace codecs
 {
 	class codec;
@@ -150,6 +154,8 @@ public:
 };
 
 } // namespace codecs
+
+/// @}
 
 } // namespace imebra
 

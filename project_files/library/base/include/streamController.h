@@ -14,6 +14,10 @@ $fileHeader$
 #include "baseStream.h"
 #include <memory>
 
+/// \addtogroup group_baseclasses
+///
+/// @{
+
 ///////////////////////////////////////////////////////////
 //
 // Everything is in the namespace puntoexe
@@ -209,9 +213,9 @@ public:
 	streamExceptionEOF(std::string message): streamException(message){}
 };
 
-
-
 } // namespace puntoexe
+
+///@}
 
 #endif // !defined(imebraStreamController_00B3C824_CD0D_4D99_8436_A41FCE9E4D6B__INCLUDED_)
 
