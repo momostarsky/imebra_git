@@ -249,6 +249,7 @@ Imebra is available at http://imebra.com
 		<copy todir="${documentation}/html">
 			<fileset dir="${build_dir}/generated_doc/html" />
 		</copy>
+		<copy file="${build_dir}/docs/documentation.html" tofile="${documentation}/documentation.html" />
 		<copy todir="${examples}/dicom2jpeg">
 			<fileset dir="${build_dir}/examples/dicom2jpeg" />
 		</copy>
