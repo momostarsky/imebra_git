@@ -27,12 +27,12 @@ The class in this file hide the platform specific features and supply a common
 
 #include <typeinfo>
 
+namespace puntoexe
+{
+
 /// \addtogroup group_baseclasses
 ///
 /// @{
-
-namespace puntoexe
-{
 
 /// \brief This class represents a thread.
 ///
@@ -236,8 +236,8 @@ public:
 	threadExceptionFailedToLaunch(std::string message): threadException(message){}
 };
 
-} // namespace puntoexe
-
 ///@}
+
+} // namespace puntoexe
 
 #endif // !defined(CImbxThread_F1BAF067_21DE_466b_AEA1_6CC4F006FAFA__INCLUDED_)

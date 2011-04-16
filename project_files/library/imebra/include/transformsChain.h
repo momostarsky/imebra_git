@@ -19,12 +19,12 @@ namespace puntoexe
 namespace imebra
 {
 
+namespace transforms
+{
+
 /// \addtogroup group_transforms
 ///
 /// @{
-
-namespace transforms
-{
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -77,10 +77,6 @@ public:
 	///////////////////////////////////////////////////////////
 	virtual bool isEmpty();
 
-	/// \brief Allocate an output image that is compatible with
-	///         the transform given the specified input image.
-	///
-	///////////////////////////////////////////////////////////
 	virtual ptr<image> allocateOutputImage(ptr<image> pInputImage, imbxUint32 width, imbxUint32 height);
 
 protected:
@@ -107,10 +103,9 @@ public:
 	transformsChainException(const std::string& what): transformException(what){}
 };
 
+/// @}
 
 } // namespace transforms
-
-/// @}
 
 } // namespace imebra
 

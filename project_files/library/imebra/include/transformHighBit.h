@@ -19,12 +19,12 @@ namespace puntoexe
 namespace imebra
 {
 
+namespace transforms
+{
+
 /// \addtogroup group_transforms
 ///
 /// @{
-
-namespace transforms
-{
 
 class transformHighBitException: public transformException
 {
@@ -114,9 +114,9 @@ public:
 
 };
 
-} // namespace transforms
-
 /// @}
+
+} // namespace transforms
 
 } // namespace imebra
 

@@ -30,6 +30,10 @@ namespace transforms
 namespace colorTransforms
 {
 
+/// \addtogroup group_transforms
+///
+/// @{
+
 ///////////////////////////////////////////////////////////
 /// \brief Transforms an image from the colorspace 
 ///         YBR_PARTIAL into the color space RGB.
@@ -188,11 +192,11 @@ public:
         }
 };
 
+/// @}
+
 } // namespace colorTransforms
 
 } // namespace transforms
-
-/// @}
 
 } // namespace imebra
 

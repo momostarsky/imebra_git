@@ -27,12 +27,12 @@ namespace puntoexe
 namespace imebra
 {
 
+namespace transforms
+{
+
 /// \addtogroup group_transforms
 ///
 /// @{
-
-namespace transforms
-{
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -131,9 +131,9 @@ private:
 	bool m_bEmpty;
 };
 
-} // namespace transforms
-
 /// @}
+
+} // namespace transforms
 
 } // namespace imebra
 

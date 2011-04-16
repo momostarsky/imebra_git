@@ -23,15 +23,16 @@ namespace puntoexe
 namespace imebra
 {
 
-/// \addtogroup group_transforms
-///
-/// @{
-
 namespace transforms
 {
 
 namespace colorTransforms
 {
+
+/// \addtogroup group_transforms
+///
+/// @{
+
 ///////////////////////////////////////////////////////////
 /// \brief Transforms an image from the colorspace 
 ///         MONOCHROME1 into the color space MONOCHROME2.
@@ -119,11 +120,11 @@ public:
 	virtual ptr<colorTransform> createColorTransform();
 };
 
+/// @}
+
 } // namespace colorTransforms
 
 } // namespace transforms
-
-/// @}
 
 } // namespace imebra
 

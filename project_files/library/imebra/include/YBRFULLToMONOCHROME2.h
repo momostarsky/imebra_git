@@ -24,15 +24,15 @@ namespace puntoexe
 namespace imebra
 {
 
-/// \addtogroup group_transforms
-///
-/// @{
-
 namespace transforms
 {
 
 namespace colorTransforms
 {
+
+/// \addtogroup group_transforms
+///
+/// @{
 
 ///////////////////////////////////////////////////////////
 /// \brief Transforms an image from the colorspace 
@@ -101,11 +101,11 @@ public:
         }
 };
 
+/// @}
+
 } // namespace colorTransforms
 
 } // namespace transforms
-
-/// @}
 
 } // namespace imebra
 

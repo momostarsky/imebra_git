@@ -15,10 +15,6 @@ $fileHeader$
 #include <ios>
 #include <stdio.h>
 
-/// \addtogroup group_baseclasses
-///
-/// @{
-
 ///////////////////////////////////////////////////////////
 //
 // Everything is in the namespace puntoexe
@@ -26,6 +22,10 @@ $fileHeader$
 ///////////////////////////////////////////////////////////
 namespace puntoexe
 {
+
+/// \addtogroup group_baseclasses
+///
+/// @{
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -94,8 +94,9 @@ protected:
 	FILE* m_openFile;
 };
 
+///@}
+
 } // namespace puntoexe
 
-///@}
 
 #endif // !defined(imebraStream_3146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_)

@@ -25,6 +25,11 @@ namespace imebra
 ///
 /// @{
 
+
+/// \name charsetsList
+/// \brief The classes used to convert between different
+///         charsets are declared in this namespace.
+///////////////////////////////////////////////////////////
 namespace charsetsList
 {
 

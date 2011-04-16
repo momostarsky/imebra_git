@@ -34,16 +34,7 @@ namespace imebra
 class dataSet;
 class image;
 
-/// \addtogroup group_codecs Codecs
-/// \brief The codecs can generate a dataSet structure
-///         or an image from a stream or can write the
-///         dataSet structure or an image into a stream.
-///
-/// @{
-
-
-
-/// \namespace puntoexe::imebra::codecs
+/// \namespace codecs
 /// \brief This namespace is used to define the classes
 ///         that implement a codec and their helper
 ///         classes
@@ -51,6 +42,13 @@ class image;
 ///////////////////////////////////////////////////////////
 namespace codecs
 {
+
+/// \addtogroup group_codecs Codecs
+/// \brief The codecs can generate a dataSet structure
+///         or an image from a stream or can write the
+///         dataSet structure or an image into a stream.
+///
+/// @{
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -448,9 +446,9 @@ public:
 	registerCodec(ptr<codec> newCodec);
 };
 
-} // namespace codecs
-
 /// @}
+
+} // namespace codecs
 
 } // namespace imebra
 

@@ -23,12 +23,12 @@ $fileHeader$
 #include <string>
 #include <sstream>
 
+namespace puntoexe
+{
+
 /// \addtogroup group_baseclasses
 ///
 /// @{
-
-namespace puntoexe
-{
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -295,9 +295,9 @@ public:
 		throw;\
 	}
 
+///@}
 
 } // namespace puntoexe
 
-///@}
 
 #endif // !defined(CImbxException_F1BAF067_21DE_466b_AEA1_6CC4F006FAFA__INCLUDED_)

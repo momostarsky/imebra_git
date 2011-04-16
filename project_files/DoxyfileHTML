@@ -98,7 +98,7 @@ INPUT                  = ./library \
                          ./examples \
                          ./tests \
                          ./docs
-INPUT_ENCODING         = ISO-8859-1
+INPUT_ENCODING         = UTF-8
 FILE_PATTERNS          = *.c \
                          *.cc \
                          *.cxx \
@@ -161,8 +161,8 @@ IGNORE_PREFIX          =
 GENERATE_HTML          = YES
 HTML_OUTPUT            = html
 HTML_FILE_EXTENSION    = .html
-HTML_HEADER            = ./docs/html_header.html
-HTML_FOOTER            = ./docs/html_footer.html
+HTML_HEADER            = 
+HTML_FOOTER            = 
 HTML_STYLESHEET        = 
 HTML_ALIGN_MEMBERS     = YES
 HTML_DYNAMIC_SECTIONS  = NO

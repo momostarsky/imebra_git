@@ -42,8 +42,7 @@ SOURCES += \
     ../../library/imebra/src/dicomDir.cpp \
     ../../library/imebra/src/dicomDict.cpp \
     ../../library/imebra/src/dicomCodec.cpp \
-    ../../library/imebra/src/dibCodec.cpp \
-    ../../library/imebra/src/dataSet.cpp \
+	../../library/imebra/src/dataSet.cpp \
     ../../library/imebra/src/dataHandlerTime.cpp \
     ../../library/imebra/src/dataHandlerStringUT.cpp \
     ../../library/imebra/src/dataHandlerStringUnicode.cpp \
@@ -116,7 +115,6 @@ HEADERS += \
     ../../library/imebra/include/dicomDir.h \
     ../../library/imebra/include/dicomDict.h \
     ../../library/imebra/include/dicomCodec.h \
-    ../../library/imebra/include/dibCodec.h \
     ../../library/imebra/include/dataSet.h \
     ../../library/imebra/include/dataHandlerTime.h \
     ../../library/imebra/include/dataHandlerStringUT.h \

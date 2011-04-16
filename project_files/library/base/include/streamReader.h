@@ -12,10 +12,6 @@ $fileHeader$
 
 #include "streamController.h"
 
-/// \addtogroup group_baseclasses
-///
-/// @{
-
 ///////////////////////////////////////////////////////////
 //
 // Everything is in the namespace puntoexe
@@ -23,6 +19,10 @@ $fileHeader$
 ///////////////////////////////////////////////////////////
 namespace puntoexe
 {
+
+/// \addtogroup group_baseclasses
+///
+/// @{
 
 /// \brief Exception thrown when a jpeg tag is found but
 ///         wasn't expected.
@@ -372,8 +372,8 @@ private:
 
 };
 
-} // namespace puntoexe
-
 ///@}
+
+} // namespace puntoexe
 
 #endif // !defined(imebraStreamReader_F6221390_BC44_4B83_B5BB_3485222FF1DD__INCLUDED_)

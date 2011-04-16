@@ -21,15 +21,15 @@ namespace puntoexe
 namespace imebra
 {
 
-/// \addtogroup group_transforms
-///
-/// @{
-
 namespace transforms
 {
 
 namespace colorTransforms
 {
+
+/// \addtogroup group_transforms
+///
+/// @{
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -302,13 +302,11 @@ public:
 	colorTransformsFactoryExceptionNoTransform(const std::string& message): colorTransformsFactoryException(message){}
 };
 
-
+/// @}
 
 } // namespace colorTransforms
 
 } // namespace transforms
-
-/// @}
 
 } // namespace imebra
 

@@ -28,7 +28,7 @@ namespace imebra
 
 	class transaction; // is a friend
 
-/// \namespace puntoexe::imebra::handlers
+/// \namespace handlers
 /// \brief All the data handlers returned by the class
 ///         buffer are defined in this namespace
 ///

@@ -34,7 +34,6 @@ namespace handlers
 ///
 /// @{
 
-
 ///////////////////////////////////////////////////////////
 /// \brief Represents a Lookup table (LUT).
 ///

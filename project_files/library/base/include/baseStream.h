@@ -17,10 +17,6 @@ $fileHeader$
 #include <map>
 #include <stdexcept>
 
-/// \addtogroup group_baseclasses
-///
-/// @{
-
 ///////////////////////////////////////////////////////////
 //
 // Everything is in the namespace puntoexe
@@ -28,6 +24,10 @@ $fileHeader$
 ///////////////////////////////////////////////////////////
 namespace puntoexe
 {
+
+/// \addtogroup group_baseclasses
+///
+/// @{
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -164,8 +164,9 @@ public:
 	streamExceptionClose(const std::string& message): streamException(message){}
 };
 
+///@}
+
 } // namespace puntoexe
 
-///@}
 
 #endif // !defined(imebraBaseStream_3146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_)

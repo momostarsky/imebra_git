@@ -12,10 +12,6 @@ $fileHeader$
 
 #include "baseStream.h"
 
-/// \addtogroup group_baseclasses
-///
-/// @{
-
 ///////////////////////////////////////////////////////////
 //
 // Everything is in the namespace puntoexe
@@ -23,6 +19,10 @@ $fileHeader$
 ///////////////////////////////////////////////////////////
 namespace puntoexe
 {
+
+/// \addtogroup group_baseclasses
+///
+/// @{
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -50,8 +50,8 @@ public:
 	virtual imbxUint32 read(imbxUint32 , imbxUint8* , imbxUint32 ){return 0;}
 };
 
-} // namespace puntoexe
-
 ///@}
+
+} // namespace puntoexe
 
 #endif // !defined(imebraNullStream_3146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_)

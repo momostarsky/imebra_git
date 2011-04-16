@@ -14,10 +14,6 @@ $fileHeader$
 #include <vector>
 #include <map>
 
-/// \addtogroup group_baseclasses
-///
-/// @{
-
 ///////////////////////////////////////////////////////////
 //
 // Everything is in the namespace puntoexe
@@ -27,6 +23,10 @@ namespace puntoexe
 {
 class streamReader;
 class streamWriter;
+
+/// \addtogroup group_baseclasses
+///
+/// @{
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -263,9 +263,9 @@ public:
 	huffmanExceptionWrite(const std::string& message): huffmanException(message){}
 };
 
+///@}
 
 } // namespace puntoexe
 
-///@}
 
 #endif // !defined(imebraHuffmanTable_3146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_)

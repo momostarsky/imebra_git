@@ -6,7 +6,7 @@
 //
 ///////////////////////////////////////////////////////////
 
-/// \namespace puntoexe::imebra
+/// \namespace imebra
 /// \brief All the functions related to the dicom standard
 ///         are defined in this namespace.
 ///

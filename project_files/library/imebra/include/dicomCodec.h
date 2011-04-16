@@ -38,12 +38,12 @@ namespace puntoexe
 namespace imebra
 {
 
+namespace codecs
+{
+
 /// \addtogroup group_codecs
 ///
 /// @{
-
-namespace codecs
-{
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -339,11 +339,9 @@ public:
 
 };
 
-
+/// @}
 
 } // namespace codecs
-
-/// @}
 
 } // namespace imebra
 

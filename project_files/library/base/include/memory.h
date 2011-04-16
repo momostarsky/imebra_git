@@ -16,10 +16,6 @@ $fileHeader$
 #include <map>
 #include <memory>
 
-/// \addtogroup group_baseclasses
-///
-/// @{
-
 ///////////////////////////////////////////////////////////
 //
 // Everything is in the namespace puntoexe
@@ -27,6 +23,10 @@ $fileHeader$
 ///////////////////////////////////////////////////////////
 namespace puntoexe
 {
+
+/// \addtogroup group_baseclasses
+///
+/// @{
 
 typedef std::basic_string<imbxUint8> stringUint8;
 
@@ -266,8 +266,8 @@ protected:
 
 };
 
-} // namespace puntoexe
-
 ///@}
+
+} // namespace puntoexe
 
 #endif // !defined(imebraMemory_DE3F98A9_664E_47c0_A29B_B681F9AEB118__INCLUDED_)

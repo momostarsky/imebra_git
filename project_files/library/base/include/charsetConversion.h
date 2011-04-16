@@ -30,10 +30,6 @@ The class hides the platform specific implementations and supplies a common
 #include "windows.h"
 #endif
 
-/// \addtogroup group_baseclasses
-///
-/// @{
-
 ///////////////////////////////////////////////////////////
 //
 // Everything is in the namespace puntoexe
@@ -41,6 +37,10 @@ The class hides the platform specific implementations and supplies a common
 ///////////////////////////////////////////////////////////
 namespace puntoexe
 {
+
+/// \addtogroup group_baseclasses
+///
+/// @{
 
 ///////////////////////////////////////////////////////////
 /// \internal
@@ -229,10 +229,10 @@ public:
 	charsetConversionExceptionUtfSizeNotSupported(const std::string& message): charsetConversionException(message){}
 };
 
+///@}
 
 } // namespace puntoexe
 
-///@}
 
 
 #endif // !defined(imebraCharsetConversion_3146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_)

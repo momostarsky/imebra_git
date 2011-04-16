@@ -13,10 +13,6 @@ $fileHeader$
 #include "baseStream.h"
 #include "memory.h"
 
-/// \addtogroup group_baseclasses
-///
-/// @{
-
 ///////////////////////////////////////////////////////////
 //
 // Everything is in the namespace puntoexe
@@ -24,6 +20,10 @@ $fileHeader$
 ///////////////////////////////////////////////////////////
 namespace puntoexe
 {
+
+/// \addtogroup group_baseclasses
+///
+/// @{
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -63,8 +63,8 @@ protected:
 	ptr<memory> m_memory;
 };
 
-} // namespace puntoexe
-
 ///@}
+
+} // namespace puntoexe
 
 #endif // !defined(imebraMemoryStream_3146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_)

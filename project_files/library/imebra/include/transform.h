@@ -119,6 +119,14 @@ class image;
 class dataSet;
 class lut;
 
+/// \namespace transforms
+/// \brief All the transforms are declared in this
+///         namespace.
+///
+///////////////////////////////////////////////////////////
+namespace transforms
+{
+
 /*! \addtogroup group_transforms Transforms
 \brief The transform classes apply a transformation to
 		one input image and return the result of the
@@ -178,14 +186,6 @@ modalityVOILUT cannot do this because its output has
 */
 /// @{
 
-/// \namespace transforms
-/// \brief All the transforms are declared in this
-///         namespace.
-///
-///////////////////////////////////////////////////////////
-namespace transforms
-{
-
 /// \brief This is the base class for the transforms.
 ///
 /// A transform takes one input and one output image:
@@ -214,6 +214,15 @@ public:
 
 	/// \brief Allocate an output image that is compatible with
 	///         the transform given the specified input image.
+	///
+	/// @param pInputImage image that will be used as input
+	///                     image in runTransform()
+	/// @param width       the width of the output image,
+	///                     in pixels
+	/// @param height      the height of the output image,
+	///                     in pixels
+	/// @return an image suitable to be used as output image
+	///          in runTransform()
 	///
 	///////////////////////////////////////////////////////////
 	virtual ptr<image> allocateOutputImage(ptr<image> pInputImage, imbxUint32 width, imbxUint32 height) = 0;
@@ -313,9 +322,9 @@ public:
 	transformException(const std::string& message): std::runtime_error(message){}
 };
 
-} // namespace transforms
-
 /// @}
+
+} // namespace transforms
 
 } // namespace imebra
 

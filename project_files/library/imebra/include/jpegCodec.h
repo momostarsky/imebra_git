@@ -27,12 +27,12 @@ class huffmanTable;
 namespace imebra
 {
 
+namespace codecs
+{
+
 /// \addtogroup group_codecs
 ///
 /// @{
-
-namespace codecs
-{
 
 // The following classes are used in the jpegCodec
 //  declaration
@@ -339,6 +339,7 @@ public:
 	jpegCodecCannotHandleSyntax(const std::string& message): jpegCodecException(message){}
 };
 
+/// @}
 
 namespace jpeg
 {
@@ -666,8 +667,6 @@ public:
 } // namespace jpegCodec
 
 } // namespace codecs
-
-/// @}
 
 } // namespace imebra
 

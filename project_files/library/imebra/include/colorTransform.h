@@ -25,14 +25,10 @@ namespace puntoexe
 namespace imebra
 {
 
-/// \addtogroup group_transforms
-///
-/// @{
-
 namespace transforms
 {
 
-/// \namespace puntoexe::imebra::transforms::colorTransforms
+/// \namespace colorTransforms
 /// \brief This namespace contains all the classes
 ///         involved in the transformation between several
 ///         color spaces.
@@ -43,6 +39,11 @@ namespace transforms
 ///////////////////////////////////////////////////////////
 namespace colorTransforms
 {
+
+/// \addtogroup group_transforms
+///
+/// @{
+
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 /// \brief This is the base class used by the color
@@ -144,11 +145,11 @@ public:
 	registerColorTransform(ptr<colorTransform> newColorTransform);
 };
 
+/// @}
+
 } // namespace colorTransforms
 
 } // namespace transforms
-
-/// @}
 
 } // namespace imebra
 

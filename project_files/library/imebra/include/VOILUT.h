@@ -29,12 +29,12 @@ namespace imebra
 
 class lut;
 
+namespace transforms
+{
+
 /// \addtogroup group_transforms
 ///
 /// @{
-
-namespace transforms
-{
 
 ///////////////////////////////////////////////////////////
 /// \brief Transform the value of the input image's pixels
@@ -257,9 +257,9 @@ protected:
 	imbxInt32 m_windowWidth;
 };
 
-} // namespace transforms
-
 /// @}
+
+} // namespace transforms
 
 } // namespace imebra
 
