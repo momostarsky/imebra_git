@@ -106,6 +106,7 @@ The changes that affect the interface of the transform classes (and therefore ne
 - Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/77">#77</a> (modalityVOILUT::isEmpty returns true when a LUT is used in the transform)
 - Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/78">#78</a> (When VOILUT is empty it should simply copy the input image into the output one)
 - Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/79">#79</a> (In puntoexe::imebra::transforms::modalityVOILUT there is no need to call DeclareDataSet)
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/82">#82</a> (Finding the index.html file in the documentation folder is difficult)
 - Added explanatory images for the documentation of the class drawBitmap
 - Updated the documentation for puntoexe::imebra::drawBitmap
 - Updated the test units for puntoexe::imebra::drawBitmap
