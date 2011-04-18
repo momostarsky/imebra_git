@@ -30,6 +30,13 @@ namespace puntoexe
 
 /// \addtogroup group_baseclasses Base classes
 ///
+/// The base classes supply basic services like streams,
+///  memory management and exceptions management.
+///
+/// They also implement the smart pointer puntoexe::ptr and
+///  the base class puntoexe::baseObject
+///
+///////////////////////////////////////////////////////////
 /// @{
 
 class baseObject;
