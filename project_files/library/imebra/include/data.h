@@ -77,13 +77,6 @@ public:
 	///////////////////////////////////////////////////////////
 	//@{
 
-	/// \brief Returns the number of buffers in the tag.
-	///
-	/// @return the number of buffers in the tag
-	///
-	///////////////////////////////////////////////////////////
-	imbxUint32 getBuffersCount();
-
 	/// \brief Returns true if the specified buffer exists, 
 	///         otherwise it returns false.
 	///
