@@ -164,6 +164,19 @@ ptr<image> dataSet::getImage(imbxUint32 frameNumber)
 	}
 	std::string imageStreamDataType = imageTag->getDataType();
 
+	// Get the number of frames
+	///////////////////////////////////////////////////////////
+	imbxUint32 numberOfFrames = 1;
+	if(!getDataType(0x0028, 0, 0x0008).empty())
+	{
+		numberOfFrames = getUnsignedLong(0x0028, 0, 0x0008, 0);
+	}
+
+	if(frameNumber >= numberOfFrames)
+	{
+		PUNTOEXE_THROW(dataSetImageDoesntExist, "The requested image doesn't exist");
+	}
+
 	// Placeholder for the stream containing the image
 	///////////////////////////////////////////////////////////
 	ptr<streamReader> imageStream;
@@ -177,7 +190,7 @@ ptr<image> dataSet::getImage(imbxUint32 frameNumber)
 		if(imageTag->getBufferSize(1) != 0)
 		{
 			imbxUint32 firstBufferId(0), endBufferId(0), totalLength(0);
-			if(imageTag->getBufferSize(0) == 0)
+			if(imageTag->getBufferSize(0) == 0 && numberOfFrames + 1 == imageTag->getBuffersCount())
 			{
 				firstBufferId = frameNumber + 1;
 				endBufferId = firstBufferId + 1;
@@ -232,16 +245,6 @@ ptr<image> dataSet::getImage(imbxUint32 frameNumber)
 	{
 		imageStream = imageTag->getStreamReader(0x0);
 		if(imageStream == 0)
-		{
-			PUNTOEXE_THROW(dataSetImageDoesntExist, "The requested image doesn't exist");
-		}
-
-		imbxUint32 numberOfFrames = 1;
-		if(!getDataType(0x0028, 0, 0x0008).empty())
-		{
-			numberOfFrames = getUnsignedLong(0x0028, 0, 0x0008, 0);
-		}
-		if(frameNumber >= numberOfFrames)
 		{
 			PUNTOEXE_THROW(dataSetImageDoesntExist, "The requested image doesn't exist");
 		}
