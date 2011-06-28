@@ -100,7 +100,12 @@ The changes that affect the interface of the transform classes (and therefore ne
 
 \section changeLog Changes log for $imebraVersion$
 
-\subsection since_2011-03_01_21_54_48 Changes since version 2011-03-01_21-54-48
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/84">#84</a> (VOILUT returns always a MONOCHROME2 image)
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/85">#85</a> (GetImage() fails when a file contains a single frame splitted across several buffers and the offset table is empty)
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/86">#86</a> (The automatic build doesn't set the product name in the source files)
+
+
+\subsection version_2011_04_18_22_48_29 Changes for version 2011-04-18_22-48-29
 
 - Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/73">#76</a> (The example in quick_tour_tag Let's read or set a tag in the dataSet is wrong)
 - Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/77">#77</a> (modalityVOILUT::isEmpty returns true when a LUT is used in the transform)
@@ -115,7 +120,8 @@ The changes that affect the interface of the transform classes (and therefore ne
 - All the transforms now act as puntoexe::imebra::transforms::transformHighBit when puntoexe::imebra::transforms::transform::isEmpty() returns true
 
 
-\subsection since_2011_01_22_13_58_55 Changes since version 2011-01-22_13-58-55
+\subsection version_2011_03_01_21_54_48 Changes for version 2011-03-01_21-54-48
+
 
 - Improved tests of the Dicom codec (now test all the bit depths)
 - Added detailed documentation for compilation of the examples
@@ -124,7 +130,8 @@ The changes that affect the interface of the transform classes (and therefore ne
 - Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/74">#75</a> (The dataset doesn't set the b2complement flag when the data is stored in signed 32bit)
 
 
-\subsection since_0_0_48 Changes since version 0.0.48
+\subsection version_2011_01_22_13_58_55 Changes for version 2011-01-22_13-58-55
+
 
 - License changed from GPL3 to FreeBSD
 - new folders structure
@@ -144,7 +151,8 @@ The changes that affect the interface of the transform classes (and therefore ne
 - Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/71">#71</a> (File Meta should always use Explicit VR Little Endian Transfer Syntax)
 
 
-\subsection since_0_0_47 Changes since version 0.0.47
+\subsection version_0_0_48 Changes for version 0.0.48
+
 
 - Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/44">#44</a> (Add the "const" modifier to all the relevant functions in the data handlers)
 - Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/55">#55</a> (Add const qualifier to functions that require them)
@@ -158,7 +166,8 @@ The changes that affect the interface of the transform classes (and therefore ne
 - The file reading related function now return the read byte or bits by value 
 
 
-\subsection since_0_0_46 Changes since version 0.0.46
+\subsection version_0_0_47 Changes for version 0.0.47
+
 
 - Makefiles for the example applications are being provided
 - Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/33">#33</a> (When launched without parameters, dicomdirItems should display the version)
@@ -170,7 +179,8 @@ The changes that affect the interface of the transform classes (and therefore ne
 - Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/52">#52</a> (The charset conversion uses different error reporting in ICONV and Windows API)
 
 
-\subsection since_0_0_45 Changes since version 0.0.45
+\subsection version_0_0_46 Changes for version 0.0.46
+
 
 - Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/32">#32</a> (When launched without parameters, dicom2jpeg should display the version)
 - Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/34">#34</a> (The on-line documentation should have to Google Analytics tracking code)
@@ -179,7 +189,8 @@ The changes that affect the interface of the transform classes (and therefore ne
 - Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/39">#39</a> (The class dataHandlerNumeric calculates the wrong size)
 
 
-\subsection since_0_0_44 Changes since version 0.0.44 (Beta)
+\subsection version_0_0_45 Changes for version 0.0.45
+
 
 - Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/1">#1</a> (The library's version should be visible in the source code)
 - Added DICOMDIR creator/parser
@@ -194,7 +205,8 @@ The changes that affect the interface of the transform classes (and therefore ne
 - Changed open source license to Affero GPL 3
 
 
-\subsection since_0_0_41 Changes since version 0.0.41 (Alpha)
+\subsection version_0_0_44 Changes for version 0.0.44 (Beta)
+
 
 - Added the function puntoexe::imebra::transforms::VOILUT::getCenterWidth()
 - The jpegCodec returns an image with color space "YBR_FULL" when the image is
@@ -214,19 +226,22 @@ The changes that affect the interface of the transform classes (and therefore ne
 - Several optimizations in the Huffman decoder
 
 
-\subsection since_0_0_40 Changes since version 0.0.40 (Alpha)
+\subsection version_0_0_41 Changes for version 0.0.41 (Alpha)
+
 
 - Added the example dicom2jpeg
 
 
-\subsection since_0_0_38 Changes since version 0.0.38 (Alpha)
+\subsection version_0_0_40 Changes for version 0.0.40 (Alpha)
+
 
 - Closes #12 (Subsampled images are saved/loaded incorrectly by the jpeg codec)
 - Closes #13 (When saving a jpeg image from a dataset and it doesn't need to be converted an exception is thrown)
 - Closes #14 (When saving an image the subsampling flags don't match the quality)
 
 
-\subsection since_0_0_36 Changes since version 0.0.36 (Alpha)
+\subsection version_0_0_38 Changes for version 0.0.38 (Alpha)
+
 
 - Removed dependence from charsetsList in data, buffer, dataSet, dataGroup, dataHandler
 - Closes #9 (The lossless jpeg codec saves corrupted images)
@@ -237,7 +252,8 @@ The changes that affect the interface of the transform classes (and therefore ne
 - Now the jpeg codec creates the offset table when loading an image
 
 
-\subsection since_0_0_35 Changes since version 0.0.35 (Alpha)
+\subsection version_0_0_36 Changes for version 0.0.36 (Alpha)
+
 
 - Closes #7 (memoryPool isn't thread safe)
 - The memory string now is managed by an auto_ptr
@@ -251,7 +267,8 @@ The changes that affect the interface of the transform classes (and therefore ne
 - Added SWIG headers (partial)
 
 
-\subsection since_0_0_34 Changes since version 0.0.34 (Alpha)
+\subsection version_0_0_35 Changes for version 0.0.35 (Alpha)
+
 
 - Closes #4 (The function jpegCodec::writeTag() always writes a tagId=0 on high-endian architectures)
 - Closes #5 (The unit test streamBitsTest doesn't flush the write buffer)
@@ -259,14 +276,16 @@ The changes that affect the interface of the transform classes (and therefore ne
    puntoexe::imebra::transforms::VOILUT::setVOILUT is called with an ID=0
 
 
-\subsection since_0_0_33 Changes since version 0.0.33 (Alpha)
+\subsection version_0_0_34 Changes for version 0.0.34 (Alpha)
+
 
 - Closes #2 (The code assumes that wchar_t is 2 bytes long, while some systems have wchar_t=4 bytes long)
 - Closes #3 (Usage of ICONV should check for return value E2BIG)
 - Added casting operators () to puntoexe::ptr
 
 
-\subsection since_0_0_32 Changes since version 0.0.32 (Alpha)
+\subsection version_0_0_33 Changes for version 0.0.33 (Alpha)
+
 
 - Corrected the ptr class so baseObject compiles on GCC
 - Corrected thread (removed orphan functions)
@@ -274,12 +293,14 @@ The changes that affect the interface of the transform classes (and therefore ne
    supported by the system
 
 
-\subsection since_0_0_31 Changes since version 0.0.31 (Alpha)
+\subsection version_0_0_32 Changes for version 0.0.32 (Alpha)
+
 
 - The PDF documentation is back
 
 
-\subsection since_0_0_30 Changes since version 0.0.30 (Alpha)
+\subsection version_0_0_31 Changes for version 0.0.31 (Alpha)
+
 
 - The smart pointer \ref puntoexe::ptr is able to cast the object's type.
 - The reference counter in puntoexe::baseObject now is set to 0 at
@@ -290,7 +311,8 @@ The changes that affect the interface of the transform classes (and therefore ne
 - Added the class thread
 
 
-\subsection since_0_0_29 Changes since version 0.0.29 (Alpha)
+\subsection version_0_0_30 Changes for version 0.0.30 (Alpha)
+
 
 - Now the library doesn't fail when the dataset has an empty
    images' offset table
@@ -300,7 +322,8 @@ The changes that affect the interface of the transform classes (and therefore ne
    with dicom files generated by DicomWorks
 
 
-\subsection since_0_0_28 Changes since version 0.0.28 (Alpha)
+\subsection version_0_0_29 Changes for version 0.0.29 (Alpha)
+
 
 - Added the function puntoexe::imebra::handlers::data::getBufferSize()
 - Added the function puntoexe::imebra::buffer::getBufferSizeBytes()
@@ -309,7 +332,8 @@ The changes that affect the interface of the transform classes (and therefore ne
    handler
 
 
-\subsection since_0_0_27 Changes since version 0.0.27 (Alpha)
+\subsection version_0_0_28 Changes for version 0.0.28 (Alpha)
+
 
 - Breaking change: introduced the puntoexe::streamReader and the 
   puntoexe::streamWriter to control the puntoexe::baseStream objects
@@ -330,7 +354,8 @@ The changes that affect the interface of the transform classes (and therefore ne
 - now the stream names can be in unicode format
 
 
-\subsection since_0_0_26 Changes since version 0.0.26 (Alpha)
+\subsection version_0_0_27 Changes for version 0.0.27 (Alpha)
+
 
 - Corrected the sample \ref quick_tour_image
 - Corrected a bug in the memoryManager's destructor
@@ -338,7 +363,8 @@ The changes that affect the interface of the transform classes (and therefore ne
    definitions
 
 
-\subsection since_0_0_25 Changes since version 0.0.25 (Alpha)
+\subsection version_0_0_26 Changes for version 0.0.26 (Alpha)
+
 
 - Replaced "informations" with "information" and "infos" with "info" \n
   The function exceptionsManager::getExceptionInfos became exceptionsManager::getExceptionInfo \n
@@ -349,7 +375,8 @@ The changes that affect the interface of the transform classes (and therefore ne
 - Improved performances in the Jpeg IDCT function
 
 
-\subsection since_0_0_24 Changes since version 0.0.24 (Alpha)
+\subsection version_0_0_25 Changes for version 0.0.25 (Alpha)
+
 
 - Introduced common lock objects
 - Introduced the transactions
@@ -358,7 +385,8 @@ The changes that affect the interface of the transform classes (and therefore ne
 - Introduced the view helper class
 
 
-\subsection since_0_0_22 Changes since version 0.0.22 (Alpha)
+\subsection version_0_0_24 Changes for version 0.0.24 (Alpha)
+
 
 - Introduced support for Unicode and different dicom charsets
 - Modified several files to solve problems with Borland C++ Builder 2006
@@ -369,7 +397,8 @@ The changes that affect the interface of the transform classes (and therefore ne
    list of strings
 
 
-\subsection since_0_0_21 Changes since version 0.0.21 (Alpha)
+\subsection version_0_0_22 Changes for version 0.0.22 (Alpha)
+
 
 - Corrected the transformHighBit class
 - Modified the exceptionsManager (now it stores the messages per thread and not
