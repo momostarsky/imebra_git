@@ -57,7 +57,7 @@
 		<replace dir="${build_dir}" includes="*.rc,*.h,*.cpp" token="L&quot;1.0.0.1&quot;" value="L&quot;${fullVersionReadable}&quot;" />
 		<replace dir="${build_dir}" token="$fileHeader$">
 			<replacevalue><![CDATA[
-$productName$
+$imebraVersion$
 
 Imebra: a C++ Dicom library
 
