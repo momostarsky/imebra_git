@@ -183,13 +183,10 @@ public:
 	///               the stream pSourceStream has been 
 	///               obtained. The data type must be in DICOM
 	///               format
-	/// @param pReuseImage if not null then the image
-	///               specified in this parameter will be
-	///               reused and will contain the final image
 	/// @return a pointer to the loaded image
 	///
 	///////////////////////////////////////////////////////////
-	virtual ptr<image> getImage(ptr<dataSet> pSourceDataSet, ptr<streamReader> pSourceStream, std::string dataType, ptr<image> pReuseImage = ptr<image>(0)) = 0;
+	virtual ptr<image> getImage(ptr<dataSet> pSourceDataSet, ptr<streamReader> pSourceStream, std::string dataType) = 0;
 	
 	/// \brief This enumeration is used by setImage() in order
 	///         to setup the compression parameters.

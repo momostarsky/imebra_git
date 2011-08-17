@@ -134,7 +134,7 @@ void dataSet::setGroup(imbxUint16 groupId, imbxUint16 order, ptr<dataGroup> pGro
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<image> dataSet::getImage(imbxUint32 frameNumber, ptr<image> pReuseImage /* = ptr<image>(0) */)
+ptr<image> dataSet::getImage(imbxUint32 frameNumber)
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getImage");
 
@@ -269,7 +269,7 @@ ptr<image> dataSet::getImage(imbxUint32 frameNumber, ptr<image> pReuseImage /* =
 			imbxUint32 offsetPosition = m_imagesPositions[readImages];
 			if(offsetPosition == 0)
 			{
-				ptr<image> tempImage = pCodec->getImage(this, imageStream, imageStreamDataType, pReuseImage);
+				ptr<image> tempImage = pCodec->getImage(this, imageStream, imageStreamDataType);
 				m_imagesPositions[readImages] = imageStream->position();
 				continue;
 			}
@@ -288,7 +288,7 @@ ptr<image> dataSet::getImage(imbxUint32 frameNumber, ptr<image> pReuseImage /* =
 	}
 
 	ptr<image> pImage;
-	pImage = pCodec->getImage(this, imageStream, imageStreamDataType, pReuseImage);
+	pImage = pCodec->getImage(this, imageStream, imageStreamDataType);
 
 	if(!bDontNeedImagesPositions && m_imagesPositions.size() > frameNumber)
 	{

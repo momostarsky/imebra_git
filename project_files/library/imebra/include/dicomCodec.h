@@ -58,7 +58,7 @@ class dicomCodec : public codec
 public:
 	// Get an image from a dicom structure
 	///////////////////////////////////////////////////////////
-	virtual ptr<image> getImage(ptr<dataSet> pData, ptr<streamReader> pSourceStream, std::string dataType, ptr<image> pReuseImage = ptr<image>(0));
+	virtual ptr<image> getImage(ptr<dataSet> pData, ptr<streamReader> pSourceStream, std::string dataType);
 
 	// Write an image into a dicom structure
 	///////////////////////////////////////////////////////////

@@ -236,7 +236,7 @@ public:
 	///                     image
 	///
 	///////////////////////////////////////////////////////////
-	ptr<image> getImage(imbxUint32 frameNumber, ptr<image> pReuseImage = ptr<image>(0));
+	ptr<image> getImage(imbxUint32 frameNumber);
 	
 	/// \brief Insert an image into the data set.
 	///

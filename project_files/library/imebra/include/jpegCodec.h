@@ -78,7 +78,7 @@ public:
 
 	// Retrieve the image from a dataset
 	///////////////////////////////////////////////////////////
-	virtual ptr<image> getImage(ptr<dataSet> sourceDataSet, ptr<streamReader> pStream, std::string dataType, ptr<image> pReuseImage = ptr<image>(0));
+	virtual ptr<image> getImage(ptr<dataSet> sourceDataSet, ptr<streamReader> pStream, std::string dataType);
 
 	// Insert a jpeg compressed image into a dataset
 	///////////////////////////////////////////////////////////
