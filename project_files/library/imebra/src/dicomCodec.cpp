@@ -935,7 +935,7 @@ void dicomCodec::parseStream(ptr<streamReader> pStream,
 //
 /////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
-ptr<image> dicomCodec::getImage(ptr<dataSet> pData, ptr<streamReader> pStream, std::string dataType)
+ptr<image> dicomCodec::getImage(ptr<dataSet> pData, ptr<streamReader> pStream, std::string dataType, ptr<image> pReuseImage /* = ptr<image>(0) */)
 {
 	PUNTOEXE_FUNCTION_START(L"dicomCodec::getImage");
 
@@ -1034,9 +1034,15 @@ ptr<image> dicomCodec::getImage(ptr<dataSet> pData, ptr<streamReader> pStream, s
 		}
 	}
 
-	ptr<image> pImage(new image);
-	ptr<handlers::dataHandlerNumericBase> handler = pImage->create(imageSizeX, imageSizeY, depth, colorSpace, highBit);
-	imbxUint32 tempChannelsNumber = pImage->getChannelsNumber();
+	ptr<image> pImage(pReuseImage);
+	if(pImage == 0)
+	{
+		pImage = new image;
+	}
+	pImage->create(imageSizeX, imageSizeY, depth, colorSpace, highBit);
+
+	imbxUint32 rowSize, channelPixelSize, tempChannelsNumber;
+	ptr<handlers::dataHandlerNumericBase> handler(pImage->getDataHandler(true, &rowSize, &channelPixelSize, &tempChannelsNumber));
 
 	if(handler == 0 || tempChannelsNumber != channelsNumber)
 	{

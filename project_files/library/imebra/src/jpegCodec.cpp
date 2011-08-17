@@ -1142,7 +1142,7 @@ imbxUint32 jpegCodec::suggestAllocatedBits(std::wstring transferSyntax, imbxUint
 //
 /////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
-ptr<image> jpegCodec::getImage(ptr<dataSet> sourceDataSet, ptr<streamReader> pStream, std::string /* dataType not used */)
+ptr<image> jpegCodec::getImage(ptr<dataSet> sourceDataSet, ptr<streamReader> pStream, std::string /* dataType not used */, ptr<image> pReuseImage /* = ptr<image>(0) */)
 {
 	PUNTOEXE_FUNCTION_START(L"jpegCodec::getImage");
 
@@ -1336,7 +1336,11 @@ ptr<image> jpegCodec::getImage(ptr<dataSet> sourceDataSet, ptr<streamReader> pSt
 		}
 	}
 
-	ptr<image> returnImage(new image);
+	ptr<image> returnImage(pReuseImage);
+	if(returnImage == 0)
+	{
+		returnImage = new image;
+	}
 	copyJpegChannelsToImage(returnImage, b2complement, colorSpace);
 
 	return returnImage;
@@ -1364,7 +1368,10 @@ void jpegCodec::copyJpegChannelsToImage(ptr<image> destImage, bool b2complement,
 	else
 		depth = (m_precision==8) ? image::depthU8 : image::depthU16;
 
-	ptr<handlers::dataHandlerNumericBase> handler = destImage->create(m_imageSizeX, m_imageSizeY, depth, colorSpace, (imbxUint8)(m_precision-1));
+	destImage->create(m_imageSizeX, m_imageSizeY, depth, colorSpace, (imbxUint8)(m_precision-1));
+	imbxUint32 rowSize, channelPixelSize, channelsNumber;
+	ptr<handlers::dataHandlerNumericBase> handler(destImage->getDataHandler(
+		true, &rowSize, &channelPixelSize, &channelsNumber));
 
 	imbxInt32 offsetValue=(imbxInt32)1<<(m_precision-1);
 	imbxInt32 maxClipValue=((imbxInt32)1<<m_precision)-1;

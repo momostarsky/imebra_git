@@ -41,7 +41,7 @@ namespace imebra
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<handlers::dataHandlerNumericBase> image::create(
+void image::create(
 						const imbxUint32 sizeX, 
 						const imbxUint32 sizeY, 
 						const bitDepth depth, 
@@ -64,6 +64,7 @@ ptr<handlers::dataHandlerNumericBase> image::create(
 
 	// Find the number of channels to allocate
 	///////////////////////////////////////////////////////////
+	imbxUint32  oldChannelsNumber = m_channelsNumber; // Remember the old channels number
 	m_channelsNumber = transforms::colorTransforms::colorTransformsFactory::getNumberOfChannels(inputColorSpace);
 	if(m_channelsNumber == 0)
 	{
@@ -119,30 +120,22 @@ ptr<handlers::dataHandlerNumericBase> image::create(
 	// If a valid buffer with the same data type is already
 	//  allocated then use it.
 	///////////////////////////////////////////////////////////
-	if(m_buffer == 0 || !(m_buffer->isReferencedOnce()) )
+	if(m_buffer == 0 || m_buffer->getDataType() != bufferDataType || m_channelsNumber != oldChannelsNumber || sizeX != m_sizeX || sizeY != m_sizeY || m_imageDepth != depth)
 	{
-		ptr<buffer> tempBuffer(new buffer(this, bufferDataType));
-		m_buffer = tempBuffer;
-	}
+		m_sizeX = m_sizeY = 0;
 
-	m_sizeX = m_sizeY = 0;
-	
-	ptr<handlers::dataHandler> imageHandler(m_buffer->getDataHandler(true, sizeX * sizeY * (imbxUint32)m_channelsNumber) );
-	if(imageHandler != 0)
-	{
-		m_rowLength = m_channelsNumber*sizeX;
-		
-		imageHandler->setSize(m_rowLength*sizeY);
-		m_channelPixelSize = imageHandler->getUnitSize();
+		m_buffer = new buffer(this, bufferDataType);
 
 		// Set the attributes
 		///////////////////////////////////////////////////////////
 		m_imageDepth=depth;
 		m_sizeX=sizeX;
 		m_sizeY=sizeY;
-	}
+		m_rowLength = m_channelsNumber * sizeX;
 
-	return ptr<handlers::dataHandlerNumericBase>(dynamic_cast<handlers::dataHandlerNumericBase*>(imageHandler.get()) );
+		ptr<handlers::dataHandler> imageHandler(m_buffer->getDataHandler(true, m_rowLength * sizeY) );
+		imageHandler->setSize(m_rowLength*sizeY);
+	}
 
 	PUNTOEXE_FUNCTION_END();
 }

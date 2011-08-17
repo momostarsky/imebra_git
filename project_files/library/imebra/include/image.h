@@ -138,7 +138,7 @@ public:
 	///                  data
 	///
 	///////////////////////////////////////////////////////////
-	ptr<handlers::dataHandlerNumericBase> create(
+	void create(
 		const imbxUint32 sizeX,
 		const imbxUint32 sizeY,
 		const bitDepth depth,
