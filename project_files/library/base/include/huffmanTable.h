@@ -236,6 +236,7 @@ public:
 	// Used to calculate the huffman codes
 	std::vector<imbxUint32> m_orderedValues;
 	imbxUint32 m_valuesPerLength[128];
+	imbxUint8 m_firstValidLength;
 	imbxUint32 m_minValuePerLength[128];
 	imbxUint32 m_maxValuePerLength[128];
 

@@ -75,6 +75,7 @@ void huffmanTable::reset()
 	::memset(&(m_valuesToHuffmanLength[0]), 0, m_numValues*sizeof(m_valuesToHuffmanLength[0]));
 
 	::memset(m_valuesPerLength, 0, sizeof(m_valuesPerLength));
+	m_firstValidLength = 0;
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -218,6 +219,15 @@ void huffmanTable::calcHuffmanCodesLength(const imbxUint32 maxCodeLength)
 		}
 	}
 
+	// Find the first available length
+	for(m_firstValidLength = 1; m_firstValidLength != sizeof(m_valuesPerLength) / sizeof(m_valuesPerLength[0]); ++m_firstValidLength)
+	{
+		if(m_valuesPerLength[m_firstValidLength] != 0)
+		{
+			break;
+		}
+	}
+
 	PUNTOEXE_FUNCTION_END();
 }
 
@@ -242,8 +252,13 @@ void huffmanTable::calcHuffmanTables()
 	::memset(m_minValuePerLength, 0xffffffff, sizeof(m_minValuePerLength));
 	::memset(m_maxValuePerLength, 0xffffffff, sizeof(m_maxValuePerLength));
 
-	for(imbxUint32 codeLength=1L; codeLength<sizeof(m_valuesPerLength)/sizeof(imbxUint32); ++codeLength)
+	m_firstValidLength = 0;
+	for(imbxUint32 codeLength=1L; codeLength != sizeof(m_valuesPerLength)/sizeof(imbxUint32); ++codeLength)
 	{
+		if(m_valuesPerLength[codeLength] != 0 && m_firstValidLength == 0)
+		{
+			m_firstValidLength = codeLength;
+		}
 		for(imbxUint32 generateCodes = 0; generateCodes<m_valuesPerLength[codeLength]; ++generateCodes)
 		{
 			if(generateCodes == 0)
@@ -277,23 +292,24 @@ imbxUint32 huffmanTable::readHuffmanCode(streamReader* pStream)
 {
 	PUNTOEXE_FUNCTION_START(L"huffmanTable::readHuffmanCode");
 
-	// Buffer with the original huffman code
-	///////////////////////////////////////////////////////////
-	imbxUint32 readBuffer(0);
+	// Read initial number of bits
+	imbxUint32 readBuffer(pStream->readBits(m_firstValidLength));
 
-	// Active ordered value
+	// Validate the current Huffman code. If it's OK, then
+	//  return the ordered value
 	///////////////////////////////////////////////////////////
-	imbxUint32 orderedValue(0);
+	if(readBuffer<=m_maxValuePerLength[m_firstValidLength])
+	{
+		return m_orderedValues[readBuffer - m_minValuePerLength[m_firstValidLength]];
+	}
 
-	// Number of bits to read in one go
-	///////////////////////////////////////////////////////////
-	imbxUint8 missingBits(0);
+	imbxUint32 orderedValue(m_valuesPerLength[m_firstValidLength]);
 
 	// Scan all the codes sizes
 	///////////////////////////////////////////////////////////
-	for(imbxUint8 scanSize(1); scanSize<sizeof(m_valuesPerLength)/sizeof(m_valuesPerLength[0]); ++scanSize)
+	for(imbxUint8 scanSize(m_firstValidLength + 1), missingBits(0); scanSize != sizeof(m_valuesPerLength)/sizeof(m_valuesPerLength[0]); ++scanSize)
 	{
-                ++missingBits;
+		++missingBits;
 
 		// If the active length is empty, then continue the loop
 		///////////////////////////////////////////////////////////
@@ -302,23 +318,14 @@ imbxUint32 huffmanTable::readHuffmanCode(streamReader* pStream)
 			continue;
 		}
 
-		// Read the missing bits
-		///////////////////////////////////////////////////////////
-		if(missingBits == scanSize) // Nothing in the buffer yet, we don't need to shift
+		readBuffer <<= missingBits;
+		if(missingBits == 1)
 		{
-		    readBuffer = pStream->readBits(scanSize);
+			readBuffer |= pStream->readBit();
 		}
 		else
 		{
-                    readBuffer <<= missingBits;
-		    if(missingBits == 1)
-		    {
-                        readBuffer |= pStream->readBit();
-		    }
-		    else
-		    {
-		        readBuffer |= pStream->readBits(missingBits);
-		    }
+			readBuffer |= pStream->readBits(missingBits);
 		}
 
 		// Validate the current Huffman code. If it's OK, then
@@ -329,9 +336,9 @@ imbxUint32 huffmanTable::readHuffmanCode(streamReader* pStream)
 			return m_orderedValues[orderedValue + readBuffer - m_minValuePerLength[scanSize]];
 		}
 
-                orderedValue += m_valuesPerLength[scanSize];
+		orderedValue += m_valuesPerLength[scanSize];
 
-                // Reset the number of bits to read in one go
+		// Reset the number of bits to read in one go
 		///////////////////////////////////////////////////////////
 		missingBits = 0;
 
