@@ -1396,11 +1396,19 @@ void jpegCodec::copyJpegChannelsToImage(ptr<image> destImage, bool b2complement,
 		{
 			for(imbxUint32 adjust2complement = pChannel->m_bufferSize; adjust2complement; --adjust2complement)
 			{
-				*(pChannelBuffer++) += offsetValue;
+				*pChannelBuffer += offsetValue;
+				if(*pChannelBuffer < minClipValue)
+				{
+					*pChannelBuffer = minClipValue;
+				}
+				else if(*pChannelBuffer > maxClipValue)
+				{
+					*pChannelBuffer = maxClipValue;
+				}
+				++pChannelBuffer;
 			}
 		}
-
-		if(m_bLossless && b2complement)
+		else if(m_bLossless && b2complement)
 		{
 			for(imbxUint32 adjust2complement = pChannel->m_bufferSize; adjust2complement; --adjust2complement)
 			{
@@ -1408,24 +1416,16 @@ void jpegCodec::copyJpegChannelsToImage(ptr<image> destImage, bool b2complement,
 				{
 					*pChannelBuffer |= ((imbxInt32)-1) << m_precision;
 				}
+				if(*pChannelBuffer < minClipValue)
+				{
+					*pChannelBuffer = minClipValue;
+				}
+				else if(*pChannelBuffer > maxClipValue)
+				{
+					*pChannelBuffer = maxClipValue;
+				}
 				++pChannelBuffer;
 			}
-		}
-
-		// Clip the values
-		///////////////////////////////////////////////////////////
-		pChannelBuffer = pChannel->m_pBuffer;
-		for(imbxUint32 clipValues = pChannel->m_bufferSize; clipValues; --clipValues)
-		{
-			if(*pChannelBuffer < minClipValue)
-			{
-				*pChannelBuffer = minClipValue;
-			}
-			else if(*pChannelBuffer > maxClipValue)
-			{
-				*pChannelBuffer = maxClipValue;
-			}
-			++pChannelBuffer;
 		}
 
 		// If only one channel is present, then use the fast copy
@@ -2475,6 +2475,7 @@ void jpegCodec::IDCT(imbxInt32* pIOMatrix, long long* pScaleFactors)
 	for(int scanBlockY(8); scanBlockY != 0; --scanBlockY)
 	{
 		pCheckMatrix = pIOMatrix;
+
 		// Check for AC coefficients value.
 		// If they are all NULL, then apply the DC value to all
 		/////////////////////////////////////////////////////////////////
