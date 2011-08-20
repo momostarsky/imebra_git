@@ -2470,23 +2470,24 @@ void jpegCodec::IDCT(imbxInt32* pIOMatrix, long long* pScaleFactors)
 	imbxInt32* pMatrix(pIOMatrix);
 
 	imbxInt32* pCheckMatrix;
+	imbxInt32 checkZero;
 
 	long long* pTempMatrix(m_idctTempMatrix);
 	for(int scanBlockY(8); scanBlockY != 0; --scanBlockY)
 	{
 		pCheckMatrix = pIOMatrix;
+		checkZero = *(++pCheckMatrix);
+		checkZero |= *(++pCheckMatrix);
+		checkZero |= *(++pCheckMatrix);
+		checkZero |= *(++pCheckMatrix);
+		checkZero |= *(++pCheckMatrix);
+		checkZero |= *(++pCheckMatrix);
+		checkZero |= *(++pCheckMatrix);
 
 		// Check for AC coefficients value.
 		// If they are all NULL, then apply the DC value to all
 		/////////////////////////////////////////////////////////////////
-		if(
-				(*(++pCheckMatrix) |
-				 *(++pCheckMatrix) |
-				 *(++pCheckMatrix) |
-				 *(++pCheckMatrix) |
-				 *(++pCheckMatrix) |
-				 *(++pCheckMatrix) |
-				 *(++pCheckMatrix)) ==0)
+		if(checkZero == 0)
 		{
 		    tmp0 = (long long)(*pMatrix) * (*pScaleFactors);
 			*(pTempMatrix++) = tmp0;
@@ -2533,16 +2534,12 @@ void jpegCodec::IDCT(imbxInt32* pIOMatrix, long long* pScaleFactors)
 
 		// Phase 5
 		tmp7 = z11 + z13;
-		tmp11 = ((z11 - z13) * multiplier_1_414213562f + zero_point_five) >> JPEG_DECOMPRESSION_BITS_PRECISION; // 2*c4
-
 		z5 = ((z10 + z12) * multiplier_1_847759065f + zero_point_five) >> JPEG_DECOMPRESSION_BITS_PRECISION;    // 2*c2
-		tmp10 = ((z12 * multiplier_1_0823922f + zero_point_five) >> JPEG_DECOMPRESSION_BITS_PRECISION) - z5;    // 2*(c2-c6)
-		tmp12 = z5 - ((z10 *multiplier_2_61312593f + zero_point_five) >> JPEG_DECOMPRESSION_BITS_PRECISION);      // -2*(c2+c6)
 
 		// Phase 2
-		tmp6 = tmp12 - tmp7;
-		tmp5 = tmp11 - tmp6;
-		tmp4 = tmp10 + tmp5;
+		tmp6 = z5 - ((z10 *multiplier_2_61312593f + zero_point_five) >> JPEG_DECOMPRESSION_BITS_PRECISION) - tmp7;
+		tmp5 = (((z11 - z13) * multiplier_1_414213562f + zero_point_five) >> JPEG_DECOMPRESSION_BITS_PRECISION) - tmp6;
+		tmp4 = ((z12 * multiplier_1_0823922f + zero_point_five) >> JPEG_DECOMPRESSION_BITS_PRECISION) - z5 + tmp5;
 
 		*(pTempMatrix++) = tmp0 + tmp7;
 		*(pTempMatrix++) = tmp1 + tmp6;
