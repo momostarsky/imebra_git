@@ -273,7 +273,7 @@ std::wstring charsetConversion::toUnicode(const std::string& asciiString) const
 ///////////////////////////////////////////////////////////
 #if defined(PUNTOEXE_USEICONV)
 
-#if defined(WIN32)
+#if defined(PUNTOEXE_WINDOWS)
 std::string charsetConversion::myIconv(iconv_t context, const char* inputString, size_t inputStringLengthBytes)
 #else
 std::string charsetConversion::myIconv(iconv_t context, char* inputString, size_t inputStringLengthBytes)
