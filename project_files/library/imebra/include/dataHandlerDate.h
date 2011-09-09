@@ -72,6 +72,8 @@ public:
 	///  - MM is the month
 	///  - DD is the day
 	///
+	/// @param index the zero based index of the date to
+	///         retrieve
 	/// @return a string representing the date stored in the
 	///          buffer
 	///
@@ -86,6 +88,8 @@ public:
 	///  - MM is the month
 	///  - DD is the day
 	///
+	/// @param index the zero based index of the date to be
+	///         set
 	/// @param value the string representing the date to be set
 	///
 	///////////////////////////////////////////////////////////

@@ -152,7 +152,9 @@ public:
 	///////////////////////////////////////////////////////////
 	void setHighBit(imbxUint32 highBit);
 
-	/// \brief Set the palette.
+	/// \brief Set the palette for the image
+	///
+	/// @param imagePalette  the palette used in the image
 	///
 	///////////////////////////////////////////////////////////
 	void setPalette(ptr<palette> imagePalette);

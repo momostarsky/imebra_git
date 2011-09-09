@@ -133,6 +133,7 @@ public:
 	/// If the index is out of the valid range, then this
 	///  method returns false.
 	///
+	/// @param index the index to be tested
 	/// @return true if the index is valid, false if it is out
 	///          of range
 	///

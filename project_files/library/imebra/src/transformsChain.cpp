@@ -167,10 +167,6 @@ void transformsChain::runTransform(
 }
 
 
-/// \brief Allocate an output image that is compatible with
-///         the transform given the specified input image.
-///
-///////////////////////////////////////////////////////////
 ptr<image> transformsChain::allocateOutputImage(ptr<image> pInputImage, imbxUint32 width, imbxUint32 height)
 {
 	if(isEmpty())

@@ -411,17 +411,14 @@ public:
 		PUNTOEXE_FUNCTION_END();
 	}
 
-	/// \brief Returns a pointer to the physical %memory that
-	///         stores the data managed by the handler.
+	/// \brief Copy the values from a memory location to
+	///         the buffer managed by the handler
 	///
-	/// Warning: the %memory that stores the managed data may
-	///          be reallocated by a call to setSize().
-	///
-	/// @return a pointer to the physical %memory that stores
-	///          the data managed by the handler
+	/// @param pSource a pointer to the first byte of the
+	///         memory area to copy
+	/// @param sourceSize the number of values to copy
 	///
 	///////////////////////////////////////////////////////////
-
 	template<class sourceHandlerType>
 	void copyFromMemory(sourceHandlerType* pSource, size_t sourceSize)
 	{
@@ -437,8 +434,7 @@ public:
 		}
 	}
 
-	// Copy the data from an array of imbxInt32 values
-	//  into the memory managed by the handler.
+	// Copy the data from another handler
 	///////////////////////////////////////////////////////////
 	virtual void copyFrom(ptr<dataHandlerNumericBase> pSource)
 	{
