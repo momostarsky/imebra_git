@@ -63,6 +63,8 @@ public:
 	/// \brief Set the value of the age string and specify
 	///         its unit.
 	///
+	/// @param index the zero based index of the age value to
+	///               read
 	/// @param age   the age to be written in the buffer
 	/// @param unit  the units used for the parameter age
 	///
@@ -72,6 +74,8 @@ public:
 	/// \brief Retrieve the age value and its unit from the
 	///         buffer handled by this handler.
 	///
+	/// @param index the zero based index of the age value to
+	///               modify
 	/// @param pUnit a pointer to a tAgeUnit that will be
 	///               filled with the unit information related
 	///               to the returned value
@@ -86,6 +90,8 @@ public:
 	///
 	/// The returned value is always expressed in years.
 	///
+	/// @param index the zero based index of the age value to
+	///               read
 	/// @return the age contained in the buffer converted into
 	///          years
 	///
@@ -96,6 +102,8 @@ public:
 	///
 	/// The returned value is always expressed in years.
 	///
+	/// @param index the zero based index of the age value to
+	///               read
 	/// @return the age contained in the buffer converted into
 	///          years
 	///
@@ -109,6 +117,8 @@ public:
 	///  age contained in the buffer is expressed in days,
 	///  weeks or months.
 	///
+	/// @param index the zero based index of the age value to
+	///               read
 	/// @return the age contained in the buffer converted into
 	///          years
 	///
@@ -117,6 +127,8 @@ public:
 
 	/// \brief Write the specified age into the handled buffer.
 	///
+	/// @param index the zero based index of the age value to
+	///               modify
 	/// @param value the age to be written, in years
 	///
 	///////////////////////////////////////////////////////////
@@ -124,6 +136,8 @@ public:
 
 	/// \brief Write the specified age into the handled buffer.
 	///
+	/// @param index the zero based index of the age value to
+	///               modify
 	/// @param value the age to be written, in years
 	///
 	///////////////////////////////////////////////////////////
@@ -135,6 +149,8 @@ public:
 	///  set the age in days, weeks or months according to
 	///  the value of the fraction.
 	///
+	/// @param index the zero based index of the age value to
+	///               modify
 	/// @param value the age to be written, in years
 	///
 	///////////////////////////////////////////////////////////

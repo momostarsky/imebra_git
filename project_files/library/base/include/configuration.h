@@ -34,7 +34,7 @@ typedef signed int    imbxInt32;
 
 #if !defined(PUNTOEXE_WINDOWS) && !defined(PUNTOEXE_POSIX)
 
-#ifdef WIN32
+#if defined(WIN32) || defined(WIN64)
 #define PUNTOEXE_WINDOWS 1
 #endif
 

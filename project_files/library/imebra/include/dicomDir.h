@@ -321,6 +321,9 @@ public:
 	/// This is the same dataset specified in the constructor
 	///  dicomDir::dicomDir() and returned by buildDataSet().
 	///
+	/// @return the dataset containing the DICOMDIR
+	///          information
+	///
 	///////////////////////////////////////////////////////////
 	ptr<dataSet> getDirectoryDataSet();
 

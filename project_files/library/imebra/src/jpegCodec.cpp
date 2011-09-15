@@ -889,7 +889,7 @@ void jpegCodec::readStream(ptr<streamReader> pSourceStream, ptr<dataSet> pDataSe
 		imbxUint8 jpegSignature[2];
 		try
 		{
-            pStream->read(jpegSignature, 2);
+			pStream->read(jpegSignature, 2);
 		}
 		catch(streamExceptionEOF&)
 		{
@@ -912,7 +912,7 @@ void jpegCodec::readStream(ptr<streamReader> pSourceStream, ptr<dataSet> pDataSe
 
 	// Used to read discharged chars
 	///////////////////////////////////////////////////////////
-        imbxUint8 entryByte;
+	imbxUint8 entryByte;
 
 	// Read all the tags in the stream
 	///////////////////////////////////////////////////////////
@@ -920,15 +920,15 @@ void jpegCodec::readStream(ptr<streamReader> pSourceStream, ptr<dataSet> pDataSe
 	{
 		// If a tag has been found, then parse it
 		///////////////////////////////////////////////////////////
-                pStream->read(&entryByte, 1);
-                if(entryByte != 0xff)
-                {
-                    continue;
-                }
-                while(entryByte == 0xff)
-                {
-                    pStream->read(&entryByte, 1);
-                }
+		pStream->read(&entryByte, 1);
+		if(entryByte != 0xff)
+		{
+			continue;
+		}
+		do
+		{
+			pStream->read(&entryByte, 1);
+		} while(entryByte == 0xff);
 
 		if(entryByte != 0)
 		{
@@ -1396,11 +1396,19 @@ void jpegCodec::copyJpegChannelsToImage(ptr<image> destImage, bool b2complement,
 		{
 			for(imbxUint32 adjust2complement = pChannel->m_bufferSize; adjust2complement; --adjust2complement)
 			{
-				*(pChannelBuffer++) += offsetValue;
+				*pChannelBuffer += offsetValue;
+				if(*pChannelBuffer < minClipValue)
+				{
+					*pChannelBuffer = minClipValue;
+				}
+				else if(*pChannelBuffer > maxClipValue)
+				{
+					*pChannelBuffer = maxClipValue;
+				}
+				++pChannelBuffer;
 			}
 		}
-
-		if(m_bLossless && b2complement)
+		else if(m_bLossless && b2complement)
 		{
 			for(imbxUint32 adjust2complement = pChannel->m_bufferSize; adjust2complement; --adjust2complement)
 			{
@@ -1408,24 +1416,16 @@ void jpegCodec::copyJpegChannelsToImage(ptr<image> destImage, bool b2complement,
 				{
 					*pChannelBuffer |= ((imbxInt32)-1) << m_precision;
 				}
+				if(*pChannelBuffer < minClipValue)
+				{
+					*pChannelBuffer = minClipValue;
+				}
+				else if(*pChannelBuffer > maxClipValue)
+				{
+					*pChannelBuffer = maxClipValue;
+				}
 				++pChannelBuffer;
 			}
-		}
-
-		// Clip the values
-		///////////////////////////////////////////////////////////
-		pChannelBuffer = pChannel->m_pBuffer;
-		for(imbxUint32 clipValues = pChannel->m_bufferSize; clipValues; --clipValues)
-		{
-			if(*pChannelBuffer < minClipValue)
-			{
-				*pChannelBuffer = minClipValue;
-			}
-			else if(*pChannelBuffer > maxClipValue)
-			{
-				*pChannelBuffer = maxClipValue;
-			}
-			++pChannelBuffer;
 		}
 
 		// If only one channel is present, then use the fast copy
@@ -1971,8 +1971,12 @@ inline void jpegCodec::readBlock(streamReader* pStream, imbxInt32* pBuffer, jpeg
 	{
 		// Read AC progressive bits for non-zero coefficients
 		/////////////////////////////////////////////////////////////////
-		if(m_eobRun && spectralIndex && m_bitHigh)
+		if(m_eobRun != 0)
 		{
+			if(m_bitHigh == 0)
+			{
+				break;
+			}
 			oldValue=pBuffer[JpegDeZigZagOrder[spectralIndex]];
 			if(oldValue == 0)
 			{
@@ -1990,157 +1994,146 @@ inline void jpegCodec::readBlock(streamReader* pStream, imbxInt32* pBuffer, jpeg
 		}
 
 		//
-		// If no EOB run is active, then read this block
+		// AC/DC pass
 		//
 		/////////////////////////////////////////////////////////////////
-		if(m_eobRun == 0)
+		if(spectralIndex != 0)
 		{
-			//
-			// AC/DC pass
-			//
-			/////////////////////////////////////////////////////////////////
-			if(spectralIndex)
-			{
-				hufCode = pChannel->m_pActiveHuffmanTableAC->readHuffmanCode(pStream);
-			}
-			else
-			{
-				// First pass
-				/////////////////////////////////////////////////////////////////
-				if(m_bitHigh)
-				{
-					hufCode = pStream->readBit();
-					value=(int)hufCode;
-					hufCode = 0;
-				}
-				else
-				{
-					hufCode = pChannel->m_pActiveHuffmanTableDC->readHuffmanCode(pStream);
-				}
-			}
-
-
-			//
-			// Get AC or DC amplitude or zero run
-			//
-			/////////////////////////////////////////////////////////////////
+			hufCode = pChannel->m_pActiveHuffmanTableAC->readHuffmanCode(pStream);
 
 			// End of block reached
 			/////////////////////////////////////////////////////////////////
-			if(hufCode == 0 && spectralIndex)
+			if(hufCode == 0)
 			{
 				++m_eobRun;
 				--spectralIndex;
+				continue;
 			}
-
-			// Amplitude or end of band
+		}
+		else
+		{
+			// First pass
 			/////////////////////////////////////////////////////////////////
+			if(m_bitHigh)
+			{
+				hufCode = pStream->readBit();
+				value=(int)hufCode;
+				hufCode = 0;
+			}
 			else
 			{
-				// Find bit coded coeff. amplitude
-				/////////////////////////////////////////////////////////////////
-				amplitudeLength=(imbxUint8)(hufCode & 0xf);
+				hufCode = pChannel->m_pActiveHuffmanTableDC->readHuffmanCode(pStream);
+			}
+		}
 
-				// Find zero run length
-				/////////////////////////////////////////////////////////////////
-				runLength=(int)(hufCode>>4);
 
-				// First DC or AC pass or refine AC pass but not EOB run
+		//
+		// Get AC or DC amplitude or zero run
+		//
+		/////////////////////////////////////////////////////////////////
+
+		// Find bit coded coeff. amplitude
+		/////////////////////////////////////////////////////////////////
+		amplitudeLength=(imbxUint8)(hufCode & 0xf);
+
+		// Find zero run length
+		/////////////////////////////////////////////////////////////////
+		runLength=(int)(hufCode>>4);
+
+		// First DC or AC pass or refine AC pass but not EOB run
+		/////////////////////////////////////////////////////////////////
+		if(spectralIndex == 0 || amplitudeLength || runLength == 0xf)
+		{
+			//
+			// First DC pass and all the AC passes are similar,
+			//  then use the same algorithm
+			//
+			/////////////////////////////////////////////////////////////////
+			if(m_bitHigh == 0 || spectralIndex)
+			{
+				// Read coeff
 				/////////////////////////////////////////////////////////////////
-				if(spectralIndex == 0 || amplitudeLength || runLength == 0xf)
+				value = 0;
+
+				if(amplitudeLength)
 				{
-					//
-					// First DC pass and all the AC passes are similar,
-					//  then use the same algorithm
-					//
+					amplitude = pStream->readBits(amplitudeLength);
+					value = (int)amplitude;
+					if(amplitude < ((imbxUint32)1<<(amplitudeLength-1)))
+						value -= (int)(((imbxUint32)1<<amplitudeLength)-1);
+				}
+
+				// Move spectral index forward by zero run length
+				/////////////////////////////////////////////////////////////////
+				if(m_bitHigh && spectralIndex)
+				{
+					// Read the correction bits
 					/////////////////////////////////////////////////////////////////
-					if(m_bitHigh == 0 || spectralIndex)
+					while(spectralIndex<=m_spectralIndexEnd)
 					{
-						// Read coeff
-						/////////////////////////////////////////////////////////////////
-						value = 0;
-
-						if(amplitudeLength)
+						oldValue=pBuffer[JpegDeZigZagOrder[spectralIndex]];
+						if(oldValue != 0)
 						{
-							amplitude = pStream->readBits(amplitudeLength);
-							value = (int)amplitude;
-							if(amplitude < ((imbxUint32)1<<(amplitudeLength-1)))
-								value -= (int)(((imbxUint32)1<<amplitudeLength)-1);
-						}
-
-						// Move spectral index forward by zero run length
-						/////////////////////////////////////////////////////////////////
-						if(m_bitHigh && spectralIndex)
-						{
-							// Read the correction bits
-							/////////////////////////////////////////////////////////////////
-							while(spectralIndex<=m_spectralIndexEnd)
+							amplitude = pStream->readBit();
+							if(amplitude && (oldValue & positiveBitLow) == 0)
 							{
-								oldValue=pBuffer[JpegDeZigZagOrder[spectralIndex]];
-								if(oldValue != 0)
-								{
-									amplitude = pStream->readBit();
-									if(amplitude && (oldValue & positiveBitLow) == 0)
-									{
-										oldValue+=(oldValue>0 ? positiveBitLow : negativeBitLow);
-										pBuffer[JpegDeZigZagOrder[spectralIndex]] = oldValue;
-									}
-								}
-								else
-								{
-									if(runLength == 0)
-									{
-										break;
-									}
-									--runLength;
-								}
-								++spectralIndex;
+								oldValue+=(oldValue>0 ? positiveBitLow : negativeBitLow);
+								pBuffer[JpegDeZigZagOrder[spectralIndex]] = oldValue;
 							}
 						}
 						else
 						{
-							spectralIndex+=runLength;
-							runLength = 0;
+							if(runLength == 0)
+							{
+								break;
+							}
+							--runLength;
 						}
+						++spectralIndex;
 					}
-
-					// Store coeff.
-					/////////////////////////////////////////////////////////////////
-					if(spectralIndex<=m_spectralIndexEnd)
-					{
-						oldValue=value<<m_bitLow;
-						if(m_bitHigh)
-							oldValue|=pBuffer[JpegDeZigZagOrder[spectralIndex]];
-
-						// DC coeff added to the previous value.
-						/////////////////////////////////////////////////////////////////
-						if(spectralIndex == 0 && m_bitHigh == 0)
-						{
-							oldValue+=pChannel->m_lastDCValue;
-							pChannel->m_lastDCValue=oldValue;
-						}
-						pBuffer[JpegDeZigZagOrder[spectralIndex]]=oldValue;
-					}
-				} // ----- End of first DC or AC pass or refine AC pass but not EOB run
-
-				// EOB run found
-				/////////////////////////////////////////////////////////////////
+				}
 				else
 				{
-					tempEobRun = pStream->readBits(runLength);
-					m_eobRun+=(imbxUint32)1<<runLength;
-					m_eobRun+=tempEobRun;
-					spectralIndex--;
+					spectralIndex+=runLength;
+					runLength = 0;
 				}
-			} // ----- End of coeff amplitude reading.
-		} // ----- End of AC pass or DC first pass
+			}
+
+			// Store coeff.
+			/////////////////////////////////////////////////////////////////
+			if(spectralIndex<=m_spectralIndexEnd)
+			{
+				oldValue=value<<m_bitLow;
+				if(m_bitHigh)
+					oldValue|=pBuffer[JpegDeZigZagOrder[spectralIndex]];
+
+				// DC coeff added to the previous value.
+				/////////////////////////////////////////////////////////////////
+				if(spectralIndex == 0 && m_bitHigh == 0)
+				{
+					oldValue+=pChannel->m_lastDCValue;
+					pChannel->m_lastDCValue=oldValue;
+				}
+				pBuffer[JpegDeZigZagOrder[spectralIndex]]=oldValue;
+			}
+		} // ----- End of first DC or AC pass or refine AC pass but not EOB run
+
+		// EOB run found
+		/////////////////////////////////////////////////////////////////
+		else
+		{
+			tempEobRun = pStream->readBits(runLength);
+			m_eobRun+=(imbxUint32)1<<runLength;
+			m_eobRun+=tempEobRun;
+			spectralIndex--;
+		}
 	}
 
     //
     // EOB run processor
     //
     /////////////////////////////////////////////////////////////////
-    if(m_eobRun)
+	if(m_eobRun != 0)
         m_eobRun--;
 
 	PUNTOEXE_FUNCTION_END();
@@ -2168,9 +2161,14 @@ inline void jpegCodec::writeBlock(streamWriter* pStream, imbxInt32* pBuffer, jpe
 	// Scan the specified spectral values
 	/////////////////////////////////////////////////////////////////
 	imbxUint8 zeroRun = 0;
+		imbxInt32 value;
+		const imbxUint32* pJpegDeZigZagOrder(&(JpegDeZigZagOrder[m_spectralIndexStart]));
+		huffmanTable* pActiveHuffmanTable;
+
 	for(imbxUint32 spectralIndex=m_spectralIndexStart; spectralIndex <= m_spectralIndexEnd; ++spectralIndex)
 	{
-		imbxInt32 value = pBuffer[JpegDeZigZagOrder[spectralIndex]];
+		value = pBuffer[*(pJpegDeZigZagOrder++)];
+
 		if(value > 32767)
 		{
 			value = 32767;
@@ -2179,7 +2177,6 @@ inline void jpegCodec::writeBlock(streamWriter* pStream, imbxInt32* pBuffer, jpe
 		{
 			value = -32767;
 		}
-		huffmanTable* pActiveHuffmanTable;
 		if(spectralIndex == 0)
 		{
 			value -= pChannel->m_lastDCValue;
@@ -2471,21 +2468,26 @@ void jpegCodec::IDCT(imbxInt32* pIOMatrix, long long* pScaleFactors)
 	//
 	/////////////////////////////////////////////////////////////////
 	imbxInt32* pMatrix(pIOMatrix);
+
+	imbxInt32* pCheckMatrix;
+	imbxInt32 checkZero;
+
 	long long* pTempMatrix(m_idctTempMatrix);
 	for(int scanBlockY(8); scanBlockY != 0; --scanBlockY)
 	{
+		pCheckMatrix = pIOMatrix;
+		checkZero = *(++pCheckMatrix);
+		checkZero |= *(++pCheckMatrix);
+		checkZero |= *(++pCheckMatrix);
+		checkZero |= *(++pCheckMatrix);
+		checkZero |= *(++pCheckMatrix);
+		checkZero |= *(++pCheckMatrix);
+		checkZero |= *(++pCheckMatrix);
+
 		// Check for AC coefficients value.
 		// If they are all NULL, then apply the DC value to all
 		/////////////////////////////////////////////////////////////////
-		if(
-			(*(pMatrix+1) |
-			 *(pMatrix+2) |
-			 *(pMatrix+3) |
-			 *(pMatrix+4) |
-			 *(pMatrix+5) |
-			 *(pMatrix+6) |
-			 *(pMatrix+7)) ==0)
-
+		if(checkZero == 0)
 		{
 		    tmp0 = (long long)(*pMatrix) * (*pScaleFactors);
 			*(pTempMatrix++) = tmp0;
@@ -2501,23 +2503,14 @@ void jpegCodec::IDCT(imbxInt32* pIOMatrix, long long* pScaleFactors)
 			continue;
 		}
 
-		tmp0 = (long long)*(pMatrix++);
-		tmp4 = (long long)*(pMatrix++);
-		tmp1 = (long long)*(pMatrix++);
-		tmp5 = (long long)*(pMatrix++);
-		tmp2 = (long long)*(pMatrix++);
-		tmp6 = (long long)*(pMatrix++);
-		tmp3 = (long long)*(pMatrix++);
-		tmp7 = (long long)*(pMatrix++);
-
-		tmp0 *= *(pScaleFactors++);
-		tmp4 *= *(pScaleFactors++);
-		tmp1 *= *(pScaleFactors++);
-		tmp5 *= *(pScaleFactors++);
-		tmp2 *= *(pScaleFactors++);
-		tmp6 *= *(pScaleFactors++);
-		tmp3 *= *(pScaleFactors++);
-		tmp7 *= *(pScaleFactors++);
+		tmp0 = ((long long)*(pMatrix++)) * (*(pScaleFactors++));
+		tmp4 = ((long long)*(pMatrix++)) * (*(pScaleFactors++));
+		tmp1 = ((long long)*(pMatrix++)) * (*(pScaleFactors++));
+		tmp5 = ((long long)*(pMatrix++)) * (*(pScaleFactors++));
+		tmp2 = ((long long)*(pMatrix++)) * (*(pScaleFactors++));
+		tmp6 = ((long long)*(pMatrix++)) * (*(pScaleFactors++));
+		tmp3 = ((long long)*(pMatrix++)) * (*(pScaleFactors++));
+		tmp7 = ((long long)*(pMatrix++)) * (*(pScaleFactors++));
 
 		// Phase 3
 		tmp10 = tmp0 + tmp2;
@@ -2541,16 +2534,12 @@ void jpegCodec::IDCT(imbxInt32* pIOMatrix, long long* pScaleFactors)
 
 		// Phase 5
 		tmp7 = z11 + z13;
-		tmp11 = ((z11 - z13) * multiplier_1_414213562f + zero_point_five) >> JPEG_DECOMPRESSION_BITS_PRECISION; // 2*c4
-
 		z5 = ((z10 + z12) * multiplier_1_847759065f + zero_point_five) >> JPEG_DECOMPRESSION_BITS_PRECISION;    // 2*c2
-		tmp10 = ((z12 * multiplier_1_0823922f + zero_point_five) >> JPEG_DECOMPRESSION_BITS_PRECISION) - z5;    // 2*(c2-c6)
-		tmp12 = z5 - ((z10 *multiplier_2_61312593f + zero_point_five) >> JPEG_DECOMPRESSION_BITS_PRECISION);      // -2*(c2+c6)
 
 		// Phase 2
-		tmp6 = tmp12 - tmp7;
-		tmp5 = tmp11 - tmp6;
-		tmp4 = tmp10 + tmp5;
+		tmp6 = z5 - ((z10 *multiplier_2_61312593f + zero_point_five) >> JPEG_DECOMPRESSION_BITS_PRECISION) - tmp7;
+		tmp5 = (((z11 - z13) * multiplier_1_414213562f + zero_point_five) >> JPEG_DECOMPRESSION_BITS_PRECISION) - tmp6;
+		tmp4 = ((z12 * multiplier_1_0823922f + zero_point_five) >> JPEG_DECOMPRESSION_BITS_PRECISION) - z5 + tmp5;
 
 		*(pTempMatrix++) = tmp0 + tmp7;
 		*(pTempMatrix++) = tmp1 + tmp6;

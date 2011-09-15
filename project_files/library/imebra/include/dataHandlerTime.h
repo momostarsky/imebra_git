@@ -75,6 +75,8 @@ public:
 	///  - SS is the second
 	///  - FFFFFF is the fraction of seconds in nanoseconds
 	///
+	/// @param index the zero based index of the time value to
+	///               read
 	/// @return a string representing the time stored in the
 	///          buffer
 	///
@@ -90,6 +92,8 @@ public:
 	///  - SS is the second
 	///  - FFFFFF is the fraction of seconds in nanoseconds
 	///
+	/// @param index the zero based index of the time value to
+	///               modify
 	/// @param value the string representing the time to be set
 	///
 	///////////////////////////////////////////////////////////

@@ -130,7 +130,7 @@ void stream::openFile(const std::wstring& fileName, const int mode)
 
 	strMode += L"b";
 
-#ifdef WIN32
+#if defined(PUNTOEXE_WINDOWS)
 	m_openFile = ::_wfopen(fileName.c_str(), strMode.c_str());
 #else
 	// Convert the filename to UTF8
