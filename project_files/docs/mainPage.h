@@ -100,6 +100,14 @@ The changes that affect the interface of the transform classes (and therefore ne
 
 \section changeLog Changes log for $imebraVersion$
 
+- Updated to compile with Visual Studio on x64 arch
+- Improved performances of IDCT
+- Improved performance of Jpeg decoder
+- Improved the performances of the huffman decoder
+
+
+\section version_2011_06_29_23_24_13 changeLog Changes for version 2011-06-29_23-24-13
+
 - Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/84">#84</a> (VOILUT returns always a MONOCHROME2 image)
 - Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/85">#85</a> (GetImage() fails when a file contains a single frame splitted across several buffers and the offset table is empty)
 - Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/86">#86</a> (The automatic build doesn't set the product name in the source files)
