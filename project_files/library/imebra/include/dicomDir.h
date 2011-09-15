@@ -29,7 +29,7 @@ namespace imebra
 class dataSet; // Used in this class
 class dicomDir;
 
-/// \addtogroup group_dicomdir
+/// \addtogroup group_dicomdir Dicomdir
 ///
 /// @{
 

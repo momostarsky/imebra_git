@@ -200,6 +200,10 @@ Imebra is available at http://imebra.com
 		<exec dir="${build_dir}" executable="doxygen" failonerror="true">
 			<arg value="DoxyfileHTML"/>
 		</exec>
+    		<replace dir="${build_dir}/generated_doc/html" token="Related Pages" value="User manual"/>
+		<replace dir="${build_dir}/generated_doc/html" token="Main Page" value="Introduction"/>
+		<replace dir="${build_dir}/generated_doc/html" token="Related&amp;#160;Pages" value="User&amp;#160;manual"/>
+		<replace dir="${build_dir}/generated_doc/html" token="Main&amp;#160;Page" value="Introduction"/>
 		<copy todir="${build_dir_html_doc}">
 			<fileset dir="${build_dir}/generated_doc/html" />
 		</copy>

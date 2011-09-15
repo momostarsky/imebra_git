@@ -26,7 +26,7 @@ namespace puntoexe
 namespace imebra
 {
 
-/// \addtogroup group_dictionary
+/// \addtogroup group_dictionary Dicom dictionary
 ///
 /// @{
 
