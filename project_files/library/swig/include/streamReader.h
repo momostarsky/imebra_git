@@ -12,16 +12,16 @@ $fileHeader$
 
 #ifndef SWIG
 #include "../../base/include/streamReader.h"
-#include "baseStream_swig.h"
+#include "baseStream.h"
 #endif
 
-class imebraCodecFactory;
+class codecFactory;
 
-class imebraStreamReader
+class streamReader
 {
-	friend class imebraCodecFactory;
+	friend class codecFactory;
 public:
-	imebraStreamReader(const imebraBaseStream& stream, unsigned long virtualStart = 0, unsigned long virtualLength = 0);
+	streamReader(const baseStream& stream, unsigned long virtualStart = 0, unsigned long virtualLength = 0);
 
 #ifndef SWIG
 protected:

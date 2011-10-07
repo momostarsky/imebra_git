@@ -7,7 +7,7 @@ $fileHeader$
 
 */
 
-#include "../include/streamReader_swig.h"
+#include "../include/streamReader.h"
 
 imebraStreamReader::imebraStreamReader(const imebraBaseStream& stream, unsigned long virtualStart, unsigned long virtualLength): m_pReader(new puntoexe::streamReader(stream.m_pStream, virtualStart, virtualLength))
 {

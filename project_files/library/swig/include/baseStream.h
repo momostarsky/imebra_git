@@ -14,20 +14,21 @@ $fileHeader$
 #include "../../base/include/baseStream.h"
 #endif
 
-class imebraBaseStream
+class baseStream
 {
 #ifndef SWIG
-	friend class imebraStreamReader;
-	friend class imebraStreamWriter;
+	friend class streamReader;
+	friend class streamWriter;
 public:
-	imebraBaseStream(puntoexe::ptr<puntoexe::baseStream> pStream);
-	imebraBaseStream(const imebraBaseStream& right);
-	imebraBaseStream& operator=(const imebraBaseStream& right);
+	baseStream(puntoexe::ptr<puntoexe::baseStream> pStream);
+	baseStream(const baseStream& right);
+	baseStream& operator=(const baseStream& right);
 protected:
 	puntoexe::ptr<puntoexe::baseStream> m_pStream;
 #endif
+
 public:
-	imebraBaseStream();
+	baseStream();
 };
 
 

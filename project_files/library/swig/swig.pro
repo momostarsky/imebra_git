@@ -7,11 +7,6 @@ OTHER_FILES += \
     include/swig.i
 
 HEADERS += \
-    include/stream_swig.h \
-    include/streamReader_swig.h \
-    include/dataSet_swig.h \
-    include/codecFactory_swig.h \
-    include/baseStream_swig.h \
     ../imebra/include/YBRPARTIALToRGB.h \
     ../imebra/include/YBRFULLToRGB.h \
     ../imebra/include/YBRFULLToMONOCHROME2.h \
@@ -85,15 +80,15 @@ HEADERS += \
     ../base/include/configuration.h \
     ../base/include/charsetConversion.h \
     ../base/include/baseStream.h \
-    ../base/include/baseObject.h
+    ../base/include/baseObject.h \
+    include/baseStream.h \
+    include/codecFactory.h \
+    include/dataSet.h \
+    include/stream.h \
+    include/streamReader.h
 
 SOURCES += \
     include/swig_wrap.cxx \
-    src/stream_swig.cpp \
-    src/streamReader_swig.cpp \
-    src/dataSet_swig.cpp \
-    src/codecFactory_swig.cpp \
-    src/baseStream_swig.cpp \
     ../imebra/src/YBRPARTIALToRGB.cpp \
     ../imebra/src/YBRFULLToRGB.cpp \
     ../imebra/src/YBRFULLToMONOCHROME2.cpp \
@@ -160,4 +155,9 @@ SOURCES += \
     ../base/src/criticalSection.cpp \
     ../base/src/charsetConversion.cpp \
     ../base/src/baseStream.cpp \
-    ../base/src/baseObject.cpp
+    ../base/src/baseObject.cpp \
+    src/baseStream.cpp \
+    src/codecFactory.cpp \
+    src/dataSet.cpp \
+    src/stream.cpp \
+    src/streamReader.cpp

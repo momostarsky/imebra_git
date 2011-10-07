@@ -14,14 +14,14 @@ $fileHeader$
 #include "../../base/include/stream.h"
 #endif
 
-#include "../include/baseStream_swig.h"
+#include "../include/baseStream.h"
 
-class imebraStream : public imebraBaseStream
+class stream : public baseStream
 {
 public:
-	imebraStream();
-	imebraStream(const imebraStream& right);
-	imebraStream& operator=(const imebraStream& right);
+	stream();
+	stream(const stream& right);
+	stream& operator=(const stream& right);
 
 	void openFile(const std::wstring& name, const int mode);
 

@@ -21,14 +21,14 @@ class imebraDataSet
 public:
 	// Costructor
 	///////////////////////////////////////////////////////////
-	imebraDataSet();
+	dataSet();
 
-	imebraDataSet(const imebraDataSet& right);
+	dataSet(const dataSet& right);
 
-	imebraDataSet& operator=(const imebraDataSet& right);
+	dataSet& operator=(const dataSet& right);
 
 #ifndef SWIG
-	imebraDataSet(puntoexe::ptr<puntoexe::imebra::dataSet> pDataSet);
+	dataSet(puntoexe::ptr<puntoexe::imebra::dataSet> pDataSet);
 #endif
 /*
 	data getTag(unsigned int groupId, unsigned int order, unsigned int tagId, bool bCreate=false);
