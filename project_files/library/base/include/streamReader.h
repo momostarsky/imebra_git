@@ -366,6 +366,11 @@ private:
 	///////////////////////////////////////////////////////////
 	imbxUint32 fillDataBuffer();
 
+	/// \brief Read data from the file into the data buffer.
+	///
+	///////////////////////////////////////////////////////////
+	imbxUint32 fillDataBuffer(imbxUint8* pDestinationBuffer, imbxUint32 readLength);
+
 private:
 	imbxUint8 m_inBitsBuffer;
 	int       m_inBitsNum;
