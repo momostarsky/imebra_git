@@ -551,24 +551,24 @@ public:
 		const imbxInt32* pSourceColScan;
 		const imbxInt32* pSourceEndColScan;
 
-        if(destHeight < destEndRow)
-        {
-            destEndRow = destHeight;
-        }
-        if(destWidth < destEndCol)
-        {
-            destEndCol = destWidth;
-        }
+		if(destHeight < destEndRow)
+		{
+			destEndRow = destHeight;
+		}
+		if(destWidth < destEndCol)
+		{
+			destEndCol = destWidth;
+		}
 
-        imbxUint32 numColumns(destEndCol - destStartCol);
+		imbxUint32 numColumns(destEndCol - destStartCol);
 
-        imbxUint32 horizontalCopyOperations = numColumns / subsampleX;
-        imbxUint32 horizontalFinalCopyDest = numColumns - horizontalCopyOperations * subsampleX;
+		imbxUint32 horizontalCopyOperations = numColumns / subsampleX;
+		imbxUint32 horizontalFinalCopyDest = numColumns - horizontalCopyOperations * subsampleX;
 
-        dataHandlerType copyValue;
-        imbxInt32 scanDest;
+		dataHandlerType copyValue;
+		imbxInt32 scanDest;
 
-        imbxUint32 scanHorizontalFinalCopyDest;
+		imbxUint32 scanHorizontalFinalCopyDest;
 
 
 		for(imbxUint32 numYCopies(destEndRow - destStartRow); numYCopies != 0; --numYCopies)
