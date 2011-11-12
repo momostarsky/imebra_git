@@ -3604,7 +3604,7 @@ void tagDRI::writeTag(streamWriter* pStream, jpegCodec* pCodec)
 	/////////////////////////////////////////////////////////////////
 	imbxUint16 unitsPerRestartInterval=pCodec->m_mcuPerRestartInterval;
 	pStream->adjustEndian((imbxUint8*)&unitsPerRestartInterval, 2, streamController::highByteEndian);
-	pStream->write((imbxUint8*)unitsPerRestartInterval, 2);
+	pStream->write((imbxUint8*)&unitsPerRestartInterval, 2);
 
 	PUNTOEXE_FUNCTION_END();
 }
