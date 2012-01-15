@@ -11,9 +11,10 @@ $fileHeader$
 
 Copyright 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011 by Paolo Brandoli.
 
-The online version of this document can be found here: http://imebra.com/documentation/html/index.html
-
 Imebra is available for free under the \ref freebsd_license.
+
+You can download the latest version of imebra from http://imebra.com
+
 
 \section section_donation Donations
 

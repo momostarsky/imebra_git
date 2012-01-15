@@ -1785,36 +1785,36 @@ void dicomCodec::readPixel(
 					const imbxUint8 allocatedBits,
 					const imbxUint32 mask)
 {
-		if(allocatedBits == 8 || allocatedBits == 16 || allocatedBits == 32)
-        {
-            pSourceStream->read(pReadBuffer, numPixels * (allocatedBits >> 3));
-            if(allocatedBits == 8)
-            {
-                imbxUint8* pSource(pReadBuffer);
-                while(numPixels-- != 0)
-                {
-                    *pDest++ = (imbxUint32)(*pSource++) & mask;
-                }
-                return;
-            }
-            pSourceStream->adjustEndian(pReadBuffer, allocatedBits >> 3, streamController::lowByteEndian, numPixels);
-			if(allocatedBits == 16)
-			{
-				imbxUint16* pSource((imbxUint16*)(pReadBuffer));
-				while(numPixels-- != 0)
-				{
-					*pDest++ = (imbxUint32)(*pSource++) & mask;
-				}
-				return;
-			}
-			imbxUint32* pSource((imbxUint32*)(pReadBuffer));
+	if(allocatedBits == 8 || allocatedBits == 16 || allocatedBits == 32)
+	{
+		pSourceStream->read(pReadBuffer, numPixels * (allocatedBits >> 3));
+		if(allocatedBits == 8)
+		{
+			imbxUint8* pSource(pReadBuffer);
 			while(numPixels-- != 0)
 			{
-				*pDest++ = (*pSource++) & mask;
+				*pDest++ = (imbxUint32)(*pSource++) & mask;
 			}
 			return;
+		}
+		pSourceStream->adjustEndian(pReadBuffer, allocatedBits >> 3, streamController::lowByteEndian, numPixels);
+		if(allocatedBits == 16)
+		{
+			imbxUint16* pSource((imbxUint16*)(pReadBuffer));
+			while(numPixels-- != 0)
+			{
+				*pDest++ = (imbxUint32)(*pSource++) & mask;
+			}
+			return;
+		}
+		imbxUint32* pSource((imbxUint32*)(pReadBuffer));
+		while(numPixels-- != 0)
+		{
+			*pDest++ = (*pSource++) & mask;
+		}
+		return;
 
-        }
+	}
 
 
         while(numPixels-- != 0)

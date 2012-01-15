@@ -46,14 +46,34 @@ imbxUint32 streamReader::fillDataBuffer()
 {
 	PUNTOEXE_FUNCTION_START(L"streamReader::fillDataBuffer");
 
-	imbxUint32 currentPosition = position();
 	imbxUint32 readLength = (imbxUint32)(m_pDataBufferMaxEnd - m_pDataBufferStart);
+	imbxUint32 readBytes = fillDataBuffer(m_pDataBufferStart, readLength);
+	if(readBytes == 0)
+	{
+		m_pDataBufferCurrent = m_pDataBufferEnd = m_pDataBufferStart;
+		return 0;
+	}
+	m_pDataBufferEnd = m_pDataBufferStart + readBytes;
+	m_pDataBufferCurrent = m_pDataBufferStart;
+	return readBytes;
+
+	PUNTOEXE_FUNCTION_END();
+}
+
+
+///////////////////////////////////////////////////////////
+//
+// Read data from the stream into the specified buffer
+//
+///////////////////////////////////////////////////////////
+imbxUint32 streamReader::fillDataBuffer(imbxUint8* pDestinationBuffer, imbxUint32 readLength)
+{
+	imbxUint32 currentPosition = position();
 	if(m_virtualLength != 0)
 	{
 		if(currentPosition >= m_virtualLength)
 		{
 			m_dataBufferStreamPosition = m_virtualLength;
-			m_pDataBufferCurrent = m_pDataBufferEnd = m_pDataBufferStart;
 			return 0;
 		}
 		if(currentPosition + readLength > m_virtualLength)
@@ -61,14 +81,10 @@ imbxUint32 streamReader::fillDataBuffer()
 			readLength = m_virtualLength - currentPosition;
 		}
 	}
-	imbxUint32 readBytes = m_pControlledStream->read(currentPosition + m_virtualStart, m_pDataBufferStart, readLength);
 	m_dataBufferStreamPosition = currentPosition;
-	m_pDataBufferEnd = m_pDataBufferStart + readBytes;
-	m_pDataBufferCurrent = m_pDataBufferStart;
-	return readBytes;
-
-	PUNTOEXE_FUNCTION_END();
+	return m_pControlledStream->read(currentPosition + m_virtualStart, pDestinationBuffer, readLength);
 }
+
 
 
 ///////////////////////////////////////////////////////////
@@ -84,8 +100,18 @@ void streamReader::read(imbxUint8* pBuffer, imbxUint32 bufferLength)
 		///////////////////////////////////////////////////////////
 		if(m_pDataBufferCurrent == m_pDataBufferEnd)
 		{
-			// EOF?
-			///////////////////////////////////////////////////////////
+			if(bufferLength >= m_pDataBufferMaxEnd - m_pDataBufferStart)
+			{
+				// read the data directly into the destination buffer
+				///////////////////////////////////////////////////////////
+				if(fillDataBuffer(pBuffer, bufferLength) != bufferLength)
+				{
+					throw(streamExceptionEOF("Attempt to read past the end of the file"));
+				}
+				return;
+
+			}
+
 			if(fillDataBuffer() == 0)
 			{
 				throw(streamExceptionEOF("Attempt to read past the end of the file"));
@@ -133,7 +159,6 @@ void streamReader::seek(imbxInt32 newPosition, bool bCurrent /* =false */)
 	m_pDataBufferCurrent = m_pDataBufferEnd = m_pDataBufferStart;
 	m_dataBufferStreamPosition = finalPosition;
 
-	fillDataBuffer();
 }
 
 

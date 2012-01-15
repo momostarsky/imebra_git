@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<project name="Imebra" default="ZIP_GPL" basedir=".">
+<project name="Imebra" default="ZIP" basedir=".">
 
 	<!-- This is an ant build file" -->
 
@@ -48,10 +48,7 @@
 
 	<!-- Replace the version number and license info -->
 	<target name="replace_version" depends="create_build_dir">
-		<replace file="${build_dir}/DoxyfileCHM" token="1.0.0.1" value='"${fullVersionReadable}"'/>
 		<replace file="${build_dir}/DoxyfileHTML" token="1.0.0.1" value='"${fullVersionReadable}"'/>
-		<replace file="${build_dir}/DoxyfilePDF" token="1.0.0.1" value='"${fullVersionReadable}"'/>
-		<replace file="${build_dir}/DoxyfilePDFH" token="1.0.0.1" value='"${fullVersionReadable}"'/>
 		<replace dir="${build_dir}" includes="*.rc,*.h,*.cpp" token="1.0.0.1" value="${fullVersionReadable}" />
 		<replace dir="${build_dir}" includes="*.rc,*.h,*.cpp" token="&quot;1.0.0.1&quot;" value="&quot;${fullVersionReadable}&quot;" />
 		<replace dir="${build_dir}" includes="*.rc,*.h,*.cpp" token="L&quot;1.0.0.1&quot;" value="L&quot;${fullVersionReadable}&quot;" />
@@ -171,35 +168,15 @@ Imebra is available at http://imebra.com
 			<exec executable="make" failonerror="true" dir="${build_dir_changeTransferSyntax_32}" />
 	</target>
 
-	<!-- Build the PDF documentation -->
-	<target name="PDF" depends="run_test_cases" description="Build the PDF document">
-				<exec dir="${build_dir}" executable="doxygen" failonerror="true">
-			<arg value="DoxyfilePDF"/>
-		</exec>
-		<exec dir="${build_dir}/generated_doc/latex" executable="pdflatex">
-			<arg value="refman.tex"/>
-		</exec>
-		<exec dir="${build_dir}/generated_doc/latex" executable="makeindex">
-			<arg value="refman.idx"/>
-		</exec>
-		<exec dir="${build_dir}/generated_doc/latex" executable="pdflatex">
-			<arg value="refman.tex"/>
-		</exec>
-		<exec dir="${build_dir}/generated_doc/latex" executable="pdflatex">
-			<arg value="refman.tex"/>
-		</exec>
-		<exec dir="${build_dir}/generated_doc/latex" executable="pdflatex">
-			<arg value="refman.tex"/>
-		</exec>
-		<copy file="${build_dir}/generated_doc/latex/refman.pdf" tofile="${build_dir}/documentation/imebra.pdf" />
-	</target>
-
-
 	<!-- Build the HTML documentation -->
 	<target name="HTML" depends="run_test_cases" description="Build the HTML documents">
 		<exec dir="${build_dir}" executable="doxygen" failonerror="true">
 			<arg value="DoxyfileHTML"/>
 		</exec>
+    		<replace dir="${build_dir}/generated_doc/html" token="Related Pages" value="User manual"/>
+		<replace dir="${build_dir}/generated_doc/html" token="Main Page" value="Introduction"/>
+		<replace dir="${build_dir}/generated_doc/html" token="Related&amp;#160;Pages" value="User&amp;#160;manual"/>
+		<replace dir="${build_dir}/generated_doc/html" token="Main&amp;#160;Page" value="Introduction"/>
 		<copy todir="${build_dir_html_doc}">
 			<fileset dir="${build_dir}/generated_doc/html" />
 		</copy>
@@ -226,15 +203,14 @@ Imebra is available at http://imebra.com
 
 
 
-	<!-- Make the GPL build -->
-	<target name="make_distribution" depends="run_test_cases, HTML, PDF, zip_dicomdirItems, zip_dicom2jpeg, zip_changeTransferSyntax">
+	<!-- Build -->
+	<target name="make_distribution" depends="run_test_cases, HTML, zip_dicomdirItems, zip_dicom2jpeg, zip_changeTransferSyntax">
 		<property name="distribution" value="${build_dir}/distribution" />
 		<mkdir dir="${distribution}" />
 		<property name="librarySource" value="${distribution}/library" />
 		<mkdir dir="${librarySource}" />
 		<property name="documentation" value="${distribution}/documentation" />
 		<mkdir dir="${documentation}/html" />
-		<mkdir dir="${documentation}/pdf" />
 		<property name="examples" value="${distribution}/examples" />
 		<mkdir dir="${examples}/dicom2jpeg" />
 		<mkdir dir="${examples}/dicomdirItems" />
@@ -245,7 +221,6 @@ Imebra is available at http://imebra.com
 		<copy todir="${librarySource}">
 			<fileset dir="${build_dir}/library" />
 		</copy>
-		<copy file="${build_dir}/generated_doc/latex/refman.pdf" tofile="${documentation}/pdf/imebra.pdf" />
 		<copy todir="${documentation}/html">
 			<fileset dir="${build_dir}/generated_doc/html" />
 		</copy>
@@ -266,8 +241,8 @@ Imebra is available at http://imebra.com
 	</target>
 
 
-	<!-- Make a zip file and a gzip file of the GPL build -->
-	<target name="ZIP_GPL" depends="make_distribution" description ="Compress the build">
+	<!-- Make a zip file and a gzip file of the build -->
+	<target name="ZIP" depends="make_distribution" description ="Compress the build">
 		<zip basedir="${build_dir}/distribution" destfile="${builds}/imebra_${fileVersion}.zip" />
 	</target>
 

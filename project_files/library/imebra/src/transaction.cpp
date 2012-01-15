@@ -215,7 +215,7 @@ bool transactionsManager::addTransaction(thread::tThreadId threadId, transaction
 	// Retrieve the transactions manager and lock it
 	///////////////////////////////////////////////////////////
 	transactionsManager* pManager = getTransactionsManager();
-	lockObject(pManager->m_lockObject.get());
+	lockObject lockThis(pManager->m_lockObject.get());
 
 	// Push back the transaction and return true if this is
 	//  the first transaction in the stack
@@ -243,7 +243,7 @@ void transactionsManager::removeTransaction(thread::tThreadId threadId)
 	// Retrieve the transactions manager and lock it
 	///////////////////////////////////////////////////////////
 	transactionsManager* pManager = getTransactionsManager();
-	lockObject(pManager->m_lockObject.get());
+	lockObject lockThis(pManager->m_lockObject.get());
 
 	// Find the thread's transactions stack
 	///////////////////////////////////////////////////////////
@@ -283,7 +283,7 @@ void transactionsManager::addHandlerToTransaction(ptr<handlers::dataHandler> new
 	// Retrieve the transactions manager and lock it
 	///////////////////////////////////////////////////////////
 	transactionsManager* pManager = getTransactionsManager();
-	lockObject(pManager->m_lockObject.get());
+	lockObject lockThis(pManager->m_lockObject.get());
 
 	// Find the thread's transactions stack
 	///////////////////////////////////////////////////////////
