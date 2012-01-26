@@ -104,12 +104,17 @@ void streamReader::read(imbxUint8* pBuffer, imbxUint32 bufferLength)
 			{
 				// read the data directly into the destination buffer
 				///////////////////////////////////////////////////////////
-				if(fillDataBuffer(pBuffer, bufferLength) != bufferLength)
+				imbxUint32 readBytes(fillDataBuffer(pBuffer, bufferLength));
+
+				m_pDataBufferCurrent = m_pDataBufferEnd = m_pDataBufferStart;
+				m_dataBufferStreamPosition += readBytes;
+				pBuffer += readBytes;
+				bufferLength -= readBytes;
+				if(readBytes == 0)
 				{
 					throw(streamExceptionEOF("Attempt to read past the end of the file"));
 				}
-				return;
-
+				continue;
 			}
 
 			if(fillDataBuffer() == 0)
