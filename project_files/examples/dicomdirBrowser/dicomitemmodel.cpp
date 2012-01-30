@@ -20,6 +20,7 @@ DicomItemModel::DicomItemModel(QObject *parent) :
 
 int DicomItemModel::columnCount ( const QModelIndex & parent) const
 {
+	return 1;
 	ptr<imebra::directoryRecord> pRecord( GetModelIndexRecord(parent) );
 
 	ptr<imebra::directoryRecord> pFirstChild;
@@ -59,13 +60,68 @@ QVariant DicomItemModel::data ( const QModelIndex & index, int role ) const
 		return QVariant();
 	}
 
+	ptr<imebra::dataSet> pDataSet( pRecord->getRecordDataSet() );
+
 	imbxUint16 group(0), tag(0);
 	imbxUint32 bufferId(0);
+
+	QString returnValue;
+	imbxInt32 year(0), month(0), day(0), hour(0), minutes(0), seconds(0), nanoseconds(0), offsetHours(0), offsetMinutes(0);
 	try
 	{
-		if( !GetColumnTag(pRecord->getType(), index.column(), &group, &tag, &bufferId) )
+		for(int column(0); GetColumnTag(pRecord->getType(), column, &group, &tag, &bufferId); ++column )
 		{
-			return QVariant();
+			ptr<imebra::handlers::dataHandler> pHandler(pDataSet->getDataHandler(group, 0, tag, bufferId, false));
+			if(pHandler == 0)
+			{
+				break;
+			}
+
+			switch(role)
+			{
+			case Qt::DisplayRole:
+			{
+				std::string dataType( pHandler->getDataType() );
+
+				// Handle date and time
+				if(dataType == "DA")
+				{
+					pHandler->getDate(0, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
+					QDate returnDate(year, month, day);
+					returnValue += returnDate.toString();
+				}
+				else if(dataType == "DT")
+				{
+					pHandler->getDate(0, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
+					QDateTime returnDateTime(QDate(year, month, day), QTime(hour, minutes, seconds, nanoseconds / 1000), Qt::LocalTime);
+					returnValue += returnDateTime.toString();
+				}
+				else if(dataType == "TM")
+				{
+					pHandler->getDate(0, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
+					QTime returnTime(hour, minutes, seconds, nanoseconds / 1000);
+					returnValue += returnTime.toString();
+				}
+				else
+				{
+					returnValue += QString::fromStdWString(pHandler->getUnicodeString(0));
+				}
+
+				break;
+			}
+
+			case Qt::WhatsThisRole:
+			case Qt::ToolTipRole:
+				returnValue += QString::fromStdWString(imebra::dicomDictionary::getDicomDictionary()->getTagName(group, tag));
+				break;
+			default:
+				return QVariant();
+
+			}
+			if(!returnValue.isEmpty() && returnValue.trimmed().right(1) != "/")
+			{
+				returnValue.push_back(" / ");
+			}
 		}
 	}
 	catch(const imebra::dicomDirUnknownDirectoryRecordType& )
@@ -73,72 +129,13 @@ QVariant DicomItemModel::data ( const QModelIndex & index, int role ) const
 		return QVariant();
 	}
 
-	switch(role)
+	QString trimmedValue(returnValue.trimmed());
+	if(trimmedValue.right(1) == "/")
 	{
-	case Qt::DisplayRole:
-	{
-		ptr<imebra::dataSet> pDataSet( pRecord->getRecordDataSet() );
-		ptr<imebra::handlers::dataHandler> pHandler(pDataSet->getDataHandler(group, 0, tag, bufferId, false));
-		if(pHandler == 0)
-		{
-			return QVariant();
-		}
-		std::string dataType( pHandler->getDataType() );
-
-
-		// Handle date and time
-		if(dataType == "DA")
-		{
-			imbxInt32 year(0), month(0), day(0), hour(0), minutes(0), seconds(0), nanoseconds(0), offsetHours(0), offsetMinutes(0);
-			pHandler->getDate(0, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
-			QDate returnDate(year, month, day);
-			return QVariant(returnDate);
-		}
-
-		if(dataType == "DT")
-		{
-			imbxInt32 year(0), month(0), day(0), hour(0), minutes(0), seconds(0), nanoseconds(0), offsetHours(0), offsetMinutes(0);
-			pHandler->getDate(0, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
-			QDateTime returnDateTime(QDate(year, month, day), QTime(hour, minutes, seconds, nanoseconds / 1000), Qt::LocalTime);
-			return QVariant(returnDateTime);
-		}
-
-		if(dataType == "TM")
-		{
-			imbxInt32 year(0), month(0), day(0), hour(0), minutes(0), seconds(0), nanoseconds(0), offsetHours(0), offsetMinutes(0);
-			pHandler->getDate(0, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
-			QTime returnTime(hour, minutes, seconds, nanoseconds / 1000);
-			return QVariant(returnTime);
-		}
-
-		// Handle double
-		if(dataType == "FL" || dataType == "FD" || dataType == "DS")
-		{
-			return QVariant(pHandler->getDouble(0));
-		}
-
-		// Handle integers
-		if(dataType == "IS" || dataType == "SL" || dataType == "SS")
-		{
-			return QVariant(pHandler->getSignedLong(0));
-		}
-		if(dataType == "UL" || dataType == "US" )
-		{
-			return QVariant(pHandler->getUnsignedLong(0));
-		}
-
-		return QVariant(QString::fromStdWString(pHandler->getUnicodeString(0)));
-
+		trimmedValue.resize(trimmedValue.size() - 1);
 	}
 
-	case Qt::WhatsThisRole:
-	case Qt::ToolTipRole:
-		return QVariant(QString::fromStdWString(imebra::dicomDictionary::getDicomDictionary()->getTagName(group, tag)));
-
-	default:
-		return QVariant();
-	}
-
+	return trimmedValue.trimmed();
 }
 
 QModelIndex	DicomItemModel::index ( int row, int column, const QModelIndex & parent ) const
@@ -227,8 +224,8 @@ bool DicomItemModel::GetColumnTag(imebra::directoryRecord::tDirectoryRecordType 
 {
 	static const imbxUint16 tags[]={
 		(imbxUint16)imebra::directoryRecord::patient, 0x0010, 0x0010, 0x0000, 0x0,
-		(imbxUint16)imebra::directoryRecord::study,   0x0008, 0x0020, 0x0000, 0x0008, 0x0030, 0x0000, 0x0008, 0x1030, 0x0000, 0x0020, 0x0010, 0x0000, 0x0008, 0x0050, 0x0000, 0x0,
-		(imbxUint16)imebra::directoryRecord::series,  0x0008, 0x0060, 0x0000, 0x0020, 0x0011, 0x0000, 0x0,
+		(imbxUint16)imebra::directoryRecord::study,   0x0008, 0x0020, 0x0000, 0x0008, 0x0030, 0x0000, 0x0008, 0x1030, 0x0000, 0x0,
+		(imbxUint16)imebra::directoryRecord::series,  0x0008, 0x0060, 0x0000, 0x0020, 0x000e, 0x0000, 0x0020, 0x0011, 0x0000, 0x0,
 		(imbxUint16)imebra::directoryRecord::image,   0x0020, 0x0013, 0x0000, 0x0,
 		(imbxUint16)imebra::directoryRecord::rt_dose, 0x0020, 0x0013, 0x0000, 0x3004, 0x000a, 0x0000, 0x3004, 0x0006, 0x0000, 0x0,
 		(imbxUint16)imebra::directoryRecord::rt_structure_set, 0x0020, 0x0013, 0x0000, 0x3006, 0x0002, 0x0000, 0x3006, 0x0008, 0x0000, 0x3006, 0x0009, 0x0000, 0x0,
@@ -286,5 +283,154 @@ void DicomItemModel::load()
 	{
 		load(fileName);
 	}
+}
+
+
+TagsItemModel::TagsItemModel(QObject* pParent): QAbstractTableModel(pParent), m_cols(0)
+{
+}
+
+int TagsItemModel::columnCount ( const QModelIndex &  parent /* = QModelIndex() */) const
+{
+	if(parent.isValid())
+	{
+		return 0;
+	}
+	return m_cols;
+}
+
+QVariant TagsItemModel::data ( const QModelIndex & index, int role /* = Qt::DisplayRole */ ) const
+{
+	if(!index.isValid())
+	{
+		return QVariant();
+	}
+
+	// Find the group and tag id
+	imbxUint32 groupAndTagId(0);
+	;
+	int row(index.row());
+	for(tValues::const_iterator scanIds(m_values.begin()); scanIds != m_values.end(); ++scanIds, --row)
+	{
+		if(row != 0)
+		{
+			continue;
+		}
+
+		groupAndTagId = scanIds->first;
+		if(groupAndTagId == 0)
+		{
+			return QVariant();
+		}
+
+		imbxUint16 group( (imbxUint16)(groupAndTagId >> 16) );
+		imbxUint16 tag( (imbxUint16)(groupAndTagId & 0x0000ffff));
+
+
+		switch(role)
+		{
+		case Qt::DisplayRole:
+			return QVariant();
+
+		case Qt::WhatsThisRole:
+		case Qt::ToolTipRole:
+			return QVariant( QString::fromStdWString(imebra::dicomDictionary::getDicomDictionary()->getTagName(group, tag)) );
+			break;
+		default:
+			return QVariant();
+
+		}
+	}
+
+	return QVariant();
+
+
+}
+
+
+int	TagsItemModel::rowCount ( const QModelIndex & parent /* = QModelIndex() */) const
+{
+	if(parent.isValid())
+	{
+		return 0;
+	}
+	return m_values.size();
+}
+
+void TagsItemModel::setDataSet(ptr<imebra::dataSet> pDataSet)
+{
+	m_pDataSet = pDataSet;
+
+	m_cols = 0;
+	m_values.clear();
+	if(m_pDataSet != 0)
+	{
+		ptr<imebra::dataCollectionIterator<imebra::dataGroup> > pGroupIterator(m_pDataSet->getDataIterator());
+
+		imbxInt32 year(0), month(0), day(0), hour(0), minutes(0), seconds(0), nanoseconds(0), offsetHours(0), offsetMinutes(0);
+
+		for(pGroupIterator->reset(); pGroupIterator->isValid(); pGroupIterator->incIterator())
+		{
+			ptr<imebra::dataGroup> pGroup(pGroupIterator->getData());
+			ptr<imebra::dataCollectionIterator<imebra::data> > pTagIterator(pGroup->getDataIterator());
+			for(pTagIterator->reset(); pTagIterator->isValid(); pTagIterator->incIterator())
+			{
+				if(pTagIterator->getId() == 0)
+				{
+					continue;
+				}
+				ptr<imebra::data> pTag(pTagIterator->getData());
+				ptr<imebra::handlers::dataHandler> pHandler(pTag->getDataHandler(0, false, "OB"));
+
+				std::string dataType(pHandler->getDataType());
+
+				QString value;
+
+				for(imbxUint32 scanTag(0); pHandler->pointerIsValid(scanTag); ++scanTag)
+				{
+
+					// Handle date and time
+					if(dataType == "DA")
+					{
+						pHandler->getDate(scanTag, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
+						QDate returnDate(year, month, day);
+						value = returnDate.toString();
+					}
+					else if(dataType == "DT")
+					{
+						pHandler->getDate(scanTag, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
+						QDateTime returnDateTime(QDate(year, month, day), QTime(hour, minutes, seconds, nanoseconds / 1000), Qt::LocalTime);
+						value = returnDateTime.toString();
+					}
+					else if(dataType == "TM")
+					{
+						pHandler->getDate(scanTag, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
+						QTime returnTime(hour, minutes, seconds, nanoseconds / 1000);
+						value = returnTime.toString();
+					}
+					else
+					{
+						value = QString::fromStdWString(pHandler->getUnicodeString(scanTag));
+					}
+
+					if(scanTag >= m_cols)
+					{
+						m_cols = scanTag + 1;
+					}
+
+					m_values[( ((imbxUint32)pGroupIterator->getId()) << 16) | pTagIterator->getId()].push_back(value);
+				}
+
+			}
+		}
+
+	}
+
+	reset();
+	if(m_cols > 0 && m_values.size() > 0)
+	{
+		dataChanged(index(0, 0), index(m_values.size() - 1, m_cols - 1));
+	}
+
 }
 

@@ -6,6 +6,14 @@
 
 using namespace puntoexe;
 
+
+/// \brief This class contains the model for the Dicom
+///         directory.
+///
+/// It is connected to one or more views that display
+///  the directory's records.
+///
+///////////////////////////////////////////////////////////
 class DicomItemModel : public QAbstractItemModel
 {
     Q_OBJECT
@@ -38,7 +46,31 @@ private:
 
 	typedef std::map<void*, QModelIndex > tParents;
 	mutable tParents m_parents;
+};
+
+
+class TagsItemModel: public QAbstractTableModel
+{
+	Q_OBJECT
+public:
+	TagsItemModel(QObject* pParent = 0);
+	virtual int columnCount ( const QModelIndex & parent = QModelIndex() ) const;
+	virtual QVariant	data ( const QModelIndex & index, int role = Qt::DisplayRole ) const;
+	virtual int	rowCount ( const QModelIndex & parent = QModelIndex() ) const;
+
+public slots:
+	void setDataSet(ptr<imebra::dataSet> pDataSet);
+
+private:
+	ptr<imebra::dataSet> m_pDataSet;
+
+	typedef std::list<QVariant> tTagValues;
+	typedef std::map<imbxUint32, tTagValues> tValues;
+	tValues m_values;
+
+	int m_cols;
 
 };
+
 
 #endif // DICOMITEMMODEL_H
