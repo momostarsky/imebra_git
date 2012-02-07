@@ -570,6 +570,8 @@ public:
 
 		imbxUint32 scanHorizontalFinalCopyDest;
 
+		imbxUint32 destRowScanIncrease(destWidth * destNumChannels);
+
 
 		for(imbxUint32 numYCopies(destEndRow - destStartRow); numYCopies != 0; --numYCopies)
 		{
@@ -605,7 +607,7 @@ public:
 
 			}
 
-			pDestRowScan += destWidth * destNumChannels;
+			pDestRowScan += destRowScanIncrease;
 			if(--replicateYCount == 0)
 			{
 				replicateYCount = sourceReplicateY;
