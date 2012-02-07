@@ -164,8 +164,6 @@ public:
 			return returnValue;
 		}
 
-		PUNTOEXE_FUNCTION_START(L"streamReader::readBits");
-
 		// Fill a local variable with the read bits
 		///////////////////////////////////////////////////////////
 		imbxUint32 returnValue(0);
@@ -195,8 +193,6 @@ public:
 			bitsNum -= 8;
 			returnValue |= ((imbxUint32)readByte()) << bitsNum;
 		}
-
-		PUNTOEXE_FUNCTION_END();
 	}
 
 	/// \brief Read one bit from the stream.
