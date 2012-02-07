@@ -2467,14 +2467,13 @@ void jpegCodec::IDCT(imbxInt32* pIOMatrix, long long* pScaleFactors)
 	//
 	/////////////////////////////////////////////////////////////////
 	imbxInt32* pMatrix(pIOMatrix);
+	imbxInt32* pCheckMatrix(pIOMatrix);
 
-	imbxInt32* pCheckMatrix;
 	imbxInt32 checkZero;
-
 	long long* pTempMatrix(m_idctTempMatrix);
+
 	for(int scanBlockY(8); scanBlockY != 0; --scanBlockY)
 	{
-		pCheckMatrix = pIOMatrix;
 		checkZero = *(++pCheckMatrix);
 		checkZero |= *(++pCheckMatrix);
 		checkZero |= *(++pCheckMatrix);
@@ -2482,6 +2481,7 @@ void jpegCodec::IDCT(imbxInt32* pIOMatrix, long long* pScaleFactors)
 		checkZero |= *(++pCheckMatrix);
 		checkZero |= *(++pCheckMatrix);
 		checkZero |= *(++pCheckMatrix);
+		++pCheckMatrix; // Point pCheckMatrix to the next row
 
 		// Check for AC coefficients value.
 		// If they are all NULL, then apply the DC value to all
@@ -2497,19 +2497,19 @@ void jpegCodec::IDCT(imbxInt32* pIOMatrix, long long* pScaleFactors)
 			*(pTempMatrix++) = tmp0;
 			*(pTempMatrix++) = tmp0;
 			*(pTempMatrix++) = tmp0;
-			pMatrix +=8 ;
+			pMatrix = pCheckMatrix;
 			pScaleFactors += 8;
 			continue;
 		}
 
-		tmp0 = ((long long)*(pMatrix++)) * (*(pScaleFactors++));
-		tmp4 = ((long long)*(pMatrix++)) * (*(pScaleFactors++));
-		tmp1 = ((long long)*(pMatrix++)) * (*(pScaleFactors++));
-		tmp5 = ((long long)*(pMatrix++)) * (*(pScaleFactors++));
-		tmp2 = ((long long)*(pMatrix++)) * (*(pScaleFactors++));
-		tmp6 = ((long long)*(pMatrix++)) * (*(pScaleFactors++));
-		tmp3 = ((long long)*(pMatrix++)) * (*(pScaleFactors++));
-		tmp7 = ((long long)*(pMatrix++)) * (*(pScaleFactors++));
+		tmp0 = (long long)*pMatrix++ * (*pScaleFactors++);
+		tmp4 = (long long)*pMatrix++ * (*pScaleFactors++);
+		tmp1 = (long long)*pMatrix++ * (*pScaleFactors++);
+		tmp5 = (long long)*pMatrix++ * (*pScaleFactors++);
+		tmp2 = (long long)*pMatrix++ * (*pScaleFactors++);
+		tmp6 = (long long)*pMatrix++ * (*pScaleFactors++);
+		tmp3 = (long long)*pMatrix++ * (*pScaleFactors++);
+		tmp7 = (long long)*pMatrix++ * (*pScaleFactors++);
 
 		// Phase 3
 		tmp10 = tmp0 + tmp2;
