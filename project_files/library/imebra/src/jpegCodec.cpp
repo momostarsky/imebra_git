@@ -3,7 +3,7 @@ $fileHeader$
 */
 
 /*! \file jpegCodec.cpp
-    \brief Implementation of the class jpegCodec.
+	\brief Implementation of the class jpegCodec.
 
 */
 
@@ -630,8 +630,8 @@ void jpegCodec::resetInternal(bool bCompression, quality compQuality)
 					m_quantizationTable[resetQT][tableIndex++] = quant;
 					continue;
 				}
-                                m_quantizationTable[resetQT][tableIndex] = pSourceTable[tableIndex];
-                                ++tableIndex;
+								m_quantizationTable[resetQT][tableIndex] = pSourceTable[tableIndex];
+								++tableIndex;
 			}
 		}
 		recalculateQuantizationTables(resetQT);
@@ -1162,7 +1162,7 @@ ptr<image> jpegCodec::getImage(ptr<dataSet> sourceDataSet, ptr<streamReader> pSt
 
 	try
 	{
-	    pSourceStream->read(jpegSignature, 2);
+		pSourceStream->read(jpegSignature, 2);
 	}
 	catch(streamExceptionEOF&)
 	{
@@ -1207,36 +1207,36 @@ ptr<image> jpegCodec::getImage(ptr<dataSet> sourceDataSet, ptr<streamReader> pSt
 		}
 
 		if(nextMcuStop <= m_mcuProcessed)
-                {
-                    
-
-                    // Look for a tag. Skip all the FF bytes
-                    imbxUint8 tagId(0xff);
-                    pSourceStream->read(&tagId, 1);
-                    if(tagId != 0xff)
-                    {
-                        continue;
-                    }
-
-                    while(tagId == 0xff)
-                    {
-                        pSourceStream->read(&tagId, 1);
-                    }
+				{
 
 
-                    // An entry has been found. Process it
-                    ///////////////////////////////////////////////////////////
-                    ptr<jpeg::tag> pTag;
-                    if(m_tagsMap.find(tagId)!=m_tagsMap.end())
-                            pTag=m_tagsMap[tagId];
-                    else
-                            pTag=m_tagsMap[0xff];
+					// Look for a tag. Skip all the FF bytes
+					imbxUint8 tagId(0xff);
+					pSourceStream->read(&tagId, 1);
+					if(tagId != 0xff)
+					{
+						continue;
+					}
 
-                    pTag->readTag(pSourceStream, this, tagId);
-                    continue;
-                }
+					while(tagId == 0xff)
+					{
+						pSourceStream->read(&tagId, 1);
+					}
 
-                jpeg::jpegChannel* pChannel; // Used in the loops
+
+					// An entry has been found. Process it
+					///////////////////////////////////////////////////////////
+					ptr<jpeg::tag> pTag;
+					if(m_tagsMap.find(tagId)!=m_tagsMap.end())
+							pTag=m_tagsMap[tagId];
+					else
+							pTag=m_tagsMap[0xff];
+
+					pTag->readTag(pSourceStream, this, tagId);
+					continue;
+				}
+
+				jpeg::jpegChannel* pChannel; // Used in the loops
 		while(m_mcuProcessed < nextMcuStop && !pSourceStream->endReached())
 		{
 			// Read an MCU
@@ -1257,8 +1257,8 @@ ptr<image> jpegCodec::getImage(ptr<dataSet> sourceDataSet, ptr<streamReader> pSt
 						scanBlock != pChannel->m_blockMcuXY;
 						++scanBlock)
 					{
-                                                amplitudeLength = pChannel->m_pActiveHuffmanTableDC->readHuffmanCode(pSourceStream);
-                                                if(amplitudeLength)
+												amplitudeLength = pChannel->m_pActiveHuffmanTableDC->readHuffmanCode(pSourceStream);
+												if(amplitudeLength)
 						{
 							amplitude = pSourceStream->readBits(amplitudeLength);
 							if(amplitude < ((imbxInt32)1<<(amplitudeLength-1)))
@@ -1394,7 +1394,7 @@ void jpegCodec::copyJpegChannelsToImage(ptr<image> destImage, bool b2complement,
 		imbxInt32* pChannelBuffer = pChannel->m_pBuffer;
 		if(!m_bLossless && !b2complement)
 		{
-			for(imbxUint32 adjust2complement = pChannel->m_bufferSize; adjust2complement; --adjust2complement)
+			for(imbxUint32 adjust2complement = pChannel->m_bufferSize; adjust2complement != 0; --adjust2complement, ++pChannelBuffer)
 			{
 				*pChannelBuffer += offsetValue;
 				if(*pChannelBuffer < minClipValue)
@@ -1405,7 +1405,6 @@ void jpegCodec::copyJpegChannelsToImage(ptr<image> destImage, bool b2complement,
 				{
 					*pChannelBuffer = maxClipValue;
 				}
-				++pChannelBuffer;
 			}
 		}
 		else if(m_bLossless && b2complement)
@@ -1470,15 +1469,15 @@ void jpegCodec::copyJpegChannelsToImage(ptr<image> destImage, bool b2complement,
 			{
 				imbxUint32 endCol = startCol + (runX << 3);
 				handler->copyFromInt32Interleaved(
-					pSourceBuffer,
-					runX, runY,
-					startCol,
-					startRow,
-					endCol,
-					endRow,
-					destChannelNumber,
-					m_imageSizeX, m_imageSizeY,
-					(imbxUint32)m_channelsMap.size());
+							pSourceBuffer,
+							runX, runY,
+							startCol,
+							startRow,
+							endCol,
+							endRow,
+							destChannelNumber,
+							m_imageSizeX, m_imageSizeY,
+							(imbxUint32)m_channelsMap.size());
 
 				pSourceBuffer += 64;
 				startCol = endCol;
@@ -1695,7 +1694,7 @@ void jpegCodec::setImage(
 		ptr<image> pImage,
 		std::wstring transferSyntax,
 		quality imageQuality,
-                std::string /* dataType */,
+				std::string /* dataType */,
 		imbxUint8 allocatedBits,
 		bool bSubSampledX,
 		bool bSubSampledY,
@@ -1715,7 +1714,7 @@ void jpegCodec::setImage(
 	resetInternal(true, imageQuality);
 
 	m_bLossless = transferSyntax == L"1.2.840.10008.1.2.4.57" ||  // lossless NH
-	              transferSyntax == L"1.2.840.10008.1.2.4.70";    // lossless NH first order prediction
+				  transferSyntax == L"1.2.840.10008.1.2.4.70";    // lossless NH first order prediction
 
 	copyImageToJpegChannels(pImage, b2Complement, allocatedBits, bSubSampledX, bSubSampledY);
 
@@ -1746,7 +1745,7 @@ void jpegCodec::setImage(
 		memset(m_channelsList, 0, sizeof(m_channelsList));
 		if(bInterleaved)
 		{
-		    size_t scanChannels(0);
+			size_t scanChannels(0);
 			for(tChannelsMap::iterator channelsIterator=m_channelsMap.begin();
 				channelsIterator!=m_channelsMap.end();
 				++channelsIterator)
@@ -1797,7 +1796,7 @@ void jpegCodec::writeScan(streamWriter* pDestinationStream, bool bCalcHuffman)
 		writeTag(pDestinationStream, sos);
 	}
 
-    jpeg::jpegChannel* pChannel; // Used in the loops
+	jpeg::jpegChannel* pChannel; // Used in the loops
 	while(m_mcuProcessed < m_mcuNumberTotal)
 	{
 		// Write an MCU
@@ -1977,7 +1976,7 @@ inline void jpegCodec::readBlock(streamReader* pStream, imbxInt32* pBuffer, jpeg
 			{
 				break;
 			}
-			oldValue=pBuffer[JpegDeZigZagOrder[spectralIndex]];
+			oldValue = pBuffer[JpegDeZigZagOrder[spectralIndex]];
 			if(oldValue == 0)
 			{
 				continue;
@@ -2042,25 +2041,28 @@ inline void jpegCodec::readBlock(streamReader* pStream, imbxInt32* pBuffer, jpeg
 
 		// First DC or AC pass or refine AC pass but not EOB run
 		/////////////////////////////////////////////////////////////////
-		if(spectralIndex == 0 || amplitudeLength || runLength == 0xf)
+		if(spectralIndex == 0 || amplitudeLength != 0 || runLength == 0xf)
 		{
 			//
 			// First DC pass and all the AC passes are similar,
 			//  then use the same algorithm
 			//
 			/////////////////////////////////////////////////////////////////
-			if(m_bitHigh == 0 || spectralIndex)
+			if(m_bitHigh == 0 || spectralIndex != 0)
 			{
 				// Read coeff
 				/////////////////////////////////////////////////////////////////
-				value = 0;
-
-				if(amplitudeLength)
+				if(amplitudeLength != 0)
 				{
-					amplitude = pStream->readBits(amplitudeLength);
-					value = (int)amplitude;
-					if(amplitude < ((imbxUint32)1<<(amplitudeLength-1)))
-						value -= (int)(((imbxUint32)1<<amplitudeLength)-1);
+					value = (imbxInt32)(pStream->readBits(amplitudeLength));
+					if(value < ((imbxInt32)1 << (amplitudeLength-1)) )
+					{
+						value -= ((imbxInt32)1 << amplitudeLength) - 1;
+					}
+				}
+				else
+				{
+					value = 0;
 				}
 
 				// Move spectral index forward by zero run length
@@ -2069,32 +2071,29 @@ inline void jpegCodec::readBlock(streamReader* pStream, imbxInt32* pBuffer, jpeg
 				{
 					// Read the correction bits
 					/////////////////////////////////////////////////////////////////
-					while(spectralIndex<=m_spectralIndexEnd)
+					for(/* none */; spectralIndex <= m_spectralIndexEnd; ++spectralIndex)
 					{
-						oldValue=pBuffer[JpegDeZigZagOrder[spectralIndex]];
+						oldValue = pBuffer[JpegDeZigZagOrder[spectralIndex]];
 						if(oldValue != 0)
 						{
 							amplitude = pStream->readBit();
-							if(amplitude && (oldValue & positiveBitLow) == 0)
+							if(amplitude != 0 && (oldValue & positiveBitLow) == 0)
 							{
-								oldValue+=(oldValue>0 ? positiveBitLow : negativeBitLow);
+								oldValue += (oldValue>0 ? positiveBitLow : negativeBitLow);
 								pBuffer[JpegDeZigZagOrder[spectralIndex]] = oldValue;
 							}
+							continue;
 						}
-						else
+						if(runLength == 0)
 						{
-							if(runLength == 0)
-							{
-								break;
-							}
-							--runLength;
+							break;
 						}
-						++spectralIndex;
+						--runLength;
 					}
 				}
 				else
 				{
-					spectralIndex+=runLength;
+					spectralIndex += runLength;
 					runLength = 0;
 				}
 			}
@@ -2103,15 +2102,15 @@ inline void jpegCodec::readBlock(streamReader* pStream, imbxInt32* pBuffer, jpeg
 			/////////////////////////////////////////////////////////////////
 			if(spectralIndex<=m_spectralIndexEnd)
 			{
-				oldValue=value<<m_bitLow;
+				oldValue = value<<m_bitLow;
 				if(m_bitHigh)
-					oldValue|=pBuffer[JpegDeZigZagOrder[spectralIndex]];
+					oldValue |= pBuffer[JpegDeZigZagOrder[spectralIndex]];
 
 				// DC coeff added to the previous value.
 				/////////////////////////////////////////////////////////////////
 				if(spectralIndex == 0 && m_bitHigh == 0)
 				{
-					oldValue+=pChannel->m_lastDCValue;
+					oldValue += pChannel->m_lastDCValue;
 					pChannel->m_lastDCValue=oldValue;
 				}
 				pBuffer[JpegDeZigZagOrder[spectralIndex]]=oldValue;
@@ -2125,16 +2124,16 @@ inline void jpegCodec::readBlock(streamReader* pStream, imbxInt32* pBuffer, jpeg
 			tempEobRun = pStream->readBits(runLength);
 			m_eobRun+=(imbxUint32)1<<runLength;
 			m_eobRun+=tempEobRun;
-			spectralIndex--;
+			--spectralIndex;
 		}
 	}
 
-    //
-    // EOB run processor
-    //
-    /////////////////////////////////////////////////////////////////
+	//
+	// EOB run processor
+	//
+	/////////////////////////////////////////////////////////////////
 	if(m_eobRun != 0)
-        m_eobRun--;
+		m_eobRun--;
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -2173,7 +2172,7 @@ inline void jpegCodec::writeBlock(streamWriter* pStream, imbxInt32* pBuffer, jpe
 		{
 			value = 32767;
 		}
-                else if(value < -32767)
+				else if(value < -32767)
 		{
 			value = -32767;
 		}
@@ -2299,27 +2298,27 @@ void jpegCodec::FDCT(imbxInt32* pIOMatrix, float* pDescaleFactors)
 	// Temporary values
 	/////////////////////////////////////////////////////////////////
 	float tmp0, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7;
-    float tmp10, tmp11, tmp12, tmp13;
-    float z1, z2, z3, z4, z5, z11, z13;
+	float tmp10, tmp11, tmp12, tmp13;
+	float z1, z2, z3, z4, z5, z11, z13;
 
-    // Rows FDCT
+	// Rows FDCT
 	/////////////////////////////////////////////////////////////////
-    imbxInt32 *pointerOperator0, *pointerOperator1;
+	imbxInt32 *pointerOperator0, *pointerOperator1;
 	for(int scanBlockY=0; scanBlockY<64; scanBlockY+=8)
-    {
+	{
 		pointerOperator0 = &(pIOMatrix[scanBlockY]);
 		pointerOperator1 = &(pIOMatrix[scanBlockY + 7]);
-        tmp0 = (float)(*pointerOperator0 + *pointerOperator1);
-        tmp7 = (float)(*pointerOperator0 - *pointerOperator1);
+		tmp0 = (float)(*pointerOperator0 + *pointerOperator1);
+		tmp7 = (float)(*pointerOperator0 - *pointerOperator1);
 
 		tmp1 = (float)(*(++pointerOperator0) + *(--pointerOperator1));
-        tmp6 = (float)(*pointerOperator0 - *pointerOperator1);
+		tmp6 = (float)(*pointerOperator0 - *pointerOperator1);
 
 		tmp2 = (float)(*(++pointerOperator0) + *(--pointerOperator1));
-        tmp5 = (float)(*pointerOperator0 - *pointerOperator1);
+		tmp5 = (float)(*pointerOperator0 - *pointerOperator1);
 
 		tmp3 = (float)(*(++pointerOperator0) + *(--pointerOperator1));
-        tmp4 = (float)(*pointerOperator0 - *pointerOperator1);
+		tmp4 = (float)(*pointerOperator0 - *pointerOperator1);
 
 		// Phase 2
 		tmp10 = tmp0 + tmp3;
@@ -2358,13 +2357,13 @@ void jpegCodec::FDCT(imbxInt32* pIOMatrix, float* pDescaleFactors)
 		m_fdctTempMatrix[scanBlockY+3] = z13 - z2;
 		m_fdctTempMatrix[scanBlockY+1] = z11 + z4;
 		m_fdctTempMatrix[scanBlockY+7] = z11 - z4;
-    }
+	}
 
-    // Columns FDCT
-    /////////////////////////////////////////////////////////////////
-    float *pointerOperatorFloat0, *pointerOperatorFloat1;
-    for(int scanBlockX = 0; scanBlockX < 8; ++scanBlockX)
-    {
+	// Columns FDCT
+	/////////////////////////////////////////////////////////////////
+	float *pointerOperatorFloat0, *pointerOperatorFloat1;
+	for(int scanBlockX = 0; scanBlockX < 8; ++scanBlockX)
+	{
 		pointerOperatorFloat0 = &(m_fdctTempMatrix[scanBlockX]);
 		pointerOperatorFloat1 = &(m_fdctTempMatrix[scanBlockX + 56]);
 
@@ -2387,7 +2386,7 @@ void jpegCodec::FDCT(imbxInt32* pIOMatrix, float* pDescaleFactors)
 		tmp4 = *pointerOperatorFloat0 - *pointerOperatorFloat1;
 
 		// Even part
-    	// Phase 2
+		// Phase 2
 		tmp10 = tmp0 + tmp3;
 		tmp13 = tmp0 - tmp3;
 		tmp11 = tmp1 + tmp2;
@@ -2424,7 +2423,7 @@ void jpegCodec::FDCT(imbxInt32* pIOMatrix, float* pDescaleFactors)
 		m_fdctTempMatrix[scanBlockX+24] = (z13 - z2);
 		m_fdctTempMatrix[scanBlockX+ 8] = (z11 + z4);
 		m_fdctTempMatrix[scanBlockX+56] = (z11 - z4);
-    }
+	}
 
 	// Descale FDCT results
 	/////////////////////////////////////////////////////////////////
@@ -2448,20 +2447,20 @@ void jpegCodec::FDCT(imbxInt32* pIOMatrix, float* pDescaleFactors)
 /////////////////////////////////////////////////////////////////
 void jpegCodec::IDCT(imbxInt32* pIOMatrix, long long* pScaleFactors)
 {
-    static const double multiplier((float)((long long)1 << JPEG_DECOMPRESSION_BITS_PRECISION));
-    static const long long multiplier_1_414213562f((long long)(multiplier * 1.414213562f + .5f));
-    static const long long multiplier_1_847759065f((long long)(multiplier * 1.847759065f + .5f));
-    static const long long multiplier_1_0823922f((long long)(multiplier * 1.0823922f + .5f));
-    static const long long multiplier_2_61312593f((long long)(multiplier * 2.61312593f + .5f));
-    static const long long zero_point_five((long long)1 << (JPEG_DECOMPRESSION_BITS_PRECISION - 1));
-    static const long long zero_point_five_by_8((imbxInt32)zero_point_five << 3);
+	static const double multiplier((float)((long long)1 << JPEG_DECOMPRESSION_BITS_PRECISION));
+	static const long long multiplier_1_414213562f((long long)(multiplier * 1.414213562f + .5f));
+	static const long long multiplier_1_847759065f((long long)(multiplier * 1.847759065f + .5f));
+	static const long long multiplier_1_0823922f((long long)(multiplier * 1.0823922f + .5f));
+	static const long long multiplier_2_61312593f((long long)(multiplier * 2.61312593f + .5f));
+	static const long long zero_point_five((long long)1 << (JPEG_DECOMPRESSION_BITS_PRECISION - 1));
+	static const long long zero_point_five_by_8((imbxInt32)zero_point_five << 3);
 
 
 	// Temporary values
 	/////////////////////////////////////////////////////////////////
 	long long tmp0, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7;
-    long long tmp10, tmp11, tmp12, tmp13;
-    long long z5, z10, z11, z12, z13;
+	long long tmp10, tmp11, tmp12, tmp13;
+	long long z5, z10, z11, z12, z13;
 
 	//
 	// Rows IDCT
@@ -2489,7 +2488,7 @@ void jpegCodec::IDCT(imbxInt32* pIOMatrix, long long* pScaleFactors)
 		/////////////////////////////////////////////////////////////////
 		if(checkZero == 0)
 		{
-		    tmp0 = (long long)(*pMatrix) * (*pScaleFactors);
+			tmp0 = (long long)(*pMatrix) * (*pScaleFactors);
 			*(pTempMatrix++) = tmp0;
 			*(pTempMatrix++) = tmp0;
 			*(pTempMatrix++) = tmp0;
@@ -2691,7 +2690,7 @@ void jpegChannel::processUnprocessedAmplitudes()
 		switch(applyPrediction)
 		{
 		case 1:
-            m_lastDCValue += *(pSource++);
+			m_lastDCValue += *(pSource++);
 			break;
 		case 2:
 			m_lastDCValue = *(pSource++) + *pPreviousLine;
@@ -2706,14 +2705,14 @@ void jpegChannel::processUnprocessedAmplitudes()
 			m_lastDCValue += *(pSource++) + ((*pPreviousLine - *pPreviousLineColumn)>>1);
 			break;
 		case 6:
-            m_lastDCValue -= *pPreviousLineColumn;
-            m_lastDCValue >>= 1;
-            m_lastDCValue += *(pSource++) + *pPreviousLine;
+			m_lastDCValue -= *pPreviousLineColumn;
+			m_lastDCValue >>= 1;
+			m_lastDCValue += *(pSource++) + *pPreviousLine;
 			break;
 		case 7:
-            m_lastDCValue += *pPreviousLine;
-            m_lastDCValue >>= 1;
-            m_lastDCValue += *(pSource++);
+			m_lastDCValue += *pPreviousLine;
+			m_lastDCValue >>= 1;
+			m_lastDCValue += *(pSource++);
 			break;
 		}
 
@@ -3031,7 +3030,7 @@ void tagDHT::writeTag(streamWriter* pStream, jpegCodec* pCodec)
 	// There are two phases:
 	//  the first phase calculates the tag's length, the second one
 	//  write the tables' definitions
-    /////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////
 	imbxUint16 tagLength = 0;
 	for(int phase = 0; phase < 2; ++phase)
 	{
@@ -3100,7 +3099,7 @@ void tagDHT::writeTag(streamWriter* pStream, jpegCodec* pCodec)
 				// Write the table ID
 				/////////////////////////////////////////////////////////////////
 				imbxUint8 tableID=(imbxUint8)((DcAc<<4) | tableNum);
-	            pStream->write(&tableID, 1);
+				pStream->write(&tableID, 1);
 
 				// Write the values per length.
 				/////////////////////////////////////////////////////////////////
@@ -3124,7 +3123,7 @@ void tagDHT::writeTag(streamWriter* pStream, jpegCodec* pCodec)
 				}
 			} // DcAc
 		} // tableNum
-    } // phase
+	} // phase
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -3150,22 +3149,22 @@ void tagDHT::readTag(streamReader* pStream, jpegCodec* pCodec, imbxUint8 /* tagE
 	/////////////////////////////////////////////////////////////////
 	imbxUint8 byte;
 
-    // Read all the defined tables
+	// Read all the defined tables
 	/////////////////////////////////////////////////////////////////
 	while(tagLength > 0)
-    {
-        // Read the table's ID
+	{
+		// Read the table's ID
 		/////////////////////////////////////////////////////////////////
-        pStream->read(&byte, 1);
+		pStream->read(&byte, 1);
 		tagLength--;
 
 		// Get a pointer to the right table
 		/////////////////////////////////////////////////////////////////
 		ptr<huffmanTable> pHuffman;
-        if((byte & 0xf0) == 0)
-            pHuffman=pCodec->m_pHuffmanTableDC[byte & 0xf];
-        else
-            pHuffman=pCodec->m_pHuffmanTableAC[byte & 0xf];
+		if((byte & 0xf0) == 0)
+			pHuffman=pCodec->m_pHuffmanTableDC[byte & 0xf];
+		else
+			pHuffman=pCodec->m_pHuffmanTableAC[byte & 0xf];
 
 		// Reset the table
 		/////////////////////////////////////////////////////////////////
@@ -3179,7 +3178,7 @@ void tagDHT::readTag(streamReader* pStream, jpegCodec* pCodec, imbxUint8 /* tagE
 		/////////////////////////////////////////////////////////////////
 		for(scanLength=0; scanLength<16L; )
 		{
-            pStream->read(&byte, 1);
+			pStream->read(&byte, 1);
 			pHuffman->m_valuesPerLength[++scanLength]=(imbxUint32)byte;
 			--tagLength;
 		}
@@ -3191,19 +3190,19 @@ void tagDHT::readTag(streamReader* pStream, jpegCodec* pCodec, imbxUint8 /* tagE
 		// Read all the values and store them into the huffman table
 		/////////////////////////////////////////////////////////////////
 		for(scanLength = 0; scanLength < 16; ++scanLength)
-        {
-            for(imbxUint32 scanValues = 0; scanValues < pHuffman->m_valuesPerLength[scanLength+1]; ++scanValues)
-            {
-                pStream->read(&byte, 1);
+		{
+			for(imbxUint32 scanValues = 0; scanValues < pHuffman->m_valuesPerLength[scanLength+1]; ++scanValues)
+			{
+				pStream->read(&byte, 1);
 				pHuffman->m_orderedValues[valueIndex++]=(imbxUint32)byte;
 				--tagLength;
-            }
-        }
+			}
+		}
 
 		// Calculate the huffman tables
 		/////////////////////////////////////////////////////////////////
 		pHuffman->calcHuffmanTables();
-    }
+	}
 
 	if(tagLength < 0)
 	{
@@ -3253,7 +3252,7 @@ void tagSOS::writeTag(streamWriter* pStream, jpegCodec* pCodec)
 	imbxUint8 componentsNumber(0);
 	while(pCodec->m_channelsList[componentsNumber] != 0)
 	{
-	    ++componentsNumber;
+		++componentsNumber;
 	}
 
 	// Write the tag's length
@@ -3269,7 +3268,7 @@ void tagSOS::writeTag(streamWriter* pStream, jpegCodec* pCodec)
 	jpeg::jpegChannel* pChannel; // used in the loop
 	for(jpeg::jpegChannel** listIterator = pCodec->m_channelsList; *listIterator != 0; ++listIterator)
 	{
-	    pChannel = *listIterator;
+		pChannel = *listIterator;
 
 		imbxUint8 channelId(0);
 
@@ -3429,7 +3428,7 @@ void tagDQT::writeTag(streamWriter* pStream, jpegCodec* pCodec)
 	/////////////////////////////////////////////////////////////////
 	imbxInt16 tagLength = 0;
 
-    imbxUint8  tablePrecision;
+	imbxUint8  tablePrecision;
 	imbxUint8  tableValue8;
 	imbxUint16 tableValue16;
 
@@ -3517,7 +3516,7 @@ void tagDQT::readTag(streamReader* pStream, jpegCodec* pCodec, imbxUint8 /* tagE
 	/////////////////////////////////////////////////////////////////
 	imbxInt32 tagLength=readLength(pStream);
 
-    imbxUint8  tablePrecision;
+	imbxUint8  tablePrecision;
 	imbxUint8  tableValue8;
 	imbxUint16 tableValue16;
 	while(tagLength > 0)
@@ -3525,34 +3524,34 @@ void tagDQT::readTag(streamReader* pStream, jpegCodec* pCodec, imbxUint8 /* tagE
 		pStream->read(&tablePrecision, 1);
 		tagLength--;
 
-        // Read a DQT table
-        /////////////////////////////////////////////////////////////////
-        for(int tableIndex = 0; tableIndex < 64; ++tableIndex)
-        {
-            // 16 bits precision
-            /////////////////////////////////////////////////////////////////
-            if((tablePrecision & 0xf0) != 0)
-            {
-                pStream->read((imbxUint8*)&tableValue16, 2);
+		// Read a DQT table
+		/////////////////////////////////////////////////////////////////
+		for(int tableIndex = 0; tableIndex < 64; ++tableIndex)
+		{
+			// 16 bits precision
+			/////////////////////////////////////////////////////////////////
+			if((tablePrecision & 0xf0) != 0)
+			{
+				pStream->read((imbxUint8*)&tableValue16, 2);
 				tagLength-=2;
 				pStream->adjustEndian((imbxUint8*)&tableValue16, 2, streamController::highByteEndian);
 				pCodec->m_quantizationTable[tablePrecision & 0x0f][JpegDeZigZagOrder[tableIndex]]=tableValue16;
-            }
+			}
 
-            // 8 bits precision
-            /////////////////////////////////////////////////////////////////
-            else
-            {
-                pStream->read(&tableValue8, 1);
+			// 8 bits precision
+			/////////////////////////////////////////////////////////////////
+			else
+			{
+				pStream->read(&tableValue8, 1);
 				tagLength--;
 				pCodec->m_quantizationTable[tablePrecision & 0x0f][JpegDeZigZagOrder[tableIndex]]=tableValue8;
-            }
+			}
 
 
-        } // ----- End of table reading
+		} // ----- End of table reading
 
 		pCodec->recalculateQuantizationTables(tablePrecision & 0x0f);
-    }
+	}
 
 	if(tagLength < 0)
 	{
@@ -3701,15 +3700,15 @@ void tagRST::readTag(streamReader* /* pStream */, jpegCodec* pCodec, imbxUint8 t
 	// Calculate the mcu processed counter
 	/////////////////////////////////////////////////////////////////
 	if(pCodec->m_mcuPerRestartInterval > 0)
-    {
-        imbxUint32 doneRestartInterval=(pCodec->m_mcuProcessed+pCodec->m_mcuPerRestartInterval-1)/pCodec->m_mcuPerRestartInterval-1;
-        imbxUint8 doneRestartIntervalID=(imbxUint8)(doneRestartInterval & 0x7);
-        imbxUint8 foundRestartIntervalID=tagEntry & 0x7;
-        if(foundRestartIntervalID<doneRestartIntervalID)
-            doneRestartInterval+=8L;
-        doneRestartInterval-=doneRestartIntervalID;
-        doneRestartInterval+=foundRestartIntervalID;
-        pCodec->m_mcuProcessed=(doneRestartInterval+1)*pCodec->m_mcuPerRestartInterval;
+	{
+		imbxUint32 doneRestartInterval=(pCodec->m_mcuProcessed+pCodec->m_mcuPerRestartInterval-1)/pCodec->m_mcuPerRestartInterval-1;
+		imbxUint8 doneRestartIntervalID=(imbxUint8)(doneRestartInterval & 0x7);
+		imbxUint8 foundRestartIntervalID=tagEntry & 0x7;
+		if(foundRestartIntervalID<doneRestartIntervalID)
+			doneRestartInterval+=8L;
+		doneRestartInterval-=doneRestartIntervalID;
+		doneRestartInterval+=foundRestartIntervalID;
+		pCodec->m_mcuProcessed=(doneRestartInterval+1)*pCodec->m_mcuPerRestartInterval;
 		pCodec->m_mcuProcessedY = pCodec->m_mcuProcessed / pCodec->m_mcuNumberX;
 		pCodec->m_mcuProcessedX = pCodec->m_mcuProcessed - (pCodec->m_mcuProcessedY * pCodec->m_mcuNumberX);
 		pCodec->m_mcuLastRestart = pCodec->m_mcuProcessed;
