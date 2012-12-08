@@ -81,11 +81,14 @@ HEADERS += \
     ../base/include/charsetConversion.h \
     ../base/include/baseStream.h \
     ../base/include/baseObject.h \
-    include/baseStream.h \
-    include/codecFactory.h \
-    include/dataSet.h \
-    include/stream.h \
-    include/streamReader.h
+    include/exceptions_swig.h \
+    include/baseStream_swig.h \
+    include/codecFactory_swig.h \
+    include/dataSet_swig.h \
+    include/stream_swig.h \
+    include/streamReader_swig.h \
+    include/dicomDir_swig.h \
+    include/image_swig.h
 
 SOURCES += \
     include/swig_wrap.cxx \
@@ -156,8 +159,24 @@ SOURCES += \
     ../base/src/charsetConversion.cpp \
     ../base/src/baseStream.cpp \
     ../base/src/baseObject.cpp \
-    src/baseStream.cpp \
-    src/codecFactory.cpp \
-    src/dataSet.cpp \
-    src/stream.cpp \
-    src/streamReader.cpp
+    src/baseStream_swig.cpp \
+    src/codecFactory_swig.cpp \
+    src/dataSet_swig.cpp \
+    src/stream_swig.cpp \
+    src/streamReader_swig.cpp \
+    src/exceptions_swig.cpp \
+    src/dicomDir_swig.cpp
+
+
+
+
+
+
+
+
+
+
+
+
+
+

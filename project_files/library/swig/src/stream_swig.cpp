@@ -2,12 +2,13 @@
 $fileHeader$
 */
 
-/*! \file stream_swig.h
+/*! \file stream_swig.cpp
     \brief Implementation of the stream class for SWIG.
 
 */
 
-#include "../include/stream.h"
+#include "../include/stream_swig.h"
+#include "../include/exceptions_swig.h"
 
 stream::stream(): baseStream(new puntoexe::stream)
 {
@@ -25,7 +26,11 @@ stream& stream::operator=(const stream& right)
 
 void stream::openFile(const std::wstring& name, const int mode)
 {
-	(dynamic_cast<puntoexe::stream*>(m_pStream.get()))->openFile(name, mode);
+	try
+	{
+		(dynamic_cast<puntoexe::stream*>(m_pStream.get()))->openFile(name, mode);
+	}
+	CATCH_IMEBRA_EXCEPTIONS;
 }
 
 

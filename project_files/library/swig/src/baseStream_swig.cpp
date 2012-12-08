@@ -7,7 +7,7 @@ $fileHeader$
 			for SWIG.
 */
 
-#include "../include/baseStream.h"
+#include "../include/baseStream_swig.h"
 
 baseStream::baseStream()
 {}

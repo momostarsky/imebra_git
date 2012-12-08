@@ -12,10 +12,14 @@ $fileHeader$
 
 #ifndef SWIG
 #include "../../base/include/streamReader.h"
-#include "baseStream.h"
+#include "baseStream_swig.h"
 #endif
 
+
 class codecFactory;
+
+/// \addtogroup group_swig_bindings
+/// @{
 
 class streamReader
 {
@@ -28,5 +32,7 @@ protected:
 	puntoexe::ptr<puntoexe::streamReader> m_pReader;
 #endif
 };
+
+///@}
 
 #endif // !defined(imebraStreamReader_SWIG_F6221390_BC44_4B83_B5BB_3485222FF1DD__INCLUDED_)
