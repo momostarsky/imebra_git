@@ -14,6 +14,7 @@ $fileHeader$
 #include "image.h"
 #include "dataSet.h"
 #include "LUT.h"
+#include "colorTransformsFactory.h"
 
 
 ///////////////////////////////////////////////////////////
@@ -29,6 +30,8 @@ namespace imebra
 
 namespace transforms
 {
+
+class modalityVOILUTException;
 
 /// \addtogroup group_transforms
 ///
@@ -68,15 +71,20 @@ public:
 
 	template <class inputType, class outputType>
 			void templateTransform(
-					inputType* inputHandlerData, size_t /* inputHandlerSize */, imbxUint32 inputHandlerWidth, const std::wstring& /* inputHandlerColorSpace */,
+					inputType* inputHandlerData, size_t /* inputHandlerSize */, imbxUint32 inputHandlerWidth, const std::wstring& inputHandlerColorSpace,
 					ptr<palette> /* inputPalette */,
 					imbxInt32 /* inputHandlerMinValue */, imbxUint32 /* inputHandlerNumValues */,
 					imbxInt32 inputTopLeftX, imbxInt32 inputTopLeftY, imbxInt32 inputWidth, imbxInt32 inputHeight,
-					outputType* outputHandlerData, size_t /* outputHandlerSize */, imbxInt32 outputHandlerWidth, const std::wstring& /* outputHandlerColorSpace */,
+					outputType* outputHandlerData, size_t /* outputHandlerSize */, imbxInt32 outputHandlerWidth, const std::wstring& outputHandlerColorSpace,
 					ptr<palette> /* outputPalette */,
 					imbxInt32 /* outputHandlerMinValue */, imbxUint32 /* outputHandlerNumValues */,
 					imbxInt32 outputTopLeftX, imbxInt32 outputTopLeftY)
 	{
+		PUNTOEXE_FUNCTION_START(L"modalityVOILUT::templateTransform");
+		if(!colorTransforms::colorTransformsFactory::isMonochrome(inputHandlerColorSpace) || !colorTransforms::colorTransformsFactory::isMonochrome(outputHandlerColorSpace))
+		{
+			PUNTOEXE_THROW(modalityVOILUTException, "modalityVOILUT can process only monochromatic images");
+		}
 		inputType* pInputMemory(inputHandlerData);
 		outputType* pOutputMemory(outputHandlerData);
 
@@ -117,6 +125,7 @@ public:
 			pInputMemory += (inputHandlerWidth - inputWidth);
 			pOutputMemory += (outputHandlerWidth - inputWidth);
 		}
+		PUNTOEXE_FUNCTION_END();
 	}
 
 	virtual bool isEmpty();
@@ -129,6 +138,21 @@ private:
     double m_rescaleIntercept;
     double m_rescaleSlope;
 	bool m_bEmpty;
+};
+
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+/// \brief This exception is thrown by modalityVOILUT
+///         when the images passed to the transform are
+///         not monochromatic.
+///
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+class modalityVOILUTException: public transformException
+{
+public:
+	modalityVOILUTException(const std::string& message): transformException(message){}
 };
 
 /// @}

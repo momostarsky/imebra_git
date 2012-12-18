@@ -10,6 +10,7 @@ $fileHeader$
 #include "../../base/include/exception.h"
 #include "../include/modalityVOILUT.h"
 #include "../include/dataSet.h"
+#include "../include/colorTransformsFactory.h"
 
 namespace puntoexe
 {
@@ -34,6 +35,14 @@ modalityVOILUT::modalityVOILUT(ptr<dataSet> pDataSet):
 		m_pDataSet(pDataSet), m_voiLut(pDataSet->getLut(0x0028, 0x3000, 0)), m_rescaleIntercept(pDataSet->getDouble(0x0028, 0, 0x1052, 0x0)), m_rescaleSlope(1.0), m_bEmpty(true)
 
 {
+	// Only monochrome images can have the modality voi-lut
+	///////////////////////////////////////////////////////
+	std::wstring colorSpace(pDataSet->getUnicodeString(0x0028, 0x0, 0x0004, 0x0));
+	if(!colorTransforms::colorTransformsFactory::isMonochrome(colorSpace))
+	{
+		return;
+	}
+
 	ptr<handlers::dataHandler> rescaleHandler(m_pDataSet->getDataHandler(0x0028, 0, 0x1053, 0x0, false));
 	if(rescaleHandler != 0)
 	{
