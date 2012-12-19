@@ -99,7 +99,21 @@ The changes that affect the interface of the transform classes (and therefore ne
 
 
 
-\section changeLog Changes log for $imebraVersion$
+\section changeLog Changes log
+
+\subsection version_current Changes for version $imebraVersion$
+
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/88">#88</a> (32-bit warnings / general pointer size concerns)
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/90">#90</a> (transactionsManager doesn't lock the manager)
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/92">#92</a> (Wrong check for ac frequencies in the IDCT method of the Jpeg codec)
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/93">#93</a> (Some files contain jpeg compressed images without the jpeg termination tag)
+- Minor optimizations in the jpegCodec::readBlock method
+- Minor optimizations in the template function dataHandlerNumeric::copyFromInt32Interleaved
+- Remove exception logging functions from the inline method streamReader::readBits()
+- Corrected modalityVOILUT to accept only monochromatic images
+
+
+\subsection version_2011_09_18_22_24_41 Changes for version 2011-09-18_22-24-41
 
 - Updated to compile with Visual Studio on x64 arch
 - Improved performances of IDCT
@@ -107,7 +121,7 @@ The changes that affect the interface of the transform classes (and therefore ne
 - Improved the performances of the huffman decoder
 
 
-\subsection version_2011_06_29_23_24_13 changeLog Changes for version 2011-06-29_23-24-13
+\subsection version_2011_06_29_23_24_13 Changes for version 2011-06-29_23-24-13
 
 - Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/84">#84</a> (VOILUT returns always a MONOCHROME2 image)
 - Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/85">#85</a> (GetImage() fails when a file contains a single frame splitted across several buffers and the offset table is empty)
