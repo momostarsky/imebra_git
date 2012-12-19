@@ -12,6 +12,12 @@ class DicomItemModel : public QAbstractItemModel
 public:
     explicit DicomItemModel(QObject *parent = 0);
 
+	enum tDicomRole
+	{
+		dicomFileName = Qt::UserRole
+
+	};
+
 	virtual int columnCount ( const QModelIndex & parent = QModelIndex() ) const;
 	virtual QVariant	data ( const QModelIndex & index, int role = Qt::DisplayRole ) const;
 	virtual QModelIndex	index ( int row, int column, const QModelIndex & parent = QModelIndex() ) const;
@@ -35,6 +41,8 @@ private:
 	static bool GetColumnTag(imebra::directoryRecord::tDirectoryRecordType recordType, int column, imbxUint16* pGroup, imbxUint16* pTag, imbxUint32* pBufferId);
 
 	ptr<imebra::dicomDir> m_pDicomDir;
+
+	QString m_rootFolder;
 
 	typedef std::map<void*, QModelIndex > tParents;
 	mutable tParents m_parents;

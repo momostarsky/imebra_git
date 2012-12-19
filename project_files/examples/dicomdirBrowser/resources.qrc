@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>resources/icons/control_wheel.png</file>
+        <file>resources/icons/shape_move_forwards.png</file>
+        <file>resources/icons/film.png</file>
+        <file>resources/icons/films.png</file>
+        <file>resources/icons/rainbow.png</file>
+        <file>resources/icons/user.png</file>
+        <file>resources/icons/printer.png</file>
+        <file>resources/icons/folder.png</file>
+        <file>resources/icons/page.png</file>
+    </qresource>
+</RCC>

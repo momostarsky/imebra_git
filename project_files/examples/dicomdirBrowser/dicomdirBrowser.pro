@@ -79,7 +79,8 @@ SOURCES += main.cpp\
     ../../library/base/src/charsetConversion.cpp \
     ../../library/base/src/baseStream.cpp \
     ../../library/base/src/baseObject.cpp \
-    dicomitemmodel.cpp
+    dicomitemmodel.cpp \
+    controller.cpp
 
 HEADERS  += mainwindow.h \
     ../../library/imebra/include/YBRPARTIALToRGB.h \
@@ -156,9 +157,13 @@ HEADERS  += mainwindow.h \
     ../../library/base/include/charsetConversion.h \
     ../../library/base/include/baseStream.h \
     ../../library/base/include/baseObject.h \
-    dicomitemmodel.h
+    dicomitemmodel.h \
+    controller.h
 
 FORMS    += mainwindow.ui
+
+RESOURCES += \
+    resources.qrc
 
 
 

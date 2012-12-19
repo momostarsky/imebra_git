@@ -12,6 +12,7 @@
 #include <QDateTime>
 #include <QFileDialog>
 #include <QDir>
+#include <QIcon>
 
 DicomItemModel::DicomItemModel(QObject *parent) :
     QAbstractItemModel(parent)
@@ -50,6 +51,8 @@ int DicomItemModel::columnCount ( const QModelIndex & parent) const
 	}
 	return numColumns;
 }
+
+
 
 QVariant DicomItemModel::data ( const QModelIndex & index, int role ) const
 {
@@ -131,9 +134,76 @@ QVariant DicomItemModel::data ( const QModelIndex & index, int role ) const
 
 	}
 
+	case Qt::DecorationRole:
+		switch(pRecord->getType())
+		{
+		case imebra::directoryRecord::study:
+			return QVariant(QIcon(":/resources/icons/page.png"));
+		case imebra::directoryRecord::patient:
+			return QVariant(QIcon(":/resources/icons/user.png"));
+		case imebra::directoryRecord::series:
+			return QVariant(QIcon(":/resources/icons/films.png"));
+		case imebra::directoryRecord::image:
+			return QVariant(QIcon(":/resources/icons/film.png"));
+		case imebra::directoryRecord::overlay:
+			return QVariant(QIcon(":/resources/icons/shape_move_forwards.png"));
+		case imebra::directoryRecord::modality_lut:
+			return QVariant(QIcon(":/resources/icons/control_wheel.png"));
+		case imebra::directoryRecord::voi_lut:
+			return QVariant(QIcon(":/resources/icons/rainbow.png"));
+		case imebra::directoryRecord::curve:
+			return QVariant(QIcon(":/resources/icons/rainbow.png"));
+		case imebra::directoryRecord::topic:
+		case imebra::directoryRecord::visit:
+		case imebra::directoryRecord::results:
+		case imebra::directoryRecord::interpretation:
+		case imebra::directoryRecord::study_component:
+		case imebra::directoryRecord::stored_print:
+		case imebra::directoryRecord::rt_dose:
+		case imebra::directoryRecord::rt_structure_set:
+		case imebra::directoryRecord::rt_plan:
+		case imebra::directoryRecord::rt_treat_record:
+		case imebra::directoryRecord::presentation:
+		case imebra::directoryRecord::waveform:
+		case imebra::directoryRecord::sr_document:
+		case imebra::directoryRecord::key_object_doc:
+		case imebra::directoryRecord::spectroscopy:
+		case imebra::directoryRecord::raw_data:
+		case imebra::directoryRecord::registration:
+		case imebra::directoryRecord::fiducial:
+		case imebra::directoryRecord::mrdr:
+			break;
+		}
+
+
 	case Qt::WhatsThisRole:
 	case Qt::ToolTipRole:
-		return QVariant(QString::fromStdWString(imebra::dicomDictionary::getDicomDictionary()->getTagName(group, tag)));
+		return QVariant(QString::fromStdWString(pRecord->getTypeString()));
+
+	case dicomFileName:
+	{
+		QString fileName;
+		for(int filePartIndex(0); /* check in the loop */; ++filePartIndex)
+		{
+			QString filePart(QString::fromStdWString(pRecord->getFilePart(filePartIndex)));
+			if(filePart.isEmpty())
+			{
+				break;
+			}
+			if(!fileName.isEmpty())
+			{
+				fileName += QDir::separator();
+			}
+			fileName += filePart;
+		}
+
+		if(fileName.isEmpty())
+		{
+			return QVariant();
+		}
+
+		return QVariant(m_rootFolder + fileName);
+	}
 
 	default:
 		return QVariant();
@@ -266,10 +336,14 @@ bool DicomItemModel::GetColumnTag(imebra::directoryRecord::tDirectoryRecordType 
 void DicomItemModel::load(const QString &fileName)
 {
 	ptr<puntoexe::stream> pStream(new puntoexe::stream);
-	pStream->openFile(QDir::toNativeSeparators(fileName).toStdWString(), std::ios_base::in);
+	QString fileNameNative(QDir::toNativeSeparators(fileName));
+	pStream->openFile(fileNameNative.toStdWString(), std::ios_base::in);
 	ptr<puntoexe::streamReader> pStreamReader(new puntoexe::streamReader(pStream));
 	m_pDicomDir = new imebra::dicomDir( imebra::codecs::codecFactory::getCodecFactory()->load(pStreamReader) );
 	m_parents.clear();
+
+	int cutRootFolder(fileNameNative.lastIndexOf(QDir::separator()));
+	m_rootFolder = fileNameNative.left(cutRootFolder + 1);
 
 	reset();
 	int numRows(GetRows(m_pDicomDir->getFirstRootRecord()));
