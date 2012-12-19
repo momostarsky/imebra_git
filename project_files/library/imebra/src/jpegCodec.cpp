@@ -509,8 +509,14 @@ void jpegCodec::writeStream(ptr<streamWriter> pStream, ptr<dataSet> pDataSet)
 		{
 			pDataSet->getFrameBufferIds(0, &firstBufferId, &endBufferId);
 		}
+
+		thread* pCurrentThread = thread::getThreadObject(thread::getThreadId());
 		for(imbxUint32 scanBuffers = firstBufferId; scanBuffers != endBufferId; ++scanBuffers)
 		{
+			if(pCurrentThread != 0 && pCurrentThread->shouldTerminate())
+			{
+				throw threadStopped("jpegCodec has been stopped");
+			}
 			ptr<handlers::dataHandlerRaw> readHandler = imageData->getDataHandlerRaw(scanBuffers, false, "");
 			imbxUint8* readBuffer = readHandler->getMemoryBuffer();
 			pStream->write(readBuffer, readHandler->getSize());
@@ -914,10 +920,17 @@ void jpegCodec::readStream(ptr<streamReader> pSourceStream, ptr<dataSet> pDataSe
 	///////////////////////////////////////////////////////////
 	imbxUint8 entryByte;
 
+	thread* pCurrentThread = thread::getThreadObject(thread::getThreadId());
+
 	// Read all the tags in the stream
 	///////////////////////////////////////////////////////////
 	for(m_bEndOfImage=false; !m_bEndOfImage; /* empty */)
 	{
+		if(pCurrentThread != 0 && pCurrentThread->shouldTerminate())
+		{
+			throw threadStopped("jpegCodec has been stopped");
+		}
+
 		// If a tag has been found, then parse it
 		///////////////////////////////////////////////////////////
 		pStream->read(&entryByte, 1);
@@ -1192,10 +1205,17 @@ ptr<image> jpegCodec::getImage(ptr<dataSet> sourceDataSet, ptr<streamReader> pSt
 	///////////////////////////////////////////////////////////
 	imbxUint32 bufferPointer = 0;
 
+	thread* pCurrentThread(thread::getThreadObject(thread::getThreadId()));
+
 	// Read until the end of the image is reached
 	///////////////////////////////////////////////////////////
 	for(m_bEndOfImage=false; !m_bEndOfImage; pSourceStream->resetInBitsBuffer())
 	{
+		if(pCurrentThread != 0 && pCurrentThread->shouldTerminate())
+		{
+			throw threadStopped("jpegCodec has been stopped");
+		}
+
 		imbxUint32 nextMcuStop = m_mcuNumberTotal;
 		if(m_mcuPerRestartInterval != 0)
 		{
@@ -1207,36 +1227,35 @@ ptr<image> jpegCodec::getImage(ptr<dataSet> sourceDataSet, ptr<streamReader> pSt
 		}
 
 		if(nextMcuStop <= m_mcuProcessed)
-				{
+		{
+			// Look for a tag. Skip all the FF bytes
+			imbxUint8 tagId(0xff);
+
+			pSourceStream->read(&tagId, 1);
+			if(tagId != 0xff)
+			{
+				continue;
+			}
+
+			while(tagId == 0xff)
+			{
+				pSourceStream->read(&tagId, 1);
+			}
 
 
-					// Look for a tag. Skip all the FF bytes
-					imbxUint8 tagId(0xff);
-					pSourceStream->read(&tagId, 1);
-					if(tagId != 0xff)
-					{
-						continue;
-					}
+			// An entry has been found. Process it
+			///////////////////////////////////////////////////////////
+			ptr<jpeg::tag> pTag;
+			if(m_tagsMap.find(tagId)!=m_tagsMap.end())
+				pTag=m_tagsMap[tagId];
+			else
+				pTag=m_tagsMap[0xff];
 
-					while(tagId == 0xff)
-					{
-						pSourceStream->read(&tagId, 1);
-					}
+			pTag->readTag(pSourceStream, this, tagId);
+			continue;
+		}
+		jpeg::jpegChannel* pChannel; // Used in the loops
 
-
-					// An entry has been found. Process it
-					///////////////////////////////////////////////////////////
-					ptr<jpeg::tag> pTag;
-					if(m_tagsMap.find(tagId)!=m_tagsMap.end())
-							pTag=m_tagsMap[tagId];
-					else
-							pTag=m_tagsMap[0xff];
-
-					pTag->readTag(pSourceStream, this, tagId);
-					continue;
-				}
-
-				jpeg::jpegChannel* pChannel; // Used in the loops
 		while(m_mcuProcessed < nextMcuStop && !pSourceStream->endReached())
 		{
 			// Read an MCU
@@ -1246,6 +1265,11 @@ ptr<image> jpegCodec::getImage(ptr<dataSet> sourceDataSet, ptr<streamReader> pSt
 			///////////////////////////////////////////////////////////
 			for(jpeg::jpegChannel** channelsIterator = m_channelsList; *channelsIterator != 0; ++channelsIterator)
 			{
+				if(pCurrentThread != 0 && pCurrentThread->shouldTerminate())
+				{
+					throw threadStopped("jpegCodec has been stopped");
+				}
+
 				pChannel = *channelsIterator;
 
 				// Read a lossless pixel
@@ -1284,6 +1308,11 @@ ptr<image> jpegCodec::getImage(ptr<dataSet> sourceDataSet, ptr<streamReader> pSt
 				{
 					for(scanBlockX = pChannel->m_blockMcuX; scanBlockX != 0; --scanBlockX)
 					{
+						if(pCurrentThread != 0 && pCurrentThread->shouldTerminate())
+						{
+							throw threadStopped("jpegCodec has been stopped");
+						}
+
 						readBlock(pSourceStream, &(pChannel->m_pBuffer[bufferPointer]), pChannel);
 
 						if(m_spectralIndexEnd>=63 && m_bitLow==0)
@@ -1796,6 +1825,8 @@ void jpegCodec::writeScan(streamWriter* pDestinationStream, bool bCalcHuffman)
 		writeTag(pDestinationStream, sos);
 	}
 
+	thread* pCurrentThread(thread::getThreadObject(thread::getThreadId()));
+
 	jpeg::jpegChannel* pChannel; // Used in the loops
 	while(m_mcuProcessed < m_mcuNumberTotal)
 	{
@@ -1806,6 +1837,11 @@ void jpegCodec::writeScan(streamWriter* pDestinationStream, bool bCalcHuffman)
 		///////////////////////////////////////////////////////////
 		for(jpeg::jpegChannel** channelsIterator = m_channelsList; *channelsIterator != 0; ++channelsIterator)
 		{
+			if(pCurrentThread != 0 && pCurrentThread->shouldTerminate())
+			{
+				throw threadStopped("jpegCodec has been stopped");
+			}
+
 			pChannel = *channelsIterator;
 
 			// Write a lossless pixel

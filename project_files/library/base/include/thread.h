@@ -102,16 +102,7 @@ public:
 	///////////////////////////////////////////////////////////
 	void terminate();
 	
-	/// \brief Returns true if the function threadFunction()
-	///         should return as soon as possible.
-	///
-	/// @return true if the function threadFunction() should
-	///          return as soon as possible
-	///
-	///////////////////////////////////////////////////////////
-	bool shouldTerminate();
-
-	/// \brief Return true if the function threadFunction() is
+	/// \brief Returns true if the function threadFunction() is
 	///         running in its own thread.
 	///
 	/// @return true if the function threadFunction() is
@@ -119,6 +110,16 @@ public:
 	///
 	///////////////////////////////////////////////////////////
 	bool isRunning();
+
+	/// \brief Returns true if the function threadFunction()
+	///         has been terminated by a call to terminate()
+	///
+	/// @return true if the function threadFunction() has been
+	///          terminated by a call to terminate(), false
+	///          otherwise
+	///
+	///////////////////////////////////////////////////////////
+	bool isTerminated();
 
 
 #ifdef PUNTOEXE_WINDOWS
@@ -141,9 +142,34 @@ public:
 	///////////////////////////////////////////////////////////
 	static tThreadId getThreadId();
 
+	/// \brief Return the thread object for the specified
+	///         thread's id.
+	///
+	/// The thread object is returned only if the method
+	///  start() was called on the desidered thread and
+	///  isRunning() is still true.
+	///
+	/// @return the thread object related to the thread id
+	///
+	///////////////////////////////////////////////////////////
+	static thread* getThreadObject(tThreadId id);
+
+	/// \brief Returns true if the function threadFunction()
+	///         should return as soon as possible.
+	///
+	/// Call this method from the overwritten threadFunction().
+	/// If this method returns true then the caller should
+	///  throw the exception threadStopped.
+	///
+	/// @return true if the function threadFunction() should
+	///          return as soon as possible
+	///
+	///////////////////////////////////////////////////////////
+	bool shouldTerminate();
+
 	/// \brief Switch to another thread.
 	///
-	/// The current thread is stopped and the following thrad
+	/// The current thread is stopped and the following thread
 	///  scheduled to be executed on the processor is started.
 	///
 	///////////////////////////////////////////////////////////
@@ -174,6 +200,12 @@ private:
 	// true if the thread's function is running
 	///////////////////////////////////////////////////////////
 	bool m_bIsRunning;
+
+	// true if the thread terminated because terminate() was
+	//  called
+	///////////////////////////////////////////////////////////
+	bool m_bStopped;
+
 	criticalSection m_lockRunningFlag;
 
 #ifdef PUNTOEXE_POSIX
@@ -234,6 +266,16 @@ class threadExceptionFailedToLaunch: public threadException
 {
 public:
 	threadExceptionFailedToLaunch(std::string message): threadException(message){}
+};
+
+/// \brief Exception thrown when a functionterminates
+///         because thread::terminate() was called
+///
+///////////////////////////////////////////////////////////
+class threadStopped: public threadException
+{
+public:
+	threadStopped(std::string message): threadException(message){}
 };
 
 ///@}

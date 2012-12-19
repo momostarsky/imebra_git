@@ -28,6 +28,10 @@ namespace puntoexe
 static thread::forceKeyConstruction forceKey;
 #endif
 
+typedef std::map<thread::tThreadId, thread*> tActiveThreads;
+static tActiveThreads m_activeThreads;
+criticalSection m_lockActiveThreads;
+
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -134,41 +138,64 @@ void* thread::privateThreadFunction(void* pParameter)
 
 #endif
 {
+	// Get the thread object that launched the function
+	///////////////////////////////////////////////////////////
+	thread* pThread( (thread*)pParameter );
+
+	tThreadId id(thread::getThreadId());
+
+	bool bStopped(false);
+
+	{
+		lockCriticalSection lockActiveThreads(&m_lockActiveThreads);
+		m_activeThreads[id] = pThread;
+	}
+
 	try
 	{
 		PUNTOEXE_FUNCTION_START(L"thread::privateThreadFunction");
-
-		// Get the thread object that launched the function
-		///////////////////////////////////////////////////////////
-		thread* pThread = (thread*)pParameter;
 
 		// Enable the "isRunning" flag
 		///////////////////////////////////////////////////////////
 		{
 			lockCriticalSection lockRunningFlag(&(pThread->m_lockRunningFlag));
 			pThread->m_bIsRunning = true;
+			pThread->m_bStopped = false;
 		}
 
 		// Call the virtual thread function
 		///////////////////////////////////////////////////////////
 		pThread->threadFunction();
 
-		// Disable the "isRunning" flag
-		///////////////////////////////////////////////////////////
-		{
-			lockCriticalSection lockRunningFlag(&(pThread->m_lockRunningFlag));
-			pThread->m_bIsRunning = false;
-		}
-
 		PUNTOEXE_FUNCTION_END();
+	}
+	catch(threadStopped& e)
+	{
+		bStopped = true;
 	}
 	catch(...)
 	{
 		exceptionsManager::getMessage();
 	}
 
-	return 0;
+	{
+		lockCriticalSection lockActiveThreads(&m_lockActiveThreads);
+		tActiveThreads::iterator findThread(m_activeThreads.find(id) );
+		if(findThread != m_activeThreads.end())
+		{
+			m_activeThreads.erase(findThread);
+		}
+	}
 
+	// Disable the "isRunning" flag
+	///////////////////////////////////////////////////////////
+	{
+		lockCriticalSection lockRunningFlag(&(pThread->m_lockRunningFlag));
+		pThread->m_bIsRunning = false;
+		pThread->m_bStopped = bStopped;
+	}
+
+	return 0;
 }
 
 
@@ -294,6 +321,27 @@ thread::tThreadId thread::getThreadId()
 	}
 	return id;
 #endif
+}
+
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
+// Return the thread object related to the thread id
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+thread* thread::getThreadObject(tThreadId id)
+{
+	lockCriticalSection lockActiveThreads(&m_lockActiveThreads);
+	tActiveThreads::const_iterator findThread(m_activeThreads.find(id) );
+	if(findThread != m_activeThreads.end())
+	{
+		return findThread->second;
+	}
+	return 0;
 }
 
 
