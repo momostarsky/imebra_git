@@ -1207,36 +1207,50 @@ ptr<image> jpegCodec::getImage(ptr<dataSet> sourceDataSet, ptr<streamReader> pSt
 		}
 
 		if(nextMcuStop <= m_mcuProcessed)
+		{
+			// Look for a tag. Skip all the FF bytes
+			imbxUint8 tagId(0xff);
+
+			try
+			{
+				pSourceStream->read(&tagId, 1);
+				if(tagId != 0xff)
 				{
-
-
-					// Look for a tag. Skip all the FF bytes
-					imbxUint8 tagId(0xff);
-					pSourceStream->read(&tagId, 1);
-					if(tagId != 0xff)
-					{
-						continue;
-					}
-
-					while(tagId == 0xff)
-					{
-						pSourceStream->read(&tagId, 1);
-					}
-
-
-					// An entry has been found. Process it
-					///////////////////////////////////////////////////////////
-					ptr<jpeg::tag> pTag;
-					if(m_tagsMap.find(tagId)!=m_tagsMap.end())
-							pTag=m_tagsMap[tagId];
-					else
-							pTag=m_tagsMap[0xff];
-
-					pTag->readTag(pSourceStream, this, tagId);
 					continue;
 				}
 
-				jpeg::jpegChannel* pChannel; // Used in the loops
+				while(tagId == 0xff)
+				{
+					pSourceStream->read(&tagId, 1);
+				}
+
+
+				// An entry has been found. Process it
+				///////////////////////////////////////////////////////////
+				ptr<jpeg::tag> pTag;
+				if(m_tagsMap.find(tagId)!=m_tagsMap.end())
+					pTag=m_tagsMap[tagId];
+				else
+					pTag=m_tagsMap[0xff];
+
+				pTag->readTag(pSourceStream, this, tagId);
+			}
+			catch(const streamExceptionEOF& e)
+			{
+				if(m_mcuProcessed == m_mcuNumberTotal)
+				{
+					m_bEndOfImage = true;
+				}
+				else
+				{
+					throw;
+				}
+			}
+			continue;
+
+		}
+
+		jpeg::jpegChannel* pChannel; // Used in the loops
 		while(m_mcuProcessed < nextMcuStop && !pSourceStream->endReached())
 		{
 			// Read an MCU
