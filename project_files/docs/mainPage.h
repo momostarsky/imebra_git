@@ -71,34 +71,6 @@ A detailed reference of the C++ classes that compose Imebra is included in
  this manual.
 
 
-\section migration_2011 Migrating projects written for older versions of Imebra
-
-Imebra 2011 introduces some breaking changes in the transform classes and access to the images' pixels.
-
-Most of the changes are due to the fact that now the imageHandler class has been replaced by a
- dataHandlerNumericBase class, which is a template class (now image classes store the pixels
- using 1, 2 or 4 bytes per color component, while the old version always used 4 bytes per color
- component).\n
-
-
-\subsection migration_transforms Migrating code that uses classes derived from transform
-
-Because the new image objects return a data handler that can point to different integer types,
- the transforms classes have been modified accordingly and now supply a template function that
- can operate on different data types. This information can be ignored if you don't have to write
- new transforms, since the correct template function is called by the base transform class.
-
-The changes that affect the interface of the transform classes (and therefore needs changes in your
- application if you use the transforms) are the following:
-- a transform cannot no longer accept several input images and several output images
-- input and output images don't have to be declared before running the transform, but are specified
-  when calling the function that actually run the transform
-- transforms don't allocate the output image anymore: the caller has to provide a valid output
-  image, but it can ask the transform for hints about the required output image
-- transforms now are stateless: the same transform can be run several times on different images
-
-
-
 \section changeLog Changes log
 
 \subsection version_current Changes for version $imebraVersion$
