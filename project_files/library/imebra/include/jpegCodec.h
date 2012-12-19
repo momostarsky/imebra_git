@@ -270,7 +270,7 @@ protected:
 		sos = 0xda,
 		dqt = 0xdb,
 
-		dri = 0xdd,
+		dri = 0xdd
 	};
 
 	// Register a tag in the jpeg codec
