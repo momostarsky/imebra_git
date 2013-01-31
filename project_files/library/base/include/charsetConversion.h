@@ -19,7 +19,13 @@ The class hides the platform specific implementations and supplies a common
 #include <string>
 #include <stdexcept>
 
-#if PUNTOEXE_POSIX
+#if defined(PUNTOEXE_USE_ICU)
+
+#include <unicode/coll.h>
+#include <unicode/ucnv.h>
+
+#else
+#if defined(PUNTOEXE_POSIX)
 #define PUNTOEXE_USEICONV 1
 #endif
 
@@ -28,6 +34,8 @@ The class hides the platform specific implementations and supplies a common
 #include <errno.h>
 #else
 #include "windows.h"
+#endif
+
 #endif
 
 ///////////////////////////////////////////////////////////
@@ -124,6 +132,12 @@ protected:
 
 	std::string m_isoCharset;
 
+#if defined(PUNTOEXE_USE_ICU)
+
+    UConverter* m_pIcuConverter;
+
+#else
+
 #if defined(PUNTOEXE_USEICONV)
 
 #if defined(WIN32)
@@ -136,6 +150,8 @@ protected:
 #else
 	unsigned long m_codePage;
 	bool m_bZeroFlag;
+#endif
+
 #endif
 };
 

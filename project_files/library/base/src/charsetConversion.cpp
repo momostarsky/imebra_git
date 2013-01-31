@@ -51,12 +51,20 @@ static charsetInformation m_charsetTable[]={
 ///////////////////////////////////////////////////////////
 charsetConversion::charsetConversion()
 {
+
+#if defined(PUNTOEXE_USE_ICU)
+    m_pIcuConverter = 0;
+
+#else
+
 #if defined(PUNTOEXE_USEICONV)
 	m_iconvToUnicode = (iconv_t)-1;
 	m_iconvFromUnicode = (iconv_t)-1;
 #else
 	m_codePage = 0;
 	m_bZeroFlag = false;
+#endif
+
 #endif
 }
 
@@ -126,6 +134,22 @@ void charsetConversion::initialize(const std::string& tableName)
 
 	// Initialize the codePage or the iconv
 	///////////////////////////////////////////////////////////
+
+#if defined(PUNTOEXE_USE_ICU)
+    UErrorCode errorCode(U_ZERO_ERROR);
+    const char* tableName = m_charsetTable[requestedTable].m_iconvName;
+    if(requestedTable == 0)
+    {
+            tableName = ucnv_getDefaultName();
+
+    }
+    m_pIcuConverter = ucnv_open(tableName, &errorCode);
+    if(U_FAILURE(errorCode))
+    {
+        PUNTOEXE_THROW(charsetConversionExceptionNoSupportedTable, "The requested ISO table is not supported by the system");
+    }
+
+#else
 #if defined(PUNTOEXE_USEICONV)
 	std::string toCodeIgnore(m_charsetTable[requestedTable].m_iconvName);
 	toCodeIgnore += "//IGNORE";
@@ -156,6 +180,7 @@ void charsetConversion::initialize(const std::string& tableName)
 	m_codePage = m_charsetTable[requestedTable].m_codePage;
 	m_bZeroFlag = m_charsetTable[requestedTable].m_bZeroFlag;
 #endif
+#endif
 
 	// Save the name of the active table
 	///////////////////////////////////////////////////////////
@@ -175,6 +200,16 @@ void charsetConversion::close()
 	PUNTOEXE_FUNCTION_START(L"charsetConversion::close");
 
 	m_isoCharset.clear();
+#if defined(PUNTOEXE_USE_ICU)
+
+    if(m_pIcuConverter != 0)
+    {
+        ucnv_close(m_pIcuConverter);
+        m_pIcuConverter = 0;
+    }
+
+#else
+
 #if defined(PUNTOEXE_USEICONV)
 	if(m_iconvToUnicode != (iconv_t)-1)
 	{
@@ -189,6 +224,8 @@ void charsetConversion::close()
 #else
 	m_codePage = 0;
 	m_bZeroFlag = false;
+#endif
+
 #endif
 
 	PUNTOEXE_FUNCTION_END();
@@ -219,6 +256,43 @@ std::string charsetConversion::fromUnicode(const std::wstring& unicodeString) co
 	{
 		return std::string();
 	}
+
+
+#if defined(PUNTOEXE_USE_ICU)
+
+    UnicodeString unicodeStringConversion;
+    switch(sizeof(wchar_t))
+    {
+    case 2:
+        unicodeStringConversion = UnicodeString((UChar*)&(unicodeString[0]), unicodeString.size());
+        break;
+    case 4:
+        unicodeStringConversion = UnicodeString::fromUTF32((UChar32*)&(unicodeString[0]), unicodeString.size());
+        break;
+    default:
+        PUNTOEXE_THROW(charsetConversionExceptionUtfSizeNotSupported, "The system utf size is not supported");
+    }
+    UErrorCode errorCode(U_ZERO_ERROR);
+    int32_t conversionLength = unicodeStringConversion.extract(0, 0, m_pIcuConverter, errorCode);
+    errorCode = U_ZERO_ERROR;
+    char* destination = new char[conversionLength];
+    unicodeStringConversion.extract(destination, conversionLength, m_pIcuConverter, errorCode);
+    std::string returnString(destination, conversionLength);
+    delete destination;
+    if(U_FAILURE(errorCode))
+    {
+        std::ostringstream buildErrorString;
+        buildErrorString << "ICU library returned error " << errorCode;
+        PUNTOEXE_THROW(charsetConversionException, buildErrorString.str());
+    }
+    if(returnString == "\x1a")
+    {
+        return "";
+    }
+    return returnString;
+
+#else
+
 #if defined(PUNTOEXE_USEICONV)
 	return myIconv(m_iconvFromUnicode, (char*)unicodeString.c_str(), unicodeString.length() * sizeof(wchar_t));
 #else
@@ -232,6 +306,8 @@ std::string charsetConversion::fromUnicode(const std::wstring& unicodeString) co
 	}
 	std::string returnString(convertedString.get(), requiredChars);
 	return returnString;
+#endif
+
 #endif
 
 	PUNTOEXE_FUNCTION_END();
@@ -251,6 +327,34 @@ std::wstring charsetConversion::toUnicode(const std::string& asciiString) const
 	{
 		return std::wstring();
 	}
+
+#if defined(PUNTOEXE_USE_ICU)
+
+    UErrorCode errorCode(U_ZERO_ERROR);
+    UnicodeString unicodeString(&(asciiString[0]), asciiString.size(), m_pIcuConverter, errorCode);
+    switch(sizeof(wchar_t))
+    {
+    case 2:
+    {
+        std::wstring returnString(unicodeString.length(), wchar_t(0));
+        unicodeString.extract((UChar*)&(returnString[0]), unicodeString.length(), errorCode);
+        return returnString;
+    }
+    case 4:
+    {
+        int32_t conversionLength = unicodeString.toUTF32((UChar32*)0, (int32_t)0, errorCode);
+        errorCode = U_ZERO_ERROR;
+        std::wstring returnString(conversionLength, wchar_t(0));
+        unicodeString.toUTF32((UChar32*)&(returnString[0]), conversionLength, errorCode);
+        return returnString;
+    }
+    default:
+        PUNTOEXE_THROW(charsetConversionExceptionUtfSizeNotSupported, "The system utf size is not supported");
+}
+
+
+#else
+
 #if defined(PUNTOEXE_USEICONV)
 	std::string convertedString(myIconv(m_iconvToUnicode, (char*)asciiString.c_str(), asciiString.length()));
 	std::wstring returnString((wchar_t*)convertedString.c_str(), convertedString.size() / sizeof(wchar_t));
@@ -260,7 +364,10 @@ std::wstring charsetConversion::toUnicode(const std::string& asciiString) const
 	::MultiByteToWideChar(m_codePage, 0, asciiString.c_str(), (int)(asciiString.length()), convertedString.get(), requiredWChars);
 	std::wstring returnString(convertedString.get(), requiredWChars);
 #endif
-	return returnString;
+
+    return returnString;
+
+#endif
 
 	PUNTOEXE_FUNCTION_END();
 }
