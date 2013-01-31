@@ -31,7 +31,20 @@ namespace imebra
 namespace transforms
 {
 
-class modalityVOILUTException;
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+/// \brief This exception is thrown by modalityVOILUT
+///         when the images passed to the transform are
+///         not monochromatic.
+///
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+class modalityVOILUTException: public transformException
+{
+public:
+    modalityVOILUTException(const std::string& message): transformException(message){}
+};
+
 
 /// \addtogroup group_transforms
 ///
@@ -140,20 +153,6 @@ private:
 	bool m_bEmpty;
 };
 
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-/// \brief This exception is thrown by modalityVOILUT
-///         when the images passed to the transform are
-///         not monochromatic.
-///
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-class modalityVOILUTException: public transformException
-{
-public:
-	modalityVOILUTException(const std::string& message): transformException(message){}
-};
 
 /// @}
 
