@@ -276,7 +276,6 @@ protected:
 					imbxUint32 numPixels,
 					imbxUint8* bitPointer,
 					imbxUint8* pReadBuffer,
-					const imbxUint32 readBufferSize,
 					const imbxUint8 wordSizeBytes,
 					const imbxUint8 allocatedBits,
 					const imbxUint32 mask);

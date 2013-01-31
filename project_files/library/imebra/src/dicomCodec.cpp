@@ -1257,7 +1257,7 @@ void dicomCodec::readUncompressedInterleaved(
 		{
 			for(imbxUint32 scanChannels = 0; scanChannels != channelsNumber; ++scanChannels)
 			{
-                            readPixel(pSourceStream, channelsMemory[scanChannels]++, 1, &bitPointer, readBuffer, (allocatedBits >> 3), wordSizeBytes, allocatedBits, mask);
+                            readPixel(pSourceStream, channelsMemory[scanChannels]++, 1, &bitPointer, readBuffer, wordSizeBytes, allocatedBits, mask);
 			}
 		}
 		return;
@@ -1293,7 +1293,7 @@ void dicomCodec::readUncompressedInterleaved(
 		--numBlocks)
 	{
         imbxInt32* readBlockValuesPtr(readBlockValuesAutoPtr.get());
-		readPixel(pSourceStream, readBlockValuesPtr, numValuesPerBlock, &bitPointer, readBuffer->data(), readBuffer->size(), wordSizeBytes, allocatedBits, mask);
+        readPixel(pSourceStream, readBlockValuesPtr, numValuesPerBlock, &bitPointer, readBuffer->data(), wordSizeBytes, allocatedBits, mask);
 
 		// Read channel 0 (not subsampled)
 		///////////////////////////////////////////////////////////
@@ -1440,7 +1440,7 @@ void dicomCodec::readUncompressedNotInterleaved(
 			readBuffer = memoryPool::getMemoryPool()->getMemory(lastBufferSize * ((7+allocatedBits) >> 3));
 		}
 		imbxInt32* pMemoryDest = m_channels[channel]->m_pBuffer;
-		readPixel(pSourceStream, pMemoryDest, m_channels[channel]->m_bufferSize, &bitPointer, readBuffer->data(), readBuffer->size(), wordSizeBytes, allocatedBits, mask);
+        readPixel(pSourceStream, pMemoryDest, m_channels[channel]->m_bufferSize, &bitPointer, readBuffer->data(), wordSizeBytes, allocatedBits, mask);
 	}
 
 	PUNTOEXE_FUNCTION_END();
@@ -1780,7 +1780,6 @@ void dicomCodec::readPixel(
 					imbxUint32 numPixels,
 					imbxUint8* pBitPointer,
 					imbxUint8* pReadBuffer,
-					const imbxUint32 readBufferSize,
 					const imbxUint8 wordSizeBytes,
 					const imbxUint8 allocatedBits,
 					const imbxUint32 mask)
@@ -1794,7 +1793,7 @@ void dicomCodec::readPixel(
 			while(numPixels-- != 0)
 			{
 				*pDest++ = (imbxUint32)(*pSource++) & mask;
-			}
+            }
 			return;
 		}
 		pSourceStream->adjustEndian(pReadBuffer, allocatedBits >> 3, streamController::lowByteEndian, numPixels);
