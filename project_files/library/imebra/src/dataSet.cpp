@@ -346,7 +346,7 @@ void dataSet::setImage(imbxUint32 frameNumber, ptr<image> pImage, std::wstring t
 	//  be stored
 	///////////////////////////////////////////////////////////
 	imbxUint16 groupId(0x7fe0), orderId(0), tagId(0x0010);
-	imbxUint32 firstBufferId(0), endBufferId(0);
+    imbxUint32 firstBufferId(0);
 
 	// bDontChangeAttributes is true if some images already
 	//  exist in the dataset and we must save the new image
@@ -466,7 +466,6 @@ void dataSet::setImage(imbxUint32 frameNumber, ptr<image> pImage, std::wstring t
 		}
 
 		firstBufferId = getFirstAvailFrameBufferId();
-		endBufferId = firstBufferId + 1;
 	}
 
 	// Get a stream to save the image

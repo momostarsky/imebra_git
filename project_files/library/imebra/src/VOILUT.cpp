@@ -51,14 +51,12 @@ imbxUint32 VOILUT::getVOILUTId(imbxUint32 VOILUTNumber)
 	// Reset the window's center and width
 	///////////////////////////////////////////////////////////
 	imbxInt32 windowWidth = 0;
-	imbxInt32 windowCenter = 0;
 
 	// Scan all the window's centers and widths.
 	///////////////////////////////////////////////////////////
 	imbxUint32 scanWindow;
 	for(scanWindow=VOILUTNumber; (windowWidth == 0) && (scanWindow!=0xffffffff); --scanWindow)
 	{
-		windowCenter = m_pDataSet->getSignedLong(0x0028, 0, 0x1050, scanWindow);
 		windowWidth  = m_pDataSet->getSignedLong(0x0028, 0, 0x1051, scanWindow);
 	}
 	++scanWindow;
