@@ -89,7 +89,7 @@ int main(int argc, char* argv[])
 		std::wstring transferSyntax;
 		if(argc == 4)
 		{
-			wchar_t* transferSyntaxAllowedValues[]=
+            const wchar_t* transferSyntaxAllowedValues[]=
 			{
 				L"1.2.840.10008.1.2.1", // Explicit VR little endian
 				L"1.2.840.10008.1.2.2", // Explicit VR big endian
@@ -105,7 +105,7 @@ int main(int argc, char* argv[])
 			std::istringstream convertTransferSyntax(argv[3]);
 			int transferSyntaxValue(-1);
 			convertTransferSyntax >> transferSyntaxValue;
-			if(transferSyntaxValue >= 0 && transferSyntaxValue < sizeof(transferSyntaxAllowedValues)/sizeof(wchar_t*))
+            if(transferSyntaxValue >= 0 && (size_t)transferSyntaxValue < sizeof(transferSyntaxAllowedValues)/sizeof(wchar_t*))
 			{
 				transferSyntax = transferSyntaxAllowedValues[transferSyntaxValue];
 			}

@@ -51,6 +51,9 @@ struct dicomCharsetInformation
 class dataHandlerStringUnicode : public dataHandlerString
 {
 public:
+
+    dataHandlerStringUnicode();
+
 	/// \internal
 	/// \brief Defines the charset used by the strings encoded
 	///         in the tag.
@@ -79,8 +82,8 @@ protected:
 	///////////////////////////////////////////////////////////
 	virtual std::string convertFromUnicode(const std::wstring& value, charsetsList::tCharsetsList* pCharsetsList) const;
 
-	charsetConversion m_charsetConversion;
-	charsetConversion m_localeCharsetConversion;
+    std::auto_ptr<charsetConversion> m_charsetConversion;
+    std::auto_ptr<charsetConversion> m_localeCharsetConversion;
 
 	dicomCharsetInformation* getCharsetInfo(const std::wstring& dicomName) const;
 };

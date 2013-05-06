@@ -120,7 +120,10 @@ HEADERS += \
     ../docs/d_addToProject.h \
     ../docs/c_quick_tour.h \
     ../docs/b_imebra_structure.h \
-    ../docs/a_license.h
+    ../docs/a_license.h \
+    ../library/base/include/charsetConversionIconv.h \
+    ../library/base/include/charsetConversionICU.h \
+    ../library/base/include/charsetConversionWindows.h
 
 SOURCES += \
     unicodeStringHandlerTest.cpp \
@@ -209,4 +212,7 @@ SOURCES += \
     ../library/base/src/criticalSection.cpp \
     ../library/base/src/charsetConversion.cpp \
     ../library/base/src/baseStream.cpp \
-    ../library/base/src/baseObject.cpp
+    ../library/base/src/baseObject.cpp \
+    ../library/base/src/charsetConversionIconv.cpp \
+    ../library/base/src/charsetConversionICU.cpp \
+    ../library/base/src/charsetConversionWindows.cpp

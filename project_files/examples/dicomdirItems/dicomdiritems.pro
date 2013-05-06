@@ -76,7 +76,10 @@ HEADERS += \
     ../../library/imebra/include/charsetsList.h \
     ../../library/imebra/include/bufferStream.h \
     ../../library/imebra/include/buffer.h \
-	../../library/imebra/include/transform.h
+	../../library/imebra/include/transform.h \
+    ../../library/base/include/charsetConversionICU.h \
+    ../../library/base/include/charsetConversionWindows.h \
+    ../../library/base/include/charsetConversionIconv.h
 
 SOURCES += \
     dicomdirItems.cpp \
@@ -146,5 +149,8 @@ SOURCES += \
     ../../library/imebra/src/codec.cpp \
     ../../library/imebra/src/charsetsList.cpp \
     ../../library/imebra/src/buffer.cpp \
-	../../library/imebra/src/transform.cpp
+	../../library/imebra/src/transform.cpp \
+    ../../library/base/src/charsetConversionICU.cpp \
+    ../../library/base/src/charsetConversionIconv.cpp \
+    ../../library/base/src/charsetConversionWindows.cpp
 

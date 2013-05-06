@@ -75,6 +75,13 @@ static dicomCharsetInformation m_dicomCharsets[]={
 };
 
 
+dataHandlerStringUnicode::dataHandlerStringUnicode()
+{
+    m_charsetConversion.reset(allocateCharsetConversion());
+    m_localeCharsetConversion.reset(allocateCharsetConversion());
+
+}
+
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 //
@@ -95,11 +102,11 @@ std::wstring dataHandlerStringUnicode::convertToUnicode(const std::string& value
 	{
 		// No, there isn't any escape sequence
 		///////////////////////////////////////////////////////////
-		return m_charsetConversion.toUnicode(value);
+        return m_charsetConversion->toUnicode(value);
 	}
 
-        charsetConversion localCharsetConversion;
-        localCharsetConversion.initialize(m_charsetConversion.getIsoCharset());
+    std::auto_ptr<charsetConversion> localCharsetConversion(allocateCharsetConversion());
+    localCharsetConversion->initialize(m_charsetConversion->getIsoCharset());
 
 	// Here we store the value to be returned
 	///////////////////////////////////////////////////////////
@@ -137,7 +144,7 @@ std::wstring dataHandlerStringUnicode::convertToUnicode(const std::string& value
 		///////////////////////////////////////////////////////////
 		if(escapePosition > scanString)
 		{
-			returnString += localCharsetConversion.toUnicode(value.substr(scanString, escapePosition - scanString));
+            returnString += localCharsetConversion->toUnicode(value.substr(scanString, escapePosition - scanString));
 		}
 
 		// Move the char pointer to the next char that has to be
@@ -149,7 +156,7 @@ std::wstring dataHandlerStringUnicode::convertToUnicode(const std::string& value
 		///////////////////////////////////////////////////////////
 		if(!isoTable.empty())
 		{
-			localCharsetConversion.initialize(isoTable);
+            localCharsetConversion->initialize(isoTable);
 		}
 	}
 
@@ -180,12 +187,12 @@ std::string dataHandlerStringUnicode::convertFromUnicode(const std::wstring& val
 		dicomCharsetInformation* pCharset = getCharsetInfo(pCharsetsList->front());
 		if(pCharset != 0 && pCharset->m_escapeSequence.empty())
 		{
-			return m_charsetConversion.fromUnicode(value);
+            return m_charsetConversion->fromUnicode(value);
 		}
 	}
 
-        charsetConversion localCharsetConversion;
-        localCharsetConversion.initialize(m_charsetConversion.getIsoCharset());
+    std::auto_ptr<charsetConversion> localCharsetConversion(allocateCharsetConversion());
+    localCharsetConversion->initialize(m_charsetConversion->getIsoCharset());
 
 	// Returned string
 	///////////////////////////////////////////////////////////
@@ -229,7 +236,7 @@ std::string dataHandlerStringUnicode::convertFromUnicode(const std::wstring& val
 			
 			// If the conversion doesn't succeed, exit from the loop
 			///////////////////////////////////////////////////////////
-			if(localCharsetConversion.fromUnicode(code).empty())
+            if(localCharsetConversion->fromUnicode(code).empty())
 			{
 				break;
 			}
@@ -242,7 +249,7 @@ std::string dataHandlerStringUnicode::convertFromUnicode(const std::wstring& val
 		if(until > scanString)
 		{
 			std::wstring partialString = value.substr(scanString, until - scanString);
-			asciiString += localCharsetConversion.fromUnicode(partialString);
+            asciiString += localCharsetConversion->fromUnicode(partialString);
 			scanString = until;
 		}
 
@@ -255,7 +262,7 @@ std::string dataHandlerStringUnicode::convertFromUnicode(const std::wstring& val
 
 		// Find the escape sequence
 		///////////////////////////////////////////////////////////
-		std::string activeIso = localCharsetConversion.getIsoCharset();
+        std::string activeIso = localCharsetConversion->getIsoCharset();
 		bool bSequenceFound = false;
 		for(int scanCharsets = 0; m_dicomCharsets[scanCharsets].m_dicomName != 0; ++scanCharsets)
 		{
@@ -266,8 +273,8 @@ std::string dataHandlerStringUnicode::convertFromUnicode(const std::wstring& val
 
 			try
 			{
-				localCharsetConversion.initialize(m_dicomCharsets[scanCharsets].m_isoRegistration);
-				if(!localCharsetConversion.fromUnicode(code).empty())
+                localCharsetConversion->initialize(m_dicomCharsets[scanCharsets].m_isoRegistration);
+                if(!localCharsetConversion->fromUnicode(code).empty())
 				{
 					asciiString += m_dicomCharsets[scanCharsets].m_escapeSequence;
 					bSequenceFound = true;
@@ -298,7 +305,7 @@ std::string dataHandlerStringUnicode::convertFromUnicode(const std::wstring& val
 		}
 		if(!bSequenceFound)
 		{
-			localCharsetConversion.initialize(activeIso);
+            localCharsetConversion->initialize(activeIso);
 			++scanString;
 		}
 
@@ -373,8 +380,8 @@ void dataHandlerStringUnicode::setCharsetsList(charsetsList::tCharsetsList* pCha
 
 	// Setup the conversion objects
 	///////////////////////////////////////////////////////////
-	m_charsetConversion.initialize(pCharset->m_isoRegistration);
-	m_localeCharsetConversion.initialize("LOCALE");
+    m_charsetConversion->initialize(pCharset->m_isoRegistration);
+    m_localeCharsetConversion->initialize("LOCALE");
 
 	PUNTOEXE_FUNCTION_END();
 }

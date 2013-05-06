@@ -19,25 +19,6 @@ The class hides the platform specific implementations and supplies a common
 #include <string>
 #include <stdexcept>
 
-#if defined(PUNTOEXE_USE_ICU)
-
-#include <unicode/coll.h>
-#include <unicode/ucnv.h>
-
-#else
-#if defined(PUNTOEXE_POSIX)
-#define PUNTOEXE_USEICONV 1
-#endif
-
-#if defined(PUNTOEXE_USEICONV)
-#include <iconv.h>
-#include <errno.h>
-#else
-#include "windows.h"
-#endif
-
-#endif
-
 ///////////////////////////////////////////////////////////
 //
 // Everything is in the namespace puntoexe
@@ -77,7 +58,7 @@ struct charsetInformation
 class charsetConversion
 {
 public:
-	charsetConversion();
+
 	virtual ~charsetConversion();
 
 	/// \brief Initialize the charsetConversion object.
@@ -89,7 +70,7 @@ public:
 	///                   be used for the conversion
 	///
 	///////////////////////////////////////////////////////////
-	void initialize(const std::string& tableName);
+    void initialize(const std::string& tableName);
 
 	/// \brief Retrieve the ISO name of the charset currently
 	///         used for the conversion.
@@ -109,7 +90,7 @@ public:
 	/// @param unicodeStr
 	///
 	///////////////////////////////////////////////////////////
-	std::string fromUnicode(const std::wstring& unicodeString) const;
+    virtual std::string fromUnicode(const std::wstring& unicodeString) const = 0;
 
 	/// \brief Transform a multibyte string into an unicode
 	///         string using the charset declared with the
@@ -123,38 +104,24 @@ public:
 	/// @return            the converted unicode string
 	///
 	///////////////////////////////////////////////////////////
-	std::wstring toUnicode(const std::string& asciiString) const;
+    virtual std::wstring toUnicode(const std::string& asciiString) const = 0;
 
 protected:
-	void close();
+    virtual void initialize(const int requestedTable) = 0;
+    virtual void close();
 
 	int findTable(const std::string& tableName) const;
 
-	std::string m_isoCharset;
+    std::string m_isoCharset;
 
-#if defined(PUNTOEXE_USE_ICU)
-
-    UConverter* m_pIcuConverter;
-
-#else
-
-#if defined(PUNTOEXE_USEICONV)
-
-#if defined(WIN32)
-	static std::string myIconv(iconv_t context, const char* inputString, size_t inputStringLengthBytes);
-#else
-	static std::string myIconv(iconv_t context, char* inputString, size_t inputStringLengthBytes);
-#endif
-	iconv_t m_iconvToUnicode;
-	iconv_t m_iconvFromUnicode;
-#else
-	unsigned long m_codePage;
-	bool m_bZeroFlag;
-#endif
-
-#endif
 };
 
+///////////////////////////////////////////////////////////
+//
+// This table contains the recognized ISO charsets
+//
+///////////////////////////////////////////////////////////
+extern const charsetInformation m_charsetTable[];
 
 ///////////////////////////////////////////////////////////
 /// \internal
@@ -246,6 +213,8 @@ public:
 };
 
 ///@}
+
+charsetConversion* allocateCharsetConversion();
 
 } // namespace puntoexe
 
