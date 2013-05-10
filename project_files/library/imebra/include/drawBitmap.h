@@ -55,10 +55,18 @@ namespace puntoexe
 		};
 
 
-		enum tDrawBitmapType
+        ///////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////
+        /// \brief Defines the output type of
+        ///         getBitmap().
+        ///
+        ///////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////
+        enum tDrawBitmapType
 		{
-			drawBitmapRGB,
-			drawBitmapBGR
+            drawBitmapRGB, ///< Generates a BMP image where each pixel contains 3 bytes (R, G and B)
+            drawBitmapBGR, ///< Generates a BMP image where each pixel contains 3 bytes (B, G and R)
+            drawBitmapARGB ///< Generates a BMP image where each pixel contains 4 bytes (A, R, G and B)
 		};
 
 		///////////////////////////////////////////////////////////
@@ -69,7 +77,7 @@ namespace puntoexe
 		///
 		///////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////
-		class drawBitmap: public baseObject
+        class drawBitmap: public baseObject
 		{
 		public:
 			/// \brief Constructor.
@@ -186,10 +194,13 @@ namespace puntoexe
 					PUNTOEXE_THROW(drawBitmapExceptionInvalidArea, "Destination area not valid");
 				}
 
-				// Calculate the row' size, in bytes
+                imbxUint32 destPixelSize(drawBitmapType == drawBitmapARGB ? 4 : 3);
+
+                // Calculate the row' size, in bytes
 				///////////////////////////////////////////////////////////
-				imbxUint32 rowSizeBytes = ((visibleBottomRightX - visibleTopLeftX) * 3 + rowAlignBytes - 1) / rowAlignBytes;
+                imbxUint32 rowSizeBytes = ((visibleBottomRightX - visibleTopLeftX) * destPixelSize + rowAlignBytes - 1) / rowAlignBytes;
 				rowSizeBytes *= rowAlignBytes;
+
 
 				// Allocate the memory for the final bitmap
 				///////////////////////////////////////////////////////////
@@ -251,7 +262,7 @@ namespace puntoexe
 				// Retrieve the final bitmap's buffer
 				///////////////////////////////////////////////////////////
 				imbxUint8* pFinalBuffer = (imbxUint8*)(reuseMemory->data());
-				imbxInt32 nextRowGap = rowSizeBytes - destBitmapWidth * 3;
+                imbxInt32 nextRowGap = rowSizeBytes - destBitmapWidth * destPixelSize;
 
 				// First Y pixel not transformed by the transforms chain
 				///////////////////////////////////////////////////////////
@@ -272,7 +283,7 @@ namespace puntoexe
 					{
 						sourceWidth = imageSizeX - (firstPixelX >> leftShiftX);
 					}
-					sourceHeight = 65536 / (sourceWidth * 3);
+                    sourceHeight = 65536 / (sourceWidth * 3);
 					if(sourceHeight < 1)
 					{
 						sourceHeight = 1;
@@ -386,7 +397,18 @@ namespace puntoexe
 					imbxInt32* pAveragePointer = averagePixels.get();
 					imbxUint32 counter;
 
-					if(drawBitmapType == drawBitmapRGB)
+                    if(drawBitmapType == drawBitmapARGB)
+                    {
+                        for(imbxInt32 scanX (destBitmapWidth); scanX != 0; --scanX)
+                        {
+                            counter = (imbxUint32)*(pAveragePointer++);
+                            *(pFinalBuffer++) = 0xff;
+                            *(pFinalBuffer++) = (imbxUint8) (((imbxUint32)*(pAveragePointer++) / counter) & 0xff);
+                            *(pFinalBuffer++) = (imbxUint8) (((imbxUint32)*(pAveragePointer++) / counter) & 0xff);
+                            *(pFinalBuffer++) = (imbxUint8) (((imbxUint32)*(pAveragePointer++) / counter) & 0xff);
+                        }
+                    }
+                    else if(drawBitmapType == drawBitmapRGB)
 					{
 						for(imbxInt32 scanX (destBitmapWidth); scanX != 0; --scanX)
 						{
