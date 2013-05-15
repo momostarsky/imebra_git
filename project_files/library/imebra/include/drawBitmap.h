@@ -67,7 +67,7 @@ namespace puntoexe
             drawBitmapRGB  = 0, ///< Generates a BMP image where each pixel contains 3 bytes (R, G and B)
             drawBitmapBGR  = 1, ///< Generates a BMP image where each pixel contains 3 bytes (B, G and R)
             drawBitmapARGB = 2, ///< Generates a BMP image where each pixel contains 4 bytes (A, R, G and B)
-            drawBitmapABGR = 3  ///< Generates a BMP image where each pixel contains 4 bytes (A, B, G and R)
+            drawBitmapBGRA = 3  ///< Generates a BMP image where each pixel contains 4 bytes (B, G, R and A)
 		};
 
 		///////////////////////////////////////////////////////////
@@ -195,7 +195,7 @@ namespace puntoexe
 					PUNTOEXE_THROW(drawBitmapExceptionInvalidArea, "Destination area not valid");
 				}
 
-                imbxUint32 destPixelSize(drawBitmapType == drawBitmapARGB ? 4 : 3);
+                imbxUint32 destPixelSize((drawBitmapType == drawBitmapARGB || drawBitmapType == drawBitmapBGRA) ? 4 : 3);
 
                 // Calculate the row' size, in bytes
 				///////////////////////////////////////////////////////////
@@ -255,7 +255,7 @@ namespace puntoexe
 					PUNTOEXE_THROW(drawBitmapExceptionInvalidArea, "Destination area not valid");
 				}
 
-                imbxUint32 destPixelSize(drawBitmapType == drawBitmapARGB ? 4 : 3);
+                imbxUint32 destPixelSize((drawBitmapType == drawBitmapARGB || drawBitmapType == drawBitmapBGRA) ? 4 : 3);
 
                 // Calculate the row' size, in bytes
 				///////////////////////////////////////////////////////////
@@ -297,18 +297,21 @@ namespace puntoexe
 				//  in the source image mapped to the final bitmap
 				///////////////////////////////////////////////////////////
 				imbxUint32 destBitmapWidth(visibleBottomRightX - visibleTopLeftX);
-				std::auto_ptr<imbxInt32> averagePixels(new imbxInt32[destBitmapWidth * 4]);
-				std::auto_ptr<imbxUint32> sourcePixelIndex(new imbxUint32[destBitmapWidth + 1]);
+
+				ptr<memory> averagePixelsMemory(memoryPool::getMemoryPool()->getMemory(destBitmapWidth * 4 * sizeof(imbxInt32)));
+				ptr<memory> sourcePixelIndexMemory(memoryPool::getMemoryPool()->getMemory((destBitmapWidth + 1) * sizeof(imbxUint32)));
+				imbxInt32* averagePixels = (imbxInt32*)averagePixelsMemory->data();
+				imbxUint32* sourcePixelIndex = (imbxUint32*)sourcePixelIndexMemory->data();
 				for(imbxInt32 scanPixelsX = visibleTopLeftX; scanPixelsX != visibleBottomRightX + 1; ++scanPixelsX)
 				{
-					sourcePixelIndex.get()[scanPixelsX - visibleTopLeftX] = scanPixelsX * (imageSizeX << leftShiftX) / totalWidthPixels;
+					sourcePixelIndex[scanPixelsX - visibleTopLeftX] = scanPixelsX * (imageSizeX << leftShiftX) / totalWidthPixels;
 				}
 
 				// Get the index of the first and last+1 pixel to be
 				//  displayed
 				///////////////////////////////////////////////////////////
-				imbxInt32 firstPixelX(sourcePixelIndex.get()[0]);
-				imbxInt32 lastPixelX(sourcePixelIndex.get()[visibleBottomRightX - visibleTopLeftX]);
+				imbxInt32 firstPixelX(*sourcePixelIndex);
+				imbxInt32 lastPixelX(sourcePixelIndex[visibleBottomRightX - visibleTopLeftX]);
 
 				// If a transform chain is active then allocate a temporary
 				//  output image
@@ -357,17 +360,18 @@ namespace puntoexe
 				///////////////////////////////////////////////////////////
 				for(imbxInt32 scanY = visibleTopLeftY; scanY != visibleBottomRightY; ++scanY)
 				{
-					::memset(averagePixels.get(), 0, destBitmapWidth * 4 * sizeof(averagePixels.get()[0]));
+					::memset(averagePixels, 0, destBitmapWidth * 4 * sizeof(imbxInt32));
 
 					// Scan all the image's rows that go in the bitmap's row
 					///////////////////////////////////////////////////////////
 					imbxInt32 firstPixelY = scanY * (imageSizeY << leftShiftY) / totalHeightPixels;
 					imbxInt32 lastPixelY = (scanY + 1) * (imageSizeY << leftShiftY) / totalHeightPixels;
+
 					for(imbxInt32 scanImageY = firstPixelY; scanImageY != lastPixelY; /* increased in the loop */)
 					{
 						imbxInt32 currentImageY = (scanImageY >> leftShiftY);
-						imbxInt32* pAveragePointer = averagePixels.get();
-						imbxUint32* pNextSourceXIndex = sourcePixelIndex.get();
+						imbxInt32* pAveragePointer = averagePixels;
+						imbxUint32* pNextSourceXIndex = sourcePixelIndex;
 
 						imbxUint8* pImagePointer(0);
 						imbxUint8* imageMemory(0);
@@ -450,7 +454,7 @@ namespace puntoexe
 					}
 
 					// Copy the average to the bitmap
-					imbxInt32* pAveragePointer = averagePixels.get();
+					imbxInt32* pAveragePointer = averagePixels;
 					imbxUint32 counter;
 
                     if(drawBitmapType == drawBitmapARGB)
@@ -464,7 +468,7 @@ namespace puntoexe
                             *(pBuffer++) = 0xff;
                         }
                     }
-                    else if(drawBitmapType == drawBitmapABGR)
+                    else if(drawBitmapType == drawBitmapBGRA)
                     {
 					    imbxUint32 r, g;
                         for(imbxInt32 scanX (destBitmapWidth); scanX != 0; --scanX)
@@ -501,6 +505,7 @@ namespace puntoexe
 							*(pBuffer++) = (imbxUint8)r;
 						}
 					}
+
 					pBuffer += nextRowGap;
 				}
 
