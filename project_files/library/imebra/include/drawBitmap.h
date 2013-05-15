@@ -64,9 +64,10 @@ namespace puntoexe
         ///////////////////////////////////////////////////////////
         enum tDrawBitmapType
 		{
-            drawBitmapRGB, ///< Generates a BMP image where each pixel contains 3 bytes (R, G and B)
-            drawBitmapBGR, ///< Generates a BMP image where each pixel contains 3 bytes (B, G and R)
-            drawBitmapARGB ///< Generates a BMP image where each pixel contains 4 bytes (A, R, G and B)
+            drawBitmapRGB  = 0, ///< Generates a BMP image where each pixel contains 3 bytes (R, G and B)
+            drawBitmapBGR  = 1, ///< Generates a BMP image where each pixel contains 3 bytes (B, G and R)
+            drawBitmapARGB = 2, ///< Generates a BMP image where each pixel contains 4 bytes (A, R, G and B)
+            drawBitmapABGR = 3  ///< Generates a BMP image where each pixel contains 4 bytes (A, B, G and R)
 		};
 
 		///////////////////////////////////////////////////////////
@@ -214,6 +215,62 @@ namespace puntoexe
 					reuseMemory->resize(memorySize);
 				}
 
+				// Retrieve the final bitmap's buffer
+				///////////////////////////////////////////////////////////
+				imbxUint8* pFinalBuffer = (imbxUint8*)(reuseMemory->data());
+
+				getBitmap<drawBitmapType, rowAlignBytes>(totalWidthPixels, totalHeightPixels, visibleTopLeftX, visibleTopLeftY, visibleBottomRightX, visibleBottomRightY, pFinalBuffer, memorySize);
+
+				return reuseMemory;
+
+				PUNTOEXE_FUNCTION_END();
+
+			}
+
+			template <tDrawBitmapType drawBitmapType, int rowAlignBytes>
+					size_t getBitmap(imbxInt32 totalWidthPixels, imbxInt32 totalHeightPixels,
+										  imbxInt32 visibleTopLeftX, imbxInt32 visibleTopLeftY, imbxInt32 visibleBottomRightX, imbxInt32 visibleBottomRightY,
+										  imbxUint8* pBuffer, size_t bufferSize)
+			{
+				PUNTOEXE_FUNCTION_START(L"drawBitmap::getBitmapRaw");
+
+				// Just return if there is nothing to show
+				///////////////////////////////////////////////////////////
+				if(visibleTopLeftX == visibleBottomRightX || visibleTopLeftY == visibleBottomRightY)
+				{
+					return 0;
+				}
+
+				// Check if the image is visible in the specified area
+				///////////////////////////////////////////////////////////
+				if(
+						visibleBottomRightX > totalWidthPixels ||
+						visibleBottomRightY > totalHeightPixels ||
+						visibleTopLeftX < 0 ||
+						visibleTopLeftY < 0 ||
+						visibleTopLeftX > visibleBottomRightX ||
+						visibleTopLeftY > visibleBottomRightY
+						)
+				{
+					PUNTOEXE_THROW(drawBitmapExceptionInvalidArea, "Destination area not valid");
+				}
+
+                imbxUint32 destPixelSize(drawBitmapType == drawBitmapARGB ? 4 : 3);
+
+                // Calculate the row' size, in bytes
+				///////////////////////////////////////////////////////////
+                imbxUint32 rowSizeBytes = ((visibleBottomRightX - visibleTopLeftX) * destPixelSize + rowAlignBytes - 1) / rowAlignBytes;
+				rowSizeBytes *= rowAlignBytes;
+
+
+				// Allocate the memory for the final bitmap
+				///////////////////////////////////////////////////////////
+				imbxUint32 memorySize(rowSizeBytes * (visibleBottomRightY - visibleTopLeftY));
+				if(memorySize > bufferSize)
+				{
+				    return memorySize;
+				}
+
 				// Find the multiplier that make the image bigger than
 				//  the rendering area
 				///////////////////////////////////////////////////////////
@@ -261,7 +318,6 @@ namespace puntoexe
 
 				// Retrieve the final bitmap's buffer
 				///////////////////////////////////////////////////////////
-				imbxUint8* pFinalBuffer = (imbxUint8*)(reuseMemory->data());
                 imbxInt32 nextRowGap = rowSizeBytes - destBitmapWidth * destPixelSize;
 
 				// First Y pixel not transformed by the transforms chain
@@ -402,10 +458,24 @@ namespace puntoexe
                         for(imbxInt32 scanX (destBitmapWidth); scanX != 0; --scanX)
                         {
                             counter = (imbxUint32)*(pAveragePointer++);
-                            *(pFinalBuffer++) = 0xff;
-                            *(pFinalBuffer++) = (imbxUint8) (((imbxUint32)*(pAveragePointer++) / counter) & 0xff);
-                            *(pFinalBuffer++) = (imbxUint8) (((imbxUint32)*(pAveragePointer++) / counter) & 0xff);
-                            *(pFinalBuffer++) = (imbxUint8) (((imbxUint32)*(pAveragePointer++) / counter) & 0xff);
+                            *(pBuffer++) = (imbxUint8) (((imbxUint32)*(pAveragePointer++) / counter) & 0xff);
+                            *(pBuffer++) = (imbxUint8) (((imbxUint32)*(pAveragePointer++) / counter) & 0xff);
+                            *(pBuffer++) = (imbxUint8) (((imbxUint32)*(pAveragePointer++) / counter) & 0xff);
+                            *(pBuffer++) = 0xff;
+                        }
+                    }
+                    else if(drawBitmapType == drawBitmapABGR)
+                    {
+					    imbxUint32 r, g;
+                        for(imbxInt32 scanX (destBitmapWidth); scanX != 0; --scanX)
+                        {
+                            counter = (imbxUint32)*(pAveragePointer++);
+							r = (imbxUint8) (((imbxUint32)*(pAveragePointer++) / counter) & 0xff);
+							g = (imbxUint8) (((imbxUint32)*(pAveragePointer++) / counter) & 0xff);
+							*(pBuffer++) = (imbxUint8) (((imbxUint32)*(pAveragePointer++) / counter) & 0xff);
+							*(pBuffer++) = (imbxUint8)g;
+							*(pBuffer++) = (imbxUint8)r;
+                            *(pBuffer++) = 0xff;
                         }
                     }
                     else if(drawBitmapType == drawBitmapRGB)
@@ -413,31 +483,30 @@ namespace puntoexe
 						for(imbxInt32 scanX (destBitmapWidth); scanX != 0; --scanX)
 						{
 							counter = (imbxUint32)*(pAveragePointer++);
-							*(pFinalBuffer++) = (imbxUint8) (((imbxUint32)*(pAveragePointer++) / counter) & 0xff);
-							*(pFinalBuffer++) = (imbxUint8) (((imbxUint32)*(pAveragePointer++) / counter) & 0xff);
-							*(pFinalBuffer++) = (imbxUint8) (((imbxUint32)*(pAveragePointer++) / counter) & 0xff);
+							*(pBuffer++) = (imbxUint8) (((imbxUint32)*(pAveragePointer++) / counter) & 0xff);
+							*(pBuffer++) = (imbxUint8) (((imbxUint32)*(pAveragePointer++) / counter) & 0xff);
+							*(pBuffer++) = (imbxUint8) (((imbxUint32)*(pAveragePointer++) / counter) & 0xff);
 						}
 					}
 					else
 					{
+					    imbxUint32 r, g;
 						for(imbxInt32 scanX (destBitmapWidth); scanX != 0; --scanX)
 						{
 							counter = (imbxUint32)*(pAveragePointer++);
-							imbxUint32 r = (imbxUint8) (((imbxUint32)*(pAveragePointer++) / counter) & 0xff);
-							imbxUint32 g = (imbxUint8) (((imbxUint32)*(pAveragePointer++) / counter) & 0xff);
-							imbxUint32 b = (imbxUint8) (((imbxUint32)*(pAveragePointer++) / counter) & 0xff);
-							*(pFinalBuffer++) = (imbxUint8)b;
-							*(pFinalBuffer++) = (imbxUint8)g;
-							*(pFinalBuffer++) = (imbxUint8)r;
+							r = (imbxUint8) (((imbxUint32)*(pAveragePointer++) / counter) & 0xff);
+							g = (imbxUint8) (((imbxUint32)*(pAveragePointer++) / counter) & 0xff);
+							*(pBuffer++) = (imbxUint8) (((imbxUint32)*(pAveragePointer++) / counter) & 0xff);
+							*(pBuffer++) = (imbxUint8)g;
+							*(pBuffer++) = (imbxUint8)r;
 						}
 					}
-					pFinalBuffer += nextRowGap;
+					pBuffer += nextRowGap;
 				}
 
-				return reuseMemory;
+				return memorySize;
 
 				PUNTOEXE_FUNCTION_END();
-
 			}
 
 		protected:

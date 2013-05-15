@@ -42,7 +42,7 @@ typedef signed int    imbxInt32;
 #define PUNTOEXE_POSIX 1
 #endif
 
-#if !defined(PUNTOEXE_USE_ICONV) && !defined(PUNTOEXE_USE_ICU) && !defined(PUNTOEXE_USE_WINDOWS_CHARSET)
+#if !defined(PUNTOEXE_USE_ICONV) && !defined(PUNTOEXE_USE_ICU) && !defined(PUNTOEXE_USE_WINDOWS_CHARSET) && !defined(PUNTOEXE_USE_JAVA)
 
 #if defined(PUNTOEXE_WINDOWS)
     #define PUNTOEXE_USE_WINDOWS_CHARSET
