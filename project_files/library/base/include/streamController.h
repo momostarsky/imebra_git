@@ -67,6 +67,8 @@ public:
 	///////////////////////////////////////////////////////////
 	streamController(ptr<baseStream> pControlledStream, imbxUint32 virtualStart = 0, imbxUint32 virtualLength = 0);
 
+    virtual ~streamController();
+
 	/// \brief Get the stream's position relative to the
 	///         virtual start position specified in the
 	///         constructor.
@@ -177,7 +179,7 @@ protected:
 	/// \brief Used for buffered IO
 	///
 	///////////////////////////////////////////////////////////
-	std::auto_ptr<imbxUint8> m_dataBuffer;
+    imbxUint8* m_dataBuffer;
 
 	/// \brief Byte in the stream that represents the byte 0
 	///         in the stream controller.

@@ -31,8 +31,19 @@ streamController::streamController(ptr<baseStream> pControlledStream, imbxUint32
 		m_virtualLength(virtualLength),
 		m_dataBufferStreamPosition(0)
 {
-	m_pDataBufferStart = m_pDataBufferEnd = m_pDataBufferCurrent = m_dataBuffer.get();
+    m_pDataBufferStart = m_pDataBufferEnd = m_pDataBufferCurrent = m_dataBuffer;
 	m_pDataBufferMaxEnd = m_pDataBufferStart + IMEBRA_STREAM_CONTROLLER_MEMORY_SIZE;
+}
+
+
+///////////////////////////////////////////////////////////
+//
+// Destructor
+//
+///////////////////////////////////////////////////////////
+streamController::~streamController()
+{
+    delete[] m_dataBuffer;
 }
 
 
