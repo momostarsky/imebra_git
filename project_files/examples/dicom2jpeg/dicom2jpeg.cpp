@@ -101,45 +101,56 @@ int main(int argc, char* argv[])
                     // Build the transforms chain
                     ptr<transforms::transformsChain> chain(new transforms::transformsChain);
 
-                    chain->addTransform(new transforms::modalityVOILUT(loadedDataSet));
+                    ptr<transforms::modalityVOILUT> modalityVOILUT(new transforms::modalityVOILUT(loadedDataSet));
+                    chain->addTransform(modalityVOILUT);
 
                     ptr<transforms::colorTransforms::colorTransformsFactory> colorFactory(transforms::colorTransforms::colorTransformsFactory::getColorTransformsFactory());
                     if(colorFactory->isMonochrome(dataSetImage->getColorSpace()))
                     {
+                        // Convert to MONOCHROME2 if a modality transform is not present
+                        ////////////////////////////////////////////////////////////////
+                        if(modalityVOILUT->isEmpty())
+                        {
+                            ptr<transforms::colorTransforms::colorTransform> monochromeColorTransform(colorFactory->getTransform(dataSetImage->getColorSpace(), L"MONOCHROME2"));
+                            if(monochromeColorTransform != 0)
+                            {
+                                chain->addTransform(monochromeColorTransform);
+                            }
+                        }
+
                         ptr<transforms::VOILUT> presentationVOILUT(new transforms::VOILUT(loadedDataSet));
                         imbxUint32 firstVOILUTID(presentationVOILUT->getVOILUTId(0));
                         if(firstVOILUTID != 0)
                         {
-                                presentationVOILUT->setVOILUT(firstVOILUTID);
-                                chain->addTransform((presentationVOILUT));
+                            presentationVOILUT->setVOILUT(firstVOILUTID);
                         }
                         else
                         {
-                            // Calculate optimal VOI/LUT
-                            imbxUint32 rowSize, channelPixelSize, channelsNumber;
-                            ptr<handlers::dataHandlerNumericBase> imagePixels(dataSetImage->getDataHandler(false, &rowSize, &channelPixelSize, &channelsNumber));
-                            imbxInt32 minValue, maxValue;
-                            minValue = maxValue = imagePixels->getSignedLong(0);
-                            imbxUint32 numPixels(width * height);
-                            for(imbxUint32 scanPixels(1); scanPixels != numPixels; ++scanPixels)
-                            {
-                                imbxInt32 value(imagePixels->getSignedLong(scanPixels));
-                                if(value > maxValue)
-                                {
-                                    maxValue = value;
-                                }
-                                else if(value < minValue)
-                                {
-                                    minValue = value;
-                                }
-                            }
-                            presentationVOILUT->setCenterWidth((maxValue - minValue) / 2 + minValue, maxValue - minValue);
-                            chain->addTransform((presentationVOILUT));
+                            // Run the transform on the first image
+                            ///////////////////////////////////////
+                            ptr<image> temporaryImage = chain->allocateOutputImage(dataSetImage, width, height);
+                            chain->runTransform(dataSetImage, 0, 0, width, height, temporaryImage, 0, 0);
+
+                            // Now find the optimal VOILUT
+                            //////////////////////////////
+                            presentationVOILUT->applyOptimalVOI(temporaryImage, 0, 0, width, height);
                         }
+                        chain->addTransform(presentationVOILUT);
+                    }
+
+                    std::wstring initialColorSpace;
+                    if(chain->isEmpty())
+                    {
+                        initialColorSpace = dataSetImage->getColorSpace();
+                    }
+                    else
+                    {
+                        ptr<image> startImage(chain->allocateOutputImage(dataSetImage, 1, 1));
+                        initialColorSpace = startImage->getColorSpace();
                     }
 
                     // Color transform to YCrCb
-                    ptr<transforms::colorTransforms::colorTransform> colorTransform(colorFactory->getTransform(loadedDataSet->getUnicodeString(0x0028, 0x0, 0x0004, 0x0), L"YBR_FULL"));
+                    ptr<transforms::colorTransforms::colorTransform> colorTransform(colorFactory->getTransform(initialColorSpace, L"YBR_FULL"));
                     if(colorTransform != 0)
                     {
                         chain->addTransform((colorTransform));
