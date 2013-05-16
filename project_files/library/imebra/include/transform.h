@@ -322,6 +322,22 @@ public:
 	transformException(const std::string& message): std::runtime_error(message){}
 };
 
+/// \brief Exception thrown when the image areas to be
+///         processed are out of bounds.
+///
+///////////////////////////////////////////////////////////
+class transformExceptionInvalidArea: public transformException
+{
+public:
+    /// \brief Constructor.
+    ///
+    /// @param message the cause of the exception
+    ///
+    ///////////////////////////////////////////////////////////
+    transformExceptionInvalidArea(const std::string& message): transformException(message){}
+};
+
+
 /// @}
 
 } // namespace transforms
