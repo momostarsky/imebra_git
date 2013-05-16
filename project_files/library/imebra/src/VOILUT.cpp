@@ -256,6 +256,16 @@ bool VOILUT::isEmpty()
 	return m_windowWidth <= 1 && (m_pLUT == 0 || m_pLUT->getSize() == 0);
 }
 
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
+// Allocate the output image
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
 ptr<image> VOILUT::allocateOutputImage(ptr<image> pInputImage, imbxUint32 width, imbxUint32 height)
 {
 	if(isEmpty())
@@ -309,6 +319,35 @@ ptr<image> VOILUT::allocateOutputImage(ptr<image> pInputImage, imbxUint32 width,
 	outputImage->create(width, height, depth, pInputImage->getColorSpace(), pInputImage->getHighBit());
 
 	return outputImage;
+}
+
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
+// Finds and applies the optimal VOI.
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+void VOILUT::applyOptimalVOI(const ptr<puntoexe::imebra::image>& inputImage, imbxUint32 inputTopLeftX, imbxUint32 inputTopLeftY, imbxUint32 inputWidth, imbxUint32 inputHeight)
+{
+    PUNTOEXE_FUNCTION_START(L"VOILUT::applyOptimalVOI");
+
+    imbxUint32 width, height;
+    inputImage->getSize(&width, &height);
+
+    if(inputTopLeftX + inputWidth > width || inputTopLeftY + inputHeight > height)
+    {
+        PUNTOEXE_THROW(transformExceptionInvalidArea, "The input and/or output areas are invalid");
+    }
+
+    imbxUint32 rowSize, channelPixelSize, channelsNumber;
+    ptr<handlers::dataHandlerNumericBase> handler(inputImage->getDataHandler(false, &rowSize, &channelPixelSize, &channelsNumber));
+    HANDLER_CALL_TEMPLATE_FUNCTION_WITH_PARAMS(templateFindOptimalVOI, handler, width, inputTopLeftX, inputTopLeftY, inputWidth, inputHeight);
+
+    PUNTOEXE_FUNCTION_END();
 }
 
 

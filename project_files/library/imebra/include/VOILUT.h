@@ -146,8 +146,32 @@ public:
 	///////////////////////////////////////////////////////////
 	void getCenterWidth(imbxInt32* pCenter, imbxInt32* pWidth);
 
+    /// \brief Finds and apply the optimal VOI values.
+    ///
+    /// @param inputImage    the image for which the optimal
+    ///                      VOI must be found
+    /// @param inputTopLeftX the horizontal coordinate of the
+    ///                       top-left corner of the area for
+    ///                       which the optimal VOI must be
+    ///                       found
+    /// @param inputTopLeftY the vertical coordinate of the
+    ///                       top-left corner of the area for
+    ///                       which the optimal VOI must be
+    ///                       found
+    /// @param inputWidth    the width of the area for which
+    ///                       the optimal VOI must be found
+    /// @param inputHeight   the height of the area for which
+    ///                       the optimal VOI must be found
+    ///
+    ///////////////////////////////////////////////////////////
+    void applyOptimalVOI(const ptr<puntoexe::imebra::image>& inputImage, imbxUint32 inputTopLeftX, imbxUint32 inputTopLeftY, imbxUint32 inputWidth, imbxUint32 inputHeight);
+
+
 	DEFINE_RUN_TEMPLATE_TRANSFORM;
 
+    // The actual transformation is done here
+    //
+    ///////////////////////////////////////////////////////////
 	template <class inputType, class outputType>
 			void templateTransform(
 					inputType* inputHandlerData, size_t /* inputHandlerSize */, imbxUint32 inputHandlerWidth, const std::wstring& /* inputHandlerColorSpace */,
@@ -246,12 +270,47 @@ public:
 		}
 	}
 
+
 	virtual bool isEmpty();
 
 	virtual ptr<image> allocateOutputImage(ptr<image> pInputImage, imbxUint32 width, imbxUint32 height);
 
 protected:
-	ptr<dataSet> m_pDataSet;
+
+    // Find the optimal VOI
+    //
+    ///////////////////////////////////////////////////////////
+    template <class inputType>
+            void templateFindOptimalVOI(
+                    inputType* inputHandlerData, size_t /* inputHandlerSize */, imbxUint32 inputHandlerWidth,
+                    imbxInt32 inputTopLeftX, imbxInt32 inputTopLeftY, imbxInt32 inputWidth, imbxInt32 inputHeight)
+    {
+        inputType* pInputMemory(inputHandlerData + inputHandlerWidth * inputTopLeftY + inputTopLeftX);
+        imbxInt32 minValue(*pInputMemory);
+        imbxInt32 maxValue(minValue);
+        imbxInt32 value;
+        for(imbxInt32 scanY(inputHeight); scanY != 0; --scanY)
+        {
+            for(imbxInt32 scanX(inputWidth); scanX != 0; --scanX)
+            {
+                value = *(pInputMemory++);
+                if(value < minValue)
+                {
+                    minValue = value;
+                }
+                else if(value > maxValue)
+                {
+                    maxValue = value;
+                }
+            }
+            pInputMemory += inputHandlerWidth - inputWidth;
+        }
+        imbxInt32 center = (maxValue - minValue) / 2 + minValue;
+        imbxInt32 width = maxValue - minValue;
+        setCenterWidth(center, width);
+    }
+
+    ptr<dataSet> m_pDataSet;
 	ptr<lut> m_pLUT;
 	imbxInt32 m_windowCenter;
 	imbxInt32 m_windowWidth;
