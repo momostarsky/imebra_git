@@ -331,7 +331,7 @@ public:
 	///  (without the preamble of 128 bytes and the DICM 
 	///   signature).
 	///
-	/// Using sequences, an application can store several
+	/// When using sequences an application can store several
 	///  nested dicom structures.
 	///
 	/// This function parse a single item of a sequence tag
@@ -416,10 +416,8 @@ public:
 	///////////////////////////////////////////////////////////
 	//@{
 public:	
-	/// \brief Retrieve a tag's value as a signed long.
-	///
-	/// Read the value of the requested tag and return it as
-	///  a signed long.
+	/// \brief Read the value of the requested tag and return
+	///         it as a signed long.
 	///
 	/// @param groupId The group to which the tag to be read
 	///                 belongs

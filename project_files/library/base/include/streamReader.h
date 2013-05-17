@@ -43,12 +43,12 @@ public:
 ///        baseStream derived object.
 ///
 /// The stream reader object is not multithread safe, but
-///  one single stream can have several streamReaders
-///  (in several threads) connected to it.
+///  one single stream can have several streamReader
+///  objects (in different threads) connected to it.
 ///
 /// A stream reader can also be connected only to a part
-///  of a stream: when this feature is used, the
-///  streamReaded's client thinks that he is using a
+///  of a stream: when this feature is used, then the
+///  streamReader's client thinks that he is using a
 ///  whole stream, while the reader limits its view
 ///  to allowed stream's bytes only.
 ///
@@ -57,7 +57,7 @@ public:
 class streamReader: public streamController
 {
 public:
-	/// \brief Builf a streamReader and connect it to an
+	/// \brief Build a streamReader and connect it to an
 	///         existing stream.
 	///
 	/// The stream reader can also be connected to only a part

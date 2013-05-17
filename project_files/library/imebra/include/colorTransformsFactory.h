@@ -232,12 +232,11 @@ public:
 	///////////////////////////////////////////////////////////
 	//@{
 
-	/// \brief Returns a transform or a sequence of transforms
-	///         (see transformsChain) that can convert the
+	/// \brief Returns a transform that can convert the
 	///         pixels from one color space to another color
 	///         space.
 	///
-	/// If the no conversion is needed then the function 
+	/// If no conversion is needed then the function
 	///  returns 0.
 	/// If the function cannot find any suitable transform 
 	///  then a colorTransformsFactoryExceptionNoTransform

@@ -44,8 +44,8 @@ namespace handlers
 ///         stored in a \ref puntoexe::imebra::buffer 
 ///         object without worrying about the %data format.
 ///
-/// Data handlers work on a local copy of the buffer,
-///  then they don't need to worry about multithreading
+/// Data handlers work on a local copy of the buffer
+///  so they don't need to worry about multithreading
 ///  accesses.
 ///
 /// Also, once a dataHandler has been obtained from
@@ -449,7 +449,7 @@ public:
 	///
 	/// @param index   the zero base index of the buffer's
 	///                 element to be set
-	/// @param value the value to write into the active
+	/// @param value the value to write into the
 	///				  %data element.
 	///
 	///////////////////////////////////////////////////////////
@@ -466,7 +466,7 @@ public:
 	///
 	/// @param index   the zero base index of the buffer's
 	///                 element to be set
-	/// @param value the value to write into the active
+	/// @param value the value to write into the
 	///				  %data element.
 	///
 	///////////////////////////////////////////////////////////
@@ -483,7 +483,7 @@ public:
 	///
 	/// @param index   the zero base index of the buffer's
 	///                 element to be set
-	/// @param value the value to write into the active
+	/// @param value the value to write into the
 	///				  %data element.
 	///
 	///////////////////////////////////////////////////////////
@@ -500,14 +500,14 @@ public:
 	///
 	/// @param index   the zero base index of the buffer's
 	///                 element to be set
-	/// @param value the value to write into the active
+	/// @param value the value to write into the
 	///				  %data element.
 	///////////////////////////////////////////////////////////
 	virtual void setString(const imbxUint32 index, const std::string& value) =0;
 
 	/// \brief Set the buffer's element referenced by the
 	///         zero-based index specified in the parameter
-	///         to a string value. See also seString().
+	///         to a string value. See also setString().
 	///
 	/// Does nothing if the specified index is out of range
 	/// You can check the validity of the index by using the
@@ -516,8 +516,8 @@ public:
 	///
 	/// @param index   the zero base index of the buffer's
 	///                 element to be set
-	/// @param value the value to write into the active
-	///				  %data element.
+	/// @param value the value to write into the %data
+	///				  element.
 	///////////////////////////////////////////////////////////
 	virtual void setUnicodeString(const imbxUint32 index, const std::wstring& value) =0;
 
