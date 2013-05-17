@@ -50,6 +50,15 @@ class memory : public baseObject
 public:
 	memory();
 
+	/// \brief Constructs the memory object and allocate
+	///         the requested amount of memory
+	///
+	/// @param initialSize the initial size of the allocated
+	///                      memory, in bytes
+	///
+	///////////////////////////////////////////////////////////
+	memory(imbxUint32 initialSize);
+
 	/// \brief Transfer the content from another memory object.
 	///
 	/// The source memory object will transfer the ownership

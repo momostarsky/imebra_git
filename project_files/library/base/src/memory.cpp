@@ -30,13 +30,18 @@ namespace puntoexe
 ///////////////////////////////////////////////////////////
 //
 //
-// Constructor
+// Constructors
 //
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 memory::memory():
 	m_pMemoryBuffer(new stringUint8)
+{
+}
+
+memory::memory(imbxUint32 initialSize):
+    m_pMemoryBuffer(new stringUint8((size_t)initialSize, 0))
 {
 }
 
@@ -106,9 +111,13 @@ void memory::resize(imbxUint32 newSize)
 {
 	if(m_pMemoryBuffer.get() == 0)
 	{
-		m_pMemoryBuffer.reset(new stringUint8);
+		m_pMemoryBuffer.reset(new stringUint8((size_t)newSize, (imbxUint8)0));
 	}
-	m_pMemoryBuffer->resize(newSize, 0);
+	else
+	{
+	    m_pMemoryBuffer->resize((size_t)newSize, (imbxUint8)0);
+	}
+
 }
 
 
@@ -418,9 +427,18 @@ memory* memoryPool::getMemory(imbxUint32 requestedSize)
 		return pMemory;
 	}
 
-	memory* pMemory(new memory);
-	pMemory->resize(requestedSize);
-	return pMemory;
+    try
+    {
+        return new memory(requestedSize);
+    }
+    catch(const std::bad_alloc& e)
+    {
+        // If an allocation error occurred, then free the cached memory and try again
+        /////////////////////////////////////////////////////////////////////////////
+        flush();
+        return new memory(requestedSize);
+    }
+
 }
 
 } // namespace puntoexe
