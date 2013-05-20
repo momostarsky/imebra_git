@@ -9,19 +9,17 @@ $fileHeader$
 
 \section copyright Copyright
 
-Copyright 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011 by Paolo Brandoli.
+Copyright 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013 by Paolo Brandoli/Binarno s.p.
 
-Imebra is available for free under the \ref freebsd_license.
+Imebra is available for free under the GNU General Public License version 2 (GPL, see
+ \ref gpl_license).
+
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial license
+ (see \ref commercial_license) for Imebra from the Imebra's website
+ (http://imebra.com).
 
 You can download the latest version of imebra from http://imebra.com
-
-
-\section section_donation Donations
-
-Want to keep Imebra free and updated? Consider making a donation to the developer.
-
-- <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=paolo%2ebrandoli%40gmail%2ecom&lc=GB&item_name=Imebra&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted">Donations via Paypal</a>
-- <a href="http://www.amazon.co.uk/wishlist/1GESO4Z6VYG4W">Amazon wishlist</a>
 
 
 \section section_Introduction Introduction
