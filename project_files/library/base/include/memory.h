@@ -32,8 +32,7 @@ typedef std::basic_string<imbxUint8> stringUint8;
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-/// \brief This class is used to supply a reference counter
-///         to a string of bytes.
+/// \brief This class holds an allocated array of bytes.
 ///
 /// New instances of this class should be obtained through
 ///  the class \ref memoryPool; 
@@ -81,8 +80,8 @@ public:
 	///////////////////////////////////////////////////////////
 	void copyFrom(const ptr<memory>& sourceMemory);
 
-	/// \brief Clear the content of the managed string of 
-	///         bytes.
+	/// \brief Clear the content of the memory object and
+	///         set its size to 0 bytes.
 	///
 	///////////////////////////////////////////////////////////
 	void clear();

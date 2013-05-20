@@ -37,7 +37,7 @@ namespace transforms
 /// @{
 
 ///////////////////////////////////////////////////////////
-/// \brief Transform the value of the input image's pixels
+/// \brief Transforms the value of the input image's pixels
 ///         by using the presentation VOI/LUT defined in
 ///         the dataSet.
 ///
@@ -55,6 +55,12 @@ namespace transforms
 class VOILUT: public transforms::transformHandlers
 {
 public:
+    /// \brief Constructor.
+    ///
+    /// @param pDataSet the dataset from which the input image
+    ///        comes from
+    ///
+    ///////////////////////////////////////////////////////////
 	VOILUT(ptr<dataSet> pDataSet): m_pDataSet(pDataSet), m_windowCenter(0), m_windowWidth(0){}
 
 	/// \brief Retrieve an ID for a VOI or a LUT.

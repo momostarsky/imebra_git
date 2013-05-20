@@ -33,7 +33,7 @@ class palette;
 class buffer;
 
 /// \addtogroup group_image Image data
-/// \brief The class image contains one image's data.
+/// \brief The class image contains the data of one DICOM image.
 ///
 /// The image's data includes:
 /// - the image's size, in pixels
@@ -82,7 +82,8 @@ public:
 
 	///////////////////////////////////////////////////////////
 	///
-	/// \brief Define a single color component's size.
+	/// \brief Define the number of allocated bytes per
+	///        value.
 	///
 	///////////////////////////////////////////////////////////
 	enum bitDepth
@@ -246,8 +247,8 @@ public:
 
 	/// \brief Get the image's bit depth.
 	///
-	/// The bit depth indicates how every single value is
-	///  stored into the image's buffer.
+	/// The bit depth indicates the number of bits used to
+	///  store every single value.
 	///
 	/// @return the bit depth.
 	///////////////////////////////////////////////////////////

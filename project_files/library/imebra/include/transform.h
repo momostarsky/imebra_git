@@ -201,9 +201,6 @@ public:
 	/// \brief Returns true if the transform doesn't do
 	///         anything.
 	///
-	/// It always return false, but it is overwritten in the
-	///  transformsChain class.
-	///
 	/// @return false if the transform does something, or true
 	///          if the transform doesn't do anything (e.g. an
 	///          empty transformsChain object).
