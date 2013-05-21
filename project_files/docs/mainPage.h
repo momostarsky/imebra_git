@@ -73,6 +73,21 @@ A detailed reference of the C++ classes that compose Imebra is included in
 
 \subsection version_current Changes for version $imebraVersion$
 
+- Changed license to GPLv2/commercial
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/89">#89</a> (Static objects don't get initialized when Imebra is built as a library)
+- Added support for ICU library
+- Removed unused parameter from dicomCodec::readPixel()
+- Compatible with clang 3.0
+- Added memory::memory(imbxUint32 size) to allocate memory in the constructor
+- Added method that finds the optimal VOI for the VOILUT transform
+- Validate the area that must be processed by the transform
+- Corrected mismatching new/delete in streamController
+- Added handling of ARGB and RGBA bitmap modes to drawBitmap
+- Splitted charsetConversion into several classes
+
+
+\subsection version_2012_12_19_20_05_13 Changes for version 2012-12-19_20-05-13
+
 - Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/88">#88</a> (32-bit warnings / general pointer size concerns)
 - Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/90">#90</a> (transactionsManager doesn't lock the manager)
 - Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/92">#92</a> (Wrong check for ac frequencies in the IDCT method of the Jpeg codec)
@@ -115,7 +130,6 @@ A detailed reference of the C++ classes that compose Imebra is included in
 
 \subsection version_2011_03_01_21_54_48 Changes for version 2011-03-01_21-54-48
 
-
 - Improved tests of the Dicom codec (now test all the bit depths)
 - Added detailed documentation for compilation of the examples
 - Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/73">#73</a> (The Dicom codec returns black images when highbit=31)
@@ -124,7 +138,6 @@ A detailed reference of the C++ classes that compose Imebra is included in
 
 
 \subsection version_2011_01_22_13_58_55 Changes for version 2011-01-22_13-58-55
-
 
 - License changed from GPL3 to FreeBSD
 - new folders structure
@@ -146,7 +159,6 @@ A detailed reference of the C++ classes that compose Imebra is included in
 
 \subsection version_0_0_48 Changes for version 0.0.48
 
-
 - Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/44">#44</a> (Add the "const" modifier to all the relevant functions in the data handlers)
 - Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/55">#55</a> (Add const qualifier to functions that require them)
 - Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/56">#56</a> (The external lock in baseObject may create circular references)
@@ -161,7 +173,6 @@ A detailed reference of the C++ classes that compose Imebra is included in
 
 \subsection version_0_0_47 Changes for version 0.0.47
 
-
 - Makefiles for the example applications are being provided
 - Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/33">#33</a> (When launched without parameters, dicomdirItems should display the version)
 - Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/42">#42</a> (When a dicomdir destructor is called, the it delete all the children elements. This may cause a stack overflow when an element call release on the next sibling item and the number of siblings is high)
@@ -174,7 +185,6 @@ A detailed reference of the C++ classes that compose Imebra is included in
 
 \subsection version_0_0_46 Changes for version 0.0.46
 
-
 - Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/32">#32</a> (When launched without parameters, dicom2jpeg should display the version)
 - Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/34">#34</a> (The on-line documentation should have to Google Analytics tracking code)
 - Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/37">#37</a> (Change the title of the documentation to: Imebra - Open source dicom
@@ -183,7 +193,6 @@ A detailed reference of the C++ classes that compose Imebra is included in
 
 
 \subsection version_0_0_45 Changes for version 0.0.45
-
 
 - Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/1">#1</a> (The library's version should be visible in the source code)
 - Added DICOMDIR creator/parser
@@ -199,7 +208,6 @@ A detailed reference of the C++ classes that compose Imebra is included in
 
 
 \subsection version_0_0_44 Changes for version 0.0.44 (Beta)
-
 
 - Added the function puntoexe::imebra::transforms::VOILUT::getCenterWidth()
 - The jpegCodec returns an image with color space "YBR_FULL" when the image is
@@ -221,12 +229,10 @@ A detailed reference of the C++ classes that compose Imebra is included in
 
 \subsection version_0_0_41 Changes for version 0.0.41 (Alpha)
 
-
 - Added the example dicom2jpeg
 
 
 \subsection version_0_0_40 Changes for version 0.0.40 (Alpha)
-
 
 - Closes #12 (Subsampled images are saved/loaded incorrectly by the jpeg codec)
 - Closes #13 (When saving a jpeg image from a dataset and it doesn't need to be converted an exception is thrown)
@@ -234,7 +240,6 @@ A detailed reference of the C++ classes that compose Imebra is included in
 
 
 \subsection version_0_0_38 Changes for version 0.0.38 (Alpha)
-
 
 - Removed dependence from charsetsList in data, buffer, dataSet, dataGroup, dataHandler
 - Closes #9 (The lossless jpeg codec saves corrupted images)
@@ -246,7 +251,6 @@ A detailed reference of the C++ classes that compose Imebra is included in
 
 
 \subsection version_0_0_36 Changes for version 0.0.36 (Alpha)
-
 
 - Closes #7 (memoryPool isn't thread safe)
 - The memory string now is managed by an auto_ptr
@@ -262,7 +266,6 @@ A detailed reference of the C++ classes that compose Imebra is included in
 
 \subsection version_0_0_35 Changes for version 0.0.35 (Alpha)
 
-
 - Closes #4 (The function jpegCodec::writeTag() always writes a tagId=0 on high-endian architectures)
 - Closes #5 (The unit test streamBitsTest doesn't flush the write buffer)
 - puntoexe::imebra::transforms::VOILUT now disables any VOI/LUT if 
@@ -271,14 +274,12 @@ A detailed reference of the C++ classes that compose Imebra is included in
 
 \subsection version_0_0_34 Changes for version 0.0.34 (Alpha)
 
-
 - Closes #2 (The code assumes that wchar_t is 2 bytes long, while some systems have wchar_t=4 bytes long)
 - Closes #3 (Usage of ICONV should check for return value E2BIG)
 - Added casting operators () to puntoexe::ptr
 
 
 \subsection version_0_0_33 Changes for version 0.0.33 (Alpha)
-
 
 - Corrected the ptr class so baseObject compiles on GCC
 - Corrected thread (removed orphan functions)
@@ -288,12 +289,10 @@ A detailed reference of the C++ classes that compose Imebra is included in
 
 \subsection version_0_0_32 Changes for version 0.0.32 (Alpha)
 
-
 - The PDF documentation is back
 
 
 \subsection version_0_0_31 Changes for version 0.0.31 (Alpha)
-
 
 - The smart pointer \ref puntoexe::ptr is able to cast the object's type.
 - The reference counter in puntoexe::baseObject now is set to 0 at
@@ -306,7 +305,6 @@ A detailed reference of the C++ classes that compose Imebra is included in
 
 \subsection version_0_0_30 Changes for version 0.0.30 (Alpha)
 
-
 - Now the library doesn't fail when the dataset has an empty
    images' offset table
 - Now the Dicom codec doesn't switch to implicit datatype when 
@@ -317,7 +315,6 @@ A detailed reference of the C++ classes that compose Imebra is included in
 
 \subsection version_0_0_29 Changes for version 0.0.29 (Alpha)
 
-
 - Added the function puntoexe::imebra::handlers::data::getBufferSize()
 - Added the function puntoexe::imebra::buffer::getBufferSizeBytes()
 - Now the functions in puntoexe::imebra::dataSet that need the buffer
@@ -326,7 +323,6 @@ A detailed reference of the C++ classes that compose Imebra is included in
 
 
 \subsection version_0_0_28 Changes for version 0.0.28 (Alpha)
-
 
 - Breaking change: introduced the puntoexe::streamReader and the 
   puntoexe::streamWriter to control the puntoexe::baseStream objects
@@ -349,7 +345,6 @@ A detailed reference of the C++ classes that compose Imebra is included in
 
 \subsection version_0_0_27 Changes for version 0.0.27 (Alpha)
 
-
 - Corrected the sample \ref quick_tour_image
 - Corrected a bug in the memoryManager's destructor
 - Now the memory manager's parameters can be configured with preprocessor
@@ -357,7 +352,6 @@ A detailed reference of the C++ classes that compose Imebra is included in
 
 
 \subsection version_0_0_26 Changes for version 0.0.26 (Alpha)
-
 
 - Replaced "informations" with "information" and "infos" with "info" \n
   The function exceptionsManager::getExceptionInfos became exceptionsManager::getExceptionInfo \n
@@ -370,7 +364,6 @@ A detailed reference of the C++ classes that compose Imebra is included in
 
 \subsection version_0_0_25 Changes for version 0.0.25 (Alpha)
 
-
 - Introduced common lock objects
 - Introduced the transactions
 - Compiles also on Embedded Visual C++ 4 (requires STLPORT, see 
@@ -379,7 +372,6 @@ A detailed reference of the C++ classes that compose Imebra is included in
 
 
 \subsection version_0_0_24 Changes for version 0.0.24 (Alpha)
-
 
 - Introduced support for Unicode and different dicom charsets
 - Modified several files to solve problems with Borland C++ Builder 2006
@@ -391,7 +383,6 @@ A detailed reference of the C++ classes that compose Imebra is included in
 
 
 \subsection version_0_0_22 Changes for version 0.0.22 (Alpha)
-
 
 - Corrected the transformHighBit class
 - Modified the exceptionsManager (now it stores the messages per thread and not
