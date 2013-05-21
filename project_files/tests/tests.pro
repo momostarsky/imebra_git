@@ -5,7 +5,7 @@ QT += core testlib
 
 CONFIG += warn_on
 
-unix:LIBS = -lgcov -licuuc -licudata
+unix:LIBS = -lgcov
 
 OTHER_FILES += \
     ReadMe.txt \
