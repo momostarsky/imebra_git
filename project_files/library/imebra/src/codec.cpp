@@ -123,25 +123,6 @@ void channel::allocate(imbxUint32 sizeX, imbxUint32 sizeY)
 
 
 
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Register a codec
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-registerCodec::registerCodec(ptr<codec> newCodec)
-{
-	PUNTOEXE_FUNCTION_START(L"registerCodec::registerCodec");
-
-	ptr<codecFactory> pFactory(codecFactory::getCodecFactory());
-	pFactory->registerCodec(newCodec);
-
-	PUNTOEXE_FUNCTION_END();
-}
-
 } // namespace codecs
 
 } // namespace imebra

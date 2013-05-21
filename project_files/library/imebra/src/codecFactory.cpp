@@ -12,6 +12,8 @@ $fileHeader$
 #include "../../base/include/exception.h"
 #include "../../base/include/streamReader.h"
 #include "../include/codec.h"
+#include "../include/jpegCodec.h"
+#include "../include/dicomCodec.h"
 
 
 namespace puntoexe
@@ -34,6 +36,13 @@ namespace codecs
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 static codecFactory::forceCodecFactoryCreation forceCreation;
+
+
+codecFactory::codecFactory()
+{
+    registerCodec(new dicomCodec());
+    registerCodec(new jpegCodec());
+}
 
 
 ///////////////////////////////////////////////////////////

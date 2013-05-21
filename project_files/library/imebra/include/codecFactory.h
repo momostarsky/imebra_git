@@ -63,7 +63,11 @@ class codec;
 ///////////////////////////////////////////////////////////
 class codecFactory: public baseObject
 {
+protected:
+    codecFactory();
+
 public:
+
 	/// \brief Register a new codec.
 	///
 	/// This function is called by the framework during the

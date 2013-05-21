@@ -440,11 +440,6 @@ public:
 	codecExceptionWrongTransferSyntax(const std::string& message): codecException(message){}
 };
 
-class registerCodec
-{
-public:
-	registerCodec(ptr<codec> newCodec);
-};
 
 /// @}
 
