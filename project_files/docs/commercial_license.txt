@@ -1,4 +1,4 @@
-Imebra Commercial License Version 1
+Imebra Commercial License Version 2
 
 DEFINITIONS
 
@@ -36,7 +36,7 @@ The Imebra's source code cannot be redistributed; the Imebra library can be
 TERMINATION
 
 This license is effective until terminated. You may terminate it at any point by
- destroying the Imebra source code together with all copies Imebra. Also, Puntoexe
+ destroying the Imebra source code together with all copies Imebra. Also, Binarno
  has the option to terminate if you fail to comply with any term or conditions of
  this Agreement. You agree upon such termination to destroy Imebra together with
  all copies of the Imebra.
@@ -52,7 +52,7 @@ COPYRIGHT
 The software is protected by copyright law and international treaty provisions.
 You acknowledge that no title to the intellectual property in the Imebra is
  transferred to you. You further acknowledge that title and full ownership rights
- to the Imebra will remain the exclusive property of Puntoexe or its suppliers,
+ to the Imebra will remain the exclusive property of Binarno or its suppliers,
  and you will not acquire any rights to the Imebra library except as expressly set
  forth in this license. You agree that any copies of Imebra will contain the same
  proprietary notices which appear on and in the Imebra distribution.
@@ -92,6 +92,6 @@ This license will be governed by the laws of Italy and is subject to the exclusi
 
 ENTIRE AGREEMENT
 
-This is the entire agreement between you and Puntoexe which supersedes any prior
+This is the entire agreement between you and Binarno which supersedes any prior
  agreement or understanding, whether written or oral, relating to the subject
  matter of this license.

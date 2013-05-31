@@ -284,7 +284,7 @@ Sections 1 and 2 above provided that you also do one of the following:
 <center><em><b>END OF TERMS AND CONDITIONS</b></em></center>
 
 
-\section commercial_license Imebra Commercial License Version 1
+\section commercial_license Imebra Commercial License Version 2
 
 <center><em><b>Definitions</b></em></center>
 
