@@ -123,6 +123,8 @@ std::wstring charsetConversionWindows::toUnicode(const std::string& asciiString)
 	::MultiByteToWideChar(m_codePage, 0, asciiString.c_str(), (int)(asciiString.length()), convertedString.get(), requiredWChars);
 	std::wstring returnString(convertedString.get(), requiredWChars);
 
+    return returnString;
+
 	PUNTOEXE_FUNCTION_END();
 }
 
