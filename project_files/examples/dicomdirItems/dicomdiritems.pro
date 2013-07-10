@@ -1,6 +1,7 @@
 QT     -= gui core
 LIBS -= -lQtGui -lQtCore
 unix:LIBS += -lpthread
+windows:DEFINES += _WIN32_WINNT=0x0501 WINVER=0x0501 NTDDI_VERSION=0x05010000
 
 HEADERS += \
     ../../library/base/include/thread.h \

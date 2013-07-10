@@ -121,7 +121,7 @@ void dataHandlerDateTimeBase::setSignedLong(const imbxUint32 index, const imbxIn
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTimeBase::setSignedLong");
 
-#ifdef PUNTOEXE_WINDOWS
+#if defined(PUNTOEXE_WINDOWS) && !defined(__MINGW32__)
 	std::auto_ptr<tm> timeStructure(new tm);
 	localtime_s(timeStructure.get(), ((time_t*)&value));
 #else
