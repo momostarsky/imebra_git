@@ -73,6 +73,12 @@ A detailed reference of the C++ classes that compose Imebra is included in
 
 \subsection version_current Changes for version $imebraVersion$
 
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/94">#94</a>(charsetConversionWindows::toUnicode doesn't return the converted string)
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/95">#95</a>(When compiling the examples on Windows using MINGW then the compilation fails)
+
+
+\subsection version_2013_05_21_12_07_46 Changes for version 2013-05-21_12-07-46
+
 - Changed license to GPLv2/commercial
 - Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/89">#89</a> (Static objects don't get initialized when Imebra is built as a library)
 - Added support for ICU library
