@@ -176,7 +176,7 @@ void dicomCodec::writeGroup(ptr<streamWriter> pDestStream, ptr<dataGroup> pGroup
 	}
 	else
 	{
-		imbxUint16 tagLengthDword = 4;
+        imbxUint32 tagLengthDword = 4;
 		pDestStream->adjustEndian((imbxUint8*)&tagLengthDword, 4, endianType);
 		pDestStream->write((imbxUint8*)&tagLengthDword, 4);
 	}
