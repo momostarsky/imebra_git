@@ -704,6 +704,7 @@ void dicomCodec::parseStream(ptr<streamReader> pStream,
 			// skip the tag's length and exit
 			imbxUint32 dummyDWord;
 			pStream->read((imbxUint8*)&dummyDWord, 4);
+            (*pReadSubItemLength) += 4;
 			break;
 		}
 

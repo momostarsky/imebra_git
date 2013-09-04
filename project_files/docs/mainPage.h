@@ -73,6 +73,11 @@ A detailed reference of the C++ classes that compose Imebra is included in
 
 \subsection version_current Changes for version $imebraVersion$
 
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/98">#98</a>(Parsing of embedded sequence tags may fail)
+
+
+\subsection version_2013_07_16_08_42_08 Changes for version 2013-07-16_08-42-08
+
 - Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/96">#96</a>(Imebra creates datasets with implicit data type with wrong tag length)
 - Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/94">#94</a>(charsetConversionWindows::toUnicode doesn't return the converted string)
 - Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/95">#95</a>(When compiling the examples on Windows using MINGW then the compilation fails)
