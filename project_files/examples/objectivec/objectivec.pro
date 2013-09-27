@@ -79,7 +79,9 @@ SOURCES += \
     ../../library/base/src/baseStream.cpp \
     ../../library/base/src/baseObject.cpp \
     main.mm \
-    objc_imebra.mm
+    objc_dataset.mm \
+    objc_helpers.mm \
+    obj_image.mm
 
 HEADERS += \
     ../../library/base/include/thread.h \
@@ -158,7 +160,11 @@ HEADERS += \
     ../../library/imebra/include/codec.h \
     ../../library/imebra/include/charsetsList.h \
     ../../library/imebra/include/bufferStream.h \
-    ../../library/imebra/include/buffer.h
+    ../../library/imebra/include/buffer.h \
+    objc_dataset.h \
+    objc_helpers.h \
+    objc_image.h
+
 
 
 
