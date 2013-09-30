@@ -78,46 +78,37 @@ int main(int argc, char* argv[])
                 {
 
                     // Open the file containing the dicom dataset
+                    /////////////////////////////////////////////
                     ptr<puntoexe::stream> inputStream(new puntoexe::stream);
                     inputStream->openFile(argv[1], std::ios_base::in);
 
                     // Connect a stream reader to the dicom stream. Several stream reader
                     //  can share the same stream
+                    /////////////////////////////////////////////////////////////////////
                     ptr<puntoexe::streamReader> reader(new streamReader(inputStream));
 
                     // Get a codec factory and let it use the right codec to create a dataset
                     //  from the input stream
+                    /////////////////////////////////////////////////////////////////////////
                     ptr<codecs::codecFactory> codecsFactory(codecs::codecFactory::getCodecFactory());
                     loadedDataSet = codecsFactory->load(reader, 2048);
 
 
                     // Get the first image. We use it in case there isn't any presentation VOI/LUT
                     //  and we have to calculate the optimal one
-                    ptr<image> dataSetImage(loadedDataSet->getImage(0));
+                    //////////////////////////////////////////////////////////////////////////////
+                    ptr<image> dataSetImage(loadedDataSet->getModalityImage(0));
                     imbxUint32 width, height;
                     dataSetImage->getSize(&width, &height);
 
 
                     // Build the transforms chain
+                    /////////////////////////////
                     ptr<transforms::transformsChain> chain(new transforms::transformsChain);
-
-                    ptr<transforms::modalityVOILUT> modalityVOILUT(new transforms::modalityVOILUT(loadedDataSet));
-                    chain->addTransform(modalityVOILUT);
 
                     ptr<transforms::colorTransforms::colorTransformsFactory> colorFactory(transforms::colorTransforms::colorTransformsFactory::getColorTransformsFactory());
                     if(colorFactory->isMonochrome(dataSetImage->getColorSpace()))
                     {
-                        // Convert to MONOCHROME2 if a modality transform is not present
-                        ////////////////////////////////////////////////////////////////
-                        if(modalityVOILUT->isEmpty())
-                        {
-                            ptr<transforms::colorTransforms::colorTransform> monochromeColorTransform(colorFactory->getTransform(dataSetImage->getColorSpace(), L"MONOCHROME2"));
-                            if(monochromeColorTransform != 0)
-                            {
-                                chain->addTransform(monochromeColorTransform);
-                            }
-                        }
-
                         ptr<transforms::VOILUT> presentationVOILUT(new transforms::VOILUT(loadedDataSet));
                         imbxUint32 firstVOILUTID(presentationVOILUT->getVOILUTId(0));
                         if(firstVOILUTID != 0)
@@ -138,6 +129,8 @@ int main(int argc, char* argv[])
                         chain->addTransform(presentationVOILUT);
                     }
 
+                    // Get the colorspace of the transformation output
+                    //////////////////////////////////////////////////
                     std::wstring initialColorSpace;
                     if(chain->isEmpty())
                     {
@@ -150,6 +143,7 @@ int main(int argc, char* argv[])
                     }
 
                     // Color transform to YCrCb
+                    ///////////////////////////
                     ptr<transforms::colorTransforms::colorTransform> colorTransform(colorFactory->getTransform(initialColorSpace, L"YBR_FULL"));
                     if(colorTransform != 0)
                     {
@@ -160,11 +154,12 @@ int main(int argc, char* argv[])
                     finalImage->create(width, height, image::depthU8, L"YBR_FULL", 7);
 
                     // Scan through the frames
+                    //////////////////////////
                     for(imbxUint32 frameNumber(0); ; ++frameNumber)
                     {
                         if(frameNumber != 0)
                         {
-                            dataSetImage = loadedDataSet->getImage(frameNumber);
+                            dataSetImage = loadedDataSet->getModalityImage(frameNumber);
                         }
 
 

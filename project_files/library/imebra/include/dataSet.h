@@ -237,6 +237,19 @@ public:
 	///
 	///////////////////////////////////////////////////////////
 	ptr<image> getImage(imbxUint32 frameNumber);
+
+    /// \brief Retrieve an image from the dataset and apply the
+    ///        modality transform if it is specified in the
+    ///        dataset.
+    ///
+    /// @param frameNumber The frame number to retrieve.
+    ///                    The first frame's id is 0
+    /// @return            A pointer to the retrieved
+    ///                     image to which the modality
+    ///                     transform has been applied
+    ///
+    ///////////////////////////////////////////////////////////
+    ptr<image> getModalityImage(imbxUint32 frameNumber);
 	
 	/// \brief Insert an image into the data set.
 	///
