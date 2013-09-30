@@ -61,7 +61,7 @@
                                     bitmapInfo,
                                     provider, NULL, NO, renderingIntent);
 
-    //return [[[UIImage alloc] imageWithCGImage:imageRef] autorelease];
+    return [[[UIImage alloc] imageWithCGImage:imageRef] autorelease];
 }
 
 #else
