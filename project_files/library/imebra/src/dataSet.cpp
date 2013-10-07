@@ -344,19 +344,19 @@ ptr<image> dataSet::getModalityImage(imbxUint32 frameNumber)
         return originalImage;
     }
 
-    ptr<transforms::modalityVOILUT> modalityVOILUT(new transforms::modalityVOILUT(loadedDataSet));
+    ptr<transforms::modalityVOILUT> modalityVOILUT(new transforms::modalityVOILUT(this));
 
     // Convert to MONOCHROME2 if a modality transform is not present
     ////////////////////////////////////////////////////////////////
     if(modalityVOILUT->isEmpty())
     {
-        ptr<transforms::colorTransforms::colorTransform> monochromeColorTransform(colorFactory->getTransform(dataSetImage->getColorSpace(), L"MONOCHROME2"));
+        ptr<transforms::colorTransforms::colorTransform> monochromeColorTransform(colorFactory->getTransform(originalImage->getColorSpace(), L"MONOCHROME2"));
         if(monochromeColorTransform != 0)
         {
             imbxUint32 width, height;
             originalImage->getSize(&width, &height);
             ptr<image> outputImage = monochromeColorTransform->allocateOutputImage(originalImage, width, height);
-            monochromeColorTransform->runTransform(originalImage, 0, 0, width, output, outputImage, 0, 0);
+            monochromeColorTransform->runTransform(originalImage, 0, 0, width, height, outputImage, 0, 0);
             return outputImage;
         }
 
@@ -368,7 +368,7 @@ ptr<image> dataSet::getModalityImage(imbxUint32 frameNumber)
     imbxUint32 width, height;
     originalImage->getSize(&width, &height);
     ptr<image> outputImage = modalityVOILUT->allocateOutputImage(originalImage, width, height);
-    modalityVOILUT->runTransform(originalImage, 0, 0, width, output, outputImage, 0, 0);
+    modalityVOILUT->runTransform(originalImage, 0, 0, width, height, outputImage, 0, 0);
     return outputImage;
 
     PUNTOEXE_FUNCTION_END();
