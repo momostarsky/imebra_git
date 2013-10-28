@@ -58,16 +58,14 @@ stream::~stream()
 ///////////////////////////////////////////////////////////
 void stream::openFile(const std::string& fileName, const int mode)
 {
-	PUNTOEXE_FUNCTION_START(L"stream::openFile (ansi)");
+    PUNTOEXE_FUNCTION_START(L"stream::openFile (utf8)");
 
-	std::wstring wFileName;
-	size_t fileNameSize(fileName.size());
-	wFileName.resize(fileNameSize);
-	for(size_t copyChars = 0; copyChars != fileNameSize; ++copyChars)
-	{
-		wFileName[copyChars] = (wchar_t)fileName[copyChars];
-	}
-	openFile(wFileName, mode);
+    // Convert the filename from UTF8
+    std::auto_ptr<charsetConversion> fromUtf8(allocateCharsetConversion());
+    fromUtf8->initialize("ISO-IR 192");
+    std::wstring wFileName(fromUtf8->toUnicode(fileName));
+
+    openFile(wFileName, mode);
 
 	PUNTOEXE_FUNCTION_END();
 }
