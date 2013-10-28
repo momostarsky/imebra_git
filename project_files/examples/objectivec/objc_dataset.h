@@ -39,7 +39,11 @@
 - (double) getDoubleFromGroup:(imbxUint16)group inTag:(imbxUint16) tag inPosition:(imbxUint32)position;
 - (double) getDoubleFromGroup:(imbxUint16)group inTag:(imbxUint16) tag;
 
+/**
+ * Retrieve a sequence item
+ */
 - (ImebraDataSet*) getSequenceFromGroup:(imbxUint16)group inTag:(imbxUint16)tag inPosition:(imbxUint32)position;
+
 
 - (ImebraImage*) getImage:(imbxUint32)frameNumber;
 - (ImebraImage*) getModalityImage:(imbxUint32)frameNumber;

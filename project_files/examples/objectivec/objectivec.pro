@@ -81,7 +81,9 @@ SOURCES += \
     main.mm \
     objc_dataset.mm \
     objc_helpers.mm \
-    objc_image.mm
+    objc_image.mm \
+    objc_transform.mm \
+    objc_transformschain.mm
 
 HEADERS += \
     ../../library/base/include/thread.h \
@@ -163,7 +165,10 @@ HEADERS += \
     ../../library/imebra/include/buffer.h \
     objc_dataset.h \
     objc_helpers.h \
-    objc_image.h
+    objc_image.h \
+    objc_transform.h \
+    objc_transformschain.h
+
 
 
 

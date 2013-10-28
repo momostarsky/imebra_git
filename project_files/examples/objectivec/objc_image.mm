@@ -41,6 +41,11 @@
 #ifdef TARGET_OS_IPHONE
 - (UIImage*) getUIImage
 {
+    if(m_image->getDepth() != puntoexe::imebra::image::depthU8 || m_image->getColorSpace() != L"RGB")
+    {
+        return 0;
+    }
+
     imbxUint32 width, height;
     m_image->getSize(&width, &height);
     imbxUint32 rowSize, channelPixelSize, channelsNumber;
@@ -68,6 +73,11 @@
 
 - (NSImage*) GetNSImage
 {
+    if(m_image->getDepth() != puntoexe::imebra::image::depthU8 || m_image->getColorSpace() != L"RGB")
+    {
+        return 0;
+    }
+
     imbxUint32 width, height;
     m_image->getSize(&width, &height);
     imbxUint32 rowSize, channelPixelSize, channelsNumber;

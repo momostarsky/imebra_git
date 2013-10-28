@@ -95,7 +95,7 @@
     puntoexe::ptr<puntoexe::imebra::image> image = m_dataSet->getImage(frameNumber);
     if(image == 0)
     {
-        return [[NSImage new] autorelease];
+        return 0;
     }
     return [[[ImebraImage alloc] initWithImebraImage:image] autorelease];
 }
@@ -106,7 +106,7 @@
     puntoexe::ptr<puntoexe::imebra::image> image = m_dataSet->getModalityImage(frameNumber);
     if(image == 0)
     {
-        return [[NSImage new] autorelease];
+        return 0;
     }
     return [[[ImebraImage alloc] initWithImebraImage:image] autorelease];
 }
