@@ -55,11 +55,11 @@ public:
         void templateTransform(
             inputType* inputHandlerData, size_t /* inputHandlerSize */, imbxUint32 inputHandlerWidth, const std::wstring& inputHandlerColorSpace,
             ptr<palette> /* inputPalette */,
-            imbxInt32 /* inputHandlerMinValue */, imbxUint32 inputHandlerNumValues,
+            imbxInt32 /* inputHandlerMinValue */, imbxUint32 inputHighBit,
             imbxInt32 inputTopLeftX, imbxInt32 inputTopLeftY, imbxInt32 inputWidth, imbxInt32 inputHeight,
             outputType* outputHandlerData, size_t /* outputHandlerSize */, imbxInt32 outputHandlerWidth, const std::wstring& outputHandlerColorSpace,
             ptr<palette> /* outputPalette */,
-            imbxInt32 outputHandlerMinValue, imbxUint32 outputHandlerNumValues,
+            imbxInt32 outputHandlerMinValue, imbxUint32 outputHighBit,
             imbxInt32 outputTopLeftX, imbxInt32 outputTopLeftY)
 
         {
@@ -71,16 +71,24 @@ public:
             pInputMemory += inputTopLeftY * inputHandlerWidth + inputTopLeftX;
             pOutputMemory += outputTopLeftY * outputHandlerWidth + outputTopLeftX;
             
-            imbxInt32 inputHandlerNumValuesMinusOne(inputHandlerNumValues - 1);
-
-            if(inputHandlerNumValues == outputHandlerNumValues)
+            imbxUint32 inputHandlerNumValuesMinusOne;
+            if(inputHighBit == 32)
             {
-                imbxInt32 offset(inputHandlerNumValuesMinusOne + outputHandlerMinValue);
+                inputHandlerNumValuesMinusOne = 0xffffffff;
+            }
+            else
+            {
+                inputHandlerNumValuesMinusOne = ((imbxUint32)1 << (inputHighBit + 1)) - 1;
+            }
+
+            if(inputHighBit > outputHighBit)
+            {
+                imbxUint32 rightShift = inputHighBit - outputHighBit;
                 for(; inputHeight != 0; --inputHeight)
                 {
                     for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
                     {
-                        *(pOutputMemory++) = (outputType)(offset - (imbxInt32)*(pInputMemory++));
+                        *pOutputMemory++ = (outputType)(((inputHandlerNumValuesMinusOne - (imbxInt32)*(pInputMemory++)) >> rightShift) + outputHandlerMinValue);
                     }
                     pInputMemory += inputHandlerWidth - inputWidth;
                     pOutputMemory += outputHandlerWidth - inputWidth;
@@ -88,11 +96,12 @@ public:
             }
             else
             {
+                imbxUint32 leftShift = outputHighBit - inputHighBit;
                 for(; inputHeight != 0; --inputHeight)
                 {
                     for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
                     {
-                        *pOutputMemory++ = (outputType)(((inputHandlerNumValuesMinusOne - (imbxInt32)*(pInputMemory++)) * outputHandlerNumValues) / inputHandlerNumValues + outputHandlerMinValue);
+                        *pOutputMemory++ = (outputType)(((inputHandlerNumValuesMinusOne - (imbxInt32)*(pInputMemory++)) << leftShift) + outputHandlerMinValue);
                     }
                     pInputMemory += inputHandlerWidth - inputWidth;
                     pOutputMemory += outputHandlerWidth - inputWidth;

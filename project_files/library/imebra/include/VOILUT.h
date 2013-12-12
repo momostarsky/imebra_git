@@ -182,11 +182,11 @@ public:
 			void templateTransform(
 					inputType* inputHandlerData, size_t /* inputHandlerSize */, imbxUint32 inputHandlerWidth, const std::wstring& /* inputHandlerColorSpace */,
 					ptr<palette> /* inputPalette */,
-					imbxInt32 inputHandlerMinValue, imbxUint32 inputHandlerNumValues,
+                    imbxInt32 inputHandlerMinValue, imbxUint32 inputHighBit,
 					imbxInt32 inputTopLeftX, imbxInt32 inputTopLeftY, imbxInt32 inputWidth, imbxInt32 inputHeight,
 					outputType* outputHandlerData, size_t /* outputHandlerSize */, imbxInt32 outputHandlerWidth, const std::wstring& /* outputHandlerColorSpace */,
 					ptr<palette> /* outputPalette */,
-					imbxInt32 outputHandlerMinValue, imbxUint32 outputHandlerNumValues,
+                    imbxInt32 outputHandlerMinValue, imbxUint32 outputHighBit,
 					imbxInt32 outputTopLeftX, imbxInt32 outputTopLeftY)
 
 	{
@@ -203,28 +203,30 @@ public:
 		if(m_pLUT != 0 && m_pLUT->getSize() != 0)
 		{
 			lut* pLUT = m_pLUT.get();
-			inputHandlerNumValues = ((imbxUint32)1) << pLUT->getBits();
+            inputHighBit = pLUT->getBits();
 			inputHandlerMinValue = 0;
 
-			if(inputHandlerNumValues == outputHandlerNumValues)
+            if(inputHighBit > outputHighBit)
 			{
-				for(; inputHeight != 0; --inputHeight)
-				{
-					for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
-					{
-						*(pOutputMemory++) = (outputType)( outputHandlerMinValue + pLUT->mappedValue((imbxInt32) (*(pInputMemory++))) );
-					}
-					pInputMemory += (inputHandlerWidth - inputWidth);
-					pOutputMemory += (outputHandlerWidth - inputWidth);
-				}
-			}
+                imbxInt32 rightShift = inputHighBit - outputHighBit;
+                for(; inputHeight != 0; --inputHeight)
+                {
+                    for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
+                    {
+                        *(pOutputMemory++) = (outputType)( outputHandlerMinValue + (pLUT->mappedValue((imbxInt32) (*(pInputMemory++))) >> rightShift ));
+                    }
+                    pInputMemory += (inputHandlerWidth - inputWidth);
+                    pOutputMemory += (outputHandlerWidth - inputWidth);
+                }
+            }
 			else
 			{
+                imbxInt32 leftShift = outputHighBit - inputHighBit;
 				for(; inputHeight != 0; --inputHeight)
 				{
 					for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
 					{
-						*(pOutputMemory++) = (outputType)( outputHandlerMinValue + (pLUT->mappedValue((imbxInt32) (*(pInputMemory++)) ) * outputHandlerNumValues ) / inputHandlerNumValues );
+                        *(pOutputMemory++) = (outputType)( outputHandlerMinValue + (pLUT->mappedValue((imbxInt32) (*(pInputMemory++))) << leftShift ));
 					}
 					pInputMemory += (inputHandlerWidth - inputWidth);
 					pOutputMemory += (outputHandlerWidth - inputWidth);
@@ -238,9 +240,11 @@ public:
 		// LUT not found.
 		// Use the window's center/width
 		//
-		///////////////////////////////////////////////////////////
-		imbxInt32 minValue = m_windowCenter-(m_windowWidth/2);
-		imbxInt32 maxValue = m_windowCenter+(m_windowWidth/2);
+        ///////////////////////////////////////////////////////////
+        imbxInt64 inputHandlerNumValues = (imbxInt64)1 << (inputHighBit + 1);
+        imbxInt64 outputHandlerNumValues = (imbxInt64)1 << (outputHighBit + 1);
+        imbxInt64 minValue = (imbxInt64)m_windowCenter- (imbxInt64)(m_windowWidth/2);
+        imbxInt64 maxValue = (imbxInt64)m_windowCenter+ (imbxInt64)(m_windowWidth/2);
 		if(m_windowWidth <= 1)
 		{
 			minValue = inputHandlerMinValue ;
@@ -252,28 +256,58 @@ public:
 		}
 
 
-		imbxInt32 value;
-		for(; inputHeight != 0; --inputHeight)
-		{
+        imbxInt64 value;
 
-			for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
-			{
-				value = (imbxInt32) *(pInputMemory++);
-				if(value <= minValue)
-				{
-					*(pOutputMemory++) = (outputType)outputHandlerMinValue;
-					continue;
-				}
-				if(value >= maxValue)
-				{
-					*(pOutputMemory++) = (outputType)( outputHandlerMinValue + outputHandlerNumValues - 1 );
-					continue;
-				}
-				*(pOutputMemory++) = (outputType)( (value - minValue) * outputHandlerNumValues / inputHandlerNumValues + outputHandlerMinValue );
-			}
-			pInputMemory += (inputHandlerWidth - inputWidth);
-			pOutputMemory += (outputHandlerWidth - inputWidth);
-		}
+        if(inputHandlerNumValues > outputHandlerNumValues)
+        {
+            imbxInt32 ratio = (imbxInt32)(inputHandlerNumValues / outputHandlerNumValues);
+            for(; inputHeight != 0; --inputHeight)
+            {
+
+                for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
+                {
+                    value = (imbxInt64) *(pInputMemory++);
+                    if(value <= minValue)
+                    {
+                        *(pOutputMemory++) = (outputType)outputHandlerMinValue;
+                        continue;
+                    }
+                    if(value >= maxValue)
+                    {
+                        *(pOutputMemory++) = (outputType)( outputHandlerMinValue + outputHandlerNumValues - 1 );
+                        continue;
+                    }
+                    *(pOutputMemory++) = (outputType)( (value - minValue) / ratio + outputHandlerMinValue );
+                }
+                pInputMemory += (inputHandlerWidth - inputWidth);
+                pOutputMemory += (outputHandlerWidth - inputWidth);
+            }
+        }
+        else
+        {
+            imbxInt32 ratio = (imbxInt32)(outputHandlerNumValues / inputHandlerNumValues);
+            for(; inputHeight != 0; --inputHeight)
+            {
+
+                for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
+                {
+                    value = (imbxInt64) *(pInputMemory++);
+                    if(value <= minValue)
+                    {
+                        *(pOutputMemory++) = (outputType)outputHandlerMinValue;
+                        continue;
+                    }
+                    if(value >= maxValue)
+                    {
+                        *(pOutputMemory++) = (outputType)( outputHandlerMinValue + outputHandlerNumValues - 1 );
+                        continue;
+                    }
+                    *(pOutputMemory++) = (outputType)( (value - minValue) * ratio + outputHandlerMinValue );
+                }
+                pInputMemory += (inputHandlerWidth - inputWidth);
+                pOutputMemory += (outputHandlerWidth - inputWidth);
+            }
+        }
 	}
 
 

@@ -835,14 +835,6 @@ class dataHandlerRaw: public dataHandlerNumeric<imbxUint8>
 {\
     functionName<imbxInt32> ((imbxInt32*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize());\
     }\
-    else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::dataHandlerNumeric<float>))\
-{\
-    functionName<float> ((float*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize());\
-    }\
-    else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::dataHandlerNumeric<double>))\
-{\
-    functionName<double> ((double*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize());\
-    }\
     else\
 {\
     throw std::runtime_error("Data type not valid");\
@@ -876,14 +868,6 @@ class dataHandlerRaw: public dataHandlerNumeric<imbxUint8>
     else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::dataHandlerNumeric<imbxInt32>))\
 {\
     functionName<imbxInt32> ((imbxInt32*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize(), __VA_ARGS__);\
-    }\
-    else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::dataHandlerNumeric<float>))\
-{\
-    functionName<float> ((float*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize(), __VA_ARGS__);\
-    }\
-    else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::dataHandlerNumeric<double>))\
-{\
-    functionName<double> ((double*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize(), __VA_ARGS__);\
     }\
     else\
 {\

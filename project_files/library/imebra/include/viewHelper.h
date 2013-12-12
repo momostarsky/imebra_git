@@ -533,8 +533,8 @@ public:
                 imbxUint32 bitmapRowLength = ((3 * (bitmapRight - bitmapLeft) + rowAlignBytes - 1) / rowAlignBytes) * rowAlignBytes;
 				if(
 					m_bUpdateImage ||
-					m_cachedWidth != (m_rightPosition - m_leftPosition) ||
-					m_cachedHeight != (m_bottomPosition - m_topPosition) ||
+                    m_cachedWidth != (imbxUint32)(m_rightPosition - m_leftPosition) ||
+                    m_cachedHeight != (imbxUint32)(m_bottomPosition - m_topPosition) ||
 					m_cachedVisibleLeft != (bitmapLeft - m_leftPosition) ||
 					m_cachedVisibleTop != (bitmapTop - m_topPosition) ||
 					m_cachedVisibleRight != (bitmapRight - m_leftPosition) ||
@@ -791,10 +791,6 @@ public:
 
 private:
 	typedef std::list<cursorLine> tCursorLinesList;
-
-	imbxInt32 m_bitmapAlign;
-
-        bool m_bBGR;
 
         // Image's position
 	///////////////////////////////////////////////////////////

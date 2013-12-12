@@ -63,11 +63,11 @@ public:
         void templateTransform(
             inputType* inputHandlerData, size_t /* inputHandlerSize */, imbxUint32 inputHandlerWidth, const std::wstring& inputHandlerColorSpace,
             ptr<palette> /* inputPalette */,
-            imbxInt32 inputHandlerMinValue, imbxUint32 inputHandlerNumValues,
+            imbxInt32 inputHandlerMinValue, imbxUint32 inputHighBit,
             imbxInt32 inputTopLeftX, imbxInt32 inputTopLeftY, imbxInt32 inputWidth, imbxInt32 inputHeight,
             outputType* outputHandlerData, size_t /* outputHandlerSize */, imbxInt32 outputHandlerWidth, const std::wstring& outputHandlerColorSpace,
             ptr<palette> /* outputPalette */,
-            imbxInt32 outputHandlerMinValue, imbxUint32 outputHandlerNumValues,
+            imbxInt32 outputHandlerMinValue, imbxUint32 outputHighBit,
             imbxInt32 outputTopLeftX, imbxInt32 outputTopLeftY)
 
         {
@@ -85,14 +85,14 @@ public:
             pInputMemory += (inputTopLeftY * inputHandlerWidth + inputTopLeftX) * numChannels;
             pOutputMemory += (outputTopLeftY * outputHandlerWidth + outputTopLeftX) * numChannels;
 
-            if(inputHandlerNumValues == outputHandlerNumValues)
+            if(inputHighBit > outputHighBit)
             {
-                imbxInt32 offset(inputHandlerMinValue - outputHandlerMinValue);
+                imbxUint32 rightShift = inputHighBit - outputHighBit;
                 for(; inputHeight != 0; --inputHeight)
                 {
                     for(int scanPixels(inputWidth * numChannels); scanPixels != 0; --scanPixels)
                     {
-                        *(pOutputMemory++) = (outputType)((imbxInt32)*(pInputMemory++) - offset);
+                        *pOutputMemory++ = (outputType)((((imbxInt32)*(pInputMemory++) - inputHandlerMinValue) >> rightShift) + outputHandlerMinValue);
                     }
                     pInputMemory += (inputHandlerWidth - inputWidth) * numChannels;
                     pOutputMemory += (outputHandlerWidth - inputWidth) * numChannels;
@@ -100,11 +100,12 @@ public:
             }
             else
             {
+                imbxUint32 leftShift = outputHighBit - inputHighBit;
                 for(; inputHeight != 0; --inputHeight)
                 {
                     for(int scanPixels(inputWidth * numChannels); scanPixels != 0; --scanPixels)
                     {
-                        *pOutputMemory++ = (outputType)((((imbxInt32)*(pInputMemory++) - inputHandlerMinValue) * outputHandlerNumValues) / inputHandlerNumValues + outputHandlerMinValue);
+                        *pOutputMemory++ = (outputType)((((imbxInt32)*(pInputMemory++) - inputHandlerMinValue) << leftShift) + outputHandlerMinValue);
                     }
                     pInputMemory += (inputHandlerWidth - inputWidth) * numChannels;
                     pOutputMemory += (outputHandlerWidth - inputWidth) * numChannels;

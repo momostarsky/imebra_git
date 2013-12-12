@@ -11,7 +11,7 @@ Please note that the file doesn't include the file viewHelper.h.
 */
 
 #if !defined(imebra_C2D59748_5D38_4b12_BA16_5EC22DA7C0E7__INCLUDED_)
-#define imebra_C2D59748_5D38_4b12_BA16_5EC22DA7C0E7__INCLUDED__
+#define imebra_C2D59748_5D38_4b12_BA16_5EC22DA7C0E7__INCLUDED_
 
 #include "buffer.h"
 #include "codec.h"

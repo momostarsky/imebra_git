@@ -87,12 +87,34 @@ ptr<image> modalityVOILUT::allocateOutputImage(ptr<image> pInputImage, imbxUint3
 		image::bitDepth depth;
 		if(bNegative)
 		{
-			depth = bits > 8 ? image::depthS16 : image::depthS8;
+            if(bits > 16)
+            {
+                depth = image::depthS32;
+            }
+            else if(bits > 8)
+            {
+                depth = image::depthS16;
+            }
+            else
+            {
+                depth = image::depthS8;
+            }
 		}
 		else
 		{
-			depth = bits > 8 ? image::depthU16 : image::depthU8;
-		}
+            if(bits > 16)
+            {
+                depth = image::depthU32;
+            }
+            else if(bits > 8)
+            {
+                depth = image::depthU16;
+            }
+            else
+            {
+                depth = image::depthU8;
+            }
+        }
 		ptr<image> returnImage(new image);
 		returnImage->create(width, height, depth, L"MONOCHROME2", bits - 1);
 		return returnImage;

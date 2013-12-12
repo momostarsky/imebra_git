@@ -125,8 +125,6 @@ void cursorLine::copy(const cursorLine& right)
 //
 ///////////////////////////////////////////////////////////
 view::view(imbxInt32 rowByteAlign, bool bBGR):
-	m_bitmapAlign(rowByteAlign),
-	m_bBGR(bBGR),
 	m_leftPosition(0),
 	m_topPosition(0),
 	m_rightPosition(0),

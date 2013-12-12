@@ -62,11 +62,11 @@ public:
         void templateTransform(
             inputType* inputHandlerData, size_t /* inputHandlerSize */, imbxUint32 inputHandlerWidth, const std::wstring& inputHandlerColorSpace,
             ptr<palette> inputPalette,
-            imbxInt32 /* inputHandlerMinValue */, imbxUint32 inputHandlerNumValues,
+            imbxInt32 /* inputHandlerMinValue */, imbxUint32 inputHighBit,
             imbxInt32 inputTopLeftX, imbxInt32 inputTopLeftY, imbxInt32 inputWidth, imbxInt32 inputHeight,
             outputType* outputHandlerData, size_t /* outputHandlerSize */, imbxInt32 outputHandlerWidth, const std::wstring& outputHandlerColorSpace,
             ptr<palette> /* outputPalette */,
-            imbxInt32 outputHandlerMinValue, imbxUint32 outputHandlerNumValues,
+            imbxInt32 outputHandlerMinValue, imbxUint32 outputHighBit,
             imbxInt32 outputTopLeftX, imbxInt32 outputTopLeftY)
 
         {
@@ -79,22 +79,23 @@ public:
             lut* pGreen = inputPalette->getGreen().get();
             lut* pBlue = inputPalette->getBlue().get();
 
-            inputHandlerNumValues = (imbxUint32)1 << (pRed->getBits());
+            inputHighBit = pRed->getBits();
 
             pInputMemory += inputTopLeftY * inputHandlerWidth + inputTopLeftX;
             pOutputMemory += (outputTopLeftY * outputHandlerWidth + outputTopLeftX) * 3;
 
             imbxInt32 paletteValue;
-            if(inputHandlerNumValues == outputHandlerNumValues)
+            if(inputHighBit > outputHighBit)
             {
+                imbxUint32 rightShift = inputHighBit - outputHighBit;
                 for(; inputHeight != 0; --inputHeight)
                 {
                     for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
                     {
                         paletteValue = (imbxInt32) (*pInputMemory++);
-                        *pOutputMemory++ = (outputType)(pRed->mappedValue(paletteValue) + outputHandlerMinValue);
-                        *pOutputMemory++ = (outputType)(pGreen->mappedValue(paletteValue) + outputHandlerMinValue);
-                        *pOutputMemory++ = (outputType)(pBlue->mappedValue(paletteValue) + outputHandlerMinValue);
+                        *pOutputMemory++ = (outputType)((pRed->mappedValue(paletteValue) >> rightShift) + outputHandlerMinValue);
+                        *pOutputMemory++ = (outputType)((pGreen->mappedValue(paletteValue) >> rightShift) + outputHandlerMinValue);
+                        *pOutputMemory++ = (outputType)((pBlue->mappedValue(paletteValue) >> rightShift) + outputHandlerMinValue);
                     }
                     pInputMemory += inputHandlerWidth - inputWidth;
                     pOutputMemory += (outputHandlerWidth - inputWidth) * 3;
@@ -102,14 +103,15 @@ public:
             }
             else
             {
+                imbxUint32 leftShift = outputHighBit - inputHighBit;
                 for(; inputHeight != 0; --inputHeight)
                 {
                     for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
                     {
                         paletteValue = (imbxInt32) (*pInputMemory++);
-                        *pOutputMemory++ = (outputType)((pRed->mappedValue(paletteValue) * outputHandlerNumValues) / inputHandlerNumValues + outputHandlerMinValue);
-                        *pOutputMemory++ = (outputType)((pGreen->mappedValue(paletteValue) * outputHandlerNumValues) / inputHandlerNumValues + outputHandlerMinValue);
-                        *pOutputMemory++ = (outputType)((pBlue->mappedValue(paletteValue) * outputHandlerNumValues) / inputHandlerNumValues + outputHandlerMinValue);
+                        *pOutputMemory++ = (outputType)((pRed->mappedValue(paletteValue) << leftShift) + outputHandlerMinValue);
+                        *pOutputMemory++ = (outputType)((pGreen->mappedValue(paletteValue) << leftShift) + outputHandlerMinValue);
+                        *pOutputMemory++ = (outputType)((pBlue->mappedValue(paletteValue) << leftShift) + outputHandlerMinValue);
                     }
                     pInputMemory += inputHandlerWidth - inputWidth;
                     pOutputMemory += (outputHandlerWidth - inputWidth) * 3;

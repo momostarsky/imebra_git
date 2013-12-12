@@ -28,8 +28,12 @@ typedef signed char    imbxInt8;
 /// This type represents a 2 bytes signed integer.
 typedef signed short   imbxInt16;
 
-/// This type represents a 4 bytes signed integer.
+/// This type represents a 8 bytes signed integer.
 typedef signed int    imbxInt32;
+
+typedef signed long long imbxInt64;
+
+typedef unsigned long long imbxUint64;
 
 
 #if !defined(PUNTOEXE_WINDOWS) && !defined(PUNTOEXE_POSIX)

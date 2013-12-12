@@ -63,10 +63,10 @@ void transformHandlers::runTransform(
 	ptr<palette> inputPalette(inputImage->getPalette());
 	std::wstring inputColorSpace(inputImage->getColorSpace());
 	imbxUint32 inputHighBit(inputImage->getHighBit());
-	imbxUint32 inputNumValues((imbxUint32)1 << (inputHighBit + 1));
-	imbxInt32 inputMinValue(0);
+    imbxUint64 inputNumValues((imbxUint64)1 << (inputHighBit + 1));
+    imbxInt32 inputMinValue(0);
 	image::bitDepth inputDepth(inputImage->getDepth());
-	if(inputDepth == image::depthS16 || inputDepth == image::depthS8)
+    if(inputDepth == image::depthS32 || inputDepth == image::depthS16 || inputDepth == image::depthS8)
 	{
 		inputMinValue -= (imbxInt32)(inputNumValues >> 1);
 	}
@@ -75,10 +75,10 @@ void transformHandlers::runTransform(
 	ptr<palette> outputPalette(outputImage->getPalette());
 	std::wstring outputColorSpace(outputImage->getColorSpace());
 	imbxUint32 outputHighBit(outputImage->getHighBit());
-	imbxUint32 outputNumValues((imbxUint32)1 << (outputHighBit + 1));
+    imbxUint64 outputNumValues((imbxUint64)1 << (outputHighBit + 1));
 	imbxInt32 outputMinValue(0);
 	image::bitDepth outputDepth(outputImage->getDepth());
-	if(outputDepth == image::depthS16 || outputDepth == image::depthS8)
+    if(outputDepth == image::depthS32 || outputDepth == image::depthS16 || outputDepth == image::depthS8)
 	{
 		outputMinValue -= (imbxInt32)(outputNumValues >> 1);
 	}
@@ -86,16 +86,16 @@ void transformHandlers::runTransform(
 	if(isEmpty())
 	{
 		ptr<transformHighBit> emptyTransform(new transformHighBit);
-		emptyTransform->runTransformHandlers(inputHandler, inputImageWidth, inputColorSpace, inputPalette, inputMinValue, inputNumValues,
+        emptyTransform->runTransformHandlers(inputHandler, inputImageWidth, inputColorSpace, inputPalette, inputMinValue, inputHighBit,
 											 inputTopLeftX, inputTopLeftY, inputWidth, inputHeight,
-											 outputHandler, outputImageWidth, outputColorSpace, outputPalette, outputMinValue, outputNumValues,
+                                             outputHandler, outputImageWidth, outputColorSpace, outputPalette, outputMinValue, outputHighBit,
 											 outputTopLeftX, outputTopLeftY);
 		return;
 	}
 
-	runTransformHandlers(inputHandler, inputImageWidth, inputColorSpace, inputPalette, inputMinValue, inputNumValues,
+    runTransformHandlers(inputHandler, inputImageWidth, inputColorSpace, inputPalette, inputMinValue, inputHighBit,
 		inputTopLeftX, inputTopLeftY, inputWidth, inputHeight,
-		outputHandler, outputImageWidth, outputColorSpace, outputPalette, outputMinValue, outputNumValues,
+        outputHandler, outputImageWidth, outputColorSpace, outputPalette, outputMinValue, outputHighBit,
 		outputTopLeftX, outputTopLeftY);
 
     PUNTOEXE_FUNCTION_END();

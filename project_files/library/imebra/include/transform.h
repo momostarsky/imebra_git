@@ -20,42 +20,42 @@ template <typename inputType>\
 void runTemplateTransform1(\
     inputType* inputData, size_t inputDataSize, imbxUint32 inputHandlerWidth, const std::wstring& inputHandlerColorSpace,\
     puntoexe::ptr<puntoexe::imebra::palette> inputPalette,\
-    imbxInt32 inputHandlerMinValue, imbxUint32 inputHandlerNumValues,\
+    imbxInt32 inputHandlerMinValue, imbxUint32 inputHighBit,\
     imbxInt32 inputTopLeftX, imbxInt32 inputTopLeftY, imbxInt32 inputWidth, imbxInt32 inputHeight,\
     puntoexe::ptr<puntoexe::imebra::handlers::dataHandlerNumericBase> outputHandler, imbxInt32 outputHandlerWidth, const std::wstring& outputHandlerColorSpace,\
     puntoexe::ptr<puntoexe::imebra::palette> outputPalette,\
-    imbxInt32 outputHandlerMinValue, imbxUint32 outputHandlerNumValues,\
+    imbxInt32 outputHandlerMinValue, imbxUint32 outputHighBit,\
     imbxInt32 outputTopLeftX, imbxInt32 outputTopLeftY)\
 {\
         HANDLER_CALL_TEMPLATE_FUNCTION_WITH_PARAMS(runTemplateTransform2, outputHandler, \
                         inputData, inputDataSize, inputHandlerWidth, inputHandlerColorSpace,\
 			inputPalette,\
-                        inputHandlerMinValue, inputHandlerNumValues,\
+                        inputHandlerMinValue, inputHighBit,\
 			inputTopLeftX, inputTopLeftY, inputWidth, inputHeight,\
 			outputHandlerWidth, outputHandlerColorSpace,\
                         outputPalette,\
-                        outputHandlerMinValue, outputHandlerNumValues,\
+                        outputHandlerMinValue, outputHighBit,\
 			outputTopLeftX, outputTopLeftY);\
 }\
 \
 void runTemplateTransform(\
     puntoexe::ptr<puntoexe::imebra::handlers::dataHandlerNumericBase> inputHandler, imbxUint32 inputHandlerWidth, const std::wstring& inputHandlerColorSpace,\
     puntoexe::ptr<puntoexe::imebra::palette> inputPalette,\
-    imbxInt32 inputHandlerMinValue, imbxUint32 inputHandlerNumValues,\
+    imbxInt32 inputHandlerMinValue, imbxUint32 inputHighBit,\
     imbxInt32 inputTopLeftX, imbxInt32 inputTopLeftY, imbxInt32 inputWidth, imbxInt32 inputHeight,\
     puntoexe::ptr<puntoexe::imebra::handlers::dataHandlerNumericBase> outputHandler, imbxInt32 outputHandlerWidth, const std::wstring& outputHandlerColorSpace,\
     puntoexe::ptr<puntoexe::imebra::palette> outputPalette,\
-    imbxInt32 outputHandlerMinValue, imbxUint32 outputHandlerNumValues,\
+    imbxInt32 outputHandlerMinValue, imbxUint32 outputHighBit,\
     imbxInt32 outputTopLeftX, imbxInt32 outputTopLeftY)\
 {\
         HANDLER_CALL_TEMPLATE_FUNCTION_WITH_PARAMS(runTemplateTransform1, inputHandler, \
                         inputHandlerWidth, inputHandlerColorSpace,\
                         inputPalette,\
-			inputHandlerMinValue, inputHandlerNumValues,\
+            inputHandlerMinValue, inputHighBit,\
 			inputTopLeftX, inputTopLeftY, inputWidth, inputHeight,\
 			outputHandler, outputHandlerWidth, outputHandlerColorSpace,\
                         outputPalette,\
-                        outputHandlerMinValue, outputHandlerNumValues,\
+                        outputHandlerMinValue, outputHighBit,\
 			outputTopLeftX, outputTopLeftY);\
 }\
 \
@@ -65,37 +65,37 @@ void runTemplateTransform2(\
     inputType* inputData, size_t inputDataSize, \
     imbxUint32 inputHandlerWidth, const std::wstring& inputHandlerColorSpace,\
     puntoexe::ptr<puntoexe::imebra::palette> inputPalette,\
-    imbxInt32 inputHandlerMinValue, imbxUint32 inputHandlerNumValues,\
+    imbxInt32 inputHandlerMinValue, imbxUint32 inputHighBit,\
     imbxInt32 inputTopLeftX, imbxInt32 inputTopLeftY, imbxInt32 inputWidth, imbxInt32 inputHeight,\
     imbxInt32 outputHandlerWidth, const std::wstring& outputHandlerColorSpace,\
     puntoexe::ptr<puntoexe::imebra::palette> outputPalette,\
-    imbxInt32 outputHandlerMinValue, imbxUint32 outputHandlerNumValues,\
+    imbxInt32 outputHandlerMinValue, imbxUint32 outputHighBit,\
     imbxInt32 outputTopLeftX, imbxInt32 outputTopLeftY)\
 {\
         templateTransform( \
             inputData, inputDataSize, inputHandlerWidth, inputHandlerColorSpace, \
             inputPalette, \
-            inputHandlerMinValue, inputHandlerNumValues, \
+            inputHandlerMinValue, inputHighBit, \
             inputTopLeftX, inputTopLeftY, inputWidth, inputHeight, \
             outputData, outputDataSize, outputHandlerWidth, outputHandlerColorSpace, \
             outputPalette, \
-            outputHandlerMinValue, outputHandlerNumValues, \
+            outputHandlerMinValue, outputHighBit, \
             outputTopLeftX, outputTopLeftY);\
 }\
 \
 virtual void runTransformHandlers(\
     puntoexe::ptr<puntoexe::imebra::handlers::dataHandlerNumericBase> inputHandler, imbxUint32 inputHandlerWidth, const std::wstring& inputHandlerColorSpace,\
     puntoexe::ptr<puntoexe::imebra::palette> inputPalette,\
-    imbxInt32 inputHandlerMinValue, imbxUint32 inputHandlerNumValues,\
+    imbxInt32 inputHandlerMinValue, imbxUint32 inputHighBit,\
     imbxInt32 inputTopLeftX, imbxInt32 inputTopLeftY, imbxInt32 inputWidth, imbxInt32 inputHeight,\
     puntoexe::ptr<puntoexe::imebra::handlers::dataHandlerNumericBase> outputHandler, imbxInt32 outputHandlerWidth, const std::wstring& outputHandlerColorSpace,\
     puntoexe::ptr<puntoexe::imebra::palette> outputPalette,\
-    imbxInt32 outputHandlerMinValue, imbxUint32 outputHandlerNumValues,\
+    imbxInt32 outputHandlerMinValue, imbxUint32 outputHighBit,\
     imbxInt32 outputTopLeftX, imbxInt32 outputTopLeftY)\
 {\
-    runTemplateTransform(inputHandler, inputHandlerWidth, inputHandlerColorSpace, inputPalette, inputHandlerMinValue, inputHandlerNumValues,\
+    runTemplateTransform(inputHandler, inputHandlerWidth, inputHandlerColorSpace, inputPalette, inputHandlerMinValue, inputHighBit,\
             inputTopLeftX, inputTopLeftY, inputWidth, inputHeight,\
-            outputHandler, outputHandlerWidth, outputHandlerColorSpace, outputPalette, outputHandlerMinValue, outputHandlerNumValues,\
+            outputHandler, outputHandlerWidth, outputHandlerColorSpace, outputPalette, outputHandlerMinValue, outputHighBit,\
             outputTopLeftX, outputTopLeftY);\
 }
 
@@ -294,11 +294,11 @@ public:
 	virtual void runTransformHandlers(
 			ptr<handlers::dataHandlerNumericBase> inputHandler, imbxUint32 inputHandlerWidth, const std::wstring& inputHandlerColorSpace,
 			ptr<palette> inputPalette,
-			imbxInt32 inputHandlerMinValue, imbxUint32 inputHandlerNumValues,
+            imbxInt32 inputHandlerMinValue, imbxUint32 inputHighBit,
 			imbxInt32 inputTopLeftX, imbxInt32 inputTopLeftY, imbxInt32 inputWidth, imbxInt32 inputHeight,
 			ptr<handlers::dataHandlerNumericBase> outputHandler, imbxInt32 outputHandlerWidth, const std::wstring& outputHandlerColorSpace,
 			ptr<palette> outputPalette,
-			imbxInt32 outputHandlerMinValue, imbxUint32 outputHandlerNumValues,
+            imbxInt32 outputHandlerMinValue, imbxUint32 outputHighBit,
 			imbxInt32 outputTopLeftX, imbxInt32 outputTopLeftY) = 0;
 
 };
