@@ -145,6 +145,7 @@ imbxUint32 sizeX, sizeY;
 presentationImage->getSize(&sizeX, &sizeY);
 
 // Scan all the rows
+imbxUint32 index(0);
 for(imbxUint32 scanY = 0; scanY < sizeY; ++scanY)
 {
 	// Scan all the columns
@@ -153,7 +154,7 @@ for(imbxUint32 scanY = 0; scanY < sizeY; ++scanY)
 		// Scan all the channels
 		for(imbxUint32 scanChannel = 0; scanChannel < channelsNumber; ++scanChannel)
 		{
-			imbxInt32 channelValue = myHandler->getSignedLongIncPointer();
+            imbxInt32 channelValue = myHandler->getSignedLong(index++);
 			
 			// Do something with the channel's value
 			//--------------------------------------

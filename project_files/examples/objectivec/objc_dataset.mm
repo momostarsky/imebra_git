@@ -101,4 +101,15 @@
 }
 
 
+- (ImebraImage*) getModalityImage:(imbxUint32)frameNumber
+{
+    puntoexe::ptr<puntoexe::imebra::image> image = m_dataSet->getModalityImage(frameNumber);
+    if(image == 0)
+    {
+        return [[NSImage new] autorelease];
+    }
+    return [[[ImebraImage alloc] initWithImebraImage:image] autorelease];
+}
+
+
 @end

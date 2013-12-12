@@ -24,6 +24,7 @@ $fileHeader$
 #include "../include/transformsChain.h"
 #include "../include/transformHighBit.h"
 #include "../include/transaction.h"
+#include "../include/modalityVOILUT.h"
 #include <iostream>
 #include <string.h>
 
@@ -318,6 +319,59 @@ ptr<image> dataSet::getImage(imbxUint32 frameNumber)
 	return pImage;
 
 	PUNTOEXE_FUNCTION_END();
+}
+
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
+// Get an image from the dataset and apply the modality
+//  transform.
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+ptr<image> dataSet::getModalityImage(imbxUint32 frameNumber)
+{
+    PUNTOEXE_FUNCTION_START(L"dataSet::getImage");
+
+    ptr<image> originalImage = getImage(frameNumber);
+
+    ptr<transforms::colorTransforms::colorTransformsFactory> colorFactory(transforms::colorTransforms::colorTransformsFactory::getColorTransformsFactory());
+    if(originalImage == 0 || !colorFactory->isMonochrome(originalImage->getColorSpace()))
+    {
+        return originalImage;
+    }
+
+    ptr<transforms::modalityVOILUT> modalityVOILUT(new transforms::modalityVOILUT(this));
+
+    // Convert to MONOCHROME2 if a modality transform is not present
+    ////////////////////////////////////////////////////////////////
+    if(modalityVOILUT->isEmpty())
+    {
+        ptr<transforms::colorTransforms::colorTransform> monochromeColorTransform(colorFactory->getTransform(originalImage->getColorSpace(), L"MONOCHROME2"));
+        if(monochromeColorTransform != 0)
+        {
+            imbxUint32 width, height;
+            originalImage->getSize(&width, &height);
+            ptr<image> outputImage = monochromeColorTransform->allocateOutputImage(originalImage, width, height);
+            monochromeColorTransform->runTransform(originalImage, 0, 0, width, height, outputImage, 0, 0);
+            return outputImage;
+        }
+
+        return originalImage;
+    }
+
+    // Apply the modality VOI/LUT transform
+    ///////////////////////////////////////
+    imbxUint32 width, height;
+    originalImage->getSize(&width, &height);
+    ptr<image> outputImage = modalityVOILUT->allocateOutputImage(originalImage, width, height);
+    modalityVOILUT->runTransform(originalImage, 0, 0, width, height, outputImage, 0, 0);
+    return outputImage;
+
+    PUNTOEXE_FUNCTION_END();
 }
 
 

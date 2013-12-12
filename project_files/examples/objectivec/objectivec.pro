@@ -81,7 +81,7 @@ SOURCES += \
     main.mm \
     objc_dataset.mm \
     objc_helpers.mm \
-    obj_image.mm
+    objc_image.mm
 
 HEADERS += \
     ../../library/base/include/thread.h \
