@@ -249,7 +249,7 @@ public:
 		PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::getString");
 
 		std::ostringstream convStream;
-		convStream << std::fixed << getDouble(index);
+        convStream << std::fixed << (((dataHandlerType*)m_pMemoryString)[index]);
 		return convStream.str();
 
 		PUNTOEXE_FUNCTION_END();
