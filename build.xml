@@ -24,18 +24,6 @@
 				<mkdir dir="${build_dir_applications}" />
 		<property name="build_dir_tests" value="${build_dir_applications}/tests" />
 		<mkdir dir="${build_dir_tests}" />
-		<property name="build_dir_dicom2jpeg_64" value="${build_dir_applications}/dicom2jpeg_64" />
-		<mkdir dir="${build_dir_dicom2jpeg_64}" />
-		<property name="build_dir_dicom2jpeg_32" value="${build_dir_applications}/dicom2jpeg_32" />
-		<mkdir dir="${build_dir_dicom2jpeg_32}" />
-		<property name="build_dir_dicomdir_64" value="${build_dir_applications}/dicomdir_64" />
-		<mkdir dir="${build_dir_dicomdir_64}" />
-		<property name="build_dir_dicomdir_32" value="${build_dir_applications}/dicomdir_32" />
-		<mkdir dir="${build_dir_dicomdir_32}" />
-		<property name="build_dir_changeTransferSyntax_64" value="${build_dir_applications}/changeTransferSyntax_64" />
-		<mkdir dir="${build_dir_changeTransferSyntax_64}" />
-		<property name="build_dir_changeTransferSyntax_32" value="${build_dir_applications}/changeTransferSyntax_32" />
-		<mkdir dir="${build_dir_changeTransferSyntax_32}" />
 		<property name="build_dir_html_doc" value="${builds}/imebra_${fileVersion}_html_doc" />
 		<mkdir dir="${build_dir_html_doc}" />
 		<copy todir="${build_dir}">
@@ -117,65 +105,6 @@ The author can be contacted by email at info@binarno.com or by mail at
 	</target>
 
 
-	<!-- Build dicomdirItems -->
-	<target name="build_dicomdirItems" depends="run_test_cases" description="Build dicomdirItems">
-			<exec executable="qmake" failonerror="true" dir="${build_dir_dicomdir_64}">
-					<arg path="${build_dir}/examples/dicomdirItems/dicomdiritems.pro"/>
-					<arg value="-r"/>
-					<arg value="CONFIG+=Release"/>
-					<arg value="-spec"/>
-					<arg value="linux-g++-64"/>
-			</exec>
-			<exec executable="make" failonerror="true" dir="${build_dir_dicomdir_64}" />
-			<exec executable="qmake" failonerror="true" dir="${build_dir_dicomdir_32}">
-					<arg path="${build_dir}/examples/dicomdirItems/dicomdiritems.pro"/>
-					<arg value="-r"/>
-					<arg value="CONFIG+=Release"/>
-					<arg value="-spec"/>
-					<arg value="linux-g++-32"/>
-			</exec>
-			<exec executable="make" failonerror="true" dir="${build_dir_dicomdir_32}" />
-		</target>
-
-	<!-- Build dicom2jpeg -->
-	<target name="build_dicom2jpeg" depends="run_test_cases" description="Build dicom2jpeg">
-			<exec executable="qmake" failonerror="true" dir="${build_dir_dicom2jpeg_64}">
-					<arg path="${build_dir}/examples/dicom2jpeg/dicom2jpeg.pro"/>
-					<arg value="-r"/>
-					<arg value="CONFIG+=Release"/>
-					<arg value="-spec"/>
-					<arg value="linux-g++-64"/>
-			</exec>
-			<exec executable="make" failonerror="true" dir="${build_dir_dicom2jpeg_64}" />
-			<exec executable="qmake" failonerror="true" dir="${build_dir_dicom2jpeg_32}">
-					<arg path="${build_dir}/examples/dicom2jpeg/dicom2jpeg.pro"/>
-					<arg value="-r"/>
-					<arg value="CONFIG+=Release"/>
-					<arg value="-spec"/>
-					<arg value="linux-g++-32"/>
-			</exec>
-			<exec executable="make" failonerror="true" dir="${build_dir_dicom2jpeg_32}" />
-	</target>
-
-	<!-- Build changeTransferSyntax -->
-	<target name="build_changeTransferSyntax" depends="run_test_cases" description="Build changeTransferSyntax">
-			<exec executable="qmake" failonerror="true" dir="${build_dir_changeTransferSyntax_64}">
-					<arg path="${build_dir}/examples/changeTransferSyntax/changeTransferSyntax.pro"/>
-					<arg value="-r"/>
-					<arg value="CONFIG+=Release"/>
-					<arg value="-spec"/>
-					<arg value="linux-g++-64"/>
-			</exec>
-			<exec executable="make" failonerror="true" dir="${build_dir_changeTransferSyntax_64}" />
-			<exec executable="qmake" failonerror="true" dir="${build_dir_changeTransferSyntax_32}">
-					<arg path="${build_dir}/examples/changeTransferSyntax/changeTransferSyntax.pro"/>
-					<arg value="-r"/>
-					<arg value="CONFIG+=Release"/>
-					<arg value="-spec"/>
-					<arg value="linux-g++-32"/>
-			</exec>
-			<exec executable="make" failonerror="true" dir="${build_dir_changeTransferSyntax_32}" />
-	</target>
 
 	<!-- Build the HTML documentation -->
 	<target name="HTML" depends="run_test_cases" description="Build the HTML documents">
@@ -191,29 +120,8 @@ The author can be contacted by email at info@binarno.com or by mail at
 		</copy>
 	</target>
 
-
-	<!-- Zip dicomdirItems -->
-	<target name="zip_dicomdirItems" depends="build_dicomdirItems" >
-		<gzip src="${build_dir_dicomdir_32}/dicomdiritems" destfile="${builds}/dicomdirItems_32bit_${fileVersion}.gzip" />
-		<gzip src="${build_dir_dicomdir_64}/dicomdiritems" destfile="${builds}/dicomdirItems_64bit_${fileVersion}.gzip" />
-	</target>
-
-	<!-- Zip dicom2jpeg -->
-	<target name="zip_dicom2jpeg" depends="build_dicom2jpeg" >
-		<gzip src="${build_dir_dicom2jpeg_32}/dicom2jpeg" destfile="${builds}/dicom2jpeg_32bit_${fileVersion}.gzip" />
-		<gzip src="${build_dir_dicom2jpeg_64}/dicom2jpeg" destfile="${builds}/dicom2jpeg_64bit_${fileVersion}.gzip" />
-	</target>
-
-	<!-- Zip changeTransferSyntax -->
-	<target name="zip_changeTransferSyntax" depends="build_changeTransferSyntax" >
-		<gzip src="${build_dir_changeTransferSyntax_32}/changeTransferSyntax" destfile="${builds}/changeTransferSyntax_32bit_${fileVersion}.gzip" />
-		<gzip src="${build_dir_changeTransferSyntax_64}/changeTransferSyntax" destfile="${builds}/changeTransferSyntax_64bit_${fileVersion}.gzip" />
-	</target>
-
-
-
 	<!-- Build -->
-	<target name="make_distribution" depends="run_test_cases, HTML, zip_dicomdirItems, zip_dicom2jpeg, zip_changeTransferSyntax">
+	<target name="make_distribution" depends="run_test_cases, HTML">
 		<property name="distribution" value="${build_dir}/distribution" />
 		<mkdir dir="${distribution}" />
 		<property name="librarySource" value="${distribution}/library" />
