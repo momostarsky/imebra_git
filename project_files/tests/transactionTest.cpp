@@ -1,6 +1,5 @@
-#include "transactionTest.h"
-
 #include "../library/imebra/include/imebra.h"
+#include <gtest/gtest.h>
 
 namespace puntoexe
 {
@@ -11,7 +10,7 @@ namespace imebra
 namespace tests
 {
 
-void transactionTest::testOneTransaction()
+TEST(transactionTest, testOneTransaction)
 {
 	ptr<dataSet> newDataSet(new dataSet);
 	charsetsList::tCharsetsList charsets;
@@ -24,10 +23,10 @@ void transactionTest::testOneTransaction()
 	newDataSet->setUnicodeString(20, 0, 12, 0, L"test 2", "PN");
 	newDataSet->setUnicodeString(20, 0, 13, 0, L"test 3", "PN");
 
-	QVERIFY(newDataSet->getUnicodeString(20, 0, 10, 0) == L"test 0");
-	QVERIFY(newDataSet->getUnicodeString(20, 0, 11, 0) == L"test 1");
-	QVERIFY(newDataSet->getUnicodeString(20, 0, 12, 0) == L"test 2");
-	QVERIFY(newDataSet->getUnicodeString(20, 0, 13, 0) == L"test 3");
+    EXPECT_EQ(std::wstring(L"test 0"), newDataSet->getUnicodeString(20, 0, 10, 0));
+    EXPECT_EQ(std::wstring(L"test 1"), newDataSet->getUnicodeString(20, 0, 11, 0));
+    EXPECT_EQ(std::wstring(L"test 2"), newDataSet->getUnicodeString(20, 0, 12, 0));
+    EXPECT_EQ(std::wstring(L"test 3"), newDataSet->getUnicodeString(20, 0, 13, 0));
 
 	// Test one transaction
 	IMEBRA_TRANSACTION_START();
@@ -37,20 +36,20 @@ void transactionTest::testOneTransaction()
 		newDataSet->setUnicodeString(10, 0, 12, 0, L"test 2", "PN");
 		newDataSet->setUnicodeString(10, 0, 13, 0, L"test 3", "PN");
 
-		QVERIFY(newDataSet->getUnicodeString(10, 0, 10, 0) != L"test 0");
-		QVERIFY(newDataSet->getUnicodeString(10, 0, 11, 0) != L"test 1");
-		QVERIFY(newDataSet->getUnicodeString(10, 0, 12, 0) != L"test 2");
-		QVERIFY(newDataSet->getUnicodeString(10, 0, 13, 0) != L"test 3");
+        EXPECT_NE(std::wstring(L"test 0"), newDataSet->getUnicodeString(10, 0, 10, 0));
+        EXPECT_NE(std::wstring(L"test 1"), newDataSet->getUnicodeString(10, 0, 11, 0));
+        EXPECT_NE(std::wstring(L"test 2"), newDataSet->getUnicodeString(10, 0, 12, 0));
+        EXPECT_NE(std::wstring(L"test 3"), newDataSet->getUnicodeString(10, 0, 13, 0));
 
 	IMEBRA_TRANSACTION_END();
 
-	QVERIFY(newDataSet->getUnicodeString(10, 0, 10, 0) == L"test 0");
-	QVERIFY(newDataSet->getUnicodeString(10, 0, 11, 0) == L"test 1");
-	QVERIFY(newDataSet->getUnicodeString(10, 0, 12, 0) == L"test 2");
-	QVERIFY(newDataSet->getUnicodeString(10, 0, 13, 0) == L"test 3");
+    EXPECT_EQ(std::wstring(L"test 0"), newDataSet->getUnicodeString(10, 0, 10, 0));
+    EXPECT_EQ(std::wstring(L"test 1"), newDataSet->getUnicodeString(10, 0, 11, 0));
+    EXPECT_EQ(std::wstring(L"test 2"), newDataSet->getUnicodeString(10, 0, 12, 0));
+    EXPECT_EQ(std::wstring(L"test 3"), newDataSet->getUnicodeString(10, 0, 13, 0));
 }
 
-void transactionTest::testNestedTransactions0()
+TEST(transactionTest, testNestedTransactions0)
 {
 	ptr<dataSet> newDataSet(new dataSet);
 	charsetsList::tCharsetsList charsets;
@@ -71,37 +70,37 @@ void transactionTest::testNestedTransactions0()
 			newDataSet->setUnicodeString(20, 0, 12, 0, L"test 6", "PN");
 			newDataSet->setUnicodeString(20, 0, 13, 0, L"test 7", "PN");
 
-			QVERIFY(newDataSet->getUnicodeString(20, 0, 10, 0) != L"test 4");
-			QVERIFY(newDataSet->getUnicodeString(20, 0, 11, 0) != L"test 5");
-			QVERIFY(newDataSet->getUnicodeString(20, 0, 12, 0) != L"test 6");
-			QVERIFY(newDataSet->getUnicodeString(20, 0, 13, 0) != L"test 7");
+            EXPECT_NE(std::wstring(L"test 4"), newDataSet->getUnicodeString(20, 0, 10, 0));
+            EXPECT_NE(std::wstring(L"test 5"), newDataSet->getUnicodeString(20, 0, 11, 0));
+            EXPECT_NE(std::wstring(L"test 6"), newDataSet->getUnicodeString(20, 0, 12, 0));
+            EXPECT_NE(std::wstring(L"test 7"), newDataSet->getUnicodeString(20, 0, 13, 0));
 		
 		IMEBRA_TRANSACTION_END();
 
-		QVERIFY(newDataSet->getUnicodeString(10, 0, 10, 0) != L"test 0");
-		QVERIFY(newDataSet->getUnicodeString(10, 0, 11, 0) != L"test 1");
-		QVERIFY(newDataSet->getUnicodeString(10, 0, 12, 0) != L"test 2");
-		QVERIFY(newDataSet->getUnicodeString(10, 0, 13, 0) != L"test 3");
+        EXPECT_NE(std::wstring(L"test 0"), newDataSet->getUnicodeString(10, 0, 10, 0));
+        EXPECT_NE(std::wstring(L"test 1"), newDataSet->getUnicodeString(10, 0, 11, 0));
+        EXPECT_NE(std::wstring(L"test 2"), newDataSet->getUnicodeString(10, 0, 12, 0));
+        EXPECT_NE(std::wstring(L"test 3"), newDataSet->getUnicodeString(10, 0, 13, 0));
 
-		QVERIFY(newDataSet->getUnicodeString(20, 0, 10, 0) != L"test 4");
-		QVERIFY(newDataSet->getUnicodeString(20, 0, 11, 0) != L"test 5");
-		QVERIFY(newDataSet->getUnicodeString(20, 0, 12, 0) != L"test 6");
-		QVERIFY(newDataSet->getUnicodeString(20, 0, 13, 0) != L"test 7");
+        EXPECT_NE(std::wstring(L"test 4"), newDataSet->getUnicodeString(20, 0, 10, 0));
+        EXPECT_NE(std::wstring(L"test 5"), newDataSet->getUnicodeString(20, 0, 11, 0));
+        EXPECT_NE(std::wstring(L"test 6"), newDataSet->getUnicodeString(20, 0, 12, 0));
+        EXPECT_NE(std::wstring(L"test 7"), newDataSet->getUnicodeString(20, 0, 13, 0));
 	
 	IMEBRA_TRANSACTION_END();
 
-	QVERIFY(newDataSet->getUnicodeString(10, 0, 10, 0) == L"test 0");
-	QVERIFY(newDataSet->getUnicodeString(10, 0, 11, 0) == L"test 1");
-	QVERIFY(newDataSet->getUnicodeString(10, 0, 12, 0) == L"test 2");
-	QVERIFY(newDataSet->getUnicodeString(10, 0, 13, 0) == L"test 3");
+    EXPECT_EQ(std::wstring(L"test 0"), newDataSet->getUnicodeString(10, 0, 10, 0));
+    EXPECT_EQ(std::wstring(L"test 1"), newDataSet->getUnicodeString(10, 0, 11, 0));
+    EXPECT_EQ(std::wstring(L"test 2"), newDataSet->getUnicodeString(10, 0, 12, 0));
+    EXPECT_EQ(std::wstring(L"test 3"), newDataSet->getUnicodeString(10, 0, 13, 0));
 
-	QVERIFY(newDataSet->getUnicodeString(20, 0, 10, 0) == L"test 4");
-	QVERIFY(newDataSet->getUnicodeString(20, 0, 11, 0) == L"test 5");
-	QVERIFY(newDataSet->getUnicodeString(20, 0, 12, 0) == L"test 6");
-	QVERIFY(newDataSet->getUnicodeString(20, 0, 13, 0) == L"test 7");
+    EXPECT_EQ(std::wstring(L"test 4"), newDataSet->getUnicodeString(20, 0, 10, 0));
+    EXPECT_EQ(std::wstring(L"test 5"), newDataSet->getUnicodeString(20, 0, 11, 0));
+    EXPECT_EQ(std::wstring(L"test 6"), newDataSet->getUnicodeString(20, 0, 12, 0));
+    EXPECT_EQ(std::wstring(L"test 7"), newDataSet->getUnicodeString(20, 0, 13, 0));
 }
 
-void transactionTest::testNestedTransactions1()
+TEST(transactionTest, testNestedTransactions1)
 {
 	ptr<dataSet> newDataSet(new dataSet);
 	charsetsList::tCharsetsList charsets;
@@ -123,37 +122,37 @@ void transactionTest::testNestedTransactions1()
 			newDataSet->setUnicodeString(20, 0, 12, 0, L"test 6", "PN");
 			newDataSet->setUnicodeString(20, 0, 13, 0, L"test 7", "PN");
 
-			QVERIFY(newDataSet->getUnicodeString(20, 0, 10, 0) != L"test 4");
-			QVERIFY(newDataSet->getUnicodeString(20, 0, 11, 0) != L"test 5");
-			QVERIFY(newDataSet->getUnicodeString(20, 0, 12, 0) != L"test 6");
-			QVERIFY(newDataSet->getUnicodeString(20, 0, 13, 0) != L"test 7");
+            EXPECT_NE(std::wstring(L"test 4"), newDataSet->getUnicodeString(20, 0, 10, 0));
+            EXPECT_NE(std::wstring(L"test 5"), newDataSet->getUnicodeString(20, 0, 11, 0));
+            EXPECT_NE(std::wstring(L"test 6"), newDataSet->getUnicodeString(20, 0, 12, 0));
+            EXPECT_NE(std::wstring(L"test 7"), newDataSet->getUnicodeString(20, 0, 13, 0));
 		
 		IMEBRA_TRANSACTION_END();
 
-		QVERIFY(newDataSet->getUnicodeString(10, 0, 10, 0) != L"test 0");
-		QVERIFY(newDataSet->getUnicodeString(10, 0, 11, 0) != L"test 1");
-		QVERIFY(newDataSet->getUnicodeString(10, 0, 12, 0) != L"test 2");
-		QVERIFY(newDataSet->getUnicodeString(10, 0, 13, 0) != L"test 3");
+        EXPECT_NE(std::wstring(L"test 0"), newDataSet->getUnicodeString(10, 0, 10, 0));
+        EXPECT_NE(std::wstring(L"test 1"), newDataSet->getUnicodeString(10, 0, 11, 0));
+        EXPECT_NE(std::wstring(L"test 2"), newDataSet->getUnicodeString(10, 0, 12, 0));
+        EXPECT_NE(std::wstring(L"test 3"), newDataSet->getUnicodeString(10, 0, 13, 0));
 
-		QVERIFY(newDataSet->getUnicodeString(20, 0, 10, 0) == L"test 4");
-		QVERIFY(newDataSet->getUnicodeString(20, 0, 11, 0) == L"test 5");
-		QVERIFY(newDataSet->getUnicodeString(20, 0, 12, 0) == L"test 6");
-		QVERIFY(newDataSet->getUnicodeString(20, 0, 13, 0) == L"test 7");
+        EXPECT_EQ(std::wstring(L"test 4"), newDataSet->getUnicodeString(20, 0, 10, 0));
+        EXPECT_EQ(std::wstring(L"test 5"), newDataSet->getUnicodeString(20, 0, 11, 0));
+        EXPECT_EQ(std::wstring(L"test 6"), newDataSet->getUnicodeString(20, 0, 12, 0));
+        EXPECT_EQ(std::wstring(L"test 7"), newDataSet->getUnicodeString(20, 0, 13, 0));
 	
 	IMEBRA_TRANSACTION_END();
 
-	QVERIFY(newDataSet->getUnicodeString(10, 0, 10, 0) == L"test 0");
-	QVERIFY(newDataSet->getUnicodeString(10, 0, 11, 0) == L"test 1");
-	QVERIFY(newDataSet->getUnicodeString(10, 0, 12, 0) == L"test 2");
-	QVERIFY(newDataSet->getUnicodeString(10, 0, 13, 0) == L"test 3");
+    EXPECT_EQ(std::wstring(L"test 0"), newDataSet->getUnicodeString(10, 0, 10, 0));
+    EXPECT_EQ(std::wstring(L"test 1"), newDataSet->getUnicodeString(10, 0, 11, 0));
+    EXPECT_EQ(std::wstring(L"test 2"), newDataSet->getUnicodeString(10, 0, 12, 0));
+    EXPECT_EQ(std::wstring(L"test 3"), newDataSet->getUnicodeString(10, 0, 13, 0));
 
-	QVERIFY(newDataSet->getUnicodeString(20, 0, 10, 0) == L"test 4");
-	QVERIFY(newDataSet->getUnicodeString(20, 0, 11, 0) == L"test 5");
-	QVERIFY(newDataSet->getUnicodeString(20, 0, 12, 0) == L"test 6");
-	QVERIFY(newDataSet->getUnicodeString(20, 0, 13, 0) == L"test 7");
+    EXPECT_EQ(std::wstring(L"test 4"), newDataSet->getUnicodeString(20, 0, 10, 0));
+    EXPECT_EQ(std::wstring(L"test 5"), newDataSet->getUnicodeString(20, 0, 11, 0));
+    EXPECT_EQ(std::wstring(L"test 6"), newDataSet->getUnicodeString(20, 0, 12, 0));
+    EXPECT_EQ(std::wstring(L"test 7"), newDataSet->getUnicodeString(20, 0, 13, 0));
 }
 
-void transactionTest::testNestedTransactionsFail0()
+TEST(transactionTest, testNestedTransactionsFail0)
 {
 	ptr<dataSet> newDataSet(new dataSet);
 	charsetsList::tCharsetsList charsets;
@@ -190,18 +189,18 @@ void transactionTest::testNestedTransactionsFail0()
 
 	IMEBRA_TRANSACTION_END();
 
-	QVERIFY(newDataSet->getUnicodeString(10, 0, 10, 0) == L"initial test 0");
-	QVERIFY(newDataSet->getUnicodeString(10, 0, 11, 0) == L"initial test 1");
-	QVERIFY(newDataSet->getUnicodeString(10, 0, 12, 0) == L"initial test 2");
-	QVERIFY(newDataSet->getUnicodeString(10, 0, 13, 0) == L"initial test 3");
+    EXPECT_EQ(std::wstring(L"initial test 0"), newDataSet->getUnicodeString(10, 0, 10, 0));
+    EXPECT_EQ(std::wstring(L"initial test 1"), newDataSet->getUnicodeString(10, 0, 11, 0));
+    EXPECT_EQ(std::wstring(L"initial test 2"), newDataSet->getUnicodeString(10, 0, 12, 0));
+    EXPECT_EQ(std::wstring(L"initial test 3"), newDataSet->getUnicodeString(10, 0, 13, 0));
 
-	QVERIFY(newDataSet->getUnicodeString(20, 0, 10, 0) == L"initial test 4");
-	QVERIFY(newDataSet->getUnicodeString(20, 0, 11, 0) == L"initial test 5");
-	QVERIFY(newDataSet->getUnicodeString(20, 0, 12, 0) == L"initial test 6");
-	QVERIFY(newDataSet->getUnicodeString(20, 0, 13, 0) == L"initial test 7");
+    EXPECT_EQ(std::wstring(L"initial test 4"), newDataSet->getUnicodeString(20, 0, 10, 0));
+    EXPECT_EQ(std::wstring(L"initial test 5"), newDataSet->getUnicodeString(20, 0, 11, 0));
+    EXPECT_EQ(std::wstring(L"initial test 6"), newDataSet->getUnicodeString(20, 0, 12, 0));
+    EXPECT_EQ(std::wstring(L"initial test 7"), newDataSet->getUnicodeString(20, 0, 13, 0));
 }
 
-void transactionTest::testNestedTransactionsFail1()
+TEST(transactionTest, testNestedTransactionsFail1)
 {
 	ptr<dataSet> newDataSet(new dataSet);
 	charsetsList::tCharsetsList charsets;
@@ -243,18 +242,18 @@ void transactionTest::testNestedTransactionsFail1()
 	catch(std::runtime_error&)
 	{
 		std::wstring message = puntoexe::exceptionsManager::getMessage();
-		QVERIFY(message.find(L"test abort") != std::string::npos);
+        ASSERT_TRUE(message.find(L"test abort") != std::string::npos);
 	}
 
-	QVERIFY(newDataSet->getUnicodeString(10, 0, 10, 0) == L"initial test 0");
-	QVERIFY(newDataSet->getUnicodeString(10, 0, 11, 0) == L"initial test 1");
-	QVERIFY(newDataSet->getUnicodeString(10, 0, 12, 0) == L"initial test 2");
-	QVERIFY(newDataSet->getUnicodeString(10, 0, 13, 0) == L"initial test 3");
+    EXPECT_EQ(std::wstring(L"initial test 0"), newDataSet->getUnicodeString(10, 0, 10, 0));
+    EXPECT_EQ(std::wstring(L"initial test 1"), newDataSet->getUnicodeString(10, 0, 11, 0));
+    EXPECT_EQ(std::wstring(L"initial test 2"), newDataSet->getUnicodeString(10, 0, 12, 0));
+    EXPECT_EQ(std::wstring(L"initial test 3"), newDataSet->getUnicodeString(10, 0, 13, 0));
 
-	QVERIFY(newDataSet->getUnicodeString(20, 0, 10, 0) == L"test 4");
-	QVERIFY(newDataSet->getUnicodeString(20, 0, 11, 0) == L"test 5");
-	QVERIFY(newDataSet->getUnicodeString(20, 0, 12, 0) == L"test 6");
-	QVERIFY(newDataSet->getUnicodeString(20, 0, 13, 0) == L"test 7");
+    EXPECT_EQ(std::wstring(L"test 4"), newDataSet->getUnicodeString(20, 0, 10, 0));
+    EXPECT_EQ(std::wstring(L"test 5"), newDataSet->getUnicodeString(20, 0, 11, 0));
+    EXPECT_EQ(std::wstring(L"test 6"), newDataSet->getUnicodeString(20, 0, 12, 0));
+    EXPECT_EQ(std::wstring(L"test 7"), newDataSet->getUnicodeString(20, 0, 13, 0));
 }
 
 

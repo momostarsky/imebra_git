@@ -53,13 +53,11 @@
     return [self getStringFromGroup:group inTag:tag inPosition:0];
 }
 
-
 - (NSString*) getStringFromGroup:(imbxUint16)group inTag:(imbxUint16)tag inPosition:(imbxUint32)position
 {
     std::wstring tagValue = m_dataSet->getUnicodeString(group, 0, tag, position);
     return StringWToNSString(tagValue);
 }
-
 
 - (long) getLongFromGroup:(imbxUint16)group inTag:(imbxUint16) tag
 {
@@ -89,7 +87,6 @@
     return [newDataSet autorelease];
 }
 
-
 - (ImebraImage*) getImage:(imbxUint32)frameNumber
 {
     puntoexe::ptr<puntoexe::imebra::image> image = m_dataSet->getImage(frameNumber);
@@ -99,7 +96,6 @@
     }
     return [[[ImebraImage alloc] initWithImebraImage:image] autorelease];
 }
-
 
 - (ImebraImage*) getModalityImage:(imbxUint32)frameNumber
 {

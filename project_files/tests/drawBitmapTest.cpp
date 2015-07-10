@@ -1,7 +1,6 @@
-#include "drawBitmapTest.h"
-
 #include "../library/imebra/include/imebra.h"
 #include "buildImageForTest.h"
+#include <gtest/gtest.h>
 
 namespace puntoexe
 {
@@ -14,7 +13,7 @@ namespace tests
 
 using namespace puntoexe::imebra;
 
-void drawBitmapTest::testDrawBitmap()
+TEST(drawBitmapTest, testDrawBitmap)
 {
 	for(int monochrome(0); monochrome != 2; ++monochrome)
 	{
@@ -74,9 +73,9 @@ void drawBitmapTest::testDrawBitmap()
 					imbxUint8 displayRed(*pBuffer++);
 					imbxUint8 displayGreen(*pBuffer++);
 					imbxUint8 displayBlue(*pBuffer++);
-					QVERIFY(averageRed == displayRed);
-					QVERIFY(averageGreen == displayGreen);
-					QVERIFY(averageBlue == displayBlue);
+                    EXPECT_EQ(averageRed, displayRed);
+                    EXPECT_EQ(averageGreen, displayGreen);
+                    EXPECT_EQ(averageBlue, displayBlue);
 				}
 
 			}

@@ -1,7 +1,6 @@
-#include "dicomCodecTest.h"
-
 #include "../library/imebra/include/imebra.h"
 #include "buildImageForTest.h"
+#include <gtest/gtest.h>
 
 namespace puntoexe
 {
@@ -12,7 +11,7 @@ namespace imebra
 namespace tests
 {
 
-ptr<image> dicomCodecTest::makeTestImage()
+ptr<image> makeTestImage()
 {
 	imbxUint32 sizeX = 601;
 	imbxUint32 sizeY = 401;
@@ -56,7 +55,7 @@ ptr<image> dicomCodecTest::makeTestImage()
 
 
 // A buffer initialized to a default data type should use the data type OB
-void dicomCodecTest::testUncompressed()
+TEST(dicomCodecTest, testUncompressed)
 {
 	for(int transferSyntaxId(0); transferSyntaxId != 3; ++transferSyntaxId)
 	{
@@ -139,21 +138,18 @@ void dicomCodecTest::testUncompressed()
 					ptr<baseStream> readStream(new memoryStream(streamMemory));
 					ptr<dataSet> testDataSet = codecs::codecFactory::getCodecFactory()->load(ptr<streamReader>(new streamReader(readStream)));
 
-					QVERIFY(testDataSet->getString(0x0010, 0, 0x0010, 0) == "AAAaa");
-					QVERIFY(testDataSet->getString(0x0010, 0, 0x0010, 1) == "BBBbbb");
-					QVERIFY(testDataSet->getString(0x0010, 0, 0x0010, 2) == "");
-					QVERIFY(testDataSet->getSignedLong(0x0028, 0, 0x0006, 0) == interleaved);
+                    EXPECT_EQ(std::string("AAAaa"), testDataSet->getString(0x0010, 0, 0x0010, 0));
+                    EXPECT_EQ(std::string("BBBbbb"), testDataSet->getString(0x0010, 0, 0x0010, 1));
+                    EXPECT_EQ(std::string(""), testDataSet->getString(0x0010, 0, 0x0010, 2));
+                    EXPECT_EQ(interleaved, testDataSet->getSignedLong(0x0028, 0, 0x0006, 0));
 
 					ptr<image> checkImage0 = testDataSet->getImage(0);
 					ptr<image> checkImage1 = testDataSet->getImage(1);
 					ptr<image> checkImage2 = testDataSet->getImage(2);
 
-					std::ostringstream message;
-					message << "Sign = " << sign << " highBit = " << highBit;
-
-					QVERIFY2(compareImages(checkImage0, dicomImage0) < 0.0001, message.str().c_str());
-					QVERIFY2(compareImages(checkImage1, dicomImage1) < 0.0001, message.str().c_str());
-					QVERIFY2(compareImages(checkImage2, dicomImage2) < 0.0001, message.str().c_str());
+                    ASSERT_TRUE(compareImages(checkImage0, dicomImage0) < 0.0001);
+                    ASSERT_TRUE(compareImages(checkImage1, dicomImage1) < 0.0001);
+                    ASSERT_TRUE(compareImages(checkImage2, dicomImage2) < 0.0001);
 				}
 			}
 		}
@@ -161,7 +157,7 @@ void dicomCodecTest::testUncompressed()
 }
 
 
-void dicomCodecTest::testRLENotInterleaved()
+TEST(dicomCodecTest, testRLENotInterleaved)
 {
 	ptr<image> dicomImage = makeTestImage();
 	imbxUint32 sizeX, sizeY;
@@ -186,8 +182,8 @@ void dicomCodecTest::testRLENotInterleaved()
 		ptr<baseStream> readStream(new memoryStream(streamMemory));
 		ptr<dataSet> testDataSet = codecs::codecFactory::getCodecFactory()->load(ptr<streamReader>(new streamReader(readStream)));
 
-		QVERIFY(testDataSet->getString(0x0010, 0, 0x0010, 0) == "AAAaa");
-		QVERIFY(testDataSet->getString(0x0010, 0, 0x0010, 1) == "BBBbbb");
+        EXPECT_EQ(std::string("AAAaa"), testDataSet->getString(0x0010, 0, 0x0010, 0));
+        EXPECT_EQ(std::string("BBBbbb"), testDataSet->getString(0x0010, 0, 0x0010, 1));
 
 		ptr<image> checkImage = testDataSet->getImage(0);
 		
@@ -198,8 +194,8 @@ void dicomCodecTest::testRLENotInterleaved()
 		ptr<handlers::dataHandlerNumericBase> originalHandler = dicomImage->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
 
 		// Compare the buffers.
-		QVERIFY(checkSizeX == sizeX);
-		QVERIFY(checkSizeY == sizeY);
+        EXPECT_EQ(sizeX, checkSizeX);
+        EXPECT_EQ(sizeY, checkSizeY);
 
 		size_t pointer(0);
 		for(imbxUint32 checkY = 0; checkY < sizeY; ++checkY)
@@ -210,7 +206,7 @@ void dicomCodecTest::testRLENotInterleaved()
 				{
 					imbxInt32 value0 = checkHandler->getUnsignedLong(pointer);
 					imbxInt32 value1 = originalHandler->getUnsignedLong(pointer++);
-					QCOMPARE(value0, value1);
+                    EXPECT_EQ(value0, value1);
 				}
 			}
 		}

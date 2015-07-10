@@ -124,7 +124,7 @@ void cursorLine::copy(const cursorLine& right)
 // Constructor
 //
 ///////////////////////////////////////////////////////////
-view::view(imbxInt32 rowByteAlign, bool bBGR):
+view::view():
 	m_leftPosition(0),
 	m_topPosition(0),
 	m_rightPosition(0),

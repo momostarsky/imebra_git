@@ -1,6 +1,5 @@
-#include "paletteTest.h"
-
 #include "../library/imebra/include/imebra.h"
+#include <gtest/gtest.h>
 
 namespace puntoexe
 {
@@ -13,7 +12,7 @@ namespace tests
 
 
 // A buffer initialized to a default data type should use the data type OB
-void paletteTest::testPalette()
+TEST(paletteTest, testPalette)
 {/*
 	imbxUint32 sizeX = 600;
 	imbxUint32 sizeY = 400;

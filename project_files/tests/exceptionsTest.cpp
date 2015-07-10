@@ -1,4 +1,4 @@
-#include "exceptionsTest.h"
+#include <gtest/gtest.h>
 
 #if defined(WIN32) | defined(WIN32_WCE)
 #include "windows.h"
@@ -18,7 +18,7 @@ namespace tests
 {
 
 // A buffer initialized to a default data type should use the data type OB
-void exceptionsTest::testExceptions()
+TEST(exceptionsTest, testExceptions)
 {
 	try
 	{
@@ -38,18 +38,18 @@ void exceptionsTest::testExceptions()
 	catch(...)
 	{
 		std::wstring exceptionMessage = puntoexe::exceptionsManager::getMessage();
-		QVERIFY(!exceptionMessage.empty());
+        ASSERT_FALSE(exceptionMessage.empty());
 
 		std::wstring exceptionMessageEmpty = puntoexe::exceptionsManager::getMessage();
-		QVERIFY(exceptionMessageEmpty.empty());
+        ASSERT_TRUE(exceptionMessageEmpty.empty());
 
-		QVERIFY(exceptionMessage.find(L"exceptionTest_Phase1") != exceptionMessage.npos);
-		QVERIFY(exceptionMessage.find(L"exceptionTest_Phase2") != exceptionMessage.npos);
-		QVERIFY(exceptionMessage.find(L"exceptionTest_Phase3") != exceptionMessage.npos);
-		QVERIFY(exceptionMessage.find(L"testPhase3") != exceptionMessage.npos);
+        ASSERT_TRUE(exceptionMessage.find(L"exceptionTest_Phase1") != exceptionMessage.npos);
+        ASSERT_TRUE(exceptionMessage.find(L"exceptionTest_Phase2") != exceptionMessage.npos);
+        ASSERT_TRUE(exceptionMessage.find(L"exceptionTest_Phase3") != exceptionMessage.npos);
+        ASSERT_TRUE(exceptionMessage.find(L"testPhase3") != exceptionMessage.npos);
 		return;
 	}
-	QVERIFY(false);
+    ASSERT_TRUE(false);
 }
 
 

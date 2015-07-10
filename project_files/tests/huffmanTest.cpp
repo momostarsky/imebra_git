@@ -1,9 +1,8 @@
-#include "huffmanTest.h"
-
 #include "../library/imebra/include/imebra.h"
 
 #include <vector>
 #include <stdlib.h>
+#include <gtest/gtest.h>
 
 namespace puntoexe
 {
@@ -15,7 +14,7 @@ namespace tests
 {
 
 // A buffer initialized to a default data type should use the data type OB
-void huffmanTest::test()
+TEST(huffmanTest, test)
 {
 	ptr<memory> myMemory(new memory);
 	ptr<baseStream> theMemoryStream(new memoryStream(myMemory));
@@ -45,7 +44,7 @@ void huffmanTest::test()
 	{
 		imbxUint32 value(huffman.readHuffmanCode(reader.get()));
 
-		QCOMPARE((imbxUint8)value, values[readValues]);
+        EXPECT_EQ(values[readValues], (imbxUint8)value);
 	}
 }
 

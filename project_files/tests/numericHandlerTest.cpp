@@ -1,7 +1,7 @@
-#include "numericHandlerTest.h"
-
 #include "../library/imebra/include/imebra.h"
 #include <string.h>
+
+#include <gtest/gtest.h>
 
 namespace puntoexe
 {
@@ -13,41 +13,41 @@ namespace tests
 {
 
 // Check the function pointerIsValid
-void numericHandlerTest::validPointer()
+TEST(numericHandlerTest, validPointer)
 {
 	ptr<buffer> buffer0(new buffer(0, "OW"));
 
 
 	ptr<handlers::dataHandler> handlerBuffer0(buffer0->getDataHandler(true, 0));
-	QVERIFY(handlerBuffer0->getUnitSize() == 2);
+    EXPECT_EQ(2, handlerBuffer0->getUnitSize());
 	imbxUint32 bufferSize(4);
 	handlerBuffer0->setSize(bufferSize);
 	
 	imbxUint32 checkSize0(0);
 	while(handlerBuffer0->pointerIsValid(checkSize0))
 	{
-		QVERIFY(checkSize0 < bufferSize);
+        EXPECT_GE(bufferSize, checkSize0);
 		++checkSize0;
 	}
 
-	QCOMPARE(checkSize0, bufferSize);
+    EXPECT_EQ(bufferSize, checkSize0);
 	handlerBuffer0.release();
 
 	ptr<handlers::dataHandler> handlerBuffer1(buffer0->getDataHandler(true, 0));
-	QVERIFY(handlerBuffer1->getUnitSize() == 2);
+    EXPECT_EQ(2, handlerBuffer1->getUnitSize());
 	
 	imbxUint32 checkSize1(0);
 	while(handlerBuffer1->pointerIsValid(checkSize1))
 	{
-		QVERIFY(checkSize1 < bufferSize);
+        EXPECT_GE(bufferSize, checkSize1);
 		++checkSize1;
 	}
 
-	QCOMPARE(checkSize1, bufferSize);
+    EXPECT_EQ(bufferSize, checkSize1);
 }
 
 // A buffer initialized to a default data type should use the data type OB
-void numericHandlerTest::interleavedCopy()
+TEST(numericHandlerTest, interleavedCopy)
 {
 	int sizeX = 601;
 	int sizeY = 401;
@@ -182,19 +182,19 @@ void numericHandlerTest::interleavedCopy()
 			imbxInt32* pTestBuffer0 = buffer0.get() + squareX * 64 + squareY * mcuX * 128;
 			for(int scanValues0 = 0; scanValues0 < 64; ++scanValues0)
 			{
-				QCOMPARE(pTestBuffer0[scanValues0], (imbxInt32)(squareY * 100 + squareX) );
+                EXPECT_EQ((imbxInt32)(squareY * 100 + squareX), pTestBuffer0[scanValues0]);
 			}
 
 			imbxInt32* pTestBuffer1 = buffer1.get() + squareX2 * 64 + squareY2 * mcuX * 64;
 			for(int scanValues1 = 0; scanValues1 < 64; ++scanValues1)
 			{
-				QCOMPARE(pTestBuffer1[scanValues1], (imbxInt32)(-squareY2 * 100 - squareX2) );
+                EXPECT_EQ((imbxInt32)(-squareY2 * 100 - squareX2), pTestBuffer1[scanValues1]);
 			}
 
 			imbxInt32* pTestBuffer2 = buffer2.get() + squareX2 * 64 + squareY2 * mcuX * 64;
 			for(int scanValues2 = 0; scanValues2 < 64; ++scanValues2)
 			{
-				QCOMPARE(pTestBuffer2[scanValues2], (imbxInt32)(-squareY2 * 100 + squareX2) );
+                EXPECT_EQ((imbxInt32)(-squareY2 * 100 + squareX2), pTestBuffer2[scanValues2]);
 			}
 
 		}
@@ -203,7 +203,7 @@ void numericHandlerTest::interleavedCopy()
 }
 
 
-void numericHandlerTest::stringConversion()
+TEST(numericHandlerTest, stringConversion)
 {
 	ptr<memory> handlerBuffer0(new memory);
 	ptr<handlers::dataHandlerNumeric<imbxInt32> > testHandler0(new handlers::dataHandlerNumeric<imbxInt32>);
@@ -211,9 +211,9 @@ void numericHandlerTest::stringConversion()
 	testHandler0->setSize(1);
 
 	testHandler0->setString(0, "13");
-	QVERIFY(testHandler0->getSignedLong(0) == 13);
+    EXPECT_EQ(13, testHandler0->getSignedLong(0));
 	testHandler0->setString(0, "45.7");
-	QVERIFY(testHandler0->getSignedLong(0) == 45);
+    EXPECT_EQ(45, testHandler0->getSignedLong(0));
 
 	ptr<memory> handlerBuffer1(new memory);
 	ptr<handlers::dataHandlerNumeric<double> > testHandler1(new handlers::dataHandlerNumeric<double>);
@@ -221,9 +221,9 @@ void numericHandlerTest::stringConversion()
 	testHandler1->setSize(1);
 
 	testHandler1->setString(0, "13");
-	QVERIFY(testHandler1->getSignedLong(0) == 13);
+    EXPECT_EQ(13, testHandler1->getSignedLong(0));
 	testHandler1->setString(0, "45.7");
-	QVERIFY(testHandler1->getDouble(0) == 45.7);
+    EXPECT_FLOAT_EQ(45.7, testHandler1->getDouble(0));
 }
 
 

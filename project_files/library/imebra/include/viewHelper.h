@@ -108,16 +108,8 @@ public:
 	/// The derived class can specify the byte alignment for
 	///  each bitmap's row and the order of the RGB components.
 	///
-	/// @param rowByteAlign   the number of bytes each bitmap's
-	///                        row has to be aligned to.
-	///                       Usually is for bytes on Windows
-	/// @param bBGR           true if the RGB components in
-	///                        the bitmap has to be blue, green
-	///                        and then red. false if the
-	///                        order has to be red, green, blue
-	///
 	///////////////////////////////////////////////////////////
-	view(imbxInt32 rowByteAlign, bool bBGR);
+    view();
 
 	///////////////////////////////////////////////////////////
 	/// \name Get/Set the image to be show

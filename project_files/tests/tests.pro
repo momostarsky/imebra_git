@@ -1,12 +1,12 @@
 TEMPLATE = app
 
-QT -= gui
-QT += core testlib
+QT -= core gui
 
 CONFIG += warn_on
 
 unix:LIBS = -lgcov
 windows:DEFINES += _WIN32_WINNT=0x0501 WINVER=0x0501 NTDDI_VERSION=0x05010000
+LIBS += -lgtest
 
 OTHER_FILES += \
     ReadMe.txt \
@@ -20,25 +20,6 @@ OTHER_FILES += \
     ../docs/html_footer.html
 
 HEADERS += \
-    unicodeStringHandlerTest.h \
-    transactionTest.h \
-    streamBitsTest.h \
-    paletteTest.h \
-    numericHandlerTest.h \
-    memoryStreamTest.h \
-    jpegCodecTest.h \
-    huffmanTest.h \
-    exceptionsTest.h \
-    drawBitmapTest.h \
-    dicomDirTest.h \
-    dicomCodecTest.h \
-    decimalStringHandlerTest.h \
-    dateTimeHandlerTest.h \
-    dataSetTest.h \
-    buildImageForTest.h \
-    bufferTest.h \
-    bitTransformTest.h \
-    ageStringHandlerTest.h \
     ../library/imebra/include/YBRPARTIALToRGB.h \
     ../library/imebra/include/YBRFULLToRGB.h \
     ../library/imebra/include/YBRFULLToMONOCHROME2.h \

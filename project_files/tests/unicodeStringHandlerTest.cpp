@@ -1,6 +1,5 @@
-#include "unicodeStringHandlerTest.h"
-
 #include "../library/imebra/include/imebra.h"
+#include <gtest/gtest.h>
 
 namespace puntoexe
 {
@@ -11,7 +10,7 @@ namespace imebra
 namespace tests
 {
 
-void unicodeStringHandlerTest::unicodeTest()
+TEST(unicodeStringHandlerTest, unicodeTest)
 {
 	ptr<memory> streamMemory(new memory);
 
@@ -37,16 +36,17 @@ void unicodeStringHandlerTest::unicodeTest()
 		ptr<baseStream> readStream(new memoryStream(streamMemory));
 		ptr<dataSet> testDataSet = codecs::codecFactory::getCodecFactory()->load(ptr<streamReader>(new streamReader(readStream)));
 
-		QCOMPARE(testDataSet->getUnicodeString(0x0010, 0, 0x0010, 0), patientName0);
-		QCOMPARE(testDataSet->getUnicodeString(0x0010, 0, 0x0010, 1), patientName1);
+        EXPECT_EQ(patientName0, testDataSet->getUnicodeString(0x0010, 0, 0x0010, 0));
+        EXPECT_EQ(patientName1, testDataSet->getUnicodeString(0x0010, 0, 0x0010, 1));
 		
 		charsetsList::tCharsetsList charsets;
 		testDataSet->getCharsetsList(&charsets);
-		QVERIFY(charsets.size() == 1 && charsets.front()==L"ISO_IR 192");
+        EXPECT_EQ(1, charsets.size());
+        EXPECT_EQ(std::wstring(L"ISO_IR 192"), charsets.front());
 	}
 }
 
-void unicodeStringHandlerTest::iso2022Test()
+TEST(unicodeStringHandlerTest, iso2022Test)
 {
 	ptr<memory> streamMemory(new memory);
 
@@ -71,12 +71,13 @@ void unicodeStringHandlerTest::iso2022Test()
 
 		std::wstring check0 = testDataSet->getUnicodeString(0x0010, 0, 0x0010, 0);
 		std::wstring check1 = testDataSet->getUnicodeString(0x0010, 0, 0x0010, 1);
-		QCOMPARE(check0, patientName0);
-		QCOMPARE(check1, patientName1);
+        EXPECT_EQ(patientName0, check0);
+        EXPECT_EQ(patientName1, check1);
 		
 		charsetsList::tCharsetsList charsets;
 		testDataSet->getCharsetsList(&charsets);
-		QVERIFY(charsets.size() == 4 && charsets.front()==L"ISO 2022 IR 6");
+        EXPECT_EQ(4, charsets.size());
+        EXPECT_EQ(std::wstring(L"ISO 2022 IR 6"), charsets.front());
 	}
 }
 

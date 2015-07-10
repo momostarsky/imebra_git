@@ -1,8 +1,8 @@
-#include "dataSetTest.h"
 #include "../library/imebra/include/imebra.h"
 #include "buildImageForTest.h"
 #include <list>
 #include <string.h>
+#include <gtest/gtest.h>
 
 namespace puntoexe
 {
@@ -15,7 +15,7 @@ namespace tests
 
 using namespace puntoexe::imebra;
 
-void dataSetTest::testFragmentation()
+TEST(dataSetTest, testFragmentation)
 {
     // Add two images to a dataset, then fragment the first image
 	ptr<image> testImage0(buildImageForTest(
@@ -43,13 +43,13 @@ void dataSetTest::testFragmentation()
 	testDataSet->setImage(1, testImage1, L"1.2.840.10008.1.2.4.70", codecs::codec::high);
 
 	ptr<image> verifyImage0 = testDataSet->getImage(0);
-        QVERIFY(compareImages(testImage0, verifyImage0) < 0.000001);
+        ASSERT_TRUE(compareImages(testImage0, verifyImage0) < 0.000001);
 	ptr<image> verifyImage1 = testDataSet->getImage(1);
-        QVERIFY(compareImages(testImage1, verifyImage1) < 0.000001);
+        ASSERT_TRUE(compareImages(testImage1, verifyImage1) < 0.000001);
 
 	// Now defragment the stored buffer
 	ptr<data> imageTag = testDataSet->getTag(0x7fe0, 0, 0x0010, false);
-        QVERIFY(imageTag != 0);
+        ASSERT_TRUE(imageTag != 0);
 
 	std::list<ptr<buffer> > newBuffers;
 	ptr<buffer> newTableOffsetBuffer(new buffer(testDataSet));
@@ -96,13 +96,13 @@ void dataSetTest::testFragmentation()
 	}
 
 	ptr<image> compareImage0 = testDataSet->getImage(0);
-        QVERIFY(compareImages(testImage0, compareImage0) < 0.000001);
+        ASSERT_TRUE(compareImages(testImage0, compareImage0) < 0.000001);
 	ptr<image> compareImage1 = testDataSet->getImage(1);
-        QVERIFY(compareImages(testImage1, compareImage1) < 0.000001);
-        QVERIFY(compareImages(testImage0, compareImage1) > 30);
+        ASSERT_TRUE(compareImages(testImage1, compareImage1) < 0.000001);
+        ASSERT_TRUE(compareImages(testImage0, compareImage1) > 30);
 }
 
-void dataSetTest::testSetTagTwice()
+TEST(dataSetTest, testSetTagTwice)
 {
     ptr<dataSet> testDataset(new dataSet);
 
@@ -113,7 +113,7 @@ void dataSetTest::testSetTagTwice()
 
     IMEBRA_TRANSACTION_END();
 
-    QVERIFY(testDataset->getUnicodeString(0x0008, 0x0, 0x0070, 0x0) == L"Puntoexe");
+    EXPECT_EQ(std::wstring(L"Puntoexe"), testDataset->getUnicodeString(0x0008, 0x0, 0x0070, 0x0));
 
 
     IMEBRA_TRANSACTION_START();
@@ -126,7 +126,7 @@ void dataSetTest::testSetTagTwice()
 
     IMEBRA_TRANSACTION_END();
 
-    QVERIFY(testDataset->getUnicodeString(0x0008, 0x0, 0x0070, 0x0) == L"Puntoexe");
+    EXPECT_EQ(std::wstring(L"Puntoexe"), testDataset->getUnicodeString(0x0008, 0x0, 0x0070, 0x0));
 
 }
 

@@ -1,8 +1,6 @@
 #include "buildImageForTest.h"
 #include <stdlib.h>
 
-#include <QtTest/QtTest>
-
 namespace puntoexe
 {
 

@@ -1,9 +1,8 @@
-#include "streamBitsTest.h"
-
 #include "../library/imebra/include/imebra.h"
 
 #include <vector>
 #include <cstdlib>
+#include <gtest/gtest.h>
 
 namespace puntoexe
 {
@@ -15,7 +14,7 @@ namespace tests
 {
 
 
-void streamBitsTest::test()
+TEST(streamBitsTest, test)
 {
 	std::srand(100);
 	ptr<memory> myMemory(new memory);
@@ -46,7 +45,7 @@ void streamBitsTest::test()
 		for(size_t readValues = 0; readValues < bitsValue.size(); ++readValues)
 		{
 			imbxUint32 value(reader->readBits(bitsNumber[readValues]));
-			QCOMPARE(value, bitsValue[readValues]);
+            EXPECT_EQ(bitsValue[readValues], value);
 		}
 	}
 
@@ -62,7 +61,7 @@ void streamBitsTest::test()
 				value <<= 1;
 				value |= reader->readBit();
 			}
-			QCOMPARE(value, bitsValue[readValues]);
+            EXPECT_EQ(bitsValue[readValues], value);
 		}
 	}
 
@@ -77,7 +76,7 @@ void streamBitsTest::test()
 			{
 				reader->addBit(&value);
 			}
-			QCOMPARE(value, bitsValue[readValues]);
+            EXPECT_EQ(bitsValue[readValues], value);
 		}
 	}
 

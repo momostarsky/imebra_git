@@ -1,6 +1,5 @@
-#include "dicomDirTest.h"
-
 #include "../library/imebra/include/imebra.h"
+#include <gtest/gtest.h>
 
 namespace puntoexe
 {
@@ -13,7 +12,7 @@ namespace tests
 
 using namespace puntoexe::imebra;
 
-void dicomDirTest::createDicomDir()
+TEST(dicomDirTest, createDicomDir)
 {
 	ptr<dicomDir> newDicomDir(new dicomDir(new dataSet));
 
@@ -50,18 +49,18 @@ void dicomDirTest::createDicomDir()
 
 	ptr<dicomDir> testDicomDir(new dicomDir(readDataSet));
 	ptr<directoryRecord> testRootRecord(testDicomDir->getFirstRootRecord());
-	QVERIFY(testRootRecord->getType() == directoryRecord::patient);
-	QVERIFY(testRootRecord->getRecordDataSet()->getUnicodeString(0x10, 0, 0x10, 0) == L"Surname");
+    EXPECT_EQ(directoryRecord::patient, testRootRecord->getType());
+    EXPECT_EQ(std::wstring(L"Surname"), testRootRecord->getRecordDataSet()->getUnicodeString(0x10, 0, 0x10, 0));
 
 	ptr<directoryRecord> testNextRecord(testRootRecord->getNextRecord());
-	QVERIFY(testNextRecord->getType() == directoryRecord::patient);
-	QVERIFY(testNextRecord->getRecordDataSet()->getUnicodeString(0x10, 0, 0x10, 0) == L"Surname 1");
+    EXPECT_EQ(directoryRecord::patient, testNextRecord->getType());
+    EXPECT_EQ(std::wstring(L"Surname 1"), testNextRecord->getRecordDataSet()->getUnicodeString(0x10, 0, 0x10, 0));
 
 	ptr<directoryRecord> testImageRecord(testNextRecord->getFirstChildRecord());
-	QVERIFY(testImageRecord->getType() == directoryRecord::image);
-	QVERIFY(testImageRecord->getRecordDataSet()->getUnicodeString(0x8, 0, 0x18, 0) == L"1.2.840.34.56.78999654.235");
-	QVERIFY(testImageRecord->getFilePart(0) == L"folder");
-	QVERIFY(testImageRecord->getFilePart(1) == L"file.dcm");
+    EXPECT_EQ(directoryRecord::image, testImageRecord->getType());
+    EXPECT_EQ(std::wstring(L"1.2.840.34.56.78999654.235"), testImageRecord->getRecordDataSet()->getUnicodeString(0x8, 0, 0x18, 0));
+    EXPECT_EQ(std::wstring(L"folder"), testImageRecord->getFilePart(0));
+    EXPECT_EQ(std::wstring(L"file.dcm"), testImageRecord->getFilePart(1));
 }
 
 

@@ -1,9 +1,8 @@
-#include "memoryStreamTest.h"
-
 #include "../library/imebra/include/imebra.h"
 
 #include <vector>
 #include <stdlib.h>
+#include <gtest/gtest.h>
 
 namespace puntoexe
 {
@@ -16,7 +15,7 @@ namespace tests
 
 
 // A buffer initialized to a default data type should use the data type OB
-void memoryStreamTest::test()
+TEST(memoryStreamTest, test)
 {
 	ptr<memory> myMemory(new memory);
 	ptr<baseStream> theMemoryStream(new memoryStream(myMemory));
@@ -37,11 +36,11 @@ void memoryStreamTest::test()
 	{
 		imbxUint8 value;
 		reader->read(&value, 1);
-		QCOMPARE(value, values[readValues]);
+        EXPECT_EQ(values[readValues], value);
 	}
 }
 
-void memoryStreamTest::testBytes()
+TEST(memoryStreamTest, testBytes)
 {
 	ptr<memory> myMemory(new memory);
 	ptr<baseStream> theMemoryStream(new memoryStream(myMemory));
@@ -67,7 +66,7 @@ void memoryStreamTest::testBytes()
 	for(size_t readValues = 0; readValues < values.size(); ++readValues)
 	{
 		imbxUint8 value(reader->readByte());
-		QCOMPARE(value, values[readValues]);
+        EXPECT_EQ(values[readValues], value);
 	}
 }
 

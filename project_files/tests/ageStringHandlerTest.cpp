@@ -1,4 +1,4 @@
-#include "ageStringHandlerTest.h"
+#include <gtest/gtest.h>
 #include "../library/imebra/include/imebra.h"
 
 namespace puntoexe
@@ -10,7 +10,7 @@ namespace imebra
 namespace tests
 {
 
-void ageStringHandlerTest::ageTest()
+TEST(ageStringHandlerTest, ageTest)
 {
 	ptr<data> tag(new data(ptr<baseObject>(0)));
 	{
@@ -19,26 +19,26 @@ void ageStringHandlerTest::ageTest()
 
 		hTag->setDouble(0, 0.01);
 		std::wstring ageString = hTag->getUnicodeString(0);
-		QCOMPARE(ageString, std::wstring(L"003D"));
+        EXPECT_EQ(std::wstring(L"003D"), ageString);
 
 		hTag->setDouble(0, 0.2);
 		ageString = hTag->getUnicodeString(0);
-		QVERIFY(ageString == L"010W");
+        EXPECT_EQ(std::wstring(L"010W"), ageString);
 
 		hTag->setDouble(0, 0.9);
 		ageString = hTag->getUnicodeString(0);
-		QVERIFY(ageString == L"010M");
+        EXPECT_EQ(std::wstring(L"010M"), ageString);
 
 		hTag->setDouble(0, 0.5);
 		ageString = hTag->getUnicodeString(0);
-		QVERIFY(ageString == L"006M");
+        EXPECT_EQ(std::wstring(L"006M"), ageString);
 
 		hTag->setDouble(0, 2.3);
 		ageString = hTag->getUnicodeString(0);
-		QVERIFY(ageString == L"002Y");
+        EXPECT_EQ(std::wstring(L"002Y"), ageString);
 
 		imbxUint32 ageInt = hTag->getUnsignedLong(0);
-		QVERIFY(ageInt == 2);
+        EXPECT_EQ(2, ageInt);
 	}
 }
 

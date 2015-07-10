@@ -1,6 +1,5 @@
-#include "jpegCodecTest.h"
-
 #include "../library/imebra/include/imebra.h"
+#include <gtest/gtest.h>
 
 namespace puntoexe
 {
@@ -12,7 +11,7 @@ namespace tests
 {
 
 // A buffer initialized to a default data type should use the data type OB
-void jpegCodecTest::testBaseline()
+TEST(jpegCodecTest, testBaseline)
 {
 	for(int precision=0; precision != 2; ++precision)
 	{
@@ -92,8 +91,8 @@ void jpegCodecTest::testBaseline()
 		ptr<handlers::dataHandlerNumericBase> originalHandler = baselineImage->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
 
 		// Compare the buffers. A little difference is allowed
-		QCOMPARE(checkSizeX, sizeX);
-		QCOMPARE(checkSizeY, sizeY);
+        EXPECT_EQ(sizeX, checkSizeX);
+        EXPECT_EQ(sizeY, checkSizeY);
 
 		elementPointer = 0;
 
@@ -117,12 +116,12 @@ void jpegCodecTest::testBaseline()
 				}
 			}
 		}
-		QVERIFY(difference < sizeX * sizeY);
+        ASSERT_LE(difference, sizeX * sizeY);
 	}
 }
 
 
-void jpegCodecTest::testBaselineSubsampled()
+TEST(jpegCodecTest, testBaselineSubsampled)
 {
 	imbxUint32 sizeX = 600;
 	imbxUint32 sizeY = 400;
@@ -192,8 +191,8 @@ void jpegCodecTest::testBaselineSubsampled()
 	ptr<handlers::dataHandlerNumericBase> originalHandler = baselineImage->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
 
 	// Compare the buffers. A little difference is allowed
-	QCOMPARE(checkSizeX, sizeX);
-	QCOMPARE(checkSizeY, sizeY);
+    EXPECT_EQ(sizeX, checkSizeX);
+    EXPECT_EQ(sizeY, checkSizeY);
 
 	imbxUint32 difference = 0;
 	elementNumber = 0;
@@ -216,11 +215,11 @@ void jpegCodecTest::testBaselineSubsampled()
 			}
 		}
 	}
-	QVERIFY(difference < sizeX * sizeY * 12);
+    ASSERT_LE(difference, sizeX * sizeY * 12);
 
 }
 
-void jpegCodecTest::testLossless()
+TEST(jpegCodecTest, testLossless)
 {
 	imbxUint32 sizeX = 115;
 	imbxUint32 sizeY = 400;
@@ -280,8 +279,8 @@ void jpegCodecTest::testLossless()
 	ptr<handlers::dataHandlerNumericBase> originalHandler = baselineImage->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
 
 	// Compare the buffers. A little difference is allowed
-	QCOMPARE(checkSizeX, sizeX);
-	QCOMPARE(checkSizeY, sizeY);
+    ASSERT_EQ(sizeX, checkSizeX);
+    ASSERT_EQ(sizeY, checkSizeY);
 
 	elementNumber = 0;
 
@@ -291,9 +290,9 @@ void jpegCodecTest::testLossless()
 		{
 			for(imbxUint32 channel = 3; channel != 0; --channel)
 			{
-				imbxInt32 value0 = rgbHandler->getUnsignedLong(elementNumber);
-				imbxInt32 value1 = originalHandler->getUnsignedLong(elementNumber++);
-				QCOMPARE(value0, value1);
+                imbxInt32 value0 = originalHandler->getUnsignedLong(elementNumber);
+                imbxInt32 value1 = rgbHandler->getUnsignedLong(elementNumber++);
+                EXPECT_EQ(value0, value1);
 			}
 		}
 	}

@@ -1,5 +1,5 @@
-#include "dateTimeHandlerTest.h"
 #include "../library/imebra/include/imebra.h"
+#include <gtest/gtest.h>
 
 namespace puntoexe
 {
@@ -10,7 +10,7 @@ namespace imebra
 namespace tests
 {
 
-void dateTimeHandlerTest::dateTest()
+TEST(dateTimeHandlerTest, dateTest)
 {
 	ptr<data> tag(new data(ptr<baseObject>(0)));
 	{
@@ -22,23 +22,23 @@ void dateTimeHandlerTest::dateTest()
 		imbxInt32 year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes;
 		hTag->getDate(0, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
 
-		QVERIFY(year == 2004);
-		QVERIFY(month == 11);
-		QVERIFY(day == 5);
-		QVERIFY(hour == 0);
-		QVERIFY(minutes == 0);
-		QVERIFY(seconds == 0);
-		QVERIFY(nanoseconds == 0);
-		QVERIFY(offsetHours == 0);
-		QVERIFY(offsetMinutes == 0);
+        EXPECT_EQ(2004, year);
+        EXPECT_EQ(11, month);
+        EXPECT_EQ(5, day);
+        EXPECT_EQ(0, hour);
+        EXPECT_EQ(0, minutes);
+        EXPECT_EQ(0, seconds);
+        EXPECT_EQ(0, nanoseconds);
+        EXPECT_EQ(0, offsetHours);
+        EXPECT_EQ(0, offsetMinutes);
 
-		QVERIFY(hTag->getUnicodeString(0) == L"2004-11-05");
+        EXPECT_EQ(std::wstring(L"2004-11-05"), hTag->getUnicodeString(0));
 	}
 
 	{
 		ptr<handlers::dataHandlerRaw> hTag= tag->getDataHandlerRaw(0, true, "DA");
 		std::basic_string<imbxUint8> checkString(hTag->getMemory()->data(), hTag->getMemory()->size());
-		QVERIFY(checkString == (imbxUint8*)"20041105");
+        EXPECT_EQ(std::basic_string<imbxUint8>((imbxUint8*)"20041105"), checkString);
 		hTag->getMemory()->assign((imbxUint8*)"2004-11-5", 9);
 	}
 
@@ -47,7 +47,7 @@ void dateTimeHandlerTest::dateTest()
 		std::basic_string<imbxUint8> checkString(hTag->getMemory()->data(), hTag->getMemory()->size());
 		stringUint8 compString((imbxUint8*)"2004-11-5", 9);
 		compString += (imbxUint8)0; // buffer's size is always even!
-		QVERIFY(checkString == compString);
+        EXPECT_EQ(compString, checkString);
 	}
 
 	{
@@ -56,21 +56,21 @@ void dateTimeHandlerTest::dateTest()
 		imbxInt32 year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes;
 		hTag->getDate(0, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
 
-		QVERIFY(year == 2004);
-		QVERIFY(month == 11);
-		QVERIFY(day == 5);
-		QVERIFY(hour == 0);
-		QVERIFY(minutes == 0);
-		QVERIFY(seconds == 0);
-		QVERIFY(nanoseconds == 0);
-		QVERIFY(offsetHours == 0);
-		QVERIFY(offsetMinutes == 0);
+        EXPECT_EQ(2004, year);
+        EXPECT_EQ(11, month);
+        EXPECT_EQ(5, day);
+        EXPECT_EQ(0, hour);
+        EXPECT_EQ(0, minutes);
+        EXPECT_EQ(0, seconds);
+        EXPECT_EQ(0, nanoseconds);
+        EXPECT_EQ(0, offsetHours);
+        EXPECT_EQ(0, offsetMinutes);
 
-		QVERIFY(hTag->getUnicodeString(0) == L"2004-11-05");
+        EXPECT_EQ(std::wstring(L"2004-11-05"), hTag->getUnicodeString(0));
 	}
 }
 
-void dateTimeHandlerTest::timeTest()
+TEST(dateTimeHandlerTest, timeTest)
 {
 	ptr<data> tag(new data(ptr<baseObject>(0)));
 	{
@@ -82,17 +82,17 @@ void dateTimeHandlerTest::timeTest()
 		imbxInt32 year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes;
 		hTag->getDate(0, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
 
-		QVERIFY(year == 0);
-		QVERIFY(month == 0);
-		QVERIFY(day == 0);
-		QVERIFY(hour == 9);
-		QVERIFY(minutes == 20);
-		QVERIFY(seconds == 40);
-		QVERIFY(nanoseconds == 5000);
-		QVERIFY(offsetHours == 0);
-		QVERIFY(offsetMinutes == 0);
+        EXPECT_EQ(0, year);
+        EXPECT_EQ(0, month);
+        EXPECT_EQ(0, day);
+        EXPECT_EQ(9, hour);
+        EXPECT_EQ(20, minutes);
+        EXPECT_EQ(40, seconds);
+        EXPECT_EQ(5000, nanoseconds);
+        EXPECT_EQ(0, offsetHours);
+        EXPECT_EQ(0, offsetMinutes);
 
-		QVERIFY(hTag->getUnicodeString(0) == L"09:20:40.005000");
+        EXPECT_EQ(std::wstring(L"09:20:40.005000"), hTag->getUnicodeString(0));
 	}
 
 	{
@@ -100,7 +100,7 @@ void dateTimeHandlerTest::timeTest()
 		stringUint8 compString((imbxUint8*)"092040.005000");
 		compString += (imbxUint8)0;
 		std::basic_string<imbxUint8> checkString(hTag->getMemory()->data(), hTag->getMemory()->size());
-		QVERIFY(checkString == compString);
+        EXPECT_EQ(compString, checkString);
 		hTag->getMemory()->assign((imbxUint8*)"9:20:40", 7);
 	}
 
@@ -110,21 +110,21 @@ void dateTimeHandlerTest::timeTest()
 		imbxInt32 year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes;
 		hTag->getDate(0, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
 
-		QVERIFY(year == 0);
-		QVERIFY(month == 0);
-		QVERIFY(day == 0);
-		QVERIFY(hour == 9);
-		QVERIFY(minutes == 20);
-		QVERIFY(seconds == 40);
-		QVERIFY(nanoseconds == 0);
-		QVERIFY(offsetHours == 0);
-		QVERIFY(offsetMinutes == 0);
+        EXPECT_EQ(0, year);
+        EXPECT_EQ(0, month);
+        EXPECT_EQ(0, day);
+        EXPECT_EQ(9, hour);
+        EXPECT_EQ(20, minutes);
+        EXPECT_EQ(40, seconds);
+        EXPECT_EQ(0, nanoseconds);
+        EXPECT_EQ(0, offsetHours);
+        EXPECT_EQ(0, offsetMinutes);
 
-		QVERIFY(hTag->getUnicodeString(0) == L"09:20:40.000000");
+        EXPECT_EQ(std::wstring(L"09:20:40.000000"), hTag->getUnicodeString(0));
 	}
 }
 
-void dateTimeHandlerTest::dateTimeTest()
+TEST(dateTimeHandlerTest, dateTimeTest)
 {
 	ptr<data> tag(new data(ptr<baseObject>(0)));
 	{
@@ -136,23 +136,23 @@ void dateTimeHandlerTest::dateTimeTest()
 		imbxInt32 year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes;
 		hTag->getDate(0, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
 
-		QVERIFY(year == 2004);
-		QVERIFY(month == 11);
-		QVERIFY(day == 5);
-		QVERIFY(hour == 9);
-		QVERIFY(minutes == 20);
-		QVERIFY(seconds == 40);
-		QVERIFY(nanoseconds == 5000);
-		QVERIFY(offsetHours == 1);
-		QVERIFY(offsetMinutes == 2);
+        EXPECT_EQ(2004, year);
+        EXPECT_EQ(11, month);
+        EXPECT_EQ(5, day);
+        EXPECT_EQ(9, hour);
+        EXPECT_EQ(20, minutes);
+        EXPECT_EQ(40, seconds);
+        EXPECT_EQ(5000, nanoseconds);
+        EXPECT_EQ(1, offsetHours);
+        EXPECT_EQ(2, offsetMinutes);
 
-		QVERIFY(hTag->getUnicodeString(0) == L"2004-11-05 09:20:40.005000+01:02");
+        EXPECT_EQ(std::wstring(L"2004-11-05 09:20:40.005000+01:02"), hTag->getUnicodeString(0));
 	}
 
 	{
 		ptr<handlers::dataHandlerRaw> hTag= tag->getDataHandlerRaw(0, false, "DT");
 		std::basic_string<imbxUint8> checkString(hTag->getMemory()->data(), hTag->getMemory()->size());
-		QVERIFY(checkString == (imbxUint8*)"20041105092040.005000+0102");
+        EXPECT_EQ(std::basic_string<imbxUint8>((imbxUint8*)"20041105092040.005000+0102"), checkString);
 	}
 
 	{
@@ -161,35 +161,35 @@ void dateTimeHandlerTest::dateTimeTest()
 		imbxInt32 year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes;
 		hTag->getDate(0, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
 
-		QVERIFY(year == 2004);
-		QVERIFY(month == 11);
-		QVERIFY(day == 5);
-		QVERIFY(hour == 9);
-		QVERIFY(minutes == 20);
-		QVERIFY(seconds == 40);
-		QVERIFY(nanoseconds == 5000);
-		QVERIFY(offsetHours == 1);
-		QVERIFY(offsetMinutes == 2);
+        EXPECT_EQ(2004, year);
+        EXPECT_EQ(11, month);
+        EXPECT_EQ(5, day);
+        EXPECT_EQ(9, hour);
+        EXPECT_EQ(20, minutes);
+        EXPECT_EQ(40, seconds);
+        EXPECT_EQ(5000, nanoseconds);
+        EXPECT_EQ(1, offsetHours);
+        EXPECT_EQ(2, offsetMinutes);
 
-		QVERIFY(hTag->getUnicodeString(0) == L"2004-11-05 09:20:40.005000+01:02");
+        EXPECT_EQ(std::wstring(L"2004-11-05 09:20:40.005000+01:02"), hTag->getUnicodeString(0));
 
 		hTag->setString(0, "2005-12-06 10:21:41.005001-4:5");
 		hTag->getDate(0, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
-		QVERIFY(year == 2005);
-		QVERIFY(month == 12);
-		QVERIFY(day == 6);
-		QVERIFY(hour == 10);
-		QVERIFY(minutes == 21);
-		QVERIFY(seconds == 41);
-		QVERIFY(nanoseconds == 5001);
-		QVERIFY(offsetHours == -4);
-		QVERIFY(offsetMinutes == -5);
+        EXPECT_EQ(2005, year);
+        EXPECT_EQ(12, month);
+        EXPECT_EQ(6, day);
+        EXPECT_EQ(10, hour);
+        EXPECT_EQ(21, minutes);
+        EXPECT_EQ(41, seconds);
+        EXPECT_EQ(5001, nanoseconds);
+        EXPECT_EQ(-4, offsetHours);
+        EXPECT_EQ(-5, offsetMinutes);
 	}
 
 	{
 		ptr<handlers::dataHandlerRaw> hTag= tag->getDataHandlerRaw(0, true, "DT");
 		std::basic_string<imbxUint8> checkString(hTag->getMemory()->data(), hTag->getMemory()->size());
-		QVERIFY(checkString == (imbxUint8*)"20051206102141.005001-0405");
+        EXPECT_EQ(std::basic_string<imbxUint8>((imbxUint8*)"20051206102141.005001-0405"), checkString);
 		hTag->getMemory()->assign((imbxUint8*)"19990305", 8);
 	}
 
@@ -199,15 +199,15 @@ void dateTimeHandlerTest::dateTimeTest()
 		imbxInt32 year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes;
 		hTag->getDate(0, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
 
-		QVERIFY(year == 1999);
-		QVERIFY(month == 03);
-		QVERIFY(day == 05);
-		QVERIFY(hour == 0);
-		QVERIFY(minutes == 0);
-		QVERIFY(seconds == 0);
-		QVERIFY(nanoseconds == 0);
-		QVERIFY(offsetHours == 0);
-		QVERIFY(offsetMinutes == 0);
+        EXPECT_EQ(1999, year);
+        EXPECT_EQ(3, month);
+        EXPECT_EQ(5, day);
+        EXPECT_EQ(0, hour);
+        EXPECT_EQ(0, minutes);
+        EXPECT_EQ(0, seconds);
+        EXPECT_EQ(0, nanoseconds);
+        EXPECT_EQ(0, offsetHours);
+        EXPECT_EQ(0, offsetMinutes);
 	}
 
 	{
@@ -221,15 +221,15 @@ void dateTimeHandlerTest::dateTimeTest()
 		imbxInt32 year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes;
 		hTag->getDate(0, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
 
-		QVERIFY(year == 1999);
-		QVERIFY(month == 03);
-		QVERIFY(day == 05);
-		QVERIFY(hour == 8);
-		QVERIFY(minutes == 0);
-		QVERIFY(seconds == 0);
-		QVERIFY(nanoseconds == 0);
-		QVERIFY(offsetHours == 0);
-		QVERIFY(offsetMinutes == 0);
+        EXPECT_EQ(1999, year);
+        EXPECT_EQ(3, month);
+        EXPECT_EQ(5, day);
+        EXPECT_EQ(8, hour);
+        EXPECT_EQ(0, minutes);
+        EXPECT_EQ(0, seconds);
+        EXPECT_EQ(0, nanoseconds);
+        EXPECT_EQ(0, offsetHours);
+        EXPECT_EQ(0, offsetMinutes);
 	}
 }
 
