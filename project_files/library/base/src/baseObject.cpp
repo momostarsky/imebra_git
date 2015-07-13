@@ -173,7 +173,6 @@ baseObject::baseObject(const ptr<baseObject>& externalLock):
 ///////////////////////////////////////////////////////////
 bool baseObject::isReferencedOnce()
 {
-	lockCriticalSection lockThis(&m_counterCriticalSection);
 	return m_lockCounter == 1;
 }
 
@@ -205,13 +204,10 @@ baseObject::~baseObject()
 ///////////////////////////////////////////////////////////
 void baseObject::addRef()
 {
-	if(this == 0)
+    if(this != 0)
 	{
-		return;
+        ++m_lockCounter;
 	}
-
-        lockCriticalSection lockThis(&m_counterCriticalSection);
-	++m_lockCounter;
 }
 
 
@@ -237,13 +233,10 @@ void baseObject::release()
 
 	// Decrease the reference counter
 	///////////////////////////////////////////////////////////
-	{
-                lockCriticalSection lockThis(&m_counterCriticalSection);
-		if(--m_lockCounter != 0)
-		{
-			return;
-		}
-	}
+    if(--m_lockCounter != 0)
+    {
+        return;
+    }
 
 	if(!preDelete())
 	{

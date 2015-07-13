@@ -15,6 +15,7 @@ $fileHeader$
 
 #include <string>
 #include <memory>
+#include <atomic>
 
 ///////////////////////////////////////////////////////////
 /// \namespace puntoexe
@@ -411,8 +412,7 @@ private:
 	///  is deleted.
 	///
 	///////////////////////////////////////////////////////////
-	volatile long m_lockCounter;
-        criticalSection m_counterCriticalSection;
+    volatile std::atomic<long> m_lockCounter;
 
 	// Lock/Unlock the objects.
 	///////////////////////////////////////////////////////////
