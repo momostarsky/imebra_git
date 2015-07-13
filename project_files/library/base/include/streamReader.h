@@ -77,7 +77,7 @@ public:
 	///                            are visible
 	///
 	///////////////////////////////////////////////////////////
-	streamReader(ptr<baseStream> pControlledStream, imbxUint32 virtualStart = 0, imbxUint32 virtualLength = 0);
+	streamReader(ptr<baseStream> pControlledStream, std::uint32_t virtualStart = 0, std::uint32_t virtualLength = 0);
 
 	/// \brief Read raw data from the stream.
 	///
@@ -99,7 +99,7 @@ public:
 	///                  the stream.
 	///
 	///////////////////////////////////////////////////////////
-	void read(imbxUint8* pBuffer, imbxUint32 bufferLength);
+	void read(std::uint8_t* pBuffer, std::uint32_t bufferLength);
 
 	/// \brief Returns true if the last byte in the stream
 	///         has already been read.
@@ -132,7 +132,7 @@ public:
 	///                   absolute position
 	///
 	///////////////////////////////////////////////////////////
-	void seek(imbxInt32 newPosition, bool bCurrent = false);
+	void seek(std::int32_t newPosition, bool bCurrent = false);
 
 	/// \brief Read the specified amount of bits from the
 	///         stream.
@@ -149,7 +149,7 @@ public:
 	///                   aligned
 	///
 	///////////////////////////////////////////////////////////
-	inline imbxUint32 readBits(int bitsNum)
+	inline std::uint32_t readBits(int bitsNum)
 	{
 		static const int bufferSize(sizeof(m_inBitsBuffer) * 8);
 
@@ -158,7 +158,7 @@ public:
 		///////////////////////////////////////////////////////////
 		if(bitsNum <= m_inBitsNum)
 		{
-			imbxUint32 returnValue(m_inBitsBuffer >> (bufferSize - bitsNum));
+			std::uint32_t returnValue(m_inBitsBuffer >> (bufferSize - bitsNum));
 			m_inBitsBuffer <<= bitsNum;
 			m_inBitsNum -= bitsNum;
 			return returnValue;
@@ -166,7 +166,7 @@ public:
 
 		// Fill a local variable with the read bits
 		///////////////////////////////////////////////////////////
-		imbxUint32 returnValue(0);
+		std::uint32_t returnValue(0);
 
 		// Some bits are in the bits buffer, copy them and reset
 		//  the bits buffer
@@ -174,7 +174,7 @@ public:
 		if(m_inBitsNum != 0)
 		{
 			bitsNum -= m_inBitsNum;
-			returnValue = ((imbxUint32)(m_inBitsBuffer >> (bufferSize - m_inBitsNum))) << bitsNum;
+			returnValue = ((std::uint32_t)(m_inBitsBuffer >> (bufferSize - m_inBitsNum))) << bitsNum;
 		}
 
 		// Read the requested number of bits
@@ -191,7 +191,7 @@ public:
 			}
 
 			bitsNum -= 8;
-			returnValue |= ((imbxUint32)readByte()) << bitsNum;
+			returnValue |= ((std::uint32_t)readByte()) << bitsNum;
 		}
 	}
 
@@ -206,12 +206,12 @@ public:
 	/// @return the value of the read bit (1 or 0)
         ///
 	///////////////////////////////////////////////////////////
-	inline imbxUint32 readBit()
+	inline std::uint32_t readBit()
 	{
 		if(m_inBitsNum != 0)
 		{
 			--m_inBitsNum;
-			if((imbxInt8)m_inBitsBuffer < 0)
+			if((std::int8_t)m_inBitsBuffer < 0)
 			{
                             m_inBitsBuffer <<= 1;
                             return 1;
@@ -224,7 +224,7 @@ public:
 
 		m_inBitsBuffer = readByte();
                 m_inBitsNum = 7; // We consider that one bit will go away
-                if((imbxInt8)m_inBitsBuffer < 0)
+                if((std::int8_t)m_inBitsBuffer < 0)
                 {
                         m_inBitsBuffer <<= 1;
                         return 1;
@@ -246,18 +246,18 @@ public:
 	/// The function throws a streamExceptionRead if an error
 	///  occurs.
 	///
-	/// @param pBuffer   a pointer to a imbxUint32 value that
+	/// @param pBuffer   a pointer to a std::uint32_t value that
 	///                   will be left shifted and filled
 	///                   with the read bit.
         ///
 	///////////////////////////////////////////////////////////
-	inline void addBit(imbxUint32* const pBuffer)
+	inline void addBit(std::uint32_t* const pBuffer)
 	{
         	(*pBuffer) <<= 1;
                 
 		if(m_inBitsNum != 0)
 		{
-			if((imbxInt8)m_inBitsBuffer < 0)
+			if((std::int8_t)m_inBitsBuffer < 0)
 			{
 				++(*pBuffer);
 			}
@@ -270,7 +270,7 @@ public:
 
 		m_inBitsBuffer = readByte();
                 m_inBitsNum = 7; // We consider that one bit will go away
-                if((imbxInt8)m_inBitsBuffer < 0)
+                if((std::int8_t)m_inBitsBuffer < 0)
                 {
                         ++(*pBuffer);
                 }
@@ -320,7 +320,7 @@ public:
 	/// @return          the read byte
 	///
 	///////////////////////////////////////////////////////////
-	inline imbxUint8 readByte()
+	inline std::uint8_t readByte()
 	{
 		// Update the data buffer if it is empty
 		///////////////////////////////////////////////////////////
@@ -360,15 +360,15 @@ private:
 	///  supply any more byte.
 	///
 	///////////////////////////////////////////////////////////
-	imbxUint32 fillDataBuffer();
+	std::uint32_t fillDataBuffer();
 
 	/// \brief Read data from the file into the data buffer.
 	///
 	///////////////////////////////////////////////////////////
-	imbxUint32 fillDataBuffer(imbxUint8* pDestinationBuffer, imbxUint32 readLength);
+	std::uint32_t fillDataBuffer(std::uint8_t* pDestinationBuffer, std::uint32_t readLength);
 
 private:
-	imbxUint8 m_inBitsBuffer;
+	std::uint8_t m_inBitsBuffer;
 	int       m_inBitsNum;
 
 };

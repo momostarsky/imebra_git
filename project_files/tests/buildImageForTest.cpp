@@ -12,35 +12,35 @@ namespace tests
 
 
 puntoexe::ptr<puntoexe::imebra::image> buildImageForTest(
-	imbxUint32 pixelsX, 
-	imbxUint32 pixelsY, 
+	std::uint32_t pixelsX, 
+	std::uint32_t pixelsY, 
 	puntoexe::imebra::image::bitDepth depth,
-	imbxUint32 highBit, 
+	std::uint32_t highBit, 
 	double sizeX, 
 	double sizeY, 
 	std::wstring colorSpace, 
-	imbxUint32 continuity)
+	std::uint32_t continuity)
 {
 	puntoexe::ptr<puntoexe::imebra::image> newImage(new puntoexe::imebra::image);
 	puntoexe::ptr<puntoexe::imebra::handlers::dataHandlerNumericBase> imgHandler = newImage->create(pixelsX, pixelsY, depth, colorSpace, highBit);
-	imbxUint32 channelsNumber = newImage->getChannelsNumber();
+	std::uint32_t channelsNumber = newImage->getChannelsNumber();
 
-	imbxInt32 range = (imbxUint32)1 << highBit;
-	imbxInt32 minValue = 0;
+	std::int32_t range = (std::uint32_t)1 << highBit;
+	std::int32_t minValue = 0;
 	if(depth == puntoexe::imebra::image::depthS16 || depth == puntoexe::imebra::image::depthS8)
 	{
 		minValue = -1 << (highBit - 1);
 	}
-	imbxInt32 maxValue(minValue + range);
+	std::int32_t maxValue(minValue + range);
 
-	imbxUint32 index(0);
-	for(imbxUint32 scanY(0); scanY != pixelsY; ++scanY)
+	std::uint32_t index(0);
+	for(std::uint32_t scanY(0); scanY != pixelsY; ++scanY)
 	{
-		for(imbxUint32 scanX(0); scanX != pixelsX; ++scanX)
+		for(std::uint32_t scanX(0); scanX != pixelsX; ++scanX)
 		{
-			for(imbxUint32 scanChannels = 0; scanChannels != channelsNumber; ++scanChannels)
+			for(std::uint32_t scanChannels = 0; scanChannels != channelsNumber; ++scanChannels)
 			{
-				imbxInt32 value = (imbxInt32)(((double)((scanX * channelsNumber+ scanY + scanChannels) % continuity) / (double)continuity) * (double)range)  + minValue;
+				std::int32_t value = (std::int32_t)(((double)((scanX * channelsNumber+ scanY + scanChannels) % continuity) / (double)continuity) * (double)range)  + minValue;
  				if(value < minValue)
 				{
 					value = minValue;
@@ -62,7 +62,7 @@ puntoexe::ptr<puntoexe::imebra::image> buildImageForTest(
 
 double compareImages(ptr<image> image0, ptr<image> image1)
 {
-	imbxUint32 sizeX0, sizeY0, sizeX1, sizeY1;
+	std::uint32_t sizeX0, sizeY0, sizeX1, sizeY1;
 	image0->getSize(&sizeX0, &sizeY0);
 	image1->getSize(&sizeX1, &sizeY1);
 	if(sizeX0 != sizeX1 || sizeY0 != sizeY1)
@@ -70,7 +70,7 @@ double compareImages(ptr<image> image0, ptr<image> image1)
 		return 1000;
 	}
 
-	imbxUint32 rowSize, channelSize, channelsNumber0, channelsNumber1;
+	std::uint32_t rowSize, channelSize, channelsNumber0, channelsNumber1;
 	ptr<handlers::dataHandlerNumericBase> hImage0 = image0->getDataHandler(false, &rowSize, &channelSize, &channelsNumber0);
 	ptr<handlers::dataHandlerNumericBase> hImage1 = image1->getDataHandler(false, &rowSize, &channelSize, &channelsNumber1);
 	if(channelsNumber0 != channelsNumber1)
@@ -78,8 +78,8 @@ double compareImages(ptr<image> image0, ptr<image> image1)
 		return 1000;
 	}
 
-	imbxUint32 highBit0 = image0->getHighBit();
-	imbxUint32 highBit1 = image1->getHighBit();
+	std::uint32_t highBit0 = image0->getHighBit();
+	std::uint32_t highBit1 = image1->getHighBit();
 	if(highBit0 != highBit1)
 	{
 		return 1000;
@@ -97,7 +97,7 @@ double compareImages(ptr<image> image0, ptr<image> image1)
 		return 0;
 	}
 
-	imbxUint32 valuesNum = sizeX0 * sizeY0 * channelsNumber0;
+	std::uint32_t valuesNum = sizeX0 * sizeY0 * channelsNumber0;
 	double divisor = double(valuesNum);
 	double range = (double)(1 << image0->getHighBit());
 	double difference(0);

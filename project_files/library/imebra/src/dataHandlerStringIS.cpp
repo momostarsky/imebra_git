@@ -43,7 +43,7 @@ namespace handlers
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-double dataHandlerStringIS::getDouble(const imbxUint32 index) const
+double dataHandlerStringIS::getDouble(const std::uint32_t index) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerStringIS::getDouble");
 
@@ -63,11 +63,11 @@ double dataHandlerStringIS::getDouble(const imbxUint32 index) const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerStringIS::setDouble(const imbxUint32 index, const double value)
+void dataHandlerStringIS::setDouble(const std::uint32_t index, const double value)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerStringIS::setDouble");
 
-	setSignedLong(index, (imbxInt32)value);
+	setSignedLong(index, (std::int32_t)value);
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -82,7 +82,7 @@ void dataHandlerStringIS::setDouble(const imbxUint32 index, const double value)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint8 dataHandlerStringIS::getPaddingByte() const
+std::uint8_t dataHandlerStringIS::getPaddingByte() const
 {
 	return 0x20;
 }
@@ -97,7 +97,7 @@ imbxUint8 dataHandlerStringIS::getPaddingByte() const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint32 dataHandlerStringIS::getUnitSize() const
+std::uint32_t dataHandlerStringIS::getUnitSize() const
 {
 	return 0;
 }
@@ -112,7 +112,7 @@ imbxUint32 dataHandlerStringIS::getUnitSize() const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint32 dataHandlerStringIS::maxSize() const
+std::uint32_t dataHandlerStringIS::maxSize() const
 {
 	return 12;
 }

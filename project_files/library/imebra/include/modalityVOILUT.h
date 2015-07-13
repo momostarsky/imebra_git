@@ -84,14 +84,14 @@ public:
 
 	template <class inputType, class outputType>
 			void templateTransform(
-					inputType* inputHandlerData, size_t /* inputHandlerSize */, imbxUint32 inputHandlerWidth, const std::wstring& inputHandlerColorSpace,
+					inputType* inputHandlerData, size_t /* inputHandlerSize */, std::uint32_t inputHandlerWidth, const std::wstring& inputHandlerColorSpace,
 					ptr<palette> /* inputPalette */,
-                    imbxInt32 /* inputHandlerMinValue */, imbxUint32 /* inputHighBit */,
-					imbxInt32 inputTopLeftX, imbxInt32 inputTopLeftY, imbxInt32 inputWidth, imbxInt32 inputHeight,
-					outputType* outputHandlerData, size_t /* outputHandlerSize */, imbxInt32 outputHandlerWidth, const std::wstring& outputHandlerColorSpace,
+                    std::int32_t /* inputHandlerMinValue */, std::uint32_t /* inputHighBit */,
+					std::int32_t inputTopLeftX, std::int32_t inputTopLeftY, std::int32_t inputWidth, std::int32_t inputHeight,
+					outputType* outputHandlerData, size_t /* outputHandlerSize */, std::int32_t outputHandlerWidth, const std::wstring& outputHandlerColorSpace,
 					ptr<palette> /* outputPalette */,
-                    imbxInt32 /* outputHandlerMinValue */, imbxUint32 /* outputHighBit */,
-					imbxInt32 outputTopLeftX, imbxInt32 outputTopLeftY)
+                    std::int32_t /* outputHandlerMinValue */, std::uint32_t /* outputHighBit */,
+					std::int32_t outputTopLeftX, std::int32_t outputTopLeftY)
 	{
 		PUNTOEXE_FUNCTION_START(L"modalityVOILUT::templateTransform");
 		if(!colorTransforms::colorTransformsFactory::isMonochrome(inputHandlerColorSpace) || !colorTransforms::colorTransformsFactory::isMonochrome(outputHandlerColorSpace))
@@ -114,7 +114,7 @@ public:
 			{
 				for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
 				{
-					*(pOutputMemory++) = (outputType) ( m_voiLut->mappedValue((imbxInt32) *(pInputMemory++)) );
+					*(pOutputMemory++) = (outputType) ( m_voiLut->mappedValue((std::int32_t) *(pInputMemory++)) );
 				}
 				pInputMemory += (inputHandlerWidth - inputWidth);
 				pOutputMemory += (outputHandlerWidth - inputWidth);
@@ -143,7 +143,7 @@ public:
 
 	virtual bool isEmpty();
 
-	virtual ptr<image> allocateOutputImage(ptr<image> pInputImage, imbxUint32 width, imbxUint32 height);
+	virtual ptr<image> allocateOutputImage(ptr<image> pInputImage, std::uint32_t width, std::uint32_t height);
 
 private:
     ptr<dataSet> m_pDataSet;

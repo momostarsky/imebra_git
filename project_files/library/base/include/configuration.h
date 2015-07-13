@@ -8,32 +8,34 @@ $fileHeader$
 
 */
 
+#include <cstdint>
+
 /// \addtogroup group_baseclasses
 ///
 /// @{
 
 
 /// This type represents a 1 byte unsigned integer.
-typedef unsigned char  imbxUint8;
+typedef std::uint8_t imbxUint8;
 
 /// This type represents a 2 bytes unsigned integer.
-typedef unsigned short imbxUint16;
+typedef std::uint16_t imbxUint16;
 
 /// This type represents a 4 bytes unsigned integer.
-typedef unsigned int  imbxUint32;
+typedef std::uint32_t  imbxUint32;
 
 /// This type represents an 1 byte signed integer.
-typedef signed char    imbxInt8;
+typedef std::int8_t    imbxInt8;
 
 /// This type represents a 2 bytes signed integer.
-typedef signed short   imbxInt16;
+typedef std::int16_t   imbxInt16;
 
 /// This type represents a 8 bytes signed integer.
-typedef signed int    imbxInt32;
+typedef std::int32_t    imbxInt32;
 
-typedef signed long long imbxInt64;
+typedef std::int64_t imbxInt64;
 
-typedef unsigned long long imbxUint64;
+typedef std::uint64_t imbxUint64;
 
 
 #if !defined(PUNTOEXE_WINDOWS) && !defined(PUNTOEXE_POSIX)

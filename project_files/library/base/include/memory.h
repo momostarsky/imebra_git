@@ -28,7 +28,7 @@ namespace puntoexe
 ///
 /// @{
 
-typedef std::basic_string<imbxUint8> stringUint8;
+typedef std::basic_string<std::uint8_t> stringUint8;
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -56,7 +56,7 @@ public:
 	///                      memory, in bytes
 	///
 	///////////////////////////////////////////////////////////
-	memory(imbxUint32 initialSize);
+	memory(std::uint32_t initialSize);
 
 	/// \brief Transfer the content from another memory object.
 	///
@@ -91,7 +91,7 @@ public:
 	/// @param newSize  the new size of the buffer, in bytes
 	///
 	///////////////////////////////////////////////////////////
-	void resize(imbxUint32 newSize);
+	void resize(std::uint32_t newSize);
 
 	/// \brief Reserve the specified quantity of bytes for
 	///         the memory object. This doesn't modify the
@@ -101,7 +101,7 @@ public:
 	///                       the memory object.
 	///
 	///////////////////////////////////////////////////////////
-	void reserve(imbxUint32 reserveSize);
+	void reserve(std::uint32_t reserveSize);
 
 	/// \brief Return the size of the managed
 	///         memory in bytes.
@@ -109,7 +109,7 @@ public:
 	/// @return the size of the managed memory, in bytes
 	///
 	///////////////////////////////////////////////////////////
-	imbxUint32 size();
+	std::uint32_t size();
 
 	/// \brief Return a pointer to the memory managed by the
 	///         object.
@@ -117,7 +117,7 @@ public:
 	/// @return a pointer to the data managed by the object
 	///
 	///////////////////////////////////////////////////////////
-	imbxUint8* data();
+	std::uint8_t* data();
 
 	/// \brief Return true if the size of the managed memory
 	///         is 0.
@@ -138,7 +138,7 @@ public:
 	///                      into the managed memory
 	///
 	///////////////////////////////////////////////////////////
-	void assign(const imbxUint8* pSource, const imbxUint32 sourceLength);
+	void assign(const std::uint8_t* pSource, const std::uint32_t sourceLength);
 
 	/// \internal
 	/// \brief This function is called by 
@@ -204,12 +204,12 @@ protected:
 	#define IMEBRA_MEMORY_POOL_MIN_SIZE 1024
 #endif
 
-	imbxUint32 m_memorySize[IMEBRA_MEMORY_POOL_SLOTS];
+	std::uint32_t m_memorySize[IMEBRA_MEMORY_POOL_SLOTS];
 	memory*    m_memoryPointer[IMEBRA_MEMORY_POOL_SLOTS];
-	imbxUint32 m_firstUsedCell;
-	imbxUint32 m_firstFreeCell;
+	std::uint32_t m_firstUsedCell;
+	std::uint32_t m_firstFreeCell;
 
-	imbxUint32 m_actualSize;
+	std::uint32_t m_actualSize;
 
 public:
 	memoryPool(): m_actualSize(0){}
@@ -236,7 +236,7 @@ public:
 	///                       object will be 1
 	///
 	///////////////////////////////////////////////////////////
-	memory* getMemory(imbxUint32 requestedSize);
+	memory* getMemory(std::uint32_t requestedSize);
 
 	/// \brief Discard all the currently unused memory.
 	///

@@ -1,5 +1,6 @@
 #include "../library/imebra/include/imebra.h"
 #include <string.h>
+#include <memory>
 
 #include <gtest/gtest.h>
 
@@ -20,10 +21,10 @@ TEST(numericHandlerTest, validPointer)
 
 	ptr<handlers::dataHandler> handlerBuffer0(buffer0->getDataHandler(true, 0));
     EXPECT_EQ(2, handlerBuffer0->getUnitSize());
-	imbxUint32 bufferSize(4);
+	std::uint32_t bufferSize(4);
 	handlerBuffer0->setSize(bufferSize);
 	
-	imbxUint32 checkSize0(0);
+	std::uint32_t checkSize0(0);
 	while(handlerBuffer0->pointerIsValid(checkSize0))
 	{
         EXPECT_GE(bufferSize, checkSize0);
@@ -36,7 +37,7 @@ TEST(numericHandlerTest, validPointer)
 	ptr<handlers::dataHandler> handlerBuffer1(buffer0->getDataHandler(true, 0));
     EXPECT_EQ(2, handlerBuffer1->getUnitSize());
 	
-	imbxUint32 checkSize1(0);
+	std::uint32_t checkSize1(0);
 	while(handlerBuffer1->pointerIsValid(checkSize1))
 	{
         EXPECT_GE(bufferSize, checkSize1);
@@ -53,7 +54,7 @@ TEST(numericHandlerTest, interleavedCopy)
 	int sizeY = 401;
 	ptr<image> testImage(new image);
 	testImage->create(sizeX, sizeY, image::depthS16, L"RGB", 7);
-	imbxUint32 rowSize, channelSize, channelsNumber;
+	std::uint32_t rowSize, channelSize, channelsNumber;
 	ptr<handlers::dataHandlerNumericBase> testHandler = testImage->getDataHandler(true, &rowSize, &channelSize, &channelsNumber);
 
 	size_t pointer(0);
@@ -76,12 +77,12 @@ TEST(numericHandlerTest, interleavedCopy)
 	int mcuX = (sizeX + 15) >> 4;
 	int mcuY = (sizeY + 15) >> 4;
 
-	std::auto_ptr<imbxInt32> buffer0(new imbxInt32[mcuX * 16 * mcuY * 16]);
-	::memset(buffer0.get(), 0, mcuX * 16 * mcuY * 16 * sizeof(imbxInt32));
-	std::auto_ptr<imbxInt32> buffer1(new imbxInt32[mcuX * 8 * mcuY * 8]);
-	::memset(buffer1.get(), 0, mcuX * 8 * mcuY * 8 * sizeof(imbxInt32));
-	std::auto_ptr<imbxInt32> buffer2(new imbxInt32[mcuX * 8 * mcuY * 8]);
-	::memset(buffer2.get(), 0, mcuX * 8 * mcuY * 8 * sizeof(imbxInt32));
+	std::unique_ptr<std::int32_t> buffer0(new std::int32_t[mcuX * 16 * mcuY * 16]);
+	::memset(buffer0.get(), 0, mcuX * 16 * mcuY * 16 * sizeof(std::int32_t));
+	std::unique_ptr<std::int32_t> buffer1(new std::int32_t[mcuX * 8 * mcuY * 8]);
+	::memset(buffer1.get(), 0, mcuX * 8 * mcuY * 8 * sizeof(std::int32_t));
+	std::unique_ptr<std::int32_t> buffer2(new std::int32_t[mcuX * 8 * mcuY * 8]);
+	::memset(buffer2.get(), 0, mcuX * 8 * mcuY * 8 * sizeof(std::int32_t));
 
 	for(int scanMcuY = 0; scanMcuY < mcuY; ++scanMcuY)
 	{
@@ -179,22 +180,22 @@ TEST(numericHandlerTest, interleavedCopy)
 			int squareX2 = squareX >> 1;
 			int squareY2 = squareY >> 1;
 
-			imbxInt32* pTestBuffer0 = buffer0.get() + squareX * 64 + squareY * mcuX * 128;
+			std::int32_t* pTestBuffer0 = buffer0.get() + squareX * 64 + squareY * mcuX * 128;
 			for(int scanValues0 = 0; scanValues0 < 64; ++scanValues0)
 			{
-                EXPECT_EQ((imbxInt32)(squareY * 100 + squareX), pTestBuffer0[scanValues0]);
+                EXPECT_EQ((std::int32_t)(squareY * 100 + squareX), pTestBuffer0[scanValues0]);
 			}
 
-			imbxInt32* pTestBuffer1 = buffer1.get() + squareX2 * 64 + squareY2 * mcuX * 64;
+			std::int32_t* pTestBuffer1 = buffer1.get() + squareX2 * 64 + squareY2 * mcuX * 64;
 			for(int scanValues1 = 0; scanValues1 < 64; ++scanValues1)
 			{
-                EXPECT_EQ((imbxInt32)(-squareY2 * 100 - squareX2), pTestBuffer1[scanValues1]);
+                EXPECT_EQ((std::int32_t)(-squareY2 * 100 - squareX2), pTestBuffer1[scanValues1]);
 			}
 
-			imbxInt32* pTestBuffer2 = buffer2.get() + squareX2 * 64 + squareY2 * mcuX * 64;
+			std::int32_t* pTestBuffer2 = buffer2.get() + squareX2 * 64 + squareY2 * mcuX * 64;
 			for(int scanValues2 = 0; scanValues2 < 64; ++scanValues2)
 			{
-                EXPECT_EQ((imbxInt32)(-squareY2 * 100 + squareX2), pTestBuffer2[scanValues2]);
+                EXPECT_EQ((std::int32_t)(-squareY2 * 100 + squareX2), pTestBuffer2[scanValues2]);
 			}
 
 		}
@@ -206,7 +207,7 @@ TEST(numericHandlerTest, interleavedCopy)
 TEST(numericHandlerTest, stringConversion)
 {
 	ptr<memory> handlerBuffer0(new memory);
-	ptr<handlers::dataHandlerNumeric<imbxInt32> > testHandler0(new handlers::dataHandlerNumeric<imbxInt32>);
+	ptr<handlers::dataHandlerNumeric<std::int32_t> > testHandler0(new handlers::dataHandlerNumeric<std::int32_t>);
 	testHandler0->parseBuffer(handlerBuffer0);
 	testHandler0->setSize(1);
 

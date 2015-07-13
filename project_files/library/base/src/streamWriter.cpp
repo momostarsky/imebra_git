@@ -18,7 +18,7 @@ namespace puntoexe
 // Constructor
 //
 ///////////////////////////////////////////////////////////
-streamWriter::streamWriter(ptr<baseStream> pControlledStream, imbxUint32 virtualStart /* =0 */, imbxUint32 virtualLength /* =0 */):
+streamWriter::streamWriter(ptr<baseStream> pControlledStream, std::uint32_t virtualStart /* =0 */, std::uint32_t virtualLength /* =0 */):
 	streamController(pControlledStream, virtualStart, virtualLength),
 	m_outBitsBuffer(0),
 	m_outBitsNum(0)
@@ -44,7 +44,7 @@ streamWriter::~streamWriter()
 ///////////////////////////////////////////////////////////
 void streamWriter::flushDataBuffer()
 {
-	imbxUint32 writeLength = (imbxUint32)(m_pDataBufferCurrent - m_pDataBufferStart);
+	std::uint32_t writeLength = (std::uint32_t)(m_pDataBufferCurrent - m_pDataBufferStart);
 	if(writeLength == 0)
 	{
 		return;
@@ -60,21 +60,21 @@ void streamWriter::flushDataBuffer()
 // Write into the stream
 //
 ///////////////////////////////////////////////////////////
-void streamWriter::write(const imbxUint8* pBuffer, imbxUint32 bufferLength)
+void streamWriter::write(const std::uint8_t* pBuffer, std::uint32_t bufferLength)
 {
 	while(bufferLength != 0)
 	{
 		if(m_pDataBufferCurrent == m_pDataBufferMaxEnd)
 		{
 			flushDataBuffer();
-                        if(bufferLength > (imbxUint32)(m_pDataBufferMaxEnd - m_pDataBufferCurrent) )
+                        if(bufferLength > (std::uint32_t)(m_pDataBufferMaxEnd - m_pDataBufferCurrent) )
                         {
                             m_pControlledStream->write(m_dataBufferStreamPosition + m_virtualStart, pBuffer, bufferLength);
                             m_dataBufferStreamPosition += bufferLength;
                             return;
                         }
 		}
-		imbxUint32 copySize = (imbxUint32)(m_pDataBufferMaxEnd - m_pDataBufferCurrent);
+		std::uint32_t copySize = (std::uint32_t)(m_pDataBufferMaxEnd - m_pDataBufferCurrent);
 		if(copySize > bufferLength)
 		{
 			copySize = bufferLength;

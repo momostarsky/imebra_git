@@ -62,7 +62,7 @@ bool modalityVOILUT::isEmpty()
 }
 
 
-ptr<image> modalityVOILUT::allocateOutputImage(ptr<image> pInputImage, imbxUint32 width, imbxUint32 height)
+ptr<image> modalityVOILUT::allocateOutputImage(ptr<image> pInputImage, std::uint32_t width, std::uint32_t height)
 {
 	if(isEmpty())
 	{
@@ -75,11 +75,11 @@ ptr<image> modalityVOILUT::allocateOutputImage(ptr<image> pInputImage, imbxUint3
 	///////////////////////////////////////////////////////////
 	if(m_voiLut != 0 && m_voiLut->getSize() != 0 && m_voiLut->checkValidDataRange())
 	{
-		imbxUint8 bits(m_voiLut->getBits());
+		std::uint8_t bits(m_voiLut->getBits());
 
 		// Look for negative outputs
 		bool bNegative(false);
-		for(imbxInt32 index(m_voiLut->getFirstMapped()), size(m_voiLut->getSize()); !bNegative && size != 0; --size, ++index)
+		for(std::int32_t index(m_voiLut->getFirstMapped()), size(m_voiLut->getSize()); !bNegative && size != 0; --size, ++index)
 		{
 			bNegative = (m_voiLut->mappedValue(index) < 0);
 		}
@@ -130,19 +130,19 @@ ptr<image> modalityVOILUT::allocateOutputImage(ptr<image> pInputImage, imbxUint3
 	}
 
 	image::bitDepth inputDepth(pInputImage->getDepth());
-	imbxUint32 highBit(pInputImage->getHighBit());
+	std::uint32_t highBit(pInputImage->getHighBit());
 
-	imbxInt32 value0 = 0;
-	imbxInt32 value1 = ((imbxInt32)1 << (highBit + 1)) - 1;
+	std::int32_t value0 = 0;
+	std::int32_t value1 = ((std::int32_t)1 << (highBit + 1)) - 1;
 	if(inputDepth == image::depthS16 || inputDepth == image::depthS8)
 	{
-		value0 = ((imbxInt32)(-1) << highBit);
-		value1 = ((imbxInt32)1 << highBit);
+		value0 = ((std::int32_t)(-1) << highBit);
+		value1 = ((std::int32_t)1 << highBit);
 	}
-	imbxInt32 finalValue0((imbxInt32) ((double)value0 * m_rescaleSlope + m_rescaleIntercept + 0.5) );
-	imbxInt32 finalValue1((imbxInt32) ((double)value1 * m_rescaleSlope + m_rescaleIntercept + 0.5) );
+	std::int32_t finalValue0((std::int32_t) ((double)value0 * m_rescaleSlope + m_rescaleIntercept + 0.5) );
+	std::int32_t finalValue1((std::int32_t) ((double)value1 * m_rescaleSlope + m_rescaleIntercept + 0.5) );
 
-	imbxInt32 minValue, maxValue;
+	std::int32_t minValue, maxValue;
 	if(finalValue0 < finalValue1)
 	{
 		minValue = finalValue0;

@@ -63,9 +63,9 @@ public:
 
 	virtual void runTransform(
             const ptr<image>& inputImage,
-            imbxUint32 inputTopLeftX, imbxUint32 inputTopLeftY, imbxUint32 inputWidth, imbxUint32 inputHeight,
+            std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight,
             const ptr<image>& outputImage,
-            imbxUint32 outputTopLeftX, imbxUint32 outputTopLeftY);
+            std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY);
 
 	/// \brief Returns true if the transform doesn't do
 	///         anything.
@@ -77,17 +77,17 @@ public:
 	///////////////////////////////////////////////////////////
 	virtual bool isEmpty();
 
-	virtual ptr<image> allocateOutputImage(ptr<image> pInputImage, imbxUint32 width, imbxUint32 height);
+	virtual ptr<image> allocateOutputImage(ptr<image> pInputImage, std::uint32_t width, std::uint32_t height);
 
 protected:
-	imbxUint32 m_inputWidth;
-	imbxUint32 m_inputHeight;
+	std::uint32_t m_inputWidth;
+	std::uint32_t m_inputHeight;
 	std::wstring m_inputColorSpace;
 	image::bitDepth m_inputDepth;
-	imbxUint32 m_inputHighBit;
+	std::uint32_t m_inputHighBit;
 	std::wstring m_outputColorSpace;
 	image::bitDepth m_outputDepth;
-	imbxUint32 m_outputHighBit;
+	std::uint32_t m_outputHighBit;
 
 	typedef std::list<ptr<transform> > tTransformsList;
 	tTransformsList m_transformsList;

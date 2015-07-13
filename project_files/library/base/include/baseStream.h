@@ -73,7 +73,7 @@ public:
 	///                        buffer that has to be written
 	///
 	///////////////////////////////////////////////////////////
-	virtual void write(imbxUint32 startPosition, const imbxUint8* pBuffer, imbxUint32 bufferLength) = 0;
+	virtual void write(std::uint32_t startPosition, const std::uint8_t* pBuffer, std::uint32_t bufferLength) = 0;
 	
 	/// \brief Read raw data from the stream.
 	///
@@ -92,7 +92,7 @@ public:
 	///          reached
 	///
 	///////////////////////////////////////////////////////////
-	virtual imbxUint32 read(imbxUint32 startPosition, imbxUint8* pBuffer, imbxUint32 bufferLength) = 0;
+	virtual std::uint32_t read(std::uint32_t startPosition, std::uint8_t* pBuffer, std::uint32_t bufferLength) = 0;
 };
 
 

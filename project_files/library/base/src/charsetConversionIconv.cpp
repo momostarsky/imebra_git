@@ -56,15 +56,15 @@ void charsetConversionIconv::initialize(const int requestedTable)
 
 	// Check little endian/big endian
 	///////////////////////////////////////////////////////////
-	static imbxUint16 m_endianCheck=0x00ff;
+	static std::uint16_t m_endianCheck=0x00ff;
 	const char* utfCode;
 	switch(sizeof(wchar_t))
 	{
 	case 2:
-		utfCode = (*((imbxUint8*)&m_endianCheck) == 0xff) ? "UTF-16LE" : "UTF-16BE";
+		utfCode = (*((std::uint8_t*)&m_endianCheck) == 0xff) ? "UTF-16LE" : "UTF-16BE";
 		break;
 	case 4:
-		utfCode = (*((imbxUint8*)&m_endianCheck) == 0xff) ? "UTF-32LE" : "UTF-32BE";
+		utfCode = (*((std::uint8_t*)&m_endianCheck) == 0xff) ? "UTF-32LE" : "UTF-32BE";
 		break;
 	default:
 		PUNTOEXE_THROW(charsetConversionExceptionUtfSizeNotSupported, "The system utf size is not supported");

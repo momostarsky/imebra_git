@@ -55,15 +55,15 @@ class dicomDictionary
 	struct validDataTypesStruct
 	{
 		bool  m_longLength;       // true if the tag has a 4 bytes length descriptor
-		imbxUint32 m_wordLength;       // Word's length, used for byte reversing in hi/lo endian conversion
-		imbxUint32 m_maxLength;        // The maximum length for the tag. An exception will be trown while reading a tag which exceedes this size 
+		std::uint32_t m_wordLength;       // Word's length, used for byte reversing in hi/lo endian conversion
+		std::uint32_t m_maxLength;        // The maximum length for the tag. An exception will be trown while reading a tag which exceedes this size 
 	};
 
 public:
 	dicomDictionary();
 
-	void registerTag(imbxUint32 tagId, const wchar_t* tagName, const char* tagType);
-	void registerVR(std::string vr, bool bLongLength, imbxUint32 wordSize, imbxUint32 maxLength);
+	void registerTag(std::uint32_t tagId, const wchar_t* tagName, const char* tagType);
+	void registerVR(std::string vr, bool bLongLength, std::uint32_t wordSize, std::uint32_t maxLength);
 
 	/// \brief Retrieve a tag's description.
 	///
@@ -72,7 +72,7 @@ public:
 	/// @return          The tag's description
 	///
 	///////////////////////////////////////////////////////////
-	std::wstring getTagName(imbxUint16 groupId, imbxUint16 tagId) const;
+	std::wstring getTagName(std::uint16_t groupId, std::uint16_t tagId) const;
 
 	/// \brief Retrieve a tag's default data type.
 	///
@@ -81,7 +81,7 @@ public:
 	/// @return          The tag's data type
 	///
 	///////////////////////////////////////////////////////////
-	std::string getTagType(imbxUint16 groupId, imbxUint16 tagId) const;
+	std::string getTagType(std::uint16_t groupId, std::uint16_t tagId) const;
 
 	/// \brief Retrieve the only valid instance of this class.
 	///
@@ -118,7 +118,7 @@ public:
 	/// @return the size of a single element
 	///
 	///////////////////////////////////////////////////////////
-	imbxUint32 getWordSize(std::string dataType) const;
+	std::uint32_t getWordSize(std::string dataType) const;
 	
 	/// \brief Return the maximum size of the tags with
 	///         the specified data type.
@@ -128,10 +128,10 @@ public:
 	/// @return         the maximum tag's size in bytes 
 	///
 	///////////////////////////////////////////////////////////
-	imbxUint32 getMaxSize(std::string dataType) const;
+	std::uint32_t getMaxSize(std::string dataType) const;
 
 protected:
-	typedef std::map<imbxUint32, imageDataDictionaryElement> tDicomDictionary;
+	typedef std::map<std::uint32_t, imageDataDictionaryElement> tDicomDictionary;
 	tDicomDictionary m_dicomDict;
 
 	typedef std::map<std::string, validDataTypesStruct> tVRDictionary;

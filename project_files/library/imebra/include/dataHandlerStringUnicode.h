@@ -14,7 +14,7 @@ $fileHeader$
 #include "../../base/include/charsetConversion.h"
 #include "dataHandlerString.h"
 #include "charsetsList.h"
-
+#include <memory>
 
 
 ///////////////////////////////////////////////////////////
@@ -82,8 +82,8 @@ protected:
 	///////////////////////////////////////////////////////////
 	virtual std::string convertFromUnicode(const std::wstring& value, charsetsList::tCharsetsList* pCharsetsList) const;
 
-    std::auto_ptr<charsetConversion> m_charsetConversion;
-    std::auto_ptr<charsetConversion> m_localeCharsetConversion;
+    std::unique_ptr<charsetConversion> m_charsetConversion;
+    std::unique_ptr<charsetConversion> m_localeCharsetConversion;
 
 	dicomCharsetInformation* getCharsetInfo(const std::wstring& dicomName) const;
 };

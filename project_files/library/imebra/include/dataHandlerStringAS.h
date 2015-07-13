@@ -69,7 +69,7 @@ public:
 	/// @param unit  the units used for the parameter age
 	///
 	///////////////////////////////////////////////////////////
-	virtual void setAge(const imbxUint32 index, const imbxUint32 age, const tAgeUnit unit);
+	virtual void setAge(const std::uint32_t index, const std::uint32_t age, const tAgeUnit unit);
 
 	/// \brief Retrieve the age value and its unit from the
 	///         buffer handled by this handler.
@@ -84,7 +84,7 @@ public:
 	///               pUnit
 	///
 	///////////////////////////////////////////////////////////
-	virtual imbxUint32 getAge(const imbxUint32 index, tAgeUnit* pUnit) const;
+	virtual std::uint32_t getAge(const std::uint32_t index, tAgeUnit* pUnit) const;
 
 	/// \brief Retrieve the age from the handled buffer.
 	///
@@ -96,7 +96,7 @@ public:
 	///          years
 	///
 	///////////////////////////////////////////////////////////
-	virtual imbxInt32 getSignedLong(const imbxUint32 index) const;
+	virtual std::int32_t getSignedLong(const std::uint32_t index) const;
 
 	/// \brief Retrieve the age from the handled buffer.
 	///
@@ -108,7 +108,7 @@ public:
 	///          years
 	///
 	///////////////////////////////////////////////////////////
-	virtual imbxUint32 getUnsignedLong(const imbxUint32 index) const;
+	virtual std::uint32_t getUnsignedLong(const std::uint32_t index) const;
 
 	/// \brief Retrieve the age from the handled buffer.
 	///
@@ -123,7 +123,7 @@ public:
 	///          years
 	///
 	///////////////////////////////////////////////////////////
-	virtual double getDouble(const imbxUint32 index) const;
+	virtual double getDouble(const std::uint32_t index) const;
 
 	/// \brief Write the specified age into the handled buffer.
 	///
@@ -132,7 +132,7 @@ public:
 	/// @param value the age to be written, in years
 	///
 	///////////////////////////////////////////////////////////
-	virtual void setSignedLong(const imbxUint32 index, const imbxInt32 value);
+	virtual void setSignedLong(const std::uint32_t index, const std::int32_t value);
 
 	/// \brief Write the specified age into the handled buffer.
 	///
@@ -141,7 +141,7 @@ public:
 	/// @param value the age to be written, in years
 	///
 	///////////////////////////////////////////////////////////
-	virtual void setUnsignedLong(const imbxUint32 index, const imbxUint32 value);
+	virtual void setUnsignedLong(const std::uint32_t index, const std::uint32_t value);
 
 	/// \brief Write the specified age into the handled buffer.
 	///
@@ -154,17 +154,17 @@ public:
 	/// @param value the age to be written, in years
 	///
 	///////////////////////////////////////////////////////////
-	virtual void setDouble(const imbxUint32 index, const double value);
+	virtual void setDouble(const std::uint32_t index, const double value);
 
 
-	virtual imbxUint8 getPaddingByte() const;
+	virtual std::uint8_t getPaddingByte() const;
 
-	virtual imbxUint32 getUnitSize() const;
+	virtual std::uint32_t getUnitSize() const;
 
 protected:
 	// Return the maximum string's length
 	///////////////////////////////////////////////////////////
-	virtual imbxUint32 maxSize() const;
+	virtual std::uint32_t maxSize() const;
 };
 
 } // namespace handlers

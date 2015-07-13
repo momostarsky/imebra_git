@@ -45,7 +45,7 @@ drawBitmap::drawBitmap(ptr<image> sourceImage, ptr<transforms::transformsChain> 
 		m_transformsChain->addTransform(rgbColorTransform);
 	}
 
-	imbxUint32 width, height;
+	std::uint32_t width, height;
 	m_image->getSize(&width, &height);
 	if(m_transformsChain->isEmpty())
 	{

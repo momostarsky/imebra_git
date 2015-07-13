@@ -162,7 +162,7 @@ public:
 	/// @return the id of the referenced data or dataGroup
 	///
 	///////////////////////////////////////////////////////////
-	imbxUint16 getId()
+	std::uint16_t getId()
 	{
 		PUNTOEXE_FUNCTION_START(L"dataCollectionIterator::getId");
 
@@ -171,7 +171,7 @@ public:
 			return 0;
 		}
 
-		return (imbxUint16)((m_iterator->first)>>16);
+		return (std::uint16_t)((m_iterator->first)>>16);
 
 		PUNTOEXE_FUNCTION_END();
 	}
@@ -196,7 +196,7 @@ public:
 	/// @return the dataGroup's order
 	///
 	///////////////////////////////////////////////////////////
-	imbxUint16 getOrder()
+	std::uint16_t getOrder()
 	{
 		PUNTOEXE_FUNCTION_START(L"dataCollectionIterator::getOrder");
 
@@ -205,14 +205,14 @@ public:
 			return 0;
 		}
 
-		return (imbxUint16)((m_iterator->first) & 0x0000ffff);
+		return (std::uint16_t)((m_iterator->first) & 0x0000ffff);
 
 		PUNTOEXE_FUNCTION_END();
 	}
 
 public:
-	std::map<imbxUint32, ptr<collectionType> > m_collection;
-	typename std::map<imbxUint32, ptr<collectionType> >::iterator m_iterator;
+	std::map<std::uint32_t, ptr<collectionType> > m_collection;
+	typename std::map<std::uint32_t, ptr<collectionType> >::iterator m_iterator;
 };
 
 
@@ -250,7 +250,7 @@ public:
 		charsetsList::updateCharsets(pCharsetsList, &m_charsetsList);
 		
 		for(
-			typename std::map<imbxUint32, ptr<collectionType> >::iterator dataIterator=m_collection.begin(); 
+			typename std::map<std::uint32_t, ptr<collectionType> >::iterator dataIterator=m_collection.begin(); 
 			dataIterator!=m_collection.end(); 
 			++dataIterator)
 		{
@@ -274,7 +274,7 @@ public:
 	{
 		m_charsetsList.clear();
 		for(
-			typename std::map<imbxUint32, ptr<collectionType> >::iterator dataIterator=m_collection.begin(); 
+			typename std::map<std::uint32_t, ptr<collectionType> >::iterator dataIterator=m_collection.begin(); 
 			dataIterator!=m_collection.end(); 
 			++dataIterator)
 		{
@@ -295,17 +295,17 @@ protected:
 	//  the group (ptr<dataGroup>) with the specified ID.
 	//
 	///////////////////////////////////////////////////////////
-	ptr<collectionType> getData(imbxUint16 dataId, imbxUint16 order)
+	ptr<collectionType> getData(std::uint16_t dataId, std::uint16_t order)
 	{
 		PUNTOEXE_FUNCTION_START(L"dataCollection::getData");
 
 		lockObject lockAccess(this);
 
-		imbxUint32 dataUid = (((imbxUint32)dataId)<<16) | (imbxUint32)order;
+		std::uint32_t dataUid = (((std::uint32_t)dataId)<<16) | (std::uint32_t)order;
 
 		ptr<collectionType> returnCollection;
 
-		typename std::map<imbxUint32, ptr<collectionType> >::iterator findCollection = m_collection.find(dataUid);
+		typename std::map<std::uint32_t, ptr<collectionType> >::iterator findCollection = m_collection.find(dataUid);
 		if(findCollection != m_collection.end())
 		{
 			returnCollection = findCollection->second;
@@ -318,13 +318,13 @@ protected:
 	
 	// Set the data (tag or group)
 	///////////////////////////////////////////////////////////
-	void setData(imbxUint16 dataId, imbxUint16 order, const ptr<collectionType>& pData)
+	void setData(std::uint16_t dataId, std::uint16_t order, const ptr<collectionType>& pData)
 	{
 		PUNTOEXE_FUNCTION_START(L"dataCollection::setData");
 
 		lockObject lockAccess(this);
 
-		imbxUint32 dataUid = (((imbxUint32)dataId)<<16) | (imbxUint32)order;
+		std::uint32_t dataUid = (((std::uint32_t)dataId)<<16) | (std::uint32_t)order;
 		m_collection[dataUid] = pData;
 		pData->setCharsetsList(&m_charsetsList);
 
@@ -355,7 +355,7 @@ public:
 
 		
 		for(
-			typename std::map<imbxUint32, ptr<collectionType> >::iterator dataIterator=m_collection.begin(); 
+			typename std::map<std::uint32_t, ptr<collectionType> >::iterator dataIterator=m_collection.begin(); 
 			dataIterator!=m_collection.end(); 
 			++dataIterator)
 		{
@@ -371,7 +371,7 @@ public:
 protected:
 	// Stored data (tags or groups)
 	///////////////////////////////////////////////////////////
-	std::map<imbxUint32, ptr<collectionType> > m_collection;
+	std::map<std::uint32_t, ptr<collectionType> > m_collection;
 
 	charsetsList::tCharsetsList m_charsetsList;
 };

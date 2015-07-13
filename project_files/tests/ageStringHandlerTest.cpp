@@ -37,7 +37,7 @@ TEST(ageStringHandlerTest, ageTest)
 		ageString = hTag->getUnicodeString(0);
         EXPECT_EQ(std::wstring(L"002Y"), ageString);
 
-		imbxUint32 ageInt = hTag->getUnsignedLong(0);
+		std::uint32_t ageInt = hTag->getUnsignedLong(0);
         EXPECT_EQ(2, ageInt);
 	}
 }

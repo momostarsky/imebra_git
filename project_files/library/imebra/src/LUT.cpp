@@ -53,21 +53,21 @@ void lut::setLut(ptr<handlers::dataHandler> pDescriptor, ptr<handlers::dataHandl
 	{
 		PUNTOEXE_THROW(lutExceptionCorrupted, "The LUT is corrupted");
 	}
-	imbxInt32 lutSize=pDescriptor->getSignedLong(0);
+	std::int32_t lutSize=pDescriptor->getSignedLong(0);
 	if(lutSize == 0)
 		lutSize=0x00010000;
 	if(lutSize < 0)
 		lutSize&=0x0000FFFF;
 
-	imbxInt32 lutFirstMapped=pDescriptor->getSignedLong(1);
-	imbxUint32 lutBits=pDescriptor->getUnsignedLong(2);
+	std::int32_t lutFirstMapped=pDescriptor->getSignedLong(1);
+	std::uint32_t lutBits=pDescriptor->getUnsignedLong(2);
 
-	if(pData == 0 || (imbxUint32)lutSize != pData->getSize())
+	if(pData == 0 || (std::uint32_t)lutSize != pData->getSize())
 	{
 		PUNTOEXE_THROW(lutExceptionCorrupted, "The LUT is corrupted");
 	}
 
-	create(lutSize, lutFirstMapped, (imbxUint8)lutBits, description);
+	create(lutSize, lutFirstMapped, (std::uint8_t)lutBits, description);
 
     dynamic_cast<handlers::dataHandlerNumericBase*>(pData.get())->copyTo(m_pMappedValues, lutSize);
 
@@ -85,7 +85,7 @@ void lut::setLut(ptr<handlers::dataHandler> pDescriptor, ptr<handlers::dataHandl
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void lut::create(imbxUint32 size, imbxInt32 firstMapped, imbxUint8 bits, std::wstring description)
+void lut::create(std::uint32_t size, std::int32_t firstMapped, std::uint8_t bits, std::wstring description)
 {
 	PUNTOEXE_FUNCTION_START(L"lut::create");
 
@@ -110,7 +110,7 @@ void lut::create(imbxUint32 size, imbxInt32 firstMapped, imbxUint8 bits, std::ws
 		m_size=size;
 		m_firstMapped=firstMapped;
 		m_bits=bits;
-		m_pMappedValues=new imbxInt32[m_size];
+		m_pMappedValues=new std::int32_t[m_size];
 	}
 
 	PUNTOEXE_FUNCTION_END();
@@ -131,7 +131,7 @@ void lut::fillHandlers(ptr<handlers::dataHandler> pDescriptor, ptr<handlers::dat
 	PUNTOEXE_FUNCTION_START(L"lut::fillHandlers");
 
 	pDescriptor->setSize(3);
-	imbxUint32 lutSize = getSize();
+	std::uint32_t lutSize = getSize();
 	if(lutSize == 0x00010000)
 	{
 		pDescriptor->setSignedLong(0, 0);
@@ -141,10 +141,10 @@ void lut::fillHandlers(ptr<handlers::dataHandler> pDescriptor, ptr<handlers::dat
 		pDescriptor->setUnsignedLong(0, lutSize);
 	}
 
-	imbxInt32 lutFirstMapped = getFirstMapped();
+	std::int32_t lutFirstMapped = getFirstMapped();
 	pDescriptor->setSignedLong(1, lutFirstMapped);
 
-	imbxUint8 bits = getBits();
+	std::uint8_t bits = getBits();
 	pDescriptor->setUnsignedLong(2, bits);
 
 	pData->setSize(lutSize);
@@ -162,7 +162,7 @@ void lut::fillHandlers(ptr<handlers::dataHandler> pDescriptor, ptr<handlers::dat
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint32 lut::getSize()
+std::uint32_t lut::getSize()
 {
 	return m_size;
 }
@@ -182,15 +182,15 @@ bool lut::checkValidDataRange()
     {
         return m_bValid;
     }
-    imbxInt32 maxValue(65535);
-    imbxInt32 minValue(-32768);
+    std::int32_t maxValue(65535);
+    std::int32_t minValue(-32768);
     if(m_bits == 8)
     {
         maxValue = 255;
         minValue = -128;
     }
-    imbxInt32* pScanValues(m_pMappedValues);
-    for(imbxUint32 checkData(0); checkData != m_size; ++checkData)
+    std::int32_t* pScanValues(m_pMappedValues);
+    for(std::uint32_t checkData(0); checkData != m_size; ++checkData)
     {
         if(*pScanValues < minValue || *pScanValues > maxValue)
         {
@@ -215,7 +215,7 @@ bool lut::checkValidDataRange()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxInt32 lut::getFirstMapped()
+std::int32_t lut::getFirstMapped()
 {
 	return m_firstMapped;
 }
@@ -230,7 +230,7 @@ imbxInt32 lut::getFirstMapped()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void lut::setLutValue(imbxInt32 startValue, imbxInt32 lutValue)
+void lut::setLutValue(std::int32_t startValue, std::int32_t lutValue)
 {
 	PUNTOEXE_FUNCTION_START(L"lut::setLutValue");
 
@@ -239,7 +239,7 @@ void lut::setLutValue(imbxInt32 startValue, imbxInt32 lutValue)
 		PUNTOEXE_THROW(lutExceptionWrongIndex, "The start index is below the first mapped index");
 	}
 	startValue-=m_firstMapped;
-	if(startValue<(imbxInt32)m_size)
+	if(startValue<(std::int32_t)m_size)
 	{
 		m_pMappedValues[startValue]=lutValue;
 		m_mappedValuesRev.clear();
@@ -274,7 +274,7 @@ std::wstring lut::getDescription()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint8 lut::getBits()
+std::uint8_t lut::getBits()
 {
 	return m_bits;
 }
@@ -289,7 +289,7 @@ imbxUint8 lut::getBits()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxInt32 lut::mappedValue(imbxInt32 id)
+std::int32_t lut::mappedValue(std::int32_t id)
 {
 	// The LUT's size is zero, return
 	///////////////////////////////////////////////////////////
@@ -306,7 +306,7 @@ imbxInt32 lut::mappedValue(imbxInt32 id)
 	{
 		return m_pMappedValues[0];
 	}
-	if(id < (imbxInt32)m_size)
+	if(id < (std::int32_t)m_size)
 	{
 		return m_pMappedValues[id];
 	}
@@ -318,18 +318,18 @@ imbxInt32 lut::mappedValue(imbxInt32 id)
 ///////////////////////////////////////////////////////////
 //
 //
-// Copy the palette's data to an array of imbxInt32
+// Copy the palette's data to an array of std::int32_t
 //
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void lut::copyToInt32(imbxInt32* pDestination, imbxUint32 destSize, imbxInt32* pFirstMapped)
+void lut::copyToInt32(std::int32_t* pDestination, std::uint32_t destSize, std::int32_t* pFirstMapped)
 {
 	if(destSize > m_size)
 	{
 		destSize = m_size;
 	}
-	::memcpy(pDestination, m_pMappedValues, destSize*sizeof(imbxInt32));
+	::memcpy(pDestination, m_pMappedValues, destSize*sizeof(std::int32_t));
 	*pFirstMapped = m_firstMapped;
 }
 
@@ -343,7 +343,7 @@ void lut::copyToInt32(imbxInt32* pDestination, imbxUint32 destSize, imbxInt32* p
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxInt32 lut::mappedValueRev(imbxInt32 lutValue)
+std::int32_t lut::mappedValueRev(std::int32_t lutValue)
 {
 	if(m_size == 0)
 	{
@@ -352,7 +352,7 @@ imbxInt32 lut::mappedValueRev(imbxInt32 lutValue)
 
 	if(m_mappedValuesRev.size() == 0)
 	{
-		for(imbxUint32 reverseLUT = 0; reverseLUT < m_size; ++reverseLUT)
+		for(std::uint32_t reverseLUT = 0; reverseLUT < m_size; ++reverseLUT)
 		{
 			m_mappedValuesRev[m_pMappedValues[reverseLUT]]=reverseLUT;
 		}
@@ -361,7 +361,7 @@ imbxInt32 lut::mappedValueRev(imbxInt32 lutValue)
 	if(lutValue<=m_mappedValuesRev.begin()->first)
 		return m_mappedValuesRev.begin()->second;
 
-	std::map<imbxInt32, imbxInt32>::iterator lutIterator;
+	std::map<std::int32_t, std::int32_t>::iterator lutIterator;
 	lutIterator=m_mappedValuesRev.end();
 	--lutIterator;
 	if(lutValue>=lutIterator->first)

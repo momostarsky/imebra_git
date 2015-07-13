@@ -129,7 +129,7 @@ ptr<codecFactory> codecFactory::getCodecFactory()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<dataSet> codecFactory::load(ptr<streamReader> pStream, imbxUint32 maxSizeBufferLoad /* = 0xffffffff */)
+ptr<dataSet> codecFactory::load(ptr<streamReader> pStream, std::uint32_t maxSizeBufferLoad /* = 0xffffffff */)
 {
 	PUNTOEXE_FUNCTION_START(L"codecFactory::load");
 

@@ -125,9 +125,9 @@ public:
 	buffer(const ptr<baseObject>& externalLock,
 		const std::string& defaultType,
 		const ptr<baseStream>& originalStream,
-		imbxUint32 bufferPosition,
-		imbxUint32 bufferLength,
-		imbxUint32 wordLength,
+		std::uint32_t bufferPosition,
+		std::uint32_t bufferLength,
+		std::uint32_t wordLength,
 		streamController::tByteOrdering endianType);
 
 	//@}
@@ -160,7 +160,7 @@ public:
 	/// @return a pointer to a dataHandler object
 	///
 	///////////////////////////////////////////////////////////
-	ptr<handlers::dataHandler> getDataHandler(bool bWrite, imbxUint32 size = 0);
+	ptr<handlers::dataHandler> getDataHandler(bool bWrite, std::uint32_t size = 0);
 
 	/// \brief Retrieve a raw data handler that can be used to
 	///         read, write and resize the memory controlled by 
@@ -187,7 +187,7 @@ public:
 	/// @return a pointer to a dataHandler object
 	///
 	///////////////////////////////////////////////////////////
-	ptr<handlers::dataHandlerRaw> getDataHandlerRaw(bool bWrite, imbxUint32 size = 0);
+	ptr<handlers::dataHandlerRaw> getDataHandlerRaw(bool bWrite, std::uint32_t size = 0);
 
 	//@}
 
@@ -206,7 +206,7 @@ public:
 	///
 	/// @return the buffer's size, in bytes
 	///////////////////////////////////////////////////////////
-	imbxUint32 getBufferSizeBytes();
+	std::uint32_t getBufferSizeBytes();
 
 	//@}
 
@@ -336,7 +336,7 @@ public:
 protected:
 	// Return a data handler.
 	///////////////////////////////////////////////////////////
-	ptr<handlers::dataHandler> getDataHandler(bool bWrite, bool bRaw, imbxUint32 size);
+	ptr<handlers::dataHandler> getDataHandler(bool bWrite, bool bRaw, std::uint32_t size);
 
 	//
 	// Attributes
@@ -364,9 +364,9 @@ protected:
 	//  from the stream.
 	///////////////////////////////////////////////////////////
 	ptr<baseStream> m_originalStream;    // < Original stream
-	imbxUint32 m_originalBufferPosition; // < Original buffer's position
-	imbxUint32 m_originalBufferLength;   // < Original buffer's length
-	imbxUint32 m_originalWordLength;     // < Original word's length (for low/high endian adjustment)
+	std::uint32_t m_originalBufferPosition; // < Original buffer's position
+	std::uint32_t m_originalBufferLength;   // < Original buffer's length
+	std::uint32_t m_originalWordLength;     // < Original word's length (for low/high endian adjustment)
 	streamController::tByteOrdering m_originalEndianType; // < Original endian type
 	
 private:
@@ -376,7 +376,7 @@ private:
 
 	// Buffer's version
 	///////////////////////////////////////////////////////////
-	imbxUint32 m_version;
+	std::uint32_t m_version;
 	
 };
 

@@ -39,14 +39,14 @@ namespace handlers
 class dataHandlerStringUT : public dataHandlerStringUnicode
 {
 public:
-	virtual imbxUint8 getPaddingByte() const;
+	virtual std::uint8_t getPaddingByte() const;
 
-	virtual imbxUint32 getUnitSize() const;
+	virtual std::uint32_t getUnitSize() const;
 
 protected:
 	// Return the maximum string's length
 	///////////////////////////////////////////////////////////
-	virtual imbxUint32 maxSize() const;
+	virtual std::uint32_t maxSize() const;
 
 	// TRUE if \ is used as a separator
 	///////////////////////////////////////////////////////////

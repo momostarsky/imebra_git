@@ -68,7 +68,7 @@ public:
 		std::wstring transferSyntax,
 		quality imageQuality,
 		std::string dataType,
-		imbxUint8 allocatedBits,
+		std::uint8_t allocatedBits,
 		bool bSubSampledX,
 		bool bSubSampledY,
 		bool bInterleaved,
@@ -114,7 +114,7 @@ public:
 	///                    ignore this parameter.
 	///                   Set to -1 to load all the buffers
 	///                    immediatly
-	/// @param pReadSubItemLength a pointer to a imbxUint32
+	/// @param pReadSubItemLength a pointer to a std::uint32_t
 	///                    that the function will fill with
 	///                    the number of bytes read
 	/// @param depth      the current dataSet depth:
@@ -129,10 +129,10 @@ public:
 		ptr<dataSet> pDataSet,
 		bool bExplicitDataType,
 		streamController::tByteOrdering endianType,
-		imbxUint32 maxSizeBufferLoad = 0xffffffff,
-		imbxUint32 subItemLength = 0xffffffff,
-		imbxUint32* pReadSubItemLength = 0,
-		imbxUint32 depth = 0);
+		std::uint32_t maxSizeBufferLoad = 0xffffffff,
+		std::uint32_t subItemLength = 0xffffffff,
+		std::uint32_t* pReadSubItemLength = 0,
+		std::uint32_t depth = 0);
 
 	/// \brief Write the dataSet to the specified stream
 	///         in Dicom format, without the file header and
@@ -161,11 +161,11 @@ public:
 
 	// Returns the maximum supported high bit
 	///////////////////////////////////////////////////////////
-	virtual imbxUint32 getMaxHighBit(std::string transferSyntax);
+	virtual std::uint32_t getMaxHighBit(std::string transferSyntax);
 
 	// Returns the suggested allocated bits
 	///////////////////////////////////////////////////////////
-	virtual imbxUint32 suggestAllocatedBits(std::wstring transferSyntax, imbxUint32 highBit);
+	virtual std::uint32_t suggestAllocatedBits(std::wstring transferSyntax, std::uint32_t highBit);
 
 protected:
 	// Write a dicom stream
@@ -174,97 +174,97 @@ protected:
 
 	// Load a dicom stream
 	///////////////////////////////////////////////////////////
-	virtual void readStream(ptr<streamReader> pStream, ptr<dataSet> pDataSet, imbxUint32 maxSizeBufferLoad = 0xffffffff);
+	virtual void readStream(ptr<streamReader> pStream, ptr<dataSet> pDataSet, std::uint32_t maxSizeBufferLoad = 0xffffffff);
 
 protected:
 	// Read a single tag
 	///////////////////////////////////////////////////////////
-	imbxUint32 readTag(ptr<streamReader> pStream, ptr<dataSet> pDataSet, imbxUint32 tagLengthDWord, imbxUint16 tagId, imbxUint16 order, imbxUint16 tagSubId, std::string, streamController::tByteOrdering endianType, short wordSize, imbxUint32 bufferId, imbxUint32 maxSizeBufferLoad = 0xffffffff);
+	std::uint32_t readTag(ptr<streamReader> pStream, ptr<dataSet> pDataSet, std::uint32_t tagLengthDWord, std::uint16_t tagId, std::uint16_t order, std::uint16_t tagSubId, std::string, streamController::tByteOrdering endianType, short wordSize, std::uint32_t bufferId, std::uint32_t maxSizeBufferLoad = 0xffffffff);
 
 	// Calculate the tag's length
 	///////////////////////////////////////////////////////////
-	imbxUint32 getTagLength(ptr<data> pData, bool bExplicitDataType, imbxUint32* pHeaderLength, bool *pbSequence);
+	std::uint32_t getTagLength(ptr<data> pData, bool bExplicitDataType, std::uint32_t* pHeaderLength, bool *pbSequence);
 
 	// Calculate the group's length
 	///////////////////////////////////////////////////////////
-	imbxUint32 getGroupLength(ptr<dataGroup>, bool bExplicitDataType);
+	std::uint32_t getGroupLength(ptr<dataGroup>, bool bExplicitDataType);
 
 	// Calculate the dataset's length
 	///////////////////////////////////////////////////////////
-	imbxUint32 getDataSetLength(ptr<dataSet>, bool bExplicitDataType);
+	std::uint32_t getDataSetLength(ptr<dataSet>, bool bExplicitDataType);
 
 	// Write a single group
 	///////////////////////////////////////////////////////////
-	void writeGroup(ptr<streamWriter> pDestStream, ptr<dataGroup> pGroup, imbxUint16 groupId, bool bExplicitDataType, streamController::tByteOrdering endianType);
+	void writeGroup(ptr<streamWriter> pDestStream, ptr<dataGroup> pGroup, std::uint16_t groupId, bool bExplicitDataType, streamController::tByteOrdering endianType);
 
 	// Write a single tag
 	///////////////////////////////////////////////////////////
-	void writeTag(ptr<streamWriter> pDestStream, ptr<data> pData, imbxUint16 tagId, bool bExplicitDataType, streamController::tByteOrdering endianType);
+	void writeTag(ptr<streamWriter> pDestStream, ptr<data> pData, std::uint16_t tagId, bool bExplicitDataType, streamController::tByteOrdering endianType);
 
 	// Read an uncompressed interleaved image
 	///////////////////////////////////////////////////////////
 	void readUncompressedInterleaved(
-		imbxUint32 channelsNumber,
+		std::uint32_t channelsNumber,
 		bool bSubSampledX,
 		bool bSubSampledY,
 		streamReader* pSourceStream,
-		imbxUint8 wordSizeBytes,
-		imbxUint8 allocatedBits,
-		imbxUint32 mask
+		std::uint8_t wordSizeBytes,
+		std::uint8_t allocatedBits,
+		std::uint32_t mask
 		);
 
 	// Write an uncompressed interleaved image
 	///////////////////////////////////////////////////////////
 	void writeUncompressedInterleaved(
-		imbxUint32 channelsNumber,
+		std::uint32_t channelsNumber,
 		bool bSubSampledX,
 		bool bSubSampledY,
 		streamWriter* pDestStream,
-		imbxUint8 wordSizeBytes,
-		imbxUint8 allocatedBits,
-		imbxUint32 mask
+		std::uint8_t wordSizeBytes,
+		std::uint8_t allocatedBits,
+		std::uint32_t mask
 		);
 
 	// Read an uncompressed not interleaved image
 	///////////////////////////////////////////////////////////
 	void readUncompressedNotInterleaved(
-		imbxUint32 channelsNumber,
+		std::uint32_t channelsNumber,
 		streamReader* pSourceStream,
-		imbxUint8 wordSizeBytes,
-		imbxUint8 allocatedBits,
-		imbxUint32 mask
+		std::uint8_t wordSizeBytes,
+		std::uint8_t allocatedBits,
+		std::uint32_t mask
 		);
 
 	// Write an uncompressed not interleaved image
 	///////////////////////////////////////////////////////////
 	void writeUncompressedNotInterleaved(
-		imbxUint32 channelsNumber,
+		std::uint32_t channelsNumber,
 		streamWriter* pDestStream,
-		imbxUint8 wordSizeBytes,
-		imbxUint8 allocatedBits,
-		imbxUint32 mask
+		std::uint8_t wordSizeBytes,
+		std::uint8_t allocatedBits,
+		std::uint32_t mask
 		);
 
 	// Write an RLE compressed image
 	///////////////////////////////////////////////////////////
 	void writeRLECompressed(
-		imbxUint32 imageSizeX,
-		imbxUint32 imageSizeY,
-		imbxUint32 channelsNumber,
+		std::uint32_t imageSizeX,
+		std::uint32_t imageSizeY,
+		std::uint32_t channelsNumber,
 		streamWriter* pDestStream,
-		imbxUint8 allocatedBits,
-		imbxUint32 mask
+		std::uint8_t allocatedBits,
+		std::uint32_t mask
 		);
 
 	// Read an RLE compressed image
 	///////////////////////////////////////////////////////////
 	void readRLECompressed(
-		imbxUint32 imageSizeX,
-		imbxUint32 imageSizeY,
-		imbxUint32 channelsNumber,
+		std::uint32_t imageSizeX,
+		std::uint32_t imageSizeY,
+		std::uint32_t channelsNumber,
 		streamReader* pSourceStream,
-		imbxUint8 allocatedBits,
-		imbxUint32 mask,
+		std::uint8_t allocatedBits,
+		std::uint32_t mask,
 		bool bInterleaved);
 
 
@@ -272,33 +272,33 @@ protected:
 	///////////////////////////////////////////////////////////
 	void readPixel(
 					streamReader* pSourceStream,
-					imbxInt32* pDest,
-					imbxUint32 numPixels,
-					imbxUint8* bitPointer,
-					imbxUint8* pReadBuffer,
-					const imbxUint8 wordSizeBytes,
-					const imbxUint8 allocatedBits,
-					const imbxUint32 mask);
+					std::int32_t* pDest,
+					std::uint32_t numPixels,
+					std::uint8_t* bitPointer,
+					std::uint8_t* pReadBuffer,
+					const std::uint8_t wordSizeBytes,
+					const std::uint8_t allocatedBits,
+					const std::uint32_t mask);
 
 	// Write a single pixel of a RAW dicom image
 	///////////////////////////////////////////////////////////
 	void writePixel(
 					streamWriter* pDestStream,
-					imbxInt32 pixelValue,
-					imbxUint8*  pBitPointer,
-					imbxUint8 wordSizeBytes,
-					imbxUint8 allocatedBits,
-					imbxUint32 mask);
+					std::int32_t pixelValue,
+					std::uint8_t*  pBitPointer,
+					std::uint8_t wordSizeBytes,
+					std::uint8_t allocatedBits,
+					std::uint32_t mask);
 
 	// Flush the unwritten bytes of an uncompressed image
 	///////////////////////////////////////////////////////////
-	void flushUnwrittenPixels(streamWriter* pDestStream, imbxUint8* pBitPointer, imbxUint8 wordSizeBytes);
+	void flushUnwrittenPixels(streamWriter* pDestStream, std::uint8_t* pBitPointer, std::uint8_t wordSizeBytes);
 
-	imbxUint32 m_ioDWord;
-	imbxUint16 m_ioWord;
-	imbxUint8  m_ioByte;
+	std::uint32_t m_ioDWord;
+	std::uint16_t m_ioWord;
+	std::uint8_t  m_ioByte;
 
-	void allocChannels(imbxUint32 channelsNumber, imbxUint32 sizeX, imbxUint32 sizeY, bool bSubSampledX, bool bSubSampledY);
+	void allocChannels(std::uint32_t channelsNumber, std::uint32_t sizeX, std::uint32_t sizeY, bool bSubSampledX, bool bSubSampledY);
 
 	typedef ptr<channel> ptrChannel;
 	std::vector<ptrChannel> m_channels;

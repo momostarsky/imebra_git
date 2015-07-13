@@ -41,7 +41,7 @@ namespace puntoexe
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-huffmanTable::huffmanTable(imbxUint32 maxValueLength)
+huffmanTable::huffmanTable(std::uint32_t maxValueLength)
 {
 	m_numValues=(1L<<(maxValueLength))+1L;
 
@@ -90,7 +90,7 @@ void huffmanTable::reset()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void huffmanTable::incValueFreq(const imbxUint32 value)
+void huffmanTable::incValueFreq(const std::uint32_t value)
 {
 	++(m_valuesFreq[value].m_freq);
 }
@@ -109,9 +109,9 @@ void huffmanTable::removeLastCode()
 {
 	// Find the number of codes
 	///////////////////////////////////////////////////////////
-	imbxUint32 codes = 0;
-	imbxUint32 lastLength = 0;
-	for(imbxUint32 scanLengths = 0; scanLengths < sizeof(m_valuesPerLength)/sizeof(m_valuesPerLength[0]); ++scanLengths)
+	std::uint32_t codes = 0;
+	std::uint32_t lastLength = 0;
+	for(std::uint32_t scanLengths = 0; scanLengths < sizeof(m_valuesPerLength)/sizeof(m_valuesPerLength[0]); ++scanLengths)
 	{
 		if(m_valuesPerLength[scanLengths] == 0)
 		{
@@ -137,7 +137,7 @@ void huffmanTable::removeLastCode()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void huffmanTable::calcHuffmanCodesLength(const imbxUint32 maxCodeLength)
+void huffmanTable::calcHuffmanCodesLength(const std::uint32_t maxCodeLength)
 {
 	PUNTOEXE_FUNCTION_START(L"huffmanTable::calcHuffmanCodesLength");
 
@@ -149,7 +149,7 @@ void huffmanTable::calcHuffmanCodesLength(const imbxUint32 maxCodeLength)
 	{
 		if(m_valuesFreq[scanValues].m_freq != 0)
 		{
-			huffmanTable::freqValue key(m_valuesFreq[scanValues].m_freq, (imbxUint32)scanValues);
+			huffmanTable::freqValue key(m_valuesFreq[scanValues].m_freq, (std::uint32_t)scanValues);
 			freqOrderedValues[key] = true;
 		}
 	}
@@ -168,16 +168,16 @@ void huffmanTable::calcHuffmanCodesLength(const imbxUint32 maxCodeLength)
 
 		freqOrderedValues[key0] = true;
 
-		imbxUint32 chainedValue;
+		std::uint32_t chainedValue;
 		for(chainedValue = key0.m_value; m_valuesFreq[chainedValue].m_nextCode != -1; /* empty */)
 		{
-			chainedValue = (imbxUint32)m_valuesFreq[chainedValue].m_nextCode;
+			chainedValue = (std::uint32_t)m_valuesFreq[chainedValue].m_nextCode;
 			m_valuesFreq[chainedValue].m_codeLength++;
 		}
 		m_valuesFreq[chainedValue].m_nextCode = key1.m_value;
 		while(m_valuesFreq[chainedValue].m_nextCode != -1)
 		{
-			chainedValue = (imbxUint32)m_valuesFreq[chainedValue].m_nextCode;
+			chainedValue = (std::uint32_t)m_valuesFreq[chainedValue].m_nextCode;
 			m_valuesFreq[chainedValue].m_codeLength++;
 		}
 	}
@@ -188,7 +188,7 @@ void huffmanTable::calcHuffmanCodesLength(const imbxUint32 maxCodeLength)
 	{
 		if(m_valuesFreq[findValuesPerLength].m_codeLength != 0)
 		{
-			huffmanTable::lengthValue key(m_valuesFreq[findValuesPerLength].m_codeLength, (imbxUint32)findValuesPerLength);
+			huffmanTable::lengthValue key(m_valuesFreq[findValuesPerLength].m_codeLength, (std::uint32_t)findValuesPerLength);
 			lengthOrderedValues[key] = true;
 			m_valuesPerLength[m_valuesFreq[findValuesPerLength].m_codeLength]++;
 		}
@@ -201,11 +201,11 @@ void huffmanTable::calcHuffmanCodesLength(const imbxUint32 maxCodeLength)
 	}
 
 	// Reduce the size of the codes' lengths
-	for(imbxUint32 reduceLengths=sizeof(m_valuesPerLength)/sizeof(m_valuesPerLength[0]) - 1; reduceLengths>maxCodeLength; --reduceLengths)
+	for(std::uint32_t reduceLengths=sizeof(m_valuesPerLength)/sizeof(m_valuesPerLength[0]) - 1; reduceLengths>maxCodeLength; --reduceLengths)
 	{
 		while(m_valuesPerLength[reduceLengths] != 0)
 		{
-			imbxInt32 reduceLengths1;
+			std::int32_t reduceLengths1;
 			for(reduceLengths1=reduceLengths-2; reduceLengths1 != -1 && m_valuesPerLength[reduceLengths1] == 0; --reduceLengths1){}
 
 			if(reduceLengths1==-1)
@@ -245,21 +245,21 @@ void huffmanTable::calcHuffmanTables()
 {
 	PUNTOEXE_FUNCTION_START(L"huffmanTable::calcHuffmanTables");
 
-	imbxUint32 huffmanCode = 0;
+	std::uint32_t huffmanCode = 0;
 
-	imbxUint32 valueIndex = 0;
+	std::uint32_t valueIndex = 0;
 
 	::memset(m_minValuePerLength, 0xffffffff, sizeof(m_minValuePerLength));
 	::memset(m_maxValuePerLength, 0xffffffff, sizeof(m_maxValuePerLength));
 
 	m_firstValidLength = 0;
-	for(imbxUint32 codeLength=1L; codeLength != sizeof(m_valuesPerLength)/sizeof(imbxUint32); ++codeLength)
+	for(std::uint32_t codeLength=1L; codeLength != sizeof(m_valuesPerLength)/sizeof(std::uint32_t); ++codeLength)
 	{
 		if(m_valuesPerLength[codeLength] != 0 && m_firstValidLength == 0)
 		{
 			m_firstValidLength = codeLength;
 		}
-		for(imbxUint32 generateCodes = 0; generateCodes<m_valuesPerLength[codeLength]; ++generateCodes)
+		for(std::uint32_t generateCodes = 0; generateCodes<m_valuesPerLength[codeLength]; ++generateCodes)
 		{
 			if(generateCodes == 0)
 			{
@@ -288,12 +288,12 @@ void huffmanTable::calcHuffmanTables()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint32 huffmanTable::readHuffmanCode(streamReader* pStream)
+std::uint32_t huffmanTable::readHuffmanCode(streamReader* pStream)
 {
 	PUNTOEXE_FUNCTION_START(L"huffmanTable::readHuffmanCode");
 
 	// Read initial number of bits
-	imbxUint32 readBuffer(pStream->readBits(m_firstValidLength));
+	std::uint32_t readBuffer(pStream->readBits(m_firstValidLength));
 
 	// Validate the current Huffman code. If it's OK, then
 	//  return the ordered value
@@ -303,11 +303,11 @@ imbxUint32 huffmanTable::readHuffmanCode(streamReader* pStream)
 		return m_orderedValues[readBuffer - m_minValuePerLength[m_firstValidLength]];
 	}
 
-	imbxUint32 orderedValue(m_valuesPerLength[m_firstValidLength]);
+	std::uint32_t orderedValue(m_valuesPerLength[m_firstValidLength]);
 
 	// Scan all the codes sizes
 	///////////////////////////////////////////////////////////
-	for(imbxUint8 scanSize(m_firstValidLength + 1), missingBits(0); scanSize != sizeof(m_valuesPerLength)/sizeof(m_valuesPerLength[0]); ++scanSize)
+	for(std::uint8_t scanSize(m_firstValidLength + 1), missingBits(0); scanSize != sizeof(m_valuesPerLength)/sizeof(m_valuesPerLength[0]); ++scanSize)
 	{
 		++missingBits;
 
@@ -359,7 +359,7 @@ imbxUint32 huffmanTable::readHuffmanCode(streamReader* pStream)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void huffmanTable::writeHuffmanCode(const imbxUint32 code, streamWriter* pStream)
+void huffmanTable::writeHuffmanCode(const std::uint32_t code, streamWriter* pStream)
 {
 	PUNTOEXE_FUNCTION_START(L"huffmanTable::writeHuffmanCode");
 

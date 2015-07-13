@@ -42,43 +42,43 @@ namespace handlers
 class dataHandlerDateTimeBase : public dataHandlerString {
 
 public:
-	virtual imbxInt32 getSignedLong(const imbxUint32 index) const;
-	virtual imbxUint32 getUnsignedLong(const imbxUint32 index) const;
-	virtual double getDouble(const imbxUint32 index) const;
-	virtual void setSignedLong(const imbxUint32 index, const imbxInt32 value);
-	virtual void setUnsignedLong(const imbxUint32 index, const imbxUint32 value);
-	virtual void setDouble(const imbxUint32 index, const double value);
+	virtual std::int32_t getSignedLong(const std::uint32_t index) const;
+	virtual std::uint32_t getUnsignedLong(const std::uint32_t index) const;
+	virtual double getDouble(const std::uint32_t index) const;
+	virtual void setSignedLong(const std::uint32_t index, const std::int32_t value);
+	virtual void setUnsignedLong(const std::uint32_t index, const std::uint32_t value);
+	virtual void setDouble(const std::uint32_t index, const double value);
 
 protected:
 	virtual wchar_t getSeparator() const;
 
 	void parseDate(
 		std::wstring dateString,
-		imbxInt32* pYear, 
-		imbxInt32* pMonth, 
-		imbxInt32* pDay) const;
+		std::int32_t* pYear, 
+		std::int32_t* pMonth, 
+		std::int32_t* pDay) const;
 
 	std::wstring buildDate(
-		imbxUint32 year,
-		imbxUint32 month,
-		imbxUint32 day) const;
+		std::uint32_t year,
+		std::uint32_t month,
+		std::uint32_t day) const;
 	
 	void parseTime(
 		std::wstring timeString,
-		imbxInt32* pHour, 
-		imbxInt32* pMinutes,
-		imbxInt32* pSeconds,
-		imbxInt32* pNanoseconds,
-		imbxInt32* pOffsetHours,
-		imbxInt32* pOffsetMinutes) const;
+		std::int32_t* pHour, 
+		std::int32_t* pMinutes,
+		std::int32_t* pSeconds,
+		std::int32_t* pNanoseconds,
+		std::int32_t* pOffsetHours,
+		std::int32_t* pOffsetMinutes) const;
 
 	std::wstring buildTime(
-		imbxInt32 hour,
-		imbxInt32 minutes,
-		imbxInt32 seconds,
-		imbxInt32 nanoseconds,
-		imbxInt32 offsetHours,
-		imbxInt32 offsetMinutes
+		std::int32_t hour,
+		std::int32_t minutes,
+		std::int32_t seconds,
+		std::int32_t nanoseconds,
+		std::int32_t offsetHours,
+		std::int32_t offsetMinutes
 		) const;
 
 	void split(const std::wstring& timeString, const std::wstring& separators, std::vector<std::wstring> *pComponents) const;

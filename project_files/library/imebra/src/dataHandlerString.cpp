@@ -55,7 +55,7 @@ void dataHandlerString::parseBuffer(const ptr<memory>& memoryBuffer)
 	// Convert the string to unicode
 	///////////////////////////////////////////////////////////
 	std::wstring tempBufferUnicode;
-	imbxUint32 tempBufferSize(memoryBuffer->size());
+	std::uint32_t tempBufferSize(memoryBuffer->size());
 	if(tempBufferSize != 0)
 	{
 		tempBufferUnicode = convertToUnicode(std::string((char*)(memoryBuffer->data()), tempBufferSize));
@@ -74,7 +74,7 @@ void dataHandlerString::parseBuffer(const ptr<memory>& memoryBuffer)
 	}
 
 	size_t nextPosition;
-	imbxUint32 unitSize=getUnitSize();
+	std::uint32_t unitSize=getUnitSize();
 	for(size_t firstPosition = 0; firstPosition<tempBufferUnicode.size(); firstPosition = nextPosition)
 	{
 		nextPosition = tempBufferUnicode.find(getSeparator(), firstPosition);
@@ -122,7 +122,7 @@ void dataHandlerString::buildBuffer(const ptr<memory>& memoryBuffer)
 
 	std::string asciiString = convertFromUnicode(completeString, &m_charsetsList);
 
-	memoryBuffer->assign((imbxUint8*)asciiString.c_str(), (imbxUint32)asciiString.size());
+	memoryBuffer->assign((std::uint8_t*)asciiString.c_str(), (std::uint32_t)asciiString.size());
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -137,7 +137,7 @@ void dataHandlerString::buildBuffer(const ptr<memory>& memoryBuffer)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-bool dataHandlerString::pointerIsValid(const imbxUint32 index) const
+bool dataHandlerString::pointerIsValid(const std::uint32_t index) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerString::pointerIsValid");
 
@@ -156,13 +156,13 @@ bool dataHandlerString::pointerIsValid(const imbxUint32 index) const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxInt32 dataHandlerString::getSignedLong(const imbxUint32 index) const
+std::int32_t dataHandlerString::getSignedLong(const std::uint32_t index) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerString::getSignedLong");
 
 	std::wstring tempString = getUnicodeString(index);
 	std::wistringstream convStream(tempString);
-	imbxInt32 value;
+	std::int32_t value;
 	convStream >> value;
 	return value;
 
@@ -179,13 +179,13 @@ imbxInt32 dataHandlerString::getSignedLong(const imbxUint32 index) const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint32 dataHandlerString::getUnsignedLong(const imbxUint32 index) const
+std::uint32_t dataHandlerString::getUnsignedLong(const std::uint32_t index) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerString::getUnsignedLong");
 
 	std::wstring tempString = getUnicodeString(index);
 	std::wistringstream convStream(tempString);
-	imbxUint32 value;
+	std::uint32_t value;
 	convStream >> value;
 	return value;
 
@@ -202,7 +202,7 @@ imbxUint32 dataHandlerString::getUnsignedLong(const imbxUint32 index) const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-double dataHandlerString::getDouble(const imbxUint32 index) const
+double dataHandlerString::getDouble(const std::uint32_t index) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerString::getDouble");
 
@@ -225,7 +225,7 @@ double dataHandlerString::getDouble(const imbxUint32 index) const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::string dataHandlerString::getString(const imbxUint32 index) const
+std::string dataHandlerString::getString(const std::uint32_t index) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerString::getString");
 
@@ -245,7 +245,7 @@ std::string dataHandlerString::getString(const imbxUint32 index) const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::wstring dataHandlerString::getUnicodeString(const imbxUint32 index) const
+std::wstring dataHandlerString::getUnicodeString(const std::uint32_t index) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerString::getUnicodeString");
 
@@ -268,7 +268,7 @@ std::wstring dataHandlerString::getUnicodeString(const imbxUint32 index) const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerString::setSignedLong(const imbxUint32 index, const imbxInt32 value)
+void dataHandlerString::setSignedLong(const std::uint32_t index, const std::int32_t value)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerString::setSignedLong");
 
@@ -289,7 +289,7 @@ void dataHandlerString::setSignedLong(const imbxUint32 index, const imbxInt32 va
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerString::setUnsignedLong(const imbxUint32 index, const imbxUint32 value)
+void dataHandlerString::setUnsignedLong(const std::uint32_t index, const std::uint32_t value)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerString::setUnsignedLong");
 
@@ -310,7 +310,7 @@ void dataHandlerString::setUnsignedLong(const imbxUint32 index, const imbxUint32
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerString::setDouble(const imbxUint32 index, const double value)
+void dataHandlerString::setDouble(const std::uint32_t index, const double value)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerString::setDouble");
 
@@ -331,7 +331,7 @@ void dataHandlerString::setDouble(const imbxUint32 index, const double value)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerString::setString(const imbxUint32 index, const std::string& value)
+void dataHandlerString::setString(const std::uint32_t index, const std::string& value)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerString::setString");
 
@@ -350,7 +350,7 @@ void dataHandlerString::setString(const imbxUint32 index, const std::string& val
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerString::setUnicodeString(const imbxUint32 index, const std::wstring& value)
+void dataHandlerString::setUnicodeString(const std::uint32_t index, const std::wstring& value)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerString::setUnicodeString");
 
@@ -358,7 +358,7 @@ void dataHandlerString::setUnicodeString(const imbxUint32 index, const std::wstr
         {
             return;
         }
-        imbxUint32 stringMaxSize(maxSize());
+        std::uint32_t stringMaxSize(maxSize());
 
         if(stringMaxSize > 0 && value.size() > stringMaxSize)
         {
@@ -380,7 +380,7 @@ void dataHandlerString::setUnicodeString(const imbxUint32 index, const std::wstr
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerString::setSize(const imbxUint32 elementsNumber)
+void dataHandlerString::setSize(const std::uint32_t elementsNumber)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerString::setSize");
 
@@ -405,11 +405,11 @@ void dataHandlerString::setSize(const imbxUint32 elementsNumber)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint32 dataHandlerString::getSize() const
+std::uint32_t dataHandlerString::getSize() const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerString::getSize");
 
-	return (imbxUint32)m_strings.size();
+	return (std::uint32_t)m_strings.size();
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -424,7 +424,7 @@ imbxUint32 dataHandlerString::getSize() const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint32 dataHandlerString::maxSize() const
+std::uint32_t dataHandlerString::maxSize() const
 {
 	return 0;
 }

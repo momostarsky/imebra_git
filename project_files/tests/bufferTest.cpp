@@ -47,7 +47,7 @@ TEST(bufferTest, testReadWrite)
 	ptr<handlers::dataHandler> readingHandler2 = patientBuffer->getDataHandler(false);
 
 	// Check the values in all the new handlers first
-		for(imbxInt32 checkValues = 0; checkValues < 10; ++checkValues)
+		for(std::int32_t checkValues = 0; checkValues < 10; ++checkValues)
 	{
                 EXPECT_EQ(checkValues, writingHandler1->getSignedLong(checkValues));
                 EXPECT_EQ(checkValues, writingHandler2->getSignedLong(checkValues));
@@ -64,7 +64,7 @@ TEST(bufferTest, testReadWrite)
 	}
 
 	// Check the other data handlers. They should still have the original values
-    for(imbxInt32 checkValues = 0; checkValues < 10; ++checkValues)
+    for(std::int32_t checkValues = 0; checkValues < 10; ++checkValues)
 	{
         EXPECT_EQ(writingHandler2->getSignedLong(checkValues), checkValues);
         EXPECT_EQ(readingHandler1->getSignedLong(checkValues), checkValues);
@@ -83,32 +83,32 @@ TEST(bufferTest, testReadWrite)
 	writingHandler1 = ptr<handlers::dataHandler>(0);
     EXPECT_EQ(10, readingHandler1->getSize());
     EXPECT_EQ(10, readingHandler2->getSize());
-    for(imbxInt32 checkValues = 0; checkValues < 10; ++checkValues)
+    for(std::int32_t checkValues = 0; checkValues < 10; ++checkValues)
 	{
         EXPECT_EQ(checkValues, readingHandler1->getSignedLong(checkValues));
         EXPECT_EQ(checkValues, readingHandler2->getSignedLong(checkValues));
 	}
     EXPECT_EQ(5, writingHandler2->getSize());
-    for(imbxInt32 checkValues = 0; checkValues < 5; ++checkValues)
+    for(std::int32_t checkValues = 0; checkValues < 5; ++checkValues)
 	{
-        EXPECT_EQ(checkValues + imbxInt32(200), writingHandler2->getSignedLong(checkValues));
+        EXPECT_EQ(checkValues + std::int32_t(200), writingHandler2->getSignedLong(checkValues));
 	}
 
 	// Get a reading handler. It should have the value written by writingHandler1
 	ptr<handlers::dataHandler> readingHandler3 = patientBuffer->getDataHandler(false);
     EXPECT_EQ(20, readingHandler3->getSize());
-    for(imbxInt32 checkValues = 0; checkValues < 20; ++checkValues)
+    for(std::int32_t checkValues = 0; checkValues < 20; ++checkValues)
 	{
-        EXPECT_EQ(checkValues + imbxInt32(100), readingHandler3->getSignedLong(checkValues));
+        EXPECT_EQ(checkValues + std::int32_t(100), readingHandler3->getSignedLong(checkValues));
 	}
 
 	// Release a reading handler. It shouldn't change the values in the buffer
 	readingHandler1 = ptr<handlers::dataHandler>(0);
 	ptr<handlers::dataHandler> readingHandler4 = patientBuffer->getDataHandler(false);
     EXPECT_EQ(20, readingHandler4->getSize());
-    for(imbxInt32 checkValues = 0; checkValues < 20; ++checkValues)
+    for(std::int32_t checkValues = 0; checkValues < 20; ++checkValues)
 	{
-        EXPECT_EQ(checkValues + imbxInt32(100), readingHandler4->getSignedLong(checkValues));
+        EXPECT_EQ(checkValues + std::int32_t(100), readingHandler4->getSignedLong(checkValues));
 	}
 
 	// Release the second writing handler. It should change the buffer, but already
@@ -116,15 +116,15 @@ TEST(bufferTest, testReadWrite)
 	writingHandler2 = ptr<handlers::dataHandler>(0);
 	ptr<handlers::dataHandler> writingHandler3 = patientBuffer->getDataHandler(true);
     EXPECT_EQ(5, writingHandler3->getSize());
-    for(imbxInt32 checkValues = 0; checkValues < 5; ++checkValues)
+    for(std::int32_t checkValues = 0; checkValues < 5; ++checkValues)
 	{
-        EXPECT_EQ(checkValues + imbxInt32(200), writingHandler3->getSignedLong(checkValues));
+        EXPECT_EQ(checkValues + std::int32_t(200), writingHandler3->getSignedLong(checkValues));
 	}
 	writingHandler3 = ptr<handlers::dataHandler>(0);
 
 	// ReadingHandler2 still exist. Check its values
     EXPECT_EQ(10, readingHandler2->getSize());
-    for(imbxInt32 checkValues = 0; checkValues < 10; ++checkValues)
+    for(std::int32_t checkValues = 0; checkValues < 10; ++checkValues)
 	{
         EXPECT_EQ(checkValues, readingHandler2->getSignedLong(checkValues));
 	}
@@ -133,9 +133,9 @@ TEST(bufferTest, testReadWrite)
 	// Get a reading handler and check it. It should have the values of writingHandler2
 	ptr<handlers::dataHandler> readingHandler5 = patientBuffer->getDataHandler(false);
     EXPECT_EQ(5, readingHandler5->getSize());
-    for(imbxInt32 checkValues = 0; checkValues < 5; ++checkValues)
+    for(std::int32_t checkValues = 0; checkValues < 5; ++checkValues)
 	{
-        EXPECT_EQ(checkValues + imbxInt32(200), readingHandler5->getSignedLong(checkValues));
+        EXPECT_EQ(checkValues + std::int32_t(200), readingHandler5->getSignedLong(checkValues));
 	}
 }
 

@@ -58,7 +58,7 @@ namespace imebra
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<data> dataSet::getTag(imbxUint16 groupId, imbxUint16 order, imbxUint16 tagId, bool bCreate /* =false */)
+ptr<data> dataSet::getTag(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, bool bCreate /* =false */)
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getTag");
 
@@ -87,7 +87,7 @@ ptr<data> dataSet::getTag(imbxUint16 groupId, imbxUint16 order, imbxUint16 tagId
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<dataGroup> dataSet::getGroup(imbxUint16 groupId, imbxUint16 order, bool bCreate /* =false */)
+ptr<dataGroup> dataSet::getGroup(std::uint16_t groupId, std::uint16_t order, bool bCreate /* =false */)
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getGroup");
 
@@ -116,7 +116,7 @@ ptr<dataGroup> dataSet::getGroup(imbxUint16 groupId, imbxUint16 order, bool bCre
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataSet::setGroup(imbxUint16 groupId, imbxUint16 order, ptr<dataGroup> pGroup)
+void dataSet::setGroup(std::uint16_t groupId, std::uint16_t order, ptr<dataGroup> pGroup)
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::setGroup");
 
@@ -135,7 +135,7 @@ void dataSet::setGroup(imbxUint16 groupId, imbxUint16 order, ptr<dataGroup> pGro
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<image> dataSet::getImage(imbxUint32 frameNumber)
+ptr<image> dataSet::getImage(std::uint32_t frameNumber)
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getImage");
 
@@ -167,7 +167,7 @@ ptr<image> dataSet::getImage(imbxUint32 frameNumber)
 
 	// Get the number of frames
 	///////////////////////////////////////////////////////////
-	imbxUint32 numberOfFrames = 1;
+	std::uint32_t numberOfFrames = 1;
 	if(!getDataType(0x0028, 0, 0x0008).empty())
 	{
 		numberOfFrames = getUnsignedLong(0x0028, 0, 0x0008, 0);
@@ -190,7 +190,7 @@ ptr<image> dataSet::getImage(imbxUint32 frameNumber)
 	{
 		if(imageTag->getBufferSize(1) != 0)
 		{
-			imbxUint32 firstBufferId(0), endBufferId(0), totalLength(0);
+			std::uint32_t firstBufferId(0), endBufferId(0), totalLength(0);
 			if(imageTag->getBufferSize(0) == 0 && numberOfFrames + 1 == imageTag->getBuffersCount())
 			{
 				firstBufferId = frameNumber + 1;
@@ -212,11 +212,11 @@ ptr<image> dataSet::getImage(imbxUint32 frameNumber)
 			else
 			{
 				ptr<memory> temporaryMemory(memoryPool::getMemoryPool()->getMemory(totalLength));
-				const imbxUint8* pDest = temporaryMemory->data();
-				for(imbxUint32 scanBuffers = firstBufferId; scanBuffers != endBufferId; ++scanBuffers)
+				const std::uint8_t* pDest = temporaryMemory->data();
+				for(std::uint32_t scanBuffers = firstBufferId; scanBuffers != endBufferId; ++scanBuffers)
 				{
 					ptr<handlers::dataHandlerRaw> bufferHandler = imageTag->getDataHandlerRaw(scanBuffers, false, "");
-					imbxUint8* pSource = bufferHandler->getMemoryBuffer();
+					std::uint8_t* pSource = bufferHandler->getMemoryBuffer();
 					::memcpy((void*)pDest, (void*)pSource, bufferHandler->getSize());
 					pDest += bufferHandler->getSize();
 				}
@@ -234,7 +234,7 @@ ptr<image> dataSet::getImage(imbxUint32 frameNumber)
 	///////////////////////////////////////////////////////////
 	if(imageStream == 0)
 	{
-		imageStream = getStreamReader(0x7fe0, (imbxUint16)frameNumber, 0x0010, 0x0);
+		imageStream = getStreamReader(0x7fe0, (std::uint16_t)frameNumber, 0x0010, 0x0);
 		bDontNeedImagesPositions = true;
 	}
 
@@ -257,7 +257,7 @@ ptr<image> dataSet::getImage(imbxUint32 frameNumber)
 		{
 			m_imagesPositions.resize(numberOfFrames);
 
-			for(imbxUint32 resetImagesPositions = 0; resetImagesPositions < numberOfFrames; m_imagesPositions[resetImagesPositions++] = 0)
+			for(std::uint32_t resetImagesPositions = 0; resetImagesPositions < numberOfFrames; m_imagesPositions[resetImagesPositions++] = 0)
 			{}// empty loop
 
 		}
@@ -265,9 +265,9 @@ ptr<image> dataSet::getImage(imbxUint32 frameNumber)
 		// Read all the images before the desidered one so we set
 		//  reading position in the stream
 		///////////////////////////////////////////////////////////
-		for(imbxUint32 readImages = 0; readImages < frameNumber; readImages++)
+		for(std::uint32_t readImages = 0; readImages < frameNumber; readImages++)
 		{
-			imbxUint32 offsetPosition = m_imagesPositions[readImages];
+			std::uint32_t offsetPosition = m_imagesPositions[readImages];
 			if(offsetPosition == 0)
 			{
 				ptr<image> tempImage = pCodec->getImage(this, imageStream, imageStreamDataType);
@@ -301,7 +301,7 @@ ptr<image> dataSet::getImage(imbxUint32 frameNumber)
 	///////////////////////////////////////////////////////////
 	if(pImage != 0)
 	{
-		imbxUint32 sizeX, sizeY;
+		std::uint32_t sizeX, sizeY;
 		pImage->getSize(&sizeX, &sizeY);
 		pImage->setSizeMm(pixelDistanceX*(double)sizeX, pixelDistanceY*(double)sizeY);
 	}
@@ -332,7 +332,7 @@ ptr<image> dataSet::getImage(imbxUint32 frameNumber)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<image> dataSet::getModalityImage(imbxUint32 frameNumber)
+ptr<image> dataSet::getModalityImage(std::uint32_t frameNumber)
 {
     PUNTOEXE_FUNCTION_START(L"dataSet::getImage");
 
@@ -353,7 +353,7 @@ ptr<image> dataSet::getModalityImage(imbxUint32 frameNumber)
         ptr<transforms::colorTransforms::colorTransform> monochromeColorTransform(colorFactory->getTransform(originalImage->getColorSpace(), L"MONOCHROME2"));
         if(monochromeColorTransform != 0)
         {
-            imbxUint32 width, height;
+            std::uint32_t width, height;
             originalImage->getSize(&width, &height);
             ptr<image> outputImage = monochromeColorTransform->allocateOutputImage(originalImage, width, height);
             monochromeColorTransform->runTransform(originalImage, 0, 0, width, height, outputImage, 0, 0);
@@ -365,7 +365,7 @@ ptr<image> dataSet::getModalityImage(imbxUint32 frameNumber)
 
     // Apply the modality VOI/LUT transform
     ///////////////////////////////////////
-    imbxUint32 width, height;
+    std::uint32_t width, height;
     originalImage->getSize(&width, &height);
     ptr<image> outputImage = modalityVOILUT->allocateOutputImage(originalImage, width, height);
     modalityVOILUT->runTransform(originalImage, 0, 0, width, height, outputImage, 0, 0);
@@ -384,7 +384,7 @@ ptr<image> dataSet::getModalityImage(imbxUint32 frameNumber)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataSet::setImage(imbxUint32 frameNumber, ptr<image> pImage, std::wstring transferSyntax, codecs::codec::quality quality)
+void dataSet::setImage(std::uint32_t frameNumber, ptr<image> pImage, std::wstring transferSyntax, codecs::codec::quality quality)
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::setImage");
 
@@ -399,14 +399,14 @@ void dataSet::setImage(imbxUint32 frameNumber, ptr<image> pImage, std::wstring t
 	// The group, order, tag and buffer where the image must
 	//  be stored
 	///////////////////////////////////////////////////////////
-	imbxUint16 groupId(0x7fe0), orderId(0), tagId(0x0010);
-    imbxUint32 firstBufferId(0);
+	std::uint16_t groupId(0x7fe0), orderId(0), tagId(0x0010);
+    std::uint32_t firstBufferId(0);
 
 	// bDontChangeAttributes is true if some images already
 	//  exist in the dataset and we must save the new image
 	//  using the attributes already stored
 	///////////////////////////////////////////////////////////
-	imbxUint32 numberOfFrames = getUnsignedLong(0x0028, 0, 0x0008, 0);
+	std::uint32_t numberOfFrames = getUnsignedLong(0x0028, 0, 0x0008, 0);
 	if(frameNumber != numberOfFrames)
 	{
 		PUNTOEXE_THROW(dataSetExceptionWrongFrame, "The frames must be inserted in sequence");
@@ -435,7 +435,7 @@ void dataSet::setImage(imbxUint32 frameNumber, ptr<image> pImage, std::wstring t
 	std::string dataHandlerType = getDataType(0x7fe0, 0x1, 0x0010);
 	if(!dataHandlerType.empty())
 	{
-		orderId = (imbxUint16)frameNumber;
+		orderId = (std::uint16_t)frameNumber;
 		bEncapsulated = false;
 	}
 
@@ -455,8 +455,8 @@ void dataSet::setImage(imbxUint32 frameNumber, ptr<image> pImage, std::wstring t
         }
 	image::bitDepth depth = pImage->getDepth();
 	bool b2complement = (depth == image::depthS32 || depth == image::depthS16 || depth == image::depthS8);
-	imbxUint32 channelsNumber = pImage->getChannelsNumber();
-	imbxUint8 allocatedBits = (imbxUint8)(saveCodec->suggestAllocatedBits(transferSyntax, pImage->getHighBit()));
+	std::uint32_t channelsNumber = pImage->getChannelsNumber();
+	std::uint8_t allocatedBits = (std::uint8_t)(saveCodec->suggestAllocatedBits(transferSyntax, pImage->getHighBit()));
 
 	// If the attributes cannot be changed, then check the
 	//  attributes already stored in the dataset
@@ -468,7 +468,7 @@ void dataSet::setImage(imbxUint32 frameNumber, ptr<image> pImage, std::wstring t
 		bSubSampledX = transforms::colorTransforms::colorTransformsFactory::isSubsampledX(currentColorSpace);
 		bSubSampledY = transforms::colorTransforms::colorTransformsFactory::isSubsampledY(currentColorSpace);
 		b2complement = (getUnsignedLong(0x0028, 0, 0x0103, 0) != 0);
-		allocatedBits = (imbxUint8)getUnsignedLong(0x0028, 0x0, 0x0100, 0x0);
+		allocatedBits = (std::uint8_t)getUnsignedLong(0x0028, 0x0, 0x0100, 0x0);
 		channelsNumber = getUnsignedLong(0x0028, 0x0, 0x0002, 0x0);
 	}
 
@@ -507,7 +507,7 @@ void dataSet::setImage(imbxUint32 frameNumber, ptr<image> pImage, std::wstring t
 			{
 				PUNTOEXE_THROW(dataSetExceptionOldFormat, "Cannot move the first image");
 			}
-			imbxUint32 bufferSize=imageHandler0->getSize();
+			std::uint32_t bufferSize=imageHandler0->getSize();
 			moveFirstImage->setSize(bufferSize);
 			::memcpy(moveFirstImage->getMemoryBuffer(), imageHandler0->getMemoryBuffer(), bufferSize);
 		}
@@ -554,8 +554,8 @@ void dataSet::setImage(imbxUint32 frameNumber, ptr<image> pImage, std::wstring t
 	{
 		ptr<handlers::dataHandlerRaw> copyUncompressed(getDataHandlerRaw(groupId, orderId, tagId, firstBufferId, true));
 		copyUncompressed->setSize((frameNumber + 1) * uncompressedImage->size());
-		imbxUint8* pSource = uncompressedImage->data();
-		imbxUint8* pDest = copyUncompressed->getMemoryBuffer() + (frameNumber * uncompressedImage->size());
+		std::uint8_t* pSource = uncompressedImage->data();
+		std::uint8_t* pDest = copyUncompressed->getMemoryBuffer() + (frameNumber * uncompressedImage->size());
 		::memcpy(pDest, pSource, uncompressedImage->size());
 	}
 
@@ -579,7 +579,7 @@ void dataSet::setImage(imbxUint32 frameNumber, ptr<image> pImage, std::wstring t
 		setUnsignedLong(0x0028, 0x0, 0x0102, 0x0, pImage->getHighBit());     // high bit
 		setUnsignedLong(0x0028, 0x0, 0x0103, 0x0, b2complement ? 1 : 0);
 		setUnsignedLong(0x0028, 0x0, 0x0002, 0x0, channelsNumber);
-		imbxUint32 imageSizeX, imageSizeY;
+		std::uint32_t imageSizeX, imageSizeY;
 		pImage->getSize(&imageSizeX, &imageSizeY);
 		setUnsignedLong(0x0028, 0x0, 0x0011, 0x0, imageSizeX);
 		setUnsignedLong(0x0028, 0x0, 0x0010, 0x0, imageSizeY);
@@ -613,17 +613,17 @@ void dataSet::setImage(imbxUint32 frameNumber, ptr<image> pImage, std::wstring t
 		return;
 	}
 
-	imbxUint32 calculatePosition(0);
+	std::uint32_t calculatePosition(0);
 	ptr<data> tag(getTag(groupId, 0, tagId, true));
-	for(imbxUint32 scanBuffers = 1; scanBuffers != firstBufferId; ++scanBuffers)
+	for(std::uint32_t scanBuffers = 1; scanBuffers != firstBufferId; ++scanBuffers)
 	{
 		calculatePosition += tag->getBufferSize(scanBuffers);
 		calculatePosition += 8;
 	}
 	ptr<handlers::dataHandlerRaw> offsetHandler(getDataHandlerRaw(groupId, 0, tagId, 0, true, dataHandlerType));
 	offsetHandler->setSize(4 * (frameNumber + 1));
-	imbxUint8* pOffsetFrame(offsetHandler->getMemoryBuffer() + (frameNumber * 4));
-	*( (imbxUint32*)pOffsetFrame  ) = calculatePosition;
+	std::uint8_t* pOffsetFrame(offsetHandler->getMemoryBuffer() + (frameNumber * 4));
+	*( (std::uint32_t*)pOffsetFrame  ) = calculatePosition;
 	streamController::adjustEndian(pOffsetFrame, 4, streamController::lowByteEndian, 1);
 
 	PUNTOEXE_FUNCTION_END();
@@ -637,7 +637,7 @@ void dataSet::setImage(imbxUint32 frameNumber, ptr<image> pImage, std::wstring t
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint32 dataSet::getFrameOffset(imbxUint32 frameNumber)
+std::uint32_t dataSet::getFrameOffset(std::uint32_t frameNumber)
 {
 	// Retrieve the buffer containing the offsets
 	///////////////////////////////////////////////////////////
@@ -649,7 +649,7 @@ imbxUint32 dataSet::getFrameOffset(imbxUint32 frameNumber)
 
 	// Get the offset table's size, in number of offsets
 	///////////////////////////////////////////////////////////
-	imbxUint32 offsetsCount = framesPointer->getSize() / sizeof(imbxUint32);
+	std::uint32_t offsetsCount = framesPointer->getSize() / sizeof(std::uint32_t);
 
 	// If the requested frame doesn't exist then return
 	//  0xffffffff (the maximum value)
@@ -663,10 +663,10 @@ imbxUint32 dataSet::getFrameOffset(imbxUint32 frameNumber)
 	//  the first and is offset is not specified, then return
 	//  0 (the first position)
 	///////////////////////////////////////////////////////////
-	imbxUint8* pOffsets = framesPointer->getMemoryBuffer();
-	std::auto_ptr<imbxUint32> pAdjustedOffsets((imbxUint32*)new imbxUint8[framesPointer->getSize()]);
+	std::uint8_t* pOffsets = framesPointer->getMemoryBuffer();
+	std::auto_ptr<std::uint32_t> pAdjustedOffsets((std::uint32_t*)new std::uint8_t[framesPointer->getSize()]);
 	::memcpy(pAdjustedOffsets.get(), pOffsets, framesPointer->getSize());
-	streamController::adjustEndian((imbxUint8*)(pAdjustedOffsets.get()), 4, streamController::lowByteEndian, offsetsCount);
+	streamController::adjustEndian((std::uint8_t*)(pAdjustedOffsets.get()), 4, streamController::lowByteEndian, offsetsCount);
 	if(frameNumber < offsetsCount)
 	{
 		return pAdjustedOffsets.get()[frameNumber];
@@ -682,7 +682,7 @@ imbxUint32 dataSet::getFrameOffset(imbxUint32 frameNumber)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint32 dataSet::getFrameBufferId(imbxUint32 offset, imbxUint32* pLengthToBuffer)
+std::uint32_t dataSet::getFrameBufferId(std::uint32_t offset, std::uint32_t* pLengthToBuffer)
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getFrameBufferId");
 
@@ -697,7 +697,7 @@ imbxUint32 dataSet::getFrameBufferId(imbxUint32 offset, imbxUint32* pLengthToBuf
 	// Start from the buffer n. 1 (the buffer 0 contains
 	//  the offset table
 	///////////////////////////////////////////////////////////
-	imbxUint32 scanBuffers(1);
+	std::uint32_t scanBuffers(1);
 
 	if(offset == 0xffffffff)
 	{
@@ -721,7 +721,7 @@ imbxUint32 dataSet::getFrameBufferId(imbxUint32 offset, imbxUint32* pLengthToBuf
 		// Calculate the total size of the buffer, including
 		//  its descriptor (tag group and id and length)
 		///////////////////////////////////////////////////////////
-		imbxUint32 bufferSize = imageTag->getBufferSize(scanBuffers);;
+		std::uint32_t bufferSize = imageTag->getBufferSize(scanBuffers);;
 		(*pLengthToBuffer) += bufferSize; // Increase the total size
 		bufferSize += 4; // one WORD for the group id, one WORD for the tag id
 		bufferSize += 4; // one DWORD for the tag length
@@ -754,19 +754,19 @@ imbxUint32 dataSet::getFrameBufferId(imbxUint32 offset, imbxUint32* pLengthToBuf
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint32 dataSet::getFrameBufferIds(imbxUint32 frameNumber, imbxUint32* pFirstBuffer, imbxUint32* pEndBuffer)
+std::uint32_t dataSet::getFrameBufferIds(std::uint32_t frameNumber, std::uint32_t* pFirstBuffer, std::uint32_t* pEndBuffer)
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getFrameBufferIds");
 
-	imbxUint32 startOffset = getFrameOffset(frameNumber);
-	imbxUint32 endOffset = getFrameOffset(frameNumber + 1);
+	std::uint32_t startOffset = getFrameOffset(frameNumber);
+	std::uint32_t endOffset = getFrameOffset(frameNumber + 1);
 
 	if(startOffset == 0xffffffff)
 	{
 		PUNTOEXE_THROW(dataSetImageDoesntExist, "Image not in the table offset");
 	}
 
-	imbxUint32 startLength, endLength;
+	std::uint32_t startLength, endLength;
 	*pFirstBuffer = getFrameBufferId(startOffset, &startLength);
 	*pEndBuffer = getFrameBufferId(endOffset, &endLength);
 
@@ -775,8 +775,8 @@ imbxUint32 dataSet::getFrameBufferIds(imbxUint32 frameNumber, imbxUint32* pFirst
 	{
 		return 0;
 	}
-	imbxUint32 totalSize(0);
-	for(imbxUint32 scanBuffers(*pFirstBuffer); scanBuffers != *pEndBuffer; ++scanBuffers)
+	std::uint32_t totalSize(0);
+	for(std::uint32_t scanBuffers(*pFirstBuffer); scanBuffers != *pEndBuffer; ++scanBuffers)
 	{
 		totalSize += imageTag->getBufferSize(scanBuffers);
 	}
@@ -796,7 +796,7 @@ imbxUint32 dataSet::getFrameBufferIds(imbxUint32 frameNumber, imbxUint32* pFirst
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint32 dataSet::getFirstAvailFrameBufferId()
+std::uint32_t dataSet::getFirstAvailFrameBufferId()
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getFirstAvailFrameBufferId");
 
@@ -806,7 +806,7 @@ imbxUint32 dataSet::getFirstAvailFrameBufferId()
 		return 1;
 	}
 
-	imbxUint32 availableId(1);
+	std::uint32_t availableId(1);
 	while(imageTag->bufferExists(availableId))
 	{
 		++availableId;
@@ -832,15 +832,15 @@ ptr<image> dataSet::convertImageForDataSet(ptr<image> sourceImage)
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::convertImageForDataSet");
 
-	imbxUint32 imageWidth, imageHeight;
+	std::uint32_t imageWidth, imageHeight;
 	sourceImage->getSize(&imageWidth, &imageHeight);
 
 	std::wstring colorSpace = sourceImage->getColorSpace();
-	imbxUint32 highBit = sourceImage->getHighBit();
+	std::uint32_t highBit = sourceImage->getHighBit();
 
-	imbxUint32 currentWidth  = getUnsignedLong(0x0028, 0x0, 0x0011, 0x0);
-	imbxUint32 currentHeight = getUnsignedLong(0x0028, 0x0, 0x0010, 0x0);
-	imbxUint32 currentHighBit = getUnsignedLong(0x0028, 0x0, 0x0102, 0x0);
+	std::uint32_t currentWidth  = getUnsignedLong(0x0028, 0x0, 0x0011, 0x0);
+	std::uint32_t currentHeight = getUnsignedLong(0x0028, 0x0, 0x0010, 0x0);
+	std::uint32_t currentHighBit = getUnsignedLong(0x0028, 0x0, 0x0102, 0x0);
 
 
 
@@ -911,7 +911,7 @@ ptr<image> dataSet::convertImageForDataSet(ptr<image> sourceImage)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<dataSet> dataSet::getSequenceItem(imbxUint16 groupId, imbxUint16 order, imbxUint16 tagId, imbxUint32 itemId)
+ptr<dataSet> dataSet::getSequenceItem(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t itemId)
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getSequenceItem");
 
@@ -937,7 +937,7 @@ ptr<dataSet> dataSet::getSequenceItem(imbxUint16 groupId, imbxUint16 order, imbx
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<lut> dataSet::getLut(imbxUint16 groupId, imbxUint16 tagId, imbxUint32 lutId)
+ptr<lut> dataSet::getLut(std::uint16_t groupId, std::uint16_t tagId, std::uint32_t lutId)
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getLut");
 
@@ -973,7 +973,7 @@ ptr<lut> dataSet::getLut(imbxUint16 groupId, imbxUint16 tagId, imbxUint32 lutId)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<waveform> dataSet::getWaveform(imbxUint32 waveformId)
+ptr<waveform> dataSet::getWaveform(std::uint32_t waveformId)
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getWaveform");
 
@@ -1000,7 +1000,7 @@ ptr<waveform> dataSet::getWaveform(imbxUint32 waveformId)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxInt32 dataSet::getSignedLong(imbxUint16 groupId, imbxUint16 order, imbxUint16 tagId, imbxUint32 elementNumber)
+std::int32_t dataSet::getSignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber)
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getSignedLong");
 
@@ -1025,7 +1025,7 @@ imbxInt32 dataSet::getSignedLong(imbxUint16 groupId, imbxUint16 order, imbxUint1
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataSet::setSignedLong(imbxUint16 groupId, imbxUint16 order, imbxUint16 tagId, imbxUint32 elementNumber, imbxInt32 newValue, std::string defaultType /* = "" */)
+void dataSet::setSignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber, std::int32_t newValue, std::string defaultType /* = "" */)
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::setSignedLong");
 
@@ -1052,7 +1052,7 @@ void dataSet::setSignedLong(imbxUint16 groupId, imbxUint16 order, imbxUint16 tag
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint32 dataSet::getUnsignedLong(imbxUint16 groupId, imbxUint16 order, imbxUint16 tagId, imbxUint32 elementNumber)
+std::uint32_t dataSet::getUnsignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber)
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getUnignedLong");
 
@@ -1077,7 +1077,7 @@ imbxUint32 dataSet::getUnsignedLong(imbxUint16 groupId, imbxUint16 order, imbxUi
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataSet::setUnsignedLong(imbxUint16 groupId, imbxUint16 order, imbxUint16 tagId, imbxUint32 elementNumber, imbxUint32 newValue, std::string defaultType /* = "" */)
+void dataSet::setUnsignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber, std::uint32_t newValue, std::string defaultType /* = "" */)
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::setUnsignedLong");
 
@@ -1104,7 +1104,7 @@ void dataSet::setUnsignedLong(imbxUint16 groupId, imbxUint16 order, imbxUint16 t
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-double dataSet::getDouble(imbxUint16 groupId, imbxUint16 order, imbxUint16 tagId, imbxUint32 elementNumber)
+double dataSet::getDouble(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber)
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getDouble");
 
@@ -1129,7 +1129,7 @@ double dataSet::getDouble(imbxUint16 groupId, imbxUint16 order, imbxUint16 tagId
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataSet::setDouble(imbxUint16 groupId, imbxUint16 order, imbxUint16 tagId, imbxUint32 elementNumber, double newValue, std::string defaultType /* = "" */)
+void dataSet::setDouble(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber, double newValue, std::string defaultType /* = "" */)
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::setDouble");
 
@@ -1156,7 +1156,7 @@ void dataSet::setDouble(imbxUint16 groupId, imbxUint16 order, imbxUint16 tagId, 
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::string dataSet::getString(imbxUint16 groupId, imbxUint16 order, imbxUint16 tagId, imbxUint32 elementNumber)
+std::string dataSet::getString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber)
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getString");
 
@@ -1185,7 +1185,7 @@ std::string dataSet::getString(imbxUint16 groupId, imbxUint16 order, imbxUint16 
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::wstring dataSet::getUnicodeString(imbxUint16 groupId, imbxUint16 order, imbxUint16 tagId, imbxUint32 elementNumber)
+std::wstring dataSet::getUnicodeString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber)
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getUnicodeString");
 
@@ -1214,7 +1214,7 @@ std::wstring dataSet::getUnicodeString(imbxUint16 groupId, imbxUint16 order, imb
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataSet::setString(imbxUint16 groupId, imbxUint16 order, imbxUint16 tagId, imbxUint32 elementNumber, std::string newString, std::string defaultType /* = "" */)
+void dataSet::setString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber, std::string newString, std::string defaultType /* = "" */)
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::setString");
 
@@ -1241,7 +1241,7 @@ void dataSet::setString(imbxUint16 groupId, imbxUint16 order, imbxUint16 tagId, 
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataSet::setUnicodeString(imbxUint16 groupId, imbxUint16 order, imbxUint16 tagId, imbxUint32 elementNumber, std::wstring newString, std::string defaultType /* = "" */)
+void dataSet::setUnicodeString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber, std::wstring newString, std::string defaultType /* = "" */)
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::setUnicodeString");
 
@@ -1268,7 +1268,7 @@ void dataSet::setUnicodeString(imbxUint16 groupId, imbxUint16 order, imbxUint16 
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<handlers::dataHandler> dataSet::getDataHandler(imbxUint16 groupId, imbxUint16 order, imbxUint16 tagId, imbxUint32 bufferId, bool bWrite, std::string defaultType /* ="" */)
+ptr<handlers::dataHandler> dataSet::getDataHandler(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId, bool bWrite, std::string defaultType /* ="" */)
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getDataHandler");
 
@@ -1305,7 +1305,7 @@ ptr<handlers::dataHandler> dataSet::getDataHandler(imbxUint16 groupId, imbxUint1
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<streamReader> dataSet::getStreamReader(imbxUint16 groupId, imbxUint16 order, imbxUint16 tagId, imbxUint32 bufferId)
+ptr<streamReader> dataSet::getStreamReader(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId)
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getStream");
 
@@ -1335,7 +1335,7 @@ ptr<streamReader> dataSet::getStreamReader(imbxUint16 groupId, imbxUint16 order,
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<streamWriter> dataSet::getStreamWriter(imbxUint16 groupId, imbxUint16 order, imbxUint16 tagId, imbxUint32 bufferId, std::string dataType /* = "" */)
+ptr<streamWriter> dataSet::getStreamWriter(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId, std::string dataType /* = "" */)
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getStream");
 
@@ -1364,7 +1364,7 @@ ptr<streamWriter> dataSet::getStreamWriter(imbxUint16 groupId, imbxUint16 order,
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<handlers::dataHandlerRaw> dataSet::getDataHandlerRaw(imbxUint16 groupId, imbxUint16 order, imbxUint16 tagId, imbxUint32 bufferId, bool bWrite, std::string defaultType /* ="" */)
+ptr<handlers::dataHandlerRaw> dataSet::getDataHandlerRaw(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId, bool bWrite, std::string defaultType /* ="" */)
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getDataHandlerRaw");
 
@@ -1398,7 +1398,7 @@ ptr<handlers::dataHandlerRaw> dataSet::getDataHandlerRaw(imbxUint16 groupId, imb
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::string dataSet::getDefaultDataType(imbxUint16 groupId, imbxUint16 tagId)
+std::string dataSet::getDefaultDataType(std::uint16_t groupId, std::uint16_t tagId)
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getDefaultDataType");
 
@@ -1417,7 +1417,7 @@ std::string dataSet::getDefaultDataType(imbxUint16 groupId, imbxUint16 tagId)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::string dataSet::getDataType(imbxUint16 groupId, imbxUint16 order, imbxUint16 tagId)
+std::string dataSet::getDataType(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId)
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getDataType");
 
@@ -1438,8 +1438,8 @@ void dataSet::updateCharsetTag()
 	charsetsList::tCharsetsList charsets;
 	getCharsetsList(&charsets);
 	ptr<handlers::dataHandler> charsetHandler(getDataHandler(0x0008, 0, 0x0005, 0, true));
-	charsetHandler->setSize((imbxUint32)(charsets.size()));
-	imbxUint32 pointer(0);
+	charsetHandler->setSize((std::uint32_t)(charsets.size()));
+	std::uint32_t pointer(0);
 	for(charsetsList::tCharsetsList::iterator scanCharsets = charsets.begin(); scanCharsets != charsets.end(); ++scanCharsets)
 	{
 		charsetHandler->setUnicodeString(pointer++, *scanCharsets);
@@ -1462,7 +1462,7 @@ void dataSet::updateTagsCharset()
 	ptr<handlers::dataHandler> charsetHandler(getDataHandler(0x0008, 0, 0x0005, 0, false));
 	if(charsetHandler != 0)
 	{
-		for(imbxUint32 pointer(0); charsetHandler->pointerIsValid(pointer); ++pointer)
+		for(std::uint32_t pointer(0); charsetHandler->pointerIsValid(pointer); ++pointer)
 		{
 			charsets.push_back(charsetHandler->getUnicodeString(pointer));
 		}
@@ -1480,7 +1480,7 @@ void dataSet::updateTagsCharset()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataSet::setItemOffset(imbxUint32 offset)
+void dataSet::setItemOffset(std::uint32_t offset)
 {
 	m_itemOffset = offset;
 }
@@ -1495,7 +1495,7 @@ void dataSet::setItemOffset(imbxUint32 offset)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint32 dataSet::getItemOffset()
+std::uint32_t dataSet::getItemOffset()
 {
 	return m_itemOffset;
 }

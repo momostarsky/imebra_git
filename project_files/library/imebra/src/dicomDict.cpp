@@ -1833,7 +1833,7 @@ dicomDictionary::dicomDictionary()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dicomDictionary::registerTag(imbxUint32 tagId, const wchar_t* tagName, const char* tagType)
+void dicomDictionary::registerTag(std::uint32_t tagId, const wchar_t* tagName, const char* tagType)
 {
 	PUNTOEXE_FUNCTION_START(L"dicomDictionary::registerTag");
 
@@ -1861,7 +1861,7 @@ void dicomDictionary::registerTag(imbxUint32 tagId, const wchar_t* tagName, cons
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dicomDictionary::registerVR(std::string vr, bool bLongLength, imbxUint32 wordSize, imbxUint32 maxLength)
+void dicomDictionary::registerVR(std::string vr, bool bLongLength, std::uint32_t wordSize, std::uint32_t maxLength)
 {
 	PUNTOEXE_FUNCTION_START(L"dicomDictionary::registerVR");
 
@@ -1889,11 +1889,11 @@ void dicomDictionary::registerVR(std::string vr, bool bLongLength, imbxUint32 wo
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::wstring dicomDictionary::getTagName(imbxUint16 groupId, imbxUint16 tagId) const
+std::wstring dicomDictionary::getTagName(std::uint16_t groupId, std::uint16_t tagId) const
 {
 	PUNTOEXE_FUNCTION_START(L"dicomDictionary::getTagName");
 
-	imbxUint32 tagDWordId=(((imbxUint32)groupId)<<16) | (imbxUint32)tagId;
+	std::uint32_t tagDWordId=(((std::uint32_t)groupId)<<16) | (std::uint32_t)tagId;
 
 	tDicomDictionary::const_iterator findIterator = m_dicomDict.find(tagDWordId);
 	if(findIterator == m_dicomDict.end())
@@ -1916,11 +1916,11 @@ std::wstring dicomDictionary::getTagName(imbxUint16 groupId, imbxUint16 tagId) c
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::string dicomDictionary::getTagType(imbxUint16 groupId, imbxUint16 tagId) const
+std::string dicomDictionary::getTagType(std::uint16_t groupId, std::uint16_t tagId) const
 {
 	PUNTOEXE_FUNCTION_START(L"dicomDictionary::getTagType");
 
-	imbxUint32 tagDWordId=(((imbxUint32)groupId)<<16) | (imbxUint32)tagId;
+	std::uint32_t tagDWordId=(((std::uint32_t)groupId)<<16) | (std::uint32_t)tagId;
 
 	tDicomDictionary::const_iterator findIterator = m_dicomDict.find(tagDWordId);
 	if(findIterator == m_dicomDict.end())
@@ -1992,7 +1992,7 @@ bool dicomDictionary::getLongLength(std::string dataType) const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint32 dicomDictionary::getWordSize(std::string dataType) const
+std::uint32_t dicomDictionary::getWordSize(std::string dataType) const
 {
 	PUNTOEXE_FUNCTION_START(L"dicomDictionary::getWordSize");
 
@@ -2019,7 +2019,7 @@ imbxUint32 dicomDictionary::getWordSize(std::string dataType) const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint32 dicomDictionary::getMaxSize(std::string dataType) const
+std::uint32_t dicomDictionary::getMaxSize(std::string dataType) const
 {
 	PUNTOEXE_FUNCTION_START(L"dicomDictionary::getMaxSize");
 

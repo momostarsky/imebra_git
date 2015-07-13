@@ -23,14 +23,14 @@ TEST(streamBitsTest, test)
 	
 	writer->m_bJpegTags = true;
 
-	std::vector<imbxUint8> bitsNumber(4000);
-	std::vector<imbxUint32> bitsValue(4000);
+	std::vector<std::uint8_t> bitsNumber(4000);
+	std::vector<std::uint32_t> bitsValue(4000);
 	for(size_t fillValues = 0; fillValues < bitsValue.size(); ++fillValues)
 	{
-		imbxUint8 bits =  rand() * 16 / RAND_MAX;
+		std::uint8_t bits =  rand() * 16 / RAND_MAX;
 		if(bits == 0) bits = 4;
-		imbxUint32 maxValue = (1 << bits) - 1;
-		imbxUint32 value = std::rand() * maxValue / RAND_MAX;
+		std::uint32_t maxValue = (1 << bits) - 1;
+		std::uint32_t value = std::rand() * maxValue / RAND_MAX;
 		bitsNumber[fillValues] = bits;
 		bitsValue[fillValues] = value;
 		writer->writeBits(value, bits);
@@ -44,7 +44,7 @@ TEST(streamBitsTest, test)
 
 		for(size_t readValues = 0; readValues < bitsValue.size(); ++readValues)
 		{
-			imbxUint32 value(reader->readBits(bitsNumber[readValues]));
+			std::uint32_t value(reader->readBits(bitsNumber[readValues]));
             EXPECT_EQ(bitsValue[readValues], value);
 		}
 	}
@@ -55,8 +55,8 @@ TEST(streamBitsTest, test)
 
 		for(size_t readValues = 0; readValues < bitsValue.size(); ++readValues)
 		{
-			imbxUint32 value(0);
-			for(imbxUint8 count(bitsNumber[readValues]); count != 0; --count)
+			std::uint32_t value(0);
+			for(std::uint8_t count(bitsNumber[readValues]); count != 0; --count)
 			{
 				value <<= 1;
 				value |= reader->readBit();
@@ -71,8 +71,8 @@ TEST(streamBitsTest, test)
 
 		for(size_t readValues = 0; readValues < bitsValue.size(); ++readValues)
 		{
-			imbxUint32 value(0);
-			for(imbxUint8 count(bitsNumber[readValues]); count != 0; --count)
+			std::uint32_t value(0);
+			for(std::uint8_t count(bitsNumber[readValues]); count != 0; --count)
 			{
 				reader->addBit(&value);
 			}

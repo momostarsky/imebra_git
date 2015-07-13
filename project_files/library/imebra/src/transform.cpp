@@ -39,15 +39,15 @@ bool transform::isEmpty()
 
 void transformHandlers::runTransform(
             const ptr<image>& inputImage,
-            imbxUint32 inputTopLeftX, imbxUint32 inputTopLeftY, imbxUint32 inputWidth, imbxUint32 inputHeight,
+            std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight,
             const ptr<image>& outputImage,
-            imbxUint32 outputTopLeftX, imbxUint32 outputTopLeftY)
+            std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY)
 {
     PUNTOEXE_FUNCTION_START(L"transformHandlers::runTransform");
 
-    imbxUint32 inputImageWidth, inputImageHeight;
+    std::uint32_t inputImageWidth, inputImageHeight;
     inputImage->getSize(&inputImageWidth, &inputImageHeight);
-    imbxUint32 outputImageWidth, outputImageHeight;
+    std::uint32_t outputImageWidth, outputImageHeight;
     outputImage->getSize(&outputImageWidth, &outputImageHeight);
 
     if(inputTopLeftX + inputWidth > inputImageWidth ||
@@ -58,29 +58,29 @@ void transformHandlers::runTransform(
         PUNTOEXE_THROW(transformExceptionInvalidArea, "The input and/or output areas are invalid");
     }
 
-    imbxUint32 rowSize, numPixels, channels;
+    std::uint32_t rowSize, numPixels, channels;
 	ptr<handlers::dataHandlerNumericBase> inputHandler(inputImage->getDataHandler(false, &rowSize, &numPixels, &channels));
 	ptr<palette> inputPalette(inputImage->getPalette());
 	std::wstring inputColorSpace(inputImage->getColorSpace());
-	imbxUint32 inputHighBit(inputImage->getHighBit());
-    imbxUint64 inputNumValues((imbxUint64)1 << (inputHighBit + 1));
-    imbxInt32 inputMinValue(0);
+	std::uint32_t inputHighBit(inputImage->getHighBit());
+    std::uint64_t inputNumValues((std::uint64_t)1 << (inputHighBit + 1));
+    std::int32_t inputMinValue(0);
 	image::bitDepth inputDepth(inputImage->getDepth());
     if(inputDepth == image::depthS32 || inputDepth == image::depthS16 || inputDepth == image::depthS8)
 	{
-		inputMinValue -= (imbxInt32)(inputNumValues >> 1);
+		inputMinValue -= (std::int32_t)(inputNumValues >> 1);
 	}
 
 	ptr<handlers::dataHandlerNumericBase> outputHandler(outputImage->getDataHandler(false, &rowSize, &numPixels, &channels));
 	ptr<palette> outputPalette(outputImage->getPalette());
 	std::wstring outputColorSpace(outputImage->getColorSpace());
-	imbxUint32 outputHighBit(outputImage->getHighBit());
-    imbxUint64 outputNumValues((imbxUint64)1 << (outputHighBit + 1));
-	imbxInt32 outputMinValue(0);
+	std::uint32_t outputHighBit(outputImage->getHighBit());
+    std::uint64_t outputNumValues((std::uint64_t)1 << (outputHighBit + 1));
+	std::int32_t outputMinValue(0);
 	image::bitDepth outputDepth(outputImage->getDepth());
     if(outputDepth == image::depthS32 || outputDepth == image::depthS16 || outputDepth == image::depthS8)
 	{
-		outputMinValue -= (imbxInt32)(outputNumValues >> 1);
+		outputMinValue -= (std::int32_t)(outputNumValues >> 1);
 	}
 
 	if(isEmpty())

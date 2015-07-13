@@ -247,7 +247,7 @@ std::wstring colorTransformsFactory::makeSubsampled(std::wstring colorSpace, boo
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint32 colorTransformsFactory::getNumberOfChannels(std::wstring colorSpace)
+std::uint32_t colorTransformsFactory::getNumberOfChannels(std::wstring colorSpace)
 {
 	PUNTOEXE_FUNCTION_START(L"colorTransformsFactory::getNumberOfChannels");
 
@@ -255,9 +255,9 @@ imbxUint32 colorTransformsFactory::getNumberOfChannels(std::wstring colorSpace)
 
 	struct sColorSpace
 	{
-		sColorSpace(const wchar_t* colorSpace, imbxUint8 channelsNumber): m_colorSpace(colorSpace), m_channelsNumber(channelsNumber){}
+		sColorSpace(const wchar_t* colorSpace, std::uint8_t channelsNumber): m_colorSpace(colorSpace), m_channelsNumber(channelsNumber){}
 		std::wstring m_colorSpace;
-		imbxUint8 m_channelsNumber;
+		std::uint8_t m_channelsNumber;
 	};
 
 	static sColorSpace imbxColorSpaces[]=
@@ -275,7 +275,7 @@ imbxUint32 colorTransformsFactory::getNumberOfChannels(std::wstring colorSpace)
 		sColorSpace(L"", 0x0)
 	};
 
-	for(imbxUint8 findColorSpace = 0; imbxColorSpaces[findColorSpace].m_channelsNumber != 0x0; ++findColorSpace)
+	for(std::uint8_t findColorSpace = 0; imbxColorSpaces[findColorSpace].m_channelsNumber != 0x0; ++findColorSpace)
 	{
 		if(imbxColorSpaces[findColorSpace].m_colorSpace == normalizedColorSpace)
 		{

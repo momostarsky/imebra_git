@@ -218,7 +218,7 @@ public:
 	///                    specified color channel
 	///
 	///////////////////////////////////////////////////////////
-	static imbxUint32 getNumberOfChannels(std::wstring colorSpace);
+	static std::uint32_t getNumberOfChannels(std::wstring colorSpace);
 	
 	//@}
 	

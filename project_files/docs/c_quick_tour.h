@@ -96,7 +96,7 @@ The following example apply the modalityVOILUT transform to the image:
 \code
 ptr<imebra::transforms::transform> modVOILUT(
 	new imebra::transforms::modalityVOILUT(testDataSet));
-imbxUint32 width, height;
+std::uint32_t width, height;
 firstImage->getSize(&width, &height);
 ptr<imebra::image> convertedImage(modVOILUT->allocateOutputImage(firstImage, width, height);
 modVOILUT->runTransform(firstImage, 0, 0, width, height, convertedImage, 0, 0);
@@ -110,7 +110,7 @@ ptr<imebra::transforms::transform> myVoiLut(
 	new imebra::transforms::VOILUT(testDataSet));
 
 // Apply the first VOI or LUT
-imbxUint32 lutId = myVoiLut->getVOILUTId(0);
+std::uint32_t lutId = myVoiLut->getVOILUTId(0);
 myVoiLut->setVOILUT(lutId);
 
 ptr<imebra::image> presentationImage(myVoiLut->allocateOutputImage(convertedImage, width, height));
@@ -137,24 +137,24 @@ Now the variable presentationImage contains an RGB image ready to be displayed.
 
 In order to access to the image's pixels you have to retrieve a data handler:
 \code
-imbxUint32 rowSize, channelPixelSize, channelsNumber;
+std::uint32_t rowSize, channelPixelSize, channelsNumber;
 ptr<imebra::handlers::dataHandlerNumericBase> myHandler = presentationImage->getDataHandler(false, &rowSize, &channelPixelSize, &channelsNumber);
 
 // Retrieve the image's size in pixels
-imbxUint32 sizeX, sizeY;
+std::uint32_t sizeX, sizeY;
 presentationImage->getSize(&sizeX, &sizeY);
 
 // Scan all the rows
-imbxUint32 index(0);
-for(imbxUint32 scanY = 0; scanY < sizeY; ++scanY)
+std::uint32_t index(0);
+for(std::uint32_t scanY = 0; scanY < sizeY; ++scanY)
 {
 	// Scan all the columns
-	for(imbxUint32 scanX = 0; scanX < sizeX; ++scanX)
+	for(std::uint32_t scanX = 0; scanX < sizeX; ++scanX)
 	{
 		// Scan all the channels
-		for(imbxUint32 scanChannel = 0; scanChannel < channelsNumber; ++scanChannel)
+		for(std::uint32_t scanChannel = 0; scanChannel < channelsNumber; ++scanChannel)
 		{
-            imbxInt32 channelValue = myHandler->getSignedLong(index++);
+            std::int32_t channelValue = myHandler->getSignedLong(index++);
 			
 			// Do something with the channel's value
 			//--------------------------------------
@@ -171,26 +171,26 @@ Use the method puntoexe::imebra::handlers::dataHandlerNumericBase::getMemoryBuff
  attribute.
 
 \code
-imbxUint32 rowSize, channelPixelSize, channelsNumber;
+std::uint32_t rowSize, channelPixelSize, channelsNumber;
 ptr<imebra::handlers::dataHandlerNumericBase> myHandler = presentationImage->getDataHandler(false, &rowSize, &channelPixelSize, &channelsNumber);
-imbxInt32* pBuffer = myHandler->getMemoryBuffer();
+std::int32_t* pBuffer = myHandler->getMemoryBuffer();
 
 // Retrieve the image's size in pixels
-imbxUint32 sizeX, sizeY;
+std::uint32_t sizeX, sizeY;
 presentationImage->getSize(&sizeX, &sizeY);
 
 // Scan all the rows. We assume that the pixels are 32 bits wide and signed
-if(myHandler->getUnitSize() == sizeof(imbxInt32) && myHandler->isSigned())
+if(myHandler->getUnitSize() == sizeof(std::int32_t) && myHandler->isSigned())
 {
-	for(imbxUint32 scanY = 0; scanY < sizeY; ++scanY)
+	for(std::uint32_t scanY = 0; scanY < sizeY; ++scanY)
 	{
 	// Scan all the columns
-	for(imbxUint32 scanX = 0; scanX < sizeX; ++scanX)
+	for(std::uint32_t scanX = 0; scanX < sizeX; ++scanX)
 	{
 		// Scan all the channels
-		for(imbxUint32 scanChannel = 0; scanChannel < channelsNumber; ++scanChannel)
+		for(std::uint32_t scanChannel = 0; scanChannel < channelsNumber; ++scanChannel)
 		{
-			imbxInt32 channelValue = *(pBuffer++);
+			std::int32_t channelValue = *(pBuffer++);
 			
 			// Do something with the channel's value
 			//--------------------------------------

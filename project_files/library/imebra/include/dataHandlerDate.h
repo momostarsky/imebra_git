@@ -39,29 +39,29 @@ namespace handlers
 class dataHandlerDate : public dataHandlerDateTimeBase
 {
 public:
-	virtual imbxUint32 getUnitSize() const;
+	virtual std::uint32_t getUnitSize() const;
 
-	virtual void getDate(const imbxUint32 index,
-		imbxInt32* pYear, 
-		imbxInt32* pMonth, 
-		imbxInt32* pDay, 
-		imbxInt32* pHour, 
-		imbxInt32* pMinutes,
-		imbxInt32* pSeconds,
-		imbxInt32* pNanoseconds,
-		imbxInt32* pOffsetHours,
-		imbxInt32* pOffsetMinutes) const;
+	virtual void getDate(const std::uint32_t index,
+		std::int32_t* pYear, 
+		std::int32_t* pMonth, 
+		std::int32_t* pDay, 
+		std::int32_t* pHour, 
+		std::int32_t* pMinutes,
+		std::int32_t* pSeconds,
+		std::int32_t* pNanoseconds,
+		std::int32_t* pOffsetHours,
+		std::int32_t* pOffsetMinutes) const;
 
-	virtual void setDate(const imbxUint32 index,
-		imbxInt32 year, 
-		imbxInt32 month, 
-		imbxInt32 day, 
-		imbxInt32 hour, 
-		imbxInt32 minutes,
-		imbxInt32 seconds,
-		imbxInt32 nanoseconds,
-		imbxInt32 offsetHours,
-		imbxInt32 offsetMinutes);
+	virtual void setDate(const std::uint32_t index,
+		std::int32_t year, 
+		std::int32_t month, 
+		std::int32_t day, 
+		std::int32_t hour, 
+		std::int32_t minutes,
+		std::int32_t seconds,
+		std::int32_t nanoseconds,
+		std::int32_t offsetHours,
+		std::int32_t offsetMinutes);
 
 	/// \brief Return a string representing the date stored in 
 	///         the buffer.
@@ -78,7 +78,7 @@ public:
 	///          buffer
 	///
 	///////////////////////////////////////////////////////////
-	virtual std::wstring getUnicodeString(const imbxUint32 index) const;
+	virtual std::wstring getUnicodeString(const std::uint32_t index) const;
 
 	/// \brief Set the date from a string.
 	///
@@ -93,12 +93,12 @@ public:
 	/// @param value the string representing the date to be set
 	///
 	///////////////////////////////////////////////////////////
-	virtual void setUnicodeString(const imbxUint32 index, const std::wstring& value);
+	virtual void setUnicodeString(const std::uint32_t index, const std::wstring& value);
 
 	void parseBuffer(const ptr<memory>& memoryBuffer);
 
 protected:
-	virtual imbxUint32 maxSize() const;
+	virtual std::uint32_t maxSize() const;
 };
 
 } // namespace handlers

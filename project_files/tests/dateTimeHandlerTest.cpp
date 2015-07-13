@@ -19,7 +19,7 @@ TEST(dateTimeHandlerTest, dateTest)
 
 		hTag->setDate(0, 2004, 11, 5, 9, 20, 30, 5000, 1, 2);
 
-		imbxInt32 year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes;
+		std::int32_t year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes;
 		hTag->getDate(0, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
 
         EXPECT_EQ(2004, year);
@@ -37,23 +37,23 @@ TEST(dateTimeHandlerTest, dateTest)
 
 	{
 		ptr<handlers::dataHandlerRaw> hTag= tag->getDataHandlerRaw(0, true, "DA");
-		std::basic_string<imbxUint8> checkString(hTag->getMemory()->data(), hTag->getMemory()->size());
-        EXPECT_EQ(std::basic_string<imbxUint8>((imbxUint8*)"20041105"), checkString);
-		hTag->getMemory()->assign((imbxUint8*)"2004-11-5", 9);
+		std::basic_string<std::uint8_t> checkString(hTag->getMemory()->data(), hTag->getMemory()->size());
+        EXPECT_EQ(std::basic_string<std::uint8_t>((std::uint8_t*)"20041105"), checkString);
+		hTag->getMemory()->assign((std::uint8_t*)"2004-11-5", 9);
 	}
 
 	{
 		ptr<handlers::dataHandlerRaw> hTag= tag->getDataHandlerRaw(0, false, "DA");
-		std::basic_string<imbxUint8> checkString(hTag->getMemory()->data(), hTag->getMemory()->size());
-		stringUint8 compString((imbxUint8*)"2004-11-5", 9);
-		compString += (imbxUint8)0; // buffer's size is always even!
+		std::basic_string<std::uint8_t> checkString(hTag->getMemory()->data(), hTag->getMemory()->size());
+		stringUint8 compString((std::uint8_t*)"2004-11-5", 9);
+		compString += (std::uint8_t)0; // buffer's size is always even!
         EXPECT_EQ(compString, checkString);
 	}
 
 	{
 		ptr<handlers::dataHandler> hTag= tag->getDataHandler(0, false, "DA");
 
-		imbxInt32 year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes;
+		std::int32_t year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes;
 		hTag->getDate(0, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
 
         EXPECT_EQ(2004, year);
@@ -79,7 +79,7 @@ TEST(dateTimeHandlerTest, timeTest)
 
 		hTag->setDate(0, 2004, 11, 5, 9, 20, 40, 5000, 1, 2);
 
-		imbxInt32 year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes;
+		std::int32_t year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes;
 		hTag->getDate(0, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
 
         EXPECT_EQ(0, year);
@@ -97,17 +97,17 @@ TEST(dateTimeHandlerTest, timeTest)
 
 	{
 		ptr<handlers::dataHandlerRaw> hTag= tag->getDataHandlerRaw(0, true, "TM");
-		stringUint8 compString((imbxUint8*)"092040.005000");
-		compString += (imbxUint8)0;
-		std::basic_string<imbxUint8> checkString(hTag->getMemory()->data(), hTag->getMemory()->size());
+		stringUint8 compString((std::uint8_t*)"092040.005000");
+		compString += (std::uint8_t)0;
+		std::basic_string<std::uint8_t> checkString(hTag->getMemory()->data(), hTag->getMemory()->size());
         EXPECT_EQ(compString, checkString);
-		hTag->getMemory()->assign((imbxUint8*)"9:20:40", 7);
+		hTag->getMemory()->assign((std::uint8_t*)"9:20:40", 7);
 	}
 
 	{
 		ptr<handlers::dataHandler> hTag= tag->getDataHandler(0, false, "TM");
 
-		imbxInt32 year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes;
+		std::int32_t year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes;
 		hTag->getDate(0, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
 
         EXPECT_EQ(0, year);
@@ -133,7 +133,7 @@ TEST(dateTimeHandlerTest, dateTimeTest)
 
 		hTag->setDate(0, 2004, 11, 5, 9, 20, 40, 5000, 1, 2);
 
-		imbxInt32 year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes;
+		std::int32_t year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes;
 		hTag->getDate(0, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
 
         EXPECT_EQ(2004, year);
@@ -151,14 +151,14 @@ TEST(dateTimeHandlerTest, dateTimeTest)
 
 	{
 		ptr<handlers::dataHandlerRaw> hTag= tag->getDataHandlerRaw(0, false, "DT");
-		std::basic_string<imbxUint8> checkString(hTag->getMemory()->data(), hTag->getMemory()->size());
-        EXPECT_EQ(std::basic_string<imbxUint8>((imbxUint8*)"20041105092040.005000+0102"), checkString);
+		std::basic_string<std::uint8_t> checkString(hTag->getMemory()->data(), hTag->getMemory()->size());
+        EXPECT_EQ(std::basic_string<std::uint8_t>((std::uint8_t*)"20041105092040.005000+0102"), checkString);
 	}
 
 	{
 		ptr<handlers::dataHandler> hTag= tag->getDataHandler(0, true, "DT");
 
-		imbxInt32 year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes;
+		std::int32_t year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes;
 		hTag->getDate(0, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
 
         EXPECT_EQ(2004, year);
@@ -188,15 +188,15 @@ TEST(dateTimeHandlerTest, dateTimeTest)
 
 	{
 		ptr<handlers::dataHandlerRaw> hTag= tag->getDataHandlerRaw(0, true, "DT");
-		std::basic_string<imbxUint8> checkString(hTag->getMemory()->data(), hTag->getMemory()->size());
-        EXPECT_EQ(std::basic_string<imbxUint8>((imbxUint8*)"20051206102141.005001-0405"), checkString);
-		hTag->getMemory()->assign((imbxUint8*)"19990305", 8);
+		std::basic_string<std::uint8_t> checkString(hTag->getMemory()->data(), hTag->getMemory()->size());
+        EXPECT_EQ(std::basic_string<std::uint8_t>((std::uint8_t*)"20051206102141.005001-0405"), checkString);
+		hTag->getMemory()->assign((std::uint8_t*)"19990305", 8);
 	}
 
 	{
 		ptr<handlers::dataHandler> hTag= tag->getDataHandler(0, false, "DT");
 
-		imbxInt32 year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes;
+		std::int32_t year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes;
 		hTag->getDate(0, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
 
         EXPECT_EQ(1999, year);
@@ -212,13 +212,13 @@ TEST(dateTimeHandlerTest, dateTimeTest)
 
 	{
 		ptr<handlers::dataHandlerRaw> hTag= tag->getDataHandlerRaw(0, true, "DT");
-		hTag->getMemory()->assign((imbxUint8*)"1999030508", 10);
+		hTag->getMemory()->assign((std::uint8_t*)"1999030508", 10);
 	}
 
 	{
 		ptr<handlers::dataHandler> hTag= tag->getDataHandler(0, false, "DT");
 
-		imbxInt32 year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes;
+		std::int32_t year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes;
 		hTag->getDate(0, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
 
         EXPECT_EQ(1999, year);

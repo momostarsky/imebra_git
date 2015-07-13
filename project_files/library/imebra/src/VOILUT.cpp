@@ -33,13 +33,13 @@ namespace transforms
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint32 VOILUT::getVOILUTId(imbxUint32 VOILUTNumber)
+std::uint32_t VOILUT::getVOILUTId(std::uint32_t VOILUTNumber)
 {
 	PUNTOEXE_FUNCTION_START(L"VOILUT::getVOILUTId");
 
 	// reset the LUT's ID
 	///////////////////////////////////////////////////////////
-	imbxUint32 VOILUTId = 0;
+	std::uint32_t VOILUTId = 0;
 
 	// If the dataset has not been set, then return NULL
 	///////////////////////////////////////////////////////////
@@ -50,11 +50,11 @@ imbxUint32 VOILUT::getVOILUTId(imbxUint32 VOILUTNumber)
 
 	// Reset the window's center and width
 	///////////////////////////////////////////////////////////
-	imbxInt32 windowWidth = 0;
+	std::int32_t windowWidth = 0;
 
 	// Scan all the window's centers and widths.
 	///////////////////////////////////////////////////////////
-	imbxUint32 scanWindow;
+	std::uint32_t scanWindow;
 	for(scanWindow=VOILUTNumber; (windowWidth == 0) && (scanWindow!=0xffffffff); --scanWindow)
 	{
 		windowWidth  = m_pDataSet->getSignedLong(0x0028, 0, 0x1051, scanWindow);
@@ -105,7 +105,7 @@ imbxUint32 VOILUT::getVOILUTId(imbxUint32 VOILUTNumber)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::wstring VOILUT::getVOILUTDescription(imbxUint32 VOILUTId)
+std::wstring VOILUT::getVOILUTDescription(std::uint32_t VOILUTId)
 {
 	PUNTOEXE_FUNCTION_START(L"VOILUT::getVOILUTDescription");
 
@@ -118,7 +118,7 @@ std::wstring VOILUT::getVOILUTDescription(imbxUint32 VOILUTId)
 		return VOILUTDescription;
 	}
 
-	imbxUint32 VOILUTNumber=VOILUTId & 0x0000ffff;
+	std::uint32_t VOILUTNumber=VOILUTId & 0x0000ffff;
 
 	// Window's center/width
 	///////////////////////////////////////////////////////////
@@ -155,7 +155,7 @@ std::wstring VOILUT::getVOILUTDescription(imbxUint32 VOILUTId)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void VOILUT::setVOILUT(imbxUint32 VOILUTId)
+void VOILUT::setVOILUT(std::uint32_t VOILUTId)
 {
 	PUNTOEXE_FUNCTION_START(L"VOILUT::setVOILUT");
 
@@ -166,7 +166,7 @@ void VOILUT::setVOILUT(imbxUint32 VOILUTId)
 		return;
 	}
 
-	imbxUint32 VOILUTNumber=VOILUTId & 0x0000ffff;
+	std::uint32_t VOILUTNumber=VOILUTId & 0x0000ffff;
 
 	// Window's center/width
 	///////////////////////////////////////////////////////////
@@ -218,7 +218,7 @@ void VOILUT::setLUT(ptr<lut> pLut)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void VOILUT::setCenterWidth(imbxInt32 center, imbxInt32 width)
+void VOILUT::setCenterWidth(std::int32_t center, std::int32_t width)
 {
 	m_windowCenter = center;
 	m_windowWidth = width;
@@ -235,7 +235,7 @@ void VOILUT::setCenterWidth(imbxInt32 center, imbxInt32 width)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void VOILUT::getCenterWidth(imbxInt32* pCenter, imbxInt32* pWidth)
+void VOILUT::getCenterWidth(std::int32_t* pCenter, std::int32_t* pWidth)
 {
 	*pCenter = m_windowCenter;
 	*pWidth = m_windowWidth;
@@ -266,7 +266,7 @@ bool VOILUT::isEmpty()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<image> VOILUT::allocateOutputImage(ptr<image> pInputImage, imbxUint32 width, imbxUint32 height)
+ptr<image> VOILUT::allocateOutputImage(ptr<image> pInputImage, std::uint32_t width, std::uint32_t height)
 {
 	if(isEmpty())
 	{
@@ -279,10 +279,10 @@ ptr<image> VOILUT::allocateOutputImage(ptr<image> pInputImage, imbxUint32 width,
 	image::bitDepth depth = pInputImage->getDepth();
 	if(m_pLUT != 0 && m_pLUT->getSize() != 0)
 	{
-		imbxUint8 bits = m_pLUT->getBits();
+		std::uint8_t bits = m_pLUT->getBits();
 
 		bool bNegative(false);
-		for(imbxInt32 index(m_pLUT->getFirstMapped()), size(m_pLUT->getSize()); !bNegative && size != 0; --size, ++index)
+		for(std::int32_t index(m_pLUT->getFirstMapped()), size(m_pLUT->getSize()); !bNegative && size != 0; --size, ++index)
 		{
 			bNegative = (m_pLUT->mappedValue(index) < 0);
 		}
@@ -331,11 +331,11 @@ ptr<image> VOILUT::allocateOutputImage(ptr<image> pInputImage, imbxUint32 width,
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void VOILUT::applyOptimalVOI(const ptr<puntoexe::imebra::image>& inputImage, imbxUint32 inputTopLeftX, imbxUint32 inputTopLeftY, imbxUint32 inputWidth, imbxUint32 inputHeight)
+void VOILUT::applyOptimalVOI(const ptr<puntoexe::imebra::image>& inputImage, std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight)
 {
     PUNTOEXE_FUNCTION_START(L"VOILUT::applyOptimalVOI");
 
-    imbxUint32 width, height;
+    std::uint32_t width, height;
     inputImage->getSize(&width, &height);
 
     if(inputTopLeftX + inputWidth > width || inputTopLeftY + inputHeight > height)
@@ -343,7 +343,7 @@ void VOILUT::applyOptimalVOI(const ptr<puntoexe::imebra::image>& inputImage, imb
         PUNTOEXE_THROW(transformExceptionInvalidArea, "The input and/or output areas are invalid");
     }
 
-    imbxUint32 rowSize, channelPixelSize, channelsNumber;
+    std::uint32_t rowSize, channelPixelSize, channelsNumber;
     ptr<handlers::dataHandlerNumericBase> handler(inputImage->getDataHandler(false, &rowSize, &channelPixelSize, &channelsNumber));
     HANDLER_CALL_TEMPLATE_FUNCTION_WITH_PARAMS(templateFindOptimalVOI, handler, width, inputTopLeftX, inputTopLeftY, inputWidth, inputHeight);
 

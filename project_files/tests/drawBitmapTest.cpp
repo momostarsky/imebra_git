@@ -36,22 +36,22 @@ TEST(drawBitmapTest, testDrawBitmap)
 
 			ptr<drawBitmap> testDraw(new drawBitmap(testImage, 0));
 			ptr<memory> bitmapBuffer(testDraw->getBitmap<puntoexe::imebra::drawBitmapRGB, 1>(bufferX, bufferY, 0, 0, bufferX, bufferY, 0));
-			imbxUint8* pBuffer(bitmapBuffer->data());
+			std::uint8_t* pBuffer(bitmapBuffer->data());
 
-			imbxUint32 imageRowSize, imageChannelPixelSize, channels;
+			std::uint32_t imageRowSize, imageChannelPixelSize, channels;
 			ptr<handlers::dataHandlerNumericBase > pImageHandler(testImage->getDataHandler(false, &imageRowSize, &imageChannelPixelSize, &channels));
-			imbxUint8* pImageBuffer (pImageHandler->getMemoryBuffer());
+			std::uint8_t* pImageBuffer (pImageHandler->getMemoryBuffer());
 
 			for(int scanY = 0; scanY != bufferY; ++scanY)
 			{
 				for(int scanX = 0; scanX != bufferX; ++scanX)
 				{
-					imbxInt32 averageRed(0), averageGreen(0), averageBlue(0);
+					std::int32_t averageRed(0), averageGreen(0), averageBlue(0);
 					for(int scanSubY(0); scanSubY != subsample; ++scanSubY)
 					{
 						for(int scanSubX(0); scanSubX != subsample; ++scanSubX)
 						{
-							imbxUint32 pixel = (scanX * subsample + scanSubX) * channels + (scanY * subsample + scanSubY) * (bufferX * subsample * channels);
+							std::uint32_t pixel = (scanX * subsample + scanSubX) * channels + (scanY * subsample + scanSubY) * (bufferX * subsample * channels);
 							if(monochrome)
 							{
 								averageRed += pImageBuffer[pixel];
@@ -70,9 +70,9 @@ TEST(drawBitmapTest, testDrawBitmap)
 					averageGreen /= subsample * subsample;
 					averageBlue /= subsample * subsample;
 
-					imbxUint8 displayRed(*pBuffer++);
-					imbxUint8 displayGreen(*pBuffer++);
-					imbxUint8 displayBlue(*pBuffer++);
+					std::uint8_t displayRed(*pBuffer++);
+					std::uint8_t displayGreen(*pBuffer++);
+					std::uint8_t displayBlue(*pBuffer++);
                     EXPECT_EQ(averageRed, displayRed);
                     EXPECT_EQ(averageGreen, displayGreen);
                     EXPECT_EQ(averageBlue, displayBlue);

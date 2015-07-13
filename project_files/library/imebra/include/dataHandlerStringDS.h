@@ -38,36 +38,36 @@ class dataHandlerStringDS : public dataHandlerString
 public:
 	// Overwritten to use getDouble()
 	///////////////////////////////////////////////////////////
-	virtual imbxInt32 getSignedLong(const imbxUint32 index) const;
+	virtual std::int32_t getSignedLong(const std::uint32_t index) const;
 
 	// Overwritten to use getDouble()
 	///////////////////////////////////////////////////////////
-	virtual imbxUint32 getUnsignedLong(const imbxUint32 index) const;
+	virtual std::uint32_t getUnsignedLong(const std::uint32_t index) const;
 
 	// Overwritten to use setDouble()
 	///////////////////////////////////////////////////////////
-	virtual void setSignedLong(const imbxUint32 index, const imbxInt32 value);
+	virtual void setSignedLong(const std::uint32_t index, const std::int32_t value);
 
 	// Overwritten to use setDouble()
 	///////////////////////////////////////////////////////////
-	virtual void setUnsignedLong(const imbxUint32 index, const imbxUint32 value);
+	virtual void setUnsignedLong(const std::uint32_t index, const std::uint32_t value);
 
 	// Overwritten to use the exponential form if needed
 	///////////////////////////////////////////////////////////
-	virtual void setDouble(const imbxUint32 index, const double value);
+	virtual void setDouble(const std::uint32_t index, const double value);
 
 	// Get the padding byte
 	///////////////////////////////////////////////////////////
-	virtual imbxUint8 getPaddingByte() const;
+	virtual std::uint8_t getPaddingByte() const;
 
 	// Get the element size
 	///////////////////////////////////////////////////////////
-	virtual imbxUint32 getUnitSize() const;
+	virtual std::uint32_t getUnitSize() const;
 
 protected:
 	// Return the maximum string's length
 	///////////////////////////////////////////////////////////
-	virtual imbxUint32 maxSize() const;
+	virtual std::uint32_t maxSize() const;
 
 };
 

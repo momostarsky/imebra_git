@@ -55,7 +55,7 @@ public:
 	///                        the length of the huffman values
 	///
 	///////////////////////////////////////////////////////////
-	huffmanTable(imbxUint32 maxValueLength);
+	huffmanTable(std::uint32_t maxValueLength);
 
 	/// \brief Reset the internal data of the huffmanTable
 	///         class.
@@ -102,7 +102,7 @@ public:
 	///                 huffmanTable()
 	///
 	///////////////////////////////////////////////////////////
-	void incValueFreq(const imbxUint32 value);
+	void incValueFreq(const std::uint32_t value);
 
 	/// \brief Calculates the length of the huffman codes.
 	///
@@ -118,7 +118,7 @@ public:
 	///                       generated huffman codes.
 	///
 	///////////////////////////////////////////////////////////
-	void calcHuffmanCodesLength(const imbxUint32 maxCodeLength);
+	void calcHuffmanCodesLength(const std::uint32_t maxCodeLength);
 	
 	/// \brief Generates the huffman table used by 
 	///         readHuffmanCode() and writeHuffmanCode().
@@ -165,7 +165,7 @@ public:
         /// @return the decoded value
 	///
 	///////////////////////////////////////////////////////////
-	imbxUint32 readHuffmanCode(streamReader* pStream);
+	std::uint32_t readHuffmanCode(streamReader* pStream);
 
 	/// \brief Write an huffman code to the specified stream.
 	///
@@ -178,7 +178,7 @@ public:
 	///                  write the code
 	///
 	///////////////////////////////////////////////////////////
-	void writeHuffmanCode(const imbxUint32 code, streamWriter* pStream);
+	void writeHuffmanCode(const std::uint32_t code, streamWriter* pStream);
 
 	//@}
 
@@ -188,19 +188,19 @@ protected:
 	public:
 		valueObject():m_freq(0), m_codeLength(0), m_nextCode(-1){}
 		valueObject(const valueObject& right):m_freq(right.m_freq), m_codeLength(right.m_codeLength), m_nextCode(right.m_nextCode){}
-		imbxUint32 m_freq;
-		imbxUint32 m_codeLength;
-		imbxInt32 m_nextCode;
+		std::uint32_t m_freq;
+		std::uint32_t m_codeLength;
+		std::int32_t m_nextCode;
 	};
 
 	class freqValue
 	{
 	public:
-		freqValue(imbxUint32 freq = 0, imbxUint32 value = 0):m_freq(freq), m_value(value){}
+		freqValue(std::uint32_t freq = 0, std::uint32_t value = 0):m_freq(freq), m_value(value){}
 		freqValue(const freqValue& right):m_freq(right.m_freq), m_value(right.m_value){}
 
-		imbxUint32 m_freq;
-		imbxUint32 m_value;
+		std::uint32_t m_freq;
+		std::uint32_t m_value;
 	};
 	struct freqValueCompare
 	{
@@ -213,11 +213,11 @@ protected:
 	class lengthValue
 	{
 	public:
-		lengthValue(imbxUint32 length = 0, imbxUint32 value = 0):m_length(length), m_value(value){}
+		lengthValue(std::uint32_t length = 0, std::uint32_t value = 0):m_length(length), m_value(value){}
 		lengthValue(const lengthValue& right):m_length(right.m_length), m_value(right.m_value){}
 
-		imbxUint32 m_length;
-		imbxUint32 m_value;
+		std::uint32_t m_length;
+		std::uint32_t m_value;
 	};
 	struct lengthValueCompare
 	{
@@ -227,22 +227,22 @@ protected:
 		}
 	};
 
-	imbxUint32 m_numValues;
+	std::uint32_t m_numValues;
 
 	// Values' frequency
 	std::vector<valueObject> m_valuesFreq;
 	
 public:
 	// Used to calculate the huffman codes
-	std::vector<imbxUint32> m_orderedValues;
-	imbxUint32 m_valuesPerLength[128];
-	imbxUint8 m_firstValidLength;
-	imbxUint32 m_minValuePerLength[128];
-	imbxUint32 m_maxValuePerLength[128];
+	std::vector<std::uint32_t> m_orderedValues;
+	std::uint32_t m_valuesPerLength[128];
+	std::uint8_t m_firstValidLength;
+	std::uint32_t m_minValuePerLength[128];
+	std::uint32_t m_maxValuePerLength[128];
 
 	// Final huffman table
-	std::vector<imbxUint32> m_valuesToHuffman;
-	std::vector<imbxUint32> m_valuesToHuffmanLength;
+	std::vector<std::uint32_t> m_valuesToHuffman;
+	std::vector<std::uint32_t> m_valuesToHuffmanLength;
 
 };
 

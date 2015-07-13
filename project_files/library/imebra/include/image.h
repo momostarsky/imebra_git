@@ -140,18 +140,18 @@ public:
 	///
 	///////////////////////////////////////////////////////////
 	ptr<handlers::dataHandlerNumericBase> create(
-		const imbxUint32 sizeX,
-		const imbxUint32 sizeY,
+		const std::uint32_t sizeX,
+		const std::uint32_t sizeY,
 		const bitDepth depth,
 		std::wstring colorSpace,
-		const imbxUint8  highBit);
+		const std::uint8_t  highBit);
 
 	/// \brief Set the high bit.
 	///
 	/// @param highBit       the image's high bit
 	///
 	///////////////////////////////////////////////////////////
-	void setHighBit(imbxUint32 highBit);
+	void setHighBit(std::uint32_t highBit);
 
 	/// \brief Set the palette for the image
 	///
@@ -189,7 +189,7 @@ public:
 	///               the image's height (in pixels).
 	///
 	///////////////////////////////////////////////////////////
-	void getSize(imbxUint32* pSizeX, imbxUint32* pSizeY);
+	void getSize(std::uint32_t* pSizeX, std::uint32_t* pSizeY);
 
 	/// \brief Retrieve a data handler for managing the
 	///        image's buffer
@@ -227,9 +227,9 @@ public:
 	///////////////////////////////////////////////////////////
 	ptr<handlers::dataHandlerNumericBase> getDataHandler(
 		const bool bWrite,
-		imbxUint32* pRowSize,
-		imbxUint32* pChannelPixelSize,
-		imbxUint32* pChannelsNumber);
+		std::uint32_t* pRowSize,
+		std::uint32_t* pChannelPixelSize,
+		std::uint32_t* pChannelsNumber);
 
 	/// \brief Get the image's color space (DICOM standard)
 	///
@@ -243,7 +243,7 @@ public:
 	/// @return the number of color channels in the image
 	///
 	///////////////////////////////////////////////////////////
-	imbxUint32 getChannelsNumber();
+	std::uint32_t getChannelsNumber();
 
 	/// \brief Get the image's bit depth.
 	///
@@ -259,7 +259,7 @@ public:
 	/// @return the image's high bit
 	///
 	///////////////////////////////////////////////////////////
-	imbxUint32 getHighBit();
+	std::uint32_t getHighBit();
 
         ptr<palette> getPalette();
 
@@ -271,15 +271,15 @@ protected:
 
 	// Lenght of a buffer's row (in bytes)
 	///////////////////////////////////////////////////////////
-	imbxUint32 m_rowLength;
+	std::uint32_t m_rowLength;
 
 	// Length of a pixel's component (in bytes)
 	///////////////////////////////////////////////////////////
-	imbxUint32 m_channelPixelSize;
+	std::uint32_t m_channelPixelSize;
 
 	// Number of channels
 	///////////////////////////////////////////////////////////
-	imbxUint32  m_channelsNumber;
+	std::uint32_t  m_channelsNumber;
 
 	// Color space
 	///////////////////////////////////////////////////////////
@@ -291,12 +291,12 @@ protected:
 
 	// High bit (not valid in float mode)
 	///////////////////////////////////////////////////////////
-	imbxUint32 m_highBit;
+	std::uint32_t m_highBit;
 
 	// Image's size in pixels
 	///////////////////////////////////////////////////////////
-	imbxUint32 m_sizeX;
-	imbxUint32 m_sizeY;
+	std::uint32_t m_sizeX;
+	std::uint32_t m_sizeY;
 
 	// Image's size in millimeters
 	///////////////////////////////////////////////////////////

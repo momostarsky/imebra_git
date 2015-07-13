@@ -13,8 +13,8 @@ namespace tests
 // A buffer initialized to a default data type should use the data type OB
 void testEmptyTransform(ptr<transforms::transform> pTransform)
 {
-    imbxUint32 sizeX = 41;
-    imbxUint32 sizeY = 13;
+    std::uint32_t sizeX = 41;
+    std::uint32_t sizeY = 13;
     ptr<image> bits8Image(new image);
     ptr<image> bits16Image(new image);
     ptr<image> bits4Image(new image);
@@ -22,17 +22,17 @@ void testEmptyTransform(ptr<transforms::transform> pTransform)
     bits16Image->create(sizeX, sizeY, image::depthU16, L"RGB", 15);
     bits4Image->create(sizeX, sizeY, image::depthU8, L"RGB", 3);
 
-    imbxUint32 rowSize, channelsPixelSize, channelsNumber;
+    std::uint32_t rowSize, channelsPixelSize, channelsNumber;
     ptr<handlers::dataHandlerNumericBase> imageHandler = bits8Image->getDataHandler(true, &rowSize, &channelsPixelSize, &channelsNumber);
 
     // Make 3 bands (RGB
-    imbxUint32 elementNumber(0);
-    for(imbxUint32 y=0; y<sizeY; ++y)
+    std::uint32_t elementNumber(0);
+    for(std::uint32_t y=0; y<sizeY; ++y)
     {
-        for(imbxUint32 x=0; x<sizeX; ++x)
+        for(std::uint32_t x=0; x<sizeX; ++x)
         {
-            imbxInt32 r, g, b;
-            imbxUint32 value = y * 255 / sizeY;
+            std::int32_t r, g, b;
+            std::uint32_t value = y * 255 / sizeY;
             r = g = 0;
             b = value;
             if(x < sizeX - sizeX/3)
@@ -62,12 +62,12 @@ void testEmptyTransform(ptr<transforms::transform> pTransform)
     ptr<handlers::dataHandlerNumericBase> bits16Handler = bits16Image->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
     ptr<handlers::dataHandlerNumericBase> bits4Handler = bits4Image->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
     elementNumber = 0;
-    for(imbxUint32 checkY = 0; checkY < sizeY; ++checkY)
+    for(std::uint32_t checkY = 0; checkY < sizeY; ++checkY)
     {
-        for(imbxUint32 checkX = 0; checkX < sizeX; ++checkX)
+        for(std::uint32_t checkX = 0; checkX < sizeX; ++checkX)
         {
-            imbxInt32 r, g, b;
-            imbxUint32 value = checkY * 255 / sizeY;
+            std::int32_t r, g, b;
+            std::uint32_t value = checkY * 255 / sizeY;
             r = g = 0;
             b = value;
             if(checkX < sizeX - sizeX/3)
@@ -83,17 +83,17 @@ void testEmptyTransform(ptr<transforms::transform> pTransform)
                 b = 0;
             }
 
-            imbxInt32 value0r = bits8Handler->getUnsignedLong(elementNumber);
-            imbxInt32 value1r = bits16Handler->getUnsignedLong(elementNumber);
-            imbxInt32 value2r = bits4Handler->getUnsignedLong(elementNumber++);
+            std::int32_t value0r = bits8Handler->getUnsignedLong(elementNumber);
+            std::int32_t value1r = bits16Handler->getUnsignedLong(elementNumber);
+            std::int32_t value2r = bits4Handler->getUnsignedLong(elementNumber++);
 
-            imbxInt32 value0g = bits8Handler->getUnsignedLong(elementNumber);
-            imbxInt32 value1g = bits16Handler->getUnsignedLong(elementNumber);
-            imbxInt32 value2g = bits4Handler->getUnsignedLong(elementNumber++);
+            std::int32_t value0g = bits8Handler->getUnsignedLong(elementNumber);
+            std::int32_t value1g = bits16Handler->getUnsignedLong(elementNumber);
+            std::int32_t value2g = bits4Handler->getUnsignedLong(elementNumber++);
 
-            imbxInt32 value0b = bits8Handler->getUnsignedLong(elementNumber);
-            imbxInt32 value1b = bits16Handler->getUnsignedLong(elementNumber);
-            imbxInt32 value2b = bits4Handler->getUnsignedLong(elementNumber++);
+            std::int32_t value0b = bits8Handler->getUnsignedLong(elementNumber);
+            std::int32_t value1b = bits16Handler->getUnsignedLong(elementNumber);
+            std::int32_t value2b = bits4Handler->getUnsignedLong(elementNumber++);
 
             EXPECT_EQ(value0r, r);
             EXPECT_EQ(value0g, g);

@@ -56,7 +56,7 @@ public:
 	///                             see all the bytes
 	///
 	///////////////////////////////////////////////////////////
-	streamWriter(ptr<baseStream> pControlledStream, imbxUint32 virtualStart = 0, imbxUint32 virtualLength = 0);
+	streamWriter(ptr<baseStream> pControlledStream, std::uint32_t virtualStart = 0, std::uint32_t virtualLength = 0);
 
 	/// \brief Writes the internal buffer into the connected
 	///         stream. This function is automatically called
@@ -82,7 +82,7 @@ public:
 	///                   written to the stream
 	///
 	///////////////////////////////////////////////////////////
-	void write(const imbxUint8* pBuffer, imbxUint32 bufferLength);
+	void write(const std::uint8_t* pBuffer, std::uint32_t bufferLength);
 
 	/// \brief Write the specified amount of bits to the
 	///         stream.
@@ -99,17 +99,17 @@ public:
 	///                  The function can write max 32 bits
 	///                   
 	///////////////////////////////////////////////////////////
-	inline void writeBits(const imbxUint32 buffer, int bitsNum)
+	inline void writeBits(const std::uint32_t buffer, int bitsNum)
 	{
 		PUNTOEXE_FUNCTION_START(L"streamWriter::writeBits");
 
-		imbxUint32 tempBuffer(buffer);
+		std::uint32_t tempBuffer(buffer);
 
 		while(bitsNum != 0)
 		{
 			if(bitsNum <= (8 - m_outBitsNum))
 			{
-				m_outBitsBuffer |= (imbxUint8)(tempBuffer << (8 - m_outBitsNum - bitsNum));
+				m_outBitsBuffer |= (std::uint8_t)(tempBuffer << (8 - m_outBitsNum - bitsNum));
 				m_outBitsNum += bitsNum;
                                 if(m_outBitsNum==8)
                                 {
@@ -126,14 +126,14 @@ public:
                         }
                         else
                         {
-                            m_outBitsBuffer |= (imbxUint8)(tempBuffer >> (bitsNum + m_outBitsNum - 8));
+                            m_outBitsBuffer |= (std::uint8_t)(tempBuffer >> (bitsNum + m_outBitsNum - 8));
                             bitsNum -= (8-m_outBitsNum);
                             writeByte(m_outBitsBuffer);
                             m_outBitsBuffer = 0;
                             m_outBitsNum = 0;
                         }
 
-                        tempBuffer &= (((imbxUint32)1) << bitsNum) - 1;
+                        tempBuffer &= (((std::uint32_t)1) << bitsNum) - 1;
 
                 }
 
@@ -179,14 +179,14 @@ public:
 	/// @param buffer    byte to be written
 	///
 	///////////////////////////////////////////////////////////
-	inline void writeByte(const imbxUint8 buffer)
+	inline void writeByte(const std::uint8_t buffer)
 	{
 		if(m_pDataBufferCurrent == m_pDataBufferMaxEnd)
 		{
 			flushDataBuffer();
 		}
 		*(m_pDataBufferCurrent++) = buffer;
-		if(m_bJpegTags && buffer == (imbxUint8)0xff)
+		if(m_bJpegTags && buffer == (std::uint8_t)0xff)
 		{
 			if(m_pDataBufferCurrent == m_pDataBufferMaxEnd)
 			{
@@ -204,7 +204,7 @@ protected:
 	virtual ~streamWriter();
 
 private:
-	imbxUint8 m_outBitsBuffer;
+	std::uint8_t m_outBitsBuffer;
 	int       m_outBitsNum;
 
 };

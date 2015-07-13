@@ -41,55 +41,55 @@ class dataHandlerString : public dataHandler
 public:
 	// Returns true if the pointer is valid
 	///////////////////////////////////////////////////////////
-	virtual bool pointerIsValid(const imbxUint32 index) const;
+	virtual bool pointerIsValid(const std::uint32_t index) const;
 
 	// Get the data element as a signed long
 	///////////////////////////////////////////////////////////
-	virtual imbxInt32 getSignedLong(const imbxUint32 index) const;
+	virtual std::int32_t getSignedLong(const std::uint32_t index) const;
 
 	// Get the data element as an unsigned long
 	///////////////////////////////////////////////////////////
-	virtual imbxUint32 getUnsignedLong(const imbxUint32 index) const;
+	virtual std::uint32_t getUnsignedLong(const std::uint32_t index) const;
 	
 	// Get the data element as a double
 	///////////////////////////////////////////////////////////
-	virtual double getDouble(const imbxUint32 index) const;
+	virtual double getDouble(const std::uint32_t index) const;
 
 	// Get the data element as a string
 	///////////////////////////////////////////////////////////
-	virtual std::string getString(const imbxUint32 index) const;
+	virtual std::string getString(const std::uint32_t index) const;
 
 	// Get the data element as an unicode string
 	///////////////////////////////////////////////////////////
-	virtual std::wstring getUnicodeString(const imbxUint32 index) const;
+	virtual std::wstring getUnicodeString(const std::uint32_t index) const;
 
 	// Retrieve the data element as a string
 	///////////////////////////////////////////////////////////
-	virtual imbxUint32 getSize() const;
+	virtual std::uint32_t getSize() const;
 	
 	// Set the data element as a signed long
 	///////////////////////////////////////////////////////////
-	virtual void setSignedLong(const imbxUint32 index, const imbxInt32 value);
+	virtual void setSignedLong(const std::uint32_t index, const std::int32_t value);
 	
 	// Set the data element as an unsigned long
 	///////////////////////////////////////////////////////////
-	virtual void setUnsignedLong(const imbxUint32 index, const imbxUint32 value);
+	virtual void setUnsignedLong(const std::uint32_t index, const std::uint32_t value);
 	
 	// Set the data element as a double
 	///////////////////////////////////////////////////////////
-	virtual void setDouble(const imbxUint32 index, const double value);
+	virtual void setDouble(const std::uint32_t index, const double value);
 	
 	// Set the data element as a string
 	///////////////////////////////////////////////////////////
-	virtual void setString(const imbxUint32 index, const std::string& value);
+	virtual void setString(const std::uint32_t index, const std::string& value);
 
 	// Set the data element as an unicode string
 	///////////////////////////////////////////////////////////
-	virtual void setUnicodeString(const imbxUint32 index, const std::wstring& value);
+	virtual void setUnicodeString(const std::uint32_t index, const std::wstring& value);
 	
 	// Set the buffer's size, in data elements
 	///////////////////////////////////////////////////////////
-	virtual void setSize(const imbxUint32 elementsNumber);
+	virtual void setSize(const std::uint32_t elementsNumber);
 
 	// Parse the buffer
 	///////////////////////////////////////////////////////////
@@ -112,13 +112,13 @@ protected:
 
 	// Return the maximum string's length
 	///////////////////////////////////////////////////////////
-	virtual imbxUint32 maxSize() const;
+	virtual std::uint32_t maxSize() const;
 
 	// Return the separator
 	///////////////////////////////////////////////////////////
 	virtual wchar_t getSeparator() const;
 
-	imbxUint32 m_elementNumber;
+	std::uint32_t m_elementNumber;
 
 	std::vector<std::wstring> m_strings;
 

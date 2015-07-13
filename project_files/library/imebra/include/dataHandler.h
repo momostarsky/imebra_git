@@ -138,7 +138,7 @@ public:
 	///          of range
 	///
 	///////////////////////////////////////////////////////////
-	virtual bool pointerIsValid(const imbxUint32 index) const=0;
+	virtual bool pointerIsValid(const std::uint32_t index) const=0;
 
 	//@}
 
@@ -158,7 +158,7 @@ public:
 	///                        in data elements
 	///
 	///////////////////////////////////////////////////////////
-	virtual void setSize(const imbxUint32 elementsNumber) =0;
+	virtual void setSize(const std::uint32_t elementsNumber) =0;
 
 	/// \brief Retrieve the data handler's local buffer buffer
 	///         size (in elements).
@@ -166,7 +166,7 @@ public:
 	/// @return the buffer's size in elements
 	///
 	///////////////////////////////////////////////////////////
-	virtual imbxUint32 getSize() const=0;
+	virtual std::uint32_t getSize() const=0;
 
 	/// \brief Returns a single element's size in bytes.
 	///
@@ -177,7 +177,7 @@ public:
 	///         element doesn't have a fixed size
 	///
 	///////////////////////////////////////////////////////////
-	virtual imbxUint32 getUnitSize() const=0;
+	virtual std::uint32_t getUnitSize() const=0;
 
 	//@}
 	
@@ -208,7 +208,7 @@ public:
 	///                 pBuffer
 	///
 	///////////////////////////////////////////////////////////
-	void parseBuffer(const imbxUint8* pBuffer, const imbxUint32 bufferLength);
+	void parseBuffer(const std::uint8_t* pBuffer, const std::uint32_t bufferLength);
 
 	/// \internal
 	/// \brief Copies the local %buffer into the original
@@ -263,7 +263,7 @@ public:
 	/// @return the byte used to make the content's size even
 	///
 	///////////////////////////////////////////////////////////
-	virtual imbxUint8 getPaddingByte() const;
+	virtual std::uint8_t getPaddingByte() const;
 
 	//@}
 
@@ -289,7 +289,7 @@ public:
 	///          0 if the index is out of range
 	///
 	///////////////////////////////////////////////////////////
-	virtual imbxInt32 getSignedLong(const imbxUint32 index) const=0;
+	virtual std::int32_t getSignedLong(const std::uint32_t index) const=0;
 
 	/// \brief Retrieve the buffer's element referenced by the
 	///         zero-based index specified in the parameter and
@@ -306,7 +306,7 @@ public:
 	///          or 0 if the index is out of range
 	///
 	///////////////////////////////////////////////////////////
-	virtual imbxUint32 getUnsignedLong(const imbxUint32 index) const =0;
+	virtual std::uint32_t getUnsignedLong(const std::uint32_t index) const =0;
 
 	/// \brief Retrieve the buffer's element referenced by the
 	///         zero-based index specified in the parameter and
@@ -323,7 +323,7 @@ public:
 	///          point, or 0 if the index is out of range
 	///
 	///////////////////////////////////////////////////////////
-	virtual double getDouble(const imbxUint32 index) const=0;
+	virtual double getDouble(const std::uint32_t index) const=0;
 
 	/// \brief Retrieve the buffer's element referenced by the
 	///         zero-based index specified in the parameter and
@@ -340,7 +340,7 @@ public:
 	///          0 if the index is out of range
 	///
 	///////////////////////////////////////////////////////////
-	virtual std::string getString(const imbxUint32 index) const= 0;
+	virtual std::string getString(const std::uint32_t index) const= 0;
 
 	/// \brief Retrieve the buffer's element referenced by the
 	///         zero-based index specified in the parameter and
@@ -357,7 +357,7 @@ public:
 	///          or 0 if the index is out of range
 	///
 	///////////////////////////////////////////////////////////
-	virtual std::wstring getUnicodeString(const imbxUint32 index) const = 0;
+	virtual std::wstring getUnicodeString(const std::uint32_t index) const = 0;
 
 	/// \brief Retrieve the buffer's element referenced by the
 	///         zero-based index specified in the parameter and
@@ -392,16 +392,16 @@ public:
 	///                 date time zone and the UTC time zone
 	///
 	///////////////////////////////////////////////////////////
-	virtual void getDate(const imbxUint32 index,
-		imbxInt32* pYear, 
-		imbxInt32* pMonth, 
-		imbxInt32* pDay, 
-		imbxInt32* pHour, 
-		imbxInt32* pMinutes,
-		imbxInt32* pSeconds,
-		imbxInt32* pNanoseconds,
-		imbxInt32* pOffsetHours,
-		imbxInt32* pOffsetMinutes) const;
+	virtual void getDate(const std::uint32_t index,
+		std::int32_t* pYear, 
+		std::int32_t* pMonth, 
+		std::int32_t* pDay, 
+		std::int32_t* pHour, 
+		std::int32_t* pMinutes,
+		std::int32_t* pSeconds,
+		std::int32_t* pNanoseconds,
+		std::int32_t* pOffsetHours,
+		std::int32_t* pOffsetMinutes) const;
 
 	/// \brief Set the buffer's element referenced by the
 	///         zero-based index specified in the parameter
@@ -427,16 +427,16 @@ public:
 	///                time zone and the UTC time zone
 	///
 	///////////////////////////////////////////////////////////
-	virtual void setDate(const imbxUint32 index,
-		imbxInt32 year, 
-		imbxInt32 month, 
-		imbxInt32 day, 
-		imbxInt32 hour, 
-		imbxInt32 minutes,
-		imbxInt32 seconds,
-		imbxInt32 nanoseconds,
-		imbxInt32 offsetHours,
-		imbxInt32 offsetMinutes);
+	virtual void setDate(const std::uint32_t index,
+		std::int32_t year, 
+		std::int32_t month, 
+		std::int32_t day, 
+		std::int32_t hour, 
+		std::int32_t minutes,
+		std::int32_t seconds,
+		std::int32_t nanoseconds,
+		std::int32_t offsetHours,
+		std::int32_t offsetMinutes);
 
 	/// \brief Set the buffer's element referenced by the
 	///         zero-based index specified in the parameter
@@ -453,7 +453,7 @@ public:
 	///				  %data element.
 	///
 	///////////////////////////////////////////////////////////
-	virtual void setSignedLong(const imbxUint32 index, const imbxInt32 value) =0;
+	virtual void setSignedLong(const std::uint32_t index, const std::int32_t value) =0;
 
 	/// \brief Set the buffer's element referenced by the
 	///         zero-based index specified in the parameter
@@ -470,7 +470,7 @@ public:
 	///				  %data element.
 	///
 	///////////////////////////////////////////////////////////
-	virtual void setUnsignedLong(const imbxUint32 index, const imbxUint32 value) =0;
+	virtual void setUnsignedLong(const std::uint32_t index, const std::uint32_t value) =0;
 
 	/// \brief Set the buffer's element referenced by the
 	///         zero-based index specified in the parameter
@@ -487,7 +487,7 @@ public:
 	///				  %data element.
 	///
 	///////////////////////////////////////////////////////////
-	virtual void setDouble(const imbxUint32 index, const double value) =0;
+	virtual void setDouble(const std::uint32_t index, const double value) =0;
 
 	/// \brief Set the buffer's element referenced by the
 	///         zero-based index specified in the parameter
@@ -503,7 +503,7 @@ public:
 	/// @param value the value to write into the
 	///				  %data element.
 	///////////////////////////////////////////////////////////
-	virtual void setString(const imbxUint32 index, const std::string& value) =0;
+	virtual void setString(const std::uint32_t index, const std::string& value) =0;
 
 	/// \brief Set the buffer's element referenced by the
 	///         zero-based index specified in the parameter
@@ -519,7 +519,7 @@ public:
 	/// @param value the value to write into the %data
 	///				  element.
 	///////////////////////////////////////////////////////////
-	virtual void setUnicodeString(const imbxUint32 index, const std::wstring& value) =0;
+	virtual void setUnicodeString(const std::uint32_t index, const std::wstring& value) =0;
 
 	//@}
 

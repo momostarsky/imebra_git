@@ -112,7 +112,7 @@ void dataHandler::abort()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint32 dataHandler::getUnitSize() const
+std::uint32_t dataHandler::getUnitSize() const
 {
 	return 0;
 }
@@ -127,7 +127,7 @@ imbxUint32 dataHandler::getUnitSize() const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint8 dataHandler::getPaddingByte() const
+std::uint8_t dataHandler::getPaddingByte() const
 {
 	return 0;
 }
@@ -158,7 +158,7 @@ std::string dataHandler::getDataType() const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandler::parseBuffer(const imbxUint8* pBuffer, const imbxUint32 bufferLength)
+void dataHandler::parseBuffer(const std::uint8_t* pBuffer, const std::uint32_t bufferLength)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandler::parseBuffer");
 
@@ -182,16 +182,16 @@ void dataHandler::parseBuffer(const imbxUint8* pBuffer, const imbxUint32 bufferL
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandler::getDate(const imbxUint32 /* index */,
-		imbxInt32* pYear, 
-		imbxInt32* pMonth, 
-		imbxInt32* pDay, 
-		imbxInt32* pHour, 
-		imbxInt32* pMinutes,
-		imbxInt32* pSeconds,
-		imbxInt32* pNanoseconds,
-		imbxInt32* pOffsetHours,
-		imbxInt32* pOffsetMinutes) const
+void dataHandler::getDate(const std::uint32_t /* index */,
+		std::int32_t* pYear, 
+		std::int32_t* pMonth, 
+		std::int32_t* pDay, 
+		std::int32_t* pHour, 
+		std::int32_t* pMinutes,
+		std::int32_t* pSeconds,
+		std::int32_t* pNanoseconds,
+		std::int32_t* pOffsetHours,
+		std::int32_t* pOffsetMinutes) const
 {
 	*pYear = 0;
 	*pMonth = 0;
@@ -214,16 +214,16 @@ void dataHandler::getDate(const imbxUint32 /* index */,
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandler::setDate(const imbxUint32 /* index */,
-		imbxInt32 /* year */, 
-		imbxInt32 /* month */, 
-		imbxInt32 /* day */, 
-		imbxInt32 /* hour */, 
-		imbxInt32 /*minutes */,
-		imbxInt32 /*seconds */,
-		imbxInt32 /*nanoseconds */,
-		imbxInt32 /*offsetHours */,
-		imbxInt32 /*offsetMinutes */)
+void dataHandler::setDate(const std::uint32_t /* index */,
+		std::int32_t /* year */, 
+		std::int32_t /* month */, 
+		std::int32_t /* day */, 
+		std::int32_t /* hour */, 
+		std::int32_t /*minutes */,
+		std::int32_t /*seconds */,
+		std::int32_t /*nanoseconds */,
+		std::int32_t /*offsetHours */,
+		std::int32_t /*offsetMinutes */)
 {
 	return;
 }

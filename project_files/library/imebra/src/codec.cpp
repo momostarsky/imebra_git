@@ -34,7 +34,7 @@ namespace codecs
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<dataSet> codec::read(ptr<streamReader> pSourceStream, imbxUint32 maxSizeBufferLoad /* = 0xffffffff */)
+ptr<dataSet> codec::read(ptr<streamReader> pSourceStream, std::uint32_t maxSizeBufferLoad /* = 0xffffffff */)
 {
 	PUNTOEXE_FUNCTION_START(L"codec::read");
 
@@ -44,7 +44,7 @@ ptr<dataSet> codec::read(ptr<streamReader> pSourceStream, imbxUint32 maxSizeBuff
 
 	// Store the stream's position
 	///////////////////////////////////////////////////////////
-	imbxUint32 position=pSourceStream->position();
+	std::uint32_t position=pSourceStream->position();
 
 	// Create a new dataset
 	///////////////////////////////////////////////////////////
@@ -58,7 +58,7 @@ ptr<dataSet> codec::read(ptr<streamReader> pSourceStream, imbxUint32 maxSizeBuff
 	}
 	catch(codecExceptionWrongFormat&)
 	{
-		pSourceStream->seek((imbxInt32)position);
+		pSourceStream->seek((std::int32_t)position);
 		PUNTOEXE_RETHROW("Detected a wrong format. Rewinding file");
 	}
 
@@ -106,17 +106,17 @@ void codec::write(ptr<streamWriter> pDestStream, ptr<dataSet> pSourceDataSet)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void channel::allocate(imbxUint32 sizeX, imbxUint32 sizeY)
+void channel::allocate(std::uint32_t sizeX, std::uint32_t sizeY)
 {
 	PUNTOEXE_FUNCTION_START(L"channel::allocate");
 
 	m_sizeX = sizeX;
 	m_sizeY = sizeY;
 	m_bufferSize = sizeX * sizeY;
-	m_memory = ptr<memory>(memoryPool::getMemoryPool()->getMemory(m_bufferSize * sizeof(imbxInt32) ));
-	m_pBuffer = (imbxInt32*)(m_memory->data());
+	m_memory = ptr<memory>(memoryPool::getMemoryPool()->getMemory(m_bufferSize * sizeof(std::int32_t) ));
+	m_pBuffer = (std::int32_t*)(m_memory->data());
 
-	::memset(m_pBuffer, 0, m_bufferSize * sizeof(imbxInt32));
+	::memset(m_pBuffer, 0, m_bufferSize * sizeof(std::int32_t));
 
 	PUNTOEXE_FUNCTION_END();
 }

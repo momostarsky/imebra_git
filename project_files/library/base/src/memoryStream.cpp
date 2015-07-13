@@ -51,7 +51,7 @@ memoryStream::memoryStream(ptr<memory> memoryStream): m_memory(memoryStream)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void memoryStream::write(imbxUint32 startPosition, const imbxUint8* pBuffer, imbxUint32 bufferLength)
+void memoryStream::write(std::uint32_t startPosition, const std::uint8_t* pBuffer, std::uint32_t bufferLength)
 {
 	PUNTOEXE_FUNCTION_START(L"memoryStream::write");
 
@@ -68,8 +68,8 @@ void memoryStream::write(imbxUint32 startPosition, const imbxUint8* pBuffer, imb
 	///////////////////////////////////////////////////////////
 	if(startPosition + bufferLength > m_memory->size())
 	{
-		imbxUint32 newSize = startPosition + bufferLength;
-		imbxUint32 reserveSize = ((newSize + 1023) >> 10) << 10; // preallocate blocks of 1024 bytes
+		std::uint32_t newSize = startPosition + bufferLength;
+		std::uint32_t reserveSize = ((newSize + 1023) >> 10) << 10; // preallocate blocks of 1024 bytes
 		m_memory->reserve(reserveSize);
 		m_memory->resize(startPosition + bufferLength);
 	}
@@ -89,7 +89,7 @@ void memoryStream::write(imbxUint32 startPosition, const imbxUint8* pBuffer, imb
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint32 memoryStream::read(imbxUint32 startPosition, imbxUint8* pBuffer, imbxUint32 bufferLength)
+std::uint32_t memoryStream::read(std::uint32_t startPosition, std::uint8_t* pBuffer, std::uint32_t bufferLength)
 {
 	PUNTOEXE_FUNCTION_START(L"memoryStream::read");
 
@@ -102,7 +102,7 @@ imbxUint32 memoryStream::read(imbxUint32 startPosition, imbxUint8* pBuffer, imbx
 
 	// Don't read if the requested position isn't valid
 	///////////////////////////////////////////////////////////
-	imbxUint32 memorySize = m_memory->size();
+	std::uint32_t memorySize = m_memory->size();
 	if(startPosition >= memorySize)
 	{
 		return 0;
@@ -110,7 +110,7 @@ imbxUint32 memoryStream::read(imbxUint32 startPosition, imbxUint8* pBuffer, imbx
 
 	// Check if all the bytes are available
 	///////////////////////////////////////////////////////////
-	imbxUint32 copySize = bufferLength;
+	std::uint32_t copySize = bufferLength;
 	if(startPosition + bufferLength > memorySize)
 	{
 		copySize = memorySize - startPosition;

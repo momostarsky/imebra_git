@@ -54,14 +54,14 @@ public:
 
         template <class inputType, class outputType>
         void templateTransform(
-            inputType* inputHandlerData, size_t /* inputHandlerSize */, imbxUint32 inputHandlerWidth, const std::wstring& inputHandlerColorSpace,
+            inputType* inputHandlerData, size_t /* inputHandlerSize */, std::uint32_t inputHandlerWidth, const std::wstring& inputHandlerColorSpace,
             ptr<palette> /* inputPalette */,
-            imbxInt32 inputHandlerMinValue, imbxUint32 inputHighBit,
-            imbxInt32 inputTopLeftX, imbxInt32 inputTopLeftY, imbxInt32 inputWidth, imbxInt32 inputHeight,
-            outputType* outputHandlerData, size_t /* outputHandlerSize */, imbxInt32 outputHandlerWidth, const std::wstring& outputHandlerColorSpace,
+            std::int32_t inputHandlerMinValue, std::uint32_t inputHighBit,
+            std::int32_t inputTopLeftX, std::int32_t inputTopLeftY, std::int32_t inputWidth, std::int32_t inputHeight,
+            outputType* outputHandlerData, size_t /* outputHandlerSize */, std::int32_t outputHandlerWidth, const std::wstring& outputHandlerColorSpace,
             ptr<palette> /* outputPalette */,
-            imbxInt32 outputHandlerMinValue, imbxUint32 outputHighBit,
-            imbxInt32 outputTopLeftX, imbxInt32 outputTopLeftY)
+            std::int32_t outputHandlerMinValue, std::uint32_t outputHighBit,
+            std::int32_t outputTopLeftX, std::int32_t outputTopLeftY)
 
         {
             checkColorSpaces(inputHandlerColorSpace, outputHandlerColorSpace);
@@ -72,23 +72,23 @@ public:
             pInputMemory += (inputTopLeftY * inputHandlerWidth + inputTopLeftX) * 3;
             pOutputMemory += (outputTopLeftY * outputHandlerWidth + outputTopLeftX) * 3;
 
-            imbxInt32 minY(outputHandlerMinValue + ((imbxInt32)1 << (outputHighBit - 3)));
-            imbxInt32 outputMiddleValue(outputHandlerMinValue + ((imbxInt32)1 << outputHighBit));
+            std::int32_t minY(outputHandlerMinValue + ((std::int32_t)1 << (outputHighBit - 3)));
+            std::int32_t outputMiddleValue(outputHandlerMinValue + ((std::int32_t)1 << outputHighBit));
 
-            imbxInt32 sourceR, sourceG, sourceB;
+            std::int32_t sourceR, sourceG, sourceB;
             if(inputHighBit > outputHighBit)
             {
-                imbxUint32 rightShift = inputHighBit - outputHighBit;
+                std::uint32_t rightShift = inputHighBit - outputHighBit;
                 for(; inputHeight != 0; --inputHeight)
                 {
                     for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
                     {
-                        sourceR = (imbxInt32) (*(pInputMemory++)) - inputHandlerMinValue;
-                        sourceG = (imbxInt32) (*(pInputMemory++)) - inputHandlerMinValue;
-                        sourceB = (imbxInt32) (*(pInputMemory++)) - inputHandlerMinValue;
-                        *(pOutputMemory++) = (outputType) ( minY + ((((imbxInt32)4207 * sourceR+(imbxInt32)8259 * sourceG+(imbxInt32)1604 * sourceB) >> 14)  >> rightShift));
-                        *(pOutputMemory++) = (outputType) ( outputMiddleValue + ((((imbxInt32)7196 * sourceB - (imbxInt32)2428 * sourceR - (imbxInt32)4768 * sourceG + (imbxInt32)8192) >> 14) >> rightShift) );
-                        *(pOutputMemory++) = (outputType) ( outputMiddleValue + ((((imbxInt32)7196 * sourceR - (imbxInt32)6026 * sourceG - (imbxInt32)1170 * sourceB + (imbxInt32)8192) >> 14) >> rightShift) );
+                        sourceR = (std::int32_t) (*(pInputMemory++)) - inputHandlerMinValue;
+                        sourceG = (std::int32_t) (*(pInputMemory++)) - inputHandlerMinValue;
+                        sourceB = (std::int32_t) (*(pInputMemory++)) - inputHandlerMinValue;
+                        *(pOutputMemory++) = (outputType) ( minY + ((((std::int32_t)4207 * sourceR+(std::int32_t)8259 * sourceG+(std::int32_t)1604 * sourceB) >> 14)  >> rightShift));
+                        *(pOutputMemory++) = (outputType) ( outputMiddleValue + ((((std::int32_t)7196 * sourceB - (std::int32_t)2428 * sourceR - (std::int32_t)4768 * sourceG + (std::int32_t)8192) >> 14) >> rightShift) );
+                        *(pOutputMemory++) = (outputType) ( outputMiddleValue + ((((std::int32_t)7196 * sourceR - (std::int32_t)6026 * sourceG - (std::int32_t)1170 * sourceB + (std::int32_t)8192) >> 14) >> rightShift) );
                     }
                     pInputMemory += (inputHandlerWidth - inputWidth) * 3;
                     pOutputMemory += (outputHandlerWidth - inputWidth) * 3;
@@ -96,17 +96,17 @@ public:
             }
             else
             {
-                imbxUint32 leftShift = outputHighBit - inputHighBit;
+                std::uint32_t leftShift = outputHighBit - inputHighBit;
                 for(; inputHeight != 0; --inputHeight)
                 {
                     for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
                     {
-                        sourceR = (imbxInt32) (*(pInputMemory++)) - inputHandlerMinValue;
-                        sourceG = (imbxInt32) (*(pInputMemory++)) - inputHandlerMinValue;
-                        sourceB = (imbxInt32) (*(pInputMemory++)) - inputHandlerMinValue;
-                        *(pOutputMemory++) = (outputType) ( minY + ((((imbxInt32)4207 * sourceR+(imbxInt32)8259 * sourceG+(imbxInt32)1604 * sourceB) >> 14)  << leftShift));
-                        *(pOutputMemory++) = (outputType) ( outputMiddleValue + ((((imbxInt32)7196 * sourceB - (imbxInt32)2428 * sourceR - (imbxInt32)4768 * sourceG + (imbxInt32)8192) >> 14) << leftShift) );
-                        *(pOutputMemory++) = (outputType) ( outputMiddleValue + ((((imbxInt32)7196 * sourceR - (imbxInt32)6026 * sourceG - (imbxInt32)1170 * sourceB + (imbxInt32)8192) >> 14) << leftShift) );
+                        sourceR = (std::int32_t) (*(pInputMemory++)) - inputHandlerMinValue;
+                        sourceG = (std::int32_t) (*(pInputMemory++)) - inputHandlerMinValue;
+                        sourceB = (std::int32_t) (*(pInputMemory++)) - inputHandlerMinValue;
+                        *(pOutputMemory++) = (outputType) ( minY + ((((std::int32_t)4207 * sourceR+(std::int32_t)8259 * sourceG+(std::int32_t)1604 * sourceB) >> 14)  << leftShift));
+                        *(pOutputMemory++) = (outputType) ( outputMiddleValue + ((((std::int32_t)7196 * sourceB - (std::int32_t)2428 * sourceR - (std::int32_t)4768 * sourceG + (std::int32_t)8192) >> 14) << leftShift) );
+                        *(pOutputMemory++) = (outputType) ( outputMiddleValue + ((((std::int32_t)7196 * sourceR - (std::int32_t)6026 * sourceG - (std::int32_t)1170 * sourceB + (std::int32_t)8192) >> 14) << leftShift) );
                     }
                     pInputMemory += (inputHandlerWidth - inputWidth) * 3;
                     pOutputMemory += (outputHandlerWidth - inputWidth) * 3;

@@ -40,7 +40,7 @@ memory::memory():
 {
 }
 
-memory::memory(imbxUint32 initialSize):
+memory::memory(std::uint32_t initialSize):
     m_pMemoryBuffer(new stringUint8((size_t)initialSize, 0))
 {
 }
@@ -107,15 +107,15 @@ void memory::clear()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void memory::resize(imbxUint32 newSize)
+void memory::resize(std::uint32_t newSize)
 {
 	if(m_pMemoryBuffer.get() == 0)
 	{
-		m_pMemoryBuffer.reset(new stringUint8((size_t)newSize, (imbxUint8)0));
+		m_pMemoryBuffer.reset(new stringUint8((size_t)newSize, (std::uint8_t)0));
 	}
 	else
 	{
-	    m_pMemoryBuffer->resize((size_t)newSize, (imbxUint8)0);
+	    m_pMemoryBuffer->resize((size_t)newSize, (std::uint8_t)0);
 	}
 
 }
@@ -130,7 +130,7 @@ void memory::resize(imbxUint32 newSize)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void memory::reserve(imbxUint32 reserveSize)
+void memory::reserve(std::uint32_t reserveSize)
 {
 	if(m_pMemoryBuffer.get() == 0)
 	{
@@ -149,13 +149,13 @@ void memory::reserve(imbxUint32 reserveSize)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint32 memory::size()
+std::uint32_t memory::size()
 {
 	if(m_pMemoryBuffer.get() == 0)
 	{
 		return 0;
 	}
-	return (imbxUint32)(m_pMemoryBuffer->size());
+	return (std::uint32_t)(m_pMemoryBuffer->size());
 }
 
 
@@ -168,7 +168,7 @@ imbxUint32 memory::size()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint8* memory::data()
+std::uint8_t* memory::data()
 {
 	if(m_pMemoryBuffer.get() == 0 || m_pMemoryBuffer->empty())
 	{
@@ -202,7 +202,7 @@ bool memory::empty()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void memory::assign(const imbxUint8* pSource, const imbxUint32 sourceLength)
+void memory::assign(const std::uint8_t* pSource, const std::uint32_t sourceLength)
 {
 	if(m_pMemoryBuffer.get() == 0)
 	{
@@ -279,7 +279,7 @@ bool memoryPool::reuseMemory(memory* pMemoryToReuse)
 	// Check for the memory size. Don't reuse it if the memory
 	//  doesn't match the requested parameters
 	///////////////////////////////////////////////////////////
-	imbxUint32 memorySize = pMemoryToReuse->size();
+	std::uint32_t memorySize = pMemoryToReuse->size();
 	if(memorySize == 0 || memorySize < IMEBRA_MEMORY_POOL_MIN_SIZE || memorySize > IMEBRA_MEMORY_POOL_MAX_SIZE)
 	{
 		return false;
@@ -381,13 +381,13 @@ memoryPool* memoryPool::getMemoryPool()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-memory* memoryPool::getMemory(imbxUint32 requestedSize)
+memory* memoryPool::getMemory(std::uint32_t requestedSize)
 {
 	lockCriticalSection lockThis(&m_criticalSection);
 
 	// Look for an object to reuse
 	///////////////////////////////////////////////////////////
-	for(imbxUint32 findCell = m_firstUsedCell; findCell != m_firstFreeCell;)
+	for(std::uint32_t findCell = m_firstUsedCell; findCell != m_firstFreeCell;)
 	{
 		if(m_memorySize[findCell] != requestedSize)
 		{
@@ -411,7 +411,7 @@ memory* memoryPool::getMemory(imbxUint32 requestedSize)
 			return pMemory;
 		}
 
-		imbxUint32 lastUsedCell = m_firstFreeCell == 0 ? (IMEBRA_MEMORY_POOL_SLOTS - 1) : (m_firstFreeCell - 1);
+		std::uint32_t lastUsedCell = m_firstFreeCell == 0 ? (IMEBRA_MEMORY_POOL_SLOTS - 1) : (m_firstFreeCell - 1);
 		if(findCell == lastUsedCell)
 		{
 			m_firstFreeCell = lastUsedCell;

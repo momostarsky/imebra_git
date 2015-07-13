@@ -164,8 +164,8 @@ namespace puntoexe
 			///
 			///////////////////////////////////////////////////////////
 			template <tDrawBitmapType drawBitmapType, int rowAlignBytes>
-					ptr<memory> getBitmap(imbxInt32 totalWidthPixels, imbxInt32 totalHeightPixels,
-										  imbxInt32 visibleTopLeftX, imbxInt32 visibleTopLeftY, imbxInt32 visibleBottomRightX, imbxInt32 visibleBottomRightY,
+					ptr<memory> getBitmap(std::int32_t totalWidthPixels, std::int32_t totalHeightPixels,
+										  std::int32_t visibleTopLeftX, std::int32_t visibleTopLeftY, std::int32_t visibleBottomRightX, std::int32_t visibleBottomRightY,
 										  ptr<memory> reuseMemory)
 			{
 				PUNTOEXE_FUNCTION_START(L"drawBitmap::getBitmap");
@@ -195,17 +195,17 @@ namespace puntoexe
 					PUNTOEXE_THROW(drawBitmapExceptionInvalidArea, "Destination area not valid");
 				}
 
-                imbxUint32 destPixelSize((drawBitmapType == drawBitmapARGB || drawBitmapType == drawBitmapBGRA) ? 4 : 3);
+                std::uint32_t destPixelSize((drawBitmapType == drawBitmapARGB || drawBitmapType == drawBitmapBGRA) ? 4 : 3);
 
                 // Calculate the row' size, in bytes
 				///////////////////////////////////////////////////////////
-                imbxUint32 rowSizeBytes = ((visibleBottomRightX - visibleTopLeftX) * destPixelSize + rowAlignBytes - 1) / rowAlignBytes;
+                std::uint32_t rowSizeBytes = ((visibleBottomRightX - visibleTopLeftX) * destPixelSize + rowAlignBytes - 1) / rowAlignBytes;
 				rowSizeBytes *= rowAlignBytes;
 
 
 				// Allocate the memory for the final bitmap
 				///////////////////////////////////////////////////////////
-				imbxUint32 memorySize(rowSizeBytes * (visibleBottomRightY - visibleTopLeftY));
+				std::uint32_t memorySize(rowSizeBytes * (visibleBottomRightY - visibleTopLeftY));
 				if(reuseMemory == 0)
 				{
 					reuseMemory = memoryPool::getMemoryPool()->getMemory(memorySize);
@@ -217,7 +217,7 @@ namespace puntoexe
 
 				// Retrieve the final bitmap's buffer
 				///////////////////////////////////////////////////////////
-				imbxUint8* pFinalBuffer = (imbxUint8*)(reuseMemory->data());
+				std::uint8_t* pFinalBuffer = (std::uint8_t*)(reuseMemory->data());
 
 				getBitmap<drawBitmapType, rowAlignBytes>(totalWidthPixels, totalHeightPixels, visibleTopLeftX, visibleTopLeftY, visibleBottomRightX, visibleBottomRightY, pFinalBuffer, memorySize);
 
@@ -228,9 +228,9 @@ namespace puntoexe
 			}
 
 			template <tDrawBitmapType drawBitmapType, int rowAlignBytes>
-					size_t getBitmap(imbxInt32 totalWidthPixels, imbxInt32 totalHeightPixels,
-										  imbxInt32 visibleTopLeftX, imbxInt32 visibleTopLeftY, imbxInt32 visibleBottomRightX, imbxInt32 visibleBottomRightY,
-										  imbxUint8* pBuffer, size_t bufferSize)
+					size_t getBitmap(std::int32_t totalWidthPixels, std::int32_t totalHeightPixels,
+										  std::int32_t visibleTopLeftX, std::int32_t visibleTopLeftY, std::int32_t visibleBottomRightX, std::int32_t visibleBottomRightY,
+										  std::uint8_t* pBuffer, size_t bufferSize)
 			{
 				PUNTOEXE_FUNCTION_START(L"drawBitmap::getBitmapRaw");
 
@@ -255,17 +255,17 @@ namespace puntoexe
 					PUNTOEXE_THROW(drawBitmapExceptionInvalidArea, "Destination area not valid");
 				}
 
-                imbxUint32 destPixelSize((drawBitmapType == drawBitmapARGB || drawBitmapType == drawBitmapBGRA) ? 4 : 3);
+                std::uint32_t destPixelSize((drawBitmapType == drawBitmapARGB || drawBitmapType == drawBitmapBGRA) ? 4 : 3);
 
                 // Calculate the row' size, in bytes
 				///////////////////////////////////////////////////////////
-                imbxUint32 rowSizeBytes = ((visibleBottomRightX - visibleTopLeftX) * destPixelSize + rowAlignBytes - 1) / rowAlignBytes;
+                std::uint32_t rowSizeBytes = ((visibleBottomRightX - visibleTopLeftX) * destPixelSize + rowAlignBytes - 1) / rowAlignBytes;
 				rowSizeBytes *= rowAlignBytes;
 
 
 				// Allocate the memory for the final bitmap
 				///////////////////////////////////////////////////////////
-				imbxUint32 memorySize(rowSizeBytes * (visibleBottomRightY - visibleTopLeftY));
+				std::uint32_t memorySize(rowSizeBytes * (visibleBottomRightY - visibleTopLeftY));
 				if(memorySize > bufferSize)
 				{
 				    return memorySize;
@@ -274,18 +274,18 @@ namespace puntoexe
 				// Find the multiplier that make the image bigger than
 				//  the rendering area
 				///////////////////////////////////////////////////////////
-				imbxUint32 imageSizeX, imageSizeY;
+				std::uint32_t imageSizeX, imageSizeY;
 				m_image->getSize(&imageSizeX, &imageSizeY);
 
-				imbxUint8 leftShiftX(0), leftShiftY(0);
-				imbxUint32 maskX(0), maskY(0);
-				while( (imageSizeX << leftShiftX) < (imbxUint32)totalWidthPixels)
+				std::uint8_t leftShiftX(0), leftShiftY(0);
+				std::uint32_t maskX(0), maskY(0);
+				while( (imageSizeX << leftShiftX) < (std::uint32_t)totalWidthPixels)
 				{
 					++leftShiftX;
 					maskX <<= 1;
 					++maskX;
 				}
-				while( (imageSizeY << leftShiftY) < (imbxUint32)totalHeightPixels)
+				while( (imageSizeY << leftShiftY) < (std::uint32_t)totalHeightPixels)
 				{
 					++leftShiftY;
 					maskY <<= 1;
@@ -296,13 +296,13 @@ namespace puntoexe
 				//  average colors and a buffer that indicates the pixels
 				//  in the source image mapped to the final bitmap
 				///////////////////////////////////////////////////////////
-				imbxUint32 destBitmapWidth(visibleBottomRightX - visibleTopLeftX);
+				std::uint32_t destBitmapWidth(visibleBottomRightX - visibleTopLeftX);
 
-				ptr<memory> averagePixelsMemory(memoryPool::getMemoryPool()->getMemory(destBitmapWidth * 4 * sizeof(imbxInt32)));
-				ptr<memory> sourcePixelIndexMemory(memoryPool::getMemoryPool()->getMemory((destBitmapWidth + 1) * sizeof(imbxUint32)));
-				imbxInt32* averagePixels = (imbxInt32*)averagePixelsMemory->data();
-				imbxUint32* sourcePixelIndex = (imbxUint32*)sourcePixelIndexMemory->data();
-				for(imbxInt32 scanPixelsX = visibleTopLeftX; scanPixelsX != visibleBottomRightX + 1; ++scanPixelsX)
+				ptr<memory> averagePixelsMemory(memoryPool::getMemoryPool()->getMemory(destBitmapWidth * 4 * sizeof(std::int32_t)));
+				ptr<memory> sourcePixelIndexMemory(memoryPool::getMemoryPool()->getMemory((destBitmapWidth + 1) * sizeof(std::uint32_t)));
+				std::int32_t* averagePixels = (std::int32_t*)averagePixelsMemory->data();
+				std::uint32_t* sourcePixelIndex = (std::uint32_t*)sourcePixelIndexMemory->data();
+				for(std::int32_t scanPixelsX = visibleTopLeftX; scanPixelsX != visibleBottomRightX + 1; ++scanPixelsX)
 				{
 					sourcePixelIndex[scanPixelsX - visibleTopLeftX] = scanPixelsX * (imageSizeX << leftShiftX) / totalWidthPixels;
 				}
@@ -310,25 +310,25 @@ namespace puntoexe
 				// Get the index of the first and last+1 pixel to be
 				//  displayed
 				///////////////////////////////////////////////////////////
-				imbxInt32 firstPixelX(*sourcePixelIndex);
-				imbxInt32 lastPixelX(sourcePixelIndex[visibleBottomRightX - visibleTopLeftX]);
+				std::int32_t firstPixelX(*sourcePixelIndex);
+				std::int32_t lastPixelX(sourcePixelIndex[visibleBottomRightX - visibleTopLeftX]);
 
 				// If a transform chain is active then allocate a temporary
 				//  output image
 				///////////////////////////////////////////////////////////
-				imbxUint32 rowSize, channelSize, channelsNumber;
+				std::uint32_t rowSize, channelSize, channelsNumber;
 				ptr<image> sourceImage(m_image);
 
 				// Retrieve the final bitmap's buffer
 				///////////////////////////////////////////////////////////
-                imbxInt32 nextRowGap = rowSizeBytes - destBitmapWidth * destPixelSize;
+                std::int32_t nextRowGap = rowSizeBytes - destBitmapWidth * destPixelSize;
 
 				// First Y pixel not transformed by the transforms chain
 				///////////////////////////////////////////////////////////
-				imbxInt32 transformChainStartY(0), transformChainNextY(0);
+				std::int32_t transformChainStartY(0), transformChainNextY(0);
 
-				imbxUint32 sourceHeight;
-				imbxUint32 sourceWidth;
+				std::uint32_t sourceHeight;
+				std::uint32_t sourceWidth;
 				if(m_transformsChain->isEmpty())
 				{
 					sourceHeight = imageSizeY;
@@ -358,23 +358,23 @@ namespace puntoexe
 
 				// Scan all the final bitmap's rows
 				///////////////////////////////////////////////////////////
-				for(imbxInt32 scanY = visibleTopLeftY; scanY != visibleBottomRightY; ++scanY)
+				for(std::int32_t scanY = visibleTopLeftY; scanY != visibleBottomRightY; ++scanY)
 				{
-					::memset(averagePixels, 0, destBitmapWidth * 4 * sizeof(imbxInt32));
+					::memset(averagePixels, 0, destBitmapWidth * 4 * sizeof(std::int32_t));
 
 					// Scan all the image's rows that go in the bitmap's row
 					///////////////////////////////////////////////////////////
-					imbxInt32 firstPixelY = scanY * (imageSizeY << leftShiftY) / totalHeightPixels;
-					imbxInt32 lastPixelY = (scanY + 1) * (imageSizeY << leftShiftY) / totalHeightPixels;
+					std::int32_t firstPixelY = scanY * (imageSizeY << leftShiftY) / totalHeightPixels;
+					std::int32_t lastPixelY = (scanY + 1) * (imageSizeY << leftShiftY) / totalHeightPixels;
 
-					for(imbxInt32 scanImageY = firstPixelY; scanImageY != lastPixelY; /* increased in the loop */)
+					for(std::int32_t scanImageY = firstPixelY; scanImageY != lastPixelY; /* increased in the loop */)
 					{
-						imbxInt32 currentImageY = (scanImageY >> leftShiftY);
-						imbxInt32* pAveragePointer = averagePixels;
-						imbxUint32* pNextSourceXIndex = sourcePixelIndex;
+						std::int32_t currentImageY = (scanImageY >> leftShiftY);
+						std::int32_t* pAveragePointer = averagePixels;
+						std::uint32_t* pNextSourceXIndex = sourcePixelIndex;
 
-						imbxUint8* pImagePointer(0);
-						imbxUint8* imageMemory(0);
+						std::uint8_t* pImagePointer(0);
+						std::uint8_t* imageMemory(0);
 
 						ptr<handlers::dataHandlerNumericBase> imageHandler;
 						if(m_transformsChain->isEmpty())
@@ -388,7 +388,7 @@ namespace puntoexe
 							if(currentImageY >= transformChainNextY)
 							{
 								transformChainNextY = currentImageY + sourceHeight;
-								if(transformChainNextY > (imbxInt32)imageSizeY)
+								if(transformChainNextY > (std::int32_t)imageSizeY)
 								{
 									transformChainNextY = imageSizeY;
 								}
@@ -401,19 +401,19 @@ namespace puntoexe
 							pImagePointer = &(imageMemory[(currentImageY - transformChainStartY) * sourceWidth * 3]);
 						}
 
-						imbxInt32 scanYBlock ( (scanImageY & (~maskY)) + ((imbxInt32)1 << leftShiftY) );
+						std::int32_t scanYBlock ( (scanImageY & (~maskY)) + ((std::int32_t)1 << leftShiftY) );
 						if(scanYBlock > lastPixelY)
 						{
 							scanYBlock = lastPixelY;
 						}
-						imbxInt32 numRows(scanYBlock - scanImageY);
+						std::int32_t numRows(scanYBlock - scanImageY);
 						scanImageY += numRows;
 
 						if(numRows == 1)
 						{
-							for(imbxInt32 scanX (destBitmapWidth); scanX != 0; --scanX)
+							for(std::int32_t scanX (destBitmapWidth); scanX != 0; --scanX)
 							{
-								for(imbxUint32 scanImageX = *(pNextSourceXIndex++); scanImageX != *pNextSourceXIndex; ++scanImageX)
+								for(std::uint32_t scanImageX = *(pNextSourceXIndex++); scanImageX != *pNextSourceXIndex; ++scanImageX)
 								{
 									++(*pAveragePointer);
 									*(++pAveragePointer) += *pImagePointer;
@@ -432,9 +432,9 @@ namespace puntoexe
 						}
 						else
 						{
-							for(imbxInt32 scanX (destBitmapWidth); scanX != 0; --scanX)
+							for(std::int32_t scanX (destBitmapWidth); scanX != 0; --scanX)
 							{
-								for(imbxUint32 scanImageX = *(pNextSourceXIndex++); scanImageX != *pNextSourceXIndex; ++scanImageX)
+								for(std::uint32_t scanImageX = *(pNextSourceXIndex++); scanImageX != *pNextSourceXIndex; ++scanImageX)
 								{
 									*pAveragePointer += numRows;
 									*(++pAveragePointer) += *pImagePointer  * numRows;
@@ -454,55 +454,55 @@ namespace puntoexe
 					}
 
 					// Copy the average to the bitmap
-					imbxInt32* pAveragePointer = averagePixels;
-					imbxUint32 counter;
+					std::int32_t* pAveragePointer = averagePixels;
+					std::uint32_t counter;
 
                     if(drawBitmapType == drawBitmapARGB)
                     {
-                        for(imbxInt32 scanX (destBitmapWidth); scanX != 0; --scanX)
+                        for(std::int32_t scanX (destBitmapWidth); scanX != 0; --scanX)
                         {
-                            counter = (imbxUint32)*(pAveragePointer++);
-                            *(pBuffer++) = (imbxUint8) (((imbxUint32)*(pAveragePointer++) / counter) & 0xff);
-                            *(pBuffer++) = (imbxUint8) (((imbxUint32)*(pAveragePointer++) / counter) & 0xff);
-                            *(pBuffer++) = (imbxUint8) (((imbxUint32)*(pAveragePointer++) / counter) & 0xff);
+                            counter = (std::uint32_t)*(pAveragePointer++);
+                            *(pBuffer++) = (std::uint8_t) (((std::uint32_t)*(pAveragePointer++) / counter) & 0xff);
+                            *(pBuffer++) = (std::uint8_t) (((std::uint32_t)*(pAveragePointer++) / counter) & 0xff);
+                            *(pBuffer++) = (std::uint8_t) (((std::uint32_t)*(pAveragePointer++) / counter) & 0xff);
                             *(pBuffer++) = 0xff;
                         }
                     }
                     else if(drawBitmapType == drawBitmapBGRA)
                     {
-					    imbxUint32 r, g;
-                        for(imbxInt32 scanX (destBitmapWidth); scanX != 0; --scanX)
+					    std::uint32_t r, g;
+                        for(std::int32_t scanX (destBitmapWidth); scanX != 0; --scanX)
                         {
-                            counter = (imbxUint32)*(pAveragePointer++);
-							r = (imbxUint8) (((imbxUint32)*(pAveragePointer++) / counter) & 0xff);
-							g = (imbxUint8) (((imbxUint32)*(pAveragePointer++) / counter) & 0xff);
-							*(pBuffer++) = (imbxUint8) (((imbxUint32)*(pAveragePointer++) / counter) & 0xff);
-							*(pBuffer++) = (imbxUint8)g;
-							*(pBuffer++) = (imbxUint8)r;
+                            counter = (std::uint32_t)*(pAveragePointer++);
+							r = (std::uint8_t) (((std::uint32_t)*(pAveragePointer++) / counter) & 0xff);
+							g = (std::uint8_t) (((std::uint32_t)*(pAveragePointer++) / counter) & 0xff);
+							*(pBuffer++) = (std::uint8_t) (((std::uint32_t)*(pAveragePointer++) / counter) & 0xff);
+							*(pBuffer++) = (std::uint8_t)g;
+							*(pBuffer++) = (std::uint8_t)r;
                             *(pBuffer++) = 0xff;
                         }
                     }
                     else if(drawBitmapType == drawBitmapRGB)
 					{
-						for(imbxInt32 scanX (destBitmapWidth); scanX != 0; --scanX)
+						for(std::int32_t scanX (destBitmapWidth); scanX != 0; --scanX)
 						{
-							counter = (imbxUint32)*(pAveragePointer++);
-							*(pBuffer++) = (imbxUint8) (((imbxUint32)*(pAveragePointer++) / counter) & 0xff);
-							*(pBuffer++) = (imbxUint8) (((imbxUint32)*(pAveragePointer++) / counter) & 0xff);
-							*(pBuffer++) = (imbxUint8) (((imbxUint32)*(pAveragePointer++) / counter) & 0xff);
+							counter = (std::uint32_t)*(pAveragePointer++);
+							*(pBuffer++) = (std::uint8_t) (((std::uint32_t)*(pAveragePointer++) / counter) & 0xff);
+							*(pBuffer++) = (std::uint8_t) (((std::uint32_t)*(pAveragePointer++) / counter) & 0xff);
+							*(pBuffer++) = (std::uint8_t) (((std::uint32_t)*(pAveragePointer++) / counter) & 0xff);
 						}
 					}
 					else
 					{
-					    imbxUint32 r, g;
-						for(imbxInt32 scanX (destBitmapWidth); scanX != 0; --scanX)
+					    std::uint32_t r, g;
+						for(std::int32_t scanX (destBitmapWidth); scanX != 0; --scanX)
 						{
-							counter = (imbxUint32)*(pAveragePointer++);
-							r = (imbxUint8) (((imbxUint32)*(pAveragePointer++) / counter) & 0xff);
-							g = (imbxUint8) (((imbxUint32)*(pAveragePointer++) / counter) & 0xff);
-							*(pBuffer++) = (imbxUint8) (((imbxUint32)*(pAveragePointer++) / counter) & 0xff);
-							*(pBuffer++) = (imbxUint8)g;
-							*(pBuffer++) = (imbxUint8)r;
+							counter = (std::uint32_t)*(pAveragePointer++);
+							r = (std::uint8_t) (((std::uint32_t)*(pAveragePointer++) / counter) & 0xff);
+							g = (std::uint8_t) (((std::uint32_t)*(pAveragePointer++) / counter) & 0xff);
+							*(pBuffer++) = (std::uint8_t) (((std::uint32_t)*(pAveragePointer++) / counter) & 0xff);
+							*(pBuffer++) = (std::uint8_t)g;
+							*(pBuffer++) = (std::uint8_t)r;
 						}
 					}
 

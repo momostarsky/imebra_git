@@ -215,7 +215,7 @@ void directoryRecord::setReferencedRecord(ptr<directoryRecord> pReferencedRecord
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::wstring directoryRecord::getFilePart(imbxUint32 part)
+std::wstring directoryRecord::getFilePart(std::uint32_t part)
 {
 	return getRecordDataSet()->getUnicodeString(0x0004, 0, 0x1500, part);
 }
@@ -230,7 +230,7 @@ std::wstring directoryRecord::getFilePart(imbxUint32 part)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void directoryRecord::setFilePart(imbxUint32 part, const std::wstring partName)
+void directoryRecord::setFilePart(std::uint32_t part, const std::wstring partName)
 {
     getRecordDataSet()->setUnicodeString(0x0004, 0, 0x1500, part, partName);
 }
@@ -441,9 +441,9 @@ dicomDir::dicomDir(ptr<dataSet> pDataSet):
 
 	// Get the DICOMDIR sequence
 	///////////////////////////////////////////////////////////
-	typedef std::map<imbxUint32, ptr<directoryRecord> > tOffsetsToRecords;
+	typedef std::map<std::uint32_t, ptr<directoryRecord> > tOffsetsToRecords;
 	tOffsetsToRecords offsetsToRecords;
-	for(imbxUint32 scanItems(0); ; ++scanItems)
+	for(std::uint32_t scanItems(0); ; ++scanItems)
 	{
 		ptr<dataSet> pDataSet(m_pDataSet->getSequenceItem(0x0004, 0, 0x1220, scanItems));
 		if(pDataSet == 0)
@@ -459,9 +459,9 @@ dicomDir::dicomDir(ptr<dataSet> pDataSet):
 	///////////////////////////////////////////////////////////
 	for(tOffsetsToRecords::iterator scanRecords(offsetsToRecords.begin()); scanRecords != offsetsToRecords.end(); ++scanRecords)
 	{
-		imbxUint32 nextRecordOffset(scanRecords->second->getRecordDataSet()->getUnsignedLong(0x0004, 0, 0x1400, 0));
-		imbxUint32 childRecordOffset(scanRecords->second->getRecordDataSet()->getUnsignedLong(0x0004, 0, 0x1420, 0));
-		imbxUint32 referencedRecordOffset(scanRecords->second->getRecordDataSet()->getUnsignedLong(0x0004, 0, 0x1504, 0));
+		std::uint32_t nextRecordOffset(scanRecords->second->getRecordDataSet()->getUnsignedLong(0x0004, 0, 0x1400, 0));
+		std::uint32_t childRecordOffset(scanRecords->second->getRecordDataSet()->getUnsignedLong(0x0004, 0, 0x1420, 0));
+		std::uint32_t referencedRecordOffset(scanRecords->second->getRecordDataSet()->getUnsignedLong(0x0004, 0, 0x1504, 0));
 
 		tOffsetsToRecords::iterator findNextRecord(offsetsToRecords.find(nextRecordOffset));
 		if(findNextRecord != offsetsToRecords.end())

@@ -65,7 +65,7 @@ public:
 	///                           beyond the virtual length
 	///
 	///////////////////////////////////////////////////////////
-	streamController(ptr<baseStream> pControlledStream, imbxUint32 virtualStart = 0, imbxUint32 virtualLength = 0);
+	streamController(ptr<baseStream> pControlledStream, std::uint32_t virtualStart = 0, std::uint32_t virtualLength = 0);
 
     virtual ~streamController();
 
@@ -88,7 +88,7 @@ public:
 	///                  start position set in the constructor
 	///
 	///////////////////////////////////////////////////////////
-	imbxUint32 position();
+	std::uint32_t position();
 
 	/// \brief Return a pointer to the controlled stream.
 	///
@@ -108,7 +108,7 @@ public:
 	///                  beginning of the stream
 	///
 	///////////////////////////////////////////////////////////
-	imbxUint32 getControlledStreamPosition();
+	std::uint32_t getControlledStreamPosition();
 
 	///////////////////////////////////////////////////////////
 	/// \name Byte ordering
@@ -156,7 +156,7 @@ public:
 	///                  equal to words*wordLength
 	///
 	///////////////////////////////////////////////////////////
-	static void adjustEndian(imbxUint8* pBuffer, const imbxUint32 wordLength, const tByteOrdering endianType, const imbxUint32 words = 1);
+	static void adjustEndian(std::uint8_t* pBuffer, const std::uint32_t wordLength, const tByteOrdering endianType, const std::uint32_t words = 1);
 
 	//@}
 
@@ -179,13 +179,13 @@ protected:
 	/// \brief Used for buffered IO
 	///
 	///////////////////////////////////////////////////////////
-    imbxUint8* m_dataBuffer;
+    std::uint8_t* m_dataBuffer;
 
 	/// \brief Byte in the stream that represents the byte 0
 	///         in the stream controller.
 	///
 	///////////////////////////////////////////////////////////
-	imbxUint32 m_virtualStart;
+	std::uint32_t m_virtualStart;
 
 	/// \brief Max number of bytes that the stream controller
 	///         can control in the controlled stream. An EOF
@@ -196,13 +196,13 @@ protected:
 	///  maximum length.
 	///
 	///////////////////////////////////////////////////////////
-	imbxUint32 m_virtualLength;
+	std::uint32_t m_virtualLength;
 
-	imbxUint32 m_dataBufferStreamPosition;
-	imbxUint8* m_pDataBufferStart;
-	imbxUint8* m_pDataBufferCurrent;
-	imbxUint8* m_pDataBufferEnd;
-	imbxUint8* m_pDataBufferMaxEnd;
+	std::uint32_t m_dataBufferStreamPosition;
+	std::uint8_t* m_pDataBufferStart;
+	std::uint8_t* m_pDataBufferCurrent;
+	std::uint8_t* m_pDataBufferEnd;
+	std::uint8_t* m_pDataBufferMaxEnd;
 };
 
 /// \brief Exception thrown when an attempt to read past

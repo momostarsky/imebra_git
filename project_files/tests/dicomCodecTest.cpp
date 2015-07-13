@@ -13,22 +13,22 @@ namespace tests
 
 ptr<image> makeTestImage()
 {
-	imbxUint32 sizeX = 601;
-	imbxUint32 sizeY = 401;
+	std::uint32_t sizeX = 601;
+	std::uint32_t sizeY = 401;
 	ptr<image> dicomImage(new image);
 	dicomImage->create(sizeX, sizeY, image::depthU16, L"RGB", 15);
 
-	imbxUint32 rowSize, channelsPixelSize, channelsNumber;
+	std::uint32_t rowSize, channelsPixelSize, channelsNumber;
 	ptr<handlers::dataHandlerNumericBase> imageHandler = dicomImage->getDataHandler(true, &rowSize, &channelsPixelSize, &channelsNumber);
 
 	// Make 3 bands (RGB)
 	size_t pointer(0);
-	for(imbxUint32 y=0; y<sizeY; ++y)
+	for(std::uint32_t y=0; y<sizeY; ++y)
 	{
-		for(imbxUint32 x=0; x<sizeX; ++x)
+		for(std::uint32_t x=0; x<sizeX; ++x)
 		{
-			imbxInt32 r, g, b;
-			imbxUint32 value = y * 255 / sizeY;
+			std::int32_t r, g, b;
+			std::uint32_t value = y * 255 / sizeY;
 			r = g = 0;
 			b = value;
 			if(x < sizeX - sizeX/3)
@@ -63,7 +63,7 @@ TEST(dicomCodecTest, testUncompressed)
 		{
 			for(unsigned int sign=0; sign != 2; ++sign)
 			{
-				for(imbxUint32 highBit(0); highBit != 32; ++highBit)
+				for(std::uint32_t highBit(0); highBit != 32; ++highBit)
 				{
 					puntoexe::imebra::image::bitDepth depth(sign == 0 ? puntoexe::imebra::image::depthU8 : puntoexe::imebra::image::depthS8);
 					if(highBit > 7)
@@ -160,10 +160,10 @@ TEST(dicomCodecTest, testUncompressed)
 TEST(dicomCodecTest, testRLENotInterleaved)
 {
 	ptr<image> dicomImage = makeTestImage();
-	imbxUint32 sizeX, sizeY;
+	std::uint32_t sizeX, sizeY;
 	dicomImage->getSize(&sizeX, &sizeY);
 
-	imbxUint32 rowSize, channelsPixelSize, channelsNumber;
+	std::uint32_t rowSize, channelsPixelSize, channelsNumber;
 
 	ptr<memory> streamMemory(new memory);
 	{
@@ -187,7 +187,7 @@ TEST(dicomCodecTest, testRLENotInterleaved)
 
 		ptr<image> checkImage = testDataSet->getImage(0);
 		
-		imbxUint32 checkSizeX, checkSizeY;
+		std::uint32_t checkSizeX, checkSizeY;
 		checkImage->getSize(&checkSizeX, &checkSizeY);
 
 		ptr<handlers::dataHandlerNumericBase> checkHandler = checkImage->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
@@ -198,14 +198,14 @@ TEST(dicomCodecTest, testRLENotInterleaved)
         EXPECT_EQ(sizeY, checkSizeY);
 
 		size_t pointer(0);
-		for(imbxUint32 checkY = 0; checkY < sizeY; ++checkY)
+		for(std::uint32_t checkY = 0; checkY < sizeY; ++checkY)
 		{
-			for(imbxUint32 checkX = 0; checkX < sizeX; ++checkX)
+			for(std::uint32_t checkX = 0; checkX < sizeX; ++checkX)
 			{
-				for(imbxUint32 channel = 3; channel != 0; --channel)
+				for(std::uint32_t channel = 3; channel != 0; --channel)
 				{
-					imbxInt32 value0 = checkHandler->getUnsignedLong(pointer);
-					imbxInt32 value1 = originalHandler->getUnsignedLong(pointer++);
+					std::int32_t value0 = checkHandler->getUnsignedLong(pointer);
+					std::int32_t value1 = originalHandler->getUnsignedLong(pointer++);
                     EXPECT_EQ(value0, value1);
 				}
 			}

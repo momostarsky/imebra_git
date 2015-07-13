@@ -48,15 +48,15 @@ cursorLine::cursorLine():
 //
 ///////////////////////////////////////////////////////////
 cursorLine::cursorLine(
-		imbxInt32 x0,
-		imbxInt32 y0,
-		imbxInt32 x1,
-		imbxInt32 y1,
-		imbxUint8 red,
-		imbxUint8 green,
-		imbxUint8 blue,
+		std::int32_t x0,
+		std::int32_t y0,
+		std::int32_t x1,
+		std::int32_t y1,
+		std::uint8_t red,
+		std::uint8_t green,
+		std::uint8_t blue,
 		tStyle style,
-		imbxUint32 width):
+		std::uint32_t width):
 	m_x0(x0), m_y0(y0), m_x1(x1), m_y1(y1),
 		m_red(red), m_green(green), m_blue(blue),
 		m_style(style), m_width(width)
@@ -149,7 +149,7 @@ view::view():
 // Get the background color
 //
 ///////////////////////////////////////////////////////////
-void view::getBackgroundColor(imbxUint8* pRed, imbxUint8* pGreen, imbxUint8* pBlue)
+void view::getBackgroundColor(std::uint8_t* pRed, std::uint8_t* pGreen, std::uint8_t* pBlue)
 {
 	*pRed   = m_backgroundRed;
 	*pGreen = m_backgroundGreen;
@@ -162,7 +162,7 @@ void view::getBackgroundColor(imbxUint8* pRed, imbxUint8* pGreen, imbxUint8* pBl
 // Set the background color
 //
 ///////////////////////////////////////////////////////////
-void view::setBackgroundColor(imbxUint8 red, imbxUint8 green, imbxUint8 blue)
+void view::setBackgroundColor(std::uint8_t red, std::uint8_t green, std::uint8_t blue)
 {
 	m_backgroundRed   = red;
 	m_backgroundGreen = green;
@@ -176,7 +176,7 @@ void view::setBackgroundColor(imbxUint8 red, imbxUint8 green, imbxUint8 blue)
 // Get the image drawing area
 //
 ///////////////////////////////////////////////////////////
-void view::getImageRect(imbxInt32* pLeft, imbxInt32* pTop, imbxInt32* pRight, imbxInt32* pBottom)
+void view::getImageRect(std::int32_t* pLeft, std::int32_t* pTop, std::int32_t* pRight, std::int32_t* pBottom)
 {
 	*pLeft   = m_leftPosition;
 	*pTop    = m_topPosition;
@@ -211,7 +211,7 @@ double view::getZoomFactor()
 // Set the active zoom factor
 //
 ///////////////////////////////////////////////////////////
-void view::setZoomFactor(double zoomFactor, imbxInt32 centerPointX /* =-1 */, imbxInt32 centerPointY /* =-1 */)
+void view::setZoomFactor(double zoomFactor, std::int32_t centerPointX /* =-1 */, std::int32_t centerPointY /* =-1 */)
 {
 	// Update the zoom factor
 	///////////////////////////////////////////////////////////
@@ -235,7 +235,7 @@ void view::setZoomFactor(double zoomFactor, imbxInt32 centerPointX /* =-1 */, im
 	// Automatic zoom
 	///////////////////////////////////////////////////////////
 	setScrollSize(1, 1, true);
-	imbxUint32 imageSizeX, imageSizeY;
+	std::uint32_t imageSizeX, imageSizeY;
 	m_originalImage->getSize(&imageSizeX, &imageSizeY);
 
 	setZoomRect(0, 0, imageSizeX, imageSizeY);
@@ -248,7 +248,7 @@ void view::setZoomFactor(double zoomFactor, imbxInt32 centerPointX /* =-1 */, im
 //  units are in image's pixels
 //
 ///////////////////////////////////////////////////////////
-void view::setZoomRect(imbxInt32 left, imbxInt32 top, imbxInt32 right, imbxInt32 bottom)
+void view::setZoomRect(std::int32_t left, std::int32_t top, std::int32_t right, std::int32_t bottom)
 {
 	if(m_originalImage == 0)
 	{
@@ -257,31 +257,31 @@ void view::setZoomRect(imbxInt32 left, imbxInt32 top, imbxInt32 right, imbxInt32
 
 	if(left > right)
 	{
-		imbxInt32 temp = left;
+		std::int32_t temp = left;
 		left = right;
 		right = temp;
 	}
 
 	if(top > bottom)
 	{
-		imbxInt32 temp = top;
+		std::int32_t temp = top;
 		top = bottom;
 		bottom = temp;
 
 	}
-	imbxInt32 centerPointX = (right - left)/2 + left;
-	imbxInt32 centerPointY = (bottom - top)/2 + top;
+	std::int32_t centerPointX = (right - left)/2 + left;
+	std::int32_t centerPointY = (bottom - top)/2 + top;
 
-	imbxUint32 sizeX, sizeY;
+	std::uint32_t sizeX, sizeY;
 	getWindowSize(&sizeX, &sizeY);
 
 	double imageSizeMmX, imageSizeMmY;
 	m_originalImage->getSizeMm(&imageSizeMmX, &imageSizeMmY);
 
-	imbxUint32 imageSizeX, imageSizeY;
+	std::uint32_t imageSizeX, imageSizeY;
 	m_originalImage->getSize(&imageSizeX, &imageSizeY);
 
-	imbxUint32 horzDPI, vertDPI;
+	std::uint32_t horzDPI, vertDPI;
 	getScreenDPI(&horzDPI, &vertDPI);
 
 	if(imageSizeMmX == 0)
@@ -311,7 +311,7 @@ void view::setZoomRect(imbxInt32 left, imbxInt32 top, imbxInt32 right, imbxInt32
 //  window
 //
 ///////////////////////////////////////////////////////////
-void view::zoomInOut(bool bZoomIn, imbxInt32 centerPointX /* =-1 */, imbxInt32 centerPointY /* =-1 */)
+void view::zoomInOut(bool bZoomIn, std::int32_t centerPointX /* =-1 */, std::int32_t centerPointY /* =-1 */)
 {
 	if(bZoomIn)
 	{
@@ -336,9 +336,9 @@ bool view::isAutoZoom()
 	{
 		return false;
 	}
-	imbxUint32 sizeX, sizeY;
+	std::uint32_t sizeX, sizeY;
 	getWindowSize(&sizeX, &sizeY);
-	return (m_leftPosition >= 0 && m_rightPosition <= (imbxInt32)sizeX && m_topPosition >= 0 && m_bottomPosition <= (imbxInt32)sizeY);
+	return (m_leftPosition >= 0 && m_rightPosition <= (std::int32_t)sizeX && m_topPosition >= 0 && m_bottomPosition <= (std::int32_t)sizeY);
 }
 
 
@@ -348,7 +348,7 @@ bool view::isAutoZoom()
 //  the window
 //
 ///////////////////////////////////////////////////////////
-void view::getCenterPoint(imbxInt32* pCenterPointX, imbxInt32* pCenterPointY)
+void view::getCenterPoint(std::int32_t* pCenterPointX, std::int32_t* pCenterPointY)
 {
 	// Reset the result values
 	///////////////////////////////////////////////////////////
@@ -360,7 +360,7 @@ void view::getCenterPoint(imbxInt32* pCenterPointX, imbxInt32* pCenterPointY)
 		return;
 	}
 
-	imbxUint32 imageSizeX, imageSizeY;
+	std::uint32_t imageSizeX, imageSizeY;
 	m_originalImage->getSize(&imageSizeX, &imageSizeY);
 
 	// Nothing happens if the image is not valid
@@ -372,14 +372,14 @@ void view::getCenterPoint(imbxInt32* pCenterPointX, imbxInt32* pCenterPointY)
 
 	// Get the window's width
 	///////////////////////////////////////////////////////////
-	imbxUint32 windowWidth  = 0;
-	imbxUint32 windowHeight = 0;
+	std::uint32_t windowWidth  = 0;
+	std::uint32_t windowHeight = 0;
 	getWindowSize(&windowWidth, &windowHeight);
 
 	// Get the scroll position
 	///////////////////////////////////////////////////////////
-	imbxInt32 scrollX = 0;
-	imbxInt32 scrollY = 0;
+	std::int32_t scrollX = 0;
+	std::int32_t scrollY = 0;
 	getScrollPosition(&scrollX, &scrollY);
 
 	// Calculate the actual center point
@@ -394,7 +394,7 @@ void view::getCenterPoint(imbxInt32* pCenterPointX, imbxInt32* pCenterPointY)
 // Center the desidered image's pixel in the window
 //
 ///////////////////////////////////////////////////////////
-void view::setCenterPoint(imbxInt32 centerPointX, imbxInt32 centerPointY)
+void view::setCenterPoint(std::int32_t centerPointX, std::int32_t centerPointY)
 {
 	if(m_originalImage == 0)
 	{
@@ -404,50 +404,50 @@ void view::setCenterPoint(imbxInt32 centerPointX, imbxInt32 centerPointY)
 	// Calculate the size of the area occupied by the image on
 	//  the screen
 	///////////////////////////////////////////////////////////
-	imbxInt32 imageAreaWidth = m_rightPosition - m_leftPosition;
-	imbxInt32 imageAreaHeight = m_bottomPosition - m_topPosition;
+	std::int32_t imageAreaWidth = m_rightPosition - m_leftPosition;
+	std::int32_t imageAreaHeight = m_bottomPosition - m_topPosition;
 
 	// Get the window's width
 	///////////////////////////////////////////////////////////
-	imbxUint32 windowWidth  = 0;
-	imbxUint32 windowHeight = 0;
+	std::uint32_t windowWidth  = 0;
+	std::uint32_t windowHeight = 0;
 	getWindowSize(&windowWidth, &windowHeight);
 
 	// Get the scroll position
 	///////////////////////////////////////////////////////////
-	imbxInt32 oldScrollPosX = 0;
-	imbxInt32 oldScrollPosY = 0;
+	std::int32_t oldScrollPosX = 0;
+	std::int32_t oldScrollPosY = 0;
 	getScrollPosition(&oldScrollPosX, &oldScrollPosY);
 
-	imbxInt32 newScrollPosX = oldScrollPosX;
-	imbxInt32 newScrollPosY = oldScrollPosY;
+	std::int32_t newScrollPosX = oldScrollPosX;
+	std::int32_t newScrollPosY = oldScrollPosY;
 
 	// Get the image's size
 	///////////////////////////////////////////////////////////
-	imbxUint32 imageSizeX, imageSizeY;
+	std::uint32_t imageSizeX, imageSizeY;
 	m_originalImage->getSize(&imageSizeX, &imageSizeY);
 
 	// Calculate the new scroll position
 	///////////////////////////////////////////////////////////
 	if(centerPointX>=0)
 	{
-		newScrollPosX = imbxInt32((centerPointX * imageAreaWidth)/imageSizeX) + m_leftPosition - windowWidth/2;
+		newScrollPosX = std::int32_t((centerPointX * imageAreaWidth)/imageSizeX) + m_leftPosition - windowWidth/2;
 	}
 
 	if(centerPointY>=0)
 	{
-		newScrollPosY = imbxInt32((centerPointY * imageAreaHeight)/imageSizeY) + m_topPosition - windowHeight/2;
+		newScrollPosY = std::int32_t((centerPointY * imageAreaHeight)/imageSizeY) + m_topPosition - windowHeight/2;
 	}
 
 	// Check if the scroll position is valid
 	///////////////////////////////////////////////////////////
-	if(newScrollPosX+(imbxInt32)windowWidth>imageAreaWidth)
+	if(newScrollPosX+(std::int32_t)windowWidth>imageAreaWidth)
 	{
-		newScrollPosX=imageAreaWidth-(imbxInt32)windowWidth;
+		newScrollPosX=imageAreaWidth-(std::int32_t)windowWidth;
 	}
-	if(newScrollPosY+(imbxInt32)windowHeight>imageAreaHeight)
+	if(newScrollPosY+(std::int32_t)windowHeight>imageAreaHeight)
 	{
-		newScrollPosY=imageAreaHeight-(imbxInt32)windowHeight;
+		newScrollPosY=imageAreaHeight-(std::int32_t)windowHeight;
 	}
 	if(newScrollPosX < 0)
 	{
@@ -496,7 +496,7 @@ void view::startCursorDef()
 // End the cursor definition
 //
 ///////////////////////////////////////////////////////////
-void view::endCursorDef(imbxInt32 cursorHotSpotX, imbxInt32 cursorHotSpotY)
+void view::endCursorDef(std::int32_t cursorHotSpotX, std::int32_t cursorHotSpotY)
 {
 	// Copy the temporary lines into cursor's lines
 	///////////////////////////////////////////////////////////
@@ -519,25 +519,25 @@ void view::endCursorDef(imbxInt32 cursorHotSpotX, imbxInt32 cursorHotSpotY)
 
 	// Convert the hotspot into window's coordinates
 	///////////////////////////////////////////////////////////
-	imbxInt32 scrollX, scrollY;
+	std::int32_t scrollX, scrollY;
 	getScrollPosition(&scrollX, &scrollY);
 
-	imbxUint32 imageSizeX, imageSizeY;
+	std::uint32_t imageSizeX, imageSizeY;
 	m_originalImage->getSize(&imageSizeX, &imageSizeY);
 
-	imbxInt32 windowHotSpotX = cursorHotSpotX * (m_rightPosition - m_leftPosition) / imageSizeX +m_leftPosition - scrollX;
-	imbxInt32 windowHotSpotY = cursorHotSpotY * (m_bottomPosition - m_topPosition) / imageSizeY +m_topPosition - scrollY;
+	std::int32_t windowHotSpotX = cursorHotSpotX * (m_rightPosition - m_leftPosition) / imageSizeX +m_leftPosition - scrollX;
+	std::int32_t windowHotSpotY = cursorHotSpotY * (m_bottomPosition - m_topPosition) / imageSizeY +m_topPosition - scrollY;
 
 	// Find the amount of scroll to execute
 	///////////////////////////////////////////////////////////
-	imbxUint32 windowSizeX, windowSizeY;
+	std::uint32_t windowSizeX, windowSizeY;
 	getWindowSize(&windowSizeX, &windowSizeY);
 
-	imbxInt32 limitX = windowSizeX / 10;
-	imbxInt32 limitY = windowSizeY / 10;
+	std::int32_t limitX = windowSizeX / 10;
+	std::int32_t limitY = windowSizeY / 10;
 
-	imbxInt32 executeScrollX = 0;
-	imbxInt32 executeScrollY = 0;
+	std::int32_t executeScrollX = 0;
+	std::int32_t executeScrollY = 0;
 
 	if(windowHotSpotX < limitX)
 	{
@@ -547,13 +547,13 @@ void view::endCursorDef(imbxInt32 cursorHotSpotX, imbxInt32 cursorHotSpotY)
 	{
 		executeScrollY = windowHotSpotY - limitY;
 	}
-	if(windowHotSpotX > ((imbxInt32)windowSizeX - limitX) )
+	if(windowHotSpotX > ((std::int32_t)windowSizeX - limitX) )
 	{
-		executeScrollX = windowHotSpotX - (imbxInt32)windowSizeX + limitX;
+		executeScrollX = windowHotSpotX - (std::int32_t)windowSizeX + limitX;
 	}
-	if(windowHotSpotY > ((imbxInt32)windowSizeY - limitY) )
+	if(windowHotSpotY > ((std::int32_t)windowSizeY - limitY) )
 	{
-		executeScrollY = windowHotSpotY - (imbxInt32)windowSizeY + limitY;
+		executeScrollY = windowHotSpotY - (std::int32_t)windowSizeY + limitY;
 	}
 
 	if(executeScrollX != 0 && executeScrollY != 0)
@@ -593,7 +593,7 @@ void view::endCursorDef()
 // Define a cursor's line
 //
 ///////////////////////////////////////////////////////////
-void view::defCursorLine(imbxInt32 startPointX, imbxInt32 startPointY, imbxInt32 endPointX, imbxInt32 endPointY, imbxUint8 colorRed, imbxUint8 colorGreen, imbxUint8 colorBlue, cursorLine::tStyle style /* = cursorLine::line */, int width /* =0 */)
+void view::defCursorLine(std::int32_t startPointX, std::int32_t startPointY, std::int32_t endPointX, std::int32_t endPointY, std::uint8_t colorRed, std::uint8_t colorGreen, std::uint8_t colorBlue, cursorLine::tStyle style /* = cursorLine::line */, int width /* =0 */)
 {
 	cursorLine newLine(startPointX, startPointY, endPointX, endPointY, colorRed, colorGreen, colorBlue, style, width);
 	m_tempCursorLines.push_back(newLine);
@@ -606,24 +606,24 @@ void view::defCursorLine(imbxInt32 startPointX, imbxInt32 startPointY, imbxInt32
 //  coordinate relative to the image's pixels
 //
 ///////////////////////////////////////////////////////////
-imbxInt32 view::windowPosToImageX(imbxInt32 windowPosX)
+std::int32_t view::windowPosToImageX(std::int32_t windowPosX)
 {
 	if(m_originalImage == 0)
 	{
 		return 0;
 	}
 
-	imbxUint32 imageSizeX, imageSizeY;
+	std::uint32_t imageSizeX, imageSizeY;
 	m_originalImage->getSize(&imageSizeX, &imageSizeY);
 
-	imbxInt32 returnValue = ((windowPosX - m_leftPosition) * (imbxInt32)imageSizeX) / (m_rightPosition - m_leftPosition);
+	std::int32_t returnValue = ((windowPosX - m_leftPosition) * (std::int32_t)imageSizeX) / (m_rightPosition - m_leftPosition);
 	if(returnValue < 0)
 	{
 		return 0;
 	}
-	if(returnValue > (imbxInt32)imageSizeX)
+	if(returnValue > (std::int32_t)imageSizeX)
 	{
-		return (imbxInt32)imageSizeX;
+		return (std::int32_t)imageSizeX;
 	}
 	return returnValue;
 }
@@ -634,24 +634,24 @@ imbxInt32 view::windowPosToImageX(imbxInt32 windowPosX)
 //  coordinate relative to the image's pixels
 //
 ///////////////////////////////////////////////////////////
-imbxInt32 view::windowPosToImageY(imbxInt32 windowPosY)
+std::int32_t view::windowPosToImageY(std::int32_t windowPosY)
 {
 	if(m_originalImage == 0)
 	{
 		return 0;
 	}
 
-	imbxUint32 imageSizeX, imageSizeY;
+	std::uint32_t imageSizeX, imageSizeY;
 	m_originalImage->getSize(&imageSizeX, &imageSizeY);
 
-	imbxInt32 returnValue = ((windowPosY - m_topPosition) * (imbxInt32)imageSizeY) / (m_bottomPosition - m_topPosition);
+	std::int32_t returnValue = ((windowPosY - m_topPosition) * (std::int32_t)imageSizeY) / (m_bottomPosition - m_topPosition);
 	if(returnValue < 0)
 	{
 		return 0;
 	}
-	if(returnValue > (imbxInt32)imageSizeY)
+	if(returnValue > (std::int32_t)imageSizeY)
 	{
-		return (imbxInt32)imageSizeY;
+		return (std::int32_t)imageSizeY;
 	}
 	return returnValue;
 }
@@ -662,14 +662,14 @@ imbxInt32 view::windowPosToImageY(imbxInt32 windowPosY)
 // Return a pixel's horizontal position in millimiters
 //
 ///////////////////////////////////////////////////////////
-double view::imagePosToMillimitersX(imbxInt32 imagePosX)
+double view::imagePosToMillimitersX(std::int32_t imagePosX)
 {
 	if(m_originalImage == 0)
 	{
 		return 0;
 	}
 
-	imbxUint32 imageSizeX, imageSizeY;
+	std::uint32_t imageSizeX, imageSizeY;
 	m_originalImage->getSize(&imageSizeX, &imageSizeY);
 
 	if(imageSizeX == 0)
@@ -689,14 +689,14 @@ double view::imagePosToMillimitersX(imbxInt32 imagePosX)
 // Return a pixel's vertical position in millimiters
 //
 ///////////////////////////////////////////////////////////
-double view::imagePosToMillimitersY(imbxInt32 imagePosY)
+double view::imagePosToMillimitersY(std::int32_t imagePosY)
 {
 	if(m_originalImage == 0)
 	{
 		return 0;
 	}
 
-	imbxUint32 imageSizeX, imageSizeY;
+	std::uint32_t imageSizeX, imageSizeY;
 	m_originalImage->getSize(&imageSizeX, &imageSizeY);
 
 	if(imageSizeY == 0)
@@ -717,7 +717,7 @@ double view::imagePosToMillimitersY(imbxInt32 imagePosY)
 //  position in millimeters
 //
 ///////////////////////////////////////////////////////////
-imbxInt32 view::millimitersToImagePosX(double millimitersX)
+std::int32_t view::millimitersToImagePosX(double millimitersX)
 {
 	if(m_originalImage == 0)
 	{
@@ -731,10 +731,10 @@ imbxInt32 view::millimitersToImagePosX(double millimitersX)
 		return 0;
 	}
 
-	imbxUint32 imageSizeX, imageSizeY;
+	std::uint32_t imageSizeX, imageSizeY;
 	m_originalImage->getSize(&imageSizeX, &imageSizeY);
 
-	return (imbxInt32)((double)imageSizeX * millimitersX / mmSizeX);
+	return (std::int32_t)((double)imageSizeX * millimitersX / mmSizeX);
 }
 
 
@@ -744,7 +744,7 @@ imbxInt32 view::millimitersToImagePosX(double millimitersX)
 //  position in millimeters
 //
 ///////////////////////////////////////////////////////////
-imbxInt32 view::millimitersToImagePosY(double millimitersY)
+std::int32_t view::millimitersToImagePosY(double millimitersY)
 {
 	if(m_originalImage == 0)
 	{
@@ -758,10 +758,10 @@ imbxInt32 view::millimitersToImagePosY(double millimitersY)
 		return 0;
 	}
 
-	imbxUint32 imageSizeX, imageSizeY;
+	std::uint32_t imageSizeX, imageSizeY;
 	m_originalImage->getSize(&imageSizeX, &imageSizeY);
 
-	return (imbxInt32)((double)imageSizeY * millimitersY / mmSizeY);
+	return (std::int32_t)((double)imageSizeY * millimitersY / mmSizeY);
 }
 
 
@@ -787,15 +787,15 @@ void view::drawCursor(void* pDeviceContext)
 		return;
 	}
 
-	imbxUint32 imageSizeX, imageSizeY;
+	std::uint32_t imageSizeX, imageSizeY;
 	m_originalImage->getSize(&imageSizeX, &imageSizeY);
 
 	for(tCursorLinesList::iterator scanLines = m_cursorLines.begin(); scanLines != m_cursorLines.end(); ++scanLines)
 	{
-		imbxInt32 x0 = scanLines->m_x0 * (m_rightPosition - m_leftPosition) / imageSizeX + m_leftPosition;
-		imbxInt32 y0 = scanLines->m_y0 * (m_bottomPosition - m_topPosition) / imageSizeY + m_topPosition;
-		imbxInt32 x1 = scanLines->m_x1 * (m_rightPosition - m_leftPosition) / imageSizeX + m_leftPosition;
-		imbxInt32 y1 = scanLines->m_y1 * (m_bottomPosition - m_topPosition) / imageSizeY + m_topPosition;
+		std::int32_t x0 = scanLines->m_x0 * (m_rightPosition - m_leftPosition) / imageSizeX + m_leftPosition;
+		std::int32_t y0 = scanLines->m_y0 * (m_bottomPosition - m_topPosition) / imageSizeY + m_topPosition;
+		std::int32_t x1 = scanLines->m_x1 * (m_rightPosition - m_leftPosition) / imageSizeX + m_leftPosition;
+		std::int32_t y1 = scanLines->m_y1 * (m_bottomPosition - m_topPosition) / imageSizeY + m_topPosition;
 
 		drawCursorLine(pDeviceContext,
 			x0, y0, x1, y1,
@@ -810,16 +810,16 @@ void view::drawCursor(void* pDeviceContext)
 // Calculate the rectancle to use to draw the image
 //
 ///////////////////////////////////////////////////////////
-void view::updateImageRect(imbxInt32 centerPointX, imbxInt32 centerPointY)
+void view::updateImageRect(std::int32_t centerPointX, std::int32_t centerPointY)
 {
-	imbxInt32 tempCenterPointX = 0;
-	imbxInt32 tempCenterPointY = 0;
+	std::int32_t tempCenterPointX = 0;
+	std::int32_t tempCenterPointY = 0;
 	getCenterPoint(&tempCenterPointX, &tempCenterPointY);
 
 	if(centerPointX < 0) centerPointX = tempCenterPointX;
 	if(centerPointY < 0) centerPointY = tempCenterPointY;
 
-	imbxInt32 leftPosition, topPosition, rightPosition, bottomPosition;
+	std::int32_t leftPosition, topPosition, rightPosition, bottomPosition;
 	leftPosition=
 		topPosition=
 		rightPosition=
@@ -827,36 +827,36 @@ void view::updateImageRect(imbxInt32 centerPointX, imbxInt32 centerPointY)
 
 	// Get the window's size
 	///////////////////////////////////////////////////////////
-	imbxUint32 windowSizeX = 0;
-	imbxUint32 windowSizeY = 0;
+	std::uint32_t windowSizeX = 0;
+	std::uint32_t windowSizeY = 0;
 	getWindowSize(&windowSizeX, &windowSizeY);
 
 	// Get the scroll size
 	///////////////////////////////////////////////////////////
-	imbxUint32 scrollSizeX = 0;
-	imbxUint32 scrollSizeY = 0;
+	std::uint32_t scrollSizeX = 0;
+	std::uint32_t scrollSizeY = 0;
 	getScrollSize(&scrollSizeX, &scrollSizeY);
 
 	// Get the scroll position
 	///////////////////////////////////////////////////////////
-	imbxInt32 scrollPosX = 0;
-	imbxInt32 scrollPosY = 0;
+	std::int32_t scrollPosX = 0;
+	std::int32_t scrollPosY = 0;
 	getScrollPosition(&scrollPosX, &scrollPosY);
 
 	// For now, the new scroll size and position are the same
 	//  as the old ones
 	///////////////////////////////////////////////////////////
-	imbxUint32 newScrollSizeX=scrollSizeX;
-	imbxUint32 newScrollSizeY=scrollSizeY;
+	std::uint32_t newScrollSizeX=scrollSizeX;
+	std::uint32_t newScrollSizeY=scrollSizeY;
 
 	if(m_originalImage != 0)
 	{
-		imbxUint32 imageSizeX(0), imageSizeY(0);
+		std::uint32_t imageSizeX(0), imageSizeY(0);
 		m_originalImage->getSize(&imageSizeX, &imageSizeY);
 
 		// Retrieve the screen's resolution
 		///////////////////////////////////////////////////////////
-		imbxUint32 screenHorzDPI, screenVertDPI;
+		std::uint32_t screenHorzDPI, screenVertDPI;
 		screenHorzDPI=screenVertDPI=75;
 		getScreenDPI(&screenHorzDPI, &screenVertDPI);
 
@@ -879,8 +879,8 @@ void view::updateImageRect(imbxInt32 centerPointX, imbxInt32 centerPointY)
 		// Calculate the area occupied by the image, in screen's
 		//  pixels
 		///////////////////////////////////////////////////////////
-		imbxUint32 displayAreaWidth=(imbxUint32)((double)imageSizeMmX*m_zoom*(double)screenHorzDPI/25.4+0.5);
-		imbxUint32 displayAreaHeight=(imbxUint32)((double)imageSizeMmY*m_zoom*(double)screenVertDPI/25.4+0.5);
+		std::uint32_t displayAreaWidth=(std::uint32_t)((double)imageSizeMmX*m_zoom*(double)screenHorzDPI/25.4+0.5);
+		std::uint32_t displayAreaHeight=(std::uint32_t)((double)imageSizeMmY*m_zoom*(double)screenVertDPI/25.4+0.5);
 
 		if(displayAreaWidth>windowSizeX)
 		{
@@ -958,8 +958,8 @@ void view::setImage(ptr<image> pImage, ptr<transforms::transformsChain> pChain)
 	}
 	m_drawBitmap = new imebra::drawBitmap(pImage, pChain);
 
-	imbxUint32 oldSizeX = 0;
-	imbxUint32 oldSizeY = 0;
+	std::uint32_t oldSizeX = 0;
+	std::uint32_t oldSizeY = 0;
 	double oldSizeMmX = 0;
 	double oldSizeMmY = 0;
 
@@ -971,7 +971,7 @@ void view::setImage(ptr<image> pImage, ptr<transforms::transformsChain> pChain)
 
 	m_originalImage = pImage;
 
-	imbxUint32 newSizeX, newSizeY;
+	std::uint32_t newSizeX, newSizeY;
 	m_originalImage->getSize(&newSizeX, &newSizeY);
 	double newSizeMmX, newSizeMmY;
 	m_originalImage->getSizeMm(&newSizeMmX, &newSizeMmY);

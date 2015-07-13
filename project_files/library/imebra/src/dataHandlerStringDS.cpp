@@ -46,11 +46,11 @@ namespace handlers
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxInt32 dataHandlerStringDS::getSignedLong(const imbxUint32 index) const
+std::int32_t dataHandlerStringDS::getSignedLong(const std::uint32_t index) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerStringDS::getSignedLong");
 
-	return (imbxInt32)getDouble(index);
+	return (std::int32_t)getDouble(index);
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -66,11 +66,11 @@ imbxInt32 dataHandlerStringDS::getSignedLong(const imbxUint32 index) const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint32 dataHandlerStringDS::getUnsignedLong(const imbxUint32 index) const
+std::uint32_t dataHandlerStringDS::getUnsignedLong(const std::uint32_t index) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerStringDS::getUnsignedLong");
 
-	return (imbxInt32)getDouble(index);
+	return (std::int32_t)getDouble(index);
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -86,7 +86,7 @@ imbxUint32 dataHandlerStringDS::getUnsignedLong(const imbxUint32 index) const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerStringDS::setSignedLong(const imbxUint32 index, const imbxInt32 value)
+void dataHandlerStringDS::setSignedLong(const std::uint32_t index, const std::int32_t value)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerStringDS::setSignedLong");
 
@@ -106,7 +106,7 @@ void dataHandlerStringDS::setSignedLong(const imbxUint32 index, const imbxInt32 
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerStringDS::setUnsignedLong(const imbxUint32 index, const imbxUint32 value)
+void dataHandlerStringDS::setUnsignedLong(const std::uint32_t index, const std::uint32_t value)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerStringDS::setUnsignedLong");
 
@@ -126,7 +126,7 @@ void dataHandlerStringDS::setUnsignedLong(const imbxUint32 index, const imbxUint
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerStringDS::setDouble(const imbxUint32 index, const double value)
+void dataHandlerStringDS::setDouble(const std::uint32_t index, const double value)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerStringDS::setDouble");
 
@@ -137,17 +137,17 @@ void dataHandlerStringDS::setDouble(const imbxUint32 index, const double value)
 	PUNTOEXE_FUNCTION_END();
 }
 
-imbxUint8 dataHandlerStringDS::getPaddingByte() const
+std::uint8_t dataHandlerStringDS::getPaddingByte() const
 {
 	return 0x20;
 }
 
-imbxUint32 dataHandlerStringDS::getUnitSize() const
+std::uint32_t dataHandlerStringDS::getUnitSize() const
 {
 	return 0;
 }
 
-imbxUint32 dataHandlerStringDS::maxSize() const
+std::uint32_t dataHandlerStringDS::maxSize() const
 {
 	return 16;
 }

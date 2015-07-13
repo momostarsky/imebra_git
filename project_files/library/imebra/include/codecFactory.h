@@ -136,7 +136,7 @@ public:
 	///          data
 	///
 	///////////////////////////////////////////////////////////
-	ptr<dataSet> load(ptr<streamReader> pStream, imbxUint32 maxSizeBufferLoad = 0xffffffff);
+	ptr<dataSet> load(ptr<streamReader> pStream, std::uint32_t maxSizeBufferLoad = 0xffffffff);
 
 protected:
 	// The list of the registered codecs

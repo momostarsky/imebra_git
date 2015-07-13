@@ -45,7 +45,7 @@ namespace imebra
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<data> dataGroup::getTag(imbxUint16 tagId, bool bCreate /* =false */)
+ptr<data> dataGroup::getTag(std::uint16_t tagId, bool bCreate /* =false */)
 {
 	PUNTOEXE_FUNCTION_START(L"dataGroup::getTag");
 
@@ -72,7 +72,7 @@ ptr<data> dataGroup::getTag(imbxUint16 tagId, bool bCreate /* =false */)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<handlers::dataHandler> dataGroup::getDataHandler(imbxUint16 tagId, imbxUint32 bufferId, bool bWrite, std::string defaultType)
+ptr<handlers::dataHandler> dataGroup::getDataHandler(std::uint16_t tagId, std::uint32_t bufferId, bool bWrite, std::string defaultType)
 {
 	PUNTOEXE_FUNCTION_START(L"dataGroup::getDataHandler");
 
@@ -100,7 +100,7 @@ ptr<handlers::dataHandler> dataGroup::getDataHandler(imbxUint16 tagId, imbxUint3
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<streamReader> dataGroup::getStreamReader(imbxUint16 tagId, imbxUint32 bufferId)
+ptr<streamReader> dataGroup::getStreamReader(std::uint16_t tagId, std::uint32_t bufferId)
 {
 	PUNTOEXE_FUNCTION_START(L"dataGroup::getStreamReader");
 
@@ -130,7 +130,7 @@ ptr<streamReader> dataGroup::getStreamReader(imbxUint16 tagId, imbxUint32 buffer
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<streamWriter> dataGroup::getStreamWriter(imbxUint16 tagId, imbxUint32 bufferId, std::string dataType /* = "" */)
+ptr<streamWriter> dataGroup::getStreamWriter(std::uint16_t tagId, std::uint32_t bufferId, std::string dataType /* = "" */)
 {
 	PUNTOEXE_FUNCTION_START(L"dataGroup::getStream");
 
@@ -160,7 +160,7 @@ ptr<streamWriter> dataGroup::getStreamWriter(imbxUint16 tagId, imbxUint32 buffer
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<handlers::dataHandlerRaw> dataGroup::getDataHandlerRaw(imbxUint16 tagId, imbxUint32 bufferId, bool bWrite, std::string defaultType)
+ptr<handlers::dataHandlerRaw> dataGroup::getDataHandlerRaw(std::uint16_t tagId, std::uint32_t bufferId, bool bWrite, std::string defaultType)
 {
 	PUNTOEXE_FUNCTION_START(L"dataGroup::getDataHandlerRaw");
 
@@ -189,7 +189,7 @@ ptr<handlers::dataHandlerRaw> dataGroup::getDataHandlerRaw(imbxUint16 tagId, imb
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::string dataGroup::getDataType(imbxUint16 tagId)
+std::string dataGroup::getDataType(std::uint16_t tagId)
 {
 	PUNTOEXE_FUNCTION_START(L"dataGroup::getDataType");
 

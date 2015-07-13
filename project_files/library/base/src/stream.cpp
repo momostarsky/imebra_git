@@ -161,7 +161,7 @@ void stream::openFile(const std::wstring& fileName, const int mode)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void stream::write(imbxUint32 startPosition, const imbxUint8* pBuffer, imbxUint32 bufferLength)
+void stream::write(std::uint32_t startPosition, const std::uint8_t* pBuffer, std::uint32_t bufferLength)
 {
 	PUNTOEXE_FUNCTION_START(L"stream::write");
 
@@ -191,7 +191,7 @@ void stream::write(imbxUint32 startPosition, const imbxUint8* pBuffer, imbxUint3
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint32 stream::read(imbxUint32 startPosition, imbxUint8* pBuffer, imbxUint32 bufferLength)
+std::uint32_t stream::read(std::uint32_t startPosition, std::uint8_t* pBuffer, std::uint32_t bufferLength)
 {
 	PUNTOEXE_FUNCTION_START(L"stream::read");
 
@@ -203,7 +203,7 @@ imbxUint32 stream::read(imbxUint32 startPosition, imbxUint8* pBuffer, imbxUint32
 		return 0;
 	}
 
-	imbxUint32 readBytes = (imbxUint32)::fread(pBuffer, 1, bufferLength, m_openFile);
+	std::uint32_t readBytes = (std::uint32_t)::fread(pBuffer, 1, bufferLength, m_openFile);
 	if(ferror(m_openFile) != 0)
 	{
 		PUNTOEXE_THROW(streamExceptionRead, "stream::read failure");

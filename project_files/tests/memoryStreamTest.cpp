@@ -21,10 +21,10 @@ TEST(memoryStreamTest, test)
 	ptr<baseStream> theMemoryStream(new memoryStream(myMemory));
 	ptr<streamWriter> writer(new streamWriter(theMemoryStream));
 
-	std::vector<imbxUint8> values(4000);
+	std::vector<std::uint8_t> values(4000);
 	for(size_t fillValues = 0; fillValues < values.size(); ++fillValues)
 	{
-		imbxUint8 value =  rand() * 255 / RAND_MAX;
+		std::uint8_t value =  rand() * 255 / RAND_MAX;
 		values[fillValues] = value;
 		writer->write(&value, 1);
 	}
@@ -34,7 +34,7 @@ TEST(memoryStreamTest, test)
 
 	for(size_t readValues = 0; readValues < values.size(); ++readValues)
 	{
-		imbxUint8 value;
+		std::uint8_t value;
 		reader->read(&value, 1);
         EXPECT_EQ(values[readValues], value);
 	}
@@ -47,10 +47,10 @@ TEST(memoryStreamTest, testBytes)
 	ptr<streamWriter> writer(new streamWriter(theMemoryStream));
 	writer->m_bJpegTags = true;
 
-	std::vector<imbxUint8> values(4000);
+	std::vector<std::uint8_t> values(4000);
 	for(size_t fillValues = 0; fillValues < values.size(); ++fillValues)
 	{
-		imbxUint8 value =  rand() * 255 / RAND_MAX;
+		std::uint8_t value =  rand() * 255 / RAND_MAX;
 		if(fillValues % 10 == 0)
 		{
 			value = 0xff;
@@ -65,7 +65,7 @@ TEST(memoryStreamTest, testBytes)
 
 	for(size_t readValues = 0; readValues < values.size(); ++readValues)
 	{
-		imbxUint8 value(reader->readByte());
+		std::uint8_t value(reader->readByte());
         EXPECT_EQ(values[readValues], value);
 	}
 }

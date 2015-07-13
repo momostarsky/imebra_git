@@ -191,7 +191,7 @@ std::string dataHandlerStringUnicode::convertFromUnicode(const std::wstring& val
 		}
 	}
 
-    std::auto_ptr<charsetConversion> localCharsetConversion(allocateCharsetConversion());
+    std::unique_ptr<charsetConversion> localCharsetConversion(allocateCharsetConversion());
     localCharsetConversion->initialize(m_charsetConversion->getIsoCharset());
 
 	// Returned string

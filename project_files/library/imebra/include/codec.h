@@ -131,7 +131,7 @@ public:
 	/// @return        a pointer to the loaded dataSet
 	///
 	///////////////////////////////////////////////////////////
-	ptr<dataSet> read(ptr<streamReader> pSourceStream, imbxUint32 maxSizeBufferLoad = 0xffffffff);
+	ptr<dataSet> read(ptr<streamReader> pSourceStream, std::uint32_t maxSizeBufferLoad = 0xffffffff);
 
 	/// \brief Write a dicom structure into a stream.
 	///
@@ -246,7 +246,7 @@ public:
 		std::wstring transferSyntax, 
 		quality imageQuality,
 		std::string dataType,
-		imbxUint8 allocatedBits,
+		std::uint8_t allocatedBits,
 		bool bSubSampledX,
 		bool bSubSampledY,
 		bool bInterleaved,
@@ -313,7 +313,7 @@ public:
 	///         syntax
 	///
 	///////////////////////////////////////////////////////////
-	virtual imbxUint32 getMaxHighBit(std::string transferSyntax)=0;
+	virtual std::uint32_t getMaxHighBit(std::string transferSyntax)=0;
 
 	/// \brief Suggest an optimal number of allocated bits for
 	///        the specified transfer syntax and high bit.
@@ -325,13 +325,13 @@ public:
 	///          specified transfer syntax and high bit.
 	///
 	///////////////////////////////////////////////////////////
-	virtual imbxUint32 suggestAllocatedBits(std::wstring transferSyntax, imbxUint32 highBit)=0;
+	virtual std::uint32_t suggestAllocatedBits(std::wstring transferSyntax, std::uint32_t highBit)=0;
 
 	//@}
 
 
 protected:
-	virtual void readStream(ptr<streamReader> pInputStream, ptr<dataSet> pDestDataSet, imbxUint32 maxSizeBufferLoad = 0xffffffff) =0;
+	virtual void readStream(ptr<streamReader> pInputStream, ptr<dataSet> pDestDataSet, std::uint32_t maxSizeBufferLoad = 0xffffffff) =0;
 	virtual void writeStream(ptr<streamWriter> pDestStream, ptr<dataSet> pSourceDataSet) =0;
 };
 
@@ -351,22 +351,22 @@ public:
 
 	// Allocate the channel
 	///////////////////////////////////////////////////////////
-	void allocate(imbxUint32 sizeX, imbxUint32 sizeY);
+	void allocate(std::uint32_t sizeX, std::uint32_t sizeY);
 
 	// Sampling factor
 	///////////////////////////////////////////////////////////
-	imbxUint32 m_samplingFactorX;
-	imbxUint32 m_samplingFactorY;
+	std::uint32_t m_samplingFactorX;
+	std::uint32_t m_samplingFactorY;
 
 	// Channel's size in pixels
 	///////////////////////////////////////////////////////////
-	imbxUint32 m_sizeX;
-	imbxUint32 m_sizeY;
+	std::uint32_t m_sizeX;
+	std::uint32_t m_sizeY;
 
 	// Channel's buffer & size
 	///////////////////////////////////////////////////////////
-	imbxInt32* m_pBuffer;
-	imbxUint32 m_bufferSize;
+	std::int32_t* m_pBuffer;
+	std::uint32_t m_bufferSize;
 
 	ptr<memory> m_memory;
 };

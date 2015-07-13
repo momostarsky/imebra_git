@@ -22,10 +22,10 @@ TEST(huffmanTest, test)
 
 	huffmanTable huffman(8);
 
-	std::vector<imbxUint8> values(4000);
+	std::vector<std::uint8_t> values(4000);
 	for(size_t fillValues = 0; fillValues < values.size(); ++fillValues)
 	{
-		imbxUint8 value =  (imbxUint8)(rand() * (double)255 / (double)RAND_MAX);
+		std::uint8_t value =  (std::uint8_t)(rand() * (double)255 / (double)RAND_MAX);
 		values[fillValues] = value;
 		huffman.incValueFreq(values[fillValues]);
 	}
@@ -34,7 +34,7 @@ TEST(huffmanTest, test)
 
 	for(size_t writeValues = 0; writeValues < values.size(); ++writeValues)
 	{
-		imbxUint32 value = values[writeValues];
+		std::uint32_t value = values[writeValues];
 		huffman.writeHuffmanCode(value, writer.get());
 	}
 	writer->resetOutBitsBuffer();
@@ -42,9 +42,9 @@ TEST(huffmanTest, test)
 	ptr<streamReader> reader(new streamReader(theMemoryStream));
 	for(size_t readValues = 0; readValues < values.size(); ++readValues)
 	{
-		imbxUint32 value(huffman.readHuffmanCode(reader.get()));
+		std::uint32_t value(huffman.readHuffmanCode(reader.get()));
 
-        EXPECT_EQ(values[readValues], (imbxUint8)value);
+        EXPECT_EQ(values[readValues], (std::uint8_t)value);
 	}
 }
 

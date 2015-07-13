@@ -178,7 +178,7 @@ public:
 	///          exist
 	///
 	///////////////////////////////////////////////////////////
-	std::wstring getFilePart(imbxUint32 part);
+	std::wstring getFilePart(std::uint32_t part);
 
 	/// \brief Set the full path to the  file referenced by
 	///         the record.
@@ -206,7 +206,7 @@ public:
         /// @param partName tha value to set for the part
 	///
 	///////////////////////////////////////////////////////////
-	void setFilePart(imbxUint32 part, const std::wstring partName);
+	void setFilePart(std::uint32_t part, const std::wstring partName);
 
 	/// \brief Returns the record's type.
 	///

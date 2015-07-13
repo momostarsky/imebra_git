@@ -18,7 +18,7 @@ namespace puntoexe
 // Constructor
 //
 ///////////////////////////////////////////////////////////
-streamReader::streamReader(ptr<baseStream> pControlledStream, imbxUint32 virtualStart /* =0 */, imbxUint32 virtualLength /* =0 */):
+streamReader::streamReader(ptr<baseStream> pControlledStream, std::uint32_t virtualStart /* =0 */, std::uint32_t virtualLength /* =0 */):
 	streamController(pControlledStream, virtualStart, virtualLength),
 	m_inBitsBuffer(0),
 	m_inBitsNum(0)
@@ -42,12 +42,12 @@ bool streamReader::endReached()
 // Refill the data buffer
 //
 ///////////////////////////////////////////////////////////
-imbxUint32 streamReader::fillDataBuffer()
+std::uint32_t streamReader::fillDataBuffer()
 {
 	PUNTOEXE_FUNCTION_START(L"streamReader::fillDataBuffer");
 
-	imbxUint32 readLength = (imbxUint32)(m_pDataBufferMaxEnd - m_pDataBufferStart);
-	imbxUint32 readBytes = fillDataBuffer(m_pDataBufferStart, readLength);
+	std::uint32_t readLength = (std::uint32_t)(m_pDataBufferMaxEnd - m_pDataBufferStart);
+	std::uint32_t readBytes = fillDataBuffer(m_pDataBufferStart, readLength);
 	if(readBytes == 0)
 	{
 		m_pDataBufferCurrent = m_pDataBufferEnd = m_pDataBufferStart;
@@ -66,9 +66,9 @@ imbxUint32 streamReader::fillDataBuffer()
 // Read data from the stream into the specified buffer
 //
 ///////////////////////////////////////////////////////////
-imbxUint32 streamReader::fillDataBuffer(imbxUint8* pDestinationBuffer, imbxUint32 readLength)
+std::uint32_t streamReader::fillDataBuffer(std::uint8_t* pDestinationBuffer, std::uint32_t readLength)
 {
-	imbxUint32 currentPosition = position();
+	std::uint32_t currentPosition = position();
 	if(m_virtualLength != 0)
 	{
 		if(currentPosition >= m_virtualLength)
@@ -92,7 +92,7 @@ imbxUint32 streamReader::fillDataBuffer(imbxUint8* pDestinationBuffer, imbxUint3
 // Return the specified number of bytes from the stream
 //
 ///////////////////////////////////////////////////////////
-void streamReader::read(imbxUint8* pBuffer, imbxUint32 bufferLength)
+void streamReader::read(std::uint8_t* pBuffer, std::uint32_t bufferLength)
 {
 	while(bufferLength != 0)
 	{
@@ -104,7 +104,7 @@ void streamReader::read(imbxUint8* pBuffer, imbxUint32 bufferLength)
 			{
 				// read the data directly into the destination buffer
 				///////////////////////////////////////////////////////////
-				imbxUint32 readBytes(fillDataBuffer(pBuffer, bufferLength));
+				std::uint32_t readBytes(fillDataBuffer(pBuffer, bufferLength));
 
 				m_pDataBufferCurrent = m_pDataBufferEnd = m_pDataBufferStart;
 				m_dataBufferStreamPosition += readBytes;
@@ -125,8 +125,8 @@ void streamReader::read(imbxUint8* pBuffer, imbxUint32 bufferLength)
 
 		// Copy the available data into the return buffer
 		///////////////////////////////////////////////////////////
-		imbxUint32 copySize = bufferLength;
-		imbxUint32 maxSize = (imbxUint32)(m_pDataBufferEnd - m_pDataBufferCurrent);
+		std::uint32_t copySize = bufferLength;
+		std::uint32_t maxSize = (std::uint32_t)(m_pDataBufferEnd - m_pDataBufferCurrent);
 		if(copySize > maxSize)
 		{
 			copySize = maxSize;
@@ -144,15 +144,15 @@ void streamReader::read(imbxUint8* pBuffer, imbxUint32 bufferLength)
 // Seek the read position
 //
 ///////////////////////////////////////////////////////////
-void streamReader::seek(imbxInt32 newPosition, bool bCurrent /* =false */)
+void streamReader::seek(std::int32_t newPosition, bool bCurrent /* =false */)
 {
 	// Calculate the absolute position
 	///////////////////////////////////////////////////////////
-	imbxUint32 finalPosition = bCurrent ? (position() + newPosition) : newPosition;
+	std::uint32_t finalPosition = bCurrent ? (position() + newPosition) : newPosition;
 
 	// The requested position is already in the data buffer?
 	///////////////////////////////////////////////////////////
-	imbxUint32 bufferEndPosition = m_dataBufferStreamPosition + (imbxUint32)(m_pDataBufferEnd - m_pDataBufferStart);
+	std::uint32_t bufferEndPosition = m_dataBufferStreamPosition + (std::uint32_t)(m_pDataBufferEnd - m_pDataBufferStart);
 	if(finalPosition >= m_dataBufferStreamPosition && finalPosition < bufferEndPosition)
 	{
 		m_pDataBufferCurrent = m_pDataBufferStart + finalPosition - m_dataBufferStreamPosition;

@@ -59,7 +59,7 @@ public:
 	/// @return a pointer to the tag object
 	///
 	///////////////////////////////////////////////////////////
-	ptr<data> getTag(imbxUint16 tagId, bool bCreate=false);
+	ptr<data> getTag(std::uint16_t tagId, bool bCreate=false);
 	
 	/// \brief Get a handlers::dataHandler object for the 
 	///         requested tag's buffer.
@@ -88,7 +88,7 @@ public:
 	/// @return a pointer to the handlers::dataHandler
 	///
 	///////////////////////////////////////////////////////////
-	ptr<handlers::dataHandler> getDataHandler(imbxUint16 tagId, imbxUint32 bufferId, bool bWrite, std::string defaultType="");
+	ptr<handlers::dataHandler> getDataHandler(std::uint16_t tagId, std::uint32_t bufferId, bool bWrite, std::string defaultType="");
 
 	/// \brief Get a handlers::dataHandlerRaw object for the 
 	///         requested tag's buffer.
@@ -124,7 +124,7 @@ public:
 	/// @return a pointer to the handlers::dataHandlerRaw
 	///
 	///////////////////////////////////////////////////////////
-	ptr<handlers::dataHandlerRaw> getDataHandlerRaw(imbxUint16 tagId, imbxUint32 bufferId, bool bWrite, std::string defaultType="");
+	ptr<handlers::dataHandlerRaw> getDataHandlerRaw(std::uint16_t tagId, std::uint32_t bufferId, bool bWrite, std::string defaultType="");
 
 	/// \brief Get a streamReader connected to the requested
 	///         tag's buffer.
@@ -147,7 +147,7 @@ public:
 	/// @return a pointer to the streamReader
 	///
 	///////////////////////////////////////////////////////////
-	ptr<streamReader> getStreamReader(imbxUint16 tagId, imbxUint32 bufferId);
+	ptr<streamReader> getStreamReader(std::uint16_t tagId, std::uint32_t bufferId);
 
 	/// \brief Get a streamWriter connected to the requested
 	///         tag's buffer.
@@ -172,7 +172,7 @@ public:
 	/// @return a pointer to the streamWriter
 	///
 	///////////////////////////////////////////////////////////
-	ptr<streamWriter> getStreamWriter(imbxUint16 tagId, imbxUint32 bufferId, std::string dataType = "");
+	ptr<streamWriter> getStreamWriter(std::uint16_t tagId, std::uint32_t bufferId, std::string dataType = "");
 
 	/// \brief Return the data type of the specified tag, in
 	///         dicom format.
@@ -188,7 +188,7 @@ public:
 	///          the group
 	///
 	///////////////////////////////////////////////////////////
-	std::string getDataType(imbxUint16 tagId);
+	std::string getDataType(std::uint16_t tagId);
 
 };
 

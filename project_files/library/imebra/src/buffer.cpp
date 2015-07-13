@@ -97,9 +97,9 @@ buffer::buffer(const ptr<baseObject>& externalLock, const std::string& defaultTy
 buffer::buffer(const ptr<baseObject>& externalLock,
 		const std::string& defaultType,
 		const ptr<baseStream>& originalStream,
-		imbxUint32 bufferPosition,
-		imbxUint32 bufferLength,
-		imbxUint32 wordLength,
+		std::uint32_t bufferPosition,
+		std::uint32_t bufferLength,
+		std::uint32_t wordLength,
 		streamController::tByteOrdering endianType):
 	baseObject(externalLock),
 		m_originalStream(originalStream),
@@ -134,7 +134,7 @@ buffer::buffer(const ptr<baseObject>& externalLock,
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<handlers::dataHandler> buffer::getDataHandler(bool bWrite, bool bRaw, imbxUint32 size)
+ptr<handlers::dataHandler> buffer::getDataHandler(bool bWrite, bool bRaw, std::uint32_t size)
 {
 	PUNTOEXE_FUNCTION_START(L"buffer::getDataHandler");
 
@@ -153,7 +153,7 @@ ptr<handlers::dataHandler> buffer::getDataHandler(bool bWrite, bool bRaw, imbxUi
 		if(m_originalBufferLength != 0)
 		{
 			ptr<streamReader> reader(new streamReader(m_originalStream, m_originalBufferPosition, m_originalBufferLength));
-			std::vector<imbxUint8> localBuffer;
+			std::vector<std::uint8_t> localBuffer;
 			localBuffer.resize(m_originalBufferLength);
 			reader->read(&localBuffer[0], m_originalBufferLength);
 			if(m_originalWordLength != 0)
@@ -264,7 +264,7 @@ ptr<handlers::dataHandler> buffer::getDataHandler(bool bWrite, bool bRaw, imbxUi
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="OB")
 		{
-			handler = new handlers::dataHandlerNumeric<imbxUint8>;
+			handler = new handlers::dataHandlerNumeric<std::uint8_t>;
 		}
 
 		// Retrieve a signed-byte object handler.
@@ -272,28 +272,28 @@ ptr<handlers::dataHandler> buffer::getDataHandler(bool bWrite, bool bRaw, imbxUi
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="SB")
 		{
-			handler = new handlers::dataHandlerNumeric<imbxInt8>;
+			handler = new handlers::dataHandlerNumeric<std::int8_t>;
 		}
 
 		// Retrieve an unknown object handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="UN")
 		{
-			handler = new handlers::dataHandlerNumeric<imbxUint8>;
+			handler = new handlers::dataHandlerNumeric<std::uint8_t>;
 		}
 
 		// Retrieve a WORD handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="OW")
 		{
-			handler = new handlers::dataHandlerNumeric<imbxUint16>;
+			handler = new handlers::dataHandlerNumeric<std::uint16_t>;
 		}
 
 		// Retrieve a WORD handler (AT)
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="AT")
 		{
-			handler = new handlers::dataHandlerNumeric<imbxUint16>;
+			handler = new handlers::dataHandlerNumeric<std::uint16_t>;
 		}
 
 		// Retrieve a float handler
@@ -314,28 +314,28 @@ ptr<handlers::dataHandler> buffer::getDataHandler(bool bWrite, bool bRaw, imbxUi
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="SL")
 		{
-			handler = new handlers::dataHandlerNumeric<imbxInt32>;
+			handler = new handlers::dataHandlerNumeric<std::int32_t>;
 		}
 
 		// Retrieve a signed short handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="SS")
 		{
-			handler = new handlers::dataHandlerNumeric<imbxInt16>;
+			handler = new handlers::dataHandlerNumeric<std::int16_t>;
 		}
 
 		// Retrieve an unsigned long handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="UL")
 		{
-			handler = new handlers::dataHandlerNumeric<imbxUint32>;
+			handler = new handlers::dataHandlerNumeric<std::uint32_t>;
 		}
 
 		// Retrieve an unsigned short handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="US")
 		{
-			handler = new handlers::dataHandlerNumeric<imbxUint16>;
+			handler = new handlers::dataHandlerNumeric<std::uint16_t>;
 		}
 
 		// Retrieve date
@@ -383,8 +383,8 @@ ptr<handlers::dataHandler> buffer::getDataHandler(bool bWrite, bool bRaw, imbxUi
 	{
 		handler->m_buffer = this;
 
-		imbxUint32 currentMemorySize(localMemory->size());
-                imbxUint32 newMemorySize(currentMemorySize);
+		std::uint32_t currentMemorySize(localMemory->size());
+                std::uint32_t newMemorySize(currentMemorySize);
 		if(newMemorySize == 0)
 		{
 			newMemorySize = size * handler->getUnitSize();
@@ -421,7 +421,7 @@ ptr<handlers::dataHandler> buffer::getDataHandler(bool bWrite, bool bRaw, imbxUi
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<handlers::dataHandler> buffer::getDataHandler(bool bWrite, imbxUint32 size)
+ptr<handlers::dataHandler> buffer::getDataHandler(bool bWrite, std::uint32_t size)
 {
 	PUNTOEXE_FUNCTION_START(L"buffer::getDataHandler");
 
@@ -517,7 +517,7 @@ ptr<streamWriter> buffer::getStreamWriter()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<handlers::dataHandlerRaw> buffer::getDataHandlerRaw(bool bWrite, imbxUint32 size)
+ptr<handlers::dataHandlerRaw> buffer::getDataHandlerRaw(bool bWrite, std::uint32_t size)
 {
 	PUNTOEXE_FUNCTION_START(L"buffer::getDataHandlerRaw");
 
@@ -535,7 +535,7 @@ ptr<handlers::dataHandlerRaw> buffer::getDataHandlerRaw(bool bWrite, imbxUint32 
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint32 buffer::getBufferSizeBytes()
+std::uint32_t buffer::getBufferSizeBytes()
 {
 	PUNTOEXE_FUNCTION_START(L"buffer::getBufferSizeBytes");
 
@@ -598,7 +598,7 @@ void buffer::copyBack(handlers::dataHandler* pDisconnectHandler)
 
 	// The buffer's size must be an even number
 	///////////////////////////////////////////////////////////
-	imbxUint32 memorySize = m_temporaryMemory->size();
+	std::uint32_t memorySize = m_temporaryMemory->size();
 	if((memorySize & 0x1) != 0)
 	{
 		m_temporaryMemory->resize(++memorySize);

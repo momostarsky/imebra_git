@@ -38,24 +38,24 @@ class dataHandlerStringIS : public dataHandlerString
 public:
 	// Overwritten to use getSignedLong()
 	///////////////////////////////////////////////////////////
-	virtual double getDouble(const imbxUint32 index) const;
+	virtual double getDouble(const std::uint32_t index) const;
 
 	// Overwritten to use setSignedLong()
 	///////////////////////////////////////////////////////////
-	virtual void setDouble(const imbxUint32 index, const double value);
+	virtual void setDouble(const std::uint32_t index, const double value);
 
 	// Get the padding byte
 	///////////////////////////////////////////////////////////
-	virtual imbxUint8 getPaddingByte() const;
+	virtual std::uint8_t getPaddingByte() const;
 
 	// Get the element size
 	///////////////////////////////////////////////////////////
-	virtual imbxUint32 getUnitSize() const;
+	virtual std::uint32_t getUnitSize() const;
 
 protected:
 	// Return the maximum string's length
 	///////////////////////////////////////////////////////////
-	virtual imbxUint32 maxSize() const;
+	virtual std::uint32_t maxSize() const;
 };
 
 } // namespace handlers

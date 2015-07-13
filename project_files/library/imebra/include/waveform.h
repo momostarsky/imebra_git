@@ -70,7 +70,7 @@ public:
 	/// @return the number of channels
 	///
 	///////////////////////////////////////////////////////////
-	imbxUint32 getChannels();
+	std::uint32_t getChannels();
 
 	/// \brief Retrieve the number of samples per channel
 	///         (tag 003A,0010).
@@ -78,7 +78,7 @@ public:
 	/// @return the number of samples per channel
 	///
 	///////////////////////////////////////////////////////////
-	imbxUint32 getSamples();
+	std::uint32_t getSamples();
 
 	/// \brief Retrieve the number of bit stored 
 	///         (tag 003A,021A).
@@ -86,7 +86,7 @@ public:
 	/// @return the number of bits stored
 	///
 	///////////////////////////////////////////////////////////
-	imbxUint32 getBitsStored();
+	std::uint32_t getBitsStored();
 
 	/// \brief Retrieve the number of bit allocated
 	///         (tag 5400,1004).
@@ -94,7 +94,7 @@ public:
 	/// @return the number of bits allocated
 	///
 	///////////////////////////////////////////////////////////
-	imbxUint32 getBitsAllocated();
+	std::uint32_t getBitsAllocated();
 
 	/// \brief Return the data interpretation string 
 	///         (tag 5400,1006).
@@ -133,7 +133,7 @@ public:
 	///        to retrieve the data
 	///
 	///////////////////////////////////////////////////////////
-	ptr<handlers::dataHandler> getIntegerData(imbxUint32 channel, imbxInt32 paddingValue = 0x7fffffff);
+	ptr<handlers::dataHandler> getIntegerData(std::uint32_t channel, std::int32_t paddingValue = 0x7fffffff);
 
 	/// \brief Return the sequence item used by the waveform.
 	///

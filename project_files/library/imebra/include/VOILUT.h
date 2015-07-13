@@ -94,7 +94,7 @@ public:
 	///                       exist
 	///
 	///////////////////////////////////////////////////////////
-	imbxUint32 getVOILUTId(imbxUint32 VOILUTNumber);
+	std::uint32_t getVOILUTId(std::uint32_t VOILUTNumber);
 
 	/// \brief Return a description for the VOI or LUT with
 	///         the specified ID.
@@ -107,7 +107,7 @@ public:
 	/// @return         the VOI/LUT description
 	///
 	///////////////////////////////////////////////////////////
-	std::wstring getVOILUTDescription(imbxUint32 VOILUTId);
+	std::wstring getVOILUTDescription(std::uint32_t VOILUTId);
 
 	/// \brief Define the VOI/LUT to use for the
 	///         transformation.
@@ -122,7 +122,7 @@ public:
 	///                  transformation
 	///
 	///////////////////////////////////////////////////////////
-	void setVOILUT(imbxUint32 VOILUTId);
+	void setVOILUT(std::uint32_t VOILUTId);
 
 	/// \brief Define the LUT to use for the transformation.
 	///
@@ -139,7 +139,7 @@ public:
 	/// @param width    the width value of the VOI
 	///
 	///////////////////////////////////////////////////////////
-	void setCenterWidth(imbxInt32 center, imbxInt32 width);
+	void setCenterWidth(std::int32_t center, std::int32_t width);
 
 	/// \brief Returns the VOI width/center used for the
 	///         transformation.
@@ -150,7 +150,7 @@ public:
 	///                  width
 	///
 	///////////////////////////////////////////////////////////
-	void getCenterWidth(imbxInt32* pCenter, imbxInt32* pWidth);
+	void getCenterWidth(std::int32_t* pCenter, std::int32_t* pWidth);
 
     /// \brief Finds and apply the optimal VOI values.
     ///
@@ -170,7 +170,7 @@ public:
     ///                       the optimal VOI must be found
     ///
     ///////////////////////////////////////////////////////////
-    void applyOptimalVOI(const ptr<puntoexe::imebra::image>& inputImage, imbxUint32 inputTopLeftX, imbxUint32 inputTopLeftY, imbxUint32 inputWidth, imbxUint32 inputHeight);
+    void applyOptimalVOI(const ptr<puntoexe::imebra::image>& inputImage, std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight);
 
 
 	DEFINE_RUN_TEMPLATE_TRANSFORM;
@@ -180,14 +180,14 @@ public:
     ///////////////////////////////////////////////////////////
 	template <class inputType, class outputType>
 			void templateTransform(
-					inputType* inputHandlerData, size_t /* inputHandlerSize */, imbxUint32 inputHandlerWidth, const std::wstring& /* inputHandlerColorSpace */,
+					inputType* inputHandlerData, size_t /* inputHandlerSize */, std::uint32_t inputHandlerWidth, const std::wstring& /* inputHandlerColorSpace */,
 					ptr<palette> /* inputPalette */,
-                    imbxInt32 inputHandlerMinValue, imbxUint32 inputHighBit,
-					imbxInt32 inputTopLeftX, imbxInt32 inputTopLeftY, imbxInt32 inputWidth, imbxInt32 inputHeight,
-					outputType* outputHandlerData, size_t /* outputHandlerSize */, imbxInt32 outputHandlerWidth, const std::wstring& /* outputHandlerColorSpace */,
+                    std::int32_t inputHandlerMinValue, std::uint32_t inputHighBit,
+					std::int32_t inputTopLeftX, std::int32_t inputTopLeftY, std::int32_t inputWidth, std::int32_t inputHeight,
+					outputType* outputHandlerData, size_t /* outputHandlerSize */, std::int32_t outputHandlerWidth, const std::wstring& /* outputHandlerColorSpace */,
 					ptr<palette> /* outputPalette */,
-                    imbxInt32 outputHandlerMinValue, imbxUint32 outputHighBit,
-					imbxInt32 outputTopLeftX, imbxInt32 outputTopLeftY)
+                    std::int32_t outputHandlerMinValue, std::uint32_t outputHighBit,
+					std::int32_t outputTopLeftX, std::int32_t outputTopLeftY)
 
 	{
 		inputType* pInputMemory(inputHandlerData);
@@ -208,12 +208,12 @@ public:
 
             if(inputHighBit > outputHighBit)
 			{
-                imbxInt32 rightShift = inputHighBit - outputHighBit;
+                std::int32_t rightShift = inputHighBit - outputHighBit;
                 for(; inputHeight != 0; --inputHeight)
                 {
                     for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
                     {
-                        *(pOutputMemory++) = (outputType)( outputHandlerMinValue + (pLUT->mappedValue((imbxInt32) (*(pInputMemory++))) >> rightShift ));
+                        *(pOutputMemory++) = (outputType)( outputHandlerMinValue + (pLUT->mappedValue((std::int32_t) (*(pInputMemory++))) >> rightShift ));
                     }
                     pInputMemory += (inputHandlerWidth - inputWidth);
                     pOutputMemory += (outputHandlerWidth - inputWidth);
@@ -221,12 +221,12 @@ public:
             }
 			else
 			{
-                imbxInt32 leftShift = outputHighBit - inputHighBit;
+                std::int32_t leftShift = outputHighBit - inputHighBit;
 				for(; inputHeight != 0; --inputHeight)
 				{
 					for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
 					{
-                        *(pOutputMemory++) = (outputType)( outputHandlerMinValue + (pLUT->mappedValue((imbxInt32) (*(pInputMemory++))) << leftShift ));
+                        *(pOutputMemory++) = (outputType)( outputHandlerMinValue + (pLUT->mappedValue((std::int32_t) (*(pInputMemory++))) << leftShift ));
 					}
 					pInputMemory += (inputHandlerWidth - inputWidth);
 					pOutputMemory += (outputHandlerWidth - inputWidth);
@@ -241,10 +241,10 @@ public:
 		// Use the window's center/width
 		//
         ///////////////////////////////////////////////////////////
-        imbxInt64 inputHandlerNumValues = (imbxInt64)1 << (inputHighBit + 1);
-        imbxInt64 outputHandlerNumValues = (imbxInt64)1 << (outputHighBit + 1);
-        imbxInt64 minValue = (imbxInt64)m_windowCenter- (imbxInt64)(m_windowWidth/2);
-        imbxInt64 maxValue = (imbxInt64)m_windowCenter+ (imbxInt64)(m_windowWidth/2);
+        std::int64_t inputHandlerNumValues = (std::int64_t)1 << (inputHighBit + 1);
+        std::int64_t outputHandlerNumValues = (std::int64_t)1 << (outputHighBit + 1);
+        std::int64_t minValue = (std::int64_t)m_windowCenter- (std::int64_t)(m_windowWidth/2);
+        std::int64_t maxValue = (std::int64_t)m_windowCenter+ (std::int64_t)(m_windowWidth/2);
 		if(m_windowWidth <= 1)
 		{
 			minValue = inputHandlerMinValue ;
@@ -256,17 +256,17 @@ public:
 		}
 
 
-        imbxInt64 value;
+        std::int64_t value;
 
         if(inputHandlerNumValues > outputHandlerNumValues)
         {
-            imbxInt32 ratio = (imbxInt32)(inputHandlerNumValues / outputHandlerNumValues);
+            std::int32_t ratio = (std::int32_t)(inputHandlerNumValues / outputHandlerNumValues);
             for(; inputHeight != 0; --inputHeight)
             {
 
                 for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
                 {
-                    value = (imbxInt64) *(pInputMemory++);
+                    value = (std::int64_t) *(pInputMemory++);
                     if(value <= minValue)
                     {
                         *(pOutputMemory++) = (outputType)outputHandlerMinValue;
@@ -285,13 +285,13 @@ public:
         }
         else
         {
-            imbxInt32 ratio = (imbxInt32)(outputHandlerNumValues / inputHandlerNumValues);
+            std::int32_t ratio = (std::int32_t)(outputHandlerNumValues / inputHandlerNumValues);
             for(; inputHeight != 0; --inputHeight)
             {
 
                 for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
                 {
-                    value = (imbxInt64) *(pInputMemory++);
+                    value = (std::int64_t) *(pInputMemory++);
                     if(value <= minValue)
                     {
                         *(pOutputMemory++) = (outputType)outputHandlerMinValue;
@@ -313,7 +313,7 @@ public:
 
 	virtual bool isEmpty();
 
-	virtual ptr<image> allocateOutputImage(ptr<image> pInputImage, imbxUint32 width, imbxUint32 height);
+	virtual ptr<image> allocateOutputImage(ptr<image> pInputImage, std::uint32_t width, std::uint32_t height);
 
 protected:
 
@@ -322,16 +322,16 @@ protected:
     ///////////////////////////////////////////////////////////
     template <class inputType>
             void templateFindOptimalVOI(
-                    inputType* inputHandlerData, size_t /* inputHandlerSize */, imbxUint32 inputHandlerWidth,
-                    imbxInt32 inputTopLeftX, imbxInt32 inputTopLeftY, imbxInt32 inputWidth, imbxInt32 inputHeight)
+                    inputType* inputHandlerData, size_t /* inputHandlerSize */, std::uint32_t inputHandlerWidth,
+                    std::int32_t inputTopLeftX, std::int32_t inputTopLeftY, std::int32_t inputWidth, std::int32_t inputHeight)
     {
         inputType* pInputMemory(inputHandlerData + inputHandlerWidth * inputTopLeftY + inputTopLeftX);
-        imbxInt32 minValue(*pInputMemory);
-        imbxInt32 maxValue(minValue);
-        imbxInt32 value;
-        for(imbxInt32 scanY(inputHeight); scanY != 0; --scanY)
+        std::int32_t minValue(*pInputMemory);
+        std::int32_t maxValue(minValue);
+        std::int32_t value;
+        for(std::int32_t scanY(inputHeight); scanY != 0; --scanY)
         {
-            for(imbxInt32 scanX(inputWidth); scanX != 0; --scanX)
+            for(std::int32_t scanX(inputWidth); scanX != 0; --scanX)
             {
                 value = *(pInputMemory++);
                 if(value < minValue)
@@ -345,15 +345,15 @@ protected:
             }
             pInputMemory += inputHandlerWidth - inputWidth;
         }
-        imbxInt32 center = (maxValue - minValue) / 2 + minValue;
-        imbxInt32 width = maxValue - minValue;
+        std::int32_t center = (maxValue - minValue) / 2 + minValue;
+        std::int32_t width = maxValue - minValue;
         setCenterWidth(center, width);
     }
 
     ptr<dataSet> m_pDataSet;
 	ptr<lut> m_pLUT;
-	imbxInt32 m_windowCenter;
-	imbxInt32 m_windowWidth;
+	std::int32_t m_windowCenter;
+	std::int32_t m_windowWidth;
 };
 
 /// @}

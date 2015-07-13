@@ -17,22 +17,22 @@ TEST(jpegCodecTest, testBaseline)
 	{
 		ptr<imebra::dataSet> dataset(new imebra::dataSet);
 
-		imbxUint32 sizeX = 600;
-		imbxUint32 sizeY = 400;
+		std::uint32_t sizeX = 600;
+		std::uint32_t sizeY = 400;
 		ptr<image> baselineImage(new image);
 		baselineImage->create(sizeX, sizeY, precision == 0 ? image::depthU8 : image::depthU16, L"RGB", precision == 0 ? 7 : 11);
 
-		imbxUint32 rowSize, channelsPixelSize, channelsNumber;
+		std::uint32_t rowSize, channelsPixelSize, channelsNumber;
 		ptr<handlers::dataHandlerNumericBase> imageHandler = baselineImage->getDataHandler(true, &rowSize, &channelsPixelSize, &channelsNumber);
 
 		// Make 3 bands (RGB)
 		int elementPointer(0);
-		for(imbxUint32 y=0; y<sizeY; ++y)
+		for(std::uint32_t y=0; y<sizeY; ++y)
 		{
-			for(imbxUint32 x=0; x<sizeX; ++x)
+			for(std::uint32_t x=0; x<sizeX; ++x)
 			{
-				imbxInt32 r, g, b;
-				imbxUint32 value = y * (precision == 0 ? 255 : 4095) / sizeY;
+				std::int32_t r, g, b;
+				std::uint32_t value = y * (precision == 0 ? 255 : 4095) / sizeY;
 				r = g = 0;
 				b = value;
 				if(x < sizeX - sizeX/3)
@@ -81,7 +81,7 @@ TEST(jpegCodecTest, testBaseline)
 		saveDicomStream.release();
 
 		ptr<image> checkImage = dataset->getImage(0);
-		imbxUint32 checkSizeX, checkSizeY;
+		std::uint32_t checkSizeX, checkSizeY;
 		checkImage->getSize(&checkSizeX, &checkSizeY);
 
 		colorTransform = colorFactory->getTransform(L"YBR_FULL", L"RGB");
@@ -96,15 +96,15 @@ TEST(jpegCodecTest, testBaseline)
 
 		elementPointer = 0;
 
-		imbxUint32 difference = 0;
-		for(imbxUint32 checkY = 0; checkY < sizeY; ++checkY)
+		std::uint32_t difference = 0;
+		for(std::uint32_t checkY = 0; checkY < sizeY; ++checkY)
 		{
-			for(imbxUint32 checkX = 0; checkX < sizeX; ++checkX)
+			for(std::uint32_t checkX = 0; checkX < sizeX; ++checkX)
 			{
-				for(imbxUint32 channel = 3; channel != 0; --channel)
+				for(std::uint32_t channel = 3; channel != 0; --channel)
 				{
-					imbxInt32 value0 = rgbHandler->getUnsignedLong(elementPointer);
-					imbxInt32 value1 = originalHandler->getUnsignedLong(elementPointer++);
+					std::int32_t value0 = rgbHandler->getUnsignedLong(elementPointer);
+					std::int32_t value1 = originalHandler->getUnsignedLong(elementPointer++);
 					if(value0 > value1)
 					{
 						difference += value0 - value1;
@@ -123,22 +123,22 @@ TEST(jpegCodecTest, testBaseline)
 
 TEST(jpegCodecTest, testBaselineSubsampled)
 {
-	imbxUint32 sizeX = 600;
-	imbxUint32 sizeY = 400;
+	std::uint32_t sizeX = 600;
+	std::uint32_t sizeY = 400;
 	ptr<image> baselineImage(new image);
 	baselineImage->create(sizeX, sizeY, image::depthU8, L"RGB", 7);
 
-	imbxUint32 rowSize, channelsPixelSize, channelsNumber;
+	std::uint32_t rowSize, channelsPixelSize, channelsNumber;
 	ptr<handlers::dataHandlerNumericBase> imageHandler = baselineImage->getDataHandler(true, &rowSize, &channelsPixelSize, &channelsNumber);
 
 	// Make 3 bands (RGB)
-	imbxUint32 elementNumber(0);
-	for(imbxUint32 y=0; y<sizeY; ++y)
+	std::uint32_t elementNumber(0);
+	for(std::uint32_t y=0; y<sizeY; ++y)
 	{
-		for(imbxUint32 x=0; x<sizeX; ++x)
+		for(std::uint32_t x=0; x<sizeX; ++x)
 		{
-			imbxInt32 r, g, b;
-			imbxUint32 value = y * 255 / sizeY;
+			std::int32_t r, g, b;
+			std::uint32_t value = y * 255 / sizeY;
 			r = g = 0;
 			b = value;
 			if(x < sizeX - sizeX/3)
@@ -181,7 +181,7 @@ TEST(jpegCodecTest, testBaselineSubsampled)
 	ptr<codecs::jpegCodec> testCodec(new codecs::jpegCodec);
 	ptr<dataSet> readDataSet = testCodec->read(reader);
 	ptr<image> checkImage = readDataSet->getImage(0);
-	imbxUint32 checkSizeX, checkSizeY;
+	std::uint32_t checkSizeX, checkSizeY;
 	checkImage->getSize(&checkSizeX, &checkSizeY);
 
 	colorTransform = colorFactory->getTransform(L"YBR_FULL", L"RGB");
@@ -194,16 +194,16 @@ TEST(jpegCodecTest, testBaselineSubsampled)
     EXPECT_EQ(sizeX, checkSizeX);
     EXPECT_EQ(sizeY, checkSizeY);
 
-	imbxUint32 difference = 0;
+	std::uint32_t difference = 0;
 	elementNumber = 0;
-	for(imbxUint32 checkY = 0; checkY < sizeY; ++checkY)
+	for(std::uint32_t checkY = 0; checkY < sizeY; ++checkY)
 	{
-		for(imbxUint32 checkX = 0; checkX < sizeX; ++checkX)
+		for(std::uint32_t checkX = 0; checkX < sizeX; ++checkX)
 		{
-			for(imbxUint32 channel = 3; channel != 0; --channel)
+			for(std::uint32_t channel = 3; channel != 0; --channel)
 			{
-				imbxInt32 value0 = rgbHandler->getUnsignedLong(elementNumber);
-				imbxInt32 value1 = originalHandler->getUnsignedLong(elementNumber++);
+				std::int32_t value0 = rgbHandler->getUnsignedLong(elementNumber);
+				std::int32_t value1 = originalHandler->getUnsignedLong(elementNumber++);
 				if(value0 > value1)
 				{
 					difference += value0 - value1;
@@ -221,22 +221,22 @@ TEST(jpegCodecTest, testBaselineSubsampled)
 
 TEST(jpegCodecTest, testLossless)
 {
-	imbxUint32 sizeX = 115;
-	imbxUint32 sizeY = 400;
+	std::uint32_t sizeX = 115;
+	std::uint32_t sizeY = 400;
 	ptr<image> baselineImage(new image);
 	baselineImage->create(sizeX, sizeY, image::depthU8, L"RGB", 7);
 
-	imbxUint32 rowSize, channelsPixelSize, channelsNumber;
+	std::uint32_t rowSize, channelsPixelSize, channelsNumber;
 	ptr<handlers::dataHandlerNumericBase> imageHandler = baselineImage->getDataHandler(true, &rowSize, &channelsPixelSize, &channelsNumber);
 
 	// Make 3 bands (RGB)
-	imbxUint32 elementNumber(0);
-	for(imbxUint32 y=0; y<sizeY; ++y)
+	std::uint32_t elementNumber(0);
+	for(std::uint32_t y=0; y<sizeY; ++y)
 	{
-		for(imbxUint32 x=0; x<sizeX; ++x)
+		for(std::uint32_t x=0; x<sizeX; ++x)
 		{
-			imbxInt32 r, g, b;
-			imbxUint32 value = y * 255 / sizeY;
+			std::int32_t r, g, b;
+			std::uint32_t value = y * 255 / sizeY;
 			r = g = 0;
 			b = value;
 			if(x < sizeX - sizeX/3)
@@ -272,7 +272,7 @@ TEST(jpegCodecTest, testLossless)
 	ptr<codecs::jpegCodec> testCodec(new codecs::jpegCodec);
 	ptr<dataSet> readDataSet = testCodec->read(reader);
 	ptr<image> checkImage = readDataSet->getImage(0);
-	imbxUint32 checkSizeX, checkSizeY;
+	std::uint32_t checkSizeX, checkSizeY;
 	checkImage->getSize(&checkSizeX, &checkSizeY);
 
 	ptr<handlers::dataHandlerNumericBase> rgbHandler = checkImage->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
@@ -284,14 +284,14 @@ TEST(jpegCodecTest, testLossless)
 
 	elementNumber = 0;
 
-	for(imbxUint32 checkY = 0; checkY < sizeY; ++checkY)
+	for(std::uint32_t checkY = 0; checkY < sizeY; ++checkY)
 	{
-		for(imbxUint32 checkX = 0; checkX < sizeX; ++checkX)
+		for(std::uint32_t checkX = 0; checkX < sizeX; ++checkX)
 		{
-			for(imbxUint32 channel = 3; channel != 0; --channel)
+			for(std::uint32_t channel = 3; channel != 0; --channel)
 			{
-                imbxInt32 value0 = originalHandler->getUnsignedLong(elementNumber);
-                imbxInt32 value1 = rgbHandler->getUnsignedLong(elementNumber++);
+                std::int32_t value0 = originalHandler->getUnsignedLong(elementNumber);
+                std::int32_t value1 = rgbHandler->getUnsignedLong(elementNumber++);
                 EXPECT_EQ(value0, value1);
 			}
 		}

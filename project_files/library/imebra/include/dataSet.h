@@ -125,7 +125,7 @@ public:
 	///                 just created tag is returned.
 	///
 	///////////////////////////////////////////////////////////
-	ptr<data> getTag(imbxUint16 groupId, imbxUint16 order, imbxUint16 tagId, bool bCreate=false);
+	ptr<data> getTag(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, bool bCreate=false);
 	
 	/// \brief Retrieve a group object.
 	///
@@ -167,7 +167,7 @@ public:
 	///                 just created group is returned.
 	///
 	///////////////////////////////////////////////////////////
-	ptr<dataGroup> getGroup(imbxUint16 groupId, imbxUint16 order, bool bCreate=false);
+	ptr<dataGroup> getGroup(std::uint16_t groupId, std::uint16_t order, bool bCreate=false);
 	
 	/// \brief Insert the specified group into the dataset.
 	///
@@ -193,7 +193,7 @@ public:
 	///                 the data set.
 	///
 	///////////////////////////////////////////////////////////
-	void setGroup(imbxUint16 groupId, imbxUint16 order, ptr<dataGroup> pGroup);
+	void setGroup(std::uint16_t groupId, std::uint16_t order, ptr<dataGroup> pGroup);
 
 	//@}
 
@@ -236,7 +236,7 @@ public:
 	///                     image
 	///
 	///////////////////////////////////////////////////////////
-	ptr<image> getImage(imbxUint32 frameNumber);
+	ptr<image> getImage(std::uint32_t frameNumber);
 
     /// \brief Retrieve an image from the dataset and apply the
     ///        modality transform if it is specified in the
@@ -249,7 +249,7 @@ public:
     ///                     transform has been applied
     ///
     ///////////////////////////////////////////////////////////
-    ptr<image> getModalityImage(imbxUint32 frameNumber);
+    ptr<image> getModalityImage(std::uint32_t frameNumber);
 	
 	/// \brief Insert an image into the data set.
 	///
@@ -268,7 +268,7 @@ public:
 	///                     compression quality
 	///
 	///////////////////////////////////////////////////////////
-	void setImage(imbxUint32 frameNumber, ptr<image> pImage, std::wstring transferSyntax, codecs::codec::quality quality);
+	void setImage(std::uint32_t frameNumber, ptr<image> pImage, std::wstring transferSyntax, codecs::codec::quality quality);
 
 	/// \brief Get a frame's offset from the offset table.
 	///
@@ -277,7 +277,7 @@ public:
 	/// @return the offset for the specified frame
 	///
 	///////////////////////////////////////////////////////////
-	imbxUint32 getFrameOffset(imbxUint32 frameNumber);
+	std::uint32_t getFrameOffset(std::uint32_t frameNumber);
 
 	/// \brief Get the id of the buffer that starts at the
 	///         specified offset.
@@ -293,7 +293,7 @@ public:
 	///                  the specified offset
 	///
 	///////////////////////////////////////////////////////////
-	imbxUint32 getFrameBufferId(imbxUint32 offset, imbxUint32* pLengthToBuffer);
+	std::uint32_t getFrameBufferId(std::uint32_t offset, std::uint32_t* pLengthToBuffer);
 
 	/// \brief Retrieve the first and the last buffers used
 	///         to store the image.
@@ -316,7 +316,7 @@ public:
 	///          the image
 	///
 	///////////////////////////////////////////////////////////
-	imbxUint32 getFrameBufferIds(imbxUint32 frameNumber, imbxUint32* pFirstBuffer, imbxUint32* pEndBuffer);
+	std::uint32_t getFrameBufferIds(std::uint32_t frameNumber, std::uint32_t* pFirstBuffer, std::uint32_t* pEndBuffer);
 	
 	/// \brief Return the first buffer's id available where
 	///         a new frame can be saved.
@@ -325,7 +325,7 @@ public:
 	///          a new frame
 	///
 	///////////////////////////////////////////////////////////
-	imbxUint32 getFirstAvailFrameBufferId();
+	std::uint32_t getFirstAvailFrameBufferId();
 
 	//@}
 
@@ -379,7 +379,7 @@ public:
 	///                 dataset is returned
 	///
 	///////////////////////////////////////////////////////////
-	ptr<dataSet> getSequenceItem(imbxUint16 groupId, imbxUint16 order, imbxUint16 tagId, imbxUint32 itemId);
+	ptr<dataSet> getSequenceItem(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t itemId);
 
 	/// \brief Retrieve a LUT.
 	///
@@ -402,7 +402,7 @@ public:
 	///                 LUT is returned
 	///
 	///////////////////////////////////////////////////////////
-	ptr<lut> getLut(imbxUint16 groupId, imbxUint16 tagId, imbxUint32 lutId);
+	ptr<lut> getLut(std::uint16_t groupId, std::uint16_t tagId, std::uint32_t lutId);
 
 	/// \brief Retrieve a waveform from the dataSet.
 	///
@@ -418,7 +418,7 @@ public:
 	///          the requested waveform doesn't exist
 	///
 	///////////////////////////////////////////////////////////
-	ptr<waveform> getWaveform(imbxUint32 waveformId);
+	ptr<waveform> getWaveform(std::uint32_t waveformId);
 
 	//@}
 
@@ -452,7 +452,7 @@ public:
 	/// @return        The tag's content, as a signed long
 	///
 	///////////////////////////////////////////////////////////
-	imbxInt32 getSignedLong(imbxUint16 groupId, imbxUint16 order, imbxUint16 tagId, imbxUint32 elementNumber);
+	std::int32_t getSignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber);
 
 	/// \brief Set a tag's value as a signed long.
 	///
@@ -483,7 +483,7 @@ public:
 	///                 this parameter
 	///
 	///////////////////////////////////////////////////////////
-	void setSignedLong(imbxUint16 groupId, imbxUint16 order, imbxUint16 tagId, imbxUint32 elementNumber, imbxInt32 newValue, std::string defaultType = "");
+	void setSignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber, std::int32_t newValue, std::string defaultType = "");
 
 	/// \brief Retrieve a tag's value as an unsigned long.
 	///
@@ -510,7 +510,7 @@ public:
 	/// @return        The tag's content, as an unsigned long
 	///
 	///////////////////////////////////////////////////////////
-	imbxUint32 getUnsignedLong(imbxUint16 groupId, imbxUint16 order, imbxUint16 tagId, imbxUint32 elementNumber);
+	std::uint32_t getUnsignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber);
 
 	/// \brief Set a tag's value as an unsigned long.
 	///
@@ -541,7 +541,7 @@ public:
 	///                 this parameter
 	///
 	///////////////////////////////////////////////////////////
-	void setUnsignedLong(imbxUint16 groupId, imbxUint16 order, imbxUint16 tagId, imbxUint32 elementNumber, imbxUint32 newValue, std::string defaultType = "");
+	void setUnsignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber, std::uint32_t newValue, std::string defaultType = "");
 
 	/// \brief Retrieve a tag's value as a double.
 	///
@@ -568,7 +568,7 @@ public:
 	/// @return        The tag's content, as a double
 	///
 	///////////////////////////////////////////////////////////
-	double getDouble(imbxUint16 groupId, imbxUint16 order, imbxUint16 tagId, imbxUint32 elementNumber);
+	double getDouble(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber);
 	
 	/// \brief Set a tag's value as a double.
 	///
@@ -599,7 +599,7 @@ public:
 	///                 this parameter
 	///
 	///////////////////////////////////////////////////////////
-	void setDouble(imbxUint16 groupId, imbxUint16 order, imbxUint16 tagId, imbxUint32 elementNumber, double newValue, std::string defaultType = "");
+	void setDouble(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber, double newValue, std::string defaultType = "");
 
 	/// \brief Retrieve a tag's value as a string.
 	///        getUnicodeString() is preferred over this
@@ -628,7 +628,7 @@ public:
 	/// @return        The tag's content, as a string
 	///
 	///////////////////////////////////////////////////////////
-	std::string getString(imbxUint16 groupId, imbxUint16 order, imbxUint16 tagId, imbxUint32 elementNumber);
+	std::string getString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber);
 
 	/// \brief Retrieve a tag's value as an unicode string.
 	///
@@ -655,7 +655,7 @@ public:
 	/// @return        The tag's content, as an unicode string
 	///
 	///////////////////////////////////////////////////////////
-	std::wstring getUnicodeString(imbxUint16 groupId, imbxUint16 order, imbxUint16 tagId, imbxUint32 elementNumber);
+	std::wstring getUnicodeString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber);
 
 	/// \brief Set a tag's value as a string.
 	///        setUnicodeString() is preferred over this
@@ -688,7 +688,7 @@ public:
 	///                 this parameter
 	///
 	///////////////////////////////////////////////////////////
-	void setString(imbxUint16 groupId, imbxUint16 order, imbxUint16 tagId, imbxUint32 elementNumber, std::string newString, std::string defaultType = "");
+	void setString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber, std::string newString, std::string defaultType = "");
 
 	/// \brief Set a tag's value as an unicode string.
 	///
@@ -719,7 +719,7 @@ public:
 	///                 this parameter
 	///
 	///////////////////////////////////////////////////////////
-	void setUnicodeString(imbxUint16 groupId, imbxUint16 order, imbxUint16 tagId, imbxUint32 elementNumber, std::wstring newString, std::string defaultType = "");
+	void setUnicodeString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber, std::wstring newString, std::string defaultType = "");
 
 	//@}
 
@@ -743,7 +743,7 @@ public:
 	/// @return           the tag's default type.
 	///                   The returned string is a constant.
 	///////////////////////////////////////////////////////////
-	std::string getDefaultDataType(imbxUint16 groupId, imbxUint16 tagId);
+	std::string getDefaultDataType(std::uint16_t groupId, std::uint16_t tagId);
 
 	/// \brief Return the data type of a tag
 	///
@@ -758,7 +758,7 @@ public:
 	/// @return           a string with the tag's type.
 	///
 	///////////////////////////////////////////////////////////
-	std::string getDataType(imbxUint16 groupId, imbxUint16 order, imbxUint16 tagId);
+	std::string getDataType(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId);
 
 	/// \brief Return a data handler for the specified tag's
 	///         buffer.
@@ -790,7 +790,7 @@ public:
 	/// @return a pointer to the data handler.
 	///
 	///////////////////////////////////////////////////////////
-	ptr<handlers::dataHandler> getDataHandler(imbxUint16 groupId, imbxUint16 order, imbxUint16 tagId, imbxUint32 bufferId, bool bWrite, std::string defaultType="");
+	ptr<handlers::dataHandler> getDataHandler(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId, bool bWrite, std::string defaultType="");
 
 	/// \brief Return a raw data handler for the specified 
 	///         tag's buffer.
@@ -823,7 +823,7 @@ public:
 	/// @return a pointer to the data handler.
 	///
 	///////////////////////////////////////////////////////////
-	ptr<handlers::dataHandlerRaw> getDataHandlerRaw(imbxUint16 groupId, imbxUint16 order, imbxUint16 tagId, imbxUint32 bufferId, bool bWrite, std::string defaultType="");
+	ptr<handlers::dataHandlerRaw> getDataHandlerRaw(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId, bool bWrite, std::string defaultType="");
 
 	/// \brief Return a streamReader connected to the specified
 	///         tag's buffer's memory.
@@ -846,7 +846,7 @@ public:
 	/// @return a pointer to the streamReader
 	///
 	///////////////////////////////////////////////////////////
-	ptr<streamReader> getStreamReader(imbxUint16 groupId, imbxUint16 order, imbxUint16 tagId, imbxUint32 bufferId);
+	ptr<streamReader> getStreamReader(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId);
 
 	/// \brief Return a streamWriter connected to the specified
 	///         tag's buffer's memory.
@@ -871,7 +871,7 @@ public:
 	/// @return a pointer to the streamWriter
 	///
 	///////////////////////////////////////////////////////////
-	ptr<streamWriter> getStreamWriter(imbxUint16 groupId, imbxUint16 order, imbxUint16 tagId, imbxUint32 bufferId, std::string dataType = "");
+	ptr<streamWriter> getStreamWriter(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId, std::string dataType = "");
 
 	//@}
 
@@ -922,7 +922,7 @@ public:
 	///                  been written into the stream
 	///
 	///////////////////////////////////////////////////////////
-	void setItemOffset(imbxUint32 offset);
+	void setItemOffset(std::uint32_t offset);
 
 	/// \brief Retrieve the offset at which the dataSet is
 	///         located in the dicom stream.
@@ -931,7 +931,7 @@ public:
 	///          in the dicom stream
 	///
 	///////////////////////////////////////////////////////////
-	imbxUint32 getItemOffset();
+	std::uint32_t getItemOffset();
 
 	//@}
 
@@ -941,12 +941,12 @@ protected:
 	///////////////////////////////////////////////////////////
 	ptr<image> convertImageForDataSet(ptr<image> sourceImage);
 
-	std::vector<imbxUint32> m_imagesPositions;
+	std::vector<std::uint32_t> m_imagesPositions;
 
 	// Position of the sequence item in the stream. Used to
 	//  parse DICOMDIR items
 	///////////////////////////////////////////////////////////
-	imbxUint32 m_itemOffset;
+	std::uint32_t m_itemOffset;
 };
 
 

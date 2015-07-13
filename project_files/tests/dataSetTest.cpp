@@ -54,32 +54,32 @@ TEST(dataSetTest, testFragmentation)
 	std::list<ptr<buffer> > newBuffers;
 	ptr<buffer> newTableOffsetBuffer(new buffer(testDataSet));
 	newBuffers.push_back(newTableOffsetBuffer);
-	imbxUint32 offset(0);
+	std::uint32_t offset(0);
 
-	for(imbxUint32 scanBuffers = 1; imageTag->bufferExists(scanBuffers); ++scanBuffers)
+	for(std::uint32_t scanBuffers = 1; imageTag->bufferExists(scanBuffers); ++scanBuffers)
 	{
 		ptr<handlers::dataHandlerRaw> offsetHandler = newTableOffsetBuffer->getDataHandlerRaw(true, 8);
-		imbxUint32* pOffsetMemory = (imbxUint32*)(offsetHandler->getMemoryBuffer());
+		std::uint32_t* pOffsetMemory = (std::uint32_t*)(offsetHandler->getMemoryBuffer());
 		pOffsetMemory[scanBuffers - 1] = offset;
-		streamController::adjustEndian((imbxUint8*)&(pOffsetMemory[scanBuffers - 1]), sizeof(pOffsetMemory[0]), streamController::lowByteEndian, 1);
+		streamController::adjustEndian((std::uint8_t*)&(pOffsetMemory[scanBuffers - 1]), sizeof(pOffsetMemory[0]), streamController::lowByteEndian, 1);
 		ptr<handlers::dataHandlerRaw> wholeHandler = imageTag->getDataHandlerRaw(scanBuffers, false, "");
-		imbxUint8* pWholeHandler = (imbxUint8*)wholeHandler->getMemoryBuffer();
-		imbxUint32 totalSize = wholeHandler->getSize();
-		imbxUint32 fragmentedSize = totalSize / 3;
+		std::uint8_t* pWholeHandler = (std::uint8_t*)wholeHandler->getMemoryBuffer();
+		std::uint32_t totalSize = wholeHandler->getSize();
+		std::uint32_t fragmentedSize = totalSize / 3;
 		if(fragmentedSize & 0x1)
 		{
 			++fragmentedSize;
 		}
 		while(totalSize != 0)
 		{
-			imbxUint32 thisSize = totalSize;
+			std::uint32_t thisSize = totalSize;
 			if(thisSize > fragmentedSize)
 			{
 				thisSize = fragmentedSize;
 			}
 			ptr<buffer> newBuffer(new buffer(ptr<baseObject>(0), "OB", ptr<baseStream>(0), 0, thisSize, 1, streamController::lowByteEndian) );
 			ptr<handlers::dataHandlerRaw> newBufferHandler = newBuffer->getDataHandlerRaw(true, thisSize);
-			imbxUint8* pNewBuffer = (imbxUint8*)newBufferHandler->getMemoryBuffer();
+			std::uint8_t* pNewBuffer = (std::uint8_t*)newBufferHandler->getMemoryBuffer();
 			::memcpy(pNewBuffer, pWholeHandler, thisSize);
 			newBufferHandler.release();
 			newBuffers.push_back(newBuffer);
@@ -89,7 +89,7 @@ TEST(dataSetTest, testFragmentation)
 		}
 	}
         
-	imbxUint32 bufferId(0);
+	std::uint32_t bufferId(0);
 	for(std::list<ptr<buffer> >::const_iterator addBuffers = newBuffers.begin(); addBuffers != newBuffers.end(); ++addBuffers)
 	{
 		imageTag->setBuffer(bufferId++, *addBuffers);

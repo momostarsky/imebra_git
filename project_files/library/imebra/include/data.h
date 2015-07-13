@@ -82,7 +82,7 @@ public:
 	/// @return the number of buffers in the tag
 	///
 	///////////////////////////////////////////////////////////
-	imbxUint32 getBuffersCount();
+	std::uint32_t getBuffersCount();
 
 	/// \brief Returns true if the specified buffer exists,
 	///         otherwise it returns false.
@@ -95,7 +95,7 @@ public:
 	/// @return true if the buffer exists, false otherwise
 	///
 	///////////////////////////////////////////////////////////
-	bool bufferExists(imbxUint32 bufferId);
+	bool bufferExists(std::uint32_t bufferId);
 
 	/// \brief Returns the size of a buffer, in bytes.
 	///
@@ -108,7 +108,7 @@ public:
 	///          doesn't exist.
 	///
 	///////////////////////////////////////////////////////////
-	imbxUint32 getBufferSize(imbxUint32 bufferId);
+	std::uint32_t getBufferSize(std::uint32_t bufferId);
 
 	/// \brief Get a data handler for the specified buffer.
 	///
@@ -147,7 +147,7 @@ public:
 	///         requested buffer.
 	///
 	///////////////////////////////////////////////////////////
-	ptr<handlers::dataHandler> getDataHandler(imbxUint32 bufferId, bool bWrite, std::string defaultType);
+	ptr<handlers::dataHandler> getDataHandler(std::uint32_t bufferId, bool bWrite, std::string defaultType);
 	
 	/// \brief Get a raw data handler 
 	///         (handlers::dataHandlerRaw) for the specified 
@@ -191,7 +191,7 @@ public:
 	///         requested buffer.
 	///
 	///////////////////////////////////////////////////////////
-	ptr<handlers::dataHandlerRaw> getDataHandlerRaw(imbxUint32 bufferId, bool bWrite, std::string defaultType);
+	ptr<handlers::dataHandlerRaw> getDataHandlerRaw(std::uint32_t bufferId, bool bWrite, std::string defaultType);
 
 	/// \brief Get a streamReader connected to a buffer's data.
 	///
@@ -202,7 +202,7 @@ public:
 	///                    buffer's data.
 	///
 	///////////////////////////////////////////////////////////
-	ptr<streamReader> getStreamReader(imbxUint32 bufferId);
+	ptr<streamReader> getStreamReader(std::uint32_t bufferId);
 
 	/// \brief Get a streamWriter connected to a buffer's data.
 	///
@@ -215,7 +215,7 @@ public:
 	///                    emptied buffer's data.
 	///
 	///////////////////////////////////////////////////////////
-	ptr<streamWriter> getStreamWriter(imbxUint32 bufferId, std::string dataType = "");
+	ptr<streamWriter> getStreamWriter(std::uint32_t bufferId, std::string dataType = "");
 
 	//@}
 
@@ -244,7 +244,7 @@ public:
 	/// @return           a pointer to the retrieved dataSet
 	///
 	///////////////////////////////////////////////////////////
-	ptr<dataSet> getDataSet(imbxUint32 dataSetId);
+	ptr<dataSet> getDataSet(std::uint32_t dataSetId);
 
 	/// \brief Set an embedded dataSet to the sequence.
 	///
@@ -262,7 +262,7 @@ public:
 	///                   into the tag
 	///
 	///////////////////////////////////////////////////////////
-	void setDataSet(imbxUint32 dataSetId, ptr<dataSet> pDataSet);
+	void setDataSet(std::uint32_t dataSetId, ptr<dataSet> pDataSet);
 
 	/// \brief Append an embedded dataSet to the sequence.
 	///
@@ -294,7 +294,7 @@ public:
 	///                   from the tag
 	///
 	///////////////////////////////////////////////////////////
-	void deleteBuffer(imbxUint32 bufferId);
+	void deleteBuffer(std::uint32_t bufferId);
 
 	//@}
 
@@ -322,12 +322,12 @@ public:
 
 	// Set a buffer
 	///////////////////////////////////////////////////////////
-	void setBuffer(imbxUint32 bufferId, const ptr<buffer>& newBuffer);
+	void setBuffer(std::uint32_t bufferId, const ptr<buffer>& newBuffer);
 
 protected:
 	// Pointers to the internal buffers
 	///////////////////////////////////////////////////////////
-	typedef std::map<imbxUint32, ptr<buffer> > tBuffersMap;
+	typedef std::map<std::uint32_t, ptr<buffer> > tBuffersMap;
 	tBuffersMap m_buffers;
 
 	// Pointers to the embedded datasets

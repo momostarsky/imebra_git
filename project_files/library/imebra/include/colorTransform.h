@@ -92,7 +92,7 @@ public:
 	///////////////////////////////////////////////////////////
 	virtual ptr<colorTransform> createColorTransform()=0;
 
-        virtual ptr<image> allocateOutputImage(ptr<image> pInputImage, imbxUint32 width, imbxUint32 height);
+        virtual ptr<image> allocateOutputImage(ptr<image> pInputImage, std::uint32_t width, std::uint32_t height);
 
 protected:
 	// Performs the color transform

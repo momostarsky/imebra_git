@@ -46,8 +46,8 @@ public:
 	// Virtual stream's functions
 	//
 	///////////////////////////////////////////////////////////
-	virtual void write(imbxUint32, const imbxUint8*, imbxUint32){}
-	virtual imbxUint32 read(imbxUint32 , imbxUint8* , imbxUint32 ){return 0;}
+	virtual void write(std::uint32_t, const std::uint8_t*, std::uint32_t){}
+	virtual std::uint32_t read(std::uint32_t , std::uint8_t* , std::uint32_t ){return 0;}
 };
 
 ///@}

@@ -14,21 +14,21 @@ namespace tests
 // A buffer initialized to a default data type should use the data type OB
 TEST(paletteTest, testPalette)
 {/*
-	imbxUint32 sizeX = 600;
-	imbxUint32 sizeY = 400;
+	std::uint32_t sizeX = 600;
+	std::uint32_t sizeY = 400;
 	ptr<image> baselineImage(new image);
 	baselineImage->create(sizeX, sizeY, image::depthU8, L"RGB", 7);
 
-	imbxUint32 rowSize, channelsPixelSize, channelsNumber;
+	std::uint32_t rowSize, channelsPixelSize, channelsNumber;
 	ptr<handlers::imageHandler> imageHandler = baselineImage->getDataHandler(true, &rowSize, &channelsPixelSize, &channelsNumber);
 
 	// Make 3 bands (RGB)
-	for(imbxUint32 y=0; y<sizeY; ++y)
+	for(std::uint32_t y=0; y<sizeY; ++y)
 	{
-		for(imbxUint32 x=0; x<sizeX; ++x)
+		for(std::uint32_t x=0; x<sizeX; ++x)
 		{
-			imbxInt32 r, g, b;
-			imbxUint32 value = y * 255 / sizeY;
+			std::int32_t r, g, b;
+			std::uint32_t value = y * 255 / sizeY;
 			r = g = 0;
 			b = value;
 			if(x < sizeX - sizeX/3)
@@ -77,7 +77,7 @@ TEST(paletteTest, testPalette)
 	colorTransformRev->declareInputImage(0, paletteImage);
 	colorTransformRev->doTransform();
 	ptr<image> rgbImage = colorTransformRev->getOutputImage(0);
-	imbxUint32 checkSizeX, checkSizeY;
+	std::uint32_t checkSizeX, checkSizeY;
 	rgbImage->getSize(&checkSizeX, &checkSizeY);
 
 	ptr<handlers::imageHandler> rgbHandler = rgbImage->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
@@ -87,15 +87,15 @@ TEST(paletteTest, testPalette)
 	CPPUNIT_ASSERT(checkSizeX == sizeX);
 	CPPUNIT_ASSERT(checkSizeY == sizeY);
 
-	imbxUint32 difference = 0;
-	for(imbxUint32 checkY = 0; checkY < sizeY; ++checkY)
+	std::uint32_t difference = 0;
+	for(std::uint32_t checkY = 0; checkY < sizeY; ++checkY)
 	{
-		for(imbxUint32 checkX = 0; checkX < sizeX; ++checkX)
+		for(std::uint32_t checkX = 0; checkX < sizeX; ++checkX)
 		{
-			for(imbxUint32 scanChannel = 3; scanChannel != 0; --scanChannel)
+			for(std::uint32_t scanChannel = 3; scanChannel != 0; --scanChannel)
 			{
-				imbxInt32 value0 = rgbHandler->getUnsignedLongIncPointer();
-				imbxInt32 value1 = originalHandler->getUnsignedLongIncPointer();
+				std::int32_t value0 = rgbHandler->getUnsignedLongIncPointer();
+				std::int32_t value1 = originalHandler->getUnsignedLongIncPointer();
 				if(value0 > value1)
 				{
 					difference += value0 - value1;

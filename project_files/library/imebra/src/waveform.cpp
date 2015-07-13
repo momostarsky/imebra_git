@@ -33,7 +33,7 @@ waveform::waveform(ptr<dataSet> pDataSet):
 // Returns the number of allocated bits
 //
 ///////////////////////////////////////////////////////////
-imbxUint32 waveform::getBitsAllocated()
+std::uint32_t waveform::getBitsAllocated()
 {
 	PUNTOEXE_FUNCTION_START(L"waveform::getBitsAllocated");
 
@@ -48,7 +48,7 @@ imbxUint32 waveform::getBitsAllocated()
 // Returns the number of bits stored
 //
 ///////////////////////////////////////////////////////////
-imbxUint32 waveform::getBitsStored()
+std::uint32_t waveform::getBitsStored()
 {
 	PUNTOEXE_FUNCTION_START(L"waveform::getBitsStored");
 
@@ -63,7 +63,7 @@ imbxUint32 waveform::getBitsStored()
 // Returns the number of channels
 //
 ///////////////////////////////////////////////////////////
-imbxUint32 waveform::getChannels()
+std::uint32_t waveform::getChannels()
 {
 	PUNTOEXE_FUNCTION_START(L"waveform::getChannels");
 
@@ -93,7 +93,7 @@ std::string waveform::getInterpretation()
 // Returns the number of samples
 //
 ///////////////////////////////////////////////////////////
-imbxUint32 waveform::getSamples()
+std::uint32_t waveform::getSamples()
 {
 	PUNTOEXE_FUNCTION_START(L"waveform::getSamples");
 
@@ -108,11 +108,11 @@ imbxUint32 waveform::getSamples()
 // Returns a data handler for the waveform
 //
 ///////////////////////////////////////////////////////////
-ptr<handlers::dataHandler> waveform::getIntegerData(imbxUint32 channel, imbxInt32 paddingValue)
+ptr<handlers::dataHandler> waveform::getIntegerData(std::uint32_t channel, std::int32_t paddingValue)
 {
 	PUNTOEXE_FUNCTION_START(L"waveform::getIntegerData");
 
-	static imbxInt32 uLawDecompressTable[256] =
+	static std::int32_t uLawDecompressTable[256] =
 	{
 		-32124,-31100,-30076,-29052,-28028,-27004,-25980,-24956,
 		-23932,-22908,-21884,-20860,-19836,-18812,-17788,-16764,
@@ -148,7 +148,7 @@ ptr<handlers::dataHandler> waveform::getIntegerData(imbxUint32 channel, imbxInt3
 		56,    48,    40,    32,    24,    16,     8,     0
 	};
 
-	static imbxInt32 aLawDecompressTable[256] =
+	static std::int32_t aLawDecompressTable[256] =
 	{
 		-5504, -5248, -6016, -5760, -4480, -4224, -4992, -4736,
 		-7552, -7296, -8064, -7808, -6528, -6272, -7040, -6784,
@@ -198,9 +198,9 @@ ptr<handlers::dataHandler> waveform::getIntegerData(imbxUint32 channel, imbxInt3
 	//  samples
 	///////////////////////////////////////////////////////////
 	std::string waveformInterpretation(getInterpretation());
-	imbxUint32 numChannels(getChannels());
-	imbxUint32 numSamples(getSamples());
-	imbxUint32 originalPaddingValue(0);
+	std::uint32_t numChannels(getChannels());
+	std::uint32_t numSamples(getSamples());
+	std::uint32_t originalPaddingValue(0);
 	bool bPaddingValueExists(false);
 	ptr<handlers::dataHandler> paddingTagHandler(m_pDataSet->getDataHandler(0x5400, 0, 0x100A, 0, false));
 	if(paddingTagHandler != 0)
@@ -217,13 +217,13 @@ ptr<handlers::dataHandler> waveform::getIntegerData(imbxUint32 channel, imbxInt3
 
 	// Copy the data to the destination for unsigned values
 	///////////////////////////////////////////////////////////
-	imbxUint32 waveformPointer(channel);
-	imbxUint32 destinationPointer(0);
+	std::uint32_t waveformPointer(channel);
+	std::uint32_t destinationPointer(0);
 	if(sourceDataType == "UB" || sourceDataType == "US")
 	{
-		for(imbxUint32 copySamples (numSamples); copySamples != 0; --copySamples)
+		for(std::uint32_t copySamples (numSamples); copySamples != 0; --copySamples)
 		{
-			imbxUint32 unsignedData(waveformData->getUnsignedLong(waveformPointer));
+			std::uint32_t unsignedData(waveformData->getUnsignedLong(waveformPointer));
 			waveformPointer += numChannels;
 			if(bPaddingValueExists && unsignedData == originalPaddingValue)
 			{
@@ -238,11 +238,11 @@ ptr<handlers::dataHandler> waveform::getIntegerData(imbxUint32 channel, imbxInt3
 	// Copy the data to the destination for signed values
 	///////////////////////////////////////////////////////////
 	int highBit(getBitsAllocated() - 1);
-	imbxUint32 testBit = ((imbxUint32)1) << highBit;
-	imbxUint32 orBits = ((imbxUint32)((imbxInt32)-1)) << highBit;
-	for(imbxUint32 copySamples (numSamples); copySamples != 0; --copySamples)
+	std::uint32_t testBit = ((std::uint32_t)1) << highBit;
+	std::uint32_t orBits = ((std::uint32_t)((std::int32_t)-1)) << highBit;
+	for(std::uint32_t copySamples (numSamples); copySamples != 0; --copySamples)
 	{
-		imbxUint32 unsignedData = waveformData->getUnsignedLong(waveformPointer);
+		std::uint32_t unsignedData = waveformData->getUnsignedLong(waveformPointer);
 		waveformPointer += numChannels;
 		if(bPaddingValueExists && unsignedData == originalPaddingValue)
 		{
@@ -253,20 +253,20 @@ ptr<handlers::dataHandler> waveform::getIntegerData(imbxUint32 channel, imbxInt3
 		{
 			unsignedData |= orBits;
 		}
-		destinationHandler->setSignedLong(destinationPointer++, (imbxInt32)unsignedData);
+		destinationHandler->setSignedLong(destinationPointer++, (std::int32_t)unsignedData);
 	}
 
 	// Now decompress uLaw or aLaw
 	if(waveformInterpretation == "AB") // 8bits aLaw
 	{
-		for(imbxUint32 aLawSamples(0); aLawSamples != numSamples; ++aLawSamples)
+		for(std::uint32_t aLawSamples(0); aLawSamples != numSamples; ++aLawSamples)
 		{
-			imbxUint32 compressed(destinationHandler->getUnsignedLong(aLawSamples));
+			std::uint32_t compressed(destinationHandler->getUnsignedLong(aLawSamples));
 			if(bPaddingValueExists && compressed == originalPaddingValue)
 			{
 				continue;
 			}
-			imbxInt32 decompressed(aLawDecompressTable[compressed]);
+			std::int32_t decompressed(aLawDecompressTable[compressed]);
 			destinationHandler->setSignedLong(aLawSamples, decompressed);
 		}
 	}
@@ -274,14 +274,14 @@ ptr<handlers::dataHandler> waveform::getIntegerData(imbxUint32 channel, imbxInt3
 	// Now decompress uLaw or aLaw
 	if(waveformInterpretation == "MB") // 8bits aLaw
 	{
-		for(imbxUint32 uLawSamples(0); uLawSamples != numSamples; ++uLawSamples)
+		for(std::uint32_t uLawSamples(0); uLawSamples != numSamples; ++uLawSamples)
 		{
-			imbxUint32 compressed(destinationHandler->getUnsignedLong(uLawSamples));
+			std::uint32_t compressed(destinationHandler->getUnsignedLong(uLawSamples));
 			if(bPaddingValueExists && compressed == originalPaddingValue)
 			{
 				continue;
 			}
-			imbxInt32 decompressed(uLawDecompressTable[compressed]);
+			std::int32_t decompressed(uLawDecompressTable[compressed]);
 			destinationHandler->setSignedLong(uLawSamples, decompressed);
 		}
 	}

@@ -42,34 +42,34 @@ namespace imebra
 class cursorLine: public baseObject
 {
 public:
-	imbxInt32 m_x0;
-	imbxInt32 m_y0;
-	imbxInt32 m_x1;
-	imbxInt32 m_y1;
+	std::int32_t m_x0;
+	std::int32_t m_y0;
+	std::int32_t m_x1;
+	std::int32_t m_y1;
 
-	imbxUint8 m_red;
-	imbxUint8 m_green;
-	imbxUint8 m_blue;
+	std::uint8_t m_red;
+	std::uint8_t m_green;
+	std::uint8_t m_blue;
 
 	enum tStyle
 	{
 		line,
 		dotted
 	} m_style;
-	imbxUint32 m_width;
+	std::uint32_t m_width;
 
 public:
 	cursorLine();
 	cursorLine(
-		imbxInt32 x0,
-		imbxInt32 y0,
-		imbxInt32 x1,
-		imbxInt32 y1,
-		imbxUint8 red,
-		imbxUint8 green,
-		imbxUint8 blue,
+		std::int32_t x0,
+		std::int32_t y0,
+		std::int32_t x1,
+		std::int32_t y1,
+		std::uint8_t red,
+		std::uint8_t green,
+		std::uint8_t blue,
 		tStyle style,
-		imbxUint32 width);
+		std::uint32_t width);
 
 	cursorLine(const cursorLine& right);
 	cursorLine& operator=(const cursorLine& right);
@@ -173,7 +173,7 @@ public:
 	///                blue component of the background
 	///
 	///////////////////////////////////////////////////////////
-	void getBackgroundColor(imbxUint8* pRed, imbxUint8* pGreen, imbxUint8* pBlue);
+	void getBackgroundColor(std::uint8_t* pRed, std::uint8_t* pGreen, std::uint8_t* pBlue);
 
 	/// \brief Set the color to be used to draw the
 	///         background around the image.
@@ -184,7 +184,7 @@ public:
 	/// @param blue  the blue component of the background color
 	///
 	///////////////////////////////////////////////////////////
-	void setBackgroundColor(imbxUint8 red, imbxUint8 green, imbxUint8 blue);
+	void setBackgroundColor(std::uint8_t red, std::uint8_t green, std::uint8_t blue);
 
 	//@}
 
@@ -219,7 +219,7 @@ public:
 	///                  bottom-right corner
 	///
 	///////////////////////////////////////////////////////////
-	void getImageRect(imbxInt32* pLeft, imbxInt32* pTop, imbxInt32* pRight, imbxInt32* pBottom);
+	void getImageRect(std::int32_t* pLeft, std::int32_t* pTop, std::int32_t* pRight, std::int32_t* pBottom);
 
 	/// \brief Retrieve the active zoom factor.
 	///
@@ -276,7 +276,7 @@ public:
 	///                          automatically
 	///
 	///////////////////////////////////////////////////////////
-	void setZoomFactor(double zoomFactor, imbxInt32 centerPointX=-1, imbxInt32 centerPointY=-1);
+	void setZoomFactor(double zoomFactor, std::int32_t centerPointX=-1, std::int32_t centerPointY=-1);
 
 	/// \brief Zoom to the selected image's area.
 	///        The rectangle's coordinates are in image's
@@ -302,7 +302,7 @@ public:
 	///                 window
 	///
 	///////////////////////////////////////////////////////////
-	void setZoomRect(imbxInt32 left, imbxInt32 top, imbxInt32 right, imbxInt32 bottom);
+	void setZoomRect(std::int32_t left, std::int32_t top, std::int32_t right, std::int32_t bottom);
 
 	/// \brief Increase or decrease the zoom factor.
 	///
@@ -320,7 +320,7 @@ public:
 	///                      centered in the window's area
 	///
 	///////////////////////////////////////////////////////////
-	void zoomInOut(bool bZoomIn=true, imbxInt32 centerPointX=-1, imbxInt32 centerPointY=-1);
+	void zoomInOut(bool bZoomIn=true, std::int32_t centerPointX=-1, std::int32_t centerPointY=-1);
 
 	/// \brief Return true if the zoom is in automatic mode.
 	///        The zoom can be set in automatic mode by
@@ -337,8 +337,8 @@ public:
 	///////////////////////////////////////////////////////////
 	bool isAutoZoom();
 
-	void getCenterPoint(imbxInt32* pCenterPointX, imbxInt32* pCenterPointY);
-	void setCenterPoint(imbxInt32 centerPointX, imbxInt32 centerPointY);
+	void getCenterPoint(std::int32_t* pCenterPointX, std::int32_t* pCenterPointY);
+	void setCenterPoint(std::int32_t centerPointX, std::int32_t centerPointY);
 
 	//@}
 
@@ -361,7 +361,7 @@ public:
 	///                        the mouse, in image's pixels
 	///          
 	///////////////////////////////////////////////////////////
-	void endCursorDef(imbxInt32 cursorHotSpotX, imbxInt32 cursorHotSpotY);
+	void endCursorDef(std::int32_t cursorHotSpotX, std::int32_t cursorHotSpotY);
 
 	// End the cursor definition
 	///////////////////////////////////////////////////////////
@@ -369,7 +369,7 @@ public:
 
 	// Define a cursor's line
 	///////////////////////////////////////////////////////////
-	void defCursorLine(imbxInt32 startPointX, imbxInt32 startPointY, imbxInt32 endPointX, imbxInt32 endPointY, imbxUint8 colorRed, imbxUint8 colorGreen, imbxUint8 colorBlue, cursorLine::tStyle style = cursorLine::line, int width=0);
+	void defCursorLine(std::int32_t startPointX, std::int32_t startPointY, std::int32_t endPointX, std::int32_t endPointY, std::uint8_t colorRed, std::uint8_t colorGreen, std::uint8_t colorBlue, cursorLine::tStyle style = cursorLine::line, int width=0);
 
 	/// \brief Translate the window's horizontal coordinate
 	///         into the image's horizontal coordinate.
@@ -390,7 +390,7 @@ public:
 	///                     horizontal size)
 	///
 	///////////////////////////////////////////////////////////
-	imbxInt32 windowPosToImageX(imbxInt32 windowPosX);
+	std::int32_t windowPosToImageX(std::int32_t windowPosX);
 
 	/// \brief Translate the window's vertical coordinate into
 	///         the image's vertical coordinate.
@@ -410,7 +410,7 @@ public:
 	///                     size)
 	///
 	///////////////////////////////////////////////////////////
-	imbxInt32 windowPosToImageY(imbxInt32 windowPosY);
+	std::int32_t windowPosToImageY(std::int32_t windowPosY);
 
 	/// \brief Return a pixel's horizontal position in
 	///         millimeters.
@@ -422,7 +422,7 @@ public:
 	///          in millimeters
 	///
 	///////////////////////////////////////////////////////////
-	double imagePosToMillimitersX(imbxInt32 imagePosX);
+	double imagePosToMillimitersX(std::int32_t imagePosX);
 
 	/// \brief Return a pixel's vertical position in
 	///         millimeters.
@@ -434,7 +434,7 @@ public:
 	///          in millimeters
 	///
 	///////////////////////////////////////////////////////////
-	double imagePosToMillimitersY(imbxInt32 imagePosY);
+	double imagePosToMillimitersY(std::int32_t imagePosY);
 
 	/// \brief Return the horizontal pixel's index that
 	///         lays at the specified horizontal position, in
@@ -446,7 +446,7 @@ public:
 	///          specified position
 	///
 	///////////////////////////////////////////////////////////
-	imbxInt32 millimitersToImagePosX(double millimitersX);
+	std::int32_t millimitersToImagePosX(double millimitersX);
 
 	/// \brief Return the vertical pixel's index that
 	///         lays at the specified vertical position, in
@@ -458,14 +458,14 @@ public:
 	///          specified position
 	///
 	///////////////////////////////////////////////////////////
-	imbxInt32 millimitersToImagePosY(double millimitersY);
+	std::int32_t millimitersToImagePosY(double millimitersY);
 
 	// This function must be called by your window class after
 	//  the window's size has been updated or when some image's
 	//  parameters have been changed
 	//
 	///////////////////////////////////////////////////////////
-	void updateImageRect(imbxInt32 centerPointX, imbxInt32 centerPointY);
+	void updateImageRect(std::int32_t centerPointX, std::int32_t centerPointY);
 
 	/// \brief Draw the image.
 	///
@@ -488,7 +488,7 @@ public:
 	///
 	///////////////////////////////////////////////////////////
 	template <tDrawBitmapType drawBitmapType, int rowAlignBytes>
-	void draw(void* pDeviceContext, imbxInt32 left, imbxInt32 top, imbxInt32 right, imbxInt32 bottom)
+	void draw(void* pDeviceContext, std::int32_t left, std::int32_t top, std::int32_t right, std::int32_t bottom)
         {
             // Check if the image is visible in the specified area
             ///////////////////////////////////////////////////////////
@@ -509,10 +509,10 @@ public:
 
             // Adjust the area to be drawn
             ///////////////////////////////////////////////////////////
-            imbxInt32 bitmapLeft   = left;
-            imbxInt32 bitmapTop    = top;
-            imbxInt32 bitmapRight  = right;
-            imbxInt32 bitmapBottom = bottom;
+            std::int32_t bitmapLeft   = left;
+            std::int32_t bitmapTop    = top;
+            std::int32_t bitmapRight  = right;
+            std::int32_t bitmapBottom = bottom;
 
             if(bitmapLeft < m_leftPosition) bitmapLeft = m_leftPosition;
             if(bitmapTop < m_topPosition) bitmapTop = m_topPosition;
@@ -522,11 +522,11 @@ public:
 
             if(bitmapRight > bitmapLeft && bitmapBottom > bitmapTop)
             {
-                imbxUint32 bitmapRowLength = ((3 * (bitmapRight - bitmapLeft) + rowAlignBytes - 1) / rowAlignBytes) * rowAlignBytes;
+                std::uint32_t bitmapRowLength = ((3 * (bitmapRight - bitmapLeft) + rowAlignBytes - 1) / rowAlignBytes) * rowAlignBytes;
 				if(
 					m_bUpdateImage ||
-                    m_cachedWidth != (imbxUint32)(m_rightPosition - m_leftPosition) ||
-                    m_cachedHeight != (imbxUint32)(m_bottomPosition - m_topPosition) ||
+                    m_cachedWidth != (std::uint32_t)(m_rightPosition - m_leftPosition) ||
+                    m_cachedHeight != (std::uint32_t)(m_bottomPosition - m_topPosition) ||
 					m_cachedVisibleLeft != (bitmapLeft - m_leftPosition) ||
 					m_cachedVisibleTop != (bitmapTop - m_topPosition) ||
 					m_cachedVisibleRight != (bitmapRight - m_leftPosition) ||
@@ -589,7 +589,7 @@ public:
 	///                   height, in pixels
 	///
 	///////////////////////////////////////////////////////////
-	virtual void getWindowSize(imbxUint32* pSizeX, imbxUint32* pSizeY) = 0;
+	virtual void getWindowSize(std::uint32_t* pSizeX, std::uint32_t* pSizeY) = 0;
 
 	/// \brief Overwrite this method with a function that
 	///         retrieves the total virtual size of the window.
@@ -605,7 +605,7 @@ public:
 	///                      virtual height, in pixels
 	///
 	///////////////////////////////////////////////////////////
-	virtual void getScrollSize(imbxUint32* pScrollSizeX, imbxUint32* pScrollSizeY) = 0;
+	virtual void getScrollSize(std::uint32_t* pScrollSizeX, std::uint32_t* pScrollSizeY) = 0;
 
 	/// \brief Overwrite this method with a function that sets
 	///         the window's virtual size.
@@ -625,7 +625,7 @@ public:
 	///                          doesn't need to be invalidated
 	///
 	///////////////////////////////////////////////////////////
-	virtual void setScrollSize(imbxUint32 newScrollSizeX, imbxUint32 newScrollSizeY, bool bInvalidate) = 0;
+	virtual void setScrollSize(std::uint32_t newScrollSizeX, std::uint32_t newScrollSizeY, bool bInvalidate) = 0;
 
 	/// \brief Overwrite this method with a function that
 	///         retrieves the current position in the scroll
@@ -639,7 +639,7 @@ public:
 	///                     vertical scroll bar's position
 	///
 	///////////////////////////////////////////////////////////
-	virtual void getScrollPosition(imbxInt32* pScrollX, imbxInt32* pScrollY) = 0;
+	virtual void getScrollPosition(std::int32_t* pScrollX, std::int32_t* pScrollY) = 0;
 
 	/// \brief Overwrite this method with a function that
 	///         changes the position in the scroll bars, in
@@ -651,7 +651,7 @@ public:
 	///                  scroll bar, in pixels
 	///
 	///////////////////////////////////////////////////////////
-	virtual void setScrollPosition(imbxInt32 scrollX, imbxInt32 scrollY)=0;
+	virtual void setScrollPosition(std::int32_t scrollX, std::int32_t scrollY)=0;
 
 	/// \brief Overwrite this method with a function that
 	///         draws a rectangle on a device context.
@@ -677,7 +677,7 @@ public:
 	///                        rectangle's color
 	///
 	///////////////////////////////////////////////////////////
-	virtual void drawRectangle(void* pDeviceContext, imbxInt32 left, imbxInt32 top, imbxInt32 right, imbxInt32 bottom, imbxUint8 colorRed, imbxUint8 colorGreen, imbxUint8 colorBlue)=0;
+	virtual void drawRectangle(void* pDeviceContext, std::int32_t left, std::int32_t top, std::int32_t right, std::int32_t bottom, std::uint8_t colorRed, std::uint8_t colorGreen, std::uint8_t colorBlue)=0;
 
 	/// \brief Overwrite this method with a function that
 	///         draws a bitmap on the screen in the specified
@@ -707,7 +707,7 @@ public:
 	///                        representing the bitmap.
 	///
 	///////////////////////////////////////////////////////////
-	virtual void drawBitmap(void* pDeviceContext, imbxInt32 left, imbxInt32 top, imbxInt32 right, imbxInt32 bottom, imbxUint32 bufferRowSizeBytes, imbxUint8* pBuffer)=0;
+	virtual void drawBitmap(void* pDeviceContext, std::int32_t left, std::int32_t top, std::int32_t right, std::int32_t bottom, std::uint32_t bufferRowSizeBytes, std::uint8_t* pBuffer)=0;
 
 	/// \brief Overwrite this method with a function that
 	///         draws a line on the specified device context.
@@ -743,7 +743,7 @@ public:
 	///                       0 means really thin.
 	///
 	///////////////////////////////////////////////////////////
-	virtual void drawCursorLine(void* pDeviceContext, imbxInt32 startPointX, imbxInt32 startPointY, imbxInt32 endPointX, imbxInt32 endPointY, imbxUint8 colorRed, imbxUint8 colorGreen, imbxUint8 colorBlue, cursorLine::tStyle style, imbxUint32 width)=0;
+	virtual void drawCursorLine(void* pDeviceContext, std::int32_t startPointX, std::int32_t startPointY, std::int32_t endPointX, std::int32_t endPointY, std::uint8_t colorRed, std::uint8_t colorGreen, std::uint8_t colorBlue, cursorLine::tStyle style, std::uint32_t width)=0;
 
 	/// \brief Overwrite this method with a function that
 	///         invalidate the window, without
@@ -774,7 +774,7 @@ public:
 	///                  per inch
 	///
 	///////////////////////////////////////////////////////////
-	virtual void getScreenDPI(imbxUint32* pHorzDPI, imbxUint32* pVertDPI)=0;
+	virtual void getScreenDPI(std::uint32_t* pHorzDPI, std::uint32_t* pVertDPI)=0;
 
 	virtual bool isMouseCaptured()=0;
 
@@ -786,16 +786,16 @@ private:
 
         // Image's position
 	///////////////////////////////////////////////////////////
-	imbxInt32 m_leftPosition;
-	imbxInt32 m_topPosition;
-	imbxInt32 m_rightPosition;
-	imbxInt32 m_bottomPosition;
+	std::int32_t m_leftPosition;
+	std::int32_t m_topPosition;
+	std::int32_t m_rightPosition;
+	std::int32_t m_bottomPosition;
 
         // Background color
 	///////////////////////////////////////////////////////////
-	imbxUint8 m_backgroundRed;
-	imbxUint8 m_backgroundGreen;
-	imbxUint8 m_backgroundBlue;
+	std::uint8_t m_backgroundRed;
+	std::uint8_t m_backgroundGreen;
+	std::uint8_t m_backgroundBlue;
 
 	// Active image's zoom
 	///////////////////////////////////////////////////////////
@@ -809,12 +809,12 @@ private:
 
 	// Values used to retrieve the last bitmap
 		bool m_bUpdateImage;
-	imbxUint32 m_cachedWidth;
-	imbxUint32 m_cachedHeight;
-        imbxInt32 m_cachedVisibleTop;
-        imbxInt32 m_cachedVisibleLeft;
-        imbxInt32 m_cachedVisibleBottom;
-        imbxInt32 m_cachedVisibleRight;
+	std::uint32_t m_cachedWidth;
+	std::uint32_t m_cachedHeight;
+        std::int32_t m_cachedVisibleTop;
+        std::int32_t m_cachedVisibleLeft;
+        std::int32_t m_cachedVisibleBottom;
+        std::int32_t m_cachedVisibleRight;
 
 
 

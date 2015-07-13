@@ -87,7 +87,7 @@ public:
 	/// @param description   a string that describes the lut
 	///
 	///////////////////////////////////////////////////////////
-	void create(imbxUint32 size, imbxInt32 firstMapped, imbxUint8 bits, std::wstring description);
+	void create(std::uint32_t size, std::int32_t firstMapped, std::uint8_t bits, std::wstring description);
 
 	/// \brief Store a mapped value in the lut.
 	///
@@ -101,7 +101,7 @@ public:
 	/// @param lutValue     the mapped value
 	///
 	///////////////////////////////////////////////////////////
-	void setLutValue(imbxInt32 startValue, imbxInt32 lutValue);
+	void setLutValue(std::int32_t startValue, std::int32_t lutValue);
 
 	/// \brief Fill the data handlers with the lut's descriptor
 	///         and the lut's data.
@@ -132,14 +132,14 @@ public:
 	/// @return the number of bits used to store a mapped value
 	///
 	///////////////////////////////////////////////////////////
-	imbxUint8 getBits();
+	std::uint8_t getBits();
 
 	/// \brief Return the lut's size.
 	///
 	/// @return the number of mapped value stored in the lut
 	///
 	///////////////////////////////////////////////////////////
-	imbxUint32 getSize();
+	std::uint32_t getSize();
 
 	/// \brief Checks if the data in the LUT is consistent
 	///         with the number of bits specified in number
@@ -155,7 +155,7 @@ public:
 	/// @return the id of the first mapped value
 	///
 	///////////////////////////////////////////////////////////
-	imbxInt32 getFirstMapped();
+	std::int32_t getFirstMapped();
 
 	/// \brief Retrieve the value mapped by the specified id.
 	///
@@ -163,7 +163,7 @@ public:
 	/// @return the value mapped by the specified id
 	///
 	///////////////////////////////////////////////////////////
-	imbxInt32 mappedValue(imbxInt32 id);
+	std::int32_t mappedValue(std::int32_t id);
 
 	/// \brief Retrieve tha id that maps the specified value.
 	///
@@ -171,36 +171,36 @@ public:
 	/// @return the id that maps the specified value
 	///
 	///////////////////////////////////////////////////////////
-	imbxInt32 mappedValueRev(imbxInt32 lutValue);
+	std::int32_t mappedValueRev(std::int32_t lutValue);
 
-	/// \brief Copy the lut's data into an imbxInt32 array.
+	/// \brief Copy the lut's data into an std::int32_t array.
 	///
 	/// @param pDestination a pointer to the first element of
-	///                      the imbxInt32 array
+	///                      the std::int32_t array
 	/// @param destSize     the size of the array, in elements
 	/// @param pFirstMapped a pointer to a variable that this
 	///                      function will fill with the id
 	///                      of the first mapped element
 	///
 	///////////////////////////////////////////////////////////
-	void copyToInt32(imbxInt32* pDestination, imbxUint32 destSize, imbxInt32* pFirstMapped);
+	void copyToInt32(std::int32_t* pDestination, std::uint32_t destSize, std::int32_t* pFirstMapped);
 
 protected:
 	// Destructor
 	///////////////////////////////////////////////////////////
 	virtual ~lut();
 
-	imbxUint32 m_size;
-	imbxInt32 m_firstMapped;
-	imbxUint8 m_bits;
+	std::uint32_t m_size;
+	std::int32_t m_firstMapped;
+	std::uint8_t m_bits;
 
 	bool m_bChecked;
 	bool m_bValid;
 
 	std::wstring m_description;
 
-	imbxInt32* m_pMappedValues;
-	std::map<imbxInt32, imbxInt32> m_mappedValuesRev;
+	std::int32_t* m_pMappedValues;
+	std::map<std::int32_t, std::int32_t> m_mappedValuesRev;
 };
 
 

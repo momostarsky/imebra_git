@@ -46,7 +46,7 @@ namespace handlers
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint32 dataHandlerTime::maxSize() const
+std::uint32_t dataHandlerTime::maxSize() const
 {
 	return 16;
 }
@@ -61,7 +61,7 @@ imbxUint32 dataHandlerTime::maxSize() const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint32 dataHandlerTime::getUnitSize() const
+std::uint32_t dataHandlerTime::getUnitSize() const
 {
 	return 0;
 }
@@ -148,16 +148,16 @@ void dataHandlerTime::parseBuffer(const ptr<memory>& memoryBuffer)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerTime::setDate(const imbxUint32 index,
-		 imbxInt32 /* year */,
-		 imbxInt32 /* month */,
-		 imbxInt32 /* day */,
-		 imbxInt32 hour,
-		 imbxInt32 minutes,
-		 imbxInt32 seconds,
-		 imbxInt32 nanoseconds,
-		 imbxInt32 offsetHours,
-		 imbxInt32 offsetMinutes)
+void dataHandlerTime::setDate(const std::uint32_t index,
+		 std::int32_t /* year */,
+		 std::int32_t /* month */,
+		 std::int32_t /* day */,
+		 std::int32_t hour,
+		 std::int32_t minutes,
+		 std::int32_t seconds,
+		 std::int32_t nanoseconds,
+		 std::int32_t offsetHours,
+		 std::int32_t offsetMinutes)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerTime::setDate");
 
@@ -178,16 +178,16 @@ void dataHandlerTime::setDate(const imbxUint32 index,
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerTime::getDate(const imbxUint32 index,
-		 imbxInt32* pYear,
-		 imbxInt32* pMonth,
-		 imbxInt32* pDay,
-		 imbxInt32* pHour,
-		 imbxInt32* pMinutes,
-		 imbxInt32* pSeconds,
-		 imbxInt32* pNanoseconds,
-		 imbxInt32* pOffsetHours,
-		 imbxInt32* pOffsetMinutes) const
+void dataHandlerTime::getDate(const std::uint32_t index,
+		 std::int32_t* pYear,
+		 std::int32_t* pMonth,
+		 std::int32_t* pDay,
+		 std::int32_t* pHour,
+		 std::int32_t* pMinutes,
+		 std::int32_t* pSeconds,
+		 std::int32_t* pNanoseconds,
+		 std::int32_t* pOffsetHours,
+		 std::int32_t* pOffsetMinutes) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerTime::getDate");
 
@@ -217,11 +217,11 @@ void dataHandlerTime::getDate(const imbxUint32 index,
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::wstring dataHandlerTime::getUnicodeString(const imbxUint32 index) const
+std::wstring dataHandlerTime::getUnicodeString(const std::uint32_t index) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerTime::getUnicodeString");
 
-	imbxInt32 year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes;
+	std::int32_t year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes;
 	getDate(index, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
 
 	std::wostringstream convStream;
@@ -256,14 +256,14 @@ std::wstring dataHandlerTime::getUnicodeString(const imbxUint32 index) const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerTime::setUnicodeString(const imbxUint32 index, const std::wstring& value)
+void dataHandlerTime::setUnicodeString(const std::uint32_t index, const std::wstring& value)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerTime::setUnicodeString");
 
 	std::vector<std::wstring> components;
 	split(value, L"-/.: +-", &components);
 
-	imbxInt32 year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes;
+	std::int32_t year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes;
 	year = 0;
 	month = 1;
 	day = 1;

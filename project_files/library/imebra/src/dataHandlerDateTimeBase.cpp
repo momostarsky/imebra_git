@@ -46,11 +46,11 @@ namespace handlers
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxInt32 dataHandlerDateTimeBase::getSignedLong(const imbxUint32 index) const
+std::int32_t dataHandlerDateTimeBase::getSignedLong(const std::uint32_t index) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTimeBase::getSignedLong");
 
-	imbxInt32 year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes;
+	std::int32_t year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes;
 	getDate(index, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
 
 	tm timeStructure;
@@ -64,7 +64,7 @@ imbxInt32 dataHandlerDateTimeBase::getSignedLong(const imbxUint32 index) const
 	timeStructure.tm_min = minutes;
 	timeStructure.tm_sec = seconds;
 	
-	return (imbxInt32)mktime(&timeStructure);
+	return (std::int32_t)mktime(&timeStructure);
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -79,11 +79,11 @@ imbxInt32 dataHandlerDateTimeBase::getSignedLong(const imbxUint32 index) const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint32 dataHandlerDateTimeBase::getUnsignedLong(const imbxUint32 index) const
+std::uint32_t dataHandlerDateTimeBase::getUnsignedLong(const std::uint32_t index) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTimeBase::getUnsignedLong");
 
-	return (imbxUint32)getSignedLong(index);
+	return (std::uint32_t)getSignedLong(index);
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -98,7 +98,7 @@ imbxUint32 dataHandlerDateTimeBase::getUnsignedLong(const imbxUint32 index) cons
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-double dataHandlerDateTimeBase::getDouble(const imbxUint32 index) const
+double dataHandlerDateTimeBase::getDouble(const std::uint32_t index) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTimeBase::getDouble");
 
@@ -117,7 +117,7 @@ double dataHandlerDateTimeBase::getDouble(const imbxUint32 index) const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerDateTimeBase::setSignedLong(const imbxUint32 index, const imbxInt32 value)
+void dataHandlerDateTimeBase::setSignedLong(const std::uint32_t index, const std::int32_t value)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTimeBase::setSignedLong");
 
@@ -127,12 +127,12 @@ void dataHandlerDateTimeBase::setSignedLong(const imbxUint32 index, const imbxIn
 #else
 	tm* timeStructure = localtime((time_t*)&value);
 #endif
-	imbxInt32 year = timeStructure->tm_year;
-	imbxInt32 month = timeStructure->tm_mon + 1;
-	imbxInt32 day = timeStructure->tm_mday;
-	imbxInt32 hour = timeStructure->tm_hour;
-	imbxInt32 minutes = timeStructure->tm_min;
-	imbxInt32 seconds = timeStructure->tm_sec;
+	std::int32_t year = timeStructure->tm_year;
+	std::int32_t month = timeStructure->tm_mon + 1;
+	std::int32_t day = timeStructure->tm_mday;
+	std::int32_t hour = timeStructure->tm_hour;
+	std::int32_t minutes = timeStructure->tm_min;
+	std::int32_t seconds = timeStructure->tm_sec;
 	setDate(index, year, month, day, hour, minutes, seconds, 0, 0, 0);
 
 	PUNTOEXE_FUNCTION_END();
@@ -148,11 +148,11 @@ void dataHandlerDateTimeBase::setSignedLong(const imbxUint32 index, const imbxIn
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerDateTimeBase::setUnsignedLong(const imbxUint32 index, const imbxUint32 value)
+void dataHandlerDateTimeBase::setUnsignedLong(const std::uint32_t index, const std::uint32_t value)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTimeBase::setUnsignedLong");
 
-	setSignedLong(index, (imbxInt32)value);
+	setSignedLong(index, (std::int32_t)value);
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -167,11 +167,11 @@ void dataHandlerDateTimeBase::setUnsignedLong(const imbxUint32 index, const imbx
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerDateTimeBase::setDouble(const imbxUint32 index, const double value)
+void dataHandlerDateTimeBase::setDouble(const std::uint32_t index, const double value)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTimeBase::setDouble");
 
-	setSignedLong(index, (imbxInt32)value);
+	setSignedLong(index, (std::int32_t)value);
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -203,9 +203,9 @@ wchar_t dataHandlerDateTimeBase::getSeparator() const
 ///////////////////////////////////////////////////////////
 void dataHandlerDateTimeBase::parseDate(
 		std::wstring dateString,
-		imbxInt32* pYear, 
-		imbxInt32* pMonth, 
-		imbxInt32* pDay) const
+		std::int32_t* pYear, 
+		std::int32_t* pMonth, 
+		std::int32_t* pDay) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTimeBase::parseDate");
 
@@ -239,9 +239,9 @@ void dataHandlerDateTimeBase::parseDate(
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 std::wstring dataHandlerDateTimeBase::buildDate(
-		imbxUint32 year,
-		imbxUint32 month,
-		imbxUint32 day) const
+		std::uint32_t year,
+		std::uint32_t month,
+		std::uint32_t day) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTimeBase::buildDate");
 
@@ -273,12 +273,12 @@ std::wstring dataHandlerDateTimeBase::buildDate(
 ///////////////////////////////////////////////////////////
 void dataHandlerDateTimeBase::parseTime(
 		std::wstring timeString,
-		imbxInt32* pHour, 
-		imbxInt32* pMinutes,
-		imbxInt32* pSeconds,
-		imbxInt32* pNanoseconds,
-		imbxInt32* pOffsetHours,
-		imbxInt32* pOffsetMinutes) const
+		std::int32_t* pHour, 
+		std::int32_t* pMinutes,
+		std::int32_t* pSeconds,
+		std::int32_t* pNanoseconds,
+		std::int32_t* pOffsetHours,
+		std::int32_t* pOffsetMinutes) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTimeBase::parseTime");
 
@@ -347,12 +347,12 @@ void dataHandlerDateTimeBase::parseTime(
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 std::wstring dataHandlerDateTimeBase::buildTime(
-		imbxInt32 hour,
-		imbxInt32 minutes,
-		imbxInt32 seconds,
-		imbxInt32 nanoseconds,
-		imbxInt32 offsetHours,
-		imbxInt32 offsetMinutes
+		std::int32_t hour,
+		std::int32_t minutes,
+		std::int32_t seconds,
+		std::int32_t nanoseconds,
+		std::int32_t offsetHours,
+		std::int32_t offsetMinutes
 		) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTimeBase::buildTime");

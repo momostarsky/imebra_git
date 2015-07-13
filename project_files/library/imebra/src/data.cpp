@@ -48,7 +48,7 @@ namespace imebra
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void data::setBuffer(imbxUint32 bufferId, const ptr<buffer>& newBuffer)
+void data::setBuffer(std::uint32_t bufferId, const ptr<buffer>& newBuffer)
 {
 	PUNTOEXE_FUNCTION_START(L"data::setBuffer");
 
@@ -71,7 +71,7 @@ void data::setBuffer(imbxUint32 bufferId, const ptr<buffer>& newBuffer)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void data::deleteBuffer(imbxUint32 bufferId)
+void data::deleteBuffer(std::uint32_t bufferId)
 {
 	PUNTOEXE_FUNCTION_START(L"data::deleteBuffer");
 
@@ -129,7 +129,7 @@ std::string data::getDataType()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint32 data::getBuffersCount()
+std::uint32_t data::getBuffersCount()
 {
 	PUNTOEXE_FUNCTION_START(L"data::getBuffersCount");
 
@@ -154,7 +154,7 @@ imbxUint32 data::getBuffersCount()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-bool data::bufferExists(imbxUint32 bufferId)
+bool data::bufferExists(std::uint32_t bufferId)
 {
 	PUNTOEXE_FUNCTION_START(L"data::bufferExists");
 
@@ -180,7 +180,7 @@ bool data::bufferExists(imbxUint32 bufferId)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint32 data::getBufferSize(imbxUint32 bufferId)
+std::uint32_t data::getBufferSize(std::uint32_t bufferId)
 {
 	PUNTOEXE_FUNCTION_START(L"data::getBufferSize");
 
@@ -213,7 +213,7 @@ imbxUint32 data::getBufferSize(imbxUint32 bufferId)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<handlers::dataHandler> data::getDataHandler(imbxUint32 bufferId, bool bWrite, std::string defaultType)
+ptr<handlers::dataHandler> data::getDataHandler(std::uint32_t bufferId, bool bWrite, std::string defaultType)
 {
 	PUNTOEXE_FUNCTION_START(L"data::getDataHandler");
 
@@ -270,7 +270,7 @@ ptr<handlers::dataHandler> data::getDataHandler(imbxUint32 bufferId, bool bWrite
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<handlers::dataHandlerRaw> data::getDataHandlerRaw(imbxUint32 bufferId, bool bWrite, std::string defaultType)
+ptr<handlers::dataHandlerRaw> data::getDataHandlerRaw(std::uint32_t bufferId, bool bWrite, std::string defaultType)
 {
 	PUNTOEXE_FUNCTION_START(L"data::getDataHandlerRaw");
 
@@ -327,7 +327,7 @@ ptr<handlers::dataHandlerRaw> data::getDataHandlerRaw(imbxUint32 bufferId, bool 
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<streamReader> data::getStreamReader(imbxUint32 bufferId)
+ptr<streamReader> data::getStreamReader(std::uint32_t bufferId)
 {
 	PUNTOEXE_FUNCTION_START(L"data::getStreamReader");
 
@@ -360,7 +360,7 @@ ptr<streamReader> data::getStreamReader(imbxUint32 bufferId)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<streamWriter> data::getStreamWriter(imbxUint32 bufferId, std::string dataType /* = "" */)
+ptr<streamWriter> data::getStreamWriter(std::uint32_t bufferId, std::string dataType /* = "" */)
 {
 	PUNTOEXE_FUNCTION_START(L"data::getStream");
 
@@ -416,7 +416,7 @@ ptr<streamWriter> data::getStreamWriter(imbxUint32 bufferId, std::string dataTyp
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<dataSet> data::getDataSet(imbxUint32 dataSetId)
+ptr<dataSet> data::getDataSet(std::uint32_t dataSetId)
 {
 	PUNTOEXE_FUNCTION_START(L"data::getDataSet");
 
@@ -446,7 +446,7 @@ ptr<dataSet> data::getDataSet(imbxUint32 dataSetId)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void data::setDataSet(imbxUint32 dataSetId, ptr<dataSet> pDataSet)
+void data::setDataSet(std::uint32_t dataSetId, ptr<dataSet> pDataSet)
 {
 	PUNTOEXE_FUNCTION_START(L"data::setDataSet");
 

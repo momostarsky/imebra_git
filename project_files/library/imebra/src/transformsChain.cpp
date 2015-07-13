@@ -66,9 +66,9 @@ bool transformsChain::isEmpty()
 
 void transformsChain::runTransform(
             const ptr<image>& inputImage,
-            imbxUint32 inputTopLeftX, imbxUint32 inputTopLeftY, imbxUint32 inputWidth, imbxUint32 inputHeight,
+            std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight,
             const ptr<image>& outputImage,
-            imbxUint32 outputTopLeftX, imbxUint32 outputTopLeftY)
+            std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY)
 {
 	if(isEmpty())
 	{
@@ -91,11 +91,11 @@ void transformsChain::runTransform(
 
 	std::wstring inputColorSpace(inputImage->getColorSpace());
 	image::bitDepth inputDepth(inputImage->getDepth());
-	imbxUint32 inputHighBit(inputImage->getHighBit());
+	std::uint32_t inputHighBit(inputImage->getHighBit());
 	std::wstring outputColorSpace(outputImage->getColorSpace());
 	image::bitDepth outputDepth(outputImage->getDepth());
-	imbxUint32 outputHighBit(outputImage->getHighBit());
-	imbxUint32 allocateRows = 65536 / inputWidth;
+	std::uint32_t outputHighBit(outputImage->getHighBit());
+	std::uint32_t allocateRows = 65536 / inputWidth;
 	if(allocateRows < 1)
 	{
 		allocateRows = 1;
@@ -140,7 +140,7 @@ void transformsChain::runTransform(
 	///////////////////////////////////////////////////////////
 	while(inputHeight != 0)
 	{
-		imbxUint32 rows = allocateRows;
+		std::uint32_t rows = allocateRows;
 		if(rows > inputHeight)
 		{
 			rows = inputHeight;
@@ -167,7 +167,7 @@ void transformsChain::runTransform(
 }
 
 
-ptr<image> transformsChain::allocateOutputImage(ptr<image> pInputImage, imbxUint32 width, imbxUint32 height)
+ptr<image> transformsChain::allocateOutputImage(ptr<image> pInputImage, std::uint32_t width, std::uint32_t height)
 {
 	if(isEmpty())
 	{

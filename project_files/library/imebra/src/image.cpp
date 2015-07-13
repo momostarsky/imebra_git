@@ -42,11 +42,11 @@ namespace imebra
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 ptr<handlers::dataHandlerNumericBase> image::create(
-						const imbxUint32 sizeX, 
-						const imbxUint32 sizeY, 
+						const std::uint32_t sizeX, 
+						const std::uint32_t sizeY, 
 						const bitDepth depth, 
 						std::wstring inputColorSpace, 
-						const imbxUint8 highBit)
+						const std::uint8_t highBit)
 {
 	PUNTOEXE_FUNCTION_START(L"image::create");
 
@@ -75,7 +75,7 @@ ptr<handlers::dataHandlerNumericBase> image::create(
 	//  for signed bytes).
 	///////////////////////////////////////////////////////////
 	m_channelPixelSize = 0;
-	imbxUint8 defaultHighBit = 0;
+	std::uint8_t defaultHighBit = 0;
 
 	std::string bufferDataType;
 
@@ -127,7 +127,7 @@ ptr<handlers::dataHandlerNumericBase> image::create(
 
 	m_sizeX = m_sizeY = 0;
 	
-	ptr<handlers::dataHandler> imageHandler(m_buffer->getDataHandler(true, sizeX * sizeY * (imbxUint32)m_channelsNumber) );
+	ptr<handlers::dataHandler> imageHandler(m_buffer->getDataHandler(true, sizeX * sizeY * (std::uint32_t)m_channelsNumber) );
 	if(imageHandler != 0)
 	{
 		m_rowLength = m_channelsNumber*sizeX;
@@ -157,7 +157,7 @@ ptr<handlers::dataHandlerNumericBase> image::create(
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void image::setHighBit(imbxUint32 highBit)
+void image::setHighBit(std::uint32_t highBit)
 {
 	PUNTOEXE_FUNCTION_START(L"image::setHighBit");
 
@@ -191,7 +191,7 @@ void image::setPalette(ptr<palette> imagePalette)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<handlers::dataHandlerNumericBase> image::getDataHandler(const bool bWrite, imbxUint32* pRowSize, imbxUint32* pChannelPixelSize, imbxUint32* pChannelsNumber)
+ptr<handlers::dataHandlerNumericBase> image::getDataHandler(const bool bWrite, std::uint32_t* pRowSize, std::uint32_t* pChannelPixelSize, std::uint32_t* pChannelsNumber)
 {
 	PUNTOEXE_FUNCTION_START(L"image::getDataHandler");
 
@@ -243,7 +243,7 @@ image::bitDepth image::getDepth()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint32 image::getHighBit()
+std::uint32_t image::getHighBit()
 {
 	PUNTOEXE_FUNCTION_START(L"image::getHighBit");
 
@@ -294,7 +294,7 @@ std::wstring image::getColorSpace()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-imbxUint32 image::getChannelsNumber()
+std::uint32_t image::getChannelsNumber()
 {
 	PUNTOEXE_FUNCTION_START(L"image::getChannelsNumber");
 
@@ -314,7 +314,7 @@ imbxUint32 image::getChannelsNumber()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void image::getSize(imbxUint32* pSizeX, imbxUint32* pSizeY)
+void image::getSize(std::uint32_t* pSizeX, std::uint32_t* pSizeY)
 {
 	PUNTOEXE_FUNCTION_START(L"image::getSize");
 

@@ -14,8 +14,8 @@ namespace puntoexe
 
 // Used for the endian check
 ///////////////////////////////////////////////////////////
-static const imbxUint16 m_endianCheck(0x00ff);
-static imbxUint8 const * const pBytePointer((imbxUint8*)&m_endianCheck);
+static const std::uint16_t m_endianCheck(0x00ff);
+static std::uint8_t const * const pBytePointer((std::uint8_t*)&m_endianCheck);
 static const streamController::tByteOrdering m_platformByteOrder((*pBytePointer)==0xff ? streamController::lowByteEndian : streamController::highByteEndian);
 
 ///////////////////////////////////////////////////////////
@@ -23,10 +23,10 @@ static const streamController::tByteOrdering m_platformByteOrder((*pBytePointer)
 // Constructor
 //
 ///////////////////////////////////////////////////////////
-streamController::streamController(ptr<baseStream> pControlledStream, imbxUint32 virtualStart /* =0 */, imbxUint32 virtualLength /* =0 */):
+streamController::streamController(ptr<baseStream> pControlledStream, std::uint32_t virtualStart /* =0 */, std::uint32_t virtualLength /* =0 */):
 	m_bJpegTags(false),
         m_pControlledStream(pControlledStream),
-		m_dataBuffer(new imbxUint8[IMEBRA_STREAM_CONTROLLER_MEMORY_SIZE]),
+		m_dataBuffer(new std::uint8_t[IMEBRA_STREAM_CONTROLLER_MEMORY_SIZE]),
 		m_virtualStart(virtualStart),
 		m_virtualLength(virtualLength),
 		m_dataBufferStreamPosition(0)
@@ -52,9 +52,9 @@ streamController::~streamController()
 // Retrieve the current position
 //
 ///////////////////////////////////////////////////////////
-imbxUint32 streamController::position()
+std::uint32_t streamController::position()
 {
-	return m_dataBufferStreamPosition + (imbxUint32)(m_pDataBufferCurrent - m_pDataBufferStart);
+	return m_dataBufferStreamPosition + (std::uint32_t)(m_pDataBufferCurrent - m_pDataBufferStart);
 }
 
 
@@ -75,9 +75,9 @@ ptr<baseStream> streamController::getControlledStream()
 //  start's position
 //
 ///////////////////////////////////////////////////////////
-imbxUint32 streamController::getControlledStreamPosition()
+std::uint32_t streamController::getControlledStreamPosition()
 {
-	return m_dataBufferStreamPosition + (imbxUint32)(m_pDataBufferCurrent - m_pDataBufferStart) + m_virtualStart;
+	return m_dataBufferStreamPosition + (std::uint32_t)(m_pDataBufferCurrent - m_pDataBufferStart) + m_virtualStart;
 }
 
 
@@ -86,7 +86,7 @@ imbxUint32 streamController::getControlledStreamPosition()
 // Adjust the byte ordering of pBuffer
 //
 ///////////////////////////////////////////////////////////
-void streamController::adjustEndian(imbxUint8* pBuffer, const imbxUint32 wordLength, const tByteOrdering endianType, const imbxUint32 words /* =1 */)
+void streamController::adjustEndian(std::uint8_t* pBuffer, const std::uint32_t wordLength, const tByteOrdering endianType, const std::uint32_t words /* =1 */)
 {
 	if(endianType == m_platformByteOrder || wordLength<2L)
 	{
@@ -97,8 +97,8 @@ void streamController::adjustEndian(imbxUint8* pBuffer, const imbxUint32 wordLen
 	{
 	case 2:
 		{ // Block needed by evc4. Prevent error on multiple definitions of scanWords
-			imbxUint8 tempByte;
-			for(imbxUint32 scanWords = words; scanWords != 0; --scanWords)
+			std::uint8_t tempByte;
+			for(std::uint32_t scanWords = words; scanWords != 0; --scanWords)
 			{
 				tempByte=*pBuffer;
 				*pBuffer=*(pBuffer+1);
@@ -109,9 +109,9 @@ void streamController::adjustEndian(imbxUint8* pBuffer, const imbxUint32 wordLen
 		return;
 	case 4:
 		{ // Block needed by evc4. Prevent error on multiple definitions of scanWords
-			imbxUint8 tempByte0;
-			imbxUint8 tempByte1;
-			for(imbxUint32 scanWords = words; scanWords != 0; --scanWords)
+			std::uint8_t tempByte0;
+			std::uint8_t tempByte1;
+			for(std::uint32_t scanWords = words; scanWords != 0; --scanWords)
 			{
 				tempByte0 = *pBuffer;
 				*pBuffer = *(pBuffer+3);

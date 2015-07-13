@@ -66,7 +66,7 @@ void colorTransform::checkColorSpaces(const std::wstring& inputHandlerColorSpace
 }
 
 
-ptr<image> colorTransform::allocateOutputImage(ptr<image> pInputImage, imbxUint32 width, imbxUint32 height)
+ptr<image> colorTransform::allocateOutputImage(ptr<image> pInputImage, std::uint32_t width, std::uint32_t height)
 {
 	ptr<image> newImage(new image);
 	newImage->create(width, height, pInputImage->getDepth(), getFinalColorSpace(), pInputImage->getHighBit());
