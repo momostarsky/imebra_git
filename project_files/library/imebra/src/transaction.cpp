@@ -42,7 +42,7 @@ transaction::transaction(bool bCommitTransaction)
 {
 	// Save the thread id
 	///////////////////////////////////////////////////////////
-	m_threadId = puntoexe::thread::getThreadId();
+    m_threadId = std::this_thread::get_id();
 
 	// Set the commit flag. The flag is always true if there
 	//  are no parent transactions
@@ -208,7 +208,7 @@ void transaction::copyHandlersTo(transaction* pDestination)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-bool transactionsManager::addTransaction(thread::tThreadId threadId, transaction* pTransaction)
+bool transactionsManager::addTransaction(std::thread::id threadId, transaction* pTransaction)
 {
 	PUNTOEXE_FUNCTION_START(L"transactionsManager::addTransaction");
 
@@ -236,7 +236,7 @@ bool transactionsManager::addTransaction(thread::tThreadId threadId, transaction
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void transactionsManager::removeTransaction(thread::tThreadId threadId)
+void transactionsManager::removeTransaction(std::thread::id threadId)
 {
 	PUNTOEXE_FUNCTION_START(L"transactionsManager::removeTransaction");
 
@@ -287,7 +287,7 @@ void transactionsManager::addHandlerToTransaction(ptr<handlers::dataHandler> new
 
 	// Find the thread's transactions stack
 	///////////////////////////////////////////////////////////
-	thread::tThreadId threadId = puntoexe::thread::getThreadId();
+    std::thread::id threadId = std::this_thread::get_id();
 	tTransactionsMap::iterator findThread = pManager->m_transactions.find(threadId);
 	if(findThread == pManager->m_transactions.end())
 	{

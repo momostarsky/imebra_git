@@ -12,7 +12,6 @@ $fileHeader$
 #define CImbxTransaction_F1BAF067_21DE_466b_AEA1_6CC4F006FAFA__INCLUDED_
 
 #include "../../base/include/configuration.h"
-#include "../../base/include/thread.h"
 #include "../../base/include/baseObject.h"
 #include "../../base/include/exception.h"
 
@@ -21,6 +20,7 @@ $fileHeader$
 #include <typeinfo>
 #include <map>
 #include <list>
+#include <thread>
 
 namespace puntoexe
 {
@@ -44,9 +44,9 @@ public:
 	///////////////////////////////////////////////////////////
 	transactionsManager(): m_lockObject(new baseObject){}
 
-	static bool addTransaction(thread::tThreadId threadId, transaction* pTransaction);
+    static bool addTransaction(std::thread::id threadId, transaction* pTransaction);
 
-	static void removeTransaction(thread::tThreadId threadId);
+    static void removeTransaction(std::thread::id threadId);
 
 	static void addHandlerToTransaction(ptr<handlers::dataHandler> newHandler);
 
@@ -57,7 +57,7 @@ protected:
 	static transactionsManager* getTransactionsManager();
 
 	typedef std::list<transaction*> tTransactionsStack;
-	typedef std::map<thread::tThreadId, tTransactionsStack> tTransactionsMap;
+    typedef std::map<std::thread::id, tTransactionsStack> tTransactionsMap;
 
 	tTransactionsMap m_transactions;
 
@@ -160,7 +160,7 @@ protected:
 	typedef std::map<buffer*, tDataHandlerPtr> tHandlersList;
 	tHandlersList m_transactionHandlers;
 
-	thread::tThreadId m_threadId;
+    std::thread::id m_threadId;
 	bool m_bCommit;
 };
 

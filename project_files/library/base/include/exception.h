@@ -12,7 +12,6 @@ $fileHeader$
 #define CImbxException_F1BAF067_21DE_466b_AEA1_6CC4F006FAFA__INCLUDED_
 
 #include "configuration.h"
-#include "thread.h"
 #include "baseObject.h"
 
 #include <typeinfo>
@@ -22,6 +21,7 @@ $fileHeader$
 #include <list>
 #include <string>
 #include <sstream>
+#include <thread>
 
 namespace puntoexe
 {
@@ -175,7 +175,7 @@ public:
 	static ptr<exceptionsManager> getExceptionsManager();
 
 protected:
-	typedef std::map<thread::tThreadId, tExceptionInfoList> tInfoMap;
+    typedef std::map<std::thread::id, tExceptionInfoList> tInfoMap;
 
 	tInfoMap m_information;
 

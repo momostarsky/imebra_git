@@ -49,7 +49,7 @@ void exceptionsManager::getExceptionInfo(tExceptionInfoList* pList)
 	ptr<exceptionsManager> pManager(getExceptionsManager());
 	lockObject lock(pManager.get());
 
-	tInfoMap::iterator findInformation = pManager->m_information.find(puntoexe::thread::getThreadId());
+    tInfoMap::iterator findInformation = pManager->m_information.find(std::this_thread::get_id());
 	if(findInformation == pManager->m_information.end())
 	{
 		return;
@@ -71,7 +71,7 @@ void exceptionsManager::addExceptionInfo(const exceptionInfo& info)
 {
 	ptr<exceptionsManager> pManager(getExceptionsManager());
 	lockObject lock(pManager.get());
-	pManager->m_information[puntoexe::thread::getThreadId()].push_back(info);
+    pManager->m_information[std::this_thread::get_id()].push_back(info);
 }
 
 
@@ -82,7 +82,7 @@ void exceptionsManager::clearExceptionInfo()
 {
 	ptr<exceptionsManager> pManager(getExceptionsManager());
 	lockObject lock(pManager.get());
-	tInfoMap::iterator findInformation = pManager->m_information.find(puntoexe::thread::getThreadId());
+    tInfoMap::iterator findInformation = pManager->m_information.find(std::this_thread::get_id());
 	if(findInformation == pManager->m_information.end())
 	{
 		return;
