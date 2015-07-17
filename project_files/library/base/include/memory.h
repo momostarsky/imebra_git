@@ -15,6 +15,7 @@ $fileHeader$
 #include <list>
 #include <map>
 #include <memory>
+#include <array>
 
 ///////////////////////////////////////////////////////////
 //
@@ -47,9 +48,25 @@ typedef std::basic_string<std::uint8_t> stringUint8;
 class memory : public baseObject
 {
 public:
+    /// \brief Construct an empty memory object
+    ///
+    ///////////////////////////////////////////////////////////
 	memory();
 
-	/// \brief Constructs the memory object and allocate
+    /// \brief Construct a memory object using the passed
+    ///        buffer.
+    ///
+    /// Takes ownership of the buffer and deletes it in
+    ///  the destructor.
+    ///
+    /// @param pBuffer buffer containing the data. The
+    ///                memory object will take ownership
+    ///                of it.
+    ///
+    ///////////////////////////////////////////////////////////
+    memory(stringUint8* pBuffer);
+
+    /// \brief Constructs the memory object and allocate
 	///         the requested amount of memory
 	///
 	/// @param initialSize the initial size of the allocated
@@ -57,6 +74,15 @@ public:
 	///
 	///////////////////////////////////////////////////////////
 	memory(std::uint32_t initialSize);
+
+    /// \brief Destruct the memory object.
+    ///
+    /// The owned buffer is passed to the memoryPool for
+    ///  possible reuse: memoryPool will decide if to keep
+    ///  the buffer or to delete it.
+    ///
+    ///////////////////////////////////////////////////////////
+    ~memory();
 
 	/// \brief Transfer the content from another memory object.
 	///
@@ -140,23 +166,8 @@ public:
 	///////////////////////////////////////////////////////////
 	void assign(const std::uint8_t* pSource, const std::uint32_t sourceLength);
 
-	/// \internal
-	/// \brief This function is called by 
-	///         \ref baseObject::release() before deleting
-	///         the memory object.
-	/// 
-	/// The function tries to move the memory object into
-	///  the memory pool (puntoexe::memoryPool), so the memory
-	///  can be reused without being reallocated.
-	///
-	/// See \ref memoryPool for more information about
-	///  this feature.
-	///
-	///////////////////////////////////////////////////////////
-	virtual bool preDelete();
-
 protected:
-	std::auto_ptr<stringUint8> m_pMemoryBuffer;
+    std::unique_ptr<stringUint8> m_pMemoryBuffer;
 };
 
 
@@ -204,8 +215,8 @@ protected:
 	#define IMEBRA_MEMORY_POOL_MIN_SIZE 1024
 #endif
 
-	std::uint32_t m_memorySize[IMEBRA_MEMORY_POOL_SLOTS];
-	memory*    m_memoryPointer[IMEBRA_MEMORY_POOL_SLOTS];
+    std::array<std::uint32_t, IMEBRA_MEMORY_POOL_SLOTS> m_memorySize;
+    std::array<stringUint8*, IMEBRA_MEMORY_POOL_SLOTS>  m_memoryPointer;
 	std::uint32_t m_firstUsedCell;
 	std::uint32_t m_firstFreeCell;
 
@@ -268,7 +279,7 @@ protected:
 	///                        otherwise
 	///
 	///////////////////////////////////////////////////////////
-	bool reuseMemory(memory* pMemoryToReuse);
+    bool reuseMemory(stringUint8* pMemoryToReuse);
 
 	criticalSection m_criticalSection;
 

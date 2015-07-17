@@ -40,9 +40,29 @@ memory::memory():
 {
 }
 
+memory::memory(stringUint8* pBuffer):
+    m_pMemoryBuffer(pBuffer)
+{
+}
+
 memory::memory(std::uint32_t initialSize):
     m_pMemoryBuffer(new stringUint8((size_t)initialSize, 0))
 {
+}
+
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
+// Destructor
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+memory::~memory()
+{
+    memoryPool::getMemoryPool()->reuseMemory(m_pMemoryBuffer.release());
 }
 
 
@@ -214,22 +234,6 @@ void memory::assign(const std::uint8_t* pSource, const std::uint32_t sourceLengt
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-//
-//
-// Check if the memory can be reused
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-bool memory::preDelete()
-{
-	return !(memoryPool::getMemoryPool()->reuseMemory(this));
-}
-
-
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 //
 //
@@ -274,12 +278,18 @@ memoryPool::~memoryPool()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-bool memoryPool::reuseMemory(memory* pMemoryToReuse)
+bool memoryPool::reuseMemory(stringUint8* pString)
 {
+    if(pString == 0)
+    {
+        return false;
+    }
+    std::unique_ptr<stringUint8> pBuffer(pString);
+
 	// Check for the memory size. Don't reuse it if the memory
 	//  doesn't match the requested parameters
 	///////////////////////////////////////////////////////////
-	std::uint32_t memorySize = pMemoryToReuse->size();
+    std::uint32_t memorySize = pBuffer->size();
 	if(memorySize == 0 || memorySize < IMEBRA_MEMORY_POOL_MIN_SIZE || memorySize > IMEBRA_MEMORY_POOL_MAX_SIZE)
 	{
 		return false;
@@ -292,9 +302,9 @@ bool memoryPool::reuseMemory(memory* pMemoryToReuse)
 	// Store the memory object in the pool
 	///////////////////////////////////////////////////////////
 	m_memorySize[m_firstFreeCell] = memorySize;
-	m_memoryPointer[m_firstFreeCell] = pMemoryToReuse;
+    m_memoryPointer[m_firstFreeCell] = pBuffer.release();
 	m_actualSize += memorySize;
-	if(++m_firstFreeCell >= IMEBRA_MEMORY_POOL_SLOTS)
+    if(++m_firstFreeCell >= m_memorySize.size())
 	{
 		m_firstFreeCell = 0;
 	}
@@ -305,7 +315,7 @@ bool memoryPool::reuseMemory(memory* pMemoryToReuse)
 	{
 		m_actualSize -= m_memorySize[m_firstUsedCell];
 		delete m_memoryPointer[m_firstUsedCell];
-		if(++m_firstUsedCell >= IMEBRA_MEMORY_POOL_SLOTS)
+        if(++m_firstUsedCell >= m_memorySize.size())
 		{
 			m_firstUsedCell = 0;
 		}
@@ -346,7 +356,7 @@ void memoryPool::flush()
 	{
 		delete m_memoryPointer[m_firstUsedCell];
 		m_actualSize -= m_memorySize[m_firstUsedCell];
-		if(++m_firstUsedCell >= IMEBRA_MEMORY_POOL_SLOTS)
+        if(++m_firstUsedCell >= m_memorySize.size())
 		{
 			m_firstUsedCell = 0;
 		}
@@ -391,7 +401,7 @@ memory* memoryPool::getMemory(std::uint32_t requestedSize)
 	{
 		if(m_memorySize[findCell] != requestedSize)
 		{
-			if(++findCell >= IMEBRA_MEMORY_POOL_SLOTS)
+            if(++findCell >= m_memorySize.size())
 			{
 				findCell = 0;
 			}
@@ -400,7 +410,7 @@ memory* memoryPool::getMemory(std::uint32_t requestedSize)
 
 		// Memory found
 		///////////////////////////////////////////////////////////
-		memory* pMemory = m_memoryPointer[findCell];
+        memory* pMemory = new memory(m_memoryPointer[findCell]);
 		m_actualSize -= m_memorySize[findCell];
 		if(findCell == m_firstUsedCell)
 		{
