@@ -68,7 +68,6 @@ TEST(paletteTest, testPalette)
     ASSERT_EQ(sizeX, checkSizeX);
     ASSERT_EQ(sizeY, checkSizeY);
 
-	std::uint32_t difference = 0;
     pointer = 0;
     size_t rgbPointer = 0;
 	for(std::uint32_t checkY = 0; checkY < sizeY; ++checkY)
