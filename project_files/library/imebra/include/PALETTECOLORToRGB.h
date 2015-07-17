@@ -62,7 +62,7 @@ public:
         void templateTransform(
             inputType* inputHandlerData, size_t /* inputHandlerSize */, std::uint32_t inputHandlerWidth, const std::wstring& inputHandlerColorSpace,
             ptr<palette> inputPalette,
-            std::int32_t /* inputHandlerMinValue */, std::uint32_t inputHighBit,
+            std::int32_t /* inputHandlerMinValue */, std::uint32_t /* inputHighBit */,
             std::int32_t inputTopLeftX, std::int32_t inputTopLeftY, std::int32_t inputWidth, std::int32_t inputHeight,
             outputType* outputHandlerData, size_t /* outputHandlerSize */, std::int32_t outputHandlerWidth, const std::wstring& outputHandlerColorSpace,
             ptr<palette> /* outputPalette */,
@@ -79,7 +79,7 @@ public:
             lut* pGreen = inputPalette->getGreen().get();
             lut* pBlue = inputPalette->getBlue().get();
 
-            inputHighBit = pRed->getBits();
+            std::uint32_t inputHighBit = pRed->getBits() - 1;
 
             pInputMemory += inputTopLeftY * inputHandlerWidth + inputTopLeftX;
             pOutputMemory += (outputTopLeftY * outputHandlerWidth + outputTopLeftX) * 3;
