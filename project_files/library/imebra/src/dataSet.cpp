@@ -663,13 +663,12 @@ std::uint32_t dataSet::getFrameOffset(std::uint32_t frameNumber)
 	//  the first and is offset is not specified, then return
 	//  0 (the first position)
 	///////////////////////////////////////////////////////////
-	std::uint8_t* pOffsets = framesPointer->getMemoryBuffer();
-	std::auto_ptr<std::uint32_t> pAdjustedOffsets((std::uint32_t*)new std::uint8_t[framesPointer->getSize()]);
-	::memcpy(pAdjustedOffsets.get(), pOffsets, framesPointer->getSize());
-	streamController::adjustEndian((std::uint8_t*)(pAdjustedOffsets.get()), 4, streamController::lowByteEndian, offsetsCount);
-	if(frameNumber < offsetsCount)
-	{
-		return pAdjustedOffsets.get()[frameNumber];
+    if(frameNumber < offsetsCount)
+    {
+        std::uint32_t* pOffsets = (std::uint32_t*)(framesPointer->getMemoryBuffer());
+        std::uint32_t returnOffset(pOffsets[frameNumber]);
+        streamController::adjustEndian((std::uint8_t*)&returnOffset, 4, streamController::lowByteEndian);
+        return returnOffset;
 	}
 	return 0;
 }

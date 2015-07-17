@@ -77,19 +77,21 @@ TEST(numericHandlerTest, interleavedCopy)
 	int mcuX = (sizeX + 15) >> 4;
 	int mcuY = (sizeY + 15) >> 4;
 
-	std::unique_ptr<std::int32_t> buffer0(new std::int32_t[mcuX * 16 * mcuY * 16]);
-	::memset(buffer0.get(), 0, mcuX * 16 * mcuY * 16 * sizeof(std::int32_t));
-	std::unique_ptr<std::int32_t> buffer1(new std::int32_t[mcuX * 8 * mcuY * 8]);
-	::memset(buffer1.get(), 0, mcuX * 8 * mcuY * 8 * sizeof(std::int32_t));
-	std::unique_ptr<std::int32_t> buffer2(new std::int32_t[mcuX * 8 * mcuY * 8]);
-	::memset(buffer2.get(), 0, mcuX * 8 * mcuY * 8 * sizeof(std::int32_t));
+    std::vector<std::int32_t> buffer0((size_t)(mcuX * 16 * mcuY * 16));
+    ::memset(buffer0.data(), 0, buffer0.size() * sizeof(std::int32_t));
+
+    std::vector<std::int32_t> buffer1((size_t)(mcuX * 8 * mcuY * 8));
+    ::memset(buffer1.data(), 0, buffer1.size() * sizeof(std::int32_t));
+
+    std::vector<std::int32_t> buffer2((size_t)(mcuX * 8 * mcuY * 8));
+    ::memset(buffer2.data(), 0, buffer2.size() * sizeof(std::int32_t));
 
 	for(int scanMcuY = 0; scanMcuY < mcuY; ++scanMcuY)
 	{
 		for(int scanMcuX = 0; scanMcuX < mcuX; ++scanMcuX)
 		{
 			testHandler->copyToInt32Interleaved(
-				buffer0.get() + (128*scanMcuX) + (256*mcuX*scanMcuY),
+                buffer0.data() + (128*scanMcuX) + (256*mcuX*scanMcuY),
 				1,
 				1,
 				scanMcuX * 16,
@@ -102,7 +104,7 @@ TEST(numericHandlerTest, interleavedCopy)
 				3);
 			
 			testHandler->copyToInt32Interleaved(
-				buffer0.get() + 64 + (128*scanMcuX) + (256*mcuX*scanMcuY),
+                buffer0.data() + 64 + (128*scanMcuX) + (256*mcuX*scanMcuY),
 				1,
 				1,
 				scanMcuX * 16 + 8,
@@ -115,7 +117,7 @@ TEST(numericHandlerTest, interleavedCopy)
 				3);
 			
 			testHandler->copyToInt32Interleaved(
-				buffer0.get() + (128*scanMcuX) + (256*mcuX*scanMcuY) + 128 * mcuX,
+                buffer0.data() + (128*scanMcuX) + (256*mcuX*scanMcuY) + 128 * mcuX,
 				1,
 				1,
 				scanMcuX * 16,
@@ -128,7 +130,7 @@ TEST(numericHandlerTest, interleavedCopy)
 				3);
 			
 			testHandler->copyToInt32Interleaved(
-				buffer0.get() + 64 + (128*scanMcuX) + (256*mcuX*scanMcuY) + 128 * mcuX,
+                buffer0.data() + 64 + (128*scanMcuX) + (256*mcuX*scanMcuY) + 128 * mcuX,
 				1,
 				1,
 				scanMcuX * 16 + 8,
@@ -142,7 +144,7 @@ TEST(numericHandlerTest, interleavedCopy)
 			
 			
 			testHandler->copyToInt32Interleaved(
-				buffer1.get() + (64*scanMcuX) + (64*mcuX*scanMcuY),
+                buffer1.data() + (64*scanMcuX) + (64*mcuX*scanMcuY),
 				2,
 				2,
 				scanMcuX * 16,
@@ -155,7 +157,7 @@ TEST(numericHandlerTest, interleavedCopy)
 				3);
 			
 			testHandler->copyToInt32Interleaved(
-				buffer2.get() + (64*scanMcuX) + (64*mcuX*scanMcuY),
+                buffer2.data() + (64*scanMcuX) + (64*mcuX*scanMcuY),
 				2,
 				2,
 				scanMcuX * 16,
@@ -180,19 +182,19 @@ TEST(numericHandlerTest, interleavedCopy)
 			int squareX2 = squareX >> 1;
 			int squareY2 = squareY >> 1;
 
-			std::int32_t* pTestBuffer0 = buffer0.get() + squareX * 64 + squareY * mcuX * 128;
+            std::int32_t* pTestBuffer0 = buffer0.data() + squareX * 64 + squareY * mcuX * 128;
 			for(int scanValues0 = 0; scanValues0 < 64; ++scanValues0)
 			{
                 EXPECT_EQ((std::int32_t)(squareY * 100 + squareX), pTestBuffer0[scanValues0]);
 			}
 
-			std::int32_t* pTestBuffer1 = buffer1.get() + squareX2 * 64 + squareY2 * mcuX * 64;
+            std::int32_t* pTestBuffer1 = buffer1.data() + squareX2 * 64 + squareY2 * mcuX * 64;
 			for(int scanValues1 = 0; scanValues1 < 64; ++scanValues1)
 			{
                 EXPECT_EQ((std::int32_t)(-squareY2 * 100 - squareX2), pTestBuffer1[scanValues1]);
 			}
 
-			std::int32_t* pTestBuffer2 = buffer2.get() + squareX2 * 64 + squareY2 * mcuX * 64;
+            std::int32_t* pTestBuffer2 = buffer2.data() + squareX2 * 64 + squareY2 * mcuX * 64;
 			for(int scanValues2 = 0; scanValues2 < 64; ++scanValues2)
 			{
                 EXPECT_EQ((std::int32_t)(-squareY2 * 100 + squareX2), pTestBuffer2[scanValues2]);

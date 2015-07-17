@@ -314,10 +314,10 @@ void dicomCodec::writeTag(ptr<streamWriter> pDestStream, ptr<data> pData, std::u
 			///////////////////////////////////////////////////////////
 			if(wordSize > 1)
 			{
-				std::auto_ptr<std::uint8_t> pTempBuffer(new std::uint8_t[bufferSize]);
-				::memcpy(pTempBuffer.get(), pDataHandlerRaw->getMemoryBuffer(), pDataHandlerRaw->getSize());
-				streamController::adjustEndian(pTempBuffer.get(), wordSize, endianType, bufferSize / wordSize);
-				pDestStream->write(pTempBuffer.get(), bufferSize);
+                std::vector<std::uint8_t> tempBuffer((size_t)bufferSize);
+                ::memcpy(tempBuffer.data(), pDataHandlerRaw->getMemoryBuffer(), pDataHandlerRaw->getSize());
+                streamController::adjustEndian(tempBuffer.data(), wordSize, endianType, bufferSize / wordSize);
+                pDestStream->write(tempBuffer.data(), bufferSize);
 				continue;
 			}
 
@@ -1240,8 +1240,7 @@ void dicomCodec::readUncompressedInterleaved(
 
 	std::uint8_t  bitPointer=0x0;
 
-	std::auto_ptr<std::int32_t*> autoPtrChannelsMemory(new std::int32_t*[m_channels.size()]);
-	std::int32_t** channelsMemory = autoPtrChannelsMemory.get();
+    std::vector<std::int32_t*> channelsMemory(m_channels.size());
 	for(size_t copyChannelsPntr = 0; copyChannelsPntr < m_channels.size(); ++copyChannelsPntr)
 	{
 		channelsMemory[copyChannelsPntr] = m_channels[copyChannelsPntr]->m_pBuffer;
@@ -1341,8 +1340,7 @@ void dicomCodec::writeUncompressedInterleaved(
 
 	std::uint8_t  bitPointer=0x0;
 
-	std::unique_ptr<std::int32_t*> autoPtrChannelsMemory(new std::int32_t*[m_channels.size()]);
-	std::int32_t** channelsMemory = autoPtrChannelsMemory.get();
+    std::vector<std::int32_t*> channelsMemory(m_channels.size());
 	for(size_t copyChannelsPntr = 0; copyChannelsPntr < m_channels.size(); ++copyChannelsPntr)
 	{
 		channelsMemory[copyChannelsPntr] = m_channels[copyChannelsPntr]->m_pBuffer;
