@@ -68,21 +68,20 @@ std::uint32_t streamReader::fillDataBuffer()
 ///////////////////////////////////////////////////////////
 std::uint32_t streamReader::fillDataBuffer(std::uint8_t* pDestinationBuffer, std::uint32_t readLength)
 {
-	std::uint32_t currentPosition = position();
+    m_dataBufferStreamPosition = position();
 	if(m_virtualLength != 0)
 	{
-		if(currentPosition >= m_virtualLength)
+        if(m_dataBufferStreamPosition >= m_virtualLength)
 		{
 			m_dataBufferStreamPosition = m_virtualLength;
 			return 0;
 		}
-		if(currentPosition + readLength > m_virtualLength)
+        if(m_dataBufferStreamPosition + readLength > m_virtualLength)
 		{
-			readLength = m_virtualLength - currentPosition;
+            readLength = m_virtualLength - m_dataBufferStreamPosition;
 		}
 	}
-	m_dataBufferStreamPosition = currentPosition;
-	return m_pControlledStream->read(currentPosition + m_virtualStart, pDestinationBuffer, readLength);
+    return m_pControlledStream->read(m_dataBufferStreamPosition + m_virtualStart, pDestinationBuffer, readLength);
 }
 
 
