@@ -73,19 +73,31 @@ A detailed reference of the C++ classes that compose Imebra is included in
 
 \subsection version_current Changes for version $imebraVersion$
 
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/99">#99</a>(The example that shows how to read the pixels is wrong)
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/100">#100</a> (The VOI/LUT fails when dealing with images with 32 bits per channel)
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/101">#101</a> (The PALETTECOLORToRGB transform returns dark images)
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/104">#104</a> (dataHandlerNumeric::getString always format the number as a double)
+- Use C++ thread class instead of custom one
+- Removed lock from reference counter (made atomic)
+- Converted custom types imbxIntXX and imbxUintXX to C++ standard types std::intX_t and std::uintXX_t
+- Ported tests from QTest to GTest
+- Minor optimizations
+
+
+\subsection version_2013_10_30_10_00_11 Changes for version 2013-10-30_10-00-11
+
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/99">#99</a> (The example that shows how to read the pixels is wrong)
 
 
 \subsection version_2013_09_04_11_02_26 Changes for version 2013-09-04_11-02-26
 
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/98">#98</a>(Parsing of embedded sequence tags may fail)
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/98">#98</a> (Parsing of embedded sequence tags may fail)
 
 
 \subsection version_2013_07_16_08_42_08 Changes for version 2013-07-16_08-42-08
 
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/96">#96</a>(Imebra creates datasets with implicit data type with wrong tag length)
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/94">#94</a>(charsetConversionWindows::toUnicode doesn't return the converted string)
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/95">#95</a>(When compiling the examples on Windows using MINGW then the compilation fails)
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/96">#96</a> (Imebra creates datasets with implicit data type with wrong tag length)
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/94">#94</a> (charsetConversionWindows::toUnicode doesn't return the converted string)
+- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/95">#95</a> (When compiling the examples on Windows using MINGW then the compilation fails)
 
 
 \subsection version_2013_05_21_12_07_46 Changes for version 2013-05-21_12-07-46
