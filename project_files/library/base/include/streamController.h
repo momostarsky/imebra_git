@@ -158,6 +158,10 @@ public:
 	///////////////////////////////////////////////////////////
 	static void adjustEndian(std::uint8_t* pBuffer, const std::uint32_t wordLength, const tByteOrdering endianType, const std::uint32_t words = 1);
 
+    static std::uint16_t adjustEndian(std::uint16_t buffer, const tByteOrdering endianType);
+
+    static std::uint32_t adjustEndian(std::uint32_t buffer, const tByteOrdering endianType);
+
 	//@}
 
 public:

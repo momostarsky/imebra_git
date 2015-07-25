@@ -74,8 +74,11 @@ void huffmanTable::reset()
 	m_valuesToHuffmanLength.resize(m_numValues);
 	::memset(&(m_valuesToHuffmanLength[0]), 0, m_numValues*sizeof(m_valuesToHuffmanLength[0]));
 
-	::memset(m_valuesPerLength, 0, sizeof(m_valuesPerLength));
-	m_firstValidLength = 0;
+    ::memset(m_valuesPerLength, 0, sizeof(m_valuesPerLength));
+    m_firstValidLength = 0;
+    m_firstMinValue = 0xffffffff;
+    m_firstMaxValue = 0xffffffff;
+    m_firstValuesPerLength = 0;
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -112,19 +115,19 @@ void huffmanTable::removeLastCode()
 	std::uint32_t codes = 0;
 	std::uint32_t lastLength = 0;
 	for(std::uint32_t scanLengths = 0; scanLengths < sizeof(m_valuesPerLength)/sizeof(m_valuesPerLength[0]); ++scanLengths)
-	{
-		if(m_valuesPerLength[scanLengths] == 0)
+    {
+        if(m_valuesPerLength[scanLengths] == 0)
 		{
 			continue;
 		}
-		codes += m_valuesPerLength[scanLengths];
+        codes += m_valuesPerLength[scanLengths];
 		lastLength = scanLengths;
 	}
 	if(lastLength == 0)
 	{
 		return;
 	}
-	m_valuesPerLength[lastLength]--;
+    m_valuesPerLength[lastLength]--;
 }
 
 
@@ -183,7 +186,7 @@ void huffmanTable::calcHuffmanCodesLength(const std::uint32_t maxCodeLength)
 	}
 
 	typedef std::map<huffmanTable::lengthValue, bool, huffmanTable::lengthValueCompare> tLengthOrderedMap;
-	tLengthOrderedMap lengthOrderedValues ;
+    tLengthOrderedMap lengthOrderedValues ;
 	for(size_t findValuesPerLength = 0; findValuesPerLength < m_valuesFreq.size(); ++findValuesPerLength)
 	{
 		if(m_valuesFreq[findValuesPerLength].m_codeLength != 0)
@@ -251,7 +254,9 @@ void huffmanTable::calcHuffmanTables()
 
 	::memset(m_minValuePerLength, 0xffffffff, sizeof(m_minValuePerLength));
 	::memset(m_maxValuePerLength, 0xffffffff, sizeof(m_maxValuePerLength));
-
+    m_firstValuesPerLength = 0;
+    m_firstMinValue = 0xffffffff;
+    m_firstMaxValue = 0xffffffff;
 	m_firstValidLength = 0;
 	for(std::uint32_t codeLength=1L; codeLength != sizeof(m_valuesPerLength)/sizeof(std::uint32_t); ++codeLength)
 	{
@@ -276,6 +281,10 @@ void huffmanTable::calcHuffmanTables()
 
 	}
 
+    m_firstMinValue = m_minValuePerLength[m_firstValidLength];
+    m_firstMaxValue = m_maxValuePerLength[m_firstValidLength];
+    m_firstValuesPerLength = m_valuesPerLength[m_firstValidLength];
+
 	PUNTOEXE_FUNCTION_END();
 }
 
@@ -290,24 +299,24 @@ void huffmanTable::calcHuffmanTables()
 ///////////////////////////////////////////////////////////
 std::uint32_t huffmanTable::readHuffmanCode(streamReader* pStream)
 {
-	PUNTOEXE_FUNCTION_START(L"huffmanTable::readHuffmanCode");
+    PUNTOEXE_FUNCTION_START(L"huffmanTable::readHuffmanCode");
 
-	// Read initial number of bits
+    // Read initial number of bits
 	std::uint32_t readBuffer(pStream->readBits(m_firstValidLength));
 
 	// Validate the current Huffman code. If it's OK, then
 	//  return the ordered value
 	///////////////////////////////////////////////////////////
-	if(readBuffer<=m_maxValuePerLength[m_firstValidLength])
+    if(readBuffer <= m_firstMaxValue)
 	{
-		return m_orderedValues[readBuffer - m_minValuePerLength[m_firstValidLength]];
+        return m_orderedValues[readBuffer - m_firstMinValue];
 	}
 
-	std::uint32_t orderedValue(m_valuesPerLength[m_firstValidLength]);
+    std::uint32_t orderedValue(m_firstValuesPerLength);
 
 	// Scan all the codes sizes
 	///////////////////////////////////////////////////////////
-	for(std::uint8_t scanSize(m_firstValidLength + 1), missingBits(0); scanSize != sizeof(m_valuesPerLength)/sizeof(m_valuesPerLength[0]); ++scanSize)
+    for(std::uint8_t scanSize(m_firstValidLength + 1), missingBits(0); scanSize != sizeof(m_valuesPerLength)/sizeof(m_valuesPerLength[0]); ++scanSize)
 	{
 		++missingBits;
 
@@ -344,9 +353,9 @@ std::uint32_t huffmanTable::readHuffmanCode(streamReader* pStream)
 
 	}
 
-	PUNTOEXE_THROW(huffmanExceptionRead, "Invalid huffman code found while reading from a stream");
+    PUNTOEXE_THROW(huffmanExceptionRead, "Invalid huffman code found while reading from a stream");
 
-	PUNTOEXE_FUNCTION_END();
+    PUNTOEXE_FUNCTION_END();
 }
 
 

@@ -295,7 +295,7 @@ protected:
 	void flushUnwrittenPixels(streamWriter* pDestStream, std::uint8_t* pBitPointer, std::uint8_t wordSizeBytes);
 
 	std::uint32_t m_ioDWord;
-	std::uint16_t m_ioWord;
+    std::uint16_t m_ioWord;
 	std::uint8_t  m_ioByte;
 
 	void allocChannels(std::uint32_t channelsNumber, std::uint32_t sizeX, std::uint32_t sizeY, bool bSubSampledX, bool bSubSampledY);

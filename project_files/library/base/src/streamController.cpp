@@ -96,36 +96,44 @@ void streamController::adjustEndian(std::uint8_t* pBuffer, const std::uint32_t w
 	switch(wordLength)
 	{
 	case 2:
-		{ // Block needed by evc4. Prevent error on multiple definitions of scanWords
-			std::uint8_t tempByte;
+        {
+            std::uint16_t* pWord((std::uint16_t*)pBuffer);
 			for(std::uint32_t scanWords = words; scanWords != 0; --scanWords)
 			{
-				tempByte=*pBuffer;
-				*pBuffer=*(pBuffer+1);
-				*(++pBuffer)=tempByte;
-				++pBuffer;
+                *pWord = ((*pWord & 0x00ff) << 8) | ((*pWord & 0xff00) >> 8);
+                ++pWord;
 			}
 		}
 		return;
 	case 4:
-		{ // Block needed by evc4. Prevent error on multiple definitions of scanWords
-			std::uint8_t tempByte0;
-			std::uint8_t tempByte1;
+        {
+            std::uint32_t* pDWord((std::uint32_t*)pBuffer);
 			for(std::uint32_t scanWords = words; scanWords != 0; --scanWords)
 			{
-				tempByte0 = *pBuffer;
-				*pBuffer = *(pBuffer+3);
-				tempByte1 = *(++pBuffer);
-				*pBuffer = *(pBuffer + 1);
-				*(++pBuffer) = tempByte1;
-				*(++pBuffer) = tempByte0;
-				++pBuffer;
+                *pDWord = ((*pDWord & 0xff000000) >> 24) | ((*pDWord & 0x00ff0000) >> 8) | ((*pDWord & 0x0000ff00) << 8) | ((*pDWord & 0x000000ff) << 24);
 			}
 		}
 		return;
 	}
 }
 
+std::uint16_t streamController::adjustEndian(std::uint16_t buffer, const tByteOrdering endianType)
+{
+    if(endianType == m_platformByteOrder)
+    {
+        return buffer;
+    }
+    return ((buffer & 0xff00) >> 8) | ((buffer & 0xff) << 8);
+}
+
+std::uint32_t streamController::adjustEndian(std::uint32_t buffer, const tByteOrdering endianType)
+{
+    if(endianType == m_platformByteOrder)
+    {
+        return buffer;
+    }
+    return ((buffer & 0xff000000) >> 24) | ((buffer & 0x00ff0000) >> 8) | ((buffer & 0x0000ff00) << 8) | ((buffer & 0x000000ff) << 24);
+}
 
 
 

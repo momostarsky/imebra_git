@@ -160,8 +160,7 @@ void dicomCodec::writeGroup(ptr<streamWriter> pDestStream, ptr<dataGroup> pGroup
 	///////////////////////////////////////////////////////////
 	static char lengthDataType[] = "UL";
 
-	std::uint16_t adjustedGroupId = groupId;
-	pDestStream->adjustEndian((std::uint8_t*)&adjustedGroupId, 2, endianType);
+    std::uint16_t adjustedGroupId = pDestStream->adjustEndian(groupId, endianType);;
 
 	std::uint16_t tagId = 0;
 	pDestStream->write((std::uint8_t*)&adjustedGroupId, 2);
@@ -170,15 +169,13 @@ void dicomCodec::writeGroup(ptr<streamWriter> pDestStream, ptr<dataGroup> pGroup
 	if(bExplicitDataType)
 	{
 		pDestStream->write((std::uint8_t*)&lengthDataType, 2);
-		std::uint16_t tagLengthWord = 4;
-		pDestStream->adjustEndian((std::uint8_t*)&tagLengthWord, 2, endianType);
-		pDestStream->write((std::uint8_t*)&tagLengthWord, 2);
+        std::uint16_t tagLengthWord = pDestStream->adjustEndian((std::uint16_t)4, endianType);;
+        pDestStream->write((std::uint8_t*)&tagLengthWord, 2);
 	}
 	else
 	{
-        std::uint32_t tagLengthDword = 4;
-		pDestStream->adjustEndian((std::uint8_t*)&tagLengthDword, 4, endianType);
-		pDestStream->write((std::uint8_t*)&tagLengthDword, 4);
+        std::uint32_t tagLengthDword = pDestStream->adjustEndian((std::uint32_t)4, endianType);
+        pDestStream->write((std::uint8_t*)&tagLengthDword, 4);
 	}
 
 	pDestStream->adjustEndian((std::uint8_t*)&groupLength, 4, endianType);
@@ -656,7 +653,7 @@ void dicomCodec::parseStream(ptr<streamReader> pStream,
 			pStream->adjustEndian((std::uint8_t*)&tagId, sizeof(tagId), endianType);
 
 			// Fix the byte adjustment
-			endianType=streamController::highByteEndian;
+            endianType=streamController::highByteEndian;
 
 			// Redo the byte adjustment
 			pStream->adjustEndian((std::uint8_t*)&tagId, sizeof(tagId), endianType);
@@ -1521,8 +1518,7 @@ void dicomCodec::writeRLECompressed(
 
 		for(std::uint32_t scanChannels = 0; scanChannels < channelsNumber; ++scanChannels)
 		{
-			std::unique_ptr<std::uint8_t> rowBytes(new std::uint8_t[imageSizeX]);
-			std::uint8_t* pRowBytes = rowBytes.get();
+            std::vector<std::uint8_t> rowBytes(imageSizeX);
 
 			for(std::int32_t rightShift = ((allocatedBits + 7) & 0xfffffff8) -8; rightShift >= 0; rightShift -= 8)
 			{
@@ -1540,7 +1536,7 @@ void dicomCodec::writeRLECompressed(
 
 				for(std::uint32_t scanY = imageSizeY; scanY != 0; --scanY)
 				{
-					std::uint8_t* rowBytesPointer = pRowBytes;
+                    std::uint8_t* rowBytesPointer = &(rowBytes[0]);
 
 					for(std::uint32_t scanX = imageSizeX; scanX != 0; --scanX)
 					{
@@ -1557,8 +1553,8 @@ void dicomCodec::writeRLECompressed(
 						while(startRun < imageSizeX)
 						{
 							std::uint32_t analyzeRun = startRun + 1;
-							std::uint8_t runByte = pRowBytes[startRun];
-							while(analyzeRun < imageSizeX && pRowBytes[analyzeRun] == runByte)
+                            std::uint8_t runByte = rowBytes[startRun];
+                            while(analyzeRun < imageSizeX && rowBytes[analyzeRun] == runByte)
 							{
 								++analyzeRun;
 							}
@@ -1584,7 +1580,7 @@ void dicomCodec::writeRLECompressed(
 								command = (std::uint8_t)writeBytes;
 								--command;
 								pDestStream->write(&command, 1);
-								pDestStream->write(&(pRowBytes[scanBytes]), startRun - scanBytes);
+                                pDestStream->write(&(rowBytes[scanBytes]), startRun - scanBytes);
 							}
 
 							scanBytes += writeBytes;
@@ -1605,7 +1601,7 @@ void dicomCodec::writeRLECompressed(
 						{
 							command = 0xff - (std::uint8_t)(runLength - 2);
 							pDestStream->write(&command, 1);
-							pDestStream->write(&(pRowBytes[scanBytes]), 1);
+                            pDestStream->write(&(rowBytes[scanBytes]), 1);
 						}
 
 						scanBytes += runLength;
@@ -1868,58 +1864,62 @@ void dicomCodec::writePixel(
 					std::uint8_t allocatedBits,
 					std::uint32_t mask)
 {
-	PUNTOEXE_FUNCTION_START(L"dicomCodec::writePixel");
-
 	pixelValue &= mask;
 
 	if(allocatedBits == 8)
 	{
-		m_ioByte = (std::uint8_t)pixelValue;
-		pDestStream->write(&m_ioByte, sizeof(m_ioByte));
+        m_ioByte = (std::uint8_t)pixelValue;
+        pDestStream->write(&m_ioByte, sizeof(m_ioByte));
 		return;
 	}
 
 	if(allocatedBits == 16)
-	{
-		m_ioWord = (std::uint16_t)pixelValue;
-		if(wordSizeBytes == 1)
-		{
-			pDestStream->adjustEndian((std::uint8_t*)&m_ioWord, 2, streamController::lowByteEndian);
-		}
-		pDestStream->write((std::uint8_t*)&m_ioWord, sizeof(m_ioWord));
-		return;
+    {
+        if(wordSizeBytes == 1)
+        {
+            m_ioWord = pDestStream->adjustEndian((std::uint16_t)pixelValue, streamController::lowByteEndian);
+        }
+        else
+        {
+            m_ioWord = (std::uint16_t)pixelValue;
+        }
+        pDestStream->write((std::uint8_t*)&m_ioWord, sizeof(m_ioWord));
+        return;
 	}
 
 	if(allocatedBits == 32)
 	{
-		m_ioDWord = (std::uint32_t)pixelValue;
 		if(wordSizeBytes == 1)
-		{
-			pDestStream->adjustEndian((std::uint8_t*)&m_ioDWord, 4, streamController::lowByteEndian);
-		}
-		pDestStream->write((std::uint8_t*)&m_ioDWord, sizeof(m_ioDWord));
+        {
+            m_ioDWord = pDestStream->adjustEndian((std::uint32_t)m_ioDWord, streamController::lowByteEndian);
+        }
+        else
+        {
+            m_ioDWord = (std::uint32_t)pixelValue;
+        }
+        pDestStream->write((std::uint8_t*)&m_ioDWord, sizeof(m_ioDWord));
 		return;
 	}
 
-	std::uint8_t maxBits = (std::uint8_t)(wordSizeBytes << 3);
+    std::uint8_t maxBits = (std::uint8_t)(wordSizeBytes << 3);
 
 	for(std::uint8_t writeBits = allocatedBits; writeBits != 0;)
 	{
 		std::uint8_t freeBits = maxBits - *pBitPointer;
 		if(freeBits == maxBits)
 		{
-			m_ioWord = 0;
+            m_ioWord = 0;
 		}
 		if( freeBits <= writeBits )
 		{
-			m_ioWord |= (pixelValue & (((std::int32_t)1 << freeBits) -1 ))<< (*pBitPointer);
+            m_ioWord |= (pixelValue & (((std::int32_t)1 << freeBits) -1 ))<< (*pBitPointer);
 			*pBitPointer = maxBits;
 			writeBits -= freeBits;
 			pixelValue >>= freeBits;
 		}
 		else
 		{
-			m_ioWord |= (pixelValue & (((std::int32_t)1 << writeBits) -1 ))<< (*pBitPointer);
+            m_ioWord |= (pixelValue & (((std::int32_t)1 << writeBits) -1 ))<< (*pBitPointer);
 			(*pBitPointer) += writeBits;
 			writeBits = 0;
 		}
@@ -1928,18 +1928,16 @@ void dicomCodec::writePixel(
 		{
 			if(wordSizeBytes == 2)
 			{
-				pDestStream->write((std::uint8_t*)&m_ioWord, 2);
+                pDestStream->write((std::uint8_t*)&m_ioWord, 2);
 			}
 			else
 			{
-				m_ioByte = (std::uint8_t)m_ioWord;
-				pDestStream->write(&m_ioByte, 1);
+                m_ioByte = (std::uint8_t)m_ioWord;
+                pDestStream->write(&m_ioByte, 1);
 			}
 			*pBitPointer = 0;
 		}
 	}
-
-	PUNTOEXE_FUNCTION_END();
 }
 
 

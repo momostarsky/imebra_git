@@ -31,7 +31,7 @@ lut::~lut()
 {
 	if(m_pMappedValues)
 	{
-		delete m_pMappedValues;
+        delete[] m_pMappedValues;
 	}
 }
 
@@ -105,12 +105,12 @@ void lut::create(std::uint32_t size, std::int32_t firstMapped, std::uint8_t bits
 
 	m_description = description;
 
-	if(size)
+    if(size != 0)
 	{
-		m_size=size;
-		m_firstMapped=firstMapped;
-		m_bits=bits;
-		m_pMappedValues=new std::int32_t[m_size];
+        m_size = size;
+        m_firstMapped = firstMapped;
+        m_bits = bits;
+        m_pMappedValues = new std::int32_t[m_size];
 	}
 
 	PUNTOEXE_FUNCTION_END();

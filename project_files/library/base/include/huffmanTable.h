@@ -233,12 +233,15 @@ protected:
 	std::vector<valueObject> m_valuesFreq;
 	
 public:
-	// Used to calculate the huffman codes
+    // Used to calculate the huffman codes
 	std::vector<std::uint32_t> m_orderedValues;
-	std::uint32_t m_valuesPerLength[128];
-	std::uint8_t m_firstValidLength;
-	std::uint32_t m_minValuePerLength[128];
-	std::uint32_t m_maxValuePerLength[128];
+    std::uint32_t m_valuesPerLength[128];
+    std::uint8_t m_firstValidLength;
+    std::uint32_t m_firstMinValue;
+    std::uint32_t m_firstMaxValue;
+    std::uint32_t m_firstValuesPerLength;
+    std::uint32_t m_minValuePerLength[128];
+    std::uint32_t m_maxValuePerLength[128];
 
 	// Final huffman table
 	std::vector<std::uint32_t> m_valuesToHuffman;
