@@ -99,7 +99,7 @@ void streamController::adjustEndian(std::uint8_t* pBuffer, const std::uint32_t w
         {
             std::uint16_t* pWord((std::uint16_t*)pBuffer);
 			for(std::uint32_t scanWords = words; scanWords != 0; --scanWords)
-			{
+            {
                 *pWord = ((*pWord & 0x00ff) << 8) | ((*pWord & 0xff00) >> 8);
                 ++pWord;
 			}
@@ -109,8 +109,9 @@ void streamController::adjustEndian(std::uint8_t* pBuffer, const std::uint32_t w
         {
             std::uint32_t* pDWord((std::uint32_t*)pBuffer);
 			for(std::uint32_t scanWords = words; scanWords != 0; --scanWords)
-			{
+            {
                 *pDWord = ((*pDWord & 0xff000000) >> 24) | ((*pDWord & 0x00ff0000) >> 8) | ((*pDWord & 0x0000ff00) << 8) | ((*pDWord & 0x000000ff) << 24);
+                ++pDWord;
 			}
 		}
 		return;
