@@ -105,7 +105,7 @@ std::wstring dataHandlerStringUnicode::convertToUnicode(const std::string& value
         return m_charsetConversion->toUnicode(value);
 	}
 
-    std::auto_ptr<charsetConversion> localCharsetConversion(allocateCharsetConversion());
+    std::unique_ptr<charsetConversion> localCharsetConversion(allocateCharsetConversion());
     localCharsetConversion->initialize(m_charsetConversion->getIsoCharset());
 
 	// Here we store the value to be returned

@@ -91,13 +91,16 @@ std::string charsetConversionWindows::fromUnicode(const std::wstring& unicodeStr
 
 	BOOL bUsedDefault = false;
 	int requiredChars = ::WideCharToMultiByte(m_codePage, m_bZeroFlag ? 0 : WC_NO_BEST_FIT_CHARS | WC_COMPOSITECHECK | WC_DEFAULTCHAR, unicodeString.c_str(), (int)(unicodeString.length()), 0, 0, 0, m_bZeroFlag ? 0 : &bUsedDefault);
-	std::auto_ptr<char> convertedString(new char[requiredChars]);
-	::WideCharToMultiByte(m_codePage, m_bZeroFlag ? 0 : WC_NO_BEST_FIT_CHARS | WC_COMPOSITECHECK | WC_DEFAULTCHAR, unicodeString.c_str(), (int)(unicodeString.length()), convertedString.get(), requiredChars, 0, m_bZeroFlag ? 0 : &bUsedDefault);
+    if(requiredChars <= 0)
+    {
+        return "";
+    }
+    std::string returnString((size_t)requiredChars, char(0));
+    ::WideCharToMultiByte(m_codePage, m_bZeroFlag ? 0 : WC_NO_BEST_FIT_CHARS | WC_COMPOSITECHECK | WC_DEFAULTCHAR, unicodeString.c_str(), (int)(unicodeString.length()), &(returnString[0]), requiredChars, 0, m_bZeroFlag ? 0 : &bUsedDefault);
 	if(bUsedDefault)
 	{
 		return std::string();
 	}
-	std::string returnString(convertedString.get(), requiredChars);
 	return returnString;
 
 	PUNTOEXE_FUNCTION_END();
@@ -119,10 +122,12 @@ std::wstring charsetConversionWindows::toUnicode(const std::string& asciiString)
 	}
 
 	int requiredWChars = ::MultiByteToWideChar(m_codePage, 0, asciiString.c_str(), (int)(asciiString.length()), 0, 0);
-	std::auto_ptr<wchar_t> convertedString(new wchar_t[requiredWChars]);
-	::MultiByteToWideChar(m_codePage, 0, asciiString.c_str(), (int)(asciiString.length()), convertedString.get(), requiredWChars);
-	std::wstring returnString(convertedString.get(), requiredWChars);
-
+    if(requiredWChars <= 0)
+    {
+        return L"";
+    }
+    std::wstring returnString((size_t)requiredWChars, char(0));
+    ::MultiByteToWideChar(m_codePage, 0, asciiString.c_str(), (int)(asciiString.length()), &(returnString[0]), requiredWChars);
     return returnString;
 
 	PUNTOEXE_FUNCTION_END();

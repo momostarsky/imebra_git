@@ -1267,7 +1267,7 @@ void dicomCodec::readUncompressedInterleaved(
         {
             numValuesPerBlock += 2;
         }
-        std::auto_ptr<std::int32_t> readBlockValuesAutoPtr(new std::int32_t[numValuesPerBlock]);
+        std::vector<std::int32_t> readBlockValues((size_t)numValuesPerBlock);
 
         // Read the subsampled channels.
 	// Find the number of blocks to read
@@ -1287,7 +1287,7 @@ void dicomCodec::readUncompressedInterleaved(
 		numBlocks != 0;
 		--numBlocks)
 	{
-        std::int32_t* readBlockValuesPtr(readBlockValuesAutoPtr.get());
+        std::int32_t* readBlockValuesPtr(&(readBlockValues[0]));
         readPixel(pSourceStream, readBlockValuesPtr, numValuesPerBlock, &bitPointer, readBuffer->data(), wordSizeBytes, allocatedBits, mask);
 
 		// Read channel 0 (not subsampled)

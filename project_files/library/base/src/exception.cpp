@@ -146,7 +146,7 @@ exceptionInfo& exceptionInfo::operator=(const exceptionInfo& right)
 ///////////////////////////////////////////////////////////
 std::wstring exceptionInfo::getMessage()
 {
-    std::auto_ptr<charsetConversion> convertUnicode(allocateCharsetConversion());
+    std::unique_ptr<charsetConversion> convertUnicode(allocateCharsetConversion());
     convertUnicode->initialize("ASCII");
 	std::wostringstream message;
 	message << "[" << m_functionName << "]" << "\n";

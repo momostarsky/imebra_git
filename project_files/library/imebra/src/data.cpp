@@ -393,14 +393,6 @@ ptr<streamWriter> data::getStreamWriter(std::uint32_t bufferId, std::string data
 		m_buffers[bufferId]=pTempBuffer;
 	}
 
-	// Retrieve the data handler
-	///////////////////////////////////////////////////////////
-	if(pTempBuffer == 0)
-	{
-		ptr<streamWriter> emptyStream;
-		return emptyStream;
-	}
-	
 	return pTempBuffer->getStreamWriter();
 
 	PUNTOEXE_FUNCTION_END();

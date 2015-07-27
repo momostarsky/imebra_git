@@ -121,18 +121,18 @@ void dataHandlerDateTimeBase::setSignedLong(const std::uint32_t index, const std
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTimeBase::setSignedLong");
 
+    tm timeStructure;
 #if defined(PUNTOEXE_WINDOWS) && !defined(__MINGW32__)
-	std::auto_ptr<tm> timeStructure(new tm);
-	localtime_s(timeStructure.get(), ((time_t*)&value));
+    localtime_s(&timeStructure, ((time_t*)&value));
 #else
-	tm* timeStructure = localtime((time_t*)&value);
+    localtime_r((time_t*)&value, &timeStructure);
 #endif
-	std::int32_t year = timeStructure->tm_year;
-	std::int32_t month = timeStructure->tm_mon + 1;
-	std::int32_t day = timeStructure->tm_mday;
-	std::int32_t hour = timeStructure->tm_hour;
-	std::int32_t minutes = timeStructure->tm_min;
-	std::int32_t seconds = timeStructure->tm_sec;
+    std::int32_t year = timeStructure.tm_year;
+    std::int32_t month = timeStructure.tm_mon + 1;
+    std::int32_t day = timeStructure.tm_mday;
+    std::int32_t hour = timeStructure.tm_hour;
+    std::int32_t minutes = timeStructure.tm_min;
+    std::int32_t seconds = timeStructure.tm_sec;
 	setDate(index, year, month, day, hour, minutes, seconds, 0, 0, 0);
 
 	PUNTOEXE_FUNCTION_END();

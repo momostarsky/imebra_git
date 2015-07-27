@@ -134,7 +134,7 @@ void stream::openFile(const std::wstring& fileName, const int mode)
 	m_openFile = ::_wfopen(fileName.c_str(), strMode.c_str());
 #else
 	// Convert the filename to UTF8
-    std::auto_ptr<charsetConversion> toUtf8(allocateCharsetConversion());
+    std::unique_ptr<charsetConversion> toUtf8(allocateCharsetConversion());
     toUtf8->initialize("ISO-IR 192");
     std::string utf8FileName(toUtf8->fromUnicode(fileName));
 
