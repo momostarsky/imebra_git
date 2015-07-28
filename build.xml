@@ -105,13 +105,11 @@ The author can be contacted by email at info@binarno.com or by mail at
 	<target name="run_test_cases" depends="build_test_cases" description="Run the test cases">
             <exec executable="lcov" dir="${build_dir_tests}" resolveexecutable="true" failonerror="true">
                 <arg value="--zerocounters" />
-                <arg value="--no-external" />
                 <arg value="--directory" />
                 <arg path="${build_dir_tests}" />
             </exec>
             <exec executable="lcov" dir="${build_dir_tests}" resolveexecutable="true" failonerror="true">
                 <arg value="--capture" />
-                <arg value="--no-external" />
                 <arg value="--initial" />
                 <arg value="--directory" />
                 <arg path="${build_dir_tests}" />
@@ -123,7 +121,6 @@ The author can be contacted by email at info@binarno.com or by mail at
 
             <exec executable="lcov" dir="${build_dir_tests}" resolveexecutable="true" failonerror="true">
                 <arg value="--capture" />
-                <arg value="--no-external" />
                 <arg value="--no-checksum" />
                 <arg value="--directory" />
                 <arg path="${build_dir_tests}" />
