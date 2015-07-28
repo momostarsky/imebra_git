@@ -13,8 +13,8 @@ namespace tests
 
 ptr<image> makeTestImage()
 {
-	std::uint32_t sizeX = 601;
-	std::uint32_t sizeY = 401;
+    std::uint32_t sizeX = 301;
+    std::uint32_t sizeY = 201;
 	ptr<image> dicomImage(new image);
 	dicomImage->create(sizeX, sizeY, image::depthU16, L"RGB", 15);
 
@@ -76,8 +76,8 @@ TEST(dicomCodecTest, testUncompressed)
 					}
 
 					ptr<image> dicomImage0(buildImageForTest(
-							601,
-							401,
+                            301,
+                            201,
 							depth,
 							highBit,
 							30,
@@ -85,8 +85,8 @@ TEST(dicomCodecTest, testUncompressed)
 							L"RGB",
 							50));
 					ptr<image> dicomImage1(buildImageForTest(
-							601,
-							401,
+                            301,
+                            201,
 							depth,
 							highBit,
 							30,
@@ -94,8 +94,8 @@ TEST(dicomCodecTest, testUncompressed)
 							L"RGB",
 							100));
 					ptr<image> dicomImage2(buildImageForTest(
-							601,
-							401,
+                            301,
+                            201,
 							depth,
 							highBit,
 							30,
