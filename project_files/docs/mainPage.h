@@ -9,7 +9,8 @@ $fileHeader$
 
 \section copyright Copyright
 
-Copyright 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013 by Paolo Brandoli/Binarno s.p.
+Copyright 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015
+ by Paolo Brandoli/Binarno s.p.
 
 Imebra is available for free under the GNU General Public License version 2 (GPL, see
  \ref gpl_license).
@@ -25,8 +26,7 @@ You can download the latest version of imebra from http://imebra.com
 \section section_Introduction Introduction
 
 Imebra is an open source Dicom library.
-The library has been designed to handle Dicom files, but it includes also some
- classes that manage jpeg and other image files.
+The library has been designed to handle Dicom files.
 
 At the moment the library provides the following features:
 - dicom files parser and builder
@@ -73,9 +73,10 @@ A detailed reference of the C++ classes that compose Imebra is included in
 
 \subsection version_current Changes for version $imebraVersion$
 
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/100">#100</a> (The VOI/LUT fails when dealing with images with 32 bits per channel)
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/101">#101</a> (The PALETTECOLORToRGB transform returns dark images)
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/104">#104</a> (dataHandlerNumeric::getString always format the number as a double)
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/87">#87</a> (Deprecation warnings regarding c++0x standard)
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/100">#100</a> (The VOI/LUT fails when dealing with images with 32 bits per channel)
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/101">#101</a> (The PALETTECOLORToRGB transform returns dark images)
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/104">#104</a> (dataHandlerNumeric::getString always format the number as a double)
 - Use C++ thread class instead of custom one
 - Removed lock from reference counter (made atomic)
 - Converted custom types imbxIntXX and imbxUintXX to C++ standard types std::intX_t and std::uintXX_t
@@ -85,25 +86,25 @@ A detailed reference of the C++ classes that compose Imebra is included in
 
 \subsection version_2013_10_30_10_00_11 Changes for version 2013-10-30_10-00-11
 
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/99">#99</a> (The example that shows how to read the pixels is wrong)
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/99">#99</a> (The example that shows how to read the pixels is wrong)
 
 
 \subsection version_2013_09_04_11_02_26 Changes for version 2013-09-04_11-02-26
 
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/98">#98</a> (Parsing of embedded sequence tags may fail)
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/98">#98</a> (Parsing of embedded sequence tags may fail)
 
 
 \subsection version_2013_07_16_08_42_08 Changes for version 2013-07-16_08-42-08
 
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/96">#96</a> (Imebra creates datasets with implicit data type with wrong tag length)
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/94">#94</a> (charsetConversionWindows::toUnicode doesn't return the converted string)
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/95">#95</a> (When compiling the examples on Windows using MINGW then the compilation fails)
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/96">#96</a> (Imebra creates datasets with implicit data type with wrong tag length)
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/94">#94</a> (charsetConversionWindows::toUnicode doesn't return the converted string)
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/95">#95</a> (When compiling the examples on Windows using MINGW then the compilation fails)
 
 
 \subsection version_2013_05_21_12_07_46 Changes for version 2013-05-21_12-07-46
 
 - Changed license to GPLv2/commercial
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/89">#89</a> (Static objects don't get initialized when Imebra is built as a library)
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/89">#89</a> (Static objects don't get initialized when Imebra is built as a library)
 - Added support for ICU library
 - Removed unused parameter from dicomCodec::readPixel()
 - Compatible with clang 3.0
@@ -117,10 +118,10 @@ A detailed reference of the C++ classes that compose Imebra is included in
 
 \subsection version_2012_12_19_20_05_13 Changes for version 2012-12-19_20-05-13
 
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/88">#88</a> (32-bit warnings / general pointer size concerns)
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/90">#90</a> (transactionsManager doesn't lock the manager)
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/92">#92</a> (Wrong check for ac frequencies in the IDCT method of the Jpeg codec)
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/93">#93</a> (Some files contain jpeg compressed images without the jpeg termination tag)
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/88">#88</a> (32-bit warnings / general pointer size concerns)
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/90">#90</a> (transactionsManager doesn't lock the manager)
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/92">#92</a> (Wrong check for ac frequencies in the IDCT method of the Jpeg codec)
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/93">#93</a> (Some files contain jpeg compressed images without the jpeg termination tag)
 - Minor optimizations in the jpegCodec::readBlock method
 - Minor optimizations in the template function dataHandlerNumeric::copyFromInt32Interleaved
 - Remove exception logging functions from the inline method streamReader::readBits()
@@ -137,18 +138,18 @@ A detailed reference of the C++ classes that compose Imebra is included in
 
 \subsection version_2011_06_29_23_24_13 Changes for version 2011-06-29_23-24-13
 
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/84">#84</a> (VOILUT returns always a MONOCHROME2 image)
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/85">#85</a> (GetImage() fails when a file contains a single frame splitted across several buffers and the offset table is empty)
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/86">#86</a> (The automatic build doesn't set the product name in the source files)
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/84">#84</a> (VOILUT returns always a MONOCHROME2 image)
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/85">#85</a> (GetImage() fails when a file contains a single frame splitted across several buffers and the offset table is empty)
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/86">#86</a> (The automatic build doesn't set the product name in the source files)
 
 
 \subsection version_2011_04_18_22_48_29 Changes for version 2011-04-18_22-48-29
 
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/73">#76</a> (The example in quick_tour_tag Let's read or set a tag in the dataSet is wrong)
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/77">#77</a> (modalityVOILUT::isEmpty returns true when a LUT is used in the transform)
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/78">#78</a> (When VOILUT is empty it should simply copy the input image into the output one)
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/79">#79</a> (In puntoexe::imebra::transforms::modalityVOILUT there is no need to call DeclareDataSet)
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/82">#82</a> (Finding the index.html file in the documentation folder is difficult)
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/73">#76</a> (The example in quick_tour_tag Let's read or set a tag in the dataSet is wrong)
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/77">#77</a> (modalityVOILUT::isEmpty returns true when a LUT is used in the transform)
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/78">#78</a> (When VOILUT is empty it should simply copy the input image into the output one)
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/79">#79</a> (In puntoexe::imebra::transforms::modalityVOILUT there is no need to call DeclareDataSet)
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/82">#82</a> (Finding the index.html file in the documentation folder is difficult)
 - Added explanatory images for the documentation of the class drawBitmap
 - Updated the documentation for puntoexe::imebra::drawBitmap
 - Updated the test units for puntoexe::imebra::drawBitmap
@@ -161,9 +162,9 @@ A detailed reference of the C++ classes that compose Imebra is included in
 
 - Improved tests of the Dicom codec (now test all the bit depths)
 - Added detailed documentation for compilation of the examples
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/73">#73</a> (The Dicom codec returns black images when highbit=31)
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/74">#74</a> (When the transfer syntax as implicit VRs then the VR for image data should be OW)
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/74">#75</a> (The dataset doesn't set the b2complement flag when the data is stored in signed 32bit)
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/73">#73</a> (The Dicom codec returns black images when highbit=31)
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/74">#74</a> (When the transfer syntax as implicit VRs then the VR for image data should be OW)
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/74">#75</a> (The dataset doesn't set the b2complement flag when the data is stored in signed 32bit)
 
 
 \subsection version_2011_01_22_13_58_55 Changes for version 2011-01-22_13-58-55
@@ -175,24 +176,24 @@ A detailed reference of the C++ classes that compose Imebra is included in
 - breaking changes in puntoexe::imebra::transforms::transform (now the transforms work with new dataHandlerNumeric)
 - The palette tags now are embedded in the puntoexe::imebra::image objects
 - Added the example changeTransferSyntax
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/59">#59</a> (Old Dicom formats may not be recognized)
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/61">#61</a> (directoryRecord must have a method setFilePart())
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/62">#62</a> (Speed up the drawBitmap class)
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/63">#63</a> (Regression when reading uncompressed non interleaved images)
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/65">#65</a> (When a tag is set twice using the default VR in a transaction then the second write operation resets the VR)
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/66">#66</a> (The dataset doesn't consider the planar configuration)
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/67">#67</a> (When an undefined-length sequence doesn't contains the end-of-sequence then an exception is thrown when the end of the file is reached)
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/68">#68</a> (drawBitmap should be able to draw b/w images)
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/71">#71</a> (File Meta should always use Explicit VR Little Endian Transfer Syntax)
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/59">#59</a> (Old Dicom formats may not be recognized)
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/61">#61</a> (directoryRecord must have a method setFilePart())
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/62">#62</a> (Speed up the drawBitmap class)
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/63">#63</a> (Regression when reading uncompressed non interleaved images)
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/65">#65</a> (When a tag is set twice using the default VR in a transaction then the second write operation resets the VR)
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/66">#66</a> (The dataset doesn't consider the planar configuration)
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/67">#67</a> (When an undefined-length sequence doesn't contains the end-of-sequence then an exception is thrown when the end of the file is reached)
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/68">#68</a> (drawBitmap should be able to draw b/w images)
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/71">#71</a> (File Meta should always use Explicit VR Little Endian Transfer Syntax)
 
 
 \subsection version_0_0_48 Changes for version 0.0.48
 
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/44">#44</a> (Add the "const" modifier to all the relevant functions in the data handlers)
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/55">#55</a> (Add const qualifier to functions that require them)
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/56">#56</a> (The external lock in baseObject may create circular references)
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/57">#57</a> (RGBToPALETTECOLOR causes memory leaks)
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/58">#58</a> (The destructors of objects derived from baseObject must be protected, since they can be deleted only by themself)
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/44">#44</a> (Add the "const" modifier to all the relevant functions in the data handlers)
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/55">#55</a> (Add const qualifier to functions that require them)
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/56">#56</a> (The external lock in baseObject may create circular references)
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/57">#57</a> (RGBToPALETTECOLOR causes memory leaks)
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/58">#58</a> (The destructors of objects derived from baseObject must be protected, since they can be deleted only by themself)
 - Increased the speed of CopyFromInt32Interleaved
 - Increased the speed of dicomCodec::ReadPixel when bitsAllocated == 8 or 16
 - Improved the speed of streamWriter::write()
@@ -203,33 +204,33 @@ A detailed reference of the C++ classes that compose Imebra is included in
 \subsection version_0_0_47 Changes for version 0.0.47
 
 - Makefiles for the example applications are being provided
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/33">#33</a> (When launched without parameters, dicomdirItems should display the version)
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/42">#42</a> (When a dicomdir destructor is called, the it delete all the children elements. This may cause a stack overflow when an element call release on the next sibling item and the number of siblings is high)
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/46">#46</a> (Checking for LUT validity will help dicom2jpeg to ignore the LUT if it contains invalid data)
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/49">#49</a> (The codepage "CHAR" used to indicate the locale charset in charsetConversion.cpp causes an exception during the initialization of ICONV. The usage of "" instead of "char" works properly)
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/50">#50</a> (mbxInt32 and imbxUint32 are wrongly mapped to long and unsigned long. It should be mapped to int and unsigned int)
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/51">#51</a> (wrong parameters in memset)
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/52">#52</a> (The charset conversion uses different error reporting in ICONV and Windows API)
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/33">#33</a> (When launched without parameters, dicomdirItems should display the version)
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/42">#42</a> (When a dicomdir destructor is called, the it delete all the children elements. This may cause a stack overflow when an element call release on the next sibling item and the number of siblings is high)
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/46">#46</a> (Checking for LUT validity will help dicom2jpeg to ignore the LUT if it contains invalid data)
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/49">#49</a> (The codepage "CHAR" used to indicate the locale charset in charsetConversion.cpp causes an exception during the initialization of ICONV. The usage of "" instead of "char" works properly)
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/50">#50</a> (mbxInt32 and imbxUint32 are wrongly mapped to long and unsigned long. It should be mapped to int and unsigned int)
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/51">#51</a> (wrong parameters in memset)
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/52">#52</a> (The charset conversion uses different error reporting in ICONV and Windows API)
 
 
 \subsection version_0_0_46 Changes for version 0.0.46
 
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/32">#32</a> (When launched without parameters, dicom2jpeg should display the version)
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/34">#34</a> (The on-line documentation should have to Google Analytics tracking code)
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/37">#37</a> (Change the title of the documentation to: Imebra - Open source dicom
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/32">#32</a> (When launched without parameters, dicom2jpeg should display the version)
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/34">#34</a> (The on-line documentation should have to Google Analytics tracking code)
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/37">#37</a> (Change the title of the documentation to: Imebra - Open source dicom
   library)
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/39">#39</a> (The class dataHandlerNumeric calculates the wrong size)
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/39">#39</a> (The class dataHandlerNumeric calculates the wrong size)
 
 
 \subsection version_0_0_45 Changes for version 0.0.45
 
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/1">#1</a> (The library's version should be visible in the source code)
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/1">#1</a> (The library's version should be visible in the source code)
 - Added DICOMDIR creator/parser
 - Added an example that extract a DICOMDIR to an XML file
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/4">#4</a> (A sequence tag should have the type set to SQ, but the
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/4">#4</a> (A sequence tag should have the type set to SQ, but the
   writer uses the first buffer's type, therefore the data type is incorrect)
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/5">#5</a> (When writing sequences, the tag's length is not calculated correctly)
-- Fixes <a href="http://bitbucket.org/puntoexe/imebra/issue/6">#6</a> (dicomCodec::getDataSetLength doesn't calculate the correct size)
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/5">#5</a> (When writing sequences, the tag's length is not calculated correctly)
+- Fixes <a href="http://bitbucket.org/binarno/imebra/issue/6">#6</a> (dicomCodec::getDataSetLength doesn't calculate the correct size)
 - dicom2jpeg can now invoke ffmpeg and create movies
 - Mercurial is now used as version control (was SVN)
 - Corrected documentation
