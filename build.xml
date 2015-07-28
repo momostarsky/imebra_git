@@ -103,19 +103,38 @@ The author can be contacted by email at info@binarno.com or by mail at
 
 	<!-- Run the test cases posix -->
 	<target name="run_test_cases" depends="build_test_cases" description="Run the test cases">
-                <exec executable="${build_dir_tests}/tests" dir="${build_dir_tests}" resolveexecutable="true" failonerror="true" />
-                <exec executable="lcov" dir="${build_dir_tests}" resolveexecutable="true" failonerror="true">
-                    <arg value="-c" />
-                    <arg value="-d" />
-                    <arg value="." />
-                    <arg value="-o" />
-                    <arg value="test.info" />
-                </exec>
-                <exec executable="genhtml" dir="${build_dir_tests}" resolveexecutable="true" failonerror="true">
-                    <arg value="-o" />
-                    <arg path="${build_dir_tests}/coverage" />
-                    <arg path="${build_dir_tests}/test.info" />
-                </exec>
+            <exec executable="lcov" dir="${build_dir_tests}" resolveexecutable="true" failonerror="true">
+                <arg value="--zerocounters" />
+                <arg value="--no-external" />
+                <arg value="--directory" />
+                <arg path="${build_dir_tests}" />
+            </exec>
+            <exec executable="lcov" dir="${build_dir_tests}" resolveexecutable="true" failonerror="true">
+                <arg value="--capture" />
+                <arg value="--no-external" />
+                <arg value="--initial" />
+                <arg value="--directory" />
+                <arg path="${build_dir_tests}" />
+                <arg value="--output-file" />
+                <arg path="${build_dir_tests}/test.info" />
+            </exec>
+
+            <exec executable="${build_dir_tests}/tests" dir="${build_dir_tests}" resolveexecutable="true" failonerror="true" />
+
+            <exec executable="lcov" dir="${build_dir_tests}" resolveexecutable="true" failonerror="true">
+                <arg value="--capture" />
+                <arg value="--no-external" />
+                <arg value="--no-checksum" />
+                <arg value="--directory" />
+                <arg path="${build_dir_tests}" />
+                <arg value="--output-file" />
+                <arg path="${build_dir_tests}/test.info" />
+            </exec>
+            <exec executable="genhtml" dir="${build_dir_tests}" resolveexecutable="true" failonerror="true">
+                <arg value="--output-directory" />
+                <arg path="${build_dir_tests}/coverage" />
+                <arg path="${build_dir_tests}/test.info" />
+            </exec>
         </target>
 
 
