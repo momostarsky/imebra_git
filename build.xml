@@ -107,9 +107,9 @@ The author can be contacted by email at info@binarno.com or by mail at
                 <exec executable="lcov" dir="${build_dir_tests}" resolveexecutable="true" failonerror="true">
                     <arg value="-c" />
                     <arg value="-d" />
-                    <arg path="${build_dir_tests}" />
+                    <arg value="." />
                     <arg value="-o" />
-                    <arg path="${build_dir_tests}/test.info" />
+                    <arg value="test.info" />
                 </exec>
                 <exec executable="genhtml" dir="${build_dir_tests}" resolveexecutable="true" failonerror="true">
                     <arg value="-o" />
@@ -147,13 +147,12 @@ The author can be contacted by email at info@binarno.com or by mail at
 		<mkdir dir="${examples}/dicomdirItems" />
 		<mkdir dir="${examples}/changeTransferSyntax" />
 
-                <property name="reports" value="${distributions}/reports" />
+                <property name="reports" value="${distribution}/reports" />
                 <property name="coverage" value="${reports}/coverage" />
                 <mkdir dir="${coverage}" />
                 <copy todir="${coverage}">
                         <fileset dir="${build_dir_tests}/coverage" />
                 </copy>
-
 
 		<property name="tests" value="${distribution}/tests" />
 		<mkdir dir="${tests}" />

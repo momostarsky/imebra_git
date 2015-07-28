@@ -8,7 +8,7 @@ unix:LIBS = -lgcov
 windows:DEFINES += _WIN32_WINNT=0x0501 WINVER=0x0501 NTDDI_VERSION=0x05010000
 LIBS += -lgtest
 
-QMAKE_CXXFLAGS += -std=c++0x -Wall -Wextra -pedantic
+QMAKE_CXXFLAGS += -std=c++0x -Wall -Wextra -pedantic --coverage
 
 OTHER_FILES += \
     ReadMe.txt \
@@ -19,7 +19,10 @@ OTHER_FILES += \
     ../DoxyfileHTML \
     ../DoxyfilePDF \
     ../docs/html_header.html \
-    ../docs/html_footer.html
+    ../docs/html_footer.html \
+    ../docs/commercial_license_perpetual.txt \
+    ../docs/commercial_license.txt \
+    ../docs/gpl.txt
 
 HEADERS += \
     ../library/imebra/include/YBRPARTIALToRGB.h \
