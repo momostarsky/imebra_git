@@ -1,5 +1,5 @@
-Imebra Commercial License Version 2
-===================================
+Imebra Personal Commercial License Version 2
+============================================
 
 DEFINITIONS
 -----------
@@ -16,7 +16,7 @@ as "The product".
 LICENSE GRANT
 -------------
 
-1. This license allows the usage of Imebra by an unlimited number of developers on
+1. This license allows the usage of Imebra by one developer (the license holder) on
    an unlimited number of CPUs for the development of one major version of one product.
 2. This license allows the distribution of an unlimited numbed of copies of one major
    version of the product based on Imebra.

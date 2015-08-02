@@ -8,13 +8,10 @@ $fileHeader$
 
 \section add_to_project_introduction Introduction
 
-Imebra is not distributed as a dynamic module and probably will never be.
-This is due to the CPP language used to build the library and to the different
- conventions used by different compilers when they deal with the C++ function
- names.
+Imebra is distributed only in source format.
 
-Because of this, all the Imebra source files must be linked to your project by
- you. If you use the same C++ compiler to build your application and the Imebra
+Because of this, all the Imebra source files must be compiled and linked to your project
+ by you. If you use the same C++ compiler to build your application and the Imebra
  library then you could create a dynamic module that includes the Imebra library.
 
 The following sections describes how to include the Imebra source code in your
@@ -23,10 +20,8 @@ The following sections describes how to include the Imebra source code in your
 
 \section add_to_project_common Prerequisites (common to all the platorms)
 
-Imebra heavily uses the stl library; if your development environment doesn't provide 
+Imebra depends on the stl library and C++0x; if your development environment doesn't provide
  a modern stl, try to install stlport (http://www.stlport.org).
-
-Imebra also needs the standard C library.
 
 
 \section add_to_project_win32 Prerequisites for Windows (desktop version)
@@ -59,6 +54,7 @@ Imebra is part of the Puntoexe Library and all its source code files are located
 
 The first step to add the Imebra library to your project is to add all the files
  in the following directories to your project:
+
  - library/imebra/src
  - library/base/src
 
@@ -69,6 +65,7 @@ The files in those directories are cpp source files.
 The files in the following directories are header files and don't need to be
  included in your project, but nothing harmful happen if you do include them
  (please note that EVC4 needs them):
+
  - library/imebra/include
  - library/base/include
 
@@ -85,6 +82,7 @@ If you are compiling the application for Windows NT, 2000, XP or Vista, then
 \section add_to_project_checklist Adding Imebra to your project: Checklist
 
 Please check that all the following tasks have been performed:
+
 - A modern STL library is available and the path to its header files has been
   added to the paths searched by the "include" statement
 - Iconv and Pthread are available on Posix systems (non necessary on Windows systems)

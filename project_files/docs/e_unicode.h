@@ -8,7 +8,7 @@ $fileHeader$
 
 \section add_to_project_introduction Introduction
 
-The Dicom standard supports several charsets, including the unicode (UTF8 encoded).
+The Dicom standard supports several charsets, including the unicode one (UTF8 encoded).
 
 Imebra uses the following approach when dealing with tags that could have been 
  encoded using one of the Dicom charsets:

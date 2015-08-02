@@ -13,6 +13,7 @@ Imebra has been designed to work with Dicom structures, but because images have 
  decompression functions.
 
 At the moment, 2 codecs are distributed with imebra:
+
 - a Dicom codec
 - a Jpeg codec
 

@@ -62,10 +62,11 @@ The previous code gets the pointer to the \ref puntoexe::imebra::codecs::codecFa
 
 \section quick_tour_tag Let's read or set a tag in the dataSet
 
-Once the dataSet has been created or loaded, your application can load or write
- values into the dataSet's tags.
+Once the dataSet has been created or loaded, your application can read or write
+ values from/to the dataSet's tags.
 
 In the following example we read the patient's name.
+
 A person name can have up to 5 components (last name, middle name, first name,...)
  separated by ^ and can be represented in 3 different ways (character representation,
  ideographic representation or phonetic representation) separated by a =.
@@ -82,27 +83,21 @@ std::string patientNameIdeographic = testDataSet->getString(0x0010, 0, 0x0010, 1
 
 \section quick_tour_image Let's read an image
 
-The dataSet provides a function that can decompress an image embedded into a dataSet.
+The dataSet provides two functions that can decompress an image embedded into a dataSet:
+
+- puntoexe::imebra::dataSet::getImage()
+- puntoexe::imebra::dataSet::getModalityImage()
+
+puntoexe::imebra::dataSet::getImage() retrieves the original images stored in the dataset, while
+ puntoexe::imebra::dataSet::getModalityImage() retrieves the images after the modality VOI/LUT has been
+ applied (if a modality VOI/LUT is available).
 
 The following example reads the first image embedded into a dataSet:
 \code
-ptr<imebra::image> firstImage = testDataSet->getImage(0);
+ptr<imebra::image> firstImage = testDataSet->getModalityImage(0);
 \endcode
 
-Note that an image should be processed by the modalityVOILUT transform to convert
- its pixel values into meaningful values.
-
-The following example apply the modalityVOILUT transform to the image:
-\code
-ptr<imebra::transforms::transform> modVOILUT(
-	new imebra::transforms::modalityVOILUT(testDataSet));
-std::uint32_t width, height;
-firstImage->getSize(&width, &height);
-ptr<imebra::image> convertedImage(modVOILUT->allocateOutputImage(firstImage, width, height);
-modVOILUT->runTransform(firstImage, 0, 0, width, height, convertedImage, 0, 0);
-\endcode
-
-Further processing may be required to convert the convertedImage into an image
+Further processing may be required to convert firstImage into an image
  suitable for the presentation on the screen. The VOILUT transform applies the
  contrast suggested by the dataSet to the image. For instance:
 \code
@@ -130,7 +125,7 @@ if(myColorTransform != 0) // color transform not needed if the factory returns 0
 }
 \endcode
 
-Now the variable presentationImage contains an RGB image ready to be displayed.
+Now the variable presentationImage contains an RGB image.
 
 
 \section quick_tour_image_pixels How to access the image's pixels
@@ -199,4 +194,90 @@ if(myHandler->getUnitSize() == sizeof(std::int32_t) && myHandler->isSigned())
 	}
 }
 \endcode
+
+
+\section quick_tour_image_display Displaying an image.
+
+The class puntoexe::imebra::drawBitmap takes an image as an input and returns an 8 bit RGB bitmap of the requested
+ image's area.
+
+Each bitmap's row can be aligned to specific bytes boundaries and can store the pixels in the followig formats:
+
+- puntoexe::imebra::drawBitmap::drawBitmapRGB: each pixel is formed by 3 bytes (R, G and B)
+- puntoexe::imebra::drawBitmap::drawBitmapBGR: each pixel is formed by (B, G and R). Suitable for Windows systems
+- puntoexe::imebra::drawBitmap::drawBitmapRGBA: each pixel is formed by 4 bytes (R, G, B and A). Suitable for Android & Mac (OSX, iOS)
+- puntoexe::imebra::drawBitmap::drawBitmapBGRA: each pixel is formed by 4 bytes (B, G, R and A). Suitable for Windows systems
+
+drawBitmap takes care of converting the color format to RGB if necessary, and also shifts the values to obtain 8 bit per color component.
+
+Sometimes the image must be processed with a presentation VOI/LUT transformations before it can be displayed.\n
+A dataSet may contain several presentation VOI/LUTs and each one of them may highlight different parts of the image by
+ applying different predefined contrasts or lookup tables.\n
+The class puntoexe::imebra::transforms::VOILUT is responsible for retrieving the list of available presentation VOIs/LUTs,
+ applying the selected VOI/LUT or finding the ideal LUT if none is specified in the dataSet.
+
+The constructor of the puntoexe::imebra::transforms::VOILUT class takes a dataset as parameter in the constructor: then it uses
+ the dataset to retrieve the available VOI or LUTs.
+
+\subsection quick_tour_image_display_list_voilut Listing the presentation VOIs/LUTs defined in the dataset
+
+The method puntoexe::imebra::transforms::VOILUT::getVOILUTIds() retrieves a list of IDs representing each VOI/LUT defined
+ in the dataset.
+
+Each ID may represent a VOI (Value of interest) or a LUT defined in the dataset: use puntoexe::imebra::transforms::VOILUT::getVOILUTDescription()
+ to retrieve the description for a particular VOI or LUT.
+
+\code
+// Construct a VOILUT from a dataset
+////////////////////////////////////
+ptr<imebra::transforms::VOILUT> pVOILUT = new imebra::transforms::VOILUT(testDataSet);
+
+// Get the list of defined VOIs and LUTs
+////////////////////////////////////////
+imebra::transforms::VOILUT::voilutIds_t availableIds = pVOILUT->getVOILUTIds();
+
+
+\subsection quick_tour_image_display_select_voilut Selecting the presentation VOI/LUT
+
+// Print out the description for the available VOI/LUTs
+///////////////////////////////////////////////////////
+for(imebra::transforms::VOILUT::voilutIds_t::iterator scan(availableIds.begin()), end(availableIds.end()); scan != end; ++scan)
+{
+    std::cout << pVOILUT->getVOILUTDescription(*scan);
+}
+\endcode
+
+To select the VOI or LUT to apply to the image, pass the proper VOILUT id to the method puntoexe::imebra::transforms::VOILUT::setVOILUT().
+
+\code
+pVOILUT->setVOILUT(availableIds.front());
+\endcode
+
+The application may also apply a VOI not defined in the dataset by using puntoexe::imebra::transforms::VOILUT::setCenterWidth()
+or puntoexe::imebra::transforms::VOILUT::applyOptimalVOI() which analyzes the image and selects the proper VOI.
+
+
+\subsection quick_tour_image_display_drawbitmap Drawing the image
+
+After the VOI or LUT has been selected, pass the transform class to the drawBitmap constructor which will apply it to the input
+ image before calculating the output bytes.
+
+\code
+
+// Initialize the drawBitmap object
+///////////////////////////////////
+ptr<imebra::drawBitmap> draw = new imebra::drawBitmap(presentationImage, pVOILUT);
+
+// Fill the puntoexe::memory object with the image in RGBA format
+/////////////////////////////////////////////////////////////////
+ptr<memory> memory = draw->getBitmap<imebra::drawBitmap::drawBitmapRGBA, 4>
+                        (width, height, 0, 0, width, height, 0);
+
+std::uint8_t* pRawData = memory->data(); // Data ready to be displayed in RGBA format
+\endcode
+
+
+
+
+
 */

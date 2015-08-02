@@ -1,11 +1,11 @@
-Imebra Commercial License Version 2
-===================================
+Imebra Perpetual Commercial License Version 2
+=============================================
 
 DEFINITIONS
 -----------
 
-The Imebra Commercial License will be referred to as "The license" in the remainder
-of this text.
+The Imebra Perpetual Commercial License will be referred to as "The license" in the 
+remainder of this text.
 
 The Imebra Library will be referred to as "Imebra".
 
@@ -16,11 +16,12 @@ as "The product".
 LICENSE GRANT
 -------------
 
-1. This license allows the usage of Imebra by an unlimited number of developers on
-   an unlimited number of CPUs for the development of one major version of one product.
-2. This license allows the distribution of an unlimited numbed of copies of one major
-   version of the product based on Imebra.
-3. The product based on Imebra must add significant and primary functionality to the
+1. This license allows the usage of Imebra by an unlimited number of developers on 
+   an unlimited number of CPUs for the development of any product created by the
+   license holder
+2. This license allows the distribution of an unlimited numbed of copies of all
+   the products based on Imebra developed by the license holder
+3. The products based on Imebra must add significant and primary functionality to the
    functionalities provided by Imebra.
 4. The license holder is allowed to make modifications to the Imebra source code
    but in no event will the original copyright holders of this library be held responsible

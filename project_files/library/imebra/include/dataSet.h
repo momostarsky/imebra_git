@@ -242,6 +242,9 @@ public:
     ///        modality transform if it is specified in the
     ///        dataset.
     ///
+    /// If the dataSet does not contain any modality transform
+    ///  then returns the same image returned by getImage().
+    ///
     /// @param frameNumber The frame number to retrieve.
     ///                    The first frame's id is 0
     /// @return            A pointer to the retrieved
