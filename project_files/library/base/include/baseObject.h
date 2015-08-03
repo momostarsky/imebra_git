@@ -106,7 +106,8 @@ protected:
 ///
 /// When a ptr object is initialized with a pointer
 ///  to a baseObject derived object then it increases by 1
-///  the reference counter of baseObject.\n
+///  the reference counter of baseObject.
+///
 /// When ptr goes out of scope (destroyed) then the
 ///  reference counter of baseObject is decreased by 1,
 ///  and eventually baseObject is destroyed when its
