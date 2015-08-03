@@ -40,6 +40,7 @@ Please note that the file doesn't include the file viewHelper.h.
 #include "dicomCodec.h"
 #include "dicomDir.h"
 #include "dicomDict.h"
+#include "drawBitmap.h"
 #include "image.h"
 #include "waveform.h"
 #include "jpegCodec.h"
