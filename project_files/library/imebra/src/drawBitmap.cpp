@@ -29,9 +29,13 @@ drawBitmap::drawBitmap(ptr<image> sourceImage, ptr<transforms::transformsChain> 
 
 	// Allocate the transforms that obtain an RGB24 image
 	std::wstring initialColorSpace;
+    std::uint32_t highBit = 7;
+    image::bitDepth depth = image::depthU8;
 	if(m_transformsChain->isEmpty())
 	{
 		initialColorSpace = m_image->getColorSpace();
+        highBit = m_image->getHighBit();
+        depth = m_image->getDepth();
 	}
 	else
 	{
@@ -45,23 +49,23 @@ drawBitmap::drawBitmap(ptr<image> sourceImage, ptr<transforms::transformsChain> 
 		m_transformsChain->addTransform(rgbColorTransform);
 	}
 
+    if(highBit != 7 || depth != image::depthU8)
+    {
+        ptr<transforms::transformHighBit> highBitTransform(new transforms::transformHighBit());
+        m_transformsChain->addTransform(highBitTransform);
+    }
+
 	std::uint32_t width, height;
 	m_image->getSize(&width, &height);
-	if(m_transformsChain->isEmpty())
+    if(m_transformsChain->isEmpty())
 	{
 		m_finalImage = m_image;
 	}
 	else
 	{
-		m_finalImage = m_transformsChain->allocateOutputImage(m_image, width, 1);
-	}
-
-	if(m_finalImage->getDepth() != image::depthU8 || m_finalImage->getHighBit() != 7)
-	{
-		m_finalImage = new image;
-		m_finalImage->create(width, 1, image::depthU8, L"RGB", 7);
-		m_transformsChain->addTransform(new transforms::transformHighBit);
-	}
+        m_finalImage = new image;
+        m_finalImage->create(width, 1, image::depthU8, L"RGB", 7);
+    }
 }
 
 

@@ -66,7 +66,7 @@ namespace puntoexe
 		{
             drawBitmapRGB  = 0, ///< Generates a BMP image where each pixel contains 3 bytes (R, G and B)
             drawBitmapBGR  = 1, ///< Generates a BMP image where each pixel contains 3 bytes (B, G and R)
-            drawBitmapARGB = 2, ///< Generates a BMP image where each pixel contains 4 bytes (A, R, G and B)
+            drawBitmapRGBA = 2, ///< Generates a BMP image where each pixel contains 4 bytes (R, G, B and A)
             drawBitmapBGRA = 3  ///< Generates a BMP image where each pixel contains 4 bytes (B, G, R and A)
 		};
 
@@ -195,17 +195,8 @@ namespace puntoexe
 					PUNTOEXE_THROW(drawBitmapExceptionInvalidArea, "Destination area not valid");
 				}
 
-                std::uint32_t destPixelSize((drawBitmapType == drawBitmapARGB || drawBitmapType == drawBitmapBGRA) ? 4 : 3);
+                size_t memorySize(getBitmap<drawBitmapType, rowAlignBytes>(totalWidthPixels, totalHeightPixels, visibleTopLeftX, visibleTopLeftY, visibleBottomRightX, visibleBottomRightY, 0, 0));
 
-                // Calculate the row' size, in bytes
-				///////////////////////////////////////////////////////////
-                std::uint32_t rowSizeBytes = ((visibleBottomRightX - visibleTopLeftX) * destPixelSize + rowAlignBytes - 1) / rowAlignBytes;
-				rowSizeBytes *= rowAlignBytes;
-
-
-				// Allocate the memory for the final bitmap
-				///////////////////////////////////////////////////////////
-				std::uint32_t memorySize(rowSizeBytes * (visibleBottomRightY - visibleTopLeftY));
 				if(reuseMemory == 0)
 				{
 					reuseMemory = memoryPool::getMemoryPool()->getMemory(memorySize);
@@ -255,7 +246,7 @@ namespace puntoexe
 					PUNTOEXE_THROW(drawBitmapExceptionInvalidArea, "Destination area not valid");
 				}
 
-                std::uint32_t destPixelSize((drawBitmapType == drawBitmapARGB || drawBitmapType == drawBitmapBGRA) ? 4 : 3);
+                std::uint32_t destPixelSize((drawBitmapType == drawBitmapRGBA || drawBitmapType == drawBitmapBGRA) ? 4 : 3);
 
                 // Calculate the row' size, in bytes
 				///////////////////////////////////////////////////////////
@@ -457,7 +448,7 @@ namespace puntoexe
 					std::int32_t* pAveragePointer = averagePixels;
 					std::uint32_t counter;
 
-                    if(drawBitmapType == drawBitmapARGB)
+                    if(drawBitmapType == drawBitmapRGBA)
                     {
                         for(std::int32_t scanX (destBitmapWidth); scanX != 0; --scanX)
                         {
