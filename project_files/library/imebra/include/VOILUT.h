@@ -96,6 +96,23 @@ public:
 	///////////////////////////////////////////////////////////
 	std::uint32_t getVOILUTId(std::uint32_t VOILUTNumber);
 
+    /// \brief List of ids of the VOIs and LUTs defined in
+    ///        the dataset.
+    ///
+    /// The list is returned by getVOILUTIds() and each id can
+    ///  be used with getVOILUTDescription() and setVOILUT().
+    ///
+    ///////////////////////////////////////////////////////////
+    typedef std::list<std::uint32_t> voilutIds_t;
+
+    /// \brief Return a list of ids of the VOIs and LUTs
+    ///        defined in the database.
+    ///
+    /// @return a list of ids of the available VOI/LUTs
+    ///
+    ///////////////////////////////////////////////////////////
+    voilutIds_t getVOILUTIds();
+
 	/// \brief Return a description for the VOI or LUT with
 	///         the specified ID.
 	///

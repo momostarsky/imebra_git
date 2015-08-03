@@ -100,6 +100,30 @@ std::uint32_t VOILUT::getVOILUTId(std::uint32_t VOILUTNumber)
 ///////////////////////////////////////////////////////////
 //
 //
+// Retrieve a lisz of IDs of the available VOIs and LUTs.
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+VOILUT::voilutIds_t VOILUT::getVOILUTIds()
+{
+    voilutIds_t returnList;
+    for(std::uint32_t scanIds(0); ; ++scanIds)
+    {
+        std::uint32_t id(getVOILUTId(scanIds));
+        if(id == 0)
+        {
+            return returnList;
+        }
+        returnList.push_back(id);
+    }
+}
+
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
 // Returns the VOILUT description
 //
 //
