@@ -95,7 +95,7 @@ The author can be contacted by email at info@binarno.com or by mail at
 		<exec executable="qmake" failonerror="true" dir="${build_dir_tests}">
                     <arg path="${build_dir}/tests/tests.pro"/>
                     <arg value="-r"/>
-                    <arg value="CONFIG+=Release"/>
+                    <arg value="CONFIG+=Debug"/>
                     </exec>
 		<exec executable="make" failonerror="true" dir="${build_dir_tests}" />
 	</target>
