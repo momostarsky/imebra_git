@@ -11,6 +11,7 @@ $fileHeader$
 #include "../include/stream.h"
 #include "../include/charsetConversion.h"
 #include <sstream>
+#include <errno.h>
 
 namespace puntoexe
 {
@@ -145,7 +146,10 @@ void stream::openFile(const std::wstring& fileName, const int mode)
 #endif
 	if(m_openFile == 0)
 	{
-		PUNTOEXE_THROW(streamExceptionOpen, "stream::openFile failure");
+        long errorCode = errno;
+        std::ostringstream errorMessage;
+        errorMessage << "stream::openFile failure - error code: " << errorCode;
+        PUNTOEXE_THROW(streamExceptionOpen, errorMessage.str());
 	}
 
 	PUNTOEXE_FUNCTION_END();

@@ -199,4 +199,5 @@ SOURCES += \
     ../library/base/src/baseObject.cpp \
     ../library/base/src/charsetConversionIconv.cpp \
     ../library/base/src/charsetConversionICU.cpp \
-    ../library/base/src/charsetConversionWindows.cpp
+    ../library/base/src/charsetConversionWindows.cpp \
+    streamTest.cpp
