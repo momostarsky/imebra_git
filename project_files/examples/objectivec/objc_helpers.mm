@@ -2,21 +2,17 @@
 
 std::wstring NSStringToStringW ( NSString* str )
 {
-    const char* wstr = [str cStringUsingEncoding:NSUTF32LittleEndianStringEncoding];
-    if(wstr == 0)
-    {
-        return L"";
-    }
-    return std::wstring((wchar_t*)wstr);
+    NSStringEncoding pEncode    =   CFStringConvertEncodingToNSStringEncoding ( kCFStringEncodingUTF32LE );   
+    NSData* pSData              =   [ str dataUsingEncoding : pEncode ];    
+    return std::wstring ( (wchar_t*) [ pSData bytes ], [ pSData length] / sizeof ( wchar_t ) );   
 }
 
 
 NSString* StringWToNSString ( const std::wstring& str )
 {
-    NSString* pString = [[NSString alloc] initWithBytes:str.data()
-            length:str.size() * sizeof(wchar_t)
-          encoding:NSUTF32LittleEndianStringEncoding];
-    return [pString autorelease];
+    NSString* pString = [ [ NSString alloc ]    
+                        initWithBytes : (char*)str.data()   
+                               length : Str.size() * sizeof(wchar_t)   
+                             encoding : CFStringConvertEncodingToNSStringEncoding ( kCFStringEncodingUTF32LE ) ];   
+    return pString;   
 }
-
-
