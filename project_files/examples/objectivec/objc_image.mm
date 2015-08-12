@@ -8,11 +8,10 @@
  */
 
 #include "../../library/imebra/include/imebra.h"
+
 #import "objc_dataset.h"
 #import "objc_image.h"
 #import "objc_helpers.h"
-
-
 
 @implementation ImebraImage
 
@@ -39,58 +38,52 @@
 }
 
 #ifdef TARGET_OS_IPHONE
-- (UIImage*) getUIImage
+- (UIImage*) getImage
+#else
+- (NSImage*) getImage
+#endif
 {
     imbxUint32 width, height;
     m_image->getSize(&width, &height);
     imbxUint32 rowSize, channelPixelSize, channelsNumber;
-    puntoexe::ptr<puntoexe::imebra::handlers::dataHandlerNumericBase> dataHandler = m_image->getDataHandler(false, &rowSize, &channelPixelSize, &channelsNumber);
-    CGDataProviderRef provider = CGDataProviderCreateWithData(NULL,
+
+    puntoexe::imebra::drawBitmap drawBitmap(m_image, 0);
+    size_t memorySize = drawBitmap.getBitmap<puntoexe::imebra::drawBitmapRGBA, 4>(width, height, 0, 0, width, height, 0, 0);
+
+    puntoexe::ptr<puntoexe::memory> memory(puntoexe::memoryPool::getMemoryPool()->getMemory(memorySize));
+    drawBitmap.getBitmap<puntoexe::imebra::drawBitmapRGBA, 4>(width, height, 0, 0, width, height, memory->data(), memorySize);
+
+    CGDataProviderRef dataProviderRef = CGDataProviderCreateWithData(0,
                                                                 dataHandler->getMemoryBuffer(),
                                                                 width * height * 4,
-                                                                NULL);
+                                                                0);
 
     CGColorSpaceRef colorSpaceRef = CGColorSpaceCreateDeviceRGB();
-    CGBitmapInfo bitmapInfo = kCGBitmapByteOrderDefault;
+    CGBitmapInfo bitmapInfo = kCGBitmapByteOrder32Big | kCGImageAlphaPremultipliedLast;
     CGColorRenderingIntent renderingIntent = kCGRenderingIntentDefault;
-    CGImageRef imageRef = CGImageCreate(width,
+
+    CGImageRef imageRef = CGImageCreate(
+                width, height,
+                8, 32,
+                width * 4,
+                colorSpaceRef, bitmapInfo, dataProviderRef, NULL, YES, renderingIntent);
+
+
+    imageRef = CGImageCreate(width,
                                     height,
                                     8,
                                     32,
-                                    rowSize,colorSpaceRef,
+                                    rowSize, colorSpaceRef,
                                     bitmapInfo,
                                     provider, NULL, NO, renderingIntent);
+#ifdef TARGET_OS_IPHONE
 
     return [[[UIImage alloc] imageWithCGImage:imageRef] autorelease];
-}
-
+    }
 #else
-
-- (NSImage*) GetNSImage
-{
-    imbxUint32 width, height;
-    m_image->getSize(&width, &height);
-    imbxUint32 rowSize, channelPixelSize, channelsNumber;
-    puntoexe::ptr<puntoexe::imebra::handlers::dataHandlerNumericBase> dataHandler = m_image->getDataHandler(false, &rowSize, &channelPixelSize, &channelsNumber);
-    CGDataProviderRef provider = CGDataProviderCreateWithData(NULL,
-                                                                dataHandler->getMemoryBuffer(),
-                                                                width * height * 4,
-                                                                NULL);
-
-    CGColorSpaceRef colorSpaceRef = CGColorSpaceCreateDeviceRGB();
-    CGBitmapInfo bitmapInfo = kCGBitmapByteOrderDefault;
-    CGColorRenderingIntent renderingIntent = kCGRenderingIntentDefault;
-    CGImageRef imageRef = CGImageCreate(width,
-                                    height,
-                                    8,
-                                    32,
-                                    rowSize,colorSpaceRef,
-                                    bitmapInfo,
-                                    provider, NULL, NO, renderingIntent);
-
     return [[[NSImage alloc] initWithCGImage:imageRef] autorelease];
-
-}
 #endif
+}
+
 
 @end

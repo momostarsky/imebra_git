@@ -71,7 +71,7 @@ void transformHandlers::runTransform(
 		inputMinValue -= (std::int32_t)(inputNumValues >> 1);
 	}
 
-	ptr<handlers::dataHandlerNumericBase> outputHandler(outputImage->getDataHandler(false, &rowSize, &numPixels, &channels));
+    ptr<handlers::dataHandlerNumericBase> outputHandler(outputImage->getDataHandler(true, &rowSize, &numPixels, &channels));
 	ptr<palette> outputPalette(outputImage->getPalette());
 	std::wstring outputColorSpace(outputImage->getColorSpace());
 	std::uint32_t outputHighBit(outputImage->getHighBit());

@@ -5,8 +5,10 @@ CONFIG += objective_c
 
 unix:LIBS += -lpthread -lobjc -lgnustep-base
 
-QMAKE_CFLAGS += -I/usr/include/GNUstep -fconstant-string-class=NSConstantString -D_NATIVE_OBJC_EXCEPTIONS
-QMAKE_CXXFLAGS += -I/usr/include/GNUstep -fconstant-string-class=NSConstantString -D_NATIVE_OBJC_EXCEPTIONS
+QMAKE_CFLAGS += -std=c++0x -I/home/usr/include/GNUstep -fconstant-string-class=NSConstantString -D_NATIVE_OBJC_EXCEPTIONS
+QMAKE_CXXFLAGS += -I/usr/include/GNUstep -D_NATIVE_OBJC_EXCEPTIONS
+QMAKE_CXXFLAGS += -std=c++0x -Wall -Wextra -pedantic
+
 SOURCES += \
     ../../library/imebra/src/YBRPARTIALToRGB.cpp \
     ../../library/imebra/src/YBRFULLToRGB.cpp \
@@ -62,7 +64,6 @@ SOURCES += \
     ../../library/imebra/src/codec.cpp \
     ../../library/imebra/src/charsetsList.cpp \
     ../../library/imebra/src/buffer.cpp \
-    ../../library/base/src/thread.cpp \
     ../../library/base/src/streamWriter.cpp \
     ../../library/base/src/streamReader.cpp \
     ../../library/base/src/streamController.cpp \
@@ -84,7 +85,6 @@ SOURCES += \
     objc_image.mm
 
 HEADERS += \
-    ../../library/base/include/thread.h \
     ../../library/base/include/streamWriter.h \
     ../../library/base/include/streamReader.h \
     ../../library/base/include/streamController.h \

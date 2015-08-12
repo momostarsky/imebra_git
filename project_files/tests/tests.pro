@@ -4,9 +4,8 @@ QT -= core gui
 
 CONFIG += warn_on
 
-unix:LIBS = -lgcov
 windows:DEFINES += _WIN32_WINNT=0x0501 WINVER=0x0501 NTDDI_VERSION=0x05010000
-LIBS += -lgtest -lpthread
+LIBS += -lgtest -lpthread -lgcov
 
 QMAKE_CXXFLAGS += -std=c++0x -Wall -Wextra -pedantic --coverage
 

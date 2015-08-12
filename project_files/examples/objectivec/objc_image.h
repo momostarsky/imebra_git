@@ -22,9 +22,9 @@
 - (long) getHeight;
 
 #ifdef TARGET_OS_IPHONE
-- (UIImage*) getUIImage;
+- (UIImage*) getImage;
 #else
-- (NSImage*) GetNSImage;
+- (NSImage*) getImage;
 #endif
 
 @end

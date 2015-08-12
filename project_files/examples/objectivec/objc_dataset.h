@@ -43,5 +43,6 @@
 
 - (ImebraImage*) getImage:(imbxUint32)frameNumber;
 - (ImebraImage*) getModalityImage:(imbxUint32)frameNumber;
+
 @end
 

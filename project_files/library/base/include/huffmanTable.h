@@ -145,6 +145,12 @@ public:
 	///////////////////////////////////////////////////////////
 	void removeLastCode();
 
+    void setValuesPerLength(std::uint32_t length, std::uint32_t numValues);
+    void addOrderedValue(std::uint32_t index, std::uint32_t value);
+
+    std::uint32_t getValuesPerLength(std::uint32_t length);
+    std::uint32_t getOrderedValue(std::uint32_t index);
+
 	//@}
 
 
@@ -232,7 +238,7 @@ protected:
 	// Values' frequency
 	std::vector<valueObject> m_valuesFreq;
 	
-public:
+private:
     // Used to calculate the huffman codes
 	std::vector<std::uint32_t> m_orderedValues;
     std::uint32_t m_valuesPerLength[128];

@@ -179,14 +179,9 @@ int main(int argc, char* argv[])
                 }
                 else
                 {
-                    // Run the transform on the first image
-                    ///////////////////////////////////////
-                    ptr<image> temporaryImage = chain->allocateOutputImage(dataSetImage, width, height);
-                    chain->runTransform(dataSetImage, 0, 0, width, height, temporaryImage, 0, 0);
-
                     // Now find the optimal VOILUT
                     //////////////////////////////
-                    presentationVOILUT->applyOptimalVOI(temporaryImage, 0, 0, width, height);
+                    presentationVOILUT->applyOptimalVOI(dataSetImage, 0, 0, width, height);
                 }
                 chain->addTransform(presentationVOILUT);
             }
@@ -223,7 +218,6 @@ int main(int argc, char* argv[])
                 {
                     dataSetImage = loadedDataSet->getModalityImage(frameNumber);
                 }
-
 
                 if(chain->isEmpty() && dataSetImage->getDepth() != finalImage->getDepth() && dataSetImage->getHighBit() != finalImage->getHighBit())
                 {

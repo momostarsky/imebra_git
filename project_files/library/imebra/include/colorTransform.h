@@ -92,12 +92,12 @@ public:
 	///////////////////////////////////////////////////////////
 	virtual ptr<colorTransform> createColorTransform()=0;
 
-        virtual ptr<image> allocateOutputImage(ptr<image> pInputImage, std::uint32_t width, std::uint32_t height);
+    virtual ptr<image> allocateOutputImage(ptr<image> pInputImage, std::uint32_t width, std::uint32_t height);
 
 protected:
 	// Performs the color transform
 	///////////////////////////////////////////////////////////
-        void checkColorSpaces(const std::wstring& inputHandlerColorSpace, const std::wstring& outputHandlerColorSpace);
+    void checkColorSpaces(const std::wstring& inputHandlerColorSpace, const std::wstring& outputHandlerColorSpace);
 
 };
 

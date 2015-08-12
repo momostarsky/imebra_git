@@ -135,6 +135,37 @@ void huffmanTable::removeLastCode()
 ///////////////////////////////////////////////////////////
 //
 //
+// Set the number of values for a specific length
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+void huffmanTable::setValuesPerLength(std::uint32_t length, std::uint32_t numValues)
+{
+    m_valuesPerLength[length] = numValues;
+}
+
+void huffmanTable::addOrderedValue(std::uint32_t index, std::uint32_t value)
+{
+    m_orderedValues[index] = value;
+}
+
+std::uint32_t huffmanTable::getValuesPerLength(std::uint32_t length)
+{
+    return m_valuesPerLength[length];
+}
+
+std::uint32_t huffmanTable::getOrderedValue(std::uint32_t index)
+{
+    return m_orderedValues[index];
+}
+
+
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
 // Calculate the codes length
 //
 //

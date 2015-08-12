@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<project name="Imebra" default="ZIP" basedir=".">
+<project name="Imebra" default="ZIP" basedir="." xmlns:if="ant:if" xmlns:unless="ant:unless">
 
 	<!-- This is an ant build file" -->
 
@@ -70,8 +70,8 @@ If you want to use Imebra commercially then you have to buy the commercial
  license available at http://imebra.com
 
 After you buy the commercial license then you can use Imebra according
- to the terms described in the Imebra Commercial License Version 1.
-A copy of the Imebra Commercial License Version 1 is available in the
+ to the terms described in the Imebra Commercial License Version 2.
+A copy of the Imebra Commercial License Version 2 is available in the
  documentation pages.
 
 Imebra is available at http://imebra.com
@@ -100,11 +100,41 @@ The author can be contacted by email at info@binarno.com or by mail at
 		<exec executable="make" failonerror="true" dir="${build_dir_tests}" />
 	</target>
 
+        <target name="clear_coverage" depends="build_test_cases" if="coverage.set" description="Initializes the coverage data">
+            <exec executable="lcov" dir="${build_dir_tests}" resolveexecutable="true" failonerror="true">
+                <arg value="--zerocounters" />
+                <arg value="--directory" />
+                <arg path="${build_dir_tests}" />
+            </exec>
+            <exec executable="lcov" dir="${build_dir_tests}" resolveexecutable="true" failonerror="true">
+                <arg value="--capture" />
+                <arg value="--initial" />
+                <arg value="--directory" />
+                <arg path="${build_dir_tests}" />
+                <arg value="--output-file" />
+                <arg path="${build_dir_tests}/test.info" />
+            </exec>
+        </target>
+
 	<!-- Run the test cases posix -->
-	<target name="run_test_cases" depends="build_test_cases" description="Run the test cases">
-
+        <target name="run_test_cases" depends="build_test_cases, clear_coverage" description="Run the test cases">
             <exec executable="${build_dir_tests}/tests" dir="${build_dir_tests}" resolveexecutable="true" failonerror="true" />
+        </target>
 
+        <target name="collect_coverage" depends="run_test_cases" if="coverage.set" description="Collect the coverage data">
+            <exec executable="lcov" dir="${build_dir_tests}" resolveexecutable="true" failonerror="true">
+                <arg value="--capture" />
+                <arg value="--no-checksum" />
+                <arg value="--directory" />
+                <arg path="${build_dir_tests}" />
+                <arg value="--output-file" />
+                <arg path="${build_dir_tests}/test.info" />
+            </exec>
+            <exec executable="genhtml" dir="${build_dir_tests}" resolveexecutable="true" failonerror="true">
+                <arg value="--output-directory" />
+                <arg path="${build_dir_tests}/coverage" />
+                <arg path="${build_dir_tests}/test.info" />
+            </exec>
         </target>
 
 	<!-- Build the HTML documentation -->
@@ -122,7 +152,7 @@ The author can be contacted by email at info@binarno.com or by mail at
 	</target>
 
 	<!-- Build -->
-	<target name="make_distribution" depends="run_test_cases, HTML">
+        <target name="make_distribution" depends="run_test_cases, collect_coverage, HTML">
 		<property name="distribution" value="${build_dir}/distribution" />
 		<mkdir dir="${distribution}" />
                 <property name="librarySource" value="${distribution}/library" />
@@ -133,6 +163,13 @@ The author can be contacted by email at info@binarno.com or by mail at
 		<mkdir dir="${examples}/dicom2jpeg" />
 		<mkdir dir="${examples}/dicomdirItems" />
 		<mkdir dir="${examples}/changeTransferSyntax" />
+
+                <property name="reports" value="${distribution}/reports" />
+                <property name="coverage" value="${reports}/coverage" />
+                <mkdir dir="${coverage}" if:set="coverage.set"/>
+                <copy todir="${coverage}" failonerror="false" if:set="coverage.set">
+                    <fileset dir="${build_dir_tests}/coverage" />
+                </copy>
 
 		<property name="tests" value="${distribution}/tests" />
 		<mkdir dir="${tests}" />
@@ -157,14 +194,12 @@ The author can be contacted by email at info@binarno.com or by mail at
 			<fileset dir="${build_dir}/tests" />
 		</copy>
 		<copy file="${build_dir}/docs/gpl.txt" tofile="${distribution}/license_gpl.txt" />
-        <copy file="${build_dir}/docs/commercial_license.txt" tofile="${distribution}/license_commercial.txt" />
+                <copy file="${build_dir}/docs/commercial_license.txt" tofile="${distribution}/license_commercial.txt" />
 	</target>
-
 
 	<!-- Make a zip file and a gzip file of the build -->
 	<target name="ZIP" depends="make_distribution" description ="Compress the build">
 		<zip basedir="${build_dir}/distribution" destfile="${builds}/imebra_${fileVersion}.zip" />
 	</target>
-
 
 </project>

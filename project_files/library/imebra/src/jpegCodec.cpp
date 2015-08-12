@@ -684,10 +684,10 @@ void jpegCodec::resetInternal(bool bCompression, quality compQuality)
 			std::uint32_t valueIndex = 0;
 			for(int scanLength = 0; scanLength<16; ++scanLength)
 			{
-				pHuffman->m_valuesPerLength[scanLength+1]=(std::uint32_t)pLengthTable[scanLength];
-				for(std::uint32_t scanValues = 0; scanValues<pHuffman->m_valuesPerLength[scanLength+1]; ++scanValues)
+                pHuffman->setValuesPerLength(scanLength + 1, (std::uint32_t)pLengthTable[scanLength]);
+                for(std::uint32_t scanValues(0); scanValues < pLengthTable[scanLength]; ++scanValues)
 				{
-					pHuffman->m_orderedValues[valueIndex]=pValuesTable[valueIndex];
+                    pHuffman->addOrderedValue(valueIndex, pValuesTable[valueIndex]);
 					++valueIndex;
 				}
 			}
@@ -1348,7 +1348,7 @@ ptr<image> jpegCodec::getImage(ptr<dataSet> sourceDataSet, ptr<streamReader> pSt
 		}
 	}
 
-	ptr<image> returnImage(new image);
+    ptr<image> returnImage(new image());
 	copyJpegChannelsToImage(returnImage, b2complement, colorSpace);
 
 	return returnImage;
@@ -3100,7 +3100,7 @@ void tagDHT::writeTag(streamWriter* pStream, jpegCodec* pCodec)
 					tagLength+=17;
 					for(int scanLength = 0; scanLength < 16;)
 					{
-						tagLength += (std::uint16_t)(pHuffman->m_valuesPerLength[++scanLength]);
+                        tagLength += (std::uint16_t)(pHuffman->getValuesPerLength(++scanLength));
 					}
 					continue;
 				}
@@ -3118,7 +3118,7 @@ void tagDHT::writeTag(streamWriter* pStream, jpegCodec* pCodec)
 				int scanLength;
 				for(scanLength=0; scanLength<16;)
 				{
-					byte=(std::uint8_t)(pHuffman->m_valuesPerLength[++scanLength]);
+                    byte=(std::uint8_t)(pHuffman->getValuesPerLength(++scanLength));
 					pStream->write(&byte, 1);
 				}
 
@@ -3127,9 +3127,9 @@ void tagDHT::writeTag(streamWriter* pStream, jpegCodec* pCodec)
 				std::uint32_t valueIndex = 0;
 				for(scanLength = 0; scanLength < 16; ++scanLength)
 				{
-					for(std::uint32_t scanValues = 0; scanValues<pHuffman->m_valuesPerLength[scanLength+1]; ++scanValues)
+                    for(std::uint32_t scanValues = 0; scanValues < pHuffman->getValuesPerLength(scanLength+1); ++scanValues)
 					{
-						byte=(std::uint8_t)(pHuffman->m_orderedValues[valueIndex++]);
+                        byte=(std::uint8_t)(pHuffman->getOrderedValue(valueIndex++));
 						pStream->write(&byte, 1);
 					}
 				}
@@ -3191,7 +3191,7 @@ void tagDHT::readTag(streamReader* pStream, jpegCodec* pCodec, std::uint8_t /* t
 		for(scanLength=0; scanLength<16L; )
 		{
 			pStream->read(&byte, 1);
-			pHuffman->m_valuesPerLength[++scanLength]=(std::uint32_t)byte;
+            pHuffman->setValuesPerLength(++scanLength, (std::uint32_t)byte);
 			--tagLength;
 		}
 
@@ -3203,10 +3203,10 @@ void tagDHT::readTag(streamReader* pStream, jpegCodec* pCodec, std::uint8_t /* t
 		/////////////////////////////////////////////////////////////////
 		for(scanLength = 0; scanLength < 16; ++scanLength)
 		{
-			for(std::uint32_t scanValues = 0; scanValues < pHuffman->m_valuesPerLength[scanLength+1]; ++scanValues)
+            for(std::uint32_t scanValues = 0; scanValues < pHuffman->getValuesPerLength(scanLength+1); ++scanValues)
 			{
 				pStream->read(&byte, 1);
-				pHuffman->m_orderedValues[valueIndex++]=(std::uint32_t)byte;
+                pHuffman->addOrderedValue(valueIndex++, (std::uint32_t)byte);
 				--tagLength;
 			}
 		}
