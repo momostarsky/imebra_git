@@ -82,6 +82,13 @@ public:
 
 	void openFile(const std::wstring& fileName, const int mode);
 
+    /// \brief Closes the stream.
+    ///
+    /// This method is called automatically by the destructor.
+    ///
+    ///////////////////////////////////////////////////////////
+    void close();
+
 	///////////////////////////////////////////////////////////
 	//
 	// Virtual stream's functions

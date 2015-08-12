@@ -41,10 +41,11 @@ namespace puntoexe
 ///////////////////////////////////////////////////////////
 stream::~stream()
 {
-	if(m_openFile != 0)
-	{
-		::fclose(m_openFile);
-	}
+    if(m_openFile != 0)
+    {
+        ::fclose(m_openFile);
+        m_openFile = 0;
+    }
 }
 
 
@@ -86,14 +87,8 @@ void stream::openFile(const std::string& fileName, const int mode)
 void stream::openFile(const std::wstring& fileName, const int mode)
 {
 	PUNTOEXE_FUNCTION_START(L"stream::openFile (unicode)");
-	if(m_openFile)
-	{
-		if(::fclose(m_openFile)!=0)
-		{
-			PUNTOEXE_THROW(streamExceptionClose, "Error while closing the file");
-		}
-		m_openFile = 0;
-	}
+
+    close();
 
 	std::wstring strMode;
 
@@ -153,6 +148,22 @@ void stream::openFile(const std::wstring& fileName, const int mode)
 	}
 
 	PUNTOEXE_FUNCTION_END();
+}
+
+void stream::close()
+{
+    PUNTOEXE_FUNCTION_START(L"stream::close");
+
+    if(m_openFile != 0)
+    {
+        if(::fclose(m_openFile) != 0)
+        {
+            PUNTOEXE_THROW(streamExceptionClose, "Error while closing the file");
+        }
+        m_openFile = 0;
+    }
+
+    PUNTOEXE_FUNCTION_END();
 }
 
 
