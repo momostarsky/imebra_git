@@ -171,7 +171,7 @@ ptr<image> transformsChain::allocateOutputImage(ptr<image> pInputImage, std::uin
 {
 	if(isEmpty())
 	{
-		ptr<image> newImage(new image);
+        ptr<image> newImage(new image());
 		newImage->create(width, height, pInputImage->getDepth(), pInputImage->getColorSpace(), pInputImage->getHighBit());
 		return newImage;
 	}
