@@ -1,0 +1,6 @@
+tests:
+  - ant -Dcoverage.set=1
+
+hooks:
+  post_worker: "cp build/*.zip $HOME/results/$TDDIUM_SESSION_ID/session"
+
