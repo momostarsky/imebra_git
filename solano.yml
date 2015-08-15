@@ -5,7 +5,12 @@ tool_config:
     version: "4.8"
 
 tests:
-  - ant
+  - export BUILD_ID=$(date +%Y%m%d-%H%M%S) &&
+    export BUILD_BRANCH="$TDDIUM_CURRENT_BRANCH" &&
+    export BUILD_COMMIT="$TDDIUM_CURRENT_COMMIT" &&
+    export BUILD_BRANCH=$(echo $BUILD_BRANCH | sed 's/default/unstable/g') &&
+    export BUILD_BRANCH=$(echo $BUILD_BRANCH | sed 's/DEFAULT/unstable/g') &&
+    ant
 
 hooks:
   post_worker: "cp build/*.zip $HOME/results/$TDDIUM_SESSION_ID/session"
