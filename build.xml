@@ -20,8 +20,8 @@
 		<mkdir dir="${builds}" />
 		<property name="build_dir" value="${builds}/temp_build" />
 		<mkdir dir="${build_dir}" />
-				<property name="build_dir_applications" value="${build_dir}/applications" />
-				<mkdir dir="${build_dir_applications}" />
+                <property name="build_dir_applications" value="${build_dir}/applications" />
+                <mkdir dir="${build_dir_applications}" />
 		<property name="build_dir_tests" value="${build_dir_applications}/tests" />
 		<mkdir dir="${build_dir_tests}" />
 		<property name="build_dir_html_doc" value="${builds}/imebra_${fileVersion}_html_doc" />
@@ -92,11 +92,24 @@ The author can be contacted by email at info@binarno.com or by mail at
 
 	<!-- Build the test cases -->
 	<target name="build_test_cases" depends="replace_version" description="Build the Imebra test cases">
-		<exec executable="qmake" failonerror="true" dir="${build_dir_tests}">
-                    <arg path="${build_dir}/tests/tests.pro"/>
-                    <arg value="-r"/>
-                    <arg value="CONFIG=debug"/>
-                    </exec>
+		<property name="gtest_source" value="/usr/src/gtest" />
+                <mkdir dir="${build_dir_tests}/gtest" />
+                <copy todir="${build_dir_tests}/gtest">
+                        <fileset dir="${gtest_source}" />
+                </copy>
+                <delete file="${build_dir_tests}/gtest/CMakeCache.txt" failonerror="false" />
+                <delete file="${build_dir_tests}/CMakeCache.txt" failonerror="false" />
+		<exec executable="cmake" failonerror="true" dir="${build_dir_tests}">
+                    <arg value="--verbose"/>
+                    <arg path="${build_dir_tests}/gtest"/>
+		</exec>
+		<exec executable="make" failonerror="true" dir="${build_dir_tests}" />
+                <delete file="${build_dir}/tests/CMakeCache.txt" failonerror="false" />
+                <delete file="${build_dir_tests}/CMakeCache.txt" failonerror="false" />
+                <exec executable="cmake" failonerror="true" dir="${build_dir_tests}">
+                    <arg value="--verbose"/>
+                    <arg path="${build_dir}/tests"/>
+                </exec>
 		<exec executable="make" failonerror="true" dir="${build_dir_tests}" />
 	</target>
 
@@ -118,7 +131,7 @@ The author can be contacted by email at info@binarno.com or by mail at
 
 	<!-- Run the test cases posix -->
         <target name="run_test_cases" depends="build_test_cases, clear_coverage" description="Run the test cases">
-            <exec executable="${build_dir_tests}/tests" dir="${build_dir_tests}" resolveexecutable="true" failonerror="true" />
+            <exec executable="${build_dir_tests}/ImebraTests" dir="${build_dir_tests}" resolveexecutable="true" failonerror="true" />
         </target>
 
         <target name="collect_coverage" depends="run_test_cases" if="coverage.set" description="Collect the coverage data">
