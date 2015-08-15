@@ -181,7 +181,7 @@ add_executable(ImebraTests
     ../library/base/src/charsetConversionWindows.cpp
 )
 
-find_library(gtest_library NAMES gtest PATHS . ./gtest)
+find_library(gtest_library NAMES gtest PATHS ${CMAKE_BINARY_DIR} ${CMAKE_BINARY_DIR}/gtest)
 
 target_link_libraries(ImebraTests ${gtest_library} pthread gcov)
 
