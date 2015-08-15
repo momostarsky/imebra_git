@@ -5,7 +5,7 @@ tool_config:
     version: "4.8"
 
 tests:
-  - ant -Dcoverage.set=1
+  - ant
 
 hooks:
   post_worker: "cp build/*.zip $HOME/results/$TDDIUM_SESSION_ID/session"
