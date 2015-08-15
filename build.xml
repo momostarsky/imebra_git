@@ -101,6 +101,7 @@ The author can be contacted by email at info@binarno.com or by mail at
                 <delete file="${build_dir_tests}/CMakeCache.txt" failonerror="false" />
 		<exec executable="cmake" failonerror="true" dir="${build_dir_tests}">
                     <arg value="--verbose"/>
+                    <arg value="-DCMAKE_BUILD_TYPE=DEBUG" />
                     <arg path="${build_dir_tests}/gtest"/>
 		</exec>
 		<exec executable="make" failonerror="true" dir="${build_dir_tests}" />
@@ -109,6 +110,7 @@ The author can be contacted by email at info@binarno.com or by mail at
                 <exec executable="cmake" failonerror="true" dir="${build_dir_tests}">
                     <arg value="--verbose"/>
                     <arg path="${build_dir}/tests"/>
+                    <arg value="-DCMAKE_BUILD_TYPE=DEBUG" />
                 </exec>
 		<exec executable="make" failonerror="true" dir="${build_dir_tests}" />
 	</target>
