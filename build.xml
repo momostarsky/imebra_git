@@ -178,6 +178,7 @@ The author can be contacted by email at info@binarno.com or by mail at
 		<mkdir dir="${examples}/dicom2jpeg" />
 		<mkdir dir="${examples}/dicomdirItems" />
 		<mkdir dir="${examples}/changeTransferSyntax" />
+                <mkdir dir="${examples}/objectivec" />
 
                 <property name="reports" value="${distribution}/reports" />
                 <property name="coverage" value="${reports}/coverage" />
@@ -205,7 +206,10 @@ The author can be contacted by email at info@binarno.com or by mail at
 		<copy todir="${examples}/changeTransferSyntax">
 			<fileset dir="${build_dir}/examples/changeTransferSyntax" />
 		</copy>
-		<copy todir="${tests}">
+                <copy todir="${examples}/objectivec">
+                        <fileset dir="${build_dir}/examples/objectivec" />
+                </copy>
+                <copy todir="${tests}">
 			<fileset dir="${build_dir}/tests" />
 		</copy>
 		<copy file="${build_dir}/docs/gpl.txt" tofile="${distribution}/license_gpl.txt" />
