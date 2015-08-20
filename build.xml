@@ -121,14 +121,6 @@ The author can be contacted by email at info@binarno.com or by mail at
                 <arg value="--directory" />
                 <arg path="${build_dir_tests}" />
             </exec>
-            <exec executable="lcov" dir="${build_dir_tests}" resolveexecutable="true" failonerror="true">
-                <arg value="--capture" />
-                <arg value="--initial" />
-                <arg value="--directory" />
-                <arg path="${build_dir_tests}" />
-                <arg value="--output-file" />
-                <arg path="${build_dir_tests}/test.info" />
-            </exec>
         </target>
 
 	<!-- Run the test cases posix -->
