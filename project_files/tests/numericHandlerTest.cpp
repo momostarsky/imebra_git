@@ -208,25 +208,84 @@ TEST(numericHandlerTest, interleavedCopy)
 
 TEST(numericHandlerTest, stringConversion)
 {
-	ptr<memory> handlerBuffer0(new memory);
-	ptr<handlers::dataHandlerNumeric<std::int32_t> > testHandler0(new handlers::dataHandlerNumeric<std::int32_t>);
-	testHandler0->parseBuffer(handlerBuffer0);
-	testHandler0->setSize(1);
+    {
+        ptr<memory> handlerBuffer0(new memory);
+        ptr<handlers::dataHandlerNumeric<std::int32_t> > testHandler0(new handlers::dataHandlerNumeric<std::int32_t>);
+        testHandler0->parseBuffer(handlerBuffer0);
+        testHandler0->setSize(2);
 
-	testHandler0->setString(0, "13");
-    EXPECT_EQ(13, testHandler0->getSignedLong(0));
-	testHandler0->setString(0, "45.7");
-    EXPECT_EQ(45, testHandler0->getSignedLong(0));
+        testHandler0->setUnicodeString(0, L"1300000000");
+        testHandler0->setString(1, "14");
+        EXPECT_EQ(1300000000, testHandler0->getSignedLong(0));
+        EXPECT_EQ(14, testHandler0->getSignedLong(1));
+        EXPECT_EQ(L"1300000000", testHandler0->getUnicodeString(0));
+        EXPECT_EQ("1300000000", testHandler0->getString(0));
+        EXPECT_EQ(L"14", testHandler0->getUnicodeString(1));
+        EXPECT_EQ("14", testHandler0->getString(1));
 
-	ptr<memory> handlerBuffer1(new memory);
-	ptr<handlers::dataHandlerNumeric<double> > testHandler1(new handlers::dataHandlerNumeric<double>);
-	testHandler1->parseBuffer(handlerBuffer1);
-	testHandler1->setSize(1);
+        testHandler0->setUnicodeString(0, L"45.7");
+        EXPECT_EQ(45, testHandler0->getSignedLong(0));
+    }
 
-	testHandler1->setString(0, "13");
-    EXPECT_EQ(13, testHandler1->getSignedLong(0));
-	testHandler1->setString(0, "45.7");
-    EXPECT_FLOAT_EQ(45.7, testHandler1->getDouble(0));
+    {
+        ptr<memory> handlerBuffer1(new memory);
+        ptr<handlers::dataHandlerNumeric<double> > testHandler1(new handlers::dataHandlerNumeric<double>);
+        testHandler1->parseBuffer(handlerBuffer1);
+        testHandler1->setSize(2);
+
+        testHandler1->setUnicodeString(0, L"13");
+        testHandler1->setString(1, "14");
+        EXPECT_FLOAT_EQ(13, testHandler1->getSignedLong(0));
+        EXPECT_FLOAT_EQ(14, testHandler1->getSignedLong(1));
+        EXPECT_EQ(L"13", testHandler1->getUnicodeString(0));
+        EXPECT_EQ(L"14", testHandler1->getUnicodeString(1));
+        testHandler1->setUnicodeString(0, L"45.7");
+        testHandler1->setString(1, "46.7");
+        EXPECT_FLOAT_EQ(45.7, testHandler1->getDouble(0));
+        EXPECT_FLOAT_EQ(46.7, testHandler1->getDouble(1));
+        EXPECT_EQ(L"45.7", testHandler1->getUnicodeString(0));
+        EXPECT_EQ(L"46.7", testHandler1->getUnicodeString(1));
+    }
+
+    {
+        ptr<memory> handlerBuffer2(new memory);
+        ptr<handlers::dataHandlerNumeric<std::uint8_t> > testHandler2(new handlers::dataHandlerNumeric<std::uint8_t>);
+        testHandler2->parseBuffer(handlerBuffer2);
+        testHandler2->setSize(2);
+
+        testHandler2->setUnicodeString(0, L"240");
+        testHandler2->setString(1, "14");
+        EXPECT_FLOAT_EQ(240, testHandler2->getSignedLong(0));
+        EXPECT_FLOAT_EQ(14, testHandler2->getSignedLong(1));
+        EXPECT_EQ(L"240", testHandler2->getUnicodeString(0));
+        EXPECT_EQ(L"14", testHandler2->getUnicodeString(1));
+        testHandler2->setUnicodeString(0, L"45.7");
+        testHandler2->setString(1, "46.7");
+        EXPECT_FLOAT_EQ(45, testHandler2->getDouble(0));
+        EXPECT_FLOAT_EQ(46, testHandler2->getDouble(1));
+        EXPECT_EQ(L"45", testHandler2->getUnicodeString(0));
+        EXPECT_EQ(L"46", testHandler2->getUnicodeString(1));
+    }
+
+    {
+        ptr<memory> handlerBuffer2(new memory);
+        ptr<handlers::dataHandlerNumeric<std::int8_t> > testHandler2(new handlers::dataHandlerNumeric<std::int8_t>);
+        testHandler2->parseBuffer(handlerBuffer2);
+        testHandler2->setSize(2);
+
+        testHandler2->setUnicodeString(0, L"-2");
+        testHandler2->setString(1, "14");
+        EXPECT_FLOAT_EQ(-2, testHandler2->getSignedLong(0));
+        EXPECT_FLOAT_EQ(14, testHandler2->getSignedLong(1));
+        EXPECT_EQ(L"-2", testHandler2->getUnicodeString(0));
+        EXPECT_EQ(L"14", testHandler2->getUnicodeString(1));
+        testHandler2->setUnicodeString(0, L"45.7");
+        testHandler2->setString(1, "46.7");
+        EXPECT_FLOAT_EQ(45, testHandler2->getDouble(0));
+        EXPECT_FLOAT_EQ(46, testHandler2->getDouble(1));
+        EXPECT_EQ(L"45", testHandler2->getUnicodeString(0));
+        EXPECT_EQ(L"46", testHandler2->getUnicodeString(1));
+    }
 }
 
 

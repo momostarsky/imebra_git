@@ -12,6 +12,7 @@ $fileHeader$
 
 #include <sstream>
 #include <iomanip>
+#include <type_traits>
 
 #include "../../base/include/exception.h"
 #include "dataHandler.h"
@@ -249,7 +250,17 @@ public:
 		PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::getString");
 
 		std::ostringstream convStream;
-        convStream << std::fixed << (((dataHandlerType*)m_pMemoryString)[index]);
+
+        if(std::is_same<dataHandlerType, std::uint8_t>::value ||
+                std::is_same<dataHandlerType, std::int8_t>::value )
+        {
+            int tempValue = (int)(((dataHandlerType*)m_pMemoryString)[index]);
+            convStream << tempValue;
+        }
+        else
+        {
+            convStream << (((dataHandlerType*)m_pMemoryString)[index]);
+        }
 		return convStream.str();
 
 		PUNTOEXE_FUNCTION_END();
@@ -261,9 +272,14 @@ public:
 	{
 		PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::getUnicodeString");
 
-		std::wostringstream convStream;
-		convStream << std::fixed << getDouble(index);
-		return convStream.str();
+        std::string ansiString = getString(index);
+
+        std::wstring unicodeString(ansiString.size(), char(0));
+        for(size_t scanAstring(0), endAstring(ansiString.size()); scanAstring != endAstring; ++scanAstring)
+        {
+            unicodeString[scanAstring] = (wchar_t)ansiString.at(scanAstring);
+        }
+        return unicodeString;
 
 		PUNTOEXE_FUNCTION_END();
 	}
@@ -307,9 +323,20 @@ public:
 		PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::setString");
 
 		std::istringstream convStream(value);
-		double tempValue;
-		convStream >> tempValue;
-		setDouble(index, tempValue);
+        dataHandlerType tempValue;
+        if(std::is_same<dataHandlerType, std::uint8_t>::value ||
+                std::is_same<dataHandlerType, std::int8_t>::value)
+        {
+            int tempValue1;
+            convStream >> tempValue1;
+            tempValue = (dataHandlerType)tempValue1;
+        }
+        else
+        {
+            convStream >> tempValue;
+        }
+
+        ((dataHandlerType*)m_pMemoryString)[index] = tempValue;
 
 		PUNTOEXE_FUNCTION_END();
 	}
@@ -320,10 +347,12 @@ public:
 	{
 		PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::setUnicodeString");
 
-		std::wistringstream convStream(value);
-		double tempValue;
-		convStream >> tempValue;
-		setDouble(index, tempValue);
+        std::string ansiString(value.size(), char(0));
+        for(size_t scanWstring(0), endWstring(value.size()); scanWstring != endWstring; ++scanWstring)
+        {
+            ansiString[scanWstring] = (char)value.at(scanWstring);
+        }
+        setString(index, ansiString);
 
 		PUNTOEXE_FUNCTION_END();
 	}
