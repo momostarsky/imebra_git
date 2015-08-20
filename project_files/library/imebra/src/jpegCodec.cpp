@@ -120,7 +120,7 @@ static const float JpegDctScaleFactor[]=
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-static const int JpegBitsDcLuminance[]=
+static const std::uint32_t JpegBitsDcLuminance[]=
 { 0, 1, 5, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0};
 
 
@@ -156,7 +156,7 @@ static const std::uint32_t JpegValDcLuminance[]=
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-static const int JpegBitsDcChrominance[]=
+static const std::uint32_t JpegBitsDcChrominance[]=
 { 0, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0 };
 
 
@@ -192,7 +192,7 @@ static const std::uint32_t JpegValDcChrominance[]=
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-static const int JpegBitsAcLuminance[]=
+static const std::uint32_t JpegBitsAcLuminance[]=
 { 0, 2, 1, 3, 3, 2, 4, 3, 5, 5, 4, 4, 0, 0, 1, 0x7d };
 
 
@@ -250,7 +250,7 @@ static const std::uint32_t JpegValAcLuminance[]=
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-static const int JpegBitsAcChrominance[] =
+static const std::uint32_t JpegBitsAcChrominance[] =
 { 0, 2, 1, 2, 4, 4, 3, 4, 7, 5, 4, 4, 0, 1, 2, 0x77 };
 
 
@@ -642,7 +642,7 @@ void jpegCodec::resetInternal(bool bCompression, quality compQuality)
 		for(int resetHT=0; resetHT < 16; ++resetHT)
 		{
 			ptr<huffmanTable> pHuffman;
-			const int* pLengthTable;
+            const std::uint32_t* pLengthTable;
 			const std::uint32_t* pValuesTable;
 			if(DcAc == 0)
 			{
