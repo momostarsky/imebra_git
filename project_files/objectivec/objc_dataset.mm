@@ -7,7 +7,7 @@
  *
  */
 
-#include "../../library/imebra/include/imebra.h"
+#include "../library/imebra/include/imebra.h"
 #import "objc_dataset.h"
 #import "objc_image.h"
 #import "objc_helpers.h"

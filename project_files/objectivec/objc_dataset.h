@@ -1,7 +1,7 @@
 #import <Foundation/Foundation.h>
 #import <Cocoa/Cocoa.h>
 
-#include "../../library/imebra/include/imebra.h"
+#include "../library/imebra/include/imebra.h"
 
 #import "objc_image.h"
 

@@ -1,6 +1,6 @@
 #import <Foundation/Foundation.h>
 #import <Cocoa/Cocoa.h>
-#include "../../library/imebra/include/image.h"
+#include "../library/imebra/include/image.h"
 
 #ifdef __APPLE__
    #include "TargetConditionals.h"

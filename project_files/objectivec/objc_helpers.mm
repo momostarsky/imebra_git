@@ -12,7 +12,7 @@ NSString* StringWToNSString ( const std::wstring& str )
 {
     NSString* pString = [ [ NSString alloc ]    
                         initWithBytes : (char*)str.data()   
-                               length : Str.size() * sizeof(wchar_t)   
+                               length : str.size() * sizeof(wchar_t)
                              encoding : CFStringConvertEncodingToNSStringEncoding ( kCFStringEncodingUTF32LE ) ];   
     return pString;   
 }
