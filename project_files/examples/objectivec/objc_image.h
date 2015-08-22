@@ -6,26 +6,9 @@
    #include "TargetConditionals.h"
 #endif
 
-/**
- * This class calls the C++ methods in imebra.
- *
- */
-@interface ImebraImage : NSObject
-  puntoexe::ptr<puntoexe::imebra::image> m_image;
-
-- initWithImebraImage: (puntoexe::ptr<puntoexe::imebra::image>) image;
-
-/**
- * Retrieve the image's size.
- */
-- (long) getWidth;
-- (long) getHeight;
-
 #ifdef TARGET_OS_IPHONE
-- (UIImage*) getImage;
+UIImage* getImage(puntoexe::ptr<puntoexe::imebra::image> image);
 #else
-- (NSImage*) getImage;
+NSImage* getImage(puntoexe::ptr<puntoexe::imebra::image> image);
 #endif
-
-@end
 

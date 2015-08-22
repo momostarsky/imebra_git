@@ -13,41 +13,17 @@
 #import "objc_image.h"
 #import "objc_helpers.h"
 
-@implementation ImebraImage
-
-- initWithImebraImage: (puntoexe::ptr<puntoexe::imebra::image>) image
-{
-    if(self = [super init])
-    {
-        m_image = image;
-    }
-}
-
-- (long) getWidth
-{
-    imbxUint32 width, height;
-    m_image->getSize(&width, &height);
-    return width;
-}
-
-- (long) getHeight
-{
-    imbxUint32 width, height;
-    m_image->getSize(&width, &height);
-    return height;
-}
-
 #ifdef TARGET_OS_IPHONE
-- (UIImage*) getImage
+UIImage* getImage(puntoexe::ptr<puntoexe::imebra::image> image)
 #else
-- (NSImage*) getImage
+NSImage* getImage(puntoexe::ptr<puntoexe::imebra::image> image)
 #endif
 {
     imbxUint32 width, height;
-    m_image->getSize(&width, &height);
+    image->getSize(&width, &height);
     imbxUint32 rowSize, channelPixelSize, channelsNumber;
 
-    puntoexe::imebra::drawBitmap drawBitmap(m_image, 0);
+    puntoexe::imebra::drawBitmap drawBitmap(image, 0);
     size_t memorySize = drawBitmap.getBitmap<puntoexe::imebra::drawBitmapRGBA, 4>(width, height, 0, 0, width, height, 0, 0);
 
     puntoexe::ptr<puntoexe::memory> memory(puntoexe::memoryPool::getMemoryPool()->getMemory(memorySize));
