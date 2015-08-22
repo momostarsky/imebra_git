@@ -213,7 +213,6 @@ The author can be contacted by email at info@binarno.com or by mail at
 			<fileset dir="${build_dir}/tests" />
 		</copy>
 		<copy file="${build_dir}/docs/gpl.txt" tofile="${distribution}/license_gpl.txt" />
-                <copy file="${build_dir}/docs/commercial_license.txt" tofile="${distribution}/license_commercial.txt" />
 	</target>
 
 	<!-- Make a zip file and a gzip file of the build -->
