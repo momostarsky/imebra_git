@@ -9,28 +9,26 @@
 
 #include "../library/imebra/include/imebra.h"
 
-#import "objc_dataset.h"
 #import "objc_image.h"
-#import "objc_helpers.h"
 
 #ifdef TARGET_OS_IPHONE
-UIImage* getImage(puntoexe::ptr<puntoexe::imebra::image> image)
+UIImage* getImage(puntoexe::ptr<puntoexe::imebra::image> image, puntoexe::ptr<puntoexe::imebra::transforms::transform> transforms)
 #else
-NSImage* getImage(puntoexe::ptr<puntoexe::imebra::image> image)
+NSImage* getImage(puntoexe::ptr<puntoexe::imebra::image> image, puntoexe::ptr<puntoexe::imebra::transforms::transform> transforms)
 #endif
 {
     imbxUint32 width, height;
     image->getSize(&width, &height);
     imbxUint32 rowSize, channelPixelSize, channelsNumber;
 
-    puntoexe::imebra::drawBitmap drawBitmap(image, 0);
+    puntoexe::imebra::drawBitmap drawBitmap(image, transforms);
     size_t memorySize = drawBitmap.getBitmap<puntoexe::imebra::drawBitmapRGBA, 4>(width, height, 0, 0, width, height, 0, 0);
 
     puntoexe::ptr<puntoexe::memory> memory(puntoexe::memoryPool::getMemoryPool()->getMemory(memorySize));
     drawBitmap.getBitmap<puntoexe::imebra::drawBitmapRGBA, 4>(width, height, 0, 0, width, height, memory->data(), memorySize);
 
     CGDataProviderRef dataProviderRef = CGDataProviderCreateWithData(0,
-                                                                dataHandler->getMemoryBuffer(),
+                                                                memory->data(),
                                                                 width * height * 4,
                                                                 0);
 
@@ -45,21 +43,13 @@ NSImage* getImage(puntoexe::ptr<puntoexe::imebra::image> image)
                 colorSpaceRef, bitmapInfo, dataProviderRef, NULL, YES, renderingIntent);
 
 
-    imageRef = CGImageCreate(width,
-                                    height,
-                                    8,
-                                    32,
-                                    rowSize, colorSpaceRef,
-                                    bitmapInfo,
-                                    provider, NULL, NO, renderingIntent);
 #ifdef TARGET_OS_IPHONE
-
-    return [[[UIImage alloc] imageWithCGImage:imageRef] autorelease];
-    }
+    UIImage* returnImage = [[UIImage alloc] imageWithCGImage:imageRef];
 #else
-    return [[[NSImage alloc] initWithCGImage:imageRef] autorelease];
+    NSImage* returnImage = [[NSImage alloc] initWithCGImage:imageRef];
 #endif
+
+    CGImageRelease(imageRef);
+    CGColorSpaceRelease(imageRef);
+    return returnImage;
 }
-
-
-@end

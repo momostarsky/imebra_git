@@ -63,8 +63,7 @@ The files in those directories are cpp source files.
    files.</b>
 
 The files in the following directories are header files and don't need to be
- included in your project, but nothing harmful happen if you do include them
- (please note that EVC4 needs them):
+ included in your project, but nothing harmful happen if you do include them:
 
  - library/imebra/include
  - library/base/include
@@ -76,6 +75,19 @@ If you are compiling the application on Windows, define the preprocessor symbol
 
 If you are compiling the application for Windows NT, 2000, XP or Vista, then
  define the preprocessor symbol _WIN32_WINNT to 0x0400 or greater.
+
+
+\section add_to_project_files_mac OSX/iOS specific: Adding the source files to your project
+
+In order to add the Imebra files to XCode, drag the files from the
+ folders library/imebra/src and library/base/src into the XCode Project Navigator.
+
+Don't drag the folder containing the files, because that will cause XCode to skip
+ the files compilation. Instead drag the files themself.
+
+Also add the libincov.dylib library to the project (Build phases/Link binary with libraries).
+
+All the objective-c files that use the Imebra library must be renamed with a .mm suffix (instead of .m).
 
 
 
