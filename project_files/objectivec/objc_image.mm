@@ -1,15 +1,12 @@
-/**
- * This is a simple objective-c class that calls some method on the imebra library.
- *
- * The most problematic part is the conversion from NSString to wstring and viceversa.
- *
- * Other data types can be used natively (e.g. int, imbxInt16, double, etc).
- *
- */
-
 #include "../library/imebra/include/imebra.h"
-
 #import "objc_image.h"
+
+void CGDataProviderCallbackFunc(void *info, const void *data, size_t size)
+{
+    // Release the shared pointer holding the memory
+    ////////////////////////////////////////////////
+    delete info;
+}
 
 #ifdef TARGET_OS_IPHONE
 UIImage* getImage(puntoexe::ptr<puntoexe::imebra::image> image, puntoexe::ptr<puntoexe::imebra::transforms::transform> transforms)
@@ -17,20 +14,32 @@ UIImage* getImage(puntoexe::ptr<puntoexe::imebra::image> image, puntoexe::ptr<pu
 NSImage* getImage(puntoexe::ptr<puntoexe::imebra::image> image, puntoexe::ptr<puntoexe::imebra::transforms::transform> transforms)
 #endif
 {
+    // Allocate the drawBitmap class
+    ////////////////////////////////
+    puntoexe::imebra::drawBitmap drawBitmap(image, transforms);
+
+    // Get the amount of memory needed for the conversion
+    /////////////////////////////////////////////////////
     imbxUint32 width, height;
     image->getSize(&width, &height);
-    imbxUint32 rowSize, channelPixelSize, channelsNumber;
-
-    puntoexe::imebra::drawBitmap drawBitmap(image, transforms);
     size_t memorySize = drawBitmap.getBitmap<puntoexe::imebra::drawBitmapRGBA, 4>(width, height, 0, 0, width, height, 0, 0);
 
+    // Allocate the memory that will hold the result
+    ////////////////////////////////////////////////
     puntoexe::ptr<puntoexe::memory> memory(puntoexe::memoryPool::getMemoryPool()->getMemory(memorySize));
+
+    // Get the result raw data
+    //////////////////////////
     drawBitmap.getBitmap<puntoexe::imebra::drawBitmapRGBA, 4>(width, height, 0, 0, width, height, memory->data(), memorySize);
 
-    CGDataProviderRef dataProviderRef = CGDataProviderCreateWithData(0,
+
+    // Create a CGImage, then convert it to NSImage or UIImage
+    //////////////////////////////////////////////////////////
+    puntoexe::ptr<puntoexe::memory> * pCGDataMemory = new puntoexe::ptr<puntoexe::memory>(memory);
+    CGDataProviderRef dataProviderRef = CGDataProviderCreateWithData(pCGDataMemory,
                                                                 memory->data(),
                                                                 width * height * 4,
-                                                                0);
+                                                                CGDataProviderCallbackFunc);
 
     CGColorSpaceRef colorSpaceRef = CGColorSpaceCreateDeviceRGB();
     CGBitmapInfo bitmapInfo = kCGBitmapByteOrder32Big | kCGImageAlphaPremultipliedLast;
@@ -44,12 +53,12 @@ NSImage* getImage(puntoexe::ptr<puntoexe::imebra::image> image, puntoexe::ptr<pu
 
 
 #ifdef TARGET_OS_IPHONE
-    UIImage* returnImage = [[UIImage alloc] imageWithCGImage:imageRef];
+    UIImage* returnImage = [[UIImage alloc] initWithCGImage:imageRef];
 #else
     NSImage* returnImage = [[NSImage alloc] initWithCGImage:imageRef];
 #endif
 
     CGImageRelease(imageRef);
-    CGColorSpaceRelease(imageRef);
+    CGColorSpaceRelease(colorSpaceRef);
     return returnImage;
 }
