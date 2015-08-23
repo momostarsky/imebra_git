@@ -5,7 +5,7 @@ void CGDataProviderCallbackFunc(void *info, const void *data, size_t size)
 {
     // Release the shared pointer holding the memory
     ////////////////////////////////////////////////
-    delete info;
+    delete (puntoexe::ptr<puntoexe::memory>*)info;
 }
 
 #ifdef TARGET_OS_IPHONE
@@ -57,7 +57,7 @@ NSImage* getImage(puntoexe::ptr<puntoexe::imebra::image> image, puntoexe::ptr<pu
 #else
     NSImage* returnImage = [[NSImage alloc] initWithCGImage:imageRef];
 #endif
-
+    CGDataProviderRelease(dataProviderRef);
     CGImageRelease(imageRef);
     CGColorSpaceRelease(colorSpaceRef);
     return returnImage;
