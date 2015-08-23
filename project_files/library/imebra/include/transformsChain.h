@@ -30,15 +30,10 @@ namespace transforms
 ///////////////////////////////////////////////////////////
 /// \brief Executes a sequence of transforms.
 ///
-/// Before calling doTransform, specify the sequence
+/// Before calling runTransform() specify the sequence
 ///  by calling addTransform().
 /// Each specified transforms take the output of the 
 ///  previous transform as input.
-///
-/// The first defined transform takes the input images
-///  defined in the transformsChain object, the last
-///  defined transforms uses the output images defined
-///  in the transformsChain object.
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////

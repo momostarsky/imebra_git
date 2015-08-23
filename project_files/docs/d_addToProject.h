@@ -21,7 +21,9 @@ The following sections describes how to include the Imebra source code in your
 \section add_to_project_common Prerequisites (common to all the platorms)
 
 Imebra depends on the stl library and C++0x; if your development environment doesn't provide
- a modern stl, try to install stlport (http://www.stlport.org).
+ a modern stl library then try to install stlport (http://www.stlport.org).
+
+The compiler must support the RTTI.
 
 
 \section add_to_project_win32 Prerequisites for Windows (desktop version)
@@ -59,7 +61,7 @@ The first step to add the Imebra library to your project is to add all the files
  - library/base/src
 
 The files in those directories are cpp source files.
-<b>You must disable the use of the precompiled header for all the imebra source
+<b>On Visual C++ you must disable the use of the precompiled header for all the imebra source
    files.</b>
 
 The files in the following directories are header files and don't need to be
@@ -68,8 +70,6 @@ The files in the following directories are header files and don't need to be
  - library/imebra/include
  - library/base/include
 
-The compiler must support the RTTI.
-
 If you are compiling the application on Windows, define the preprocessor symbol
  WIN32 in your project's properties.
 
@@ -77,18 +77,19 @@ If you are compiling the application for Windows NT, 2000, XP or Vista, then
  define the preprocessor symbol _WIN32_WINNT to 0x0400 or greater.
 
 
-\section add_to_project_files_mac OSX/iOS specific: Adding the source files to your project
+\section add_to_project_files_mac OS-X/iOS specific: Adding the source files to your project
 
 In order to add the Imebra files to XCode, drag the files from the
- folders library/imebra/src and library/base/src into the XCode Project Navigator.
+ folders library/imebra/src and library/base/src into the XCode Project Navigator.\n
+Additional files for OS-X and iOS are located in the folder objectiveC: you may want to include
+ those files too
 
 Don't drag the folder containing the files, because that will cause XCode to skip
- the files compilation. Instead drag the files themself.
+ the files compilation: instead drag the files themself.
 
 Also add the libincov.dylib library to the project (Build phases/Link binary with libraries).
 
-All the objective-c files that use the Imebra library must be renamed with a .mm suffix (instead of .m).
-
+\warning All the objective-c files that use the Imebra library must be renamed with a .mm suffix (instead of .m)
 
 
 \section add_to_project_checklist Adding Imebra to your project: Checklist

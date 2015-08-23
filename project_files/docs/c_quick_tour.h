@@ -210,6 +210,8 @@ Each bitmap's row can be aligned to specific bytes boundaries and can store the 
 
 drawBitmap takes care of converting the color format to RGB if necessary, and also shifts the values to obtain 8 bit per color component.
 
+If you used puntoexe::imebra::dataSet::getModalityImage() to retrieve the image then the modality transform has already
+ been applied to the image, otherwise it must be applied by your application (see puntoexe::imebra::transforms::modalityVOILUT)
 Sometimes the image must be processed with a presentation VOI/LUT transformations before it can be displayed.\n
 A dataSet may contain several presentation VOI/LUTs and each one of them may highlight different parts of the image by
  applying different predefined contrasts or lookup tables.\n
@@ -218,6 +220,7 @@ The class puntoexe::imebra::transforms::VOILUT is responsible for retrieving the
 
 The constructor of the puntoexe::imebra::transforms::VOILUT class takes a dataset as parameter in the constructor: then it uses
  the dataset to retrieve the available VOI or LUTs.
+
 
 \subsection quick_tour_image_display_list_voilut Listing the presentation VOIs/LUTs defined in the dataset
 
@@ -275,6 +278,19 @@ ptr<memory> memory = draw->getBitmap<imebra::drawBitmap::drawBitmapRGBA, 4>
 
 std::uint8_t* pRawData = memory->data(); // Data ready to be displayed in RGBA format
 \endcode
+
+
+\subsection quick_tour_image_display_mac Using drawBitmap on OS-X or iOS.
+
+Please read also the previous sections, since they contain important information relevant to understand this section.
+
+A special helper method called getImage() is available for OS-X and iOS (add the files in the folder objectivec to
+ your project, see \ref add_to_project_files_mac).
+
+This method uses puntoexe::imebra::drawBitmap to produce an UIImage or NSImage that can be used directly.
+
+The method accepts the same parameters as drawBitmap's constructor but instead of a raw buffer it returns an UIImage
+ or NSImage object that can be used directly by your application.
 
 
 
