@@ -172,13 +172,14 @@ The author can be contacted by email at info@binarno.com or by mail at
 		<mkdir dir="${distribution}" />
                 <property name="librarySource" value="${distribution}/library" />
 		<mkdir dir="${librarySource}" />
-		<property name="documentation" value="${distribution}/documentation" />
+                <property name="objectivecSource" value="${distribution}/objectivec" />
+                <mkdir dir="${objectivecSource}" />
+                <property name="documentation" value="${distribution}/documentation" />
 		<mkdir dir="${documentation}/html" />
 		<property name="examples" value="${distribution}/examples" />
 		<mkdir dir="${examples}/dicom2jpeg" />
 		<mkdir dir="${examples}/dicomdirItems" />
 		<mkdir dir="${examples}/changeTransferSyntax" />
-                <mkdir dir="${examples}/objectivec" />
 
                 <property name="reports" value="${distribution}/reports" />
                 <property name="coverage" value="${reports}/coverage" />
@@ -193,7 +194,10 @@ The author can be contacted by email at info@binarno.com or by mail at
 		<copy todir="${librarySource}">
 			<fileset dir="${build_dir}/library" />
 		</copy>
-		<copy todir="${documentation}/html">
+                <copy todir="${objectivecSource}">
+                        <fileset dir="${build_dir}/objectivec" />
+                </copy>
+                <copy todir="${documentation}/html">
 			<fileset dir="${build_dir}/generated_doc/html" />
 		</copy>
 		<copy file="${build_dir}/docs/documentation.html" tofile="${documentation}/documentation.html" />
@@ -206,9 +210,6 @@ The author can be contacted by email at info@binarno.com or by mail at
 		<copy todir="${examples}/changeTransferSyntax">
 			<fileset dir="${build_dir}/examples/changeTransferSyntax" />
 		</copy>
-                <copy todir="${examples}/objectivec">
-                        <fileset dir="${build_dir}/examples/objectivec" />
-                </copy>
                 <copy todir="${tests}">
 			<fileset dir="${build_dir}/tests" />
 		</copy>
