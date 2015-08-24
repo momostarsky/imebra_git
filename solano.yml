@@ -10,6 +10,7 @@ tests:
     export BUILD_COMMIT="$TDDIUM_CURRENT_COMMIT" &&
     export BUILD_BRANCH=$(echo $BUILD_BRANCH | sed 's/default/unstable/g') &&
     export BUILD_BRANCH=$(echo $BUILD_BRANCH | sed 's/DEFAULT/unstable/g') &&
+    export BUILD_BRANCH=$(echo $BUILD_BRANCH | sed 's/imebra//g') &&
     ant
 
 hooks:
