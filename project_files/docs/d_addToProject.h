@@ -71,7 +71,7 @@ The files in the following directories are header files and don't need to be
  - library/base/include
 
 If you are compiling the application on Windows, define the preprocessor symbol
- WIN32 in your project's properties.
+ PUNTOEXE_WINDOWS and PUNTOEXE_USE_WINDOWS_CHARSET in your project's properties.
 
 If you are compiling the application for Windows NT, 2000, XP or Vista, then
  define the preprocessor symbol _WIN32_WINNT to 0x0400 or greater.
