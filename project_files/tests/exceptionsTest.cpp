@@ -1,11 +1,4 @@
 #include <gtest/gtest.h>
-
-#if defined(WIN32) | defined(WIN32_WCE)
-#include "windows.h"
-#else
-#include <pthread.h>
-#endif
-
 #include "../library/imebra/include/imebra.h"
 
 namespace puntoexe
