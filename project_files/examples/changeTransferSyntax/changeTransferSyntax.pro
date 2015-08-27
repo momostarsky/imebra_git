@@ -1,11 +1,11 @@
 QT     -= gui core
 LIBS -= -lQtGui -lQtCore
+QMAKE_CXXFLAGS += -std=c++0x -Wall -Wextra -pedantic
 unix:LIBS += -lpthread
 windows:DEFINES += _WIN32_WINNT=0x0501 WINVER=0x0501 NTDDI_VERSION=0x05010000
 
 SOURCES += \
     changeTransferSyntax.cpp \
-    ../../library/base/src/thread.cpp \
     ../../library/base/src/streamWriter.cpp \
     ../../library/base/src/streamReader.cpp \
     ../../library/base/src/streamController.cpp \
@@ -77,7 +77,6 @@ SOURCES += \
     ../../library/base/src/charsetConversionWindows.cpp
 
 HEADERS += \
-    ../../library/base/include/thread.h \
     ../../library/base/include/streamWriter.h \
     ../../library/base/include/streamReader.h \
     ../../library/base/include/streamController.h \
