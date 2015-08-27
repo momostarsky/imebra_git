@@ -81,6 +81,7 @@ A detailed reference of the C++ classes that compose Imebra is included in
 - Removed lock from reference counter (made atomic)
 - Converted custom types imbxIntXX and imbxUintXX to C++ standard types std::intX_t and std::uintXX_t
 - Ported tests from QTest to GTest
+- Added ObjectiveC helpers
 - Minor optimizations
 
 

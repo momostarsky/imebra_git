@@ -80,8 +80,8 @@ void outputDatasetTags(ptr<dataSet> dataset, std::wstring prefix)
                 }
                 else
                 {
-                    std::wcout << prefix << L"  Not shown" << std::endl;
-
+                    ptr<handlers::dataHandlerRaw> handlerRaw = tag->getDataHandlerRaw(numBuffer, false, "");
+                    std::wcout << prefix << L"  Not shown: size " << handlerRaw->getSize() << " bytes" << std::endl;
                 }
             }
         }
