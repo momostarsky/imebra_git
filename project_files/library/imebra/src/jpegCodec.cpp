@@ -1269,8 +1269,8 @@ ptr<image> jpegCodec::getImage(ptr<dataSet> sourceDataSet, ptr<streamReader> pSt
 						scanBlock != pChannel->m_blockMcuXY;
 						++scanBlock)
 					{
-												amplitudeLength = pChannel->m_pActiveHuffmanTableDC->readHuffmanCode(pSourceStream);
-												if(amplitudeLength)
+                        amplitudeLength = pChannel->m_pActiveHuffmanTableDC->readHuffmanCode(pSourceStream);
+                        if(amplitudeLength)
 						{
 							amplitude = pSourceStream->readBits(amplitudeLength);
 							if(amplitude < ((std::int32_t)1<<(amplitudeLength-1)))
@@ -1799,12 +1799,13 @@ void jpegCodec::writeScan(streamWriter* pDestinationStream, bool bCalcHuffman)
 
 	findMcuSize();
 
-	if(!bCalcHuffman)
+    if(m_bLossless)
+    {
+        m_spectralIndexStart = 1;
+        m_spectralIndexEnd = 0;
+    }
+    if(!bCalcHuffman)
 	{
-		if(m_bLossless)
-		{
-			m_spectralIndexStart = 1;
-		}
 		writeTag(pDestinationStream, sos);
 	}
 

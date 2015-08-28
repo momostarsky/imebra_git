@@ -73,6 +73,11 @@ A detailed reference of the C++ classes that compose Imebra is included in
 
 \subsection version_current Changes for version $imebraVersion$
 
+- Fixes <a href="https://bitbucket.org/binarno/imebra/issues/105">#105</a> (EndSpectralIndex set to 63 on jpeg lossless images cause errors on some viewers)
+
+
+\subsection version_2015_20150827-173545 Changes for version 2014 20150827-173545 (commit 0976eb146d0f)
+
 - Fixes <a href="http://bitbucket.org/binarno/imebra/issue/87">#87</a> (Deprecation warnings regarding c++0x standard)
 - Fixes <a href="http://bitbucket.org/binarno/imebra/issue/100">#100</a> (The VOI/LUT fails when dealing with images with 32 bits per channel)
 - Fixes <a href="http://bitbucket.org/binarno/imebra/issue/101">#101</a> (The PALETTECOLORToRGB transform returns dark images)
