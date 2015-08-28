@@ -221,82 +221,104 @@ TEST(jpegCodecTest, testBaselineSubsampled)
 
 TEST(jpegCodecTest, testLossless)
 {
-	std::uint32_t sizeX = 115;
-	std::uint32_t sizeY = 400;
-	ptr<image> baselineImage(new image);
-	baselineImage->create(sizeX, sizeY, image::depthU8, L"RGB", 7);
+    for(int bits = 8; bits <= 16; bits += 8)
+    {
+        for(int firstOrderPrediction = 0; firstOrderPrediction != 2; ++firstOrderPrediction)
+        {
+            ptr<imebra::dataSet> dataset(new imebra::dataSet);
 
-	std::uint32_t rowSize, channelsPixelSize, channelsNumber;
-	ptr<handlers::dataHandlerNumericBase> imageHandler = baselineImage->getDataHandler(true, &rowSize, &channelsPixelSize, &channelsNumber);
+            std::uint32_t sizeX = 115;
+            std::uint32_t sizeY = 400;
+            ptr<image> baselineImage(new image);
+            baselineImage->create(sizeX, sizeY, bits == 8 ? image::depthU8 : image::depthU16, L"RGB", bits - 1);
 
-	// Make 3 bands (RGB)
-	std::uint32_t elementNumber(0);
-	for(std::uint32_t y=0; y<sizeY; ++y)
-	{
-		for(std::uint32_t x=0; x<sizeX; ++x)
-		{
-			std::int32_t r, g, b;
-			std::uint32_t value = y * 255 / sizeY;
-			r = g = 0;
-			b = value;
-			if(x < sizeX - sizeX/3)
-			{
-				r = 0;
-				g = value;
-				b = 0;
-			}
-			if(x < sizeX / 3)
-			{
-				r = value;
-				g = 0;
-				b = 0;
-			}
-			imageHandler->setUnsignedLong(elementNumber++, r);
-			imageHandler->setUnsignedLong(elementNumber++, g);
-			imageHandler->setUnsignedLong(elementNumber++, b);
-		}
-	}
-	imageHandler.release();
+            std::uint32_t rowSize, channelsPixelSize, channelsNumber;
+            ptr<handlers::dataHandlerNumericBase> imageHandler = baselineImage->getDataHandler(true, &rowSize, &channelsPixelSize, &channelsNumber);
 
-	ptr<memory> streamMemory(new memory);
-	{
-		ptr<baseStream> writeStream(new memoryStream(streamMemory));
-		ptr<streamWriter> writer(new streamWriter(writeStream));
-		ptr<codecs::jpegCodec> testCodec(new codecs::jpegCodec);
-		testCodec->setImage(writer, baselineImage, L"1.2.840.10008.1.2.4.57", codecs::codec::medium, "OB", 8, false, false, false, false);
-	}
+            // Make 3 bands (RGB)
+            std::uint32_t elementNumber(0);
+            for(std::uint32_t y=0; y<sizeY; ++y)
+            {
+                for(std::uint32_t x=0; x<sizeX; ++x)
+                {
+                    std::int32_t r, g, b;
+                    std::uint32_t value = y * ((std::uint32_t)255 << (bits - 8)) / sizeY;
+                    r = g = 0;
+                    b = value;
+                    if(x < sizeX - sizeX/3)
+                    {
+                        r = 0;
+                        g = value;
+                        b = 0;
+                    }
+                    if(x < sizeX / 3)
+                    {
+                        r = value;
+                        g = 0;
+                        b = 0;
+                    }
+                    imageHandler->setUnsignedLong(elementNumber++, r);
+                    imageHandler->setUnsignedLong(elementNumber++, g);
+                    imageHandler->setUnsignedLong(elementNumber++, b);
+                }
+            }
+            imageHandler.release();
 
-	ptr<baseStream> readStream(new memoryStream(streamMemory));
-	ptr<streamReader> reader(new streamReader(readStream));
-		
-	ptr<codecs::jpegCodec> testCodec(new codecs::jpegCodec);
-	ptr<dataSet> readDataSet = testCodec->read(reader);
-	ptr<image> checkImage = readDataSet->getImage(0);
-	std::uint32_t checkSizeX, checkSizeY;
-	checkImage->getSize(&checkSizeX, &checkSizeY);
+            std::wstring transferSyntax = (firstOrderPrediction == 0) ? L"1.2.840.10008.1.2.4.57" : L"1.2.840.10008.1.2.4.70";
+            ptr<memory> streamMemory(new memory);
+            {
+                ptr<baseStream> writeStream(new memoryStream(streamMemory));
+                ptr<streamWriter> writer(new streamWriter(writeStream));
+                ptr<codecs::jpegCodec> testCodec(new codecs::jpegCodec);
+                testCodec->setImage(writer, baselineImage, transferSyntax, codecs::codec::veryHigh, "OB", bits, false, false, false, false);
+            }
 
-	ptr<handlers::dataHandlerNumericBase> rgbHandler = checkImage->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
-	ptr<handlers::dataHandlerNumericBase> originalHandler = baselineImage->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
+            ptr<baseStream> readStream(new memoryStream(streamMemory));
+            ptr<streamReader> reader(new streamReader(readStream));
 
-	// Compare the buffers. A little difference is allowed
-    ASSERT_EQ(sizeX, checkSizeX);
-    ASSERT_EQ(sizeY, checkSizeY);
+            ptr<codecs::jpegCodec> testCodec(new codecs::jpegCodec);
+            ptr<dataSet> readDataSet = testCodec->read(reader);
+            ptr<image> checkImage = readDataSet->getImage(0);
+            std::uint32_t checkSizeX, checkSizeY;
+            checkImage->getSize(&checkSizeX, &checkSizeY);
 
-	elementNumber = 0;
+            ptr<handlers::dataHandlerNumericBase> rgbHandler = checkImage->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
+            ptr<handlers::dataHandlerNumericBase> originalHandler = baselineImage->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
 
-	for(std::uint32_t checkY = 0; checkY < sizeY; ++checkY)
-	{
-		for(std::uint32_t checkX = 0; checkX < sizeX; ++checkX)
-		{
-			for(std::uint32_t channel = 3; channel != 0; --channel)
-			{
-                std::int32_t value0 = originalHandler->getUnsignedLong(elementNumber);
-                std::int32_t value1 = rgbHandler->getUnsignedLong(elementNumber++);
-                EXPECT_EQ(value0, value1);
-			}
-		}
-	}
 
+            dataset->setImage(0, baselineImage, transferSyntax, puntoexe::imebra::codecs::codec::veryHigh);
+            std::wostringstream fileName;
+            fileName << L"dicom_" << transferSyntax << L"_bits" << bits << L".dcm";
+            ptr<imebra::codecs::dicomCodec> saveDicom(new imebra::codecs::dicomCodec);
+            ptr<puntoexe::stream> saveDicomStream(new puntoexe::stream);
+            saveDicomStream->openFile(fileName.str(), std::ios_base::out | std::ios_base::trunc);
+            ptr<puntoexe::streamWriter> saveDicomStreamWriter(new puntoexe::streamWriter(saveDicomStream));
+            saveDicom->write(saveDicomStreamWriter, dataset);
+            saveDicomStreamWriter.release();
+            saveDicomStream.release();
+
+
+
+            // Compare the buffers. A little difference is allowed
+            ASSERT_EQ(sizeX, checkSizeX);
+            ASSERT_EQ(sizeY, checkSizeY);
+
+            elementNumber = 0;
+
+            for(std::uint32_t checkY = 0; checkY < sizeY; ++checkY)
+            {
+                for(std::uint32_t checkX = 0; checkX < sizeX; ++checkX)
+                {
+                    for(std::uint32_t channel = 3; channel != 0; --channel)
+                    {
+                        std::int32_t value0 = originalHandler->getUnsignedLong(elementNumber);
+                        std::int32_t value1 = rgbHandler->getUnsignedLong(elementNumber++);
+                        EXPECT_EQ(value0, value1);
+                    }
+                }
+            }
+        }
+    }
 }
 
 
