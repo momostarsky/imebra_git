@@ -448,15 +448,24 @@ void dataSet::setImage(std::uint32_t frameNumber, ptr<image> pImage, std::wstrin
 	{
 		bSubSampledX = bSubSampledY = false;
 	}
-	bool bInterleaved(false);
-        if( !(getDataType(0x0028, 0, 0x0006).empty()) )
+
+    image::bitDepth depth = pImage->getDepth();
+    bool b2complement = (depth == image::depthS32 || depth == image::depthS16 || depth == image::depthS8);
+    std::uint32_t channelsNumber = pImage->getChannelsNumber();
+    std::uint8_t allocatedBits = (std::uint8_t)(saveCodec->suggestAllocatedBits(transferSyntax, pImage->getHighBit()));
+    bool bInterleaved(false);
+    if(getDataType(0x0028, 0, 0x0006).empty())
+    {
+        if(channelsNumber > 1)
         {
-            bInterleaved = (getUnsignedLong(0x0028, 0x0, 0x0006, 0x0) == 0x0);
+            bInterleaved = true;
+            setUnsignedLong(0x0028, 0, 0x0006, 0, 0, "US");
         }
-	image::bitDepth depth = pImage->getDepth();
-	bool b2complement = (depth == image::depthS32 || depth == image::depthS16 || depth == image::depthS8);
-	std::uint32_t channelsNumber = pImage->getChannelsNumber();
-	std::uint8_t allocatedBits = (std::uint8_t)(saveCodec->suggestAllocatedBits(transferSyntax, pImage->getHighBit()));
+    }
+    else
+    {
+        bInterleaved = (getUnsignedLong(0x0028, 0x0, 0x0006, 0x0) == 0x0);
+    }
 
 	// If the attributes cannot be changed, then check the
 	//  attributes already stored in the dataset
