@@ -31,9 +31,7 @@ namespace puntoexe
 class streamJpegTagInStream : public streamException
 {
 public:
-    streamJpegTagInStream(std::uint8_t jpegTag, std::string message): streamException(message), m_jpegTag(jpegTag){}
-
-    std::uint8_t m_jpegTag;
+	streamJpegTagInStream(std::string message): streamException(message){}
 };
 
 
@@ -346,12 +344,10 @@ public:
                     }
                 }while(*m_pDataBufferCurrent == 0xff);
 
-                if(*m_pDataBufferCurrent != 0)
+                if(*(m_pDataBufferCurrent++) != 0)
                 {
-                    throw(streamJpegTagInStream(*m_pDataBufferCurrent, "Corrupted jpeg stream"));
+                    throw(streamJpegTagInStream("Corrupted jpeg stream"));
                 }
-
-                ++m_pDataBufferCurrent;
 
                 return 0xff;
 	}
