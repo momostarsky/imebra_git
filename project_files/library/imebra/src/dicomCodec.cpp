@@ -1514,11 +1514,13 @@ void dicomCodec::writeRLECompressed(
 
 		std::uint32_t segmentNumber = 0;
 		std::uint32_t offset = 64;
-		std::uint8_t command;
 
 		for(std::uint32_t scanChannels = 0; scanChannels < channelsNumber; ++scanChannels)
 		{
             std::vector<std::uint8_t> rowBytes(imageSizeX);
+
+            std::vector<std::uint8_t> differentBytes;
+            differentBytes.reserve(imageSizeX);
 
 			for(std::int32_t rightShift = ((allocatedBits + 7) & 0xfffffff8) -8; rightShift >= 0; rightShift -= 8)
 			{
@@ -1546,67 +1548,45 @@ void dicomCodec::writeRLECompressed(
 
 					for(std::uint32_t scanBytes = 0; scanBytes < imageSizeX; /* left empty */)
 					{
-						// Find the next start of consecutive bytes with the
-						//  same value
-						std::uint32_t startRun = scanBytes;
-						std::uint32_t runLength = 0;
-						while(startRun < imageSizeX)
-						{
-							std::uint32_t analyzeRun = startRun + 1;
-                            std::uint8_t runByte = rowBytes[startRun];
-                            while(analyzeRun < imageSizeX && rowBytes[analyzeRun] == runByte)
-							{
-								++analyzeRun;
-							}
-							if(analyzeRun - startRun > 3)
-							{
-								runLength = analyzeRun - startRun;
-								break;
-							}
-							startRun = analyzeRun;
-						}
+                        std::uint8_t currentByte = rowBytes[scanBytes];
 
-						while(scanBytes < startRun)
-						{
-							std::uint32_t writeBytes = startRun - scanBytes;
-							if(writeBytes > 0x00000080)
-							{
-								writeBytes = 0x00000080;
-							}
+                        // Calculate the run-length
+                        ///////////////////////////
+                        size_t runLength(1);
+                        for(; ((scanBytes + runLength) != imageSizeX) && rowBytes[scanBytes + runLength] == currentByte; ++runLength)
+                        {
+                        }
 
-							offset += 1 + startRun - scanBytes;
-							if(phase == 1)
-							{
-								command = (std::uint8_t)writeBytes;
-								--command;
-								pDestStream->write(&command, 1);
-                                pDestStream->write(&(rowBytes[scanBytes]), startRun - scanBytes);
-							}
+                        // Write the runlength
+                        //////////////////////
+                        if(runLength > 3)
+                        {
+                            if(!differentBytes.empty())
+                            {
+                                offset += writeRLEDifferentBytes(&differentBytes, pDestStream, phase == 1);
+                            }
+                            if(runLength > 128)
+                            {
+                                runLength = 128;
+                            }
+                            offset += 2;
+                            scanBytes += runLength;
+                            if(phase == 1)
+                            {
+                                std::uint8_t lengthByte = 1 - runLength;
+                                pDestStream->write(&lengthByte, 1);
+                                pDestStream->write(&currentByte, 1);
+                            }
+                            continue;
+                        }
 
-							scanBytes += writeBytes;
-						}
+                        // Remmember sequence of different bytes
+                        ////////////////////////////////////////
+                        differentBytes.push_back(currentByte);
+                        ++scanBytes;
+                    } // for(std::uint32_t scanBytes = 0; scanBytes < imageSizeX; )
 
-						// Write a run length
-						if(startRun >= imageSizeX)
-						{
-							continue;
-						}
-						if(runLength > 0x00000080)
-						{
-							runLength = 0x00000080;
-						}
-
-						offset += 2;
-						if(phase == 1)
-						{
-							command = 0xff - (std::uint8_t)(runLength - 2);
-							pDestStream->write(&command, 1);
-                            pDestStream->write(&(rowBytes[scanBytes]), 1);
-						}
-
-						scanBytes += runLength;
-
-					} // for(std::uint32_t scanBytes = 0; scanBytes < imageSizeX; )
+                    offset += writeRLEDifferentBytes(&differentBytes, pDestStream, phase == 1);
 
 				} // for(std::uint32_t scanY = imageSizeY; scanY != 0; --scanY)
 
@@ -1615,7 +1595,7 @@ void dicomCodec::writeRLECompressed(
 					++offset;
 					if(phase == 1)
 					{
-						std::uint8_t command = 0x80;
+                        static const std::uint8_t command = 0x80;
 						pDestStream->write(&command, 1);
 					}
 				}
@@ -1627,6 +1607,42 @@ void dicomCodec::writeRLECompressed(
 	} // for(int phase = 0; phase < 2; ++phase)
 
 	PUNTOEXE_FUNCTION_END();
+}
+
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
+// Write RLE sequence of different bytes
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+size_t dicomCodec::writeRLEDifferentBytes(std::vector<std::uint8_t>* pDifferentBytes, streamWriter* pDestStream, bool bWrite)
+{
+    size_t writtenLength = 0;
+    for(size_t offset(0); offset != pDifferentBytes->size();)
+    {
+        size_t writeSize = pDifferentBytes->size() - offset;
+        if(writeSize > 128)
+        {
+            writeSize = 128;
+        }
+        writtenLength += writeSize + 1;
+        if(bWrite)
+        {
+            const std::uint8_t writeLength((std::uint8_t)(writeSize - 1));
+            pDestStream->write(&writeLength, 1);
+            pDestStream->write(&(pDifferentBytes->at(offset)), writeSize);
+        }
+        offset += writeSize;
+    }
+    pDifferentBytes->clear();
+
+    // return number of written bytes
+    /////////////////////////////////
+    return writtenLength;
 }
 
 

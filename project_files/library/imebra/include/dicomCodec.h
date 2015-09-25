@@ -256,6 +256,10 @@ protected:
 		std::uint32_t mask
 		);
 
+    // Write RLE sequence of different bytes
+    ///////////////////////////////////////////////////////////
+    size_t writeRLEDifferentBytes(std::vector<std::uint8_t>* pDifferentBytes, streamWriter* pDestStream, bool bWrite);
+
 	// Read an RLE compressed image
 	///////////////////////////////////////////////////////////
 	void readRLECompressed(
