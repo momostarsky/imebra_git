@@ -71,7 +71,7 @@ A detailed reference of the C++ classes that compose Imebra is included in
 
 \subsection version_current Changes for version $imebraVersion$
 
-- Fixes <a href="https://bitbucket.org/binarno/imebra/issues/72">#72</a> (Planar configuration is not set)
+- Fixes <a href="https://bitbucket.org/binarno/imebra/issues/72">#72</a> (RLE compression creates mangled images)
 - Fixes <a href="https://bitbucket.org/binarno/imebra/issues/106">#106</a> (Planar configuration is not set)
 
 
