@@ -55,9 +55,9 @@ ptr<image> makeTestImage()
 
 
 // A buffer initialized to a default data type should use the data type OB
-TEST(dicomCodecTest, testUncompressed)
+TEST(dicomCodecTest, testDicom)
 {
-	for(int transferSyntaxId(0); transferSyntaxId != 3; ++transferSyntaxId)
+    for(int transferSyntaxId(0); transferSyntaxId != 4; ++transferSyntaxId)
 	{
 		for(int interleaved(0); interleaved != 2; ++interleaved)
 		{
@@ -83,7 +83,7 @@ TEST(dicomCodecTest, testUncompressed)
 							30,
 							20,
 							L"RGB",
-							50));
+                            1));
 					ptr<image> dicomImage1(buildImageForTest(
                             301,
                             201,
@@ -115,6 +115,9 @@ TEST(dicomCodecTest, testUncompressed)
 						break;
 					case 2:
 						transferSyntax = L"1.2.840.10008.1.2.2";
+                        break;
+                    case 3:
+                        transferSyntax = L"1.2.840.10008.1.2.5";
 						break;
 					}
 
@@ -154,64 +157,6 @@ TEST(dicomCodecTest, testUncompressed)
 			}
 		}
 	} // transferSyntaxId
-}
-
-
-TEST(dicomCodecTest, testRLENotInterleaved)
-{
-	ptr<image> dicomImage = makeTestImage();
-	std::uint32_t sizeX, sizeY;
-	dicomImage->getSize(&sizeX, &sizeY);
-
-	std::uint32_t rowSize, channelsPixelSize, channelsNumber;
-
-	ptr<memory> streamMemory(new memory);
-	{
-		ptr<dataSet> testDataSet(new dataSet);
-		testDataSet->setString(0x0010, 0, 0x0010, 0, "AAAaa");
-		testDataSet->setString(0x0010, 0, 0x0010, 1, "BBBbbb");
-		testDataSet->setImage(0, dicomImage, L"1.2.840.10008.1.2.5", codecs::codec::veryHigh);
-
-		ptr<baseStream> writeStream(new memoryStream(streamMemory));
-
-		ptr<codecs::dicomCodec> testCodec(new codecs::dicomCodec);
-		testCodec->write(ptr<streamWriter>(new streamWriter(writeStream)), testDataSet);
-	}
-
-	{
-		ptr<baseStream> readStream(new memoryStream(streamMemory));
-		ptr<dataSet> testDataSet = codecs::codecFactory::getCodecFactory()->load(ptr<streamReader>(new streamReader(readStream)));
-
-        EXPECT_EQ(std::string("AAAaa"), testDataSet->getString(0x0010, 0, 0x0010, 0));
-        EXPECT_EQ(std::string("BBBbbb"), testDataSet->getString(0x0010, 0, 0x0010, 1));
-
-		ptr<image> checkImage = testDataSet->getImage(0);
-		
-		std::uint32_t checkSizeX, checkSizeY;
-		checkImage->getSize(&checkSizeX, &checkSizeY);
-
-		ptr<handlers::dataHandlerNumericBase> checkHandler = checkImage->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
-		ptr<handlers::dataHandlerNumericBase> originalHandler = dicomImage->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
-
-		// Compare the buffers.
-        EXPECT_EQ(sizeX, checkSizeX);
-        EXPECT_EQ(sizeY, checkSizeY);
-
-		size_t pointer(0);
-		for(std::uint32_t checkY = 0; checkY < sizeY; ++checkY)
-		{
-			for(std::uint32_t checkX = 0; checkX < sizeX; ++checkX)
-			{
-				for(std::uint32_t channel = 3; channel != 0; --channel)
-				{
-					std::int32_t value0 = checkHandler->getUnsignedLong(pointer);
-					std::int32_t value1 = originalHandler->getUnsignedLong(pointer++);
-                    EXPECT_EQ(value0, value1);
-				}
-			}
-		}
-	}
-
 }
 
 
