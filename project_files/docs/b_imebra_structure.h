@@ -4,64 +4,47 @@ $fileHeader$
 
 /*!
 
-\page imebra_structure The Imebra's structure
+\page imebra_structure Introduction to Imebra
 
 \section imebra_structure_introduction Introduction
 
-Imebra has been designed to work with Dicom structures, but because images have a
- great importance in the Dicom world, it also includes some image compression and
- decompression functions.
+Imebra is a C++ library able to parse and build DICOM files (including DICOMDIR
+ files). It also supplies the necessary codecs to decode and decode the images
+ embedded in the DICOM files.
 
-At the moment, 2 codecs are distributed with imebra:
+When Imebra reads a DICOM file then it generates a Dicom structure in memory
+(from now on "dataSet", see \ref puntoexe::imebra::dataSet) and fills it with
+ the information available in the file.
 
-- a Dicom codec
-- a Jpeg codec
-
-When a codec reads a stream, it generates a Dicom structure (from now on "dataSet", 
- see \ref puntoexe::imebra::dataSet) in memory and fill it with all the informations 
- available in the stream; please note that also the jpeg codec generates a Dicom 
- structure.
-
-If some images are embedded in the stream being parsed, then they are loaded
- into the \ref puntoexe::imebra::dataSet, but they are not decompressed nor 
- interpreted; in order to retrieve an image from the dataSet, the application must 
- call the function \ref puntoexe::imebra::dataSet::getImage() that retrieves the 
- image from the dataSet and decompresses it using the appropriate codec.
+If images are embedded in the file being parsed then they are loaded
+ into the \ref puntoexe::imebra::dataSet and can be decoded into raw buffers
+ with the function \ref puntoexe::imebra::dataSet::getImage().
 
 Other functions in the dataSet allow the application to read or write into
- the Dicom tags, or to store new images into the dataSet 
+ the DICOM tags, or to store new images into the dataSet
  (\ref puntoexe::imebra::dataSet).
 
 
 \section imebra_structure_dataSet The dataSet
 
-The dataSet is a collection of Dicom tags organized in groups.
-Each group is represented by its ID, which SHOULD be unique in the dataset: datasets
- created with older application may contain several groups with the same ID, but
- more recent applications use sequences to obtain the same result of storing
+The dataSet is a collection of DICOM tags organized in groups.
+
+Each group is represented by the GROUP ID, which SHOULD be unique in the dataset:
+ datasets created with older application may contain several groups with the same ID,
+ but more recent applications use sequences to obtain the same result of storing
  several objects of the same type (e.g.: a sequence of images, or a sequence of
  LUTs).
 
-The information stored in the dataSet (\ref puntoexe::imebra::dataSet) 
- represents the content of one or more related Dicom objects: for instance it
- could include the informations of a patient and the images of one of its exams.
-
-The information related to one object could be distributed in several groups, and
- the dataSet has access to all the groups and tags it contains: this is why 
- the dataSet supplies several functions that pick up related informations with 
- one function call.
-For instance, the images (the attributes are stored in the group 0x28 while the
- pixels are in the group 0x7fe0) can be retrieved from the dataSet with a call
- to \ref puntoexe::imebra::dataSet::getImage().
+The information stored in the dataset (\ref puntoexe::imebra::dataSet)
+ represents the content of one or more related DICOM objects: for instance it
+ could include the patient's data, the images and data of one of its exams.
 
 
 \section imebra_structure_groups The groups
 
 One group is a collection of Dicom tags. Each group is identified by a numeric ID.
-When a group appears several times in a dataSet, then it is identified also by
+When a group appears several times in a dataSet, then Imebra identifies it also with
  a progressive number (called order in the library).
-The information about the order is not stored in the Dicom stream but is generated
- by the library while a Dicom structure is created.
 
 The tags that belong to the same group are stored together in the Dicom stream.
 

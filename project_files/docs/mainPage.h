@@ -17,8 +17,7 @@ Imebra is available for free under the GNU General Public License version 2 (GPL
 
 If you do not want to be bound by the GPL terms (such as the requirement
  that your application must also be GPL), you may purchase a commercial license
- (see \ref commercial_license) for Imebra from the Imebra's website
- (http://imebra.com).
+ for Imebra from the Imebra's website (http://imebra.com).
 
 You can download the latest version of imebra from http://imebra.com
 
@@ -50,8 +49,7 @@ At the moment the library provides the following features:
 
 \section is_not What Imebra does NOT do?
 
-- the library doesn't check for a Dicom stream validity; this feature will be
-   introduced with the support for dicom objects.
+- the library doesn't check for a Dicom stream validity
 - the library doesn't support network communication
 
 
@@ -74,6 +72,7 @@ A detailed reference of the C++ classes that compose Imebra is included in
 \subsection version_current Changes for version $imebraVersion$
 
 - Fixes <a href="https://bitbucket.org/binarno/imebra/issues/106">#106</a> (Planar configuration is not set)
+
 
 
 \subsection version_2015_20150828_135616 Changes for version 2015 20150828-135616
