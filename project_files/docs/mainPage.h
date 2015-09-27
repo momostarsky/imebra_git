@@ -73,6 +73,7 @@ A detailed reference of the C++ classes that compose Imebra is included in
 
 - Fixes <a href="https://bitbucket.org/binarno/imebra/issues/72">#72</a> (RLE compression creates mangled images)
 - Fixes <a href="https://bitbucket.org/binarno/imebra/issues/106">#106</a> (Planar configuration is not set)
+- Changed version number format to: BRANCH_NAME YYYYMMDD-BBB (YYYY=year, MM=month, DD=day, BBB=build number)
 
 
 \subsection version_2015_20150828_135616 Changes for version 2015 20150828-135616
