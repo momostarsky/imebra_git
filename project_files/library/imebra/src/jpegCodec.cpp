@@ -3362,7 +3362,12 @@ void tagSOS::readTag(streamReader* pStream, jpegCodec* pCodec, std::uint8_t /* t
 		pStream->read(&byte, 1);
 		--tagLength;
 
-		ptrChannel pChannel=pCodec->m_channelsMap[byte];
+        jpegCodec::tChannelsMap::const_iterator findChannel = pCodec->m_channelsMap.find(byte);
+        if(findChannel == pCodec->m_channelsMap.end())
+        {
+            PUNTOEXE_THROW(codecExceptionCorruptedFile, "Corrupted SOS tag found");
+        }
+        ptrChannel pChannel = findChannel->second;
 
 		pChannel->processUnprocessedAmplitudes();
 
