@@ -74,7 +74,7 @@ void huffmanTable::reset()
 	m_valuesToHuffmanLength.resize(m_numValues);
 	::memset(&(m_valuesToHuffmanLength[0]), 0, m_numValues*sizeof(m_valuesToHuffmanLength[0]));
 
-    ::memset(m_valuesPerLength, 0, sizeof(m_valuesPerLength));
+    m_valuesPerLength.fill(0);
     m_firstValidLength = 0;
     m_firstMinValue = 0xffffffff;
     m_firstMaxValue = 0xffffffff;
@@ -142,11 +142,19 @@ void huffmanTable::removeLastCode()
 ///////////////////////////////////////////////////////////
 void huffmanTable::setValuesPerLength(std::uint32_t length, std::uint32_t numValues)
 {
+    if(length >= m_valuesPerLength.size())
+    {
+        throw huffmanExceptionCreateTable("Huffman code length too big");
+    }
     m_valuesPerLength[length] = numValues;
 }
 
 void huffmanTable::addOrderedValue(std::uint32_t index, std::uint32_t value)
 {
+    if(index >= m_orderedValues.size())
+    {
+        throw huffmanExceptionCreateTable("Too many values in the huffman table");
+    }
     m_orderedValues[index] = value;
 }
 
