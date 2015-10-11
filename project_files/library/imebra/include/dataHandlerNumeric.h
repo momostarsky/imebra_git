@@ -681,7 +681,7 @@ public:
 						destHeight,
 						destNumChannels);
 			break;
-		default:
+        case 4:
 			copyFromInt32Interleaved< 4 > (
 						pSource,
 						sourceReplicateY,
@@ -694,7 +694,9 @@ public:
 						destHeight,
 						destNumChannels);
 			break;
-		}
+        default:
+            throw std::logic_error("Invalid subsampling factor");
+        }
 	}
 
 
