@@ -13,6 +13,7 @@ $fileHeader$
 #include "baseObject.h"
 #include <vector>
 #include <map>
+#include <array>
 
 ///////////////////////////////////////////////////////////
 //
@@ -241,7 +242,7 @@ protected:
 private:
     // Used to calculate the huffman codes
 	std::vector<std::uint32_t> m_orderedValues;
-    std::uint32_t m_valuesPerLength[128];
+    std::array<std::uint32_t, 128> m_valuesPerLength;
     std::uint8_t m_firstValidLength;
     std::uint32_t m_firstMinValue;
     std::uint32_t m_firstMaxValue;
@@ -259,6 +260,12 @@ class huffmanException: public std::runtime_error
 {
 public:
 	huffmanException(const std::string& message): std::runtime_error(message){}
+};
+
+class huffmanExceptionCreateTable: public huffmanException
+{
+public:
+    huffmanExceptionCreateTable(const std::string& message): huffmanException(message){}
 };
 
 class huffmanExceptionRead : public huffmanException
