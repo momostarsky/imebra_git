@@ -8,7 +8,7 @@ $fileHeader$
 */
 
 #include "../include/codecFactory.h"
-
+#include "../../base/include/configuration.h"
 #include "../../base/include/exception.h"
 #include "../../base/include/streamReader.h"
 #include "../include/codec.h"
@@ -38,7 +38,16 @@ namespace codecs
 static codecFactory::forceCodecFactoryCreation forceCreation;
 
 
-codecFactory::codecFactory()
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
+// Constructor
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+codecFactory::codecFactory(): m_maximumImageWidth(MAXIMUM_IMAGE_WIDTH), m_maximumImageHeight(MAXIMUM_IMAGE_HEIGHT)
 {
     registerCodec(new dicomCodec());
     registerCodec(new jpegCodec());
@@ -169,6 +178,24 @@ ptr<dataSet> codecFactory::load(ptr<streamReader> pStream, std::uint32_t maxSize
 	return pDataSet;
 
 	PUNTOEXE_FUNCTION_END();
+}
+
+
+void codecFactory::setMaximumImageSize(const uint32_t maximumWidth, const uint32_t maximumHeight)
+{
+    m_maximumImageWidth = maximumWidth;
+    m_maximumImageHeight = maximumHeight;
+}
+
+
+std::uint32_t codecFactory::getMaximumImageWidth()
+{
+    return m_maximumImageWidth;
+}
+
+std::uint32_t codecFactory::getMaximumImageHeight()
+{
+    return m_maximumImageHeight;
 }
 
 } // namespace codecs
