@@ -79,7 +79,19 @@ public:
 	///////////////////////////////////////////////////////////
 	streamReader(ptr<baseStream> pControlledStream, std::uint32_t virtualStart = 0, std::uint32_t virtualLength = 0);
 
-	/// \brief Read raw data from the stream.
+    /// \brief Returns a new streamReader object that starts
+    ///        at the current stream location and continues
+    ///        for the specified amount of bytes.
+    ///
+    /// @param virtualLength the amount of bytes that can be
+    ///                      read from the new streamReader.
+    ///                      The called streamReader will
+    ///                      advance the read position past
+    ///                      the end position of the new
+    ///                      streamReader
+    ptr<streamReader> getReader(std::uint32_t virtualLength);
+
+    /// \brief Read raw data from the stream.
 	///
 	/// The number of bytes specified in the parameter
 	///  bufferLength will be read from the stream and copied

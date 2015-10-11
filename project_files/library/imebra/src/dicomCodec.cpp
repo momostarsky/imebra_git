@@ -19,6 +19,7 @@ $fileHeader$
 #include "../include/dicomDict.h"
 #include "../include/image.h"
 #include "../include/colorTransformsFactory.h"
+#include "../include/codecFactory.h"
 
 
 namespace puntoexe
@@ -968,7 +969,15 @@ ptr<image> dicomCodec::getImage(ptr<dataSet> pData, ptr<streamReader> pStream, s
 	///////////////////////////////////////////////////////////
 	std::uint32_t imageSizeX=pData->getUnsignedLong(0x0028, 0x0, 0x0011, 0x0);
 	std::uint32_t imageSizeY=pData->getUnsignedLong(0x0028, 0x0, 0x0010, 0x0);
-	if((imageSizeX == 0) || (imageSizeY == 0))
+
+    if(
+            imageSizeX > codecFactory::getCodecFactory()->getMaximumImageWidth() ||
+            imageSizeY > codecFactory::getCodecFactory()->getMaximumImageHeight())
+    {
+        PUNTOEXE_THROW(codecExceptionImageTooBig, "The factory settings prevented the loading of this image. Consider using codecFactory::setMaximumImageSize() to modify the settings");
+    }
+
+    if((imageSizeX == 0) || (imageSizeY == 0))
 	{
 		PUNTOEXE_THROW(codecExceptionCorruptedFile, "The size tags are not available");
 	}

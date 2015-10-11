@@ -432,12 +432,34 @@ class codecExceptionWrongTransferSyntax: public codecException
 {
 public:
 	/// \brief Build a codecExceptionWrongTransferSyntax
-	///         exception
+    ///         exception.
 	///
 	/// @param message the message to store into the exception
 	///
 	///////////////////////////////////////////////////////////
 	codecExceptionWrongTransferSyntax(const std::string& message): codecException(message){}
+};
+
+
+///////////////////////////////////////////////////////////
+/// \brief This exception is thrown when the codec reads
+///         a file that contains an image that is too big
+///         according to the codecFactory settings.
+///
+/// Consider using codecFactory::setMaximumImageSize()
+///  to change the allowed maximum image size.
+///
+///////////////////////////////////////////////////////////
+class codecExceptionImageTooBig: public codecException
+{
+public:
+    /// \brief Build a codecExceptionImageTooBig
+    ///         exception.
+    ///
+    /// @param message the message to store into the exception
+    ///
+    ///////////////////////////////////////////////////////////
+    codecExceptionImageTooBig(const std::string& message): codecException(message){}
 };
 
 

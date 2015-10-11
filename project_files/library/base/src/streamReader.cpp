@@ -26,6 +26,17 @@ streamReader::streamReader(ptr<baseStream> pControlledStream, std::uint32_t virt
 }
 
 
+ptr<streamReader> streamReader::getReader(std::uint32_t virtualLength)
+{
+    std::uint32_t currentPosition = position();
+    if(currentPosition + virtualLength > m_virtualLength && m_virtualLength != 0)
+    {
+        virtualLength = m_virtualLength - currentPosition;
+    }
+    seek(virtualLength, true);
+    return new streamReader(m_pControlledStream, currentPosition + m_virtualStart, virtualLength);
+}
+
 ///////////////////////////////////////////////////////////
 //
 // Returns true if the last byte has been read

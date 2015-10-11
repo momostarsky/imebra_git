@@ -269,10 +269,10 @@ public:
 ///////////////////////////////////////////////////////////
 #define PUNTOEXE_THROW(exceptionType, what) \
 	{\
-		exceptionType e(what);\
-		puntoexe::exceptionInfo info(_puntoexe_function_name, __FILE__, __LINE__, typeid(e).name(), what);\
+        exceptionType puntoexeTrackException(what);\
+        puntoexe::exceptionInfo info(_puntoexe_function_name, __FILE__, __LINE__, typeid(puntoexeTrackException).name(), what);\
 		puntoexe::exceptionsManager::addExceptionInfo(info);\
-		throw e;\
+        throw puntoexeTrackException;\
 	}
 
 /// \def PUNTOEXE_RETHROW(what)
