@@ -74,6 +74,13 @@ typedef std::uint64_t imbxUint64;
 #endif
 #endif
 
+#ifndef MAXIMUM_IMAGE_WIDTH
+    #define MAXIMUM_IMAGE_WIDTH 4096
+#endif
+#ifndef MAXIMUM_IMAGE_HEIGHT
+    #define MAXIMUM_IMAGE_HEIGHT 4096
+#endif
+
 ///@}
 
 #endif

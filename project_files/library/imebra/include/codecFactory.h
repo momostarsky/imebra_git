@@ -138,10 +138,46 @@ public:
 	///////////////////////////////////////////////////////////
 	ptr<dataSet> load(ptr<streamReader> pStream, std::uint32_t maxSizeBufferLoad = 0xffffffff);
 
+    /// \brief Set the maximum size of the images created by
+    ///         the codec::getImage() function.
+    ///
+    /// @param maximumWidth   the maximum with of the images
+    ///                        created by codec::getImage(), in
+    ///                        pixels
+    /// @param maximumHeight the maximum height of the images
+    ///                        created by codec::getImage(), in
+    ///                        pixels
+    ///
+    ///////////////////////////////////////////////////////////
+    void setMaximumImageSize(const std::uint32_t maximumWidth, const std::uint32_t maximumHeight);
+
+    /// \brief Get the maximum width of the images created
+    ///         by codec::getImage()
+    ///
+    /// @return the maximum width, in pixels, of the images
+    ///          created by codec::getImage()
+    ///
+    ///////////////////////////////////////////////////////////
+    std::uint32_t getMaximumImageWidth();
+
+    /// \brief Get the maximum height of the images created
+    ///         by codec::getImage()
+    ///
+    /// @return the maximum height, in pixels, of the images
+    ///          created by codec::getImage()
+    ///
+    ///////////////////////////////////////////////////////////
+    std::uint32_t getMaximumImageHeight();
+
 protected:
 	// The list of the registered codecs
 	///////////////////////////////////////////////////////////
 	std::list<ptr<codec> > m_codecsList;
+
+    // Maximum allowed image size
+    ///////////////////////////////////////////////////////////
+    std::uint32_t m_maximumImageWidth;
+    std::uint32_t m_maximumImageHeight;
 
 
 public:
