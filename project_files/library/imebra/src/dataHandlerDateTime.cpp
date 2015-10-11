@@ -62,11 +62,17 @@ void dataHandlerDateTime::getDate(const std::uint32_t index,
 	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTime::getDate");
 
 	std::wstring dateTimeString=dataHandlerDateTimeBase::getUnicodeString(index);
-	std::wstring dateString=dateTimeString.substr(0, 8);
-	std::wstring timeString=dateTimeString.substr(8);
 
-	parseDate(dateString, pYear, pMonth, pDay);
-	parseTime(timeString, pHour, pMinutes, pSeconds, pNanoseconds, pOffsetHours, pOffsetMinutes);
+    parseDate(dateTimeString, pYear, pMonth, pDay);
+
+    if(dateTimeString.size() <= 8)
+    {
+        parseTime(L"", pHour, pMinutes, pSeconds, pNanoseconds, pOffsetHours, pOffsetMinutes);
+    }
+    else
+    {
+        parseTime(dateTimeString.substr(8), pHour, pMinutes, pSeconds, pNanoseconds, pOffsetHours, pOffsetMinutes);
+    }
 
 	PUNTOEXE_FUNCTION_END();
 }
