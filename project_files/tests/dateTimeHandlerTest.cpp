@@ -233,6 +233,92 @@ TEST(dateTimeHandlerTest, dateTimeTest)
 	}
 }
 
+TEST(dateTimeHandlerTest, incompleteDateTimeTest)
+{
+    ptr<data> tag(new data(ptr<baseObject>(0)));
+    {
+        ptr<handlers::dataHandlerRaw> hTag= tag->getDataHandlerRaw(0, true, "DT");
+        std::string bufferData;
+        hTag->setSize(0);
+        hTag->copyFrom((std::uint8_t*)bufferData.data(), bufferData.size());
+    }
+
+    std::int32_t year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes;
+    ptr<handlers::dataHandler> hTag = tag->getDataHandler(0, false, "");
+    hTag->getDate(0, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
+
+    EXPECT_EQ(0, year);
+    EXPECT_EQ(0, month);
+    EXPECT_EQ(0, day);
+    EXPECT_EQ(0, hour);
+    EXPECT_EQ(0, minutes);
+    EXPECT_EQ(0, seconds);
+    EXPECT_EQ(0, nanoseconds);
+    EXPECT_EQ(0, offsetHours);
+    EXPECT_EQ(0, offsetMinutes);
+
+    {
+        ptr<handlers::dataHandlerRaw> hTag = tag->getDataHandlerRaw(0, true, "DT");
+        hTag->setSize(1);
+        std::string bufferData("199901");
+        hTag->setSize(0);
+        hTag->copyFrom((std::uint8_t*)bufferData.data(), bufferData.size());
+    }
+
+    hTag = tag->getDataHandler(0, false, "");
+    hTag->getDate(0, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
+
+    EXPECT_EQ(1999, year);
+    EXPECT_EQ(1, month);
+    EXPECT_EQ(0, day);
+    EXPECT_EQ(0, hour);
+    EXPECT_EQ(0, minutes);
+    EXPECT_EQ(0, seconds);
+    EXPECT_EQ(0, nanoseconds);
+    EXPECT_EQ(0, offsetHours);
+    EXPECT_EQ(0, offsetMinutes);
+
+    {
+        ptr<handlers::dataHandlerRaw> hTag = tag->getDataHandlerRaw(0, true, "DT");
+        std::string bufferData("19990120");
+        hTag->setSize(0);
+        hTag->copyFrom((std::uint8_t*)bufferData.data(), bufferData.size());
+    }
+
+    hTag = tag->getDataHandler(0, false, "");
+    hTag->getDate(0, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
+
+    EXPECT_EQ(1999, year);
+    EXPECT_EQ(1, month);
+    EXPECT_EQ(20, day);
+    EXPECT_EQ(0, hour);
+    EXPECT_EQ(0, minutes);
+    EXPECT_EQ(0, seconds);
+    EXPECT_EQ(0, nanoseconds);
+    EXPECT_EQ(0, offsetHours);
+    EXPECT_EQ(0, offsetMinutes);
+
+    {
+        ptr<handlers::dataHandlerRaw> hTag = tag->getDataHandlerRaw(0, true, "DT");
+        std::string bufferData("1999012012");
+        hTag->setSize(0);
+        hTag->copyFrom((std::uint8_t*)bufferData.data(), bufferData.size());
+    }
+
+    hTag = tag->getDataHandler(0, false, "");
+    hTag->getDate(0, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
+
+    EXPECT_EQ(1999, year);
+    EXPECT_EQ(1, month);
+    EXPECT_EQ(20, day);
+    EXPECT_EQ(12, hour);
+    EXPECT_EQ(0, minutes);
+    EXPECT_EQ(0, seconds);
+    EXPECT_EQ(0, nanoseconds);
+    EXPECT_EQ(0, offsetHours);
+    EXPECT_EQ(0, offsetMinutes);
+}
+
 
 
 } // namespace tests
