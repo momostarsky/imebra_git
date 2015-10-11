@@ -71,6 +71,21 @@ A detailed reference of the C++ classes that compose Imebra is included in
 
 \subsection version_current Changes for version $imebraVersion$
 
+\warning Security update.\n
+This release introduces several validations in the file parsing source code (for both jpeg and Dicom streams).\n
+The bugs listed in the changelog may be used to perform an attack to the device on which the software linked to
+Imebra is running, therefore it is strongly suggested that all the software using Imebra is recompiled with
+the latest version of the library.
+
+- Fixes <a href="https://bitbucket.org/binarno/imebra/issues/107">#107</a> (corrupted jpeg SOS tag causes crash)
+- Fixes <a href="https://bitbucket.org/binarno/imebra/issues/108">#108</a> (copyFromInt32Interleaved crashes when wrong parameters trigger a reading from invalid memory)
+- Fixes <a href="https://bitbucket.org/binarno/imebra/issues/109">#109</a> (jpeg subsampling information set to 0 causes crash)
+- Fixes <a href="https://bitbucket.org/binarno/imebra/issues/110">#110</a> (Out of memory when allocating big images)
+- Fixes <a href="https://bitbucket.org/binarno/imebra/issues/111">#111</a> (crash while creating huffman table while reading corrupted jpeg files)
+
+
+\subsection version_current Changes for version 2015 20150927-001
+
 - Fixes <a href="https://bitbucket.org/binarno/imebra/issues/72">#72</a> (RLE compression creates mangled images)
 - Fixes <a href="https://bitbucket.org/binarno/imebra/issues/106">#106</a> (Planar configuration is not set)
 - Changed version number format to: BRANCH_NAME YYYYMMDD-BBB (YYYY=year, MM=month, DD=day, BBB=build number)
