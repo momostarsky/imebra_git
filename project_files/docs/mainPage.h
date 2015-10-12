@@ -77,6 +77,7 @@ The bugs listed in the changelog may be used to perform an attack to the device 
 Imebra is running, therefore it is strongly suggested that all the software using Imebra is recompiled with
 the latest version of the library.
 
+- Fixes <a href="https://bitbucket.org/binarno/imebra/issues/103">#103</a> (crash in dateHandlerDateTime::getDate when the buffer is empty)
 - Fixes <a href="https://bitbucket.org/binarno/imebra/issues/107">#107</a> (corrupted jpeg SOS tag causes crash)
 - Fixes <a href="https://bitbucket.org/binarno/imebra/issues/108">#108</a> (copyFromInt32Interleaved crashes when wrong parameters trigger a reading from invalid memory)
 - Fixes <a href="https://bitbucket.org/binarno/imebra/issues/109">#109</a> (jpeg subsampling information set to 0 causes crash)
