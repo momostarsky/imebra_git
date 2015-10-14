@@ -107,7 +107,8 @@ HEADERS += \
     ../docs/a_license.h \
     ../library/base/include/charsetConversionIconv.h \
     ../library/base/include/charsetConversionICU.h \
-    ../library/base/include/charsetConversionWindows.h
+    ../library/base/include/charsetConversionWindows.h \
+    testsSettings.h
 
 SOURCES += \
     unicodeStringHandlerTest.cpp \
@@ -199,4 +200,6 @@ SOURCES += \
     ../library/base/src/charsetConversionIconv.cpp \
     ../library/base/src/charsetConversionICU.cpp \
     ../library/base/src/charsetConversionWindows.cpp \
-    streamTest.cpp
+    streamTest.cpp \
+    corruptedFilesTest.cpp \
+    testsSettings.cpp

@@ -1,6 +1,7 @@
 #include "../library/imebra/include/imebra.h"
 
 #include <vector>
+#include <array>
 #include <stdlib.h>
 #include <gtest/gtest.h>
 
@@ -68,6 +69,54 @@ TEST(memoryStreamTest, testBytes)
 		std::uint8_t value(reader->readByte());
         EXPECT_EQ(values[readValues], value);
 	}
+}
+
+bool compareStreamContent(std::uint8_t* buffer, size_t streamPosition, size_t numBytes)
+{
+    for(size_t position(streamPosition); position != streamPosition + numBytes; ++position)
+    {
+        std::uint8_t value = (std::uint8_t)(position & 0xff);
+        if(value != *buffer++)
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+TEST(memoryStreamTest, testVirtualStream)
+{
+    ptr<memory> streamMemory(new memory(4098));
+
+    // Fill the memory
+    std::uint8_t* data = streamMemory->data();
+    for(size_t fillMemory(0); fillMemory != streamMemory->size(); ++fillMemory)
+    {
+        data[fillMemory] = (std::uint8_t)(fillMemory & 0xff);
+    }
+
+    ptr<memoryStream> myStream(new memoryStream(streamMemory));
+
+    ptr<streamReader> reader(new streamReader(myStream));
+    ptr<streamReader> readerPosition95_20(new streamReader(myStream, 95, 20));
+
+    std::vector<std::uint8_t> buffer10(10);
+    reader->read(buffer10.data(), buffer10.size());
+    ASSERT_TRUE(compareStreamContent(buffer10.data(), 0, buffer10.size()));
+
+    ptr<streamReader> embeddedReader_10_60 = reader->getReader(60);
+    reader->read(buffer10.data(), buffer10.size());
+    ASSERT_TRUE(compareStreamContent(buffer10.data(), 70, buffer10.size()));
+
+    embeddedReader_10_60->read(buffer10.data(), buffer10.size());
+    ASSERT_TRUE(compareStreamContent(buffer10.data(), 10, buffer10.size()));
+
+    readerPosition95_20->read(buffer10.data(), buffer10.size());
+    ASSERT_TRUE(compareStreamContent(buffer10.data(), 95, buffer10.size()));
+    ptr<streamReader> embeddedReader_105_10 = readerPosition95_20->getReader(10);
+    embeddedReader_105_10->read(buffer10.data(), buffer10.size());
+    ASSERT_TRUE(compareStreamContent(buffer10.data(), 105, buffer10.size()));
+    ASSERT_THROW(readerPosition95_20->read(buffer10.data(), 1), streamExceptionEOF);
 }
 
 
