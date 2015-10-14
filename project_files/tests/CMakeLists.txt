@@ -63,7 +63,7 @@ add_executable(ImebraTests
     ../library/imebra/include/charsetsList.h
     ../library/imebra/include/bufferStream.h
     ../library/imebra/include/buffer.h
-	../library/imebra/include/transform.h
+    ../library/imebra/include/transform.h
     ../library/base/include/streamWriter.h
     ../library/base/include/streamReader.h
     ../library/base/include/streamController.h
@@ -89,27 +89,6 @@ add_executable(ImebraTests
     ../library/base/include/charsetConversionIconv.h
     ../library/base/include/charsetConversionICU.h
     ../library/base/include/charsetConversionWindows.h
-    unicodeStringHandlerTest.cpp
-    transactionTest.cpp
-    streamBitsTest.cpp
-    paletteTest.cpp
-    numericHandlerTest.cpp
-    memoryStreamTest.cpp
-    jpegCodecTest.cpp
-    huffmanTest.cpp
-    exceptionsTest.cpp
-    drawBitmapTest.cpp
-    dicomDirTest.cpp
-    dicomCodecTest.cpp
-    decimalStringHandlerTest.cpp
-    dateTimeHandlerTest.cpp
-    dataSetTest.cpp
-    CImbx_tests.cpp
-    buildImageForTest.cpp
-    bufferTest.cpp
-    bitTransformTest.cpp
-    ageStringHandlerTest.cpp
-    streamTest.cpp
     ../library/imebra/src/YBRPARTIALToRGB.cpp
     ../library/imebra/src/YBRFULLToRGB.cpp
     ../library/imebra/src/YBRFULLToMONOCHROME2.cpp
@@ -179,6 +158,30 @@ add_executable(ImebraTests
     ../library/base/src/charsetConversionIconv.cpp
     ../library/base/src/charsetConversionICU.cpp
     ../library/base/src/charsetConversionWindows.cpp
+    unicodeStringHandlerTest.cpp
+    transactionTest.cpp
+    streamBitsTest.cpp
+    paletteTest.cpp
+    numericHandlerTest.cpp
+    memoryStreamTest.cpp
+    jpegCodecTest.cpp
+    huffmanTest.cpp
+    exceptionsTest.cpp
+    drawBitmapTest.cpp
+    dicomDirTest.cpp
+    dicomCodecTest.cpp
+    decimalStringHandlerTest.cpp
+    dateTimeHandlerTest.cpp
+    dataSetTest.cpp
+    CImbx_tests.cpp
+    buildImageForTest.cpp
+    bufferTest.cpp
+    bitTransformTest.cpp
+    ageStringHandlerTest.cpp
+    streamTest.cpp
+    corruptedFilesTest.cpp
+    testsSettings.cpp
+    testsSettings.h
 )
 
 find_library(gtest_library NAMES gtest PATHS ${CMAKE_BINARY_DIR} ${CMAKE_BINARY_DIR}/gtest)
