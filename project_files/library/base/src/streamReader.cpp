@@ -18,16 +18,31 @@ namespace puntoexe
 // Constructor
 //
 ///////////////////////////////////////////////////////////
-streamReader::streamReader(ptr<baseStream> pControlledStream, std::uint32_t virtualStart /* =0 */, std::uint32_t virtualLength /* =0 */):
+streamReader::streamReader(ptr<baseStream> pControlledStream):
+    streamController(pControlledStream, 0, 0),
+    m_inBitsBuffer(0),
+    m_inBitsNum(0)
+{
+}
+
+streamReader::streamReader(ptr<baseStream> pControlledStream, std::uint32_t virtualStart, std::uint32_t virtualLength):
 	streamController(pControlledStream, virtualStart, virtualLength),
 	m_inBitsBuffer(0),
 	m_inBitsNum(0)
 {
+    if(virtualLength == 0)
+    {
+        throw(streamExceptionEOF("Virtual stream with zero length"));
+    }
 }
 
 
 ptr<streamReader> streamReader::getReader(std::uint32_t virtualLength)
 {
+    if(virtualLength == 0)
+    {
+        throw(streamExceptionEOF("Virtual stream with zero length"));
+    }
     std::uint32_t currentPosition = position();
     if(currentPosition + virtualLength > m_virtualLength && m_virtualLength != 0)
     {
