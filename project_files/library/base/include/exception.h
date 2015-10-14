@@ -252,6 +252,44 @@ public:
 		throw;\
 	}
 
+/// \def PUNTOEXE_FUNCTION_END_MODIFY()
+///
+/// \brief Insert a catch block that rethrows the catched
+///         exception and log the function's name and
+///         the position in the source file in which the
+///         exception has been catched and rethrown.
+///        Exception of the type specified in the first
+///         parameter are replaced by the type specified
+///         in the second parameter.
+///
+/// @param catchType the exception type that must be
+///                  caught and replace by the exception in
+///                  throwType
+/// @param throwType the exception type to throw instead
+///                  of catchType
+///
+///////////////////////////////////////////////////////////
+#define PUNTOEXE_FUNCTION_END_MODIFY(catchType, throwType) \
+    }\
+    catch(catchType& e)\
+    {\
+        puntoexe::exceptionInfo info(_puntoexe_function_name, __FILE__, __LINE__, typeid(e).name(), e.what());\
+        puntoexe::exceptionsManager::addExceptionInfo(info);\
+        PUNTOEXE_THROW(throwType, e.what());\
+    }\
+    catch(std::exception& e)\
+    {\
+        puntoexe::exceptionInfo info(_puntoexe_function_name, __FILE__, __LINE__, typeid(e).name(), e.what());\
+        puntoexe::exceptionsManager::addExceptionInfo(info);\
+        throw;\
+    }\
+    catch(...)\
+    {\
+        puntoexe::exceptionInfo info(_puntoexe_function_name, __FILE__, __LINE__, "unknown", "");\
+        puntoexe::exceptionsManager::addExceptionInfo(info);\
+        throw;\
+    }
+
 /// \def PUNTOEXE_THROW(exceptionType, what)
 ///
 /// \brief Throw an exception of the specified type and log
