@@ -2960,7 +2960,7 @@ void tagSOF::readTag(streamReader* pStream, jpegCodec* pCodec, std::uint8_t tagE
     ptr<streamReader> tagReader(pStream->getReader(tagLength));
 
     pCodec->m_bLossless = (tagEntry==0xc3) || (tagEntry==0xc7);
-    pCodec->m_process = tagEntry-0xc0;
+    pCodec->m_process = tagEntry - 0xc0;
 
     // Read the precision, in bits
     ///////////////////////////////////////////////////////////
@@ -2977,6 +2977,8 @@ void tagSOF::readTag(streamReader* pStream, jpegCodec* pCodec, std::uint8_t tagE
     tagReader->adjustEndian((std::uint8_t*)&imageSizeX, 2, streamController::highByteEndian);
 
     if(
+            precisionBits < 8 ||
+            precisionBits > 16 ||
             imageSizeX > codecFactory::getCodecFactory()->getMaximumImageWidth() ||
             imageSizeY > codecFactory::getCodecFactory()->getMaximumImageHeight())
     {
@@ -3029,7 +3031,7 @@ void tagSOF::readTag(streamReader* pStream, jpegCodec* pCodec, std::uint8_t tagE
     ///////////////////////////////////////////////////////////
     pCodec->allocChannels();
 
-    PUNTOEXE_FUNCTION_END();
+    PUNTOEXE_FUNCTION_END_MODIFY(streamExceptionEOF, codecExceptionCorruptedFile);
 }
 
 
@@ -3247,7 +3249,8 @@ void tagDHT::readTag(streamReader* pStream, jpegCodec* pCodec, std::uint8_t /* t
         PUNTOEXE_THROW(codecs::codecExceptionCorruptedFile, e.what());
     }
 
-    PUNTOEXE_FUNCTION_END();
+    PUNTOEXE_FUNCTION_END_MODIFY(streamExceptionEOF, codecExceptionCorruptedFile);
+
 }
 
 
@@ -3416,7 +3419,8 @@ void tagSOS::readTag(streamReader* pStream, jpegCodec* pCodec, std::uint8_t /* t
 
     pCodec->findMcuSize();
 
-    PUNTOEXE_FUNCTION_END();
+    PUNTOEXE_FUNCTION_END_MODIFY(streamExceptionEOF, codecExceptionCorruptedFile);
+
 }
 
 
@@ -3575,7 +3579,8 @@ void tagDQT::readTag(streamReader* pStream, jpegCodec* pCodec, std::uint8_t /* t
         pCodec->recalculateQuantizationTables(tablePrecision & 0x0f);
     }
 
-    PUNTOEXE_FUNCTION_END();
+    PUNTOEXE_FUNCTION_END_MODIFY(streamExceptionEOF, codecExceptionCorruptedFile);
+
 }
 
 
@@ -3645,7 +3650,8 @@ void tagDRI::readTag(streamReader* pStream, jpegCodec* pCodec, std::uint8_t /* t
     tagReader->adjustEndian((std::uint8_t*)&unitsPerRestartInterval, 2, streamController::highByteEndian);
     pCodec->m_mcuPerRestartInterval=unitsPerRestartInterval;
 
-    PUNTOEXE_FUNCTION_END();
+    PUNTOEXE_FUNCTION_END_MODIFY(streamExceptionEOF, codecExceptionCorruptedFile);
+
 }
 
 
