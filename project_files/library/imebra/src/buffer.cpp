@@ -462,7 +462,7 @@ ptr<streamReader> buffer::getStreamReader()
 	///////////////////////////////////////////////////////////
 	ptr<streamReader> reader;
 	ptr<handlers::dataHandlerRaw> tempHandlerRaw = getDataHandlerRaw(false);
-	if(tempHandlerRaw != 0)
+    if(tempHandlerRaw != 0 && tempHandlerRaw->getSize() != 0)
 	{
 		ptr<baseStream> localStream(new bufferStream(tempHandlerRaw));
 		reader = ptr<streamReader>(new streamReader(localStream));
@@ -485,7 +485,7 @@ ptr<streamReader> buffer::getStreamReader()
 ///////////////////////////////////////////////////////////
 ptr<streamWriter> buffer::getStreamWriter()
 {
-	PUNTOEXE_FUNCTION_START(L"buffer::getStreamReader");
+    PUNTOEXE_FUNCTION_START(L"buffer::getStreamWriter");
 
 	// Lock the object
 	///////////////////////////////////////////////////////////
