@@ -57,11 +57,14 @@ public:
 class streamReader: public streamController
 {
 public:
-	/// \brief Build a streamReader and connect it to an
-	///         existing stream.
-	///
-	/// The stream reader can also be connected to only a part
-	///  of the stream.
+    /// \brief Build a streamReader and connect it to an
+    ///         existing stream.
+    ///
+    ///////////////////////////////////////////////////////////
+    streamReader(ptr<baseStream> pControlledStream);
+
+    /// \brief Build a streamReader and connect it to a part
+    ///         of an existing stream.
 	///
 	/// When the streamReader is connected to a part of a
 	///  stream then all the its functions will act on the
@@ -77,7 +80,7 @@ public:
 	///                            are visible
 	///
 	///////////////////////////////////////////////////////////
-	streamReader(ptr<baseStream> pControlledStream, std::uint32_t virtualStart = 0, std::uint32_t virtualLength = 0);
+    streamReader(ptr<baseStream> pControlledStream, std::uint32_t virtualStart, std::uint32_t virtualLength);
 
     /// \brief Returns a new streamReader object that starts
     ///        at the current stream location and continues
