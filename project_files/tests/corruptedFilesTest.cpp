@@ -27,6 +27,7 @@ TEST(corruptedFilesTest, corruptedFilesTest)
     DIR * dir = opendir(folder.c_str());
     if(dir == 0)
     {
+        std::cout << folder << " not found" << std::endl;
         ASSERT_FALSE(true);
     }
 
