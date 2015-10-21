@@ -134,7 +134,7 @@ The author can be contacted by email at info@binarno.com or by mail at
 	<!-- Run the test cases posix -->
         <target name="run_test_cases" depends="build_test_cases, clear_coverage" description="Run the test cases">
             <exec executable="${build_dir_tests}/ImebraTests" dir="${build_dir_tests}" resolveexecutable="true" failonerror="true">
-                <arg value="----corruptedFilesFolder=${build_dir}/tests/" />
+                <arg prefix="--corruptedFilesFolder=" path="${build_dir}/tests/corruptedfiles" />
             </exec>
         </target>
 
