@@ -74,18 +74,18 @@ std::uint32_t dataHandlerStringAS::getAge(const std::uint32_t index, tAgeUnit* p
 	PUNTOEXE_FUNCTION_START(L"dataHandlerStringAS::getAge");
 
 	std::wstring ageString = getUnicodeString(index);
-	if(ageString.size() < 3)
-	{
-		ageString.resize(3, L'0');
-	}
-	if(ageString.size() < 4)
-	{
-		ageString.resize(4, L'Y');
-	}
 	std::wistringstream ageStream(ageString);
 	std::uint32_t age;
 	ageStream >> age;
-	*pUnit = (tAgeUnit)ageString[3];
+    char unit = ageString[ageString.size() - 1];
+    if(unit == days || unit == weeks || unit == months || unit == years)
+    {
+        *pUnit = (tAgeUnit)unit;
+    }
+    else
+    {
+        *pUnit = years;
+    }
 
 	return age;
 
