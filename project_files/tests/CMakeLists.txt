@@ -171,6 +171,7 @@ add_executable(ImebraTests
     dicomDirTest.cpp
     dicomCodecTest.cpp
     decimalStringHandlerTest.cpp
+    integerStringHandlerTest.cpp
     dateTimeHandlerTest.cpp
     dataSetTest.cpp
     CImbx_tests.cpp

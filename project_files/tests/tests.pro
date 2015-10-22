@@ -202,4 +202,5 @@ SOURCES += \
     ../library/base/src/charsetConversionWindows.cpp \
     streamTest.cpp \
     corruptedFilesTest.cpp \
-    testsSettings.cpp
+    testsSettings.cpp \
+    integerStringHandlerTest.cpp
