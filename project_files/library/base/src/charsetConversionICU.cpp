@@ -23,10 +23,22 @@ namespace puntoexe
 // Constructor
 //
 ///////////////////////////////////////////////////////////
-charsetConversionICU::charsetConversionICU()
+charsetConversionICU::charsetConversionICU(const std::string& dicomName)
 {
+    PUNTOEXE_FUNCTION_START(L"charsetConversionICU::charsetConversionICU");
 
-    m_pIcuConverter = 0;
+    UErrorCode errorCode(U_ZERO_ERROR);
+    const charsetInformation& info = getDictionary().getCharsetInformation(dicomName);
+
+    m_pIcuConverter = ucnv_open(info.m_isoRegistration.c_str(), &errorCode);
+    if(U_FAILURE(errorCode))
+    {
+        std::ostringstream buildErrorString;
+        buildErrorString << "ICU library returned error " << errorCode << " for table " << dicomName;
+        PUNTOEXE_THROW(charsetConversionExceptionNoSupportedTable, buildErrorString.str());
+    }
+
+    PUNTOEXE_FUNCTION_END();
 }
 
 
@@ -37,55 +49,9 @@ charsetConversionICU::charsetConversionICU()
 ///////////////////////////////////////////////////////////
 charsetConversionICU::~charsetConversionICU()
 {
-	close();
+    ucnv_close(m_pIcuConverter);
 }
 
-
-///////////////////////////////////////////////////////////
-//
-// Initialize the charsetConversion object
-//
-///////////////////////////////////////////////////////////
-void charsetConversionICU::initialize(const int requestedTable)
-{
-    PUNTOEXE_FUNCTION_START(L"charsetConversionICU::initialize");
-
-    UErrorCode errorCode(U_ZERO_ERROR);
-    const char* tableName = m_charsetTable[requestedTable].m_iconvName;
-    if(requestedTable == 0)
-    {
-            tableName = ucnv_getDefaultName();
-
-    }
-    m_pIcuConverter = ucnv_open(tableName, &errorCode);
-    if(U_FAILURE(errorCode))
-    {
-        PUNTOEXE_THROW(charsetConversionExceptionNoSupportedTable, "The requested ISO table is not supported by the system");
-    }
-
-	PUNTOEXE_FUNCTION_END();
-}
-
-
-///////////////////////////////////////////////////////////
-//
-// Uninitialize the charsetConversion object
-//
-///////////////////////////////////////////////////////////
-void charsetConversionICU::close()
-{
-    PUNTOEXE_FUNCTION_START(L"charsetConversionICU::close");
-
-    charsetConversion::close();
-
-    if(m_pIcuConverter != 0)
-    {
-        ucnv_close(m_pIcuConverter);
-        m_pIcuConverter = 0;
-    }
-
-	PUNTOEXE_FUNCTION_END();
-}
 
 
 ///////////////////////////////////////////////////////////
@@ -176,10 +142,7 @@ std::wstring charsetConversionICU::toUnicode(const std::string& asciiString) con
 	PUNTOEXE_FUNCTION_END();
 }
 
-charsetConversion* allocateCharsetConversion()
-{
-    return new charsetConversionICU();
-}
+
 
 } // namespace puntoexe
 

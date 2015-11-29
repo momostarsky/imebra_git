@@ -14,7 +14,7 @@ TEST(transactionTest, testOneTransaction)
 {
 	ptr<dataSet> newDataSet(new dataSet);
 	charsetsList::tCharsetsList charsets;
-	charsets.push_back(L"ISO_IR 100");
+    charsets.push_back("ISO_IR 100");
 	newDataSet->setCharsetsList(&charsets);
 
 	// Test without transactions
@@ -53,7 +53,7 @@ TEST(transactionTest, testNestedTransactions0)
 {
 	ptr<dataSet> newDataSet(new dataSet);
 	charsetsList::tCharsetsList charsets;
-	charsets.push_back(L"ISO_IR 100");
+    charsets.push_back("ISO_IR 100");
 	newDataSet->setCharsetsList(&charsets);
 
 	IMEBRA_TRANSACTION_START();
@@ -104,7 +104,7 @@ TEST(transactionTest, testNestedTransactions1)
 {
 	ptr<dataSet> newDataSet(new dataSet);
 	charsetsList::tCharsetsList charsets;
-	charsets.push_back(L"ISO_IR 100");
+    charsets.push_back("ISO_IR 100");
 	newDataSet->setCharsetsList(&charsets);
 
 	// Test one transaction
@@ -156,7 +156,7 @@ TEST(transactionTest, testNestedTransactionsFail0)
 {
 	ptr<dataSet> newDataSet(new dataSet);
 	charsetsList::tCharsetsList charsets;
-	charsets.push_back(L"ISO_IR 6");
+    charsets.push_back("ISO_IR 6");
 	newDataSet->setCharsetsList(&charsets);
 
 	newDataSet->setUnicodeString(10, 0, 10, 0, L"initial test 0", "PN");
@@ -204,7 +204,7 @@ TEST(transactionTest, testNestedTransactionsFail1)
 {
 	ptr<dataSet> newDataSet(new dataSet);
 	charsetsList::tCharsetsList charsets;
-	charsets.push_back(L"ISO_IR 100");
+    charsets.push_back("ISO_IR 100");
 	newDataSet->setCharsetsList(&charsets);
 
 	newDataSet->setUnicodeString(10, 0, 10, 0, L"initial test 0", "PN");

@@ -54,6 +54,12 @@ typedef std::int64_t imbxInt64;
 
 typedef std::uint64_t imbxUint64;
 
+#ifndef MAXIMUM_IMAGE_WIDTH
+    #define MAXIMUM_IMAGE_WIDTH 4096
+#endif
+#ifndef MAXIMUM_IMAGE_HEIGHT
+    #define MAXIMUM_IMAGE_HEIGHT 4096
+#endif
 
 #if !defined(PUNTOEXE_WINDOWS) && !defined(PUNTOEXE_POSIX)
 
@@ -65,6 +71,8 @@ typedef std::uint64_t imbxUint64;
 #define PUNTOEXE_POSIX 1
 #endif
 
+#endif
+
 #if !defined(PUNTOEXE_USE_ICONV) && !defined(PUNTOEXE_USE_ICU) && !defined(PUNTOEXE_USE_WINDOWS_CHARSET) && !defined(PUNTOEXE_USE_JAVA)
 
 #if defined(PUNTOEXE_WINDOWS)
@@ -74,16 +82,4 @@ typedef std::uint64_t imbxUint64;
 #endif
 #endif
 
-#ifndef MAXIMUM_IMAGE_WIDTH
-    #define MAXIMUM_IMAGE_WIDTH 4096
-#endif
-#ifndef MAXIMUM_IMAGE_HEIGHT
-    #define MAXIMUM_IMAGE_HEIGHT 4096
-#endif
-
 ///@}
-
-#endif
-
-
-

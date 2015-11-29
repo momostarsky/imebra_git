@@ -283,7 +283,7 @@ public:
 			charsetsList::updateCharsets(&charsets, &m_charsetsList);
 		}
 
-		charsetsList::copyCharsets(&m_charsetsList, pCharsetsList);
+        pCharsetsList->insert(pCharsetsList->end(), m_charsetsList.begin(), m_charsetsList.end());
 	}
 
 

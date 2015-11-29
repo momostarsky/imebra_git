@@ -591,7 +591,7 @@ void buffer::copyBack(handlers::dataHandler* pDisconnectHandler)
 	// Update the charsets
 	///////////////////////////////////////////////////////////
 	m_temporaryCharsets.clear();
-	charsetsList::copyCharsets(&m_charsetsList, &m_temporaryCharsets);
+    m_temporaryCharsets.insert(m_temporaryCharsets.begin(), m_charsetsList.begin(), m_charsetsList.end());
 	charsetsList::tCharsetsList charsets;
 	pDisconnectHandler->getCharsetsList(&charsets);
 	charsetsList::updateCharsets(&charsets, &m_temporaryCharsets);
@@ -641,8 +641,7 @@ void buffer::commit()
 	// Commit the charsets
 	///////////////////////////////////////////////////////////
 	m_charsetsList.clear();
-	charsetsList::copyCharsets(&m_temporaryCharsets, &m_charsetsList);
-	m_temporaryCharsets.clear();
+    m_charsetsList.splice(m_charsetsList.end(), m_temporaryCharsets);
 
 	// Increase the buffer's version
 	///////////////////////////////////////////////////////////
@@ -709,7 +708,7 @@ void buffer::getCharsetsList(charsetsList::tCharsetsList* pCharsetsList)
 {
 	PUNTOEXE_FUNCTION_START(L"buffer::getCharsetsList");
 
-	charsetsList::copyCharsets(&m_charsetsList, pCharsetsList);
+    pCharsetsList->insert(pCharsetsList->end(), m_charsetsList.begin(), m_charsetsList.end());
 
 	PUNTOEXE_FUNCTION_END();
 }

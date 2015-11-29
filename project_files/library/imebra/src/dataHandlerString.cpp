@@ -229,7 +229,7 @@ std::string dataHandlerString::getString(const std::uint32_t index) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerString::getString");
 
-        charsetsList::tCharsetsList localCharsetsList(m_charsetsList);
+    charsetsList::tCharsetsList localCharsetsList(m_charsetsList);
 	return convertFromUnicode(getUnicodeString(index), &localCharsetsList);
 
 	PUNTOEXE_FUNCTION_END();

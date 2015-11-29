@@ -74,7 +74,7 @@ Please note that the file doesn't include the file viewHelper.h.
 #include "../../base/include/nullStream.h"
 #include "../../base/include/streamReader.h"
 #include "../../base/include/streamWriter.h"
-#include "../../base/include/charsetConversion.h"
+#include "../../base/include/charsetConversionBase.h"
 #include "../../base/include/criticalSection.h"
 
 #endif // !defined(imebra_C2D59748_5D38_4b12_BA16_5EC22DA7C0E7__INCLUDED_)

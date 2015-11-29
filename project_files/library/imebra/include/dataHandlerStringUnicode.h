@@ -31,15 +31,6 @@ namespace imebra
 namespace handlers
 {
 
-struct dicomCharsetInformation
-{
-	dicomCharsetInformation(const wchar_t* dicomName, const char* escapeSequence, const char* isoRegistration):
-		m_dicomName(dicomName), m_escapeSequence(escapeSequence), m_isoRegistration(isoRegistration){}
-	const wchar_t* m_dicomName;
-	std::string m_escapeSequence;
-	std::string m_isoRegistration;
-};
-
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 /// \brief This is the base class for all the data handlers
@@ -82,10 +73,6 @@ protected:
 	///////////////////////////////////////////////////////////
 	virtual std::string convertFromUnicode(const std::wstring& value, charsetsList::tCharsetsList* pCharsetsList) const;
 
-    std::unique_ptr<charsetConversion> m_charsetConversion;
-    std::unique_ptr<charsetConversion> m_localeCharsetConversion;
-
-	dicomCharsetInformation* getCharsetInfo(const std::wstring& dicomName) const;
 };
 
 class dataHandlerStringUnicodeException: public std::runtime_error

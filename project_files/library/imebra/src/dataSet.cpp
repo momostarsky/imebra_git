@@ -1450,7 +1450,7 @@ void dataSet::updateCharsetTag()
 	std::uint32_t pointer(0);
 	for(charsetsList::tCharsetsList::iterator scanCharsets = charsets.begin(); scanCharsets != charsets.end(); ++scanCharsets)
 	{
-		charsetHandler->setUnicodeString(pointer++, *scanCharsets);
+        charsetHandler->setString(pointer++, *scanCharsets);
 	}
 }
 
@@ -1472,7 +1472,7 @@ void dataSet::updateTagsCharset()
 	{
 		for(std::uint32_t pointer(0); charsetHandler->pointerIsValid(pointer); ++pointer)
 		{
-			charsets.push_back(charsetHandler->getUnicodeString(pointer));
+            charsets.push_back(charsetHandler->getString(pointer));
 		}
 	}
 	setCharsetsList(&charsets);

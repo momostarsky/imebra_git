@@ -23,11 +23,41 @@ namespace puntoexe
 // Constructor
 //
 ///////////////////////////////////////////////////////////
-charsetConversionIconv::charsetConversionIconv()
+charsetConversionIconv::charsetConversionIconv(const std::string& dicomName)
 {
+    PUNTOEXE_FUNCTION_START(L"charsetConversion::charsetConversionIconv");
 
-	m_iconvToUnicode = (iconv_t)-1;
-	m_iconvFromUnicode = (iconv_t)-1;
+    const charsetInformation& info(getDictionary().getCharsetInformation(dicomName));
+
+    std::string toCodeIgnore(info.m_isoRegistration);
+    toCodeIgnore += "//IGNORE";
+
+    // Check little endian/big endian
+    ///////////////////////////////////////////////////////////
+    static std::uint16_t m_endianCheck=0x00ff;
+    const char* utfCode;
+    switch(sizeof(wchar_t))
+    {
+    case 2:
+        utfCode = (*((std::uint8_t*)&m_endianCheck) == 0xff) ? "UTF-16LE" : "UTF-16BE";
+        break;
+    case 4:
+        utfCode = (*((std::uint8_t*)&m_endianCheck) == 0xff) ? "UTF-32LE" : "UTF-32BE";
+        break;
+    default:
+        PUNTOEXE_THROW(charsetConversionExceptionUtfSizeNotSupported, "The system utf size is not supported");
+    }
+
+    m_iconvToUnicode = iconv_open(utfCode, info.m_isoRegistration.c_str());
+    m_iconvFromUnicode = iconv_open(toCodeIgnore.c_str(), utfCode);
+    if(m_iconvToUnicode == (iconv_t)-1 || m_iconvFromUnicode == (iconv_t)-1)
+    {
+        std::ostringstream buildErrorString;
+        buildErrorString << "Table " << dicomName << " not supported by the system";
+        PUNTOEXE_THROW(charsetConversionExceptionNoSupportedTable, buildErrorString.str());
+    }
+
+    PUNTOEXE_FUNCTION_END();
 }
 
 
@@ -38,74 +68,9 @@ charsetConversionIconv::charsetConversionIconv()
 ///////////////////////////////////////////////////////////
 charsetConversionIconv::~charsetConversionIconv()
 {
-	close();
+    iconv_close(m_iconvToUnicode);
+    iconv_close(m_iconvFromUnicode);
 }
-
-
-///////////////////////////////////////////////////////////
-//
-// Initialize the charsetConversion object
-//
-///////////////////////////////////////////////////////////
-void charsetConversionIconv::initialize(const int requestedTable)
-{
-	PUNTOEXE_FUNCTION_START(L"charsetConversion::initialize");
-
-	std::string toCodeIgnore(m_charsetTable[requestedTable].m_iconvName);
-	toCodeIgnore += "//IGNORE";
-
-	// Check little endian/big endian
-	///////////////////////////////////////////////////////////
-	static std::uint16_t m_endianCheck=0x00ff;
-	const char* utfCode;
-	switch(sizeof(wchar_t))
-	{
-	case 2:
-		utfCode = (*((std::uint8_t*)&m_endianCheck) == 0xff) ? "UTF-16LE" : "UTF-16BE";
-		break;
-	case 4:
-		utfCode = (*((std::uint8_t*)&m_endianCheck) == 0xff) ? "UTF-32LE" : "UTF-32BE";
-		break;
-	default:
-		PUNTOEXE_THROW(charsetConversionExceptionUtfSizeNotSupported, "The system utf size is not supported");
-	}
-
-	m_iconvToUnicode = iconv_open(utfCode, m_charsetTable[requestedTable].m_iconvName);
-	m_iconvFromUnicode = iconv_open(toCodeIgnore.c_str(), utfCode);
-	if(m_iconvToUnicode == (iconv_t)-1 || m_iconvFromUnicode == (iconv_t)-1)
-	{
-		PUNTOEXE_THROW(charsetConversionExceptionNoSupportedTable, "The requested ISO table is not supported by the system");
-	}
-
-	PUNTOEXE_FUNCTION_END();
-}
-
-
-///////////////////////////////////////////////////////////
-//
-// Uninitialize the charsetConversion object
-//
-///////////////////////////////////////////////////////////
-void charsetConversionIconv::close()
-{
-    PUNTOEXE_FUNCTION_START(L"charsetConversionIconv::close");
-
-    charsetConversion::close();
-
-	if(m_iconvToUnicode != (iconv_t)-1)
-	{
-		iconv_close(m_iconvToUnicode);
-		m_iconvToUnicode = (iconv_t)-1;
-	}
-	if(m_iconvFromUnicode != (iconv_t)-1)
-	{
-		iconv_close(m_iconvFromUnicode);
-		m_iconvFromUnicode = (iconv_t)-1;
-	}
-
-	PUNTOEXE_FUNCTION_END();
-}
-
 
 ///////////////////////////////////////////////////////////
 //
@@ -120,7 +85,6 @@ std::string charsetConversionIconv::fromUnicode(const std::wstring& unicodeStrin
 	{
 		return std::string();
 	}
-
 
 	return myIconv(m_iconvFromUnicode, (char*)unicodeString.c_str(), unicodeString.length() * sizeof(wchar_t));
 
@@ -201,11 +165,6 @@ std::string charsetConversionIconv::myIconv(iconv_t context, char* inputString, 
 	return finalString;
 
 	PUNTOEXE_FUNCTION_END();
-}
-
-charsetConversion* allocateCharsetConversion()
-{
-    return new charsetConversionIconv();
 }
 
 } // namespace puntoexe
