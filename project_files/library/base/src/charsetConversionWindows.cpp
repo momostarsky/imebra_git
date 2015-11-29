@@ -23,54 +23,16 @@ namespace puntoexe
 // Constructor
 //
 ///////////////////////////////////////////////////////////
-charsetConversionWindows::charsetConversionWindows()
+charsetConversionWindows::charsetConversionWindows(const std::string& dicomName)
 {
+    PUNTOEXE_FUNCTION_START(L"charsetConversionWindows::charsetConversionWindows");
 
-	m_codePage = 0;
-	m_bZeroFlag = false;
-}
+    const charsetInformation& info(getDictionary().getCharsetInformation(dicomName));
 
+    m_codePage = info.m_codePage;
+    m_bZeroFlag = info.m_bZeroFlag;
 
-///////////////////////////////////////////////////////////
-//
-// Destructor
-//
-///////////////////////////////////////////////////////////
-charsetConversionWindows::~charsetConversionWindows()
-{
-}
-
-
-///////////////////////////////////////////////////////////
-//
-// Initialize the charsetConversion object
-//
-///////////////////////////////////////////////////////////
-void charsetConversionWindows::initialize(const int requestedTable)
-{
-    PUNTOEXE_FUNCTION_START(L"charsetConversionWindows::initialize");
-
-	m_codePage = m_charsetTable[requestedTable].m_codePage;
-	m_bZeroFlag = m_charsetTable[requestedTable].m_bZeroFlag;
-
-	PUNTOEXE_FUNCTION_END();
-}
-
-
-///////////////////////////////////////////////////////////
-//
-// Uninitialize the charsetConversion object
-//
-///////////////////////////////////////////////////////////
-void charsetConversionWindows::close()
-{
-    PUNTOEXE_FUNCTION_START(L"charsetConversionWindows::close");
-
-    charsetConversion::close();
-	m_codePage = 0;
-	m_bZeroFlag = false;
-
-	PUNTOEXE_FUNCTION_END();
+    PUNTOEXE_FUNCTION_END();
 }
 
 
@@ -87,7 +49,6 @@ std::string charsetConversionWindows::fromUnicode(const std::wstring& unicodeStr
 	{
 		return std::string();
 	}
-
 
 	BOOL bUsedDefault = false;
 	int requiredChars = ::WideCharToMultiByte(m_codePage, m_bZeroFlag ? 0 : WC_NO_BEST_FIT_CHARS | WC_COMPOSITECHECK | WC_DEFAULTCHAR, unicodeString.c_str(), (int)(unicodeString.length()), 0, 0, 0, m_bZeroFlag ? 0 : &bUsedDefault);
@@ -131,11 +92,6 @@ std::wstring charsetConversionWindows::toUnicode(const std::string& asciiString)
     return returnString;
 
 	PUNTOEXE_FUNCTION_END();
-}
-
-charsetConversion* allocateCharsetConversion()
-{
-    return new charsetConversionWindows();
 }
 
 } // namespace puntoexe

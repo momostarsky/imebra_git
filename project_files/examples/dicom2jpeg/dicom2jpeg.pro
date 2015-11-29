@@ -2,8 +2,9 @@ QT     -= gui core
 LIBS -= -lQtGui -lQtCore
 afl:QMAKE_CXX = afl-g++
 QMAKE_CXXFLAGS += -std=c++0x -Wall -Wextra -pedantic
-unix:LIBS += -lpthread
+unix:LIBS += -lpthread -licui18n -licuio -licuuc
 windows:DEFINES += _WIN32_WINNT=0x0501 WINVER=0x0501 NTDDI_VERSION=0x05010000
+DEFINES += PUNTOEXE_USE_ICU
 
 SOURCES += \
     dicom2jpeg.cpp \
@@ -16,7 +17,6 @@ SOURCES += \
     ../../library/base/src/huffmanTable.cpp \
     ../../library/base/src/exception.cpp \
     ../../library/base/src/criticalSection.cpp \
-    ../../library/base/src/charsetConversion.cpp \
     ../../library/base/src/baseStream.cpp \
     ../../library/base/src/baseObject.cpp \
     ../../library/imebra/src/YBRPARTIALToRGB.cpp \
@@ -75,7 +75,8 @@ SOURCES += \
 	../../library/imebra/src/transform.cpp \
     ../../library/base/src/charsetConversionICU.cpp \
     ../../library/base/src/charsetConversionWindows.cpp \
-    ../../library/base/src/charsetConversionIconv.cpp
+    ../../library/base/src/charsetConversionIconv.cpp \
+    ../../library/base/src/charsetConversionBase.cpp
 
 HEADERS += \
     ../../library/base/include/streamWriter.h \
@@ -89,7 +90,6 @@ HEADERS += \
     ../../library/base/include/exception.h \
     ../../library/base/include/criticalSection.h \
     ../../library/base/include/configuration.h \
-    ../../library/base/include/charsetConversion.h \
     ../../library/base/include/baseStream.h \
     ../../library/base/include/baseObject.h \
     ../../library/imebra/include/YBRPARTIALToRGB.h \
@@ -153,4 +153,6 @@ HEADERS += \
 	../../library/imebra/include/transform.h \
     ../../library/base/include/charsetConversionICU.h \
     ../../library/base/include/charsetConversionWindows.h \
-    ../../library/base/include/charsetConversionIconv.h
+    ../../library/base/include/charsetConversionIconv.h \
+    ../../library/base/include/charsetConversionBase.h \
+    ../../library/base/include/charsetConversion.h

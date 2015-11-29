@@ -108,7 +108,8 @@ HEADERS += \
     ../library/base/include/charsetConversionIconv.h \
     ../library/base/include/charsetConversionICU.h \
     ../library/base/include/charsetConversionWindows.h \
-    testsSettings.h
+    testsSettings.h \
+    ../library/base/include/charsetConversionBase.h
 
 SOURCES += \
     unicodeStringHandlerTest.cpp \
@@ -194,7 +195,6 @@ SOURCES += \
     ../library/base/src/huffmanTable.cpp \
     ../library/base/src/exception.cpp \
     ../library/base/src/criticalSection.cpp \
-    ../library/base/src/charsetConversion.cpp \
     ../library/base/src/baseStream.cpp \
     ../library/base/src/baseObject.cpp \
     ../library/base/src/charsetConversionIconv.cpp \
@@ -203,4 +203,5 @@ SOURCES += \
     streamTest.cpp \
     corruptedFilesTest.cpp \
     testsSettings.cpp \
-    integerStringHandlerTest.cpp
+    integerStringHandlerTest.cpp \
+    ../library/base/src/charsetConversionBase.cpp

@@ -61,10 +61,15 @@ void updateCharsets(const tCharsetsList* pCharsetsList, tCharsetsList* pDestinat
 	///////////////////////////////////////////////////////////
 	for(tCharsetsList::const_iterator scanCharsets = pCharsetsList->begin(); scanCharsets != pCharsetsList->end(); ++scanCharsets)
 	{
+        std::string charsetName(*scanCharsets);
+        if(charsetName.empty())
+        {
+            charsetName = "ISO 2022 IR 6";
+        }
 		bool bExist = false;
 		for(tCharsetsList::iterator scanExistingCharsets = pDestinationCharsetsList->begin(); scanExistingCharsets != pDestinationCharsetsList->end(); ++scanExistingCharsets)
 		{
-			if(*scanCharsets == *scanExistingCharsets)
+            if(charsetName == *scanExistingCharsets)
 			{
 				bExist = true;
 				break;
@@ -72,36 +77,13 @@ void updateCharsets(const tCharsetsList* pCharsetsList, tCharsetsList* pDestinat
 		}
 		if(!bExist)
 		{
-			pDestinationCharsetsList->push_back(*scanCharsets);
+            pDestinationCharsetsList->push_back(charsetName);
 		}
 	}
 
 	PUNTOEXE_FUNCTION_END();
 }
 
-
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Copy the charsets from the local list into the
-//  specified list
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-void copyCharsets(const tCharsetsList* pSourceCharsetsList, tCharsetsList* pDestinationCharsetsList)
-{
-	PUNTOEXE_FUNCTION_START(L"charsetsList::copyCharsets");
-
-	for(tCharsetsList::const_iterator scanCharsets = pSourceCharsetsList->begin(); scanCharsets != pSourceCharsetsList->end(); ++scanCharsets)
-	{
-		pDestinationCharsetsList->push_back(*scanCharsets);
-	}
-
-	PUNTOEXE_FUNCTION_END();
-}
 
 } // namespace charsetsList
 

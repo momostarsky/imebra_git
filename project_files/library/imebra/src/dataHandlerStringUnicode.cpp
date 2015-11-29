@@ -35,51 +35,9 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 
-static dicomCharsetInformation m_dicomCharsets[]={
-
-	dicomCharsetInformation(L"ISO 2022 IR 6",   "\x1b\x28\x42", "ISO-IR 6"),
-
-	dicomCharsetInformation(L"ISO_IR 6", "", "ISO-IR 6"),
-	dicomCharsetInformation(L"ISO_IR 100", "", "ISO-8859-1"),
-	dicomCharsetInformation(L"ISO_IR 101", "", "ISO-8859-2"),
-	dicomCharsetInformation(L"ISO_IR 109", "", "ISO-8859-3"),
-	dicomCharsetInformation(L"ISO_IR 110", "", "ISO-8859-4"),
-	dicomCharsetInformation(L"ISO_IR 144", "", "ISO-8859-5"),
-	dicomCharsetInformation(L"ISO_IR 127", "", "ISO-8859-6"),
-	dicomCharsetInformation(L"ISO_IR 126", "", "ISO-8859-7"),
-	dicomCharsetInformation(L"ISO_IR 138", "", "ISO-8859-8"),
-	dicomCharsetInformation(L"ISO_IR 148", "", "ISO-8859-9"),
-	dicomCharsetInformation(L"ISO_IR 13",  "", "ISO-IR 13" ),
-	dicomCharsetInformation(L"ISO_IR 166", "", "ISO-IR 166"),
-
-	dicomCharsetInformation(L"", "\x1b\x28\x42", "ISO-IR 6"),
-	dicomCharsetInformation(L"ISO 2022 IR 100", "\x1b\x2d\x41", "ISO-8859-1"),
-	dicomCharsetInformation(L"ISO 2022 IR 101", "\x1b\x2d\x42", "ISO-8859-2"),
-	dicomCharsetInformation(L"ISO 2022 IR 109", "\x1b\x2d\x43", "ISO-8859-3"),
-	dicomCharsetInformation(L"ISO 2022 IR 110", "\x1b\x2d\x44", "ISO-8859-4"),
-	dicomCharsetInformation(L"ISO 2022 IR 144", "\x1b\x2d\x4c", "ISO-8859-5"),
-	dicomCharsetInformation(L"ISO 2022 IR 127", "\x1b\x2d\x47", "ISO-8859-6"),
-	dicomCharsetInformation(L"ISO 2022 IR 126", "\x1b\x2d\x46", "ISO-8859-7"),
-	dicomCharsetInformation(L"ISO 2022 IR 138", "\x1b\x2d\x48", "ISO-8859-8"),
-	dicomCharsetInformation(L"ISO 2022 IR 148", "\x1b\x2d\x4d", "ISO-8859-9"),
-	dicomCharsetInformation(L"ISO 2022 IR 13",  "\x1b\x29\x49", "ISO-IR 13"),
-	dicomCharsetInformation(L"ISO 2022 IR 166", "\x1b\x2d\x54", "ISO-IR 166"),
-	dicomCharsetInformation(L"ISO 2022 IR 87",  "\x1b\x24\x42", "ISO-IR 87"),
-	dicomCharsetInformation(L"ISO 2022 IR 159", "\x1b\x24\x28\x44", "ISO-IR 159"),
-	dicomCharsetInformation(L"ISO 2022 IR 149", "\x1b\x24\x29\x43", "ISO-IR 149"),
-
-	dicomCharsetInformation(L"ISO_IR 192", "", "ISO-IR 192"),
-	dicomCharsetInformation(L"GB18030",    "",    "GB18030"),
-
-	dicomCharsetInformation(0,"","")
-};
-
 
 dataHandlerStringUnicode::dataHandlerStringUnicode()
 {
-    m_charsetConversion.reset(allocateCharsetConversion());
-    m_localeCharsetConversion.reset(allocateCharsetConversion());
-
 }
 
 ///////////////////////////////////////////////////////////
@@ -98,66 +56,91 @@ std::wstring dataHandlerStringUnicode::convertToUnicode(const std::string& value
 
 	// Should we take care of the escape sequences...?
 	///////////////////////////////////////////////////////////
-	if(m_charsetsList.size() < 2)
+    if(m_charsetsList.empty())
 	{
-		// No, there isn't any escape sequence
-		///////////////////////////////////////////////////////////
-        return m_charsetConversion->toUnicode(value);
+        throw std::logic_error("The charsets list must be set before converting to unicode");
 	}
 
-    std::unique_ptr<charsetConversion> localCharsetConversion(allocateCharsetConversion());
-    localCharsetConversion->initialize(m_charsetConversion->getIsoCharset());
+    // Initialize the conversion engine with the default
+    //  charset
+    ///////////////////////////////////////////////////////////
+    std::unique_ptr<defaultCharsetConversion> localCharsetConversion(new defaultCharsetConversion(m_charsetsList.front()));
+
+    // Only one charset is present: we don't need to check
+    //  the escape sequences
+    ///////////////////////////////////////////////////////////
+    if(m_charsetsList.size() == 1)
+    {
+        return localCharsetConversion->toUnicode(value);
+    }
 
 	// Here we store the value to be returned
 	///////////////////////////////////////////////////////////
 	std::wstring returnString;
+    returnString.reserve(value.size());
+
+    // Get the escape sequences from the unicode conversion
+    //  engine
+    ///////////////////////////////////////////////////////////
+    const charsetDictionary::escapeSequences_t& escapeSequences(localCharsetConversion->getDictionary().getEscapeSequences());
+
+    // Position and properties of the next escape sequence
+    ///////////////////////////////////////////////////////////
+    size_t escapePosition = std::string::npos;
+    std::string escapeString;
+    std::string isoTable;
 
 	// Scan all the string and look for valid escape sequences.
 	// The partial strings are converted using the dicom
 	//  charset specified by the escape sequences.
 	///////////////////////////////////////////////////////////
-	for(size_t scanString = 0; scanString < value.length(); /* empty */)
+    for(size_t scanString = 0; scanString < value.size(); /* empty */)
 	{
 		// Find the position of the next escape sequence
 		///////////////////////////////////////////////////////////
-		size_t escapePosition = value.length();
-		std::string escapeString;
-		std::string isoTable;
-		for(int scanCharsets = 0; m_dicomCharsets[scanCharsets].m_dicomName != 0; ++scanCharsets)
-		{
-			std::string findEscapeString(m_dicomCharsets[scanCharsets].m_escapeSequence);
-			if(findEscapeString == "")
-			{
-				continue;
-			}
-			size_t findEscape = value.find(findEscapeString, scanString);
-			if(findEscape < escapePosition)
-			{
-				escapePosition = findEscape;
-				escapeString = findEscapeString;
-				isoTable = m_dicomCharsets[scanCharsets].m_isoRegistration;
-			}
-		}
+        if(escapePosition == std::string::npos)
+        {
+            escapePosition = value.size();
+            for(charsetDictionary::escapeSequences_t::const_iterator scanEscapes(escapeSequences.begin()), endEscapes(escapeSequences.end());
+                scanEscapes != endEscapes;
+                ++scanEscapes)
+            {
+                size_t findEscape = value.find(scanEscapes->first, scanString);
+                if(findEscape != std::string::npos && findEscape < escapePosition)
+                {
+                    escapePosition = findEscape;
+                    escapeString = scanEscapes->first;
+                    isoTable = scanEscapes->second;
+                }
+            }
+        }
 
-		// The escape sequence can wait, now we are still in the
-		//  already activated charset
-		///////////////////////////////////////////////////////////
-		if(escapePosition > scanString)
+        // No more escape sequences. Just convert everything
+        ///////////////////////////////////////////////////////////
+        if(escapePosition == value.size())
+        {
+            return returnString + localCharsetConversion->toUnicode(value.substr(scanString));
+        }
+
+        // The escape sequence can wait, now we are still in the
+        //  already activated charset
+        ///////////////////////////////////////////////////////////
+        if(escapePosition > scanString)
 		{
             returnString += localCharsetConversion->toUnicode(value.substr(scanString, escapePosition - scanString));
+            scanString = escapePosition;
+            continue;
 		}
 
 		// Move the char pointer to the next char that has to be
 		//  analyzed
 		///////////////////////////////////////////////////////////
 		scanString = escapePosition + escapeString.length();
+        escapePosition = std::string::npos;
 
 		// An iso table is coupled to the found escape sequence.
 		///////////////////////////////////////////////////////////
-		if(!isoTable.empty())
-		{
-            localCharsetConversion->initialize(isoTable);
-		}
+        localCharsetConversion.reset(new defaultCharsetConversion(isoTable));
 	}
 
 	return returnString;
@@ -180,112 +163,90 @@ std::string dataHandlerStringUnicode::convertFromUnicode(const std::wstring& val
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerStringUnicode::convertFromUnicode");
 
-	// We don't have to deal with multiple charsets here
-	///////////////////////////////////////////////////////////
-	if(pCharsetsList->size() == 1)
-	{
-		dicomCharsetInformation* pCharset = getCharsetInfo(pCharsetsList->front());
-		if(pCharset != 0 && pCharset->m_escapeSequence.empty())
-		{
-            return m_charsetConversion->fromUnicode(value);
-		}
-	}
+    // Check for the dicom charset's name
+    ///////////////////////////////////////////////////////////
+    if(pCharsetsList->empty())
+    {
+        throw std::logic_error("The charsets list must be set before converting from unicode");
+    }
 
-    std::unique_ptr<charsetConversion> localCharsetConversion(allocateCharsetConversion());
-    localCharsetConversion->initialize(m_charsetConversion->getIsoCharset());
+    // Setup the conversion objects
+    ///////////////////////////////////////////////////////////
+    std::unique_ptr<defaultCharsetConversion> localCharsetConversion(new defaultCharsetConversion(pCharsetsList->front()));
+
+    // Get the escape sequences from the unicode conversion
+    //  engine
+    ///////////////////////////////////////////////////////////
+    const charsetDictionary::escapeSequences_t& escapes(localCharsetConversion->getDictionary().getEscapeSequences());
 
 	// Returned string
 	///////////////////////////////////////////////////////////
-	std::string asciiString;
+    std::string rawString;
+    rawString.reserve(value.size());
 	
 	// Convert all the chars. Each char is tested with the
 	//  active charset first, then with other charsets if
 	//  the active one doesn't work
 	///////////////////////////////////////////////////////////
-	size_t valueSize = value.size();
-	for(size_t scanString = 0; scanString < valueSize; /* empty */)
+    for(size_t scanString = 0; scanString != value.size(); ++scanString)
 	{
-		// Find the last char that can be converted with the active
-		//  charset
+        // Get the UNICODE char. On windows the code may be spread
+        //  across 2 16 bit wide codes.
 		///////////////////////////////////////////////////////////
-		std::wstring code;
-		size_t until;
-		for(until = scanString; until < valueSize; /* empty */)
-		{
-			size_t increaseUntil = 1;
-			code = value[until];
-			
-			// Check UTF-16 extension
-			///////////////////////////////////////////////////////////
-			if(sizeof(wchar_t) == 2)
-			{
-				if(value[until] >= 0xd800 && value[until] <=0xdfff && until < (valueSize - 1))
-				{
-					code += value[until+increaseUntil];
-					++increaseUntil;
-				}
+        std::wstring code(size_t(1), value[scanString]);
 
-				// Check composed chars extension
-				///////////////////////////////////////////////////////////
-				if((until + increaseUntil) < (valueSize - 1) && value[until + increaseUntil] >= 0x0300 && value[until + increaseUntil] <= 0x036f)
-				{
-					code += value[until+increaseUntil];
-					++increaseUntil;
-				}
-			}
-			
-			// If the conversion doesn't succeed, exit from the loop
-			///////////////////////////////////////////////////////////
-            if(localCharsetConversion->fromUnicode(code).empty())
-			{
-				break;
-			}
-			until += increaseUntil;
-		}
+        // Check UTF-16 extension (Windows only)
+        ///////////////////////////////////////////////////////////
+        if(sizeof(wchar_t) == 2)
+        {
+            if(code[0] >= 0xd800 && code[0] <=0xdfff && scanString < (value.size() - 1))
+            {
+                code += value[++scanString];
+            }
+        }
 
-		// Convert all the chars that can be converted using the
-		//  active charset
-		///////////////////////////////////////////////////////////
-		if(until > scanString)
-		{
-			std::wstring partialString = value.substr(scanString, until - scanString);
-            asciiString += localCharsetConversion->fromUnicode(partialString);
-			scanString = until;
-		}
+        // Check composed chars extension (diacritical marks)
+        ///////////////////////////////////////////////////////////
+        while(scanString < (value.size() - 1) && value[scanString + 1] >= 0x0300 && value[scanString + 1] <= 0x036f)
+        {
+            code += value[++scanString];
+        }
 
-		// Exit if the end of the source string has been reached
-		///////////////////////////////////////////////////////////
-		if(until >= valueSize)
-		{
-			break;
-		}
+        // Remember the return string size so we can check if we
+        //  added something to it
+        ///////////////////////////////////////////////////////////
+        size_t currentRawSize(rawString.size());
+        rawString += localCharsetConversion->fromUnicode(code);
+        if(rawString.size() != currentRawSize)
+        {
+            // The conversion succeeded: continue with the next char
+            ///////////////////////////////////////////////////////////
+            continue;
+        }
 
 		// Find the escape sequence
 		///////////////////////////////////////////////////////////
-        std::string activeIso = localCharsetConversion->getIsoCharset();
-		bool bSequenceFound = false;
-		for(int scanCharsets = 0; m_dicomCharsets[scanCharsets].m_dicomName != 0; ++scanCharsets)
+        for(charsetDictionary::escapeSequences_t::const_iterator scanEscapes(escapes.begin()), endEscapes(escapes.end());
+            scanEscapes != endEscapes;
+            ++scanEscapes)
 		{
-			if(m_dicomCharsets[scanCharsets].m_escapeSequence.empty())
-			{
-				continue;
-			}
-
 			try
 			{
-                localCharsetConversion->initialize(m_dicomCharsets[scanCharsets].m_isoRegistration);
-                if(!localCharsetConversion->fromUnicode(code).empty())
+                std::unique_ptr<defaultCharsetConversion> testEscapeSequence(new defaultCharsetConversion(scanEscapes->second));
+                std::string convertedChar(testEscapeSequence->fromUnicode(code));
+                if(!convertedChar.empty())
 				{
-					asciiString += m_dicomCharsets[scanCharsets].m_escapeSequence;
-					bSequenceFound = true;
+                    rawString += scanEscapes->first;
+                    rawString += convertedChar;
+
+                    localCharsetConversion.reset(testEscapeSequence.release());
 
 					// Add the dicom charset to the charsets
 					///////////////////////////////////////////////////////////
-					std::wstring dicomCharset = m_dicomCharsets[scanCharsets].m_dicomName;
 					bool bAlreadyUsed = false;
 					for(charsetsList::tCharsetsList::const_iterator scanUsedCharsets = pCharsetsList->begin(); scanUsedCharsets != pCharsetsList->end(); ++scanUsedCharsets)
 					{
-						if(*scanUsedCharsets == dicomCharset)
+                        if(*scanUsedCharsets == scanEscapes->second)
 						{
 							bAlreadyUsed = true;
 							break;
@@ -293,7 +254,7 @@ std::string dataHandlerStringUnicode::convertFromUnicode(const std::wstring& val
 					}
 					if(!bAlreadyUsed)
 					{
-						pCharsetsList->push_back(dicomCharset);
+                        pCharsetsList->push_back(scanEscapes->second);
 					}
 					break;
 				}
@@ -303,42 +264,9 @@ std::string dataHandlerStringUnicode::convertFromUnicode(const std::wstring& val
 				continue;
 			}
 		}
-		if(!bSequenceFound)
-		{
-            localCharsetConversion->initialize(activeIso);
-			++scanString;
-		}
-
 	}
 
-	return asciiString;
-
-	PUNTOEXE_FUNCTION_END();
-}
-
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Return the information related to the requested
-//  dicom charset
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-dicomCharsetInformation* dataHandlerStringUnicode::getCharsetInfo(const std::wstring& dicomName) const
-{
-	PUNTOEXE_FUNCTION_START(L"dataHandlerStringUnicode::getCharsetInfo");
-
-	for(int scanCharsets = 0; m_dicomCharsets[scanCharsets].m_dicomName != 0; ++scanCharsets)
-	{
-		if(m_dicomCharsets[scanCharsets].m_dicomName == dicomName)
-		{
-			return &(m_dicomCharsets[scanCharsets]);
-		}
-	}
-	return 0;
+    return rawString;
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -367,21 +295,8 @@ void dataHandlerStringUnicode::setCharsetsList(charsetsList::tCharsetsList* pCha
 	///////////////////////////////////////////////////////////
 	if(m_charsetsList.empty())
 	{
-		m_charsetsList.push_back(m_dicomCharsets[0].m_dicomName);
+        m_charsetsList.push_back("ISO 2022 IR 6");
 	}
-
-	// Check for the dicom charset's name
-	///////////////////////////////////////////////////////////
-	dicomCharsetInformation* pCharset = getCharsetInfo(m_charsetsList.front());
-	if(pCharset == 0 || pCharset->m_isoRegistration.empty())
-	{
-		PUNTOEXE_THROW(dataHandlerStringUnicodeExceptionUnknownCharset, "Unknown charset");
-	}
-
-	// Setup the conversion objects
-	///////////////////////////////////////////////////////////
-    m_charsetConversion->initialize(pCharset->m_isoRegistration);
-    m_localeCharsetConversion->initialize("LOCALE");
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -400,7 +315,7 @@ void dataHandlerStringUnicode::getCharsetsList(charsetsList::tCharsetsList* pCha
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerStringUnicode::getCharsetList");
 
-	charsetsList::copyCharsets(&m_charsetsList, pCharsetsList);
+    pCharsetsList->insert(pCharsetsList->end(), m_charsetsList.begin(), m_charsetsList.end());
 
 	PUNTOEXE_FUNCTION_END();
 }

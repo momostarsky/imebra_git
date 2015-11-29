@@ -21,7 +21,7 @@ TEST(unicodeStringHandlerTest, unicodeTest)
 	{
 		ptr<dataSet> testDataSet(new dataSet);
 		charsetsList::tCharsetsList charsets;
-		charsets.push_back(L"ISO_IR 192");
+        charsets.push_back("ISO_IR 192");
 		testDataSet->setCharsetsList(&charsets);
 
 		testDataSet->setUnicodeString(0x0010, 0, 0x0010, 0, patientName0);
@@ -42,7 +42,7 @@ TEST(unicodeStringHandlerTest, unicodeTest)
 		charsetsList::tCharsetsList charsets;
 		testDataSet->getCharsetsList(&charsets);
         EXPECT_EQ(1, charsets.size());
-        EXPECT_EQ(std::wstring(L"ISO_IR 192"), charsets.front());
+        EXPECT_EQ(std::string("ISO_IR 192"), charsets.front());
 	}
 }
 
@@ -77,7 +77,7 @@ TEST(unicodeStringHandlerTest, iso2022Test)
 		charsetsList::tCharsetsList charsets;
 		testDataSet->getCharsetsList(&charsets);
         EXPECT_EQ(4, charsets.size());
-        EXPECT_EQ(std::wstring(L"ISO 2022 IR 6"), charsets.front());
+        EXPECT_EQ(std::string("ISO 2022 IR 6"), charsets.front());
 	}
 }
 

@@ -146,13 +146,12 @@ exceptionInfo& exceptionInfo::operator=(const exceptionInfo& right)
 ///////////////////////////////////////////////////////////
 std::wstring exceptionInfo::getMessage()
 {
-    std::unique_ptr<charsetConversion> convertUnicode(allocateCharsetConversion());
-    convertUnicode->initialize("ASCII");
+    defaultCharsetConversion convertUnicode("ISO_IR 6");
 	std::wostringstream message;
 	message << "[" << m_functionName << "]" << "\n";
-    message << " file: " << convertUnicode->toUnicode(m_fileName) << "  line: " << m_lineNumber << "\n";
-    message << " exception type: " << convertUnicode->toUnicode(m_exceptionType) << "\n";
-    message << " exception message: " << convertUnicode->toUnicode(m_exceptionMessage) << "\n";
+    message << " file: " << convertUnicode.toUnicode(m_fileName) << "  line: " << m_lineNumber << "\n";
+    message << " exception type: " << convertUnicode.toUnicode(m_exceptionType) << "\n";
+    message << " exception message: " << convertUnicode.toUnicode(m_exceptionMessage) << "\n";
 	return message.str();
 }
 
