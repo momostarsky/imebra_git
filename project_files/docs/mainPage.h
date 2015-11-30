@@ -71,6 +71,13 @@ A detailed reference of the C++ classes that compose Imebra is included in
 
 \subsection version_current Changes for version $imebraVersion$
 
+- Fixes <a href="https://bitbucket.org/binarno/imebra/issues/112>#112</a> (MAXIMUM_IMAGE_WIDTH and MAXIMUM_IMAGE_HEIGHT are not defined)
+- Fixes <a href="https://bitbucket.org/binarno/imebra/issues/113>#113</a> (Corrupted test files have a name that is incompatible with Windows)
+- Refactored the DICOM charset conversion to/from Unicode
+
+
+\subsection version_2015_20151022_001 Changes for version 2015 20151022-001
+
 \warning Security update.\n
 This release introduces several validations in the file parsing source code (for both jpeg and Dicom streams).\n
 The bugs listed in the changelog may be used to perform an attack to the device on which the software linked to
@@ -85,7 +92,7 @@ the latest version of the library.
 - Fixes <a href="https://bitbucket.org/binarno/imebra/issues/111">#111</a> (crash while creating huffman table while reading corrupted jpeg files)
 
 
-\subsection version_current Changes for version 2015 20150927-001
+\subsection version_2015_20150927_001 Changes for version 2015 20150927-001
 
 - Fixes <a href="https://bitbucket.org/binarno/imebra/issues/72">#72</a> (RLE compression creates mangled images)
 - Fixes <a href="https://bitbucket.org/binarno/imebra/issues/106">#106</a> (Planar configuration is not set)
