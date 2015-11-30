@@ -214,6 +214,10 @@ The author can be contacted by email at info@binarno.com or by mail at
 		</copy>
                 <copy todir="${tests}">
 			<fileset dir="${build_dir}/tests" />
+			<filtermapper>
+				<replacestring from=":" to="_"/>
+				<replacestring from="," to="_"/>
+			</filtermapper>
 		</copy>
 		<copy file="${build_dir}/docs/gpl.txt" tofile="${distribution}/license_gpl.txt" />
 	</target>
