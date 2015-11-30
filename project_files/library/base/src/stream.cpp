@@ -127,7 +127,11 @@ void stream::openFile(const std::wstring& fileName, const int mode)
 	strMode += L"b";
 
 #if defined(PUNTOEXE_WINDOWS)
-	m_openFile = ::_wfopen(fileName.c_str(), strMode.c_str());
+	 errno_t errorCode = ::_wfopen_s(&m_openFile, fileName.c_str(), strMode.c_str());
+	 if (errorCode != 0)
+	 {
+		 m_openFile = 0;
+	 }
 #else
 	// Convert the filename to UTF8
     std::unique_ptr<charsetConversion> toUtf8(allocateCharsetConversion());
@@ -138,10 +142,10 @@ void stream::openFile(const std::wstring& fileName, const int mode)
     std::string utf8Mode(toUtf8->fromUnicode(strMode));
 	
 	m_openFile = ::fopen(utf8FileName.c_str(), utf8Mode.c_str());
+    int errorCode = errno;
 #endif
 	if(m_openFile == 0)
 	{
-        long errorCode = errno;
         std::ostringstream errorMessage;
         errorMessage << "stream::openFile failure - error code: " << errorCode;
         PUNTOEXE_THROW(streamExceptionOpen, errorMessage.str());
