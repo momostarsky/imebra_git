@@ -97,7 +97,7 @@ ptr<colorTransformsFactory> colorTransformsFactory::getColorTransformsFactory()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////;
-std::wstring colorTransformsFactory::normalizeColorSpace(std::wstring colorSpace)
+std::wstring colorTransformsFactory::normalizeColorSpace(const std::wstring& colorSpace)
 {
 	PUNTOEXE_FUNCTION_START(L"colorTransformsFactory::normalizeColorSpace");
 
@@ -133,7 +133,7 @@ std::wstring colorTransformsFactory::normalizeColorSpace(std::wstring colorSpace
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-bool colorTransformsFactory::isMonochrome(std::wstring colorSpace)
+bool colorTransformsFactory::isMonochrome(const std::wstring& colorSpace)
 {
 	PUNTOEXE_FUNCTION_START(L"colorTransformsFactory::isMonochrome");
 
@@ -154,7 +154,7 @@ bool colorTransformsFactory::isMonochrome(std::wstring colorSpace)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-bool colorTransformsFactory::isSubsampledX(std::wstring colorSpace)
+bool colorTransformsFactory::isSubsampledX(const std::wstring& colorSpace)
 {
 	PUNTOEXE_FUNCTION_START(L"colorTransformsFactory::isSubsampledX");
 
@@ -174,7 +174,7 @@ bool colorTransformsFactory::isSubsampledX(std::wstring colorSpace)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-bool colorTransformsFactory::isSubsampledY(std::wstring colorSpace)
+bool colorTransformsFactory::isSubsampledY(const std::wstring& colorSpace)
 {
 	PUNTOEXE_FUNCTION_START(L"colorTransformsFactory::isSubsampledY");
 
@@ -194,7 +194,7 @@ bool colorTransformsFactory::isSubsampledY(std::wstring colorSpace)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-bool colorTransformsFactory::canSubsample(std::wstring colorSpace)
+bool colorTransformsFactory::canSubsample(const std::wstring& colorSpace)
 {
 	PUNTOEXE_FUNCTION_START(L"colorTransformsFactory::canSubsample");
 
@@ -214,7 +214,7 @@ bool colorTransformsFactory::canSubsample(std::wstring colorSpace)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::wstring colorTransformsFactory::makeSubsampled(std::wstring colorSpace, bool bSubsampleX, bool bSubsampleY)
+std::wstring colorTransformsFactory::makeSubsampled(const std::wstring& colorSpace, bool bSubsampleX, bool bSubsampleY)
 {
 	PUNTOEXE_FUNCTION_START(L"colorTransformsFactory::makeSubsampled");
 
@@ -247,7 +247,7 @@ std::wstring colorTransformsFactory::makeSubsampled(std::wstring colorSpace, boo
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::uint32_t colorTransformsFactory::getNumberOfChannels(std::wstring colorSpace)
+std::uint32_t colorTransformsFactory::getNumberOfChannels(const std::wstring& colorSpace)
 {
 	PUNTOEXE_FUNCTION_START(L"colorTransformsFactory::getNumberOfChannels");
 
@@ -299,7 +299,7 @@ std::uint32_t colorTransformsFactory::getNumberOfChannels(std::wstring colorSpac
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<colorTransform> colorTransformsFactory::getTransform(std::wstring startColorSpace, std::wstring endColorSpace)
+ptr<colorTransform> colorTransformsFactory::getTransform(const std::wstring& startColorSpace, const std::wstring& endColorSpace)
 {
 	PUNTOEXE_FUNCTION_START(L"colorTransformsFactory::getTransform");
 

@@ -45,7 +45,7 @@ lut::~lut()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void lut::setLut(ptr<handlers::dataHandler> pDescriptor, ptr<handlers::dataHandler> pData, std::wstring description)
+void lut::setLut(ptr<handlers::dataHandler> pDescriptor, ptr<handlers::dataHandler> pData, const std::wstring& description)
 {
 	PUNTOEXE_FUNCTION_START(L"lut::setLut");
 
@@ -85,7 +85,7 @@ void lut::setLut(ptr<handlers::dataHandler> pDescriptor, ptr<handlers::dataHandl
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void lut::create(std::uint32_t size, std::int32_t firstMapped, std::uint8_t bits, std::wstring description)
+void lut::create(std::uint32_t size, std::int32_t firstMapped, std::uint8_t bits, const std::wstring& description)
 {
 	PUNTOEXE_FUNCTION_START(L"lut::create");
 

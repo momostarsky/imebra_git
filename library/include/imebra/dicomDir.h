@@ -60,15 +60,15 @@ public:
 
 	void setReferencedRecord(const DirectoryRecord& referencedRecord);
 	
-	std::wstring getFilePart(int part);
+    std::wstring getFilePart(int part) const;
 
 	void setFilePart(int part, const std::wstring& partName);
 
-	std::wstring getTypeString();
+    std::wstring getTypeString() const;
 
 	void setTypeString(const std::wstring& recordType);
 
-	bool isNull();
+    bool isNull() const;
 
 #ifndef SWIG
 private:

@@ -313,7 +313,7 @@ void directoryRecord::setType(tDirectoryRecordType recordType)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void directoryRecord::setTypeString(std::wstring recordType)
+void directoryRecord::setTypeString(const std::wstring& recordType)
 {
 	getRecordDataSet()->setUnicodeString(0x0004, 0, 0x1430, 0, recordType);
 }

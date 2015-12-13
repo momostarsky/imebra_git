@@ -100,7 +100,7 @@ public:
 	///         registerCodec()
 	///
 	///////////////////////////////////////////////////////////
-	static ptr<codec> getCodec(std::wstring transferSyntax);
+    static ptr<codec> getCodec(const std::wstring& transferSyntax);
 
 	/// \brief Retrieve the only reference to the codecFactory
 	///         instance.

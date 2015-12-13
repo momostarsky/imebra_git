@@ -72,7 +72,7 @@ ptr<data> dataGroup::getTag(std::uint16_t tagId, bool bCreate /* =false */)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<handlers::dataHandler> dataGroup::getDataHandler(std::uint16_t tagId, std::uint32_t bufferId, bool bWrite, std::string defaultType)
+ptr<handlers::dataHandler> dataGroup::getDataHandler(std::uint16_t tagId, std::uint32_t bufferId, bool bWrite, const std::string& defaultType)
 {
 	PUNTOEXE_FUNCTION_START(L"dataGroup::getDataHandler");
 
@@ -130,7 +130,7 @@ ptr<streamReader> dataGroup::getStreamReader(std::uint16_t tagId, std::uint32_t 
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<streamWriter> dataGroup::getStreamWriter(std::uint16_t tagId, std::uint32_t bufferId, std::string dataType /* = "" */)
+ptr<streamWriter> dataGroup::getStreamWriter(std::uint16_t tagId, std::uint32_t bufferId, const std::string& dataType /* = "" */)
 {
 	PUNTOEXE_FUNCTION_START(L"dataGroup::getStream");
 
@@ -160,7 +160,7 @@ ptr<streamWriter> dataGroup::getStreamWriter(std::uint16_t tagId, std::uint32_t 
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<handlers::dataHandlerRaw> dataGroup::getDataHandlerRaw(std::uint16_t tagId, std::uint32_t bufferId, bool bWrite, std::string defaultType)
+ptr<handlers::dataHandlerRaw> dataGroup::getDataHandlerRaw(std::uint16_t tagId, std::uint32_t bufferId, bool bWrite, const std::string& defaultType)
 {
 	PUNTOEXE_FUNCTION_START(L"dataGroup::getDataHandlerRaw");
 

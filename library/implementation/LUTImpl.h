@@ -72,7 +72,7 @@ public:
 	///                       lut
 	///
 	///////////////////////////////////////////////////////////
-	void setLut(ptr<handlers::dataHandler> pDescriptor, ptr<handlers::dataHandler> pData, std::wstring description);
+    void setLut(ptr<handlers::dataHandler> pDescriptor, ptr<handlers::dataHandler> pData, const std::wstring& description);
 
 	/// \brief Create an empty lut.
 	///
@@ -87,7 +87,7 @@ public:
 	/// @param description   a string that describes the lut
 	///
 	///////////////////////////////////////////////////////////
-	void create(std::uint32_t size, std::int32_t firstMapped, std::uint8_t bits, std::wstring description);
+    void create(std::uint32_t size, std::int32_t firstMapped, std::uint8_t bits, const std::wstring& description);
 
 	/// \brief Store a mapped value in the lut.
 	///

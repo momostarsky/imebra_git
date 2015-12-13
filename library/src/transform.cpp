@@ -24,11 +24,7 @@ Transform::Transform(puntoexe::ptr<puntoexe::imebra::transforms::transform> pTra
 
 bool Transform::isEmpty()
 {
-    if(m_pTransform == 0)
-    {
-        return true;
-    }
-    return m_pTransform->isEmpty();
+    return m_pTransform == 0 || m_pTransform->isEmpty();
 }
 
 Image Transform::allocateOutputImage(Image& inputImage, int width, int height)

@@ -1039,7 +1039,7 @@ void jpegCodec::readStream(ptr<streamReader> pSourceStream, ptr<dataSet> pDataSe
 //
 /////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
-bool jpegCodec::canHandleTransferSyntax(std::wstring transferSyntax)
+bool jpegCodec::canHandleTransferSyntax(const std::wstring& transferSyntax)
 {
     PUNTOEXE_FUNCTION_START(L"jpegCodec::canHandleTransferSyntax");
 
@@ -1063,7 +1063,7 @@ bool jpegCodec::canHandleTransferSyntax(std::wstring transferSyntax)
 //
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
-bool jpegCodec::encapsulated(std::wstring transferSyntax)
+bool jpegCodec::encapsulated(const std::wstring& transferSyntax)
 {
     PUNTOEXE_FUNCTION_START(L"jpegCodec::canHandleTransferSyntax");
 
@@ -1072,34 +1072,6 @@ bool jpegCodec::encapsulated(std::wstring transferSyntax)
         PUNTOEXE_THROW(codecExceptionWrongTransferSyntax, "Cannot handle the transfer syntax");
     }
     return true;
-
-    PUNTOEXE_FUNCTION_END();
-}
-
-
-/////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////
-//
-//
-// Return the highest bit that the transfer syntax can
-//  handle
-//
-//
-/////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-std::uint32_t jpegCodec::getMaxHighBit(std::string transferSyntax)
-{
-    PUNTOEXE_FUNCTION_START(L"jpegCodec::getMaxHighBit");
-
-    if(transferSyntax == "1.2.840.10008.1.2.4.50")
-    {
-        return 7;
-    }
-    if(transferSyntax == "1.2.840.10008.1.2.4.51")
-    {
-        return 11;
-    }
-    return 15;
 
     PUNTOEXE_FUNCTION_END();
 }
@@ -1114,7 +1086,7 @@ std::uint32_t jpegCodec::getMaxHighBit(std::string transferSyntax)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::uint32_t jpegCodec::suggestAllocatedBits(std::wstring transferSyntax, std::uint32_t highBit)
+std::uint32_t jpegCodec::suggestAllocatedBits(const std::wstring& transferSyntax, std::uint32_t highBit)
 {
     PUNTOEXE_FUNCTION_START(L"jpegCodec::suggestAllocatedBits");
 
@@ -1141,7 +1113,7 @@ std::uint32_t jpegCodec::suggestAllocatedBits(std::wstring transferSyntax, std::
 //
 /////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
-ptr<image> jpegCodec::getImage(ptr<dataSet> sourceDataSet, ptr<streamReader> pStream, std::string /* dataType not used */)
+ptr<image> jpegCodec::getImage(ptr<dataSet> sourceDataSet, ptr<streamReader> pStream, const std::string& /* dataType not used */)
 {
     PUNTOEXE_FUNCTION_START(L"jpegCodec::getImage");
 
@@ -1367,7 +1339,7 @@ ptr<image> jpegCodec::getImage(ptr<dataSet> sourceDataSet, ptr<streamReader> pSt
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void jpegCodec::copyJpegChannelsToImage(ptr<image> destImage, bool b2complement, std::wstring colorSpace)
+void jpegCodec::copyJpegChannelsToImage(ptr<image> destImage, bool b2complement, const std::wstring& colorSpace)
 {
     PUNTOEXE_FUNCTION_START(L"jpegCodec::copyJpegChannelsToImage");
 

@@ -58,7 +58,7 @@ class dicomCodec : public codec
 public:
 	// Get an image from a dicom structure
 	///////////////////////////////////////////////////////////
-	virtual ptr<image> getImage(ptr<dataSet> pData, ptr<streamReader> pSourceStream, std::string dataType);
+    virtual ptr<image> getImage(ptr<dataSet> pData, ptr<streamReader> pSourceStream, const std::string& dataType);
 
 	// Write an image into a dicom structure
 	///////////////////////////////////////////////////////////
@@ -151,21 +151,17 @@ public:
 	// Returns true if the codec can handle the transfer
 	//  syntax
 	///////////////////////////////////////////////////////////
-	virtual bool canHandleTransferSyntax(std::wstring transferSyntax);
+    virtual bool canHandleTransferSyntax(const std::wstring& transferSyntax);
 
 	// Returns true if the transfer syntax has to be
 	//  encapsulated
 	//
 	///////////////////////////////////////////////////////////
-	virtual bool encapsulated(std::wstring transferSyntax);
-
-	// Returns the maximum supported high bit
-	///////////////////////////////////////////////////////////
-	virtual std::uint32_t getMaxHighBit(std::string transferSyntax);
+    virtual bool encapsulated(const std::wstring& transferSyntax);
 
 	// Returns the suggested allocated bits
 	///////////////////////////////////////////////////////////
-	virtual std::uint32_t suggestAllocatedBits(std::wstring transferSyntax, std::uint32_t highBit);
+    virtual std::uint32_t suggestAllocatedBits(const std::wstring& transferSyntax, std::uint32_t highBit);
 
 protected:
 	// Write a dicom stream
@@ -179,7 +175,7 @@ protected:
 protected:
 	// Read a single tag
 	///////////////////////////////////////////////////////////
-	std::uint32_t readTag(ptr<streamReader> pStream, ptr<dataSet> pDataSet, std::uint32_t tagLengthDWord, std::uint16_t tagId, std::uint16_t order, std::uint16_t tagSubId, std::string, streamController::tByteOrdering endianType, short wordSize, std::uint32_t bufferId, std::uint32_t maxSizeBufferLoad = 0xffffffff);
+    std::uint32_t readTag(ptr<streamReader> pStream, ptr<dataSet> pDataSet, std::uint32_t tagLengthDWord, std::uint16_t tagId, std::uint16_t order, std::uint16_t tagSubId, const std::string& tagType, streamController::tByteOrdering endianType, short wordSize, std::uint32_t bufferId, std::uint32_t maxSizeBufferLoad = 0xffffffff);
 
 	// Calculate the tag's length
 	///////////////////////////////////////////////////////////

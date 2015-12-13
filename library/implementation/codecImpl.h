@@ -186,7 +186,7 @@ public:
 	/// @return a pointer to the loaded image
 	///
 	///////////////////////////////////////////////////////////
-	virtual ptr<image> getImage(ptr<dataSet> pSourceDataSet, ptr<streamReader> pSourceStream, std::string dataType) = 0;
+    virtual ptr<image> getImage(ptr<dataSet> pSourceDataSet, ptr<streamReader> pSourceStream, const std::string& dataType) = 0;
 	
 	/// \brief This enumeration is used by setImage() in order
 	///         to setup the compression parameters.
@@ -280,7 +280,7 @@ public:
 	///         codec, false otherwise.
 	///
 	///////////////////////////////////////////////////////////
-	virtual bool canHandleTransferSyntax(std::wstring transferSyntax)=0;
+    virtual bool canHandleTransferSyntax(const std::wstring& transferSyntax)=0;
 
 	/// \brief This function returns true if the codec 
 	///         transfer syntax handled by the code has to be
@@ -292,7 +292,7 @@ public:
 	///         transferSyntax has to be encapsulated
 	///
 	///////////////////////////////////////////////////////////
-	virtual bool encapsulated(std::wstring transferSyntax)=0;
+    virtual bool encapsulated(const std::wstring& transferSyntax)=0;
 
 	//@}
 
@@ -302,18 +302,6 @@ public:
 	///
 	///////////////////////////////////////////////////////////
 	//@{
-
-	/// \brief This function returns the highest bit per
-	///        channel supported by the specified transfer
-	///        syntax.
-	///
-	/// @param transferSyntax the transfer syntax for which
-	///         the information is requested.
-	/// @return the highest bit supported by the transfer
-	///         syntax
-	///
-	///////////////////////////////////////////////////////////
-	virtual std::uint32_t getMaxHighBit(std::string transferSyntax)=0;
 
 	/// \brief Suggest an optimal number of allocated bits for
 	///        the specified transfer syntax and high bit.
@@ -325,7 +313,7 @@ public:
 	///          specified transfer syntax and high bit.
 	///
 	///////////////////////////////////////////////////////////
-	virtual std::uint32_t suggestAllocatedBits(std::wstring transferSyntax, std::uint32_t highBit)=0;
+    virtual std::uint32_t suggestAllocatedBits(const std::wstring& transferSyntax, std::uint32_t highBit)=0;
 
 	//@}
 

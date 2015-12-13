@@ -216,7 +216,7 @@ protected:
 class streamExceptionEOF : public streamException
 {
 public:
-	streamExceptionEOF(std::string message): streamException(message){}
+    streamExceptionEOF(const std::string& message): streamException(message){}
 };
 
 ///@}

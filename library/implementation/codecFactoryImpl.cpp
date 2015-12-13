@@ -90,7 +90,7 @@ void codecFactory::registerCodec(ptr<codec> pCodec)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<codec> codecFactory::getCodec(std::wstring transferSyntax)
+ptr<codec> codecFactory::getCodec(const std::wstring& transferSyntax)
 {
 	PUNTOEXE_FUNCTION_START(L"codecFactory::getCodec");
 

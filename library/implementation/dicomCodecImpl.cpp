@@ -932,7 +932,7 @@ void dicomCodec::parseStream(ptr<streamReader> pStream,
 //
 /////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
-ptr<image> dicomCodec::getImage(ptr<dataSet> pData, ptr<streamReader> pStream, std::string dataType)
+ptr<image> dicomCodec::getImage(ptr<dataSet> pData, ptr<streamReader> pStream, const std::string& dataType)
 {
 	PUNTOEXE_FUNCTION_START(L"dicomCodec::getImage");
 
@@ -2110,7 +2110,7 @@ void dicomCodec::setImage(
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-bool dicomCodec::canHandleTransferSyntax(std::wstring transferSyntax)
+bool dicomCodec::canHandleTransferSyntax(const std::wstring& transferSyntax)
 {
 	PUNTOEXE_FUNCTION_START(L"dicomCodec::canHandleTransferSyntax");
 
@@ -2136,7 +2136,7 @@ bool dicomCodec::canHandleTransferSyntax(std::wstring transferSyntax)
 //
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
-bool dicomCodec::encapsulated(std::wstring transferSyntax)
+bool dicomCodec::encapsulated(const std::wstring& transferSyntax)
 {
 	PUNTOEXE_FUNCTION_START(L"jpegCodec::canHandleTransferSyntax");
 
@@ -2154,28 +2154,12 @@ bool dicomCodec::encapsulated(std::wstring transferSyntax)
 ///////////////////////////////////////////////////////////
 //
 //
-// Return the highest bit number that can be handled
-//  by the codec
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-std::uint32_t dicomCodec::getMaxHighBit(std::string /* transferSyntax */)
-{
-	return 15;
-}
-
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
 // Suggest the number of allocated bits
 //
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::uint32_t dicomCodec::suggestAllocatedBits(std::wstring transferSyntax, std::uint32_t highBit)
+std::uint32_t dicomCodec::suggestAllocatedBits(const std::wstring& transferSyntax, std::uint32_t highBit)
 {
 	PUNTOEXE_FUNCTION_START(L"dicomCodec::suggestAllocatedBits");
 
@@ -2206,7 +2190,7 @@ std::uint32_t dicomCodec::readTag(
 	std::uint16_t tagId,
 	std::uint16_t order,
 	std::uint16_t tagSubId,
-	std::string tagType,
+    const std::string& tagType,
 	streamController::tByteOrdering endianType,
 	short wordSize,
 	std::uint32_t bufferId,

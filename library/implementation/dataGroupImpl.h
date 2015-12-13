@@ -88,7 +88,7 @@ public:
 	/// @return a pointer to the handlers::dataHandler
 	///
 	///////////////////////////////////////////////////////////
-	ptr<handlers::dataHandler> getDataHandler(std::uint16_t tagId, std::uint32_t bufferId, bool bWrite, std::string defaultType="");
+    ptr<handlers::dataHandler> getDataHandler(std::uint16_t tagId, std::uint32_t bufferId, bool bWrite, const std::string& defaultType="");
 
 	/// \brief Get a handlers::dataHandlerRaw object for the 
 	///         requested tag's buffer.
@@ -124,7 +124,7 @@ public:
 	/// @return a pointer to the handlers::dataHandlerRaw
 	///
 	///////////////////////////////////////////////////////////
-	ptr<handlers::dataHandlerRaw> getDataHandlerRaw(std::uint16_t tagId, std::uint32_t bufferId, bool bWrite, std::string defaultType="");
+    ptr<handlers::dataHandlerRaw> getDataHandlerRaw(std::uint16_t tagId, std::uint32_t bufferId, bool bWrite, const std::string& defaultType="");
 
 	/// \brief Get a streamReader connected to the requested
 	///         tag's buffer.
@@ -172,7 +172,7 @@ public:
 	/// @return a pointer to the streamWriter
 	///
 	///////////////////////////////////////////////////////////
-	ptr<streamWriter> getStreamWriter(std::uint16_t tagId, std::uint32_t bufferId, std::string dataType = "");
+    ptr<streamWriter> getStreamWriter(std::uint16_t tagId, std::uint32_t bufferId, const std::string& dataType = "");
 
 	/// \brief Return the data type of the specified tag, in
 	///         dicom format.

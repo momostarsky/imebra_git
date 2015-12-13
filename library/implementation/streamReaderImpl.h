@@ -31,7 +31,7 @@ namespace puntoexe
 class streamJpegTagInStream : public streamException
 {
 public:
-	streamJpegTagInStream(std::string message): streamException(message){}
+    streamJpegTagInStream(const std::string& message): streamException(message){}
 };
 
 

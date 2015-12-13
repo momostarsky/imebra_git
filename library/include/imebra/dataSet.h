@@ -64,33 +64,33 @@ public:
 
 	Image getImage(int frameNumber);
 
-	void setImage(int frameNumber, Image image, std::wstring transferSyntax, imageQuality quality);
+    void setImage(int frameNumber, Image image, const std::wstring& transferSyntax, imageQuality quality);
 
 	DataSet getSequenceItem(int groupId, int order, int tagId, int itemId);
 
-	int getSignedLong(int groupId, int order, int tagId, int elementNumber);
+    int getSignedLong(int groupId, int order, int tagId, int elementNumber) const;
 
-	void setSignedLong(int groupId, int order, int tagId, int elementNumber, int newValue, std::string defaultType = "");
+    void setSignedLong(int groupId, int order, int tagId, int elementNumber, int newValue, const std::string& defaultType = "");
 
-	int getUnsignedLong(int groupId, int order, int tagId, int elementNumber);
+    int getUnsignedLong(int groupId, int order, int tagId, int elementNumber) const;
 
-	void setUnsignedLong(int groupId, int order, int tagId, int elementNumber, int newValue, std::string defaultType = "");
+    void setUnsignedLong(int groupId, int order, int tagId, int elementNumber, int newValue, const std::string& defaultType = "");
 
-	double getDouble(int groupId, int order, int tagId, int elementNumber);
+    double getDouble(int groupId, int order, int tagId, int elementNumber) const;
 
-	void setDouble(int groupId, int order, int tagId, int elementNumber, double newValue, std::string defaultType = "");
+    void setDouble(int groupId, int order, int tagId, int elementNumber, double newValue, const std::string& defaultType = "");
 
-	std::wstring getString(int groupId, int order, int tagId, int elementNumber);
+    std::wstring getString(int groupId, int order, int tagId, int elementNumber) const;
 
-	void setString(int groupId, int order, int tagId, int elementNumber, std::wstring newString, std::string defaultType = "");
+    void setString(int groupId, int order, int tagId, int elementNumber, const std::wstring& newString, const std::string& defaultType = "");
 
-        size_t getRawData(int groupId, int order, int tagId, int bufferId, char* buffer, int bufferSize);
+    size_t getRawData(int groupId, int order, int tagId, int bufferId, char* buffer, int bufferSize) const;
 
-        void setRawData(int groupId, int order, int tagId, int bufferId, char* buffer, int bufferSize, std::string defaultType = "");
+    void setRawData(int groupId, int order, int tagId, int bufferId, char* buffer, int bufferSize, const std::string& defaultType = "");
 
-	std::string getDefaultDataType(int groupId, int order, int tagId);
+    std::string getDefaultDataType(int groupId, int order, int tagId) const;
 
-	std::string getDataType(int groupId, int order, int tagId);
+    std::string getDataType(int groupId, int order, int tagId) const;
 
 #ifndef SWIG
 	puntoexe::ptr<puntoexe::imebra::dataSet> m_pDataSet;

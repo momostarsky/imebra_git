@@ -40,7 +40,7 @@ Image DataSet::getImage(int frameNumber)
     return Image(m_pDataSet->getImage((imbxUint32)frameNumber));
 }
 
-void DataSet::setImage(int frameNumber, Image image, std::wstring transferSyntax, imageQuality quality)
+void DataSet::setImage(int frameNumber, Image image, const std::wstring& transferSyntax, imageQuality quality)
 {
 	m_pDataSet->setImage(frameNumber, image.m_pImage, transferSyntax, (puntoexe::imebra::codecs::codec::quality)quality);
 }
@@ -50,47 +50,47 @@ DataSet DataSet::getSequenceItem(int groupId, int order, int tagId, int itemId)
 	return DataSet(m_pDataSet->getSequenceItem(groupId, order, tagId, itemId));
 }
 
-int DataSet::getSignedLong(int groupId, int order, int tagId, int elementNumber)
+int DataSet::getSignedLong(int groupId, int order, int tagId, int elementNumber) const
 {
 	return m_pDataSet->getSignedLong(groupId, order, tagId, elementNumber);
 }
 
-void DataSet::setSignedLong(int groupId, int order, int tagId, int elementNumber, int newValue, std::string defaultType)
+void DataSet::setSignedLong(int groupId, int order, int tagId, int elementNumber, int newValue, const std::string& defaultType)
 {
 	m_pDataSet->setSignedLong(groupId, order, tagId, elementNumber, newValue, defaultType);
 }
 
-int DataSet::getUnsignedLong(int groupId, int order, int tagId, int elementNumber)
+int DataSet::getUnsignedLong(int groupId, int order, int tagId, int elementNumber) const
 {
 	return m_pDataSet->getUnsignedLong(groupId, order, tagId, elementNumber);
 }
 
-void DataSet::setUnsignedLong(int groupId, int order, int tagId, int elementNumber, int newValue, std::string defaultType)
+void DataSet::setUnsignedLong(int groupId, int order, int tagId, int elementNumber, int newValue, const std::string& defaultType)
 {
 	m_pDataSet->setUnsignedLong(groupId, order, tagId, elementNumber, newValue, defaultType);
 }
 
-double DataSet::getDouble(int groupId, int order, int tagId, int elementNumber)
+double DataSet::getDouble(int groupId, int order, int tagId, int elementNumber) const
 {
 	return m_pDataSet->getDouble(groupId, order, tagId, elementNumber);
 }
 
-void DataSet::setDouble(int groupId, int order, int tagId, int elementNumber, double newValue, std::string defaultType)
+void DataSet::setDouble(int groupId, int order, int tagId, int elementNumber, double newValue, const std::string& defaultType)
 {
 	m_pDataSet->setDouble(groupId, order, tagId, elementNumber, newValue, defaultType);
 }
 
-std::wstring DataSet::getString(int groupId, int order, int tagId, int elementNumber)
+std::wstring DataSet::getString(int groupId, int order, int tagId, int elementNumber) const
 {
 	return m_pDataSet->getUnicodeString(groupId, order, tagId, elementNumber);
 }
 
-void DataSet::setString(int groupId, int order, int tagId, int elementNumber, std::wstring newString, std::string defaultType)
+void DataSet::setString(int groupId, int order, int tagId, int elementNumber, const std::wstring& newString, const std::string& defaultType)
 {
 	m_pDataSet->setUnicodeString(groupId, order, tagId, elementNumber, newString, defaultType);
 }
 
-size_t DataSet::getRawData(int groupId, int order, int tagId, int bufferId, char* buffer, int bufferSize)
+size_t DataSet::getRawData(int groupId, int order, int tagId, int bufferId, char* buffer, int bufferSize) const
 {
     puntoexe::ptr<puntoexe::imebra::handlers::dataHandlerRaw> dataHandlerRaw = m_pDataSet->getDataHandlerRaw(groupId, order, tagId, bufferId, false);
     if(dataHandlerRaw->getSize() > bufferSize)
@@ -101,19 +101,19 @@ size_t DataSet::getRawData(int groupId, int order, int tagId, int bufferId, char
     return dataHandlerRaw->getSize();
 }
 
-void DataSet::setRawData(int groupId, int order, int tagId, int bufferId, char* buffer, int bufferSize, std::string defaultType)
+void DataSet::setRawData(int groupId, int order, int tagId, int bufferId, char* buffer, int bufferSize, const std::string& defaultType)
 {
     puntoexe::ptr<puntoexe::imebra::handlers::dataHandlerRaw> dataHandlerRaw = m_pDataSet->getDataHandlerRaw(groupId, order, tagId, bufferId, true);
     dataHandlerRaw->copyFrom((std::int8_t*)buffer, bufferSize);
 }
 
 
-std::string DataSet::getDefaultDataType(int groupId, int order, int tagId)
+std::string DataSet::getDefaultDataType(int groupId, int order, int tagId) const
 {
 	return m_pDataSet->getDataType(groupId, order, tagId);
 }
 
-std::string DataSet::getDataType(int groupId, int order, int tagId)
+std::string DataSet::getDataType(int groupId, int order, int tagId) const
 {
 	return m_pDataSet->getDataType(groupId, order, tagId);
 }

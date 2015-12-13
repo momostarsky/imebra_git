@@ -53,7 +53,7 @@ void updateCharsets(const tCharsetsList* pCharsetsList, tCharsetsList* pDestinat
 class charsetsListException: public std::runtime_error
 {
 public:
-	charsetsListException(std::string message): std::runtime_error(message){}
+    charsetsListException(const std::string& message): std::runtime_error(message){}
 };
 
 
@@ -72,7 +72,7 @@ public:
 class charsetListExceptionDiffDefault: public charsetsListException
 {
 public:
-	charsetListExceptionDiffDefault(std::string message): charsetsListException(message){}
+    charsetListExceptionDiffDefault(const std::string& message): charsetsListException(message){}
 };
 
 } // namespace charsetsList

@@ -51,10 +51,14 @@ class BaseStream
 #ifndef SWIG
 	friend class StreamReader;
 	friend class StreamWriter;
-public:
+protected:
 	BaseStream(puntoexe::ptr<puntoexe::baseStream> pStream);
+#endif
+public:
 	BaseStream(const BaseStream& right);
 	BaseStream& operator=(const BaseStream& right);
+
+#ifndef SWIG
 protected:
 	puntoexe::ptr<puntoexe::baseStream> m_pStream;
 #endif

@@ -9,43 +9,42 @@ $fileHeader$
 #include "../include/imebra/colorTransformsFactory.h"
 #include "../implementation/colorTransformsFactoryImpl.h"
 
-std::wstring ColorTransformsFactory::normalizeColorSpace(std::wstring colorSpace)
+std::wstring ColorTransformsFactory::normalizeColorSpace(const std::wstring& colorSpace)
 {
     return puntoexe::imebra::transforms::colorTransforms::colorTransformsFactory::normalizeColorSpace(colorSpace);
-
 }
 
-bool ColorTransformsFactory::isMonochrome(std::wstring colorSpace)
+bool ColorTransformsFactory::isMonochrome(const std::wstring& colorSpace)
 {
     return puntoexe::imebra::transforms::colorTransforms::colorTransformsFactory::isMonochrome(colorSpace);
 }
 
-bool ColorTransformsFactory::isSubsampledX(std::wstring colorSpace)
+bool ColorTransformsFactory::isSubsampledX(const std::wstring& colorSpace)
 {
     return puntoexe::imebra::transforms::colorTransforms::colorTransformsFactory::isSubsampledX(colorSpace);
 }
 
-bool ColorTransformsFactory::isSubsampledY(std::wstring colorSpace)
+bool ColorTransformsFactory::isSubsampledY(const std::wstring& colorSpace)
 {
     return puntoexe::imebra::transforms::colorTransforms::colorTransformsFactory::isSubsampledY(colorSpace);
 }
 
-bool ColorTransformsFactory::canSubsample(std::wstring colorSpace)
+bool ColorTransformsFactory::canSubsample(const std::wstring& colorSpace)
 {
     return puntoexe::imebra::transforms::colorTransforms::colorTransformsFactory::canSubsample(colorSpace);
 }
 
-std::wstring ColorTransformsFactory::makeSubsampled(std::wstring colorSpace, bool bSubsampleX, bool bSubsampleY)
+std::wstring ColorTransformsFactory::makeSubsampled(const std::wstring& colorSpace, bool bSubsampleX, bool bSubsampleY)
 {
     return puntoexe::imebra::transforms::colorTransforms::colorTransformsFactory::makeSubsampled(colorSpace, bSubsampleX, bSubsampleY);
 }
 
-int ColorTransformsFactory::getNumberOfChannels(std::wstring colorSpace)
+int ColorTransformsFactory::getNumberOfChannels(const std::wstring& colorSpace)
 {
     return (int)puntoexe::imebra::transforms::colorTransforms::colorTransformsFactory::getNumberOfChannels(colorSpace);
 }
 
-Transform ColorTransformsFactory::getTransform(std::wstring startColorSpace, std::wstring endColorSpace)
+Transform ColorTransformsFactory::getTransform(const std::wstring& startColorSpace, const std::wstring& endColorSpace)
 {
     puntoexe::ptr<puntoexe::imebra::transforms::colorTransforms::colorTransformsFactory> factory(puntoexe::imebra::transforms::colorTransforms::colorTransformsFactory::getColorTransformsFactory());
     Transform transform(factory->getTransform(startColorSpace, endColorSpace));

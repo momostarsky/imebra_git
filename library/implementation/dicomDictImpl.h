@@ -63,7 +63,7 @@ public:
 	dicomDictionary();
 
 	void registerTag(std::uint32_t tagId, const wchar_t* tagName, const char* tagType);
-	void registerVR(std::string vr, bool bLongLength, std::uint32_t wordSize, std::uint32_t maxLength);
+    void registerVR(const std::string& vr, bool bLongLength, std::uint32_t wordSize, std::uint32_t maxLength);
 
 	/// \brief Retrieve a tag's description.
 	///
@@ -98,7 +98,7 @@ public:
 	///                  dicom data type
 	///
 	///////////////////////////////////////////////////////////
-	bool isDataTypeValid(std::string dataType) const;
+    bool isDataTypeValid(const std::string& dataType) const;
 
 	/// \brief Return true if the tag's length in the dicom 
 	///         stream must be written using a DWORD
@@ -109,7 +109,7 @@ public:
 	///                  length must be written using a DWORD
 	///
 	///////////////////////////////////////////////////////////
-	bool getLongLength(std::string dataType) const ;
+    bool getLongLength(const std::string& dataType) const ;
 	
 	/// \brief Return the size of the data type's elements
 	///
@@ -118,7 +118,7 @@ public:
 	/// @return the size of a single element
 	///
 	///////////////////////////////////////////////////////////
-	std::uint32_t getWordSize(std::string dataType) const;
+    std::uint32_t getWordSize(const std::string& dataType) const;
 	
 	/// \brief Return the maximum size of the tags with
 	///         the specified data type.
@@ -128,7 +128,7 @@ public:
 	/// @return         the maximum tag's size in bytes 
 	///
 	///////////////////////////////////////////////////////////
-	std::uint32_t getMaxSize(std::string dataType) const;
+    std::uint32_t getMaxSize(const std::string& dataType) const;
 
 protected:
 	typedef std::map<std::uint32_t, imageDataDictionaryElement> tDicomDictionary;

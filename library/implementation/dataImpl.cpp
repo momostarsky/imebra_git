@@ -213,7 +213,7 @@ std::uint32_t data::getBufferSize(std::uint32_t bufferId)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<handlers::dataHandler> data::getDataHandler(std::uint32_t bufferId, bool bWrite, std::string defaultType)
+ptr<handlers::dataHandler> data::getDataHandler(std::uint32_t bufferId, bool bWrite, const std::string& defaultType)
 {
 	PUNTOEXE_FUNCTION_START(L"data::getDataHandler");
 
@@ -230,19 +230,22 @@ ptr<handlers::dataHandler> data::getDataHandler(std::uint32_t bufferId, bool bWr
 		pTempBuffer = findBuffer->second;
 	}
 
-	// If a buffer already exists, then use the already defined
-	//  datatype
-	///////////////////////////////////////////////////////////
-	if( !m_buffers.empty() && !m_buffers.begin()->second->getDataType().empty() )
-	{
-		defaultType = m_buffers.begin()->second->getDataType();
-	}
-
 	// If the buffer doesn't exist, then create a new one
 	///////////////////////////////////////////////////////////
 	if(pTempBuffer == 0 && bWrite)
 	{
-		pTempBuffer = new buffer(this, defaultType);
+        // If a buffer already exists, then use the already defined
+        //  datatype
+        ///////////////////////////////////////////////////////////
+        if( !m_buffers.empty() && !m_buffers.begin()->second->getDataType().empty() )
+        {
+            pTempBuffer = new buffer(this, m_buffers.begin()->second->getDataType());
+        }
+        else
+        {
+            pTempBuffer = new buffer(this, defaultType);
+        }
+
 		pTempBuffer->setCharsetsList(&m_charsetsList);
 		m_buffers[bufferId]=pTempBuffer;
 	}
@@ -270,7 +273,7 @@ ptr<handlers::dataHandler> data::getDataHandler(std::uint32_t bufferId, bool bWr
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<handlers::dataHandlerRaw> data::getDataHandlerRaw(std::uint32_t bufferId, bool bWrite, std::string defaultType)
+ptr<handlers::dataHandlerRaw> data::getDataHandlerRaw(std::uint32_t bufferId, bool bWrite, const std::string& defaultType)
 {
 	PUNTOEXE_FUNCTION_START(L"data::getDataHandlerRaw");
 
@@ -287,19 +290,22 @@ ptr<handlers::dataHandlerRaw> data::getDataHandlerRaw(std::uint32_t bufferId, bo
 		pTempBuffer = findBuffer->second;
 	}
 
-	// If a buffer already exists, then use the already defined
-	//  datatype
-	///////////////////////////////////////////////////////////
-	if( !m_buffers.empty() )
-	{
-		defaultType = (m_buffers.begin())->second->getDataType();
-	}
-
 	// If the buffer doesn't exist, then create a new one
 	///////////////////////////////////////////////////////////
 	if( pTempBuffer == 0 && bWrite )
 	{
-		pTempBuffer = new buffer(this, defaultType);
+        // If a buffer already exists, then use the already defined
+        //  datatype
+        ///////////////////////////////////////////////////////////
+        if( !m_buffers.empty() )
+        {
+            pTempBuffer = new buffer(this, m_buffers.begin()->second->getDataType());
+        }
+        else
+        {
+            pTempBuffer = new buffer(this, defaultType);
+        }
+
 		pTempBuffer->setCharsetsList(&m_charsetsList);
 		m_buffers[bufferId]=pTempBuffer;
 	}
@@ -360,7 +366,7 @@ ptr<streamReader> data::getStreamReader(std::uint32_t bufferId)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<streamWriter> data::getStreamWriter(std::uint32_t bufferId, std::string dataType /* = "" */)
+ptr<streamWriter> data::getStreamWriter(std::uint32_t bufferId, const std::string& dataType /* = "" */)
 {
 	PUNTOEXE_FUNCTION_START(L"data::getStream");
 
@@ -377,20 +383,23 @@ ptr<streamWriter> data::getStreamWriter(std::uint32_t bufferId, std::string data
 		pTempBuffer = findBuffer->second;
 	}
 
-	// If a buffer already exists, then use the already defined
-	//  datatype
-	///////////////////////////////////////////////////////////
-	if( !m_buffers.empty() )
-	{
-		dataType = (m_buffers.begin())->second->getDataType();
-	}
-
 	// If the buffer doesn't exist, then create a new one
 	///////////////////////////////////////////////////////////
 	if(pTempBuffer == 0)
 	{
-		pTempBuffer = new buffer(this, dataType);
-		m_buffers[bufferId]=pTempBuffer;
+        // If a buffer already exists, then use the already defined
+        //  datatype
+        ///////////////////////////////////////////////////////////
+        if( !m_buffers.empty() )
+        {
+            pTempBuffer = new buffer(this, m_buffers.begin()->second->getDataType());
+        }
+        else
+        {
+            pTempBuffer = new buffer(this, dataType);
+        }
+
+        m_buffers[bufferId]=pTempBuffer;
 	}
 
 	return pTempBuffer->getStreamWriter();

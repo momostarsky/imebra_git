@@ -78,7 +78,7 @@ public:
 
 	// Retrieve the image from a dataset
 	///////////////////////////////////////////////////////////
-	virtual ptr<image> getImage(ptr<dataSet> sourceDataSet, ptr<streamReader> pStream, std::string dataType);
+    virtual ptr<image> getImage(ptr<dataSet> sourceDataSet, ptr<streamReader> pStream, const std::string& dataType);
 
 	// Insert a jpeg compressed image into a dataset
 	///////////////////////////////////////////////////////////
@@ -96,22 +96,17 @@ public:
 
 	// Return true if the codec can handle the transfer
 	///////////////////////////////////////////////////////////
-	virtual bool canHandleTransferSyntax(std::wstring transferSyntax);
+    virtual bool canHandleTransferSyntax(const std::wstring& transferSyntax);
 
 	// Returns true if the transfer syntax has to be
 	//  encapsulated
 	//
 	///////////////////////////////////////////////////////////
-	virtual bool encapsulated(std::wstring transferSyntax);
-
-	// Return the highest bit that the transfer syntax can
-	//  handle
-	///////////////////////////////////////////////////////////
-	virtual std::uint32_t getMaxHighBit(std::string transferSyntax);
+    virtual bool encapsulated(const std::wstring& transferSyntax);
 
 	// Return the suggested allocated bits
 	///////////////////////////////////////////////////////////
-	virtual std::uint32_t suggestAllocatedBits(std::wstring transferSyntax, std::uint32_t highBit);
+    virtual std::uint32_t suggestAllocatedBits(const std::wstring& transferSyntax, std::uint32_t highBit);
 
 	// Create another jpeg codec
 	///////////////////////////////////////////////////////////
@@ -289,7 +284,7 @@ protected:
 	///////////////////////////////////////////////////////////
 	void resetInternal(bool bCompression, quality compQuality);
 
-	void copyJpegChannelsToImage(ptr<image> destImage, bool b2complement, std::wstring colorSpace);
+    void copyJpegChannelsToImage(ptr<image> destImage, bool b2complement, const std::wstring& colorSpace);
 	void copyImageToJpegChannels(ptr<image> sourceImage, bool b2complement, std::uint8_t allocatedBits, bool bSubSampledX, bool bSubSampledY);
 
 	void writeScan(streamWriter* pDestinationStream, bool bCalcHuffman);

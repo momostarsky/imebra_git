@@ -97,6 +97,7 @@ void DataHandler::getDate(const int index,
     *pDay = (int)day;
     *pHour = (int)hour;
     *pMinutes = (int)minutes;
+    *pSeconds = (int)seconds;
     *pNanoseconds = (int)nanoseconds;
     *pOffsetHours = (int)offsetHours;
     *pOffsetMinutes = (int)offsetMinutes;

@@ -17,21 +17,21 @@ class ColorTransformsFactory
 
 public:
 
-	static std::wstring normalizeColorSpace(std::wstring colorSpace);
+    static std::wstring normalizeColorSpace(const std::wstring& colorSpace);
 
-	static bool isMonochrome(std::wstring colorSpace);
+    static bool isMonochrome(const std::wstring& colorSpace);
 
-	static bool isSubsampledX(std::wstring colorSpace);
+    static bool isSubsampledX(const std::wstring& colorSpace);
 
-	static bool isSubsampledY(std::wstring colorSpace);
+    static bool isSubsampledY(const std::wstring& colorSpace);
 
-	static bool canSubsample(std::wstring colorSpace);
+    static bool canSubsample(const std::wstring& colorSpace);
 
-	static std::wstring makeSubsampled(std::wstring colorSpace, bool bSubsampleX, bool bSubsampleY);
+    static std::wstring makeSubsampled(const std::wstring& colorSpace, bool bSubsampleX, bool bSubsampleY);
 
-	static int getNumberOfChannels(std::wstring colorSpace);
+    static int getNumberOfChannels(const std::wstring& colorSpace);
 
-	static Transform getTransform(std::wstring startColorSpace, std::wstring endColorSpace);
+    static Transform getTransform(const std::wstring& startColorSpace, const std::wstring& endColorSpace);
 
 };
 

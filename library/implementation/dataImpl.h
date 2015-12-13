@@ -147,7 +147,7 @@ public:
 	///         requested buffer.
 	///
 	///////////////////////////////////////////////////////////
-	ptr<handlers::dataHandler> getDataHandler(std::uint32_t bufferId, bool bWrite, std::string defaultType);
+    ptr<handlers::dataHandler> getDataHandler(std::uint32_t bufferId, bool bWrite, const std::string& defaultType);
 	
 	/// \brief Get a raw data handler 
 	///         (handlers::dataHandlerRaw) for the specified 
@@ -191,7 +191,7 @@ public:
 	///         requested buffer.
 	///
 	///////////////////////////////////////////////////////////
-	ptr<handlers::dataHandlerRaw> getDataHandlerRaw(std::uint32_t bufferId, bool bWrite, std::string defaultType);
+    ptr<handlers::dataHandlerRaw> getDataHandlerRaw(std::uint32_t bufferId, bool bWrite, const std::string& defaultType);
 
 	/// \brief Get a streamReader connected to a buffer's data.
 	///
@@ -215,7 +215,7 @@ public:
 	///                    emptied buffer's data.
 	///
 	///////////////////////////////////////////////////////////
-	ptr<streamWriter> getStreamWriter(std::uint32_t bufferId, std::string dataType = "");
+    ptr<streamWriter> getStreamWriter(std::uint32_t bufferId, const std::string& dataType = "");
 
 	//@}
 

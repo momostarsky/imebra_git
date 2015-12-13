@@ -271,7 +271,7 @@ public:
 	///                     compression quality
 	///
 	///////////////////////////////////////////////////////////
-	void setImage(std::uint32_t frameNumber, ptr<image> pImage, std::wstring transferSyntax, codecs::codec::quality quality);
+    void setImage(std::uint32_t frameNumber, ptr<image> pImage, const std::wstring& transferSyntax, codecs::codec::quality quality);
 
 	/// \brief Get a frame's offset from the offset table.
 	///
@@ -486,7 +486,7 @@ public:
 	///                 this parameter
 	///
 	///////////////////////////////////////////////////////////
-	void setSignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber, std::int32_t newValue, std::string defaultType = "");
+    void setSignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber, std::int32_t newValue, const std::string& defaultType = "");
 
 	/// \brief Retrieve a tag's value as an unsigned long.
 	///
@@ -544,7 +544,7 @@ public:
 	///                 this parameter
 	///
 	///////////////////////////////////////////////////////////
-	void setUnsignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber, std::uint32_t newValue, std::string defaultType = "");
+    void setUnsignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber, std::uint32_t newValue, const std::string& defaultType = "");
 
 	/// \brief Retrieve a tag's value as a double.
 	///
@@ -602,7 +602,7 @@ public:
 	///                 this parameter
 	///
 	///////////////////////////////////////////////////////////
-	void setDouble(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber, double newValue, std::string defaultType = "");
+    void setDouble(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber, double newValue, const std::string& defaultType = "");
 
 	/// \brief Retrieve a tag's value as a string.
 	///        getUnicodeString() is preferred over this
@@ -691,7 +691,7 @@ public:
 	///                 this parameter
 	///
 	///////////////////////////////////////////////////////////
-	void setString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber, std::string newString, std::string defaultType = "");
+    void setString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber, const std::string& newString, const std::string& defaultType = "");
 
 	/// \brief Set a tag's value as an unicode string.
 	///
@@ -722,7 +722,7 @@ public:
 	///                 this parameter
 	///
 	///////////////////////////////////////////////////////////
-	void setUnicodeString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber, std::wstring newString, std::string defaultType = "");
+    void setUnicodeString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber, const std::wstring& newString, const std::string& defaultType = "");
 
 	//@}
 
@@ -793,7 +793,7 @@ public:
 	/// @return a pointer to the data handler.
 	///
 	///////////////////////////////////////////////////////////
-	ptr<handlers::dataHandler> getDataHandler(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId, bool bWrite, std::string defaultType="");
+    ptr<handlers::dataHandler> getDataHandler(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId, bool bWrite, const std::string& defaultType="");
 
 	/// \brief Return a raw data handler for the specified 
 	///         tag's buffer.
@@ -826,7 +826,7 @@ public:
 	/// @return a pointer to the data handler.
 	///
 	///////////////////////////////////////////////////////////
-	ptr<handlers::dataHandlerRaw> getDataHandlerRaw(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId, bool bWrite, std::string defaultType="");
+    ptr<handlers::dataHandlerRaw> getDataHandlerRaw(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId, bool bWrite, const std::string& defaultType="");
 
 	/// \brief Return a streamReader connected to the specified
 	///         tag's buffer's memory.
@@ -874,7 +874,7 @@ public:
 	/// @return a pointer to the streamWriter
 	///
 	///////////////////////////////////////////////////////////
-	ptr<streamWriter> getStreamWriter(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId, std::string dataType = "");
+    ptr<streamWriter> getStreamWriter(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId, const std::string& dataType = "");
 
 	//@}
 

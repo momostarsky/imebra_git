@@ -1861,7 +1861,7 @@ void dicomDictionary::registerTag(std::uint32_t tagId, const wchar_t* tagName, c
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dicomDictionary::registerVR(std::string vr, bool bLongLength, std::uint32_t wordSize, std::uint32_t maxLength)
+void dicomDictionary::registerVR(const std::string& vr, bool bLongLength, std::uint32_t wordSize, std::uint32_t maxLength)
 {
 	PUNTOEXE_FUNCTION_START(L"dicomDictionary::registerVR");
 
@@ -1943,7 +1943,7 @@ std::string dicomDictionary::getTagType(std::uint16_t groupId, std::uint16_t tag
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-bool dicomDictionary::isDataTypeValid(std::string dataType) const
+bool dicomDictionary::isDataTypeValid(const std::string& dataType) const
 {
 	PUNTOEXE_FUNCTION_START(L"dicomDictionary::isDataTypeValid");
 
@@ -1965,7 +1965,7 @@ bool dicomDictionary::isDataTypeValid(std::string dataType) const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-bool dicomDictionary::getLongLength(std::string dataType) const
+bool dicomDictionary::getLongLength(const std::string& dataType) const
 {
 	PUNTOEXE_FUNCTION_START(L"dicomDictionary::getLongLength");
 
@@ -1992,7 +1992,7 @@ bool dicomDictionary::getLongLength(std::string dataType) const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::uint32_t dicomDictionary::getWordSize(std::string dataType) const
+std::uint32_t dicomDictionary::getWordSize(const std::string& dataType) const
 {
 	PUNTOEXE_FUNCTION_START(L"dicomDictionary::getWordSize");
 
@@ -2019,7 +2019,7 @@ std::uint32_t dicomDictionary::getWordSize(std::string dataType) const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::uint32_t dicomDictionary::getMaxSize(std::string dataType) const
+std::uint32_t dicomDictionary::getMaxSize(const std::string& dataType) const
 {
 	PUNTOEXE_FUNCTION_START(L"dicomDictionary::getMaxSize");
 

@@ -238,7 +238,7 @@ public:
 	///                     type
 	///
 	///////////////////////////////////////////////////////////
-	void setTypeString(std::wstring recordType);
+    void setTypeString(const std::wstring& recordType);
 
 
 private:

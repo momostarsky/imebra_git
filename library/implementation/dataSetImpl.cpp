@@ -384,7 +384,7 @@ ptr<image> dataSet::getModalityImage(std::uint32_t frameNumber)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataSet::setImage(std::uint32_t frameNumber, ptr<image> pImage, std::wstring transferSyntax, codecs::codec::quality quality)
+void dataSet::setImage(std::uint32_t frameNumber, ptr<image> pImage, const std::wstring& transferSyntax, codecs::codec::quality quality)
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::setImage");
 
@@ -414,7 +414,10 @@ void dataSet::setImage(std::uint32_t frameNumber, ptr<image> pImage, std::wstrin
 	bool bDontChangeAttributes = (numberOfFrames != 0);
 	if(bDontChangeAttributes)
 	{
-		transferSyntax = getUnicodeString(0x0002, 0x0, 0x0010, 0x0);
+        if(transferSyntax != getUnicodeString(0x0002, 0x0, 0x0010, 0x0))
+        {
+            PUNTOEXE_THROW(dataSetExceptionDifferentFormat, "Previous images had a different transfer syntax");
+        }
 	}
 
 	// Select the right codec
@@ -1033,7 +1036,7 @@ std::int32_t dataSet::getSignedLong(std::uint16_t groupId, std::uint16_t order, 
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataSet::setSignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber, std::int32_t newValue, std::string defaultType /* = "" */)
+void dataSet::setSignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber, std::int32_t newValue, const std::string& defaultType /* = "" */)
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::setSignedLong");
 
@@ -1085,7 +1088,7 @@ std::uint32_t dataSet::getUnsignedLong(std::uint16_t groupId, std::uint16_t orde
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataSet::setUnsignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber, std::uint32_t newValue, std::string defaultType /* = "" */)
+void dataSet::setUnsignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber, std::uint32_t newValue, const std::string& defaultType /* = "" */)
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::setUnsignedLong");
 
@@ -1137,7 +1140,7 @@ double dataSet::getDouble(std::uint16_t groupId, std::uint16_t order, std::uint1
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataSet::setDouble(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber, double newValue, std::string defaultType /* = "" */)
+void dataSet::setDouble(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber, double newValue, const std::string& defaultType /* = "" */)
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::setDouble");
 
@@ -1222,7 +1225,7 @@ std::wstring dataSet::getUnicodeString(std::uint16_t groupId, std::uint16_t orde
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataSet::setString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber, std::string newString, std::string defaultType /* = "" */)
+void dataSet::setString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber, const std::string& newString, const std::string& defaultType /* = "" */)
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::setString");
 
@@ -1249,7 +1252,7 @@ void dataSet::setString(std::uint16_t groupId, std::uint16_t order, std::uint16_
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataSet::setUnicodeString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber, std::wstring newString, std::string defaultType /* = "" */)
+void dataSet::setUnicodeString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber, const std::wstring& newString, const std::string& defaultType /* = "" */)
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::setUnicodeString");
 
@@ -1276,7 +1279,7 @@ void dataSet::setUnicodeString(std::uint16_t groupId, std::uint16_t order, std::
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<handlers::dataHandler> dataSet::getDataHandler(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId, bool bWrite, std::string defaultType /* ="" */)
+ptr<handlers::dataHandler> dataSet::getDataHandler(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId, bool bWrite, const std::string& defaultType /* ="" */)
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getDataHandler");
 
@@ -1293,12 +1296,10 @@ ptr<handlers::dataHandler> dataSet::getDataHandler(std::uint16_t groupId, std::u
 
 	if(defaultType.length()!=2L)
 	{
-		defaultType=getDefaultDataType(groupId, tagId);
+        return group->getDataHandler(tagId, bufferId, bWrite, getDefaultDataType(groupId, tagId));
 	}
 
-	pDataHandler = group->getDataHandler(tagId, bufferId, bWrite, defaultType);
-
-	return pDataHandler;
+    return group->getDataHandler(tagId, bufferId, bWrite, defaultType);
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -1343,7 +1344,7 @@ ptr<streamReader> dataSet::getStreamReader(std::uint16_t groupId, std::uint16_t 
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<streamWriter> dataSet::getStreamWriter(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId, std::string dataType /* = "" */)
+ptr<streamWriter> dataSet::getStreamWriter(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId, const std::string& dataType /* = "" */)
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getStream");
 
@@ -1372,7 +1373,7 @@ ptr<streamWriter> dataSet::getStreamWriter(std::uint16_t groupId, std::uint16_t 
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<handlers::dataHandlerRaw> dataSet::getDataHandlerRaw(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId, bool bWrite, std::string defaultType /* ="" */)
+ptr<handlers::dataHandlerRaw> dataSet::getDataHandlerRaw(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId, bool bWrite, const std::string& defaultType /* ="" */)
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getDataHandlerRaw");
 
@@ -1388,7 +1389,7 @@ ptr<handlers::dataHandlerRaw> dataSet::getDataHandlerRaw(std::uint16_t groupId, 
 
 	if(defaultType.length()!=2)
 	{
-		defaultType=getDefaultDataType(groupId, tagId);
+        return group->getDataHandlerRaw(tagId, bufferId, bWrite, getDefaultDataType(groupId, tagId));
 	}
 
 	return group->getDataHandlerRaw(tagId, bufferId, bWrite, defaultType);
