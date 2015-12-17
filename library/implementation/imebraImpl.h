@@ -60,7 +60,6 @@ Please note that the file doesn't include the file viewHelper.h.
 #include "YBRFULLToMONOCHROME2Impl.h"
 #include "YBRFULLToRGBImpl.h"
 #include "YBRPARTIALToRGBImpl.h"
-#include "transactionImpl.h"
 #include "drawBitmapImpl.h"
 
 #include "baseObjectImpl.h"
