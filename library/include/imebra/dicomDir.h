@@ -27,6 +27,9 @@ class dicomDir;
 
 #include "dataSet.h"
 
+namespace imebra
+{
+
 /// \addtogroup group_swig_bindings
 /// @{
 
@@ -99,5 +102,7 @@ private:
 };
 
 ///@}
+
+}
 
 #endif // !defined(imebraDicomDir_SWIG_93F684BF_0024_4bf3_89BA_D98E82A1F44C__INCLUDED_)

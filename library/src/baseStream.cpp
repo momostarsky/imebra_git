@@ -10,6 +10,9 @@ $fileHeader$
 #include "../include/imebra/baseStream.h"
 #include "../implementation/baseStreamImpl.h"
 
+namespace imebra
+{
+
 BaseStream::BaseStream()
 {}
 
@@ -27,4 +30,4 @@ BaseStream& BaseStream::operator=(const BaseStream& right)
 	return *this;
 }
 
-
+}

@@ -12,6 +12,9 @@ $fileHeader$
 
 #include "../implementation/streamWriterImpl.h"
 
+namespace imebra
+{
+
 StreamWriter::StreamWriter(const BaseStream& stream, int virtualStart, int virtualLength): m_pWriter(new puntoexe::streamWriter(stream.m_pStream, virtualStart, virtualLength))
 {
 }
@@ -26,3 +29,4 @@ StreamWriter& StreamWriter::operator=(const StreamWriter& right)
     return *this;
 }
 
+}

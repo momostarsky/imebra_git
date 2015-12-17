@@ -13,11 +13,16 @@ $fileHeader$
 #include "transform.h"
 #include "dataSet.h"
 
+namespace imebra
+{
+
 class ModalityVOILUT: public Transform
 {
 
 public:
     ModalityVOILUT(const DataSet& dataset);
 };
+
+}
 
 #endif // imebraModalityVOILUT_SWIG_F6221390_BC44_4B83_B5BB_3485222FF1DD__INCLUDED_

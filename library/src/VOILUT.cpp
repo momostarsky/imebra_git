@@ -12,18 +12,20 @@ $fileHeader$
 #include "../include/imebra/dataSet.h"
 #include "../implementation/VOILUTImpl.h"
 
+namespace imebra
+{
 
 VOILUT::VOILUT(const DataSet& dataset): Transform(new puntoexe::imebra::transforms::VOILUT(dataset.m_pDataSet))
 {
 }
 
-int VOILUT::getVOILUTId(int VOILUTNumber)
+int VOILUT::getVOILUTId(int VOILUTNumber) const
 {
     return (int) (((puntoexe::imebra::transforms::VOILUT*)m_pTransform.get())->getVOILUTId((imbxUint32) VOILUTNumber));
 
 }
 
-std::wstring VOILUT::getVOILUTDescription(int VOILUTId)
+std::wstring VOILUT::getVOILUTDescription(int VOILUTId) const
 {
     return ((puntoexe::imebra::transforms::VOILUT*)m_pTransform.get())->getVOILUTDescription((imbxUint32) VOILUTId);
 
@@ -44,17 +46,18 @@ void VOILUT::applyOptimalVOI(Image inputImage, int topLeftX, int topLeftY, int w
     ((puntoexe::imebra::transforms::VOILUT*)m_pTransform.get())->applyOptimalVOI(inputImage.m_pImage, (imbxUint32) topLeftX, (imbxUint32) topLeftY, (imbxUint32) width, (imbxUint32) height);
 }
 
-int VOILUT::getCenter()
+int VOILUT::getCenter() const
 {
     imbxInt32 center, width;
     ((puntoexe::imebra::transforms::VOILUT*)m_pTransform.get())->getCenterWidth(&center, &width);
     return (int)center;
 }
 
-int VOILUT::getWidth()
+int VOILUT::getWidth() const
 {
     imbxInt32 center, width;
     ((puntoexe::imebra::transforms::VOILUT*)m_pTransform.get())->getCenterWidth(&center, &width);
     return (int)width;
 }
 
+}

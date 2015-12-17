@@ -28,6 +28,9 @@ class transformsChain;
 
 #include "transform.h"
 
+namespace imebra
+{
+
 class TransformsChain: public Transform
 {
 
@@ -40,5 +43,7 @@ public:
 
     void addTransform(const Transform& transform);
 };
+
+}
 
 #endif // imebraTransformsChain_SWIG_F6221390_BC44_4B83_B5BB_3485222FF1DD__INCLUDED_

@@ -22,6 +22,9 @@ class streamReader;
 
 #include "baseStream.h"
 
+namespace imebra
+{
+
 class CodecFactory;
 
 /// \addtogroup group_swig_bindings
@@ -46,5 +49,7 @@ protected:
 };
 
 ///@}
+
+}
 
 #endif // !defined(imebraStreamReader_SWIG_F6221390_BC44_4B83_B5BB_3485222FF1DD__INCLUDED_)

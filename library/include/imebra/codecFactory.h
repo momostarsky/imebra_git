@@ -15,6 +15,9 @@ $fileHeader$
 #include "streamReader.h"
 #include "streamWriter.h"
 
+namespace imebra
+{
+
 /// \addtogroup group_swig_bindings
 /// @{
 
@@ -34,4 +37,5 @@ public:
 
 ///@}
 
+}
 #endif // !defined(imebraCodecFactory_SWIG_82307D4A_6490_4202_BF86_93399D32721E__INCLUDED_)

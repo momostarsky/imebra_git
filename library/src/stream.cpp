@@ -10,6 +10,9 @@ $fileHeader$
 #include "../include/imebra/stream.h"
 #include "../implementation/streamImpl.h"
 
+namespace imebra
+{
+
 Stream::Stream(): BaseStream(new puntoexe::stream())
 {
 }
@@ -39,3 +42,4 @@ void Stream::close()
 	static_cast<puntoexe::stream*>(m_pStream.get())->close();
 }
 
+}

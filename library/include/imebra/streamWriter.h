@@ -19,6 +19,9 @@ class streamWriter;
 }
 #endif
 
+namespace imebra
+{
+
 class BaseStream;
 
 class CodecFactory;
@@ -41,5 +44,7 @@ protected:
 };
 
 ///@}
+
+}
 
 #endif // !defined(imebraStreamWriter_SWIG_F6221390_BC44_4B83_B5BB_3485222FF1DD__INCLUDED_)

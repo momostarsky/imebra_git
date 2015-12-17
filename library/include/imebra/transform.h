@@ -29,6 +29,9 @@ class transform;
 
 #include "image.h"
 
+namespace imebra
+{
+
 class Transform
 {
 
@@ -42,7 +45,7 @@ public:
 #endif
 
 
-	bool isEmpty();
+    bool isEmpty() const;
 
 	Image allocateOutputImage(Image& pInputImage, int width, int height);
 
@@ -56,5 +59,7 @@ public:
     puntoexe::ptr<puntoexe::imebra::transforms::transform> m_pTransform;
 #endif
 };
+
+}
 
 #endif // imebraTransform_SWIG_F6221390_BC44_4B83_B5BB_3485222FF1DD__INCLUDED_

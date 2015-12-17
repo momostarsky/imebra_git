@@ -11,10 +11,13 @@ $fileHeader$
 #include "../implementation/memoryImpl.h"
 #include <cstring>
 
+namespace imebra
+{
+
 Memory::Memory(): m_pMemory(new puntoexe::memory())
 {}
 
-Memory::Memory(int requestedSize): m_pMemory(puntoexe::memoryPool::getMemoryPool()->getMemory((imbxUint32)requestedSize))
+Memory::Memory(size_t requestedSize): m_pMemory(puntoexe::memoryPool::getMemoryPool()->getMemory((imbxUint32)requestedSize))
 {}
 
 Memory::Memory(puntoexe::ptr<puntoexe::memory> pMemory): m_pMemory(pMemory)
@@ -35,42 +38,47 @@ void Memory::clear()
     m_pMemory->clear();
 }
 
-void Memory::resize(int newSize)
+void Memory::resize(size_t newSize)
 {
     m_pMemory->resize((imbxUint32)newSize);
 }
 
-void Memory::reserve(int reserveSize)
+void Memory::reserve(size_t reserveSize)
 {
     m_pMemory->reserve((imbxUint32)reserveSize);
 }
 
-int Memory::size()
+size_t Memory::size() const
 {
-    return (int)m_pMemory->size();
+    return m_pMemory->size();
 }
 
-size_t Memory::data(char* bufferOut, int bufferSize)
+std::uint8_t* Memory::data() const
+{
+    return m_pMemory->data();
+}
+
+size_t Memory::data(char* bufferOut, size_t bufferSize) const
 {
     size_t memorySize = (size_t)m_pMemory->size();
     if(memorySize == 0)
     {
        return 0;
     }
-    if((size_t)bufferSize >= memorySize)
+    if(bufferOut != 0 && (size_t)bufferSize >= memorySize)
     {
         ::memcpy(bufferOut, m_pMemory->data(), memorySize);
     }
     return memorySize;
 }
 
-void Memory::assign(char* buffer, int bufferSize)
+void Memory::assign(char* buffer, size_t bufferSize)
 {
     m_pMemory->assign((imbxUint8*)buffer, (size_t)bufferSize);
 }
 
 
-bool Memory::empty()
+bool Memory::empty() const
 {
     return m_pMemory->empty();
 }
@@ -80,5 +88,4 @@ void MemoryPool::flush()
     puntoexe::memoryPool::getMemoryPool()->flush();
 }
 
-
-
+}

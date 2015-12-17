@@ -24,6 +24,9 @@ class dataSet;
 
 #include "image.h"
 
+namespace imebra
+{
+
 /// \addtogroup group_swig_bindings Bindings
 ///
 /// The binding classes interface the Imebra library
@@ -98,5 +101,7 @@ public:
 };
 
 ///@}
+
+}
 
 #endif // !defined(imebraDataSet_SWIG_93F684BF_0024_4bf3_89BA_D98E82A1F44C__INCLUDED_)

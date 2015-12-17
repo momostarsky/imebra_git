@@ -11,6 +11,9 @@ $fileHeader$
 #include "../implementation/imageImpl.h"
 #include "../implementation/dataHandlerImpl.h"
 
+namespace imebra
+{
+
 Image::Image(): m_pImage(new puntoexe::imebra::image())
 {
 }
@@ -42,14 +45,14 @@ void Image::setHighBit(int highBit)
     m_pImage->setHighBit((imbxUint8)highBit);
 }
 
-double Image::getSizeMmX()
+double Image::getSizeMmX() const
 {
     double sizeX, sizeY;
     m_pImage->getSizeMm(&sizeX, &sizeY);
     return sizeX;
 }
 
-double Image::getSizeMmY()
+double Image::getSizeMmY() const
 {
     double sizeX, sizeY;
     m_pImage->getSizeMm(&sizeX, &sizeY);
@@ -61,14 +64,14 @@ void Image::setSizeMm(const double sizeX, const double sizeY)
     m_pImage->setSizeMm(sizeX, sizeY);
 }
 
-int Image::getSizeX()
+int Image::getSizeX() const
 {
     imbxUint32 sizeX, sizeY;
     m_pImage->getSize(&sizeX, &sizeY);
     return (int)sizeX;
 }
 
-int Image::getSizeY()
+int Image::getSizeY() const
 {
     imbxUint32 sizeX, sizeY;
     m_pImage->getSize(&sizeX, &sizeY);
@@ -82,22 +85,24 @@ DataHandler Image::getDataHandler(const bool bWrite)
 }
 
 
-std::wstring Image::getColorSpace()
+std::wstring Image::getColorSpace() const
 {
     return m_pImage->getColorSpace();
 }
 
-int Image::getChannelsNumber()
+int Image::getChannelsNumber() const
 {
     return m_pImage->getChannelsNumber();
 }
 
-Image::bitDepth Image::getDepth()
+Image::bitDepth Image::getDepth() const
 {
     return (bitDepth)(m_pImage->getDepth());
 }
 
-int Image::getHighBit()
+int Image::getHighBit() const
 {
     return (int)(m_pImage->getHighBit());
+}
+
 }

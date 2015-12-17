@@ -12,6 +12,9 @@ $fileHeader$
 
 #include "transform.h"
 
+namespace imebra
+{
+
 class ColorTransformsFactory
 {
 
@@ -34,5 +37,7 @@ public:
     static Transform getTransform(const std::wstring& startColorSpace, const std::wstring& endColorSpace);
 
 };
+
+}
 
 #endif // imebraColorTransformsFactory_SWIG_F6221390_BC44_4B83_B5BB_3485222FF1DD__INCLUDED_

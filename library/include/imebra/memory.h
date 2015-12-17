@@ -20,11 +20,14 @@ class memory;
 }
 #endif
 
+namespace imebra
+{
+
 class Memory
 {
 public:
 	Memory();
-	Memory(int requestedSize);
+    Memory(size_t requestedSize);
 
 #ifndef SWIG
     Memory(puntoexe::ptr<puntoexe::memory> pMemory);
@@ -36,17 +39,19 @@ public:
 
 	void clear();
 
-	void resize(int newSize);
+    void resize(size_t newSize);
 
-	void reserve(int reserveSize);
+    void reserve(size_t reserveSize);
 
-	int size();
+    size_t size() const;
 
-	size_t data(char* buffer, int bufferSize);
+    std::uint8_t* data() const;
 
-	void assign(char* buffer, int bufferSize);
+    size_t data(char* buffer, size_t bufferSize) const;
 
-	bool empty();
+    void assign(char* buffer, size_t bufferSize);
+
+    bool empty() const;
 
 #ifndef SWIG
     puntoexe::ptr<puntoexe::memory> m_pMemory;
@@ -59,5 +64,6 @@ public:
     static void flush();
 };
 
+}
 
 #endif // !defined(imebraMemory_SWIG_DE3F98A9_664E_47c0_A29B_B681F9AEB118__INCLUDED_)

@@ -12,6 +12,9 @@ $fileHeader$
 
 #include "transform.h"
 
+namespace imebra
+{
+
 class DataSet;
 
 class VOILUT: public Transform
@@ -20,16 +23,18 @@ class VOILUT: public Transform
 public:
     VOILUT(const DataSet& dataset);
 
-	int getVOILUTId(int VOILUTNumber);
-	std::wstring getVOILUTDescription(int VOILUTId);
+    int getVOILUTId(int VOILUTNumber) const;
+    std::wstring getVOILUTDescription(int VOILUTId) const;
 	void setVOILUT(int VOILUTId);
 	void applyOptimalVOI(Image inputImage, int topLeftX, int topLeftY, int width, int height);
 	//void setLUT(ptr<lut> pLut);
 	void setCenterWidth(int center, int width);
-	int getCenter();
-	int getWidth();
+    int getCenter() const;
+    int getWidth() const;
 
 
 };
+
+}
 
 #endif // imebraVOILUT_SWIG_F6221390_BC44_4B83_B5BB_3485222FF1DD__INCLUDED_

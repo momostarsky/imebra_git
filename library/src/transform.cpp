@@ -10,6 +10,9 @@ $fileHeader$
 #include "../include/imebra/transform.h"
 #include "../implementation/transformImpl.h"
 
+namespace imebra
+{
+
 Transform::Transform(const Transform& right): m_pTransform(right.m_pTransform)
 {}
 
@@ -22,7 +25,7 @@ Transform& Transform::operator=(const Transform& right)
 Transform::Transform(puntoexe::ptr<puntoexe::imebra::transforms::transform> pTransform): m_pTransform(pTransform)
 {}
 
-bool Transform::isEmpty()
+bool Transform::isEmpty() const
 {
     return m_pTransform == 0 || m_pTransform->isEmpty();
 }
@@ -48,3 +51,4 @@ void Transform::runTransform(
         (imbxUint32) outputTopLeftY);
 }
 
+}

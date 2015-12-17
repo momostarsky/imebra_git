@@ -10,6 +10,8 @@ $fileHeader$
 #include "../implementation/dataHandlerImpl.h"
 #include "../implementation/dataHandlerNumericImpl.h"
 
+namespace imebra
+{
 
 DataHandler::DataHandler(const DataHandler& right) : m_pDataHandler(right.m_pDataHandler)
 {}
@@ -157,3 +159,4 @@ Memory DataHandler::getMemory()
     return Memory(pDataHandler->getMemory());
 }
 
+}

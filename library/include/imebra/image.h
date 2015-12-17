@@ -25,6 +25,9 @@ class image;
 
 #include "dataHandler.h"
 
+namespace imebra
+{
+
 class Image
 {
 public:
@@ -67,23 +70,23 @@ public:
 
 	void setHighBit(int highBit);
 
-	double getSizeMmY();
-	double getSizeMmX();
+    double getSizeMmY() const;
+    double getSizeMmX() const;
 
 	void setSizeMm(const double sizeX, const double sizeY);
 
-	int getSizeX();
-	int getSizeY();
+    int getSizeX() const;
+    int getSizeY() const;
 
 	DataHandler getDataHandler(const bool bWrite);
 
-	std::wstring getColorSpace();
+    std::wstring getColorSpace() const;
 
-	int getChannelsNumber();
+    int getChannelsNumber() const;
 
-	bitDepth getDepth();
+    bitDepth getDepth() const;
 
-	int getHighBit();
+    int getHighBit() const;
 
 #ifndef SWIG
 	puntoexe::ptr<puntoexe::imebra::image> m_pImage;
@@ -91,6 +94,6 @@ public:
 
 };
 
-
+}
 
 #endif // !defined(imebraImage_SWIG_A807A3CA_FA04_44f4_85D2_C7AA2FE103C4__INCLUDED_)

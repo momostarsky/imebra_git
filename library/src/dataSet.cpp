@@ -10,6 +10,9 @@ $fileHeader$
 #include "../implementation/dataSetImpl.h"
 #include "../implementation/dataHandlerNumericImpl.h"
 
+namespace imebra
+{
+
 DataSet::DataSet(): m_pDataSet(new puntoexe::imebra::dataSet)
 {
 }
@@ -118,6 +121,4 @@ std::string DataSet::getDataType(int groupId, int order, int tagId) const
 	return m_pDataSet->getDataType(groupId, order, tagId);
 }
 
-
-
-
+}

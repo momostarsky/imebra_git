@@ -11,6 +11,9 @@ $fileHeader$
 #include "../include/imebra/dicomDir.h"
 #include "../implementation/dicomDirImpl.h"
 
+namespace imebra
+{
+
 DirectoryRecord::DirectoryRecord(){}
 
 DirectoryRecord::DirectoryRecord(const DirectoryRecord& right): m_pDirectoryRecord(right.m_pDirectoryRecord)
@@ -126,4 +129,6 @@ void DicomDir::setFirstRootRecord(DirectoryRecord firstRootRecord)
 DataSet DicomDir::buildDataSet()
 {
 	return DataSet(m_pDicomDir->buildDataSet());
+}
+
 }

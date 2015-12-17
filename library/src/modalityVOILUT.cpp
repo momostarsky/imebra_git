@@ -11,6 +11,11 @@ $fileHeader$
 #include "../include/imebra/modalityVOILUT.h"
 #include "../implementation/modalityVOILUTImpl.h"
 
+namespace imebra
+{
+
 ModalityVOILUT::ModalityVOILUT(const DataSet& dataset): Transform(new puntoexe::imebra::transforms::modalityVOILUT(dataset.m_pDataSet))
 {
+}
+
 }

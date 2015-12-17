@@ -14,6 +14,9 @@ $fileHeader$
 #include "../implementation/jpegCodecImpl.h"
 #include "../implementation/codecFactoryImpl.h"
 
+namespace imebra
+{
+
 DataSet CodecFactory::load(StreamReader reader, int maxSizeBufferLoad)
 {
     puntoexe::ptr<puntoexe::imebra::codecs::codecFactory> factory(puntoexe::imebra::codecs::codecFactory::getCodecFactory());
@@ -35,4 +38,6 @@ void CodecFactory::save(DataSet dataSet, StreamWriter writer, codecType codecTyp
     }
 
     codec->write(writer.m_pWriter, dataSet.m_pDataSet);
+}
+
 }

@@ -13,9 +13,11 @@ $fileHeader$
 
 #include "baseStream.h"
 
+namespace imebra
+{
+
 /// \addtogroup group_swig_bindings
 /// @{
-
 class Stream : public BaseStream
 {
 public:
@@ -32,4 +34,5 @@ public:
 
 ///@}
 
+}
 #endif // !defined(imebraStream_SWIG_146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_)

@@ -9,6 +9,9 @@ $fileHeader$
 #include "../include/imebra/colorTransformsFactory.h"
 #include "../implementation/colorTransformsFactoryImpl.h"
 
+namespace imebra
+{
+
 std::wstring ColorTransformsFactory::normalizeColorSpace(const std::wstring& colorSpace)
 {
     return puntoexe::imebra::transforms::colorTransforms::colorTransformsFactory::normalizeColorSpace(colorSpace);
@@ -53,4 +56,6 @@ Transform ColorTransformsFactory::getTransform(const std::wstring& startColorSpa
         throw puntoexe::imebra::transforms::colorTransforms::colorTransformsFactoryExceptionNoTransform("There is no color transform that can convert between the specified color spaces");
     }
     return transform;
+}
+
 }
