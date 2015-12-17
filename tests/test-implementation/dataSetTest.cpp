@@ -1,4 +1,4 @@
-#include "../library/imebra/include/imebra.h"
+#include "../../library/implementation/imebraImpl.h"
 #include "buildImageForTest.h"
 #include <list>
 #include <string.h>
@@ -106,25 +106,13 @@ TEST(dataSetTest, testSetTagTwice)
 {
     ptr<dataSet> testDataset(new dataSet);
 
-    IMEBRA_TRANSACTION_START();
-
     testDataset->setUnicodeString(0x0008, 0x0, 0x0070, 0x0, L"Puntoexe");
     testDataset->setUnicodeString(0x0008, 0x0, 0x0070, 0x0, L"Puntoexe");
-
-    IMEBRA_TRANSACTION_END();
 
     EXPECT_EQ(std::wstring(L"Puntoexe"), testDataset->getUnicodeString(0x0008, 0x0, 0x0070, 0x0));
 
-
-    IMEBRA_TRANSACTION_START();
-
     testDataset->setUnicodeString(0x0008, 0x0, 0x0070, 0x0, L"Puntoexe");
-
-    IMEBRA_TRANSACTION_START();
     testDataset->setUnicodeString(0x0008, 0x0, 0x0070, 0x0, L"Puntoexe");
-    IMEBRA_TRANSACTION_END();
-
-    IMEBRA_TRANSACTION_END();
 
     EXPECT_EQ(std::wstring(L"Puntoexe"), testDataset->getUnicodeString(0x0008, 0x0, 0x0070, 0x0));
 

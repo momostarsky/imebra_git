@@ -1,4 +1,4 @@
-#include "../library/imebra/include/imebra.h"
+#include "../../library/implementation/imebraImpl.h"
 #include "buildImageForTest.h"
 #include <gtest/gtest.h>
 
