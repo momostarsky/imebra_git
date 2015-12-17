@@ -274,7 +274,6 @@ public:
 };
 
 class lockObject;
-class lockMultipleObjects;
 class exceptionsManager;
 
 ///////////////////////////////////////////////////////////
@@ -311,7 +310,6 @@ class exceptionsManager;
 class baseObject
 {
 	friend class lockObject;
-	friend class lockMultipleObjects;
 	friend class basePtr;
 	friend class exceptionsManager;
 
@@ -474,61 +472,6 @@ protected:
 	// Pointer to the locked object
 	///////////////////////////////////////////////////////////
 	baseObject* m_pObject;
-};
-
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-/// \brief Locks the access to several objects of type
-///         baseObject.
-///
-/// The class lock ALL the objects listed in the
-///  constructor's parameter.
-/// If the objects cannot be locked at once, then all of
-///  them are left unlocked until all of them can be locked
-///  all togheter.
-///
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-class lockMultipleObjects
-{
-public:
-	/// \typedef std::list<ptr<baseObject> > tObjectsList
-	/// \brief Represents a std::list of pointers to the
-	///         objects to be locked (see puntoexe::ptr).
-	///
-	///////////////////////////////////////////////////////////
-	typedef std::list<ptr<baseObject> > tObjectsList;
-
-	/// \brief Construct the locker and lock all the objects
-	///         listed in the pObjectsList.
-	///
-	/// The function looks for the external lockers (if any).
-	/// An object may be listed several times in the list.
-	///
-	/// @param pObjectsList  a list of pointers to the
-	///                       objects to be locked
-	///
-	///////////////////////////////////////////////////////////
-	lockMultipleObjects(tObjectsList* pObjectsList);
-
-	/// \brief Destroy the locker and unlock all the locked
-	///         objects
-	///
-	///////////////////////////////////////////////////////////
-	virtual ~lockMultipleObjects();
-
-	/// \brief Unlock all the locked objects
-	///
-	///////////////////////////////////////////////////////////
-	void unlock();
-
-protected:
-	/// \internal
-	/// \brief A list of locked critical sections
-	///
-	///////////////////////////////////////////////////////////
-    std::unique_ptr<tCriticalSectionsList> m_pLockedCS;
 };
 
 ///@}

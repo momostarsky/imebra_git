@@ -23,7 +23,6 @@ $fileHeader$
 #include "colorTransformsFactoryImpl.h"
 #include "transformsChainImpl.h"
 #include "transformHighBitImpl.h"
-#include "transactionImpl.h"
 #include "modalityVOILUTImpl.h"
 #include <iostream>
 #include <string.h>
@@ -391,10 +390,6 @@ void dataSet::setImage(std::uint32_t frameNumber, ptr<image> pImage, const std::
 	// Lock the entire dataset
 	///////////////////////////////////////////////////////////
 	lockObject lockAccess(this);
-
-	// All the commit are in one transaction
-	///////////////////////////////////////////////////////////
-	transaction localTransaction(true);
 
 	// The group, order, tag and buffer where the image must
 	//  be stored

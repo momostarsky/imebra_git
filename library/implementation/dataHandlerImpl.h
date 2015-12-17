@@ -67,10 +67,9 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 class dataHandler : public baseObject
 {
-	// buffer & transaction are friend of this class
+    // buffer is friend of this class
 	///////////////////////////////////////////////////////////
 	friend class puntoexe::imebra::buffer;
-	friend class puntoexe::imebra::transaction;
 
 public:
 	// Contructor

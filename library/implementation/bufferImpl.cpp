@@ -29,7 +29,6 @@ $fileHeader$
 #include "dataHandlerDateImpl.h"
 #include "dataHandlerDateTimeImpl.h"
 #include "dataHandlerTimeImpl.h"
-#include "transactionImpl.h"
 #include <vector>
 
 
@@ -394,10 +393,6 @@ ptr<handlers::dataHandler> buffer::getDataHandler(bool bWrite, bool bRaw, std::u
 		{
 			parseMemory->copyFrom(localMemory);
 		}
-
-		// Add writing handlers to the current transaction
-		///////////////////////////////////////////////////////////
-		transactionsManager::addHandlerToTransaction(handler);
 	}
 
 	handler->m_bufferType = m_bufferType;

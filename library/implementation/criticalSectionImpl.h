@@ -155,46 +155,6 @@ private:
 	criticalSection* m_pCriticalSection;
 };
 
-
-/// \internal
-/// \brief Represents a list of critical sections.
-///
-/// It is used by lockMultipleCriticalSections() and
-///  unlockMultipleCriticalSections().
-///
-///////////////////////////////////////////////////////////
-typedef std::list<criticalSection*> tCriticalSectionsList;
-
-/// \internal
-/// \brief Lock a collection of critical sections.
-///
-/// The list can contain several pointers to the critical
-///  sections that must be locked; the function tries to
-///  lock all the critical sections in the list until it
-///  succeedes.
-///
-/// The critical sections locked with 
-///  lockMultipleCriticalSections() should be unlocked by
-///  unlockMultipleCriticalSections().
-///
-/// @param pList a list of the critical sections that must
-///               be locked
-/// @return      a pointer to a list that must be passed
-///               to unlockMultipleCriticalSections()
-///
-///////////////////////////////////////////////////////////
-tCriticalSectionsList* lockMultipleCriticalSections(tCriticalSectionsList* pList);
-
-/// \internal
-/// \brief Unlock a collection of critical sections
-///         locked by lockMultipleCriticalSections().
-///
-/// @param pList a pointer the list returned by
-///               lockMultipleCriticalSections().
-///
-///////////////////////////////////////////////////////////
-void unlockMultipleCriticalSections(tCriticalSectionsList* pList);
-
 /// \internal
 /// \brief Exception thrown when a posix mutex is in an
 ///         error state.
