@@ -36,9 +36,34 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 
 
-dataHandlerStringUnicode::dataHandlerStringUnicode()
+dataHandlerStringUnicode::dataHandlerStringUnicode(const wchar_t separator, const uint8_t paddingByte):
+    dataHandlerStringBase(separator, paddingByte)
 {
 }
+
+dataHandlerStringUnicode::~dataHandlerStringUnicode()
+{
+    if(m_buffer != 0)
+    {
+        std::wstring completeString;
+        for(size_t stringsIterator = 0; stringsIterator < m_strings.size(); ++stringsIterator)
+        {
+            if(stringsIterator)
+            {
+                completeString += m_separator;
+            }
+            completeString += m_strings[stringsIterator];
+        }
+
+        std::string asciiString = convertFromUnicode(completeString, &m_charsetsList);
+
+        m_commitMemory = new memory((std::uint32_t)asciiString.size());
+        m_commitMemory->assign((std::uint8_t*)asciiString.data(), (std::uint32_t)asciiString.size());
+
+        m_commitCharsetsList.insert(m_commitCharsetsList.end(), m_charsetsList.begin(), m_charsetsList.end());
+    }
+}
+
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -297,25 +322,6 @@ void dataHandlerStringUnicode::setCharsetsList(charsetsList::tCharsetsList* pCha
 	{
         m_charsetsList.push_back("ISO 2022 IR 6");
 	}
-
-	PUNTOEXE_FUNCTION_END();
-}
-
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Retrieve the dicom charsets used in the string
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-void dataHandlerStringUnicode::getCharsetsList(charsetsList::tCharsetsList* pCharsetsList) const
-{
-	PUNTOEXE_FUNCTION_START(L"dataHandlerStringUnicode::getCharsetList");
-
-    pCharsetsList->insert(pCharsetsList->end(), m_charsetsList.begin(), m_charsetsList.end());
 
 	PUNTOEXE_FUNCTION_END();
 }

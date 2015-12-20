@@ -39,7 +39,7 @@ namespace handlers
 class dataHandlerStringSH : public dataHandlerStringUnicode
 {
 public:
-	virtual std::uint8_t getPaddingByte() const;
+    dataHandlerStringSH();
 
 	virtual std::uint32_t getUnitSize() const;
 

@@ -12,7 +12,7 @@ $fileHeader$
 #define imebraDataHandlerStringUnicode_367AAE47_6FD7_4107_AB5B_25A355C5CB6E__INCLUDED_
 
 #include "charsetConversionImpl.h"
-#include "dataHandlerStringImpl.h"
+#include "dataHandlerStringBaseImpl.h"
 #include "charsetsListImpl.h"
 #include <memory>
 
@@ -39,11 +39,13 @@ namespace handlers
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class dataHandlerStringUnicode : public dataHandlerString
+class dataHandlerStringUnicode : public dataHandlerStringBase
 {
 public:
 
-    dataHandlerStringUnicode();
+    dataHandlerStringUnicode(const wchar_t separator, const std::uint8_t paddingByte);
+
+    ~dataHandlerStringUnicode();
 
 	/// \internal
 	/// \brief Defines the charset used by the strings encoded
@@ -55,15 +57,6 @@ public:
 	///////////////////////////////////////////////////////////
 	virtual void setCharsetsList(charsetsList::tCharsetsList* pCharsetsList);
 	
-	/// \internal
-	/// \brief Retrieve the charset used in the encoded string
-	///
-	/// @param pCharsetsList a list that will be filled with the
-	///                      dicom charsets used in the string
-	///
-	///////////////////////////////////////////////////////////
-	virtual void getCharsetsList(charsetsList::tCharsetsList* pCharsetsList) const;
-
 protected:
 	// Convert a string to unicode, using the dicom charsets
 	///////////////////////////////////////////////////////////

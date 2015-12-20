@@ -36,6 +36,8 @@ namespace handlers
 class dataHandlerStringDS : public dataHandlerString
 {
 public:
+    dataHandlerStringDS();
+
 	// Overwritten to use getDouble()
 	///////////////////////////////////////////////////////////
 	virtual std::int32_t getSignedLong(const std::uint32_t index) const;
@@ -55,10 +57,6 @@ public:
 	// Overwritten to use the exponential form if needed
 	///////////////////////////////////////////////////////////
 	virtual void setDouble(const std::uint32_t index, const double value);
-
-	// Get the padding byte
-	///////////////////////////////////////////////////////////
-	virtual std::uint8_t getPaddingByte() const;
 
 	// Get the element size
 	///////////////////////////////////////////////////////////

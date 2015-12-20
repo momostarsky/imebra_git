@@ -40,7 +40,7 @@ namespace handlers
 class dataHandlerStringAE : public dataHandlerString
 {
 public:
-	virtual std::uint8_t getPaddingByte() const;
+    dataHandlerStringAE();
 
 	virtual std::uint32_t getUnitSize() const;
 

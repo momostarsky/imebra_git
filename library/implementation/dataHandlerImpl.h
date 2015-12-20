@@ -71,51 +71,12 @@ class dataHandler : public baseObject
 	///////////////////////////////////////////////////////////
 	friend class puntoexe::imebra::buffer;
 
-public:
-	// Contructor
-	///////////////////////////////////////////////////////////
-	dataHandler(): m_bCommitted(false){}
-
-	// The data handler is disconnected
-	///////////////////////////////////////////////////////////
-	virtual bool preDelete();
-
-	/// \brief In a writing handler copies back the modified
-	///         data to the buffer.
-	///
-	/// Is not necessary to call this function directly because
-	///  it is called by the handler's destructor, which copy
-	///  any modification back to the buffer and finalize it.
-	///
-	/// The operation must be finalized by a call to commit(),
-	///  or will be finalized by the destructor unless a call
-	///  to abort() happen.
-	///
-	///////////////////////////////////////////////////////////
-	void copyBack();
-	
-	/// \brief Finalize the copy of the data from the handler
-	///         to the buffer.
-	///
-	/// Is not necessary to call this function directly because
-	///  it is called by the handler's destructor, which copy
-	///  any modification back to the buffer and then finalize
-	///  it.
-	///
-	///////////////////////////////////////////////////////////
-	void commit();
-
-	/// \brief Discard all the changes made on a writing
-	///         handler.
-	///
-	/// The function also switches the write flag to false,
-	///  so it also prevent further changes from being
-	///  committed into the buffer.
-	///
-	///////////////////////////////////////////////////////////
-	void abort();
 
 public:
+    dataHandler(const std::uint8_t paddingByte);
+
+    virtual ~dataHandler();
+
 	///////////////////////////////////////////////////////////
 	/// \name Data pointer
 	///
@@ -137,7 +98,7 @@ public:
 	///          of range
 	///
 	///////////////////////////////////////////////////////////
-	virtual bool pointerIsValid(const std::uint32_t index) const=0;
+    virtual bool pointerIsValid(const std::uint32_t index) const = 0;
 
 	//@}
 
@@ -210,31 +171,12 @@ public:
 	void parseBuffer(const std::uint8_t* pBuffer, const std::uint32_t bufferLength);
 
 	/// \internal
-	/// \brief Copies the local %buffer into the original
-	///         \ref buffer object.
-	///
-	/// @param memoryBuffer the \ref memory managed by the 
-	///                      \ref buffer
-	///
-	///////////////////////////////////////////////////////////
-	virtual void buildBuffer(const ptr<memory>& memoryBuffer)=0;
-
-	/// \internal
 	/// \brief Defines the charsets used in the string
 	///
 	/// @param pCharsetsList a list of dicom charsets
 	///
 	///////////////////////////////////////////////////////////
 	virtual void setCharsetsList(charsetsList::tCharsetsList* pCharsetsList);
-
-	/// \internal
-	/// \brief Retrieve the charsets used in the string.
-	///
-	/// @param pCharsetsList a list that will be filled with the
-	///                      dicom charsets used in the string
-	///
-	///////////////////////////////////////////////////////////
-	virtual void getCharsetsList(charsetsList::tCharsetsList* pCharsetsList) const;
 
 	//@}
 
@@ -262,7 +204,7 @@ public:
 	/// @return the byte used to make the content's size even
 	///
 	///////////////////////////////////////////////////////////
-	virtual std::uint8_t getPaddingByte() const;
+    std::uint8_t getPaddingByte() const;
 
 	//@}
 
@@ -524,9 +466,9 @@ public:
 
 
 protected:
-	// true if the buffer has been committed
-	///////////////////////////////////////////////////////////
-	bool m_bCommitted;
+    charsetsList::tCharsetsList m_charsetsList;
+
+    const std::uint8_t m_paddingByte;
 
 	// Pointer to the connected buffer
 	///////////////////////////////////////////////////////////
@@ -534,7 +476,11 @@ protected:
 
 	std::string m_bufferType;
 
-	charsetsList::tCharsetsList m_charsetsList;
+    // Memory that will be committed by the destructor
+    ///////////////////////////////////////////////////////////
+    ptr<memory> m_commitMemory;
+
+    charsetsList::tCharsetsList m_commitCharsetsList;
 };
 
 } // namespace handlers

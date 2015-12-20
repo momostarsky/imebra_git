@@ -37,69 +37,47 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 //
 //
+// Constructor
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+dataHandler::dataHandler(const uint8_t paddingByte): m_paddingByte(paddingByte)
+{
+
+}
+
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
 // Disconnect the handler
 //
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-bool dataHandler::preDelete()
+dataHandler::~dataHandler()
 {
-	PUNTOEXE_FUNCTION_START(L"dataHandler::preDelete");
+    if(m_commitMemory != 0)
+    {
+        lockObject lockAccess(m_buffer.get());
 
-	if(!m_bCommitted)
-	{
-		lockObject lockAccess(m_buffer.get());
+        charsetsList::tCharsetsList temporaryCharsets;
+        m_buffer->getCharsetsList(&temporaryCharsets);
+        charsetsList::updateCharsets(&m_commitCharsetsList, &temporaryCharsets);
 
-		copyBack();
-		commit();
-	}
-	return true;
+        // The buffer's size must be an even number
+        ///////////////////////////////////////////////////////////
+        std::uint32_t memorySize = m_commitMemory->size();
+        if((memorySize & 0x1) != 0)
+        {
+            m_commitMemory->resize(++memorySize);
+            *(m_commitMemory->data() + (memorySize - 1)) = m_paddingByte;
+        }
 
-	PUNTOEXE_FUNCTION_END();
-}
-
-
-void dataHandler::copyBack()
-{
-	PUNTOEXE_FUNCTION_START(L"dataHandler::copyBack");
-
-	if(m_buffer == 0)
-	{
-		return;
-	}
-	m_buffer->copyBack(this);
-
-	PUNTOEXE_FUNCTION_END();
-}
-
-void dataHandler::commit()
-{
-	PUNTOEXE_FUNCTION_START(L"dataHandler::copyBack");
-
-	if(m_buffer == 0)
-	{
-		return;
-	}
-
-	m_buffer->commit();
-	m_bCommitted = true;
-
-	PUNTOEXE_FUNCTION_END();
-}
-
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Discard all the changes made on a writing handler
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-void dataHandler::abort()
-{
-	m_buffer.release();
+        m_buffer->commit(m_commitMemory, m_bufferType, temporaryCharsets);
+    }
 }
 
 
@@ -129,7 +107,7 @@ std::uint32_t dataHandler::getUnitSize() const
 ///////////////////////////////////////////////////////////
 std::uint8_t dataHandler::getPaddingByte() const
 {
-	return 0;
+    return m_paddingByte;
 }
 
 
@@ -232,12 +210,6 @@ void dataHandler::setCharsetsList(charsetsList::tCharsetsList* /* pCharsetsList 
 {
 	// Intentionally empty
 }
-
-void dataHandler::getCharsetsList(charsetsList::tCharsetsList* /* pCharsetsList */) const
-{
-	// Intentionally empty
-}
-
 
 } // namespace handlers
 

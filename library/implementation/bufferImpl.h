@@ -262,11 +262,7 @@ public:
 
 	//@}
 
-	// Disconnect a data handler.
-	// Called by the handler during its destruction
-	///////////////////////////////////////////////////////////
-	void copyBack(handlers::dataHandler* pDisconnectHandler);
-	void commit();
+    void commit(ptr<memory> newMemory, const std::string& newBufferType, const charsetsList::tCharsetsList& newCharsetsList);
 
 	///////////////////////////////////////////////////////////
 	/// \name Charsets
@@ -347,13 +343,6 @@ private:
 	///////////////////////////////////////////////////////////
 	ptr<memory> m_memory;
 
-	// Temporary memory buffer and charsets list, used for
-	//  the two phase operation copyBack/commit
-	///////////////////////////////////////////////////////////
-	ptr<memory> m_temporaryMemory;
-	charsetsList::tCharsetsList m_temporaryCharsets;
-	std::string m_temporaryBufferType;
-	
 protected:
 	// The buffer's type, in Dicom standard
 	///////////////////////////////////////////////////////////
@@ -374,10 +363,6 @@ private:
 	///////////////////////////////////////////////////////////
 	charsetsList::tCharsetsList m_charsetsList;
 
-	// Buffer's version
-	///////////////////////////////////////////////////////////
-	std::uint32_t m_version;
-	
 };
 
 ///////////////////////////////////////////////////////////

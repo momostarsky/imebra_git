@@ -41,6 +41,19 @@ class dataHandlerNumericBase: public dataHandler
     friend class buffer;
 
 public:
+    dataHandlerNumericBase(): dataHandler(0)
+    {
+    }
+
+    ~dataHandlerNumericBase()
+    {
+        if(m_buffer != 0)
+        {
+            m_commitMemory = new memory();
+            m_commitMemory->transfer(m_memory);
+        }
+    }
+
 	std::uint8_t* getMemoryBuffer() const
 	{
 		return m_pMemoryString;
@@ -85,17 +98,6 @@ public:
 		m_memory = memoryBuffer;
 		m_pMemoryString = m_memory->data();
 		m_memorySize = m_memory->size();
-
-		PUNTOEXE_FUNCTION_END();
-	}
-
-	// Rebuild the tag's buffer
-	///////////////////////////////////////////////////////////
-	virtual void buildBuffer(const ptr<memory>& memoryBuffer)
-	{
-		PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::buildBuffer");
-
-		memoryBuffer->transfer(m_memory);
 
 		PUNTOEXE_FUNCTION_END();
 	}
@@ -181,6 +183,7 @@ template<class dataHandlerType>
 class dataHandlerNumeric : public dataHandlerNumericBase
 {
 public:
+
 	/// \brief Provides a direct access to the data managed by
 	///         the handler.
 	///
@@ -829,6 +832,7 @@ public:
 ///////////////////////////////////////////////////////////
 class dataHandlerRaw: public dataHandlerNumeric<std::uint8_t>
 {
+public:
 };
 
 } // namespace handlers

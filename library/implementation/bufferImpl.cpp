@@ -66,8 +66,7 @@ buffer::buffer(const ptr<baseObject>& externalLock, const std::string& defaultTy
 		m_originalBufferPosition(0),
 		m_originalBufferLength(0),
 		m_originalWordLength(1),
-		m_originalEndianType(streamController::lowByteEndian),
-		m_version(0)
+        m_originalEndianType(streamController::lowByteEndian)
 {
 	PUNTOEXE_FUNCTION_START(L"buffer::buffer");
 
@@ -105,8 +104,7 @@ buffer::buffer(const ptr<baseObject>& externalLock,
 		m_originalBufferPosition(bufferPosition),
 		m_originalBufferLength(bufferLength),
 		m_originalWordLength(wordLength),
-		m_originalEndianType(endianType),
-		m_version(0)
+        m_originalEndianType(endianType)
 {
 	PUNTOEXE_FUNCTION_START(L"buffer::buffer (on demand)");
 
@@ -171,7 +169,7 @@ ptr<handlers::dataHandler> buffer::getDataHandler(bool bWrite, bool bRaw, std::u
 	///////////////////////////////////////////////////////////
 	if(bRaw)
 	{
-		handler = new handlers::dataHandlerRaw;
+        handler = new handlers::dataHandlerRaw();
 	}
 	else
 	{
@@ -179,91 +177,91 @@ ptr<handlers::dataHandler> buffer::getDataHandler(bool bWrite, bool bRaw, std::u
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="AE")
 		{
-			handler = new handlers::dataHandlerStringAE;
+            handler = new handlers::dataHandlerStringAE();
 		}
 
 		// Retrieve an Age string data handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="AS")
 		{
-			handler = new handlers::dataHandlerStringAS;
+            handler = new handlers::dataHandlerStringAS();
 		}
 
 		// Retrieve a Code string data handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="CS")
 		{
-			handler = new handlers::dataHandlerStringCS;
+            handler = new handlers::dataHandlerStringCS();
 		}
 
 		// Retrieve a Decimal string data handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="DS")
 		{
-			handler = new handlers::dataHandlerStringDS;
+            handler = new handlers::dataHandlerStringDS();
 		}
 
 		// Retrieve an Integer string data handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="IS")
 		{
-			handler = new handlers::dataHandlerStringIS;
+            handler = new handlers::dataHandlerStringIS();
 		}
 
 		// Retrieve a Long string data handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="LO")
 		{
-			handler = new handlers::dataHandlerStringLO;
+            handler = new handlers::dataHandlerStringLO();
 		}
 
 		// Retrieve a Long text data handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="LT")
 		{
-			handler = new handlers::dataHandlerStringLT;
+            handler = new handlers::dataHandlerStringLT();
 		}
 
 		// Retrieve a Person Name data handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="PN")
 		{
-			handler = new handlers::dataHandlerStringPN;
+            handler = new handlers::dataHandlerStringPN();
 		}
 
 		// Retrieve a Short string data handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="SH")
 		{
-			handler = new handlers::dataHandlerStringSH;
+            handler = new handlers::dataHandlerStringSH();
 		}
 
 		// Retrieve a Short text data handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="ST")
 		{
-			handler = new handlers::dataHandlerStringST;
+            handler = new handlers::dataHandlerStringST();
 		}
 
 		// Retrieve an Unique Identifier data handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="UI")
 		{
-			handler = new handlers::dataHandlerStringUI;
+            handler = new handlers::dataHandlerStringUI();
 		}
 
 		// Retrieve an Unlimited text data handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="UT")
 		{
-			handler = new handlers::dataHandlerStringUT;
+            handler = new handlers::dataHandlerStringUT();
 		}
 
 		// Retrieve an object handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="OB")
 		{
-			handler = new handlers::dataHandlerNumeric<std::uint8_t>;
+            handler = new handlers::dataHandlerNumeric<std::uint8_t>();
 		}
 
 		// Retrieve a signed-byte object handler.
@@ -271,91 +269,91 @@ ptr<handlers::dataHandler> buffer::getDataHandler(bool bWrite, bool bRaw, std::u
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="SB")
 		{
-			handler = new handlers::dataHandlerNumeric<std::int8_t>;
+            handler = new handlers::dataHandlerNumeric<std::int8_t>();
 		}
 
 		// Retrieve an unknown object handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="UN")
 		{
-			handler = new handlers::dataHandlerNumeric<std::uint8_t>;
+            handler = new handlers::dataHandlerNumeric<std::uint8_t>();
 		}
 
 		// Retrieve a WORD handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="OW")
 		{
-			handler = new handlers::dataHandlerNumeric<std::uint16_t>;
+            handler = new handlers::dataHandlerNumeric<std::uint16_t>();
 		}
 
 		// Retrieve a WORD handler (AT)
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="AT")
 		{
-			handler = new handlers::dataHandlerNumeric<std::uint16_t>;
+            handler = new handlers::dataHandlerNumeric<std::uint16_t>();
 		}
 
 		// Retrieve a float handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="FL")
 		{
-			handler = new handlers::dataHandlerNumeric<float>;
+            handler = new handlers::dataHandlerNumeric<float>();
 		}
 
 		// Retrieve a double float handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="FD")
 		{
-			handler = new handlers::dataHandlerNumeric<double>;
+            handler = new handlers::dataHandlerNumeric<double>();
 		}
 
 		// Retrieve a signed long handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="SL")
 		{
-			handler = new handlers::dataHandlerNumeric<std::int32_t>;
+            handler = new handlers::dataHandlerNumeric<std::int32_t>();
 		}
 
 		// Retrieve a signed short handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="SS")
 		{
-			handler = new handlers::dataHandlerNumeric<std::int16_t>;
+            handler = new handlers::dataHandlerNumeric<std::int16_t>();
 		}
 
 		// Retrieve an unsigned long handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="UL")
 		{
-			handler = new handlers::dataHandlerNumeric<std::uint32_t>;
+            handler = new handlers::dataHandlerNumeric<std::uint32_t>();
 		}
 
 		// Retrieve an unsigned short handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="US")
 		{
-			handler = new handlers::dataHandlerNumeric<std::uint16_t>;
+            handler = new handlers::dataHandlerNumeric<std::uint16_t>();
 		}
 
 		// Retrieve date
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="DA")
 		{
-			handler = new handlers::dataHandlerDate;
+            handler = new handlers::dataHandlerDate();
 		}
 
 		// Retrieve date-time
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="DT")
 		{
-			handler = new handlers::dataHandlerDateTime;
+            handler = new handlers::dataHandlerDateTime();
 		}
 
 		// Retrieve time
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="TM")
 		{
-			handler = new handlers::dataHandlerTime;
+            handler = new handlers::dataHandlerTime();
 		}
 
 	} // check bRaw
@@ -565,57 +563,11 @@ std::uint32_t buffer::getBufferSizeBytes()
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 //
-// Disconnect an handler from this buffer and copy the
-//  data from the handler back to the buffer
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-void buffer::copyBack(handlers::dataHandler* pDisconnectHandler)
-{
-	PUNTOEXE_FUNCTION_START(L"buffer::copyBack");
-
-	// Lock the object
-	///////////////////////////////////////////////////////////
-	lockObject lockAccess(this);
-
-	// Get the buffer's content
-	///////////////////////////////////////////////////////////
-	m_temporaryMemory = ptr<memory>(new memory);
-	pDisconnectHandler->buildBuffer(m_temporaryMemory);
-
-	// Update the charsets
-	///////////////////////////////////////////////////////////
-	m_temporaryCharsets.clear();
-    m_temporaryCharsets.insert(m_temporaryCharsets.begin(), m_charsetsList.begin(), m_charsetsList.end());
-	charsetsList::tCharsetsList charsets;
-	pDisconnectHandler->getCharsetsList(&charsets);
-	charsetsList::updateCharsets(&charsets, &m_temporaryCharsets);
-
-	// The buffer's size must be an even number
-	///////////////////////////////////////////////////////////
-	std::uint32_t memorySize = m_temporaryMemory->size();
-	if((memorySize & 0x1) != 0)
-	{
-		m_temporaryMemory->resize(++memorySize);
-		*(m_temporaryMemory->data() + (memorySize - 1)) = pDisconnectHandler->getPaddingByte();
-	}
-
-	// Adjust the buffer's type
-	///////////////////////////////////////////////////////////
-	m_temporaryBufferType = pDisconnectHandler->m_bufferType;
-
-	PUNTOEXE_FUNCTION_END();
-}
-
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
 // Commit the changes made by copyBack
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void buffer::commit()
+void buffer::commit(ptr<memory> newMemory, const std::string& newBufferType, const charsetsList::tCharsetsList& newCharsetsList)
 {
 	PUNTOEXE_FUNCTION_START(L"buffer::commit");
 
@@ -625,22 +577,15 @@ void buffer::commit()
 
 	// Commit the memory buffer
 	///////////////////////////////////////////////////////////
-	m_memory = m_temporaryMemory;
-	m_temporaryMemory.release();
+    m_memory = newMemory;
 
 	// Commit the buffer type
 	///////////////////////////////////////////////////////////
-	m_bufferType = m_temporaryBufferType;
-	m_temporaryBufferType.clear();
+    m_bufferType = newBufferType;
 
 	// Commit the charsets
 	///////////////////////////////////////////////////////////
-	m_charsetsList.clear();
-    m_charsetsList.splice(m_charsetsList.end(), m_temporaryCharsets);
-
-	// Increase the buffer's version
-	///////////////////////////////////////////////////////////
-	++m_version;
+    m_charsetsList = newCharsetsList;
 
 	// The buffer has been updated and the original stream
 	//  is still storing the old version. We don't need

@@ -32,9 +32,8 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 
-std::uint8_t dataHandlerStringUI::getPaddingByte() const
+dataHandlerStringUI::dataHandlerStringUI(): dataHandlerString(0x0, 0x0)
 {
-	return 0x0;
 }
 
 std::uint32_t dataHandlerStringUI::getUnitSize() const
@@ -45,11 +44,6 @@ std::uint32_t dataHandlerStringUI::getUnitSize() const
 std::uint32_t dataHandlerStringUI::maxSize() const
 {
 	return 64;
-}
-
-wchar_t dataHandlerStringUI::getSeparator() const
-{
-	return 0;
 }
 
 } // namespace handlers

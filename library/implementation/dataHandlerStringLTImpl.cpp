@@ -33,9 +33,8 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 
-std::uint8_t dataHandlerStringLT::getPaddingByte() const
+dataHandlerStringLT::dataHandlerStringLT(): dataHandlerStringUnicode(0x0, 0x20)
 {
-	return 0x20;
 }
 
 std::uint32_t dataHandlerStringLT::getUnitSize() const
@@ -46,11 +45,6 @@ std::uint32_t dataHandlerStringLT::getUnitSize() const
 std::uint32_t dataHandlerStringLT::maxSize() const
 {
 	return 10240L;
-}
-
-wchar_t dataHandlerStringLT::getSeparator() const
-{
-	return 0;
 }
 
 } // namespace handlers

@@ -292,8 +292,7 @@ class exceptionsManager;
 ///
 /// Use release() to decrement the reference counter.\n
 /// The object automatically destroy itself when the
-///  reference counter reaches 0, but only if the function
-///  preDelete() returns true.
+///  reference counter reaches 0.
 ///
 /// An object of type baseObject should never be deleted
 ///  using the C++ statement "delete".
@@ -381,25 +380,6 @@ private:
 	///
 	///////////////////////////////////////////////////////////
 	void release();
-
-	/// \internal
-	/// \brief This function is called by release() before the
-	///         deletion of the object.
-	///
-	/// The base version of this function just returns true.
-	/// When the function returns true then the function
-	///  release() deletes the object normally when its
-	///  references counter reaches 0, otherwise the object
-	///  will NOT be deleted when the references counter
-	///  reaches 0.
-	///
-	/// @return true if the object should be deleted when
-	///          the references counter reaches 0, false if
-	///          the object should NOT be deleted when the
-	///          references counter reaches 0.
-	///
-	///////////////////////////////////////////////////////////
-	virtual bool preDelete();
 
 	/// \brief References counter.
 	///

@@ -42,6 +42,8 @@ namespace handlers
 class dataHandlerDateTimeBase : public dataHandlerString {
 
 public:
+    dataHandlerDateTimeBase();
+
 	virtual std::int32_t getSignedLong(const std::uint32_t index) const;
 	virtual std::uint32_t getUnsignedLong(const std::uint32_t index) const;
 	virtual double getDouble(const std::uint32_t index) const;
@@ -50,8 +52,6 @@ public:
 	virtual void setDouble(const std::uint32_t index, const double value);
 
 protected:
-	virtual wchar_t getSeparator() const;
-
 	void parseDate(
 		std::wstring dateString,
 		std::int32_t* pYear, 

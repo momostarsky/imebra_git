@@ -48,6 +48,8 @@ namespace handlers
 class dataHandlerStringAS : public dataHandlerString
 {
 public:
+    dataHandlerStringAS();
+
 	/// \brief Used by setAge() and getAge() to specify the
 	///         unit of the age value.
 	///
@@ -155,9 +157,6 @@ public:
 	///
 	///////////////////////////////////////////////////////////
 	virtual void setDouble(const std::uint32_t index, const double value);
-
-
-	virtual std::uint8_t getPaddingByte() const;
 
 	virtual std::uint32_t getUnitSize() const;
 

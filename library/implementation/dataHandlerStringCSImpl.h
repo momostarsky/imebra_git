@@ -37,7 +37,7 @@ namespace handlers
 class dataHandlerStringCS : public dataHandlerString
 {
 public:
-	virtual std::uint8_t getPaddingByte() const;
+    dataHandlerStringCS();
 
 	virtual std::uint32_t getUnitSize() const;
 

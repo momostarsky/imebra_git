@@ -69,7 +69,7 @@ myDataSet->setUnicodeString(L"<-"); // :-)
 class dataHandlerStringPN : public dataHandlerStringUnicode
 {
 public:
-	virtual std::uint8_t getPaddingByte() const;
+    dataHandlerStringPN();
 
 	virtual std::uint32_t getUnitSize() const;
 
@@ -78,9 +78,6 @@ protected:
 	///////////////////////////////////////////////////////////
 	virtual std::uint32_t maxSize() const;
 
-	// Returns the separator =
-	///////////////////////////////////////////////////////////
-	virtual wchar_t getSeparator() const;
 };
 
 } // namespace handlers

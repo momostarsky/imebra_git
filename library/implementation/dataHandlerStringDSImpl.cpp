@@ -35,7 +35,12 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-	
+
+dataHandlerStringDS::dataHandlerStringDS(): dataHandlerString(L'\\', 0x20)
+{
+}
+
+
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 //
@@ -135,11 +140,6 @@ void dataHandlerStringDS::setDouble(const std::uint32_t index, const double valu
 	setUnicodeString(index, convStream.str());
 
 	PUNTOEXE_FUNCTION_END();
-}
-
-std::uint8_t dataHandlerStringDS::getPaddingByte() const
-{
-	return 0x20;
 }
 
 std::uint32_t dataHandlerStringDS::getUnitSize() const

@@ -32,9 +32,8 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 
-std::uint8_t dataHandlerStringSH::getPaddingByte() const
+dataHandlerStringSH::dataHandlerStringSH(): dataHandlerStringUnicode(L'\\', 0x20)
 {
-	return 0x20;
 }
 
 std::uint32_t dataHandlerStringSH::getUnitSize() const

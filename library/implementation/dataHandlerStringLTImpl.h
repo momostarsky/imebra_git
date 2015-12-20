@@ -39,7 +39,7 @@ namespace handlers
 class dataHandlerStringLT : public dataHandlerStringUnicode
 {
 public:
-	virtual std::uint8_t getPaddingByte() const;
+    dataHandlerStringLT();
 
 	virtual std::uint32_t getUnitSize() const;
 
@@ -48,9 +48,6 @@ protected:
 	///////////////////////////////////////////////////////////
 	virtual std::uint32_t maxSize() const;
 
-	// Separator
-	///////////////////////////////////////////////////////////
-	virtual wchar_t getSeparator() const;
 };
 
 } // namespace handlers
