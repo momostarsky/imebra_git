@@ -87,9 +87,9 @@ public:
 
     void setString(int groupId, int order, int tagId, int elementNumber, const std::wstring& newString, const std::string& defaultType = "");
 
-    size_t getRawData(int groupId, int order, int tagId, int bufferId, char* buffer, int bufferSize) const;
+    size_t getRawData(int groupId, int order, int tagId, int bufferId, char* buffer, size_t bufferSize) const;
 
-    void setRawData(int groupId, int order, int tagId, int bufferId, char* buffer, int bufferSize, const std::string& defaultType = "");
+    void setRawData(int groupId, int order, int tagId, int bufferId, char* buffer, size_t bufferSize, const std::string& defaultType = "");
 
     std::string getDefaultDataType(int groupId, int order, int tagId) const;
 

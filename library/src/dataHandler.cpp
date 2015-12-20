@@ -30,24 +30,24 @@ void DataHandler::close()
     m_pDataHandler.release();
 }
 
-bool DataHandler::pointerIsValid(const int index) const
+bool DataHandler::pointerIsValid(const size_t index) const
 {
     return m_pDataHandler->pointerIsValid((const imbxUint32)index);
 }
 
-void DataHandler::setSize(const int elementsNumber)
+void DataHandler::setSize(const size_t elementsNumber)
 {
     m_pDataHandler->setSize((const imbxUint32)elementsNumber);
 }
 
-int DataHandler::getSize() const
+size_t DataHandler::getSize() const
 {
-    return (int)(m_pDataHandler->getSize());
+    return (size_t)(m_pDataHandler->getSize());
 }
 
-int DataHandler::getUnitSize() const
+size_t DataHandler::getUnitSize() const
 {
-    return (int)(m_pDataHandler->getUnitSize());
+    return (size_t)(m_pDataHandler->getUnitSize());
 }
 
 std::string DataHandler::getDataType() const

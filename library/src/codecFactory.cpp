@@ -17,7 +17,7 @@ $fileHeader$
 namespace imebra
 {
 
-DataSet CodecFactory::load(StreamReader reader, int maxSizeBufferLoad)
+DataSet CodecFactory::load(StreamReader reader, size_t maxSizeBufferLoad)
 {
     puntoexe::ptr<puntoexe::imebra::codecs::codecFactory> factory(puntoexe::imebra::codecs::codecFactory::getCodecFactory());
     return DataSet(factory->load(reader.m_pReader, maxSizeBufferLoad));

@@ -55,13 +55,13 @@ public:
 
 	void close();
 
-	bool pointerIsValid(const int index) const;
+    bool pointerIsValid(const size_t index) const;
 
-	void setSize(const int elementsNumber);
+    void setSize(const size_t elementsNumber);
 
-	int getSize() const;
+    size_t getSize() const;
 
-	int getUnitSize() const;
+    size_t getUnitSize() const;
 
 	std::string getDataType() const;
 

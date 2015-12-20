@@ -62,8 +62,8 @@ public:
 #endif
 
 	DataHandler create(
-		const int sizeX,
-		const int sizeY,
+        const size_t sizeX,
+        const size_t sizeY,
 		const bitDepth depth,
 		std::wstring colorSpace,
 		const int highBit);
@@ -75,8 +75,8 @@ public:
 
 	void setSizeMm(const double sizeX, const double sizeY);
 
-    int getSizeX() const;
-    int getSizeY() const;
+    size_t getSizeX() const;
+    size_t getSizeY() const;
 
 	DataHandler getDataHandler(const bool bWrite);
 

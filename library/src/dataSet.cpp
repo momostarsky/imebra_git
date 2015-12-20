@@ -93,7 +93,7 @@ void DataSet::setString(int groupId, int order, int tagId, int elementNumber, co
 	m_pDataSet->setUnicodeString(groupId, order, tagId, elementNumber, newString, defaultType);
 }
 
-size_t DataSet::getRawData(int groupId, int order, int tagId, int bufferId, char* buffer, int bufferSize) const
+size_t DataSet::getRawData(int groupId, int order, int tagId, int bufferId, char* buffer, size_t bufferSize) const
 {
     puntoexe::ptr<puntoexe::imebra::handlers::dataHandlerRaw> dataHandlerRaw = m_pDataSet->getDataHandlerRaw(groupId, order, tagId, bufferId, false);
     if(dataHandlerRaw->getSize() > bufferSize)
@@ -104,7 +104,7 @@ size_t DataSet::getRawData(int groupId, int order, int tagId, int bufferId, char
     return dataHandlerRaw->getSize();
 }
 
-void DataSet::setRawData(int groupId, int order, int tagId, int bufferId, char* buffer, int bufferSize, const std::string& defaultType)
+void DataSet::setRawData(int groupId, int order, int tagId, int bufferId, char* buffer, size_t bufferSize, const std::string& defaultType)
 {
     puntoexe::ptr<puntoexe::imebra::handlers::dataHandlerRaw> dataHandlerRaw = m_pDataSet->getDataHandlerRaw(groupId, order, tagId, bufferId, true);
     dataHandlerRaw->copyFrom((std::int8_t*)buffer, bufferSize);

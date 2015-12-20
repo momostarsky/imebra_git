@@ -24,7 +24,7 @@ namespace imebra
 class CodecFactory
 {
 public:
-    static DataSet load(StreamReader reader, int maxSizeBufferLoad);
+    static DataSet load(StreamReader reader, size_t maxSizeBufferLoad);
 
     enum codecType
     {

@@ -31,8 +31,8 @@ Image& Image::operator=(const Image& right)
 }
 
 DataHandler Image::create(
-		const int sizeX,
-		const int sizeY,
+        const size_t sizeX,
+        const size_t sizeY,
 		const bitDepth depth,
 		std::wstring colorSpace,
 		const int highBit)
@@ -64,18 +64,18 @@ void Image::setSizeMm(const double sizeX, const double sizeY)
     m_pImage->setSizeMm(sizeX, sizeY);
 }
 
-int Image::getSizeX() const
+size_t Image::getSizeX() const
 {
     imbxUint32 sizeX, sizeY;
     m_pImage->getSize(&sizeX, &sizeY);
-    return (int)sizeX;
+    return (size_t)sizeX;
 }
 
-int Image::getSizeY() const
+size_t Image::getSizeY() const
 {
     imbxUint32 sizeX, sizeY;
     m_pImage->getSize(&sizeX, &sizeY);
-    return (int)sizeY;
+    return (size_t)sizeY;
 }
 
 DataHandler Image::getDataHandler(const bool bWrite)
