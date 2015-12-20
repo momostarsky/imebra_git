@@ -83,10 +83,8 @@ std::string charsetConversionICU::fromUnicode(const std::wstring& unicodeString)
     UErrorCode errorCode(U_ZERO_ERROR);
     int32_t conversionLength = unicodeStringConversion.extract(0, 0, m_pIcuConverter, errorCode);
     errorCode = U_ZERO_ERROR;
-    char* destination = new char[conversionLength];
-    unicodeStringConversion.extract(destination, conversionLength, m_pIcuConverter, errorCode);
-    std::string returnString(destination, conversionLength);
-    delete destination;
+    std::string returnString((size_t)conversionLength, char(0));
+    unicodeStringConversion.extract(&(returnString[0]), conversionLength, m_pIcuConverter, errorCode);
     if(U_FAILURE(errorCode))
     {
         std::ostringstream buildErrorString;
