@@ -106,7 +106,7 @@ size_t DataSet::getRawData(int groupId, int order, int tagId, int bufferId, char
 
 void DataSet::setRawData(int groupId, int order, int tagId, int bufferId, char* buffer, size_t bufferSize, const std::string& defaultType)
 {
-    std::shared_ptr<puntoexe::imebra::handlers::dataHandlerRaw> dataHandlerRaw = m_pDataSet->getDataHandlerRaw(groupId, order, tagId, bufferId, true);
+    std::shared_ptr<puntoexe::imebra::handlers::dataHandlerRaw> dataHandlerRaw = m_pDataSet->getDataHandlerRaw(groupId, order, tagId, bufferId, true, defaultType);
     dataHandlerRaw->copyFrom((std::int8_t*)buffer, bufferSize);
 }
 
