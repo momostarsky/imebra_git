@@ -166,7 +166,7 @@ public:
 	///////////////////////////////////////////////////////////
 	inline std::uint32_t readBits(int bitsNum)
 	{
-		static const int bufferSize(sizeof(m_inBitsBuffer) * 8);
+        const int bufferSize(sizeof(m_inBitsBuffer) * 8);
 
 		// All the requested bits are already in the buffer.
 		// Just return them.

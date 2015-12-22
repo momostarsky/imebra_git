@@ -25,8 +25,6 @@ namespace transforms
 namespace colorTransforms
 {
 
-static registerColorTransform m_registerTransform0(std::shared_ptr<colorTransform>(std::make_shared<MONOCHROME1ToMONOCHROME2>()));
-static registerColorTransform m_registerTransform1(std::shared_ptr<colorTransform>(std::make_shared<MONOCHROME2ToMONOCHROME1>()));
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////

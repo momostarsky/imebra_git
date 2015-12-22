@@ -46,6 +46,8 @@ namespace imebra
 ///////////////////////////////////////////////////////////
 class dicomDictionary
 {
+    dicomDictionary();
+
 	struct imageDataDictionaryElement
 	{
 		std::wstring m_tagName;
@@ -60,8 +62,6 @@ class dicomDictionary
 	};
 
 public:
-	dicomDictionary();
-
 	void registerTag(std::uint32_t tagId, const wchar_t* tagName, const char* tagType);
     void registerVR(const std::string& vr, bool bLongLength, std::uint32_t wordSize, std::uint32_t maxLength);
 

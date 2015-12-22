@@ -22,43 +22,6 @@ namespace puntoexe
 namespace imebra
 {
 
-	struct tDirectoryRecordTypeDef
-	{
-		std::wstring m_name;
-		directoryRecord::tDirectoryRecordType m_type;
-	};
-	
-	static const tDirectoryRecordTypeDef typesList[] =
-	{
-		{L"PATIENT", directoryRecord::patient},
-		{L"STUDY", directoryRecord::study},
-		{L"SERIES", directoryRecord::series},
-		{L"IMAGE", directoryRecord::image},
-		{L"OVERLAY", directoryRecord::overlay},
-		{L"MODALITY LUT", directoryRecord::modality_lut},
-		{L"VOI LUT", directoryRecord::voi_lut},
-		{L"CURVE", directoryRecord::curve},
-		{L"TOPIC", directoryRecord::topic},
-		{L"VISIT", directoryRecord::visit},
-		{L"RESULTS", directoryRecord::results},
-		{L"INTERPRETATION", directoryRecord::interpretation},
-		{L"STUDY COMPONENT", directoryRecord::study_component},
-		{L"STORED PRINT", directoryRecord::stored_print},
-		{L"RT DOSE", directoryRecord::rt_dose},
-		{L"RT STRUCTURE SET", directoryRecord::rt_structure_set},
-		{L"RT PLAN", directoryRecord::rt_plan},
-		{L"RT TREAT RECORD", directoryRecord::rt_treat_record},
-		{L"PRESENTATION", directoryRecord::presentation},
-		{L"WAVEFORM", directoryRecord::waveform},
-		{L"SR DOCUMENT", directoryRecord::sr_document},
-		{L"KEY OBJECT DOC", directoryRecord::key_object_doc},
-		{L"SPECTROSCOPY", directoryRecord::spectroscopy},
-		{L"RAW DATA", directoryRecord::raw_data},
-		{L"REGISTRATION", directoryRecord::registration},
-		{L"FIDUCIAL", directoryRecord::fiducial},
-		{L"MRDR", directoryRecord::mrdr},
-		{L"", directoryRecord::endOfDirectoryRecordTypes}
-	};
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -98,7 +61,7 @@ directoryRecord::directoryRecord(std::shared_ptr<dataSet> pDataSet):
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<dataSet> directoryRecord::getRecordDataSet()
+std::shared_ptr<dataSet> directoryRecord::getRecordDataSet() const
 {
 	return m_pDataSet;
 }
@@ -113,7 +76,7 @@ std::shared_ptr<dataSet> directoryRecord::getRecordDataSet()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<directoryRecord> directoryRecord::getNextRecord()
+std::shared_ptr<directoryRecord> directoryRecord::getNextRecord() const
 {
 	return m_pNextRecord;
 }
@@ -128,7 +91,7 @@ std::shared_ptr<directoryRecord> directoryRecord::getNextRecord()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<directoryRecord> directoryRecord::getFirstChildRecord()
+std::shared_ptr<directoryRecord> directoryRecord::getFirstChildRecord() const
 {
 	return m_pFirstChildRecord;
 }
@@ -143,7 +106,7 @@ std::shared_ptr<directoryRecord> directoryRecord::getFirstChildRecord()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<directoryRecord> directoryRecord::getReferencedRecord()
+std::shared_ptr<directoryRecord> directoryRecord::getReferencedRecord() const
 {
 	return m_pReferencedRecord;
 }
@@ -215,7 +178,7 @@ void directoryRecord::setReferencedRecord(std::shared_ptr<directoryRecord> pRefe
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::wstring directoryRecord::getFilePart(std::uint32_t part)
+std::wstring directoryRecord::getFilePart(std::uint32_t part) const
 {
 	return getRecordDataSet()->getUnicodeString(0x0004, 0, 0x1500, part);
 }
@@ -245,10 +208,11 @@ void directoryRecord::setFilePart(std::uint32_t part, const std::wstring partNam
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-directoryRecord::tDirectoryRecordType directoryRecord::getType()
+directoryRecord::tDirectoryRecordType directoryRecord::getType() const
 {
 	std::wstring typeString(getTypeString());
 
+    const tDirectoryRecordTypeDef* typesList(getRecordTypeMap());
 	for(size_t scanTypes(0); typesList[scanTypes].m_type != endOfDirectoryRecordTypes; ++scanTypes)
 	{
 		if(typesList[scanTypes].m_name == typeString)
@@ -272,7 +236,7 @@ directoryRecord::tDirectoryRecordType directoryRecord::getType()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::wstring directoryRecord::getTypeString()
+std::wstring directoryRecord::getTypeString() const
 {
 	return getRecordDataSet()->getUnicodeString(0x0004, 0, 0x1430, 0);
 }
@@ -289,6 +253,7 @@ std::wstring directoryRecord::getTypeString()
 ///////////////////////////////////////////////////////////
 void directoryRecord::setType(tDirectoryRecordType recordType)
 {
+    const tDirectoryRecordTypeDef* typesList(getRecordTypeMap());
 	for(size_t scanTypes(0); typesList[scanTypes].m_type != endOfDirectoryRecordTypes; ++scanTypes)
 	{
 		if(typesList[scanTypes].m_type == recordType)
@@ -401,6 +366,43 @@ void directoryRecord::checkCircularReference(directoryRecord* pStartRecord)
 	}
 }
 
+
+const directoryRecord::tDirectoryRecordTypeDef* directoryRecord::getRecordTypeMap()
+{
+    static const tDirectoryRecordTypeDef typesList[] =
+    {
+        {L"PATIENT", directoryRecord::patient},
+        {L"STUDY", directoryRecord::study},
+        {L"SERIES", directoryRecord::series},
+        {L"IMAGE", directoryRecord::image},
+        {L"OVERLAY", directoryRecord::overlay},
+        {L"MODALITY LUT", directoryRecord::modality_lut},
+        {L"VOI LUT", directoryRecord::voi_lut},
+        {L"CURVE", directoryRecord::curve},
+        {L"TOPIC", directoryRecord::topic},
+        {L"VISIT", directoryRecord::visit},
+        {L"RESULTS", directoryRecord::results},
+        {L"INTERPRETATION", directoryRecord::interpretation},
+        {L"STUDY COMPONENT", directoryRecord::study_component},
+        {L"STORED PRINT", directoryRecord::stored_print},
+        {L"RT DOSE", directoryRecord::rt_dose},
+        {L"RT STRUCTURE SET", directoryRecord::rt_structure_set},
+        {L"RT PLAN", directoryRecord::rt_plan},
+        {L"RT TREAT RECORD", directoryRecord::rt_treat_record},
+        {L"PRESENTATION", directoryRecord::presentation},
+        {L"WAVEFORM", directoryRecord::waveform},
+        {L"SR DOCUMENT", directoryRecord::sr_document},
+        {L"KEY OBJECT DOC", directoryRecord::key_object_doc},
+        {L"SPECTROSCOPY", directoryRecord::spectroscopy},
+        {L"RAW DATA", directoryRecord::raw_data},
+        {L"REGISTRATION", directoryRecord::registration},
+        {L"FIDUCIAL", directoryRecord::fiducial},
+        {L"MRDR", directoryRecord::mrdr},
+        {L"", directoryRecord::endOfDirectoryRecordTypes}
+    };
+
+    return typesList;
+}
 
 
 
@@ -517,7 +519,7 @@ dicomDir::~dicomDir()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<dataSet> dicomDir::getDirectoryDataSet()
+std::shared_ptr<dataSet> dicomDir::getDirectoryDataSet() const
 {
 	return m_pDataSet;
 }
@@ -621,7 +623,7 @@ std::shared_ptr<dataSet> dicomDir::buildDataSet()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<directoryRecord> dicomDir::getFirstRootRecord()
+std::shared_ptr<directoryRecord> dicomDir::getFirstRootRecord() const
 {
 	return m_pFirstRootRecord;
 }

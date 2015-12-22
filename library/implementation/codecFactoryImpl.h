@@ -63,7 +63,6 @@ class codec;
 ///////////////////////////////////////////////////////////
 class codecFactory
 {
-protected:
     codecFactory();
 
 public:

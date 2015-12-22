@@ -12,6 +12,18 @@ $fileHeader$
 #include "transformsChainImpl.h"
 #include "imageImpl.h"
 
+#include "MONOCHROME1ToMONOCHROME2Impl.h"
+#include "MONOCHROME1ToRGBImpl.h"
+#include "MONOCHROME2ToRGBImpl.h"
+#include "MONOCHROME2ToYBRFULLImpl.h"
+#include "PALETTECOLORToRGBImpl.h"
+#include "RGBToMONOCHROME2Impl.h"
+#include "RGBToYBRFULLImpl.h"
+#include "RGBToYBRPARTIALImpl.h"
+#include "YBRFULLToMONOCHROME2Impl.h"
+#include "YBRFULLToRGBImpl.h"
+#include "YBRPARTIALToRGBImpl.h"
+
 namespace puntoexe
 {
 
@@ -50,6 +62,21 @@ namespace colorTransforms
 ///////////////////////////////////////////////////////////
 static colorTransformsFactory::forceColorTransformsFactoryConstruction forceConstruction;
 
+colorTransformsFactory::colorTransformsFactory()
+{
+    registerTransform(std::make_shared<MONOCHROME1ToMONOCHROME2>());
+    registerTransform(std::make_shared<MONOCHROME2ToMONOCHROME1>());
+    registerTransform(std::make_shared<MONOCHROME1ToRGB>());
+    registerTransform(std::make_shared<MONOCHROME2ToRGB>());
+    registerTransform(std::make_shared<MONOCHROME2ToYBRFULL>());
+    registerTransform(std::make_shared<PALETTECOLORToRGB>());
+    registerTransform(std::make_shared<RGBToMONOCHROME2>());
+    registerTransform(std::make_shared<RGBToYBRFULL>());
+    registerTransform(std::make_shared<RGBToYBRPARTIAL>());
+    registerTransform(std::make_shared<YBRFULLToMONOCHROME2>());
+    registerTransform(std::make_shared<YBRFULLToRGB>());
+    registerTransform(std::make_shared<YBRPARTIALToRGB>());
+}
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////

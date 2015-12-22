@@ -63,6 +63,8 @@ namespace colorTransforms
 ///////////////////////////////////////////////////////////
 class colorTransformsFactory
 {
+    colorTransformsFactory();
+
 public:
 	/// \internal
 	/// \brief Register a color transform in the 

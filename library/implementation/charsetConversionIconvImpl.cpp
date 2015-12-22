@@ -34,7 +34,7 @@ charsetConversionIconv::charsetConversionIconv(const std::string& dicomName)
 
     // Check little endian/big endian
     ///////////////////////////////////////////////////////////
-    static std::uint16_t m_endianCheck=0x00ff;
+    std::uint16_t m_endianCheck=0x00ff;
     const char* utfCode;
     switch(sizeof(wchar_t))
     {

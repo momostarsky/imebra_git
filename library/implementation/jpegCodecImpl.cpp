@@ -1127,7 +1127,7 @@ std::shared_ptr<image> jpegCodec::getImage(dataSet* sourceDataSet, std::shared_p
     // If the jpeg signature is wrong, then return an error
     //  condition
     ///////////////////////////////////////////////////////////
-    static std::uint8_t checkSignature[2]={(std::uint8_t)0xff, (std::uint8_t)0xd8};
+    const std::uint8_t checkSignature[2]={(std::uint8_t)0xff, (std::uint8_t)0xd8};
     if(::memcmp(jpegSignature, checkSignature, 2) != 0)
     {
         PUNTOEXE_THROW(codecExceptionWrongFormat, "Jpeg signature not valid");
@@ -1689,7 +1689,7 @@ void jpegCodec::setImage(
 
     // Now write the jpeg stream
     ////////////////////////////////////////////////////////////////
-    static std::uint8_t checkSignature[2]={(std::uint8_t)0xff, (std::uint8_t)0xd8};
+    const std::uint8_t checkSignature[2]={(std::uint8_t)0xff, (std::uint8_t)0xd8};
     pDestinationStream->write(checkSignature, 2);
 
     // Write the SOF tag
@@ -1890,7 +1890,7 @@ void jpegCodec::writeTag(streamWriter* pDestinationStream, tTagId tagId)
     {
         return;
     }
-    static std::uint8_t ff(0xff);
+    const std::uint8_t ff(0xff);
     std::uint8_t byteTagId(tagId);
     pDestinationStream->write(&ff, 1);
     pDestinationStream->write(&byteTagId, 1);
@@ -2167,7 +2167,7 @@ inline void jpegCodec::writeBlock(streamWriter* pStream, std::int32_t* pBuffer, 
         while(zeroRun >= 16)
         {
             zeroRun -= 16;
-            static std::uint32_t zeroRunCode = 0xf0;
+            const std::uint32_t zeroRunCode = 0xf0;
             if(bCalcHuffman)
             {
                 pActiveHuffmanTable->incValueFreq(zeroRunCode);
@@ -2212,7 +2212,7 @@ inline void jpegCodec::writeBlock(streamWriter* pStream, std::int32_t* pBuffer, 
         return;
     }
 
-    static std::uint32_t zero = 0;
+    const std::uint32_t zero(0);
     if(bCalcHuffman)
     {
         pChannel->m_pActiveHuffmanTableAC->incValueFreq(zero);
@@ -2417,13 +2417,13 @@ void jpegCodec::FDCT(std::int32_t* pIOMatrix, float* pDescaleFactors)
 /////////////////////////////////////////////////////////////////
 void jpegCodec::IDCT(std::int32_t* pIOMatrix, long long* pScaleFactors)
 {
-    static const double multiplier((float)((long long)1 << JPEG_DECOMPRESSION_BITS_PRECISION));
-    static const long long multiplier_1_414213562f((long long)(multiplier * 1.414213562f + .5f));
-    static const long long multiplier_1_847759065f((long long)(multiplier * 1.847759065f + .5f));
-    static const long long multiplier_1_0823922f((long long)(multiplier * 1.0823922f + .5f));
-    static const long long multiplier_2_61312593f((long long)(multiplier * 2.61312593f + .5f));
-    static const long long zero_point_five((long long)1 << (JPEG_DECOMPRESSION_BITS_PRECISION - 1));
-    static const long long zero_point_five_by_8((std::int32_t)zero_point_five << 3);
+    const double multiplier((float)((long long)1 << JPEG_DECOMPRESSION_BITS_PRECISION));
+    const long long multiplier_1_414213562f((long long)(multiplier * 1.414213562f + .5f));
+    const long long multiplier_1_847759065f((long long)(multiplier * 1.847759065f + .5f));
+    const long long multiplier_1_0823922f((long long)(multiplier * 1.0823922f + .5f));
+    const long long multiplier_2_61312593f((long long)(multiplier * 2.61312593f + .5f));
+    const long long zero_point_five((long long)1 << (JPEG_DECOMPRESSION_BITS_PRECISION - 1));
+    const long long zero_point_five_by_8((std::int32_t)zero_point_five << 3);
 
 
     // Temporary values

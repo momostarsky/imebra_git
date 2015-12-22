@@ -112,7 +112,7 @@ std::shared_ptr<handlers::dataHandler> waveform::getIntegerData(std::uint32_t ch
 {
 	PUNTOEXE_FUNCTION_START(L"waveform::getIntegerData");
 
-	static std::int32_t uLawDecompressTable[256] =
+    const std::int32_t uLawDecompressTable[256] =
 	{
 		-32124,-31100,-30076,-29052,-28028,-27004,-25980,-24956,
 		-23932,-22908,-21884,-20860,-19836,-18812,-17788,-16764,
@@ -148,7 +148,7 @@ std::shared_ptr<handlers::dataHandler> waveform::getIntegerData(std::uint32_t ch
 		56,    48,    40,    32,    24,    16,     8,     0
 	};
 
-	static std::int32_t aLawDecompressTable[256] =
+    const std::int32_t aLawDecompressTable[256] =
 	{
 		-5504, -5248, -6016, -5760, -4480, -4224, -4992, -4736,
 		-7552, -7296, -8064, -7808, -6528, -6272, -7040, -6784,

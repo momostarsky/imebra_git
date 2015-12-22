@@ -159,7 +159,7 @@ void dicomCodec::writeGroup(std::shared_ptr<streamWriter> pDestStream, std::shar
 
 	// Write the group's length
 	///////////////////////////////////////////////////////////
-	static char lengthDataType[] = "UL";
+    const char lengthDataType[] = "UL";
 
     std::uint16_t adjustedGroupId = pDestStream->adjustEndian(groupId, endianType);;
 
@@ -1604,7 +1604,7 @@ void dicomCodec::writeRLECompressed(
 					++offset;
 					if(phase == 1)
 					{
-                        static const std::uint8_t command = 0x80;
+                        const std::uint8_t command = 0x80;
 						pDestStream->write(&command, 1);
 					}
 				}
@@ -2255,7 +2255,7 @@ std::uint32_t dicomCodec::readTag(
 	// If the buffer size is bigger than the following const
 	//  variable, then read the buffer in small chunks
 	///////////////////////////////////////////////////////////
-	static const std::uint32_t smallBuffersSize(32768);
+    const std::uint32_t smallBuffersSize(32768);
 
 	if(tagLengthDWord <= smallBuffersSize) // Read in one go
 	{

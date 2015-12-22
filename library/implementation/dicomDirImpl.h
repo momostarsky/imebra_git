@@ -49,6 +49,7 @@ class dicomDir;
 class directoryRecord
 {
 	friend class dicomDir;
+
 public:
 
 	/// \brief Specifies the item's type.
@@ -86,7 +87,6 @@ public:
 		endOfDirectoryRecordTypes
 	};
 
-public:
 	/// \brief Returns the dataSet that contains the
 	///         record's information.
 	///
@@ -97,7 +97,7 @@ public:
 	///          information
 	///
 	///////////////////////////////////////////////////////////
-	std::shared_ptr<dataSet> getRecordDataSet();
+    std::shared_ptr<dataSet> getRecordDataSet() const;
 
 	/// \brief Returns the next sibling record.
 	///
@@ -105,7 +105,7 @@ public:
 	///          last record
 	///
 	///////////////////////////////////////////////////////////
-	std::shared_ptr<directoryRecord> getNextRecord();
+    std::shared_ptr<directoryRecord> getNextRecord() const;
 
 	/// \brief Returns the first child record.
 	///
@@ -113,7 +113,7 @@ public:
 	///          doesn't have any child
 	///
 	///////////////////////////////////////////////////////////
-	std::shared_ptr<directoryRecord> getFirstChildRecord();
+    std::shared_ptr<directoryRecord> getFirstChildRecord() const;
 	
 	/// \brief Returns the referenced record, if any.
 	///
@@ -121,7 +121,7 @@ public:
 	///          doesn't reference any other record
 	///
 	///////////////////////////////////////////////////////////
-	std::shared_ptr<directoryRecord> getReferencedRecord();
+    std::shared_ptr<directoryRecord> getReferencedRecord() const;
 
 	/// \brief Sets the next sibling record.
 	///
@@ -170,8 +170,8 @@ public:
 	///
 	/// The function returns an empty string if the
 	///  specified part doesn't exist.
-        ///
-        /// See also setFilePart().
+    ///
+    /// See also setFilePart().
 	/// 
 	/// @param part the part to be returned, 0 based.
 	/// @return the part's name (folder or file), or an
@@ -179,7 +179,7 @@ public:
 	///          exist
 	///
 	///////////////////////////////////////////////////////////
-	std::wstring getFilePart(std::uint32_t part);
+    std::wstring getFilePart(std::uint32_t part) const;
 
 	/// \brief Set the full path to the  file referenced by
 	///         the record.
@@ -196,15 +196,15 @@ public:
 	///  in which the file is stored; each folder is a child
 	///  of the folder set in the previous part.
 	///
-        /// For instance, the file /folder/file.dcm is set
-        ///  with two calls to setFilePart():
-        /// - setFilePart(0, "folder")
-        /// - setFilePart(1, "file.dcm")
-        ///
-        /// See also getFilePart().
+    /// For instance, the file /folder/file.dcm is set
+    ///  with two calls to setFilePart():
+    /// - setFilePart(0, "folder")
+    /// - setFilePart(1, "file.dcm")
+    ///
+    /// See also getFilePart().
 	///
 	/// @param part the part to be set, 0 based.
-        /// @param partName tha value to set for the part
+    /// @param partName tha value to set for the part
 	///
 	///////////////////////////////////////////////////////////
 	void setFilePart(std::uint32_t part, const std::wstring partName);
@@ -217,14 +217,14 @@ public:
 	/// @return the record's type
 	///
 	///////////////////////////////////////////////////////////
-	tDirectoryRecordType getType();
+    tDirectoryRecordType getType() const;
 
 	/// \brief Returns a string representing the record's type.
 	///
 	/// @return the record's type
 	///
 	///////////////////////////////////////////////////////////
-	std::wstring getTypeString();
+    std::wstring getTypeString() const;
 
 	/// \brief Sets the record's type.
 	///
@@ -263,6 +263,14 @@ private:
 	void checkCircularReference(directoryRecord* pStartRecord);
 
 	void updateOffsets();
+
+    struct tDirectoryRecordTypeDef
+    {
+        std::wstring m_name;
+        directoryRecord::tDirectoryRecordType m_type;
+    };
+
+    static const tDirectoryRecordTypeDef* getRecordTypeMap();
 
 	std::shared_ptr<directoryRecord> m_pNextRecord;
 	std::shared_ptr<directoryRecord> m_pFirstChildRecord;
@@ -331,7 +339,7 @@ public:
 	///          information
 	///
 	///////////////////////////////////////////////////////////
-	std::shared_ptr<dataSet> getDirectoryDataSet();
+    std::shared_ptr<dataSet> getDirectoryDataSet() const;
 
 	/// \brief Creates a new directoryRecord and embeds its
 	///         dataSet into the DICOMDIR sequence of items.
@@ -359,7 +367,7 @@ public:
 	/// @return the first root record in the DICOMDIR.
 	///
 	///////////////////////////////////////////////////////////
-	std::shared_ptr<directoryRecord> getFirstRootRecord();
+    std::shared_ptr<directoryRecord> getFirstRootRecord() const;
 
 	/// \brief Sets the first root record in the DICOMDIR.
 	///
