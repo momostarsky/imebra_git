@@ -57,7 +57,7 @@ dataHandlerStringUnicode::~dataHandlerStringUnicode()
 
         std::string asciiString = convertFromUnicode(completeString, &m_charsetsList);
 
-        m_commitMemory = new memory((std::uint32_t)asciiString.size());
+        m_commitMemory = std::make_shared<memory>((std::uint32_t)asciiString.size());
         m_commitMemory->assign((std::uint8_t*)asciiString.data(), (std::uint32_t)asciiString.size());
 
         m_commitCharsetsList.insert(m_commitCharsetsList.end(), m_charsetsList.begin(), m_charsetsList.end());

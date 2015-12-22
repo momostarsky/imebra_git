@@ -19,7 +19,7 @@ TEST(drawBitmapTest, testDrawBitmap)
 	{
 		for(int subsample = 1; subsample != 4; subsample <<= 1)
 		{
-			ptr<image> testImage(buildImageForTest(
+			std::shared_ptr<image> testImage(buildImageForTest(
 					400,
 					300,
 					puntoexe::imebra::image::depthU8,
@@ -29,17 +29,17 @@ TEST(drawBitmapTest, testDrawBitmap)
 					monochrome == 1 ? L"MONOCHROME2" : L"RGB",
 					50));
 
-			ptr<dataSet> testDataSet(new dataSet);
+			std::shared_ptr<dataSet> testDataSet(new dataSet);
 			testDataSet->setImage(0, testImage, L"1.2.840.10008.1.2", codecs::codec::high);
 
 			int bufferX(400 / subsample), bufferY(300 / subsample);
 
-			ptr<drawBitmap> testDraw(new drawBitmap(testImage, 0));
-			ptr<memory> bitmapBuffer(testDraw->getBitmap<puntoexe::imebra::drawBitmapRGB, 1>(bufferX, bufferY, 0, 0, bufferX, bufferY, 0));
+			std::shared_ptr<drawBitmap> testDraw(new drawBitmap(testImage, 0));
+			std::shared_ptr<memory> bitmapBuffer(testDraw->getBitmap<puntoexe::imebra::drawBitmapRGB, 1>(bufferX, bufferY, 0, 0, bufferX, bufferY, 0));
 			std::uint8_t* pBuffer(bitmapBuffer->data());
 
 			std::uint32_t imageRowSize, imageChannelPixelSize, channels;
-			ptr<handlers::dataHandlerNumericBase > pImageHandler(testImage->getDataHandler(false, &imageRowSize, &imageChannelPixelSize, &channels));
+			std::shared_ptr<handlers::dataHandlerNumericBase > pImageHandler(testImage->getDataHandler(false, &imageRowSize, &imageChannelPixelSize, &channels));
 			std::uint8_t* pImageBuffer (pImageHandler->getMemoryBuffer());
 
 			for(int scanY = 0; scanY != bufferY; ++scanY)

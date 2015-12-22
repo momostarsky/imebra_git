@@ -10,7 +10,7 @@ $fileHeader$
 #if !defined(imebraDataHandler_6F85D344_DEF8_468d_BF73_AC5BB17FD22A__INCLUDED_)
 #define imebraDataHandler_6F85D344_DEF8_468d_BF73_AC5BB17FD22A__INCLUDED_
 
-#include "baseObjectImpl.h"
+#include <memory>
 #include "bufferImpl.h"
 #include "charsetsListImpl.h"
 
@@ -65,7 +65,7 @@ namespace handlers
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class dataHandler : public baseObject
+class dataHandler
 {
     // buffer is friend of this class
 	///////////////////////////////////////////////////////////
@@ -156,7 +156,7 @@ public:
 	///                      \ref buffer
 	///
 	///////////////////////////////////////////////////////////
-	virtual void parseBuffer(const ptr<memory>& memoryBuffer)=0;
+	virtual void parseBuffer(const std::shared_ptr<memory>& memoryBuffer)=0;
 	
 	/// \internal
 	/// \brief This function copies the %data from the 
@@ -472,13 +472,13 @@ protected:
 
 	// Pointer to the connected buffer
 	///////////////////////////////////////////////////////////
-	ptr<buffer> m_buffer;
+	std::shared_ptr<buffer> m_buffer;
 
 	std::string m_bufferType;
 
     // Memory that will be committed by the destructor
     ///////////////////////////////////////////////////////////
-    ptr<memory> m_commitMemory;
+    std::shared_ptr<memory> m_commitMemory;
 
     charsetsList::tCharsetsList m_commitCharsetsList;
 };

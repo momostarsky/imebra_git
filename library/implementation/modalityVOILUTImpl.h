@@ -78,18 +78,18 @@ public:
 	///         images come from
 	///
 	///////////////////////////////////////////////////////////
-    modalityVOILUT(ptr<dataSet> pDataSet);
+    modalityVOILUT(std::shared_ptr<dataSet> pDataSet);
 
 	DEFINE_RUN_TEMPLATE_TRANSFORM;
 
 	template <class inputType, class outputType>
 			void templateTransform(
 					inputType* inputHandlerData, size_t /* inputHandlerSize */, std::uint32_t inputHandlerWidth, const std::wstring& inputHandlerColorSpace,
-					ptr<palette> /* inputPalette */,
+                    std::shared_ptr<palette> /* inputPalette */,
                     std::int32_t /* inputHandlerMinValue */, std::uint32_t /* inputHighBit */,
 					std::int32_t inputTopLeftX, std::int32_t inputTopLeftY, std::int32_t inputWidth, std::int32_t inputHeight,
 					outputType* outputHandlerData, size_t /* outputHandlerSize */, std::int32_t outputHandlerWidth, const std::wstring& outputHandlerColorSpace,
-					ptr<palette> /* outputPalette */,
+                    std::shared_ptr<palette> /* outputPalette */,
                     std::int32_t /* outputHandlerMinValue */, std::uint32_t /* outputHighBit */,
 					std::int32_t outputTopLeftX, std::int32_t outputTopLeftY)
 	{
@@ -143,11 +143,11 @@ public:
 
 	virtual bool isEmpty();
 
-	virtual ptr<image> allocateOutputImage(ptr<image> pInputImage, std::uint32_t width, std::uint32_t height);
+    virtual std::shared_ptr<image> allocateOutputImage(std::shared_ptr<image> pInputImage, std::uint32_t width, std::uint32_t height);
 
 private:
-    ptr<dataSet> m_pDataSet;
-    ptr<lut> m_voiLut;
+    std::shared_ptr<dataSet> m_pDataSet;
+    std::shared_ptr<lut> m_voiLut;
     double m_rescaleIntercept;
     double m_rescaleSlope;
 	bool m_bEmpty;

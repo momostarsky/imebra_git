@@ -54,7 +54,7 @@ class data;
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 template <class collectionType>
-class dataCollectionIterator: public baseObject
+class dataCollectionIterator
 {
 public:
 	dataCollectionIterator()
@@ -137,11 +137,11 @@ public:
 	///          iterator
 	///
 	///////////////////////////////////////////////////////////
-	ptr<collectionType> getData()
+	std::shared_ptr<collectionType> getData()
 	{
 		PUNTOEXE_FUNCTION_START(L"dataCollectionIterator::getData");
 
-		ptr<collectionType> collection;
+		std::shared_ptr<collectionType> collection;
 
 		if(isValid())
 		{
@@ -211,8 +211,8 @@ public:
 	}
 
 public:
-	std::map<std::uint32_t, ptr<collectionType> > m_collection;
-	typename std::map<std::uint32_t, ptr<collectionType> >::iterator m_iterator;
+	std::map<std::uint32_t, std::shared_ptr<collectionType> > m_collection;
+	typename std::map<std::uint32_t, std::shared_ptr<collectionType> >::iterator m_iterator;
 };
 
 
@@ -228,11 +228,9 @@ public:
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 template <class collectionType>
-class dataCollection : public baseObject
+class dataCollection
 {
 public:
-	dataCollection(ptr<baseObject> externalLock): baseObject(externalLock) {}
-
 	/// \brief Set the charsets used in the collection
 	///
 	/// The charsets contained in the list are copied in a
@@ -250,7 +248,7 @@ public:
 		charsetsList::updateCharsets(pCharsetsList, &m_charsetsList);
 		
 		for(
-			typename std::map<std::uint32_t, ptr<collectionType> >::iterator dataIterator=m_collection.begin(); 
+			typename std::map<std::uint32_t, std::shared_ptr<collectionType> >::iterator dataIterator=m_collection.begin(); 
 			dataIterator!=m_collection.end(); 
 			++dataIterator)
 		{
@@ -274,7 +272,7 @@ public:
 	{
 		m_charsetsList.clear();
 		for(
-			typename std::map<std::uint32_t, ptr<collectionType> >::iterator dataIterator=m_collection.begin(); 
+			typename std::map<std::uint32_t, std::shared_ptr<collectionType> >::iterator dataIterator=m_collection.begin(); 
 			dataIterator!=m_collection.end(); 
 			++dataIterator)
 		{
@@ -290,22 +288,20 @@ public:
 protected:
 
 	//
-	// In a dataGroup class returns the tag (ptr<data>with 
+	// In a dataGroup class returns the tag (std::shared_ptr<data>with 
 	//  the specified ID, while in a dataSet class returns
-	//  the group (ptr<dataGroup>) with the specified ID.
+	//  the group (std::shared_ptr<dataGroup>) with the specified ID.
 	//
 	///////////////////////////////////////////////////////////
-	ptr<collectionType> getData(std::uint16_t dataId, std::uint16_t order)
+	std::shared_ptr<collectionType> getData(std::uint16_t dataId, std::uint16_t order)
 	{
 		PUNTOEXE_FUNCTION_START(L"dataCollection::getData");
 
-		lockObject lockAccess(this);
-
 		std::uint32_t dataUid = (((std::uint32_t)dataId)<<16) | (std::uint32_t)order;
 
-		ptr<collectionType> returnCollection;
+		std::shared_ptr<collectionType> returnCollection;
 
-		typename std::map<std::uint32_t, ptr<collectionType> >::iterator findCollection = m_collection.find(dataUid);
+		typename std::map<std::uint32_t, std::shared_ptr<collectionType> >::iterator findCollection = m_collection.find(dataUid);
 		if(findCollection != m_collection.end())
 		{
 			returnCollection = findCollection->second;
@@ -318,11 +314,9 @@ protected:
 	
 	// Set the data (tag or group)
 	///////////////////////////////////////////////////////////
-	void setData(std::uint16_t dataId, std::uint16_t order, const ptr<collectionType>& pData)
+	void setData(std::uint16_t dataId, std::uint16_t order, const std::shared_ptr<collectionType>& pData)
 	{
 		PUNTOEXE_FUNCTION_START(L"dataCollection::setData");
-
-		lockObject lockAccess(this);
 
 		std::uint32_t dataUid = (((std::uint32_t)dataId)<<16) | (std::uint32_t)order;
 		m_collection[dataUid] = pData;
@@ -345,17 +339,15 @@ public:
 	///          the collection
 	///
 	///////////////////////////////////////////////////////////
-	ptr<dataCollectionIterator<collectionType> > getDataIterator()
+	std::shared_ptr<dataCollectionIterator<collectionType> > getDataIterator()
 	{
 		PUNTOEXE_FUNCTION_START(L"dataCollection::getDataIterator");
 
-		lockObject lockAccess(this);
-
-		ptr<dataCollectionIterator<collectionType> > pIterator(new dataCollectionIterator<collectionType>);
+		std::shared_ptr<dataCollectionIterator<collectionType> > pIterator(new dataCollectionIterator<collectionType>);
 
 		
 		for(
-			typename std::map<std::uint32_t, ptr<collectionType> >::iterator dataIterator=m_collection.begin(); 
+			typename std::map<std::uint32_t, std::shared_ptr<collectionType> >::iterator dataIterator=m_collection.begin(); 
 			dataIterator!=m_collection.end(); 
 			++dataIterator)
 		{
@@ -371,7 +363,7 @@ public:
 protected:
 	// Stored data (tags or groups)
 	///////////////////////////////////////////////////////////
-	std::map<std::uint32_t, ptr<collectionType> > m_collection;
+	std::map<std::uint32_t, std::shared_ptr<collectionType> > m_collection;
 
 	charsetsList::tCharsetsList m_charsetsList;
 };

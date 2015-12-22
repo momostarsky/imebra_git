@@ -10,7 +10,7 @@ $fileHeader$
 #if !defined(imebraHuffmanTable_3146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_)
 #define imebraHuffmanTable_3146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_
 
-#include "baseObjectImpl.h"
+#include <memory>
 #include <vector>
 #include <map>
 #include <array>
@@ -37,7 +37,7 @@ class streamWriter;
 ///         baseStream object.
 ///
 ///////////////////////////////////////////////////////////
-class huffmanTable: public baseObject
+class huffmanTable
 {
 public:
 	///////////////////////////////////////////////////////////

@@ -11,7 +11,8 @@ $fileHeader$
 #define imebraStreamWriter_SWIG_F6221390_BC44_4B83_B5BB_3485222FF1DD__INCLUDED_
 
 #ifndef SWIG
-#include "../../implementation/baseObjectImpl.h"
+
+#include <memory>
 
 namespace puntoexe
 {
@@ -39,7 +40,7 @@ public:
 
 #ifndef SWIG
 protected:
-    puntoexe::ptr<puntoexe::streamWriter> m_pWriter;
+    std::shared_ptr<puntoexe::streamWriter> m_pWriter;
 #endif
 };
 

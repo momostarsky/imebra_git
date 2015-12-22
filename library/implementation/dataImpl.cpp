@@ -48,11 +48,9 @@ namespace imebra
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void data::setBuffer(std::uint32_t bufferId, const ptr<buffer>& newBuffer)
+void data::setBuffer(std::uint32_t bufferId, const std::shared_ptr<buffer>& newBuffer)
 {
 	PUNTOEXE_FUNCTION_START(L"data::setBuffer");
-
-	lockObject lockAccess(this);
 
 	// Assign the new buffer
 	///////////////////////////////////////////////////////////
@@ -74,10 +72,6 @@ void data::setBuffer(std::uint32_t bufferId, const ptr<buffer>& newBuffer)
 void data::deleteBuffer(std::uint32_t bufferId)
 {
 	PUNTOEXE_FUNCTION_START(L"data::deleteBuffer");
-
-	// Lock the object
-	///////////////////////////////////////////////////////////
-	lockObject lockAccess(this);
 
 	// Remove the buffer
 	///////////////////////////////////////////////////////////
@@ -104,10 +98,6 @@ std::string data::getDataType()
 {
 	PUNTOEXE_FUNCTION_START(L"data::getDataType");
 
-	// Lock the object
-	///////////////////////////////////////////////////////////
-	lockObject lockAccess(this);
-
 	tBuffersMap::iterator findBuffer = m_buffers.find(0);
 	if(findBuffer != m_buffers.end())
 	{
@@ -133,10 +123,6 @@ std::uint32_t data::getBuffersCount()
 {
 	PUNTOEXE_FUNCTION_START(L"data::getBuffersCount");
 
-	// Lock the object
-	///////////////////////////////////////////////////////////
-	lockObject lockAccess(this);
-
 	// Returns the number of buffers
 	///////////////////////////////////////////////////////////
 	return m_buffers.size();
@@ -157,10 +143,6 @@ std::uint32_t data::getBuffersCount()
 bool data::bufferExists(std::uint32_t bufferId)
 {
 	PUNTOEXE_FUNCTION_START(L"data::bufferExists");
-
-	// Lock the object
-	///////////////////////////////////////////////////////////
-	lockObject lockAccess(this);
 
 	// Retrieve the buffer
 	///////////////////////////////////////////////////////////
@@ -183,10 +165,6 @@ bool data::bufferExists(std::uint32_t bufferId)
 std::uint32_t data::getBufferSize(std::uint32_t bufferId)
 {
 	PUNTOEXE_FUNCTION_START(L"data::getBufferSize");
-
-	// Lock the object
-	///////////////////////////////////////////////////////////
-	lockObject lockAccess(this);
 
 	// Retrieve the buffer
 	///////////////////////////////////////////////////////////
@@ -213,17 +191,13 @@ std::uint32_t data::getBufferSize(std::uint32_t bufferId)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<handlers::dataHandler> data::getDataHandler(std::uint32_t bufferId, bool bWrite, const std::string& defaultType)
+std::shared_ptr<handlers::dataHandler> data::getDataHandler(std::uint32_t bufferId, bool bWrite, const std::string& defaultType)
 {
 	PUNTOEXE_FUNCTION_START(L"data::getDataHandler");
 
-	// Lock the object
-	///////////////////////////////////////////////////////////
-	lockObject lockAccess(this);
-
 	// Retrieve the buffer
 	///////////////////////////////////////////////////////////
-	ptr<buffer> pTempBuffer;
+	std::shared_ptr<buffer> pTempBuffer;
 	tBuffersMap::iterator findBuffer = m_buffers.find(bufferId);
 	if(findBuffer != m_buffers.end())
 	{
@@ -239,11 +213,11 @@ ptr<handlers::dataHandler> data::getDataHandler(std::uint32_t bufferId, bool bWr
         ///////////////////////////////////////////////////////////
         if( !m_buffers.empty() && !m_buffers.begin()->second->getDataType().empty() )
         {
-            pTempBuffer = new buffer(this, m_buffers.begin()->second->getDataType());
+            pTempBuffer = std::make_shared<buffer>(m_buffers.begin()->second->getDataType());
         }
         else
         {
-            pTempBuffer = new buffer(this, defaultType);
+            pTempBuffer = std::make_shared<buffer>(defaultType);
         }
 
 		pTempBuffer->setCharsetsList(&m_charsetsList);
@@ -254,7 +228,7 @@ ptr<handlers::dataHandler> data::getDataHandler(std::uint32_t bufferId, bool bWr
 	///////////////////////////////////////////////////////////
 	if(pTempBuffer == 0)
 	{
-		ptr<handlers::dataHandler> emptyDataHandler;
+		std::shared_ptr<handlers::dataHandler> emptyDataHandler;
 		return emptyDataHandler;
 	}
 	
@@ -273,17 +247,13 @@ ptr<handlers::dataHandler> data::getDataHandler(std::uint32_t bufferId, bool bWr
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<handlers::dataHandlerRaw> data::getDataHandlerRaw(std::uint32_t bufferId, bool bWrite, const std::string& defaultType)
+std::shared_ptr<handlers::dataHandlerRaw> data::getDataHandlerRaw(std::uint32_t bufferId, bool bWrite, const std::string& defaultType)
 {
 	PUNTOEXE_FUNCTION_START(L"data::getDataHandlerRaw");
 
-	// Lock the object
-	///////////////////////////////////////////////////////////
-	lockObject lockAccess(this);
-
 	// Retrieve the buffer
 	///////////////////////////////////////////////////////////
-	ptr<buffer> pTempBuffer;
+	std::shared_ptr<buffer> pTempBuffer;
 	tBuffersMap::iterator findBuffer = m_buffers.find(bufferId);
 	if(findBuffer != m_buffers.end() )
 	{
@@ -299,11 +269,11 @@ ptr<handlers::dataHandlerRaw> data::getDataHandlerRaw(std::uint32_t bufferId, bo
         ///////////////////////////////////////////////////////////
         if( !m_buffers.empty() )
         {
-            pTempBuffer = new buffer(this, m_buffers.begin()->second->getDataType());
+            pTempBuffer = std::make_shared<buffer>(m_buffers.begin()->second->getDataType());
         }
         else
         {
-            pTempBuffer = new buffer(this, defaultType);
+            pTempBuffer = std::make_shared<buffer>(defaultType);
         }
 
 		pTempBuffer->setCharsetsList(&m_charsetsList);
@@ -314,7 +284,7 @@ ptr<handlers::dataHandlerRaw> data::getDataHandlerRaw(std::uint32_t bufferId, bo
 	///////////////////////////////////////////////////////////
 	if( pTempBuffer == 0 )
 	{
-		ptr<handlers::dataHandlerRaw> emptyDataHandler;
+		std::shared_ptr<handlers::dataHandlerRaw> emptyDataHandler;
 		return emptyDataHandler;
 	}
 
@@ -333,24 +303,20 @@ ptr<handlers::dataHandlerRaw> data::getDataHandlerRaw(std::uint32_t bufferId, bo
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<streamReader> data::getStreamReader(std::uint32_t bufferId)
+std::shared_ptr<streamReader> data::getStreamReader(std::uint32_t bufferId)
 {
 	PUNTOEXE_FUNCTION_START(L"data::getStreamReader");
 
-	// Lock the object
-	///////////////////////////////////////////////////////////
-	lockObject lockAccess(this);
-
 	// Retrieve the buffer
 	///////////////////////////////////////////////////////////
-	ptr<buffer> pTempBuffer;
+	std::shared_ptr<buffer> pTempBuffer;
 	tBuffersMap::iterator findBuffer = m_buffers.find(bufferId);
 	if(findBuffer != m_buffers.end())
 	{
 		return findBuffer->second->getStreamReader();
 	}
 
-	ptr<streamReader> emptyStream;
+	std::shared_ptr<streamReader> emptyStream;
 	return emptyStream;
 
 	PUNTOEXE_FUNCTION_END();
@@ -366,17 +332,13 @@ ptr<streamReader> data::getStreamReader(std::uint32_t bufferId)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<streamWriter> data::getStreamWriter(std::uint32_t bufferId, const std::string& dataType /* = "" */)
+std::shared_ptr<streamWriter> data::getStreamWriter(std::uint32_t bufferId, const std::string& dataType /* = "" */)
 {
 	PUNTOEXE_FUNCTION_START(L"data::getStream");
 
-	// Lock the object
-	///////////////////////////////////////////////////////////
-	lockObject lockAccess(this);
-
 	// Retrieve the buffer
 	///////////////////////////////////////////////////////////
-	ptr<buffer> pTempBuffer;
+	std::shared_ptr<buffer> pTempBuffer;
 	tBuffersMap::iterator findBuffer = m_buffers.find(bufferId);
 	if(findBuffer != m_buffers.end())
 	{
@@ -392,11 +354,11 @@ ptr<streamWriter> data::getStreamWriter(std::uint32_t bufferId, const std::strin
         ///////////////////////////////////////////////////////////
         if( !m_buffers.empty() )
         {
-            pTempBuffer = new buffer(this, m_buffers.begin()->second->getDataType());
+            pTempBuffer = std::make_shared<buffer>(m_buffers.begin()->second->getDataType());
         }
         else
         {
-            pTempBuffer = new buffer(this, dataType);
+            pTempBuffer = std::make_shared<buffer>(dataType);
         }
 
         m_buffers[bufferId]=pTempBuffer;
@@ -417,13 +379,9 @@ ptr<streamWriter> data::getStreamWriter(std::uint32_t bufferId, const std::strin
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<dataSet> data::getDataSet(std::uint32_t dataSetId)
+std::shared_ptr<dataSet> data::getDataSet(std::uint32_t dataSetId)
 {
 	PUNTOEXE_FUNCTION_START(L"data::getDataSet");
-
-	// Lock the object
-	///////////////////////////////////////////////////////////
-	lockObject lockAccess(this);
 
 	// Retrieve the buffer
 	///////////////////////////////////////////////////////////
@@ -447,13 +405,9 @@ ptr<dataSet> data::getDataSet(std::uint32_t dataSetId)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void data::setDataSet(std::uint32_t dataSetId, ptr<dataSet> pDataSet)
+void data::setDataSet(std::uint32_t dataSetId, std::shared_ptr<dataSet> pDataSet)
 {
 	PUNTOEXE_FUNCTION_START(L"data::setDataSet");
-
-	// Lock the object
-	///////////////////////////////////////////////////////////
-	lockObject lockAccess(this);
 
 	if(dataSetId >= m_embeddedDataSets.size())
 	{
@@ -474,13 +428,9 @@ void data::setDataSet(std::uint32_t dataSetId, ptr<dataSet> pDataSet)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void data::appendDataSet(ptr<dataSet> pDataSet)
+void data::appendDataSet(std::shared_ptr<dataSet> pDataSet)
 {
 	PUNTOEXE_FUNCTION_START(L"data::appendDataSet");
-
-	// Lock the object
-	///////////////////////////////////////////////////////////
-	lockObject lockAccess(this);
 
 	m_embeddedDataSets.push_back(pDataSet);
 
@@ -501,8 +451,6 @@ void data::appendDataSet(ptr<dataSet> pDataSet)
 void data::setCharsetsList(charsetsList::tCharsetsList* pCharsetsList)
 {
 	PUNTOEXE_FUNCTION_START(L"data::setCharsetsList");
-
-	lockObject lockAccess(this);
 
 	m_charsetsList.clear();
 	charsetsList::updateCharsets(pCharsetsList, &m_charsetsList);
@@ -535,8 +483,6 @@ void data::getCharsetsList(charsetsList::tCharsetsList* pCharsetsList)
 {
 	PUNTOEXE_FUNCTION_START(L"data::getCharsetsList");
 
-	lockObject lockAccess(this);
-	
 	m_charsetsList.clear();
 
 	for(tEmbeddedDatasetsMap::iterator scanEmbeddedDataSets = m_embeddedDataSets.begin(); scanEmbeddedDataSets != m_embeddedDataSets.end(); ++scanEmbeddedDataSets)

@@ -38,7 +38,7 @@ transformsChain::transformsChain():
 // Add a new transform to the chain
 //
 ///////////////////////////////////////////////////////////
-void transformsChain::addTransform(ptr<transform> pTransform)
+void transformsChain::addTransform(std::shared_ptr<transform> pTransform)
 {
 	PUNTOEXE_FUNCTION_START(L"transformsChain::addTransform");
 
@@ -65,14 +65,14 @@ bool transformsChain::isEmpty()
 
 
 void transformsChain::runTransform(
-            const ptr<image>& inputImage,
+            const std::shared_ptr<image>& inputImage,
             std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight,
-            const ptr<image>& outputImage,
+            const std::shared_ptr<image>& outputImage,
             std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY)
 {
 	if(isEmpty())
 	{
-		ptr<transformHighBit> highBit(new transformHighBit);
+		std::shared_ptr<transformHighBit> highBit(new transformHighBit);
 		highBit->runTransform(inputImage, inputTopLeftX, inputTopLeftY, inputWidth, inputHeight, outputImage, outputTopLeftX, outputTopLeftY);
 		return;
 	}
@@ -155,8 +155,8 @@ void transformsChain::runTransform(
 
 		while(++scanTransforms != lastTransform)
 		{
-			ptr<image> temporaryInput(*(scanTemporaryImages++));
-			ptr<image> temporaryOutput(*scanTemporaryImages);
+			std::shared_ptr<image> temporaryInput(*(scanTemporaryImages++));
+			std::shared_ptr<image> temporaryOutput(*scanTemporaryImages);
 
 			(*scanTransforms)->runTransform(temporaryInput, 0, 0, inputWidth, rows, temporaryOutput, 0, 0);
 		}
@@ -167,11 +167,11 @@ void transformsChain::runTransform(
 }
 
 
-ptr<image> transformsChain::allocateOutputImage(ptr<image> pInputImage, std::uint32_t width, std::uint32_t height)
+std::shared_ptr<image> transformsChain::allocateOutputImage(std::shared_ptr<image> pInputImage, std::uint32_t width, std::uint32_t height)
 {
 	if(isEmpty())
 	{
-        ptr<image> newImage(new image());
+        std::shared_ptr<image> newImage(new image());
 		newImage->create(width, height, pInputImage->getDepth(), pInputImage->getColorSpace(), pInputImage->getHighBit());
 		return newImage;
 	}
@@ -186,7 +186,7 @@ ptr<image> transformsChain::allocateOutputImage(ptr<image> pInputImage, std::uin
 	tTransformsList::iterator lastTransform(m_transformsList.end());
 	--lastTransform;
 
-	ptr<image> temporaryImage;
+	std::shared_ptr<image> temporaryImage;
 
 	for(tTransformsList::iterator scanTransforms(m_transformsList.begin()); scanTransforms != lastTransform; ++scanTransforms)
 	{
@@ -196,7 +196,7 @@ ptr<image> transformsChain::allocateOutputImage(ptr<image> pInputImage, std::uin
 		}
 		else
 		{
-			ptr <image> newImage( (*scanTransforms)->allocateOutputImage(temporaryImage, 1, 1) );
+			std::shared_ptr <image> newImage( (*scanTransforms)->allocateOutputImage(temporaryImage, 1, 1) );
 			temporaryImage = newImage;
 		}
 	}

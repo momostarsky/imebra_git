@@ -41,7 +41,7 @@ class dataHandlerStringBase : public dataHandler
 public:
     dataHandlerStringBase(const wchar_t separator, const std::uint8_t paddingByte);
 
-    virtual void parseBuffer(const ptr<memory>& memoryBuffer);
+    virtual void parseBuffer(const std::shared_ptr<memory>& memoryBuffer);
 
     // Returns true if the pointer is valid
     ///////////////////////////////////////////////////////////

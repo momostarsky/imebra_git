@@ -11,7 +11,7 @@ $fileHeader$
 #define imebraLUT_C2D59748_5D38_4b12_BA16_5EC22DA7C0E7__INCLUDED_
 
 #include <map>
-#include "baseObjectImpl.h"
+#include <memory>
 
 
 ///////////////////////////////////////////////////////////
@@ -45,7 +45,7 @@ namespace handlers
 ///  color palette.
 ///
 ///////////////////////////////////////////////////////////
-class lut : public baseObject
+class lut
 {
 public:
 	// Constructor
@@ -57,6 +57,10 @@ public:
 		m_bChecked(false),
 		m_bValid(false),
 		m_pMappedValues(0){}
+
+    // Destructor
+    ///////////////////////////////////////////////////////////
+    virtual ~lut();
 
 
 	/// \brief Initializes the lut with the values stored in
@@ -72,7 +76,7 @@ public:
 	///                       lut
 	///
 	///////////////////////////////////////////////////////////
-    void setLut(ptr<handlers::dataHandler> pDescriptor, ptr<handlers::dataHandler> pData, const std::wstring& description);
+    void setLut(std::shared_ptr<handlers::dataHandler> pDescriptor, std::shared_ptr<handlers::dataHandler> pData, const std::wstring& description);
 
 	/// \brief Create an empty lut.
 	///
@@ -117,7 +121,7 @@ public:
 	///                       data
 	///
 	///////////////////////////////////////////////////////////
-	void fillHandlers(ptr<handlers::dataHandler> pDescriptor, ptr<handlers::dataHandler> pData);
+	void fillHandlers(std::shared_ptr<handlers::dataHandler> pDescriptor, std::shared_ptr<handlers::dataHandler> pData);
 
 	/// \brief Return the lut's description.
 	///
@@ -185,11 +189,6 @@ public:
 	///////////////////////////////////////////////////////////
 	void copyToInt32(std::int32_t* pDestination, std::uint32_t destSize, std::int32_t* pFirstMapped);
 
-protected:
-	// Destructor
-	///////////////////////////////////////////////////////////
-	virtual ~lut();
-
 	std::uint32_t m_size;
 	std::int32_t m_firstMapped;
 	std::uint8_t m_bits;
@@ -210,7 +209,7 @@ protected:
 ///  colors.
 ///
 ///////////////////////////////////////////////////////////
-class palette: public baseObject
+class palette
 {
 public:
     /// \brief Construct the color palette.
@@ -220,7 +219,7 @@ public:
     /// @param blue  the lut containing the blue components
     ///
     ///////////////////////////////////////////////////////////
-    palette(ptr<lut> red, ptr<lut> green, ptr<lut> blue);
+    palette(std::shared_ptr<lut> red, std::shared_ptr<lut> green, std::shared_ptr<lut> blue);
 
     /// \brief Set the luts that form the color palette.
     ///
@@ -229,33 +228,33 @@ public:
     /// @param blue  the lut containing the blue components
     ///
     ///////////////////////////////////////////////////////////
-    void setLuts(ptr<lut> red, ptr<lut> green, ptr<lut> blue);
+    void setLuts(std::shared_ptr<lut> red, std::shared_ptr<lut> green, std::shared_ptr<lut> blue);
 
     /// \brief Retrieve the lut containing the red components.
     ///
     /// @return the lut containing the red components
     ///
     ///////////////////////////////////////////////////////////
-    ptr<lut> getRed();
+    std::shared_ptr<lut> getRed();
 
     /// \brief Retrieve the lut containing the green components.
     ///
     /// @return the lut containing the green components
     ///
     ///////////////////////////////////////////////////////////
-    ptr<lut> getGreen();
+    std::shared_ptr<lut> getGreen();
 
     /// \brief Retrieve the lut containing the blue components.
     ///
     /// @return the lut containing the blue components
     ///
     ///////////////////////////////////////////////////////////
-    ptr<lut> getBlue();
+    std::shared_ptr<lut> getBlue();
 
 protected:
-    ptr<lut> m_redLut;
-    ptr<lut> m_greenLut;
-    ptr<lut> m_blueLut;
+    std::shared_ptr<lut> m_redLut;
+    std::shared_ptr<lut> m_greenLut;
+    std::shared_ptr<lut> m_blueLut;
 };
 
 

@@ -37,7 +37,7 @@ namespace puntoexe
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-memoryStream::memoryStream(ptr<memory> memoryStream): m_memory(memoryStream)
+memoryStream::memoryStream(std::shared_ptr<memory> memoryStream): m_memory(memoryStream)
 {
 }
 
@@ -61,8 +61,6 @@ void memoryStream::write(std::uint32_t startPosition, const std::uint8_t* pBuffe
 	{
 		return;
 	}
-
-	lockObject lockThis(this);
 
 	// Copy the buffer into the memory
 	///////////////////////////////////////////////////////////
@@ -97,8 +95,6 @@ std::uint32_t memoryStream::read(std::uint32_t startPosition, std::uint8_t* pBuf
 	{
 		return 0;
 	}
-
-	lockObject lockThis(this);
 
 	// Don't read if the requested position isn't valid
 	///////////////////////////////////////////////////////////

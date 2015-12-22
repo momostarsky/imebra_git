@@ -25,7 +25,7 @@ namespace transforms
 namespace colorTransforms
 {
 
-static registerColorTransform m_registerTransform(ptr<colorTransform>(new YBRFULLToMONOCHROME2));
+static registerColorTransform m_registerTransform(std::shared_ptr<colorTransform>(new YBRFULLToMONOCHROME2));
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -66,9 +66,9 @@ std::wstring YBRFULLToMONOCHROME2::getFinalColorSpace()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<colorTransform> YBRFULLToMONOCHROME2::createColorTransform()
+std::shared_ptr<colorTransform> YBRFULLToMONOCHROME2::createColorTransform()
 {
-	return ptr<colorTransform>(new YBRFULLToMONOCHROME2);
+	return std::shared_ptr<colorTransform>(new YBRFULLToMONOCHROME2);
 }
 
 

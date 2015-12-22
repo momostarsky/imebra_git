@@ -10,7 +10,7 @@ $fileHeader$
 #if !defined(imebraTransform_5DB89BFD_F105_45e7_B9D9_3756AC93C821__INCLUDED_)
 #define imebraTransform_5DB89BFD_F105_45e7_B9D9_3756AC93C821__INCLUDED_
 
-#include "baseObjectImpl.h"
+#include <memory>
 #include "dataHandlerNumericImpl.h"
 #include "imageImpl.h"
 
@@ -19,11 +19,11 @@ $fileHeader$
 template <typename inputType>\
 void runTemplateTransform1(\
     inputType* inputData, size_t inputDataSize, std::uint32_t inputHandlerWidth, const std::wstring& inputHandlerColorSpace,\
-    puntoexe::ptr<puntoexe::imebra::palette> inputPalette,\
+    std::shared_ptr<puntoexe::imebra::palette> inputPalette,\
     std::int32_t inputHandlerMinValue, std::uint32_t inputHighBit,\
     std::int32_t inputTopLeftX, std::int32_t inputTopLeftY, std::int32_t inputWidth, std::int32_t inputHeight,\
-    puntoexe::ptr<puntoexe::imebra::handlers::dataHandlerNumericBase> outputHandler, std::int32_t outputHandlerWidth, const std::wstring& outputHandlerColorSpace,\
-    puntoexe::ptr<puntoexe::imebra::palette> outputPalette,\
+    std::shared_ptr<puntoexe::imebra::handlers::dataHandlerNumericBase> outputHandler, std::int32_t outputHandlerWidth, const std::wstring& outputHandlerColorSpace,\
+    std::shared_ptr<puntoexe::imebra::palette> outputPalette,\
     std::int32_t outputHandlerMinValue, std::uint32_t outputHighBit,\
     std::int32_t outputTopLeftX, std::int32_t outputTopLeftY)\
 {\
@@ -39,12 +39,12 @@ void runTemplateTransform1(\
 }\
 \
 void runTemplateTransform(\
-    puntoexe::ptr<puntoexe::imebra::handlers::dataHandlerNumericBase> inputHandler, std::uint32_t inputHandlerWidth, const std::wstring& inputHandlerColorSpace,\
-    puntoexe::ptr<puntoexe::imebra::palette> inputPalette,\
+    std::shared_ptr<puntoexe::imebra::handlers::dataHandlerNumericBase> inputHandler, std::uint32_t inputHandlerWidth, const std::wstring& inputHandlerColorSpace,\
+    std::shared_ptr<puntoexe::imebra::palette> inputPalette,\
     std::int32_t inputHandlerMinValue, std::uint32_t inputHighBit,\
     std::int32_t inputTopLeftX, std::int32_t inputTopLeftY, std::int32_t inputWidth, std::int32_t inputHeight,\
-    puntoexe::ptr<puntoexe::imebra::handlers::dataHandlerNumericBase> outputHandler, std::int32_t outputHandlerWidth, const std::wstring& outputHandlerColorSpace,\
-    puntoexe::ptr<puntoexe::imebra::palette> outputPalette,\
+    std::shared_ptr<puntoexe::imebra::handlers::dataHandlerNumericBase> outputHandler, std::int32_t outputHandlerWidth, const std::wstring& outputHandlerColorSpace,\
+    std::shared_ptr<puntoexe::imebra::palette> outputPalette,\
     std::int32_t outputHandlerMinValue, std::uint32_t outputHighBit,\
     std::int32_t outputTopLeftX, std::int32_t outputTopLeftY)\
 {\
@@ -64,11 +64,11 @@ void runTemplateTransform2(\
     outputType* outputData, size_t outputDataSize, \
     inputType* inputData, size_t inputDataSize, \
     std::uint32_t inputHandlerWidth, const std::wstring& inputHandlerColorSpace,\
-    puntoexe::ptr<puntoexe::imebra::palette> inputPalette,\
+    std::shared_ptr<puntoexe::imebra::palette> inputPalette,\
     std::int32_t inputHandlerMinValue, std::uint32_t inputHighBit,\
     std::int32_t inputTopLeftX, std::int32_t inputTopLeftY, std::int32_t inputWidth, std::int32_t inputHeight,\
     std::int32_t outputHandlerWidth, const std::wstring& outputHandlerColorSpace,\
-    puntoexe::ptr<puntoexe::imebra::palette> outputPalette,\
+    std::shared_ptr<puntoexe::imebra::palette> outputPalette,\
     std::int32_t outputHandlerMinValue, std::uint32_t outputHighBit,\
     std::int32_t outputTopLeftX, std::int32_t outputTopLeftY)\
 {\
@@ -84,12 +84,12 @@ void runTemplateTransform2(\
 }\
 \
 virtual void runTransformHandlers(\
-    puntoexe::ptr<puntoexe::imebra::handlers::dataHandlerNumericBase> inputHandler, std::uint32_t inputHandlerWidth, const std::wstring& inputHandlerColorSpace,\
-    puntoexe::ptr<puntoexe::imebra::palette> inputPalette,\
+    std::shared_ptr<puntoexe::imebra::handlers::dataHandlerNumericBase> inputHandler, std::uint32_t inputHandlerWidth, const std::wstring& inputHandlerColorSpace,\
+    std::shared_ptr<puntoexe::imebra::palette> inputPalette,\
     std::int32_t inputHandlerMinValue, std::uint32_t inputHighBit,\
     std::int32_t inputTopLeftX, std::int32_t inputTopLeftY, std::int32_t inputWidth, std::int32_t inputHeight,\
-    puntoexe::ptr<puntoexe::imebra::handlers::dataHandlerNumericBase> outputHandler, std::int32_t outputHandlerWidth, const std::wstring& outputHandlerColorSpace,\
-    puntoexe::ptr<puntoexe::imebra::palette> outputPalette,\
+    std::shared_ptr<puntoexe::imebra::handlers::dataHandlerNumericBase> outputHandler, std::int32_t outputHandlerWidth, const std::wstring& outputHandlerColorSpace,\
+    std::shared_ptr<puntoexe::imebra::palette> outputPalette,\
     std::int32_t outputHandlerMinValue, std::uint32_t outputHighBit,\
     std::int32_t outputTopLeftX, std::int32_t outputTopLeftY)\
 {\
@@ -149,9 +149,9 @@ For instance, once an image has been retrieved from
  bit depth;
 
 \code
-// loadedDataSet is a ptr<dataSet> previously loaded
+// loadedDataSet is a std::shared_ptr<dataSet> previously loaded
 // Here we get the first image in the dataSet
-ptr<image> inputImage(loadedDataSet->getImage(0));
+std::shared_ptr<image> inputImage(loadedDataSet->getImage(0));
 
 // We need to get the image's size because we have to
 //  tell the transform on which area we want to apply
@@ -161,10 +161,10 @@ inputImage->getSize(&width, &height);
 
 // Allocate the modality transform. The modality transform
 //  gets the transformation parameters from the dataset
-ptr<transforms::modalityVOILUT> modalityTransform(new transforms::modalityVOILUT(loadedDataSet));
+std::shared_ptr<transforms::modalityVOILUT> modalityTransform(new transforms::modalityVOILUT(loadedDataSet));
 
 // We ask the transform to allocate a proper output image
-ptr<image> outputImage(modalityTransform->allocateOutputImage(inputImage, width, height));
+std::shared_ptr<image> outputImage(modalityTransform->allocateOutputImage(inputImage, width, height));
 
 // And now we run the transform
 modalityTransform->runTransform(inputImage, 0, 0, width, height, outputImage, 0, 0);
@@ -194,7 +194,7 @@ modalityVOILUT cannot do this because its output has
 ///  transform's parameter.
 ///
 ///////////////////////////////////////////////////////////
-class transform : public baseObject
+class transform
 {
 
 public:
@@ -222,7 +222,7 @@ public:
 	///          in runTransform()
 	///
 	///////////////////////////////////////////////////////////
-	virtual ptr<image> allocateOutputImage(ptr<image> pInputImage, std::uint32_t width, std::uint32_t height) = 0;
+    virtual std::shared_ptr<image> allocateOutputImage(std::shared_ptr<image> pInputImage, std::uint32_t width, std::uint32_t height) = 0;
 
 	/// \brief Executes the transform.
 	///
@@ -244,9 +244,9 @@ public:
 	///
 	///////////////////////////////////////////////////////////
 	virtual void runTransform(
-            const ptr<image>& inputImage,
+            const std::shared_ptr<image>& inputImage,
             std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight,
-            const ptr<image>& outputImage,
+            const std::shared_ptr<image>& outputImage,
 			std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY) = 0;
 
 };
@@ -285,19 +285,19 @@ public:
 	///
 	///////////////////////////////////////////////////////////
 	virtual void runTransform(
-			const ptr<image>& inputImage,
+            const std::shared_ptr<image>& inputImage,
 			std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight,
-			const ptr<image>& outputImage,
+            const std::shared_ptr<image>& outputImage,
 			std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY);
 
 	/// \internal
 	virtual void runTransformHandlers(
-			ptr<handlers::dataHandlerNumericBase> inputHandler, std::uint32_t inputHandlerWidth, const std::wstring& inputHandlerColorSpace,
-			ptr<palette> inputPalette,
+            std::shared_ptr<handlers::dataHandlerNumericBase> inputHandler, std::uint32_t inputHandlerWidth, const std::wstring& inputHandlerColorSpace,
+            std::shared_ptr<palette> inputPalette,
             std::int32_t inputHandlerMinValue, std::uint32_t inputHighBit,
 			std::int32_t inputTopLeftX, std::int32_t inputTopLeftY, std::int32_t inputWidth, std::int32_t inputHeight,
-			ptr<handlers::dataHandlerNumericBase> outputHandler, std::int32_t outputHandlerWidth, const std::wstring& outputHandlerColorSpace,
-			ptr<palette> outputPalette,
+            std::shared_ptr<handlers::dataHandlerNumericBase> outputHandler, std::int32_t outputHandlerWidth, const std::wstring& outputHandlerColorSpace,
+            std::shared_ptr<palette> outputPalette,
             std::int32_t outputHandlerMinValue, std::uint32_t outputHighBit,
 			std::int32_t outputTopLeftX, std::int32_t outputTopLeftY) = 0;
 

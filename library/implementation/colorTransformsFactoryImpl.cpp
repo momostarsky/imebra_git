@@ -60,11 +60,9 @@ static colorTransformsFactory::forceColorTransformsFactoryConstruction forceCons
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void colorTransformsFactory::registerTransform(ptr<colorTransform> newColorTransform)
+void colorTransformsFactory::registerTransform(std::shared_ptr<colorTransform> newColorTransform)
 {
 	PUNTOEXE_FUNCTION_START(L"colorTransformsFactory::registerTransform");
-
-	lockObject lockAccess(this);
 
 	m_transformsList.push_back(newColorTransform);
 
@@ -81,9 +79,9 @@ void colorTransformsFactory::registerTransform(ptr<colorTransform> newColorTrans
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<colorTransformsFactory> colorTransformsFactory::getColorTransformsFactory()
+std::shared_ptr<colorTransformsFactory> colorTransformsFactory::getColorTransformsFactory()
 {
-	static ptr<colorTransformsFactory> m_transformFactory(new colorTransformsFactory);
+	static std::shared_ptr<colorTransformsFactory> m_transformFactory(new colorTransformsFactory);
 	return m_transformFactory;
 }
 
@@ -299,18 +297,16 @@ std::uint32_t colorTransformsFactory::getNumberOfChannels(const std::wstring& co
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<colorTransform> colorTransformsFactory::getTransform(const std::wstring& startColorSpace, const std::wstring& endColorSpace)
+std::shared_ptr<transform> colorTransformsFactory::getTransform(const std::wstring& startColorSpace, const std::wstring& endColorSpace)
 {
 	PUNTOEXE_FUNCTION_START(L"colorTransformsFactory::getTransform");
-
-	lockObject lockAccess(this);
 
 	std::wstring normalizedStartColorSpace = normalizeColorSpace(startColorSpace);
 	std::wstring normalizedEndColorSpace = normalizeColorSpace(endColorSpace);
 
 	if(normalizedStartColorSpace == normalizedEndColorSpace)
 	{
-		return ptr<colorTransform>(0);
+		return std::shared_ptr<colorTransform>(0);
 	}
 
 	for(tTransformsList::iterator scanSingleTransform = m_transformsList.begin(); scanSingleTransform != m_transformsList.end(); ++scanSingleTransform)
@@ -318,7 +314,7 @@ ptr<colorTransform> colorTransformsFactory::getTransform(const std::wstring& sta
 		if( (*scanSingleTransform)->getInitialColorSpace() == normalizedStartColorSpace && 
 			(*scanSingleTransform)->getFinalColorSpace() == normalizedEndColorSpace)
 		{
-			ptr<colorTransform> newTransform = (*scanSingleTransform)->createColorTransform();
+			std::shared_ptr<colorTransform> newTransform = (*scanSingleTransform)->createColorTransform();
 			return newTransform;
 		}
 	}
@@ -338,10 +334,10 @@ ptr<colorTransform> colorTransformsFactory::getTransform(const std::wstring& sta
 				continue;
 			}
 
-			ptr<colorTransform> newTransform0 = (*scanMultipleTransforms)->createColorTransform();
-			ptr<colorTransform> newTransform1 = (*secondTransform)->createColorTransform();
+			std::shared_ptr<colorTransform> newTransform0 = (*scanMultipleTransforms)->createColorTransform();
+			std::shared_ptr<colorTransform> newTransform1 = (*secondTransform)->createColorTransform();
 
-			ptr<transformsChain> chain(new transformsChain);
+            std::shared_ptr<transformsChain> chain = std::make_shared<transformsChain>();
 			chain->addTransform(newTransform0);
 			chain->addTransform(newTransform1);
 

@@ -70,7 +70,7 @@ std::uint32_t VOILUT::getVOILUTId(std::uint32_t VOILUTNumber)
 		// Find the LUT's ID
 		///////////////////////////////////////////////////////////
 		VOILUTNumber-=scanWindow;
-		ptr<dataSet> voiLut = m_pDataSet->getSequenceItem(0x0028, 0, 0x3010, VOILUTNumber);
+		std::shared_ptr<dataSet> voiLut = m_pDataSet->getSequenceItem(0x0028, 0, 0x3010, VOILUTNumber);
 		if(voiLut != 0)
 		{
 			// Set the VOILUTId
@@ -155,7 +155,7 @@ std::wstring VOILUT::getVOILUTDescription(std::uint32_t VOILUTId)
 	///////////////////////////////////////////////////////////
 	if((VOILUTId & 0x00100000))
 	{
-		ptr<lut> voiLut = m_pDataSet->getLut(0x0028, 0x3010, VOILUTNumber);
+		std::shared_ptr<lut> voiLut = m_pDataSet->getLut(0x0028, 0x3010, VOILUTNumber);
 		if(voiLut != 0)
 		{
 			VOILUTDescription=voiLut->getDescription();
@@ -225,7 +225,7 @@ void VOILUT::setVOILUT(std::uint32_t VOILUTId)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void VOILUT::setLUT(ptr<lut> pLut)
+void VOILUT::setLUT(std::shared_ptr<lut> pLut)
 {
 	m_pLUT = pLut;
 	m_windowCenter = 0;
@@ -246,7 +246,7 @@ void VOILUT::setCenterWidth(std::int32_t center, std::int32_t width)
 {
 	m_windowCenter = center;
 	m_windowWidth = width;
-	m_pLUT.release();
+    m_pLUT.reset();
 }
 
 
@@ -290,16 +290,16 @@ bool VOILUT::isEmpty()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<image> VOILUT::allocateOutputImage(ptr<image> pInputImage, std::uint32_t width, std::uint32_t height)
+std::shared_ptr<image> VOILUT::allocateOutputImage(std::shared_ptr<image> pInputImage, std::uint32_t width, std::uint32_t height)
 {
 	if(isEmpty())
 	{
-        ptr<image> newImage(new image());
+        std::shared_ptr<image> newImage(new image());
 		newImage->create(width, height, pInputImage->getDepth(), pInputImage->getColorSpace(), pInputImage->getHighBit());
 		return newImage;
 	}
 
-	ptr<image> outputImage(new image);
+	std::shared_ptr<image> outputImage(new image);
 	image::bitDepth depth = pInputImage->getDepth();
 	if(m_pLUT != 0 && m_pLUT->getSize() != 0)
 	{
@@ -319,7 +319,7 @@ ptr<image> VOILUT::allocateOutputImage(ptr<image> pInputImage, std::uint32_t wid
 		{
 			depth = bits > 8 ? image::depthU16 : image::depthU8;
 		}
-		ptr<image> returnImage(new image);
+		std::shared_ptr<image> returnImage(new image);
 		returnImage->create(width, height, depth, pInputImage->getColorSpace(), bits - 1);
 		return returnImage;
 	}
@@ -355,7 +355,7 @@ ptr<image> VOILUT::allocateOutputImage(ptr<image> pInputImage, std::uint32_t wid
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void VOILUT::applyOptimalVOI(const ptr<puntoexe::imebra::image>& inputImage, std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight)
+void VOILUT::applyOptimalVOI(const std::shared_ptr<puntoexe::imebra::image>& inputImage, std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight)
 {
     PUNTOEXE_FUNCTION_START(L"VOILUT::applyOptimalVOI");
 
@@ -368,7 +368,7 @@ void VOILUT::applyOptimalVOI(const ptr<puntoexe::imebra::image>& inputImage, std
     }
 
     std::uint32_t rowSize, channelPixelSize, channelsNumber;
-    ptr<handlers::dataHandlerNumericBase> handler(inputImage->getDataHandler(false, &rowSize, &channelPixelSize, &channelsNumber));
+    std::shared_ptr<handlers::dataHandlerNumericBase> handler(inputImage->getDataHandler(false, &rowSize, &channelPixelSize, &channelsNumber));
     HANDLER_CALL_TEMPLATE_FUNCTION_WITH_PARAMS(templateFindOptimalVOI, handler, width, inputTopLeftX, inputTopLeftY, inputWidth, inputHeight);
 
     PUNTOEXE_FUNCTION_END();

@@ -11,7 +11,8 @@ $fileHeader$
 #define imebraDataSet_SWIG_93F684BF_0024_4bf3_89BA_D98E82A1F44C__INCLUDED_
 
 #ifndef SWIG
-#include "../../implementation/baseObjectImpl.h"
+
+#include <memory>
 
 namespace puntoexe
 {
@@ -51,7 +52,7 @@ public:
 	DataSet& operator=(const DataSet& right);
 
 #ifndef SWIG
-	DataSet(puntoexe::ptr<puntoexe::imebra::dataSet> pDataSet);
+	DataSet(std::shared_ptr<puntoexe::imebra::dataSet> pDataSet);
 #endif
 
 	enum imageQuality
@@ -96,7 +97,7 @@ public:
     std::string getDataType(int groupId, int order, int tagId) const;
 
 #ifndef SWIG
-	puntoexe::ptr<puntoexe::imebra::dataSet> m_pDataSet;
+	std::shared_ptr<puntoexe::imebra::dataSet> m_pDataSet;
 #endif
 };
 

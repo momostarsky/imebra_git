@@ -11,7 +11,7 @@ $fileHeader$
 #if !defined(imebraCodecFactory_82307D4A_6490_4202_BF86_93399D32721E__INCLUDED_)
 #define imebraCodecFactory_82307D4A_6490_4202_BF86_93399D32721E__INCLUDED_
 
-#include "baseObjectImpl.h"
+#include <memory>
 #include "dataSetImpl.h"
 
 
@@ -61,7 +61,7 @@ class codec;
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class codecFactory: public baseObject
+class codecFactory
 {
 protected:
     codecFactory();
@@ -79,7 +79,7 @@ public:
 	/// @param pCodec a pointer to the codec to register
 	///
 	///////////////////////////////////////////////////////////
-	void registerCodec(ptr<codec> pCodec);
+	void registerCodec(std::shared_ptr<codec> pCodec);
 
 	/// \brief Get a pointer to the codec that can handle
 	///        the requested transfer syntax.
@@ -100,7 +100,7 @@ public:
 	///         registerCodec()
 	///
 	///////////////////////////////////////////////////////////
-    static ptr<codec> getCodec(const std::wstring& transferSyntax);
+    static std::shared_ptr<codec> getCodec(const std::wstring& transferSyntax);
 
 	/// \brief Retrieve the only reference to the codecFactory
 	///         instance.
@@ -115,7 +115,7 @@ public:
 	///          codecFactory class.
 	///
 	///////////////////////////////////////////////////////////
-	static ptr<codecFactory> getCodecFactory();
+	static std::shared_ptr<codecFactory> getCodecFactory();
 
 	/// \brief Build a dataSet structure from the specified
 	///         stream of data.
@@ -136,7 +136,7 @@ public:
 	///          data
 	///
 	///////////////////////////////////////////////////////////
-	ptr<dataSet> load(ptr<streamReader> pStream, std::uint32_t maxSizeBufferLoad = 0xffffffff);
+	std::shared_ptr<dataSet> load(std::shared_ptr<streamReader> pStream, std::uint32_t maxSizeBufferLoad = 0xffffffff);
 
     /// \brief Set the maximum size of the images created by
     ///         the codec::getImage() function.
@@ -172,7 +172,7 @@ public:
 protected:
 	// The list of the registered codecs
 	///////////////////////////////////////////////////////////
-	std::list<ptr<codec> > m_codecsList;
+	std::list<std::shared_ptr<codec> > m_codecsList;
 
     // Maximum allowed image size
     ///////////////////////////////////////////////////////////

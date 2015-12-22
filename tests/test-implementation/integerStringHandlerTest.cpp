@@ -12,9 +12,9 @@ namespace tests
 
 TEST(integerStringHandlerTest, integerTest)
 {
-    ptr<data> tag(new data(ptr<baseObject>(0)));
+    std::shared_ptr<data> tag(new data());
     {
-        ptr<handlers::dataHandler> hTag= tag->getDataHandler(0, true, "IS");
+        std::shared_ptr<handlers::dataHandler> hTag= tag->getDataHandler(0, true, "IS");
         hTag->setSize(1);
 
         hTag->setDouble(0, 6.5);

@@ -11,7 +11,7 @@ namespace tests
 {
 
 
-puntoexe::ptr<puntoexe::imebra::image> buildImageForTest(
+std::shared_ptr<puntoexe::imebra::image> buildImageForTest(
 	std::uint32_t pixelsX, 
 	std::uint32_t pixelsY, 
 	puntoexe::imebra::image::bitDepth depth,
@@ -21,8 +21,8 @@ puntoexe::ptr<puntoexe::imebra::image> buildImageForTest(
 	std::wstring colorSpace, 
 	std::uint32_t continuity)
 {
-	puntoexe::ptr<puntoexe::imebra::image> newImage(new puntoexe::imebra::image);
-	puntoexe::ptr<puntoexe::imebra::handlers::dataHandlerNumericBase> imgHandler = newImage->create(pixelsX, pixelsY, depth, colorSpace, highBit);
+	std::shared_ptr<puntoexe::imebra::image> newImage(new puntoexe::imebra::image);
+	std::shared_ptr<puntoexe::imebra::handlers::dataHandlerNumericBase> imgHandler = newImage->create(pixelsX, pixelsY, depth, colorSpace, highBit);
 	std::uint32_t channelsNumber = newImage->getChannelsNumber();
 
 	std::int32_t range = (std::uint32_t)1 << highBit;
@@ -60,7 +60,7 @@ puntoexe::ptr<puntoexe::imebra::image> buildImageForTest(
 }
 
 
-double compareImages(ptr<image> image0, ptr<image> image1)
+double compareImages(std::shared_ptr<image> image0, std::shared_ptr<image> image1)
 {
 	std::uint32_t sizeX0, sizeY0, sizeX1, sizeY1;
 	image0->getSize(&sizeX0, &sizeY0);
@@ -71,8 +71,8 @@ double compareImages(ptr<image> image0, ptr<image> image1)
 	}
 
 	std::uint32_t rowSize, channelSize, channelsNumber0, channelsNumber1;
-	ptr<handlers::dataHandlerNumericBase> hImage0 = image0->getDataHandler(false, &rowSize, &channelSize, &channelsNumber0);
-	ptr<handlers::dataHandlerNumericBase> hImage1 = image1->getDataHandler(false, &rowSize, &channelSize, &channelsNumber1);
+	std::shared_ptr<handlers::dataHandlerNumericBase> hImage0 = image0->getDataHandler(false, &rowSize, &channelSize, &channelsNumber0);
+	std::shared_ptr<handlers::dataHandlerNumericBase> hImage1 = image1->getDataHandler(false, &rowSize, &channelSize, &channelsNumber1);
 	if(channelsNumber0 != channelsNumber1)
 	{
 		return 1000;

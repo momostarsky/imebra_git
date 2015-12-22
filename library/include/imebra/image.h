@@ -12,7 +12,7 @@ $fileHeader$
 
 #ifndef SWIG
 
-#include "../../implementation/baseObjectImpl.h"
+#include <memory>
 
 namespace puntoexe
 {
@@ -58,7 +58,7 @@ public:
 	Image& operator=(const Image& right);
 
 #ifndef SWIG
-	Image(puntoexe::ptr<puntoexe::imebra::image> pImage);
+	Image(std::shared_ptr<puntoexe::imebra::image> pImage);
 #endif
 
 	DataHandler create(
@@ -89,7 +89,7 @@ public:
     int getHighBit() const;
 
 #ifndef SWIG
-	puntoexe::ptr<puntoexe::imebra::image> m_pImage;
+	std::shared_ptr<puntoexe::imebra::image> m_pImage;
 #endif
 
 };

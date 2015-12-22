@@ -61,7 +61,7 @@ namespace colorTransforms
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class colorTransformsFactory: public baseObject
+class colorTransformsFactory
 {
 public:
 	/// \internal
@@ -72,7 +72,7 @@ public:
 	///                               be registered
 	///
 	///////////////////////////////////////////////////////////
-	void registerTransform(ptr<colorTransform> newColorTransform);
+	void registerTransform(std::shared_ptr<colorTransform> newColorTransform);
 
 	///////////////////////////////////////////////////////////
 	/// \name Static instance
@@ -95,7 +95,7 @@ public:
 	///          colorTransformsFactory
 	///
 	///////////////////////////////////////////////////////////
-	static ptr<colorTransformsFactory> getColorTransformsFactory();
+	static std::shared_ptr<colorTransformsFactory> getColorTransformsFactory();
 
 	
 	///////////////////////////////////////////////////////////
@@ -253,12 +253,12 @@ public:
 	///          same value
 	///
 	///////////////////////////////////////////////////////////
-    ptr<colorTransform> getTransform(const std::wstring& startColorSpace, const std::wstring& endColorSpace);
+    std::shared_ptr<transform> getTransform(const std::wstring& startColorSpace, const std::wstring& endColorSpace);
 
 	//@}
 
 protected:
-	typedef std::list<ptr<colorTransform> > tTransformsList;
+	typedef std::list<std::shared_ptr<colorTransform> > tTransformsList;
 	tTransformsList m_transformsList;
 
 public:

@@ -60,7 +60,7 @@ dataHandlerStringBase::dataHandlerStringBase(const wchar_t separator, const std:
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerStringBase::parseBuffer(const ptr<memory>& memoryBuffer)
+void dataHandlerStringBase::parseBuffer(const std::shared_ptr<memory>& memoryBuffer)
 {
     PUNTOEXE_FUNCTION_START(L"dataHandlerStringBase::parseBuffer");
 

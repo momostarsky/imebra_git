@@ -12,7 +12,7 @@ namespace imebra
 namespace tests
 {
 
-	puntoexe::ptr<puntoexe::imebra::image> buildImageForTest(
+	std::shared_ptr<puntoexe::imebra::image> buildImageForTest(
 		imbxUint32 pixelsX, 
 		imbxUint32 pixelsY, 
 		puntoexe::imebra::image::bitDepth depth,
@@ -22,7 +22,7 @@ namespace tests
 		std::wstring colorSpace, 
 		imbxUint32 continuity);
 
-	double compareImages(ptr<image> image0, ptr<image> image1);
+	double compareImages(std::shared_ptr<image> image0, std::shared_ptr<image> image1);
 
 
 } // namespace tests

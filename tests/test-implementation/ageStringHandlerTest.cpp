@@ -12,9 +12,9 @@ namespace tests
 
 TEST(ageStringHandlerTest, ageTest)
 {
-	ptr<data> tag(new data(ptr<baseObject>(0)));
+    std::shared_ptr<data> tag(new data());
 	{
-		ptr<handlers::dataHandler> hTag= tag->getDataHandler(0, true, "AS");
+		std::shared_ptr<handlers::dataHandler> hTag= tag->getDataHandler(0, true, "AS");
 		hTag->setSize(1);
 
 		hTag->setDouble(0, 0.01);

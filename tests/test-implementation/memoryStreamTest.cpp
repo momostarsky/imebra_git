@@ -18,9 +18,9 @@ namespace tests
 // A buffer initialized to a default data type should use the data type OB
 TEST(memoryStreamTest, test)
 {
-	ptr<memory> myMemory(new memory);
-	ptr<baseStream> theMemoryStream(new memoryStream(myMemory));
-	ptr<streamWriter> writer(new streamWriter(theMemoryStream));
+	std::shared_ptr<memory> myMemory(new memory);
+	std::shared_ptr<baseStream> theMemoryStream(new memoryStream(myMemory));
+	std::shared_ptr<streamWriter> writer(new streamWriter(theMemoryStream));
 
 	std::vector<std::uint8_t> values(4000);
 	for(size_t fillValues = 0; fillValues < values.size(); ++fillValues)
@@ -31,7 +31,7 @@ TEST(memoryStreamTest, test)
 	}
 	writer->flushDataBuffer();
 
-	ptr<streamReader> reader(new streamReader(theMemoryStream));
+	std::shared_ptr<streamReader> reader(new streamReader(theMemoryStream));
 
 	for(size_t readValues = 0; readValues < values.size(); ++readValues)
 	{
@@ -43,9 +43,9 @@ TEST(memoryStreamTest, test)
 
 TEST(memoryStreamTest, testBytes)
 {
-	ptr<memory> myMemory(new memory);
-	ptr<baseStream> theMemoryStream(new memoryStream(myMemory));
-	ptr<streamWriter> writer(new streamWriter(theMemoryStream));
+	std::shared_ptr<memory> myMemory(new memory);
+	std::shared_ptr<baseStream> theMemoryStream(new memoryStream(myMemory));
+	std::shared_ptr<streamWriter> writer(new streamWriter(theMemoryStream));
 	writer->m_bJpegTags = true;
 
 	std::vector<std::uint8_t> values(4000);
@@ -61,7 +61,7 @@ TEST(memoryStreamTest, testBytes)
 	}
 	writer->flushDataBuffer();
 
-	ptr<streamReader> reader(new streamReader(theMemoryStream));
+	std::shared_ptr<streamReader> reader(new streamReader(theMemoryStream));
 	reader->m_bJpegTags = true;
 
 	for(size_t readValues = 0; readValues < values.size(); ++readValues)
@@ -86,7 +86,7 @@ bool compareStreamContent(std::uint8_t* buffer, size_t streamPosition, size_t nu
 
 TEST(memoryStreamTest, testVirtualStream)
 {
-    ptr<memory> streamMemory(new memory(4098));
+    std::shared_ptr<memory> streamMemory(new memory(4098));
 
     // Fill the memory
     std::uint8_t* data = streamMemory->data();
@@ -95,16 +95,16 @@ TEST(memoryStreamTest, testVirtualStream)
         data[fillMemory] = (std::uint8_t)(fillMemory & 0xff);
     }
 
-    ptr<memoryStream> myStream(new memoryStream(streamMemory));
+    std::shared_ptr<memoryStream> myStream(new memoryStream(streamMemory));
 
-    ptr<streamReader> reader(new streamReader(myStream));
-    ptr<streamReader> readerPosition95_20(new streamReader(myStream, 95, 20));
+    std::shared_ptr<streamReader> reader(new streamReader(myStream));
+    std::shared_ptr<streamReader> readerPosition95_20(new streamReader(myStream, 95, 20));
 
     std::vector<std::uint8_t> buffer10(10);
     reader->read(buffer10.data(), buffer10.size());
     ASSERT_TRUE(compareStreamContent(buffer10.data(), 0, buffer10.size()));
 
-    ptr<streamReader> embeddedReader_10_60 = reader->getReader(60);
+    std::shared_ptr<streamReader> embeddedReader_10_60 = reader->getReader(60);
     reader->read(buffer10.data(), buffer10.size());
     ASSERT_TRUE(compareStreamContent(buffer10.data(), 70, buffer10.size()));
 
@@ -113,7 +113,7 @@ TEST(memoryStreamTest, testVirtualStream)
 
     readerPosition95_20->read(buffer10.data(), buffer10.size());
     ASSERT_TRUE(compareStreamContent(buffer10.data(), 95, buffer10.size()));
-    ptr<streamReader> embeddedReader_105_10 = readerPosition95_20->getReader(10);
+    std::shared_ptr<streamReader> embeddedReader_105_10 = readerPosition95_20->getReader(10);
     embeddedReader_105_10->read(buffer10.data(), buffer10.size());
     ASSERT_TRUE(compareStreamContent(buffer10.data(), 105, buffer10.size()));
     ASSERT_THROW(readerPosition95_20->read(buffer10.data(), 1), streamExceptionEOF);

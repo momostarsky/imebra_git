@@ -49,8 +49,8 @@ static codecFactory::forceCodecFactoryCreation forceCreation;
 ///////////////////////////////////////////////////////////
 codecFactory::codecFactory(): m_maximumImageWidth(MAXIMUM_IMAGE_WIDTH), m_maximumImageHeight(MAXIMUM_IMAGE_HEIGHT)
 {
-    registerCodec(new dicomCodec());
-    registerCodec(new jpegCodec());
+    registerCodec(std::make_shared<dicomCodec>());
+    registerCodec(std::make_shared<jpegCodec>());
 }
 
 
@@ -63,7 +63,7 @@ codecFactory::codecFactory(): m_maximumImageWidth(MAXIMUM_IMAGE_WIDTH), m_maximu
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void codecFactory::registerCodec(ptr<codec> pCodec)
+void codecFactory::registerCodec(std::shared_ptr<codec> pCodec)
 {
 	PUNTOEXE_FUNCTION_START(L"codecFactory::registerCodec");
 
@@ -71,8 +71,6 @@ void codecFactory::registerCodec(ptr<codec> pCodec)
 	{
 		return;
 	}
-
-	lockObject lockAccess(this);
 
 	m_codecsList.push_back(pCodec);
 
@@ -90,14 +88,13 @@ void codecFactory::registerCodec(ptr<codec> pCodec)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<codec> codecFactory::getCodec(const std::wstring& transferSyntax)
+std::shared_ptr<codec> codecFactory::getCodec(const std::wstring& transferSyntax)
 {
 	PUNTOEXE_FUNCTION_START(L"codecFactory::getCodec");
 
-	ptr<codecFactory> pFactory(getCodecFactory());
-	lockObject lockAccess(pFactory.get());
+	std::shared_ptr<codecFactory> pFactory(getCodecFactory());
 
-	for(std::list<ptr<codec> >::iterator scanCodecs=pFactory->m_codecsList.begin(); scanCodecs!=pFactory->m_codecsList.end(); ++scanCodecs)
+	for(std::list<std::shared_ptr<codec> >::iterator scanCodecs=pFactory->m_codecsList.begin(); scanCodecs!=pFactory->m_codecsList.end(); ++scanCodecs)
 	{
 		if((*scanCodecs)->canHandleTransferSyntax(transferSyntax))
 		{
@@ -105,7 +102,7 @@ ptr<codec> codecFactory::getCodec(const std::wstring& transferSyntax)
 		}
 	}
 
-	ptr<codec> emptyCodec;
+	std::shared_ptr<codec> emptyCodec;
 	return emptyCodec;
 
 	PUNTOEXE_FUNCTION_END();
@@ -121,9 +118,9 @@ ptr<codec> codecFactory::getCodec(const std::wstring& transferSyntax)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<codecFactory> codecFactory::getCodecFactory()
+std::shared_ptr<codecFactory> codecFactory::getCodecFactory()
 {
-	static ptr<codecFactory> m_codecFactory(new codecFactory);
+	static std::shared_ptr<codecFactory> m_codecFactory(new codecFactory);
 	return m_codecFactory;
 }
 
@@ -138,26 +135,25 @@ ptr<codecFactory> codecFactory::getCodecFactory()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<dataSet> codecFactory::load(ptr<streamReader> pStream, std::uint32_t maxSizeBufferLoad /* = 0xffffffff */)
+std::shared_ptr<dataSet> codecFactory::load(std::shared_ptr<streamReader> pStream, std::uint32_t maxSizeBufferLoad /* = 0xffffffff */)
 {
 	PUNTOEXE_FUNCTION_START(L"codecFactory::load");
 
 	// Copy the list of codecs in a local list so we don't have
 	//  to lock the object for a long time
 	///////////////////////////////////////////////////////////
-	std::list<ptr<codec> > localCodecsList;
-	ptr<codecFactory> pFactory(getCodecFactory());
+	std::list<std::shared_ptr<codec> > localCodecsList;
+	std::shared_ptr<codecFactory> pFactory(getCodecFactory());
 	{
-		lockObject lockAccess(pFactory.get());
-		for(std::list<ptr<codec> >::iterator scanCodecs=pFactory->m_codecsList.begin(); scanCodecs!=pFactory->m_codecsList.end(); ++scanCodecs)
+		for(std::list<std::shared_ptr<codec> >::iterator scanCodecs=pFactory->m_codecsList.begin(); scanCodecs!=pFactory->m_codecsList.end(); ++scanCodecs)
 		{
-			ptr<codec> copyCodec((*scanCodecs)->createCodec());
+			std::shared_ptr<codec> copyCodec((*scanCodecs)->createCodec());
 			localCodecsList.push_back(copyCodec);
 		}
 	}
 
-	ptr<dataSet> pDataSet;
-	for(std::list<ptr<codec> >::iterator scanCodecs=localCodecsList.begin(); scanCodecs != localCodecsList.end() && pDataSet == 0; ++scanCodecs)
+	std::shared_ptr<dataSet> pDataSet;
+	for(std::list<std::shared_ptr<codec> >::iterator scanCodecs=localCodecsList.begin(); scanCodecs != localCodecsList.end() && pDataSet == 0; ++scanCodecs)
 	{
 		try
 		{

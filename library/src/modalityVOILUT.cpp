@@ -14,7 +14,7 @@ $fileHeader$
 namespace imebra
 {
 
-ModalityVOILUT::ModalityVOILUT(const DataSet& dataset): Transform(new puntoexe::imebra::transforms::modalityVOILUT(dataset.m_pDataSet))
+ModalityVOILUT::ModalityVOILUT(const DataSet& dataset): Transform(std::make_shared<puntoexe::imebra::transforms::modalityVOILUT>(dataset.m_pDataSet))
 {
 }
 

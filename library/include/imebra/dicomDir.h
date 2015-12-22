@@ -12,7 +12,8 @@ $fileHeader$
 #define imebraDicomDir_SWIG_93F684BF_0024_4bf3_89BA_D98E82A1F44C__INCLUDED_
 
 #ifndef SWIG
-#include "../../implementation/baseObjectImpl.h"
+
+#include <memory>
 
 namespace puntoexe
 {
@@ -44,7 +45,7 @@ public:
 
 
 #ifndef SWIG
-	DirectoryRecord(puntoexe::ptr<puntoexe::imebra::directoryRecord> pDirectoryRecord);
+	DirectoryRecord(std::shared_ptr<puntoexe::imebra::directoryRecord> pDirectoryRecord);
 #endif
 
 	DirectoryRecord& operator=(const DirectoryRecord& right);
@@ -75,7 +76,7 @@ public:
 
 #ifndef SWIG
 private:
-	puntoexe::ptr<puntoexe::imebra::directoryRecord> m_pDirectoryRecord;
+	std::shared_ptr<puntoexe::imebra::directoryRecord> m_pDirectoryRecord;
 #endif
 };
 
@@ -97,7 +98,7 @@ public:
 
 #ifndef SWIG
 private:
-	puntoexe::ptr<puntoexe::imebra::dicomDir> m_pDicomDir;
+	std::shared_ptr<puntoexe::imebra::dicomDir> m_pDicomDir;
 #endif
 };
 

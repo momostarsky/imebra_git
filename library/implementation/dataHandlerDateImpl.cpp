@@ -211,7 +211,7 @@ void dataHandlerDate::setUnicodeString(const std::uint32_t index, const std::wst
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerDate::parseBuffer(const ptr<memory>& memoryBuffer)
+void dataHandlerDate::parseBuffer(const std::shared_ptr<memory>& memoryBuffer)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerDate::parseBuffer");
 

@@ -18,7 +18,7 @@ using namespace puntoexe::imebra;
 TEST(dataSetTest, testFragmentation)
 {
     // Add two images to a dataset, then fragment the first image
-	ptr<image> testImage0(buildImageForTest(
+	std::shared_ptr<image> testImage0(buildImageForTest(
 		400, 
 		300, 
 		puntoexe::imebra::image::depthU8,
@@ -28,7 +28,7 @@ TEST(dataSetTest, testFragmentation)
 		L"RGB", 
 		50));
 
-	ptr<image> testImage1(buildImageForTest(
+	std::shared_ptr<image> testImage1(buildImageForTest(
 		400, 
 		300, 
 		puntoexe::imebra::image::depthU8,
@@ -38,31 +38,31 @@ TEST(dataSetTest, testFragmentation)
 		L"RGB", 
 		20));
 
-	ptr<dataSet> testDataSet(new dataSet);
+	std::shared_ptr<dataSet> testDataSet(new dataSet);
 	testDataSet->setImage(0, testImage0, L"1.2.840.10008.1.2.4.70", codecs::codec::high);
 	testDataSet->setImage(1, testImage1, L"1.2.840.10008.1.2.4.70", codecs::codec::high);
 
-	ptr<image> verifyImage0 = testDataSet->getImage(0);
+	std::shared_ptr<image> verifyImage0 = testDataSet->getImage(0);
         ASSERT_TRUE(compareImages(testImage0, verifyImage0) < 0.000001);
-	ptr<image> verifyImage1 = testDataSet->getImage(1);
+	std::shared_ptr<image> verifyImage1 = testDataSet->getImage(1);
         ASSERT_TRUE(compareImages(testImage1, verifyImage1) < 0.000001);
 
 	// Now defragment the stored buffer
-	ptr<data> imageTag = testDataSet->getTag(0x7fe0, 0, 0x0010, false);
+	std::shared_ptr<data> imageTag = testDataSet->getTag(0x7fe0, 0, 0x0010, false);
         ASSERT_TRUE(imageTag != 0);
 
-	std::list<ptr<buffer> > newBuffers;
-	ptr<buffer> newTableOffsetBuffer(new buffer(testDataSet));
+	std::list<std::shared_ptr<buffer> > newBuffers;
+    std::shared_ptr<buffer> newTableOffsetBuffer(new buffer());
 	newBuffers.push_back(newTableOffsetBuffer);
 	std::uint32_t offset(0);
 
 	for(std::uint32_t scanBuffers = 1; imageTag->bufferExists(scanBuffers); ++scanBuffers)
 	{
-		ptr<handlers::dataHandlerRaw> offsetHandler = newTableOffsetBuffer->getDataHandlerRaw(true, 8);
+		std::shared_ptr<handlers::dataHandlerRaw> offsetHandler = newTableOffsetBuffer->getDataHandlerRaw(true, 8);
 		std::uint32_t* pOffsetMemory = (std::uint32_t*)(offsetHandler->getMemoryBuffer());
 		pOffsetMemory[scanBuffers - 1] = offset;
 		streamController::adjustEndian((std::uint8_t*)&(pOffsetMemory[scanBuffers - 1]), sizeof(pOffsetMemory[0]), streamController::lowByteEndian, 1);
-		ptr<handlers::dataHandlerRaw> wholeHandler = imageTag->getDataHandlerRaw(scanBuffers, false, "");
+		std::shared_ptr<handlers::dataHandlerRaw> wholeHandler = imageTag->getDataHandlerRaw(scanBuffers, false, "");
 		std::uint8_t* pWholeHandler = wholeHandler->getMemoryBuffer();
 		std::uint32_t totalSize = wholeHandler->getSize();
 		std::uint32_t fragmentedSize = totalSize / 3;
@@ -77,11 +77,11 @@ TEST(dataSetTest, testFragmentation)
 			{
 				thisSize = fragmentedSize;
 			}
-			ptr<buffer> newBuffer(new buffer(ptr<baseObject>(0), "OB", ptr<baseStream>(0), 0, thisSize, 1, streamController::lowByteEndian) );
-			ptr<handlers::dataHandlerRaw> newBufferHandler = newBuffer->getDataHandlerRaw(true, thisSize);
+            std::shared_ptr<buffer> newBuffer(new buffer("OB", std::shared_ptr<baseStream>(0), 0, thisSize, 1, streamController::lowByteEndian) );
+			std::shared_ptr<handlers::dataHandlerRaw> newBufferHandler = newBuffer->getDataHandlerRaw(true, thisSize);
 			std::uint8_t* pNewBuffer = newBufferHandler->getMemoryBuffer();
 			::memcpy(pNewBuffer, pWholeHandler, thisSize);
-			newBufferHandler.release();
+            newBufferHandler.reset();
 			newBuffers.push_back(newBuffer);
 			offset += newBuffer->getBufferSizeBytes() + 8;
 			totalSize -= thisSize;
@@ -90,21 +90,21 @@ TEST(dataSetTest, testFragmentation)
 	}
         
 	std::uint32_t bufferId(0);
-	for(std::list<ptr<buffer> >::const_iterator addBuffers = newBuffers.begin(); addBuffers != newBuffers.end(); ++addBuffers)
+	for(std::list<std::shared_ptr<buffer> >::const_iterator addBuffers = newBuffers.begin(); addBuffers != newBuffers.end(); ++addBuffers)
 	{
 		imageTag->setBuffer(bufferId++, *addBuffers);
 	}
 
-	ptr<image> compareImage0 = testDataSet->getImage(0);
+	std::shared_ptr<image> compareImage0 = testDataSet->getImage(0);
         ASSERT_TRUE(compareImages(testImage0, compareImage0) < 0.000001);
-	ptr<image> compareImage1 = testDataSet->getImage(1);
+	std::shared_ptr<image> compareImage1 = testDataSet->getImage(1);
         ASSERT_TRUE(compareImages(testImage1, compareImage1) < 0.000001);
         ASSERT_TRUE(compareImages(testImage0, compareImage1) > 30);
 }
 
 TEST(dataSetTest, testSetTagTwice)
 {
-    ptr<dataSet> testDataset(new dataSet);
+    std::shared_ptr<dataSet> testDataset(new dataSet);
 
     testDataset->setUnicodeString(0x0008, 0x0, 0x0070, 0x0, L"Puntoexe");
     testDataset->setUnicodeString(0x0008, 0x0, 0x0070, 0x0, L"Puntoexe");

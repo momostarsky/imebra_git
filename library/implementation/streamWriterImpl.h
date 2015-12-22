@@ -56,7 +56,13 @@ public:
 	///                             see all the bytes
 	///
 	///////////////////////////////////////////////////////////
-	streamWriter(ptr<baseStream> pControlledStream, std::uint32_t virtualStart = 0, std::uint32_t virtualLength = 0);
+	streamWriter(std::shared_ptr<baseStream> pControlledStream, std::uint32_t virtualStart = 0, std::uint32_t virtualLength = 0);
+
+    /// \brief Flushes the internal buffer, disconnects the
+    ///         stream and destroys the streamWriter.
+    ///
+    ///////////////////////////////////////////////////////////
+    virtual ~streamWriter();
 
 	/// \brief Writes the internal buffer into the connected
 	///         stream. This function is automatically called
@@ -195,13 +201,6 @@ public:
 			*(m_pDataBufferCurrent++) = 0;
 		}
 	}
-
-protected:
-	/// \brief Flushes the internal buffer, disconnects the
-	///         stream and destroys the streamWriter.
-	///
-	///////////////////////////////////////////////////////////
-	virtual ~streamWriter();
 
 private:
 	std::uint8_t m_outBitsBuffer;

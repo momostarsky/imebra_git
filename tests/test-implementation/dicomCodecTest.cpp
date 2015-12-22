@@ -11,15 +11,15 @@ namespace imebra
 namespace tests
 {
 
-ptr<image> makeTestImage()
+std::shared_ptr<image> makeTestImage()
 {
     std::uint32_t sizeX = 301;
     std::uint32_t sizeY = 201;
-	ptr<image> dicomImage(new image);
+	std::shared_ptr<image> dicomImage(new image);
 	dicomImage->create(sizeX, sizeY, image::depthU16, L"RGB", 15);
 
 	std::uint32_t rowSize, channelsPixelSize, channelsNumber;
-	ptr<handlers::dataHandlerNumericBase> imageHandler = dicomImage->getDataHandler(true, &rowSize, &channelsPixelSize, &channelsNumber);
+	std::shared_ptr<handlers::dataHandlerNumericBase> imageHandler = dicomImage->getDataHandler(true, &rowSize, &channelsPixelSize, &channelsNumber);
 
 	// Make 3 bands (RGB)
 	size_t pointer(0);
@@ -48,7 +48,7 @@ ptr<image> makeTestImage()
 			imageHandler->setUnsignedLong(pointer++, b);
 		}
 	}
-	imageHandler.release();
+    imageHandler.reset();
 
 	return dicomImage;
 }
@@ -75,7 +75,7 @@ TEST(dicomCodecTest, testDicom)
 						depth = (sign == 0 ? puntoexe::imebra::image::depthU32 : puntoexe::imebra::image::depthS32);
 					}
 
-					ptr<image> dicomImage0(buildImageForTest(
+					std::shared_ptr<image> dicomImage0(buildImageForTest(
                             301,
                             201,
 							depth,
@@ -84,7 +84,7 @@ TEST(dicomCodecTest, testDicom)
 							20,
 							L"RGB",
                             1));
-					ptr<image> dicomImage1(buildImageForTest(
+					std::shared_ptr<image> dicomImage1(buildImageForTest(
                             301,
                             201,
 							depth,
@@ -93,7 +93,7 @@ TEST(dicomCodecTest, testDicom)
 							20,
 							L"RGB",
 							100));
-					ptr<image> dicomImage2(buildImageForTest(
+					std::shared_ptr<image> dicomImage2(buildImageForTest(
                             301,
                             201,
 							depth,
@@ -121,9 +121,9 @@ TEST(dicomCodecTest, testDicom)
 						break;
 					}
 
-					ptr<memory> streamMemory(new memory);
+					std::shared_ptr<memory> streamMemory(new memory);
 					{
-						ptr<dataSet> testDataSet(new dataSet);
+						std::shared_ptr<dataSet> testDataSet(new dataSet);
 						testDataSet->setString(0x0010, 0, 0x0010, 0, "AAAaa");
 						testDataSet->setString(0x0010, 0, 0x0010, 1, "BBBbbb");
 						testDataSet->setString(0x0010, 0, 0x0010, 2, "");
@@ -132,23 +132,23 @@ TEST(dicomCodecTest, testDicom)
 						testDataSet->setImage(1, dicomImage1, transferSyntax, codecs::codec::veryHigh);
 						testDataSet->setImage(2, dicomImage2, transferSyntax, codecs::codec::veryHigh);
 
-						ptr<memoryStream> writeStream(new memoryStream(streamMemory));
+						std::shared_ptr<memoryStream> writeStream(new memoryStream(streamMemory));
 
-						ptr<codecs::dicomCodec> testCodec(new codecs::dicomCodec);
-						testCodec->write(ptr<streamWriter>(new streamWriter(writeStream)), testDataSet);
+						std::shared_ptr<codecs::dicomCodec> testCodec(new codecs::dicomCodec);
+						testCodec->write(std::shared_ptr<streamWriter>(new streamWriter(writeStream)), testDataSet);
 					}
 
-					ptr<baseStream> readStream(new memoryStream(streamMemory));
-					ptr<dataSet> testDataSet = codecs::codecFactory::getCodecFactory()->load(ptr<streamReader>(new streamReader(readStream)));
+					std::shared_ptr<baseStream> readStream(new memoryStream(streamMemory));
+					std::shared_ptr<dataSet> testDataSet = codecs::codecFactory::getCodecFactory()->load(std::shared_ptr<streamReader>(new streamReader(readStream)));
 
                     EXPECT_EQ(std::string("AAAaa"), testDataSet->getString(0x0010, 0, 0x0010, 0));
                     EXPECT_EQ(std::string("BBBbbb"), testDataSet->getString(0x0010, 0, 0x0010, 1));
                     EXPECT_EQ(std::string(""), testDataSet->getString(0x0010, 0, 0x0010, 2));
                     EXPECT_EQ(interleaved, testDataSet->getSignedLong(0x0028, 0, 0x0006, 0));
 
-					ptr<image> checkImage0 = testDataSet->getImage(0);
-					ptr<image> checkImage1 = testDataSet->getImage(1);
-					ptr<image> checkImage2 = testDataSet->getImage(2);
+					std::shared_ptr<image> checkImage0 = testDataSet->getImage(0);
+					std::shared_ptr<image> checkImage1 = testDataSet->getImage(1);
+					std::shared_ptr<image> checkImage2 = testDataSet->getImage(2);
 
                     ASSERT_TRUE(compareImages(checkImage0, dicomImage0) < 0.0001);
                     ASSERT_TRUE(compareImages(checkImage1, dicomImage1) < 0.0001);

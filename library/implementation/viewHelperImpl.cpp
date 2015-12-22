@@ -68,7 +68,7 @@ cursorLine::cursorLine(
 // Copy constructor
 //
 ///////////////////////////////////////////////////////////
-cursorLine::cursorLine(const cursorLine& right): baseObject()
+cursorLine::cursorLine(const cursorLine& right)
 {
 	copy(right);
 }
@@ -936,7 +936,7 @@ void view::updateImageRect(std::int32_t centerPointX, std::int32_t centerPointY)
 // Retrieve the active image
 //
 ///////////////////////////////////////////////////////////
-ptr<image> view::getImage()
+std::shared_ptr<image> view::getImage()
 {
 	return m_originalImage;
 }
@@ -946,17 +946,17 @@ ptr<image> view::getImage()
 // Set the active image
 //
 ///////////////////////////////////////////////////////////
-void view::setImage(ptr<image> pImage, ptr<transforms::transformsChain> pChain)
+void view::setImage(std::shared_ptr<image> pImage, std::shared_ptr<transforms::transformsChain> pChain)
 {
 	m_bUpdateImage = true;
 	if(pImage == 0)
 	{
 		m_originalImage = 0;
 		setScrollSize(1, 1, true);
-		m_drawBitmap.release();
+        m_drawBitmap.reset();
 		return;
 	}
-	m_drawBitmap = new imebra::drawBitmap(pImage, pChain);
+    m_drawBitmap = std::make_shared<imebra::drawBitmap>(pImage, pChain);
 
 	std::uint32_t oldSizeX = 0;
 	std::uint32_t oldSizeY = 0;

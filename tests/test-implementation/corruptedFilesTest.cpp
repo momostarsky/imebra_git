@@ -43,14 +43,14 @@ TEST(corruptedFilesTest, corruptedFilesTest)
 
         std::cout << "Processing corrupted file " << fullName.str() << std::endl;
 
-        puntoexe::ptr<puntoexe::imebra::codecs::codecFactory> factory = puntoexe::imebra::codecs::codecFactory::getCodecFactory();
+        std::shared_ptr<puntoexe::imebra::codecs::codecFactory> factory = puntoexe::imebra::codecs::codecFactory::getCodecFactory();
 
-        puntoexe::ptr<puntoexe::stream> inputStream(new puntoexe::stream());
+        std::shared_ptr<puntoexe::stream> inputStream(new puntoexe::stream());
         inputStream->openFile(fullName.str(), std::ios::in);
 
-        puntoexe::ptr<puntoexe::streamReader> reader = new puntoexe::streamReader(inputStream);
+        std::shared_ptr<puntoexe::streamReader> reader = std::make_shared<puntoexe::streamReader>(inputStream);
 
-        puntoexe::ptr<puntoexe::imebra::dataSet> dataset = factory->load(reader, 2048);
+        std::shared_ptr<puntoexe::imebra::dataSet> dataset = factory->load(reader, 2048);
 
         ASSERT_THROW(dataset->getImage(0), puntoexe::imebra::codecs::codecException);
     }

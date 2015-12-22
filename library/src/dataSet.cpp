@@ -22,11 +22,11 @@ DataSet::DataSet(const DataSet& right): m_pDataSet(right.m_pDataSet)
 }
 
 #ifndef SWIG
-DataSet::DataSet(puntoexe::ptr<puntoexe::imebra::dataSet> pDataSet): m_pDataSet(pDataSet)
+DataSet::DataSet(std::shared_ptr<puntoexe::imebra::dataSet> pDataSet): m_pDataSet(pDataSet)
 {
     if(pDataSet == 0)
     {
-        m_pDataSet = new puntoexe::imebra::dataSet;
+        m_pDataSet = std::make_shared<puntoexe::imebra::dataSet>();
     }
 }
 
@@ -95,7 +95,7 @@ void DataSet::setString(int groupId, int order, int tagId, int elementNumber, co
 
 size_t DataSet::getRawData(int groupId, int order, int tagId, int bufferId, char* buffer, size_t bufferSize) const
 {
-    puntoexe::ptr<puntoexe::imebra::handlers::dataHandlerRaw> dataHandlerRaw = m_pDataSet->getDataHandlerRaw(groupId, order, tagId, bufferId, false);
+    std::shared_ptr<puntoexe::imebra::handlers::dataHandlerRaw> dataHandlerRaw = m_pDataSet->getDataHandlerRaw(groupId, order, tagId, bufferId, false);
     if(dataHandlerRaw->getSize() > bufferSize)
     {
         return dataHandlerRaw->getSize();
@@ -106,7 +106,7 @@ size_t DataSet::getRawData(int groupId, int order, int tagId, int bufferId, char
 
 void DataSet::setRawData(int groupId, int order, int tagId, int bufferId, char* buffer, size_t bufferSize, const std::string& defaultType)
 {
-    puntoexe::ptr<puntoexe::imebra::handlers::dataHandlerRaw> dataHandlerRaw = m_pDataSet->getDataHandlerRaw(groupId, order, tagId, bufferId, true);
+    std::shared_ptr<puntoexe::imebra::handlers::dataHandlerRaw> dataHandlerRaw = m_pDataSet->getDataHandlerRaw(groupId, order, tagId, bufferId, true);
     dataHandlerRaw->copyFrom((std::int8_t*)buffer, bufferSize);
 }
 

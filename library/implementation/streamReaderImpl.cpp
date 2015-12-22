@@ -18,14 +18,14 @@ namespace puntoexe
 // Constructor
 //
 ///////////////////////////////////////////////////////////
-streamReader::streamReader(ptr<baseStream> pControlledStream):
+streamReader::streamReader(std::shared_ptr<baseStream> pControlledStream):
     streamController(pControlledStream, 0, 0),
     m_inBitsBuffer(0),
     m_inBitsNum(0)
 {
 }
 
-streamReader::streamReader(ptr<baseStream> pControlledStream, std::uint32_t virtualStart, std::uint32_t virtualLength):
+streamReader::streamReader(std::shared_ptr<baseStream> pControlledStream, std::uint32_t virtualStart, std::uint32_t virtualLength):
 	streamController(pControlledStream, virtualStart, virtualLength),
 	m_inBitsBuffer(0),
 	m_inBitsNum(0)
@@ -37,7 +37,7 @@ streamReader::streamReader(ptr<baseStream> pControlledStream, std::uint32_t virt
 }
 
 
-ptr<streamReader> streamReader::getReader(std::uint32_t virtualLength)
+std::shared_ptr<streamReader> streamReader::getReader(std::uint32_t virtualLength)
 {
     if(virtualLength == 0)
     {
@@ -49,7 +49,7 @@ ptr<streamReader> streamReader::getReader(std::uint32_t virtualLength)
         virtualLength = m_virtualLength - currentPosition;
     }
     seek(virtualLength, true);
-    return new streamReader(m_pControlledStream, currentPosition + m_virtualStart, virtualLength);
+    return std::make_shared<streamReader>(m_pControlledStream, currentPosition + m_virtualStart, virtualLength);
 }
 
 ///////////////////////////////////////////////////////////

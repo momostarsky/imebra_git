@@ -106,9 +106,9 @@ TEST(streamBitsTest, adjustEndianessTest3)
 TEST(streamBitsTest, test)
 {
 	std::srand(100);
-	ptr<memory> myMemory(new memory);
-	ptr<baseStream> theMemoryStream(new memoryStream(myMemory));
-	ptr<streamWriter> writer(new streamWriter(theMemoryStream));
+	std::shared_ptr<memory> myMemory(new memory);
+	std::shared_ptr<baseStream> theMemoryStream(new memoryStream(myMemory));
+	std::shared_ptr<streamWriter> writer(new streamWriter(theMemoryStream));
 	
 	writer->m_bJpegTags = true;
 
@@ -128,7 +128,7 @@ TEST(streamBitsTest, test)
 	writer->flushDataBuffer();
 
 	{
-		ptr<streamReader> reader(new streamReader(theMemoryStream));
+		std::shared_ptr<streamReader> reader(new streamReader(theMemoryStream));
 		reader->m_bJpegTags = true;
 
 		for(size_t readValues = 0; readValues < bitsValue.size(); ++readValues)
@@ -139,7 +139,7 @@ TEST(streamBitsTest, test)
 	}
 
 	{
-		ptr<streamReader> reader(new streamReader(theMemoryStream));
+		std::shared_ptr<streamReader> reader(new streamReader(theMemoryStream));
 		reader->m_bJpegTags = true;
 
 		for(size_t readValues = 0; readValues < bitsValue.size(); ++readValues)
@@ -155,7 +155,7 @@ TEST(streamBitsTest, test)
 	}
 
 	{
-		ptr<streamReader> reader(new streamReader(theMemoryStream));
+		std::shared_ptr<streamReader> reader(new streamReader(theMemoryStream));
 		reader->m_bJpegTags = true;
 
 		for(size_t readValues = 0; readValues < bitsValue.size(); ++readValues)

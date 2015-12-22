@@ -49,8 +49,6 @@ namespace imebra
 class dataGroup : public dataCollection<data>
 {
 public:
-	dataGroup(ptr<baseObject> externalLock): dataCollection<data>(externalLock) {}
-
 	/// \brief Get the requested tag (class \ref data).
 	///
 	/// @param tagId the tag's id (without the group id).
@@ -59,7 +57,7 @@ public:
 	/// @return a pointer to the tag object
 	///
 	///////////////////////////////////////////////////////////
-	ptr<data> getTag(std::uint16_t tagId, bool bCreate=false);
+	std::shared_ptr<data> getTag(std::uint16_t tagId, bool bCreate=false);
 	
 	/// \brief Get a handlers::dataHandler object for the 
 	///         requested tag's buffer.
@@ -88,7 +86,7 @@ public:
 	/// @return a pointer to the handlers::dataHandler
 	///
 	///////////////////////////////////////////////////////////
-    ptr<handlers::dataHandler> getDataHandler(std::uint16_t tagId, std::uint32_t bufferId, bool bWrite, const std::string& defaultType="");
+    std::shared_ptr<handlers::dataHandler> getDataHandler(std::uint16_t tagId, std::uint32_t bufferId, bool bWrite, const std::string& defaultType="");
 
 	/// \brief Get a handlers::dataHandlerRaw object for the 
 	///         requested tag's buffer.
@@ -124,7 +122,7 @@ public:
 	/// @return a pointer to the handlers::dataHandlerRaw
 	///
 	///////////////////////////////////////////////////////////
-    ptr<handlers::dataHandlerRaw> getDataHandlerRaw(std::uint16_t tagId, std::uint32_t bufferId, bool bWrite, const std::string& defaultType="");
+    std::shared_ptr<handlers::dataHandlerRaw> getDataHandlerRaw(std::uint16_t tagId, std::uint32_t bufferId, bool bWrite, const std::string& defaultType="");
 
 	/// \brief Get a streamReader connected to the requested
 	///         tag's buffer.
@@ -147,7 +145,7 @@ public:
 	/// @return a pointer to the streamReader
 	///
 	///////////////////////////////////////////////////////////
-	ptr<streamReader> getStreamReader(std::uint16_t tagId, std::uint32_t bufferId);
+	std::shared_ptr<streamReader> getStreamReader(std::uint16_t tagId, std::uint32_t bufferId);
 
 	/// \brief Get a streamWriter connected to the requested
 	///         tag's buffer.
@@ -172,7 +170,7 @@ public:
 	/// @return a pointer to the streamWriter
 	///
 	///////////////////////////////////////////////////////////
-    ptr<streamWriter> getStreamWriter(std::uint16_t tagId, std::uint32_t bufferId, const std::string& dataType = "");
+    std::shared_ptr<streamWriter> getStreamWriter(std::uint16_t tagId, std::uint32_t bufferId, const std::string& dataType = "");
 
 	/// \brief Return the data type of the specified tag, in
 	///         dicom format.

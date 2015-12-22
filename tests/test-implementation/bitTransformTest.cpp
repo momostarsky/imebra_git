@@ -11,19 +11,19 @@ namespace tests
 {
 
 // A buffer initialized to a default data type should use the data type OB
-void testEmptyTransform(ptr<transforms::transform> pTransform)
+void testEmptyTransform(std::shared_ptr<transforms::transform> pTransform)
 {
     std::uint32_t sizeX = 41;
     std::uint32_t sizeY = 13;
-    ptr<image> bits8Image(new image);
-    ptr<image> bits16Image(new image);
-    ptr<image> bits4Image(new image);
+    std::shared_ptr<image> bits8Image(new image);
+    std::shared_ptr<image> bits16Image(new image);
+    std::shared_ptr<image> bits4Image(new image);
     bits8Image->create(sizeX, sizeY, image::depthU8, L"RGB", 7);
     bits16Image->create(sizeX, sizeY, image::depthU16, L"RGB", 15);
     bits4Image->create(sizeX, sizeY, image::depthU8, L"RGB", 3);
 
     std::uint32_t rowSize, channelsPixelSize, channelsNumber;
-    ptr<handlers::dataHandlerNumericBase> imageHandler = bits8Image->getDataHandler(true, &rowSize, &channelsPixelSize, &channelsNumber);
+    std::shared_ptr<handlers::dataHandlerNumericBase> imageHandler = bits8Image->getDataHandler(true, &rowSize, &channelsPixelSize, &channelsNumber);
 
     // Make 3 bands (RGB
     std::uint32_t elementNumber(0);
@@ -52,15 +52,15 @@ void testEmptyTransform(ptr<transforms::transform> pTransform)
             imageHandler->setUnsignedLong(elementNumber++, b);
         }
     }
-    imageHandler.release();
+    imageHandler.reset();
 
     pTransform->runTransform(bits8Image, 0, 0, sizeX, sizeY, bits16Image, 0, 0);
     pTransform->runTransform(bits8Image, 0, 0, sizeX, sizeY, bits4Image, 0, 0);
 
 
-    ptr<handlers::dataHandlerNumericBase> bits8Handler = bits8Image->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
-    ptr<handlers::dataHandlerNumericBase> bits16Handler = bits16Image->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
-    ptr<handlers::dataHandlerNumericBase> bits4Handler = bits4Image->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
+    std::shared_ptr<handlers::dataHandlerNumericBase> bits8Handler = bits8Image->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
+    std::shared_ptr<handlers::dataHandlerNumericBase> bits16Handler = bits16Image->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
+    std::shared_ptr<handlers::dataHandlerNumericBase> bits4Handler = bits4Image->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
     elementNumber = 0;
     for(std::uint32_t checkY = 0; checkY < sizeY; ++checkY)
     {
@@ -114,24 +114,24 @@ void testEmptyTransform(ptr<transforms::transform> pTransform)
 
 TEST(bitTransformTest, testBitTransform)
 {
-	testEmptyTransform(new transforms::transformHighBit);
+    testEmptyTransform(std::make_shared<transforms::transformHighBit>());
 }
 
 TEST(bitTransformTest, testEmptyTransformsChain)
 {
-	testEmptyTransform(new transforms::transformsChain);
+    testEmptyTransform(std::make_shared<transforms::transformsChain>());
 }
 
 TEST(bitTransformTest, testEmptyVOILUT)
 {
-	ptr<dataSet> tempDataSet(new dataSet);
-	testEmptyTransform(new transforms::VOILUT(tempDataSet));
+	std::shared_ptr<dataSet> tempDataSet(new dataSet);
+    testEmptyTransform(std::make_shared<transforms::VOILUT>(tempDataSet));
 }
 
 TEST(bitTransformTest, testEmptyModalityVOILUT)
 {
-	ptr<dataSet> tempDataSet(new dataSet);
-	testEmptyTransform(new transforms::modalityVOILUT(tempDataSet));
+	std::shared_ptr<dataSet> tempDataSet(new dataSet);
+    testEmptyTransform(std::make_shared<transforms::modalityVOILUT>(tempDataSet));
 }
 
 

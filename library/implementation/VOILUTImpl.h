@@ -61,7 +61,7 @@ public:
     ///        comes from
     ///
     ///////////////////////////////////////////////////////////
-	VOILUT(ptr<dataSet> pDataSet): m_pDataSet(pDataSet), m_windowCenter(0), m_windowWidth(0){}
+	VOILUT(std::shared_ptr<dataSet> pDataSet): m_pDataSet(pDataSet), m_windowCenter(0), m_windowWidth(0){}
 
 	/// \brief Retrieve an ID for a VOI or a LUT.
 	///
@@ -147,7 +147,7 @@ public:
 	///              transformation
 	///
 	///////////////////////////////////////////////////////////
-	void setLUT(ptr<lut> pLut);
+	void setLUT(std::shared_ptr<lut> pLut);
 
 	/// \brief Define the VOI width/center to use for the
 	///         transformation.
@@ -187,7 +187,7 @@ public:
     ///                       the optimal VOI must be found
     ///
     ///////////////////////////////////////////////////////////
-    void applyOptimalVOI(const ptr<puntoexe::imebra::image>& inputImage, std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight);
+    void applyOptimalVOI(const std::shared_ptr<puntoexe::imebra::image>& inputImage, std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight);
 
 
 	DEFINE_RUN_TEMPLATE_TRANSFORM;
@@ -198,11 +198,11 @@ public:
 	template <class inputType, class outputType>
 			void templateTransform(
 					inputType* inputHandlerData, size_t /* inputHandlerSize */, std::uint32_t inputHandlerWidth, const std::wstring& /* inputHandlerColorSpace */,
-					ptr<palette> /* inputPalette */,
+					std::shared_ptr<palette> /* inputPalette */,
                     std::int32_t inputHandlerMinValue, std::uint32_t inputHighBit,
 					std::int32_t inputTopLeftX, std::int32_t inputTopLeftY, std::int32_t inputWidth, std::int32_t inputHeight,
 					outputType* outputHandlerData, size_t /* outputHandlerSize */, std::int32_t outputHandlerWidth, const std::wstring& /* outputHandlerColorSpace */,
-					ptr<palette> /* outputPalette */,
+					std::shared_ptr<palette> /* outputPalette */,
                     std::int32_t outputHandlerMinValue, std::uint32_t outputHighBit,
 					std::int32_t outputTopLeftX, std::int32_t outputTopLeftY)
 
@@ -330,7 +330,7 @@ public:
 
 	virtual bool isEmpty();
 
-	virtual ptr<image> allocateOutputImage(ptr<image> pInputImage, std::uint32_t width, std::uint32_t height);
+	virtual std::shared_ptr<image> allocateOutputImage(std::shared_ptr<image> pInputImage, std::uint32_t width, std::uint32_t height);
 
 protected:
 
@@ -367,8 +367,8 @@ protected:
         setCenterWidth(center, width);
     }
 
-    ptr<dataSet> m_pDataSet;
-	ptr<lut> m_pLUT;
+    std::shared_ptr<dataSet> m_pDataSet;
+	std::shared_ptr<lut> m_pLUT;
 	std::int32_t m_windowCenter;
 	std::int32_t m_windowWidth;
 };

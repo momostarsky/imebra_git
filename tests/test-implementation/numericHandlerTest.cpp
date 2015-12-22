@@ -16,10 +16,10 @@ namespace tests
 // Check the function pointerIsValid
 TEST(numericHandlerTest, validPointer)
 {
-	ptr<buffer> buffer0(new buffer(0, "OW"));
+    std::shared_ptr<buffer> buffer0(new buffer("OW"));
 
 
-	ptr<handlers::dataHandler> handlerBuffer0(buffer0->getDataHandler(true, 0));
+	std::shared_ptr<handlers::dataHandler> handlerBuffer0(buffer0->getDataHandler(true, 0));
     EXPECT_EQ(2, handlerBuffer0->getUnitSize());
 	std::uint32_t bufferSize(4);
 	handlerBuffer0->setSize(bufferSize);
@@ -32,9 +32,9 @@ TEST(numericHandlerTest, validPointer)
 	}
 
     EXPECT_EQ(bufferSize, checkSize0);
-	handlerBuffer0.release();
+    handlerBuffer0.reset();
 
-	ptr<handlers::dataHandler> handlerBuffer1(buffer0->getDataHandler(true, 0));
+	std::shared_ptr<handlers::dataHandler> handlerBuffer1(buffer0->getDataHandler(true, 0));
     EXPECT_EQ(2, handlerBuffer1->getUnitSize());
 	
 	std::uint32_t checkSize1(0);
@@ -52,10 +52,10 @@ TEST(numericHandlerTest, interleavedCopy)
 {
 	int sizeX = 601;
 	int sizeY = 401;
-	ptr<image> testImage(new image);
+	std::shared_ptr<image> testImage(new image);
 	testImage->create(sizeX, sizeY, image::depthS16, L"RGB", 7);
 	std::uint32_t rowSize, channelSize, channelsNumber;
-	ptr<handlers::dataHandlerNumericBase> testHandler = testImage->getDataHandler(true, &rowSize, &channelSize, &channelsNumber);
+	std::shared_ptr<handlers::dataHandlerNumericBase> testHandler = testImage->getDataHandler(true, &rowSize, &channelSize, &channelsNumber);
 
 	size_t pointer(0);
 	for(int y = 0; y < sizeY; ++y)
@@ -207,8 +207,8 @@ TEST(numericHandlerTest, interleavedCopy)
 
 TEST(numericHandlerTest, memcopy)
 {
-    ptr<memory> handlerBuffer(new memory());
-    ptr<handlers::dataHandlerNumeric<std::int32_t> > testHandler(new handlers::dataHandlerNumeric<std::int32_t>);
+    std::shared_ptr<memory> handlerBuffer(new memory());
+    std::shared_ptr<handlers::dataHandlerNumeric<std::int32_t> > testHandler(new handlers::dataHandlerNumeric<std::int32_t>);
     testHandler->parseBuffer(handlerBuffer);
 
     size_t size = 121;
@@ -218,8 +218,8 @@ TEST(numericHandlerTest, memcopy)
         testHandler->setUnsignedLong(scanElements, scanElements * 2);
     }
 
-    ptr<handlers::dataHandlerNumeric<std::uint16_t> > testHandlerDest(new handlers::dataHandlerNumeric<std::uint16_t>);
-    testHandlerDest->parseBuffer(new memory());
+    std::shared_ptr<handlers::dataHandlerNumeric<std::uint16_t> > testHandlerDest(new handlers::dataHandlerNumeric<std::uint16_t>);
+    testHandlerDest->parseBuffer(std::make_shared<memory>());
     testHandlerDest->copyFrom(testHandler);
 
     testHandler->setUnsignedLong(0, 128);
@@ -235,8 +235,8 @@ TEST(numericHandlerTest, memcopy)
 TEST(numericHandlerTest, stringConversion)
 {
     {
-        ptr<memory> handlerBuffer(new memory);
-        ptr<handlers::dataHandlerNumeric<std::int32_t> > testHandler(new handlers::dataHandlerNumeric<std::int32_t>);
+        std::shared_ptr<memory> handlerBuffer(new memory);
+        std::shared_ptr<handlers::dataHandlerNumeric<std::int32_t> > testHandler(new handlers::dataHandlerNumeric<std::int32_t>);
         testHandler->parseBuffer(handlerBuffer);
         testHandler->setSize(2);
 
@@ -254,8 +254,8 @@ TEST(numericHandlerTest, stringConversion)
     }
 
     {
-        ptr<memory> handlerBuffer(new memory);
-        ptr<handlers::dataHandlerNumeric<double> > testHandler(new handlers::dataHandlerNumeric<double>);
+        std::shared_ptr<memory> handlerBuffer(new memory);
+        std::shared_ptr<handlers::dataHandlerNumeric<double> > testHandler(new handlers::dataHandlerNumeric<double>);
         testHandler->parseBuffer(handlerBuffer);
         testHandler->setSize(2);
 
@@ -274,8 +274,8 @@ TEST(numericHandlerTest, stringConversion)
     }
 
     {
-        ptr<memory> handlerBuffer(new memory);
-        ptr<handlers::dataHandlerNumeric<std::uint8_t> > testHandler(new handlers::dataHandlerNumeric<std::uint8_t>);
+        std::shared_ptr<memory> handlerBuffer(new memory);
+        std::shared_ptr<handlers::dataHandlerNumeric<std::uint8_t> > testHandler(new handlers::dataHandlerNumeric<std::uint8_t>);
         testHandler->parseBuffer(handlerBuffer);
         testHandler->setSize(2);
 
@@ -296,8 +296,8 @@ TEST(numericHandlerTest, stringConversion)
     }
 
     {
-        ptr<memory> handlerBuffer(new memory);
-        ptr<handlers::dataHandlerNumeric<std::int8_t> > testHandler(new handlers::dataHandlerNumeric<std::int8_t>);
+        std::shared_ptr<memory> handlerBuffer(new memory);
+        std::shared_ptr<handlers::dataHandlerNumeric<std::int8_t> > testHandler(new handlers::dataHandlerNumeric<std::int8_t>);
         testHandler->parseBuffer(handlerBuffer);
         testHandler->setSize(2);
 

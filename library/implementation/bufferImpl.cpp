@@ -61,12 +61,11 @@ namespace imebra
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-buffer::buffer(const ptr<baseObject>& externalLock, const std::string& defaultType /* ="" */):
-	baseObject(externalLock),
-		m_originalBufferPosition(0),
-		m_originalBufferLength(0),
-		m_originalWordLength(1),
-        m_originalEndianType(streamController::lowByteEndian)
+buffer::buffer(const std::string& defaultType /* ="" */):
+    m_originalBufferPosition(0),
+    m_originalBufferLength(0),
+    m_originalWordLength(1),
+    m_originalEndianType(streamController::lowByteEndian)
 {
 	PUNTOEXE_FUNCTION_START(L"buffer::buffer");
 
@@ -92,14 +91,13 @@ buffer::buffer(const ptr<baseObject>& externalLock, const std::string& defaultTy
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-buffer::buffer(const ptr<baseObject>& externalLock,
+buffer::buffer(
 		const std::string& defaultType,
-		const ptr<baseStream>& originalStream,
+        const std::shared_ptr<baseStream>& originalStream,
 		std::uint32_t bufferPosition,
 		std::uint32_t bufferLength,
 		std::uint32_t wordLength,
 		streamController::tByteOrdering endianType):
-	baseObject(externalLock),
 		m_originalStream(originalStream),
 		m_originalBufferPosition(bufferPosition),
 		m_originalBufferLength(bufferLength),
@@ -131,25 +129,21 @@ buffer::buffer(const ptr<baseObject>& externalLock,
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<handlers::dataHandler> buffer::getDataHandler(bool bWrite, bool bRaw, std::uint32_t size)
+std::shared_ptr<handlers::dataHandler> buffer::getDataHandler(bool bWrite, bool bRaw, std::uint32_t size)
 {
 	PUNTOEXE_FUNCTION_START(L"buffer::getDataHandler");
 
-	// Lock the object
-	///////////////////////////////////////////////////////////
-	lockObject lockAccess(this);
-
-	ptr<memory> localMemory(m_memory);
+    std::shared_ptr<memory> localMemory(m_memory);
 
 	// If the object must be loaded from the original stream,
 	//  then load it...
 	///////////////////////////////////////////////////////////
 	if(m_originalStream != 0 && (localMemory == 0 || localMemory->empty()) )
 	{
-		localMemory = ptr<memory>(memoryPool::getMemoryPool()->getMemory(m_originalBufferLength));
+        localMemory = std::shared_ptr<memory>(memoryPool::getMemoryPool()->getMemory(m_originalBufferLength));
 		if(m_originalBufferLength != 0)
 		{
-			ptr<streamReader> reader(new streamReader(m_originalStream, m_originalBufferPosition, m_originalBufferLength));
+            std::shared_ptr<streamReader> reader(new streamReader(m_originalStream, m_originalBufferPosition, m_originalBufferLength));
 			std::vector<std::uint8_t> localBuffer;
 			localBuffer.resize(m_originalBufferLength);
 			reader->read(&localBuffer[0], m_originalBufferLength);
@@ -163,13 +157,13 @@ ptr<handlers::dataHandler> buffer::getDataHandler(bool bWrite, bool bRaw, std::u
 
 	// Reset the pointer to the data handler
 	///////////////////////////////////////////////////////////
-	ptr<handlers::dataHandler> handler;
+    std::shared_ptr<handlers::dataHandler> handler;
 
 	// Allocate a raw data handler if bRaw==true
 	///////////////////////////////////////////////////////////
 	if(bRaw)
 	{
-        handler = new handlers::dataHandlerRaw();
+        handler = std::make_shared<handlers::dataHandlerRaw>();
 	}
 	else
 	{
@@ -177,91 +171,91 @@ ptr<handlers::dataHandler> buffer::getDataHandler(bool bWrite, bool bRaw, std::u
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="AE")
 		{
-            handler = new handlers::dataHandlerStringAE();
+            handler = std::make_shared<handlers::dataHandlerStringAE>();
 		}
 
 		// Retrieve an Age string data handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="AS")
 		{
-            handler = new handlers::dataHandlerStringAS();
+            handler = std::make_shared<handlers::dataHandlerStringAS>();
 		}
 
 		// Retrieve a Code string data handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="CS")
 		{
-            handler = new handlers::dataHandlerStringCS();
+            handler = std::make_shared<handlers::dataHandlerStringCS>();
 		}
 
 		// Retrieve a Decimal string data handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="DS")
 		{
-            handler = new handlers::dataHandlerStringDS();
+            handler = std::make_shared<handlers::dataHandlerStringDS>();
 		}
 
 		// Retrieve an Integer string data handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="IS")
 		{
-            handler = new handlers::dataHandlerStringIS();
+            handler = std::make_shared<handlers::dataHandlerStringIS>();
 		}
 
 		// Retrieve a Long string data handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="LO")
 		{
-            handler = new handlers::dataHandlerStringLO();
+            handler = std::make_shared<handlers::dataHandlerStringLO>();
 		}
 
 		// Retrieve a Long text data handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="LT")
 		{
-            handler = new handlers::dataHandlerStringLT();
+            handler = std::make_shared<handlers::dataHandlerStringLT>();
 		}
 
 		// Retrieve a Person Name data handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="PN")
 		{
-            handler = new handlers::dataHandlerStringPN();
+            handler = std::make_shared<handlers::dataHandlerStringPN>();
 		}
 
 		// Retrieve a Short string data handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="SH")
 		{
-            handler = new handlers::dataHandlerStringSH();
+            handler = std::make_shared<handlers::dataHandlerStringSH>();
 		}
 
 		// Retrieve a Short text data handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="ST")
 		{
-            handler = new handlers::dataHandlerStringST();
+            handler = std::make_shared<handlers::dataHandlerStringST>();
 		}
 
 		// Retrieve an Unique Identifier data handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="UI")
 		{
-            handler = new handlers::dataHandlerStringUI();
+            handler = std::make_shared<handlers::dataHandlerStringUI>();
 		}
 
 		// Retrieve an Unlimited text data handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="UT")
 		{
-            handler = new handlers::dataHandlerStringUT();
+            handler = std::make_shared< handlers::dataHandlerStringUT>();
 		}
 
 		// Retrieve an object handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="OB")
 		{
-            handler = new handlers::dataHandlerNumeric<std::uint8_t>();
+            handler = std::make_shared<handlers::dataHandlerNumeric<std::uint8_t> >();
 		}
 
 		// Retrieve a signed-byte object handler.
@@ -269,91 +263,91 @@ ptr<handlers::dataHandler> buffer::getDataHandler(bool bWrite, bool bRaw, std::u
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="SB")
 		{
-            handler = new handlers::dataHandlerNumeric<std::int8_t>();
+            handler = std::make_shared<handlers::dataHandlerNumeric<std::int8_t> >();
 		}
 
 		// Retrieve an unknown object handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="UN")
 		{
-            handler = new handlers::dataHandlerNumeric<std::uint8_t>();
+            handler = std::make_shared<handlers::dataHandlerNumeric<std::uint8_t> >();
 		}
 
 		// Retrieve a WORD handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="OW")
 		{
-            handler = new handlers::dataHandlerNumeric<std::uint16_t>();
+            handler = std::make_shared<handlers::dataHandlerNumeric<std::uint16_t> >();
 		}
 
 		// Retrieve a WORD handler (AT)
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="AT")
 		{
-            handler = new handlers::dataHandlerNumeric<std::uint16_t>();
+            handler = std::make_shared<handlers::dataHandlerNumeric<std::uint16_t> >();
 		}
 
 		// Retrieve a float handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="FL")
 		{
-            handler = new handlers::dataHandlerNumeric<float>();
+            handler = std::make_shared<handlers::dataHandlerNumeric<float> >();
 		}
 
 		// Retrieve a double float handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="FD")
 		{
-            handler = new handlers::dataHandlerNumeric<double>();
+            handler = std::make_shared<handlers::dataHandlerNumeric<double> >();
 		}
 
 		// Retrieve a signed long handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="SL")
 		{
-            handler = new handlers::dataHandlerNumeric<std::int32_t>();
+            handler = std::make_shared<handlers::dataHandlerNumeric<std::int32_t> >();
 		}
 
 		// Retrieve a signed short handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="SS")
 		{
-            handler = new handlers::dataHandlerNumeric<std::int16_t>();
+            handler = std::make_shared<handlers::dataHandlerNumeric<std::int16_t> >();
 		}
 
 		// Retrieve an unsigned long handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="UL")
 		{
-            handler = new handlers::dataHandlerNumeric<std::uint32_t>();
+            handler = std::make_shared<handlers::dataHandlerNumeric<std::uint32_t> >();
 		}
 
 		// Retrieve an unsigned short handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="US")
 		{
-            handler = new handlers::dataHandlerNumeric<std::uint16_t>();
+            handler = std::make_shared<handlers::dataHandlerNumeric<std::uint16_t> >();
 		}
 
 		// Retrieve date
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="DA")
 		{
-            handler = new handlers::dataHandlerDate();
+            handler = std::make_shared<handlers::dataHandlerDate>();
 		}
 
 		// Retrieve date-time
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="DT")
 		{
-            handler = new handlers::dataHandlerDateTime();
+            handler = std::make_shared<handlers::dataHandlerDateTime>();
 		}
 
 		// Retrieve time
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="TM")
 		{
-            handler = new handlers::dataHandlerTime();
+            handler = std::make_shared<handlers::dataHandlerTime>();
 		}
 
 	} // check bRaw
@@ -370,15 +364,15 @@ ptr<handlers::dataHandler> buffer::getDataHandler(bool bWrite, bool bRaw, std::u
 	///////////////////////////////////////////////////////////
 	if(localMemory == 0)
 	{
-		localMemory = ptr<memory>(new memory);
+        localMemory = std::shared_ptr<memory>(new memory);
 	}
-	ptr<memory> parseMemory(localMemory);
+    std::shared_ptr<memory> parseMemory(localMemory);
 
 	// Set the handler's attributes
 	///////////////////////////////////////////////////////////
 	if(bWrite)
 	{
-		handler->m_buffer = this;
+        handler->m_buffer = shared_from_this();
 
 		std::uint32_t currentMemorySize(localMemory->size());
                 std::uint32_t newMemorySize(currentMemorySize);
@@ -386,7 +380,7 @@ ptr<handlers::dataHandler> buffer::getDataHandler(bool bWrite, bool bRaw, std::u
 		{
 			newMemorySize = size * handler->getUnitSize();
 		}
-		parseMemory = memoryPool::getMemoryPool()->getMemory(newMemorySize);
+        parseMemory.reset(memoryPool::getMemoryPool()->getMemory(newMemorySize));
 		if(currentMemorySize != 0)
 		{
 			parseMemory->copyFrom(localMemory);
@@ -414,7 +408,7 @@ ptr<handlers::dataHandler> buffer::getDataHandler(bool bWrite, bool bRaw, std::u
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<handlers::dataHandler> buffer::getDataHandler(bool bWrite, std::uint32_t size)
+std::shared_ptr<handlers::dataHandler> buffer::getDataHandler(bool bWrite, std::uint32_t size)
 {
 	PUNTOEXE_FUNCTION_START(L"buffer::getDataHandler");
 
@@ -433,32 +427,28 @@ ptr<handlers::dataHandler> buffer::getDataHandler(bool bWrite, std::uint32_t siz
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<streamReader> buffer::getStreamReader()
+std::shared_ptr<streamReader> buffer::getStreamReader()
 {
 	PUNTOEXE_FUNCTION_START(L"buffer::getStreamReader");
-
-	// Lock the object
-	///////////////////////////////////////////////////////////
-	lockObject lockAccess(this);
 
 	// If the object must be loaded from the original stream,
 	//  then return the original stream
 	///////////////////////////////////////////////////////////
 	if(m_originalStream != 0 && (m_memory == 0 || m_memory->empty()) )
 	{
-		ptr<streamReader> reader(new streamReader(m_originalStream, m_originalBufferPosition, m_originalBufferLength));
+        std::shared_ptr<streamReader> reader(new streamReader(m_originalStream, m_originalBufferPosition, m_originalBufferLength));
 		return reader;
 	}
 
 
 	// Build a stream from the buffer's memory
 	///////////////////////////////////////////////////////////
-	ptr<streamReader> reader;
-	ptr<handlers::dataHandlerRaw> tempHandlerRaw = getDataHandlerRaw(false);
+    std::shared_ptr<streamReader> reader;
+    std::shared_ptr<handlers::dataHandlerRaw> tempHandlerRaw = getDataHandlerRaw(false);
     if(tempHandlerRaw != 0 && tempHandlerRaw->getSize() != 0)
 	{
-		ptr<baseStream> localStream(new bufferStream(tempHandlerRaw));
-		reader = ptr<streamReader>(new streamReader(localStream));
+        std::shared_ptr<baseStream> localStream(new bufferStream(tempHandlerRaw));
+        reader = std::shared_ptr<streamReader>(new streamReader(localStream));
 	}
 
 	return reader;
@@ -476,22 +466,17 @@ ptr<streamReader> buffer::getStreamReader()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<streamWriter> buffer::getStreamWriter()
+std::shared_ptr<streamWriter> buffer::getStreamWriter()
 {
     PUNTOEXE_FUNCTION_START(L"buffer::getStreamWriter");
 
-	// Lock the object
-	///////////////////////////////////////////////////////////
-	lockObject lockAccess(this);
-
 	// Build a stream from the buffer's memory
 	///////////////////////////////////////////////////////////
-	ptr<streamWriter> writer;
-	ptr<handlers::dataHandlerRaw> tempHandlerRaw = getDataHandlerRaw(true);
+    std::shared_ptr<streamWriter> writer;
+    std::shared_ptr<handlers::dataHandlerRaw> tempHandlerRaw = getDataHandlerRaw(true);
 	if(tempHandlerRaw != 0)
 	{
-		ptr<baseStream> localStream(new bufferStream(tempHandlerRaw));
-		writer = ptr<streamWriter>(new streamWriter(localStream, tempHandlerRaw->getSize()));
+        writer = std::make_shared<streamWriter>(std::make_shared<bufferStream>(tempHandlerRaw), tempHandlerRaw->getSize());
 	}
 
 	return writer;
@@ -510,12 +495,12 @@ ptr<streamWriter> buffer::getStreamWriter()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<handlers::dataHandlerRaw> buffer::getDataHandlerRaw(bool bWrite, std::uint32_t size)
+std::shared_ptr<handlers::dataHandlerRaw> buffer::getDataHandlerRaw(bool bWrite, std::uint32_t size)
 {
 	PUNTOEXE_FUNCTION_START(L"buffer::getDataHandlerRaw");
 
-	ptr<handlers::dataHandler> returnValue = getDataHandler(bWrite, true, size);
-	return ptr<handlers::dataHandlerRaw>((handlers::dataHandlerRaw*)returnValue.get());
+    std::shared_ptr<handlers::dataHandler> returnValue = getDataHandler(bWrite, true, size);
+    return std::static_pointer_cast<handlers::dataHandlerRaw>(returnValue);
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -532,11 +517,7 @@ std::uint32_t buffer::getBufferSizeBytes()
 {
 	PUNTOEXE_FUNCTION_START(L"buffer::getBufferSizeBytes");
 
-	// Lock the object
-	///////////////////////////////////////////////////////////
-	lockObject lockAccess(this);
-
-	ptr<memory> localMemory(m_memory);
+    std::shared_ptr<memory> localMemory(m_memory);
 
 	// The buffer has not been loaded yet
 	///////////////////////////////////////////////////////////
@@ -567,13 +548,9 @@ std::uint32_t buffer::getBufferSizeBytes()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void buffer::commit(ptr<memory> newMemory, const std::string& newBufferType, const charsetsList::tCharsetsList& newCharsetsList)
+void buffer::commit(std::shared_ptr<memory> newMemory, const std::string& newBufferType, const charsetsList::tCharsetsList& newCharsetsList)
 {
 	PUNTOEXE_FUNCTION_START(L"buffer::commit");
-
-	// Lock the object
-	///////////////////////////////////////////////////////////
-	lockObject lockAccess(this);
 
 	// Commit the memory buffer
 	///////////////////////////////////////////////////////////
@@ -591,7 +568,7 @@ void buffer::commit(ptr<memory> newMemory, const std::string& newBufferType, con
 	//  is still storing the old version. We don't need
 	//  the original stream anymore, then release it.
 	///////////////////////////////////////////////////////////
-	ptr<baseStream> emptyBaseStream;
+    std::shared_ptr<baseStream> emptyBaseStream;
 	m_originalStream = emptyBaseStream;
 
 	PUNTOEXE_FUNCTION_END();
@@ -625,8 +602,6 @@ std::string buffer::getDataType()
 void buffer::setCharsetsList(charsetsList::tCharsetsList* pCharsetsList)
 {
 	PUNTOEXE_FUNCTION_START(L"buffer::setCharsetsList");
-
-	lockObject lockAccess(this);
 
 	m_charsetsList.clear();
 	charsetsList::updateCharsets(pCharsetsList, &m_charsetsList);

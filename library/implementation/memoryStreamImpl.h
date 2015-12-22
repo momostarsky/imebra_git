@@ -49,7 +49,7 @@ public:
 	///                      the memoryStream object.
 	///
 	///////////////////////////////////////////////////////////
-	memoryStream(ptr<memory> memoryStream);
+	memoryStream(std::shared_ptr<memory> memoryStream);
 
 	///////////////////////////////////////////////////////////
 	//
@@ -60,7 +60,7 @@ public:
 	virtual std::uint32_t read(std::uint32_t startPosition, std::uint8_t* pBuffer, std::uint32_t bufferLength);
 
 protected:
-	ptr<memory> m_memory;
+	std::shared_ptr<memory> m_memory;
 };
 
 ///@}

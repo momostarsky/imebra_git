@@ -14,9 +14,9 @@ namespace tests
 // A buffer initialized to a default data type should use the data type OB
 TEST(paletteTest, testPalette)
 {
-    ptr<lut> red(new lut());
-    ptr<lut> green(new lut());
-    ptr<lut> blue(new lut());
+    std::shared_ptr<lut> red(new lut());
+    std::shared_ptr<lut> green(new lut());
+    std::shared_ptr<lut> blue(new lut());
 
     red->create(256, 0, 8, L"Test Red");
     green->create(256, 0, 8, L"Test Green");
@@ -29,15 +29,15 @@ TEST(paletteTest, testPalette)
         blue->setLutValue(fillPalette, (fillPalette + 32) & 0xff);
     }
 
-    ptr<palette> newPalette(new palette(red, green, blue));
+    std::shared_ptr<palette> newPalette(new palette(red, green, blue));
 	std::uint32_t sizeX = 600;
 	std::uint32_t sizeY = 400;
-    ptr<image> paletteImage(new image);
+    std::shared_ptr<image> paletteImage(new image);
     paletteImage->create(sizeX, sizeY, image::depthU8, L"PALETTE COLOR", 7);
     paletteImage->setPalette(newPalette);
 
 	std::uint32_t rowSize, channelsPixelSize, channelsNumber;
-    ptr<handlers::dataHandlerNumericBase> imageHandler = paletteImage->getDataHandler(true, &rowSize, &channelsPixelSize, &channelsNumber);
+    std::shared_ptr<handlers::dataHandlerNumericBase> imageHandler = paletteImage->getDataHandler(true, &rowSize, &channelsPixelSize, &channelsNumber);
 
     size_t pointer(0);
 
@@ -50,19 +50,19 @@ TEST(paletteTest, testPalette)
             ++pointer;
 		}
 	}
-	imageHandler.release();
+    imageHandler.reset();
 
-	ptr<transforms::colorTransforms::colorTransformsFactory> colorFactory;
+	std::shared_ptr<transforms::colorTransforms::colorTransformsFactory> colorFactory;
 	colorFactory = transforms::colorTransforms::colorTransformsFactory::getColorTransformsFactory();
-    ptr<transforms::transform> colorTransform = colorFactory->getTransform(L"PALETTE COLOR", L"RGB");
+    std::shared_ptr<transforms::transform> colorTransform = colorFactory->getTransform(L"PALETTE COLOR", L"RGB");
 
-    ptr<image> rgbImage(colorTransform->allocateOutputImage(paletteImage, sizeX, sizeY));
+    std::shared_ptr<image> rgbImage(colorTransform->allocateOutputImage(paletteImage, sizeX, sizeY));
     colorTransform->runTransform(paletteImage, 0, 0, sizeX, sizeY, rgbImage, 0, 0);
 
     std::uint32_t checkSizeX, checkSizeY;
 	rgbImage->getSize(&checkSizeX, &checkSizeY);
 
-    ptr<handlers::dataHandlerNumericBase> rgbHandler = rgbImage->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
+    std::shared_ptr<handlers::dataHandlerNumericBase> rgbHandler = rgbImage->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
 
 	// Compare the buffers. A little difference is allowed
     ASSERT_EQ(sizeX, checkSizeX);

@@ -12,7 +12,7 @@ $fileHeader$
 
 #ifndef SWIG
 
-#include "../../implementation/baseObjectImpl.h"
+#include <memory>
 
 namespace puntoexe
 {
@@ -30,7 +30,7 @@ public:
     Memory(size_t requestedSize);
 
 #ifndef SWIG
-    Memory(puntoexe::ptr<puntoexe::memory> pMemory);
+    Memory(std::shared_ptr<puntoexe::memory> pMemory);
 #endif
 
 	void transfer(Memory& transferFrom);
@@ -54,7 +54,7 @@ public:
     bool empty() const;
 
 #ifndef SWIG
-    puntoexe::ptr<puntoexe::memory> m_pMemory;
+    std::shared_ptr<puntoexe::memory> m_pMemory;
 #endif
 };
 

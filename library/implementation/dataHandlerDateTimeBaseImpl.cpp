@@ -37,7 +37,7 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 
-dataHandlerDateTimeBase::dataHandlerDateTimeBase(): dataHandlerString(0x0, 0x0)
+dataHandlerDateTimeBase::dataHandlerDateTimeBase(): dataHandlerString(0x0, 0x20)
 {
 
 }

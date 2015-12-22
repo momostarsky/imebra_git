@@ -78,7 +78,7 @@ namespace puntoexe
 		///
 		///////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////
-        class drawBitmap: public baseObject
+        class drawBitmap
 		{
 		public:
 			/// \brief Constructor.
@@ -93,7 +93,7 @@ namespace puntoexe
 			///                      automatically by this class
 			///
 			///////////////////////////////////////////////////////////
-			drawBitmap(ptr<image> sourceImage, ptr<transforms::transformsChain> transformsChain);
+			drawBitmap(std::shared_ptr<image> sourceImage, std::shared_ptr<transforms::transformsChain> transformsChain);
 
 			/// \brief Renders the image specified in the constructor
 			///         into an RGB or BGR buffer.
@@ -164,9 +164,9 @@ namespace puntoexe
 			///
 			///////////////////////////////////////////////////////////
 			template <tDrawBitmapType drawBitmapType, int rowAlignBytes>
-					ptr<memory> getBitmap(std::int32_t totalWidthPixels, std::int32_t totalHeightPixels,
+					std::shared_ptr<memory> getBitmap(std::int32_t totalWidthPixels, std::int32_t totalHeightPixels,
 										  std::int32_t visibleTopLeftX, std::int32_t visibleTopLeftY, std::int32_t visibleBottomRightX, std::int32_t visibleBottomRightY,
-										  ptr<memory> reuseMemory)
+										  std::shared_ptr<memory> reuseMemory)
 			{
 				PUNTOEXE_FUNCTION_START(L"drawBitmap::getBitmap");
 
@@ -199,7 +199,7 @@ namespace puntoexe
 
 				if(reuseMemory == 0)
 				{
-					reuseMemory = memoryPool::getMemoryPool()->getMemory(memorySize);
+                    reuseMemory.reset(memoryPool::getMemoryPool()->getMemory(memorySize));
 				}
 				else
 				{
@@ -289,8 +289,8 @@ namespace puntoexe
 				///////////////////////////////////////////////////////////
 				std::uint32_t destBitmapWidth(visibleBottomRightX - visibleTopLeftX);
 
-				ptr<memory> averagePixelsMemory(memoryPool::getMemoryPool()->getMemory(destBitmapWidth * 4 * sizeof(std::int32_t)));
-				ptr<memory> sourcePixelIndexMemory(memoryPool::getMemoryPool()->getMemory((destBitmapWidth + 1) * sizeof(std::uint32_t)));
+				std::shared_ptr<memory> averagePixelsMemory(memoryPool::getMemoryPool()->getMemory(destBitmapWidth * 4 * sizeof(std::int32_t)));
+				std::shared_ptr<memory> sourcePixelIndexMemory(memoryPool::getMemoryPool()->getMemory((destBitmapWidth + 1) * sizeof(std::uint32_t)));
 				std::int32_t* averagePixels = (std::int32_t*)averagePixelsMemory->data();
 				std::uint32_t* sourcePixelIndex = (std::uint32_t*)sourcePixelIndexMemory->data();
 				for(std::int32_t scanPixelsX = visibleTopLeftX; scanPixelsX != visibleBottomRightX + 1; ++scanPixelsX)
@@ -308,7 +308,7 @@ namespace puntoexe
 				//  output image
 				///////////////////////////////////////////////////////////
 				std::uint32_t rowSize, channelSize, channelsNumber;
-				ptr<image> sourceImage(m_image);
+				std::shared_ptr<image> sourceImage(m_image);
 
 				// Retrieve the final bitmap's buffer
 				///////////////////////////////////////////////////////////
@@ -342,7 +342,7 @@ namespace puntoexe
 					{
 						sourceHeight = imageSizeY;
 					}
-					sourceImage = new image;
+                    sourceImage = std::make_shared<image>();
 					sourceImage->create(sourceWidth, sourceHeight, image::depthU8, L"RGB", 7);
 				}
 
@@ -367,7 +367,7 @@ namespace puntoexe
 						std::uint8_t* pImagePointer(0);
 						std::uint8_t* imageMemory(0);
 
-						ptr<handlers::dataHandlerNumericBase> imageHandler;
+						std::shared_ptr<handlers::dataHandlerNumericBase> imageHandler;
 						if(m_transformsChain->isEmpty())
 						{
 							imageHandler = sourceImage->getDataHandler(false, &rowSize, &channelSize, &channelsNumber);
@@ -506,12 +506,12 @@ namespace puntoexe
 			}
 
 		protected:
-			ptr<image> m_image;
+			std::shared_ptr<image> m_image;
 
-			ptr<image> m_finalImage;
+			std::shared_ptr<image> m_finalImage;
 
 			// Transform that calculates an 8 bit per channel RGB image
-			ptr<transforms::transformsChain> m_transformsChain;
+			std::shared_ptr<transforms::transformsChain> m_transformsChain;
 		};
 
 		/// @}

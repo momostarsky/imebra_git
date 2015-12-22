@@ -12,20 +12,20 @@ namespace tests
 
 TEST(bufferTest, testDefaultType)
 {
-	ptr<buffer> patientBuffer(new buffer(ptr<baseObject>(0)));
+    std::shared_ptr<buffer> patientBuffer(new buffer());
     EXPECT_EQ(std::string("OB"), patientBuffer->getDataType());
 }
 
 TEST(bufferTest, testReadWrite)
 {
-	ptr<buffer> patientBuffer(new buffer(ptr<baseObject>(0), "UL"));
+    std::shared_ptr<buffer> patientBuffer(new buffer("UL"));
 
 	// get a data reading handler
-	ptr<handlers::dataHandler> readingHandler0 = patientBuffer->getDataHandler(false);
+	std::shared_ptr<handlers::dataHandler> readingHandler0 = patientBuffer->getDataHandler(false);
 
 	// get a writing handler and write something
 	{
-		ptr<handlers::dataHandler> writingHandler0 = patientBuffer->getDataHandler(true);
+		std::shared_ptr<handlers::dataHandler> writingHandler0 = patientBuffer->getDataHandler(true);
 		writingHandler0->setSize(10);
 		for(int writeNumbers = 0; writeNumbers < 10; ++writeNumbers)
 		{
@@ -37,14 +37,14 @@ TEST(bufferTest, testReadWrite)
     EXPECT_EQ(0, readingHandler0->getSize());
 
 	// Get a new reading handler
-	ptr<handlers::dataHandler> readingHandler1 = patientBuffer->getDataHandler(false);
+	std::shared_ptr<handlers::dataHandler> readingHandler1 = patientBuffer->getDataHandler(false);
 
 	// Get two different writing handlers
-	ptr<handlers::dataHandler> writingHandler1 = patientBuffer->getDataHandler(true);
-	ptr<handlers::dataHandler> writingHandler2 = patientBuffer->getDataHandler(true);
+	std::shared_ptr<handlers::dataHandler> writingHandler1 = patientBuffer->getDataHandler(true);
+	std::shared_ptr<handlers::dataHandler> writingHandler2 = patientBuffer->getDataHandler(true);
 
 	// Get another reading handler
-	ptr<handlers::dataHandler> readingHandler2 = patientBuffer->getDataHandler(false);
+	std::shared_ptr<handlers::dataHandler> readingHandler2 = patientBuffer->getDataHandler(false);
 
 	// Check the values in all the new handlers first
 		for(std::int32_t checkValues = 0; checkValues < 10; ++checkValues)
@@ -80,7 +80,7 @@ TEST(bufferTest, testReadWrite)
 	}
 
 	// Release the first writing handler, then recheck the values in the other handlers
-	writingHandler1 = ptr<handlers::dataHandler>(0);
+	writingHandler1 = std::shared_ptr<handlers::dataHandler>(0);
     EXPECT_EQ(10, readingHandler1->getSize());
     EXPECT_EQ(10, readingHandler2->getSize());
     for(std::int32_t checkValues = 0; checkValues < 10; ++checkValues)
@@ -95,7 +95,7 @@ TEST(bufferTest, testReadWrite)
 	}
 
 	// Get a reading handler. It should have the value written by writingHandler1
-	ptr<handlers::dataHandler> readingHandler3 = patientBuffer->getDataHandler(false);
+	std::shared_ptr<handlers::dataHandler> readingHandler3 = patientBuffer->getDataHandler(false);
     EXPECT_EQ(20, readingHandler3->getSize());
     for(std::int32_t checkValues = 0; checkValues < 20; ++checkValues)
 	{
@@ -103,8 +103,8 @@ TEST(bufferTest, testReadWrite)
 	}
 
 	// Release a reading handler. It shouldn't change the values in the buffer
-	readingHandler1 = ptr<handlers::dataHandler>(0);
-	ptr<handlers::dataHandler> readingHandler4 = patientBuffer->getDataHandler(false);
+	readingHandler1 = std::shared_ptr<handlers::dataHandler>(0);
+	std::shared_ptr<handlers::dataHandler> readingHandler4 = patientBuffer->getDataHandler(false);
     EXPECT_EQ(20, readingHandler4->getSize());
     for(std::int32_t checkValues = 0; checkValues < 20; ++checkValues)
 	{
@@ -113,14 +113,14 @@ TEST(bufferTest, testReadWrite)
 
 	// Release the second writing handler. It should change the buffer, but already
 	//  existing handlers should continue with their values
-	writingHandler2 = ptr<handlers::dataHandler>(0);
-	ptr<handlers::dataHandler> writingHandler3 = patientBuffer->getDataHandler(true);
+	writingHandler2 = std::shared_ptr<handlers::dataHandler>(0);
+	std::shared_ptr<handlers::dataHandler> writingHandler3 = patientBuffer->getDataHandler(true);
     EXPECT_EQ(5, writingHandler3->getSize());
     for(std::int32_t checkValues = 0; checkValues < 5; ++checkValues)
 	{
         EXPECT_EQ(checkValues + std::int32_t(200), writingHandler3->getSignedLong(checkValues));
 	}
-	writingHandler3 = ptr<handlers::dataHandler>(0);
+	writingHandler3 = std::shared_ptr<handlers::dataHandler>(0);
 
 	// ReadingHandler2 still exist. Check its values
     EXPECT_EQ(10, readingHandler2->getSize());
@@ -128,10 +128,10 @@ TEST(bufferTest, testReadWrite)
 	{
         EXPECT_EQ(checkValues, readingHandler2->getSignedLong(checkValues));
 	}
-	readingHandler2 = ptr<handlers::dataHandler>(0);
+	readingHandler2 = std::shared_ptr<handlers::dataHandler>(0);
 
 	// Get a reading handler and check it. It should have the values of writingHandler2
-	ptr<handlers::dataHandler> readingHandler5 = patientBuffer->getDataHandler(false);
+	std::shared_ptr<handlers::dataHandler> readingHandler5 = patientBuffer->getDataHandler(false);
     EXPECT_EQ(5, readingHandler5->getSize());
     for(std::int32_t checkValues = 0; checkValues < 5; ++checkValues)
 	{
@@ -141,17 +141,17 @@ TEST(bufferTest, testReadWrite)
 
 TEST(bufferTest, testOddLength)
 {
-	ptr<buffer> patientBuffer(new buffer(ptr<baseObject>(0), "OB"));
-	ptr<handlers::dataHandler> writingHandler = patientBuffer->getDataHandler(true);
+    std::shared_ptr<buffer> patientBuffer(new buffer("OB"));
+	std::shared_ptr<handlers::dataHandler> writingHandler = patientBuffer->getDataHandler(true);
 	
 	// Write 3 numbers
 	writingHandler->setSize(3);
 	writingHandler->setUnsignedLong(0, 10);
 	writingHandler->setUnsignedLong(1, 20);
 	writingHandler->setUnsignedLong(2, 30);
-	writingHandler = ptr<handlers::dataHandler>(0);
+	writingHandler = std::shared_ptr<handlers::dataHandler>(0);
 
-	ptr<handlers::dataHandler> readingHandler = patientBuffer->getDataHandler(false);
+	std::shared_ptr<handlers::dataHandler> readingHandler = patientBuffer->getDataHandler(false);
     EXPECT_EQ(4, readingHandler->getSize());
     EXPECT_EQ(10, readingHandler->getUnsignedLong(0));
     EXPECT_EQ(20, readingHandler->getUnsignedLong(1));

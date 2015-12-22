@@ -13,11 +13,11 @@ $fileHeader$
 namespace imebra
 {
 
-TransformsChain::TransformsChain(): Transform(new puntoexe::imebra::transforms::transformsChain)
+TransformsChain::TransformsChain(): Transform(std::make_shared<puntoexe::imebra::transforms::transformsChain>())
 {
 }
 
-TransformsChain::TransformsChain(puntoexe::ptr<puntoexe::imebra::transforms::transformsChain> pTransform): Transform(pTransform)
+TransformsChain::TransformsChain(std::shared_ptr<puntoexe::imebra::transforms::transformsChain> pTransform): Transform(pTransform)
 {}
 
 void TransformsChain::addTransform(const Transform& transform)

@@ -49,7 +49,7 @@ int ColorTransformsFactory::getNumberOfChannels(const std::wstring& colorSpace)
 
 Transform ColorTransformsFactory::getTransform(const std::wstring& startColorSpace, const std::wstring& endColorSpace)
 {
-    puntoexe::ptr<puntoexe::imebra::transforms::colorTransforms::colorTransformsFactory> factory(puntoexe::imebra::transforms::colorTransforms::colorTransformsFactory::getColorTransformsFactory());
+    std::shared_ptr<puntoexe::imebra::transforms::colorTransforms::colorTransformsFactory> factory(puntoexe::imebra::transforms::colorTransforms::colorTransformsFactory::getColorTransformsFactory());
     Transform transform(factory->getTransform(startColorSpace, endColorSpace));
     if(transform.m_pTransform == 0)
     {

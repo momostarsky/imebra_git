@@ -10,7 +10,7 @@ $fileHeader$
 #if !defined(imebraWaveform_A807A3CA_FA04_44f4_85D2_C7AA2FE103C4__INCLUDED_)
 #define imebraWaveform_A807A3CA_FA04_44f4_85D2_C7AA2FE103C4__INCLUDED_
 
-#include "baseObjectImpl.h"
+#include <memory>
 
 
 ///////////////////////////////////////////////////////////
@@ -47,7 +47,7 @@ namespace handlers
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class waveform : public baseObject
+class waveform
 {
 public:
 	/// \brief Constructor. Initializes the class and connects
@@ -63,7 +63,7 @@ public:
 	///                    dataSet::getWaveform()
 	///
 	///////////////////////////////////////////////////////////
-	waveform(ptr<dataSet> pDataSet);
+	waveform(std::shared_ptr<dataSet> pDataSet);
 
 	/// \brief Retrieve the number of channels (tag 003A,0005).
 	///
@@ -133,17 +133,17 @@ public:
 	///        to retrieve the data
 	///
 	///////////////////////////////////////////////////////////
-	ptr<handlers::dataHandler> getIntegerData(std::uint32_t channel, std::int32_t paddingValue = 0x7fffffff);
+	std::shared_ptr<handlers::dataHandler> getIntegerData(std::uint32_t channel, std::int32_t paddingValue = 0x7fffffff);
 
 	/// \brief Return the sequence item used by the waveform.
 	///
 	/// @return the sequence item used by the waveform
 	///
 	///////////////////////////////////////////////////////////
-	ptr<dataSet> GetWaveformItem();
+	std::shared_ptr<dataSet> GetWaveformItem();
 	
 private:
-	ptr<dataSet> m_pDataSet;
+	std::shared_ptr<dataSet> m_pDataSet;
 };
 
 /// @}

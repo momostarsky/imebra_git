@@ -356,10 +356,10 @@ jpegCodec::jpegCodec()
     ///////////////////////////////////////////////////////////
     for(int resetHuffmanTables = 0; resetHuffmanTables<16; ++resetHuffmanTables)
     {
-        ptr<huffmanTable> huffmanDC(new huffmanTable(9));
+        std::shared_ptr<huffmanTable> huffmanDC(new huffmanTable(9));
         m_pHuffmanTableDC[resetHuffmanTables]=huffmanDC;
 
-        ptr<huffmanTable> huffmanAC(new huffmanTable(9));
+        std::shared_ptr<huffmanTable> huffmanAC(new huffmanTable(9));
         m_pHuffmanTableAC[resetHuffmanTables]=huffmanAC;
     }
 
@@ -368,70 +368,56 @@ jpegCodec::jpegCodec()
 
     // Unknown tag must be registered
     ///////////////////////////////////////////////////////////
-    registerTag(unknown, ptr<jpeg::tag>(new jpeg::tagUnknown));
+    registerTag(unknown, std::shared_ptr<jpeg::tag>(new jpeg::tagUnknown));
 
     // Register SOF
     ///////////////////////////////////////////////////////////
-    registerTag(sof0, ptr<jpeg::tag>(new jpeg::tagSOF));
-    registerTag(sof1, ptr<jpeg::tag>(new jpeg::tagSOF));
-    registerTag(sof2, ptr<jpeg::tag>(new jpeg::tagSOF));
-    registerTag(sof3, ptr<jpeg::tag>(new jpeg::tagSOF));
-    registerTag(sof5, ptr<jpeg::tag>(new jpeg::tagSOF));
-    registerTag(sof6, ptr<jpeg::tag>(new jpeg::tagSOF));
-    registerTag(sof7, ptr<jpeg::tag>(new jpeg::tagSOF));
-    registerTag(sof9, ptr<jpeg::tag>(new jpeg::tagSOF));
-    registerTag(sofA, ptr<jpeg::tag>(new jpeg::tagSOF));
-    registerTag(sofB, ptr<jpeg::tag>(new jpeg::tagSOF));
-    registerTag(sofD, ptr<jpeg::tag>(new jpeg::tagSOF));
-    registerTag(sofE, ptr<jpeg::tag>(new jpeg::tagSOF));
-    registerTag(sofF, ptr<jpeg::tag>(new jpeg::tagSOF));
+    registerTag(sof0, std::shared_ptr<jpeg::tag>(new jpeg::tagSOF));
+    registerTag(sof1, std::shared_ptr<jpeg::tag>(new jpeg::tagSOF));
+    registerTag(sof2, std::shared_ptr<jpeg::tag>(new jpeg::tagSOF));
+    registerTag(sof3, std::shared_ptr<jpeg::tag>(new jpeg::tagSOF));
+    registerTag(sof5, std::shared_ptr<jpeg::tag>(new jpeg::tagSOF));
+    registerTag(sof6, std::shared_ptr<jpeg::tag>(new jpeg::tagSOF));
+    registerTag(sof7, std::shared_ptr<jpeg::tag>(new jpeg::tagSOF));
+    registerTag(sof9, std::shared_ptr<jpeg::tag>(new jpeg::tagSOF));
+    registerTag(sofA, std::shared_ptr<jpeg::tag>(new jpeg::tagSOF));
+    registerTag(sofB, std::shared_ptr<jpeg::tag>(new jpeg::tagSOF));
+    registerTag(sofD, std::shared_ptr<jpeg::tag>(new jpeg::tagSOF));
+    registerTag(sofE, std::shared_ptr<jpeg::tag>(new jpeg::tagSOF));
+    registerTag(sofF, std::shared_ptr<jpeg::tag>(new jpeg::tagSOF));
 
     // Register DHT
     ///////////////////////////////////////////////////////////
-    registerTag(dht, ptr<jpeg::tag>(new jpeg::tagDHT));
+    registerTag(dht, std::shared_ptr<jpeg::tag>(new jpeg::tagDHT));
 
     // Register DQT
     ///////////////////////////////////////////////////////////
-    registerTag(dqt, ptr<jpeg::tag>(new jpeg::tagDQT));
+    registerTag(dqt, std::shared_ptr<jpeg::tag>(new jpeg::tagDQT));
 
     // Register SOS
     ///////////////////////////////////////////////////////////
-    registerTag(sos, ptr<jpeg::tag>(new jpeg::tagSOS));
+    registerTag(sos, std::shared_ptr<jpeg::tag>(new jpeg::tagSOS));
 
     // Register EOI
     ///////////////////////////////////////////////////////////
-    registerTag(eoi, ptr<jpeg::tag>(new jpeg::tagEOI));
+    registerTag(eoi, std::shared_ptr<jpeg::tag>(new jpeg::tagEOI));
 
     // Register RST
     ///////////////////////////////////////////////////////////
-    registerTag(rst0, ptr<jpeg::tag>(new jpeg::tagRST));
-    registerTag(rst1, ptr<jpeg::tag>(new jpeg::tagRST));
-    registerTag(rst2, ptr<jpeg::tag>(new jpeg::tagRST));
-    registerTag(rst3, ptr<jpeg::tag>(new jpeg::tagRST));
-    registerTag(rst4, ptr<jpeg::tag>(new jpeg::tagRST));
-    registerTag(rst5, ptr<jpeg::tag>(new jpeg::tagRST));
-    registerTag(rst6, ptr<jpeg::tag>(new jpeg::tagRST));
-    registerTag(rst7, ptr<jpeg::tag>(new jpeg::tagRST));
+    registerTag(rst0, std::shared_ptr<jpeg::tag>(new jpeg::tagRST));
+    registerTag(rst1, std::shared_ptr<jpeg::tag>(new jpeg::tagRST));
+    registerTag(rst2, std::shared_ptr<jpeg::tag>(new jpeg::tagRST));
+    registerTag(rst3, std::shared_ptr<jpeg::tag>(new jpeg::tagRST));
+    registerTag(rst4, std::shared_ptr<jpeg::tag>(new jpeg::tagRST));
+    registerTag(rst5, std::shared_ptr<jpeg::tag>(new jpeg::tagRST));
+    registerTag(rst6, std::shared_ptr<jpeg::tag>(new jpeg::tagRST));
+    registerTag(rst7, std::shared_ptr<jpeg::tag>(new jpeg::tagRST));
 
     // Register DRI
     ///////////////////////////////////////////////////////////
-    registerTag(dri, ptr<jpeg::tag>(new jpeg::tagDRI));
+    registerTag(dri, std::shared_ptr<jpeg::tag>(new jpeg::tagDRI));
 
     PUNTOEXE_FUNCTION_END();
-}
-
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Destructor
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-jpegCodec::~jpegCodec()
-{
 }
 
 
@@ -444,11 +430,11 @@ jpegCodec::~jpegCodec()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<codec> jpegCodec::createCodec()
+std::shared_ptr<codec> jpegCodec::createCodec()
 {
     PUNTOEXE_FUNCTION_START(L"jpegCodec::createCodec");
 
-    return ptr<codec>(new jpegCodec);
+    return std::shared_ptr<codec>(new jpegCodec);
 
     PUNTOEXE_FUNCTION_END();
 }
@@ -463,11 +449,11 @@ ptr<codec> jpegCodec::createCodec()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void jpegCodec::registerTag(tTagId tagId, ptr<jpeg::tag> pTag)
+void jpegCodec::registerTag(tTagId tagId, std::shared_ptr<jpeg::tag> pTag)
 {
     PUNTOEXE_FUNCTION_START(L"jpegCodec::registerTag");
 
-    ptr<jpeg::tag> test = pTag;
+    std::shared_ptr<jpeg::tag> test = pTag;
     m_tagsMap[(std::uint8_t)tagId]=pTag;
 
     PUNTOEXE_FUNCTION_END();
@@ -483,11 +469,9 @@ void jpegCodec::registerTag(tTagId tagId, ptr<jpeg::tag> pTag)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void jpegCodec::writeStream(ptr<streamWriter> pStream, ptr<dataSet> pDataSet)
+void jpegCodec::writeStream(std::shared_ptr<streamWriter> pStream, std::shared_ptr<dataSet> pDataSet)
 {
     PUNTOEXE_FUNCTION_START(L"jpegCodec::writeStream");
-
-    lockObject lockDataSet(pDataSet.get());
 
     // Retrieve the transfer syntax
     ///////////////////////////////////////////////////////////
@@ -497,7 +481,7 @@ void jpegCodec::writeStream(ptr<streamWriter> pStream, ptr<dataSet> pDataSet)
     ///////////////////////////////////////////////////////////
     if(canHandleTransferSyntax(transferSyntax))
     {
-        ptr<data> imageData = pDataSet->getTag(0x7fe0, 0, 0x0010, false);
+        std::shared_ptr<data> imageData = pDataSet->getTag(0x7fe0, 0, 0x0010, false);
         if(imageData == 0 || !imageData->bufferExists(0))
         {
             PUNTOEXE_THROW(dataSetImageDoesntExist, "The requested image doesn't exist");
@@ -510,7 +494,7 @@ void jpegCodec::writeStream(ptr<streamWriter> pStream, ptr<dataSet> pDataSet)
         }
         for(std::uint32_t scanBuffers = firstBufferId; scanBuffers != endBufferId; ++scanBuffers)
         {
-            ptr<handlers::dataHandlerRaw> readHandler = imageData->getDataHandlerRaw(scanBuffers, false, "");
+            std::shared_ptr<handlers::dataHandlerRaw> readHandler = imageData->getDataHandlerRaw(scanBuffers, false, "");
             std::uint8_t* readBuffer = readHandler->getMemoryBuffer();
             pStream->write(readBuffer, readHandler->getSize());
         }
@@ -520,7 +504,7 @@ void jpegCodec::writeStream(ptr<streamWriter> pStream, ptr<dataSet> pDataSet)
 
     // Get the image then write it
     ///////////////////////////////////////////////////////////
-    ptr<image> decodedImage = pDataSet->getImage(0);
+    std::shared_ptr<image> decodedImage = pDataSet->getImage(0);
     std::wstring defaultTransferSyntax(L"1.2.840.10008.1.2.4.50"); // baseline (8 bits lossy)
     setImage(pStream, decodedImage, defaultTransferSyntax, codecs::codec::high, "OB", 8, true, true, false, false);
 
@@ -642,7 +626,7 @@ void jpegCodec::resetInternal(bool bCompression, quality compQuality)
     {
         for(int resetHT=0; resetHT < 16; ++resetHT)
         {
-            ptr<huffmanTable> pHuffman;
+            std::shared_ptr<huffmanTable> pHuffman;
             const std::uint32_t* pLengthTable;
             const std::uint32_t* pValuesTable;
             if(DcAc == 0)
@@ -723,7 +707,7 @@ void jpegCodec::allocChannels()
     ///////////////////////////////////////////////////////////
     for(tChannelsMap::iterator channelsIterator0=m_channelsMap.begin(); channelsIterator0!=m_channelsMap.end(); ++channelsIterator0)
     {
-        ptr<jpeg::jpegChannel> pChannel=channelsIterator0->second;
+        std::shared_ptr<jpeg::jpegChannel> pChannel=channelsIterator0->second;
 
         if(pChannel->m_samplingFactorX>m_maxSamplingFactorX)
             m_maxSamplingFactorX=pChannel->m_samplingFactorX;
@@ -750,7 +734,7 @@ void jpegCodec::allocChannels()
     ///////////////////////////////////////////////////////////
     for(tChannelsMap::iterator channelsIterator1=m_channelsMap.begin(); channelsIterator1 != m_channelsMap.end(); ++channelsIterator1)
     {
-        ptr<jpeg::jpegChannel> pChannel=channelsIterator1->second;
+        std::shared_ptr<jpeg::jpegChannel> pChannel=channelsIterator1->second;
         pChannel->m_defaultDCValue = m_bLossless ? ((std::int32_t)1<<(m_precision - 1)) : 0;
         pChannel->m_lastDCValue = pChannel->m_defaultDCValue;
 
@@ -784,7 +768,7 @@ void jpegCodec::findMcuSize()
     std::uint32_t maxSamplingFactorChannelsY=1;
     for(tChannelsMap::iterator allChannelsIterator=m_channelsMap.begin(); allChannelsIterator!=m_channelsMap.end(); ++allChannelsIterator)
     {
-        ptr<jpeg::jpegChannel> pChannel = allChannelsIterator->second;
+        std::shared_ptr<jpeg::jpegChannel> pChannel = allChannelsIterator->second;
 
         if(pChannel->m_samplingFactorX > maxSamplingFactorChannelsX)
             maxSamplingFactorChannelsX = pChannel->m_samplingFactorX;
@@ -865,7 +849,7 @@ void jpegCodec::findMcuSize()
 //
 /////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
-void jpegCodec::readStream(ptr<streamReader> pSourceStream, ptr<dataSet> pDataSet, std::uint32_t /* maxSizeBufferLoad = 0xffffffff */)
+void jpegCodec::readStream(std::shared_ptr<streamReader> pSourceStream, std::shared_ptr<dataSet> pDataSet, std::uint32_t /* maxSizeBufferLoad = 0xffffffff */)
 {
     PUNTOEXE_FUNCTION_START(L"jpegCodec::readStream");
 
@@ -931,7 +915,7 @@ void jpegCodec::readStream(ptr<streamReader> pSourceStream, ptr<dataSet> pDataSe
 
         if(entryByte != 0)
         {
-            ptr<jpeg::tag> pTag;
+            std::shared_ptr<jpeg::tag> pTag;
             tTagsMap::iterator findTag = m_tagsMap.find(entryByte);
             if(findTag != m_tagsMap.end())
                 pTag = findTag->second;
@@ -1008,7 +992,7 @@ void jpegCodec::readStream(ptr<streamReader> pSourceStream, ptr<dataSet> pDataSe
 
     // Insert the basic offset table
     ////////////////////////////////////////////////////////////////
-    ptr<handlers::dataHandlerRaw> offsetHandler=pDataSet->getDataHandlerRaw(0x7fe0, 0, 0x0010, 0, true, "OB");
+    std::shared_ptr<handlers::dataHandlerRaw> offsetHandler=pDataSet->getDataHandlerRaw(0x7fe0, 0, 0x0010, 0, true, "OB");
     offsetHandler->setSize(4);
     ::memset(offsetHandler->getMemoryBuffer(), 0, offsetHandler->getSize());
 
@@ -1018,7 +1002,7 @@ void jpegCodec::readStream(ptr<streamReader> pSourceStream, ptr<dataSet> pDataSe
     std::uint32_t streamLength=(std::uint32_t)(finalPosition-startPosition);
     pStream->seek((std::int32_t)startPosition);
 
-    ptr<handlers::dataHandlerRaw> imageHandler=pDataSet->getDataHandlerRaw(0x7fe0, 0, 0x0010, 1, true, "OB");
+    std::shared_ptr<handlers::dataHandlerRaw> imageHandler=pDataSet->getDataHandlerRaw(0x7fe0, 0, 0x0010, 1, true, "OB");
     if(imageHandler != 0 && streamLength != 0)
     {
         imageHandler->setSize(streamLength);
@@ -1113,7 +1097,7 @@ std::uint32_t jpegCodec::suggestAllocatedBits(const std::wstring& transferSyntax
 //
 /////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
-ptr<image> jpegCodec::getImage(ptr<dataSet> sourceDataSet, ptr<streamReader> pStream, const std::string& /* dataType not used */)
+std::shared_ptr<image> jpegCodec::getImage(dataSet* sourceDataSet, std::shared_ptr<streamReader> pStream, const std::string& /* dataType not used */)
 {
     PUNTOEXE_FUNCTION_START(L"jpegCodec::getImage");
 
@@ -1198,7 +1182,7 @@ ptr<image> jpegCodec::getImage(ptr<dataSet> sourceDataSet, ptr<streamReader> pSt
 
                 // An entry has been found. Process it
                 ///////////////////////////////////////////////////////////
-                ptr<jpeg::tag> pTag;
+                std::shared_ptr<jpeg::tag> pTag;
                 if(m_tagsMap.find(tagId)!=m_tagsMap.end())
                     pTag=m_tagsMap[tagId];
                 else
@@ -1321,7 +1305,7 @@ ptr<image> jpegCodec::getImage(ptr<dataSet> sourceDataSet, ptr<streamReader> pSt
         }
     }
 
-    ptr<image> returnImage(new image());
+    std::shared_ptr<image> returnImage(new image());
     copyJpegChannelsToImage(returnImage, b2complement, colorSpace);
 
     return returnImage;
@@ -1339,7 +1323,7 @@ ptr<image> jpegCodec::getImage(ptr<dataSet> sourceDataSet, ptr<streamReader> pSt
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void jpegCodec::copyJpegChannelsToImage(ptr<image> destImage, bool b2complement, const std::wstring& colorSpace)
+void jpegCodec::copyJpegChannelsToImage(std::shared_ptr<image> destImage, bool b2complement, const std::wstring& colorSpace)
 {
     PUNTOEXE_FUNCTION_START(L"jpegCodec::copyJpegChannelsToImage");
 
@@ -1349,7 +1333,7 @@ void jpegCodec::copyJpegChannelsToImage(ptr<image> destImage, bool b2complement,
     else
         depth = (m_precision==8) ? image::depthU8 : image::depthU16;
 
-    ptr<handlers::dataHandlerNumericBase> handler = destImage->create(m_imageSizeX, m_imageSizeY, depth, colorSpace, (std::uint8_t)(m_precision-1));
+    std::shared_ptr<handlers::dataHandlerNumericBase> handler = destImage->create(m_imageSizeX, m_imageSizeY, depth, colorSpace, (std::uint8_t)(m_precision-1));
 
     std::int32_t offsetValue=(std::int32_t)1<<(m_precision-1);
     std::int32_t maxClipValue=((std::int32_t)1<<m_precision)-1;
@@ -1372,7 +1356,7 @@ void jpegCodec::copyJpegChannelsToImage(ptr<image> destImage, bool b2complement,
         copyChannelsIterator!=m_channelsMap.end();
         ++copyChannelsIterator)
     {
-        ptr<jpeg::jpegChannel> pChannel = copyChannelsIterator->second;
+        std::shared_ptr<jpeg::jpegChannel> pChannel = copyChannelsIterator->second;
 
         // Adjust 2complement
         ///////////////////////////////////////////////////////////
@@ -1486,7 +1470,7 @@ void jpegCodec::copyJpegChannelsToImage(ptr<image> destImage, bool b2complement,
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
 void jpegCodec::copyImageToJpegChannels(
-        ptr<image> sourceImage,
+        std::shared_ptr<image> sourceImage,
         bool b2complement,
         std::uint8_t allocatedBits,
         bool bSubSampledX,
@@ -1501,11 +1485,11 @@ void jpegCodec::copyImageToJpegChannels(
     // Create the channels
     ////////////////////////////////////////////////////////////////
     std::uint32_t rowSize, channelSize, channelsNumber;
-    ptr<handlers::dataHandlerNumericBase>imageDataHandler = sourceImage->getDataHandler(false, &rowSize, &channelSize, &channelsNumber);
+    std::shared_ptr<handlers::dataHandlerNumericBase>imageDataHandler = sourceImage->getDataHandler(false, &rowSize, &channelSize, &channelsNumber);
 
     for(std::uint8_t channelId = 0; channelId < (std::uint8_t)channelsNumber; ++channelId)
     {
-        ptr<jpeg::jpegChannel> pChannel(new jpeg::jpegChannel);
+        std::shared_ptr<jpeg::jpegChannel> pChannel(new jpeg::jpegChannel);
         m_channelsMap[channelId] = pChannel;
 
         pChannel->m_huffmanTableAC = 0;
@@ -1553,7 +1537,7 @@ void jpegCodec::copyImageToJpegChannels(
         copyChannelsIterator!=m_channelsMap.end();
         ++copyChannelsIterator)
     {
-        ptr<jpeg::jpegChannel> pChannel = copyChannelsIterator->second;
+        std::shared_ptr<jpeg::jpegChannel> pChannel = copyChannelsIterator->second;
 
         // If only one channel is present, then use the fast copy
         ///////////////////////////////////////////////////////////
@@ -1620,7 +1604,7 @@ void jpegCodec::copyImageToJpegChannels(
         clipChannelsIterator != m_channelsMap.end();
         ++clipChannelsIterator)
     {
-        ptr<jpeg::jpegChannel> pChannel = clipChannelsIterator->second;
+        std::shared_ptr<jpeg::jpegChannel> pChannel = clipChannelsIterator->second;
 
         // Clip the values
         ///////////////////////////////////////////////////////////
@@ -1675,8 +1659,8 @@ void jpegCodec::copyImageToJpegChannels(
 /////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
 void jpegCodec::setImage(
-        ptr<streamWriter> pDestStream,
-        ptr<image> pImage,
+        std::shared_ptr<streamWriter> pDestStream,
+        std::shared_ptr<image> pImage,
         std::wstring transferSyntax,
         quality imageQuality,
         std::string /* dataType */,
@@ -1900,7 +1884,7 @@ void jpegCodec::writeTag(streamWriter* pDestinationStream, tTagId tagId)
 {
     PUNTOEXE_FUNCTION_START(L"jpegCodec::writeTag");
 
-    ptr<jpeg::tag> pTag;
+    std::shared_ptr<jpeg::tag> pTag;
     tTagsMap::iterator findTag = m_tagsMap.find((std::uint8_t)tagId);
     if(findTag == m_tagsMap.end())
     {
@@ -2929,7 +2913,7 @@ void tagSOF::readTag(streamReader* pStream, jpegCodec* pCodec, std::uint8_t tagE
     //  the tag bytes
     //////////////////////////////////////////////////////////
     const std::int32_t tagLength = readLength(pStream);
-    ptr<streamReader> tagReader(pStream->getReader(tagLength));
+    std::shared_ptr<streamReader> tagReader(pStream->getReader(tagLength));
 
     pCodec->m_bLossless = (tagEntry==0xc3) || (tagEntry==0xc7);
     pCodec->m_process = tagEntry - 0xc0;
@@ -3075,7 +3059,7 @@ void tagDHT::writeTag(streamWriter* pStream, jpegCodec* pCodec)
                 {
                     continue;
                 }
-                ptr<huffmanTable> pHuffman;
+                std::shared_ptr<huffmanTable> pHuffman;
 
                 if(DcAc==0)
                 {
@@ -3156,7 +3140,7 @@ void tagDHT::readTag(streamReader* pStream, jpegCodec* pCodec, std::uint8_t /* t
     //  the tag bytes)
     //////////////////////////////////////////////////////////
     const std::int32_t tagLength = readLength(pStream);
-    ptr<streamReader> tagReader(pStream->getReader(tagLength));
+    std::shared_ptr<streamReader> tagReader(pStream->getReader(tagLength));
 
     // Used to read bytes from the stream
     /////////////////////////////////////////////////////////////////
@@ -3174,7 +3158,7 @@ void tagDHT::readTag(streamReader* pStream, jpegCodec* pCodec, std::uint8_t /* t
 
             // Get a pointer to the right table
             /////////////////////////////////////////////////////////////////
-            ptr<huffmanTable> pHuffman;
+            std::shared_ptr<huffmanTable> pHuffman;
             if((byte & 0xf0) == 0)
                 pHuffman=pCodec->m_pHuffmanTableDC[byte & 0xf];
             else
@@ -3344,7 +3328,7 @@ void tagSOS::readTag(streamReader* pStream, jpegCodec* pCodec, std::uint8_t /* t
     //  the tag bytes)
     //////////////////////////////////////////////////////////
     const std::int32_t tagLength = readLength(pStream);
-    ptr<streamReader> tagReader(pStream->getReader(tagLength));
+    std::shared_ptr<streamReader> tagReader(pStream->getReader(tagLength));
 
     pCodec->m_eobRun = 0;
     memset(pCodec->m_channelsList, 0, sizeof(pCodec->m_channelsList));
@@ -3516,7 +3500,7 @@ void tagDQT::readTag(streamReader* pStream, jpegCodec* pCodec, std::uint8_t /* t
     //  the tag bytes)
     //////////////////////////////////////////////////////////
     const std::int32_t tagLength = readLength(pStream);
-    ptr<streamReader> tagReader(pStream->getReader(tagLength));
+    std::shared_ptr<streamReader> tagReader(pStream->getReader(tagLength));
 
     std::uint8_t  tablePrecision;
     std::uint8_t  tableValue8;
@@ -3615,7 +3599,7 @@ void tagDRI::readTag(streamReader* pStream, jpegCodec* pCodec, std::uint8_t /* t
     //  the tag bytes)
     //////////////////////////////////////////////////////////
     const std::int32_t tagLength = readLength(pStream);
-    ptr<streamReader> tagReader(pStream->getReader(tagLength));
+    std::shared_ptr<streamReader> tagReader(pStream->getReader(tagLength));
 
     std::uint16_t unitsPerRestartInterval;
     tagReader->read((std::uint8_t*)&unitsPerRestartInterval, 2);

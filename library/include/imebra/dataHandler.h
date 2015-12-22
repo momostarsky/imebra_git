@@ -12,7 +12,7 @@ $fileHeader$
 
 #ifndef SWIG
 
-#include "../../implementation/baseObjectImpl.h"
+#include <memory>
 
 namespace puntoexe
 {
@@ -50,7 +50,7 @@ public:
 	DataHandler& operator=(const DataHandler& right);
 
 #ifndef SWIG
-	DataHandler(puntoexe::ptr<puntoexe::imebra::handlers::dataHandler> pDataHandler);
+    DataHandler(std::shared_ptr<puntoexe::imebra::handlers::dataHandler> pDataHandler);
 #endif
 
 	void close();
@@ -109,7 +109,7 @@ public:
 
 #ifndef SWIG
 protected:
-	puntoexe::ptr<puntoexe::imebra::handlers::dataHandler> m_pDataHandler;
+	std::shared_ptr<puntoexe::imebra::handlers::dataHandler> m_pDataHandler;
 #endif
 };
 

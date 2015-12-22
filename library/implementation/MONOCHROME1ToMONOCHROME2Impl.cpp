@@ -25,8 +25,8 @@ namespace transforms
 namespace colorTransforms
 {
 
-static registerColorTransform m_registerTransform0(ptr<colorTransform>(new MONOCHROME1ToMONOCHROME2));
-static registerColorTransform m_registerTransform1(ptr<colorTransform>(new MONOCHROME2ToMONOCHROME1));
+static registerColorTransform m_registerTransform0(std::shared_ptr<colorTransform>(std::make_shared<MONOCHROME1ToMONOCHROME2>()));
+static registerColorTransform m_registerTransform1(std::shared_ptr<colorTransform>(std::make_shared<MONOCHROME2ToMONOCHROME1>()));
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -57,9 +57,9 @@ std::wstring MONOCHROME1ToMONOCHROME2::getFinalColorSpace()
 	return L"MONOCHROME2";
 }
 
-ptr<colorTransform> MONOCHROME1ToMONOCHROME2::createColorTransform()
+std::shared_ptr<colorTransform> MONOCHROME1ToMONOCHROME2::createColorTransform()
 {
-	return ptr<colorTransform> (new MONOCHROME1ToMONOCHROME2);
+    return std::shared_ptr<colorTransform> (std::make_shared<MONOCHROME1ToMONOCHROME2>());
 }
 
 
@@ -94,9 +94,9 @@ std::wstring MONOCHROME2ToMONOCHROME1::getFinalColorSpace()
 	return L"MONOCHROME1";
 }
 
-ptr<colorTransform> MONOCHROME2ToMONOCHROME1::createColorTransform()
+std::shared_ptr<colorTransform> MONOCHROME2ToMONOCHROME1::createColorTransform()
 {
-	return ptr<colorTransform> (new MONOCHROME2ToMONOCHROME1);
+    return std::shared_ptr<colorTransform> (std::make_shared<MONOCHROME2ToMONOCHROME1>());
 }
 
 

@@ -11,8 +11,9 @@ $fileHeader$
 #if !defined(imebraDicomDir_93F684BF_0024_4bf3_89BA_D98E82A1F44C__INCLUDED_)
 #define imebraDicomDir_93F684BF_0024_4bf3_89BA_D98E82A1F44C__INCLUDED_
 
-#include "baseObjectImpl.h"
+#include <memory>
 #include <string>
+#include <list>
 
 ///////////////////////////////////////////////////////////
 //
@@ -45,7 +46,7 @@ class dicomDir;
 /// 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class directoryRecord: public baseObject
+class directoryRecord
 {
 	friend class dicomDir;
 public:
@@ -96,7 +97,7 @@ public:
 	///          information
 	///
 	///////////////////////////////////////////////////////////
-	ptr<dataSet> getRecordDataSet();
+	std::shared_ptr<dataSet> getRecordDataSet();
 
 	/// \brief Returns the next sibling record.
 	///
@@ -104,7 +105,7 @@ public:
 	///          last record
 	///
 	///////////////////////////////////////////////////////////
-	ptr<directoryRecord> getNextRecord();
+	std::shared_ptr<directoryRecord> getNextRecord();
 
 	/// \brief Returns the first child record.
 	///
@@ -112,7 +113,7 @@ public:
 	///          doesn't have any child
 	///
 	///////////////////////////////////////////////////////////
-	ptr<directoryRecord> getFirstChildRecord();
+	std::shared_ptr<directoryRecord> getFirstChildRecord();
 	
 	/// \brief Returns the referenced record, if any.
 	///
@@ -120,7 +121,7 @@ public:
 	///          doesn't reference any other record
 	///
 	///////////////////////////////////////////////////////////
-	ptr<directoryRecord> getReferencedRecord();
+	std::shared_ptr<directoryRecord> getReferencedRecord();
 
 	/// \brief Sets the next sibling record.
 	///
@@ -130,7 +131,7 @@ public:
 	/// @param pNextRecord    the next sibling record
 	///
 	///////////////////////////////////////////////////////////
-	void setNextRecord(ptr<directoryRecord> pNextRecord);
+	void setNextRecord(std::shared_ptr<directoryRecord> pNextRecord);
 
 	/// \brief Set the first child record.
 	///
@@ -140,7 +141,7 @@ public:
 	/// @param pFirstChildRecord the first child record
 	///
 	///////////////////////////////////////////////////////////
-	void setFirstChildRecord(ptr<directoryRecord> pFirstChildRecord);
+	void setFirstChildRecord(std::shared_ptr<directoryRecord> pFirstChildRecord);
 
 	/// \brief Set the referenced record.
 	///
@@ -150,7 +151,7 @@ public:
 	/// @param pReferencedRecord the referenced record
 	///
 	///////////////////////////////////////////////////////////
-	void setReferencedRecord(ptr<directoryRecord> pReferencedRecord);
+	void setReferencedRecord(std::shared_ptr<directoryRecord> pReferencedRecord);
 	
 	/// \brief Get the full path to the  file referenced by
 	///         the record.
@@ -257,17 +258,17 @@ private:
 	///                   to the directoryRecord
 	///
 	///////////////////////////////////////////////////////////
-	directoryRecord(ptr<dataSet> pDataSet);
+	directoryRecord(std::shared_ptr<dataSet> pDataSet);
 
 	void checkCircularReference(directoryRecord* pStartRecord);
 
 	void updateOffsets();
 
-	ptr<directoryRecord> m_pNextRecord;
-	ptr<directoryRecord> m_pFirstChildRecord;
-	ptr<directoryRecord> m_pReferencedRecord;
+	std::shared_ptr<directoryRecord> m_pNextRecord;
+	std::shared_ptr<directoryRecord> m_pFirstChildRecord;
+	std::shared_ptr<directoryRecord> m_pReferencedRecord;
 
-	ptr<dataSet> m_pDataSet;
+	std::shared_ptr<dataSet> m_pDataSet;
 };
 
 
@@ -296,7 +297,7 @@ private:
 /// 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class dicomDir: public baseObject
+class dicomDir
 {
 public:
 	/// \brief Initializes a dicomDir object and attach it to 
@@ -314,7 +315,12 @@ public:
 	///                    constructor
 	///
 	///////////////////////////////////////////////////////////
-	dicomDir(ptr<dataSet> pDataSet);
+	dicomDir(std::shared_ptr<dataSet> pDataSet);
+
+    // Destructor.
+    //
+    ///////////////////////////////////////////////////////////
+    virtual ~dicomDir();
 
 	/// \brief Returns the DICOMDIR dataset.
 	///
@@ -325,7 +331,7 @@ public:
 	///          information
 	///
 	///////////////////////////////////////////////////////////
-	ptr<dataSet> getDirectoryDataSet();
+	std::shared_ptr<dataSet> getDirectoryDataSet();
 
 	/// \brief Creates a new directoryRecord and embeds its
 	///         dataSet into the DICOMDIR sequence of items.
@@ -342,7 +348,7 @@ public:
 	///         DICOMDIR
 	///
 	///////////////////////////////////////////////////////////
-	ptr<directoryRecord> getNewRecord();
+	std::shared_ptr<directoryRecord> getNewRecord();
 
 	/// \brief Returns the first root record in the DICOMDIR.
 	///
@@ -353,7 +359,7 @@ public:
 	/// @return the first root record in the DICOMDIR.
 	///
 	///////////////////////////////////////////////////////////
-	ptr<directoryRecord> getFirstRootRecord();
+	std::shared_ptr<directoryRecord> getFirstRootRecord();
 
 	/// \brief Sets the first root record in the DICOMDIR.
 	///
@@ -363,7 +369,7 @@ public:
 	///                          first root record in the 
 	///                          directory
 	///////////////////////////////////////////////////////////
-	void setFirstRootRecord(ptr<directoryRecord> pFirstRootRecord);
+	void setFirstRootRecord(std::shared_ptr<directoryRecord> pFirstRootRecord);
 
 	/// \brief Updates the dataSet containing the DICOMDIR
 	///         with the information contained in the directory
@@ -388,19 +394,14 @@ public:
 	/// @return a pointer to the updated dataSet
 	///
 	///////////////////////////////////////////////////////////
-	ptr<dataSet> buildDataSet();
+	std::shared_ptr<dataSet> buildDataSet();
 
 protected:
-	// Destructor.
-	//
-	///////////////////////////////////////////////////////////
-	virtual ~dicomDir();
+	std::shared_ptr<dataSet> m_pDataSet;
 
-	ptr<dataSet> m_pDataSet;
+	std::shared_ptr<directoryRecord> m_pFirstRootRecord;
 
-	ptr<directoryRecord> m_pFirstRootRecord;
-
-	typedef std::list<ptr<directoryRecord> > tRecordsList;
+	typedef std::list<std::shared_ptr<directoryRecord> > tRecordsList;
 	tRecordsList m_recordsList;
 };
 

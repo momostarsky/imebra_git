@@ -45,14 +45,14 @@ namespace imebra
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<data> dataGroup::getTag(std::uint16_t tagId, bool bCreate /* =false */)
+std::shared_ptr<data> dataGroup::getTag(std::uint16_t tagId, bool bCreate /* =false */)
 {
 	PUNTOEXE_FUNCTION_START(L"dataGroup::getTag");
 
-	ptr<data> pData=getData(tagId, 0);
+	std::shared_ptr<data> pData=getData(tagId, 0);
 	if(pData == 0 && bCreate)
 	{
-		ptr<data> tempData(new data(this));
+        std::shared_ptr<data> tempData(std::make_shared<data>());
 		pData = tempData;
 		setData(tagId, 0, pData);
 	}
@@ -72,17 +72,15 @@ ptr<data> dataGroup::getTag(std::uint16_t tagId, bool bCreate /* =false */)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<handlers::dataHandler> dataGroup::getDataHandler(std::uint16_t tagId, std::uint32_t bufferId, bool bWrite, const std::string& defaultType)
+std::shared_ptr<handlers::dataHandler> dataGroup::getDataHandler(std::uint16_t tagId, std::uint32_t bufferId, bool bWrite, const std::string& defaultType)
 {
 	PUNTOEXE_FUNCTION_START(L"dataGroup::getDataHandler");
 
-	lockObject lockAccess(this);
-
-	ptr<data> tag=getTag(tagId, bWrite);
+	std::shared_ptr<data> tag=getTag(tagId, bWrite);
 
 	if(tag == 0)
 	{
-		return ptr<handlers::dataHandler>(0);
+		return std::shared_ptr<handlers::dataHandler>(0);
 	}
 
 	return tag->getDataHandler(bufferId, bWrite, defaultType);
@@ -100,15 +98,13 @@ ptr<handlers::dataHandler> dataGroup::getDataHandler(std::uint16_t tagId, std::u
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<streamReader> dataGroup::getStreamReader(std::uint16_t tagId, std::uint32_t bufferId)
+std::shared_ptr<streamReader> dataGroup::getStreamReader(std::uint16_t tagId, std::uint32_t bufferId)
 {
 	PUNTOEXE_FUNCTION_START(L"dataGroup::getStreamReader");
 
-	lockObject lockAccess(this);
+	std::shared_ptr<streamReader> returnStream;
 
-	ptr<streamReader> returnStream;
-
-	ptr<data> tag=getTag(tagId, false);
+	std::shared_ptr<data> tag=getTag(tagId, false);
 
 	if(tag != 0)
 	{
@@ -130,15 +126,13 @@ ptr<streamReader> dataGroup::getStreamReader(std::uint16_t tagId, std::uint32_t 
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<streamWriter> dataGroup::getStreamWriter(std::uint16_t tagId, std::uint32_t bufferId, const std::string& dataType /* = "" */)
+std::shared_ptr<streamWriter> dataGroup::getStreamWriter(std::uint16_t tagId, std::uint32_t bufferId, const std::string& dataType /* = "" */)
 {
 	PUNTOEXE_FUNCTION_START(L"dataGroup::getStream");
 
-	lockObject lockAccess(this);
+	std::shared_ptr<streamWriter> returnStream;
 
-	ptr<streamWriter> returnStream;
-
-	ptr<data> tag=getTag(tagId, true);
+	std::shared_ptr<data> tag=getTag(tagId, true);
 
 	if(tag != 0)
 	{
@@ -160,17 +154,15 @@ ptr<streamWriter> dataGroup::getStreamWriter(std::uint16_t tagId, std::uint32_t 
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<handlers::dataHandlerRaw> dataGroup::getDataHandlerRaw(std::uint16_t tagId, std::uint32_t bufferId, bool bWrite, const std::string& defaultType)
+std::shared_ptr<handlers::dataHandlerRaw> dataGroup::getDataHandlerRaw(std::uint16_t tagId, std::uint32_t bufferId, bool bWrite, const std::string& defaultType)
 {
 	PUNTOEXE_FUNCTION_START(L"dataGroup::getDataHandlerRaw");
 
-	lockObject lockAccess(this);
-
-	ptr<data> tag=getTag(tagId, bWrite);
+	std::shared_ptr<data> tag=getTag(tagId, bWrite);
 
 	if(tag == 0)
 	{
-		ptr<handlers::dataHandlerRaw> emptyDataHandler;
+		std::shared_ptr<handlers::dataHandlerRaw> emptyDataHandler;
 		return emptyDataHandler;
 	}
 
@@ -194,7 +186,7 @@ std::string dataGroup::getDataType(std::uint16_t tagId)
 	PUNTOEXE_FUNCTION_START(L"dataGroup::getDataType");
 
 	std::string bufferType;
-	ptr<data> tag = getTag(tagId, false);
+	std::shared_ptr<data> tag = getTag(tagId, false);
 	if(tag != 0)
 	{
 		bufferType = tag->getDataType();

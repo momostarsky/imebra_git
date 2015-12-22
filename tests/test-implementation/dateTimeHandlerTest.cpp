@@ -12,9 +12,9 @@ namespace tests
 
 TEST(dateTimeHandlerTest, dateTest)
 {
-	ptr<data> tag(new data(ptr<baseObject>(0)));
+    std::shared_ptr<data> tag(new data());
 	{
-		ptr<handlers::dataHandler> hTag= tag->getDataHandler(0, true, "DA");
+        std::shared_ptr<handlers::dataHandler> hTag= tag->getDataHandler(0, true, "DA");
 		hTag->setSize(1);
 
 		hTag->setDate(0, 2004, 11, 5, 9, 20, 30, 5000, 1, 2);
@@ -36,14 +36,14 @@ TEST(dateTimeHandlerTest, dateTest)
 	}
 
 	{
-		ptr<handlers::dataHandlerRaw> hTag= tag->getDataHandlerRaw(0, true, "DA");
+        std::shared_ptr<handlers::dataHandlerRaw> hTag= tag->getDataHandlerRaw(0, true, "DA");
 		std::basic_string<std::uint8_t> checkString(hTag->getMemory()->data(), hTag->getMemory()->size());
         EXPECT_EQ(std::basic_string<std::uint8_t>((std::uint8_t*)"20041105"), checkString);
 		hTag->getMemory()->assign((std::uint8_t*)"2004-11-5", 9);
 	}
 
 	{
-		ptr<handlers::dataHandlerRaw> hTag= tag->getDataHandlerRaw(0, false, "DA");
+        std::shared_ptr<handlers::dataHandlerRaw> hTag= tag->getDataHandlerRaw(0, false, "DA");
 		std::basic_string<std::uint8_t> checkString(hTag->getMemory()->data(), hTag->getMemory()->size());
 		stringUint8 compString((std::uint8_t*)"2004-11-5", 9);
 		compString += (std::uint8_t)0; // buffer's size is always even!
@@ -51,7 +51,7 @@ TEST(dateTimeHandlerTest, dateTest)
 	}
 
 	{
-		ptr<handlers::dataHandler> hTag= tag->getDataHandler(0, false, "DA");
+        std::shared_ptr<handlers::dataHandler> hTag= tag->getDataHandler(0, false, "DA");
 
 		std::int32_t year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes;
 		hTag->getDate(0, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
@@ -72,9 +72,9 @@ TEST(dateTimeHandlerTest, dateTest)
 
 TEST(dateTimeHandlerTest, timeTest)
 {
-	ptr<data> tag(new data(ptr<baseObject>(0)));
+    std::shared_ptr<data> tag(new data());
 	{
-		ptr<handlers::dataHandler> hTag= tag->getDataHandler(0, true, "TM");
+        std::shared_ptr<handlers::dataHandler> hTag= tag->getDataHandler(0, true, "TM");
 		hTag->setSize(1);
 
 		hTag->setDate(0, 2004, 11, 5, 9, 20, 40, 5000, 1, 2);
@@ -96,16 +96,16 @@ TEST(dateTimeHandlerTest, timeTest)
 	}
 
 	{
-		ptr<handlers::dataHandlerRaw> hTag= tag->getDataHandlerRaw(0, true, "TM");
+        std::shared_ptr<handlers::dataHandlerRaw> hTag= tag->getDataHandlerRaw(0, true, "TM");
 		stringUint8 compString((std::uint8_t*)"092040.005000");
-		compString += (std::uint8_t)0;
+        compString += (std::uint8_t)0x20;
 		std::basic_string<std::uint8_t> checkString(hTag->getMemory()->data(), hTag->getMemory()->size());
         EXPECT_EQ(compString, checkString);
 		hTag->getMemory()->assign((std::uint8_t*)"9:20:40", 7);
 	}
 
 	{
-		ptr<handlers::dataHandler> hTag= tag->getDataHandler(0, false, "TM");
+        std::shared_ptr<handlers::dataHandler> hTag= tag->getDataHandler(0, false, "TM");
 
 		std::int32_t year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes;
 		hTag->getDate(0, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
@@ -126,9 +126,9 @@ TEST(dateTimeHandlerTest, timeTest)
 
 TEST(dateTimeHandlerTest, dateTimeTest)
 {
-	ptr<data> tag(new data(ptr<baseObject>(0)));
+    std::shared_ptr<data> tag(new data());
 	{
-		ptr<handlers::dataHandler> hTag= tag->getDataHandler(0, true, "DT");
+        std::shared_ptr<handlers::dataHandler> hTag= tag->getDataHandler(0, true, "DT");
 		hTag->setSize(1);
 
 		hTag->setDate(0, 2004, 11, 5, 9, 20, 40, 5000, 1, 2);
@@ -150,13 +150,13 @@ TEST(dateTimeHandlerTest, dateTimeTest)
 	}
 
 	{
-		ptr<handlers::dataHandlerRaw> hTag= tag->getDataHandlerRaw(0, false, "DT");
+        std::shared_ptr<handlers::dataHandlerRaw> hTag= tag->getDataHandlerRaw(0, false, "DT");
 		std::basic_string<std::uint8_t> checkString(hTag->getMemory()->data(), hTag->getMemory()->size());
         EXPECT_EQ(std::basic_string<std::uint8_t>((std::uint8_t*)"20041105092040.005000+0102"), checkString);
 	}
 
 	{
-		ptr<handlers::dataHandler> hTag= tag->getDataHandler(0, true, "DT");
+        std::shared_ptr<handlers::dataHandler> hTag= tag->getDataHandler(0, true, "DT");
 
 		std::int32_t year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes;
 		hTag->getDate(0, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
@@ -187,14 +187,14 @@ TEST(dateTimeHandlerTest, dateTimeTest)
 	}
 
 	{
-		ptr<handlers::dataHandlerRaw> hTag= tag->getDataHandlerRaw(0, true, "DT");
+        std::shared_ptr<handlers::dataHandlerRaw> hTag= tag->getDataHandlerRaw(0, true, "DT");
 		std::basic_string<std::uint8_t> checkString(hTag->getMemory()->data(), hTag->getMemory()->size());
         EXPECT_EQ(std::basic_string<std::uint8_t>((std::uint8_t*)"20051206102141.005001-0405"), checkString);
 		hTag->getMemory()->assign((std::uint8_t*)"19990305", 8);
 	}
 
 	{
-		ptr<handlers::dataHandler> hTag= tag->getDataHandler(0, false, "DT");
+        std::shared_ptr<handlers::dataHandler> hTag= tag->getDataHandler(0, false, "DT");
 
 		std::int32_t year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes;
 		hTag->getDate(0, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
@@ -211,12 +211,12 @@ TEST(dateTimeHandlerTest, dateTimeTest)
 	}
 
 	{
-		ptr<handlers::dataHandlerRaw> hTag= tag->getDataHandlerRaw(0, true, "DT");
+        std::shared_ptr<handlers::dataHandlerRaw> hTag= tag->getDataHandlerRaw(0, true, "DT");
 		hTag->getMemory()->assign((std::uint8_t*)"1999030508", 10);
 	}
 
 	{
-		ptr<handlers::dataHandler> hTag= tag->getDataHandler(0, false, "DT");
+        std::shared_ptr<handlers::dataHandler> hTag= tag->getDataHandler(0, false, "DT");
 
 		std::int32_t year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes;
 		hTag->getDate(0, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
@@ -235,16 +235,16 @@ TEST(dateTimeHandlerTest, dateTimeTest)
 
 TEST(dateTimeHandlerTest, incompleteDateTimeTest)
 {
-    ptr<data> tag(new data(ptr<baseObject>(0)));
+    std::shared_ptr<data> tag(new data());
     {
-        ptr<handlers::dataHandlerRaw> hTag= tag->getDataHandlerRaw(0, true, "DT");
+        std::shared_ptr<handlers::dataHandlerRaw> hTag= tag->getDataHandlerRaw(0, true, "DT");
         std::string bufferData;
         hTag->setSize(0);
         hTag->copyFrom((std::uint8_t*)bufferData.data(), bufferData.size());
     }
 
     std::int32_t year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes;
-    ptr<handlers::dataHandler> hTag = tag->getDataHandler(0, false, "");
+    std::shared_ptr<handlers::dataHandler> hTag = tag->getDataHandler(0, false, "");
     hTag->getDate(0, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
 
     EXPECT_EQ(0, year);
@@ -258,7 +258,7 @@ TEST(dateTimeHandlerTest, incompleteDateTimeTest)
     EXPECT_EQ(0, offsetMinutes);
 
     {
-        ptr<handlers::dataHandlerRaw> hTag = tag->getDataHandlerRaw(0, true, "DT");
+        std::shared_ptr<handlers::dataHandlerRaw> hTag = tag->getDataHandlerRaw(0, true, "DT");
         hTag->setSize(1);
         std::string bufferData("199901");
         hTag->setSize(0);
@@ -279,7 +279,7 @@ TEST(dateTimeHandlerTest, incompleteDateTimeTest)
     EXPECT_EQ(0, offsetMinutes);
 
     {
-        ptr<handlers::dataHandlerRaw> hTag = tag->getDataHandlerRaw(0, true, "DT");
+        std::shared_ptr<handlers::dataHandlerRaw> hTag = tag->getDataHandlerRaw(0, true, "DT");
         std::string bufferData("19990120");
         hTag->setSize(0);
         hTag->copyFrom((std::uint8_t*)bufferData.data(), bufferData.size());
@@ -299,7 +299,7 @@ TEST(dateTimeHandlerTest, incompleteDateTimeTest)
     EXPECT_EQ(0, offsetMinutes);
 
     {
-        ptr<handlers::dataHandlerRaw> hTag = tag->getDataHandlerRaw(0, true, "DT");
+        std::shared_ptr<handlers::dataHandlerRaw> hTag = tag->getDataHandlerRaw(0, true, "DT");
         std::string bufferData("1999012012");
         hTag->setSize(0);
         hTag->copyFrom((std::uint8_t*)bufferData.data(), bufferData.size());

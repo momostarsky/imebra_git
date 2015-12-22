@@ -90,9 +90,9 @@ public:
 	///          instance on which the function is called
 	///
 	///////////////////////////////////////////////////////////
-	virtual ptr<colorTransform> createColorTransform()=0;
+	virtual std::shared_ptr<colorTransform> createColorTransform()=0;
 
-    virtual ptr<image> allocateOutputImage(ptr<image> pInputImage, std::uint32_t width, std::uint32_t height);
+    virtual std::shared_ptr<image> allocateOutputImage(std::shared_ptr<image> pInputImage, std::uint32_t width, std::uint32_t height);
 
 protected:
 	// Performs the color transform
@@ -142,7 +142,7 @@ public:
 	///                           registered
 	///
 	///////////////////////////////////////////////////////////
-	registerColorTransform(ptr<colorTransform> newColorTransform);
+	registerColorTransform(std::shared_ptr<colorTransform> newColorTransform);
 };
 
 /// @}

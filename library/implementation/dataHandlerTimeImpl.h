@@ -99,7 +99,7 @@ public:
 	///////////////////////////////////////////////////////////
 	virtual void setUnicodeString(const std::uint32_t index, const std::wstring& value);
 
-	void parseBuffer(const ptr<memory>& memoryBuffer);
+	void parseBuffer(const std::shared_ptr<memory>& memoryBuffer);
 
 protected:
 	virtual std::uint32_t maxSize() const;

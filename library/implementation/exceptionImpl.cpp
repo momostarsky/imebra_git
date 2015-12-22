@@ -46,8 +46,7 @@ std::wstring exceptionsManager::getMessage()
 ///////////////////////////////////////////////////////////
 void exceptionsManager::getExceptionInfo(tExceptionInfoList* pList)
 {
-	ptr<exceptionsManager> pManager(getExceptionsManager());
-	lockObject lock(pManager.get());
+	std::shared_ptr<exceptionsManager> pManager(getExceptionsManager());
 
     tInfoMap::iterator findInformation = pManager->m_information.find(std::this_thread::get_id());
 	if(findInformation == pManager->m_information.end())
@@ -69,8 +68,7 @@ void exceptionsManager::getExceptionInfo(tExceptionInfoList* pList)
 ///////////////////////////////////////////////////////////
 void exceptionsManager::addExceptionInfo(const exceptionInfo& info)
 {
-	ptr<exceptionsManager> pManager(getExceptionsManager());
-	lockObject lock(pManager.get());
+	std::shared_ptr<exceptionsManager> pManager(getExceptionsManager());
     pManager->m_information[std::this_thread::get_id()].push_back(info);
 }
 
@@ -80,8 +78,7 @@ void exceptionsManager::addExceptionInfo(const exceptionInfo& info)
 ///////////////////////////////////////////////////////////
 void exceptionsManager::clearExceptionInfo()
 {
-	ptr<exceptionsManager> pManager(getExceptionsManager());
-	lockObject lock(pManager.get());
+	std::shared_ptr<exceptionsManager> pManager(getExceptionsManager());
     tInfoMap::iterator findInformation = pManager->m_information.find(std::this_thread::get_id());
 	if(findInformation == pManager->m_information.end())
 	{
@@ -93,9 +90,9 @@ void exceptionsManager::clearExceptionInfo()
 ///////////////////////////////////////////////////////////
 // Return a pointer to the exceptions manager
 ///////////////////////////////////////////////////////////
-ptr<exceptionsManager> exceptionsManager::getExceptionsManager()
+std::shared_ptr<exceptionsManager> exceptionsManager::getExceptionsManager()
 {
-	static ptr<exceptionsManager> m_manager(new exceptionsManager);
+	static std::shared_ptr<exceptionsManager> m_manager(new exceptionsManager);
 	return m_manager;
 }
 

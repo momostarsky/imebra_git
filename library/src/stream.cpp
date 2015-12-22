@@ -13,7 +13,7 @@ $fileHeader$
 namespace imebra
 {
 
-Stream::Stream(): BaseStream(new puntoexe::stream())
+Stream::Stream(): BaseStream(std::make_shared<puntoexe::stream>())
 {
 }
 

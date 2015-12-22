@@ -27,7 +27,7 @@ public:
     std::wstring getVOILUTDescription(int VOILUTId) const;
 	void setVOILUT(int VOILUTId);
 	void applyOptimalVOI(Image inputImage, int topLeftX, int topLeftY, int width, int height);
-	//void setLUT(ptr<lut> pLut);
+	//void setLUT(std::shared_ptr<lut> pLut);
 	void setCenterWidth(int center, int width);
     int getCenter() const;
     int getWidth() const;

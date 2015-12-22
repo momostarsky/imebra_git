@@ -12,7 +12,7 @@ $fileHeader$
 #define CImbxException_F1BAF067_21DE_466b_AEA1_6CC4F006FAFA__INCLUDED_
 
 #include "configurationImpl.h"
-#include "baseObjectImpl.h"
+#include <memory>
 
 #include <typeinfo>
 #include <exception>
@@ -118,7 +118,7 @@ public:
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class exceptionsManager: public baseObject
+class exceptionsManager
 {
 public:
 	/// \brief Add an exceptionInfo object to the active
@@ -172,7 +172,7 @@ public:
 	// Return a pointer to the statically allocated
 	//         instance of exceptionsManager.
 	///////////////////////////////////////////////////////////
-	static ptr<exceptionsManager> getExceptionsManager();
+	static std::shared_ptr<exceptionsManager> getExceptionsManager();
 
 protected:
     typedef std::map<std::thread::id, tExceptionInfoList> tInfoMap;

@@ -34,7 +34,7 @@ namespace codecs
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<dataSet> codec::read(ptr<streamReader> pSourceStream, std::uint32_t maxSizeBufferLoad /* = 0xffffffff */)
+std::shared_ptr<dataSet> codec::read(std::shared_ptr<streamReader> pSourceStream, std::uint32_t maxSizeBufferLoad /* = 0xffffffff */)
 {
 	PUNTOEXE_FUNCTION_START(L"codec::read");
 
@@ -48,7 +48,7 @@ ptr<dataSet> codec::read(ptr<streamReader> pSourceStream, std::uint32_t maxSizeB
 
 	// Create a new dataset
 	///////////////////////////////////////////////////////////
-	ptr<dataSet> pDestDataSet(new dataSet);
+	std::shared_ptr<dataSet> pDestDataSet(new dataSet);
 
 	// Read the stream
 	///////////////////////////////////////////////////////////
@@ -81,7 +81,7 @@ ptr<dataSet> codec::read(ptr<streamReader> pSourceStream, std::uint32_t maxSizeB
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void codec::write(ptr<streamWriter> pDestStream, ptr<dataSet> pSourceDataSet)
+void codec::write(std::shared_ptr<streamWriter> pDestStream, std::shared_ptr<dataSet> pSourceDataSet)
 {
 	PUNTOEXE_FUNCTION_START(L"codec::write");
 
@@ -113,7 +113,7 @@ void channel::allocate(std::uint32_t sizeX, std::uint32_t sizeY)
 	m_sizeX = sizeX;
 	m_sizeY = sizeY;
 	m_bufferSize = sizeX * sizeY;
-	m_memory = ptr<memory>(memoryPool::getMemoryPool()->getMemory(m_bufferSize * sizeof(std::int32_t) ));
+	m_memory = std::shared_ptr<memory>(memoryPool::getMemoryPool()->getMemory(m_bufferSize * sizeof(std::int32_t) ));
 	m_pBuffer = (std::int32_t*)(m_memory->data());
 
 	::memset(m_pBuffer, 0, m_bufferSize * sizeof(std::int32_t));

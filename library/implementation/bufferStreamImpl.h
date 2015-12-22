@@ -22,12 +22,12 @@ namespace imebra
 class bufferStream: public memoryStream
 {
 public:
-	bufferStream(ptr<handlers::dataHandlerRaw> pDataHandler):
+	bufferStream(std::shared_ptr<handlers::dataHandlerRaw> pDataHandler):
 	  memoryStream(pDataHandler->getMemory()),
 	  m_pDataHandler(pDataHandler){}
 protected:
 
-	ptr<handlers::dataHandlerRaw> m_pDataHandler;
+	std::shared_ptr<handlers::dataHandlerRaw> m_pDataHandler;
 };
 
 /// @}

@@ -183,8 +183,6 @@ void stream::write(std::uint32_t startPosition, const std::uint8_t* pBuffer, std
 {
 	PUNTOEXE_FUNCTION_START(L"stream::write");
 
-	lockObject lockThis(this);
-
 	::fseek(m_openFile, startPosition, SEEK_SET);
 	if(ferror(m_openFile) != 0)
 	{
@@ -212,8 +210,6 @@ void stream::write(std::uint32_t startPosition, const std::uint8_t* pBuffer, std
 std::uint32_t stream::read(std::uint32_t startPosition, std::uint8_t* pBuffer, std::uint32_t bufferLength)
 {
 	PUNTOEXE_FUNCTION_START(L"stream::read");
-
-	lockObject lockThis(this);
 
 	::fseek(m_openFile, startPosition, SEEK_SET);
 	if(ferror(m_openFile) != 0)

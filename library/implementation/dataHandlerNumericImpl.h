@@ -49,7 +49,7 @@ public:
     {
         if(m_buffer != 0)
         {
-            m_commitMemory = new memory();
+            m_commitMemory = std::make_shared<memory>();
             m_commitMemory->transfer(m_memory);
         }
     }
@@ -71,7 +71,7 @@ public:
 	///          by the handler
 	///
 	///////////////////////////////////////////////////////////
-	ptr<memory> getMemory()
+	std::shared_ptr<memory> getMemory()
 	{
 		return m_memory;
 	}
@@ -91,7 +91,7 @@ public:
 
 	// Parse the tag's buffer and extract its content
 	///////////////////////////////////////////////////////////
-	virtual void parseBuffer(const ptr<memory>& memoryBuffer)
+	virtual void parseBuffer(const std::shared_ptr<memory>& memoryBuffer)
 	{
 		PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::parseBuffer");
 
@@ -102,7 +102,7 @@ public:
 		PUNTOEXE_FUNCTION_END();
 	}
 
-	virtual void copyFrom(ptr<dataHandlerNumericBase> pSource) = 0;
+	virtual void copyFrom(std::shared_ptr<dataHandlerNumericBase> pSource) = 0;
 
 	virtual void copyFrom(std::uint8_t* pMemory, size_t memorySize) = 0;
 	virtual void copyFrom(std::int8_t* pMemory, size_t memorySize) = 0;
@@ -165,7 +165,7 @@ protected:
 	///////////////////////////////////////////////////////////
 	std::uint8_t* m_pMemoryString;
 	size_t m_memorySize;
-	ptr<memory> m_memory;
+	std::shared_ptr<memory> m_memory;
 };
 
 ///////////////////////////////////////////////////////////
@@ -385,7 +385,7 @@ public:
 
 	// Copy the data from another handler
 	///////////////////////////////////////////////////////////
-    virtual void copyFrom(ptr<dataHandlerNumericBase> pSource)
+    virtual void copyFrom(std::shared_ptr<dataHandlerNumericBase> pSource)
     {
         PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::copyFrom");
 

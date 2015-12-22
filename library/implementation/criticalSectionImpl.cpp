@@ -151,6 +151,7 @@ criticalSection::~criticalSection()
 ///////////////////////////////////////////////////////////
 void criticalSection::lock()
 {
+    return;
 #ifdef PUNTOEXE_WINDOWS
 	EnterCriticalSection(&m_criticalSection);
 #else
@@ -170,6 +171,7 @@ void criticalSection::lock()
 ///////////////////////////////////////////////////////////
 void criticalSection::unlock()
 {
+    return;
 #ifdef PUNTOEXE_WINDOWS
 	LeaveCriticalSection(&m_criticalSection);
 #else

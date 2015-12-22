@@ -15,7 +15,7 @@ The class hides the platform specific implementations and supplies a common
 #define imebraCharsetConversionBase_3146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_
 
 #include "configurationImpl.h"
-#include "baseObjectImpl.h"
+#include <memory>
 #include <string>
 #include <stdexcept>
 #include <map>

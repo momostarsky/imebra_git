@@ -13,12 +13,11 @@ This file is not included automatically by imebra.h
 #if !defined(imebraView_3146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_)
 #define imebraView_3146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_
 
-#include "baseObjectImpl.h"
+#include <memory>
 #include "imageImpl.h"
 #include "dataSetImpl.h"
 #include "drawBitmapImpl.h"
 #include <list>
-//#include <memory>
 
 namespace puntoexe
 {
@@ -39,7 +38,7 @@ namespace imebra
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class cursorLine: public baseObject
+class cursorLine
 {
 public:
 	std::int32_t m_x0;
@@ -143,7 +142,7 @@ public:
         ///                      displayed. Can be null
 	///
 	///////////////////////////////////////////////////////////
-	void setImage(ptr<image> pImage, ptr<transforms::transformsChain> pChain);
+	void setImage(std::shared_ptr<image> pImage, std::shared_ptr<transforms::transformsChain> pChain);
 
 	/// \brief Retrieve the image currently displayed in the
 	///         window
@@ -151,7 +150,7 @@ public:
 	/// @return the image currently displayed in the window
 	///
 	///////////////////////////////////////////////////////////
-	ptr<image> getImage();
+	std::shared_ptr<image> getImage();
 
 	//@}
 
@@ -801,11 +800,11 @@ private:
 	///////////////////////////////////////////////////////////
 	double m_zoom;
 
-        ptr<imebra::drawBitmap> m_drawBitmap;
+        std::shared_ptr<imebra::drawBitmap> m_drawBitmap;
 
-	ptr<image> m_originalImage;
+	std::shared_ptr<image> m_originalImage;
 
-        ptr<memory> m_bitmapMemory;
+        std::shared_ptr<memory> m_bitmapMemory;
 
 	// Values used to retrieve the last bitmap
 		bool m_bUpdateImage;

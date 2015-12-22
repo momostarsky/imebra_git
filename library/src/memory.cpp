@@ -20,7 +20,7 @@ Memory::Memory(): m_pMemory(new puntoexe::memory())
 Memory::Memory(size_t requestedSize): m_pMemory(puntoexe::memoryPool::getMemoryPool()->getMemory((imbxUint32)requestedSize))
 {}
 
-Memory::Memory(puntoexe::ptr<puntoexe::memory> pMemory): m_pMemory(pMemory)
+Memory::Memory(std::shared_ptr<puntoexe::memory> pMemory): m_pMemory(pMemory)
 {}
 
 void Memory::transfer(Memory& transferFrom)

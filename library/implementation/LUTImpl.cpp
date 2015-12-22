@@ -45,7 +45,7 @@ lut::~lut()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void lut::setLut(ptr<handlers::dataHandler> pDescriptor, ptr<handlers::dataHandler> pData, const std::wstring& description)
+void lut::setLut(std::shared_ptr<handlers::dataHandler> pDescriptor, std::shared_ptr<handlers::dataHandler> pData, const std::wstring& description)
 {
 	PUNTOEXE_FUNCTION_START(L"lut::setLut");
 
@@ -126,7 +126,7 @@ void lut::create(std::uint32_t size, std::int32_t firstMapped, std::uint8_t bits
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void lut::fillHandlers(ptr<handlers::dataHandler> pDescriptor, ptr<handlers::dataHandler> pData)
+void lut::fillHandlers(std::shared_ptr<handlers::dataHandler> pDescriptor, std::shared_ptr<handlers::dataHandler> pData)
 {
 	PUNTOEXE_FUNCTION_START(L"lut::fillHandlers");
 
@@ -376,28 +376,28 @@ std::int32_t lut::mappedValueRev(std::int32_t lutValue)
 }
 
 
-palette::palette(ptr<lut> red, ptr<lut> green, ptr<lut> blue):
+palette::palette(std::shared_ptr<lut> red, std::shared_ptr<lut> green, std::shared_ptr<lut> blue):
 m_redLut(red), m_greenLut(green), m_blueLut(blue)
 {}
 
-void palette::setLuts(ptr<lut> red, ptr<lut> green, ptr<lut> blue)
+void palette::setLuts(std::shared_ptr<lut> red, std::shared_ptr<lut> green, std::shared_ptr<lut> blue)
 {
 	m_redLut = red;
 	m_greenLut = green;
 	m_blueLut = blue;
 }
 
-ptr<lut> palette::getRed()
+std::shared_ptr<lut> palette::getRed()
 {
 	return m_redLut;
 }
 
-ptr<lut> palette::getGreen()
+std::shared_ptr<lut> palette::getGreen()
 {
 	return m_greenLut;
 }
 
-ptr<lut> palette::getBlue()
+std::shared_ptr<lut> palette::getBlue()
 {
 	return m_blueLut;
 }

@@ -39,17 +39,16 @@ namespace puntoexe
 ///////////////////////////////////////////////////////////
 class stream : public baseStream
 {
-protected:
-	// Destructor
-	///////////////////////////////////////////////////////////
-	virtual ~stream();
-
 public:
 	// Constructor
 	///////////////////////////////////////////////////////////
 	stream(): m_openFile(0){}
 
-	/// \brief Open a file.
+    // Destructor
+    ///////////////////////////////////////////////////////////
+    virtual ~stream();
+
+    /// \brief Open a file.
 	///
 	/// The function uses the standard library function
 	///  fopen to open the specified file.

@@ -16,9 +16,9 @@ namespace tests
 // A buffer initialized to a default data type should use the data type OB
 TEST(huffmanTest, test)
 {
-	ptr<memory> myMemory(new memory);
-	ptr<baseStream> theMemoryStream(new memoryStream(myMemory));
-	ptr<streamWriter> writer(new streamWriter(theMemoryStream));
+	std::shared_ptr<memory> myMemory(new memory);
+	std::shared_ptr<baseStream> theMemoryStream(new memoryStream(myMemory));
+	std::shared_ptr<streamWriter> writer(new streamWriter(theMemoryStream));
 
 	huffmanTable huffman(8);
 
@@ -39,7 +39,7 @@ TEST(huffmanTest, test)
 	}
 	writer->resetOutBitsBuffer();
 
-	ptr<streamReader> reader(new streamReader(theMemoryStream));
+	std::shared_ptr<streamReader> reader(new streamReader(theMemoryStream));
 	for(size_t readValues = 0; readValues < values.size(); ++readValues)
 	{
 		std::uint32_t value(huffman.readHuffmanCode(reader.get()));

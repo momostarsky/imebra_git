@@ -12,7 +12,8 @@ $fileHeader$
 
 #ifndef SWIG
 
-#include "../../implementation/baseObjectImpl.h"
+#include <memory>
+
 namespace puntoexe
 {
     class baseStream;
@@ -55,7 +56,7 @@ class BaseStream
 	friend class StreamReader;
 	friend class StreamWriter;
 protected:
-	BaseStream(puntoexe::ptr<puntoexe::baseStream> pStream);
+	BaseStream(std::shared_ptr<puntoexe::baseStream> pStream);
 #endif
 public:
 	BaseStream(const BaseStream& right);
@@ -63,7 +64,7 @@ public:
 
 #ifndef SWIG
 protected:
-	puntoexe::ptr<puntoexe::baseStream> m_pStream;
+	std::shared_ptr<puntoexe::baseStream> m_pStream;
 #endif
 
 public:

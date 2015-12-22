@@ -10,18 +10,19 @@ $fileHeader$
 #include "../include/imebra/image.h"
 #include "../implementation/imageImpl.h"
 #include "../implementation/dataHandlerImpl.h"
+#include "../implementation/dataHandlerNumericImpl.h"
 
 namespace imebra
 {
 
-Image::Image(): m_pImage(new puntoexe::imebra::image())
+Image::Image(): m_pImage(std::make_shared<puntoexe::imebra::image>())
 {
 }
 
 Image::Image(const Image& right): m_pImage(right.m_pImage)
 {}
 
-Image::Image(puntoexe::ptr<puntoexe::imebra::image> pImage): m_pImage(pImage)
+Image::Image(std::shared_ptr<puntoexe::imebra::image> pImage): m_pImage(pImage)
 {}
 
 Image& Image::operator=(const Image& right)

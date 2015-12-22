@@ -38,9 +38,9 @@ bool transform::isEmpty()
 
 
 void transformHandlers::runTransform(
-            const ptr<image>& inputImage,
+            const std::shared_ptr<image>& inputImage,
             std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight,
-            const ptr<image>& outputImage,
+            const std::shared_ptr<image>& outputImage,
             std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY)
 {
     PUNTOEXE_FUNCTION_START(L"transformHandlers::runTransform");
@@ -59,8 +59,8 @@ void transformHandlers::runTransform(
     }
 
     std::uint32_t rowSize, numPixels, channels;
-	ptr<handlers::dataHandlerNumericBase> inputHandler(inputImage->getDataHandler(false, &rowSize, &numPixels, &channels));
-	ptr<palette> inputPalette(inputImage->getPalette());
+	std::shared_ptr<handlers::dataHandlerNumericBase> inputHandler(inputImage->getDataHandler(false, &rowSize, &numPixels, &channels));
+	std::shared_ptr<palette> inputPalette(inputImage->getPalette());
 	std::wstring inputColorSpace(inputImage->getColorSpace());
 	std::uint32_t inputHighBit(inputImage->getHighBit());
     std::uint64_t inputNumValues((std::uint64_t)1 << (inputHighBit + 1));
@@ -71,8 +71,8 @@ void transformHandlers::runTransform(
 		inputMinValue -= (std::int32_t)(inputNumValues >> 1);
 	}
 
-    ptr<handlers::dataHandlerNumericBase> outputHandler(outputImage->getDataHandler(true, &rowSize, &numPixels, &channels));
-	ptr<palette> outputPalette(outputImage->getPalette());
+    std::shared_ptr<handlers::dataHandlerNumericBase> outputHandler(outputImage->getDataHandler(true, &rowSize, &numPixels, &channels));
+	std::shared_ptr<palette> outputPalette(outputImage->getPalette());
 	std::wstring outputColorSpace(outputImage->getColorSpace());
 	std::uint32_t outputHighBit(outputImage->getHighBit());
     std::uint64_t outputNumValues((std::uint64_t)1 << (outputHighBit + 1));
@@ -85,7 +85,7 @@ void transformHandlers::runTransform(
 
 	if(isEmpty())
 	{
-		ptr<transformHighBit> emptyTransform(new transformHighBit);
+		std::shared_ptr<transformHighBit> emptyTransform(new transformHighBit);
         emptyTransform->runTransformHandlers(inputHandler, inputImageWidth, inputColorSpace, inputPalette, inputMinValue, inputHighBit,
 											 inputTopLeftX, inputTopLeftY, inputWidth, inputHeight,
                                              outputHandler, outputImageWidth, outputColorSpace, outputPalette, outputMinValue, outputHighBit,

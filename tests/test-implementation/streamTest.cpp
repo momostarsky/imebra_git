@@ -13,7 +13,7 @@ namespace tests
 
 TEST(streamTest, testFailOpen)
 {
-    ptr<stream> failOpenStream(new stream());
+    std::shared_ptr<stream> failOpenStream(new stream());
     try
     {
         failOpenStream->openFile(L"doNotExist.dcm", std::ios_base::in);

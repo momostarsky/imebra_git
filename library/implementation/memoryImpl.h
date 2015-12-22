@@ -10,7 +10,6 @@ $fileHeader$
 #if !defined(imebraMemory_DE3F98A9_664E_47c0_A29B_B681F9AEB118__INCLUDED_)
 #define imebraMemory_DE3F98A9_664E_47c0_A29B_B681F9AEB118__INCLUDED_
 
-#include "baseObjectImpl.h"
 #include "criticalSectionImpl.h"
 #include <list>
 #include <map>
@@ -45,7 +44,7 @@ typedef std::basic_string<std::uint8_t> stringUint8;
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class memory : public baseObject
+class memory
 {
 public:
     /// \brief Construct an empty memory object
@@ -94,7 +93,7 @@ public:
 	///                      must be transferred
 	///
 	///////////////////////////////////////////////////////////
-	void transfer(const ptr<memory>& transferFrom);
+	void transfer(const std::shared_ptr<memory>& transferFrom);
 
 	/// \brief Copy the content of the memory managed
 	///         by another memory object into the memory 
@@ -104,7 +103,7 @@ public:
 	///                      which the data has to be copied
 	///
 	///////////////////////////////////////////////////////////
-	void copyFrom(const ptr<memory>& sourceMemory);
+	void copyFrom(const std::shared_ptr<memory>& sourceMemory);
 
 	/// \brief Clear the content of the memory object and
 	///         set its size to 0 bytes.

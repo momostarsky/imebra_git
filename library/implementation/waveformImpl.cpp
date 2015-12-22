@@ -22,7 +22,7 @@ namespace imebra
 // Constructor
 //
 ///////////////////////////////////////////////////////////
-waveform::waveform(ptr<dataSet> pDataSet):
+waveform::waveform(std::shared_ptr<dataSet> pDataSet):
 	m_pDataSet(pDataSet)
 {
 }
@@ -108,7 +108,7 @@ std::uint32_t waveform::getSamples()
 // Returns a data handler for the waveform
 //
 ///////////////////////////////////////////////////////////
-ptr<handlers::dataHandler> waveform::getIntegerData(std::uint32_t channel, std::int32_t paddingValue)
+std::shared_ptr<handlers::dataHandler> waveform::getIntegerData(std::uint32_t channel, std::int32_t paddingValue)
 {
 	PUNTOEXE_FUNCTION_START(L"waveform::getIntegerData");
 
@@ -184,14 +184,9 @@ ptr<handlers::dataHandler> waveform::getIntegerData(std::uint32_t channel, std::
 		944,   912,  1008,   976,   816,   784,   880,   848
 	}; 
 
-	// Lock the dataset during the interpretation of the 
-	//  dataset
-	///////////////////////////////////////////////////////////
-	lockObject lockDataSet(m_pDataSet);
-
 	// Get the original data
 	///////////////////////////////////////////////////////////
-	ptr<handlers::dataHandler> waveformData(m_pDataSet->getDataHandler(0x5400, 0x0, 0x1010, 0, false));
+	std::shared_ptr<handlers::dataHandler> waveformData(m_pDataSet->getDataHandler(0x5400, 0x0, 0x1010, 0, false));
 	std::string sourceDataType(waveformData->getDataType());
 	
 	// Get the interpretation, number of channels, number of
@@ -202,7 +197,7 @@ ptr<handlers::dataHandler> waveform::getIntegerData(std::uint32_t channel, std::
 	std::uint32_t numSamples(getSamples());
 	std::uint32_t originalPaddingValue(0);
 	bool bPaddingValueExists(false);
-	ptr<handlers::dataHandler> paddingTagHandler(m_pDataSet->getDataHandler(0x5400, 0, 0x100A, 0, false));
+	std::shared_ptr<handlers::dataHandler> paddingTagHandler(m_pDataSet->getDataHandler(0x5400, 0, 0x100A, 0, false));
 	if(paddingTagHandler != 0)
 	{
 		originalPaddingValue = paddingTagHandler->getUnsignedLong(0);
@@ -212,8 +207,8 @@ ptr<handlers::dataHandler> waveform::getIntegerData(std::uint32_t channel, std::
 	
 	// Allocate a buffer for the destination data
 	///////////////////////////////////////////////////////////
-	ptr<buffer> waveformBuffer(new buffer(0, "SL"));
-	ptr<handlers::dataHandler> destinationHandler(waveformBuffer->getDataHandler(true, numSamples));
+    std::shared_ptr<buffer> waveformBuffer(new buffer("SL"));
+	std::shared_ptr<handlers::dataHandler> destinationHandler(waveformBuffer->getDataHandler(true, numSamples));
 
 	// Copy the data to the destination for unsigned values
 	///////////////////////////////////////////////////////////
@@ -297,7 +292,7 @@ ptr<handlers::dataHandler> waveform::getIntegerData(std::uint32_t channel, std::
 // Returns the sequence item
 //
 ///////////////////////////////////////////////////////////
-ptr<dataSet> waveform::GetWaveformItem()
+std::shared_ptr<dataSet> waveform::GetWaveformItem()
 {
 	return m_pDataSet;
 }

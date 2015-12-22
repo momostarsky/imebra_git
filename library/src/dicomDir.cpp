@@ -20,7 +20,7 @@ DirectoryRecord::DirectoryRecord(const DirectoryRecord& right): m_pDirectoryReco
 {
 }
 
-DirectoryRecord::DirectoryRecord(puntoexe::ptr<puntoexe::imebra::directoryRecord> pDirectoryRecord): m_pDirectoryRecord(pDirectoryRecord)
+DirectoryRecord::DirectoryRecord(std::shared_ptr<puntoexe::imebra::directoryRecord> pDirectoryRecord): m_pDirectoryRecord(pDirectoryRecord)
 {
 }
 

@@ -10,7 +10,7 @@ $fileHeader$
 #if !defined(imebraImage_A807A3CA_FA04_44f4_85D2_C7AA2FE103C4__INCLUDED_)
 #define imebraImage_A807A3CA_FA04_44f4_85D2_C7AA2FE103C4__INCLUDED_
 
-#include "baseObjectImpl.h"
+#include <memory>
 
 
 ///////////////////////////////////////////////////////////
@@ -76,7 +76,7 @@ class buffer;
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class image : public baseObject
+class image
 {
 public:
 
@@ -139,7 +139,7 @@ public:
 	///                  data
 	///
 	///////////////////////////////////////////////////////////
-	ptr<handlers::dataHandlerNumericBase> create(
+	std::shared_ptr<handlers::dataHandlerNumericBase> create(
 		const std::uint32_t sizeX,
 		const std::uint32_t sizeY,
 		const bitDepth depth,
@@ -158,7 +158,7 @@ public:
 	/// @param imagePalette  the palette used in the image
 	///
 	///////////////////////////////////////////////////////////
-	void setPalette(ptr<palette> imagePalette);
+	void setPalette(std::shared_ptr<palette> imagePalette);
 
 	/// \brief Retrieve the image's size, in millimeters.
 	///
@@ -225,7 +225,7 @@ public:
 	///         buffer.
 	///
 	///////////////////////////////////////////////////////////
-	ptr<handlers::dataHandlerNumericBase> getDataHandler(
+	std::shared_ptr<handlers::dataHandlerNumericBase> getDataHandler(
 		const bool bWrite,
 		std::uint32_t* pRowSize,
 		std::uint32_t* pChannelPixelSize,
@@ -261,13 +261,13 @@ public:
 	///////////////////////////////////////////////////////////
 	std::uint32_t getHighBit();
 
-        ptr<palette> getPalette();
+        std::shared_ptr<palette> getPalette();
 
 
 protected:
 	// Image's buffer
 	///////////////////////////////////////////////////////////
-	ptr<buffer> m_buffer;
+	std::shared_ptr<buffer> m_buffer;
 
 	// Lenght of a buffer's row (in bytes)
 	///////////////////////////////////////////////////////////
@@ -305,7 +305,7 @@ protected:
 
 	// Image's lut (only if the colorspace is PALETTECOLOR
 	///////////////////////////////////////////////////////////
-        ptr<palette> m_palette;
+        std::shared_ptr<palette> m_palette;
 
 };
 

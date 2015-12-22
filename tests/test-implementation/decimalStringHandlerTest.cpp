@@ -12,9 +12,9 @@ namespace tests
 
 TEST(decimalStringHandlerTest, decimalTest)
 {
-	ptr<data> tag(new data(ptr<baseObject>(0)));
+    std::shared_ptr<data> tag(new data());
 	{
-		ptr<handlers::dataHandler> hTag= tag->getDataHandler(0, true, "DS");
+		std::shared_ptr<handlers::dataHandler> hTag= tag->getDataHandler(0, true, "DS");
 		hTag->setSize(1);
 
 		hTag->setDouble(0, 0.000001);

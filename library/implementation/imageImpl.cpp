@@ -41,7 +41,7 @@ namespace imebra
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<handlers::dataHandlerNumericBase> image::create(
+std::shared_ptr<handlers::dataHandlerNumericBase> image::create(
 						const std::uint32_t sizeX, 
 						const std::uint32_t sizeY, 
 						const bitDepth depth, 
@@ -49,8 +49,6 @@ ptr<handlers::dataHandlerNumericBase> image::create(
 						const std::uint8_t highBit)
 {
 	PUNTOEXE_FUNCTION_START(L"image::create");
-
-	lockObject lockAccess(this);
 
 	if(sizeX == 0 || sizeY == 0)
 	{
@@ -119,15 +117,14 @@ ptr<handlers::dataHandlerNumericBase> image::create(
 	// If a valid buffer with the same data type is already
 	//  allocated then use it.
 	///////////////////////////////////////////////////////////
-	if(m_buffer == 0 || !(m_buffer->isReferencedOnce()) )
+    if(m_buffer.get() == 0 || !(m_buffer.unique()) )
 	{
-		ptr<buffer> tempBuffer(new buffer(this, bufferDataType));
-		m_buffer = tempBuffer;
+        m_buffer = std::make_shared<buffer>(bufferDataType);
 	}
 
 	m_sizeX = m_sizeY = 0;
 	
-	ptr<handlers::dataHandler> imageHandler(m_buffer->getDataHandler(true, sizeX * sizeY * (std::uint32_t)m_channelsNumber) );
+	std::shared_ptr<handlers::dataHandler> imageHandler(m_buffer->getDataHandler(true, sizeX * sizeY * (std::uint32_t)m_channelsNumber) );
 	if(imageHandler != 0)
 	{
 		m_rowLength = m_channelsNumber*sizeX;
@@ -142,7 +139,7 @@ ptr<handlers::dataHandlerNumericBase> image::create(
 		m_sizeY=sizeY;
 	}
 
-	return ptr<handlers::dataHandlerNumericBase>(dynamic_cast<handlers::dataHandlerNumericBase*>(imageHandler.get()) );
+    return std::static_pointer_cast<handlers::dataHandlerNumericBase>(imageHandler);
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -159,24 +156,12 @@ ptr<handlers::dataHandlerNumericBase> image::create(
 ///////////////////////////////////////////////////////////
 void image::setHighBit(std::uint32_t highBit)
 {
-	PUNTOEXE_FUNCTION_START(L"image::setHighBit");
-
-	lockObject lockAccess(this);
-
 	m_highBit = highBit;
-
-	PUNTOEXE_FUNCTION_END();
 }
 
-void image::setPalette(ptr<palette> imagePalette)
+void image::setPalette(std::shared_ptr<palette> imagePalette)
 {
-	PUNTOEXE_FUNCTION_START(L"image::getPalette");
-
-	lockObject lockAccess(this);
-
 	m_palette = imagePalette;
-
-	PUNTOEXE_FUNCTION_END();
 }
 
 
@@ -191,24 +176,22 @@ void image::setPalette(ptr<palette> imagePalette)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<handlers::dataHandlerNumericBase> image::getDataHandler(const bool bWrite, std::uint32_t* pRowSize, std::uint32_t* pChannelPixelSize, std::uint32_t* pChannelsNumber)
+std::shared_ptr<handlers::dataHandlerNumericBase> image::getDataHandler(const bool bWrite, std::uint32_t* pRowSize, std::uint32_t* pChannelPixelSize, std::uint32_t* pChannelsNumber)
 {
 	PUNTOEXE_FUNCTION_START(L"image::getDataHandler");
 
-	lockObject lockAccess(this);
-
 	if(m_buffer == 0)
 	{
-		return ptr<handlers::dataHandlerNumericBase>(0);
+		return std::shared_ptr<handlers::dataHandlerNumericBase>(0);
 	}
 
 	*pRowSize=m_rowLength;
 	*pChannelPixelSize=m_channelPixelSize;
 	*pChannelsNumber=m_channelsNumber;
 
-	ptr<handlers::dataHandler> imageHandler(m_buffer->getDataHandler(bWrite, m_sizeX * m_sizeY * m_channelsNumber));
+	std::shared_ptr<handlers::dataHandler> imageHandler(m_buffer->getDataHandler(bWrite, m_sizeX * m_sizeY * m_channelsNumber));
 
-	return ptr<handlers::dataHandlerNumericBase>(dynamic_cast<handlers::dataHandlerNumericBase*>(imageHandler.get()) );
+    return std::static_pointer_cast<handlers::dataHandlerNumericBase>(imageHandler);
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -225,12 +208,7 @@ ptr<handlers::dataHandlerNumericBase> image::getDataHandler(const bool bWrite, s
 ///////////////////////////////////////////////////////////
 image::bitDepth image::getDepth()
 {
-	PUNTOEXE_FUNCTION_START(L"image::getDepth");
-
-	lockObject lockAccess(this);
 	return m_imageDepth;
-
-	PUNTOEXE_FUNCTION_END();
 }
 
 
@@ -245,23 +223,12 @@ image::bitDepth image::getDepth()
 ///////////////////////////////////////////////////////////
 std::uint32_t image::getHighBit()
 {
-	PUNTOEXE_FUNCTION_START(L"image::getHighBit");
-
-	lockObject lockAccess(this);
 	return m_highBit;
-
-	PUNTOEXE_FUNCTION_END();
 }
 
-ptr<palette> image::getPalette()
+std::shared_ptr<palette> image::getPalette()
 {
-	PUNTOEXE_FUNCTION_START(L"image::getPalette");
-
-	lockObject lockAccess(this);
-
 	return m_palette;
-
-	PUNTOEXE_FUNCTION_END();
 }
 
 
@@ -276,12 +243,7 @@ ptr<palette> image::getPalette()
 ///////////////////////////////////////////////////////////
 std::wstring image::getColorSpace()
 {
-	PUNTOEXE_FUNCTION_START(L"image::getColorSpace");
-
-	lockObject lockAccess(this);
 	return m_colorSpace;
-
-	PUNTOEXE_FUNCTION_END();
 }
 
 
@@ -296,12 +258,7 @@ std::wstring image::getColorSpace()
 ///////////////////////////////////////////////////////////
 std::uint32_t image::getChannelsNumber()
 {
-	PUNTOEXE_FUNCTION_START(L"image::getChannelsNumber");
-
-	lockObject lockAccess(this);
 	return m_channelsNumber;
-
-	PUNTOEXE_FUNCTION_END();
 }
 
 
@@ -316,17 +273,11 @@ std::uint32_t image::getChannelsNumber()
 ///////////////////////////////////////////////////////////
 void image::getSize(std::uint32_t* pSizeX, std::uint32_t* pSizeY)
 {
-	PUNTOEXE_FUNCTION_START(L"image::getSize");
-
-	lockObject lockAccess(this);
-
 	if(pSizeX)
-		*pSizeX=m_sizeX;
+        *pSizeX = m_sizeX;
 
 	if(pSizeY)
-		*pSizeY=m_sizeY;
-
-	PUNTOEXE_FUNCTION_END();
+        *pSizeY = m_sizeY;
 }
 
 
@@ -342,8 +293,6 @@ void image::getSize(std::uint32_t* pSizeX, std::uint32_t* pSizeY)
 void image::getSizeMm(double* pSizeMmX, double* pSizeMmY)
 {
 	PUNTOEXE_FUNCTION_START(L"image::getSizeMm");
-
-	lockObject lockAccess(this);
 
 	if(pSizeMmX)
 		*pSizeMmX=m_sizeMmX;
@@ -367,8 +316,6 @@ void image::getSizeMm(double* pSizeMmX, double* pSizeMmY)
 void image::setSizeMm(const double sizeMmX, const double sizeMmY)
 {
 	PUNTOEXE_FUNCTION_START(L"image::setSizeMm");
-
-	lockObject lockAccess(this);
 
 	if(sizeMmX)
 		m_sizeMmX=sizeMmX;

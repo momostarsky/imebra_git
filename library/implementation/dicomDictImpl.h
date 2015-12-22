@@ -11,7 +11,7 @@ $fileHeader$
 #if !defined(imebraDicomDict_CC44A2C5_2B8C_42c1_9704_3F9C582643B9__INCLUDED_)
 #define imebraDicomDict_CC44A2C5_2B8C_42c1_9704_3F9C582643B9__INCLUDED_
 
-#include "baseObjectImpl.h"
+#include <memory>
 #include <map>
 
 

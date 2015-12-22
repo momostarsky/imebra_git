@@ -22,12 +22,12 @@ DataHandler& DataHandler::operator=(const DataHandler& right)
     return *this;
 }
 
-DataHandler::DataHandler(puntoexe::ptr<puntoexe::imebra::handlers::dataHandler> pDataHandler): m_pDataHandler(pDataHandler)
+DataHandler::DataHandler(std::shared_ptr<puntoexe::imebra::handlers::dataHandler> pDataHandler): m_pDataHandler(pDataHandler)
 {}
 
 void DataHandler::close()
 {
-    m_pDataHandler.release();
+    m_pDataHandler.reset();
 }
 
 bool DataHandler::pointerIsValid(const size_t index) const
@@ -151,7 +151,7 @@ void DataHandler::setString(const int index, const std::wstring& value)
 
 Memory DataHandler::getMemory()
 {
-    puntoexe::imebra::handlers::dataHandlerNumericBase* pDataHandler = dynamic_cast<puntoexe::imebra::handlers::dataHandlerNumericBase*>(m_pDataHandler.get());
+    std::shared_ptr<puntoexe::imebra::handlers::dataHandlerNumericBase> pDataHandler(std::dynamic_pointer_cast<puntoexe::imebra::handlers::dataHandlerNumericBase>(m_pDataHandler));
     if(pDataHandler == 0)
     {
         return Memory();

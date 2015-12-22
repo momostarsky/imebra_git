@@ -54,12 +54,12 @@ public:
 	///                    transformsChain
 	///
 	///////////////////////////////////////////////////////////
-	void addTransform(ptr<transform> pTransform);
+	void addTransform(std::shared_ptr<transform> pTransform);
 
 	virtual void runTransform(
-            const ptr<image>& inputImage,
+            const std::shared_ptr<image>& inputImage,
             std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight,
-            const ptr<image>& outputImage,
+            const std::shared_ptr<image>& outputImage,
             std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY);
 
 	/// \brief Returns true if the transform doesn't do
@@ -72,7 +72,7 @@ public:
 	///////////////////////////////////////////////////////////
 	virtual bool isEmpty();
 
-	virtual ptr<image> allocateOutputImage(ptr<image> pInputImage, std::uint32_t width, std::uint32_t height);
+	virtual std::shared_ptr<image> allocateOutputImage(std::shared_ptr<image> pInputImage, std::uint32_t width, std::uint32_t height);
 
 protected:
 	std::uint32_t m_inputWidth;
@@ -84,10 +84,10 @@ protected:
 	image::bitDepth m_outputDepth;
 	std::uint32_t m_outputHighBit;
 
-	typedef std::list<ptr<transform> > tTransformsList;
+	typedef std::list<std::shared_ptr<transform> > tTransformsList;
 	tTransformsList m_transformsList;
 
-	typedef std::list<ptr<image> > tTemporaryImagesList;
+	typedef std::list<std::shared_ptr<image> > tTemporaryImagesList;
 	tTemporaryImagesList m_temporaryImages;
 
 };

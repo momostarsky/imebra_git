@@ -10,7 +10,7 @@ $fileHeader$
 #if !defined(imebraBuffer_DE3F98A9_664E_47c0_A29B_B681F9AEB118__INCLUDED_)
 #define imebraBuffer_DE3F98A9_664E_47c0_A29B_B681F9AEB118__INCLUDED_
 
-#include "baseObjectImpl.h"
+#include <memory>
 #include "streamControllerImpl.h"
 #include "memoryImpl.h"
 
@@ -64,7 +64,7 @@ namespace handlers
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class buffer : public baseObject
+class buffer: public std::enable_shared_from_this<buffer>
 {
 
 public:
@@ -80,11 +80,6 @@ public:
 	/// If no data type is specified, then the Dicom data
 	///  type "OB" is used.
 	///
-	/// @param externalLock a pointer to an object to be
-	///                      used to lock this one
-	///                      (see baseObject).
-	///                     If set to zero then a local
-	///                      locker will be used
 	/// @param defaultType  a string with the buffer's type.
 	///                     The buffer's type must be one of
 	///                      the Dicom data types.
@@ -92,7 +87,7 @@ public:
 	///                      two uppercase chars
 	///
 	///////////////////////////////////////////////////////////
-	buffer(const ptr<baseObject>& externalLock, const std::string& defaultType="");
+    buffer(const std::string& defaultType="");
 
 	/// \brief Constructor. Initialize the buffer object and
 	///         declare the buffer's content on demand.
@@ -101,11 +96,6 @@ public:
 	///  when the application requires the access to the
 	///  buffer.
 	///
-	/// @param externalLock a pointer to an object to be
-	///                      used to lock this one
-	///                      (see baseObject).
-	///                     If set to zero then a local
-	///                      locker will be used
 	/// @param defaultType  a string with the buffer's type.
 	///                     The buffer's type must be one of
 	///                      the Dicom data types.
@@ -122,9 +112,9 @@ public:
 	/// @param endianType   the stream's endian type
 	///
 	///////////////////////////////////////////////////////////
-	buffer(const ptr<baseObject>& externalLock,
+    buffer(
 		const std::string& defaultType,
-		const ptr<baseStream>& originalStream,
+		const std::shared_ptr<baseStream>& originalStream,
 		std::uint32_t bufferPosition,
 		std::uint32_t bufferLength,
 		std::uint32_t wordLength,
@@ -160,7 +150,7 @@ public:
 	/// @return a pointer to a dataHandler object
 	///
 	///////////////////////////////////////////////////////////
-	ptr<handlers::dataHandler> getDataHandler(bool bWrite, std::uint32_t size = 0);
+	std::shared_ptr<handlers::dataHandler> getDataHandler(bool bWrite, std::uint32_t size = 0);
 
 	/// \brief Retrieve a raw data handler that can be used to
 	///         read, write and resize the memory controlled by 
@@ -187,7 +177,7 @@ public:
 	/// @return a pointer to a dataHandler object
 	///
 	///////////////////////////////////////////////////////////
-	ptr<handlers::dataHandlerRaw> getDataHandlerRaw(bool bWrite, std::uint32_t size = 0);
+	std::shared_ptr<handlers::dataHandlerRaw> getDataHandlerRaw(bool bWrite, std::uint32_t size = 0);
 
 	//@}
 
@@ -227,7 +217,7 @@ public:
 	/// @return          a pointer to a stream reader
 	///
 	///////////////////////////////////////////////////////////
-	ptr<streamReader> getStreamReader();
+	std::shared_ptr<streamReader> getStreamReader();
 
 	/// \brief Return a stream writer connected to the 
 	///         buffer's content.
@@ -239,7 +229,7 @@ public:
 	/// @return          a pointer to a stream writer
 	///
 	///////////////////////////////////////////////////////////
-	ptr<streamWriter> getStreamWriter();
+	std::shared_ptr<streamWriter> getStreamWriter();
 
 	//@}
 
@@ -262,7 +252,7 @@ public:
 
 	//@}
 
-    void commit(ptr<memory> newMemory, const std::string& newBufferType, const charsetsList::tCharsetsList& newCharsetsList);
+    void commit(std::shared_ptr<memory> newMemory, const std::string& newBufferType, const charsetsList::tCharsetsList& newCharsetsList);
 
 	///////////////////////////////////////////////////////////
 	/// \name Charsets
@@ -332,7 +322,7 @@ public:
 protected:
 	// Return a data handler.
 	///////////////////////////////////////////////////////////
-	ptr<handlers::dataHandler> getDataHandler(bool bWrite, bool bRaw, std::uint32_t size);
+	std::shared_ptr<handlers::dataHandler> getDataHandler(bool bWrite, bool bRaw, std::uint32_t size);
 
 	//
 	// Attributes
@@ -341,7 +331,7 @@ protected:
 private:
 	// The memory buffer
 	///////////////////////////////////////////////////////////
-	ptr<memory> m_memory;
+	std::shared_ptr<memory> m_memory;
 
 protected:
 	// The buffer's type, in Dicom standard
@@ -352,7 +342,7 @@ protected:
 	// The following variables are used to reread the buffer
 	//  from the stream.
 	///////////////////////////////////////////////////////////
-	ptr<baseStream> m_originalStream;    // < Original stream
+	std::shared_ptr<baseStream> m_originalStream;    // < Original stream
 	std::uint32_t m_originalBufferPosition; // < Original buffer's position
 	std::uint32_t m_originalBufferLength;   // < Original buffer's length
 	std::uint32_t m_originalWordLength;     // < Original word's length (for low/high endian adjustment)

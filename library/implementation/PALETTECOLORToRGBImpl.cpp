@@ -25,7 +25,7 @@ namespace transforms
 namespace colorTransforms
 {
 
-static registerColorTransform m_registerTransform(ptr<colorTransform>(new PALETTECOLORToRGB));
+static registerColorTransform m_registerTransform(std::shared_ptr<colorTransform>(new PALETTECOLORToRGB));
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -56,9 +56,9 @@ std::wstring PALETTECOLORToRGB::getFinalColorSpace()
 	return L"RGB";
 }
 
-ptr<colorTransform> PALETTECOLORToRGB::createColorTransform()
+std::shared_ptr<colorTransform> PALETTECOLORToRGB::createColorTransform()
 {
-	return ptr<colorTransform>(new PALETTECOLORToRGB);
+    return std::shared_ptr<colorTransform>(new PALETTECOLORToRGB);
 }
 
 } // namespace colorTransforms

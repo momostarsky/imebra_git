@@ -61,7 +61,7 @@ public:
     ///         existing stream.
     ///
     ///////////////////////////////////////////////////////////
-    streamReader(ptr<baseStream> pControlledStream);
+    streamReader(std::shared_ptr<baseStream> pControlledStream);
 
     /// \brief Build a streamReader and connect it to a part
     ///         of an existing stream.
@@ -80,7 +80,7 @@ public:
 	///                            are visible
 	///
 	///////////////////////////////////////////////////////////
-    streamReader(ptr<baseStream> pControlledStream, std::uint32_t virtualStart, std::uint32_t virtualLength);
+    streamReader(std::shared_ptr<baseStream> pControlledStream, std::uint32_t virtualStart, std::uint32_t virtualLength);
 
     /// \brief Returns a new streamReader object that starts
     ///        at the current stream location and continues
@@ -92,7 +92,7 @@ public:
     ///                      advance the read position past
     ///                      the end position of the new
     ///                      streamReader
-    ptr<streamReader> getReader(std::uint32_t virtualLength);
+    std::shared_ptr<streamReader> getReader(std::uint32_t virtualLength);
 
     /// \brief Read raw data from the stream.
 	///

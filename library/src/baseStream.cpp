@@ -16,7 +16,7 @@ namespace imebra
 BaseStream::BaseStream()
 {}
 
-BaseStream::BaseStream(puntoexe::ptr<puntoexe::baseStream> pStream): m_pStream(pStream)
+BaseStream::BaseStream(std::shared_ptr<puntoexe::baseStream> pStream): m_pStream(pStream)
 {
 }
 

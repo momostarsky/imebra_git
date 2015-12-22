@@ -54,11 +54,11 @@ namespace codecs
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<codec> dicomCodec::createCodec()
+std::shared_ptr<codec> dicomCodec::createCodec()
 {
 	PUNTOEXE_FUNCTION_START(L"dicomCodec::createCodec");
 
-	return ptr<codec>(new dicomCodec);
+	return std::shared_ptr<codec>(new dicomCodec);
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -73,7 +73,7 @@ ptr<codec> dicomCodec::createCodec()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dicomCodec::writeStream(ptr<streamWriter> pStream, ptr<dataSet> pDataSet)
+void dicomCodec::writeStream(std::shared_ptr<streamWriter> pStream, std::shared_ptr<dataSet> pDataSet)
 {
 	PUNTOEXE_FUNCTION_START(L"dicomCodec::writeStream");
 
@@ -116,16 +116,16 @@ void dicomCodec::writeStream(ptr<streamWriter> pStream, ptr<dataSet> pDataSet)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dicomCodec::buildStream(ptr<streamWriter> pStream, ptr<dataSet> pDataSet, bool bExplicitDataType, streamController::tByteOrdering endianType)
+void dicomCodec::buildStream(std::shared_ptr<streamWriter> pStream, std::shared_ptr<dataSet> pDataSet, bool bExplicitDataType, streamController::tByteOrdering endianType)
 {
 	PUNTOEXE_FUNCTION_START(L"dicomCodec::buildStream");
 
 	for(
-		ptr<dataCollectionIterator<dataGroup> > groupsIterator = pDataSet->getDataIterator();
+		std::shared_ptr<dataCollectionIterator<dataGroup> > groupsIterator = pDataSet->getDataIterator();
 		groupsIterator->isValid();
 		groupsIterator->incIterator())
 	{
-		ptr<dataGroup> pGroup = groupsIterator->getData();
+		std::shared_ptr<dataGroup> pGroup = groupsIterator->getData();
 		std::uint16_t groupId = groupsIterator->getId();
 		writeGroup(pStream, pGroup, groupId, bExplicitDataType, endianType);
 	}
@@ -143,7 +143,7 @@ void dicomCodec::buildStream(ptr<streamWriter> pStream, ptr<dataSet> pDataSet, b
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dicomCodec::writeGroup(ptr<streamWriter> pDestStream, ptr<dataGroup> pGroup, std::uint16_t groupId, bool bExplicitDataType, streamController::tByteOrdering endianType)
+void dicomCodec::writeGroup(std::shared_ptr<streamWriter> pDestStream, std::shared_ptr<dataGroup> pGroup, std::uint16_t groupId, bool bExplicitDataType, streamController::tByteOrdering endianType)
 {
 	PUNTOEXE_FUNCTION_START(L"dicomCodec::writeGroup");
 
@@ -185,7 +185,7 @@ void dicomCodec::writeGroup(ptr<streamWriter> pDestStream, ptr<dataGroup> pGroup
 	// Write all the tags
 	///////////////////////////////////////////////////////////
 	for(
-		ptr<dataCollectionIterator<data> > pIterator = pGroup->getDataIterator();
+		std::shared_ptr<dataCollectionIterator<data> > pIterator = pGroup->getDataIterator();
 		pIterator->isValid();
 		pIterator->incIterator())
 	{
@@ -194,7 +194,7 @@ void dicomCodec::writeGroup(ptr<streamWriter> pDestStream, ptr<dataGroup> pGroup
 		{
 			continue;
 		}
-		ptr<data> pData = pIterator->getData();
+		std::shared_ptr<data> pData = pIterator->getData();
 		pDestStream->write((std::uint8_t*)&adjustedGroupId, 2);
 		writeTag(pDestStream, pData, tagId, bExplicitDataType, endianType);
 	}
@@ -212,7 +212,7 @@ void dicomCodec::writeGroup(ptr<streamWriter> pDestStream, ptr<dataGroup> pGroup
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dicomCodec::writeTag(ptr<streamWriter> pDestStream, ptr<data> pData, std::uint16_t tagId, bool bExplicitDataType, streamController::tByteOrdering endianType)
+void dicomCodec::writeTag(std::shared_ptr<streamWriter> pDestStream, std::shared_ptr<data> pData, std::uint16_t tagId, bool bExplicitDataType, streamController::tByteOrdering endianType)
 {
 	PUNTOEXE_FUNCTION_START(L"dicomCodec::writeTag");
 
@@ -286,7 +286,7 @@ void dicomCodec::writeTag(ptr<streamWriter> pDestStream, ptr<data> pData, std::u
 	///////////////////////////////////////////////////////////
 	for(std::uint32_t scanBuffers = 0; ; ++scanBuffers)
 	{
-		ptr<handlers::dataHandlerRaw> pDataHandlerRaw = pData->getDataHandlerRaw(scanBuffers, false, "");
+		std::shared_ptr<handlers::dataHandlerRaw> pDataHandlerRaw = pData->getDataHandlerRaw(scanBuffers, false, "");
 		if(pDataHandlerRaw != 0)
 		{
 			std::uint32_t wordSize = dicomDictionary::getDicomDictionary()->getWordSize(dataType);
@@ -325,7 +325,7 @@ void dicomCodec::writeTag(ptr<streamWriter> pDestStream, ptr<data> pData, std::u
 
 		// Write a nested dataset
 		///////////////////////////////////////////////////////////
-		ptr<dataSet> pDataSet = pData->getDataSet(scanBuffers);
+		std::shared_ptr<dataSet> pDataSet = pData->getDataSet(scanBuffers);
 		if(pDataSet == 0)
 		{
 			break;
@@ -371,7 +371,7 @@ void dicomCodec::writeTag(ptr<streamWriter> pDestStream, ptr<data> pData, std::u
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::uint32_t dicomCodec::getTagLength(ptr<data> pData, bool bExplicitDataType, std::uint32_t* pHeaderLength, bool *pbSequence)
+std::uint32_t dicomCodec::getTagLength(std::shared_ptr<data> pData, bool bExplicitDataType, std::uint32_t* pHeaderLength, bool *pbSequence)
 {
 	PUNTOEXE_FUNCTION_START(L"dicomCodec::getTagLength");
 
@@ -381,7 +381,7 @@ std::uint32_t dicomCodec::getTagLength(ptr<data> pData, bool bExplicitDataType, 
 	std::uint32_t totalLength = 0;
 	for(std::uint32_t scanBuffers = 0; ; ++scanBuffers, ++numberOfElements)
 	{
-		ptr<dataSet> pDataSet = pData->getDataSet(scanBuffers);
+		std::shared_ptr<dataSet> pDataSet = pData->getDataSet(scanBuffers);
 		if(pDataSet != 0)
 		{
 			totalLength += getDataSetLength(pDataSet, bExplicitDataType);
@@ -427,11 +427,11 @@ std::uint32_t dicomCodec::getTagLength(ptr<data> pData, bool bExplicitDataType, 
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::uint32_t dicomCodec::getGroupLength(ptr<dataGroup> pDataGroup, bool bExplicitDataType)
+std::uint32_t dicomCodec::getGroupLength(std::shared_ptr<dataGroup> pDataGroup, bool bExplicitDataType)
 {
 	PUNTOEXE_FUNCTION_START(L"dicomCodec::getGroupLength");
 
-	ptr<dataCollectionIterator<data> > pIterator = pDataGroup->getDataIterator();
+	std::shared_ptr<dataCollectionIterator<data> > pIterator = pDataGroup->getDataIterator();
 
 	std::uint32_t totalLength = 0;
 
@@ -463,11 +463,11 @@ std::uint32_t dicomCodec::getGroupLength(ptr<dataGroup> pDataGroup, bool bExplic
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::uint32_t dicomCodec::getDataSetLength(ptr<dataSet> pDataSet, bool bExplicitDataType)
+std::uint32_t dicomCodec::getDataSetLength(std::shared_ptr<dataSet> pDataSet, bool bExplicitDataType)
 {
 	PUNTOEXE_FUNCTION_START(L"dicomCodec::getDataSetLength");
 
-	ptr<dataCollectionIterator<dataGroup> > pIterator = pDataSet->getDataIterator();
+	std::shared_ptr<dataCollectionIterator<dataGroup> > pIterator = pDataSet->getDataIterator();
 
 	std::uint32_t totalLength = 0;
 
@@ -500,7 +500,7 @@ std::uint32_t dicomCodec::getDataSetLength(ptr<dataSet> pDataSet, bool bExplicit
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dicomCodec::readStream(ptr<streamReader> pStream, ptr<dataSet> pDataSet, std::uint32_t maxSizeBufferLoad /* = 0xffffffff */)
+void dicomCodec::readStream(std::shared_ptr<streamReader> pStream, std::shared_ptr<dataSet> pDataSet, std::uint32_t maxSizeBufferLoad /* = 0xffffffff */)
 {
 	PUNTOEXE_FUNCTION_START(L"dicomCodec::readStream");
 
@@ -584,8 +584,8 @@ void dicomCodec::readStream(ptr<streamReader> pStream, ptr<dataSet> pDataSet, st
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dicomCodec::parseStream(ptr<streamReader> pStream,
-							 ptr<dataSet> pDataSet,
+void dicomCodec::parseStream(std::shared_ptr<streamReader> pStream,
+							 std::shared_ptr<dataSet> pDataSet,
 							 bool bExplicitDataType,
 							 streamController::tByteOrdering endianType,
 							 std::uint32_t maxSizeBufferLoad /* = 0xffffffff */,
@@ -891,14 +891,14 @@ void dicomCodec::parseStream(ptr<streamReader> pStream,
 			///////////////////////////////////////////////////////////
 			if((sequenceItemLength == 0xffffffff) || (::memcmp(tagType, "SQ", 2) == 0))
 			{
-				ptr<dataSet> sequenceDataSet(new dataSet);
+				std::shared_ptr<dataSet> sequenceDataSet(new dataSet);
 				sequenceDataSet->setItemOffset(itemOffset);
 				std::uint32_t effectiveLength(0);
 				parseStream(pStream, sequenceDataSet, bExplicitDataType, endianType, maxSizeBufferLoad, sequenceItemLength, &effectiveLength, depth + 1);
 				(*pReadSubItemLength) += effectiveLength;
 				if(tagLengthDWord!=0xffffffff)
 					tagLengthDWord-=effectiveLength;
-				ptr<data> sequenceTag=pDataSet->getTag(tagId, 0x0, tagSubId, true);
+				std::shared_ptr<data> sequenceTag=pDataSet->getTag(tagId, 0x0, tagSubId, true);
 				sequenceTag->setDataSet(bufferId, sequenceDataSet);
 				++bufferId;
 
@@ -932,7 +932,7 @@ void dicomCodec::parseStream(ptr<streamReader> pStream,
 //
 /////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
-ptr<image> dicomCodec::getImage(ptr<dataSet> pData, ptr<streamReader> pStream, const std::string& dataType)
+std::shared_ptr<image> dicomCodec::getImage(dataSet* pData, std::shared_ptr<streamReader> pStream, const std::string& dataType)
 {
 	PUNTOEXE_FUNCTION_START(L"dicomCodec::getImage");
 
@@ -945,7 +945,7 @@ ptr<image> dicomCodec::getImage(ptr<dataSet> pData, ptr<streamReader> pStream, c
 
 	// Check for color space and subsampled channels
 	///////////////////////////////////////////////////////////
-	std::wstring colorSpace=pData->getUnicodeString(0x0028, 0x0, 0x0004, 0x0);
+    std::wstring colorSpace = pData->getUnicodeString(0x0028, 0x0, 0x0004, 0x0);
 
 	// Retrieve the number of planes
 	///////////////////////////////////////////////////////////
@@ -967,8 +967,8 @@ ptr<image> dicomCodec::getImage(ptr<dataSet> pData, ptr<streamReader> pStream, c
 
 	// Retrieve the image's size
 	///////////////////////////////////////////////////////////
-	std::uint32_t imageSizeX=pData->getUnsignedLong(0x0028, 0x0, 0x0011, 0x0);
-	std::uint32_t imageSizeY=pData->getUnsignedLong(0x0028, 0x0, 0x0010, 0x0);
+    std::uint32_t imageSizeX = pData->getUnsignedLong(0x0028, 0x0, 0x0011, 0x0);
+    std::uint32_t imageSizeY = pData->getUnsignedLong(0x0028, 0x0, 0x0010, 0x0);
 
     if(
             imageSizeX > codecFactory::getCodecFactory()->getMaximumImageWidth() ||
@@ -988,7 +988,7 @@ ptr<image> dicomCodec::getImage(ptr<dataSet> pData, ptr<streamReader> pStream, c
 
 	// Check for 2's complement
 	///////////////////////////////////////////////////////////
-	bool b2Complement=pData->getUnsignedLong(0x0028, 0x0, 0x0103, 0x0)!=0x0;
+    bool b2Complement = pData->getUnsignedLong(0x0028, 0x0, 0x0103, 0x0)!=0x0;
 
 	// Retrieve the allocated/stored/high bits
 	///////////////////////////////////////////////////////////
@@ -1039,8 +1039,8 @@ ptr<image> dicomCodec::getImage(ptr<dataSet> pData, ptr<streamReader> pStream, c
 		}
 	}
 
-	ptr<image> pImage(new image);
-	ptr<handlers::dataHandlerNumericBase> handler = pImage->create(imageSizeX, imageSizeY, depth, colorSpace, highBit);
+	std::shared_ptr<image> pImage(new image);
+	std::shared_ptr<handlers::dataHandlerNumericBase> handler = pImage->create(imageSizeX, imageSizeY, depth, colorSpace, highBit);
 	std::uint32_t tempChannelsNumber = pImage->getChannelsNumber();
 
 	if(handler == 0 || tempChannelsNumber != channelsNumber)
@@ -1287,7 +1287,7 @@ void dicomCodec::readUncompressedInterleaved(
 	std::uint32_t maxSamplingFactorX = bSubSampledX ? 2 : 1;
 	std::uint32_t maxSamplingFactorY = bSubSampledY ? 2 : 1;
 
-	ptr<memory> readBuffer(memoryPool::getMemoryPool()->getMemory(numValuesPerBlock * ((7+allocatedBits) >> 3)));
+	std::shared_ptr<memory> readBuffer(memoryPool::getMemoryPool()->getMemory(numValuesPerBlock * ((7+allocatedBits) >> 3)));
 
 	// Read all the blocks
 	///////////////////////////////////////////////////////////
@@ -1430,7 +1430,7 @@ void dicomCodec::readUncompressedNotInterleaved(
 
 	std::uint8_t  bitPointer=0x0;
 
-	ptr<memory> readBuffer;
+	std::shared_ptr<memory> readBuffer;
 	std::uint32_t lastBufferSize(0);
 
 	// Read all the pixels
@@ -1440,7 +1440,7 @@ void dicomCodec::readUncompressedNotInterleaved(
 		if(m_channels[channel]->m_bufferSize != lastBufferSize)
 		{
 			lastBufferSize = m_channels[channel]->m_bufferSize;
-			readBuffer = memoryPool::getMemoryPool()->getMemory(lastBufferSize * ((7+allocatedBits) >> 3));
+            readBuffer.reset(memoryPool::getMemoryPool()->getMemory(lastBufferSize * ((7+allocatedBits) >> 3)));
 		}
 		std::int32_t* pMemoryDest = m_channels[channel]->m_pBuffer;
         readPixel(pSourceStream, pMemoryDest, m_channels[channel]->m_bufferSize, &bitPointer, readBuffer->data(), wordSizeBytes, allocatedBits, mask);
@@ -2013,8 +2013,8 @@ void dicomCodec::flushUnwrittenPixels(streamWriter* pDestStream, std::uint8_t* p
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 void dicomCodec::setImage(
-		ptr<streamWriter> pDestStream,
-		ptr<image> pImage,
+		std::shared_ptr<streamWriter> pDestStream,
+		std::shared_ptr<image> pImage,
 		std::wstring transferSyntax,
 		quality /*imageQuality*/,
 		std::string dataType,
@@ -2038,7 +2038,7 @@ void dicomCodec::setImage(
 	bool bRleCompressed = (transferSyntax == L"1.2.840.10008.1.2.5");
 
 	std::uint32_t rowSize, channelPixelSize, channelsNumber;
-	ptr<handlers::dataHandlerNumericBase> imageHandler = pImage->getDataHandler(false, &rowSize, &channelPixelSize, &channelsNumber);
+	std::shared_ptr<handlers::dataHandlerNumericBase> imageHandler = pImage->getDataHandler(false, &rowSize, &channelPixelSize, &channelsNumber);
 
 	// Copy the image into the dicom channels
 	///////////////////////////////////////////////////////////
@@ -2184,8 +2184,8 @@ std::uint32_t dicomCodec::suggestAllocatedBits(const std::wstring& transferSynta
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 std::uint32_t dicomCodec::readTag(
-	ptr<streamReader> pStream,
-	ptr<dataSet> pDataSet,
+	std::shared_ptr<streamReader> pStream,
+	std::shared_ptr<dataSet> pDataSet,
 	std::uint32_t tagLengthDWord,
 	std::uint16_t tagId,
 	std::uint16_t order,
@@ -2214,11 +2214,10 @@ std::uint32_t dicomCodec::readTag(
 			PUNTOEXE_THROW(codecExceptionCorruptedFile, "dicomCodec::readTag detected a corrupted tag");
 		}
 
-		ptr<dataGroup> writeGroup(pDataSet->getGroup(tagId, order, true));
-		ptr<data>      writeData (writeGroup->getTag(tagSubId, true));
-		ptr<buffer> newBuffer(
+		std::shared_ptr<dataGroup> writeGroup(pDataSet->getGroup(tagId, order, true));
+		std::shared_ptr<data>      writeData (writeGroup->getTag(tagSubId, true));
+		std::shared_ptr<buffer> newBuffer(
 			new buffer(
-				writeData,
 				tagType,
 				pStream->getControlledStream(),
 				streamPosition,
@@ -2233,7 +2232,7 @@ std::uint32_t dicomCodec::readTag(
 
 	// Allocate the tag's buffer
 	///////////////////////////////////////////////////////////
-	ptr<handlers::dataHandlerRaw> handler(pDataSet->getDataHandlerRaw(tagId, order, tagSubId, bufferId, true, tagType));
+	std::shared_ptr<handlers::dataHandlerRaw> handler(pDataSet->getDataHandlerRaw(tagId, order, tagSubId, bufferId, true, tagType));
 
 	// Do nothing if the tag's size is 0
 	///////////////////////////////////////////////////////////

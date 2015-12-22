@@ -76,7 +76,7 @@ std::uint32_t dataHandlerTime::getUnitSize() const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerTime::parseBuffer(const ptr<memory>& memoryBuffer)
+void dataHandlerTime::parseBuffer(const std::shared_ptr<memory>& memoryBuffer)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerTime::parseBuffer");
 

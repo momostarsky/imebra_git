@@ -83,7 +83,7 @@ namespace imebra
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-directoryRecord::directoryRecord(ptr<dataSet> pDataSet):
+directoryRecord::directoryRecord(std::shared_ptr<dataSet> pDataSet):
 	m_pDataSet(pDataSet)
 {
 }
@@ -98,7 +98,7 @@ directoryRecord::directoryRecord(ptr<dataSet> pDataSet):
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<dataSet> directoryRecord::getRecordDataSet()
+std::shared_ptr<dataSet> directoryRecord::getRecordDataSet()
 {
 	return m_pDataSet;
 }
@@ -113,7 +113,7 @@ ptr<dataSet> directoryRecord::getRecordDataSet()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<directoryRecord> directoryRecord::getNextRecord()
+std::shared_ptr<directoryRecord> directoryRecord::getNextRecord()
 {
 	return m_pNextRecord;
 }
@@ -128,7 +128,7 @@ ptr<directoryRecord> directoryRecord::getNextRecord()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<directoryRecord> directoryRecord::getFirstChildRecord()
+std::shared_ptr<directoryRecord> directoryRecord::getFirstChildRecord()
 {
 	return m_pFirstChildRecord;
 }
@@ -143,7 +143,7 @@ ptr<directoryRecord> directoryRecord::getFirstChildRecord()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<directoryRecord> directoryRecord::getReferencedRecord()
+std::shared_ptr<directoryRecord> directoryRecord::getReferencedRecord()
 {
 	return m_pReferencedRecord;
 }
@@ -158,7 +158,7 @@ ptr<directoryRecord> directoryRecord::getReferencedRecord()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void directoryRecord::setNextRecord(ptr<directoryRecord> pNextRecord)
+void directoryRecord::setNextRecord(std::shared_ptr<directoryRecord> pNextRecord)
 {
 	if(pNextRecord != 0)
 	{
@@ -177,7 +177,7 @@ void directoryRecord::setNextRecord(ptr<directoryRecord> pNextRecord)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void directoryRecord::setFirstChildRecord(ptr<directoryRecord> pFirstChildRecord)
+void directoryRecord::setFirstChildRecord(std::shared_ptr<directoryRecord> pFirstChildRecord)
 {
 	if(pFirstChildRecord != 0)
 	{
@@ -196,7 +196,7 @@ void directoryRecord::setFirstChildRecord(ptr<directoryRecord> pFirstChildRecord
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void directoryRecord::setReferencedRecord(ptr<directoryRecord> pReferencedRecord)
+void directoryRecord::setReferencedRecord(std::shared_ptr<directoryRecord> pReferencedRecord)
 {
 	if(pReferencedRecord != 0)
 	{
@@ -427,30 +427,26 @@ void directoryRecord::checkCircularReference(directoryRecord* pStartRecord)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-dicomDir::dicomDir(ptr<dataSet> pDataSet):
+dicomDir::dicomDir(std::shared_ptr<dataSet> pDataSet):
 	m_pDataSet(pDataSet)
 {
-	if(m_pDataSet == 0)
+    if(m_pDataSet.get() == 0)
 	{
-		m_pDataSet =new dataSet;
+        m_pDataSet = std::make_shared<dataSet>();
 	}
-
-	// Parse the dataset
-	///////////////////////////////////////////////////////////
-	lockObject lockDataSet(pDataSet);
 
 	// Get the DICOMDIR sequence
 	///////////////////////////////////////////////////////////
-	typedef std::map<std::uint32_t, ptr<directoryRecord> > tOffsetsToRecords;
+	typedef std::map<std::uint32_t, std::shared_ptr<directoryRecord> > tOffsetsToRecords;
 	tOffsetsToRecords offsetsToRecords;
 	for(std::uint32_t scanItems(0); ; ++scanItems)
 	{
-		ptr<dataSet> pDataSet(m_pDataSet->getSequenceItem(0x0004, 0, 0x1220, scanItems));
+		std::shared_ptr<dataSet> pDataSet(m_pDataSet->getSequenceItem(0x0004, 0, 0x1220, scanItems));
 		if(pDataSet == 0)
 		{
 			break;
 		}
-		ptr<directoryRecord> newRecord(new directoryRecord(pDataSet));
+		std::shared_ptr<directoryRecord> newRecord(new directoryRecord(pDataSet));
 		offsetsToRecords[pDataSet->getItemOffset()] = newRecord;
 		m_recordsList.push_back(newRecord);
 	}
@@ -507,7 +503,7 @@ dicomDir::dicomDir(ptr<dataSet> pDataSet):
 ///////////////////////////////////////////////////////////
 dicomDir::~dicomDir()
 {
-	m_pFirstRootRecord.release();
+    m_pFirstRootRecord.reset();
 	m_recordsList.clear();
 }
 
@@ -521,7 +517,7 @@ dicomDir::~dicomDir()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<dataSet> dicomDir::getDirectoryDataSet()
+std::shared_ptr<dataSet> dicomDir::getDirectoryDataSet()
 {
 	return m_pDataSet;
 }
@@ -537,13 +533,13 @@ ptr<dataSet> dicomDir::getDirectoryDataSet()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<directoryRecord> dicomDir::getNewRecord()
+std::shared_ptr<directoryRecord> dicomDir::getNewRecord()
 {
-	ptr<data> recordsTag(m_pDataSet->getTag(0x0004, 0, 0x1220, true));
-	ptr<dataSet> recordDataSet(new dataSet);
+	std::shared_ptr<data> recordsTag(m_pDataSet->getTag(0x0004, 0, 0x1220, true));
+    std::shared_ptr<dataSet> recordDataSet = std::make_shared<dataSet>();
 	recordsTag->appendDataSet(recordDataSet);
 
-	ptr<directoryRecord> newRecord(new directoryRecord(recordDataSet));
+	std::shared_ptr<directoryRecord> newRecord(new directoryRecord(recordDataSet));
 	m_recordsList.push_back(newRecord);
 
 	return newRecord;
@@ -560,7 +556,7 @@ ptr<directoryRecord> dicomDir::getNewRecord()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<dataSet> dicomDir::buildDataSet()
+std::shared_ptr<dataSet> dicomDir::buildDataSet()
 {
 	// Adjust the transfer syntax if it isn't already set
 	///////////////////////////////////////////////////////////
@@ -571,14 +567,14 @@ ptr<dataSet> dicomDir::buildDataSet()
 
 	// Adjust the version if it isn't already set
 	///////////////////////////////////////////////////////////
-	ptr<handlers::dataHandlerRaw> versionHandler(m_pDataSet->getDataHandlerRaw(0x2, 0, 0x1, 0, true, "OB"));
+	std::shared_ptr<handlers::dataHandlerRaw> versionHandler(m_pDataSet->getDataHandlerRaw(0x2, 0, 0x1, 0, true, "OB"));
 	if(versionHandler->getSize() != 2)
 	{
 		versionHandler->setSize(2);
 		versionHandler->setUnsignedLong(0, 0);
 		versionHandler->setUnsignedLong(1, 1);
 	}
-	versionHandler.release();
+    versionHandler.reset();
 
 	// Adjust the SOP class UID if it isn't already set
 	///////////////////////////////////////////////////////////
@@ -598,9 +594,9 @@ ptr<dataSet> dicomDir::buildDataSet()
 
 	// Save to a null stream in order to update the offsets
 	///////////////////////////////////////////////////////////
-	ptr<nullStream> saveStream(new nullStream);
-	ptr<streamWriter> writer(new streamWriter(saveStream));
-	ptr<codecs::dicomCodec> writerCodec(new codecs::dicomCodec);
+	std::shared_ptr<nullStream> saveStream(new nullStream);
+	std::shared_ptr<streamWriter> writer(new streamWriter(saveStream));
+	std::shared_ptr<codecs::dicomCodec> writerCodec(new codecs::dicomCodec);
 	writerCodec->write(writer, m_pDataSet);
 
 	// Scan all the records and update the pointers
@@ -625,7 +621,7 @@ ptr<dataSet> dicomDir::buildDataSet()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-ptr<directoryRecord> dicomDir::getFirstRootRecord()
+std::shared_ptr<directoryRecord> dicomDir::getFirstRootRecord()
 {
 	return m_pFirstRootRecord;
 }
@@ -640,7 +636,7 @@ ptr<directoryRecord> dicomDir::getFirstRootRecord()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dicomDir::setFirstRootRecord(ptr<directoryRecord> pFirstRootRecord)
+void dicomDir::setFirstRootRecord(std::shared_ptr<directoryRecord> pFirstRootRecord)
 {
 	m_pFirstRootRecord = pFirstRootRecord;
 }

@@ -12,7 +12,7 @@ $fileHeader$
 
 #include <stdexcept>
 
-#include "baseObjectImpl.h"
+#include <memory>
 #include "memoryImpl.h"
 
 ///////////////////////////////////////////////////////////
@@ -82,7 +82,7 @@ namespace codecs
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class codec : public baseObject
+class codec
 {
 public:
 	///////////////////////////////////////////////////////////
@@ -131,7 +131,7 @@ public:
 	/// @return        a pointer to the loaded dataSet
 	///
 	///////////////////////////////////////////////////////////
-	ptr<dataSet> read(ptr<streamReader> pSourceStream, std::uint32_t maxSizeBufferLoad = 0xffffffff);
+	std::shared_ptr<dataSet> read(std::shared_ptr<streamReader> pSourceStream, std::uint32_t maxSizeBufferLoad = 0xffffffff);
 
 	/// \brief Write a dicom structure into a stream.
 	///
@@ -146,7 +146,7 @@ public:
 	///                     to write into the stream
 	///
 	///////////////////////////////////////////////////////////
-	void write(ptr<streamWriter> pDestStream, ptr<dataSet> pSourceDataSet);
+	void write(std::shared_ptr<streamWriter> pDestStream, std::shared_ptr<dataSet> pSourceDataSet);
 
 	//@}
 
@@ -186,7 +186,7 @@ public:
 	/// @return a pointer to the loaded image
 	///
 	///////////////////////////////////////////////////////////
-    virtual ptr<image> getImage(ptr<dataSet> pSourceDataSet, ptr<streamReader> pSourceStream, const std::string& dataType) = 0;
+    virtual std::shared_ptr<image> getImage(dataSet* pSourceDataSet, std::shared_ptr<streamReader> pSourceStream, const std::string& dataType) = 0;
 	
 	/// \brief This enumeration is used by setImage() in order
 	///         to setup the compression parameters.
@@ -241,8 +241,8 @@ public:
 	///
 	///////////////////////////////////////////////////////////
 	virtual void setImage(
-		ptr<streamWriter> pDestStream,
-		ptr<image> pSourceImage, 
+		std::shared_ptr<streamWriter> pDestStream,
+		std::shared_ptr<image> pSourceImage, 
 		std::wstring transferSyntax, 
 		quality imageQuality,
 		std::string dataType,
@@ -268,7 +268,7 @@ public:
 	///          codec where the function is being called
 	///
 	///////////////////////////////////////////////////////////
-	virtual ptr<codec> createCodec()=0;
+	virtual std::shared_ptr<codec> createCodec()=0;
 
 	/// \brief This function returns true if the codec can
 	///        handle the requested DICOM transfer syntax.
@@ -319,12 +319,12 @@ public:
 
 
 protected:
-	virtual void readStream(ptr<streamReader> pInputStream, ptr<dataSet> pDestDataSet, std::uint32_t maxSizeBufferLoad = 0xffffffff) =0;
-	virtual void writeStream(ptr<streamWriter> pDestStream, ptr<dataSet> pSourceDataSet) =0;
+	virtual void readStream(std::shared_ptr<streamReader> pInputStream, std::shared_ptr<dataSet> pDestDataSet, std::uint32_t maxSizeBufferLoad = 0xffffffff) =0;
+	virtual void writeStream(std::shared_ptr<streamWriter> pDestStream, std::shared_ptr<dataSet> pSourceDataSet) =0;
 };
 
 
-class channel : public baseObject
+class channel
 {
 public:
 	// Constructor
@@ -356,7 +356,7 @@ public:
 	std::int32_t* m_pBuffer;
 	std::uint32_t m_bufferSize;
 
-	ptr<memory> m_memory;
+	std::shared_ptr<memory> m_memory;
 };
 
 

@@ -31,7 +31,7 @@ namespace transforms
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-modalityVOILUT::modalityVOILUT(ptr<dataSet> pDataSet):
+modalityVOILUT::modalityVOILUT(std::shared_ptr<dataSet> pDataSet):
 		m_pDataSet(pDataSet), m_voiLut(pDataSet->getLut(0x0028, 0x3000, 0)), m_rescaleIntercept(pDataSet->getDouble(0x0028, 0, 0x1052, 0x0)), m_rescaleSlope(1.0), m_bEmpty(true)
 
 {
@@ -43,7 +43,7 @@ modalityVOILUT::modalityVOILUT(ptr<dataSet> pDataSet):
 		return;
 	}
 
-	ptr<handlers::dataHandler> rescaleHandler(m_pDataSet->getDataHandler(0x0028, 0, 0x1053, 0x0, false));
+    std::shared_ptr<handlers::dataHandler> rescaleHandler(m_pDataSet->getDataHandler(0x0028, 0, 0x1053, 0x0, false));
 	if(rescaleHandler != 0)
 	{
 		m_rescaleSlope = rescaleHandler->getDouble(0);
@@ -62,11 +62,11 @@ bool modalityVOILUT::isEmpty()
 }
 
 
-ptr<image> modalityVOILUT::allocateOutputImage(ptr<image> pInputImage, std::uint32_t width, std::uint32_t height)
+std::shared_ptr<image> modalityVOILUT::allocateOutputImage(std::shared_ptr<image> pInputImage, std::uint32_t width, std::uint32_t height)
 {
 	if(isEmpty())
 	{
-        ptr<image> newImage(new image());
+        std::shared_ptr<image> newImage(new image());
 		newImage->create(width, height, pInputImage->getDepth(), pInputImage->getColorSpace(), pInputImage->getHighBit());
 		return newImage;
 	}
@@ -115,7 +115,7 @@ ptr<image> modalityVOILUT::allocateOutputImage(ptr<image> pInputImage, std::uint
                 depth = image::depthU8;
             }
         }
-		ptr<image> returnImage(new image);
+        std::shared_ptr<image> returnImage(new image);
 		returnImage->create(width, height, depth, L"MONOCHROME2", bits - 1);
 		return returnImage;
 	}
@@ -124,7 +124,7 @@ ptr<image> modalityVOILUT::allocateOutputImage(ptr<image> pInputImage, std::uint
 	///////////////////////////////////////////////////////////
 	if(m_rescaleSlope == 0)
 	{
-		ptr<image> returnImage(new image);
+        std::shared_ptr<image> returnImage(new image);
 		returnImage->create(width, height, pInputImage->getDepth(), L"MONOCHROME2", pInputImage->getHighBit());
 		return returnImage;
 	}
@@ -154,7 +154,7 @@ ptr<image> modalityVOILUT::allocateOutputImage(ptr<image> pInputImage, std::uint
 		maxValue = finalValue0;
 	}
 
-	ptr<image> returnImage(new image);
+    std::shared_ptr<image> returnImage(new image);
 	if(minValue >= 0 && maxValue <= 255)
 	{
 		returnImage->create(width, height, image::depthU8, L"MONOCHROME2", 7);

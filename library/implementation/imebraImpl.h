@@ -61,8 +61,6 @@ Please note that the file doesn't include the file viewHelper.h.
 #include "YBRFULLToRGBImpl.h"
 #include "YBRPARTIALToRGBImpl.h"
 #include "drawBitmapImpl.h"
-
-#include "baseObjectImpl.h"
 #include "baseStreamImpl.h"
 #include "configurationImpl.h"
 #include "exceptionImpl.h"

@@ -66,9 +66,9 @@ void colorTransform::checkColorSpaces(const std::wstring& inputHandlerColorSpace
 }
 
 
-ptr<image> colorTransform::allocateOutputImage(ptr<image> pInputImage, std::uint32_t width, std::uint32_t height)
+std::shared_ptr<image> colorTransform::allocateOutputImage(std::shared_ptr<image> pInputImage, std::uint32_t width, std::uint32_t height)
 {
-    ptr<image> newImage(new image());
+    std::shared_ptr<image> newImage(new image());
 	newImage->create(width, height, pInputImage->getDepth(), getFinalColorSpace(), pInputImage->getHighBit());
 	return newImage;
 }
@@ -100,11 +100,11 @@ ptr<image> colorTransform::allocateOutputImage(ptr<image> pInputImage, std::uint
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-registerColorTransform::registerColorTransform(ptr<colorTransform> newColorTransform)
+registerColorTransform::registerColorTransform(std::shared_ptr<colorTransform> newColorTransform)
 {
 	PUNTOEXE_FUNCTION_START(L"registerColorTransform::registerColorTransform");
 
-	ptr<colorTransformsFactory> pFactory(colorTransformsFactory::getColorTransformsFactory());
+	std::shared_ptr<colorTransformsFactory> pFactory(colorTransformsFactory::getColorTransformsFactory());
 	pFactory->registerTransform(newColorTransform);
 
 	PUNTOEXE_FUNCTION_END();

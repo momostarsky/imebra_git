@@ -12,7 +12,7 @@ $fileHeader$
 
 #ifndef SWIG
 
-#include "../../implementation/baseObjectImpl.h"
+#include <memory>
 
 namespace puntoexe
 {
@@ -41,7 +41,7 @@ public:
     virtual ~Transform(){}
 
 #ifndef SWIG
-    Transform(puntoexe::ptr<puntoexe::imebra::transforms::transform> pTransform);
+    Transform(std::shared_ptr<puntoexe::imebra::transforms::transform> pTransform);
 #endif
 
 
@@ -56,7 +56,7 @@ public:
 			int outputTopLeftX, int outputTopLeftY);
 
 #ifndef SWIG
-    puntoexe::ptr<puntoexe::imebra::transforms::transform> m_pTransform;
+    std::shared_ptr<puntoexe::imebra::transforms::transform> m_pTransform;
 #endif
 };
 

@@ -61,8 +61,6 @@ dataHandler::~dataHandler()
 {
     if(m_commitMemory != 0)
     {
-        lockObject lockAccess(m_buffer.get());
-
         charsetsList::tCharsetsList temporaryCharsets;
         m_buffer->getCharsetsList(&temporaryCharsets);
         charsetsList::updateCharsets(&m_commitCharsetsList, &temporaryCharsets);
@@ -140,7 +138,7 @@ void dataHandler::parseBuffer(const std::uint8_t* pBuffer, const std::uint32_t b
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandler::parseBuffer");
 
-	ptr<memory> tempMemory(memoryPool::getMemoryPool()->getMemory(bufferLength));
+	std::shared_ptr<memory> tempMemory(memoryPool::getMemoryPool()->getMemory(bufferLength));
 	if(pBuffer && bufferLength)
 	{
 		tempMemory->assign(pBuffer, bufferLength);

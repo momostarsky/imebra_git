@@ -16,7 +16,7 @@ $fileHeader$
 #include "codecImpl.h"
 
 #include <vector>
-
+#include <memory>
 
 ///////////////////////////////////////////////////////////
 //
@@ -74,12 +74,12 @@ class waveform;
 /// 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class dataSet : public dataCollection<dataGroup>
+class dataSet : public dataCollection<dataGroup>, public std::enable_shared_from_this<dataSet>
 {
 public:
 	// Costructor
 	///////////////////////////////////////////////////////////
-	dataSet(): dataCollection<dataGroup>(ptr<baseObject>(new baseObject)), m_itemOffset(0) {}
+    dataSet(): m_itemOffset(0) {}
 
 	///////////////////////////////////////////////////////////
 	/// \name Get/set groups/tags
@@ -125,7 +125,7 @@ public:
 	///                 just created tag is returned.
 	///
 	///////////////////////////////////////////////////////////
-	ptr<data> getTag(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, bool bCreate=false);
+	std::shared_ptr<data> getTag(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, bool bCreate=false);
 	
 	/// \brief Retrieve a group object.
 	///
@@ -167,7 +167,7 @@ public:
 	///                 just created group is returned.
 	///
 	///////////////////////////////////////////////////////////
-	ptr<dataGroup> getGroup(std::uint16_t groupId, std::uint16_t order, bool bCreate=false);
+	std::shared_ptr<dataGroup> getGroup(std::uint16_t groupId, std::uint16_t order, bool bCreate=false);
 	
 	/// \brief Insert the specified group into the dataset.
 	///
@@ -193,7 +193,7 @@ public:
 	///                 the data set.
 	///
 	///////////////////////////////////////////////////////////
-	void setGroup(std::uint16_t groupId, std::uint16_t order, ptr<dataGroup> pGroup);
+	void setGroup(std::uint16_t groupId, std::uint16_t order, std::shared_ptr<dataGroup> pGroup);
 
 	//@}
 
@@ -236,7 +236,7 @@ public:
 	///                     image
 	///
 	///////////////////////////////////////////////////////////
-	ptr<image> getImage(std::uint32_t frameNumber);
+	std::shared_ptr<image> getImage(std::uint32_t frameNumber);
 
     /// \brief Retrieve an image from the dataset and apply the
     ///        modality transform if it is specified in the
@@ -252,7 +252,7 @@ public:
     ///                     transform has been applied
     ///
     ///////////////////////////////////////////////////////////
-    ptr<image> getModalityImage(std::uint32_t frameNumber);
+    std::shared_ptr<image> getModalityImage(std::uint32_t frameNumber);
 	
 	/// \brief Insert an image into the data set.
 	///
@@ -271,7 +271,7 @@ public:
 	///                     compression quality
 	///
 	///////////////////////////////////////////////////////////
-    void setImage(std::uint32_t frameNumber, ptr<image> pImage, const std::wstring& transferSyntax, codecs::codec::quality quality);
+    void setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage, const std::wstring& transferSyntax, codecs::codec::quality quality);
 
 	/// \brief Get a frame's offset from the offset table.
 	///
@@ -382,7 +382,7 @@ public:
 	///                 dataset is returned
 	///
 	///////////////////////////////////////////////////////////
-	ptr<dataSet> getSequenceItem(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t itemId);
+	std::shared_ptr<dataSet> getSequenceItem(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t itemId);
 
 	/// \brief Retrieve a LUT.
 	///
@@ -405,7 +405,7 @@ public:
 	///                 LUT is returned
 	///
 	///////////////////////////////////////////////////////////
-	ptr<lut> getLut(std::uint16_t groupId, std::uint16_t tagId, std::uint32_t lutId);
+	std::shared_ptr<lut> getLut(std::uint16_t groupId, std::uint16_t tagId, std::uint32_t lutId);
 
 	/// \brief Retrieve a waveform from the dataSet.
 	///
@@ -421,7 +421,7 @@ public:
 	///          the requested waveform doesn't exist
 	///
 	///////////////////////////////////////////////////////////
-	ptr<waveform> getWaveform(std::uint32_t waveformId);
+	std::shared_ptr<waveform> getWaveform(std::uint32_t waveformId);
 
 	//@}
 
@@ -793,7 +793,7 @@ public:
 	/// @return a pointer to the data handler.
 	///
 	///////////////////////////////////////////////////////////
-    ptr<handlers::dataHandler> getDataHandler(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId, bool bWrite, const std::string& defaultType="");
+    std::shared_ptr<handlers::dataHandler> getDataHandler(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId, bool bWrite, const std::string& defaultType="");
 
 	/// \brief Return a raw data handler for the specified 
 	///         tag's buffer.
@@ -826,7 +826,7 @@ public:
 	/// @return a pointer to the data handler.
 	///
 	///////////////////////////////////////////////////////////
-    ptr<handlers::dataHandlerRaw> getDataHandlerRaw(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId, bool bWrite, const std::string& defaultType="");
+    std::shared_ptr<handlers::dataHandlerRaw> getDataHandlerRaw(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId, bool bWrite, const std::string& defaultType="");
 
 	/// \brief Return a streamReader connected to the specified
 	///         tag's buffer's memory.
@@ -849,7 +849,7 @@ public:
 	/// @return a pointer to the streamReader
 	///
 	///////////////////////////////////////////////////////////
-	ptr<streamReader> getStreamReader(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId);
+	std::shared_ptr<streamReader> getStreamReader(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId);
 
 	/// \brief Return a streamWriter connected to the specified
 	///         tag's buffer's memory.
@@ -874,7 +874,7 @@ public:
 	/// @return a pointer to the streamWriter
 	///
 	///////////////////////////////////////////////////////////
-    ptr<streamWriter> getStreamWriter(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId, const std::string& dataType = "");
+    std::shared_ptr<streamWriter> getStreamWriter(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId, const std::string& dataType = "");
 
 	//@}
 
@@ -942,7 +942,7 @@ protected:
 	// Convert an image using the attributes specified in the
 	//  the dataset
 	///////////////////////////////////////////////////////////
-	ptr<image> convertImageForDataSet(ptr<image> sourceImage);
+	std::shared_ptr<image> convertImageForDataSet(std::shared_ptr<image> sourceImage);
 
 	std::vector<std::uint32_t> m_imagesPositions;
 

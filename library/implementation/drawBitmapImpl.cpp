@@ -19,7 +19,7 @@ namespace imebra
 {
 
 
-drawBitmap::drawBitmap(ptr<image> sourceImage, ptr<transforms::transformsChain> transformsChain):
+drawBitmap::drawBitmap(std::shared_ptr<image> sourceImage, std::shared_ptr<transforms::transformsChain> transformsChain):
 	m_image(sourceImage), m_transformsChain(new transforms::transformsChain)
 {
 	if(transformsChain != 0 && !transformsChain->isEmpty())
@@ -39,11 +39,11 @@ drawBitmap::drawBitmap(ptr<image> sourceImage, ptr<transforms::transformsChain> 
 	}
 	else
 	{
-		ptr<image> startImage(m_transformsChain->allocateOutputImage(m_image, 1, 1));
+		std::shared_ptr<image> startImage(m_transformsChain->allocateOutputImage(m_image, 1, 1));
 		initialColorSpace = startImage->getColorSpace();
 	}
-	transforms::colorTransforms::colorTransformsFactory* pColorTransformsFactory(transforms::colorTransforms::colorTransformsFactory::getColorTransformsFactory());
-	ptr<transforms::colorTransforms::colorTransform> rgbColorTransform(pColorTransformsFactory->getTransform(initialColorSpace, L"RGB"));
+    std::shared_ptr<transforms::colorTransforms::colorTransformsFactory> pColorTransformsFactory(transforms::colorTransforms::colorTransformsFactory::getColorTransformsFactory());
+    std::shared_ptr<transforms::transform> rgbColorTransform(pColorTransformsFactory->getTransform(initialColorSpace, L"RGB"));
 	if(rgbColorTransform != 0)
 	{
 		m_transformsChain->addTransform(rgbColorTransform);
@@ -51,7 +51,7 @@ drawBitmap::drawBitmap(ptr<image> sourceImage, ptr<transforms::transformsChain> 
 
     if(highBit != 7 || depth != image::depthU8)
     {
-        ptr<transforms::transformHighBit> highBitTransform(new transforms::transformHighBit());
+        std::shared_ptr<transforms::transformHighBit> highBitTransform(new transforms::transformHighBit());
         m_transformsChain->addTransform(highBitTransform);
     }
 
@@ -63,7 +63,7 @@ drawBitmap::drawBitmap(ptr<image> sourceImage, ptr<transforms::transformsChain> 
 	}
 	else
 	{
-        m_finalImage = new image;
+        m_finalImage = std::make_shared<image>();
         m_finalImage->create(width, 1, image::depthU8, L"RGB", 7);
     }
 }

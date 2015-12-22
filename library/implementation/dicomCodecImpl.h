@@ -58,13 +58,13 @@ class dicomCodec : public codec
 public:
 	// Get an image from a dicom structure
 	///////////////////////////////////////////////////////////
-    virtual ptr<image> getImage(ptr<dataSet> pData, ptr<streamReader> pSourceStream, const std::string& dataType);
+    virtual std::shared_ptr<image> getImage(dataSet* pData, std::shared_ptr<streamReader> pSourceStream, const std::string& dataType);
 
 	// Write an image into a dicom structure
 	///////////////////////////////////////////////////////////
 	virtual void setImage(
-		ptr<streamWriter> pDestStream,
-		ptr<image> pImage,
+		std::shared_ptr<streamWriter> pDestStream,
+		std::shared_ptr<image> pImage,
 		std::wstring transferSyntax,
 		quality imageQuality,
 		std::string dataType,
@@ -76,7 +76,7 @@ public:
 
 	// Create another dicom codec
 	///////////////////////////////////////////////////////////
-	virtual ptr<codec> createCodec();
+	virtual std::shared_ptr<codec> createCodec();
 
 	/// \brief Parse the dicom stream and fill the data set
 	///        with the read tags.
@@ -125,8 +125,8 @@ public:
 	///
 	///////////////////////////////////////////////////////////
 	void parseStream(
-		ptr<streamReader> pStream,
-		ptr<dataSet> pDataSet,
+		std::shared_ptr<streamReader> pStream,
+		std::shared_ptr<dataSet> pDataSet,
 		bool bExplicitDataType,
 		streamController::tByteOrdering endianType,
 		std::uint32_t maxSizeBufferLoad = 0xffffffff,
@@ -146,7 +146,7 @@ public:
 	/// @param endianType the endian type to be generated
 	///
 	///////////////////////////////////////////////////////////
-	void buildStream(ptr<streamWriter> pStream, ptr<dataSet> pDataSet, bool bExplicitDataType, streamController::tByteOrdering endianType);
+	void buildStream(std::shared_ptr<streamWriter> pStream, std::shared_ptr<dataSet> pDataSet, bool bExplicitDataType, streamController::tByteOrdering endianType);
 
 	// Returns true if the codec can handle the transfer
 	//  syntax
@@ -166,36 +166,36 @@ public:
 protected:
 	// Write a dicom stream
 	///////////////////////////////////////////////////////////
-	virtual void writeStream(ptr<streamWriter> pStream, ptr<dataSet> pDataSet);
+	virtual void writeStream(std::shared_ptr<streamWriter> pStream, std::shared_ptr<dataSet> pDataSet);
 
 	// Load a dicom stream
 	///////////////////////////////////////////////////////////
-	virtual void readStream(ptr<streamReader> pStream, ptr<dataSet> pDataSet, std::uint32_t maxSizeBufferLoad = 0xffffffff);
+	virtual void readStream(std::shared_ptr<streamReader> pStream, std::shared_ptr<dataSet> pDataSet, std::uint32_t maxSizeBufferLoad = 0xffffffff);
 
 protected:
 	// Read a single tag
 	///////////////////////////////////////////////////////////
-    std::uint32_t readTag(ptr<streamReader> pStream, ptr<dataSet> pDataSet, std::uint32_t tagLengthDWord, std::uint16_t tagId, std::uint16_t order, std::uint16_t tagSubId, const std::string& tagType, streamController::tByteOrdering endianType, short wordSize, std::uint32_t bufferId, std::uint32_t maxSizeBufferLoad = 0xffffffff);
+    std::uint32_t readTag(std::shared_ptr<streamReader> pStream, std::shared_ptr<dataSet> pDataSet, std::uint32_t tagLengthDWord, std::uint16_t tagId, std::uint16_t order, std::uint16_t tagSubId, const std::string& tagType, streamController::tByteOrdering endianType, short wordSize, std::uint32_t bufferId, std::uint32_t maxSizeBufferLoad = 0xffffffff);
 
 	// Calculate the tag's length
 	///////////////////////////////////////////////////////////
-	std::uint32_t getTagLength(ptr<data> pData, bool bExplicitDataType, std::uint32_t* pHeaderLength, bool *pbSequence);
+	std::uint32_t getTagLength(std::shared_ptr<data> pData, bool bExplicitDataType, std::uint32_t* pHeaderLength, bool *pbSequence);
 
 	// Calculate the group's length
 	///////////////////////////////////////////////////////////
-	std::uint32_t getGroupLength(ptr<dataGroup>, bool bExplicitDataType);
+	std::uint32_t getGroupLength(std::shared_ptr<dataGroup>, bool bExplicitDataType);
 
 	// Calculate the dataset's length
 	///////////////////////////////////////////////////////////
-	std::uint32_t getDataSetLength(ptr<dataSet>, bool bExplicitDataType);
+	std::uint32_t getDataSetLength(std::shared_ptr<dataSet>, bool bExplicitDataType);
 
 	// Write a single group
 	///////////////////////////////////////////////////////////
-	void writeGroup(ptr<streamWriter> pDestStream, ptr<dataGroup> pGroup, std::uint16_t groupId, bool bExplicitDataType, streamController::tByteOrdering endianType);
+	void writeGroup(std::shared_ptr<streamWriter> pDestStream, std::shared_ptr<dataGroup> pGroup, std::uint16_t groupId, bool bExplicitDataType, streamController::tByteOrdering endianType);
 
 	// Write a single tag
 	///////////////////////////////////////////////////////////
-	void writeTag(ptr<streamWriter> pDestStream, ptr<data> pData, std::uint16_t tagId, bool bExplicitDataType, streamController::tByteOrdering endianType);
+	void writeTag(std::shared_ptr<streamWriter> pDestStream, std::shared_ptr<data> pData, std::uint16_t tagId, bool bExplicitDataType, streamController::tByteOrdering endianType);
 
 	// Read an uncompressed interleaved image
 	///////////////////////////////////////////////////////////
@@ -300,7 +300,7 @@ protected:
 
 	void allocChannels(std::uint32_t channelsNumber, std::uint32_t sizeX, std::uint32_t sizeY, bool bSubSampledX, bool bSubSampledY);
 
-	typedef ptr<channel> ptrChannel;
+	typedef std::shared_ptr<channel> ptrChannel;
 	std::vector<ptrChannel> m_channels;
 };
 

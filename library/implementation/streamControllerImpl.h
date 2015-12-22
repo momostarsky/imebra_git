@@ -10,7 +10,6 @@ $fileHeader$
 #if !defined(imebraStreamController_00B3C824_CD0D_4D99_8436_A41FCE9E4D6B__INCLUDED_)
 #define imebraStreamController_00B3C824_CD0D_4D99_8436_A41FCE9E4D6B__INCLUDED_
 
-#include "baseObjectImpl.h"
 #include "baseStreamImpl.h"
 #include <memory>
 
@@ -38,7 +37,7 @@ namespace puntoexe
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class streamController : public baseObject
+class streamController
 {
 
 #if(!defined IMEBRA_STREAM_CONTROLLER_MEMORY_SIZE)
@@ -65,7 +64,7 @@ public:
 	///                           beyond the virtual length
 	///
 	///////////////////////////////////////////////////////////
-	streamController(ptr<baseStream> pControlledStream, std::uint32_t virtualStart = 0, std::uint32_t virtualLength = 0);
+	streamController(std::shared_ptr<baseStream> pControlledStream, std::uint32_t virtualStart = 0, std::uint32_t virtualLength = 0);
 
     virtual ~streamController();
 
@@ -95,7 +94,7 @@ public:
 	/// @return a pointer to the controlled stream
 	///
 	///////////////////////////////////////////////////////////
-	ptr<baseStream> getControlledStream();
+	std::shared_ptr<baseStream> getControlledStream();
 
 	/// \brief Return the position in bytes from the beginning
 	///         of the stream.
@@ -178,7 +177,7 @@ protected:
 	/// \brief Stream controlled by the stream controller.
 	///
 	///////////////////////////////////////////////////////////
-	ptr<baseStream> m_pControlledStream;
+	std::shared_ptr<baseStream> m_pControlledStream;
 
 	/// \brief Used for buffered IO
 	///

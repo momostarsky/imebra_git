@@ -78,13 +78,13 @@ public:
 
 	// Retrieve the image from a dataset
 	///////////////////////////////////////////////////////////
-    virtual ptr<image> getImage(ptr<dataSet> sourceDataSet, ptr<streamReader> pStream, const std::string& dataType);
+    virtual std::shared_ptr<image> getImage(dataSet* sourceDataSet, std::shared_ptr<streamReader> pStream, const std::string& dataType);
 
 	// Insert a jpeg compressed image into a dataset
 	///////////////////////////////////////////////////////////
 	virtual void setImage(
-		ptr<streamWriter> pDestStream,
-		ptr<image> pImage,
+		std::shared_ptr<streamWriter> pDestStream,
+		std::shared_ptr<image> pImage,
 		std::wstring transferSyntax,
 		quality imageQuality,
 		std::string dataType,
@@ -110,20 +110,16 @@ public:
 
 	// Create another jpeg codec
 	///////////////////////////////////////////////////////////
-	virtual ptr<codec> createCodec();
+	virtual std::shared_ptr<codec> createCodec();
 
 protected:
-	// Destructor
-	///////////////////////////////////////////////////////////
-	virtual ~jpegCodec();
-
 	// Read a jpeg stream and build a Dicom dataset
 	///////////////////////////////////////////////////////////
-	virtual void readStream(ptr<streamReader> pSourceStream, ptr<dataSet> pDataSet, std::uint32_t maxSizeBufferLoad = 0xffffffff);
+	virtual void readStream(std::shared_ptr<streamReader> pSourceStream, std::shared_ptr<dataSet> pDataSet, std::uint32_t maxSizeBufferLoad = 0xffffffff);
 
 	// Write a Dicom dataset as a Jpeg stream
 	///////////////////////////////////////////////////////////
-	virtual void writeStream(ptr<streamWriter> pSourceStream, ptr<dataSet> pDataSet);
+	virtual void writeStream(std::shared_ptr<streamWriter> pSourceStream, std::shared_ptr<dataSet> pDataSet);
 
 	///////////////////////////////////////////////////////////
 	//
@@ -151,7 +147,7 @@ public:
 
 	// The allocated channels
 	///////////////////////////////////////////////////////////
-	typedef ptr<jpeg::jpegChannel> ptrChannel;
+	typedef std::shared_ptr<jpeg::jpegChannel> ptrChannel;
 	typedef std::map<std::uint8_t, ptrChannel> tChannelsMap;
 	tChannelsMap m_channelsMap;
 
@@ -162,8 +158,8 @@ public:
 
 	// Huffman tables
 	///////////////////////////////////////////////////////////
-	ptr<huffmanTable> m_pHuffmanTableDC[16];
-	ptr<huffmanTable> m_pHuffmanTableAC[16];
+	std::shared_ptr<huffmanTable> m_pHuffmanTableDC[16];
+	std::shared_ptr<huffmanTable> m_pHuffmanTableAC[16];
 
 	//
 	// Quantization tables
@@ -270,7 +266,7 @@ protected:
 
 	// Register a tag in the jpeg codec
 	///////////////////////////////////////////////////////////
-	void registerTag(tTagId tagId, ptr<jpeg::tag> pTag);
+	void registerTag(tTagId tagId, std::shared_ptr<jpeg::tag> pTag);
 
 	// Read a lossy block of pixels
 	///////////////////////////////////////////////////////////
@@ -284,8 +280,8 @@ protected:
 	///////////////////////////////////////////////////////////
 	void resetInternal(bool bCompression, quality compQuality);
 
-    void copyJpegChannelsToImage(ptr<image> destImage, bool b2complement, const std::wstring& colorSpace);
-	void copyImageToJpegChannels(ptr<image> sourceImage, bool b2complement, std::uint8_t allocatedBits, bool bSubSampledX, bool bSubSampledY);
+    void copyJpegChannelsToImage(std::shared_ptr<image> destImage, bool b2complement, const std::wstring& colorSpace);
+	void copyImageToJpegChannels(std::shared_ptr<image> sourceImage, bool b2complement, std::uint8_t allocatedBits, bool bSubSampledX, bool bSubSampledY);
 
 	void writeScan(streamWriter* pDestinationStream, bool bCalcHuffman);
 
@@ -296,7 +292,7 @@ protected:
 
 	// Map of the available Jpeg tags
 	///////////////////////////////////////////////////////////
-	typedef ptr<jpeg::tag> ptrTag;
+	typedef std::shared_ptr<jpeg::tag> ptrTag;
 	typedef std::map<std::uint8_t, ptrTag> tTagsMap;
 	tTagsMap m_tagsMap;
 
@@ -445,10 +441,10 @@ public:
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class tag : public baseObject
+class tag
 {
 public:
-	typedef ptr<jpeg::jpegChannel> ptrChannel;
+	typedef std::shared_ptr<jpeg::jpegChannel> ptrChannel;
 
 public:
 	// Write the tag's content.

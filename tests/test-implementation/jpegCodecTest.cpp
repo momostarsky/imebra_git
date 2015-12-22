@@ -15,15 +15,15 @@ TEST(jpegCodecTest, testBaseline)
 {
 	for(int precision=0; precision != 2; ++precision)
 	{
-		ptr<imebra::dataSet> dataset(new imebra::dataSet);
+		std::shared_ptr<imebra::dataSet> dataset(new imebra::dataSet);
 
 		std::uint32_t sizeX = 600;
 		std::uint32_t sizeY = 400;
-		ptr<image> baselineImage(new image);
+		std::shared_ptr<image> baselineImage(new image);
 		baselineImage->create(sizeX, sizeY, precision == 0 ? image::depthU8 : image::depthU16, L"RGB", precision == 0 ? 7 : 11);
 
 		std::uint32_t rowSize, channelsPixelSize, channelsNumber;
-		ptr<handlers::dataHandlerNumericBase> imageHandler = baselineImage->getDataHandler(true, &rowSize, &channelsPixelSize, &channelsNumber);
+		std::shared_ptr<handlers::dataHandlerNumericBase> imageHandler = baselineImage->getDataHandler(true, &rowSize, &channelsPixelSize, &channelsNumber);
 
 		// Make 3 bands (RGB)
 		int elementPointer(0);
@@ -52,12 +52,11 @@ TEST(jpegCodecTest, testBaseline)
 				imageHandler->setUnsignedLong(elementPointer++, b);
 			}
 		}
-		imageHandler.release();
+        imageHandler.reset();
 
-		ptr<transforms::colorTransforms::colorTransformsFactory> colorFactory;
-		colorFactory = transforms::colorTransforms::colorTransformsFactory::getColorTransformsFactory();
-		ptr<transforms::colorTransforms::colorTransform> colorTransform = colorFactory->getTransform(L"RGB", L"YBR_FULL");
-		ptr<image> ybrImage = colorTransform->allocateOutputImage(baselineImage, sizeX, sizeY);
+        std::shared_ptr<transforms::colorTransforms::colorTransformsFactory> colorFactory(transforms::colorTransforms::colorTransformsFactory::getColorTransformsFactory());
+        std::shared_ptr<transforms::transform> colorTransform(colorFactory->getTransform(L"RGB", L"YBR_FULL"));
+		std::shared_ptr<image> ybrImage = colorTransform->allocateOutputImage(baselineImage, sizeX, sizeY);
 		colorTransform->runTransform(baselineImage, 0, 0, sizeX, sizeY, ybrImage, 0, 0);
 
 		std::wstring fileName;
@@ -72,23 +71,23 @@ TEST(jpegCodecTest, testBaseline)
 			dataset->setImage(0, ybrImage, L"1.2.840.10008.1.2.4.51", codecs::codec::veryHigh);
 		}
 
-		ptr<imebra::codecs::dicomCodec> saveDicom(new imebra::codecs::dicomCodec);
-		ptr<puntoexe::stream> saveDicomStream(new puntoexe::stream);
+		std::shared_ptr<imebra::codecs::dicomCodec> saveDicom(new imebra::codecs::dicomCodec);
+		std::shared_ptr<puntoexe::stream> saveDicomStream(new puntoexe::stream);
 		saveDicomStream->openFile(fileName, std::ios_base::out | std::ios_base::trunc);
-		ptr<puntoexe::streamWriter> saveDicomStreamWriter(new puntoexe::streamWriter(saveDicomStream));
+		std::shared_ptr<puntoexe::streamWriter> saveDicomStreamWriter(new puntoexe::streamWriter(saveDicomStream));
 		saveDicom->write(saveDicomStreamWriter, dataset);
-		saveDicomStreamWriter.release();
-		saveDicomStream.release();
+        saveDicomStreamWriter.reset();
+        saveDicomStream.reset();
 
-		ptr<image> checkImage = dataset->getImage(0);
+		std::shared_ptr<image> checkImage = dataset->getImage(0);
 		std::uint32_t checkSizeX, checkSizeY;
 		checkImage->getSize(&checkSizeX, &checkSizeY);
 
 		colorTransform = colorFactory->getTransform(L"YBR_FULL", L"RGB");
-		ptr<image> rgbImage = colorTransform->allocateOutputImage(checkImage, checkSizeX, checkSizeY);
+		std::shared_ptr<image> rgbImage = colorTransform->allocateOutputImage(checkImage, checkSizeX, checkSizeY);
 		colorTransform->runTransform(checkImage, 0, 0, checkSizeX, checkSizeY, rgbImage, 0, 0);
-		ptr<handlers::dataHandlerNumericBase> rgbHandler = rgbImage->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
-		ptr<handlers::dataHandlerNumericBase> originalHandler = baselineImage->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
+		std::shared_ptr<handlers::dataHandlerNumericBase> rgbHandler = rgbImage->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
+		std::shared_ptr<handlers::dataHandlerNumericBase> originalHandler = baselineImage->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
 
 		// Compare the buffers. A little difference is allowed
         EXPECT_EQ(sizeX, checkSizeX);
@@ -131,11 +130,11 @@ TEST(jpegCodecTest, testBaselineSubsampled)
             {
                 std::uint32_t sizeX = 600;
                 std::uint32_t sizeY = 400;
-                ptr<image> baselineImage(new image);
+                std::shared_ptr<image> baselineImage(new image);
                 baselineImage->create(sizeX, sizeY, image::depthU8, L"RGB", 7);
 
                 std::uint32_t rowSize, channelsPixelSize, channelsNumber;
-                ptr<handlers::dataHandlerNumericBase> imageHandler = baselineImage->getDataHandler(true, &rowSize, &channelsPixelSize, &channelsNumber);
+                std::shared_ptr<handlers::dataHandlerNumericBase> imageHandler = baselineImage->getDataHandler(true, &rowSize, &channelsPixelSize, &channelsNumber);
 
                 // Make 3 bands (RGB)
                 std::uint32_t elementNumber(0);
@@ -164,37 +163,37 @@ TEST(jpegCodecTest, testBaselineSubsampled)
                         imageHandler->setUnsignedLong(elementNumber++, b);
                     }
                 }
-                imageHandler.release();
+                imageHandler.reset();
 
-                ptr<transforms::colorTransforms::colorTransformsFactory> colorFactory;
+                std::shared_ptr<transforms::colorTransforms::colorTransformsFactory> colorFactory;
                 colorFactory = transforms::colorTransforms::colorTransformsFactory::getColorTransformsFactory();
-                ptr<transforms::colorTransforms::colorTransform> colorTransform = colorFactory->getTransform(L"RGB", L"YBR_FULL");
-                ptr<image> ybrImage = colorTransform->allocateOutputImage(baselineImage, sizeX, sizeY);
+                std::shared_ptr<transforms::transform> colorTransform(colorFactory->getTransform(L"RGB", L"YBR_FULL"));
+                std::shared_ptr<image> ybrImage = colorTransform->allocateOutputImage(baselineImage, sizeX, sizeY);
                 colorTransform->runTransform(baselineImage, 0, 0, sizeX, sizeY, ybrImage, 0, 0);
 
-                ptr<memory> streamMemory(new memory);
+                std::shared_ptr<memory> streamMemory(new memory);
                 {
-                    ptr<baseStream> writeStream(new memoryStream(streamMemory));
-                    ptr<streamWriter> writer(new streamWriter(writeStream));
+                    std::shared_ptr<baseStream> writeStream(new memoryStream(streamMemory));
+                    std::shared_ptr<streamWriter> writer(new streamWriter(writeStream));
 
-                    ptr<codecs::jpegCodec> testCodec(new codecs::jpegCodec);
+                    std::shared_ptr<codecs::jpegCodec> testCodec(new codecs::jpegCodec);
                     testCodec->setImage(writer, ybrImage, L"1.2.840.10008.1.2.4.50", codecs::codec::medium, "OB", 8, subsampledX != 0, subsampledY != 0, interleaved != 0, false);
                 }
 
-                ptr<baseStream> readStream(new memoryStream(streamMemory));
-                ptr<streamReader> reader(new streamReader(readStream));
+                std::shared_ptr<baseStream> readStream(new memoryStream(streamMemory));
+                std::shared_ptr<streamReader> reader(new streamReader(readStream));
 
-                ptr<codecs::jpegCodec> testCodec(new codecs::jpegCodec);
-                ptr<dataSet> readDataSet = testCodec->read(reader);
-                ptr<image> checkImage = readDataSet->getImage(0);
+                std::shared_ptr<codecs::jpegCodec> testCodec(new codecs::jpegCodec);
+                std::shared_ptr<dataSet> readDataSet = testCodec->read(reader);
+                std::shared_ptr<image> checkImage = readDataSet->getImage(0);
                 std::uint32_t checkSizeX, checkSizeY;
                 checkImage->getSize(&checkSizeX, &checkSizeY);
 
                 colorTransform = colorFactory->getTransform(L"YBR_FULL", L"RGB");
-                ptr<image> rgbImage = colorTransform->allocateOutputImage(checkImage, checkSizeX, checkSizeY);
+                std::shared_ptr<image> rgbImage = colorTransform->allocateOutputImage(checkImage, checkSizeX, checkSizeY);
                 colorTransform->runTransform(checkImage, 0, 0, checkSizeX, checkSizeY, rgbImage, 0, 0);
-                ptr<handlers::dataHandlerNumericBase> rgbHandler = rgbImage->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
-                ptr<handlers::dataHandlerNumericBase> originalHandler = baselineImage->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
+                std::shared_ptr<handlers::dataHandlerNumericBase> rgbHandler = rgbImage->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
+                std::shared_ptr<handlers::dataHandlerNumericBase> originalHandler = baselineImage->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
 
                 // Compare the buffers. A little difference is allowed
                 EXPECT_EQ(sizeX, checkSizeX);
@@ -236,15 +235,15 @@ TEST(jpegCodecTest, testLossless)
         {
             for(int firstOrderPrediction = 0; firstOrderPrediction != 2; ++firstOrderPrediction)
             {
-                ptr<imebra::dataSet> dataset(new imebra::dataSet);
+                std::shared_ptr<imebra::dataSet> dataset(new imebra::dataSet);
 
                 std::uint32_t sizeX = 115;
                 std::uint32_t sizeY = 400;
-                ptr<image> baselineImage(new image);
+                std::shared_ptr<image> baselineImage(new image);
                 baselineImage->create(sizeX, sizeY, bits == 8 ? image::depthU8 : image::depthU16, L"RGB", bits - 1);
 
                 std::uint32_t rowSize, channelsPixelSize, channelsNumber;
-                ptr<handlers::dataHandlerNumericBase> imageHandler = baselineImage->getDataHandler(true, &rowSize, &channelsPixelSize, &channelsNumber);
+                std::shared_ptr<handlers::dataHandlerNumericBase> imageHandler = baselineImage->getDataHandler(true, &rowSize, &channelsPixelSize, &channelsNumber);
 
                 // Make 3 bands (RGB)
                 std::uint32_t elementNumber(0);
@@ -273,41 +272,41 @@ TEST(jpegCodecTest, testLossless)
                         imageHandler->setUnsignedLong(elementNumber++, b);
                     }
                 }
-                imageHandler.release();
+                imageHandler.reset();
 
                 std::wstring transferSyntax = (firstOrderPrediction == 0) ? L"1.2.840.10008.1.2.4.57" : L"1.2.840.10008.1.2.4.70";
-                ptr<memory> streamMemory(new memory);
+                std::shared_ptr<memory> streamMemory(new memory);
                 {
-                    ptr<baseStream> writeStream(new memoryStream(streamMemory));
-                    ptr<streamWriter> writer(new streamWriter(writeStream));
-                    ptr<codecs::jpegCodec> testCodec(new codecs::jpegCodec);
+                    std::shared_ptr<baseStream> writeStream(new memoryStream(streamMemory));
+                    std::shared_ptr<streamWriter> writer(new streamWriter(writeStream));
+                    std::shared_ptr<codecs::jpegCodec> testCodec(new codecs::jpegCodec);
                     testCodec->setImage(writer, baselineImage, transferSyntax, codecs::codec::veryHigh, "OB", bits, false, false, interleaved != 0, false);
                 }
 
-                ptr<baseStream> readStream(new memoryStream(streamMemory));
-                ptr<streamReader> reader(new streamReader(readStream));
+                std::shared_ptr<baseStream> readStream(new memoryStream(streamMemory));
+                std::shared_ptr<streamReader> reader(new streamReader(readStream));
 
-                ptr<codecs::jpegCodec> testCodec(new codecs::jpegCodec);
-                ptr<dataSet> readDataSet = testCodec->read(reader);
-                ptr<image> checkImage = readDataSet->getImage(0);
+                std::shared_ptr<codecs::jpegCodec> testCodec(new codecs::jpegCodec);
+                std::shared_ptr<dataSet> readDataSet = testCodec->read(reader);
+                std::shared_ptr<image> checkImage = readDataSet->getImage(0);
                 std::uint32_t checkSizeX, checkSizeY;
                 checkImage->getSize(&checkSizeX, &checkSizeY);
 
-                ptr<handlers::dataHandlerNumericBase> rgbHandler = checkImage->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
-                ptr<handlers::dataHandlerNumericBase> originalHandler = baselineImage->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
+                std::shared_ptr<handlers::dataHandlerNumericBase> rgbHandler = checkImage->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
+                std::shared_ptr<handlers::dataHandlerNumericBase> originalHandler = baselineImage->getDataHandler(false, &rowSize, &channelsPixelSize, &channelsNumber);
 
                 if(interleaved == 0)
                 {
                     dataset->setImage(0, baselineImage, transferSyntax, puntoexe::imebra::codecs::codec::veryHigh);
                     std::wostringstream fileName;
                     fileName << L"dicom_" << transferSyntax << L"_bits" << bits << L".dcm";
-                    ptr<imebra::codecs::dicomCodec> saveDicom(new imebra::codecs::dicomCodec);
-                    ptr<puntoexe::stream> saveDicomStream(new puntoexe::stream);
+                    std::shared_ptr<imebra::codecs::dicomCodec> saveDicom(new imebra::codecs::dicomCodec);
+                    std::shared_ptr<puntoexe::stream> saveDicomStream(new puntoexe::stream);
                     saveDicomStream->openFile(fileName.str(), std::ios_base::out | std::ios_base::trunc);
-                    ptr<puntoexe::streamWriter> saveDicomStreamWriter(new puntoexe::streamWriter(saveDicomStream));
+                    std::shared_ptr<puntoexe::streamWriter> saveDicomStreamWriter(new puntoexe::streamWriter(saveDicomStream));
                     saveDicom->write(saveDicomStreamWriter, dataset);
-                    saveDicomStreamWriter.release();
-                    saveDicomStream.release();
+                    saveDicomStreamWriter.reset();
+                    saveDicomStream.reset();
                 }
 
                 // Compare the buffers. No difference is allowed

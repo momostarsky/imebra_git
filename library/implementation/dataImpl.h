@@ -10,7 +10,7 @@ $fileHeader$
 #if !defined(imebraData_20A41D11_C650_410b_B3AA_CD5B3FF63222__INCLUDED_)
 #define imebraData_20A41D11_C650_410b_B3AA_CD5B3FF63222__INCLUDED_
 
-#include "baseObjectImpl.h"
+#include <memory>
 
 #include "charsetsListImpl.h"
 
@@ -63,11 +63,9 @@ namespace handlers
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class data : public baseObject
+class data
 {
 public:
-	data(ptr<baseObject> externalLock): baseObject(externalLock) {}
-
 	///////////////////////////////////////////////////////////
 	/// \name Data handlers
 	///
@@ -147,7 +145,7 @@ public:
 	///         requested buffer.
 	///
 	///////////////////////////////////////////////////////////
-    ptr<handlers::dataHandler> getDataHandler(std::uint32_t bufferId, bool bWrite, const std::string& defaultType);
+    std::shared_ptr<handlers::dataHandler> getDataHandler(std::uint32_t bufferId, bool bWrite, const std::string& defaultType);
 	
 	/// \brief Get a raw data handler 
 	///         (handlers::dataHandlerRaw) for the specified 
@@ -191,7 +189,7 @@ public:
 	///         requested buffer.
 	///
 	///////////////////////////////////////////////////////////
-    ptr<handlers::dataHandlerRaw> getDataHandlerRaw(std::uint32_t bufferId, bool bWrite, const std::string& defaultType);
+    std::shared_ptr<handlers::dataHandlerRaw> getDataHandlerRaw(std::uint32_t bufferId, bool bWrite, const std::string& defaultType);
 
 	/// \brief Get a streamReader connected to a buffer's data.
 	///
@@ -202,7 +200,7 @@ public:
 	///                    buffer's data.
 	///
 	///////////////////////////////////////////////////////////
-	ptr<streamReader> getStreamReader(std::uint32_t bufferId);
+	std::shared_ptr<streamReader> getStreamReader(std::uint32_t bufferId);
 
 	/// \brief Get a streamWriter connected to a buffer's data.
 	///
@@ -215,7 +213,7 @@ public:
 	///                    emptied buffer's data.
 	///
 	///////////////////////////////////////////////////////////
-    ptr<streamWriter> getStreamWriter(std::uint32_t bufferId, const std::string& dataType = "");
+    std::shared_ptr<streamWriter> getStreamWriter(std::uint32_t bufferId, const std::string& dataType = "");
 
 	//@}
 
@@ -244,7 +242,7 @@ public:
 	/// @return           a pointer to the retrieved dataSet
 	///
 	///////////////////////////////////////////////////////////
-	ptr<dataSet> getDataSet(std::uint32_t dataSetId);
+	std::shared_ptr<dataSet> getDataSet(std::uint32_t dataSetId);
 
 	/// \brief Set an embedded dataSet to the sequence.
 	///
@@ -262,7 +260,7 @@ public:
 	///                   into the tag
 	///
 	///////////////////////////////////////////////////////////
-	void setDataSet(std::uint32_t dataSetId, ptr<dataSet> pDataSet);
+	void setDataSet(std::uint32_t dataSetId, std::shared_ptr<dataSet> pDataSet);
 
 	/// \brief Append an embedded dataSet to the sequence.
 	///
@@ -277,7 +275,7 @@ public:
 	///                   into the tag
 	///
 	///////////////////////////////////////////////////////////
-	void appendDataSet(ptr<dataSet> pDataSet);
+	void appendDataSet(std::shared_ptr<dataSet> pDataSet);
 	
 	//@}
 
@@ -322,17 +320,17 @@ public:
 
 	// Set a buffer
 	///////////////////////////////////////////////////////////
-	void setBuffer(std::uint32_t bufferId, const ptr<buffer>& newBuffer);
+	void setBuffer(std::uint32_t bufferId, const std::shared_ptr<buffer>& newBuffer);
 
 protected:
 	// Pointers to the internal buffers
 	///////////////////////////////////////////////////////////
-	typedef std::map<std::uint32_t, ptr<buffer> > tBuffersMap;
+	typedef std::map<std::uint32_t, std::shared_ptr<buffer> > tBuffersMap;
 	tBuffersMap m_buffers;
 
 	// Pointers to the embedded datasets
 	///////////////////////////////////////////////////////////
-	typedef ptr<dataSet> ptrDataSet;
+	typedef std::shared_ptr<dataSet> ptrDataSet;
 	typedef std::vector<ptrDataSet> tEmbeddedDatasetsMap;
 	tEmbeddedDatasetsMap m_embeddedDataSets;
 

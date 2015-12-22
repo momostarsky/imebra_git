@@ -75,7 +75,7 @@ memory::~memory()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void memory::transfer(const ptr<memory>& transferFrom)
+void memory::transfer(const std::shared_ptr<memory>& transferFrom)
 {
 	m_pMemoryBuffer.reset(transferFrom->m_pMemoryBuffer.release());
 }
@@ -90,7 +90,7 @@ void memory::transfer(const ptr<memory>& transferFrom)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void memory::copyFrom(const ptr<memory>& sourceMemory)
+void memory::copyFrom(const std::shared_ptr<memory>& sourceMemory)
 {
 	if(m_pMemoryBuffer.get() == 0)
 	{
