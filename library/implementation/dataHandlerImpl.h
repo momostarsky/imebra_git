@@ -183,14 +183,6 @@ public:
 	///////////////////////////////////////////////////////////
 	std::string getDataType() const;
 
-	/// \brief Return the byte that this handler uses to fill
-	///         its content to make its size even.
-	///
-	/// @return the byte used to make the content's size even
-	///
-	///////////////////////////////////////////////////////////
-    std::uint8_t getPaddingByte() const;
-
 	//@}
 
 

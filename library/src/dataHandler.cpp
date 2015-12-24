@@ -50,11 +50,6 @@ std::string DataHandler::getDataType() const
     return m_pDataHandler->getDataType();
 }
 
-char DataHandler::getPaddingByte() const
-{
-    return (char)(m_pDataHandler->getPaddingByte());
-}
-
 int DataHandler::getSignedLong(const int index) const
 {
     return (int)(m_pDataHandler->getSignedLong((const imbxUint32)index));

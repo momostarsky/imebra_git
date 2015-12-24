@@ -63,8 +63,6 @@ public:
 
 	std::string getDataType() const;
 
-	char getPaddingByte() const;
-
 	int getSignedLong(const int index) const;
 
 	int getUnsignedLong(const int index) const;
