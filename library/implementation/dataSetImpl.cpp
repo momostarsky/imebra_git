@@ -1432,7 +1432,7 @@ void dataSet::updateTagsCharset()
     std::shared_ptr<handlers::dataHandler> charsetHandler(getDataHandler(0x0008, 0, 0x0005, 0, false));
 	if(charsetHandler != 0)
 	{
-        for(std::uint32_t pointer(0); charsetHandler->getSize(); ++pointer)
+        for(std::uint32_t pointer(0); pointer != charsetHandler->getSize(); ++pointer)
 		{
             charsets.push_back(charsetHandler->getString(pointer));
 		}
