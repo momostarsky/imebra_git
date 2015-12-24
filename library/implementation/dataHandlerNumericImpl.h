@@ -176,33 +176,6 @@ template<class dataHandlerType>
 class dataHandlerNumeric : public dataHandlerNumericBase
 {
 public:
-
-	/// \brief Provides a direct access to the data managed by
-	///         the handler.
-	///
-	/// @param nSubscript  the index of the numeric value that
-	///                     you want to access to
-	/// @return a reference to the requested value
-	///
-	///////////////////////////////////////////////////////////
-	dataHandlerType& operator[](int nSubscript)
-	{
-		return ((dataHandlerType*)m_pMemoryString)[nSubscript];
-	}
-
-	/// \brief Provides a direct access to the data managed by
-	///         the handler.
-	///
-	/// @param nSubscript  the index of the numeric value that
-	///                     you want to access to
-	/// @return a reference to the requested value
-	///
-	///////////////////////////////////////////////////////////
-	dataHandlerType& at(int nSubscript)
-	{
-		return ((dataHandlerType*)m_pMemoryString)[nSubscript];
-	}
-
 	// Returns the size of an element managed by the
 	//  handler.
 	///////////////////////////////////////////////////////////
