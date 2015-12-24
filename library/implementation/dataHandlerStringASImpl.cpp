@@ -45,7 +45,7 @@ namespace handlers
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-dataHandlerStringAS::dataHandlerStringAS(): dataHandlerString(L'\\', 0x20)
+dataHandlerStringAS::dataHandlerStringAS(): dataHandlerString("AS", L'\\', 0x20)
 {
 }
 

@@ -39,7 +39,7 @@ namespace handlers
 class dataHandlerString : public dataHandlerStringBase
 {
 public:
-    dataHandlerString(const wchar_t separator, const std::uint8_t paddingByte);
+    dataHandlerString(const std::string& dataType, const wchar_t separator, const std::uint8_t paddingByte);
 
     ~dataHandlerString();
 

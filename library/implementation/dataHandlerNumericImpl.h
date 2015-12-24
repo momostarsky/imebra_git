@@ -39,66 +39,23 @@ namespace handlers
 class dataHandlerNumericBase: public dataHandler
 {
 public:
-    dataHandlerNumericBase(): dataHandler(0)
-    {
-    }
+    dataHandlerNumericBase(const std::string& dataType);
 
-    ~dataHandlerNumericBase()
-    {
-        if(m_buffer != 0)
-        {
-            m_commitMemory = std::make_shared<memory>();
-            m_commitMemory->transfer(m_memory);
-        }
-    }
+    ~dataHandlerNumericBase();
 
-	std::uint8_t* getMemoryBuffer() const
-	{
-		return m_pMemoryString;
-	}
+    std::uint8_t* getMemoryBuffer() const;
 
-	size_t getMemorySize() const
-	{
-		return m_memorySize;
-	}
+    size_t getMemorySize() const;
 
-	/// \brief Returns the memory object that stores the data
-	///         managed by the handler.
-	///
-	/// @return the memory object that stores the data managed
-	///          by the handler
-	///
-	///////////////////////////////////////////////////////////
-	std::shared_ptr<memory> getMemory()
-	{
-		return m_memory;
-	}
+    std::shared_ptr<memory> getMemory();
 
 	// Set the buffer's size, in data elements
 	///////////////////////////////////////////////////////////
-	virtual void setSize(const std::uint32_t elementsNumber)
-	{
-		PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::setSize");
-
-		m_memory->resize(elementsNumber * getUnitSize());
-		m_pMemoryString = m_memory->data();
-		m_memorySize = m_memory->size();
-
-		PUNTOEXE_FUNCTION_END();
-	}
+    virtual void setSize(const std::uint32_t elementsNumber);
 
 	// Parse the tag's buffer and extract its content
 	///////////////////////////////////////////////////////////
-	virtual void parseBuffer(const std::shared_ptr<memory>& memoryBuffer)
-	{
-		PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::parseBuffer");
-
-		m_memory = memoryBuffer;
-		m_pMemoryString = m_memory->data();
-		m_memorySize = m_memory->size();
-
-		PUNTOEXE_FUNCTION_END();
-	}
+    virtual void parseBuffer(const std::shared_ptr<memory>& memoryBuffer);
 
 	virtual void copyFrom(std::shared_ptr<dataHandlerNumericBase> pSource) = 0;
 
@@ -176,6 +133,11 @@ template<class dataHandlerType>
 class dataHandlerNumeric : public dataHandlerNumericBase
 {
 public:
+    dataHandlerNumeric(const std::string& dataType): dataHandlerNumericBase(dataType)
+    {
+
+    }
+
 	// Returns the size of an element managed by the
 	//  handler.
 	///////////////////////////////////////////////////////////
@@ -787,19 +749,7 @@ public:
 
 };
 
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-/// \brief A dataHandlerRaw always "sees" the data as a
-///         collection of bytes, no matter what the Dicom
-///         data type is.
-///
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-class dataHandlerRaw: public dataHandlerNumeric<std::uint8_t>
-{
-public:
-};
+typedef dataHandlerNumeric<std::uint8_t> dataHandlerRaw;
 
 } // namespace handlers
 

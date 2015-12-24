@@ -39,7 +39,7 @@ namespace handlers
 class dataHandlerStringLT : public dataHandlerStringUnicode
 {
 public:
-    dataHandlerStringLT();
+    dataHandlerStringLT(const charsetsList::tCharsetsList& initialCharsetsList);
 
 	virtual std::uint32_t getUnitSize() const;
 

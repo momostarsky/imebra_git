@@ -33,7 +33,7 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 
-dataHandlerStringLT::dataHandlerStringLT(): dataHandlerStringUnicode(0x0, 0x20)
+dataHandlerStringLT::dataHandlerStringLT(const charsetsList::tCharsetsList& initialCharsetsList): dataHandlerStringUnicode("LT", 0x0, 0x20, initialCharsetsList)
 {
 }
 

@@ -11,7 +11,6 @@ $fileHeader$
 #define imebraDataHandler_6F85D344_DEF8_468d_BF73_AC5BB17FD22A__INCLUDED_
 
 #include <memory>
-#include "bufferImpl.h"
 #include "charsetsListImpl.h"
 
 
@@ -23,8 +22,12 @@ $fileHeader$
 namespace puntoexe
 {
 
+class memory;
+
 namespace imebra
 {
+
+class buffer;
 
 /// \namespace handlers
 /// \brief All the data handlers returned by the class
@@ -42,11 +45,7 @@ namespace handlers
 ///         stored in a \ref puntoexe::imebra::buffer 
 ///         object without worrying about the %data format.
 ///
-/// Data handlers work on a local copy of the buffer
-///  so they don't need to worry about multithreading
-///  accesses.
-///
-/// Also, once a dataHandler has been obtained from
+/// Once a dataHandler has been obtained from
 ///  a \ref buffer, it cannot be shared between threads
 ///  and it doesn't provide any multithread-safe mechanism,
 ///  except for its destructor which copies the local
@@ -65,13 +64,8 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 class dataHandler
 {
-    // buffer is friend of this class
-    ///////////////////////////////////////////////////////////
-    friend class puntoexe::imebra::buffer;
-
-
 public:
-    dataHandler(const std::uint8_t paddingByte);
+    dataHandler(const std::string& dataType, const std::uint8_t paddingByte);
 
     virtual ~dataHandler();
 
@@ -155,14 +149,6 @@ public:
 	///////////////////////////////////////////////////////////
 	void parseBuffer(const std::uint8_t* pBuffer, const std::uint32_t bufferLength);
 
-	/// \internal
-	/// \brief Defines the charsets used in the string
-	///
-	/// @param pCharsetsList a list of dicom charsets
-	///
-	///////////////////////////////////////////////////////////
-	virtual void setCharsetsList(charsetsList::tCharsetsList* pCharsetsList);
-
 	//@}
 
 
@@ -183,7 +169,7 @@ public:
 	///////////////////////////////////////////////////////////
 	std::string getDataType() const;
 
-	//@}
+    //@}
 
 
 	///////////////////////////////////////////////////////////
@@ -387,22 +373,14 @@ public:
 	//@}
 
 
+    // Pointer to the connected buffer
+    ///////////////////////////////////////////////////////////
+    std::shared_ptr<buffer> m_buffer;
+
 protected:
-    charsetsList::tCharsetsList m_charsetsList;
+    std::string m_bufferType;
 
     const std::uint8_t m_paddingByte;
-
-	// Pointer to the connected buffer
-	///////////////////////////////////////////////////////////
-	std::shared_ptr<buffer> m_buffer;
-
-	std::string m_bufferType;
-
-    // Memory that will be committed by the destructor
-    ///////////////////////////////////////////////////////////
-    std::shared_ptr<memory> m_commitMemory;
-
-    charsetsList::tCharsetsList m_commitCharsetsList;
 };
 
 } // namespace handlers

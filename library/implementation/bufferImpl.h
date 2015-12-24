@@ -10,9 +10,9 @@ $fileHeader$
 #if !defined(imebraBuffer_DE3F98A9_664E_47c0_A29B_B681F9AEB118__INCLUDED_)
 #define imebraBuffer_DE3F98A9_664E_47c0_A29B_B681F9AEB118__INCLUDED_
 
-#include <memory>
 #include "streamControllerImpl.h"
 #include "memoryImpl.h"
+#include "dataHandlerNumericImpl.h"
 
 #include "charsetsListImpl.h"
 
@@ -25,16 +25,10 @@ namespace puntoexe
 {
 	class streamReader;
 	class streamWriter;
-
+    class memory;
 
 namespace imebra
 {
-
-namespace handlers
-{
-	class dataHandler;
-	class dataHandlerRaw;
-}
 
 /// \addtogroup group_dataset
 ///
@@ -249,6 +243,8 @@ public:
 	//@}
 
     void commit(std::shared_ptr<memory> newMemory, const std::string& newBufferType, const charsetsList::tCharsetsList& newCharsetsList);
+
+    void commit(std::shared_ptr<memory> newMemory, const std::string& newBufferType);
 
 	///////////////////////////////////////////////////////////
 	/// \name Charsets

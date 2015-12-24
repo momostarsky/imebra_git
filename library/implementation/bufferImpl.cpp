@@ -163,7 +163,7 @@ std::shared_ptr<handlers::dataHandler> buffer::getDataHandler(bool bWrite, bool 
 	///////////////////////////////////////////////////////////
 	if(bRaw)
 	{
-        handler = std::make_shared<handlers::dataHandlerRaw>();
+        handler = std::make_shared<handlers::dataHandlerRaw>(m_bufferType);
 	}
 	else
 	{
@@ -206,35 +206,35 @@ std::shared_ptr<handlers::dataHandler> buffer::getDataHandler(bool bWrite, bool 
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="LO")
 		{
-            handler = std::make_shared<handlers::dataHandlerStringLO>();
+            handler = std::make_shared<handlers::dataHandlerStringLO>(m_charsetsList);
 		}
 
 		// Retrieve a Long text data handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="LT")
 		{
-            handler = std::make_shared<handlers::dataHandlerStringLT>();
+            handler = std::make_shared<handlers::dataHandlerStringLT>(m_charsetsList);
 		}
 
 		// Retrieve a Person Name data handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="PN")
 		{
-            handler = std::make_shared<handlers::dataHandlerStringPN>();
+            handler = std::make_shared<handlers::dataHandlerStringPN>(m_charsetsList);
 		}
 
 		// Retrieve a Short string data handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="SH")
 		{
-            handler = std::make_shared<handlers::dataHandlerStringSH>();
+            handler = std::make_shared<handlers::dataHandlerStringSH>(m_charsetsList);
 		}
 
 		// Retrieve a Short text data handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="ST")
 		{
-            handler = std::make_shared<handlers::dataHandlerStringST>();
+            handler = std::make_shared<handlers::dataHandlerStringST>(m_charsetsList);
 		}
 
 		// Retrieve an Unique Identifier data handler
@@ -248,14 +248,14 @@ std::shared_ptr<handlers::dataHandler> buffer::getDataHandler(bool bWrite, bool 
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="UT")
 		{
-            handler = std::make_shared< handlers::dataHandlerStringUT>();
+            handler = std::make_shared< handlers::dataHandlerStringUT>(m_charsetsList);
 		}
 
 		// Retrieve an object handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="OB")
 		{
-            handler = std::make_shared<handlers::dataHandlerNumeric<std::uint8_t> >();
+            handler = std::make_shared<handlers::dataHandlerNumeric<std::uint8_t> >(m_bufferType);
 		}
 
 		// Retrieve a signed-byte object handler.
@@ -263,70 +263,70 @@ std::shared_ptr<handlers::dataHandler> buffer::getDataHandler(bool bWrite, bool 
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="SB")
 		{
-            handler = std::make_shared<handlers::dataHandlerNumeric<std::int8_t> >();
+            handler = std::make_shared<handlers::dataHandlerNumeric<std::int8_t> >(m_bufferType);
 		}
 
 		// Retrieve an unknown object handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="UN")
 		{
-            handler = std::make_shared<handlers::dataHandlerNumeric<std::uint8_t> >();
+            handler = std::make_shared<handlers::dataHandlerNumeric<std::uint8_t> >(m_bufferType);
 		}
 
 		// Retrieve a WORD handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="OW")
 		{
-            handler = std::make_shared<handlers::dataHandlerNumeric<std::uint16_t> >();
+            handler = std::make_shared<handlers::dataHandlerNumeric<std::uint16_t> >(m_bufferType);
 		}
 
 		// Retrieve a WORD handler (AT)
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="AT")
 		{
-            handler = std::make_shared<handlers::dataHandlerNumeric<std::uint16_t> >();
+            handler = std::make_shared<handlers::dataHandlerNumeric<std::uint16_t> >(m_bufferType);
 		}
 
 		// Retrieve a float handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="FL")
 		{
-            handler = std::make_shared<handlers::dataHandlerNumeric<float> >();
+            handler = std::make_shared<handlers::dataHandlerNumeric<float> >(m_bufferType);
 		}
 
 		// Retrieve a double float handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="FD")
 		{
-            handler = std::make_shared<handlers::dataHandlerNumeric<double> >();
+            handler = std::make_shared<handlers::dataHandlerNumeric<double> >(m_bufferType);
 		}
 
 		// Retrieve a signed long handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="SL")
 		{
-            handler = std::make_shared<handlers::dataHandlerNumeric<std::int32_t> >();
+            handler = std::make_shared<handlers::dataHandlerNumeric<std::int32_t> >(m_bufferType);
 		}
 
 		// Retrieve a signed short handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="SS")
 		{
-            handler = std::make_shared<handlers::dataHandlerNumeric<std::int16_t> >();
+            handler = std::make_shared<handlers::dataHandlerNumeric<std::int16_t> >(m_bufferType);
 		}
 
 		// Retrieve an unsigned long handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="UL")
 		{
-            handler = std::make_shared<handlers::dataHandlerNumeric<std::uint32_t> >();
+            handler = std::make_shared<handlers::dataHandlerNumeric<std::uint32_t> >(m_bufferType);
 		}
 
 		// Retrieve an unsigned short handler
 		///////////////////////////////////////////////////////////
 		if(m_bufferType=="US")
 		{
-            handler = std::make_shared<handlers::dataHandlerNumeric<std::uint16_t> >();
+            handler = std::make_shared<handlers::dataHandlerNumeric<std::uint16_t> >(m_bufferType);
 		}
 
 		// Retrieve date
@@ -387,8 +387,6 @@ std::shared_ptr<handlers::dataHandler> buffer::getDataHandler(bool bWrite, bool 
 		}
 	}
 
-	handler->m_bufferType = m_bufferType;
-	handler->setCharsetsList(&m_charsetsList);
 	handler->parseBuffer(parseMemory);
 
 	// Return the allocated handler
@@ -546,26 +544,43 @@ void buffer::commit(std::shared_ptr<memory> newMemory, const std::string& newBuf
 {
 	PUNTOEXE_FUNCTION_START(L"buffer::commit");
 
-	// Commit the memory buffer
-	///////////////////////////////////////////////////////////
-    m_memory = newMemory;
-
-	// Commit the buffer type
-	///////////////////////////////////////////////////////////
-    m_bufferType = newBufferType;
+    commit(newMemory, newBufferType);
 
 	// Commit the charsets
 	///////////////////////////////////////////////////////////
     m_charsetsList = newCharsetsList;
 
-	// The buffer has been updated and the original stream
-	//  is still storing the old version. We don't need
-	//  the original stream anymore, then release it.
-	///////////////////////////////////////////////////////////
-    std::shared_ptr<baseStream> emptyBaseStream;
-	m_originalStream = emptyBaseStream;
-
 	PUNTOEXE_FUNCTION_END();
+}
+
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+// Commit the changes made by copyBack
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+void buffer::commit(std::shared_ptr<memory> newMemory, const std::string& newBufferType)
+{
+    PUNTOEXE_FUNCTION_START(L"buffer::commit");
+
+    // Commit the memory buffer
+    ///////////////////////////////////////////////////////////
+    m_memory = newMemory;
+
+    // Commit the buffer type
+    ///////////////////////////////////////////////////////////
+    m_bufferType = newBufferType;
+
+    // The buffer has been updated and the original stream
+    //  is still storing the old version. We don't need
+    //  the original stream anymore, then release it.
+    ///////////////////////////////////////////////////////////
+    std::shared_ptr<baseStream> emptyBaseStream;
+    m_originalStream = emptyBaseStream;
+
+    PUNTOEXE_FUNCTION_END();
 }
 
 

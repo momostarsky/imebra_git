@@ -42,7 +42,7 @@ namespace handlers
 class dataHandlerDateTimeBase : public dataHandlerString {
 
 public:
-    dataHandlerDateTimeBase();
+    dataHandlerDateTimeBase(const std::string& dataType);
 
 	virtual std::int32_t getSignedLong(const std::uint32_t index) const;
 	virtual std::uint32_t getUnsignedLong(const std::uint32_t index) const;

@@ -69,7 +69,7 @@ myDataSet->setUnicodeString(L"<-"); // :-)
 class dataHandlerStringPN : public dataHandlerStringUnicode
 {
 public:
-    dataHandlerStringPN();
+    dataHandlerStringPN(const charsetsList::tCharsetsList& initialCharsetsList);
 
 	virtual std::uint32_t getUnitSize() const;
 

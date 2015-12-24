@@ -10,7 +10,8 @@ $fileHeader$
 
 #include "exceptionImpl.h"
 #include "dataHandlerStringUnicodeImpl.h"
-
+#include "memoryImpl.h"
+#include "bufferImpl.h"
 
 namespace puntoexe
 {
@@ -36,9 +37,21 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 
 
-dataHandlerStringUnicode::dataHandlerStringUnicode(const wchar_t separator, const uint8_t paddingByte):
-    dataHandlerStringBase(separator, paddingByte)
+dataHandlerStringUnicode::dataHandlerStringUnicode(const std::string& dataType, const wchar_t separator, const uint8_t paddingByte, const charsetsList::tCharsetsList& initialCharsetsList):
+    dataHandlerStringBase(dataType, separator, paddingByte)
 {
+    // Copy the specified charsets into the tag
+    ///////////////////////////////////////////////////////////
+    m_charsetsList.clear();
+    charsetsList::updateCharsets(&initialCharsetsList, &m_charsetsList);
+
+    // If no charset has been defined then we use the default
+    //  one
+    ///////////////////////////////////////////////////////////
+    if(m_charsetsList.empty())
+    {
+        m_charsetsList.push_back("ISO 2022 IR 6");
+    }
 }
 
 dataHandlerStringUnicode::~dataHandlerStringUnicode()
@@ -57,10 +70,24 @@ dataHandlerStringUnicode::~dataHandlerStringUnicode()
 
         std::string asciiString = convertFromUnicode(completeString, &m_charsetsList);
 
-        m_commitMemory = std::make_shared<memory>((std::uint32_t)asciiString.size());
-        m_commitMemory->assign((std::uint8_t*)asciiString.data(), (std::uint32_t)asciiString.size());
+        std::shared_ptr<memory> commitMemory = std::make_shared<memory>((std::uint32_t)asciiString.size());
+        commitMemory->assign((std::uint8_t*)asciiString.data(), (std::uint32_t)asciiString.size());
 
-        m_commitCharsetsList.insert(m_commitCharsetsList.end(), m_charsetsList.begin(), m_charsetsList.end());
+        charsetsList::tCharsetsList temporaryCharsets;
+        m_buffer->getCharsetsList(&temporaryCharsets);
+        charsetsList::updateCharsets(&m_charsetsList, &temporaryCharsets);
+
+        // The buffer's size must be an even number
+        ///////////////////////////////////////////////////////////
+        std::uint32_t memorySize = commitMemory->size();
+        if((memorySize & 0x1) != 0)
+        {
+            commitMemory->resize(++memorySize);
+            *(commitMemory->data() + (memorySize - 1)) = m_paddingByte;
+        }
+
+        m_buffer->commit(commitMemory, m_bufferType, temporaryCharsets);
+
     }
 }
 
@@ -296,35 +323,6 @@ std::string dataHandlerStringUnicode::convertFromUnicode(const std::wstring& val
 	PUNTOEXE_FUNCTION_END();
 }
 
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Set the charset used in the tag
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-void dataHandlerStringUnicode::setCharsetsList(charsetsList::tCharsetsList* pCharsetsList)
-{
-	PUNTOEXE_FUNCTION_START(L"dataHandlerStringUnicode::setCharsetInfo");
-
-	// Copy the specified charsets into the tag
-	///////////////////////////////////////////////////////////
-	m_charsetsList.clear();
-	charsetsList::updateCharsets(pCharsetsList, &m_charsetsList);
-
-	// If no charset has been defined then we use the default 
-	//  one
-	///////////////////////////////////////////////////////////
-	if(m_charsetsList.empty())
-	{
-        m_charsetsList.push_back("ISO 2022 IR 6");
-	}
-
-	PUNTOEXE_FUNCTION_END();
-}
 
 } // namespace handlers
 

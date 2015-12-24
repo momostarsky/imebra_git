@@ -14,7 +14,7 @@ $fileHeader$
 #include "dataImpl.h"
 #include "dataGroupImpl.h"
 #include "dataSetImpl.h"
-
+#include "streamControllerImpl.h"
 
 /// \def IMEBRA_DATASET_MAX_DEPTH
 /// \brief Max number of datasets embedded into each 

@@ -32,7 +32,7 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 
-dataHandlerStringPN::dataHandlerStringPN(): dataHandlerStringUnicode(L'=', 0x20)
+dataHandlerStringPN::dataHandlerStringPN(const charsetsList::tCharsetsList& initialCharsetsList): dataHandlerStringUnicode("PN", L'=', 0x20, initialCharsetsList)
 {
 }
 

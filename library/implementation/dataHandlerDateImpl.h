@@ -39,6 +39,8 @@ namespace handlers
 class dataHandlerDate : public dataHandlerDateTimeBase
 {
 public:
+    dataHandlerDate();
+
 	virtual std::uint32_t getUnitSize() const;
 
 	virtual void getDate(const std::uint32_t index,

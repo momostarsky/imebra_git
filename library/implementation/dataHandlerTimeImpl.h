@@ -39,6 +39,8 @@ class dataHandlerTime : public dataHandlerDateTimeBase
 {
 
 public:
+    dataHandlerTime();
+
 	virtual std::uint32_t getUnitSize() const;
 
 	virtual void getDate(

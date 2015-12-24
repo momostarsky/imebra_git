@@ -9,6 +9,7 @@ $fileHeader$
 
 #include "exceptionImpl.h"
 #include "dataHandlerImpl.h"
+#include "memoryImpl.h"
 
 namespace puntoexe
 {
@@ -42,7 +43,9 @@ namespace handlers
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-dataHandler::dataHandler(const uint8_t paddingByte): m_paddingByte(paddingByte)
+dataHandler::dataHandler(const std::string& dataType, const uint8_t paddingByte):
+    m_bufferType(dataType),
+    m_paddingByte(paddingByte)
 {
 
 }
@@ -59,23 +62,6 @@ dataHandler::dataHandler(const uint8_t paddingByte): m_paddingByte(paddingByte)
 ///////////////////////////////////////////////////////////
 dataHandler::~dataHandler()
 {
-    if(m_commitMemory != 0)
-    {
-        charsetsList::tCharsetsList temporaryCharsets;
-        m_buffer->getCharsetsList(&temporaryCharsets);
-        charsetsList::updateCharsets(&m_commitCharsetsList, &temporaryCharsets);
-
-        // The buffer's size must be an even number
-        ///////////////////////////////////////////////////////////
-        std::uint32_t memorySize = m_commitMemory->size();
-        if((memorySize & 0x1) != 0)
-        {
-            m_commitMemory->resize(++memorySize);
-            *(m_commitMemory->data() + (memorySize - 1)) = m_paddingByte;
-        }
-
-        m_buffer->commit(m_commitMemory, m_bufferType, temporaryCharsets);
-    }
 }
 
 
@@ -186,11 +172,6 @@ void dataHandler::setDate(const std::uint32_t /* index */,
 		std::int32_t /*offsetMinutes */)
 {
 	return;
-}
-
-void dataHandler::setCharsetsList(charsetsList::tCharsetsList* /* pCharsetsList */)
-{
-	// Intentionally empty
 }
 
 } // namespace handlers

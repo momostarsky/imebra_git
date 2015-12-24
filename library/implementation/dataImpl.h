@@ -13,6 +13,7 @@ $fileHeader$
 #include <memory>
 
 #include "charsetsListImpl.h"
+#include "dataHandlerNumericImpl.h"
 
 #include <map>
 #include <vector>
@@ -34,11 +35,6 @@ namespace imebra
 class buffer;
 class dataSet;
 
-namespace handlers
-{
-	class dataHandler;
-	class dataHandlerRaw;
-}
 
 /// \addtogroup group_dataset
 ///

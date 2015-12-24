@@ -32,7 +32,7 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 
-dataHandlerStringLO::dataHandlerStringLO(): dataHandlerStringUnicode(L'\\', 0x20)
+dataHandlerStringLO::dataHandlerStringLO(const charsetsList::tCharsetsList& initialCharsetsList): dataHandlerStringUnicode("LO", L'\\', 0x20, initialCharsetsList)
 {
 }
 

@@ -12,7 +12,7 @@ $fileHeader$
 
 #include "exceptionImpl.h"
 #include "dataHandlerStringBaseImpl.h"
-
+#include "memoryImpl.h"
 
 namespace puntoexe
 {
@@ -46,7 +46,8 @@ namespace handlers
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-dataHandlerStringBase::dataHandlerStringBase(const wchar_t separator, const std::uint8_t paddingByte): dataHandler(paddingByte), m_separator(separator)
+dataHandlerStringBase::dataHandlerStringBase(const std::string& dataType, const wchar_t separator, const std::uint8_t paddingByte):
+    dataHandler(dataType, paddingByte), m_separator(separator)
 {
 }
 
@@ -193,7 +194,8 @@ std::string dataHandlerStringBase::getString(const std::uint32_t index) const
 {
     PUNTOEXE_FUNCTION_START(L"dataHandlerStringBase::getString");
 
-    charsetsList::tCharsetsList localCharsetsList(m_charsetsList);
+    charsetsList::tCharsetsList localCharsetsList;
+    localCharsetsList.push_back("ISO_IR 6");
 	return convertFromUnicode(getUnicodeString(index), &localCharsetsList);
 
 	PUNTOEXE_FUNCTION_END();

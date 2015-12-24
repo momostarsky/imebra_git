@@ -32,7 +32,7 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 
-dataHandlerStringUI::dataHandlerStringUI(): dataHandlerString(0x0, 0x0)
+dataHandlerStringUI::dataHandlerStringUI(): dataHandlerString("UI", 0x0, 0x0)
 {
 }
 

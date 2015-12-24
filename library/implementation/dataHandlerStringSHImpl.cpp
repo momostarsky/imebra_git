@@ -32,7 +32,7 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 
-dataHandlerStringSH::dataHandlerStringSH(): dataHandlerStringUnicode(L'\\', 0x20)
+dataHandlerStringSH::dataHandlerStringSH(const charsetsList::tCharsetsList& initialCharsetsList): dataHandlerStringUnicode("SH", L'\\', 0x20, initialCharsetsList)
 {
 }
 

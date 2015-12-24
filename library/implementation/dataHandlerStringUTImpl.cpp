@@ -32,7 +32,7 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 
-dataHandlerStringUT::dataHandlerStringUT(): dataHandlerStringUnicode(0x0, 0x20)
+dataHandlerStringUT::dataHandlerStringUT(const charsetsList::tCharsetsList& initialCharsetsList): dataHandlerStringUnicode("UT", 0x0, 0x20, initialCharsetsList)
 {
 }
 

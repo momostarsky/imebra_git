@@ -10,6 +10,7 @@ $fileHeader$
 #include "exceptionImpl.h"
 #include "imageImpl.h"
 #include "colorTransformsFactoryImpl.h"
+#include "bufferImpl.h"
 
 namespace puntoexe
 {

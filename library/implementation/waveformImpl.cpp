@@ -10,6 +10,7 @@ $fileHeader$
 #include "waveformImpl.h"
 #include "dataHandlerNumericImpl.h"
 #include "dataSetImpl.h"
+#include "bufferImpl.h"
 
 namespace puntoexe
 {

@@ -32,7 +32,7 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 
-dataHandlerStringCS::dataHandlerStringCS(): dataHandlerString(L'\\', 0x20)
+dataHandlerStringCS::dataHandlerStringCS(): dataHandlerString("CS", L'\\', 0x20)
 {
 }
 

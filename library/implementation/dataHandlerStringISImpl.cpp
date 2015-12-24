@@ -33,7 +33,7 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 
-dataHandlerStringIS::dataHandlerStringIS(): dataHandlerString(L'\\', 0x20)
+dataHandlerStringIS::dataHandlerStringIS(): dataHandlerString("IS", L'\\', 0x20)
 {
 }
 

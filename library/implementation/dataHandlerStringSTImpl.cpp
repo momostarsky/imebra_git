@@ -32,7 +32,7 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 
-dataHandlerStringST::dataHandlerStringST(): dataHandlerStringUnicode(0x0, 0x20)
+dataHandlerStringST::dataHandlerStringST(const charsetsList::tCharsetsList& initialCharsetsList): dataHandlerStringUnicode("ST", 0x0, 0x20, initialCharsetsList)
 {
 }
 

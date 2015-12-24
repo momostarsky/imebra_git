@@ -43,21 +43,13 @@ class dataHandlerStringUnicode : public dataHandlerStringBase
 {
 public:
 
-    dataHandlerStringUnicode(const wchar_t separator, const std::uint8_t paddingByte);
+    dataHandlerStringUnicode(const std::string& dataType, const wchar_t separator, const std::uint8_t paddingByte, const charsetsList::tCharsetsList& initialCharsetsList);
 
     ~dataHandlerStringUnicode();
 
-	/// \internal
-	/// \brief Defines the charset used by the strings encoded
-	///         in the tag.
-	///
-	/// @param pCharsetsList the list of dicom charsets used by
-	///                      the string
-	/// 
-	///////////////////////////////////////////////////////////
-	virtual void setCharsetsList(charsetsList::tCharsetsList* pCharsetsList);
-	
 protected:
+    charsetsList::tCharsetsList m_charsetsList;
+
 	// Convert a string to unicode, using the dicom charsets
 	///////////////////////////////////////////////////////////
 	virtual std::wstring convertToUnicode(const std::string& value) const;

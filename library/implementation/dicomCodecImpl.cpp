@@ -20,7 +20,7 @@ $fileHeader$
 #include "imageImpl.h"
 #include "colorTransformsFactoryImpl.h"
 #include "codecFactoryImpl.h"
-
+#include "bufferImpl.h"
 
 namespace puntoexe
 {

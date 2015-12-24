@@ -36,7 +36,7 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 
-dataHandlerStringDS::dataHandlerStringDS(): dataHandlerString(L'\\', 0x20)
+dataHandlerStringDS::dataHandlerStringDS(): dataHandlerString("DS", L'\\', 0x20)
 {
 }
 

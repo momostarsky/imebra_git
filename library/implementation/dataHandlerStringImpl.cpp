@@ -12,7 +12,8 @@ $fileHeader$
 
 #include "exceptionImpl.h"
 #include "dataHandlerStringImpl.h"
-
+#include "memoryImpl.h"
+#include "bufferImpl.h"
 
 namespace puntoexe
 {
@@ -46,7 +47,8 @@ namespace handlers
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-dataHandlerString::dataHandlerString(const wchar_t separator, const std::uint8_t paddingByte): dataHandlerStringBase(separator, paddingByte)
+dataHandlerString::dataHandlerString(const std::string& dataType, const wchar_t separator, const std::uint8_t paddingByte):
+    dataHandlerStringBase(dataType, separator, paddingByte)
 {
 }
 
@@ -74,10 +76,23 @@ dataHandlerString::~dataHandlerString()
             completeString += m_strings[stringsIterator];
         }
 
-        std::string asciiString = convertFromUnicode(completeString, &m_charsetsList);
+        charsetsList::tCharsetsList localCharsetsList;
+        localCharsetsList.push_back("ISO_IR 6");
+        std::string asciiString = convertFromUnicode(completeString, &localCharsetsList);
 
-        m_commitMemory = std::make_shared<memory>((std::uint32_t)asciiString.size());
-        m_commitMemory->assign((std::uint8_t*)asciiString.data(), (std::uint32_t)asciiString.size());
+        std::shared_ptr<memory> commitMemory = std::make_shared<memory>((std::uint32_t)asciiString.size());
+        commitMemory->assign((std::uint8_t*)asciiString.data(), (std::uint32_t)asciiString.size());
+
+        // The buffer's size must be an even number
+        ///////////////////////////////////////////////////////////
+        std::uint32_t memorySize = commitMemory->size();
+        if((memorySize & 0x1) != 0)
+        {
+            commitMemory->resize(++memorySize);
+            *(commitMemory->data() + (memorySize - 1)) = m_paddingByte;
+        }
+
+        m_buffer->commit(commitMemory, m_bufferType);
     }
 }
 

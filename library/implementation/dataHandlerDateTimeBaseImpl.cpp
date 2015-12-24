@@ -37,7 +37,7 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 
-dataHandlerDateTimeBase::dataHandlerDateTimeBase(): dataHandlerString(0x0, 0x20)
+dataHandlerDateTimeBase::dataHandlerDateTimeBase(const std::string& dataType): dataHandlerString(dataType, 0x0, 0x20)
 {
 
 }

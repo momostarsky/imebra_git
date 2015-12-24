@@ -41,7 +41,7 @@ namespace handlers
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-dataHandlerStringAE::dataHandlerStringAE(): dataHandlerString(L'\\', 0x20)
+dataHandlerStringAE::dataHandlerStringAE(): dataHandlerString("AE", L'\\', 0x20)
 {
 
 }

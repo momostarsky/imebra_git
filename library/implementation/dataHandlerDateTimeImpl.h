@@ -31,6 +31,8 @@ class dataHandlerDateTime : public dataHandlerDateTimeBase
 {
 
 public:
+    dataHandlerDateTime();
+
 	virtual void getDate(const std::uint32_t index,
 		std::int32_t* pYear, 
 		std::int32_t* pMonth, 
