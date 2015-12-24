@@ -196,7 +196,7 @@ public:
 	///
 	/// @return the buffer's size, in bytes
 	///////////////////////////////////////////////////////////
-	std::uint32_t getBufferSizeBytes();
+    std::uint32_t getBufferSizeBytes() const;
 
 	//@}
 
@@ -209,10 +209,6 @@ public:
 
 	/// \brief Return a stream reader connected to the 
 	///         buffer's content.
-	///
-	/// The stream works on a local copy of the buffer's data,
-	///  then it doesn't have to worry about multithreading
-	///  related problems.
 	///
 	/// @return          a pointer to a stream reader
 	///
@@ -248,7 +244,7 @@ public:
 	///          format.
 	//
 	///////////////////////////////////////////////////////////
-	std::string getDataType();
+    std::string getDataType() const;
 
 	//@}
 
@@ -315,7 +311,7 @@ public:
 	///                        charsets
 	///
 	///////////////////////////////////////////////////////////
-	virtual void getCharsetsList(charsetsList::tCharsetsList* pCharsetsList);
+    virtual void getCharsetsList(charsetsList::tCharsetsList* pCharsetsList) const;
 
 	//@}
 

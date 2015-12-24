@@ -513,12 +513,8 @@ std::shared_ptr<handlers::dataHandlerRaw> buffer::getDataHandlerRaw(bool bWrite,
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::uint32_t buffer::getBufferSizeBytes()
+std::uint32_t buffer::getBufferSizeBytes() const
 {
-	PUNTOEXE_FUNCTION_START(L"buffer::getBufferSizeBytes");
-
-    std::shared_ptr<memory> localMemory(m_memory);
-
 	// The buffer has not been loaded yet
 	///////////////////////////////////////////////////////////
 	if(m_originalStream != 0 && (m_memory == 0 || m_memory->empty()) )
@@ -536,8 +532,6 @@ std::uint32_t buffer::getBufferSizeBytes()
 	// Return the memory's size
 	///////////////////////////////////////////////////////////
 	return m_memory->size();
-
-	PUNTOEXE_FUNCTION_END();
 }
 
 
@@ -584,9 +578,9 @@ void buffer::commit(std::shared_ptr<memory> newMemory, const std::string& newBuf
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::string buffer::getDataType()
+std::string buffer::getDataType() const
 {
-	return std::string(m_bufferType);
+    return m_bufferType;
 }
 
 
@@ -619,7 +613,7 @@ void buffer::setCharsetsList(charsetsList::tCharsetsList* pCharsetsList)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void buffer::getCharsetsList(charsetsList::tCharsetsList* pCharsetsList)
+void buffer::getCharsetsList(charsetsList::tCharsetsList* pCharsetsList) const
 {
 	PUNTOEXE_FUNCTION_START(L"buffer::getCharsetsList");
 
