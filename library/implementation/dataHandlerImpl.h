@@ -26,8 +26,6 @@ namespace puntoexe
 namespace imebra
 {
 
-	class transaction; // is a friend
-
 /// \namespace handlers
 /// \brief All the data handlers returned by the class
 ///         buffer are defined in this namespace
@@ -68,8 +66,8 @@ namespace handlers
 class dataHandler
 {
     // buffer is friend of this class
-	///////////////////////////////////////////////////////////
-	friend class puntoexe::imebra::buffer;
+    ///////////////////////////////////////////////////////////
+    friend class puntoexe::imebra::buffer;
 
 
 public:

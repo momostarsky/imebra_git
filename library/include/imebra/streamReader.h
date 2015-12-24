@@ -33,7 +33,7 @@ class CodecFactory;
 
 class StreamReader
 {
-	friend class CodecFactory;
+    friend class CodecFactory;
 public:
 	StreamReader(const BaseStream& stream);
 

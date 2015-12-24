@@ -38,8 +38,6 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 class dataHandlerNumericBase: public dataHandler
 {
-    friend class buffer;
-
 public:
     dataHandlerNumericBase(): dataHandler(0)
     {
