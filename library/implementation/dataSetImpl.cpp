@@ -996,7 +996,7 @@ std::int32_t dataSet::getSignedLong(std::uint16_t groupId, std::uint16_t order, 
 		return 0;
 	}
 
-	return dataHandler->pointerIsValid(elementNumber) ? dataHandler->getSignedLong(elementNumber) : 0;
+    return dataHandler->getSignedLong(elementNumber);
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -1048,7 +1048,7 @@ std::uint32_t dataSet::getUnsignedLong(std::uint16_t groupId, std::uint16_t orde
 		return 0;
 	}
 
-	return dataHandler->pointerIsValid(elementNumber) ? dataHandler->getUnsignedLong(elementNumber) : 0;
+    return dataHandler->getUnsignedLong(elementNumber);
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -1100,7 +1100,7 @@ double dataSet::getDouble(std::uint16_t groupId, std::uint16_t order, std::uint1
 		return 0.0;
 	}
 
-	return dataHandler->pointerIsValid(elementNumber) ? dataHandler->getDouble(elementNumber) : 0.0;
+    return dataHandler->getDouble(elementNumber);
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -1150,10 +1150,7 @@ std::string dataSet::getString(std::uint16_t groupId, std::uint16_t order, std::
 	std::string returnValue;
 	if(dataHandler != 0)
 	{
-		if(dataHandler->pointerIsValid(elementNumber))
-		{
-			returnValue = dataHandler->getString(elementNumber);
-		}
+        returnValue = dataHandler->getString(elementNumber);
 	}
 
 	return returnValue;
@@ -1175,15 +1172,12 @@ std::wstring dataSet::getUnicodeString(std::uint16_t groupId, std::uint16_t orde
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getUnicodeString");
 
-    std::shared_ptr<handlers::dataHandler> dataHandler=getDataHandler(groupId, order, tagId, 0L, false);
+    std::shared_ptr<handlers::dataHandler> dataHandler = getDataHandler(groupId, order, tagId, 0L, false);
 	std::wstring returnValue;
 	if(dataHandler != 0)
 	{
-		if(dataHandler->pointerIsValid(elementNumber))
-		{
-			returnValue = dataHandler->getUnicodeString(elementNumber);
-		}
-	}
+        returnValue = dataHandler->getUnicodeString(elementNumber);
+    }
 
 	return returnValue;
 
@@ -1438,7 +1432,7 @@ void dataSet::updateTagsCharset()
     std::shared_ptr<handlers::dataHandler> charsetHandler(getDataHandler(0x0008, 0, 0x0005, 0, false));
 	if(charsetHandler != 0)
 	{
-		for(std::uint32_t pointer(0); charsetHandler->pointerIsValid(pointer); ++pointer)
+        for(std::uint32_t pointer(0); charsetHandler->getSize(); ++pointer)
 		{
             charsets.push_back(charsetHandler->getString(pointer));
 		}

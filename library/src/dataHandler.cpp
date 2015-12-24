@@ -30,11 +30,6 @@ void DataHandler::close()
     m_pDataHandler.reset();
 }
 
-bool DataHandler::pointerIsValid(const size_t index) const
-{
-    return m_pDataHandler->pointerIsValid((const imbxUint32)index);
-}
-
 void DataHandler::setSize(const size_t elementsNumber)
 {
     m_pDataHandler->setSize((const imbxUint32)elementsNumber);

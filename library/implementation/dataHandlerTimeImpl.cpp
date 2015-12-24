@@ -86,11 +86,7 @@ void dataHandlerTime::parseBuffer(const std::shared_ptr<memory>& memoryBuffer)
 
 	// Adjust the parsed string so it is a legal time
 	///////////////////////////////////////////////////////////
-	std::wstring unicodeString;
-	if(pointerIsValid(0))
-	{
-		unicodeString = dataHandlerString::getUnicodeString(0);
-	}
+    std::wstring unicodeString(dataHandlerString::getUnicodeString(0));
 
 	// Remove trailing spaces an invalid chars
 	///////////////////////////////////////////////////////////

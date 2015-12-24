@@ -13,39 +13,6 @@ namespace imebra
 namespace tests
 {
 
-// Check the function pointerIsValid
-TEST(numericHandlerTest, validPointer)
-{
-    std::shared_ptr<buffer> buffer0(new buffer("OW"));
-
-
-	std::shared_ptr<handlers::dataHandler> handlerBuffer0(buffer0->getDataHandler(true, 0));
-    EXPECT_EQ(2, handlerBuffer0->getUnitSize());
-	std::uint32_t bufferSize(4);
-	handlerBuffer0->setSize(bufferSize);
-	
-	std::uint32_t checkSize0(0);
-	while(handlerBuffer0->pointerIsValid(checkSize0))
-	{
-        EXPECT_GE(bufferSize, checkSize0);
-		++checkSize0;
-	}
-
-    EXPECT_EQ(bufferSize, checkSize0);
-    handlerBuffer0.reset();
-
-	std::shared_ptr<handlers::dataHandler> handlerBuffer1(buffer0->getDataHandler(true, 0));
-    EXPECT_EQ(2, handlerBuffer1->getUnitSize());
-	
-	std::uint32_t checkSize1(0);
-	while(handlerBuffer1->pointerIsValid(checkSize1))
-	{
-        EXPECT_GE(bufferSize, checkSize1);
-		++checkSize1;
-	}
-
-    EXPECT_EQ(bufferSize, checkSize1);
-}
 
 // A buffer initialized to a default data type should use the data type OB
 TEST(numericHandlerTest, interleavedCopy)

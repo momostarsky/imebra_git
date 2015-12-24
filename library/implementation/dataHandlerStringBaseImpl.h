@@ -43,10 +43,6 @@ public:
 
     virtual void parseBuffer(const std::shared_ptr<memory>& memoryBuffer);
 
-    // Returns true if the pointer is valid
-    ///////////////////////////////////////////////////////////
-    virtual bool pointerIsValid(const std::uint32_t index) const;
-
     // Get the data element as a signed long
     ///////////////////////////////////////////////////////////
     virtual std::int32_t getSignedLong(const std::uint32_t index) const;

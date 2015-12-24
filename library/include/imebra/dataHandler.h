@@ -55,8 +55,6 @@ public:
 
 	void close();
 
-    bool pointerIsValid(const size_t index) const;
-
     void setSize(const size_t elementsNumber);
 
     size_t getSize() const;

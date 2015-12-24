@@ -87,19 +87,6 @@ public:
 	///////////////////////////////////////////////////////////
 	//@{
 
-	/// \brief Returns true if the specified index points to
-	///        a valid element in the buffer.
-	///
-	/// If the index is out of the valid range, then this
-	///  method returns false.
-	///
-	/// @param index the index to be tested
-	/// @return true if the index is valid, false if it is out
-	///          of range
-	///
-	///////////////////////////////////////////////////////////
-    virtual bool pointerIsValid(const std::uint32_t index) const = 0;
-
 	//@}
 
 
@@ -219,10 +206,6 @@ public:
 	///         zero-based index specified in the parameter and
 	///         returns it as a signed long value.
 	///
-	/// Returns 0 if the specified index is out of range.
-	/// You can check the validity of the index by using the
-	///  function pointerIsValid().
-	///
 	/// @param index   the zero base index of the buffer's
 	///                 element to retrieve
 	/// @return the value of the data element referenced by
@@ -235,10 +218,6 @@ public:
 	/// \brief Retrieve the buffer's element referenced by the
 	///         zero-based index specified in the parameter and
 	///         returns it as an unsigned long value.
-	///
-	/// Returns 0 if the specified index is out of range.
-	/// You can check the validity of the index by using the
-	///  function pointerIsValid().
 	///
 	/// @param index   the zero base index of the buffer's
 	///                 element to retrieve
@@ -253,10 +232,6 @@ public:
 	///         zero-based index specified in the parameter and
 	///         returns it as a double floating point value.
 	///
-	/// Returns 0 if the specified index is out of range.
-	/// You can check the validity of the index by using the
-	///  function pointerIsValid().
-	///
 	/// @param index   the zero base index of the buffer's
 	///                 element to retrieve
 	/// @return the value of the data element referenced by
@@ -269,10 +244,6 @@ public:
 	/// \brief Retrieve the buffer's element referenced by the
 	///         zero-based index specified in the parameter and
 	///         returns it as a string value.
-	///
-	/// Returns 0 if the specified index is out of range.
-	/// You can check the validity of the index by using the
-	///  function pointerIsValid().
 	///
 	/// @param index   the zero base index of the buffer's
 	///                 element to retrieve
@@ -287,10 +258,6 @@ public:
 	///         zero-based index specified in the parameter and
 	///         returns it as an unicode string value.
 	///
-	/// Returns 0 if the specified index is out of range.
-	/// You can check the validity of the index by using the
-	///  function pointerIsValid().
-	///
 	/// @param index   the zero base index of the buffer's
 	///                 element to retrieve
 	/// @return the value of the data element referenced by
@@ -303,11 +270,6 @@ public:
 	/// \brief Retrieve the buffer's element referenced by the
 	///         zero-based index specified in the parameter and
 	///         returns it as a date/time value.
-	///
-	/// Returns all zeros if the specified index is out of
-	///  range.
-	/// You can check the validity of the index by using the
-	///  function pointerIsValid().
 	///
 	/// @param index   the zero base index of the buffer's
 	///                 element to retrieve
@@ -348,11 +310,6 @@ public:
 	///         zero-based index specified in the parameter
 	///         to a date/time value.
 	///
-	/// Does nothing if the specified index is out of range
-	/// You can check the validity of the index by using the
-	///  function pointerIsValid(), you can resize the buffer
-	///  by using the function setSize().
-	///
 	/// @param index   the zero base index of the buffer's
 	///                 element to be set
 	/// @param year   the UTC date's year
@@ -383,11 +340,6 @@ public:
 	///         zero-based index specified in the parameter
 	///         to a signed long value.
 	///
-	/// Does nothing if the specified index is out of range
-	/// You can check the validity of the index by using the
-	///  function pointerIsValid(), you can resize the buffer
-	///  by using the function setSize().
-	///
 	/// @param index   the zero base index of the buffer's
 	///                 element to be set
 	/// @param value the value to write into the
@@ -399,11 +351,6 @@ public:
 	/// \brief Set the buffer's element referenced by the
 	///         zero-based index specified in the parameter
 	///         to an unsigned long value.
-	///
-	/// Does nothing if the specified index is out of range
-	/// You can check the validity of the index by using the
-	///  function pointerIsValid(), you can resize the buffer
-	///  by using the function setSize().
 	///
 	/// @param index   the zero base index of the buffer's
 	///                 element to be set
@@ -417,11 +364,6 @@ public:
 	///         zero-based index specified in the parameter
 	///         to a double floating point value.
 	///
-	/// Does nothing if the specified index is out of range
-	/// You can check the validity of the index by using the
-	///  function pointerIsValid(), you can resize the buffer
-	///  by using the function setSize().
-	///
 	/// @param index   the zero base index of the buffer's
 	///                 element to be set
 	/// @param value the value to write into the
@@ -434,11 +376,6 @@ public:
 	///         zero-based index specified in the parameter
 	///         to a string value. See also setUnicodeString().
 	///
-	/// Does nothing if the specified index is out of range
-	/// You can check the validity of the index by using the
-	///  function pointerIsValid(), you can resize the buffer
-	///  by using the function setSize().
-	///
 	/// @param index   the zero base index of the buffer's
 	///                 element to be set
 	/// @param value the value to write into the
@@ -449,11 +386,6 @@ public:
 	/// \brief Set the buffer's element referenced by the
 	///         zero-based index specified in the parameter
 	///         to a string value. See also setString().
-	///
-	/// Does nothing if the specified index is out of range
-	/// You can check the validity of the index by using the
-	///  function pointerIsValid(), you can resize the buffer
-	///  by using the function setSize().
 	///
 	/// @param index   the zero base index of the buffer's
 	///                 element to be set

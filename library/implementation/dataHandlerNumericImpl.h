@@ -155,11 +155,6 @@ public:
 	///////////////////////////////////////////////////////////
 	virtual bool isSigned() const = 0;
 
-	virtual bool pointerIsValid(const std::uint32_t index) const
-	{
-		return index < getSize();
-	}
-
 protected:
 	// Memory buffer
 	///////////////////////////////////////////////////////////
