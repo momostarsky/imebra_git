@@ -15,87 +15,23 @@ $fileHeader$
 #include "imageImpl.h"
 
 
+
+
+
 #define DEFINE_RUN_TEMPLATE_TRANSFORM \
-template <typename inputType>\
-void runTemplateTransform1(\
-    inputType* inputData, size_t inputDataSize, std::uint32_t inputHandlerWidth, const std::wstring& inputHandlerColorSpace,\
-    std::shared_ptr<puntoexe::imebra::palette> inputPalette,\
-    std::int32_t inputHandlerMinValue, std::uint32_t inputHighBit,\
-    std::int32_t inputTopLeftX, std::int32_t inputTopLeftY, std::int32_t inputWidth, std::int32_t inputHeight,\
-    std::shared_ptr<puntoexe::imebra::handlers::dataHandlerNumericBase> outputHandler, std::int32_t outputHandlerWidth, const std::wstring& outputHandlerColorSpace,\
-    std::shared_ptr<puntoexe::imebra::palette> outputPalette,\
-    std::int32_t outputHandlerMinValue, std::uint32_t outputHighBit,\
-    std::int32_t outputTopLeftX, std::int32_t outputTopLeftY)\
-{\
-        HANDLER_CALL_TEMPLATE_FUNCTION_WITH_PARAMS(runTemplateTransform2, outputHandler, \
-                        inputData, inputDataSize, inputHandlerWidth, inputHandlerColorSpace,\
-			inputPalette,\
-                        inputHandlerMinValue, inputHighBit,\
-			inputTopLeftX, inputTopLeftY, inputWidth, inputHeight,\
-			outputHandlerWidth, outputHandlerColorSpace,\
-                        outputPalette,\
-                        outputHandlerMinValue, outputHighBit,\
-			outputTopLeftX, outputTopLeftY);\
-}\
-\
-void runTemplateTransform(\
-    std::shared_ptr<puntoexe::imebra::handlers::dataHandlerNumericBase> inputHandler, std::uint32_t inputHandlerWidth, const std::wstring& inputHandlerColorSpace,\
-    std::shared_ptr<puntoexe::imebra::palette> inputPalette,\
-    std::int32_t inputHandlerMinValue, std::uint32_t inputHighBit,\
-    std::int32_t inputTopLeftX, std::int32_t inputTopLeftY, std::int32_t inputWidth, std::int32_t inputHeight,\
-    std::shared_ptr<puntoexe::imebra::handlers::dataHandlerNumericBase> outputHandler, std::int32_t outputHandlerWidth, const std::wstring& outputHandlerColorSpace,\
-    std::shared_ptr<puntoexe::imebra::palette> outputPalette,\
-    std::int32_t outputHandlerMinValue, std::uint32_t outputHighBit,\
-    std::int32_t outputTopLeftX, std::int32_t outputTopLeftY)\
-{\
-        HANDLER_CALL_TEMPLATE_FUNCTION_WITH_PARAMS(runTemplateTransform1, inputHandler, \
-                        inputHandlerWidth, inputHandlerColorSpace,\
-                        inputPalette,\
-            inputHandlerMinValue, inputHighBit,\
-			inputTopLeftX, inputTopLeftY, inputWidth, inputHeight,\
-			outputHandler, outputHandlerWidth, outputHandlerColorSpace,\
-                        outputPalette,\
-                        outputHandlerMinValue, outputHighBit,\
-			outputTopLeftX, outputTopLeftY);\
-}\
-\
-template <typename outputType, typename inputType>\
-void runTemplateTransform2(\
-    outputType* outputData, size_t outputDataSize, \
-    inputType* inputData, size_t inputDataSize, \
-    std::uint32_t inputHandlerWidth, const std::wstring& inputHandlerColorSpace,\
-    std::shared_ptr<puntoexe::imebra::palette> inputPalette,\
-    std::int32_t inputHandlerMinValue, std::uint32_t inputHighBit,\
-    std::int32_t inputTopLeftX, std::int32_t inputTopLeftY, std::int32_t inputWidth, std::int32_t inputHeight,\
-    std::int32_t outputHandlerWidth, const std::wstring& outputHandlerColorSpace,\
-    std::shared_ptr<puntoexe::imebra::palette> outputPalette,\
-    std::int32_t outputHandlerMinValue, std::uint32_t outputHighBit,\
-    std::int32_t outputTopLeftX, std::int32_t outputTopLeftY)\
-{\
-        templateTransform( \
-            inputData, inputDataSize, inputHandlerWidth, inputHandlerColorSpace, \
-            inputPalette, \
-            inputHandlerMinValue, inputHighBit, \
-            inputTopLeftX, inputTopLeftY, inputWidth, inputHeight, \
-            outputData, outputDataSize, outputHandlerWidth, outputHandlerColorSpace, \
-            outputPalette, \
-            outputHandlerMinValue, outputHighBit, \
-            outputTopLeftX, outputTopLeftY);\
-}\
-\
 virtual void runTransformHandlers(\
-    std::shared_ptr<puntoexe::imebra::handlers::dataHandlerNumericBase> inputHandler, std::uint32_t inputHandlerWidth, const std::wstring& inputHandlerColorSpace,\
+    std::shared_ptr<puntoexe::imebra::handlers::readingDataHandlerNumericBase> inputHandler, std::uint32_t inputHandlerWidth, const std::wstring& inputHandlerColorSpace,\
     std::shared_ptr<puntoexe::imebra::palette> inputPalette,\
     std::int32_t inputHandlerMinValue, std::uint32_t inputHighBit,\
     std::int32_t inputTopLeftX, std::int32_t inputTopLeftY, std::int32_t inputWidth, std::int32_t inputHeight,\
-    std::shared_ptr<puntoexe::imebra::handlers::dataHandlerNumericBase> outputHandler, std::int32_t outputHandlerWidth, const std::wstring& outputHandlerColorSpace,\
+    std::shared_ptr<puntoexe::imebra::handlers::writingDataHandlerNumericBase> outputHandler, std::int32_t outputHandlerWidth, const std::wstring& outputHandlerColorSpace,\
     std::shared_ptr<puntoexe::imebra::palette> outputPalette,\
     std::int32_t outputHandlerMinValue, std::uint32_t outputHighBit,\
     std::int32_t outputTopLeftX, std::int32_t outputTopLeftY)\
 {\
-    runTemplateTransform(inputHandler, inputHandlerWidth, inputHandlerColorSpace, inputPalette, inputHandlerMinValue, inputHighBit,\
+    runTemplateTransform(*this, inputHandler, outputHandler, inputHandlerWidth, inputHandlerColorSpace, inputPalette, inputHandlerMinValue, inputHighBit,\
             inputTopLeftX, inputTopLeftY, inputWidth, inputHeight,\
-            outputHandler, outputHandlerWidth, outputHandlerColorSpace, outputPalette, outputHandlerMinValue, outputHighBit,\
+            outputHandlerWidth, outputHandlerColorSpace, outputPalette, outputHandlerMinValue, outputHighBit,\
             outputTopLeftX, outputTopLeftY);\
 }
 
@@ -292,16 +228,94 @@ public:
 
 	/// \internal
 	virtual void runTransformHandlers(
-            std::shared_ptr<handlers::dataHandlerNumericBase> inputHandler, std::uint32_t inputHandlerWidth, const std::wstring& inputHandlerColorSpace,
+            std::shared_ptr<handlers::readingDataHandlerNumericBase> inputHandler, std::uint32_t inputHandlerWidth, const std::wstring& inputHandlerColorSpace,
             std::shared_ptr<palette> inputPalette,
             std::int32_t inputHandlerMinValue, std::uint32_t inputHighBit,
 			std::int32_t inputTopLeftX, std::int32_t inputTopLeftY, std::int32_t inputWidth, std::int32_t inputHeight,
-            std::shared_ptr<handlers::dataHandlerNumericBase> outputHandler, std::int32_t outputHandlerWidth, const std::wstring& outputHandlerColorSpace,
+            std::shared_ptr<handlers::writingDataHandlerNumericBase> outputHandler, std::int32_t outputHandlerWidth, const std::wstring& outputHandlerColorSpace,
             std::shared_ptr<palette> outputPalette,
             std::int32_t outputHandlerMinValue, std::uint32_t outputHighBit,
 			std::int32_t outputTopLeftX, std::int32_t outputTopLeftY) = 0;
 
 };
+
+
+template <typename transformClass, typename inputType, typename... Args>
+void runTemplateTransform1(
+        transformClass& transformObject,
+        const inputType* pInputData,
+        std::shared_ptr<puntoexe::imebra::handlers::writingDataHandlerNumericBase> outputHandler, Args... args)
+{
+    puntoexe::imebra::handlers::writingDataHandlerNumericBase* pHandler(outputHandler.get());
+
+    if(typeid(*pHandler) == typeid(handlers::writingDataHandlerUint8))
+    {
+        transformObject.templateTransform(pInputData, (std::uint8_t*)pHandler->getMemoryBuffer(), args...);
+    }
+    else if(typeid(*pHandler) == typeid(handlers::writingDataHandlerInt8))
+    {
+        transformObject.templateTransform(pInputData, (std::int8_t*)pHandler->getMemoryBuffer(), args...);
+    }
+    else if(typeid(*pHandler) == typeid(handlers::writingDataHandlerUint16))
+    {
+        transformObject.templateTransform(pInputData, (std::uint16_t*)pHandler->getMemoryBuffer(), args...);
+    }
+    else if(typeid(*pHandler) == typeid(handlers::writingDataHandlerInt16))
+    {
+        transformObject.templateTransform(pInputData, (std::int16_t*)pHandler->getMemoryBuffer(), args...);
+    }
+    else if(typeid(*pHandler) == typeid(handlers::writingDataHandlerUint32))
+    {
+        transformObject.templateTransform(pInputData, (std::uint32_t*)pHandler->getMemoryBuffer(), args...);
+    }
+    else if(typeid(*pHandler) == typeid(handlers::writingDataHandlerInt32))
+    {
+        transformObject.templateTransform(pInputData, (std::int32_t*)pHandler->getMemoryBuffer(), args...);
+    }
+    else
+    {
+        throw std::runtime_error("Data type not valid");\
+    }
+}
+
+
+template <typename transformClass, typename... Args>
+void runTemplateTransform(
+        transformClass& transformObject,
+        std::shared_ptr<puntoexe::imebra::handlers::readingDataHandlerNumericBase> inputHandler, Args... args)
+{
+    puntoexe::imebra::handlers::readingDataHandlerNumericBase* pHandler(inputHandler.get());
+    if(typeid(*pHandler) == typeid(handlers::readingDataHandlerUint8))
+    {
+        runTemplateTransform1<transformClass, std::uint8_t>(transformObject, (const std::uint8_t*)pHandler->getMemoryBuffer(), args...);
+    }
+    else if(typeid(*pHandler) == typeid(handlers::readingDataHandlerInt8))
+    {
+        runTemplateTransform1<transformClass, std::int8_t>(transformObject, (const std::int8_t*)pHandler->getMemoryBuffer(), args...);
+    }
+    else if(typeid(*pHandler) == typeid(handlers::readingDataHandlerUint16))
+    {
+        runTemplateTransform1<transformClass, std::uint16_t>(transformObject, (const std::uint16_t*)pHandler->getMemoryBuffer(), args...);
+    }
+    else if(typeid(*pHandler) == typeid(handlers::readingDataHandlerInt16))
+    {
+        runTemplateTransform1<transformClass, std::int16_t>(transformObject, (const std::int16_t*)pHandler->getMemoryBuffer(), args...);
+    }
+    else if(typeid(*pHandler) == typeid(handlers::readingDataHandlerUint32))
+    {
+        runTemplateTransform1<transformClass, std::uint32_t>(transformObject, (const std::uint32_t*)pHandler->getMemoryBuffer(), args...);
+    }
+    else if(typeid(*pHandler) == typeid(handlers::readingDataHandlerInt32))
+    {
+        runTemplateTransform1<transformClass, std::int32_t>(transformObject, (const std::int32_t*)pHandler->getMemoryBuffer(), args...);
+    }
+    else
+    {
+        throw std::runtime_error("Data type not valid");\
+    }
+}
+
+
 
 
 /// \brief Base class for the exceptions thrown by the

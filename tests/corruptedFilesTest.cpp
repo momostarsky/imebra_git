@@ -1,10 +1,8 @@
-#include "../../library/implementation/imebraImpl.h"
+#include <imebra/codecFactory.h>
+#include <imebra/stream.h>
 #include "testsSettings.h"
 #include <dirent.h>
 #include <gtest/gtest.h>
-
-namespace puntoexe
-{
 
 namespace imebra
 {
@@ -43,22 +41,18 @@ TEST(corruptedFilesTest, corruptedFilesTest)
 
         std::cout << "Processing corrupted file " << fullName.str() << std::endl;
 
-        std::shared_ptr<puntoexe::imebra::codecs::codecFactory> factory = puntoexe::imebra::codecs::codecFactory::getCodecFactory();
+        imebra::FileStreamReader file;
+        file.openFile(fullName.str());
+        imebra::StreamReader reader(file);
+        imebra::DataSet dataset = imebra::CodecFactory::load(file, 2048);
 
-        std::shared_ptr<puntoexe::stream> inputStream(new puntoexe::stream());
-        inputStream->openFile(fullName.str(), std::ios::in);
-
-        std::shared_ptr<puntoexe::streamReader> reader = std::make_shared<puntoexe::streamReader>(inputStream);
-
-        std::shared_ptr<puntoexe::imebra::dataSet> dataset = factory->load(reader, 2048);
-
-        ASSERT_THROW(dataset->getImage(0), puntoexe::imebra::codecs::codecException);
+        ASSERT_THROW(dataset.getImage(0), puntoexe::imebra::codecs::codecException);
     }
-}
 
 }
 
 }
 
 }
+
 

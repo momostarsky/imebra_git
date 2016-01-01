@@ -30,6 +30,104 @@ namespace puntoexe
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
+// Open a file (unicode)
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+void fileStream::openFile(const std::wstring& fileName, std::ios_base::openmode mode)
+{
+    PUNTOEXE_FUNCTION_START(L"stream::openFile (unicode)");
+
+    close();
+
+    std::wstring strMode;
+
+    int tempMode = mode & (~std::ios::binary);
+
+    if(tempMode == (int)(std::ios::in | std::ios::out))
+    {
+        strMode = L"r+";
+    }
+
+    if(tempMode == (int)(std::ios::in | std::ios::out | std::ios::app))
+    {
+        strMode = L"a+";
+    }
+
+    if(tempMode == (int)(std::ios::in | std::ios::out | std::ios::trunc))
+    {
+        strMode = L"w+";
+    }
+
+    if(tempMode == (int)(std::ios::out) || tempMode == (int)(std::ios::out | std::ios::trunc))
+    {
+        strMode = L"w";
+    }
+
+    if(tempMode == (int)(std::ios::out | std::ios::app))
+    {
+        strMode = L"a";
+    }
+
+    if(tempMode == (int)(std::ios::in))
+    {
+        strMode = L"r";
+    }
+
+    strMode += L"b";
+
+#if defined(PUNTOEXE_WINDOWS)
+     errno_t errorCode = ::_wfopen_s(&m_openFile, fileName.c_str(), strMode.c_str());
+     if (errorCode != 0)
+     {
+         m_openFile = 0;
+     }
+#else
+    // Convert the filename to UTF8
+    defaultCharsetConversion toUtf8("ISO-IR 192");
+    std::string utf8FileName(toUtf8.fromUnicode(fileName));
+
+    // Convert the filemode to UTF8
+    std::string utf8Mode(toUtf8.fromUnicode(strMode));
+
+    m_openFile = ::fopen(utf8FileName.c_str(), utf8Mode.c_str());
+    int errorCode = errno;
+#endif
+    if(m_openFile == 0)
+    {
+        std::ostringstream errorMessage;
+        errorMessage << "stream::openFile failure - error code: " << errorCode;
+        PUNTOEXE_THROW(streamExceptionOpen, errorMessage.str());
+    }
+
+    PUNTOEXE_FUNCTION_END();
+}
+
+void fileStream::close()
+{
+    PUNTOEXE_FUNCTION_START(L"stream::close");
+
+    if(m_openFile != 0)
+    {
+        if(::fclose(m_openFile) != 0)
+        {
+            PUNTOEXE_THROW(streamExceptionClose, "Error while closing the file");
+        }
+        m_openFile = 0;
+    }
+
+    PUNTOEXE_FUNCTION_END();
+}
+
+
+
+
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 //
@@ -39,7 +137,7 @@ namespace puntoexe
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-stream::~stream()
+fileStream::~fileStream()
 {
     if(m_openFile != 0)
     {
@@ -58,7 +156,7 @@ stream::~stream()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void stream::openFile(const std::string& fileName, const int mode)
+void fileStreamReader::openFile(const std::string& fileName)
 {
 	PUNTOEXE_FUNCTION_START(L"stream::openFile (ansi)");
 
@@ -69,104 +167,35 @@ void stream::openFile(const std::string& fileName, const int mode)
 	{
 		wFileName[copyChars] = (wchar_t)fileName[copyChars];
 	}
-	openFile(wFileName, mode);
+    fileStream::openFile(wFileName, std::ios::in);
 
 	PUNTOEXE_FUNCTION_END();
 }
 
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Open a file (unicode)
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-void stream::openFile(const std::wstring& fileName, const int mode)
+void fileStreamReader::openFile(const std::wstring& fileName)
 {
-	PUNTOEXE_FUNCTION_START(L"stream::openFile (unicode)");
-
-    close();
-
-	std::wstring strMode;
-
-	int tempMode = mode & (~std::ios::binary);
-
-	if(tempMode == (int)(std::ios::in | std::ios::out))
-	{
-		strMode = L"r+";
-	}
-
-	if(tempMode == (int)(std::ios::in | std::ios::out | std::ios::app))
-	{
-		strMode = L"a+";
-	}
-	
-	if(tempMode == (int)(std::ios::in | std::ios::out | std::ios::trunc))
-	{
-		strMode = L"w+";
-	}
-	
-	if(tempMode == (int)(std::ios::out) || tempMode == (int)(std::ios::out | std::ios::trunc))
-	{
-		strMode = L"w";
-	}
-	
-	if(tempMode == (int)(std::ios::out | std::ios::app))
-	{
-		strMode = L"a";
-	}
-	
-	if(tempMode == (int)(std::ios::in))
-	{
-		strMode = L"r";
-	}
-
-	strMode += L"b";
-
-#if defined(PUNTOEXE_WINDOWS)
-	 errno_t errorCode = ::_wfopen_s(&m_openFile, fileName.c_str(), strMode.c_str());
-	 if (errorCode != 0)
-	 {
-		 m_openFile = 0;
-	 }
-#else
-	// Convert the filename to UTF8
-    defaultCharsetConversion toUtf8("ISO-IR 192");
-    std::string utf8FileName(toUtf8.fromUnicode(fileName));
-
-	// Convert the filemode to UTF8
-    std::string utf8Mode(toUtf8.fromUnicode(strMode));
-	
-	m_openFile = ::fopen(utf8FileName.c_str(), utf8Mode.c_str());
-    int errorCode = errno;
-#endif
-	if(m_openFile == 0)
-	{
-        std::ostringstream errorMessage;
-        errorMessage << "stream::openFile failure - error code: " << errorCode;
-        PUNTOEXE_THROW(streamExceptionOpen, errorMessage.str());
-	}
-
-	PUNTOEXE_FUNCTION_END();
+    fileStream::openFile(fileName, std::ios::in);
 }
 
-void stream::close()
+void fileStreamWriter::openFile(const std::string& fileName)
 {
-    PUNTOEXE_FUNCTION_START(L"stream::close");
+    PUNTOEXE_FUNCTION_START(L"stream::openFile (ansi)");
 
-    if(m_openFile != 0)
+    std::wstring wFileName;
+    size_t fileNameSize(fileName.size());
+    wFileName.resize(fileNameSize);
+    for(size_t copyChars = 0; copyChars != fileNameSize; ++copyChars)
     {
-        if(::fclose(m_openFile) != 0)
-        {
-            PUNTOEXE_THROW(streamExceptionClose, "Error while closing the file");
-        }
-        m_openFile = 0;
+        wFileName[copyChars] = (wchar_t)fileName[copyChars];
     }
+    fileStream::openFile(wFileName, std::ios::out);
 
     PUNTOEXE_FUNCTION_END();
+}
+
+void fileStreamWriter::openFile(const std::wstring &fileName)
+{
+    fileStream::openFile(fileName, std::ios::out);
 }
 
 
@@ -179,7 +208,7 @@ void stream::close()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void stream::write(std::uint32_t startPosition, const std::uint8_t* pBuffer, std::uint32_t bufferLength)
+void fileStreamWriter::write(std::uint32_t startPosition, const std::uint8_t* pBuffer, std::uint32_t bufferLength)
 {
 	PUNTOEXE_FUNCTION_START(L"stream::write");
 
@@ -207,7 +236,7 @@ void stream::write(std::uint32_t startPosition, const std::uint8_t* pBuffer, std
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::uint32_t stream::read(std::uint32_t startPosition, std::uint8_t* pBuffer, std::uint32_t bufferLength)
+std::uint32_t fileStreamReader::read(std::uint32_t startPosition, std::uint8_t* pBuffer, std::uint32_t bufferLength)
 {
 	PUNTOEXE_FUNCTION_START(L"stream::read");
 

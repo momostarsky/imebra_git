@@ -37,7 +37,8 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 
-dataHandlerDateTimeBase::dataHandlerDateTimeBase(const std::string& dataType): dataHandlerString(dataType, 0x0, 0x20)
+readingDataHandlerDateTimeBase::readingDataHandlerDateTimeBase(const memory& parseMemory, const std::string& dataType):
+    readingDataHandlerString(parseMemory, dataType, 0x0, 0x20)
 {
 
 }
@@ -51,7 +52,7 @@ dataHandlerDateTimeBase::dataHandlerDateTimeBase(const std::string& dataType): d
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::int32_t dataHandlerDateTimeBase::getSignedLong(const std::uint32_t index) const
+std::int32_t readingDataHandlerDateTimeBase::getSignedLong(const size_t index) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTimeBase::getSignedLong");
 
@@ -84,7 +85,7 @@ std::int32_t dataHandlerDateTimeBase::getSignedLong(const std::uint32_t index) c
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::uint32_t dataHandlerDateTimeBase::getUnsignedLong(const std::uint32_t index) const
+std::uint32_t readingDataHandlerDateTimeBase::getUnsignedLong(const size_t index) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTimeBase::getUnsignedLong");
 
@@ -103,7 +104,7 @@ std::uint32_t dataHandlerDateTimeBase::getUnsignedLong(const std::uint32_t index
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-double dataHandlerDateTimeBase::getDouble(const std::uint32_t index) const
+double readingDataHandlerDateTimeBase::getDouble(const size_t index) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTimeBase::getDouble");
 
@@ -112,6 +113,11 @@ double dataHandlerDateTimeBase::getDouble(const std::uint32_t index) const
 	PUNTOEXE_FUNCTION_END();
 }
 
+
+writingDataHandlerDateTimeBase::writingDataHandlerDateTimeBase(const std::shared_ptr<buffer> &pBuffer, const std::string &dataType, const size_t unitSize, const size_t maxSize):
+    writingDataHandlerString(pBuffer, dataType, 0x0, unitSize, maxSize, 0x20)
+{
+}
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -122,7 +128,7 @@ double dataHandlerDateTimeBase::getDouble(const std::uint32_t index) const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerDateTimeBase::setSignedLong(const std::uint32_t index, const std::int32_t value)
+void writingDataHandlerDateTimeBase::setSignedLong(const size_t index, const std::int32_t value)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTimeBase::setSignedLong");
 
@@ -153,7 +159,7 @@ void dataHandlerDateTimeBase::setSignedLong(const std::uint32_t index, const std
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerDateTimeBase::setUnsignedLong(const std::uint32_t index, const std::uint32_t value)
+void writingDataHandlerDateTimeBase::setUnsignedLong(const size_t index, const std::uint32_t value)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTimeBase::setUnsignedLong");
 
@@ -172,7 +178,7 @@ void dataHandlerDateTimeBase::setUnsignedLong(const std::uint32_t index, const s
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerDateTimeBase::setDouble(const std::uint32_t index, const double value)
+void writingDataHandlerDateTimeBase::setDouble(const size_t index, const double value)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTimeBase::setDouble");
 
@@ -191,28 +197,30 @@ void dataHandlerDateTimeBase::setDouble(const std::uint32_t index, const double 
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerDateTimeBase::parseDate(
-		std::wstring dateString,
+void readingDataHandlerDateTimeBase::parseDate(
+        const std::string& dateString,
 		std::int32_t* pYear, 
 		std::int32_t* pMonth, 
 		std::int32_t* pDay) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTimeBase::parseDate");
 
-	if(dateString.size()<8)
-		dateString.resize(8, L'0');
+    if(dateString.size() != 8)
+    {
+        throw;
+    }
 
-	std::wstring dateYear=dateString.substr(0, 4);
-	std::wstring dateMonth=dateString.substr(4, 2);
-	std::wstring dateDay=dateString.substr(6, 2);
+    std::string dateYear=dateString.substr(0, 4);
+    std::string dateMonth=dateString.substr(4, 2);
+    std::string dateDay=dateString.substr(6, 2);
 
-	std::wistringstream yearStream(dateYear);
+    std::istringstream yearStream(dateYear);
 	yearStream >> (*pYear);
 
-	std::wistringstream monthStream(dateMonth);
+    std::istringstream monthStream(dateMonth);
 	monthStream >> (*pMonth);
 
-	std::wistringstream dayStream(dateDay);
+    std::istringstream dayStream(dateDay);
 	dayStream >> (*pDay);
 
 	PUNTOEXE_FUNCTION_END();
@@ -228,7 +236,7 @@ void dataHandlerDateTimeBase::parseDate(
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::wstring dataHandlerDateTimeBase::buildDate(
+std::string writingDataHandlerDateTimeBase::buildDate(
 		std::uint32_t year,
 		std::uint32_t month,
 		std::uint32_t day) const
@@ -240,8 +248,8 @@ std::wstring dataHandlerDateTimeBase::buildDate(
 		year = month = day = 0;
 	}
 
-	std::wostringstream dateStream;
-	dateStream << std::setfill(L'0');
+    std::ostringstream dateStream;
+    dateStream << std::setfill('0');
 	dateStream << std::setw(4) << year;
 	dateStream << std::setw(2) << month;
 	dateStream << std::setw(2) << day;
@@ -261,8 +269,8 @@ std::wstring dataHandlerDateTimeBase::buildDate(
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerDateTimeBase::parseTime(
-		std::wstring timeString,
+void readingDataHandlerDateTimeBase::parseTime(
+        const std::string& timeString,
 		std::int32_t* pHour, 
 		std::int32_t* pMinutes,
 		std::int32_t* pSeconds,
@@ -272,50 +280,52 @@ void dataHandlerDateTimeBase::parseTime(
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTimeBase::parseTime");
 
-	if(timeString.size() < 6)
+    std::string fullTimeString(timeString);
+
+    if(fullTimeString.size() < 6)
 	{
-		timeString.resize(6, L'0');
+        fullTimeString.resize(6, '0');
 	}
-	if(timeString.size() < 7)
+    if(fullTimeString.size() < 7)
 	{
-		timeString += L'.';
+        fullTimeString += '.';
 	}
-	if(timeString.size() < 13)
+    if(fullTimeString.size() < 13)
 	{
-		timeString.resize(13, L'0');
+        fullTimeString.resize(13, '0');
 	}
-	if(timeString.size() < 14)
+    if(fullTimeString.size() < 14)
 	{
-		timeString += L'+';
+        fullTimeString += '+';
 	}
-	if(timeString.size() < 18)
+    if(fullTimeString.size() < 18)
 	{
-		timeString.resize(18, L'0');
+        fullTimeString.resize(18, '0');
 	}
 	
-	std::wstring timeHour = timeString.substr(0, 2);
-	std::wstring timeMinutes = timeString.substr(2, 2);
-	std::wstring timeSeconds = timeString.substr(4, 2);
-	std::wstring timeNanoseconds = timeString.substr(7, 6);
-	std::wstring timeOffsetHours = timeString.substr(13, 3);
-	std::wstring timeOffsetMinutes = timeString.substr(16, 2);
+    std::string timeHour = fullTimeString.substr(0, 2);
+    std::string timeMinutes = fullTimeString.substr(2, 2);
+    std::string timeSeconds = fullTimeString.substr(4, 2);
+    std::string timeNanoseconds = fullTimeString.substr(7, 6);
+    std::string timeOffsetHours = fullTimeString.substr(13, 3);
+    std::string timeOffsetMinutes = fullTimeString.substr(16, 2);
 
-	std::wistringstream hourStream(timeHour);
+    std::istringstream hourStream(timeHour);
 	hourStream >> (*pHour);
 
-	std::wistringstream minutesStream(timeMinutes);
+    std::istringstream minutesStream(timeMinutes);
 	minutesStream >> (*pMinutes);
 
-	std::wistringstream secondsStream(timeSeconds);
+    std::istringstream secondsStream(timeSeconds);
 	secondsStream >> (*pSeconds);
 
-	std::wistringstream nanosecondsStream(timeNanoseconds);
+    std::istringstream nanosecondsStream(timeNanoseconds);
 	nanosecondsStream >> (*pNanoseconds);
 
-	std::wistringstream offsetHoursStream(timeOffsetHours);
+    std::istringstream offsetHoursStream(timeOffsetHours);
 	offsetHoursStream >> (*pOffsetHours);
 
-	std::wistringstream offsetMinutesStream(timeOffsetMinutes);
+    std::istringstream offsetMinutesStream(timeOffsetMinutes);
 	offsetMinutesStream >> (*pOffsetMinutes);
 
 	if(*pOffsetHours < 0)
@@ -336,7 +346,7 @@ void dataHandlerDateTimeBase::parseTime(
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::wstring dataHandlerDateTimeBase::buildTime(
+std::string writingDataHandlerDateTimeBase::buildTime(
 		std::int32_t hour,
 		std::int32_t minutes,
 		std::int32_t seconds,
@@ -366,14 +376,14 @@ std::wstring dataHandlerDateTimeBase::buildTime(
 
 	bool bMinus=offsetHours < 0;
 
-	std::wostringstream timeStream;
-	timeStream << std::setfill(L'0');
+    std::ostringstream timeStream;
+    timeStream << std::setfill('0');
 	timeStream << std::setw(2) << hour;
 	timeStream << std::setw(2) << minutes;
 	timeStream << std::setw(2) << seconds;
-	timeStream << std::setw(1) << L".";
+    timeStream << std::setw(1) << ".";
 	timeStream << std::setw(6) << nanoseconds;
-	timeStream << std::setw(1) << (bMinus ? L"-" : L"+");
+    timeStream << std::setw(1) << (bMinus ? "-" : "+");
 	timeStream << std::setw(2) << labs(offsetHours);
 	timeStream << std::setw(2) << labs(offsetMinutes);
 	
@@ -392,29 +402,29 @@ std::wstring dataHandlerDateTimeBase::buildTime(
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerDateTimeBase::split(const std::wstring& timeString, const std::wstring& separators, std::vector<std::wstring> *pComponents) const
+void readingDataHandlerDateTimeBase::split(const std::string& timeString, const std::string& separators, std::vector<std::string> *pComponents) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTimeBase::split");
 
-        if(timeString.empty())
-        {
-            return;
-        }
+    if(timeString.empty())
+    {
+        return;
+    }
 
 	for(size_t startPos(0), sepPos(timeString.find_first_of(separators)); /* empty */; sepPos = timeString.find_first_of(separators, startPos))
 	{
-                if(sepPos == timeString.npos)
-                {
-                    pComponents->push_back(timeString.substr(startPos));
-                    break;
-                }
+        if(sepPos == timeString.npos)
+        {
+            pComponents->push_back(timeString.substr(startPos));
+            break;
+        }
 		pComponents->push_back(timeString.substr(startPos, sepPos - startPos));
 		startPos = ++sepPos;
-                if(startPos == timeString.size())
-                {
-                    pComponents->push_back(L"");
-                    break;
-                }
+        if(startPos == timeString.size())
+        {
+            pComponents->push_back("");
+            break;
+        }
 	}
 
 	PUNTOEXE_FUNCTION_END();
@@ -431,7 +441,7 @@ void dataHandlerDateTimeBase::split(const std::wstring& timeString, const std::w
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::wstring dataHandlerDateTimeBase::padLeft(const std::wstring& source, const wchar_t fillChar, const size_t length) const
+std::string writingDataHandlerDateTimeBase::padLeft(const std::string& source, const char fillChar, const size_t length) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTimeBase::padLeft");
         
@@ -440,7 +450,7 @@ std::wstring dataHandlerDateTimeBase::padLeft(const std::wstring& source, const 
             return source;
         }
 
-        std::wstring paddedString(length - source.size(), fillChar);
+        std::string paddedString(length - source.size(), fillChar);
         paddedString += source;
 
 	return paddedString;

@@ -13,33 +13,64 @@ $fileHeader$
 namespace imebra
 {
 
-Stream::Stream(): BaseStream(std::make_shared<puntoexe::stream>())
+FileStreamWriter::FileStreamWriter(): BaseStreamWriter(std::make_shared<puntoexe::fileStreamWriter>())
 {
 }
 
-Stream::Stream(const Stream& right): BaseStream(right.m_pStream)
+FileStreamWriter::FileStreamWriter(const FileStreamWriter& right): BaseStreamWriter(right.m_pStream)
 {
 }
 
-Stream& Stream::operator=(const Stream& right)
+FileStreamWriter& FileStreamWriter::operator=(const FileStreamWriter& right)
 {
 	m_pStream = right.m_pStream;
 	return *this;
 }
 
-void Stream::openFileRead(const std::wstring& name)
+void FileStreamWriter::openFile(const std::wstring& name)
 {
-	(dynamic_cast<puntoexe::stream*>(m_pStream.get()))->openFile(name, std::ios_base::in);
+    (dynamic_cast<puntoexe::fileStreamWriter*>(m_pStream.get()))->openFile(name);
 }
 
-void Stream::openFileWrite(const std::wstring& name)
+void FileStreamWriter::openFile(const std::string& name)
 {
-	(dynamic_cast<puntoexe::stream*>(m_pStream.get()))->openFile(name, std::ios_base::out);
+    (dynamic_cast<puntoexe::fileStreamWriter*>(m_pStream.get()))->openFile(name);
 }
 
-void Stream::close()
+void FileStreamWriter::close()
 {
-	static_cast<puntoexe::stream*>(m_pStream.get())->close();
+    static_cast<puntoexe::fileStreamWriter*>(m_pStream.get())->close();
 }
+
+
+FileStreamReader::FileStreamReader(): BaseStreamReader(std::make_shared<puntoexe::fileStreamReader>())
+{
+}
+
+FileStreamReader::FileStreamReader(const FileStreamReader& right): BaseStreamReader(right.m_pStream)
+{
+}
+
+FileStreamReader& FileStreamReader::operator=(const FileStreamReader& right)
+{
+    m_pStream = right.m_pStream;
+    return *this;
+}
+
+void FileStreamReader::openFile(const std::wstring& name)
+{
+    (dynamic_cast<puntoexe::fileStreamReader*>(m_pStream.get()))->openFile(name);
+}
+
+void FileStreamReader::openFile(const std::string& name)
+{
+    (dynamic_cast<puntoexe::fileStreamReader*>(m_pStream.get()))->openFile(name);
+}
+
+void FileStreamReader::close()
+{
+    static_cast<puntoexe::fileStreamReader*>(m_pStream.get())->close();
+}
+
 
 }

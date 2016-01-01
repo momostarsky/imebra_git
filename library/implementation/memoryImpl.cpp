@@ -45,8 +45,8 @@ memory::memory(stringUint8* pBuffer):
 {
 }
 
-memory::memory(std::uint32_t initialSize):
-    m_pMemoryBuffer(new stringUint8((size_t)initialSize, 0))
+memory::memory(size_t initialSize):
+    m_pMemoryBuffer(new stringUint8(initialSize, 0))
 {
 }
 
@@ -127,7 +127,7 @@ void memory::clear()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void memory::resize(std::uint32_t newSize)
+void memory::resize(size_t newSize)
 {
 	if(m_pMemoryBuffer.get() == 0)
 	{
@@ -150,11 +150,11 @@ void memory::resize(std::uint32_t newSize)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void memory::reserve(std::uint32_t reserveSize)
+void memory::reserve(size_t reserveSize)
 {
 	if(m_pMemoryBuffer.get() == 0)
 	{
-		m_pMemoryBuffer.reset(new stringUint8);
+        m_pMemoryBuffer.reset(new stringUint8());
 	}
 	m_pMemoryBuffer->reserve(reserveSize);
 }
@@ -169,13 +169,13 @@ void memory::reserve(std::uint32_t reserveSize)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::uint32_t memory::size()
+size_t memory::size() const
 {
 	if(m_pMemoryBuffer.get() == 0)
 	{
 		return 0;
 	}
-	return (std::uint32_t)(m_pMemoryBuffer->size());
+    return m_pMemoryBuffer->size();
 }
 
 
@@ -197,6 +197,14 @@ std::uint8_t* memory::data()
 	return &( ( (*m_pMemoryBuffer.get()))[0]);
 }
 
+const std::uint8_t* memory::data() const
+{
+    if(m_pMemoryBuffer.get() == 0 || m_pMemoryBuffer->empty())
+    {
+        return 0;
+    }
+    return &( ( (*m_pMemoryBuffer.get()))[0]);
+}
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////

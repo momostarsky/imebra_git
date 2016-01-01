@@ -32,18 +32,14 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 
-dataHandlerStringSH::dataHandlerStringSH(const charsetsList::tCharsetsList& initialCharsetsList): dataHandlerStringUnicode("SH", L'\\', 0x20, initialCharsetsList)
+readingDataHandlerStringSH::readingDataHandlerStringSH(const memory& parseMemory, const charsetsList::tCharsetsList& charsets):
+    readingDataHandlerStringUnicode(parseMemory, charsets, "SH", L'\\', 0x20)
 {
 }
 
-std::uint32_t dataHandlerStringSH::getUnitSize() const
+writingDataHandlerStringSH::writingDataHandlerStringSH(const std::shared_ptr<buffer> &pBuffer, const charsetsList::tCharsetsList &charsets):
+    writingDataHandlerStringUnicode(pBuffer, charsets, "SH", L'\\', 0, 16, 0x20)
 {
-	return 0;
-}
-
-std::uint32_t dataHandlerStringSH::maxSize() const
-{
-	return 16;
 }
 
 } // namespace handlers

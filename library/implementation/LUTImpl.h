@@ -27,7 +27,8 @@ namespace imebra
 
 namespace handlers
 {
-	class dataHandler;
+    class readingDataHandler;
+    class writingDataHandler;
 }
 
 /// \addtogroup group_image
@@ -76,7 +77,7 @@ public:
 	///                       lut
 	///
 	///////////////////////////////////////////////////////////
-    void setLut(std::shared_ptr<handlers::dataHandler> pDescriptor, std::shared_ptr<handlers::dataHandler> pData, const std::wstring& description);
+    void setLut(std::shared_ptr<handlers::readingDataHandler> pDescriptor, std::shared_ptr<handlers::readingDataHandler> pData, const std::wstring& description);
 
 	/// \brief Create an empty lut.
 	///
@@ -121,7 +122,7 @@ public:
 	///                       data
 	///
 	///////////////////////////////////////////////////////////
-	void fillHandlers(std::shared_ptr<handlers::dataHandler> pDescriptor, std::shared_ptr<handlers::dataHandler> pData);
+    void fillHandlers(std::shared_ptr<handlers::writingDataHandler> pDescriptor, std::shared_ptr<handlers::writingDataHandler> pData);
 
 	/// \brief Return the lut's description.
 	///
@@ -143,7 +144,7 @@ public:
 	/// @return the number of mapped value stored in the lut
 	///
 	///////////////////////////////////////////////////////////
-	std::uint32_t getSize();
+	size_t getSize();
 
 	/// \brief Checks if the data in the LUT is consistent
 	///         with the number of bits specified in number
@@ -189,7 +190,7 @@ public:
 	///////////////////////////////////////////////////////////
 	void copyToInt32(std::int32_t* pDestination, std::uint32_t destSize, std::int32_t* pFirstMapped);
 
-	std::uint32_t m_size;
+    size_t m_size;
 	std::int32_t m_firstMapped;
 	std::uint8_t m_bits;
 

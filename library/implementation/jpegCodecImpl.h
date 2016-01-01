@@ -78,7 +78,7 @@ public:
 
 	// Retrieve the image from a dataset
 	///////////////////////////////////////////////////////////
-    virtual std::shared_ptr<image> getImage(dataSet* sourceDataSet, std::shared_ptr<streamReader> pStream, const std::string& dataType);
+    virtual std::shared_ptr<image> getImage(const dataSet& sourceDataSet, std::shared_ptr<streamReader> pStream, const std::string& dataType);
 
 	// Insert a jpeg compressed image into a dataset
 	///////////////////////////////////////////////////////////

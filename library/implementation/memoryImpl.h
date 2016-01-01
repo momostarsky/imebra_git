@@ -72,7 +72,7 @@ public:
 	///                      memory, in bytes
 	///
 	///////////////////////////////////////////////////////////
-	memory(std::uint32_t initialSize);
+    memory(size_t initialSize);
 
     /// \brief Destruct the memory object.
     ///
@@ -116,7 +116,7 @@ public:
 	/// @param newSize  the new size of the buffer, in bytes
 	///
 	///////////////////////////////////////////////////////////
-	void resize(std::uint32_t newSize);
+    void resize(size_t newSize);
 
 	/// \brief Reserve the specified quantity of bytes for
 	///         the memory object. This doesn't modify the
@@ -126,7 +126,7 @@ public:
 	///                       the memory object.
 	///
 	///////////////////////////////////////////////////////////
-	void reserve(std::uint32_t reserveSize);
+    void reserve(size_t reserveSize);
 
 	/// \brief Return the size of the managed
 	///         memory in bytes.
@@ -134,7 +134,7 @@ public:
 	/// @return the size of the managed memory, in bytes
 	///
 	///////////////////////////////////////////////////////////
-	std::uint32_t size();
+    size_t size() const;
 
 	/// \brief Return a pointer to the memory managed by the
 	///         object.
@@ -143,6 +143,8 @@ public:
 	///
 	///////////////////////////////////////////////////////////
 	std::uint8_t* data();
+
+    const std::uint8_t* data() const;
 
 	/// \brief Return true if the size of the managed memory
 	///         is 0.

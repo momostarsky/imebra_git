@@ -307,7 +307,6 @@ namespace puntoexe
 				// If a transform chain is active then allocate a temporary
 				//  output image
 				///////////////////////////////////////////////////////////
-				std::uint32_t rowSize, channelSize, channelsNumber;
 				std::shared_ptr<image> sourceImage(m_image);
 
 				// Retrieve the final bitmap's buffer
@@ -367,10 +366,10 @@ namespace puntoexe
 						std::uint8_t* pImagePointer(0);
 						std::uint8_t* imageMemory(0);
 
-						std::shared_ptr<handlers::dataHandlerNumericBase> imageHandler;
+                        std::shared_ptr<handlers::readingDataHandlerNumericBase> imageHandler;
 						if(m_transformsChain->isEmpty())
 						{
-							imageHandler = sourceImage->getDataHandler(false, &rowSize, &channelSize, &channelsNumber);
+                            imageHandler = sourceImage->getReadingDataHandler();
 							imageMemory = imageHandler->getMemoryBuffer();
 							pImagePointer = &(imageMemory[currentImageY * imageSizeX * 3 + ((*pNextSourceXIndex) >> leftShiftX) * 3]);
 						}
@@ -386,7 +385,7 @@ namespace puntoexe
 								m_transformsChain->runTransform(m_image, firstPixelX >> leftShiftX, currentImageY, sourceWidth, transformChainNextY - currentImageY, sourceImage, 0, 0);
 								transformChainStartY = currentImageY;
 							}
-							imageHandler = sourceImage->getDataHandler(false, &rowSize, &channelSize, &channelsNumber);
+                            imageHandler = sourceImage->getReadingDataHandler();
 							imageMemory = imageHandler->getMemoryBuffer();
 
 							pImagePointer = &(imageMemory[(currentImageY - transformChainStartY) * sourceWidth * 3]);

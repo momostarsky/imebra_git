@@ -37,7 +37,7 @@ namespace puntoexe
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class nullStream : public baseStream
+class nullStreamWriter : public baseStreamWriter
 {
 
 public:
@@ -47,7 +47,6 @@ public:
 	//
 	///////////////////////////////////////////////////////////
 	virtual void write(std::uint32_t, const std::uint8_t*, std::uint32_t){}
-	virtual std::uint32_t read(std::uint32_t , std::uint8_t* , std::uint32_t ){return 0;}
 };
 
 ///@}

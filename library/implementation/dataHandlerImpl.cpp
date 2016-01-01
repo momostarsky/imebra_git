@@ -43,9 +43,8 @@ namespace handlers
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-dataHandler::dataHandler(const std::string& dataType, const uint8_t paddingByte):
-    m_bufferType(dataType),
-    m_paddingByte(paddingByte)
+dataHandler::dataHandler(const std::string& dataType):
+    m_dataType(dataType)
 {
 
 }
@@ -69,21 +68,6 @@ dataHandler::~dataHandler()
 ///////////////////////////////////////////////////////////
 //
 //
-// Retrieve an element's size
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-std::uint32_t dataHandler::getUnitSize() const
-{
-	return 0;
-}
-
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
 // Retrieve the data 's type
 //
 //
@@ -91,33 +75,13 @@ std::uint32_t dataHandler::getUnitSize() const
 ///////////////////////////////////////////////////////////
 std::string dataHandler::getDataType() const
 {
-	return m_bufferType;
+    return m_dataType;
 }
 
 
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Parse the buffer's content
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-void dataHandler::parseBuffer(const std::uint8_t* pBuffer, const std::uint32_t bufferLength)
+readingDataHandler::readingDataHandler(const std::string& dataType): dataHandler(dataType)
 {
-	PUNTOEXE_FUNCTION_START(L"dataHandler::parseBuffer");
-
-	std::shared_ptr<memory> tempMemory(memoryPool::getMemoryPool()->getMemory(bufferLength));
-	if(pBuffer && bufferLength)
-	{
-		tempMemory->assign(pBuffer, bufferLength);
-	}
-	parseBuffer(tempMemory);
-
-	PUNTOEXE_FUNCTION_END();
 }
-
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -128,7 +92,7 @@ void dataHandler::parseBuffer(const std::uint8_t* pBuffer, const std::uint32_t b
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandler::getDate(const std::uint32_t /* index */,
+void readingDataHandler::getDate(const size_t /* index */,
 		std::int32_t* pYear, 
 		std::int32_t* pMonth, 
 		std::int32_t* pDay, 
@@ -150,6 +114,18 @@ void dataHandler::getDate(const std::uint32_t /* index */,
 	*pOffsetMinutes = 0;
 }
 
+std::uint32_t readingDataHandler::getAge(const size_t /* index */, ::imebra::ageUnit_t *pUnit) const
+{
+    *pUnit = ::imebra::ageUnit_t::years;
+    return 0;
+}
+
+
+writingDataHandler::writingDataHandler(const std::shared_ptr<buffer> &pBuffer, const std::string &dataType, const uint8_t paddingByte):
+    dataHandler(dataType), m_buffer(pBuffer), m_paddingByte(paddingByte)
+{
+
+}
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -160,7 +136,7 @@ void dataHandler::getDate(const std::uint32_t /* index */,
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandler::setDate(const std::uint32_t /* index */,
+void writingDataHandler::setDate(const size_t /* index */,
 		std::int32_t /* year */, 
 		std::int32_t /* month */, 
 		std::int32_t /* day */, 
@@ -172,6 +148,11 @@ void dataHandler::setDate(const std::uint32_t /* index */,
 		std::int32_t /*offsetMinutes */)
 {
 	return;
+}
+
+void writingDataHandler::setAge(const size_t /* index */, const std::uint32_t /* age */, const ::imebra::ageUnit_t /* unit */)
+{
+    return;
 }
 
 } // namespace handlers

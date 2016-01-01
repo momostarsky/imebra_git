@@ -12,25 +12,40 @@ $fileHeader$
 
 
 #include "baseStream.h"
+#include "definitions.h"
 
 namespace imebra
 {
 
 /// \addtogroup group_swig_bindings
 /// @{
-class Stream : public BaseStream
+class IMEBRA_API FileStreamWriter : public BaseStreamWriter
 {
 public:
-	Stream();
-	Stream(const Stream& right);
-	Stream& operator=(const Stream& right);
+    FileStreamWriter();
+    FileStreamWriter(const FileStreamWriter& right);
+    FileStreamWriter& operator=(const FileStreamWriter& right);
 
-	void openFileRead(const std::wstring& name);
-	void openFileWrite(const std::wstring& name);
+    void openFile(const std::wstring& name);
+    void openFile(const std::string& name);
 
 	void close();
+};
+
+class IMEBRA_API FileStreamReader : public BaseStreamReader
+{
+public:
+    FileStreamReader();
+    FileStreamReader(const FileStreamReader& right);
+    FileStreamReader& operator=(const FileStreamReader& right);
+
+    void openFile(const std::wstring& name);
+    void openFile(const std::string& name);
+
+    void close();
 
 };
+
 
 ///@}
 

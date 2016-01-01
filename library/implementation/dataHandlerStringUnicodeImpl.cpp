@@ -36,291 +36,190 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 
-
-dataHandlerStringUnicode::dataHandlerStringUnicode(const std::string& dataType, const wchar_t separator, const uint8_t paddingByte, const charsetsList::tCharsetsList& initialCharsetsList):
-    dataHandlerStringBase(dataType, separator, paddingByte)
+readingDataHandlerStringUnicode::readingDataHandlerStringUnicode(const memory& parseMemory, const charsetsList::tCharsetsList& charsets, const std::string& dataType, const wchar_t separator, const std::uint8_t paddingByte):
+    readingDataHandler(dataType)
 {
-    // Copy the specified charsets into the tag
-    ///////////////////////////////////////////////////////////
-    m_charsetsList.clear();
-    charsetsList::updateCharsets(&initialCharsetsList, &m_charsetsList);
+    PUNTOEXE_FUNCTION_START(L"readingDataHandlerString::readingDataHandlerString");
 
-    // If no charset has been defined then we use the default
-    //  one
-    ///////////////////////////////////////////////////////////
-    if(m_charsetsList.empty())
+    std::string asciiString((const char*)parseMemory.data(), parseMemory.size());
+    std::wstring parseString(dicomConversion::convertToUnicode(asciiString, charsets));
+
+    while(!parseString.empty() && parseString.back() == (wchar_t)paddingByte)
     {
-        m_charsetsList.push_back("ISO 2022 IR 6");
+        parseString.pop_back();
     }
+
+    if(separator == 0)
+    {
+        m_strings.push_back(parseString);
+        return;
+    }
+
+    for(size_t firstPosition(0); firstPosition != parseString.size(); )
+    {
+        size_t nextPosition = parseString.find(separator, firstPosition);
+        if(nextPosition == std::string::npos)
+        {
+            m_strings.push_back(parseString.substr(firstPosition));
+            return;
+        }
+        m_strings.push_back(parseString.substr(firstPosition, nextPosition - firstPosition));
+        firstPosition = ++nextPosition;
+    }
+
+    PUNTOEXE_FUNCTION_END();
+
 }
 
-dataHandlerStringUnicode::~dataHandlerStringUnicode()
+// Get the data element as a signed long
+///////////////////////////////////////////////////////////
+std::int32_t readingDataHandlerStringUnicode::getSignedLong(const size_t index) const
 {
-    if(m_buffer != 0)
-    {
-        std::wstring completeString;
-        for(size_t stringsIterator = 0; stringsIterator < m_strings.size(); ++stringsIterator)
-        {
-            if(stringsIterator)
-            {
-                completeString += m_separator;
-            }
-            completeString += m_strings[stringsIterator];
-        }
-
-        std::string asciiString = convertFromUnicode(completeString, &m_charsetsList);
-
-        std::shared_ptr<memory> commitMemory = std::make_shared<memory>((std::uint32_t)asciiString.size());
-        commitMemory->assign((std::uint8_t*)asciiString.data(), (std::uint32_t)asciiString.size());
-
-        charsetsList::tCharsetsList temporaryCharsets;
-        m_buffer->getCharsetsList(&temporaryCharsets);
-        charsetsList::updateCharsets(&m_charsetsList, &temporaryCharsets);
-
-        // The buffer's size must be an even number
-        ///////////////////////////////////////////////////////////
-        std::uint32_t memorySize = commitMemory->size();
-        if((memorySize & 0x1) != 0)
-        {
-            commitMemory->resize(++memorySize);
-            *(commitMemory->data() + (memorySize - 1)) = m_paddingByte;
-        }
-
-        m_buffer->commit(commitMemory, m_bufferType, temporaryCharsets);
-
-    }
+    std::wistringstream conversion(m_strings.at(index));
+    std::int32_t value;
+    conversion >> value;
+    return value;
 }
 
-
+// Get the data element as an unsigned long
 ///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Convert a string stored in a dicom tag to an unicode
-//  string
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-std::wstring dataHandlerStringUnicode::convertToUnicode(const std::string& value) const
+std::uint32_t readingDataHandlerStringUnicode::getUnsignedLong(const size_t index) const
 {
-	PUNTOEXE_FUNCTION_START(L"dataHandlerStringUnicode::convertToUnicode");
-
-	// Should we take care of the escape sequences...?
-	///////////////////////////////////////////////////////////
-    if(m_charsetsList.empty())
-	{
-        throw std::logic_error("The charsets list must be set before converting to unicode");
-	}
-
-    // Initialize the conversion engine with the default
-    //  charset
-    ///////////////////////////////////////////////////////////
-    std::unique_ptr<defaultCharsetConversion> localCharsetConversion(new defaultCharsetConversion(m_charsetsList.front()));
-
-    // Only one charset is present: we don't need to check
-    //  the escape sequences
-    ///////////////////////////////////////////////////////////
-    if(m_charsetsList.size() == 1)
-    {
-        return localCharsetConversion->toUnicode(value);
-    }
-
-	// Here we store the value to be returned
-	///////////////////////////////////////////////////////////
-	std::wstring returnString;
-    returnString.reserve(value.size());
-
-    // Get the escape sequences from the unicode conversion
-    //  engine
-    ///////////////////////////////////////////////////////////
-    const charsetDictionary::escapeSequences_t& escapeSequences(localCharsetConversion->getDictionary().getEscapeSequences());
-
-    // Position and properties of the next escape sequence
-    ///////////////////////////////////////////////////////////
-    size_t escapePosition = std::string::npos;
-    std::string escapeString;
-    std::string isoTable;
-
-	// Scan all the string and look for valid escape sequences.
-	// The partial strings are converted using the dicom
-	//  charset specified by the escape sequences.
-	///////////////////////////////////////////////////////////
-    for(size_t scanString = 0; scanString < value.size(); /* empty */)
-	{
-		// Find the position of the next escape sequence
-		///////////////////////////////////////////////////////////
-        if(escapePosition == std::string::npos)
-        {
-            escapePosition = value.size();
-            for(charsetDictionary::escapeSequences_t::const_iterator scanEscapes(escapeSequences.begin()), endEscapes(escapeSequences.end());
-                scanEscapes != endEscapes;
-                ++scanEscapes)
-            {
-                size_t findEscape = value.find(scanEscapes->first, scanString);
-                if(findEscape != std::string::npos && findEscape < escapePosition)
-                {
-                    escapePosition = findEscape;
-                    escapeString = scanEscapes->first;
-                    isoTable = scanEscapes->second;
-                }
-            }
-        }
-
-        // No more escape sequences. Just convert everything
-        ///////////////////////////////////////////////////////////
-        if(escapePosition == value.size())
-        {
-            return returnString + localCharsetConversion->toUnicode(value.substr(scanString));
-        }
-
-        // The escape sequence can wait, now we are still in the
-        //  already activated charset
-        ///////////////////////////////////////////////////////////
-        if(escapePosition > scanString)
-		{
-            returnString += localCharsetConversion->toUnicode(value.substr(scanString, escapePosition - scanString));
-            scanString = escapePosition;
-            continue;
-		}
-
-		// Move the char pointer to the next char that has to be
-		//  analyzed
-		///////////////////////////////////////////////////////////
-		scanString = escapePosition + escapeString.length();
-        escapePosition = std::string::npos;
-
-		// An iso table is coupled to the found escape sequence.
-		///////////////////////////////////////////////////////////
-        localCharsetConversion.reset(new defaultCharsetConversion(isoTable));
-	}
-
-	return returnString;
-
-	PUNTOEXE_FUNCTION_END();
+    std::wistringstream conversion(m_strings.at(index));
+    std::uint32_t value;
+    conversion >> value;
+    return value;
 }
 
-
+// Get the data element as a double
 ///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Convert an unicode string to a string ready to be
-//  stored in a dicom tag
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-std::string dataHandlerStringUnicode::convertFromUnicode(const std::wstring& value, charsetsList::tCharsetsList* pCharsetsList) const
+double readingDataHandlerStringUnicode::getDouble(const size_t index) const
 {
-	PUNTOEXE_FUNCTION_START(L"dataHandlerStringUnicode::convertFromUnicode");
+    std::wistringstream conversion(m_strings.at(index));
+    double value;
+    conversion >> value;
+    return value;
 
-    // Check for the dicom charset's name
-    ///////////////////////////////////////////////////////////
-    if(pCharsetsList->empty())
+}
+
+// Get the data element as a string
+///////////////////////////////////////////////////////////
+std::string readingDataHandlerStringUnicode::getString(const size_t index) const
+{
+    charsetsList::tCharsetsList charsets;
+    charsets.push_back("ISO 2022 IR 6");
+    return dicomConversion::convertFromUnicode(m_strings.at(index), &charsets);
+}
+
+// Get the data element as an unicode string
+///////////////////////////////////////////////////////////
+std::wstring readingDataHandlerStringUnicode::getUnicodeString(const size_t index) const
+{
+    return m_strings.at(index);
+}
+
+// Retrieve the data element as a string
+///////////////////////////////////////////////////////////
+size_t readingDataHandlerStringUnicode::getSize() const
+{
+    return m_strings.size();
+}
+
+writingDataHandlerStringUnicode::writingDataHandlerStringUnicode(const std::shared_ptr<buffer> &pBuffer, const charsetsList::tCharsetsList& charsets, const std::string &dataType, const wchar_t separator, const size_t unitSize, const size_t maxSize, const uint8_t paddingByte):
+    writingDataHandler(pBuffer, dataType, paddingByte), m_charsets(charsets), m_separator(separator), m_unitSize(unitSize), m_maxSize(maxSize)
+{
+
+}
+
+writingDataHandlerStringUnicode::~writingDataHandlerStringUnicode()
+{
+    std::wstring completeString;
+    for(size_t stringsIterator(0); stringsIterator != m_strings.size(); ++stringsIterator)
     {
-        throw std::logic_error("The charsets list must be set before converting from unicode");
+        if(stringsIterator != 0)
+        {
+            completeString += m_separator;
+        }
+        completeString += m_strings.at(stringsIterator);
     }
 
-    // Setup the conversion objects
+    std::string asciiString = dicomConversion::convertFromUnicode(completeString, &m_charsets);
+
+    std::shared_ptr<memory> commitMemory = std::make_shared<memory>((std::uint32_t)asciiString.size());
+    commitMemory->assign((std::uint8_t*)asciiString.data(), (std::uint32_t)asciiString.size());
+
+    // The buffer's size must be an even number
     ///////////////////////////////////////////////////////////
-    std::unique_ptr<defaultCharsetConversion> localCharsetConversion(new defaultCharsetConversion(pCharsetsList->front()));
+    std::uint32_t memorySize = commitMemory->size();
+    if((memorySize & 0x1) != 0)
+    {
+        commitMemory->resize(++memorySize);
+        *(commitMemory->data() + (memorySize - 1)) = m_paddingByte;
+    }
 
-    // Get the escape sequences from the unicode conversion
-    //  engine
-    ///////////////////////////////////////////////////////////
-    const charsetDictionary::escapeSequences_t& escapes(localCharsetConversion->getDictionary().getEscapeSequences());
+    if(m_maxSize != 0 && commitMemory->size() > m_maxSize)
+    {
+        throw;
+    }
 
-	// Returned string
-	///////////////////////////////////////////////////////////
-    std::string rawString;
-    rawString.reserve(value.size());
-	
-	// Convert all the chars. Each char is tested with the
-	//  active charset first, then with other charsets if
-	//  the active one doesn't work
-	///////////////////////////////////////////////////////////
-    for(size_t scanString = 0; scanString != value.size(); ++scanString)
-	{
-        // Get the UNICODE char. On windows the code may be spread
-        //  across 2 16 bit wide codes.
-		///////////////////////////////////////////////////////////
-        std::wstring code(size_t(1), value[scanString]);
+    if(m_unitSize != 0 && commitMemory->size() > m_unitSize)
+    {
+        throw;
+    }
 
-        // Check UTF-16 extension (Windows only)
-        ///////////////////////////////////////////////////////////
-        if(sizeof(wchar_t) == 2)
-        {
-            if(code[0] >= 0xd800 && code[0] <=0xdfff && scanString < (value.size() - 1))
-            {
-                code += value[++scanString];
-            }
-        }
+    m_buffer->commit(commitMemory, m_dataType);
+}
 
-        // Check composed chars extension (diacritical marks)
-        ///////////////////////////////////////////////////////////
-        while(scanString < (value.size() - 1) && value[scanString + 1] >= 0x0300 && value[scanString + 1] <= 0x036f)
-        {
-            code += value[++scanString];
-        }
+// Set the data element as a signed long
+///////////////////////////////////////////////////////////
+void writingDataHandlerStringUnicode::setSignedLong(const size_t index, const std::int32_t value)
+{
+    std::wostringstream conversion;
+    conversion << value;
+    setUnicodeString(index, conversion.str());
+}
 
-        // Remember the return string size so we can check if we
-        //  added something to it
-        ///////////////////////////////////////////////////////////
-        size_t currentRawSize(rawString.size());
-        rawString += localCharsetConversion->fromUnicode(code);
-        if(rawString.size() != currentRawSize)
-        {
-            // The conversion succeeded: continue with the next char
-            ///////////////////////////////////////////////////////////
-            continue;
-        }
+// Set the data element as an unsigned long
+///////////////////////////////////////////////////////////
+void writingDataHandlerStringUnicode::setUnsignedLong(const size_t index, const std::uint32_t value)
+{
+    std::wostringstream conversion;
+    conversion << value;
+    setUnicodeString(index, conversion.str());
+}
 
-		// Find the escape sequence
-		///////////////////////////////////////////////////////////
-        for(charsetDictionary::escapeSequences_t::const_iterator scanEscapes(escapes.begin()), endEscapes(escapes.end());
-            scanEscapes != endEscapes;
-            ++scanEscapes)
-		{
-			try
-			{
-                std::unique_ptr<defaultCharsetConversion> testEscapeSequence(new defaultCharsetConversion(scanEscapes->second));
-                std::string convertedChar(testEscapeSequence->fromUnicode(code));
-                if(!convertedChar.empty())
-				{
-                    rawString += scanEscapes->first;
-                    rawString += convertedChar;
+// Set the data element as a double
+///////////////////////////////////////////////////////////
+void writingDataHandlerStringUnicode::setDouble(const size_t index, const double value)
+{
+    std::wostringstream conversion;
+    conversion << value;
+    setUnicodeString(index, conversion.str());
+}
 
-                    localCharsetConversion.reset(testEscapeSequence.release());
+// Set the buffer's size, in data elements
+///////////////////////////////////////////////////////////
+void writingDataHandlerStringUnicode::setSize(const size_t elementsNumber)
+{
+    m_strings.resize(elementsNumber);
+}
 
-					// Add the dicom charset to the charsets
-					///////////////////////////////////////////////////////////
-					bool bAlreadyUsed = false;
-					for(charsetsList::tCharsetsList::const_iterator scanUsedCharsets = pCharsetsList->begin(); scanUsedCharsets != pCharsetsList->end(); ++scanUsedCharsets)
-					{
-                        if(*scanUsedCharsets == scanEscapes->second)
-						{
-							bAlreadyUsed = true;
-							break;
-						}
-					}
-					if(!bAlreadyUsed)
-					{
-                        pCharsetsList->push_back(scanEscapes->second);
-					}
-					break;
-				}
-			}
-			catch(charsetConversionExceptionNoSupportedTable)
-			{
-				continue;
-			}
-		}
-	}
+size_t writingDataHandlerStringUnicode::getSize() const
+{
+    return m_strings.size();
+}
 
-    return rawString;
+void writingDataHandlerStringUnicode::setString(const size_t index, const std::string& value)
+{
+    charsetsList::tCharsetsList charsets;
+    charsets.push_back("ISO 2022 IR 6");
+    setUnicodeString(index, dicomConversion::convertToUnicode(value, charsets));
 
-	PUNTOEXE_FUNCTION_END();
+}
+
+void writingDataHandlerStringUnicode::setUnicodeString(const size_t index, const std::wstring& value)
+{
+    m_strings[index] = value;
 }
 
 

@@ -55,26 +55,10 @@ namespace puntoexe
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class baseStream
+class baseStreamReader
 {
 
 public:
-	/// \brief Writes raw data into the stream.
-	///
-	/// The function is multithreading-safe and is called by
-	///  the streamWriter class when its buffer has to be
-	///  flushed.
-	///
-	/// @param startPosition  the position in the file where
-	///                        the data has to be written
-	/// @param pBuffer        pointer to the data that has to
-	///                        be written
-	/// @param bufferLength   number of bytes in the data 
-	///                        buffer that has to be written
-	///
-	///////////////////////////////////////////////////////////
-	virtual void write(std::uint32_t startPosition, const std::uint8_t* pBuffer, std::uint32_t bufferLength) = 0;
-	
 	/// \brief Read raw data from the stream.
 	///
 	/// The function is multithreading-safe and is called by
@@ -93,6 +77,29 @@ public:
 	///
 	///////////////////////////////////////////////////////////
 	virtual std::uint32_t read(std::uint32_t startPosition, std::uint8_t* pBuffer, std::uint32_t bufferLength) = 0;
+};
+
+
+class baseStreamWriter
+{
+
+public:
+    /// \brief Writes raw data into the stream.
+    ///
+    /// The function is multithreading-safe and is called by
+    ///  the streamWriter class when its buffer has to be
+    ///  flushed.
+    ///
+    /// @param startPosition  the position in the file where
+    ///                        the data has to be written
+    /// @param pBuffer        pointer to the data that has to
+    ///                        be written
+    /// @param bufferLength   number of bytes in the data
+    ///                        buffer that has to be written
+    ///
+    ///////////////////////////////////////////////////////////
+    virtual void write(std::uint32_t startPosition, const std::uint8_t* pBuffer, std::uint32_t bufferLength) = 0;
+
 };
 
 

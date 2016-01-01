@@ -13,64 +13,54 @@ $fileHeader$
 namespace imebra
 {
 
-DataHandler::DataHandler(const DataHandler& right) : m_pDataHandler(right.m_pDataHandler)
+ReadingDataHandler::ReadingDataHandler(const ReadingDataHandler& right) : m_pDataHandler(right.m_pDataHandler)
 {}
 
-DataHandler& DataHandler::operator=(const DataHandler& right)
+ReadingDataHandler& ReadingDataHandler::operator=(const ReadingDataHandler& right)
 {
     m_pDataHandler = right.m_pDataHandler;
     return *this;
 }
 
-DataHandler::DataHandler(std::shared_ptr<puntoexe::imebra::handlers::dataHandler> pDataHandler): m_pDataHandler(pDataHandler)
+ReadingDataHandler::ReadingDataHandler(std::shared_ptr<puntoexe::imebra::handlers::readingDataHandler> pDataHandler): m_pDataHandler(pDataHandler)
 {}
 
-void DataHandler::close()
+void ReadingDataHandler::close()
 {
     m_pDataHandler.reset();
 }
 
-void DataHandler::setSize(const size_t elementsNumber)
+size_t ReadingDataHandler::getSize() const
 {
-    m_pDataHandler->setSize((const imbxUint32)elementsNumber);
+    return m_pDataHandler->getSize();
 }
 
-size_t DataHandler::getSize() const
-{
-    return (size_t)(m_pDataHandler->getSize());
-}
-
-size_t DataHandler::getUnitSize() const
-{
-    return (size_t)(m_pDataHandler->getUnitSize());
-}
-
-std::string DataHandler::getDataType() const
+std::string ReadingDataHandler::getDataType() const
 {
     return m_pDataHandler->getDataType();
 }
 
-int DataHandler::getSignedLong(const int index) const
+int ReadingDataHandler::getSignedLong(const int index) const
 {
     return (int)(m_pDataHandler->getSignedLong((const imbxUint32)index));
 }
 
-int DataHandler::getUnsignedLong(const int index) const
+int ReadingDataHandler::getUnsignedLong(const int index) const
 {
     return (int)(m_pDataHandler->getUnsignedLong((const imbxUint32)index));
 }
 
-double DataHandler::getDouble(const int index) const
+double ReadingDataHandler::getDouble(const int index) const
 {
     return m_pDataHandler->getDouble((const imbxUint32)index);
 }
 
-std::wstring DataHandler::getString(const int index) const
+std::wstring ReadingDataHandler::getString(const int index) const
 {
     return m_pDataHandler->getUnicodeString((const imbxUint32)index);
 }
 
-void DataHandler::getDate(const int index,
+void ReadingDataHandler::getDate(const int index,
 		int* pYear,
 		int* pMonth,
 		int* pDay,
@@ -95,16 +85,59 @@ void DataHandler::getDate(const int index,
     *pOffsetMinutes = (int)offsetMinutes;
 }
 
-void DataHandler::setDate(const int index,
-		int year,
-		int month,
-		int day,
-		int hour,
-		int minutes,
-		int seconds,
-		int nanoseconds,
-		int offsetHours,
-		int offsetMinutes)
+std::uint32_t ReadingDataHandler::getAge(const size_t index, ageUnit_t *pUnit) const
+{
+    return m_pDataHandler->getAge(index, pUnit);
+}
+
+
+
+
+
+
+WritingDataHandler::WritingDataHandler(const WritingDataHandler& right) : m_pDataHandler(right.m_pDataHandler)
+{}
+
+WritingDataHandler& WritingDataHandler::operator=(const WritingDataHandler& right)
+{
+    m_pDataHandler = right.m_pDataHandler;
+    return *this;
+}
+
+WritingDataHandler::WritingDataHandler(std::shared_ptr<puntoexe::imebra::handlers::writingDataHandler> pDataHandler): m_pDataHandler(pDataHandler)
+{}
+
+void WritingDataHandler::close()
+{
+    m_pDataHandler.reset();
+}
+
+void WritingDataHandler::setSize(const size_t elementsNumber)
+{
+    m_pDataHandler->setSize((const imbxUint32)elementsNumber);
+}
+
+size_t WritingDataHandler::getSize() const
+{
+    return m_pDataHandler->getSize();
+}
+
+std::string WritingDataHandler::getDataType() const
+{
+    return m_pDataHandler->getDataType();
+}
+
+
+void WritingDataHandler::setDate(const int index,
+        int year,
+        int month,
+        int day,
+        int hour,
+        int minutes,
+        int seconds,
+        int nanoseconds,
+        int offsetHours,
+        int offsetMinutes)
 {
     m_pDataHandler->setDate(
         (imbxUint32)index,
@@ -119,29 +152,34 @@ void DataHandler::setDate(const int index,
         (imbxInt32)offsetMinutes);
 }
 
-void DataHandler::setSignedLong(const int index, const int value)
+void WritingDataHandler::setAge(const size_t index, const uint32_t age, const ageUnit_t unit)
+{
+    m_pDataHandler->setAge(index, age, unit);
+}
+
+void WritingDataHandler::setSignedLong(const int index, const int value)
 {
     m_pDataHandler->setSignedLong((imbxUint32)index, (imbxInt32)value);
 }
 
-void DataHandler::setUnsignedLong(const int index, const int value)
+void WritingDataHandler::setUnsignedLong(const int index, const int value)
 {
     m_pDataHandler->setUnsignedLong((imbxUint32)index, (imbxUint32)value);
 }
 
-void DataHandler::setDouble(const int index, const double value)
+void WritingDataHandler::setDouble(const int index, const double value)
 {
     m_pDataHandler->setDouble((imbxUint32)index, value);
 }
 
-void DataHandler::setString(const int index, const std::wstring& value)
+void WritingDataHandler::setString(const int index, const std::wstring& value)
 {
     m_pDataHandler->setUnicodeString((imbxUint32)index, value);
 }
 
-Memory DataHandler::getMemory()
+Memory WritingDataHandler::getMemory()
 {
-    std::shared_ptr<puntoexe::imebra::handlers::dataHandlerNumericBase> pDataHandler(std::dynamic_pointer_cast<puntoexe::imebra::handlers::dataHandlerNumericBase>(m_pDataHandler));
+    std::shared_ptr<puntoexe::imebra::handlers::writingDataHandlerNumericBase> pDataHandler(std::dynamic_pointer_cast<puntoexe::imebra::handlers::writingDataHandlerNumericBase>(m_pDataHandler));
     if(pDataHandler == 0)
     {
         return Memory();

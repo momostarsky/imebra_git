@@ -36,14 +36,12 @@ namespace handlers
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class dataHandlerDate : public dataHandlerDateTimeBase
+class readingDataHandlerDate : public readingDataHandlerDateTimeBase
 {
 public:
-    dataHandlerDate();
+    readingDataHandlerDate(const memory& parseMemory);
 
-	virtual std::uint32_t getUnitSize() const;
-
-	virtual void getDate(const std::uint32_t index,
+	virtual void getDate(const size_t index,
 		std::int32_t* pYear, 
 		std::int32_t* pMonth, 
 		std::int32_t* pDay, 
@@ -53,54 +51,23 @@ public:
 		std::int32_t* pNanoseconds,
 		std::int32_t* pOffsetHours,
 		std::int32_t* pOffsetMinutes) const;
+};
 
-	virtual void setDate(const std::uint32_t index,
-		std::int32_t year, 
-		std::int32_t month, 
-		std::int32_t day, 
-		std::int32_t hour, 
-		std::int32_t minutes,
-		std::int32_t seconds,
-		std::int32_t nanoseconds,
-		std::int32_t offsetHours,
-		std::int32_t offsetMinutes);
+class writingDataHandlerDate: public writingDataHandlerDateTimeBase
+{
+public:
+    writingDataHandlerDate(const std::shared_ptr<buffer>& pBuffer);
 
-	/// \brief Return a string representing the date stored in 
-	///         the buffer.
-	///
-	/// The returned string has the format: "YYYY-MM-DD"
-	///  where:
-	///  - YYYY is the year
-	///  - MM is the month
-	///  - DD is the day
-	///
-	/// @param index the zero based index of the date to
-	///         retrieve
-	/// @return a string representing the date stored in the
-	///          buffer
-	///
-	///////////////////////////////////////////////////////////
-	virtual std::wstring getUnicodeString(const std::uint32_t index) const;
-
-	/// \brief Set the date from a string.
-	///
-	/// The string must have the format: "YYYY-MM-DD"
-	///  where:
-	///  - YYYY is the year
-	///  - MM is the month
-	///  - DD is the day
-	///
-	/// @param index the zero based index of the date to be
-	///         set
-	/// @param value the string representing the date to be set
-	///
-	///////////////////////////////////////////////////////////
-	virtual void setUnicodeString(const std::uint32_t index, const std::wstring& value);
-
-	void parseBuffer(const std::shared_ptr<memory>& memoryBuffer);
-
-protected:
-	virtual std::uint32_t maxSize() const;
+    virtual void setDate(const size_t index,
+        std::int32_t year,
+        std::int32_t month,
+        std::int32_t day,
+        std::int32_t hour,
+        std::int32_t minutes,
+        std::int32_t seconds,
+        std::int32_t nanoseconds,
+        std::int32_t offsetHours,
+        std::int32_t offsetMinutes);
 };
 
 } // namespace handlers

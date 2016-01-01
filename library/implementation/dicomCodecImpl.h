@@ -12,7 +12,6 @@ $fileHeader$
 
 #include "codecImpl.h"
 #include "dataImpl.h"
-#include "dataGroupImpl.h"
 #include "dataSetImpl.h"
 #include "streamControllerImpl.h"
 
@@ -58,7 +57,7 @@ class dicomCodec : public codec
 public:
 	// Get an image from a dicom structure
 	///////////////////////////////////////////////////////////
-    virtual std::shared_ptr<image> getImage(dataSet* pData, std::shared_ptr<streamReader> pSourceStream, const std::string& dataType);
+    virtual std::shared_ptr<image> getImage(const dataSet& dataset, std::shared_ptr<streamReader> pSourceStream, const std::string& dataType);
 
 	// Write an image into a dicom structure
 	///////////////////////////////////////////////////////////
@@ -179,19 +178,19 @@ protected:
 
 	// Calculate the tag's length
 	///////////////////////////////////////////////////////////
-	std::uint32_t getTagLength(std::shared_ptr<data> pData, bool bExplicitDataType, std::uint32_t* pHeaderLength, bool *pbSequence);
+    std::uint32_t getTagLength(const std::shared_ptr<data>& pData, bool bExplicitDataType, std::uint32_t* pHeaderLength, bool *pbSequence) const;
 
 	// Calculate the group's length
 	///////////////////////////////////////////////////////////
-	std::uint32_t getGroupLength(std::shared_ptr<dataGroup>, bool bExplicitDataType);
+    std::uint32_t getGroupLength(const dataSet::tTags tags, bool bExplicitDataType) const;
 
 	// Calculate the dataset's length
 	///////////////////////////////////////////////////////////
-	std::uint32_t getDataSetLength(std::shared_ptr<dataSet>, bool bExplicitDataType);
+    std::uint32_t getDataSetLength(std::shared_ptr<dataSet>, bool bExplicitDataType) const;
 
 	// Write a single group
 	///////////////////////////////////////////////////////////
-	void writeGroup(std::shared_ptr<streamWriter> pDestStream, std::shared_ptr<dataGroup> pGroup, std::uint16_t groupId, bool bExplicitDataType, streamController::tByteOrdering endianType);
+    void writeGroup(std::shared_ptr<streamWriter> pDestStream, const dataSet::tTags& tags, std::uint16_t groupId, bool bExplicitDataType, streamController::tByteOrdering endianType);
 
 	// Write a single tag
 	///////////////////////////////////////////////////////////

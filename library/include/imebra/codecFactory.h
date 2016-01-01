@@ -14,6 +14,7 @@ $fileHeader$
 #include "dataSet.h"
 #include "streamReader.h"
 #include "streamWriter.h"
+#include "definitions.h"
 
 namespace imebra
 {
@@ -21,7 +22,7 @@ namespace imebra
 /// \addtogroup group_swig_bindings
 /// @{
 
-class CodecFactory
+class IMEBRA_API CodecFactory
 {
 public:
     static DataSet load(StreamReader reader, size_t maxSizeBufferLoad);

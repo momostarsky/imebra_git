@@ -19,7 +19,6 @@ Please note that the file doesn't include the file viewHelper.h.
 #include "colorTransformImpl.h"
 #include "colorTransformsFactoryImpl.h"
 #include "dataImpl.h"
-#include "dataGroupImpl.h"
 #include "dataHandlerDateImpl.h"
 #include "dataHandlerDateTimeImpl.h"
 #include "dataHandlerNumericImpl.h"

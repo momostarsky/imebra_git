@@ -39,32 +39,25 @@ namespace handlers
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class dataHandlerDateTimeBase : public dataHandlerString {
+class readingDataHandlerDateTimeBase : public readingDataHandlerString
+{
 
 public:
-    dataHandlerDateTimeBase(const std::string& dataType);
+    readingDataHandlerDateTimeBase(const memory& parseMemory, const std::string& dataType);
 
-	virtual std::int32_t getSignedLong(const std::uint32_t index) const;
-	virtual std::uint32_t getUnsignedLong(const std::uint32_t index) const;
-	virtual double getDouble(const std::uint32_t index) const;
-	virtual void setSignedLong(const std::uint32_t index, const std::int32_t value);
-	virtual void setUnsignedLong(const std::uint32_t index, const std::uint32_t value);
-	virtual void setDouble(const std::uint32_t index, const double value);
+    virtual std::int32_t getSignedLong(const size_t index) const;
+    virtual std::uint32_t getUnsignedLong(const size_t index) const;
+    virtual double getDouble(const size_t index) const;
 
 protected:
 	void parseDate(
-		std::wstring dateString,
+        const std::string& dateString,
 		std::int32_t* pYear, 
 		std::int32_t* pMonth, 
 		std::int32_t* pDay) const;
 
-	std::wstring buildDate(
-		std::uint32_t year,
-		std::uint32_t month,
-		std::uint32_t day) const;
-	
 	void parseTime(
-		std::wstring timeString,
+        const std::string& timeString,
 		std::int32_t* pHour, 
 		std::int32_t* pMinutes,
 		std::int32_t* pSeconds,
@@ -72,17 +65,35 @@ protected:
 		std::int32_t* pOffsetHours,
 		std::int32_t* pOffsetMinutes) const;
 
-	std::wstring buildTime(
-		std::int32_t hour,
-		std::int32_t minutes,
-		std::int32_t seconds,
-		std::int32_t nanoseconds,
-		std::int32_t offsetHours,
-		std::int32_t offsetMinutes
-		) const;
+    void split(const std::string& timeString, const std::string& separators, std::vector<std::string> *pComponents) const;
+};
 
-	void split(const std::wstring& timeString, const std::wstring& separators, std::vector<std::wstring> *pComponents) const;
-	std::wstring padLeft(const std::wstring& source, const wchar_t fillChar, const size_t length) const;
+class writingDataHandlerDateTimeBase: public writingDataHandlerString
+{
+public:
+    writingDataHandlerDateTimeBase(const std::shared_ptr<buffer>& pBuffer, const std::string& dataType, const size_t unitSize, const size_t maxSize);
+
+    virtual void setSignedLong(const size_t index, const std::int32_t value);
+    virtual void setUnsignedLong(const size_t index, const std::uint32_t value);
+    virtual void setDouble(const size_t index, const double value);
+
+protected:
+    std::string buildDate(
+        std::uint32_t year,
+        std::uint32_t month,
+        std::uint32_t day) const;
+
+    std::string buildTime(
+        std::int32_t hour,
+        std::int32_t minutes,
+        std::int32_t seconds,
+        std::int32_t nanoseconds,
+        std::int32_t offsetHours,
+        std::int32_t offsetMinutes
+        ) const;
+
+    std::string padLeft(const std::string& source, const char fillChar, const size_t length) const;
+
 };
 
 } // namespace handlers

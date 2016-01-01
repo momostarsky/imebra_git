@@ -186,7 +186,7 @@ public:
 	/// @return a pointer to the loaded image
 	///
 	///////////////////////////////////////////////////////////
-    virtual std::shared_ptr<image> getImage(dataSet* pSourceDataSet, std::shared_ptr<streamReader> pSourceStream, const std::string& dataType) = 0;
+    virtual std::shared_ptr<image> getImage(const dataSet& sourceDataSet, std::shared_ptr<streamReader> pSourceStream, const std::string& dataType) = 0;
 	
 	/// \brief This enumeration is used by setImage() in order
 	///         to setup the compression parameters.

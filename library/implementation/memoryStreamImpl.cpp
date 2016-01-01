@@ -37,7 +37,12 @@ namespace puntoexe
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-memoryStream::memoryStream(std::shared_ptr<memory> memoryStream): m_memory(memoryStream)
+memoryStreamReader::memoryStreamReader(std::shared_ptr<const memory> memoryStream): m_memory(memoryStream)
+{
+}
+
+
+memoryStreamWriter::memoryStreamWriter(std::shared_ptr<memory> memoryStream): m_memory(memoryStream)
 {
 }
 
@@ -51,7 +56,7 @@ memoryStream::memoryStream(std::shared_ptr<memory> memoryStream): m_memory(memor
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void memoryStream::write(std::uint32_t startPosition, const std::uint8_t* pBuffer, std::uint32_t bufferLength)
+void memoryStreamWriter::write(std::uint32_t startPosition, const std::uint8_t* pBuffer, std::uint32_t bufferLength)
 {
 	PUNTOEXE_FUNCTION_START(L"memoryStream::write");
 
@@ -87,7 +92,7 @@ void memoryStream::write(std::uint32_t startPosition, const std::uint8_t* pBuffe
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::uint32_t memoryStream::read(std::uint32_t startPosition, std::uint8_t* pBuffer, std::uint32_t bufferLength)
+std::uint32_t memoryStreamReader::read(std::uint32_t startPosition, std::uint8_t* pBuffer, std::uint32_t bufferLength)
 {
 	PUNTOEXE_FUNCTION_START(L"memoryStream::read");
 

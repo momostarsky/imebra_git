@@ -13,6 +13,8 @@ $fileHeader$
 #ifndef SWIG
 
 #include <memory>
+#include "definitions.h"
+#include "dataHandler.h"
 
 namespace puntoexe
 {
@@ -23,12 +25,10 @@ class image;
 }
 #endif
 
-#include "dataHandler.h"
-
 namespace imebra
 {
 
-class Image
+class IMEBRA_API Image
 {
 public:
 
@@ -37,7 +37,7 @@ public:
 	/// \brief Define a single color component's size.
 	///
 	///////////////////////////////////////////////////////////
-	enum bitDepth
+    enum class bitDepth
 	{
 		depthU8 = 0,
 		depthS8 = 1,
@@ -61,7 +61,7 @@ public:
 	Image(std::shared_ptr<puntoexe::imebra::image> pImage);
 #endif
 
-	DataHandler create(
+    WritingDataHandler create(
         const size_t sizeX,
         const size_t sizeY,
 		const bitDepth depth,
@@ -78,7 +78,8 @@ public:
     size_t getSizeX() const;
     size_t getSizeY() const;
 
-	DataHandler getDataHandler(const bool bWrite);
+    ReadingDataHandler getReadingDataHandler() const;
+    WritingDataHandler getWritingDataHandler();
 
     std::wstring getColorSpace() const;
 

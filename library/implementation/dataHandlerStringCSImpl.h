@@ -34,17 +34,17 @@ namespace handlers
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class dataHandlerStringCS : public dataHandlerString
+class readingDataHandlerStringCS : public readingDataHandlerString
 {
 public:
-    dataHandlerStringCS();
+    readingDataHandlerStringCS(const memory& parseMemory);
 
-	virtual std::uint32_t getUnitSize() const;
+};
 
-protected:
-	// Return the maximum string's length
-	///////////////////////////////////////////////////////////
-	virtual std::uint32_t maxSize() const;
+class writingDataHandlerStringCS: public writingDataHandlerString
+{
+public:
+    writingDataHandlerStringCS(const std::shared_ptr<buffer> pBuffer);
 };
 
 } // namespace handlers

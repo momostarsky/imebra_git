@@ -13,6 +13,8 @@ $fileHeader$
 #ifndef SWIG
 
 #include <memory>
+#include "image.h"
+#include "definitions.h"
 
 namespace puntoexe
 {
@@ -22,8 +24,6 @@ class dataSet;
 }
 }
 #endif
-
-#include "image.h"
 
 namespace imebra
 {
@@ -36,7 +36,7 @@ namespace imebra
 ///////////////////////////////////////////////////////////
 /// @{
 
-class DataSet
+class IMEBRA_API DataSet
 {
 #ifndef SWIG
 	friend class DirectoryRecord;
@@ -87,6 +87,10 @@ public:
     std::wstring getString(int groupId, int order, int tagId, int elementNumber) const;
 
     void setString(int groupId, int order, int tagId, int elementNumber, const std::wstring& newString, const std::string& defaultType = "");
+
+    void setAge(int groupId, int order, int tagId, int elementNumber, int age, imebra::ageUnit_t units, const std::string& defaultType = "");
+
+    int getAge(int groupId, int order, int tagId, int elementNumber, imebra::ageUnit_t* pUnits) const;
 
     size_t getRawData(int groupId, int order, int tagId, int bufferId, char* buffer, size_t bufferSize) const;
 

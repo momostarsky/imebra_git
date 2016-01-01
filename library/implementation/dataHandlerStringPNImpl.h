@@ -66,18 +66,16 @@ myDataSet->setUnicodeString(L"<-"); // :-)
 \endcode
 
 */
-class dataHandlerStringPN : public dataHandlerStringUnicode
+class readingDataHandlerStringPN : public readingDataHandlerStringUnicode
 {
 public:
-    dataHandlerStringPN(const charsetsList::tCharsetsList& initialCharsetsList);
+    readingDataHandlerStringPN(const memory& parseMemory, const charsetsList::tCharsetsList& charsets);
+};
 
-	virtual std::uint32_t getUnitSize() const;
-
-protected:
-	// Return the maximum string's length
-	///////////////////////////////////////////////////////////
-	virtual std::uint32_t maxSize() const;
-
+class writingDataHandlerStringPN: public writingDataHandlerStringUnicode
+{
+public:
+    writingDataHandlerStringPN(const std::shared_ptr<buffer>& pBuffer, const charsetsList::tCharsetsList& charsets);
 };
 
 } // namespace handlers

@@ -33,27 +33,25 @@ namespace handlers
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class dataHandlerStringIS : public dataHandlerString
+class readingDataHandlerStringIS : public readingDataHandlerString
 {
 public:
-    dataHandlerStringIS();
+    readingDataHandlerStringIS(const memory& parseMemory);
 
 	// Overwritten to use getSignedLong()
 	///////////////////////////////////////////////////////////
-	virtual double getDouble(const std::uint32_t index) const;
+	virtual double getDouble(const size_t index) const;
 
-	// Overwritten to use setSignedLong()
-	///////////////////////////////////////////////////////////
-	virtual void setDouble(const std::uint32_t index, const double value);
+};
 
-	// Get the element size
-	///////////////////////////////////////////////////////////
-	virtual std::uint32_t getUnitSize() const;
+class writingDataHandlerStringIS: public writingDataHandlerString
+{
+public:
+    writingDataHandlerStringIS(const std::shared_ptr<buffer> pBuffer);
 
-protected:
-	// Return the maximum string's length
-	///////////////////////////////////////////////////////////
-	virtual std::uint32_t maxSize() const;
+    // Overwritten to use setSignedLong()
+    ///////////////////////////////////////////////////////////
+    virtual void setDouble(const size_t index, const double value);
 };
 
 } // namespace handlers

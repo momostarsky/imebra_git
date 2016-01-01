@@ -103,7 +103,7 @@ std::uint32_t waveform::getSamples()
 	PUNTOEXE_FUNCTION_END();
 }
 
-
+/*
 ///////////////////////////////////////////////////////////
 //
 // Returns a data handler for the waveform
@@ -187,7 +187,7 @@ std::shared_ptr<handlers::dataHandler> waveform::getIntegerData(std::uint32_t ch
 
 	// Get the original data
 	///////////////////////////////////////////////////////////
-	std::shared_ptr<handlers::dataHandler> waveformData(m_pDataSet->getDataHandler(0x5400, 0x0, 0x1010, 0, false));
+    std::shared_ptr<handlers::readingDataHandler> waveformData(m_pDataSet->getReadingDataHandler(0x5400, 0x0, 0x1010, 0));
 	std::string sourceDataType(waveformData->getDataType());
 	
 	// Get the interpretation, number of channels, number of
@@ -198,7 +198,7 @@ std::shared_ptr<handlers::dataHandler> waveform::getIntegerData(std::uint32_t ch
 	std::uint32_t numSamples(getSamples());
 	std::uint32_t originalPaddingValue(0);
 	bool bPaddingValueExists(false);
-	std::shared_ptr<handlers::dataHandler> paddingTagHandler(m_pDataSet->getDataHandler(0x5400, 0, 0x100A, 0, false));
+    std::shared_ptr<handlers::readingDataHandler> paddingTagHandler(m_pDataSet->getReadingDataHandler(0x5400, 0, 0x100A, 0));
 	if(paddingTagHandler != 0)
 	{
 		originalPaddingValue = paddingTagHandler->getUnsignedLong(0);
@@ -209,7 +209,7 @@ std::shared_ptr<handlers::dataHandler> waveform::getIntegerData(std::uint32_t ch
 	// Allocate a buffer for the destination data
 	///////////////////////////////////////////////////////////
     std::shared_ptr<buffer> waveformBuffer(new buffer("SL"));
-	std::shared_ptr<handlers::dataHandler> destinationHandler(waveformBuffer->getDataHandler(true, numSamples));
+    std::shared_ptr<handlers::writingDataHandler> destinationHandler(waveformBuffer->getWritingDataHandler(numSamples));
 
 	// Copy the data to the destination for unsigned values
 	///////////////////////////////////////////////////////////
@@ -268,7 +268,7 @@ std::shared_ptr<handlers::dataHandler> waveform::getIntegerData(std::uint32_t ch
 	}
 
 	// Now decompress uLaw or aLaw
-	if(waveformInterpretation == "MB") // 8bits aLaw
+    else if(waveformInterpretation == "MB") // 8bits aLaw
 	{
 		for(std::uint32_t uLawSamples(0); uLawSamples != numSamples; ++uLawSamples)
 		{
@@ -282,12 +282,17 @@ std::shared_ptr<handlers::dataHandler> waveform::getIntegerData(std::uint32_t ch
 		}
 	}
 
+    else
+    {
+
+    }
+
 	return destinationHandler;
 
 	PUNTOEXE_FUNCTION_END();
 }
 
-
+*/
 ///////////////////////////////////////////////////////////
 //
 // Returns the sequence item

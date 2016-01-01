@@ -43,7 +43,7 @@ modalityVOILUT::modalityVOILUT(std::shared_ptr<dataSet> pDataSet):
 		return;
 	}
 
-    std::shared_ptr<handlers::dataHandler> rescaleHandler(m_pDataSet->getDataHandler(0x0028, 0, 0x1053, 0x0, false));
+    std::shared_ptr<handlers::readingDataHandler> rescaleHandler(m_pDataSet->getReadingDataHandler(0x0028, 0, 0x1053, 0x0));
 	if(rescaleHandler != 0)
 	{
 		m_rescaleSlope = rescaleHandler->getDouble(0);

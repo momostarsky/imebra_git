@@ -133,7 +133,7 @@ public:
 	///        to retrieve the data
 	///
 	///////////////////////////////////////////////////////////
-	std::shared_ptr<handlers::dataHandler> getIntegerData(std::uint32_t channel, std::int32_t paddingValue = 0x7fffffff);
+    //std::shared_ptr<handlers::dataHandler> getIntegerData(std::uint32_t channel, std::int32_t paddingValue = 0x7fffffff);
 
 	/// \brief Return the sequence item used by the waveform.
 	///

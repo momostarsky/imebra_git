@@ -32,18 +32,14 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 
-dataHandlerStringPN::dataHandlerStringPN(const charsetsList::tCharsetsList& initialCharsetsList): dataHandlerStringUnicode("PN", L'=', 0x20, initialCharsetsList)
+readingDataHandlerStringPN::readingDataHandlerStringPN(const memory& parseMemory, const charsetsList::tCharsetsList& charsets):
+    readingDataHandlerStringUnicode(parseMemory, charsets, "PN", L'=', 0x20)
 {
 }
 
-std::uint32_t dataHandlerStringPN::getUnitSize() const
+writingDataHandlerStringPN::writingDataHandlerStringPN(const std::shared_ptr<buffer>& pBuffer, const charsetsList::tCharsetsList& charsets):
+    writingDataHandlerStringUnicode(pBuffer, charsets, "PN", L'=', 0, 64, 0x20)
 {
-	return 0;
-}
-
-std::uint32_t dataHandlerStringPN::maxSize() const
-{
-	return 64;
 }
 
 } // namespace handlers

@@ -13,6 +13,8 @@ $fileHeader$
 #ifndef SWIG
 
 #include <memory>
+#include "definitions.h"
+#include "baseStream.h"
 
 namespace puntoexe
 {
@@ -21,7 +23,6 @@ class streamReader;
 
 #endif
 
-#include "baseStream.h"
 
 namespace imebra
 {
@@ -31,13 +32,13 @@ class CodecFactory;
 /// \addtogroup group_swig_bindings
 /// @{
 
-class StreamReader
+class IMEBRA_API StreamReader
 {
     friend class CodecFactory;
 public:
-	StreamReader(const BaseStream& stream);
+    StreamReader(const BaseStreamReader& stream);
 
-	StreamReader(const BaseStream& stream, int virtualStart, int virtualLength);
+    StreamReader(const BaseStreamReader& stream, int virtualStart, int virtualLength);
 
     StreamReader(const StreamReader& right);
 

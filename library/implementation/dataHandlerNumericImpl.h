@@ -16,7 +16,8 @@ $fileHeader$
 
 #include "exceptionImpl.h"
 #include "dataHandlerImpl.h"
-
+#include "memoryImpl.h"
+#include "charsetConversionImpl.h"
 
 ///////////////////////////////////////////////////////////
 //
@@ -36,58 +37,25 @@ namespace handlers
 ///         that manage numeric values.
 ///
 ///////////////////////////////////////////////////////////
-class dataHandlerNumericBase: public dataHandler
+class readingDataHandlerNumericBase: public readingDataHandler
 {
 public:
-    dataHandlerNumericBase(const std::string& dataType);
+    readingDataHandlerNumericBase(const std::shared_ptr<const memory>& pMemory, const std::string& dataType);
 
-    ~dataHandlerNumericBase();
-
-    std::uint8_t* getMemoryBuffer() const;
+    const std::uint8_t* getMemoryBuffer() const;
 
     size_t getMemorySize() const;
 
-    std::shared_ptr<memory> getMemory();
+    std::shared_ptr<const memory> getMemory() const;
 
-	// Set the buffer's size, in data elements
-	///////////////////////////////////////////////////////////
-    virtual void setSize(const std::uint32_t elementsNumber);
-
-	// Parse the tag's buffer and extract its content
-	///////////////////////////////////////////////////////////
-    virtual void parseBuffer(const std::shared_ptr<memory>& memoryBuffer);
-
-	virtual void copyFrom(std::shared_ptr<dataHandlerNumericBase> pSource) = 0;
-
-	virtual void copyFrom(std::uint8_t* pMemory, size_t memorySize) = 0;
-	virtual void copyFrom(std::int8_t* pMemory, size_t memorySize) = 0;
-	virtual void copyFrom(std::uint16_t* pMemory, size_t memorySize) = 0;
-	virtual void copyFrom(std::int16_t* pMemory, size_t memorySize) = 0;
-	virtual void copyFrom(std::uint32_t* pMemory, size_t memorySize) = 0;
-	virtual void copyFrom(std::int32_t* pMemory, size_t memorySize) = 0;
-	virtual void copyFrom(float* pMemory, size_t memorySize) = 0;
-	virtual void copyFrom(double* pMemory, size_t memorySize) = 0;
-
-	virtual void copyTo(std::uint8_t* pMemory, size_t memorySize) = 0;
-	virtual void copyTo(std::int8_t* pMemory, size_t memorySize) = 0;
-	virtual void copyTo(std::uint16_t* pMemory, size_t memorySize) = 0;
-	virtual void copyTo(std::int16_t* pMemory, size_t memorySize) = 0;
-	virtual void copyTo(std::uint32_t* pMemory, size_t memorySize) = 0;
-	virtual void copyTo(std::int32_t* pMemory, size_t memorySize) = 0;
-	virtual void copyTo(float* pMemory, size_t memorySize) = 0;
-	virtual void copyTo(double* pMemory, size_t memorySize) = 0;
-
-	virtual void copyFromInt32Interleaved(const std::int32_t* pSource,
-										  std::uint32_t sourceReplicateX,
-										  std::uint32_t sourceReplicateY,
-										  std::uint32_t destStartCol,
-										  std::uint32_t destStartRow,
-										  std::uint32_t destEndCol,
-										  std::uint32_t destEndRow,
-										  std::uint32_t destStartChannel,
-										  std::uint32_t destWidth,
-										  std::uint32_t destHeight,
-										  std::uint32_t destNumChannels) = 0;
+    virtual void copyTo(std::uint8_t* pMemory, size_t memorySize) const = 0;
+    virtual void copyTo(std::int8_t* pMemory, size_t memorySize) const = 0;
+    virtual void copyTo(std::uint16_t* pMemory, size_t memorySize) const = 0;
+    virtual void copyTo(std::int16_t* pMemory, size_t memorySize) const = 0;
+    virtual void copyTo(std::uint32_t* pMemory, size_t memorySize) const = 0;
+    virtual void copyTo(std::int32_t* pMemory, size_t memorySize) const = 0;
+    virtual void copyTo(float* pMemory, size_t memorySize) const = 0;
+    virtual void copyTo(double* pMemory, size_t memorySize) const = 0;
 
 	virtual void copyToInt32Interleaved(std::int32_t* pDest,
 										std::uint32_t destSubSampleX,
@@ -113,9 +81,55 @@ public:
 protected:
 	// Memory buffer
 	///////////////////////////////////////////////////////////
-	std::uint8_t* m_pMemoryString;
-	size_t m_memorySize;
-	std::shared_ptr<memory> m_memory;
+    std::shared_ptr<const memory> m_pMemory;
+};
+
+class writingDataHandlerNumericBase: public writingDataHandler
+{
+public:
+    writingDataHandlerNumericBase(const std::shared_ptr<buffer>& pBuffer, const size_t initialSize, const std::string& dataType, size_t unitSize);
+    ~writingDataHandlerNumericBase();
+
+    std::uint8_t* getMemoryBuffer() const;
+
+    size_t getMemorySize() const;
+
+    virtual size_t getSize() const;
+
+    std::shared_ptr<memory> getMemory() const;
+
+    // Set the buffer's size, in data elements
+    ///////////////////////////////////////////////////////////
+    virtual void setSize(const size_t elementsNumber);
+
+    virtual void copyFromInt32Interleaved(const std::int32_t* pSource,
+                                          std::uint32_t sourceReplicateX,
+                                          std::uint32_t sourceReplicateY,
+                                          std::uint32_t destStartCol,
+                                          std::uint32_t destStartRow,
+                                          std::uint32_t destEndCol,
+                                          std::uint32_t destEndRow,
+                                          std::uint32_t destStartChannel,
+                                          std::uint32_t destWidth,
+                                          std::uint32_t destHeight,
+                                          std::uint32_t destNumChannels) = 0;
+
+    virtual void copyFrom(std::shared_ptr<readingDataHandlerNumericBase> pSource) = 0;
+    virtual void copyFrom(std::uint8_t* pMemory, size_t memorySize) = 0;
+    virtual void copyFrom(std::int8_t* pMemory, size_t memorySize) = 0;
+    virtual void copyFrom(std::uint16_t* pMemory, size_t memorySize) = 0;
+    virtual void copyFrom(std::int16_t* pMemory, size_t memorySize) = 0;
+    virtual void copyFrom(std::uint32_t* pMemory, size_t memorySize) = 0;
+    virtual void copyFrom(std::int32_t* pMemory, size_t memorySize) = 0;
+    virtual void copyFrom(float* pMemory, size_t memorySize) = 0;
+    virtual void copyFrom(double* pMemory, size_t memorySize) = 0;
+
+protected:
+    // Memory buffer
+    ///////////////////////////////////////////////////////////
+    std::shared_ptr<memory> m_pMemory;
+
+    size_t m_unitSize;
 };
 
 ///////////////////////////////////////////////////////////
@@ -130,21 +144,15 @@ protected:
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 template<class dataHandlerType>
-class dataHandlerNumeric : public dataHandlerNumericBase
+class readingDataHandlerNumeric : public readingDataHandlerNumericBase
 {
 public:
-    dataHandlerNumeric(const std::string& dataType): dataHandlerNumericBase(dataType)
+    typedef dataHandlerType value_type;
+
+    readingDataHandlerNumeric(const std::shared_ptr<const memory>& pMemory, const std::string& dataType): readingDataHandlerNumericBase(pMemory, dataType)
     {
 
     }
-
-	// Returns the size of an element managed by the
-	//  handler.
-	///////////////////////////////////////////////////////////
-	virtual std::uint32_t getUnitSize() const
-	{
-		return sizeof(dataHandlerType);
-	}
 
 	virtual bool isSigned() const
 	{
@@ -155,28 +163,28 @@ public:
 
 	// Retrieve the data element as a signed long
 	///////////////////////////////////////////////////////////
-	virtual std::int32_t getSignedLong(const std::uint32_t index) const
+    virtual std::int32_t getSignedLong(const size_t index) const
 	{
-		return (std::int32_t) (((dataHandlerType*)m_pMemoryString)[index]);
+        return (std::int32_t) (((const dataHandlerType*)m_pMemory->data())[index]);
 	}
 
 	// Retrieve the data element an unsigned long
 	///////////////////////////////////////////////////////////
-	virtual std::uint32_t getUnsignedLong(const std::uint32_t index) const
+    virtual std::uint32_t getUnsignedLong(const size_t index) const
 	{
-		return (std::uint32_t) (((dataHandlerType*)m_pMemoryString)[index]);
+        return (std::uint32_t) (((const dataHandlerType*)m_pMemory->data())[index]);
 	}
 
 	// Retrieve the data element as a double
 	///////////////////////////////////////////////////////////
-	virtual double getDouble(const std::uint32_t index) const
+    virtual double getDouble(const size_t index) const
 	{
-		return (double) (((dataHandlerType*)m_pMemoryString)[index]);
+        return (double) (((const dataHandlerType*)m_pMemory->data())[index]);
 	}
 
 	// Retrieve the data element as a string
 	///////////////////////////////////////////////////////////
-	virtual std::string getString(const std::uint32_t index) const
+    virtual std::string getString(const size_t index) const
 	{
 		PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::getString");
 
@@ -185,12 +193,12 @@ public:
         if(std::is_same<dataHandlerType, std::uint8_t>::value ||
                 std::is_same<dataHandlerType, std::int8_t>::value )
         {
-            int tempValue = (int)(((dataHandlerType*)m_pMemoryString)[index]);
+            int tempValue = (int) (((const dataHandlerType*)m_pMemory->data())[index]);
             convStream << tempValue;
         }
         else
         {
-            convStream << (((dataHandlerType*)m_pMemoryString)[index]);
+            convStream << (((const dataHandlerType*)m_pMemory->data())[index]);
         }
 		return convStream.str();
 
@@ -199,435 +207,76 @@ public:
 
 	// Retrieve the data element as a unicode string
 	///////////////////////////////////////////////////////////
-	virtual std::wstring getUnicodeString(const std::uint32_t index) const
+    virtual std::wstring getUnicodeString(const size_t index) const
 	{
 		PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::getUnicodeString");
 
         std::string ansiString = getString(index);
 
-        std::wstring unicodeString(ansiString.size(), char(0));
-        for(size_t scanAstring(0), endAstring(ansiString.size()); scanAstring != endAstring; ++scanAstring)
-        {
-            unicodeString[scanAstring] = (wchar_t)ansiString.at(scanAstring);
-        }
-        return unicodeString;
+        charsetsList::tCharsetsList charsets;
+        charsets.push_back("ISO_IR 6");
+
+        return dicomConversion::convertToUnicode(ansiString, charsets);
 
 		PUNTOEXE_FUNCTION_END();
 	}
 
 	// Retrieve the buffer's size in elements
 	///////////////////////////////////////////////////////////
-	virtual std::uint32_t getSize() const
+    virtual size_t getSize() const
 	{
 		PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::getSize");
 
-		return m_memorySize/getUnitSize();
+        return m_pMemory->size() / sizeof(dataHandlerType);
 
 		PUNTOEXE_FUNCTION_END();
 	}
-
-	// Set the data element as a signed long
-	///////////////////////////////////////////////////////////
-	virtual void setSignedLong(const std::uint32_t index, const std::int32_t value)
-	{
-		((dataHandlerType*)m_pMemoryString)[index] = (dataHandlerType)value;
-	}
-
-	// Set the data element as an unsigned long
-	///////////////////////////////////////////////////////////
-	virtual void setUnsignedLong(const std::uint32_t index, const std::uint32_t value)
-	{
-		((dataHandlerType*)m_pMemoryString)[index] = (dataHandlerType)value;
-	}
-
-	// Set the data element as a double
-	///////////////////////////////////////////////////////////
-	virtual void setDouble(const std::uint32_t index, const double value)
-	{
-		((dataHandlerType*)m_pMemoryString)[index] = (dataHandlerType)value;
-	}
-
-	// Set the data element as a string
-	///////////////////////////////////////////////////////////
-	virtual void setString(const std::uint32_t index, const std::string& value)
-	{
-		PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::setString");
-
-		std::istringstream convStream(value);
-        dataHandlerType tempValue;
-        if(std::is_same<dataHandlerType, std::uint8_t>::value ||
-                std::is_same<dataHandlerType, std::int8_t>::value)
-        {
-            int tempValue1;
-            convStream >> tempValue1;
-            tempValue = (dataHandlerType)tempValue1;
-        }
-        else
-        {
-            convStream >> tempValue;
-        }
-
-        ((dataHandlerType*)m_pMemoryString)[index] = tempValue;
-
-		PUNTOEXE_FUNCTION_END();
-	}
-
-	// Set the data element as an unicode string
-	///////////////////////////////////////////////////////////
-	virtual void setUnicodeString(const std::uint32_t index, const std::wstring& value)
-	{
-		PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::setUnicodeString");
-
-        std::string ansiString(value.size(), char(0));
-        for(size_t scanWstring(0), endWstring(value.size()); scanWstring != endWstring; ++scanWstring)
-        {
-            ansiString[scanWstring] = (char)value.at(scanWstring);
-        }
-        setString(index, ansiString);
-
-		PUNTOEXE_FUNCTION_END();
-	}
-
-	/// \brief Copy the values from a memory location to
-	///         the buffer managed by the handler
-	///
-	/// @param pSource a pointer to the first byte of the
-	///         memory area to copy
-	/// @param sourceSize the number of values to copy
-	///
-	///////////////////////////////////////////////////////////
-	template<class sourceHandlerType>
-	void copyFromMemory(sourceHandlerType* pSource, size_t sourceSize)
-	{
-		setSize(sourceSize);
-		if(getSize() < sourceSize)
-		{
-			sourceSize = getSize();
-		}
-		dataHandlerType* pDest((dataHandlerType*)m_pMemoryString);
-		while(sourceSize-- != 0)
-		{
-			*(pDest++) = (dataHandlerType)*(pSource++);
-		}
-	}
-
-	// Copy the data from another handler
-	///////////////////////////////////////////////////////////
-    virtual void copyFrom(std::shared_ptr<dataHandlerNumericBase> pSource)
-    {
-        PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::copyFrom");
-
-        puntoexe::imebra::handlers::dataHandlerNumericBase* pHandler(pSource.get());
-        if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::dataHandlerNumeric<std::uint8_t>) ||
-            dynamic_cast<puntoexe::imebra::handlers::dataHandlerNumeric<std::uint8_t>* >(pHandler) != 0)
-        {
-            copyFromMemory<std::uint8_t> ((std::uint8_t*)pHandler->getMemoryBuffer(), pHandler->getSize());
-        }
-        else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::dataHandlerNumeric<std::int8_t>))
-        {
-            copyFromMemory<std::int8_t> ((std::int8_t*)pHandler->getMemoryBuffer(), pHandler->getSize());
-        }
-        else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::dataHandlerNumeric<std::uint16_t>))
-        {
-            copyFromMemory<std::uint16_t> ((std::uint16_t*)pHandler->getMemoryBuffer(), pHandler->getSize());
-        }
-        else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::dataHandlerNumeric<std::int16_t>))
-        {
-            copyFromMemory<std::int16_t> ((std::int16_t*)pHandler->getMemoryBuffer(), pHandler->getSize());
-        }
-        else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::dataHandlerNumeric<std::uint32_t>))
-        {
-            copyFromMemory<std::uint32_t> ((std::uint32_t*)pHandler->getMemoryBuffer(), pHandler->getSize());
-        }
-        else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::dataHandlerNumeric<std::int32_t>))
-        {
-            copyFromMemory<std::int32_t> ((std::int32_t*)pHandler->getMemoryBuffer(), pHandler->getSize());
-        }
-        else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::dataHandlerNumeric<float>))
-        {
-            copyFromMemory<float> ((float*)pHandler->getMemoryBuffer(), pHandler->getSize());
-        }
-        else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::dataHandlerNumeric<double>))
-        {
-            copyFromMemory<double> ((double*)pHandler->getMemoryBuffer(), pHandler->getSize());
-        }
-        else
-        {
-            throw std::runtime_error("Data type not valid");
-        }
-
-        PUNTOEXE_FUNCTION_END();
-
-    }
-
-	virtual void copyFrom(std::uint8_t* pMemory, size_t memorySize)
-	{
-		copyFromMemory(pMemory, memorySize);
-	}
-	virtual void copyFrom(std::int8_t* pMemory, size_t memorySize)
-	{
-		copyFromMemory(pMemory, memorySize);
-	}
-	virtual void copyFrom(std::uint16_t* pMemory, size_t memorySize)
-	{
-		copyFromMemory(pMemory, memorySize);
-	}
-	virtual void copyFrom(std::int16_t* pMemory, size_t memorySize)
-	{
-		copyFromMemory(pMemory, memorySize);
-	}
-	virtual void copyFrom(std::uint32_t* pMemory, size_t memorySize)
-	{
-		copyFromMemory(pMemory, memorySize);
-	}
-	virtual void copyFrom(std::int32_t* pMemory, size_t memorySize)
-	{
-		copyFromMemory(pMemory, memorySize);
-	}
-	virtual void copyFrom(float* pMemory, size_t memorySize)
-	{
-		copyFromMemory(pMemory, memorySize);
-	}
-	virtual void copyFrom(double* pMemory, size_t memorySize)
-	{
-		copyFromMemory(pMemory, memorySize);
-	}
-
 
 	template<class destHandlerType>
-	void copyToMemory(destHandlerType* pDestination, size_t destSize)
+    void copyToMemory(destHandlerType* pDestination, size_t destSize) const
 	{
 		if(getSize() < destSize)
 		{
 			destSize = getSize();
 		}
-		dataHandlerType* pSource((dataHandlerType*)m_pMemoryString);
+        const dataHandlerType* pSource((const dataHandlerType*)m_pMemory->data());
 		while(destSize-- != 0)
 		{
 			*(pDestination++) = (destHandlerType)*(pSource++);
 		}
 	}
 
-	virtual void copyTo(std::uint8_t* pMemory, size_t memorySize)
+    virtual void copyTo(std::uint8_t* pMemory, size_t memorySize) const
 	{
 		copyToMemory(pMemory, memorySize);
 	}
-	virtual void copyTo(std::int8_t* pMemory, size_t memorySize)
+    virtual void copyTo(std::int8_t* pMemory, size_t memorySize) const
 	{
 		copyToMemory(pMemory, memorySize);
 	}
-	virtual void copyTo(std::uint16_t* pMemory, size_t memorySize)
+    virtual void copyTo(std::uint16_t* pMemory, size_t memorySize) const
 	{
 		copyToMemory(pMemory, memorySize);
 	}
-	virtual void copyTo(std::int16_t* pMemory, size_t memorySize)
+    virtual void copyTo(std::int16_t* pMemory, size_t memorySize) const
 	{
 		copyToMemory(pMemory, memorySize);
 	}
-	virtual void copyTo(std::uint32_t* pMemory, size_t memorySize)
+    virtual void copyTo(std::uint32_t* pMemory, size_t memorySize) const
 	{
 		copyToMemory(pMemory, memorySize);
 	}
-	virtual void copyTo(std::int32_t* pMemory, size_t memorySize)
+    virtual void copyTo(std::int32_t* pMemory, size_t memorySize) const
 	{
 		copyToMemory(pMemory, memorySize);
 	}
-	virtual void copyTo(float* pMemory, size_t memorySize)
+    virtual void copyTo(float* pMemory, size_t memorySize) const
 	{
 		copyToMemory(pMemory, memorySize);
 	}
-	virtual void copyTo(double* pMemory, size_t memorySize)
+    virtual void copyTo(double* pMemory, size_t memorySize) const
 	{
 		copyToMemory(pMemory, memorySize);
-	}
-
-
-	template<int subsampleX>
-	inline void copyFromInt32Interleaved(
-		const std::int32_t* pSource,
-		std::uint32_t sourceReplicateY,
-		std::uint32_t destStartCol,
-		std::uint32_t destStartRow,
-		std::uint32_t destEndCol,
-		std::uint32_t destEndRow,
-		std::uint32_t destStartChannel,
-		std::uint32_t destWidth,
-		std::uint32_t destHeight,
-		std::uint32_t destNumChannels)
-	{
-		dataHandlerType *pDestRowScan = &(((dataHandlerType*)m_pMemoryString)[(destStartRow*destWidth+destStartCol)*destNumChannels+destStartChannel]);
-		const std::int32_t* pSourceRowScan = pSource;
-
-		std::uint32_t replicateYCount = sourceReplicateY;
-		std::uint32_t replicateYIncrease = (destEndCol - destStartCol) / subsampleX;
-
-		dataHandlerType *pDestColScan;
-		const std::int32_t* pSourceColScan;
-		const std::int32_t* pSourceEndColScan;
-
-		if(destHeight < destEndRow)
-		{
-			destEndRow = destHeight;
-		}
-		if(destWidth < destEndCol)
-		{
-			destEndCol = destWidth;
-		}
-
-		std::uint32_t numColumns(destEndCol - destStartCol);
-
-		std::uint32_t horizontalCopyOperations = numColumns / subsampleX;
-		std::uint32_t horizontalFinalCopyDest = numColumns - horizontalCopyOperations * subsampleX;
-
-		dataHandlerType copyValue;
-		std::int32_t scanDest;
-
-		std::uint32_t scanHorizontalFinalCopyDest;
-
-		std::uint32_t destRowScanIncrease(destWidth * destNumChannels);
-
-
-		for(std::uint32_t numYCopies(destEndRow - destStartRow); numYCopies != 0; --numYCopies)
-		{
-			pDestColScan = pDestRowScan;
-			pSourceColScan = pSourceRowScan;
-			pSourceEndColScan = pSourceColScan + horizontalCopyOperations;
-
-			if(subsampleX == 1)
-			{
-				while(pSourceColScan != pSourceEndColScan)
-				{
-					*pDestColScan = (dataHandlerType)(*(pSourceColScan++));
-					pDestColScan += destNumChannels;
-				}
-			}
-			else
-			{
-				while(pSourceColScan != pSourceEndColScan)
-				{
-					copyValue = (dataHandlerType)(*(pSourceColScan++));
-					for(scanDest = subsampleX; scanDest != 0; --scanDest)
-					{
-						*pDestColScan = copyValue;
-						pDestColScan += destNumChannels;
-					}
-				}
-
-				for(scanHorizontalFinalCopyDest = horizontalFinalCopyDest; scanHorizontalFinalCopyDest != 0; --scanHorizontalFinalCopyDest)
-				{
-					*pDestColScan = (dataHandlerType) *pSourceColScan;
-					pDestColScan += destNumChannels;
-				}
-
-			}
-
-			pDestRowScan += destRowScanIncrease;
-			if(--replicateYCount == 0)
-			{
-				replicateYCount = sourceReplicateY;
-				pSourceRowScan += replicateYIncrease;
-			}
-		}
-	}
-
-
-	/// \brief Copy the content of an array of std::int32_t values
-	///         into the buffer controlled by the handler,
-	///         considering that the source buffer could
-	///         have subsampled data.
-	///
-	/// The source buffer is supposed to have the information
-	///  related to a single channel.
-	/// @param pSource      a pointer to the source array of
-	///                      std::int32_t values
-	/// @param sourceReplicateX the horizontal subsamplig
-	///                      factor of the source buffer
-	///                      (1=not subsampled, 2=subsampled)
-	/// @param sourceReplicateY the vertical subsamplig
-	///                      factor of the source buffer
-	///                      (1=not subsampled, 2=subsampled)
-	/// @param destStartCol the horizontal coordinate of the
-	///                      top left corner of the destination
-	///                      rectangle
-	/// @param destStartRow the vertical coordinate of the
-	///                      top left corner of the destination
-	///                      rectangle
-	/// @param destEndCol   the horizontal coordinate of the
-	///                      bottom right corner of the
-	///                      destination rectangle
-	/// @param destEndRow   the vertical coordinate of the
-	///                      bottom right corner of the
-	///                      destination rectangle
-	/// @param destStartChannel the destination channel
-	/// @param destWidth    the destination buffer's width in
-	///                      pixels
-	/// @param destHeight   the destination buffer's height in
-	///                      pixels
-	/// @param destNumChannels the number of channels in the
-	///                      destination buffer
-	///
-	///////////////////////////////////////////////////////////
-	virtual void copyFromInt32Interleaved(const std::int32_t* pSource,
-										  std::uint32_t sourceReplicateX,
-										  std::uint32_t sourceReplicateY,
-										  std::uint32_t destStartCol,
-										  std::uint32_t destStartRow,
-										  std::uint32_t destEndCol,
-										  std::uint32_t destEndRow,
-										  std::uint32_t destStartChannel,
-										  std::uint32_t destWidth,
-										  std::uint32_t destHeight,
-										  std::uint32_t destNumChannels)
-	{
-		if(destStartCol >= destWidth || destStartRow >= destHeight)
-		{
-			return;
-		}
-
-		switch(sourceReplicateX)
-		{
-		case 1:
-			copyFromInt32Interleaved< 1 > (
-						pSource,
-						sourceReplicateY,
-						destStartCol,
-						destStartRow,
-						destEndCol,
-						destEndRow,
-						destStartChannel,
-						destWidth,
-						destHeight,
-						destNumChannels);
-			break;
-		case 2:
-			copyFromInt32Interleaved< 2 > (
-						pSource,
-						sourceReplicateY,
-						destStartCol,
-						destStartRow,
-						destEndCol,
-						destEndRow,
-						destStartChannel,
-						destWidth,
-						destHeight,
-						destNumChannels);
-			break;
-        case 4:
-			copyFromInt32Interleaved< 4 > (
-						pSource,
-						sourceReplicateY,
-						destStartCol,
-						destStartRow,
-						destEndCol,
-						destEndRow,
-						destStartChannel,
-						destWidth,
-						destHeight,
-						destNumChannels);
-			break;
-        default:
-            throw std::logic_error("Invalid subsampling factor");
-        }
 	}
 
 
@@ -683,21 +332,21 @@ public:
 		{
 			return;
 		}
-		dataHandlerType *pSourceRowScan = &(((dataHandlerType*)m_pMemoryString)[(sourceStartRow*sourceWidth+sourceStartCol)*sourceNumChannels+sourceStartChannel]);
+        const dataHandlerType *pSourceRowScan = &(((const dataHandlerType*)m_pMemory->data())[(sourceStartRow*sourceWidth+sourceStartCol)*sourceNumChannels+sourceStartChannel]);
 		std::int32_t* pDestRowScan = pDest;
 
 		std::uint32_t subSampleXCount;
 		std::uint32_t subSampleYCount = destSubSampleY;
 		std::uint32_t subSampleYIncrease = (sourceEndCol - sourceStartCol) / destSubSampleX;
 
-		dataHandlerType *pSourceColScan;
+        const dataHandlerType *pSourceColScan;
 		std::int32_t* pDestColScan;
 
 		std::int32_t lastValue = (std::int32_t)*pSourceRowScan;
 
 		for(std::uint32_t scanRow = sourceStartRow; scanRow < sourceEndRow; ++scanRow)
 		{
-			pSourceColScan = pSourceRowScan;
+            pSourceColScan = pSourceRowScan;
 			pDestColScan = pDestRowScan;
 			subSampleXCount = destSubSampleX;
 
@@ -745,11 +394,392 @@ public:
 		}
 
 	}
+};
 
+template<class dataHandlerType>
+class writingDataHandlerNumeric : public writingDataHandlerNumericBase
+{
+public:
+    typedef dataHandlerType value_type;
+
+    writingDataHandlerNumeric(const std::shared_ptr<buffer> &pBuffer, const size_t initialSize, const std::string &dataType):
+        writingDataHandlerNumericBase(pBuffer, initialSize, dataType, sizeof(dataHandlerType))
+    {
+    }
+
+    // Set the data element as a signed long
+    ///////////////////////////////////////////////////////////
+    virtual void setSignedLong(const size_t index, const std::int32_t value)
+    {
+        ((dataHandlerType*)m_pMemory->data())[index] = (dataHandlerType)value;
+    }
+
+    // Set the data element as an unsigned long
+    ///////////////////////////////////////////////////////////
+    virtual void setUnsignedLong(const size_t index, const std::uint32_t value)
+    {
+        ((dataHandlerType*)m_pMemory->data())[index] = (dataHandlerType)value;
+    }
+
+    // Set the data element as a double
+    ///////////////////////////////////////////////////////////
+    virtual void setDouble(const size_t index, const double value)
+    {
+        ((dataHandlerType*)m_pMemory->data())[index] = (dataHandlerType)value;
+    }
+
+    // Set the data element as a string
+    ///////////////////////////////////////////////////////////
+    virtual void setString(const size_t index, const std::string& value)
+    {
+        PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::setString");
+
+        std::istringstream convStream(value);
+        dataHandlerType tempValue;
+        if(std::is_same<dataHandlerType, std::uint8_t>::value ||
+                std::is_same<dataHandlerType, std::int8_t>::value)
+        {
+            int tempValue1;
+            convStream >> tempValue1;
+            tempValue = (dataHandlerType)tempValue1;
+        }
+        else
+        {
+            convStream >> tempValue;
+        }
+
+        ((dataHandlerType*)m_pMemory->data())[index] = tempValue;
+
+        PUNTOEXE_FUNCTION_END();
+    }
+
+    // Set the data element as an unicode string
+    ///////////////////////////////////////////////////////////
+    virtual void setUnicodeString(const size_t index, const std::wstring& value)
+    {
+        PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::setUnicodeString");
+
+        charsetsList::tCharsetsList charsets;
+        charsets.push_back("ISO_IR 6");
+
+        setString(index, dicomConversion::convertFromUnicode(value, &charsets));
+
+        PUNTOEXE_FUNCTION_END();
+    }
+
+
+    /// \brief Copy the values from a memory location to
+    ///         the buffer managed by the handler
+    ///
+    /// @param pSource a pointer to the first byte of the
+    ///         memory area to copy
+    /// @param sourceSize the number of values to copy
+    ///
+    ///////////////////////////////////////////////////////////
+    template<class sourceHandlerType>
+    void copyFromMemory(sourceHandlerType* pSource, size_t sourceSize)
+    {
+        setSize(sourceSize);
+        dataHandlerType* pDest((dataHandlerType*)m_pMemory->data());
+        while(sourceSize-- != 0)
+        {
+            *(pDest++) = (dataHandlerType)*(pSource++);
+        }
+    }
+
+    // Copy the data from another handler
+    ///////////////////////////////////////////////////////////
+    virtual void copyFrom(std::shared_ptr<readingDataHandlerNumericBase> pSource)
+    {
+        PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::copyFrom");
+
+        puntoexe::imebra::handlers::readingDataHandlerNumericBase* pHandler(pSource.get());
+        if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::readingDataHandlerNumeric<std::uint8_t>) ||
+            dynamic_cast<puntoexe::imebra::handlers::readingDataHandlerNumeric<std::uint8_t>* >(pHandler) != 0)
+        {
+            copyFromMemory<std::uint8_t> ((std::uint8_t*)pHandler->getMemoryBuffer(), pHandler->getSize());
+        }
+        else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::readingDataHandlerNumeric<std::int8_t>))
+        {
+            copyFromMemory<std::int8_t> ((std::int8_t*)pHandler->getMemoryBuffer(), pHandler->getSize());
+        }
+        else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::readingDataHandlerNumeric<std::uint16_t>))
+        {
+            copyFromMemory<std::uint16_t> ((std::uint16_t*)pHandler->getMemoryBuffer(), pHandler->getSize());
+        }
+        else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::readingDataHandlerNumeric<std::int16_t>))
+        {
+            copyFromMemory<std::int16_t> ((std::int16_t*)pHandler->getMemoryBuffer(), pHandler->getSize());
+        }
+        else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::readingDataHandlerNumeric<std::uint32_t>))
+        {
+            copyFromMemory<std::uint32_t> ((std::uint32_t*)pHandler->getMemoryBuffer(), pHandler->getSize());
+        }
+        else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::readingDataHandlerNumeric<std::int32_t>))
+        {
+            copyFromMemory<std::int32_t> ((std::int32_t*)pHandler->getMemoryBuffer(), pHandler->getSize());
+        }
+        else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::readingDataHandlerNumeric<float>))
+        {
+            copyFromMemory<float> ((float*)pHandler->getMemoryBuffer(), pHandler->getSize());
+        }
+        else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::readingDataHandlerNumeric<double>))
+        {
+            copyFromMemory<double> ((double*)pHandler->getMemoryBuffer(), pHandler->getSize());
+        }
+        else
+        {
+            throw std::runtime_error("Data type not valid");
+        }
+
+        PUNTOEXE_FUNCTION_END();
+
+    }
+
+
+    virtual void copyFrom(std::uint8_t* pMemory, size_t memorySize)
+    {
+        copyFromMemory(pMemory, memorySize);
+    }
+    virtual void copyFrom(std::int8_t* pMemory, size_t memorySize)
+    {
+        copyFromMemory(pMemory, memorySize);
+    }
+    virtual void copyFrom(std::uint16_t* pMemory, size_t memorySize)
+    {
+        copyFromMemory(pMemory, memorySize);
+    }
+    virtual void copyFrom(std::int16_t* pMemory, size_t memorySize)
+    {
+        copyFromMemory(pMemory, memorySize);
+    }
+    virtual void copyFrom(std::uint32_t* pMemory, size_t memorySize)
+    {
+        copyFromMemory(pMemory, memorySize);
+    }
+    virtual void copyFrom(std::int32_t* pMemory, size_t memorySize)
+    {
+        copyFromMemory(pMemory, memorySize);
+    }
+    virtual void copyFrom(float* pMemory, size_t memorySize)
+    {
+        copyFromMemory(pMemory, memorySize);
+    }
+    virtual void copyFrom(double* pMemory, size_t memorySize)
+    {
+        copyFromMemory(pMemory, memorySize);
+    }
+
+    template<int subsampleX>
+    inline void copyFromInt32Interleaved(
+        const std::int32_t* pSource,
+        std::uint32_t sourceReplicateY,
+        std::uint32_t destStartCol,
+        std::uint32_t destStartRow,
+        std::uint32_t destEndCol,
+        std::uint32_t destEndRow,
+        std::uint32_t destStartChannel,
+        std::uint32_t destWidth,
+        std::uint32_t destHeight,
+        std::uint32_t destNumChannels)
+    {
+        dataHandlerType *pDestRowScan = &(((dataHandlerType*)m_pMemory->data())[(destStartRow*destWidth+destStartCol)*destNumChannels+destStartChannel]);
+        const std::int32_t* pSourceRowScan = pSource;
+
+        std::uint32_t replicateYCount = sourceReplicateY;
+        std::uint32_t replicateYIncrease = (destEndCol - destStartCol) / subsampleX;
+
+        dataHandlerType *pDestColScan;
+        const std::int32_t* pSourceColScan;
+        const std::int32_t* pSourceEndColScan;
+
+        if(destHeight < destEndRow)
+        {
+            destEndRow = destHeight;
+        }
+        if(destWidth < destEndCol)
+        {
+            destEndCol = destWidth;
+        }
+
+        std::uint32_t numColumns(destEndCol - destStartCol);
+
+        std::uint32_t horizontalCopyOperations = numColumns / subsampleX;
+        std::uint32_t horizontalFinalCopyDest = numColumns - horizontalCopyOperations * subsampleX;
+
+        dataHandlerType copyValue;
+        std::int32_t scanDest;
+
+        std::uint32_t scanHorizontalFinalCopyDest;
+
+        std::uint32_t destRowScanIncrease(destWidth * destNumChannels);
+
+
+        for(std::uint32_t numYCopies(destEndRow - destStartRow); numYCopies != 0; --numYCopies)
+        {
+            pDestColScan = pDestRowScan;
+            pSourceColScan = pSourceRowScan;
+            pSourceEndColScan = pSourceColScan + horizontalCopyOperations;
+
+            if(subsampleX == 1)
+            {
+                while(pSourceColScan != pSourceEndColScan)
+                {
+                    *pDestColScan = (dataHandlerType)(*(pSourceColScan++));
+                    pDestColScan += destNumChannels;
+                }
+            }
+            else
+            {
+                while(pSourceColScan != pSourceEndColScan)
+                {
+                    copyValue = (dataHandlerType)(*(pSourceColScan++));
+                    for(scanDest = subsampleX; scanDest != 0; --scanDest)
+                    {
+                        *pDestColScan = copyValue;
+                        pDestColScan += destNumChannels;
+                    }
+                }
+
+                for(scanHorizontalFinalCopyDest = horizontalFinalCopyDest; scanHorizontalFinalCopyDest != 0; --scanHorizontalFinalCopyDest)
+                {
+                    *pDestColScan = (dataHandlerType) *pSourceColScan;
+                    pDestColScan += destNumChannels;
+                }
+
+            }
+
+            pDestRowScan += destRowScanIncrease;
+            if(--replicateYCount == 0)
+            {
+                replicateYCount = sourceReplicateY;
+                pSourceRowScan += replicateYIncrease;
+            }
+        }
+    }
+
+
+    /// \brief Copy the content of an array of std::int32_t values
+    ///         into the buffer controlled by the handler,
+    ///         considering that the source buffer could
+    ///         have subsampled data.
+    ///
+    /// The source buffer is supposed to have the information
+    ///  related to a single channel.
+    /// @param pSource      a pointer to the source array of
+    ///                      std::int32_t values
+    /// @param sourceReplicateX the horizontal subsamplig
+    ///                      factor of the source buffer
+    ///                      (1=not subsampled, 2=subsampled)
+    /// @param sourceReplicateY the vertical subsamplig
+    ///                      factor of the source buffer
+    ///                      (1=not subsampled, 2=subsampled)
+    /// @param destStartCol the horizontal coordinate of the
+    ///                      top left corner of the destination
+    ///                      rectangle
+    /// @param destStartRow the vertical coordinate of the
+    ///                      top left corner of the destination
+    ///                      rectangle
+    /// @param destEndCol   the horizontal coordinate of the
+    ///                      bottom right corner of the
+    ///                      destination rectangle
+    /// @param destEndRow   the vertical coordinate of the
+    ///                      bottom right corner of the
+    ///                      destination rectangle
+    /// @param destStartChannel the destination channel
+    /// @param destWidth    the destination buffer's width in
+    ///                      pixels
+    /// @param destHeight   the destination buffer's height in
+    ///                      pixels
+    /// @param destNumChannels the number of channels in the
+    ///                      destination buffer
+    ///
+    ///////////////////////////////////////////////////////////
+    virtual void copyFromInt32Interleaved(const std::int32_t* pSource,
+                                          std::uint32_t sourceReplicateX,
+                                          std::uint32_t sourceReplicateY,
+                                          std::uint32_t destStartCol,
+                                          std::uint32_t destStartRow,
+                                          std::uint32_t destEndCol,
+                                          std::uint32_t destEndRow,
+                                          std::uint32_t destStartChannel,
+                                          std::uint32_t destWidth,
+                                          std::uint32_t destHeight,
+                                          std::uint32_t destNumChannels)
+    {
+        if(destStartCol >= destWidth || destStartRow >= destHeight)
+        {
+            return;
+        }
+
+        switch(sourceReplicateX)
+        {
+        case 1:
+            copyFromInt32Interleaved< 1 > (
+                        pSource,
+                        sourceReplicateY,
+                        destStartCol,
+                        destStartRow,
+                        destEndCol,
+                        destEndRow,
+                        destStartChannel,
+                        destWidth,
+                        destHeight,
+                        destNumChannels);
+            break;
+        case 2:
+            copyFromInt32Interleaved< 2 > (
+                        pSource,
+                        sourceReplicateY,
+                        destStartCol,
+                        destStartRow,
+                        destEndCol,
+                        destEndRow,
+                        destStartChannel,
+                        destWidth,
+                        destHeight,
+                        destNumChannels);
+            break;
+        case 4:
+            copyFromInt32Interleaved< 4 > (
+                        pSource,
+                        sourceReplicateY,
+                        destStartCol,
+                        destStartRow,
+                        destEndCol,
+                        destEndRow,
+                        destStartChannel,
+                        destWidth,
+                        destHeight,
+                        destNumChannels);
+            break;
+        default:
+            throw std::logic_error("Invalid subsampling factor");
+        }
+    }
 
 };
 
-typedef dataHandlerNumeric<std::uint8_t> dataHandlerRaw;
+
+typedef readingDataHandlerNumeric<std::uint8_t> readingDataHandlerRaw;
+typedef readingDataHandlerNumeric<std::uint8_t> readingDataHandlerUint8;
+typedef readingDataHandlerNumeric<std::int8_t> readingDataHandlerInt8;
+typedef readingDataHandlerNumeric<std::uint16_t> readingDataHandlerUint16;
+typedef readingDataHandlerNumeric<std::int16_t> readingDataHandlerInt16;
+typedef readingDataHandlerNumeric<std::uint32_t> readingDataHandlerUint32;
+typedef readingDataHandlerNumeric<std::int32_t> readingDataHandlerInt32;
+typedef readingDataHandlerNumeric<float> readingDataHandlerFloat;
+typedef readingDataHandlerNumeric<double> readingDataHandlerDouble;
+
+typedef writingDataHandlerNumeric<std::uint8_t> writingDataHandlerRaw;
+typedef writingDataHandlerNumeric<std::uint8_t> writingDataHandlerUint8;
+typedef writingDataHandlerNumeric<std::int8_t> writingDataHandlerInt8;
+typedef writingDataHandlerNumeric<std::uint16_t> writingDataHandlerUint16;
+typedef writingDataHandlerNumeric<std::int16_t> writingDataHandlerInt16;
+typedef writingDataHandlerNumeric<std::uint32_t> writingDataHandlerUint32;
+typedef writingDataHandlerNumeric<std::int32_t> writingDataHandlerInt32;
+typedef writingDataHandlerNumeric<float> writingDataHandlerFloat;
+typedef writingDataHandlerNumeric<double> writingDataHandlerDouble;
 
 } // namespace handlers
 
@@ -757,66 +787,30 @@ typedef dataHandlerNumeric<std::uint8_t> dataHandlerRaw;
 
 } // namespace puntoexe
 
-
-#define HANDLER_CALL_TEMPLATE_FUNCTION(functionName, handlerPointer)\
-{\
-    puntoexe::imebra::handlers::dataHandlerNumericBase* pHandler(handlerPointer.get()); \
-    if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::dataHandlerNumeric<std::uint8_t>) || \
-    typeid(*pHandler)== typeid(puntoexe::imebra::handlers::dataHandlerRaw))\
-{\
-    functionName<std::uint8_t> ((std::uint8_t*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize());\
-    }\
-    else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::dataHandlerNumeric<std::int8_t>))\
-{\
-    functionName<std::int8_t> ((std::int8_t*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize());\
-    }\
-    else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::dataHandlerNumeric<std::uint16_t>))\
-{\
-    functionName<std::uint16_t> ((std::uint16_t*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize());\
-    }\
-    else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::dataHandlerNumeric<std::int16_t>))\
-{\
-    functionName<std::int16_t> ((std::int16_t*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize());\
-    }\
-    else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::dataHandlerNumeric<std::uint32_t>))\
-{\
-    functionName<std::uint32_t> ((std::uint32_t*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize());\
-    }\
-    else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::dataHandlerNumeric<std::int32_t>))\
-{\
-    functionName<std::int32_t> ((std::int32_t*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize());\
-    }\
-    else\
-{\
-    throw std::runtime_error("Data type not valid");\
-    }\
-    }
-
 #define HANDLER_CALL_TEMPLATE_FUNCTION_WITH_PARAMS(functionName, handlerPointer, ...)\
 {\
-    puntoexe::imebra::handlers::dataHandlerNumericBase* pHandler(handlerPointer.get()); \
-    if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::dataHandlerNumeric<std::uint8_t>) || \
-    typeid(*pHandler) == typeid(puntoexe::imebra::handlers::dataHandlerRaw))\
+    puntoexe::imebra::handlers::readingDataHandlerNumericBase* pHandler(handlerPointer.get()); \
+    if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::readingDataHandlerNumeric<std::uint8_t>)) \
 {\
     functionName<std::uint8_t> ((std::uint8_t*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize(), __VA_ARGS__);\
     }\
-    else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::dataHandlerNumeric<std::int8_t>))\
+    else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::readingDataHandlerNumeric<std::int8_t>))\
 {\
     functionName<std::int8_t> ((std::int8_t*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize(), __VA_ARGS__);\
     }\
-    else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::dataHandlerNumeric<std::uint16_t>))\
+    else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::readingDataHandlerNumeric<std::uint16_t>))\
 {\
     functionName<std::uint16_t> ((std::uint16_t*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize(), __VA_ARGS__);\
     }\
-    else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::dataHandlerNumeric<std::int16_t>))\
+    else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::readingDataHandlerNumeric<std::int16_t>))\
 {\
     functionName<std::int16_t> ((std::int16_t*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize(), __VA_ARGS__);\
     }\
-    else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::dataHandlerNumeric<std::uint32_t>))\
+    else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::readingDataHandlerNumeric<std::uint32_t>))\
 {\
     functionName<std::uint32_t> ((std::uint32_t*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize(), __VA_ARGS__);\
     }\
-    else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::dataHandlerNumeric<std::int32_t>))\
+    else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::readingDataHandlerNumeric<std::int32_t>))\
 {\
     functionName<std::int32_t> ((std::int32_t*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize(), __VA_ARGS__);\
     }\
@@ -824,7 +818,7 @@ typedef dataHandlerNumeric<std::uint8_t> dataHandlerRaw;
 {\
     throw std::runtime_error("Data type not valid");\
     }\
-    }
+}
 
 
 #endif // !defined(imebraDataHandlerNumeric_BD270581_5746_48d1_816E_64B700955A12__INCLUDED_)

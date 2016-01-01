@@ -191,23 +191,50 @@ std::uint32_t data::getBufferSize(std::uint32_t bufferId)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<handlers::dataHandler> data::getDataHandler(std::uint32_t bufferId, bool bWrite, const std::string& defaultType)
+std::shared_ptr<handlers::readingDataHandler> data::getReadingDataHandler(std::uint32_t bufferId) const
 {
 	PUNTOEXE_FUNCTION_START(L"data::getDataHandler");
 
 	// Retrieve the buffer
 	///////////////////////////////////////////////////////////
 	std::shared_ptr<buffer> pTempBuffer;
-	tBuffersMap::iterator findBuffer = m_buffers.find(bufferId);
+    tBuffersMap::const_iterator findBuffer = m_buffers.find(bufferId);
 	if(findBuffer != m_buffers.end())
 	{
 		pTempBuffer = findBuffer->second;
 	}
 
-	// If the buffer doesn't exist, then create a new one
+	// Retrieve the data handler
 	///////////////////////////////////////////////////////////
-	if(pTempBuffer == 0 && bWrite)
+	if(pTempBuffer == 0)
 	{
+        std::shared_ptr<handlers::readingDataHandler> emptyDataHandler;
+		return emptyDataHandler;
+	}
+	
+    return pTempBuffer->getReadingDataHandler();
+
+	PUNTOEXE_FUNCTION_END();
+}
+
+
+std::shared_ptr<handlers::writingDataHandler> data::getWritingDataHandler(std::uint32_t bufferId, const std::string& defaultType, const charsetsList::tCharsetsList& defaultCharsets)
+{
+    PUNTOEXE_FUNCTION_START(L"data::getDataHandler");
+
+    // Retrieve the buffer
+    ///////////////////////////////////////////////////////////
+    std::shared_ptr<buffer> pTempBuffer;
+    tBuffersMap::iterator findBuffer = m_buffers.find(bufferId);
+    if(findBuffer != m_buffers.end())
+    {
+        pTempBuffer = findBuffer->second;
+    }
+
+    // If the buffer doesn't exist, then create a new one
+    ///////////////////////////////////////////////////////////
+    if(pTempBuffer == 0)
+    {
         // If a buffer already exists, then use the already defined
         //  datatype
         ///////////////////////////////////////////////////////////
@@ -220,21 +247,13 @@ std::shared_ptr<handlers::dataHandler> data::getDataHandler(std::uint32_t buffer
             pTempBuffer = std::make_shared<buffer>(defaultType);
         }
 
-		pTempBuffer->setCharsetsList(&m_charsetsList);
-		m_buffers[bufferId]=pTempBuffer;
-	}
+        pTempBuffer->setCharsetsList(defaultCharsets);
+        m_buffers[bufferId]=pTempBuffer;
+    }
 
-	// Retrieve the data handler
-	///////////////////////////////////////////////////////////
-	if(pTempBuffer == 0)
-	{
-		std::shared_ptr<handlers::dataHandler> emptyDataHandler;
-		return emptyDataHandler;
-	}
-	
-	return pTempBuffer->getDataHandler(bWrite);
+    return pTempBuffer->getWritingDataHandler();
 
-	PUNTOEXE_FUNCTION_END();
+    PUNTOEXE_FUNCTION_END();
 }
 
 
@@ -247,23 +266,50 @@ std::shared_ptr<handlers::dataHandler> data::getDataHandler(std::uint32_t buffer
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<handlers::dataHandlerRaw> data::getDataHandlerRaw(std::uint32_t bufferId, bool bWrite, const std::string& defaultType)
+std::shared_ptr<handlers::readingDataHandlerRaw> data::getReadingDataHandlerRaw(std::uint32_t bufferId) const
 {
 	PUNTOEXE_FUNCTION_START(L"data::getDataHandlerRaw");
 
 	// Retrieve the buffer
 	///////////////////////////////////////////////////////////
 	std::shared_ptr<buffer> pTempBuffer;
-	tBuffersMap::iterator findBuffer = m_buffers.find(bufferId);
+    tBuffersMap::const_iterator findBuffer = m_buffers.find(bufferId);
 	if(findBuffer != m_buffers.end() )
 	{
 		pTempBuffer = findBuffer->second;
 	}
 
-	// If the buffer doesn't exist, then create a new one
+	// Retrieve the data handler
 	///////////////////////////////////////////////////////////
-	if( pTempBuffer == 0 && bWrite )
+	if( pTempBuffer == 0 )
 	{
+        std::shared_ptr<handlers::readingDataHandlerRaw> emptyDataHandler;
+		return emptyDataHandler;
+	}
+
+    return pTempBuffer->getReadingDataHandlerRaw();
+
+	PUNTOEXE_FUNCTION_END();
+}
+
+
+std::shared_ptr<handlers::writingDataHandlerRaw> data::getWritingDataHandlerRaw(std::uint32_t bufferId, const std::string& defaultType, const charsetsList::tCharsetsList& defaultCharsets)
+{
+    PUNTOEXE_FUNCTION_START(L"data::getDataHandlerRaw");
+
+    // Retrieve the buffer
+    ///////////////////////////////////////////////////////////
+    std::shared_ptr<buffer> pTempBuffer;
+    tBuffersMap::iterator findBuffer = m_buffers.find(bufferId);
+    if(findBuffer != m_buffers.end() )
+    {
+        pTempBuffer = findBuffer->second;
+    }
+
+    // If the buffer doesn't exist, then create a new one
+    ///////////////////////////////////////////////////////////
+    if(pTempBuffer == 0)
+    {
         // If a buffer already exists, then use the already defined
         //  datatype
         ///////////////////////////////////////////////////////////
@@ -276,21 +322,13 @@ std::shared_ptr<handlers::dataHandlerRaw> data::getDataHandlerRaw(std::uint32_t 
             pTempBuffer = std::make_shared<buffer>(defaultType);
         }
 
-		pTempBuffer->setCharsetsList(&m_charsetsList);
-		m_buffers[bufferId]=pTempBuffer;
-	}
+        pTempBuffer->setCharsetsList(defaultCharsets);
+        m_buffers[bufferId]=pTempBuffer;
+    }
 
-	// Retrieve the data handler
-	///////////////////////////////////////////////////////////
-	if( pTempBuffer == 0 )
-	{
-		std::shared_ptr<handlers::dataHandlerRaw> emptyDataHandler;
-		return emptyDataHandler;
-	}
+    return pTempBuffer->getWritingDataHandlerRaw();
 
-	return pTempBuffer->getDataHandlerRaw(bWrite);
-
-	PUNTOEXE_FUNCTION_END();
+    PUNTOEXE_FUNCTION_END();
 }
 
 
@@ -448,21 +486,18 @@ void data::appendDataSet(std::shared_ptr<dataSet> pDataSet)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void data::setCharsetsList(charsetsList::tCharsetsList* pCharsetsList)
+void data::setCharsetsList(const charsetsList::tCharsetsList& charsetsList)
 {
 	PUNTOEXE_FUNCTION_START(L"data::setCharsetsList");
 
-	m_charsetsList.clear();
-	charsetsList::updateCharsets(pCharsetsList, &m_charsetsList);
-
 	for(tEmbeddedDatasetsMap::iterator scanEmbeddedDataSets = m_embeddedDataSets.begin(); scanEmbeddedDataSets != m_embeddedDataSets.end(); ++scanEmbeddedDataSets)
 	{
-		(*scanEmbeddedDataSets)->setCharsetsList(pCharsetsList);
+        (*scanEmbeddedDataSets)->setCharsetsList(charsetsList);
 	}
 
 	for(tBuffersMap::iterator scanBuffers = m_buffers.begin(); scanBuffers != m_buffers.end(); ++scanBuffers)
 	{
-		scanBuffers->second->setCharsetsList(pCharsetsList);
+        scanBuffers->second->setCharsetsList(charsetsList);
 	}
 
 	PUNTOEXE_FUNCTION_END();
@@ -479,27 +514,23 @@ void data::setCharsetsList(charsetsList::tCharsetsList* pCharsetsList)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void data::getCharsetsList(charsetsList::tCharsetsList* pCharsetsList)
+void data::getCharsetsList(charsetsList::tCharsetsList* pCharsetsList) const
 {
 	PUNTOEXE_FUNCTION_START(L"data::getCharsetsList");
 
-	m_charsetsList.clear();
-
-	for(tEmbeddedDatasetsMap::iterator scanEmbeddedDataSets = m_embeddedDataSets.begin(); scanEmbeddedDataSets != m_embeddedDataSets.end(); ++scanEmbeddedDataSets)
+    for(tEmbeddedDatasetsMap::const_iterator scanEmbeddedDataSets = m_embeddedDataSets.begin(); scanEmbeddedDataSets != m_embeddedDataSets.end(); ++scanEmbeddedDataSets)
 	{
 		charsetsList::tCharsetsList charsets;
 		(*scanEmbeddedDataSets)->getCharsetsList(&charsets);
-		charsetsList::updateCharsets(&charsets, &m_charsetsList);
+        charsetsList::updateCharsets(&charsets, pCharsetsList);
 	}
 
-	for(tBuffersMap::iterator scanBuffers = m_buffers.begin(); scanBuffers != m_buffers.end(); ++scanBuffers)
+    for(tBuffersMap::const_iterator scanBuffers = m_buffers.begin(); scanBuffers != m_buffers.end(); ++scanBuffers)
 	{
 		charsetsList::tCharsetsList charsets;
 		scanBuffers->second->getCharsetsList(&charsets);
-		charsetsList::updateCharsets(&charsets, &m_charsetsList);
+        charsetsList::updateCharsets(&charsets, pCharsetsList);
 	}
-
-    pCharsetsList->insert(pCharsetsList->end(), m_charsetsList.begin(), m_charsetsList.end());
 
 	PUNTOEXE_FUNCTION_END();
 }

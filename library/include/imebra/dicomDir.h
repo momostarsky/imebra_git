@@ -14,6 +14,9 @@ $fileHeader$
 #ifndef SWIG
 
 #include <memory>
+#include "dataSet.h"
+#include "definitions.h"
+
 
 namespace puntoexe
 {
@@ -26,15 +29,13 @@ class dicomDir;
 
 #endif
 
-#include "dataSet.h"
-
 namespace imebra
 {
 
 /// \addtogroup group_swig_bindings
 /// @{
 
-class DirectoryRecord
+class IMEBRA_API DirectoryRecord
 {
 #ifndef SWIG
 	friend class DicomDir;
@@ -81,7 +82,7 @@ private:
 };
 
 
-class DicomDir
+class IMEBRA_API DicomDir
 {
 public:
 	DicomDir(DataSet fromDataSet);

@@ -45,7 +45,7 @@ lut::~lut()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void lut::setLut(std::shared_ptr<handlers::dataHandler> pDescriptor, std::shared_ptr<handlers::dataHandler> pData, const std::wstring& description)
+void lut::setLut(std::shared_ptr<handlers::readingDataHandler> pDescriptor, std::shared_ptr<handlers::readingDataHandler> pData, const std::wstring& description)
 {
 	PUNTOEXE_FUNCTION_START(L"lut::setLut");
 
@@ -69,7 +69,7 @@ void lut::setLut(std::shared_ptr<handlers::dataHandler> pDescriptor, std::shared
 
 	create(lutSize, lutFirstMapped, (std::uint8_t)lutBits, description);
 
-    dynamic_cast<handlers::dataHandlerNumericBase*>(pData.get())->copyTo(m_pMappedValues, lutSize);
+    std::dynamic_pointer_cast<handlers::readingDataHandlerNumericBase>(pData)->copyTo(m_pMappedValues, lutSize);
 
     m_bChecked = false; // LUT has to be checked again
 
@@ -126,7 +126,7 @@ void lut::create(std::uint32_t size, std::int32_t firstMapped, std::uint8_t bits
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void lut::fillHandlers(std::shared_ptr<handlers::dataHandler> pDescriptor, std::shared_ptr<handlers::dataHandler> pData)
+void lut::fillHandlers(std::shared_ptr<handlers::writingDataHandler> pDescriptor, std::shared_ptr<handlers::writingDataHandler> pData)
 {
 	PUNTOEXE_FUNCTION_START(L"lut::fillHandlers");
 
@@ -148,7 +148,7 @@ void lut::fillHandlers(std::shared_ptr<handlers::dataHandler> pDescriptor, std::
 	pDescriptor->setUnsignedLong(2, bits);
 
 	pData->setSize(lutSize);
-	dynamic_cast<handlers::dataHandlerNumericBase*>(pData.get())->copyFrom(m_pMappedValues, lutSize);
+    std::dynamic_pointer_cast<handlers::writingDataHandlerNumericBase>(pData)->copyFrom(m_pMappedValues, lutSize);
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -162,7 +162,7 @@ void lut::fillHandlers(std::shared_ptr<handlers::dataHandler> pDescriptor, std::
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::uint32_t lut::getSize()
+size_t lut::getSize()
 {
 	return m_size;
 }

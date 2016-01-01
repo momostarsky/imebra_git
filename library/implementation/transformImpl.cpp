@@ -58,8 +58,7 @@ void transformHandlers::runTransform(
         PUNTOEXE_THROW(transformExceptionInvalidArea, "The input and/or output areas are invalid");
     }
 
-    std::uint32_t rowSize, numPixels, channels;
-	std::shared_ptr<handlers::dataHandlerNumericBase> inputHandler(inputImage->getDataHandler(false, &rowSize, &numPixels, &channels));
+    std::shared_ptr<handlers::readingDataHandlerNumericBase> inputHandler(inputImage->getReadingDataHandler());
 	std::shared_ptr<palette> inputPalette(inputImage->getPalette());
 	std::wstring inputColorSpace(inputImage->getColorSpace());
 	std::uint32_t inputHighBit(inputImage->getHighBit());
@@ -71,7 +70,7 @@ void transformHandlers::runTransform(
 		inputMinValue -= (std::int32_t)(inputNumValues >> 1);
 	}
 
-    std::shared_ptr<handlers::dataHandlerNumericBase> outputHandler(outputImage->getDataHandler(true, &rowSize, &numPixels, &channels));
+    std::shared_ptr<handlers::writingDataHandlerNumericBase> outputHandler(outputImage->getWritingDataHandler());
 	std::shared_ptr<palette> outputPalette(outputImage->getPalette());
 	std::wstring outputColorSpace(outputImage->getColorSpace());
 	std::uint32_t outputHighBit(outputImage->getHighBit());
@@ -100,6 +99,8 @@ void transformHandlers::runTransform(
 
     PUNTOEXE_FUNCTION_END();
 }
+
+
 
 
 } // namespace transforms

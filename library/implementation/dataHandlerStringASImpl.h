@@ -11,7 +11,7 @@ $fileHeader$
 #define imebraDataHandlerStringAS_367AAE47_6FD7_4107_AB5B_25A355C5CB6E__INCLUDED_
 
 #include "dataHandlerStringImpl.h"
-
+#include "../include/imebra/definitions.h"
 
 ///////////////////////////////////////////////////////////
 //
@@ -45,40 +45,17 @@ namespace handlers
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class dataHandlerStringAS : public dataHandlerString
+class readingDataHandlerStringAS : public readingDataHandlerString
 {
 public:
-    dataHandlerStringAS();
-
-	/// \brief Used by setAge() and getAge() to specify the
-	///         unit of the age value.
-	///
-	///////////////////////////////////////////////////////////
-	enum tAgeUnit
-	{
-		days = L'D',   ///< the age value is in days
-		weeks = L'W',  ///< the age value is in weeks
-		months = L'M', ///< the age value is in months
-		years = L'Y'   ///< the age value is in years
-	};
-	
-	/// \brief Set the value of the age string and specify
-	///         its unit.
-	///
-	/// @param index the zero based index of the age value to
-	///               read
-	/// @param age   the age to be written in the buffer
-	/// @param unit  the units used for the parameter age
-	///
-	///////////////////////////////////////////////////////////
-	virtual void setAge(const std::uint32_t index, const std::uint32_t age, const tAgeUnit unit);
+    readingDataHandlerStringAS(const memory& parseMemory);
 
 	/// \brief Retrieve the age value and its unit from the
 	///         buffer handled by this handler.
 	///
 	/// @param index the zero based index of the age value to
 	///               modify
-	/// @param pUnit a pointer to a tAgeUnit that will be
+    /// @param pUnit a pointer to a ageUnit_t that will be
 	///               filled with the unit information related
 	///               to the returned value
 	/// @return the age, expressed in the unit written in the
@@ -86,7 +63,7 @@ public:
 	///               pUnit
 	///
 	///////////////////////////////////////////////////////////
-	virtual std::uint32_t getAge(const std::uint32_t index, tAgeUnit* pUnit) const;
+    virtual std::uint32_t getAge(const size_t index, ::imebra::ageUnit_t* pUnit) const;
 
 	/// \brief Retrieve the age from the handled buffer.
 	///
@@ -98,7 +75,7 @@ public:
 	///          years
 	///
 	///////////////////////////////////////////////////////////
-	virtual std::int32_t getSignedLong(const std::uint32_t index) const;
+	virtual std::int32_t getSignedLong(const size_t index) const;
 
 	/// \brief Retrieve the age from the handled buffer.
 	///
@@ -110,7 +87,7 @@ public:
 	///          years
 	///
 	///////////////////////////////////////////////////////////
-	virtual std::uint32_t getUnsignedLong(const std::uint32_t index) const;
+	virtual std::uint32_t getUnsignedLong(const size_t index) const;
 
 	/// \brief Retrieve the age from the handled buffer.
 	///
@@ -125,45 +102,58 @@ public:
 	///          years
 	///
 	///////////////////////////////////////////////////////////
-	virtual double getDouble(const std::uint32_t index) const;
+	virtual double getDouble(const size_t index) const;
+};
 
-	/// \brief Write the specified age into the handled buffer.
-	///
-	/// @param index the zero based index of the age value to
-	///               modify
-	/// @param value the age to be written, in years
-	///
-	///////////////////////////////////////////////////////////
-	virtual void setSignedLong(const std::uint32_t index, const std::int32_t value);
 
-	/// \brief Write the specified age into the handled buffer.
-	///
-	/// @param index the zero based index of the age value to
-	///               modify
-	/// @param value the age to be written, in years
-	///
-	///////////////////////////////////////////////////////////
-	virtual void setUnsignedLong(const std::uint32_t index, const std::uint32_t value);
+class writingDataHandlerStringAS: public writingDataHandlerString
+{
+public:
+    writingDataHandlerStringAS(const std::shared_ptr<buffer>& pBuffer);
 
-	/// \brief Write the specified age into the handled buffer.
-	///
-	/// If a fraction of a year is specified, then the function
-	///  set the age in days, weeks or months according to
-	///  the value of the fraction.
-	///
-	/// @param index the zero based index of the age value to
-	///               modify
-	/// @param value the age to be written, in years
-	///
-	///////////////////////////////////////////////////////////
-	virtual void setDouble(const std::uint32_t index, const double value);
+    /// \brief Set the value of the age string and specify
+    ///         its unit.
+    ///
+    /// @param index the zero based index of the age value to
+    ///               read
+    /// @param age   the age to be written in the buffer
+    /// @param unit  the units used for the parameter age
+    ///
+    ///////////////////////////////////////////////////////////
+    virtual void setAge(const size_t index, const std::uint32_t age, const ::imebra::ageUnit_t unit);
 
-	virtual std::uint32_t getUnitSize() const;
+    /// \brief Write the specified age into the handled buffer.
+    ///
+    /// @param index the zero based index of the age value to
+    ///               modify
+    /// @param value the age to be written, in years
+    ///
+    ///////////////////////////////////////////////////////////
+    virtual void setSignedLong(const size_t index, const std::int32_t value);
 
-protected:
-	// Return the maximum string's length
-	///////////////////////////////////////////////////////////
-	virtual std::uint32_t maxSize() const;
+    /// \brief Write the specified age into the handled buffer.
+    ///
+    /// @param index the zero based index of the age value to
+    ///               modify
+    /// @param value the age to be written, in years
+    ///
+    ///////////////////////////////////////////////////////////
+    virtual void setUnsignedLong(const size_t index, const std::uint32_t value);
+
+    /// \brief Write the specified age into the handled buffer.
+    ///
+    /// If a fraction of a year is specified, then the function
+    ///  set the age in days, weeks or months according to
+    ///  the value of the fraction.
+    ///
+    /// @param index the zero based index of the age value to
+    ///               modify
+    /// @param value the age to be written, in years
+    ///
+    ///////////////////////////////////////////////////////////
+    virtual void setDouble(const size_t index, const double value);
+
+
 };
 
 } // namespace handlers

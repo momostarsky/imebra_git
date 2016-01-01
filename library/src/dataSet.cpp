@@ -13,7 +13,7 @@ $fileHeader$
 namespace imebra
 {
 
-DataSet::DataSet(): m_pDataSet(new puntoexe::imebra::dataSet)
+DataSet::DataSet(): m_pDataSet(new puntoexe::imebra::dataSet())
 {
 }
 
@@ -93,9 +93,20 @@ void DataSet::setString(int groupId, int order, int tagId, int elementNumber, co
 	m_pDataSet->setUnicodeString(groupId, order, tagId, elementNumber, newString, defaultType);
 }
 
+void DataSet::setAge(int groupId, int order, int tagId, int elementNumber, int age, imebra::ageUnit_t units, const std::string& defaultType)
+{
+    m_pDataSet->setAge(groupId, order, tagId, elementNumber, age, units, defaultType);
+}
+
+int DataSet::getAge(int groupId, int order, int tagId, int elementNumber, imebra::ageUnit_t* pUnits) const
+{
+    return m_pDataSet->getAge(groupId, order, tagId, elementNumber, pUnits);
+}
+
+
 size_t DataSet::getRawData(int groupId, int order, int tagId, int bufferId, char* buffer, size_t bufferSize) const
 {
-    std::shared_ptr<puntoexe::imebra::handlers::dataHandlerRaw> dataHandlerRaw = m_pDataSet->getDataHandlerRaw(groupId, order, tagId, bufferId, false);
+    std::shared_ptr<puntoexe::imebra::handlers::readingDataHandlerRaw> dataHandlerRaw = m_pDataSet->getReadingDataHandlerRaw(groupId, order, tagId, bufferId);
     if(dataHandlerRaw->getSize() > bufferSize)
     {
         return dataHandlerRaw->getSize();
@@ -106,7 +117,7 @@ size_t DataSet::getRawData(int groupId, int order, int tagId, int bufferId, char
 
 void DataSet::setRawData(int groupId, int order, int tagId, int bufferId, char* buffer, size_t bufferSize, const std::string& defaultType)
 {
-    std::shared_ptr<puntoexe::imebra::handlers::dataHandlerRaw> dataHandlerRaw = m_pDataSet->getDataHandlerRaw(groupId, order, tagId, bufferId, true, defaultType);
+    std::shared_ptr<puntoexe::imebra::handlers::writingDataHandlerRaw> dataHandlerRaw = m_pDataSet->getWritingDataHandlerRaw(groupId, order, tagId, bufferId, defaultType);
     dataHandlerRaw->copyFrom((std::int8_t*)buffer, bufferSize);
 }
 

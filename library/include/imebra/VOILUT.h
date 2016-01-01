@@ -11,13 +11,14 @@ $fileHeader$
 #define imebraVOILUT_SWIG_F6221390_BC44_4B83_B5BB_3485222FF1DD__INCLUDED_
 
 #include "transform.h"
+#include "definitions.h"
 
 namespace imebra
 {
 
 class DataSet;
 
-class VOILUT: public Transform
+class IMEBRA_API VOILUT: public Transform
 {
 
 public:

@@ -35,7 +35,7 @@ namespace puntoexe
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class memoryStream : public baseStream
+class memoryStreamReader : public baseStreamReader
 {
 
 public:
@@ -49,19 +49,46 @@ public:
 	///                      the memoryStream object.
 	///
 	///////////////////////////////////////////////////////////
-	memoryStream(std::shared_ptr<memory> memoryStream);
+    memoryStreamReader(std::shared_ptr<const memory> memoryStream);
 
 	///////////////////////////////////////////////////////////
 	//
 	// Virtual stream's functions
 	//
 	///////////////////////////////////////////////////////////
-	virtual void write(std::uint32_t startPosition, const std::uint8_t* pBuffer, std::uint32_t bufferLength);
 	virtual std::uint32_t read(std::uint32_t startPosition, std::uint8_t* pBuffer, std::uint32_t bufferLength);
 
 protected:
-	std::shared_ptr<memory> m_memory;
+    std::shared_ptr<const memory> m_memory;
 };
+
+class memoryStreamWriter : public baseStreamWriter
+{
+
+public:
+    /// \brief Construct a memoryStream object and attach a
+    ///         memory object to it.
+    ///
+    /// The attached memory object will be resized if new data
+    ///  is written and its size is too small.
+    ///
+    /// @param memoryStream the memory object to be used by
+    ///                      the memoryStream object.
+    ///
+    ///////////////////////////////////////////////////////////
+    memoryStreamWriter(std::shared_ptr<memory> memoryStream);
+
+    ///////////////////////////////////////////////////////////
+    //
+    // Virtual stream's functions
+    //
+    ///////////////////////////////////////////////////////////
+    virtual void write(std::uint32_t startPosition, const std::uint8_t* pBuffer, std::uint32_t bufferLength);
+
+protected:
+    std::shared_ptr<memory> m_memory;
+};
+
 
 ///@}
 

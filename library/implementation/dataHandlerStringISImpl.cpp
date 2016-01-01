@@ -33,7 +33,7 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 
-dataHandlerStringIS::dataHandlerStringIS(): dataHandlerString("IS", L'\\', 0x20)
+readingDataHandlerStringIS::readingDataHandlerStringIS(const memory& parseMemory): readingDataHandlerString(parseMemory, "IS", '\\', 0x20)
 {
 }
 
@@ -48,7 +48,7 @@ dataHandlerStringIS::dataHandlerStringIS(): dataHandlerString("IS", L'\\', 0x20)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-double dataHandlerStringIS::getDouble(const std::uint32_t index) const
+double readingDataHandlerStringIS::getDouble(const size_t index) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerStringIS::getDouble");
 
@@ -57,6 +57,11 @@ double dataHandlerStringIS::getDouble(const std::uint32_t index) const
 	PUNTOEXE_FUNCTION_END();
 }
 
+writingDataHandlerStringIS::writingDataHandlerStringIS(const std::shared_ptr<buffer> pBuffer):
+    writingDataHandlerString(pBuffer, "IS", '\\', 0, 12, 0x20)
+{
+
+}
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -68,43 +73,13 @@ double dataHandlerStringIS::getDouble(const std::uint32_t index) const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerStringIS::setDouble(const std::uint32_t index, const double value)
+void writingDataHandlerStringIS::setDouble(const size_t index, const double value)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerStringIS::setDouble");
 
 	setSignedLong(index, (std::int32_t)value);
 
 	PUNTOEXE_FUNCTION_END();
-}
-
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Get the element's size
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-std::uint32_t dataHandlerStringIS::getUnitSize() const
-{
-	return 0;
-}
-
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Get the maximum size
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-std::uint32_t dataHandlerStringIS::maxSize() const
-{
-	return 12;
 }
 
 } // namespace handlers

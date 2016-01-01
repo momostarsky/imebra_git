@@ -537,7 +537,7 @@ std::shared_ptr<dataSet> dicomDir::getDirectoryDataSet() const
 ///////////////////////////////////////////////////////////
 std::shared_ptr<directoryRecord> dicomDir::getNewRecord()
 {
-	std::shared_ptr<data> recordsTag(m_pDataSet->getTag(0x0004, 0, 0x1220, true));
+    std::shared_ptr<data> recordsTag(m_pDataSet->getTagCreate(0x0004, 0, 0x1220));
     std::shared_ptr<dataSet> recordDataSet = std::make_shared<dataSet>();
 	recordsTag->appendDataSet(recordDataSet);
 
@@ -568,22 +568,17 @@ std::shared_ptr<dataSet> dicomDir::buildDataSet()
 	}
 
 	// Adjust the version if it isn't already set
-	///////////////////////////////////////////////////////////
-	std::shared_ptr<handlers::dataHandlerRaw> versionHandler(m_pDataSet->getDataHandlerRaw(0x2, 0, 0x1, 0, true, "OB"));
-	if(versionHandler->getSize() != 2)
-	{
-		versionHandler->setSize(2);
-		versionHandler->setUnsignedLong(0, 0);
-		versionHandler->setUnsignedLong(1, 1);
-	}
-    versionHandler.reset();
+    ///////////////////////////////////////////////////////////
+    {
+        std::shared_ptr<handlers::writingDataHandlerRaw> versionHandler(m_pDataSet->getWritingDataHandlerRaw(0x2, 0, 0x1, 0, "OB"));
+        versionHandler->setSize(2);
+        versionHandler->setUnsignedLong(0, 0);
+        versionHandler->setUnsignedLong(1, 1);
+    }
 
 	// Adjust the SOP class UID if it isn't already set
 	///////////////////////////////////////////////////////////
-	if(m_pDataSet->getString(0x2, 0, 0x2, 0) == "")
-	{
-		m_pDataSet->setString(0x2, 0, 0x2, 0, "1.2.840.10008.1.3.10");
-	}
+    m_pDataSet->setString(0x2, 0, 0x2, 0, "1.2.840.10008.1.3.10");
 
 	// Allocate offset fields
 	///////////////////////////////////////////////////////////
@@ -596,7 +591,7 @@ std::shared_ptr<dataSet> dicomDir::buildDataSet()
 
 	// Save to a null stream in order to update the offsets
 	///////////////////////////////////////////////////////////
-	std::shared_ptr<nullStream> saveStream(new nullStream);
+    std::shared_ptr<nullStreamWriter> saveStream(new nullStreamWriter);
 	std::shared_ptr<streamWriter> writer(new streamWriter(saveStream));
 	std::shared_ptr<codecs::dicomCodec> writerCodec(new codecs::dicomCodec);
 	writerCodec->write(writer, m_pDataSet);

@@ -42,7 +42,7 @@ namespace imebra
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<handlers::dataHandlerNumericBase> image::create(
+std::shared_ptr<handlers::writingDataHandlerNumericBase> image::create(
 						const std::uint32_t sizeX, 
 						const std::uint32_t sizeY, 
 						const bitDepth depth, 
@@ -73,7 +73,6 @@ std::shared_ptr<handlers::dataHandlerNumericBase> image::create(
 	//  buffer (datatypes are in Dicom standard, plus SB
 	//  for signed bytes).
 	///////////////////////////////////////////////////////////
-	m_channelPixelSize = 0;
 	std::uint8_t defaultHighBit = 0;
 
 	std::string bufferDataType;
@@ -87,23 +86,23 @@ std::shared_ptr<handlers::dataHandlerNumericBase> image::create(
 	case depthS8:
 		bufferDataType = "SB";
 		defaultHighBit=7;
-		break;
+        break;
 	case depthU16:
 		bufferDataType = "US";
 		defaultHighBit=15;
-		break;
+        break;
 	case depthS16:
 		bufferDataType = "SS";
 		defaultHighBit=15;
-		break;
+        break;
 	case depthU32:
 		bufferDataType = "UL";
 		defaultHighBit=31;
-		break;
+        break;
 	case depthS32:
 		bufferDataType = "SL";
 		defaultHighBit=31;
-		break;
+        break;
 	default:
 		PUNTOEXE_THROW(imageExceptionUnknownDepth, "Unknown depth");
 	}
@@ -125,22 +124,18 @@ std::shared_ptr<handlers::dataHandlerNumericBase> image::create(
 
 	m_sizeX = m_sizeY = 0;
 	
-	std::shared_ptr<handlers::dataHandler> imageHandler(m_buffer->getDataHandler(true, sizeX * sizeY * (std::uint32_t)m_channelsNumber) );
-	if(imageHandler != 0)
-	{
-		m_rowLength = m_channelsNumber*sizeX;
-		
-		imageHandler->setSize(m_rowLength*sizeY);
-		m_channelPixelSize = imageHandler->getUnitSize();
+    std::shared_ptr<handlers::writingDataHandler> imageHandler(m_buffer->getWritingDataHandler(sizeX * sizeY * (std::uint32_t)m_channelsNumber) );
+    m_rowLength = m_channelsNumber*sizeX;
 
-		// Set the attributes
-		///////////////////////////////////////////////////////////
-		m_imageDepth=depth;
-		m_sizeX=sizeX;
-		m_sizeY=sizeY;
-	}
+    imageHandler->setSize(m_rowLength*sizeY);
 
-    return std::static_pointer_cast<handlers::dataHandlerNumericBase>(imageHandler);
+    // Set the attributes
+    ///////////////////////////////////////////////////////////
+    m_imageDepth=depth;
+    m_sizeX=sizeX;
+    m_sizeY=sizeY;
+
+    return std::static_pointer_cast<handlers::writingDataHandlerNumericBase>(imageHandler);
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -177,24 +172,36 @@ void image::setPalette(std::shared_ptr<palette> imagePalette)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<handlers::dataHandlerNumericBase> image::getDataHandler(const bool bWrite, std::uint32_t* pRowSize, std::uint32_t* pChannelPixelSize, std::uint32_t* pChannelsNumber)
+std::shared_ptr<handlers::readingDataHandlerNumericBase> image::getReadingDataHandler() const
 {
 	PUNTOEXE_FUNCTION_START(L"image::getDataHandler");
 
 	if(m_buffer == 0)
 	{
-		return std::shared_ptr<handlers::dataHandlerNumericBase>(0);
+        return std::shared_ptr<handlers::readingDataHandlerNumericBase>(0);
 	}
 
-	*pRowSize=m_rowLength;
-	*pChannelPixelSize=m_channelPixelSize;
-	*pChannelsNumber=m_channelsNumber;
+    std::shared_ptr<handlers::readingDataHandler> imageHandler(m_buffer->getReadingDataHandler());
 
-	std::shared_ptr<handlers::dataHandler> imageHandler(m_buffer->getDataHandler(bWrite, m_sizeX * m_sizeY * m_channelsNumber));
-
-    return std::static_pointer_cast<handlers::dataHandlerNumericBase>(imageHandler);
+    return std::dynamic_pointer_cast<handlers::readingDataHandlerNumericBase>(imageHandler);
 
 	PUNTOEXE_FUNCTION_END();
+}
+
+std::shared_ptr<handlers::writingDataHandlerNumericBase> image::getWritingDataHandler()
+{
+    PUNTOEXE_FUNCTION_START(L"image::getDataHandler");
+
+    if(m_buffer == 0)
+    {
+        return std::shared_ptr<handlers::writingDataHandlerNumericBase>(0);
+    }
+
+    std::shared_ptr<handlers::dataHandler> imageHandler(m_buffer->getWritingDataHandler(m_sizeX * m_sizeY * m_channelsNumber));
+
+    return std::dynamic_pointer_cast<handlers::writingDataHandlerNumericBase>(imageHandler);
+
+    PUNTOEXE_FUNCTION_END();
 }
 
 

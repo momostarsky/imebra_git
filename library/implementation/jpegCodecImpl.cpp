@@ -481,7 +481,7 @@ void jpegCodec::writeStream(std::shared_ptr<streamWriter> pStream, std::shared_p
     ///////////////////////////////////////////////////////////
     if(canHandleTransferSyntax(transferSyntax))
     {
-        std::shared_ptr<data> imageData = pDataSet->getTag(0x7fe0, 0, 0x0010, false);
+        std::shared_ptr<data> imageData = pDataSet->getTag(0x7fe0, 0, 0x0010);
         if(imageData == 0 || !imageData->bufferExists(0))
         {
             PUNTOEXE_THROW(dataSetImageDoesntExist, "The requested image doesn't exist");
@@ -494,8 +494,8 @@ void jpegCodec::writeStream(std::shared_ptr<streamWriter> pStream, std::shared_p
         }
         for(std::uint32_t scanBuffers = firstBufferId; scanBuffers != endBufferId; ++scanBuffers)
         {
-            std::shared_ptr<handlers::dataHandlerRaw> readHandler = imageData->getDataHandlerRaw(scanBuffers, false, "");
-            std::uint8_t* readBuffer = readHandler->getMemoryBuffer();
+            std::shared_ptr<handlers::readingDataHandlerRaw> readHandler = imageData->getReadingDataHandlerRaw(scanBuffers);
+            const std::uint8_t* readBuffer = readHandler->getMemoryBuffer();
             pStream->write(readBuffer, readHandler->getSize());
         }
         return;
@@ -992,7 +992,7 @@ void jpegCodec::readStream(std::shared_ptr<streamReader> pSourceStream, std::sha
 
     // Insert the basic offset table
     ////////////////////////////////////////////////////////////////
-    std::shared_ptr<handlers::dataHandlerRaw> offsetHandler=pDataSet->getDataHandlerRaw(0x7fe0, 0, 0x0010, 0, true, "OB");
+    std::shared_ptr<handlers::writingDataHandlerRaw> offsetHandler=pDataSet->getWritingDataHandlerRaw(0x7fe0, 0, 0x0010, 0, "OB");
     offsetHandler->setSize(4);
     ::memset(offsetHandler->getMemoryBuffer(), 0, offsetHandler->getSize());
 
@@ -1002,7 +1002,7 @@ void jpegCodec::readStream(std::shared_ptr<streamReader> pSourceStream, std::sha
     std::uint32_t streamLength=(std::uint32_t)(finalPosition-startPosition);
     pStream->seek((std::int32_t)startPosition);
 
-    std::shared_ptr<handlers::dataHandlerRaw> imageHandler=pDataSet->getDataHandlerRaw(0x7fe0, 0, 0x0010, 1, true, "OB");
+    std::shared_ptr<handlers::writingDataHandlerRaw> imageHandler=pDataSet->getWritingDataHandlerRaw(0x7fe0, 0, 0x0010, 1, "OB");
     if(imageHandler != 0 && streamLength != 0)
     {
         imageHandler->setSize(streamLength);
@@ -1097,7 +1097,7 @@ std::uint32_t jpegCodec::suggestAllocatedBits(const std::wstring& transferSyntax
 //
 /////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
-std::shared_ptr<image> jpegCodec::getImage(dataSet* sourceDataSet, std::shared_ptr<streamReader> pStream, const std::string& /* dataType not used */)
+std::shared_ptr<image> jpegCodec::getImage(const dataSet& sourceDataSet, std::shared_ptr<streamReader> pStream, const std::string& /* dataType not used */)
 {
     PUNTOEXE_FUNCTION_START(L"jpegCodec::getImage");
 
@@ -1289,15 +1289,15 @@ std::shared_ptr<image> jpegCodec::getImage(dataSet* sourceDataSet, std::shared_p
 
     // Check for 2's complement
     ///////////////////////////////////////////////////////////
-    bool b2complement = sourceDataSet->getUnsignedLong(0x0028, 0, 0x0103, 0) != 0;
-    std::wstring colorSpace = sourceDataSet->getUnicodeString(0x0028, 0, 0x0004, 0);
+    bool b2complement = sourceDataSet.getUnsignedLong(0x0028, 0, 0x0103, 0) != 0;
+    std::wstring colorSpace = sourceDataSet.getUnicodeString(0x0028, 0, 0x0004, 0);
 
     // If the compression is jpeg baseline or jpeg extended
     //  then the color space cannot be "RGB"
     ///////////////////////////////////////////////////////////
     if(colorSpace == L"RGB")
     {
-        std::wstring transferSyntax(sourceDataSet->getUnicodeString(0x0002, 0, 0x0010, 0));
+        std::wstring transferSyntax(sourceDataSet.getUnicodeString(0x0002, 0, 0x0010, 0));
         if(transferSyntax == L"1.2.840.10008.1.2.4.50" ||  // baseline (8 bits lossy)
                 transferSyntax == L"1.2.840.10008.1.2.4.51")    // extended (12 bits lossy)
         {
@@ -1333,7 +1333,7 @@ void jpegCodec::copyJpegChannelsToImage(std::shared_ptr<image> destImage, bool b
     else
         depth = (m_precision==8) ? image::depthU8 : image::depthU16;
 
-    std::shared_ptr<handlers::dataHandlerNumericBase> handler = destImage->create(m_imageSizeX, m_imageSizeY, depth, colorSpace, (std::uint8_t)(m_precision-1));
+    std::shared_ptr<handlers::writingDataHandlerNumericBase> handler = destImage->create(m_imageSizeX, m_imageSizeY, depth, colorSpace, (std::uint8_t)(m_precision-1));
 
     std::int32_t offsetValue=(std::int32_t)1<<(m_precision-1);
     std::int32_t maxClipValue=((std::int32_t)1<<m_precision)-1;
@@ -1484,8 +1484,8 @@ void jpegCodec::copyImageToJpegChannels(
 
     // Create the channels
     ////////////////////////////////////////////////////////////////
-    std::uint32_t rowSize, channelSize, channelsNumber;
-    std::shared_ptr<handlers::dataHandlerNumericBase>imageDataHandler = sourceImage->getDataHandler(false, &rowSize, &channelSize, &channelsNumber);
+    std::uint32_t channelsNumber(sourceImage->getChannelsNumber());
+    std::shared_ptr<handlers::readingDataHandlerNumericBase>imageDataHandler = sourceImage->getReadingDataHandler();
 
     for(std::uint8_t channelId = 0; channelId < (std::uint8_t)channelsNumber; ++channelId)
     {

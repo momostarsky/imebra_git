@@ -108,7 +108,7 @@ public:
 	///////////////////////////////////////////////////////////
     buffer(
 		const std::string& defaultType,
-		const std::shared_ptr<baseStream>& originalStream,
+        const std::shared_ptr<baseStreamReader>& originalStream,
 		std::uint32_t bufferPosition,
 		std::uint32_t bufferLength,
 		std::uint32_t wordLength,
@@ -144,7 +144,9 @@ public:
 	/// @return a pointer to a dataHandler object
 	///
 	///////////////////////////////////////////////////////////
-	std::shared_ptr<handlers::dataHandler> getDataHandler(bool bWrite, std::uint32_t size = 0);
+    std::shared_ptr<handlers::readingDataHandler> getReadingDataHandler() const;
+
+    std::shared_ptr<handlers::writingDataHandler> getWritingDataHandler(std::uint32_t size = 0);
 
 	/// \brief Retrieve a raw data handler that can be used to
 	///         read, write and resize the memory controlled by 
@@ -171,7 +173,9 @@ public:
 	/// @return a pointer to a dataHandler object
 	///
 	///////////////////////////////////////////////////////////
-	std::shared_ptr<handlers::dataHandlerRaw> getDataHandlerRaw(bool bWrite, std::uint32_t size = 0);
+    std::shared_ptr<handlers::readingDataHandlerRaw> getReadingDataHandlerRaw() const;
+
+    std::shared_ptr<handlers::writingDataHandlerRaw> getWritingDataHandlerRaw(std::uint32_t size = 0);
 
 	//@}
 
@@ -293,7 +297,7 @@ public:
 	///                        the first item in the list
 	///
 	///////////////////////////////////////////////////////////
-	virtual void setCharsetsList(charsetsList::tCharsetsList* pCharsetsList);
+    virtual void setCharsetsList(const charsetsList::tCharsetsList& charsets);
 	
 	/// \brief Retrieve the charsets used by the dicom object.
 	///
@@ -312,9 +316,8 @@ public:
 	//@}
 
 protected:
-	// Return a data handler.
-	///////////////////////////////////////////////////////////
-	std::shared_ptr<handlers::dataHandler> getDataHandler(bool bWrite, bool bRaw, std::uint32_t size);
+
+    std::shared_ptr<memory> getLocalMemory() const;
 
 	//
 	// Attributes
@@ -334,7 +337,7 @@ protected:
 	// The following variables are used to reread the buffer
 	//  from the stream.
 	///////////////////////////////////////////////////////////
-	std::shared_ptr<baseStream> m_originalStream;    // < Original stream
+    std::shared_ptr<baseStreamReader> m_originalStream;    // < Original stream
 	std::uint32_t m_originalBufferPosition; // < Original buffer's position
 	std::uint32_t m_originalBufferLength;   // < Original buffer's length
 	std::uint32_t m_originalWordLength;     // < Original word's length (for low/high endian adjustment)

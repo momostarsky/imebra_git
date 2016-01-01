@@ -31,14 +31,14 @@ Image& Image::operator=(const Image& right)
     return *this;
 }
 
-DataHandler Image::create(
+WritingDataHandler Image::create(
         const size_t sizeX,
         const size_t sizeY,
 		const bitDepth depth,
 		std::wstring colorSpace,
 		const int highBit)
 {
-    return DataHandler(m_pImage->create((imbxUint32)sizeX, (imbxUint32)sizeY, (puntoexe::imebra::image::bitDepth)depth, colorSpace, (imbxUint8)highBit));
+    return WritingDataHandler(m_pImage->create((imbxUint32)sizeX, (imbxUint32)sizeY, (puntoexe::imebra::image::bitDepth)depth, colorSpace, (imbxUint8)highBit));
 }
 
 void Image::setHighBit(int highBit)
@@ -79,10 +79,9 @@ size_t Image::getSizeY() const
     return (size_t)sizeY;
 }
 
-DataHandler Image::getDataHandler(const bool bWrite)
+ReadingDataHandler Image::getReadingDataHandler() const
 {
-    imbxUint32 rowSize, channelPixelSize, channelsNumber;
-    return DataHandler(m_pImage->getDataHandler(bWrite, &rowSize, &channelPixelSize, &channelsNumber));
+    return ReadingDataHandler(m_pImage->getReadingDataHandler());
 }
 
 

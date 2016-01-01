@@ -10,13 +10,14 @@ $fileHeader$
 #if !defined(imebraDataSet_93F684BF_0024_4bf3_89BA_D98E82A1F44C__INCLUDED_)
 #define imebraDataSet_93F684BF_0024_4bf3_89BA_D98E82A1F44C__INCLUDED_
 
-#include "dataCollectionImpl.h"
-#include "dataGroupImpl.h"
 #include "exceptionImpl.h"
 #include "codecImpl.h"
+#include "dataImpl.h"
 
 #include <vector>
 #include <memory>
+#include <set>
+#include <map>
 
 ///////////////////////////////////////////////////////////
 //
@@ -74,7 +75,7 @@ class waveform;
 /// 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class dataSet : public dataCollection<dataGroup>, public std::enable_shared_from_this<dataSet>
+class dataSet : public std::enable_shared_from_this<dataSet>
 {
 public:
 	// Costructor
@@ -125,76 +126,9 @@ public:
 	///                 just created tag is returned.
 	///
 	///////////////////////////////////////////////////////////
-	std::shared_ptr<data> getTag(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, bool bCreate=false);
+    std::shared_ptr<data> getTag(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId) const;
+    std::shared_ptr<data> getTagCreate(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId);
 	
-	/// \brief Retrieve a group object.
-	///
-	/// A Group object is represented by the \ref dataGroup
-	/// class.
-	///
-	/// If the group doesn't exist and the parameter bCreate
-	///  is set to false, then the function returns a null
-	///  pointer.
-	/// If the group doesn't exist and the parameter bCreate
-	///  is set to true, then an empty group will be created
-	///  and inserted into the dataset.
-	///
-	/// @param groupId The group to retrieve.
-	/// @param order   If the group is recurring in the file
-	///                 (it appears several times), then use
-	///                 this parameter to specify which group
-	///                 must be retrieved.
-	///                This parameter is used to deal with
-	///                 old DICOM files, since the new one
-	///                 should use the sequence items to
-	///                 achieve the same result.
-	///                It should be set to zero.
-	/// @param bCreate When bCreate is set to true and the
-	///                 requested group doesn't exist,
-	///                 then a new one is created and inserted
-	///                 into the dataset.
-	///                When bCreate is set to false and the
-	///                 requested group doesn't exist, then
-	///                 a null pointer is returned.
-	/// @return        A pointer to the retrieved group.
-	///                The group should be released as soon as
-	///                 possible using the function Release().
-	///                If the requested group doesn't exist
-	///                 then the returned value depend on the
-	///                 value of the bCreate parameter: when
-	///                 bCreate is false then a value of zero
-	///                 is returned, otherwise a pointer to the
-	///                 just created group is returned.
-	///
-	///////////////////////////////////////////////////////////
-	std::shared_ptr<dataGroup> getGroup(std::uint16_t groupId, std::uint16_t order, bool bCreate=false);
-	
-	/// \brief Insert the specified group into the dataset.
-	///
-	/// A Group object is represented by the \ref dataGroup
-	///  class.
-	///
-	/// If a group with the same id and order is already
-	///  present into the data set, then it is removed to
-	///  leave space to the new group.
-	///
-	/// @param groupId The id of the group to insert into
-	///                 the data set.
-	/// @param order   If the group is recurring in the file
-	///                 (it appears several times), then use
-	///                 this parameter to specify to which
-	///                 group the group belongs.
-	///                This parameter is used to deal with
-	///                 old DICOM files, since the new one
-	///                 should use the sequence items to
-	///                 achieve the same result.
-	///                It should be set to zero.
-	/// @param pGroup  A pointer to the group to insert into
-	///                 the data set.
-	///
-	///////////////////////////////////////////////////////////
-	void setGroup(std::uint16_t groupId, std::uint16_t order, std::shared_ptr<dataGroup> pGroup);
-
 	//@}
 
 
@@ -236,7 +170,7 @@ public:
 	///                     image
 	///
 	///////////////////////////////////////////////////////////
-	std::shared_ptr<image> getImage(std::uint32_t frameNumber);
+    std::shared_ptr<image> getImage(std::uint32_t frameNumber) const;
 
     /// \brief Retrieve an image from the dataset and apply the
     ///        modality transform if it is specified in the
@@ -280,7 +214,7 @@ public:
 	/// @return the offset for the specified frame
 	///
 	///////////////////////////////////////////////////////////
-	std::uint32_t getFrameOffset(std::uint32_t frameNumber);
+    std::uint32_t getFrameOffset(std::uint32_t frameNumber) const;
 
 	/// \brief Get the id of the buffer that starts at the
 	///         specified offset.
@@ -296,7 +230,7 @@ public:
 	///                  the specified offset
 	///
 	///////////////////////////////////////////////////////////
-	std::uint32_t getFrameBufferId(std::uint32_t offset, std::uint32_t* pLengthToBuffer);
+    std::uint32_t getFrameBufferId(std::uint32_t offset, std::uint32_t* pLengthToBuffer) const;
 
 	/// \brief Retrieve the first and the last buffers used
 	///         to store the image.
@@ -319,7 +253,7 @@ public:
 	///          the image
 	///
 	///////////////////////////////////////////////////////////
-	std::uint32_t getFrameBufferIds(std::uint32_t frameNumber, std::uint32_t* pFirstBuffer, std::uint32_t* pEndBuffer);
+    std::uint32_t getFrameBufferIds(std::uint32_t frameNumber, std::uint32_t* pFirstBuffer, std::uint32_t* pEndBuffer) const;
 	
 	/// \brief Return the first buffer's id available where
 	///         a new frame can be saved.
@@ -328,7 +262,7 @@ public:
 	///          a new frame
 	///
 	///////////////////////////////////////////////////////////
-	std::uint32_t getFirstAvailFrameBufferId();
+    std::uint32_t getFirstAvailFrameBufferId() const;
 
 	//@}
 
@@ -455,7 +389,7 @@ public:
 	/// @return        The tag's content, as a signed long
 	///
 	///////////////////////////////////////////////////////////
-	std::int32_t getSignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber);
+    std::int32_t getSignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber) const;
 
 	/// \brief Set a tag's value as a signed long.
 	///
@@ -513,7 +447,7 @@ public:
 	/// @return        The tag's content, as an unsigned long
 	///
 	///////////////////////////////////////////////////////////
-	std::uint32_t getUnsignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber);
+    std::uint32_t getUnsignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber) const;
 
 	/// \brief Set a tag's value as an unsigned long.
 	///
@@ -571,7 +505,7 @@ public:
 	/// @return        The tag's content, as a double
 	///
 	///////////////////////////////////////////////////////////
-	double getDouble(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber);
+    double getDouble(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber) const;
 	
 	/// \brief Set a tag's value as a double.
 	///
@@ -631,7 +565,7 @@ public:
 	/// @return        The tag's content, as a string
 	///
 	///////////////////////////////////////////////////////////
-	std::string getString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber);
+    std::string getString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber) const;
 
 	/// \brief Retrieve a tag's value as an unicode string.
 	///
@@ -658,7 +592,7 @@ public:
 	/// @return        The tag's content, as an unicode string
 	///
 	///////////////////////////////////////////////////////////
-	std::wstring getUnicodeString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber);
+    std::wstring getUnicodeString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber) const;
 
 	/// \brief Set a tag's value as a string.
 	///        setUnicodeString() is preferred over this
@@ -724,7 +658,11 @@ public:
 	///////////////////////////////////////////////////////////
     void setUnicodeString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber, const std::wstring& newString, const std::string& defaultType = "");
 
-	//@}
+    void setAge(int groupId, int order, int tagId, int elementNumber, int age, ::imebra::ageUnit_t units, const std::string& defaultType = "");
+
+    int getAge(int groupId, int order, int tagId, int elementNumber, ::imebra::ageUnit_t* pUnits) const;
+
+    //@}
 
 
 	///////////////////////////////////////////////////////////
@@ -746,7 +684,7 @@ public:
 	/// @return           the tag's default type.
 	///                   The returned string is a constant.
 	///////////////////////////////////////////////////////////
-	std::string getDefaultDataType(std::uint16_t groupId, std::uint16_t tagId);
+    std::string getDefaultDataType(std::uint16_t groupId, std::uint16_t tagId) const;
 
 	/// \brief Return the data type of a tag
 	///
@@ -761,7 +699,7 @@ public:
 	/// @return           a string with the tag's type.
 	///
 	///////////////////////////////////////////////////////////
-	std::string getDataType(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId);
+    std::string getDataType(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId) const;
 
 	/// \brief Return a data handler for the specified tag's
 	///         buffer.
@@ -793,7 +731,8 @@ public:
 	/// @return a pointer to the data handler.
 	///
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<handlers::dataHandler> getDataHandler(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId, bool bWrite, const std::string& defaultType="");
+    std::shared_ptr<handlers::readingDataHandler> getReadingDataHandler(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId) const;
+    std::shared_ptr<handlers::writingDataHandler> getWritingDataHandler(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId, const std::string& defaultType="");
 
 	/// \brief Return a raw data handler for the specified 
 	///         tag's buffer.
@@ -826,7 +765,8 @@ public:
 	/// @return a pointer to the data handler.
 	///
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<handlers::dataHandlerRaw> getDataHandlerRaw(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId, bool bWrite, const std::string& defaultType="");
+    std::shared_ptr<handlers::readingDataHandlerRaw> getReadingDataHandlerRaw(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId) const;
+    std::shared_ptr<handlers::writingDataHandlerRaw> getWritingDataHandlerRaw(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId, const std::string& defaultType="");
 
 	/// \brief Return a streamReader connected to the specified
 	///         tag's buffer's memory.
@@ -849,7 +789,7 @@ public:
 	/// @return a pointer to the streamReader
 	///
 	///////////////////////////////////////////////////////////
-	std::shared_ptr<streamReader> getStreamReader(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId);
+    std::shared_ptr<streamReader> getStreamReader(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId) const;
 
 	/// \brief Return a streamWriter connected to the specified
 	///         tag's buffer's memory.
@@ -934,9 +874,25 @@ public:
 	///          in the dicom stream
 	///
 	///////////////////////////////////////////////////////////
-	std::uint32_t getItemOffset();
+    std::uint32_t getItemOffset() const;
 
 	//@}
+
+    typedef std::map<std::uint16_t, std::shared_ptr<data> > tTags;
+    typedef std::vector<tTags> tGroupsList;
+    typedef std::map<std::uint16_t, tGroupsList> tGroups;
+
+    typedef std::set<std::uint16_t> tGroupsIds;
+
+    tGroupsIds getGroups() const;
+
+    size_t getGroupsNumber(std::uint16_t groupId) const;
+
+
+    const tTags& getGroupTags(std::uint16_t groupId, size_t groupOrder) const;
+
+    void getCharsetsList(charsetsList::tCharsetsList* pCharsetsList) const;
+    void setCharsetsList(const charsetsList::tCharsetsList& charsetsList);
 
 protected:
 	// Convert an image using the attributes specified in the
@@ -944,12 +900,19 @@ protected:
 	///////////////////////////////////////////////////////////
 	std::shared_ptr<image> convertImageForDataSet(std::shared_ptr<image> sourceImage);
 
-	std::vector<std::uint32_t> m_imagesPositions;
+
+    mutable std::vector<std::uint32_t> m_imagesPositions;
 
 	// Position of the sequence item in the stream. Used to
 	//  parse DICOMDIR items
 	///////////////////////////////////////////////////////////
 	std::uint32_t m_itemOffset;
+
+private:
+
+    tGroups m_groups;
+
+    charsetsList::tCharsetsList m_charsetsList;
 };
 
 

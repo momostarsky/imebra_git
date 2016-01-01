@@ -11,11 +11,12 @@ $fileHeader$
 #define imebraColorTransformsFactory_SWIG_F6221390_BC44_4B83_B5BB_3485222FF1DD__INCLUDED_
 
 #include "transform.h"
+#include "definitions.h"
 
 namespace imebra
 {
 
-class ColorTransformsFactory
+class IMEBRA_API ColorTransformsFactory
 {
 
 public:

@@ -13,6 +13,7 @@ $fileHeader$
 #ifndef SWIG
 
 #include <memory>
+#include "definitions.h"
 
 namespace puntoexe
 {
@@ -20,7 +21,8 @@ namespace imebra
 {
 namespace handlers
 {
-class dataHandler;
+class readingDataHandler;
+class writingDataHandler;
 }
 }
 }
@@ -40,22 +42,20 @@ namespace imebra
 ///////////////////////////////////////////////////////////
 /// @{
 
-class DataHandler
+class IMEBRA_API ReadingDataHandler
 {
 public:
 	// Costructor
 	///////////////////////////////////////////////////////////
-	DataHandler(const DataHandler& right);
+    ReadingDataHandler(const ReadingDataHandler& right);
 
-	DataHandler& operator=(const DataHandler& right);
+    ReadingDataHandler& operator=(const ReadingDataHandler& right);
 
 #ifndef SWIG
-    DataHandler(std::shared_ptr<puntoexe::imebra::handlers::dataHandler> pDataHandler);
+    ReadingDataHandler(std::shared_ptr<puntoexe::imebra::handlers::readingDataHandler> pDataHandler);
 #endif
 
 	void close();
-
-    void setSize(const size_t elementsNumber);
 
     size_t getSize() const;
 
@@ -82,30 +82,65 @@ public:
 		int* pOffsetHours,
 		int* pOffsetMinutes) const;
 
-	void setDate(const int index,
-		int year,
-		int month,
-		int day,
-		int hour,
-		int minutes,
-		int seconds,
-		int nanoseconds,
-		int offsetHours,
-		int offsetMinutes);
-
-	void setSignedLong(const int index, const int value);
-
-	void setUnsignedLong(const int index, const int value);
-
-	void setDouble(const int index, const double value);
-
-	void setString(const int index, const std::wstring& value);
+    std::uint32_t getAge(const size_t index, imebra::ageUnit_t* pUnit) const;
 
     Memory getMemory();
 
 #ifndef SWIG
 protected:
-	std::shared_ptr<puntoexe::imebra::handlers::dataHandler> m_pDataHandler;
+    std::shared_ptr<puntoexe::imebra::handlers::readingDataHandler> m_pDataHandler;
+#endif
+};
+
+class IMEBRA_API WritingDataHandler
+{
+public:
+    // Costructor
+    ///////////////////////////////////////////////////////////
+    WritingDataHandler(const WritingDataHandler& right);
+
+    WritingDataHandler& operator=(const WritingDataHandler& right);
+
+#ifndef SWIG
+    WritingDataHandler(std::shared_ptr<puntoexe::imebra::handlers::writingDataHandler> pDataHandler);
+#endif
+
+    void close();
+
+    void setSize(const size_t elementsNumber);
+
+    size_t getSize() const;
+
+    size_t getUnitSize() const;
+
+    std::string getDataType() const;
+
+    void setDate(const int index,
+        int year,
+        int month,
+        int day,
+        int hour,
+        int minutes,
+        int seconds,
+        int nanoseconds,
+        int offsetHours,
+        int offsetMinutes);
+
+    void setAge(const size_t index, const std::uint32_t age, const imebra::ageUnit_t unit);
+
+    void setSignedLong(const int index, const int value);
+
+    void setUnsignedLong(const int index, const int value);
+
+    void setDouble(const int index, const double value);
+
+    void setString(const int index, const std::wstring& value);
+
+    Memory getMemory();
+
+#ifndef SWIG
+protected:
+    std::shared_ptr<puntoexe::imebra::handlers::writingDataHandler> m_pDataHandler;
 #endif
 };
 

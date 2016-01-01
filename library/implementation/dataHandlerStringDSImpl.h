@@ -33,40 +33,33 @@ namespace handlers
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class dataHandlerStringDS : public dataHandlerString
+class readingDataHandlerStringDS : public readingDataHandlerString
 {
 public:
-    dataHandlerStringDS();
+    readingDataHandlerStringDS(const memory& memory);
 
 	// Overwritten to use getDouble()
 	///////////////////////////////////////////////////////////
-	virtual std::int32_t getSignedLong(const std::uint32_t index) const;
+	virtual std::int32_t getSignedLong(const size_t index) const;
 
 	// Overwritten to use getDouble()
 	///////////////////////////////////////////////////////////
-	virtual std::uint32_t getUnsignedLong(const std::uint32_t index) const;
+	virtual std::uint32_t getUnsignedLong(const size_t index) const;
 
-	// Overwritten to use setDouble()
-	///////////////////////////////////////////////////////////
-	virtual void setSignedLong(const std::uint32_t index, const std::int32_t value);
+};
 
-	// Overwritten to use setDouble()
-	///////////////////////////////////////////////////////////
-	virtual void setUnsignedLong(const std::uint32_t index, const std::uint32_t value);
+class writingDataHandlerStringDS: public writingDataHandlerString
+{
+public:
+    writingDataHandlerStringDS(const std::shared_ptr<buffer> pBuffer);
 
-	// Overwritten to use the exponential form if needed
-	///////////////////////////////////////////////////////////
-	virtual void setDouble(const std::uint32_t index, const double value);
+    // Overwritten to use setDouble()
+    ///////////////////////////////////////////////////////////
+    virtual void setSignedLong(const size_t index, const std::int32_t value);
 
-	// Get the element size
-	///////////////////////////////////////////////////////////
-	virtual std::uint32_t getUnitSize() const;
-
-protected:
-	// Return the maximum string's length
-	///////////////////////////////////////////////////////////
-	virtual std::uint32_t maxSize() const;
-
+    // Overwritten to use setDouble()
+    ///////////////////////////////////////////////////////////
+    virtual void setUnsignedLong(const size_t index, const std::uint32_t value);
 };
 
 } // namespace handlers

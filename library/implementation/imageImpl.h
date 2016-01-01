@@ -11,7 +11,7 @@ $fileHeader$
 #define imebraImage_A807A3CA_FA04_44f4_85D2_C7AA2FE103C4__INCLUDED_
 
 #include <memory>
-
+#include "dataHandlerNumericImpl.h"
 
 ///////////////////////////////////////////////////////////
 //
@@ -102,7 +102,6 @@ public:
 	///////////////////////////////////////////////////////////
 	image():
 			m_rowLength(0),
-			m_channelPixelSize(0),
 			m_channelsNumber(0),
 			m_imageDepth(depthU8),
 			m_highBit(0),
@@ -139,7 +138,7 @@ public:
 	///                  data
 	///
 	///////////////////////////////////////////////////////////
-	std::shared_ptr<handlers::dataHandlerNumericBase> create(
+    std::shared_ptr<handlers::writingDataHandlerNumericBase> create(
 		const std::uint32_t sizeX,
 		const std::uint32_t sizeY,
 		const bitDepth depth,
@@ -225,13 +224,11 @@ public:
 	///         buffer.
 	///
 	///////////////////////////////////////////////////////////
-	std::shared_ptr<handlers::dataHandlerNumericBase> getDataHandler(
-		const bool bWrite,
-		std::uint32_t* pRowSize,
-		std::uint32_t* pChannelPixelSize,
-		std::uint32_t* pChannelsNumber);
+    std::shared_ptr<handlers::readingDataHandlerNumericBase> getReadingDataHandler() const;
 
-	/// \brief Get the image's color space (DICOM standard)
+    std::shared_ptr<handlers::writingDataHandlerNumericBase> getWritingDataHandler();
+
+    /// \brief Get the image's color space (DICOM standard)
 	///
 	/// @return a string with the image's color space
 	///
@@ -272,10 +269,6 @@ protected:
 	// Lenght of a buffer's row (in bytes)
 	///////////////////////////////////////////////////////////
 	std::uint32_t m_rowLength;
-
-	// Length of a pixel's component (in bytes)
-	///////////////////////////////////////////////////////////
-	std::uint32_t m_channelPixelSize;
 
 	// Number of channels
 	///////////////////////////////////////////////////////////

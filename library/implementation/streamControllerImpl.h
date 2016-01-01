@@ -64,7 +64,7 @@ public:
 	///                           beyond the virtual length
 	///
 	///////////////////////////////////////////////////////////
-	streamController(std::shared_ptr<baseStream> pControlledStream, std::uint32_t virtualStart = 0, std::uint32_t virtualLength = 0);
+    streamController(std::uint32_t virtualStart = 0, std::uint32_t virtualLength = 0);
 
     virtual ~streamController();
 
@@ -88,13 +88,6 @@ public:
 	///
 	///////////////////////////////////////////////////////////
 	std::uint32_t position();
-
-	/// \brief Return a pointer to the controlled stream.
-	///
-	/// @return a pointer to the controlled stream
-	///
-	///////////////////////////////////////////////////////////
-	std::shared_ptr<baseStream> getControlledStream();
 
 	/// \brief Return the position in bytes from the beginning
 	///         of the stream.
@@ -174,11 +167,6 @@ public:
 
 
 protected:
-	/// \brief Stream controlled by the stream controller.
-	///
-	///////////////////////////////////////////////////////////
-	std::shared_ptr<baseStream> m_pControlledStream;
-
 	/// \brief Used for buffered IO
 	///
 	///////////////////////////////////////////////////////////

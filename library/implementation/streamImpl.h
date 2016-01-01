@@ -26,6 +26,28 @@ namespace puntoexe
 /// \addtogroup group_baseclasses
 ///
 /// @{
+///
+
+class fileStream
+{
+public:
+    fileStream(): m_openFile(0){}
+
+    virtual ~fileStream();
+
+    /// \brief Closes the stream.
+    ///
+    /// This method is called automatically by the destructor.
+    ///
+    ///////////////////////////////////////////////////////////
+    void close();
+
+    void openFile(const std::wstring& fileName, std::ios_base::openmode mode);
+
+protected:
+    FILE* m_openFile;
+
+};
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -37,17 +59,9 @@ namespace puntoexe
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class stream : public baseStream
+class fileStreamReader : public baseStreamReader, public fileStream
 {
 public:
-	// Constructor
-	///////////////////////////////////////////////////////////
-	stream(): m_openFile(0){}
-
-    // Destructor
-    ///////////////////////////////////////////////////////////
-    virtual ~stream();
-
     /// \brief Open a file.
 	///
 	/// The function uses the standard library function
@@ -60,44 +74,66 @@ public:
 	/// - this function will be called again
 	///
 	/// @param fileName the name of the file to be opened
-	/// @param mode     the opening mode.
-	///                 Can be the combination of one or
-	///                 more of the following values:
-	///                 - ios_base::in the file will be opened
-	///                   for reading operations
-	///                 - ios_base::out the file will be
-	///                   opened for writing operations
-	///                 - ios_base::app the writing operations
-	///                   will append data to the existing file
-	///                 - ios_base::trunc the existing file
-	///                   will be truncated to zero length
-	///                 - ios_base::binary the file will be
-	///                   opened in binary mode. Please note
-	///                   that this flag is useless, since all
-	///                   the files ARE OPENED IN BINARY MODE.
 	///
 	///////////////////////////////////////////////////////////
-	void openFile(const std::string& fileName, const int mode);
+    void openFile(const std::string& fileName);
 
-	void openFile(const std::wstring& fileName, const int mode);
-
-    /// \brief Closes the stream.
-    ///
-    /// This method is called automatically by the destructor.
-    ///
-    ///////////////////////////////////////////////////////////
-    void close();
+    void openFile(const std::wstring& fileName);
 
 	///////////////////////////////////////////////////////////
 	//
 	// Virtual stream's functions
 	//
 	///////////////////////////////////////////////////////////
-	virtual void write(std::uint32_t startPosition, const std::uint8_t* pBuffer, std::uint32_t bufferLength);
 	virtual std::uint32_t read(std::uint32_t startPosition, std::uint8_t* pBuffer, std::uint32_t bufferLength);
 
+};
+
+class fileStreamWriter : public baseStreamWriter, public fileStream
+{
+public:
+    /// \brief Open a file.
+    ///
+    /// The function uses the standard library function
+    ///  fopen to open the specified file.
+    ///
+    /// The created file object will be automatically
+    ///  closed and destroyed when one of the following events
+    ///  will occur:
+    /// - the stream class will be destroyed
+    /// - this function will be called again
+    ///
+    /// @param fileName the name of the file to be opened
+    /// @param mode     the opening mode.
+    ///                 Can be the combination of one or
+    ///                 more of the following values:
+    ///                 - ios_base::in the file will be opened
+    ///                   for reading operations
+    ///                 - ios_base::out the file will be
+    ///                   opened for writing operations
+    ///                 - ios_base::app the writing operations
+    ///                   will append data to the existing file
+    ///                 - ios_base::trunc the existing file
+    ///                   will be truncated to zero length
+    ///                 - ios_base::binary the file will be
+    ///                   opened in binary mode. Please note
+    ///                   that this flag is useless, since all
+    ///                   the files ARE OPENED IN BINARY MODE.
+    ///
+    ///////////////////////////////////////////////////////////
+    void openFile(const std::string& fileName);
+
+    void openFile(const std::wstring& fileName);
+
+    ///////////////////////////////////////////////////////////
+    //
+    // Virtual stream's functions
+    //
+    ///////////////////////////////////////////////////////////
+    virtual void write(std::uint32_t startPosition, const std::uint8_t* pBuffer, std::uint32_t bufferLength);
+
 protected:
-	FILE* m_openFile;
+    FILE* m_openFile;
 };
 
 ///@}

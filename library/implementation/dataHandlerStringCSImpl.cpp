@@ -32,18 +32,14 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 
-dataHandlerStringCS::dataHandlerStringCS(): dataHandlerString("CS", L'\\', 0x20)
+readingDataHandlerStringCS::readingDataHandlerStringCS(const memory &parseMemory):
+    readingDataHandlerString(parseMemory, "CS", '\\', 0x20)
 {
 }
 
-std::uint32_t dataHandlerStringCS::getUnitSize() const
+writingDataHandlerStringCS::writingDataHandlerStringCS(const std::shared_ptr<buffer> pBuffer):
+    writingDataHandlerString(pBuffer, "CS", '\\', 0, 16, 0x20)
 {
-	return 0;
-}
-
-std::uint32_t dataHandlerStringCS::maxSize() const
-{
-	return 16;
 }
 
 } // namespace handlers

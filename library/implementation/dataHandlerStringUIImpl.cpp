@@ -32,18 +32,14 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 
-dataHandlerStringUI::dataHandlerStringUI(): dataHandlerString("UI", 0x0, 0x0)
+readingDataHandlerStringUI::readingDataHandlerStringUI(const memory& parseMemory):
+    readingDataHandlerString(parseMemory, "UI", 0x0, 0x0)
 {
 }
 
-std::uint32_t dataHandlerStringUI::getUnitSize() const
+writingDataHandlerStringUI::writingDataHandlerStringUI(const std::shared_ptr<buffer> &pBuffer):
+    writingDataHandlerString(pBuffer, "UI", 0x0, 0, 64, 0x0)
 {
-	return 0;
-}
-
-std::uint32_t dataHandlerStringUI::maxSize() const
-{
-	return 64;
 }
 
 } // namespace handlers

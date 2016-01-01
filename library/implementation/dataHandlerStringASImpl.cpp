@@ -45,32 +45,8 @@ namespace handlers
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-dataHandlerStringAS::dataHandlerStringAS(): dataHandlerString("AS", L'\\', 0x20)
+readingDataHandlerStringAS::readingDataHandlerStringAS(const memory& parseMemory): readingDataHandlerString(parseMemory, "AS", '\\', 0x20)
 {
-}
-
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Set the age
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-void dataHandlerStringAS::setAge(const std::uint32_t index, const std::uint32_t age, const tAgeUnit unit)
-{
-	PUNTOEXE_FUNCTION_START(L"dataHandlerStringAS::setAge");
-
-	std::wostringstream ageStream;
-	ageStream << std::setfill(L'0');
-	ageStream << std::setw(3) << age;
-	ageStream << std::setw(1) << (wchar_t)unit;
-
-	setUnicodeString(index, ageStream.str());
-
-	PUNTOEXE_FUNCTION_END();
 }
 
 
@@ -83,25 +59,29 @@ void dataHandlerStringAS::setAge(const std::uint32_t index, const std::uint32_t 
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::uint32_t dataHandlerStringAS::getAge(const std::uint32_t index, tAgeUnit* pUnit) const
+std::uint32_t readingDataHandlerStringAS::getAge(const size_t index, ::imebra::ageUnit_t* pUnit) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerStringAS::getAge");
 
-	std::wstring ageString = getUnicodeString(index);
-	std::wistringstream ageStream(ageString);
+    std::string ageString = getString(index);
+    if(ageString.size() != 4)
+    {
+        throw;
+    }
+    std::istringstream ageStream(ageString);
 	std::uint32_t age;
 	ageStream >> age;
-    char unit = ageString[ageString.size() - 1];
-    if(unit == days || unit == weeks || unit == months || unit == years)
+    char unit = ageString[3];
+    if(
+            unit != (char)::imebra::ageUnit_t::days &&
+            unit != (char)::imebra::ageUnit_t::weeks &&
+            unit == (char)::imebra::ageUnit_t::months &&
+            unit == (char)::imebra::ageUnit_t::years)
     {
-        *pUnit = (tAgeUnit)unit;
+        throw;
     }
-    else
-    {
-        *pUnit = years;
-    }
-
-	return age;
+    *pUnit = (::imebra::ageUnit_t)unit;
+    return age;
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -116,7 +96,7 @@ std::uint32_t dataHandlerStringAS::getAge(const std::uint32_t index, tAgeUnit* p
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::int32_t dataHandlerStringAS::getSignedLong(const std::uint32_t index) const
+std::int32_t readingDataHandlerStringAS::getSignedLong(const size_t index) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerStringAS::getSignedLong");
 
@@ -135,7 +115,7 @@ std::int32_t dataHandlerStringAS::getSignedLong(const std::uint32_t index) const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::uint32_t dataHandlerStringAS::getUnsignedLong(const std::uint32_t index) const
+std::uint32_t readingDataHandlerStringAS::getUnsignedLong(const size_t index) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerStringAS::getUnsignedLong");
 
@@ -154,28 +134,61 @@ std::uint32_t dataHandlerStringAS::getUnsignedLong(const std::uint32_t index) co
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-double dataHandlerStringAS::getDouble(const std::uint32_t index) const
+double readingDataHandlerStringAS::getDouble(const size_t index) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerStringAS::getDouble");
 
-	tAgeUnit ageUnit;
+    ::imebra::ageUnit_t ageUnit;
 	double age = (double)getAge(index, &ageUnit);
 
-	if(ageUnit == days)
-	{
-		return age / (double)365;
-	}
-	if(ageUnit == weeks)
-	{
-		return age / 52.14;
-	}
-	if(ageUnit == months)
-	{
-		return age / (double)12;
-	}
-	return age;
+    switch (ageUnit)
+    {
+    case ::imebra::ageUnit_t::days:
+        return age / (double)365;
+
+    case ::imebra::ageUnit_t::weeks:
+        return age / 52.14;
+
+    case ::imebra::ageUnit_t::months:
+        return age / (double)12;
+
+    case ::imebra::ageUnit_t::years:
+        return age;
+
+    default:
+        throw;
+    }
 
 	PUNTOEXE_FUNCTION_END();
+}
+
+
+writingDataHandlerStringAS::writingDataHandlerStringAS(const std::shared_ptr<buffer> &pBuffer):
+    writingDataHandlerString(pBuffer, "AS", '\\', 4, 4, 0x20)
+{
+}
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
+// Set the age
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+void writingDataHandlerStringAS::setAge(const size_t index, const std::uint32_t age, const ::imebra::ageUnit_t unit)
+{
+    PUNTOEXE_FUNCTION_START(L"dataHandlerStringAS::setAge");
+
+    std::ostringstream ageStream;
+    ageStream << std::setfill('0');
+    ageStream << std::setw(3) << age;
+    ageStream << std::setw(1) << (char)unit;
+
+    setString(index, ageStream.str());
+
+    PUNTOEXE_FUNCTION_END();
 }
 
 
@@ -188,7 +201,7 @@ double dataHandlerStringAS::getDouble(const std::uint32_t index) const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerStringAS::setSignedLong(const std::uint32_t index, const std::int32_t value)
+void writingDataHandlerStringAS::setSignedLong(const size_t index, const std::int32_t value)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerStringAS::setSignedLong");
 
@@ -207,7 +220,7 @@ void dataHandlerStringAS::setSignedLong(const std::uint32_t index, const std::in
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerStringAS::setUnsignedLong(const std::uint32_t index, const std::uint32_t value)
+void writingDataHandlerStringAS::setUnsignedLong(const size_t index, const std::uint32_t value)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerStringAS::setUnsignedLong");
 
@@ -226,63 +239,34 @@ void dataHandlerStringAS::setUnsignedLong(const std::uint32_t index, const std::
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerStringAS::setDouble(const std::uint32_t index, const double value)
+void writingDataHandlerStringAS::setDouble(const size_t index, const double value)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerStringAS::setDouble");
 
 	if(value < 0)
 	{
-		setAge(index, 0, days);
+        setAge(index, 0, ::imebra::ageUnit_t::days);
 	}
 	if(value < 0.08)
 	{
-		setAge(index, (std::uint32_t)(value * 365), days);
+        setAge(index, (std::uint32_t)(value * 365), ::imebra::ageUnit_t::days);
 		return;
 	}
 	if(value < 0.5)
 	{
-		setAge(index, (std::uint32_t)(value * 52.14), weeks);
+        setAge(index, (std::uint32_t)(value * 52.14), ::imebra::ageUnit_t::weeks);
 		return;
 	}
 	if(value < 2)
 	{
-		setAge(index, (std::uint32_t)(value * 12), months);
+        setAge(index, (std::uint32_t)(value * 12), ::imebra::ageUnit_t::months);
 		return;
 	}
-	setAge(index, (std::uint32_t)value, years);
+    setAge(index, (std::uint32_t)value, ::imebra::ageUnit_t::years);
 
 	PUNTOEXE_FUNCTION_END();
 }
 
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Get the element's size
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-std::uint32_t dataHandlerStringAS::getUnitSize() const
-{
-	return 4L;
-}
-
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Get the maximum size
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-std::uint32_t dataHandlerStringAS::maxSize() const
-{
-	return 4L;
-}
 
 } // namespace handlers
 

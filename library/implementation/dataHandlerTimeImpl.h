@@ -35,16 +35,14 @@ namespace handlers
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class dataHandlerTime : public dataHandlerDateTimeBase
+class readingDataHandlerTime : public readingDataHandlerDateTimeBase
 {
 
 public:
-    dataHandlerTime();
-
-	virtual std::uint32_t getUnitSize() const;
+    readingDataHandlerTime(const memory& parseMemory);
 
 	virtual void getDate(
-                const std::uint32_t index,
+        const size_t index,
 		std::int32_t* pYear, 
 		std::int32_t* pMonth, 
 		std::int32_t* pDay, 
@@ -55,56 +53,24 @@ public:
 		std::int32_t* pOffsetHours,
 		std::int32_t* pOffsetMinutes) const;
 
-	virtual void setDate(
-                const std::uint32_t index,
-		std::int32_t year, 
-		std::int32_t month, 
-		std::int32_t day, 
-		std::int32_t hour, 
-		std::int32_t minutes,
-		std::int32_t seconds,
-		std::int32_t nanoseconds,
-		std::int32_t offsetHours,
-		std::int32_t offsetMinutes);
+};
 
-	/// \brief Return a string representing the time stored in 
-	///         the buffer.
-	///
-	/// The returned string has the format: "HH:MM:SS.FFFFFF"
-	///  where:
-	///  - HH is the hour
-	///  - MM is the minute
-	///  - SS is the second
-	///  - FFFFFF is the fraction of seconds in nanoseconds
-	///
-	/// @param index the zero based index of the time value to
-	///               read
-	/// @return a string representing the time stored in the
-	///          buffer
-	///
-	///////////////////////////////////////////////////////////
-	virtual std::wstring getUnicodeString(const std::uint32_t index) const;
+class writingDataHandlerTime: public writingDataHandlerDateTimeBase
+{
+public:
+    writingDataHandlerTime(const std::shared_ptr<buffer>& pBuffer);
 
-	/// \brief Set the date from a string.
-	///
-	/// The string must have the format: "HH:MM:SS.FFFFFF"
-	///  where:
-	///  - HH is the hour
-	///  - MM is the minute
-	///  - SS is the second
-	///  - FFFFFF is the fraction of seconds in nanoseconds
-	///
-	/// @param index the zero based index of the time value to
-	///               modify
-	/// @param value the string representing the time to be set
-	///
-	///////////////////////////////////////////////////////////
-	virtual void setUnicodeString(const std::uint32_t index, const std::wstring& value);
-
-	void parseBuffer(const std::shared_ptr<memory>& memoryBuffer);
-
-protected:
-	virtual std::uint32_t maxSize() const;
+    virtual void setDate(
+        const size_t index,
+        std::int32_t year,
+        std::int32_t month,
+        std::int32_t day,
+        std::int32_t hour,
+        std::int32_t minutes,
+        std::int32_t seconds,
+        std::int32_t nanoseconds,
+        std::int32_t offsetHours,
+        std::int32_t offsetMinutes);
 };
 
 } // namespace handlers

@@ -141,7 +141,9 @@ public:
 	///         requested buffer.
 	///
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<handlers::dataHandler> getDataHandler(std::uint32_t bufferId, bool bWrite, const std::string& defaultType);
+    std::shared_ptr<handlers::readingDataHandler> getReadingDataHandler(std::uint32_t bufferId) const;
+
+    std::shared_ptr<handlers::writingDataHandler> getWritingDataHandler(std::uint32_t bufferId, const std::string& defaultType, const charsetsList::tCharsetsList& defaultCharsets);
 	
 	/// \brief Get a raw data handler 
 	///         (handlers::dataHandlerRaw) for the specified 
@@ -185,7 +187,9 @@ public:
 	///         requested buffer.
 	///
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<handlers::dataHandlerRaw> getDataHandlerRaw(std::uint32_t bufferId, bool bWrite, const std::string& defaultType);
+    std::shared_ptr<handlers::readingDataHandlerRaw> getReadingDataHandlerRaw(std::uint32_t bufferId) const;
+
+    std::shared_ptr<handlers::writingDataHandlerRaw> getWritingDataHandlerRaw(std::uint32_t bufferId, const std::string& defaultType, const charsetsList::tCharsetsList& defaultCharsets);
 
 	/// \brief Get a streamReader connected to a buffer's data.
 	///
@@ -311,8 +315,8 @@ public:
 
 	//@}
 
-	virtual void setCharsetsList(charsetsList::tCharsetsList* pCharsetsList);
-	virtual void getCharsetsList(charsetsList::tCharsetsList* pCharsetsList);
+    virtual void setCharsetsList(const charsetsList::tCharsetsList& charsetsList);
+    virtual void getCharsetsList(charsetsList::tCharsetsList* pCharsetsList) const;
 
 	// Set a buffer
 	///////////////////////////////////////////////////////////
@@ -329,8 +333,6 @@ protected:
 	typedef std::shared_ptr<dataSet> ptrDataSet;
 	typedef std::vector<ptrDataSet> tEmbeddedDatasetsMap;
 	tEmbeddedDatasetsMap m_embeddedDataSets;
-
-	charsetsList::tCharsetsList m_charsetsList;
 };
 
 /// @}

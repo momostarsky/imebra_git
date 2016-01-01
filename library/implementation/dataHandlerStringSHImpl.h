@@ -36,18 +36,16 @@ namespace handlers
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class dataHandlerStringSH : public dataHandlerStringUnicode
+class readingDataHandlerStringSH : public readingDataHandlerStringUnicode
 {
 public:
-    dataHandlerStringSH(const charsetsList::tCharsetsList& initialCharsetsList);
+    readingDataHandlerStringSH(const memory& parseMemory, const charsetsList::tCharsetsList& charsets);
+};
 
-	virtual std::uint32_t getUnitSize() const;
-
-protected:
-	// Return the maximum string's length
-	///////////////////////////////////////////////////////////
-	virtual std::uint32_t maxSize() const;
-
+class writingDataHandlerStringSH: public writingDataHandlerStringUnicode
+{
+public:
+    writingDataHandlerStringSH(const std::shared_ptr<buffer>& pBuffer, const charsetsList::tCharsetsList& charsets);
 };
 
 } // namespace handlers

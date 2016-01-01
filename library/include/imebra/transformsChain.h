@@ -13,6 +13,8 @@ $fileHeader$
 #ifndef SWIG
 
 #include <memory>
+#include "definitions.h"
+#include "transform.h"
 
 namespace puntoexe
 {
@@ -27,12 +29,10 @@ class transformsChain;
 
 #endif
 
-#include "transform.h"
-
 namespace imebra
 {
 
-class TransformsChain: public Transform
+class IMEBRA_API TransformsChain: public Transform
 {
 
 public:

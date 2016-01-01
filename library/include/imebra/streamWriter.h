@@ -13,6 +13,7 @@ $fileHeader$
 #ifndef SWIG
 
 #include <memory>
+#include "definitions.h"
 
 namespace puntoexe
 {
@@ -23,18 +24,18 @@ class streamWriter;
 namespace imebra
 {
 
-class BaseStream;
+class BaseStreamWriter;
 
 class CodecFactory;
 
 /// \addtogroup group_swig_bindings
 /// @{
 
-class StreamWriter
+class IMEBRA_API StreamWriter
 {
 	friend class CodecFactory;
 public:
-    StreamWriter(const BaseStream& stream, int virtualStart = 0, int virtualLength = 0);
+    StreamWriter(const BaseStreamWriter& stream, int virtualStart = 0, int virtualLength = 0);
     StreamWriter(const StreamWriter& right);
     StreamWriter& operator=(const StreamWriter& right);
 

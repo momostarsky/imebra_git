@@ -13,6 +13,7 @@ $fileHeader$
 #ifndef SWIG
 
 #include <memory>
+#include "definitions.h"
 
 namespace puntoexe
 {
@@ -23,7 +24,7 @@ class memory;
 namespace imebra
 {
 
-class Memory
+class IMEBRA_API Memory
 {
 public:
 	Memory();

@@ -23,9 +23,8 @@ static const streamController::tByteOrdering m_platformByteOrder((*pBytePointer)
 // Constructor
 //
 ///////////////////////////////////////////////////////////
-streamController::streamController(std::shared_ptr<baseStream> pControlledStream, std::uint32_t virtualStart /* =0 */, std::uint32_t virtualLength /* =0 */):
+streamController::streamController(std::uint32_t virtualStart /* =0 */, std::uint32_t virtualLength /* =0 */):
 	m_bJpegTags(false),
-        m_pControlledStream(pControlledStream),
 		m_dataBuffer(new std::uint8_t[IMEBRA_STREAM_CONTROLLER_MEMORY_SIZE]),
 		m_virtualStart(virtualStart),
 		m_virtualLength(virtualLength),
@@ -55,17 +54,6 @@ streamController::~streamController()
 std::uint32_t streamController::position()
 {
 	return m_dataBufferStreamPosition + (std::uint32_t)(m_pDataBufferCurrent - m_pDataBufferStart);
-}
-
-
-///////////////////////////////////////////////////////////
-//
-// Retrieve a pointer to the controlled stream
-//
-///////////////////////////////////////////////////////////
-std::shared_ptr<baseStream> streamController::getControlledStream()
-{
-	return m_pControlledStream;
 }
 
 

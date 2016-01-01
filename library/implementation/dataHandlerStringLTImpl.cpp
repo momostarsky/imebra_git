@@ -33,18 +33,14 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 
-dataHandlerStringLT::dataHandlerStringLT(const charsetsList::tCharsetsList& initialCharsetsList): dataHandlerStringUnicode("LT", 0x0, 0x20, initialCharsetsList)
+readingDataHandlerStringLT::readingDataHandlerStringLT(const memory& parseMemory, const charsetsList::tCharsetsList& initialCharsetsList):
+    readingDataHandlerStringUnicode(parseMemory, initialCharsetsList, "LT", L'\\', 0x20)
 {
 }
 
-std::uint32_t dataHandlerStringLT::getUnitSize() const
+writingDataHandlerStringLT::writingDataHandlerStringLT(const std::shared_ptr<buffer> &pBuffer, const charsetsList::tCharsetsList &charsets):
+    writingDataHandlerStringUnicode(pBuffer, charsets, "LT", '\\', 0, 10240, 0x20)
 {
-	return 0;
-}
-
-std::uint32_t dataHandlerStringLT::maxSize() const
-{
-	return 10240L;
 }
 
 } // namespace handlers

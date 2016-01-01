@@ -18,8 +18,9 @@ namespace puntoexe
 // Constructor
 //
 ///////////////////////////////////////////////////////////
-streamWriter::streamWriter(std::shared_ptr<baseStream> pControlledStream, std::uint32_t virtualStart /* =0 */, std::uint32_t virtualLength /* =0 */):
-	streamController(pControlledStream, virtualStart, virtualLength),
+streamWriter::streamWriter(std::shared_ptr<baseStreamWriter> pControlledStream, std::uint32_t virtualStart /* =0 */, std::uint32_t virtualLength /* =0 */):
+    streamController(virtualStart, virtualLength),
+    m_pControlledStream(pControlledStream),
 	m_outBitsBuffer(0),
 	m_outBitsNum(0)
 {

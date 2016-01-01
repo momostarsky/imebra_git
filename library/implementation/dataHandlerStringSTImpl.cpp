@@ -32,19 +32,16 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 
-dataHandlerStringST::dataHandlerStringST(const charsetsList::tCharsetsList& initialCharsetsList): dataHandlerStringUnicode("ST", 0x0, 0x20, initialCharsetsList)
+readingDataHandlerStringST::readingDataHandlerStringST(const memory& parseMemory, const charsetsList::tCharsetsList& charsets):
+    readingDataHandlerStringUnicode(parseMemory, charsets, "ST", 0x0, 0x20)
 {
 }
 
-std::uint32_t dataHandlerStringST::getUnitSize() const
+writingDataHandlerStringST::writingDataHandlerStringST(const std::shared_ptr<buffer> &pBuffer, const charsetsList::tCharsetsList &charsets):
+    writingDataHandlerStringUnicode(pBuffer, charsets, "ST", 0x0, 0, 1024, 0x20)
 {
-	return 0;
 }
 
-std::uint32_t dataHandlerStringST::maxSize() const
-{
-	return 1024L;
-}
 
 } // namespace handlers
 

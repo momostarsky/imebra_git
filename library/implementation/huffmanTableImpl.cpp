@@ -149,7 +149,7 @@ void huffmanTable::setValuesPerLength(std::uint32_t length, std::uint32_t numVal
     m_valuesPerLength[length] = numValues;
 }
 
-void huffmanTable::addOrderedValue(std::uint32_t index, std::uint32_t value)
+void huffmanTable::addOrderedValue(size_t index, std::uint32_t value)
 {
     if(index >= m_orderedValues.size())
     {
@@ -163,7 +163,7 @@ std::uint32_t huffmanTable::getValuesPerLength(std::uint32_t length)
     return m_valuesPerLength[length];
 }
 
-std::uint32_t huffmanTable::getOrderedValue(std::uint32_t index)
+std::uint32_t huffmanTable::getOrderedValue(size_t index)
 {
     return m_orderedValues[index];
 }

@@ -54,11 +54,13 @@ public:
 
         template <class inputType, class outputType>
         void templateTransform(
-            inputType* inputHandlerData, size_t /* inputHandlerSize */, std::uint32_t inputHandlerWidth, const std::wstring& inputHandlerColorSpace,
+            const inputType* inputHandlerData,
+            outputType* outputHandlerData,
+            std::uint32_t inputHandlerWidth, const std::wstring& inputHandlerColorSpace,
             std::shared_ptr<palette> /* inputPalette */,
             std::int32_t inputHandlerMinValue, std::uint32_t inputHighBit,
             std::int32_t inputTopLeftX, std::int32_t inputTopLeftY, std::int32_t inputWidth, std::int32_t inputHeight,
-            outputType* outputHandlerData, size_t /* outputHandlerSize */, std::int32_t outputHandlerWidth, const std::wstring& outputHandlerColorSpace,
+            std::int32_t outputHandlerWidth, const std::wstring& outputHandlerColorSpace,
             std::shared_ptr<palette> /* outputPalette */,
             std::int32_t outputHandlerMinValue, std::uint32_t outputHighBit,
             std::int32_t outputTopLeftX, std::int32_t outputTopLeftY)
@@ -66,7 +68,7 @@ public:
         {
             checkColorSpaces(inputHandlerColorSpace, outputHandlerColorSpace);
 
-            inputType* pInputMemory(inputHandlerData);
+            const inputType* pInputMemory(inputHandlerData);
             outputType* pOutputMemory(outputHandlerData);
 
             pInputMemory += inputTopLeftY * inputHandlerWidth + inputTopLeftX;

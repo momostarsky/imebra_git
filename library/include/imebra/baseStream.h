@@ -13,10 +13,12 @@ $fileHeader$
 #ifndef SWIG
 
 #include <memory>
+#include "definitions.h"
 
 namespace puntoexe
 {
-    class baseStream;
+    class baseStreamReader;
+    class baseStreamWriter;
 }
 
 #endif
@@ -50,26 +52,47 @@ namespace imebra
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class BaseStream
+class IMEBRA_API BaseStreamReader
 {
 #ifndef SWIG
 	friend class StreamReader;
-	friend class StreamWriter;
 protected:
-	BaseStream(std::shared_ptr<puntoexe::baseStream> pStream);
+    BaseStreamReader(std::shared_ptr<puntoexe::baseStreamReader> pStream);
 #endif
 public:
-	BaseStream(const BaseStream& right);
-	BaseStream& operator=(const BaseStream& right);
+    BaseStreamReader(const BaseStreamReader& right);
+    BaseStreamReader& operator=(const BaseStreamReader& right);
 
 #ifndef SWIG
 protected:
-	std::shared_ptr<puntoexe::baseStream> m_pStream;
+    std::shared_ptr<puntoexe::baseStreamReader> m_pStream;
 #endif
 
 public:
-	BaseStream();
+    BaseStreamReader();
 };
+
+
+class IMEBRA_API BaseStreamWriter
+{
+#ifndef SWIG
+    friend class StreamWriter;
+protected:
+    BaseStreamWriter(std::shared_ptr<puntoexe::baseStreamWriter> pStream);
+#endif
+public:
+    BaseStreamWriter(const BaseStreamWriter& right);
+    BaseStreamWriter& operator=(const BaseStreamWriter& right);
+
+#ifndef SWIG
+protected:
+    std::shared_ptr<puntoexe::baseStreamWriter> m_pStream;
+#endif
+
+public:
+    BaseStreamWriter();
+};
+
 
 ///@}
 

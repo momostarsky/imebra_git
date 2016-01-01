@@ -367,8 +367,7 @@ void VOILUT::applyOptimalVOI(const std::shared_ptr<puntoexe::imebra::image>& inp
         PUNTOEXE_THROW(transformExceptionInvalidArea, "The input and/or output areas are invalid");
     }
 
-    std::uint32_t rowSize, channelPixelSize, channelsNumber;
-    std::shared_ptr<handlers::dataHandlerNumericBase> handler(inputImage->getDataHandler(false, &rowSize, &channelPixelSize, &channelsNumber));
+    std::shared_ptr<handlers::readingDataHandlerNumericBase> handler(inputImage->getReadingDataHandler());
     HANDLER_CALL_TEMPLATE_FUNCTION_WITH_PARAMS(templateFindOptimalVOI, handler, width, inputTopLeftX, inputTopLeftY, inputWidth, inputHeight);
 
     PUNTOEXE_FUNCTION_END();

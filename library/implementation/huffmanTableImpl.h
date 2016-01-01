@@ -147,10 +147,10 @@ public:
 	void removeLastCode();
 
     void setValuesPerLength(std::uint32_t length, std::uint32_t numValues);
-    void addOrderedValue(std::uint32_t index, std::uint32_t value);
+    void addOrderedValue(size_t index, std::uint32_t value);
 
     std::uint32_t getValuesPerLength(std::uint32_t length);
-    std::uint32_t getOrderedValue(std::uint32_t index);
+    std::uint32_t getOrderedValue(size_t index);
 
 	//@}
 

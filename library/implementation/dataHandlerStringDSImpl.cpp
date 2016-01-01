@@ -36,7 +36,7 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 
-dataHandlerStringDS::dataHandlerStringDS(): dataHandlerString("DS", L'\\', 0x20)
+readingDataHandlerStringDS::readingDataHandlerStringDS(const memory& parseMemory): readingDataHandlerString(parseMemory, "DS", '\\', 0x20)
 {
 }
 
@@ -51,7 +51,7 @@ dataHandlerStringDS::dataHandlerStringDS(): dataHandlerString("DS", L'\\', 0x20)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::int32_t dataHandlerStringDS::getSignedLong(const std::uint32_t index) const
+std::int32_t readingDataHandlerStringDS::getSignedLong(const size_t index) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerStringDS::getSignedLong");
 
@@ -71,15 +71,21 @@ std::int32_t dataHandlerStringDS::getSignedLong(const std::uint32_t index) const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::uint32_t dataHandlerStringDS::getUnsignedLong(const std::uint32_t index) const
+std::uint32_t readingDataHandlerStringDS::getUnsignedLong(const size_t index) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerStringDS::getUnsignedLong");
 
-	return (std::int32_t)getDouble(index);
+    return (std::uint32_t)getDouble(index);
 
 	PUNTOEXE_FUNCTION_END();
 }
 
+
+writingDataHandlerStringDS::writingDataHandlerStringDS(const std::shared_ptr<buffer> pBuffer):
+    writingDataHandlerString(pBuffer, "DS", '\\', 0, 16, 0x20)
+{
+
+}
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -91,7 +97,7 @@ std::uint32_t dataHandlerStringDS::getUnsignedLong(const std::uint32_t index) co
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerStringDS::setSignedLong(const std::uint32_t index, const std::int32_t value)
+void writingDataHandlerStringDS::setSignedLong(const size_t index, const std::int32_t value)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerStringDS::setSignedLong");
 
@@ -111,45 +117,13 @@ void dataHandlerStringDS::setSignedLong(const std::uint32_t index, const std::in
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataHandlerStringDS::setUnsignedLong(const std::uint32_t index, const std::uint32_t value)
+void writingDataHandlerStringDS::setUnsignedLong(const size_t index, const std::uint32_t value)
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerStringDS::setUnsignedLong");
 
 	setDouble(index, (double)value);
 
 	PUNTOEXE_FUNCTION_END();
-}
-
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Overwrite setDouble so the value is written in the
-//  exponential form if needed
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-void dataHandlerStringDS::setDouble(const std::uint32_t index, const double value)
-{
-	PUNTOEXE_FUNCTION_START(L"dataHandlerStringDS::setDouble");
-
-	std::wostringstream convStream;
-	convStream << value;
-	setUnicodeString(index, convStream.str());
-
-	PUNTOEXE_FUNCTION_END();
-}
-
-std::uint32_t dataHandlerStringDS::getUnitSize() const
-{
-	return 0;
-}
-
-std::uint32_t dataHandlerStringDS::maxSize() const
-{
-	return 16;
 }
 
 } // namespace handlers

@@ -12,11 +12,12 @@ $fileHeader$
 
 #include "transform.h"
 #include "dataSet.h"
+#include "definitions.h"
 
 namespace imebra
 {
 
-class ModalityVOILUT: public Transform
+class IMEBRA_API ModalityVOILUT: public Transform
 {
 
 public:
