@@ -13,6 +13,12 @@ $fileHeader$
 namespace imebra
 {
 
+Age::Age(uint32_t age, ageUnit_t units):
+    age(age), units(units)
+{
+
+}
+
 ReadingDataHandler::ReadingDataHandler(const ReadingDataHandler& right) : m_pDataHandler(right.m_pDataHandler)
 {}
 
@@ -85,14 +91,43 @@ void ReadingDataHandler::getDate(const int index,
     *pOffsetMinutes = (int)offsetMinutes;
 }
 
-std::uint32_t ReadingDataHandler::getAge(const size_t index, ageUnit_t *pUnit) const
+Age ReadingDataHandler::getAge(const size_t index) const
 {
-    return m_pDataHandler->getAge(index, pUnit);
+    imebra::ageUnit_t ageUnits;
+    std::uint32_t age = m_pDataHandler->getAge(index, &ageUnits);
+    return Age(age, ageUnits);
 }
 
+size_t ReadingDataHandler::data(char* bufferOut, const size_t bufferSize) const
+{
+    std::shared_ptr<puntoexe::imebra::handlers::readingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<puntoexe::imebra::handlers::readingDataHandlerNumericBase>(m_pDataHandler);
+    if(numericDataHandler == 0)
+    {
+        return 0;
+    }
+    size_t memorySize = numericDataHandler->getMemorySize();
+    if(memorySize == 0)
+    {
+       return 0;
+    }
+    if(bufferOut != 0 && bufferSize >= memorySize)
+    {
+        ::memcpy(bufferOut, numericDataHandler->getMemoryBuffer(), memorySize);
+    }
+    return memorySize;
+}
 
-
-
+const char* ReadingDataHandler::data(size_t* pDataSize) const
+{
+    std::shared_ptr<puntoexe::imebra::handlers::readingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<puntoexe::imebra::handlers::readingDataHandlerNumericBase>(m_pDataHandler);
+    if(numericDataHandler == 0)
+    {
+        *pDataSize = 0;
+        return 0;
+    }
+    *pDataSize = numericDataHandler->getMemorySize();
+    return (const char*)numericDataHandler->getMemoryBuffer();
+}
 
 
 WritingDataHandler::WritingDataHandler(const WritingDataHandler& right) : m_pDataHandler(right.m_pDataHandler)
@@ -152,9 +187,9 @@ void WritingDataHandler::setDate(const int index,
         (imbxInt32)offsetMinutes);
 }
 
-void WritingDataHandler::setAge(const size_t index, const uint32_t age, const ageUnit_t unit)
+void WritingDataHandler::setAge(const size_t index, const Age& age)
 {
-    m_pDataHandler->setAge(index, age, unit);
+    m_pDataHandler->setAge(index, age.age, age.units);
 }
 
 void WritingDataHandler::setSignedLong(const int index, const int value)
@@ -177,14 +212,29 @@ void WritingDataHandler::setString(const int index, const std::wstring& value)
     m_pDataHandler->setUnicodeString((imbxUint32)index, value);
 }
 
-Memory WritingDataHandler::getMemory()
+void WritingDataHandler::assign(const char *buffer, const size_t bufferSize)
 {
-    std::shared_ptr<puntoexe::imebra::handlers::writingDataHandlerNumericBase> pDataHandler(std::dynamic_pointer_cast<puntoexe::imebra::handlers::writingDataHandlerNumericBase>(m_pDataHandler));
-    if(pDataHandler == 0)
+    std::shared_ptr<puntoexe::imebra::handlers::writingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<puntoexe::imebra::handlers::writingDataHandlerNumericBase>(m_pDataHandler);
+    if(numericDataHandler == 0)
     {
-        return Memory();
+        return;
     }
-    return Memory(pDataHandler->getMemory());
+
+    numericDataHandler->getMemory()->assign((std::uint8_t*) buffer, bufferSize);
 }
+
+char* WritingDataHandler::data(size_t* pDataSize) const
+{
+    std::shared_ptr<puntoexe::imebra::handlers::writingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<puntoexe::imebra::handlers::writingDataHandlerNumericBase>(m_pDataHandler);
+    if(numericDataHandler == 0)
+    {
+        *pDataSize = 0;
+        return 0;
+    }
+    *pDataSize = numericDataHandler->getMemorySize();
+    return (char*)numericDataHandler->getMemoryBuffer();
+
+}
+
 
 }

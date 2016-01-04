@@ -152,12 +152,12 @@ writingDataHandlerString::~writingDataHandlerString()
         completeString += m_strings.at(stringsIterator);
     }
 
-    std::shared_ptr<memory> commitMemory = std::make_shared<memory>((std::uint32_t)completeString.size());
-    commitMemory->assign((std::uint8_t*)completeString.data(), (std::uint32_t)completeString.size());
+    std::shared_ptr<memory> commitMemory = std::make_shared<memory>(completeString.size());
+    commitMemory->assign((std::uint8_t*)completeString.data(), completeString.size());
 
     // The buffer's size must be an even number
     ///////////////////////////////////////////////////////////
-    std::uint32_t memorySize = commitMemory->size();
+    size_t memorySize = commitMemory->size();
     if((memorySize & 0x1) != 0)
     {
         commitMemory->resize(++memorySize);
@@ -218,6 +218,10 @@ size_t writingDataHandlerString::getSize() const
 
 void writingDataHandlerString::setString(const size_t index, const std::string& value)
 {
+    if(index >= getSize())
+    {
+        setSize(index + 1);
+    }
     m_strings[index] = value;
 }
 

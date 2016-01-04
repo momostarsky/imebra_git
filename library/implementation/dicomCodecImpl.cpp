@@ -21,6 +21,7 @@ $fileHeader$
 #include "colorTransformsFactoryImpl.h"
 #include "codecFactoryImpl.h"
 #include "bufferImpl.h"
+#include "../include/imebra/exceptions.h"
 
 namespace puntoexe
 {
@@ -79,7 +80,7 @@ void dicomCodec::writeStream(std::shared_ptr<streamWriter> pStream, std::shared_
 
 	// Retrieve the transfer syntax
 	///////////////////////////////////////////////////////////
-	std::wstring transferSyntax=pDataSet->getUnicodeString(0x0002, 0, 0x0010, 0);
+    std::wstring transferSyntax=pDataSet->getUnicodeString(0x0002, 0, 0x0010, 0, 0);
 
 	// Adjust the flags
 	///////////////////////////////////////////////////////////
@@ -519,9 +520,9 @@ void dicomCodec::readStream(std::shared_ptr<streamReader> pStream, std::shared_p
 	{
 		pStream->read(oldDicomSignature, 8);
 	}
-	catch(streamExceptionEOF&)
+    catch(::imebra::streamExceptionEOF&)
 	{
-		PUNTOEXE_THROW(codecExceptionWrongFormat, "detected a wrong format");
+        PUNTOEXE_THROW(::imebra::codecExceptionWrongFormat, "detected a wrong format");
 	}
 
 	// Skip the first 128 bytes (8 already skipped)
@@ -551,7 +552,7 @@ void dicomCodec::readStream(std::shared_ptr<streamReader> pStream, std::shared_p
 			oldDicomSignature[1]!=0x0 ||
 			oldDicomSignature[3]!=0x0)
 		{
-			PUNTOEXE_THROW(codecExceptionWrongFormat, "detected a wrong format (checked old NEMA signature)");
+            PUNTOEXE_THROW(::imebra::codecExceptionWrongFormat, "detected a wrong format (checked old NEMA signature)");
 		}
 
 		// Go back to the beginning of the file
@@ -596,7 +597,7 @@ void dicomCodec::parseStream(std::shared_ptr<streamReader> pStream,
 
 	if(depth > IMEBRA_DATASET_MAX_DEPTH)
 	{
-		PUNTOEXE_THROW(dicomCodecExceptionDepthLimitReached, "Depth for embedded dataset reached");
+        PUNTOEXE_THROW(::imebra::dicomCodecExceptionDepthLimitReached, "Depth for embedded dataset reached");
 	}
 
 	std::uint16_t tagId;
@@ -667,7 +668,7 @@ void dicomCodec::parseStream(std::shared_ptr<streamReader> pStream,
 			// Reverse the last adjust
 			pStream->adjustEndian((std::uint8_t*)&tagId, sizeof(tagId), endianType);
 
-			std::wstring transferSyntax=pDataSet->getUnicodeString(0x0002, 0x0, 0x0010, 0x0);
+            std::wstring transferSyntax=pDataSet->getUnicodeString(0x0002, 0x0, 0x0010, 0, 0);
 
 			if(transferSyntax == L"1.2.840.10008.1.2.2")
 				endianType=streamController::highByteEndian;
@@ -939,16 +940,16 @@ std::shared_ptr<image> dicomCodec::getImage(const dataSet& dataset, std::shared_
 
 	// Check for RLE compression
 	///////////////////////////////////////////////////////////
-    std::wstring transferSyntax = dataset.getUnicodeString(0x0002, 0x0, 0x0010, 0x0);
+    std::wstring transferSyntax = dataset.getUnicodeString(0x0002, 0x0, 0x0010, 0, 0);
 	bool bRleCompressed = (transferSyntax == L"1.2.840.10008.1.2.5");
 
 	// Check for color space and subsampled channels
 	///////////////////////////////////////////////////////////
-    std::wstring colorSpace = dataset.getUnicodeString(0x0028, 0x0, 0x0004, 0x0);
+    std::wstring colorSpace = dataset.getUnicodeString(0x0028, 0x0, 0x0004, 0, 0);
 
 	// Retrieve the number of planes
 	///////////////////////////////////////////////////////////
-    std::uint8_t channelsNumber=(std::uint8_t)dataset.getUnsignedLong(0x0028, 0x0, 0x0002, 0x0);
+    std::uint8_t channelsNumber=(std::uint8_t)dataset.getUnsignedLong(0x0028, 0x0, 0x0002, 0, 0);
 
 	// Adjust the colorspace and the channels number for old
 	//  NEMA files that don't specify those data
@@ -966,34 +967,34 @@ std::shared_ptr<image> dicomCodec::getImage(const dataSet& dataset, std::shared_
 
 	// Retrieve the image's size
 	///////////////////////////////////////////////////////////
-    std::uint32_t imageSizeX = dataset.getUnsignedLong(0x0028, 0x0, 0x0011, 0x0);
-    std::uint32_t imageSizeY = dataset.getUnsignedLong(0x0028, 0x0, 0x0010, 0x0);
+    std::uint32_t imageSizeX = dataset.getUnsignedLong(0x0028, 0x0, 0x0011, 0, 0);
+    std::uint32_t imageSizeY = dataset.getUnsignedLong(0x0028, 0x0, 0x0010, 0, 0);
 
     if(
             imageSizeX > codecFactory::getCodecFactory()->getMaximumImageWidth() ||
             imageSizeY > codecFactory::getCodecFactory()->getMaximumImageHeight())
     {
-        PUNTOEXE_THROW(codecExceptionImageTooBig, "The factory settings prevented the loading of this image. Consider using codecFactory::setMaximumImageSize() to modify the settings");
+        PUNTOEXE_THROW(::imebra::codecExceptionImageTooBig, "The factory settings prevented the loading of this image. Consider using codecFactory::setMaximumImageSize() to modify the settings");
     }
 
     if((imageSizeX == 0) || (imageSizeY == 0))
 	{
-		PUNTOEXE_THROW(codecExceptionCorruptedFile, "The size tags are not available");
+        PUNTOEXE_THROW(::imebra::codecExceptionCorruptedFile, "The size tags are not available");
 	}
 
 	// Check for interleaved planes.
 	///////////////////////////////////////////////////////////
-    bool bInterleaved(dataset.getUnsignedLong(0x0028, 0x0, 0x0006, 0x0)==0x0);
+    bool bInterleaved(dataset.getUnsignedLong(0x0028, 0x0, 0x0006, 0, 0)==0x0);
 
 	// Check for 2's complement
 	///////////////////////////////////////////////////////////
-    bool b2Complement = dataset.getUnsignedLong(0x0028, 0x0, 0x0103, 0x0)!=0x0;
+    bool b2Complement = dataset.getUnsignedLong(0x0028, 0x0, 0x0103, 0, 0)!=0x0;
 
 	// Retrieve the allocated/stored/high bits
 	///////////////////////////////////////////////////////////
-    std::uint8_t allocatedBits=(std::uint8_t)dataset.getUnsignedLong(0x0028, 0x0, 0x0100, 0x0);
-    std::uint8_t storedBits=(std::uint8_t)dataset.getUnsignedLong(0x0028, 0x0, 0x0101, 0x0);
-    std::uint8_t highBit=(std::uint8_t)dataset.getUnsignedLong(0x0028, 0x0, 0x0102, 0x0);
+    std::uint8_t allocatedBits=(std::uint8_t)dataset.getUnsignedLong(0x0028, 0x0, 0x0100, 0, 0);
+    std::uint8_t storedBits=(std::uint8_t)dataset.getUnsignedLong(0x0028, 0x0, 0x0101, 0, 0);
+    std::uint8_t highBit=(std::uint8_t)dataset.getUnsignedLong(0x0028, 0x0, 0x0102, 0, 0);
 	if(highBit<storedBits-1)
 		highBit=storedBits-1;
 
@@ -1044,7 +1045,7 @@ std::shared_ptr<image> dicomCodec::getImage(const dataSet& dataset, std::shared_
 
 	if(handler == 0 || tempChannelsNumber != channelsNumber)
 	{
-		PUNTOEXE_THROW(codecExceptionCorruptedFile, "Cannot allocate the image's buffer");
+        PUNTOEXE_THROW(::imebra::codecExceptionCorruptedFile, "Cannot allocate the image's buffer");
 	}
 
 	// Allocate the dicom channels
@@ -1096,7 +1097,7 @@ std::shared_ptr<image> dicomCodec::getImage(const dataSet& dataset, std::shared_
 	{
 		if(bSubSampledX || bSubSampledY)
 		{
-			PUNTOEXE_THROW(codecExceptionCorruptedFile, "Cannot read subsampled RLE images");
+            PUNTOEXE_THROW(::imebra::codecExceptionCorruptedFile, "Cannot read subsampled RLE images");
 		}
 
 		readRLECompressed(imageSizeX, imageSizeY, channelsNumber, pSourceStream, allocatedBits, mask, bInterleaved);
@@ -2141,7 +2142,7 @@ bool dicomCodec::encapsulated(const std::wstring& transferSyntax)
 
 	if(!canHandleTransferSyntax(transferSyntax))
 	{
-		PUNTOEXE_THROW(codecExceptionWrongTransferSyntax, "Cannot handle the transfer syntax");
+        PUNTOEXE_THROW(::imebra::codecExceptionWrongTransferSyntax, "Cannot handle the transfer syntax");
 	}
 	return (transferSyntax == L"1.2.840.10008.1.2.5");
 
@@ -2210,7 +2211,7 @@ std::uint32_t dicomCodec::readTag(
 
 		if(bufferLength != tagLengthDWord)
 		{
-			PUNTOEXE_THROW(codecExceptionCorruptedFile, "dicomCodec::readTag detected a corrupted tag");
+            PUNTOEXE_THROW(::imebra::codecExceptionCorruptedFile, "dicomCodec::readTag detected a corrupted tag");
 		}
 
         std::shared_ptr<data> writeData (pDataSet->getTagCreate(tagId, order, tagSubId));

@@ -38,7 +38,7 @@ std::uint32_t waveform::getBitsAllocated()
 {
 	PUNTOEXE_FUNCTION_START(L"waveform::getBitsAllocated");
 
-	return m_pDataSet->getUnsignedLong(0x5400, 0, 0x1004, 0);
+    return m_pDataSet->getUnsignedLong(0x5400, 0, 0x1004, 0, 0);
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -53,7 +53,7 @@ std::uint32_t waveform::getBitsStored()
 {
 	PUNTOEXE_FUNCTION_START(L"waveform::getBitsStored");
 
-	return m_pDataSet->getUnsignedLong(0x003A, 0, 0x021A, 0);
+    return m_pDataSet->getUnsignedLong(0x003A, 0, 0x021A, 0, 0);
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -68,7 +68,7 @@ std::uint32_t waveform::getChannels()
 {
 	PUNTOEXE_FUNCTION_START(L"waveform::getChannels");
 
-	return m_pDataSet->getUnsignedLong(0x003A, 0, 0x0005, 0);
+    return m_pDataSet->getUnsignedLong(0x003A, 0, 0x0005, 0, 0);
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -83,7 +83,7 @@ std::string waveform::getInterpretation()
 {
 	PUNTOEXE_FUNCTION_START(L"waveform::getChannels");
 
-	return m_pDataSet->getString(0x5400, 0, 0x1006, 0);
+    return m_pDataSet->getString(0x5400, 0, 0x1006, 0, 0);
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -98,7 +98,7 @@ std::uint32_t waveform::getSamples()
 {
 	PUNTOEXE_FUNCTION_START(L"waveform::getSamples");
 
-	return m_pDataSet->getUnsignedLong(0x003A, 0, 0x0010, 0);
+    return m_pDataSet->getUnsignedLong(0x003A, 0, 0x0010, 0, 0);
 
 	PUNTOEXE_FUNCTION_END();
 }

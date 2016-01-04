@@ -13,6 +13,8 @@ $fileHeader$
 
 #include "exceptionImpl.h"
 #include "charsetConversionIconvImpl.h"
+#include "../include/imebra/exceptions.h"
+
 #include <memory>
 
 namespace puntoexe
@@ -45,7 +47,7 @@ charsetConversionIconv::charsetConversionIconv(const std::string& dicomName)
         utfCode = (*((std::uint8_t*)&m_endianCheck) == 0xff) ? "UTF-32LE" : "UTF-32BE";
         break;
     default:
-        PUNTOEXE_THROW(charsetConversionExceptionUtfSizeNotSupported, "The system utf size is not supported");
+        PUNTOEXE_THROW(::imebra::charsetConversionExceptionUtfSizeNotSupported, "The system utf size is not supported");
     }
 
     m_iconvToUnicode = iconv_open(utfCode, info.m_isoRegistration.c_str());
@@ -54,7 +56,7 @@ charsetConversionIconv::charsetConversionIconv(const std::string& dicomName)
     {
         std::ostringstream buildErrorString;
         buildErrorString << "Table " << dicomName << " not supported by the system";
-        PUNTOEXE_THROW(charsetConversionExceptionNoSupportedTable, buildErrorString.str());
+        PUNTOEXE_THROW(::imebra::charsetConversionExceptionNoSupportedTable, buildErrorString.str());
     }
 
     PUNTOEXE_FUNCTION_END();

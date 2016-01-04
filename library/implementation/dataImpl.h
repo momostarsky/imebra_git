@@ -76,7 +76,7 @@ public:
 	/// @return the number of buffers in the tag
 	///
 	///////////////////////////////////////////////////////////
-	std::uint32_t getBuffersCount();
+    size_t getBuffersCount();
 
 	/// \brief Returns true if the specified buffer exists,
 	///         otherwise it returns false.
@@ -89,7 +89,7 @@ public:
 	/// @return true if the buffer exists, false otherwise
 	///
 	///////////////////////////////////////////////////////////
-	bool bufferExists(std::uint32_t bufferId);
+    bool bufferExists(size_t bufferId);
 
 	/// \brief Returns the size of a buffer, in bytes.
 	///
@@ -102,7 +102,7 @@ public:
 	///          doesn't exist.
 	///
 	///////////////////////////////////////////////////////////
-	std::uint32_t getBufferSize(std::uint32_t bufferId);
+    size_t getBufferSize(size_t bufferId);
 
 	/// \brief Get a data handler for the specified buffer.
 	///
@@ -141,9 +141,9 @@ public:
 	///         requested buffer.
 	///
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<handlers::readingDataHandler> getReadingDataHandler(std::uint32_t bufferId) const;
+    std::shared_ptr<handlers::readingDataHandler> getReadingDataHandler(size_t bufferId) const;
 
-    std::shared_ptr<handlers::writingDataHandler> getWritingDataHandler(std::uint32_t bufferId, const std::string& defaultType, const charsetsList::tCharsetsList& defaultCharsets);
+    std::shared_ptr<handlers::writingDataHandler> getWritingDataHandler(size_t bufferId, const std::string& defaultType, const charsetsList::tCharsetsList& defaultCharsets);
 	
 	/// \brief Get a raw data handler 
 	///         (handlers::dataHandlerRaw) for the specified 
@@ -187,9 +187,9 @@ public:
 	///         requested buffer.
 	///
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<handlers::readingDataHandlerRaw> getReadingDataHandlerRaw(std::uint32_t bufferId) const;
+    std::shared_ptr<handlers::readingDataHandlerRaw> getReadingDataHandlerRaw(size_t bufferId) const;
 
-    std::shared_ptr<handlers::writingDataHandlerRaw> getWritingDataHandlerRaw(std::uint32_t bufferId, const std::string& defaultType, const charsetsList::tCharsetsList& defaultCharsets);
+    std::shared_ptr<handlers::writingDataHandlerRaw> getWritingDataHandlerRaw(size_t bufferId, const std::string& defaultType, const charsetsList::tCharsetsList& defaultCharsets);
 
 	/// \brief Get a streamReader connected to a buffer's data.
 	///
@@ -200,7 +200,7 @@ public:
 	///                    buffer's data.
 	///
 	///////////////////////////////////////////////////////////
-	std::shared_ptr<streamReader> getStreamReader(std::uint32_t bufferId);
+    std::shared_ptr<streamReader> getStreamReader(size_t bufferId);
 
 	/// \brief Get a streamWriter connected to a buffer's data.
 	///
@@ -213,7 +213,7 @@ public:
 	///                    emptied buffer's data.
 	///
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<streamWriter> getStreamWriter(std::uint32_t bufferId, const std::string& dataType = "");
+    std::shared_ptr<streamWriter> getStreamWriter(size_t bufferId, const std::string& dataType = "");
 
 	//@}
 
@@ -242,7 +242,7 @@ public:
 	/// @return           a pointer to the retrieved dataSet
 	///
 	///////////////////////////////////////////////////////////
-	std::shared_ptr<dataSet> getDataSet(std::uint32_t dataSetId);
+    std::shared_ptr<dataSet> getDataSet(size_t dataSetId);
 
 	/// \brief Set an embedded dataSet to the sequence.
 	///
@@ -260,7 +260,7 @@ public:
 	///                   into the tag
 	///
 	///////////////////////////////////////////////////////////
-	void setDataSet(std::uint32_t dataSetId, std::shared_ptr<dataSet> pDataSet);
+    void setDataSet(size_t dataSetId, std::shared_ptr<dataSet> pDataSet);
 
 	/// \brief Append an embedded dataSet to the sequence.
 	///
@@ -292,7 +292,7 @@ public:
 	///                   from the tag
 	///
 	///////////////////////////////////////////////////////////
-	void deleteBuffer(std::uint32_t bufferId);
+    void deleteBuffer(size_t bufferId);
 
 	//@}
 
@@ -320,12 +320,12 @@ public:
 
 	// Set a buffer
 	///////////////////////////////////////////////////////////
-	void setBuffer(std::uint32_t bufferId, const std::shared_ptr<buffer>& newBuffer);
+    void setBuffer(size_t bufferId, const std::shared_ptr<buffer>& newBuffer);
 
 protected:
 	// Pointers to the internal buffers
 	///////////////////////////////////////////////////////////
-	typedef std::map<std::uint32_t, std::shared_ptr<buffer> > tBuffersMap;
+    typedef std::map<size_t, std::shared_ptr<buffer> > tBuffersMap;
 	tBuffersMap m_buffers;
 
 	// Pointers to the embedded datasets

@@ -10,7 +10,7 @@ $fileHeader$
 #include "exceptionImpl.h"
 #include "VOILUTImpl.h"
 #include "dataSetImpl.h"
-
+#include "../include/imebra/exceptions.h"
 
 namespace puntoexe
 {
@@ -57,7 +57,7 @@ std::uint32_t VOILUT::getVOILUTId(std::uint32_t VOILUTNumber)
 	std::uint32_t scanWindow;
 	for(scanWindow=VOILUTNumber; (windowWidth == 0) && (scanWindow!=0xffffffff); --scanWindow)
 	{
-		windowWidth  = m_pDataSet->getSignedLong(0x0028, 0, 0x1051, scanWindow);
+        windowWidth  = m_pDataSet->getSignedLong(0x0028, 0, 0x1051, 0, scanWindow);
 	}
 	++scanWindow;
 
@@ -148,7 +148,7 @@ std::wstring VOILUT::getVOILUTDescription(std::uint32_t VOILUTId)
 	///////////////////////////////////////////////////////////
 	if((VOILUTId & 0x00200000))
 	{
-		VOILUTDescription = m_pDataSet->getUnicodeString(0x0028, 0, 0x1055, VOILUTNumber);
+        VOILUTDescription = m_pDataSet->getUnicodeString(0x0028, 0, 0x1055, 0, VOILUTNumber);
 	}
 
 	// LUT
@@ -197,8 +197,8 @@ void VOILUT::setVOILUT(std::uint32_t VOILUTId)
 	if((VOILUTId & 0x00200000))
 	{
 		setCenterWidth(
-			m_pDataSet->getSignedLong(0x0028, 0, 0x1050, VOILUTNumber),
-			m_pDataSet->getSignedLong(0x0028, 0, 0x1051, VOILUTNumber));
+            m_pDataSet->getSignedLong(0x0028, 0, 0x1050, 0, VOILUTNumber),
+            m_pDataSet->getSignedLong(0x0028, 0, 0x1051, 0, VOILUTNumber));
 		return;
 	}
 
@@ -364,7 +364,7 @@ void VOILUT::applyOptimalVOI(const std::shared_ptr<puntoexe::imebra::image>& inp
 
     if(inputTopLeftX + inputWidth > width || inputTopLeftY + inputHeight > height)
     {
-        PUNTOEXE_THROW(transformExceptionInvalidArea, "The input and/or output areas are invalid");
+        PUNTOEXE_THROW(::imebra::transformExceptionInvalidArea, "The input and/or output areas are invalid");
     }
 
     std::shared_ptr<handlers::readingDataHandlerNumericBase> handler(inputImage->getReadingDataHandler());

@@ -9,7 +9,7 @@ $fileHeader$
 
 #include "exceptionImpl.h"
 #include "charsetsListImpl.h"
-
+#include "../include/imebra/exceptions.h"
 
 namespace puntoexe
 {
@@ -53,7 +53,7 @@ void updateCharsets(const tCharsetsList* pCharsetsList, tCharsetsList* pDestinat
 	///////////////////////////////////////////////////////////
 	if(!pCharsetsList->empty() && !pDestinationCharsetsList->empty() && pCharsetsList->front() != pDestinationCharsetsList->front())
 	{
-		PUNTOEXE_THROW(charsetListExceptionDiffDefault, "Different default charsets");
+        PUNTOEXE_THROW(::imebra::charsetListExceptionDiffDefault, "Different default charsets");
 	}
 
 	// Copy the charsets in the local list (if they are not

@@ -196,16 +196,6 @@ protected:
 	std::uint8_t* m_pDataBufferMaxEnd;
 };
 
-/// \brief Exception thrown when an attempt to read past
-///         the end of the file is made.
-///
-///////////////////////////////////////////////////////////
-class streamExceptionEOF : public streamException
-{
-public:
-    streamExceptionEOF(const std::string& message): streamException(message){}
-};
-
 ///@}
 
 } // namespace puntoexe

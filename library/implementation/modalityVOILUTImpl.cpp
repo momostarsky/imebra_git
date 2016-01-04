@@ -32,12 +32,12 @@ namespace transforms
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 modalityVOILUT::modalityVOILUT(std::shared_ptr<dataSet> pDataSet):
-		m_pDataSet(pDataSet), m_voiLut(pDataSet->getLut(0x0028, 0x3000, 0)), m_rescaleIntercept(pDataSet->getDouble(0x0028, 0, 0x1052, 0x0)), m_rescaleSlope(1.0), m_bEmpty(true)
+        m_pDataSet(pDataSet), m_voiLut(pDataSet->getLut(0x0028, 0x3000, 0)), m_rescaleIntercept(pDataSet->getDouble(0x0028, 0, 0x1052, 0, 0)), m_rescaleSlope(1.0), m_bEmpty(true)
 
 {
 	// Only monochrome images can have the modality voi-lut
 	///////////////////////////////////////////////////////
-	std::wstring colorSpace(pDataSet->getUnicodeString(0x0028, 0x0, 0x0004, 0x0));
+    std::wstring colorSpace(pDataSet->getUnicodeString(0x0028, 0x0, 0x0004, 0, 0));
 	if(!colorTransforms::colorTransformsFactory::isMonochrome(colorSpace))
 	{
 		return;

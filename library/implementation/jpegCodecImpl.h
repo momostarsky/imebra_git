@@ -305,30 +305,6 @@ protected:
 	long long m_idctTempMatrix[64];
 };
 
-/// \brief Base class for the exceptions thrown by the
-///        jpeg codec
-///
-///////////////////////////////////////////////////////////
-class jpegCodecException: public codecException
-{
-public:
-	jpegCodecException(const std::string& message): codecException(message){}
-};
-
-/// \brief Exception thrown when the jpeg variant cannot
-///         be handled.
-///
-///////////////////////////////////////////////////////////
-class jpegCodecCannotHandleSyntax: public jpegCodecException
-{
-public:
-	/// \brief Constructs the exception.
-	///
-	/// @param message   the cause of the exception
-	///
-	///////////////////////////////////////////////////////////
-	jpegCodecCannotHandleSyntax(const std::string& message): jpegCodecException(message){}
-};
 
 /// @}
 

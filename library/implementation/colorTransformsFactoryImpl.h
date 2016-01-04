@@ -279,30 +279,6 @@ public:
 
 };
 
-///////////////////////////////////////////////////////////
-/// \brief This is the base class for the exceptions
-///         thrown by colorTransformsFactory.
-///
-///////////////////////////////////////////////////////////
-class colorTransformsFactoryException: public transformException
-{
-public:
-	colorTransformsFactoryException(const std::string& message): transformException(message){}
-};
-
-///////////////////////////////////////////////////////////
-/// \brief This exception is thrown by the function
-///         colorTransformsFactory::getTransform() when
-///         it cannot find any transform that can convert
-///         the specified color spaces.
-///
-///////////////////////////////////////////////////////////
-class colorTransformsFactoryExceptionNoTransform: public colorTransformsFactoryException
-{
-public:
-	colorTransformsFactoryExceptionNoTransform(const std::string& message): colorTransformsFactoryException(message){}
-};
-
 /// @}
 
 } // namespace colorTransforms

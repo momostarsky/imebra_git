@@ -10,6 +10,8 @@ $fileHeader$
 #include "exceptionImpl.h"
 #include "streamImpl.h"
 #include "charsetConversionImpl.h"
+#include "../include/imebra/exceptions.h"
+
 #include <sstream>
 #include <errno.h>
 
@@ -103,7 +105,7 @@ void fileStream::openFile(const std::wstring& fileName, std::ios_base::openmode 
     {
         std::ostringstream errorMessage;
         errorMessage << "stream::openFile failure - error code: " << errorCode;
-        PUNTOEXE_THROW(streamExceptionOpen, errorMessage.str());
+        PUNTOEXE_THROW(::imebra::streamExceptionOpen, errorMessage.str());
     }
 
     PUNTOEXE_FUNCTION_END();
@@ -117,7 +119,7 @@ void fileStream::close()
     {
         if(::fclose(m_openFile) != 0)
         {
-            PUNTOEXE_THROW(streamExceptionClose, "Error while closing the file");
+            PUNTOEXE_THROW(::imebra::streamExceptionClose, "Error while closing the file");
         }
         m_openFile = 0;
     }
@@ -215,12 +217,12 @@ void fileStreamWriter::write(std::uint32_t startPosition, const std::uint8_t* pB
 	::fseek(m_openFile, startPosition, SEEK_SET);
 	if(ferror(m_openFile) != 0)
 	{
-		PUNTOEXE_THROW(streamExceptionWrite, "stream::seek failure");
+        PUNTOEXE_THROW(::imebra::streamExceptionWrite, "stream::seek failure");
 	}
 
 	if(::fwrite(pBuffer, 1, bufferLength, m_openFile) != bufferLength)
 	{
-		PUNTOEXE_THROW(streamExceptionWrite, "stream::write failure");
+        PUNTOEXE_THROW(::imebra::streamExceptionWrite, "stream::write failure");
 	}
 
 	PUNTOEXE_FUNCTION_END();
@@ -249,7 +251,7 @@ std::uint32_t fileStreamReader::read(std::uint32_t startPosition, std::uint8_t* 
 	std::uint32_t readBytes = (std::uint32_t)::fread(pBuffer, 1, bufferLength, m_openFile);
 	if(ferror(m_openFile) != 0)
 	{
-		PUNTOEXE_THROW(streamExceptionRead, "stream::read failure");
+        PUNTOEXE_THROW(::imebra::streamExceptionRead, "stream::read failure");
 	}
 	return readBytes;
 

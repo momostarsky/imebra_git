@@ -92,12 +92,6 @@ protected:
 
 };
 
-class transformsChainException: public transformException
-{
-public:
-	transformsChainException(const std::string& what): transformException(what){}
-};
-
 /// @}
 
 } // namespace transforms

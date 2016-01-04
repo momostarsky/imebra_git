@@ -318,36 +318,6 @@ void runTemplateTransform(
 
 
 
-/// \brief Base class for the exceptions thrown by the
-///         transforms.
-///
-///////////////////////////////////////////////////////////
-class transformException: public std::runtime_error
-{
-public:
-	/// \brief Constructor.
-	///
-	/// @param message the cause of the exception
-	///
-	///////////////////////////////////////////////////////////
-	transformException(const std::string& message): std::runtime_error(message){}
-};
-
-/// \brief Exception thrown when the image areas to be
-///         processed are out of bounds.
-///
-///////////////////////////////////////////////////////////
-class transformExceptionInvalidArea: public transformException
-{
-public:
-    /// \brief Constructor.
-    ///
-    /// @param message the cause of the exception
-    ///
-    ///////////////////////////////////////////////////////////
-    transformExceptionInvalidArea(const std::string& message): transformException(message){}
-};
-
 
 /// @}
 

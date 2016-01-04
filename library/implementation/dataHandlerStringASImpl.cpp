@@ -181,6 +181,11 @@ void writingDataHandlerStringAS::setAge(const size_t index, const std::uint32_t 
 {
     PUNTOEXE_FUNCTION_START(L"dataHandlerStringAS::setAge");
 
+    if(index >= getSize())
+    {
+        setSize(index + 1);
+    }
+
     std::ostringstream ageStream;
     ageStream << std::setfill('0');
     ageStream << std::setw(3) << age;

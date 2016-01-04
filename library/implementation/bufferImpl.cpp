@@ -29,6 +29,8 @@ $fileHeader$
 #include "dataHandlerDateImpl.h"
 #include "dataHandlerDateTimeImpl.h"
 #include "dataHandlerTimeImpl.h"
+#include "../include/imebra/exceptions.h"
+
 #include <vector>
 
 
@@ -346,7 +348,7 @@ std::shared_ptr<handlers::readingDataHandler> buffer::getReadingDataHandler() co
         return std::make_shared<handlers::readingDataHandlerTime>(*localMemory);
     }
 
-    PUNTOEXE_THROW(bufferExceptionUnknownType, "Unknown data type requested");
+    PUNTOEXE_THROW(::imebra::bufferExceptionUnknownType, "Unknown data type requested");
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -357,7 +359,7 @@ std::shared_ptr<handlers::writingDataHandler> buffer::getWritingDataHandler(std:
 
     // Reset the pointer to the data handler
     ///////////////////////////////////////////////////////////
-    std::shared_ptr<handlers::dataHandler> handler;
+    std::shared_ptr<handlers::writingDataHandler> handler;
 
     // Retrieve an Application entity handler
     ///////////////////////////////////////////////////////////
@@ -542,7 +544,7 @@ std::shared_ptr<handlers::writingDataHandler> buffer::getWritingDataHandler(std:
         return std::make_shared<handlers::writingDataHandlerTime>(shared_from_this());
     }
 
-    PUNTOEXE_THROW(bufferExceptionUnknownType, "Unknown data type requested");
+    PUNTOEXE_THROW(::imebra::bufferExceptionUnknownType, "Unknown data type requested");
 
     PUNTOEXE_FUNCTION_END();
 }
@@ -599,7 +601,7 @@ std::shared_ptr<streamWriter> buffer::getStreamWriter()
 	// Build a stream from the buffer's memory
 	///////////////////////////////////////////////////////////
     std::shared_ptr<streamWriter> writer;
-    std::shared_ptr<handlers::writingDataHandlerRaw> tempHandlerRaw = getWritingDataHandlerRaw(true);
+    std::shared_ptr<handlers::writingDataHandlerRaw> tempHandlerRaw = getWritingDataHandlerRaw(0);
 	if(tempHandlerRaw != 0)
 	{
         writer = std::make_shared<streamWriter>(std::make_shared<bufferStreamWriter>(tempHandlerRaw), tempHandlerRaw->getSize());

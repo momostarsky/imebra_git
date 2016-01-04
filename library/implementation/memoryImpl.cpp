@@ -230,7 +230,7 @@ bool memory::empty()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void memory::assign(const std::uint8_t* pSource, const std::uint32_t sourceLength)
+void memory::assign(const std::uint8_t* pSource, const size_t sourceLength)
 {
 	if(m_pMemoryBuffer.get() == 0)
 	{
@@ -303,10 +303,6 @@ bool memoryPool::reuseMemory(stringUint8* pString)
 		return false;
 	}
 
-	// Ok to reuse
-	///////////////////////////////////////////////////////////
-	lockCriticalSection lockThis(&m_criticalSection);
-
 	// Store the memory object in the pool
 	///////////////////////////////////////////////////////////
 	m_memorySize[m_firstFreeCell] = memorySize;
@@ -358,8 +354,6 @@ bool memoryPool::reuseMemory(stringUint8* pString)
 ///////////////////////////////////////////////////////////
 void memoryPool::flush()
 {
-	lockCriticalSection lockThis(&m_criticalSection);
-
 	while(m_firstUsedCell != m_firstFreeCell)
 	{
 		delete m_memoryPointer[m_firstUsedCell];
@@ -401,8 +395,6 @@ memoryPool* memoryPool::getMemoryPool()
 ///////////////////////////////////////////////////////////
 memory* memoryPool::getMemory(std::uint32_t requestedSize)
 {
-	lockCriticalSection lockThis(&m_criticalSection);
-
 	// Look for an object to reuse
 	///////////////////////////////////////////////////////////
 	for(std::uint32_t findCell = m_firstUsedCell; findCell != m_firstFreeCell;)

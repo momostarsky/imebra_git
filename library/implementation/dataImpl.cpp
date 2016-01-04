@@ -48,7 +48,7 @@ namespace imebra
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void data::setBuffer(std::uint32_t bufferId, const std::shared_ptr<buffer>& newBuffer)
+void data::setBuffer(size_t bufferId, const std::shared_ptr<buffer>& newBuffer)
 {
 	PUNTOEXE_FUNCTION_START(L"data::setBuffer");
 
@@ -69,7 +69,7 @@ void data::setBuffer(std::uint32_t bufferId, const std::shared_ptr<buffer>& newB
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void data::deleteBuffer(std::uint32_t bufferId)
+void data::deleteBuffer(size_t bufferId)
 {
 	PUNTOEXE_FUNCTION_START(L"data::deleteBuffer");
 
@@ -119,7 +119,7 @@ std::string data::getDataType()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::uint32_t data::getBuffersCount()
+size_t data::getBuffersCount()
 {
 	PUNTOEXE_FUNCTION_START(L"data::getBuffersCount");
 
@@ -140,7 +140,7 @@ std::uint32_t data::getBuffersCount()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-bool data::bufferExists(std::uint32_t bufferId)
+bool data::bufferExists(size_t bufferId)
 {
 	PUNTOEXE_FUNCTION_START(L"data::bufferExists");
 
@@ -162,7 +162,7 @@ bool data::bufferExists(std::uint32_t bufferId)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::uint32_t data::getBufferSize(std::uint32_t bufferId)
+size_t data::getBufferSize(size_t bufferId)
 {
 	PUNTOEXE_FUNCTION_START(L"data::getBufferSize");
 
@@ -191,7 +191,7 @@ std::uint32_t data::getBufferSize(std::uint32_t bufferId)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<handlers::readingDataHandler> data::getReadingDataHandler(std::uint32_t bufferId) const
+std::shared_ptr<handlers::readingDataHandler> data::getReadingDataHandler(size_t bufferId) const
 {
 	PUNTOEXE_FUNCTION_START(L"data::getDataHandler");
 
@@ -218,7 +218,7 @@ std::shared_ptr<handlers::readingDataHandler> data::getReadingDataHandler(std::u
 }
 
 
-std::shared_ptr<handlers::writingDataHandler> data::getWritingDataHandler(std::uint32_t bufferId, const std::string& defaultType, const charsetsList::tCharsetsList& defaultCharsets)
+std::shared_ptr<handlers::writingDataHandler> data::getWritingDataHandler(size_t bufferId, const std::string& defaultType, const charsetsList::tCharsetsList& defaultCharsets)
 {
     PUNTOEXE_FUNCTION_START(L"data::getDataHandler");
 
@@ -266,7 +266,7 @@ std::shared_ptr<handlers::writingDataHandler> data::getWritingDataHandler(std::u
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<handlers::readingDataHandlerRaw> data::getReadingDataHandlerRaw(std::uint32_t bufferId) const
+std::shared_ptr<handlers::readingDataHandlerRaw> data::getReadingDataHandlerRaw(size_t bufferId) const
 {
 	PUNTOEXE_FUNCTION_START(L"data::getDataHandlerRaw");
 
@@ -293,7 +293,7 @@ std::shared_ptr<handlers::readingDataHandlerRaw> data::getReadingDataHandlerRaw(
 }
 
 
-std::shared_ptr<handlers::writingDataHandlerRaw> data::getWritingDataHandlerRaw(std::uint32_t bufferId, const std::string& defaultType, const charsetsList::tCharsetsList& defaultCharsets)
+std::shared_ptr<handlers::writingDataHandlerRaw> data::getWritingDataHandlerRaw(size_t bufferId, const std::string& defaultType, const charsetsList::tCharsetsList& defaultCharsets)
 {
     PUNTOEXE_FUNCTION_START(L"data::getDataHandlerRaw");
 
@@ -341,7 +341,7 @@ std::shared_ptr<handlers::writingDataHandlerRaw> data::getWritingDataHandlerRaw(
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<streamReader> data::getStreamReader(std::uint32_t bufferId)
+std::shared_ptr<streamReader> data::getStreamReader(size_t bufferId)
 {
 	PUNTOEXE_FUNCTION_START(L"data::getStreamReader");
 
@@ -370,7 +370,7 @@ std::shared_ptr<streamReader> data::getStreamReader(std::uint32_t bufferId)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<streamWriter> data::getStreamWriter(std::uint32_t bufferId, const std::string& dataType /* = "" */)
+std::shared_ptr<streamWriter> data::getStreamWriter(size_t bufferId, const std::string& dataType /* = "" */)
 {
 	PUNTOEXE_FUNCTION_START(L"data::getStream");
 
@@ -417,7 +417,7 @@ std::shared_ptr<streamWriter> data::getStreamWriter(std::uint32_t bufferId, cons
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<dataSet> data::getDataSet(std::uint32_t dataSetId)
+std::shared_ptr<dataSet> data::getDataSet(size_t dataSetId)
 {
 	PUNTOEXE_FUNCTION_START(L"data::getDataSet");
 
@@ -443,7 +443,7 @@ std::shared_ptr<dataSet> data::getDataSet(std::uint32_t dataSetId)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void data::setDataSet(std::uint32_t dataSetId, std::shared_ptr<dataSet> pDataSet)
+void data::setDataSet(size_t dataSetId, std::shared_ptr<dataSet> pDataSet)
 {
 	PUNTOEXE_FUNCTION_START(L"data::setDataSet");
 

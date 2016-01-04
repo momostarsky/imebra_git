@@ -102,24 +102,6 @@ protected:
 };
 
 
-class colorTransformException: public transformException
-{
-public:
-	colorTransformException(const std::string& message): transformException(message){}
-};
-
-class colorTransformExceptionWrongColorSpace: public colorTransformException
-{
-public:
-	colorTransformExceptionWrongColorSpace(const std::string& message): colorTransformException(message){}
-};
-
-class colorTransformExceptionWrongSize: public colorTransformException
-{
-public:
-	colorTransformExceptionWrongSize(const std::string& message): colorTransformException(message){}
-};
-
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////

@@ -14,6 +14,7 @@ $fileHeader$
 
 #include <memory>
 #include "image.h"
+#include "dataHandler.h"
 #include "definitions.h"
 
 namespace puntoexe
@@ -72,25 +73,31 @@ public:
 
 	DataSet getSequenceItem(int groupId, int order, int tagId, int itemId);
 
-    int getSignedLong(int groupId, int order, int tagId, int elementNumber) const;
+    ReadingDataHandler getReadingDataHandler(int groupId, int order, int tagId, int bufferId) const;
 
-    void setSignedLong(int groupId, int order, int tagId, int elementNumber, int newValue, const std::string& defaultType = "");
+    WritingDataHandler getWritingDataHandler(int groupId, int order, int tagId, int bufferId, const std::string& defaultDataType);
 
-    int getUnsignedLong(int groupId, int order, int tagId, int elementNumber) const;
+    bool bufferExists(int groupId, int order, int tagId, int bufferId);
 
-    void setUnsignedLong(int groupId, int order, int tagId, int elementNumber, int newValue, const std::string& defaultType = "");
+    int getSignedLong(int groupId, int order, int tagId, int bufferId, int elementNumber) const;
 
-    double getDouble(int groupId, int order, int tagId, int elementNumber) const;
+    void setSignedLong(int groupId, int order, int tagId, int bufferId, int elementNumber, int newValue, const std::string& defaultType = "");
 
-    void setDouble(int groupId, int order, int tagId, int elementNumber, double newValue, const std::string& defaultType = "");
+    int getUnsignedLong(int groupId, int order, int tagId, int bufferId, int elementNumber) const;
 
-    std::wstring getString(int groupId, int order, int tagId, int elementNumber) const;
+    void setUnsignedLong(int groupId, int order, int tagId, int bufferId, int elementNumber, int newValue, const std::string& defaultType = "");
 
-    void setString(int groupId, int order, int tagId, int elementNumber, const std::wstring& newString, const std::string& defaultType = "");
+    double getDouble(int groupId, int order, int tagId, int bufferId, int elementNumber) const;
 
-    void setAge(int groupId, int order, int tagId, int elementNumber, int age, imebra::ageUnit_t units, const std::string& defaultType = "");
+    void setDouble(int groupId, int order, int tagId, int bufferId, int elementNumber, double newValue, const std::string& defaultType = "");
 
-    int getAge(int groupId, int order, int tagId, int elementNumber, imebra::ageUnit_t* pUnits) const;
+    std::wstring getString(int groupId, int order, int tagId, int bufferId, int elementNumber) const;
+
+    void setString(int groupId, int order, int tagId, int bufferId, int elementNumber, const std::wstring& newString, const std::string& defaultType = "");
+
+    void setAge(int groupId, int order, int tagId, int bufferId, int elementNumber, int age, imebra::ageUnit_t units, const std::string& defaultType = "");
+
+    int getAge(int groupId, int order, int tagId, int bufferId, int elementNumber, imebra::ageUnit_t* pUnits) const;
 
     size_t getRawData(int groupId, int order, int tagId, int bufferId, char* buffer, size_t bufferSize) const;
 

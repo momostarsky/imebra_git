@@ -144,52 +144,6 @@ public:
 };
 
 
-///////////////////////////////////////////////////////////
-/// \brief Base class for the exceptions thrown by
-///         charsetConversion.
-///
-///////////////////////////////////////////////////////////
-class charsetConversionException: public std::runtime_error
-{
-public:
-	charsetConversionException(const std::string& message): std::runtime_error(message){}
-};
-
-
-///////////////////////////////////////////////////////////
-/// \brief Exception thrown when the requested charset
-///         is not supported by the DICOM standard.
-///
-///////////////////////////////////////////////////////////
-class charsetConversionExceptionNoTable: public charsetConversionException
-{
-public:
-	charsetConversionExceptionNoTable(const std::string& message): charsetConversionException(message){}
-};
-
-
-///////////////////////////////////////////////////////////
-/// \brief Exception thrown when the requested charset
-///         is not supported by the system.
-///
-///////////////////////////////////////////////////////////
-class charsetConversionExceptionNoSupportedTable: public charsetConversionException
-{
-public:
-	charsetConversionExceptionNoSupportedTable(const std::string& message): charsetConversionException(message){}
-};
-
-
-///////////////////////////////////////////////////////////
-/// \brief Exception thrown when the system doesn't have
-///         a supported size for wchar_t
-///
-///////////////////////////////////////////////////////////
-class charsetConversionExceptionUtfSizeNotSupported: public charsetConversionException
-{
-public:
-	charsetConversionExceptionUtfSizeNotSupported(const std::string& message): charsetConversionException(message){}
-};
 
 ///@}
 

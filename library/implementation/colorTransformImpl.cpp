@@ -11,7 +11,7 @@ $fileHeader$
 #include "colorTransformImpl.h"
 #include "colorTransformsFactoryImpl.h"
 #include "imageImpl.h"
-
+#include "../include/imebra/exceptions.h"
 
 namespace puntoexe
 {
@@ -54,12 +54,12 @@ void colorTransform::checkColorSpaces(const std::wstring& inputHandlerColorSpace
 
 	if(inputHandlerColorSpace != getInitialColorSpace())
 	{
-		PUNTOEXE_THROW(colorTransformExceptionWrongColorSpace, "The image's color space cannot be handled by the transform");
+        PUNTOEXE_THROW(::imebra::colorTransformExceptionWrongColorSpace, "The image's color space cannot be handled by the transform");
 	}
 
 	if(outputHandlerColorSpace != getFinalColorSpace())
 	{
-		PUNTOEXE_THROW(colorTransformExceptionWrongColorSpace, "The image's color space cannot be handled by the transform");
+        PUNTOEXE_THROW(::imebra::colorTransformExceptionWrongColorSpace, "The image's color space cannot be handled by the transform");
 	}
 
 	PUNTOEXE_FUNCTION_END();

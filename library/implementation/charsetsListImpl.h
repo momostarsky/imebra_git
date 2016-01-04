@@ -43,38 +43,6 @@ typedef std::list<std::string> tCharsetsList;
 
 void updateCharsets(const tCharsetsList* pCharsetsList, tCharsetsList* pDestinationCharsetsList);
 
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-/// \brief This is the base class for the exceptions thrown
-///         by the class charsetsList.
-///
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-class charsetsListException: public std::runtime_error
-{
-public:
-    charsetsListException(const std::string& message): std::runtime_error(message){}
-};
-
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-/// \brief This exception is thrown when a conversion from
-///         an unicode string causes the dicom dataSet
-///         to change its default charset.
-///
-/// For instace, the default charset is ISO IR 6 but a
-///  value written by the application in one tag causes
-///  the default charset to switch to ISO 2022 IR 100.
-///
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-class charsetListExceptionDiffDefault: public charsetsListException
-{
-public:
-    charsetListExceptionDiffDefault(const std::string& message): charsetsListException(message){}
-};
-
 } // namespace charsetsList
 
 /// @}

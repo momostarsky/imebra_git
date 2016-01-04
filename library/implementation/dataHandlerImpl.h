@@ -31,64 +31,31 @@ namespace imebra
 class buffer;
 
 /// \namespace handlers
-/// \brief All the data handlers returned by the class
-///         buffer are defined in this namespace
+/// \brief All the implementations of the data handlers
+///         are defined in this namespace.
 ///
 ///////////////////////////////////////////////////////////
 namespace handlers
 {
 
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-/// \brief This is the base class for all the imebra data
-///         handlers.
-///        A data handler allows to read/write the data
-///         stored in a \ref puntoexe::imebra::buffer 
-///         object without worrying about the %data format.
 ///
-/// Once a dataHandler has been obtained from
-///  a \ref buffer, it cannot be shared between threads
-///  and it doesn't provide any multithread-safe mechanism,
-///  except for its destructor which copies the local
-///  buffer back to the original one (only for the writable
-///  handlers).
-///
-/// Data handlers are also used to access to the
-///  decompressed image's pixels (see image and 
-///  handlers::dataHandlerNumericBase).
-///
-/// To obtain a data handler your application has to
-///  call buffer::getDataHandler() or 
-///  image::getDataHandler().
+/// \brief The readingDataHandler parses the content of
+///        a tag's buffer and makes it accessible as
+///        numeric value, string, time or age.
 ///
 ///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-class dataHandler
+class readingDataHandler
 {
 public:
-    dataHandler(const std::string& dataType);
-
-    virtual ~dataHandler();
-
-    /// \brief Get the dicom data type managed by this handler.
     ///
-    /// The dicom data type is formed by 2 uppercase chars,
-    ///  as described by the dicom standard.
-    /// See \ref buffer for further information.
-    ///
-    /// @return the data handler's dicom data type
+    /// \brief Constructor.
+    /// \param The data type of the tag exposed by this
+    ///         readingDataHandler.
     ///
     ///////////////////////////////////////////////////////////
-    std::string getDataType() const;
-
-protected:
-    std::string m_dataType;
-};
-
-class readingDataHandler: public dataHandler
-{
-public:
     readingDataHandler(const std::string& dataType);
+
+    std::string getDataType() const;
 
     /// \brief Retrieve the data handler's local buffer buffer
     ///         size (in elements).
@@ -216,12 +183,17 @@ public:
     ///
     ///////////////////////////////////////////////////////////
     virtual std::uint32_t getAge(const size_t index, ::imebra::ageUnit_t* pUnit) const;
+
+private:
+    std::string m_dataType;
 };
 
-class writingDataHandler: public dataHandler
+class writingDataHandler
 {
 public:
     writingDataHandler(const std::shared_ptr<buffer>& pBuffer, const std::string& dataType, const std::uint8_t paddingByte);
+
+    std::string getDataType() const;
 
     virtual size_t getSize() const = 0;
 
@@ -336,6 +308,8 @@ public:
     virtual void setUnicodeString(const size_t index, const std::wstring& value) =0;
 
 protected:
+    std::string m_dataType;
+
     // Pointer to the connected buffer
     ///////////////////////////////////////////////////////////
     std::shared_ptr<buffer> m_buffer;

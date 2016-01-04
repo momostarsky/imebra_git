@@ -11,7 +11,7 @@ $fileHeader$
 #include "transformImpl.h"
 #include "imageImpl.h"
 #include "transformHighBitImpl.h"
-
+#include "../include/imebra/exceptions.h"
 
 namespace puntoexe
 {
@@ -55,7 +55,7 @@ void transformHandlers::runTransform(
         outputTopLeftX + inputWidth > outputImageWidth ||
         outputTopLeftY + inputHeight > outputImageHeight)
     {
-        PUNTOEXE_THROW(transformExceptionInvalidArea, "The input and/or output areas are invalid");
+        PUNTOEXE_THROW(::imebra::transformExceptionInvalidArea, "The input and/or output areas are invalid");
     }
 
     std::shared_ptr<handlers::readingDataHandlerNumericBase> inputHandler(inputImage->getReadingDataHandler());

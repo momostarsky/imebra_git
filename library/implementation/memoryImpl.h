@@ -10,7 +10,6 @@ $fileHeader$
 #if !defined(imebraMemory_DE3F98A9_664E_47c0_A29B_B681F9AEB118__INCLUDED_)
 #define imebraMemory_DE3F98A9_664E_47c0_A29B_B681F9AEB118__INCLUDED_
 
-#include "criticalSectionImpl.h"
 #include <list>
 #include <map>
 #include <memory>
@@ -165,7 +164,7 @@ public:
 	///                      into the managed memory
 	///
 	///////////////////////////////////////////////////////////
-	void assign(const std::uint8_t* pSource, const std::uint32_t sourceLength);
+    void assign(const std::uint8_t* pSource, const size_t sourceLength);
 
 protected:
     std::unique_ptr<stringUint8> m_pMemoryBuffer;
@@ -281,9 +280,6 @@ protected:
 	///
 	///////////////////////////////////////////////////////////
     bool reuseMemory(stringUint8* pMemoryToReuse);
-
-	criticalSection m_criticalSection;
-
 };
 
 ///@}

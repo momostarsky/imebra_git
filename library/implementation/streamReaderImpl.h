@@ -11,6 +11,7 @@ $fileHeader$
 #define imebraStreamReader_F6221390_BC44_4B83_B5BB_3485222FF1DD__INCLUDED_
 
 #include "streamControllerImpl.h"
+#include "../include/imebra/exceptions.h"
 
 ///////////////////////////////////////////////////////////
 //
@@ -19,20 +20,6 @@ $fileHeader$
 ///////////////////////////////////////////////////////////
 namespace puntoexe
 {
-
-/// \addtogroup group_baseclasses
-///
-/// @{
-
-/// \brief Exception thrown when a jpeg tag is found but
-///         wasn't expected.
-///
-///////////////////////////////////////////////////////////
-class streamJpegTagInStream : public streamException
-{
-public:
-    streamJpegTagInStream(const std::string& message): streamException(message){}
-};
 
 
 ///////////////////////////////////////////////////////////
@@ -343,7 +330,7 @@ public:
 		///////////////////////////////////////////////////////////
 		if(m_pDataBufferCurrent == m_pDataBufferEnd && fillDataBuffer() == 0)
                 {
-                    throw(streamExceptionEOF("Attempt to read past the end of the file"));
+                    throw(::imebra::streamExceptionEOF("Attempt to read past the end of the file"));
                 }
 
 		// Read one byte. Return immediatly if the tags are not
@@ -357,13 +344,13 @@ public:
                 {
                     if(++m_pDataBufferCurrent == m_pDataBufferEnd && fillDataBuffer() == 0)
                     {
-                        throw(streamExceptionEOF("Attempt to read past the end of the file"));
+                        throw(::imebra::streamExceptionEOF("Attempt to read past the end of the file"));
                     }
                 }while(*m_pDataBufferCurrent == 0xff);
 
                 if(*(m_pDataBufferCurrent++) != 0)
                 {
-                    throw(streamJpegTagInStream("Corrupted jpeg stream"));
+                    throw(::imebra::streamJpegTagInStream("Corrupted jpeg stream"));
                 }
 
                 return 0xff;

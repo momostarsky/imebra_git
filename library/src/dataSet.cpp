@@ -53,54 +53,69 @@ DataSet DataSet::getSequenceItem(int groupId, int order, int tagId, int itemId)
 	return DataSet(m_pDataSet->getSequenceItem(groupId, order, tagId, itemId));
 }
 
-int DataSet::getSignedLong(int groupId, int order, int tagId, int elementNumber) const
+ReadingDataHandler DataSet::getReadingDataHandler(int groupId, int order, int tagId, int bufferId) const
 {
-	return m_pDataSet->getSignedLong(groupId, order, tagId, elementNumber);
+    return ReadingDataHandler(m_pDataSet->getReadingDataHandler(groupId, order, tagId, bufferId));
 }
 
-void DataSet::setSignedLong(int groupId, int order, int tagId, int elementNumber, int newValue, const std::string& defaultType)
+WritingDataHandler DataSet::getWritingDataHandler(int groupId, int order, int tagId, int bufferId, const std::string& defaultDataType)
 {
-	m_pDataSet->setSignedLong(groupId, order, tagId, elementNumber, newValue, defaultType);
+    return WritingDataHandler(m_pDataSet->getWritingDataHandler(groupId, order, tagId, bufferId, defaultDataType));
 }
 
-int DataSet::getUnsignedLong(int groupId, int order, int tagId, int elementNumber) const
+bool DataSet::bufferExists(int groupId, int order, int tagId, int bufferId)
 {
-	return m_pDataSet->getUnsignedLong(groupId, order, tagId, elementNumber);
+    return m_pDataSet->bufferExists(groupId, order, tagId, bufferId);
 }
 
-void DataSet::setUnsignedLong(int groupId, int order, int tagId, int elementNumber, int newValue, const std::string& defaultType)
+int DataSet::getSignedLong(int groupId, int order, int tagId, int bufferId, int elementNumber) const
 {
-	m_pDataSet->setUnsignedLong(groupId, order, tagId, elementNumber, newValue, defaultType);
+    return m_pDataSet->getSignedLong(groupId, order, tagId, bufferId, elementNumber);
 }
 
-double DataSet::getDouble(int groupId, int order, int tagId, int elementNumber) const
+void DataSet::setSignedLong(int groupId, int order, int tagId, int bufferId, int elementNumber, int newValue, const std::string& defaultType)
 {
-	return m_pDataSet->getDouble(groupId, order, tagId, elementNumber);
+    m_pDataSet->setSignedLong(groupId, order, tagId, bufferId, elementNumber, newValue, defaultType);
 }
 
-void DataSet::setDouble(int groupId, int order, int tagId, int elementNumber, double newValue, const std::string& defaultType)
+int DataSet::getUnsignedLong(int groupId, int order, int tagId, int bufferId, int elementNumber) const
 {
-	m_pDataSet->setDouble(groupId, order, tagId, elementNumber, newValue, defaultType);
+    return m_pDataSet->getUnsignedLong(groupId, order, tagId, bufferId, elementNumber);
 }
 
-std::wstring DataSet::getString(int groupId, int order, int tagId, int elementNumber) const
+void DataSet::setUnsignedLong(int groupId, int order, int tagId, int bufferId, int elementNumber, int newValue, const std::string& defaultType)
 {
-	return m_pDataSet->getUnicodeString(groupId, order, tagId, elementNumber);
+    m_pDataSet->setUnsignedLong(groupId, order, tagId, bufferId, elementNumber, newValue, defaultType);
 }
 
-void DataSet::setString(int groupId, int order, int tagId, int elementNumber, const std::wstring& newString, const std::string& defaultType)
+double DataSet::getDouble(int groupId, int order, int tagId, int bufferId, int elementNumber) const
 {
-	m_pDataSet->setUnicodeString(groupId, order, tagId, elementNumber, newString, defaultType);
+    return m_pDataSet->getDouble(groupId, order, tagId, bufferId, elementNumber);
 }
 
-void DataSet::setAge(int groupId, int order, int tagId, int elementNumber, int age, imebra::ageUnit_t units, const std::string& defaultType)
+void DataSet::setDouble(int groupId, int order, int tagId, int bufferId, int elementNumber, double newValue, const std::string& defaultType)
 {
-    m_pDataSet->setAge(groupId, order, tagId, elementNumber, age, units, defaultType);
+    m_pDataSet->setDouble(groupId, order, tagId, bufferId, elementNumber, newValue, defaultType);
 }
 
-int DataSet::getAge(int groupId, int order, int tagId, int elementNumber, imebra::ageUnit_t* pUnits) const
+std::wstring DataSet::getString(int groupId, int order, int tagId, int bufferId, int elementNumber) const
 {
-    return m_pDataSet->getAge(groupId, order, tagId, elementNumber, pUnits);
+    return m_pDataSet->getUnicodeString(groupId, order, tagId, bufferId, elementNumber);
+}
+
+void DataSet::setString(int groupId, int order, int tagId, int bufferId, int elementNumber, const std::wstring& newString, const std::string& defaultType)
+{
+    m_pDataSet->setUnicodeString(groupId, order, tagId, bufferId, elementNumber, newString, defaultType);
+}
+
+void DataSet::setAge(int groupId, int order, int tagId, int bufferId, int elementNumber, int age, imebra::ageUnit_t units, const std::string& defaultType)
+{
+    m_pDataSet->setAge(groupId, order, tagId, bufferId, elementNumber, age, units, defaultType);
+}
+
+int DataSet::getAge(int groupId, int order, int tagId, int bufferId, int elementNumber, imebra::ageUnit_t* pUnits) const
+{
+    return m_pDataSet->getAge(groupId, order, tagId, bufferId, elementNumber, pUnits);
 }
 
 

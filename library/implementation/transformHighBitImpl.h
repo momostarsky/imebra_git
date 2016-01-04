@@ -12,6 +12,7 @@ $fileHeader$
 
 #include "transformImpl.h"
 #include "colorTransformsFactoryImpl.h"
+#include "../include/imebra/exceptions.h"
 
 namespace puntoexe
 {
@@ -25,18 +26,6 @@ namespace transforms
 /// \addtogroup group_transforms
 ///
 /// @{
-
-class transformHighBitException: public transformException
-{
-public:
-		transformHighBitException(const std::string& message): transformException(message){}
-};
-
-class transformHighBitDifferentColorSpaces: public transformHighBitException
-{
-public:
-    transformHighBitDifferentColorSpaces(const std::string& message): transformHighBitException(message){}
-};
 
 
 ///////////////////////////////////////////////////////////
@@ -76,7 +65,7 @@ public:
             if(colorTransforms::colorTransformsFactory::normalizeColorSpace(inputHandlerColorSpace) !=
                colorTransforms::colorTransformsFactory::normalizeColorSpace(outputHandlerColorSpace))
             {
-                throw transformHighBitDifferentColorSpaces("The input and output image must have the same color space");
+                throw ::imebra::transformHighBitDifferentColorSpaces("The input and output image must have the same color space");
             }
 
             std::int32_t numChannels(colorTransforms::colorTransformsFactory::getNumberOfChannels(inputHandlerColorSpace));

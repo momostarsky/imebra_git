@@ -411,6 +411,10 @@ public:
     ///////////////////////////////////////////////////////////
     virtual void setSignedLong(const size_t index, const std::int32_t value)
     {
+        if(index >= getSize())
+        {
+            setSize(index + 1);
+        }
         ((dataHandlerType*)m_pMemory->data())[index] = (dataHandlerType)value;
     }
 
@@ -418,6 +422,10 @@ public:
     ///////////////////////////////////////////////////////////
     virtual void setUnsignedLong(const size_t index, const std::uint32_t value)
     {
+        if(index >= getSize())
+        {
+            setSize(index + 1);
+        }
         ((dataHandlerType*)m_pMemory->data())[index] = (dataHandlerType)value;
     }
 
@@ -425,6 +433,10 @@ public:
     ///////////////////////////////////////////////////////////
     virtual void setDouble(const size_t index, const double value)
     {
+        if(index >= getSize())
+        {
+            setSize(index + 1);
+        }
         ((dataHandlerType*)m_pMemory->data())[index] = (dataHandlerType)value;
     }
 

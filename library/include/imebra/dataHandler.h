@@ -34,13 +34,12 @@ class writingDataHandler;
 namespace imebra
 {
 
-/// \addtogroup group_swig_bindings Bindings
-///
-/// The binding classes interface the Imebra library
-///  with software written in Java, PHP, Python and others.
-///
-///////////////////////////////////////////////////////////
-/// @{
+struct IMEBRA_API Age
+{
+    Age(std::uint32_t age, ageUnit_t units);
+    std::uint32_t age;
+    ageUnit_t     units;
+};
 
 class IMEBRA_API ReadingDataHandler
 {
@@ -82,9 +81,28 @@ public:
 		int* pOffsetHours,
 		int* pOffsetMinutes) const;
 
-    std::uint32_t getAge(const size_t index, imebra::ageUnit_t* pUnit) const;
+    Age getAge(const size_t index) const;
 
-    Memory getMemory();
+    ///
+    /// \brief Copies the raw representation of the handled data into
+    ///        an already allocated buffer.
+    ///
+    /// If the allocated buffer is not large enough then the method doesn't
+    ///  copy any data and just returns the desidered size of the buffer.
+    ///
+    /// \param buffer     a pointer to the allocated buffer
+    /// \param bufferSize the size of the allocated buffer
+    /// \return the number of bytes to be copied into the pre-allocated buffer
+    ///
+    size_t data(char* buffer, const size_t bufferSize) const;
+
+    ///
+    /// \brief Returns a pointer to the raw representation of the handled data.
+    /// \param dataSize
+    /// \return
+    ///
+    const char* data(size_t* pDataSize) const;
+
 
 #ifndef SWIG
 protected:
@@ -126,7 +144,7 @@ public:
         int offsetHours,
         int offsetMinutes);
 
-    void setAge(const size_t index, const std::uint32_t age, const imebra::ageUnit_t unit);
+    void setAge(const size_t index, const Age& age);
 
     void setSignedLong(const int index, const int value);
 
@@ -136,15 +154,16 @@ public:
 
     void setString(const int index, const std::wstring& value);
 
-    Memory getMemory();
+    void assign(const char* buffer, const size_t bufferSize);
+
+    char* data(size_t* pDataSize) const;
+
 
 #ifndef SWIG
 protected:
     std::shared_ptr<puntoexe::imebra::handlers::writingDataHandler> m_pDataHandler;
 #endif
 };
-
-///@}
 
 }
 

@@ -14,7 +14,7 @@ $fileHeader$
 #include "codecImpl.h"
 #include "jpegCodecImpl.h"
 #include "dicomCodecImpl.h"
-
+#include "../include/imebra/exceptions.h"
 
 namespace puntoexe
 {
@@ -159,7 +159,7 @@ std::shared_ptr<dataSet> codecFactory::load(std::shared_ptr<streamReader> pStrea
 		{
 			return (*scanCodecs)->read(pStream, maxSizeBufferLoad);
 		}
-		catch(codecExceptionWrongFormat& /* e */)
+        catch(::imebra::codecExceptionWrongFormat& /* e */)
 		{
 			exceptionsManager::getMessage(); // Reset the messages stack
 			continue;
@@ -168,7 +168,7 @@ std::shared_ptr<dataSet> codecFactory::load(std::shared_ptr<streamReader> pStrea
 
 	if(pDataSet == 0)
 	{
-		PUNTOEXE_THROW(codecExceptionWrongFormat, "none of the codecs recognized the file format");
+        PUNTOEXE_THROW(::imebra::codecExceptionWrongFormat, "none of the codecs recognized the file format");
 	}
 
 	return pDataSet;

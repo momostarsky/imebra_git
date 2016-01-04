@@ -9,6 +9,7 @@ $fileHeader$
 
 #include "exceptionImpl.h"
 #include "charsetConversionImpl.h"
+#include "../include/imebra/exceptions.h"
 #include <memory>
 #include <sstream>
 
@@ -71,7 +72,7 @@ const charsetInformation& charsetDictionary::getCharsetInformation(const std::st
     {
         std::ostringstream errorMessage;
         errorMessage << "Charset table " << dicomName << " not found in the charset dictionary";
-        throw charsetConversionExceptionNoTable(errorMessage.str());
+        throw ::imebra::charsetConversionExceptionNoTable(errorMessage.str());
     }
     return findInfo->second;
 }

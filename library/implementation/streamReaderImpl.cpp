@@ -34,7 +34,7 @@ streamReader::streamReader(std::shared_ptr<baseStreamReader> pControlledStream, 
 {
     if(virtualLength == 0)
     {
-        throw(streamExceptionEOF("Virtual stream with zero length"));
+        throw(::imebra::streamExceptionEOF("Virtual stream with zero length"));
     }
 }
 
@@ -48,7 +48,7 @@ std::shared_ptr<streamReader> streamReader::getReader(std::uint32_t virtualLengt
 {
     if(virtualLength == 0)
     {
-        throw(streamExceptionEOF("Virtual stream with zero length"));
+        throw(::imebra::streamExceptionEOF("Virtual stream with zero length"));
     }
     std::uint32_t currentPosition = position();
     if(currentPosition + virtualLength > m_virtualLength && m_virtualLength != 0)
@@ -144,14 +144,14 @@ void streamReader::read(std::uint8_t* pBuffer, std::uint32_t bufferLength)
 				bufferLength -= readBytes;
 				if(readBytes == 0)
 				{
-					throw(streamExceptionEOF("Attempt to read past the end of the file"));
+                    throw(::imebra::streamExceptionEOF("Attempt to read past the end of the file"));
 				}
 				continue;
 			}
 
 			if(fillDataBuffer() == 0)
 			{
-				throw(streamExceptionEOF("Attempt to read past the end of the file"));
+                throw(::imebra::streamExceptionEOF("Attempt to read past the end of the file"));
 			}
 		}
 

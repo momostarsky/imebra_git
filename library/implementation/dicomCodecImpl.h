@@ -304,39 +304,6 @@ protected:
 };
 
 
-/// \brief This is the base class for the exceptions thrown
-///         by the dicom codec (dicomCodec).
-///
-///////////////////////////////////////////////////////////
-class dicomCodecException: public codecException
-{
-public:
-	/// \brief Build a dicomCodecException exception
-	///
-	/// @param message the message to store into the exception
-	///
-	///////////////////////////////////////////////////////////
-	dicomCodecException(const std::string& message): codecException(message){}
-};
-
-/// \brief This exception is thrown when 
-///         dicomCodec::parseStream reaches the maximum 
-///         depth for embedded datasets.
-///
-///////////////////////////////////////////////////////////
-class dicomCodecExceptionDepthLimitReached: public dicomCodecException
-{
-public:
-	/// \brief Build a dicomCodecExceptionDepthLimitReached
-	///        exception
-	///
-	/// @param message the message to store into the exception
-	///
-	///////////////////////////////////////////////////////////
-	dicomCodecExceptionDepthLimitReached(const std::string&message): dicomCodecException(message){}
-
-};
-
 /// @}
 
 } // namespace codecs

@@ -259,42 +259,6 @@ protected:
 };
 
 
-///////////////////////////////////////////////////////////
-/// \brief This is the base class for the exceptions thrown
-///         by the lut class
-///
-///////////////////////////////////////////////////////////
-class lutException: public std::runtime_error
-{
-public:
-	lutException(const std::string& message): std::runtime_error(message){}
-};
-
-
-///////////////////////////////////////////////////////////
-/// \brief This exception is thrown by the lut class when
-///         the wrong index or id is specified as a
-///         parameter.
-///
-///////////////////////////////////////////////////////////
-class lutExceptionWrongIndex: public lutException
-{
-public:
-	lutExceptionWrongIndex(const std::string& message): lutException(message){}
-};
-
-
-///////////////////////////////////////////////////////////
-/// \brief This exception is thrown by the lut class when
-///         the the LUT information is corrupted.
-///
-///////////////////////////////////////////////////////////
-class lutExceptionCorrupted: public lutException
-{
-public:
-	lutExceptionCorrupted(const std::string& message): lutException(message){}
-};
-
 /// @}
 
 

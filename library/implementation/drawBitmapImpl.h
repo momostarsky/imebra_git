@@ -14,6 +14,9 @@ This file is not included automatically by imebra.h
 
 #include "memoryImpl.h"
 #include "transformsChainImpl.h"
+#include "../include/imebra/exceptions.h"
+
+
 #include <memory>
 #include <string.h>
 
@@ -26,34 +29,6 @@ namespace puntoexe
 		/// \addtogroup group_helpers Helpers
 		///
 		/// @{
-
-		///////////////////////////////////////////////////////////
-		///////////////////////////////////////////////////////////
-		/// \brief Base class used for the exceptions thrown by
-		///         drawBitmap.
-		///
-		///////////////////////////////////////////////////////////
-		///////////////////////////////////////////////////////////
-		class drawBitmapException: public std::runtime_error
-		{
-		public:
-			drawBitmapException(const std::string& message): std::runtime_error(message){}
-		};
-
-		///////////////////////////////////////////////////////////
-		///////////////////////////////////////////////////////////
-		/// \brief This exception is thrown by
-		///         declareBitmapType() if the image's area that
-		///         has to be generated is not valid.
-		///
-		///////////////////////////////////////////////////////////
-		///////////////////////////////////////////////////////////
-		class drawBitmapExceptionInvalidArea: public drawBitmapException
-		{
-		public:
-			drawBitmapExceptionInvalidArea(const std::string& message): drawBitmapException(message){}
-		};
-
 
         ///////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////
@@ -192,7 +167,7 @@ namespace puntoexe
 						visibleTopLeftY > visibleBottomRightY
 						)
 				{
-					PUNTOEXE_THROW(drawBitmapExceptionInvalidArea, "Destination area not valid");
+                    PUNTOEXE_THROW(::imebra::drawBitmapExceptionInvalidArea, "Destination area not valid");
 				}
 
                 size_t memorySize(getBitmap<drawBitmapType, rowAlignBytes>(totalWidthPixels, totalHeightPixels, visibleTopLeftX, visibleTopLeftY, visibleBottomRightX, visibleBottomRightY, 0, 0));
@@ -243,7 +218,7 @@ namespace puntoexe
 						visibleTopLeftY > visibleBottomRightY
 						)
 				{
-					PUNTOEXE_THROW(drawBitmapExceptionInvalidArea, "Destination area not valid");
+                    PUNTOEXE_THROW(::imebra::drawBitmapExceptionInvalidArea, "Destination area not valid");
 				}
 
                 std::uint32_t destPixelSize((drawBitmapType == drawBitmapRGBA || drawBitmapType == drawBitmapBGRA) ? 4 : 3);

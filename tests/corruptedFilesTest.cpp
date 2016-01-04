@@ -1,5 +1,6 @@
 #include <imebra/codecFactory.h>
 #include <imebra/stream.h>
+#include <imebra/exceptions.h>
 #include "testsSettings.h"
 #include <dirent.h>
 #include <gtest/gtest.h>
@@ -41,12 +42,9 @@ TEST(corruptedFilesTest, corruptedFilesTest)
 
         std::cout << "Processing corrupted file " << fullName.str() << std::endl;
 
-        imebra::FileStreamReader file;
-        file.openFile(fullName.str());
-        imebra::StreamReader reader(file);
-        imebra::DataSet dataset = imebra::CodecFactory::load(file, 2048);
+        imebra::DataSet dataset = imebra::CodecFactory::load(fullName.str(), 2048);
 
-        ASSERT_THROW(dataset.getImage(0), puntoexe::imebra::codecs::codecException);
+        ASSERT_THROW(dataset.getImage(0), imebra::codecException);
     }
 
 }

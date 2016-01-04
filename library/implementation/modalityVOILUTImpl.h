@@ -15,7 +15,7 @@ $fileHeader$
 #include "dataSetImpl.h"
 #include "LUTImpl.h"
 #include "colorTransformsFactoryImpl.h"
-
+#include "../include/imebra/exceptions.h"
 
 ///////////////////////////////////////////////////////////
 //
@@ -30,20 +30,6 @@ namespace imebra
 
 namespace transforms
 {
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-/// \brief This exception is thrown by modalityVOILUT
-///         when the images passed to the transform are
-///         not monochromatic.
-///
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-class modalityVOILUTException: public transformException
-{
-public:
-    modalityVOILUTException(const std::string& message): transformException(message){}
-};
 
 
 /// \addtogroup group_transforms
@@ -98,7 +84,7 @@ public:
 		PUNTOEXE_FUNCTION_START(L"modalityVOILUT::templateTransform");
 		if(!colorTransforms::colorTransformsFactory::isMonochrome(inputHandlerColorSpace) || !colorTransforms::colorTransformsFactory::isMonochrome(outputHandlerColorSpace))
 		{
-			PUNTOEXE_THROW(modalityVOILUTException, "modalityVOILUT can process only monochromatic images");
+            PUNTOEXE_THROW(::imebra::modalityVOILUTException, "modalityVOILUT can process only monochromatic images");
 		}
         const inputType* pInputMemory(inputHandlerData);
 		outputType* pOutputMemory(outputHandlerData);

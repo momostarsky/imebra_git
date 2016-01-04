@@ -13,6 +13,7 @@ $fileHeader$
 #include "codecImpl.h"
 #include "dataSetImpl.h"
 #include "codecFactoryImpl.h"
+#include "../include/imebra/exceptions.h"
 #include <string.h>
 
 
@@ -56,7 +57,7 @@ std::shared_ptr<dataSet> codec::read(std::shared_ptr<streamReader> pSourceStream
 	{
 		readStream(pSourceStream, pDestDataSet, maxSizeBufferLoad);
 	}
-	catch(codecExceptionWrongFormat&)
+    catch(::imebra::codecExceptionWrongFormat&)
 	{
 		pSourceStream->seek((std::int32_t)position);
 		PUNTOEXE_RETHROW("Detected a wrong format. Rewinding file");

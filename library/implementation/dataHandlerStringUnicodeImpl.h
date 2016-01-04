@@ -116,18 +116,6 @@ protected:
 };
 
 
-class dataHandlerStringUnicodeException: public std::runtime_error
-{
-public:
-	dataHandlerStringUnicodeException(const std::string& message): std::runtime_error(message){}
-};
-
-class dataHandlerStringUnicodeExceptionUnknownCharset: public dataHandlerStringUnicodeException
-{
-public:
-	dataHandlerStringUnicodeExceptionUnknownCharset(const std::string& message): dataHandlerStringUnicodeException(message){}
-};
-
 } // namespace handlers
 
 } // namespace imebra

@@ -303,56 +303,6 @@ protected:
 };
 
 
-///////////////////////////////////////////////////////////
-/// \brief This is the base class for the exceptions thrown
-///         by the image class.
-///
-///////////////////////////////////////////////////////////
-class imageException: public std::runtime_error
-{
-public:
-	/// \brief Build a codec exception
-	///
-	/// @param message the message to store into the exception
-	///
-	///////////////////////////////////////////////////////////
-	imageException(const std::string& message): std::runtime_error(message){}
-};
-
-///////////////////////////////////////////////////////////
-/// \brief This exception is thrown when an unknown depth
-///         is specified as a parameter.
-///
-///////////////////////////////////////////////////////////
-class imageExceptionUnknownDepth: public imageException
-{
-public:
-	imageExceptionUnknownDepth(const std::string& message): imageException(message){}
-};
-
-///////////////////////////////////////////////////////////
-/// \brief This exception is thrown when an unknown color
-///         space is specified in the function create().
-///
-///////////////////////////////////////////////////////////
-class imageExceptionUnknownColorSpace: public imageException
-{
-public:
-	imageExceptionUnknownColorSpace(const std::string& message): imageException(message){}
-};
-
-///////////////////////////////////////////////////////////
-/// \brief This exception is thrown when an invalid size
-///         in pixels is specified in the function
-///         create().
-///
-///////////////////////////////////////////////////////////
-class imageExceptionInvalidSize: public imageException
-{
-public:
-	imageExceptionInvalidSize(const std::string& message): imageException(message){}
-};
-
 /// @}
 
 } // namespace imebra

@@ -8,7 +8,7 @@ $fileHeader$
 
 #include "../include/imebra/colorTransformsFactory.h"
 #include "../implementation/colorTransformsFactoryImpl.h"
-
+#include "../include/imebra/exceptions.h"
 namespace imebra
 {
 
@@ -53,7 +53,7 @@ Transform ColorTransformsFactory::getTransform(const std::wstring& startColorSpa
     Transform transform(factory->getTransform(startColorSpace, endColorSpace));
     if(transform.m_pTransform == 0)
     {
-        throw puntoexe::imebra::transforms::colorTransforms::colorTransformsFactoryExceptionNoTransform("There is no color transform that can convert between the specified color spaces");
+        throw colorTransformsFactoryExceptionNoTransform("There is no color transform that can convert between the specified color spaces");
     }
     return transform;
 }

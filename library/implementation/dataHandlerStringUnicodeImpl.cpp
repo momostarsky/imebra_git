@@ -145,12 +145,12 @@ writingDataHandlerStringUnicode::~writingDataHandlerStringUnicode()
 
     std::string asciiString = dicomConversion::convertFromUnicode(completeString, &m_charsets);
 
-    std::shared_ptr<memory> commitMemory = std::make_shared<memory>((std::uint32_t)asciiString.size());
-    commitMemory->assign((std::uint8_t*)asciiString.data(), (std::uint32_t)asciiString.size());
+    std::shared_ptr<memory> commitMemory = std::make_shared<memory>(asciiString.size());
+    commitMemory->assign((std::uint8_t*)asciiString.data(), asciiString.size());
 
     // The buffer's size must be an even number
     ///////////////////////////////////////////////////////////
-    std::uint32_t memorySize = commitMemory->size();
+    size_t memorySize = commitMemory->size();
     if((memorySize & 0x1) != 0)
     {
         commitMemory->resize(++memorySize);
@@ -219,6 +219,10 @@ void writingDataHandlerStringUnicode::setString(const size_t index, const std::s
 
 void writingDataHandlerStringUnicode::setUnicodeString(const size_t index, const std::wstring& value)
 {
+    if(index >= getSize())
+    {
+        setSize(index + 1);
+    }
     m_strings[index] = value;
 }
 

@@ -350,38 +350,6 @@ private:
 
 };
 
-///////////////////////////////////////////////////////////
-/// \brief This is the base class for the exceptions thrown
-///         by the buffer class.
-///
-///////////////////////////////////////////////////////////
-class bufferException: public std::runtime_error
-{
-public:
-	/// \brief Build a buffer exception
-	///
-	/// @param message the message to store into the exception
-	///
-	///////////////////////////////////////////////////////////
-	bufferException(const std::string& message): std::runtime_error(message){}
-};
-
-
-///////////////////////////////////////////////////////////
-/// \brief This exception is throw by the buffer when an
-///         handler for an unknown data type is asked.
-///
-///////////////////////////////////////////////////////////
-class bufferExceptionUnknownType: public bufferException
-{
-public:
-	/// \brief Build a wrong data type exception
-	///
-	/// @param message the message to store into the exception
-	///
-	///////////////////////////////////////////////////////////
-	bufferExceptionUnknownType(const std::string& message): bufferException(message){}
-};
 
 /// @}
 

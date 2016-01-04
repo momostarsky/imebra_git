@@ -90,12 +90,22 @@ std::shared_ptr<data> dataSet::getTagCreate(std::uint16_t groupId, std::uint16_t
     if(m_groups[groupId].size() <= order)
     {
         m_groups[groupId].resize(order + 1);
+    }
+
+    if(m_groups[groupId][order][tagId] == 0)
+    {
         m_groups[groupId][order][tagId] = std::make_shared<data>();
     }
 
     return m_groups[groupId][order][tagId];
 
     PUNTOEXE_FUNCTION_END();
+}
+
+bool dataSet::bufferExists(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId)
+{
+    std::shared_ptr<data> tag(getTag(groupId, order, tagId));
+    return tag != 0 && tag->bufferExists(bufferId);
 }
 
 
@@ -114,7 +124,7 @@ std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
 
 	// Retrieve the transfer syntax
 	///////////////////////////////////////////////////////////
-    std::wstring transferSyntax = getUnicodeString(0x0002, 0x0, 0x0010, 0x0);
+    std::wstring transferSyntax = getUnicodeString(0x0002, 0x0, 0x0010, 0, 0);
 
 	// Get the right codec
 	///////////////////////////////////////////////////////////
@@ -124,13 +134,13 @@ std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
 	///////////////////////////////////////////////////////////
 	if(pCodec == 0)
 	{
-		PUNTOEXE_THROW(dataSetExceptionUnknownTransferSyntax, "None of the codecs support the specified transfer syntax");
+        PUNTOEXE_THROW(::imebra::dataSetExceptionUnknownTransferSyntax, "None of the codecs support the specified transfer syntax");
 	}
 
     std::shared_ptr<imebra::data> imageTag = getTag(0x7fe0, 0x0, 0x0010);
 	if(imageTag == 0)
 	{
-		PUNTOEXE_THROW(dataSetImageDoesntExist, "The requested image doesn't exist");
+        PUNTOEXE_THROW(::imebra::dataSetImageDoesntExist, "The requested image doesn't exist");
 	}
 	std::string imageStreamDataType = imageTag->getDataType();
 
@@ -139,12 +149,12 @@ std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
 	std::uint32_t numberOfFrames = 1;
 	if(!getDataType(0x0028, 0, 0x0008).empty())
 	{
-		numberOfFrames = getUnsignedLong(0x0028, 0, 0x0008, 0);
+        numberOfFrames = getUnsignedLong(0x0028, 0, 0x0008, 0, 0);
 	}
 
 	if(frameNumber >= numberOfFrames)
 	{
-		PUNTOEXE_THROW(dataSetImageDoesntExist, "The requested image doesn't exist");
+        PUNTOEXE_THROW(::imebra::dataSetImageDoesntExist, "The requested image doesn't exist");
 	}
 
 	// Placeholder for the stream containing the image
@@ -175,7 +185,7 @@ std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
 				imageStream = imageTag->getStreamReader(firstBufferId);
 				if(imageStream == 0)
 				{
-					PUNTOEXE_THROW(dataSetImageDoesntExist, "The requested image doesn't exist");
+                    PUNTOEXE_THROW(::imebra::dataSetImageDoesntExist, "The requested image doesn't exist");
 				}
 			}
 			else
@@ -216,7 +226,7 @@ std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
 		imageStream = imageTag->getStreamReader(0x0);
 		if(imageStream == 0)
 		{
-			PUNTOEXE_THROW(dataSetImageDoesntExist, "The requested image doesn't exist");
+            PUNTOEXE_THROW(::imebra::dataSetImageDoesntExist, "The requested image doesn't exist");
 		}
 
 		// Reset an internal array that keeps track of the
@@ -250,8 +260,8 @@ std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
 		}
 	}
 
-    double pixelDistanceX = getDouble(0x0028, 0x0, 0x0030, 0);
-    double pixelDistanceY = getDouble(0x0028, 0x0, 0x0030, 1);
+    double pixelDistanceX = getDouble(0x0028, 0x0, 0x0030, 0, 0);
+    double pixelDistanceY = getDouble(0x0028, 0x0, 0x0030, 0, 1);
 
     std::shared_ptr<image> pImage;
     pImage = pCodec->getImage(*this, imageStream, imageStreamDataType);
@@ -363,17 +373,17 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
 	//  exist in the dataset and we must save the new image
 	//  using the attributes already stored
 	///////////////////////////////////////////////////////////
-	std::uint32_t numberOfFrames = getUnsignedLong(0x0028, 0, 0x0008, 0);
+    std::uint32_t numberOfFrames = getUnsignedLong(0x0028, 0, 0x0008, 0, 0);
 	if(frameNumber != numberOfFrames)
 	{
-		PUNTOEXE_THROW(dataSetExceptionWrongFrame, "The frames must be inserted in sequence");
+        PUNTOEXE_THROW(::imebra::dataSetExceptionWrongFrame, "The frames must be inserted in sequence");
 	}
 	bool bDontChangeAttributes = (numberOfFrames != 0);
 	if(bDontChangeAttributes)
 	{
-        if(transferSyntax != getUnicodeString(0x0002, 0x0, 0x0010, 0x0))
+        if(transferSyntax != getUnicodeString(0x0002, 0x0, 0x0010, 0, 0))
         {
-            PUNTOEXE_THROW(dataSetExceptionDifferentFormat, "Previous images had a different transfer syntax");
+            PUNTOEXE_THROW(::imebra::dataSetExceptionDifferentFormat, "Previous images had a different transfer syntax");
         }
 	}
 
@@ -382,7 +392,7 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
     std::shared_ptr<codecs::codec> saveCodec(codecs::codecFactory::getCodec(transferSyntax));
 	if(saveCodec == 0L)
 	{
-		PUNTOEXE_THROW(dataSetExceptionUnknownTransferSyntax, "None of the codec support the requested transfer syntax");
+        PUNTOEXE_THROW(::imebra::dataSetExceptionUnknownTransferSyntax, "None of the codec support the requested transfer syntax");
 	}
 
 	// Do we have to save the basic offset table?
@@ -419,12 +429,12 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
         if(channelsNumber > 1)
         {
             bInterleaved = true;
-            setUnsignedLong(0x0028, 0, 0x0006, 0, 0, "US");
+            setUnsignedLong(0x0028, 0, 0x0006, 0, 0, 0, "US");
         }
     }
     else
     {
-        bInterleaved = (getUnsignedLong(0x0028, 0x0, 0x0006, 0x0) == 0x0);
+        bInterleaved = (getUnsignedLong(0x0028, 0x0, 0x0006, 0, 0) == 0x0);
     }
 
 	// If the attributes cannot be changed, then check the
@@ -433,12 +443,12 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
 	if(bDontChangeAttributes)
 	{
 		pImage = convertImageForDataSet(pImage);
-		std::wstring currentColorSpace = getUnicodeString(0x0028, 0x0, 0x0004, 0x0);
+        std::wstring currentColorSpace = getUnicodeString(0x0028, 0x0, 0x0004, 0, 0);
 		bSubSampledX = transforms::colorTransforms::colorTransformsFactory::isSubsampledX(currentColorSpace);
 		bSubSampledY = transforms::colorTransforms::colorTransformsFactory::isSubsampledY(currentColorSpace);
-		b2complement = (getUnsignedLong(0x0028, 0, 0x0103, 0) != 0);
-		allocatedBits = (std::uint8_t)getUnsignedLong(0x0028, 0x0, 0x0100, 0x0);
-		channelsNumber = getUnsignedLong(0x0028, 0x0, 0x0002, 0x0);
+        b2complement = (getUnsignedLong(0x0028, 0, 0x0103, 0, 0) != 0);
+        allocatedBits = (std::uint8_t)getUnsignedLong(0x0028, 0x0, 0x0100, 0, 0);
+        channelsNumber = getUnsignedLong(0x0028, 0x0, 0x0002, 0, 0);
 	}
 
 	// Select the data type OB if not already set in the
@@ -474,9 +484,9 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
 
 			if(moveFirstImage == 0L)
 			{
-				PUNTOEXE_THROW(dataSetExceptionOldFormat, "Cannot move the first image");
+                PUNTOEXE_THROW(::imebra::dataSetExceptionOldFormat, "Cannot move the first image");
 			}
-			std::uint32_t bufferSize=imageHandler0->getSize();
+            size_t bufferSize=imageHandler0->getSize();
 			moveFirstImage->setSize(bufferSize);
 			::memcpy(moveFirstImage->getMemoryBuffer(), imageHandler0->getMemoryBuffer(), bufferSize);
 		}
@@ -541,17 +551,17 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
 		dataHandlerTransferSyntax->setUnicodeString(0, transferSyntax);
 
 		std::wstring colorSpace = pImage->getColorSpace();
-		setUnicodeString(0x0028, 0x0, 0x0004, 0x0, transforms::colorTransforms::colorTransformsFactory::makeSubsampled(colorSpace, bSubSampledX, bSubSampledY));
-		setUnsignedLong(0x0028, 0x0, 0x0006, 0x0, bInterleaved ? 0 : 1);
-		setUnsignedLong(0x0028, 0x0, 0x0100, 0x0, allocatedBits);            // allocated bits
-		setUnsignedLong(0x0028, 0x0, 0x0101, 0x0, pImage->getHighBit() + 1); // stored bits
-		setUnsignedLong(0x0028, 0x0, 0x0102, 0x0, pImage->getHighBit());     // high bit
-		setUnsignedLong(0x0028, 0x0, 0x0103, 0x0, b2complement ? 1 : 0);
-		setUnsignedLong(0x0028, 0x0, 0x0002, 0x0, channelsNumber);
+        setUnicodeString(0x0028, 0x0, 0x0004, 0, 0, transforms::colorTransforms::colorTransformsFactory::makeSubsampled(colorSpace, bSubSampledX, bSubSampledY));
+        setUnsignedLong(0x0028, 0x0, 0x0006, 0, 0, bInterleaved ? 0 : 1);
+        setUnsignedLong(0x0028, 0x0, 0x0100, 0, 0, allocatedBits);            // allocated bits
+        setUnsignedLong(0x0028, 0x0, 0x0101, 0, 0, pImage->getHighBit() + 1); // stored bits
+        setUnsignedLong(0x0028, 0x0, 0x0102, 0, 0, pImage->getHighBit());     // high bit
+        setUnsignedLong(0x0028, 0x0, 0x0103, 0, 0, b2complement ? 1 : 0);
+        setUnsignedLong(0x0028, 0x0, 0x0002, 0, 0, channelsNumber);
 		std::uint32_t imageSizeX, imageSizeY;
 		pImage->getSize(&imageSizeX, &imageSizeY);
-		setUnsignedLong(0x0028, 0x0, 0x0011, 0x0, imageSizeX);
-		setUnsignedLong(0x0028, 0x0, 0x0010, 0x0, imageSizeY);
+        setUnsignedLong(0x0028, 0x0, 0x0011, 0, 0, imageSizeX);
+        setUnsignedLong(0x0028, 0x0, 0x0010, 0, 0, imageSizeY);
 
 		if(colorSpace == L"PALETTECOLOR")
 		{
@@ -573,7 +583,7 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
 	// Update the number of frames
 	///////////////////////////////////////////////////////////
 	numberOfFrames = frameNumber + 1;
-	setUnsignedLong(0x0028, 0, 0x0008, 0, numberOfFrames );
+    setUnsignedLong(0x0028, 0, 0x0008, 0, 0, numberOfFrames );
 
 	// Update the offsets tag with the image's offsets
 	///////////////////////////////////////////////////////////
@@ -695,7 +705,7 @@ std::uint32_t dataSet::getFrameBufferId(std::uint32_t offset, std::uint32_t* pLe
 		bufferSize += 4; // one DWORD for the tag length
 		if(bufferSize > offset)
 		{
-			PUNTOEXE_THROW(dataSetImageDoesntExist, "Image not in the offset table");
+            PUNTOEXE_THROW(::imebra::dataSetImageDoesntExist, "Image not in the offset table");
 		}
 		offset -= bufferSize;
 		++scanBuffers;
@@ -703,7 +713,7 @@ std::uint32_t dataSet::getFrameBufferId(std::uint32_t offset, std::uint32_t* pLe
 
 	if(offset != 0)
 	{
-		PUNTOEXE_THROW(dataSetCorruptedOffsetTable, "The basic offset table is corrupted");
+        PUNTOEXE_THROW(::imebra::dataSetCorruptedOffsetTable, "The basic offset table is corrupted");
 	}
 
 	return scanBuffers;
@@ -731,7 +741,7 @@ std::uint32_t dataSet::getFrameBufferIds(std::uint32_t frameNumber, std::uint32_
 
 	if(startOffset == 0xffffffff)
 	{
-		PUNTOEXE_THROW(dataSetImageDoesntExist, "Image not in the table offset");
+        PUNTOEXE_THROW(::imebra::dataSetImageDoesntExist, "Image not in the table offset");
 	}
 
 	std::uint32_t startLength, endLength;
@@ -806,29 +816,29 @@ std::shared_ptr<image> dataSet::convertImageForDataSet(std::shared_ptr<image> so
 	std::wstring colorSpace = sourceImage->getColorSpace();
 	std::uint32_t highBit = sourceImage->getHighBit();
 
-	std::uint32_t currentWidth  = getUnsignedLong(0x0028, 0x0, 0x0011, 0x0);
-	std::uint32_t currentHeight = getUnsignedLong(0x0028, 0x0, 0x0010, 0x0);
-	std::uint32_t currentHighBit = getUnsignedLong(0x0028, 0x0, 0x0102, 0x0);
+    std::uint32_t currentWidth  = getUnsignedLong(0x0028, 0x0, 0x0011, 0, 0);
+    std::uint32_t currentHeight = getUnsignedLong(0x0028, 0x0, 0x0010, 0, 0);
+    std::uint32_t currentHighBit = getUnsignedLong(0x0028, 0x0, 0x0102, 0, 0);
 
 
 
 
 
-	std::wstring currentColorSpace = transforms::colorTransforms::colorTransformsFactory::normalizeColorSpace(getUnicodeString(0x0028, 0x0, 0x0004, 0x0));
+    std::wstring currentColorSpace = transforms::colorTransforms::colorTransformsFactory::normalizeColorSpace(getUnicodeString(0x0028, 0x0, 0x0004, 0, 0));
 
 	if(currentWidth != imageWidth || currentHeight != imageHeight)
 	{
-		PUNTOEXE_THROW(dataSetExceptionDifferentFormat, "The dataset already contains an image with a different size");
+        PUNTOEXE_THROW(::imebra::dataSetExceptionDifferentFormat, "The dataset already contains an image with a different size");
 	}
 
 	if(currentHighBit < highBit)
 	{
-		PUNTOEXE_THROW(dataSetExceptionDifferentFormat, "The high bit in the dataset is smaller than the requested one");
+        PUNTOEXE_THROW(::imebra::dataSetExceptionDifferentFormat, "The high bit in the dataset is smaller than the requested one");
 	}
 
 	if( !transforms::colorTransforms::colorTransformsFactory::isMonochrome(colorSpace) && colorSpace != currentColorSpace)
 	{
-		PUNTOEXE_THROW(dataSetExceptionDifferentFormat, "The requested color space doesn't match the one already stored in the dataset");
+        PUNTOEXE_THROW(::imebra::dataSetExceptionDifferentFormat, "The requested color space doesn't match the one already stored in the dataset");
 	}
 
     std::shared_ptr<transforms::transformsChain> chain(new transforms::transformsChain);
@@ -838,7 +848,7 @@ std::shared_ptr<image> dataSet::convertImageForDataSet(std::shared_ptr<image> so
         std::shared_ptr<transforms::transform> colorChain = pColorFactory->getTransform(colorSpace, currentColorSpace);
 		if(colorChain->isEmpty())
 		{
-			PUNTOEXE_THROW(dataSetExceptionDifferentFormat, "The image color space cannot be converted to the dataset color space");
+            PUNTOEXE_THROW(::imebra::dataSetExceptionDifferentFormat, "The image color space cannot be converted to the dataset color space");
 		}
 		chain->addTransform(colorChain);
 	}
@@ -854,7 +864,7 @@ std::shared_ptr<image> dataSet::convertImageForDataSet(std::shared_ptr<image> so
 	}
 
     std::shared_ptr<image> destImage(new image);
-	bool b2Complement(getUnsignedLong(0x0028, 0x0, 0x0103, 0x0)!=0x0);
+    bool b2Complement(getUnsignedLong(0x0028, 0x0, 0x0103, 0, 0)!=0x0);
 	image::bitDepth depth;
 	if(b2Complement)
 		depth=highBit>=8 ? image::depthS16 : image::depthS8;
@@ -879,7 +889,7 @@ std::shared_ptr<image> dataSet::convertImageForDataSet(std::shared_ptr<image> so
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<dataSet> dataSet::getSequenceItem(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t itemId)
+std::shared_ptr<dataSet> dataSet::getSequenceItem(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t itemId)
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getSequenceItem");
 
@@ -922,7 +932,7 @@ std::shared_ptr<lut> dataSet::getLut(std::uint16_t groupId, std::uint16_t tagId,
 		pLUT->setLut(
 			descriptorHandle,
 			dataHandle,
-			embeddedLUT->getUnicodeString(0x0028, 0x0, 0x3003, 0x0));
+            embeddedLUT->getUnicodeString(0x0028, 0x0, 0x3003, 0, 0));
 	}
 	return pLUT;
 
@@ -964,11 +974,11 @@ std::shared_ptr<waveform> dataSet::getWaveform(std::uint32_t waveformId)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::int32_t dataSet::getSignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber) const
+std::int32_t dataSet::getSignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getSignedLong");
 
-    std::shared_ptr<handlers::readingDataHandler> dataHandler = getReadingDataHandler(groupId, order, tagId, 0);
+    std::shared_ptr<handlers::readingDataHandler> dataHandler = getReadingDataHandler(groupId, order, tagId, bufferId);
 	if(dataHandler == 0)
 	{
 		return 0;
@@ -989,11 +999,11 @@ std::int32_t dataSet::getSignedLong(std::uint16_t groupId, std::uint16_t order, 
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataSet::setSignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber, std::int32_t newValue, const std::string& defaultType /* = "" */)
+void dataSet::setSignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::int32_t newValue, const std::string& defaultType /* = "" */)
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::setSignedLong");
 
-    std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, 0, defaultType);
+    std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, bufferId, defaultType);
 	if(dataHandler != 0)
 	{
         if(dataHandler->getSize() <= elementNumber)
@@ -1016,11 +1026,11 @@ void dataSet::setSignedLong(std::uint16_t groupId, std::uint16_t order, std::uin
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::uint32_t dataSet::getUnsignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber) const
+std::uint32_t dataSet::getUnsignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getUnignedLong");
 
-    std::shared_ptr<handlers::readingDataHandler> dataHandler = getReadingDataHandler(groupId, order, tagId, 0);
+    std::shared_ptr<handlers::readingDataHandler> dataHandler = getReadingDataHandler(groupId, order, tagId, bufferId);
 	if(dataHandler == 0)
 	{
 		return 0;
@@ -1041,11 +1051,11 @@ std::uint32_t dataSet::getUnsignedLong(std::uint16_t groupId, std::uint16_t orde
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataSet::setUnsignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber, std::uint32_t newValue, const std::string& defaultType /* = "" */)
+void dataSet::setUnsignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::uint32_t newValue, const std::string& defaultType /* = "" */)
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::setUnsignedLong");
 
-    std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, 0, defaultType);
+    std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, bufferId, defaultType);
 	if(dataHandler != 0)
 	{
 		if(dataHandler->getSize() <= elementNumber)
@@ -1068,11 +1078,11 @@ void dataSet::setUnsignedLong(std::uint16_t groupId, std::uint16_t order, std::u
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-double dataSet::getDouble(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber) const
+double dataSet::getDouble(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getDouble");
 
-    std::shared_ptr<handlers::readingDataHandler> dataHandler = getReadingDataHandler(groupId, order, tagId, 0);
+    std::shared_ptr<handlers::readingDataHandler> dataHandler = getReadingDataHandler(groupId, order, tagId, bufferId);
 	if(dataHandler == 0)
 	{
 		return 0.0;
@@ -1093,11 +1103,11 @@ double dataSet::getDouble(std::uint16_t groupId, std::uint16_t order, std::uint1
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataSet::setDouble(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber, double newValue, const std::string& defaultType /* = "" */)
+void dataSet::setDouble(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, double newValue, const std::string& defaultType /* = "" */)
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::setDouble");
 
-    std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, 0, defaultType);
+    std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, bufferId, defaultType);
 	if(dataHandler != 0)
 	{
 		if(dataHandler->getSize() <= elementNumber)
@@ -1120,11 +1130,11 @@ void dataSet::setDouble(std::uint16_t groupId, std::uint16_t order, std::uint16_
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::string dataSet::getString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber) const
+std::string dataSet::getString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getString");
 
-    std::shared_ptr<handlers::readingDataHandler> dataHandler = getReadingDataHandler(groupId, order, tagId, 0L);
+    std::shared_ptr<handlers::readingDataHandler> dataHandler = getReadingDataHandler(groupId, order, tagId, bufferId);
 	std::string returnValue;
 	if(dataHandler != 0)
 	{
@@ -1146,11 +1156,11 @@ std::string dataSet::getString(std::uint16_t groupId, std::uint16_t order, std::
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::wstring dataSet::getUnicodeString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber) const
+std::wstring dataSet::getUnicodeString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getUnicodeString");
 
-    std::shared_ptr<handlers::readingDataHandler> dataHandler = getReadingDataHandler(groupId, order, tagId, 0L);
+    std::shared_ptr<handlers::readingDataHandler> dataHandler = getReadingDataHandler(groupId, order, tagId, bufferId);
 	std::wstring returnValue;
 	if(dataHandler != 0)
 	{
@@ -1172,11 +1182,11 @@ std::wstring dataSet::getUnicodeString(std::uint16_t groupId, std::uint16_t orde
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataSet::setString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber, const std::string& newString, const std::string& defaultType /* = "" */)
+void dataSet::setString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, const std::string& newString, const std::string& defaultType /* = "" */)
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::setString");
 
-    std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, 0L, defaultType);
+    std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, bufferId, defaultType);
 	if(dataHandler != 0)
 	{
 		if(dataHandler->getSize() <= elementNumber)
@@ -1199,11 +1209,11 @@ void dataSet::setString(std::uint16_t groupId, std::uint16_t order, std::uint16_
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataSet::setUnicodeString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber, const std::wstring& newString, const std::string& defaultType /* = "" */)
+void dataSet::setUnicodeString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, const std::wstring& newString, const std::string& defaultType /* = "" */)
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::setUnicodeString");
 
-    std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, 0L, defaultType);
+    std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, bufferId, defaultType);
 	if(dataHandler != 0)
 	{
 		if(dataHandler->getSize() <= elementNumber)
@@ -1216,11 +1226,11 @@ void dataSet::setUnicodeString(std::uint16_t groupId, std::uint16_t order, std::
 	PUNTOEXE_FUNCTION_END();
 }
 
-void dataSet::setAge(int groupId, int order, int tagId, int elementNumber, int age, ::imebra::ageUnit_t units, const std::string& defaultType /* = "" */)
+void dataSet::setAge(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, int age, ::imebra::ageUnit_t units, const std::string& defaultType /* = "" */)
 {
     PUNTOEXE_FUNCTION_START(L"dataSet::setAge");
 
-    std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, 0L, defaultType);
+    std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, bufferId, defaultType);
     if(dataHandler != 0)
     {
         if(dataHandler->getSize() <= elementNumber)
@@ -1233,11 +1243,11 @@ void dataSet::setAge(int groupId, int order, int tagId, int elementNumber, int a
     PUNTOEXE_FUNCTION_END();
 }
 
-int dataSet::getAge(int groupId, int order, int tagId, int elementNumber, ::imebra::ageUnit_t* pUnits) const
+int dataSet::getAge(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, ::imebra::ageUnit_t* pUnits) const
 {
     PUNTOEXE_FUNCTION_START(L"dataSet::getAge");
 
-    std::shared_ptr<handlers::readingDataHandler> dataHandler = getReadingDataHandler(groupId, order, tagId, 0L);
+    std::shared_ptr<handlers::readingDataHandler> dataHandler = getReadingDataHandler(groupId, order, tagId, bufferId);
     if(dataHandler != 0)
     {
         return dataHandler->getAge(elementNumber, pUnits);
@@ -1261,7 +1271,7 @@ int dataSet::getAge(int groupId, int order, int tagId, int elementNumber, ::imeb
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<handlers::readingDataHandler> dataSet::getReadingDataHandler(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId) const
+std::shared_ptr<handlers::readingDataHandler> dataSet::getReadingDataHandler(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getDataHandler");
 
@@ -1279,7 +1289,7 @@ std::shared_ptr<handlers::readingDataHandler> dataSet::getReadingDataHandler(std
 }
 
 
-std::shared_ptr<handlers::writingDataHandler> dataSet::getWritingDataHandler(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId, const std::string& defaultType /* ="" */)
+std::shared_ptr<handlers::writingDataHandler> dataSet::getWritingDataHandler(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, const std::string& defaultType /* ="" */)
 {
     PUNTOEXE_FUNCTION_START(L"dataSet::getDataHandler");
 
@@ -1305,7 +1315,7 @@ std::shared_ptr<handlers::writingDataHandler> dataSet::getWritingDataHandler(std
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<streamReader> dataSet::getStreamReader(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId) const
+std::shared_ptr<streamReader> dataSet::getStreamReader(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getStream");
 
@@ -1326,7 +1336,7 @@ std::shared_ptr<streamReader> dataSet::getStreamReader(std::uint16_t groupId, st
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<streamWriter> dataSet::getStreamWriter(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId, const std::string& dataType /* = "" */)
+std::shared_ptr<streamWriter> dataSet::getStreamWriter(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, const std::string& dataType /* = "" */)
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getStream");
 
@@ -1353,7 +1363,7 @@ std::shared_ptr<streamWriter> dataSet::getStreamWriter(std::uint16_t groupId, st
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<handlers::readingDataHandlerRaw> dataSet::getReadingDataHandlerRaw(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId) const
+std::shared_ptr<handlers::readingDataHandlerRaw> dataSet::getReadingDataHandlerRaw(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getDataHandlerRaw");
 
@@ -1371,7 +1381,7 @@ std::shared_ptr<handlers::readingDataHandlerRaw> dataSet::getReadingDataHandlerR
 }
 
 
-std::shared_ptr<handlers::writingDataHandlerRaw> dataSet::getWritingDataHandlerRaw(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId, const std::string& defaultType /* ="" */)
+std::shared_ptr<handlers::writingDataHandlerRaw> dataSet::getWritingDataHandlerRaw(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, const std::string& defaultType /* ="" */)
 {
     PUNTOEXE_FUNCTION_START(L"dataSet::getDataHandlerRaw");
 

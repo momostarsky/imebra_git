@@ -11,6 +11,7 @@ $fileHeader$
 #include "imageImpl.h"
 #include "colorTransformsFactoryImpl.h"
 #include "bufferImpl.h"
+#include "../include/imebra/exceptions.h"
 
 namespace puntoexe
 {
@@ -53,7 +54,7 @@ std::shared_ptr<handlers::writingDataHandlerNumericBase> image::create(
 
 	if(sizeX == 0 || sizeY == 0)
 	{
-		PUNTOEXE_THROW(imageExceptionInvalidSize, "An invalid image's size has been specified");
+        PUNTOEXE_THROW(::imebra::imageExceptionInvalidSize, "An invalid image's size has been specified");
 	}
 
 	// Normalize the color space (remove _420 & _422 and
@@ -66,7 +67,7 @@ std::shared_ptr<handlers::writingDataHandlerNumericBase> image::create(
 	m_channelsNumber = transforms::colorTransforms::colorTransformsFactory::getNumberOfChannels(inputColorSpace);
 	if(m_channelsNumber == 0)
 	{
-		PUNTOEXE_THROW(imageExceptionUnknownColorSpace, "Cannot recognize the specified color space");
+        PUNTOEXE_THROW(::imebra::imageExceptionUnknownColorSpace, "Cannot recognize the specified color space");
 	}
 
 	// Find the datatype to use to allocate the
@@ -104,7 +105,7 @@ std::shared_ptr<handlers::writingDataHandlerNumericBase> image::create(
 		defaultHighBit=31;
         break;
 	default:
-		PUNTOEXE_THROW(imageExceptionUnknownDepth, "Unknown depth");
+        PUNTOEXE_THROW(::imebra::imageExceptionUnknownDepth, "Unknown depth");
 	}
 
 	// Adjust the high bit value
@@ -197,7 +198,7 @@ std::shared_ptr<handlers::writingDataHandlerNumericBase> image::getWritingDataHa
         return std::shared_ptr<handlers::writingDataHandlerNumericBase>(0);
     }
 
-    std::shared_ptr<handlers::dataHandler> imageHandler(m_buffer->getWritingDataHandler(m_sizeX * m_sizeY * m_channelsNumber));
+    std::shared_ptr<handlers::writingDataHandler> imageHandler(m_buffer->getWritingDataHandler(m_sizeX * m_sizeY * m_channelsNumber));
 
     return std::dynamic_pointer_cast<handlers::writingDataHandlerNumericBase>(imageHandler);
 

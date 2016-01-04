@@ -10,6 +10,8 @@ $fileHeader$
 #include "exceptionImpl.h"
 #include "LUTImpl.h"
 #include "dataHandlerNumericImpl.h"
+#include "../include/imebra/exceptions.h"
+
 #include <string.h>
 
 namespace puntoexe
@@ -51,7 +53,7 @@ void lut::setLut(std::shared_ptr<handlers::readingDataHandler> pDescriptor, std:
 
 	if(pDescriptor->getSize() < 3)
 	{
-		PUNTOEXE_THROW(lutExceptionCorrupted, "The LUT is corrupted");
+        PUNTOEXE_THROW(::imebra::lutExceptionCorrupted, "The LUT is corrupted");
 	}
 	std::int32_t lutSize=pDescriptor->getSignedLong(0);
 	if(lutSize == 0)
@@ -64,7 +66,7 @@ void lut::setLut(std::shared_ptr<handlers::readingDataHandler> pDescriptor, std:
 
 	if(pData == 0 || (std::uint32_t)lutSize != pData->getSize())
 	{
-		PUNTOEXE_THROW(lutExceptionCorrupted, "The LUT is corrupted");
+        PUNTOEXE_THROW(::imebra::lutExceptionCorrupted, "The LUT is corrupted");
 	}
 
 	create(lutSize, lutFirstMapped, (std::uint8_t)lutBits, description);
@@ -236,7 +238,7 @@ void lut::setLutValue(std::int32_t startValue, std::int32_t lutValue)
 
 	if(startValue<m_firstMapped)
 	{
-		PUNTOEXE_THROW(lutExceptionWrongIndex, "The start index is below the first mapped index");
+        PUNTOEXE_THROW(::imebra::lutExceptionWrongIndex, "The start index is below the first mapped index");
 	}
 	startValue-=m_firstMapped;
 	if(startValue<(std::int32_t)m_size)

@@ -25,7 +25,9 @@ namespace imebra
 class IMEBRA_API CodecFactory
 {
 public:
-    static DataSet load(StreamReader reader, size_t maxSizeBufferLoad);
+    static DataSet load(StreamReader& reader, size_t maxSizeBufferLoad);
+    static DataSet load(const std::wstring& fileName, size_t maxSizeBufferLoad);
+    static DataSet load(const std::string& fileName, size_t maxSizeBufferLoad);
 
     enum codecType
     {
@@ -33,7 +35,9 @@ public:
         jpeg
     };
 
-    static void save(DataSet dataSet, StreamWriter writer, codecType codecType);
+    static void save(const DataSet& dataSet, StreamWriter& writer, codecType codecType);
+    static void save(const DataSet& dataSet, const std::wstring& fileName, codecType codecType);
+    static void save(const DataSet& dataSet, const std::string& fileName, codecType codecType);
 };
 
 ///@}

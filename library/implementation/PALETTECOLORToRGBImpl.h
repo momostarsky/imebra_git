@@ -125,18 +125,6 @@ public:
 
 };
 
-class PALETTECOLORToRGBException: public colorTransformException
-{
-public:
-	PALETTECOLORToRGBException(const std::string& message): colorTransformException(message){}
-};
-
-class PALETTECOLORToRGBExceptionWhoToldYouSo: public PALETTECOLORToRGBException
-{
-public:
-	PALETTECOLORToRGBExceptionWhoToldYouSo(const std::string& message): PALETTECOLORToRGBException(message){}
-};
-
 /// @}
 
 } // namespace colorTransforms

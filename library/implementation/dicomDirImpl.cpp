@@ -13,6 +13,7 @@ $fileHeader$
 #include "dataHandlerNumericImpl.h"
 #include "nullStreamImpl.h"
 #include "streamWriterImpl.h"
+#include "../include/imebra/exceptions.h"
 #include <map>
 #include <string>
 
@@ -180,7 +181,7 @@ void directoryRecord::setReferencedRecord(std::shared_ptr<directoryRecord> pRefe
 ///////////////////////////////////////////////////////////
 std::wstring directoryRecord::getFilePart(std::uint32_t part) const
 {
-	return getRecordDataSet()->getUnicodeString(0x0004, 0, 0x1500, part);
+    return getRecordDataSet()->getUnicodeString(0x0004, 0, 0x1500, 0, part);
 }
 
 
@@ -195,7 +196,7 @@ std::wstring directoryRecord::getFilePart(std::uint32_t part) const
 ///////////////////////////////////////////////////////////
 void directoryRecord::setFilePart(std::uint32_t part, const std::wstring partName)
 {
-    getRecordDataSet()->setUnicodeString(0x0004, 0, 0x1500, part, partName);
+    getRecordDataSet()->setUnicodeString(0x0004, 0, 0x1500, 0, part, partName);
 }
 
 
@@ -223,7 +224,7 @@ directoryRecord::tDirectoryRecordType directoryRecord::getType() const
 
 	// Invalid value found . Throw an exception
 	///////////////////////////////////////////////////////////
-	throw dicomDirUnknownDirectoryRecordType("Unknown directory record type");
+    throw ::imebra::dicomDirUnknownDirectoryRecordType("Unknown directory record type");
 }
 
 
@@ -238,7 +239,7 @@ directoryRecord::tDirectoryRecordType directoryRecord::getType() const
 ///////////////////////////////////////////////////////////
 std::wstring directoryRecord::getTypeString() const
 {
-	return getRecordDataSet()->getUnicodeString(0x0004, 0, 0x1430, 0);
+    return getRecordDataSet()->getUnicodeString(0x0004, 0, 0x1430, 0, 0);
 }
 
 
@@ -258,14 +259,14 @@ void directoryRecord::setType(tDirectoryRecordType recordType)
 	{
 		if(typesList[scanTypes].m_type == recordType)
 		{
-			getRecordDataSet()->setUnicodeString(0x0004, 0, 0x1430, 0, typesList[scanTypes].m_name);
+            getRecordDataSet()->setUnicodeString(0x0004, 0, 0x1430, 0, 0, typesList[scanTypes].m_name);
 			return;
 		}
 	}
 
 	// Trying to set an invalid type. Throw an exception
 	///////////////////////////////////////////////////////////
-	throw dicomDirUnknownDirectoryRecordType("Unknown directory record type");
+    throw ::imebra::dicomDirUnknownDirectoryRecordType("Unknown directory record type");
 }
 
 
@@ -280,7 +281,7 @@ void directoryRecord::setType(tDirectoryRecordType recordType)
 ///////////////////////////////////////////////////////////
 void directoryRecord::setTypeString(const std::wstring& recordType)
 {
-	getRecordDataSet()->setUnicodeString(0x0004, 0, 0x1430, 0, recordType);
+    getRecordDataSet()->setUnicodeString(0x0004, 0, 0x1430, 0, 0, recordType);
 }
 
 
@@ -299,11 +300,11 @@ void directoryRecord::updateOffsets()
 	///////////////////////////////////////////////////////////
 	if(m_pNextRecord == 0)
 	{
-		getRecordDataSet()->setUnsignedLong(0x0004, 0, 0x1400, 0, 0);
+        getRecordDataSet()->setUnsignedLong(0x0004, 0, 0x1400, 0, 0, 0);
 	}
 	else
 	{
-		getRecordDataSet()->setUnsignedLong(0x0004, 0, 0x1400, 0, m_pNextRecord->getRecordDataSet()->getItemOffset());
+        getRecordDataSet()->setUnsignedLong(0x0004, 0, 0x1400, 0, 0, m_pNextRecord->getRecordDataSet()->getItemOffset());
 		m_pNextRecord->updateOffsets();
 	}
 
@@ -311,11 +312,11 @@ void directoryRecord::updateOffsets()
 	///////////////////////////////////////////////////////////
 	if(m_pFirstChildRecord == 0)
 	{
-		getRecordDataSet()->setUnsignedLong(0x0004, 0, 0x1420, 0, 0);
+        getRecordDataSet()->setUnsignedLong(0x0004, 0, 0x1420, 0, 0, 0);
 	}
 	else
 	{
-		getRecordDataSet()->setUnsignedLong(0x0004, 0, 0x1420, 0, m_pFirstChildRecord->getRecordDataSet()->getItemOffset());
+        getRecordDataSet()->setUnsignedLong(0x0004, 0, 0x1420, 0, 0, m_pFirstChildRecord->getRecordDataSet()->getItemOffset());
 		m_pFirstChildRecord->updateOffsets();
 	}
 
@@ -323,11 +324,11 @@ void directoryRecord::updateOffsets()
 	///////////////////////////////////////////////////////////
 	if(m_pReferencedRecord == 0)
 	{
-		getRecordDataSet()->setUnsignedLong(0x0004, 0, 0x1504, 0, 0);
+        getRecordDataSet()->setUnsignedLong(0x0004, 0, 0x1504, 0, 0, 0);
 	}
 	else
 	{
-		getRecordDataSet()->setUnsignedLong(0x0004, 0, 0x1504, 0, m_pReferencedRecord->getRecordDataSet()->getItemOffset());
+        getRecordDataSet()->setUnsignedLong(0x0004, 0, 0x1504, 0, 0, m_pReferencedRecord->getRecordDataSet()->getItemOffset());
 		m_pReferencedRecord->updateOffsets();
 	}
 }
@@ -347,7 +348,7 @@ void directoryRecord::checkCircularReference(directoryRecord* pStartRecord)
 {
 	if(this == pStartRecord)
 	{
-		throw dicomDirCircularReferenceException("Circular reference detected");
+        throw ::imebra::dicomDirCircularReferenceException("Circular reference detected");
 	}
 
 	if(m_pNextRecord != 0)
@@ -457,9 +458,9 @@ dicomDir::dicomDir(std::shared_ptr<dataSet> pDataSet):
 	///////////////////////////////////////////////////////////
 	for(tOffsetsToRecords::iterator scanRecords(offsetsToRecords.begin()); scanRecords != offsetsToRecords.end(); ++scanRecords)
 	{
-		std::uint32_t nextRecordOffset(scanRecords->second->getRecordDataSet()->getUnsignedLong(0x0004, 0, 0x1400, 0));
-		std::uint32_t childRecordOffset(scanRecords->second->getRecordDataSet()->getUnsignedLong(0x0004, 0, 0x1420, 0));
-		std::uint32_t referencedRecordOffset(scanRecords->second->getRecordDataSet()->getUnsignedLong(0x0004, 0, 0x1504, 0));
+        std::uint32_t nextRecordOffset(scanRecords->second->getRecordDataSet()->getUnsignedLong(0x0004, 0, 0x1400, 0, 0));
+        std::uint32_t childRecordOffset(scanRecords->second->getRecordDataSet()->getUnsignedLong(0x0004, 0, 0x1420, 0, 0));
+        std::uint32_t referencedRecordOffset(scanRecords->second->getRecordDataSet()->getUnsignedLong(0x0004, 0, 0x1504, 0, 0));
 
 		tOffsetsToRecords::iterator findNextRecord(offsetsToRecords.find(nextRecordOffset));
 		if(findNextRecord != offsetsToRecords.end())
@@ -482,7 +483,7 @@ dicomDir::dicomDir(std::shared_ptr<dataSet> pDataSet):
 
 	// Get the position of the first record
 	///////////////////////////////////////////////////////////
-	tOffsetsToRecords::iterator findRecord(offsetsToRecords.find(m_pDataSet->getUnsignedLong(0x0004, 0, 0x1200, 0)));
+    tOffsetsToRecords::iterator findRecord(offsetsToRecords.find(m_pDataSet->getUnsignedLong(0x0004, 0, 0x1200, 0, 0)));
 	if(findRecord == offsetsToRecords.end())
 	{
 		return;
@@ -562,9 +563,9 @@ std::shared_ptr<dataSet> dicomDir::buildDataSet()
 {
 	// Adjust the transfer syntax if it isn't already set
 	///////////////////////////////////////////////////////////
-	if(m_pDataSet->getString(0x2, 0, 0x10, 0) == "")
+    if(m_pDataSet->getString(0x2, 0, 0x10, 0, 0) == "")
 	{
-		m_pDataSet->setString(0x2, 0, 0x10, 0, "1.2.840.10008.1.2.1");
+        m_pDataSet->setString(0x2, 0, 0x10, 0, 0, "1.2.840.10008.1.2.1");
 	}
 
 	// Adjust the version if it isn't already set
@@ -578,7 +579,7 @@ std::shared_ptr<dataSet> dicomDir::buildDataSet()
 
 	// Adjust the SOP class UID if it isn't already set
 	///////////////////////////////////////////////////////////
-    m_pDataSet->setString(0x2, 0, 0x2, 0, "1.2.840.10008.1.3.10");
+    m_pDataSet->setString(0x2, 0, 0x2, 0, 0, "1.2.840.10008.1.3.10");
 
 	// Allocate offset fields
 	///////////////////////////////////////////////////////////
@@ -586,7 +587,7 @@ std::shared_ptr<dataSet> dicomDir::buildDataSet()
 	{
 		m_pFirstRootRecord->updateOffsets();
 	}
-	m_pDataSet->setUnsignedLong(0x0004, 0, 0x1200, 0, 0);
+    m_pDataSet->setUnsignedLong(0x0004, 0, 0x1200, 0, 0, 0);
 
 
 	// Save to a null stream in order to update the offsets
@@ -601,7 +602,7 @@ std::shared_ptr<dataSet> dicomDir::buildDataSet()
 	if(m_pFirstRootRecord != 0)
 	{
 		m_pFirstRootRecord->updateOffsets();
-		m_pDataSet->setUnsignedLong(0x0004, 0, 0x1200, 0, m_pFirstRootRecord->getRecordDataSet()->getItemOffset());
+        m_pDataSet->setUnsignedLong(0x0004, 0, 0x1200, 0, 0, m_pFirstRootRecord->getRecordDataSet()->getItemOffset());
 	}
 
 	return m_pDataSet;

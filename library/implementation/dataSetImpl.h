@@ -128,6 +128,8 @@ public:
 	///////////////////////////////////////////////////////////
     std::shared_ptr<data> getTag(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId) const;
     std::shared_ptr<data> getTagCreate(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId);
+
+    bool bufferExists(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId);
 	
 	//@}
 
@@ -316,7 +318,7 @@ public:
 	///                 dataset is returned
 	///
 	///////////////////////////////////////////////////////////
-	std::shared_ptr<dataSet> getSequenceItem(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t itemId);
+    std::shared_ptr<dataSet> getSequenceItem(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t itemId);
 
 	/// \brief Retrieve a LUT.
 	///
@@ -389,7 +391,7 @@ public:
 	/// @return        The tag's content, as a signed long
 	///
 	///////////////////////////////////////////////////////////
-    std::int32_t getSignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber) const;
+    std::int32_t getSignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
 
 	/// \brief Set a tag's value as a signed long.
 	///
@@ -420,7 +422,7 @@ public:
 	///                 this parameter
 	///
 	///////////////////////////////////////////////////////////
-    void setSignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber, std::int32_t newValue, const std::string& defaultType = "");
+    void setSignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::int32_t newValue, const std::string& defaultType = "");
 
 	/// \brief Retrieve a tag's value as an unsigned long.
 	///
@@ -447,7 +449,7 @@ public:
 	/// @return        The tag's content, as an unsigned long
 	///
 	///////////////////////////////////////////////////////////
-    std::uint32_t getUnsignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber) const;
+    std::uint32_t getUnsignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
 
 	/// \brief Set a tag's value as an unsigned long.
 	///
@@ -478,7 +480,7 @@ public:
 	///                 this parameter
 	///
 	///////////////////////////////////////////////////////////
-    void setUnsignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber, std::uint32_t newValue, const std::string& defaultType = "");
+    void setUnsignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::uint32_t newValue, const std::string& defaultType = "");
 
 	/// \brief Retrieve a tag's value as a double.
 	///
@@ -505,7 +507,7 @@ public:
 	/// @return        The tag's content, as a double
 	///
 	///////////////////////////////////////////////////////////
-    double getDouble(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber) const;
+    double getDouble(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
 	
 	/// \brief Set a tag's value as a double.
 	///
@@ -536,7 +538,7 @@ public:
 	///                 this parameter
 	///
 	///////////////////////////////////////////////////////////
-    void setDouble(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber, double newValue, const std::string& defaultType = "");
+    void setDouble(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, double newValue, const std::string& defaultType = "");
 
 	/// \brief Retrieve a tag's value as a string.
 	///        getUnicodeString() is preferred over this
@@ -565,7 +567,7 @@ public:
 	/// @return        The tag's content, as a string
 	///
 	///////////////////////////////////////////////////////////
-    std::string getString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber) const;
+    std::string getString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
 
 	/// \brief Retrieve a tag's value as an unicode string.
 	///
@@ -592,7 +594,7 @@ public:
 	/// @return        The tag's content, as an unicode string
 	///
 	///////////////////////////////////////////////////////////
-    std::wstring getUnicodeString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber) const;
+    std::wstring getUnicodeString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
 
 	/// \brief Set a tag's value as a string.
 	///        setUnicodeString() is preferred over this
@@ -625,7 +627,7 @@ public:
 	///                 this parameter
 	///
 	///////////////////////////////////////////////////////////
-    void setString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber, const std::string& newString, const std::string& defaultType = "");
+    void setString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, const std::string& newString, const std::string& defaultType = "");
 
 	/// \brief Set a tag's value as an unicode string.
 	///
@@ -656,11 +658,11 @@ public:
 	///                 this parameter
 	///
 	///////////////////////////////////////////////////////////
-    void setUnicodeString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t elementNumber, const std::wstring& newString, const std::string& defaultType = "");
+    void setUnicodeString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, const std::wstring& newString, const std::string& defaultType = "");
 
-    void setAge(int groupId, int order, int tagId, int elementNumber, int age, ::imebra::ageUnit_t units, const std::string& defaultType = "");
+    void setAge(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, int age, ::imebra::ageUnit_t units, const std::string& defaultType = "");
 
-    int getAge(int groupId, int order, int tagId, int elementNumber, ::imebra::ageUnit_t* pUnits) const;
+    int getAge(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, ::imebra::ageUnit_t* pUnits) const;
 
     //@}
 
@@ -731,8 +733,8 @@ public:
 	/// @return a pointer to the data handler.
 	///
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<handlers::readingDataHandler> getReadingDataHandler(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId) const;
-    std::shared_ptr<handlers::writingDataHandler> getWritingDataHandler(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId, const std::string& defaultType="");
+    std::shared_ptr<handlers::readingDataHandler> getReadingDataHandler(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId) const;
+    std::shared_ptr<handlers::writingDataHandler> getWritingDataHandler(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, const std::string& defaultType="");
 
 	/// \brief Return a raw data handler for the specified 
 	///         tag's buffer.
@@ -765,8 +767,8 @@ public:
 	/// @return a pointer to the data handler.
 	///
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<handlers::readingDataHandlerRaw> getReadingDataHandlerRaw(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId) const;
-    std::shared_ptr<handlers::writingDataHandlerRaw> getWritingDataHandlerRaw(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId, const std::string& defaultType="");
+    std::shared_ptr<handlers::readingDataHandlerRaw> getReadingDataHandlerRaw(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId) const;
+    std::shared_ptr<handlers::writingDataHandlerRaw> getWritingDataHandlerRaw(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, const std::string& defaultType="");
 
 	/// \brief Return a streamReader connected to the specified
 	///         tag's buffer's memory.
@@ -789,7 +791,7 @@ public:
 	/// @return a pointer to the streamReader
 	///
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<streamReader> getStreamReader(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId) const;
+    std::shared_ptr<streamReader> getStreamReader(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId) const;
 
 	/// \brief Return a streamWriter connected to the specified
 	///         tag's buffer's memory.
@@ -814,7 +816,7 @@ public:
 	/// @return a pointer to the streamWriter
 	///
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<streamWriter> getStreamWriter(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId, const std::string& dataType = "");
+    std::shared_ptr<streamWriter> getStreamWriter(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, const std::string& dataType = "");
 
 	//@}
 
@@ -916,123 +918,6 @@ private:
 };
 
 
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-/// \brief This is the base class for the exceptions thrown
-///         by the dataSet.
-/// 
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-class dataSetException: public std::runtime_error
-{
-public:
-	dataSetException(const std::string& message): std::runtime_error(message){}
-};
-
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-/// \brief This exception is thrown when the application is
-///         trying to store an image in the dataSet but
-///         the dataSet already stores other images that
-///         have different attributes.
-///
-/// The exception is usually thrown by dataSet::setImage().
-/// 
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-class dataSetExceptionDifferentFormat: public dataSetException
-{
-public:
-	dataSetExceptionDifferentFormat(const std::string& message): dataSetException(message){}
-};
-
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-/// \brief This exception is thrown when an unknown 
-///         transfer syntax is being used while reading or
-///         writing a stream.
-/// 
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-class dataSetExceptionUnknownTransferSyntax: public dataSetException
-{
-public:
-	dataSetExceptionUnknownTransferSyntax(const std::string& message): dataSetException(message){}
-};
-
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-/// \brief This exception is thrown when the application
-///         is storing several images in the dataSet but
-///         doesn't store them in the right order.
-///
-/// The application must store the images following the 
-///  frame order, without skipping frames.
-/// 
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-class dataSetExceptionWrongFrame: public dataSetException
-{
-public:
-	dataSetExceptionWrongFrame(const std::string& message): dataSetException(message){}
-};
-
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-/// \brief This exception is thrown when the application
-///         is trying to store an image in an old Dicom
-///         format.
-///
-/// The application cannot store images in old Dicom 
-///  formats (before Dicom3).
-/// 
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-class dataSetExceptionOldFormat: public dataSetException
-{
-public:
-	dataSetExceptionOldFormat(const std::string& message): dataSetException(message){}
-};
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-/// \brief This exception is thrown when the an image that
-///         doesn't exist is requested.
-///
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-class dataSetImageDoesntExist: public dataSetException
-{
-public:
-	/// \brief Build a dataSetImageDoesntExist exception
-	///
-	/// @param message the message to store into the exception
-	///
-	///////////////////////////////////////////////////////////
-	dataSetImageDoesntExist(const std::string& message): dataSetException(message){}
-};
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-/// \brief This exception is thrown when the basic offset
-///         table is corrupted.
-///
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-class dataSetCorruptedOffsetTable: public dataSetException
-{
-public:
-	/// \brief Build a dataSetImageDoesntExist exception
-	///
-	/// @param message the message to store into the exception
-	///
-	///////////////////////////////////////////////////////////
-	dataSetCorruptedOffsetTable(const std::string& message): dataSetException(message){}
-};
 
 /// @}
 

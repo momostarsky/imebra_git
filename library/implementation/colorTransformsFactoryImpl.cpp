@@ -11,6 +11,7 @@ $fileHeader$
 #include "colorTransformsFactoryImpl.h"
 #include "transformsChainImpl.h"
 #include "imageImpl.h"
+#include "../include/imebra/exceptions.h"
 
 #include "MONOCHROME1ToMONOCHROME2Impl.h"
 #include "MONOCHROME1ToRGBImpl.h"
@@ -372,7 +373,7 @@ std::shared_ptr<transform> colorTransformsFactory::getTransform(const std::wstri
 		}
 	}
 
-	PUNTOEXE_THROW(colorTransformsFactoryExceptionNoTransform, "There isn't any transform that can convert between the specified color spaces");
+    PUNTOEXE_THROW(::imebra::colorTransformsFactoryExceptionNoTransform, "There isn't any transform that can convert between the specified color spaces");
 
 	PUNTOEXE_FUNCTION_END();
 }

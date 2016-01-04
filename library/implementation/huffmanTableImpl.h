@@ -256,29 +256,6 @@ private:
 
 };
 
-class huffmanException: public std::runtime_error
-{
-public:
-	huffmanException(const std::string& message): std::runtime_error(message){}
-};
-
-class huffmanExceptionCreateTable: public huffmanException
-{
-public:
-    huffmanExceptionCreateTable(const std::string& message): huffmanException(message){}
-};
-
-class huffmanExceptionRead : public huffmanException
-{
-public:
-	huffmanExceptionRead(const std::string& message): huffmanException(message){}
-};
-
-class huffmanExceptionWrite : public huffmanException
-{
-public:
-	huffmanExceptionWrite(const std::string& message): huffmanException(message){}
-};
 
 ///@}
 
