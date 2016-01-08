@@ -4,8 +4,6 @@ project("dicom2jpeg")
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wall -Wextra -Wpedantic -pthread")
 
-add_definitions(-DPUNTOEXE_WINDOWS)
-
 # Specify include and source files
 #---------------------------------
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../include)
