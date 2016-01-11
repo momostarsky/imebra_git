@@ -13,12 +13,12 @@ $fileHeader$
 namespace imebra
 {
 
-StreamReader::StreamReader(const BaseStreamReader& stream): m_pReader(new puntoexe::streamReader(stream.m_pStream))
+StreamReader::StreamReader(const BaseStreamInput& stream): m_pReader(new puntoexe::streamReader(stream.m_pStream))
 {
 }
 
 
-StreamReader::StreamReader(const BaseStreamReader& stream, int virtualStart, int virtualLength): m_pReader(new puntoexe::streamReader(stream.m_pStream, virtualStart, virtualLength))
+StreamReader::StreamReader(const BaseStreamInput& stream, int virtualStart, int virtualLength): m_pReader(new puntoexe::streamReader(stream.m_pStream, virtualStart, virtualLength))
 {
 }
 

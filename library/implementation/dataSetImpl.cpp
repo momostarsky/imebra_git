@@ -190,7 +190,7 @@ std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
                         ::memcpy((void*)pDest, (void*)pSource, bufferHandler->getSize());
                         pDest += bufferHandler->getSize();
                     }
-                    std::shared_ptr<baseStreamReader> compositeStream(new memoryStreamReader(temporaryMemory));
+                    std::shared_ptr<baseStreamInput> compositeStream(new memoryStreamInput(temporaryMemory));
                     imageStream = std::make_shared<streamReader>(compositeStream);
                 }
                 bDontNeedImagesPositions = true;
@@ -487,7 +487,7 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
 	}
 	else
 	{
-        std::shared_ptr<puntoexe::memoryStreamWriter> memStream(new memoryStreamWriter(uncompressedImage));
+        std::shared_ptr<puntoexe::memoryStreamOutput> memStream(new memoryStreamOutput(uncompressedImage));
         outputStream = std::make_shared<streamWriter>(memStream);
 	}
 

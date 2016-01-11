@@ -18,7 +18,7 @@ namespace puntoexe
 // Constructor
 //
 ///////////////////////////////////////////////////////////
-streamReader::streamReader(std::shared_ptr<baseStreamReader> pControlledStream):
+streamReader::streamReader(std::shared_ptr<baseStreamInput> pControlledStream):
     streamController(0, 0),
     m_pControlledStream(pControlledStream),
     m_inBitsBuffer(0),
@@ -26,7 +26,7 @@ streamReader::streamReader(std::shared_ptr<baseStreamReader> pControlledStream):
 {
 }
 
-streamReader::streamReader(std::shared_ptr<baseStreamReader> pControlledStream, std::uint32_t virtualStart, std::uint32_t virtualLength):
+streamReader::streamReader(std::shared_ptr<baseStreamInput> pControlledStream, std::uint32_t virtualStart, std::uint32_t virtualLength):
     streamController(virtualStart, virtualLength),
     m_pControlledStream(pControlledStream),
 	m_inBitsBuffer(0),
@@ -39,7 +39,7 @@ streamReader::streamReader(std::shared_ptr<baseStreamReader> pControlledStream, 
 }
 
 
-std::shared_ptr<baseStreamReader> streamReader::getControlledStream()
+std::shared_ptr<baseStreamInput> streamReader::getControlledStream()
 {
     return m_pControlledStream;
 }

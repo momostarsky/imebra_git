@@ -13,63 +13,63 @@ $fileHeader$
 namespace imebra
 {
 
-FileStreamWriter::FileStreamWriter(): BaseStreamWriter(std::make_shared<puntoexe::fileStreamWriter>())
+FileStreamOutput::FileStreamOutput(): BaseStreamOutput(std::make_shared<puntoexe::fileStreamOutput>())
 {
 }
 
-FileStreamWriter::FileStreamWriter(const FileStreamWriter& right): BaseStreamWriter(right.m_pStream)
+FileStreamOutput::FileStreamOutput(const FileStreamOutput& right): BaseStreamOutput(right.m_pStream)
 {
 }
 
-FileStreamWriter& FileStreamWriter::operator=(const FileStreamWriter& right)
+FileStreamOutput& FileStreamOutput::operator=(const FileStreamOutput& right)
 {
 	m_pStream = right.m_pStream;
 	return *this;
 }
 
-void FileStreamWriter::openFile(const std::wstring& name)
+void FileStreamOutput::openFile(const std::wstring& name)
 {
-    (dynamic_cast<puntoexe::fileStreamWriter*>(m_pStream.get()))->openFile(name);
+    (dynamic_cast<puntoexe::fileStreamOutput*>(m_pStream.get()))->openFile(name);
 }
 
-void FileStreamWriter::openFile(const std::string& name)
+void FileStreamOutput::openFile(const std::string& name)
 {
-    (dynamic_cast<puntoexe::fileStreamWriter*>(m_pStream.get()))->openFile(name);
+    (dynamic_cast<puntoexe::fileStreamOutput*>(m_pStream.get()))->openFile(name);
 }
 
-void FileStreamWriter::close()
+void FileStreamOutput::close()
 {
-    static_cast<puntoexe::fileStreamWriter*>(m_pStream.get())->close();
+    static_cast<puntoexe::fileStreamOutput*>(m_pStream.get())->close();
 }
 
 
-FileStreamReader::FileStreamReader(): BaseStreamReader(std::make_shared<puntoexe::fileStreamReader>())
-{
-}
-
-FileStreamReader::FileStreamReader(const FileStreamReader& right): BaseStreamReader(right.m_pStream)
+FileStreamInput::FileStreamInput(): BaseStreamInput(std::make_shared<puntoexe::fileStreamInput>())
 {
 }
 
-FileStreamReader& FileStreamReader::operator=(const FileStreamReader& right)
+FileStreamInput::FileStreamInput(const FileStreamInput& right): BaseStreamInput(right.m_pStream)
+{
+}
+
+FileStreamInput& FileStreamInput::operator=(const FileStreamInput& right)
 {
     m_pStream = right.m_pStream;
     return *this;
 }
 
-void FileStreamReader::openFile(const std::wstring& name)
+void FileStreamInput::openFile(const std::wstring& name)
 {
-    (dynamic_cast<puntoexe::fileStreamReader*>(m_pStream.get()))->openFile(name);
+    (dynamic_cast<puntoexe::fileStreamInput*>(m_pStream.get()))->openFile(name);
 }
 
-void FileStreamReader::openFile(const std::string& name)
+void FileStreamInput::openFile(const std::string& name)
 {
-    (dynamic_cast<puntoexe::fileStreamReader*>(m_pStream.get()))->openFile(name);
+    (dynamic_cast<puntoexe::fileStreamInput*>(m_pStream.get()))->openFile(name);
 }
 
-void FileStreamReader::close()
+void FileStreamInput::close()
 {
-    static_cast<puntoexe::fileStreamReader*>(m_pStream.get())->close();
+    static_cast<puntoexe::fileStreamInput*>(m_pStream.get())->close();
 }
 
 

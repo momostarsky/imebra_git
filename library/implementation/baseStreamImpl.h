@@ -55,7 +55,7 @@ namespace puntoexe
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class baseStreamReader
+class baseStreamInput
 {
 
 public:
@@ -80,7 +80,7 @@ public:
 };
 
 
-class baseStreamWriter
+class baseStreamOutput
 {
 
 public:

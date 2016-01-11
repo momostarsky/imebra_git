@@ -56,7 +56,7 @@ public:
 	///                             see all the bytes
 	///
 	///////////////////////////////////////////////////////////
-    streamWriter(std::shared_ptr<baseStreamWriter> pControlledStream, std::uint32_t virtualStart = 0, std::uint32_t virtualLength = 0);
+    streamWriter(std::shared_ptr<baseStreamOutput> pControlledStream, std::uint32_t virtualStart = 0, std::uint32_t virtualLength = 0);
 
     /// \brief Flushes the internal buffer, disconnects the
     ///         stream and destroys the streamWriter.
@@ -203,7 +203,7 @@ public:
 	}
 
 private:
-    std::shared_ptr<baseStreamWriter> m_pControlledStream;
+    std::shared_ptr<baseStreamOutput> m_pControlledStream;
 
 	std::uint8_t m_outBitsBuffer;
 	int       m_outBitsNum;

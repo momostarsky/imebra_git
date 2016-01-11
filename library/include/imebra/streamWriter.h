@@ -24,7 +24,7 @@ class streamWriter;
 namespace imebra
 {
 
-class BaseStreamWriter;
+class BaseStreamOutput;
 
 class CodecFactory;
 
@@ -35,7 +35,7 @@ class IMEBRA_API StreamWriter
 {
 	friend class CodecFactory;
 public:
-    StreamWriter(const BaseStreamWriter& stream, int virtualStart = 0, int virtualLength = 0);
+    StreamWriter(const BaseStreamOutput& stream, int virtualStart = 0, int virtualLength = 0);
     StreamWriter(const StreamWriter& right);
     StreamWriter& operator=(const StreamWriter& right);
 

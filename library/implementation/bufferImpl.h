@@ -108,7 +108,7 @@ public:
 	///////////////////////////////////////////////////////////
     buffer(
 		const std::string& defaultType,
-        const std::shared_ptr<baseStreamReader>& originalStream,
+        const std::shared_ptr<baseStreamInput>& originalStream,
 		std::uint32_t bufferPosition,
 		std::uint32_t bufferLength,
 		std::uint32_t wordLength,
@@ -337,7 +337,7 @@ protected:
 	// The following variables are used to reread the buffer
 	//  from the stream.
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<baseStreamReader> m_originalStream;    // < Original stream
+    std::shared_ptr<baseStreamInput> m_originalStream;    // < Original stream
 	std::uint32_t m_originalBufferPosition; // < Original buffer's position
 	std::uint32_t m_originalBufferLength;   // < Original buffer's length
 	std::uint32_t m_originalWordLength;     // < Original word's length (for low/high endian adjustment)

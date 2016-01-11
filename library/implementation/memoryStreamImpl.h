@@ -35,7 +35,7 @@ namespace puntoexe
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class memoryStreamReader : public baseStreamReader
+class memoryStreamInput : public baseStreamInput
 {
 
 public:
@@ -49,7 +49,7 @@ public:
 	///                      the memoryStream object.
 	///
 	///////////////////////////////////////////////////////////
-    memoryStreamReader(std::shared_ptr<const memory> memoryStream);
+    memoryStreamInput(std::shared_ptr<const memory> memoryStream);
 
 	///////////////////////////////////////////////////////////
 	//
@@ -62,7 +62,7 @@ protected:
     std::shared_ptr<const memory> m_memory;
 };
 
-class memoryStreamWriter : public baseStreamWriter
+class memoryStreamOutput : public baseStreamOutput
 {
 
 public:
@@ -76,7 +76,7 @@ public:
     ///                      the memoryStream object.
     ///
     ///////////////////////////////////////////////////////////
-    memoryStreamWriter(std::shared_ptr<memory> memoryStream);
+    memoryStreamOutput(std::shared_ptr<memory> memoryStream);
 
     ///////////////////////////////////////////////////////////
     //

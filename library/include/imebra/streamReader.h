@@ -36,9 +36,9 @@ class IMEBRA_API StreamReader
 {
     friend class CodecFactory;
 public:
-    StreamReader(const BaseStreamReader& stream);
+    StreamReader(const BaseStreamInput& stream);
 
-    StreamReader(const BaseStreamReader& stream, int virtualStart, int virtualLength);
+    StreamReader(const BaseStreamInput& stream, int virtualStart, int virtualLength);
 
     StreamReader(const StreamReader& right);
 

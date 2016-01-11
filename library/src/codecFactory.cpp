@@ -26,7 +26,7 @@ DataSet CodecFactory::load(StreamReader& reader, size_t maxSizeBufferLoad)
 
 DataSet CodecFactory::load(const std::wstring& fileName, size_t maxSizeBufferLoad)
 {
-    FileStreamReader file;
+    FileStreamInput file;
     file.openFile(fileName);
 
     StreamReader reader(file);
@@ -35,7 +35,7 @@ DataSet CodecFactory::load(const std::wstring& fileName, size_t maxSizeBufferLoa
 
 DataSet CodecFactory::load(const std::string& fileName, size_t maxSizeBufferLoad)
 {
-    FileStreamReader file;
+    FileStreamInput file;
     file.openFile(fileName);
 
     StreamReader reader(file);
@@ -62,7 +62,7 @@ void CodecFactory::save(const DataSet& dataSet, StreamWriter& writer, codecType 
 
 void CodecFactory::save(const DataSet &dataSet, const std::wstring& fileName, codecType codecType)
 {
-    FileStreamWriter file;
+    FileStreamOutput file;
     file.openFile(fileName);
 
     StreamWriter writer(file);
@@ -71,7 +71,7 @@ void CodecFactory::save(const DataSet &dataSet, const std::wstring& fileName, co
 
 void CodecFactory::save(const DataSet &dataSet, const std::string& fileName, codecType codecType)
 {
-    FileStreamWriter file;
+    FileStreamOutput file;
     file.openFile(fileName);
 
     StreamWriter writer(file);

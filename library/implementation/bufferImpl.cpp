@@ -95,7 +95,7 @@ buffer::buffer(const std::string& defaultType /* ="" */):
 ///////////////////////////////////////////////////////////
 buffer::buffer(
 		const std::string& defaultType,
-        const std::shared_ptr<baseStreamReader>& originalStream,
+        const std::shared_ptr<baseStreamInput>& originalStream,
 		std::uint32_t bufferPosition,
 		std::uint32_t bufferLength,
 		std::uint32_t wordLength,
@@ -576,7 +576,7 @@ std::shared_ptr<streamReader> buffer::getStreamReader()
 	// Build a stream from the buffer's memory
 	///////////////////////////////////////////////////////////
     std::shared_ptr<streamReader> reader;
-    std::shared_ptr<memoryStreamReader> memoryStream = std::make_shared<memoryStreamReader>(getLocalMemory());
+    std::shared_ptr<memoryStreamInput> memoryStream = std::make_shared<memoryStreamInput>(getLocalMemory());
     reader = std::shared_ptr<streamReader>(new streamReader(memoryStream));
 
 	return reader;
@@ -604,7 +604,7 @@ std::shared_ptr<streamWriter> buffer::getStreamWriter()
     std::shared_ptr<handlers::writingDataHandlerRaw> tempHandlerRaw = getWritingDataHandlerRaw(0);
 	if(tempHandlerRaw != 0)
 	{
-        writer = std::make_shared<streamWriter>(std::make_shared<bufferStreamWriter>(tempHandlerRaw), tempHandlerRaw->getSize());
+        writer = std::make_shared<streamWriter>(std::make_shared<bufferStreamOutput>(tempHandlerRaw), tempHandlerRaw->getSize());
 	}
 
 	return writer;

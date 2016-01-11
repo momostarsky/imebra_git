@@ -19,11 +19,11 @@ namespace imebra
 ///
 /// @{
 
-class bufferStreamWriter: public memoryStreamWriter
+class bufferStreamOutput: public memoryStreamOutput
 {
 public:
-    bufferStreamWriter(std::shared_ptr<handlers::writingDataHandlerRaw> pDataHandler):
-      memoryStreamWriter(pDataHandler->getMemory()),
+    bufferStreamOutput(std::shared_ptr<handlers::writingDataHandlerRaw> pDataHandler):
+      memoryStreamOutput(pDataHandler->getMemory()),
 	  m_pDataHandler(pDataHandler){}
 protected:
 

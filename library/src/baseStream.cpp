@@ -13,36 +13,36 @@ $fileHeader$
 namespace imebra
 {
 
-BaseStreamWriter::BaseStreamWriter()
+BaseStreamOutput::BaseStreamOutput()
 {}
 
-BaseStreamWriter::BaseStreamWriter(std::shared_ptr<puntoexe::baseStreamWriter> pStream): m_pStream(pStream)
+BaseStreamOutput::BaseStreamOutput(std::shared_ptr<puntoexe::baseStreamOutput> pStream): m_pStream(pStream)
 {
 }
 
-BaseStreamWriter::BaseStreamWriter(const BaseStreamWriter& right): m_pStream(right.m_pStream)
+BaseStreamOutput::BaseStreamOutput(const BaseStreamOutput& right): m_pStream(right.m_pStream)
 {
 }
 
-BaseStreamWriter& BaseStreamWriter::operator=(const BaseStreamWriter& right)
+BaseStreamOutput& BaseStreamOutput::operator=(const BaseStreamOutput& right)
 {
 	m_pStream = right.m_pStream;
 	return *this;
 }
 
 
-BaseStreamReader::BaseStreamReader()
+BaseStreamInput::BaseStreamInput()
 {}
 
-BaseStreamReader::BaseStreamReader(std::shared_ptr<puntoexe::baseStreamReader> pStream): m_pStream(pStream)
+BaseStreamInput::BaseStreamInput(std::shared_ptr<puntoexe::baseStreamInput> pStream): m_pStream(pStream)
 {
 }
 
-BaseStreamReader::BaseStreamReader(const BaseStreamReader& right): m_pStream(right.m_pStream)
+BaseStreamInput::BaseStreamInput(const BaseStreamInput& right): m_pStream(right.m_pStream)
 {
 }
 
-BaseStreamReader& BaseStreamReader::operator=(const BaseStreamReader& right)
+BaseStreamInput& BaseStreamInput::operator=(const BaseStreamInput& right)
 {
     m_pStream = right.m_pStream;
     return *this;

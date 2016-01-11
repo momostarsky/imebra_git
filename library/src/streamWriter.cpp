@@ -15,7 +15,7 @@ $fileHeader$
 namespace imebra
 {
 
-StreamWriter::StreamWriter(const BaseStreamWriter& stream, int virtualStart, int virtualLength): m_pWriter(new puntoexe::streamWriter(stream.m_pStream, virtualStart, virtualLength))
+StreamWriter::StreamWriter(const BaseStreamOutput& stream, int virtualStart, int virtualLength): m_pWriter(new puntoexe::streamWriter(stream.m_pStream, virtualStart, virtualLength))
 {
 }
 

@@ -59,7 +59,7 @@ protected:
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class fileStreamReader : public baseStreamReader, public fileStream
+class fileStreamInput : public baseStreamInput, public fileStream
 {
 public:
     /// \brief Open a file.
@@ -89,7 +89,7 @@ public:
 
 };
 
-class fileStreamWriter : public baseStreamWriter, public fileStream
+class fileStreamOutput : public baseStreamOutput, public fileStream
 {
 public:
     /// \brief Open a file.

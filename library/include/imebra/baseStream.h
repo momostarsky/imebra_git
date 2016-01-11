@@ -17,8 +17,8 @@ $fileHeader$
 
 namespace puntoexe
 {
-    class baseStreamReader;
-    class baseStreamWriter;
+    class baseStreamInput;
+    class baseStreamOutput;
 }
 
 #endif
@@ -57,7 +57,7 @@ class IMEBRA_API BaseStreamReader
 #ifndef SWIG
 	friend class StreamReader;
 protected:
-    BaseStreamReader(std::shared_ptr<puntoexe::baseStreamReader> pStream);
+    BaseStreamReader(std::shared_ptr<puntoexe::baseStreamInput> pStream);
 #endif
 public:
     BaseStreamReader(const BaseStreamReader& right);
@@ -65,7 +65,7 @@ public:
 
 #ifndef SWIG
 protected:
-    std::shared_ptr<puntoexe::baseStreamReader> m_pStream;
+    std::shared_ptr<puntoexe::baseStreamInput> m_pStream;
 #endif
 
 public:
@@ -78,7 +78,7 @@ class IMEBRA_API BaseStreamWriter
 #ifndef SWIG
     friend class StreamWriter;
 protected:
-    BaseStreamWriter(std::shared_ptr<puntoexe::baseStreamWriter> pStream);
+    BaseStreamWriter(std::shared_ptr<puntoexe::baseStreamOutput> pStream);
 #endif
 public:
     BaseStreamWriter(const BaseStreamWriter& right);
@@ -86,7 +86,7 @@ public:
 
 #ifndef SWIG
 protected:
-    std::shared_ptr<puntoexe::baseStreamWriter> m_pStream;
+    std::shared_ptr<puntoexe::baseStreamOutput> m_pStream;
 #endif
 
 public:

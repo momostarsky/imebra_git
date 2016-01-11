@@ -158,7 +158,7 @@ fileStream::~fileStream()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void fileStreamReader::openFile(const std::string& fileName)
+void fileStreamInput::openFile(const std::string& fileName)
 {
 	PUNTOEXE_FUNCTION_START(L"stream::openFile (ansi)");
 
@@ -174,12 +174,12 @@ void fileStreamReader::openFile(const std::string& fileName)
 	PUNTOEXE_FUNCTION_END();
 }
 
-void fileStreamReader::openFile(const std::wstring& fileName)
+void fileStreamInput::openFile(const std::wstring& fileName)
 {
     fileStream::openFile(fileName, std::ios::in);
 }
 
-void fileStreamWriter::openFile(const std::string& fileName)
+void fileStreamOutput::openFile(const std::string& fileName)
 {
     PUNTOEXE_FUNCTION_START(L"stream::openFile (ansi)");
 
@@ -195,7 +195,7 @@ void fileStreamWriter::openFile(const std::string& fileName)
     PUNTOEXE_FUNCTION_END();
 }
 
-void fileStreamWriter::openFile(const std::wstring &fileName)
+void fileStreamOutput::openFile(const std::wstring &fileName)
 {
     fileStream::openFile(fileName, std::ios::out);
 }
@@ -210,7 +210,7 @@ void fileStreamWriter::openFile(const std::wstring &fileName)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void fileStreamWriter::write(std::uint32_t startPosition, const std::uint8_t* pBuffer, std::uint32_t bufferLength)
+void fileStreamOutput::write(std::uint32_t startPosition, const std::uint8_t* pBuffer, std::uint32_t bufferLength)
 {
 	PUNTOEXE_FUNCTION_START(L"stream::write");
 
@@ -238,7 +238,7 @@ void fileStreamWriter::write(std::uint32_t startPosition, const std::uint8_t* pB
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::uint32_t fileStreamReader::read(std::uint32_t startPosition, std::uint8_t* pBuffer, std::uint32_t bufferLength)
+std::uint32_t fileStreamInput::read(std::uint32_t startPosition, std::uint8_t* pBuffer, std::uint32_t bufferLength)
 {
 	PUNTOEXE_FUNCTION_START(L"stream::read");
 
