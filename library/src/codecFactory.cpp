@@ -9,7 +9,7 @@ $fileHeader$
 */
 
 #include <imebra/codecFactory.h>
-#include <imebra/stream.h>
+#include <imebra/fileStream.h>
 
 #include "../implementation/dicomCodecImpl.h"
 #include "../implementation/jpegCodecImpl.h"

@@ -52,16 +52,16 @@ namespace imebra
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class IMEBRA_API BaseStreamReader
+class IMEBRA_API BaseStreamInput
 {
 #ifndef SWIG
 	friend class StreamReader;
 protected:
-    BaseStreamReader(std::shared_ptr<puntoexe::baseStreamInput> pStream);
+    BaseStreamInput(std::shared_ptr<puntoexe::baseStreamInput> pStream);
 #endif
 public:
-    BaseStreamReader(const BaseStreamReader& right);
-    BaseStreamReader& operator=(const BaseStreamReader& right);
+    BaseStreamInput(const BaseStreamInput& right);
+    BaseStreamInput& operator=(const BaseStreamInput& right);
 
 #ifndef SWIG
 protected:
@@ -69,20 +69,20 @@ protected:
 #endif
 
 public:
-    BaseStreamReader();
+    BaseStreamInput();
 };
 
 
-class IMEBRA_API BaseStreamWriter
+class IMEBRA_API BaseStreamOutput
 {
 #ifndef SWIG
     friend class StreamWriter;
 protected:
-    BaseStreamWriter(std::shared_ptr<puntoexe::baseStreamOutput> pStream);
+    BaseStreamOutput(std::shared_ptr<puntoexe::baseStreamOutput> pStream);
 #endif
 public:
-    BaseStreamWriter(const BaseStreamWriter& right);
-    BaseStreamWriter& operator=(const BaseStreamWriter& right);
+    BaseStreamOutput(const BaseStreamOutput& right);
+    BaseStreamOutput& operator=(const BaseStreamOutput& right);
 
 #ifndef SWIG
 protected:
@@ -90,7 +90,7 @@ protected:
 #endif
 
 public:
-    BaseStreamWriter();
+    BaseStreamOutput();
 };
 
 

@@ -19,12 +19,12 @@ namespace imebra
 
 /// \addtogroup group_swig_bindings
 /// @{
-class IMEBRA_API FileStreamWriter : public BaseStreamWriter
+class IMEBRA_API FileStreamOutput : public BaseStreamOutput
 {
 public:
-    FileStreamWriter();
-    FileStreamWriter(const FileStreamWriter& right);
-    FileStreamWriter& operator=(const FileStreamWriter& right);
+    FileStreamOutput();
+    FileStreamOutput(const FileStreamOutput& right);
+    FileStreamOutput& operator=(const FileStreamOutput& right);
 
     void openFile(const std::wstring& name);
     void openFile(const std::string& name);
@@ -32,12 +32,12 @@ public:
 	void close();
 };
 
-class IMEBRA_API FileStreamReader : public BaseStreamReader
+class IMEBRA_API FileStreamInput : public BaseStreamInput
 {
 public:
-    FileStreamReader();
-    FileStreamReader(const FileStreamReader& right);
-    FileStreamReader& operator=(const FileStreamReader& right);
+    FileStreamInput();
+    FileStreamInput(const FileStreamInput& right);
+    FileStreamInput& operator=(const FileStreamInput& right);
 
     void openFile(const std::wstring& name);
     void openFile(const std::string& name);

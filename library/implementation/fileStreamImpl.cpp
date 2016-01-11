@@ -8,7 +8,7 @@ $fileHeader$
 */
 
 #include "exceptionImpl.h"
-#include "streamImpl.h"
+#include "fileStreamImpl.h"
 #include "charsetConversionImpl.h"
 #include "../include/imebra/exceptions.h"
 

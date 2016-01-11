@@ -1,5 +1,5 @@
 #include <imebra/codecFactory.h>
-#include <imebra/stream.h>
+#include <imebra/fileStream.h>
 #include <imebra/exceptions.h>
 #include "testsSettings.h"
 #include <dirent.h>

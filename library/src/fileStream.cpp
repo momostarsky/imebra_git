@@ -7,8 +7,8 @@ $fileHeader$
 
 */
 
-#include "../include/imebra/stream.h"
-#include "../implementation/streamImpl.h"
+#include "../include/imebra/fileStream.h"
+#include "../implementation/fileStreamImpl.h"
 
 namespace imebra
 {
