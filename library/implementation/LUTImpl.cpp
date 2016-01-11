@@ -64,7 +64,7 @@ void lut::setLut(std::shared_ptr<handlers::readingDataHandler> pDescriptor, std:
 	std::int32_t lutFirstMapped=pDescriptor->getSignedLong(1);
 	std::uint32_t lutBits=pDescriptor->getUnsignedLong(2);
 
-	if(pData == 0 || (std::uint32_t)lutSize != pData->getSize())
+	if((size_t)lutSize != pData->getSize())
 	{
         PUNTOEXE_THROW(::imebra::lutExceptionCorrupted, "The LUT is corrupted");
 	}
@@ -72,8 +72,6 @@ void lut::setLut(std::shared_ptr<handlers::readingDataHandler> pDescriptor, std:
 	create(lutSize, lutFirstMapped, (std::uint8_t)lutBits, description);
 
     std::dynamic_pointer_cast<handlers::readingDataHandlerNumericBase>(pData)->copyTo(m_pMappedValues, lutSize);
-
-    m_bChecked = false; // LUT has to be checked again
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -99,9 +97,6 @@ void lut::create(std::uint32_t size, std::int32_t firstMapped, std::uint8_t bits
 		delete m_pMappedValues;
 		m_pMappedValues= 0;
 	}
-	m_mappedValuesRev.clear();
-
-	m_bChecked = false;
 
 	m_size = 0;
 
@@ -128,7 +123,7 @@ void lut::create(std::uint32_t size, std::int32_t firstMapped, std::uint8_t bits
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void lut::fillHandlers(std::shared_ptr<handlers::writingDataHandler> pDescriptor, std::shared_ptr<handlers::writingDataHandler> pData)
+void lut::fillHandlers(std::shared_ptr<handlers::writingDataHandler> pDescriptor, std::shared_ptr<handlers::writingDataHandler> pData) const
 {
 	PUNTOEXE_FUNCTION_START(L"lut::fillHandlers");
 
@@ -164,7 +159,7 @@ void lut::fillHandlers(std::shared_ptr<handlers::writingDataHandler> pDescriptor
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-size_t lut::getSize()
+size_t lut::getSize() const
 {
 	return m_size;
 }
@@ -178,12 +173,8 @@ size_t lut::getSize()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-bool lut::checkValidDataRange()
+bool lut::checkValidDataRange() const
 {
-    if(m_bChecked)
-    {
-        return m_bValid;
-    }
     std::int32_t maxValue(65535);
     std::int32_t minValue(-32768);
     if(m_bits == 8)
@@ -191,20 +182,16 @@ bool lut::checkValidDataRange()
         maxValue = 255;
         minValue = -128;
     }
-    std::int32_t* pScanValues(m_pMappedValues);
+    const std::int32_t* pScanValues(m_pMappedValues);
     for(std::uint32_t checkData(0); checkData != m_size; ++checkData)
     {
         if(*pScanValues < minValue || *pScanValues > maxValue)
         {
-            m_bValid = false;
-            m_bChecked = true;
-            return m_bValid;
+            return false;
         }
         ++pScanValues;
     }
-    m_bValid = true;
-    m_bChecked = true;
-    return m_bValid;
+    return true;
 }
 
 
@@ -217,7 +204,7 @@ bool lut::checkValidDataRange()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::int32_t lut::getFirstMapped()
+std::int32_t lut::getFirstMapped() const
 {
 	return m_firstMapped;
 }
@@ -244,7 +231,6 @@ void lut::setLutValue(std::int32_t startValue, std::int32_t lutValue)
 	if(startValue<(std::int32_t)m_size)
 	{
 		m_pMappedValues[startValue]=lutValue;
-		m_mappedValuesRev.clear();
 	}
 
 	PUNTOEXE_FUNCTION_END();
@@ -261,7 +247,7 @@ void lut::setLutValue(std::int32_t startValue, std::int32_t lutValue)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::wstring lut::getDescription()
+std::wstring lut::getDescription() const
 {
 	return m_description;
 }
@@ -276,7 +262,7 @@ std::wstring lut::getDescription()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::uint8_t lut::getBits()
+std::uint8_t lut::getBits() const
 {
 	return m_bits;
 }
@@ -291,7 +277,7 @@ std::uint8_t lut::getBits()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::int32_t lut::mappedValue(std::int32_t id)
+std::int32_t lut::mappedValue(std::int32_t id) const
 {
 	// The LUT's size is zero, return
 	///////////////////////////////////////////////////////////
@@ -325,7 +311,7 @@ std::int32_t lut::mappedValue(std::int32_t id)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void lut::copyToInt32(std::int32_t* pDestination, std::uint32_t destSize, std::int32_t* pFirstMapped)
+void lut::copyToInt32(std::int32_t* pDestination, std::uint32_t destSize, std::int32_t* pFirstMapped) const
 {
 	if(destSize > m_size)
 	{
@@ -333,48 +319,6 @@ void lut::copyToInt32(std::int32_t* pDestination, std::uint32_t destSize, std::i
 	}
 	::memcpy(pDestination, m_pMappedValues, destSize*sizeof(std::int32_t));
 	*pFirstMapped = m_firstMapped;
-}
-
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Inverse Lookup table
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-std::int32_t lut::mappedValueRev(std::int32_t lutValue)
-{
-	if(m_size == 0)
-	{
-		return 0;
-	}
-
-	if(m_mappedValuesRev.size() == 0)
-	{
-		for(std::uint32_t reverseLUT = 0; reverseLUT < m_size; ++reverseLUT)
-		{
-			m_mappedValuesRev[m_pMappedValues[reverseLUT]]=reverseLUT;
-		}
-	}
-
-	if(lutValue<=m_mappedValuesRev.begin()->first)
-		return m_mappedValuesRev.begin()->second;
-
-	std::map<std::int32_t, std::int32_t>::iterator lutIterator;
-	lutIterator=m_mappedValuesRev.end();
-	--lutIterator;
-	if(lutValue>=lutIterator->first)
-		return lutIterator->second;
-
-	lutIterator=m_mappedValuesRev.lower_bound(lutValue);
-
-	if(lutIterator!=m_mappedValuesRev.end())
-		return lutIterator->second;
-
-	return 0;
 }
 
 
@@ -389,17 +333,17 @@ void palette::setLuts(std::shared_ptr<lut> red, std::shared_ptr<lut> green, std:
 	m_blueLut = blue;
 }
 
-std::shared_ptr<lut> palette::getRed()
+std::shared_ptr<lut> palette::getRed() const
 {
 	return m_redLut;
 }
 
-std::shared_ptr<lut> palette::getGreen()
+std::shared_ptr<lut> palette::getGreen() const
 {
 	return m_greenLut;
 }
 
-std::shared_ptr<lut> palette::getBlue()
+std::shared_ptr<lut> palette::getBlue() const
 {
 	return m_blueLut;
 }

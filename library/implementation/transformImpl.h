@@ -20,11 +20,11 @@ $fileHeader$
 
 #define DEFINE_RUN_TEMPLATE_TRANSFORM \
 virtual void runTransformHandlers(\
-    std::shared_ptr<puntoexe::imebra::handlers::readingDataHandlerNumericBase> inputHandler, std::uint32_t inputHandlerWidth, const std::wstring& inputHandlerColorSpace,\
+    std::shared_ptr<puntoexe::imebra::handlers::readingDataHandlerNumericBase> inputHandler, std::uint32_t inputHandlerWidth, const std::string& inputHandlerColorSpace,\
     std::shared_ptr<puntoexe::imebra::palette> inputPalette,\
     std::int32_t inputHandlerMinValue, std::uint32_t inputHighBit,\
     std::int32_t inputTopLeftX, std::int32_t inputTopLeftY, std::int32_t inputWidth, std::int32_t inputHeight,\
-    std::shared_ptr<puntoexe::imebra::handlers::writingDataHandlerNumericBase> outputHandler, std::int32_t outputHandlerWidth, const std::wstring& outputHandlerColorSpace,\
+    std::shared_ptr<puntoexe::imebra::handlers::writingDataHandlerNumericBase> outputHandler, std::int32_t outputHandlerWidth, const std::string& outputHandlerColorSpace,\
     std::shared_ptr<puntoexe::imebra::palette> outputPalette,\
     std::int32_t outputHandlerMinValue, std::uint32_t outputHighBit,\
     std::int32_t outputTopLeftX, std::int32_t outputTopLeftY)\
@@ -228,11 +228,11 @@ public:
 
 	/// \internal
 	virtual void runTransformHandlers(
-            std::shared_ptr<handlers::readingDataHandlerNumericBase> inputHandler, std::uint32_t inputHandlerWidth, const std::wstring& inputHandlerColorSpace,
+            std::shared_ptr<handlers::readingDataHandlerNumericBase> inputHandler, std::uint32_t inputHandlerWidth, const std::string& inputHandlerColorSpace,
             std::shared_ptr<palette> inputPalette,
             std::int32_t inputHandlerMinValue, std::uint32_t inputHighBit,
 			std::int32_t inputTopLeftX, std::int32_t inputTopLeftY, std::int32_t inputWidth, std::int32_t inputHeight,
-            std::shared_ptr<handlers::writingDataHandlerNumericBase> outputHandler, std::int32_t outputHandlerWidth, const std::wstring& outputHandlerColorSpace,
+            std::shared_ptr<handlers::writingDataHandlerNumericBase> outputHandler, std::int32_t outputHandlerWidth, const std::string& outputHandlerColorSpace,
             std::shared_ptr<palette> outputPalette,
             std::int32_t outputHandlerMinValue, std::uint32_t outputHighBit,
 			std::int32_t outputTopLeftX, std::int32_t outputTopLeftY) = 0;

@@ -60,7 +60,7 @@ void transformHandlers::runTransform(
 
     std::shared_ptr<handlers::readingDataHandlerNumericBase> inputHandler(inputImage->getReadingDataHandler());
 	std::shared_ptr<palette> inputPalette(inputImage->getPalette());
-	std::wstring inputColorSpace(inputImage->getColorSpace());
+    std::string inputColorSpace(inputImage->getColorSpace());
 	std::uint32_t inputHighBit(inputImage->getHighBit());
     std::uint64_t inputNumValues((std::uint64_t)1 << (inputHighBit + 1));
     std::int32_t inputMinValue(0);
@@ -72,7 +72,7 @@ void transformHandlers::runTransform(
 
     std::shared_ptr<handlers::writingDataHandlerNumericBase> outputHandler(outputImage->getWritingDataHandler());
 	std::shared_ptr<palette> outputPalette(outputImage->getPalette());
-	std::wstring outputColorSpace(outputImage->getColorSpace());
+    std::string outputColorSpace(outputImage->getColorSpace());
 	std::uint32_t outputHighBit(outputImage->getHighBit());
     std::uint64_t outputNumValues((std::uint64_t)1 << (outputHighBit + 1));
 	std::int32_t outputMinValue(0);

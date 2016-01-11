@@ -15,6 +15,7 @@ $fileHeader$
 #include "bufferImpl.h"
 #include "dataHandlerImpl.h"
 #include "dataHandlerNumericImpl.h"
+#include "../include/imebra/exceptions.h"
 #include <iostream>
 
 namespace puntoexe
@@ -94,17 +95,17 @@ void data::deleteBuffer(size_t bufferId)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::string data::getDataType()
+std::string data::getDataTypeThrow(size_t bufferId) const
 {
 	PUNTOEXE_FUNCTION_START(L"data::getDataType");
 
-	tBuffersMap::iterator findBuffer = m_buffers.find(0);
+    tBuffersMap::const_iterator findBuffer = m_buffers.find(bufferId);
 	if(findBuffer != m_buffers.end())
 	{
 		return findBuffer->second->getDataType();
 	}
 	
-	return "";
+    throw ::imebra::missingBuffer("The requested buffer is missing");
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -119,7 +120,7 @@ std::string data::getDataType()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-size_t data::getBuffersCount()
+size_t data::getBuffersCount() const
 {
 	PUNTOEXE_FUNCTION_START(L"data::getBuffersCount");
 
@@ -140,13 +141,13 @@ size_t data::getBuffersCount()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-bool data::bufferExists(size_t bufferId)
+bool data::bufferExists(size_t bufferId) const
 {
 	PUNTOEXE_FUNCTION_START(L"data::bufferExists");
 
 	// Retrieve the buffer
 	///////////////////////////////////////////////////////////
-	tBuffersMap::iterator findBuffer = m_buffers.find(bufferId);
+    tBuffersMap::const_iterator findBuffer = m_buffers.find(bufferId);
 	return (findBuffer != m_buffers.end());
 
 	PUNTOEXE_FUNCTION_END();
@@ -162,16 +163,16 @@ bool data::bufferExists(size_t bufferId)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-size_t data::getBufferSize(size_t bufferId)
+size_t data::getBufferSizeThrow(size_t bufferId) const
 {
 	PUNTOEXE_FUNCTION_START(L"data::getBufferSize");
 
 	// Retrieve the buffer
 	///////////////////////////////////////////////////////////
-	tBuffersMap::iterator findBuffer = m_buffers.find(bufferId);
+    tBuffersMap::const_iterator findBuffer = m_buffers.find(bufferId);
 	if(findBuffer == m_buffers.end())
 	{
-		return 0;
+        throw ::imebra::missingBuffer("The requested buffer is missing");
 	}
 
 	// Retrieve the buffer's size
@@ -191,28 +192,19 @@ size_t data::getBufferSize(size_t bufferId)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<handlers::readingDataHandler> data::getReadingDataHandler(size_t bufferId) const
+std::shared_ptr<handlers::readingDataHandler> data::getReadingDataHandlerThrow(size_t bufferId) const
 {
 	PUNTOEXE_FUNCTION_START(L"data::getDataHandler");
 
 	// Retrieve the buffer
 	///////////////////////////////////////////////////////////
-	std::shared_ptr<buffer> pTempBuffer;
     tBuffersMap::const_iterator findBuffer = m_buffers.find(bufferId);
-	if(findBuffer != m_buffers.end())
+    if(findBuffer == m_buffers.end())
 	{
-		pTempBuffer = findBuffer->second;
+        throw ::imebra::missingBuffer("The requested buffer is missing");
 	}
 
-	// Retrieve the data handler
-	///////////////////////////////////////////////////////////
-	if(pTempBuffer == 0)
-	{
-        std::shared_ptr<handlers::readingDataHandler> emptyDataHandler;
-		return emptyDataHandler;
-	}
-	
-    return pTempBuffer->getReadingDataHandler();
+    return findBuffer->second->getReadingDataHandler();
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -266,7 +258,7 @@ std::shared_ptr<handlers::writingDataHandler> data::getWritingDataHandler(size_t
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<handlers::readingDataHandlerRaw> data::getReadingDataHandlerRaw(size_t bufferId) const
+std::shared_ptr<handlers::readingDataHandlerRaw> data::getReadingDataHandlerRawThrow(size_t bufferId) const
 {
 	PUNTOEXE_FUNCTION_START(L"data::getDataHandlerRaw");
 
@@ -274,20 +266,12 @@ std::shared_ptr<handlers::readingDataHandlerRaw> data::getReadingDataHandlerRaw(
 	///////////////////////////////////////////////////////////
 	std::shared_ptr<buffer> pTempBuffer;
     tBuffersMap::const_iterator findBuffer = m_buffers.find(bufferId);
-	if(findBuffer != m_buffers.end() )
+    if(findBuffer == m_buffers.end() )
 	{
-		pTempBuffer = findBuffer->second;
+        throw ::imebra::missingBuffer("The requested buffer is missing");
 	}
 
-	// Retrieve the data handler
-	///////////////////////////////////////////////////////////
-	if( pTempBuffer == 0 )
-	{
-        std::shared_ptr<handlers::readingDataHandlerRaw> emptyDataHandler;
-		return emptyDataHandler;
-	}
-
-    return pTempBuffer->getReadingDataHandlerRaw();
+    return findBuffer->second->getReadingDataHandlerRaw();
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -341,7 +325,7 @@ std::shared_ptr<handlers::writingDataHandlerRaw> data::getWritingDataHandlerRaw(
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<streamReader> data::getStreamReader(size_t bufferId)
+std::shared_ptr<streamReader> data::getStreamReaderThrow(size_t bufferId)
 {
 	PUNTOEXE_FUNCTION_START(L"data::getStreamReader");
 
@@ -354,8 +338,7 @@ std::shared_ptr<streamReader> data::getStreamReader(size_t bufferId)
 		return findBuffer->second->getStreamReader();
 	}
 
-	std::shared_ptr<streamReader> emptyStream;
-	return emptyStream;
+    throw ::imebra::missingBuffer("The requested buffer does not exist");
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -417,7 +400,7 @@ std::shared_ptr<streamWriter> data::getStreamWriter(size_t bufferId, const std::
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<dataSet> data::getDataSet(size_t dataSetId)
+std::shared_ptr<dataSet> data::getDataSetThrow(size_t dataSetId) const
 {
 	PUNTOEXE_FUNCTION_START(L"data::getDataSet");
 
@@ -425,12 +408,17 @@ std::shared_ptr<dataSet> data::getDataSet(size_t dataSetId)
 	///////////////////////////////////////////////////////////
 	if(m_embeddedDataSets.size() <= dataSetId)
 	{
-		return 0;
+        throw ::imebra::missingItem("The requested sequence item does not exist");
 	}
 
 	return m_embeddedDataSets[dataSetId];
 
 	PUNTOEXE_FUNCTION_END();
+}
+
+bool data::dataSetExists(size_t dataSetId) const
+{
+    return m_embeddedDataSets.size() > dataSetId;
 }
 
 

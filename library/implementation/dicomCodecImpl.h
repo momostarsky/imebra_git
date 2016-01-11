@@ -64,9 +64,9 @@ public:
 	virtual void setImage(
 		std::shared_ptr<streamWriter> pDestStream,
 		std::shared_ptr<image> pImage,
-		std::wstring transferSyntax,
+        const std::string& transferSyntax,
 		quality imageQuality,
-		std::string dataType,
+        const std::string& dataType,
 		std::uint8_t allocatedBits,
 		bool bSubSampledX,
 		bool bSubSampledY,
@@ -150,17 +150,17 @@ public:
 	// Returns true if the codec can handle the transfer
 	//  syntax
 	///////////////////////////////////////////////////////////
-    virtual bool canHandleTransferSyntax(const std::wstring& transferSyntax);
+    virtual bool canHandleTransferSyntax(const std::string& transferSyntax) const;
 
 	// Returns true if the transfer syntax has to be
 	//  encapsulated
 	//
 	///////////////////////////////////////////////////////////
-    virtual bool encapsulated(const std::wstring& transferSyntax);
+    virtual bool encapsulated(const std::string& transferSyntax) const;
 
 	// Returns the suggested allocated bits
 	///////////////////////////////////////////////////////////
-    virtual std::uint32_t suggestAllocatedBits(const std::wstring& transferSyntax, std::uint32_t highBit);
+    virtual std::uint32_t suggestAllocatedBits(const std::string& transferSyntax, std::uint32_t highBit) const;
 
 protected:
 	// Write a dicom stream

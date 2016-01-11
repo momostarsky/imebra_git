@@ -16,7 +16,7 @@ namespace tests
         std::uint32_t highBit,
 		double sizeX, 
 		double sizeY, 
-        const std::wstring& colorSpace,
+        const std::string& colorSpace,
         std::uint32_t continuity);
 
     double compareImages(const Image& image0, const Image& image1);

@@ -50,13 +50,13 @@ std::string readingDataHandler::getDataType() const
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 void readingDataHandler::getDate(const size_t /* index */,
-		std::int32_t* pYear, 
-		std::int32_t* pMonth, 
-		std::int32_t* pDay, 
-		std::int32_t* pHour, 
-		std::int32_t* pMinutes,
-		std::int32_t* pSeconds,
-		std::int32_t* pNanoseconds,
+        std::uint32_t* pYear,
+        std::uint32_t* pMonth,
+        std::uint32_t* pDay,
+        std::uint32_t* pHour,
+        std::uint32_t* pMinutes,
+        std::uint32_t* pSeconds,
+        std::uint32_t* pNanoseconds,
 		std::int32_t* pOffsetHours,
 		std::int32_t* pOffsetMinutes) const
 {
@@ -109,13 +109,13 @@ std::string writingDataHandler::getDataType() const
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 void writingDataHandler::setDate(const size_t /* index */,
-		std::int32_t /* year */, 
-		std::int32_t /* month */, 
-		std::int32_t /* day */, 
-		std::int32_t /* hour */, 
-		std::int32_t /*minutes */,
-		std::int32_t /*seconds */,
-		std::int32_t /*nanoseconds */,
+        std::uint32_t /* year */,
+        std::uint32_t /* month */,
+        std::uint32_t /* day */,
+        std::uint32_t /* hour */,
+        std::uint32_t /*minutes */,
+        std::uint32_t /*seconds */,
+        std::uint32_t /*nanoseconds */,
 		std::int32_t /*offsetHours */,
 		std::int32_t /*offsetMinutes */)
 {

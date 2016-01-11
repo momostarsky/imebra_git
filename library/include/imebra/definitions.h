@@ -10,6 +10,8 @@ $fileHeader$
 #if !defined(imebraDefinitions_SWIG_3146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_)
 #define imebraDefinitions_SWIG_3146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_
 
+#include <cstdint>
+
 // Generic helper definitions for shared library support
 #if defined _WIN32 || defined __CYGWIN__
   #define IMEBRA_HELPER_DLL_IMPORT __declspec(dllimport)
@@ -40,9 +42,6 @@ $fileHeader$
 
 
 
-
-
-
 namespace imebra
 {
 
@@ -58,7 +57,40 @@ enum class ageUnit_t: char
     years = L'Y'   ///< the age value is in years
 };
 
+struct IMEBRA_API Age
+{
+    Age(std::uint32_t initialAge, ageUnit_t initialUnits);
+    std::uint32_t age;
+    ageUnit_t     units;
+};
 
-}
+struct IMEBRA_API Date
+{
+    Date(const unsigned int initialYear,
+         const unsigned int initialMonth,
+         const unsigned int initialDay,
+         const unsigned int initialHour,
+         const unsigned int initialMinutes,
+         const unsigned int initialSeconds,
+         const unsigned int initialNanoseconds,
+         const signed int initialOffsetHours,
+         const signed int initialOffsetMinutes);
+
+    signed int year;
+    unsigned int month;
+    unsigned int day;
+    unsigned int hour;
+    int minutes;
+    unsigned int seconds;
+    unsigned int nanoseconds;
+    signed int offsetHours;
+    signed int offsetMinutes;
+
+};
+
+} // namespace imebra
+
+
+
 
 #endif // imebraDefinitions_SWIG_3146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_

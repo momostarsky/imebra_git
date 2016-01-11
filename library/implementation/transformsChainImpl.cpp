@@ -89,10 +89,10 @@ void transformsChain::runTransform(
 	tTransformsList::iterator lastTransform(m_transformsList.end());
 	--lastTransform;
 
-	std::wstring inputColorSpace(inputImage->getColorSpace());
+    std::string inputColorSpace(inputImage->getColorSpace());
 	image::bitDepth inputDepth(inputImage->getDepth());
 	std::uint32_t inputHighBit(inputImage->getHighBit());
-	std::wstring outputColorSpace(outputImage->getColorSpace());
+    std::string outputColorSpace(outputImage->getColorSpace());
 	image::bitDepth outputDepth(outputImage->getDepth());
 	std::uint32_t outputHighBit(outputImage->getHighBit());
 	std::uint32_t allocateRows = 65536 / inputWidth;

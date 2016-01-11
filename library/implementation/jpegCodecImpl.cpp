@@ -476,17 +476,14 @@ void jpegCodec::writeStream(std::shared_ptr<streamWriter> pStream, std::shared_p
 
     // Retrieve the transfer syntax
     ///////////////////////////////////////////////////////////
-    std::wstring transferSyntax = pDataSet->getUnicodeString(0x0002, 0x0, 0x0010, 0, 0);
+    std::string transferSyntax = pDataSet->getStringThrow(0x0002, 0x0, 0x0010, 0, 0);
 
     // The buffer can be written as it is
     ///////////////////////////////////////////////////////////
     if(canHandleTransferSyntax(transferSyntax))
     {
-        std::shared_ptr<data> imageData = pDataSet->getTag(0x7fe0, 0, 0x0010);
-        if(imageData == 0 || !imageData->bufferExists(0))
-        {
-            PUNTOEXE_THROW(::imebra::dataSetImageDoesntExist, "The requested image doesn't exist");
-        }
+        std::shared_ptr<data> imageData = pDataSet->getTagThrow(0x7fe0, 0, 0x0010);
+
         std::uint32_t firstBufferId(0);
         std::uint32_t endBufferId(1);
         if(imageData->bufferExists(1))
@@ -495,7 +492,7 @@ void jpegCodec::writeStream(std::shared_ptr<streamWriter> pStream, std::shared_p
         }
         for(std::uint32_t scanBuffers = firstBufferId; scanBuffers != endBufferId; ++scanBuffers)
         {
-            std::shared_ptr<handlers::readingDataHandlerRaw> readHandler = imageData->getReadingDataHandlerRaw(scanBuffers);
+            std::shared_ptr<handlers::readingDataHandlerRaw> readHandler = imageData->getReadingDataHandlerRawThrow(scanBuffers);
             const std::uint8_t* readBuffer = readHandler->getMemoryBuffer();
             pStream->write(readBuffer, readHandler->getSize());
         }
@@ -506,8 +503,7 @@ void jpegCodec::writeStream(std::shared_ptr<streamWriter> pStream, std::shared_p
     // Get the image then write it
     ///////////////////////////////////////////////////////////
     std::shared_ptr<image> decodedImage = pDataSet->getImage(0);
-    std::wstring defaultTransferSyntax(L"1.2.840.10008.1.2.4.50"); // baseline (8 bits lossy)
-    setImage(pStream, decodedImage, defaultTransferSyntax, codecs::codec::high, "OB", 8, true, true, false, false);
+    setImage(pStream, decodedImage, "1.2.840.10008.1.2.4.50", codecs::codec::high, "OB", 8, true, true, false, false);
 
     PUNTOEXE_FUNCTION_END();
 
@@ -1024,15 +1020,15 @@ void jpegCodec::readStream(std::shared_ptr<streamReader> pSourceStream, std::sha
 //
 /////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
-bool jpegCodec::canHandleTransferSyntax(const std::wstring& transferSyntax)
+bool jpegCodec::canHandleTransferSyntax(const std::string& transferSyntax) const
 {
     PUNTOEXE_FUNCTION_START(L"jpegCodec::canHandleTransferSyntax");
 
     return (
-                transferSyntax == L"1.2.840.10008.1.2.4.50" ||  // baseline (8 bits lossy)
-                transferSyntax == L"1.2.840.10008.1.2.4.51" ||  // extended (12 bits lossy)
-                transferSyntax == L"1.2.840.10008.1.2.4.57" ||  // lossless NH
-                transferSyntax == L"1.2.840.10008.1.2.4.70");   // lossless NH first order prediction
+                transferSyntax == "1.2.840.10008.1.2.4.50" ||  // baseline (8 bits lossy)
+                transferSyntax == "1.2.840.10008.1.2.4.51" ||  // extended (12 bits lossy)
+                transferSyntax == "1.2.840.10008.1.2.4.57" ||  // lossless NH
+                transferSyntax == "1.2.840.10008.1.2.4.70");   // lossless NH first order prediction
 
     PUNTOEXE_FUNCTION_END();
 }
@@ -1048,7 +1044,7 @@ bool jpegCodec::canHandleTransferSyntax(const std::wstring& transferSyntax)
 //
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
-bool jpegCodec::encapsulated(const std::wstring& transferSyntax)
+bool jpegCodec::encapsulated(const std::string& transferSyntax) const
 {
     PUNTOEXE_FUNCTION_START(L"jpegCodec::canHandleTransferSyntax");
 
@@ -1071,15 +1067,15 @@ bool jpegCodec::encapsulated(const std::wstring& transferSyntax)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::uint32_t jpegCodec::suggestAllocatedBits(const std::wstring& transferSyntax, std::uint32_t highBit)
+std::uint32_t jpegCodec::suggestAllocatedBits(const std::string& transferSyntax, std::uint32_t highBit) const
 {
     PUNTOEXE_FUNCTION_START(L"jpegCodec::suggestAllocatedBits");
 
-    if(transferSyntax == L"1.2.840.10008.1.2.4.50")
+    if(transferSyntax == "1.2.840.10008.1.2.4.50")
     {
         return 8;
     }
-    if(transferSyntax == L"1.2.840.10008.1.2.4.51")
+    if(transferSyntax == "1.2.840.10008.1.2.4.51")
     {
         return 12;
     }
@@ -1290,19 +1286,19 @@ std::shared_ptr<image> jpegCodec::getImage(const dataSet& sourceDataSet, std::sh
 
     // Check for 2's complement
     ///////////////////////////////////////////////////////////
-    bool b2complement = sourceDataSet.getUnsignedLong(0x0028, 0, 0x0103, 0, 0) != 0;
-    std::wstring colorSpace = sourceDataSet.getUnicodeString(0x0028, 0, 0x0004, 0, 0);
+    bool b2complement = sourceDataSet.getUnsignedLong(0x0028, 0, 0x0103, 0, 0, 0) != 0;
+    std::string colorSpace = sourceDataSet.getStringThrow(0x0028, 0, 0x0004, 0, 0);
 
     // If the compression is jpeg baseline or jpeg extended
     //  then the color space cannot be "RGB"
     ///////////////////////////////////////////////////////////
-    if(colorSpace == L"RGB")
+    if(colorSpace == "RGB")
     {
-        std::wstring transferSyntax(sourceDataSet.getUnicodeString(0x0002, 0, 0x0010, 0, 0));
-        if(transferSyntax == L"1.2.840.10008.1.2.4.50" ||  // baseline (8 bits lossy)
-                transferSyntax == L"1.2.840.10008.1.2.4.51")    // extended (12 bits lossy)
+        std::string transferSyntax(sourceDataSet.getStringThrow(0x0002, 0, 0x0010, 0, 0));
+        if(transferSyntax == "1.2.840.10008.1.2.4.50" ||  // baseline (8 bits lossy)
+                transferSyntax == "1.2.840.10008.1.2.4.51")    // extended (12 bits lossy)
         {
-            colorSpace = L"YBR_FULL";
+            colorSpace = "YBR_FULL";
         }
     }
 
@@ -1324,7 +1320,7 @@ std::shared_ptr<image> jpegCodec::getImage(const dataSet& sourceDataSet, std::sh
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void jpegCodec::copyJpegChannelsToImage(std::shared_ptr<image> destImage, bool b2complement, const std::wstring& colorSpace)
+void jpegCodec::copyJpegChannelsToImage(std::shared_ptr<image> destImage, bool b2complement, const std::string& colorSpace)
 {
     PUNTOEXE_FUNCTION_START(L"jpegCodec::copyJpegChannelsToImage");
 
@@ -1479,7 +1475,7 @@ void jpegCodec::copyImageToJpegChannels(
 {
     PUNTOEXE_FUNCTION_START(L"jpegCodec::copyImageToJpegChannels");
 
-    std::wstring colorSpace = sourceImage->getColorSpace();
+    std::string colorSpace = sourceImage->getColorSpace();
     sourceImage->getSize(&m_imageSizeX, &m_imageSizeY);
     m_precision = allocatedBits;
 
@@ -1510,7 +1506,7 @@ void jpegCodec::copyImageToJpegChannels(
             }
             continue;
         }
-        if(colorSpace != L"YBR_FULL" && colorSpace != L"YBR_PARTIAL")
+        if(colorSpace != "YBR_FULL" && colorSpace != "YBR_PARTIAL")
         {
             continue;
         }
@@ -1662,9 +1658,9 @@ void jpegCodec::copyImageToJpegChannels(
 void jpegCodec::setImage(
         std::shared_ptr<streamWriter> pDestStream,
         std::shared_ptr<image> pImage,
-        std::wstring transferSyntax,
+        const std::string& transferSyntax,
         quality imageQuality,
-        std::string /* dataType */,
+        const std::string& /* dataType */,
         std::uint8_t allocatedBits,
         bool bSubSampledX,
         bool bSubSampledY,
@@ -1683,8 +1679,8 @@ void jpegCodec::setImage(
     ////////////////////////////////////////////////////////////////
     resetInternal(true, imageQuality);
 
-    m_bLossless = transferSyntax == L"1.2.840.10008.1.2.4.57" ||  // lossless NH
-            transferSyntax == L"1.2.840.10008.1.2.4.70";    // lossless NH first order prediction
+    m_bLossless = transferSyntax == "1.2.840.10008.1.2.4.57" ||  // lossless NH
+            transferSyntax == "1.2.840.10008.1.2.4.70";    // lossless NH first order prediction
 
     copyImageToJpegChannels(pImage, b2Complement, allocatedBits, bSubSampledX, bSubSampledY);
 

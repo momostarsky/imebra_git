@@ -34,9 +34,9 @@ namespace colorTransforms
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::wstring RGBToMONOCHROME2::getInitialColorSpace()
+std::string RGBToMONOCHROME2::getInitialColorSpace()
 {
-	return L"RGB";
+    return "RGB";
 }
 
 
@@ -49,9 +49,9 @@ std::wstring RGBToMONOCHROME2::getInitialColorSpace()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::wstring RGBToMONOCHROME2::getFinalColorSpace()
+std::string RGBToMONOCHROME2::getFinalColorSpace()
 {
-	return L"MONOCHROME2";
+    return "MONOCHROME2";
 }
 
 std::shared_ptr<colorTransform> RGBToMONOCHROME2::createColorTransform()

@@ -41,13 +41,6 @@ std::uint32_t VOILUT::getVOILUTId(std::uint32_t VOILUTNumber)
 	///////////////////////////////////////////////////////////
 	std::uint32_t VOILUTId = 0;
 
-	// If the dataset has not been set, then return NULL
-	///////////////////////////////////////////////////////////
-	if(m_pDataSet == 0)
-	{
-		return 0;
-	}
-
 	// Reset the window's center and width
 	///////////////////////////////////////////////////////////
 	std::int32_t windowWidth = 0;
@@ -55,9 +48,9 @@ std::uint32_t VOILUT::getVOILUTId(std::uint32_t VOILUTNumber)
 	// Scan all the window's centers and widths.
 	///////////////////////////////////////////////////////////
 	std::uint32_t scanWindow;
-	for(scanWindow=VOILUTNumber; (windowWidth == 0) && (scanWindow!=0xffffffff); --scanWindow)
+    for(scanWindow = VOILUTNumber; (windowWidth == 0) && (scanWindow != 0xffffffff); --scanWindow)
 	{
-        windowWidth  = m_pDataSet->getSignedLong(0x0028, 0, 0x1051, 0, scanWindow);
+        windowWidth  = m_pDataSet->getSignedLong(0x0028, 0, 0x1051, 0, scanWindow, 0);
 	}
 	++scanWindow;
 
@@ -69,14 +62,16 @@ std::uint32_t VOILUT::getVOILUTId(std::uint32_t VOILUTNumber)
 	{
 		// Find the LUT's ID
 		///////////////////////////////////////////////////////////
-		VOILUTNumber-=scanWindow;
-		std::shared_ptr<dataSet> voiLut = m_pDataSet->getSequenceItem(0x0028, 0, 0x3010, VOILUTNumber);
-		if(voiLut != 0)
-		{
-			// Set the VOILUTId
-			///////////////////////////////////////////////////////////
-			VOILUTId=VOILUTNumber | 0x00100000;
+        VOILUTNumber -= scanWindow;
+        try
+        {
+            m_pDataSet->getSequenceItemThrow(0x0028, 0, 0x3010, VOILUTNumber);
+            VOILUTId = VOILUTNumber | 0x00100000;
 		}
+        catch(const ::imebra::missingDataElement&)
+        {
+            // Nothing to do. The lut does not exist
+        }
 	}
 
 	// The window's center/width has been found
@@ -85,7 +80,7 @@ std::uint32_t VOILUT::getVOILUTId(std::uint32_t VOILUTNumber)
 	{
 		// Set the VOILUTId
 		///////////////////////////////////////////////////////////
-		VOILUTId=VOILUTNumber | 0x00200000;
+        VOILUTId = VOILUTNumber | 0x00200000;
 	}
 
 	// Return the VOILUT's ID
@@ -148,14 +143,14 @@ std::wstring VOILUT::getVOILUTDescription(std::uint32_t VOILUTId)
 	///////////////////////////////////////////////////////////
 	if((VOILUTId & 0x00200000))
 	{
-        VOILUTDescription = m_pDataSet->getUnicodeString(0x0028, 0, 0x1055, 0, VOILUTNumber);
+        VOILUTDescription = m_pDataSet->getUnicodeString(0x0028, 0, 0x1055, 0, VOILUTNumber, L"");
 	}
 
 	// LUT
 	///////////////////////////////////////////////////////////
 	if((VOILUTId & 0x00100000))
 	{
-		std::shared_ptr<lut> voiLut = m_pDataSet->getLut(0x0028, 0x3010, VOILUTNumber);
+        std::shared_ptr<lut> voiLut = m_pDataSet->getLutThrow(0x0028, 0x3010, VOILUTNumber);
 		if(voiLut != 0)
 		{
 			VOILUTDescription=voiLut->getDescription();
@@ -197,8 +192,8 @@ void VOILUT::setVOILUT(std::uint32_t VOILUTId)
 	if((VOILUTId & 0x00200000))
 	{
 		setCenterWidth(
-            m_pDataSet->getSignedLong(0x0028, 0, 0x1050, 0, VOILUTNumber),
-            m_pDataSet->getSignedLong(0x0028, 0, 0x1051, 0, VOILUTNumber));
+            m_pDataSet->getSignedLongThrow(0x0028, 0, 0x1050, 0, VOILUTNumber),
+            m_pDataSet->getSignedLongThrow(0x0028, 0, 0x1051, 0, VOILUTNumber));
 		return;
 	}
 
@@ -206,7 +201,7 @@ void VOILUT::setVOILUT(std::uint32_t VOILUTId)
 	///////////////////////////////////////////////////////////
 	if((VOILUTId & 0x00100000))
 	{
-		setLUT(m_pDataSet->getLut(0x0028, 0x3010, VOILUTNumber));
+        setLUT(m_pDataSet->getLutThrow(0x0028, 0x3010, VOILUTNumber));
 		return;
 	}
 

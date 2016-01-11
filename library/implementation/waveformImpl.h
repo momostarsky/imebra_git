@@ -11,7 +11,7 @@ $fileHeader$
 #define imebraWaveform_A807A3CA_FA04_44f4_85D2_C7AA2FE103C4__INCLUDED_
 
 #include <memory>
-
+#include "dataHandlerImpl.h"
 
 ///////////////////////////////////////////////////////////
 //
@@ -70,7 +70,7 @@ public:
 	/// @return the number of channels
 	///
 	///////////////////////////////////////////////////////////
-	std::uint32_t getChannels();
+    std::uint32_t getChannels() const;
 
 	/// \brief Retrieve the number of samples per channel
 	///         (tag 003A,0010).
@@ -78,7 +78,7 @@ public:
 	/// @return the number of samples per channel
 	///
 	///////////////////////////////////////////////////////////
-	std::uint32_t getSamples();
+    std::uint32_t getSamples() const;
 
 	/// \brief Retrieve the number of bit stored 
 	///         (tag 003A,021A).
@@ -86,7 +86,7 @@ public:
 	/// @return the number of bits stored
 	///
 	///////////////////////////////////////////////////////////
-	std::uint32_t getBitsStored();
+    std::uint32_t getBitsStored() const;
 
 	/// \brief Retrieve the number of bit allocated
 	///         (tag 5400,1004).
@@ -94,7 +94,7 @@ public:
 	/// @return the number of bits allocated
 	///
 	///////////////////////////////////////////////////////////
-	std::uint32_t getBitsAllocated();
+    std::uint32_t getBitsAllocated() const;
 
 	/// \brief Return the data interpretation string 
 	///         (tag 5400,1006).
@@ -108,7 +108,7 @@ public:
 	/// - "US": unsigned 16 bit
 	///
 	///////////////////////////////////////////////////////////
-	std::string getInterpretation();
+    std::string getInterpretation() const;
 
 	/// \brief Retrieve the decompressed waveform data.
 	///
@@ -133,7 +133,7 @@ public:
 	///        to retrieve the data
 	///
 	///////////////////////////////////////////////////////////
-    //std::shared_ptr<handlers::dataHandler> getIntegerData(std::uint32_t channel, std::int32_t paddingValue = 0x7fffffff);
+    std::shared_ptr<handlers::readingDataHandler> getIntegerData(std::uint32_t channel, std::int32_t paddingValue = 0x7fffffff);
 
 	/// \brief Return the sequence item used by the waveform.
 	///

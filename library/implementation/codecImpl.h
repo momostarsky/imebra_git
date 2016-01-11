@@ -243,9 +243,9 @@ public:
 	virtual void setImage(
 		std::shared_ptr<streamWriter> pDestStream,
 		std::shared_ptr<image> pSourceImage, 
-		std::wstring transferSyntax, 
+        const std::string& transferSyntax,
 		quality imageQuality,
-		std::string dataType,
+        const std::string& dataType,
 		std::uint8_t allocatedBits,
 		bool bSubSampledX,
 		bool bSubSampledY,
@@ -280,7 +280,7 @@ public:
 	///         codec, false otherwise.
 	///
 	///////////////////////////////////////////////////////////
-    virtual bool canHandleTransferSyntax(const std::wstring& transferSyntax)=0;
+    virtual bool canHandleTransferSyntax(const std::string& transferSyntax) const = 0;
 
 	/// \brief This function returns true if the codec 
 	///         transfer syntax handled by the code has to be
@@ -292,7 +292,7 @@ public:
 	///         transferSyntax has to be encapsulated
 	///
 	///////////////////////////////////////////////////////////
-    virtual bool encapsulated(const std::wstring& transferSyntax)=0;
+    virtual bool encapsulated(const std::string& transferSyntax) const = 0;
 
 	//@}
 
@@ -313,7 +313,7 @@ public:
 	///          specified transfer syntax and high bit.
 	///
 	///////////////////////////////////////////////////////////
-    virtual std::uint32_t suggestAllocatedBits(const std::wstring& transferSyntax, std::uint32_t highBit)=0;
+    virtual std::uint32_t suggestAllocatedBits(const std::string& transferSyntax, std::uint32_t highBit) const = 0;
 
 	//@}
 

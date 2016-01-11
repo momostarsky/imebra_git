@@ -34,9 +34,9 @@ namespace colorTransforms
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::wstring RGBToYBRFULL::getInitialColorSpace()
+std::string RGBToYBRFULL::getInitialColorSpace()
 {
-	return L"RGB";
+    return "RGB";
 }
 
 
@@ -49,9 +49,9 @@ std::wstring RGBToYBRFULL::getInitialColorSpace()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::wstring RGBToYBRFULL::getFinalColorSpace()
+std::string RGBToYBRFULL::getFinalColorSpace()
 {
-	return L"YBR_FULL";
+    return "YBR_FULL";
 }
 
 

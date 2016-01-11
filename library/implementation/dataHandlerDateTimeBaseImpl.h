@@ -52,16 +52,16 @@ public:
 protected:
 	void parseDate(
         const std::string& dateString,
-		std::int32_t* pYear, 
-		std::int32_t* pMonth, 
-		std::int32_t* pDay) const;
+        std::uint32_t* pYear,
+        std::uint32_t* pMonth,
+        std::uint32_t* pDay) const;
 
 	void parseTime(
         const std::string& timeString,
-		std::int32_t* pHour, 
-		std::int32_t* pMinutes,
-		std::int32_t* pSeconds,
-		std::int32_t* pNanoseconds,
+        std::uint32_t* pHour,
+        std::uint32_t* pMinutes,
+        std::uint32_t* pSeconds,
+        std::uint32_t* pNanoseconds,
 		std::int32_t* pOffsetHours,
 		std::int32_t* pOffsetMinutes) const;
 

@@ -153,9 +153,9 @@ public:
 	///                   aligned
 	///
 	///////////////////////////////////////////////////////////
-	inline std::uint32_t readBits(int bitsNum)
+    inline std::uint32_t readBits(std::uint8_t bitsNum)
 	{
-        const int bufferSize(sizeof(m_inBitsBuffer) * 8);
+        const size_t bufferSize(sizeof(m_inBitsBuffer) * 8);
 
 		// All the requested bits are already in the buffer.
 		// Just return them.
@@ -187,7 +187,7 @@ public:
 		{
 			if(bitsNum <= 8)
 			{
-                                m_inBitsBuffer = readByte();
+                m_inBitsBuffer = readByte();
 				returnValue |= (m_inBitsBuffer >> (bufferSize - bitsNum));
 				m_inBitsBuffer <<= bitsNum;
 				m_inBitsNum = 8 - bitsNum;

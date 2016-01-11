@@ -10,50 +10,6 @@ $fileHeader$
 
 #include <cstdint>
 
-/// \addtogroup group_baseclasses
-///
-/// @{
-
-/// @deprecated Use std::uint8_t instead
-///
-/// This type represents a 1 byte unsigned integer.
-///
-typedef std::uint8_t imbxUint8;
-
-/// @deprecated Use std::uint16_t instead
-///
-/// This type represents a 2 bytes unsigned integer.
-///
-typedef std::uint16_t imbxUint16;
-
-/// @deprecated Use std::uint32_t instead
-///
-/// This type represents a 4 bytes unsigned integer.
-///
-typedef std::uint32_t  imbxUint32;
-
-/// @deprecated Use std::int8_t instead
-///
-/// This type represents an 1 byte signed integer.
-///
-typedef std::int8_t    imbxInt8;
-
-/// @deprecated Use std::int16_t instead
-///
-/// This type represents a 2 bytes signed integer.
-///
-typedef std::int16_t   imbxInt16;
-
-/// @deprecated Use std::int32_t instead
-///
-/// This type represents a 8 bytes signed integer.
-///
-typedef std::int32_t    imbxInt32;
-
-typedef std::int64_t imbxInt64;
-
-typedef std::uint64_t imbxUint64;
-
 #ifndef MAXIMUM_IMAGE_WIDTH
     #define MAXIMUM_IMAGE_WIDTH 4096
 #endif
@@ -82,4 +38,3 @@ typedef std::uint64_t imbxUint64;
 #endif
 #endif
 
-///@}

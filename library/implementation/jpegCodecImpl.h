@@ -85,9 +85,9 @@ public:
 	virtual void setImage(
 		std::shared_ptr<streamWriter> pDestStream,
 		std::shared_ptr<image> pImage,
-		std::wstring transferSyntax,
+        const std::string& transferSyntax,
 		quality imageQuality,
-		std::string dataType,
+        const std::string& dataType,
 		std::uint8_t allocatedBits,
 		bool bSubSampledX,
 		bool bSubSampledY,
@@ -96,17 +96,17 @@ public:
 
 	// Return true if the codec can handle the transfer
 	///////////////////////////////////////////////////////////
-    virtual bool canHandleTransferSyntax(const std::wstring& transferSyntax);
+    virtual bool canHandleTransferSyntax(const std::string& transferSyntax) const;
 
 	// Returns true if the transfer syntax has to be
 	//  encapsulated
 	//
 	///////////////////////////////////////////////////////////
-    virtual bool encapsulated(const std::wstring& transferSyntax);
+    virtual bool encapsulated(const std::string& transferSyntax) const;
 
 	// Return the suggested allocated bits
 	///////////////////////////////////////////////////////////
-    virtual std::uint32_t suggestAllocatedBits(const std::wstring& transferSyntax, std::uint32_t highBit);
+    virtual std::uint32_t suggestAllocatedBits(const std::string& transferSyntax, std::uint32_t highBit) const;
 
 	// Create another jpeg codec
 	///////////////////////////////////////////////////////////
@@ -280,7 +280,7 @@ protected:
 	///////////////////////////////////////////////////////////
 	void resetInternal(bool bCompression, quality compQuality);
 
-    void copyJpegChannelsToImage(std::shared_ptr<image> destImage, bool b2complement, const std::wstring& colorSpace);
+    void copyJpegChannelsToImage(std::shared_ptr<image> destImage, bool b2complement, const std::string& colorSpace);
 	void copyImageToJpegChannels(std::shared_ptr<image> sourceImage, bool b2complement, std::uint8_t allocatedBits, bool bSubSampledX, bool bSubSampledY);
 
 	void writeScan(streamWriter* pDestinationStream, bool bCalcHuffman);

@@ -317,7 +317,7 @@ namespace puntoexe
 						sourceHeight = imageSizeY;
 					}
                     sourceImage = std::make_shared<image>();
-					sourceImage->create(sourceWidth, sourceHeight, image::depthU8, L"RGB", 7);
+                    sourceImage->create(sourceWidth, sourceHeight, image::depthU8, "RGB", 7);
 				}
 
 

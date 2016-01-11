@@ -56,26 +56,26 @@ namespace imebra
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<data> dataSet::getTag(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId) const
+std::shared_ptr<data> dataSet::getTagThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getTag");
 
     tGroups::const_iterator findGroup(m_groups.find(groupId));
     if(findGroup == m_groups.end())
     {
-        return std::shared_ptr<data>(0);
+        throw ::imebra::missingGroup("The requested group is missing");
     }
 
     if(findGroup->second.size() <= order)
     {
-        return std::shared_ptr<data>(0);
+        throw ::imebra::missingGroup("The requested group is missing");
     }
 
     const tTags& tagsMap = findGroup->second.at(order);
     tTags::const_iterator findTag(tagsMap.find(tagId));
     if(findTag == tagsMap.end())
     {
-        return std::shared_ptr<data>(0);
+        throw ::imebra::missingGroup("The requested tag is missing");
     }
     return findTag->second;
 
@@ -102,10 +102,17 @@ std::shared_ptr<data> dataSet::getTagCreate(std::uint16_t groupId, std::uint16_t
     PUNTOEXE_FUNCTION_END();
 }
 
-bool dataSet::bufferExists(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId)
+bool dataSet::bufferExists(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId) const
 {
-    std::shared_ptr<data> tag(getTag(groupId, order, tagId));
-    return tag != 0 && tag->bufferExists(bufferId);
+    try
+    {
+        std::shared_ptr<data> tag(getTagThrow(groupId, order, tagId));
+        return tag != 0 && tag->bufferExists(bufferId);
+    }
+    catch(const ::imebra::missingDataElement&)
+    {
+        return false;
+    }
 }
 
 
@@ -124,174 +131,166 @@ std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
 
 	// Retrieve the transfer syntax
 	///////////////////////////////////////////////////////////
-    std::wstring transferSyntax = getUnicodeString(0x0002, 0x0, 0x0010, 0, 0);
+    std::string transferSyntax = getStringThrow(0x0002, 0x0, 0x0010, 0, 0);
 
 	// Get the right codec
 	///////////////////////////////////////////////////////////
     std::shared_ptr<codecs::codec> pCodec=codecs::codecFactory::getCodec(transferSyntax);
 
-	// Return if the codec has not been found
-	///////////////////////////////////////////////////////////
-	if(pCodec == 0)
-	{
-        PUNTOEXE_THROW(::imebra::dataSetExceptionUnknownTransferSyntax, "None of the codecs support the specified transfer syntax");
-	}
+    try
+    {
+        std::shared_ptr<imebra::data> imageTag = getTagThrow(0x7fe0, 0x0, 0x0010);
 
-    std::shared_ptr<imebra::data> imageTag = getTag(0x7fe0, 0x0, 0x0010);
-	if(imageTag == 0)
-	{
-        PUNTOEXE_THROW(::imebra::dataSetImageDoesntExist, "The requested image doesn't exist");
-	}
-	std::string imageStreamDataType = imageTag->getDataType();
+        const std::string imageStreamDataType(imageTag->getDataTypeThrow(0));
 
-	// Get the number of frames
-	///////////////////////////////////////////////////////////
-	std::uint32_t numberOfFrames = 1;
-	if(!getDataType(0x0028, 0, 0x0008).empty())
-	{
-        numberOfFrames = getUnsignedLong(0x0028, 0, 0x0008, 0, 0);
-	}
+        // Get the number of frames
+        ///////////////////////////////////////////////////////////
+        std::uint32_t numberOfFrames = getUnsignedLong(0x0028, 0, 0x0008, 0, 0, 1);
 
-	if(frameNumber >= numberOfFrames)
-	{
-        PUNTOEXE_THROW(::imebra::dataSetImageDoesntExist, "The requested image doesn't exist");
-	}
-
-	// Placeholder for the stream containing the image
-	///////////////////////////////////////////////////////////
-    std::shared_ptr<streamReader> imageStream;
-
-	// Retrieve the second item in the image's tag.
-	// If the second item is present, then a multiframe
-	//  image is present.
-	///////////////////////////////////////////////////////////
-	bool bDontNeedImagesPositions = false;
-	{
-		if(imageTag->getBufferSize(1) != 0)
-		{
-			std::uint32_t firstBufferId(0), endBufferId(0), totalLength(0);
-			if(imageTag->getBufferSize(0) == 0 && numberOfFrames + 1 == imageTag->getBuffersCount())
-			{
-				firstBufferId = frameNumber + 1;
-				endBufferId = firstBufferId + 1;
-				totalLength = imageTag->getBufferSize(firstBufferId);
-			}
-			else
-			{
-				totalLength = getFrameBufferIds(frameNumber, &firstBufferId, &endBufferId);
-			}
-			if(firstBufferId == endBufferId - 1)
-			{
-				imageStream = imageTag->getStreamReader(firstBufferId);
-				if(imageStream == 0)
-				{
-                    PUNTOEXE_THROW(::imebra::dataSetImageDoesntExist, "The requested image doesn't exist");
-				}
-			}
-			else
-			{
-                std::shared_ptr<memory> temporaryMemory(memoryPool::getMemoryPool()->getMemory(totalLength));
-				const std::uint8_t* pDest = temporaryMemory->data();
-				for(std::uint32_t scanBuffers = firstBufferId; scanBuffers != endBufferId; ++scanBuffers)
-				{
-                    std::shared_ptr<handlers::readingDataHandlerRaw> bufferHandler = imageTag->getReadingDataHandlerRaw(scanBuffers);
-                    const std::uint8_t* pSource = bufferHandler->getMemoryBuffer();
-					::memcpy((void*)pDest, (void*)pSource, bufferHandler->getSize());
-					pDest += bufferHandler->getSize();
-				}
-                std::shared_ptr<baseStreamReader> compositeStream(new memoryStreamReader(temporaryMemory));
-                imageStream = std::shared_ptr<streamReader>(new streamReader(compositeStream));
-			}
-			bDontNeedImagesPositions = true;
-		}
-	}
-
-	// If the image cannot be found, then probably we are
-	//  handling an old dicom format.
-	// Then try to read the image from the next group with
-	//  id=0x7fe
-	///////////////////////////////////////////////////////////
-	if(imageStream == 0)
-	{
-		imageStream = getStreamReader(0x7fe0, (std::uint16_t)frameNumber, 0x0010, 0x0);
-		bDontNeedImagesPositions = true;
-	}
-
-	// We are dealing with an old dicom format that doesn't
-	//  include the image offsets and stores all the images
-	//  in one buffer
-	///////////////////////////////////////////////////////////
-	if(imageStream == 0)
-	{
-		imageStream = imageTag->getStreamReader(0x0);
-		if(imageStream == 0)
-		{
+        if(frameNumber >= numberOfFrames)
+        {
             PUNTOEXE_THROW(::imebra::dataSetImageDoesntExist, "The requested image doesn't exist");
-		}
+        }
 
-		// Reset an internal array that keeps track of the
-		//  images position
-		///////////////////////////////////////////////////////////
-		if(m_imagesPositions.size() != numberOfFrames)
-		{
-			m_imagesPositions.resize(numberOfFrames);
+        // Placeholder for the stream containing the image
+        ///////////////////////////////////////////////////////////
+        std::shared_ptr<streamReader> imageStream;
 
-			for(std::uint32_t resetImagesPositions = 0; resetImagesPositions < numberOfFrames; m_imagesPositions[resetImagesPositions++] = 0)
-			{}// empty loop
+        // Retrieve the second item in the image's tag.
+        // If the second item is present, then a multiframe
+        //  image is present.
+        ///////////////////////////////////////////////////////////
+        bool bDontNeedImagesPositions = false;
+        {
+            if(imageTag->bufferExists(1))
+            {
+                std::uint32_t firstBufferId(0), endBufferId(0), totalLength(0);
+                if(imageTag->getBufferSizeThrow(0) == 0 && numberOfFrames + 1 == imageTag->getBuffersCount())
+                {
+                    firstBufferId = frameNumber + 1;
+                    endBufferId = firstBufferId + 1;
+                    totalLength = imageTag->getBufferSizeThrow(firstBufferId);
+                }
+                else
+                {
+                    totalLength = getFrameBufferIds(frameNumber, &firstBufferId, &endBufferId);
+                }
+                if(firstBufferId == endBufferId - 1)
+                {
+                    imageStream = imageTag->getStreamReaderThrow(firstBufferId);
+                }
+                else
+                {
+                    std::shared_ptr<memory> temporaryMemory(memoryPool::getMemoryPool()->getMemory(totalLength));
+                    const std::uint8_t* pDest = temporaryMemory->data();
+                    for(std::uint32_t scanBuffers = firstBufferId; scanBuffers != endBufferId; ++scanBuffers)
+                    {
+                        std::shared_ptr<handlers::readingDataHandlerRaw> bufferHandler = imageTag->getReadingDataHandlerRawThrow(scanBuffers);
+                        const std::uint8_t* pSource = bufferHandler->getMemoryBuffer();
+                        ::memcpy((void*)pDest, (void*)pSource, bufferHandler->getSize());
+                        pDest += bufferHandler->getSize();
+                    }
+                    std::shared_ptr<baseStreamReader> compositeStream(new memoryStreamReader(temporaryMemory));
+                    imageStream = std::make_shared<streamReader>(compositeStream);
+                }
+                bDontNeedImagesPositions = true;
+            }
+        }
 
-		}
+        // If the image cannot be found, then probably we are
+        //  handling an old dicom format.
+        // Then try to read the image from the next group with
+        //  id=0x7fe
+        ///////////////////////////////////////////////////////////
+        if(imageStream == 0)
+        {
+            try
+            {
+                imageStream = getStreamReaderThrow(0x7fe0, (std::uint16_t)frameNumber, 0x0010, 0x0);
+                bDontNeedImagesPositions = true;
+            }
+            catch(const ::imebra::missingDataElement&)
+            {
+                // Nothing to do
+            }
+        }
 
-		// Read all the images before the desidered one so we set
-		//  reading position in the stream
-		///////////////////////////////////////////////////////////
-		for(std::uint32_t readImages = 0; readImages < frameNumber; readImages++)
-		{
-			std::uint32_t offsetPosition = m_imagesPositions[readImages];
-			if(offsetPosition == 0)
-			{
-                pCodec->getImage(*this, imageStream, imageStreamDataType);
-				m_imagesPositions[readImages] = imageStream->position();
-				continue;
-			}
-			if((m_imagesPositions[readImages + 1] == 0) || (readImages == (frameNumber - 1)))
-			{
-				imageStream->seek(offsetPosition);
-			}
-		}
-	}
+        // We are dealing with an old dicom format that doesn't
+        //  include the image offsets and stores all the images
+        //  in one buffer
+        ///////////////////////////////////////////////////////////
+        if(imageStream == 0)
+        {
+            imageStream = imageTag->getStreamReaderThrow(0x0);
 
-    double pixelDistanceX = getDouble(0x0028, 0x0, 0x0030, 0, 0);
-    double pixelDistanceY = getDouble(0x0028, 0x0, 0x0030, 0, 1);
+            // Reset an internal array that keeps track of the
+            //  images position
+            ///////////////////////////////////////////////////////////
+            if(m_imagesPositions.size() != numberOfFrames)
+            {
+                m_imagesPositions.resize(numberOfFrames);
 
-    std::shared_ptr<image> pImage;
-    pImage = pCodec->getImage(*this, imageStream, imageStreamDataType);
+                for(std::uint32_t resetImagesPositions = 0; resetImagesPositions < numberOfFrames; m_imagesPositions[resetImagesPositions++] = 0)
+                {}// empty loop
 
-	if(!bDontNeedImagesPositions && m_imagesPositions.size() > frameNumber)
-	{
-		m_imagesPositions[frameNumber] = imageStream->position();
-	}
+            }
 
-	// If the image has been returned correctly, then set
-	//  the image's size
-	///////////////////////////////////////////////////////////
-	if(pImage != 0)
-	{
-		std::uint32_t sizeX, sizeY;
-		pImage->getSize(&sizeX, &sizeY);
-		pImage->setSizeMm(pixelDistanceX*(double)sizeX, pixelDistanceY*(double)sizeY);
-	}
+            // Read all the images before the desidered one so we set
+            //  reading position in the stream
+            ///////////////////////////////////////////////////////////
+            for(std::uint32_t readImages = 0; readImages < frameNumber; readImages++)
+            {
+                std::uint32_t offsetPosition = m_imagesPositions[readImages];
+                if(offsetPosition == 0)
+                {
+                    pCodec->getImage(*this, imageStream, imageStreamDataType);
+                    m_imagesPositions[readImages] = imageStream->position();
+                    continue;
+                }
+                if((m_imagesPositions[readImages + 1] == 0) || (readImages == (frameNumber - 1)))
+                {
+                    imageStream->seek(offsetPosition);
+                }
+            }
+        }
 
-	if(pImage->getColorSpace() == L"PALETTE COLOR")
-	{
-        std::shared_ptr<lut> red(new lut), green(new lut), blue(new lut);
-        red->setLut(getReadingDataHandler(0x0028, 0x0, 0x1101, 0), getReadingDataHandler(0x0028, 0x0, 0x1201, 0), L"");
-        green->setLut(getReadingDataHandler(0x0028, 0x0, 0x1102, 0), getReadingDataHandler(0x0028, 0x0, 0x1202, 0), L"");
-        blue->setLut(getReadingDataHandler(0x0028, 0x0, 0x1103, 0), getReadingDataHandler(0x0028, 0x0, 0x1203, 0), L"");
-        std::shared_ptr<palette> imagePalette(new palette(red, green, blue));
-		pImage->setPalette(imagePalette);
-	}
+        double pixelDistanceX = getDouble(0x0028, 0x0, 0x0030, 0, 0, 1);
+        double pixelDistanceY = getDouble(0x0028, 0x0, 0x0030, 0, 1, 1);
 
-	return pImage;
+        std::shared_ptr<image> pImage;
+        pImage = pCodec->getImage(*this, imageStream, imageStreamDataType);
+
+        if(!bDontNeedImagesPositions && m_imagesPositions.size() > frameNumber)
+        {
+            m_imagesPositions[frameNumber] = imageStream->position();
+        }
+
+        // If the image has been returned correctly, then set
+        //  the image's size
+        ///////////////////////////////////////////////////////////
+        if(pImage != 0)
+        {
+            std::uint32_t sizeX, sizeY;
+            pImage->getSize(&sizeX, &sizeY);
+            pImage->setSizeMm(pixelDistanceX*(double)sizeX, pixelDistanceY*(double)sizeY);
+        }
+
+        if(pImage->getColorSpace() == "PALETTE COLOR")
+        {
+            std::shared_ptr<lut> red(new lut), green(new lut), blue(new lut);
+            red->setLut(getReadingDataHandlerThrow(0x0028, 0x0, 0x1101, 0), getReadingDataHandlerThrow(0x0028, 0x0, 0x1201, 0), L"");
+            green->setLut(getReadingDataHandlerThrow(0x0028, 0x0, 0x1102, 0), getReadingDataHandlerThrow(0x0028, 0x0, 0x1202, 0), L"");
+            blue->setLut(getReadingDataHandlerThrow(0x0028, 0x0, 0x1103, 0), getReadingDataHandlerThrow(0x0028, 0x0, 0x1203, 0), L"");
+            std::shared_ptr<palette> imagePalette(new palette(red, green, blue));
+            pImage->setPalette(imagePalette);
+        }
+
+        return pImage;
+    }
+    catch(const ::imebra::missingDataElement&)
+    {
+        PUNTOEXE_THROW(::imebra::dataSetImageDoesntExist, "The requested image doesn't exist");
+    }
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -307,7 +306,7 @@ std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<image> dataSet::getModalityImage(std::uint32_t frameNumber)
+std::shared_ptr<image> dataSet::getModalityImage(std::uint32_t frameNumber) const
 {
     PUNTOEXE_FUNCTION_START(L"dataSet::getImage");
 
@@ -319,13 +318,13 @@ std::shared_ptr<image> dataSet::getModalityImage(std::uint32_t frameNumber)
         return originalImage;
     }
 
-    std::shared_ptr<transforms::modalityVOILUT> modalityVOILUT(new transforms::modalityVOILUT(std::static_pointer_cast<dataSet>(shared_from_this())));
+    std::shared_ptr<transforms::modalityVOILUT> modalityVOILUT(new transforms::modalityVOILUT(std::static_pointer_cast<const dataSet>(shared_from_this())));
 
     // Convert to MONOCHROME2 if a modality transform is not present
     ////////////////////////////////////////////////////////////////
     if(modalityVOILUT->isEmpty())
     {
-        std::shared_ptr<transforms::transform> monochromeColorTransform(colorFactory->getTransform(originalImage->getColorSpace(), L"MONOCHROME2"));
+        std::shared_ptr<transforms::transform> monochromeColorTransform(colorFactory->getTransform(originalImage->getColorSpace(), "MONOCHROME2"));
         if(monochromeColorTransform != 0)
         {
             std::uint32_t width, height;
@@ -359,21 +358,21 @@ std::shared_ptr<image> dataSet::getModalityImage(std::uint32_t frameNumber)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage, const std::wstring& transferSyntax, codecs::codec::quality quality)
+void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage, const std::string& transferSyntax, codecs::codec::quality quality)
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::setImage");
 
 	// The group, order, tag and buffer where the image must
 	//  be stored
 	///////////////////////////////////////////////////////////
-	std::uint16_t groupId(0x7fe0), orderId(0), tagId(0x0010);
+    std::uint16_t groupId(0x7fe0), tagId(0x0010);
     std::uint32_t firstBufferId(0);
 
 	// bDontChangeAttributes is true if some images already
 	//  exist in the dataset and we must save the new image
 	//  using the attributes already stored
 	///////////////////////////////////////////////////////////
-    std::uint32_t numberOfFrames = getUnsignedLong(0x0028, 0, 0x0008, 0, 0);
+    std::uint32_t numberOfFrames = getUnsignedLong(0x0028, 0, 0x0008, 0, 0, 0);
 	if(frameNumber != numberOfFrames)
 	{
         PUNTOEXE_THROW(::imebra::dataSetExceptionWrongFrame, "The frames must be inserted in sequence");
@@ -381,7 +380,7 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
 	bool bDontChangeAttributes = (numberOfFrames != 0);
 	if(bDontChangeAttributes)
 	{
-        if(transferSyntax != getUnicodeString(0x0002, 0x0, 0x0010, 0, 0))
+        if(transferSyntax != getStringThrow(0x0002, 0x0, 0x0010, 0, 0))
         {
             PUNTOEXE_THROW(::imebra::dataSetExceptionDifferentFormat, "Previous images had a different transfer syntax");
         }
@@ -390,25 +389,10 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
 	// Select the right codec
 	///////////////////////////////////////////////////////////
     std::shared_ptr<codecs::codec> saveCodec(codecs::codecFactory::getCodec(transferSyntax));
-	if(saveCodec == 0L)
-	{
-        PUNTOEXE_THROW(::imebra::dataSetExceptionUnknownTransferSyntax, "None of the codec support the requested transfer syntax");
-	}
 
 	// Do we have to save the basic offset table?
 	///////////////////////////////////////////////////////////
-	bool bEncapsulated = saveCodec->encapsulated(transferSyntax) ||
-                         (getReadingDataHandlerRaw(groupId, 0x0, tagId, 0x1) != 0);
-
-	// Check if we are dealing with an old Dicom format...
-	///////////////////////////////////////////////////////////
-	std::string dataHandlerType = getDataType(0x7fe0, 0x1, 0x0010);
-	if(!dataHandlerType.empty())
-	{
-		orderId = (std::uint16_t)frameNumber;
-		bEncapsulated = false;
-	}
-
+    bool bEncapsulated = saveCodec->encapsulated(transferSyntax) || bufferExists(groupId, 0x0, tagId, 0x1);
 
 	// Set the subsampling flags
 	///////////////////////////////////////////////////////////
@@ -423,80 +407,72 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
     bool b2complement = (depth == image::depthS32 || depth == image::depthS16 || depth == image::depthS8);
     std::uint32_t channelsNumber = pImage->getChannelsNumber();
     std::uint8_t allocatedBits = (std::uint8_t)(saveCodec->suggestAllocatedBits(transferSyntax, pImage->getHighBit()));
-    bool bInterleaved(false);
-    if(getDataType(0x0028, 0, 0x0006).empty())
-    {
-        if(channelsNumber > 1)
-        {
-            bInterleaved = true;
-            setUnsignedLong(0x0028, 0, 0x0006, 0, 0, 0, "US");
-        }
-    }
-    else
-    {
-        bInterleaved = (getUnsignedLong(0x0028, 0x0, 0x0006, 0, 0) == 0x0);
-    }
+    bool bInterleaved = (getUnsignedLong(0x0028, 0x0, 0x0006, 0, 0, channelsNumber > 1 ? 0 : 1) == 0x0);
+    setUnsignedLong(0x0028, 0, 0x0006, 0, 0, bInterleaved ? 0 : 1);
 
 	// If the attributes cannot be changed, then check the
 	//  attributes already stored in the dataset
 	///////////////////////////////////////////////////////////
 	if(bDontChangeAttributes)
 	{
-		pImage = convertImageForDataSet(pImage);
-        std::wstring currentColorSpace = getUnicodeString(0x0028, 0x0, 0x0004, 0, 0);
-		bSubSampledX = transforms::colorTransforms::colorTransformsFactory::isSubsampledX(currentColorSpace);
-		bSubSampledY = transforms::colorTransforms::colorTransformsFactory::isSubsampledY(currentColorSpace);
-        b2complement = (getUnsignedLong(0x0028, 0, 0x0103, 0, 0) != 0);
-        allocatedBits = (std::uint8_t)getUnsignedLong(0x0028, 0x0, 0x0100, 0, 0);
-        channelsNumber = getUnsignedLong(0x0028, 0x0, 0x0002, 0, 0);
+        std::string currentColorSpace = getStringThrow(0x0028, 0x0, 0x0004, 0, 0);
+        if(
+                transforms::colorTransforms::colorTransformsFactory::normalizeColorSpace(pImage->getColorSpace()) !=
+                    transforms::colorTransforms::colorTransformsFactory::normalizeColorSpace(currentColorSpace) ||
+                bSubSampledX != transforms::colorTransforms::colorTransformsFactory::isSubsampledX(currentColorSpace) ||
+                bSubSampledY != transforms::colorTransforms::colorTransformsFactory::isSubsampledY(currentColorSpace) ||
+                b2complement != (getUnsignedLongThrow(0x0028, 0, 0x0103, 0, 0) != 0) ||
+                allocatedBits != (std::uint8_t)getUnsignedLongThrow(0x0028, 0x0, 0x0100, 0, 0) ||
+                channelsNumber != getUnsignedLongThrow(0x0028, 0x0, 0x0002, 0, 0))
+        {
+            PUNTOEXE_THROW(::imebra::dataSetExceptionDifferentFormat, "An image already exists in the dataset and has different attributes");
+        }
 	}
 
 	// Select the data type OB if not already set in the
 	//  dataset
 	///////////////////////////////////////////////////////////
-	if(dataHandlerType.empty())
-	{
-		if(transferSyntax == L"1.2.840.10008.1.2")
-		{
-			dataHandlerType = getDefaultDataType(0x7FE0, 0x0010);
-		}
-		else
-		{
-			dataHandlerType = (bEncapsulated || allocatedBits <= 8) ? "OB" : "OW";
-		}
-	}
+    std::string dataHandlerType;
+    if(transferSyntax == "1.2.840.10008.1.2")
+    {
+        dataHandlerType = getDefaultDataType(0x7FE0, 0x0010);
+    }
+    else
+    {
+        dataHandlerType = (bEncapsulated || allocatedBits <= 8) ? "OB" : "OW";
+    }
 
 	// Encapsulated mode. Check if we have the offsets table
 	///////////////////////////////////////////////////////////
 	if(bEncapsulated)
 	{
-		// We have to add the offsets buffer
-		///////////////////////////////////////////////////////////
-        std::shared_ptr<handlers::readingDataHandlerRaw> imageHandler0 = getReadingDataHandlerRaw(groupId, 0x0, tagId, 0x0);
-        std::shared_ptr<handlers::readingDataHandlerRaw> imageHandler1 = getReadingDataHandlerRaw(groupId, 0x0, tagId, 0x1);
-		if(imageHandler0 != 0L && imageHandler0->getSize() != 0 && imageHandler1 == 0L)
-		{
-			// The first image must be moved forward, in order to
-			//  make some room for the offset table
-			///////////////////////////////////////////////////////////
-			dataHandlerType = imageHandler0->getDataType();
-            std::shared_ptr<handlers::writingDataHandlerRaw> moveFirstImage = getWritingDataHandlerRaw(groupId, 0x0, tagId, 0x1, dataHandlerType);
+        try
+        {
+            if(bufferExists(groupId, 0x0, tagId, 0x1))
+            {
+                dataHandlerType = getDataTypeThrow(groupId, 0x0, tagId, 0x1);
+            }
+            else
+            {
+                std::shared_ptr<handlers::readingDataHandlerRaw> imageHandler0 = getReadingDataHandlerRawThrow(groupId, 0x0, tagId, 0x0);
+                size_t bufferSize(imageHandler0->getSize());
 
-			if(moveFirstImage == 0L)
-			{
-                PUNTOEXE_THROW(::imebra::dataSetExceptionOldFormat, "Cannot move the first image");
-			}
-            size_t bufferSize=imageHandler0->getSize();
-			moveFirstImage->setSize(bufferSize);
-			::memcpy(moveFirstImage->getMemoryBuffer(), imageHandler0->getMemoryBuffer(), bufferSize);
-		}
-
-		// An image in the first buffer already exists.
-		///////////////////////////////////////////////////////////
-		if(imageHandler1 != 0)
-		{
-			dataHandlerType = imageHandler1->getDataType();
-		}
+                if(bufferSize != 0 && !bufferExists(groupId, 0x0, tagId, 0x1))
+                {
+                    // The first image must be moved forward, in order to
+                    //  make some room for the offset table
+                    ///////////////////////////////////////////////////////////
+                    dataHandlerType = imageHandler0->getDataType();
+                    std::shared_ptr<handlers::writingDataHandlerRaw> moveFirstImage = getWritingDataHandlerRaw(groupId, 0x0, tagId, 0x1, dataHandlerType);
+                    moveFirstImage->setSize(bufferSize);
+                    ::memcpy(moveFirstImage->getMemoryBuffer(), imageHandler0->getMemoryBuffer(), bufferSize);
+                }
+            }
+        }
+        catch(const ::imebra::missingDataElement&)
+        {
+            // Nothing to do. No image has been stored yet
+        }
 
 		firstBufferId = getFirstAvailFrameBufferId();
 	}
@@ -507,7 +483,7 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
     std::shared_ptr<memory> uncompressedImage(new memory);
 	if(bEncapsulated || frameNumber == 0)
 	{
-		outputStream = getStreamWriter(groupId, orderId, tagId, firstBufferId, dataHandlerType);
+        outputStream = getStreamWriter(groupId, 0, tagId, firstBufferId, dataHandlerType);
 	}
 	else
 	{
@@ -531,7 +507,7 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
 
 	if(!bEncapsulated && frameNumber != 0)
 	{
-        std::shared_ptr<handlers::writingDataHandlerRaw> copyUncompressed(getWritingDataHandlerRaw(groupId, orderId, tagId, firstBufferId));
+        std::shared_ptr<handlers::writingDataHandlerRaw> copyUncompressed(getWritingDataHandlerRaw(groupId, 0, tagId, firstBufferId));
 		copyUncompressed->setSize((frameNumber + 1) * uncompressedImage->size());
 		std::uint8_t* pSource = uncompressedImage->data();
 		std::uint8_t* pDest = copyUncompressed->getMemoryBuffer() + (frameNumber * uncompressedImage->size());
@@ -548,10 +524,10 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
 	if(!bDontChangeAttributes)
 	{
         std::shared_ptr<handlers::writingDataHandler> dataHandlerTransferSyntax = getWritingDataHandler(0x0002, 0x0, 0x0010, 0x0);
-		dataHandlerTransferSyntax->setUnicodeString(0, transferSyntax);
+        dataHandlerTransferSyntax->setString(0, transferSyntax);
 
-		std::wstring colorSpace = pImage->getColorSpace();
-        setUnicodeString(0x0028, 0x0, 0x0004, 0, 0, transforms::colorTransforms::colorTransformsFactory::makeSubsampled(colorSpace, bSubSampledX, bSubSampledY));
+        std::string colorSpace = pImage->getColorSpace();
+        setString(0x0028, 0x0, 0x0004, 0, 0, transforms::colorTransforms::colorTransformsFactory::makeSubsampled(colorSpace, bSubSampledX, bSubSampledY));
         setUnsignedLong(0x0028, 0x0, 0x0006, 0, 0, bInterleaved ? 0 : 1);
         setUnsignedLong(0x0028, 0x0, 0x0100, 0, 0, allocatedBits);            // allocated bits
         setUnsignedLong(0x0028, 0x0, 0x0101, 0, 0, pImage->getHighBit() + 1); // stored bits
@@ -563,7 +539,7 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
         setUnsignedLong(0x0028, 0x0, 0x0011, 0, 0, imageSizeX);
         setUnsignedLong(0x0028, 0x0, 0x0010, 0, 0, imageSizeY);
 
-		if(colorSpace == L"PALETTECOLOR")
+        if(colorSpace == "PALETTECOLOR")
 		{
             std::shared_ptr<palette> imagePalette(pImage->getPalette());
 			if(imagePalette != 0)
@@ -594,9 +570,9 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
 
 	std::uint32_t calculatePosition(0);
     std::shared_ptr<data> tag(getTagCreate(groupId, 0, tagId));
-	for(std::uint32_t scanBuffers = 1; scanBuffers != firstBufferId; ++scanBuffers)
+    for(std::uint32_t scanBuffers = 1; scanBuffers < firstBufferId; ++scanBuffers)
 	{
-		calculatePosition += tag->getBufferSize(scanBuffers);
+        calculatePosition += tag->getBufferSizeThrow(scanBuffers);
 		calculatePosition += 8;
 	}
     std::shared_ptr<handlers::writingDataHandlerRaw> offsetHandler(getWritingDataHandlerRaw(groupId, 0, tagId, 0, dataHandlerType));
@@ -618,38 +594,41 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
 ///////////////////////////////////////////////////////////
 std::uint32_t dataSet::getFrameOffset(std::uint32_t frameNumber) const
 {
-	// Retrieve the buffer containing the offsets
-	///////////////////////////////////////////////////////////
-    std::shared_ptr<handlers::readingDataHandlerRaw> framesPointer = getReadingDataHandlerRaw(0x7fe0, 0x0, 0x0010, 0);
-	if(framesPointer == 0)
-	{
-		return 0xffffffff;
-	}
-
-	// Get the offset table's size, in number of offsets
-	///////////////////////////////////////////////////////////
-	std::uint32_t offsetsCount = framesPointer->getSize() / sizeof(std::uint32_t);
-
-	// If the requested frame doesn't exist then return
-	//  0xffffffff (the maximum value)
-	///////////////////////////////////////////////////////////
-	if(frameNumber >= offsetsCount && frameNumber != 0)
-	{
-		return 0xffffffff;
-	}
-
-	// Return the requested offset. If the requested frame is
-	//  the first and is offset is not specified, then return
-	//  0 (the first position)
-	///////////////////////////////////////////////////////////
-    if(frameNumber < offsetsCount)
+    try
     {
-        std::uint32_t* pOffsets = (std::uint32_t*)(framesPointer->getMemoryBuffer());
-        std::uint32_t returnOffset(pOffsets[frameNumber]);
-        streamController::adjustEndian((std::uint8_t*)&returnOffset, 4, streamController::lowByteEndian);
-        return returnOffset;
-	}
-	return 0;
+        // Retrieve the buffer containing the offsets
+        ///////////////////////////////////////////////////////////
+        std::shared_ptr<handlers::readingDataHandlerRaw> framesPointer = getReadingDataHandlerRawThrow(0x7fe0, 0x0, 0x0010, 0);
+
+        // Get the offset table's size, in number of offsets
+        ///////////////////////////////////////////////////////////
+        std::uint32_t offsetsCount = framesPointer->getSize() / sizeof(std::uint32_t);
+
+        // If the requested frame doesn't exist then return
+        //  0xffffffff (the maximum value)
+        ///////////////////////////////////////////////////////////
+        if(frameNumber >= offsetsCount && frameNumber != 0)
+        {
+            return 0xffffffff;
+        }
+
+        // Return the requested offset. If the requested frame is
+        //  the first and is offset is not specified, then return
+        //  0 (the first position)
+        ///////////////////////////////////////////////////////////
+        if(frameNumber < offsetsCount)
+        {
+            std::uint32_t* pOffsets = (std::uint32_t*)(framesPointer->getMemoryBuffer());
+            std::uint32_t returnOffset(pOffsets[frameNumber]);
+            streamController::adjustEndian((std::uint8_t*)&returnOffset, 4, streamController::lowByteEndian);
+            return returnOffset;
+        }
+        return 0;
+    }
+    catch(const ::imebra::missingDataElement&)
+    {
+        return 0xffffffff;
+    }
 }
 
 
@@ -664,59 +643,42 @@ std::uint32_t dataSet::getFrameBufferId(std::uint32_t offset, std::uint32_t* pLe
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getFrameBufferId");
 
-	*pLengthToBuffer = 0;
+    *pLengthToBuffer = 0;
 
-    std::shared_ptr<data> imageTag = getTag(0x7fe0, 0, 0x0010);
-	if(imageTag == 0)
-	{
-		return 0;
-	}
+    std::shared_ptr<data> imageTag = getTagThrow(0x7fe0, 0, 0x0010);
 
-	// Start from the buffer n. 1 (the buffer 0 contains
-	//  the offset table
-	///////////////////////////////////////////////////////////
-	std::uint32_t scanBuffers(1);
+    // Start from the buffer n. 1 (the buffer 0 contains
+    //  the offset table
+    ///////////////////////////////////////////////////////////
+    std::uint32_t scanBuffers(1);
 
-	if(offset == 0xffffffff)
-	{
-		while(imageTag->bufferExists(scanBuffers))
-		{
-			++scanBuffers;
-		}
-		return scanBuffers;
-	}
+    if(offset == 0xffffffff)
+    {
+        while(imageTag->bufferExists(scanBuffers))
+        {
+            ++scanBuffers;
+        }
+        return scanBuffers;
+    }
 
-	while(offset != 0)
-	{
-		// If the handler isn't connected to any buffer, then
-		//  the buffer doesn't exist: return
-		///////////////////////////////////////////////////////////
-		if(!imageTag->bufferExists(scanBuffers))
-		{
-			break;
-		}
-
-		// Calculate the total size of the buffer, including
-		//  its descriptor (tag group and id and length)
-		///////////////////////////////////////////////////////////
-		std::uint32_t bufferSize = imageTag->getBufferSize(scanBuffers);;
-		(*pLengthToBuffer) += bufferSize; // Increase the total size
-		bufferSize += 4; // one WORD for the group id, one WORD for the tag id
-		bufferSize += 4; // one DWORD for the tag length
-		if(bufferSize > offset)
-		{
+    while(offset != 0)
+    {
+        // Calculate the total size of the buffer, including
+        //  its descriptor (tag group and id and length)
+        ///////////////////////////////////////////////////////////
+        std::uint32_t bufferSize = imageTag->getBufferSizeThrow(scanBuffers);;
+        (*pLengthToBuffer) += bufferSize; // Increase the total size
+        bufferSize += 4; // one WORD for the group id, one WORD for the tag id
+        bufferSize += 4; // one DWORD for the tag length
+        if(bufferSize > offset)
+        {
             PUNTOEXE_THROW(::imebra::dataSetImageDoesntExist, "Image not in the offset table");
-		}
-		offset -= bufferSize;
-		++scanBuffers;
-	}
+        }
+        offset -= bufferSize;
+        ++scanBuffers;
+    }
 
-	if(offset != 0)
-	{
-        PUNTOEXE_THROW(::imebra::dataSetCorruptedOffsetTable, "The basic offset table is corrupted");
-	}
-
-	return scanBuffers;
+    return scanBuffers;
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -736,29 +698,36 @@ std::uint32_t dataSet::getFrameBufferIds(std::uint32_t frameNumber, std::uint32_
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getFrameBufferIds");
 
-	std::uint32_t startOffset = getFrameOffset(frameNumber);
-	std::uint32_t endOffset = getFrameOffset(frameNumber + 1);
+    try
+    {
+        std::uint32_t startOffset = getFrameOffset(frameNumber);
+        std::uint32_t endOffset = getFrameOffset(frameNumber + 1);
 
-	if(startOffset == 0xffffffff)
-	{
-        PUNTOEXE_THROW(::imebra::dataSetImageDoesntExist, "Image not in the table offset");
-	}
+        if(startOffset == 0xffffffff)
+        {
+            PUNTOEXE_THROW(::imebra::dataSetImageDoesntExist, "Image not in the table offset");
+        }
 
-	std::uint32_t startLength, endLength;
-	*pFirstBuffer = getFrameBufferId(startOffset, &startLength);
-	*pEndBuffer = getFrameBufferId(endOffset, &endLength);
+        std::uint32_t startLength, endLength;
+        *pFirstBuffer = getFrameBufferId(startOffset, &startLength);
+        *pEndBuffer = getFrameBufferId(endOffset, &endLength);
 
-    std::shared_ptr<data> imageTag = getTag(0x7fe0, 0, 0x0010);
-	if(imageTag == 0)
-	{
-		return 0;
-	}
-	std::uint32_t totalSize(0);
-	for(std::uint32_t scanBuffers(*pFirstBuffer); scanBuffers != *pEndBuffer; ++scanBuffers)
-	{
-		totalSize += imageTag->getBufferSize(scanBuffers);
-	}
-	return totalSize;
+        std::shared_ptr<data> imageTag = getTagThrow(0x7fe0, 0, 0x0010);
+        if(imageTag == 0)
+        {
+            return 0;
+        }
+        std::uint32_t totalSize(0);
+        for(std::uint32_t scanBuffers(*pFirstBuffer); scanBuffers != *pEndBuffer; ++scanBuffers)
+        {
+            totalSize += imageTag->getBufferSizeThrow(scanBuffers);
+        }
+        return totalSize;
+    }
+    catch(const ::imebra::missingDataElement&)
+    {
+        PUNTOEXE_THROW(::imebra::dataSetCorruptedOffsetTable, "The basic offset table is corrupted");
+    }
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -778,103 +747,13 @@ std::uint32_t dataSet::getFirstAvailFrameBufferId() const
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getFirstAvailFrameBufferId");
 
-    std::shared_ptr<data> imageTag = getTag(0x7fe0, 0, 0x0010);
-	if(imageTag == 0)
-	{
-		return 1;
-	}
-
-	std::uint32_t availableId(1);
-	while(imageTag->bufferExists(availableId))
-	{
-		++availableId;
-	}
+    std::uint32_t availableId(0);
+    while(bufferExists(0x7fe0, 0, 0x0010, availableId))
+    {
+        ++availableId;
+    }
 
 	return availableId;
-
-	PUNTOEXE_FUNCTION_END();
-}
-
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Converts an image using the attributes specified in
-//  the dataset.
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-std::shared_ptr<image> dataSet::convertImageForDataSet(std::shared_ptr<image> sourceImage)
-{
-	PUNTOEXE_FUNCTION_START(L"dataSet::convertImageForDataSet");
-
-	std::uint32_t imageWidth, imageHeight;
-	sourceImage->getSize(&imageWidth, &imageHeight);
-
-	std::wstring colorSpace = sourceImage->getColorSpace();
-	std::uint32_t highBit = sourceImage->getHighBit();
-
-    std::uint32_t currentWidth  = getUnsignedLong(0x0028, 0x0, 0x0011, 0, 0);
-    std::uint32_t currentHeight = getUnsignedLong(0x0028, 0x0, 0x0010, 0, 0);
-    std::uint32_t currentHighBit = getUnsignedLong(0x0028, 0x0, 0x0102, 0, 0);
-
-
-
-
-
-    std::wstring currentColorSpace = transforms::colorTransforms::colorTransformsFactory::normalizeColorSpace(getUnicodeString(0x0028, 0x0, 0x0004, 0, 0));
-
-	if(currentWidth != imageWidth || currentHeight != imageHeight)
-	{
-        PUNTOEXE_THROW(::imebra::dataSetExceptionDifferentFormat, "The dataset already contains an image with a different size");
-	}
-
-	if(currentHighBit < highBit)
-	{
-        PUNTOEXE_THROW(::imebra::dataSetExceptionDifferentFormat, "The high bit in the dataset is smaller than the requested one");
-	}
-
-	if( !transforms::colorTransforms::colorTransformsFactory::isMonochrome(colorSpace) && colorSpace != currentColorSpace)
-	{
-        PUNTOEXE_THROW(::imebra::dataSetExceptionDifferentFormat, "The requested color space doesn't match the one already stored in the dataset");
-	}
-
-    std::shared_ptr<transforms::transformsChain> chain(new transforms::transformsChain);
-	if(colorSpace != currentColorSpace)
-	{
-        std::shared_ptr<transforms::colorTransforms::colorTransformsFactory> pColorFactory(transforms::colorTransforms::colorTransformsFactory::getColorTransformsFactory());
-        std::shared_ptr<transforms::transform> colorChain = pColorFactory->getTransform(colorSpace, currentColorSpace);
-		if(colorChain->isEmpty())
-		{
-            PUNTOEXE_THROW(::imebra::dataSetExceptionDifferentFormat, "The image color space cannot be converted to the dataset color space");
-		}
-		chain->addTransform(colorChain);
-	}
-
-	if(currentHighBit != highBit)
-	{
-        chain->addTransform(std::make_shared<transforms::transformHighBit>());
-	}
-
-	if(chain->isEmpty())
-	{
-		return sourceImage;
-	}
-
-    std::shared_ptr<image> destImage(new image);
-    bool b2Complement(getUnsignedLong(0x0028, 0x0, 0x0103, 0, 0)!=0x0);
-	image::bitDepth depth;
-	if(b2Complement)
-		depth=highBit>=8 ? image::depthS16 : image::depthS8;
-	else
-		depth=highBit>=8 ? image::depthU16 : image::depthU8;
-	destImage->create(currentWidth, currentHeight, depth, currentColorSpace, currentHighBit);
-
-	chain->runTransform(sourceImage, 0, 0, imageWidth, imageHeight, destImage, 0, 0);
-
-	return destImage;
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -889,18 +768,11 @@ std::shared_ptr<image> dataSet::convertImageForDataSet(std::shared_ptr<image> so
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<dataSet> dataSet::getSequenceItem(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t itemId)
+std::shared_ptr<dataSet> dataSet::getSequenceItemThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t itemId) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getSequenceItem");
 
-    std::shared_ptr<data> tag = getTag(groupId, order, tagId);
-    std::shared_ptr<dataSet> pDataSet;
-	if(tag != 0)
-	{
-		pDataSet = tag->getDataSet(itemId);
-	}
-
-	return pDataSet;
+    return getTagThrow(groupId, order, tagId)->getDataSetThrow(itemId);
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -915,25 +787,19 @@ std::shared_ptr<dataSet> dataSet::getSequenceItem(std::uint16_t groupId, std::ui
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<lut> dataSet::getLut(std::uint16_t groupId, std::uint16_t tagId, std::uint32_t lutId)
+std::shared_ptr<lut> dataSet::getLutThrow(std::uint16_t groupId, std::uint16_t tagId, std::uint32_t lutId) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getLut");
 
-    std::shared_ptr<lut> pLUT;
-    std::shared_ptr<dataSet> embeddedLUT = getSequenceItem(groupId, 0, tagId, lutId);
-	std::string tagType = getDataType(groupId, 0, tagId);
-	if(embeddedLUT != 0)
-	{
-        std::shared_ptr<lut> tempLut(new lut);
-		pLUT = tempLut;
-        std::shared_ptr<handlers::readingDataHandler> descriptorHandle = embeddedLUT->getReadingDataHandler(0x0028, 0x0, 0x3002, 0x0);
-        std::shared_ptr<handlers::readingDataHandler> dataHandle = embeddedLUT->getReadingDataHandler(0x0028, 0x0, 0x3006, 0x0);
+    std::shared_ptr<dataSet> embeddedLUT = getSequenceItemThrow(groupId, 0, tagId, lutId);
+    std::shared_ptr<handlers::readingDataHandler> descriptorHandle = embeddedLUT->getReadingDataHandlerThrow(0x0028, 0x0, 0x3002, 0x0);
+    std::shared_ptr<handlers::readingDataHandler> dataHandle = embeddedLUT->getReadingDataHandlerThrow(0x0028, 0x0, 0x3006, 0x0);
 
-		pLUT->setLut(
-			descriptorHandle,
-			dataHandle,
-            embeddedLUT->getUnicodeString(0x0028, 0x0, 0x3003, 0, 0));
-	}
+    std::shared_ptr<lut> pLUT = std::make_shared<lut>();
+    pLUT->setLut(
+        descriptorHandle,
+        dataHandle,
+        embeddedLUT->getUnicodeStringThrow(0x0028, 0x0, 0x3003, 0, 0));
 	return pLUT;
 
 	PUNTOEXE_FUNCTION_END();
@@ -949,16 +815,11 @@ std::shared_ptr<lut> dataSet::getLut(std::uint16_t groupId, std::uint16_t tagId,
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<waveform> dataSet::getWaveform(std::uint32_t waveformId)
+std::shared_ptr<waveform> dataSet::getWaveformThrow(std::uint32_t waveformId)
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getWaveform");
 
-    std::shared_ptr<dataSet> embeddedWaveform(getSequenceItem(0x5400, 0, 0x0100, waveformId));
-	if(embeddedWaveform == 0)
-	{
-		return 0;
-	}
-
+    std::shared_ptr<dataSet> embeddedWaveform(getSequenceItemThrow(0x5400, 0, 0x0100, waveformId));
     return std::make_shared<waveform>(embeddedWaveform);
 
 	PUNTOEXE_FUNCTION_END();
@@ -974,19 +835,25 @@ std::shared_ptr<waveform> dataSet::getWaveform(std::uint32_t waveformId)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::int32_t dataSet::getSignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
+std::int32_t dataSet::getSignedLongThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getSignedLong");
 
-    std::shared_ptr<handlers::readingDataHandler> dataHandler = getReadingDataHandler(groupId, order, tagId, bufferId);
-	if(dataHandler == 0)
-	{
-		return 0;
-	}
-
-    return dataHandler->getSignedLong(elementNumber);
+    return getReadingDataHandlerThrow(groupId, order, tagId, bufferId)->getSignedLong(elementNumber);
 
 	PUNTOEXE_FUNCTION_END();
+}
+
+std::int32_t dataSet::getSignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::int32_t defaultValue) const
+{
+    try
+    {
+        return getSignedLongThrow(groupId, order, tagId, bufferId, elementNumber);
+    }
+    catch(const ::imebra::missingDataElement&)
+    {
+        return defaultValue;
+    }
 }
 
 
@@ -1004,14 +871,11 @@ void dataSet::setSignedLong(std::uint16_t groupId, std::uint16_t order, std::uin
 	PUNTOEXE_FUNCTION_START(L"dataSet::setSignedLong");
 
     std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, bufferId, defaultType);
-	if(dataHandler != 0)
-	{
-        if(dataHandler->getSize() <= elementNumber)
-		{
-			dataHandler->setSize(elementNumber + 1);
-		}
-		dataHandler->setSignedLong(elementNumber, newValue);
-	}
+    if(dataHandler->getSize() <= elementNumber)
+    {
+        dataHandler->setSize(elementNumber + 1);
+    }
+    dataHandler->setSignedLong(elementNumber, newValue);
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -1026,19 +890,25 @@ void dataSet::setSignedLong(std::uint16_t groupId, std::uint16_t order, std::uin
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::uint32_t dataSet::getUnsignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
+std::uint32_t dataSet::getUnsignedLongThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getUnignedLong");
 
-    std::shared_ptr<handlers::readingDataHandler> dataHandler = getReadingDataHandler(groupId, order, tagId, bufferId);
-	if(dataHandler == 0)
-	{
-		return 0;
-	}
-
-    return dataHandler->getUnsignedLong(elementNumber);
+    return getReadingDataHandlerThrow(groupId, order, tagId, bufferId)->getUnsignedLong(elementNumber);
 
 	PUNTOEXE_FUNCTION_END();
+}
+
+std::uint32_t dataSet::getUnsignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::uint32_t defaultValue) const
+{
+    try
+    {
+        return getUnsignedLongThrow(groupId, order, tagId, bufferId, elementNumber);
+    }
+    catch(const ::imebra::missingDataElement&)
+    {
+        return defaultValue;
+    }
 }
 
 
@@ -1056,14 +926,11 @@ void dataSet::setUnsignedLong(std::uint16_t groupId, std::uint16_t order, std::u
 	PUNTOEXE_FUNCTION_START(L"dataSet::setUnsignedLong");
 
     std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, bufferId, defaultType);
-	if(dataHandler != 0)
-	{
-		if(dataHandler->getSize() <= elementNumber)
-		{
-			dataHandler->setSize(elementNumber + 1);
-		}
-		dataHandler->setUnsignedLong(elementNumber, newValue);
-	}
+    if(dataHandler->getSize() <= elementNumber)
+    {
+        dataHandler->setSize(elementNumber + 1);
+    }
+    dataHandler->setUnsignedLong(elementNumber, newValue);
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -1078,21 +945,26 @@ void dataSet::setUnsignedLong(std::uint16_t groupId, std::uint16_t order, std::u
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-double dataSet::getDouble(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
+double dataSet::getDoubleThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getDouble");
 
-    std::shared_ptr<handlers::readingDataHandler> dataHandler = getReadingDataHandler(groupId, order, tagId, bufferId);
-	if(dataHandler == 0)
-	{
-		return 0.0;
-	}
-
-    return dataHandler->getDouble(elementNumber);
+    return getReadingDataHandlerThrow(groupId, order, tagId, bufferId)->getDouble(elementNumber);
 
 	PUNTOEXE_FUNCTION_END();
 }
 
+double dataSet::getDouble(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, double defaultValue) const
+{
+    try
+    {
+        return getDoubleThrow(groupId, order, tagId, bufferId, elementNumber);
+    }
+    catch(const ::imebra::missingDataElement&)
+    {
+        return defaultValue;
+    }
+}
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -1108,14 +980,11 @@ void dataSet::setDouble(std::uint16_t groupId, std::uint16_t order, std::uint16_
 	PUNTOEXE_FUNCTION_START(L"dataSet::setDouble");
 
     std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, bufferId, defaultType);
-	if(dataHandler != 0)
-	{
-		if(dataHandler->getSize() <= elementNumber)
-		{
-			dataHandler->setSize(elementNumber + 1);
-		}
-		dataHandler->setDouble(elementNumber, newValue);
-	}
+    if(dataHandler->getSize() <= elementNumber)
+    {
+        dataHandler->setSize(elementNumber + 1);
+    }
+    dataHandler->setDouble(elementNumber, newValue);
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -1130,20 +999,25 @@ void dataSet::setDouble(std::uint16_t groupId, std::uint16_t order, std::uint16_
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::string dataSet::getString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
+std::string dataSet::getStringThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getString");
 
-    std::shared_ptr<handlers::readingDataHandler> dataHandler = getReadingDataHandler(groupId, order, tagId, bufferId);
-	std::string returnValue;
-	if(dataHandler != 0)
-	{
-        returnValue = dataHandler->getString(elementNumber);
-	}
-
-	return returnValue;
+    return getReadingDataHandlerThrow(groupId, order, tagId, bufferId)->getString(elementNumber);
 
 	PUNTOEXE_FUNCTION_END();
+}
+
+std::string dataSet::getString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, const std::string& defaultValue) const
+{
+    try
+    {
+        return getStringThrow(groupId, order, tagId, bufferId, elementNumber);
+    }
+    catch(const ::imebra::missingDataElement&)
+    {
+        return defaultValue;
+    }
 }
 
 
@@ -1156,20 +1030,25 @@ std::string dataSet::getString(std::uint16_t groupId, std::uint16_t order, std::
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::wstring dataSet::getUnicodeString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
+std::wstring dataSet::getUnicodeStringThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getUnicodeString");
 
-    std::shared_ptr<handlers::readingDataHandler> dataHandler = getReadingDataHandler(groupId, order, tagId, bufferId);
-	std::wstring returnValue;
-	if(dataHandler != 0)
-	{
-        returnValue = dataHandler->getUnicodeString(elementNumber);
-    }
-
-	return returnValue;
+    return getReadingDataHandlerThrow(groupId, order, tagId, bufferId)->getUnicodeString(elementNumber);
 
 	PUNTOEXE_FUNCTION_END();
+}
+
+std::wstring dataSet::getUnicodeString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, const std::wstring& defaultValue) const
+{
+    try
+    {
+        return getUnicodeStringThrow(groupId, order, tagId, bufferId, elementNumber);
+    }
+    catch(const ::imebra::missingDataElement&)
+    {
+        return defaultValue;
+    }
 }
 
 
@@ -1187,14 +1066,11 @@ void dataSet::setString(std::uint16_t groupId, std::uint16_t order, std::uint16_
 	PUNTOEXE_FUNCTION_START(L"dataSet::setString");
 
     std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, bufferId, defaultType);
-	if(dataHandler != 0)
-	{
-		if(dataHandler->getSize() <= elementNumber)
-		{
-			dataHandler->setSize(elementNumber + 1);
-		}
-		dataHandler->setString(elementNumber, newString);
-	}
+    if(dataHandler->getSize() <= elementNumber)
+    {
+        dataHandler->setSize(elementNumber + 1);
+    }
+    dataHandler->setString(elementNumber, newString);
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -1214,14 +1090,11 @@ void dataSet::setUnicodeString(std::uint16_t groupId, std::uint16_t order, std::
 	PUNTOEXE_FUNCTION_START(L"dataSet::setUnicodeString");
 
     std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, bufferId, defaultType);
-	if(dataHandler != 0)
-	{
-		if(dataHandler->getSize() <= elementNumber)
-		{
-			dataHandler->setSize(elementNumber + 1);
-		}
-		dataHandler->setUnicodeString(elementNumber, newString);
-	}
+    if(dataHandler->getSize() <= elementNumber)
+    {
+        dataHandler->setSize(elementNumber + 1);
+    }
+    dataHandler->setUnicodeString(elementNumber, newString);
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -1231,30 +1104,44 @@ void dataSet::setAge(std::uint16_t groupId, std::uint16_t order, std::uint16_t t
     PUNTOEXE_FUNCTION_START(L"dataSet::setAge");
 
     std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, bufferId, defaultType);
-    if(dataHandler != 0)
+    if(dataHandler->getSize() <= elementNumber)
     {
-        if(dataHandler->getSize() <= elementNumber)
-        {
-            dataHandler->setSize(elementNumber + 1);
-        }
-        dataHandler->setAge(elementNumber, age, units);
+        dataHandler->setSize(elementNumber + 1);
     }
+    dataHandler->setAge(elementNumber, age, units);
 
     PUNTOEXE_FUNCTION_END();
 }
 
-int dataSet::getAge(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, ::imebra::ageUnit_t* pUnits) const
+int dataSet::getAgeThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, ::imebra::ageUnit_t* pUnits) const
 {
     PUNTOEXE_FUNCTION_START(L"dataSet::getAge");
 
-    std::shared_ptr<handlers::readingDataHandler> dataHandler = getReadingDataHandler(groupId, order, tagId, bufferId);
-    if(dataHandler != 0)
-    {
-        return dataHandler->getAge(elementNumber, pUnits);
-    }
+    return getReadingDataHandlerThrow(groupId, order, tagId, bufferId)->getAge(elementNumber, pUnits);
 
-    *pUnits = ::imebra::ageUnit_t::years;
-    return 0;
+    PUNTOEXE_FUNCTION_END();
+
+}
+
+void dataSet::setDate(uint16_t groupId, uint16_t order, uint16_t tagId, size_t bufferId, size_t elementNumber, uint32_t year, uint32_t month, uint32_t day, uint32_t hour, uint32_t minutes, uint32_t seconds, uint32_t nanoseconds, int32_t offsetHours, int32_t offsetMinutes, const std::string& defaultType /* = "" */)
+{
+    PUNTOEXE_FUNCTION_START(L"dataSet::setDate");
+
+    std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, bufferId, defaultType);
+    if(dataHandler->getSize() <= elementNumber)
+    {
+        dataHandler->setSize(elementNumber + 1);
+    }
+    dataHandler->setDate(elementNumber, year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes);
+
+    PUNTOEXE_FUNCTION_END();
+}
+
+void dataSet::getDateThrow(uint16_t groupId, uint16_t order, uint16_t tagId, size_t bufferId, size_t elementNumber, uint32_t *pYear, uint32_t *pMonth, uint32_t *pDay, uint32_t *pHour, uint32_t *pMinutes, uint32_t *pSeconds, uint32_t *pNanoseconds, int32_t *pOffsetHours, int32_t *pOffsetMinutes) const
+{
+    PUNTOEXE_FUNCTION_START(L"dataSet::getDate");
+
+    return getReadingDataHandlerThrow(groupId, order, tagId, bufferId)->getDate(elementNumber, pYear, pMonth, pDay, pHour, pMinutes, pSeconds, pNanoseconds, pOffsetHours, pOffsetMinutes);
 
     PUNTOEXE_FUNCTION_END();
 
@@ -1271,19 +1158,11 @@ int dataSet::getAge(std::uint16_t groupId, std::uint16_t order, std::uint16_t ta
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<handlers::readingDataHandler> dataSet::getReadingDataHandler(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId) const
+std::shared_ptr<handlers::readingDataHandler> dataSet::getReadingDataHandlerThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getDataHandler");
 
-    std::shared_ptr<data> tag(getTag(groupId, order, tagId));
-
-    if(tag == 0)
-	{
-        std::shared_ptr<handlers::readingDataHandler> pDataHandler;
-        return pDataHandler;
-	}
-
-    return tag->getReadingDataHandler(bufferId);
+    return getTagThrow(groupId, order, tagId)->getReadingDataHandlerThrow(bufferId);
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -1315,13 +1194,11 @@ std::shared_ptr<handlers::writingDataHandler> dataSet::getWritingDataHandler(std
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<streamReader> dataSet::getStreamReader(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId) const
+std::shared_ptr<streamReader> dataSet::getStreamReaderThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getStream");
 
-    std::shared_ptr<data> tag (getTag(groupId, order, tagId));
-
-    return tag->getStreamReader(bufferId);
+    return getTagThrow(groupId, order, tagId)->getStreamReaderThrow(bufferId);
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -1340,16 +1217,7 @@ std::shared_ptr<streamWriter> dataSet::getStreamWriter(std::uint16_t groupId, st
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getStream");
 
-    std::shared_ptr<data> tag = getTagCreate(groupId, order, tagId);
-
-    std::shared_ptr<streamWriter> returnStream;
-
-    if(tag != 0)
-	{
-        returnStream = tag->getStreamWriter(bufferId, dataType);
-	}
-
-	return returnStream;
+    return getTagCreate(groupId, order, tagId)->getStreamWriter(bufferId, dataType);
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -1363,19 +1231,11 @@ std::shared_ptr<streamWriter> dataSet::getStreamWriter(std::uint16_t groupId, st
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<handlers::readingDataHandlerRaw> dataSet::getReadingDataHandlerRaw(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId) const
+std::shared_ptr<handlers::readingDataHandlerRaw> dataSet::getReadingDataHandlerRawThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getDataHandlerRaw");
 
-    std::shared_ptr<data> tag = getTag(groupId, order, tagId);
-
-    if(tag == 0)
-	{
-        std::shared_ptr<handlers::readingDataHandlerRaw> emptyDataHandler;
-		return emptyDataHandler;
-	}
-
-    return tag->getReadingDataHandlerRaw(bufferId);
+    return getTagThrow(groupId, order, tagId)->getReadingDataHandlerRawThrow(bufferId);
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -1426,18 +1286,11 @@ std::string dataSet::getDefaultDataType(std::uint16_t groupId, std::uint16_t tag
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::string dataSet::getDataType(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId) const
+std::string dataSet::getDataTypeThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataSet::getDataType");
 
-	std::string bufferType;
-
-    std::shared_ptr<data> tag = getTag(groupId, order, tagId);
-	if(tag != 0)
-	{
-		bufferType = tag->getDataType();
-	}
-	return bufferType;
+    return getTagThrow(groupId, order, tagId)->getDataTypeThrow(bufferId);
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -1468,14 +1321,19 @@ void dataSet::updateCharsetTag()
 void dataSet::updateTagsCharset()
 {
 	charsetsList::tCharsetsList charsets;
-    std::shared_ptr<handlers::readingDataHandler> charsetHandler(getReadingDataHandler(0x0008, 0, 0x0005, 0));
-	if(charsetHandler != 0)
-	{
+    try
+    {
+        std::shared_ptr<handlers::readingDataHandler> charsetHandler(getReadingDataHandlerThrow(0x0008, 0, 0x0005, 0));
         for(std::uint32_t pointer(0); pointer != charsetHandler->getSize(); ++pointer)
 		{
             charsets.push_back(charsetHandler->getString(pointer));
 		}
 	}
+    catch(const ::imebra::missingDataElement&)
+    {
+        // TODO
+    }
+
     setCharsetsList(charsets);
 }
 

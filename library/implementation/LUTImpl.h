@@ -55,8 +55,6 @@ public:
 	  m_size(0),
 		m_firstMapped(0),
 		m_bits(0),
-		m_bChecked(false),
-		m_bValid(false),
 		m_pMappedValues(0){}
 
     // Destructor
@@ -122,14 +120,14 @@ public:
 	///                       data
 	///
 	///////////////////////////////////////////////////////////
-    void fillHandlers(std::shared_ptr<handlers::writingDataHandler> pDescriptor, std::shared_ptr<handlers::writingDataHandler> pData);
+    void fillHandlers(std::shared_ptr<handlers::writingDataHandler> pDescriptor, std::shared_ptr<handlers::writingDataHandler> pData) const;
 
 	/// \brief Return the lut's description.
 	///
 	/// @return the lut description
 	///
 	///////////////////////////////////////////////////////////
-	std::wstring getDescription();
+    std::wstring getDescription() const;
 
 	/// \brief Return the number of bits used to store a mapped
 	///         value.
@@ -137,14 +135,14 @@ public:
 	/// @return the number of bits used to store a mapped value
 	///
 	///////////////////////////////////////////////////////////
-	std::uint8_t getBits();
+    std::uint8_t getBits() const;
 
 	/// \brief Return the lut's size.
 	///
 	/// @return the number of mapped value stored in the lut
 	///
 	///////////////////////////////////////////////////////////
-	size_t getSize();
+    size_t getSize() const;
 
 	/// \brief Checks if the data in the LUT is consistent
 	///         with the number of bits specified in number
@@ -153,14 +151,14 @@ public:
 	/// @return true if the data is correct, false otherwise
 	///
 	///////////////////////////////////////////////////////////
-	bool checkValidDataRange();
+    bool checkValidDataRange() const;
 
 	/// \brief Return the id of the first mapped value
 	///
 	/// @return the id of the first mapped value
 	///
 	///////////////////////////////////////////////////////////
-	std::int32_t getFirstMapped();
+    std::int32_t getFirstMapped() const;
 
 	/// \brief Retrieve the value mapped by the specified id.
 	///
@@ -168,15 +166,7 @@ public:
 	/// @return the value mapped by the specified id
 	///
 	///////////////////////////////////////////////////////////
-	std::int32_t mappedValue(std::int32_t id);
-
-	/// \brief Retrieve tha id that maps the specified value.
-	///
-	/// @param  lutValue the value to look for in the lut
-	/// @return the id that maps the specified value
-	///
-	///////////////////////////////////////////////////////////
-	std::int32_t mappedValueRev(std::int32_t lutValue);
+    std::int32_t mappedValue(std::int32_t id) const;
 
 	/// \brief Copy the lut's data into an std::int32_t array.
 	///
@@ -188,19 +178,15 @@ public:
 	///                      of the first mapped element
 	///
 	///////////////////////////////////////////////////////////
-	void copyToInt32(std::int32_t* pDestination, std::uint32_t destSize, std::int32_t* pFirstMapped);
+    void copyToInt32(std::int32_t* pDestination, std::uint32_t destSize, std::int32_t* pFirstMapped) const;
 
     size_t m_size;
 	std::int32_t m_firstMapped;
 	std::uint8_t m_bits;
 
-	bool m_bChecked;
-	bool m_bValid;
-
 	std::wstring m_description;
 
 	std::int32_t* m_pMappedValues;
-	std::map<std::int32_t, std::int32_t> m_mappedValuesRev;
 };
 
 
@@ -236,21 +222,21 @@ public:
     /// @return the lut containing the red components
     ///
     ///////////////////////////////////////////////////////////
-    std::shared_ptr<lut> getRed();
+    std::shared_ptr<lut> getRed() const;
 
     /// \brief Retrieve the lut containing the green components.
     ///
     /// @return the lut containing the green components
     ///
     ///////////////////////////////////////////////////////////
-    std::shared_ptr<lut> getGreen();
+    std::shared_ptr<lut> getGreen() const;
 
     /// \brief Retrieve the lut containing the blue components.
     ///
     /// @return the lut containing the blue components
     ///
     ///////////////////////////////////////////////////////////
-    std::shared_ptr<lut> getBlue();
+    std::shared_ptr<lut> getBlue() const;
 
 protected:
     std::shared_ptr<lut> m_redLut;

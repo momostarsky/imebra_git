@@ -99,7 +99,7 @@ public:
 	///         registerCodec()
 	///
 	///////////////////////////////////////////////////////////
-    static std::shared_ptr<codec> getCodec(const std::wstring& transferSyntax);
+    static std::shared_ptr<codec> getCodec(const std::string& transferSyntax);
 
 	/// \brief Retrieve the only reference to the codecFactory
 	///         instance.

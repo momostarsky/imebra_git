@@ -179,7 +179,7 @@ public:
 	///          exist
 	///
 	///////////////////////////////////////////////////////////
-    std::wstring getFilePart(std::uint32_t part) const;
+    std::string getFilePart(std::uint32_t part) const;
 
 	/// \brief Set the full path to the  file referenced by
 	///         the record.
@@ -207,7 +207,7 @@ public:
     /// @param partName tha value to set for the part
 	///
 	///////////////////////////////////////////////////////////
-	void setFilePart(std::uint32_t part, const std::wstring partName);
+    void setFilePart(std::uint32_t part, const std::string& partName);
 
 	/// \brief Returns the record's type.
 	///
@@ -224,7 +224,7 @@ public:
 	/// @return the record's type
 	///
 	///////////////////////////////////////////////////////////
-    std::wstring getTypeString() const;
+    std::string getTypeString() const;
 
 	/// \brief Sets the record's type.
 	///
@@ -239,7 +239,7 @@ public:
 	///                     type
 	///
 	///////////////////////////////////////////////////////////
-    void setTypeString(const std::wstring& recordType);
+    void setTypeString(const std::string& recordType);
 
 
 private:
@@ -266,7 +266,7 @@ private:
 
     struct tDirectoryRecordTypeDef
     {
-        std::wstring m_name;
+        std::string m_name;
         directoryRecord::tDirectoryRecordType m_type;
     };
 

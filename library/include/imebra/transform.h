@@ -46,13 +46,13 @@ public:
 
     bool isEmpty() const;
 
-	Image allocateOutputImage(Image& pInputImage, int width, int height);
+    Image allocateOutputImage(Image& pInputImage, unsigned int width, unsigned int height);
 
 	void runTransform(
             const Image& inputImage,
-            int inputTopLeftX, int inputTopLeftY, int inputWidth, int inputHeight,
+            unsigned int inputTopLeftX, unsigned int inputTopLeftY, unsigned int inputWidth, unsigned int inputHeight,
             Image& outputImage,
-			int outputTopLeftX, int outputTopLeftY);
+            unsigned int outputTopLeftX, unsigned int outputTopLeftY);
 
 #ifndef SWIG
     std::shared_ptr<puntoexe::imebra::transforms::transform> m_pTransform;

@@ -15,7 +15,7 @@ imebra::Image buildImageForTest(
 	std::uint32_t highBit, 
 	double sizeX, 
 	double sizeY, 
-    const std::wstring& colorSpace,
+    const std::string& colorSpace,
 	std::uint32_t continuity)
 {
     imebra::Image newImage;

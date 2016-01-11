@@ -11,6 +11,7 @@ $fileHeader$
 #include "dataHandlerNumericImpl.h"
 #include "dataSetImpl.h"
 #include "bufferImpl.h"
+#include "../include/imebra/exceptions.h"
 
 namespace puntoexe
 {
@@ -34,11 +35,11 @@ waveform::waveform(std::shared_ptr<dataSet> pDataSet):
 // Returns the number of allocated bits
 //
 ///////////////////////////////////////////////////////////
-std::uint32_t waveform::getBitsAllocated()
+std::uint32_t waveform::getBitsAllocated() const
 {
 	PUNTOEXE_FUNCTION_START(L"waveform::getBitsAllocated");
 
-    return m_pDataSet->getUnsignedLong(0x5400, 0, 0x1004, 0, 0);
+    return m_pDataSet->getUnsignedLongThrow(0x5400, 0, 0x1004, 0, 0);
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -49,11 +50,11 @@ std::uint32_t waveform::getBitsAllocated()
 // Returns the number of bits stored
 //
 ///////////////////////////////////////////////////////////
-std::uint32_t waveform::getBitsStored()
+std::uint32_t waveform::getBitsStored() const
 {
 	PUNTOEXE_FUNCTION_START(L"waveform::getBitsStored");
 
-    return m_pDataSet->getUnsignedLong(0x003A, 0, 0x021A, 0, 0);
+    return m_pDataSet->getUnsignedLongThrow(0x003A, 0, 0x021A, 0, 0);
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -64,11 +65,11 @@ std::uint32_t waveform::getBitsStored()
 // Returns the number of channels
 //
 ///////////////////////////////////////////////////////////
-std::uint32_t waveform::getChannels()
+std::uint32_t waveform::getChannels() const
 {
 	PUNTOEXE_FUNCTION_START(L"waveform::getChannels");
 
-    return m_pDataSet->getUnsignedLong(0x003A, 0, 0x0005, 0, 0);
+    return m_pDataSet->getUnsignedLongThrow(0x003A, 0, 0x0005, 0, 0);
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -79,11 +80,11 @@ std::uint32_t waveform::getChannels()
 // Returns the interpretation string
 //
 ///////////////////////////////////////////////////////////
-std::string waveform::getInterpretation()
+std::string waveform::getInterpretation() const
 {
 	PUNTOEXE_FUNCTION_START(L"waveform::getChannels");
 
-    return m_pDataSet->getString(0x5400, 0, 0x1006, 0, 0);
+    return m_pDataSet->getStringThrow(0x5400, 0, 0x1006, 0, 0);
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -94,22 +95,22 @@ std::string waveform::getInterpretation()
 // Returns the number of samples
 //
 ///////////////////////////////////////////////////////////
-std::uint32_t waveform::getSamples()
+std::uint32_t waveform::getSamples() const
 {
 	PUNTOEXE_FUNCTION_START(L"waveform::getSamples");
 
-    return m_pDataSet->getUnsignedLong(0x003A, 0, 0x0010, 0, 0);
+    return m_pDataSet->getUnsignedLongThrow(0x003A, 0, 0x0010, 0, 0);
 
 	PUNTOEXE_FUNCTION_END();
 }
 
-/*
+
 ///////////////////////////////////////////////////////////
 //
 // Returns a data handler for the waveform
 //
 ///////////////////////////////////////////////////////////
-std::shared_ptr<handlers::dataHandler> waveform::getIntegerData(std::uint32_t channel, std::int32_t paddingValue)
+std::shared_ptr<handlers::readingDataHandler> waveform::getIntegerData(std::uint32_t channel, std::int32_t paddingValue)
 {
 	PUNTOEXE_FUNCTION_START(L"waveform::getIntegerData");
 
@@ -187,7 +188,7 @@ std::shared_ptr<handlers::dataHandler> waveform::getIntegerData(std::uint32_t ch
 
 	// Get the original data
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<handlers::readingDataHandler> waveformData(m_pDataSet->getReadingDataHandler(0x5400, 0x0, 0x1010, 0));
+    std::shared_ptr<handlers::readingDataHandler> waveformData(m_pDataSet->getReadingDataHandlerThrow(0x5400, 0x0, 0x1010, 0));
 	std::string sourceDataType(waveformData->getDataType());
 	
 	// Get the interpretation, number of channels, number of
@@ -198,18 +199,24 @@ std::shared_ptr<handlers::dataHandler> waveform::getIntegerData(std::uint32_t ch
 	std::uint32_t numSamples(getSamples());
 	std::uint32_t originalPaddingValue(0);
 	bool bPaddingValueExists(false);
-    std::shared_ptr<handlers::readingDataHandler> paddingTagHandler(m_pDataSet->getReadingDataHandler(0x5400, 0, 0x100A, 0));
-	if(paddingTagHandler != 0)
-	{
+    try
+    {
+        std::shared_ptr<handlers::readingDataHandler> paddingTagHandler(m_pDataSet->getReadingDataHandlerThrow(0x5400, 0, 0x100A, 0));
 		originalPaddingValue = paddingTagHandler->getUnsignedLong(0);
 		bPaddingValueExists = true;
-	}
+    }
+    catch(const ::imebra::missingDataElement&)
+    {
+        // Nothing to do
+    }
 
 	
 	// Allocate a buffer for the destination data
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<buffer> waveformBuffer(new buffer("SL"));
-    std::shared_ptr<handlers::writingDataHandler> destinationHandler(waveformBuffer->getWritingDataHandler(numSamples));
+    buffer waveformBuffer("SL");
+    std::shared_ptr<handlers::writingDataHandlerRaw> destinationHandler(waveformBuffer.getWritingDataHandlerRaw(numSamples));
+    destinationHandler->setSize(numSamples * sizeof(std::int32_t));
+    std::int32_t* pWritingMemory = (std::int32_t*)destinationHandler->getMemoryBuffer();
 
 	// Copy the data to the destination for unsigned values
 	///////////////////////////////////////////////////////////
@@ -223,47 +230,52 @@ std::shared_ptr<handlers::dataHandler> waveform::getIntegerData(std::uint32_t ch
 			waveformPointer += numChannels;
 			if(bPaddingValueExists && unsignedData == originalPaddingValue)
 			{
-				destinationHandler->setSignedLong(destinationPointer++, paddingValue);
-				continue;
+                pWritingMemory[destinationPointer++] = paddingValue;
 			}
-			destinationHandler->setUnsignedLong(destinationPointer++, unsignedData);
+            else
+            {
+                pWritingMemory[destinationPointer++] = unsignedData;
+            }
 		}
-		return destinationHandler;
 	}
-
-	// Copy the data to the destination for signed values
-	///////////////////////////////////////////////////////////
-	int highBit(getBitsAllocated() - 1);
-	std::uint32_t testBit = ((std::uint32_t)1) << highBit;
-	std::uint32_t orBits = ((std::uint32_t)((std::int32_t)-1)) << highBit;
-	for(std::uint32_t copySamples (numSamples); copySamples != 0; --copySamples)
-	{
-		std::uint32_t unsignedData = waveformData->getUnsignedLong(waveformPointer);
-		waveformPointer += numChannels;
-		if(bPaddingValueExists && unsignedData == originalPaddingValue)
-		{
-			destinationHandler->setSignedLong(destinationPointer++, paddingValue);;
-			continue;
-		}
-		if((unsignedData & testBit) != 0)
-		{
-			unsignedData |= orBits;
-		}
-		destinationHandler->setSignedLong(destinationPointer++, (std::int32_t)unsignedData);
-	}
+    else
+    {
+        // Copy the data to the destination for signed values
+        ///////////////////////////////////////////////////////////
+        int highBit(getBitsAllocated() - 1);
+        std::uint32_t testBit = ((std::uint32_t)1) << highBit;
+        std::uint32_t orBits = ((std::uint32_t)((std::int32_t)-1)) << highBit;
+        for(std::uint32_t copySamples (numSamples); copySamples != 0; --copySamples)
+        {
+            std::uint32_t unsignedData = waveformData->getUnsignedLong(waveformPointer);
+            waveformPointer += numChannels;
+            if(bPaddingValueExists && unsignedData == originalPaddingValue)
+            {
+                pWritingMemory[destinationPointer++] = paddingValue;
+            }
+            else
+            {
+                if((unsignedData & testBit) != 0)
+                {
+                    unsignedData |= orBits;
+                }
+                pWritingMemory[destinationPointer++] = (std::int32_t)unsignedData;
+            }
+        }
+    }
 
 	// Now decompress uLaw or aLaw
 	if(waveformInterpretation == "AB") // 8bits aLaw
 	{
 		for(std::uint32_t aLawSamples(0); aLawSamples != numSamples; ++aLawSamples)
 		{
-			std::uint32_t compressed(destinationHandler->getUnsignedLong(aLawSamples));
+            std::uint32_t compressed(pWritingMemory[aLawSamples]);
 			if(bPaddingValueExists && compressed == originalPaddingValue)
 			{
 				continue;
 			}
 			std::int32_t decompressed(aLawDecompressTable[compressed]);
-			destinationHandler->setSignedLong(aLawSamples, decompressed);
+            pWritingMemory[aLawSamples] = decompressed;
 		}
 	}
 
@@ -272,27 +284,23 @@ std::shared_ptr<handlers::dataHandler> waveform::getIntegerData(std::uint32_t ch
 	{
 		for(std::uint32_t uLawSamples(0); uLawSamples != numSamples; ++uLawSamples)
 		{
-			std::uint32_t compressed(destinationHandler->getUnsignedLong(uLawSamples));
+            std::uint32_t compressed(pWritingMemory[uLawSamples]);
 			if(bPaddingValueExists && compressed == originalPaddingValue)
 			{
 				continue;
 			}
 			std::int32_t decompressed(uLawDecompressTable[compressed]);
-			destinationHandler->setSignedLong(uLawSamples, decompressed);
+            pWritingMemory[uLawSamples] = decompressed;
 		}
 	}
+    destinationHandler.reset();
 
-    else
-    {
-
-    }
-
-	return destinationHandler;
+    return waveformBuffer.getReadingDataHandler();
 
 	PUNTOEXE_FUNCTION_END();
 }
 
-*/
+
 ///////////////////////////////////////////////////////////
 //
 // Returns the sequence item

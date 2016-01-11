@@ -34,9 +34,9 @@ namespace colorTransforms
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::wstring PALETTECOLORToRGB::getInitialColorSpace()
+std::string PALETTECOLORToRGB::getInitialColorSpace()
 {
-	return L"PALETTE COLOR";
+    return "PALETTE COLOR";
 }
 
 
@@ -49,9 +49,9 @@ std::wstring PALETTECOLORToRGB::getInitialColorSpace()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::wstring PALETTECOLORToRGB::getFinalColorSpace()
+std::string PALETTECOLORToRGB::getFinalColorSpace()
 {
-	return L"RGB";
+    return "RGB";
 }
 
 std::shared_ptr<colorTransform> PALETTECOLORToRGB::createColorTransform()

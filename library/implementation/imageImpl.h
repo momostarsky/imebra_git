@@ -142,8 +142,8 @@ public:
 		const std::uint32_t sizeX,
 		const std::uint32_t sizeY,
 		const bitDepth depth,
-		std::wstring colorSpace,
-		const std::uint8_t  highBit);
+        const std::string& colorSpace,
+        const std::uint32_t  highBit);
 
 	/// \brief Set the high bit.
 	///
@@ -233,7 +233,7 @@ public:
 	/// @return a string with the image's color space
 	///
 	///////////////////////////////////////////////////////////
-	std::wstring getColorSpace();
+    std::string getColorSpace();
 
 	/// \brief Get the number of allocated channels.
 	///
@@ -276,7 +276,7 @@ protected:
 
 	// Color space
 	///////////////////////////////////////////////////////////
-	std::wstring m_colorSpace;
+    std::string m_colorSpace;
 
 	// Depth (enum)
 	///////////////////////////////////////////////////////////

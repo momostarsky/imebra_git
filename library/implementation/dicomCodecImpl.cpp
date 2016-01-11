@@ -80,15 +80,15 @@ void dicomCodec::writeStream(std::shared_ptr<streamWriter> pStream, std::shared_
 
 	// Retrieve the transfer syntax
 	///////////////////////////////////////////////////////////
-    std::wstring transferSyntax=pDataSet->getUnicodeString(0x0002, 0, 0x0010, 0, 0);
+    std::string transferSyntax = pDataSet->getStringThrow(0x0002, 0, 0x0010, 0, 0);
 
 	// Adjust the flags
 	///////////////////////////////////////////////////////////
-	bool bExplicitDataType = (transferSyntax != L"1.2.840.10008.1.2");        // Implicit VR little endian
+    bool bExplicitDataType = (transferSyntax != "1.2.840.10008.1.2");        // Implicit VR little endian
 
 	// Explicit VR big endian
 	///////////////////////////////////////////////////////////
-	streamController::tByteOrdering endianType = (transferSyntax == L"1.2.840.10008.1.2.2") ? streamController::highByteEndian : streamController::lowByteEndian;
+    streamController::tByteOrdering endianType = (transferSyntax == "1.2.840.10008.1.2.2") ? streamController::highByteEndian : streamController::lowByteEndian;
 
 	// Write the dicom header
 	///////////////////////////////////////////////////////////
@@ -233,17 +233,10 @@ void dicomCodec::writeTag(std::shared_ptr<streamWriter> pDestStream, std::shared
 
 	// Check the data type
 	///////////////////////////////////////////////////////////
-	std::string dataType = pData->getDataType();
+    std::string dataType = pData->getDataTypeThrow(0);
 	if(!(dicomDictionary::getDicomDictionary()->isDataTypeValid(dataType)))
 	{
-		if(pData->getDataSet(0) != 0)
-		{
-			dataType = "SQ";
-		}
-		else
-		{
-			dataType = "OB";
-		}
+        throw;
 	}
 
 	// Adjust the tag id endian and write it
@@ -285,9 +278,10 @@ void dicomCodec::writeTag(std::shared_ptr<streamWriter> pDestStream, std::shared
 	///////////////////////////////////////////////////////////
 	for(std::uint32_t scanBuffers = 0; ; ++scanBuffers)
 	{
-        std::shared_ptr<handlers::readingDataHandlerRaw> pDataHandlerRaw = pData->getReadingDataHandlerRaw(scanBuffers);
-		if(pDataHandlerRaw != 0)
+        if(pData->bufferExists(scanBuffers))
 		{
+            std::shared_ptr<handlers::readingDataHandlerRaw> pDataHandlerRaw = pData->getReadingDataHandlerRawThrow(scanBuffers);
+
 			std::uint32_t wordSize = dicomDictionary::getDicomDictionary()->getWordSize(dataType);
 			std::uint32_t bufferSize = pDataHandlerRaw->getSize();
 
@@ -323,12 +317,12 @@ void dicomCodec::writeTag(std::shared_ptr<streamWriter> pDestStream, std::shared
 		}
 
 		// Write a nested dataset
-		///////////////////////////////////////////////////////////
-		std::shared_ptr<dataSet> pDataSet = pData->getDataSet(scanBuffers);
-		if(pDataSet == 0)
-		{
-			break;
-		}
+        ///////////////////////////////////////////////////////////
+        if(!pData->dataSetExists(scanBuffers))
+        {
+            break;
+        }
+        std::shared_ptr<dataSet> pDataSet = pData->getDataSetThrow(scanBuffers);
 
 		// Remember the position at which the item has been written
 		///////////////////////////////////////////////////////////
@@ -374,16 +368,16 @@ std::uint32_t dicomCodec::getTagLength(const std::shared_ptr<data>& pData, bool 
 {
 	PUNTOEXE_FUNCTION_START(L"dicomCodec::getTagLength");
 
-	std::string dataType = pData->getDataType();
+    std::string dataType = pData->getDataTypeThrow(0);
 	*pbSequence = (dataType == "SQ");
 	std::uint32_t numberOfElements = 0;
 	std::uint32_t totalLength = 0;
 	for(std::uint32_t scanBuffers = 0; ; ++scanBuffers, ++numberOfElements)
 	{
-		std::shared_ptr<dataSet> pDataSet = pData->getDataSet(scanBuffers);
-		if(pDataSet != 0)
+        if(pData->dataSetExists(scanBuffers))
 		{
-			totalLength += getDataSetLength(pDataSet, bExplicitDataType);
+            std::shared_ptr<dataSet> pDataSet = pData->getDataSetThrow(scanBuffers);
+            totalLength += getDataSetLength(pDataSet, bExplicitDataType);
 			totalLength += 8; // item tag and item length
 			*pbSequence = true;
 			continue;
@@ -392,7 +386,7 @@ std::uint32_t dicomCodec::getTagLength(const std::shared_ptr<data>& pData, bool 
 		{
 			break;
 		}
-		totalLength += pData->getBufferSize(scanBuffers);
+        totalLength += pData->getBufferSizeThrow(scanBuffers);
 	}
 
 	(*pbSequence) |= (numberOfElements > 1);
@@ -668,11 +662,11 @@ void dicomCodec::parseStream(std::shared_ptr<streamReader> pStream,
 			// Reverse the last adjust
 			pStream->adjustEndian((std::uint8_t*)&tagId, sizeof(tagId), endianType);
 
-            std::wstring transferSyntax=pDataSet->getUnicodeString(0x0002, 0x0, 0x0010, 0, 0);
+            std::string transferSyntax = pDataSet->getStringThrow(0x0002, 0x0, 0x0010, 0, 0);
 
-			if(transferSyntax == L"1.2.840.10008.1.2.2")
+            if(transferSyntax == "1.2.840.10008.1.2.2")
 				endianType=streamController::highByteEndian;
-			if(transferSyntax == L"1.2.840.10008.1.2")
+            if(transferSyntax == "1.2.840.10008.1.2")
 				bExplicitDataType=false;
 
 			bCheckTransferSyntax=false;
@@ -940,35 +934,35 @@ std::shared_ptr<image> dicomCodec::getImage(const dataSet& dataset, std::shared_
 
 	// Check for RLE compression
 	///////////////////////////////////////////////////////////
-    std::wstring transferSyntax = dataset.getUnicodeString(0x0002, 0x0, 0x0010, 0, 0);
-	bool bRleCompressed = (transferSyntax == L"1.2.840.10008.1.2.5");
+    std::string transferSyntax = dataset.getStringThrow(0x0002, 0x0, 0x0010, 0, 0);
+    bool bRleCompressed = (transferSyntax == "1.2.840.10008.1.2.5");
 
 	// Check for color space and subsampled channels
 	///////////////////////////////////////////////////////////
-    std::wstring colorSpace = dataset.getUnicodeString(0x0028, 0x0, 0x0004, 0, 0);
+    std::string colorSpace = dataset.getStringThrow(0x0028, 0x0, 0x0004, 0, 0);
 
 	// Retrieve the number of planes
 	///////////////////////////////////////////////////////////
-    std::uint8_t channelsNumber=(std::uint8_t)dataset.getUnsignedLong(0x0028, 0x0, 0x0002, 0, 0);
+    std::uint8_t channelsNumber=(std::uint8_t)dataset.getUnsignedLongThrow(0x0028, 0x0, 0x0002, 0, 0);
 
 	// Adjust the colorspace and the channels number for old
 	//  NEMA files that don't specify those data
 	///////////////////////////////////////////////////////////
 	if(colorSpace.empty() && (channelsNumber == 0 || channelsNumber == 1))
 	{
-		colorSpace = L"MONOCHROME2";
+        colorSpace = "MONOCHROME2";
 		channelsNumber = 1;
 	}
 
 	if(colorSpace.empty() && channelsNumber == 3)
 	{
-		colorSpace = L"RGB";
+        colorSpace = "RGB";
 	}
 
 	// Retrieve the image's size
 	///////////////////////////////////////////////////////////
-    std::uint32_t imageSizeX = dataset.getUnsignedLong(0x0028, 0x0, 0x0011, 0, 0);
-    std::uint32_t imageSizeY = dataset.getUnsignedLong(0x0028, 0x0, 0x0010, 0, 0);
+    std::uint32_t imageSizeX = dataset.getUnsignedLongThrow(0x0028, 0x0, 0x0011, 0, 0);
+    std::uint32_t imageSizeY = dataset.getUnsignedLongThrow(0x0028, 0x0, 0x0010, 0, 0);
 
     if(
             imageSizeX > codecFactory::getCodecFactory()->getMaximumImageWidth() ||
@@ -984,17 +978,17 @@ std::shared_ptr<image> dicomCodec::getImage(const dataSet& dataset, std::shared_
 
 	// Check for interleaved planes.
 	///////////////////////////////////////////////////////////
-    bool bInterleaved(dataset.getUnsignedLong(0x0028, 0x0, 0x0006, 0, 0)==0x0);
+    bool bInterleaved(dataset.getUnsignedLong(0x0028, 0x0, 0x0006, 0, 0, 0) == 0x0);
 
 	// Check for 2's complement
 	///////////////////////////////////////////////////////////
-    bool b2Complement = dataset.getUnsignedLong(0x0028, 0x0, 0x0103, 0, 0)!=0x0;
+    bool b2Complement = dataset.getUnsignedLong(0x0028, 0x0, 0x0103, 0, 0, 0)!=0x0;
 
 	// Retrieve the allocated/stored/high bits
 	///////////////////////////////////////////////////////////
-    std::uint8_t allocatedBits=(std::uint8_t)dataset.getUnsignedLong(0x0028, 0x0, 0x0100, 0, 0);
-    std::uint8_t storedBits=(std::uint8_t)dataset.getUnsignedLong(0x0028, 0x0, 0x0101, 0, 0);
-    std::uint8_t highBit=(std::uint8_t)dataset.getUnsignedLong(0x0028, 0x0, 0x0102, 0, 0);
+    std::uint8_t allocatedBits=(std::uint8_t)dataset.getUnsignedLongThrow(0x0028, 0x0, 0x0100, 0, 0);
+    std::uint8_t storedBits=(std::uint8_t)dataset.getUnsignedLongThrow(0x0028, 0x0, 0x0101, 0, 0);
+    std::uint8_t highBit=(std::uint8_t)dataset.getUnsignedLongThrow(0x0028, 0x0, 0x0102, 0, 0);
 	if(highBit<storedBits-1)
 		highBit=storedBits-1;
 
@@ -1002,8 +996,8 @@ std::shared_ptr<image> dicomCodec::getImage(const dataSet& dataset, std::shared_
 	// If the chrominance channels are subsampled, then find
 	//  the right image's size
 	///////////////////////////////////////////////////////////
-	bool bSubSampledY=channelsNumber>0x1 && transforms::colorTransforms::colorTransformsFactory::isSubsampledY(colorSpace);
-	bool bSubSampledX=channelsNumber>0x1 && transforms::colorTransforms::colorTransformsFactory::isSubsampledX(colorSpace);
+    bool bSubSampledY = channelsNumber > 0x1 && transforms::colorTransforms::colorTransformsFactory::isSubsampledY(colorSpace);
+    bool bSubSampledX = channelsNumber > 0x1 && transforms::colorTransforms::colorTransformsFactory::isSubsampledX(colorSpace);
 
 	// Create an image
 	///////////////////////////////////////////////////////////
@@ -2015,9 +2009,9 @@ void dicomCodec::flushUnwrittenPixels(streamWriter* pDestStream, std::uint8_t* p
 void dicomCodec::setImage(
 		std::shared_ptr<streamWriter> pDestStream,
 		std::shared_ptr<image> pImage,
-		std::wstring transferSyntax,
+        const std::string& transferSyntax,
 		quality /*imageQuality*/,
-		std::string dataType,
+        const std::string& dataType,
 		std::uint8_t allocatedBits,
 		bool bSubSampledX,
 		bool bSubSampledY,
@@ -2033,9 +2027,9 @@ void dicomCodec::setImage(
 	std::uint32_t imageWidth, imageHeight;
 	pImage->getSize(&imageWidth, &imageHeight);
 
-	std::wstring colorSpace = pImage->getColorSpace();
+    std::string colorSpace = pImage->getColorSpace();
 	std::uint32_t highBit = pImage->getHighBit();
-	bool bRleCompressed = (transferSyntax == L"1.2.840.10008.1.2.5");
+    bool bRleCompressed = (transferSyntax == "1.2.840.10008.1.2.5");
 
     std::shared_ptr<handlers::readingDataHandlerNumericBase> imageHandler = pImage->getReadingDataHandler();
     std::uint32_t channelsNumber = pImage->getChannelsNumber();
@@ -2110,17 +2104,16 @@ void dicomCodec::setImage(
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-bool dicomCodec::canHandleTransferSyntax(const std::wstring& transferSyntax)
+bool dicomCodec::canHandleTransferSyntax(const std::string& transferSyntax) const
 {
 	PUNTOEXE_FUNCTION_START(L"dicomCodec::canHandleTransferSyntax");
 
 	return(
-		transferSyntax == L"" ||
-		transferSyntax == L"1.2.840.10008.1.2" ||      // Implicit VR little endian
-		transferSyntax == L"1.2.840.10008.1.2.1" ||    // Explicit VR little endian
-		// transferSyntax==L"1.2.840.10008.1.2.1.99" || // Deflated explicit VR little endian
-		transferSyntax == L"1.2.840.10008.1.2.2" ||    // Explicit VR big endian
-		transferSyntax == L"1.2.840.10008.1.2.5");     // RLE compression
+        transferSyntax == "1.2.840.10008.1.2" ||      // Implicit VR little endian
+        transferSyntax == "1.2.840.10008.1.2.1" ||    // Explicit VR little endian
+        // transferSyntax=="1.2.840.10008.1.2.1.99" || // Deflated explicit VR little endian
+        transferSyntax == "1.2.840.10008.1.2.2" ||    // Explicit VR big endian
+        transferSyntax == "1.2.840.10008.1.2.5");     // RLE compression
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -2136,7 +2129,7 @@ bool dicomCodec::canHandleTransferSyntax(const std::wstring& transferSyntax)
 //
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
-bool dicomCodec::encapsulated(const std::wstring& transferSyntax)
+bool dicomCodec::encapsulated(const std::string& transferSyntax) const
 {
 	PUNTOEXE_FUNCTION_START(L"jpegCodec::canHandleTransferSyntax");
 
@@ -2144,7 +2137,7 @@ bool dicomCodec::encapsulated(const std::wstring& transferSyntax)
 	{
         PUNTOEXE_THROW(::imebra::codecExceptionWrongTransferSyntax, "Cannot handle the transfer syntax");
 	}
-	return (transferSyntax == L"1.2.840.10008.1.2.5");
+    return (transferSyntax == "1.2.840.10008.1.2.5");
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -2159,11 +2152,11 @@ bool dicomCodec::encapsulated(const std::wstring& transferSyntax)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::uint32_t dicomCodec::suggestAllocatedBits(const std::wstring& transferSyntax, std::uint32_t highBit)
+std::uint32_t dicomCodec::suggestAllocatedBits(const std::string& transferSyntax, std::uint32_t highBit) const
 {
 	PUNTOEXE_FUNCTION_START(L"dicomCodec::suggestAllocatedBits");
 
-	if(transferSyntax == L"1.2.840.10008.1.2.5")
+    if(transferSyntax == "1.2.840.10008.1.2.5")
 	{
 		return (highBit + 8) & 0xfffffff8;
 	}

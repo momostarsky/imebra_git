@@ -76,7 +76,7 @@ public:
 	/// @return the number of buffers in the tag
 	///
 	///////////////////////////////////////////////////////////
-    size_t getBuffersCount();
+    size_t getBuffersCount() const;
 
 	/// \brief Returns true if the specified buffer exists,
 	///         otherwise it returns false.
@@ -89,7 +89,7 @@ public:
 	/// @return true if the buffer exists, false otherwise
 	///
 	///////////////////////////////////////////////////////////
-    bool bufferExists(size_t bufferId);
+    bool bufferExists(size_t bufferId) const;
 
 	/// \brief Returns the size of a buffer, in bytes.
 	///
@@ -102,7 +102,7 @@ public:
 	///          doesn't exist.
 	///
 	///////////////////////////////////////////////////////////
-    size_t getBufferSize(size_t bufferId);
+    size_t getBufferSizeThrow(size_t bufferId) const;
 
 	/// \brief Get a data handler for the specified buffer.
 	///
@@ -141,7 +141,7 @@ public:
 	///         requested buffer.
 	///
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<handlers::readingDataHandler> getReadingDataHandler(size_t bufferId) const;
+    std::shared_ptr<handlers::readingDataHandler> getReadingDataHandlerThrow(size_t bufferId) const;
 
     std::shared_ptr<handlers::writingDataHandler> getWritingDataHandler(size_t bufferId, const std::string& defaultType, const charsetsList::tCharsetsList& defaultCharsets);
 	
@@ -187,7 +187,7 @@ public:
 	///         requested buffer.
 	///
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<handlers::readingDataHandlerRaw> getReadingDataHandlerRaw(size_t bufferId) const;
+    std::shared_ptr<handlers::readingDataHandlerRaw> getReadingDataHandlerRawThrow(size_t bufferId) const;
 
     std::shared_ptr<handlers::writingDataHandlerRaw> getWritingDataHandlerRaw(size_t bufferId, const std::string& defaultType, const charsetsList::tCharsetsList& defaultCharsets);
 
@@ -200,7 +200,7 @@ public:
 	///                    buffer's data.
 	///
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<streamReader> getStreamReader(size_t bufferId);
+    std::shared_ptr<streamReader> getStreamReaderThrow(size_t bufferId);
 
 	/// \brief Get a streamWriter connected to a buffer's data.
 	///
@@ -242,7 +242,9 @@ public:
 	/// @return           a pointer to the retrieved dataSet
 	///
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<dataSet> getDataSet(size_t dataSetId);
+    std::shared_ptr<dataSet> getDataSetThrow(size_t dataSetId) const;
+
+    bool dataSetExists(size_t dataSetId) const;
 
 	/// \brief Set an embedded dataSet to the sequence.
 	///
@@ -311,7 +313,7 @@ public:
 	/// @return the buffer's data type in Dicom format
 	///
 	///////////////////////////////////////////////////////////
-	std::string getDataType();
+    std::string getDataTypeThrow(size_t bufferId) const;
 
 	//@}
 

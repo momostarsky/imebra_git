@@ -35,15 +35,15 @@ WritingDataHandler Image::create(
         const size_t sizeX,
         const size_t sizeY,
 		const bitDepth depth,
-		std::wstring colorSpace,
-		const int highBit)
+        const std::string& colorSpace,
+        const unsigned int highBit)
 {
-    return WritingDataHandler(m_pImage->create((imbxUint32)sizeX, (imbxUint32)sizeY, (puntoexe::imebra::image::bitDepth)depth, colorSpace, (imbxUint8)highBit));
+    return WritingDataHandler(m_pImage->create((std::uint32_t)sizeX, (std::uint32_t)sizeY, (puntoexe::imebra::image::bitDepth)depth, colorSpace, (std::uint8_t)highBit));
 }
 
-void Image::setHighBit(int highBit)
+void Image::setHighBit(unsigned int highBit)
 {
-    m_pImage->setHighBit((imbxUint8)highBit);
+    m_pImage->setHighBit((std::uint8_t)highBit);
 }
 
 double Image::getSizeMmX() const
@@ -67,14 +67,14 @@ void Image::setSizeMm(const double sizeX, const double sizeY)
 
 size_t Image::getSizeX() const
 {
-    imbxUint32 sizeX, sizeY;
+    std::uint32_t sizeX, sizeY;
     m_pImage->getSize(&sizeX, &sizeY);
     return (size_t)sizeX;
 }
 
 size_t Image::getSizeY() const
 {
-    imbxUint32 sizeX, sizeY;
+    std::uint32_t sizeX, sizeY;
     m_pImage->getSize(&sizeX, &sizeY);
     return (size_t)sizeY;
 }
@@ -85,7 +85,7 @@ ReadingDataHandler Image::getReadingDataHandler() const
 }
 
 
-std::wstring Image::getColorSpace() const
+std::string Image::getColorSpace() const
 {
     return m_pImage->getColorSpace();
 }

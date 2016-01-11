@@ -126,10 +126,10 @@ public:
 	///                 just created tag is returned.
 	///
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<data> getTag(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId) const;
+    std::shared_ptr<data> getTagThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId) const;
     std::shared_ptr<data> getTagCreate(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId);
 
-    bool bufferExists(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId);
+    bool bufferExists(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId) const;
 	
 	//@}
 
@@ -188,7 +188,7 @@ public:
     ///                     transform has been applied
     ///
     ///////////////////////////////////////////////////////////
-    std::shared_ptr<image> getModalityImage(std::uint32_t frameNumber);
+    std::shared_ptr<image> getModalityImage(std::uint32_t frameNumber) const;
 	
 	/// \brief Insert an image into the data set.
 	///
@@ -207,7 +207,7 @@ public:
 	///                     compression quality
 	///
 	///////////////////////////////////////////////////////////
-    void setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage, const std::wstring& transferSyntax, codecs::codec::quality quality);
+    void setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage, const std::string& transferSyntax, codecs::codec::quality quality);
 
 	/// \brief Get a frame's offset from the offset table.
 	///
@@ -217,22 +217,6 @@ public:
 	///
 	///////////////////////////////////////////////////////////
     std::uint32_t getFrameOffset(std::uint32_t frameNumber) const;
-
-	/// \brief Get the id of the buffer that starts at the
-	///         specified offset.
-	///
-	/// @param offset   one offset retrieved from the frames
-	///                  offset table: see getFrameOffset()
-	/// @param pLengthToBuffer a pointer to a variable that
-	///                  will store the total lenght of
-	///                  the buffers that preceed the one
-	///                  being returned (doesn't include
-	///                  the tag descriptors)
-	/// @return         the id of the buffer that starts at
-	///                  the specified offset
-	///
-	///////////////////////////////////////////////////////////
-    std::uint32_t getFrameBufferId(std::uint32_t offset, std::uint32_t* pLengthToBuffer) const;
 
 	/// \brief Retrieve the first and the last buffers used
 	///         to store the image.
@@ -318,7 +302,7 @@ public:
 	///                 dataset is returned
 	///
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<dataSet> getSequenceItem(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t itemId);
+    std::shared_ptr<dataSet> getSequenceItemThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t itemId) const;
 
 	/// \brief Retrieve a LUT.
 	///
@@ -341,7 +325,7 @@ public:
 	///                 LUT is returned
 	///
 	///////////////////////////////////////////////////////////
-	std::shared_ptr<lut> getLut(std::uint16_t groupId, std::uint16_t tagId, std::uint32_t lutId);
+    std::shared_ptr<lut> getLutThrow(std::uint16_t groupId, std::uint16_t tagId, std::uint32_t lutId) const;
 
 	/// \brief Retrieve a waveform from the dataSet.
 	///
@@ -357,7 +341,7 @@ public:
 	///          the requested waveform doesn't exist
 	///
 	///////////////////////////////////////////////////////////
-	std::shared_ptr<waveform> getWaveform(std::uint32_t waveformId);
+    std::shared_ptr<waveform> getWaveformThrow(std::uint32_t waveformId);
 
 	//@}
 
@@ -391,7 +375,9 @@ public:
 	/// @return        The tag's content, as a signed long
 	///
 	///////////////////////////////////////////////////////////
-    std::int32_t getSignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
+    std::int32_t getSignedLongThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
+
+    std::int32_t getSignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::int32_t defaultValue) const;
 
 	/// \brief Set a tag's value as a signed long.
 	///
@@ -449,7 +435,9 @@ public:
 	/// @return        The tag's content, as an unsigned long
 	///
 	///////////////////////////////////////////////////////////
-    std::uint32_t getUnsignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
+    std::uint32_t getUnsignedLongThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
+
+    std::uint32_t getUnsignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::uint32_t defaultValue) const;
 
 	/// \brief Set a tag's value as an unsigned long.
 	///
@@ -507,7 +495,9 @@ public:
 	/// @return        The tag's content, as a double
 	///
 	///////////////////////////////////////////////////////////
-    double getDouble(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
+    double getDoubleThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
+
+    double getDouble(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, double defaultValue) const;
 	
 	/// \brief Set a tag's value as a double.
 	///
@@ -567,7 +557,9 @@ public:
 	/// @return        The tag's content, as a string
 	///
 	///////////////////////////////////////////////////////////
-    std::string getString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
+    std::string getStringThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
+
+    std::string getString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, const std::string& defaultValue) const;
 
 	/// \brief Retrieve a tag's value as an unicode string.
 	///
@@ -594,7 +586,9 @@ public:
 	/// @return        The tag's content, as an unicode string
 	///
 	///////////////////////////////////////////////////////////
-    std::wstring getUnicodeString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
+    std::wstring getUnicodeStringThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
+
+    std::wstring getUnicodeString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, const std::wstring& defaultValue) const;
 
 	/// \brief Set a tag's value as a string.
 	///        setUnicodeString() is preferred over this
@@ -662,7 +656,29 @@ public:
 
     void setAge(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, int age, ::imebra::ageUnit_t units, const std::string& defaultType = "");
 
-    int getAge(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, ::imebra::ageUnit_t* pUnits) const;
+    int getAgeThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, ::imebra::ageUnit_t* pUnits) const;
+
+    void setDate(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber,
+        std::uint32_t year,
+        std::uint32_t month,
+        std::uint32_t day,
+        std::uint32_t hour,
+        std::uint32_t minutes,
+        std::uint32_t seconds,
+        std::uint32_t nanoseconds,
+        std::int32_t offsetHours,
+        std::int32_t offsetMinutes, const std::string& defaultType = "");
+
+    void getDateThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber,
+        std::uint32_t* pYear,
+        std::uint32_t* pMonth,
+        std::uint32_t* pDay,
+        std::uint32_t* pHour,
+        std::uint32_t* pMinutes,
+        std::uint32_t* pSeconds,
+        std::uint32_t* pNanoseconds,
+        std::int32_t* pOffsetHours,
+        std::int32_t* pOffsetMinutes) const;
 
     //@}
 
@@ -701,7 +717,7 @@ public:
 	/// @return           a string with the tag's type.
 	///
 	///////////////////////////////////////////////////////////
-    std::string getDataType(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId) const;
+    std::string getDataTypeThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId) const;
 
 	/// \brief Return a data handler for the specified tag's
 	///         buffer.
@@ -733,7 +749,7 @@ public:
 	/// @return a pointer to the data handler.
 	///
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<handlers::readingDataHandler> getReadingDataHandler(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId) const;
+    std::shared_ptr<handlers::readingDataHandler> getReadingDataHandlerThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId) const;
     std::shared_ptr<handlers::writingDataHandler> getWritingDataHandler(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, const std::string& defaultType="");
 
 	/// \brief Return a raw data handler for the specified 
@@ -767,7 +783,7 @@ public:
 	/// @return a pointer to the data handler.
 	///
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<handlers::readingDataHandlerRaw> getReadingDataHandlerRaw(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId) const;
+    std::shared_ptr<handlers::readingDataHandlerRaw> getReadingDataHandlerRawThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId) const;
     std::shared_ptr<handlers::writingDataHandlerRaw> getWritingDataHandlerRaw(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, const std::string& defaultType="");
 
 	/// \brief Return a streamReader connected to the specified
@@ -791,7 +807,7 @@ public:
 	/// @return a pointer to the streamReader
 	///
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<streamReader> getStreamReader(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId) const;
+    std::shared_ptr<streamReader> getStreamReaderThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId) const;
 
 	/// \brief Return a streamWriter connected to the specified
 	///         tag's buffer's memory.
@@ -896,13 +912,7 @@ public:
     void getCharsetsList(charsetsList::tCharsetsList* pCharsetsList) const;
     void setCharsetsList(const charsetsList::tCharsetsList& charsetsList);
 
-protected:
-	// Convert an image using the attributes specified in the
-	//  the dataset
-	///////////////////////////////////////////////////////////
-	std::shared_ptr<image> convertImageForDataSet(std::shared_ptr<image> sourceImage);
-
-
+private:
     mutable std::vector<std::uint32_t> m_imagesPositions;
 
 	// Position of the sequence item in the stream. Used to
@@ -910,7 +920,23 @@ protected:
 	///////////////////////////////////////////////////////////
 	std::uint32_t m_itemOffset;
 
-private:
+    /// \brief Get the id of the buffer that starts at the
+    ///         specified offset.
+    ///
+    /// @param offset   one offset retrieved from the frames
+    ///                  offset table: see getFrameOffset()
+    /// @param pLengthToBuffer a pointer to a variable that
+    ///                  will store the total lenght of
+    ///                  the buffers that preceed the one
+    ///                  being returned (doesn't include
+    ///                  the tag descriptors)
+    /// @return         the id of the buffer that starts at
+    ///                  the specified offset
+    ///
+    ///////////////////////////////////////////////////////////
+    std::uint32_t getFrameBufferId(std::uint32_t offset, std::uint32_t* pLengthToBuffer) const;
+
+
 
     tGroups m_groups;
 

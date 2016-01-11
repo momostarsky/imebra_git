@@ -88,7 +88,7 @@ void codecFactory::registerCodec(std::shared_ptr<codec> pCodec)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<codec> codecFactory::getCodec(const std::wstring& transferSyntax)
+std::shared_ptr<codec> codecFactory::getCodec(const std::string& transferSyntax)
 {
 	PUNTOEXE_FUNCTION_START(L"codecFactory::getCodec");
 
@@ -102,8 +102,7 @@ std::shared_ptr<codec> codecFactory::getCodec(const std::wstring& transferSyntax
 		}
 	}
 
-	std::shared_ptr<codec> emptyCodec;
-	return emptyCodec;
+    PUNTOEXE_THROW(::imebra::dataSetExceptionUnknownTransferSyntax, "None of the codecs support the specified transfer syntax");
 
 	PUNTOEXE_FUNCTION_END();
 }

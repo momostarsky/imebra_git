@@ -13,8 +13,31 @@ $fileHeader$
 namespace imebra
 {
 
-Age::Age(uint32_t age, ageUnit_t units):
-    age(age), units(units)
+Age::Age(uint32_t initialAge, ageUnit_t initialUnits):
+    age(initialAge), units(initialUnits)
+{
+
+}
+
+Date::Date(
+        const unsigned int initialYear,
+        const unsigned int initialMonth,
+        const unsigned int initialDay,
+        const unsigned int initialHour,
+        const unsigned int initialMinutes,
+        const unsigned int initialSeconds,
+        const unsigned int initialNanoseconds,
+        const signed int initialOffsetHours,
+        const signed int initialOffsetMinutes):
+    year(initialYear),
+    month(initialMonth),
+    day(initialDay),
+    hour(initialHour),
+    minutes(initialMinutes),
+    seconds(initialSeconds),
+    nanoseconds(initialNanoseconds),
+    offsetHours(initialOffsetHours),
+    offsetMinutes(initialOffsetMinutes)
 {
 
 }
@@ -48,47 +71,40 @@ std::string ReadingDataHandler::getDataType() const
 
 int ReadingDataHandler::getSignedLong(const int index) const
 {
-    return (int)(m_pDataHandler->getSignedLong((const imbxUint32)index));
+    return (int)(m_pDataHandler->getSignedLong(index));
 }
 
-int ReadingDataHandler::getUnsignedLong(const int index) const
+unsigned int ReadingDataHandler::getUnsignedLong(const int index) const
 {
-    return (int)(m_pDataHandler->getUnsignedLong((const imbxUint32)index));
+    return (int)(m_pDataHandler->getUnsignedLong(index));
 }
 
 double ReadingDataHandler::getDouble(const int index) const
 {
-    return m_pDataHandler->getDouble((const imbxUint32)index);
+    return m_pDataHandler->getDouble(index);
 }
 
 std::wstring ReadingDataHandler::getString(const int index) const
 {
-    return m_pDataHandler->getUnicodeString((const imbxUint32)index);
+    return m_pDataHandler->getUnicodeString(index);
 }
 
-void ReadingDataHandler::getDate(const int index,
-		int* pYear,
-		int* pMonth,
-		int* pDay,
-		int* pHour,
-		int* pMinutes,
-		int* pSeconds,
-		int* pNanoseconds,
-		int* pOffsetHours,
-		int* pOffsetMinutes) const
+Date ReadingDataHandler::getDate(const int index) const
 {
-    imbxInt32 year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes;
-    m_pDataHandler->getDate((imbxUint32)index, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
+    std::uint32_t year, month, day, hour, minutes, seconds, nanoseconds;
+    std::int32_t offsetHours, offsetMinutes;
+    m_pDataHandler->getDate(index, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
 
-    *pYear = (int)year;
-    *pMonth = (int)month;
-    *pDay = (int)day;
-    *pHour = (int)hour;
-    *pMinutes = (int)minutes;
-    *pSeconds = (int)seconds;
-    *pNanoseconds = (int)nanoseconds;
-    *pOffsetHours = (int)offsetHours;
-    *pOffsetMinutes = (int)offsetMinutes;
+    return Date(
+                (unsigned int)year,
+                (unsigned int)month,
+                (unsigned int)day,
+                (unsigned int)hour,
+                (unsigned int)minutes,
+                (unsigned int)seconds,
+                (unsigned int)nanoseconds,
+                (int)offsetHours,
+                (int)offsetMinutes);
 }
 
 Age ReadingDataHandler::getAge(const size_t index) const
@@ -149,7 +165,7 @@ void WritingDataHandler::close()
 
 void WritingDataHandler::setSize(const size_t elementsNumber)
 {
-    m_pDataHandler->setSize((const imbxUint32)elementsNumber);
+    m_pDataHandler->setSize(elementsNumber);
 }
 
 size_t WritingDataHandler::getSize() const
@@ -163,28 +179,19 @@ std::string WritingDataHandler::getDataType() const
 }
 
 
-void WritingDataHandler::setDate(const int index,
-        int year,
-        int month,
-        int day,
-        int hour,
-        int minutes,
-        int seconds,
-        int nanoseconds,
-        int offsetHours,
-        int offsetMinutes)
+void WritingDataHandler::setDate(const int index, const Date& date)
 {
     m_pDataHandler->setDate(
-        (imbxUint32)index,
-        (imbxInt32)year,
-        (imbxInt32)month,
-        (imbxInt32)day,
-        (imbxInt32)hour,
-        (imbxInt32)minutes,
-        (imbxInt32)seconds,
-        (imbxInt32)nanoseconds,
-        (imbxInt32)offsetHours,
-        (imbxInt32)offsetMinutes);
+        (std::uint32_t)index,
+        (std::uint32_t)date.year,
+        (std::uint32_t)date.month,
+        (std::uint32_t)date.day,
+        (std::uint32_t)date.hour,
+        (std::uint32_t)date.minutes,
+        (std::uint32_t)date.seconds,
+        (std::uint32_t)date.nanoseconds,
+        (std::int32_t)date.offsetHours,
+        (std::int32_t)date.offsetMinutes);
 }
 
 void WritingDataHandler::setAge(const size_t index, const Age& age)
@@ -194,22 +201,22 @@ void WritingDataHandler::setAge(const size_t index, const Age& age)
 
 void WritingDataHandler::setSignedLong(const int index, const int value)
 {
-    m_pDataHandler->setSignedLong((imbxUint32)index, (imbxInt32)value);
+    m_pDataHandler->setSignedLong(index, value);
 }
 
-void WritingDataHandler::setUnsignedLong(const int index, const int value)
+void WritingDataHandler::setUnsignedLong(const int index, const unsigned int value)
 {
-    m_pDataHandler->setUnsignedLong((imbxUint32)index, (imbxUint32)value);
+    m_pDataHandler->setUnsignedLong(index, value);
 }
 
 void WritingDataHandler::setDouble(const int index, const double value)
 {
-    m_pDataHandler->setDouble((imbxUint32)index, value);
+    m_pDataHandler->setDouble(index, value);
 }
 
 void WritingDataHandler::setString(const int index, const std::wstring& value)
 {
-    m_pDataHandler->setUnicodeString((imbxUint32)index, value);
+    m_pDataHandler->setUnicodeString(index, value);
 }
 
 void WritingDataHandler::assign(const char *buffer, const size_t bufferSize)

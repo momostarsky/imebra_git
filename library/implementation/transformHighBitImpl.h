@@ -52,11 +52,11 @@ public:
         void templateTransform(
             const inputType* inputHandlerData,
             outputType* outputHandlerData,
-            std::uint32_t inputHandlerWidth, const std::wstring& inputHandlerColorSpace,
+            std::uint32_t inputHandlerWidth, const std::string& inputHandlerColorSpace,
             std::shared_ptr<palette> /* inputPalette */,
             std::int32_t inputHandlerMinValue, std::uint32_t inputHighBit,
             std::int32_t inputTopLeftX, std::int32_t inputTopLeftY, std::int32_t inputWidth, std::int32_t inputHeight,
-            std::int32_t outputHandlerWidth, const std::wstring& outputHandlerColorSpace,
+            std::int32_t outputHandlerWidth, const std::string& outputHandlerColorSpace,
             std::shared_ptr<palette> /* outputPalette */,
             std::int32_t outputHandlerMinValue, std::uint32_t outputHighBit,
             std::int32_t outputTopLeftX, std::int32_t outputTopLeftY)

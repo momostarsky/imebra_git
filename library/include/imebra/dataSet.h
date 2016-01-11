@@ -67,15 +67,15 @@ public:
 		veryLow = 600	   ///< the image is saved in low quality. Horizontal and vertical subsampling are applied. Quantization ratios are high
 	};
 
-	Image getImage(int frameNumber);
+    Image getImage(unsigned int frameNumber);
 
-    void setImage(int frameNumber, Image image, const std::wstring& transferSyntax, imageQuality quality);
+    void setImage(unsigned int frameNumber, Image image, const std::string& transferSyntax, imageQuality quality);
 
 	DataSet getSequenceItem(int groupId, int order, int tagId, int itemId);
 
     ReadingDataHandler getReadingDataHandler(int groupId, int order, int tagId, int bufferId) const;
 
-    WritingDataHandler getWritingDataHandler(int groupId, int order, int tagId, int bufferId, const std::string& defaultDataType);
+    WritingDataHandler getWritingDataHandler(int groupId, int order, int tagId, int bufferId, const std::string& defaultDataType = "");
 
     bool bufferExists(int groupId, int order, int tagId, int bufferId);
 
@@ -83,9 +83,9 @@ public:
 
     void setSignedLong(int groupId, int order, int tagId, int bufferId, int elementNumber, int newValue, const std::string& defaultType = "");
 
-    int getUnsignedLong(int groupId, int order, int tagId, int bufferId, int elementNumber) const;
+    unsigned int getUnsignedLong(int groupId, int order, int tagId, int bufferId, int elementNumber) const;
 
-    void setUnsignedLong(int groupId, int order, int tagId, int bufferId, int elementNumber, int newValue, const std::string& defaultType = "");
+    void setUnsignedLong(int groupId, int order, int tagId, int bufferId, int elementNumber, unsigned int newValue, const std::string& defaultType = "");
 
     double getDouble(int groupId, int order, int tagId, int bufferId, int elementNumber) const;
 
@@ -98,6 +98,10 @@ public:
     void setAge(int groupId, int order, int tagId, int bufferId, int elementNumber, int age, imebra::ageUnit_t units, const std::string& defaultType = "");
 
     int getAge(int groupId, int order, int tagId, int bufferId, int elementNumber, imebra::ageUnit_t* pUnits) const;
+
+    void setDate(int groupId, int order, int tagId, int bufferId, int elementNumber, const Date& date, const std::string& defaultType = "");
+
+    Date getDate(int groupId, int order, int tagId, int bufferId, int elementNumber) const;
 
     size_t getRawData(int groupId, int order, int tagId, int bufferId, char* buffer, size_t bufferSize) const;
 

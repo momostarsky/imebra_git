@@ -77,10 +77,10 @@ public:
 protected:
 	std::uint32_t m_inputWidth;
 	std::uint32_t m_inputHeight;
-	std::wstring m_inputColorSpace;
+    std::string m_inputColorSpace;
 	image::bitDepth m_inputDepth;
 	std::uint32_t m_inputHighBit;
-	std::wstring m_outputColorSpace;
+    std::string m_outputColorSpace;
 	image::bitDepth m_outputDepth;
 	std::uint32_t m_outputHighBit;
 

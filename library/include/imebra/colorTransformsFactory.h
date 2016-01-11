@@ -21,21 +21,21 @@ class IMEBRA_API ColorTransformsFactory
 
 public:
 
-    static std::wstring normalizeColorSpace(const std::wstring& colorSpace);
+    static std::string normalizeColorSpace(const std::string& colorSpace);
 
-    static bool isMonochrome(const std::wstring& colorSpace);
+    static bool isMonochrome(const std::string& colorSpace);
 
-    static bool isSubsampledX(const std::wstring& colorSpace);
+    static bool isSubsampledX(const std::string& colorSpace);
 
-    static bool isSubsampledY(const std::wstring& colorSpace);
+    static bool isSubsampledY(const std::string& colorSpace);
 
-    static bool canSubsample(const std::wstring& colorSpace);
+    static bool canSubsample(const std::string& colorSpace);
 
-    static std::wstring makeSubsampled(const std::wstring& colorSpace, bool bSubsampleX, bool bSubsampleY);
+    static std::string makeSubsampled(const std::string& colorSpace, bool bSubsampleX, bool bSubsampleY);
 
-    static int getNumberOfChannels(const std::wstring& colorSpace);
+    static int getNumberOfChannels(const std::string& colorSpace);
 
-    static Transform getTransform(const std::wstring& startColorSpace, const std::wstring& endColorSpace);
+    static Transform getTransform(const std::string& startColorSpace, const std::string& endColorSpace);
 
 };
 

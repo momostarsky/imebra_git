@@ -65,13 +65,13 @@ public:
 
 	void setReferencedRecord(const DirectoryRecord& referencedRecord);
 	
-    std::wstring getFilePart(int part) const;
+    std::string getFilePart(int part) const;
 
-	void setFilePart(int part, const std::wstring& partName);
+    void setFilePart(int part, const std::string& partName);
 
-    std::wstring getTypeString() const;
+    std::string getTypeString() const;
 
-	void setTypeString(const std::wstring& recordType);
+    void setTypeString(const std::string& recordType);
 
     bool isNull() const;
 

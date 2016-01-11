@@ -65,10 +65,10 @@ public:
         const size_t sizeX,
         const size_t sizeY,
 		const bitDepth depth,
-		std::wstring colorSpace,
-		const int highBit);
+        const std::string& colorSpace,
+        const unsigned int highBit);
 
-	void setHighBit(int highBit);
+    void setHighBit(unsigned int highBit);
 
     double getSizeMmY() const;
     double getSizeMmX() const;
@@ -81,7 +81,7 @@ public:
     ReadingDataHandler getReadingDataHandler() const;
     WritingDataHandler getWritingDataHandler();
 
-    std::wstring getColorSpace() const;
+    std::string getColorSpace() const;
 
     int getChannelsNumber() const;
 

@@ -19,43 +19,43 @@ VOILUT::VOILUT(const DataSet& dataset): Transform(std::make_shared<puntoexe::ime
 {
 }
 
-int VOILUT::getVOILUTId(int VOILUTNumber) const
+unsigned int VOILUT::getVOILUTId(unsigned int VOILUTNumber) const
 {
-    return (int) (((puntoexe::imebra::transforms::VOILUT*)m_pTransform.get())->getVOILUTId((imbxUint32) VOILUTNumber));
+    return (unsigned int) (((puntoexe::imebra::transforms::VOILUT*)m_pTransform.get())->getVOILUTId((std::uint32_t) VOILUTNumber));
 
 }
 
 std::wstring VOILUT::getVOILUTDescription(int VOILUTId) const
 {
-    return ((puntoexe::imebra::transforms::VOILUT*)m_pTransform.get())->getVOILUTDescription((imbxUint32) VOILUTId);
+    return ((puntoexe::imebra::transforms::VOILUT*)m_pTransform.get())->getVOILUTDescription((std::uint32_t) VOILUTId);
 
 }
 
 void VOILUT::setVOILUT(int VOILUTId)
 {
-    ((puntoexe::imebra::transforms::VOILUT*)m_pTransform.get())->setVOILUT((imbxUint32) VOILUTId);
+    ((puntoexe::imebra::transforms::VOILUT*)m_pTransform.get())->setVOILUT((std::uint32_t) VOILUTId);
 }
 
 void VOILUT::setCenterWidth(int center, int width)
 {
-    ((puntoexe::imebra::transforms::VOILUT*)m_pTransform.get())->setCenterWidth((imbxInt32) center, (imbxInt32) width);
+    ((puntoexe::imebra::transforms::VOILUT*)m_pTransform.get())->setCenterWidth((std::int32_t) center, (std::int32_t) width);
 }
 
-void VOILUT::applyOptimalVOI(Image inputImage, int topLeftX, int topLeftY, int width, int height)
+void VOILUT::applyOptimalVOI(Image inputImage, unsigned int topLeftX, unsigned int topLeftY, unsigned int width, unsigned int height)
 {
-    ((puntoexe::imebra::transforms::VOILUT*)m_pTransform.get())->applyOptimalVOI(inputImage.m_pImage, (imbxUint32) topLeftX, (imbxUint32) topLeftY, (imbxUint32) width, (imbxUint32) height);
+    ((puntoexe::imebra::transforms::VOILUT*)m_pTransform.get())->applyOptimalVOI(inputImage.m_pImage, (std::uint32_t) topLeftX, (std::uint32_t) topLeftY, (std::uint32_t) width, (std::uint32_t) height);
 }
 
 int VOILUT::getCenter() const
 {
-    imbxInt32 center, width;
+    std::int32_t center, width;
     ((puntoexe::imebra::transforms::VOILUT*)m_pTransform.get())->getCenterWidth(&center, &width);
     return (int)center;
 }
 
 int VOILUT::getWidth() const
 {
-    imbxInt32 center, width;
+    std::int32_t center, width;
     ((puntoexe::imebra::transforms::VOILUT*)m_pTransform.get())->getCenterWidth(&center, &width);
     return (int)width;
 }

@@ -47,8 +47,8 @@ std::shared_ptr<handlers::writingDataHandlerNumericBase> image::create(
 						const std::uint32_t sizeX, 
 						const std::uint32_t sizeY, 
 						const bitDepth depth, 
-						std::wstring inputColorSpace, 
-						const std::uint8_t highBit)
+                        const std::string& inputColorSpace,
+                        const std::uint32_t highBit)
 {
 	PUNTOEXE_FUNCTION_START(L"image::create");
 
@@ -250,7 +250,7 @@ std::shared_ptr<palette> image::getPalette()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::wstring image::getColorSpace()
+std::string image::getColorSpace()
 {
 	return m_colorSpace;
 }

@@ -123,13 +123,13 @@ std::shared_ptr<colorTransformsFactory> colorTransformsFactory::getColorTransfor
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////;
-std::wstring colorTransformsFactory::normalizeColorSpace(const std::wstring& colorSpace)
+std::string colorTransformsFactory::normalizeColorSpace(const std::string& colorSpace)
 {
 	PUNTOEXE_FUNCTION_START(L"colorTransformsFactory::normalizeColorSpace");
 
-	std::wstring normalizedColorSpace;
+    std::string normalizedColorSpace;
 
-        size_t c42position = colorSpace.find(L"_42");
+    size_t c42position = colorSpace.find("_42");
 	if(c42position != colorSpace.npos)
 		normalizedColorSpace=colorSpace.substr(0, c42position);
 	else
@@ -137,10 +137,10 @@ std::wstring colorTransformsFactory::normalizeColorSpace(const std::wstring& col
 
 	// Colorspace transformed to uppercase
 	///////////////////////////////////////////////////////////
-	for(int adjustColorSpace = 0; adjustColorSpace<(int)normalizedColorSpace.length(); ++adjustColorSpace)
+    for(size_t adjustColorSpace = 0; adjustColorSpace < normalizedColorSpace.size(); ++adjustColorSpace)
 	{
-		if(normalizedColorSpace[adjustColorSpace] >= L'a' && normalizedColorSpace[adjustColorSpace] <= L'z')
-			normalizedColorSpace[adjustColorSpace] -= L'a'-L'A';
+        if(normalizedColorSpace[adjustColorSpace] >= 'a' && normalizedColorSpace[adjustColorSpace] <= 'z')
+            normalizedColorSpace[adjustColorSpace] -= 'a'-'A';
 	}
 
 	return normalizedColorSpace;
@@ -159,12 +159,12 @@ std::wstring colorTransformsFactory::normalizeColorSpace(const std::wstring& col
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-bool colorTransformsFactory::isMonochrome(const std::wstring& colorSpace)
+bool colorTransformsFactory::isMonochrome(const std::string& colorSpace)
 {
 	PUNTOEXE_FUNCTION_START(L"colorTransformsFactory::isMonochrome");
 
-	std::wstring normalizedColorSpace = normalizeColorSpace(colorSpace);
-	return (normalizedColorSpace == L"MONOCHROME1" || normalizedColorSpace == L"MONOCHROME2");
+    std::string normalizedColorSpace = normalizeColorSpace(colorSpace);
+    return (normalizedColorSpace == "MONOCHROME1" || normalizedColorSpace == "MONOCHROME2");
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -180,11 +180,11 @@ bool colorTransformsFactory::isMonochrome(const std::wstring& colorSpace)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-bool colorTransformsFactory::isSubsampledX(const std::wstring& colorSpace)
+bool colorTransformsFactory::isSubsampledX(const std::string& colorSpace)
 {
 	PUNTOEXE_FUNCTION_START(L"colorTransformsFactory::isSubsampledX");
 
-	return (colorSpace.find(L"_42")!=colorSpace.npos);
+    return (colorSpace.find("_42")!=colorSpace.npos);
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -200,11 +200,11 @@ bool colorTransformsFactory::isSubsampledX(const std::wstring& colorSpace)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-bool colorTransformsFactory::isSubsampledY(const std::wstring& colorSpace)
+bool colorTransformsFactory::isSubsampledY(const std::string& colorSpace)
 {
 	PUNTOEXE_FUNCTION_START(L"colorTransformsFactory::isSubsampledY");
 
-	return (colorSpace.find(L"_420")!=colorSpace.npos);
+    return (colorSpace.find("_420")!=colorSpace.npos);
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -220,12 +220,12 @@ bool colorTransformsFactory::isSubsampledY(const std::wstring& colorSpace)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-bool colorTransformsFactory::canSubsample(const std::wstring& colorSpace)
+bool colorTransformsFactory::canSubsample(const std::string& colorSpace)
 {
 	PUNTOEXE_FUNCTION_START(L"colorTransformsFactory::canSubsample");
 
-	std::wstring normalizedColorSpace = normalizeColorSpace(colorSpace);
-	return normalizedColorSpace.find(L"YBR_") == 0;
+    std::string normalizedColorSpace = normalizeColorSpace(colorSpace);
+    return normalizedColorSpace.find("YBR_") == 0;
 
 	PUNTOEXE_FUNCTION_END();
 }
@@ -240,22 +240,22 @@ bool colorTransformsFactory::canSubsample(const std::wstring& colorSpace)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::wstring colorTransformsFactory::makeSubsampled(const std::wstring& colorSpace, bool bSubsampleX, bool bSubsampleY)
+std::string colorTransformsFactory::makeSubsampled(const std::string& colorSpace, bool bSubsampleX, bool bSubsampleY)
 {
 	PUNTOEXE_FUNCTION_START(L"colorTransformsFactory::makeSubsampled");
 
-	std::wstring normalizedColorSpace = normalizeColorSpace(colorSpace);
+    std::string normalizedColorSpace = normalizeColorSpace(colorSpace);
 	if(!canSubsample(normalizedColorSpace))
 	{
 		return normalizedColorSpace;
 	}
 	if(bSubsampleY)
 	{
-		return normalizedColorSpace + L"_420";
+        return normalizedColorSpace + "_420";
 	}
 	if(bSubsampleX)
 	{
-		return normalizedColorSpace + L"_422";
+        return normalizedColorSpace + "_422";
 	}
 	return normalizedColorSpace;
 
@@ -273,32 +273,32 @@ std::wstring colorTransformsFactory::makeSubsampled(const std::wstring& colorSpa
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::uint32_t colorTransformsFactory::getNumberOfChannels(const std::wstring& colorSpace)
+std::uint32_t colorTransformsFactory::getNumberOfChannels(const std::string& colorSpace)
 {
 	PUNTOEXE_FUNCTION_START(L"colorTransformsFactory::getNumberOfChannels");
 
-	std::wstring normalizedColorSpace = normalizeColorSpace(colorSpace);
+    std::string normalizedColorSpace = normalizeColorSpace(colorSpace);
 
 	struct sColorSpace
 	{
-		sColorSpace(const wchar_t* colorSpace, std::uint8_t channelsNumber): m_colorSpace(colorSpace), m_channelsNumber(channelsNumber){}
-		std::wstring m_colorSpace;
+        sColorSpace(const char* colorSpace, std::uint8_t channelsNumber): m_colorSpace(colorSpace), m_channelsNumber(channelsNumber){}
+        std::string m_colorSpace;
 		std::uint8_t m_channelsNumber;
 	};
 
 	static sColorSpace imbxColorSpaces[]=
 	{
-		sColorSpace(L"RGB", 0x3),
-		sColorSpace(L"YBR_FULL", 0x3),
-		sColorSpace(L"YBR_PARTIAL", 0x3),
-		sColorSpace(L"YBR_RCT", 0x3),
-		sColorSpace(L"YBR_ICT", 0x3),
-		sColorSpace(L"PALETTE COLOR", 0x1),
-		sColorSpace(L"CMYK", 0x4),
-		sColorSpace(L"CMY", 0x3),
-		sColorSpace(L"MONOCHROME2", 0x1),
-		sColorSpace(L"MONOCHROME1", 0x1),
-		sColorSpace(L"", 0x0)
+        sColorSpace("RGB", 0x3),
+        sColorSpace("YBR_FULL", 0x3),
+        sColorSpace("YBR_PARTIAL", 0x3),
+        sColorSpace("YBR_RCT", 0x3),
+        sColorSpace("YBR_ICT", 0x3),
+        sColorSpace("PALETTE COLOR", 0x1),
+        sColorSpace("CMYK", 0x4),
+        sColorSpace("CMY", 0x3),
+        sColorSpace("MONOCHROME2", 0x1),
+        sColorSpace("MONOCHROME1", 0x1),
+        sColorSpace("", 0x0)
 	};
 
 	for(std::uint8_t findColorSpace = 0; imbxColorSpaces[findColorSpace].m_channelsNumber != 0x0; ++findColorSpace)
@@ -325,12 +325,12 @@ std::uint32_t colorTransformsFactory::getNumberOfChannels(const std::wstring& co
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<transform> colorTransformsFactory::getTransform(const std::wstring& startColorSpace, const std::wstring& endColorSpace)
+std::shared_ptr<transform> colorTransformsFactory::getTransform(const std::string& startColorSpace, const std::string& endColorSpace)
 {
 	PUNTOEXE_FUNCTION_START(L"colorTransformsFactory::getTransform");
 
-	std::wstring normalizedStartColorSpace = normalizeColorSpace(startColorSpace);
-	std::wstring normalizedEndColorSpace = normalizeColorSpace(endColorSpace);
+    std::string normalizedStartColorSpace = normalizeColorSpace(startColorSpace);
+    std::string normalizedEndColorSpace = normalizeColorSpace(endColorSpace);
 
 	if(normalizedStartColorSpace == normalizedEndColorSpace)
 	{

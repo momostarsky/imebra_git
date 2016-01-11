@@ -26,7 +26,7 @@ TEST(dataSetTest, testFragmentation)
 		7, 
 		400, 
 		300, 
-		L"RGB", 
+        "RGB",
 		50));
 
     Image testImage1(buildImageForTest(
@@ -36,12 +36,12 @@ TEST(dataSetTest, testFragmentation)
 		7, 
 		400, 
 		300, 
-		L"RGB", 
+        "RGB",
 		20));
 
     imebra::DataSet testDataSet;
-    testDataSet.setImage(0, testImage0, L"1.2.840.10008.1.2.4.70", DataSet::high);
-    testDataSet.setImage(1, testImage1, L"1.2.840.10008.1.2.4.70", DataSet::high);
+    testDataSet.setImage(0, testImage0, "1.2.840.10008.1.2.4.70", DataSet::high);
+    testDataSet.setImage(1, testImage1, "1.2.840.10008.1.2.4.70", DataSet::high);
 
     // Verify the two images
     imebra::Image verifyImage0 = testDataSet.getImage(0);

@@ -24,10 +24,10 @@ class IMEBRA_API VOILUT: public Transform
 public:
     VOILUT(const DataSet& dataset);
 
-    int getVOILUTId(int VOILUTNumber) const;
+    unsigned int getVOILUTId(unsigned int VOILUTNumber) const;
     std::wstring getVOILUTDescription(int VOILUTId) const;
 	void setVOILUT(int VOILUTId);
-	void applyOptimalVOI(Image inputImage, int topLeftX, int topLeftY, int width, int height);
+    void applyOptimalVOI(Image inputImage, unsigned int topLeftX, unsigned int topLeftY, unsigned int width, unsigned int height);
 	//void setLUT(std::shared_ptr<lut> pLut);
 	void setCenterWidth(int center, int width);
     int getCenter() const;

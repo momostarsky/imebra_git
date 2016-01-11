@@ -72,25 +72,25 @@ void DirectoryRecord::setReferencedRecord(const DirectoryRecord& referencedRecor
 	m_pDirectoryRecord->setReferencedRecord(referencedRecord.m_pDirectoryRecord);
 }
 	
-std::wstring DirectoryRecord::getFilePart(int part) const
+std::string DirectoryRecord::getFilePart(int part) const
 {
 	if(m_pDirectoryRecord == 0) throw std::logic_error("Null directoryRecord");
 	return m_pDirectoryRecord->getFilePart(part);
 }
 
-void DirectoryRecord::setFilePart(int part, const std::wstring& partName)
+void DirectoryRecord::setFilePart(int part, const std::string& partName)
 {
 	if(m_pDirectoryRecord == 0) throw std::logic_error("Null directoryRecord");
 	m_pDirectoryRecord->setFilePart(part, partName);
 }
 
-std::wstring DirectoryRecord::getTypeString() const
+std::string DirectoryRecord::getTypeString() const
 {
 	if(m_pDirectoryRecord == 0) throw std::logic_error("Null directoryRecord");
 	return m_pDirectoryRecord->getTypeString();
 }
 
-void DirectoryRecord::setTypeString(const std::wstring& recordType)
+void DirectoryRecord::setTypeString(const std::string& recordType)
 {
 	if(m_pDirectoryRecord == 0) throw std::logic_error("Null directoryRecord");
 	m_pDirectoryRecord->setTypeString(recordType);

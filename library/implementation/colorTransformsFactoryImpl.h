@@ -120,7 +120,7 @@ public:
 	/// @return the normalized color space name
 	///
 	///////////////////////////////////////////////////////////
-    static std::wstring normalizeColorSpace(const std::wstring& colorSpace);
+    static std::string normalizeColorSpace(const std::string& colorSpace);
 
 	/// \brief Returns true if the color space name specified
 	///         in the parameter has only one color channel and
@@ -137,7 +137,7 @@ public:
 	///                    otherwise
 	///
 	///////////////////////////////////////////////////////////
-    static bool isMonochrome(const std::wstring& colorSpace);
+    static bool isMonochrome(const std::string& colorSpace);
 
 	/// \brief Returns true if the name of the color space
 	///         specified in the parameter indicates that
@@ -152,7 +152,7 @@ public:
 	///                    horizontally
 	///
 	///////////////////////////////////////////////////////////
-    static bool isSubsampledX(const std::wstring& colorSpace);
+    static bool isSubsampledX(const std::string& colorSpace);
 
 	/// \brief Returns true if the name of the color space
 	///         specified in the parameter indicates that
@@ -167,7 +167,7 @@ public:
 	///                    vertically
 	///
 	///////////////////////////////////////////////////////////
-    static bool isSubsampledY(const std::wstring& colorSpace);
+    static bool isSubsampledY(const std::string& colorSpace);
 
 	/// \brief Returns true if the color space specified 
 	///         in the parameter can be subsampled.
@@ -183,7 +183,7 @@ public:
 	///                    subsampled
 	///
 	///////////////////////////////////////////////////////////
-    static bool canSubsample(const std::wstring& colorSpace);
+    static bool canSubsample(const std::string& colorSpace);
 
 	/// \brief Add the subsamplig information to a color space
 	///         name.
@@ -204,7 +204,7 @@ public:
 	/// @return the color space name subsampled as specified
 	///
 	///////////////////////////////////////////////////////////
-    static std::wstring makeSubsampled(const std::wstring& colorSpace, bool bSubsampleX, bool bSubsampleY);
+    static std::string makeSubsampled(const std::string& colorSpace, bool bSubsampleX, bool bSubsampleY);
 
 	/// \brief Returns the number of channels used by the
 	///         specified color space.
@@ -220,7 +220,7 @@ public:
 	///                    specified color channel
 	///
 	///////////////////////////////////////////////////////////
-    static std::uint32_t getNumberOfChannels(const std::wstring& colorSpace);
+    static std::uint32_t getNumberOfChannels(const std::string& colorSpace);
 	
 	//@}
 	
@@ -255,7 +255,7 @@ public:
 	///          same value
 	///
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<transform> getTransform(const std::wstring& startColorSpace, const std::wstring& endColorSpace);
+    std::shared_ptr<transform> getTransform(const std::string& startColorSpace, const std::string& endColorSpace);
 
 	//@}
 

@@ -28,7 +28,7 @@ drawBitmap::drawBitmap(std::shared_ptr<image> sourceImage, std::shared_ptr<trans
 	}
 
 	// Allocate the transforms that obtain an RGB24 image
-	std::wstring initialColorSpace;
+    std::string initialColorSpace;
     std::uint32_t highBit = 7;
     image::bitDepth depth = image::depthU8;
 	if(m_transformsChain->isEmpty())
@@ -43,7 +43,7 @@ drawBitmap::drawBitmap(std::shared_ptr<image> sourceImage, std::shared_ptr<trans
 		initialColorSpace = startImage->getColorSpace();
 	}
     std::shared_ptr<transforms::colorTransforms::colorTransformsFactory> pColorTransformsFactory(transforms::colorTransforms::colorTransformsFactory::getColorTransformsFactory());
-    std::shared_ptr<transforms::transform> rgbColorTransform(pColorTransformsFactory->getTransform(initialColorSpace, L"RGB"));
+    std::shared_ptr<transforms::transform> rgbColorTransform(pColorTransformsFactory->getTransform(initialColorSpace, "RGB"));
 	if(rgbColorTransform != 0)
 	{
 		m_transformsChain->addTransform(rgbColorTransform);
@@ -64,7 +64,7 @@ drawBitmap::drawBitmap(std::shared_ptr<image> sourceImage, std::shared_ptr<trans
 	else
 	{
         m_finalImage = std::make_shared<image>();
-        m_finalImage->create(width, 1, image::depthU8, L"RGB", 7);
+        m_finalImage->create(width, 1, image::depthU8, "RGB", 7);
     }
 }
 

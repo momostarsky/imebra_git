@@ -56,7 +56,8 @@ std::int32_t readingDataHandlerDateTimeBase::getSignedLong(const size_t index) c
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTimeBase::getSignedLong");
 
-	std::int32_t year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes;
+    std::uint32_t year, month, day, hour, minutes, seconds, nanoseconds;
+    std::int32_t offsetHours, offsetMinutes;
 	getDate(index, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
 
 	tm timeStructure;
@@ -138,12 +139,12 @@ void writingDataHandlerDateTimeBase::setSignedLong(const size_t index, const std
 #else
     localtime_r((time_t*)&value, &timeStructure);
 #endif
-    std::int32_t year = timeStructure.tm_year;
-    std::int32_t month = timeStructure.tm_mon + 1;
-    std::int32_t day = timeStructure.tm_mday;
-    std::int32_t hour = timeStructure.tm_hour;
-    std::int32_t minutes = timeStructure.tm_min;
-    std::int32_t seconds = timeStructure.tm_sec;
+    std::uint32_t year = timeStructure.tm_year;
+    std::uint32_t month = timeStructure.tm_mon + 1;
+    std::uint32_t day = timeStructure.tm_mday;
+    std::uint32_t hour = timeStructure.tm_hour;
+    std::uint32_t minutes = timeStructure.tm_min;
+    std::uint32_t seconds = timeStructure.tm_sec;
 	setDate(index, year, month, day, hour, minutes, seconds, 0, 0, 0);
 
 	PUNTOEXE_FUNCTION_END();
@@ -199,9 +200,9 @@ void writingDataHandlerDateTimeBase::setDouble(const size_t index, const double 
 ///////////////////////////////////////////////////////////
 void readingDataHandlerDateTimeBase::parseDate(
         const std::string& dateString,
-		std::int32_t* pYear, 
-		std::int32_t* pMonth, 
-		std::int32_t* pDay) const
+        std::uint32_t* pYear,
+        std::uint32_t* pMonth,
+        std::uint32_t* pDay) const
 {
 	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTimeBase::parseDate");
 
@@ -271,10 +272,10 @@ std::string writingDataHandlerDateTimeBase::buildDate(
 ///////////////////////////////////////////////////////////
 void readingDataHandlerDateTimeBase::parseTime(
         const std::string& timeString,
-		std::int32_t* pHour, 
-		std::int32_t* pMinutes,
-		std::int32_t* pSeconds,
-		std::int32_t* pNanoseconds,
+        std::uint32_t* pHour,
+        std::uint32_t* pMinutes,
+        std::uint32_t* pSeconds,
+        std::uint32_t* pNanoseconds,
 		std::int32_t* pOffsetHours,
 		std::int32_t* pOffsetMinutes) const
 {

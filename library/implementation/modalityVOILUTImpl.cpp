@@ -31,29 +31,40 @@ namespace transforms
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-modalityVOILUT::modalityVOILUT(std::shared_ptr<dataSet> pDataSet):
-        m_pDataSet(pDataSet), m_voiLut(pDataSet->getLut(0x0028, 0x3000, 0)), m_rescaleIntercept(pDataSet->getDouble(0x0028, 0, 0x1052, 0, 0)), m_rescaleSlope(1.0), m_bEmpty(true)
+modalityVOILUT::modalityVOILUT(std::shared_ptr<const dataSet> pDataSet):
+        m_pDataSet(pDataSet), m_voiLut(0), m_rescaleIntercept(pDataSet->getDouble(0x0028, 0, 0x1052, 0, 0, 0)), m_rescaleSlope(1.0), m_bEmpty(true)
 
 {
+
+
 	// Only monochrome images can have the modality voi-lut
 	///////////////////////////////////////////////////////
-    std::wstring colorSpace(pDataSet->getUnicodeString(0x0028, 0x0, 0x0004, 0, 0));
+    const std::string colorSpace(pDataSet->getStringThrow(0x0028, 0x0, 0x0004, 0, 0));
+
 	if(!colorTransforms::colorTransformsFactory::isMonochrome(colorSpace))
 	{
 		return;
 	}
 
-    std::shared_ptr<handlers::readingDataHandler> rescaleHandler(m_pDataSet->getReadingDataHandler(0x0028, 0, 0x1053, 0x0));
-	if(rescaleHandler != 0)
-	{
-		m_rescaleSlope = rescaleHandler->getDouble(0);
-		m_bEmpty = false;
-	}
-	if(m_voiLut != 0 && m_voiLut->getSize() != 0)
-	{
-		m_bEmpty = false;
-	}
+    try
+    {
+        std::shared_ptr<handlers::readingDataHandler> rescaleHandler(m_pDataSet->getReadingDataHandlerThrow(0x0028, 0, 0x1053, 0x0));
+        m_rescaleSlope = rescaleHandler->getDouble(0);
+        m_bEmpty = false;
+    }
+    catch(const ::imebra::missingDataElement&)
+    {
+        try
+        {
+            m_voiLut = pDataSet->getLutThrow(0x0028, 0x3000, 0);
+            m_bEmpty = m_voiLut->getSize() != 0;
+        }
+        catch(const ::imebra::missingDataElement&)
+        {
+            // Nothing to do. Transformis empty
+        }
 
+    }
 }
 
 bool modalityVOILUT::isEmpty()
@@ -116,7 +127,7 @@ std::shared_ptr<image> modalityVOILUT::allocateOutputImage(std::shared_ptr<image
             }
         }
         std::shared_ptr<image> returnImage(new image);
-		returnImage->create(width, height, depth, L"MONOCHROME2", bits - 1);
+        returnImage->create(width, height, depth, "MONOCHROME2", bits - 1);
 		return returnImage;
 	}
 
@@ -125,7 +136,7 @@ std::shared_ptr<image> modalityVOILUT::allocateOutputImage(std::shared_ptr<image
 	if(m_rescaleSlope == 0)
 	{
         std::shared_ptr<image> returnImage(new image);
-		returnImage->create(width, height, pInputImage->getDepth(), L"MONOCHROME2", pInputImage->getHighBit());
+        returnImage->create(width, height, pInputImage->getDepth(), "MONOCHROME2", pInputImage->getHighBit());
 		return returnImage;
 	}
 
@@ -157,25 +168,25 @@ std::shared_ptr<image> modalityVOILUT::allocateOutputImage(std::shared_ptr<image
     std::shared_ptr<image> returnImage(new image);
 	if(minValue >= 0 && maxValue <= 255)
 	{
-		returnImage->create(width, height, image::depthU8, L"MONOCHROME2", 7);
+        returnImage->create(width, height, image::depthU8, "MONOCHROME2", 7);
 		return returnImage;
 	}
 	if(minValue >= -128 && maxValue <= 127)
 	{
-		returnImage->create(width, height, image::depthS8, L"MONOCHROME2", 7);
+        returnImage->create(width, height, image::depthS8, "MONOCHROME2", 7);
 		return returnImage;
 	}
 	if(minValue >= 0 && maxValue <= 65535)
 	{
-		returnImage->create(width, height, image::depthU16, L"MONOCHROME2", 15);
+        returnImage->create(width, height, image::depthU16, "MONOCHROME2", 15);
 		return returnImage;
 	}
 	if(minValue >= -32768 && maxValue <= 32767)
 	{
-		returnImage->create(width, height, image::depthS16, L"MONOCHROME2", 15);
+        returnImage->create(width, height, image::depthS16, "MONOCHROME2", 15);
 		return returnImage;
 	}
-	returnImage->create(width, height, image::depthS32, L"MONOCHROME2", 31);
+    returnImage->create(width, height, image::depthS32, "MONOCHROME2", 31);
 	return returnImage;
 }
 
