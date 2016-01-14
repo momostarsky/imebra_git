@@ -14,7 +14,7 @@ The class hides the platform specific implementations and supplies a common
 #if !defined(imebraCharsetConversionICU_3146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_)
 #define imebraCharsetConversionICU_3146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_
 
-#if defined(PUNTOEXE_USE_ICU)
+#if defined(IMEBRA_USE_ICU)
 
 #include "charsetConversionBaseImpl.h"
 
@@ -47,6 +47,6 @@ typedef charsetConversionICU defaultCharsetConversion;
 
 } // namespace puntoexe
 
-#endif // defined(PUNTOEXE_USE_ICU)
+#endif // defined(IMEBRA_USE_ICU)
 
 #endif // !defined(imebraCharsetConversionICU_3146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_)

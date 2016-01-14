@@ -9,7 +9,7 @@ $fileHeader$
 
 #include "configurationImpl.h"
 
-#if defined(PUNTOEXE_USE_ICONV)
+#if defined(IMEBRA_USE_ICONV)
 
 #include "exceptionImpl.h"
 #include "charsetConversionIconvImpl.h"
@@ -122,7 +122,7 @@ std::wstring charsetConversionIconv::toUnicode(const std::string& asciiString) c
 // In Posix systems executes an iconv
 //
 ///////////////////////////////////////////////////////////
-#if defined(PUNTOEXE_WINDOWS)
+#if defined(IMEBRA_WINDOWS)
 std::string charsetConversionIconv::myIconv(iconv_t context, const char* inputString, size_t inputStringLengthBytes) const
 #else
 std::string charsetConversionIconv::myIconv(iconv_t context, char* inputString, size_t inputStringLengthBytes) const

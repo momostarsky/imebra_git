@@ -134,7 +134,7 @@ void writingDataHandlerDateTimeBase::setSignedLong(const size_t index, const std
 	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTimeBase::setSignedLong");
 
     tm timeStructure;
-#if defined(PUNTOEXE_WINDOWS) && !defined(__MINGW32__)
+#if defined(IMEBRA_WINDOWS) && !defined(__MINGW32__)
     localtime_s(&timeStructure, ((time_t*)&value));
 #else
     localtime_r((time_t*)&value, &timeStructure);

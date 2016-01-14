@@ -14,8 +14,8 @@ add_executable(ImebraTests
     ${imebra_tests_src}
 )
 
-find_library(gtest_library NAMES gtest PATHS ${CMAKE_BINARY_DIR} ${CMAKE_BINARY_DIR}/gtest)
-find_library(imebra_library NAMES imebra PATHS ${CMAKE_BINARY_DIR} ${CMAKE_BINARY_DIR}/imebra ${CMAKE_CURRENT_SOURCE_DIR}/../library-build )
+find_library(gtest_library NAMES gtest libgtest HINTS ${CMAKE_BINARY_DIR} ${CMAKE_BINARY_DIR}/gtest)
+find_library(imebra_library NAMES imebra libimebra HINTS ${CMAKE_BINARY_DIR} ${CMAKE_BINARY_DIR}/imebra ${CMAKE_CURRENT_SOURCE_DIR}/../library-build )
 
 target_link_libraries(ImebraTests ${imebra_library} ${gtest_library} pthread gcov)
 

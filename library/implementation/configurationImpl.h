@@ -17,24 +17,24 @@ $fileHeader$
     #define MAXIMUM_IMAGE_HEIGHT 4096
 #endif
 
-#if !defined(PUNTOEXE_WINDOWS) && !defined(PUNTOEXE_POSIX)
+#if !defined(IMEBRA_WINDOWS) && !defined(IMEBRA_POSIX)
 
 #if defined(WIN32) || defined(WIN64)
-#define PUNTOEXE_WINDOWS 1
+#define IMEBRA_WINDOWS 1
 #endif
 
-#ifndef PUNTOEXE_WINDOWS
-#define PUNTOEXE_POSIX 1
+#ifndef IMEBRA_WINDOWS
+#define IMEBRA_POSIX 1
 #endif
 
 #endif
 
-#if !defined(PUNTOEXE_USE_ICONV) && !defined(PUNTOEXE_USE_ICU) && !defined(PUNTOEXE_USE_WINDOWS_CHARSET) && !defined(PUNTOEXE_USE_JAVA)
+#if !defined(IMEBRA_USE_ICONV) && !defined(IMEBRA_USE_ICU) && !defined(IMEBRA_USE_WINDOWS_CHARSET) && !defined(IMEBRA_USE_JAVA)
 
-#if defined(PUNTOEXE_WINDOWS)
-    #define PUNTOEXE_USE_WINDOWS_CHARSET
+#if defined(IMEBRA_WINDOWS)
+    #define IMEBRA_USE_WINDOWS_CHARSET
 #else
-    #define PUNTOEXE_USE_ICONV
+    #define IMEBRA_USE_ICONV
 #endif
 #endif
 

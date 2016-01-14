@@ -84,7 +84,7 @@ void fileStream::openFile(const std::wstring& fileName, std::ios_base::openmode 
 
     strMode += L"b";
 
-#if defined(PUNTOEXE_WINDOWS)
+#if defined(IMEBRA_WINDOWS)
      errno_t errorCode = ::_wfopen_s(&m_openFile, fileName.c_str(), strMode.c_str());
      if (errorCode != 0)
      {

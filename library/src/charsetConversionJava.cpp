@@ -7,7 +7,7 @@ $fileHeader$
 
 */
 
-#if defined(PUNTOEXE_USE_JAVA)
+#if defined(IMEBRA_USE_JAVA)
 
 #include "../implementation/configurationImpl.h"
 #include "../imebra/project_files/library/base/include/streamControllerImpl.h"

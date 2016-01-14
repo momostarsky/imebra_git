@@ -2,10 +2,42 @@ cmake_minimum_required(VERSION 2.8)
 
 project("imebra")
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Wpedantic -Wconversion -Wfloat-equal -fvisibility=hidden -fvisibility-inlines-hidden")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Wpedantic -Wconversion -Wfloat-equal -fvisibility=hidden -fvisibility-inlines-hidden --coverage")
 
 add_definitions(-DIMEBRA_DLL)
 add_definitions(-DIMEBRA_DLL_EXPORTS)
+
+set(IMEBRA_LIBRARIES pthread)
+
+if(CMAKE_BUILD_TYPE MATCHES DEBUG)
+    message("debug mode")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
+    set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} gcov)
+endif(CMAKE_BUILD_TYPE MATCHES DEBUG)
+
+# Select the proper libraries according to the charset conversion method
+#-----------------------------------------------------------------------
+if(IMEBRA_CHARSET_CONVERSION MATCHES ICONV)
+    message("Using ICONV")
+    add_definitions(-DIMEBRA_USE_ICONV)
+elseif(IMEBRA_CHARSET_CONVERSION MATCHES ICU)
+    message("Using ICU")
+    add_definitions(-DIMEBRA_USE_ICU)
+    set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} icuuc)
+    set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} icuio)
+elseif(IMEBRA_CHARSET_CONVERSION MATCHES JAVA)
+    message("Using JAVA")
+    add_definitions(-DIMEBRA_USE_JAVA)
+elseif(IMEBRA_CHARSET_CONVERSION MATCHES WINDOWS)
+    message("Using WINDOWS CHARSET CONVERSION")
+    add_definitions(-DIMEBRA_USE_WINDOWS_CHARSET)
+    set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} Kernel32)
+else(IMEBRA_CHARSET_CONVERSION MATCHES ICONV)
+    message("Using ICONV (default)")
+    add_definitions(-DIMEBRA_USE_ICONV)
+endif(IMEBRA_CHARSET_CONVERSION MATCHES ICONV)
+
+message("Linked libraries: ${IMEBRA_LIBRARIES}")
 
 include_directories(include)
 
@@ -15,7 +47,6 @@ file(GLOB imebra_src "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 file(GLOB imebra_implementation_src "${CMAKE_CURRENT_SOURCE_DIR}/implementation/*.cpp")
 file(GLOB imebra_implementation_include "${CMAKE_CURRENT_SOURCE_DIR}/implementation/*.h")
 
-
 add_library(imebra SHARED
     ${imebra_implementation_src}
     ${imebra_implementation_include}
@@ -23,6 +54,9 @@ add_library(imebra SHARED
     ${imebra_src}
     ${imebra_interface}
 )
+
+target_link_libraries(imebra ${IMEBRA_LIBRARIES})
+#target_link_libraries(imebra gcov)
 
 # Set the library version from IMEBRA_MAJOR_VERSION, IMEBRA_MINOR_VERSION,
 #  & IMEBRA_REVISION
@@ -65,9 +99,6 @@ set(CPACK_DEBIAN_PACKAGE_PRIORITY "optional")
 set(CPACK_DEBIAN_PACKAGE_SECTION "devel")
 
 set(CPACK_RPM_PACKAGE_REQUIRES "libc6")
-
-
-target_link_libraries(imebra pthread)
 
 # Generate the control scripts
 #-----------------------------

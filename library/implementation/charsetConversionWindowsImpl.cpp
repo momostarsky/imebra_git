@@ -9,7 +9,7 @@ $fileHeader$
 
 #include "configurationImpl.h"
 
-#if defined(PUNTOEXE_USE_WINDOWS_CHARSET)
+#if defined(IMEBRA_USE_WINDOWS_CHARSET)
 
 #include "exceptionImpl.h"
 #include "charsetConversionWindowsImpl.h"

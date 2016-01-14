@@ -11,7 +11,7 @@ $fileHeader$
 #if !defined(imebraCharsetConversionWindows_3146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_)
 #define imebraCharsetConversionWindows_3146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_
 
-#if defined(PUNTOEXE_USE_WINDOWS_CHARSET)
+#if defined(IMEBRA_USE_WINDOWS_CHARSET)
 
 #include "charsetConversionBaseImpl.h"
 #include <windows.h>
@@ -41,6 +41,6 @@ typedef charsetConversionWindows defaultCharsetConversion;
 
 } // namespace puntoexe
 
-#endif // defined(PUNTOEXE_USE_WINDOWS_CHARSET)
+#endif // defined(IMEBRA_USE_WINDOWS_CHARSET)
 
 #endif // !defined(imebraCharsetConversionWindows_3146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_)

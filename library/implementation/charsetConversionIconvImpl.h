@@ -14,7 +14,7 @@ The class hides the platform specific implementations and supplies a common
 #if !defined(imebraCharsetConversionIconv_3146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_)
 #define imebraCharsetConversionIconv_3146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_
 
-#if defined(PUNTOEXE_USE_ICONV)
+#if defined(IMEBRA_USE_ICONV)
 
 #include "charsetConversionBaseImpl.h"
 
@@ -41,7 +41,7 @@ public:
 
 protected:
 
-#if defined(PUNTOEXE_WINDOWS)
+#if defined(IMEBRA_WINDOWS)
     std::string myIconv(iconv_t context, const char* inputString, size_t inputStringLengthBytes) const;
 #else
     std::string myIconv(iconv_t context, char* inputString, size_t inputStringLengthBytes) const;
@@ -54,6 +54,6 @@ typedef charsetConversionIconv defaultCharsetConversion;
 
 } // namespace puntoexe
 
-#endif // defined(PUNTOEXE_USE_ICONV)
+#endif // defined(IMEBRA_USE_ICONV)
 
 #endif // !defined(imebraCharsetConversionIconv_3146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_)

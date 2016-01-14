@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<project name="Imebra" default="ZIP" basedir="." xmlns:if="ant:if" xmlns:unless="ant:unless">
+<project name="Imebra" default="make_distribution" basedir="." >
 
 	<!-- This is an ant build file" -->
 
@@ -15,38 +15,62 @@
 
 	<!-- Create the directory for the final build -->
 	<target name="create_build_dir" depends="version" description="Create the directory for the final build">
-		<property name="builds" value="./build" />
-		<delete dir="${builds}" failonerror="false" />
-		<mkdir dir="${builds}" />
-		<property name="build_dir" value="${builds}/temp_build" />
-		<mkdir dir="${build_dir}" />
-                <property name="build_dir_applications" value="${build_dir}/applications" />
-                <mkdir dir="${build_dir_applications}" />
-		<property name="build_dir_tests" value="${build_dir_applications}/tests" />
-		<mkdir dir="${build_dir_tests}" />
-		<property name="build_dir_html_doc" value="${builds}/imebra_${fileVersion}_html_doc" />
-		<mkdir dir="${build_dir_html_doc}" />
-		<copy todir="${build_dir}">
-			 <fileset dir="project_files"/>
+		<property name="build_release" location="./ant-build" />
+		<delete dir="${build_release}" failonerror="false" />
+		<mkdir dir="${build_release}" />
+		<copy todir="${build_release}/library">
+			<fileset dir="library" />
 		</copy>
-		<property name="build_dir_html_doc" value="${builds}/imebra_${fileVersion}_html_doc" />
-		<mkdir dir="${build_dir_html_doc}" />
+		<copy todir="${build_release}/examples">
+			<fileset dir="examples" />
+		</copy>
+		<copy todir="${build_release}/tests">
+			<fileset dir="tests" />
+		</copy>
+		<copy todir="${build_release}/docs">
+			<fileset dir="docs" />
+		</copy>
+		<copy todir="${build_release}" file="build.xml" />
+		<copy todir="${build_release}" file="readme.md" />
+
+		<property name="build_library_release" location="${build_release}/library-build" />
+		<mkdir dir="${build_library_release}" />
 	</target>
 
+	<!-- Create the directory for the test execution and code coverage -->
+	<target name="create_tests_dir" depends="version" description="Create the directory for the tests execution">
+		<property name="build_tests_dir" location="./ant-build-tests" />
+		<delete dir="${build_tests_dir}" failonerror="false" />
+		<mkdir dir="${build_tests_dir}" />
+		<copy todir="${build_tests_dir}/library">
+			<fileset dir="library" />
+		</copy>
+		<copy todir="${build_tests_dir}/examples">
+			<fileset dir="examples" />
+		</copy>
+		<copy todir="${build_tests_dir}/tests">
+			<fileset dir="tests" />
+		</copy>
+		<copy todir="${build_tests_dir}" file="readme.md" />
+
+		<property name="build_library_for_tests" location="${build_tests_dir}/library-build" />
+		<mkdir dir="${build_library_for_tests}" />
+		<property name="build_tests" location="${build_tests_dir}/tests-build" />
+		<mkdir dir="${build_tests}" />
+	</target>
 
 	<!-- Replace the version number and license info -->
-	<target name="replace_version" depends="create_build_dir">
-		<replace file="${build_dir}/DoxyfileHTML" token="1.0.0.1" value='"${fullVersionReadable}"'/>
-		<replace dir="${build_dir}" includes="*.rc,*.h,*.cpp" token="1.0.0.1" value="${fullVersionReadable}" />
-		<replace dir="${build_dir}" includes="*.rc,*.h,*.cpp" token="&quot;1.0.0.1&quot;" value="&quot;${fullVersionReadable}&quot;" />
-		<replace dir="${build_dir}" includes="*.rc,*.h,*.cpp" token="L&quot;1.0.0.1&quot;" value="L&quot;${fullVersionReadable}&quot;" />
-		<replace dir="${build_dir}" token="$fileHeader$">
+	<target name="replace_version">
+		<replace dir="${replace_folder}" includes="*.h,*.cpp, *.txt, *.rst, *.py" token="1.0.0.1" value="${fullVersionReadable}" />
+		<replace dir="${replace_folder}" includes="*.h,*.cpp, *.txt, *.rst, *.py" token="&quot;1.0.0.1&quot;" value="&quot;${fullVersionReadable}&quot;" />
+		<replace dir="${replace_folder}" includes="*.h,*.cpp, *.txt, *.rst, *.py" token="L&quot;1.0.0.1&quot;" value="L&quot;${fullVersionReadable}&quot;" />
+		<replace dir="${replace_folder}" token="$fileHeader$">
 			<replacevalue><![CDATA[
 $imebraVersion$
 
 Imebra: a C++ Dicom library
 
-Copyright (c) 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015
+Copyright (c) 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016
 by Paolo Brandoli/Binarno s.p.
 
 All rights reserved.
@@ -86,145 +110,108 @@ The author can be contacted by email at info@binarno.com or by mail at
 
 ]]></replacevalue>
 		</replace>
-		<replace dir="${build_dir}" token="$imebraVersion$" value="${productName}" />
+		<replace dir="${replace_folder}" token="$imebraVersion$" value="${productName}" />
+	</target>
+
+	<target name="replace_version_release" depends="create_build_dir">
+		<antcall target="replace_version">
+			<param name="replace_folder" value="${build_release}" />
+		</antcall>
+	</target>
+
+	<target name="replace_version_tests" depends="create_tests_dir">
+		<antcall target="replace_version">
+			<param name="replace_folder" value="${build_tests_dir}" />
+		</antcall>
+	</target>
+
+
+	<!-- Build the library for the release -->
+	<target name="build_library" depends="replace_version_release" description="Build the library">
+                <delete file="${build_library_release}/CMakeCache.txt" failonerror="false" />
+		<exec executable="cmake" failonerror="true" dir="${build_library_release}">
+                    <arg value="--verbose"/>
+                    <arg value="-DCMAKE_BUILD_TYPE=DEBUG" />
+                    <arg path="${build_release}/library"/>
+		</exec>
+		<exec executable="make" failonerror="true" dir="${build_library_release}" />
 	</target>
 
 
 	<!-- Build the test cases -->
-	<target name="build_test_cases" depends="replace_version" description="Build the Imebra test cases">
+	<target name="build_test_cases" depends="replace_version_tests" description="Build the Imebra test cases">
+                <delete file="${build_library_for_tests}/CMakeCache.txt" failonerror="false" />
+		<exec executable="cmake" failonerror="true" dir="${build_library_for_tests}">
+                    <arg value="--verbose"/>
+                    <arg value="-DCMAKE_BUILD_TYPE=DEBUG" />
+                    <arg path="${build_tests_dir}/library"/>
+		</exec>
+		<exec executable="make" failonerror="true" dir="${build_library_for_tests}" />
+
 		<property name="gtest_source" value="/usr/src/gtest" />
-                <mkdir dir="${build_dir_tests}/gtest" />
-                <copy todir="${build_dir_tests}/gtest">
+                <mkdir dir="${build_tests}/gtest" />
+                <copy todir="${build_tests}/gtest">
                         <fileset dir="${gtest_source}" />
                 </copy>
-                <delete file="${build_dir_tests}/gtest/CMakeCache.txt" failonerror="false" />
-                <delete file="${build_dir_tests}/CMakeCache.txt" failonerror="false" />
-		<exec executable="cmake" failonerror="true" dir="${build_dir_tests}">
+                <delete file="${build_tests}/gtest/CMakeCache.txt" failonerror="false" />
+                <delete file="${build_tests}/CMakeCache.txt" failonerror="false" />
+		<exec executable="cmake" failonerror="true" dir="${build_tests}/gtest">
                     <arg value="--verbose"/>
                     <arg value="-DCMAKE_BUILD_TYPE=DEBUG" />
-                    <arg path="${build_dir_tests}/gtest"/>
+                    <arg path="${build_tests}/gtest"/>
 		</exec>
-		<exec executable="make" failonerror="true" dir="${build_dir_tests}" />
-                <delete file="${build_dir}/tests/CMakeCache.txt" failonerror="false" />
-                <delete file="${build_dir_tests}/CMakeCache.txt" failonerror="false" />
-                <exec executable="cmake" failonerror="true" dir="${build_dir_tests}">
+		<exec executable="make" failonerror="true" dir="${build_tests}/gtest" />
+
+                <exec executable="cmake" failonerror="true" dir="${build_tests}">
                     <arg value="--verbose"/>
-                    <arg path="${build_dir}/tests"/>
                     <arg value="-DCMAKE_BUILD_TYPE=DEBUG" />
+                    <arg path="${build_tests_dir}/tests"/>
                 </exec>
-		<exec executable="make" failonerror="true" dir="${build_dir_tests}" />
+		<exec executable="make" failonerror="true" dir="${build_tests}" />
 	</target>
 
-        <target name="clear_coverage" depends="build_test_cases" if="coverage.set" description="Initializes the coverage data">
-            <exec executable="lcov" dir="${build_dir_tests}" resolveexecutable="true" failonerror="true">
+        <target name="clear_coverage" depends="build_test_cases" description="Initializes the coverage data">
+            <exec executable="lcov" dir="${build_tests_dir}" resolveexecutable="true" failonerror="true">
                 <arg value="--zerocounters" />
                 <arg value="--directory" />
-                <arg path="${build_dir_tests}" />
+                <arg path="${build_tests_dir}" />
             </exec>
-            <exec executable="lcov" dir="${build_dir_tests}" resolveexecutable="true" failonerror="true">
+            <exec executable="lcov" dir="${build_tests_dir}" resolveexecutable="true" failonerror="true">
                 <arg value="--capture" />
                 <arg value="--initial" />
                 <arg value="--directory" />
-                <arg path="${build_dir_tests}" />
+                <arg path="${build_tests_dir}" />
                 <arg value="--output-file" />
-                <arg path="${build_dir_tests}/test.info" />
+                <arg path="${build_tests_dir}/test.info" />
             </exec>
         </target>
 
 	<!-- Run the test cases posix -->
         <target name="run_test_cases" depends="build_test_cases, clear_coverage" description="Run the test cases">
-            <exec executable="${build_dir_tests}/ImebraTests" dir="${build_dir_tests}" resolveexecutable="true" failonerror="true">
-                <arg prefix="--corruptedFilesFolder=" path="${build_dir}/tests/corruptedfiles" />
+            <exec executable="${build_tests}/ImebraTests" dir="${build_tests}" resolveexecutable="true" failonerror="true">
+                <arg prefix="--corruptedFilesFolder=" path="${build_tests_dir}/tests/corruptedfiles" />
             </exec>
         </target>
 
-        <target name="collect_coverage" depends="run_test_cases" if="coverage.set" description="Collect the coverage data">
-            <exec executable="lcov" dir="${build_dir_tests}" resolveexecutable="true" failonerror="true">
+        <target name="collect_coverage" depends="run_test_cases" description="Collect the coverage data">
+            <exec executable="lcov" dir="${build_tests_dir}" resolveexecutable="true" failonerror="true">
                 <arg value="--capture" />
                 <arg value="--no-checksum" />
                 <arg value="--directory" />
-                <arg path="${build_dir_tests}" />
+                <arg path="${build_tests_dir}" />
                 <arg value="--output-file" />
-                <arg path="${build_dir_tests}/test.info" />
+                <arg path="${build_tests_dir}/test.info" />
             </exec>
-            <exec executable="genhtml" dir="${build_dir_tests}" resolveexecutable="true" failonerror="true">
+            <exec executable="genhtml" dir="${build_tests_dir}" resolveexecutable="true" failonerror="true">
                 <arg value="--output-directory" />
-                <arg path="${build_dir_tests}/coverage" />
-                <arg path="${build_dir_tests}/test.info" />
+                <arg path="${build_tests_dir}/coverage" />
+                <arg path="${build_tests_dir}/test.info" />
             </exec>
         </target>
 
-	<!-- Build the HTML documentation -->
-	<target name="HTML" depends="run_test_cases" description="Build the HTML documents">
-		<exec dir="${build_dir}" executable="doxygen" failonerror="true">
-			<arg value="DoxyfileHTML"/>
-		</exec>
-    		<replace dir="${build_dir}/generated_doc/html" token="Related Pages" value="User manual"/>
-		<replace dir="${build_dir}/generated_doc/html" token="Main Page" value="Introduction"/>
-		<replace dir="${build_dir}/generated_doc/html" token="Related&amp;#160;Pages" value="User&amp;#160;manual"/>
-		<replace dir="${build_dir}/generated_doc/html" token="Main&amp;#160;Page" value="Introduction"/>
-		<copy todir="${build_dir_html_doc}">
-			<fileset dir="${build_dir}/generated_doc/html" />
-		</copy>
-	</target>
-
 	<!-- Build -->
-        <target name="make_distribution" depends="run_test_cases, collect_coverage, HTML">
-		<property name="distribution" value="${build_dir}/distribution" />
-		<mkdir dir="${distribution}" />
-                <property name="librarySource" value="${distribution}/library" />
-		<mkdir dir="${librarySource}" />
-                <property name="objectivecSource" value="${distribution}/objectivec" />
-                <mkdir dir="${objectivecSource}" />
-                <property name="documentation" value="${distribution}/documentation" />
-		<mkdir dir="${documentation}/html" />
-		<property name="examples" value="${distribution}/examples" />
-		<mkdir dir="${examples}/dicom2jpeg" />
-		<mkdir dir="${examples}/dicomdirItems" />
-		<mkdir dir="${examples}/changeTransferSyntax" />
-
-                <property name="reports" value="${distribution}/reports" />
-                <property name="coverage" value="${reports}/coverage" />
-                <mkdir dir="${coverage}" if:set="coverage.set"/>
-                <copy todir="${coverage}" failonerror="false" if:set="coverage.set">
-                    <fileset dir="${build_dir_tests}/coverage" />
-                </copy>
-
-		<property name="tests" value="${distribution}/tests" />
-		<mkdir dir="${tests}" />
-
-		<copy todir="${librarySource}">
-			<fileset dir="${build_dir}/library" />
-		</copy>
-                <copy todir="${objectivecSource}">
-                        <fileset dir="${build_dir}/objectivec" />
-                </copy>
-                <copy todir="${documentation}/html">
-			<fileset dir="${build_dir}/generated_doc/html" />
-		</copy>
-		<copy file="${build_dir}/docs/documentation.html" tofile="${documentation}/documentation.html" />
-		<copy todir="${examples}/dicom2jpeg">
-			<fileset dir="${build_dir}/examples/dicom2jpeg" />
-		</copy>
-		<copy todir="${examples}/dicomdirItems">
-			<fileset dir="${build_dir}/examples/dicomdirItems" />
-		</copy>
-		<copy todir="${examples}/changeTransferSyntax">
-			<fileset dir="${build_dir}/examples/changeTransferSyntax" />
-		</copy>
-                <copy todir="${tests}">
-			<fileset dir="${build_dir}/tests" />
-			<filtermapper>
-				<replacestring from=":" to="_"/>
-				<replacestring from="," to="_"/>
-			</filtermapper>
-		</copy>
-		<copy file="${build_dir}/docs/gpl.txt" tofile="${distribution}/license_gpl.txt" />
+        <target name="make_distribution" depends="run_test_cases, collect_coverage">
 	</target>
 
-	<!-- Make a zip file and a gzip file of the build -->
-	<target name="ZIP" depends="make_distribution" description ="Compress the build">
-		<zip basedir="${build_dir}/distribution" destfile="${builds}/imebra_${fileVersion}.zip" />
-	</target>
 
 </project>

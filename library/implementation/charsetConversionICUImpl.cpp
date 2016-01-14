@@ -9,10 +9,11 @@ $fileHeader$
 
 #include "configurationImpl.h"
 
-#if defined(PUNTOEXE_USE_ICU)
+#if defined(IMEBRA_USE_ICU)
 
 #include "exceptionImpl.h"
 #include "charsetConversionICUImpl.h"
+#include "../include/imebra/exceptions.h"
 #include <memory>
 
 namespace puntoexe
@@ -35,7 +36,7 @@ charsetConversionICU::charsetConversionICU(const std::string& dicomName)
     {
         std::ostringstream buildErrorString;
         buildErrorString << "ICU library returned error " << errorCode << " for table " << dicomName;
-        PUNTOEXE_THROW(charsetConversionExceptionNoSupportedTable, buildErrorString.str());
+        PUNTOEXE_THROW(::imebra::charsetConversionExceptionNoSupportedTable, buildErrorString.str());
     }
 
     PUNTOEXE_FUNCTION_END();
@@ -78,7 +79,7 @@ std::string charsetConversionICU::fromUnicode(const std::wstring& unicodeString)
         unicodeStringConversion = UnicodeString::fromUTF32((UChar32*)&(unicodeString[0]), unicodeString.size());
         break;
     default:
-        PUNTOEXE_THROW(charsetConversionExceptionUtfSizeNotSupported, "The system utf size is not supported");
+        PUNTOEXE_THROW(::imebra::charsetConversionExceptionUtfSizeNotSupported, "The system utf size is not supported");
     }
     UErrorCode errorCode(U_ZERO_ERROR);
     int32_t conversionLength = unicodeStringConversion.extract(0, 0, m_pIcuConverter, errorCode);
@@ -89,7 +90,7 @@ std::string charsetConversionICU::fromUnicode(const std::wstring& unicodeString)
     {
         std::ostringstream buildErrorString;
         buildErrorString << "ICU library returned error " << errorCode;
-        PUNTOEXE_THROW(charsetConversionException, buildErrorString.str());
+        PUNTOEXE_THROW(::imebra::charsetConversionException, buildErrorString.str());
     }
     if(returnString == "\x1a")
     {
@@ -134,7 +135,7 @@ std::wstring charsetConversionICU::toUnicode(const std::string& asciiString) con
         return returnString;
     }
     default:
-        PUNTOEXE_THROW(charsetConversionExceptionUtfSizeNotSupported, "The system utf size is not supported");
+        PUNTOEXE_THROW(::imebra::charsetConversionExceptionUtfSizeNotSupported, "The system utf size is not supported");
     }
 
 	PUNTOEXE_FUNCTION_END();

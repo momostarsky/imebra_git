@@ -29,14 +29,9 @@ class dataSet;
 namespace imebra
 {
 
-/// \addtogroup group_swig_bindings Bindings
 ///
-/// The binding classes interface the Imebra library
-///  with software written in Java, PHP, Python and others.
+/// \brief The DataSet class
 ///
-///////////////////////////////////////////////////////////
-/// @{
-
 class IMEBRA_API DataSet
 {
 #ifndef SWIG
@@ -44,7 +39,7 @@ class IMEBRA_API DataSet
 	friend class DicomDir;
 #endif
 public:
-	// Costructor
+    /// Costructor
 	///////////////////////////////////////////////////////////
 	DataSet();
 
@@ -115,8 +110,6 @@ public:
 	std::shared_ptr<puntoexe::imebra::dataSet> m_pDataSet;
 #endif
 };
-
-///@}
 
 }
 
