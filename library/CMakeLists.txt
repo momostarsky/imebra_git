@@ -141,6 +141,6 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/copyright"
 
 install(TARGETS imebra LIBRARY DESTINATION lib COMPONENT "Shared library")
 
-install(FILES ${imebra_include} DESTINATION include/imebra COMPONENT "Include files")
+install(FILES ${imebra_interface} DESTINATION include/imebra COMPONENT "Include files")
 
 include(CPack)
