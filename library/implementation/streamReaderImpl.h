@@ -153,16 +153,16 @@ public:
 	///                   aligned
 	///
 	///////////////////////////////////////////////////////////
-    inline std::uint32_t readBits(std::uint8_t bitsNum)
+    inline std::uint32_t readBits(unsigned int bitsNum)
 	{
-        const size_t bufferSize(sizeof(m_inBitsBuffer) * 8);
+        const size_t bufferSize(8);
 
 		// All the requested bits are already in the buffer.
 		// Just return them.
 		///////////////////////////////////////////////////////////
 		if(bitsNum <= m_inBitsNum)
 		{
-			std::uint32_t returnValue(m_inBitsBuffer >> (bufferSize - bitsNum));
+            std::uint32_t returnValue((m_inBitsBuffer & 0x00ff) >> (bufferSize - bitsNum));
 			m_inBitsBuffer <<= bitsNum;
 			m_inBitsNum -= bitsNum;
 			return returnValue;
@@ -178,7 +178,7 @@ public:
 		if(m_inBitsNum != 0)
 		{
 			bitsNum -= m_inBitsNum;
-			returnValue = ((std::uint32_t)(m_inBitsBuffer >> (bufferSize - m_inBitsNum))) << bitsNum;
+            returnValue = ((std::uint32_t)((m_inBitsBuffer & 0xff) >> (bufferSize - m_inBitsNum))) << bitsNum;
 		}
 
 		// Read the requested number of bits
@@ -208,33 +208,22 @@ public:
 	///  occurs.
 	///
 	/// @return the value of the read bit (1 or 0)
-        ///
+    ///
 	///////////////////////////////////////////////////////////
 	inline std::uint32_t readBit()
 	{
-		if(m_inBitsNum != 0)
-		{
-			--m_inBitsNum;
-			if((std::int8_t)m_inBitsBuffer < 0)
-			{
-                            m_inBitsBuffer <<= 1;
-                            return 1;
-			}
-                        m_inBitsBuffer <<= 1;
-			return 0;
-		}
+        IMEBRA_FUNCTION_START(L"streamReader::readBit");
 
-		IMEBRA_FUNCTION_START(L"streamReader::readBit");
+        const unsigned int checkBit8(0x0100);
 
-		m_inBitsBuffer = readByte();
-                m_inBitsNum = 7; // We consider that one bit will go away
-                if((std::int8_t)m_inBitsBuffer < 0)
-                {
-                        m_inBitsBuffer <<= 1;
-                        return 1;
-                }
-                m_inBitsBuffer <<= 1;
-                return 0;
+        if(m_inBitsNum == 0)
+        {
+            m_inBitsBuffer = readByte();
+            m_inBitsNum = 8;
+        }
+        --m_inBitsNum;
+        m_inBitsBuffer <<= 1;
+        return (m_inBitsBuffer >> 8) & 1;
 
 		IMEBRA_FUNCTION_END();
 	}
@@ -253,32 +242,22 @@ public:
 	/// @param pBuffer   a pointer to a std::uint32_t value that
 	///                   will be left shifted and filled
 	///                   with the read bit.
-        ///
+    ///
 	///////////////////////////////////////////////////////////
 	inline void addBit(std::uint32_t* const pBuffer)
 	{
-        	(*pBuffer) <<= 1;
+        IMEBRA_FUNCTION_START(L"streamReader::addBit");
+
+        (*pBuffer) <<= 1;
                 
-		if(m_inBitsNum != 0)
-		{
-			if((std::int8_t)m_inBitsBuffer < 0)
-			{
-				++(*pBuffer);
-			}
-			--m_inBitsNum;
-			m_inBitsBuffer <<= 1;
-                        return;
-		}
-
-		IMEBRA_FUNCTION_START(L"streamReader::addBit");
-
-		m_inBitsBuffer = readByte();
-                m_inBitsNum = 7; // We consider that one bit will go away
-                if((std::int8_t)m_inBitsBuffer < 0)
-                {
-                        ++(*pBuffer);
-                }
-                m_inBitsBuffer <<= 1;
+        if(m_inBitsNum == 0)
+        {
+            m_inBitsBuffer = readByte();
+            m_inBitsNum = 8;
+        }
+        m_inBitsBuffer <<= 1;
+        --m_inBitsNum;
+        *pBuffer |= (m_inBitsBuffer >> 8) & 1;
 
 		IMEBRA_FUNCTION_END();
 	}
@@ -329,31 +308,31 @@ public:
 		// Update the data buffer if it is empty
 		///////////////////////////////////////////////////////////
 		if(m_pDataBufferCurrent == m_pDataBufferEnd && fillDataBuffer() == 0)
-                {
-                    throw(::imebra::streamExceptionEOF("Attempt to read past the end of the file"));
-                }
+        {
+            throw(::imebra::streamExceptionEOF("Attempt to read past the end of the file"));
+        }
 
 		// Read one byte. Return immediatly if the tags are not
 		//  activated
 		///////////////////////////////////////////////////////////
-                if(*m_pDataBufferCurrent != 0xff || !m_bJpegTags)
-                {
-                    return *(m_pDataBufferCurrent++);
-                }
-                do
-                {
-                    if(++m_pDataBufferCurrent == m_pDataBufferEnd && fillDataBuffer() == 0)
-                    {
-                        throw(::imebra::streamExceptionEOF("Attempt to read past the end of the file"));
-                    }
-                }while(*m_pDataBufferCurrent == 0xff);
+        if(*m_pDataBufferCurrent != 0xff || !m_bJpegTags)
+        {
+            return *(m_pDataBufferCurrent++);
+        }
+        do
+        {
+            if(++m_pDataBufferCurrent == m_pDataBufferEnd && fillDataBuffer() == 0)
+            {
+                throw(::imebra::streamExceptionEOF("Attempt to read past the end of the file"));
+            }
+        }while(*m_pDataBufferCurrent == 0xff);
 
-                if(*(m_pDataBufferCurrent++) != 0)
-                {
-                    throw(::imebra::streamJpegTagInStream("Corrupted jpeg stream"));
-                }
+        if(*(m_pDataBufferCurrent++) != 0)
+        {
+            throw(::imebra::streamJpegTagInStream("Corrupted jpeg stream"));
+        }
 
-                return 0xff;
+        return 0xff;
 	}
 
 private:
@@ -374,8 +353,8 @@ private:
 private:
     std::shared_ptr<baseStreamInput> m_pControlledStream;
 
-	std::uint8_t m_inBitsBuffer;
-	int       m_inBitsNum;
+    unsigned int m_inBitsBuffer;
+    unsigned int m_inBitsNum;
 
 };
 
