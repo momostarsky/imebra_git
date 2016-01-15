@@ -10,7 +10,7 @@ namespace imebra
 
 std::string dicomConversion::convertFromUnicode(const std::wstring& unicodeString, charsetsList::tCharsetsList* pCharsets)
 {
-    PUNTOEXE_FUNCTION_START(L"dicomConversion::convertFromUnicode");
+    IMEBRA_FUNCTION_START(L"dicomConversion::convertFromUnicode");
 
     // Check for the dicom charset's name
     ///////////////////////////////////////////////////////////
@@ -117,13 +117,13 @@ std::string dicomConversion::convertFromUnicode(const std::wstring& unicodeStrin
 
     return rawString;
 
-    PUNTOEXE_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 
 }
 
 std::wstring dicomConversion::convertToUnicode(const std::string& value, const charsetsList::tCharsetsList& charsets)
 {
-    PUNTOEXE_FUNCTION_START(L"dicomConversion::convertToUnicode");
+    IMEBRA_FUNCTION_START(L"dicomConversion::convertToUnicode");
 
     // Should we take care of the escape sequences...?
     ///////////////////////////////////////////////////////////
@@ -216,7 +216,7 @@ std::wstring dicomConversion::convertToUnicode(const std::string& value, const c
 
     return returnString;
 
-    PUNTOEXE_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 
 }
 

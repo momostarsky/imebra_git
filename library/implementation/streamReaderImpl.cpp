@@ -77,7 +77,7 @@ bool streamReader::endReached()
 ///////////////////////////////////////////////////////////
 std::uint32_t streamReader::fillDataBuffer()
 {
-	PUNTOEXE_FUNCTION_START(L"streamReader::fillDataBuffer");
+	IMEBRA_FUNCTION_START(L"streamReader::fillDataBuffer");
 
 	std::uint32_t readLength = (std::uint32_t)(m_pDataBufferMaxEnd - m_pDataBufferStart);
 	std::uint32_t readBytes = fillDataBuffer(m_pDataBufferStart, readLength);
@@ -90,7 +90,7 @@ std::uint32_t streamReader::fillDataBuffer()
 	m_pDataBufferCurrent = m_pDataBufferStart;
 	return readBytes;
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 

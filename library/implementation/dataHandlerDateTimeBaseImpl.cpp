@@ -54,7 +54,7 @@ readingDataHandlerDateTimeBase::readingDataHandlerDateTimeBase(const memory& par
 ///////////////////////////////////////////////////////////
 std::int32_t readingDataHandlerDateTimeBase::getSignedLong(const size_t index) const
 {
-	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTimeBase::getSignedLong");
+	IMEBRA_FUNCTION_START(L"dataHandlerDateTimeBase::getSignedLong");
 
     std::uint32_t year, month, day, hour, minutes, seconds, nanoseconds;
     std::int32_t offsetHours, offsetMinutes;
@@ -73,7 +73,7 @@ std::int32_t readingDataHandlerDateTimeBase::getSignedLong(const size_t index) c
 	
 	return (std::int32_t)mktime(&timeStructure);
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -88,11 +88,11 @@ std::int32_t readingDataHandlerDateTimeBase::getSignedLong(const size_t index) c
 ///////////////////////////////////////////////////////////
 std::uint32_t readingDataHandlerDateTimeBase::getUnsignedLong(const size_t index) const
 {
-	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTimeBase::getUnsignedLong");
+	IMEBRA_FUNCTION_START(L"dataHandlerDateTimeBase::getUnsignedLong");
 
 	return (std::uint32_t)getSignedLong(index);
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -107,11 +107,11 @@ std::uint32_t readingDataHandlerDateTimeBase::getUnsignedLong(const size_t index
 ///////////////////////////////////////////////////////////
 double readingDataHandlerDateTimeBase::getDouble(const size_t index) const
 {
-	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTimeBase::getDouble");
+	IMEBRA_FUNCTION_START(L"dataHandlerDateTimeBase::getDouble");
 
 	return (double)getSignedLong(index);
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -131,7 +131,7 @@ writingDataHandlerDateTimeBase::writingDataHandlerDateTimeBase(const std::shared
 ///////////////////////////////////////////////////////////
 void writingDataHandlerDateTimeBase::setSignedLong(const size_t index, const std::int32_t value)
 {
-	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTimeBase::setSignedLong");
+	IMEBRA_FUNCTION_START(L"dataHandlerDateTimeBase::setSignedLong");
 
     tm timeStructure;
 #if defined(IMEBRA_WINDOWS) && !defined(__MINGW32__)
@@ -147,7 +147,7 @@ void writingDataHandlerDateTimeBase::setSignedLong(const size_t index, const std
     std::uint32_t seconds = timeStructure.tm_sec;
 	setDate(index, year, month, day, hour, minutes, seconds, 0, 0, 0);
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -162,11 +162,11 @@ void writingDataHandlerDateTimeBase::setSignedLong(const size_t index, const std
 ///////////////////////////////////////////////////////////
 void writingDataHandlerDateTimeBase::setUnsignedLong(const size_t index, const std::uint32_t value)
 {
-	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTimeBase::setUnsignedLong");
+	IMEBRA_FUNCTION_START(L"dataHandlerDateTimeBase::setUnsignedLong");
 
 	setSignedLong(index, (std::int32_t)value);
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -181,11 +181,11 @@ void writingDataHandlerDateTimeBase::setUnsignedLong(const size_t index, const s
 ///////////////////////////////////////////////////////////
 void writingDataHandlerDateTimeBase::setDouble(const size_t index, const double value)
 {
-	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTimeBase::setDouble");
+	IMEBRA_FUNCTION_START(L"dataHandlerDateTimeBase::setDouble");
 
 	setSignedLong(index, (std::int32_t)value);
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -204,7 +204,7 @@ void readingDataHandlerDateTimeBase::parseDate(
         std::uint32_t* pMonth,
         std::uint32_t* pDay) const
 {
-	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTimeBase::parseDate");
+	IMEBRA_FUNCTION_START(L"dataHandlerDateTimeBase::parseDate");
 
     if(dateString.size() != 8)
     {
@@ -224,7 +224,7 @@ void readingDataHandlerDateTimeBase::parseDate(
     std::istringstream dayStream(dateDay);
 	dayStream >> (*pDay);
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -242,7 +242,7 @@ std::string writingDataHandlerDateTimeBase::buildDate(
 		std::uint32_t month,
 		std::uint32_t day) const
 {
-	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTimeBase::buildDate");
+	IMEBRA_FUNCTION_START(L"dataHandlerDateTimeBase::buildDate");
 
         if((year > 9999) || (month < 1) || (month>12) || (day<1) || (day>31))
 	{
@@ -257,7 +257,7 @@ std::string writingDataHandlerDateTimeBase::buildDate(
 
 	return dateStream.str();
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -279,7 +279,7 @@ void readingDataHandlerDateTimeBase::parseTime(
 		std::int32_t* pOffsetHours,
 		std::int32_t* pOffsetMinutes) const
 {
-	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTimeBase::parseTime");
+	IMEBRA_FUNCTION_START(L"dataHandlerDateTimeBase::parseTime");
 
     std::string fullTimeString(timeString);
 
@@ -334,7 +334,7 @@ void readingDataHandlerDateTimeBase::parseTime(
 		*pOffsetMinutes= - *pOffsetMinutes;
 	}
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -356,7 +356,7 @@ std::string writingDataHandlerDateTimeBase::buildTime(
 		std::int32_t offsetMinutes
 		) const
 {
-	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTimeBase::buildTime");
+	IMEBRA_FUNCTION_START(L"dataHandlerDateTimeBase::buildTime");
 
 	if(
 		   (hour < 0)
@@ -390,7 +390,7 @@ std::string writingDataHandlerDateTimeBase::buildTime(
 	
 	return timeStream.str();
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -405,7 +405,7 @@ std::string writingDataHandlerDateTimeBase::buildTime(
 ///////////////////////////////////////////////////////////
 void readingDataHandlerDateTimeBase::split(const std::string& timeString, const std::string& separators, std::vector<std::string> *pComponents) const
 {
-	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTimeBase::split");
+	IMEBRA_FUNCTION_START(L"dataHandlerDateTimeBase::split");
 
     if(timeString.empty())
     {
@@ -428,7 +428,7 @@ void readingDataHandlerDateTimeBase::split(const std::string& timeString, const 
         }
 	}
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -444,7 +444,7 @@ void readingDataHandlerDateTimeBase::split(const std::string& timeString, const 
 ///////////////////////////////////////////////////////////
 std::string writingDataHandlerDateTimeBase::padLeft(const std::string& source, const char fillChar, const size_t length) const
 {
-	PUNTOEXE_FUNCTION_START(L"dataHandlerDateTimeBase::padLeft");
+	IMEBRA_FUNCTION_START(L"dataHandlerDateTimeBase::padLeft");
         
         if(source.size() >= length)
         {
@@ -456,7 +456,7 @@ std::string writingDataHandlerDateTimeBase::padLeft(const std::string& source, c
 
 	return paddedString;
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 } // namespace handlers

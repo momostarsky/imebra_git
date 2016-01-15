@@ -50,11 +50,11 @@ readingDataHandlerStringIS::readingDataHandlerStringIS(const memory& parseMemory
 ///////////////////////////////////////////////////////////
 double readingDataHandlerStringIS::getDouble(const size_t index) const
 {
-	PUNTOEXE_FUNCTION_START(L"dataHandlerStringIS::getDouble");
+	IMEBRA_FUNCTION_START(L"dataHandlerStringIS::getDouble");
 
 	return (double)getSignedLong(index);
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 writingDataHandlerStringIS::writingDataHandlerStringIS(const std::shared_ptr<buffer> pBuffer):
@@ -75,11 +75,11 @@ writingDataHandlerStringIS::writingDataHandlerStringIS(const std::shared_ptr<buf
 ///////////////////////////////////////////////////////////
 void writingDataHandlerStringIS::setDouble(const size_t index, const double value)
 {
-	PUNTOEXE_FUNCTION_START(L"dataHandlerStringIS::setDouble");
+	IMEBRA_FUNCTION_START(L"dataHandlerStringIS::setDouble");
 
 	setSignedLong(index, (std::int32_t)value);
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 } // namespace handlers

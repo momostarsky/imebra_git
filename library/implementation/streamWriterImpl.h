@@ -107,7 +107,7 @@ public:
 	///////////////////////////////////////////////////////////
 	inline void writeBits(const std::uint32_t buffer, int bitsNum)
 	{
-		PUNTOEXE_FUNCTION_START(L"streamWriter::writeBits");
+		IMEBRA_FUNCTION_START(L"streamWriter::writeBits");
 
 		std::uint32_t tempBuffer(buffer);
 
@@ -143,7 +143,7 @@ public:
 
                 }
 
-		PUNTOEXE_FUNCTION_END();
+		IMEBRA_FUNCTION_END();
 	}
 
 	/// \brief Reset the bit pointer used by writeBits().
@@ -154,7 +154,7 @@ public:
 	///////////////////////////////////////////////////////////
 	inline void resetOutBitsBuffer()
 	{
-		PUNTOEXE_FUNCTION_START(L"streamWriter::resetOutBitsBuffer");
+		IMEBRA_FUNCTION_START(L"streamWriter::resetOutBitsBuffer");
 
 		if(m_outBitsNum == 0)
 			return;
@@ -164,7 +164,7 @@ public:
 		m_outBitsBuffer = 0;
 		m_outBitsNum = 0;
 
-		PUNTOEXE_FUNCTION_END();
+		IMEBRA_FUNCTION_END();
 	}
 
 	/// \brief Write a single byte to the stream, parsing it

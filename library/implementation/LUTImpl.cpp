@@ -49,11 +49,11 @@ lut::~lut()
 ///////////////////////////////////////////////////////////
 void lut::setLut(std::shared_ptr<handlers::readingDataHandler> pDescriptor, std::shared_ptr<handlers::readingDataHandler> pData, const std::wstring& description)
 {
-	PUNTOEXE_FUNCTION_START(L"lut::setLut");
+    IMEBRA_FUNCTION_START(L"lut::setLut");
 
 	if(pDescriptor->getSize() < 3)
 	{
-        PUNTOEXE_THROW(::imebra::lutExceptionCorrupted, "The LUT is corrupted");
+        IMEBRA_THROW(::imebra::lutExceptionCorrupted, "The LUT is corrupted");
 	}
 	std::int32_t lutSize=pDescriptor->getSignedLong(0);
 	if(lutSize == 0)
@@ -66,14 +66,14 @@ void lut::setLut(std::shared_ptr<handlers::readingDataHandler> pDescriptor, std:
 
 	if((size_t)lutSize != pData->getSize())
 	{
-        PUNTOEXE_THROW(::imebra::lutExceptionCorrupted, "The LUT is corrupted");
+        IMEBRA_THROW(::imebra::lutExceptionCorrupted, "The LUT is corrupted");
 	}
 
 	create(lutSize, lutFirstMapped, (std::uint8_t)lutBits, description);
 
     std::dynamic_pointer_cast<handlers::readingDataHandlerNumericBase>(pData)->copyTo(m_pMappedValues, lutSize);
 
-	PUNTOEXE_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 ///////////////////////////////////////////////////////////
@@ -87,7 +87,7 @@ void lut::setLut(std::shared_ptr<handlers::readingDataHandler> pDescriptor, std:
 ///////////////////////////////////////////////////////////
 void lut::create(std::uint32_t size, std::int32_t firstMapped, std::uint8_t bits, const std::wstring& description)
 {
-	PUNTOEXE_FUNCTION_START(L"lut::create");
+    IMEBRA_FUNCTION_START(L"lut::create");
 
 	// If some values were previously allocated, then remove
 	//  them
@@ -110,7 +110,7 @@ void lut::create(std::uint32_t size, std::int32_t firstMapped, std::uint8_t bits
         m_pMappedValues = new std::int32_t[m_size];
 	}
 
-	PUNTOEXE_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 ///////////////////////////////////////////////////////////
@@ -125,7 +125,7 @@ void lut::create(std::uint32_t size, std::int32_t firstMapped, std::uint8_t bits
 ///////////////////////////////////////////////////////////
 void lut::fillHandlers(std::shared_ptr<handlers::writingDataHandler> pDescriptor, std::shared_ptr<handlers::writingDataHandler> pData) const
 {
-	PUNTOEXE_FUNCTION_START(L"lut::fillHandlers");
+    IMEBRA_FUNCTION_START(L"lut::fillHandlers");
 
 	pDescriptor->setSize(3);
 	std::uint32_t lutSize = getSize();
@@ -147,7 +147,7 @@ void lut::fillHandlers(std::shared_ptr<handlers::writingDataHandler> pDescriptor
 	pData->setSize(lutSize);
     std::dynamic_pointer_cast<handlers::writingDataHandlerNumericBase>(pData)->copyFrom(m_pMappedValues, lutSize);
 
-	PUNTOEXE_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 ///////////////////////////////////////////////////////////
@@ -221,11 +221,11 @@ std::int32_t lut::getFirstMapped() const
 ///////////////////////////////////////////////////////////
 void lut::setLutValue(std::int32_t startValue, std::int32_t lutValue)
 {
-	PUNTOEXE_FUNCTION_START(L"lut::setLutValue");
+    IMEBRA_FUNCTION_START(L"lut::setLutValue");
 
 	if(startValue<m_firstMapped)
 	{
-        PUNTOEXE_THROW(::imebra::lutExceptionWrongIndex, "The start index is below the first mapped index");
+        IMEBRA_THROW(::imebra::lutExceptionWrongIndex, "The start index is below the first mapped index");
 	}
 	startValue-=m_firstMapped;
 	if(startValue<(std::int32_t)m_size)
@@ -233,7 +233,7 @@ void lut::setLutValue(std::int32_t startValue, std::int32_t lutValue)
 		m_pMappedValues[startValue]=lutValue;
 	}
 
-	PUNTOEXE_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 

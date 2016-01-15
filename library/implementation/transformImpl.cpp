@@ -43,7 +43,7 @@ void transformHandlers::runTransform(
             const std::shared_ptr<image>& outputImage,
             std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY)
 {
-    PUNTOEXE_FUNCTION_START(L"transformHandlers::runTransform");
+    IMEBRA_FUNCTION_START(L"transformHandlers::runTransform");
 
     std::uint32_t inputImageWidth, inputImageHeight;
     inputImage->getSize(&inputImageWidth, &inputImageHeight);
@@ -55,7 +55,7 @@ void transformHandlers::runTransform(
         outputTopLeftX + inputWidth > outputImageWidth ||
         outputTopLeftY + inputHeight > outputImageHeight)
     {
-        PUNTOEXE_THROW(::imebra::transformExceptionInvalidArea, "The input and/or output areas are invalid");
+        IMEBRA_THROW(::imebra::transformExceptionInvalidArea, "The input and/or output areas are invalid");
     }
 
     std::shared_ptr<handlers::readingDataHandlerNumericBase> inputHandler(inputImage->getReadingDataHandler());
@@ -97,7 +97,7 @@ void transformHandlers::runTransform(
         outputHandler, outputImageWidth, outputColorSpace, outputPalette, outputMinValue, outputHighBit,
 		outputTopLeftX, outputTopLeftY);
 
-    PUNTOEXE_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 

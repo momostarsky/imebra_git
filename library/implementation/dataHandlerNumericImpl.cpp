@@ -59,11 +59,11 @@ std::shared_ptr<memory> writingDataHandlerNumericBase::getMemory() const
 ///////////////////////////////////////////////////////////
 void writingDataHandlerNumericBase::setSize(const size_t elementsNumber)
 {
-    PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::setSize");
+    IMEBRA_FUNCTION_START(L"dataHandlerNumeric::setSize");
 
     m_pMemory->resize(elementsNumber * m_unitSize);
 
-    PUNTOEXE_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 

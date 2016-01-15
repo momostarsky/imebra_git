@@ -25,14 +25,14 @@ namespace puntoexe
 ///////////////////////////////////////////////////////////
 charsetConversionWindows::charsetConversionWindows(const std::string& dicomName)
 {
-    PUNTOEXE_FUNCTION_START(L"charsetConversionWindows::charsetConversionWindows");
+    IMEBRA_FUNCTION_START(L"charsetConversionWindows::charsetConversionWindows");
 
     const charsetInformation& info(getDictionary().getCharsetInformation(dicomName));
 
     m_codePage = info.m_codePage;
     m_bZeroFlag = info.m_bZeroFlag;
 
-    PUNTOEXE_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -43,7 +43,7 @@ charsetConversionWindows::charsetConversionWindows(const std::string& dicomName)
 ///////////////////////////////////////////////////////////
 std::string charsetConversionWindows::fromUnicode(const std::wstring& unicodeString) const
 {
-    PUNTOEXE_FUNCTION_START(L"charsetConversionWindows::fromUnicode");
+    IMEBRA_FUNCTION_START(L"charsetConversionWindows::fromUnicode");
 
 	if(unicodeString.empty())
 	{
@@ -64,7 +64,7 @@ std::string charsetConversionWindows::fromUnicode(const std::wstring& unicodeStr
 	}
 	return returnString;
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -75,7 +75,7 @@ std::string charsetConversionWindows::fromUnicode(const std::wstring& unicodeStr
 ///////////////////////////////////////////////////////////
 std::wstring charsetConversionWindows::toUnicode(const std::string& asciiString) const
 {
-    PUNTOEXE_FUNCTION_START(L"charsetConversionWindows::toUnicode");
+    IMEBRA_FUNCTION_START(L"charsetConversionWindows::toUnicode");
 
 	if(asciiString.empty())
 	{
@@ -91,7 +91,7 @@ std::wstring charsetConversionWindows::toUnicode(const std::string& asciiString)
     ::MultiByteToWideChar(m_codePage, 0, asciiString.c_str(), (int)(asciiString.length()), &(returnString[0]), requiredWChars);
     return returnString;
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 } // namespace puntoexe

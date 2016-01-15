@@ -61,7 +61,7 @@ void readingDataHandlerTime::getDate(const size_t index,
          std::int32_t* pOffsetHours,
          std::int32_t* pOffsetMinutes) const
 {
-    PUNTOEXE_FUNCTION_START(L"dataHandlerTime::getDate");
+    IMEBRA_FUNCTION_START(L"dataHandlerTime::getDate");
 
     *pYear = 0;
     *pMonth = 0;
@@ -75,7 +75,7 @@ void readingDataHandlerTime::getDate(const size_t index,
 
     parseTime(getString(index), pHour, pMinutes, pSeconds, pNanoseconds, pOffsetHours, pOffsetMinutes);
 
-    PUNTOEXE_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 
 }
 
@@ -106,13 +106,13 @@ void writingDataHandlerTime::setDate(const size_t index,
 		 std::int32_t offsetHours,
 		 std::int32_t offsetMinutes)
 {
-	PUNTOEXE_FUNCTION_START(L"dataHandlerTime::setDate");
+	IMEBRA_FUNCTION_START(L"dataHandlerTime::setDate");
 
     std::string timeString = buildTime(hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes);
 	timeString.resize(13);
     setString(index, timeString);
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 

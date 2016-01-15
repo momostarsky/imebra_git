@@ -37,7 +37,7 @@ namespace codecs
 ///////////////////////////////////////////////////////////
 std::shared_ptr<dataSet> codec::read(std::shared_ptr<streamReader> pSourceStream, std::uint32_t maxSizeBufferLoad /* = 0xffffffff */)
 {
-	PUNTOEXE_FUNCTION_START(L"codec::read");
+	IMEBRA_FUNCTION_START(L"codec::read");
 
 	// Reset the codec's bits buffer
 	///////////////////////////////////////////////////////////
@@ -60,7 +60,7 @@ std::shared_ptr<dataSet> codec::read(std::shared_ptr<streamReader> pSourceStream
     catch(::imebra::codecExceptionWrongFormat&)
 	{
 		pSourceStream->seek((std::int32_t)position);
-		PUNTOEXE_RETHROW("Detected a wrong format. Rewinding file");
+        IMEBRA_RETHROW("Detected a wrong format. Rewinding file");
 	}
 
 	// Update the charsets in the tags
@@ -69,7 +69,7 @@ std::shared_ptr<dataSet> codec::read(std::shared_ptr<streamReader> pSourceStream
 
 	return pDestDataSet;
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -84,7 +84,7 @@ std::shared_ptr<dataSet> codec::read(std::shared_ptr<streamReader> pSourceStream
 ///////////////////////////////////////////////////////////
 void codec::write(std::shared_ptr<streamWriter> pDestStream, std::shared_ptr<dataSet> pSourceDataSet)
 {
-	PUNTOEXE_FUNCTION_START(L"codec::write");
+	IMEBRA_FUNCTION_START(L"codec::write");
 
 	// Update charsets tag
 	///////////////////////////////////////////////////////////
@@ -94,7 +94,7 @@ void codec::write(std::shared_ptr<streamWriter> pDestStream, std::shared_ptr<dat
 	writeStream(pDestStream, pSourceDataSet);
 	pDestStream->flushDataBuffer();
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -109,7 +109,7 @@ void codec::write(std::shared_ptr<streamWriter> pDestStream, std::shared_ptr<dat
 ///////////////////////////////////////////////////////////
 void channel::allocate(std::uint32_t sizeX, std::uint32_t sizeY)
 {
-	PUNTOEXE_FUNCTION_START(L"channel::allocate");
+	IMEBRA_FUNCTION_START(L"channel::allocate");
 
 	m_sizeX = sizeX;
 	m_sizeY = sizeY;
@@ -119,7 +119,7 @@ void channel::allocate(std::uint32_t sizeX, std::uint32_t sizeY)
 
 	::memset(m_pBuffer, 0, m_bufferSize * sizeof(std::int32_t));
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 

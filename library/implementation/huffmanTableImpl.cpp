@@ -61,7 +61,7 @@ huffmanTable::huffmanTable(std::uint32_t maxValueLength)
 ///////////////////////////////////////////////////////////
 void huffmanTable::reset()
 {
-	PUNTOEXE_FUNCTION_START(L"huffmanTable::reset");
+	IMEBRA_FUNCTION_START(L"huffmanTable::reset");
 
 	m_valuesFreq.clear();
 	m_valuesFreq.resize(m_numValues);
@@ -81,7 +81,7 @@ void huffmanTable::reset()
     m_firstMaxValue = 0xffffffff;
     m_firstValuesPerLength = 0;
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -182,7 +182,7 @@ std::uint32_t huffmanTable::getOrderedValue(size_t index)
 ///////////////////////////////////////////////////////////
 void huffmanTable::calcHuffmanCodesLength(const std::uint32_t maxCodeLength)
 {
-	PUNTOEXE_FUNCTION_START(L"huffmanTable::calcHuffmanCodesLength");
+	IMEBRA_FUNCTION_START(L"huffmanTable::calcHuffmanCodesLength");
 
 	// Order the values by their frequency
 	typedef std::map<huffmanTable::freqValue, bool, huffmanTable::freqValueCompare> tFreqOrderedMap;
@@ -271,7 +271,7 @@ void huffmanTable::calcHuffmanCodesLength(const std::uint32_t maxCodeLength)
 		}
 	}
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -286,7 +286,7 @@ void huffmanTable::calcHuffmanCodesLength(const std::uint32_t maxCodeLength)
 ///////////////////////////////////////////////////////////
 void huffmanTable::calcHuffmanTables()
 {
-	PUNTOEXE_FUNCTION_START(L"huffmanTable::calcHuffmanTables");
+	IMEBRA_FUNCTION_START(L"huffmanTable::calcHuffmanTables");
 
 	std::uint32_t huffmanCode = 0;
 
@@ -325,7 +325,7 @@ void huffmanTable::calcHuffmanTables()
     m_firstMaxValue = m_maxValuePerLength[m_firstValidLength];
     m_firstValuesPerLength = m_valuesPerLength[m_firstValidLength];
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 ///////////////////////////////////////////////////////////
@@ -339,7 +339,7 @@ void huffmanTable::calcHuffmanTables()
 ///////////////////////////////////////////////////////////
 std::uint32_t huffmanTable::readHuffmanCode(streamReader* pStream)
 {
-    PUNTOEXE_FUNCTION_START(L"huffmanTable::readHuffmanCode");
+    IMEBRA_FUNCTION_START(L"huffmanTable::readHuffmanCode");
 
     // Read initial number of bits
 	std::uint32_t readBuffer(pStream->readBits(m_firstValidLength));
@@ -393,9 +393,9 @@ std::uint32_t huffmanTable::readHuffmanCode(streamReader* pStream)
 
 	}
 
-    PUNTOEXE_THROW(::imebra::huffmanExceptionRead, "Invalid huffman code found while reading from a stream");
+    IMEBRA_THROW(::imebra::huffmanExceptionRead, "Invalid huffman code found while reading from a stream");
 
-    PUNTOEXE_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -410,15 +410,15 @@ std::uint32_t huffmanTable::readHuffmanCode(streamReader* pStream)
 ///////////////////////////////////////////////////////////
 void huffmanTable::writeHuffmanCode(const std::uint32_t code, streamWriter* pStream)
 {
-	PUNTOEXE_FUNCTION_START(L"huffmanTable::writeHuffmanCode");
+	IMEBRA_FUNCTION_START(L"huffmanTable::writeHuffmanCode");
 
 	if(m_valuesToHuffmanLength[code] == 0)
 	{
-        PUNTOEXE_THROW(::imebra::huffmanExceptionWrite, "Trying to write an invalid huffman code");
+        IMEBRA_THROW(::imebra::huffmanExceptionWrite, "Trying to write an invalid huffman code");
 	}
 	pStream->writeBits(m_valuesToHuffman[code], m_valuesToHuffmanLength[code]);
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 } // namespace puntoexe

@@ -37,10 +37,10 @@ namespace puntoexe
 ///         being caught&thrown.
 ///
 /// The application can use the macros
-///  PUNTOEXE_FUNCTION_START(),
-///  PUNTOEXE_FUNCTION_END(), 
-///  PUNTOEXE_THROW() and
-///  PUNTOEXE_RETHROW()
+///  IMEBRA_FUNCTION_START(),
+///  IMEBRA_FUNCTION_END(),
+///  IMEBRA_THROW() and
+///  IMEBRA_RETHROW()
 ///  inside its function: the macros take care of logging
 ///  in the exceptions manager the source code's lines
 ///  travelled by an exception while it is being thrown
@@ -97,9 +97,9 @@ public:
 ///
 /// In order to log the stack position the application
 ///  must use the following macros inside its functions:
-/// - PUNTOEXE_FUNCTION_START()
-/// - PUNTOEXE_FUNCTION_END()
-/// - PUNTOEXE_THROW()
+/// - IMEBRA_FUNCTION_START()
+/// - IMEBRA_FUNCTION_END()
+/// - IMEBRA_THROW()
 ///
 /// The final catch block that processes the exception and
 ///  doesn't rethrow it should call 
@@ -108,7 +108,7 @@ public:
 ///
 /// The retrieved message will contain the position of the
 ///  first throw statement and the positions of the
-///  PUNTOEXE_FUNCTION_END() macros that rethrown the
+///  IMEBRA_FUNCTION_END() macros that rethrown the
 ///  exception.
 ///
 /// All the catch blocks that don't rethrow the catched
@@ -124,7 +124,7 @@ public:
 	/// \brief Add an exceptionInfo object to the active
 	///         thread's information list.
 	///
-	/// This function is called by PUNTOEXE_FUNCTION_END() when
+    /// This function is called by IMEBRA_FUNCTION_END() when
 	///  an uncaught exception is found.
 	///
 	/// @param info the info object that must be added
@@ -197,35 +197,35 @@ public:
 
 
 
-/// \def PUNTOEXE_FUNCTION_START(functionName)
+/// \def IMEBRA_FUNCTION_START(functionName)
 ///
 /// \brief Initialize a try block. The try block must be
 ///         matched by a call to the 
-///         PUNTOEXE_FUNCTION_END() macro.
+///         IMEBRA_FUNCTION_END() macro.
 ///
 /// This macro should be placed at the very beginning
 ///  of a function.
 ///
 /// All the exceptions not catched by the body of the
-///  function are catched by PUNTOEXE_FUNCTION_END() and 
+///  function are catched by IMEBRA_FUNCTION_END() and
 ///  rethrown, but before being rethrown the function's
 ///  name and the line number in the source file are 
 ///  logged.
-/// All the positions of the PUNTOEXE_FUNCTION_END() that
+/// All the positions of the IMEBRA_FUNCTION_END() that
 ///  catch the same exception are logged togheter.
 ///
 /// Exceptions thrown inside the function should be thrown
-///  by PUNTOEXE_THROW(), but this is not necessary.
+///  by IMEBRA_THROW(), but this is not necessary.
 ///
 /// @param functionName the name of the function in which
 ///         the macro is placed.
 ///
 ///////////////////////////////////////////////////////////
-#define PUNTOEXE_FUNCTION_START(functionName) \
+#define IMEBRA_FUNCTION_START(functionName) \
 	static const wchar_t* _puntoexe_function_name = functionName;\
 	try{
 
-/// \def PUNTOEXE_FUNCTION_END()
+/// \def IMEBRA_FUNCTION_END()
 ///
 /// \brief Insert a catch block that rethrows the catched
 ///         exception and log the function's name and
@@ -233,11 +233,11 @@ public:
 ///         exception has been catched and rethrown.
 ///
 /// This function must be placed at the end of a function
-///  if the PUNTOEXE_FUNCTION_START() has been used in
+///  if the IMEBRA_FUNCTION_START() has been used in
 ///  the function.
 ///
 ///////////////////////////////////////////////////////////
-#define PUNTOEXE_FUNCTION_END() \
+#define IMEBRA_FUNCTION_END() \
 	}\
 	catch(std::exception& e)\
 	{\
@@ -252,7 +252,7 @@ public:
 		throw;\
 	}
 
-/// \def PUNTOEXE_FUNCTION_END_MODIFY()
+/// \def IMEBRA_FUNCTION_END_MODIFY()
 ///
 /// \brief Insert a catch block that rethrows the catched
 ///         exception and log the function's name and
@@ -269,13 +269,13 @@ public:
 ///                  of catchType
 ///
 ///////////////////////////////////////////////////////////
-#define PUNTOEXE_FUNCTION_END_MODIFY(catchType, throwType) \
+#define IMEBRA_FUNCTION_END_MODIFY(catchType, throwType) \
     }\
     catch(catchType& e)\
     {\
         puntoexe::exceptionInfo info(_puntoexe_function_name, __FILE__, __LINE__, typeid(e).name(), e.what());\
         puntoexe::exceptionsManager::addExceptionInfo(info);\
-        PUNTOEXE_THROW(throwType, e.what());\
+        IMEBRA_THROW(throwType, e.what());\
     }\
     catch(std::exception& e)\
     {\
@@ -290,22 +290,22 @@ public:
         throw;\
     }
 
-/// \def PUNTOEXE_THROW(exceptionType, what)
+/// \def IMEBRA_THROW(exceptionType, what)
 ///
 /// \brief Throw an exception of the specified type and log
 ///         the function's name and the position in the
 ///         file on which the exception has been thrown.
 ///
 /// This macro can be used only in the functions or blocks
-///  that use the macros PUNTOEXE_FUNCTION_START() and
-///  PUNTOEXE_FUNCTION_END().
+///  that use the macros IMEBRA_FUNCTION_START() and
+///  IMEBRA_FUNCTION_END().
 ///
 /// @param exceptionType the type of exception to throw
 /// @param what          a message to be associated with
 ///                       the exception
 ///
 ///////////////////////////////////////////////////////////
-#define PUNTOEXE_THROW(exceptionType, what) \
+#define IMEBRA_THROW(exceptionType, what) \
 	{\
         exceptionType puntoexeTrackException(what);\
         puntoexe::exceptionInfo info(_puntoexe_function_name, __FILE__, __LINE__, typeid(puntoexeTrackException).name(), what);\
@@ -313,20 +313,20 @@ public:
         throw puntoexeTrackException;\
 	}
 
-/// \def PUNTOEXE_RETHROW(what)
+/// \def IMEBRA_RETHROW(what)
 ///
 /// \brief Rethrow an exception caught by a catch block
 ///         and add some descriptions to it.
 ///
 /// This macro can be used only in the functions or blocks
-///  that use the macros PUNTOEXE_FUNCTION_START() and
-///  PUNTOEXE_FUNCTION_END().
+///  that use the macros IMEBRA_FUNCTION_START() and
+///  IMEBRA_FUNCTION_END().
 ///
 /// @param what          a message to be associated with
 ///                       the exception
 ///
 ///////////////////////////////////////////////////////////
-#define PUNTOEXE_RETHROW(what) \
+#define IMEBRA_RETHROW(what) \
 	{\
 		puntoexe::exceptionInfo info(_puntoexe_function_name, __FILE__, __LINE__, "rethrowing", what);\
 		puntoexe::exceptionsManager::addExceptionInfo(info);\

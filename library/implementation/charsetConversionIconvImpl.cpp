@@ -27,7 +27,7 @@ namespace puntoexe
 ///////////////////////////////////////////////////////////
 charsetConversionIconv::charsetConversionIconv(const std::string& dicomName)
 {
-    PUNTOEXE_FUNCTION_START(L"charsetConversion::charsetConversionIconv");
+    IMEBRA_FUNCTION_START(L"charsetConversion::charsetConversionIconv");
 
     const charsetInformation& info(getDictionary().getCharsetInformation(dicomName));
 
@@ -47,7 +47,7 @@ charsetConversionIconv::charsetConversionIconv(const std::string& dicomName)
         utfCode = (*((std::uint8_t*)&m_endianCheck) == 0xff) ? "UTF-32LE" : "UTF-32BE";
         break;
     default:
-        PUNTOEXE_THROW(::imebra::charsetConversionExceptionUtfSizeNotSupported, "The system utf size is not supported");
+        IMEBRA_THROW(::imebra::charsetConversionExceptionUtfSizeNotSupported, "The system utf size is not supported");
     }
 
     m_iconvToUnicode = iconv_open(utfCode, info.m_isoRegistration.c_str());
@@ -56,10 +56,10 @@ charsetConversionIconv::charsetConversionIconv(const std::string& dicomName)
     {
         std::ostringstream buildErrorString;
         buildErrorString << "Table " << dicomName << " not supported by the system";
-        PUNTOEXE_THROW(::imebra::charsetConversionExceptionNoSupportedTable, buildErrorString.str());
+        IMEBRA_THROW(::imebra::charsetConversionExceptionNoSupportedTable, buildErrorString.str());
     }
 
-    PUNTOEXE_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -81,7 +81,7 @@ charsetConversionIconv::~charsetConversionIconv()
 ///////////////////////////////////////////////////////////
 std::string charsetConversionIconv::fromUnicode(const std::wstring& unicodeString) const
 {
-    PUNTOEXE_FUNCTION_START(L"charsetConversionIconv::fromUnicode");
+    IMEBRA_FUNCTION_START(L"charsetConversionIconv::fromUnicode");
 
 	if(unicodeString.empty())
 	{
@@ -90,7 +90,7 @@ std::string charsetConversionIconv::fromUnicode(const std::wstring& unicodeStrin
 
 	return myIconv(m_iconvFromUnicode, (char*)unicodeString.c_str(), unicodeString.length() * sizeof(wchar_t));
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -101,7 +101,7 @@ std::string charsetConversionIconv::fromUnicode(const std::wstring& unicodeStrin
 ///////////////////////////////////////////////////////////
 std::wstring charsetConversionIconv::toUnicode(const std::string& asciiString) const
 {
-    PUNTOEXE_FUNCTION_START(L"charsetConversionIconv::toUnicode");
+    IMEBRA_FUNCTION_START(L"charsetConversionIconv::toUnicode");
 
 	if(asciiString.empty())
 	{
@@ -113,7 +113,7 @@ std::wstring charsetConversionIconv::toUnicode(const std::string& asciiString) c
 
     return returnString;
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -128,7 +128,7 @@ std::string charsetConversionIconv::myIconv(iconv_t context, const char* inputSt
 std::string charsetConversionIconv::myIconv(iconv_t context, char* inputString, size_t inputStringLengthBytes) const
 #endif
 {
-	PUNTOEXE_FUNCTION_START(L"charsetConversion::myIconv");
+	IMEBRA_FUNCTION_START(L"charsetConversion::myIconv");
 
 	std::string finalString;
 
@@ -166,7 +166,7 @@ std::string charsetConversionIconv::myIconv(iconv_t context, char* inputString, 
 
 	return finalString;
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 } // namespace puntoexe

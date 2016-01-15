@@ -47,13 +47,13 @@ namespace charsetsList
 ///////////////////////////////////////////////////////////
 void updateCharsets(const tCharsetsList* pCharsetsList, tCharsetsList* pDestinationCharsetsList)
 {
-	PUNTOEXE_FUNCTION_START(L"charsetsList::updateCharsets");
+	IMEBRA_FUNCTION_START(L"charsetsList::updateCharsets");
 
 	// Check the default charset
 	///////////////////////////////////////////////////////////
 	if(!pCharsetsList->empty() && !pDestinationCharsetsList->empty() && pCharsetsList->front() != pDestinationCharsetsList->front())
 	{
-        PUNTOEXE_THROW(::imebra::charsetListExceptionDiffDefault, "Different default charsets");
+        IMEBRA_THROW(::imebra::charsetListExceptionDiffDefault, "Different default charsets");
 	}
 
 	// Copy the charsets in the local list (if they are not
@@ -81,7 +81,7 @@ void updateCharsets(const tCharsetsList* pCharsetsList, tCharsetsList* pDestinat
 		}
 	}
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 

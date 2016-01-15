@@ -40,7 +40,7 @@ transformsChain::transformsChain():
 ///////////////////////////////////////////////////////////
 void transformsChain::addTransform(std::shared_ptr<transform> pTransform)
 {
-	PUNTOEXE_FUNCTION_START(L"transformsChain::addTransform");
+	IMEBRA_FUNCTION_START(L"transformsChain::addTransform");
 
         if(pTransform != 0 && !pTransform->isEmpty())
         {
@@ -49,7 +49,7 @@ void transformsChain::addTransform(std::shared_ptr<transform> pTransform)
             m_transformsList.push_back(pTransform);
         }
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 

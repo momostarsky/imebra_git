@@ -58,7 +58,7 @@ memoryStreamOutput::memoryStreamOutput(std::shared_ptr<memory> memoryStream): m_
 ///////////////////////////////////////////////////////////
 void memoryStreamOutput::write(std::uint32_t startPosition, const std::uint8_t* pBuffer, std::uint32_t bufferLength)
 {
-	PUNTOEXE_FUNCTION_START(L"memoryStream::write");
+	IMEBRA_FUNCTION_START(L"memoryStream::write");
 
 	// Nothing happens if we have nothing to write
 	///////////////////////////////////////////////////////////
@@ -79,7 +79,7 @@ void memoryStreamOutput::write(std::uint32_t startPosition, const std::uint8_t* 
 
 	::memcpy(m_memory->data() + startPosition, pBuffer, bufferLength);
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -94,7 +94,7 @@ void memoryStreamOutput::write(std::uint32_t startPosition, const std::uint8_t* 
 ///////////////////////////////////////////////////////////
 std::uint32_t memoryStreamInput::read(std::uint32_t startPosition, std::uint8_t* pBuffer, std::uint32_t bufferLength)
 {
-	PUNTOEXE_FUNCTION_START(L"memoryStream::read");
+	IMEBRA_FUNCTION_START(L"memoryStream::read");
 
 	if(bufferLength == 0)
 	{
@@ -126,7 +126,7 @@ std::uint32_t memoryStreamInput::read(std::uint32_t startPosition, std::uint8_t*
 
 	return copySize;
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 

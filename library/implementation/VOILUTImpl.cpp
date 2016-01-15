@@ -35,7 +35,7 @@ namespace transforms
 ///////////////////////////////////////////////////////////
 std::uint32_t VOILUT::getVOILUTId(std::uint32_t VOILUTNumber)
 {
-	PUNTOEXE_FUNCTION_START(L"VOILUT::getVOILUTId");
+	IMEBRA_FUNCTION_START(L"VOILUT::getVOILUTId");
 
 	// reset the LUT's ID
 	///////////////////////////////////////////////////////////
@@ -87,7 +87,7 @@ std::uint32_t VOILUT::getVOILUTId(std::uint32_t VOILUTNumber)
 	///////////////////////////////////////////////////////////
 	return VOILUTId;
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -126,7 +126,7 @@ VOILUT::voilutIds_t VOILUT::getVOILUTIds()
 ///////////////////////////////////////////////////////////
 std::wstring VOILUT::getVOILUTDescription(std::uint32_t VOILUTId)
 {
-	PUNTOEXE_FUNCTION_START(L"VOILUT::getVOILUTDescription");
+	IMEBRA_FUNCTION_START(L"VOILUT::getVOILUTDescription");
 
 	std::wstring VOILUTDescription;
 
@@ -159,7 +159,7 @@ std::wstring VOILUT::getVOILUTDescription(std::uint32_t VOILUTId)
 
 	return VOILUTDescription;
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -176,7 +176,7 @@ std::wstring VOILUT::getVOILUTDescription(std::uint32_t VOILUTId)
 ///////////////////////////////////////////////////////////
 void VOILUT::setVOILUT(std::uint32_t VOILUTId)
 {
-	PUNTOEXE_FUNCTION_START(L"VOILUT::setVOILUT");
+	IMEBRA_FUNCTION_START(L"VOILUT::setVOILUT");
 
 	// If the dataset has not been set, then return NULL
 	///////////////////////////////////////////////////////////
@@ -207,7 +207,7 @@ void VOILUT::setVOILUT(std::uint32_t VOILUTId)
 
 	setCenterWidth(0, 0);
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -352,20 +352,20 @@ std::shared_ptr<image> VOILUT::allocateOutputImage(std::shared_ptr<image> pInput
 ///////////////////////////////////////////////////////////
 void VOILUT::applyOptimalVOI(const std::shared_ptr<puntoexe::imebra::image>& inputImage, std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight)
 {
-    PUNTOEXE_FUNCTION_START(L"VOILUT::applyOptimalVOI");
+    IMEBRA_FUNCTION_START(L"VOILUT::applyOptimalVOI");
 
     std::uint32_t width, height;
     inputImage->getSize(&width, &height);
 
     if(inputTopLeftX + inputWidth > width || inputTopLeftY + inputHeight > height)
     {
-        PUNTOEXE_THROW(::imebra::transformExceptionInvalidArea, "The input and/or output areas are invalid");
+        IMEBRA_THROW(::imebra::transformExceptionInvalidArea, "The input and/or output areas are invalid");
     }
 
     std::shared_ptr<handlers::readingDataHandlerNumericBase> handler(inputImage->getReadingDataHandler());
     HANDLER_CALL_TEMPLATE_FUNCTION_WITH_PARAMS(templateFindOptimalVOI, handler, width, inputTopLeftX, inputTopLeftY, inputWidth, inputHeight);
 
-    PUNTOEXE_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 

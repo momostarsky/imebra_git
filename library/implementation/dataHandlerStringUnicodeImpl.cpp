@@ -39,7 +39,7 @@ namespace handlers
 readingDataHandlerStringUnicode::readingDataHandlerStringUnicode(const memory& parseMemory, const charsetsList::tCharsetsList& charsets, const std::string& dataType, const wchar_t separator, const std::uint8_t paddingByte):
     readingDataHandler(dataType)
 {
-    PUNTOEXE_FUNCTION_START(L"readingDataHandlerString::readingDataHandlerString");
+    IMEBRA_FUNCTION_START(L"readingDataHandlerString::readingDataHandlerString");
 
     std::string asciiString((const char*)parseMemory.data(), parseMemory.size());
     std::wstring parseString(dicomConversion::convertToUnicode(asciiString, charsets));
@@ -67,7 +67,7 @@ readingDataHandlerStringUnicode::readingDataHandlerStringUnicode(const memory& p
         firstPosition = ++nextPosition;
     }
 
-    PUNTOEXE_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 
 }
 

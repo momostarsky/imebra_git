@@ -37,11 +37,11 @@ waveform::waveform(std::shared_ptr<dataSet> pDataSet):
 ///////////////////////////////////////////////////////////
 std::uint32_t waveform::getBitsAllocated() const
 {
-	PUNTOEXE_FUNCTION_START(L"waveform::getBitsAllocated");
+	IMEBRA_FUNCTION_START(L"waveform::getBitsAllocated");
 
     return m_pDataSet->getUnsignedLongThrow(0x5400, 0, 0x1004, 0, 0);
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -52,11 +52,11 @@ std::uint32_t waveform::getBitsAllocated() const
 ///////////////////////////////////////////////////////////
 std::uint32_t waveform::getBitsStored() const
 {
-	PUNTOEXE_FUNCTION_START(L"waveform::getBitsStored");
+	IMEBRA_FUNCTION_START(L"waveform::getBitsStored");
 
     return m_pDataSet->getUnsignedLongThrow(0x003A, 0, 0x021A, 0, 0);
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -67,11 +67,11 @@ std::uint32_t waveform::getBitsStored() const
 ///////////////////////////////////////////////////////////
 std::uint32_t waveform::getChannels() const
 {
-	PUNTOEXE_FUNCTION_START(L"waveform::getChannels");
+	IMEBRA_FUNCTION_START(L"waveform::getChannels");
 
     return m_pDataSet->getUnsignedLongThrow(0x003A, 0, 0x0005, 0, 0);
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -82,11 +82,11 @@ std::uint32_t waveform::getChannels() const
 ///////////////////////////////////////////////////////////
 std::string waveform::getInterpretation() const
 {
-	PUNTOEXE_FUNCTION_START(L"waveform::getChannels");
+	IMEBRA_FUNCTION_START(L"waveform::getChannels");
 
     return m_pDataSet->getStringThrow(0x5400, 0, 0x1006, 0, 0);
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -97,11 +97,11 @@ std::string waveform::getInterpretation() const
 ///////////////////////////////////////////////////////////
 std::uint32_t waveform::getSamples() const
 {
-	PUNTOEXE_FUNCTION_START(L"waveform::getSamples");
+	IMEBRA_FUNCTION_START(L"waveform::getSamples");
 
     return m_pDataSet->getUnsignedLongThrow(0x003A, 0, 0x0010, 0, 0);
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -112,7 +112,7 @@ std::uint32_t waveform::getSamples() const
 ///////////////////////////////////////////////////////////
 std::shared_ptr<handlers::readingDataHandler> waveform::getIntegerData(std::uint32_t channel, std::int32_t paddingValue)
 {
-	PUNTOEXE_FUNCTION_START(L"waveform::getIntegerData");
+	IMEBRA_FUNCTION_START(L"waveform::getIntegerData");
 
     const std::int32_t uLawDecompressTable[256] =
 	{
@@ -297,7 +297,7 @@ std::shared_ptr<handlers::readingDataHandler> waveform::getIntegerData(std::uint
 
     return waveformBuffer.getReadingDataHandler();
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 

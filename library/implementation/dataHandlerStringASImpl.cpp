@@ -61,7 +61,7 @@ readingDataHandlerStringAS::readingDataHandlerStringAS(const memory& parseMemory
 ///////////////////////////////////////////////////////////
 std::uint32_t readingDataHandlerStringAS::getAge(const size_t index, ::imebra::ageUnit_t* pUnit) const
 {
-	PUNTOEXE_FUNCTION_START(L"dataHandlerStringAS::getAge");
+	IMEBRA_FUNCTION_START(L"dataHandlerStringAS::getAge");
 
     std::string ageString = getString(index);
     if(ageString.size() != 4)
@@ -83,7 +83,7 @@ std::uint32_t readingDataHandlerStringAS::getAge(const size_t index, ::imebra::a
     *pUnit = (::imebra::ageUnit_t)unit;
     return age;
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -98,11 +98,11 @@ std::uint32_t readingDataHandlerStringAS::getAge(const size_t index, ::imebra::a
 ///////////////////////////////////////////////////////////
 std::int32_t readingDataHandlerStringAS::getSignedLong(const size_t index) const
 {
-	PUNTOEXE_FUNCTION_START(L"dataHandlerStringAS::getSignedLong");
+	IMEBRA_FUNCTION_START(L"dataHandlerStringAS::getSignedLong");
 
 	return (std::int32_t)getDouble(index);
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -117,11 +117,11 @@ std::int32_t readingDataHandlerStringAS::getSignedLong(const size_t index) const
 ///////////////////////////////////////////////////////////
 std::uint32_t readingDataHandlerStringAS::getUnsignedLong(const size_t index) const
 {
-	PUNTOEXE_FUNCTION_START(L"dataHandlerStringAS::getUnsignedLong");
+	IMEBRA_FUNCTION_START(L"dataHandlerStringAS::getUnsignedLong");
 
 	return (std::int32_t)getDouble(index);
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -136,7 +136,7 @@ std::uint32_t readingDataHandlerStringAS::getUnsignedLong(const size_t index) co
 ///////////////////////////////////////////////////////////
 double readingDataHandlerStringAS::getDouble(const size_t index) const
 {
-	PUNTOEXE_FUNCTION_START(L"dataHandlerStringAS::getDouble");
+	IMEBRA_FUNCTION_START(L"dataHandlerStringAS::getDouble");
 
     ::imebra::ageUnit_t ageUnit;
 	double age = (double)getAge(index, &ageUnit);
@@ -159,7 +159,7 @@ double readingDataHandlerStringAS::getDouble(const size_t index) const
         throw;
     }
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -179,7 +179,7 @@ writingDataHandlerStringAS::writingDataHandlerStringAS(const std::shared_ptr<buf
 ///////////////////////////////////////////////////////////
 void writingDataHandlerStringAS::setAge(const size_t index, const std::uint32_t age, const ::imebra::ageUnit_t unit)
 {
-    PUNTOEXE_FUNCTION_START(L"dataHandlerStringAS::setAge");
+    IMEBRA_FUNCTION_START(L"dataHandlerStringAS::setAge");
 
     if(index >= getSize())
     {
@@ -193,7 +193,7 @@ void writingDataHandlerStringAS::setAge(const size_t index, const std::uint32_t 
 
     setString(index, ageStream.str());
 
-    PUNTOEXE_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -208,11 +208,11 @@ void writingDataHandlerStringAS::setAge(const size_t index, const std::uint32_t 
 ///////////////////////////////////////////////////////////
 void writingDataHandlerStringAS::setSignedLong(const size_t index, const std::int32_t value)
 {
-	PUNTOEXE_FUNCTION_START(L"dataHandlerStringAS::setSignedLong");
+	IMEBRA_FUNCTION_START(L"dataHandlerStringAS::setSignedLong");
 
 	setDouble(index, (double)value);
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -227,11 +227,11 @@ void writingDataHandlerStringAS::setSignedLong(const size_t index, const std::in
 ///////////////////////////////////////////////////////////
 void writingDataHandlerStringAS::setUnsignedLong(const size_t index, const std::uint32_t value)
 {
-	PUNTOEXE_FUNCTION_START(L"dataHandlerStringAS::setUnsignedLong");
+	IMEBRA_FUNCTION_START(L"dataHandlerStringAS::setUnsignedLong");
 
 	setDouble(index, (double)value);
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -246,7 +246,7 @@ void writingDataHandlerStringAS::setUnsignedLong(const size_t index, const std::
 ///////////////////////////////////////////////////////////
 void writingDataHandlerStringAS::setDouble(const size_t index, const double value)
 {
-	PUNTOEXE_FUNCTION_START(L"dataHandlerStringAS::setDouble");
+	IMEBRA_FUNCTION_START(L"dataHandlerStringAS::setDouble");
 
 	if(value < 0)
 	{
@@ -269,7 +269,7 @@ void writingDataHandlerStringAS::setDouble(const size_t index, const double valu
 	}
     setAge(index, (std::uint32_t)value, ::imebra::ageUnit_t::years);
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 

@@ -52,7 +52,7 @@ namespace handlers
 readingDataHandlerString::readingDataHandlerString(const memory &parseMemory, const std::string &dataType, const char separator, const uint8_t paddingByte):
     readingDataHandler(dataType)
 {
-    PUNTOEXE_FUNCTION_START(L"readingDataHandlerString::readingDataHandlerString");
+    IMEBRA_FUNCTION_START(L"readingDataHandlerString::readingDataHandlerString");
 
     std::string parseString((const char*)parseMemory.data(), parseMemory.size());
     while(!parseString.empty() && parseString.back() == (char)paddingByte)
@@ -78,7 +78,7 @@ readingDataHandlerString::readingDataHandlerString(const memory &parseMemory, co
         firstPosition = ++nextPosition;
     }
 
-    PUNTOEXE_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 // Get the data element as a signed long

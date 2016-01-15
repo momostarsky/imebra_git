@@ -62,7 +62,7 @@ void readingDataHandlerDate::getDate(const size_t index,
 		std::int32_t* pOffsetHours,
 		std::int32_t* pOffsetMinutes) const
 {
-	PUNTOEXE_FUNCTION_START(L"dataHandlerDate::getDate");
+	IMEBRA_FUNCTION_START(L"dataHandlerDate::getDate");
 
 	*pYear = 0;
 	*pMonth = 0;
@@ -77,7 +77,7 @@ void readingDataHandlerDate::getDate(const size_t index,
     std::string dateString = getString(index);
 	parseDate(dateString, pYear, pMonth, pDay);
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -106,11 +106,11 @@ void writingDataHandlerDate::setDate(const size_t index,
 		std::int32_t /* offsetHours */,
 		std::int32_t /* offsetMinutes */)
 {
-	PUNTOEXE_FUNCTION_START(L"dataHandlerDate::setDate");
+	IMEBRA_FUNCTION_START(L"dataHandlerDate::setDate");
 
     setString(index, buildDate(year, month, day));
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 } // namespace handlers

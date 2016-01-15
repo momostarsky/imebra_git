@@ -143,7 +143,7 @@ namespace puntoexe
 										  std::int32_t visibleTopLeftX, std::int32_t visibleTopLeftY, std::int32_t visibleBottomRightX, std::int32_t visibleBottomRightY,
 										  std::shared_ptr<memory> reuseMemory)
 			{
-				PUNTOEXE_FUNCTION_START(L"drawBitmap::getBitmap");
+				IMEBRA_FUNCTION_START(L"drawBitmap::getBitmap");
 
 				// Just return if there is nothing to show
 				///////////////////////////////////////////////////////////
@@ -167,7 +167,7 @@ namespace puntoexe
 						visibleTopLeftY > visibleBottomRightY
 						)
 				{
-                    PUNTOEXE_THROW(::imebra::drawBitmapExceptionInvalidArea, "Destination area not valid");
+                    IMEBRA_THROW(::imebra::drawBitmapExceptionInvalidArea, "Destination area not valid");
 				}
 
                 size_t memorySize(getBitmap<drawBitmapType, rowAlignBytes>(totalWidthPixels, totalHeightPixels, visibleTopLeftX, visibleTopLeftY, visibleBottomRightX, visibleBottomRightY, 0, 0));
@@ -189,7 +189,7 @@ namespace puntoexe
 
 				return reuseMemory;
 
-				PUNTOEXE_FUNCTION_END();
+				IMEBRA_FUNCTION_END();
 
 			}
 
@@ -198,7 +198,7 @@ namespace puntoexe
 										  std::int32_t visibleTopLeftX, std::int32_t visibleTopLeftY, std::int32_t visibleBottomRightX, std::int32_t visibleBottomRightY,
 										  std::uint8_t* pBuffer, size_t bufferSize)
 			{
-				PUNTOEXE_FUNCTION_START(L"drawBitmap::getBitmapRaw");
+				IMEBRA_FUNCTION_START(L"drawBitmap::getBitmapRaw");
 
 				// Just return if there is nothing to show
 				///////////////////////////////////////////////////////////
@@ -218,7 +218,7 @@ namespace puntoexe
 						visibleTopLeftY > visibleBottomRightY
 						)
 				{
-                    PUNTOEXE_THROW(::imebra::drawBitmapExceptionInvalidArea, "Destination area not valid");
+                    IMEBRA_THROW(::imebra::drawBitmapExceptionInvalidArea, "Destination area not valid");
 				}
 
                 std::uint32_t destPixelSize((drawBitmapType == drawBitmapRGBA || drawBitmapType == drawBitmapBGRA) ? 4 : 3);
@@ -476,7 +476,7 @@ namespace puntoexe
 
 				return memorySize;
 
-				PUNTOEXE_FUNCTION_END();
+				IMEBRA_FUNCTION_END();
 			}
 
 		protected:

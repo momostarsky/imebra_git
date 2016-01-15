@@ -51,13 +51,13 @@ namespace imebra
 ///////////////////////////////////////////////////////////
 void data::setBuffer(size_t bufferId, const std::shared_ptr<buffer>& newBuffer)
 {
-	PUNTOEXE_FUNCTION_START(L"data::setBuffer");
+	IMEBRA_FUNCTION_START(L"data::setBuffer");
 
 	// Assign the new buffer
 	///////////////////////////////////////////////////////////
 	m_buffers[bufferId] = newBuffer;
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -72,7 +72,7 @@ void data::setBuffer(size_t bufferId, const std::shared_ptr<buffer>& newBuffer)
 ///////////////////////////////////////////////////////////
 void data::deleteBuffer(size_t bufferId)
 {
-	PUNTOEXE_FUNCTION_START(L"data::deleteBuffer");
+	IMEBRA_FUNCTION_START(L"data::deleteBuffer");
 
 	// Remove the buffer
 	///////////////////////////////////////////////////////////
@@ -82,7 +82,7 @@ void data::deleteBuffer(size_t bufferId)
 		m_buffers.erase(findBuffer);
 	}
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -97,7 +97,7 @@ void data::deleteBuffer(size_t bufferId)
 ///////////////////////////////////////////////////////////
 std::string data::getDataTypeThrow(size_t bufferId) const
 {
-	PUNTOEXE_FUNCTION_START(L"data::getDataType");
+	IMEBRA_FUNCTION_START(L"data::getDataType");
 
     tBuffersMap::const_iterator findBuffer = m_buffers.find(bufferId);
 	if(findBuffer != m_buffers.end())
@@ -107,7 +107,7 @@ std::string data::getDataTypeThrow(size_t bufferId) const
 	
     throw ::imebra::missingBuffer("The requested buffer is missing");
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -122,13 +122,13 @@ std::string data::getDataTypeThrow(size_t bufferId) const
 ///////////////////////////////////////////////////////////
 size_t data::getBuffersCount() const
 {
-	PUNTOEXE_FUNCTION_START(L"data::getBuffersCount");
+	IMEBRA_FUNCTION_START(L"data::getBuffersCount");
 
 	// Returns the number of buffers
 	///////////////////////////////////////////////////////////
 	return m_buffers.size();
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -143,14 +143,14 @@ size_t data::getBuffersCount() const
 ///////////////////////////////////////////////////////////
 bool data::bufferExists(size_t bufferId) const
 {
-	PUNTOEXE_FUNCTION_START(L"data::bufferExists");
+	IMEBRA_FUNCTION_START(L"data::bufferExists");
 
 	// Retrieve the buffer
 	///////////////////////////////////////////////////////////
     tBuffersMap::const_iterator findBuffer = m_buffers.find(bufferId);
 	return (findBuffer != m_buffers.end());
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -165,7 +165,7 @@ bool data::bufferExists(size_t bufferId) const
 ///////////////////////////////////////////////////////////
 size_t data::getBufferSizeThrow(size_t bufferId) const
 {
-	PUNTOEXE_FUNCTION_START(L"data::getBufferSize");
+	IMEBRA_FUNCTION_START(L"data::getBufferSize");
 
 	// Retrieve the buffer
 	///////////////////////////////////////////////////////////
@@ -179,7 +179,7 @@ size_t data::getBufferSizeThrow(size_t bufferId) const
 	///////////////////////////////////////////////////////////
 	return findBuffer->second->getBufferSizeBytes();
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -194,7 +194,7 @@ size_t data::getBufferSizeThrow(size_t bufferId) const
 ///////////////////////////////////////////////////////////
 std::shared_ptr<handlers::readingDataHandler> data::getReadingDataHandlerThrow(size_t bufferId) const
 {
-	PUNTOEXE_FUNCTION_START(L"data::getDataHandler");
+	IMEBRA_FUNCTION_START(L"data::getDataHandler");
 
 	// Retrieve the buffer
 	///////////////////////////////////////////////////////////
@@ -206,13 +206,13 @@ std::shared_ptr<handlers::readingDataHandler> data::getReadingDataHandlerThrow(s
 
     return findBuffer->second->getReadingDataHandler();
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
 std::shared_ptr<handlers::writingDataHandler> data::getWritingDataHandler(size_t bufferId, const std::string& defaultType, const charsetsList::tCharsetsList& defaultCharsets)
 {
-    PUNTOEXE_FUNCTION_START(L"data::getDataHandler");
+    IMEBRA_FUNCTION_START(L"data::getDataHandler");
 
     // Retrieve the buffer
     ///////////////////////////////////////////////////////////
@@ -245,7 +245,7 @@ std::shared_ptr<handlers::writingDataHandler> data::getWritingDataHandler(size_t
 
     return pTempBuffer->getWritingDataHandler();
 
-    PUNTOEXE_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -260,7 +260,7 @@ std::shared_ptr<handlers::writingDataHandler> data::getWritingDataHandler(size_t
 ///////////////////////////////////////////////////////////
 std::shared_ptr<handlers::readingDataHandlerRaw> data::getReadingDataHandlerRawThrow(size_t bufferId) const
 {
-	PUNTOEXE_FUNCTION_START(L"data::getDataHandlerRaw");
+	IMEBRA_FUNCTION_START(L"data::getDataHandlerRaw");
 
 	// Retrieve the buffer
 	///////////////////////////////////////////////////////////
@@ -273,13 +273,13 @@ std::shared_ptr<handlers::readingDataHandlerRaw> data::getReadingDataHandlerRawT
 
     return findBuffer->second->getReadingDataHandlerRaw();
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
 std::shared_ptr<handlers::writingDataHandlerRaw> data::getWritingDataHandlerRaw(size_t bufferId, const std::string& defaultType, const charsetsList::tCharsetsList& defaultCharsets)
 {
-    PUNTOEXE_FUNCTION_START(L"data::getDataHandlerRaw");
+    IMEBRA_FUNCTION_START(L"data::getDataHandlerRaw");
 
     // Retrieve the buffer
     ///////////////////////////////////////////////////////////
@@ -312,7 +312,7 @@ std::shared_ptr<handlers::writingDataHandlerRaw> data::getWritingDataHandlerRaw(
 
     return pTempBuffer->getWritingDataHandlerRaw();
 
-    PUNTOEXE_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -327,7 +327,7 @@ std::shared_ptr<handlers::writingDataHandlerRaw> data::getWritingDataHandlerRaw(
 ///////////////////////////////////////////////////////////
 std::shared_ptr<streamReader> data::getStreamReaderThrow(size_t bufferId)
 {
-	PUNTOEXE_FUNCTION_START(L"data::getStreamReader");
+	IMEBRA_FUNCTION_START(L"data::getStreamReader");
 
 	// Retrieve the buffer
 	///////////////////////////////////////////////////////////
@@ -340,7 +340,7 @@ std::shared_ptr<streamReader> data::getStreamReaderThrow(size_t bufferId)
 
     throw ::imebra::missingBuffer("The requested buffer does not exist");
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -355,7 +355,7 @@ std::shared_ptr<streamReader> data::getStreamReaderThrow(size_t bufferId)
 ///////////////////////////////////////////////////////////
 std::shared_ptr<streamWriter> data::getStreamWriter(size_t bufferId, const std::string& dataType /* = "" */)
 {
-	PUNTOEXE_FUNCTION_START(L"data::getStream");
+	IMEBRA_FUNCTION_START(L"data::getStream");
 
 	// Retrieve the buffer
 	///////////////////////////////////////////////////////////
@@ -387,7 +387,7 @@ std::shared_ptr<streamWriter> data::getStreamWriter(size_t bufferId, const std::
 
 	return pTempBuffer->getStreamWriter();
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -402,7 +402,7 @@ std::shared_ptr<streamWriter> data::getStreamWriter(size_t bufferId, const std::
 ///////////////////////////////////////////////////////////
 std::shared_ptr<dataSet> data::getDataSetThrow(size_t dataSetId) const
 {
-	PUNTOEXE_FUNCTION_START(L"data::getDataSet");
+	IMEBRA_FUNCTION_START(L"data::getDataSet");
 
 	// Retrieve the buffer
 	///////////////////////////////////////////////////////////
@@ -413,7 +413,7 @@ std::shared_ptr<dataSet> data::getDataSetThrow(size_t dataSetId) const
 
 	return m_embeddedDataSets[dataSetId];
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 bool data::dataSetExists(size_t dataSetId) const
@@ -433,7 +433,7 @@ bool data::dataSetExists(size_t dataSetId) const
 ///////////////////////////////////////////////////////////
 void data::setDataSet(size_t dataSetId, std::shared_ptr<dataSet> pDataSet)
 {
-	PUNTOEXE_FUNCTION_START(L"data::setDataSet");
+	IMEBRA_FUNCTION_START(L"data::setDataSet");
 
 	if(dataSetId >= m_embeddedDataSets.size())
 	{
@@ -441,7 +441,7 @@ void data::setDataSet(size_t dataSetId, std::shared_ptr<dataSet> pDataSet)
 	}
 	m_embeddedDataSets[dataSetId] = pDataSet;
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -456,11 +456,11 @@ void data::setDataSet(size_t dataSetId, std::shared_ptr<dataSet> pDataSet)
 ///////////////////////////////////////////////////////////
 void data::appendDataSet(std::shared_ptr<dataSet> pDataSet)
 {
-	PUNTOEXE_FUNCTION_START(L"data::appendDataSet");
+	IMEBRA_FUNCTION_START(L"data::appendDataSet");
 
 	m_embeddedDataSets.push_back(pDataSet);
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -476,7 +476,7 @@ void data::appendDataSet(std::shared_ptr<dataSet> pDataSet)
 ///////////////////////////////////////////////////////////
 void data::setCharsetsList(const charsetsList::tCharsetsList& charsetsList)
 {
-	PUNTOEXE_FUNCTION_START(L"data::setCharsetsList");
+	IMEBRA_FUNCTION_START(L"data::setCharsetsList");
 
 	for(tEmbeddedDatasetsMap::iterator scanEmbeddedDataSets = m_embeddedDataSets.begin(); scanEmbeddedDataSets != m_embeddedDataSets.end(); ++scanEmbeddedDataSets)
 	{
@@ -488,7 +488,7 @@ void data::setCharsetsList(const charsetsList::tCharsetsList& charsetsList)
         scanBuffers->second->setCharsetsList(charsetsList);
 	}
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -504,7 +504,7 @@ void data::setCharsetsList(const charsetsList::tCharsetsList& charsetsList)
 ///////////////////////////////////////////////////////////
 void data::getCharsetsList(charsetsList::tCharsetsList* pCharsetsList) const
 {
-	PUNTOEXE_FUNCTION_START(L"data::getCharsetsList");
+	IMEBRA_FUNCTION_START(L"data::getCharsetsList");
 
     for(tEmbeddedDatasetsMap::const_iterator scanEmbeddedDataSets = m_embeddedDataSets.begin(); scanEmbeddedDataSets != m_embeddedDataSets.end(); ++scanEmbeddedDataSets)
 	{
@@ -520,7 +520,7 @@ void data::getCharsetsList(charsetsList::tCharsetsList* pCharsetsList) const
         charsetsList::updateCharsets(&charsets, pCharsetsList);
 	}
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 

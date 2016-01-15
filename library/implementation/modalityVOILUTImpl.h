@@ -81,10 +81,10 @@ public:
                     std::int32_t /* outputHandlerMinValue */, std::uint32_t /* outputHighBit */,
 					std::int32_t outputTopLeftX, std::int32_t outputTopLeftY)
 	{
-		PUNTOEXE_FUNCTION_START(L"modalityVOILUT::templateTransform");
+		IMEBRA_FUNCTION_START(L"modalityVOILUT::templateTransform");
 		if(!colorTransforms::colorTransformsFactory::isMonochrome(inputHandlerColorSpace) || !colorTransforms::colorTransformsFactory::isMonochrome(outputHandlerColorSpace))
 		{
-            PUNTOEXE_THROW(::imebra::modalityVOILUTException, "modalityVOILUT can process only monochromatic images");
+            IMEBRA_THROW(::imebra::modalityVOILUTException, "modalityVOILUT can process only monochromatic images");
 		}
         const inputType* pInputMemory(inputHandlerData);
 		outputType* pOutputMemory(outputHandlerData);
@@ -126,7 +126,7 @@ public:
 			pInputMemory += (inputHandlerWidth - inputWidth);
 			pOutputMemory += (outputHandlerWidth - inputWidth);
 		}
-		PUNTOEXE_FUNCTION_END();
+		IMEBRA_FUNCTION_END();
 	}
 
 	virtual bool isEmpty();

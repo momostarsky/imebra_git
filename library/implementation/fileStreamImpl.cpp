@@ -44,7 +44,7 @@ namespace puntoexe
 ///////////////////////////////////////////////////////////
 void fileStream::openFile(const std::wstring& fileName, std::ios_base::openmode mode)
 {
-    PUNTOEXE_FUNCTION_START(L"stream::openFile (unicode)");
+    IMEBRA_FUNCTION_START(L"stream::openFile (unicode)");
 
     close();
 
@@ -105,26 +105,26 @@ void fileStream::openFile(const std::wstring& fileName, std::ios_base::openmode 
     {
         std::ostringstream errorMessage;
         errorMessage << "stream::openFile failure - error code: " << errorCode;
-        PUNTOEXE_THROW(::imebra::streamExceptionOpen, errorMessage.str());
+        IMEBRA_THROW(::imebra::streamExceptionOpen, errorMessage.str());
     }
 
-    PUNTOEXE_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 void fileStream::close()
 {
-    PUNTOEXE_FUNCTION_START(L"stream::close");
+    IMEBRA_FUNCTION_START(L"stream::close");
 
     if(m_openFile != 0)
     {
         if(::fclose(m_openFile) != 0)
         {
-            PUNTOEXE_THROW(::imebra::streamExceptionClose, "Error while closing the file");
+            IMEBRA_THROW(::imebra::streamExceptionClose, "Error while closing the file");
         }
         m_openFile = 0;
     }
 
-    PUNTOEXE_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -160,7 +160,7 @@ fileStream::~fileStream()
 ///////////////////////////////////////////////////////////
 void fileStreamInput::openFile(const std::string& fileName)
 {
-	PUNTOEXE_FUNCTION_START(L"stream::openFile (ansi)");
+	IMEBRA_FUNCTION_START(L"stream::openFile (ansi)");
 
 	std::wstring wFileName;
 	size_t fileNameSize(fileName.size());
@@ -171,7 +171,7 @@ void fileStreamInput::openFile(const std::string& fileName)
 	}
     fileStream::openFile(wFileName, std::ios::in);
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 void fileStreamInput::openFile(const std::wstring& fileName)
@@ -181,7 +181,7 @@ void fileStreamInput::openFile(const std::wstring& fileName)
 
 void fileStreamOutput::openFile(const std::string& fileName)
 {
-    PUNTOEXE_FUNCTION_START(L"stream::openFile (ansi)");
+    IMEBRA_FUNCTION_START(L"stream::openFile (ansi)");
 
     std::wstring wFileName;
     size_t fileNameSize(fileName.size());
@@ -192,7 +192,7 @@ void fileStreamOutput::openFile(const std::string& fileName)
     }
     fileStream::openFile(wFileName, std::ios::out);
 
-    PUNTOEXE_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 void fileStreamOutput::openFile(const std::wstring &fileName)
@@ -212,20 +212,20 @@ void fileStreamOutput::openFile(const std::wstring &fileName)
 ///////////////////////////////////////////////////////////
 void fileStreamOutput::write(std::uint32_t startPosition, const std::uint8_t* pBuffer, std::uint32_t bufferLength)
 {
-	PUNTOEXE_FUNCTION_START(L"stream::write");
+	IMEBRA_FUNCTION_START(L"stream::write");
 
 	::fseek(m_openFile, startPosition, SEEK_SET);
 	if(ferror(m_openFile) != 0)
 	{
-        PUNTOEXE_THROW(::imebra::streamExceptionWrite, "stream::seek failure");
+        IMEBRA_THROW(::imebra::streamExceptionWrite, "stream::seek failure");
 	}
 
 	if(::fwrite(pBuffer, 1, bufferLength, m_openFile) != bufferLength)
 	{
-        PUNTOEXE_THROW(::imebra::streamExceptionWrite, "stream::write failure");
+        IMEBRA_THROW(::imebra::streamExceptionWrite, "stream::write failure");
 	}
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -240,7 +240,7 @@ void fileStreamOutput::write(std::uint32_t startPosition, const std::uint8_t* pB
 ///////////////////////////////////////////////////////////
 std::uint32_t fileStreamInput::read(std::uint32_t startPosition, std::uint8_t* pBuffer, std::uint32_t bufferLength)
 {
-	PUNTOEXE_FUNCTION_START(L"stream::read");
+	IMEBRA_FUNCTION_START(L"stream::read");
 
 	::fseek(m_openFile, startPosition, SEEK_SET);
 	if(ferror(m_openFile) != 0)
@@ -251,11 +251,11 @@ std::uint32_t fileStreamInput::read(std::uint32_t startPosition, std::uint8_t* p
 	std::uint32_t readBytes = (std::uint32_t)::fread(pBuffer, 1, bufferLength, m_openFile);
 	if(ferror(m_openFile) != 0)
 	{
-        PUNTOEXE_THROW(::imebra::streamExceptionRead, "stream::read failure");
+        IMEBRA_THROW(::imebra::streamExceptionRead, "stream::read failure");
 	}
 	return readBytes;
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 

@@ -186,7 +186,7 @@ public:
 	///////////////////////////////////////////////////////////
     virtual std::string getString(const size_t index) const
 	{
-		PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::getString");
+		IMEBRA_FUNCTION_START(L"dataHandlerNumeric::getString");
 
 		std::ostringstream convStream;
 
@@ -202,14 +202,14 @@ public:
         }
 		return convStream.str();
 
-		PUNTOEXE_FUNCTION_END();
+		IMEBRA_FUNCTION_END();
 	}
 
 	// Retrieve the data element as a unicode string
 	///////////////////////////////////////////////////////////
     virtual std::wstring getUnicodeString(const size_t index) const
 	{
-		PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::getUnicodeString");
+		IMEBRA_FUNCTION_START(L"dataHandlerNumeric::getUnicodeString");
 
         std::string ansiString = getString(index);
 
@@ -218,18 +218,18 @@ public:
 
         return dicomConversion::convertToUnicode(ansiString, charsets);
 
-		PUNTOEXE_FUNCTION_END();
+		IMEBRA_FUNCTION_END();
 	}
 
 	// Retrieve the buffer's size in elements
 	///////////////////////////////////////////////////////////
     virtual size_t getSize() const
 	{
-		PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::getSize");
+		IMEBRA_FUNCTION_START(L"dataHandlerNumeric::getSize");
 
         return m_pMemory->size() / sizeof(dataHandlerType);
 
-		PUNTOEXE_FUNCTION_END();
+		IMEBRA_FUNCTION_END();
 	}
 
 	template<class destHandlerType>
@@ -444,7 +444,7 @@ public:
     ///////////////////////////////////////////////////////////
     virtual void setString(const size_t index, const std::string& value)
     {
-        PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::setString");
+        IMEBRA_FUNCTION_START(L"dataHandlerNumeric::setString");
 
         std::istringstream convStream(value);
         dataHandlerType tempValue;
@@ -462,21 +462,21 @@ public:
 
         ((dataHandlerType*)m_pMemory->data())[index] = tempValue;
 
-        PUNTOEXE_FUNCTION_END();
+        IMEBRA_FUNCTION_END();
     }
 
     // Set the data element as an unicode string
     ///////////////////////////////////////////////////////////
     virtual void setUnicodeString(const size_t index, const std::wstring& value)
     {
-        PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::setUnicodeString");
+        IMEBRA_FUNCTION_START(L"dataHandlerNumeric::setUnicodeString");
 
         charsetsList::tCharsetsList charsets;
         charsets.push_back("ISO_IR 6");
 
         setString(index, dicomConversion::convertFromUnicode(value, &charsets));
 
-        PUNTOEXE_FUNCTION_END();
+        IMEBRA_FUNCTION_END();
     }
 
 
@@ -503,7 +503,7 @@ public:
     ///////////////////////////////////////////////////////////
     virtual void copyFrom(std::shared_ptr<readingDataHandlerNumericBase> pSource)
     {
-        PUNTOEXE_FUNCTION_START(L"dataHandlerNumeric::copyFrom");
+        IMEBRA_FUNCTION_START(L"dataHandlerNumeric::copyFrom");
 
         puntoexe::imebra::handlers::readingDataHandlerNumericBase* pHandler(pSource.get());
         if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::readingDataHandlerNumeric<std::uint8_t>) ||
@@ -544,7 +544,7 @@ public:
             throw std::runtime_error("Data type not valid");
         }
 
-        PUNTOEXE_FUNCTION_END();
+        IMEBRA_FUNCTION_END();
 
     }
 

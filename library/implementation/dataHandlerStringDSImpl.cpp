@@ -53,11 +53,11 @@ readingDataHandlerStringDS::readingDataHandlerStringDS(const memory& parseMemory
 ///////////////////////////////////////////////////////////
 std::int32_t readingDataHandlerStringDS::getSignedLong(const size_t index) const
 {
-	PUNTOEXE_FUNCTION_START(L"dataHandlerStringDS::getSignedLong");
+	IMEBRA_FUNCTION_START(L"dataHandlerStringDS::getSignedLong");
 
 	return (std::int32_t)getDouble(index);
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -73,11 +73,11 @@ std::int32_t readingDataHandlerStringDS::getSignedLong(const size_t index) const
 ///////////////////////////////////////////////////////////
 std::uint32_t readingDataHandlerStringDS::getUnsignedLong(const size_t index) const
 {
-	PUNTOEXE_FUNCTION_START(L"dataHandlerStringDS::getUnsignedLong");
+	IMEBRA_FUNCTION_START(L"dataHandlerStringDS::getUnsignedLong");
 
     return (std::uint32_t)getDouble(index);
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -99,11 +99,11 @@ writingDataHandlerStringDS::writingDataHandlerStringDS(const std::shared_ptr<buf
 ///////////////////////////////////////////////////////////
 void writingDataHandlerStringDS::setSignedLong(const size_t index, const std::int32_t value)
 {
-	PUNTOEXE_FUNCTION_START(L"dataHandlerStringDS::setSignedLong");
+	IMEBRA_FUNCTION_START(L"dataHandlerStringDS::setSignedLong");
 
 	setDouble(index, (double)value);
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -119,11 +119,11 @@ void writingDataHandlerStringDS::setSignedLong(const size_t index, const std::in
 ///////////////////////////////////////////////////////////
 void writingDataHandlerStringDS::setUnsignedLong(const size_t index, const std::uint32_t value)
 {
-	PUNTOEXE_FUNCTION_START(L"dataHandlerStringDS::setUnsignedLong");
+	IMEBRA_FUNCTION_START(L"dataHandlerStringDS::setUnsignedLong");
 
 	setDouble(index, (double)value);
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 } // namespace handlers

@@ -50,11 +50,11 @@ std::shared_ptr<handlers::writingDataHandlerNumericBase> image::create(
                         const std::string& inputColorSpace,
                         const std::uint32_t highBit)
 {
-	PUNTOEXE_FUNCTION_START(L"image::create");
+	IMEBRA_FUNCTION_START(L"image::create");
 
 	if(sizeX == 0 || sizeY == 0)
 	{
-        PUNTOEXE_THROW(::imebra::imageExceptionInvalidSize, "An invalid image's size has been specified");
+        IMEBRA_THROW(::imebra::imageExceptionInvalidSize, "An invalid image's size has been specified");
 	}
 
 	// Normalize the color space (remove _420 & _422 and
@@ -67,7 +67,7 @@ std::shared_ptr<handlers::writingDataHandlerNumericBase> image::create(
 	m_channelsNumber = transforms::colorTransforms::colorTransformsFactory::getNumberOfChannels(inputColorSpace);
 	if(m_channelsNumber == 0)
 	{
-        PUNTOEXE_THROW(::imebra::imageExceptionUnknownColorSpace, "Cannot recognize the specified color space");
+        IMEBRA_THROW(::imebra::imageExceptionUnknownColorSpace, "Cannot recognize the specified color space");
 	}
 
 	// Find the datatype to use to allocate the
@@ -105,7 +105,7 @@ std::shared_ptr<handlers::writingDataHandlerNumericBase> image::create(
 		defaultHighBit=31;
         break;
 	default:
-        PUNTOEXE_THROW(::imebra::imageExceptionUnknownDepth, "Unknown depth");
+        IMEBRA_THROW(::imebra::imageExceptionUnknownDepth, "Unknown depth");
 	}
 
 	// Adjust the high bit value
@@ -138,7 +138,7 @@ std::shared_ptr<handlers::writingDataHandlerNumericBase> image::create(
 
     return std::static_pointer_cast<handlers::writingDataHandlerNumericBase>(imageHandler);
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -175,7 +175,7 @@ void image::setPalette(std::shared_ptr<palette> imagePalette)
 ///////////////////////////////////////////////////////////
 std::shared_ptr<handlers::readingDataHandlerNumericBase> image::getReadingDataHandler() const
 {
-	PUNTOEXE_FUNCTION_START(L"image::getDataHandler");
+	IMEBRA_FUNCTION_START(L"image::getDataHandler");
 
 	if(m_buffer == 0)
 	{
@@ -186,12 +186,12 @@ std::shared_ptr<handlers::readingDataHandlerNumericBase> image::getReadingDataHa
 
     return std::dynamic_pointer_cast<handlers::readingDataHandlerNumericBase>(imageHandler);
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 std::shared_ptr<handlers::writingDataHandlerNumericBase> image::getWritingDataHandler()
 {
-    PUNTOEXE_FUNCTION_START(L"image::getDataHandler");
+    IMEBRA_FUNCTION_START(L"image::getDataHandler");
 
     if(m_buffer == 0)
     {
@@ -202,7 +202,7 @@ std::shared_ptr<handlers::writingDataHandlerNumericBase> image::getWritingDataHa
 
     return std::dynamic_pointer_cast<handlers::writingDataHandlerNumericBase>(imageHandler);
 
-    PUNTOEXE_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -301,7 +301,7 @@ void image::getSize(std::uint32_t* pSizeX, std::uint32_t* pSizeY)
 ///////////////////////////////////////////////////////////
 void image::getSizeMm(double* pSizeMmX, double* pSizeMmY)
 {
-	PUNTOEXE_FUNCTION_START(L"image::getSizeMm");
+	IMEBRA_FUNCTION_START(L"image::getSizeMm");
 
 	if(pSizeMmX)
 		*pSizeMmX=m_sizeMmX;
@@ -309,7 +309,7 @@ void image::getSizeMm(double* pSizeMmX, double* pSizeMmY)
 	if(pSizeMmY)
 		*pSizeMmY=m_sizeMmY;
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -324,7 +324,7 @@ void image::getSizeMm(double* pSizeMmX, double* pSizeMmY)
 ///////////////////////////////////////////////////////////
 void image::setSizeMm(const double sizeMmX, const double sizeMmY)
 {
-	PUNTOEXE_FUNCTION_START(L"image::setSizeMm");
+	IMEBRA_FUNCTION_START(L"image::setSizeMm");
 
 	if(sizeMmX)
 		m_sizeMmX=sizeMmX;
@@ -332,7 +332,7 @@ void image::setSizeMm(const double sizeMmX, const double sizeMmY)
 	if(sizeMmY)
 		m_sizeMmY=sizeMmY;
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 } // namespace imebra

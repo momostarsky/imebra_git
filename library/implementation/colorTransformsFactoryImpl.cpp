@@ -90,11 +90,11 @@ colorTransformsFactory::colorTransformsFactory()
 ///////////////////////////////////////////////////////////
 void colorTransformsFactory::registerTransform(std::shared_ptr<colorTransform> newColorTransform)
 {
-	PUNTOEXE_FUNCTION_START(L"colorTransformsFactory::registerTransform");
+	IMEBRA_FUNCTION_START(L"colorTransformsFactory::registerTransform");
 
 	m_transformsList.push_back(newColorTransform);
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -125,7 +125,7 @@ std::shared_ptr<colorTransformsFactory> colorTransformsFactory::getColorTransfor
 ///////////////////////////////////////////////////////////;
 std::string colorTransformsFactory::normalizeColorSpace(const std::string& colorSpace)
 {
-	PUNTOEXE_FUNCTION_START(L"colorTransformsFactory::normalizeColorSpace");
+	IMEBRA_FUNCTION_START(L"colorTransformsFactory::normalizeColorSpace");
 
     std::string normalizedColorSpace;
 
@@ -145,7 +145,7 @@ std::string colorTransformsFactory::normalizeColorSpace(const std::string& color
 
 	return normalizedColorSpace;
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -161,12 +161,12 @@ std::string colorTransformsFactory::normalizeColorSpace(const std::string& color
 ///////////////////////////////////////////////////////////
 bool colorTransformsFactory::isMonochrome(const std::string& colorSpace)
 {
-	PUNTOEXE_FUNCTION_START(L"colorTransformsFactory::isMonochrome");
+	IMEBRA_FUNCTION_START(L"colorTransformsFactory::isMonochrome");
 
     std::string normalizedColorSpace = normalizeColorSpace(colorSpace);
     return (normalizedColorSpace == "MONOCHROME1" || normalizedColorSpace == "MONOCHROME2");
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -182,11 +182,11 @@ bool colorTransformsFactory::isMonochrome(const std::string& colorSpace)
 ///////////////////////////////////////////////////////////
 bool colorTransformsFactory::isSubsampledX(const std::string& colorSpace)
 {
-	PUNTOEXE_FUNCTION_START(L"colorTransformsFactory::isSubsampledX");
+	IMEBRA_FUNCTION_START(L"colorTransformsFactory::isSubsampledX");
 
     return (colorSpace.find("_42")!=colorSpace.npos);
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -202,11 +202,11 @@ bool colorTransformsFactory::isSubsampledX(const std::string& colorSpace)
 ///////////////////////////////////////////////////////////
 bool colorTransformsFactory::isSubsampledY(const std::string& colorSpace)
 {
-	PUNTOEXE_FUNCTION_START(L"colorTransformsFactory::isSubsampledY");
+	IMEBRA_FUNCTION_START(L"colorTransformsFactory::isSubsampledY");
 
     return (colorSpace.find("_420")!=colorSpace.npos);
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -222,12 +222,12 @@ bool colorTransformsFactory::isSubsampledY(const std::string& colorSpace)
 ///////////////////////////////////////////////////////////
 bool colorTransformsFactory::canSubsample(const std::string& colorSpace)
 {
-	PUNTOEXE_FUNCTION_START(L"colorTransformsFactory::canSubsample");
+	IMEBRA_FUNCTION_START(L"colorTransformsFactory::canSubsample");
 
     std::string normalizedColorSpace = normalizeColorSpace(colorSpace);
     return normalizedColorSpace.find("YBR_") == 0;
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -242,7 +242,7 @@ bool colorTransformsFactory::canSubsample(const std::string& colorSpace)
 ///////////////////////////////////////////////////////////
 std::string colorTransformsFactory::makeSubsampled(const std::string& colorSpace, bool bSubsampleX, bool bSubsampleY)
 {
-	PUNTOEXE_FUNCTION_START(L"colorTransformsFactory::makeSubsampled");
+	IMEBRA_FUNCTION_START(L"colorTransformsFactory::makeSubsampled");
 
     std::string normalizedColorSpace = normalizeColorSpace(colorSpace);
 	if(!canSubsample(normalizedColorSpace))
@@ -259,7 +259,7 @@ std::string colorTransformsFactory::makeSubsampled(const std::string& colorSpace
 	}
 	return normalizedColorSpace;
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -275,7 +275,7 @@ std::string colorTransformsFactory::makeSubsampled(const std::string& colorSpace
 ///////////////////////////////////////////////////////////
 std::uint32_t colorTransformsFactory::getNumberOfChannels(const std::string& colorSpace)
 {
-	PUNTOEXE_FUNCTION_START(L"colorTransformsFactory::getNumberOfChannels");
+	IMEBRA_FUNCTION_START(L"colorTransformsFactory::getNumberOfChannels");
 
     std::string normalizedColorSpace = normalizeColorSpace(colorSpace);
 
@@ -311,7 +311,7 @@ std::uint32_t colorTransformsFactory::getNumberOfChannels(const std::string& col
 
 	return 0;
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -327,7 +327,7 @@ std::uint32_t colorTransformsFactory::getNumberOfChannels(const std::string& col
 ///////////////////////////////////////////////////////////
 std::shared_ptr<transform> colorTransformsFactory::getTransform(const std::string& startColorSpace, const std::string& endColorSpace)
 {
-	PUNTOEXE_FUNCTION_START(L"colorTransformsFactory::getTransform");
+	IMEBRA_FUNCTION_START(L"colorTransformsFactory::getTransform");
 
     std::string normalizedStartColorSpace = normalizeColorSpace(startColorSpace);
     std::string normalizedEndColorSpace = normalizeColorSpace(endColorSpace);
@@ -373,9 +373,9 @@ std::shared_ptr<transform> colorTransformsFactory::getTransform(const std::strin
 		}
 	}
 
-    PUNTOEXE_THROW(::imebra::colorTransformsFactoryExceptionNoTransform, "There isn't any transform that can convert between the specified color spaces");
+    IMEBRA_THROW(::imebra::colorTransformsFactoryExceptionNoTransform, "There isn't any transform that can convert between the specified color spaces");
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 } // namespace colorTransforms

@@ -69,7 +69,7 @@ buffer::buffer(const std::string& defaultType /* ="" */):
     m_originalWordLength(1),
     m_originalEndianType(streamController::lowByteEndian)
 {
-	PUNTOEXE_FUNCTION_START(L"buffer::buffer");
+	IMEBRA_FUNCTION_START(L"buffer::buffer");
 
 	// Set the buffer's type.
 	// If the buffer's type is unspecified, then the buffer
@@ -80,7 +80,7 @@ buffer::buffer(const std::string& defaultType /* ="" */):
 	else
 		m_bufferType = "OB";
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -106,7 +106,7 @@ buffer::buffer(
 		m_originalWordLength(wordLength),
         m_originalEndianType(endianType)
 {
-	PUNTOEXE_FUNCTION_START(L"buffer::buffer (on demand)");
+	IMEBRA_FUNCTION_START(L"buffer::buffer (on demand)");
 
 	// Set the buffer's type.
 	// If the buffer's type is unspecified, then the buffer
@@ -117,7 +117,7 @@ buffer::buffer(
 	else
 		m_bufferType = "OB";
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -161,7 +161,7 @@ std::shared_ptr<memory> buffer::getLocalMemory() const
 ///////////////////////////////////////////////////////////
 std::shared_ptr<handlers::readingDataHandler> buffer::getReadingDataHandler() const
 {
-	PUNTOEXE_FUNCTION_START(L"buffer::getDataHandler");
+	IMEBRA_FUNCTION_START(L"buffer::getDataHandler");
 
     std::shared_ptr<const memory> localMemory(getLocalMemory());
 
@@ -348,14 +348,14 @@ std::shared_ptr<handlers::readingDataHandler> buffer::getReadingDataHandler() co
         return std::make_shared<handlers::readingDataHandlerTime>(*localMemory);
     }
 
-    PUNTOEXE_THROW(::imebra::bufferExceptionUnknownType, "Unknown data type requested");
+    IMEBRA_THROW(::imebra::bufferExceptionUnknownType, "Unknown data type requested");
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 std::shared_ptr<handlers::writingDataHandler> buffer::getWritingDataHandler(std::uint32_t size)
 {
-    PUNTOEXE_FUNCTION_START(L"buffer::getDataHandler");
+    IMEBRA_FUNCTION_START(L"buffer::getDataHandler");
 
     // Reset the pointer to the data handler
     ///////////////////////////////////////////////////////////
@@ -544,9 +544,9 @@ std::shared_ptr<handlers::writingDataHandler> buffer::getWritingDataHandler(std:
         return std::make_shared<handlers::writingDataHandlerTime>(shared_from_this());
     }
 
-    PUNTOEXE_THROW(::imebra::bufferExceptionUnknownType, "Unknown data type requested");
+    IMEBRA_THROW(::imebra::bufferExceptionUnknownType, "Unknown data type requested");
 
-    PUNTOEXE_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -561,7 +561,7 @@ std::shared_ptr<handlers::writingDataHandler> buffer::getWritingDataHandler(std:
 ///////////////////////////////////////////////////////////
 std::shared_ptr<streamReader> buffer::getStreamReader()
 {
-	PUNTOEXE_FUNCTION_START(L"buffer::getStreamReader");
+	IMEBRA_FUNCTION_START(L"buffer::getStreamReader");
 
 	// If the object must be loaded from the original stream,
 	//  then return the original stream
@@ -581,7 +581,7 @@ std::shared_ptr<streamReader> buffer::getStreamReader()
 
 	return reader;
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -596,7 +596,7 @@ std::shared_ptr<streamReader> buffer::getStreamReader()
 ///////////////////////////////////////////////////////////
 std::shared_ptr<streamWriter> buffer::getStreamWriter()
 {
-    PUNTOEXE_FUNCTION_START(L"buffer::getStreamWriter");
+    IMEBRA_FUNCTION_START(L"buffer::getStreamWriter");
 
 	// Build a stream from the buffer's memory
 	///////////////////////////////////////////////////////////
@@ -609,7 +609,7 @@ std::shared_ptr<streamWriter> buffer::getStreamWriter()
 
 	return writer;
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -625,7 +625,7 @@ std::shared_ptr<streamWriter> buffer::getStreamWriter()
 ///////////////////////////////////////////////////////////
 std::shared_ptr<handlers::readingDataHandlerRaw> buffer::getReadingDataHandlerRaw() const
 {
-	PUNTOEXE_FUNCTION_START(L"buffer::getDataHandlerRaw");
+	IMEBRA_FUNCTION_START(L"buffer::getDataHandlerRaw");
 
     std::shared_ptr<memory> localMemory(getLocalMemory());
 
@@ -633,17 +633,17 @@ std::shared_ptr<handlers::readingDataHandlerRaw> buffer::getReadingDataHandlerRa
     ///////////////////////////////////////////////////////////
     return std::make_shared<handlers::readingDataHandlerRaw>(localMemory, m_bufferType);
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
 std::shared_ptr<handlers::writingDataHandlerRaw> buffer::getWritingDataHandlerRaw(std::uint32_t size)
 {
-    PUNTOEXE_FUNCTION_START(L"buffer::getDataHandlerRaw");
+    IMEBRA_FUNCTION_START(L"buffer::getDataHandlerRaw");
 
     return std::make_shared<handlers::writingDataHandlerRaw>(shared_from_this(), size, m_bufferType);
 
-    PUNTOEXE_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -685,7 +685,7 @@ std::uint32_t buffer::getBufferSizeBytes() const
 ///////////////////////////////////////////////////////////
 void buffer::commit(std::shared_ptr<memory> newMemory, const std::string& newBufferType, const charsetsList::tCharsetsList& newCharsetsList)
 {
-	PUNTOEXE_FUNCTION_START(L"buffer::commit");
+	IMEBRA_FUNCTION_START(L"buffer::commit");
 
     commit(newMemory, newBufferType);
 
@@ -693,7 +693,7 @@ void buffer::commit(std::shared_ptr<memory> newMemory, const std::string& newBuf
 	///////////////////////////////////////////////////////////
     m_charsetsList = newCharsetsList;
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -706,7 +706,7 @@ void buffer::commit(std::shared_ptr<memory> newMemory, const std::string& newBuf
 ///////////////////////////////////////////////////////////
 void buffer::commit(std::shared_ptr<memory> newMemory, const std::string& newBufferType)
 {
-    PUNTOEXE_FUNCTION_START(L"buffer::commit");
+    IMEBRA_FUNCTION_START(L"buffer::commit");
 
     // Commit the memory buffer
     ///////////////////////////////////////////////////////////
@@ -722,7 +722,7 @@ void buffer::commit(std::shared_ptr<memory> newMemory, const std::string& newBuf
     ///////////////////////////////////////////////////////////
     m_originalStream.reset();
 
-    PUNTOEXE_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -752,11 +752,11 @@ std::string buffer::getDataType() const
 ///////////////////////////////////////////////////////////
 void buffer::setCharsetsList(const charsetsList::tCharsetsList& charsets)
 {
-	PUNTOEXE_FUNCTION_START(L"buffer::setCharsetsList");
+	IMEBRA_FUNCTION_START(L"buffer::setCharsetsList");
 
     m_charsetsList = charsets;
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -771,11 +771,11 @@ void buffer::setCharsetsList(const charsetsList::tCharsetsList& charsets)
 ///////////////////////////////////////////////////////////
 void buffer::getCharsetsList(charsetsList::tCharsetsList* pCharsetsList) const
 {
-	PUNTOEXE_FUNCTION_START(L"buffer::getCharsetsList");
+	IMEBRA_FUNCTION_START(L"buffer::getCharsetsList");
 
     pCharsetsList->insert(pCharsetsList->end(), m_charsetsList.begin(), m_charsetsList.end());
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 

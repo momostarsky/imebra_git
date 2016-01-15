@@ -26,7 +26,7 @@ namespace puntoexe
 ///////////////////////////////////////////////////////////
 charsetConversionICU::charsetConversionICU(const std::string& dicomName)
 {
-    PUNTOEXE_FUNCTION_START(L"charsetConversionICU::charsetConversionICU");
+    IMEBRA_FUNCTION_START(L"charsetConversionICU::charsetConversionICU");
 
     UErrorCode errorCode(U_ZERO_ERROR);
     const charsetInformation& info = getDictionary().getCharsetInformation(dicomName);
@@ -36,10 +36,10 @@ charsetConversionICU::charsetConversionICU(const std::string& dicomName)
     {
         std::ostringstream buildErrorString;
         buildErrorString << "ICU library returned error " << errorCode << " for table " << dicomName;
-        PUNTOEXE_THROW(::imebra::charsetConversionExceptionNoSupportedTable, buildErrorString.str());
+        IMEBRA_THROW(::imebra::charsetConversionExceptionNoSupportedTable, buildErrorString.str());
     }
 
-    PUNTOEXE_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -62,7 +62,7 @@ charsetConversionICU::~charsetConversionICU()
 ///////////////////////////////////////////////////////////
 std::string charsetConversionICU::fromUnicode(const std::wstring& unicodeString) const
 {
-    PUNTOEXE_FUNCTION_START(L"charsetConversionICU::fromUnicode");
+    IMEBRA_FUNCTION_START(L"charsetConversionICU::fromUnicode");
 
 	if(unicodeString.empty())
 	{
@@ -79,7 +79,7 @@ std::string charsetConversionICU::fromUnicode(const std::wstring& unicodeString)
         unicodeStringConversion = UnicodeString::fromUTF32((UChar32*)&(unicodeString[0]), unicodeString.size());
         break;
     default:
-        PUNTOEXE_THROW(::imebra::charsetConversionExceptionUtfSizeNotSupported, "The system utf size is not supported");
+        IMEBRA_THROW(::imebra::charsetConversionExceptionUtfSizeNotSupported, "The system utf size is not supported");
     }
     UErrorCode errorCode(U_ZERO_ERROR);
     int32_t conversionLength = unicodeStringConversion.extract(0, 0, m_pIcuConverter, errorCode);
@@ -90,7 +90,7 @@ std::string charsetConversionICU::fromUnicode(const std::wstring& unicodeString)
     {
         std::ostringstream buildErrorString;
         buildErrorString << "ICU library returned error " << errorCode;
-        PUNTOEXE_THROW(::imebra::charsetConversionException, buildErrorString.str());
+        IMEBRA_THROW(::imebra::charsetConversionException, buildErrorString.str());
     }
     if(returnString == "\x1a")
     {
@@ -98,7 +98,7 @@ std::string charsetConversionICU::fromUnicode(const std::wstring& unicodeString)
     }
     return returnString;
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -109,7 +109,7 @@ std::string charsetConversionICU::fromUnicode(const std::wstring& unicodeString)
 ///////////////////////////////////////////////////////////
 std::wstring charsetConversionICU::toUnicode(const std::string& asciiString) const
 {
-    PUNTOEXE_FUNCTION_START(L"charsetConversionICU::toUnicode");
+    IMEBRA_FUNCTION_START(L"charsetConversionICU::toUnicode");
 
 	if(asciiString.empty())
 	{
@@ -135,10 +135,10 @@ std::wstring charsetConversionICU::toUnicode(const std::string& asciiString) con
         return returnString;
     }
     default:
-        PUNTOEXE_THROW(::imebra::charsetConversionExceptionUtfSizeNotSupported, "The system utf size is not supported");
+        IMEBRA_THROW(::imebra::charsetConversionExceptionUtfSizeNotSupported, "The system utf size is not supported");
     }
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 

@@ -48,11 +48,11 @@ charsetConversionJava::~charsetConversionJava()
 ///////////////////////////////////////////////////////////
 void charsetConversionJava::initialize(const int requestedTable)
 {
-    PUNTOEXE_FUNCTION_START(L"charsetConversionJava::initialize");
+    IMEBRA_FUNCTION_START(L"charsetConversionJava::initialize");
 
     m_tableName = m_charsetTable[requestedTable].m_iconvName;
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -63,11 +63,11 @@ void charsetConversionJava::initialize(const int requestedTable)
 ///////////////////////////////////////////////////////////
 void charsetConversionJava::close()
 {
-    PUNTOEXE_FUNCTION_START(L"charsetConversionJava::close");
+    IMEBRA_FUNCTION_START(L"charsetConversionJava::close");
 
     charsetConversion::close();
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -78,7 +78,7 @@ void charsetConversionJava::close()
 ///////////////////////////////////////////////////////////
 std::string charsetConversionJava::fromUnicode(const std::wstring& unicodeString) const
 {
-    PUNTOEXE_FUNCTION_START(L"charsetConversionJava::fromUnicode");
+    IMEBRA_FUNCTION_START(L"charsetConversionJava::fromUnicode");
 
 	if(unicodeString.empty())
 	{
@@ -109,7 +109,7 @@ std::string charsetConversionJava::fromUnicode(const std::wstring& unicodeString
 
     return returnValue;
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -120,7 +120,7 @@ std::string charsetConversionJava::fromUnicode(const std::wstring& unicodeString
 ///////////////////////////////////////////////////////////
 std::wstring charsetConversionJava::toUnicode(const std::string& asciiString) const
 {
-    PUNTOEXE_FUNCTION_START(L"charsetConversionJava::toUnicode");
+    IMEBRA_FUNCTION_START(L"charsetConversionJava::toUnicode");
 
 	if(asciiString.empty())
 	{
@@ -151,7 +151,7 @@ std::wstring charsetConversionJava::toUnicode(const std::string& asciiString) co
 
     return returnValue;
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 charsetConversion* allocateCharsetConversion()

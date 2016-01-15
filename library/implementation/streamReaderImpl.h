@@ -224,7 +224,7 @@ public:
 			return 0;
 		}
 
-		PUNTOEXE_FUNCTION_START(L"streamReader::readBit");
+		IMEBRA_FUNCTION_START(L"streamReader::readBit");
 
 		m_inBitsBuffer = readByte();
                 m_inBitsNum = 7; // We consider that one bit will go away
@@ -236,7 +236,7 @@ public:
                 m_inBitsBuffer <<= 1;
                 return 0;
 
-		PUNTOEXE_FUNCTION_END();
+		IMEBRA_FUNCTION_END();
 	}
 
 
@@ -270,7 +270,7 @@ public:
                         return;
 		}
 
-		PUNTOEXE_FUNCTION_START(L"streamReader::addBit");
+		IMEBRA_FUNCTION_START(L"streamReader::addBit");
 
 		m_inBitsBuffer = readByte();
                 m_inBitsNum = 7; // We consider that one bit will go away
@@ -280,7 +280,7 @@ public:
                 }
                 m_inBitsBuffer <<= 1;
 
-		PUNTOEXE_FUNCTION_END();
+		IMEBRA_FUNCTION_END();
 	}
 
 	/// \brief Reset the bit pointer used by readBits(),

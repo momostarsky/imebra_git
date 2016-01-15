@@ -65,7 +65,7 @@ codecFactory::codecFactory(): m_maximumImageWidth(MAXIMUM_IMAGE_WIDTH), m_maximu
 ///////////////////////////////////////////////////////////
 void codecFactory::registerCodec(std::shared_ptr<codec> pCodec)
 {
-	PUNTOEXE_FUNCTION_START(L"codecFactory::registerCodec");
+	IMEBRA_FUNCTION_START(L"codecFactory::registerCodec");
 
 	if(pCodec == 0)
 	{
@@ -74,7 +74,7 @@ void codecFactory::registerCodec(std::shared_ptr<codec> pCodec)
 
 	m_codecsList.push_back(pCodec);
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -90,7 +90,7 @@ void codecFactory::registerCodec(std::shared_ptr<codec> pCodec)
 ///////////////////////////////////////////////////////////
 std::shared_ptr<codec> codecFactory::getCodec(const std::string& transferSyntax)
 {
-	PUNTOEXE_FUNCTION_START(L"codecFactory::getCodec");
+	IMEBRA_FUNCTION_START(L"codecFactory::getCodec");
 
 	std::shared_ptr<codecFactory> pFactory(getCodecFactory());
 
@@ -102,9 +102,9 @@ std::shared_ptr<codec> codecFactory::getCodec(const std::string& transferSyntax)
 		}
 	}
 
-    PUNTOEXE_THROW(::imebra::dataSetExceptionUnknownTransferSyntax, "None of the codecs support the specified transfer syntax");
+    IMEBRA_THROW(::imebra::dataSetExceptionUnknownTransferSyntax, "None of the codecs support the specified transfer syntax");
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -136,7 +136,7 @@ std::shared_ptr<codecFactory> codecFactory::getCodecFactory()
 ///////////////////////////////////////////////////////////
 std::shared_ptr<dataSet> codecFactory::load(std::shared_ptr<streamReader> pStream, std::uint32_t maxSizeBufferLoad /* = 0xffffffff */)
 {
-	PUNTOEXE_FUNCTION_START(L"codecFactory::load");
+	IMEBRA_FUNCTION_START(L"codecFactory::load");
 
 	// Copy the list of codecs in a local list so we don't have
 	//  to lock the object for a long time
@@ -167,12 +167,12 @@ std::shared_ptr<dataSet> codecFactory::load(std::shared_ptr<streamReader> pStrea
 
 	if(pDataSet == 0)
 	{
-        PUNTOEXE_THROW(::imebra::codecExceptionWrongFormat, "none of the codecs recognized the file format");
+        IMEBRA_THROW(::imebra::codecExceptionWrongFormat, "none of the codecs recognized the file format");
 	}
 
 	return pDataSet;
 
-	PUNTOEXE_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
