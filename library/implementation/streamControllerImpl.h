@@ -12,6 +12,7 @@ $fileHeader$
 
 #include "baseStreamImpl.h"
 #include <memory>
+#include <string>
 
 ///////////////////////////////////////////////////////////
 //
@@ -170,7 +171,7 @@ protected:
 	/// \brief Used for buffered IO
 	///
 	///////////////////////////////////////////////////////////
-    std::uint8_t* m_dataBuffer;
+    std::basic_string<std::uint8_t> m_dataBuffer;
 
 	/// \brief Byte in the stream that represents the byte 0
 	///         in the stream controller.
@@ -190,10 +191,9 @@ protected:
     size_t m_virtualLength;
 
     size_t m_dataBufferStreamPosition;
-	std::uint8_t* m_pDataBufferStart;
-	std::uint8_t* m_pDataBufferCurrent;
-	std::uint8_t* m_pDataBufferEnd;
-	std::uint8_t* m_pDataBufferMaxEnd;
+
+    size_t m_dataBufferCurrent;
+    size_t m_dataBufferEnd;
 };
 
 ///@}

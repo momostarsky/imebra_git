@@ -913,7 +913,7 @@ public:
     void setCharsetsList(const charsetsList::tCharsetsList& charsetsList);
 
 private:
-    mutable std::vector<std::uint32_t> m_imagesPositions;
+    mutable std::vector<size_t> m_imagesPositions;
 
 	// Position of the sequence item in the stream. Used to
 	//  parse DICOMDIR items

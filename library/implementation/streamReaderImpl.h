@@ -124,19 +124,12 @@ public:
 	///
 	/// @param newPosition the new position to use for read
 	///                   operations, in bytes from the
-	///                   beginning of the stream if bCurrent
-	///                   is false, or in bytes relative to
-	///                   the current position if bCurrent is
-	///                   true
-	/// @param bCurrent  when this parameter is true then the
-	///                   new read position is calculated by
-	///                   adding the content of position to
-	///                   the current position, otherwise the
-	///                   parameter position stores the new
-	///                   absolute position
+    ///                   beginning of the stream
 	///
 	///////////////////////////////////////////////////////////
-	void seek(std::int32_t newPosition, bool bCurrent = false);
+    void seek(size_t newPosition);
+
+    void seekRelative(std::int32_t newPosition);
 
 	/// \brief Read the specified amount of bits from the
 	///         stream.
@@ -305,7 +298,7 @@ public:
 	{
 		// Update the data buffer if it is empty
 		///////////////////////////////////////////////////////////
-		if(m_pDataBufferCurrent == m_pDataBufferEnd && fillDataBuffer() == 0)
+        if(m_dataBufferCurrent == m_dataBufferEnd && fillDataBuffer() == 0)
         {
             throw(::imebra::streamExceptionEOF("Attempt to read past the end of the file"));
         }
@@ -313,19 +306,19 @@ public:
 		// Read one byte. Return immediatly if the tags are not
 		//  activated
 		///////////////////////////////////////////////////////////
-        if(*m_pDataBufferCurrent != 0xff || !m_bJpegTags)
+        if(m_dataBuffer[m_dataBufferCurrent] != 0xff || !m_bJpegTags)
         {
-            return *(m_pDataBufferCurrent++);
+            return m_dataBuffer[m_dataBufferCurrent++];
         }
         do
         {
-            if(++m_pDataBufferCurrent == m_pDataBufferEnd && fillDataBuffer() == 0)
+            if(++m_dataBufferCurrent == m_dataBufferEnd && fillDataBuffer() == 0)
             {
                 throw(::imebra::streamExceptionEOF("Attempt to read past the end of the file"));
             }
-        }while(*m_pDataBufferCurrent == 0xff);
+        }while(m_dataBuffer[m_dataBufferCurrent] == 0xff);
 
-        if(*(m_pDataBufferCurrent++) != 0)
+        if(m_dataBuffer[m_dataBufferCurrent++] != 0)
         {
             throw(::imebra::streamJpegTagInStream("Corrupted jpeg stream"));
         }

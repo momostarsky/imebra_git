@@ -25,13 +25,12 @@ static const streamController::tByteOrdering m_platformByteOrder((*pBytePointer)
 ///////////////////////////////////////////////////////////
 streamController::streamController(size_t virtualStart /* =0 */, size_t virtualLength /* =0 */):
 	m_bJpegTags(false),
-		m_dataBuffer(new std::uint8_t[IMEBRA_STREAM_CONTROLLER_MEMORY_SIZE]),
+        m_dataBuffer(size_t(IMEBRA_STREAM_CONTROLLER_MEMORY_SIZE), 0),
 		m_virtualStart(virtualStart),
 		m_virtualLength(virtualLength),
-		m_dataBufferStreamPosition(0)
+        m_dataBufferStreamPosition(0),
+        m_dataBufferCurrent(0), m_dataBufferEnd(0)
 {
-    m_pDataBufferStart = m_pDataBufferEnd = m_pDataBufferCurrent = m_dataBuffer;
-	m_pDataBufferMaxEnd = m_pDataBufferStart + IMEBRA_STREAM_CONTROLLER_MEMORY_SIZE;
 }
 
 
@@ -42,7 +41,6 @@ streamController::streamController(size_t virtualStart /* =0 */, size_t virtualL
 ///////////////////////////////////////////////////////////
 streamController::~streamController()
 {
-    delete[] m_dataBuffer;
 }
 
 
@@ -53,7 +51,7 @@ streamController::~streamController()
 ///////////////////////////////////////////////////////////
 size_t streamController::position()
 {
-    return m_dataBufferStreamPosition + (size_t)(m_pDataBufferCurrent - m_pDataBufferStart);
+    return m_dataBufferStreamPosition + m_dataBufferCurrent;
 }
 
 
@@ -65,7 +63,7 @@ size_t streamController::position()
 ///////////////////////////////////////////////////////////
 size_t streamController::getControlledStreamPosition()
 {
-    return m_dataBufferStreamPosition + (size_t)(m_pDataBufferCurrent - m_pDataBufferStart) + m_virtualStart;
+    return m_dataBufferStreamPosition + m_dataBufferCurrent + m_virtualStart;
 }
 
 

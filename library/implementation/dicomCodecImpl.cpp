@@ -521,7 +521,7 @@ void dicomCodec::readStream(std::shared_ptr<streamReader> pStream, std::shared_p
 
 	// Skip the first 128 bytes (8 already skipped)
 	///////////////////////////////////////////////////////////
-	pStream->seek(120, true);
+    pStream->seekRelative(120);
 
 	// Read the DICOM signature (DICM)
 	///////////////////////////////////////////////////////////
@@ -1693,7 +1693,7 @@ void dicomCodec::readRLECompressed(
 			// Prepare to scan all the RLE segment
 			///////////////////////////////////////////////////////////
 			std::uint32_t segmentOffset=segmentsOffset[++segmentNumber]; // Get the offset
-			pSourceStream->seek(segmentOffset - currentSegmentOffset, true);
+            pSourceStream->seekRelative(segmentOffset - currentSegmentOffset);
 			currentSegmentOffset = segmentOffset;
 
 			std::uint8_t  rleByte = 0;         // RLE code
@@ -2199,7 +2199,7 @@ std::uint32_t dicomCodec::readTag(
 	{
 		std::uint32_t bufferPosition(pStream->position());
 		std::uint32_t streamPosition(pStream->getControlledStreamPosition());
-		pStream->seek(tagLengthDWord, true);
+        pStream->seekRelative(tagLengthDWord);
 		std::uint32_t bufferLength(pStream->position() - bufferPosition);
 
 		if(bufferLength != tagLengthDWord)

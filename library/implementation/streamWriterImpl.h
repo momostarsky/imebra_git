@@ -187,18 +187,18 @@ public:
 	///////////////////////////////////////////////////////////
 	inline void writeByte(const std::uint8_t buffer)
 	{
-		if(m_pDataBufferCurrent == m_pDataBufferMaxEnd)
+        if(m_dataBufferCurrent == m_dataBuffer.size())
 		{
 			flushDataBuffer();
 		}
-		*(m_pDataBufferCurrent++) = buffer;
+        m_dataBuffer[m_dataBufferCurrent++] = buffer;
 		if(m_bJpegTags && buffer == (std::uint8_t)0xff)
 		{
-			if(m_pDataBufferCurrent == m_pDataBufferMaxEnd)
+            if(m_dataBufferCurrent == m_dataBuffer.size())
 			{
 				flushDataBuffer();
 			}
-			*(m_pDataBufferCurrent++) = 0;
+            m_dataBuffer[m_dataBufferCurrent++] = 0;
 		}
 	}
 

@@ -55,7 +55,7 @@ std::shared_ptr<streamReader> streamReader::getReader(size_t virtualLength)
     {
         virtualLength = m_virtualLength - currentPosition;
     }
-    seek((std::int32_t)virtualLength, true);
+    seekRelative((std::int32_t)virtualLength);
     return std::make_shared<streamReader>(m_pControlledStream, currentPosition + m_virtualStart, virtualLength);
 }
 
@@ -66,7 +66,7 @@ std::shared_ptr<streamReader> streamReader::getReader(size_t virtualLength)
 ///////////////////////////////////////////////////////////
 bool streamReader::endReached()
 {
-    return (m_pDataBufferCurrent == m_pDataBufferEnd && fillDataBuffer() == 0);
+    return (m_dataBufferCurrent == m_dataBufferEnd && fillDataBuffer() == 0);
 }
 
 
@@ -79,15 +79,14 @@ size_t streamReader::fillDataBuffer()
 {
 	IMEBRA_FUNCTION_START(L"streamReader::fillDataBuffer");
 
-    size_t readLength = (size_t)(m_pDataBufferMaxEnd - m_pDataBufferStart);
-    size_t readBytes = fillDataBuffer(m_pDataBufferStart, readLength);
+    size_t readBytes = fillDataBuffer(&(m_dataBuffer[0]), m_dataBuffer.size());
 	if(readBytes == 0)
 	{
-		m_pDataBufferCurrent = m_pDataBufferEnd = m_pDataBufferStart;
+        m_dataBufferCurrent = m_dataBufferEnd = 0;
 		return 0;
 	}
-	m_pDataBufferEnd = m_pDataBufferStart + readBytes;
-	m_pDataBufferCurrent = m_pDataBufferStart;
+    m_dataBufferEnd = readBytes;
+    m_dataBufferCurrent = 0;
 	return readBytes;
 
 	IMEBRA_FUNCTION_END();
@@ -130,15 +129,15 @@ void streamReader::read(std::uint8_t* pBuffer, size_t bufferLength)
 	{
 		// Update the data buffer if it is empty
 		///////////////////////////////////////////////////////////
-		if(m_pDataBufferCurrent == m_pDataBufferEnd)
+        if(m_dataBufferCurrent == m_dataBufferEnd)
 		{
-			if(bufferLength >= m_pDataBufferMaxEnd - m_pDataBufferStart)
+            if(bufferLength >= m_dataBuffer.size())
 			{
 				// read the data directly into the destination buffer
 				///////////////////////////////////////////////////////////
                 size_t readBytes(fillDataBuffer(pBuffer, bufferLength));
 
-				m_pDataBufferCurrent = m_pDataBufferEnd = m_pDataBufferStart;
+                m_dataBufferCurrent = m_dataBufferEnd = 0;
 				m_dataBufferStreamPosition += readBytes;
 				pBuffer += readBytes;
 				bufferLength -= readBytes;
@@ -158,15 +157,15 @@ void streamReader::read(std::uint8_t* pBuffer, size_t bufferLength)
 		// Copy the available data into the return buffer
 		///////////////////////////////////////////////////////////
         size_t copySize = bufferLength;
-        size_t maxSize = (size_t)(m_pDataBufferEnd - m_pDataBufferCurrent);
+        size_t maxSize = (size_t)(m_dataBufferEnd - m_dataBufferCurrent);
 		if(copySize > maxSize)
 		{
 			copySize = maxSize;
 		}
-        ::memcpy(pBuffer, m_pDataBufferCurrent, copySize);
+        ::memcpy(pBuffer, &(m_dataBuffer[m_dataBufferCurrent]), copySize);
 		bufferLength -= copySize;
 		pBuffer += copySize;
-		m_pDataBufferCurrent += copySize;
+        m_dataBufferCurrent += copySize;
 	}
 }
 
@@ -176,26 +175,29 @@ void streamReader::read(std::uint8_t* pBuffer, size_t bufferLength)
 // Seek the read position
 //
 ///////////////////////////////////////////////////////////
-void streamReader::seek(std::int32_t newPosition, bool bCurrent /* =false */)
+void streamReader::seek(size_t newPosition)
 {
-	// Calculate the absolute position
-	///////////////////////////////////////////////////////////
-    size_t finalPosition = bCurrent ? (position() + newPosition) : newPosition;
-
 	// The requested position is already in the data buffer?
 	///////////////////////////////////////////////////////////
-    size_t bufferEndPosition = m_dataBufferStreamPosition + (size_t)(m_pDataBufferEnd - m_pDataBufferStart);
-	if(finalPosition >= m_dataBufferStreamPosition && finalPosition < bufferEndPosition)
+    size_t bufferEndPosition = m_dataBufferStreamPosition + m_dataBufferEnd;
+    if(newPosition >= m_dataBufferStreamPosition && newPosition < bufferEndPosition)
 	{
-		m_pDataBufferCurrent = m_pDataBufferStart + finalPosition - m_dataBufferStreamPosition;
+        m_dataBufferCurrent = newPosition - m_dataBufferStreamPosition;
 		return;
 	}
 
 	// The requested position is not in the data buffer
 	///////////////////////////////////////////////////////////
-	m_pDataBufferCurrent = m_pDataBufferEnd = m_pDataBufferStart;
-	m_dataBufferStreamPosition = finalPosition;
+    m_dataBufferCurrent = m_dataBufferEnd = 0;
+    m_dataBufferStreamPosition = newPosition;
 
+}
+
+void streamReader::seekRelative(int32_t newPosition)
+{
+    size_t finalPosition = position() + newPosition;
+
+    seek(finalPosition);
 }
 
 

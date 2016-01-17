@@ -231,8 +231,10 @@ std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
             {
                 m_imagesPositions.resize(numberOfFrames);
 
-                for(std::uint32_t resetImagesPositions = 0; resetImagesPositions < numberOfFrames; m_imagesPositions[resetImagesPositions++] = 0)
-                {}// empty loop
+                for(std::uint32_t resetImagesPositions = 0; resetImagesPositions != numberOfFrames; ++resetImagesPositions)
+                {
+                    m_imagesPositions[resetImagesPositions] = 0;
+                }
 
             }
 
@@ -241,7 +243,7 @@ std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
             ///////////////////////////////////////////////////////////
             for(std::uint32_t readImages = 0; readImages < frameNumber; readImages++)
             {
-                std::uint32_t offsetPosition = m_imagesPositions[readImages];
+                size_t offsetPosition = m_imagesPositions[readImages];
                 if(offsetPosition == 0)
                 {
                     pCodec->getImage(*this, imageStream, imageStreamDataType);

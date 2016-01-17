@@ -45,14 +45,13 @@ streamWriter::~streamWriter()
 ///////////////////////////////////////////////////////////
 void streamWriter::flushDataBuffer()
 {
-    size_t writeLength = (size_t)(m_pDataBufferCurrent - m_pDataBufferStart);
-	if(writeLength == 0)
+    if(m_dataBufferCurrent == 0)
 	{
 		return;
 	}
-	m_pControlledStream->write(m_dataBufferStreamPosition + m_virtualStart, m_pDataBufferStart, writeLength);
-	m_pDataBufferCurrent = m_pDataBufferEnd = m_pDataBufferStart;
-	m_dataBufferStreamPosition += writeLength;
+    m_pControlledStream->write(m_dataBufferStreamPosition + m_virtualStart, m_dataBuffer.data(), m_dataBufferCurrent);
+    m_dataBufferStreamPosition += m_dataBufferCurrent;
+    m_dataBufferCurrent = 0;
 }
 
 
@@ -65,26 +64,26 @@ void streamWriter::write(const std::uint8_t* pBuffer, size_t bufferLength)
 {
 	while(bufferLength != 0)
 	{
-		if(m_pDataBufferCurrent == m_pDataBufferMaxEnd)
+        if(m_dataBufferCurrent == m_dataBuffer.size())
 		{
 			flushDataBuffer();
-            if(bufferLength > (size_t)(m_pDataBufferMaxEnd - m_pDataBufferCurrent) )
+            if(bufferLength > (size_t)(m_dataBuffer.size() - m_dataBufferCurrent) )
             {
                 m_pControlledStream->write(m_dataBufferStreamPosition + m_virtualStart, pBuffer, bufferLength);
                 m_dataBufferStreamPosition += bufferLength;
                 return;
             }
 		}
-        size_t copySize = (size_t)(m_pDataBufferMaxEnd - m_pDataBufferCurrent);
+        size_t copySize = (size_t)(m_dataBuffer.size() - m_dataBufferCurrent);
 		if(copySize > bufferLength)
 		{
 			copySize = bufferLength;
 		}
-		::memcpy(m_pDataBufferCurrent, pBuffer, copySize);
+        ::memcpy(&(m_dataBuffer[m_dataBufferCurrent]), pBuffer, copySize);
 		pBuffer += copySize;
 		bufferLength -= copySize;
-		m_pDataBufferCurrent += copySize;
-		m_pDataBufferEnd = m_pDataBufferCurrent;
+        m_dataBufferCurrent += copySize;
+        m_dataBufferEnd = m_dataBufferCurrent;
 	}
 }
 

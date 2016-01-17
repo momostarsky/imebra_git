@@ -45,7 +45,7 @@ std::shared_ptr<dataSet> codec::read(std::shared_ptr<streamReader> pSourceStream
 
 	// Store the stream's position
 	///////////////////////////////////////////////////////////
-	std::uint32_t position=pSourceStream->position();
+    size_t position = pSourceStream->position();
 
 	// Create a new dataset
 	///////////////////////////////////////////////////////////
@@ -59,7 +59,7 @@ std::shared_ptr<dataSet> codec::read(std::shared_ptr<streamReader> pSourceStream
 	}
     catch(::imebra::codecExceptionWrongFormat&)
 	{
-		pSourceStream->seek((std::int32_t)position);
+        pSourceStream->seek(position);
         IMEBRA_RETHROW("Detected a wrong format. Rewinding file");
 	}
 

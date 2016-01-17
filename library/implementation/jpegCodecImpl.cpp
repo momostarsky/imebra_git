@@ -860,7 +860,7 @@ void jpegCodec::readStream(std::shared_ptr<streamReader> pSourceStream, std::sha
     // This will be used later, in order to reread all the
     //  stream's content and store it into the dataset
     ///////////////////////////////////////////////////////////
-    std::uint32_t startPosition=pStream->position();
+    size_t startPosition=pStream->position();
 
     try
     {
@@ -995,11 +995,11 @@ void jpegCodec::readStream(std::shared_ptr<streamReader> pSourceStream, std::sha
 
     // Reread all the stream's content and write it into the dataset
     ////////////////////////////////////////////////////////////////
-    std::uint32_t finalPosition=pStream->position();
-    std::uint32_t streamLength=(std::uint32_t)(finalPosition-startPosition);
+    size_t finalPosition = pStream->position();
+    size_t streamLength = (std::uint32_t)(finalPosition - startPosition);
     pStream->seek((std::int32_t)startPosition);
 
-    std::shared_ptr<handlers::writingDataHandlerRaw> imageHandler=pDataSet->getWritingDataHandlerRaw(0x7fe0, 0, 0x0010, 1, "OB");
+    std::shared_ptr<handlers::writingDataHandlerRaw> imageHandler = pDataSet->getWritingDataHandlerRaw(0x7fe0, 0, 0x0010, 1, "OB");
     if(imageHandler != 0 && streamLength != 0)
     {
         imageHandler->setSize(streamLength);
@@ -2811,7 +2811,7 @@ void tagUnknown::readTag(streamReader* pStream, jpegCodec* /* pCodec */, std::ui
     IMEBRA_FUNCTION_START(L"jpeg::tagUnknown::readTag");
 
     std::int32_t tagLength=readLength(pStream);
-    pStream->seek(tagLength, true);
+    pStream->seekRelative(tagLength);
 
     IMEBRA_FUNCTION_END();
 }
