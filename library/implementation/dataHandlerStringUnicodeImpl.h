@@ -108,7 +108,7 @@ protected:
 
     charsetsList::tCharsetsList m_charsets;
 
-    char m_separator;
+    wchar_t m_separator;
     size_t m_unitSize;
     size_t m_maxSize;
 

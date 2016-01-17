@@ -56,7 +56,7 @@ memoryStreamOutput::memoryStreamOutput(std::shared_ptr<memory> memoryStream): m_
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void memoryStreamOutput::write(std::uint32_t startPosition, const std::uint8_t* pBuffer, std::uint32_t bufferLength)
+void memoryStreamOutput::write(size_t startPosition, const std::uint8_t* pBuffer, size_t bufferLength)
 {
 	IMEBRA_FUNCTION_START(L"memoryStream::write");
 
@@ -71,8 +71,8 @@ void memoryStreamOutput::write(std::uint32_t startPosition, const std::uint8_t* 
 	///////////////////////////////////////////////////////////
 	if(startPosition + bufferLength > m_memory->size())
 	{
-		std::uint32_t newSize = startPosition + bufferLength;
-		std::uint32_t reserveSize = ((newSize + 1023) >> 10) << 10; // preallocate blocks of 1024 bytes
+        size_t newSize = startPosition + bufferLength;
+        size_t reserveSize = ((newSize + 1023) >> 10) << 10; // preallocate blocks of 1024 bytes
 		m_memory->reserve(reserveSize);
 		m_memory->resize(startPosition + bufferLength);
 	}
@@ -92,7 +92,7 @@ void memoryStreamOutput::write(std::uint32_t startPosition, const std::uint8_t* 
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::uint32_t memoryStreamInput::read(std::uint32_t startPosition, std::uint8_t* pBuffer, std::uint32_t bufferLength)
+size_t memoryStreamInput::read(size_t startPosition, std::uint8_t* pBuffer, size_t bufferLength)
 {
 	IMEBRA_FUNCTION_START(L"memoryStream::read");
 
@@ -103,7 +103,7 @@ std::uint32_t memoryStreamInput::read(std::uint32_t startPosition, std::uint8_t*
 
 	// Don't read if the requested position isn't valid
 	///////////////////////////////////////////////////////////
-	std::uint32_t memorySize = m_memory->size();
+    size_t memorySize = m_memory->size();
 	if(startPosition >= memorySize)
 	{
 		return 0;
@@ -111,7 +111,7 @@ std::uint32_t memoryStreamInput::read(std::uint32_t startPosition, std::uint8_t*
 
 	// Check if all the bytes are available
 	///////////////////////////////////////////////////////////
-	std::uint32_t copySize = bufferLength;
+    size_t copySize = bufferLength;
 	if(startPosition + bufferLength > memorySize)
 	{
 		copySize = memorySize - startPosition;

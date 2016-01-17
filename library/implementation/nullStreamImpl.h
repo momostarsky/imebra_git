@@ -46,7 +46,7 @@ public:
 	// Virtual stream's functions
 	//
 	///////////////////////////////////////////////////////////
-	virtual void write(std::uint32_t, const std::uint8_t*, std::uint32_t){}
+    virtual void write(size_t, const std::uint8_t*, size_t){}
 };
 
 ///@}

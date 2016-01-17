@@ -44,7 +44,7 @@ namespace puntoexe
 ///////////////////////////////////////////////////////////
 huffmanTable::huffmanTable(std::uint32_t maxValueLength)
 {
-	m_numValues=(1L<<(maxValueLength))+1L;
+    m_numValues = (std::uint32_t(1)<<(maxValueLength)) + 1;
 
 	reset();
 }

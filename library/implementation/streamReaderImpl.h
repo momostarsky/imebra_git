@@ -67,7 +67,7 @@ public:
 	///                            are visible
 	///
 	///////////////////////////////////////////////////////////
-    streamReader(std::shared_ptr<baseStreamInput> pControlledStream, std::uint32_t virtualStart, std::uint32_t virtualLength);
+    streamReader(std::shared_ptr<baseStreamInput> pControlledStream, size_t virtualStart, size_t virtualLength);
 
     std::shared_ptr<baseStreamInput> getControlledStream();
 
@@ -81,7 +81,7 @@ public:
     ///                      advance the read position past
     ///                      the end position of the new
     ///                      streamReader
-    std::shared_ptr<streamReader> getReader(std::uint32_t virtualLength);
+    std::shared_ptr<streamReader> getReader(size_t virtualLength);
 
     /// \brief Read raw data from the stream.
 	///
@@ -103,7 +103,7 @@ public:
 	///                  the stream.
 	///
 	///////////////////////////////////////////////////////////
-	void read(std::uint8_t* pBuffer, std::uint32_t bufferLength);
+    void read(std::uint8_t* pBuffer, size_t bufferLength);
 
 	/// \brief Returns true if the last byte in the stream
 	///         has already been read.
@@ -213,8 +213,6 @@ public:
 	inline std::uint32_t readBit()
 	{
         IMEBRA_FUNCTION_START(L"streamReader::readBit");
-
-        const unsigned int checkBit8(0x0100);
 
         if(m_inBitsNum == 0)
         {
@@ -343,12 +341,12 @@ private:
 	///  supply any more byte.
 	///
 	///////////////////////////////////////////////////////////
-	std::uint32_t fillDataBuffer();
+    size_t fillDataBuffer();
 
 	/// \brief Read data from the file into the data buffer.
 	///
 	///////////////////////////////////////////////////////////
-	std::uint32_t fillDataBuffer(std::uint8_t* pDestinationBuffer, std::uint32_t readLength);
+    size_t fillDataBuffer(std::uint8_t* pDestinationBuffer, size_t readLength);
 
 private:
     std::shared_ptr<baseStreamInput> m_pControlledStream;

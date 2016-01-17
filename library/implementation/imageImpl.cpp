@@ -304,10 +304,10 @@ void image::getSizeMm(double* pSizeMmX, double* pSizeMmY)
 	IMEBRA_FUNCTION_START(L"image::getSizeMm");
 
 	if(pSizeMmX)
-		*pSizeMmX=m_sizeMmX;
+        *pSizeMmX = m_sizeMmX;
 
 	if(pSizeMmY)
-		*pSizeMmY=m_sizeMmY;
+        *pSizeMmY = m_sizeMmY;
 
 	IMEBRA_FUNCTION_END();
 }
@@ -326,11 +326,8 @@ void image::setSizeMm(const double sizeMmX, const double sizeMmY)
 {
 	IMEBRA_FUNCTION_START(L"image::setSizeMm");
 
-	if(sizeMmX)
-		m_sizeMmX=sizeMmX;
-
-	if(sizeMmY)
-		m_sizeMmY=sizeMmY;
+    m_sizeMmX = sizeMmX;
+    m_sizeMmY = sizeMmY;
 
 	IMEBRA_FUNCTION_END();
 }

@@ -210,7 +210,7 @@ void fileStreamOutput::openFile(const std::wstring &fileName)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void fileStreamOutput::write(std::uint32_t startPosition, const std::uint8_t* pBuffer, std::uint32_t bufferLength)
+void fileStreamOutput::write(size_t startPosition, const std::uint8_t* pBuffer, size_t bufferLength)
 {
 	IMEBRA_FUNCTION_START(L"stream::write");
 
@@ -238,7 +238,7 @@ void fileStreamOutput::write(std::uint32_t startPosition, const std::uint8_t* pB
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::uint32_t fileStreamInput::read(std::uint32_t startPosition, std::uint8_t* pBuffer, std::uint32_t bufferLength)
+size_t fileStreamInput::read(size_t startPosition, std::uint8_t* pBuffer, size_t bufferLength)
 {
 	IMEBRA_FUNCTION_START(L"stream::read");
 
@@ -248,7 +248,7 @@ std::uint32_t fileStreamInput::read(std::uint32_t startPosition, std::uint8_t* p
 		return 0;
 	}
 
-	std::uint32_t readBytes = (std::uint32_t)::fread(pBuffer, 1, bufferLength, m_openFile);
+    size_t readBytes = (size_t)::fread(pBuffer, 1, bufferLength, m_openFile);
 	if(ferror(m_openFile) != 0)
 	{
         IMEBRA_THROW(::imebra::streamExceptionRead, "stream::read failure");

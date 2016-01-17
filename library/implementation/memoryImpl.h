@@ -215,12 +215,12 @@ protected:
 	#define IMEBRA_MEMORY_POOL_MIN_SIZE 1024
 #endif
 
-    std::array<std::uint32_t, IMEBRA_MEMORY_POOL_SLOTS> m_memorySize;
+    std::array<size_t, IMEBRA_MEMORY_POOL_SLOTS> m_memorySize;
     std::array<stringUint8*, IMEBRA_MEMORY_POOL_SLOTS>  m_memoryPointer;
-	std::uint32_t m_firstUsedCell;
-	std::uint32_t m_firstFreeCell;
+    size_t m_firstUsedCell;
+    size_t m_firstFreeCell;
 
-	std::uint32_t m_actualSize;
+    size_t m_actualSize;
 
 public:
 	memoryPool(): m_actualSize(0){}
@@ -247,7 +247,7 @@ public:
 	///                       object will be 1
 	///
 	///////////////////////////////////////////////////////////
-	memory* getMemory(std::uint32_t requestedSize);
+    memory* getMemory(size_t requestedSize);
 
 	/// \brief Discard all the currently unused memory.
 	///

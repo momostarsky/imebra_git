@@ -297,7 +297,7 @@ bool memoryPool::reuseMemory(stringUint8* pString)
 	// Check for the memory size. Don't reuse it if the memory
 	//  doesn't match the requested parameters
 	///////////////////////////////////////////////////////////
-    std::uint32_t memorySize = pBuffer->size();
+    size_t memorySize = pBuffer->size();
 	if(memorySize == 0 || memorySize < IMEBRA_MEMORY_POOL_MIN_SIZE || memorySize > IMEBRA_MEMORY_POOL_MAX_SIZE)
 	{
 		return false;
@@ -393,11 +393,11 @@ memoryPool* memoryPool::getMemoryPool()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-memory* memoryPool::getMemory(std::uint32_t requestedSize)
+memory* memoryPool::getMemory(size_t requestedSize)
 {
 	// Look for an object to reuse
 	///////////////////////////////////////////////////////////
-	for(std::uint32_t findCell = m_firstUsedCell; findCell != m_firstFreeCell;)
+    for(size_t findCell = m_firstUsedCell; findCell != m_firstFreeCell;)
 	{
 		if(m_memorySize[findCell] != requestedSize)
 		{

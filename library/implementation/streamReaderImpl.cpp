@@ -26,7 +26,7 @@ streamReader::streamReader(std::shared_ptr<baseStreamInput> pControlledStream):
 {
 }
 
-streamReader::streamReader(std::shared_ptr<baseStreamInput> pControlledStream, std::uint32_t virtualStart, std::uint32_t virtualLength):
+streamReader::streamReader(std::shared_ptr<baseStreamInput> pControlledStream, size_t virtualStart, size_t virtualLength):
     streamController(virtualStart, virtualLength),
     m_pControlledStream(pControlledStream),
 	m_inBitsBuffer(0),
@@ -44,18 +44,18 @@ std::shared_ptr<baseStreamInput> streamReader::getControlledStream()
     return m_pControlledStream;
 }
 
-std::shared_ptr<streamReader> streamReader::getReader(std::uint32_t virtualLength)
+std::shared_ptr<streamReader> streamReader::getReader(size_t virtualLength)
 {
     if(virtualLength == 0)
     {
         throw(::imebra::streamExceptionEOF("Virtual stream with zero length"));
     }
-    std::uint32_t currentPosition = position();
+    size_t currentPosition = position();
     if(currentPosition + virtualLength > m_virtualLength && m_virtualLength != 0)
     {
         virtualLength = m_virtualLength - currentPosition;
     }
-    seek(virtualLength, true);
+    seek((std::int32_t)virtualLength, true);
     return std::make_shared<streamReader>(m_pControlledStream, currentPosition + m_virtualStart, virtualLength);
 }
 
@@ -75,12 +75,12 @@ bool streamReader::endReached()
 // Refill the data buffer
 //
 ///////////////////////////////////////////////////////////
-std::uint32_t streamReader::fillDataBuffer()
+size_t streamReader::fillDataBuffer()
 {
 	IMEBRA_FUNCTION_START(L"streamReader::fillDataBuffer");
 
-	std::uint32_t readLength = (std::uint32_t)(m_pDataBufferMaxEnd - m_pDataBufferStart);
-	std::uint32_t readBytes = fillDataBuffer(m_pDataBufferStart, readLength);
+    size_t readLength = (size_t)(m_pDataBufferMaxEnd - m_pDataBufferStart);
+    size_t readBytes = fillDataBuffer(m_pDataBufferStart, readLength);
 	if(readBytes == 0)
 	{
 		m_pDataBufferCurrent = m_pDataBufferEnd = m_pDataBufferStart;
@@ -99,7 +99,7 @@ std::uint32_t streamReader::fillDataBuffer()
 // Read data from the stream into the specified buffer
 //
 ///////////////////////////////////////////////////////////
-std::uint32_t streamReader::fillDataBuffer(std::uint8_t* pDestinationBuffer, std::uint32_t readLength)
+size_t streamReader::fillDataBuffer(std::uint8_t* pDestinationBuffer, size_t readLength)
 {
     m_dataBufferStreamPosition = position();
 	if(m_virtualLength != 0)
@@ -124,7 +124,7 @@ std::uint32_t streamReader::fillDataBuffer(std::uint8_t* pDestinationBuffer, std
 // Return the specified number of bytes from the stream
 //
 ///////////////////////////////////////////////////////////
-void streamReader::read(std::uint8_t* pBuffer, std::uint32_t bufferLength)
+void streamReader::read(std::uint8_t* pBuffer, size_t bufferLength)
 {
 	while(bufferLength != 0)
 	{
@@ -136,7 +136,7 @@ void streamReader::read(std::uint8_t* pBuffer, std::uint32_t bufferLength)
 			{
 				// read the data directly into the destination buffer
 				///////////////////////////////////////////////////////////
-				std::uint32_t readBytes(fillDataBuffer(pBuffer, bufferLength));
+                size_t readBytes(fillDataBuffer(pBuffer, bufferLength));
 
 				m_pDataBufferCurrent = m_pDataBufferEnd = m_pDataBufferStart;
 				m_dataBufferStreamPosition += readBytes;
@@ -157,13 +157,13 @@ void streamReader::read(std::uint8_t* pBuffer, std::uint32_t bufferLength)
 
 		// Copy the available data into the return buffer
 		///////////////////////////////////////////////////////////
-		std::uint32_t copySize = bufferLength;
-		std::uint32_t maxSize = (std::uint32_t)(m_pDataBufferEnd - m_pDataBufferCurrent);
+        size_t copySize = bufferLength;
+        size_t maxSize = (size_t)(m_pDataBufferEnd - m_pDataBufferCurrent);
 		if(copySize > maxSize)
 		{
 			copySize = maxSize;
 		}
-		::memcpy(pBuffer, m_pDataBufferCurrent, (size_t)copySize);
+        ::memcpy(pBuffer, m_pDataBufferCurrent, copySize);
 		bufferLength -= copySize;
 		pBuffer += copySize;
 		m_pDataBufferCurrent += copySize;
@@ -180,11 +180,11 @@ void streamReader::seek(std::int32_t newPosition, bool bCurrent /* =false */)
 {
 	// Calculate the absolute position
 	///////////////////////////////////////////////////////////
-	std::uint32_t finalPosition = bCurrent ? (position() + newPosition) : newPosition;
+    size_t finalPosition = bCurrent ? (position() + newPosition) : newPosition;
 
 	// The requested position is already in the data buffer?
 	///////////////////////////////////////////////////////////
-	std::uint32_t bufferEndPosition = m_dataBufferStreamPosition + (std::uint32_t)(m_pDataBufferEnd - m_pDataBufferStart);
+    size_t bufferEndPosition = m_dataBufferStreamPosition + (size_t)(m_pDataBufferEnd - m_pDataBufferStart);
 	if(finalPosition >= m_dataBufferStreamPosition && finalPosition < bufferEndPosition)
 	{
 		m_pDataBufferCurrent = m_pDataBufferStart + finalPosition - m_dataBufferStreamPosition;

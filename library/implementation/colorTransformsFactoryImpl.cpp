@@ -11,6 +11,7 @@ $fileHeader$
 #include "colorTransformsFactoryImpl.h"
 #include "transformsChainImpl.h"
 #include "imageImpl.h"
+#include <locale>
 #include "../include/imebra/exceptions.h"
 
 #include "MONOCHROME1ToMONOCHROME2Impl.h"
@@ -135,12 +136,11 @@ std::string colorTransformsFactory::normalizeColorSpace(const std::string& color
 	else
 		normalizedColorSpace=colorSpace;
 
-	// Colorspace transformed to uppercase
+    // Colorspace transformed to uppercase
 	///////////////////////////////////////////////////////////
-    for(size_t adjustColorSpace = 0; adjustColorSpace < normalizedColorSpace.size(); ++adjustColorSpace)
+    for(size_t adjustColorSpace = 0; adjustColorSpace != normalizedColorSpace.size(); ++adjustColorSpace)
 	{
-        if(normalizedColorSpace[adjustColorSpace] >= 'a' && normalizedColorSpace[adjustColorSpace] <= 'z')
-            normalizedColorSpace[adjustColorSpace] -= 'a'-'A';
+        normalizedColorSpace[adjustColorSpace] = std::toupper<char>(normalizedColorSpace[adjustColorSpace], std::locale());
 	}
 
 	return normalizedColorSpace;

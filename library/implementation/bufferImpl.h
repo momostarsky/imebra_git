@@ -194,7 +194,7 @@ public:
 	///
 	/// @return the buffer's size, in bytes
 	///////////////////////////////////////////////////////////
-    std::uint32_t getBufferSizeBytes() const;
+    size_t getBufferSizeBytes() const;
 
 	//@}
 

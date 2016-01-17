@@ -62,49 +62,49 @@ public:
 		veryLow = 600	   ///< the image is saved in low quality. Horizontal and vertical subsampling are applied. Quantization ratios are high
 	};
 
-    Image getImage(unsigned int frameNumber);
+    Image getImage(size_t frameNumber);
 
-    void setImage(unsigned int frameNumber, Image image, const std::string& transferSyntax, imageQuality quality);
+    void setImage(size_t frameNumber, Image image, const std::string& transferSyntax, imageQuality quality);
 
-	DataSet getSequenceItem(int groupId, int order, int tagId, int itemId);
+    DataSet getSequenceItem(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t itemId);
 
-    ReadingDataHandler getReadingDataHandler(int groupId, int order, int tagId, int bufferId) const;
+    ReadingDataHandler getReadingDataHandler(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId) const;
 
-    WritingDataHandler getWritingDataHandler(int groupId, int order, int tagId, int bufferId, const std::string& defaultDataType = "");
+    WritingDataHandler getWritingDataHandler(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, const std::string& defaultDataType = "");
 
-    bool bufferExists(int groupId, int order, int tagId, int bufferId);
+    bool bufferExists(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId);
 
-    int getSignedLong(int groupId, int order, int tagId, int bufferId, int elementNumber) const;
+    int getSignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
 
-    void setSignedLong(int groupId, int order, int tagId, int bufferId, int elementNumber, int newValue, const std::string& defaultType = "");
+    void setSignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, int newValue, const std::string& defaultType = "");
 
-    unsigned int getUnsignedLong(int groupId, int order, int tagId, int bufferId, int elementNumber) const;
+    unsigned int getUnsignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
 
-    void setUnsignedLong(int groupId, int order, int tagId, int bufferId, int elementNumber, unsigned int newValue, const std::string& defaultType = "");
+    void setUnsignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, unsigned int newValue, const std::string& defaultType = "");
 
-    double getDouble(int groupId, int order, int tagId, int bufferId, int elementNumber) const;
+    double getDouble(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
 
-    void setDouble(int groupId, int order, int tagId, int bufferId, int elementNumber, double newValue, const std::string& defaultType = "");
+    void setDouble(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, double newValue, const std::string& defaultType = "");
 
-    std::wstring getString(int groupId, int order, int tagId, int bufferId, int elementNumber) const;
+    std::wstring getString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
 
-    void setString(int groupId, int order, int tagId, int bufferId, int elementNumber, const std::wstring& newString, const std::string& defaultType = "");
+    void setString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, const std::wstring& newString, const std::string& defaultType = "");
 
-    void setAge(int groupId, int order, int tagId, int bufferId, int elementNumber, int age, imebra::ageUnit_t units, const std::string& defaultType = "");
+    void setAge(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, int age, imebra::ageUnit_t units, const std::string& defaultType = "");
 
-    int getAge(int groupId, int order, int tagId, int bufferId, int elementNumber, imebra::ageUnit_t* pUnits) const;
+    int getAge(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, imebra::ageUnit_t* pUnits) const;
 
-    void setDate(int groupId, int order, int tagId, int bufferId, int elementNumber, const Date& date, const std::string& defaultType = "");
+    void setDate(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, const Date& date, const std::string& defaultType = "");
 
-    Date getDate(int groupId, int order, int tagId, int bufferId, int elementNumber) const;
+    Date getDate(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
 
-    size_t getRawData(int groupId, int order, int tagId, int bufferId, char* buffer, size_t bufferSize) const;
+    size_t getRawData(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, char* buffer, size_t bufferSize) const;
 
-    void setRawData(int groupId, int order, int tagId, int bufferId, char* buffer, size_t bufferSize, const std::string& defaultType = "");
+    void setRawData(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, char* buffer, size_t bufferSize, const std::string& defaultType = "");
 
-    std::string getDefaultDataType(int groupId, int order, int tagId) const;
+    std::string getDefaultDataType(std::uint16_t groupId, std::uint16_t tagId) const;
 
-    std::string getDataType(int groupId, int order, int tagId) const;
+    std::string getDataType(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId) const;
 
 #ifndef SWIG
 	std::shared_ptr<puntoexe::imebra::dataSet> m_pDataSet;

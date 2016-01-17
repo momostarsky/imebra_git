@@ -56,7 +56,7 @@ public:
 	///                             see all the bytes
 	///
 	///////////////////////////////////////////////////////////
-    streamWriter(std::shared_ptr<baseStreamOutput> pControlledStream, std::uint32_t virtualStart = 0, std::uint32_t virtualLength = 0);
+    streamWriter(std::shared_ptr<baseStreamOutput> pControlledStream, size_t virtualStart = 0, size_t virtualLength = 0);
 
     /// \brief Flushes the internal buffer, disconnects the
     ///         stream and destroys the streamWriter.
@@ -88,7 +88,7 @@ public:
 	///                   written to the stream
 	///
 	///////////////////////////////////////////////////////////
-	void write(const std::uint8_t* pBuffer, std::uint32_t bufferLength);
+    void write(const std::uint8_t* pBuffer, size_t bufferLength);
 
 	/// \brief Write the specified amount of bits to the
 	///         stream.
@@ -117,31 +117,31 @@ public:
 			{
 				m_outBitsBuffer |= (std::uint8_t)(tempBuffer << (8 - m_outBitsNum - bitsNum));
 				m_outBitsNum += bitsNum;
-                                if(m_outBitsNum==8)
-                                {
-                                        m_outBitsNum = 0;
-                                        writeByte(m_outBitsBuffer);
-                                        m_outBitsBuffer = 0;
-                                }
-                                return;
+                if(m_outBitsNum==8)
+                {
+                        m_outBitsNum = 0;
+                        writeByte(m_outBitsBuffer);
+                        m_outBitsBuffer = 0;
+                }
+                return;
 			}
 			if(m_outBitsNum == 0 && bitsNum >= 8)
-                        {
-                                bitsNum -= 8;
-                                writeByte(tempBuffer >> bitsNum);
-                        }
-                        else
-                        {
-                            m_outBitsBuffer |= (std::uint8_t)(tempBuffer >> (bitsNum + m_outBitsNum - 8));
-                            bitsNum -= (8-m_outBitsNum);
-                            writeByte(m_outBitsBuffer);
-                            m_outBitsBuffer = 0;
-                            m_outBitsNum = 0;
-                        }
+            {
+                    bitsNum -= 8;
+                    writeByte(std::uint8_t(tempBuffer >> bitsNum));
+            }
+            else
+            {
+                m_outBitsBuffer |= (std::uint8_t)(tempBuffer >> (bitsNum + m_outBitsNum - 8));
+                bitsNum -= (8-m_outBitsNum);
+                writeByte(m_outBitsBuffer);
+                m_outBitsBuffer = 0;
+                m_outBitsNum = 0;
+            }
 
-                        tempBuffer &= (((std::uint32_t)1) << bitsNum) - 1;
+            tempBuffer &= (((std::uint32_t)1) << bitsNum) - 1;
 
-                }
+        }
 
 		IMEBRA_FUNCTION_END();
 	}

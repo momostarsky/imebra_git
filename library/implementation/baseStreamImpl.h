@@ -76,7 +76,7 @@ public:
 	///          reached
 	///
 	///////////////////////////////////////////////////////////
-	virtual std::uint32_t read(std::uint32_t startPosition, std::uint8_t* pBuffer, std::uint32_t bufferLength) = 0;
+    virtual size_t read(size_t startPosition, std::uint8_t* pBuffer, size_t bufferLength) = 0;
 };
 
 
@@ -98,7 +98,7 @@ public:
     ///                        buffer that has to be written
     ///
     ///////////////////////////////////////////////////////////
-    virtual void write(std::uint32_t startPosition, const std::uint8_t* pBuffer, std::uint32_t bufferLength) = 0;
+    virtual void write(size_t startPosition, const std::uint8_t* pBuffer, size_t bufferLength) = 0;
 
 };
 

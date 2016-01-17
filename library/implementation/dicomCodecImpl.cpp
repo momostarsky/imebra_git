@@ -283,7 +283,7 @@ void dicomCodec::writeTag(std::shared_ptr<streamWriter> pDestStream, std::shared
             std::shared_ptr<handlers::readingDataHandlerRaw> pDataHandlerRaw = pData->getReadingDataHandlerRawThrow(scanBuffers);
 
 			std::uint32_t wordSize = dicomDictionary::getDicomDictionary()->getWordSize(dataType);
-			std::uint32_t bufferSize = pDataHandlerRaw->getSize();
+            size_t bufferSize = pDataHandlerRaw->getSize();
 
 			// write the sequence item header
 			///////////////////////////////////////////////////////////
@@ -291,7 +291,7 @@ void dicomCodec::writeTag(std::shared_ptr<streamWriter> pDestStream, std::shared
 			{
 				pDestStream->write((std::uint8_t*)&sequenceItemGroup, 2);
 				pDestStream->write((std::uint8_t*)&sequenceItemDelimiter, 2);
-				std::uint32_t sequenceItemLength = bufferSize;
+                std::uint32_t sequenceItemLength = (std::uint32_t)bufferSize;
 				pDestStream->adjustEndian((std::uint8_t*)&sequenceItemLength, 4, endianType);
 				pDestStream->write((std::uint8_t*)&sequenceItemLength, 4);
 			}
@@ -305,7 +305,7 @@ void dicomCodec::writeTag(std::shared_ptr<streamWriter> pDestStream, std::shared
 			///////////////////////////////////////////////////////////
 			if(wordSize > 1)
 			{
-                std::vector<std::uint8_t> tempBuffer((size_t)bufferSize);
+                std::vector<std::uint8_t> tempBuffer(bufferSize);
                 ::memcpy(tempBuffer.data(), pDataHandlerRaw->getMemoryBuffer(), pDataHandlerRaw->getSize());
                 streamController::adjustEndian(tempBuffer.data(), wordSize, endianType, bufferSize / wordSize);
                 pDestStream->write(tempBuffer.data(), bufferSize);

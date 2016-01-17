@@ -129,7 +129,7 @@ public:
     std::shared_ptr<data> getTagThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId) const;
     std::shared_ptr<data> getTagCreate(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId);
 
-    bool bufferExists(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId) const;
+    bool bufferExists(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId) const;
 	
 	//@}
 
@@ -239,7 +239,7 @@ public:
 	///          the image
 	///
 	///////////////////////////////////////////////////////////
-    std::uint32_t getFrameBufferIds(std::uint32_t frameNumber, std::uint32_t* pFirstBuffer, std::uint32_t* pEndBuffer) const;
+    size_t getFrameBufferIds(std::uint32_t frameNumber, std::uint32_t* pFirstBuffer, std::uint32_t* pEndBuffer) const;
 	
 	/// \brief Return the first buffer's id available where
 	///         a new frame can be saved.
@@ -925,16 +925,11 @@ private:
     ///
     /// @param offset   one offset retrieved from the frames
     ///                  offset table: see getFrameOffset()
-    /// @param pLengthToBuffer a pointer to a variable that
-    ///                  will store the total lenght of
-    ///                  the buffers that preceed the one
-    ///                  being returned (doesn't include
-    ///                  the tag descriptors)
     /// @return         the id of the buffer that starts at
     ///                  the specified offset
     ///
     ///////////////////////////////////////////////////////////
-    std::uint32_t getFrameBufferId(std::uint32_t offset, std::uint32_t* pLengthToBuffer) const;
+    std::uint32_t getFrameBufferId(std::uint32_t offset) const;
 
 
 

@@ -64,7 +64,7 @@ public:
 	///                           beyond the virtual length
 	///
 	///////////////////////////////////////////////////////////
-    streamController(std::uint32_t virtualStart = 0, std::uint32_t virtualLength = 0);
+    streamController(size_t virtualStart = 0, size_t virtualLength = 0);
 
     virtual ~streamController();
 
@@ -87,7 +87,7 @@ public:
 	///                  start position set in the constructor
 	///
 	///////////////////////////////////////////////////////////
-	std::uint32_t position();
+    size_t position();
 
 	/// \brief Return the position in bytes from the beginning
 	///         of the stream.
@@ -100,7 +100,7 @@ public:
 	///                  beginning of the stream
 	///
 	///////////////////////////////////////////////////////////
-	std::uint32_t getControlledStreamPosition();
+    size_t getControlledStreamPosition();
 
 	///////////////////////////////////////////////////////////
 	/// \name Byte ordering
@@ -148,7 +148,7 @@ public:
 	///                  equal to words*wordLength
 	///
 	///////////////////////////////////////////////////////////
-	static void adjustEndian(std::uint8_t* pBuffer, const std::uint32_t wordLength, const tByteOrdering endianType, const std::uint32_t words = 1);
+    static void adjustEndian(std::uint8_t* pBuffer, const size_t wordLength, const tByteOrdering endianType, const size_t words = 1);
 
     static std::uint16_t adjustEndian(std::uint16_t buffer, const tByteOrdering endianType);
 
@@ -176,7 +176,7 @@ protected:
 	///         in the stream controller.
 	///
 	///////////////////////////////////////////////////////////
-	std::uint32_t m_virtualStart;
+    size_t m_virtualStart;
 
 	/// \brief Max number of bytes that the stream controller
 	///         can control in the controlled stream. An EOF
@@ -187,9 +187,9 @@ protected:
 	///  maximum length.
 	///
 	///////////////////////////////////////////////////////////
-	std::uint32_t m_virtualLength;
+    size_t m_virtualLength;
 
-	std::uint32_t m_dataBufferStreamPosition;
+    size_t m_dataBufferStreamPosition;
 	std::uint8_t* m_pDataBufferStart;
 	std::uint8_t* m_pDataBufferCurrent;
 	std::uint8_t* m_pDataBufferEnd;

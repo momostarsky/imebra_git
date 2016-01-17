@@ -18,7 +18,7 @@ namespace puntoexe
 // Constructor
 //
 ///////////////////////////////////////////////////////////
-streamWriter::streamWriter(std::shared_ptr<baseStreamOutput> pControlledStream, std::uint32_t virtualStart /* =0 */, std::uint32_t virtualLength /* =0 */):
+streamWriter::streamWriter(std::shared_ptr<baseStreamOutput> pControlledStream, size_t virtualStart /* =0 */, size_t virtualLength /* =0 */):
     streamController(virtualStart, virtualLength),
     m_pControlledStream(pControlledStream),
 	m_outBitsBuffer(0),
@@ -45,7 +45,7 @@ streamWriter::~streamWriter()
 ///////////////////////////////////////////////////////////
 void streamWriter::flushDataBuffer()
 {
-	std::uint32_t writeLength = (std::uint32_t)(m_pDataBufferCurrent - m_pDataBufferStart);
+    size_t writeLength = (size_t)(m_pDataBufferCurrent - m_pDataBufferStart);
 	if(writeLength == 0)
 	{
 		return;
@@ -61,21 +61,21 @@ void streamWriter::flushDataBuffer()
 // Write into the stream
 //
 ///////////////////////////////////////////////////////////
-void streamWriter::write(const std::uint8_t* pBuffer, std::uint32_t bufferLength)
+void streamWriter::write(const std::uint8_t* pBuffer, size_t bufferLength)
 {
 	while(bufferLength != 0)
 	{
 		if(m_pDataBufferCurrent == m_pDataBufferMaxEnd)
 		{
 			flushDataBuffer();
-                        if(bufferLength > (std::uint32_t)(m_pDataBufferMaxEnd - m_pDataBufferCurrent) )
-                        {
-                            m_pControlledStream->write(m_dataBufferStreamPosition + m_virtualStart, pBuffer, bufferLength);
-                            m_dataBufferStreamPosition += bufferLength;
-                            return;
-                        }
+            if(bufferLength > (size_t)(m_pDataBufferMaxEnd - m_pDataBufferCurrent) )
+            {
+                m_pControlledStream->write(m_dataBufferStreamPosition + m_virtualStart, pBuffer, bufferLength);
+                m_dataBufferStreamPosition += bufferLength;
+                return;
+            }
 		}
-		std::uint32_t copySize = (std::uint32_t)(m_pDataBufferMaxEnd - m_pDataBufferCurrent);
+        size_t copySize = (size_t)(m_pDataBufferMaxEnd - m_pDataBufferCurrent);
 		if(copySize > bufferLength)
 		{
 			copySize = bufferLength;

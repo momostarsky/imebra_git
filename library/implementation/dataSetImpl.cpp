@@ -102,7 +102,7 @@ std::shared_ptr<data> dataSet::getTagCreate(std::uint16_t groupId, std::uint16_t
     IMEBRA_FUNCTION_END();
 }
 
-bool dataSet::bufferExists(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, std::uint32_t bufferId) const
+bool dataSet::bufferExists(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId) const
 {
     try
     {
@@ -164,7 +164,8 @@ std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
         {
             if(imageTag->bufferExists(1))
             {
-                std::uint32_t firstBufferId(0), endBufferId(0), totalLength(0);
+                std::uint32_t firstBufferId(0), endBufferId(0);
+                size_t totalLength(0);
                 if(imageTag->getBufferSizeThrow(0) == 0 && numberOfFrames + 1 == imageTag->getBuffersCount())
                 {
                     firstBufferId = frameNumber + 1;
@@ -572,7 +573,7 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
     std::shared_ptr<data> tag(getTagCreate(groupId, 0, tagId));
     for(std::uint32_t scanBuffers = 1; scanBuffers < firstBufferId; ++scanBuffers)
 	{
-        calculatePosition += tag->getBufferSizeThrow(scanBuffers);
+        calculatePosition += (std::uint32_t)tag->getBufferSizeThrow(scanBuffers);
 		calculatePosition += 8;
 	}
     std::shared_ptr<handlers::writingDataHandlerRaw> offsetHandler(getWritingDataHandlerRaw(groupId, 0, tagId, 0, dataHandlerType));
@@ -602,14 +603,14 @@ std::uint32_t dataSet::getFrameOffset(std::uint32_t frameNumber) const
 
         // Get the offset table's size, in number of offsets
         ///////////////////////////////////////////////////////////
-        std::uint32_t offsetsCount = framesPointer->getSize() / sizeof(std::uint32_t);
+        std::uint32_t offsetsCount = (std::uint32_t)(framesPointer->getSize() / sizeof(std::uint32_t));
 
         // If the requested frame doesn't exist then return
         //  0xffffffff (the maximum value)
         ///////////////////////////////////////////////////////////
         if(frameNumber >= offsetsCount && frameNumber != 0)
         {
-            return 0xffffffff;
+            return std::numeric_limits<std::uint32_t>::max();
         }
 
         // Return the requested offset. If the requested frame is
@@ -639,11 +640,9 @@ std::uint32_t dataSet::getFrameOffset(std::uint32_t frameNumber) const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::uint32_t dataSet::getFrameBufferId(std::uint32_t offset, std::uint32_t* pLengthToBuffer) const
+std::uint32_t dataSet::getFrameBufferId(std::uint32_t offset) const
 {
 	IMEBRA_FUNCTION_START(L"dataSet::getFrameBufferId");
-
-    *pLengthToBuffer = 0;
 
     std::shared_ptr<data> imageTag = getTagThrow(0x7fe0, 0, 0x0010);
 
@@ -652,7 +651,7 @@ std::uint32_t dataSet::getFrameBufferId(std::uint32_t offset, std::uint32_t* pLe
     ///////////////////////////////////////////////////////////
     std::uint32_t scanBuffers(1);
 
-    if(offset == 0xffffffff)
+    if(offset == std::numeric_limits<std::uint32_t>::max())
     {
         while(imageTag->bufferExists(scanBuffers))
         {
@@ -666,8 +665,7 @@ std::uint32_t dataSet::getFrameBufferId(std::uint32_t offset, std::uint32_t* pLe
         // Calculate the total size of the buffer, including
         //  its descriptor (tag group and id and length)
         ///////////////////////////////////////////////////////////
-        std::uint32_t bufferSize = imageTag->getBufferSizeThrow(scanBuffers);;
-        (*pLengthToBuffer) += bufferSize; // Increase the total size
+        std::uint32_t bufferSize = (std::int32_t)imageTag->getBufferSizeThrow(scanBuffers);;
         bufferSize += 4; // one WORD for the group id, one WORD for the tag id
         bufferSize += 4; // one DWORD for the tag length
         if(bufferSize > offset)
@@ -694,7 +692,7 @@ std::uint32_t dataSet::getFrameBufferId(std::uint32_t offset, std::uint32_t* pLe
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::uint32_t dataSet::getFrameBufferIds(std::uint32_t frameNumber, std::uint32_t* pFirstBuffer, std::uint32_t* pEndBuffer) const
+size_t dataSet::getFrameBufferIds(std::uint32_t frameNumber, std::uint32_t* pFirstBuffer, std::uint32_t* pEndBuffer) const
 {
 	IMEBRA_FUNCTION_START(L"dataSet::getFrameBufferIds");
 
@@ -703,21 +701,20 @@ std::uint32_t dataSet::getFrameBufferIds(std::uint32_t frameNumber, std::uint32_
         std::uint32_t startOffset = getFrameOffset(frameNumber);
         std::uint32_t endOffset = getFrameOffset(frameNumber + 1);
 
-        if(startOffset == 0xffffffff)
+        if(startOffset == std::numeric_limits<std::int32_t>::max())
         {
             IMEBRA_THROW(::imebra::dataSetImageDoesntExist, "Image not in the table offset");
         }
 
-        std::uint32_t startLength, endLength;
-        *pFirstBuffer = getFrameBufferId(startOffset, &startLength);
-        *pEndBuffer = getFrameBufferId(endOffset, &endLength);
+        *pFirstBuffer = getFrameBufferId(startOffset);
+        *pEndBuffer = getFrameBufferId(endOffset);
 
         std::shared_ptr<data> imageTag = getTagThrow(0x7fe0, 0, 0x0010);
         if(imageTag == 0)
         {
             return 0;
         }
-        std::uint32_t totalSize(0);
+        size_t totalSize(0);
         for(std::uint32_t scanBuffers(*pFirstBuffer); scanBuffers != *pEndBuffer; ++scanBuffers)
         {
             totalSize += imageTag->getBufferSizeThrow(scanBuffers);

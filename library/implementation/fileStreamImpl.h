@@ -85,7 +85,7 @@ public:
 	// Virtual stream's functions
 	//
 	///////////////////////////////////////////////////////////
-	virtual std::uint32_t read(std::uint32_t startPosition, std::uint8_t* pBuffer, std::uint32_t bufferLength);
+    virtual size_t read(size_t startPosition, std::uint8_t* pBuffer, size_t bufferLength);
 
 };
 
@@ -130,7 +130,7 @@ public:
     // Virtual stream's functions
     //
     ///////////////////////////////////////////////////////////
-    virtual void write(std::uint32_t startPosition, const std::uint8_t* pBuffer, std::uint32_t bufferLength);
+    virtual void write(size_t startPosition, const std::uint8_t* pBuffer, size_t bufferLength);
 
 protected:
     FILE* m_openFile;

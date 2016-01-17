@@ -11,6 +11,8 @@ $fileHeader$
 #include "modalityVOILUTImpl.h"
 #include "dataSetImpl.h"
 #include "colorTransformsFactoryImpl.h"
+#include <math.h>
+#include <limits>
 
 namespace puntoexe
 {
@@ -133,7 +135,7 @@ std::shared_ptr<image> modalityVOILUT::allocateOutputImage(std::shared_ptr<image
 
 	// Rescale
 	///////////////////////////////////////////////////////////
-	if(m_rescaleSlope == 0)
+    if(fabs(m_rescaleSlope) <= std::numeric_limits<double>::denorm_min())
 	{
         std::shared_ptr<image> returnImage(new image);
         returnImage->create(width, height, pInputImage->getDepth(), "MONOCHROME2", pInputImage->getHighBit());
