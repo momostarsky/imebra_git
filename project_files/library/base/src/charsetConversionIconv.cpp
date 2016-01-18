@@ -53,7 +53,7 @@ charsetConversionIconv::charsetConversionIconv(const std::string& dicomName)
     if(m_iconvToUnicode == (iconv_t)-1 || m_iconvFromUnicode == (iconv_t)-1)
     {
         std::ostringstream buildErrorString;
-        buildErrorString << "Table " << dicomName << " not supported by the system";
+        buildErrorString << "Table " << info.m_isoRegistration << " not supported by the system";
         PUNTOEXE_THROW(charsetConversionExceptionNoSupportedTable, buildErrorString.str());
     }
 
