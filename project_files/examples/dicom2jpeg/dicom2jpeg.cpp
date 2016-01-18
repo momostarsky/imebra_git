@@ -186,6 +186,10 @@ int main(int argc, char* argv[])
                 chain->addTransform(presentationVOILUT);
             }
 
+            // Apply the presentation LUT
+            /////////////////////////////
+            chain->addTransform(loadedDataSet->getPresentationLUTTransform());
+
             // Get the colorspace of the transformation output
             //////////////////////////////////////////////////
             std::wstring initialColorSpace;
