@@ -76,7 +76,8 @@ SOURCES += \
     ../../library/base/src/charsetConversionICU.cpp \
     ../../library/base/src/charsetConversionWindows.cpp \
     ../../library/base/src/charsetConversionIconv.cpp \
-    ../../library/base/src/charsetConversionBase.cpp
+    ../../library/base/src/charsetConversionBase.cpp \
+    ../../library/imebra/src/applyLUT.cpp
 
 HEADERS += \
     ../../library/base/include/streamWriter.h \
@@ -155,4 +156,5 @@ HEADERS += \
     ../../library/base/include/charsetConversionWindows.h \
     ../../library/base/include/charsetConversionIconv.h \
     ../../library/base/include/charsetConversionBase.h \
-    ../../library/base/include/charsetConversion.h
+    ../../library/base/include/charsetConversion.h \
+    ../../library/imebra/include/applyLUT.h

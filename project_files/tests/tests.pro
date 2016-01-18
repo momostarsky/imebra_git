@@ -108,8 +108,9 @@ HEADERS += \
     ../library/base/include/charsetConversionIconv.h \
     ../library/base/include/charsetConversionICU.h \
     ../library/base/include/charsetConversionWindows.h \
+    ../library/base/include/charsetConversionBase.h \
+    ../library/imebra/include/applyLUT.h
     testsSettings.h \
-    ../library/base/include/charsetConversionBase.h
 
 SOURCES += \
     unicodeStringHandlerTest.cpp \
@@ -204,4 +205,5 @@ SOURCES += \
     corruptedFilesTest.cpp \
     testsSettings.cpp \
     integerStringHandlerTest.cpp \
-    ../library/base/src/charsetConversionBase.cpp
+    ../library/base/src/charsetConversionBase.cpp \
+    ../library/imebra/src/applyLUT.cpp
