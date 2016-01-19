@@ -182,6 +182,9 @@ add_executable(ImebraTests
 )
 
 find_library(gtest_library NAMES gtest PATHS ${CMAKE_BINARY_DIR} ${CMAKE_BINARY_DIR}/gtest)
+if(${gtest_library} MATCHES "NOTFOUND")
+	set(gtest_library gtest)
+endif(${gtest_library} MATCHES "NOTFOUND")
 
 target_link_libraries(ImebraTests ${gtest_library} pthread gcov)
 
