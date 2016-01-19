@@ -105,7 +105,7 @@ public:
 	///                  The function can write max 32 bits
 	///                   
 	///////////////////////////////////////////////////////////
-	inline void writeBits(const std::uint32_t buffer, int bitsNum)
+    inline void writeBits(const std::uint32_t buffer, size_t bitsNum)
 	{
 		IMEBRA_FUNCTION_START(L"streamWriter::writeBits");
 
@@ -206,7 +206,7 @@ private:
     std::shared_ptr<baseStreamOutput> m_pControlledStream;
 
 	std::uint8_t m_outBitsBuffer;
-	int       m_outBitsNum;
+    size_t m_outBitsNum;
 
 };
 

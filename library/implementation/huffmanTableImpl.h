@@ -243,7 +243,7 @@ private:
     // Used to calculate the huffman codes
 	std::vector<std::uint32_t> m_orderedValues;
     std::array<std::uint32_t, 128> m_valuesPerLength;
-    std::uint8_t m_firstValidLength;
+    size_t m_firstValidLength;
     std::uint32_t m_firstMinValue;
     std::uint32_t m_firstMaxValue;
     std::uint32_t m_firstValuesPerLength;
@@ -252,7 +252,7 @@ private:
 
 	// Final huffman table
 	std::vector<std::uint32_t> m_valuesToHuffman;
-	std::vector<std::uint32_t> m_valuesToHuffmanLength;
+    std::vector<size_t> m_valuesToHuffmanLength;
 
 };
 

@@ -326,7 +326,7 @@ void dicomCodec::writeTag(std::shared_ptr<streamWriter> pDestStream, std::shared
 
 		// Remember the position at which the item has been written
 		///////////////////////////////////////////////////////////
-		pDataSet->setItemOffset(pDestStream->getControlledStreamPosition());
+        pDataSet->setItemOffset((std::uint32_t)pDestStream->getControlledStreamPosition());
 
 		// write the sequence item header
 		///////////////////////////////////////////////////////////
@@ -386,7 +386,7 @@ std::uint32_t dicomCodec::getTagLength(const std::shared_ptr<data>& pData, bool 
 		{
 			break;
 		}
-        totalLength += pData->getBufferSizeThrow(scanBuffers);
+        totalLength += (std::uint32_t)pData->getBufferSizeThrow(scanBuffers);
 	}
 
 	(*pbSequence) |= (numberOfElements > 1);
@@ -500,7 +500,7 @@ void dicomCodec::readStream(std::shared_ptr<streamReader> pStream, std::shared_p
 
 	// Save the starting position
 	///////////////////////////////////////////////////////////
-	std::uint32_t position=pStream->position();
+    size_t position = pStream->position();
 
 	// This flag signals a failure
 	///////////////////////////////////////////////////////////
@@ -551,7 +551,7 @@ void dicomCodec::readStream(std::shared_ptr<streamReader> pStream, std::shared_p
 
 		// Go back to the beginning of the file
 		///////////////////////////////////////////////////////////
-		pStream->seek((std::int32_t)position);
+        pStream->seek(position);
 
 		// Set "explicit data type" to true if a valid data type
                 //  is found
@@ -631,7 +631,7 @@ void dicomCodec::parseStream(std::shared_ptr<streamReader> pStream,
 		///////////////////////////////////////////////////////////
 		pStream->read((std::uint8_t*)&tagId, sizeof(tagId));
 		pStream->adjustEndian((std::uint8_t*)&tagId, sizeof(tagId), endianType);
-		(*pReadSubItemLength) += sizeof(tagId);
+        (*pReadSubItemLength) += (std::uint32_t)sizeof(tagId);
 
 		// Check for EOF
 		///////////////////////////////////////////////////////////
@@ -687,7 +687,7 @@ void dicomCodec::parseStream(std::shared_ptr<streamReader> pStream,
 		///////////////////////////////////////////////////////////
 		pStream->read((std::uint8_t*)&tagSubId, sizeof(tagSubId));
 		pStream->adjustEndian((std::uint8_t*)&tagSubId, sizeof(tagSubId), endianType);
-		(*pReadSubItemLength) += sizeof(tagSubId);
+        (*pReadSubItemLength) += (std::uint32_t)sizeof(tagSubId);
 
 		// Check for the end of the dataset
 		///////////////////////////////////////////////////////////
@@ -715,7 +715,7 @@ void dicomCodec::parseStream(std::shared_ptr<streamReader> pStream,
 			///////////////////////////////////////////////////////////
 			pStream->read((std::uint8_t*)&tagLengthWord, sizeof(tagLengthWord));
 			pStream->adjustEndian((std::uint8_t*)&tagLengthWord, sizeof(tagLengthWord), endianType);
-			(*pReadSubItemLength) += sizeof(tagLengthWord);
+            (*pReadSubItemLength) += (std::uint32_t)sizeof(tagLengthWord);
 
 			// The data type is valid
 			///////////////////////////////////////////////////////////
@@ -727,7 +727,7 @@ void dicomCodec::parseStream(std::shared_ptr<streamReader> pStream,
 				{
 					pStream->read((std::uint8_t*)&tagLengthDWord, sizeof(tagLengthDWord));
 					pStream->adjustEndian((std::uint8_t*)&tagLengthDWord, sizeof(tagLengthDWord), endianType);
-					(*pReadSubItemLength) += sizeof(tagLengthDWord);
+                    (*pReadSubItemLength) += (std::uint32_t)sizeof(tagLengthDWord);
 				}
 			}
 
@@ -756,7 +756,7 @@ void dicomCodec::parseStream(std::shared_ptr<streamReader> pStream,
 			///////////////////////////////////////////////////////////
 			pStream->read((std::uint8_t*)&tagLengthDWord, sizeof(tagLengthDWord));
 			pStream->adjustEndian((std::uint8_t*)&tagLengthDWord, sizeof(tagLengthDWord), endianType);
-			(*pReadSubItemLength) += sizeof(tagLengthDWord);
+            (*pReadSubItemLength) += (std::uint32_t)sizeof(tagLengthDWord);
 		} // End of the implicit data type read block
 
 
@@ -848,25 +848,25 @@ void dicomCodec::parseStream(std::shared_ptr<streamReader> pStream,
 			// Remember the item's position (used by DICOMDIR
 			//  structures)
 			///////////////////////////////////////////////////////////
-			std::uint32_t itemOffset(pStream->getControlledStreamPosition());
+            std::uint32_t itemOffset((std::uint32_t)pStream->getControlledStreamPosition());
 
 			// Read the sequence item's group
 			///////////////////////////////////////////////////////////
 			pStream->read((std::uint8_t*)&subItemGroupId, sizeof(subItemGroupId));
 			pStream->adjustEndian((std::uint8_t*)&subItemGroupId, sizeof(subItemGroupId), endianType);
-			(*pReadSubItemLength) += sizeof(subItemGroupId);
+            (*pReadSubItemLength) += (std::uint32_t)sizeof(subItemGroupId);
 
 			// Read the sequence item's id
 			///////////////////////////////////////////////////////////
 			pStream->read((std::uint8_t*)&subItemTagId, sizeof(subItemTagId));
 			pStream->adjustEndian((std::uint8_t*)&subItemTagId, sizeof(subItemTagId), endianType);
-			(*pReadSubItemLength) += sizeof(subItemTagId);
+            (*pReadSubItemLength) += (std::uint32_t)sizeof(subItemTagId);
 
 			// Read the sequence item's length
 			///////////////////////////////////////////////////////////
 			pStream->read((std::uint8_t*)&sequenceItemLength, sizeof(sequenceItemLength));
 			pStream->adjustEndian((std::uint8_t*)&sequenceItemLength, sizeof(sequenceItemLength), endianType);
-			(*pReadSubItemLength) += sizeof(sequenceItemLength);
+            (*pReadSubItemLength) += (std::uint32_t)sizeof(sequenceItemLength);
 
 			if(tagLengthDWord!=0xffffffff)
 			{
@@ -989,8 +989,8 @@ std::shared_ptr<image> dicomCodec::getImage(const dataSet& dataset, std::shared_
     std::uint8_t allocatedBits=(std::uint8_t)dataset.getUnsignedLongThrow(0x0028, 0x0, 0x0100, 0, 0);
     std::uint8_t storedBits=(std::uint8_t)dataset.getUnsignedLongThrow(0x0028, 0x0, 0x0101, 0, 0);
     std::uint8_t highBit=(std::uint8_t)dataset.getUnsignedLongThrow(0x0028, 0x0, 0x0102, 0, 0);
-	if(highBit<storedBits-1)
-		highBit=storedBits-1;
+    if(highBit < storedBits - 1)
+        highBit = (std::uint8_t)(storedBits - 1);
 
 
 	// If the chrominance channels are subsampled, then find
@@ -1549,7 +1549,7 @@ void dicomCodec::writeRLECompressed(
 						++pPixel;
 					}
 
-					for(std::uint32_t scanBytes = 0; scanBytes < imageSizeX; /* left empty */)
+                    for(size_t scanBytes = 0; scanBytes < imageSizeX; /* left empty */)
 					{
                         std::uint8_t currentByte = rowBytes[scanBytes];
 
@@ -1566,7 +1566,7 @@ void dicomCodec::writeRLECompressed(
                         {
                             if(!differentBytes.empty())
                             {
-                                offset += writeRLEDifferentBytes(&differentBytes, pDestStream, phase == 1);
+                                offset += (std::uint32_t)writeRLEDifferentBytes(&differentBytes, pDestStream, phase == 1);
                             }
                             if(runLength > 128)
                             {
@@ -1576,7 +1576,7 @@ void dicomCodec::writeRLECompressed(
                             scanBytes += runLength;
                             if(phase == 1)
                             {
-                                std::uint8_t lengthByte = 1 - runLength;
+                                std::uint8_t lengthByte = (std::uint8_t)(1 - runLength);
                                 pDestStream->write(&lengthByte, 1);
                                 pDestStream->write(&currentByte, 1);
                             }
@@ -1589,11 +1589,11 @@ void dicomCodec::writeRLECompressed(
                         ++scanBytes;
                     } // for(std::uint32_t scanBytes = 0; scanBytes < imageSizeX; )
 
-                    offset += writeRLEDifferentBytes(&differentBytes, pDestStream, phase == 1);
+                    offset += (std::uint32_t)writeRLEDifferentBytes(&differentBytes, pDestStream, phase == 1);
 
 				} // for(std::uint32_t scanY = imageSizeY; scanY != 0; --scanY)
 
-				if(offset & 0x00000001)
+                if((offset & 1) != 0)
 				{
 					++offset;
 					if(phase == 1)
@@ -1747,7 +1747,7 @@ void dicomCodec::readRLECompressed(
 
 				// Copy the same byte several times
 				///////////////////////////////////////////////////////////
-				runLength = (std::uint8_t)0x1-rleByte;
+                runLength = (std::uint8_t)(1-rleByte);
 				if(runLength < channelSize)
 				{
 				    pSourceStream->read(copyBytesBuffer, 2);
@@ -1827,42 +1827,41 @@ void dicomCodec::readPixel(
 
 	}
 
-
-        while(numPixels-- != 0)
+    while(numPixels-- != 0)
+    {
+        *pDest = 0;
+        for(std::uint8_t bitsToRead = allocatedBits; bitsToRead != 0;)
         {
-            *pDest = 0;
-            for(std::uint8_t bitsToRead = allocatedBits; bitsToRead != 0;)
+            if(*pBitPointer == 0)
             {
-                if(*pBitPointer == 0)
+                if(wordSizeBytes==0x2)
                 {
-                    if(wordSizeBytes==0x2)
-                    {
-                        pSourceStream->read((std::uint8_t*)&m_ioWord, sizeof(m_ioWord));
-                        *pBitPointer = 16;
-                    }
-                    else
-                    {
-                        pSourceStream->read(&m_ioByte, 1);
-                        m_ioWord = (std::uint16_t)m_ioByte;
-                        *pBitPointer = 8;
-                    }
+                    pSourceStream->read((std::uint8_t*)&m_ioWord, sizeof(m_ioWord));
+                    *pBitPointer = 16;
                 }
-
-                if(*pBitPointer <= bitsToRead)
+                else
                 {
-                    *pDest |= m_ioWord << (allocatedBits - bitsToRead);
-                    bitsToRead -= *pBitPointer;
-                    *pBitPointer = 0;
-                    continue;
+                    pSourceStream->read(&m_ioByte, 1);
+                    m_ioWord = (std::uint16_t)m_ioByte;
+                    *pBitPointer = 8;
                 }
-
-                *pDest |= (m_ioWord & (((std::uint16_t)1<<bitsToRead) - 1)) << (allocatedBits - bitsToRead);
-                m_ioWord >>= bitsToRead;
-                *pBitPointer -= bitsToRead;
-                bitsToRead = 0;
             }
-            *pDest++ &= mask;
+
+            if(*pBitPointer <= bitsToRead)
+            {
+                *pDest |= m_ioWord << (allocatedBits - bitsToRead);
+                bitsToRead = (std::uint8_t)(bitsToRead - *pBitPointer);
+                *pBitPointer = 0;
+                continue;
+            }
+
+            *pDest |= (m_ioWord & (((std::uint16_t)1<<bitsToRead) - 1)) << (allocatedBits - bitsToRead);
+            m_ioWord = (std::uint16_t)(m_ioWord >> bitsToRead);
+            *pBitPointer = (std::uint8_t)(*pBitPointer - bitsToRead);
+            bitsToRead = 0;
         }
+        *pDest++ &= mask;
+    }
 }
 
 
@@ -1924,22 +1923,22 @@ void dicomCodec::writePixel(
 
 	for(std::uint8_t writeBits = allocatedBits; writeBits != 0;)
 	{
-		std::uint8_t freeBits = maxBits - *pBitPointer;
+        std::uint8_t freeBits = (std::uint8_t)(maxBits - *pBitPointer);
 		if(freeBits == maxBits)
 		{
             m_ioWord = 0;
 		}
 		if( freeBits <= writeBits )
 		{
-            m_ioWord |= (pixelValue & (((std::int32_t)1 << freeBits) -1 ))<< (*pBitPointer);
+            m_ioWord = (std::uint16_t)(m_ioWord | ((pixelValue & (((std::int32_t)1 << freeBits) -1 )) << *pBitPointer));
 			*pBitPointer = maxBits;
-			writeBits -= freeBits;
+            writeBits = (std::uint8_t)(writeBits - freeBits);
 			pixelValue >>= freeBits;
 		}
 		else
 		{
-            m_ioWord |= (pixelValue & (((std::int32_t)1 << writeBits) -1 ))<< (*pBitPointer);
-			(*pBitPointer) += writeBits;
+            m_ioWord = (std::uint16_t)(m_ioWord | ((pixelValue & (((std::int32_t)1 << writeBits) -1 ))<< *pBitPointer));
+            *pBitPointer = (std::uint8_t)(*pBitPointer + writeBits);
 			writeBits = 0;
 		}
 
@@ -2197,10 +2196,10 @@ std::uint32_t dicomCodec::readTag(
 	///////////////////////////////////////////////////////////
 	if(tagLengthDWord > maxSizeBufferLoad)
 	{
-		std::uint32_t bufferPosition(pStream->position());
-		std::uint32_t streamPosition(pStream->getControlledStreamPosition());
+        size_t bufferPosition(pStream->position());
+        size_t streamPosition(pStream->getControlledStreamPosition());
         pStream->seekRelative(tagLengthDWord);
-		std::uint32_t bufferLength(pStream->position() - bufferPosition);
+        size_t bufferLength(pStream->position() - bufferPosition);
 
 		if(bufferLength != tagLengthDWord)
 		{
@@ -2219,7 +2218,7 @@ std::uint32_t dicomCodec::readTag(
 
 		writeData->setBuffer(bufferId, newBuffer);
 
-		return bufferLength;
+        return (std::uint32_t)bufferLength;
 	}
 
 	// Allocate the tag's buffer

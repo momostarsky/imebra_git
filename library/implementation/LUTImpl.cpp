@@ -85,7 +85,7 @@ void lut::setLut(std::shared_ptr<handlers::readingDataHandler> pDescriptor, std:
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void lut::create(std::uint32_t size, std::int32_t firstMapped, std::uint8_t bits, const std::wstring& description)
+void lut::create(std::uint32_t size, std::uint32_t firstMapped, std::uint8_t bits, const std::wstring& description)
 {
     IMEBRA_FUNCTION_START(L"lut::create");
 
@@ -128,7 +128,7 @@ void lut::fillHandlers(std::shared_ptr<handlers::writingDataHandler> pDescriptor
     IMEBRA_FUNCTION_START(L"lut::fillHandlers");
 
 	pDescriptor->setSize(3);
-	std::uint32_t lutSize = getSize();
+    std::uint32_t lutSize = (std::uint32_t)getSize();
 	if(lutSize == 0x00010000)
 	{
 		pDescriptor->setSignedLong(0, 0);
@@ -138,7 +138,7 @@ void lut::fillHandlers(std::shared_ptr<handlers::writingDataHandler> pDescriptor
 		pDescriptor->setUnsignedLong(0, lutSize);
 	}
 
-	std::int32_t lutFirstMapped = getFirstMapped();
+    std::uint32_t lutFirstMapped = getFirstMapped();
 	pDescriptor->setSignedLong(1, lutFirstMapped);
 
 	std::uint8_t bits = getBits();
@@ -159,7 +159,7 @@ void lut::fillHandlers(std::shared_ptr<handlers::writingDataHandler> pDescriptor
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-size_t lut::getSize() const
+std::uint32_t lut::getSize() const
 {
 	return m_size;
 }
@@ -204,7 +204,7 @@ bool lut::checkValidDataRange() const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::int32_t lut::getFirstMapped() const
+std::uint32_t lut::getFirstMapped() const
 {
 	return m_firstMapped;
 }
@@ -219,16 +219,16 @@ std::int32_t lut::getFirstMapped() const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void lut::setLutValue(std::int32_t startValue, std::int32_t lutValue)
+void lut::setLutValue(std::uint32_t startValue, std::int32_t lutValue)
 {
     IMEBRA_FUNCTION_START(L"lut::setLutValue");
 
-	if(startValue<m_firstMapped)
+    if(startValue < m_firstMapped)
 	{
         IMEBRA_THROW(::imebra::lutExceptionWrongIndex, "The start index is below the first mapped index");
 	}
-	startValue-=m_firstMapped;
-	if(startValue<(std::int32_t)m_size)
+    startValue -= m_firstMapped;
+    if(startValue < m_size)
 	{
 		m_pMappedValues[startValue]=lutValue;
 	}
@@ -311,13 +311,13 @@ std::int32_t lut::mappedValue(std::int32_t id) const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void lut::copyToInt32(std::int32_t* pDestination, std::uint32_t destSize, std::int32_t* pFirstMapped) const
+void lut::copyToInt32(std::int32_t* pDestination, size_t destSize, std::int32_t* pFirstMapped) const
 {
 	if(destSize > m_size)
 	{
 		destSize = m_size;
 	}
-	::memcpy(pDestination, m_pMappedValues, destSize*sizeof(std::int32_t));
+    ::memcpy(pDestination, m_pMappedValues, destSize * sizeof(std::int32_t));
 	*pFirstMapped = m_firstMapped;
 }
 

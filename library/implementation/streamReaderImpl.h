@@ -146,7 +146,7 @@ public:
 	///                   aligned
 	///
 	///////////////////////////////////////////////////////////
-    inline std::uint32_t readBits(unsigned int bitsNum)
+    inline std::uint32_t readBits(size_t bitsNum)
 	{
         const size_t bufferSize(8);
 
@@ -345,7 +345,7 @@ private:
     std::shared_ptr<baseStreamInput> m_pControlledStream;
 
     unsigned int m_inBitsBuffer;
-    unsigned int m_inBitsNum;
+    size_t m_inBitsNum;
 
 };
 

@@ -21,7 +21,7 @@ namespace imebra
 DataSet CodecFactory::load(StreamReader& reader, size_t maxSizeBufferLoad)
 {
     std::shared_ptr<puntoexe::imebra::codecs::codecFactory> factory(puntoexe::imebra::codecs::codecFactory::getCodecFactory());
-    return DataSet(factory->load(reader.m_pReader, maxSizeBufferLoad));
+    return DataSet(factory->load(reader.m_pReader, (std::uint32_t)maxSizeBufferLoad));
 }
 
 DataSet CodecFactory::load(const std::wstring& fileName, size_t maxSizeBufferLoad)

@@ -2126,7 +2126,7 @@ inline void jpegCodec::writeBlock(streamWriter* pStream, std::int32_t* pBuffer, 
 
     // Scan the specified spectral values
     /////////////////////////////////////////////////////////////////
-    std::uint8_t zeroRun = 0;
+    std::uint32_t zeroRun = 0;
     std::int32_t value;
     const std::uint32_t* pJpegDeZigZagOrder(&(JpegDeZigZagOrder[m_spectralIndexStart]));
     huffmanTable* pActiveHuffmanTable;
@@ -2731,7 +2731,7 @@ void tag::writeLength(streamWriter* pStream, std::uint16_t length)
 {
     IMEBRA_FUNCTION_START(L"jpeg::tag::writeLength");
 
-    length+=sizeof(length);
+    length = (std::uint16_t)(length + sizeof(length));
     pStream->adjustEndian((std::uint8_t*)&length, sizeof(length), streamController::highByteEndian);
     pStream->write((std::uint8_t*)&length, sizeof(length));
 
@@ -2756,7 +2756,7 @@ std::int32_t tag::readLength(streamReader* pStream)
     pStream->read((std::uint8_t*)&length, sizeof(length));
     pStream->adjustEndian((std::uint8_t*)&length, sizeof(length), streamController::highByteEndian);
     if(length > 1)
-        length -= 2;
+        length = (std::uint16_t)(length - 2);
     return (std::int32_t)((std::uint32_t)length);
 
     IMEBRA_FUNCTION_END();
@@ -2850,7 +2850,7 @@ void tagSOF::writeTag(streamWriter* pStream, jpegCodec* pCodec)
 
     // Write the tag's length
     ///////////////////////////////////////////////////////////
-    writeLength(pStream, 6+componentsNumber*3);
+    writeLength(pStream, (std::uint16_t)(6 + componentsNumber * 3));
 
     // Write the precision, in bits
     ///////////////////////////////////////////////////////////
@@ -2880,9 +2880,9 @@ void tagSOF::writeTag(streamWriter* pStream, jpegCodec* pCodec)
     {
         ptrChannel pChannel=channelsIterator->second;
 
-        componentId=channelsIterator->first;
-        componentSamplingFactor=((std::uint8_t)pChannel->m_samplingFactorX<<4) | ((std::uint8_t)pChannel->m_samplingFactorY);
-        componentQuantTable=(std::uint8_t)pChannel->m_quantTable;
+        componentId = channelsIterator->first;
+        componentSamplingFactor = (std::uint8_t)( ((pChannel->m_samplingFactorX & 0xf) << 4) | (pChannel->m_samplingFactorY & 0xf) );
+        componentQuantTable = (std::uint8_t)pChannel->m_quantTable;
 
         pStream->write((std::uint8_t*)&componentId, 1);
         pStream->write((std::uint8_t*)&componentSamplingFactor, 1);
@@ -2913,7 +2913,7 @@ void tagSOF::readTag(streamReader* pStream, jpegCodec* pCodec, std::uint8_t tagE
     std::shared_ptr<streamReader> tagReader(pStream->getReader(tagLength));
 
     pCodec->m_bLossless = (tagEntry==0xc3) || (tagEntry==0xc7);
-    pCodec->m_process = tagEntry - 0xc0;
+    pCodec->m_process = (std::uint8_t)(tagEntry - 0xc0);
 
     // Read the precision, in bits
     ///////////////////////////////////////////////////////////
@@ -3077,10 +3077,10 @@ void tagDHT::writeTag(streamWriter* pStream, jpegCodec* pCodec)
                     pHuffman->removeLastCode();
 
                     pHuffman->calcHuffmanTables();
-                    tagLength+=17;
+                    tagLength = (std::uint16_t)(tagLength + 17);
                     for(int scanLength = 0; scanLength < 16;)
                     {
-                        tagLength += (std::uint16_t)(pHuffman->getValuesPerLength(++scanLength));
+                        tagLength = (std::uint16_t)(tagLength + (pHuffman->getValuesPerLength(++scanLength)));
                     }
                     continue;
                 }
@@ -3246,7 +3246,7 @@ void tagSOS::writeTag(streamWriter* pStream, jpegCodec* pCodec)
 
     // Write the tag's length
     /////////////////////////////////////////////////////////////////
-    writeLength(pStream, 4+2*componentsNumber);
+    writeLength(pStream, (std::uint16_t)(4 + 2 * componentsNumber));
 
     // Write the component's number
     /////////////////////////////////////////////////////////////////
@@ -3280,8 +3280,7 @@ void tagSOS::writeTag(streamWriter* pStream, jpegCodec* pCodec)
 
         // Write the ac/dc tables ID
         /////////////////////////////////////////////////////////////////
-        std::uint8_t acdc=(std::uint8_t)((pChannel->m_huffmanTableDC & 0xf)<<4);
-        acdc |= (std::uint8_t)(pChannel->m_huffmanTableAC & 0xf);
+        std::uint8_t acdc = (std::uint8_t)(((pChannel->m_huffmanTableDC & 0xf)<<4) | (pChannel->m_huffmanTableAC & 0xf));
 
         pStream->write(&acdc, 1);
     }
@@ -3300,8 +3299,8 @@ void tagSOS::writeTag(streamWriter* pStream, jpegCodec* pCodec)
 
     // Write the hi/lo bit
     /////////////////////////////////////////////////////////////////
-    byte=(std::uint8_t)(pCodec->m_bitHigh & 0xf)<<4;
-    byte|=(std::uint8_t)(pCodec->m_bitLow & 0xf);
+    byte = (std::uint8_t)(((pCodec->m_bitHigh & 0xf) << 4) | (pCodec->m_bitLow & 0xf));
+
     pStream->write(&byte, 1);
 
     IMEBRA_FUNCTION_END();
@@ -3447,11 +3446,11 @@ void tagDQT::writeTag(streamWriter* pStream, jpegCodec* pCodec)
 
             if(phase == 0)
             {
-                tagLength += 1+(b16Bits ? 128 : 64);
+                tagLength = (std::uint16_t)(tagLength + 1 + (b16Bits ? 128 : 64));
             }
             else
             {
-                tablePrecision = tableId | (b16Bits ? 0x10 : 0);
+                tablePrecision = (std::uint8_t)(tableId | (b16Bits ? 0x10 : 0));
                 pStream->write(&tablePrecision, 1);
                 if(b16Bits)
                 {
@@ -3667,9 +3666,9 @@ void tagRST::readTag(streamReader* /* pStream */, jpegCodec* pCodec, std::uint8_
         std::uint8_t doneRestartIntervalID=(std::uint8_t)(doneRestartInterval & 0x7);
         std::uint8_t foundRestartIntervalID=tagEntry & 0x7;
         if(foundRestartIntervalID<doneRestartIntervalID)
-            doneRestartInterval+=8L;
-        doneRestartInterval-=doneRestartIntervalID;
-        doneRestartInterval+=foundRestartIntervalID;
+        doneRestartInterval += 8;
+        doneRestartInterval -= doneRestartIntervalID;
+        doneRestartInterval += foundRestartIntervalID;
         pCodec->m_mcuProcessed=(doneRestartInterval+1)*pCodec->m_mcuPerRestartInterval;
         pCodec->m_mcuProcessedY = pCodec->m_mcuProcessed / pCodec->m_mcuNumberX;
         pCodec->m_mcuProcessedX = pCodec->m_mcuProcessed - (pCodec->m_mcuProcessedY * pCodec->m_mcuNumberX);

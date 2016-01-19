@@ -150,7 +150,7 @@ std::string charsetConversionBase::normalizeIsoCharset(const std::string &isoCha
 
         if(isoChar >= 'a' && isoChar <= 'z')
         {
-            normalizedIsoCharset.push_back(isoChar - (char)('a' - 'A'));
+            normalizedIsoCharset.push_back((char)(isoChar - ('a' - 'A')));
             continue;
         }
 

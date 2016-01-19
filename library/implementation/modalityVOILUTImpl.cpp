@@ -92,7 +92,7 @@ std::shared_ptr<image> modalityVOILUT::allocateOutputImage(std::shared_ptr<image
 
 		// Look for negative outputs
 		bool bNegative(false);
-		for(std::int32_t index(m_voiLut->getFirstMapped()), size(m_voiLut->getSize()); !bNegative && size != 0; --size, ++index)
+        for(std::uint32_t index(m_voiLut->getFirstMapped()), size(m_voiLut->getSize()); !bNegative && size != 0; --size, ++index)
 		{
 			bNegative = (m_voiLut->mappedValue(index) < 0);
 		}

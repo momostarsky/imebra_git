@@ -73,10 +73,10 @@ std::string charsetConversionICU::fromUnicode(const std::wstring& unicodeString)
     switch(sizeof(wchar_t))
     {
     case 2:
-        unicodeStringConversion = UnicodeString((UChar*)&(unicodeString[0]), unicodeString.size());
+        unicodeStringConversion = UnicodeString((UChar*)&(unicodeString[0]), (std::int32_t)unicodeString.size());
         break;
     case 4:
-        unicodeStringConversion = UnicodeString::fromUTF32((UChar32*)&(unicodeString[0]), unicodeString.size());
+        unicodeStringConversion = UnicodeString::fromUTF32((UChar32*)&(unicodeString[0]), (std::int32_t)unicodeString.size());
         break;
     default:
         IMEBRA_THROW(::imebra::charsetConversionExceptionUtfSizeNotSupported, "The system utf size is not supported");
@@ -117,7 +117,7 @@ std::wstring charsetConversionICU::toUnicode(const std::string& asciiString) con
 	}
 
     UErrorCode errorCode(U_ZERO_ERROR);
-    UnicodeString unicodeString(&(asciiString[0]), asciiString.size(), m_pIcuConverter, errorCode);
+    UnicodeString unicodeString(&(asciiString[0]), (std::int32_t)asciiString.size(), m_pIcuConverter, errorCode);
     switch(sizeof(wchar_t))
     {
     case 2:

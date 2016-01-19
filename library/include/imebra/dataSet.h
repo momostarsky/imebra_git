@@ -62,9 +62,11 @@ public:
 		veryLow = 600	   ///< the image is saved in low quality. Horizontal and vertical subsampling are applied. Quantization ratios are high
 	};
 
-    Image getImage(size_t frameNumber);
+    Image getImage(std::uint32_t frameNumber);
 
-    void setImage(size_t frameNumber, Image image, const std::string& transferSyntax, imageQuality quality);
+    Image getImageApplyModalityTransform(std::uint32_t frameNumber);
+
+    void setImage(std::uint32_t frameNumber, Image image, const std::string& transferSyntax, imageQuality quality);
 
     DataSet getSequenceItem(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t itemId);
 

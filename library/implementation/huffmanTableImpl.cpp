@@ -115,7 +115,7 @@ void huffmanTable::removeLastCode()
 	///////////////////////////////////////////////////////////
 	std::uint32_t codes = 0;
 	std::uint32_t lastLength = 0;
-	for(std::uint32_t scanLengths = 0; scanLengths < sizeof(m_valuesPerLength)/sizeof(m_valuesPerLength[0]); ++scanLengths)
+    for(std::uint32_t scanLengths = 0; scanLengths < m_valuesPerLength.size(); ++scanLengths)
     {
         if(m_valuesPerLength[scanLengths] == 0)
 		{
@@ -244,14 +244,15 @@ void huffmanTable::calcHuffmanCodesLength(const std::uint32_t maxCodeLength)
 	}
 
 	// Reduce the size of the codes' lengths
-	for(std::uint32_t reduceLengths=sizeof(m_valuesPerLength)/sizeof(m_valuesPerLength[0]) - 1; reduceLengths>maxCodeLength; --reduceLengths)
+    for(size_t reduceLengths = m_valuesPerLength.size() - 1; reduceLengths>maxCodeLength; --reduceLengths)
 	{
 		while(m_valuesPerLength[reduceLengths] != 0)
 		{
-			std::int32_t reduceLengths1;
-			for(reduceLengths1=reduceLengths-2; reduceLengths1 != -1 && m_valuesPerLength[reduceLengths1] == 0; --reduceLengths1){}
+            size_t reduceLengths1;
+            for(reduceLengths1 = reduceLengths - 2; reduceLengths1 < m_valuesPerLength.size() && m_valuesPerLength[reduceLengths1] == 0; --reduceLengths1)
+            {}
 
-			if(reduceLengths1==-1)
+            if(reduceLengths1 >= m_valuesPerLength.size())
 			{
 				break;
 			}
@@ -263,7 +264,7 @@ void huffmanTable::calcHuffmanCodesLength(const std::uint32_t maxCodeLength)
 	}
 
 	// Find the first available length
-	for(m_firstValidLength = 1; m_firstValidLength != sizeof(m_valuesPerLength) / sizeof(m_valuesPerLength[0]); ++m_firstValidLength)
+    for(m_firstValidLength = 1; m_firstValidLength != m_valuesPerLength.size(); ++m_firstValidLength)
 	{
 		if(m_valuesPerLength[m_firstValidLength] != 0)
 		{
@@ -298,7 +299,7 @@ void huffmanTable::calcHuffmanTables()
     m_firstMinValue = 0xffffffff;
     m_firstMaxValue = 0xffffffff;
 	m_firstValidLength = 0;
-	for(std::uint32_t codeLength=1L; codeLength != sizeof(m_valuesPerLength)/sizeof(std::uint32_t); ++codeLength)
+    for(size_t codeLength = 1; codeLength != m_valuesPerLength.size(); ++codeLength)
 	{
 		if(m_valuesPerLength[codeLength] != 0 && m_firstValidLength == 0)
 		{
@@ -312,7 +313,7 @@ void huffmanTable::calcHuffmanTables()
 			}
 			m_maxValuePerLength[codeLength]=huffmanCode;
 			m_valuesToHuffman[m_orderedValues[valueIndex]]=huffmanCode;
-			m_valuesToHuffmanLength[m_orderedValues[valueIndex]]=codeLength;
+            m_valuesToHuffmanLength[m_orderedValues[valueIndex]] = codeLength;
 			++valueIndex;
 			++huffmanCode;
 		}
@@ -356,7 +357,7 @@ std::uint32_t huffmanTable::readHuffmanCode(streamReader* pStream)
 
 	// Scan all the codes sizes
 	///////////////////////////////////////////////////////////
-    for(std::uint8_t scanSize(m_firstValidLength + 1), missingBits(0); scanSize != sizeof(m_valuesPerLength)/sizeof(m_valuesPerLength[0]); ++scanSize)
+    for(size_t scanSize(m_firstValidLength + 1), missingBits(0); scanSize != m_valuesPerLength.size(); ++scanSize)
 	{
 		++missingBits;
 

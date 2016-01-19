@@ -301,7 +301,7 @@ std::shared_ptr<image> VOILUT::allocateOutputImage(std::shared_ptr<image> pInput
 		std::uint8_t bits = m_pLUT->getBits();
 
 		bool bNegative(false);
-		for(std::int32_t index(m_pLUT->getFirstMapped()), size(m_pLUT->getSize()); !bNegative && size != 0; --size, ++index)
+        for(std::uint32_t index(m_pLUT->getFirstMapped()), size(m_pLUT->getSize()); !bNegative && size != 0; --size, ++index)
 		{
 			bNegative = (m_pLUT->mappedValue(index) < 0);
 		}

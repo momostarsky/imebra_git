@@ -109,9 +109,9 @@ public:
     buffer(
 		const std::string& defaultType,
         const std::shared_ptr<baseStreamInput>& originalStream,
-		std::uint32_t bufferPosition,
-		std::uint32_t bufferLength,
-		std::uint32_t wordLength,
+        size_t bufferPosition,
+        size_t bufferLength,
+        size_t wordLength,
 		streamController::tByteOrdering endianType);
 
 	//@}
@@ -338,9 +338,9 @@ protected:
 	//  from the stream.
 	///////////////////////////////////////////////////////////
     std::shared_ptr<baseStreamInput> m_originalStream;    // < Original stream
-	std::uint32_t m_originalBufferPosition; // < Original buffer's position
-	std::uint32_t m_originalBufferLength;   // < Original buffer's length
-	std::uint32_t m_originalWordLength;     // < Original word's length (for low/high endian adjustment)
+    size_t m_originalBufferPosition; // < Original buffer's position
+    size_t m_originalBufferLength;   // < Original buffer's length
+    size_t m_originalWordLength;     // < Original word's length (for low/high endian adjustment)
 	streamController::tByteOrdering m_originalEndianType; // < Original endian type
 	
 private:

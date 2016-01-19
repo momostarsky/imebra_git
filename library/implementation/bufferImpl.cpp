@@ -96,9 +96,9 @@ buffer::buffer(const std::string& defaultType /* ="" */):
 buffer::buffer(
 		const std::string& defaultType,
         const std::shared_ptr<baseStreamInput>& originalStream,
-		std::uint32_t bufferPosition,
-		std::uint32_t bufferLength,
-		std::uint32_t wordLength,
+        size_t bufferPosition,
+        size_t bufferLength,
+        size_t wordLength,
 		streamController::tByteOrdering endianType):
 		m_originalStream(originalStream),
 		m_originalBufferPosition(bufferPosition),

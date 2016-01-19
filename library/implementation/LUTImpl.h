@@ -90,7 +90,7 @@ public:
 	/// @param description   a string that describes the lut
 	///
 	///////////////////////////////////////////////////////////
-    void create(std::uint32_t size, std::int32_t firstMapped, std::uint8_t bits, const std::wstring& description);
+    void create(std::uint32_t size, std::uint32_t firstMapped, std::uint8_t bits, const std::wstring& description);
 
 	/// \brief Store a mapped value in the lut.
 	///
@@ -104,7 +104,7 @@ public:
 	/// @param lutValue     the mapped value
 	///
 	///////////////////////////////////////////////////////////
-	void setLutValue(std::int32_t startValue, std::int32_t lutValue);
+    void setLutValue(std::uint32_t startValue, std::int32_t lutValue);
 
 	/// \brief Fill the data handlers with the lut's descriptor
 	///         and the lut's data.
@@ -142,7 +142,7 @@ public:
 	/// @return the number of mapped value stored in the lut
 	///
 	///////////////////////////////////////////////////////////
-    size_t getSize() const;
+    std::uint32_t getSize() const;
 
 	/// \brief Checks if the data in the LUT is consistent
 	///         with the number of bits specified in number
@@ -158,7 +158,7 @@ public:
 	/// @return the id of the first mapped value
 	///
 	///////////////////////////////////////////////////////////
-    std::int32_t getFirstMapped() const;
+    std::uint32_t getFirstMapped() const;
 
 	/// \brief Retrieve the value mapped by the specified id.
 	///
@@ -178,10 +178,10 @@ public:
 	///                      of the first mapped element
 	///
 	///////////////////////////////////////////////////////////
-    void copyToInt32(std::int32_t* pDestination, std::uint32_t destSize, std::int32_t* pFirstMapped) const;
+    void copyToInt32(std::int32_t* pDestination, size_t destSize, std::int32_t* pFirstMapped) const;
 
-    size_t m_size;
-	std::int32_t m_firstMapped;
+    std::uint32_t m_size;
+    std::uint32_t m_firstMapped;
 	std::uint8_t m_bits;
 
 	std::wstring m_description;

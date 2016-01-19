@@ -86,7 +86,7 @@ void streamController::adjustEndian(std::uint8_t* pBuffer, const size_t wordLeng
             std::uint16_t* pWord((std::uint16_t*)pBuffer);
             for(size_t scanWords = words; scanWords != 0; --scanWords)
             {
-                *pWord = ((*pWord & 0x00ff) << 8) | ((*pWord & 0xff00) >> 8);
+                *pWord = (std::uint16_t)(((*pWord & 0x00ff) << 8) | ((*pWord & 0xff00) >> 8));
                 ++pWord;
 			}
 		}
@@ -128,7 +128,7 @@ std::uint16_t streamController::adjustEndian(std::uint16_t buffer, const tByteOr
     {
         return buffer;
     }
-    return ((buffer & 0xff00) >> 8) | ((buffer & 0xff) << 8);
+    return (std::uint16_t)(((buffer & 0xff00) >> 8) | ((buffer & 0xff) << 8));
 }
 
 std::uint32_t streamController::adjustEndian(std::uint32_t buffer, const tByteOrdering endianType)
@@ -137,7 +137,11 @@ std::uint32_t streamController::adjustEndian(std::uint32_t buffer, const tByteOr
     {
         return buffer;
     }
-    return ((buffer & 0xff000000) >> 24) | ((buffer & 0x00ff0000) >> 8) | ((buffer & 0x0000ff00) << 8) | ((buffer & 0x000000ff) << 24);
+    return (std::uint32_t)(
+            ((buffer & 0xff000000) >> 24) |
+            ((buffer & 0x00ff0000) >> 8) |
+            ((buffer & 0x0000ff00) << 8) |
+            ((buffer & 0x000000ff) << 24) );
 }
 
 std::uint64_t streamController::adjustEndian(std::uint64_t buffer, const tByteOrdering endianType)
@@ -146,15 +150,15 @@ std::uint64_t streamController::adjustEndian(std::uint64_t buffer, const tByteOr
     {
         return buffer;
     }
-    return
-        ((buffer & 0xff00000000000000) >> 56) |
-        ((buffer & 0x00ff000000000000) >> 40) |
-        ((buffer & 0x0000ff0000000000) >> 24) |
-        ((buffer & 0x000000ff00000000) >> 8) |
-        ((buffer & 0x00000000ff000000) << 8) |
-        ((buffer & 0x0000000000ff0000) << 24) |
-        ((buffer & 0x000000000000ff00) << 40) |
-        ((buffer & 0x00000000000000ff) << 56);
+    return (std::uint64_t)(
+            ((buffer & 0xff00000000000000) >> 56) |
+            ((buffer & 0x00ff000000000000) >> 40) |
+            ((buffer & 0x0000ff0000000000) >> 24) |
+            ((buffer & 0x000000ff00000000) >> 8) |
+            ((buffer & 0x00000000ff000000) << 8) |
+            ((buffer & 0x0000000000ff0000) << 24) |
+            ((buffer & 0x000000000000ff00) << 40) |
+            ((buffer & 0x00000000000000ff) << 56));
 }
 
 } // namespace puntoexe

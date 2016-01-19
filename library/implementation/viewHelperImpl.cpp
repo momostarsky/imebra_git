@@ -9,6 +9,8 @@ $fileHeader$
 
 #include "viewHelperImpl.h"
 #include "imageImpl.h"
+#include <math.h>
+#include <limits>
 
 namespace puntoexe
 {
@@ -284,11 +286,11 @@ void view::setZoomRect(std::int32_t left, std::int32_t top, std::int32_t right, 
 	std::uint32_t horzDPI, vertDPI;
 	getScreenDPI(&horzDPI, &vertDPI);
 
-	if(imageSizeMmX == 0)
+    if(fabs(imageSizeMmX) <= std::numeric_limits<double>::denorm_min())
 	{
 		imageSizeMmX = (double)imageSizeX * 25.4 / (double)horzDPI;
 	}
-	if(imageSizeMmY == 0)
+    if(fabs(imageSizeMmY) <= std::numeric_limits<double>::denorm_min())
 	{
 		imageSizeMmY = (double)imageSizeY * 25.4 / (double)vertDPI;
 	}
@@ -726,7 +728,7 @@ std::int32_t view::millimitersToImagePosX(double millimitersX)
 
 	double mmSizeX, mmSizeY;
 	m_originalImage->getSizeMm(&mmSizeX, &mmSizeY);
-	if(mmSizeX == 0)
+    if(fabs(mmSizeX) <= std::numeric_limits<double>::denorm_min())
 	{
 		return 0;
 	}
@@ -753,7 +755,7 @@ std::int32_t view::millimitersToImagePosY(double millimitersY)
 
 	double mmSizeX, mmSizeY;
 	m_originalImage->getSizeMm(&mmSizeX, &mmSizeY);
-	if(mmSizeY == 0)
+    if(fabs(mmSizeY) <= std::numeric_limits<double>::denorm_min())
 	{
 		return 0;
 	}
@@ -866,11 +868,11 @@ void view::updateImageRect(std::int32_t centerPointX, std::int32_t centerPointY)
 		double imageSizeMmY = 0;
 		m_originalImage->getSizeMm(&imageSizeMmX, &imageSizeMmY);
 
-		if(imageSizeMmX == 0)
+        if(fabs(imageSizeMmX) <= std::numeric_limits<double>::denorm_min())
 		{
 			imageSizeMmX = (double)imageSizeX * 25.4 / (double)screenHorzDPI;
 		}
-		if(imageSizeMmY == 0)
+        if(fabs(imageSizeMmY) <= std::numeric_limits<double>::denorm_min())
 		{
 			imageSizeMmY = (double)imageSizeY * 25.4 / (double)screenVertDPI;
 		}
@@ -978,8 +980,8 @@ void view::setImage(std::shared_ptr<image> pImage, std::shared_ptr<transforms::t
 
 	if(oldSizeX == newSizeX &&
 		oldSizeY == newSizeY &&
-		oldSizeMmX == newSizeMmX &&
-		oldSizeMmY == newSizeMmY)
+        fabs(oldSizeMmX - newSizeMmX) <= std::numeric_limits<double>::denorm_min() &&
+        fabs(oldSizeMmY - newSizeMmY) <= std::numeric_limits<double>::denorm_min())
 	{
 		invalidate();
 		return;

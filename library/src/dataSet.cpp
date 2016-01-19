@@ -38,12 +38,17 @@ DataSet& DataSet::operator=(const DataSet& right)
 	return *this;
 }
 
-Image DataSet::getImage(size_t frameNumber)
+Image DataSet::getImage(std::uint32_t frameNumber)
 {
     return Image(m_pDataSet->getImage((std::uint32_t)frameNumber));
 }
 
-void DataSet::setImage(size_t frameNumber, Image image, const std::string& transferSyntax, imageQuality quality)
+Image DataSet::getImageApplyModalityTransform(std::uint32_t frameNumber)
+{
+    return Image(m_pDataSet->getModalityImage((std::uint32_t)frameNumber));
+}
+
+void DataSet::setImage(std::uint32_t frameNumber, Image image, const std::string& transferSyntax, imageQuality quality)
 {
 	m_pDataSet->setImage(frameNumber, image.m_pImage, transferSyntax, (puntoexe::imebra::codecs::codec::quality)quality);
 }

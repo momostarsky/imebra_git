@@ -421,7 +421,7 @@ memory* memoryPool::getMemory(size_t requestedSize)
 			return pMemory;
 		}
 
-		std::uint32_t lastUsedCell = m_firstFreeCell == 0 ? (IMEBRA_MEMORY_POOL_SLOTS - 1) : (m_firstFreeCell - 1);
+        size_t lastUsedCell = m_firstFreeCell == 0 ? (IMEBRA_MEMORY_POOL_SLOTS - 1) : (m_firstFreeCell - 1);
 		if(findCell == lastUsedCell)
 		{
 			m_firstFreeCell = lastUsedCell;
