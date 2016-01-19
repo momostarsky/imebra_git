@@ -162,6 +162,7 @@ add_executable(ImebraTests
     unicodeStringHandlerTest.cpp
     transactionTest.cpp
     streamBitsTest.cpp
+    colorConversionTest.cpp
     paletteTest.cpp
     numericHandlerTest.cpp
     memoryStreamTest.cpp
