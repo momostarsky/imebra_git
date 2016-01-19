@@ -9,6 +9,7 @@ add_executable(ImebraTests
     ../library/imebra/include/YBRFULLToRGB.h
     ../library/imebra/include/YBRFULLToMONOCHROME2.h
     ../library/imebra/include/waveform.h
+    ../library/imebra/include/applyLUT.h
     ../library/imebra/include/VOILUT.h
     ../library/imebra/include/viewHelper.h
     ../library/imebra/include/transformsChain.h
@@ -94,6 +95,7 @@ add_executable(ImebraTests
     ../library/imebra/src/YBRFULLToRGB.cpp
     ../library/imebra/src/YBRFULLToMONOCHROME2.cpp
     ../library/imebra/src/waveform.cpp
+    ../library/imebra/src/applyLUT.cpp
     ../library/imebra/src/VOILUT.cpp
     ../library/imebra/src/viewHelper.cpp
     ../library/imebra/src/transformsChain.cpp
