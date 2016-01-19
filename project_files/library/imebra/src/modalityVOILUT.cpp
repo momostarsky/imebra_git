@@ -116,7 +116,7 @@ ptr<image> modalityVOILUT::allocateOutputImage(ptr<image> pInputImage, std::uint
             }
         }
 		ptr<image> returnImage(new image);
-		returnImage->create(width, height, depth, L"MONOCHROME2", bits - 1);
+        returnImage->create(width, height, depth, pInputImage->getColorSpace(), bits - 1);
 		return returnImage;
 	}
 
@@ -125,7 +125,7 @@ ptr<image> modalityVOILUT::allocateOutputImage(ptr<image> pInputImage, std::uint
 	if(m_rescaleSlope == 0)
 	{
 		ptr<image> returnImage(new image);
-		returnImage->create(width, height, pInputImage->getDepth(), L"MONOCHROME2", pInputImage->getHighBit());
+        returnImage->create(width, height, pInputImage->getDepth(), pInputImage->getColorSpace(), pInputImage->getHighBit());
 		return returnImage;
 	}
 
@@ -157,25 +157,25 @@ ptr<image> modalityVOILUT::allocateOutputImage(ptr<image> pInputImage, std::uint
 	ptr<image> returnImage(new image);
 	if(minValue >= 0 && maxValue <= 255)
 	{
-		returnImage->create(width, height, image::depthU8, L"MONOCHROME2", 7);
+        returnImage->create(width, height, image::depthU8, pInputImage->getColorSpace(), 7);
 		return returnImage;
 	}
 	if(minValue >= -128 && maxValue <= 127)
 	{
-		returnImage->create(width, height, image::depthS8, L"MONOCHROME2", 7);
+        returnImage->create(width, height, image::depthS8, pInputImage->getColorSpace(), 7);
 		return returnImage;
 	}
 	if(minValue >= 0 && maxValue <= 65535)
 	{
-		returnImage->create(width, height, image::depthU16, L"MONOCHROME2", 15);
+        returnImage->create(width, height, image::depthU16, pInputImage->getColorSpace(), 15);
 		return returnImage;
 	}
 	if(minValue >= -32768 && maxValue <= 32767)
 	{
-		returnImage->create(width, height, image::depthS16, L"MONOCHROME2", 15);
+        returnImage->create(width, height, image::depthS16, pInputImage->getColorSpace(), 15);
 		return returnImage;
 	}
-	returnImage->create(width, height, image::depthS32, L"MONOCHROME2", 31);
+    returnImage->create(width, height, image::depthS32, pInputImage->getColorSpace(), 31);
 	return returnImage;
 }
 
