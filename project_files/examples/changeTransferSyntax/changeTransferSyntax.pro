@@ -15,7 +15,7 @@ SOURCES += \
     ../../library/base/src/huffmanTable.cpp \
     ../../library/base/src/exception.cpp \
     ../../library/base/src/criticalSection.cpp \
-    ../../library/base/src/charsetConversion.cpp \
+    ../../library/base/src/charsetConversionBase.cpp \
     ../../library/base/src/baseStream.cpp \
     ../../library/base/src/baseObject.cpp \
     ../../library/imebra/src/YBRPARTIALToRGB.cpp \
@@ -74,7 +74,8 @@ SOURCES += \
 	../../library/imebra/src/transform.cpp \
     ../../library/base/src/charsetConversionICU.cpp \
     ../../library/base/src/charsetConversionIconv.cpp \
-    ../../library/base/src/charsetConversionWindows.cpp
+    ../../library/base/src/charsetConversionWindows.cpp \
+    ../../library/imebra/src/applyLUT.cpp
 
 HEADERS += \
     ../../library/base/include/streamWriter.h \
@@ -152,4 +153,5 @@ HEADERS += \
 	../../library/imebra/include/transform.h \
     ../../library/base/include/charsetConversionICU.h \
     ../../library/base/include/charsetConversionWindows.h \
-    ../../library/base/include/charsetConversionIconv.h
+    ../../library/base/include/charsetConversionIconv.h \
+    ../../library/imebra/include/applyLUT.h
