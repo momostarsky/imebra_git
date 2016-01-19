@@ -80,14 +80,6 @@ add_executable(ImebraTests
     ../library/base/include/charsetConversion.h
     ../library/base/include/baseStream.h
     ../library/base/include/baseObject.h
-    ../docs/mainPage.h
-    ../docs/g_examples.h
-    ../docs/f_transactions_locks.h
-    ../docs/e_unicode.h
-    ../docs/d_addToProject.h
-    ../docs/c_quick_tour.h
-    ../docs/b_imebra_structure.h
-    ../docs/a_license.h
     ../library/base/include/charsetConversionIconv.h
     ../library/base/include/charsetConversionICU.h
     ../library/base/include/charsetConversionWindows.h
