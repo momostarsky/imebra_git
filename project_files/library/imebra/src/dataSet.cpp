@@ -978,53 +978,6 @@ ptr<lut> dataSet::getLut(std::uint16_t groupId, std::uint16_t tagId, std::uint32
 ///////////////////////////////////////////////////////////
 //
 //
-// Retrieve a transform that applies the presentation LUT
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-ptr<transforms::transform> dataSet::getPresentationLUTTransform()
-{
-    PUNTOEXE_FUNCTION_START(L"dataSet::getPresentationLUTTransform");
-
-    lockObject lockAccess(this);
-
-    std::string presentationLUTShape = getString(0x2050, 0, 0x0020, 0);
-    if(presentationLUTShape.empty() || presentationLUTShape == "IDENTITY")
-    {
-        return 0;
-    }
-
-    if(presentationLUTShape == "INVERSE")
-    {
-        std::wstring colorSpace = transforms::colorTransforms::colorTransformsFactory::normalizeColorSpace(getUnicodeString(0x0028, 0, 0x0004, 0));
-        if(colorSpace == L"MONOCHROME2")
-        {
-            return ptr<transforms::transform>(new transforms::colorTransforms::MONOCHROME2ToMONOCHROME1());
-        }
-        else
-        {
-            return ptr<transforms::transform>(new transforms::colorTransforms::MONOCHROME1ToMONOCHROME2());
-        }
-    }
-
-    ptr<lut> pLUT = getLut(0x2050, 0x0010, 0);
-    if(pLUT != 0)
-    {
-        return ptr<transforms::transform>(new transforms::applyLUT(pLUT));
-    }
-
-    return 0;
-
-    PUNTOEXE_FUNCTION_END();
-
-}
-
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
 // Retrieve a waveform
 //
 //
