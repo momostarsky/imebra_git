@@ -51,13 +51,14 @@ dicomDictionary::dicomDictionary()
 	registerVR("DA", false, 0, 0);
 	registerVR("DS", false, 0, 16);
 	registerVR("DT", false, 0, 26);
-	registerVR("FL", false, 0, 0);
-	registerVR("FD", false, 0, 0);
-	registerVR("IS", false, 0, 12);
+    registerVR("FL", false, 4, 0);
+    registerVR("FD", false, 8, 0);
+    registerVR("IS", false, 0, 12);
 	registerVR("LO", false, 0, 64);
 	registerVR("LT", false, 0, 10240);
 	registerVR("OB", true,  0, 0);
 	registerVR("OF", true,  4, 0);
+    registerVR("OD", true,  8, 0);
 	registerVR("OW", true,  2, 0);
 	registerVR("PN", false, 0, 64);
 	registerVR("SH", false, 0, 16);

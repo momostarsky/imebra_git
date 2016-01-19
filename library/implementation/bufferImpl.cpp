@@ -287,14 +287,14 @@ std::shared_ptr<handlers::readingDataHandler> buffer::getReadingDataHandler() co
 
     // Retrieve a float handler
     ///////////////////////////////////////////////////////////
-    if(m_bufferType=="FL")
+    if(m_bufferType=="FL" || m_bufferType == "OF")
     {
         return std::make_shared<handlers::readingDataHandlerNumeric<float> >(localMemory, m_bufferType);
     }
 
     // Retrieve a double float handler
     ///////////////////////////////////////////////////////////
-    if(m_bufferType=="FD")
+    if(m_bufferType == "FD" || m_bufferType == "OD")
     {
         return std::make_shared<handlers::readingDataHandlerNumeric<double> >(localMemory, m_bufferType);
     }
@@ -483,14 +483,14 @@ std::shared_ptr<handlers::writingDataHandler> buffer::getWritingDataHandler(std:
 
     // Retrieve a float handler
     ///////////////////////////////////////////////////////////
-    if(m_bufferType=="FL")
+    if(m_bufferType=="FL" || m_bufferType == "OF")
     {
         return std::make_shared<handlers::writingDataHandlerNumeric<float> >(shared_from_this(), size, m_bufferType);
     }
 
     // Retrieve a double float handler
     ///////////////////////////////////////////////////////////
-    if(m_bufferType=="FD")
+    if(m_bufferType == "FD" || m_bufferType == "OD")
     {
         return std::make_shared<handlers::writingDataHandlerNumeric<double> >(shared_from_this(), size, m_bufferType);
     }
