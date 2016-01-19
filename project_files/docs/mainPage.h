@@ -71,13 +71,13 @@ A detailed reference of the C++ classes that compose Imebra is included in
 
 \subsection version_current Changes for version $imebraVersion$
 
-- Fixes <a href="https://bitbucket.org/binarno/imebra/issues/115>#115</a> (The modality VOI/LUT always return a MONOCHROME2 image)
+- Fixes <a href="https://bitbucket.org/binarno/imebra/issues/115">#115</a> (The modality VOI/LUT always return a MONOCHROME2 image)
 
 
 \subsection version_2015_20151022_001 Changes for version 2015 20151130-001
 
-- Fixes <a href="https://bitbucket.org/binarno/imebra/issues/112>#112</a> (MAXIMUM_IMAGE_WIDTH and MAXIMUM_IMAGE_HEIGHT are not defined)
-- Fixes <a href="https://bitbucket.org/binarno/imebra/issues/113>#113</a> (Corrupted test files have a name that is incompatible with Windows)
+- Fixes <a href="https://bitbucket.org/binarno/imebra/issues/112">#112</a> (MAXIMUM_IMAGE_WIDTH and MAXIMUM_IMAGE_HEIGHT are not defined)
+- Fixes <a href="https://bitbucket.org/binarno/imebra/issues/113">#113</a> (Corrupted test files have a name that is incompatible with Windows)
 - Refactored the DICOM charset conversion to/from Unicode
 
 
