@@ -33,7 +33,7 @@ namespace transforms
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-/// \brief This exception is thrown by modalityVOILUT
+/// \brief This exception is thrown by applyLUT
 ///         when the images passed to the transform are
 ///         not monochromatic.
 ///
