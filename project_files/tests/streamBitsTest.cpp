@@ -103,6 +103,79 @@ TEST(streamBitsTest, adjustEndianessTest3)
     EXPECT_EQ(0xfd, ((std::uint8_t*)&uint32Number)[3]);
 }
 
+TEST(streamBitsTest, adjustEndianessTest4)
+{
+    std::uint64_t uint64Numbers[2];
+    uint64Numbers[0] = 0xaaabacadaeafb0b1;
+    uint64Numbers[1] = 0xbabbbcbdbebfc0c1;
+
+    streamController::adjustEndian((std::uint8_t*)uint64Numbers, 8, streamController::lowByteEndian, 2);
+
+    EXPECT_EQ(0xb1, ((std::uint8_t*)uint64Numbers)[0]);
+    EXPECT_EQ(0xb0, ((std::uint8_t*)uint64Numbers)[1]);
+    EXPECT_EQ(0xaf, ((std::uint8_t*)uint64Numbers)[2]);
+    EXPECT_EQ(0xae, ((std::uint8_t*)uint64Numbers)[3]);
+    EXPECT_EQ(0xad, ((std::uint8_t*)uint64Numbers)[4]);
+    EXPECT_EQ(0xac, ((std::uint8_t*)uint64Numbers)[5]);
+    EXPECT_EQ(0xab, ((std::uint8_t*)uint64Numbers)[6]);
+    EXPECT_EQ(0xaa, ((std::uint8_t*)uint64Numbers)[7]);
+    EXPECT_EQ(0xc1, ((std::uint8_t*)uint64Numbers)[8]);
+    EXPECT_EQ(0xc0, ((std::uint8_t*)uint64Numbers)[9]);
+    EXPECT_EQ(0xbf, ((std::uint8_t*)uint64Numbers)[10]);
+    EXPECT_EQ(0xbe, ((std::uint8_t*)uint64Numbers)[11]);
+    EXPECT_EQ(0xbd, ((std::uint8_t*)uint64Numbers)[12]);
+    EXPECT_EQ(0xbc, ((std::uint8_t*)uint64Numbers)[13]);
+    EXPECT_EQ(0xbb, ((std::uint8_t*)uint64Numbers)[14]);
+    EXPECT_EQ(0xba, ((std::uint8_t*)uint64Numbers)[15]);
+
+    std::uint64_t uint64Number = streamController::adjustEndian((std::uint64_t)0xfafbfcfdfeff0001, streamController::lowByteEndian);
+    EXPECT_EQ(0x01, ((std::uint8_t*)&uint64Number)[0]);
+    EXPECT_EQ(0x00, ((std::uint8_t*)&uint64Number)[1]);
+    EXPECT_EQ(0xff, ((std::uint8_t*)&uint64Number)[2]);
+    EXPECT_EQ(0xfe, ((std::uint8_t*)&uint64Number)[3]);
+    EXPECT_EQ(0xfd, ((std::uint8_t*)&uint64Number)[4]);
+    EXPECT_EQ(0xfc, ((std::uint8_t*)&uint64Number)[5]);
+    EXPECT_EQ(0xfb, ((std::uint8_t*)&uint64Number)[6]);
+    EXPECT_EQ(0xfa, ((std::uint8_t*)&uint64Number)[7]);
+}
+
+TEST(streamBitsTest, adjustEndianessTest5)
+{
+    std::uint64_t uint64Numbers[2];
+    uint64Numbers[0] = 0xaaabacadaeafb0b1;
+    uint64Numbers[1] = 0xbabbbcbdbebfc0c1;
+
+    streamController::adjustEndian((std::uint8_t*)uint64Numbers, 8, streamController::highByteEndian, 2);
+
+    EXPECT_EQ(0xaa, ((std::uint8_t*)uint64Numbers)[0]);
+    EXPECT_EQ(0xab, ((std::uint8_t*)uint64Numbers)[1]);
+    EXPECT_EQ(0xac, ((std::uint8_t*)uint64Numbers)[2]);
+    EXPECT_EQ(0xad, ((std::uint8_t*)uint64Numbers)[3]);
+    EXPECT_EQ(0xae, ((std::uint8_t*)uint64Numbers)[4]);
+    EXPECT_EQ(0xaf, ((std::uint8_t*)uint64Numbers)[5]);
+    EXPECT_EQ(0xb0, ((std::uint8_t*)uint64Numbers)[6]);
+    EXPECT_EQ(0xb1, ((std::uint8_t*)uint64Numbers)[7]);
+    EXPECT_EQ(0xba, ((std::uint8_t*)uint64Numbers)[8]);
+    EXPECT_EQ(0xbb, ((std::uint8_t*)uint64Numbers)[9]);
+    EXPECT_EQ(0xbc, ((std::uint8_t*)uint64Numbers)[10]);
+    EXPECT_EQ(0xbd, ((std::uint8_t*)uint64Numbers)[11]);
+    EXPECT_EQ(0xbe, ((std::uint8_t*)uint64Numbers)[12]);
+    EXPECT_EQ(0xbf, ((std::uint8_t*)uint64Numbers)[13]);
+    EXPECT_EQ(0xc0, ((std::uint8_t*)uint64Numbers)[14]);
+    EXPECT_EQ(0xc1, ((std::uint8_t*)uint64Numbers)[15]);
+
+    std::uint64_t uint64Number = streamController::adjustEndian((std::uint64_t)0xfafbfcfdfeff0001, streamController::highByteEndian);
+    EXPECT_EQ(0xfa, ((std::uint8_t*)&uint64Number)[0]);
+    EXPECT_EQ(0xfb, ((std::uint8_t*)&uint64Number)[1]);
+    EXPECT_EQ(0xfc, ((std::uint8_t*)&uint64Number)[2]);
+    EXPECT_EQ(0xfd, ((std::uint8_t*)&uint64Number)[3]);
+    EXPECT_EQ(0xfe, ((std::uint8_t*)&uint64Number)[4]);
+    EXPECT_EQ(0xff, ((std::uint8_t*)&uint64Number)[5]);
+    EXPECT_EQ(0x00, ((std::uint8_t*)&uint64Number)[6]);
+    EXPECT_EQ(0x01, ((std::uint8_t*)&uint64Number)[7]);
+}
+
+
 TEST(streamBitsTest, test)
 {
 	std::srand(100);

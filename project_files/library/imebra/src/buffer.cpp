@@ -298,14 +298,14 @@ ptr<handlers::dataHandler> buffer::getDataHandler(bool bWrite, bool bRaw, std::u
 
 		// Retrieve a float handler
 		///////////////////////////////////////////////////////////
-		if(m_bufferType=="FL")
+        if(m_bufferType=="FL" || m_bufferType == "OF")
 		{
 			handler = new handlers::dataHandlerNumeric<float>;
 		}
 
 		// Retrieve a double float handler
 		///////////////////////////////////////////////////////////
-		if(m_bufferType=="FD")
+        if(m_bufferType == "FD" || m_bufferType == "OD")
 		{
 			handler = new handlers::dataHandlerNumeric<double>;
 		}

@@ -162,7 +162,8 @@ public:
 
     static std::uint32_t adjustEndian(std::uint32_t buffer, const tByteOrdering endianType);
 
-	//@}
+    static std::uint64_t adjustEndian(std::uint64_t buffer, const tByteOrdering endianType);
+    //@}
 
 public:
 
