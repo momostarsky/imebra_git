@@ -989,12 +989,6 @@ ptr<transforms::transform> dataSet::getPresentationLUTTransform()
 
     lockObject lockAccess(this);
 
-    ptr<lut> pLUT = getLut(0x2050, 0x0010, 0);
-    if(pLUT != 0)
-    {
-        return ptr<transforms::transform>(new transforms::applyLUT(pLUT));
-    }
-
     std::string presentationLUTShape = getString(0x2050, 0, 0x0020, 0);
     if(presentationLUTShape.empty() || presentationLUTShape == "IDENTITY")
     {
@@ -1013,6 +1007,13 @@ ptr<transforms::transform> dataSet::getPresentationLUTTransform()
             return ptr<transforms::transform>(new transforms::colorTransforms::MONOCHROME1ToMONOCHROME2());
         }
     }
+
+    ptr<lut> pLUT = getLut(0x2050, 0x0010, 0);
+    if(pLUT != 0)
+    {
+        return ptr<transforms::transform>(new transforms::applyLUT(pLUT));
+    }
+
     return 0;
 
     PUNTOEXE_FUNCTION_END();
