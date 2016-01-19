@@ -412,16 +412,6 @@ public:
 	///////////////////////////////////////////////////////////
 	ptr<lut> getLut(std::uint16_t groupId, std::uint16_t tagId, std::uint32_t lutId);
 
-    /// \brief Retrieve a transform that applies the
-    ///        presentation LUT to the image.
-    /// @return a transform that applies the presentation
-    ///        LUT to an image, or a null pointer if the
-    ///        presentation LUT is not present or not
-    ///        necessary
-    ///
-    ///////////////////////////////////////////////////////////
-    ptr<transforms::transform> getPresentationLUTTransform();
-
 	/// \brief Retrieve a waveform from the dataSet.
 	///
 	/// Each waveforms is stored in a sequence item;
