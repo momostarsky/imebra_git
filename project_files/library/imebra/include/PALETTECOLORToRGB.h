@@ -87,15 +87,15 @@ public:
             std::int32_t paletteValue;
             if(inputHighBit > outputHighBit)
             {
-                std::uint32_t rightShift = inputHighBit - outputHighBit;
+                std::int32_t division = (std::int32_t)1 << (inputHighBit - outputHighBit);
                 for(; inputHeight != 0; --inputHeight)
                 {
                     for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
                     {
                         paletteValue = (std::int32_t) (*pInputMemory++);
-                        *pOutputMemory++ = (outputType)((pRed->mappedValue(paletteValue) >> rightShift) + outputHandlerMinValue);
-                        *pOutputMemory++ = (outputType)((pGreen->mappedValue(paletteValue) >> rightShift) + outputHandlerMinValue);
-                        *pOutputMemory++ = (outputType)((pBlue->mappedValue(paletteValue) >> rightShift) + outputHandlerMinValue);
+                        *pOutputMemory++ = (outputType)((pRed->mappedValue(paletteValue) / division) + outputHandlerMinValue);
+                        *pOutputMemory++ = (outputType)((pGreen->mappedValue(paletteValue) / division) + outputHandlerMinValue);
+                        *pOutputMemory++ = (outputType)((pBlue->mappedValue(paletteValue) / division) + outputHandlerMinValue);
                     }
                     pInputMemory += inputHandlerWidth - inputWidth;
                     pOutputMemory += (outputHandlerWidth - inputWidth) * 3;

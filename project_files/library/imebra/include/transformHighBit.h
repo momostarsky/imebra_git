@@ -87,12 +87,12 @@ public:
 
             if(inputHighBit > outputHighBit)
             {
-                std::uint32_t rightShift = inputHighBit - outputHighBit;
+                std::int32_t division = (std::int32_t)1 << (inputHighBit - outputHighBit);
                 for(; inputHeight != 0; --inputHeight)
                 {
                     for(int scanPixels(inputWidth * numChannels); scanPixels != 0; --scanPixels)
                     {
-                        *pOutputMemory++ = (outputType)((((std::int32_t)*(pInputMemory++) - inputHandlerMinValue) >> rightShift) + outputHandlerMinValue);
+                        *pOutputMemory++ = (outputType)((((std::int32_t)*(pInputMemory++) - inputHandlerMinValue) / division) + outputHandlerMinValue);
                     }
                     pInputMemory += (inputHandlerWidth - inputWidth) * numChannels;
                     pOutputMemory += (outputHandlerWidth - inputWidth) * numChannels;

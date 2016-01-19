@@ -80,7 +80,7 @@ public:
 
             if(inputHighBit > outputHighBit)
             {
-                std::uint32_t rightShift = outputHighBit - inputHighBit;
+                std::int32_t division = (std::int32_t)1 << (inputHighBit - outputHighBit);
                 for(; inputHeight != 0; --inputHeight)
                 {
                     for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
@@ -89,7 +89,7 @@ public:
                         sourceB = (std::int32_t)(*(pInputMemory++) - inputMiddleValue);
                         sourceR = (std::int32_t)(*(pInputMemory++) - inputMiddleValue);
 
-                        destination = sourceY + ((22970 * sourceR + 8192) >> 14);
+                        destination = sourceY + ((22970 * sourceR + 8192) / 16384);
                         if(destination < 0)
                         {
                             *(pOutputMemory++) = (outputType)outputHandlerMinValue;
@@ -100,10 +100,10 @@ public:
                         }
                         else
                         {
-                            *(pOutputMemory++) = (outputType)(outputHandlerMinValue + (destination >> rightShift));
+                            *(pOutputMemory++) = (outputType)(outputHandlerMinValue + (destination / division));
                         }
 
-                        destination = sourceY - ((5638 * sourceB + 11700 * sourceR + 8192) >> 14);
+                        destination = sourceY - ((5638 * sourceB + 11700 * sourceR + 8192) / 16384);
                         if(destination < 0)
                         {
                             *(pOutputMemory++) = (outputType)outputHandlerMinValue;
@@ -114,10 +114,10 @@ public:
                         }
                         else
                         {
-                            *(pOutputMemory++) = (outputType)(outputHandlerMinValue + (destination >> rightShift));
+                            *(pOutputMemory++) = (outputType)(outputHandlerMinValue + (destination / division));
                         }
 
-                        destination = sourceY + ((29032 * sourceB + 8192) >> 14);
+                        destination = sourceY + ((29032 * sourceB + 8192) / 16384);
                         if(destination < 0)
                         {
                             *(pOutputMemory++) = (outputType)outputHandlerMinValue;
@@ -128,7 +128,7 @@ public:
                         }
                         else
                         {
-                            *(pOutputMemory++) = (outputType)(outputHandlerMinValue + (destination >> rightShift));
+                            *(pOutputMemory++) = (outputType)(outputHandlerMinValue + (destination / division));
                         }
                     }
                     pInputMemory += (inputHandlerWidth - inputWidth) * 3;
@@ -146,7 +146,7 @@ public:
                         sourceB = (std::int32_t)(*(pInputMemory++) - inputMiddleValue);
                         sourceR = (std::int32_t)(*(pInputMemory++) - inputMiddleValue);
 
-                        destination = sourceY + ((22970 * sourceR + 8192) >> 14);
+                        destination = sourceY + ((22970 * sourceR + 8192) / 16384);
                         if(destination < 0)
                         {
                             *(pOutputMemory++) = (outputType)outputHandlerMinValue;
@@ -160,7 +160,7 @@ public:
                             *(pOutputMemory++) = (outputType)(outputHandlerMinValue + (destination << leftShift));
                         }
 
-                        destination = sourceY - ((5638 * sourceB + 11700 * sourceR + 8192) >> 14);
+                        destination = sourceY - ((5638 * sourceB + 11700 * sourceR + 8192) / 16384);
                         if(destination < 0)
                         {
                             *(pOutputMemory++) = (outputType)outputHandlerMinValue;
@@ -174,7 +174,7 @@ public:
                             *(pOutputMemory++) = (outputType)(outputHandlerMinValue + (destination << leftShift));
                         }
 
-                        destination = sourceY + ((29032 * sourceB + 8192) >> 14);
+                        destination = sourceY + ((29032 * sourceB + 8192) / 16384);
                         if(destination < 0)
                         {
                             *(pOutputMemory++) = (outputType)outputHandlerMinValue;

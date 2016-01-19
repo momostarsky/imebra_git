@@ -75,7 +75,7 @@ public:
             std::int32_t sourceR, sourceG, sourceB;
             if(inputHighBit > outputHighBit)
             {
-                std::uint32_t rightShift = inputHighBit - outputHighBit;
+                std::int32_t division = ((std::int32_t)1 << (inputHighBit - outputHighBit)) * 16384;
                 for(; inputHeight != 0; --inputHeight)
                 {
                     for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
@@ -83,7 +83,7 @@ public:
                         sourceR = (std::int32_t) (*(pInputMemory++)) - inputHandlerMinValue;
                         sourceG = (std::int32_t) (*(pInputMemory++)) - inputHandlerMinValue;
                         sourceB = (std::int32_t) (*(pInputMemory++)) - inputHandlerMinValue;
-                        *(pOutputMemory++) = (outputType) ( ((((std::int32_t)4899 * sourceR+(std::int32_t)9617 * sourceG+(std::int32_t)1868 * sourceB) >> 14) >> rightShift) + outputHandlerMinValue );
+                        *(pOutputMemory++) = (outputType) ( (((std::int32_t)4899 * sourceR+(std::int32_t)9617 * sourceG+(std::int32_t)1868 * sourceB) / division) + outputHandlerMinValue );
                     }
                     pInputMemory += (inputHandlerWidth - inputWidth) * 3;
                     pOutputMemory += outputHandlerWidth - inputWidth;
@@ -99,7 +99,7 @@ public:
                         sourceR = (std::int32_t) (*(pInputMemory++)) - inputHandlerMinValue;
                         sourceG = (std::int32_t) (*(pInputMemory++)) - inputHandlerMinValue;
                         sourceB = (std::int32_t) (*(pInputMemory++)) - inputHandlerMinValue;
-                        *(pOutputMemory++) = (outputType) ( ((((std::int32_t)4899 * sourceR+(std::int32_t)9617 * sourceG+(std::int32_t)1868 * sourceB) >> 14) << leftShift) + outputHandlerMinValue );
+                        *(pOutputMemory++) = (outputType) ( ((((std::int32_t)4899 * sourceR+(std::int32_t)9617 * sourceG+(std::int32_t)1868 * sourceB) / 16384) << leftShift) + outputHandlerMinValue );
                     }
                     pInputMemory += (inputHandlerWidth - inputWidth) * 3;
                     pOutputMemory += outputHandlerWidth - inputWidth;

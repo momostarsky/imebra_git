@@ -225,12 +225,12 @@ public:
 
             if(inputHighBit > outputHighBit)
 			{
-                std::int32_t rightShift = inputHighBit - outputHighBit;
+                std::int32_t division = (std::int32_t)1 << (inputHighBit - outputHighBit);
                 for(; inputHeight != 0; --inputHeight)
                 {
                     for(int scanPixels(inputWidth); scanPixels != 0; --scanPixels)
                     {
-                        *(pOutputMemory++) = (outputType)( outputHandlerMinValue + (pLUT->mappedValue((std::int32_t) (*(pInputMemory++))) >> rightShift ));
+                        *(pOutputMemory++) = (outputType)( outputHandlerMinValue + (pLUT->mappedValue((std::int32_t) (*(pInputMemory++))) / division));
                     }
                     pInputMemory += (inputHandlerWidth - inputWidth);
                     pOutputMemory += (outputHandlerWidth - inputWidth);

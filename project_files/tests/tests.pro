@@ -206,4 +206,5 @@ SOURCES += \
     testsSettings.cpp \
     integerStringHandlerTest.cpp \
     ../library/base/src/charsetConversionBase.cpp \
-    ../library/imebra/src/applyLUT.cpp
+    ../library/imebra/src/applyLUT.cpp \
+    colorConversionTest.cpp
