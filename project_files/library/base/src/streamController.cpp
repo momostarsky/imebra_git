@@ -115,7 +115,25 @@ void streamController::adjustEndian(std::uint8_t* pBuffer, const std::uint32_t w
 			}
 		}
 		return;
-	}
+    case 8:
+        {
+            std::uint64_t* pQWord((std::uint64_t*)pBuffer);
+            for(std::uint64_t scanWords = words; scanWords != 0; --scanWords)
+            {
+                *pQWord =
+                        ((*pQWord & 0xff00000000000000) >> 56) |
+                        ((*pQWord & 0x00ff000000000000) >> 40) |
+                        ((*pQWord & 0x0000ff0000000000) >> 24) |
+                        ((*pQWord & 0x000000ff00000000) >> 8) |
+                        ((*pQWord & 0x00000000ff000000) << 8) |
+                        ((*pQWord & 0x0000000000ff0000) << 24) |
+                        ((*pQWord & 0x000000000000ff00) << 40) |
+                        ((*pQWord & 0x00000000000000ff) << 56);
+                ++pQWord;
+            }
+        }
+        return;
+    }
 }
 
 std::uint16_t streamController::adjustEndian(std::uint16_t buffer, const tByteOrdering endianType)
@@ -134,6 +152,23 @@ std::uint32_t streamController::adjustEndian(std::uint32_t buffer, const tByteOr
         return buffer;
     }
     return ((buffer & 0xff000000) >> 24) | ((buffer & 0x00ff0000) >> 8) | ((buffer & 0x0000ff00) << 8) | ((buffer & 0x000000ff) << 24);
+}
+
+std::uint64_t streamController::adjustEndian(std::uint64_t buffer, const tByteOrdering endianType)
+{
+    if(endianType == m_platformByteOrder)
+    {
+        return buffer;
+    }
+    return
+        ((buffer & 0xff00000000000000) >> 56) |
+        ((buffer & 0x00ff000000000000) >> 40) |
+        ((buffer & 0x0000ff0000000000) >> 24) |
+        ((buffer & 0x000000ff00000000) >> 8) |
+        ((buffer & 0x00000000ff000000) << 8) |
+        ((buffer & 0x0000000000ff0000) << 24) |
+        ((buffer & 0x000000000000ff00) << 40) |
+        ((buffer & 0x00000000000000ff) << 56);
 }
 
 
