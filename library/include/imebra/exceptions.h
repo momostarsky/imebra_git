@@ -2,7 +2,7 @@
 #define imebraExceptions_SWIG_A807A3CA_FA04_44f4_85D2_C7AA2FE103C4__INCLUDED_
 
 #include <stdexcept>
-
+#include <string>
 #include "definitions.h"
 
 namespace imebra

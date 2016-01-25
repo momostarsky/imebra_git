@@ -17,6 +17,7 @@ The class hides the platform specific implementations and supplies a common
 #ifndef SWIG
 
 #include <jni.h>
+#include <string>
 #include "../imebra/project_files/library/base/include/charsetConversionImpl.h"
 
 

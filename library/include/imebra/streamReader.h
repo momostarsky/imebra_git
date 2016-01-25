@@ -29,9 +29,6 @@ namespace imebra
 
 class CodecFactory;
 
-/// \addtogroup group_swig_bindings
-/// @{
-
 class IMEBRA_API StreamReader
 {
     friend class CodecFactory;
@@ -49,8 +46,6 @@ protected:
 	std::shared_ptr<puntoexe::streamReader> m_pReader;
 #endif
 };
-
-///@}
 
 }
 

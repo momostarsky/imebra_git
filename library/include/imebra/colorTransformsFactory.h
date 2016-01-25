@@ -10,6 +10,7 @@ $fileHeader$
 #if !defined(imebraColorTransformsFactory_SWIG_F6221390_BC44_4B83_B5BB_3485222FF1DD__INCLUDED_)
 #define imebraColorTransformsFactory_SWIG_F6221390_BC44_4B83_B5BB_3485222FF1DD__INCLUDED_
 
+#include <string>
 #include "transform.h"
 #include "definitions.h"
 

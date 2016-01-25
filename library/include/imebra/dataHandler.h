@@ -12,6 +12,7 @@ $fileHeader$
 
 #ifndef SWIG
 
+#include <string>
 #include <memory>
 #include "definitions.h"
 

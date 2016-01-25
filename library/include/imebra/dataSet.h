@@ -12,6 +12,8 @@ $fileHeader$
 
 #ifndef SWIG
 
+#include <string>
+#include <cstdint>
 #include <memory>
 #include "image.h"
 #include "dataHandler.h"
@@ -30,8 +32,10 @@ namespace imebra
 {
 
 ///
-/// \brief The DataSet class
 ///
+/// This class represents a DICOM dataset.
+///
+///////////////////////////////////////////////////////////
 class IMEBRA_API DataSet
 {
 #ifndef SWIG
@@ -51,21 +55,101 @@ public:
 	DataSet(std::shared_ptr<puntoexe::imebra::dataSet> pDataSet);
 #endif
 
-	enum imageQuality
-	{
-		veryHigh = 0,      ///< the image is saved with very high quality. No subsampling is performed and no quantization
-		high = 100,        ///< the image is saved with high quality. No subsampling is performed. Quantization ratios are low
-		aboveMedium = 200, ///< the image is saved in medium quality. Horizontal subsampling is applied. Quantization ratios are low
-		medium = 300,      ///< the image is saved in medium quality. Horizontal subsampling is applied. Quantization ratios are medium
-		belowMedium = 400, ///< the image is saved in medium quality. Horizontal and vertical subsampling are applied. Quantization ratios are medium
-		low = 500,         ///< the image is saved in low quality. Horizontal and vertical subsampling are applied. Quantization ratios are higher than the ratios used in the belowMedium quality
-		veryLow = 600	   ///< the image is saved in low quality. Horizontal and vertical subsampling are applied. Quantization ratios are high
-	};
-
+    ///
+    /// \brief Retrieve an image from the dataset.
+    ///
+    /// Images should be retrieved in order (first frame 0,
+    ///  then frame 1, then frame 2 and so on).
+    /// Images can be retrieved also in random order but this
+    ///  introduces performance penalties.
+    ///
+    /// Throws dataSetImageDoesntExist if the requested frame
+    ///  does not exist.
+    ///
+    /// \note Images retrieved from the dataset should be
+    ///       processed by the ModalityVOILUT transform,
+    ///       which converts the modality-specific pixel
+    ///       values to values that the application can
+    ///       understand. Consider using
+    ///       getImageApplyModalityTransform() to retrieve
+    ///       the image already processed by ModalityVOILUT.
+    ///
+    /// \param frameNumber the frame to retrieve (the first
+    ///                    frame is 0)
+    /// \return an image object containing the decompressed
+    ///         image
+    ///
+    ///////////////////////////////////////////////////////////
     Image getImage(std::uint32_t frameNumber);
 
+    ///
+    /// \brief Retrieve an image from the dataset and if
+    ///        necessary process it with ModalityVOILUT before
+    ///        returning it.
+    ///
+    /// Images should be retrieved in order (first frame 0,
+    ///  then frame 1, then frame 2 and so on).
+    /// Images can be retrieved also in random order but this
+    ///  introduces performance penalties.
+    ///
+    /// Throws dataSetImageDoesntExist if the requested frame
+    ///  does not exist.
+    ///
+    /// \param frameNumber the frame to retrieve (the first
+    ///                    frame is 0)
+    /// \return an image object containing the decompressed
+    ///         image, processed with ModalityVOILUT
+    ///
+    ///////////////////////////////////////////////////////////
     Image getImageApplyModalityTransform(std::uint32_t frameNumber);
 
+    ///
+    /// \brief This enumeration specifies the quality of the
+    ///        compressed image when a lossy compression format
+    ///        is used.
+    ///
+    ///////////////////////////////////////////////////////////
+    enum imageQuality
+    {
+        veryHigh = 0,      ///< the image is saved with very high quality. No subsampling is performed and no quantization
+        high = 100,        ///< the image is saved with high quality. No subsampling is performed. Quantization ratios are low
+        aboveMedium = 200, ///< the image is saved in medium quality. Horizontal subsampling is applied. Quantization ratios are low
+        medium = 300,      ///< the image is saved in medium quality. Horizontal subsampling is applied. Quantization ratios are medium
+        belowMedium = 400, ///< the image is saved in medium quality. Horizontal and vertical subsampling are applied. Quantization ratios are medium
+        low = 500,         ///< the image is saved in low quality. Horizontal and vertical subsampling are applied. Quantization ratios are higher than the ratios used in the belowMedium quality
+        veryLow = 600	   ///< the image is saved in low quality. Horizontal and vertical subsampling are applied. Quantization ratios are high
+    };
+
+    ///
+    /// \brief Insert an image into the dataset.
+    ///
+    /// In multi-frame datasets the images must be inserted
+    ///  in order: first insert the frame 0, then the frame 1,
+    ///  then the frame 2 and so on.
+    ///
+    /// All the inserted images must have the same transfer
+    ///  syntax and the same properties (size, color space,
+    ///  high bit, bits allocated).
+    ///
+    /// If the images are inserted in the wrong order then the
+    ///  dataSetExceptionWrongFrame exception is thrown.
+    ///
+    /// If the image being inserted has different properties
+    ///  than the ones of the images already in the dataset
+    ///  then the exception dataSetExceptionDifferentFormat
+    ///  is thrown.
+    ///
+    /// \param frameNumber    the frame number (the first
+    ///                        frame is 0)
+    /// \param image          the object containing the image
+    /// \param transferSyntax the transfer syntax. This
+    ///                        influence also the format used
+    ///                        to store the entire dataset
+    /// \param quality        the quality to use for lossy
+    ///                       compression. Ignored if lossless
+    ///                       compression is used
+    ///
+    ///////////////////////////////////////////////////////////
     void setImage(std::uint32_t frameNumber, Image image, const std::string& transferSyntax, imageQuality quality);
 
     DataSet getSequenceItem(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t itemId);

@@ -26,40 +26,39 @@ namespace puntoexe
 namespace imebra
 {
 
-/// \addtogroup group_swig_bindings
-/// @{
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-/// \brief This class represents a stream.
+///
+/// \brief This class represents an input stream, a source
+///        of data from which the DICOM or the Jpeg
+///        decoders read the DICOM or the Jpeg file.
 ///
 /// Specialized classes derived from this class can
-///  read/write from/to files stored on the computer's
-///  disks, on the network or in memory.
+///  read from files stored on the computer's disks,
+///  on the network or in memory.
 ///
-/// The application can read or write into the stream
-///  by using the streamReader or the streamWriter.
+/// The application can read from the stream by using the
+///  StreamReader class.
 ///
 /// While this class can be used across several threads,
-///  the streamReader and the streamWriter can be used in
-///  one thread only. This is not a big deal, since one
-///  stream can be connected to several streamReaders and
-///  streamWriters.
+///  the StreamReader can be used only in one thread.
+/// Several StreamReader objects can use a BaseStreamInput
+///  object at the same time.
 ///
 /// The library supplies the specialized derived
-///  class stream, used to read or write into physical
+///  class FileStreamInput, used to read from physical
 ///  files.
 ///
 ///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
 class IMEBRA_API BaseStreamInput
 {
+
 #ifndef SWIG
 	friend class StreamReader;
 protected:
     BaseStreamInput(std::shared_ptr<puntoexe::baseStreamInput> pStream);
 #endif
+
 public:
+    BaseStreamInput();
     BaseStreamInput(const BaseStreamInput& right);
     BaseStreamInput& operator=(const BaseStreamInput& right);
 
@@ -67,20 +66,42 @@ public:
 protected:
     std::shared_ptr<puntoexe::baseStreamInput> m_pStream;
 #endif
-
-public:
-    BaseStreamInput();
 };
 
 
+///
+/// \brief This class represents an output stream, a
+///        data sink into which the DICOM or the Jpeg
+///        encoders write the DICOM or the Jpeg file.
+///
+/// Specialized classes derived from this class can
+///  write into files on the computer's disks, on the
+///   network or in memory.
+///
+/// The application can write into the stream by using the
+///  StreamWriter class.
+///
+/// While this class can be used across several threads,
+///  the StreamWriter can be used only in one thread.
+/// Several StreamWriter objects can use a BaseStreamOutput
+///  object at the same time.
+///
+/// The library supplies the specialized derived
+///  class FileStreamOutput, used to write into physical
+///  files.
+///
+///////////////////////////////////////////////////////////
 class IMEBRA_API BaseStreamOutput
 {
+
 #ifndef SWIG
     friend class StreamWriter;
 protected:
     BaseStreamOutput(std::shared_ptr<puntoexe::baseStreamOutput> pStream);
 #endif
+
 public:
+    BaseStreamOutput();
     BaseStreamOutput(const BaseStreamOutput& right);
     BaseStreamOutput& operator=(const BaseStreamOutput& right);
 
@@ -88,13 +109,7 @@ public:
 protected:
     std::shared_ptr<puntoexe::baseStreamOutput> m_pStream;
 #endif
-
-public:
-    BaseStreamOutput();
 };
-
-
-///@}
 
 }
 

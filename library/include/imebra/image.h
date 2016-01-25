@@ -13,6 +13,7 @@ $fileHeader$
 #ifndef SWIG
 
 #include <memory>
+#include <string>
 #include "definitions.h"
 #include "dataHandler.h"
 

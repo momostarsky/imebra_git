@@ -31,11 +31,11 @@ namespace puntoexe
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-/// \brief This class represents a stream.
+/// \brief This class represents an input stream.
 ///
 /// Specialized classes derived from this class can
-///  read/write from/to files stored on the computer's
-///  disks, on the network or in memory.
+///  read from files stored on the computer's disks, on the
+///  network or in memory.
 ///
 /// The application can read or write into the stream
 ///  by using the streamReader or the streamWriter.

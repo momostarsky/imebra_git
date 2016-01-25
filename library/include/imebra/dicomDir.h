@@ -14,6 +14,7 @@ $fileHeader$
 #ifndef SWIG
 
 #include <memory>
+#include <string>
 #include "dataSet.h"
 #include "definitions.h"
 
