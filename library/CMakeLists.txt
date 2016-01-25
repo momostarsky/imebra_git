@@ -2,10 +2,9 @@ cmake_minimum_required(VERSION 2.8)
 
 project("imebra")
 
+if(CMAKE_COMPILER_IS_GNUCXX)
+    message(STATUS "GCC detected, adding compile flags")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Wpedantic -Wconversion -Wfloat-equal -fvisibility=hidden -fvisibility-inlines-hidden --coverage")
-
-add_definitions(-DIMEBRA_DLL)
-add_definitions(-DIMEBRA_DLL_EXPORTS)
 
 set(IMEBRA_LIBRARIES pthread)
 
@@ -14,6 +13,10 @@ if(CMAKE_BUILD_TYPE MATCHES DEBUG)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
     set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} gcov)
 endif(CMAKE_BUILD_TYPE MATCHES DEBUG)
+endif(CMAKE_COMPILER_IS_GNUCXX)
+
+add_definitions(-DIMEBRA_DLL)
+add_definitions(-DIMEBRA_DLL_EXPORTS)
 
 # Select the proper libraries according to the charset conversion method
 #-----------------------------------------------------------------------
@@ -33,8 +36,13 @@ elseif(IMEBRA_CHARSET_CONVERSION MATCHES WINDOWS)
     add_definitions(-DIMEBRA_USE_WINDOWS_CHARSET)
     set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} Kernel32)
 else(IMEBRA_CHARSET_CONVERSION MATCHES ICONV)
+	if(WIN32)
+		message("Using WINDOWS CHARSET CONVERSION (default)")
+		add_definitions(-DIMEBRA_USE_WINDOWS_CHARSET)
+	else(WIN32)
     message("Using ICONV (default)")
     add_definitions(-DIMEBRA_USE_ICONV)
+	endif(WIN32)
 endif(IMEBRA_CHARSET_CONVERSION MATCHES ICONV)
 
 message("Linked libraries: ${IMEBRA_LIBRARIES}")
@@ -139,7 +147,11 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/copyright"
         GROUP_READ
         WORLD_READ)
 
-install(TARGETS imebra LIBRARY DESTINATION lib COMPONENT "Shared library")
+install(TARGETS imebra LIBRARY DESTINATION lib 
+						ARCHIVE DESTINATION lib
+						LIBRARY DESTINATION lib
+						RUNTIME DESTINATION bin
+						COMPONENT "Shared library")
 
 install(FILES ${imebra_interface} DESTINATION include/imebra COMPONENT "Include files")
 
