@@ -102,7 +102,7 @@ bool DirectoryRecord::isNull() const
 }
 
 
-DicomDir::DicomDir(DataSet fromDataSet): m_pDicomDir(new puntoexe::imebra::dicomDir(fromDataSet.m_pDataSet))
+DicomDir::DicomDir(DataSet fromDataSet): m_pDicomDir(std::make_shared<puntoexe::imebra::dicomDir>(fromDataSet.m_pDataSet))
 {}
 
 DataSet DicomDir::getDirectoryDataSet()

@@ -119,7 +119,9 @@ std::shared_ptr<codec> codecFactory::getCodec(const std::string& transferSyntax)
 ///////////////////////////////////////////////////////////
 std::shared_ptr<codecFactory> codecFactory::getCodecFactory()
 {
-	static std::shared_ptr<codecFactory> m_codecFactory(new codecFactory);
+    // Violation to requirement REQ_MAKE_SHARED due to protected constructor
+    static std::shared_ptr<codecFactory> m_codecFactory(new codecFactory());
+
 	return m_codecFactory;
 }
 

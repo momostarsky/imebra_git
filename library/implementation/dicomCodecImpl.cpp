@@ -59,7 +59,7 @@ std::shared_ptr<codec> dicomCodec::createCodec()
 {
 	IMEBRA_FUNCTION_START(L"dicomCodec::createCodec");
 
-	return std::shared_ptr<codec>(new dicomCodec);
+    return std::shared_ptr<codec>(std::make_shared<dicomCodec>());
 
 	IMEBRA_FUNCTION_END();
 }
@@ -885,7 +885,7 @@ void dicomCodec::parseStream(std::shared_ptr<streamReader> pStream,
 			///////////////////////////////////////////////////////////
 			if((sequenceItemLength == 0xffffffff) || (::memcmp(tagType, "SQ", 2) == 0))
 			{
-				std::shared_ptr<dataSet> sequenceDataSet(new dataSet);
+                std::shared_ptr<dataSet> sequenceDataSet(std::make_shared<dataSet>());
 				sequenceDataSet->setItemOffset(itemOffset);
 				std::uint32_t effectiveLength(0);
 				parseStream(pStream, sequenceDataSet, bExplicitDataType, endianType, maxSizeBufferLoad, sequenceItemLength, &effectiveLength, depth + 1);
@@ -1033,7 +1033,7 @@ std::shared_ptr<image> dicomCodec::getImage(const dataSet& dataset, std::shared_
 		}
 	}
 
-	std::shared_ptr<image> pImage(new image);
+    std::shared_ptr<image> pImage(std::make_shared<image>());
     std::shared_ptr<handlers::writingDataHandlerNumericBase> handler = pImage->create(imageSizeX, imageSizeY, depth, colorSpace, highBit);
 	std::uint32_t tempChannelsNumber = pImage->getChannelsNumber();
 
@@ -1177,7 +1177,7 @@ void dicomCodec::allocChannels(std::uint32_t channelsNumber, std::uint32_t sizeX
 	m_channels.resize(channelsNumber);
 	for(std::uint32_t channelNum = 0; channelNum < channelsNumber; ++channelNum)
 	{
-		ptrChannel newChannel(new channel);
+        ptrChannel newChannel(std::make_shared<channel>());
 		std::uint32_t channelSizeX = sizeX;
 		std::uint32_t channelSizeY = sizeY;
 		std::uint32_t samplingFactorX = 1;
@@ -2208,7 +2208,7 @@ std::uint32_t dicomCodec::readTag(
 
         std::shared_ptr<data> writeData (pDataSet->getTagCreate(tagId, order, tagSubId));
 		std::shared_ptr<buffer> newBuffer(
-			new buffer(
+            std::make_shared<buffer>(
 				tagType,
 				pStream->getControlledStream(),
 				streamPosition,

@@ -20,9 +20,21 @@ $fileHeader$
 namespace imebra
 {
 
+///
+/// \brief The CodecFactory class contains a collections of
+///         codecs and select the right one when loading
+///         or writing data from/to a stream.
+///
+///////////////////////////////////////////////////////////
 class IMEBRA_API CodecFactory
 {
 public:
+    ///
+    /// \brief Tries to parse the
+    /// \param reader
+    /// \param maxSizeBufferLoad
+    /// \return
+    ///
     static DataSet load(StreamReader& reader, size_t maxSizeBufferLoad);
     static DataSet load(const std::wstring& fileName, size_t maxSizeBufferLoad);
     static DataSet load(const std::string& fileName, size_t maxSizeBufferLoad);

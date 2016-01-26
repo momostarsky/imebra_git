@@ -20,7 +20,7 @@ namespace imebra
 
 
 drawBitmap::drawBitmap(std::shared_ptr<image> sourceImage, std::shared_ptr<transforms::transformsChain> transformsChain):
-	m_image(sourceImage), m_transformsChain(new transforms::transformsChain)
+    m_image(sourceImage), m_transformsChain(std::make_shared<transforms::transformsChain>())
 {
 	if(transformsChain != 0 && !transformsChain->isEmpty())
 	{
@@ -51,7 +51,7 @@ drawBitmap::drawBitmap(std::shared_ptr<image> sourceImage, std::shared_ptr<trans
 
     if(highBit != 7 || depth != image::depthU8)
     {
-        std::shared_ptr<transforms::transformHighBit> highBitTransform(new transforms::transformHighBit());
+        std::shared_ptr<transforms::transformHighBit> highBitTransform(std::make_shared<transforms::transformHighBit>());
         m_transformsChain->addTransform(highBitTransform);
     }
 

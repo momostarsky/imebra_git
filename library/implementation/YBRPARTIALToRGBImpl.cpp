@@ -67,7 +67,7 @@ std::string YBRPARTIALToRGB::getFinalColorSpace()
 ///////////////////////////////////////////////////////////
 std::shared_ptr<colorTransform> YBRPARTIALToRGB::createColorTransform()
 {
-	return std::shared_ptr<colorTransform>(new YBRPARTIALToRGB);
+    return std::shared_ptr<colorTransform>(std::make_shared<YBRPARTIALToRGB>());
 }
 
 

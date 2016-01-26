@@ -161,11 +161,11 @@ public:
 	///
 	/// This function is usually called by 
 	///  dataSet::getImage(), which also manages the 
-	///  codec and the frame selection.
+    ///  codec and the frame selection.
 	///
 	/// The decompressed image will be stored in a image
 	///  object.
-	/// Your application can choose the frame to decompress if
+    /// Your application can choose the frame to decompress if
 	///  a multiframe Dicom structure is available.
 	///
 	/// We suggest to use the dataSet::getImage()

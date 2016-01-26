@@ -57,7 +57,7 @@ std::string MONOCHROME2ToYBRFULL::getFinalColorSpace()
 
 std::shared_ptr<colorTransform> MONOCHROME2ToYBRFULL::createColorTransform()
 {
-	return std::shared_ptr<colorTransform>(new MONOCHROME2ToYBRFULL);
+    return std::shared_ptr<colorTransform>(std::make_shared<MONOCHROME2ToYBRFULL>());
 }
 
 

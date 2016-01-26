@@ -175,6 +175,8 @@ public:
 	static std::shared_ptr<exceptionsManager> getExceptionsManager();
 
 protected:
+    exceptionsManager();
+
     typedef std::map<std::thread::id, tExceptionInfoList> tInfoMap;
 
 	tInfoMap m_information;

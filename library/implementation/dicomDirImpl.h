@@ -39,18 +39,33 @@ class dicomDir;
 /// \brief directoryRecord represents a single record in
 ///         a DICOMDIR structure (see dicomDir).
 ///
-/// A new directoryRecord object cannot be constructed 
-///  directly but only by calling dicomDir::getNewRecord() 
-///  on the directory the new record will belong to.
+/// A new directoryRecord object can be constructed
+///  by calling dicomDir::getNewRecord().
 ///
 /// 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 class directoryRecord
 {
-	friend class dicomDir;
+    friend class dicomDir;
 
 public:
+    /// \brief Constructor. A directoryRecord object must be
+    ///         connected to a dataSet object, which contains
+    ///         the record's information.
+    ///
+    /// The dataSet object is an item of the sequence tag
+    ///  0004,1220
+    ///
+    /// When a directoryRecord is connected to an empty dataSet
+    ///  then the other constructor must be used, which allows
+    ///  to define the record type.
+    ///
+    /// @param pDataSet  the dataSet that must be connected
+    ///                   to the directoryRecord
+    ///
+    ///////////////////////////////////////////////////////////
+    directoryRecord(std::shared_ptr<dataSet> pDataSet);
 
 	/// \brief Specifies the item's type.
 	///
@@ -241,26 +256,8 @@ public:
 	///////////////////////////////////////////////////////////
     void setTypeString(const std::string& recordType);
 
-
 private:
-	/// \brief Constructor. A directoryRecord object must be
-	///         connected to a dataSet object, which contains
-	///         the record's information.
-	///
-	/// The dataSet object is an item of the sequence tag 
-	///  0004,1220
-	///
-	/// When a directoryRecord is connected to an empty dataSet
-	///  then the other constructor must be used, which allows
-	///  to define the record type.
-	///
-	/// @param pDataSet  the dataSet that must be connected
-	///                   to the directoryRecord
-	///
-	///////////////////////////////////////////////////////////
-	directoryRecord(std::shared_ptr<dataSet> pDataSet);
-
-	void checkCircularReference(directoryRecord* pStartRecord);
+    void checkCircularReference(directoryRecord* pStartRecord);
 
 	void updateOffsets();
 

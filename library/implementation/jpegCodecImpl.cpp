@@ -357,10 +357,10 @@ jpegCodec::jpegCodec()
     ///////////////////////////////////////////////////////////
     for(int resetHuffmanTables = 0; resetHuffmanTables<16; ++resetHuffmanTables)
     {
-        std::shared_ptr<huffmanTable> huffmanDC(new huffmanTable(9));
+        std::shared_ptr<huffmanTable> huffmanDC(std::make_shared<huffmanTable>(9));
         m_pHuffmanTableDC[resetHuffmanTables]=huffmanDC;
 
-        std::shared_ptr<huffmanTable> huffmanAC(new huffmanTable(9));
+        std::shared_ptr<huffmanTable> huffmanAC(std::make_shared<huffmanTable>(9));
         m_pHuffmanTableAC[resetHuffmanTables]=huffmanAC;
     }
 
@@ -369,54 +369,54 @@ jpegCodec::jpegCodec()
 
     // Unknown tag must be registered
     ///////////////////////////////////////////////////////////
-    registerTag(unknown, std::shared_ptr<jpeg::tag>(new jpeg::tagUnknown));
+    registerTag(unknown, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagUnknown>()));
 
     // Register SOF
     ///////////////////////////////////////////////////////////
-    registerTag(sof0, std::shared_ptr<jpeg::tag>(new jpeg::tagSOF));
-    registerTag(sof1, std::shared_ptr<jpeg::tag>(new jpeg::tagSOF));
-    registerTag(sof2, std::shared_ptr<jpeg::tag>(new jpeg::tagSOF));
-    registerTag(sof3, std::shared_ptr<jpeg::tag>(new jpeg::tagSOF));
-    registerTag(sof5, std::shared_ptr<jpeg::tag>(new jpeg::tagSOF));
-    registerTag(sof6, std::shared_ptr<jpeg::tag>(new jpeg::tagSOF));
-    registerTag(sof7, std::shared_ptr<jpeg::tag>(new jpeg::tagSOF));
-    registerTag(sof9, std::shared_ptr<jpeg::tag>(new jpeg::tagSOF));
-    registerTag(sofA, std::shared_ptr<jpeg::tag>(new jpeg::tagSOF));
-    registerTag(sofB, std::shared_ptr<jpeg::tag>(new jpeg::tagSOF));
-    registerTag(sofD, std::shared_ptr<jpeg::tag>(new jpeg::tagSOF));
-    registerTag(sofE, std::shared_ptr<jpeg::tag>(new jpeg::tagSOF));
-    registerTag(sofF, std::shared_ptr<jpeg::tag>(new jpeg::tagSOF));
+    registerTag(sof0, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagSOF>()));
+    registerTag(sof1, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagSOF>()));
+    registerTag(sof2, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagSOF>()));
+    registerTag(sof3, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagSOF>()));
+    registerTag(sof5, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagSOF>()));
+    registerTag(sof6, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagSOF>()));
+    registerTag(sof7, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagSOF>()));
+    registerTag(sof9, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagSOF>()));
+    registerTag(sofA, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagSOF>()));
+    registerTag(sofB, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagSOF>()));
+    registerTag(sofD, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagSOF>()));
+    registerTag(sofE, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagSOF>()));
+    registerTag(sofF, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagSOF>()));
 
     // Register DHT
     ///////////////////////////////////////////////////////////
-    registerTag(dht, std::shared_ptr<jpeg::tag>(new jpeg::tagDHT));
+    registerTag(dht, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagDHT>()));
 
     // Register DQT
     ///////////////////////////////////////////////////////////
-    registerTag(dqt, std::shared_ptr<jpeg::tag>(new jpeg::tagDQT));
+    registerTag(dqt, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagDQT>()));
 
     // Register SOS
     ///////////////////////////////////////////////////////////
-    registerTag(sos, std::shared_ptr<jpeg::tag>(new jpeg::tagSOS));
+    registerTag(sos, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagSOS>()));
 
     // Register EOI
     ///////////////////////////////////////////////////////////
-    registerTag(eoi, std::shared_ptr<jpeg::tag>(new jpeg::tagEOI));
+    registerTag(eoi, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagEOI>()));
 
     // Register RST
     ///////////////////////////////////////////////////////////
-    registerTag(rst0, std::shared_ptr<jpeg::tag>(new jpeg::tagRST));
-    registerTag(rst1, std::shared_ptr<jpeg::tag>(new jpeg::tagRST));
-    registerTag(rst2, std::shared_ptr<jpeg::tag>(new jpeg::tagRST));
-    registerTag(rst3, std::shared_ptr<jpeg::tag>(new jpeg::tagRST));
-    registerTag(rst4, std::shared_ptr<jpeg::tag>(new jpeg::tagRST));
-    registerTag(rst5, std::shared_ptr<jpeg::tag>(new jpeg::tagRST));
-    registerTag(rst6, std::shared_ptr<jpeg::tag>(new jpeg::tagRST));
-    registerTag(rst7, std::shared_ptr<jpeg::tag>(new jpeg::tagRST));
+    registerTag(rst0, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagRST>()));
+    registerTag(rst1, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagRST>()));
+    registerTag(rst2, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagRST>()));
+    registerTag(rst3, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagRST>()));
+    registerTag(rst4, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagRST>()));
+    registerTag(rst5, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagRST>()));
+    registerTag(rst6, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagRST>()));
+    registerTag(rst7, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagRST>()));
 
     // Register DRI
     ///////////////////////////////////////////////////////////
-    registerTag(dri, std::shared_ptr<jpeg::tag>(new jpeg::tagDRI));
+    registerTag(dri, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagDRI>()));
 
     IMEBRA_FUNCTION_END();
 }
@@ -435,7 +435,7 @@ std::shared_ptr<codec> jpegCodec::createCodec()
 {
     IMEBRA_FUNCTION_START(L"jpegCodec::createCodec");
 
-    return std::shared_ptr<codec>(new jpegCodec);
+    return std::shared_ptr<codec>(std::make_shared<jpegCodec>());
 
     IMEBRA_FUNCTION_END();
 }
@@ -1302,7 +1302,7 @@ std::shared_ptr<image> jpegCodec::getImage(const dataSet& sourceDataSet, std::sh
         }
     }
 
-    std::shared_ptr<image> returnImage(new image());
+    std::shared_ptr<image> returnImage(std::make_shared<image>());
     copyJpegChannelsToImage(returnImage, b2complement, colorSpace);
 
     return returnImage;
@@ -1486,7 +1486,7 @@ void jpegCodec::copyImageToJpegChannels(
 
     for(std::uint8_t channelId = 0; channelId < (std::uint8_t)channelsNumber; ++channelId)
     {
-        std::shared_ptr<jpeg::jpegChannel> pChannel(new jpeg::jpegChannel);
+        std::shared_ptr<jpeg::jpegChannel> pChannel(std::make_shared<jpeg::jpegChannel>());
         m_channelsMap[channelId] = pChannel;
 
         pChannel->m_huffmanTableAC = 0;
@@ -2958,7 +2958,7 @@ void tagSOF::readTag(streamReader* pStream, jpegCodec* pCodec, std::uint8_t tagE
         tagReader->read(&componentSamplingFactor, 1);
         tagReader->read(&componentQuantTable, 1);
 
-        ptrChannel pChannel(new jpeg::jpegChannel);
+        ptrChannel pChannel(std::make_shared<jpeg::jpegChannel>());
         pChannel->m_quantTable = (int)componentQuantTable;
         if(pChannel->m_quantTable >= 16)
         {

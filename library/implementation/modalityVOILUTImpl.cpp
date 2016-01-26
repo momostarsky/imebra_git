@@ -79,7 +79,7 @@ std::shared_ptr<image> modalityVOILUT::allocateOutputImage(std::shared_ptr<image
 {
 	if(isEmpty())
 	{
-        std::shared_ptr<image> newImage(new image());
+        std::shared_ptr<image> newImage(std::make_shared<image>());
 		newImage->create(width, height, pInputImage->getDepth(), pInputImage->getColorSpace(), pInputImage->getHighBit());
 		return newImage;
 	}
@@ -128,7 +128,7 @@ std::shared_ptr<image> modalityVOILUT::allocateOutputImage(std::shared_ptr<image
                 depth = image::depthU8;
             }
         }
-        std::shared_ptr<image> returnImage(new image);
+        std::shared_ptr<image> returnImage(std::make_shared<image>());
         returnImage->create(width, height, depth, pInputImage->getColorSpace(), bits - 1);
 		return returnImage;
 	}
@@ -137,7 +137,7 @@ std::shared_ptr<image> modalityVOILUT::allocateOutputImage(std::shared_ptr<image
 	///////////////////////////////////////////////////////////
     if(fabs(m_rescaleSlope) <= std::numeric_limits<double>::denorm_min())
 	{
-        std::shared_ptr<image> returnImage(new image);
+        std::shared_ptr<image> returnImage(std::make_shared<image>());
         returnImage->create(width, height, pInputImage->getDepth(), pInputImage->getColorSpace(), pInputImage->getHighBit());
 		return returnImage;
 	}
@@ -167,7 +167,7 @@ std::shared_ptr<image> modalityVOILUT::allocateOutputImage(std::shared_ptr<image
 		maxValue = finalValue0;
 	}
 
-    std::shared_ptr<image> returnImage(new image);
+    std::shared_ptr<image> returnImage(std::make_shared<image>());
 	if(minValue >= 0 && maxValue <= 255)
 	{
         returnImage->create(width, height, image::depthU8, pInputImage->getColorSpace(), 7);

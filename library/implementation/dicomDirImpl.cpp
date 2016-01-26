@@ -447,7 +447,7 @@ dicomDir::dicomDir(std::shared_ptr<dataSet> pDataSet):
         try
         {
             std::shared_ptr<dataSet> pDataSet(m_pDataSet->getSequenceItemThrow(0x0004, 0, 0x1220, scanItems));
-            std::shared_ptr<directoryRecord> newRecord(new directoryRecord(pDataSet));
+            std::shared_ptr<directoryRecord> newRecord(std::make_shared<directoryRecord>(pDataSet));
             offsetsToRecords[pDataSet->getItemOffset()] = newRecord;
             m_recordsList.push_back(newRecord);
         }
@@ -565,7 +565,7 @@ std::shared_ptr<directoryRecord> dicomDir::getNewRecord()
     std::shared_ptr<dataSet> recordDataSet = std::make_shared<dataSet>();
 	recordsTag->appendDataSet(recordDataSet);
 
-	std::shared_ptr<directoryRecord> newRecord(new directoryRecord(recordDataSet));
+    std::shared_ptr<directoryRecord> newRecord(std::make_shared<directoryRecord>(recordDataSet));
 	m_recordsList.push_back(newRecord);
 
 	return newRecord;
@@ -615,9 +615,9 @@ std::shared_ptr<dataSet> dicomDir::buildDataSet()
 
 	// Save to a null stream in order to update the offsets
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<nullStreamWriter> saveStream(new nullStreamWriter);
-	std::shared_ptr<streamWriter> writer(new streamWriter(saveStream));
-	std::shared_ptr<codecs::dicomCodec> writerCodec(new codecs::dicomCodec);
+    std::shared_ptr<nullStreamWriter> saveStream(std::make_shared<nullStreamWriter>());
+    std::shared_ptr<streamWriter> writer(std::make_shared<streamWriter>(saveStream));
+    std::shared_ptr<codecs::dicomCodec> writerCodec(std::make_shared<codecs::dicomCodec>());
 	writerCodec->write(writer, m_pDataSet);
 
 	// Scan all the records and update the pointers

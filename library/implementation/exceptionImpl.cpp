@@ -19,6 +19,13 @@ namespace puntoexe
 ///////////////////////////////////////////////////////////
 static exceptionsManager::forceExceptionsConstruction forceConstruction;
 
+///////////////////////////////////////////////////////////
+// Protected constructor
+///////////////////////////////////////////////////////////
+exceptionsManager::exceptionsManager()
+{
+
+}
 	
 ///////////////////////////////////////////////////////////
 // Return the message info for the specified thread
@@ -92,7 +99,9 @@ void exceptionsManager::clearExceptionInfo()
 ///////////////////////////////////////////////////////////
 std::shared_ptr<exceptionsManager> exceptionsManager::getExceptionsManager()
 {
-	static std::shared_ptr<exceptionsManager> m_manager(new exceptionsManager);
+    // Violation to requirement REQ_MAKE_SHARED due to protected constructor
+    static std::shared_ptr<exceptionsManager> m_manager(new exceptionsManager());
+
 	return m_manager;
 }
 

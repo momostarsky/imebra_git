@@ -191,7 +191,7 @@ std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
                         ::memcpy((void*)pDest, (void*)pSource, bufferHandler->getSize());
                         pDest += bufferHandler->getSize();
                     }
-                    std::shared_ptr<baseStreamInput> compositeStream(new memoryStreamInput(temporaryMemory));
+                    std::shared_ptr<baseStreamInput> compositeStream(std::make_shared<memoryStreamInput>(temporaryMemory));
                     imageStream = std::make_shared<streamReader>(compositeStream);
                 }
                 bDontNeedImagesPositions = true;
@@ -280,11 +280,11 @@ std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
 
         if(pImage->getColorSpace() == "PALETTE COLOR")
         {
-            std::shared_ptr<lut> red(new lut), green(new lut), blue(new lut);
+            std::shared_ptr<lut> red(std::make_shared<lut>()), green(std::make_shared<lut>()), blue(std::make_shared<lut>());
             red->setLut(getReadingDataHandlerThrow(0x0028, 0x0, 0x1101, 0), getReadingDataHandlerThrow(0x0028, 0x0, 0x1201, 0), L"");
             green->setLut(getReadingDataHandlerThrow(0x0028, 0x0, 0x1102, 0), getReadingDataHandlerThrow(0x0028, 0x0, 0x1202, 0), L"");
             blue->setLut(getReadingDataHandlerThrow(0x0028, 0x0, 0x1103, 0), getReadingDataHandlerThrow(0x0028, 0x0, 0x1203, 0), L"");
-            std::shared_ptr<palette> imagePalette(new palette(red, green, blue));
+            std::shared_ptr<palette> imagePalette(std::make_shared<palette>(red, green, blue));
             pImage->setPalette(imagePalette);
         }
 
@@ -321,7 +321,7 @@ std::shared_ptr<image> dataSet::getModalityImage(std::uint32_t frameNumber) cons
         return originalImage;
     }
 
-    std::shared_ptr<transforms::modalityVOILUT> modalityVOILUT(new transforms::modalityVOILUT(std::static_pointer_cast<const dataSet>(shared_from_this())));
+    std::shared_ptr<transforms::modalityVOILUT> modalityVOILUT(std::make_shared<transforms::modalityVOILUT>(std::static_pointer_cast<const dataSet>(shared_from_this())));
 
     // Convert to MONOCHROME2 if a modality transform is not present
     ////////////////////////////////////////////////////////////////
@@ -483,14 +483,14 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
 	// Get a stream to save the image
 	///////////////////////////////////////////////////////////
     std::shared_ptr<streamWriter> outputStream;
-    std::shared_ptr<memory> uncompressedImage(new memory);
+    std::shared_ptr<memory> uncompressedImage(std::make_shared<memory>());
 	if(bEncapsulated || frameNumber == 0)
 	{
         outputStream = getStreamWriter(groupId, 0, tagId, firstBufferId, dataHandlerType);
 	}
 	else
 	{
-        std::shared_ptr<puntoexe::memoryStreamOutput> memStream(new memoryStreamOutput(uncompressedImage));
+        std::shared_ptr<puntoexe::memoryStreamOutput> memStream(std::make_shared<memoryStreamOutput>(uncompressedImage));
         outputStream = std::make_shared<streamWriter>(memStream);
 	}
 

@@ -110,7 +110,8 @@ void colorTransformsFactory::registerTransform(std::shared_ptr<colorTransform> n
 ///////////////////////////////////////////////////////////
 std::shared_ptr<colorTransformsFactory> colorTransformsFactory::getColorTransformsFactory()
 {
-	static std::shared_ptr<colorTransformsFactory> m_transformFactory(new colorTransformsFactory);
+    // Violation to requirement REQ_MAKE_SHARED due to protected constructor
+    static std::shared_ptr<colorTransformsFactory> m_transformFactory(new colorTransformsFactory());
 	return m_transformFactory;
 }
 

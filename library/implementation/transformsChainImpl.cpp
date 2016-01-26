@@ -72,7 +72,7 @@ void transformsChain::runTransform(
 {
 	if(isEmpty())
 	{
-		std::shared_ptr<transformHighBit> highBit(new transformHighBit);
+        std::shared_ptr<transformHighBit> highBit(std::make_shared<transformHighBit>());
 		highBit->runTransform(inputImage, inputTopLeftX, inputTopLeftY, inputWidth, inputHeight, outputImage, outputTopLeftX, outputTopLeftY);
 		return;
 	}
@@ -171,7 +171,7 @@ std::shared_ptr<image> transformsChain::allocateOutputImage(std::shared_ptr<imag
 {
 	if(isEmpty())
 	{
-        std::shared_ptr<image> newImage(new image());
+        std::shared_ptr<image> newImage(std::make_shared<image>());
 		newImage->create(width, height, pInputImage->getDepth(), pInputImage->getColorSpace(), pInputImage->getHighBit());
 		return newImage;
 	}

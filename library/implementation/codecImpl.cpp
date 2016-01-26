@@ -49,7 +49,7 @@ std::shared_ptr<dataSet> codec::read(std::shared_ptr<streamReader> pSourceStream
 
 	// Create a new dataset
 	///////////////////////////////////////////////////////////
-	std::shared_ptr<dataSet> pDestDataSet(new dataSet);
+    std::shared_ptr<dataSet> pDestDataSet(std::make_shared<dataSet>());
 
 	// Read the stream
 	///////////////////////////////////////////////////////////

@@ -67,7 +67,7 @@ std::string YBRFULLToRGB::getFinalColorSpace()
 ///////////////////////////////////////////////////////////
 std::shared_ptr<colorTransform> YBRFULLToRGB::createColorTransform()
 {
-	return std::shared_ptr<colorTransform>(new YBRFULLToRGB);
+    return std::shared_ptr<colorTransform>(std::make_shared<YBRFULLToRGB>());
 }
 
 

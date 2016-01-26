@@ -13,7 +13,7 @@ $fileHeader$
 namespace imebra
 {
 
-DataSet::DataSet(): m_pDataSet(new puntoexe::imebra::dataSet())
+DataSet::DataSet(): m_pDataSet(std::make_shared<puntoexe::imebra::dataSet>())
 {
 }
 

@@ -133,7 +133,7 @@ std::shared_ptr<memory> buffer::getLocalMemory() const
         localMemory = std::shared_ptr<memory>(memoryPool::getMemoryPool()->getMemory(m_originalBufferLength));
         if(m_originalBufferLength != 0)
         {
-            std::shared_ptr<streamReader> reader(new streamReader(m_originalStream, m_originalBufferPosition, m_originalBufferLength));
+            std::shared_ptr<streamReader> reader(std::make_shared<streamReader>(m_originalStream, m_originalBufferPosition, m_originalBufferLength));
             std::vector<std::uint8_t> localBuffer;
             localBuffer.resize(m_originalBufferLength);
             reader->read(&localBuffer[0], m_originalBufferLength);
@@ -568,7 +568,7 @@ std::shared_ptr<streamReader> buffer::getStreamReader()
 	///////////////////////////////////////////////////////////
 	if(m_originalStream != 0 && (m_memory == 0 || m_memory->empty()) )
 	{
-        std::shared_ptr<streamReader> reader(new streamReader(m_originalStream, m_originalBufferPosition, m_originalBufferLength));
+        std::shared_ptr<streamReader> reader(std::make_shared<streamReader>(m_originalStream, m_originalBufferPosition, m_originalBufferLength));
 		return reader;
 	}
 
@@ -577,7 +577,7 @@ std::shared_ptr<streamReader> buffer::getStreamReader()
 	///////////////////////////////////////////////////////////
     std::shared_ptr<streamReader> reader;
     std::shared_ptr<memoryStreamInput> memoryStream = std::make_shared<memoryStreamInput>(getLocalMemory());
-    reader = std::shared_ptr<streamReader>(new streamReader(memoryStream));
+    reader = std::shared_ptr<streamReader>(std::make_shared<streamReader>(memoryStream));
 
 	return reader;
 

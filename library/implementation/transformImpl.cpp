@@ -84,7 +84,7 @@ void transformHandlers::runTransform(
 
 	if(isEmpty())
 	{
-		std::shared_ptr<transformHighBit> emptyTransform(new transformHighBit);
+        std::shared_ptr<transformHighBit> emptyTransform(std::make_shared<transformHighBit>());
         emptyTransform->runTransformHandlers(inputHandler, inputImageWidth, inputColorSpace, inputPalette, inputMinValue, inputHighBit,
 											 inputTopLeftX, inputTopLeftY, inputWidth, inputHeight,
                                              outputHandler, outputImageWidth, outputColorSpace, outputPalette, outputMinValue, outputHighBit,

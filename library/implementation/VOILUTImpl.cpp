@@ -289,12 +289,12 @@ std::shared_ptr<image> VOILUT::allocateOutputImage(std::shared_ptr<image> pInput
 {
 	if(isEmpty())
 	{
-        std::shared_ptr<image> newImage(new image());
+        std::shared_ptr<image> newImage(std::make_shared<image>());
 		newImage->create(width, height, pInputImage->getDepth(), pInputImage->getColorSpace(), pInputImage->getHighBit());
 		return newImage;
 	}
 
-	std::shared_ptr<image> outputImage(new image);
+    std::shared_ptr<image> outputImage(std::make_shared<image>());
 	image::bitDepth depth = pInputImage->getDepth();
 	if(m_pLUT != 0 && m_pLUT->getSize() != 0)
 	{
@@ -314,7 +314,7 @@ std::shared_ptr<image> VOILUT::allocateOutputImage(std::shared_ptr<image> pInput
 		{
 			depth = bits > 8 ? image::depthU16 : image::depthU8;
 		}
-		std::shared_ptr<image> returnImage(new image);
+        std::shared_ptr<image> returnImage(std::make_shared<image>());
 		returnImage->create(width, height, depth, pInputImage->getColorSpace(), bits - 1);
 		return returnImage;
 	}

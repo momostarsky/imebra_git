@@ -68,7 +68,7 @@ void colorTransform::checkColorSpaces(const std::string& inputHandlerColorSpace,
 
 std::shared_ptr<image> colorTransform::allocateOutputImage(std::shared_ptr<image> pInputImage, std::uint32_t width, std::uint32_t height)
 {
-    std::shared_ptr<image> newImage(new image());
+    std::shared_ptr<image> newImage(std::make_shared<image>());
 	newImage->create(width, height, pInputImage->getDepth(), getFinalColorSpace(), pInputImage->getHighBit());
 	return newImage;
 }

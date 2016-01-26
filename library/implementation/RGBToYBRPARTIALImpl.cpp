@@ -66,7 +66,7 @@ std::string RGBToYBRPARTIAL::getFinalColorSpace()
 ///////////////////////////////////////////////////////////
 std::shared_ptr<colorTransform> RGBToYBRPARTIAL::createColorTransform()
 {
-	return std::shared_ptr<colorTransform>(new RGBToYBRPARTIAL);
+    return std::shared_ptr<colorTransform>(std::make_shared<RGBToYBRPARTIAL>());
 }
 
 

@@ -66,7 +66,7 @@ std::string YBRFULLToMONOCHROME2::getFinalColorSpace()
 ///////////////////////////////////////////////////////////
 std::shared_ptr<colorTransform> YBRFULLToMONOCHROME2::createColorTransform()
 {
-	return std::shared_ptr<colorTransform>(new YBRFULLToMONOCHROME2);
+    return std::shared_ptr<colorTransform>(std::make_shared<YBRFULLToMONOCHROME2>());
 }
 
 

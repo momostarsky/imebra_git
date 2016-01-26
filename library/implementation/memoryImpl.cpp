@@ -410,7 +410,7 @@ memory* memoryPool::getMemory(size_t requestedSize)
 
 		// Memory found
 		///////////////////////////////////////////////////////////
-        memory* pMemory = new memory(m_memoryPointer[findCell]);
+        std::unique_ptr<memory> pMemory(new memory(m_memoryPointer[findCell]));
 		m_actualSize -= m_memorySize[findCell];
 		if(findCell == m_firstUsedCell)
 		{
@@ -418,14 +418,14 @@ memory* memoryPool::getMemory(size_t requestedSize)
 			{
 				m_firstUsedCell = 0;
 			}
-			return pMemory;
+            return pMemory.release();
 		}
 
         size_t lastUsedCell = m_firstFreeCell == 0 ? (IMEBRA_MEMORY_POOL_SLOTS - 1) : (m_firstFreeCell - 1);
 		if(findCell == lastUsedCell)
 		{
 			m_firstFreeCell = lastUsedCell;
-			return pMemory;
+            return pMemory.release();
 		}
 
 		m_memorySize[findCell] = m_memorySize[m_firstUsedCell];
@@ -434,7 +434,7 @@ memory* memoryPool::getMemory(size_t requestedSize)
 		{
 			m_firstUsedCell = 0;
 		}
-		return pMemory;
+        return pMemory.release();
 	}
 
     try
