@@ -19,45 +19,45 @@ VOILUT::VOILUT(const DataSet& dataset): Transform(std::make_shared<imebra::imple
 {
 }
 
-unsigned int VOILUT::getVOILUTId(unsigned int VOILUTNumber) const
+std::uint32_t VOILUT::getVOILUTId(std::uint32_t VOILUTNumber) const
 {
-    return (unsigned int) (((imebra::implementation::transforms::VOILUT*)m_pTransform.get())->getVOILUTId((std::uint32_t) VOILUTNumber));
+    return ((imebra::implementation::transforms::VOILUT*)m_pTransform.get())->getVOILUTId(VOILUTNumber);
 
 }
 
-std::wstring VOILUT::getVOILUTDescription(int VOILUTId) const
+std::wstring VOILUT::getVOILUTDescription(std::uint32_t VOILUTId) const
 {
-    return ((imebra::implementation::transforms::VOILUT*)m_pTransform.get())->getVOILUTDescription((std::uint32_t) VOILUTId);
+    return ((imebra::implementation::transforms::VOILUT*)m_pTransform.get())->getVOILUTDescription(VOILUTId);
 
 }
 
-void VOILUT::setVOILUT(int VOILUTId)
+void VOILUT::setVOILUT(std::uint32_t VOILUTId)
 {
-    ((imebra::implementation::transforms::VOILUT*)m_pTransform.get())->setVOILUT((std::uint32_t) VOILUTId);
+    ((imebra::implementation::transforms::VOILUT*)m_pTransform.get())->setVOILUT(VOILUTId);
 }
 
-void VOILUT::setCenterWidth(int center, int width)
+void VOILUT::setCenterWidth(std::int32_t center, std::int32_t width)
 {
-    ((imebra::implementation::transforms::VOILUT*)m_pTransform.get())->setCenterWidth((std::int32_t) center, (std::int32_t) width);
+    ((imebra::implementation::transforms::VOILUT*)m_pTransform.get())->setCenterWidth(center, width);
 }
 
-void VOILUT::applyOptimalVOI(Image inputImage, unsigned int topLeftX, unsigned int topLeftY, unsigned int width, unsigned int height)
+void VOILUT::applyOptimalVOI(Image inputImage, std::uint32_t topLeftX, std::uint32_t topLeftY, std::uint32_t width, std::uint32_t height)
 {
-    ((imebra::implementation::transforms::VOILUT*)m_pTransform.get())->applyOptimalVOI(inputImage.m_pImage, (std::uint32_t) topLeftX, (std::uint32_t) topLeftY, (std::uint32_t) width, (std::uint32_t) height);
+    ((imebra::implementation::transforms::VOILUT*)m_pTransform.get())->applyOptimalVOI(inputImage.m_pImage, topLeftX, topLeftY, width, height);
 }
 
-int VOILUT::getCenter() const
+std::int32_t VOILUT::getCenter() const
 {
     std::int32_t center, width;
     ((imebra::implementation::transforms::VOILUT*)m_pTransform.get())->getCenterWidth(&center, &width);
-    return (int)center;
+    return center;
 }
 
-int VOILUT::getWidth() const
+std::int32_t VOILUT::getWidth() const
 {
     std::int32_t center, width;
     ((imebra::implementation::transforms::VOILUT*)m_pTransform.get())->getCenterWidth(&center, &width);
-    return (int)width;
+    return width;
 }
 
 }

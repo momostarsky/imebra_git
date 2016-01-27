@@ -34,7 +34,7 @@ public:
 
     static std::string makeSubsampled(const std::string& colorSpace, bool bSubsampleX, bool bSubsampleY);
 
-    static int getNumberOfChannels(const std::string& colorSpace);
+    static std::uint32_t getNumberOfChannels(const std::string& colorSpace);
 
     static Transform getTransform(const std::string& startColorSpace, const std::string& endColorSpace);
 

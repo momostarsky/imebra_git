@@ -6,6 +6,7 @@ $fileHeader$
     \brief Implementation of the class dataSet.
 
 */
+#define NOMINMAX
 
 #include "exceptionImpl.h"
 #include "streamReaderImpl.h"

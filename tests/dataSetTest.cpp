@@ -68,14 +68,14 @@ TEST(dataSetTest, testFragmentation)
             imebra::ReadingDataHandler wholeHandler = testDataSet.getReadingDataHandler(0x7fe0, 0, 0x0010, scanBuffers);
             size_t totalSize;
             const char* pWholeMemory = wholeHandler.data(&totalSize);
-            std::uint32_t fragmentedSize = totalSize / 3;
+            size_t fragmentedSize = totalSize / 3;
             if(fragmentedSize & 0x1)
             {
                 ++fragmentedSize;
             }
             while(totalSize != 0)
             {
-                std::uint32_t thisSize = totalSize;
+                size_t thisSize = totalSize;
                 if(thisSize > fragmentedSize)
                 {
                     thisSize = fragmentedSize;

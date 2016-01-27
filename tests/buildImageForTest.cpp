@@ -20,7 +20,7 @@ imebra::Image buildImageForTest(
 {
     imebra::Image newImage;
     imebra::WritingDataHandler handler = newImage.create(pixelsX, pixelsY, depth, colorSpace, highBit);
-    int channelsNumber = newImage.getChannelsNumber();
+    std::uint32_t channelsNumber = newImage.getChannelsNumber();
 
 	std::int32_t range = (std::uint32_t)1 << highBit;
 	std::int32_t minValue = 0;
@@ -59,8 +59,8 @@ imebra::Image buildImageForTest(
 
 double compareImages(const imebra::Image& image0, const imebra::Image& image1)
 {
-    std::uint32_t sizeX0(image0.getSizeX()), sizeY0(image0.getSizeY());
-    std::uint32_t sizeX1(image1.getSizeX()), sizeY1(image1.getSizeY());
+    size_t sizeX0(image0.getSizeX()), sizeY0(image0.getSizeY());
+    size_t sizeX1(image1.getSizeX()), sizeY1(image1.getSizeY());
 
     if(sizeX0 != sizeX1 || sizeY0 != sizeY1)
 	{
@@ -96,7 +96,7 @@ double compareImages(const imebra::Image& image0, const imebra::Image& image1)
 		return 0;
 	}
 
-	std::uint32_t valuesNum = sizeX0 * sizeY0 * channelsNumber0;
+    size_t valuesNum = sizeX0 * sizeY0 * channelsNumber0;
 	double divisor = double(valuesNum);
     double range = (double)(1 << image0.getHighBit());
 	double difference(0);

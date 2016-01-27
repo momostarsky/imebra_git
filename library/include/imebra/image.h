@@ -67,9 +67,9 @@ public:
         const size_t sizeY,
 		const bitDepth depth,
         const std::string& colorSpace,
-        const unsigned int highBit);
+        const std::uint32_t highBit);
 
-    void setHighBit(unsigned int highBit);
+    void setHighBit(std::uint32_t highBit);
 
     double getSizeMmY() const;
     double getSizeMmX() const;
@@ -84,11 +84,11 @@ public:
 
     std::string getColorSpace() const;
 
-    int getChannelsNumber() const;
+    std::uint32_t getChannelsNumber() const;
 
     bitDepth getDepth() const;
 
-    int getHighBit() const;
+    std::uint32_t getHighBit() const;
 
 #ifndef SWIG
     std::shared_ptr<imebra::implementation::image> m_pImage;

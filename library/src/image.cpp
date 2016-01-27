@@ -36,14 +36,14 @@ WritingDataHandler Image::create(
         const size_t sizeY,
 		const bitDepth depth,
         const std::string& colorSpace,
-        const unsigned int highBit)
+        const std::uint32_t highBit)
 {
-    return WritingDataHandler(m_pImage->create((std::uint32_t)sizeX, (std::uint32_t)sizeY, (imebra::implementation::image::bitDepth)depth, colorSpace, (std::uint8_t)highBit));
+    return WritingDataHandler(m_pImage->create((std::uint32_t)sizeX, (std::uint32_t)sizeY, (imebra::implementation::image::bitDepth)depth, colorSpace, highBit));
 }
 
-void Image::setHighBit(unsigned int highBit)
+void Image::setHighBit(std::uint32_t highBit)
 {
-    m_pImage->setHighBit((std::uint8_t)highBit);
+    m_pImage->setHighBit(highBit);
 }
 
 double Image::getSizeMmX() const
@@ -90,7 +90,7 @@ std::string Image::getColorSpace() const
     return m_pImage->getColorSpace();
 }
 
-int Image::getChannelsNumber() const
+std::uint32_t Image::getChannelsNumber() const
 {
     return m_pImage->getChannelsNumber();
 }
@@ -100,9 +100,9 @@ Image::bitDepth Image::getDepth() const
     return (bitDepth)(m_pImage->getDepth());
 }
 
-int Image::getHighBit() const
+std::uint32_t Image::getHighBit() const
 {
-    return (int)(m_pImage->getHighBit());
+    return m_pImage->getHighBit();
 }
 
 }

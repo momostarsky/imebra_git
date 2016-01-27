@@ -38,7 +38,7 @@ class IMEBRA_API StreamWriter
 {
 	friend class CodecFactory;
 public:
-    StreamWriter(const BaseStreamOutput& stream, int virtualStart = 0, int virtualLength = 0);
+    StreamWriter(const BaseStreamOutput& stream, size_t virtualStart = 0, size_t virtualLength = 0);
     StreamWriter(const StreamWriter& right);
     StreamWriter& operator=(const StreamWriter& right);
 

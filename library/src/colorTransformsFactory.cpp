@@ -42,9 +42,9 @@ std::string ColorTransformsFactory::makeSubsampled(const std::string& colorSpace
     return imebra::implementation::transforms::colorTransforms::colorTransformsFactory::makeSubsampled(colorSpace, bSubsampleX, bSubsampleY);
 }
 
-int ColorTransformsFactory::getNumberOfChannels(const std::string& colorSpace)
+std::uint32_t ColorTransformsFactory::getNumberOfChannels(const std::string& colorSpace)
 {
-    return (int)imebra::implementation::transforms::colorTransforms::colorTransformsFactory::getNumberOfChannels(colorSpace);
+    return imebra::implementation::transforms::colorTransforms::colorTransformsFactory::getNumberOfChannels(colorSpace);
 }
 
 Transform ColorTransformsFactory::getTransform(const std::string& startColorSpace, const std::string& endColorSpace)

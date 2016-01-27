@@ -30,25 +30,25 @@ bool Transform::isEmpty() const
     return m_pTransform == 0 || m_pTransform->isEmpty();
 }
 
-Image Transform::allocateOutputImage(Image& inputImage, unsigned int width, unsigned int height)
+Image Transform::allocateOutputImage(Image& inputImage, std::uint32_t width, std::uint32_t height)
 {
-    return Image(m_pTransform->allocateOutputImage(inputImage.m_pImage, (std::uint32_t)width, (std::uint32_t)height));
+    return Image(m_pTransform->allocateOutputImage(inputImage.m_pImage, width, height));
 }
 
 void Transform::runTransform(
             const Image& inputImage,
-            unsigned int inputTopLeftX, unsigned int inputTopLeftY, unsigned int inputWidth, unsigned int inputHeight,
+            std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight,
             Image& outputImage,
-            unsigned int outputTopLeftX, unsigned int outputTopLeftY)
+            std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY)
 {
     m_pTransform->runTransform(inputImage.m_pImage,
-        (std::uint32_t) inputTopLeftX,
-        (std::uint32_t) inputTopLeftY,
-        (std::uint32_t) inputWidth,
-        (std::uint32_t) inputHeight,
+        inputTopLeftX,
+        inputTopLeftY,
+        inputWidth,
+        inputHeight,
         outputImage.m_pImage,
-        (std::uint32_t) outputTopLeftX,
-        (std::uint32_t) outputTopLeftY);
+        outputTopLeftX,
+        outputTopLeftY);
 }
 
 }

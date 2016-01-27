@@ -38,7 +38,7 @@ class IMEBRA_API StreamReader
 public:
     StreamReader(const BaseStreamInput& stream);
 
-    StreamReader(const BaseStreamInput& stream, int virtualStart, int virtualLength);
+    StreamReader(const BaseStreamInput& stream, size_t virtualStart, size_t virtualLength);
 
     StreamReader(const StreamReader& right);
 

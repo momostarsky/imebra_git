@@ -24,14 +24,14 @@ class IMEBRA_API VOILUT: public Transform
 public:
     VOILUT(const DataSet& dataset);
 
-    unsigned int getVOILUTId(unsigned int VOILUTNumber) const;
-    std::wstring getVOILUTDescription(int VOILUTId) const;
-	void setVOILUT(int VOILUTId);
-    void applyOptimalVOI(Image inputImage, unsigned int topLeftX, unsigned int topLeftY, unsigned int width, unsigned int height);
+    std::uint32_t getVOILUTId(std::uint32_t VOILUTNumber) const;
+    std::wstring getVOILUTDescription(std::uint32_t VOILUTId) const;
+    void setVOILUT(std::uint32_t VOILUTId);
+    void applyOptimalVOI(Image inputImage, std::uint32_t topLeftX, std::uint32_t topLeftY, std::uint32_t width, std::uint32_t height);
 	//void setLUT(std::shared_ptr<lut> pLut);
-	void setCenterWidth(int center, int width);
-    int getCenter() const;
-    int getWidth() const;
+    void setCenterWidth(std::int32_t center, std::int32_t width);
+    std::int32_t getCenter() const;
+    std::int32_t getWidth() const;
 
 
 };

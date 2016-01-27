@@ -18,7 +18,7 @@ StreamReader::StreamReader(const BaseStreamInput& stream): m_pReader(std::make_s
 }
 
 
-StreamReader::StreamReader(const BaseStreamInput& stream, int virtualStart, int virtualLength): m_pReader(std::make_shared<implementation::streamReader>(stream.m_pStream, virtualStart, virtualLength))
+StreamReader::StreamReader(const BaseStreamInput& stream, size_t virtualStart, size_t virtualLength): m_pReader(std::make_shared<implementation::streamReader>(stream.m_pStream, virtualStart, virtualLength))
 {
 }
 
