@@ -2,18 +2,24 @@ cmake_minimum_required(VERSION 2.8)
 
 project("imebra")
 
-if(CMAKE_COMPILER_IS_GNUCXX)
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     message(STATUS "GCC detected, adding compile flags")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Wpedantic -Wconversion -Wfloat-equal -fvisibility=hidden -fvisibility-inlines-hidden --coverage")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wall -Wextra -Wpedantic -Wconversion -Wfloat-equal -fvisibility=hidden -fvisibility-inlines-hidden --coverage")
 
-set(IMEBRA_LIBRARIES pthread)
+    set(IMEBRA_LIBRARIES pthread)
 
-if(CMAKE_BUILD_TYPE MATCHES DEBUG)
-    message("debug mode")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
-    set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} gcov)
-endif(CMAKE_BUILD_TYPE MATCHES DEBUG)
-endif(CMAKE_COMPILER_IS_GNUCXX)
+    if(CMAKE_BUILD_TYPE MATCHES DEBUG)
+        message("debug mode")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
+        set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} gcov)
+    endif(CMAKE_BUILD_TYPE MATCHES DEBUG)
+
+elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+
+    message(STATUS "CLANG detected, adding compile flags")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wall -Wextra -Wpedantic -Wconversion -Wfloat-equal -fvisibility=hidden -fvisibility-inlines-hidden --coverage")
+
+endif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 
 add_definitions(-DIMEBRA_DLL)
 add_definitions(-DIMEBRA_DLL_EXPORTS)
