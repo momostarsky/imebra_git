@@ -66,25 +66,25 @@ struct IMEBRA_API Age
 
 struct IMEBRA_API Date
 {
-    Date(const unsigned int initialYear,
-         const unsigned int initialMonth,
-         const unsigned int initialDay,
-         const unsigned int initialHour,
-         const unsigned int initialMinutes,
-         const unsigned int initialSeconds,
-         const unsigned int initialNanoseconds,
-         const signed int initialOffsetHours,
-         const signed int initialOffsetMinutes);
+    Date(const std::uint32_t initialYear,
+         const std::uint32_t initialMonth,
+         const std::uint32_t initialDay,
+         const std::uint32_t initialHour,
+         const std::uint32_t initialMinutes,
+         const std::uint32_t initialSeconds,
+         const std::uint32_t initialNanoseconds,
+         const std::int32_t initialOffsetHours,
+         const std::int32_t initialOffsetMinutes);
 
-    signed int year;
-    unsigned int month;
-    unsigned int day;
-    unsigned int hour;
-    int minutes;
-    unsigned int seconds;
-    unsigned int nanoseconds;
-    signed int offsetHours;
-    signed int offsetMinutes;
+    std::uint32_t year;
+    std::uint32_t month;
+    std::uint32_t day;
+    std::uint32_t hour;
+    std::uint32_t minutes;
+    std::uint32_t seconds;
+    std::uint32_t nanoseconds;
+    std::int32_t offsetHours;
+    std::int32_t offsetMinutes;
 
 };
 

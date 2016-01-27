@@ -14,7 +14,7 @@ namespace imebra
 namespace tests
 {
 
-using namespace puntoexe::imebra;
+using namespace imebra;
 
 TEST(dataSetTest, testFragmentation)
 {

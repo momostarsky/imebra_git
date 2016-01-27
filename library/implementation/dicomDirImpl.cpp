@@ -179,7 +179,7 @@ void directoryRecord::setReferencedRecord(std::shared_ptr<directoryRecord> pRefe
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::string directoryRecord::getFilePart(std::uint32_t part) const
+std::string directoryRecord::getFilePart(size_t part) const
 {
     return getRecordDataSet()->getString(0x0004, 0, 0x1500, 0, part, "");
 }
@@ -194,7 +194,7 @@ std::string directoryRecord::getFilePart(std::uint32_t part) const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void directoryRecord::setFilePart(std::uint32_t part, const std::string& partName)
+void directoryRecord::setFilePart(size_t part, const std::string& partName)
 {
     getRecordDataSet()->setString(0x0004, 0, 0x1500, 0, part, partName);
 }

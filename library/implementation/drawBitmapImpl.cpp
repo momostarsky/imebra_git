@@ -64,7 +64,7 @@ drawBitmap::drawBitmap(std::shared_ptr<image> sourceImage, std::shared_ptr<trans
 	else
 	{
         m_finalImage = std::make_shared<image>();
-        m_finalImage->create(width, 1, image::depthU8, "RGB", 7);
+        m_finalImage->create(width, height, image::depthU8, "RGB", 7);
     }
 }
 

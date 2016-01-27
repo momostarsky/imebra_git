@@ -69,27 +69,27 @@ std::string ReadingDataHandler::getDataType() const
     return m_pDataHandler->getDataType();
 }
 
-int ReadingDataHandler::getSignedLong(const int index) const
+std::int32_t ReadingDataHandler::getSignedLong(const size_t index) const
 {
-    return (int)(m_pDataHandler->getSignedLong(index));
+    return m_pDataHandler->getSignedLong(index);
 }
 
-unsigned int ReadingDataHandler::getUnsignedLong(const int index) const
+std::uint32_t ReadingDataHandler::getUnsignedLong(const size_t index) const
 {
-    return (int)(m_pDataHandler->getUnsignedLong(index));
+    return m_pDataHandler->getUnsignedLong(index);
 }
 
-double ReadingDataHandler::getDouble(const int index) const
+double ReadingDataHandler::getDouble(const size_t index) const
 {
     return m_pDataHandler->getDouble(index);
 }
 
-std::wstring ReadingDataHandler::getString(const int index) const
+std::wstring ReadingDataHandler::getString(const size_t index) const
 {
     return m_pDataHandler->getUnicodeString(index);
 }
 
-Date ReadingDataHandler::getDate(const int index) const
+Date ReadingDataHandler::getDate(const size_t index) const
 {
     std::uint32_t year, month, day, hour, minutes, seconds, nanoseconds;
     std::int32_t offsetHours, offsetMinutes;
@@ -179,7 +179,7 @@ std::string WritingDataHandler::getDataType() const
 }
 
 
-void WritingDataHandler::setDate(const int index, const Date& date)
+void WritingDataHandler::setDate(const size_t index, const Date& date)
 {
     m_pDataHandler->setDate(
         (std::uint32_t)index,
@@ -199,22 +199,22 @@ void WritingDataHandler::setAge(const size_t index, const Age& age)
     m_pDataHandler->setAge(index, age.age, age.units);
 }
 
-void WritingDataHandler::setSignedLong(const int index, const int value)
+void WritingDataHandler::setSignedLong(const size_t index, const std::int32_t value)
 {
     m_pDataHandler->setSignedLong(index, value);
 }
 
-void WritingDataHandler::setUnsignedLong(const int index, const unsigned int value)
+void WritingDataHandler::setUnsignedLong(const size_t index, const std::uint32_t value)
 {
     m_pDataHandler->setUnsignedLong(index, value);
 }
 
-void WritingDataHandler::setDouble(const int index, const double value)
+void WritingDataHandler::setDouble(const size_t index, const double value)
 {
     m_pDataHandler->setDouble(index, value);
 }
 
-void WritingDataHandler::setString(const int index, const std::wstring& value)
+void WritingDataHandler::setString(const size_t index, const std::wstring& value)
 {
     m_pDataHandler->setUnicodeString(index, value);
 }

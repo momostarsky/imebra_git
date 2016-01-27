@@ -11,7 +11,7 @@ TEST(ageStringHandlerTest, ageTest)
 {
     imebra::DataSet dataSet;
 
-    dataSet.setAge(0x0010, 0, 0x1010, 0, 0, 3, imebra::ageUnit_t::days);
+    dataSet.setAge(0x0010, 0, 0x1010, 0, 0, Age(3, imebra::ageUnit_t::days));
     EXPECT_EQ(L"003D", dataSet.getString(0x0010, 0, 0x1010, 0, 0));
     EXPECT_DOUBLE_EQ(0.00821917808219178, dataSet.getDouble(0x0010, 0, 0x1010, 0, 0));
 

@@ -65,9 +65,9 @@ public:
 
 	void setReferencedRecord(const DirectoryRecord& referencedRecord);
 	
-    std::string getFilePart(int part) const;
+    std::string getFilePart(size_t part) const;
 
-    void setFilePart(int part, const std::string& partName);
+    void setFilePart(size_t part, const std::string& partName);
 
     std::string getTypeString() const;
 

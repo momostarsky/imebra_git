@@ -194,7 +194,7 @@ public:
 	///          exist
 	///
 	///////////////////////////////////////////////////////////
-    std::string getFilePart(std::uint32_t part) const;
+    std::string getFilePart(size_t part) const;
 
 	/// \brief Set the full path to the  file referenced by
 	///         the record.
@@ -222,7 +222,7 @@ public:
     /// @param partName tha value to set for the part
 	///
 	///////////////////////////////////////////////////////////
-    void setFilePart(std::uint32_t part, const std::string& partName);
+    void setFilePart(size_t part, const std::string& partName);
 
 	/// \brief Returns the record's type.
 	///

@@ -234,7 +234,7 @@ std::shared_ptr<handlers::readingDataHandler> waveform::getIntegerData(std::uint
 			}
             else
             {
-                pWritingMemory[destinationPointer++] = unsignedData;
+                pWritingMemory[destinationPointer++] = (std::int32_t)unsignedData;
             }
 		}
 	}
@@ -242,7 +242,7 @@ std::shared_ptr<handlers::readingDataHandler> waveform::getIntegerData(std::uint
     {
         // Copy the data to the destination for signed values
         ///////////////////////////////////////////////////////////
-        int highBit(getBitsAllocated() - 1);
+        std::uint32_t highBit(getBitsAllocated() - 1);
         std::uint32_t testBit = ((std::uint32_t)1) << highBit;
         std::uint32_t orBits = ((std::uint32_t)((std::int32_t)-1)) << highBit;
         for(std::uint32_t copySamples (numSamples); copySamples != 0; --copySamples)

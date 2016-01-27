@@ -654,9 +654,13 @@ public:
 	///////////////////////////////////////////////////////////
     void setUnicodeString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, const std::wstring& newString, const std::string& defaultType = "");
 
-    void setAge(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, int age, ageUnit_t units, const std::string& defaultType = "");
+    void setAge(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::uint32_t age, ageUnit_t units, const std::string& defaultType = "");
 
-    int getAgeThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, ageUnit_t* pUnits) const;
+    std::uint32_t getAgeThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, ageUnit_t* pUnits) const;
+
+    std::uint32_t getAge(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId,
+                                  size_t elementNumber, ageUnit_t* pUnits,
+                                  std::uint32_t defaultAge, ageUnit_t defaultUnits) const;
 
     void setDate(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber,
         std::uint32_t year,
@@ -679,6 +683,26 @@ public:
         std::uint32_t* pNanoseconds,
         std::int32_t* pOffsetHours,
         std::int32_t* pOffsetMinutes) const;
+
+    void getDate(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber,
+        std::uint32_t* pYear,
+        std::uint32_t* pMonth,
+        std::uint32_t* pDay,
+        std::uint32_t* pHour,
+        std::uint32_t* pMinutes,
+        std::uint32_t* pSeconds,
+        std::uint32_t* pNanoseconds,
+        std::int32_t* pOffsetHours,
+        std::int32_t* pOffsetMinutes,
+        std::uint32_t defaultYear,
+        std::uint32_t defaultMonth,
+        std::uint32_t defaultDay,
+        std::uint32_t defaultHour,
+        std::uint32_t defaultMinutes,
+        std::uint32_t defaultSeconds,
+        std::uint32_t defaultNanoseconds,
+        std::int32_t defaultOffsetHours,
+        std::int32_t defaultOffsetMinutes) const;
 
     //@}
 

@@ -667,7 +667,7 @@ std::uint32_t dataSet::getFrameBufferId(std::uint32_t offset) const
         // Calculate the total size of the buffer, including
         //  its descriptor (tag group and id and length)
         ///////////////////////////////////////////////////////////
-        std::uint32_t bufferSize = (std::int32_t)imageTag->getBufferSizeThrow(scanBuffers);;
+        std::uint32_t bufferSize = (std::uint32_t)imageTag->getBufferSizeThrow(scanBuffers);;
         bufferSize += 4; // one WORD for the group id, one WORD for the tag id
         bufferSize += 4; // one DWORD for the tag length
         if(bufferSize > offset)
@@ -1098,7 +1098,7 @@ void dataSet::setUnicodeString(std::uint16_t groupId, std::uint16_t order, std::
 	IMEBRA_FUNCTION_END();
 }
 
-void dataSet::setAge(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, int age, ageUnit_t units, const std::string& defaultType /* = "" */)
+void dataSet::setAge(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::uint32_t age, ageUnit_t units, const std::string& defaultType /* = "" */)
 {
     IMEBRA_FUNCTION_START(L"dataSet::setAge");
 
@@ -1112,15 +1112,35 @@ void dataSet::setAge(std::uint16_t groupId, std::uint16_t order, std::uint16_t t
     IMEBRA_FUNCTION_END();
 }
 
-int dataSet::getAgeThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, ageUnit_t* pUnits) const
+std::uint32_t dataSet::getAgeThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, ageUnit_t* pUnits) const
 {
-    IMEBRA_FUNCTION_START(L"dataSet::getAge");
+    IMEBRA_FUNCTION_START(L"dataSet::getAgeThrow");
 
     return getReadingDataHandlerThrow(groupId, order, tagId, bufferId)->getAge(elementNumber, pUnits);
 
     IMEBRA_FUNCTION_END();
+}
+
+std::uint32_t dataSet::getAge(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId,
+                              size_t elementNumber, ageUnit_t* pUnits,
+                              std::uint32_t defaultAge, ageUnit_t defaultUnits) const
+{
+    IMEBRA_FUNCTION_START(L"dataSet::getAge");
+
+    try
+    {
+        return getAgeThrow(groupId, order, tagId, bufferId, elementNumber, pUnits);
+    }
+    catch(const missingDataElement&)
+    {
+        *pUnits = defaultUnits;
+        return defaultAge;
+    }
+
+    IMEBRA_FUNCTION_END();
 
 }
+
 
 void dataSet::setDate(uint16_t groupId, uint16_t order, uint16_t tagId, size_t bufferId, size_t elementNumber, uint32_t year, uint32_t month, uint32_t day, uint32_t hour, uint32_t minutes, uint32_t seconds, uint32_t nanoseconds, int32_t offsetHours, int32_t offsetMinutes, const std::string& defaultType /* = "" */)
 {
@@ -1143,9 +1163,46 @@ void dataSet::getDateThrow(uint16_t groupId, uint16_t order, uint16_t tagId, siz
     return getReadingDataHandlerThrow(groupId, order, tagId, bufferId)->getDate(elementNumber, pYear, pMonth, pDay, pHour, pMinutes, pSeconds, pNanoseconds, pOffsetHours, pOffsetMinutes);
 
     IMEBRA_FUNCTION_END();
-
 }
 
+void dataSet::getDate(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber,
+    std::uint32_t* pYear,
+    std::uint32_t* pMonth,
+    std::uint32_t* pDay,
+    std::uint32_t* pHour,
+    std::uint32_t* pMinutes,
+    std::uint32_t* pSeconds,
+    std::uint32_t* pNanoseconds,
+    std::int32_t* pOffsetHours,
+    std::int32_t* pOffsetMinutes,
+    std::uint32_t defaultYear,
+    std::uint32_t defaultMonth,
+    std::uint32_t defaultDay,
+    std::uint32_t defaultHour,
+    std::uint32_t defaultMinutes,
+    std::uint32_t defaultSeconds,
+    std::uint32_t defaultNanoseconds,
+    std::int32_t defaultOffsetHours,
+    std::int32_t defaultOffsetMinutes) const
+{
+    try
+    {
+        return getDateThrow(groupId, order, tagId, bufferId, elementNumber,
+                            pYear, pMonth, pDay, pHour, pMinutes, pSeconds, pNanoseconds, pOffsetHours, pOffsetMinutes);
+    }
+    catch(const missingDataElement&)
+    {
+        *pYear = defaultYear;
+        *pMonth = defaultMonth;
+        *pDay = defaultDay;
+        *pHour = defaultHour;
+        *pMinutes = defaultMinutes;
+        *pSeconds = defaultSeconds;
+        *pNanoseconds = defaultNanoseconds;
+        *pOffsetHours = defaultOffsetHours;
+        *pOffsetMinutes = defaultOffsetMinutes;
+    }
+}
 
 
 ///////////////////////////////////////////////////////////

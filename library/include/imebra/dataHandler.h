@@ -56,15 +56,15 @@ public:
 
 	std::string getDataType() const;
 
-	int getSignedLong(const int index) const;
+    std::int32_t getSignedLong(size_t index) const;
 
-    unsigned int getUnsignedLong(const int index) const;
+    std::uint32_t getUnsignedLong(size_t index) const;
 
-	double getDouble(const int index) const;
+    double getDouble(size_t index) const;
 
-	std::wstring getString(const int index) const;
+    std::wstring getString(size_t index) const;
 
-    Date getDate(const int index) const;
+    Date getDate(size_t index) const;
 
     Age getAge(const size_t index) const;
 
@@ -118,17 +118,17 @@ public:
 
     std::string getDataType() const;
 
-    void setDate(const int index, const Date& date);
+    void setDate(const size_t index, const Date& date);
 
     void setAge(const size_t index, const Age& age);
 
-    void setSignedLong(const int index, const int value);
+    void setSignedLong(const size_t index, const std::int32_t value);
 
-    void setUnsignedLong(const int index, const unsigned int value);
+    void setUnsignedLong(const size_t index, const std::uint32_t value);
 
-    void setDouble(const int index, const double value);
+    void setDouble(const size_t index, const double value);
 
-    void setString(const int index, const std::wstring& value);
+    void setString(const size_t index, const std::wstring& value);
 
     void assign(const char* buffer, const size_t bufferSize);
 
