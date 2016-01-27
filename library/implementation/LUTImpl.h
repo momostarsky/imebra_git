@@ -16,13 +16,13 @@ $fileHeader$
 
 ///////////////////////////////////////////////////////////
 //
-// Everything is in the namespace puntoexe::imebra
+// Everything is in the namespace imebra::implementation
 //
 ///////////////////////////////////////////////////////////
-namespace puntoexe
+namespace imebra
 {
 
-namespace imebra
+namespace implementation
 {
 
 namespace handlers
@@ -248,8 +248,8 @@ protected:
 /// @}
 
 
-} // namespace imebra
+} // namespace implementation
 
-} // namespace puntoexe
+} // namespace imebra
 
 #endif // !defined(imebraLUT_C2D59748_5D38_4b12_BA16_5EC22DA7C0E7__INCLUDED_)

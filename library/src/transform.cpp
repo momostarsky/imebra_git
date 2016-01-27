@@ -22,7 +22,7 @@ Transform& Transform::operator=(const Transform& right)
     return *this;
 }
 
-Transform::Transform(std::shared_ptr<puntoexe::imebra::transforms::transform> pTransform): m_pTransform(pTransform)
+Transform::Transform(std::shared_ptr<imebra::implementation::transforms::transform> pTransform): m_pTransform(pTransform)
 {}
 
 bool Transform::isEmpty() const

@@ -2,9 +2,9 @@
 $fileHeader$
 */
 
-/*! \file imebra.h
+/*! \file implementation.h
     \brief Includes all the headers needed to build an application that
-	        uses imebra.
+	        uses implementation.
 
 Please note that the file doesn't include the file viewHelper.h.
 

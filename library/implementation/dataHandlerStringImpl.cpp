@@ -15,10 +15,10 @@ $fileHeader$
 #include "memoryImpl.h"
 #include "bufferImpl.h"
 
-namespace puntoexe
+namespace imebra
 {
 
-namespace imebra
+namespace implementation
 {
 
 namespace handlers
@@ -235,6 +235,6 @@ void writingDataHandlerString::setUnicodeString(const size_t index, const std::w
 
 } // namespace handlers
 
-} // namespace imebra
+} // namespace implementation
 
-} // namespace puntoexe
+} // namespace imebra

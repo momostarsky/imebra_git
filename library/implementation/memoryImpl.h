@@ -17,10 +17,10 @@ $fileHeader$
 
 ///////////////////////////////////////////////////////////
 //
-// Everything is in the namespace puntoexe
+// Everything is in the namespace imebra
 //
 ///////////////////////////////////////////////////////////
-namespace puntoexe
+namespace imebra
 {
 
 /// \addtogroup group_baseclasses
@@ -38,7 +38,7 @@ typedef std::basic_string<std::uint8_t> stringUint8;
 ///  call \ref memoryPool::getMemory() in order to
 ///  obtain a new instance of memory.
 ///
-/// This class is usually used by \ref imebra::buffer 
+/// This class is usually used by \ref implementation::buffer 
 ///  objects to store the tags values.
 ///
 ///////////////////////////////////////////////////////////
@@ -174,7 +174,7 @@ protected:
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 /// \brief Stores unused memory objects (see 
-///         \ref puntoexe::memory) so they can be reused 
+///         \ref imebra::memory) so they can be reused 
 ///         when needed.
 ///
 /// One instance of this class is statically allocated
@@ -228,7 +228,7 @@ public:
 	virtual ~memoryPool();
 
 	/// \brief Retrieve a new or reused 
-	///         \ref puntoexe::memory object.
+	///         \ref imebra::memory object.
 	///
 	/// The function look for an unused \ref memory object
 	///  that has a managed string with the same size of the
@@ -284,6 +284,6 @@ protected:
 
 ///@}
 
-} // namespace puntoexe
+} // namespace imebra
 
 #endif // !defined(imebraMemory_DE3F98A9_664E_47c0_A29B_B681F9AEB118__INCLUDED_)

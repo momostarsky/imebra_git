@@ -14,10 +14,10 @@ $fileHeader$
 #include <math.h>
 #include <limits>
 
-namespace puntoexe
+namespace imebra
 {
 
-namespace imebra
+namespace implementation
 {
 
 namespace transforms
@@ -54,14 +54,14 @@ modalityVOILUT::modalityVOILUT(std::shared_ptr<const dataSet> pDataSet):
         m_rescaleSlope = rescaleHandler->getDouble(0);
         m_bEmpty = false;
     }
-    catch(const ::imebra::missingDataElement&)
+    catch(const missingDataElement&)
     {
         try
         {
             m_voiLut = pDataSet->getLutThrow(0x0028, 0x3000, 0);
             m_bEmpty = m_voiLut->getSize() != 0;
         }
-        catch(const ::imebra::missingDataElement&)
+        catch(const missingDataElement&)
         {
             // Nothing to do. Transformis empty
         }
@@ -196,6 +196,6 @@ std::shared_ptr<image> modalityVOILUT::allocateOutputImage(std::shared_ptr<image
 
 } // namespace transforms
 
-} // namespace imebra
+} // namespace implementation
 
-} // namespace puntoexe
+} // namespace imebra

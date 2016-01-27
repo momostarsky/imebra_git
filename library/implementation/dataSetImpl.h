@@ -21,16 +21,16 @@ $fileHeader$
 
 ///////////////////////////////////////////////////////////
 //
-// Everything is in the namespace puntoexe::imebra
+// Everything is in the namespace imebra::implementation
 //
 ///////////////////////////////////////////////////////////
-namespace puntoexe
+namespace imebra
 {
 
 	class streamReader;
 	class streamWriter;
 
-namespace imebra
+namespace implementation
 {
 
 //The following classes are used in this declaration file
@@ -654,9 +654,9 @@ public:
 	///////////////////////////////////////////////////////////
     void setUnicodeString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, const std::wstring& newString, const std::string& defaultType = "");
 
-    void setAge(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, int age, ::imebra::ageUnit_t units, const std::string& defaultType = "");
+    void setAge(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, int age, ageUnit_t units, const std::string& defaultType = "");
 
-    int getAgeThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, ::imebra::ageUnit_t* pUnits) const;
+    int getAgeThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, ageUnit_t* pUnits) const;
 
     void setDate(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber,
         std::uint32_t year,
@@ -944,8 +944,8 @@ private:
 
 
 
-} // namespace imebra
+} // namespace implementation
 
-} // namespace puntoexe
+} // namespace imebra
 
 #endif // !defined(imebraDataSet_93F684BF_0024_4bf3_89BA_D98E82A1F44C__INCLUDED_)

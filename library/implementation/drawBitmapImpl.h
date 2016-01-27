@@ -5,7 +5,7 @@ $fileHeader$
 /*! \file drawBitmap.h
     \brief Declaration of the a class that draw an image into a bitmap.
 
-This file is not included automatically by imebra.h
+This file is not included automatically by implementation.h
 
 */
 
@@ -20,10 +20,10 @@ This file is not included automatically by imebra.h
 #include <memory>
 #include <string.h>
 
-namespace puntoexe
+namespace imebra
 {
 
-	namespace imebra
+	namespace implementation
 	{
 
 		/// \addtogroup group_helpers Helpers
@@ -167,7 +167,7 @@ namespace puntoexe
 						visibleTopLeftY > visibleBottomRightY
 						)
 				{
-                    IMEBRA_THROW(::imebra::drawBitmapExceptionInvalidArea, "Destination area not valid");
+                    IMEBRA_THROW(drawBitmapExceptionInvalidArea, "Destination area not valid");
 				}
 
                 size_t memorySize(getBitmap<drawBitmapType, rowAlignBytes>(totalWidthPixels, totalHeightPixels, visibleTopLeftX, visibleTopLeftY, visibleBottomRightX, visibleBottomRightY, 0, 0));
@@ -218,7 +218,7 @@ namespace puntoexe
 						visibleTopLeftY > visibleBottomRightY
 						)
 				{
-                    IMEBRA_THROW(::imebra::drawBitmapExceptionInvalidArea, "Destination area not valid");
+                    IMEBRA_THROW(drawBitmapExceptionInvalidArea, "Destination area not valid");
 				}
 
                 std::uint32_t destPixelSize((drawBitmapType == drawBitmapRGBA || drawBitmapType == drawBitmapBGRA) ? 4 : 3);
@@ -338,8 +338,8 @@ namespace puntoexe
 						std::int32_t* pAveragePointer = averagePixels;
 						std::uint32_t* pNextSourceXIndex = sourcePixelIndex;
 
-						std::uint8_t* pImagePointer(0);
-						std::uint8_t* imageMemory(0);
+                        const std::uint8_t* pImagePointer(0);
+                        const std::uint8_t* imageMemory(0);
 
                         std::shared_ptr<handlers::readingDataHandlerNumericBase> imageHandler;
 						if(m_transformsChain->isEmpty())
@@ -490,8 +490,8 @@ namespace puntoexe
 
 		/// @}
 
-	} // namespace imebra
+	} // namespace implementation
 
-} // namespace puntoexe
+} // namespace imebra
 
 #endif // !defined(imebraDrawBitmap_3146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_)

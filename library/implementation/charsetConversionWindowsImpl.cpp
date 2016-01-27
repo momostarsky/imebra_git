@@ -15,7 +15,7 @@ $fileHeader$
 #include "charsetConversionWindowsImpl.h"
 #include <memory>
 
-namespace puntoexe
+namespace imebra
 {
 
 ///////////////////////////////////////////////////////////
@@ -94,6 +94,6 @@ std::wstring charsetConversionWindows::toUnicode(const std::string& asciiString)
 	IMEBRA_FUNCTION_END();
 }
 
-} // namespace puntoexe
+} // namespace imebra
 
 #endif

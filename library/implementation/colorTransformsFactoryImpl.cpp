@@ -26,10 +26,10 @@ $fileHeader$
 #include "YBRFULLToRGBImpl.h"
 #include "YBRPARTIALToRGBImpl.h"
 
-namespace puntoexe
+namespace imebra
 {
 
-namespace imebra
+namespace implementation
 {
 
 namespace transforms
@@ -374,7 +374,7 @@ std::shared_ptr<transform> colorTransformsFactory::getTransform(const std::strin
 		}
 	}
 
-    IMEBRA_THROW(::imebra::colorTransformsFactoryExceptionNoTransform, "There isn't any transform that can convert between the specified color spaces");
+    IMEBRA_THROW(colorTransformsFactoryExceptionNoTransform, "There isn't any transform that can convert between the specified color spaces");
 
 	IMEBRA_FUNCTION_END();
 }
@@ -383,6 +383,6 @@ std::shared_ptr<transform> colorTransformsFactory::getTransform(const std::strin
 
 } // namespace transforms
 
-} // namespace imebra
+} // namespace implementation
 
-} // namespace puntoexe
+} // namespace imebra

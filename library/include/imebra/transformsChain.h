@@ -16,9 +16,9 @@ $fileHeader$
 #include "definitions.h"
 #include "transform.h"
 
-namespace puntoexe
-{
 namespace imebra
+{
+namespace implementation
 {
 namespace transforms
 {
@@ -39,7 +39,7 @@ public:
     TransformsChain();
 
 #ifndef SWIG
-    TransformsChain(std::shared_ptr<puntoexe::imebra::transforms::transformsChain> pTransformsChain);
+    TransformsChain(std::shared_ptr<imebra::implementation::transforms::transformsChain> pTransformsChain);
 #endif
 
     void addTransform(const Transform& transform);

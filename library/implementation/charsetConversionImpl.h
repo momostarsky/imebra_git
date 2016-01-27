@@ -9,10 +9,10 @@
 
 #include <string>
 
-namespace puntoexe
+namespace imebra
 {
 
-namespace imebra
+namespace implementation
 {
 
 class dicomConversion

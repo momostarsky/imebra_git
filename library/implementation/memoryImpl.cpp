@@ -9,7 +9,7 @@ $fileHeader$
 
 #include "memoryImpl.h"
 
-namespace puntoexe
+namespace imebra
 {
 
 ///////////////////////////////////////////////////////////
@@ -451,4 +451,4 @@ memory* memoryPool::getMemory(size_t requestedSize)
 
 }
 
-} // namespace puntoexe
+} // namespace imebra

@@ -17,10 +17,10 @@ $fileHeader$
 #include <string.h>
 
 
-namespace puntoexe
+namespace imebra
 {
 
-namespace imebra
+namespace implementation
 {
 
 namespace codecs
@@ -57,7 +57,7 @@ std::shared_ptr<dataSet> codec::read(std::shared_ptr<streamReader> pSourceStream
 	{
 		readStream(pSourceStream, pDestDataSet, maxSizeBufferLoad);
 	}
-    catch(::imebra::codecExceptionWrongFormat&)
+    catch(codecExceptionWrongFormat&)
 	{
         pSourceStream->seek(position);
         IMEBRA_RETHROW("Detected a wrong format. Rewinding file");
@@ -126,7 +126,7 @@ void channel::allocate(std::uint32_t sizeX, std::uint32_t sizeY)
 
 } // namespace codecs
 
-} // namespace imebra
+} // namespace implementation
 
-} // namespace puntoexe
+} // namespace imebra
 

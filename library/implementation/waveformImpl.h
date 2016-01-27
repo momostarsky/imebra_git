@@ -15,13 +15,13 @@ $fileHeader$
 
 ///////////////////////////////////////////////////////////
 //
-// Everything is in the namespace puntoexe::imebra
+// Everything is in the namespace imebra::implementation
 //
 ///////////////////////////////////////////////////////////
-namespace puntoexe
+namespace imebra
 {
 
-namespace imebra
+namespace implementation
 {
 
 class dataSet;
@@ -148,8 +148,8 @@ private:
 
 /// @}
 
-} // namespace imebra
+} // namespace implementation
 
-} // namespace puntoexe
+} // namespace imebra
 
 #endif // !defined(imebraWaveform_A807A3CA_FA04_44f4_85D2_C7AA2FE103C4__INCLUDED_)

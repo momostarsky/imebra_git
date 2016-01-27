@@ -16,7 +16,10 @@ $fileHeader$
 #include <list>
 #include <string.h>
 
-namespace puntoexe
+namespace imebra
+{
+
+namespace implementation
 {
 
 ///////////////////////////////////////////////////////////
@@ -145,7 +148,7 @@ void huffmanTable::setValuesPerLength(std::uint32_t length, std::uint32_t numVal
 {
     if(length >= m_valuesPerLength.size())
     {
-        throw ::imebra::huffmanExceptionCreateTable("Huffman code length too big");
+        throw huffmanExceptionCreateTable("Huffman code length too big");
     }
     m_valuesPerLength[length] = numValues;
 }
@@ -154,7 +157,7 @@ void huffmanTable::addOrderedValue(size_t index, std::uint32_t value)
 {
     if(index >= m_orderedValues.size())
     {
-        throw ::imebra::huffmanExceptionCreateTable("Too many values in the huffman table");
+        throw huffmanExceptionCreateTable("Too many values in the huffman table");
     }
     m_orderedValues[index] = value;
 }
@@ -394,7 +397,7 @@ std::uint32_t huffmanTable::readHuffmanCode(streamReader* pStream)
 
 	}
 
-    IMEBRA_THROW(::imebra::huffmanExceptionRead, "Invalid huffman code found while reading from a stream");
+    IMEBRA_THROW(huffmanExceptionRead, "Invalid huffman code found while reading from a stream");
 
     IMEBRA_FUNCTION_END();
 }
@@ -415,12 +418,14 @@ void huffmanTable::writeHuffmanCode(const std::uint32_t code, streamWriter* pStr
 
 	if(m_valuesToHuffmanLength[code] == 0)
 	{
-        IMEBRA_THROW(::imebra::huffmanExceptionWrite, "Trying to write an invalid huffman code");
+        IMEBRA_THROW(huffmanExceptionWrite, "Trying to write an invalid huffman code");
 	}
 	pStream->writeBits(m_valuesToHuffman[code], m_valuesToHuffmanLength[code]);
 
 	IMEBRA_FUNCTION_END();
 }
 
-} // namespace puntoexe
+} // namespace implementation
+
+} // namespace imebra
 

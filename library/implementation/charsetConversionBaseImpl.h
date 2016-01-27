@@ -22,10 +22,10 @@ The class hides the platform specific implementations and supplies a common
 
 ///////////////////////////////////////////////////////////
 //
-// Everything is in the namespace puntoexe
+// Everything is in the namespace imebra
 //
 ///////////////////////////////////////////////////////////
-namespace puntoexe
+namespace imebra
 {
 
 /// \addtogroup group_baseclasses
@@ -147,7 +147,7 @@ public:
 
 ///@}
 
-} // namespace puntoexe
+} // namespace imebra
 
 
 

@@ -13,10 +13,10 @@ $fileHeader$
 #include "bufferImpl.h"
 #include "../include/imebra/exceptions.h"
 
-namespace puntoexe
+namespace imebra
 {
 
-namespace imebra
+namespace implementation
 {
 
 ///////////////////////////////////////////////////////////
@@ -54,7 +54,7 @@ std::shared_ptr<handlers::writingDataHandlerNumericBase> image::create(
 
 	if(sizeX == 0 || sizeY == 0)
 	{
-        IMEBRA_THROW(::imebra::imageExceptionInvalidSize, "An invalid image's size has been specified");
+        IMEBRA_THROW(imageExceptionInvalidSize, "An invalid image's size has been specified");
 	}
 
 	// Normalize the color space (remove _420 & _422 and
@@ -67,7 +67,7 @@ std::shared_ptr<handlers::writingDataHandlerNumericBase> image::create(
 	m_channelsNumber = transforms::colorTransforms::colorTransformsFactory::getNumberOfChannels(inputColorSpace);
 	if(m_channelsNumber == 0)
 	{
-        IMEBRA_THROW(::imebra::imageExceptionUnknownColorSpace, "Cannot recognize the specified color space");
+        IMEBRA_THROW(imageExceptionUnknownColorSpace, "Cannot recognize the specified color space");
 	}
 
 	// Find the datatype to use to allocate the
@@ -105,7 +105,7 @@ std::shared_ptr<handlers::writingDataHandlerNumericBase> image::create(
 		defaultHighBit=31;
         break;
 	default:
-        IMEBRA_THROW(::imebra::imageExceptionUnknownDepth, "Unknown depth");
+        IMEBRA_THROW(imageExceptionUnknownDepth, "Unknown depth");
 	}
 
 	// Adjust the high bit value
@@ -332,6 +332,6 @@ void image::setSizeMm(const double sizeMmX, const double sizeMmY)
 	IMEBRA_FUNCTION_END();
 }
 
-} // namespace imebra
+} // namespace implementation
 
-} // namespace puntoexe
+} // namespace imebra

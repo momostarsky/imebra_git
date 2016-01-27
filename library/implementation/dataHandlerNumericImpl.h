@@ -21,13 +21,13 @@ $fileHeader$
 
 ///////////////////////////////////////////////////////////
 //
-// Everything is in the namespace puntoexe::imebra
+// Everything is in the namespace imebra::implementation
 //
 ///////////////////////////////////////////////////////////
-namespace puntoexe
+namespace imebra
 {
 
-namespace imebra
+namespace implementation
 {
 
 namespace handlers
@@ -135,10 +135,10 @@ protected:
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 /// \brief This data handler accesses to the numeric data
-///         stored in a puntoexe::imebra::buffer class.
+///         stored in a imebra::implementation::buffer class.
 ///
 /// A special definition of this class
-///  (puntoexe::imebra::handlers::imageHandler) is used
+///  (imebra::implementation::handlers::imageHandler) is used
 ///  to access to the images' raw pixels.
 ///
 ///////////////////////////////////////////////////////////
@@ -505,37 +505,37 @@ public:
     {
         IMEBRA_FUNCTION_START(L"dataHandlerNumeric::copyFrom");
 
-        puntoexe::imebra::handlers::readingDataHandlerNumericBase* pHandler(pSource.get());
-        if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::readingDataHandlerNumeric<std::uint8_t>) ||
-            dynamic_cast<puntoexe::imebra::handlers::readingDataHandlerNumeric<std::uint8_t>* >(pHandler) != 0)
+        imebra::implementation::handlers::readingDataHandlerNumericBase* pHandler(pSource.get());
+        if(typeid(*pHandler) == typeid(imebra::implementation::handlers::readingDataHandlerNumeric<std::uint8_t>) ||
+            dynamic_cast<imebra::implementation::handlers::readingDataHandlerNumeric<std::uint8_t>* >(pHandler) != 0)
         {
             copyFromMemory<std::uint8_t> ((std::uint8_t*)pHandler->getMemoryBuffer(), pHandler->getSize());
         }
-        else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::readingDataHandlerNumeric<std::int8_t>))
+        else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::readingDataHandlerNumeric<std::int8_t>))
         {
             copyFromMemory<std::int8_t> ((std::int8_t*)pHandler->getMemoryBuffer(), pHandler->getSize());
         }
-        else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::readingDataHandlerNumeric<std::uint16_t>))
+        else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::readingDataHandlerNumeric<std::uint16_t>))
         {
             copyFromMemory<std::uint16_t> ((std::uint16_t*)pHandler->getMemoryBuffer(), pHandler->getSize());
         }
-        else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::readingDataHandlerNumeric<std::int16_t>))
+        else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::readingDataHandlerNumeric<std::int16_t>))
         {
             copyFromMemory<std::int16_t> ((std::int16_t*)pHandler->getMemoryBuffer(), pHandler->getSize());
         }
-        else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::readingDataHandlerNumeric<std::uint32_t>))
+        else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::readingDataHandlerNumeric<std::uint32_t>))
         {
             copyFromMemory<std::uint32_t> ((std::uint32_t*)pHandler->getMemoryBuffer(), pHandler->getSize());
         }
-        else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::readingDataHandlerNumeric<std::int32_t>))
+        else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::readingDataHandlerNumeric<std::int32_t>))
         {
             copyFromMemory<std::int32_t> ((std::int32_t*)pHandler->getMemoryBuffer(), pHandler->getSize());
         }
-        else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::readingDataHandlerNumeric<float>))
+        else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::readingDataHandlerNumeric<float>))
         {
             copyFromMemory<float> ((float*)pHandler->getMemoryBuffer(), pHandler->getSize());
         }
-        else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::readingDataHandlerNumeric<double>))
+        else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::readingDataHandlerNumeric<double>))
         {
             copyFromMemory<double> ((double*)pHandler->getMemoryBuffer(), pHandler->getSize());
         }
@@ -795,34 +795,34 @@ typedef writingDataHandlerNumeric<double> writingDataHandlerDouble;
 
 } // namespace handlers
 
-} // namespace imebra
+} // namespace implementation
 
-} // namespace puntoexe
+} // namespace imebra
 
 #define HANDLER_CALL_TEMPLATE_FUNCTION_WITH_PARAMS(functionName, handlerPointer, ...)\
 {\
-    puntoexe::imebra::handlers::readingDataHandlerNumericBase* pHandler(handlerPointer.get()); \
-    if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::readingDataHandlerNumeric<std::uint8_t>)) \
+    imebra::implementation::handlers::readingDataHandlerNumericBase* pHandler(handlerPointer.get()); \
+    if(typeid(*pHandler) == typeid(imebra::implementation::handlers::readingDataHandlerNumeric<std::uint8_t>)) \
 {\
     functionName<std::uint8_t> ((std::uint8_t*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize(), __VA_ARGS__);\
     }\
-    else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::readingDataHandlerNumeric<std::int8_t>))\
+    else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::readingDataHandlerNumeric<std::int8_t>))\
 {\
     functionName<std::int8_t> ((std::int8_t*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize(), __VA_ARGS__);\
     }\
-    else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::readingDataHandlerNumeric<std::uint16_t>))\
+    else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::readingDataHandlerNumeric<std::uint16_t>))\
 {\
     functionName<std::uint16_t> ((std::uint16_t*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize(), __VA_ARGS__);\
     }\
-    else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::readingDataHandlerNumeric<std::int16_t>))\
+    else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::readingDataHandlerNumeric<std::int16_t>))\
 {\
     functionName<std::int16_t> ((std::int16_t*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize(), __VA_ARGS__);\
     }\
-    else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::readingDataHandlerNumeric<std::uint32_t>))\
+    else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::readingDataHandlerNumeric<std::uint32_t>))\
 {\
     functionName<std::uint32_t> ((std::uint32_t*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize(), __VA_ARGS__);\
     }\
-    else if(typeid(*pHandler) == typeid(puntoexe::imebra::handlers::readingDataHandlerNumeric<std::int32_t>))\
+    else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::readingDataHandlerNumeric<std::int32_t>))\
 {\
     functionName<std::int32_t> ((std::int32_t*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize(), __VA_ARGS__);\
     }\

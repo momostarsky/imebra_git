@@ -14,10 +14,10 @@ $fileHeader$
 #include "dataHandlerDateImpl.h"
 
 
-namespace puntoexe
+namespace imebra
 {
 
-namespace imebra
+namespace implementation
 {
 
 namespace handlers
@@ -115,6 +115,6 @@ void writingDataHandlerDate::setDate(const size_t index,
 
 } // namespace handlers
 
-} // namespace imebra
+} // namespace implementation
 
-} // namespace puntoexe
+} // namespace imebra

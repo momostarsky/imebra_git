@@ -20,12 +20,12 @@ $fileHeader$
 
 #define DEFINE_RUN_TEMPLATE_TRANSFORM \
 virtual void runTransformHandlers(\
-    std::shared_ptr<puntoexe::imebra::handlers::readingDataHandlerNumericBase> inputHandler, std::uint32_t inputHandlerWidth, const std::string& inputHandlerColorSpace,\
-    std::shared_ptr<puntoexe::imebra::palette> inputPalette,\
+    std::shared_ptr<imebra::implementation::handlers::readingDataHandlerNumericBase> inputHandler, std::uint32_t inputHandlerWidth, const std::string& inputHandlerColorSpace,\
+    std::shared_ptr<imebra::implementation::palette> inputPalette,\
     std::int32_t inputHandlerMinValue, std::uint32_t inputHighBit,\
     std::int32_t inputTopLeftX, std::int32_t inputTopLeftY, std::int32_t inputWidth, std::int32_t inputHeight,\
-    std::shared_ptr<puntoexe::imebra::handlers::writingDataHandlerNumericBase> outputHandler, std::int32_t outputHandlerWidth, const std::string& outputHandlerColorSpace,\
-    std::shared_ptr<puntoexe::imebra::palette> outputPalette,\
+    std::shared_ptr<imebra::implementation::handlers::writingDataHandlerNumericBase> outputHandler, std::int32_t outputHandlerWidth, const std::string& outputHandlerColorSpace,\
+    std::shared_ptr<imebra::implementation::palette> outputPalette,\
     std::int32_t outputHandlerMinValue, std::uint32_t outputHighBit,\
     std::int32_t outputTopLeftX, std::int32_t outputTopLeftY)\
 {\
@@ -37,13 +37,13 @@ virtual void runTransformHandlers(\
 
 ///////////////////////////////////////////////////////////
 //
-// Everything is in the namespace puntoexe::imebra
+// Everything is in the namespace imebra::implementation
 //
 ///////////////////////////////////////////////////////////
-namespace puntoexe
+namespace imebra
 {
 
-namespace imebra
+namespace implementation
 {
 
 namespace handlers
@@ -244,9 +244,9 @@ template <typename transformClass, typename inputType, typename... Args>
 void runTemplateTransform1(
         transformClass& transformObject,
         const inputType* pInputData,
-        std::shared_ptr<puntoexe::imebra::handlers::writingDataHandlerNumericBase> outputHandler, Args... args)
+        std::shared_ptr<imebra::implementation::handlers::writingDataHandlerNumericBase> outputHandler, Args... args)
 {
-    puntoexe::imebra::handlers::writingDataHandlerNumericBase* pHandler(outputHandler.get());
+    imebra::implementation::handlers::writingDataHandlerNumericBase* pHandler(outputHandler.get());
 
     if(typeid(*pHandler) == typeid(handlers::writingDataHandlerUint8))
     {
@@ -282,9 +282,9 @@ void runTemplateTransform1(
 template <typename transformClass, typename... Args>
 void runTemplateTransform(
         transformClass& transformObject,
-        std::shared_ptr<puntoexe::imebra::handlers::readingDataHandlerNumericBase> inputHandler, Args... args)
+        std::shared_ptr<imebra::implementation::handlers::readingDataHandlerNumericBase> inputHandler, Args... args)
 {
-    puntoexe::imebra::handlers::readingDataHandlerNumericBase* pHandler(inputHandler.get());
+    imebra::implementation::handlers::readingDataHandlerNumericBase* pHandler(inputHandler.get());
     if(typeid(*pHandler) == typeid(handlers::readingDataHandlerUint8))
     {
         runTemplateTransform1<transformClass, std::uint8_t>(transformObject, (const std::uint8_t*)pHandler->getMemoryBuffer(), args...);
@@ -323,8 +323,8 @@ void runTemplateTransform(
 
 } // namespace transforms
 
-} // namespace imebra
+} // namespace implementation
 
-} // namespace puntoexe
+} // namespace imebra
 
 #endif // !defined(imebraTransform_5DB89BFD_F105_45e7_B9D9_3756AC93C821__INCLUDED_)

@@ -13,7 +13,7 @@ $fileHeader$
 namespace imebra
 {
 
-DataSet::DataSet(): m_pDataSet(std::make_shared<puntoexe::imebra::dataSet>())
+DataSet::DataSet(): m_pDataSet(std::make_shared<imebra::implementation::dataSet>())
 {
 }
 
@@ -22,11 +22,11 @@ DataSet::DataSet(const DataSet& right): m_pDataSet(right.m_pDataSet)
 }
 
 #ifndef SWIG
-DataSet::DataSet(std::shared_ptr<puntoexe::imebra::dataSet> pDataSet): m_pDataSet(pDataSet)
+DataSet::DataSet(std::shared_ptr<imebra::implementation::dataSet> pDataSet): m_pDataSet(pDataSet)
 {
     if(pDataSet == 0)
     {
-        m_pDataSet = std::make_shared<puntoexe::imebra::dataSet>();
+        m_pDataSet = std::make_shared<imebra::implementation::dataSet>();
     }
 }
 
@@ -50,7 +50,7 @@ Image DataSet::getImageApplyModalityTransform(std::uint32_t frameNumber)
 
 void DataSet::setImage(std::uint32_t frameNumber, Image image, const std::string& transferSyntax, imageQuality quality)
 {
-	m_pDataSet->setImage(frameNumber, image.m_pImage, transferSyntax, (puntoexe::imebra::codecs::codec::quality)quality);
+	m_pDataSet->setImage(frameNumber, image.m_pImage, transferSyntax, (imebra::implementation::codecs::codec::quality)quality);
 }
 
 DataSet DataSet::getSequenceItem(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t itemId)
@@ -160,7 +160,7 @@ Date DataSet::getDate(std::uint16_t groupId, std::uint16_t order, std::uint16_t 
 
 size_t DataSet::getRawData(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, char* buffer, size_t bufferSize) const
 {
-    std::shared_ptr<puntoexe::imebra::handlers::readingDataHandlerRaw> dataHandlerRaw = m_pDataSet->getReadingDataHandlerRawThrow(groupId, order, tagId, bufferId);
+    std::shared_ptr<imebra::implementation::handlers::readingDataHandlerRaw> dataHandlerRaw = m_pDataSet->getReadingDataHandlerRawThrow(groupId, order, tagId, bufferId);
     if(dataHandlerRaw->getSize() > bufferSize)
     {
         return dataHandlerRaw->getSize();
@@ -171,7 +171,7 @@ size_t DataSet::getRawData(std::uint16_t groupId, std::uint16_t order, std::uint
 
 void DataSet::setRawData(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, char* buffer, size_t bufferSize, const std::string& defaultType)
 {
-    std::shared_ptr<puntoexe::imebra::handlers::writingDataHandlerRaw> dataHandlerRaw = m_pDataSet->getWritingDataHandlerRaw(groupId, order, tagId, bufferId, defaultType);
+    std::shared_ptr<imebra::implementation::handlers::writingDataHandlerRaw> dataHandlerRaw = m_pDataSet->getWritingDataHandlerRaw(groupId, order, tagId, bufferId, defaultType);
     dataHandlerRaw->copyFrom((std::int8_t*)buffer, bufferSize);
 }
 

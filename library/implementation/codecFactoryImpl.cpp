@@ -16,10 +16,10 @@ $fileHeader$
 #include "dicomCodecImpl.h"
 #include "../include/imebra/exceptions.h"
 
-namespace puntoexe
+namespace imebra
 {
 
-namespace imebra
+namespace implementation
 {
 
 namespace codecs
@@ -102,7 +102,7 @@ std::shared_ptr<codec> codecFactory::getCodec(const std::string& transferSyntax)
 		}
 	}
 
-    IMEBRA_THROW(::imebra::dataSetExceptionUnknownTransferSyntax, "None of the codecs support the specified transfer syntax");
+    IMEBRA_THROW(dataSetExceptionUnknownTransferSyntax, "None of the codecs support the specified transfer syntax");
 
 	IMEBRA_FUNCTION_END();
 }
@@ -160,7 +160,7 @@ std::shared_ptr<dataSet> codecFactory::load(std::shared_ptr<streamReader> pStrea
 		{
 			return (*scanCodecs)->read(pStream, maxSizeBufferLoad);
 		}
-        catch(::imebra::codecExceptionWrongFormat& /* e */)
+        catch(codecExceptionWrongFormat& /* e */)
 		{
 			exceptionsManager::getMessage(); // Reset the messages stack
 			continue;
@@ -169,7 +169,7 @@ std::shared_ptr<dataSet> codecFactory::load(std::shared_ptr<streamReader> pStrea
 
 	if(pDataSet == 0)
 	{
-        IMEBRA_THROW(::imebra::codecExceptionWrongFormat, "none of the codecs recognized the file format");
+        IMEBRA_THROW(codecExceptionWrongFormat, "none of the codecs recognized the file format");
 	}
 
 	return pDataSet;
@@ -197,7 +197,7 @@ std::uint32_t codecFactory::getMaximumImageHeight()
 
 } // namespace codecs
 
-} // namespace imebra
+} // namespace implementation
 
-} // namespace puntoexe
+} // namespace imebra
 

@@ -23,10 +23,10 @@ The class hides the platform specific implementations and supplies a common
 
 ///////////////////////////////////////////////////////////
 //
-// Everything is in the namespace puntoexe
+// Everything is in the namespace imebra
 //
 ///////////////////////////////////////////////////////////
-namespace puntoexe
+namespace imebra
 {
 
 class charsetConversionIconv: public charsetConversionBase
@@ -52,7 +52,7 @@ protected:
 
 typedef charsetConversionIconv defaultCharsetConversion;
 
-} // namespace puntoexe
+} // namespace imebra
 
 #endif // defined(IMEBRA_USE_ICONV)
 

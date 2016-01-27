@@ -10,10 +10,10 @@ $fileHeader$
 #include "exceptionImpl.h"
 #include "dataHandlerStringISImpl.h"
 
-namespace puntoexe
+namespace imebra
 {
 
-namespace imebra
+namespace implementation
 {
 
 namespace handlers
@@ -84,6 +84,6 @@ void writingDataHandlerStringIS::setDouble(const size_t index, const double valu
 
 } // namespace handlers
 
-} // namespace imebra
+} // namespace implementation
 
-} // namespace puntoexe
+} // namespace imebra

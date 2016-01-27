@@ -13,7 +13,7 @@ $fileHeader$
 namespace imebra
 {
 
-FileStreamOutput::FileStreamOutput(): BaseStreamOutput(std::make_shared<puntoexe::fileStreamOutput>())
+FileStreamOutput::FileStreamOutput(): BaseStreamOutput(std::make_shared<implementation::fileStreamOutput>())
 {
 }
 
@@ -29,21 +29,21 @@ FileStreamOutput& FileStreamOutput::operator=(const FileStreamOutput& right)
 
 void FileStreamOutput::openFile(const std::wstring& name)
 {
-    (dynamic_cast<puntoexe::fileStreamOutput*>(m_pStream.get()))->openFile(name);
+    (dynamic_cast<implementation::fileStreamOutput*>(m_pStream.get()))->openFile(name);
 }
 
 void FileStreamOutput::openFile(const std::string& name)
 {
-    (dynamic_cast<puntoexe::fileStreamOutput*>(m_pStream.get()))->openFile(name);
+    (dynamic_cast<implementation::fileStreamOutput*>(m_pStream.get()))->openFile(name);
 }
 
 void FileStreamOutput::close()
 {
-    static_cast<puntoexe::fileStreamOutput*>(m_pStream.get())->close();
+    static_cast<implementation::fileStreamOutput*>(m_pStream.get())->close();
 }
 
 
-FileStreamInput::FileStreamInput(): BaseStreamInput(std::make_shared<puntoexe::fileStreamInput>())
+FileStreamInput::FileStreamInput(): BaseStreamInput(std::make_shared<implementation::fileStreamInput>())
 {
 }
 
@@ -59,17 +59,17 @@ FileStreamInput& FileStreamInput::operator=(const FileStreamInput& right)
 
 void FileStreamInput::openFile(const std::wstring& name)
 {
-    (dynamic_cast<puntoexe::fileStreamInput*>(m_pStream.get()))->openFile(name);
+    (dynamic_cast<implementation::fileStreamInput*>(m_pStream.get()))->openFile(name);
 }
 
 void FileStreamInput::openFile(const std::string& name)
 {
-    (dynamic_cast<puntoexe::fileStreamInput*>(m_pStream.get()))->openFile(name);
+    (dynamic_cast<implementation::fileStreamInput*>(m_pStream.get()))->openFile(name);
 }
 
 void FileStreamInput::close()
 {
-    static_cast<puntoexe::fileStreamInput*>(m_pStream.get())->close();
+    static_cast<implementation::fileStreamInput*>(m_pStream.get())->close();
 }
 
 

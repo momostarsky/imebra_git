@@ -17,17 +17,17 @@ $fileHeader$
 
 ///////////////////////////////////////////////////////////
 //
-// Everything is in the namespace puntoexe
+// Everything is in the namespace imebra
 //
 ///////////////////////////////////////////////////////////
-namespace puntoexe
+namespace imebra
 {
+
+namespace implementation
+{
+
 class streamReader;
 class streamWriter;
-
-/// \addtogroup group_baseclasses
-///
-/// @{
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -256,10 +256,9 @@ private:
 
 };
 
+} // namespace implementation
 
-///@}
-
-} // namespace puntoexe
+} // namespace imebra
 
 
 #endif // !defined(imebraHuffmanTable_3146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_)

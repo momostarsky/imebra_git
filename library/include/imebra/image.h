@@ -17,9 +17,9 @@ $fileHeader$
 #include "definitions.h"
 #include "dataHandler.h"
 
-namespace puntoexe
-{
 namespace imebra
+{
+namespace implementation
 {
 class image;
 }
@@ -59,7 +59,7 @@ public:
 	Image& operator=(const Image& right);
 
 #ifndef SWIG
-	Image(std::shared_ptr<puntoexe::imebra::image> pImage);
+    Image(std::shared_ptr<imebra::implementation::image> pImage);
 #endif
 
     WritingDataHandler create(
@@ -91,7 +91,7 @@ public:
     int getHighBit() const;
 
 #ifndef SWIG
-	std::shared_ptr<puntoexe::imebra::image> m_pImage;
+    std::shared_ptr<imebra::implementation::image> m_pImage;
 #endif
 
 };

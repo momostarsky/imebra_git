@@ -20,7 +20,7 @@ namespace imebra
 
 DataSet CodecFactory::load(StreamReader& reader, size_t maxSizeBufferLoad)
 {
-    std::shared_ptr<puntoexe::imebra::codecs::codecFactory> factory(puntoexe::imebra::codecs::codecFactory::getCodecFactory());
+    std::shared_ptr<imebra::implementation::codecs::codecFactory> factory(imebra::implementation::codecs::codecFactory::getCodecFactory());
     return DataSet(factory->load(reader.m_pReader, (std::uint32_t)maxSizeBufferLoad));
 }
 
@@ -45,15 +45,15 @@ DataSet CodecFactory::load(const std::string& fileName, size_t maxSizeBufferLoad
 
 void CodecFactory::save(const DataSet& dataSet, StreamWriter& writer, codecType codecType)
 {
-    std::shared_ptr<puntoexe::imebra::codecs::codec> codec;
+    std::shared_ptr<imebra::implementation::codecs::codec> codec;
 
     switch(codecType)
     {
     case jpeg:
-        codec = std::make_shared<puntoexe::imebra::codecs::jpegCodec>();
+        codec = std::make_shared<imebra::implementation::codecs::jpegCodec>();
         break;
     default:
-        codec = std::make_shared<puntoexe::imebra::codecs::dicomCodec>();
+        codec = std::make_shared<imebra::implementation::codecs::dicomCodec>();
         break;
     }
 

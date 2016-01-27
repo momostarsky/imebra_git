@@ -16,9 +16,12 @@ $fileHeader$
 #include "definitions.h"
 #include "baseStream.h"
 
-namespace puntoexe
+namespace imebra
+{
+namespace implementation
 {
 class streamReader;
+}
 }
 
 #endif
@@ -43,7 +46,7 @@ public:
 
 #ifndef SWIG
 protected:
-	std::shared_ptr<puntoexe::streamReader> m_pReader;
+    std::shared_ptr<implementation::streamReader> m_pReader;
 #endif
 };
 

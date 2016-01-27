@@ -11,10 +11,10 @@ $fileHeader$
 #include "charsetsListImpl.h"
 #include "../include/imebra/exceptions.h"
 
-namespace puntoexe
+namespace imebra
 {
 
-namespace imebra
+namespace implementation
 {
 
 namespace charsetsList
@@ -53,7 +53,7 @@ void updateCharsets(const tCharsetsList* pCharsetsList, tCharsetsList* pDestinat
 	///////////////////////////////////////////////////////////
 	if(!pCharsetsList->empty() && !pDestinationCharsetsList->empty() && pCharsetsList->front() != pDestinationCharsetsList->front())
 	{
-        IMEBRA_THROW(::imebra::charsetListExceptionDiffDefault, "Different default charsets");
+        IMEBRA_THROW(charsetListExceptionDiffDefault, "Different default charsets");
 	}
 
 	// Copy the charsets in the local list (if they are not
@@ -87,6 +87,6 @@ void updateCharsets(const tCharsetsList* pCharsetsList, tCharsetsList* pDestinat
 
 } // namespace charsetsList
 
-} // namespace imebra
+} // namespace implementation
 
-} // namespace puntoexe
+} // namespace imebra

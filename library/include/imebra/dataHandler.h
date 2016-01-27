@@ -16,9 +16,9 @@ $fileHeader$
 #include <memory>
 #include "definitions.h"
 
-namespace puntoexe
-{
 namespace imebra
+{
+namespace implementation
 {
 namespace handlers
 {
@@ -35,7 +35,6 @@ class writingDataHandler;
 namespace imebra
 {
 
-
 class IMEBRA_API ReadingDataHandler
 {
 public:
@@ -46,7 +45,7 @@ public:
     ReadingDataHandler& operator=(const ReadingDataHandler& right);
 
 #ifndef SWIG
-    ReadingDataHandler(std::shared_ptr<puntoexe::imebra::handlers::readingDataHandler> pDataHandler);
+    ReadingDataHandler(std::shared_ptr<imebra::implementation::handlers::readingDataHandler> pDataHandler);
 #endif
 
 	void close();
@@ -92,7 +91,7 @@ public:
 
 #ifndef SWIG
 protected:
-    std::shared_ptr<puntoexe::imebra::handlers::readingDataHandler> m_pDataHandler;
+    std::shared_ptr<imebra::implementation::handlers::readingDataHandler> m_pDataHandler;
 #endif
 };
 
@@ -106,7 +105,7 @@ public:
     WritingDataHandler& operator=(const WritingDataHandler& right);
 
 #ifndef SWIG
-    WritingDataHandler(std::shared_ptr<puntoexe::imebra::handlers::writingDataHandler> pDataHandler);
+    WritingDataHandler(std::shared_ptr<imebra::implementation::handlers::writingDataHandler> pDataHandler);
 #endif
 
     void close();
@@ -138,7 +137,7 @@ public:
 
 #ifndef SWIG
 protected:
-    std::shared_ptr<puntoexe::imebra::handlers::writingDataHandler> m_pDataHandler;
+    std::shared_ptr<imebra::implementation::handlers::writingDataHandler> m_pDataHandler;
 #endif
 };
 

@@ -18,10 +18,10 @@ $fileHeader$
 #include "../include/imebra/exceptions.h"
 #include <iostream>
 
-namespace puntoexe
+namespace imebra
 {
 
-namespace imebra
+namespace implementation
 {
 
 ///////////////////////////////////////////////////////////
@@ -105,7 +105,7 @@ std::string data::getDataTypeThrow(size_t bufferId) const
 		return findBuffer->second->getDataType();
 	}
 	
-    throw ::imebra::missingBuffer("The requested buffer is missing");
+    throw missingBuffer("The requested buffer is missing");
 
 	IMEBRA_FUNCTION_END();
 }
@@ -172,7 +172,7 @@ size_t data::getBufferSizeThrow(size_t bufferId) const
     tBuffersMap::const_iterator findBuffer = m_buffers.find(bufferId);
 	if(findBuffer == m_buffers.end())
 	{
-        throw ::imebra::missingBuffer("The requested buffer is missing");
+        throw missingBuffer("The requested buffer is missing");
 	}
 
 	// Retrieve the buffer's size
@@ -201,7 +201,7 @@ std::shared_ptr<handlers::readingDataHandler> data::getReadingDataHandlerThrow(s
     tBuffersMap::const_iterator findBuffer = m_buffers.find(bufferId);
     if(findBuffer == m_buffers.end())
 	{
-        throw ::imebra::missingBuffer("The requested buffer is missing");
+        throw missingBuffer("The requested buffer is missing");
 	}
 
     return findBuffer->second->getReadingDataHandler();
@@ -268,7 +268,7 @@ std::shared_ptr<handlers::readingDataHandlerRaw> data::getReadingDataHandlerRawT
     tBuffersMap::const_iterator findBuffer = m_buffers.find(bufferId);
     if(findBuffer == m_buffers.end() )
 	{
-        throw ::imebra::missingBuffer("The requested buffer is missing");
+        throw missingBuffer("The requested buffer is missing");
 	}
 
     return findBuffer->second->getReadingDataHandlerRaw();
@@ -338,7 +338,7 @@ std::shared_ptr<streamReader> data::getStreamReaderThrow(size_t bufferId)
 		return findBuffer->second->getStreamReader();
 	}
 
-    throw ::imebra::missingBuffer("The requested buffer does not exist");
+    throw missingBuffer("The requested buffer does not exist");
 
 	IMEBRA_FUNCTION_END();
 }
@@ -408,7 +408,7 @@ std::shared_ptr<dataSet> data::getDataSetThrow(size_t dataSetId) const
 	///////////////////////////////////////////////////////////
 	if(m_embeddedDataSets.size() <= dataSetId)
 	{
-        throw ::imebra::missingItem("The requested sequence item does not exist");
+        throw missingItem("The requested sequence item does not exist");
 	}
 
 	return m_embeddedDataSets[dataSetId];
@@ -524,6 +524,6 @@ void data::getCharsetsList(charsetsList::tCharsetsList* pCharsetsList) const
 }
 
 
-} // namespace imebra
+} // namespace implementation
 
-} // namespace puntoexe
+} // namespace imebra

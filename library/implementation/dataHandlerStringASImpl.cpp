@@ -13,10 +13,10 @@ $fileHeader$
 #include "exceptionImpl.h"
 #include "dataHandlerStringASImpl.h"
 
-namespace puntoexe
+namespace imebra
 {
 
-namespace imebra
+namespace implementation
 {
 
 namespace handlers
@@ -59,7 +59,7 @@ readingDataHandlerStringAS::readingDataHandlerStringAS(const memory& parseMemory
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::uint32_t readingDataHandlerStringAS::getAge(const size_t index, ::imebra::ageUnit_t* pUnit) const
+std::uint32_t readingDataHandlerStringAS::getAge(const size_t index, ageUnit_t* pUnit) const
 {
 	IMEBRA_FUNCTION_START(L"dataHandlerStringAS::getAge");
 
@@ -73,14 +73,14 @@ std::uint32_t readingDataHandlerStringAS::getAge(const size_t index, ::imebra::a
 	ageStream >> age;
     char unit = ageString[3];
     if(
-            unit != (char)::imebra::ageUnit_t::days &&
-            unit != (char)::imebra::ageUnit_t::weeks &&
-            unit == (char)::imebra::ageUnit_t::months &&
-            unit == (char)::imebra::ageUnit_t::years)
+            unit != (char)ageUnit_t::days &&
+            unit != (char)ageUnit_t::weeks &&
+            unit == (char)ageUnit_t::months &&
+            unit == (char)ageUnit_t::years)
     {
         throw;
     }
-    *pUnit = (::imebra::ageUnit_t)unit;
+    *pUnit = (ageUnit_t)unit;
     return age;
 
 	IMEBRA_FUNCTION_END();
@@ -138,21 +138,21 @@ double readingDataHandlerStringAS::getDouble(const size_t index) const
 {
 	IMEBRA_FUNCTION_START(L"dataHandlerStringAS::getDouble");
 
-    ::imebra::ageUnit_t ageUnit;
+    ageUnit_t ageUnit;
 	double age = (double)getAge(index, &ageUnit);
 
     switch (ageUnit)
     {
-    case ::imebra::ageUnit_t::days:
+    case ageUnit_t::days:
         return age / (double)365;
 
-    case ::imebra::ageUnit_t::weeks:
+    case ageUnit_t::weeks:
         return age / 52.14;
 
-    case ::imebra::ageUnit_t::months:
+    case ageUnit_t::months:
         return age / (double)12;
 
-    case ::imebra::ageUnit_t::years:
+    case ageUnit_t::years:
         return age;
 
     default:
@@ -177,7 +177,7 @@ writingDataHandlerStringAS::writingDataHandlerStringAS(const std::shared_ptr<buf
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void writingDataHandlerStringAS::setAge(const size_t index, const std::uint32_t age, const ::imebra::ageUnit_t unit)
+void writingDataHandlerStringAS::setAge(const size_t index, const std::uint32_t age, const ageUnit_t unit)
 {
     IMEBRA_FUNCTION_START(L"dataHandlerStringAS::setAge");
 
@@ -250,24 +250,24 @@ void writingDataHandlerStringAS::setDouble(const size_t index, const double valu
 
 	if(value < 0)
 	{
-        setAge(index, 0, ::imebra::ageUnit_t::days);
+        setAge(index, 0, ageUnit_t::days);
 	}
 	if(value < 0.08)
 	{
-        setAge(index, (std::uint32_t)(value * 365), ::imebra::ageUnit_t::days);
+        setAge(index, (std::uint32_t)(value * 365), ageUnit_t::days);
 		return;
 	}
 	if(value < 0.5)
 	{
-        setAge(index, (std::uint32_t)(value * 52.14), ::imebra::ageUnit_t::weeks);
+        setAge(index, (std::uint32_t)(value * 52.14), ageUnit_t::weeks);
 		return;
 	}
 	if(value < 2)
 	{
-        setAge(index, (std::uint32_t)(value * 12), ::imebra::ageUnit_t::months);
+        setAge(index, (std::uint32_t)(value * 12), ageUnit_t::months);
 		return;
 	}
-    setAge(index, (std::uint32_t)value, ::imebra::ageUnit_t::years);
+    setAge(index, (std::uint32_t)value, ageUnit_t::years);
 
 	IMEBRA_FUNCTION_END();
 }
@@ -275,6 +275,6 @@ void writingDataHandlerStringAS::setDouble(const size_t index, const double valu
 
 } // namespace handlers
 
-} // namespace imebra
+} // namespace implementation
 
-} // namespace puntoexe
+} // namespace imebra

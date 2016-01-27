@@ -6,7 +6,7 @@ $fileHeader$
     \brief Declaration of the a class that help a view or window class to draw
             a dicom image on the screen.
 
-This file is not included automatically by imebra.h
+This file is not included automatically by implementation.h
 
 */
 
@@ -19,10 +19,10 @@ This file is not included automatically by imebra.h
 #include "drawBitmapImpl.h"
 #include <list>
 
-namespace puntoexe
+namespace imebra
 {
 
-namespace imebra
+namespace implementation
 {
 
 /// \addtogroup group_helpers
@@ -87,11 +87,6 @@ protected:
 /// The is an abstract class, so it cannot be used alone;
 /// it provides some functions that the derived class must
 ///  always overwrite because they are platform specific.
-///
-/// Because this class must always be overwritten its
-///  header is not included in the file imebra.h and
-///  should be included in the header file of the
-///  derived class.
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -800,7 +795,7 @@ private:
 	///////////////////////////////////////////////////////////
 	double m_zoom;
 
-        std::shared_ptr<imebra::drawBitmap> m_drawBitmap;
+        std::shared_ptr<implementation::drawBitmap> m_drawBitmap;
 
 	std::shared_ptr<image> m_originalImage;
 
@@ -829,8 +824,8 @@ private:
 
 /// @}
 
-} // namespace imebra
+} // namespace implementation
 
-} // namespace puntoexe
+} // namespace imebra
 
 #endif // imebraView_3146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_

@@ -34,10 +34,10 @@ $fileHeader$
 #include <vector>
 
 
-namespace puntoexe
+namespace imebra
 {
 
-namespace imebra
+namespace implementation
 {
 
 ///////////////////////////////////////////////////////////
@@ -348,7 +348,7 @@ std::shared_ptr<handlers::readingDataHandler> buffer::getReadingDataHandler() co
         return std::make_shared<handlers::readingDataHandlerTime>(*localMemory);
     }
 
-    IMEBRA_THROW(::imebra::bufferExceptionUnknownType, "Unknown data type requested");
+    IMEBRA_THROW(bufferExceptionUnknownType, "Unknown data type requested");
 
 	IMEBRA_FUNCTION_END();
 }
@@ -544,7 +544,7 @@ std::shared_ptr<handlers::writingDataHandler> buffer::getWritingDataHandler(std:
         return std::make_shared<handlers::writingDataHandlerTime>(shared_from_this());
     }
 
-    IMEBRA_THROW(::imebra::bufferExceptionUnknownType, "Unknown data type requested");
+    IMEBRA_THROW(bufferExceptionUnknownType, "Unknown data type requested");
 
     IMEBRA_FUNCTION_END();
 }
@@ -779,7 +779,7 @@ void buffer::getCharsetsList(charsetsList::tCharsetsList* pCharsetsList) const
 }
 
 
-} // namespace imebra
+} // namespace implementation
 
-} // namespace puntoexe
+} // namespace imebra
 

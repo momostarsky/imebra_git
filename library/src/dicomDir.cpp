@@ -20,7 +20,7 @@ DirectoryRecord::DirectoryRecord(const DirectoryRecord& right): m_pDirectoryReco
 {
 }
 
-DirectoryRecord::DirectoryRecord(std::shared_ptr<puntoexe::imebra::directoryRecord> pDirectoryRecord): m_pDirectoryRecord(pDirectoryRecord)
+DirectoryRecord::DirectoryRecord(std::shared_ptr<imebra::implementation::directoryRecord> pDirectoryRecord): m_pDirectoryRecord(pDirectoryRecord)
 {
 }
 
@@ -102,7 +102,7 @@ bool DirectoryRecord::isNull() const
 }
 
 
-DicomDir::DicomDir(DataSet fromDataSet): m_pDicomDir(std::make_shared<puntoexe::imebra::dicomDir>(fromDataSet.m_pDataSet))
+DicomDir::DicomDir(DataSet fromDataSet): m_pDicomDir(std::make_shared<imebra::implementation::dicomDir>(fromDataSet.m_pDataSet))
 {}
 
 DataSet DicomDir::getDirectoryDataSet()

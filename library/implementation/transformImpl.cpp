@@ -13,10 +13,10 @@ $fileHeader$
 #include "transformHighBitImpl.h"
 #include "../include/imebra/exceptions.h"
 
-namespace puntoexe
+namespace imebra
 {
 
-namespace imebra
+namespace implementation
 {
 
 namespace transforms
@@ -55,7 +55,7 @@ void transformHandlers::runTransform(
         outputTopLeftX + inputWidth > outputImageWidth ||
         outputTopLeftY + inputHeight > outputImageHeight)
     {
-        IMEBRA_THROW(::imebra::transformExceptionInvalidArea, "The input and/or output areas are invalid");
+        IMEBRA_THROW(transformExceptionInvalidArea, "The input and/or output areas are invalid");
     }
 
     std::shared_ptr<handlers::readingDataHandlerNumericBase> inputHandler(inputImage->getReadingDataHandler());
@@ -105,6 +105,6 @@ void transformHandlers::runTransform(
 
 } // namespace transforms
 
-} // namespace imebra
+} // namespace implementation
 
-} // namespace puntoexe
+} // namespace imebra

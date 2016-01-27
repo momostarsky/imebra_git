@@ -10,7 +10,10 @@ $fileHeader$
 #include "streamWriterImpl.h"
 #include <string.h>
 
-namespace puntoexe
+namespace imebra
+{
+
+namespace implementation
 {
 
 ///////////////////////////////////////////////////////////
@@ -87,5 +90,6 @@ void streamWriter::write(const std::uint8_t* pBuffer, size_t bufferLength)
 	}
 }
 
+} // namespace implementation
 
-} // namespace puntoexe
+} // namespace imebra

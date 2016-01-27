@@ -27,10 +27,10 @@ $fileHeader$
 #include <string.h>
 
 
-namespace puntoexe
+namespace imebra
 {
 
-namespace imebra
+namespace implementation
 {
 
 ///////////////////////////////////////////////////////////
@@ -63,19 +63,19 @@ std::shared_ptr<data> dataSet::getTagThrow(std::uint16_t groupId, std::uint16_t 
     tGroups::const_iterator findGroup(m_groups.find(groupId));
     if(findGroup == m_groups.end())
     {
-        throw ::imebra::missingGroup("The requested group is missing");
+        throw missingGroup("The requested group is missing");
     }
 
     if(findGroup->second.size() <= order)
     {
-        throw ::imebra::missingGroup("The requested group is missing");
+        throw missingGroup("The requested group is missing");
     }
 
     const tTags& tagsMap = findGroup->second.at(order);
     tTags::const_iterator findTag(tagsMap.find(tagId));
     if(findTag == tagsMap.end())
     {
-        throw ::imebra::missingGroup("The requested tag is missing");
+        throw missingGroup("The requested tag is missing");
     }
     return findTag->second;
 
@@ -109,7 +109,7 @@ bool dataSet::bufferExists(std::uint16_t groupId, std::uint16_t order, std::uint
         std::shared_ptr<data> tag(getTagThrow(groupId, order, tagId));
         return tag != 0 && tag->bufferExists(bufferId);
     }
-    catch(const ::imebra::missingDataElement&)
+    catch(const missingDataElement&)
     {
         return false;
     }
@@ -139,7 +139,7 @@ std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
 
     try
     {
-        std::shared_ptr<imebra::data> imageTag = getTagThrow(0x7fe0, 0x0, 0x0010);
+        std::shared_ptr<implementation::data> imageTag = getTagThrow(0x7fe0, 0x0, 0x0010);
 
         const std::string imageStreamDataType(imageTag->getDataTypeThrow(0));
 
@@ -149,7 +149,7 @@ std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
 
         if(frameNumber >= numberOfFrames)
         {
-            IMEBRA_THROW(::imebra::dataSetImageDoesntExist, "The requested image doesn't exist");
+            IMEBRA_THROW(dataSetImageDoesntExist, "The requested image doesn't exist");
         }
 
         // Placeholder for the stream containing the image
@@ -210,7 +210,7 @@ std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
                 imageStream = getStreamReaderThrow(0x7fe0, (std::uint16_t)frameNumber, 0x0010, 0x0);
                 bDontNeedImagesPositions = true;
             }
-            catch(const ::imebra::missingDataElement&)
+            catch(const missingDataElement&)
             {
                 // Nothing to do
             }
@@ -290,9 +290,9 @@ std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
 
         return pImage;
     }
-    catch(const ::imebra::missingDataElement&)
+    catch(const missingDataElement&)
     {
-        IMEBRA_THROW(::imebra::dataSetImageDoesntExist, "The requested image doesn't exist");
+        IMEBRA_THROW(dataSetImageDoesntExist, "The requested image doesn't exist");
     }
 
 	IMEBRA_FUNCTION_END();
@@ -378,14 +378,14 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
     std::uint32_t numberOfFrames = getUnsignedLong(0x0028, 0, 0x0008, 0, 0, 0);
 	if(frameNumber != numberOfFrames)
 	{
-        IMEBRA_THROW(::imebra::dataSetExceptionWrongFrame, "The frames must be inserted in sequence");
+        IMEBRA_THROW(dataSetExceptionWrongFrame, "The frames must be inserted in sequence");
 	}
 	bool bDontChangeAttributes = (numberOfFrames != 0);
 	if(bDontChangeAttributes)
 	{
         if(transferSyntax != getStringThrow(0x0002, 0x0, 0x0010, 0, 0))
         {
-            IMEBRA_THROW(::imebra::dataSetExceptionDifferentFormat, "Previous images had a different transfer syntax");
+            IMEBRA_THROW(dataSetExceptionDifferentFormat, "Previous images had a different transfer syntax");
         }
 	}
 
@@ -428,7 +428,7 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
                 allocatedBits != (std::uint8_t)getUnsignedLongThrow(0x0028, 0x0, 0x0100, 0, 0) ||
                 channelsNumber != getUnsignedLongThrow(0x0028, 0x0, 0x0002, 0, 0))
         {
-            IMEBRA_THROW(::imebra::dataSetExceptionDifferentFormat, "An image already exists in the dataset and has different attributes");
+            IMEBRA_THROW(dataSetExceptionDifferentFormat, "An image already exists in the dataset and has different attributes");
         }
 	}
 
@@ -472,7 +472,7 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
                 }
             }
         }
-        catch(const ::imebra::missingDataElement&)
+        catch(const missingDataElement&)
         {
             // Nothing to do. No image has been stored yet
         }
@@ -490,7 +490,7 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
 	}
 	else
 	{
-        std::shared_ptr<puntoexe::memoryStreamOutput> memStream(std::make_shared<memoryStreamOutput>(uncompressedImage));
+        std::shared_ptr<memoryStreamOutput> memStream(std::make_shared<memoryStreamOutput>(uncompressedImage));
         outputStream = std::make_shared<streamWriter>(memStream);
 	}
 
@@ -628,7 +628,7 @@ std::uint32_t dataSet::getFrameOffset(std::uint32_t frameNumber) const
         }
         return 0;
     }
-    catch(const ::imebra::missingDataElement&)
+    catch(const missingDataElement&)
     {
         return 0xffffffff;
     }
@@ -672,7 +672,7 @@ std::uint32_t dataSet::getFrameBufferId(std::uint32_t offset) const
         bufferSize += 4; // one DWORD for the tag length
         if(bufferSize > offset)
         {
-            IMEBRA_THROW(::imebra::dataSetImageDoesntExist, "Image not in the offset table");
+            IMEBRA_THROW(dataSetImageDoesntExist, "Image not in the offset table");
         }
         offset -= bufferSize;
         ++scanBuffers;
@@ -705,7 +705,7 @@ size_t dataSet::getFrameBufferIds(std::uint32_t frameNumber, std::uint32_t* pFir
 
         if(startOffset == std::numeric_limits<std::int32_t>::max())
         {
-            IMEBRA_THROW(::imebra::dataSetImageDoesntExist, "Image not in the table offset");
+            IMEBRA_THROW(dataSetImageDoesntExist, "Image not in the table offset");
         }
 
         *pFirstBuffer = getFrameBufferId(startOffset);
@@ -723,9 +723,9 @@ size_t dataSet::getFrameBufferIds(std::uint32_t frameNumber, std::uint32_t* pFir
         }
         return totalSize;
     }
-    catch(const ::imebra::missingDataElement&)
+    catch(const missingDataElement&)
     {
-        IMEBRA_THROW(::imebra::dataSetCorruptedOffsetTable, "The basic offset table is corrupted");
+        IMEBRA_THROW(dataSetCorruptedOffsetTable, "The basic offset table is corrupted");
     }
 
 	IMEBRA_FUNCTION_END();
@@ -849,7 +849,7 @@ std::int32_t dataSet::getSignedLong(std::uint16_t groupId, std::uint16_t order, 
     {
         return getSignedLongThrow(groupId, order, tagId, bufferId, elementNumber);
     }
-    catch(const ::imebra::missingDataElement&)
+    catch(const missingDataElement&)
     {
         return defaultValue;
     }
@@ -904,7 +904,7 @@ std::uint32_t dataSet::getUnsignedLong(std::uint16_t groupId, std::uint16_t orde
     {
         return getUnsignedLongThrow(groupId, order, tagId, bufferId, elementNumber);
     }
-    catch(const ::imebra::missingDataElement&)
+    catch(const missingDataElement&)
     {
         return defaultValue;
     }
@@ -959,7 +959,7 @@ double dataSet::getDouble(std::uint16_t groupId, std::uint16_t order, std::uint1
     {
         return getDoubleThrow(groupId, order, tagId, bufferId, elementNumber);
     }
-    catch(const ::imebra::missingDataElement&)
+    catch(const missingDataElement&)
     {
         return defaultValue;
     }
@@ -1013,7 +1013,7 @@ std::string dataSet::getString(std::uint16_t groupId, std::uint16_t order, std::
     {
         return getStringThrow(groupId, order, tagId, bufferId, elementNumber);
     }
-    catch(const ::imebra::missingDataElement&)
+    catch(const missingDataElement&)
     {
         return defaultValue;
     }
@@ -1044,7 +1044,7 @@ std::wstring dataSet::getUnicodeString(std::uint16_t groupId, std::uint16_t orde
     {
         return getUnicodeStringThrow(groupId, order, tagId, bufferId, elementNumber);
     }
-    catch(const ::imebra::missingDataElement&)
+    catch(const missingDataElement&)
     {
         return defaultValue;
     }
@@ -1098,7 +1098,7 @@ void dataSet::setUnicodeString(std::uint16_t groupId, std::uint16_t order, std::
 	IMEBRA_FUNCTION_END();
 }
 
-void dataSet::setAge(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, int age, ::imebra::ageUnit_t units, const std::string& defaultType /* = "" */)
+void dataSet::setAge(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, int age, ageUnit_t units, const std::string& defaultType /* = "" */)
 {
     IMEBRA_FUNCTION_START(L"dataSet::setAge");
 
@@ -1112,7 +1112,7 @@ void dataSet::setAge(std::uint16_t groupId, std::uint16_t order, std::uint16_t t
     IMEBRA_FUNCTION_END();
 }
 
-int dataSet::getAgeThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, ::imebra::ageUnit_t* pUnits) const
+int dataSet::getAgeThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, ageUnit_t* pUnits) const
 {
     IMEBRA_FUNCTION_START(L"dataSet::getAge");
 
@@ -1328,7 +1328,7 @@ void dataSet::updateTagsCharset()
             charsets.push_back(charsetHandler->getString(pointer));
 		}
 	}
-    catch(const ::imebra::missingDataElement&)
+    catch(const missingDataElement&)
     {
         // TODO
     }
@@ -1437,6 +1437,6 @@ void dataSet::setCharsetsList(const charsetsList::tCharsetsList& charsetsList)
     }
 }
 
-} // namespace imebra
+} // namespace implementation
 
-} // namespace puntoexe
+} // namespace imebra

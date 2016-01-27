@@ -16,10 +16,10 @@ $fileHeader$
 
 ///////////////////////////////////////////////////////////
 //
-// Everything is in the namespace puntoexe
+// Everything is in the namespace imebra
 //
 ///////////////////////////////////////////////////////////
-namespace puntoexe
+namespace imebra
 {
 
 /// \addtogroup group_baseclasses
@@ -33,7 +33,7 @@ namespace puntoexe
 ///         from/to a stream.
 ///
 /// Do not use this class directly: use
-///  puntoexe::streamWriter or puntoexe::streamReader
+///  imebra::streamWriter or imebra::streamReader
 ///  instead.
 ///
 ///////////////////////////////////////////////////////////
@@ -200,7 +200,7 @@ protected:
 
 ///@}
 
-} // namespace puntoexe
+} // namespace imebra
 
 #endif // !defined(imebraStreamController_00B3C824_CD0D_4D99_8436_A41FCE9E4D6B__INCLUDED_)
 

@@ -4,7 +4,7 @@ $fileHeader$
 
 /*! \file baseStream.h
     \brief Declaration of the the base class for the streams (memory, file, ...)
-            used by the puntoexe library.
+            used by the imebra library.
 
 */
 
@@ -19,15 +19,14 @@ $fileHeader$
 
 ///////////////////////////////////////////////////////////
 //
-// Everything is in the namespace puntoexe
+// Everything is in the namespace imebra
 //
 ///////////////////////////////////////////////////////////
-namespace puntoexe
+namespace imebra
 {
 
-/// \addtogroup group_baseclasses
-///
-/// @{
+namespace implementation
+{
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -48,10 +47,10 @@ namespace puntoexe
 ///
 /// The library supplies two specialized streams derived
 ///  from this class:
-/// - puntoexe::stream (used to read or write into physical
+/// - imebra::stream (used to read or write into physical
 ///    files)
-/// - puntoexe::memoryStream (used to read or write into
-///    puntoexe::memory objects)
+/// - imebra::memoryStream (used to read or write into
+///    imebra::memory objects)
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -102,10 +101,9 @@ public:
 
 };
 
+} // namespace implementation
 
-///@}
-
-} // namespace puntoexe
+} // namespace imebra
 
 
 #endif // !defined(imebraBaseStream_3146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_)

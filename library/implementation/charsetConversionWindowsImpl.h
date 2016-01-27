@@ -18,10 +18,10 @@ $fileHeader$
 
 ///////////////////////////////////////////////////////////
 //
-// Everything is in the namespace puntoexe
+// Everything is in the namespace imebra
 //
 ///////////////////////////////////////////////////////////
-namespace puntoexe
+namespace imebra
 {
 class charsetConversionWindows: public charsetConversionBase
 {
@@ -39,7 +39,7 @@ protected:
 
 typedef charsetConversionWindows defaultCharsetConversion;
 
-} // namespace puntoexe
+} // namespace imebra
 
 #endif // defined(IMEBRA_USE_WINDOWS_CHARSET)
 

@@ -51,7 +51,7 @@ ReadingDataHandler& ReadingDataHandler::operator=(const ReadingDataHandler& righ
     return *this;
 }
 
-ReadingDataHandler::ReadingDataHandler(std::shared_ptr<puntoexe::imebra::handlers::readingDataHandler> pDataHandler): m_pDataHandler(pDataHandler)
+ReadingDataHandler::ReadingDataHandler(std::shared_ptr<imebra::implementation::handlers::readingDataHandler> pDataHandler): m_pDataHandler(pDataHandler)
 {}
 
 void ReadingDataHandler::close()
@@ -116,7 +116,7 @@ Age ReadingDataHandler::getAge(const size_t index) const
 
 size_t ReadingDataHandler::data(char* bufferOut, const size_t bufferSize) const
 {
-    std::shared_ptr<puntoexe::imebra::handlers::readingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<puntoexe::imebra::handlers::readingDataHandlerNumericBase>(m_pDataHandler);
+    std::shared_ptr<imebra::implementation::handlers::readingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<imebra::implementation::handlers::readingDataHandlerNumericBase>(m_pDataHandler);
     if(numericDataHandler == 0)
     {
         return 0;
@@ -135,7 +135,7 @@ size_t ReadingDataHandler::data(char* bufferOut, const size_t bufferSize) const
 
 const char* ReadingDataHandler::data(size_t* pDataSize) const
 {
-    std::shared_ptr<puntoexe::imebra::handlers::readingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<puntoexe::imebra::handlers::readingDataHandlerNumericBase>(m_pDataHandler);
+    std::shared_ptr<imebra::implementation::handlers::readingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<imebra::implementation::handlers::readingDataHandlerNumericBase>(m_pDataHandler);
     if(numericDataHandler == 0)
     {
         *pDataSize = 0;
@@ -155,7 +155,7 @@ WritingDataHandler& WritingDataHandler::operator=(const WritingDataHandler& righ
     return *this;
 }
 
-WritingDataHandler::WritingDataHandler(std::shared_ptr<puntoexe::imebra::handlers::writingDataHandler> pDataHandler): m_pDataHandler(pDataHandler)
+WritingDataHandler::WritingDataHandler(std::shared_ptr<imebra::implementation::handlers::writingDataHandler> pDataHandler): m_pDataHandler(pDataHandler)
 {}
 
 void WritingDataHandler::close()
@@ -221,7 +221,7 @@ void WritingDataHandler::setString(const int index, const std::wstring& value)
 
 void WritingDataHandler::assign(const char *buffer, const size_t bufferSize)
 {
-    std::shared_ptr<puntoexe::imebra::handlers::writingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<puntoexe::imebra::handlers::writingDataHandlerNumericBase>(m_pDataHandler);
+    std::shared_ptr<imebra::implementation::handlers::writingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<imebra::implementation::handlers::writingDataHandlerNumericBase>(m_pDataHandler);
     if(numericDataHandler == 0)
     {
         return;
@@ -232,7 +232,7 @@ void WritingDataHandler::assign(const char *buffer, const size_t bufferSize)
 
 char* WritingDataHandler::data(size_t* pDataSize) const
 {
-    std::shared_ptr<puntoexe::imebra::handlers::writingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<puntoexe::imebra::handlers::writingDataHandlerNumericBase>(m_pDataHandler);
+    std::shared_ptr<imebra::implementation::handlers::writingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<imebra::implementation::handlers::writingDataHandlerNumericBase>(m_pDataHandler);
     if(numericDataHandler == 0)
     {
         *pDataSize = 0;

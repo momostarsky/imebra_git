@@ -15,12 +15,14 @@ $fileHeader$
 
 ///////////////////////////////////////////////////////////
 //
-// Everything is in the namespace puntoexe
+// Everything is in the namespace imebra
 //
 ///////////////////////////////////////////////////////////
-namespace puntoexe
+namespace imebra
 {
 
+namespace implementation
+{
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -300,7 +302,7 @@ public:
 		///////////////////////////////////////////////////////////
         if(m_dataBufferCurrent == m_dataBufferEnd && fillDataBuffer() == 0)
         {
-            throw(::imebra::streamExceptionEOF("Attempt to read past the end of the file"));
+            throw(streamExceptionEOF("Attempt to read past the end of the file"));
         }
 
 		// Read one byte. Return immediatly if the tags are not
@@ -314,13 +316,13 @@ public:
         {
             if(++m_dataBufferCurrent == m_dataBufferEnd && fillDataBuffer() == 0)
             {
-                throw(::imebra::streamExceptionEOF("Attempt to read past the end of the file"));
+                throw(streamExceptionEOF("Attempt to read past the end of the file"));
             }
         }while(m_dataBuffer[m_dataBufferCurrent] == 0xff);
 
         if(m_dataBuffer[m_dataBufferCurrent++] != 0)
         {
-            throw(::imebra::streamJpegTagInStream("Corrupted jpeg stream"));
+            throw(streamJpegTagInStream("Corrupted jpeg stream"));
         }
 
         return 0xff;
@@ -351,6 +353,8 @@ private:
 
 ///@}
 
-} // namespace puntoexe
+} // namespace implementation
+
+} // namespace imebra
 
 #endif // !defined(imebraStreamReader_F6221390_BC44_4B83_B5BB_3485222FF1DD__INCLUDED_)

@@ -15,7 +15,10 @@ $fileHeader$
 #include <sstream>
 #include <errno.h>
 
-namespace puntoexe
+namespace imebra
+{
+
+namespace implementation
 {
 
 ///////////////////////////////////////////////////////////
@@ -105,7 +108,7 @@ void fileStream::openFile(const std::wstring& fileName, std::ios_base::openmode 
     {
         std::ostringstream errorMessage;
         errorMessage << "stream::openFile failure - error code: " << errorCode;
-        IMEBRA_THROW(::imebra::streamExceptionOpen, errorMessage.str());
+        IMEBRA_THROW(streamExceptionOpen, errorMessage.str());
     }
 
     IMEBRA_FUNCTION_END();
@@ -119,7 +122,7 @@ void fileStream::close()
     {
         if(::fclose(m_openFile) != 0)
         {
-            IMEBRA_THROW(::imebra::streamExceptionClose, "Error while closing the file");
+            IMEBRA_THROW(streamExceptionClose, "Error while closing the file");
         }
         m_openFile = 0;
     }
@@ -217,12 +220,12 @@ void fileStreamOutput::write(size_t startPosition, const std::uint8_t* pBuffer, 
 	::fseek(m_openFile, startPosition, SEEK_SET);
 	if(ferror(m_openFile) != 0)
 	{
-        IMEBRA_THROW(::imebra::streamExceptionWrite, "stream::seek failure");
+        IMEBRA_THROW(streamExceptionWrite, "stream::seek failure");
 	}
 
 	if(::fwrite(pBuffer, 1, bufferLength, m_openFile) != bufferLength)
 	{
-        IMEBRA_THROW(::imebra::streamExceptionWrite, "stream::write failure");
+        IMEBRA_THROW(streamExceptionWrite, "stream::write failure");
 	}
 
 	IMEBRA_FUNCTION_END();
@@ -251,12 +254,13 @@ size_t fileStreamInput::read(size_t startPosition, std::uint8_t* pBuffer, size_t
     size_t readBytes = (size_t)::fread(pBuffer, 1, bufferLength, m_openFile);
 	if(ferror(m_openFile) != 0)
 	{
-        IMEBRA_THROW(::imebra::streamExceptionRead, "stream::read failure");
+        IMEBRA_THROW(streamExceptionRead, "stream::read failure");
 	}
 	return readBytes;
 
 	IMEBRA_FUNCTION_END();
 }
 
+} // namespace implementation
 
-} // namespace puntoexe
+} // namespace imebra

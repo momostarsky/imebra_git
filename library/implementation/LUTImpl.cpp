@@ -14,10 +14,10 @@ $fileHeader$
 
 #include <string.h>
 
-namespace puntoexe
+namespace imebra
 {
 
-namespace imebra
+namespace implementation
 {
 
 ///////////////////////////////////////////////////////////
@@ -53,7 +53,7 @@ void lut::setLut(std::shared_ptr<handlers::readingDataHandler> pDescriptor, std:
 
 	if(pDescriptor->getSize() < 3)
 	{
-        IMEBRA_THROW(::imebra::lutExceptionCorrupted, "The LUT is corrupted");
+        IMEBRA_THROW(lutExceptionCorrupted, "The LUT is corrupted");
 	}
 	std::int32_t lutSize=pDescriptor->getSignedLong(0);
 	if(lutSize == 0)
@@ -66,7 +66,7 @@ void lut::setLut(std::shared_ptr<handlers::readingDataHandler> pDescriptor, std:
 
 	if((size_t)lutSize != pData->getSize())
 	{
-        IMEBRA_THROW(::imebra::lutExceptionCorrupted, "The LUT is corrupted");
+        IMEBRA_THROW(lutExceptionCorrupted, "The LUT is corrupted");
 	}
 
 	create(lutSize, lutFirstMapped, (std::uint8_t)lutBits, description);
@@ -225,7 +225,7 @@ void lut::setLutValue(std::uint32_t startValue, std::int32_t lutValue)
 
     if(startValue < m_firstMapped)
 	{
-        IMEBRA_THROW(::imebra::lutExceptionWrongIndex, "The start index is below the first mapped index");
+        IMEBRA_THROW(lutExceptionWrongIndex, "The start index is below the first mapped index");
 	}
     startValue -= m_firstMapped;
     if(startValue < m_size)
@@ -348,6 +348,6 @@ std::shared_ptr<lut> palette::getBlue() const
 	return m_blueLut;
 }
 
-} // namespace imebra
+} // namespace implementation
 
-} // namespace puntoexe
+} // namespace imebra

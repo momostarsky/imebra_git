@@ -9,10 +9,10 @@
 #include "memoryStreamImpl.h"
 #include "dataHandlerNumericImpl.h"
 
-namespace puntoexe
+namespace imebra
 {
 
-namespace imebra
+namespace implementation
 {
 
 /// \addtogroup group_dataset
@@ -32,8 +32,8 @@ protected:
 
 /// @}
 
-} // namespace imebra
+} // namespace implementation
 
-} // namespace puntoexe
+} // namespace imebra
 
 #endif // !defined(imebraBufferStream_DE3F98A9_664E_47c0_A29B_B681F9AEB118__INCLUDED_)

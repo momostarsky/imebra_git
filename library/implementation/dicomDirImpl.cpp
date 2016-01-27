@@ -17,10 +17,10 @@ $fileHeader$
 #include <map>
 #include <string>
 
-namespace puntoexe
+namespace imebra
 {
 
-namespace imebra
+namespace implementation
 {
 
 
@@ -224,7 +224,7 @@ directoryRecord::tDirectoryRecordType directoryRecord::getType() const
 
 	// Invalid value found . Throw an exception
 	///////////////////////////////////////////////////////////
-    throw ::imebra::dicomDirUnknownDirectoryRecordType("Unknown directory record type");
+    throw dicomDirUnknownDirectoryRecordType("Unknown directory record type");
 }
 
 
@@ -266,7 +266,7 @@ void directoryRecord::setType(tDirectoryRecordType recordType)
 
 	// Trying to set an invalid type. Throw an exception
 	///////////////////////////////////////////////////////////
-    throw ::imebra::dicomDirUnknownDirectoryRecordType("Unknown directory record type");
+    throw dicomDirUnknownDirectoryRecordType("Unknown directory record type");
 }
 
 
@@ -348,7 +348,7 @@ void directoryRecord::checkCircularReference(directoryRecord* pStartRecord)
 {
 	if(this == pStartRecord)
 	{
-        throw ::imebra::dicomDirCircularReferenceException("Circular reference detected");
+        throw dicomDirCircularReferenceException("Circular reference detected");
 	}
 
 	if(m_pNextRecord != 0)
@@ -451,7 +451,7 @@ dicomDir::dicomDir(std::shared_ptr<dataSet> pDataSet):
             offsetsToRecords[pDataSet->getItemOffset()] = newRecord;
             m_recordsList.push_back(newRecord);
         }
-        catch(const ::imebra::missingDataElement&)
+        catch(const missingDataElement&)
         {
             break; // Out of sequence items
         }
@@ -470,7 +470,7 @@ dicomDir::dicomDir(std::shared_ptr<dataSet> pDataSet):
                 scanRecords->second->setNextRecord(findNextRecord->second);
             }
         }
-        catch(const ::imebra::missingDataElement&)
+        catch(const missingDataElement&)
         {
             // Nothing to do
         }
@@ -484,7 +484,7 @@ dicomDir::dicomDir(std::shared_ptr<dataSet> pDataSet):
                 scanRecords->second->setFirstChildRecord(findChildRecord->second);
             }
         }
-        catch(const ::imebra::missingDataElement&)
+        catch(const missingDataElement&)
         {
             // Nothing to do
         }
@@ -498,7 +498,7 @@ dicomDir::dicomDir(std::shared_ptr<dataSet> pDataSet):
                 scanRecords->second->setReferencedRecord(findReferencedRecord->second);
             }
         }
-        catch(const ::imebra::missingDataElement&)
+        catch(const missingDataElement&)
         {
             // Nothing to do
         }
@@ -664,6 +664,6 @@ void dicomDir::setFirstRootRecord(std::shared_ptr<directoryRecord> pFirstRootRec
 
 
 
-} // namespace imebra
+} // namespace implementation
 
-} // namespace puntoexe
+} // namespace imebra

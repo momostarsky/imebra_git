@@ -11,7 +11,10 @@ $fileHeader$
 #include "memoryStreamImpl.h"
 #include <string.h>
 
-namespace puntoexe
+namespace imebra
+{
+
+namespace implementation
 {
 
 ///////////////////////////////////////////////////////////
@@ -129,5 +132,6 @@ size_t memoryStreamInput::read(size_t startPosition, std::uint8_t* pBuffer, size
 	IMEBRA_FUNCTION_END();
 }
 
+} // namespace implementation
 
-} // namespace puntoexe
+} // namespace imebra

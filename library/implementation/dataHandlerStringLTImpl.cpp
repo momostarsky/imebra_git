@@ -9,10 +9,10 @@ $fileHeader$
 
 #include "dataHandlerStringLTImpl.h"
 
-namespace puntoexe
+namespace imebra
 {
 
-namespace imebra
+namespace implementation
 {
 
 namespace handlers
@@ -45,6 +45,6 @@ writingDataHandlerStringLT::writingDataHandlerStringLT(const std::shared_ptr<buf
 
 } // namespace handlers
 
-} // namespace imebra
+} // namespace implementation
 
-} // namespace puntoexe
+} // namespace imebra

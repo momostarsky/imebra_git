@@ -13,17 +13,11 @@ $fileHeader$
 
 #include "streamControllerImpl.h"
 
-///////////////////////////////////////////////////////////
-//
-// Everything is in the namespace puntoexe
-//
-///////////////////////////////////////////////////////////
-namespace puntoexe
+namespace imebra
 {
 
-/// \addtogroup group_baseclasses
-///
-/// @{
+namespace implementation
+{
 
 /// \brief Use this class to write into a baseStream
 ///         derived class.
@@ -210,9 +204,9 @@ private:
 
 };
 
-///@}
+} // namespace implementation
 
-} // namespace puntoexe
+} // namespace imebra
 
 
 #endif // !defined(imebraStreamWriter_2C008538_F046_401C_8C83_2F76E1077DB0__INCLUDED_)

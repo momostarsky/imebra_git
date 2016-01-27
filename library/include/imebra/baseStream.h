@@ -15,16 +15,20 @@ $fileHeader$
 #include <memory>
 #include "definitions.h"
 
-namespace puntoexe
+namespace imebra
+{
+namespace implementation
 {
     class baseStreamInput;
     class baseStreamOutput;
+}
 }
 
 #endif
 
 namespace imebra
 {
+
 
 ///
 /// \brief This class represents an input stream, a source
@@ -54,7 +58,7 @@ class IMEBRA_API BaseStreamInput
 #ifndef SWIG
 	friend class StreamReader;
 protected:
-    BaseStreamInput(std::shared_ptr<puntoexe::baseStreamInput> pStream);
+    BaseStreamInput(std::shared_ptr<implementation::baseStreamInput> pStream);
 #endif
 
 public:
@@ -64,7 +68,7 @@ public:
 
 #ifndef SWIG
 protected:
-    std::shared_ptr<puntoexe::baseStreamInput> m_pStream;
+    std::shared_ptr<implementation::baseStreamInput> m_pStream;
 #endif
 };
 
@@ -97,7 +101,7 @@ class IMEBRA_API BaseStreamOutput
 #ifndef SWIG
     friend class StreamWriter;
 protected:
-    BaseStreamOutput(std::shared_ptr<puntoexe::baseStreamOutput> pStream);
+    BaseStreamOutput(std::shared_ptr<implementation::baseStreamOutput> pStream);
 #endif
 
 public:
@@ -107,7 +111,7 @@ public:
 
 #ifndef SWIG
 protected:
-    std::shared_ptr<puntoexe::baseStreamOutput> m_pStream;
+    std::shared_ptr<implementation::baseStreamOutput> m_pStream;
 #endif
 };
 

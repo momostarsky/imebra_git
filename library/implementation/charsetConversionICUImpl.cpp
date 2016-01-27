@@ -16,7 +16,7 @@ $fileHeader$
 #include "../include/imebra/exceptions.h"
 #include <memory>
 
-namespace puntoexe
+namespace imebra
 {
 
 ///////////////////////////////////////////////////////////
@@ -36,7 +36,7 @@ charsetConversionICU::charsetConversionICU(const std::string& dicomName)
     {
         std::ostringstream buildErrorString;
         buildErrorString << "ICU library returned error " << errorCode << " for table " << dicomName;
-        IMEBRA_THROW(::imebra::charsetConversionExceptionNoSupportedTable, buildErrorString.str());
+        IMEBRA_THROW(charsetConversionExceptionNoSupportedTable, buildErrorString.str());
     }
 
     IMEBRA_FUNCTION_END();
@@ -79,7 +79,7 @@ std::string charsetConversionICU::fromUnicode(const std::wstring& unicodeString)
         unicodeStringConversion = UnicodeString::fromUTF32((UChar32*)&(unicodeString[0]), (std::int32_t)unicodeString.size());
         break;
     default:
-        IMEBRA_THROW(::imebra::charsetConversionExceptionUtfSizeNotSupported, "The system utf size is not supported");
+        IMEBRA_THROW(charsetConversionExceptionUtfSizeNotSupported, "The system utf size is not supported");
     }
     UErrorCode errorCode(U_ZERO_ERROR);
     int32_t conversionLength = unicodeStringConversion.extract(0, 0, m_pIcuConverter, errorCode);
@@ -90,7 +90,7 @@ std::string charsetConversionICU::fromUnicode(const std::wstring& unicodeString)
     {
         std::ostringstream buildErrorString;
         buildErrorString << "ICU library returned error " << errorCode;
-        IMEBRA_THROW(::imebra::charsetConversionException, buildErrorString.str());
+        IMEBRA_THROW(charsetConversionException, buildErrorString.str());
     }
     if(returnString == "\x1a")
     {
@@ -135,7 +135,7 @@ std::wstring charsetConversionICU::toUnicode(const std::string& asciiString) con
         return returnString;
     }
     default:
-        IMEBRA_THROW(::imebra::charsetConversionExceptionUtfSizeNotSupported, "The system utf size is not supported");
+        IMEBRA_THROW(charsetConversionExceptionUtfSizeNotSupported, "The system utf size is not supported");
     }
 
 	IMEBRA_FUNCTION_END();
@@ -143,7 +143,7 @@ std::wstring charsetConversionICU::toUnicode(const std::string& asciiString) con
 
 
 
-} // namespace puntoexe
+} // namespace imebra
 
 
 

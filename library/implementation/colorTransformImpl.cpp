@@ -13,10 +13,10 @@ $fileHeader$
 #include "imageImpl.h"
 #include "../include/imebra/exceptions.h"
 
-namespace puntoexe
+namespace imebra
 {
 
-namespace imebra
+namespace implementation
 {
 
 namespace transforms
@@ -54,12 +54,12 @@ void colorTransform::checkColorSpaces(const std::string& inputHandlerColorSpace,
 
 	if(inputHandlerColorSpace != getInitialColorSpace())
 	{
-        IMEBRA_THROW(::imebra::colorTransformExceptionWrongColorSpace, "The image's color space cannot be handled by the transform");
+        IMEBRA_THROW(colorTransformExceptionWrongColorSpace, "The image's color space cannot be handled by the transform");
 	}
 
 	if(outputHandlerColorSpace != getFinalColorSpace())
 	{
-        IMEBRA_THROW(::imebra::colorTransformExceptionWrongColorSpace, "The image's color space cannot be handled by the transform");
+        IMEBRA_THROW(colorTransformExceptionWrongColorSpace, "The image's color space cannot be handled by the transform");
 	}
 
 	IMEBRA_FUNCTION_END();
@@ -115,6 +115,6 @@ registerColorTransform::registerColorTransform(std::shared_ptr<colorTransform> n
 
 } // namespace transforms
 
-} // namespace imebra
+} // namespace implementation
 
-} // namespace puntoexe
+} // namespace imebra

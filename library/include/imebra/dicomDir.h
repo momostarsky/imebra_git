@@ -18,10 +18,9 @@ $fileHeader$
 #include "dataSet.h"
 #include "definitions.h"
 
-
-namespace puntoexe
-{
 namespace imebra
+{
+namespace implementation
 {
 class directoryRecord;
 class dicomDir;
@@ -47,7 +46,7 @@ public:
 
 
 #ifndef SWIG
-	DirectoryRecord(std::shared_ptr<puntoexe::imebra::directoryRecord> pDirectoryRecord);
+    DirectoryRecord(std::shared_ptr<imebra::implementation::directoryRecord> pDirectoryRecord);
 #endif
 
 	DirectoryRecord& operator=(const DirectoryRecord& right);
@@ -78,7 +77,7 @@ public:
 
 #ifndef SWIG
 private:
-	std::shared_ptr<puntoexe::imebra::directoryRecord> m_pDirectoryRecord;
+    std::shared_ptr<imebra::implementation::directoryRecord> m_pDirectoryRecord;
 #endif
 };
 
@@ -100,7 +99,7 @@ public:
 
 #ifndef SWIG
 private:
-	std::shared_ptr<puntoexe::imebra::dicomDir> m_pDicomDir;
+    std::shared_ptr<imebra::implementation::dicomDir> m_pDicomDir;
 #endif
 };
 

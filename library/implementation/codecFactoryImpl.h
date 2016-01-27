@@ -21,15 +21,15 @@ $fileHeader$
 
 ///////////////////////////////////////////////////////////
 //
-// Everything is in the namespace puntoexe::imebra
+// Everything is in the namespace imebra::implementation
 //
 ///////////////////////////////////////////////////////////
-namespace puntoexe
+namespace imebra
 {
 
 	class streamReader;
 
-namespace imebra
+namespace implementation
 {
 
 // Classes used in the declaration
@@ -70,9 +70,9 @@ public:
 	/// \brief Register a new codec.
 	///
 	/// This function is called by the framework during the
-	///  library's startup, in order to register all the imebra
+    ///  library's startup, in order to register all the Imebra
 	///  codecs.
-	/// The codecs distributed with the imebra library are
+    /// The codecs distributed with the Imebra library are
 	///  automatically registered.
 	///
 	/// @param pCodec a pointer to the codec to register
@@ -91,7 +91,7 @@ public:
 	///
 	/// @param transferSyntax a string with the requested
 	///         transfer syntax.
-	/// @return a pointer to a imebra codec that can handle the
+    /// @return a pointer to a Imebra codec that can handle the
 	///        requested transfer syntax, or 0 if the function
 	///         didn't find any valid codec.
 	///        The returned pointer references a new instance
@@ -105,7 +105,7 @@ public:
 	///         instance.
 	///
 	/// An instance of codecFactory class is statically
-	///  allocated by the imebra framework.
+    ///  allocated by the Imebra framework.
 	///
 	/// The applications should use only the statically 
 	///  allocated instance of codecFactory.
@@ -197,9 +197,9 @@ public:
 
 } // namespace codecs
 
-} // namespace imebra
+} // namespace implementation
 
-} // namespace puntoexe
+} // namespace imebra
 
 
 #endif // !defined(imebraCodecFactory_82307D4A_6490_4202_BF86_93399D32721E__INCLUDED_)

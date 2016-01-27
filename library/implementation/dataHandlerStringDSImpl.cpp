@@ -13,10 +13,10 @@ $fileHeader$
 #include "exceptionImpl.h"
 #include "dataHandlerStringDSImpl.h"
 
-namespace puntoexe
+namespace imebra
 {
 
-namespace imebra
+namespace implementation
 {
 
 namespace handlers
@@ -128,6 +128,6 @@ void writingDataHandlerStringDS::setUnsignedLong(const size_t index, const std::
 
 } // namespace handlers
 
-} // namespace imebra
+} // namespace implementation
 
-} // namespace puntoexe
+} // namespace imebra

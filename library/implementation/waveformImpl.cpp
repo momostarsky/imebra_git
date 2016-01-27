@@ -13,10 +13,10 @@ $fileHeader$
 #include "bufferImpl.h"
 #include "../include/imebra/exceptions.h"
 
-namespace puntoexe
+namespace imebra
 {
 
-namespace imebra
+namespace implementation
 {
 
 ///////////////////////////////////////////////////////////
@@ -205,7 +205,7 @@ std::shared_ptr<handlers::readingDataHandler> waveform::getIntegerData(std::uint
 		originalPaddingValue = paddingTagHandler->getUnsignedLong(0);
 		bPaddingValueExists = true;
     }
-    catch(const ::imebra::missingDataElement&)
+    catch(const missingDataElement&)
     {
         // Nothing to do
     }
@@ -312,7 +312,7 @@ std::shared_ptr<dataSet> waveform::GetWaveformItem()
 }
 
 
-} // namespace imebra
+} // namespace implementation
 
-} // namespace puntoexe
+} // namespace imebra
 

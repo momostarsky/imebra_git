@@ -12,10 +12,10 @@ $fileHeader$
 #include "dataSetImpl.h"
 
 
-namespace puntoexe
+namespace imebra
 {
 
-namespace imebra
+namespace implementation
 {
 
 namespace transforms
@@ -30,6 +30,6 @@ std::shared_ptr<image> transformHighBit::allocateOutputImage(std::shared_ptr<ima
 
 } // namespace transforms
 
-} // namespace imebra
+} // namespace implementation
 
-} // namespace puntoexe
+} // namespace imebra

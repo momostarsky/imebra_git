@@ -10,7 +10,10 @@ $fileHeader$
 #include "streamReaderImpl.h"
 #include <string.h>
 
-namespace puntoexe
+namespace imebra
+{
+
+namespace implementation
 {
 
 ///////////////////////////////////////////////////////////
@@ -34,7 +37,7 @@ streamReader::streamReader(std::shared_ptr<baseStreamInput> pControlledStream, s
 {
     if(virtualLength == 0)
     {
-        throw(::imebra::streamExceptionEOF("Virtual stream with zero length"));
+        throw(streamExceptionEOF("Virtual stream with zero length"));
     }
 }
 
@@ -48,7 +51,7 @@ std::shared_ptr<streamReader> streamReader::getReader(size_t virtualLength)
 {
     if(virtualLength == 0)
     {
-        throw(::imebra::streamExceptionEOF("Virtual stream with zero length"));
+        throw(streamExceptionEOF("Virtual stream with zero length"));
     }
     size_t currentPosition = position();
     if(currentPosition + virtualLength > m_virtualLength && m_virtualLength != 0)
@@ -143,14 +146,14 @@ void streamReader::read(std::uint8_t* pBuffer, size_t bufferLength)
 				bufferLength -= readBytes;
 				if(readBytes == 0)
 				{
-                    throw(::imebra::streamExceptionEOF("Attempt to read past the end of the file"));
+                    throw(streamExceptionEOF("Attempt to read past the end of the file"));
 				}
 				continue;
 			}
 
 			if(fillDataBuffer() == 0)
 			{
-                throw(::imebra::streamExceptionEOF("Attempt to read past the end of the file"));
+                throw(streamExceptionEOF("Attempt to read past the end of the file"));
 			}
 		}
 
@@ -200,6 +203,6 @@ void streamReader::seekRelative(int32_t newPosition)
     seek(finalPosition);
 }
 
+} // namespace implementation
 
-
-} // namespace puntoexe
+} // namespace imebra

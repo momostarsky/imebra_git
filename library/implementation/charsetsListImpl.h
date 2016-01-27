@@ -15,10 +15,10 @@ $fileHeader$
 #include <string>
 #include <list>
 
-namespace puntoexe
+namespace imebra
 {
 
-namespace imebra
+namespace implementation
 {
 
 /// \addtogroup group_dataset
@@ -47,9 +47,9 @@ void updateCharsets(const tCharsetsList* pCharsetsList, tCharsetsList* pDestinat
 
 /// @}
 
-} // namespace imebra
+} // namespace implementation
 
-} // namespace puntoexe
+} // namespace imebra
 
 #endif // !defined(imebraCharsetsList_DE3F98A9_664E_47c0_A29B_B681F9AEB118__INCLUDED_)
 

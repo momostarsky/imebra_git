@@ -15,13 +15,13 @@ $fileHeader$
 
 ///////////////////////////////////////////////////////////
 //
-// Everything is in the namespace puntoexe::imebra
+// Everything is in the namespace imebra::implementation
 //
 ///////////////////////////////////////////////////////////
-namespace puntoexe
+namespace imebra
 {
 
-namespace imebra
+namespace implementation
 {
 
 namespace handlers
@@ -63,7 +63,7 @@ public:
 	///               pUnit
 	///
 	///////////////////////////////////////////////////////////
-    virtual std::uint32_t getAge(const size_t index, ::imebra::ageUnit_t* pUnit) const;
+    virtual std::uint32_t getAge(const size_t index, ageUnit_t* pUnit) const;
 
 	/// \brief Retrieve the age from the handled buffer.
 	///
@@ -120,7 +120,7 @@ public:
     /// @param unit  the units used for the parameter age
     ///
     ///////////////////////////////////////////////////////////
-    virtual void setAge(const size_t index, const std::uint32_t age, const ::imebra::ageUnit_t unit);
+    virtual void setAge(const size_t index, const std::uint32_t age, const ageUnit_t unit);
 
     /// \brief Write the specified age into the handled buffer.
     ///
@@ -158,8 +158,8 @@ public:
 
 } // namespace handlers
 
-} // namespace imebra
+} // namespace implementation
 
-} // namespace puntoexe
+} // namespace imebra
 
 #endif // !defined(imebraDataHandlerStringAS_367AAE47_6FD7_4107_AB5B_25A355C5CB6E__INCLUDED_)

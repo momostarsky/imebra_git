@@ -13,7 +13,7 @@ $fileHeader$
 #include <memory>
 #include <sstream>
 
-namespace puntoexe
+namespace imebra
 {
 
 charsetDictionary::charsetDictionary()
@@ -72,7 +72,7 @@ const charsetInformation& charsetDictionary::getCharsetInformation(const std::st
     {
         std::ostringstream errorMessage;
         errorMessage << "Charset table " << dicomName << " not found in the charset dictionary";
-        throw ::imebra::charsetConversionExceptionNoTable(errorMessage.str());
+        throw charsetConversionExceptionNoTable(errorMessage.str());
     }
     return findInfo->second;
 }
@@ -163,5 +163,5 @@ std::string charsetConversionBase::normalizeIsoCharset(const std::string &isoCha
     return normalizedIsoCharset;
 }
 
-} // namespace puntoexe
+} // namespace imebra
 

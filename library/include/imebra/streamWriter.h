@@ -15,9 +15,12 @@ $fileHeader$
 #include <memory>
 #include "definitions.h"
 
-namespace puntoexe
+namespace imebra
+{
+namespace implementation
 {
 class streamWriter;
+}
 }
 #endif
 
@@ -41,7 +44,7 @@ public:
 
 #ifndef SWIG
 protected:
-    std::shared_ptr<puntoexe::streamWriter> m_pWriter;
+    std::shared_ptr<implementation::streamWriter> m_pWriter;
 #endif
 };
 

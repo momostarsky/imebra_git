@@ -16,9 +16,9 @@ $fileHeader$
 #include "definitions.h"
 #include "image.h"
 
-namespace puntoexe
-{
 namespace imebra
+{
+namespace implementation
 {
 namespace transforms
 {
@@ -40,7 +40,7 @@ public:
     virtual ~Transform(){}
 
 #ifndef SWIG
-    Transform(std::shared_ptr<puntoexe::imebra::transforms::transform> pTransform);
+    Transform(std::shared_ptr<imebra::implementation::transforms::transform> pTransform);
 #endif
 
 
@@ -55,7 +55,7 @@ public:
             unsigned int outputTopLeftX, unsigned int outputTopLeftY);
 
 #ifndef SWIG
-    std::shared_ptr<puntoexe::imebra::transforms::transform> m_pTransform;
+    std::shared_ptr<imebra::implementation::transforms::transform> m_pTransform;
 #endif
 };
 

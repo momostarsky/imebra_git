@@ -16,7 +16,7 @@ namespace imebra
 BaseStreamOutput::BaseStreamOutput()
 {}
 
-BaseStreamOutput::BaseStreamOutput(std::shared_ptr<puntoexe::baseStreamOutput> pStream): m_pStream(pStream)
+BaseStreamOutput::BaseStreamOutput(std::shared_ptr<implementation::baseStreamOutput> pStream): m_pStream(pStream)
 {
 }
 
@@ -34,7 +34,7 @@ BaseStreamOutput& BaseStreamOutput::operator=(const BaseStreamOutput& right)
 BaseStreamInput::BaseStreamInput()
 {}
 
-BaseStreamInput::BaseStreamInput(std::shared_ptr<puntoexe::baseStreamInput> pStream): m_pStream(pStream)
+BaseStreamInput::BaseStreamInput(std::shared_ptr<implementation::baseStreamInput> pStream): m_pStream(pStream)
 {
 }
 

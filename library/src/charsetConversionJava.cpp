@@ -91,7 +91,7 @@ std::string charsetConversionJava::fromUnicode(const std::wstring& unicodeString
 	std::string bytes;
 	bytes.resize(unicodeString.length() * sizeof(wchar_t));
 	::memcpy(&bytes[0], &(unicodeString[0]), bytes.size());
-	puntoexe::streamController::adjustEndian((imbxUint8*)&(bytes[0]), sizeof(wchar_t), puntoexe::streamController::highByteEndian, unicodeString.size());
+	implementation::streamController::adjustEndian((imbxUint8*)&(bytes[0]), sizeof(wchar_t), implementation::streamController::highByteEndian, unicodeString.size());
 	jstring javaString = getNativeJavaString(env, bytes, sizeof(wchar_t) == 2 ? "UTF-16BE" : "UTF-32BE");
 
 	std::string returnValue;
@@ -139,7 +139,7 @@ std::wstring charsetConversionJava::toUnicode(const std::string& asciiString) co
         {
             returnValue.resize(bytes.size() / sizeof(wchar_t));
             ::memcpy(&(returnValue[0]), &(bytes[0]), bytes.size());
-            puntoexe::streamController::adjustEndian((imbxUint8*)&(returnValue[0]), sizeof(wchar_t), puntoexe::streamController::highByteEndian, returnValue.size());
+            implementation::streamController::adjustEndian((imbxUint8*)&(returnValue[0]), sizeof(wchar_t), implementation::streamController::highByteEndian, returnValue.size());
         }
         env->DeleteLocalRef(javaString);
     }

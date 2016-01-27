@@ -19,13 +19,13 @@ $fileHeader$
 
 ///////////////////////////////////////////////////////////
 //
-// Everything is in the namespace puntoexe::imebra
+// Everything is in the namespace imebra::implementation
 //
 ///////////////////////////////////////////////////////////
-namespace puntoexe
+namespace imebra
 {
 
-namespace imebra
+namespace implementation
 {
 
 namespace transforms
@@ -84,7 +84,7 @@ public:
 		IMEBRA_FUNCTION_START(L"modalityVOILUT::templateTransform");
 		if(!colorTransforms::colorTransformsFactory::isMonochrome(inputHandlerColorSpace) || !colorTransforms::colorTransformsFactory::isMonochrome(outputHandlerColorSpace))
 		{
-            IMEBRA_THROW(::imebra::modalityVOILUTException, "modalityVOILUT can process only monochromatic images");
+            IMEBRA_THROW(modalityVOILUTException, "modalityVOILUT can process only monochromatic images");
 		}
         const inputType* pInputMemory(inputHandlerData);
 		outputType* pOutputMemory(outputHandlerData);
@@ -146,8 +146,8 @@ private:
 
 } // namespace transforms
 
-} // namespace imebra
+} // namespace implementation
 
-} // namespace puntoexe
+} // namespace imebra
 
 #endif // !defined(imebraModalityVOILUT_8347C70F_1FC8_4df8_A887_8DE9E968B2CF__INCLUDED_)

@@ -11,10 +11,10 @@ $fileHeader$
 #include "exceptionImpl.h"
 #include "dicomDictImpl.h"
 
-namespace puntoexe
+namespace imebra
 {
 
-namespace imebra
+namespace implementation
 {
 
 ///////////////////////////////////////////////////////////
@@ -2054,6 +2054,6 @@ dicomDictionary* dicomDictionary::getDicomDictionary()
 }
 
 
-} // namespace imebra
+} // namespace implementation
 
-} // namespace puntoexe
+} // namespace imebra

@@ -12,10 +12,10 @@ $fileHeader$
 #include <math.h>
 #include <limits>
 
-namespace puntoexe
+namespace imebra
 {
 
-namespace imebra
+namespace implementation
 {
 
 ///////////////////////////////////////////////////////////
@@ -958,7 +958,7 @@ void view::setImage(std::shared_ptr<image> pImage, std::shared_ptr<transforms::t
         m_drawBitmap.reset();
 		return;
 	}
-    m_drawBitmap = std::make_shared<imebra::drawBitmap>(pImage, pChain);
+    m_drawBitmap = std::make_shared<implementation::drawBitmap>(pImage, pChain);
 
 	std::uint32_t oldSizeX = 0;
 	std::uint32_t oldSizeY = 0;
@@ -991,6 +991,6 @@ void view::setImage(std::shared_ptr<image> pImage, std::shared_ptr<transforms::t
 }
 
 
-} // namespace imebra
+} // namespace implementation
 
-} // namespace puntoexe
+} // namespace imebra

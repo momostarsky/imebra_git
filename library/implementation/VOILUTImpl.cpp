@@ -12,10 +12,10 @@ $fileHeader$
 #include "dataSetImpl.h"
 #include "../include/imebra/exceptions.h"
 
-namespace puntoexe
+namespace imebra
 {
 
-namespace imebra
+namespace implementation
 {
 
 namespace transforms
@@ -68,7 +68,7 @@ std::uint32_t VOILUT::getVOILUTId(std::uint32_t VOILUTNumber)
             m_pDataSet->getSequenceItemThrow(0x0028, 0, 0x3010, VOILUTNumber);
             VOILUTId = VOILUTNumber | 0x00100000;
 		}
-        catch(const ::imebra::missingDataElement&)
+        catch(const missingDataElement&)
         {
             // Nothing to do. The lut does not exist
         }
@@ -350,7 +350,7 @@ std::shared_ptr<image> VOILUT::allocateOutputImage(std::shared_ptr<image> pInput
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void VOILUT::applyOptimalVOI(const std::shared_ptr<puntoexe::imebra::image>& inputImage, std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight)
+void VOILUT::applyOptimalVOI(const std::shared_ptr<imebra::implementation::image>& inputImage, std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight)
 {
     IMEBRA_FUNCTION_START(L"VOILUT::applyOptimalVOI");
 
@@ -359,7 +359,7 @@ void VOILUT::applyOptimalVOI(const std::shared_ptr<puntoexe::imebra::image>& inp
 
     if(inputTopLeftX + inputWidth > width || inputTopLeftY + inputHeight > height)
     {
-        IMEBRA_THROW(::imebra::transformExceptionInvalidArea, "The input and/or output areas are invalid");
+        IMEBRA_THROW(transformExceptionInvalidArea, "The input and/or output areas are invalid");
     }
 
     std::shared_ptr<handlers::readingDataHandlerNumericBase> handler(inputImage->getReadingDataHandler());
@@ -373,6 +373,6 @@ void VOILUT::applyOptimalVOI(const std::shared_ptr<puntoexe::imebra::image>& inp
 
 } // namespace transforms
 
-} // namespace imebra
+} // namespace implementation
 
-} // namespace puntoexe
+} // namespace imebra

@@ -23,12 +23,11 @@ $fileHeader$
 #include <sstream>
 #include <thread>
 
-namespace puntoexe
+namespace imebra
 {
 
-/// \addtogroup group_baseclasses
-///
-/// @{
+namespace implementation
+{
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -243,14 +242,14 @@ public:
 	}\
 	catch(std::exception& e)\
 	{\
-		puntoexe::exceptionInfo info(_puntoexe_function_name, __FILE__, __LINE__, typeid(e).name(), e.what());\
-		puntoexe::exceptionsManager::addExceptionInfo(info);\
+        imebra::implementation::exceptionInfo info(_puntoexe_function_name, __FILE__, __LINE__, typeid(e).name(), e.what());\
+        imebra::implementation::exceptionsManager::addExceptionInfo(info);\
 		throw;\
 	}\
 	catch(...)\
 	{\
-		puntoexe::exceptionInfo info(_puntoexe_function_name, __FILE__, __LINE__, "unknown", "");\
-		puntoexe::exceptionsManager::addExceptionInfo(info);\
+        imebra::implementation::exceptionInfo info(_puntoexe_function_name, __FILE__, __LINE__, "unknown", "");\
+        imebra::implementation::exceptionsManager::addExceptionInfo(info);\
 		throw;\
 	}
 
@@ -275,20 +274,20 @@ public:
     }\
     catch(catchType& e)\
     {\
-        puntoexe::exceptionInfo info(_puntoexe_function_name, __FILE__, __LINE__, typeid(e).name(), e.what());\
-        puntoexe::exceptionsManager::addExceptionInfo(info);\
+        imebra::implementation::exceptionInfo info(_puntoexe_function_name, __FILE__, __LINE__, typeid(e).name(), e.what());\
+        imebra::implementation::exceptionsManager::addExceptionInfo(info);\
         IMEBRA_THROW(throwType, e.what());\
     }\
     catch(std::exception& e)\
     {\
-        puntoexe::exceptionInfo info(_puntoexe_function_name, __FILE__, __LINE__, typeid(e).name(), e.what());\
-        puntoexe::exceptionsManager::addExceptionInfo(info);\
+        imebra::implementation::exceptionInfo info(_puntoexe_function_name, __FILE__, __LINE__, typeid(e).name(), e.what());\
+        imebra::implementation::exceptionsManager::addExceptionInfo(info);\
         throw;\
     }\
     catch(...)\
     {\
-        puntoexe::exceptionInfo info(_puntoexe_function_name, __FILE__, __LINE__, "unknown", "");\
-        puntoexe::exceptionsManager::addExceptionInfo(info);\
+        imebra::implementation::exceptionInfo info(_puntoexe_function_name, __FILE__, __LINE__, "unknown", "");\
+        imebra::implementation::exceptionsManager::addExceptionInfo(info);\
         throw;\
     }
 
@@ -310,8 +309,8 @@ public:
 #define IMEBRA_THROW(exceptionType, what) \
 	{\
         exceptionType puntoexeTrackException(what);\
-        puntoexe::exceptionInfo info(_puntoexe_function_name, __FILE__, __LINE__, typeid(puntoexeTrackException).name(), what);\
-		puntoexe::exceptionsManager::addExceptionInfo(info);\
+        imebra::implementation::exceptionInfo info(_puntoexe_function_name, __FILE__, __LINE__, typeid(puntoexeTrackException).name(), what);\
+        imebra::implementation::exceptionsManager::addExceptionInfo(info);\
         throw puntoexeTrackException;\
 	}
 
@@ -330,14 +329,16 @@ public:
 ///////////////////////////////////////////////////////////
 #define IMEBRA_RETHROW(what) \
 	{\
-		puntoexe::exceptionInfo info(_puntoexe_function_name, __FILE__, __LINE__, "rethrowing", what);\
-		puntoexe::exceptionsManager::addExceptionInfo(info);\
+        imebra::implementation::exceptionInfo info(_puntoexe_function_name, __FILE__, __LINE__, "rethrowing", what);\
+        imebra::implementation::exceptionsManager::addExceptionInfo(info);\
 		throw;\
 	}
 
 ///@}
 
-} // namespace puntoexe
+} // namespace implementation
+
+} // namespace imebra
 
 
 #endif // !defined(CImbxException_F1BAF067_21DE_466b_AEA1_6CC4F006FAFA__INCLUDED_)

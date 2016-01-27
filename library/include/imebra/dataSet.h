@@ -19,13 +19,14 @@ $fileHeader$
 #include "dataHandler.h"
 #include "definitions.h"
 
-namespace puntoexe
-{
 namespace imebra
+{
+namespace implementation
 {
 class dataSet;
 }
 }
+
 #endif
 
 namespace imebra
@@ -43,16 +44,28 @@ class IMEBRA_API DataSet
 	friend class DicomDir;
 #endif
 public:
-    /// Costructor
-	///////////////////////////////////////////////////////////
+    ///
+    /// \brief Construct an empty dicom dataset.
+    ///
+    ///////////////////////////////////////////////////////////
 	DataSet();
 
-	DataSet(const DataSet& right);
+    ///
+    /// \brief Creates a dataset and shallow copies the data
+    ///        from the dataset in the parameters
+    /// \param right the dataset to copy from
+    ///
+    /// This dataset and the one in the parameter will refer
+    ///  to the same data: changes made in one dataset will be
+    ///  reflected in the other dataset.
+    ///
+    ///////////////////////////////////////////////////////////
+    DataSet(const DataSet& right);
 
 	DataSet& operator=(const DataSet& right);
 
 #ifndef SWIG
-	DataSet(std::shared_ptr<puntoexe::imebra::dataSet> pDataSet);
+    DataSet(std::shared_ptr<imebra::implementation::dataSet> pDataSet);
 #endif
 
     ///
@@ -193,7 +206,7 @@ public:
     std::string getDataType(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId) const;
 
 #ifndef SWIG
-	std::shared_ptr<puntoexe::imebra::dataSet> m_pDataSet;
+    std::shared_ptr<imebra::implementation::dataSet> m_pDataSet;
 #endif
 };
 

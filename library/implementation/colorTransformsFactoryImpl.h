@@ -15,10 +15,10 @@ $fileHeader$
 
 #include "colorTransformImpl.h"
 
-namespace puntoexe
+namespace imebra
 {
 
-namespace imebra
+namespace implementation
 {
 
 namespace transforms
@@ -285,9 +285,9 @@ public:
 
 } // namespace transforms
 
-} // namespace imebra
+} // namespace implementation
 
-} // namespace puntoexe
+} // namespace imebra
 
 
 #endif // !defined imebraColorTransformsFactory

@@ -11,10 +11,10 @@ $fileHeader$
 #include "dataHandlerImpl.h"
 #include "memoryImpl.h"
 
-namespace puntoexe
+namespace imebra
 {
 
-namespace imebra
+namespace implementation
 {
 
 namespace handlers
@@ -71,9 +71,9 @@ void readingDataHandler::getDate(const size_t /* index */,
 	*pOffsetMinutes = 0;
 }
 
-std::uint32_t readingDataHandler::getAge(const size_t /* index */, ::imebra::ageUnit_t *pUnit) const
+std::uint32_t readingDataHandler::getAge(const size_t /* index */, ageUnit_t *pUnit) const
 {
-    *pUnit = ::imebra::ageUnit_t::years;
+    *pUnit = ageUnit_t::years;
     return 0;
 }
 
@@ -122,13 +122,13 @@ void writingDataHandler::setDate(const size_t /* index */,
     throw;
 }
 
-void writingDataHandler::setAge(const size_t /* index */, const std::uint32_t /* age */, const ::imebra::ageUnit_t /* unit */)
+void writingDataHandler::setAge(const size_t /* index */, const std::uint32_t /* age */, const ageUnit_t /* unit */)
 {
     throw;
 }
 
 } // namespace handlers
 
-} // namespace imebra
+} // namespace implementation
 
-} // namespace puntoexe
+} // namespace imebra

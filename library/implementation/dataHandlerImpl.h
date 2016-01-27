@@ -10,22 +10,22 @@ $fileHeader$
 #if !defined(imebraDataHandler_6F85D344_DEF8_468d_BF73_AC5BB17FD22A__INCLUDED_)
 #define imebraDataHandler_6F85D344_DEF8_468d_BF73_AC5BB17FD22A__INCLUDED_
 
-#include <imebra/definitions.h>
+#include "../include/imebra/definitions.h"
 #include <memory>
 #include "charsetsListImpl.h"
 
 
 ///////////////////////////////////////////////////////////
 //
-// Everything is in the namespace puntoexe::imebra
+// Everything is in the namespace imebra::implementation
 //
 ///////////////////////////////////////////////////////////
-namespace puntoexe
+namespace imebra
 {
 
 class memory;
 
-namespace imebra
+namespace implementation
 {
 
 class buffer;
@@ -182,7 +182,7 @@ public:
     ///               pUnit
     ///
     ///////////////////////////////////////////////////////////
-    virtual std::uint32_t getAge(const size_t index, ::imebra::ageUnit_t* pUnit) const;
+    virtual std::uint32_t getAge(const size_t index, ageUnit_t* pUnit) const;
 
 private:
     std::string m_dataType;
@@ -247,7 +247,7 @@ public:
     /// @param unit  the units used for the parameter age
     ///
     ///////////////////////////////////////////////////////////
-    virtual void setAge(const size_t index, const std::uint32_t age, const ::imebra::ageUnit_t unit);
+    virtual void setAge(const size_t index, const std::uint32_t age, const ageUnit_t unit);
 
     /// \brief Set the buffer's element referenced by the
     ///         zero-based index specified in the parameter
@@ -321,8 +321,8 @@ protected:
 
 } // namespace handlers
 
-} // namespace imebra
+} // namespace implementation
 
-} // namespace puntoexe
+} // namespace imebra
 
 #endif // !defined(imebraDataHandler_6F85D344_DEF8_468d_BF73_AC5BB17FD22A__INCLUDED_)

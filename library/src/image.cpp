@@ -15,14 +15,14 @@ $fileHeader$
 namespace imebra
 {
 
-Image::Image(): m_pImage(std::make_shared<puntoexe::imebra::image>())
+Image::Image(): m_pImage(std::make_shared<imebra::implementation::image>())
 {
 }
 
 Image::Image(const Image& right): m_pImage(right.m_pImage)
 {}
 
-Image::Image(std::shared_ptr<puntoexe::imebra::image> pImage): m_pImage(pImage)
+Image::Image(std::shared_ptr<imebra::implementation::image> pImage): m_pImage(pImage)
 {}
 
 Image& Image::operator=(const Image& right)
@@ -38,7 +38,7 @@ WritingDataHandler Image::create(
         const std::string& colorSpace,
         const unsigned int highBit)
 {
-    return WritingDataHandler(m_pImage->create((std::uint32_t)sizeX, (std::uint32_t)sizeY, (puntoexe::imebra::image::bitDepth)depth, colorSpace, (std::uint8_t)highBit));
+    return WritingDataHandler(m_pImage->create((std::uint32_t)sizeX, (std::uint32_t)sizeY, (imebra::implementation::image::bitDepth)depth, colorSpace, (std::uint8_t)highBit));
 }
 
 void Image::setHighBit(unsigned int highBit)

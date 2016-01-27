@@ -17,20 +17,18 @@ $fileHeader$
 
 ///////////////////////////////////////////////////////////
 //
-// Everything is in the namespace puntoexe::imebra
+// Everything is in the namespace imebra::implementation
 //
 ///////////////////////////////////////////////////////////
-namespace puntoexe
-{
-
-class streamReader;
-class streamWriter;
-
 namespace imebra
 {
 
+namespace implementation
+{
 
 // Classes used in the declaration
+class streamReader;
+class streamWriter;
 class dataSet;
 class image;
 
@@ -52,10 +50,10 @@ namespace codecs
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-/// \brief This is the base class for all the imebra 
+/// \brief This is the base class for all the Imebra
 ///         codecs.
 ///
-/// When the imebra codecs read the content of a file, they
+/// When the Imebra codecs read the content of a file, they
 ///  don't return a decompressed image: instead they build
 ///  a DICOM structure in memory, with the image(s)
 ///  embedded in it.
@@ -107,7 +105,7 @@ public:
 	///  one of them return a valid result.
 	/// This task is easier if you use the class 
 	///  codecFactory, which automatically scans all the
-	///  imebra codecs until one can decompress the stream.
+    ///  Imebra codecs until one can decompress the stream.
 	///
 	/// Each codec will rewind the stream's position if
 	///  an error occurs.
@@ -365,9 +363,9 @@ public:
 
 } // namespace codecs
 
-} // namespace imebra
+} // namespace implementation
 
-} // namespace puntoexe
+} // namespace imebra
 
 
 #endif // !defined(imebraCodec_299706D7_4761_44a1_9F2D_8C38A7BD7AD5__INCLUDED_)

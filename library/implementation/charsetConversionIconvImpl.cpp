@@ -17,7 +17,7 @@ $fileHeader$
 
 #include <memory>
 
-namespace puntoexe
+namespace imebra
 {
 
 ///////////////////////////////////////////////////////////
@@ -47,7 +47,7 @@ charsetConversionIconv::charsetConversionIconv(const std::string& dicomName)
         utfCode = (*((std::uint8_t*)&m_endianCheck) == 0xff) ? "UTF-32LE" : "UTF-32BE";
         break;
     default:
-        IMEBRA_THROW(::imebra::charsetConversionExceptionUtfSizeNotSupported, "The system utf size is not supported");
+        IMEBRA_THROW(charsetConversionExceptionUtfSizeNotSupported, "The system utf size is not supported");
     }
 
     m_iconvToUnicode = iconv_open(utfCode, info.m_isoRegistration.c_str());
@@ -56,7 +56,7 @@ charsetConversionIconv::charsetConversionIconv(const std::string& dicomName)
     {
         std::ostringstream buildErrorString;
         buildErrorString << "Table " << dicomName << " not supported by the system";
-        IMEBRA_THROW(::imebra::charsetConversionExceptionNoSupportedTable, buildErrorString.str());
+        IMEBRA_THROW(charsetConversionExceptionNoSupportedTable, buildErrorString.str());
     }
 
     IMEBRA_FUNCTION_END();
@@ -169,6 +169,6 @@ std::string charsetConversionIconv::myIconv(iconv_t context, char* inputString, 
 	IMEBRA_FUNCTION_END();
 }
 
-} // namespace puntoexe
+} // namespace imebra
 
 #endif

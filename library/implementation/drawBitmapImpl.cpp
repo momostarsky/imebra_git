@@ -12,10 +12,10 @@ $fileHeader$
 #include "colorTransformsFactoryImpl.h"
 #include "transformHighBitImpl.h"
 
-namespace puntoexe
+namespace imebra
 {
 
-namespace imebra
+namespace implementation
 {
 
 
@@ -69,6 +69,6 @@ drawBitmap::drawBitmap(std::shared_ptr<image> sourceImage, std::shared_ptr<trans
 }
 
 
-} // namespace imebra
+} // namespace implementation
 
-} // namespace puntoexe
+} // namespace imebra

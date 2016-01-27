@@ -10,7 +10,7 @@ $fileHeader$
 #include "baseStreamImpl.h"
 #include <list>
 
-namespace puntoexe
+namespace imebra
 {
 
 ///////////////////////////////////////////////////////////
@@ -29,5 +29,5 @@ namespace puntoexe
 
 
 
-} // namespace puntoexe
+} // namespace imebra
 

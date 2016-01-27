@@ -13,10 +13,10 @@ $fileHeader$
 #include "dataSetImpl.h"
 #include "imageImpl.h"
 
-namespace puntoexe
+namespace imebra
 {
 
-namespace imebra
+namespace implementation
 {
 
 namespace transforms
@@ -65,6 +65,6 @@ std::shared_ptr<colorTransform> MONOCHROME2ToYBRFULL::createColorTransform()
 
 } // namespace transforms
 
-} // namespace imebra
+} // namespace implementation
 
-} // namespace puntoexe
+} // namespace imebra

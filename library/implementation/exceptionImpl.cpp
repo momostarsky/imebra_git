@@ -10,7 +10,10 @@ $fileHeader$
 #include "exceptionImpl.h"
 #include "charsetConversionImpl.h"
 
-namespace puntoexe
+namespace imebra
+{
+
+namespace implementation
 {
 
 ///////////////////////////////////////////////////////////
@@ -161,6 +164,6 @@ std::wstring exceptionInfo::getMessage()
 	return message.str();
 }
 
+} // namespace implementation
 
-
-} // namespace puntoexe
+} // namespace imebra

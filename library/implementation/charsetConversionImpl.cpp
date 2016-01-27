@@ -2,10 +2,10 @@
 #include "exceptionImpl.h"
 #include "../include/imebra/exceptions.h"
 
-namespace puntoexe
+namespace imebra
 {
 
-namespace imebra
+namespace implementation
 {
 
 std::string dicomConversion::convertFromUnicode(const std::wstring& unicodeString, charsetsList::tCharsetsList* pCharsets)
@@ -108,7 +108,7 @@ std::string dicomConversion::convertFromUnicode(const std::wstring& unicodeStrin
                     break;
                 }
             }
-            catch(::imebra::charsetConversionExceptionNoSupportedTable)
+            catch(charsetConversionExceptionNoSupportedTable)
             {
                 continue;
             }

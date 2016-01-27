@@ -11,10 +11,10 @@ $fileHeader$
 #include "memoryImpl.h"
 #include "bufferImpl.h"
 
-namespace puntoexe
+namespace imebra
 {
 
-namespace imebra
+namespace implementation
 {
 
 namespace handlers

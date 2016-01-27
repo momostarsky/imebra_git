@@ -14,10 +14,10 @@ $fileHeader$
 #include "colorTransformsFactoryImpl.h"
 #include "../include/imebra/exceptions.h"
 
-namespace puntoexe
+namespace imebra
 {
 
-namespace imebra
+namespace implementation
 {
 
 namespace transforms
@@ -65,7 +65,7 @@ public:
             if(colorTransforms::colorTransformsFactory::normalizeColorSpace(inputHandlerColorSpace) !=
                colorTransforms::colorTransformsFactory::normalizeColorSpace(outputHandlerColorSpace))
             {
-                throw ::imebra::transformHighBitDifferentColorSpaces("The input and output image must have the same color space");
+                throw transformHighBitDifferentColorSpaces("The input and output image must have the same color space");
             }
 
             std::int32_t numChannels(colorTransforms::colorTransformsFactory::getNumberOfChannels(inputHandlerColorSpace));
@@ -110,8 +110,8 @@ public:
 
 } // namespace transforms
 
-} // namespace imebra
+} // namespace implementation
 
-} // namespace puntoexe
+} // namespace imebra
 
 #endif // !defined(imebraTransformHighBit_8347C70F_1FC8_4df8_A887_8DE9E968B2CF__INCLUDED_)

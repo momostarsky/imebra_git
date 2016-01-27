@@ -16,13 +16,13 @@ $fileHeader$
 
 ///////////////////////////////////////////////////////////
 //
-// Everything is in the namespace puntoexe::imebra
+// Everything is in the namespace imebra::implementation
 //
 ///////////////////////////////////////////////////////////
-namespace puntoexe
+namespace imebra
 {
 
-namespace imebra
+namespace implementation
 {
 
 namespace transforms
@@ -34,7 +34,7 @@ namespace transforms
 ///         color spaces.
 ///
 /// The color transformation is performed on images (see
-///  puntoexe::imebra::image).
+///  imebra::implementation::image).
 ///
 ///////////////////////////////////////////////////////////
 namespace colorTransforms
@@ -133,9 +133,9 @@ public:
 
 } // namespace transforms
 
-} // namespace imebra
+} // namespace implementation
 
-} // namespace puntoexe
+} // namespace imebra
 
 
 #endif // !defined(imebraColorTransform_E27C63E7_A907_4899_9BD3_8026AD7D110C__INCLUDED_)

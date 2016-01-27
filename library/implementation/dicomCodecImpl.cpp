@@ -23,10 +23,10 @@ $fileHeader$
 #include "bufferImpl.h"
 #include "../include/imebra/exceptions.h"
 
-namespace puntoexe
+namespace imebra
 {
 
-namespace imebra
+namespace implementation
 {
 
 namespace codecs
@@ -514,9 +514,9 @@ void dicomCodec::readStream(std::shared_ptr<streamReader> pStream, std::shared_p
 	{
 		pStream->read(oldDicomSignature, 8);
 	}
-    catch(::imebra::streamExceptionEOF&)
+    catch(streamExceptionEOF&)
 	{
-        IMEBRA_THROW(::imebra::codecExceptionWrongFormat, "detected a wrong format");
+        IMEBRA_THROW(codecExceptionWrongFormat, "detected a wrong format");
 	}
 
 	// Skip the first 128 bytes (8 already skipped)
@@ -546,7 +546,7 @@ void dicomCodec::readStream(std::shared_ptr<streamReader> pStream, std::shared_p
 			oldDicomSignature[1]!=0x0 ||
 			oldDicomSignature[3]!=0x0)
 		{
-            IMEBRA_THROW(::imebra::codecExceptionWrongFormat, "detected a wrong format (checked old NEMA signature)");
+            IMEBRA_THROW(codecExceptionWrongFormat, "detected a wrong format (checked old NEMA signature)");
 		}
 
 		// Go back to the beginning of the file
@@ -591,7 +591,7 @@ void dicomCodec::parseStream(std::shared_ptr<streamReader> pStream,
 
 	if(depth > IMEBRA_DATASET_MAX_DEPTH)
 	{
-        IMEBRA_THROW(::imebra::dicomCodecExceptionDepthLimitReached, "Depth for embedded dataset reached");
+        IMEBRA_THROW(dicomCodecExceptionDepthLimitReached, "Depth for embedded dataset reached");
 	}
 
 	std::uint16_t tagId;
@@ -968,12 +968,12 @@ std::shared_ptr<image> dicomCodec::getImage(const dataSet& dataset, std::shared_
             imageSizeX > codecFactory::getCodecFactory()->getMaximumImageWidth() ||
             imageSizeY > codecFactory::getCodecFactory()->getMaximumImageHeight())
     {
-        IMEBRA_THROW(::imebra::codecExceptionImageTooBig, "The factory settings prevented the loading of this image. Consider using codecFactory::setMaximumImageSize() to modify the settings");
+        IMEBRA_THROW(codecExceptionImageTooBig, "The factory settings prevented the loading of this image. Consider using codecFactory::setMaximumImageSize() to modify the settings");
     }
 
     if((imageSizeX == 0) || (imageSizeY == 0))
 	{
-        IMEBRA_THROW(::imebra::codecExceptionCorruptedFile, "The size tags are not available");
+        IMEBRA_THROW(codecExceptionCorruptedFile, "The size tags are not available");
 	}
 
 	// Check for interleaved planes.
@@ -1039,7 +1039,7 @@ std::shared_ptr<image> dicomCodec::getImage(const dataSet& dataset, std::shared_
 
 	if(handler == 0 || tempChannelsNumber != channelsNumber)
 	{
-        IMEBRA_THROW(::imebra::codecExceptionCorruptedFile, "Cannot allocate the image's buffer");
+        IMEBRA_THROW(codecExceptionCorruptedFile, "Cannot allocate the image's buffer");
 	}
 
 	// Allocate the dicom channels
@@ -1091,7 +1091,7 @@ std::shared_ptr<image> dicomCodec::getImage(const dataSet& dataset, std::shared_
 	{
 		if(bSubSampledX || bSubSampledY)
 		{
-            IMEBRA_THROW(::imebra::codecExceptionCorruptedFile, "Cannot read subsampled RLE images");
+            IMEBRA_THROW(codecExceptionCorruptedFile, "Cannot read subsampled RLE images");
 		}
 
 		readRLECompressed(imageSizeX, imageSizeY, channelsNumber, pSourceStream, allocatedBits, mask, bInterleaved);
@@ -2134,7 +2134,7 @@ bool dicomCodec::encapsulated(const std::string& transferSyntax) const
 
 	if(!canHandleTransferSyntax(transferSyntax))
 	{
-        IMEBRA_THROW(::imebra::codecExceptionWrongTransferSyntax, "Cannot handle the transfer syntax");
+        IMEBRA_THROW(codecExceptionWrongTransferSyntax, "Cannot handle the transfer syntax");
 	}
     return (transferSyntax == "1.2.840.10008.1.2.5");
 
@@ -2203,7 +2203,7 @@ std::uint32_t dicomCodec::readTag(
 
 		if(bufferLength != tagLengthDWord)
 		{
-            IMEBRA_THROW(::imebra::codecExceptionCorruptedFile, "dicomCodec::readTag detected a corrupted tag");
+            IMEBRA_THROW(codecExceptionCorruptedFile, "dicomCodec::readTag detected a corrupted tag");
 		}
 
         std::shared_ptr<data> writeData (pDataSet->getTagCreate(tagId, order, tagSubId));
@@ -2324,7 +2324,7 @@ std::uint32_t dicomCodec::readTag(
 
 } // namespace codecs
 
-} // namespace imebra
+} // namespace implementation
 
-} // namespace puntoexe
+} // namespace imebra
 

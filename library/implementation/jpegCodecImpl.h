@@ -16,15 +16,15 @@ $fileHeader$
 
 ///////////////////////////////////////////////////////////
 //
-// Everything is in the namespace puntoexe::imebra
+// Everything is in the namespace imebra::implementation
 //
 ///////////////////////////////////////////////////////////
-namespace puntoexe
+namespace imebra
 {
 
 class huffmanTable;
 
-namespace imebra
+namespace implementation
 {
 
 namespace codecs
@@ -635,8 +635,8 @@ public:
 
 } // namespace codecs
 
-} // namespace imebra
+} // namespace implementation
 
-} // namespace puntoexe
+} // namespace imebra
 
 #endif // !defined(imebraJpegCodec_7F63E846_8824_42c6_A048_DD59C657AED4__INCLUDED_)

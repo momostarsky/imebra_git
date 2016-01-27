@@ -18,16 +18,16 @@ $fileHeader$
 
 ///////////////////////////////////////////////////////////
 //
-// Everything is in the namespace puntoexe::imebra
+// Everything is in the namespace imebra::implementation
 //
 ///////////////////////////////////////////////////////////
-namespace puntoexe
+namespace imebra
 {
 	class streamReader;
 	class streamWriter;
     class memory;
 
-namespace imebra
+namespace implementation
 {
 
 /// \addtogroup group_dataset
@@ -353,8 +353,8 @@ private:
 
 /// @}
 
-} // End of namespace imebra
+} // End of namespace implementation
 
-} // End of namespace puntoexe
+} // End of namespace imebra
 
 #endif // !defined(imebraBuffer_DE3F98A9_664E_47c0_A29B_B681F9AEB118__INCLUDED_)
