@@ -37,7 +37,7 @@ namespace codecs
 ///////////////////////////////////////////////////////////
 std::shared_ptr<dataSet> codec::read(std::shared_ptr<streamReader> pSourceStream, std::uint32_t maxSizeBufferLoad /* = 0xffffffff */)
 {
-	IMEBRA_FUNCTION_START(L"codec::read");
+    IMEBRA_FUNCTION_START();
 
 	// Reset the codec's bits buffer
 	///////////////////////////////////////////////////////////
@@ -57,7 +57,7 @@ std::shared_ptr<dataSet> codec::read(std::shared_ptr<streamReader> pSourceStream
 	{
 		readStream(pSourceStream, pDestDataSet, maxSizeBufferLoad);
 	}
-    catch(codecExceptionWrongFormat&)
+    catch(CodecWrongFormatError&)
 	{
         pSourceStream->seek(position);
         IMEBRA_RETHROW("Detected a wrong format. Rewinding file");
@@ -84,7 +84,7 @@ std::shared_ptr<dataSet> codec::read(std::shared_ptr<streamReader> pSourceStream
 ///////////////////////////////////////////////////////////
 void codec::write(std::shared_ptr<streamWriter> pDestStream, std::shared_ptr<dataSet> pSourceDataSet)
 {
-	IMEBRA_FUNCTION_START(L"codec::write");
+    IMEBRA_FUNCTION_START();
 
 	// Update charsets tag
 	///////////////////////////////////////////////////////////
@@ -109,7 +109,7 @@ void codec::write(std::shared_ptr<streamWriter> pDestStream, std::shared_ptr<dat
 ///////////////////////////////////////////////////////////
 void channel::allocate(std::uint32_t sizeX, std::uint32_t sizeY)
 {
-	IMEBRA_FUNCTION_START(L"channel::allocate");
+    IMEBRA_FUNCTION_START();
 
 	m_sizeX = sizeX;
 	m_sizeY = sizeY;

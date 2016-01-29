@@ -101,7 +101,7 @@ public:
 	///////////////////////////////////////////////////////////
     inline void writeBits(const std::uint32_t buffer, size_t bitsNum)
 	{
-		IMEBRA_FUNCTION_START(L"streamWriter::writeBits");
+        IMEBRA_FUNCTION_START();
 
 		std::uint32_t tempBuffer(buffer);
 
@@ -148,7 +148,7 @@ public:
 	///////////////////////////////////////////////////////////
 	inline void resetOutBitsBuffer()
 	{
-		IMEBRA_FUNCTION_START(L"streamWriter::resetOutBitsBuffer");
+        IMEBRA_FUNCTION_START();
 
 		if(m_outBitsNum == 0)
 			return;

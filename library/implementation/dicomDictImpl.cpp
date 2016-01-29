@@ -42,7 +42,7 @@ namespace implementation
 ///////////////////////////////////////////////////////////
 dicomDictionary::dicomDictionary()
 {
-	IMEBRA_FUNCTION_START(L"dicomDictionary::dicomDictionary");
+    IMEBRA_FUNCTION_START();
 
 	registerVR("AE", false, 0, 16);
 	registerVR("AS", false, 0, 0);
@@ -1836,7 +1836,7 @@ dicomDictionary::dicomDictionary()
 ///////////////////////////////////////////////////////////
 void dicomDictionary::registerTag(std::uint32_t tagId, const wchar_t* tagName, const char* tagType)
 {
-	IMEBRA_FUNCTION_START(L"dicomDictionary::registerTag");
+    IMEBRA_FUNCTION_START();
 
 	if(m_dicomDict.find(tagId) != m_dicomDict.end())
 	{
@@ -1864,7 +1864,7 @@ void dicomDictionary::registerTag(std::uint32_t tagId, const wchar_t* tagName, c
 ///////////////////////////////////////////////////////////
 void dicomDictionary::registerVR(const std::string& vr, bool bLongLength, std::uint32_t wordSize, std::uint32_t maxLength)
 {
-	IMEBRA_FUNCTION_START(L"dicomDictionary::registerVR");
+    IMEBRA_FUNCTION_START();
 
 	if(m_vrDict.find(vr) != m_vrDict.end())
 	{
@@ -1892,7 +1892,7 @@ void dicomDictionary::registerVR(const std::string& vr, bool bLongLength, std::u
 ///////////////////////////////////////////////////////////
 std::wstring dicomDictionary::getTagName(std::uint16_t groupId, std::uint16_t tagId) const
 {
-	IMEBRA_FUNCTION_START(L"dicomDictionary::getTagName");
+    IMEBRA_FUNCTION_START();
 
 	std::uint32_t tagDWordId=(((std::uint32_t)groupId)<<16) | (std::uint32_t)tagId;
 
@@ -1919,7 +1919,7 @@ std::wstring dicomDictionary::getTagName(std::uint16_t groupId, std::uint16_t ta
 ///////////////////////////////////////////////////////////
 std::string dicomDictionary::getTagType(std::uint16_t groupId, std::uint16_t tagId) const
 {
-	IMEBRA_FUNCTION_START(L"dicomDictionary::getTagType");
+    IMEBRA_FUNCTION_START();
 
 	std::uint32_t tagDWordId=(((std::uint32_t)groupId)<<16) | (std::uint32_t)tagId;
 
@@ -1946,13 +1946,9 @@ std::string dicomDictionary::getTagType(std::uint16_t groupId, std::uint16_t tag
 ///////////////////////////////////////////////////////////
 bool dicomDictionary::isDataTypeValid(const std::string& dataType) const
 {
-	IMEBRA_FUNCTION_START(L"dicomDictionary::isDataTypeValid");
-
 	tVRDictionary::const_iterator findIterator = m_vrDict.find(dataType);
 
 	return (findIterator != m_vrDict.end());
-
-	IMEBRA_FUNCTION_END();
 }
 
 
@@ -1968,7 +1964,7 @@ bool dicomDictionary::isDataTypeValid(const std::string& dataType) const
 ///////////////////////////////////////////////////////////
 bool dicomDictionary::getLongLength(const std::string& dataType) const
 {
-	IMEBRA_FUNCTION_START(L"dicomDictionary::getLongLength");
+    IMEBRA_FUNCTION_START();
 
 	tVRDictionary::const_iterator findIterator = m_vrDict.find(dataType);
 
@@ -1995,7 +1991,7 @@ bool dicomDictionary::getLongLength(const std::string& dataType) const
 ///////////////////////////////////////////////////////////
 std::uint32_t dicomDictionary::getWordSize(const std::string& dataType) const
 {
-	IMEBRA_FUNCTION_START(L"dicomDictionary::getWordSize");
+    IMEBRA_FUNCTION_START();
 
 	tVRDictionary::const_iterator findIterator = m_vrDict.find(dataType);
 
@@ -2022,7 +2018,7 @@ std::uint32_t dicomDictionary::getWordSize(const std::string& dataType) const
 ///////////////////////////////////////////////////////////
 std::uint32_t dicomDictionary::getMaxSize(const std::string& dataType) const
 {
-	IMEBRA_FUNCTION_START(L"dicomDictionary::getMaxSize");
+    IMEBRA_FUNCTION_START();
 
 	tVRDictionary::const_iterator findIterator = m_vrDict.find(dataType);
 

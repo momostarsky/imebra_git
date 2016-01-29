@@ -93,7 +93,7 @@ public:
     ///         image
     ///
     ///////////////////////////////////////////////////////////
-    Image getImage(std::uint32_t frameNumber);
+    Image getImage(size_t frameNumber);
 
     ///
     /// \brief Retrieve an image from the dataset and if
@@ -114,7 +114,7 @@ public:
     ///         image, processed with ModalityVOILUT
     ///
     ///////////////////////////////////////////////////////////
-    Image getImageApplyModalityTransform(std::uint32_t frameNumber);
+    Image getImageApplyModalityTransform(size_t frameNumber);
 
     ///
     /// \brief This enumeration specifies the quality of the
@@ -163,7 +163,7 @@ public:
     ///                       compression is used
     ///
     ///////////////////////////////////////////////////////////
-    void setImage(std::uint32_t frameNumber, Image image, const std::string& transferSyntax, imageQuality quality);
+    void setImage(size_t frameNumber, Image image, const std::string& transferSyntax, imageQuality quality);
 
     DataSet getSequenceItem(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t itemId);
 
@@ -173,25 +173,25 @@ public:
 
     bool bufferExists(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId);
 
-    std::int32_t getSignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
+    std::int32_t getSignedLongThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
 
     std::int32_t getSignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::int32_t defaultValue) const;
 
     void setSignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::int32_t newValue, const std::string& defaultType = "");
 
-    std::uint32_t getUnsignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
+    std::uint32_t getUnsignedLongThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
 
     std::uint32_t getUnsignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::uint32_t defaultValue) const;
 
     void setUnsignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::uint32_t newValue, const std::string& defaultType = "");
 
-    double getDouble(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
+    double getDoubleThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
 
     double getDouble(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, double defaultValue) const;
 
     void setDouble(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, double newValue, const std::string& defaultType = "");
 
-    std::wstring getString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
+    std::wstring getStringThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
 
     std::wstring getString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, const std::wstring& defaultValue) const;
 
@@ -199,23 +199,23 @@ public:
 
     void setAge(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, const Age& age, const std::string& defaultType = "");
 
-    Age getAge(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
+    Age getAgeThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
 
     Age getAge(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, const Age& defaultValue) const;
 
     void setDate(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, const Date& date, const std::string& defaultType = "");
 
-    Date getDate(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
+    Date getDateThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
 
     Date getDate(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, const Date& defaultValue) const;
 
-    size_t getRawData(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, char* buffer, size_t bufferSize) const;
+    size_t getRawDataThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, char* buffer, size_t bufferSize) const;
 
     void setRawData(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, char* buffer, size_t bufferSize, const std::string& defaultType = "");
 
     std::string getDefaultDataType(std::uint16_t groupId, std::uint16_t tagId) const;
 
-    std::string getDataType(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId) const;
+    std::string getDataTypeThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId) const;
 
 #ifndef SWIG
     std::shared_ptr<imebra::implementation::dataSet> m_pDataSet;

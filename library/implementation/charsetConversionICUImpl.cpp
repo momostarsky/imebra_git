@@ -26,7 +26,7 @@ namespace imebra
 ///////////////////////////////////////////////////////////
 charsetConversionICU::charsetConversionICU(const std::string& dicomName)
 {
-    IMEBRA_FUNCTION_START(L"charsetConversionICU::charsetConversionICU");
+    IMEBRA_FUNCTION_START();
 
     UErrorCode errorCode(U_ZERO_ERROR);
     const charsetInformation& info = getDictionary().getCharsetInformation(dicomName);
@@ -62,7 +62,7 @@ charsetConversionICU::~charsetConversionICU()
 ///////////////////////////////////////////////////////////
 std::string charsetConversionICU::fromUnicode(const std::wstring& unicodeString) const
 {
-    IMEBRA_FUNCTION_START(L"charsetConversionICU::fromUnicode");
+    IMEBRA_FUNCTION_START();
 
 	if(unicodeString.empty())
 	{
@@ -109,7 +109,7 @@ std::string charsetConversionICU::fromUnicode(const std::wstring& unicodeString)
 ///////////////////////////////////////////////////////////
 std::wstring charsetConversionICU::toUnicode(const std::string& asciiString) const
 {
-    IMEBRA_FUNCTION_START(L"charsetConversionICU::toUnicode");
+    IMEBRA_FUNCTION_START();
 
 	if(asciiString.empty())
 	{

@@ -32,13 +32,13 @@ Image& Image::operator=(const Image& right)
 }
 
 WritingDataHandler Image::create(
-        const size_t sizeX,
-        const size_t sizeY,
+        const std::uint32_t sizeX,
+        const std::uint32_t sizeY,
 		const bitDepth depth,
         const std::string& colorSpace,
         const std::uint32_t highBit)
 {
-    return WritingDataHandler(m_pImage->create((std::uint32_t)sizeX, (std::uint32_t)sizeY, (imebra::implementation::image::bitDepth)depth, colorSpace, highBit));
+    return WritingDataHandler(m_pImage->create(sizeX, sizeY, (imebra::implementation::image::bitDepth)depth, colorSpace, highBit));
 }
 
 void Image::setHighBit(std::uint32_t highBit)
@@ -65,18 +65,18 @@ void Image::setSizeMm(const double sizeX, const double sizeY)
     m_pImage->setSizeMm(sizeX, sizeY);
 }
 
-size_t Image::getSizeX() const
+std::uint32_t Image::getSizeX() const
 {
     std::uint32_t sizeX, sizeY;
     m_pImage->getSize(&sizeX, &sizeY);
-    return (size_t)sizeX;
+    return sizeX;
 }
 
-size_t Image::getSizeY() const
+std::uint32_t Image::getSizeY() const
 {
     std::uint32_t sizeX, sizeY;
     m_pImage->getSize(&sizeX, &sizeY);
-    return (size_t)sizeY;
+    return sizeY;
 }
 
 ReadingDataHandler Image::getReadingDataHandler() const

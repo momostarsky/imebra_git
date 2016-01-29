@@ -52,7 +52,7 @@ namespace handlers
 readingDataHandlerString::readingDataHandlerString(const memory &parseMemory, const std::string &dataType, const char separator, const uint8_t paddingByte):
     readingDataHandler(dataType)
 {
-    IMEBRA_FUNCTION_START(L"readingDataHandlerString::readingDataHandlerString");
+    IMEBRA_FUNCTION_START();
 
     std::string parseString((const char*)parseMemory.data(), parseMemory.size());
     while(!parseString.empty() && parseString.back() == (char)paddingByte)
@@ -87,7 +87,10 @@ std::int32_t readingDataHandlerString::getSignedLong(const size_t index) const
 {
     std::istringstream conversion(m_strings.at(index));
     std::int32_t value;
-    conversion >> value;
+    if(!(conversion >> value))
+    {
+        IMEBRA_THROW(DataHandlerConversionError, "Cannot convert " << m_strings.at(index) << " to a number");
+    }
     return value;
 }
 
@@ -97,7 +100,10 @@ std::uint32_t readingDataHandlerString::getUnsignedLong(const size_t index) cons
 {
     std::istringstream conversion(m_strings.at(index));
     std::uint32_t value;
-    conversion >> value;
+    if(!(conversion >> value))
+    {
+        IMEBRA_THROW(DataHandlerConversionError, "Cannot convert " << m_strings.at(index) << " to a number");
+    }
     return value;
 }
 
@@ -107,7 +113,10 @@ double readingDataHandlerString::getDouble(const size_t index) const
 {
     std::istringstream conversion(m_strings.at(index));
     double value;
-    conversion >> value;
+    if(!(conversion >> value))
+    {
+        IMEBRA_THROW(DataHandlerConversionError, "Cannot convert " << m_strings.at(index) << " to a number");
+    }
     return value;
 
 }
@@ -164,16 +173,6 @@ writingDataHandlerString::~writingDataHandlerString()
         *(commitMemory->data() + (memorySize - 1)) = m_paddingByte;
     }
 
-    if(m_maxSize != 0 && commitMemory->size() > m_maxSize)
-    {
-        throw;
-    }
-
-    if(m_unitSize != 0 && commitMemory->size() > m_unitSize)
-    {
-        throw;
-    }
-
     m_buffer->commit(commitMemory, m_dataType);
 }
 
@@ -218,11 +217,25 @@ size_t writingDataHandlerString::getSize() const
 
 void writingDataHandlerString::setString(const size_t index, const std::string& value)
 {
+    IMEBRA_FUNCTION_START();
+
+    if(m_maxSize != 0 && value.size() > m_maxSize)
+    {
+        throw;
+    }
+
+    if(m_unitSize != 0 && value.size() > m_unitSize)
+    {
+        throw;
+    }
+
     if(index >= getSize())
     {
         setSize(index + 1);
     }
     m_strings[index] = value;
+
+    IMEBRA_FUNCTION_END();
 }
 
 void writingDataHandlerString::setUnicodeString(const size_t index, const std::wstring& value)

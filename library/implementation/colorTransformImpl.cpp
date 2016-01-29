@@ -50,16 +50,16 @@ namespace colorTransforms
 ///////////////////////////////////////////////////////////
 void colorTransform::checkColorSpaces(const std::string& inputHandlerColorSpace, const std::string& outputHandlerColorSpace)
 {
-	IMEBRA_FUNCTION_START(L"colorTransform::runTransform");
+    IMEBRA_FUNCTION_START();
 
 	if(inputHandlerColorSpace != getInitialColorSpace())
 	{
-        IMEBRA_THROW(colorTransformExceptionWrongColorSpace, "The image's color space cannot be handled by the transform");
+        IMEBRA_THROW(ColorTransformWrongColorSpaceError, "The image's color space cannot be handled by the transform");
 	}
 
 	if(outputHandlerColorSpace != getFinalColorSpace())
 	{
-        IMEBRA_THROW(colorTransformExceptionWrongColorSpace, "The image's color space cannot be handled by the transform");
+        IMEBRA_THROW(ColorTransformWrongColorSpaceError, "The image's color space cannot be handled by the transform");
 	}
 
 	IMEBRA_FUNCTION_END();
@@ -102,7 +102,7 @@ std::shared_ptr<image> colorTransform::allocateOutputImage(std::shared_ptr<image
 ///////////////////////////////////////////////////////////
 registerColorTransform::registerColorTransform(std::shared_ptr<colorTransform> newColorTransform)
 {
-	IMEBRA_FUNCTION_START(L"registerColorTransform::registerColorTransform");
+    IMEBRA_FUNCTION_START();
 
 	std::shared_ptr<colorTransformsFactory> pFactory(colorTransformsFactory::getColorTransformsFactory());
 	pFactory->registerTransform(newColorTransform);

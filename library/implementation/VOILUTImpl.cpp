@@ -35,7 +35,7 @@ namespace transforms
 ///////////////////////////////////////////////////////////
 std::uint32_t VOILUT::getVOILUTId(std::uint32_t VOILUTNumber)
 {
-	IMEBRA_FUNCTION_START(L"VOILUT::getVOILUTId");
+    IMEBRA_FUNCTION_START();
 
 	// reset the LUT's ID
 	///////////////////////////////////////////////////////////
@@ -68,7 +68,7 @@ std::uint32_t VOILUT::getVOILUTId(std::uint32_t VOILUTNumber)
             m_pDataSet->getSequenceItemThrow(0x0028, 0, 0x3010, VOILUTNumber);
             VOILUTId = VOILUTNumber | 0x00100000;
 		}
-        catch(const missingDataElement&)
+        catch(const MissingDataElementError&)
         {
             // Nothing to do. The lut does not exist
         }
@@ -126,7 +126,7 @@ VOILUT::voilutIds_t VOILUT::getVOILUTIds()
 ///////////////////////////////////////////////////////////
 std::wstring VOILUT::getVOILUTDescription(std::uint32_t VOILUTId)
 {
-	IMEBRA_FUNCTION_START(L"VOILUT::getVOILUTDescription");
+    IMEBRA_FUNCTION_START();
 
 	std::wstring VOILUTDescription;
 
@@ -176,7 +176,7 @@ std::wstring VOILUT::getVOILUTDescription(std::uint32_t VOILUTId)
 ///////////////////////////////////////////////////////////
 void VOILUT::setVOILUT(std::uint32_t VOILUTId)
 {
-	IMEBRA_FUNCTION_START(L"VOILUT::setVOILUT");
+    IMEBRA_FUNCTION_START();
 
 	// If the dataset has not been set, then return NULL
 	///////////////////////////////////////////////////////////
@@ -352,14 +352,14 @@ std::shared_ptr<image> VOILUT::allocateOutputImage(std::shared_ptr<image> pInput
 ///////////////////////////////////////////////////////////
 void VOILUT::applyOptimalVOI(const std::shared_ptr<imebra::implementation::image>& inputImage, std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight)
 {
-    IMEBRA_FUNCTION_START(L"VOILUT::applyOptimalVOI");
+    IMEBRA_FUNCTION_START();
 
     std::uint32_t width, height;
     inputImage->getSize(&width, &height);
 
     if(inputTopLeftX + inputWidth > width || inputTopLeftY + inputHeight > height)
     {
-        IMEBRA_THROW(transformExceptionInvalidArea, "The input and/or output areas are invalid");
+        IMEBRA_THROW(TransformInvalidAreaError, "The input and/or output areas are invalid");
     }
 
     std::shared_ptr<handlers::readingDataHandlerNumericBase> handler(inputImage->getReadingDataHandler());

@@ -13,7 +13,7 @@ $fileHeader$
 #include <sstream>
 #include <iomanip>
 #include <type_traits>
-
+#include "../include/imebra/exceptions.h"
 #include "exceptionImpl.h"
 #include "dataHandlerImpl.h"
 #include "memoryImpl.h"
@@ -186,7 +186,7 @@ public:
 	///////////////////////////////////////////////////////////
     virtual std::string getString(const size_t index) const
 	{
-		IMEBRA_FUNCTION_START(L"dataHandlerNumeric::getString");
+        IMEBRA_FUNCTION_START();
 
 		std::ostringstream convStream;
 
@@ -209,7 +209,7 @@ public:
 	///////////////////////////////////////////////////////////
     virtual std::wstring getUnicodeString(const size_t index) const
 	{
-		IMEBRA_FUNCTION_START(L"dataHandlerNumeric::getUnicodeString");
+        IMEBRA_FUNCTION_START();
 
         std::string ansiString = getString(index);
 
@@ -225,7 +225,7 @@ public:
 	///////////////////////////////////////////////////////////
     virtual size_t getSize() const
 	{
-		IMEBRA_FUNCTION_START(L"dataHandlerNumeric::getSize");
+        IMEBRA_FUNCTION_START();
 
         return m_pMemory->size() / sizeof(dataHandlerType);
 
@@ -444,7 +444,7 @@ public:
     ///////////////////////////////////////////////////////////
     virtual void setString(const size_t index, const std::string& value)
     {
-        IMEBRA_FUNCTION_START(L"dataHandlerNumeric::setString");
+        IMEBRA_FUNCTION_START();
 
         std::istringstream convStream(value);
         dataHandlerType tempValue;
@@ -452,12 +452,18 @@ public:
                 std::is_same<dataHandlerType, std::int8_t>::value)
         {
             int tempValue1;
-            convStream >> tempValue1;
+            if(!(convStream >> tempValue1))
+            {
+                IMEBRA_THROW(DataHandlerConversionError, "Cannot convert " << value << " to a number");
+            }
             tempValue = (dataHandlerType)tempValue1;
         }
         else
         {
-            convStream >> tempValue;
+            if(!(convStream >> tempValue))
+            {
+                IMEBRA_THROW(DataHandlerConversionError, "Cannot convert " << value << " to a number");
+            }
         }
 
         ((dataHandlerType*)m_pMemory->data())[index] = tempValue;
@@ -469,7 +475,7 @@ public:
     ///////////////////////////////////////////////////////////
     virtual void setUnicodeString(const size_t index, const std::wstring& value)
     {
-        IMEBRA_FUNCTION_START(L"dataHandlerNumeric::setUnicodeString");
+        IMEBRA_FUNCTION_START();
 
         charsetsList::tCharsetsList charsets;
         charsets.push_back("ISO_IR 6");
@@ -503,7 +509,7 @@ public:
     ///////////////////////////////////////////////////////////
     virtual void copyFrom(std::shared_ptr<readingDataHandlerNumericBase> pSource)
     {
-        IMEBRA_FUNCTION_START(L"dataHandlerNumeric::copyFrom");
+        IMEBRA_FUNCTION_START();
 
         imebra::implementation::handlers::readingDataHandlerNumericBase* pHandler(pSource.get());
         if(typeid(*pHandler) == typeid(imebra::implementation::handlers::readingDataHandlerNumeric<std::uint8_t>) ||

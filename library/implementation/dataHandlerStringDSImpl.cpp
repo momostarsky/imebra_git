@@ -53,7 +53,7 @@ readingDataHandlerStringDS::readingDataHandlerStringDS(const memory& parseMemory
 ///////////////////////////////////////////////////////////
 std::int32_t readingDataHandlerStringDS::getSignedLong(const size_t index) const
 {
-	IMEBRA_FUNCTION_START(L"dataHandlerStringDS::getSignedLong");
+    IMEBRA_FUNCTION_START();
 
 	return (std::int32_t)getDouble(index);
 
@@ -73,7 +73,7 @@ std::int32_t readingDataHandlerStringDS::getSignedLong(const size_t index) const
 ///////////////////////////////////////////////////////////
 std::uint32_t readingDataHandlerStringDS::getUnsignedLong(const size_t index) const
 {
-	IMEBRA_FUNCTION_START(L"dataHandlerStringDS::getUnsignedLong");
+    IMEBRA_FUNCTION_START();
 
     return (std::uint32_t)getDouble(index);
 
@@ -99,7 +99,7 @@ writingDataHandlerStringDS::writingDataHandlerStringDS(const std::shared_ptr<buf
 ///////////////////////////////////////////////////////////
 void writingDataHandlerStringDS::setSignedLong(const size_t index, const std::int32_t value)
 {
-	IMEBRA_FUNCTION_START(L"dataHandlerStringDS::setSignedLong");
+    IMEBRA_FUNCTION_START();
 
 	setDouble(index, (double)value);
 
@@ -119,7 +119,7 @@ void writingDataHandlerStringDS::setSignedLong(const size_t index, const std::in
 ///////////////////////////////////////////////////////////
 void writingDataHandlerStringDS::setUnsignedLong(const size_t index, const std::uint32_t value)
 {
-	IMEBRA_FUNCTION_START(L"dataHandlerStringDS::setUnsignedLong");
+    IMEBRA_FUNCTION_START();
 
 	setDouble(index, (double)value);
 

@@ -111,7 +111,7 @@ namespace imebra
 			template <tDrawBitmapType drawBitmapType, int rowAlignBytes>
                     std::shared_ptr<memory> getBitmap(std::shared_ptr<memory> reuseMemory)
 			{
-				IMEBRA_FUNCTION_START(L"drawBitmap::getBitmap");
+                IMEBRA_FUNCTION_START();
 
                 size_t memorySize(getBitmap<drawBitmapType, rowAlignBytes>(0, 0));
 
@@ -139,7 +139,7 @@ namespace imebra
 			template <tDrawBitmapType drawBitmapType, int rowAlignBytes>
                     size_t getBitmap(std::uint8_t* pBuffer, size_t bufferSize)
 			{
-				IMEBRA_FUNCTION_START(L"drawBitmap::getBitmapRaw");
+                IMEBRA_FUNCTION_START();
 
                 std::uint32_t destPixelSize((drawBitmapType == drawBitmapRGBA || drawBitmapType == drawBitmapBGRA) ? 4 : 3);
 

@@ -53,7 +53,7 @@ Transform ColorTransformsFactory::getTransform(const std::string& startColorSpac
     Transform transform(factory->getTransform(startColorSpace, endColorSpace));
     if(transform.m_pTransform == 0)
     {
-        throw colorTransformsFactoryExceptionNoTransform("There is no color transform that can convert between the specified color spaces");
+        throw ColorTransformsFactoryNoTransformError("There is no color transform that can convert between the specified color spaces");
     }
     return transform;
 }

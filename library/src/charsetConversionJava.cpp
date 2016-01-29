@@ -48,7 +48,7 @@ charsetConversionJava::~charsetConversionJava()
 ///////////////////////////////////////////////////////////
 void charsetConversionJava::initialize(const int requestedTable)
 {
-    IMEBRA_FUNCTION_START(L"charsetConversionJava::initialize");
+    IMEBRA_FUNCTION_START();
 
     m_tableName = m_charsetTable[requestedTable].m_iconvName;
 
@@ -63,7 +63,7 @@ void charsetConversionJava::initialize(const int requestedTable)
 ///////////////////////////////////////////////////////////
 void charsetConversionJava::close()
 {
-    IMEBRA_FUNCTION_START(L"charsetConversionJava::close");
+    IMEBRA_FUNCTION_START();
 
     charsetConversion::close();
 
@@ -78,7 +78,7 @@ void charsetConversionJava::close()
 ///////////////////////////////////////////////////////////
 std::string charsetConversionJava::fromUnicode(const std::wstring& unicodeString) const
 {
-    IMEBRA_FUNCTION_START(L"charsetConversionJava::fromUnicode");
+    IMEBRA_FUNCTION_START();
 
 	if(unicodeString.empty())
 	{
@@ -120,7 +120,7 @@ std::string charsetConversionJava::fromUnicode(const std::wstring& unicodeString
 ///////////////////////////////////////////////////////////
 std::wstring charsetConversionJava::toUnicode(const std::string& asciiString) const
 {
-    IMEBRA_FUNCTION_START(L"charsetConversionJava::toUnicode");
+    IMEBRA_FUNCTION_START();
 
 	if(asciiString.empty())
 	{

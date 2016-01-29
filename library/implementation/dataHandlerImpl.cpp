@@ -7,6 +7,7 @@ $fileHeader$
 
 */
 
+#include "../include/imebra/exceptions.h"
 #include "exceptionImpl.h"
 #include "dataHandlerImpl.h"
 #include "memoryImpl.h"
@@ -119,12 +120,20 @@ void writingDataHandler::setDate(const size_t /* index */,
 		std::int32_t /*offsetHours */,
 		std::int32_t /*offsetMinutes */)
 {
-    throw;
+    IMEBRA_FUNCTION_START();
+
+    IMEBRA_THROW(DataHandlerDeniedConversionError, "Cannot convert VR "<< getDataType() << " to Date");
+
+    IMEBRA_FUNCTION_END();
 }
 
 void writingDataHandler::setAge(const size_t /* index */, const std::uint32_t /* age */, const ageUnit_t /* unit */)
 {
-    throw;
+    IMEBRA_FUNCTION_START();
+
+    IMEBRA_THROW(DataHandlerDeniedConversionError, "Cannot convert VR "<< getDataType() << " to Age");
+
+    IMEBRA_FUNCTION_END();
 }
 
 } // namespace handlers

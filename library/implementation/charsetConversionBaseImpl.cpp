@@ -72,7 +72,7 @@ const charsetInformation& charsetDictionary::getCharsetInformation(const std::st
     {
         std::ostringstream errorMessage;
         errorMessage << "Charset table " << dicomName << " not found in the charset dictionary";
-        throw charsetConversionExceptionNoTable(errorMessage.str());
+        throw CharsetConversionNoTableError(errorMessage.str());
     }
     return findInfo->second;
 }

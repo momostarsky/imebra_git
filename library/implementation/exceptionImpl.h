@@ -64,7 +64,7 @@ public:
 	///                       exception being rethrown
 	///
 	///////////////////////////////////////////////////////////
-	exceptionInfo(const std::wstring& functionName, const std::string& fileName, const long lineNumber, const std::string& exceptionType, const std::string& exceptionMessage);
+    exceptionInfo(const std::string& functionName, const std::string& fileName, const long lineNumber, const std::string& exceptionType, const std::string& exceptionMessage);
 
 	exceptionInfo();
 	
@@ -78,9 +78,9 @@ public:
 	/// @return the object's content formatted in a string
 	///
 	///////////////////////////////////////////////////////////
-	std::wstring getMessage();
+    std::string getMessage();
 
-	std::wstring m_functionName;   ///< The name of the function where the catch&throw is happening
+    std::string m_functionName;   ///< The name of the function where the catch&throw is happening
 	std::string m_fileName;        ///< The name of the file where the catch&throw is happening
 	long m_lineNumber;             ///< The number of the line where the catch&throw is happening
 	std::string m_exceptionType;   ///< The type of the exception being rethrown
@@ -142,7 +142,7 @@ public:
 	/// @return the information formatted as a text message
 	///
 	///////////////////////////////////////////////////////////
-	static std::wstring getMessage();
+    static std::string getMessage();
 
 	/// \brief Defines a list of exceptionInfo objects.
 	///
@@ -222,8 +222,13 @@ public:
 ///         the macro is placed.
 ///
 ///////////////////////////////////////////////////////////
-#define IMEBRA_FUNCTION_START(functionName) \
-	static const wchar_t* _puntoexe_function_name = functionName;\
+#ifdef _MSC_VER
+#define IMEBRA_METHOD_NAME() __FUNCTION__
+#else
+#define IMEBRA_METHOD_NAME() __PRETTY_FUNCTION__
+#endif
+
+#define IMEBRA_FUNCTION_START() \
 	try{
 
 /// \def IMEBRA_FUNCTION_END()
@@ -242,13 +247,13 @@ public:
 	}\
 	catch(std::exception& e)\
 	{\
-        imebra::implementation::exceptionInfo info(_puntoexe_function_name, __FILE__, __LINE__, typeid(e).name(), e.what());\
+        imebra::implementation::exceptionInfo info(IMEBRA_METHOD_NAME(), __FILE__, __LINE__, typeid(e).name(), e.what());\
         imebra::implementation::exceptionsManager::addExceptionInfo(info);\
 		throw;\
 	}\
 	catch(...)\
 	{\
-        imebra::implementation::exceptionInfo info(_puntoexe_function_name, __FILE__, __LINE__, "unknown", "");\
+        imebra::implementation::exceptionInfo info(IMEBRA_METHOD_NAME(), __FILE__, __LINE__, "unknown", "");\
         imebra::implementation::exceptionsManager::addExceptionInfo(info);\
 		throw;\
 	}
@@ -274,19 +279,19 @@ public:
     }\
     catch(catchType& e)\
     {\
-        imebra::implementation::exceptionInfo info(_puntoexe_function_name, __FILE__, __LINE__, typeid(e).name(), e.what());\
+        imebra::implementation::exceptionInfo info(IMEBRA_METHOD_NAME(), __FILE__, __LINE__, typeid(e).name(), e.what());\
         imebra::implementation::exceptionsManager::addExceptionInfo(info);\
         IMEBRA_THROW(throwType, e.what());\
     }\
     catch(std::exception& e)\
     {\
-        imebra::implementation::exceptionInfo info(_puntoexe_function_name, __FILE__, __LINE__, typeid(e).name(), e.what());\
+        imebra::implementation::exceptionInfo info(IMEBRA_METHOD_NAME(), __FILE__, __LINE__, typeid(e).name(), e.what());\
         imebra::implementation::exceptionsManager::addExceptionInfo(info);\
         throw;\
     }\
     catch(...)\
     {\
-        imebra::implementation::exceptionInfo info(_puntoexe_function_name, __FILE__, __LINE__, "unknown", "");\
+        imebra::implementation::exceptionInfo info(IMEBRA_METHOD_NAME(), __FILE__, __LINE__, "unknown", "");\
         imebra::implementation::exceptionsManager::addExceptionInfo(info);\
         throw;\
     }
@@ -306,12 +311,14 @@ public:
 ///                       the exception
 ///
 ///////////////////////////////////////////////////////////
-#define IMEBRA_THROW(exceptionType, what) \
+#define IMEBRA_THROW(exceptionType, message) \
 	{\
-        exceptionType puntoexeTrackException(what);\
-        imebra::implementation::exceptionInfo info(_puntoexe_function_name, __FILE__, __LINE__, typeid(puntoexeTrackException).name(), what);\
+        std::ostringstream buildMessage; \
+        buildMessage << message; \
+        exceptionType imebraTrackException(buildMessage.str());\
+        imebra::implementation::exceptionInfo info(IMEBRA_METHOD_NAME(), __FILE__, __LINE__, typeid(imebraTrackException).name(), imebraTrackException.what());\
         imebra::implementation::exceptionsManager::addExceptionInfo(info);\
-        throw puntoexeTrackException;\
+        throw imebraTrackException;\
 	}
 
 /// \def IMEBRA_RETHROW(what)
@@ -329,7 +336,7 @@ public:
 ///////////////////////////////////////////////////////////
 #define IMEBRA_RETHROW(what) \
 	{\
-        imebra::implementation::exceptionInfo info(_puntoexe_function_name, __FILE__, __LINE__, "rethrowing", what);\
+        imebra::implementation::exceptionInfo info(IMEBRA_METHOD_NAME(), __FILE__, __LINE__, "rethrowing", what);\
         imebra::implementation::exceptionsManager::addExceptionInfo(info);\
 		throw;\
 	}

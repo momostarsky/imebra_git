@@ -35,7 +35,7 @@ namespace imebra
 ///        of data from which the DICOM or the Jpeg
 ///        decoders read the DICOM or the Jpeg file.
 ///
-/// Specialized classes derived from this class can
+/// Specialized classes derived from this one can
 ///  read from files stored on the computer's disks,
 ///  on the network or in memory.
 ///

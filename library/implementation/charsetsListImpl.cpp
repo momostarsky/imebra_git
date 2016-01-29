@@ -47,13 +47,13 @@ namespace charsetsList
 ///////////////////////////////////////////////////////////
 void updateCharsets(const tCharsetsList* pCharsetsList, tCharsetsList* pDestinationCharsetsList)
 {
-	IMEBRA_FUNCTION_START(L"charsetsList::updateCharsets");
+    IMEBRA_FUNCTION_START();
 
 	// Check the default charset
 	///////////////////////////////////////////////////////////
 	if(!pCharsetsList->empty() && !pDestinationCharsetsList->empty() && pCharsetsList->front() != pDestinationCharsetsList->front())
 	{
-        IMEBRA_THROW(charsetListExceptionDiffDefault, "Different default charsets");
+        IMEBRA_THROW(CharsetListDiffDefaultError, "Different default charsets");
 	}
 
 	// Copy the charsets in the local list (if they are not

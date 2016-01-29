@@ -33,18 +33,18 @@ exceptionsManager::exceptionsManager()
 ///////////////////////////////////////////////////////////
 // Return the message info for the specified thread
 ///////////////////////////////////////////////////////////
-std::wstring exceptionsManager::getMessage()
+std::string exceptionsManager::getMessage()
 {
 	tExceptionInfoList infoList;
 	exceptionsManager::getExceptionInfo(&infoList);
 
-	std::wstring message;
+    std::string message;
 	for(tExceptionInfoList::iterator scanInfo = infoList.begin(); 
 		scanInfo != infoList.end(); 
 		++scanInfo)
 	{
 		message += scanInfo->getMessage();
-		message += L"\n\n";
+        message += "\n\n";
 	}
 
 	return message;
@@ -112,7 +112,7 @@ std::shared_ptr<exceptionsManager> exceptionsManager::getExceptionsManager()
 ///////////////////////////////////////////////////////////
 // Construct the exceptionInfo object
 ///////////////////////////////////////////////////////////
-exceptionInfo::exceptionInfo(const std::wstring& functionName, const std::string& fileName, const long lineNumber, const std::string& exceptionType, const std::string& exceptionMessage):
+exceptionInfo::exceptionInfo(const std::string& functionName, const std::string& fileName, const long lineNumber, const std::string& exceptionType, const std::string& exceptionMessage):
 	m_functionName(functionName), 
 	m_fileName(fileName),
 	m_lineNumber(lineNumber),
@@ -153,14 +153,14 @@ exceptionInfo& exceptionInfo::operator=(const exceptionInfo& right)
 ///////////////////////////////////////////////////////////
 // Return the exceptionInfo content in a string
 ///////////////////////////////////////////////////////////
-std::wstring exceptionInfo::getMessage()
+std::string exceptionInfo::getMessage()
 {
     defaultCharsetConversion convertUnicode("ISO_IR 6");
-	std::wostringstream message;
+    std::ostringstream message;
 	message << "[" << m_functionName << "]" << "\n";
-    message << " file: " << convertUnicode.toUnicode(m_fileName) << "  line: " << m_lineNumber << "\n";
-    message << " exception type: " << convertUnicode.toUnicode(m_exceptionType) << "\n";
-    message << " exception message: " << convertUnicode.toUnicode(m_exceptionMessage) << "\n";
+    message << " file: " << m_fileName << "  line: " << m_lineNumber << "\n";
+    message << " exception type: " << m_exceptionType << "\n";
+    message << " exception message: " << m_exceptionMessage << "\n";
 	return message.str();
 }
 

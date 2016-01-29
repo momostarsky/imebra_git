@@ -51,7 +51,7 @@ namespace implementation
 ///////////////////////////////////////////////////////////
 void data::setBuffer(size_t bufferId, const std::shared_ptr<buffer>& newBuffer)
 {
-	IMEBRA_FUNCTION_START(L"data::setBuffer");
+    IMEBRA_FUNCTION_START();
 
 	// Assign the new buffer
 	///////////////////////////////////////////////////////////
@@ -72,7 +72,7 @@ void data::setBuffer(size_t bufferId, const std::shared_ptr<buffer>& newBuffer)
 ///////////////////////////////////////////////////////////
 void data::deleteBuffer(size_t bufferId)
 {
-	IMEBRA_FUNCTION_START(L"data::deleteBuffer");
+    IMEBRA_FUNCTION_START();
 
 	// Remove the buffer
 	///////////////////////////////////////////////////////////
@@ -97,7 +97,7 @@ void data::deleteBuffer(size_t bufferId)
 ///////////////////////////////////////////////////////////
 std::string data::getDataTypeThrow(size_t bufferId) const
 {
-	IMEBRA_FUNCTION_START(L"data::getDataType");
+    IMEBRA_FUNCTION_START();
 
     tBuffersMap::const_iterator findBuffer = m_buffers.find(bufferId);
 	if(findBuffer != m_buffers.end())
@@ -105,7 +105,7 @@ std::string data::getDataTypeThrow(size_t bufferId) const
 		return findBuffer->second->getDataType();
 	}
 	
-    throw missingBuffer("The requested buffer is missing");
+    throw MissingBufferError("The requested buffer is missing");
 
 	IMEBRA_FUNCTION_END();
 }
@@ -122,7 +122,7 @@ std::string data::getDataTypeThrow(size_t bufferId) const
 ///////////////////////////////////////////////////////////
 size_t data::getBuffersCount() const
 {
-	IMEBRA_FUNCTION_START(L"data::getBuffersCount");
+    IMEBRA_FUNCTION_START();
 
 	// Returns the number of buffers
 	///////////////////////////////////////////////////////////
@@ -143,7 +143,7 @@ size_t data::getBuffersCount() const
 ///////////////////////////////////////////////////////////
 bool data::bufferExists(size_t bufferId) const
 {
-	IMEBRA_FUNCTION_START(L"data::bufferExists");
+    IMEBRA_FUNCTION_START();
 
 	// Retrieve the buffer
 	///////////////////////////////////////////////////////////
@@ -165,14 +165,14 @@ bool data::bufferExists(size_t bufferId) const
 ///////////////////////////////////////////////////////////
 size_t data::getBufferSizeThrow(size_t bufferId) const
 {
-	IMEBRA_FUNCTION_START(L"data::getBufferSize");
+    IMEBRA_FUNCTION_START();
 
 	// Retrieve the buffer
 	///////////////////////////////////////////////////////////
     tBuffersMap::const_iterator findBuffer = m_buffers.find(bufferId);
 	if(findBuffer == m_buffers.end())
 	{
-        throw missingBuffer("The requested buffer is missing");
+        throw MissingBufferError("The requested buffer is missing");
 	}
 
 	// Retrieve the buffer's size
@@ -194,14 +194,14 @@ size_t data::getBufferSizeThrow(size_t bufferId) const
 ///////////////////////////////////////////////////////////
 std::shared_ptr<handlers::readingDataHandler> data::getReadingDataHandlerThrow(size_t bufferId) const
 {
-	IMEBRA_FUNCTION_START(L"data::getDataHandler");
+    IMEBRA_FUNCTION_START();
 
 	// Retrieve the buffer
 	///////////////////////////////////////////////////////////
     tBuffersMap::const_iterator findBuffer = m_buffers.find(bufferId);
     if(findBuffer == m_buffers.end())
 	{
-        throw missingBuffer("The requested buffer is missing");
+        throw MissingBufferError("The requested buffer is missing");
 	}
 
     return findBuffer->second->getReadingDataHandler();
@@ -212,7 +212,7 @@ std::shared_ptr<handlers::readingDataHandler> data::getReadingDataHandlerThrow(s
 
 std::shared_ptr<handlers::writingDataHandler> data::getWritingDataHandler(size_t bufferId, const std::string& defaultType, const charsetsList::tCharsetsList& defaultCharsets)
 {
-    IMEBRA_FUNCTION_START(L"data::getDataHandler");
+    IMEBRA_FUNCTION_START();
 
     // Retrieve the buffer
     ///////////////////////////////////////////////////////////
@@ -227,17 +227,17 @@ std::shared_ptr<handlers::writingDataHandler> data::getWritingDataHandler(size_t
     ///////////////////////////////////////////////////////////
     if(pTempBuffer == 0)
     {
-        // If a buffer already exists, then use the already defined
+        // If a buffer already exists, then check the already defined
         //  datatype
-        ///////////////////////////////////////////////////////////
-        if( !m_buffers.empty() && !m_buffers.begin()->second->getDataType().empty() )
+        /////////////////////////////////////////////////////////////
+        if(
+                !m_buffers.empty() &&
+                !m_buffers.begin()->second->getDataType().empty() &&
+                defaultType != m_buffers.begin()->second->getDataType())
         {
-            pTempBuffer = std::make_shared<buffer>(m_buffers.begin()->second->getDataType());
+            throw;
         }
-        else
-        {
-            pTempBuffer = std::make_shared<buffer>(defaultType);
-        }
+        pTempBuffer = std::make_shared<buffer>(defaultType);
 
         pTempBuffer->setCharsetsList(defaultCharsets);
         m_buffers[bufferId]=pTempBuffer;
@@ -260,7 +260,7 @@ std::shared_ptr<handlers::writingDataHandler> data::getWritingDataHandler(size_t
 ///////////////////////////////////////////////////////////
 std::shared_ptr<handlers::readingDataHandlerRaw> data::getReadingDataHandlerRawThrow(size_t bufferId) const
 {
-	IMEBRA_FUNCTION_START(L"data::getDataHandlerRaw");
+    IMEBRA_FUNCTION_START();
 
 	// Retrieve the buffer
 	///////////////////////////////////////////////////////////
@@ -268,7 +268,7 @@ std::shared_ptr<handlers::readingDataHandlerRaw> data::getReadingDataHandlerRawT
     tBuffersMap::const_iterator findBuffer = m_buffers.find(bufferId);
     if(findBuffer == m_buffers.end() )
 	{
-        throw missingBuffer("The requested buffer is missing");
+        throw MissingBufferError("The requested buffer is missing");
 	}
 
     return findBuffer->second->getReadingDataHandlerRaw();
@@ -279,7 +279,7 @@ std::shared_ptr<handlers::readingDataHandlerRaw> data::getReadingDataHandlerRawT
 
 std::shared_ptr<handlers::writingDataHandlerRaw> data::getWritingDataHandlerRaw(size_t bufferId, const std::string& defaultType, const charsetsList::tCharsetsList& defaultCharsets)
 {
-    IMEBRA_FUNCTION_START(L"data::getDataHandlerRaw");
+    IMEBRA_FUNCTION_START();
 
     // Retrieve the buffer
     ///////////////////////////////////////////////////////////
@@ -327,7 +327,7 @@ std::shared_ptr<handlers::writingDataHandlerRaw> data::getWritingDataHandlerRaw(
 ///////////////////////////////////////////////////////////
 std::shared_ptr<streamReader> data::getStreamReaderThrow(size_t bufferId)
 {
-	IMEBRA_FUNCTION_START(L"data::getStreamReader");
+    IMEBRA_FUNCTION_START();
 
 	// Retrieve the buffer
 	///////////////////////////////////////////////////////////
@@ -338,7 +338,7 @@ std::shared_ptr<streamReader> data::getStreamReaderThrow(size_t bufferId)
 		return findBuffer->second->getStreamReader();
 	}
 
-    throw missingBuffer("The requested buffer does not exist");
+    throw MissingBufferError("The requested buffer does not exist");
 
 	IMEBRA_FUNCTION_END();
 }
@@ -355,7 +355,7 @@ std::shared_ptr<streamReader> data::getStreamReaderThrow(size_t bufferId)
 ///////////////////////////////////////////////////////////
 std::shared_ptr<streamWriter> data::getStreamWriter(size_t bufferId, const std::string& dataType /* = "" */)
 {
-	IMEBRA_FUNCTION_START(L"data::getStream");
+    IMEBRA_FUNCTION_START();
 
 	// Retrieve the buffer
 	///////////////////////////////////////////////////////////
@@ -402,13 +402,13 @@ std::shared_ptr<streamWriter> data::getStreamWriter(size_t bufferId, const std::
 ///////////////////////////////////////////////////////////
 std::shared_ptr<dataSet> data::getDataSetThrow(size_t dataSetId) const
 {
-	IMEBRA_FUNCTION_START(L"data::getDataSet");
+    IMEBRA_FUNCTION_START();
 
 	// Retrieve the buffer
 	///////////////////////////////////////////////////////////
 	if(m_embeddedDataSets.size() <= dataSetId)
 	{
-        throw missingItem("The requested sequence item does not exist");
+        throw MissingItemError("The requested sequence item does not exist");
 	}
 
 	return m_embeddedDataSets[dataSetId];
@@ -433,7 +433,7 @@ bool data::dataSetExists(size_t dataSetId) const
 ///////////////////////////////////////////////////////////
 void data::setDataSet(size_t dataSetId, std::shared_ptr<dataSet> pDataSet)
 {
-	IMEBRA_FUNCTION_START(L"data::setDataSet");
+    IMEBRA_FUNCTION_START();
 
 	if(dataSetId >= m_embeddedDataSets.size())
 	{
@@ -456,7 +456,7 @@ void data::setDataSet(size_t dataSetId, std::shared_ptr<dataSet> pDataSet)
 ///////////////////////////////////////////////////////////
 void data::appendDataSet(std::shared_ptr<dataSet> pDataSet)
 {
-	IMEBRA_FUNCTION_START(L"data::appendDataSet");
+    IMEBRA_FUNCTION_START();
 
 	m_embeddedDataSets.push_back(pDataSet);
 
@@ -476,7 +476,7 @@ void data::appendDataSet(std::shared_ptr<dataSet> pDataSet)
 ///////////////////////////////////////////////////////////
 void data::setCharsetsList(const charsetsList::tCharsetsList& charsetsList)
 {
-	IMEBRA_FUNCTION_START(L"data::setCharsetsList");
+    IMEBRA_FUNCTION_START();
 
 	for(tEmbeddedDatasetsMap::iterator scanEmbeddedDataSets = m_embeddedDataSets.begin(); scanEmbeddedDataSets != m_embeddedDataSets.end(); ++scanEmbeddedDataSets)
 	{
@@ -504,7 +504,7 @@ void data::setCharsetsList(const charsetsList::tCharsetsList& charsetsList)
 ///////////////////////////////////////////////////////////
 void data::getCharsetsList(charsetsList::tCharsetsList* pCharsetsList) const
 {
-	IMEBRA_FUNCTION_START(L"data::getCharsetsList");
+    IMEBRA_FUNCTION_START();
 
     for(tEmbeddedDatasetsMap::const_iterator scanEmbeddedDataSets = m_embeddedDataSets.begin(); scanEmbeddedDataSets != m_embeddedDataSets.end(); ++scanEmbeddedDataSets)
 	{

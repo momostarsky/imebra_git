@@ -37,7 +37,7 @@ waveform::waveform(std::shared_ptr<dataSet> pDataSet):
 ///////////////////////////////////////////////////////////
 std::uint32_t waveform::getBitsAllocated() const
 {
-	IMEBRA_FUNCTION_START(L"waveform::getBitsAllocated");
+    IMEBRA_FUNCTION_START();
 
     return m_pDataSet->getUnsignedLongThrow(0x5400, 0, 0x1004, 0, 0);
 
@@ -52,7 +52,7 @@ std::uint32_t waveform::getBitsAllocated() const
 ///////////////////////////////////////////////////////////
 std::uint32_t waveform::getBitsStored() const
 {
-	IMEBRA_FUNCTION_START(L"waveform::getBitsStored");
+    IMEBRA_FUNCTION_START();
 
     return m_pDataSet->getUnsignedLongThrow(0x003A, 0, 0x021A, 0, 0);
 
@@ -67,7 +67,7 @@ std::uint32_t waveform::getBitsStored() const
 ///////////////////////////////////////////////////////////
 std::uint32_t waveform::getChannels() const
 {
-	IMEBRA_FUNCTION_START(L"waveform::getChannels");
+    IMEBRA_FUNCTION_START();
 
     return m_pDataSet->getUnsignedLongThrow(0x003A, 0, 0x0005, 0, 0);
 
@@ -82,7 +82,7 @@ std::uint32_t waveform::getChannels() const
 ///////////////////////////////////////////////////////////
 std::string waveform::getInterpretation() const
 {
-	IMEBRA_FUNCTION_START(L"waveform::getChannels");
+    IMEBRA_FUNCTION_START();
 
     return m_pDataSet->getStringThrow(0x5400, 0, 0x1006, 0, 0);
 
@@ -97,7 +97,7 @@ std::string waveform::getInterpretation() const
 ///////////////////////////////////////////////////////////
 std::uint32_t waveform::getSamples() const
 {
-	IMEBRA_FUNCTION_START(L"waveform::getSamples");
+    IMEBRA_FUNCTION_START();
 
     return m_pDataSet->getUnsignedLongThrow(0x003A, 0, 0x0010, 0, 0);
 
@@ -112,7 +112,7 @@ std::uint32_t waveform::getSamples() const
 ///////////////////////////////////////////////////////////
 std::shared_ptr<handlers::readingDataHandler> waveform::getIntegerData(std::uint32_t channel, std::int32_t paddingValue)
 {
-	IMEBRA_FUNCTION_START(L"waveform::getIntegerData");
+    IMEBRA_FUNCTION_START();
 
     const std::int32_t uLawDecompressTable[256] =
 	{
@@ -205,7 +205,7 @@ std::shared_ptr<handlers::readingDataHandler> waveform::getIntegerData(std::uint
 		originalPaddingValue = paddingTagHandler->getUnsignedLong(0);
 		bPaddingValueExists = true;
     }
-    catch(const missingDataElement&)
+    catch(const MissingDataElementError&)
     {
         // Nothing to do
     }

@@ -59,7 +59,7 @@ std::shared_ptr<memory> writingDataHandlerNumericBase::getMemory() const
 ///////////////////////////////////////////////////////////
 void writingDataHandlerNumericBase::setSize(const size_t elementsNumber)
 {
-    IMEBRA_FUNCTION_START(L"dataHandlerNumeric::setSize");
+    IMEBRA_FUNCTION_START();
 
     m_pMemory->resize(elementsNumber * m_unitSize);
 

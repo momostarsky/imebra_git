@@ -81,10 +81,10 @@ public:
                     std::int32_t /* outputHandlerMinValue */, std::uint32_t /* outputHighBit */,
                     std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY)
 	{
-		IMEBRA_FUNCTION_START(L"modalityVOILUT::templateTransform");
+        IMEBRA_FUNCTION_START();
 		if(!colorTransforms::colorTransformsFactory::isMonochrome(inputHandlerColorSpace) || !colorTransforms::colorTransformsFactory::isMonochrome(outputHandlerColorSpace))
 		{
-            IMEBRA_THROW(modalityVOILUTException, "modalityVOILUT can process only monochromatic images");
+            IMEBRA_THROW(ModalityVOILUTError, "modalityVOILUT can process only monochromatic images");
 		}
         const inputType* pInputMemory(inputHandlerData);
 		outputType* pOutputMemory(outputHandlerData);

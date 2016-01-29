@@ -61,7 +61,7 @@ void readingDataHandlerTime::getDate(const size_t index,
          std::int32_t* pOffsetHours,
          std::int32_t* pOffsetMinutes) const
 {
-    IMEBRA_FUNCTION_START(L"dataHandlerTime::getDate");
+    IMEBRA_FUNCTION_START();
 
     *pYear = 0;
     *pMonth = 0;
@@ -106,7 +106,7 @@ void writingDataHandlerTime::setDate(const size_t index,
 		 std::int32_t offsetHours,
 		 std::int32_t offsetMinutes)
 {
-	IMEBRA_FUNCTION_START(L"dataHandlerTime::setDate");
+    IMEBRA_FUNCTION_START();
 
     std::string timeString = buildTime(hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes);
 	timeString.resize(13);

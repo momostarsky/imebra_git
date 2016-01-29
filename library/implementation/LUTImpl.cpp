@@ -49,11 +49,11 @@ lut::~lut()
 ///////////////////////////////////////////////////////////
 void lut::setLut(std::shared_ptr<handlers::readingDataHandler> pDescriptor, std::shared_ptr<handlers::readingDataHandler> pData, const std::wstring& description)
 {
-    IMEBRA_FUNCTION_START(L"lut::setLut");
+    IMEBRA_FUNCTION_START();
 
 	if(pDescriptor->getSize() < 3)
 	{
-        IMEBRA_THROW(lutExceptionCorrupted, "The LUT is corrupted");
+        IMEBRA_THROW(LutCorruptedError, "The LUT is corrupted");
 	}
 	std::int32_t lutSize=pDescriptor->getSignedLong(0);
 	if(lutSize == 0)
@@ -66,7 +66,7 @@ void lut::setLut(std::shared_ptr<handlers::readingDataHandler> pDescriptor, std:
 
 	if((size_t)lutSize != pData->getSize())
 	{
-        IMEBRA_THROW(lutExceptionCorrupted, "The LUT is corrupted");
+        IMEBRA_THROW(LutCorruptedError, "The LUT is corrupted");
 	}
 
 	create(lutSize, lutFirstMapped, (std::uint8_t)lutBits, description);
@@ -87,7 +87,7 @@ void lut::setLut(std::shared_ptr<handlers::readingDataHandler> pDescriptor, std:
 ///////////////////////////////////////////////////////////
 void lut::create(std::uint32_t size, std::uint32_t firstMapped, std::uint8_t bits, const std::wstring& description)
 {
-    IMEBRA_FUNCTION_START(L"lut::create");
+    IMEBRA_FUNCTION_START();
 
 	// If some values were previously allocated, then remove
 	//  them
@@ -125,7 +125,7 @@ void lut::create(std::uint32_t size, std::uint32_t firstMapped, std::uint8_t bit
 ///////////////////////////////////////////////////////////
 void lut::fillHandlers(std::shared_ptr<handlers::writingDataHandler> pDescriptor, std::shared_ptr<handlers::writingDataHandler> pData) const
 {
-    IMEBRA_FUNCTION_START(L"lut::fillHandlers");
+    IMEBRA_FUNCTION_START();
 
 	pDescriptor->setSize(3);
     std::uint32_t lutSize = (std::uint32_t)getSize();
@@ -221,11 +221,11 @@ std::uint32_t lut::getFirstMapped() const
 ///////////////////////////////////////////////////////////
 void lut::setLutValue(std::uint32_t startValue, std::int32_t lutValue)
 {
-    IMEBRA_FUNCTION_START(L"lut::setLutValue");
+    IMEBRA_FUNCTION_START();
 
     if(startValue < m_firstMapped)
 	{
-        IMEBRA_THROW(lutExceptionWrongIndex, "The start index is below the first mapped index");
+        IMEBRA_THROW(LutWrongIndexError, "The start index is below the first mapped index");
 	}
     startValue -= m_firstMapped;
     if(startValue < m_size)

@@ -9,6 +9,7 @@ $fileHeader$
 
 #include "exceptionImpl.h"
 #include "dataHandlerDateTimeBaseImpl.h"
+#include "../include/imebra/exceptions.h"
 #include <time.h>
 #include <stdlib.h>
 #include <sstream>
@@ -54,24 +55,9 @@ readingDataHandlerDateTimeBase::readingDataHandlerDateTimeBase(const memory& par
 ///////////////////////////////////////////////////////////
 std::int32_t readingDataHandlerDateTimeBase::getSignedLong(const size_t index) const
 {
-	IMEBRA_FUNCTION_START(L"dataHandlerDateTimeBase::getSignedLong");
+    IMEBRA_FUNCTION_START();
 
-    std::uint32_t year, month, day, hour, minutes, seconds, nanoseconds;
-    std::int32_t offsetHours, offsetMinutes;
-	getDate(index, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
-
-	tm timeStructure;
-	timeStructure.tm_isdst= -1;
-	timeStructure.tm_wday= 0;
-	timeStructure.tm_yday= 0;
-	timeStructure.tm_year = year;
-	timeStructure.tm_mon = month-1;
-	timeStructure.tm_mday = day;
-	timeStructure.tm_hour = hour;
-	timeStructure.tm_min = minutes;
-	timeStructure.tm_sec = seconds;
-	
-	return (std::int32_t)mktime(&timeStructure);
+    return (std::int32_t)getDouble(index);
 
 	IMEBRA_FUNCTION_END();
 }
@@ -88,9 +74,9 @@ std::int32_t readingDataHandlerDateTimeBase::getSignedLong(const size_t index) c
 ///////////////////////////////////////////////////////////
 std::uint32_t readingDataHandlerDateTimeBase::getUnsignedLong(const size_t index) const
 {
-	IMEBRA_FUNCTION_START(L"dataHandlerDateTimeBase::getUnsignedLong");
+    IMEBRA_FUNCTION_START();
 
-	return (std::uint32_t)getSignedLong(index);
+    return (std::uint32_t)getDouble(index);
 
 	IMEBRA_FUNCTION_END();
 }
@@ -100,16 +86,16 @@ std::uint32_t readingDataHandlerDateTimeBase::getUnsignedLong(const size_t index
 ///////////////////////////////////////////////////////////
 //
 //
-// Cast getSignedLong to double
+// Get double
 //
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 double readingDataHandlerDateTimeBase::getDouble(const size_t index) const
 {
-	IMEBRA_FUNCTION_START(L"dataHandlerDateTimeBase::getDouble");
+    IMEBRA_FUNCTION_START();
 
-	return (double)getSignedLong(index);
+    IMEBRA_THROW(DataHandlerDeniedConversionError, "Cannot convert VR "<< getDataType() << " to double");
 
 	IMEBRA_FUNCTION_END();
 }
@@ -131,21 +117,9 @@ writingDataHandlerDateTimeBase::writingDataHandlerDateTimeBase(const std::shared
 ///////////////////////////////////////////////////////////
 void writingDataHandlerDateTimeBase::setSignedLong(const size_t index, const std::int32_t value)
 {
-	IMEBRA_FUNCTION_START(L"dataHandlerDateTimeBase::setSignedLong");
+    IMEBRA_FUNCTION_START();
 
-    tm timeStructure;
-#if defined(IMEBRA_WINDOWS) && !defined(__MINGW32__)
-    localtime_s(&timeStructure, ((time_t*)&value));
-#else
-    localtime_r((time_t*)&value, &timeStructure);
-#endif
-    std::uint32_t year = timeStructure.tm_year;
-    std::uint32_t month = timeStructure.tm_mon + 1;
-    std::uint32_t day = timeStructure.tm_mday;
-    std::uint32_t hour = timeStructure.tm_hour;
-    std::uint32_t minutes = timeStructure.tm_min;
-    std::uint32_t seconds = timeStructure.tm_sec;
-	setDate(index, year, month, day, hour, minutes, seconds, 0, 0, 0);
+    setDouble(index, (double)value);
 
 	IMEBRA_FUNCTION_END();
 }
@@ -162,9 +136,9 @@ void writingDataHandlerDateTimeBase::setSignedLong(const size_t index, const std
 ///////////////////////////////////////////////////////////
 void writingDataHandlerDateTimeBase::setUnsignedLong(const size_t index, const std::uint32_t value)
 {
-	IMEBRA_FUNCTION_START(L"dataHandlerDateTimeBase::setUnsignedLong");
+    IMEBRA_FUNCTION_START();
 
-	setSignedLong(index, (std::int32_t)value);
+    setDouble(index, (double)value);
 
 	IMEBRA_FUNCTION_END();
 }
@@ -181,9 +155,9 @@ void writingDataHandlerDateTimeBase::setUnsignedLong(const size_t index, const s
 ///////////////////////////////////////////////////////////
 void writingDataHandlerDateTimeBase::setDouble(const size_t index, const double value)
 {
-	IMEBRA_FUNCTION_START(L"dataHandlerDateTimeBase::setDouble");
+    IMEBRA_FUNCTION_START();
 
-	setSignedLong(index, (std::int32_t)value);
+    IMEBRA_THROW(DataHandlerDeniedConversionError, "Cannot convert from double to VR "<< getDataType());
 
 	IMEBRA_FUNCTION_END();
 }
@@ -204,11 +178,11 @@ void readingDataHandlerDateTimeBase::parseDate(
         std::uint32_t* pMonth,
         std::uint32_t* pDay) const
 {
-	IMEBRA_FUNCTION_START(L"dataHandlerDateTimeBase::parseDate");
+    IMEBRA_FUNCTION_START();
 
     if(dateString.size() != 8)
     {
-        throw;
+        throw InvalidTagContentError("The date/time string has the wrong size");
     }
 
     std::string dateYear=dateString.substr(0, 4);
@@ -242,7 +216,7 @@ std::string writingDataHandlerDateTimeBase::buildDate(
 		std::uint32_t month,
 		std::uint32_t day) const
 {
-	IMEBRA_FUNCTION_START(L"dataHandlerDateTimeBase::buildDate");
+    IMEBRA_FUNCTION_START();
 
         if((year > 9999) || (month < 1) || (month>12) || (day<1) || (day>31))
 	{
@@ -279,7 +253,7 @@ void readingDataHandlerDateTimeBase::parseTime(
 		std::int32_t* pOffsetHours,
 		std::int32_t* pOffsetMinutes) const
 {
-	IMEBRA_FUNCTION_START(L"dataHandlerDateTimeBase::parseTime");
+    IMEBRA_FUNCTION_START();
 
     std::string fullTimeString(timeString);
 
@@ -356,7 +330,7 @@ std::string writingDataHandlerDateTimeBase::buildTime(
 		std::int32_t offsetMinutes
 		) const
 {
-	IMEBRA_FUNCTION_START(L"dataHandlerDateTimeBase::buildTime");
+    IMEBRA_FUNCTION_START();
 
 	if(
 		   (hour < 0)
@@ -405,7 +379,7 @@ std::string writingDataHandlerDateTimeBase::buildTime(
 ///////////////////////////////////////////////////////////
 void readingDataHandlerDateTimeBase::split(const std::string& timeString, const std::string& separators, std::vector<std::string> *pComponents) const
 {
-	IMEBRA_FUNCTION_START(L"dataHandlerDateTimeBase::split");
+    IMEBRA_FUNCTION_START();
 
     if(timeString.empty())
     {
@@ -444,7 +418,7 @@ void readingDataHandlerDateTimeBase::split(const std::string& timeString, const 
 ///////////////////////////////////////////////////////////
 std::string writingDataHandlerDateTimeBase::padLeft(const std::string& source, const char fillChar, const size_t length) const
 {
-	IMEBRA_FUNCTION_START(L"dataHandlerDateTimeBase::padLeft");
+    IMEBRA_FUNCTION_START();
         
         if(source.size() >= length)
         {

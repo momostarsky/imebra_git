@@ -40,7 +40,7 @@ transformsChain::transformsChain():
 ///////////////////////////////////////////////////////////
 void transformsChain::addTransform(std::shared_ptr<transform> pTransform)
 {
-	IMEBRA_FUNCTION_START(L"transformsChain::addTransform");
+    IMEBRA_FUNCTION_START();
 
         if(pTransform != 0 && !pTransform->isEmpty())
         {

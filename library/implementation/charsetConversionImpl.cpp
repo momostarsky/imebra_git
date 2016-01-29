@@ -10,7 +10,7 @@ namespace implementation
 
 std::string dicomConversion::convertFromUnicode(const std::wstring& unicodeString, charsetsList::tCharsetsList* pCharsets)
 {
-    IMEBRA_FUNCTION_START(L"dicomConversion::convertFromUnicode");
+    IMEBRA_FUNCTION_START();
 
     // Check for the dicom charset's name
     ///////////////////////////////////////////////////////////
@@ -108,7 +108,7 @@ std::string dicomConversion::convertFromUnicode(const std::wstring& unicodeStrin
                     break;
                 }
             }
-            catch(charsetConversionExceptionNoSupportedTable)
+            catch(CharsetConversionNoSupportedTableError)
             {
                 continue;
             }
@@ -123,7 +123,7 @@ std::string dicomConversion::convertFromUnicode(const std::wstring& unicodeStrin
 
 std::wstring dicomConversion::convertToUnicode(const std::string& value, const charsetsList::tCharsetsList& charsets)
 {
-    IMEBRA_FUNCTION_START(L"dicomConversion::convertToUnicode");
+    IMEBRA_FUNCTION_START();
 
     // Should we take care of the escape sequences...?
     ///////////////////////////////////////////////////////////

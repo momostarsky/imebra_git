@@ -63,8 +63,8 @@ public:
 #endif
 
     WritingDataHandler create(
-        const size_t sizeX,
-        const size_t sizeY,
+        const std::uint32_t sizeX,
+        const std::uint32_t sizeY,
 		const bitDepth depth,
         const std::string& colorSpace,
         const std::uint32_t highBit);
@@ -76,8 +76,8 @@ public:
 
 	void setSizeMm(const double sizeX, const double sizeY);
 
-    size_t getSizeX() const;
-    size_t getSizeY() const;
+    std::uint32_t getSizeX() const;
+    std::uint32_t getSizeY() const;
 
     ReadingDataHandler getReadingDataHandler() const;
     WritingDataHandler getWritingDataHandler();

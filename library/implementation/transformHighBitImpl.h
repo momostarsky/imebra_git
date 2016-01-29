@@ -65,7 +65,7 @@ public:
             if(colorTransforms::colorTransformsFactory::normalizeColorSpace(inputHandlerColorSpace) !=
                colorTransforms::colorTransformsFactory::normalizeColorSpace(outputHandlerColorSpace))
             {
-                throw transformHighBitDifferentColorSpaces("The input and output image must have the same color space");
+                throw TransformHighBitDifferentColorSpacesError("The input and output image must have the same color space");
             }
 
             std::uint32_t numChannels(colorTransforms::colorTransformsFactory::getNumberOfChannels(inputHandlerColorSpace));

@@ -54,14 +54,14 @@ modalityVOILUT::modalityVOILUT(std::shared_ptr<const dataSet> pDataSet):
         m_rescaleSlope = rescaleHandler->getDouble(0);
         m_bEmpty = false;
     }
-    catch(const missingDataElement&)
+    catch(const MissingDataElementError&)
     {
         try
         {
             m_voiLut = pDataSet->getLutThrow(0x0028, 0x3000, 0);
             m_bEmpty = m_voiLut->getSize() != 0;
         }
-        catch(const missingDataElement&)
+        catch(const MissingDataElementError&)
         {
             // Nothing to do. Transformis empty
         }

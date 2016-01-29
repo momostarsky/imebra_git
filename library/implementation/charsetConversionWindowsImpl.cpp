@@ -25,7 +25,7 @@ namespace imebra
 ///////////////////////////////////////////////////////////
 charsetConversionWindows::charsetConversionWindows(const std::string& dicomName)
 {
-    IMEBRA_FUNCTION_START(L"charsetConversionWindows::charsetConversionWindows");
+    IMEBRA_FUNCTION_START();
 
     const charsetInformation& info(getDictionary().getCharsetInformation(dicomName));
 
@@ -43,7 +43,7 @@ charsetConversionWindows::charsetConversionWindows(const std::string& dicomName)
 ///////////////////////////////////////////////////////////
 std::string charsetConversionWindows::fromUnicode(const std::wstring& unicodeString) const
 {
-    IMEBRA_FUNCTION_START(L"charsetConversionWindows::fromUnicode");
+    IMEBRA_FUNCTION_START();
 
 	if(unicodeString.empty())
 	{
@@ -75,7 +75,7 @@ std::string charsetConversionWindows::fromUnicode(const std::wstring& unicodeStr
 ///////////////////////////////////////////////////////////
 std::wstring charsetConversionWindows::toUnicode(const std::string& asciiString) const
 {
-    IMEBRA_FUNCTION_START(L"charsetConversionWindows::toUnicode");
+    IMEBRA_FUNCTION_START();
 
 	if(asciiString.empty())
 	{

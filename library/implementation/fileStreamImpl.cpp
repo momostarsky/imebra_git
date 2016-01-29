@@ -47,7 +47,7 @@ namespace implementation
 ///////////////////////////////////////////////////////////
 void fileStream::openFile(const std::wstring& fileName, std::ios_base::openmode mode)
 {
-    IMEBRA_FUNCTION_START(L"stream::openFile (unicode)");
+    IMEBRA_FUNCTION_START();
 
     close();
 
@@ -108,7 +108,7 @@ void fileStream::openFile(const std::wstring& fileName, std::ios_base::openmode 
     {
         std::ostringstream errorMessage;
         errorMessage << "stream::openFile failure - error code: " << errorCode;
-        IMEBRA_THROW(streamExceptionOpen, errorMessage.str());
+        IMEBRA_THROW(StreamOpenError, "stream::openFile failure - error code: " << errorCode);
     }
 
     IMEBRA_FUNCTION_END();
@@ -116,13 +116,13 @@ void fileStream::openFile(const std::wstring& fileName, std::ios_base::openmode 
 
 void fileStream::close()
 {
-    IMEBRA_FUNCTION_START(L"stream::close");
+    IMEBRA_FUNCTION_START();
 
     if(m_openFile != 0)
     {
         if(::fclose(m_openFile) != 0)
         {
-            IMEBRA_THROW(streamExceptionClose, "Error while closing the file");
+            IMEBRA_THROW(StreamCloseError, "Error while closing the file");
         }
         m_openFile = 0;
     }
@@ -163,7 +163,7 @@ fileStream::~fileStream()
 ///////////////////////////////////////////////////////////
 void fileStreamInput::openFile(const std::string& fileName)
 {
-	IMEBRA_FUNCTION_START(L"stream::openFile (ansi)");
+    IMEBRA_FUNCTION_START();
 
 	std::wstring wFileName;
 	size_t fileNameSize(fileName.size());
@@ -179,12 +179,16 @@ void fileStreamInput::openFile(const std::string& fileName)
 
 void fileStreamInput::openFile(const std::wstring& fileName)
 {
+    IMEBRA_FUNCTION_START();
+
     fileStream::openFile(fileName, std::ios::in);
+
+    IMEBRA_FUNCTION_END();
 }
 
 void fileStreamOutput::openFile(const std::string& fileName)
 {
-    IMEBRA_FUNCTION_START(L"stream::openFile (ansi)");
+    IMEBRA_FUNCTION_START();
 
     std::wstring wFileName;
     size_t fileNameSize(fileName.size());
@@ -200,7 +204,11 @@ void fileStreamOutput::openFile(const std::string& fileName)
 
 void fileStreamOutput::openFile(const std::wstring &fileName)
 {
+    IMEBRA_FUNCTION_START();
+
     fileStream::openFile(fileName, std::ios::out);
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -215,17 +223,17 @@ void fileStreamOutput::openFile(const std::wstring &fileName)
 ///////////////////////////////////////////////////////////
 void fileStreamOutput::write(size_t startPosition, const std::uint8_t* pBuffer, size_t bufferLength)
 {
-	IMEBRA_FUNCTION_START(L"stream::write");
+    IMEBRA_FUNCTION_START();
 
 	::fseek(m_openFile, startPosition, SEEK_SET);
 	if(ferror(m_openFile) != 0)
 	{
-        IMEBRA_THROW(streamExceptionWrite, "stream::seek failure");
+        IMEBRA_THROW(StreamWriteError, "stream::seek failure");
 	}
 
 	if(::fwrite(pBuffer, 1, bufferLength, m_openFile) != bufferLength)
 	{
-        IMEBRA_THROW(streamExceptionWrite, "stream::write failure");
+        IMEBRA_THROW(StreamWriteError, "stream::write failure");
 	}
 
 	IMEBRA_FUNCTION_END();
@@ -243,7 +251,7 @@ void fileStreamOutput::write(size_t startPosition, const std::uint8_t* pBuffer, 
 ///////////////////////////////////////////////////////////
 size_t fileStreamInput::read(size_t startPosition, std::uint8_t* pBuffer, size_t bufferLength)
 {
-	IMEBRA_FUNCTION_START(L"stream::read");
+    IMEBRA_FUNCTION_START();
 
 	::fseek(m_openFile, startPosition, SEEK_SET);
 	if(ferror(m_openFile) != 0)
@@ -254,7 +262,7 @@ size_t fileStreamInput::read(size_t startPosition, std::uint8_t* pBuffer, size_t
     size_t readBytes = (size_t)::fread(pBuffer, 1, bufferLength, m_openFile);
 	if(ferror(m_openFile) != 0)
 	{
-        IMEBRA_THROW(streamExceptionRead, "stream::read failure");
+        IMEBRA_THROW(StreamReadError, "stream::read failure");
 	}
 	return readBytes;
 

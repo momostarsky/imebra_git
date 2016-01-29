@@ -65,7 +65,7 @@ codecFactory::codecFactory(): m_maximumImageWidth(MAXIMUM_IMAGE_WIDTH), m_maximu
 ///////////////////////////////////////////////////////////
 void codecFactory::registerCodec(std::shared_ptr<codec> pCodec)
 {
-	IMEBRA_FUNCTION_START(L"codecFactory::registerCodec");
+    IMEBRA_FUNCTION_START();
 
 	if(pCodec == 0)
 	{
@@ -90,7 +90,7 @@ void codecFactory::registerCodec(std::shared_ptr<codec> pCodec)
 ///////////////////////////////////////////////////////////
 std::shared_ptr<codec> codecFactory::getCodec(const std::string& transferSyntax)
 {
-	IMEBRA_FUNCTION_START(L"codecFactory::getCodec");
+    IMEBRA_FUNCTION_START();
 
 	std::shared_ptr<codecFactory> pFactory(getCodecFactory());
 
@@ -102,7 +102,7 @@ std::shared_ptr<codec> codecFactory::getCodec(const std::string& transferSyntax)
 		}
 	}
 
-    IMEBRA_THROW(dataSetExceptionUnknownTransferSyntax, "None of the codecs support the specified transfer syntax");
+    IMEBRA_THROW(DataSetUnknownTransferSyntaxError, "None of the codecs support the specified transfer syntax");
 
 	IMEBRA_FUNCTION_END();
 }
@@ -138,7 +138,7 @@ std::shared_ptr<codecFactory> codecFactory::getCodecFactory()
 ///////////////////////////////////////////////////////////
 std::shared_ptr<dataSet> codecFactory::load(std::shared_ptr<streamReader> pStream, std::uint32_t maxSizeBufferLoad /* = 0xffffffff */)
 {
-	IMEBRA_FUNCTION_START(L"codecFactory::load");
+    IMEBRA_FUNCTION_START();
 
 	// Copy the list of codecs in a local list so we don't have
 	//  to lock the object for a long time
@@ -160,7 +160,7 @@ std::shared_ptr<dataSet> codecFactory::load(std::shared_ptr<streamReader> pStrea
 		{
 			return (*scanCodecs)->read(pStream, maxSizeBufferLoad);
 		}
-        catch(codecExceptionWrongFormat& /* e */)
+        catch(CodecWrongFormatError& /* e */)
 		{
 			exceptionsManager::getMessage(); // Reset the messages stack
 			continue;
@@ -169,7 +169,7 @@ std::shared_ptr<dataSet> codecFactory::load(std::shared_ptr<streamReader> pStrea
 
 	if(pDataSet == 0)
 	{
-        IMEBRA_THROW(codecExceptionWrongFormat, "none of the codecs recognized the file format");
+        IMEBRA_THROW(CodecWrongFormatError, "none of the codecs recognized the file format");
 	}
 
 	return pDataSet;

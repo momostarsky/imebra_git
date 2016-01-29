@@ -3,202 +3,205 @@
 namespace imebra
 {
 
-lutException::lutException(const std::string& message): std::runtime_error(message)
+LutError::LutError(const std::string& message): std::runtime_error(message)
 {}
 
-lutExceptionWrongIndex::lutExceptionWrongIndex(const std::string& message): lutException(message)
+LutWrongIndexError::LutWrongIndexError(const std::string& message): LutError(message)
 {}
 
-lutExceptionCorrupted::lutExceptionCorrupted(const std::string& message): lutException(message)
+LutCorruptedError::LutCorruptedError(const std::string& message): LutError(message)
 {}
 
-missingDataElement::missingDataElement(const std::string& message): std::runtime_error(message)
+MissingDataElementError::MissingDataElementError(const std::string& message): std::runtime_error(message)
 {}
 
-missingGroup::missingGroup(const std::string& message): missingDataElement(message)
+MissingGroupError::MissingGroupError(const std::string& message): MissingDataElementError(message)
 {}
 
-missingTag::missingTag(const std::string& message): missingDataElement(message)
+MissingTagError::MissingTagError(const std::string& message): MissingDataElementError(message)
 {}
 
-missingBuffer::missingBuffer(const std::string& message): missingDataElement(message)
+MissingBufferError::MissingBufferError(const std::string& message): MissingDataElementError(message)
 {}
 
-missingItem::missingItem(const std::string& message): missingDataElement(message)
+MissingItemError::MissingItemError(const std::string& message): MissingDataElementError(message)
 {}
 
-streamException::streamException(const std::string& message): std::runtime_error(message)
+TagContentError::TagContentError(const std::string &message): std::runtime_error(message)
 {}
 
-streamExceptionOpen::streamExceptionOpen(const std::string& message): streamException(message)
+InvalidTagContentError::InvalidTagContentError(const std::string &message): TagContentError(message)
 {}
 
-streamExceptionRead::streamExceptionRead(const std::string& message): streamException(message)
+StreamError::StreamError(const std::string& message): std::runtime_error(message)
 {}
 
-streamExceptionWrite::streamExceptionWrite(const std::string& message): streamException(message)
+StreamOpenError::StreamOpenError(const std::string& message): StreamError(message)
 {}
 
-streamExceptionClose::streamExceptionClose(const std::string& message): streamException(message)
+StreamReadError::StreamReadError(const std::string& message): StreamError(message)
 {}
 
-bufferException::bufferException(const std::string& message): std::runtime_error(message)
+StreamWriteError::StreamWriteError(const std::string& message): StreamError(message)
 {}
 
-bufferExceptionUnknownType::bufferExceptionUnknownType(const std::string& message): bufferException(message)
+StreamCloseError::StreamCloseError(const std::string& message): StreamError(message)
 {}
 
-charsetConversionException::charsetConversionException(const std::string& message): std::runtime_error(message)
+BufferError::BufferError(const std::string& message): std::runtime_error(message)
 {}
 
-charsetConversionExceptionNoTable::charsetConversionExceptionNoTable(const std::string& message): charsetConversionException(message)
+BufferUnknownTypeError::BufferUnknownTypeError(const std::string& message): BufferError(message)
 {}
 
-charsetConversionExceptionNoSupportedTable::charsetConversionExceptionNoSupportedTable(const std::string& message): charsetConversionException(message)
+CharsetConversionError::CharsetConversionError(const std::string& message): std::runtime_error(message)
 {}
 
-charsetConversionExceptionUtfSizeNotSupported::charsetConversionExceptionUtfSizeNotSupported(const std::string& message): charsetConversionException(message)
+CharsetConversionNoTableError::CharsetConversionNoTableError(const std::string& message): CharsetConversionError(message)
 {}
 
-charsetsListException::charsetsListException(const std::string& message): std::runtime_error(message)
+CharsetConversionNoSupportedTableError::CharsetConversionNoSupportedTableError(const std::string& message): CharsetConversionError(message)
 {}
 
-charsetListExceptionDiffDefault::charsetListExceptionDiffDefault(const std::string& message): charsetsListException(message)
+CharsetsListError::CharsetsListError(const std::string& message): std::runtime_error(message)
 {}
 
-codecException::codecException(const std::string& message): std::runtime_error(message)
+CharsetListDiffDefaultError::CharsetListDiffDefaultError(const std::string& message): CharsetsListError(message)
 {}
 
-codecExceptionWrongFormat::codecExceptionWrongFormat(const std::string& message): codecException(message)
+CodecError::CodecError(const std::string& message): std::runtime_error(message)
 {}
 
-codecExceptionCorruptedFile::codecExceptionCorruptedFile(const std::string& message): codecException(message)
+CodecWrongFormatError::CodecWrongFormatError(const std::string& message): CodecError(message)
 {}
 
-codecExceptionWrongTransferSyntax::codecExceptionWrongTransferSyntax(const std::string& message): codecException(message)
+CodecCorruptedFileError::CodecCorruptedFileError(const std::string& message): CodecError(message)
 {}
 
-codecExceptionImageTooBig::codecExceptionImageTooBig(const std::string& message): codecException(message)
+CodecWrongTransferSyntaxError::CodecWrongTransferSyntaxError(const std::string& message): CodecError(message)
 {}
 
-dataHandlerStringUnicodeException::dataHandlerStringUnicodeException(const std::string& message): std::runtime_error(message)
+CodecImageTooBigError::CodecImageTooBigError(const std::string& message): CodecError(message)
 {}
 
-dataHandlerStringUnicodeExceptionUnknownCharset::dataHandlerStringUnicodeExceptionUnknownCharset(const std::string& message): dataHandlerStringUnicodeException(message)
+DataHandlerError::DataHandlerError(const std::string& message): std::runtime_error(message)
 {}
 
-dataSetException::dataSetException(const std::string& message): std::runtime_error(message)
+DataHandlerDeniedConversionError::DataHandlerDeniedConversionError(const std::string &message): DataHandlerError(message)
 {}
 
-dataSetExceptionDifferentFormat::dataSetExceptionDifferentFormat(const std::string& message): dataSetException(message)
+DataHandlerConversionError::DataHandlerConversionError(const std::string &message)
 {}
 
-dataSetExceptionUnknownTransferSyntax::dataSetExceptionUnknownTransferSyntax(const std::string& message): dataSetException(message)
+DataHandlerCorruptedBufferError::DataHandlerCorruptedBufferError(const std::string &message): DataHandlerError(message)
 {}
 
-dataSetExceptionWrongFrame::dataSetExceptionWrongFrame(const std::string& message): dataSetException(message)
+DataSetError::DataSetError(const std::string& message): std::runtime_error(message)
 {}
 
-dataSetExceptionOldFormat::dataSetExceptionOldFormat(const std::string& message): dataSetException(message)
+DataSetDifferentFormatError::DataSetDifferentFormatError(const std::string& message): DataSetError(message)
 {}
 
-dataSetImageDoesntExist::dataSetImageDoesntExist(const std::string& message): dataSetException(message)
+DataSetUnknownTransferSyntaxError::DataSetUnknownTransferSyntaxError(const std::string& message): DataSetError(message)
 {}
 
-dataSetCorruptedOffsetTable::dataSetCorruptedOffsetTable(const std::string& message): dataSetException(message)
+DataSetWrongFrameError::DataSetWrongFrameError(const std::string& message): DataSetError(message)
 {}
 
-dicomDirException::dicomDirException(const std::string& message): std::runtime_error(message)
+DataSetOldFormatError::DataSetOldFormatError(const std::string& message): DataSetError(message)
 {}
 
-dicomDirCircularReferenceException::dicomDirCircularReferenceException(const std::string& message): dicomDirException(message)
+DataSetImageDoesntExistError::DataSetImageDoesntExistError(const std::string& message): DataSetError(message)
 {}
 
-dicomDirUnknownDirectoryRecordType::dicomDirUnknownDirectoryRecordType(const std::string& message): dicomDirException(message)
+DataSetCorruptedOffsetTableError::DataSetCorruptedOffsetTableError(const std::string& message): DataSetError(message)
 {}
 
-drawBitmapException::drawBitmapException(const std::string& message): std::runtime_error(message)
+DicomDirError::DicomDirError(const std::string& message): std::runtime_error(message)
 {}
 
-drawBitmapExceptionInvalidArea::drawBitmapExceptionInvalidArea(const std::string& message): drawBitmapException(message)
+DicomDirCircularReferenceError::DicomDirCircularReferenceError(const std::string& message): DicomDirError(message)
 {}
 
-huffmanException::huffmanException(const std::string& message): std::runtime_error(message)
+DicomDirUnknownDirectoryRecordTypeError::DicomDirUnknownDirectoryRecordTypeError(const std::string& message): DicomDirError(message)
 {}
 
-huffmanExceptionCreateTable::huffmanExceptionCreateTable(const std::string& message): huffmanException(message)
+HuffmanError::HuffmanError(const std::string& message): std::runtime_error(message)
 {}
 
-huffmanExceptionRead::huffmanExceptionRead(const std::string& message): huffmanException(message)
+HuffmanCreateTableError::HuffmanCreateTableError(const std::string& message): HuffmanError(message)
 {}
 
-huffmanExceptionWrite::huffmanExceptionWrite(const std::string& message): huffmanException(message)
+HuffmanReadError::HuffmanReadError(const std::string& message): HuffmanError(message)
 {}
 
-imageException::imageException(const std::string& message): std::runtime_error(message)
+HuffmanWriteError::HuffmanWriteError(const std::string& message): HuffmanError(message)
 {}
 
-imageExceptionUnknownDepth::imageExceptionUnknownDepth(const std::string& message): imageException(message)
+ImageError::ImageError(const std::string& message): std::runtime_error(message)
 {}
 
-imageExceptionUnknownColorSpace::imageExceptionUnknownColorSpace(const std::string& message): imageException(message)
+ImageUnknownDepthError::ImageUnknownDepthError(const std::string& message): ImageError(message)
 {}
 
-imageExceptionInvalidSize::imageExceptionInvalidSize(const std::string& message): imageException(message)
+ImageUnknownColorSpaceError::ImageUnknownColorSpaceError(const std::string& message): ImageError(message)
 {}
 
-transformException::transformException(const std::string& message): std::runtime_error(message)
+ImageInvalidSizeError::ImageInvalidSizeError(const std::string& message): ImageError(message)
 {}
 
-transformExceptionInvalidArea::transformExceptionInvalidArea(const std::string& message): transformException(message)
+TransformError::TransformError(const std::string& message): std::runtime_error(message)
 {}
 
-transformsChainException::transformsChainException(const std::string& what): transformException(what)
+TransformInvalidAreaError::TransformInvalidAreaError(const std::string& message): TransformError(message)
 {}
 
-colorTransformException::colorTransformException(const std::string& message): transformException(message)
+TransformsChainError::TransformsChainError(const std::string& what): TransformError(what)
 {}
 
-colorTransformExceptionWrongColorSpace::colorTransformExceptionWrongColorSpace(const std::string& message): colorTransformException(message)
+ColorTransformError::ColorTransformError(const std::string& message): TransformError(message)
 {}
 
-colorTransformExceptionWrongSize::colorTransformExceptionWrongSize(const std::string& message): colorTransformException(message)
+ColorTransformWrongColorSpaceError::ColorTransformWrongColorSpaceError(const std::string& message): ColorTransformError(message)
 {}
 
-colorTransformsFactoryException::colorTransformsFactoryException(const std::string& message): transformException(message)
+ColorTransformWrongSizeError::ColorTransformWrongSizeError(const std::string& message): ColorTransformError(message)
 {}
 
-colorTransformsFactoryExceptionNoTransform::colorTransformsFactoryExceptionNoTransform(const std::string& message): colorTransformsFactoryException(message)
+ColorTransformsFactoryError::ColorTransformsFactoryError(const std::string& message): TransformError(message)
 {}
 
-transformHighBitException::transformHighBitException(const std::string& message): transformException(message)
+ColorTransformsFactoryNoTransformError::ColorTransformsFactoryNoTransformError(const std::string& message): ColorTransformsFactoryError(message)
 {}
 
-transformHighBitDifferentColorSpaces::transformHighBitDifferentColorSpaces(const std::string& message): transformHighBitException(message)
+TransformHighBitError::TransformHighBitError(const std::string& message): TransformError(message)
 {}
 
-streamExceptionEOF::streamExceptionEOF(const std::string& message): streamException(message)
+TransformHighBitDifferentColorSpacesError::TransformHighBitDifferentColorSpacesError(const std::string& message): TransformHighBitError(message)
 {}
 
-streamJpegTagInStream::streamJpegTagInStream(const std::string& message): streamException(message)
+StreamEOFError::StreamEOFError(const std::string& message): StreamError(message)
 {}
 
-modalityVOILUTException::modalityVOILUTException(const std::string& message): transformException(message)
+StreamJpegTagInStreamError::StreamJpegTagInStreamError(const std::string& message): StreamError(message)
 {}
 
-PALETTECOLORToRGBException::PALETTECOLORToRGBException(const std::string& message): colorTransformException(message)
+ModalityVOILUTError::ModalityVOILUTError(const std::string& message): TransformError(message)
 {}
 
-dicomCodecException::dicomCodecException(const std::string& message): codecException(message)
+PALETTECOLORToRGBError::PALETTECOLORToRGBError(const std::string& message): ColorTransformError(message)
 {}
 
-dicomCodecExceptionDepthLimitReached::dicomCodecExceptionDepthLimitReached(const std::string&message): dicomCodecException(message)
+DicomCodecError::DicomCodecError(const std::string& message): CodecError(message)
 {}
 
-jpegCodecException::jpegCodecException(const std::string& message): codecException(message)
+DicomCodecDepthLimitReachedError::DicomCodecDepthLimitReachedError(const std::string&message): DicomCodecError(message)
 {}
 
-jpegCodecCannotHandleSyntax::jpegCodecCannotHandleSyntax(const std::string& message): jpegCodecException(message)
+JpegCodecError::JpegCodecError(const std::string& message): CodecError(message)
+{}
+
+JpegCodecCannotHandleSyntaxError::JpegCodecCannotHandleSyntaxError(const std::string& message): JpegCodecError(message)
 {}
 
 }

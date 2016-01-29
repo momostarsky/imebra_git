@@ -9,7 +9,7 @@ $fileHeader$
 
 #include <sstream>
 #include <iomanip>
-
+#include "../include/imebra/exceptions.h"
 #include "exceptionImpl.h"
 #include "dataHandlerStringASImpl.h"
 
@@ -61,12 +61,12 @@ readingDataHandlerStringAS::readingDataHandlerStringAS(const memory& parseMemory
 ///////////////////////////////////////////////////////////
 std::uint32_t readingDataHandlerStringAS::getAge(const size_t index, ageUnit_t* pUnit) const
 {
-	IMEBRA_FUNCTION_START(L"dataHandlerStringAS::getAge");
+    IMEBRA_FUNCTION_START();
 
     std::string ageString = getString(index);
     if(ageString.size() != 4)
     {
-        throw;
+        IMEBRA_THROW(DataHandlerCorruptedBufferError, "The AGE string should be 4 bytes long but it is "<< ageString.size() << " bytes long");
     }
     std::istringstream ageStream(ageString);
 	std::uint32_t age;
@@ -78,7 +78,7 @@ std::uint32_t readingDataHandlerStringAS::getAge(const size_t index, ageUnit_t* 
             unit == (char)ageUnit_t::months &&
             unit == (char)ageUnit_t::years)
     {
-        throw;
+        IMEBRA_THROW(DataHandlerCorruptedBufferError, "The AGE unit should be D, W, M or Y but is ascii code "<< (int)unit);
     }
     *pUnit = (ageUnit_t)unit;
     return age;
@@ -98,7 +98,7 @@ std::uint32_t readingDataHandlerStringAS::getAge(const size_t index, ageUnit_t* 
 ///////////////////////////////////////////////////////////
 std::int32_t readingDataHandlerStringAS::getSignedLong(const size_t index) const
 {
-	IMEBRA_FUNCTION_START(L"dataHandlerStringAS::getSignedLong");
+    IMEBRA_FUNCTION_START();
 
 	return (std::int32_t)getDouble(index);
 
@@ -117,7 +117,7 @@ std::int32_t readingDataHandlerStringAS::getSignedLong(const size_t index) const
 ///////////////////////////////////////////////////////////
 std::uint32_t readingDataHandlerStringAS::getUnsignedLong(const size_t index) const
 {
-	IMEBRA_FUNCTION_START(L"dataHandlerStringAS::getUnsignedLong");
+    IMEBRA_FUNCTION_START();
 
 	return (std::int32_t)getDouble(index);
 
@@ -136,28 +136,9 @@ std::uint32_t readingDataHandlerStringAS::getUnsignedLong(const size_t index) co
 ///////////////////////////////////////////////////////////
 double readingDataHandlerStringAS::getDouble(const size_t index) const
 {
-	IMEBRA_FUNCTION_START(L"dataHandlerStringAS::getDouble");
+    IMEBRA_FUNCTION_START();
 
-    ageUnit_t ageUnit;
-	double age = (double)getAge(index, &ageUnit);
-
-    switch (ageUnit)
-    {
-    case ageUnit_t::days:
-        return age / (double)365;
-
-    case ageUnit_t::weeks:
-        return age / 52.14;
-
-    case ageUnit_t::months:
-        return age / (double)12;
-
-    case ageUnit_t::years:
-        return age;
-
-    default:
-        throw;
-    }
+    IMEBRA_THROW(DataHandlerDeniedConversionError, "Cannot convert an Age to a number")
 
 	IMEBRA_FUNCTION_END();
 }
@@ -179,7 +160,7 @@ writingDataHandlerStringAS::writingDataHandlerStringAS(const std::shared_ptr<buf
 ///////////////////////////////////////////////////////////
 void writingDataHandlerStringAS::setAge(const size_t index, const std::uint32_t age, const ageUnit_t unit)
 {
-    IMEBRA_FUNCTION_START(L"dataHandlerStringAS::setAge");
+    IMEBRA_FUNCTION_START();
 
     if(index >= getSize())
     {
@@ -208,7 +189,7 @@ void writingDataHandlerStringAS::setAge(const size_t index, const std::uint32_t 
 ///////////////////////////////////////////////////////////
 void writingDataHandlerStringAS::setSignedLong(const size_t index, const std::int32_t value)
 {
-	IMEBRA_FUNCTION_START(L"dataHandlerStringAS::setSignedLong");
+    IMEBRA_FUNCTION_START();
 
 	setDouble(index, (double)value);
 
@@ -227,7 +208,7 @@ void writingDataHandlerStringAS::setSignedLong(const size_t index, const std::in
 ///////////////////////////////////////////////////////////
 void writingDataHandlerStringAS::setUnsignedLong(const size_t index, const std::uint32_t value)
 {
-	IMEBRA_FUNCTION_START(L"dataHandlerStringAS::setUnsignedLong");
+    IMEBRA_FUNCTION_START();
 
 	setDouble(index, (double)value);
 
@@ -246,28 +227,9 @@ void writingDataHandlerStringAS::setUnsignedLong(const size_t index, const std::
 ///////////////////////////////////////////////////////////
 void writingDataHandlerStringAS::setDouble(const size_t index, const double value)
 {
-	IMEBRA_FUNCTION_START(L"dataHandlerStringAS::setDouble");
+    IMEBRA_FUNCTION_START();
 
-	if(value < 0)
-	{
-        setAge(index, 0, ageUnit_t::days);
-	}
-	if(value < 0.08)
-	{
-        setAge(index, (std::uint32_t)(value * 365), ageUnit_t::days);
-		return;
-	}
-	if(value < 0.5)
-	{
-        setAge(index, (std::uint32_t)(value * 52.14), ageUnit_t::weeks);
-		return;
-	}
-	if(value < 2)
-	{
-        setAge(index, (std::uint32_t)(value * 12), ageUnit_t::months);
-		return;
-	}
-    setAge(index, (std::uint32_t)value, ageUnit_t::years);
+    IMEBRA_THROW(DataHandlerDeniedConversionError, "Cannot convert VR AS to double");
 
 	IMEBRA_FUNCTION_END();
 }

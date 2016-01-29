@@ -39,7 +39,7 @@ namespace handlers
 readingDataHandlerStringUnicode::readingDataHandlerStringUnicode(const memory& parseMemory, const charsetsList::tCharsetsList& charsets, const std::string& dataType, const wchar_t separator, const std::uint8_t paddingByte):
     readingDataHandler(dataType)
 {
-    IMEBRA_FUNCTION_START(L"readingDataHandlerString::readingDataHandlerString");
+    IMEBRA_FUNCTION_START();
 
     std::string asciiString((const char*)parseMemory.data(), parseMemory.size());
     std::wstring parseString(dicomConversion::convertToUnicode(asciiString, charsets));
@@ -77,7 +77,10 @@ std::int32_t readingDataHandlerStringUnicode::getSignedLong(const size_t index) 
 {
     std::wistringstream conversion(m_strings.at(index));
     std::int32_t value;
-    conversion >> value;
+    if(!(conversion >> value))
+    {
+        IMEBRA_THROW(DataHandlerConversionError, "The string is not a number");
+    }
     return value;
 }
 
@@ -87,7 +90,10 @@ std::uint32_t readingDataHandlerStringUnicode::getUnsignedLong(const size_t inde
 {
     std::wistringstream conversion(m_strings.at(index));
     std::uint32_t value;
-    conversion >> value;
+    if(!(conversion >> value))
+    {
+        IMEBRA_THROW(DataHandlerConversionError, "The string is not a number");
+    }
     return value;
 }
 
@@ -97,7 +103,10 @@ double readingDataHandlerStringUnicode::getDouble(const size_t index) const
 {
     std::wistringstream conversion(m_strings.at(index));
     double value;
-    conversion >> value;
+    if(!(conversion >> value))
+    {
+        IMEBRA_THROW(DataHandlerConversionError, "The string is not a number");
+    }
     return value;
 
 }

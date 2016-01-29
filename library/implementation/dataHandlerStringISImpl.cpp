@@ -50,7 +50,7 @@ readingDataHandlerStringIS::readingDataHandlerStringIS(const memory& parseMemory
 ///////////////////////////////////////////////////////////
 double readingDataHandlerStringIS::getDouble(const size_t index) const
 {
-	IMEBRA_FUNCTION_START(L"dataHandlerStringIS::getDouble");
+    IMEBRA_FUNCTION_START();
 
 	return (double)getSignedLong(index);
 
@@ -75,7 +75,7 @@ writingDataHandlerStringIS::writingDataHandlerStringIS(const std::shared_ptr<buf
 ///////////////////////////////////////////////////////////
 void writingDataHandlerStringIS::setDouble(const size_t index, const double value)
 {
-	IMEBRA_FUNCTION_START(L"dataHandlerStringIS::setDouble");
+    IMEBRA_FUNCTION_START();
 
 	setSignedLong(index, (std::int32_t)value);
 

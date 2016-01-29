@@ -44,7 +44,7 @@ TEST(corruptedFilesTest, corruptedFilesTest)
 
         imebra::DataSet dataset = imebra::CodecFactory::load(fullName.str(), 2048);
 
-        ASSERT_THROW(dataset.getImage(0), imebra::codecException);
+        ASSERT_THROW(dataset.getImage(0), imebra::CodecError);
     }
 
 }

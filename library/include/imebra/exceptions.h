@@ -13,10 +13,10 @@ namespace imebra
 ///         by the lut class
 ///
 ///////////////////////////////////////////////////////////
-class IMEBRA_API lutException: public std::runtime_error
+class IMEBRA_API LutError: public std::runtime_error
 {
 public:
-    lutException(const std::string& message);
+    LutError(const std::string& message);
 };
 
 
@@ -26,10 +26,10 @@ public:
 ///         parameter.
 ///
 ///////////////////////////////////////////////////////////
-class IMEBRA_API lutExceptionWrongIndex: public lutException
+class IMEBRA_API LutWrongIndexError: public LutError
 {
 public:
-    lutExceptionWrongIndex(const std::string& message);
+    LutWrongIndexError(const std::string& message);
 };
 
 
@@ -38,42 +38,53 @@ public:
 ///         the the LUT information is corrupted.
 ///
 ///////////////////////////////////////////////////////////
-class IMEBRA_API lutExceptionCorrupted: public lutException
+class IMEBRA_API LutCorruptedError: public LutError
 {
 public:
-    lutExceptionCorrupted(const std::string& message);
+    LutCorruptedError(const std::string& message);
 };
 
-class IMEBRA_API missingDataElement: public std::runtime_error
+class IMEBRA_API MissingDataElementError: public std::runtime_error
 {
 public:
-    missingDataElement(const std::string& message);
+    MissingDataElementError(const std::string& message);
 };
 
-class IMEBRA_API missingGroup: public missingDataElement
+class IMEBRA_API MissingGroupError: public MissingDataElementError
 {
 public:
-    missingGroup(const std::string& message);
+    MissingGroupError(const std::string& message);
 };
 
-class IMEBRA_API missingTag: public missingDataElement
+class IMEBRA_API MissingTagError: public MissingDataElementError
 {
 public:
-    missingTag(const std::string& message);
+    MissingTagError(const std::string& message);
 };
 
-class IMEBRA_API missingBuffer: public missingDataElement
+class IMEBRA_API MissingBufferError: public MissingDataElementError
 {
 public:
-    missingBuffer(const std::string& message);
+    MissingBufferError(const std::string& message);
 };
 
-class IMEBRA_API missingItem: public missingDataElement
+class IMEBRA_API MissingItemError: public MissingDataElementError
 {
 public:
-    missingItem(const std::string& message);
+    MissingItemError(const std::string& message);
 };
 
+class IMEBRA_API TagContentError: public std::runtime_error
+{
+public:
+    TagContentError(const std::string& message);
+};
+
+class IMEBRA_API InvalidTagContentError: public TagContentError
+{
+public:
+    InvalidTagContentError(const std::string& message);
+};
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -82,10 +93,10 @@ public:
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class IMEBRA_API streamException: public std::runtime_error
+class IMEBRA_API StreamError: public std::runtime_error
 {
 public:
-    streamException(const std::string& message);
+    StreamError(const std::string& message);
 };
 
 
@@ -95,10 +106,10 @@ public:
 ///         open.
 ///
 ///////////////////////////////////////////////////////////
-class IMEBRA_API streamExceptionOpen : public streamException
+class IMEBRA_API StreamOpenError : public StreamError
 {
 public:
-    streamExceptionOpen(const std::string& message);
+    StreamOpenError(const std::string& message);
 };
 
 
@@ -109,10 +120,10 @@ public:
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class IMEBRA_API streamExceptionRead : public streamException
+class IMEBRA_API StreamReadError : public StreamError
 {
 public:
-    streamExceptionRead(const std::string& message);
+    StreamReadError(const std::string& message);
 };
 
 
@@ -123,10 +134,10 @@ public:
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class IMEBRA_API streamExceptionWrite : public streamException
+class IMEBRA_API StreamWriteError : public StreamError
 {
 public:
-    streamExceptionWrite(const std::string& message);
+    StreamWriteError(const std::string& message);
 };
 
 
@@ -137,10 +148,10 @@ public:
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class IMEBRA_API streamExceptionClose : public streamException
+class IMEBRA_API StreamCloseError : public StreamError
 {
 public:
-    streamExceptionClose(const std::string& message);
+    StreamCloseError(const std::string& message);
 };
 
 
@@ -150,7 +161,7 @@ public:
 ///         by the buffer class.
 ///
 ///////////////////////////////////////////////////////////
-class IMEBRA_API bufferException: public std::runtime_error
+class IMEBRA_API BufferError: public std::runtime_error
 {
 public:
     /// \brief Build a buffer exception
@@ -158,7 +169,7 @@ public:
     /// @param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////
-    bufferException(const std::string& message);
+    BufferError(const std::string& message);
 };
 
 
@@ -167,7 +178,7 @@ public:
 ///         handler for an unknown data type is asked.
 ///
 ///////////////////////////////////////////////////////////
-class IMEBRA_API bufferExceptionUnknownType: public bufferException
+class IMEBRA_API BufferUnknownTypeError: public BufferError
 {
 public:
     /// \brief Build a wrong data type exception
@@ -175,7 +186,7 @@ public:
     /// @param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////
-    bufferExceptionUnknownType(const std::string& message);
+    BufferUnknownTypeError(const std::string& message);
 };
 
 
@@ -184,10 +195,10 @@ public:
 ///         charsetConversion.
 ///
 ///////////////////////////////////////////////////////////
-class IMEBRA_API charsetConversionException: public std::runtime_error
+class IMEBRA_API CharsetConversionError: public std::runtime_error
 {
 public:
-    charsetConversionException(const std::string& message);
+    CharsetConversionError(const std::string& message);
 };
 
 
@@ -196,10 +207,10 @@ public:
 ///         is not supported by the DICOM standard.
 ///
 ///////////////////////////////////////////////////////////
-class IMEBRA_API charsetConversionExceptionNoTable: public charsetConversionException
+class IMEBRA_API CharsetConversionNoTableError: public CharsetConversionError
 {
 public:
-    charsetConversionExceptionNoTable(const std::string& message);
+    CharsetConversionNoTableError(const std::string& message);
 };
 
 
@@ -208,22 +219,10 @@ public:
 ///         is not supported by the system.
 ///
 ///////////////////////////////////////////////////////////
-class IMEBRA_API charsetConversionExceptionNoSupportedTable: public charsetConversionException
+class IMEBRA_API CharsetConversionNoSupportedTableError: public CharsetConversionError
 {
 public:
-    charsetConversionExceptionNoSupportedTable(const std::string& message);
-};
-
-
-///////////////////////////////////////////////////////////
-/// \brief Exception thrown when the system doesn't have
-///         a supported size for wchar_t
-///
-///////////////////////////////////////////////////////////
-class IMEBRA_API charsetConversionExceptionUtfSizeNotSupported: public charsetConversionException
-{
-public:
-    charsetConversionExceptionUtfSizeNotSupported(const std::string& message);
+    CharsetConversionNoSupportedTableError(const std::string& message);
 };
 
 
@@ -234,10 +233,10 @@ public:
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class IMEBRA_API charsetsListException: public std::runtime_error
+class IMEBRA_API CharsetsListError: public std::runtime_error
 {
 public:
-    charsetsListException(const std::string& message);
+    CharsetsListError(const std::string& message);
 };
 
 
@@ -253,10 +252,10 @@ public:
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class IMEBRA_API charsetListExceptionDiffDefault: public charsetsListException
+class IMEBRA_API CharsetListDiffDefaultError: public CharsetsListError
 {
 public:
-    charsetListExceptionDiffDefault(const std::string& message);
+    CharsetListDiffDefaultError(const std::string& message);
 };
 
 
@@ -265,7 +264,7 @@ public:
 ///         by the codec derived classes.
 ///
 ///////////////////////////////////////////////////////////
-class IMEBRA_API codecException: public std::runtime_error
+class IMEBRA_API CodecError: public std::runtime_error
 {
 public:
     /// \brief Build a codec exception
@@ -273,7 +272,7 @@ public:
     /// @param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////
-    codecException(const std::string& message);
+    CodecError(const std::string& message);
 };
 
 
@@ -282,7 +281,7 @@ public:
 ///         parsed is not valid for the codec.
 ///
 ///////////////////////////////////////////////////////////
-class IMEBRA_API codecExceptionWrongFormat: public codecException
+class IMEBRA_API CodecWrongFormatError: public CodecError
 {
 public:
     /// \brief Build a codecExceptionWrongFormat exception
@@ -290,7 +289,7 @@ public:
     /// @param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////
-    codecExceptionWrongFormat(const std::string& message);
+    CodecWrongFormatError(const std::string& message);
 };
 
 
@@ -299,7 +298,7 @@ public:
 ///         parsed is corrupted.
 ///
 ///////////////////////////////////////////////////////////
-class IMEBRA_API codecExceptionCorruptedFile: public codecException
+class IMEBRA_API CodecCorruptedFileError: public CodecError
 {
 public:
     /// \brief Build a codecExceptionCorruptedFile exception
@@ -307,7 +306,7 @@ public:
     /// @param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////
-    codecExceptionCorruptedFile(const std::string& message);
+    CodecCorruptedFileError(const std::string& message);
 };
 
 
@@ -316,7 +315,7 @@ public:
 ///         syntax is not recognized by the codec.
 ///
 ///////////////////////////////////////////////////////////
-class IMEBRA_API codecExceptionWrongTransferSyntax: public codecException
+class IMEBRA_API CodecWrongTransferSyntaxError: public CodecError
 {
 public:
     /// \brief Build a codecExceptionWrongTransferSyntax
@@ -325,7 +324,7 @@ public:
     /// @param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////
-    codecExceptionWrongTransferSyntax(const std::string& message);
+    CodecWrongTransferSyntaxError(const std::string& message);
 };
 
 
@@ -338,7 +337,7 @@ public:
 ///  to change the allowed maximum image size.
 ///
 ///////////////////////////////////////////////////////////
-class IMEBRA_API codecExceptionImageTooBig: public codecException
+class IMEBRA_API CodecImageTooBigError: public CodecError
 {
 public:
     /// \brief Build a codecExceptionImageTooBig
@@ -347,22 +346,33 @@ public:
     /// @param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////
-    codecExceptionImageTooBig(const std::string& message);
+    CodecImageTooBigError(const std::string& message);
 };
 
 
-class IMEBRA_API dataHandlerStringUnicodeException: public std::runtime_error
+class IMEBRA_API DataHandlerError: public std::runtime_error
 {
 public:
-    dataHandlerStringUnicodeException(const std::string& message);
+    DataHandlerError(const std::string& message);
 };
 
-class IMEBRA_API dataHandlerStringUnicodeExceptionUnknownCharset: public dataHandlerStringUnicodeException
+class IMEBRA_API DataHandlerDeniedConversionError: public DataHandlerError
 {
 public:
-    dataHandlerStringUnicodeExceptionUnknownCharset(const std::string& message);
+    DataHandlerDeniedConversionError(const std::string& message);
 };
 
+class IMEBRA_API DataHandlerConversionError: public DataHandlerError
+{
+public:
+    DataHandlerConversionError(const std::string& message);
+};
+
+class IMEBRA_API DataHandlerCorruptedBufferError: public DataHandlerError
+{
+public:
+    DataHandlerCorruptedBufferError(const std::string& message);
+};
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -371,10 +381,10 @@ public:
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class IMEBRA_API dataSetException: public std::runtime_error
+class IMEBRA_API DataSetError: public std::runtime_error
 {
 public:
-    dataSetException(const std::string& message);
+    DataSetError(const std::string& message);
 };
 
 
@@ -389,10 +399,10 @@ public:
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class IMEBRA_API dataSetExceptionDifferentFormat: public dataSetException
+class IMEBRA_API DataSetDifferentFormatError: public DataSetError
 {
 public:
-    dataSetExceptionDifferentFormat(const std::string& message);
+    DataSetDifferentFormatError(const std::string& message);
 };
 
 
@@ -404,10 +414,10 @@ public:
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class IMEBRA_API dataSetExceptionUnknownTransferSyntax: public dataSetException
+class IMEBRA_API DataSetUnknownTransferSyntaxError: public DataSetError
 {
 public:
-    dataSetExceptionUnknownTransferSyntax(const std::string& message);
+    DataSetUnknownTransferSyntaxError(const std::string& message);
 };
 
 
@@ -422,10 +432,10 @@ public:
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class IMEBRA_API dataSetExceptionWrongFrame: public dataSetException
+class IMEBRA_API DataSetWrongFrameError: public DataSetError
 {
 public:
-    dataSetExceptionWrongFrame(const std::string& message);
+    DataSetWrongFrameError(const std::string& message);
 };
 
 
@@ -440,10 +450,10 @@ public:
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class IMEBRA_API dataSetExceptionOldFormat: public dataSetException
+class IMEBRA_API DataSetOldFormatError: public DataSetError
 {
 public:
-    dataSetExceptionOldFormat(const std::string& message);
+    DataSetOldFormatError(const std::string& message);
 };
 
 ///////////////////////////////////////////////////////////
@@ -453,7 +463,7 @@ public:
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class IMEBRA_API dataSetImageDoesntExist: public dataSetException
+class IMEBRA_API DataSetImageDoesntExistError: public DataSetError
 {
 public:
     /// \brief Build a dataSetImageDoesntExist exception
@@ -461,7 +471,7 @@ public:
     /// @param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////
-    dataSetImageDoesntExist(const std::string& message);
+    DataSetImageDoesntExistError(const std::string& message);
 };
 
 ///////////////////////////////////////////////////////////
@@ -471,7 +481,7 @@ public:
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class IMEBRA_API dataSetCorruptedOffsetTable: public dataSetException
+class IMEBRA_API DataSetCorruptedOffsetTableError: public DataSetError
 {
 public:
     /// \brief Build a dataSetImageDoesntExist exception
@@ -479,7 +489,7 @@ public:
     /// @param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////
-    dataSetCorruptedOffsetTable(const std::string& message);
+    DataSetCorruptedOffsetTableError(const std::string& message);
 };
 
 
@@ -491,7 +501,7 @@ public:
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class IMEBRA_API dicomDirException: public std::runtime_error
+class IMEBRA_API DicomDirError: public std::runtime_error
 {
 public:
     /// \brief Build a dicomDirException exception.
@@ -499,7 +509,7 @@ public:
     /// @param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////
-    dicomDirException(const std::string& message);
+    DicomDirError(const std::string& message);
 };
 
 
@@ -516,7 +526,7 @@ public:
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class IMEBRA_API dicomDirCircularReferenceException: public dicomDirException
+class IMEBRA_API DicomDirCircularReferenceError: public DicomDirError
 {
 public:
     /// \brief Build a dicomDirCircularReferenceException
@@ -525,7 +535,7 @@ public:
     /// @param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////
-    dicomDirCircularReferenceException(const std::string& message);
+    DicomDirCircularReferenceError(const std::string& message);
 };
 
 
@@ -539,7 +549,7 @@ public:
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class IMEBRA_API dicomDirUnknownDirectoryRecordType: public dicomDirException
+class IMEBRA_API DicomDirUnknownDirectoryRecordTypeError: public DicomDirError
 {
 public:
     /// \brief Build a dicomDirUnknownDirectoryRecordType
@@ -548,60 +558,32 @@ public:
     /// @param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////
-    dicomDirUnknownDirectoryRecordType(const std::string& message);
+    DicomDirUnknownDirectoryRecordTypeError(const std::string& message);
 };
 
 
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-/// \brief Base class used for the exceptions thrown by
-///         drawBitmap.
-///
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-class IMEBRA_API drawBitmapException: public std::runtime_error
+class IMEBRA_API HuffmanError: public std::runtime_error
 {
 public:
-    drawBitmapException(const std::string& message);
+    HuffmanError(const std::string& message);
 };
 
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-/// \brief This exception is thrown by
-///         declareBitmapType() if the image's area that
-///         has to be generated is not valid.
-///
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-class IMEBRA_API drawBitmapExceptionInvalidArea: public drawBitmapException
+class IMEBRA_API HuffmanCreateTableError: public HuffmanError
 {
 public:
-    drawBitmapExceptionInvalidArea(const std::string& message);
+    HuffmanCreateTableError(const std::string& message);
 };
 
-
-class IMEBRA_API huffmanException: public std::runtime_error
+class IMEBRA_API HuffmanReadError : public HuffmanError
 {
 public:
-    huffmanException(const std::string& message);
+    HuffmanReadError(const std::string& message);
 };
 
-class IMEBRA_API huffmanExceptionCreateTable: public huffmanException
+class IMEBRA_API HuffmanWriteError : public HuffmanError
 {
 public:
-    huffmanExceptionCreateTable(const std::string& message);
-};
-
-class IMEBRA_API huffmanExceptionRead : public huffmanException
-{
-public:
-    huffmanExceptionRead(const std::string& message);
-};
-
-class IMEBRA_API huffmanExceptionWrite : public huffmanException
-{
-public:
-    huffmanExceptionWrite(const std::string& message);
+    HuffmanWriteError(const std::string& message);
 };
 
 ///////////////////////////////////////////////////////////
@@ -609,7 +591,7 @@ public:
 ///         by the image class.
 ///
 ///////////////////////////////////////////////////////////
-class IMEBRA_API imageException: public std::runtime_error
+class IMEBRA_API ImageError: public std::runtime_error
 {
 public:
     /// \brief Build a codec exception
@@ -617,7 +599,7 @@ public:
     /// @param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////
-    imageException(const std::string& message);
+    ImageError(const std::string& message);
 };
 
 ///////////////////////////////////////////////////////////
@@ -625,10 +607,10 @@ public:
 ///         is specified as a parameter.
 ///
 ///////////////////////////////////////////////////////////
-class IMEBRA_API imageExceptionUnknownDepth: public imageException
+class IMEBRA_API ImageUnknownDepthError: public ImageError
 {
 public:
-    imageExceptionUnknownDepth(const std::string& message);
+    ImageUnknownDepthError(const std::string& message);
 };
 
 ///////////////////////////////////////////////////////////
@@ -636,10 +618,10 @@ public:
 ///         space is specified in the function create().
 ///
 ///////////////////////////////////////////////////////////
-class IMEBRA_API imageExceptionUnknownColorSpace: public imageException
+class IMEBRA_API ImageUnknownColorSpaceError: public ImageError
 {
 public:
-    imageExceptionUnknownColorSpace(const std::string& message);
+    ImageUnknownColorSpaceError(const std::string& message);
 };
 
 ///////////////////////////////////////////////////////////
@@ -648,10 +630,10 @@ public:
 ///         create().
 ///
 ///////////////////////////////////////////////////////////
-class IMEBRA_API imageExceptionInvalidSize: public imageException
+class IMEBRA_API ImageInvalidSizeError: public ImageError
 {
 public:
-    imageExceptionInvalidSize(const std::string& message);
+    ImageInvalidSizeError(const std::string& message);
 };
 
 
@@ -659,7 +641,7 @@ public:
 ///         transforms.
 ///
 ///////////////////////////////////////////////////////////
-class IMEBRA_API transformException: public std::runtime_error
+class IMEBRA_API TransformError: public std::runtime_error
 {
 public:
     /// \brief Constructor.
@@ -667,14 +649,14 @@ public:
     /// @param message the cause of the exception
     ///
     ///////////////////////////////////////////////////////////
-    transformException(const std::string& message);
+    TransformError(const std::string& message);
 };
 
 /// \brief Exception thrown when the image areas to be
 ///         processed are out of bounds.
 ///
 ///////////////////////////////////////////////////////////
-class IMEBRA_API transformExceptionInvalidArea: public transformException
+class IMEBRA_API TransformInvalidAreaError: public TransformError
 {
 public:
     /// \brief Constructor.
@@ -682,31 +664,31 @@ public:
     /// @param message the cause of the exception
     ///
     ///////////////////////////////////////////////////////////
-    transformExceptionInvalidArea(const std::string& message);
+    TransformInvalidAreaError(const std::string& message);
 };
 
-class IMEBRA_API transformsChainException: public transformException
+class IMEBRA_API TransformsChainError: public TransformError
 {
 public:
-    transformsChainException(const std::string& what);
+    TransformsChainError(const std::string& what);
 };
 
-class IMEBRA_API colorTransformException: public transformException
+class IMEBRA_API ColorTransformError: public TransformError
 {
 public:
-    colorTransformException(const std::string& message);
+    ColorTransformError(const std::string& message);
 };
 
-class IMEBRA_API colorTransformExceptionWrongColorSpace: public colorTransformException
+class IMEBRA_API ColorTransformWrongColorSpaceError: public ColorTransformError
 {
 public:
-    colorTransformExceptionWrongColorSpace(const std::string& message);
+    ColorTransformWrongColorSpaceError(const std::string& message);
 };
 
-class IMEBRA_API colorTransformExceptionWrongSize: public colorTransformException
+class IMEBRA_API ColorTransformWrongSizeError: public ColorTransformError
 {
 public:
-    colorTransformExceptionWrongSize(const std::string& message);
+    ColorTransformWrongSizeError(const std::string& message);
 };
 
 ///////////////////////////////////////////////////////////
@@ -714,10 +696,10 @@ public:
 ///         thrown by colorTransformsFactory.
 ///
 ///////////////////////////////////////////////////////////
-class IMEBRA_API colorTransformsFactoryException: public transformException
+class IMEBRA_API ColorTransformsFactoryError: public TransformError
 {
 public:
-    colorTransformsFactoryException(const std::string& message);
+    ColorTransformsFactoryError(const std::string& message);
 };
 
 ///////////////////////////////////////////////////////////
@@ -727,22 +709,22 @@ public:
 ///         the specified color spaces.
 ///
 ///////////////////////////////////////////////////////////
-class IMEBRA_API colorTransformsFactoryExceptionNoTransform: public colorTransformsFactoryException
+class IMEBRA_API ColorTransformsFactoryNoTransformError: public ColorTransformsFactoryError
 {
 public:
-    colorTransformsFactoryExceptionNoTransform(const std::string& message);
+    ColorTransformsFactoryNoTransformError(const std::string& message);
 };
 
-class IMEBRA_API transformHighBitException: public transformException
+class IMEBRA_API TransformHighBitError: public TransformError
 {
 public:
-        transformHighBitException(const std::string& message);
+        TransformHighBitError(const std::string& message);
 };
 
-class IMEBRA_API transformHighBitDifferentColorSpaces: public transformHighBitException
+class IMEBRA_API TransformHighBitDifferentColorSpacesError: public TransformHighBitError
 {
 public:
-    transformHighBitDifferentColorSpaces(const std::string& message);
+    TransformHighBitDifferentColorSpacesError(const std::string& message);
 };
 
 
@@ -750,10 +732,10 @@ public:
 ///         the end of the file is made.
 ///
 ///////////////////////////////////////////////////////////
-class IMEBRA_API streamExceptionEOF : public streamException
+class IMEBRA_API StreamEOFError : public StreamError
 {
 public:
-    streamExceptionEOF(const std::string& message);
+    StreamEOFError(const std::string& message);
 };
 
 /// \addtogroup group_baseclasses
@@ -764,10 +746,10 @@ public:
 ///         wasn't expected.
 ///
 ///////////////////////////////////////////////////////////
-class IMEBRA_API streamJpegTagInStream : public streamException
+class IMEBRA_API StreamJpegTagInStreamError : public StreamError
 {
 public:
-    streamJpegTagInStream(const std::string& message);
+    StreamJpegTagInStreamError(const std::string& message);
 };
 
 ///////////////////////////////////////////////////////////
@@ -778,23 +760,23 @@ public:
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class IMEBRA_API modalityVOILUTException: public transformException
+class IMEBRA_API ModalityVOILUTError: public TransformError
 {
 public:
-    modalityVOILUTException(const std::string& message);
+    ModalityVOILUTError(const std::string& message);
 };
 
-class IMEBRA_API PALETTECOLORToRGBException: public colorTransformException
+class IMEBRA_API PALETTECOLORToRGBError: public ColorTransformError
 {
 public:
-    PALETTECOLORToRGBException(const std::string& message);
+    PALETTECOLORToRGBError(const std::string& message);
 };
 
 /// \brief This is the base class for the exceptions thrown
 ///         by the dicom codec (dicomCodec).
 ///
 ///////////////////////////////////////////////////////////
-class IMEBRA_API dicomCodecException: public codecException
+class IMEBRA_API DicomCodecError: public CodecError
 {
 public:
     /// \brief Build a dicomCodecException exception
@@ -802,7 +784,7 @@ public:
     /// @param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////
-    dicomCodecException(const std::string& message);
+    DicomCodecError(const std::string& message);
 };
 
 /// \brief This exception is thrown when
@@ -810,7 +792,7 @@ public:
 ///         depth for embedded datasets.
 ///
 ///////////////////////////////////////////////////////////
-class IMEBRA_API dicomCodecExceptionDepthLimitReached: public dicomCodecException
+class IMEBRA_API DicomCodecDepthLimitReachedError: public DicomCodecError
 {
 public:
     /// \brief Build a dicomCodecExceptionDepthLimitReached
@@ -819,7 +801,7 @@ public:
     /// @param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////
-    dicomCodecExceptionDepthLimitReached(const std::string&message);
+    DicomCodecDepthLimitReachedError(const std::string&message);
 
 };
 
@@ -827,17 +809,17 @@ public:
 ///        jpeg codec
 ///
 ///////////////////////////////////////////////////////////
-class IMEBRA_API jpegCodecException: public codecException
+class IMEBRA_API JpegCodecError: public CodecError
 {
 public:
-    jpegCodecException(const std::string& message);
+    JpegCodecError(const std::string& message);
 };
 
 /// \brief Exception thrown when the jpeg variant cannot
 ///         be handled.
 ///
 ///////////////////////////////////////////////////////////
-class IMEBRA_API jpegCodecCannotHandleSyntax: public jpegCodecException
+class IMEBRA_API JpegCodecCannotHandleSyntaxError: public JpegCodecError
 {
 public:
     /// \brief Constructs the exception.
@@ -845,7 +827,7 @@ public:
     /// @param message   the cause of the exception
     ///
     ///////////////////////////////////////////////////////////
-    jpegCodecCannotHandleSyntax(const std::string& message);
+    JpegCodecCannotHandleSyntaxError(const std::string& message);
 };
 
 

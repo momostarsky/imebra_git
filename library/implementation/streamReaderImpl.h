@@ -207,7 +207,7 @@ public:
 	///////////////////////////////////////////////////////////
 	inline std::uint32_t readBit()
 	{
-        IMEBRA_FUNCTION_START(L"streamReader::readBit");
+        IMEBRA_FUNCTION_START();
 
         if(m_inBitsNum == 0)
         {
@@ -239,7 +239,7 @@ public:
 	///////////////////////////////////////////////////////////
 	inline void addBit(std::uint32_t* const pBuffer)
 	{
-        IMEBRA_FUNCTION_START(L"streamReader::addBit");
+        IMEBRA_FUNCTION_START();
 
         (*pBuffer) <<= 1;
                 
@@ -302,7 +302,7 @@ public:
 		///////////////////////////////////////////////////////////
         if(m_dataBufferCurrent == m_dataBufferEnd && fillDataBuffer() == 0)
         {
-            throw(streamExceptionEOF("Attempt to read past the end of the file"));
+            throw(StreamEOFError("Attempt to read past the end of the file"));
         }
 
 		// Read one byte. Return immediatly if the tags are not
@@ -316,13 +316,13 @@ public:
         {
             if(++m_dataBufferCurrent == m_dataBufferEnd && fillDataBuffer() == 0)
             {
-                throw(streamExceptionEOF("Attempt to read past the end of the file"));
+                throw(StreamEOFError("Attempt to read past the end of the file"));
             }
         }while(m_dataBuffer[m_dataBufferCurrent] == 0xff);
 
         if(m_dataBuffer[m_dataBufferCurrent++] != 0)
         {
-            throw(streamJpegTagInStream("Corrupted jpeg stream"));
+            throw(StreamJpegTagInStreamError("Corrupted jpeg stream"));
         }
 
         return 0xff;

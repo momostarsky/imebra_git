@@ -61,7 +61,7 @@ memoryStreamOutput::memoryStreamOutput(std::shared_ptr<memory> memoryStream): m_
 ///////////////////////////////////////////////////////////
 void memoryStreamOutput::write(size_t startPosition, const std::uint8_t* pBuffer, size_t bufferLength)
 {
-	IMEBRA_FUNCTION_START(L"memoryStream::write");
+    IMEBRA_FUNCTION_START();
 
 	// Nothing happens if we have nothing to write
 	///////////////////////////////////////////////////////////
@@ -97,7 +97,7 @@ void memoryStreamOutput::write(size_t startPosition, const std::uint8_t* pBuffer
 ///////////////////////////////////////////////////////////
 size_t memoryStreamInput::read(size_t startPosition, std::uint8_t* pBuffer, size_t bufferLength)
 {
-	IMEBRA_FUNCTION_START(L"memoryStream::read");
+    IMEBRA_FUNCTION_START();
 
 	if(bufferLength == 0)
 	{

@@ -347,7 +347,7 @@ static const std::uint32_t JpegDeZigZagOrder[]=
 ///////////////////////////////////////////////////////////
 jpegCodec::jpegCodec()
 {
-    IMEBRA_FUNCTION_START(L"jpegCodec::jpegCodec");
+    IMEBRA_FUNCTION_START();
 
     // Resets the channels list
     ///////////////////////////////////////////////////////////
@@ -433,7 +433,7 @@ jpegCodec::jpegCodec()
 ///////////////////////////////////////////////////////////
 std::shared_ptr<codec> jpegCodec::createCodec()
 {
-    IMEBRA_FUNCTION_START(L"jpegCodec::createCodec");
+    IMEBRA_FUNCTION_START();
 
     return std::shared_ptr<codec>(std::make_shared<jpegCodec>());
 
@@ -452,7 +452,7 @@ std::shared_ptr<codec> jpegCodec::createCodec()
 ///////////////////////////////////////////////////////////
 void jpegCodec::registerTag(tTagId tagId, std::shared_ptr<jpeg::tag> pTag)
 {
-    IMEBRA_FUNCTION_START(L"jpegCodec::registerTag");
+    IMEBRA_FUNCTION_START();
 
     std::shared_ptr<jpeg::tag> test = pTag;
     m_tagsMap[(std::uint8_t)tagId]=pTag;
@@ -472,7 +472,7 @@ void jpegCodec::registerTag(tTagId tagId, std::shared_ptr<jpeg::tag> pTag)
 ///////////////////////////////////////////////////////////
 void jpegCodec::writeStream(std::shared_ptr<streamWriter> pStream, std::shared_ptr<dataSet> pDataSet)
 {
-    IMEBRA_FUNCTION_START(L"jpegCodec::writeStream");
+    IMEBRA_FUNCTION_START();
 
     // Retrieve the transfer syntax
     ///////////////////////////////////////////////////////////
@@ -521,7 +521,7 @@ void jpegCodec::writeStream(std::shared_ptr<streamWriter> pStream, std::shared_p
 ///////////////////////////////////////////////////////////
 void jpegCodec::eraseChannels()
 {
-    IMEBRA_FUNCTION_START(L"jpegCodec::eraseChannels");
+    IMEBRA_FUNCTION_START();
 
     m_channelsMap.clear();
     memset(m_channelsList, 0, sizeof(m_channelsList));
@@ -541,7 +541,7 @@ void jpegCodec::eraseChannels()
 ///////////////////////////////////////////////////////////
 void jpegCodec::resetInternal(bool bCompression, quality compQuality)
 {
-    IMEBRA_FUNCTION_START(L"jpegCodec::resetInternal");
+    IMEBRA_FUNCTION_START();
 
     // Factor used to calculate the quantization tables used
     //  for the compression
@@ -693,7 +693,7 @@ void jpegCodec::resetInternal(bool bCompression, quality compQuality)
 ///////////////////////////////////////////////////////////
 void jpegCodec::allocChannels()
 {
-    IMEBRA_FUNCTION_START(L"jpegCodec::allocChannels");
+    IMEBRA_FUNCTION_START();
 
     m_maxSamplingFactorX=1L;
     m_maxSamplingFactorY=1L;
@@ -757,7 +757,7 @@ void jpegCodec::allocChannels()
 ///////////////////////////////////////////////////////////
 void jpegCodec::findMcuSize()
 {
-    IMEBRA_FUNCTION_START(L"jpegCodec::findMcuSize");
+    IMEBRA_FUNCTION_START();
 
     // Find the maximum sampling factor for all the channels
     ///////////////////////////////////////////////////////////
@@ -848,7 +848,7 @@ void jpegCodec::findMcuSize()
 /////////////////////////////////////////////////////////////////
 void jpegCodec::readStream(std::shared_ptr<streamReader> pSourceStream, std::shared_ptr<dataSet> pDataSet, std::uint32_t /* maxSizeBufferLoad = 0xffffffff */)
 {
-    IMEBRA_FUNCTION_START(L"jpegCodec::readStream");
+    IMEBRA_FUNCTION_START();
 
     streamReader* pStream = pSourceStream.get();
 
@@ -871,9 +871,9 @@ void jpegCodec::readStream(std::shared_ptr<streamReader> pSourceStream, std::sha
         {
             pStream->read(jpegSignature, 2);
         }
-        catch(streamExceptionEOF&)
+        catch(StreamEOFError&)
         {
-            IMEBRA_THROW(codecExceptionWrongFormat, "readStream detected a wrong format");
+            IMEBRA_THROW(CodecWrongFormatError, "readStream detected a wrong format");
         }
 
         // If the jpeg signature is wrong, then return an error
@@ -882,12 +882,12 @@ void jpegCodec::readStream(std::shared_ptr<streamReader> pSourceStream, std::sha
         std::uint8_t checkSignature[2]={(std::uint8_t)0xff, (std::uint8_t)0xd8};
         if(::memcmp(jpegSignature, checkSignature, 2) != 0)
         {
-            IMEBRA_THROW(codecExceptionWrongFormat, "detected a wrong format");
+            IMEBRA_THROW(CodecWrongFormatError, "detected a wrong format");
         }
     }
-    catch(streamExceptionEOF&)
+    catch(StreamEOFError&)
     {
-        IMEBRA_THROW(codecExceptionWrongFormat, "detected a wrong format");
+        IMEBRA_THROW(CodecWrongFormatError, "detected a wrong format");
     }
 
     // Used to read discharged chars
@@ -954,7 +954,7 @@ void jpegCodec::readStream(std::shared_ptr<streamReader> pSourceStream, std::sha
         pDataSet->setUnicodeString(0x0002, 0, 0x0010, 0, 0, L"1.2.840.10008.1.2.4.57");
         break;
     default:
-        throw jpegCodecCannotHandleSyntax("Jpeg SOF not supported");
+        throw JpegCodecCannotHandleSyntaxError("Jpeg SOF not supported");
     }
 
     // Number of planes
@@ -1022,7 +1022,7 @@ void jpegCodec::readStream(std::shared_ptr<streamReader> pSourceStream, std::sha
 /////////////////////////////////////////////////////////////////
 bool jpegCodec::canHandleTransferSyntax(const std::string& transferSyntax) const
 {
-    IMEBRA_FUNCTION_START(L"jpegCodec::canHandleTransferSyntax");
+    IMEBRA_FUNCTION_START();
 
     return (
                 transferSyntax == "1.2.840.10008.1.2.4.50" ||  // baseline (8 bits lossy)
@@ -1046,11 +1046,11 @@ bool jpegCodec::canHandleTransferSyntax(const std::string& transferSyntax) const
 ////////////////////////////////////////////////////////////////
 bool jpegCodec::encapsulated(const std::string& transferSyntax) const
 {
-    IMEBRA_FUNCTION_START(L"jpegCodec::canHandleTransferSyntax");
+    IMEBRA_FUNCTION_START();
 
     if(!canHandleTransferSyntax(transferSyntax))
     {
-        IMEBRA_THROW(codecExceptionWrongTransferSyntax, "Cannot handle the transfer syntax");
+        IMEBRA_THROW(CodecWrongTransferSyntaxError, "Cannot handle the transfer syntax");
     }
     return true;
 
@@ -1069,7 +1069,7 @@ bool jpegCodec::encapsulated(const std::string& transferSyntax) const
 ///////////////////////////////////////////////////////////
 std::uint32_t jpegCodec::suggestAllocatedBits(const std::string& transferSyntax, std::uint32_t highBit) const
 {
-    IMEBRA_FUNCTION_START(L"jpegCodec::suggestAllocatedBits");
+    IMEBRA_FUNCTION_START();
 
     if(transferSyntax == "1.2.840.10008.1.2.4.50")
     {
@@ -1096,7 +1096,7 @@ std::uint32_t jpegCodec::suggestAllocatedBits(const std::string& transferSyntax,
 /////////////////////////////////////////////////////////////////
 std::shared_ptr<image> jpegCodec::getImage(const dataSet& sourceDataSet, std::shared_ptr<streamReader> pStream, const std::string& /* dataType not used */)
 {
-    IMEBRA_FUNCTION_START(L"jpegCodec::getImage");
+    IMEBRA_FUNCTION_START();
 
     streamReader* pSourceStream = pStream.get();
 
@@ -1116,9 +1116,9 @@ std::shared_ptr<image> jpegCodec::getImage(const dataSet& sourceDataSet, std::sh
     {
         pSourceStream->read(jpegSignature, 2);
     }
-    catch(streamExceptionEOF&)
+    catch(StreamEOFError&)
     {
-        IMEBRA_THROW(codecExceptionWrongFormat, "Jpeg signature not present");
+        IMEBRA_THROW(CodecWrongFormatError, "Jpeg signature not present");
     }
 
     // If the jpeg signature is wrong, then return an error
@@ -1127,7 +1127,7 @@ std::shared_ptr<image> jpegCodec::getImage(const dataSet& sourceDataSet, std::sh
     const std::uint8_t checkSignature[2]={(std::uint8_t)0xff, (std::uint8_t)0xd8};
     if(::memcmp(jpegSignature, checkSignature, 2) != 0)
     {
-        IMEBRA_THROW(codecExceptionWrongFormat, "Jpeg signature not valid");
+        IMEBRA_THROW(CodecWrongFormatError, "Jpeg signature not valid");
     }
 
     //
@@ -1187,7 +1187,7 @@ std::shared_ptr<image> jpegCodec::getImage(const dataSet& sourceDataSet, std::sh
 
                 pTag->readTag(pSourceStream, this, tagId);
             }
-            catch(const streamExceptionEOF& e)
+            catch(const StreamEOFError& e)
             {
                 if(m_mcuProcessed == m_mcuNumberTotal && m_mcuNumberTotal != 0)
                 {
@@ -1322,7 +1322,7 @@ std::shared_ptr<image> jpegCodec::getImage(const dataSet& sourceDataSet, std::sh
 ///////////////////////////////////////////////////////////
 void jpegCodec::copyJpegChannelsToImage(std::shared_ptr<image> destImage, bool b2complement, const std::string& colorSpace)
 {
-    IMEBRA_FUNCTION_START(L"jpegCodec::copyJpegChannelsToImage");
+    IMEBRA_FUNCTION_START();
 
     image::bitDepth depth;
     if(b2complement)
@@ -1473,7 +1473,7 @@ void jpegCodec::copyImageToJpegChannels(
         bool bSubSampledX,
         bool bSubSampledY)
 {
-    IMEBRA_FUNCTION_START(L"jpegCodec::copyImageToJpegChannels");
+    IMEBRA_FUNCTION_START();
 
     std::string colorSpace = sourceImage->getColorSpace();
     sourceImage->getSize(&m_imageSizeX, &m_imageSizeY);
@@ -1667,7 +1667,7 @@ void jpegCodec::setImage(
         bool bInterleaved,
         bool b2Complement)
 {
-    IMEBRA_FUNCTION_START(L"jpegCodec::setImage");
+    IMEBRA_FUNCTION_START();
 
     streamWriter* pDestinationStream = pDestStream.get();
 
@@ -1749,7 +1749,7 @@ void jpegCodec::setImage(
 ///////////////////////////////////////////////////////////
 void jpegCodec::writeScan(streamWriter* pDestinationStream, bool bCalcHuffman)
 {
-    IMEBRA_FUNCTION_START(L"jpegCodec::writeScan");
+    IMEBRA_FUNCTION_START();
 
     findMcuSize();
 
@@ -1879,7 +1879,7 @@ void jpegCodec::writeScan(streamWriter* pDestinationStream, bool bCalcHuffman)
 /////////////////////////////////////////////////////////////////
 void jpegCodec::writeTag(streamWriter* pDestinationStream, tTagId tagId)
 {
-    IMEBRA_FUNCTION_START(L"jpegCodec::writeTag");
+    IMEBRA_FUNCTION_START();
 
     std::shared_ptr<jpeg::tag> pTag;
     tTagsMap::iterator findTag = m_tagsMap.find((std::uint8_t)tagId);
@@ -1908,7 +1908,7 @@ void jpegCodec::writeTag(streamWriter* pDestinationStream, tTagId tagId)
 /////////////////////////////////////////////////////////////////
 inline void jpegCodec::readBlock(streamReader* pStream, std::int32_t* pBuffer, jpeg::jpegChannel* pChannel)
 {
-    IMEBRA_FUNCTION_START(L"jpegCodec::readBlock");
+    IMEBRA_FUNCTION_START();
 
     // Scan all the requested spectral values
     /////////////////////////////////////////////////////////////////
@@ -2117,7 +2117,7 @@ inline void jpegCodec::readBlock(streamReader* pStream, std::int32_t* pBuffer, j
 /////////////////////////////////////////////////////////////////
 inline void jpegCodec::writeBlock(streamWriter* pStream, std::int32_t* pBuffer, jpeg::jpegChannel* pChannel, bool bCalcHuffman)
 {
-    IMEBRA_FUNCTION_START(L"jpegCodec::writeBlock");
+    IMEBRA_FUNCTION_START();
 
     if(bCalcHuffman)
     {
@@ -2626,7 +2626,7 @@ void jpegChannel::processUnprocessedAmplitudes()
     std::int32_t missingPixels = (std::int32_t)m_sizeX - (std::int32_t)m_losslessPositionX + (std::int32_t)m_sizeX * ((std::int32_t)m_sizeY - (std::int32_t)m_losslessPositionY - 1);
     if(missingPixels < (std::int32_t)m_unprocessedAmplitudesCount)
     {
-        throw codecExceptionCorruptedFile("Excess data in the lossless jpeg stream");
+        throw CodecCorruptedFileError("Excess data in the lossless jpeg stream");
     }
 
     if(m_unprocessedAmplitudesPredictor == 0)
@@ -2688,7 +2688,7 @@ void jpegChannel::processUnprocessedAmplitudes()
             m_lastDCValue += *(pSource++);
             break;
         default:
-            throw codecExceptionCorruptedFile("Wrong predictor index in lossless jpeg stream");
+            throw CodecCorruptedFileError("Wrong predictor index in lossless jpeg stream");
         }
 
         m_lastDCValue &= m_valuesMask;
@@ -2729,7 +2729,7 @@ void jpegChannel::processUnprocessedAmplitudes()
 ///////////////////////////////////////////////////////////
 void tag::writeLength(streamWriter* pStream, std::uint16_t length)
 {
-    IMEBRA_FUNCTION_START(L"jpeg::tag::writeLength");
+    IMEBRA_FUNCTION_START();
 
     length = (std::uint16_t)(length + sizeof(length));
     pStream->adjustEndian((std::uint8_t*)&length, sizeof(length), streamController::highByteEndian);
@@ -2750,7 +2750,7 @@ void tag::writeLength(streamWriter* pStream, std::uint16_t length)
 ///////////////////////////////////////////////////////////
 std::int32_t tag::readLength(streamReader* pStream)
 {
-    IMEBRA_FUNCTION_START(L"jpeg::tag::readLength");
+    IMEBRA_FUNCTION_START();
 
     std::uint16_t length = 0;
     pStream->read((std::uint8_t*)&length, sizeof(length));
@@ -2789,7 +2789,7 @@ std::int32_t tag::readLength(streamReader* pStream)
 ///////////////////////////////////////////////////////////
 void tagUnknown::writeTag(streamWriter* pStream, jpegCodec* /* pCodec */)
 {
-    IMEBRA_FUNCTION_START(L"jpeg::tagUnknown::writeTag");
+    IMEBRA_FUNCTION_START();
 
     writeLength(pStream, 0);
 
@@ -2808,7 +2808,7 @@ void tagUnknown::writeTag(streamWriter* pStream, jpegCodec* /* pCodec */)
 ///////////////////////////////////////////////////////////
 void tagUnknown::readTag(streamReader* pStream, jpegCodec* /* pCodec */, std::uint8_t /* tagEntry */)
 {
-    IMEBRA_FUNCTION_START(L"jpeg::tagUnknown::readTag");
+    IMEBRA_FUNCTION_START();
 
     std::int32_t tagLength=readLength(pStream);
     pStream->seekRelative(tagLength);
@@ -2842,7 +2842,7 @@ void tagUnknown::readTag(streamReader* pStream, jpegCodec* /* pCodec */, std::ui
 ///////////////////////////////////////////////////////////
 void tagSOF::writeTag(streamWriter* pStream, jpegCodec* pCodec)
 {
-    IMEBRA_FUNCTION_START(L"jpeg::tagSOF::writeTag");
+    IMEBRA_FUNCTION_START();
 
     // Calculate the components number
     ///////////////////////////////////////////////////////////
@@ -2904,7 +2904,7 @@ void tagSOF::writeTag(streamWriter* pStream, jpegCodec* pCodec)
 /////////////////////////////////////////////////////////////////
 void tagSOF::readTag(streamReader* pStream, jpegCodec* pCodec, std::uint8_t tagEntry)
 {
-    IMEBRA_FUNCTION_START(L"jpeg::tagSOF::readTag");
+    IMEBRA_FUNCTION_START();
 
     // tag dedicated stream (throws if we attempt to read past
     //  the tag bytes
@@ -2935,7 +2935,7 @@ void tagSOF::readTag(streamReader* pStream, jpegCodec* pCodec, std::uint8_t tagE
             imageSizeX > codecFactory::getCodecFactory()->getMaximumImageWidth() ||
             imageSizeY > codecFactory::getCodecFactory()->getMaximumImageHeight())
     {
-        IMEBRA_THROW(codecExceptionImageTooBig, "The factory settings prevented the loading of this image. Consider using codecFactory::setMaximumImageSize() to modify the settings");
+        IMEBRA_THROW(CodecImageTooBigError, "The factory settings prevented the loading of this image. Consider using codecFactory::setMaximumImageSize() to modify the settings");
     }
 
     pCodec->m_imageSizeX=(int)imageSizeX;
@@ -2962,7 +2962,7 @@ void tagSOF::readTag(streamReader* pStream, jpegCodec* pCodec, std::uint8_t tagE
         pChannel->m_quantTable = (int)componentQuantTable;
         if(pChannel->m_quantTable >= 16)
         {
-            IMEBRA_THROW(codecExceptionCorruptedFile, "Corrupted quantization table index in SOF tag");
+            IMEBRA_THROW(CodecCorruptedFileError, "Corrupted quantization table index in SOF tag");
         }
         pChannel->m_samplingFactorX = (int)(componentSamplingFactor>>4);
         pChannel->m_samplingFactorY = (int)(componentSamplingFactor & 0x0f);
@@ -2975,7 +2975,7 @@ void tagSOF::readTag(streamReader* pStream, jpegCodec* pCodec, std::uint8_t tagE
                  pChannel->m_samplingFactorY != 4)
                 )
         {
-            IMEBRA_THROW(codecExceptionCorruptedFile, "Wrong sampling factor in SOF tag");
+            IMEBRA_THROW(CodecCorruptedFileError, "Wrong sampling factor in SOF tag");
         }
         pCodec->m_channelsMap[componentId] = pChannel;
     }
@@ -2984,7 +2984,7 @@ void tagSOF::readTag(streamReader* pStream, jpegCodec* pCodec, std::uint8_t tagE
     ///////////////////////////////////////////////////////////
     pCodec->allocChannels();
 
-    IMEBRA_FUNCTION_END_MODIFY(streamExceptionEOF, codecExceptionCorruptedFile);
+    IMEBRA_FUNCTION_END_MODIFY(StreamEOFError, CodecCorruptedFileError);
 }
 
 
@@ -3013,7 +3013,7 @@ void tagSOF::readTag(streamReader* pStream, jpegCodec* pCodec, std::uint8_t tagE
 /////////////////////////////////////////////////////////////////
 void tagDHT::writeTag(streamWriter* pStream, jpegCodec* pCodec)
 {
-    IMEBRA_FUNCTION_START(L"jpeg::tagDHT::writeTag");
+    IMEBRA_FUNCTION_START();
 
     // Used to write bytes into the stream
     /////////////////////////////////////////////////////////////////
@@ -3131,7 +3131,7 @@ void tagDHT::writeTag(streamWriter* pStream, jpegCodec* pCodec)
 /////////////////////////////////////////////////////////////////
 void tagDHT::readTag(streamReader* pStream, jpegCodec* pCodec, std::uint8_t /* tagEntry */)
 {
-    IMEBRA_FUNCTION_START(L"jpeg::tagDHT::readTag");
+    IMEBRA_FUNCTION_START();
 
     // tag dedicated stream (throws if we attempt to read past
     //  the tag bytes)
@@ -3197,12 +3197,12 @@ void tagDHT::readTag(streamReader* pStream, jpegCodec* pCodec, std::uint8_t /* t
             pHuffman->calcHuffmanTables();
         }
     }
-    catch(const huffmanExceptionCreateTable& e)
+    catch(const HuffmanCreateTableError& e)
     {
-        IMEBRA_THROW(codecExceptionCorruptedFile, e.what());
+        IMEBRA_THROW(CodecCorruptedFileError, e.what());
     }
 
-    IMEBRA_FUNCTION_END_MODIFY(streamExceptionEOF, codecExceptionCorruptedFile);
+    IMEBRA_FUNCTION_END_MODIFY(StreamEOFError, CodecCorruptedFileError);
 
 }
 
@@ -3234,7 +3234,7 @@ void tagDHT::readTag(streamReader* pStream, jpegCodec* pCodec, std::uint8_t /* t
 /////////////////////////////////////////////////////////////////
 void tagSOS::writeTag(streamWriter* pStream, jpegCodec* pCodec)
 {
-    IMEBRA_FUNCTION_START(L"jpeg::tagSOS::writeTag");
+    IMEBRA_FUNCTION_START();
 
     // Calculate the components number
     /////////////////////////////////////////////////////////////////
@@ -3318,7 +3318,7 @@ void tagSOS::writeTag(streamWriter* pStream, jpegCodec* pCodec)
 /////////////////////////////////////////////////////////////////
 void tagSOS::readTag(streamReader* pStream, jpegCodec* pCodec, std::uint8_t /* tagEntry */)
 {
-    IMEBRA_FUNCTION_START(L"jpeg::tagSOS::readTag");
+    IMEBRA_FUNCTION_START();
 
     // tag dedicated stream (throws if we attempt to read past
     //  the tag bytes)
@@ -3340,7 +3340,7 @@ void tagSOS::readTag(streamReader* pStream, jpegCodec* pCodec, std::uint8_t /* t
         jpegCodec::tChannelsMap::const_iterator findChannel = pCodec->m_channelsMap.find(byte);
         if(findChannel == pCodec->m_channelsMap.end())
         {
-            IMEBRA_THROW(codecExceptionCorruptedFile, "Corrupted SOS tag found");
+            IMEBRA_THROW(CodecCorruptedFileError, "Corrupted SOS tag found");
         }
         ptrChannel pChannel = findChannel->second;
 
@@ -3371,7 +3371,7 @@ void tagSOS::readTag(streamReader* pStream, jpegCodec* pCodec, std::uint8_t /* t
 
     pCodec->findMcuSize();
 
-    IMEBRA_FUNCTION_END_MODIFY(streamExceptionEOF, codecExceptionCorruptedFile);
+    IMEBRA_FUNCTION_END_MODIFY(StreamEOFError, CodecCorruptedFileError);
 
 }
 
@@ -3402,7 +3402,7 @@ void tagSOS::readTag(streamReader* pStream, jpegCodec* pCodec, std::uint8_t /* t
 /////////////////////////////////////////////////////////////////
 void tagDQT::writeTag(streamWriter* pStream, jpegCodec* pCodec)
 {
-    IMEBRA_FUNCTION_START(L"jpeg::tagDQT::writeTag");
+    IMEBRA_FUNCTION_START();
 
     // Read the tag's length
     /////////////////////////////////////////////////////////////////
@@ -3490,7 +3490,7 @@ void tagDQT::writeTag(streamWriter* pStream, jpegCodec* pCodec)
 /////////////////////////////////////////////////////////////////
 void tagDQT::readTag(streamReader* pStream, jpegCodec* pCodec, std::uint8_t /* tagEntry */)
 {
-    IMEBRA_FUNCTION_START(L"jpeg::tagDQT::readTag");
+    IMEBRA_FUNCTION_START();
 
     // tag dedicated stream (throws if we attempt to read past
     //  the tag bytes)
@@ -3531,7 +3531,7 @@ void tagDQT::readTag(streamReader* pStream, jpegCodec* pCodec, std::uint8_t /* t
         pCodec->recalculateQuantizationTables(tablePrecision & 0x0f);
     }
 
-    IMEBRA_FUNCTION_END_MODIFY(streamExceptionEOF, codecExceptionCorruptedFile);
+    IMEBRA_FUNCTION_END_MODIFY(StreamEOFError, CodecCorruptedFileError);
 
 }
 
@@ -3562,7 +3562,7 @@ void tagDQT::readTag(streamReader* pStream, jpegCodec* pCodec, std::uint8_t /* t
 /////////////////////////////////////////////////////////////////
 void tagDRI::writeTag(streamWriter* pStream, jpegCodec* pCodec)
 {
-    IMEBRA_FUNCTION_START(L"jpeg::tagDRI::writeTag");
+    IMEBRA_FUNCTION_START();
 
     // Write the tag's length
     /////////////////////////////////////////////////////////////////
@@ -3589,7 +3589,7 @@ void tagDRI::writeTag(streamWriter* pStream, jpegCodec* pCodec)
 /////////////////////////////////////////////////////////////////
 void tagDRI::readTag(streamReader* pStream, jpegCodec* pCodec, std::uint8_t /* tagEntry */)
 {
-    IMEBRA_FUNCTION_START(L"jpeg::tagDRI::readTag");
+    IMEBRA_FUNCTION_START();
 
     // tag dedicated stream (throws if we attempt to read past
     //  the tag bytes)
@@ -3602,7 +3602,7 @@ void tagDRI::readTag(streamReader* pStream, jpegCodec* pCodec, std::uint8_t /* t
     tagReader->adjustEndian((std::uint8_t*)&unitsPerRestartInterval, 2, streamController::highByteEndian);
     pCodec->m_mcuPerRestartInterval=unitsPerRestartInterval;
 
-    IMEBRA_FUNCTION_END_MODIFY(streamExceptionEOF, codecExceptionCorruptedFile);
+    IMEBRA_FUNCTION_END_MODIFY(StreamEOFError, CodecCorruptedFileError);
 
 }
 
@@ -3648,7 +3648,7 @@ void tagRST::writeTag(streamWriter* /* pStream */, jpegCodec* /* pCodec */)
 /////////////////////////////////////////////////////////////////
 void tagRST::readTag(streamReader* /* pStream */, jpegCodec* pCodec, std::uint8_t tagEntry)
 {
-    IMEBRA_FUNCTION_START(L"jpeg::tagRST::readTag");
+    IMEBRA_FUNCTION_START();
 
     // Reset the channels last dc value
     /////////////////////////////////////////////////////////////////
@@ -3716,7 +3716,7 @@ void tagRST::readTag(streamReader* /* pStream */, jpegCodec* pCodec, std::uint8_
 /////////////////////////////////////////////////////////////////
 void tagEOI::writeTag(streamWriter* pStream, jpegCodec* /* pCodec */)
 {
-    IMEBRA_FUNCTION_START(L"jpeg::tagEOI::writeTag");
+    IMEBRA_FUNCTION_START();
 
     writeLength(pStream, 0);
 

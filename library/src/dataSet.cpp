@@ -38,19 +38,19 @@ DataSet& DataSet::operator=(const DataSet& right)
 	return *this;
 }
 
-Image DataSet::getImage(std::uint32_t frameNumber)
+Image DataSet::getImage(size_t frameNumber)
 {
     return Image(m_pDataSet->getImage((std::uint32_t)frameNumber));
 }
 
-Image DataSet::getImageApplyModalityTransform(std::uint32_t frameNumber)
+Image DataSet::getImageApplyModalityTransform(size_t frameNumber)
 {
     return Image(m_pDataSet->getModalityImage((std::uint32_t)frameNumber));
 }
 
-void DataSet::setImage(std::uint32_t frameNumber, Image image, const std::string& transferSyntax, imageQuality quality)
+void DataSet::setImage(size_t frameNumber, Image image, const std::string& transferSyntax, imageQuality quality)
 {
-	m_pDataSet->setImage(frameNumber, image.m_pImage, transferSyntax, (imebra::implementation::codecs::codec::quality)quality);
+    m_pDataSet->setImage((std::uint32_t)frameNumber, image.m_pImage, transferSyntax, (imebra::implementation::codecs::codec::quality)quality);
 }
 
 DataSet DataSet::getSequenceItem(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t itemId)
@@ -73,7 +73,7 @@ bool DataSet::bufferExists(std::uint16_t groupId, std::uint16_t order, std::uint
     return m_pDataSet->bufferExists(groupId, order, tagId, bufferId);
 }
 
-std::int32_t DataSet::getSignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
+std::int32_t DataSet::getSignedLongThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
 {
     return m_pDataSet->getSignedLongThrow(groupId, order, tagId, bufferId, elementNumber);
 }
@@ -88,7 +88,7 @@ void DataSet::setSignedLong(std::uint16_t groupId, std::uint16_t order, std::uin
     m_pDataSet->setSignedLong(groupId, order, tagId, bufferId, elementNumber, newValue, defaultType);
 }
 
-std::uint32_t DataSet::getUnsignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
+std::uint32_t DataSet::getUnsignedLongThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
 {
     return m_pDataSet->getUnsignedLongThrow(groupId, order, tagId, bufferId, elementNumber);
 }
@@ -103,7 +103,7 @@ void DataSet::setUnsignedLong(std::uint16_t groupId, std::uint16_t order, std::u
     m_pDataSet->setUnsignedLong(groupId, order, tagId, bufferId, elementNumber, newValue, defaultType);
 }
 
-double DataSet::getDouble(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
+double DataSet::getDoubleThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
 {
     return m_pDataSet->getDoubleThrow(groupId, order, tagId, bufferId, elementNumber);
 }
@@ -118,7 +118,7 @@ void DataSet::setDouble(std::uint16_t groupId, std::uint16_t order, std::uint16_
     m_pDataSet->setDouble(groupId, order, tagId, bufferId, elementNumber, newValue, defaultType);
 }
 
-std::wstring DataSet::getString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
+std::wstring DataSet::getStringThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
 {
     return m_pDataSet->getUnicodeStringThrow(groupId, order, tagId, bufferId, elementNumber);
 }
@@ -138,7 +138,7 @@ void DataSet::setAge(std::uint16_t groupId, std::uint16_t order, std::uint16_t t
     m_pDataSet->setAge(groupId, order, tagId, bufferId, elementNumber, age.age, age.units, defaultType);
 }
 
-Age DataSet::getAge(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
+Age DataSet::getAgeThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
 {
     imebra::ageUnit_t units;
     std::uint32_t age = m_pDataSet->getAgeThrow(groupId, order, tagId, bufferId, elementNumber, &units);
@@ -166,7 +166,7 @@ void DataSet::setDate(std::uint16_t groupId, std::uint16_t order, std::uint16_t 
                         (std::int32_t) date.offsetMinutes, defaultType);
 }
 
-Date DataSet::getDate(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
+Date DataSet::getDateThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
 {
     std::uint32_t year, month, day, hour, minutes, seconds, nanoseconds;
     std::int32_t offsetHours, offsetMinutes;
@@ -208,7 +208,7 @@ Date DataSet::getDate(std::uint16_t groupId, std::uint16_t order, std::uint16_t 
 }
 
 
-size_t DataSet::getRawData(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, char* buffer, size_t bufferSize) const
+size_t DataSet::getRawDataThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, char* buffer, size_t bufferSize) const
 {
     std::shared_ptr<imebra::implementation::handlers::readingDataHandlerRaw> dataHandlerRaw = m_pDataSet->getReadingDataHandlerRawThrow(groupId, order, tagId, bufferId);
     if(dataHandlerRaw->getSize() > bufferSize)
@@ -231,7 +231,7 @@ std::string DataSet::getDefaultDataType(std::uint16_t groupId, std::uint16_t tag
     return m_pDataSet->getDefaultDataType(groupId, tagId);
 }
 
-std::string DataSet::getDataType(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId) const
+std::string DataSet::getDataTypeThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId) const
 {
     return m_pDataSet->getDataTypeThrow(groupId, order, tagId, 0);
 }

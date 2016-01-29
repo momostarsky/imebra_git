@@ -29,6 +29,7 @@ $fileHeader$
 #include "dataHandlerDateImpl.h"
 #include "dataHandlerDateTimeImpl.h"
 #include "dataHandlerTimeImpl.h"
+#include "dicomDictImpl.h"
 #include "../include/imebra/exceptions.h"
 
 #include <vector>
@@ -63,22 +64,19 @@ namespace implementation
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-buffer::buffer(const std::string& defaultType /* ="" */):
+buffer::buffer(const std::string& defaultType):
+    m_bufferType(defaultType),
     m_originalBufferPosition(0),
     m_originalBufferLength(0),
     m_originalWordLength(1),
     m_originalEndianType(streamController::lowByteEndian)
 {
-	IMEBRA_FUNCTION_START(L"buffer::buffer");
+    IMEBRA_FUNCTION_START();
 
-	// Set the buffer's type.
-	// If the buffer's type is unspecified, then the buffer
-	//  type is set to OB
-	///////////////////////////////////////////////////////////
-	if(defaultType.length()==2L)
-		m_bufferType = defaultType;
-	else
-		m_bufferType = "OB";
+    if(!dicomDictionary::getDicomDictionary()->isDataTypeValid(defaultType))
+    {
+        IMEBRA_THROW(BufferUnknownTypeError, "Unknown data type " << defaultType);
+    }
 
 	IMEBRA_FUNCTION_END();
 }
@@ -100,22 +98,19 @@ buffer::buffer(
         size_t bufferLength,
         size_t wordLength,
 		streamController::tByteOrdering endianType):
+        m_bufferType(defaultType),
 		m_originalStream(originalStream),
 		m_originalBufferPosition(bufferPosition),
 		m_originalBufferLength(bufferLength),
 		m_originalWordLength(wordLength),
         m_originalEndianType(endianType)
 {
-	IMEBRA_FUNCTION_START(L"buffer::buffer (on demand)");
+    IMEBRA_FUNCTION_START();
 
-	// Set the buffer's type.
-	// If the buffer's type is unspecified, then the buffer
-	//  type is set to OB
-	///////////////////////////////////////////////////////////
-	if(defaultType.length()==2L)
-		m_bufferType = defaultType;
-	else
-		m_bufferType = "OB";
+    if(!dicomDictionary::getDicomDictionary()->isDataTypeValid(defaultType))
+    {
+        IMEBRA_THROW(BufferUnknownTypeError, "Unknown data type " << defaultType);
+    }
 
 	IMEBRA_FUNCTION_END();
 }
@@ -161,7 +156,7 @@ std::shared_ptr<memory> buffer::getLocalMemory() const
 ///////////////////////////////////////////////////////////
 std::shared_ptr<handlers::readingDataHandler> buffer::getReadingDataHandler() const
 {
-	IMEBRA_FUNCTION_START(L"buffer::getDataHandler");
+    IMEBRA_FUNCTION_START();
 
     std::shared_ptr<const memory> localMemory(getLocalMemory());
 
@@ -348,14 +343,14 @@ std::shared_ptr<handlers::readingDataHandler> buffer::getReadingDataHandler() co
         return std::make_shared<handlers::readingDataHandlerTime>(*localMemory);
     }
 
-    IMEBRA_THROW(bufferExceptionUnknownType, "Unknown data type requested");
+    IMEBRA_THROW(BufferUnknownTypeError, "Unknown data type requested (" << m_bufferType << ")");
 
 	IMEBRA_FUNCTION_END();
 }
 
 std::shared_ptr<handlers::writingDataHandler> buffer::getWritingDataHandler(std::uint32_t size)
 {
-    IMEBRA_FUNCTION_START(L"buffer::getDataHandler");
+    IMEBRA_FUNCTION_START();
 
     // Reset the pointer to the data handler
     ///////////////////////////////////////////////////////////
@@ -544,7 +539,7 @@ std::shared_ptr<handlers::writingDataHandler> buffer::getWritingDataHandler(std:
         return std::make_shared<handlers::writingDataHandlerTime>(shared_from_this());
     }
 
-    IMEBRA_THROW(bufferExceptionUnknownType, "Unknown data type requested");
+    IMEBRA_THROW(BufferUnknownTypeError, "Unknown data type requested");
 
     IMEBRA_FUNCTION_END();
 }
@@ -561,7 +556,7 @@ std::shared_ptr<handlers::writingDataHandler> buffer::getWritingDataHandler(std:
 ///////////////////////////////////////////////////////////
 std::shared_ptr<streamReader> buffer::getStreamReader()
 {
-	IMEBRA_FUNCTION_START(L"buffer::getStreamReader");
+    IMEBRA_FUNCTION_START();
 
 	// If the object must be loaded from the original stream,
 	//  then return the original stream
@@ -596,7 +591,7 @@ std::shared_ptr<streamReader> buffer::getStreamReader()
 ///////////////////////////////////////////////////////////
 std::shared_ptr<streamWriter> buffer::getStreamWriter()
 {
-    IMEBRA_FUNCTION_START(L"buffer::getStreamWriter");
+    IMEBRA_FUNCTION_START();
 
 	// Build a stream from the buffer's memory
 	///////////////////////////////////////////////////////////
@@ -625,13 +620,9 @@ std::shared_ptr<streamWriter> buffer::getStreamWriter()
 ///////////////////////////////////////////////////////////
 std::shared_ptr<handlers::readingDataHandlerRaw> buffer::getReadingDataHandlerRaw() const
 {
-	IMEBRA_FUNCTION_START(L"buffer::getDataHandlerRaw");
+    IMEBRA_FUNCTION_START();
 
-    std::shared_ptr<memory> localMemory(getLocalMemory());
-
-    // Allocate a raw data handler if bRaw==true
-    ///////////////////////////////////////////////////////////
-    return std::make_shared<handlers::readingDataHandlerRaw>(localMemory, m_bufferType);
+    return std::make_shared<handlers::readingDataHandlerRaw>(getLocalMemory(), m_bufferType);
 
 	IMEBRA_FUNCTION_END();
 }
@@ -639,7 +630,7 @@ std::shared_ptr<handlers::readingDataHandlerRaw> buffer::getReadingDataHandlerRa
 
 std::shared_ptr<handlers::writingDataHandlerRaw> buffer::getWritingDataHandlerRaw(std::uint32_t size)
 {
-    IMEBRA_FUNCTION_START(L"buffer::getDataHandlerRaw");
+    IMEBRA_FUNCTION_START();
 
     return std::make_shared<handlers::writingDataHandlerRaw>(shared_from_this(), size, m_bufferType);
 
@@ -685,7 +676,7 @@ size_t buffer::getBufferSizeBytes() const
 ///////////////////////////////////////////////////////////
 void buffer::commit(std::shared_ptr<memory> newMemory, const std::string& newBufferType, const charsetsList::tCharsetsList& newCharsetsList)
 {
-	IMEBRA_FUNCTION_START(L"buffer::commit");
+    IMEBRA_FUNCTION_START();
 
     commit(newMemory, newBufferType);
 
@@ -706,7 +697,7 @@ void buffer::commit(std::shared_ptr<memory> newMemory, const std::string& newBuf
 ///////////////////////////////////////////////////////////
 void buffer::commit(std::shared_ptr<memory> newMemory, const std::string& newBufferType)
 {
-    IMEBRA_FUNCTION_START(L"buffer::commit");
+    IMEBRA_FUNCTION_START();
 
     // Commit the memory buffer
     ///////////////////////////////////////////////////////////
@@ -752,7 +743,7 @@ std::string buffer::getDataType() const
 ///////////////////////////////////////////////////////////
 void buffer::setCharsetsList(const charsetsList::tCharsetsList& charsets)
 {
-	IMEBRA_FUNCTION_START(L"buffer::setCharsetsList");
+    IMEBRA_FUNCTION_START();
 
     m_charsetsList = charsets;
 
@@ -771,7 +762,7 @@ void buffer::setCharsetsList(const charsetsList::tCharsetsList& charsets)
 ///////////////////////////////////////////////////////////
 void buffer::getCharsetsList(charsetsList::tCharsetsList* pCharsetsList) const
 {
-	IMEBRA_FUNCTION_START(L"buffer::getCharsetsList");
+    IMEBRA_FUNCTION_START();
 
     pCharsetsList->insert(pCharsetsList->end(), m_charsetsList.begin(), m_charsetsList.end());
 

@@ -27,7 +27,7 @@ namespace imebra
 ///////////////////////////////////////////////////////////
 charsetConversionIconv::charsetConversionIconv(const std::string& dicomName)
 {
-    IMEBRA_FUNCTION_START(L"charsetConversion::charsetConversionIconv");
+    IMEBRA_FUNCTION_START();
 
     const charsetInformation& info(getDictionary().getCharsetInformation(dicomName));
 
@@ -38,16 +38,14 @@ charsetConversionIconv::charsetConversionIconv(const std::string& dicomName)
     ///////////////////////////////////////////////////////////
     std::uint16_t m_endianCheck=0x00ff;
     const char* utfCode;
-    switch(sizeof(wchar_t))
+    static_assert(sizeof(wchar_t) == 2 || sizeof(wchar_t) == 4, "Unsupported UTF char size");
+    if(sizeof(wchar_t) == 2)
     {
-    case 2:
         utfCode = (*((std::uint8_t*)&m_endianCheck) == 0xff) ? "UTF-16LE" : "UTF-16BE";
-        break;
-    case 4:
+    }
+    else
+    {
         utfCode = (*((std::uint8_t*)&m_endianCheck) == 0xff) ? "UTF-32LE" : "UTF-32BE";
-        break;
-    default:
-        IMEBRA_THROW(charsetConversionExceptionUtfSizeNotSupported, "The system utf size is not supported");
     }
 
     m_iconvToUnicode = iconv_open(utfCode, info.m_isoRegistration.c_str());
@@ -56,7 +54,7 @@ charsetConversionIconv::charsetConversionIconv(const std::string& dicomName)
     {
         std::ostringstream buildErrorString;
         buildErrorString << "Table " << dicomName << " not supported by the system";
-        IMEBRA_THROW(charsetConversionExceptionNoSupportedTable, buildErrorString.str());
+        IMEBRA_THROW(CharsetConversionNoSupportedTableError, buildErrorString.str());
     }
 
     IMEBRA_FUNCTION_END();
@@ -81,7 +79,7 @@ charsetConversionIconv::~charsetConversionIconv()
 ///////////////////////////////////////////////////////////
 std::string charsetConversionIconv::fromUnicode(const std::wstring& unicodeString) const
 {
-    IMEBRA_FUNCTION_START(L"charsetConversionIconv::fromUnicode");
+    IMEBRA_FUNCTION_START();
 
 	if(unicodeString.empty())
 	{
@@ -101,7 +99,7 @@ std::string charsetConversionIconv::fromUnicode(const std::wstring& unicodeStrin
 ///////////////////////////////////////////////////////////
 std::wstring charsetConversionIconv::toUnicode(const std::string& asciiString) const
 {
-    IMEBRA_FUNCTION_START(L"charsetConversionIconv::toUnicode");
+    IMEBRA_FUNCTION_START();
 
 	if(asciiString.empty())
 	{
@@ -128,7 +126,7 @@ std::string charsetConversionIconv::myIconv(iconv_t context, const char* inputSt
 std::string charsetConversionIconv::myIconv(iconv_t context, char* inputString, size_t inputStringLengthBytes) const
 #endif
 {
-	IMEBRA_FUNCTION_START(L"charsetConversion::myIconv");
+    IMEBRA_FUNCTION_START();
 
 	std::string finalString;
 

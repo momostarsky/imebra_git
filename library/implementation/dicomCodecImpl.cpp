@@ -57,7 +57,7 @@ namespace codecs
 ///////////////////////////////////////////////////////////
 std::shared_ptr<codec> dicomCodec::createCodec()
 {
-	IMEBRA_FUNCTION_START(L"dicomCodec::createCodec");
+    IMEBRA_FUNCTION_START();
 
     return std::shared_ptr<codec>(std::make_shared<dicomCodec>());
 
@@ -76,7 +76,7 @@ std::shared_ptr<codec> dicomCodec::createCodec()
 ///////////////////////////////////////////////////////////
 void dicomCodec::writeStream(std::shared_ptr<streamWriter> pStream, std::shared_ptr<dataSet> pDataSet)
 {
-	IMEBRA_FUNCTION_START(L"dicomCodec::writeStream");
+    IMEBRA_FUNCTION_START();
 
 	// Retrieve the transfer syntax
 	///////////////////////////////////////////////////////////
@@ -119,7 +119,7 @@ void dicomCodec::writeStream(std::shared_ptr<streamWriter> pStream, std::shared_
 ///////////////////////////////////////////////////////////
 void dicomCodec::buildStream(std::shared_ptr<streamWriter> pStream, std::shared_ptr<dataSet> pDataSet, bool bExplicitDataType, streamController::tByteOrdering endianType)
 {
-	IMEBRA_FUNCTION_START(L"dicomCodec::buildStream");
+    IMEBRA_FUNCTION_START();
 
     dataSet::tGroupsIds groups = pDataSet->getGroups();
 
@@ -148,7 +148,7 @@ void dicomCodec::buildStream(std::shared_ptr<streamWriter> pStream, std::shared_
 ///////////////////////////////////////////////////////////
 void dicomCodec::writeGroup(std::shared_ptr<streamWriter> pDestStream, const dataSet::tTags& tags, std::uint16_t groupId, bool bExplicitDataType, streamController::tByteOrdering endianType)
 {
-	IMEBRA_FUNCTION_START(L"dicomCodec::writeGroup");
+    IMEBRA_FUNCTION_START();
 
 	if(groupId == 2)
 	{
@@ -213,7 +213,7 @@ void dicomCodec::writeGroup(std::shared_ptr<streamWriter> pDestStream, const dat
 ///////////////////////////////////////////////////////////
 void dicomCodec::writeTag(std::shared_ptr<streamWriter> pDestStream, std::shared_ptr<data> pData, std::uint16_t tagId, bool bExplicitDataType, streamController::tByteOrdering endianType)
 {
-	IMEBRA_FUNCTION_START(L"dicomCodec::writeTag");
+    IMEBRA_FUNCTION_START();
 
 	// Calculate the tag's length
 	///////////////////////////////////////////////////////////
@@ -236,8 +236,8 @@ void dicomCodec::writeTag(std::shared_ptr<streamWriter> pDestStream, std::shared
     std::string dataType = pData->getDataTypeThrow(0);
 	if(!(dicomDictionary::getDicomDictionary()->isDataTypeValid(dataType)))
 	{
-        throw;
-	}
+        IMEBRA_THROW(BufferUnknownTypeError, "Unknown data type " << dataType);
+    }
 
 	// Adjust the tag id endian and write it
 	///////////////////////////////////////////////////////////
@@ -366,7 +366,7 @@ void dicomCodec::writeTag(std::shared_ptr<streamWriter> pDestStream, std::shared
 ///////////////////////////////////////////////////////////
 std::uint32_t dicomCodec::getTagLength(const std::shared_ptr<data>& pData, bool bExplicitDataType, std::uint32_t* pHeaderLength, bool *pbSequence) const
 {
-	IMEBRA_FUNCTION_START(L"dicomCodec::getTagLength");
+    IMEBRA_FUNCTION_START();
 
     std::string dataType = pData->getDataTypeThrow(0);
 	*pbSequence = (dataType == "SQ");
@@ -422,7 +422,7 @@ std::uint32_t dicomCodec::getTagLength(const std::shared_ptr<data>& pData, bool 
 ///////////////////////////////////////////////////////////
 std::uint32_t dicomCodec::getGroupLength(const dataSet::tTags tags, bool bExplicitDataType) const
 {
-	IMEBRA_FUNCTION_START(L"dicomCodec::getGroupLength");
+    IMEBRA_FUNCTION_START();
 
     std::uint32_t totalLength(0);
 
@@ -456,7 +456,7 @@ std::uint32_t dicomCodec::getGroupLength(const dataSet::tTags tags, bool bExplic
 ///////////////////////////////////////////////////////////
 std::uint32_t dicomCodec::getDataSetLength(std::shared_ptr<dataSet> pDataSet, bool bExplicitDataType) const
 {
-	IMEBRA_FUNCTION_START(L"dicomCodec::getDataSetLength");
+    IMEBRA_FUNCTION_START();
 
     dataSet::tGroupsIds groups(pDataSet->getGroups());
 
@@ -496,7 +496,7 @@ std::uint32_t dicomCodec::getDataSetLength(std::shared_ptr<dataSet> pDataSet, bo
 ///////////////////////////////////////////////////////////
 void dicomCodec::readStream(std::shared_ptr<streamReader> pStream, std::shared_ptr<dataSet> pDataSet, std::uint32_t maxSizeBufferLoad /* = 0xffffffff */)
 {
-	IMEBRA_FUNCTION_START(L"dicomCodec::readStream");
+    IMEBRA_FUNCTION_START();
 
 	// Save the starting position
 	///////////////////////////////////////////////////////////
@@ -514,9 +514,9 @@ void dicomCodec::readStream(std::shared_ptr<streamReader> pStream, std::shared_p
 	{
 		pStream->read(oldDicomSignature, 8);
 	}
-    catch(streamExceptionEOF&)
+    catch(StreamEOFError&)
 	{
-        IMEBRA_THROW(codecExceptionWrongFormat, "detected a wrong format");
+        IMEBRA_THROW(CodecWrongFormatError, "detected a wrong format");
 	}
 
 	// Skip the first 128 bytes (8 already skipped)
@@ -546,7 +546,7 @@ void dicomCodec::readStream(std::shared_ptr<streamReader> pStream, std::shared_p
 			oldDicomSignature[1]!=0x0 ||
 			oldDicomSignature[3]!=0x0)
 		{
-            IMEBRA_THROW(codecExceptionWrongFormat, "detected a wrong format (checked old NEMA signature)");
+            IMEBRA_THROW(CodecWrongFormatError, "detected a wrong format (checked old NEMA signature)");
 		}
 
 		// Go back to the beginning of the file
@@ -587,11 +587,11 @@ void dicomCodec::parseStream(std::shared_ptr<streamReader> pStream,
 							 std::uint32_t* pReadSubItemLength /* = 0 */,
 							 std::uint32_t depth)
 {
-	IMEBRA_FUNCTION_START(L"dicomCodec::parseStream");
+    IMEBRA_FUNCTION_START();
 
 	if(depth > IMEBRA_DATASET_MAX_DEPTH)
 	{
-        IMEBRA_THROW(dicomCodecExceptionDepthLimitReached, "Depth for embedded dataset reached");
+        IMEBRA_THROW(DicomCodecDepthLimitReachedError, "Depth for embedded dataset reached");
 	}
 
 	std::uint16_t tagId;
@@ -928,7 +928,7 @@ void dicomCodec::parseStream(std::shared_ptr<streamReader> pStream,
 /////////////////////////////////////////////////////////////////
 std::shared_ptr<image> dicomCodec::getImage(const dataSet& dataset, std::shared_ptr<streamReader> pStream, const std::string& dataType)
 {
-	IMEBRA_FUNCTION_START(L"dicomCodec::getImage");
+    IMEBRA_FUNCTION_START();
 
 	streamReader* pSourceStream = pStream.get();
 
@@ -968,12 +968,12 @@ std::shared_ptr<image> dicomCodec::getImage(const dataSet& dataset, std::shared_
             imageSizeX > codecFactory::getCodecFactory()->getMaximumImageWidth() ||
             imageSizeY > codecFactory::getCodecFactory()->getMaximumImageHeight())
     {
-        IMEBRA_THROW(codecExceptionImageTooBig, "The factory settings prevented the loading of this image. Consider using codecFactory::setMaximumImageSize() to modify the settings");
+        IMEBRA_THROW(CodecImageTooBigError, "The factory settings prevented the loading of this image. Consider using codecFactory::setMaximumImageSize() to modify the settings");
     }
 
     if((imageSizeX == 0) || (imageSizeY == 0))
 	{
-        IMEBRA_THROW(codecExceptionCorruptedFile, "The size tags are not available");
+        IMEBRA_THROW(CodecCorruptedFileError, "The size tags are not available");
 	}
 
 	// Check for interleaved planes.
@@ -1039,7 +1039,7 @@ std::shared_ptr<image> dicomCodec::getImage(const dataSet& dataset, std::shared_
 
 	if(handler == 0 || tempChannelsNumber != channelsNumber)
 	{
-        IMEBRA_THROW(codecExceptionCorruptedFile, "Cannot allocate the image's buffer");
+        IMEBRA_THROW(CodecCorruptedFileError, "Cannot allocate the image's buffer");
 	}
 
 	// Allocate the dicom channels
@@ -1091,7 +1091,7 @@ std::shared_ptr<image> dicomCodec::getImage(const dataSet& dataset, std::shared_
 	{
 		if(bSubSampledX || bSubSampledY)
 		{
-            IMEBRA_THROW(codecExceptionCorruptedFile, "Cannot read subsampled RLE images");
+            IMEBRA_THROW(CodecCorruptedFileError, "Cannot read subsampled RLE images");
 		}
 
 		readRLECompressed(imageSizeX, imageSizeY, channelsNumber, pSourceStream, allocatedBits, mask, bInterleaved);
@@ -1162,7 +1162,7 @@ std::shared_ptr<image> dicomCodec::getImage(const dataSet& dataset, std::shared_
 ///////////////////////////////////////////////////////////
 void dicomCodec::allocChannels(std::uint32_t channelsNumber, std::uint32_t sizeX, std::uint32_t sizeY, bool bSubSampledX, bool bSubSampledY)
 {
-	IMEBRA_FUNCTION_START(L"dicomCodec::allocChannels");
+    IMEBRA_FUNCTION_START();
 
 	if(bSubSampledX && (sizeX & 0x1) != 0)
 	{
@@ -1236,7 +1236,7 @@ void dicomCodec::readUncompressedInterleaved(
 	std::uint32_t mask
 	)
 {
-	IMEBRA_FUNCTION_START(L"dicomCodec::readUncompressedInterleaved");
+    IMEBRA_FUNCTION_START();
 
 	std::uint8_t  bitPointer=0x0;
 
@@ -1336,7 +1336,7 @@ void dicomCodec::writeUncompressedInterleaved(
 	std::uint32_t mask
 	)
 {
-	IMEBRA_FUNCTION_START(L"dicomCodec::writeUncompressedInterleaved");
+    IMEBRA_FUNCTION_START();
 
 	std::uint8_t  bitPointer=0x0;
 
@@ -1420,7 +1420,7 @@ void dicomCodec::readUncompressedNotInterleaved(
 	std::uint32_t mask
 	)
 {
-	IMEBRA_FUNCTION_START(L"dicomCodec::readUncompressedNotInterleaved");
+    IMEBRA_FUNCTION_START();
 
 	std::uint8_t  bitPointer=0x0;
 
@@ -1461,7 +1461,7 @@ void dicomCodec::writeUncompressedNotInterleaved(
 	std::uint32_t mask
 	)
 {
-	IMEBRA_FUNCTION_START(L"dicomCodec::writeUncompressedNotInterleaved");
+    IMEBRA_FUNCTION_START();
 
 	std::uint8_t  bitPointer=0x0;
 
@@ -1499,7 +1499,7 @@ void dicomCodec::writeRLECompressed(
 	std::uint32_t mask
 	)
 {
-	IMEBRA_FUNCTION_START(L"dicomCodec::writeRLECompressed");
+    IMEBRA_FUNCTION_START();
 
 	std::uint32_t segmentsOffset[16];
 	::memset(segmentsOffset, 0, sizeof(segmentsOffset));
@@ -1667,7 +1667,7 @@ void dicomCodec::readRLECompressed(
 	std::uint32_t mask,
 	bool /*bInterleaved*/)
 {
-	IMEBRA_FUNCTION_START(L"dicomCodec::readRLECompressed");
+    IMEBRA_FUNCTION_START();
 
 	// Copy the RLE header into the segmentsOffset array
 	//  and adjust the byte endian to the machine architecture
@@ -1971,7 +1971,7 @@ void dicomCodec::writePixel(
 ///////////////////////////////////////////////////////////
 void dicomCodec::flushUnwrittenPixels(streamWriter* pDestStream, std::uint8_t* pBitPointer, std::uint8_t wordSizeBytes)
 {
-	IMEBRA_FUNCTION_START(L"dicomCodec::flushUnwrittenPixels");
+    IMEBRA_FUNCTION_START();
 
 	if(*pBitPointer == 0)
 	{
@@ -2017,7 +2017,7 @@ void dicomCodec::setImage(
 		bool bInterleaved,
 		bool /*b2Complement*/)
 {
-	IMEBRA_FUNCTION_START(L"dicomCodec::setImage");
+    IMEBRA_FUNCTION_START();
 
 	// First calculate the attributes we want to use.
 	// Return an exception if they are different from the
@@ -2105,7 +2105,7 @@ void dicomCodec::setImage(
 ///////////////////////////////////////////////////////////
 bool dicomCodec::canHandleTransferSyntax(const std::string& transferSyntax) const
 {
-	IMEBRA_FUNCTION_START(L"dicomCodec::canHandleTransferSyntax");
+    IMEBRA_FUNCTION_START();
 
 	return(
         transferSyntax == "1.2.840.10008.1.2" ||      // Implicit VR little endian
@@ -2130,11 +2130,11 @@ bool dicomCodec::canHandleTransferSyntax(const std::string& transferSyntax) cons
 ////////////////////////////////////////////////////////////////
 bool dicomCodec::encapsulated(const std::string& transferSyntax) const
 {
-	IMEBRA_FUNCTION_START(L"jpegCodec::canHandleTransferSyntax");
+    IMEBRA_FUNCTION_START();
 
 	if(!canHandleTransferSyntax(transferSyntax))
 	{
-        IMEBRA_THROW(codecExceptionWrongTransferSyntax, "Cannot handle the transfer syntax");
+        IMEBRA_THROW(CodecWrongTransferSyntaxError, "Cannot handle the transfer syntax");
 	}
     return (transferSyntax == "1.2.840.10008.1.2.5");
 
@@ -2153,7 +2153,7 @@ bool dicomCodec::encapsulated(const std::string& transferSyntax) const
 ///////////////////////////////////////////////////////////
 std::uint32_t dicomCodec::suggestAllocatedBits(const std::string& transferSyntax, std::uint32_t highBit) const
 {
-	IMEBRA_FUNCTION_START(L"dicomCodec::suggestAllocatedBits");
+    IMEBRA_FUNCTION_START();
 
     if(transferSyntax == "1.2.840.10008.1.2.5")
 	{
@@ -2189,7 +2189,7 @@ std::uint32_t dicomCodec::readTag(
 	std::uint32_t maxSizeBufferLoad /* = 0xffffffff */
 	)
 {
-	IMEBRA_FUNCTION_START(L"dicomCodec::readTag");
+    IMEBRA_FUNCTION_START();
 
 	// If the tag's size is bigger than the maximum loadable
 	//  size then just specify in which file it resides
@@ -2203,7 +2203,7 @@ std::uint32_t dicomCodec::readTag(
 
 		if(bufferLength != tagLengthDWord)
 		{
-            IMEBRA_THROW(codecExceptionCorruptedFile, "dicomCodec::readTag detected a corrupted tag");
+            IMEBRA_THROW(CodecCorruptedFileError, "dicomCodec::readTag detected a corrupted tag");
 		}
 
         std::shared_ptr<data> writeData (pDataSet->getTagCreate(tagId, order, tagSubId));

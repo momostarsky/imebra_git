@@ -50,11 +50,11 @@ std::shared_ptr<handlers::writingDataHandlerNumericBase> image::create(
                         const std::string& inputColorSpace,
                         const std::uint32_t highBit)
 {
-	IMEBRA_FUNCTION_START(L"image::create");
+    IMEBRA_FUNCTION_START();
 
 	if(sizeX == 0 || sizeY == 0)
 	{
-        IMEBRA_THROW(imageExceptionInvalidSize, "An invalid image's size has been specified");
+        IMEBRA_THROW(ImageInvalidSizeError, "An invalid image's size has been specified");
 	}
 
 	// Normalize the color space (remove _420 & _422 and
@@ -67,7 +67,7 @@ std::shared_ptr<handlers::writingDataHandlerNumericBase> image::create(
 	m_channelsNumber = transforms::colorTransforms::colorTransformsFactory::getNumberOfChannels(inputColorSpace);
 	if(m_channelsNumber == 0)
 	{
-        IMEBRA_THROW(imageExceptionUnknownColorSpace, "Cannot recognize the specified color space");
+        IMEBRA_THROW(ImageUnknownColorSpaceError, "Cannot recognize the specified color space");
 	}
 
 	// Find the datatype to use to allocate the
@@ -105,7 +105,7 @@ std::shared_ptr<handlers::writingDataHandlerNumericBase> image::create(
 		defaultHighBit=31;
         break;
 	default:
-        IMEBRA_THROW(imageExceptionUnknownDepth, "Unknown depth");
+        IMEBRA_THROW(ImageUnknownDepthError, "Unknown depth");
 	}
 
 	// Adjust the high bit value
@@ -175,7 +175,7 @@ void image::setPalette(std::shared_ptr<palette> imagePalette)
 ///////////////////////////////////////////////////////////
 std::shared_ptr<handlers::readingDataHandlerNumericBase> image::getReadingDataHandler() const
 {
-	IMEBRA_FUNCTION_START(L"image::getDataHandler");
+    IMEBRA_FUNCTION_START();
 
 	if(m_buffer == 0)
 	{
@@ -191,7 +191,7 @@ std::shared_ptr<handlers::readingDataHandlerNumericBase> image::getReadingDataHa
 
 std::shared_ptr<handlers::writingDataHandlerNumericBase> image::getWritingDataHandler()
 {
-    IMEBRA_FUNCTION_START(L"image::getDataHandler");
+    IMEBRA_FUNCTION_START();
 
     if(m_buffer == 0)
     {
@@ -301,7 +301,7 @@ void image::getSize(std::uint32_t* pSizeX, std::uint32_t* pSizeY)
 ///////////////////////////////////////////////////////////
 void image::getSizeMm(double* pSizeMmX, double* pSizeMmY)
 {
-	IMEBRA_FUNCTION_START(L"image::getSizeMm");
+    IMEBRA_FUNCTION_START();
 
 	if(pSizeMmX)
         *pSizeMmX = m_sizeMmX;
@@ -324,7 +324,7 @@ void image::getSizeMm(double* pSizeMmX, double* pSizeMmY)
 ///////////////////////////////////////////////////////////
 void image::setSizeMm(const double sizeMmX, const double sizeMmY)
 {
-	IMEBRA_FUNCTION_START(L"image::setSizeMm");
+    IMEBRA_FUNCTION_START();
 
     m_sizeMmX = sizeMmX;
     m_sizeMmY = sizeMmY;
