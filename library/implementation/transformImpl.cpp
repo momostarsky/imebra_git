@@ -85,16 +85,16 @@ void transformHandlers::runTransform(
 	if(isEmpty())
 	{
         std::shared_ptr<transformHighBit> emptyTransform(std::make_shared<transformHighBit>());
-        emptyTransform->runTransformHandlers(inputHandler, inputImageWidth, inputColorSpace, inputPalette, inputMinValue, inputHighBit,
+        emptyTransform->runTransformHandlers(inputHandler, inputImageWidth, inputColorSpace, inputPalette, inputHighBit,
 											 inputTopLeftX, inputTopLeftY, inputWidth, inputHeight,
-                                             outputHandler, outputImageWidth, outputColorSpace, outputPalette, outputMinValue, outputHighBit,
+                                             outputHandler, outputImageWidth, outputColorSpace, outputPalette, outputHighBit,
 											 outputTopLeftX, outputTopLeftY);
 		return;
 	}
 
-    runTransformHandlers(inputHandler, inputImageWidth, inputColorSpace, inputPalette, inputMinValue, inputHighBit,
+    runTransformHandlers(inputHandler, inputImageWidth, inputColorSpace, inputPalette, inputHighBit,
 		inputTopLeftX, inputTopLeftY, inputWidth, inputHeight,
-        outputHandler, outputImageWidth, outputColorSpace, outputPalette, outputMinValue, outputHighBit,
+        outputHandler, outputImageWidth, outputColorSpace, outputPalette, outputHighBit,
 		outputTopLeftX, outputTopLeftY);
 
     IMEBRA_FUNCTION_END();

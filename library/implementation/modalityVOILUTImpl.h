@@ -74,11 +74,11 @@ public:
                     outputType* outputHandlerData,
                     std::uint32_t inputHandlerWidth, const std::string& inputHandlerColorSpace,
                     std::shared_ptr<palette> /* inputPalette */,
-                    std::int32_t /* inputHandlerMinValue */, std::uint32_t /* inputHighBit */,
+                    std::uint32_t /* inputHighBit */,
                     std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight,
                     std::uint32_t outputHandlerWidth, const std::string& outputHandlerColorSpace,
                     std::shared_ptr<palette> /* outputPalette */,
-                    std::int32_t /* outputHandlerMinValue */, std::uint32_t /* outputHighBit */,
+                    std::uint32_t /* outputHighBit */,
                     std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY)
 	{
         IMEBRA_FUNCTION_START();
@@ -102,7 +102,7 @@ public:
 			{
                 for(std::uint32_t scanPixels(inputWidth); scanPixels != 0; --scanPixels)
 				{
-					*(pOutputMemory++) = (outputType) ( m_voiLut->mappedValue((std::int32_t) *(pInputMemory++)) );
+                    *(pOutputMemory++) = (outputType) ( m_voiLut->mappedValue((std::uint32_t) *(pInputMemory++)) );
 				}
 				pInputMemory += (inputHandlerWidth - inputWidth);
 				pOutputMemory += (outputHandlerWidth - inputWidth);

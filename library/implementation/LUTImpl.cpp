@@ -277,7 +277,7 @@ std::uint8_t lut::getBits() const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::int32_t lut::mappedValue(std::int32_t id) const
+std::int32_t lut::mappedValue(std::uint32_t id) const
 {
 	// The LUT's size is zero, return
 	///////////////////////////////////////////////////////////
@@ -288,13 +288,13 @@ std::int32_t lut::mappedValue(std::int32_t id) const
 
 	// Subtract the first mapped value
 	///////////////////////////////////////////////////////////
-	id -= m_firstMapped;
+    if(m_firstMapped > id)
+    {
+        return m_pMappedValues[0];
+    }
 
-	if(id <= 0)
-	{
-		return m_pMappedValues[0];
-	}
-	if(id < (std::int32_t)m_size)
+    id -= m_firstMapped;
+    if(id < (std::uint32_t)m_size)
 	{
 		return m_pMappedValues[id];
 	}

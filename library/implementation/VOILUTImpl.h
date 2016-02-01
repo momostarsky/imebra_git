@@ -156,7 +156,7 @@ public:
 	/// @param width    the width value of the VOI
 	///
 	///////////////////////////////////////////////////////////
-	void setCenterWidth(std::int32_t center, std::int32_t width);
+    void setCenterWidth(double center, double width);
 
 	/// \brief Returns the VOI width/center used for the
 	///         transformation.
@@ -167,7 +167,7 @@ public:
 	///                  width
 	///
 	///////////////////////////////////////////////////////////
-	void getCenterWidth(std::int32_t* pCenter, std::int32_t* pWidth);
+    void getCenterWidth(double* pCenter, double* pWidth);
 
     /// \brief Finds and apply the optimal VOI values.
     ///
@@ -201,11 +201,11 @@ public:
                     outputType* outputHandlerData,
                     std::uint32_t inputHandlerWidth, const std::string& /* inputHandlerColorSpace */,
 					std::shared_ptr<palette> /* inputPalette */,
-                    std::int32_t inputHandlerMinValue, std::uint32_t inputHighBit,
+                    std::uint32_t inputHighBit,
                     std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight,
                     std::uint32_t outputHandlerWidth, const std::string& /* outputHandlerColorSpace */,
 					std::shared_ptr<palette> /* outputPalette */,
-                    std::int32_t outputHandlerMinValue, std::uint32_t outputHighBit,
+                    std::uint32_t outputHighBit,
                     std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY)
 
 	{
@@ -215,43 +215,24 @@ public:
 		pInputMemory += inputTopLeftY * inputHandlerWidth + inputTopLeftX;
 		pOutputMemory += outputTopLeftY * outputHandlerWidth + outputTopLeftX;
 
+        std::int64_t inputHandlerMinValue = getMinValue<inputType>(inputHighBit);
+        std::int64_t outputHandlerMinValue = getMinValue<outputType>(outputHighBit);
+
 		//
 		// LUT found
 		//
 		///////////////////////////////////////////////////////////
 		if(m_pLUT != 0 && m_pLUT->getSize() != 0)
 		{
-			lut* pLUT = m_pLUT.get();
-            inputHighBit = pLUT->getBits();
-			inputHandlerMinValue = 0;
-
-            if(inputHighBit > outputHighBit)
-			{
-                std::int32_t rightShift = inputHighBit - outputHighBit;
-                for(; inputHeight != 0; --inputHeight)
+            for(; inputHeight != 0; --inputHeight)
+            {
+                for(std::uint32_t scanPixels(inputWidth); scanPixels != 0; --scanPixels)
                 {
-                    for(std::uint32_t scanPixels(inputWidth); scanPixels != 0; --scanPixels)
-                    {
-                        *(pOutputMemory++) = (outputType)( outputHandlerMinValue + (pLUT->mappedValue((std::int32_t) (*(pInputMemory++))) >> rightShift ));
-                    }
-                    pInputMemory += (inputHandlerWidth - inputWidth);
-                    pOutputMemory += (outputHandlerWidth - inputWidth);
+                    *(pOutputMemory++) = (outputType)( outputHandlerMinValue + m_pLUT->mappedValue((std::uint32_t)*pInputMemory++ ));
                 }
+                pInputMemory += (inputHandlerWidth - inputWidth);
+                pOutputMemory += (outputHandlerWidth - inputWidth);
             }
-			else
-			{
-                std::int32_t leftShift = outputHighBit - inputHighBit;
-				for(; inputHeight != 0; --inputHeight)
-				{
-                    for(std::uint32_t scanPixels(inputWidth); scanPixels != 0; --scanPixels)
-					{
-                        *(pOutputMemory++) = (outputType)( outputHandlerMinValue + (pLUT->mappedValue((std::int32_t) (*(pInputMemory++))) << leftShift ));
-					}
-					pInputMemory += (inputHandlerWidth - inputWidth);
-					pOutputMemory += (outputHandlerWidth - inputWidth);
-				}
-			}
-
 			return;
 		}
 
@@ -262,8 +243,8 @@ public:
         ///////////////////////////////////////////////////////////
         std::int64_t inputHandlerNumValues = (std::int64_t)1 << (inputHighBit + 1);
         std::int64_t outputHandlerNumValues = (std::int64_t)1 << (outputHighBit + 1);
-        std::int64_t minValue = (std::int64_t)m_windowCenter- (std::int64_t)(m_windowWidth/2);
-        std::int64_t maxValue = (std::int64_t)m_windowCenter+ (std::int64_t)(m_windowWidth/2);
+        std::int64_t minValue = (std::int64_t)(m_windowCenter - m_windowWidth/2);
+        std::int64_t maxValue = (std::int64_t)(m_windowCenter + m_windowWidth/2);
 		if(m_windowWidth <= 1)
 		{
 			minValue = inputHandlerMinValue ;
@@ -273,7 +254,6 @@ public:
 		{
 			inputHandlerNumValues = maxValue - minValue;
 		}
-
 
         std::int64_t value;
 
@@ -342,13 +322,13 @@ protected:
     template <class inputType>
             void templateFindOptimalVOI(
                     inputType* inputHandlerData, size_t /* inputHandlerSize */, std::uint32_t inputHandlerWidth,
-                    std::int32_t inputTopLeftX, std::int32_t inputTopLeftY, std::int32_t inputWidth, std::int32_t inputHeight)
+                    std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight)
     {
         inputType* pInputMemory(inputHandlerData + inputHandlerWidth * inputTopLeftY + inputTopLeftX);
-        std::int32_t minValue(*pInputMemory);
-        std::int32_t maxValue(minValue);
-        std::int32_t value;
-        for(std::int32_t scanY(inputHeight); scanY != 0; --scanY)
+        inputType minValue(*pInputMemory);
+        inputType maxValue(minValue);
+        inputType value;
+        for(std::uint32_t scanY(inputHeight); scanY != 0; --scanY)
         {
             for(std::uint32_t scanX(inputWidth); scanX != 0; --scanX)
             {
@@ -364,15 +344,15 @@ protected:
             }
             pInputMemory += inputHandlerWidth - inputWidth;
         }
-        std::int32_t center = (maxValue - minValue) / 2 + minValue;
-        std::int32_t width = maxValue - minValue;
+        double center = (std::int32_t)(((std::int64_t)maxValue - (std::int64_t)minValue) / 2 + (std::int64_t)minValue);
+        double width = (std::int64_t)maxValue - (std::int64_t)minValue;
         setCenterWidth(center, width);
     }
 
     std::shared_ptr<dataSet> m_pDataSet;
 	std::shared_ptr<lut> m_pLUT;
-	std::int32_t m_windowCenter;
-    std::int32_t m_windowWidth;
+    double m_windowCenter;
+    double m_windowWidth;
 };
 
 /// @}

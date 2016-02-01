@@ -11,6 +11,7 @@ $fileHeader$
 #include "colorTransformImpl.h"
 #include "colorTransformsFactoryImpl.h"
 #include "imageImpl.h"
+#include "LUTImpl.h"
 #include "../include/imebra/exceptions.h"
 
 namespace imebra
@@ -65,11 +66,26 @@ void colorTransform::checkColorSpaces(const std::string& inputHandlerColorSpace,
 	IMEBRA_FUNCTION_END();
 }
 
+void colorTransform::checkHighBit(std::uint32_t inputHighBit, std::uint32_t outputHighBit)
+{
+    if(inputHighBit != outputHighBit)
+    {
+        IMEBRA_THROW(TransformDifferentHighBitError, "Different high bit (input = " << inputHighBit << ", output = " << outputHighBit << ")");
+    }
+}
+
 
 std::shared_ptr<image> colorTransform::allocateOutputImage(std::shared_ptr<image> pInputImage, std::uint32_t width, std::uint32_t height)
 {
     std::shared_ptr<image> newImage(std::make_shared<image>());
-	newImage->create(width, height, pInputImage->getDepth(), getFinalColorSpace(), pInputImage->getHighBit());
+    std::uint32_t highBit = pInputImage->getHighBit();
+    std::shared_ptr<palette> inputPalette = pInputImage->getPalette();
+    if(inputPalette != 0)
+    {
+        highBit = inputPalette->getRed()->getBits();
+    }
+
+    newImage->create(width, height, pInputImage->getDepth(), getFinalColorSpace(), highBit);
 	return newImage;
 }
 

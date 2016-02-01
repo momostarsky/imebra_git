@@ -166,7 +166,7 @@ public:
 	/// @return the value mapped by the specified id
 	///
 	///////////////////////////////////////////////////////////
-    std::int32_t mappedValue(std::int32_t id) const;
+    std::int32_t mappedValue(std::uint32_t id) const;
 
 	/// \brief Copy the lut's data into an std::int32_t array.
 	///

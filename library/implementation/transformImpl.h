@@ -11,6 +11,7 @@ $fileHeader$
 #define imebraTransform_5DB89BFD_F105_45e7_B9D9_3756AC93C821__INCLUDED_
 
 #include <memory>
+#include <limits>
 #include "dataHandlerNumericImpl.h"
 #include "imageImpl.h"
 
@@ -22,16 +23,16 @@ $fileHeader$
 virtual void runTransformHandlers(\
     std::shared_ptr<imebra::implementation::handlers::readingDataHandlerNumericBase> inputHandler, std::uint32_t inputHandlerWidth, const std::string& inputHandlerColorSpace,\
     std::shared_ptr<imebra::implementation::palette> inputPalette,\
-    std::int32_t inputHandlerMinValue, std::uint32_t inputHighBit,\
+    std::uint32_t inputHighBit,\
     std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight,\
     std::shared_ptr<imebra::implementation::handlers::writingDataHandlerNumericBase> outputHandler, std::uint32_t outputHandlerWidth, const std::string& outputHandlerColorSpace,\
     std::shared_ptr<imebra::implementation::palette> outputPalette,\
-    std::int32_t outputHandlerMinValue, std::uint32_t outputHighBit,\
+    std::uint32_t outputHighBit,\
     std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY)\
 {\
-    runTemplateTransform(*this, inputHandler, outputHandler, inputHandlerWidth, inputHandlerColorSpace, inputPalette, inputHandlerMinValue, inputHighBit,\
+    runTemplateTransform(*this, inputHandler, outputHandler, inputHandlerWidth, inputHandlerColorSpace, inputPalette, inputHighBit,\
             inputTopLeftX, inputTopLeftY, inputWidth, inputHeight,\
-            outputHandlerWidth, outputHandlerColorSpace, outputPalette, outputHandlerMinValue, outputHighBit,\
+            outputHandlerWidth, outputHandlerColorSpace, outputPalette, outputHighBit,\
             outputTopLeftX, outputTopLeftY);\
 }
 
@@ -230,15 +231,29 @@ public:
 	virtual void runTransformHandlers(
             std::shared_ptr<handlers::readingDataHandlerNumericBase> inputHandler, std::uint32_t inputHandlerWidth, const std::string& inputHandlerColorSpace,
             std::shared_ptr<palette> inputPalette,
-            std::int32_t inputHandlerMinValue, std::uint32_t inputHighBit,
+            std::uint32_t inputHighBit,
             std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight,
             std::shared_ptr<handlers::writingDataHandlerNumericBase> outputHandler, std::uint32_t outputHandlerWidth, const std::string& outputHandlerColorSpace,
             std::shared_ptr<palette> outputPalette,
-            std::int32_t outputHandlerMinValue, std::uint32_t outputHighBit,
+            std::uint32_t outputHighBit,
             std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY) = 0;
 
 };
 
+template <typename dataType>
+dataType getMinValue(std::uint32_t highBit)
+{
+    if(
+            std::is_same<dataType, std::uint8_t>::value ||
+            std::is_same<dataType, std::uint16_t>::value ||
+            std::is_same<dataType, std::uint32_t>::value
+            )
+    {
+        return 0;
+    }
+    dataType divide = (dataType)((dataType)1 << (sizeof(dataType) * 8 - highBit - 1));
+    return (dataType)(std::numeric_limits<dataType>::min() / divide);
+}
 
 template <typename transformClass, typename inputType, typename... Args>
 void runTemplateTransform1(

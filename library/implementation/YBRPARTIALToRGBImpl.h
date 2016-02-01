@@ -58,11 +58,11 @@ public:
             outputType* outputHandlerData,
             std::uint32_t inputHandlerWidth, const std::string& inputHandlerColorSpace,
             std::shared_ptr<palette> /* inputPalette */,
-            std::int32_t inputHandlerMinValue, std::uint32_t inputHighBit,
+            std::uint32_t inputHighBit,
             std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight,
             std::uint32_t outputHandlerWidth, const std::string& outputHandlerColorSpace,
             std::shared_ptr<palette> /* outputPalette */,
-            std::int32_t outputHandlerMinValue, std::uint32_t outputHighBit,
+            std::uint32_t outputHighBit,
             std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY)
 
         {
@@ -74,125 +74,67 @@ public:
             pInputMemory += (inputTopLeftY * inputHandlerWidth + inputTopLeftX) * 3;
             pOutputMemory += (outputTopLeftY * outputHandlerWidth + outputTopLeftX) * 3;
 
-            std::int32_t inputMiddleValue(inputHandlerMinValue + ((std::int32_t)1 << inputHighBit));
-            std::int32_t sourceY, sourceB, sourceR, destination;
+            std::int64_t inputHandlerMinValue = getMinValue<inputType>(inputHighBit);
+            std::int64_t outputHandlerMinValue = getMinValue<outputType>(outputHighBit);
 
-            std::int32_t inputHandlerNumValues = (std::int32_t)1 << (inputHighBit + 1);
-            std::int32_t outputHandlerNumValues = (std::int32_t)1 << (outputHighBit + 1);
+            std::int64_t inputMiddleValue(inputHandlerMinValue + ((std::int64_t)1 << inputHighBit));
+            std::int64_t sourceY, sourceB, sourceR, destination;
 
-            if(inputHighBit > outputHighBit)
+            std::int64_t inputHandlerNumValues = (std::int64_t)1 << (inputHighBit + 1);
+            std::int64_t outputHandlerNumValues = (std::int64_t)1 << (outputHighBit + 1);
+
+            for(; inputHeight != 0; --inputHeight)
             {
-                std::uint32_t rightShift = outputHighBit - inputHighBit;
-                for(; inputHeight != 0; --inputHeight)
+                for(std::uint32_t scanPixels(inputWidth); scanPixels != 0; --scanPixels)
                 {
-                    for(std::uint32_t scanPixels(inputWidth); scanPixels != 0; --scanPixels)
+                    sourceY = (std::int64_t)*(pInputMemory++);
+                    sourceB = (std::int64_t)*(pInputMemory++) - inputMiddleValue;
+                    sourceR = (std::int64_t)*(pInputMemory++) - inputMiddleValue;
+
+                    destination = sourceY + ((22970 * sourceR + 8192) / 16384);
+                    if(destination < 0)
                     {
-                        sourceY = (std::int32_t)*(pInputMemory++);
-                        sourceB = (std::int32_t)*(pInputMemory++) - inputMiddleValue;
-                        sourceR = (std::int32_t)*(pInputMemory++) - inputMiddleValue;
-
-                        destination = sourceY + ((22970 * sourceR + 8192) >> 14);
-                        if(destination < 0)
-                        {
-                            *(pOutputMemory++) = (outputType)outputHandlerMinValue;
-                        }
-                        else if (destination >= (std::int32_t)inputHandlerNumValues)
-                        {
-                            *(pOutputMemory++) = (outputType)(outputHandlerMinValue + outputHandlerNumValues - 1);
-                        }
-                        else
-                        {
-                            *(pOutputMemory++) = (outputType)(outputHandlerMinValue + (destination >> rightShift));
-                        }
-
-                        destination = sourceY - ((5638 * sourceB + 11700 * sourceR + 8192) >> 14);
-                        if(destination < 0)
-                        {
-                            *(pOutputMemory++) = (outputType)outputHandlerMinValue;
-                        }
-                        else if (destination >= (std::int32_t)inputHandlerNumValues)
-                        {
-                            *(pOutputMemory++) = (outputType)(outputHandlerMinValue + outputHandlerNumValues - 1);
-                        }
-                        else
-                        {
-                            *(pOutputMemory++) = (outputType)(outputHandlerMinValue + (destination >> rightShift));
-                        }
-
-                        destination = sourceY + ((29032 * sourceB + 8192) >> 14);
-                        if(destination < 0)
-                        {
-                            *(pOutputMemory++) = (outputType)outputHandlerMinValue;
-                        }
-                        else if (destination >= (std::int32_t)inputHandlerNumValues)
-                        {
-                            *(pOutputMemory++) = (outputType)(outputHandlerMinValue + outputHandlerNumValues - 1);
-                        }
-                        else
-                        {
-                            *(pOutputMemory++) = (outputType)(outputHandlerMinValue + (destination >> rightShift));
-                        }
+                        *(pOutputMemory++) = (outputType)outputHandlerMinValue;
                     }
-                    pInputMemory += (inputHandlerWidth - inputWidth) * 3;
-                    pOutputMemory += (outputHandlerWidth - inputWidth) * 3;
-                }
-            }
-            else
-            {
-                std::uint32_t leftShift = outputHighBit - inputHighBit;
-                for(; inputHeight != 0; --inputHeight)
-                {
-                    for(std::uint32_t scanPixels(inputWidth); scanPixels != 0; --scanPixels)
+                    else if (destination >= inputHandlerNumValues)
                     {
-                        sourceY = (std::int32_t)*(pInputMemory++);
-                        sourceB = (std::int32_t)*(pInputMemory++) - inputMiddleValue;
-                        sourceR = (std::int32_t)*(pInputMemory++) - inputMiddleValue;
-
-                        destination = sourceY + ((22970 * sourceR + 8192) >> 14);
-                        if(destination < 0)
-                        {
-                            *(pOutputMemory++) = (outputType)outputHandlerMinValue;
-                        }
-                        else if (destination >= (std::int32_t)inputHandlerNumValues)
-                        {
-                            *(pOutputMemory++) = (outputType)(outputHandlerMinValue + outputHandlerNumValues - 1);
-                        }
-                        else
-                        {
-                            *(pOutputMemory++) = (outputType)(outputHandlerMinValue + (destination << leftShift));
-                        }
-
-                        destination = sourceY - ((5638 * sourceB + 11700 * sourceR + 8192) >> 14);
-                        if(destination < 0)
-                        {
-                            *(pOutputMemory++) = (outputType)outputHandlerMinValue;
-                        }
-                        else if (destination >= (std::int32_t)inputHandlerNumValues)
-                        {
-                            *(pOutputMemory++) = (outputType)(outputHandlerMinValue + outputHandlerNumValues - 1);
-                        }
-                        else
-                        {
-                            *(pOutputMemory++) = (outputType)(outputHandlerMinValue + (destination << leftShift));
-                        }
-
-                        destination = sourceY + ((29032 * sourceB + 8192) >> 14);
-                        if(destination < 0)
-                        {
-                            *(pOutputMemory++) = (outputType)outputHandlerMinValue;
-                        }
-                        else if (destination >= (std::int32_t)inputHandlerNumValues)
-                        {
-                            *(pOutputMemory++) = (outputType)(outputHandlerMinValue + outputHandlerNumValues - 1);
-                        }
-                        else
-                        {
-                            *(pOutputMemory++) = (outputType)(outputHandlerMinValue + (destination << leftShift));
-                        }
+                        *(pOutputMemory++) = (outputType)(outputHandlerMinValue + outputHandlerNumValues - 1);
                     }
-                    pInputMemory += (inputHandlerWidth - inputWidth) * 3;
-                    pOutputMemory += (outputHandlerWidth - inputWidth) * 3;
+                    else
+                    {
+                        *(pOutputMemory++) = (outputType)(outputHandlerMinValue + destination);
+                    }
+
+                    destination = sourceY - ((5638 * sourceB + 11700 * sourceR + 8192) / 16384);
+                    if(destination < 0)
+                    {
+                        *(pOutputMemory++) = (outputType)outputHandlerMinValue;
+                    }
+                    else if (destination >= (std::int32_t)inputHandlerNumValues)
+                    {
+                        *(pOutputMemory++) = (outputType)(outputHandlerMinValue + outputHandlerNumValues - 1);
+                    }
+                    else
+                    {
+                        *(pOutputMemory++) = (outputType)(outputHandlerMinValue + destination);
+                    }
+
+                    destination = sourceY + ((29032 * sourceB + 8192) / 16384);
+                    if(destination < 0)
+                    {
+                        *(pOutputMemory++) = (outputType)outputHandlerMinValue;
+                    }
+                    else if (destination >= (std::int32_t)inputHandlerNumValues)
+                    {
+                        *(pOutputMemory++) = (outputType)(outputHandlerMinValue + outputHandlerNumValues - 1);
+                    }
+                    else
+                    {
+                        *(pOutputMemory++) = (outputType)(outputHandlerMinValue +destination);
+                    }
                 }
+                pInputMemory += (inputHandlerWidth - inputWidth) * 3;
+                pOutputMemory += (outputHandlerWidth - inputWidth) * 3;
             }
         }
 };

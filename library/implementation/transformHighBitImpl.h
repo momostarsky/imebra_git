@@ -54,11 +54,11 @@ public:
             outputType* outputHandlerData,
             std::uint32_t inputHandlerWidth, const std::string& inputHandlerColorSpace,
             std::shared_ptr<palette> /* inputPalette */,
-            std::int32_t inputHandlerMinValue, std::uint32_t inputHighBit,
+            std::uint32_t inputHighBit,
             std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight,
             std::uint32_t outputHandlerWidth, const std::string& outputHandlerColorSpace,
             std::shared_ptr<palette> /* outputPalette */,
-            std::int32_t outputHandlerMinValue, std::uint32_t outputHighBit,
+            std::uint32_t outputHighBit,
             std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY)
 
         {
@@ -75,6 +75,9 @@ public:
 
             pInputMemory += (inputTopLeftY * inputHandlerWidth + inputTopLeftX) * numChannels;
             pOutputMemory += (outputTopLeftY * outputHandlerWidth + outputTopLeftX) * numChannels;
+
+            std::int64_t inputHandlerMinValue = getMinValue<inputType>(inputHighBit);
+            std::int64_t outputHandlerMinValue = getMinValue<outputType>(outputHighBit);
 
             if(inputHighBit > outputHighBit)
             {

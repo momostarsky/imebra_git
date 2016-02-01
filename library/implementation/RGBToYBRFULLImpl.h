@@ -58,15 +58,16 @@ public:
             outputType* outputHandlerData,
             std::uint32_t inputHandlerWidth, const std::string& inputHandlerColorSpace,
             std::shared_ptr<palette> /* inputPalette */,
-            std::int32_t inputHandlerMinValue, std::uint32_t inputHighBit,
+            std::uint32_t inputHighBit,
             std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight,
             std::uint32_t outputHandlerWidth, const std::string& outputHandlerColorSpace,
             std::shared_ptr<palette> /* outputPalette */,
-            std::int32_t outputHandlerMinValue, std::uint32_t outputHighBit,
+            std::uint32_t outputHighBit,
             std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY)
 
         {
             checkColorSpaces(inputHandlerColorSpace, outputHandlerColorSpace);
+            checkHighBit(inputHighBit, outputHighBit);
 
             const inputType* pInputMemory(inputHandlerData);
             outputType* pOutputMemory(outputHandlerData);
@@ -74,44 +75,24 @@ public:
             pInputMemory += (inputTopLeftY * inputHandlerWidth + inputTopLeftX) * 3;
             pOutputMemory += (outputTopLeftY * outputHandlerWidth + outputTopLeftX) * 3;
 
-            std::int32_t outputMiddleValue(outputHandlerMinValue + ((std::int32_t)1 << outputHighBit));
+            std::int64_t inputHandlerMinValue = getMinValue<inputType>(inputHighBit);
+            std::int64_t outputHandlerMinValue = getMinValue<outputType>(outputHighBit);
+            std::int64_t outputMiddleValue(outputHandlerMinValue + ((std::int64_t)1 << outputHighBit));
 
-            std::int32_t sourceR, sourceG, sourceB;
-            if(inputHighBit > outputHighBit)
+            std::int64_t sourceR, sourceG, sourceB;
+            for(; inputHeight != 0; --inputHeight)
             {
-                std::uint32_t rightShift = inputHighBit - outputHighBit;
-                for(; inputHeight != 0; --inputHeight)
+                for(std::uint32_t scanPixels(inputWidth); scanPixels != 0; --scanPixels)
                 {
-                    for(std::uint32_t scanPixels(inputWidth); scanPixels != 0; --scanPixels)
-                    {
-                        sourceR = (std::int32_t) (*(pInputMemory++)) - inputHandlerMinValue;
-                        sourceG = (std::int32_t) (*(pInputMemory++)) - inputHandlerMinValue;
-                        sourceB = (std::int32_t) (*(pInputMemory++)) - inputHandlerMinValue;
-                        *(pOutputMemory++) = (outputType) ( ((((std::int32_t)4899 * sourceR+(std::int32_t)9617 * sourceG+(std::int32_t)1868 * sourceB) >> 14) >> rightShift) + outputHandlerMinValue );
-                        *(pOutputMemory++) = (outputType) ( outputMiddleValue + ((((std::int32_t)8192 * sourceB - (std::int32_t)2764 * sourceR - (std::int32_t)5428 * sourceG + (std::int32_t)8192) >> 14) >> rightShift));
-                        *(pOutputMemory++) = (outputType) ( outputMiddleValue + ((((std::int32_t)8192 * sourceR - (std::int32_t)6860 * sourceG - (std::int32_t)1332 * sourceB + (std::int32_t)8192) >> 14) >> rightShift));
-                    }
-                    pInputMemory += (inputHandlerWidth - inputWidth) * 3;
-                    pOutputMemory += (outputHandlerWidth - inputWidth) * 3;
+                    sourceR = (std::int64_t)*pInputMemory++ - inputHandlerMinValue;
+                    sourceG = (std::int64_t)*pInputMemory++ - inputHandlerMinValue;
+                    sourceB = (std::int64_t)*pInputMemory++ - inputHandlerMinValue;
+                    *(pOutputMemory++) = (outputType) ( ((4899 * sourceR + 9617 * sourceG + 1868 * sourceB) / 16384) + outputHandlerMinValue );
+                    *(pOutputMemory++) = (outputType) ( outputMiddleValue + ((8192 * sourceB - 2764 * sourceR - 5428 * sourceG + 8192) / 16384));
+                    *(pOutputMemory++) = (outputType) ( outputMiddleValue + ((8192 * sourceR - 6860 * sourceG - 1332 * sourceB + 8192) / 16384));
                 }
-            }
-            else
-            {
-                std::uint32_t leftShift = outputHighBit - inputHighBit;
-                for(; inputHeight != 0; --inputHeight)
-                {
-                    for(std::uint32_t scanPixels(inputWidth); scanPixels != 0; --scanPixels)
-                    {
-                        sourceR = (std::int32_t) (*(pInputMemory++)) - inputHandlerMinValue;
-                        sourceG = (std::int32_t) (*(pInputMemory++)) - inputHandlerMinValue;
-                        sourceB = (std::int32_t) (*(pInputMemory++)) - inputHandlerMinValue;
-                        *(pOutputMemory++) = (outputType) ( ((((std::int32_t)4899 * sourceR+(std::int32_t)9617 * sourceG+(std::int32_t)1868 * sourceB) >> 14) << leftShift) + outputHandlerMinValue );
-                        *(pOutputMemory++) = (outputType) ( outputMiddleValue + ((((std::int32_t)8192 * sourceB - (std::int32_t)2764 * sourceR - (std::int32_t)5428 * sourceG + (std::int32_t)8192) >> 14) << leftShift));
-                        *(pOutputMemory++) = (outputType) ( outputMiddleValue + ((((std::int32_t)8192 * sourceR - (std::int32_t)6860 * sourceG - (std::int32_t)1332 * sourceB + (std::int32_t)8192) >> 14) << leftShift));
-                    }
-                    pInputMemory += (inputHandlerWidth - inputWidth) * 3;
-                    pOutputMemory += (outputHandlerWidth - inputWidth) * 3;
-                }
+                pInputMemory += (inputHandlerWidth - inputWidth) * 3;
+                pOutputMemory += (outputHandlerWidth - inputWidth) * 3;
             }
         }
 };

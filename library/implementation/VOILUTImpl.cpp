@@ -192,8 +192,8 @@ void VOILUT::setVOILUT(std::uint32_t VOILUTId)
 	if((VOILUTId & 0x00200000))
 	{
 		setCenterWidth(
-            m_pDataSet->getSignedLongThrow(0x0028, 0, 0x1050, 0, VOILUTNumber),
-            m_pDataSet->getSignedLongThrow(0x0028, 0, 0x1051, 0, VOILUTNumber));
+            m_pDataSet->getDoubleThrow(0x0028, 0, 0x1050, 0, VOILUTNumber),
+            m_pDataSet->getDoubleThrow(0x0028, 0, 0x1051, 0, VOILUTNumber));
 		return;
 	}
 
@@ -237,7 +237,7 @@ void VOILUT::setLUT(std::shared_ptr<lut> pLut)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void VOILUT::setCenterWidth(std::int32_t center, std::int32_t width)
+void VOILUT::setCenterWidth(double center, double width)
 {
 	m_windowCenter = center;
 	m_windowWidth = width;
@@ -254,7 +254,7 @@ void VOILUT::setCenterWidth(std::int32_t center, std::int32_t width)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void VOILUT::getCenterWidth(std::int32_t* pCenter, std::int32_t* pWidth)
+void VOILUT::getCenterWidth(double* pCenter, double* pWidth)
 {
 	*pCenter = m_windowCenter;
 	*pWidth = m_windowWidth;

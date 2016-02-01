@@ -46,16 +46,16 @@ void VOILUT::applyOptimalVOI(Image inputImage, std::uint32_t topLeftX, std::uint
     ((imebra::implementation::transforms::VOILUT*)m_pTransform.get())->applyOptimalVOI(inputImage.m_pImage, topLeftX, topLeftY, width, height);
 }
 
-std::int32_t VOILUT::getCenter() const
+double VOILUT::getCenter() const
 {
-    std::int32_t center, width;
+    double center, width;
     ((imebra::implementation::transforms::VOILUT*)m_pTransform.get())->getCenterWidth(&center, &width);
     return center;
 }
 
-std::int32_t VOILUT::getWidth() const
+double VOILUT::getWidth() const
 {
-    std::int32_t center, width;
+    double center, width;
     ((imebra::implementation::transforms::VOILUT*)m_pTransform.get())->getCenterWidth(&center, &width);
     return width;
 }

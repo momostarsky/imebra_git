@@ -30,8 +30,8 @@ public:
     void applyOptimalVOI(Image inputImage, std::uint32_t topLeftX, std::uint32_t topLeftY, std::uint32_t width, std::uint32_t height);
 	//void setLUT(std::shared_ptr<lut> pLut);
     void setCenterWidth(std::int32_t center, std::int32_t width);
-    std::int32_t getCenter() const;
-    std::int32_t getWidth() const;
+    double getCenter() const;
+    double getWidth() const;
 
 
 };

@@ -117,7 +117,7 @@ namespace imebra
 
 				if(reuseMemory == 0)
 				{
-                    reuseMemory.reset(memoryPool::getMemoryPool()->getMemory(memorySize));
+                    reuseMemory = std::make_shared<memory>(memorySize);
 				}
 				else
 				{

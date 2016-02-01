@@ -95,9 +95,11 @@ public:
     virtual std::shared_ptr<image> allocateOutputImage(std::shared_ptr<image> pInputImage, std::uint32_t width, std::uint32_t height);
 
 protected:
-	// Performs the color transform
+    // Check the color space of the input and output images
 	///////////////////////////////////////////////////////////
     void checkColorSpaces(const std::string& inputHandlerColorSpace, const std::string& outputHandlerColorSpace);
+
+    void checkHighBit(std::uint32_t inputHighBit, std::uint32_t outputHighBit);
 
 };
 
