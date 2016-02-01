@@ -15,6 +15,24 @@ $fileHeader$
 #include <memory>
 #include <array>
 
+#ifdef __APPLE__
+#include <pthread.h>
+#else
+#include <thread>
+#endif
+
+
+#if(!defined IMEBRA_MEMORY_POOL_SLOTS)
+    #define IMEBRA_MEMORY_POOL_SLOTS 256
+#endif
+#if(!defined IMEBRA_MEMORY_POOL_MAX_SIZE)
+    #define IMEBRA_MEMORY_POOL_MAX_SIZE 20000000
+#endif
+#if(!defined IMEBRA_MEMORY_POOL_MIN_SIZE)
+    #define IMEBRA_MEMORY_POOL_MIN_SIZE 1024
+#endif
+
+
 ///////////////////////////////////////////////////////////
 //
 // Everything is in the namespace imebra
@@ -22,10 +40,6 @@ $fileHeader$
 ///////////////////////////////////////////////////////////
 namespace imebra
 {
-
-/// \addtogroup group_baseclasses
-///
-/// @{
 
 typedef std::basic_string<std::uint8_t> stringUint8;
 
@@ -204,28 +218,11 @@ protected:
 class memoryPool
 {
 	friend class memory;
-protected:
-#if(!defined IMEBRA_MEMORY_POOL_SLOTS)
-	#define IMEBRA_MEMORY_POOL_SLOTS 256
-#endif
-#if(!defined IMEBRA_MEMORY_POOL_MAX_SIZE)
-	#define IMEBRA_MEMORY_POOL_MAX_SIZE 20000000
-#endif
-#if(!defined IMEBRA_MEMORY_POOL_MIN_SIZE)
-	#define IMEBRA_MEMORY_POOL_MIN_SIZE 1024
-#endif
+    friend class memoryPoolGetter;
 
-    std::array<size_t, IMEBRA_MEMORY_POOL_SLOTS> m_memorySize;
-    std::array<stringUint8*, IMEBRA_MEMORY_POOL_SLOTS>  m_memoryPointer;
-    size_t m_firstUsedCell;
-    size_t m_firstFreeCell;
-
-    size_t m_actualSize;
-
+    memoryPool(size_t memoryMinSize, size_t poolMaxSize);
 public:
-	memoryPool(): m_actualSize(0){}
-
-	virtual ~memoryPool();
+    ~memoryPool();
 
 	/// \brief Retrieve a new or reused 
 	///         \ref imebra::memory object.
@@ -247,42 +244,71 @@ public:
 	///                       object will be 1
 	///
 	///////////////////////////////////////////////////////////
-    memory* getMemory(size_t requestedSize);
+    stringUint8* getMemory(size_t requestedSize);
 
 	/// \brief Discard all the currently unused memory.
 	///
+    /// \return true if some unused memory has been deleted,
+    ///         false if the memory pool was already empty
 	///////////////////////////////////////////////////////////
-	void flush();
-
-	/// \brief Get a pointer to the statically allocated 
-	///         instance of memoryPool.
-	///
-	/// @return a pointer to the statically allocated instance
-	///          of memoryPool
-	///
-	///////////////////////////////////////////////////////////
-	static memoryPool* getMemoryPool();
+    bool flush();
 
 protected:
 	/// \internal
 	/// \brief Called by \ref memory before the object
 	///         is deleted.
 	///
-	/// This function returns true if the memory object will
-	///  be reused and shouldn't be deleted.
+    /// This function returns takes ownership of the object and
+    ///  will delete it when necessary
 	///
 	/// @param pMemoryToReuse a pointer to the memory object
 	///                        that call this function
-	/// @return               true if the memory object has
-	///                        been saved in the memory pool
-	///                        and will be reused, false
-	///                        otherwise
 	///
 	///////////////////////////////////////////////////////////
-    bool reuseMemory(stringUint8* pMemoryToReuse);
+    void reuseMemory(stringUint8* pMemoryToReuse);
+
+    std::array<size_t, IMEBRA_MEMORY_POOL_SLOTS> m_memorySize;
+    std::array<stringUint8*, IMEBRA_MEMORY_POOL_SLOTS>  m_memoryPointer;
+    size_t m_actualSize;
+    size_t m_firstUsedCell;
+    size_t m_firstFreeCell;
+
 };
 
-///@}
+class memoryPoolGetter
+{
+protected:
+    memoryPoolGetter();
+    ~memoryPoolGetter();
+
+#ifdef __APPLE__
+    memoryPool& getMemoryPoolLocal();
+    void memoryPoolGetter::deleteMemoryPool(void* pMemoryPool)
+
+    pthread_key_t m_key;
+#endif
+    std::new_handler m_oldNewHandler;
+
+    static memoryPoolGetter& getMemoryPoolGetter();
+
+public:
+    static memoryPool& getMemoryPoolLocal(
+            size_t memoryMinSize = IMEBRA_MEMORY_POOL_MIN_SIZE,
+            size_t poolMaxSize = IMEBRA_MEMORY_POOL_MAX_SIZE);
+
+protected:
+    /// \internal
+    /// \brief Call flush(). Throws bad_alloc() if flush()
+    ///        returns false.
+    ///
+    ///////////////////////////////////////////////////////////
+    static void newHandler();
+
+#ifndef __APPLE__
+    thread_local static std::unique_ptr<memoryPool> m_pool;
+#endif
+
+};
 
 } // namespace imebra
 

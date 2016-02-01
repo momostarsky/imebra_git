@@ -8,6 +8,7 @@ $fileHeader$
 */
 
 #include "memoryImpl.h"
+#include "../include/imebra/exceptions.h"
 
 namespace imebra
 {
@@ -46,7 +47,7 @@ memory::memory(stringUint8* pBuffer):
 }
 
 memory::memory(size_t initialSize):
-    m_pMemoryBuffer(new stringUint8(initialSize, 0))
+    m_pMemoryBuffer(memoryPoolGetter::getMemoryPoolLocal().getMemory(initialSize))
 {
 }
 
@@ -62,7 +63,7 @@ memory::memory(size_t initialSize):
 ///////////////////////////////////////////////////////////
 memory::~memory()
 {
-    memoryPool::getMemoryPool()->reuseMemory(m_pMemoryBuffer.release());
+    memoryPoolGetter::getMemoryPoolLocal().reuseMemory(m_pMemoryBuffer.release());
 }
 
 
@@ -258,22 +259,28 @@ void memory::assign(const std::uint8_t* pSource, const size_t sourceLength)
 ///////////////////////////////////////////////////////////
 //
 //
-// Destructor
+// Constructor
 //
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
+memoryPool::memoryPool(size_t memoryMinSize, size_t poolMaxSize):
+    m_actualSize(0), m_firstUsedCell(0), m_firstFreeCell(0)
+{
+}
+
 memoryPool::~memoryPool()
 {
-	while(m_actualSize != 0)
-	{
-		m_actualSize -= m_memorySize[m_firstUsedCell];
-		delete m_memoryPointer[m_firstUsedCell++];
-		if(m_firstUsedCell == IMEBRA_MEMORY_POOL_SLOTS)
-		{
-			m_firstUsedCell = 0;
-		}
-	}
+    while(m_actualSize != 0)
+    {
+        m_actualSize -= m_memorySize[m_firstUsedCell];
+        delete m_memoryPointer[m_firstUsedCell++];
+        if(m_firstUsedCell == m_memoryPointer.size())
+        {
+            m_firstUsedCell = 0;
+        }
+    }
+
 }
 
 
@@ -286,11 +293,11 @@ memoryPool::~memoryPool()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-bool memoryPool::reuseMemory(stringUint8* pString)
+void memoryPool::reuseMemory(stringUint8* pString)
 {
     if(pString == 0)
     {
-        return false;
+        return;
     }
     std::unique_ptr<stringUint8> pBuffer(pString);
 
@@ -300,7 +307,7 @@ bool memoryPool::reuseMemory(stringUint8* pString)
     size_t memorySize = pBuffer->size();
 	if(memorySize == 0 || memorySize < IMEBRA_MEMORY_POOL_MIN_SIZE || memorySize > IMEBRA_MEMORY_POOL_MAX_SIZE)
 	{
-		return false;
+        return;
 	}
 
 	// Store the memory object in the pool
@@ -337,9 +344,6 @@ bool memoryPool::reuseMemory(stringUint8* pString)
 			m_firstUsedCell = 0;
 		}
 	}
-
-	return true;
-
 }
 
 
@@ -352,35 +356,20 @@ bool memoryPool::reuseMemory(stringUint8* pString)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void memoryPool::flush()
+bool memoryPool::flush()
 {
+    bool bCleared(m_firstUsedCell != m_firstFreeCell);
 	while(m_firstUsedCell != m_firstFreeCell)
 	{
 		delete m_memoryPointer[m_firstUsedCell];
+
 		m_actualSize -= m_memorySize[m_firstUsedCell];
         if(++m_firstUsedCell >= m_memorySize.size())
 		{
 			m_firstUsedCell = 0;
 		}
 	}
-}
-
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Get a pointer to the unique instance of the memoryPool
-//  class
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-memoryPool* memoryPool::getMemoryPool()
-{
-	static memoryPool m_staticMemoryPool;
-
-	return &m_staticMemoryPool;
+    return bCleared;
 }
 
 
@@ -393,8 +382,13 @@ memoryPool* memoryPool::getMemoryPool()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-memory* memoryPool::getMemory(size_t requestedSize)
+stringUint8* memoryPool::getMemory(size_t requestedSize)
 {
+    if(requestedSize < IMEBRA_MEMORY_POOL_MIN_SIZE || requestedSize > IMEBRA_MEMORY_POOL_MAX_SIZE)
+    {
+        return new stringUint8(requestedSize, 0);
+    }
+
 	// Look for an object to reuse
 	///////////////////////////////////////////////////////////
     for(size_t findCell = m_firstUsedCell; findCell != m_firstFreeCell;)
@@ -410,7 +404,7 @@ memory* memoryPool::getMemory(size_t requestedSize)
 
 		// Memory found
 		///////////////////////////////////////////////////////////
-        std::unique_ptr<memory> pMemory(new memory(m_memoryPointer[findCell]));
+        std::unique_ptr<stringUint8> pMemory(m_memoryPointer[findCell]);
 		m_actualSize -= m_memorySize[findCell];
 		if(findCell == m_firstUsedCell)
 		{
@@ -437,18 +431,71 @@ memory* memoryPool::getMemory(size_t requestedSize)
         return pMemory.release();
 	}
 
-    try
-    {
-        return new memory(requestedSize);
-    }
-    catch(const std::bad_alloc& e)
-    {
-        // If an allocation error occurred, then free the cached memory and try again
-        /////////////////////////////////////////////////////////////////////////////
-        flush();
-        return new memory(requestedSize);
-    }
-
+    return new stringUint8(requestedSize, 0);
 }
+
+
+memoryPoolGetter::memoryPoolGetter()
+{
+    m_oldNewHandler = std::set_new_handler(memoryPoolGetter::newHandler);
+#ifdef __APPLE__
+    ::pthread_key_create(&m_key, &memoryPoolGetter::deleteMemoryPool);
+#endif
+}
+
+memoryPoolGetter::~memoryPoolGetter()
+{
+    std::set_new_handler(m_oldNewHandler);
+#ifdef __APPLE__
+    ::pthread_key_delete(m_key)
+#endif
+}
+
+thread_local std::unique_ptr<memoryPool> memoryPoolGetter::m_pool = std::unique_ptr<memoryPool>();
+
+memoryPool& memoryPoolGetter::getMemoryPoolLocal(size_t memoryMinSize, size_t poolMaxSize)
+{
+#ifdef __APPLE__
+    memoryPool* pPool = (memoryPool*)pthread_getspecific(m_key);
+    if(pPool == 0)
+    {
+        pPool = new memoryPool(memoryMinSize, poolMaxSize);
+        pthread_setspecific(m_key, pPool);
+    }
+    return *pPool;
+#else
+    if(m_pool.get() == 0)
+    {
+        m_pool.reset(new memoryPool(memoryMinSize, poolMaxSize));
+    }
+    return *(m_pool.get());
+#endif
+}
+
+#ifdef __APPLE__
+void memoryPoolGetter::deleteMemoryPool(void* pMemoryPool)
+{
+    delete (memoryPool*)pMemoryPool;
+}
+#endif
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
+// Set by std::set_new_handler() as new handler.
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+void memoryPoolGetter::newHandler()
+{
+    if(!memoryPoolGetter::getMemoryPoolLocal().flush())
+    {
+        throw ImebraBadAlloc();
+    }
+}
+
+
 
 } // namespace imebra

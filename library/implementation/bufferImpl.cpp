@@ -125,7 +125,7 @@ std::shared_ptr<memory> buffer::getLocalMemory() const
     ///////////////////////////////////////////////////////////
     if(m_originalStream != 0 && (localMemory == 0 || localMemory->empty()) )
     {
-        localMemory = std::shared_ptr<memory>(memoryPool::getMemoryPool()->getMemory(m_originalBufferLength));
+        localMemory = std::make_shared<memory>(m_originalBufferLength);
         if(m_originalBufferLength != 0)
         {
             std::shared_ptr<streamReader> reader(std::make_shared<streamReader>(m_originalStream, m_originalBufferPosition, m_originalBufferLength));
