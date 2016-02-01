@@ -1,10 +1,11 @@
 QT     -= gui core
+CONFIG += warn_on
 LIBS -= -lQtGui -lQtCore
 afl:QMAKE_CXX = afl-g++
-QMAKE_CXXFLAGS += -std=c++0x -Wall -Wextra -pedantic
+unix:QMAKE_CXXFLAGS += -std=c++0x -Wall -Wextra -pedantic
 unix:LIBS += -lpthread -licui18n -licuio -licuuc
-windows:DEFINES += _WIN32_WINNT=0x0501 WINVER=0x0501 NTDDI_VERSION=0x05010000
-DEFINES += PUNTOEXE_USE_ICU
+unix:DEFINES += PUNTOEXE_USE_ICU
+windows:DEFINES += PUNTOEXE_WINDOWS
 
 SOURCES += \
     dicom2jpeg.cpp \

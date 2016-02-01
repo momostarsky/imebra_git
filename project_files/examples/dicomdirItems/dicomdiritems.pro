@@ -1,8 +1,11 @@
 QT     -= gui core
+CONFIG += warn_on
 LIBS -= -lQtGui -lQtCore
-QMAKE_CXXFLAGS += -std=c++0x -Wall -Wextra -pedantic
-unix:LIBS += -lpthread
-windows:DEFINES += _WIN32_WINNT=0x0501 WINVER=0x0501 NTDDI_VERSION=0x05010000
+afl:QMAKE_CXX = afl-g++
+unix:QMAKE_CXXFLAGS += -std=c++0x -Wall -Wextra -pedantic
+unix:LIBS += -lpthread -licui18n -licuio -licuuc
+unix:DEFINES += PUNTOEXE_USE_ICU
+windows:DEFINES += PUNTOEXE_WINDOWS
 
 HEADERS += \
     ../../library/base/include/streamWriter.h \
