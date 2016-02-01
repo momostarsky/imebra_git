@@ -9,15 +9,15 @@ $fileHeader$
 
 #if defined(IMEBRA_USE_JAVA)
 
-#include "../implementation/configurationImpl.h"
-#include "../imebra/project_files/library/base/include/streamControllerImpl.h"
+#include "configurationImpl.h"
+#include "streamControllerImpl.h"
 
 #include "onloadImpl.h"
-#include "../implementation/exceptionImpl.h"
-#include "./charsetConversionJavaImpl.h"
+#include "exceptionImpl.h"
+#include "charsetConversionJavaImpl.h"
 #include <memory>
 
-namespace puntoexe
+namespace imebra
 {
 
 ///////////////////////////////////////////////////////////
@@ -270,7 +270,7 @@ JNIEnv* charsetConversionJava::getJavaEnv(bool* bDetach)
 }
 
 
-} // namespace puntoexe
+} // namespace imebra
 
 
 

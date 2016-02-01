@@ -21,12 +21,7 @@ The class hides the platform specific implementations and supplies a common
 #include "../imebra/project_files/library/base/include/charsetConversionImpl.h"
 
 
-///////////////////////////////////////////////////////////
-//
-// Everything is in the namespace puntoexe
-//
-///////////////////////////////////////////////////////////
-namespace puntoexe
+namespace imebra
 {
 
 class charsetConversionJava: public charsetConversion
@@ -54,7 +49,7 @@ protected:
 
 };
 
-} // namespace puntoexe
+} // namespace imebra
 
 #endif // SWIG
 
