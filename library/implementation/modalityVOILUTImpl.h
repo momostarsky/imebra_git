@@ -102,7 +102,7 @@ public:
 			{
                 for(std::uint32_t scanPixels(inputWidth); scanPixels != 0; --scanPixels)
 				{
-                    *(pOutputMemory++) = (outputType) ( m_voiLut->mappedValue((std::uint32_t) *(pInputMemory++)) );
+                    *(pOutputMemory++) = (outputType) ( m_voiLut->mappedValue((std::int32_t) *(pInputMemory++)) );
 				}
 				pInputMemory += (inputHandlerWidth - inputWidth);
 				pOutputMemory += (outputHandlerWidth - inputWidth);

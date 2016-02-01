@@ -84,10 +84,10 @@ protected:
         std::uint32_t day) const;
 
     std::string buildTime(
-        std::int32_t hour,
-        std::int32_t minutes,
-        std::int32_t seconds,
-        std::int32_t nanoseconds,
+        std::uint32_t hour,
+        std::uint32_t minutes,
+        std::uint32_t seconds,
+        std::uint32_t nanoseconds,
         std::int32_t offsetHours,
         std::int32_t offsetMinutes
         ) const;

@@ -228,7 +228,7 @@ public:
             {
                 for(std::uint32_t scanPixels(inputWidth); scanPixels != 0; --scanPixels)
                 {
-                    *(pOutputMemory++) = (outputType)( outputHandlerMinValue + m_pLUT->mappedValue((std::uint32_t)*pInputMemory++ ));
+                    *(pOutputMemory++) = (outputType)( outputHandlerMinValue + m_pLUT->mappedValue((std::int32_t)*pInputMemory++ ));
                 }
                 pInputMemory += (inputHandlerWidth - inputWidth);
                 pOutputMemory += (outputHandlerWidth - inputWidth);

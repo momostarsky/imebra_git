@@ -55,14 +55,11 @@ void lut::setLut(std::shared_ptr<handlers::readingDataHandler> pDescriptor, std:
 	{
         IMEBRA_THROW(LutCorruptedError, "The LUT is corrupted");
 	}
-	std::int32_t lutSize=pDescriptor->getSignedLong(0);
-	if(lutSize == 0)
-		lutSize=0x00010000;
-	if(lutSize < 0)
-		lutSize&=0x0000FFFF;
+    std::uint32_t lutSize(descriptorSignedToUnsigned(pDescriptor->getSignedLong(0)));
 
-	std::int32_t lutFirstMapped=pDescriptor->getSignedLong(1);
-	std::uint32_t lutBits=pDescriptor->getUnsignedLong(2);
+    std::int32_t lutFirstMapped = pDescriptor->getSignedLong(1);
+
+    std::uint32_t lutBits = pDescriptor->getUnsignedLong(2);
 
 	if((size_t)lutSize != pData->getSize())
 	{
@@ -76,6 +73,33 @@ void lut::setLut(std::shared_ptr<handlers::readingDataHandler> pDescriptor, std:
     IMEBRA_FUNCTION_END();
 }
 
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
+// Convert a signed value in the lut descriptor into an
+//  unsigned value
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+std::uint32_t lut::descriptorSignedToUnsigned(std::int32_t signedValue)
+{
+    if(signedValue == 0)
+    {
+        return 0x010000;
+    }
+    else if(signedValue < 0)
+    {
+        return (signedValue & 0x0FFFF);
+    }
+    else
+    {
+        return (std::uint32_t)signedValue;
+    }
+}
+
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 //
@@ -85,7 +109,7 @@ void lut::setLut(std::shared_ptr<handlers::readingDataHandler> pDescriptor, std:
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void lut::create(std::uint32_t size, std::uint32_t firstMapped, std::uint8_t bits, const std::wstring& description)
+void lut::create(std::uint32_t size, std::int32_t firstMapped, std::uint8_t bits, const std::wstring& description)
 {
     IMEBRA_FUNCTION_START();
 
@@ -138,7 +162,7 @@ void lut::fillHandlers(std::shared_ptr<handlers::writingDataHandler> pDescriptor
 		pDescriptor->setUnsignedLong(0, lutSize);
 	}
 
-    std::uint32_t lutFirstMapped = getFirstMapped();
+    std::int32_t lutFirstMapped = getFirstMapped();
 	pDescriptor->setSignedLong(1, lutFirstMapped);
 
 	std::uint8_t bits = getBits();
@@ -204,7 +228,7 @@ bool lut::checkValidDataRange() const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::uint32_t lut::getFirstMapped() const
+std::int32_t lut::getFirstMapped() const
 {
 	return m_firstMapped;
 }
@@ -219,7 +243,7 @@ std::uint32_t lut::getFirstMapped() const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void lut::setLutValue(std::uint32_t startValue, std::int32_t lutValue)
+void lut::setLutValue(std::int32_t startValue, std::int32_t lutValue)
 {
     IMEBRA_FUNCTION_START();
 
@@ -228,7 +252,7 @@ void lut::setLutValue(std::uint32_t startValue, std::int32_t lutValue)
         IMEBRA_THROW(LutWrongIndexError, "The start index is below the first mapped index");
 	}
     startValue -= m_firstMapped;
-    if(startValue < m_size)
+    if(startValue < (std::int32_t)m_size)
 	{
 		m_pMappedValues[startValue]=lutValue;
 	}
@@ -277,7 +301,7 @@ std::uint8_t lut::getBits() const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::int32_t lut::mappedValue(std::uint32_t id) const
+std::int32_t lut::mappedValue(std::int32_t id) const
 {
 	// The LUT's size is zero, return
 	///////////////////////////////////////////////////////////
@@ -294,9 +318,9 @@ std::int32_t lut::mappedValue(std::uint32_t id) const
     }
 
     id -= m_firstMapped;
-    if(id < (std::uint32_t)m_size)
+    if(id < (std::int32_t)m_size)
 	{
-		return m_pMappedValues[id];
+        return m_pMappedValues[(std::uint32_t)id];
 	}
 	return m_pMappedValues[m_size-1];
 }

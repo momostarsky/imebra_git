@@ -88,12 +88,12 @@ public:
 
             std::int64_t outputHandlerMinValue = getMinValue<outputType>(outputHighBit);
 
-            std::uint32_t paletteValue;
+            std::int32_t paletteValue;
             for(; inputHeight != 0; --inputHeight)
             {
                 for(std::uint32_t scanPixels(inputWidth); scanPixels != 0; --scanPixels)
                 {
-                    paletteValue = (std::uint32_t) (*pInputMemory++);
+                    paletteValue = (std::int32_t) (*pInputMemory++);
                     *pOutputMemory++ = (outputType)(pRed->mappedValue(paletteValue) + outputHandlerMinValue);
                     *pOutputMemory++ = (outputType)(pGreen->mappedValue(paletteValue) + outputHandlerMinValue);
                     *pOutputMemory++ = (outputType)(pBlue->mappedValue(paletteValue) + outputHandlerMinValue);
