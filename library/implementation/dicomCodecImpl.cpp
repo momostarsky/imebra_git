@@ -1281,7 +1281,7 @@ void dicomCodec::readUncompressedInterleaved(
 	std::uint32_t maxSamplingFactorX = bSubSampledX ? 2 : 1;
 	std::uint32_t maxSamplingFactorY = bSubSampledY ? 2 : 1;
 
-	std::shared_ptr<memory> readBuffer(memoryPool::getMemoryPool()->getMemory(numValuesPerBlock * ((7+allocatedBits) >> 3)));
+    std::shared_ptr<memory> readBuffer(std::make_shared<memory>(numValuesPerBlock * ((7+allocatedBits) >> 3)));
 
 	// Read all the blocks
 	///////////////////////////////////////////////////////////
@@ -1434,7 +1434,7 @@ void dicomCodec::readUncompressedNotInterleaved(
 		if(m_channels[channel]->m_bufferSize != lastBufferSize)
 		{
 			lastBufferSize = m_channels[channel]->m_bufferSize;
-            readBuffer.reset(memoryPool::getMemoryPool()->getMemory(lastBufferSize * ((7+allocatedBits) >> 3)));
+            readBuffer = std::make_shared<memory>(lastBufferSize * ((7+allocatedBits) >> 3));
 		}
 		std::int32_t* pMemoryDest = m_channels[channel]->m_pBuffer;
         readPixel(pSourceStream, pMemoryDest, m_channels[channel]->m_bufferSize, &bitPointer, readBuffer->data(), wordSizeBytes, allocatedBits, mask);

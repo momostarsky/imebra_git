@@ -667,10 +667,16 @@ public:
     TransformInvalidAreaError(const std::string& message);
 };
 
+class IMEBRA_API TransformDifferentHighBitError: public TransformError
+{
+public:
+    TransformDifferentHighBitError(const std::string& message);
+};
+
 class IMEBRA_API TransformsChainError: public TransformError
 {
 public:
-    TransformsChainError(const std::string& what);
+    TransformsChainError(const std::string& message);
 };
 
 class IMEBRA_API ColorTransformError: public TransformError
@@ -831,6 +837,9 @@ public:
 };
 
 
+class IMEBRA_API ImebraBadAlloc: public std::bad_alloc
+{
+};
 
 }
 

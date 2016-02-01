@@ -183,7 +183,7 @@ std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
                 }
                 else
                 {
-                    std::shared_ptr<memory> temporaryMemory(memoryPool::getMemoryPool()->getMemory(totalLength));
+                    std::shared_ptr<memory> temporaryMemory(std::make_shared<memory>(totalLength));
                     const std::uint8_t* pDest = temporaryMemory->data();
                     for(std::uint32_t scanBuffers = firstBufferId; scanBuffers != endBufferId; ++scanBuffers)
                     {

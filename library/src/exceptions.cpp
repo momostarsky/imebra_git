@@ -90,7 +90,7 @@ DataHandlerError::DataHandlerError(const std::string& message): std::runtime_err
 DataHandlerDeniedConversionError::DataHandlerDeniedConversionError(const std::string &message): DataHandlerError(message)
 {}
 
-DataHandlerConversionError::DataHandlerConversionError(const std::string &message)
+DataHandlerConversionError::DataHandlerConversionError(const std::string &message): DataHandlerError(message)
 {}
 
 DataHandlerCorruptedBufferError::DataHandlerCorruptedBufferError(const std::string &message): DataHandlerError(message)
@@ -156,7 +156,10 @@ TransformError::TransformError(const std::string& message): std::runtime_error(m
 TransformInvalidAreaError::TransformInvalidAreaError(const std::string& message): TransformError(message)
 {}
 
-TransformsChainError::TransformsChainError(const std::string& what): TransformError(what)
+TransformDifferentHighBitError::TransformDifferentHighBitError(const std::string &message): TransformError(message)
+{}
+
+TransformsChainError::TransformsChainError(const std::string& message): TransformError(message)
 {}
 
 ColorTransformError::ColorTransformError(const std::string& message): TransformError(message)

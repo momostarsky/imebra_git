@@ -258,8 +258,7 @@ public:
 	///////////////////////////////////////////////////////////
 	std::uint32_t getHighBit();
 
-        std::shared_ptr<palette> getPalette();
-
+    std::shared_ptr<palette> getPalette();
 
 protected:
 	// Image's buffer

@@ -114,7 +114,7 @@ void channel::allocate(std::uint32_t sizeX, std::uint32_t sizeY)
 	m_sizeX = sizeX;
 	m_sizeY = sizeY;
 	m_bufferSize = sizeX * sizeY;
-	m_memory = std::shared_ptr<memory>(memoryPool::getMemoryPool()->getMemory(m_bufferSize * sizeof(std::int32_t) ));
+    m_memory = std::make_shared<memory>(m_bufferSize * sizeof(std::int32_t) );
 	m_pBuffer = (std::int32_t*)(m_memory->data());
 
 	::memset(m_pBuffer, 0, m_bufferSize * sizeof(std::int32_t));
