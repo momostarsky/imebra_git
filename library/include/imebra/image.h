@@ -33,21 +33,19 @@ class IMEBRA_API Image
 {
 public:
 
-	///////////////////////////////////////////////////////////
-	///
-	/// \brief Define a single color component's size.
+    /// \brief Define the size (in bytes) of a each pixel's
+    ///        color component and its representation
+    ///        (signed/unsigned)
 	///
 	///////////////////////////////////////////////////////////
     enum class bitDepth
 	{
-		depthU8 = 0,
-		depthS8 = 1,
-		depthU16 = 2,
-		depthS16 = 3,
-		depthU32 = 4,
-		depthS32 = 5,
-		endOfDepths = 6
-
+        depthU8 = 0,    ///< Unsigned byte
+        depthS8 = 1,    ///< Signed byte
+        depthU16 = 2,   ///< Unsigned word (2 bytes)
+        depthS16 = 3,   ///< Signed word (2 bytes)
+        depthU32 = 4,   ///< Unsigned double word (4 bytes)
+        depthS32 = 5    ///< Signed double word (4 bytes)
 	};
 
 	// Constructor

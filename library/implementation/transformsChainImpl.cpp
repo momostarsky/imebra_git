@@ -27,9 +27,9 @@ namespace transforms
 transformsChain::transformsChain():
         m_inputWidth(0),
         m_inputHeight(0),
-	m_inputDepth(image::endOfDepths),
+    m_inputDepth(image::depthU8),
 	m_inputHighBit(0),
-	m_outputDepth(image::endOfDepths),
+    m_outputDepth(image::depthU8),
 	m_outputHighBit(0)
 {}
 
