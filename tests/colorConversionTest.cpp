@@ -1,0 +1,63 @@
+#include <imebra/imebra.h>
+#include "buildImageForTest.h"
+#include <gtest/gtest.h>
+
+
+namespace imebra
+{
+
+namespace tests
+{
+
+TEST(colorConversion, RGB2YBRFULL)
+{
+    Image rgb;
+    rgb.create(1, 1, Image::bitDepth::depthU8, "RGB", 7);
+
+    {
+        WritingDataHandler rgbHandler = rgb.getWritingDataHandler();
+        rgbHandler.setUnsignedLong(0, 255);
+        rgbHandler.setUnsignedLong(1, 255);
+        rgbHandler.setUnsignedLong(2, 255);
+    }
+
+    Transform rgb2ybr = ColorTransformsFactory::getTransform("RGB", "YBR_FULL");
+
+    Image ybr1;
+    ybr1.create(1, 1, Image::bitDepth::depthU8, "YBR_FULL", 7);
+    rgb2ybr.runTransform(rgb, 0, 0, 1, 1, ybr1, 0, 0);
+
+    ReadingDataHandler ybr1Handler = ybr1.getReadingDataHandler();
+    ASSERT_EQ(255, ybr1Handler.getSignedLong(0));
+    ASSERT_EQ(128, ybr1Handler.getSignedLong(1));
+    ASSERT_EQ(128, ybr1Handler.getSignedLong(2));
+}
+
+TEST(colorConversion, YBRFULL2RGB)
+{
+    Image ybr;
+    ybr.create(1, 1, Image::bitDepth::depthU8, "YBR_FULL", 7);
+
+    {
+        WritingDataHandler ybrHandler = ybr.getWritingDataHandler();
+        ybrHandler.setUnsignedLong(0, 255);
+        ybrHandler.setUnsignedLong(1, 128);
+        ybrHandler.setUnsignedLong(2, 128);
+    }
+
+    Transform ybr2rgb = ColorTransformsFactory::getTransform("YBR_FULL", "RGB");
+
+    Image rgb1;
+    rgb1.create(1, 1, Image::bitDepth::depthU8, "RGB", 7);
+    ybr2rgb.runTransform(ybr, 0, 0, 1, 1, rgb1, 0, 0);
+    ReadingDataHandler rgb1Handler = rgb1.getReadingDataHandler();
+
+    ASSERT_EQ(255, rgb1Handler.getSignedLong(0));
+    ASSERT_EQ(255, rgb1Handler.getSignedLong(1));
+    ASSERT_EQ(255, rgb1Handler.getSignedLong(2));
+}
+
+}
+
+}
+
