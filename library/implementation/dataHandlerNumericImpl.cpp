@@ -41,7 +41,7 @@ std::shared_ptr<const memory> readingDataHandlerNumericBase::getMemory() const
 }
 
 writingDataHandlerNumericBase::writingDataHandlerNumericBase(const std::shared_ptr<buffer> &pBuffer, const size_t initialSize, const std::string &dataType, size_t unitSize):
-    writingDataHandler(pBuffer, dataType, 0), m_pMemory(std::make_shared<memory>(initialSize)), m_unitSize(unitSize)
+    writingDataHandler(pBuffer, dataType, 0), m_pMemory(std::make_shared<memory>(initialSize * unitSize)), m_unitSize(unitSize)
 {
 }
 

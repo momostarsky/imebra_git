@@ -195,7 +195,7 @@ std::uint8_t* memory::data()
 	{
 		return 0;
 	}
-	return &( ( (*m_pMemoryBuffer.get()))[0]);
+    return &( (*(m_pMemoryBuffer.get()))[0]);
 }
 
 const std::uint8_t* memory::data() const
