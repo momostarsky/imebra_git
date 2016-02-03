@@ -84,6 +84,10 @@ ReadingDataHandler Image::getReadingDataHandler() const
     return ReadingDataHandler(m_pImage->getReadingDataHandler());
 }
 
+WritingDataHandler Image::getWritingDataHandler()
+{
+    return WritingDataHandler(m_pImage->getWritingDataHandler());
+}
 
 std::string Image::getColorSpace() const
 {
