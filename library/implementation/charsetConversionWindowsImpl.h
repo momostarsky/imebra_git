@@ -16,11 +16,7 @@ $fileHeader$
 #include "charsetConversionBaseImpl.h"
 #include <windows.h>
 
-///////////////////////////////////////////////////////////
-//
-// Everything is in the namespace imebra
-//
-///////////////////////////////////////////////////////////
+
 namespace imebra
 {
 class charsetConversionWindows: public charsetConversionBase

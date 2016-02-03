@@ -20,11 +20,7 @@ The class hides the platform specific implementations and supplies a common
 #include <stdexcept>
 #include <map>
 
-///////////////////////////////////////////////////////////
-//
-// Everything is in the namespace imebra
-//
-///////////////////////////////////////////////////////////
+
 namespace imebra
 {
 

@@ -33,10 +33,13 @@ class IMEBRA_API Image
 {
 public:
 
-    /// \brief Define the size (in bytes) of a each pixel's
-    ///        color component and its representation
-    ///        (signed/unsigned)
-	///
+    /// \brief Defines the size (in bytes) of the memory
+    ///        allocated for each pixel's color component and
+    ///        its representation (signed/unsigned).
+    ///
+    /// This enumeration does not specify the highest bit used:
+    /// in order to retrieve the highest used bit call
+    /// getHighBit().
 	///////////////////////////////////////////////////////////
     enum class bitDepth
 	{
@@ -48,18 +51,39 @@ public:
         depthS32 = 5    ///< Signed double word (4 bytes)
 	};
 
-	// Constructor
+    /// \brief Construct an empty image.
+    ///
+    /// You can assign an image to the object by using the
+    /// operator=() or by calling create() to allocate an
+    /// image with the desidered size.
+    ///
 	///////////////////////////////////////////////////////////
 	Image();
 
+    /// \brief Construct an image that references the image
+    ///        passed in the parameter.
+    ///
+    /// \param right the Image object referencing the image to
+    ///              reference in this object
+    ///
+    ///////////////////////////////////////////////////////////
 	Image(const Image& right);
 
-	Image& operator=(const Image& right);
+    /// \brief Copy into the object the reference to the image
+    ///        referenced by the parameter.
+    ///
+    /// \param right the Image object referencing the image to
+    ///              reference in this object
+    ///
+    ///////////////////////////////////////////////////////////
+    Image& operator=(const Image& right);
 
 #ifndef SWIG
     Image(std::shared_ptr<imebra::implementation::image> pImage);
 #endif
 
+    /// \brief Create a writing data handler that controls a
+    ///        new
     WritingDataHandler create(
         const std::uint32_t sizeX,
         const std::uint32_t sizeY,

@@ -32,9 +32,6 @@ class dicomDir;
 namespace imebra
 {
 
-/// \addtogroup group_swig_bindings
-/// @{
-
 class IMEBRA_API DirectoryRecord
 {
 #ifndef SWIG
@@ -102,8 +99,6 @@ private:
     std::shared_ptr<imebra::implementation::dicomDir> m_pDicomDir;
 #endif
 };
-
-///@}
 
 }
 

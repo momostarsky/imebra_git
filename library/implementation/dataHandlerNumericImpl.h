@@ -19,11 +19,7 @@ $fileHeader$
 #include "memoryImpl.h"
 #include "charsetConversionImpl.h"
 
-///////////////////////////////////////////////////////////
-//
-// Everything is in the namespace imebra::implementation
-//
-///////////////////////////////////////////////////////////
+
 namespace imebra
 {
 

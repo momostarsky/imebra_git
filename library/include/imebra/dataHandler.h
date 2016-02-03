@@ -70,10 +70,10 @@ public:
 
     ///
     /// \brief Copies the raw representation of the handled data into
-    ///        an already allocated buffer.
+    ///        a pre-allocated buffer.
     ///
     /// If the allocated buffer is not large enough then the method doesn't
-    ///  copy any data and just returns the desidered size of the buffer.
+    ///  copy any data and just returns the required buffer' size.
     ///
     /// \param buffer     a pointer to the allocated buffer
     /// \param bufferSize the size of the allocated buffer

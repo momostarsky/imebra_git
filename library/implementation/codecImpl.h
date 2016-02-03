@@ -11,15 +11,10 @@ $fileHeader$
 #define imebraCodec_299706D7_4761_44a1_9F2D_8C38A7BD7AD5__INCLUDED_
 
 #include <stdexcept>
-
 #include <memory>
 #include "memoryImpl.h"
 
-///////////////////////////////////////////////////////////
-//
-// Everything is in the namespace imebra::implementation
-//
-///////////////////////////////////////////////////////////
+
 namespace imebra
 {
 

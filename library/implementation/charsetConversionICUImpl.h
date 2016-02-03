@@ -21,11 +21,7 @@ The class hides the platform specific implementations and supplies a common
 #include <unicode/coll.h>
 #include <unicode/ucnv.h>
 
-///////////////////////////////////////////////////////////
-//
-// Everything is in the namespace imebra
-//
-///////////////////////////////////////////////////////////
+
 namespace imebra
 {
 

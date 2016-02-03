@@ -13,11 +13,7 @@ $fileHeader$
 #include "dataHandlerStringImpl.h"
 #include "../include/imebra/definitions.h"
 
-///////////////////////////////////////////////////////////
-//
-// Everything is in the namespace imebra::implementation
-//
-///////////////////////////////////////////////////////////
+
 namespace imebra
 {
 

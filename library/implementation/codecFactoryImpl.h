@@ -12,18 +12,10 @@ $fileHeader$
 #define imebraCodecFactory_82307D4A_6490_4202_BF86_93399D32721E__INCLUDED_
 
 #include <memory>
+#include <list>
 #include "dataSetImpl.h"
 
 
-
-#include <list>
-
-
-///////////////////////////////////////////////////////////
-//
-// Everything is in the namespace imebra::implementation
-//
-///////////////////////////////////////////////////////////
 namespace imebra
 {
 

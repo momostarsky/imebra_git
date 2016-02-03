@@ -17,11 +17,7 @@ $fileHeader$
 #include "colorTransformsFactoryImpl.h"
 #include "../include/imebra/exceptions.h"
 
-///////////////////////////////////////////////////////////
-//
-// Everything is in the namespace imebra::implementation
-//
-///////////////////////////////////////////////////////////
+
 namespace imebra
 {
 

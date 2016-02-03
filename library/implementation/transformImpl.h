@@ -36,11 +36,7 @@ virtual void runTransformHandlers(\
             outputTopLeftX, outputTopLeftY);\
 }
 
-///////////////////////////////////////////////////////////
-//
-// Everything is in the namespace imebra::implementation
-//
-///////////////////////////////////////////////////////////
+
 namespace imebra
 {
 

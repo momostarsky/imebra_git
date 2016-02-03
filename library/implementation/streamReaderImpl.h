@@ -13,11 +13,7 @@ $fileHeader$
 #include "streamControllerImpl.h"
 #include "../include/imebra/exceptions.h"
 
-///////////////////////////////////////////////////////////
-//
-// Everything is in the namespace imebra
-//
-///////////////////////////////////////////////////////////
+
 namespace imebra
 {
 

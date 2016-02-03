@@ -13,17 +13,12 @@ $fileHeader$
 #include "exceptionImpl.h"
 #include "codecImpl.h"
 #include "dataImpl.h"
-
 #include <vector>
 #include <memory>
 #include <set>
 #include <map>
 
-///////////////////////////////////////////////////////////
-//
-// Everything is in the namespace imebra::implementation
-//
-///////////////////////////////////////////////////////////
+
 namespace imebra
 {
 
