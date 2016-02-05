@@ -338,8 +338,8 @@ protected:
             }
             pInputMemory += inputHandlerWidth - inputWidth;
         }
-        double center = (std::int32_t)(((std::int64_t)maxValue - (std::int64_t)minValue) / 2 + (std::int64_t)minValue);
-        double width = (std::int64_t)maxValue - (std::int64_t)minValue;
+        double center = (double)(((std::int64_t)maxValue - (std::int64_t)minValue) / 2 + (std::int64_t)minValue);
+        double width = (double)((std::int64_t)maxValue - (std::int64_t)minValue);
         setCenterWidth(center, width);
     }
 
