@@ -13,35 +13,6 @@ $fileHeader$
 namespace imebra
 {
 
-Age::Age(uint32_t initialAge, ageUnit_t initialUnits):
-    age(initialAge), units(initialUnits)
-{
-
-}
-
-Date::Date(
-        const unsigned int initialYear,
-        const unsigned int initialMonth,
-        const unsigned int initialDay,
-        const unsigned int initialHour,
-        const unsigned int initialMinutes,
-        const unsigned int initialSeconds,
-        const unsigned int initialNanoseconds,
-        const signed int initialOffsetHours,
-        const signed int initialOffsetMinutes):
-    year(initialYear),
-    month(initialMonth),
-    day(initialDay),
-    hour(initialHour),
-    minutes(initialMinutes),
-    seconds(initialSeconds),
-    nanoseconds(initialNanoseconds),
-    offsetHours(initialOffsetHours),
-    offsetMinutes(initialOffsetMinutes)
-{
-
-}
-
 ReadingDataHandler::ReadingDataHandler(const ReadingDataHandler& right) : m_pDataHandler(right.m_pDataHandler)
 {}
 
@@ -84,7 +55,12 @@ double ReadingDataHandler::getDouble(const size_t index) const
     return m_pDataHandler->getDouble(index);
 }
 
-std::wstring ReadingDataHandler::getString(const size_t index) const
+std::string ReadingDataHandler::getString(const size_t index) const
+{
+    return m_pDataHandler->getString(index);
+}
+
+std::wstring ReadingDataHandler::getUnicodeString(const size_t index) const
 {
     return m_pDataHandler->getUnicodeString(index);
 }

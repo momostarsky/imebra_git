@@ -62,7 +62,9 @@ public:
 
     double getDouble(size_t index) const;
 
-    std::wstring getString(size_t index) const;
+    std::string getString(size_t index) const;
+
+    std::wstring getUnicodeString(size_t index) const;
 
     Date getDate(size_t index) const;
 

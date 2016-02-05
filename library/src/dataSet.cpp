@@ -2,10 +2,6 @@
 $fileHeader$
 */
 
-/*! \file dataSet_swig.cpp
-    \brief Implementation of the class dataSet for SWIG.
-*/
-
 #include "../include/imebra/dataSet.h"
 #include "../implementation/dataSetImpl.h"
 #include "../implementation/dataHandlerNumericImpl.h"
@@ -118,12 +114,22 @@ void DataSet::setDouble(std::uint16_t groupId, std::uint16_t order, std::uint16_
     m_pDataSet->setDouble(groupId, order, tagId, bufferId, elementNumber, newValue, defaultType);
 }
 
-std::wstring DataSet::getStringThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
+std::string DataSet::getStringThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
+{
+    return m_pDataSet->getStringThrow(groupId, order, tagId, bufferId, elementNumber);
+}
+
+std::string DataSet::getString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, const std::string& defaultValue) const
+{
+    return m_pDataSet->getString(groupId, order, tagId, bufferId, elementNumber, defaultValue);
+}
+
+std::wstring DataSet::getUnicodeStringThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
 {
     return m_pDataSet->getUnicodeStringThrow(groupId, order, tagId, bufferId, elementNumber);
 }
 
-std::wstring DataSet::getString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, const std::wstring& defaultValue) const
+std::wstring DataSet::getUnicodeString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, const std::wstring& defaultValue) const
 {
     return m_pDataSet->getUnicodeString(groupId, order, tagId, bufferId, elementNumber, defaultValue);
 }
