@@ -333,14 +333,10 @@ std::string writingDataHandlerDateTimeBase::buildTime(
     IMEBRA_FUNCTION_START();
 
 	if(
-		   (hour < 0)
-		|| (hour >= 24)
-		|| (minutes < 0)
-		|| (minutes >= 60)
-		|| (seconds <0)
-		|| (seconds >= 60)
-		|| (nanoseconds < 0)
-		|| (nanoseconds > 999999)
+        (hour >= 24)
+        || (minutes >= 60)
+        || (seconds >= 60)
+        || (nanoseconds > 999999)
 		|| (offsetHours < -12)
 		|| (offsetHours > 12)
 		|| (offsetMinutes < -59)
