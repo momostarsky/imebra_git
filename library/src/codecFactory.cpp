@@ -10,10 +10,12 @@ $fileHeader$
 
 #include <imebra/codecFactory.h>
 #include <imebra/fileStream.h>
+#include <imebra/definitions.h>
 
 #include "../implementation/dicomCodecImpl.h"
 #include "../implementation/jpegCodecImpl.h"
 #include "../implementation/codecFactoryImpl.h"
+#include "../implementation/codecImpl.h"
 
 namespace imebra
 {
@@ -40,6 +42,24 @@ DataSet CodecFactory::load(const std::string& fileName, size_t maxSizeBufferLoad
 
     StreamReader reader(file);
     return load(reader, maxSizeBufferLoad);
+}
+
+void CodecFactory::saveImage(
+        StreamWriter& destStream,
+        const Image& sourceImage,
+        const std::string& transferSyntax,
+        imageQuality imageQuality,
+        const std::string& dataType,
+        std::uint32_t allocatedBits,
+        bool bSubSampledX,
+        bool bSubSampledY,
+        bool bInterleaved,
+        bool b2Complement)
+{
+    std::shared_ptr<imebra::implementation::codecs::codecFactory> factory(imebra::implementation::codecs::codecFactory::getCodecFactory());
+    std::shared_ptr<implementation::codecs::codec> pCodec = factory->getCodec(transferSyntax);
+    pCodec->setImage(destStream.m_pWriter, sourceImage.m_pImage, transferSyntax, (imebra::implementation::codecs::codec::quality)imageQuality, dataType, allocatedBits, bSubSampledX, bSubSampledY, bInterleaved, b2Complement);
+
 }
 
 

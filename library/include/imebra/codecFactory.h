@@ -39,6 +39,18 @@ public:
     static DataSet load(const std::wstring& fileName, size_t maxSizeBufferLoad);
     static DataSet load(const std::string& fileName, size_t maxSizeBufferLoad);
 
+    static void saveImage(
+            StreamWriter& destStream,
+            const Image& sourceImage,
+            const std::string& transferSyntax,
+            imageQuality imageQuality,
+            const std::string& dataType,
+            std::uint32_t allocatedBits,
+            bool bSubSampledX,
+            bool bSubSampledY,
+            bool bInterleaved,
+            bool b2Complement);
+
     enum codecType
     {
         dicom,
