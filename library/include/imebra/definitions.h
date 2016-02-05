@@ -57,11 +57,30 @@ enum class ageUnit_t: char
     years = L'Y'   ///< the age value is in years
 };
 
+///
+/// \brief This enumeration specifies the quality of the
+///        compressed image when a lossy compression format
+///        is used.
+///
+///////////////////////////////////////////////////////////
+enum imageQuality
+{
+    veryHigh = 0,      ///< the image is saved with very high quality. No subsampling is performed and no quantization
+    high = 100,        ///< the image is saved with high quality. No subsampling is performed. Quantization ratios are low
+    aboveMedium = 200, ///< the image is saved in medium quality. Horizontal subsampling is applied. Quantization ratios are low
+    medium = 300,      ///< the image is saved in medium quality. Horizontal subsampling is applied. Quantization ratios are medium
+    belowMedium = 400, ///< the image is saved in medium quality. Horizontal and vertical subsampling are applied. Quantization ratios are medium
+    low = 500,         ///< the image is saved in low quality. Horizontal and vertical subsampling are applied. Quantization ratios are higher than the ratios used in the belowMedium quality
+    veryLow = 600	   ///< the image is saved in low quality. Horizontal and vertical subsampling are applied. Quantization ratios are high
+};
+
+
 struct IMEBRA_API Age
 {
     Age(std::uint32_t initialAge, ageUnit_t initialUnits);
     std::uint32_t age;
     ageUnit_t     units;
+    double years();
 };
 
 struct IMEBRA_API Date

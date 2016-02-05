@@ -17,6 +17,7 @@ TEST(ageStringHandlerTest, ageTest)
     EXPECT_EQ(3, age.age);
     EXPECT_EQ(imebra::ageUnit_t::days, age.units);
     EXPECT_EQ(L"003D", dataSet.getStringThrow(0x0010, 0, 0x1010, 0, 0));
+    EXPECT_FLOAT_EQ(0.008219178, age.years());
 
     ASSERT_THROW(dataSet.setDouble(0x0010, 0, 0x1010, 0, 0, .01), imebra::DataHandlerDeniedConversionError);
 
@@ -30,7 +31,19 @@ TEST(ageStringHandlerTest, ageTest)
     age = dataSet.getAgeThrow(0x0010, 0, 0x1010, 0, 0);
     EXPECT_EQ(5, age.age);
     EXPECT_EQ(imebra::ageUnit_t::months, age.units);
+    EXPECT_FLOAT_EQ(0.4166666666, age.years());
 
+    dataSet.setString(0x0010, 0, 0x1010, 0, 0, L"018W");
+    age = dataSet.getAgeThrow(0x0010, 0, 0x1010, 0, 0);
+    EXPECT_EQ(18, age.age);
+    EXPECT_EQ(imebra::ageUnit_t::weeks, age.units);
+    EXPECT_FLOAT_EQ(0.34520548, age.years());
+
+    dataSet.setString(0x0010, 0, 0x1010, 0, 0, L"090Y");
+    age = dataSet.getAgeThrow(0x0010, 0, 0x1010, 0, 0);
+    EXPECT_EQ(90, age.age);
+    EXPECT_EQ(imebra::ageUnit_t::years, age.units);
+    EXPECT_FLOAT_EQ(90, age.years());
 }
 
 
