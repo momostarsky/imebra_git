@@ -29,8 +29,17 @@ class image;
 namespace imebra
 {
 
+class CodecFactory;
+class Transform;
+class VOILUT;
+class DataSet;
+
 class IMEBRA_API Image
 {
+    friend class CodecFactory;
+    friend class Transform;
+    friend class VOILUT;
+    friend class DataSet;
 public:
 
     /// \brief Defines the size (in bytes) of the memory
@@ -112,6 +121,7 @@ public:
 
     std::uint32_t getHighBit() const;
 
+protected:
 #ifndef SWIG
     std::shared_ptr<imebra::implementation::image> m_pImage;
 #endif
