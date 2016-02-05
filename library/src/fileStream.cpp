@@ -29,12 +29,12 @@ FileStreamOutput& FileStreamOutput::operator=(const FileStreamOutput& right)
 
 void FileStreamOutput::openFile(const std::wstring& name)
 {
-    (dynamic_cast<implementation::fileStreamOutput*>(m_pStream.get()))->openFile(name);
+    std::dynamic_pointer_cast<implementation::fileStreamOutput>(m_pStream)->openFile(name);
 }
 
 void FileStreamOutput::openFile(const std::string& name)
 {
-    (dynamic_cast<implementation::fileStreamOutput*>(m_pStream.get()))->openFile(name);
+    std::dynamic_pointer_cast<implementation::fileStreamOutput>(m_pStream)->openFile(name);
 }
 
 void FileStreamOutput::close()
