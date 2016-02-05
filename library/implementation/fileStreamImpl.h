@@ -126,8 +126,6 @@ public:
     ///////////////////////////////////////////////////////////
     virtual void write(size_t startPosition, const std::uint8_t* pBuffer, size_t bufferLength);
 
-protected:
-    FILE* m_openFile;
 };
 
 } // namespace implementation
