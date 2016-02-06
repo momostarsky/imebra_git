@@ -7,6 +7,8 @@ $fileHeader$
 
 */
 
+#define NOMINMAX
+
 #include "exceptionImpl.h"
 #include "modalityVOILUTImpl.h"
 #include "dataSetImpl.h"
@@ -69,18 +71,23 @@ modalityVOILUT::modalityVOILUT(std::shared_ptr<const dataSet> pDataSet):
     }
 }
 
-bool modalityVOILUT::isEmpty()
+bool modalityVOILUT::isEmpty() const
 {
 	return m_bEmpty;
 }
 
 
-std::shared_ptr<image> modalityVOILUT::allocateOutputImage(std::shared_ptr<image> pInputImage, std::uint32_t width, std::uint32_t height)
+std::shared_ptr<image> modalityVOILUT::allocateOutputImage(
+        image::bitDepth inputDepth,
+        const std::string& inputColorSpace,
+        std::uint32_t inputHighBit,
+        std::shared_ptr<palette> /* inputPalette */,
+        std::uint32_t outputWidth, std::uint32_t outputHeight) const
 {
 	if(isEmpty())
 	{
         std::shared_ptr<image> newImage(std::make_shared<image>());
-		newImage->create(width, height, pInputImage->getDepth(), pInputImage->getColorSpace(), pInputImage->getHighBit());
+        newImage->create(outputWidth, outputHeight, inputDepth, inputColorSpace, inputHighBit);
 		return newImage;
 	}
 
@@ -129,7 +136,7 @@ std::shared_ptr<image> modalityVOILUT::allocateOutputImage(std::shared_ptr<image
             }
         }
         std::shared_ptr<image> returnImage(std::make_shared<image>());
-        returnImage->create(width, height, depth, pInputImage->getColorSpace(), bits - 1);
+        returnImage->create(outputWidth, outputHeight, depth, inputColorSpace, bits - 1);
 		return returnImage;
 	}
 
@@ -138,19 +145,16 @@ std::shared_ptr<image> modalityVOILUT::allocateOutputImage(std::shared_ptr<image
     if(fabs(m_rescaleSlope) <= std::numeric_limits<double>::denorm_min())
 	{
         std::shared_ptr<image> returnImage(std::make_shared<image>());
-        returnImage->create(width, height, pInputImage->getDepth(), pInputImage->getColorSpace(), pInputImage->getHighBit());
+        returnImage->create(outputWidth, outputHeight, inputDepth, inputColorSpace, inputHighBit);
 		return returnImage;
 	}
 
-	image::bitDepth inputDepth(pInputImage->getDepth());
-	std::uint32_t highBit(pInputImage->getHighBit());
-
 	std::int32_t value0 = 0;
-	std::int32_t value1 = ((std::int32_t)1 << (highBit + 1)) - 1;
+    std::int32_t value1 = ((std::int32_t)1 << (inputHighBit + 1)) - 1;
 	if(inputDepth == image::depthS16 || inputDepth == image::depthS8)
 	{
-		value0 = ((std::int32_t)(-1) << highBit);
-		value1 = ((std::int32_t)1 << highBit);
+        value0 = ((std::int32_t)(-1) << inputHighBit);
+        value1 = ((std::int32_t)1 << inputHighBit);
 	}
 	std::int32_t finalValue0((std::int32_t) ((double)value0 * m_rescaleSlope + m_rescaleIntercept + 0.5) );
 	std::int32_t finalValue1((std::int32_t) ((double)value1 * m_rescaleSlope + m_rescaleIntercept + 0.5) );
@@ -170,25 +174,25 @@ std::shared_ptr<image> modalityVOILUT::allocateOutputImage(std::shared_ptr<image
     std::shared_ptr<image> returnImage(std::make_shared<image>());
 	if(minValue >= 0 && maxValue <= 255)
 	{
-        returnImage->create(width, height, image::depthU8, pInputImage->getColorSpace(), 7);
+        returnImage->create(outputWidth, outputHeight, image::depthU8, inputColorSpace, 7);
 		return returnImage;
 	}
 	if(minValue >= -128 && maxValue <= 127)
 	{
-        returnImage->create(width, height, image::depthS8, pInputImage->getColorSpace(), 7);
+        returnImage->create(outputWidth, outputHeight, image::depthS8, inputColorSpace, 7);
 		return returnImage;
 	}
 	if(minValue >= 0 && maxValue <= 65535)
 	{
-        returnImage->create(width, height, image::depthU16, pInputImage->getColorSpace(), 15);
+        returnImage->create(outputWidth, outputHeight, image::depthU16, inputColorSpace, 15);
 		return returnImage;
 	}
 	if(minValue >= -32768 && maxValue <= 32767)
 	{
-        returnImage->create(width, height, image::depthS16, pInputImage->getColorSpace(), 15);
+        returnImage->create(outputWidth, outputHeight, image::depthS16, inputColorSpace, 15);
 		return returnImage;
 	}
-    returnImage->create(width, height, image::depthS32, pInputImage->getColorSpace(), 31);
+    returnImage->create(outputWidth, outputHeight, image::depthS32, inputColorSpace, 31);
 	return returnImage;
 }
 

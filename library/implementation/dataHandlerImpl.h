@@ -188,6 +188,8 @@ class writingDataHandler
 public:
     writingDataHandler(const std::shared_ptr<buffer>& pBuffer, const std::string& dataType, const std::uint8_t paddingByte);
 
+    virtual ~writingDataHandler();
+
     std::string getDataType() const;
 
     virtual size_t getSize() const = 0;

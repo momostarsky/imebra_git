@@ -10,6 +10,8 @@ $fileHeader$
 #if !defined(imebraTransform_5DB89BFD_F105_45e7_B9D9_3756AC93C821__INCLUDED_)
 #define imebraTransform_5DB89BFD_F105_45e7_B9D9_3756AC93C821__INCLUDED_
 
+#define NOMINMAX
+
 #include <memory>
 #include <limits>
 #include "dataHandlerNumericImpl.h"
@@ -21,18 +23,18 @@ $fileHeader$
 
 #define DEFINE_RUN_TEMPLATE_TRANSFORM \
 virtual void runTransformHandlers(\
-    std::shared_ptr<imebra::implementation::handlers::readingDataHandlerNumericBase> inputHandler, std::uint32_t inputHandlerWidth, const std::string& inputHandlerColorSpace,\
+    std::shared_ptr<imebra::implementation::handlers::readingDataHandlerNumericBase> inputHandler, image::bitDepth inputDepth, std::uint32_t inputHandlerWidth, const std::string& inputHandlerColorSpace,\
     std::shared_ptr<imebra::implementation::palette> inputPalette,\
     std::uint32_t inputHighBit,\
     std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight,\
-    std::shared_ptr<imebra::implementation::handlers::writingDataHandlerNumericBase> outputHandler, std::uint32_t outputHandlerWidth, const std::string& outputHandlerColorSpace,\
+    std::shared_ptr<imebra::implementation::handlers::writingDataHandlerNumericBase> outputHandler, image::bitDepth outputDepth, std::uint32_t outputHandlerWidth, const std::string& outputHandlerColorSpace,\
     std::shared_ptr<imebra::implementation::palette> outputPalette,\
     std::uint32_t outputHighBit,\
-    std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY)\
+    std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY) const\
 {\
-    runTemplateTransform(*this, inputHandler, outputHandler, inputHandlerWidth, inputHandlerColorSpace, inputPalette, inputHighBit,\
+    runTemplateTransform(*this, inputHandler, outputHandler, inputDepth, inputHandlerWidth, inputHandlerColorSpace, inputPalette, inputHighBit,\
             inputTopLeftX, inputTopLeftY, inputWidth, inputHeight,\
-            outputHandlerWidth, outputHandlerColorSpace, outputPalette, outputHighBit,\
+            outputDepth, outputHandlerWidth, outputHandlerColorSpace, outputPalette, outputHighBit,\
             outputTopLeftX, outputTopLeftY);\
 }
 
@@ -139,7 +141,7 @@ public:
 	///          empty transformsChain object).
 	///
 	///////////////////////////////////////////////////////////
-	virtual bool isEmpty();
+    virtual bool isEmpty() const;
 
 
 	/// \brief Allocate an output image that is compatible with
@@ -155,7 +157,13 @@ public:
 	///          in runTransform()
 	///
 	///////////////////////////////////////////////////////////
-    virtual std::shared_ptr<image> allocateOutputImage(std::shared_ptr<image> pInputImage, std::uint32_t width, std::uint32_t height) = 0;
+    virtual std::shared_ptr<image> allocateOutputImage(
+            image::bitDepth inputDepth,
+            const std::string& inputColorSpace,
+            std::uint32_t inputHighBit,
+            std::shared_ptr<palette> inputPalette,
+            std::uint32_t outputWidth, std::uint32_t outputHeight) const = 0;
+
 
 	/// \brief Executes the transform.
 	///
@@ -177,64 +185,22 @@ public:
 	///
 	///////////////////////////////////////////////////////////
 	virtual void runTransform(
-            const std::shared_ptr<image>& inputImage,
+            const std::shared_ptr<const image>& inputImage,
             std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight,
             const std::shared_ptr<image>& outputImage,
-			std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY) = 0;
+            std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY) const;
 
-};
-
-
-/// \brief This is the base class for transforms that use
-///         templates.
-///
-/// Transforms derived from transformHandlers
-///  have the macro DEFINE_RUN_TEMPLATE_TRANSFORM in
-///  their class definition and implement the template
-///  function templateTransform().
-///
-///////////////////////////////////////////////////////////
-class transformHandlers: public transform
-{
-public:
-	/// \brief Reimplemented from transform: calls the
-	///         templated function templateTransform().
-	///
-	/// @param inputImage    the input image for the transform
-	/// @param inputTopLeftX the horizontal position of the
-	///                       top left corner of the area to
-	///                       process
-	/// @param inputTopLeftY the vertical position of the top
-	///                       left corner of the area to
-	///                       process
-	/// @param inputWidth    the width of the area to process
-	/// @param inputHeight   the height of the area to process
-	/// @param outputImage   the output image for the transform
-	/// @param outputTopLeftX the horizontal position of the
-	///                       top left corner of the output
-	///                       area
-	/// @param outputTopLeftY the vertical position of the top
-	///                        left corner of the output area
-	///
-	///////////////////////////////////////////////////////////
-	virtual void runTransform(
-            const std::shared_ptr<image>& inputImage,
-			std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight,
-            const std::shared_ptr<image>& outputImage,
-			std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY);
-
-	/// \internal
-	virtual void runTransformHandlers(
-            std::shared_ptr<handlers::readingDataHandlerNumericBase> inputHandler, std::uint32_t inputHandlerWidth, const std::string& inputHandlerColorSpace,
+    virtual void runTransformHandlers(
+            std::shared_ptr<handlers::readingDataHandlerNumericBase> inputHandler, image::bitDepth inputDepth, std::uint32_t inputHandlerWidth, const std::string& inputHandlerColorSpace,
             std::shared_ptr<palette> inputPalette,
             std::uint32_t inputHighBit,
             std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight,
-            std::shared_ptr<handlers::writingDataHandlerNumericBase> outputHandler, std::uint32_t outputHandlerWidth, const std::string& outputHandlerColorSpace,
+            std::shared_ptr<handlers::writingDataHandlerNumericBase> outputHandler, image::bitDepth outputDepth, std::uint32_t outputHandlerWidth, const std::string& outputHandlerColorSpace,
             std::shared_ptr<palette> outputPalette,
             std::uint32_t outputHighBit,
-            std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY) = 0;
-
+            std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY) const = 0;
 };
+
 
 template <typename dataType>
 dataType getMinValue(std::uint32_t highBit)
@@ -253,7 +219,7 @@ dataType getMinValue(std::uint32_t highBit)
 
 template <typename transformClass, typename inputType, typename... Args>
 void runTemplateTransform1(
-        transformClass& transformObject,
+        const transformClass& transformObject,
         const inputType* pInputData,
         std::shared_ptr<imebra::implementation::handlers::writingDataHandlerNumericBase> outputHandler, Args... args)
 {
@@ -292,7 +258,7 @@ void runTemplateTransform1(
 
 template <typename transformClass, typename... Args>
 void runTemplateTransform(
-        transformClass& transformObject,
+        const transformClass& transformObject,
         std::shared_ptr<imebra::implementation::handlers::readingDataHandlerNumericBase> inputHandler, Args... args)
 {
     imebra::implementation::handlers::readingDataHandlerNumericBase* pHandler(inputHandler.get());

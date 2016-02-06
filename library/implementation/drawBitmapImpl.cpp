@@ -39,7 +39,11 @@ drawBitmap::drawBitmap(std::shared_ptr<image> sourceImage, std::shared_ptr<trans
 	}
 	else
 	{
-		std::shared_ptr<image> startImage(m_transformsChain->allocateOutputImage(m_image, 1, 1));
+        std::shared_ptr<image> startImage(m_transformsChain->allocateOutputImage(m_image->getDepth(),
+                                                                                 m_image->getColorSpace(),
+                                                                                 m_image->getHighBit(),
+                                                                                 m_image->getPalette(),
+                                                                                 1, 1));
 		initialColorSpace = startImage->getColorSpace();
 	}
     std::shared_ptr<transforms::colorTransforms::colorTransformsFactory> pColorTransformsFactory(transforms::colorTransforms::colorTransformsFactory::getColorTransformsFactory());

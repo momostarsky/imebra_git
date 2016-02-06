@@ -41,8 +41,8 @@ namespace colorTransforms
 class RGBToMONOCHROME2: public colorTransform
 {
 public:
-    virtual std::string getInitialColorSpace();
-    virtual std::string getFinalColorSpace();
+    virtual std::string getInitialColorSpace() const;
+    virtual std::string getFinalColorSpace() const;
 	virtual std::shared_ptr<colorTransform> createColorTransform();
 
         DEFINE_RUN_TEMPLATE_TRANSFORM;
@@ -51,14 +51,14 @@ public:
         void templateTransform(
             const inputType* inputHandlerData,
             outputType* outputHandlerData,
-            std::uint32_t inputHandlerWidth, const std::string& inputHandlerColorSpace,
+            image::bitDepth /* inputDepth */, std::uint32_t inputHandlerWidth, const std::string& inputHandlerColorSpace,
             std::shared_ptr<palette> /* inputPalette */,
             std::uint32_t inputHighBit,
             std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight,
-            std::uint32_t outputHandlerWidth, const std::string& outputHandlerColorSpace,
+            image::bitDepth /* outputDepth */, std::uint32_t outputHandlerWidth, const std::string& outputHandlerColorSpace,
             std::shared_ptr<palette> /* outputPalette */,
             std::uint32_t outputHighBit,
-            std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY)
+            std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY) const
 
         {
             checkColorSpaces(inputHandlerColorSpace, outputHandlerColorSpace);

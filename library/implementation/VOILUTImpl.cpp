@@ -270,7 +270,7 @@ void VOILUT::getCenterWidth(double* pCenter, double* pWidth)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-bool VOILUT::isEmpty()
+bool VOILUT::isEmpty() const
 {
 	return m_windowWidth <= 1 && (m_pLUT == 0 || m_pLUT->getSize() == 0);
 }
@@ -285,17 +285,21 @@ bool VOILUT::isEmpty()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<image> VOILUT::allocateOutputImage(std::shared_ptr<image> pInputImage, std::uint32_t width, std::uint32_t height)
+std::shared_ptr<image> VOILUT::allocateOutputImage(
+        image::bitDepth inputDepth,
+        const std::string& inputColorSpace,
+        std::uint32_t inputHighBit,
+        std::shared_ptr<palette> /* inputPalette */,
+        std::uint32_t outputWidth, std::uint32_t outputHeight) const
 {
 	if(isEmpty())
 	{
         std::shared_ptr<image> newImage(std::make_shared<image>());
-		newImage->create(width, height, pInputImage->getDepth(), pInputImage->getColorSpace(), pInputImage->getHighBit());
+        newImage->create(outputWidth, outputHeight, inputDepth, inputColorSpace, inputHighBit);
 		return newImage;
 	}
 
     std::shared_ptr<image> outputImage(std::make_shared<image>());
-	image::bitDepth depth = pInputImage->getDepth();
 	if(m_pLUT != 0 && m_pLUT->getSize() != 0)
 	{
 		std::uint8_t bits = m_pLUT->getBits();
@@ -308,14 +312,14 @@ std::shared_ptr<image> VOILUT::allocateOutputImage(std::shared_ptr<image> pInput
 
 		if(bNegative)
 		{
-			depth = bits > 8 ? image::depthS16 : image::depthS8;
+            inputDepth = bits > 8 ? image::depthS16 : image::depthS8;
 		}
 		else
 		{
-			depth = bits > 8 ? image::depthU16 : image::depthU8;
+            inputDepth = bits > 8 ? image::depthU16 : image::depthU8;
 		}
         std::shared_ptr<image> returnImage(std::make_shared<image>());
-		returnImage->create(width, height, depth, pInputImage->getColorSpace(), bits - 1);
+        returnImage->create(outputWidth, outputHeight, inputDepth, inputColorSpace, bits - 1);
 		return returnImage;
 	}
 
@@ -326,16 +330,16 @@ std::shared_ptr<image> VOILUT::allocateOutputImage(std::shared_ptr<image> pInput
 	///////////////////////////////////////////////////////////
 	if(m_windowWidth <= 1)
 	{
-		outputImage->create(width, height, depth, pInputImage->getColorSpace(), pInputImage->getHighBit());
+        outputImage->create(outputWidth, outputHeight, inputDepth, inputColorSpace, inputHighBit);
 		return outputImage;
 	}
 
-	if(depth == image::depthS8)
-		depth = image::depthU8;
-	if(depth == image::depthS16 || depth == image::depthU32 || depth == image::depthS32)
-		depth = image::depthU16;
+    if(inputDepth == image::depthS8)
+        inputDepth = image::depthU8;
+    if(inputDepth == image::depthS16 || inputDepth == image::depthU32 || inputDepth == image::depthS32)
+        inputDepth = image::depthU16;
 
-	outputImage->create(width, height, depth, pInputImage->getColorSpace(), pInputImage->getHighBit());
+    outputImage->create(outputWidth, outputHeight, inputDepth, inputColorSpace, inputHighBit);
 
 	return outputImage;
 }

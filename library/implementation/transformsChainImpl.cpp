@@ -24,13 +24,7 @@ namespace transforms
 
 
 
-transformsChain::transformsChain():
-        m_inputWidth(0),
-        m_inputHeight(0),
-    m_inputDepth(image::depthU8),
-	m_inputHighBit(0),
-    m_outputDepth(image::depthU8),
-	m_outputHighBit(0)
+transformsChain::transformsChain()
 {}
 
 ///////////////////////////////////////////////////////////
@@ -58,149 +52,181 @@ void transformsChain::addTransform(std::shared_ptr<transform> pTransform)
 // Returns true if no transform has been defined
 //
 ///////////////////////////////////////////////////////////
-bool transformsChain::isEmpty()
+bool transformsChain::isEmpty() const
 {
 	return m_transformsList.empty();
 }
 
 
-void transformsChain::runTransform(
-            const std::shared_ptr<image>& inputImage,
-            std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight,
-            const std::shared_ptr<image>& outputImage,
-            std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY)
+void transformsChain::runTransformHandlers(
+        std::shared_ptr<handlers::readingDataHandlerNumericBase> inputHandler, image::bitDepth inputDepth, std::uint32_t inputHandlerWidth, const std::string& inputHandlerColorSpace,
+        std::shared_ptr<palette> inputPalette,
+        std::uint32_t inputHighBit,
+        std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight,
+        std::shared_ptr<handlers::writingDataHandlerNumericBase> outputHandler, image::bitDepth outputDepth, std::uint32_t outputHandlerWidth, const std::string& outputHandlerColorSpace,
+        std::shared_ptr<palette> outputPalette,
+        std::uint32_t outputHighBit,
+        std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY) const
 {
-	if(isEmpty())
-	{
+    if(isEmpty())
+    {
         std::shared_ptr<transformHighBit> highBit(std::make_shared<transformHighBit>());
-		highBit->runTransform(inputImage, inputTopLeftX, inputTopLeftY, inputWidth, inputHeight, outputImage, outputTopLeftX, outputTopLeftY);
-		return;
-	}
+        highBit->runTransformHandlers(inputHandler, inputDepth, inputHandlerWidth, inputHandlerColorSpace,
+                                      inputPalette,
+                                      inputHighBit,
+                                      inputTopLeftX, inputTopLeftY, inputWidth, inputHeight,
+                                      outputHandler, outputDepth, outputHandlerWidth, outputHandlerColorSpace,
+                                      outputPalette,
+                                      outputHighBit,
+                                      outputTopLeftX, outputTopLeftY);
+        return;
+    }
 
-	if(m_transformsList.size() == 1)
-	{
-		m_transformsList.front()->runTransform(inputImage, inputTopLeftX, inputTopLeftY, inputWidth, inputHeight,
-			outputImage, outputTopLeftX, outputTopLeftY);
-		return;
-	}
+    if(m_transformsList.size() == 1)
+    {
+        m_transformsList.front()->runTransformHandlers(inputHandler, inputDepth, inputHandlerWidth, inputHandlerColorSpace,
+                                               inputPalette,
+                                               inputHighBit,
+                                               inputTopLeftX, inputTopLeftY, inputWidth, inputHeight,
+                                               outputHandler, outputDepth, outputHandlerWidth, outputHandlerColorSpace,
+                                               outputPalette,
+                                               outputHighBit,
+                                               outputTopLeftX, outputTopLeftY);
+        return;
+    }
 
-	// Get the position of the last transform
-	///////////////////////////////////////////////////////////
-	tTransformsList::iterator lastTransform(m_transformsList.end());
-	--lastTransform;
+    std::uint32_t allocateRows = 65536 / inputWidth;
+    if(allocateRows == 0)
+    {
+        allocateRows = 1;
+    }
+    if(allocateRows > inputHeight)
+    {
+        allocateRows = inputHeight;
+    }
 
-    std::string inputColorSpace(inputImage->getColorSpace());
-	image::bitDepth inputDepth(inputImage->getDepth());
-	std::uint32_t inputHighBit(inputImage->getHighBit());
-    std::string outputColorSpace(outputImage->getColorSpace());
-	image::bitDepth outputDepth(outputImage->getDepth());
-	std::uint32_t outputHighBit(outputImage->getHighBit());
-	std::uint32_t allocateRows = 65536 / inputWidth;
-	if(allocateRows < 1)
-	{
-		allocateRows = 1;
-	}
-	if(allocateRows > inputHeight)
-	{
-		allocateRows = inputHeight;
-	}
+    // Allocate temporary images
+    ///////////////////////////////////////////////////////////
+    typedef std::vector<std::shared_ptr<image> > tTemporaryImagesList;
+    tTemporaryImagesList temporaryImages;
 
-	// Allocate temporary images
-	///////////////////////////////////////////////////////////
-	if(
-		m_inputWidth != inputWidth ||
-		m_inputHeight != inputHeight ||
-		m_inputColorSpace != inputColorSpace ||
-		m_inputDepth != inputDepth ||
-		m_inputHighBit != inputHighBit ||
-		m_outputColorSpace != outputColorSpace ||
-		m_outputDepth != outputDepth ||
-		m_outputHighBit != outputHighBit)
-	{
-		m_inputWidth = inputWidth;
-		m_inputHeight = inputHeight;
-		m_inputColorSpace = inputColorSpace;
-		m_inputDepth = inputDepth;
-		m_inputHighBit = inputHighBit;
-		m_outputColorSpace = outputColorSpace;
-		m_outputDepth = outputDepth;
-		m_outputHighBit = outputHighBit;
+    temporaryImages.push_back(m_transformsList.at(0)->allocateOutputImage(inputDepth,
+                                                                          inputHandlerColorSpace,
+                                                                          inputHighBit,
+                                                                          inputPalette,
+                                                                          inputWidth, allocateRows));
 
-		m_temporaryImages.clear();
-		tTransformsList::iterator scanTransforms(m_transformsList.begin());
-		m_temporaryImages.push_back((*scanTransforms)->allocateOutputImage(inputImage, inputWidth, allocateRows));
-		while(++scanTransforms != lastTransform)
-		{
-			m_temporaryImages.push_back((*scanTransforms)->allocateOutputImage(m_temporaryImages.back(), inputWidth, allocateRows));
-		}
-	}
+    for(size_t scanTransforms(1); scanTransforms != m_transformsList.size() - 1; ++scanTransforms)
+    {
+        std::shared_ptr<image> inputTemporaryImage = temporaryImages.at(scanTransforms - 1);
+        temporaryImages.push_back(m_transformsList.at(scanTransforms)->allocateOutputImage(inputTemporaryImage->getDepth(),
+                                                                                           inputTemporaryImage->getColorSpace(),
+                                                                                           inputTemporaryImage->getHighBit(),
+                                                                                           inputTemporaryImage->getPalette(),
+                                                                                           inputWidth, allocateRows));
+    }
 
-	// Run all the transforms. Split the images into several
-	//  parts
-	///////////////////////////////////////////////////////////
-	while(inputHeight != 0)
-	{
-		std::uint32_t rows = allocateRows;
-		if(rows > inputHeight)
-		{
-			rows = inputHeight;
-		}
-		inputHeight -= rows;
-		
-		tTransformsList::iterator scanTransforms(m_transformsList.begin());
-		tTemporaryImagesList::iterator scanTemporaryImages(m_temporaryImages.begin());
-		
-		(*scanTransforms)->runTransform(inputImage, inputTopLeftX, inputTopLeftY, inputWidth, rows, *scanTemporaryImages, 0, 0);
-		inputTopLeftY += rows;
 
-		while(++scanTransforms != lastTransform)
-		{
-			std::shared_ptr<image> temporaryInput(*(scanTemporaryImages++));
-			std::shared_ptr<image> temporaryOutput(*scanTemporaryImages);
 
-			(*scanTransforms)->runTransform(temporaryInput, 0, 0, inputWidth, rows, temporaryOutput, 0, 0);
-		}
+    // Run all the transforms. Split the images into several
+    //  parts
+    ///////////////////////////////////////////////////////////
+    while(inputHeight != 0)
+    {
+        std::uint32_t rows = allocateRows;
+        if(rows > inputHeight)
+        {
+            rows = inputHeight;
+        }
+        inputHeight -= rows;
 
-		m_transformsList.back()->runTransform(*scanTemporaryImages, 0, 0, inputWidth, rows, outputImage, outputTopLeftX, outputTopLeftY);
-		outputTopLeftY += rows;
-	}
+        m_transformsList.at(0)->runTransformHandlers(inputHandler, inputDepth, inputHandlerWidth, inputHandlerColorSpace,
+                                                     inputPalette,
+                                                     inputHighBit,
+                                                     inputTopLeftX, inputTopLeftY, inputWidth, rows,
+                                                     temporaryImages.front()->getWritingDataHandler(),
+                                                     temporaryImages.front()->getDepth(), inputWidth,
+                                                     temporaryImages.front()->getColorSpace(),
+                                                     temporaryImages.front()->getPalette(),
+                                                     temporaryImages.front()->getHighBit(),
+                                                     0, 0);
+        inputTopLeftY += rows;
+
+        for(size_t scanTransforms(1); scanTransforms != m_transformsList.size() - 1; ++scanTransforms)
+        {
+            m_transformsList.at(scanTransforms)->runTransform(temporaryImages.at(scanTransforms - 1), 0, 0, inputWidth, rows, temporaryImages.at(scanTransforms), 0, 0);
+        }
+
+        m_transformsList.back()->runTransformHandlers(temporaryImages.back()->getReadingDataHandler(),
+                                                      temporaryImages.back()->getDepth(), inputWidth,
+                                                      temporaryImages.back()->getColorSpace(),
+                                                      temporaryImages.back()->getPalette(),
+                                                      temporaryImages.back()->getHighBit(),
+                                                      0, 0, inputWidth, rows,
+                                                      outputHandler, outputDepth, outputHandlerWidth, outputHandlerColorSpace,
+                                                      outputPalette,
+                                                      outputHighBit,
+                                                      outputTopLeftX, outputTopLeftY);
+        outputTopLeftY += rows;
+    }
 }
 
 
-std::shared_ptr<image> transformsChain::allocateOutputImage(std::shared_ptr<image> pInputImage, std::uint32_t width, std::uint32_t height)
+std::shared_ptr<image> transformsChain::allocateOutputImage(
+        image::bitDepth inputDepth,
+        const std::string& inputColorSpace,
+        std::uint32_t inputHighBit,
+        std::shared_ptr<palette> inputPalette,
+        std::uint32_t outputWidth, std::uint32_t outputHeight) const
 {
 	if(isEmpty())
 	{
         std::shared_ptr<image> newImage(std::make_shared<image>());
-		newImage->create(width, height, pInputImage->getDepth(), pInputImage->getColorSpace(), pInputImage->getHighBit());
+        newImage->create(outputWidth, outputHeight, inputDepth, inputColorSpace, inputHighBit);
 		return newImage;
 	}
 
 	if(m_transformsList.size() == 1)
 	{
-		return m_transformsList.front()->allocateOutputImage(pInputImage, width, height);
+        return m_transformsList.front()->allocateOutputImage(inputDepth,
+                                                             inputColorSpace,
+                                                             inputHighBit,
+                                                             inputPalette,
+                                                             outputWidth, outputHeight);
 	}
 
 	// Get the position of the last transform
 	///////////////////////////////////////////////////////////
-	tTransformsList::iterator lastTransform(m_transformsList.end());
+    tTransformsList::const_iterator lastTransform(m_transformsList.end());
 	--lastTransform;
 
 	std::shared_ptr<image> temporaryImage;
 
-	for(tTransformsList::iterator scanTransforms(m_transformsList.begin()); scanTransforms != lastTransform; ++scanTransforms)
+    for(tTransformsList::const_iterator scanTransforms(m_transformsList.begin()); scanTransforms != lastTransform; ++scanTransforms)
 	{
 		if(scanTransforms == m_transformsList.begin())
 		{
-			temporaryImage = (*scanTransforms)->allocateOutputImage(pInputImage, 1, 1);
+            temporaryImage = (*scanTransforms)->allocateOutputImage(inputDepth,
+                                                                    inputColorSpace,
+                                                                    inputHighBit,
+                                                                    inputPalette,
+                                                                    1, 1);
 		}
 		else
 		{
-			std::shared_ptr <image> newImage( (*scanTransforms)->allocateOutputImage(temporaryImage, 1, 1) );
+            std::shared_ptr <image> newImage( (*scanTransforms)->allocateOutputImage(temporaryImage->getDepth(),
+                                                                                     temporaryImage->getColorSpace(),
+                                                                                     temporaryImage->getHighBit(),
+                                                                                     temporaryImage->getPalette(),
+                                                                                     1, 1) );
 			temporaryImage = newImage;
 		}
 	}
-	return (*lastTransform)->allocateOutputImage(temporaryImage, width, height);
+    return (*lastTransform)->allocateOutputImage(temporaryImage->getDepth(),
+                                                 temporaryImage->getColorSpace(),
+                                                 temporaryImage->getHighBit(),
+                                                 temporaryImage->getPalette(),
+                                                 outputWidth, outputHeight);
 
 
 }

@@ -130,7 +130,9 @@ public:
 
     void setDouble(const size_t index, const double value);
 
-    void setString(const size_t index, const std::wstring& value);
+    void setString(const size_t index, const std::string& value);
+
+    void setUnicodeString(const size_t index, const std::wstring& value);
 
     void assign(const char* buffer, const size_t bufferSize);
 

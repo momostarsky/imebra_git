@@ -990,7 +990,7 @@ std::shared_ptr<image> dicomCodec::getImage(const dataSet& dataset, std::shared_
     std::uint8_t storedBits=(std::uint8_t)dataset.getUnsignedLongThrow(0x0028, 0x0, 0x0101, 0, 0);
     std::uint8_t highBit=(std::uint8_t)dataset.getUnsignedLongThrow(0x0028, 0x0, 0x0102, 0, 0);
     if(highBit < storedBits - 1)
-        highBit = (std::uint8_t)(storedBits - 1);
+        throw;
 
 
 	// If the chrominance channels are subsampled, then find

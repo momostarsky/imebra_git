@@ -82,7 +82,10 @@ std::uint32_t readingDataHandler::getAge(const size_t /* index */, ageUnit_t *pU
 writingDataHandler::writingDataHandler(const std::shared_ptr<buffer> &pBuffer, const std::string &dataType, const uint8_t paddingByte):
     m_dataType(dataType), m_buffer(pBuffer), m_paddingByte(paddingByte)
 {
+}
 
+writingDataHandler::~writingDataHandler()
+{
 }
 
 ///////////////////////////////////////////////////////////

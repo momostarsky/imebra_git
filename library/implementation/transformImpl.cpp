@@ -31,17 +31,17 @@ namespace transforms
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-bool transform::isEmpty()
+bool transform::isEmpty() const
 {
 	return false;
 }
 
 
-void transformHandlers::runTransform(
-            const std::shared_ptr<image>& inputImage,
+void transform::runTransform(
+            const std::shared_ptr<const image>& inputImage,
             std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight,
             const std::shared_ptr<image>& outputImage,
-            std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY)
+            std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY) const
 {
     IMEBRA_FUNCTION_START();
 
@@ -85,16 +85,16 @@ void transformHandlers::runTransform(
 	if(isEmpty())
 	{
         std::shared_ptr<transformHighBit> emptyTransform(std::make_shared<transformHighBit>());
-        emptyTransform->runTransformHandlers(inputHandler, inputImageWidth, inputColorSpace, inputPalette, inputHighBit,
+        emptyTransform->runTransformHandlers(inputHandler, inputDepth, inputImageWidth, inputColorSpace, inputPalette, inputHighBit,
 											 inputTopLeftX, inputTopLeftY, inputWidth, inputHeight,
-                                             outputHandler, outputImageWidth, outputColorSpace, outputPalette, outputHighBit,
+                                             outputHandler, outputDepth, outputImageWidth, outputColorSpace, outputPalette, outputHighBit,
 											 outputTopLeftX, outputTopLeftY);
 		return;
 	}
 
-    runTransformHandlers(inputHandler, inputImageWidth, inputColorSpace, inputPalette, inputHighBit,
+    runTransformHandlers(inputHandler, inputDepth, inputImageWidth, inputColorSpace, inputPalette, inputHighBit,
 		inputTopLeftX, inputTopLeftY, inputWidth, inputHeight,
-        outputHandler, outputImageWidth, outputColorSpace, outputPalette, outputHighBit,
+        outputHandler, outputDepth, outputImageWidth, outputColorSpace, outputPalette, outputHighBit,
 		outputTopLeftX, outputTopLeftY);
 
     IMEBRA_FUNCTION_END();

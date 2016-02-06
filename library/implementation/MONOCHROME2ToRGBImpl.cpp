@@ -35,7 +35,7 @@ namespace colorTransforms
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::string MONOCHROME2ToRGB::getInitialColorSpace()
+std::string MONOCHROME2ToRGB::getInitialColorSpace() const
 {
     return "MONOCHROME2";
 }
@@ -50,7 +50,7 @@ std::string MONOCHROME2ToRGB::getInitialColorSpace()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::string MONOCHROME2ToRGB::getFinalColorSpace()
+std::string MONOCHROME2ToRGB::getFinalColorSpace() const
 {
     return "RGB";
 }

@@ -172,7 +172,11 @@ namespace imebra
                 }
                 else
                 {
-                    m_transformsChain->allocateOutputImage(m_image, imageSizeX, imageSizeY);
+                    m_transformsChain->allocateOutputImage(m_image->getDepth(),
+                                                           m_image->getColorSpace(),
+                                                           m_image->getHighBit(),
+                                                           m_image->getPalette(),
+                                                           imageSizeX, imageSizeY);
                     imageHandler = sourceImage->getReadingDataHandler();
                 }
                 const std::uint8_t* pImagePointer = imageHandler->getMemoryBuffer();

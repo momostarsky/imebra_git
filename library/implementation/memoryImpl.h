@@ -219,28 +219,6 @@ class memoryPool
 public:
     ~memoryPool();
 
-	/// \brief Retrieve a new or reused 
-	///         \ref imebra::memory object.
-	///
-	/// The function look for an unused \ref memory object
-	///  that has a managed string with the same size of the
-	///  specified one and tries to reuse it.
-	///
-	/// If none of the unused objects has the requested
-	///  size, then a new memory object is created and 
-	///  returned.
-	///
-	/// @param requestedSize the size that the string managed
-	///                       by the returned memory object
-	///                       must have
-	/// @return              a pointer to the reused or new
-	///                       memory object: in any case the
-	///                       reference counter of the returned
-	///                       object will be 1
-	///
-	///////////////////////////////////////////////////////////
-    stringUint8* getMemory(size_t requestedSize);
-
 	/// \brief Discard all the currently unused memory.
 	///
     /// \return true if some unused memory has been deleted,
@@ -249,7 +227,29 @@ public:
     bool flush();
 
 protected:
-	/// \internal
+    /// \brief Retrieve a new or reused
+    ///         \ref imebra::memory object.
+    ///
+    /// The function look for an unused \ref memory object
+    ///  that has a managed string with the same size of the
+    ///  specified one and tries to reuse it.
+    ///
+    /// If none of the unused objects has the requested
+    ///  size, then a new memory object is created and
+    ///  returned.
+    ///
+    /// @param requestedSize the size that the string managed
+    ///                       by the returned memory object
+    ///                       must have
+    /// @return              a pointer to the reused or new
+    ///                       memory object: in any case the
+    ///                       reference counter of the returned
+    ///                       object will be 1
+    ///
+    ///////////////////////////////////////////////////////////
+    stringUint8* getMemory(size_t requestedSize);
+
+    /// \internal
 	/// \brief Called by \ref memory before the object
 	///         is deleted.
 	///

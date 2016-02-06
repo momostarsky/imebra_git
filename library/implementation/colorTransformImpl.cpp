@@ -49,7 +49,7 @@ namespace colorTransforms
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void colorTransform::checkColorSpaces(const std::string& inputHandlerColorSpace, const std::string& outputHandlerColorSpace)
+void colorTransform::checkColorSpaces(const std::string& inputHandlerColorSpace, const std::string& outputHandlerColorSpace) const
 {
     IMEBRA_FUNCTION_START();
 
@@ -66,7 +66,7 @@ void colorTransform::checkColorSpaces(const std::string& inputHandlerColorSpace,
 	IMEBRA_FUNCTION_END();
 }
 
-void colorTransform::checkHighBit(std::uint32_t inputHighBit, std::uint32_t outputHighBit)
+void colorTransform::checkHighBit(std::uint32_t inputHighBit, std::uint32_t outputHighBit) const
 {
     if(inputHighBit != outputHighBit)
     {
@@ -75,17 +75,20 @@ void colorTransform::checkHighBit(std::uint32_t inputHighBit, std::uint32_t outp
 }
 
 
-std::shared_ptr<image> colorTransform::allocateOutputImage(std::shared_ptr<image> pInputImage, std::uint32_t width, std::uint32_t height)
+std::shared_ptr<image> colorTransform::allocateOutputImage(
+        image::bitDepth inputDepth,
+        const std::string& /* inputColorSpace */,
+        std::uint32_t inputHighBit,
+        std::shared_ptr<palette> inputPalette,
+        std::uint32_t outputWidth, std::uint32_t outputHeight) const
 {
     std::shared_ptr<image> newImage(std::make_shared<image>());
-    std::uint32_t highBit = pInputImage->getHighBit();
-    std::shared_ptr<palette> inputPalette = pInputImage->getPalette();
     if(inputPalette != 0)
     {
-        highBit = inputPalette->getRed()->getBits();
+        inputHighBit = inputPalette->getRed()->getBits();
     }
 
-    newImage->create(width, height, pInputImage->getDepth(), getFinalColorSpace(), highBit);
+    newImage->create(outputWidth, outputHeight, inputDepth, getFinalColorSpace(), inputHighBit);
 	return newImage;
 }
 

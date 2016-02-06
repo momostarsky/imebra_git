@@ -100,8 +100,6 @@ public:
         const std::string& colorSpace,
         const std::uint32_t highBit);
 
-    void setHighBit(std::uint32_t highBit);
-
     double getSizeMmY() const;
     double getSizeMmX() const;
 

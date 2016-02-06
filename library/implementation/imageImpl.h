@@ -82,9 +82,9 @@ public:
 	///        value.
 	///
 	///////////////////////////////////////////////////////////
-	enum bitDepth
+    enum bitDepth
 	{
-			depthU8,    ///< unsigned integer, 1 byte
+            depthU8,    ///< unsigned integer, 1 byte
 			depthS8,    ///< signed integer, 1 byte
 			depthU16,   ///< unsigned integer, 2 bytes
 			depthS16,   ///< signed integer, 2 bytes
@@ -92,12 +92,12 @@ public:
             depthS32    ///< signed integer, 4 bytes
 	};
 
+
 	// Constructor
 	///////////////////////////////////////////////////////////
 	image():
-			m_rowLength(0),
 			m_channelsNumber(0),
-			m_imageDepth(depthU8),
+            m_imageDepth(depthU8),
 			m_highBit(0),
 			m_sizeX(0),
 			m_sizeY(0),
@@ -139,13 +139,6 @@ public:
         const std::string& colorSpace,
         const std::uint32_t  highBit);
 
-	/// \brief Set the high bit.
-	///
-	/// @param highBit       the image's high bit
-	///
-	///////////////////////////////////////////////////////////
-	void setHighBit(std::uint32_t highBit);
-
 	/// \brief Set the palette for the image
 	///
 	/// @param imagePalette  the palette used in the image
@@ -164,7 +157,7 @@ public:
 	/// @param pSizeY a pointer to the variable to fill with
 	///               the image's height (in millimeters).
 	///////////////////////////////////////////////////////////
-	void getSizeMm(double* pSizeX, double* pSizeY);
+    void getSizeMm(double* pSizeX, double* pSizeY) const;
 
 	/// \brief Set the image's size, in millimeters.
 	///
@@ -182,7 +175,7 @@ public:
 	///               the image's height (in pixels).
 	///
 	///////////////////////////////////////////////////////////
-	void getSize(std::uint32_t* pSizeX, std::uint32_t* pSizeY);
+    void getSize(std::uint32_t* pSizeX, std::uint32_t* pSizeY) const;
 
 	/// \brief Retrieve a data handler for managing the
 	///        image's buffer
@@ -227,14 +220,14 @@ public:
 	/// @return a string with the image's color space
 	///
 	///////////////////////////////////////////////////////////
-    std::string getColorSpace();
+    std::string getColorSpace() const;
 
 	/// \brief Get the number of allocated channels.
 	///
 	/// @return the number of color channels in the image
 	///
 	///////////////////////////////////////////////////////////
-	std::uint32_t getChannelsNumber();
+    std::uint32_t getChannelsNumber() const;
 
 	/// \brief Get the image's bit depth.
 	///
@@ -243,25 +236,21 @@ public:
 	///
 	/// @return the bit depth.
 	///////////////////////////////////////////////////////////
-	bitDepth getDepth();
+    bitDepth getDepth() const;
 
 	/// \brief Get the high bit.
 	///
 	/// @return the image's high bit
 	///
 	///////////////////////////////////////////////////////////
-	std::uint32_t getHighBit();
+    std::uint32_t getHighBit() const;
 
-    std::shared_ptr<palette> getPalette();
+    std::shared_ptr<palette> getPalette() const;
 
 protected:
 	// Image's buffer
 	///////////////////////////////////////////////////////////
 	std::shared_ptr<buffer> m_buffer;
-
-	// Lenght of a buffer's row (in bytes)
-	///////////////////////////////////////////////////////////
-	std::uint32_t m_rowLength;
 
 	// Number of channels
 	///////////////////////////////////////////////////////////

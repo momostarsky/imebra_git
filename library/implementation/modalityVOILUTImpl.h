@@ -51,7 +51,7 @@ namespace transforms
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class modalityVOILUT: public transformHandlers
+class modalityVOILUT: public transform
 {
 public:
 	/// \brief Constructor.
@@ -68,14 +68,14 @@ public:
 			void templateTransform(
                     const inputType* inputHandlerData,
                     outputType* outputHandlerData,
-                    std::uint32_t inputHandlerWidth, const std::string& inputHandlerColorSpace,
+                    image::bitDepth /* inputDepth */, std::uint32_t inputHandlerWidth, const std::string& inputHandlerColorSpace,
                     std::shared_ptr<palette> /* inputPalette */,
                     std::uint32_t /* inputHighBit */,
                     std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight,
-                    std::uint32_t outputHandlerWidth, const std::string& outputHandlerColorSpace,
+                    image::bitDepth /* outputDepth */, std::uint32_t outputHandlerWidth, const std::string& outputHandlerColorSpace,
                     std::shared_ptr<palette> /* outputPalette */,
                     std::uint32_t /* outputHighBit */,
-                    std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY)
+                    std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY) const
 	{
         IMEBRA_FUNCTION_START();
 		if(!colorTransforms::colorTransformsFactory::isMonochrome(inputHandlerColorSpace) || !colorTransforms::colorTransformsFactory::isMonochrome(outputHandlerColorSpace))
@@ -125,9 +125,14 @@ public:
 		IMEBRA_FUNCTION_END();
 	}
 
-	virtual bool isEmpty();
+    virtual bool isEmpty() const;
 
-    virtual std::shared_ptr<image> allocateOutputImage(std::shared_ptr<image> pInputImage, std::uint32_t width, std::uint32_t height);
+    virtual std::shared_ptr<image> allocateOutputImage(
+            image::bitDepth inputDepth,
+            const std::string& inputColorSpace,
+            std::uint32_t inputHighBit,
+            std::shared_ptr<palette> inputPalette,
+            std::uint32_t outputWidth, std::uint32_t outputHeight) const;
 
 private:
     std::shared_ptr<const dataSet> m_pDataSet;

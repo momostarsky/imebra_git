@@ -21,10 +21,15 @@ namespace implementation
 namespace transforms
 {
 
-std::shared_ptr<image> transformHighBit::allocateOutputImage(std::shared_ptr<image> pInputImage, std::uint32_t width, std::uint32_t height)
+std::shared_ptr<image> transformHighBit::allocateOutputImage(
+        image::bitDepth inputDepth,
+        const std::string& inputColorSpace,
+        std::uint32_t inputHighBit,
+        std::shared_ptr<palette> /* inputPalette */,
+        std::uint32_t outputWidth, std::uint32_t outputHeight) const
 {
     std::shared_ptr<image> newImage(std::make_shared<image>());
-	newImage->create(width, height, pInputImage->getDepth(), pInputImage->getColorSpace(), pInputImage->getHighBit());
+    newImage->create(outputWidth, outputHeight, inputDepth, inputColorSpace, inputHighBit);
 	return newImage;
 }
 

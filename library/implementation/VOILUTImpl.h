@@ -46,7 +46,7 @@ namespace transforms
 ///  setCenterWidth() or setLUT().
 ///
 ///////////////////////////////////////////////////////////
-class VOILUT: public transforms::transformHandlers
+class VOILUT: public transforms::transform
 {
 public:
     /// \brief Constructor.
@@ -193,14 +193,14 @@ public:
 			void templateTransform(
                     const inputType* inputHandlerData,
                     outputType* outputHandlerData,
-                    std::uint32_t inputHandlerWidth, const std::string& /* inputHandlerColorSpace */,
+                    image::bitDepth /* inputDepth */, std::uint32_t inputHandlerWidth, const std::string& /* inputHandlerColorSpace */,
 					std::shared_ptr<palette> /* inputPalette */,
                     std::uint32_t inputHighBit,
                     std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight,
-                    std::uint32_t outputHandlerWidth, const std::string& /* outputHandlerColorSpace */,
+                    image::bitDepth /* outputDepth */, std::uint32_t outputHandlerWidth, const std::string& /* outputHandlerColorSpace */,
 					std::shared_ptr<palette> /* outputPalette */,
                     std::uint32_t outputHighBit,
-                    std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY)
+                    std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY) const
 
 	{
         const inputType* pInputMemory(inputHandlerData);
@@ -249,64 +249,44 @@ public:
 			inputHandlerNumValues = maxValue - minValue;
 		}
 
-        std::int64_t value;
-
-        if(inputHandlerNumValues > outputHandlerNumValues)
+        double ratio = (double)outputHandlerNumValues / (double)inputHandlerNumValues;
+        double outputValue;
+        double outputMin((double)outputHandlerMinValue);
+        double outputMax((double)(outputHandlerMinValue + outputHandlerNumValues - 1));
+        for(; inputHeight != 0; --inputHeight)
         {
-            std::int32_t ratio = (std::int32_t)(inputHandlerNumValues / outputHandlerNumValues);
-            for(; inputHeight != 0; --inputHeight)
-            {
 
-                for(std::uint32_t scanPixels(inputWidth); scanPixels != 0; --scanPixels)
-                {
-                    value = (std::int64_t) *(pInputMemory++);
-                    if(value <= minValue)
-                    {
-                        *(pOutputMemory++) = (outputType)outputHandlerMinValue;
-                        continue;
-                    }
-                    if(value >= maxValue)
-                    {
-                        *(pOutputMemory++) = (outputType)( outputHandlerMinValue + outputHandlerNumValues - 1 );
-                        continue;
-                    }
-                    *(pOutputMemory++) = (outputType)( (value - minValue) / ratio + outputHandlerMinValue );
-                }
-                pInputMemory += (inputHandlerWidth - inputWidth);
-                pOutputMemory += (outputHandlerWidth - inputWidth);
-            }
-        }
-        else
-        {
-            std::int32_t ratio = (std::int32_t)(outputHandlerNumValues / inputHandlerNumValues);
-            for(; inputHeight != 0; --inputHeight)
+            for(std::uint32_t scanPixels(inputWidth); scanPixels != 0; --scanPixels)
             {
-
-                for(std::uint32_t scanPixels(inputWidth); scanPixels != 0; --scanPixels)
+                outputValue = 0.5 + ((std::int64_t)*(pInputMemory++) - minValue) * ratio + (double)outputHandlerMinValue ;
+                if(outputValue <= outputMin)
                 {
-                    value = (std::int64_t) *(pInputMemory++);
-                    if(value <= minValue)
-                    {
-                        *(pOutputMemory++) = (outputType)outputHandlerMinValue;
-                        continue;
-                    }
-                    if(value >= maxValue)
-                    {
-                        *(pOutputMemory++) = (outputType)( outputHandlerMinValue + outputHandlerNumValues - 1 );
-                        continue;
-                    }
-                    *(pOutputMemory++) = (outputType)( (value - minValue) * ratio + outputHandlerMinValue );
+                    *pOutputMemory++ = (outputType)outputHandlerMinValue;
                 }
-                pInputMemory += (inputHandlerWidth - inputWidth);
-                pOutputMemory += (outputHandlerWidth - inputWidth);
+                else if(outputValue >= outputMax)
+                {
+                    *pOutputMemory++ = (outputType)( outputHandlerMinValue + outputHandlerNumValues - 1 );
+                }
+                else
+                {
+                    *pOutputMemory++ = (outputType)outputValue;
+                }
             }
+
+            pInputMemory += (inputHandlerWidth - inputWidth);
+            pOutputMemory += (outputHandlerWidth - inputWidth);
         }
 	}
 
 
-	virtual bool isEmpty();
+    virtual bool isEmpty() const;
 
-	virtual std::shared_ptr<image> allocateOutputImage(std::shared_ptr<image> pInputImage, std::uint32_t width, std::uint32_t height);
+    virtual std::shared_ptr<image> allocateOutputImage(
+            image::bitDepth inputDepth,
+            const std::string& inputColorSpace,
+            std::uint32_t inputHighBit,
+            std::shared_ptr<palette> inputPalette,
+            std::uint32_t outputWidth, std::uint32_t outputHeight) const;
 
 protected:
 

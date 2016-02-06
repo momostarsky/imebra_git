@@ -333,7 +333,11 @@ std::shared_ptr<image> dataSet::getModalityImage(std::uint32_t frameNumber) cons
         {
             std::uint32_t width, height;
             originalImage->getSize(&width, &height);
-            std::shared_ptr<image> outputImage = monochromeColorTransform->allocateOutputImage(originalImage, width, height);
+            std::shared_ptr<image> outputImage = monochromeColorTransform->allocateOutputImage(originalImage->getDepth(),
+                                                                                               originalImage->getColorSpace(),
+                                                                                               originalImage->getHighBit(),
+                                                                                               originalImage->getPalette(),
+                                                                                               width, height);
             monochromeColorTransform->runTransform(originalImage, 0, 0, width, height, outputImage, 0, 0);
             return outputImage;
         }
@@ -345,7 +349,11 @@ std::shared_ptr<image> dataSet::getModalityImage(std::uint32_t frameNumber) cons
     ///////////////////////////////////////
     std::uint32_t width, height;
     originalImage->getSize(&width, &height);
-    std::shared_ptr<image> outputImage = modalityVOILUT->allocateOutputImage(originalImage, width, height);
+    std::shared_ptr<image> outputImage = modalityVOILUT->allocateOutputImage(originalImage->getDepth(),
+                                                                             originalImage->getColorSpace(),
+                                                                             originalImage->getHighBit(),
+                                                                             originalImage->getPalette(),
+                                                                             width, height);
     modalityVOILUT->runTransform(originalImage, 0, 0, width, height, outputImage, 0, 0);
     return outputImage;
 

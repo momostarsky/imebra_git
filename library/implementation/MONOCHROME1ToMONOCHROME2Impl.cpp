@@ -35,7 +35,7 @@ namespace colorTransforms
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::string MONOCHROME1ToMONOCHROME2::getInitialColorSpace()
+std::string MONOCHROME1ToMONOCHROME2::getInitialColorSpace() const
 {
     return "MONOCHROME1";
 }
@@ -50,7 +50,7 @@ std::string MONOCHROME1ToMONOCHROME2::getInitialColorSpace()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::string MONOCHROME1ToMONOCHROME2::getFinalColorSpace()
+std::string MONOCHROME1ToMONOCHROME2::getFinalColorSpace() const
 {
     return "MONOCHROME2";
 }
@@ -72,7 +72,7 @@ std::shared_ptr<colorTransform> MONOCHROME1ToMONOCHROME2::createColorTransform()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::string MONOCHROME2ToMONOCHROME1::getInitialColorSpace()
+std::string MONOCHROME2ToMONOCHROME1::getInitialColorSpace() const
 {
     return "MONOCHROME2";
 }
@@ -87,7 +87,7 @@ std::string MONOCHROME2ToMONOCHROME1::getInitialColorSpace()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::string MONOCHROME2ToMONOCHROME1::getFinalColorSpace()
+std::string MONOCHROME2ToMONOCHROME1::getFinalColorSpace() const
 {
     return "MONOCHROME1";
 }

@@ -46,13 +46,13 @@ public:
 
     bool isEmpty() const;
 
-    Image allocateOutputImage(Image& pInputImage, std::uint32_t width, std::uint32_t height);
+    Image allocateOutputImage(Image& pInputImage, std::uint32_t width, std::uint32_t height) const;
 
 	void runTransform(
             const Image& inputImage,
             std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight,
             Image& outputImage,
-            std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY);
+            std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY) const;
 
 #ifndef SWIG
     std::shared_ptr<imebra::implementation::transforms::transform> m_pTransform;

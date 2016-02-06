@@ -34,7 +34,7 @@ namespace colorTransforms
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::string PALETTECOLORToRGB::getInitialColorSpace()
+std::string PALETTECOLORToRGB::getInitialColorSpace() const
 {
     return "PALETTE COLOR";
 }
@@ -49,7 +49,7 @@ std::string PALETTECOLORToRGB::getInitialColorSpace()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::string PALETTECOLORToRGB::getFinalColorSpace()
+std::string PALETTECOLORToRGB::getFinalColorSpace() const
 {
     return "RGB";
 }

@@ -10,7 +10,7 @@ $fileHeader$
 #if !defined(imebraTransformsChain_5DB89BFD_F105_45e7_B9D9_3756AC93C821__INCLUDED_)
 #define imebraTransformsChain_5DB89BFD_F105_45e7_B9D9_3756AC93C821__INCLUDED_
 
-#include <list>
+#include <vector>
 #include "transformImpl.h"
 
 namespace imebra
@@ -56,11 +56,15 @@ public:
 	///////////////////////////////////////////////////////////
 	void addTransform(std::shared_ptr<transform> pTransform);
 
-	virtual void runTransform(
-            const std::shared_ptr<image>& inputImage,
+    virtual void runTransformHandlers(
+            std::shared_ptr<handlers::readingDataHandlerNumericBase> inputHandler, image::bitDepth inputDepth, std::uint32_t inputHandlerWidth, const std::string& inputHandlerColorSpace,
+            std::shared_ptr<palette> inputPalette,
+            std::uint32_t inputHighBit,
             std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight,
-            const std::shared_ptr<image>& outputImage,
-            std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY);
+            std::shared_ptr<handlers::writingDataHandlerNumericBase> outputHandler, image::bitDepth outputDepth, std::uint32_t outputHandlerWidth, const std::string& outputHandlerColorSpace,
+            std::shared_ptr<palette> outputPalette,
+            std::uint32_t outputHighBit,
+            std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY) const;
 
 	/// \brief Returns true if the transform doesn't do
 	///         anything.
@@ -70,25 +74,18 @@ public:
 	///          empty transformsChain object).
 	///
 	///////////////////////////////////////////////////////////
-	virtual bool isEmpty();
+    virtual bool isEmpty() const;
 
-	virtual std::shared_ptr<image> allocateOutputImage(std::shared_ptr<image> pInputImage, std::uint32_t width, std::uint32_t height);
+    virtual std::shared_ptr<image> allocateOutputImage(
+            image::bitDepth inputDepth,
+            const std::string& inputColorSpace,
+            std::uint32_t inputHighBit,
+            std::shared_ptr<palette> inputPalette,
+            std::uint32_t outputWidth, std::uint32_t outputHeight) const;
 
 protected:
-	std::uint32_t m_inputWidth;
-	std::uint32_t m_inputHeight;
-    std::string m_inputColorSpace;
-	image::bitDepth m_inputDepth;
-	std::uint32_t m_inputHighBit;
-    std::string m_outputColorSpace;
-	image::bitDepth m_outputDepth;
-	std::uint32_t m_outputHighBit;
-
-	typedef std::list<std::shared_ptr<transform> > tTransformsList;
+    typedef std::vector<std::shared_ptr<transform> > tTransformsList;
 	tTransformsList m_transformsList;
-
-	typedef std::list<std::shared_ptr<image> > tTemporaryImagesList;
-	tTemporaryImagesList m_temporaryImages;
 
 };
 

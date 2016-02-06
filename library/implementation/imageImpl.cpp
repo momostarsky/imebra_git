@@ -126,9 +126,8 @@ std::shared_ptr<handlers::writingDataHandlerNumericBase> image::create(
 	m_sizeX = m_sizeY = 0;
 	
     std::shared_ptr<handlers::writingDataHandler> imageHandler(m_buffer->getWritingDataHandler(sizeX * sizeY * (std::uint32_t)m_channelsNumber) );
-    m_rowLength = m_channelsNumber*sizeX;
 
-    imageHandler->setSize(m_rowLength*sizeY);
+    imageHandler->setSize(m_channelsNumber * sizeX * sizeY);
 
     // Set the attributes
     ///////////////////////////////////////////////////////////
@@ -141,20 +140,6 @@ std::shared_ptr<handlers::writingDataHandlerNumericBase> image::create(
 	IMEBRA_FUNCTION_END();
 }
 
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Set the depth
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-void image::setHighBit(std::uint32_t highBit)
-{
-	m_highBit = highBit;
-}
 
 void image::setPalette(std::shared_ptr<palette> imagePalette)
 {
@@ -215,7 +200,7 @@ std::shared_ptr<handlers::writingDataHandlerNumericBase> image::getWritingDataHa
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-image::bitDepth image::getDepth()
+image::bitDepth image::getDepth() const
 {
 	return m_imageDepth;
 }
@@ -230,12 +215,12 @@ image::bitDepth image::getDepth()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::uint32_t image::getHighBit()
+std::uint32_t image::getHighBit() const
 {
 	return m_highBit;
 }
 
-std::shared_ptr<palette> image::getPalette()
+std::shared_ptr<palette> image::getPalette() const
 {
 	return m_palette;
 }
@@ -250,7 +235,7 @@ std::shared_ptr<palette> image::getPalette()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::string image::getColorSpace()
+std::string image::getColorSpace() const
 {
 	return m_colorSpace;
 }
@@ -265,7 +250,7 @@ std::string image::getColorSpace()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::uint32_t image::getChannelsNumber()
+std::uint32_t image::getChannelsNumber() const
 {
 	return m_channelsNumber;
 }
@@ -280,7 +265,7 @@ std::uint32_t image::getChannelsNumber()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void image::getSize(std::uint32_t* pSizeX, std::uint32_t* pSizeY)
+void image::getSize(std::uint32_t* pSizeX, std::uint32_t* pSizeY) const
 {
 	if(pSizeX)
         *pSizeX = m_sizeX;
@@ -299,7 +284,7 @@ void image::getSize(std::uint32_t* pSizeX, std::uint32_t* pSizeY)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void image::getSizeMm(double* pSizeMmX, double* pSizeMmY)
+void image::getSizeMm(double* pSizeMmX, double* pSizeMmY) const
 {
     IMEBRA_FUNCTION_START();
 
