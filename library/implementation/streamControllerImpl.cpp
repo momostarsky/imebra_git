@@ -74,7 +74,9 @@ size_t streamController::getControlledStreamPosition()
 ///////////////////////////////////////////////////////////
 void streamController::adjustEndian(std::uint8_t* pBuffer, const size_t wordLength, const tByteOrdering endianType, const size_t words /* =1 */)
 {
-	if(endianType == m_platformByteOrder || wordLength<2L)
+    IMEBRA_FUNCTION_START();
+
+    if(endianType == m_platformByteOrder || wordLength<2L)
 	{
 		return;
 	}
@@ -120,6 +122,8 @@ void streamController::adjustEndian(std::uint8_t* pBuffer, const size_t wordLeng
         }
         return;
 	}
+
+    IMEBRA_FUNCTION_END();
 }
 
 std::uint16_t streamController::adjustEndian(std::uint16_t buffer, const tByteOrdering endianType)

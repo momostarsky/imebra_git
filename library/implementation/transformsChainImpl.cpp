@@ -68,6 +68,8 @@ void transformsChain::runTransformHandlers(
         std::uint32_t outputHighBit,
         std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY) const
 {
+    IMEBRA_FUNCTION_START();
+
     if(isEmpty())
     {
         std::shared_ptr<transformHighBit> highBit(std::make_shared<transformHighBit>());
@@ -169,6 +171,8 @@ void transformsChain::runTransformHandlers(
                                                       outputTopLeftX, outputTopLeftY);
         outputTopLeftY += rows;
     }
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -179,7 +183,9 @@ std::shared_ptr<image> transformsChain::allocateOutputImage(
         std::shared_ptr<palette> inputPalette,
         std::uint32_t outputWidth, std::uint32_t outputHeight) const
 {
-	if(isEmpty())
+    IMEBRA_FUNCTION_START();
+
+    if(isEmpty())
 	{
         std::shared_ptr<image> newImage(std::make_shared<image>());
         newImage->create(outputWidth, outputHeight, inputDepth, inputColorSpace, inputHighBit);
@@ -228,7 +234,7 @@ std::shared_ptr<image> transformsChain::allocateOutputImage(
                                                  temporaryImage->getPalette(),
                                                  outputWidth, outputHeight);
 
-
+    IMEBRA_FUNCTION_END();
 }
 
 

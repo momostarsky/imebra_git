@@ -124,11 +124,15 @@ std::shared_ptr<directoryRecord> directoryRecord::getReferencedRecord() const
 ///////////////////////////////////////////////////////////
 void directoryRecord::setNextRecord(std::shared_ptr<directoryRecord> pNextRecord)
 {
-	if(pNextRecord != 0)
+    IMEBRA_FUNCTION_START();
+
+    if(pNextRecord != 0)
 	{
 		pNextRecord->checkCircularReference(this);
 	}
 	m_pNextRecord = pNextRecord;
+
+    IMEBRA_FUNCTION_END();
 }
 	
 
@@ -143,11 +147,15 @@ void directoryRecord::setNextRecord(std::shared_ptr<directoryRecord> pNextRecord
 ///////////////////////////////////////////////////////////
 void directoryRecord::setFirstChildRecord(std::shared_ptr<directoryRecord> pFirstChildRecord)
 {
-	if(pFirstChildRecord != 0)
+    IMEBRA_FUNCTION_START();
+
+    if(pFirstChildRecord != 0)
 	{
 		pFirstChildRecord->checkCircularReference(this);
 	}
 	m_pFirstChildRecord = pFirstChildRecord;
+
+    IMEBRA_FUNCTION_END();
 }
 	
 
@@ -162,11 +170,15 @@ void directoryRecord::setFirstChildRecord(std::shared_ptr<directoryRecord> pFirs
 ///////////////////////////////////////////////////////////
 void directoryRecord::setReferencedRecord(std::shared_ptr<directoryRecord> pReferencedRecord)
 {
-	if(pReferencedRecord != 0)
+    IMEBRA_FUNCTION_START();
+
+    if(pReferencedRecord != 0)
 	{
 		pReferencedRecord->checkCircularReference(this);
 	}
 	m_pReferencedRecord = pReferencedRecord;
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -181,7 +193,11 @@ void directoryRecord::setReferencedRecord(std::shared_ptr<directoryRecord> pRefe
 ///////////////////////////////////////////////////////////
 std::string directoryRecord::getFilePart(size_t part) const
 {
+    IMEBRA_FUNCTION_START();
+
     return getRecordDataSet()->getString(0x0004, 0, 0x1500, 0, part, "");
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -196,7 +212,11 @@ std::string directoryRecord::getFilePart(size_t part) const
 ///////////////////////////////////////////////////////////
 void directoryRecord::setFilePart(size_t part, const std::string& partName)
 {
+    IMEBRA_FUNCTION_START();
+
     getRecordDataSet()->setString(0x0004, 0, 0x1500, 0, part, partName);
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -211,6 +231,8 @@ void directoryRecord::setFilePart(size_t part, const std::string& partName)
 ///////////////////////////////////////////////////////////
 directoryRecord::tDirectoryRecordType directoryRecord::getType() const
 {
+    IMEBRA_FUNCTION_START();
+
     std::string typeString(getTypeString());
 
     const tDirectoryRecordTypeDef* typesList(getRecordTypeMap());
@@ -225,6 +247,8 @@ directoryRecord::tDirectoryRecordType directoryRecord::getType() const
 	// Invalid value found . Throw an exception
 	///////////////////////////////////////////////////////////
     throw DicomDirUnknownDirectoryRecordTypeError("Unknown directory record type");
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -239,7 +263,11 @@ directoryRecord::tDirectoryRecordType directoryRecord::getType() const
 ///////////////////////////////////////////////////////////
 std::string directoryRecord::getTypeString() const
 {
+    IMEBRA_FUNCTION_START();
+
     return getRecordDataSet()->getStringThrow(0x0004, 0, 0x1430, 0, 0);
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -254,6 +282,8 @@ std::string directoryRecord::getTypeString() const
 ///////////////////////////////////////////////////////////
 void directoryRecord::setType(tDirectoryRecordType recordType)
 {
+    IMEBRA_FUNCTION_START();
+
     const tDirectoryRecordTypeDef* typesList(getRecordTypeMap());
 	for(size_t scanTypes(0); typesList[scanTypes].m_type != endOfDirectoryRecordTypes; ++scanTypes)
 	{
@@ -267,6 +297,8 @@ void directoryRecord::setType(tDirectoryRecordType recordType)
 	// Trying to set an invalid type. Throw an exception
 	///////////////////////////////////////////////////////////
     throw DicomDirUnknownDirectoryRecordTypeError("Unknown directory record type");
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -281,7 +313,11 @@ void directoryRecord::setType(tDirectoryRecordType recordType)
 ///////////////////////////////////////////////////////////
 void directoryRecord::setTypeString(const std::string& recordType)
 {
+    IMEBRA_FUNCTION_START();
+
     getRecordDataSet()->setString(0x0004, 0, 0x1430, 0, 0, recordType);
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -296,7 +332,9 @@ void directoryRecord::setTypeString(const std::string& recordType)
 ///////////////////////////////////////////////////////////
 void directoryRecord::updateOffsets()
 {
-	// Update offset for the next record
+    IMEBRA_FUNCTION_START();
+
+    // Update offset for the next record
 	///////////////////////////////////////////////////////////
 	if(m_pNextRecord == 0)
 	{
@@ -331,6 +369,8 @@ void directoryRecord::updateOffsets()
         getRecordDataSet()->setUnsignedLong(0x0004, 0, 0x1504, 0, 0, m_pReferencedRecord->getRecordDataSet()->getItemOffset());
 		m_pReferencedRecord->updateOffsets();
 	}
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -346,7 +386,9 @@ void directoryRecord::updateOffsets()
 ///////////////////////////////////////////////////////////
 void directoryRecord::checkCircularReference(directoryRecord* pStartRecord)
 {
-	if(this == pStartRecord)
+    IMEBRA_FUNCTION_START();
+
+    if(this == pStartRecord)
 	{
         throw DicomDirCircularReferenceError("Circular reference detected");
 	}
@@ -365,11 +407,15 @@ void directoryRecord::checkCircularReference(directoryRecord* pStartRecord)
 	{
 		m_pReferencedRecord->checkCircularReference(pStartRecord);
 	}
+
+    IMEBRA_FUNCTION_END();
 }
 
 
 const directoryRecord::tDirectoryRecordTypeDef* directoryRecord::getRecordTypeMap()
 {
+    IMEBRA_FUNCTION_START();
+
     static const tDirectoryRecordTypeDef typesList[] =
     {
         {"PATIENT", directoryRecord::patient},
@@ -403,6 +449,8 @@ const directoryRecord::tDirectoryRecordTypeDef* directoryRecord::getRecordTypeMa
     };
 
     return typesList;
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -433,6 +481,8 @@ const directoryRecord::tDirectoryRecordTypeDef* directoryRecord::getRecordTypeMa
 dicomDir::dicomDir(std::shared_ptr<dataSet> pDataSet):
 	m_pDataSet(pDataSet)
 {
+    IMEBRA_FUNCTION_START();
+
     if(m_pDataSet.get() == 0)
 	{
         m_pDataSet = std::make_shared<dataSet>();
@@ -512,6 +562,8 @@ dicomDir::dicomDir(std::shared_ptr<dataSet> pDataSet):
         throw;
 	}
 	setFirstRootRecord(findRecord->second);
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -561,6 +613,8 @@ std::shared_ptr<dataSet> dicomDir::getDirectoryDataSet() const
 ///////////////////////////////////////////////////////////
 std::shared_ptr<directoryRecord> dicomDir::getNewRecord()
 {
+    IMEBRA_FUNCTION_START();
+
     std::shared_ptr<data> recordsTag(m_pDataSet->getTagCreate(0x0004, 0, 0x1220));
     std::shared_ptr<dataSet> recordDataSet = std::make_shared<dataSet>();
 	recordsTag->appendDataSet(recordDataSet);
@@ -569,6 +623,8 @@ std::shared_ptr<directoryRecord> dicomDir::getNewRecord()
 	m_recordsList.push_back(newRecord);
 
 	return newRecord;
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -584,7 +640,9 @@ std::shared_ptr<directoryRecord> dicomDir::getNewRecord()
 ///////////////////////////////////////////////////////////
 std::shared_ptr<dataSet> dicomDir::buildDataSet()
 {
-	// Adjust the transfer syntax if it isn't already set
+    IMEBRA_FUNCTION_START();
+
+    // Adjust the transfer syntax if it isn't already set
 	///////////////////////////////////////////////////////////
     if(m_pDataSet->getString(0x2, 0, 0x10, 0, 0, "") == "")
 	{
@@ -630,6 +688,7 @@ std::shared_ptr<dataSet> dicomDir::buildDataSet()
 
 	return m_pDataSet;
 
+    IMEBRA_FUNCTION_END();
 }
 
 

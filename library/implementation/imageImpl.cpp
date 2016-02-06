@@ -143,7 +143,11 @@ std::shared_ptr<handlers::writingDataHandlerNumericBase> image::create(
 
 void image::setPalette(std::shared_ptr<palette> imagePalette)
 {
-	m_palette = imagePalette;
+    IMEBRA_FUNCTION_START();
+
+    m_palette = imagePalette;
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -267,11 +271,15 @@ std::uint32_t image::getChannelsNumber() const
 ///////////////////////////////////////////////////////////
 void image::getSize(std::uint32_t* pSizeX, std::uint32_t* pSizeY) const
 {
-	if(pSizeX)
+    IMEBRA_FUNCTION_START();
+
+    if(pSizeX)
         *pSizeX = m_sizeX;
 
 	if(pSizeY)
         *pSizeY = m_sizeY;
+
+    IMEBRA_FUNCTION_END();
 }
 
 

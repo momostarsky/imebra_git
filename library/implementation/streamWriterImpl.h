@@ -181,6 +181,8 @@ public:
 	///////////////////////////////////////////////////////////
 	inline void writeByte(const std::uint8_t buffer)
 	{
+        IMEBRA_FUNCTION_START();
+
         if(m_dataBufferCurrent == m_dataBuffer.size())
 		{
 			flushDataBuffer();
@@ -194,7 +196,9 @@ public:
 			}
             m_dataBuffer[m_dataBufferCurrent++] = 0;
 		}
-	}
+
+        IMEBRA_FUNCTION_END();
+    }
 
 private:
     std::shared_ptr<baseStreamOutput> m_pControlledStream;

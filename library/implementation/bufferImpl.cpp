@@ -118,6 +118,8 @@ buffer::buffer(
 
 std::shared_ptr<memory> buffer::getLocalMemory() const
 {
+    IMEBRA_FUNCTION_START();
+
     std::shared_ptr<memory> localMemory(m_memory);
 
     // If the object must be loaded from the original stream,
@@ -142,6 +144,7 @@ std::shared_ptr<memory> buffer::getLocalMemory() const
 
     return localMemory;
 
+    IMEBRA_FUNCTION_END();
 }
 
 ///////////////////////////////////////////////////////////
@@ -647,7 +650,9 @@ std::shared_ptr<handlers::writingDataHandlerRaw> buffer::getWritingDataHandlerRa
 ///////////////////////////////////////////////////////////
 size_t buffer::getBufferSizeBytes() const
 {
-	// The buffer has not been loaded yet
+    IMEBRA_FUNCTION_START();
+
+    // The buffer has not been loaded yet
 	///////////////////////////////////////////////////////////
 	if(m_originalStream != 0 && (m_memory == 0 || m_memory->empty()) )
 	{
@@ -664,6 +669,8 @@ size_t buffer::getBufferSizeBytes() const
 	// Return the memory's size
 	///////////////////////////////////////////////////////////
 	return m_memory->size();
+
+    IMEBRA_FUNCTION_END();
 }
 
 

@@ -61,7 +61,9 @@ void readingDataHandler::getDate(const size_t /* index */,
 		std::int32_t* pOffsetHours,
 		std::int32_t* pOffsetMinutes) const
 {
-	*pYear = 0;
+    IMEBRA_FUNCTION_START();
+
+    *pYear = 0;
 	*pMonth = 0;
 	*pDay = 0;
 	*pHour = 0;
@@ -70,12 +72,18 @@ void readingDataHandler::getDate(const size_t /* index */,
 	*pNanoseconds = 0;
 	*pOffsetHours = 0;
 	*pOffsetMinutes = 0;
+
+    IMEBRA_FUNCTION_END();
 }
 
 std::uint32_t readingDataHandler::getAge(const size_t /* index */, ageUnit_t *pUnit) const
 {
+    IMEBRA_FUNCTION_START();
+
     *pUnit = ageUnit_t::years;
     return 0;
+
+    IMEBRA_FUNCTION_END();
 }
 
 

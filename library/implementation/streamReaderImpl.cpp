@@ -35,10 +35,14 @@ streamReader::streamReader(std::shared_ptr<baseStreamInput> pControlledStream, s
 	m_inBitsBuffer(0),
 	m_inBitsNum(0)
 {
+    IMEBRA_FUNCTION_START();
+
     if(virtualLength == 0)
     {
         throw(StreamEOFError("Virtual stream with zero length"));
     }
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -49,6 +53,8 @@ std::shared_ptr<baseStreamInput> streamReader::getControlledStream()
 
 std::shared_ptr<streamReader> streamReader::getReader(size_t virtualLength)
 {
+    IMEBRA_FUNCTION_START();
+
     if(virtualLength == 0)
     {
         throw(StreamEOFError("Virtual stream with zero length"));
@@ -60,6 +66,8 @@ std::shared_ptr<streamReader> streamReader::getReader(size_t virtualLength)
     }
     seekRelative((std::int32_t)virtualLength);
     return std::make_shared<streamReader>(m_pControlledStream, currentPosition + m_virtualStart, virtualLength);
+
+    IMEBRA_FUNCTION_END();
 }
 
 ///////////////////////////////////////////////////////////
@@ -69,7 +77,11 @@ std::shared_ptr<streamReader> streamReader::getReader(size_t virtualLength)
 ///////////////////////////////////////////////////////////
 bool streamReader::endReached()
 {
+    IMEBRA_FUNCTION_START();
+
     return (m_dataBufferCurrent == m_dataBufferEnd && fillDataBuffer() == 0);
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -103,6 +115,8 @@ size_t streamReader::fillDataBuffer()
 ///////////////////////////////////////////////////////////
 size_t streamReader::fillDataBuffer(std::uint8_t* pDestinationBuffer, size_t readLength)
 {
+    IMEBRA_FUNCTION_START();
+
     m_dataBufferStreamPosition = position();
 	if(m_virtualLength != 0)
 	{
@@ -117,6 +131,8 @@ size_t streamReader::fillDataBuffer(std::uint8_t* pDestinationBuffer, size_t rea
 		}
 	}
     return m_pControlledStream->read(m_dataBufferStreamPosition + m_virtualStart, pDestinationBuffer, readLength);
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -128,7 +144,9 @@ size_t streamReader::fillDataBuffer(std::uint8_t* pDestinationBuffer, size_t rea
 ///////////////////////////////////////////////////////////
 void streamReader::read(std::uint8_t* pBuffer, size_t bufferLength)
 {
-	while(bufferLength != 0)
+    IMEBRA_FUNCTION_START();
+
+    while(bufferLength != 0)
 	{
 		// Update the data buffer if it is empty
 		///////////////////////////////////////////////////////////
@@ -170,6 +188,8 @@ void streamReader::read(std::uint8_t* pBuffer, size_t bufferLength)
 		pBuffer += copySize;
         m_dataBufferCurrent += copySize;
 	}
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -180,7 +200,9 @@ void streamReader::read(std::uint8_t* pBuffer, size_t bufferLength)
 ///////////////////////////////////////////////////////////
 void streamReader::seek(size_t newPosition)
 {
-	// The requested position is already in the data buffer?
+    IMEBRA_FUNCTION_START();
+
+    // The requested position is already in the data buffer?
 	///////////////////////////////////////////////////////////
     size_t bufferEndPosition = m_dataBufferStreamPosition + m_dataBufferEnd;
     if(newPosition >= m_dataBufferStreamPosition && newPosition < bufferEndPosition)
@@ -194,13 +216,18 @@ void streamReader::seek(size_t newPosition)
     m_dataBufferCurrent = m_dataBufferEnd = 0;
     m_dataBufferStreamPosition = newPosition;
 
+    IMEBRA_FUNCTION_END();
 }
 
 void streamReader::seekRelative(int32_t newPosition)
 {
+    IMEBRA_FUNCTION_START();
+
     size_t finalPosition = position() + newPosition;
 
     seek(finalPosition);
+
+    IMEBRA_FUNCTION_END();
 }
 
 } // namespace implementation

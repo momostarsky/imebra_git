@@ -48,6 +48,8 @@ streamWriter::~streamWriter()
 ///////////////////////////////////////////////////////////
 void streamWriter::flushDataBuffer()
 {
+    IMEBRA_FUNCTION_START();
+
     if(m_dataBufferCurrent == 0)
 	{
 		return;
@@ -55,6 +57,8 @@ void streamWriter::flushDataBuffer()
     m_pControlledStream->write(m_dataBufferStreamPosition + m_virtualStart, m_dataBuffer.data(), m_dataBufferCurrent);
     m_dataBufferStreamPosition += m_dataBufferCurrent;
     m_dataBufferCurrent = 0;
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -65,7 +69,9 @@ void streamWriter::flushDataBuffer()
 ///////////////////////////////////////////////////////////
 void streamWriter::write(const std::uint8_t* pBuffer, size_t bufferLength)
 {
-	while(bufferLength != 0)
+    IMEBRA_FUNCTION_START();
+
+    while(bufferLength != 0)
 	{
         if(m_dataBufferCurrent == m_dataBuffer.size())
 		{
@@ -88,6 +94,8 @@ void streamWriter::write(const std::uint8_t* pBuffer, size_t bufferLength)
         m_dataBufferCurrent += copySize;
         m_dataBufferEnd = m_dataBufferCurrent;
 	}
+
+    IMEBRA_FUNCTION_END();
 }
 
 } // namespace implementation

@@ -78,6 +78,7 @@ public:
                     std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY) const
 	{
         IMEBRA_FUNCTION_START();
+
 		if(!colorTransforms::colorTransformsFactory::isMonochrome(inputHandlerColorSpace) || !colorTransforms::colorTransformsFactory::isMonochrome(outputHandlerColorSpace))
 		{
             IMEBRA_THROW(ModalityVOILUTError, "modalityVOILUT can process only monochromatic images");

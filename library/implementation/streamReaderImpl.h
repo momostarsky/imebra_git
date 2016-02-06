@@ -146,6 +146,8 @@ public:
 	///////////////////////////////////////////////////////////
     inline std::uint32_t readBits(size_t bitsNum)
 	{
+        IMEBRA_FUNCTION_START();
+
         const size_t bufferSize(8);
 
 		// All the requested bits are already in the buffer.
@@ -188,7 +190,9 @@ public:
 			bitsNum -= 8;
 			returnValue |= ((std::uint32_t)readByte()) << bitsNum;
 		}
-	}
+
+        IMEBRA_FUNCTION_END();
+    }
 
 	/// \brief Read one bit from the stream.
 	///
@@ -294,7 +298,9 @@ public:
 	///////////////////////////////////////////////////////////
 	inline std::uint8_t readByte()
 	{
-		// Update the data buffer if it is empty
+        IMEBRA_FUNCTION_START();
+
+        // Update the data buffer if it is empty
 		///////////////////////////////////////////////////////////
         if(m_dataBufferCurrent == m_dataBufferEnd && fillDataBuffer() == 0)
         {
@@ -322,7 +328,9 @@ public:
         }
 
         return 0xff;
-	}
+
+        IMEBRA_FUNCTION_END();
+    }
 
 private:
 	/// \brief Read data from the file into the data buffer.

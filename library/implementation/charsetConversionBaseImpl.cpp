@@ -18,6 +18,8 @@ namespace imebra
 
 charsetDictionary::charsetDictionary()
 {
+    IMEBRA_FUNCTION_START();
+
     registerCharset("ISO_IR 6", "", "ISO-IR-6", 1252, false);
     registerCharset("ISO_IR 100", "", "ISO-IR-100", 1252, false);
     registerCharset("ISO_IR 101", "", "ISO-IR-101", 28592, false);
@@ -62,10 +64,14 @@ charsetDictionary::charsetDictionary()
             m_escapeSequences[scanInfo->second.m_escapeSequence] = scanInfo->first;
         }
     }
+
+    IMEBRA_FUNCTION_END();
 }
 
 const charsetInformation& charsetDictionary::getCharsetInformation(const std::string& dicomName) const
 {
+    IMEBRA_FUNCTION_START();
+
     std::string normalizedName(charsetConversionBase::normalizeIsoCharset((dicomName)));
     dictionary_t::const_iterator findInfo(m_dictionary.find(normalizedName));
     if(findInfo == m_dictionary.end())
@@ -75,6 +81,8 @@ const charsetInformation& charsetDictionary::getCharsetInformation(const std::st
         throw CharsetConversionNoTableError(errorMessage.str());
     }
     return findInfo->second;
+
+    IMEBRA_FUNCTION_END();
 }
 
 const charsetDictionary::escapeSequences_t& charsetDictionary::getEscapeSequences() const
@@ -84,9 +92,13 @@ const charsetDictionary::escapeSequences_t& charsetDictionary::getEscapeSequence
 
 void charsetDictionary::registerCharset(const std::string& dicomName, const std::string& escapeSequence, const std::string& isoName, const unsigned long windowsPage, const bool bZeroFlag)
 {
+    IMEBRA_FUNCTION_START();
+
     m_dictionary.insert(std::pair<std::string, charsetInformation>(
                             charsetConversionBase::normalizeIsoCharset(dicomName),
                             charsetInformation(dicomName, escapeSequence, isoName, windowsPage, bZeroFlag)));
+
+    IMEBRA_FUNCTION_END();
 }
 
 charsetInformation::charsetInformation(const std::string &dicomName, const std::string &escapeSequence, const std::string &isoRegistration, unsigned long codePage, bool bZeroFlag):
@@ -133,13 +145,19 @@ charsetConversionBase::~charsetConversionBase()
 
 const charsetDictionary& charsetConversionBase::getDictionary() const
 {
+    IMEBRA_FUNCTION_START();
+
     static charsetDictionary dictionary;
     return dictionary;
+
+    IMEBRA_FUNCTION_END();
 }
 
 
 std::string charsetConversionBase::normalizeIsoCharset(const std::string &isoCharset)
 {
+    IMEBRA_FUNCTION_START();
+
     std::string normalizedIsoCharset;
 
     normalizedIsoCharset.reserve(isoCharset.size());
@@ -161,6 +179,8 @@ std::string charsetConversionBase::normalizeIsoCharset(const std::string &isoCha
     }
 
     return normalizedIsoCharset;
+
+    IMEBRA_FUNCTION_END();
 }
 
 } // namespace imebra

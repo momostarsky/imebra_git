@@ -32,10 +32,12 @@ virtual void runTransformHandlers(\
     std::uint32_t outputHighBit,\
     std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY) const\
 {\
+    IMEBRA_FUNCTION_START();\
     runTemplateTransform(*this, inputHandler, outputHandler, inputDepth, inputHandlerWidth, inputHandlerColorSpace, inputPalette, inputHighBit,\
             inputTopLeftX, inputTopLeftY, inputWidth, inputHeight,\
             outputDepth, outputHandlerWidth, outputHandlerColorSpace, outputPalette, outputHighBit,\
             outputTopLeftX, outputTopLeftY);\
+    IMEBRA_FUNCTION_END();\
 }
 
 
@@ -205,6 +207,8 @@ public:
 template <typename dataType>
 dataType getMinValue(std::uint32_t highBit)
 {
+    IMEBRA_FUNCTION_START();
+
     if(
             std::is_same<dataType, std::uint8_t>::value ||
             std::is_same<dataType, std::uint16_t>::value ||
@@ -215,6 +219,8 @@ dataType getMinValue(std::uint32_t highBit)
     }
     dataType divide = (dataType)((dataType)1 << (sizeof(dataType) * 8 - highBit - 1));
     return (dataType)(std::numeric_limits<dataType>::min() / divide);
+
+    IMEBRA_FUNCTION_END();
 }
 
 template <typename transformClass, typename inputType, typename... Args>
@@ -223,6 +229,8 @@ void runTemplateTransform1(
         const inputType* pInputData,
         std::shared_ptr<imebra::implementation::handlers::writingDataHandlerNumericBase> outputHandler, Args... args)
 {
+    IMEBRA_FUNCTION_START();
+
     imebra::implementation::handlers::writingDataHandlerNumericBase* pHandler(outputHandler.get());
 
     if(typeid(*pHandler) == typeid(handlers::writingDataHandlerUint8))
@@ -253,6 +261,8 @@ void runTemplateTransform1(
     {
         throw std::runtime_error("Data type not valid");\
     }
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -261,6 +271,8 @@ void runTemplateTransform(
         const transformClass& transformObject,
         std::shared_ptr<imebra::implementation::handlers::readingDataHandlerNumericBase> inputHandler, Args... args)
 {
+    IMEBRA_FUNCTION_START();
+
     imebra::implementation::handlers::readingDataHandlerNumericBase* pHandler(inputHandler.get());
     if(typeid(*pHandler) == typeid(handlers::readingDataHandlerUint8))
     {
@@ -290,6 +302,7 @@ void runTemplateTransform(
     {
         throw std::runtime_error("Data type not valid");\
     }
+    IMEBRA_FUNCTION_END();
 }
 
 

@@ -105,6 +105,8 @@ std::shared_ptr<data> dataSet::getTagCreate(std::uint16_t groupId, std::uint16_t
 
 bool dataSet::bufferExists(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId) const
 {
+    IMEBRA_FUNCTION_START();
+
     try
     {
         std::shared_ptr<data> tag(getTagThrow(groupId, order, tagId));
@@ -114,6 +116,8 @@ bool dataSet::bufferExists(std::uint16_t groupId, std::uint16_t order, std::uint
     {
         return false;
     }
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -606,6 +610,8 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
 ///////////////////////////////////////////////////////////
 std::uint32_t dataSet::getFrameOffset(std::uint32_t frameNumber) const
 {
+    IMEBRA_FUNCTION_START();
+
     try
     {
         // Retrieve the buffer containing the offsets
@@ -641,6 +647,8 @@ std::uint32_t dataSet::getFrameOffset(std::uint32_t frameNumber) const
     {
         return 0xffffffff;
     }
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -854,6 +862,8 @@ std::int32_t dataSet::getSignedLongThrow(std::uint16_t groupId, std::uint16_t or
 
 std::int32_t dataSet::getSignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::int32_t defaultValue) const
 {
+    IMEBRA_FUNCTION_START();
+
     try
     {
         return getSignedLongThrow(groupId, order, tagId, bufferId, elementNumber);
@@ -862,6 +872,8 @@ std::int32_t dataSet::getSignedLong(std::uint16_t groupId, std::uint16_t order, 
     {
         return defaultValue;
     }
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -909,6 +921,8 @@ std::uint32_t dataSet::getUnsignedLongThrow(std::uint16_t groupId, std::uint16_t
 
 std::uint32_t dataSet::getUnsignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::uint32_t defaultValue) const
 {
+    IMEBRA_FUNCTION_START();
+
     try
     {
         return getUnsignedLongThrow(groupId, order, tagId, bufferId, elementNumber);
@@ -917,6 +931,8 @@ std::uint32_t dataSet::getUnsignedLong(std::uint16_t groupId, std::uint16_t orde
     {
         return defaultValue;
     }
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -964,6 +980,8 @@ double dataSet::getDoubleThrow(std::uint16_t groupId, std::uint16_t order, std::
 
 double dataSet::getDouble(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, double defaultValue) const
 {
+    IMEBRA_FUNCTION_START();
+
     try
     {
         return getDoubleThrow(groupId, order, tagId, bufferId, elementNumber);
@@ -972,6 +990,8 @@ double dataSet::getDouble(std::uint16_t groupId, std::uint16_t order, std::uint1
     {
         return defaultValue;
     }
+
+    IMEBRA_FUNCTION_END();
 }
 
 ///////////////////////////////////////////////////////////
@@ -1018,6 +1038,8 @@ std::string dataSet::getStringThrow(std::uint16_t groupId, std::uint16_t order, 
 
 std::string dataSet::getString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, const std::string& defaultValue) const
 {
+    IMEBRA_FUNCTION_START();
+
     try
     {
         return getStringThrow(groupId, order, tagId, bufferId, elementNumber);
@@ -1026,6 +1048,8 @@ std::string dataSet::getString(std::uint16_t groupId, std::uint16_t order, std::
     {
         return defaultValue;
     }
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -1049,6 +1073,8 @@ std::wstring dataSet::getUnicodeStringThrow(std::uint16_t groupId, std::uint16_t
 
 std::wstring dataSet::getUnicodeString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, const std::wstring& defaultValue) const
 {
+    IMEBRA_FUNCTION_START();
+
     try
     {
         return getUnicodeStringThrow(groupId, order, tagId, bufferId, elementNumber);
@@ -1057,6 +1083,8 @@ std::wstring dataSet::getUnicodeString(std::uint16_t groupId, std::uint16_t orde
     {
         return defaultValue;
     }
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -1194,6 +1222,8 @@ void dataSet::getDate(std::uint16_t groupId, std::uint16_t order, std::uint16_t 
     std::int32_t defaultOffsetHours,
     std::int32_t defaultOffsetMinutes) const
 {
+    IMEBRA_FUNCTION_START();
+
     try
     {
         return getDateThrow(groupId, order, tagId, bufferId, elementNumber,
@@ -1211,6 +1241,8 @@ void dataSet::getDate(std::uint16_t groupId, std::uint16_t order, std::uint16_t 
         *pOffsetHours = defaultOffsetHours;
         *pOffsetMinutes = defaultOffsetMinutes;
     }
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -1362,7 +1394,9 @@ std::string dataSet::getDataTypeThrow(std::uint16_t groupId, std::uint16_t order
 
 void dataSet::updateCharsetTag()
 {
-	charsetsList::tCharsetsList charsets;
+    IMEBRA_FUNCTION_START();
+
+    charsetsList::tCharsetsList charsets;
 	getCharsetsList(&charsets);
     std::shared_ptr<handlers::writingDataHandler> charsetHandler(getWritingDataHandler(0x0008, 0, 0x0005, 0));
 	charsetHandler->setSize((std::uint32_t)(charsets.size()));
@@ -1371,6 +1405,8 @@ void dataSet::updateCharsetTag()
 	{
         charsetHandler->setString(pointer++, *scanCharsets);
 	}
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -1385,7 +1421,9 @@ void dataSet::updateCharsetTag()
 ///////////////////////////////////////////////////////////
 void dataSet::updateTagsCharset()
 {
-	charsetsList::tCharsetsList charsets;
+    IMEBRA_FUNCTION_START();
+
+    charsetsList::tCharsetsList charsets;
     try
     {
         std::shared_ptr<handlers::readingDataHandler> charsetHandler(getReadingDataHandlerThrow(0x0008, 0, 0x0005, 0));
@@ -1400,6 +1438,8 @@ void dataSet::updateTagsCharset()
     }
 
     setCharsetsList(charsets);
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -1434,6 +1474,8 @@ std::uint32_t dataSet::getItemOffset() const
 
 void dataSet::getCharsetsList(charsetsList::tCharsetsList* pCharsetsList) const
 {
+    IMEBRA_FUNCTION_START();
+
     for(tGroups::const_iterator scanGroups(m_groups.begin()), endGroups(m_groups.end()); scanGroups != endGroups; ++scanGroups)
     {
         for(tGroupsList::const_iterator scanGroupsList(scanGroups->second.begin()), endGroupsList(scanGroups->second.end()); scanGroupsList != endGroupsList; ++scanGroupsList)
@@ -1447,10 +1489,14 @@ void dataSet::getCharsetsList(charsetsList::tCharsetsList* pCharsetsList) const
             }
         }
     }
+
+    IMEBRA_FUNCTION_END();
 }
 
 dataSet::tGroupsIds dataSet::getGroups() const
 {
+    IMEBRA_FUNCTION_START();
+
     dataSet::tGroupsIds groups;
 
     for(tGroups::const_iterator scanGroups(m_groups.begin()), endGroups(m_groups.end()); scanGroups != endGroups; ++scanGroups)
@@ -1459,10 +1505,14 @@ dataSet::tGroupsIds dataSet::getGroups() const
     }
 
     return groups;
+
+    IMEBRA_FUNCTION_END();
 }
 
 size_t dataSet::getGroupsNumber(uint16_t groupId) const
 {
+    IMEBRA_FUNCTION_START();
+
     dataSet::tGroups::const_iterator findGroup(m_groups.find(groupId));
 
     if(findGroup == m_groups.end())
@@ -1472,10 +1522,13 @@ size_t dataSet::getGroupsNumber(uint16_t groupId) const
 
     return findGroup->second.size();
 
+    IMEBRA_FUNCTION_END();
 }
 
 const dataSet::tTags& dataSet::getGroupTags(std::uint16_t groupId, size_t groupOrder) const
 {
+    IMEBRA_FUNCTION_START();
+
     static const dataSet::tTags emptyTags;
 
     tGroups::const_iterator findGroup(m_groups.find(groupId));
@@ -1486,10 +1539,13 @@ const dataSet::tTags& dataSet::getGroupTags(std::uint16_t groupId, size_t groupO
 
     return findGroup->second.at(groupOrder);
 
+    IMEBRA_FUNCTION_END();
 }
 
 void dataSet::setCharsetsList(const charsetsList::tCharsetsList& charsetsList)
 {
+    IMEBRA_FUNCTION_START();
+
     m_charsetsList = charsetsList;
     for(tGroups::iterator scanGroups(m_groups.begin()), endGroups(m_groups.end()); scanGroups != endGroups; ++scanGroups)
     {
@@ -1501,6 +1557,8 @@ void dataSet::setCharsetsList(const charsetsList::tCharsetsList& charsetsList)
             }
         }
     }
+
+    IMEBRA_FUNCTION_END();
 }
 
 } // namespace implementation

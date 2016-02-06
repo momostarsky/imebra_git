@@ -27,17 +27,29 @@ readingDataHandlerNumericBase::readingDataHandlerNumericBase(const std::shared_p
 
 const std::uint8_t* readingDataHandlerNumericBase::getMemoryBuffer() const
 {
+    IMEBRA_FUNCTION_START();
+
     return m_pMemory->data();
+
+    IMEBRA_FUNCTION_END();
 }
 
 size_t readingDataHandlerNumericBase::getMemorySize() const
 {
+    IMEBRA_FUNCTION_START();
+
     return m_pMemory->size();
+
+    IMEBRA_FUNCTION_END();
 }
 
 std::shared_ptr<const memory> readingDataHandlerNumericBase::getMemory() const
 {
+    IMEBRA_FUNCTION_START();
+
     return m_pMemory;
+
+    IMEBRA_FUNCTION_END();
 }
 
 writingDataHandlerNumericBase::writingDataHandlerNumericBase(const std::shared_ptr<buffer> &pBuffer, const size_t initialSize, const std::string &dataType, size_t unitSize):
@@ -47,7 +59,11 @@ writingDataHandlerNumericBase::writingDataHandlerNumericBase(const std::shared_p
 
 size_t writingDataHandlerNumericBase::getSize() const
 {
+    IMEBRA_FUNCTION_START();
+
     return m_pMemory->size() / m_unitSize;
+
+    IMEBRA_FUNCTION_END();
 }
 
 std::shared_ptr<memory> writingDataHandlerNumericBase::getMemory() const
@@ -86,12 +102,20 @@ writingDataHandlerNumericBase::~writingDataHandlerNumericBase()
 
 std::uint8_t* writingDataHandlerNumericBase::getMemoryBuffer() const
 {
+    IMEBRA_FUNCTION_START();
+
     return m_pMemory->data();
+
+    IMEBRA_FUNCTION_END();
 }
 
 size_t writingDataHandlerNumericBase::getMemorySize() const
 {
+    IMEBRA_FUNCTION_START();
+
     return m_pMemory->size();
+
+    IMEBRA_FUNCTION_END();
 }
 
 

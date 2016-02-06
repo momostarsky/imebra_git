@@ -102,6 +102,8 @@ std::uint32_t VOILUT::getVOILUTId(std::uint32_t VOILUTNumber)
 ///////////////////////////////////////////////////////////
 VOILUT::voilutIds_t VOILUT::getVOILUTIds()
 {
+    IMEBRA_FUNCTION_START();
+
     voilutIds_t returnList;
     for(std::uint32_t scanIds(0); ; ++scanIds)
     {
@@ -112,6 +114,8 @@ VOILUT::voilutIds_t VOILUT::getVOILUTIds()
         }
         returnList.push_back(id);
     }
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -292,7 +296,9 @@ std::shared_ptr<image> VOILUT::allocateOutputImage(
         std::shared_ptr<palette> /* inputPalette */,
         std::uint32_t outputWidth, std::uint32_t outputHeight) const
 {
-	if(isEmpty())
+    IMEBRA_FUNCTION_START();
+
+    if(isEmpty())
 	{
         std::shared_ptr<image> newImage(std::make_shared<image>());
         newImage->create(outputWidth, outputHeight, inputDepth, inputColorSpace, inputHighBit);
@@ -342,6 +348,8 @@ std::shared_ptr<image> VOILUT::allocateOutputImage(
     outputImage->create(outputWidth, outputHeight, inputDepth, inputColorSpace, inputHighBit);
 
 	return outputImage;
+
+    IMEBRA_FUNCTION_END();
 }
 
 

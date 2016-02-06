@@ -85,6 +85,8 @@ readingDataHandlerString::readingDataHandlerString(const memory &parseMemory, co
 ///////////////////////////////////////////////////////////
 std::int32_t readingDataHandlerString::getSignedLong(const size_t index) const
 {
+    IMEBRA_FUNCTION_START();
+
     std::istringstream conversion(m_strings.at(index));
     std::int32_t value;
     if(!(conversion >> value))
@@ -92,12 +94,16 @@ std::int32_t readingDataHandlerString::getSignedLong(const size_t index) const
         IMEBRA_THROW(DataHandlerConversionError, "Cannot convert " << m_strings.at(index) << " to a number");
     }
     return value;
+
+    IMEBRA_FUNCTION_END();
 }
 
 // Get the data element as an unsigned long
 ///////////////////////////////////////////////////////////
 std::uint32_t readingDataHandlerString::getUnsignedLong(const size_t index) const
 {
+    IMEBRA_FUNCTION_START();
+
     std::istringstream conversion(m_strings.at(index));
     std::uint32_t value;
     if(!(conversion >> value))
@@ -105,12 +111,16 @@ std::uint32_t readingDataHandlerString::getUnsignedLong(const size_t index) cons
         IMEBRA_THROW(DataHandlerConversionError, "Cannot convert " << m_strings.at(index) << " to a number");
     }
     return value;
+
+    IMEBRA_FUNCTION_END();
 }
 
 // Get the data element as a double
 ///////////////////////////////////////////////////////////
 double readingDataHandlerString::getDouble(const size_t index) const
 {
+    IMEBRA_FUNCTION_START();
+
     std::istringstream conversion(m_strings.at(index));
     double value;
     if(!(conversion >> value))
@@ -119,29 +129,42 @@ double readingDataHandlerString::getDouble(const size_t index) const
     }
     return value;
 
+    IMEBRA_FUNCTION_END();
 }
 
 // Get the data element as a string
 ///////////////////////////////////////////////////////////
 std::string readingDataHandlerString::getString(const size_t index) const
 {
+    IMEBRA_FUNCTION_START();
+
     return m_strings.at(index);
+
+    IMEBRA_FUNCTION_END();
 }
 
 // Get the data element as an unicode string
 ///////////////////////////////////////////////////////////
 std::wstring readingDataHandlerString::getUnicodeString(const size_t index) const
 {
+    IMEBRA_FUNCTION_START();
+
     charsetsList::tCharsetsList charsets;
     charsets.push_back("ISO 2022 IR 6");
     return dicomConversion::convertToUnicode(getString(index), charsets);
+
+    IMEBRA_FUNCTION_END();
 }
 
 // Retrieve the data element as a string
 ///////////////////////////////////////////////////////////
 size_t readingDataHandlerString::getSize() const
 {
+    IMEBRA_FUNCTION_START();
+
     return m_strings.size();
+
+    IMEBRA_FUNCTION_END();
 }
 
 writingDataHandlerString::writingDataHandlerString(const std::shared_ptr<buffer> &pBuffer, const std::string &dataType, const char separator, const size_t unitSize, const size_t maxSize, const uint8_t paddingByte):
@@ -180,39 +203,59 @@ writingDataHandlerString::~writingDataHandlerString()
 ///////////////////////////////////////////////////////////
 void writingDataHandlerString::setSignedLong(const size_t index, const std::int32_t value)
 {
+    IMEBRA_FUNCTION_START();
+
     std::ostringstream conversion;
     conversion << value;
     setString(index, conversion.str());
+
+    IMEBRA_FUNCTION_END();
 }
 
 // Set the data element as an unsigned long
 ///////////////////////////////////////////////////////////
 void writingDataHandlerString::setUnsignedLong(const size_t index, const std::uint32_t value)
 {
+    IMEBRA_FUNCTION_START();
+
     std::ostringstream conversion;
     conversion << value;
     setString(index, conversion.str());
+
+    IMEBRA_FUNCTION_END();
 }
 
 // Set the data element as a double
 ///////////////////////////////////////////////////////////
 void writingDataHandlerString::setDouble(const size_t index, const double value)
 {
+    IMEBRA_FUNCTION_START();
+
     std::ostringstream conversion;
     conversion << value;
     setString(index, conversion.str());
+
+    IMEBRA_FUNCTION_END();
 }
 
 // Set the buffer's size, in data elements
 ///////////////////////////////////////////////////////////
 void writingDataHandlerString::setSize(const size_t elementsNumber)
 {
+    IMEBRA_FUNCTION_START();
+
     m_strings.resize(elementsNumber);
+
+    IMEBRA_FUNCTION_END();
 }
 
 size_t writingDataHandlerString::getSize() const
 {
+    IMEBRA_FUNCTION_START();
+
     return m_strings.size();
+
+    IMEBRA_FUNCTION_END();
 }
 
 void writingDataHandlerString::setString(const size_t index, const std::string& value)
@@ -240,9 +283,13 @@ void writingDataHandlerString::setString(const size_t index, const std::string& 
 
 void writingDataHandlerString::setUnicodeString(const size_t index, const std::wstring& value)
 {
+    IMEBRA_FUNCTION_START();
+
     charsetsList::tCharsetsList charsets;
     charsets.push_back("ISO_IR 6");
     setString(index, dicomConversion::convertFromUnicode(value, &charsets));
+
+    IMEBRA_FUNCTION_END();
 }
 
 

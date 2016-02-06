@@ -39,7 +39,7 @@ modalityVOILUT::modalityVOILUT(std::shared_ptr<const dataSet> pDataSet):
         m_pDataSet(pDataSet), m_voiLut(0), m_rescaleIntercept(pDataSet->getDouble(0x0028, 0, 0x1052, 0, 0, 0)), m_rescaleSlope(1.0), m_bEmpty(true)
 
 {
-
+    IMEBRA_FUNCTION_START();
 
 	// Only monochrome images can have the modality voi-lut
 	///////////////////////////////////////////////////////
@@ -69,6 +69,8 @@ modalityVOILUT::modalityVOILUT(std::shared_ptr<const dataSet> pDataSet):
         }
 
     }
+
+    IMEBRA_FUNCTION_END();
 }
 
 bool modalityVOILUT::isEmpty() const
@@ -84,7 +86,9 @@ std::shared_ptr<image> modalityVOILUT::allocateOutputImage(
         std::shared_ptr<palette> /* inputPalette */,
         std::uint32_t outputWidth, std::uint32_t outputHeight) const
 {
-	if(isEmpty())
+    IMEBRA_FUNCTION_START();
+
+    if(isEmpty())
 	{
         std::shared_ptr<image> newImage(std::make_shared<image>());
         newImage->create(outputWidth, outputHeight, inputDepth, inputColorSpace, inputHighBit);
@@ -194,6 +198,8 @@ std::shared_ptr<image> modalityVOILUT::allocateOutputImage(
 	}
     returnImage->create(outputWidth, outputHeight, image::depthS32, inputColorSpace, 31);
 	return returnImage;
+
+    IMEBRA_FUNCTION_END();
 }
 
 

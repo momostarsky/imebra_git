@@ -28,9 +28,13 @@ std::shared_ptr<image> transformHighBit::allocateOutputImage(
         std::shared_ptr<palette> /* inputPalette */,
         std::uint32_t outputWidth, std::uint32_t outputHeight) const
 {
+    IMEBRA_FUNCTION_START();
+
     std::shared_ptr<image> newImage(std::make_shared<image>());
     newImage->create(outputWidth, outputHeight, inputDepth, inputColorSpace, inputHighBit);
 	return newImage;
+
+    IMEBRA_FUNCTION_END();
 }
 
 } // namespace transforms

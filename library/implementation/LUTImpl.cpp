@@ -86,6 +86,8 @@ void lut::setLut(std::shared_ptr<handlers::readingDataHandler> pDescriptor, std:
 ///////////////////////////////////////////////////////////
 std::uint32_t lut::descriptorSignedToUnsigned(std::int32_t signedValue)
 {
+    IMEBRA_FUNCTION_START();
+
     if(signedValue == 0)
     {
         return 0x010000;
@@ -98,6 +100,8 @@ std::uint32_t lut::descriptorSignedToUnsigned(std::int32_t signedValue)
     {
         return (std::uint32_t)signedValue;
     }
+
+    IMEBRA_FUNCTION_END();
 }
 
 ///////////////////////////////////////////////////////////
@@ -199,6 +203,8 @@ std::uint32_t lut::getSize() const
 ///////////////////////////////////////////////////////////
 bool lut::checkValidDataRange() const
 {
+    IMEBRA_FUNCTION_START();
+
     std::int32_t maxValue(65535);
     std::int32_t minValue(-32768);
     if(m_bits == 8)
@@ -216,6 +222,8 @@ bool lut::checkValidDataRange() const
         ++pScanValues;
     }
     return true;
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -303,7 +311,9 @@ std::uint8_t lut::getBits() const
 ///////////////////////////////////////////////////////////
 std::int32_t lut::mappedValue(std::int32_t id) const
 {
-	// The LUT's size is zero, return
+    IMEBRA_FUNCTION_START();
+
+    // The LUT's size is zero, return
 	///////////////////////////////////////////////////////////
 	if(m_size == 0)
 	{
@@ -323,6 +333,8 @@ std::int32_t lut::mappedValue(std::int32_t id) const
         return m_pMappedValues[(std::uint32_t)id];
 	}
 	return m_pMappedValues[m_size-1];
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -337,12 +349,16 @@ std::int32_t lut::mappedValue(std::int32_t id) const
 ///////////////////////////////////////////////////////////
 void lut::copyToInt32(std::int32_t* pDestination, size_t destSize, std::int32_t* pFirstMapped) const
 {
-	if(destSize > m_size)
+    IMEBRA_FUNCTION_START();
+
+    if(destSize > m_size)
 	{
 		destSize = m_size;
 	}
     ::memcpy(pDestination, m_pMappedValues, destSize * sizeof(std::int32_t));
 	*pFirstMapped = m_firstMapped;
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -352,9 +368,13 @@ m_redLut(red), m_greenLut(green), m_blueLut(blue)
 
 void palette::setLuts(std::shared_ptr<lut> red, std::shared_ptr<lut> green, std::shared_ptr<lut> blue)
 {
-	m_redLut = red;
+    IMEBRA_FUNCTION_START();
+
+    m_redLut = red;
 	m_greenLut = green;
 	m_blueLut = blue;
+
+    IMEBRA_FUNCTION_END();
 }
 
 std::shared_ptr<lut> palette::getRed() const

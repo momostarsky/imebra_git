@@ -170,6 +170,8 @@ charsetConversion* allocateCharsetConversion()
 */
 jstring charsetConversionJava::getNativeJavaString(JNIEnv *env, const std::string& str, const char* tableName)
 {
+    IMEBRA_FUNCTION_START();
+
     jclass Class_java_lang_String = env->FindClass("java/lang/String");
     jmethodID MID_String_init = env->GetMethodID(Class_java_lang_String, "<init>", "([BLjava/lang/String;)V");
 
@@ -195,6 +197,8 @@ jstring charsetConversionJava::getNativeJavaString(JNIEnv *env, const std::strin
     }
 
     return 0;
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -207,6 +211,8 @@ jstring charsetConversionJava::getNativeJavaString(JNIEnv *env, const std::strin
 */
 std::string charsetConversionJava::getBytesFromString(JNIEnv *env, jstring jstr, const char* tableName)
 {
+    IMEBRA_FUNCTION_START();
+
     std::string result;
     jclass Class_java_lang_String = env->FindClass("java/lang/String");
     jmethodID MID_String_getBytes = env->GetMethodID(Class_java_lang_String, "getBytes", "(Ljava/lang/String;)[B");
@@ -243,11 +249,15 @@ std::string charsetConversionJava::getBytesFromString(JNIEnv *env, jstring jstr,
         env->DeleteLocalRef(jTableName);
     }
     return result;
+
+    IMEBRA_FUNCTION_END();
 }
 
 
 JNIEnv* charsetConversionJava::getJavaEnv(bool* bDetach)
 {
+    IMEBRA_FUNCTION_START();
+
     JavaVM* javaVM = get_imebra_javaVM();
     JNIEnv* env;
 
@@ -267,6 +277,9 @@ JNIEnv* charsetConversionJava::getJavaEnv(bool* bDetach)
         return env;
     }
     return 0;
+
+    IMEBRA_FUNCTION_END();
+
 }
 
 

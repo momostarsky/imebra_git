@@ -47,9 +47,12 @@ namespace implementation
 ///////////////////////////////////////////////////////////
 huffmanTable::huffmanTable(std::uint32_t maxValueLength)
 {
-    m_numValues = (std::uint32_t(1)<<(maxValueLength)) + 1;
+    IMEBRA_FUNCTION_START();
 
+    m_numValues = (std::uint32_t(1)<<(maxValueLength)) + 1;
 	reset();
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -99,7 +102,11 @@ void huffmanTable::reset()
 ///////////////////////////////////////////////////////////
 void huffmanTable::incValueFreq(const std::uint32_t value)
 {
-	++(m_valuesFreq[value].m_freq);
+    IMEBRA_FUNCTION_START();
+
+    ++(m_valuesFreq[value].m_freq);
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -114,7 +121,9 @@ void huffmanTable::incValueFreq(const std::uint32_t value)
 ///////////////////////////////////////////////////////////
 void huffmanTable::removeLastCode()
 {
-	// Find the number of codes
+    IMEBRA_FUNCTION_START();
+
+    // Find the number of codes
 	///////////////////////////////////////////////////////////
 	std::uint32_t codes = 0;
 	std::uint32_t lastLength = 0;
@@ -132,6 +141,8 @@ void huffmanTable::removeLastCode()
 		return;
 	}
     m_valuesPerLength[lastLength]--;
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -146,30 +157,46 @@ void huffmanTable::removeLastCode()
 ///////////////////////////////////////////////////////////
 void huffmanTable::setValuesPerLength(std::uint32_t length, std::uint32_t numValues)
 {
+    IMEBRA_FUNCTION_START();
+
     if(length >= m_valuesPerLength.size())
     {
         throw HuffmanCreateTableError("Huffman code length too big");
     }
     m_valuesPerLength[length] = numValues;
+
+    IMEBRA_FUNCTION_END();
 }
 
 void huffmanTable::addOrderedValue(size_t index, std::uint32_t value)
 {
+    IMEBRA_FUNCTION_START();
+
     if(index >= m_orderedValues.size())
     {
         throw HuffmanCreateTableError("Too many values in the huffman table");
     }
     m_orderedValues[index] = value;
+
+    IMEBRA_FUNCTION_END();
 }
 
 std::uint32_t huffmanTable::getValuesPerLength(std::uint32_t length)
 {
+    IMEBRA_FUNCTION_START();
+
     return m_valuesPerLength[length];
+
+    IMEBRA_FUNCTION_END();
 }
 
 std::uint32_t huffmanTable::getOrderedValue(size_t index)
 {
+    IMEBRA_FUNCTION_START();
+
     return m_orderedValues[index];
+
+    IMEBRA_FUNCTION_END();
 }
 
 

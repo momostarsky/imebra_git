@@ -203,6 +203,8 @@ public:
                     std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY) const
 
 	{
+        IMEBRA_FUNCTION_START();
+
         const inputType* pInputMemory(inputHandlerData);
 		outputType* pOutputMemory(outputHandlerData);
 
@@ -276,7 +278,9 @@ public:
             pInputMemory += (inputHandlerWidth - inputWidth);
             pOutputMemory += (outputHandlerWidth - inputWidth);
         }
-	}
+
+        IMEBRA_FUNCTION_END();
+    }
 
 
     virtual bool isEmpty() const;
@@ -298,6 +302,8 @@ protected:
                     inputType* inputHandlerData, size_t /* inputHandlerSize */, std::uint32_t inputHandlerWidth,
                     std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight)
     {
+        IMEBRA_FUNCTION_START();
+
         inputType* pInputMemory(inputHandlerData + inputHandlerWidth * inputTopLeftY + inputTopLeftX);
         inputType minValue(*pInputMemory);
         inputType maxValue(minValue);
@@ -321,6 +327,9 @@ protected:
         double center = (double)(((std::int64_t)maxValue - (std::int64_t)minValue) / 2 + (std::int64_t)minValue);
         double width = (double)((std::int64_t)maxValue - (std::int64_t)minValue);
         setCenterWidth(center, width);
+
+        IMEBRA_FUNCTION_END();
+
     }
 
     std::shared_ptr<dataSet> m_pDataSet;

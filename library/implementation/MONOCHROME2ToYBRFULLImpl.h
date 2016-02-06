@@ -61,6 +61,8 @@ public:
             std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY) const
 
         {
+            IMEBRA_FUNCTION_START();
+
             checkColorSpaces(inputHandlerColorSpace, outputHandlerColorSpace);
             checkHighBit(inputHighBit, outputHighBit);
 
@@ -86,6 +88,8 @@ public:
                 pInputMemory += inputHandlerWidth - inputWidth;
                 pOutputMemory += (outputHandlerWidth - inputWidth) * 3;
             }
+
+            IMEBRA_FUNCTION_END();
         }
 };
 

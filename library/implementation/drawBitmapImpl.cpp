@@ -22,7 +22,9 @@ namespace implementation
 drawBitmap::drawBitmap(std::shared_ptr<image> sourceImage, std::shared_ptr<transforms::transformsChain> transformsChain):
     m_image(sourceImage), m_transformsChain(std::make_shared<transforms::transformsChain>())
 {
-	if(transformsChain != 0 && !transformsChain->isEmpty())
+    IMEBRA_FUNCTION_START();
+
+    if(transformsChain != 0 && !transformsChain->isEmpty())
 	{
 		m_transformsChain->addTransform(transformsChain);
 	}
@@ -70,6 +72,8 @@ drawBitmap::drawBitmap(std::shared_ptr<image> sourceImage, std::shared_ptr<trans
         m_finalImage = std::make_shared<image>();
         m_finalImage->create(width, height, image::depthU8, "RGB", 7);
     }
+
+    IMEBRA_FUNCTION_END();
 }
 
 

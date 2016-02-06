@@ -59,8 +59,9 @@ public:
             std::shared_ptr<palette> /* outputPalette */,
             std::uint32_t outputHighBit,
             std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY) const
-
         {
+            IMEBRA_FUNCTION_START();
+
             checkColorSpaces(inputHandlerColorSpace, outputHandlerColorSpace);
 
             const inputType* pInputMemory(inputHandlerData);
@@ -131,6 +132,8 @@ public:
                 pInputMemory += (inputHandlerWidth - inputWidth) * 3;
                 pOutputMemory += (outputHandlerWidth - inputWidth) * 3;
             }
+
+            IMEBRA_FUNCTION_END();
         }
 };
 

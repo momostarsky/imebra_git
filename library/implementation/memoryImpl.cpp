@@ -8,6 +8,7 @@ $fileHeader$
 */
 
 #include "memoryImpl.h"
+#include "exceptionImpl.h"
 #include "../include/imebra/exceptions.h"
 
 namespace imebra
@@ -78,7 +79,11 @@ memory::~memory()
 ///////////////////////////////////////////////////////////
 void memory::transfer(const std::shared_ptr<memory>& transferFrom)
 {
+    IMEBRA_FUNCTION_START();
+
 	m_pMemoryBuffer.reset(transferFrom->m_pMemoryBuffer.release());
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -93,11 +98,15 @@ void memory::transfer(const std::shared_ptr<memory>& transferFrom)
 ///////////////////////////////////////////////////////////
 void memory::copyFrom(const std::shared_ptr<memory>& sourceMemory)
 {
-	if(m_pMemoryBuffer.get() == 0)
+    IMEBRA_FUNCTION_START();
+
+    if(m_pMemoryBuffer.get() == 0)
 	{
 		m_pMemoryBuffer.reset(new stringUint8);
 	}
 	m_pMemoryBuffer->assign(sourceMemory->data(), sourceMemory->size());
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -112,10 +121,14 @@ void memory::copyFrom(const std::shared_ptr<memory>& sourceMemory)
 ///////////////////////////////////////////////////////////
 void memory::clear()
 {
-	if(m_pMemoryBuffer.get() != 0)
+    IMEBRA_FUNCTION_START();
+
+    if(m_pMemoryBuffer.get() != 0)
 	{
 		m_pMemoryBuffer->clear();
 	}
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -130,7 +143,9 @@ void memory::clear()
 ///////////////////////////////////////////////////////////
 void memory::resize(size_t newSize)
 {
-	if(m_pMemoryBuffer.get() == 0)
+    IMEBRA_FUNCTION_START();
+
+    if(m_pMemoryBuffer.get() == 0)
 	{
 		m_pMemoryBuffer.reset(new stringUint8((size_t)newSize, (std::uint8_t)0));
 	}
@@ -139,6 +154,7 @@ void memory::resize(size_t newSize)
 	    m_pMemoryBuffer->resize((size_t)newSize, (std::uint8_t)0);
 	}
 
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -153,11 +169,15 @@ void memory::resize(size_t newSize)
 ///////////////////////////////////////////////////////////
 void memory::reserve(size_t reserveSize)
 {
-	if(m_pMemoryBuffer.get() == 0)
+    IMEBRA_FUNCTION_START();
+
+    if(m_pMemoryBuffer.get() == 0)
 	{
         m_pMemoryBuffer.reset(new stringUint8());
 	}
 	m_pMemoryBuffer->reserve(reserveSize);
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -172,11 +192,15 @@ void memory::reserve(size_t reserveSize)
 ///////////////////////////////////////////////////////////
 size_t memory::size() const
 {
-	if(m_pMemoryBuffer.get() == 0)
+    IMEBRA_FUNCTION_START();
+
+    if(m_pMemoryBuffer.get() == 0)
 	{
 		return 0;
 	}
     return m_pMemoryBuffer->size();
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -191,20 +215,28 @@ size_t memory::size() const
 ///////////////////////////////////////////////////////////
 std::uint8_t* memory::data()
 {
-	if(m_pMemoryBuffer.get() == 0 || m_pMemoryBuffer->empty())
+    IMEBRA_FUNCTION_START();
+
+    if(m_pMemoryBuffer.get() == 0 || m_pMemoryBuffer->empty())
 	{
 		return 0;
 	}
     return &( (*(m_pMemoryBuffer.get()))[0]);
+
+    IMEBRA_FUNCTION_END();
 }
 
 const std::uint8_t* memory::data() const
 {
+    IMEBRA_FUNCTION_START();
+
     if(m_pMemoryBuffer.get() == 0 || m_pMemoryBuffer->empty())
     {
         return 0;
     }
     return &( ( (*m_pMemoryBuffer.get()))[0]);
+
+    IMEBRA_FUNCTION_END();
 }
 
 ///////////////////////////////////////////////////////////
@@ -218,7 +250,11 @@ const std::uint8_t* memory::data() const
 ///////////////////////////////////////////////////////////
 bool memory::empty()
 {
-	return m_pMemoryBuffer.get() == 0 || m_pMemoryBuffer->empty();
+    IMEBRA_FUNCTION_START();
+
+    return m_pMemoryBuffer.get() == 0 || m_pMemoryBuffer->empty();
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -233,11 +269,15 @@ bool memory::empty()
 ///////////////////////////////////////////////////////////
 void memory::assign(const std::uint8_t* pSource, const size_t sourceLength)
 {
-	if(m_pMemoryBuffer.get() == 0)
+    IMEBRA_FUNCTION_START();
+
+    if(m_pMemoryBuffer.get() == 0)
 	{
 		m_pMemoryBuffer.reset(new stringUint8);
 	}
 	m_pMemoryBuffer->assign(pSource, sourceLength);
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -295,6 +335,8 @@ memoryPool::~memoryPool()
 ///////////////////////////////////////////////////////////
 void memoryPool::reuseMemory(stringUint8* pString)
 {
+    IMEBRA_FUNCTION_START();
+
     if(pString == 0)
     {
         return;
@@ -344,6 +386,8 @@ void memoryPool::reuseMemory(stringUint8* pString)
 			m_firstUsedCell = 0;
 		}
 	}
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -358,6 +402,8 @@ void memoryPool::reuseMemory(stringUint8* pString)
 ///////////////////////////////////////////////////////////
 bool memoryPool::flush()
 {
+    IMEBRA_FUNCTION_START();
+
     bool bCleared(m_firstUsedCell != m_firstFreeCell);
 	while(m_firstUsedCell != m_firstFreeCell)
 	{
@@ -370,6 +416,8 @@ bool memoryPool::flush()
 		}
 	}
     return bCleared;
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -384,6 +432,8 @@ bool memoryPool::flush()
 ///////////////////////////////////////////////////////////
 stringUint8* memoryPool::getMemory(size_t requestedSize)
 {
+    IMEBRA_FUNCTION_START();
+
     if(requestedSize < IMEBRA_MEMORY_POOL_MIN_SIZE || requestedSize > IMEBRA_MEMORY_POOL_MAX_SIZE)
     {
         return new stringUint8(requestedSize, 0);
@@ -432,15 +482,21 @@ stringUint8* memoryPool::getMemory(size_t requestedSize)
 	}
 
     return new stringUint8(requestedSize, 0);
+
+    IMEBRA_FUNCTION_END();
 }
 
 
 memoryPoolGetter::memoryPoolGetter()
 {
+    IMEBRA_FUNCTION_START();
+
     m_oldNewHandler = std::set_new_handler(memoryPoolGetter::newHandler);
 #ifdef __APPLE__
     ::pthread_key_create(&m_key, &memoryPoolGetter::deleteMemoryPool);
 #endif
+
+    IMEBRA_FUNCTION_END();
 }
 
 memoryPoolGetter::~memoryPoolGetter()
@@ -455,6 +511,8 @@ thread_local std::unique_ptr<memoryPool> memoryPoolGetter::m_pool = std::unique_
 
 memoryPool& memoryPoolGetter::getMemoryPoolLocal(size_t memoryMinSize, size_t poolMaxSize)
 {
+    IMEBRA_FUNCTION_START();
+
 #ifdef __APPLE__
     memoryPool* pPool = (memoryPool*)pthread_getspecific(m_key);
     if(pPool == 0)
@@ -470,6 +528,8 @@ memoryPool& memoryPoolGetter::getMemoryPoolLocal(size_t memoryMinSize, size_t po
     }
     return *(m_pool.get());
 #endif
+
+    IMEBRA_FUNCTION_END();
 }
 
 #ifdef __APPLE__

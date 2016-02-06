@@ -2045,8 +2045,12 @@ std::uint32_t dicomDictionary::getMaxSize(const std::string& dataType) const
 ///////////////////////////////////////////////////////////
 dicomDictionary* dicomDictionary::getDicomDictionary()
 {
-	static dicomDictionary m_imbxDicomDictionary;
+    IMEBRA_FUNCTION_START();
+
+    static dicomDictionary m_imbxDicomDictionary;
 	return &m_imbxDicomDictionary;
+
+    IMEBRA_FUNCTION_END();
 }
 
 

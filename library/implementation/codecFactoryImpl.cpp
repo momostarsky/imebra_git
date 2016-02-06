@@ -49,8 +49,13 @@ static codecFactory::forceCodecFactoryCreation forceCreation;
 ///////////////////////////////////////////////////////////
 codecFactory::codecFactory(): m_maximumImageWidth(MAXIMUM_IMAGE_WIDTH), m_maximumImageHeight(MAXIMUM_IMAGE_HEIGHT)
 {
+    IMEBRA_FUNCTION_START();
+
     registerCodec(std::make_shared<dicomCodec>());
     registerCodec(std::make_shared<jpegCodec>());
+
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -119,10 +124,14 @@ std::shared_ptr<codec> codecFactory::getCodec(const std::string& transferSyntax)
 ///////////////////////////////////////////////////////////
 std::shared_ptr<codecFactory> codecFactory::getCodecFactory()
 {
+    IMEBRA_FUNCTION_START();
+
     // Violation to requirement REQ_MAKE_SHARED due to protected constructor
     static std::shared_ptr<codecFactory> m_codecFactory(new codecFactory());
 
 	return m_codecFactory;
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -180,8 +189,12 @@ std::shared_ptr<dataSet> codecFactory::load(std::shared_ptr<streamReader> pStrea
 
 void codecFactory::setMaximumImageSize(const uint32_t maximumWidth, const uint32_t maximumHeight)
 {
+    IMEBRA_FUNCTION_START();
+
     m_maximumImageWidth = maximumWidth;
     m_maximumImageHeight = maximumHeight;
+
+    IMEBRA_FUNCTION_END();
 }
 
 

@@ -66,6 +66,8 @@ static colorTransformsFactory::forceColorTransformsFactoryConstruction forceCons
 
 colorTransformsFactory::colorTransformsFactory()
 {
+    IMEBRA_FUNCTION_START();
+
     registerTransform(std::make_shared<MONOCHROME1ToMONOCHROME2>());
     registerTransform(std::make_shared<MONOCHROME2ToMONOCHROME1>());
     registerTransform(std::make_shared<MONOCHROME1ToRGB>());
@@ -78,6 +80,8 @@ colorTransformsFactory::colorTransformsFactory()
     registerTransform(std::make_shared<YBRFULLToMONOCHROME2>());
     registerTransform(std::make_shared<YBRFULLToRGB>());
     registerTransform(std::make_shared<YBRPARTIALToRGB>());
+
+    IMEBRA_FUNCTION_END();
 }
 
 ///////////////////////////////////////////////////////////
@@ -110,9 +114,13 @@ void colorTransformsFactory::registerTransform(std::shared_ptr<colorTransform> n
 ///////////////////////////////////////////////////////////
 std::shared_ptr<colorTransformsFactory> colorTransformsFactory::getColorTransformsFactory()
 {
+    IMEBRA_FUNCTION_START();
+
     // Violation to requirement REQ_MAKE_SHARED due to protected constructor
     static std::shared_ptr<colorTransformsFactory> m_transformFactory(new colorTransformsFactory());
 	return m_transformFactory;
+
+    IMEBRA_FUNCTION_END();
 }
 
 

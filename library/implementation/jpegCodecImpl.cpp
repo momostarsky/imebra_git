@@ -2233,6 +2233,8 @@ inline void jpegCodec::writeBlock(streamWriter* pStream, std::int32_t* pBuffer, 
 ///////////////////////////////////////////////////////////
 void jpegCodec::recalculateQuantizationTables(int table)
 {
+    IMEBRA_FUNCTION_START();
+
     // Adjust the tables for compression/decompression
     ///////////////////////////////////////////////////////////
     std::uint8_t tableIndex = 0;
@@ -2245,6 +2247,8 @@ void jpegCodec::recalculateQuantizationTables(int table)
             ++tableIndex;
         }
     }
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -2262,6 +2266,8 @@ void jpegCodec::recalculateQuantizationTables(int table)
 /////////////////////////////////////////////////////////////////
 void jpegCodec::FDCT(std::int32_t* pIOMatrix, float* pDescaleFactors)
 {
+    IMEBRA_FUNCTION_START();
+
     // Temporary values
     /////////////////////////////////////////////////////////////////
     float tmp0, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7;
@@ -2397,6 +2403,7 @@ void jpegCodec::FDCT(std::int32_t* pIOMatrix, float* pDescaleFactors)
     for(int descale = 0; descale < 64; ++descale)
         pIOMatrix[descale]=(std::int32_t)(m_fdctTempMatrix[descale]*pDescaleFactors[descale]+.5f);
 
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -2414,6 +2421,8 @@ void jpegCodec::FDCT(std::int32_t* pIOMatrix, float* pDescaleFactors)
 /////////////////////////////////////////////////////////////////
 void jpegCodec::IDCT(std::int32_t* pIOMatrix, long long* pScaleFactors)
 {
+    IMEBRA_FUNCTION_START();
+
     const double multiplier((float)((long long)1 << JPEG_DECOMPRESSION_BITS_PRECISION));
     const long long multiplier_1_414213562f((long long)(multiplier * 1.414213562f + .5f));
     const long long multiplier_1_847759065f((long long)(multiplier * 1.847759065f + .5f));
@@ -2593,6 +2602,8 @@ void jpegCodec::IDCT(std::int32_t* pIOMatrix, long long* pScaleFactors)
         *pMatrix = (std::int32_t)((tmp0 - tmp7 + zero_point_five_by_8)>>(JPEG_DECOMPRESSION_BITS_PRECISION + 3));
         pMatrix -= 55;
     }
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -2614,6 +2625,8 @@ namespace jpeg
 
 void jpegChannel::processUnprocessedAmplitudes()
 {
+    IMEBRA_FUNCTION_START();
+
     if(m_unprocessedAmplitudesCount == 0)
     {
         return;
@@ -2702,6 +2715,7 @@ void jpegChannel::processUnprocessedAmplitudes()
             m_losslessPositionX = 0;
         }
     }
+    IMEBRA_FUNCTION_END();
 }
 
 ///////////////////////////////////////////////////////////

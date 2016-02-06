@@ -1624,6 +1624,8 @@ void dicomCodec::writeRLECompressed(
 ///////////////////////////////////////////////////////////
 size_t dicomCodec::writeRLEDifferentBytes(std::vector<std::uint8_t>* pDifferentBytes, streamWriter* pDestStream, bool bWrite)
 {
+    IMEBRA_FUNCTION_START();
+
     size_t writtenLength = 0;
     for(size_t offset(0); offset != pDifferentBytes->size();)
     {
@@ -1646,6 +1648,8 @@ size_t dicomCodec::writeRLEDifferentBytes(std::vector<std::uint8_t>* pDifferentB
     // return number of written bytes
     /////////////////////////////////
     return writtenLength;
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -1796,7 +1800,9 @@ void dicomCodec::readPixel(
 					const std::uint8_t allocatedBits,
 					const std::uint32_t mask)
 {
-	if(allocatedBits == 8 || allocatedBits == 16 || allocatedBits == 32)
+    IMEBRA_FUNCTION_START();
+
+    if(allocatedBits == 8 || allocatedBits == 16 || allocatedBits == 32)
 	{
 		pSourceStream->read(pReadBuffer, numPixels * (allocatedBits >> 3));
 		if(allocatedBits == 8)
@@ -1862,6 +1868,8 @@ void dicomCodec::readPixel(
         }
         *pDest++ &= mask;
     }
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -1882,7 +1890,9 @@ void dicomCodec::writePixel(
 					std::uint8_t allocatedBits,
 					std::uint32_t mask)
 {
-	pixelValue &= mask;
+    IMEBRA_FUNCTION_START();
+
+    pixelValue &= mask;
 
 	if(allocatedBits == 8)
 	{
@@ -1956,6 +1966,8 @@ void dicomCodec::writePixel(
 			*pBitPointer = 0;
 		}
 	}
+
+    IMEBRA_FUNCTION_END();
 }
 
 

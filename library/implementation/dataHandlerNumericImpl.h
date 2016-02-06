@@ -152,31 +152,47 @@ public:
 
 	virtual bool isSigned() const
 	{
+        IMEBRA_FUNCTION_START();
+
 		dataHandlerType firstValue((dataHandlerType) -1);
 		dataHandlerType secondValue((dataHandlerType) 0);
 		return firstValue < secondValue;
-	}
+
+        IMEBRA_FUNCTION_END();
+    }
 
 	// Retrieve the data element as a signed long
 	///////////////////////////////////////////////////////////
     virtual std::int32_t getSignedLong(const size_t index) const
 	{
+        IMEBRA_FUNCTION_START();
+
         return (std::int32_t) (((const dataHandlerType*)m_pMemory->data())[index]);
-	}
+
+        IMEBRA_FUNCTION_END();
+    }
 
 	// Retrieve the data element an unsigned long
 	///////////////////////////////////////////////////////////
     virtual std::uint32_t getUnsignedLong(const size_t index) const
 	{
+        IMEBRA_FUNCTION_START();
+
         return (std::uint32_t) (((const dataHandlerType*)m_pMemory->data())[index]);
-	}
+
+        IMEBRA_FUNCTION_END();
+    }
 
 	// Retrieve the data element as a double
 	///////////////////////////////////////////////////////////
     virtual double getDouble(const size_t index) const
 	{
+        IMEBRA_FUNCTION_START();
+
         return (double) (((const dataHandlerType*)m_pMemory->data())[index]);
-	}
+
+        IMEBRA_FUNCTION_END();
+    }
 
 	// Retrieve the data element as a string
 	///////////////////////////////////////////////////////////
@@ -231,7 +247,9 @@ public:
 	template<class destHandlerType>
     void copyToMemory(destHandlerType* pDestination, size_t destSize) const
 	{
-		if(getSize() < destSize)
+        IMEBRA_FUNCTION_START();
+
+        if(getSize() < destSize)
 		{
 			destSize = getSize();
 		}
@@ -240,40 +258,81 @@ public:
 		{
 			*(pDestination++) = (destHandlerType)*(pSource++);
 		}
+
+        IMEBRA_FUNCTION_END();
 	}
 
     virtual void copyTo(std::uint8_t* pMemory, size_t memorySize) const
 	{
+        IMEBRA_FUNCTION_START();
+
 		copyToMemory(pMemory, memorySize);
-	}
+
+        IMEBRA_FUNCTION_END();
+    }
+
     virtual void copyTo(std::int8_t* pMemory, size_t memorySize) const
 	{
-		copyToMemory(pMemory, memorySize);
-	}
+        IMEBRA_FUNCTION_START();
+
+        copyToMemory(pMemory, memorySize);
+
+        IMEBRA_FUNCTION_END();
+    }
+
     virtual void copyTo(std::uint16_t* pMemory, size_t memorySize) const
 	{
-		copyToMemory(pMemory, memorySize);
-	}
+        IMEBRA_FUNCTION_START();
+
+        copyToMemory(pMemory, memorySize);
+
+        IMEBRA_FUNCTION_END();
+    }
+
     virtual void copyTo(std::int16_t* pMemory, size_t memorySize) const
 	{
-		copyToMemory(pMemory, memorySize);
-	}
+        IMEBRA_FUNCTION_START();
+
+        copyToMemory(pMemory, memorySize);
+
+        IMEBRA_FUNCTION_END();
+    }
+
     virtual void copyTo(std::uint32_t* pMemory, size_t memorySize) const
 	{
+        IMEBRA_FUNCTION_START();
+
 		copyToMemory(pMemory, memorySize);
-	}
+
+        IMEBRA_FUNCTION_END();
+    }
+
     virtual void copyTo(std::int32_t* pMemory, size_t memorySize) const
 	{
-		copyToMemory(pMemory, memorySize);
-	}
+        IMEBRA_FUNCTION_START();
+
+        copyToMemory(pMemory, memorySize);
+
+        IMEBRA_FUNCTION_END();
+    }
+
     virtual void copyTo(float* pMemory, size_t memorySize) const
 	{
-		copyToMemory(pMemory, memorySize);
-	}
+        IMEBRA_FUNCTION_START();
+
+        copyToMemory(pMemory, memorySize);
+
+        IMEBRA_FUNCTION_END();
+    }
+
     virtual void copyTo(double* pMemory, size_t memorySize) const
 	{
-		copyToMemory(pMemory, memorySize);
-	}
+        IMEBRA_FUNCTION_START();
+
+        copyToMemory(pMemory, memorySize);
+
+        IMEBRA_FUNCTION_END();
+    }
 
 
 	/// \brief Copy the buffer controlled by the handler into
@@ -324,7 +383,9 @@ public:
 										std::uint32_t sourceHeight,
 										std::uint32_t sourceNumChannels) const
 	{
-		if(sourceStartCol >= sourceWidth || sourceStartRow >= sourceHeight)
+        IMEBRA_FUNCTION_START();
+
+        if(sourceStartCol >= sourceWidth || sourceStartRow >= sourceHeight)
 		{
 			return;
 		}
@@ -389,7 +450,8 @@ public:
 			*scanDivide >>= rightShift;
 		}
 
-	}
+        IMEBRA_FUNCTION_END();
+    }
 };
 
 template<class dataHandlerType>
@@ -407,33 +469,45 @@ public:
     ///////////////////////////////////////////////////////////
     virtual void setSignedLong(const size_t index, const std::int32_t value)
     {
+        IMEBRA_FUNCTION_START();
+
         if(index >= getSize())
         {
             setSize(index + 1);
         }
         ((dataHandlerType*)m_pMemory->data())[index] = (dataHandlerType)value;
+
+        IMEBRA_FUNCTION_END();
     }
 
     // Set the data element as an unsigned long
     ///////////////////////////////////////////////////////////
     virtual void setUnsignedLong(const size_t index, const std::uint32_t value)
     {
+        IMEBRA_FUNCTION_START();
+
         if(index >= getSize())
         {
             setSize(index + 1);
         }
         ((dataHandlerType*)m_pMemory->data())[index] = (dataHandlerType)value;
+
+        IMEBRA_FUNCTION_END();
     }
 
     // Set the data element as a double
     ///////////////////////////////////////////////////////////
     virtual void setDouble(const size_t index, const double value)
     {
+        IMEBRA_FUNCTION_START();
+
         if(index >= getSize())
         {
             setSize(index + 1);
         }
         ((dataHandlerType*)m_pMemory->data())[index] = (dataHandlerType)value;
+
+        IMEBRA_FUNCTION_END();
     }
 
     // Set the data element as a string
@@ -493,12 +567,16 @@ public:
     template<class sourceHandlerType>
     void copyFromMemory(sourceHandlerType* pSource, size_t sourceSize)
     {
+        IMEBRA_FUNCTION_START();
+
         setSize(sourceSize);
         dataHandlerType* pDest((dataHandlerType*)m_pMemory->data());
         while(sourceSize-- != 0)
         {
             *(pDest++) = (dataHandlerType)*(pSource++);
         }
+
+        IMEBRA_FUNCTION_END();
     }
 
     // Copy the data from another handler
@@ -553,35 +631,74 @@ public:
 
     virtual void copyFrom(std::uint8_t* pMemory, size_t memorySize)
     {
+        IMEBRA_FUNCTION_START();
+
         copyFromMemory(pMemory, memorySize);
+
+        IMEBRA_FUNCTION_END();
     }
+
     virtual void copyFrom(std::int8_t* pMemory, size_t memorySize)
     {
+        IMEBRA_FUNCTION_START();
+
         copyFromMemory(pMemory, memorySize);
+
+        IMEBRA_FUNCTION_END();
     }
+
     virtual void copyFrom(std::uint16_t* pMemory, size_t memorySize)
     {
+        IMEBRA_FUNCTION_START();
+
         copyFromMemory(pMemory, memorySize);
+
+        IMEBRA_FUNCTION_END();
     }
+
     virtual void copyFrom(std::int16_t* pMemory, size_t memorySize)
     {
+        IMEBRA_FUNCTION_START();
+
         copyFromMemory(pMemory, memorySize);
+
+        IMEBRA_FUNCTION_END();
     }
+
     virtual void copyFrom(std::uint32_t* pMemory, size_t memorySize)
     {
+        IMEBRA_FUNCTION_START();
+
         copyFromMemory(pMemory, memorySize);
+
+        IMEBRA_FUNCTION_END();
     }
+
     virtual void copyFrom(std::int32_t* pMemory, size_t memorySize)
     {
+        IMEBRA_FUNCTION_START();
+
         copyFromMemory(pMemory, memorySize);
+
+        IMEBRA_FUNCTION_END();
     }
+
     virtual void copyFrom(float* pMemory, size_t memorySize)
     {
+        IMEBRA_FUNCTION_START();
+
         copyFromMemory(pMemory, memorySize);
+
+        IMEBRA_FUNCTION_END();
     }
+
     virtual void copyFrom(double* pMemory, size_t memorySize)
     {
+        IMEBRA_FUNCTION_START();
+
         copyFromMemory(pMemory, memorySize);
+
+        IMEBRA_FUNCTION_END();
     }
 
     template<int subsampleX>
@@ -597,6 +714,8 @@ public:
         std::uint32_t destHeight,
         std::uint32_t destNumChannels)
     {
+        IMEBRA_FUNCTION_START();
+
         dataHandlerType *pDestRowScan = &(((dataHandlerType*)m_pMemory->data())[(destStartRow*destWidth+destStartCol)*destNumChannels+destStartChannel]);
         const std::int32_t* pSourceRowScan = pSource;
 
@@ -670,6 +789,8 @@ public:
                 pSourceRowScan += replicateYIncrease;
             }
         }
+
+        IMEBRA_FUNCTION_END();
     }
 
 
@@ -721,6 +842,8 @@ public:
                                           std::uint32_t destHeight,
                                           std::uint32_t destNumChannels)
     {
+        IMEBRA_FUNCTION_START();
+
         if(destStartCol >= destWidth || destStartRow >= destHeight)
         {
             return;
@@ -770,6 +893,8 @@ public:
         default:
             throw std::logic_error("Invalid subsampling factor");
         }
+
+        IMEBRA_FUNCTION_END();
     }
 
 };
@@ -803,35 +928,37 @@ typedef writingDataHandlerNumeric<double> writingDataHandlerDouble;
 
 #define HANDLER_CALL_TEMPLATE_FUNCTION_WITH_PARAMS(functionName, handlerPointer, ...)\
 {\
+    IMEBRA_FUNCTION_START();\
     imebra::implementation::handlers::readingDataHandlerNumericBase* pHandler(handlerPointer.get()); \
     if(typeid(*pHandler) == typeid(imebra::implementation::handlers::readingDataHandlerNumeric<std::uint8_t>)) \
-{\
-    functionName<std::uint8_t> ((std::uint8_t*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize(), __VA_ARGS__);\
+    {\
+        functionName<std::uint8_t> ((std::uint8_t*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize(), __VA_ARGS__);\
     }\
     else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::readingDataHandlerNumeric<std::int8_t>))\
-{\
-    functionName<std::int8_t> ((std::int8_t*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize(), __VA_ARGS__);\
+    {\
+        functionName<std::int8_t> ((std::int8_t*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize(), __VA_ARGS__);\
     }\
     else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::readingDataHandlerNumeric<std::uint16_t>))\
-{\
-    functionName<std::uint16_t> ((std::uint16_t*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize(), __VA_ARGS__);\
+    {\
+        functionName<std::uint16_t> ((std::uint16_t*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize(), __VA_ARGS__);\
     }\
     else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::readingDataHandlerNumeric<std::int16_t>))\
-{\
-    functionName<std::int16_t> ((std::int16_t*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize(), __VA_ARGS__);\
+    {\
+        functionName<std::int16_t> ((std::int16_t*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize(), __VA_ARGS__);\
     }\
     else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::readingDataHandlerNumeric<std::uint32_t>))\
-{\
-    functionName<std::uint32_t> ((std::uint32_t*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize(), __VA_ARGS__);\
+    {\
+        functionName<std::uint32_t> ((std::uint32_t*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize(), __VA_ARGS__);\
     }\
     else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::readingDataHandlerNumeric<std::int32_t>))\
-{\
-    functionName<std::int32_t> ((std::int32_t*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize(), __VA_ARGS__);\
+    {\
+        functionName<std::int32_t> ((std::int32_t*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize(), __VA_ARGS__);\
     }\
     else\
-{\
-    throw std::runtime_error("Data type not valid");\
+    {\
+        throw std::runtime_error("Data type not valid");\
     }\
+    IMEBRA_FUNCTION_END();\
 }
 
 

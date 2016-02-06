@@ -67,6 +67,8 @@ public:
             std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY) const
 
         {
+            IMEBRA_FUNCTION_START();
+
             if(colorTransforms::colorTransformsFactory::normalizeColorSpace(inputHandlerColorSpace) !=
                colorTransforms::colorTransformsFactory::normalizeColorSpace(outputHandlerColorSpace))
             {
@@ -110,6 +112,8 @@ public:
                     pOutputMemory += (outputHandlerWidth - inputWidth) * numChannels;
                 }
             }
+
+            IMEBRA_FUNCTION_END();
         }
 
 };

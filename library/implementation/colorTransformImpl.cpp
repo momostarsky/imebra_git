@@ -68,10 +68,14 @@ void colorTransform::checkColorSpaces(const std::string& inputHandlerColorSpace,
 
 void colorTransform::checkHighBit(std::uint32_t inputHighBit, std::uint32_t outputHighBit) const
 {
+    IMEBRA_FUNCTION_START();
+
     if(inputHighBit != outputHighBit)
     {
         IMEBRA_THROW(TransformDifferentHighBitError, "Different high bit (input = " << inputHighBit << ", output = " << outputHighBit << ")");
     }
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -82,6 +86,8 @@ std::shared_ptr<image> colorTransform::allocateOutputImage(
         std::shared_ptr<palette> inputPalette,
         std::uint32_t outputWidth, std::uint32_t outputHeight) const
 {
+    IMEBRA_FUNCTION_START();
+
     std::shared_ptr<image> newImage(std::make_shared<image>());
     if(inputPalette != 0)
     {
@@ -90,6 +96,8 @@ std::shared_ptr<image> colorTransform::allocateOutputImage(
 
     newImage->create(outputWidth, outputHeight, inputDepth, getFinalColorSpace(), inputHighBit);
 	return newImage;
+
+    IMEBRA_FUNCTION_END();
 }
 
 
