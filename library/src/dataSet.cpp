@@ -134,7 +134,12 @@ std::wstring DataSet::getUnicodeString(std::uint16_t groupId, std::uint16_t orde
     return m_pDataSet->getUnicodeString(groupId, order, tagId, bufferId, elementNumber, defaultValue);
 }
 
-void DataSet::setString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, const std::wstring& newString, const std::string& defaultType)
+void DataSet::setString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, const std::string& newString, const std::string& defaultType)
+{
+    m_pDataSet->setString(groupId, order, tagId, bufferId, elementNumber, newString, defaultType);
+}
+
+void DataSet::setUnicodeString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, const std::wstring& newString, const std::string& defaultType)
 {
     m_pDataSet->setUnicodeString(groupId, order, tagId, bufferId, elementNumber, newString, defaultType);
 }

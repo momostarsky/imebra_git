@@ -190,7 +190,12 @@ void WritingDataHandler::setDouble(const size_t index, const double value)
     m_pDataHandler->setDouble(index, value);
 }
 
-void WritingDataHandler::setString(const size_t index, const std::wstring& value)
+void WritingDataHandler::setString(const size_t index, const std::string& value)
+{
+    m_pDataHandler->setString(index, value);
+}
+
+void WritingDataHandler::setUnicodeString(const size_t index, const std::wstring& value)
 {
     m_pDataHandler->setUnicodeString(index, value);
 }

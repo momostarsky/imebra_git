@@ -41,11 +41,6 @@ WritingDataHandler Image::create(
     return WritingDataHandler(m_pImage->create(sizeX, sizeY, (imebra::implementation::image::bitDepth)depth, colorSpace, highBit));
 }
 
-void Image::setHighBit(std::uint32_t highBit)
-{
-    m_pImage->setHighBit(highBit);
-}
-
 double Image::getSizeMmX() const
 {
     double sizeX, sizeY;

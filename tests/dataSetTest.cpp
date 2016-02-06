@@ -40,8 +40,8 @@ TEST(dataSetTest, testFragmentation)
 		20));
 
     imebra::DataSet testDataSet;
-    testDataSet.setImage(0, testImage0, "1.2.840.10008.1.2.4.70", DataSet::high);
-    testDataSet.setImage(1, testImage1, "1.2.840.10008.1.2.4.70", DataSet::high);
+    testDataSet.setImage(0, testImage0, "1.2.840.10008.1.2.4.70", imageQuality::high);
+    testDataSet.setImage(1, testImage1, "1.2.840.10008.1.2.4.70", imageQuality::high);
 
     // Verify the two images
     imebra::Image verifyImage0 = testDataSet.getImage(0);
