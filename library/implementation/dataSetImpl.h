@@ -51,7 +51,7 @@ class waveform;
 ///
 /// Also the tags with the data type SQ (sequence) contains
 ///  one or more embedded dataSets that can be retrieved
-///  by using data::getDataSet().
+///  by using data::getSequenceItemThrow().
 ///
 /// If your application creates a new dataset then it can
 ///  set the default dataSet's charset by calling 
@@ -924,7 +924,6 @@ public:
     tGroupsIds getGroups() const;
 
     size_t getGroupsNumber(std::uint16_t groupId) const;
-
 
     const tTags& getGroupTags(std::uint16_t groupId, size_t groupOrder) const;
 

@@ -13,6 +13,10 @@ $fileHeader$
 namespace imebra
 {
 
+StreamReader::StreamReader(std::shared_ptr<implementation::streamReader> pReader): m_pReader(pReader)
+{
+}
+
 StreamReader::StreamReader(const BaseStreamInput& stream): m_pReader(std::make_shared<implementation::streamReader>(stream.m_pStream))
 {
 }

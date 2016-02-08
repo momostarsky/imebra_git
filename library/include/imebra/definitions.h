@@ -10,6 +10,7 @@ $fileHeader$
 #if !defined(imebraDefinitions_SWIG_3146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_)
 #define imebraDefinitions_SWIG_3146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_
 
+#include <set>
 #include <cstdint>
 
 // Generic helper definitions for shared library support
@@ -40,8 +41,6 @@ $fileHeader$
   #define IMEBRA_API
 #endif // IMEBRA_DLL
 
-
-
 namespace imebra
 {
 
@@ -63,7 +62,7 @@ enum class ageUnit_t: char
 ///        is used.
 ///
 ///////////////////////////////////////////////////////////
-enum imageQuality
+enum imageQuality_t
 {
     veryHigh = 0,      ///< the image is saved with very high quality. No subsampling is performed and no quantization
     high = 100,        ///< the image is saved with high quality. No subsampling is performed. Quantization ratios are low
@@ -107,9 +106,8 @@ struct IMEBRA_API Date
 
 };
 
+typedef std::set<std::uint16_t> groups_t;
+
 } // namespace imebra
-
-
-
 
 #endif // imebraDefinitions_SWIG_3146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_

@@ -22,6 +22,7 @@ namespace implementation
 {
 class streamReader;
 }
+
 }
 
 #endif
@@ -36,6 +37,9 @@ class IMEBRA_API StreamReader
 {
     friend class CodecFactory;
 public:
+#ifndef SWIG
+    StreamReader(std::shared_ptr<implementation::streamReader> pReader);
+#endif
     StreamReader(const BaseStreamInput& stream);
 
     StreamReader(const BaseStreamInput& stream, size_t virtualStart, size_t virtualLength);

@@ -95,7 +95,7 @@ std::shared_ptr<data> dataSet::getTagCreate(std::uint16_t groupId, std::uint16_t
 
     if(m_groups[groupId][order][tagId] == 0)
     {
-        m_groups[groupId][order][tagId] = std::make_shared<data>();
+        m_groups[groupId][order][tagId] = std::make_shared<data>(m_charsetsList);
     }
 
     return m_groups[groupId][order][tagId];
@@ -788,7 +788,7 @@ std::shared_ptr<dataSet> dataSet::getSequenceItemThrow(std::uint16_t groupId, st
 {
     IMEBRA_FUNCTION_START();
 
-    return getTagThrow(groupId, order, tagId)->getDataSetThrow(itemId);
+    return getTagThrow(groupId, order, tagId)->getSequenceItemThrow(itemId);
 
 	IMEBRA_FUNCTION_END();
 }
@@ -1273,10 +1273,10 @@ std::shared_ptr<handlers::writingDataHandler> dataSet::getWritingDataHandler(std
 
     if(defaultType.length()!=2L)
     {
-        return tag->getWritingDataHandler(bufferId, getDefaultDataType(groupId, tagId), m_charsetsList);
+        return tag->getWritingDataHandler(bufferId, getDefaultDataType(groupId, tagId));
     }
 
-    return tag->getWritingDataHandler(bufferId, defaultType, m_charsetsList);
+    return tag->getWritingDataHandler(bufferId, defaultType);
 
     IMEBRA_FUNCTION_END();
 }
@@ -1346,10 +1346,10 @@ std::shared_ptr<handlers::writingDataHandlerRaw> dataSet::getWritingDataHandlerR
 
     if(defaultType.length()!=2)
     {
-        return tag->getWritingDataHandlerRaw(bufferId, getDefaultDataType(groupId, tagId), m_charsetsList);
+        return tag->getWritingDataHandlerRaw(bufferId, getDefaultDataType(groupId, tagId));
     }
 
-    return tag->getWritingDataHandlerRaw(bufferId, defaultType, m_charsetsList);
+    return tag->getWritingDataHandlerRaw(bufferId, defaultType);
 
     IMEBRA_FUNCTION_END();
 }

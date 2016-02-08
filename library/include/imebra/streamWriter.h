@@ -38,6 +38,9 @@ class IMEBRA_API StreamWriter
 {
 	friend class CodecFactory;
 public:
+#ifndef SWIG
+    StreamWriter(std::shared_ptr<implementation::streamWriter> pWriter);
+#endif
     StreamWriter(const BaseStreamOutput& stream, size_t virtualStart = 0, size_t virtualLength = 0);
     StreamWriter(const StreamWriter& right);
     StreamWriter& operator=(const StreamWriter& right);

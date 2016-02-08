@@ -18,6 +18,7 @@ $fileHeader$
 #include "image.h"
 #include "dataHandler.h"
 #include "definitions.h"
+#include "tagContent.h"
 
 namespace imebra
 {
@@ -67,6 +68,12 @@ public:
 #ifndef SWIG
     DataSet(std::shared_ptr<imebra::implementation::dataSet> pDataSet);
 #endif
+
+    groups_t getGroups() const;
+
+    size_t getGroupsNumber(std::uint16_t groupId) const;
+
+    tags_t getGroupTags(std::uint16_t groupId, size_t groupOrder) const;
 
     ///
     /// \brief Retrieve an image from the dataset.
@@ -146,9 +153,9 @@ public:
     ///                       compression is used
     ///
     ///////////////////////////////////////////////////////////
-    void setImage(size_t frameNumber, Image image, const std::string& transferSyntax, imageQuality quality);
+    void setImage(size_t frameNumber, Image image, const std::string& transferSyntax, imageQuality_t quality);
 
-    DataSet getSequenceItem(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t itemId);
+    DataSet getSequenceItemThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t itemId);
 
     ReadingDataHandler getReadingDataHandler(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId) const;
 

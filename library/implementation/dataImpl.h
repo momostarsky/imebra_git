@@ -57,6 +57,9 @@ class dataSet;
 class data
 {
 public:
+
+    data(const charsetsList::tCharsetsList& defaultCharsets);
+
 	///////////////////////////////////////////////////////////
 	/// \name Data handlers
 	///
@@ -138,7 +141,7 @@ public:
 	///////////////////////////////////////////////////////////
     std::shared_ptr<handlers::readingDataHandler> getReadingDataHandlerThrow(size_t bufferId) const;
 
-    std::shared_ptr<handlers::writingDataHandler> getWritingDataHandler(size_t bufferId, const std::string& defaultType, const charsetsList::tCharsetsList& defaultCharsets);
+    std::shared_ptr<handlers::writingDataHandler> getWritingDataHandler(size_t bufferId, const std::string& defaultType);
 	
 	/// \brief Get a raw data handler 
 	///         (handlers::dataHandlerRaw) for the specified 
@@ -184,7 +187,7 @@ public:
 	///////////////////////////////////////////////////////////
     std::shared_ptr<handlers::readingDataHandlerRaw> getReadingDataHandlerRawThrow(size_t bufferId) const;
 
-    std::shared_ptr<handlers::writingDataHandlerRaw> getWritingDataHandlerRaw(size_t bufferId, const std::string& defaultType, const charsetsList::tCharsetsList& defaultCharsets);
+    std::shared_ptr<handlers::writingDataHandlerRaw> getWritingDataHandlerRaw(size_t bufferId, const std::string& defaultType);
 
 	/// \brief Get a streamReader connected to a buffer's data.
 	///
@@ -237,7 +240,7 @@ public:
 	/// @return           a pointer to the retrieved dataSet
 	///
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<dataSet> getDataSetThrow(size_t dataSetId) const;
+    std::shared_ptr<dataSet> getSequenceItemThrow(size_t dataSetId) const;
 
     bool dataSetExists(size_t dataSetId) const;
 
@@ -278,23 +281,6 @@ public:
 
 
 	///////////////////////////////////////////////////////////
-	/// \name Buffer deletion
-	///
-	///////////////////////////////////////////////////////////
-	//@{
-
-	/// \brief Remove a buffer from the tag.
-	///
-	/// @param bufferId  the id of the buffer to be removed
-	///                   from the tag
-	///
-	///////////////////////////////////////////////////////////
-    void deleteBuffer(size_t bufferId);
-
-	//@}
-
-
-	///////////////////////////////////////////////////////////
 	/// \name Buffer's data type
 	///
 	///////////////////////////////////////////////////////////
@@ -315,11 +301,14 @@ public:
     virtual void setCharsetsList(const charsetsList::tCharsetsList& charsetsList);
     virtual void getCharsetsList(charsetsList::tCharsetsList* pCharsetsList) const;
 
-	// Set a buffer
-	///////////////////////////////////////////////////////////
+    // Set a buffer
+    ///////////////////////////////////////////////////////////
     void setBuffer(size_t bufferId, const std::shared_ptr<buffer>& newBuffer);
 
 protected:
+
+    charsetsList::tCharsetsList m_charsetsList;
+
 	// Pointers to the internal buffers
 	///////////////////////////////////////////////////////////
     typedef std::map<size_t, std::shared_ptr<buffer> > tBuffersMap;

@@ -15,6 +15,10 @@ $fileHeader$
 namespace imebra
 {
 
+StreamWriter::StreamWriter(std::shared_ptr<implementation::streamWriter> pWriter): m_pWriter(pWriter)
+{
+}
+
 StreamWriter::StreamWriter(const BaseStreamOutput& stream, size_t virtualStart, size_t virtualLength): m_pWriter(std::make_shared<implementation::streamWriter>(stream.m_pStream, virtualStart, virtualLength))
 {
 }

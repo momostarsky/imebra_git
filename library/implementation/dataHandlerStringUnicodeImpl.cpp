@@ -201,7 +201,7 @@ writingDataHandlerStringUnicode::~writingDataHandlerStringUnicode()
         throw;
     }
 
-    m_buffer->commit(commitMemory, m_dataType);
+    m_buffer->commit(commitMemory, m_dataType, m_charsets);
 
     IMEBRA_FUNCTION_END();
 }

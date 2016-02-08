@@ -39,6 +39,20 @@ namespace implementation
 ///////////////////////////////////////////////////////////
 
 
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
+// Constructor
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+data::data(const charsetsList::tCharsetsList &defaultCharsets):
+    m_charsetsList(defaultCharsets)
+{
+}
+
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -53,37 +67,13 @@ void data::setBuffer(size_t bufferId, const std::shared_ptr<buffer>& newBuffer)
 {
     IMEBRA_FUNCTION_START();
 
-	// Assign the new buffer
-	///////////////////////////////////////////////////////////
-	m_buffers[bufferId] = newBuffer;
+    // Assign the new buffer
+    ///////////////////////////////////////////////////////////
+    m_buffers[bufferId] = newBuffer;
 
-	IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Remove a buffer
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-void data::deleteBuffer(size_t bufferId)
-{
-    IMEBRA_FUNCTION_START();
-
-	// Remove the buffer
-	///////////////////////////////////////////////////////////
-	tBuffersMap::iterator findBuffer = m_buffers.find(bufferId);
-	if(findBuffer != m_buffers.end())
-	{
-		m_buffers.erase(findBuffer);
-	}
-
-	IMEBRA_FUNCTION_END();
-}
 
 
 ///////////////////////////////////////////////////////////
@@ -210,7 +200,7 @@ std::shared_ptr<handlers::readingDataHandler> data::getReadingDataHandlerThrow(s
 }
 
 
-std::shared_ptr<handlers::writingDataHandler> data::getWritingDataHandler(size_t bufferId, const std::string& defaultType, const charsetsList::tCharsetsList& defaultCharsets)
+std::shared_ptr<handlers::writingDataHandler> data::getWritingDataHandler(size_t bufferId, const std::string& defaultType)
 {
     IMEBRA_FUNCTION_START();
 
@@ -239,7 +229,7 @@ std::shared_ptr<handlers::writingDataHandler> data::getWritingDataHandler(size_t
         }
         pTempBuffer = std::make_shared<buffer>(defaultType);
 
-        pTempBuffer->setCharsetsList(defaultCharsets);
+        pTempBuffer->setCharsetsList(m_charsetsList);
         m_buffers[bufferId]=pTempBuffer;
     }
 
@@ -277,7 +267,7 @@ std::shared_ptr<handlers::readingDataHandlerRaw> data::getReadingDataHandlerRawT
 }
 
 
-std::shared_ptr<handlers::writingDataHandlerRaw> data::getWritingDataHandlerRaw(size_t bufferId, const std::string& defaultType, const charsetsList::tCharsetsList& defaultCharsets)
+std::shared_ptr<handlers::writingDataHandlerRaw> data::getWritingDataHandlerRaw(size_t bufferId, const std::string& defaultType)
 {
     IMEBRA_FUNCTION_START();
 
@@ -306,7 +296,7 @@ std::shared_ptr<handlers::writingDataHandlerRaw> data::getWritingDataHandlerRaw(
             pTempBuffer = std::make_shared<buffer>(defaultType);
         }
 
-        pTempBuffer->setCharsetsList(defaultCharsets);
+        pTempBuffer->setCharsetsList(m_charsetsList);
         m_buffers[bufferId]=pTempBuffer;
     }
 
@@ -400,7 +390,7 @@ std::shared_ptr<streamWriter> data::getStreamWriter(size_t bufferId, const std::
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<dataSet> data::getDataSetThrow(size_t dataSetId) const
+std::shared_ptr<dataSet> data::getSequenceItemThrow(size_t dataSetId) const
 {
     IMEBRA_FUNCTION_START();
 
@@ -477,6 +467,8 @@ void data::appendDataSet(std::shared_ptr<dataSet> pDataSet)
 void data::setCharsetsList(const charsetsList::tCharsetsList& charsetsList)
 {
     IMEBRA_FUNCTION_START();
+
+    m_charsetsList = charsetsList;
 
 	for(tEmbeddedDatasetsMap::iterator scanEmbeddedDataSets = m_embeddedDataSets.begin(); scanEmbeddedDataSets != m_embeddedDataSets.end(); ++scanEmbeddedDataSets)
 	{

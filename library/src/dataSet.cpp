@@ -34,6 +34,41 @@ DataSet& DataSet::operator=(const DataSet& right)
 	return *this;
 }
 
+groups_t DataSet::getGroups() const
+{
+    groups_t returnGroups;
+    implementation::dataSet::tGroupsIds groups = m_pDataSet->getGroups();
+    for(implementation::dataSet::tGroupsIds::const_iterator scanGroups(groups.begin()), endGroups(groups.end());
+        scanGroups != endGroups;
+        ++scanGroups)
+    {
+        returnGroups.insert(*scanGroups);
+    }
+
+    return returnGroups;
+}
+
+size_t DataSet::getGroupsNumber(std::uint16_t groupId) const
+{
+    return m_pDataSet->getGroupsNumber(groupId);
+}
+
+tags_t DataSet::getGroupTags(std::uint16_t groupId, size_t groupOrder) const
+{
+    tags_t returnTags;
+    implementation::dataSet::tTags tags = m_pDataSet->getGroupTags(groupId, groupOrder);
+    for(implementation::dataSet::tTags::const_iterator scanTags(tags.begin()), endTags(tags.end());
+        scanTags != endTags;
+        ++scanTags)
+    {
+        returnTags.insert(std::pair<std::uint16_t, TagContent>(scanTags->first, TagContent(scanTags->second)));
+
+    }
+    return returnTags;
+}
+
+
+
 Image DataSet::getImage(size_t frameNumber)
 {
     return Image(m_pDataSet->getImage((std::uint32_t)frameNumber));
@@ -44,12 +79,12 @@ Image DataSet::getImageApplyModalityTransform(size_t frameNumber)
     return Image(m_pDataSet->getModalityImage((std::uint32_t)frameNumber));
 }
 
-void DataSet::setImage(size_t frameNumber, Image image, const std::string& transferSyntax, imageQuality quality)
+void DataSet::setImage(size_t frameNumber, Image image, const std::string& transferSyntax, imageQuality_t quality)
 {
     m_pDataSet->setImage((std::uint32_t)frameNumber, image.m_pImage, transferSyntax, (imebra::implementation::codecs::codec::quality)quality);
 }
 
-DataSet DataSet::getSequenceItem(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t itemId)
+DataSet DataSet::getSequenceItemThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t itemId)
 {
     return DataSet(m_pDataSet->getSequenceItemThrow(groupId, order, tagId, itemId));
 }

@@ -61,7 +61,7 @@ public:
 		std::shared_ptr<streamWriter> pDestStream,
 		std::shared_ptr<image> pImage,
         const std::string& transferSyntax,
-		quality imageQuality,
+		quality imageQuality_t,
         const std::string& dataType,
 		std::uint8_t allocatedBits,
 		bool bSubSampledX,

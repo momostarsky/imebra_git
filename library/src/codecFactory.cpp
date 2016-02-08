@@ -48,7 +48,7 @@ void CodecFactory::saveImage(
         StreamWriter& destStream,
         const Image& sourceImage,
         const std::string& transferSyntax,
-        imageQuality imageQuality,
+        imageQuality_t imageQuality,
         const std::string& dataType,
         std::uint32_t allocatedBits,
         bool bSubSampledX,

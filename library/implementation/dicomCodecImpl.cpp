@@ -322,7 +322,7 @@ void dicomCodec::writeTag(std::shared_ptr<streamWriter> pDestStream, std::shared
         {
             break;
         }
-        std::shared_ptr<dataSet> pDataSet = pData->getDataSetThrow(scanBuffers);
+        std::shared_ptr<dataSet> pDataSet = pData->getSequenceItemThrow(scanBuffers);
 
 		// Remember the position at which the item has been written
 		///////////////////////////////////////////////////////////
@@ -376,7 +376,7 @@ std::uint32_t dicomCodec::getTagLength(const std::shared_ptr<data>& pData, bool 
 	{
         if(pData->dataSetExists(scanBuffers))
 		{
-            std::shared_ptr<dataSet> pDataSet = pData->getDataSetThrow(scanBuffers);
+            std::shared_ptr<dataSet> pDataSet = pData->getSequenceItemThrow(scanBuffers);
             totalLength += getDataSetLength(pDataSet, bExplicitDataType);
 			totalLength += 8; // item tag and item length
 			*pbSequence = true;

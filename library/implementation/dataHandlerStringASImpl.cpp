@@ -229,7 +229,7 @@ void writingDataHandlerStringAS::setDouble(const size_t index, const double valu
 {
     IMEBRA_FUNCTION_START();
 
-    IMEBRA_THROW(DataHandlerDeniedConversionError, "Cannot convert VR AS to double");
+    IMEBRA_THROW(DataHandlerDeniedConversionError, "Cannot convert to VR AS from double");
 
 	IMEBRA_FUNCTION_END();
 }
