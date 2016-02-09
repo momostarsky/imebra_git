@@ -202,10 +202,18 @@ The author can be contacted by email at info@binarno.com or by mail at
                 <arg value="--output-file" />
                 <arg path="${build_tests_dir}/test.info" />
             </exec>
+            <exec executable="lcov" dir="${build_tests_dir}" resolveexecutable="true" failonerror="true">
+                <arg value="--extract" />
+                <arg path="${build_tests_dir}/test.info" />
+                <arg path="${build_tests_dir}/library/*/*.*" />
+                <arg path="${build_tests_dir}/library/*/*/*.*" />
+                <arg value="--output-file" />
+                <arg path="${build_tests_dir}/extracted.info" />
+            </exec>
             <exec executable="genhtml" dir="${build_tests_dir}" resolveexecutable="true" failonerror="true">
                 <arg value="--output-directory" />
                 <arg path="${build_tests_dir}/coverage" />
-                <arg path="${build_tests_dir}/test.info" />
+                <arg path="${build_tests_dir}/extracted.info" />
             </exec>
         </target>
 
