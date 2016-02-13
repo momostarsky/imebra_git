@@ -403,7 +403,7 @@ public:
 	///                 this parameter
 	///
 	///////////////////////////////////////////////////////////
-    void setSignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::int32_t newValue, const std::string& defaultType = "");
+    void setSignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, std::int32_t newValue, const std::string& defaultType = "");
 
 	/// \brief Retrieve a tag's value as an unsigned long.
 	///
@@ -463,7 +463,7 @@ public:
 	///                 this parameter
 	///
 	///////////////////////////////////////////////////////////
-    void setUnsignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::uint32_t newValue, const std::string& defaultType = "");
+    void setUnsignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, std::uint32_t newValue, const std::string& defaultType = "");
 
 	/// \brief Retrieve a tag's value as a double.
 	///
@@ -523,7 +523,7 @@ public:
 	///                 this parameter
 	///
 	///////////////////////////////////////////////////////////
-    void setDouble(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, double newValue, const std::string& defaultType = "");
+    void setDouble(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, double newValue, const std::string& defaultType = "");
 
 	/// \brief Retrieve a tag's value as a string.
 	///        getUnicodeString() is preferred over this
@@ -616,7 +616,7 @@ public:
 	///                 this parameter
 	///
 	///////////////////////////////////////////////////////////
-    void setString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, const std::string& newString, const std::string& defaultType = "");
+    void setString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, const std::string& newString, const std::string& defaultType = "");
 
 	/// \brief Set a tag's value as an unicode string.
 	///
@@ -647,9 +647,9 @@ public:
 	///                 this parameter
 	///
 	///////////////////////////////////////////////////////////
-    void setUnicodeString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, const std::wstring& newString, const std::string& defaultType = "");
+    void setUnicodeString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, const std::wstring& newString, const std::string& defaultType = "");
 
-    void setAge(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::uint32_t age, ageUnit_t units, const std::string& defaultType = "");
+    void setAge(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, std::uint32_t age, ageUnit_t units, const std::string& defaultType = "");
 
     std::uint32_t getAgeThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, ageUnit_t* pUnits) const;
 
@@ -657,7 +657,7 @@ public:
                                   size_t elementNumber, ageUnit_t* pUnits,
                                   std::uint32_t defaultAge, ageUnit_t defaultUnits) const;
 
-    void setDate(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber,
+    void setDate(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId,
         std::uint32_t year,
         std::uint32_t month,
         std::uint32_t day,

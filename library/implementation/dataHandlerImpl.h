@@ -18,11 +18,10 @@ $fileHeader$
 namespace imebra
 {
 
-class memory;
-
 namespace implementation
 {
 
+class memory;
 class buffer;
 
 /// \namespace handlers

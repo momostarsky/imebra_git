@@ -5,12 +5,16 @@ $fileHeader$
 #include "../include/imebra/dataSet.h"
 #include "../implementation/dataSetImpl.h"
 #include "../implementation/dataHandlerNumericImpl.h"
+#include "../implementation/charsetConversionBaseImpl.h"
 
 namespace imebra
 {
 
 DataSet::DataSet(): m_pDataSet(std::make_shared<imebra::implementation::dataSet>())
 {
+    implementation::charsetsList::tCharsetsList list;
+    list.push_back("ISO 2022 IR 6");
+    m_pDataSet->setCharsetsList(list);
 }
 
 DataSet::DataSet(const DataSet& right): m_pDataSet(right.m_pDataSet)
@@ -114,9 +118,9 @@ std::int32_t DataSet::getSignedLong(std::uint16_t groupId, std::uint16_t order, 
     return m_pDataSet->getSignedLong(groupId, order, tagId, bufferId, elementNumber, defaultValue);
 }
 
-void DataSet::setSignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::int32_t newValue, const std::string& defaultType)
+void DataSet::setSignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, std::int32_t newValue, const std::string& defaultType)
 {
-    m_pDataSet->setSignedLong(groupId, order, tagId, bufferId, elementNumber, newValue, defaultType);
+    m_pDataSet->setSignedLong(groupId, order, tagId, bufferId, newValue, defaultType);
 }
 
 std::uint32_t DataSet::getUnsignedLongThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
@@ -129,9 +133,9 @@ std::uint32_t DataSet::getUnsignedLong(std::uint16_t groupId, std::uint16_t orde
     return m_pDataSet->getUnsignedLong(groupId, order, tagId, bufferId, elementNumber, defaultValue);
 }
 
-void DataSet::setUnsignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::uint32_t newValue, const std::string& defaultType)
+void DataSet::setUnsignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, std::uint32_t newValue, const std::string& defaultType)
 {
-    m_pDataSet->setUnsignedLong(groupId, order, tagId, bufferId, elementNumber, newValue, defaultType);
+    m_pDataSet->setUnsignedLong(groupId, order, tagId, bufferId, newValue, defaultType);
 }
 
 double DataSet::getDoubleThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
@@ -144,9 +148,9 @@ double DataSet::getDouble(std::uint16_t groupId, std::uint16_t order, std::uint1
     return m_pDataSet->getDouble(groupId, order, tagId, bufferId, elementNumber, defaultValue);
 }
 
-void DataSet::setDouble(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, double newValue, const std::string& defaultType)
+void DataSet::setDouble(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, double newValue, const std::string& defaultType)
 {
-    m_pDataSet->setDouble(groupId, order, tagId, bufferId, elementNumber, newValue, defaultType);
+    m_pDataSet->setDouble(groupId, order, tagId, bufferId, newValue, defaultType);
 }
 
 std::string DataSet::getStringThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
@@ -169,19 +173,19 @@ std::wstring DataSet::getUnicodeString(std::uint16_t groupId, std::uint16_t orde
     return m_pDataSet->getUnicodeString(groupId, order, tagId, bufferId, elementNumber, defaultValue);
 }
 
-void DataSet::setString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, const std::string& newString, const std::string& defaultType)
+void DataSet::setString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, const std::string& newString, const std::string& defaultType)
 {
-    m_pDataSet->setString(groupId, order, tagId, bufferId, elementNumber, newString, defaultType);
+    m_pDataSet->setString(groupId, order, tagId, bufferId, newString, defaultType);
 }
 
-void DataSet::setUnicodeString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, const std::wstring& newString, const std::string& defaultType)
+void DataSet::setUnicodeString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, const std::wstring& newString, const std::string& defaultType)
 {
-    m_pDataSet->setUnicodeString(groupId, order, tagId, bufferId, elementNumber, newString, defaultType);
+    m_pDataSet->setUnicodeString(groupId, order, tagId, bufferId, newString, defaultType);
 }
 
-void DataSet::setAge(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, const Age& age, const std::string& defaultType)
+void DataSet::setAge(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, const Age& age, const std::string& defaultType)
 {
-    m_pDataSet->setAge(groupId, order, tagId, bufferId, elementNumber, age.age, age.units, defaultType);
+    m_pDataSet->setAge(groupId, order, tagId, bufferId, age.age, age.units, defaultType);
 }
 
 Age DataSet::getAgeThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
@@ -198,9 +202,9 @@ Age DataSet::getAge(std::uint16_t groupId, std::uint16_t order, std::uint16_t ta
     return Age(age, units);
 }
 
-void DataSet::setDate(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, const Date& date, const std::string& defaultType)
+void DataSet::setDate(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, const Date& date, const std::string& defaultType)
 {
-    m_pDataSet->setDate(groupId, order, tagId, bufferId, elementNumber,
+    m_pDataSet->setDate(groupId, order, tagId, bufferId,
                         (std::uint32_t) date.year,
                         (std::uint32_t) date.month,
                         (std::uint32_t) date.day,

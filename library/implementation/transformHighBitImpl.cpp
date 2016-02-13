@@ -10,6 +10,7 @@ $fileHeader$
 #include "exceptionImpl.h"
 #include "transformHighBitImpl.h"
 #include "dataSetImpl.h"
+#include "imageImpl.h"
 
 
 namespace imebra
@@ -22,7 +23,7 @@ namespace transforms
 {
 
 std::shared_ptr<image> transformHighBit::allocateOutputImage(
-        image::bitDepth inputDepth,
+        bitDepth inputDepth,
         const std::string& inputColorSpace,
         std::uint32_t inputHighBit,
         std::shared_ptr<palette> /* inputPalette */,
@@ -30,9 +31,7 @@ std::shared_ptr<image> transformHighBit::allocateOutputImage(
 {
     IMEBRA_FUNCTION_START();
 
-    std::shared_ptr<image> newImage(std::make_shared<image>());
-    newImage->create(outputWidth, outputHeight, inputDepth, inputColorSpace, inputHighBit);
-	return newImage;
+    return std::make_shared<image>(outputWidth, outputHeight, inputDepth, inputColorSpace, inputHighBit);
 
     IMEBRA_FUNCTION_END();
 }

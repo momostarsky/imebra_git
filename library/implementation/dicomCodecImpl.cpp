@@ -1001,40 +1001,40 @@ std::shared_ptr<image> dicomCodec::getImage(const dataSet& dataset, std::shared_
 
 	// Create an image
 	///////////////////////////////////////////////////////////
-	image::bitDepth depth;
+    bitDepth depth;
 	if(b2Complement)
 	{
 		if(highBit >= 16)
 		{
-			depth = image::depthS32;
+            depth = bitDepth::depthS32;
 		}
 		else if(highBit >= 8)
 		{
-			depth = image::depthS16;
+            depth = bitDepth::depthS16;
 		}
 		else
 		{
-			depth = image::depthS8;
+            depth = bitDepth::depthS8;
 		}
 	}
 	else
 	{
 		if(highBit >= 16)
 		{
-			depth = image::depthU32;
+            depth = bitDepth::depthU32;
 		}
 		else if(highBit >= 8)
 		{
-			depth = image::depthU16;
+            depth = bitDepth::depthU16;
 		}
 		else
 		{
-			depth = image::depthU8;
+            depth = bitDepth::depthU8;
 		}
 	}
 
-    std::shared_ptr<image> pImage(std::make_shared<image>());
-    std::shared_ptr<handlers::writingDataHandlerNumericBase> handler = pImage->create(imageSizeX, imageSizeY, depth, colorSpace, highBit);
+    std::shared_ptr<image> pImage(std::make_shared<image>(imageSizeX, imageSizeY, depth, colorSpace, highBit));
+    std::shared_ptr<handlers::writingDataHandlerNumericBase> handler = pImage->getWritingDataHandler();
 	std::uint32_t tempChannelsNumber = pImage->getChannelsNumber();
 
 	if(handler == 0 || tempChannelsNumber != channelsNumber)

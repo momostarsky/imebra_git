@@ -57,7 +57,8 @@ dicomDictionary::dicomDictionary()
 	registerVR("LO", false, 0, 64);
 	registerVR("LT", false, 0, 10240);
 	registerVR("OB", true,  0, 0);
-	registerVR("OF", true,  4, 0);
+    registerVR("SB", true,  0, 0); // Non standard. Used internally for signed bytes
+    registerVR("OF", true,  4, 0);
     registerVR("OD", true,  8, 0);
 	registerVR("OW", true,  2, 0);
 	registerVR("PN", false, 0, 64);

@@ -2,7 +2,7 @@
 $fileHeader$
 */
 
-/*! \file codecFactory_swig.h
+/*! \file codecFactory.h
     \brief Declaration of the class used to retrieve the codec able to
 		handle the requested transfer syntax (SWIG).
 

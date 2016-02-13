@@ -80,7 +80,7 @@ void colorTransform::checkHighBit(std::uint32_t inputHighBit, std::uint32_t outp
 
 
 std::shared_ptr<image> colorTransform::allocateOutputImage(
-        image::bitDepth inputDepth,
+        bitDepth inputDepth,
         const std::string& /* inputColorSpace */,
         std::uint32_t inputHighBit,
         std::shared_ptr<palette> inputPalette,
@@ -88,14 +88,12 @@ std::shared_ptr<image> colorTransform::allocateOutputImage(
 {
     IMEBRA_FUNCTION_START();
 
-    std::shared_ptr<image> newImage(std::make_shared<image>());
     if(inputPalette != 0)
     {
         inputHighBit = inputPalette->getRed()->getBits();
     }
 
-    newImage->create(outputWidth, outputHeight, inputDepth, getFinalColorSpace(), inputHighBit);
-	return newImage;
+    return std::make_shared<image>(outputWidth, outputHeight, inputDepth, getFinalColorSpace(), inputHighBit);
 
     IMEBRA_FUNCTION_END();
 }

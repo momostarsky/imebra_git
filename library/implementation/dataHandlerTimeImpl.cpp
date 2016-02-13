@@ -80,7 +80,7 @@ void readingDataHandlerTime::getDate(const size_t index,
 }
 
 writingDataHandlerTime::writingDataHandlerTime(const std::shared_ptr<buffer> &pBuffer):
-    writingDataHandlerDateTimeBase(pBuffer, "TM", 0, 16)
+    writingDataHandlerDateTimeBase(pBuffer, "TM", 0, 28)
 {
 
 }
@@ -103,13 +103,12 @@ void writingDataHandlerTime::setDate(const size_t index,
          std::uint32_t minutes,
          std::uint32_t seconds,
          std::uint32_t nanoseconds,
-		 std::int32_t offsetHours,
-		 std::int32_t offsetMinutes)
+         std::int32_t /* offsetHours */,
+         std::int32_t /* offsetMinutes */)
 {
     IMEBRA_FUNCTION_START();
 
-    std::string timeString = buildTime(hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes);
-	timeString.resize(13);
+    std::string timeString = buildTimeSimple(hour, minutes, seconds, nanoseconds);
     setString(index, timeString);
 
 	IMEBRA_FUNCTION_END();

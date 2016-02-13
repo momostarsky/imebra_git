@@ -59,11 +59,11 @@ bool transformsChain::isEmpty() const
 
 
 void transformsChain::runTransformHandlers(
-        std::shared_ptr<handlers::readingDataHandlerNumericBase> inputHandler, image::bitDepth inputDepth, std::uint32_t inputHandlerWidth, const std::string& inputHandlerColorSpace,
+        std::shared_ptr<handlers::readingDataHandlerNumericBase> inputHandler, bitDepth inputDepth, std::uint32_t inputHandlerWidth, const std::string& inputHandlerColorSpace,
         std::shared_ptr<palette> inputPalette,
         std::uint32_t inputHighBit,
         std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight,
-        std::shared_ptr<handlers::writingDataHandlerNumericBase> outputHandler, image::bitDepth outputDepth, std::uint32_t outputHandlerWidth, const std::string& outputHandlerColorSpace,
+        std::shared_ptr<handlers::writingDataHandlerNumericBase> outputHandler, bitDepth outputDepth, std::uint32_t outputHandlerWidth, const std::string& outputHandlerColorSpace,
         std::shared_ptr<palette> outputPalette,
         std::uint32_t outputHighBit,
         std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY) const
@@ -177,7 +177,7 @@ void transformsChain::runTransformHandlers(
 
 
 std::shared_ptr<image> transformsChain::allocateOutputImage(
-        image::bitDepth inputDepth,
+        bitDepth inputDepth,
         const std::string& inputColorSpace,
         std::uint32_t inputHighBit,
         std::shared_ptr<palette> inputPalette,
@@ -187,9 +187,7 @@ std::shared_ptr<image> transformsChain::allocateOutputImage(
 
     if(isEmpty())
 	{
-        std::shared_ptr<image> newImage(std::make_shared<image>());
-        newImage->create(outputWidth, outputHeight, inputDepth, inputColorSpace, inputHighBit);
-		return newImage;
+        return std::make_shared<image>(outputWidth, outputHeight, inputDepth, inputColorSpace, inputHighBit);
 	}
 
 	if(m_transformsList.size() == 1)

@@ -76,6 +76,17 @@ void exceptionsManager::getExceptionInfo(tExceptionInfoList* pList)
 ///////////////////////////////////////////////////////////
 // Add an info object to the current thread
 ///////////////////////////////////////////////////////////
+void exceptionsManager::startExceptionInfo(const exceptionInfo& info)
+{
+    std::shared_ptr<exceptionsManager> pManager(getExceptionsManager());
+    pManager->m_information[std::this_thread::get_id()].clear();
+    pManager->m_information[std::this_thread::get_id()].push_back(info);
+}
+
+
+///////////////////////////////////////////////////////////
+// Add an info object to the current thread
+///////////////////////////////////////////////////////////
 void exceptionsManager::addExceptionInfo(const exceptionInfo& info)
 {
 	std::shared_ptr<exceptionsManager> pManager(getExceptionsManager());

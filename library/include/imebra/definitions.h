@@ -12,6 +12,8 @@ $fileHeader$
 
 #include <set>
 #include <cstdint>
+#include <list>
+#include <string>
 
 // Generic helper definitions for shared library support
 #if defined _WIN32 || defined __CYGWIN__
@@ -73,6 +75,60 @@ enum imageQuality_t
     veryLow = 600	   ///< the image is saved in low quality. Horizontal and vertical subsampling are applied. Quantization ratios are high
 };
 
+/// \brief Defines the size (in bytes) of the memory
+///        allocated for each pixel's color component and
+///        its representation (signed/unsigned).
+///
+/// This enumeration does not specify the highest bit used:
+/// in order to retrieve the highest used bit call
+/// getHighBit().
+///////////////////////////////////////////////////////////
+enum class bitDepth
+{
+    depthU8 = 0,    ///< Unsigned byte
+    depthS8 = 1,    ///< Signed byte
+    depthU16 = 2,   ///< Unsigned word (2 bytes)
+    depthS16 = 3,   ///< Signed word (2 bytes)
+    depthU32 = 4,   ///< Unsigned double word (4 bytes)
+    depthS32 = 5    ///< Signed double word (4 bytes)
+};
+
+/// \brief Specifies the item's type.
+///
+///////////////////////////////////////////////////////////
+enum class directoryRecordType_t
+{
+    patient,
+    study,
+    series,
+    image,
+    overlay,
+    modality_lut,
+    voi_lut,
+    curve,
+    topic,
+    visit,
+    results,
+    interpretation,
+    study_component,
+    stored_print,
+    rt_dose,
+    rt_structure_set,
+    rt_plan,
+    rt_treat_record,
+    presentation,
+    waveform,
+    sr_document,
+    key_object_doc,
+    spectroscopy,
+    raw_data,
+    registration,
+    fiducial,
+    mrdr,
+    endOfDirectoryRecordTypes
+};
+
+typedef std::list<std::string> fileParts_t;
 
 struct IMEBRA_API Age
 {

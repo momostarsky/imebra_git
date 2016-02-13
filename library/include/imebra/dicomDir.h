@@ -2,7 +2,7 @@
 $fileHeader$
 */
 
-/*! \file dicomDir_swig.h
+/*! \file dicomDir.h
     \brief Declaration of the classes that parse/create a DICOMDIR
 		structure (dicomDir and directoryRecord) for SWIG
 
@@ -62,9 +62,9 @@ public:
 
 	void setReferencedRecord(const DirectoryRecord& referencedRecord);
 	
-    std::string getFilePart(size_t part) const;
+    fileParts_t getFileParts() const;
 
-    void setFilePart(size_t part, const std::string& partName);
+    void setFileParts(const fileParts_t& fileParts);
 
     std::string getTypeString() const;
 

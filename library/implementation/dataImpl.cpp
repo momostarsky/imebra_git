@@ -95,7 +95,7 @@ std::string data::getDataTypeThrow(size_t bufferId) const
 		return findBuffer->second->getDataType();
 	}
 	
-    throw MissingBufferError("The requested buffer is missing");
+    IMEBRA_THROW(MissingBufferError, "The buffer with ID " << bufferId << " is missing");
 
 	IMEBRA_FUNCTION_END();
 }
@@ -162,8 +162,8 @@ size_t data::getBufferSizeThrow(size_t bufferId) const
     tBuffersMap::const_iterator findBuffer = m_buffers.find(bufferId);
 	if(findBuffer == m_buffers.end())
 	{
-        throw MissingBufferError("The requested buffer is missing");
-	}
+        IMEBRA_THROW(MissingBufferError, "The buffer with ID " << bufferId << " is missing");
+    }
 
 	// Retrieve the buffer's size
 	///////////////////////////////////////////////////////////
@@ -191,8 +191,8 @@ std::shared_ptr<handlers::readingDataHandler> data::getReadingDataHandlerThrow(s
     tBuffersMap::const_iterator findBuffer = m_buffers.find(bufferId);
     if(findBuffer == m_buffers.end())
 	{
-        throw MissingBufferError("The requested buffer is missing");
-	}
+        IMEBRA_THROW(MissingBufferError, "The buffer with ID " << bufferId << " is missing");
+    }
 
     return findBuffer->second->getReadingDataHandler();
 
@@ -258,8 +258,8 @@ std::shared_ptr<handlers::readingDataHandlerRaw> data::getReadingDataHandlerRawT
     tBuffersMap::const_iterator findBuffer = m_buffers.find(bufferId);
     if(findBuffer == m_buffers.end() )
 	{
-        throw MissingBufferError("The requested buffer is missing");
-	}
+        IMEBRA_THROW(MissingBufferError, "The buffer with ID " << bufferId << " is missing");
+    }
 
     return findBuffer->second->getReadingDataHandlerRaw();
 
@@ -328,7 +328,7 @@ std::shared_ptr<streamReader> data::getStreamReaderThrow(size_t bufferId)
 		return findBuffer->second->getStreamReader();
 	}
 
-    throw MissingBufferError("The requested buffer does not exist");
+    IMEBRA_THROW(MissingBufferError, "The buffer with ID " << bufferId << " is missing");
 
 	IMEBRA_FUNCTION_END();
 }

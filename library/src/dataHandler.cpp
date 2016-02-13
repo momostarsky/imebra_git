@@ -9,6 +9,7 @@ $fileHeader$
 #include "../include/imebra/dataHandler.h"
 #include "../implementation/dataHandlerImpl.h"
 #include "../implementation/dataHandlerNumericImpl.h"
+#include <cstring>
 
 namespace imebra
 {
@@ -155,7 +156,7 @@ std::string WritingDataHandler::getDataType() const
 }
 
 
-void WritingDataHandler::setDate(const size_t index, const Date& date)
+WritingDataHandler& WritingDataHandler::setDate(const size_t index, const Date& date)
 {
     m_pDataHandler->setDate(
         (std::uint32_t)index,
@@ -168,36 +169,43 @@ void WritingDataHandler::setDate(const size_t index, const Date& date)
         (std::uint32_t)date.nanoseconds,
         (std::int32_t)date.offsetHours,
         (std::int32_t)date.offsetMinutes);
+    return *this;
 }
 
-void WritingDataHandler::setAge(const size_t index, const Age& age)
+WritingDataHandler& WritingDataHandler::setAge(const size_t index, const Age& age)
 {
     m_pDataHandler->setAge(index, age.age, age.units);
+    return *this;
 }
 
-void WritingDataHandler::setSignedLong(const size_t index, const std::int32_t value)
+WritingDataHandler& WritingDataHandler::setSignedLong(const size_t index, const std::int32_t value)
 {
     m_pDataHandler->setSignedLong(index, value);
+    return *this;
 }
 
-void WritingDataHandler::setUnsignedLong(const size_t index, const std::uint32_t value)
+WritingDataHandler& WritingDataHandler::setUnsignedLong(const size_t index, const std::uint32_t value)
 {
     m_pDataHandler->setUnsignedLong(index, value);
+    return *this;
 }
 
-void WritingDataHandler::setDouble(const size_t index, const double value)
+WritingDataHandler& WritingDataHandler::setDouble(const size_t index, const double value)
 {
     m_pDataHandler->setDouble(index, value);
+    return *this;
 }
 
-void WritingDataHandler::setString(const size_t index, const std::string& value)
+WritingDataHandler& WritingDataHandler::setString(const size_t index, const std::string& value)
 {
     m_pDataHandler->setString(index, value);
+    return *this;
 }
 
-void WritingDataHandler::setUnicodeString(const size_t index, const std::wstring& value)
+WritingDataHandler& WritingDataHandler::setUnicodeString(const size_t index, const std::wstring& value)
 {
     m_pDataHandler->setUnicodeString(index, value);
+    return *this;
 }
 
 void WritingDataHandler::assign(const char *buffer, const size_t bufferSize)

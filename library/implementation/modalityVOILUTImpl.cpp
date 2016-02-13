@@ -80,7 +80,7 @@ bool modalityVOILUT::isEmpty() const
 
 
 std::shared_ptr<image> modalityVOILUT::allocateOutputImage(
-        image::bitDepth inputDepth,
+        bitDepth inputDepth,
         const std::string& inputColorSpace,
         std::uint32_t inputHighBit,
         std::shared_ptr<palette> /* inputPalette */,
@@ -90,9 +90,7 @@ std::shared_ptr<image> modalityVOILUT::allocateOutputImage(
 
     if(isEmpty())
 	{
-        std::shared_ptr<image> newImage(std::make_shared<image>());
-        newImage->create(outputWidth, outputHeight, inputDepth, inputColorSpace, inputHighBit);
-		return newImage;
+        return std::make_shared<image>(outputWidth, outputHeight, inputDepth, inputColorSpace, inputHighBit);
 	}
 
 	// LUT
@@ -108,54 +106,51 @@ std::shared_ptr<image> modalityVOILUT::allocateOutputImage(
 			bNegative = (m_voiLut->mappedValue(index) < 0);
 		}
 
-		image::bitDepth depth;
+        bitDepth depth;
 		if(bNegative)
 		{
             if(bits > 16)
             {
-                depth = image::depthS32;
+                depth = bitDepth::depthS32;
             }
             else if(bits > 8)
             {
-                depth = image::depthS16;
+                depth = bitDepth::depthS16;
             }
             else
             {
-                depth = image::depthS8;
+                depth = bitDepth::depthS8;
             }
 		}
 		else
 		{
             if(bits > 16)
             {
-                depth = image::depthU32;
+                depth = bitDepth::depthU32;
             }
             else if(bits > 8)
             {
-                depth = image::depthU16;
+                depth = bitDepth::depthU16;
             }
             else
             {
-                depth = image::depthU8;
+                depth = bitDepth::depthU8;
             }
         }
-        std::shared_ptr<image> returnImage(std::make_shared<image>());
-        returnImage->create(outputWidth, outputHeight, depth, inputColorSpace, bits - 1);
-		return returnImage;
+
+        return std::make_shared<image>(outputWidth, outputHeight, depth, inputColorSpace, bits - 1);
 	}
 
 	// Rescale
 	///////////////////////////////////////////////////////////
     if(fabs(m_rescaleSlope) <= std::numeric_limits<double>::denorm_min())
 	{
-        std::shared_ptr<image> returnImage(std::make_shared<image>());
-        returnImage->create(outputWidth, outputHeight, inputDepth, inputColorSpace, inputHighBit);
-		return returnImage;
+        return std::make_shared<image>(outputWidth, outputHeight, inputDepth, inputColorSpace, inputHighBit);
 	}
 
 	std::int32_t value0 = 0;
     std::int32_t value1 = ((std::int32_t)1 << (inputHighBit + 1)) - 1;
-	if(inputDepth == image::depthS16 || inputDepth == image::depthS8)
+    if(inputDepth == bitDepth::depthS16 || inputDepth == bitDepth::depthS8)
 	{
         value0 = ((std::int32_t)(-1) << inputHighBit);
         value1 = ((std::int32_t)1 << inputHighBit);
@@ -175,29 +170,24 @@ std::shared_ptr<image> modalityVOILUT::allocateOutputImage(
 		maxValue = finalValue0;
 	}
 
-    std::shared_ptr<image> returnImage(std::make_shared<image>());
 	if(minValue >= 0 && maxValue <= 255)
 	{
-        returnImage->create(outputWidth, outputHeight, image::depthU8, inputColorSpace, 7);
-		return returnImage;
+        return std::make_shared<image>(outputWidth, outputHeight, bitDepth::depthU8, inputColorSpace, 7);
 	}
 	if(minValue >= -128 && maxValue <= 127)
 	{
-        returnImage->create(outputWidth, outputHeight, image::depthS8, inputColorSpace, 7);
-		return returnImage;
+        return std::make_shared<image>(outputWidth, outputHeight, bitDepth::depthS8, inputColorSpace, 7);
 	}
 	if(minValue >= 0 && maxValue <= 65535)
 	{
-        returnImage->create(outputWidth, outputHeight, image::depthU16, inputColorSpace, 15);
-		return returnImage;
+        return std::make_shared<image>(outputWidth, outputHeight, bitDepth::depthU16, inputColorSpace, 15);
 	}
 	if(minValue >= -32768 && maxValue <= 32767)
 	{
-        returnImage->create(outputWidth, outputHeight, image::depthS16, inputColorSpace, 15);
-		return returnImage;
+        return std::make_shared<image>(outputWidth, outputHeight, bitDepth::depthS16, inputColorSpace, 15);
 	}
-    returnImage->create(outputWidth, outputHeight, image::depthS32, inputColorSpace, 31);
-	return returnImage;
+
+    return std::make_shared<image>(outputWidth, outputHeight, bitDepth::depthS32, inputColorSpace, 31);
 
     IMEBRA_FUNCTION_END();
 }

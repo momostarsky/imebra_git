@@ -42,24 +42,6 @@ class IMEBRA_API Image
     friend class DataSet;
 public:
 
-    /// \brief Defines the size (in bytes) of the memory
-    ///        allocated for each pixel's color component and
-    ///        its representation (signed/unsigned).
-    ///
-    /// This enumeration does not specify the highest bit used:
-    /// in order to retrieve the highest used bit call
-    /// getHighBit().
-	///////////////////////////////////////////////////////////
-    enum class bitDepth
-	{
-        depthU8 = 0,    ///< Unsigned byte
-        depthS8 = 1,    ///< Signed byte
-        depthU16 = 2,   ///< Unsigned word (2 bytes)
-        depthS16 = 3,   ///< Signed word (2 bytes)
-        depthU32 = 4,   ///< Unsigned double word (4 bytes)
-        depthS32 = 5    ///< Signed double word (4 bytes)
-	};
-
     /// \brief Construct an empty image.
     ///
     /// You can assign an image to the object by using the
@@ -68,6 +50,13 @@ public:
     ///
 	///////////////////////////////////////////////////////////
 	Image();
+
+    Image(
+        std::uint32_t sizeX,
+        std::uint32_t sizeY,
+        bitDepth depth,
+        const std::string& colorSpace,
+        std::uint32_t highBit);
 
     /// \brief Construct an image that references the image
     ///        passed in the parameter.
@@ -91,14 +80,6 @@ public:
     Image(std::shared_ptr<imebra::implementation::image> pImage);
 #endif
 
-    /// \brief Create a writing data handler that controls a
-    ///        new
-    WritingDataHandler create(
-        const std::uint32_t sizeX,
-        const std::uint32_t sizeY,
-		const bitDepth depth,
-        const std::string& colorSpace,
-        const std::uint32_t highBit);
 
     double getSizeMmY() const;
     double getSizeMmX() const;
@@ -121,7 +102,7 @@ public:
 
 protected:
 #ifndef SWIG
-    std::shared_ptr<imebra::implementation::image> m_pImage;
+    std::shared_ptr<implementation::image> m_pImage;
 #endif
 
 };

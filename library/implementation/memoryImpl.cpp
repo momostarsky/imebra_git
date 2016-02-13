@@ -14,6 +14,9 @@ $fileHeader$
 namespace imebra
 {
 
+namespace implementation
+{
+
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -96,7 +99,7 @@ void memory::transfer(const std::shared_ptr<memory>& transferFrom)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void memory::copyFrom(const std::shared_ptr<memory>& sourceMemory)
+void memory::copyFrom(const std::shared_ptr<const memory>& sourceMemory)
 {
     IMEBRA_FUNCTION_START();
 
@@ -248,7 +251,7 @@ const std::uint8_t* memory::data() const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-bool memory::empty()
+bool memory::empty() const
 {
     IMEBRA_FUNCTION_START();
 
@@ -556,6 +559,6 @@ void memoryPoolGetter::newHandler()
     }
 }
 
-
+} // namespace implementation
 
 } // namespace imebra

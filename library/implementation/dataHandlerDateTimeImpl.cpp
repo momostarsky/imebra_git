@@ -84,7 +84,7 @@ void readingDataHandlerDateTime::getDate(const size_t index,
 
 
 writingDataHandlerDateTime::writingDataHandlerDateTime(const std::shared_ptr<buffer> &pBuffer):
-    writingDataHandlerDateTimeBase(pBuffer, "DT", 0, 26)
+    writingDataHandlerDateTimeBase(pBuffer, "DT", 0, 54)
 {
 
 }

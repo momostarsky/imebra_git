@@ -239,6 +239,10 @@ public:
 	{
         IMEBRA_FUNCTION_START();
 
+        if(m_pMemory.get() == 0)
+        {
+            return 0;
+        }
         return m_pMemory->size() / sizeof(dataHandlerType);
 
 		IMEBRA_FUNCTION_END();
@@ -253,11 +257,14 @@ public:
 		{
 			destSize = getSize();
 		}
-        const dataHandlerType* pSource((const dataHandlerType*)m_pMemory->data());
-		while(destSize-- != 0)
-		{
-			*(pDestination++) = (destHandlerType)*(pSource++);
-		}
+        if(destSize != 0)
+        {
+            const dataHandlerType* pSource((const dataHandlerType*)m_pMemory->data());
+            while(destSize-- != 0)
+            {
+                *(pDestination++) = (destHandlerType)*(pSource++);
+            }
+        }
 
         IMEBRA_FUNCTION_END();
 	}

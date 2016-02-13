@@ -12,6 +12,8 @@
 #include "exceptions.h"
 #include "fileStream.h"
 #include "image.h"
+#include "memory.h"
+#include "memoryStream.h"
 #include "modalityVOILUT.h"
 #include "streamReader.h"
 #include "streamWriter.h"

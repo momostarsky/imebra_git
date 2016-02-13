@@ -11,20 +11,20 @@ namespace tests
 imebra::Image buildImageForTest(
 	std::uint32_t pixelsX, 
 	std::uint32_t pixelsY, 
-    imebra::Image::bitDepth depth,
+    imebra::bitDepth depth,
 	std::uint32_t highBit, 
 	double sizeX, 
 	double sizeY, 
     const std::string& colorSpace,
 	std::uint32_t continuity)
 {
-    imebra::Image newImage;
-    imebra::WritingDataHandler handler = newImage.create(pixelsX, pixelsY, depth, colorSpace, highBit);
+    imebra::Image newImage(pixelsX, pixelsY, depth, colorSpace, highBit);
+    imebra::WritingDataHandler handler = newImage.getWritingDataHandler();
     std::uint32_t channelsNumber = newImage.getChannelsNumber();
 
 	std::int32_t range = (std::uint32_t)1 << highBit;
 	std::int32_t minValue = 0;
-    if(depth == Image::bitDepth::depthS16 || depth == Image::bitDepth::depthS8)
+    if(depth == bitDepth::depthS16 || depth == bitDepth::depthS8)
 	{
 		minValue = -1 << (highBit - 1);
 	}
@@ -84,8 +84,8 @@ double compareImages(const imebra::Image& image0, const imebra::Image& image1)
 		return 1000;
 	}
 
-    Image::bitDepth depth0 = image0.getDepth();
-    Image::bitDepth depth1 = image1.getDepth();
+    bitDepth depth0 = image0.getDepth();
+    bitDepth depth1 = image1.getDepth();
 	if(depth0 != depth1)
 	{
 		return 1000;

@@ -11,7 +11,7 @@ TEST(dateTimeHandlerTest, dateTest)
 {
     DataSet testDataSet;
 
-    testDataSet.setDate(0x0008, 0, 0x0012, 0, 0, Date(2004, 11, 5, 9, 20, 30, 5000, 1, 2));
+    testDataSet.setDate(0x0008, 0, 0x0012, 0, Date(2004, 11, 5, 9, 20, 30, 5000, 1, 2));
     Date checkDate = testDataSet.getDateThrow(0x0008, 0, 0x0012, 0, 0);
     std::string checkString = testDataSet.getStringThrow(0x0008, 0, 0x0012, 0, 0);
     EXPECT_EQ("20041105", checkString);
@@ -27,7 +27,7 @@ TEST(dateTimeHandlerTest, dateTest)
     EXPECT_EQ("DA", testDataSet.getDataTypeThrow(0x0008, 0, 0x0012));
 
 
-    testDataSet.setString(0x0008, 0, 0x0012, 0, 0, "20120910");
+    testDataSet.setString(0x0008, 0, 0x0012, 0, "20120910");
     Date checkDate1 = testDataSet.getDateThrow(0x0008, 0, 0x0012, 0, 0);
     EXPECT_EQ(2012, checkDate1.year);
     EXPECT_EQ(9, checkDate1.month);
@@ -45,7 +45,7 @@ TEST(dateTimeHandlerTest, timeTest)
     DataSet testDataSet;
 
     {
-        testDataSet.setDate(0x0008, 0, 0x0013, 0, 0, Date(2004, 11, 5, 9, 20, 30, 5000, 1, 2));
+        testDataSet.setDate(0x0008, 0, 0x0013, 0, Date(2004, 11, 5, 9, 20, 30, 5000, 1, 2));
         Date checkDate = testDataSet.getDateThrow(0x0008, 0, 0x0013, 0, 0);
         std::string checkString = testDataSet.getStringThrow(0x0008, 0, 0x0013, 0, 0);
         EXPECT_EQ("092030.005000", checkString);
@@ -62,7 +62,7 @@ TEST(dateTimeHandlerTest, timeTest)
     }
 
     {
-        testDataSet.setString(0x0008, 0, 0x0013, 0, 0, "101502");
+        testDataSet.setString(0x0008, 0, 0x0013, 0, "101502");
         Date checkDate = testDataSet.getDateThrow(0x0008, 0, 0x0013, 0, 0);
         EXPECT_EQ(0, checkDate.year);
         EXPECT_EQ(0, checkDate.month);
@@ -76,7 +76,7 @@ TEST(dateTimeHandlerTest, timeTest)
     }
 
     {
-        testDataSet.setString(0x0008, 0, 0x0013, 0, 0, "1015");
+        testDataSet.setString(0x0008, 0, 0x0013, 0, "1015");
         Date checkDate = testDataSet.getDateThrow(0x0008, 0, 0x0013, 0, 0);
         EXPECT_EQ(0, checkDate.year);
         EXPECT_EQ(0, checkDate.month);
@@ -95,7 +95,7 @@ TEST(dateTimeHandlerTest, dateTimeTest)
     DataSet testDataSet;
 
     Date testDate(2004, 11, 5, 9, 20, 40, 5000, 1, 2);
-    testDataSet.setDate(0x0008, 0, 0x002A, 0, 0, testDate);
+    testDataSet.setDate(0x0008, 0, 0x002A, 0, testDate);
 
     Date checkDate = testDataSet.getDateThrow(0x0008, 0, 0x002A, 0, 0);
 
@@ -117,7 +117,7 @@ TEST(dateTimeHandlerTest, incompleteDateTimeTest)
 {
     DataSet testDataSet;
 
-    testDataSet.setString(0x0008, 0, 0x002A, 0, 0, "19990120");
+    testDataSet.setString(0x0008, 0, 0x002A, 0, "19990120");
     Date checkDate = testDataSet.getDateThrow(0x0008, 0, 0x002A, 0, 0);
 
     EXPECT_EQ(1999, checkDate.year);
@@ -130,7 +130,7 @@ TEST(dateTimeHandlerTest, incompleteDateTimeTest)
     EXPECT_EQ(0, checkDate.offsetHours);
     EXPECT_EQ(0, checkDate.offsetMinutes);
 
-    testDataSet.setString(0x0008, 0, 0x002A, 0, 0, "1999012012");
+    testDataSet.setString(0x0008, 0, 0x002A, 0, "1999012012");
     checkDate = testDataSet.getDateThrow(0x0008, 0, 0x002A, 0, 0);
 
     EXPECT_EQ(1999, checkDate.year);

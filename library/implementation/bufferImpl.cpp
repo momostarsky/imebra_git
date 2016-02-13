@@ -120,14 +120,12 @@ std::shared_ptr<memory> buffer::getLocalMemory() const
 {
     IMEBRA_FUNCTION_START();
 
-    std::shared_ptr<memory> localMemory(m_memory);
-
     // If the object must be loaded from the original stream,
     //  then load it...
     ///////////////////////////////////////////////////////////
-    if(m_originalStream != 0 && (localMemory == 0 || localMemory->empty()) )
+    if(m_originalStream != 0)
     {
-        localMemory = std::make_shared<memory>(m_originalBufferLength);
+        std::shared_ptr<memory> localMemory(std::make_shared<memory>(m_originalBufferLength));
         if(m_originalBufferLength != 0)
         {
             std::shared_ptr<streamReader> reader(std::make_shared<streamReader>(m_originalStream, m_originalBufferPosition, m_originalBufferLength));
@@ -140,9 +138,15 @@ std::shared_ptr<memory> buffer::getLocalMemory() const
             }
             localMemory->assign(&localBuffer[0], m_originalBufferLength);
         }
+        return localMemory;
     }
 
-    return localMemory;
+    if(m_memory == 0)
+    {
+        return std::make_shared<memory>();
+    }
+
+    return m_memory;
 
     IMEBRA_FUNCTION_END();
 }
@@ -564,7 +568,7 @@ std::shared_ptr<streamReader> buffer::getStreamReader()
 	// If the object must be loaded from the original stream,
 	//  then return the original stream
 	///////////////////////////////////////////////////////////
-	if(m_originalStream != 0 && (m_memory == 0 || m_memory->empty()) )
+    if(m_originalStream != 0)
 	{
         std::shared_ptr<streamReader> reader(std::make_shared<streamReader>(m_originalStream, m_originalBufferPosition, m_originalBufferLength));
 		return reader;
@@ -654,7 +658,7 @@ size_t buffer::getBufferSizeBytes() const
 
     // The buffer has not been loaded yet
 	///////////////////////////////////////////////////////////
-	if(m_originalStream != 0 && (m_memory == 0 || m_memory->empty()) )
+    if(m_originalStream != 0)
 	{
 		return m_originalBufferLength;
 	}

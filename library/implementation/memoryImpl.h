@@ -36,6 +36,9 @@ $fileHeader$
 namespace imebra
 {
 
+namespace implementation
+{
+
 typedef std::basic_string<std::uint8_t> stringUint8;
 
 ///////////////////////////////////////////////////////////
@@ -111,7 +114,7 @@ public:
 	///                      which the data has to be copied
 	///
 	///////////////////////////////////////////////////////////
-	void copyFrom(const std::shared_ptr<memory>& sourceMemory);
+    void copyFrom(const std::shared_ptr<const memory>& sourceMemory);
 
 	/// \brief Clear the content of the memory object and
 	///         set its size to 0 bytes.
@@ -161,7 +164,7 @@ public:
 	///          false otherwise
 	///
 	///////////////////////////////////////////////////////////
-	bool empty();
+    bool empty() const;
 
 	/// \brief Copy the specified array of bytes into the
 	///         managed memory.
@@ -304,6 +307,8 @@ protected:
 #endif
 
 };
+
+} // namespace implementation
 
 } // namespace imebra
 

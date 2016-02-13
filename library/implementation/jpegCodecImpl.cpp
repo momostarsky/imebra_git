@@ -933,25 +933,25 @@ void jpegCodec::readStream(std::shared_ptr<streamReader> pSourceStream, std::sha
     // Color space
     ///////////////////////////////////////////////////////////
     if(m_channelsMap.size()==1)
-        pDataSet->setUnicodeString(0x0028, 0, 0x0004, 0, 0, L"MONOCHROME2");
+        pDataSet->setString(0x0028, 0, 0x0004, 0, "MONOCHROME2");
     else
-        pDataSet->setUnicodeString(0x0028, 0, 0x0004, 0, 0, L"YBR_FULL");
+        pDataSet->setString(0x0028, 0, 0x0004, 0, "YBR_FULL");
 
     // Transfer syntax
     ///////////////////////////////////////////////////////////
     switch(m_process)
     {
     case 0x00:
-        pDataSet->setUnicodeString(0x0002, 0, 0x0010, 0, 0, L"1.2.840.10008.1.2.4.50");
+        pDataSet->setString(0x0002, 0, 0x0010, 0, "1.2.840.10008.1.2.4.50");
         break;
     case 0x01:
-        pDataSet->setUnicodeString(0x0002, 0, 0x0010, 0, 0, L"1.2.840.10008.1.2.4.51");
+        pDataSet->setString(0x0002, 0, 0x0010, 0, "1.2.840.10008.1.2.4.51");
         break;
     case 0x03:
-        pDataSet->setUnicodeString(0x0002, 0, 0x0010, 0, 0, L"1.2.840.10008.1.2.4.57");
+        pDataSet->setString(0x0002, 0, 0x0010, 0, "1.2.840.10008.1.2.4.57");
         break;
     case 0x07:
-        pDataSet->setUnicodeString(0x0002, 0, 0x0010, 0, 0, L"1.2.840.10008.1.2.4.57");
+        pDataSet->setString(0x0002, 0, 0x0010, 0, "1.2.840.10008.1.2.4.57");
         break;
     default:
         throw JpegCodecCannotHandleSyntaxError("Jpeg SOF not supported");
@@ -959,33 +959,33 @@ void jpegCodec::readStream(std::shared_ptr<streamReader> pSourceStream, std::sha
 
     // Number of planes
     ///////////////////////////////////////////////////////////
-    pDataSet->setUnsignedLong(0x0028, 0, 0x0002, 0, 0, (std::uint32_t)m_channelsMap.size());
+    pDataSet->setUnsignedLong(0x0028, 0, 0x0002, 0, (std::uint32_t)m_channelsMap.size());
 
     // Image's width
     /////////////////////////////////////////////////////////////////
-    pDataSet->setUnsignedLong(0x0028, 0, 0x0011, 0, 0, m_imageSizeX);
+    pDataSet->setUnsignedLong(0x0028, 0, 0x0011, 0, m_imageSizeX);
 
     // Image's height
     /////////////////////////////////////////////////////////////////
-    pDataSet->setUnsignedLong(0x0028, 0, 0x0010, 0, 0, m_imageSizeY);
+    pDataSet->setUnsignedLong(0x0028, 0, 0x0010, 0, m_imageSizeY);
 
     // Number of frames
     /////////////////////////////////////////////////////////////////
-    pDataSet->setUnsignedLong(0x0028, 0, 0x0008, 0, 0, 1);
+    pDataSet->setUnsignedLong(0x0028, 0, 0x0008, 0, 1);
 
     // Pixel representation
     /////////////////////////////////////////////////////////////////
-    pDataSet->setUnsignedLong(0x0028, 0x0, 0x0103, 0, 0, 0);
+    pDataSet->setUnsignedLong(0x0028, 0x0, 0x0103, 0, 0);
 
     // Allocated, stored bits and high bit
     /////////////////////////////////////////////////////////////////
-    pDataSet->setUnsignedLong(0x0028, 0x0, 0x0100, 0, 0, m_precision);
-    pDataSet->setUnsignedLong(0x0028, 0x0, 0x0101, 0, 0, m_precision);
-    pDataSet->setUnsignedLong(0x0028, 0x0, 0x0102, 0, 0, m_precision - 1);
+    pDataSet->setUnsignedLong(0x0028, 0x0, 0x0100, 0, m_precision);
+    pDataSet->setUnsignedLong(0x0028, 0x0, 0x0101, 0, m_precision);
+    pDataSet->setUnsignedLong(0x0028, 0x0, 0x0102, 0, m_precision - 1);
 
     // Interleaved (more than 1 channel in the channels list)
     /////////////////////////////////////////////////////////////////
-    pDataSet->setUnsignedLong(0x0028, 0x0, 0x0006, 0, 0, m_channelsList[0] != 0 && m_channelsList[1] != 0);
+    pDataSet->setUnsignedLong(0x0028, 0x0, 0x0006, 0, m_channelsList[0] != 0 && m_channelsList[1] != 0 ? 1 : 0);
 
     // Insert the basic offset table
     ////////////////////////////////////////////////////////////////
@@ -1302,10 +1302,7 @@ std::shared_ptr<image> jpegCodec::getImage(const dataSet& sourceDataSet, std::sh
         }
     }
 
-    std::shared_ptr<image> returnImage(std::make_shared<image>());
-    copyJpegChannelsToImage(returnImage, b2complement, colorSpace);
-
-    return returnImage;
+    return copyJpegChannelsToImage(b2complement, colorSpace);
 
     IMEBRA_FUNCTION_END();
 }
@@ -1320,17 +1317,19 @@ std::shared_ptr<image> jpegCodec::getImage(const dataSet& sourceDataSet, std::sh
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void jpegCodec::copyJpegChannelsToImage(std::shared_ptr<image> destImage, bool b2complement, const std::string& colorSpace)
+std::shared_ptr<image> jpegCodec::copyJpegChannelsToImage(bool b2complement, const std::string& colorSpace)
 {
     IMEBRA_FUNCTION_START();
 
-    image::bitDepth depth;
+    bitDepth depth;
     if(b2complement)
-        depth = (m_precision==8) ? image::depthS8 : image::depthS16;
+        depth = (m_precision==8) ? bitDepth::depthS8 : bitDepth::depthS16;
     else
-        depth = (m_precision==8) ? image::depthU8 : image::depthU16;
+        depth = (m_precision==8) ? bitDepth::depthU8 : bitDepth::depthU16;
 
-    std::shared_ptr<handlers::writingDataHandlerNumericBase> handler = destImage->create(m_imageSizeX, m_imageSizeY, depth, colorSpace, (std::uint8_t)(m_precision-1));
+    std::shared_ptr<image> destImage(std::make_shared<image>(m_imageSizeX, m_imageSizeY, depth, colorSpace, (std::uint8_t)(m_precision-1)));
+
+    std::shared_ptr<handlers::writingDataHandlerNumericBase> handler = destImage->getWritingDataHandler();
 
     std::int32_t offsetValue=(std::int32_t)1<<(m_precision-1);
     std::int32_t maxClipValue=((std::int32_t)1<<m_precision)-1;
@@ -1339,11 +1338,6 @@ void jpegCodec::copyJpegChannelsToImage(std::shared_ptr<image> destImage, bool b
     {
         maxClipValue-=offsetValue;
         minClipValue-=offsetValue;
-    }
-
-    if(handler == 0)
-    {
-        return;
     }
 
     // Copy the jpeg channels into the new image
@@ -1398,7 +1392,7 @@ void jpegCodec::copyJpegChannelsToImage(std::shared_ptr<image> destImage, bool b
         if(m_bLossless && m_channelsMap.size() == 1)
         {
             handler->copyFrom(pChannel->m_pBuffer, pChannel->m_bufferSize);
-            return;
+            return destImage;
         }
 
         // Lossless interleaved
@@ -1452,6 +1446,8 @@ void jpegCodec::copyJpegChannelsToImage(std::shared_ptr<image> destImage, bool b
         }
         ++destChannelNumber;
     }
+
+    return destImage;
 
     IMEBRA_FUNCTION_END();
 }

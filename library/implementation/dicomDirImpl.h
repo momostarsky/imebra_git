@@ -14,7 +14,7 @@ $fileHeader$
 #include <memory>
 #include <string>
 #include <list>
-
+#include "../include/imebra/definitions.h"
 
 namespace imebra
 {
@@ -62,41 +62,6 @@ public:
     ///
     ///////////////////////////////////////////////////////////
     directoryRecord(std::shared_ptr<dataSet> pDataSet);
-
-	/// \brief Specifies the item's type.
-	///
-	///////////////////////////////////////////////////////////
-	enum tDirectoryRecordType
-	{
-		patient,
-		study,
-		series,
-		image,
-		overlay,
-		modality_lut,
-		voi_lut,
-		curve,
-		topic,
-		visit,
-		results,
-		interpretation,
-		study_component,
-        stored_print,
-		rt_dose,
-		rt_structure_set,
-		rt_plan,
-		rt_treat_record,
-		presentation,
-		waveform,
-		sr_document,
-		key_object_doc,
-		spectroscopy,
-		raw_data,
-		registration,
-		fiducial,
-		mrdr,
-		endOfDirectoryRecordTypes
-	};
 
 	/// \brief Returns the dataSet that contains the
 	///         record's information.
@@ -190,7 +155,7 @@ public:
 	///          exist
 	///
 	///////////////////////////////////////////////////////////
-    std::string getFilePart(size_t part) const;
+    fileParts_t getFileParts() const;
 
 	/// \brief Set the full path to the  file referenced by
 	///         the record.
@@ -218,7 +183,7 @@ public:
     /// @param partName tha value to set for the part
 	///
 	///////////////////////////////////////////////////////////
-    void setFilePart(size_t part, const std::string& partName);
+    void setFileParts(const fileParts_t& fileParts);
 
 	/// \brief Returns the record's type.
 	///
@@ -228,7 +193,7 @@ public:
 	/// @return the record's type
 	///
 	///////////////////////////////////////////////////////////
-    tDirectoryRecordType getType() const;
+    directoryRecordType_t getType() const;
 
 	/// \brief Returns a string representing the record's type.
 	///
@@ -242,7 +207,7 @@ public:
 	/// @param recordType  the record's type
 	///
 	///////////////////////////////////////////////////////////
-	void setType(tDirectoryRecordType recordType);
+    void setType(directoryRecordType_t recordType);
 
 	/// \brief Sets the record's type.
 	///
@@ -260,7 +225,7 @@ private:
     struct tDirectoryRecordTypeDef
     {
         std::string m_name;
-        directoryRecord::tDirectoryRecordType m_type;
+        directoryRecordType_t m_type;
     };
 
     static const tDirectoryRecordTypeDef* getRecordTypeMap();

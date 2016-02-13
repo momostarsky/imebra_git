@@ -276,7 +276,7 @@ protected:
 	///////////////////////////////////////////////////////////
 	void resetInternal(bool bCompression, quality compQuality);
 
-    void copyJpegChannelsToImage(std::shared_ptr<image> destImage, bool b2complement, const std::string& colorSpace);
+    std::shared_ptr<image> copyJpegChannelsToImage(bool b2complement, const std::string& colorSpace);
 	void copyImageToJpegChannels(std::shared_ptr<image> sourceImage, bool b2complement, std::uint8_t allocatedBits, bool bSubSampledX, bool bSubSampledY);
 
 	void writeScan(streamWriter* pDestinationStream, bool bCalcHuffman);

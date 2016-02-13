@@ -120,6 +120,8 @@ public:
 class exceptionsManager
 {
 public:
+    static void startExceptionInfo(const exceptionInfo& info);
+
 	/// \brief Add an exceptionInfo object to the active
 	///         thread's information list.
 	///
@@ -317,7 +319,7 @@ public:
         buildMessage << message; \
         exceptionType imebraTrackException(buildMessage.str());\
         imebra::implementation::exceptionInfo info(IMEBRA_METHOD_NAME(), __FILE__, __LINE__, typeid(imebraTrackException).name(), imebraTrackException.what());\
-        imebra::implementation::exceptionsManager::addExceptionInfo(info);\
+        imebra::implementation::exceptionsManager::startExceptionInfo(info);\
         throw imebraTrackException;\
 	}
 

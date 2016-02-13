@@ -15,30 +15,32 @@ $fileHeader$
 namespace imebra
 {
 
-Image::Image(): m_pImage(std::make_shared<imebra::implementation::image>())
+Image::Image()
+{
+    std::string colorSpace("MONOCHROME2");
+    m_pImage = std::make_shared<implementation::image>((std::uint32_t)1, (std::uint32_t)1, bitDepth::depthU8, colorSpace, (std::uint32_t)7);
+}
+
+Image::Image(
+        std::uint32_t sizeX,
+        std::uint32_t sizeY,
+        bitDepth depth,
+        const std::string& colorSpace,
+        std::uint32_t highBit):
+    m_pImage(std::make_shared<implementation::image>(sizeX, sizeY, depth, colorSpace, highBit))
 {
 }
 
 Image::Image(const Image& right): m_pImage(right.m_pImage)
 {}
 
-Image::Image(std::shared_ptr<imebra::implementation::image> pImage): m_pImage(pImage)
+Image::Image(std::shared_ptr<implementation::image> pImage): m_pImage(pImage)
 {}
 
 Image& Image::operator=(const Image& right)
 {
     m_pImage = right.m_pImage;
     return *this;
-}
-
-WritingDataHandler Image::create(
-        const std::uint32_t sizeX,
-        const std::uint32_t sizeY,
-		const bitDepth depth,
-        const std::string& colorSpace,
-        const std::uint32_t highBit)
-{
-    return WritingDataHandler(m_pImage->create(sizeX, sizeY, (imebra::implementation::image::bitDepth)depth, colorSpace, highBit));
 }
 
 double Image::getSizeMmX() const
@@ -94,9 +96,9 @@ std::uint32_t Image::getChannelsNumber() const
     return m_pImage->getChannelsNumber();
 }
 
-Image::bitDepth Image::getDepth() const
+bitDepth Image::getDepth() const
 {
-    return (bitDepth)(m_pImage->getDepth());
+    return m_pImage->getDepth();
 }
 
 std::uint32_t Image::getHighBit() const

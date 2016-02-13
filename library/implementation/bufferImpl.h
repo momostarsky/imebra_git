@@ -19,12 +19,13 @@ $fileHeader$
 
 namespace imebra
 {
-	class streamReader;
-	class streamWriter;
-    class memory;
 
 namespace implementation
 {
+
+class streamReader;
+class streamWriter;
+class memory;
 
 /// \addtogroup group_dataset
 ///

@@ -290,7 +290,7 @@ bool VOILUT::isEmpty() const
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 std::shared_ptr<image> VOILUT::allocateOutputImage(
-        image::bitDepth inputDepth,
+        bitDepth inputDepth,
         const std::string& inputColorSpace,
         std::uint32_t inputHighBit,
         std::shared_ptr<palette> /* inputPalette */,
@@ -300,12 +300,9 @@ std::shared_ptr<image> VOILUT::allocateOutputImage(
 
     if(isEmpty())
 	{
-        std::shared_ptr<image> newImage(std::make_shared<image>());
-        newImage->create(outputWidth, outputHeight, inputDepth, inputColorSpace, inputHighBit);
-		return newImage;
+        return std::make_shared<image>(outputWidth, outputHeight, inputDepth, inputColorSpace, inputHighBit);
 	}
 
-    std::shared_ptr<image> outputImage(std::make_shared<image>());
 	if(m_pLUT != 0 && m_pLUT->getSize() != 0)
 	{
 		std::uint8_t bits = m_pLUT->getBits();
@@ -318,15 +315,13 @@ std::shared_ptr<image> VOILUT::allocateOutputImage(
 
 		if(bNegative)
 		{
-            inputDepth = bits > 8 ? image::depthS16 : image::depthS8;
+            inputDepth = bits > 8 ? bitDepth::depthS16 : bitDepth::depthS8;
 		}
 		else
 		{
-            inputDepth = bits > 8 ? image::depthU16 : image::depthU8;
+            inputDepth = bits > 8 ? bitDepth::depthU16 : bitDepth::depthU8;
 		}
-        std::shared_ptr<image> returnImage(std::make_shared<image>());
-        returnImage->create(outputWidth, outputHeight, inputDepth, inputColorSpace, bits - 1);
-		return returnImage;
+        return std::make_shared<image>(outputWidth, outputHeight, inputDepth, inputColorSpace, bits - 1);
 	}
 
 	//
@@ -336,18 +331,15 @@ std::shared_ptr<image> VOILUT::allocateOutputImage(
 	///////////////////////////////////////////////////////////
 	if(m_windowWidth <= 1)
 	{
-        outputImage->create(outputWidth, outputHeight, inputDepth, inputColorSpace, inputHighBit);
-		return outputImage;
+        return std::make_shared<image>(outputWidth, outputHeight, inputDepth, inputColorSpace, inputHighBit);
 	}
 
-    if(inputDepth == image::depthS8)
-        inputDepth = image::depthU8;
-    if(inputDepth == image::depthS16 || inputDepth == image::depthU32 || inputDepth == image::depthS32)
-        inputDepth = image::depthU16;
+    if(inputDepth == bitDepth::depthS8)
+        inputDepth = bitDepth::depthU8;
+    if(inputDepth == bitDepth::depthS16 || inputDepth == bitDepth::depthU32 || inputDepth == bitDepth::depthS32)
+        inputDepth = bitDepth::depthU16;
 
-    outputImage->create(outputWidth, outputHeight, inputDepth, inputColorSpace, inputHighBit);
-
-	return outputImage;
+    return std::make_shared<image>(outputWidth, outputHeight, inputDepth, inputColorSpace, inputHighBit);
 
     IMEBRA_FUNCTION_END();
 }

@@ -22,7 +22,7 @@ TEST(dataSetTest, testFragmentation)
     Image testImage0(buildImageForTest(
 		400, 
 		300, 
-        imebra::Image::bitDepth::depthU8,
+        imebra::bitDepth::depthU8,
 		7, 
 		400, 
 		300, 
@@ -32,7 +32,7 @@ TEST(dataSetTest, testFragmentation)
     Image testImage1(buildImageForTest(
 		400, 
 		300, 
-        imebra::Image::bitDepth::depthU8,
+        imebra::bitDepth::depthU8,
 		7, 
 		400, 
 		300, 

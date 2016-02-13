@@ -11,8 +11,7 @@ namespace tests
 
 TEST(colorConversion, RGB2YBRFULL)
 {
-    Image rgb;
-    rgb.create(1, 1, Image::bitDepth::depthU8, "RGB", 7);
+    Image rgb(1, 1, bitDepth::depthU8, "RGB", 7);
 
     {
         WritingDataHandler rgbHandler = rgb.getWritingDataHandler();
@@ -23,8 +22,7 @@ TEST(colorConversion, RGB2YBRFULL)
 
     Transform rgb2ybr = ColorTransformsFactory::getTransform("RGB", "YBR_FULL");
 
-    Image ybr1;
-    ybr1.create(1, 1, Image::bitDepth::depthU8, "YBR_FULL", 7);
+    Image ybr1(1, 1, bitDepth::depthU8, "YBR_FULL", 7);
     rgb2ybr.runTransform(rgb, 0, 0, 1, 1, ybr1, 0, 0);
 
     ReadingDataHandler ybr1Handler = ybr1.getReadingDataHandler();
@@ -35,8 +33,7 @@ TEST(colorConversion, RGB2YBRFULL)
 
 TEST(colorConversion, YBRFULL2RGB)
 {
-    Image ybr;
-    ybr.create(1, 1, Image::bitDepth::depthU8, "YBR_FULL", 7);
+    Image ybr(1, 1, bitDepth::depthU8, "YBR_FULL", 7);
 
     {
         WritingDataHandler ybrHandler = ybr.getWritingDataHandler();
@@ -47,8 +44,7 @@ TEST(colorConversion, YBRFULL2RGB)
 
     Transform ybr2rgb = ColorTransformsFactory::getTransform("YBR_FULL", "RGB");
 
-    Image rgb1;
-    rgb1.create(1, 1, Image::bitDepth::depthU8, "RGB", 7);
+    Image rgb1(1, 1, bitDepth::depthU8, "RGB", 7);
     ybr2rgb.runTransform(ybr, 0, 0, 1, 1, rgb1, 0, 0);
     ReadingDataHandler rgb1Handler = rgb1.getReadingDataHandler();
 

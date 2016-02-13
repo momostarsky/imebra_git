@@ -33,111 +33,84 @@ namespace implementation
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Create an image with the specified size, colorspace and
-//  bit depth
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-std::shared_ptr<handlers::writingDataHandlerNumericBase> image::create(
-						const std::uint32_t sizeX, 
-						const std::uint32_t sizeY, 
-						const bitDepth depth, 
-                        const std::string& inputColorSpace,
-                        const std::uint32_t highBit)
+image::image(uint32_t sizeX, uint32_t sizeY, bitDepth depth, const std::string &colorSpace, uint32_t highBit):
+    m_channelsNumber(0),
+    m_imageDepth(depth),
+    m_highBit(highBit),
+    m_sizeX(sizeX),
+    m_sizeY(sizeY),
+    m_sizeMmX(0),
+    m_sizeMmY(0)
 {
     IMEBRA_FUNCTION_START();
 
-	if(sizeX == 0 || sizeY == 0)
-	{
+    if(sizeX == 0 || sizeY == 0)
+    {
         IMEBRA_THROW(ImageInvalidSizeError, "An invalid image's size has been specified");
-	}
+    }
 
-	// Normalize the color space (remove _420 & _422 and
-	//  make it uppercase).
-	///////////////////////////////////////////////////////////
-	m_colorSpace=transforms::colorTransforms::colorTransformsFactory::normalizeColorSpace(inputColorSpace);
-
-	// Find the number of channels to allocate
-	///////////////////////////////////////////////////////////
-	m_channelsNumber = transforms::colorTransforms::colorTransformsFactory::getNumberOfChannels(inputColorSpace);
-	if(m_channelsNumber == 0)
-	{
-        IMEBRA_THROW(ImageUnknownColorSpaceError, "Cannot recognize the specified color space");
-	}
-
-	// Find the datatype to use to allocate the
-	//  buffer (datatypes are in Dicom standard, plus SB
-	//  for signed bytes).
-	///////////////////////////////////////////////////////////
-	std::uint8_t defaultHighBit = 0;
-
-	std::string bufferDataType;
-
-	switch(depth)
-	{
-	case depthU8:
-		bufferDataType = "OB";
-		defaultHighBit=7;
-		break;
-	case depthS8:
-		bufferDataType = "SB";
-		defaultHighBit=7;
-        break;
-	case depthU16:
-		bufferDataType = "US";
-		defaultHighBit=15;
-        break;
-	case depthS16:
-		bufferDataType = "SS";
-		defaultHighBit=15;
-        break;
-	case depthU32:
-		bufferDataType = "UL";
-		defaultHighBit=31;
-        break;
-	case depthS32:
-		bufferDataType = "SL";
-		defaultHighBit=31;
-        break;
-	default:
-        IMEBRA_THROW(ImageUnknownDepthError, "Unknown depth");
-	}
-
-	// Adjust the high bit value
-	///////////////////////////////////////////////////////////
-	if(highBit == 0 || highBit>defaultHighBit)
-		m_highBit=defaultHighBit;
-	else
-		m_highBit=highBit;
-
-	// If a valid buffer with the same data type is already
-	//  allocated then use it.
-	///////////////////////////////////////////////////////////
-    if(m_buffer.get() == 0 || !(m_buffer.unique()) )
-	{
-        m_buffer = std::make_shared<buffer>(bufferDataType);
-	}
-
-	m_sizeX = m_sizeY = 0;
-	
-    std::shared_ptr<handlers::writingDataHandler> imageHandler(m_buffer->getWritingDataHandler(sizeX * sizeY * (std::uint32_t)m_channelsNumber) );
-
-    imageHandler->setSize(m_channelsNumber * sizeX * sizeY);
-
-    // Set the attributes
+    // Normalize the color space (remove _420 & _422 and
+    //  make it uppercase).
     ///////////////////////////////////////////////////////////
-    m_imageDepth=depth;
-    m_sizeX=sizeX;
-    m_sizeY=sizeY;
+    m_colorSpace = transforms::colorTransforms::colorTransformsFactory::normalizeColorSpace(colorSpace);
 
-    return std::static_pointer_cast<handlers::writingDataHandlerNumericBase>(imageHandler);
+    // Find the number of channels to allocate
+    ///////////////////////////////////////////////////////////
+    m_channelsNumber = transforms::colorTransforms::colorTransformsFactory::getNumberOfChannels(colorSpace);
+    if(m_channelsNumber == 0)
+    {
+        IMEBRA_THROW(ImageUnknownColorSpaceError, "Cannot recognize the specified color space");
+    }
 
-	IMEBRA_FUNCTION_END();
+    // Find the datatype to use to allocate the
+    //  buffer (datatypes are in Dicom standard, plus SB
+    //  for signed bytes).
+    ///////////////////////////////////////////////////////////
+    std::uint8_t defaultHighBit = 0;
+
+    switch(depth)
+    {
+    case bitDepth::depthU8:
+        m_bufferDataType = "OB";
+        defaultHighBit=7;
+        break;
+    case bitDepth::depthS8:
+        m_bufferDataType = "SB";
+        defaultHighBit=7;
+        break;
+    case bitDepth::depthU16:
+        m_bufferDataType = "US";
+        defaultHighBit=15;
+        break;
+    case bitDepth::depthS16:
+        m_bufferDataType = "SS";
+        defaultHighBit=15;
+        break;
+    case bitDepth::depthU32:
+        m_bufferDataType = "UL";
+        defaultHighBit=31;
+        break;
+    case bitDepth::depthS32:
+        m_bufferDataType = "SL";
+        defaultHighBit=31;
+        break;
+    default:
+        IMEBRA_THROW(ImageUnknownDepthError, "Unknown depth");
+    }
+
+    // Adjust the high bit value
+    ///////////////////////////////////////////////////////////
+    if(highBit == 0 || highBit>defaultHighBit)
+        m_highBit=defaultHighBit;
+    else
+        m_highBit=highBit;
+
+    IMEBRA_FUNCTION_END();
+}
+
+image::~image()
+{
+
 }
 
 
@@ -166,14 +139,19 @@ std::shared_ptr<handlers::readingDataHandlerNumericBase> image::getReadingDataHa
 {
     IMEBRA_FUNCTION_START();
 
-	if(m_buffer == 0)
-	{
-        return std::shared_ptr<handlers::readingDataHandlerNumericBase>(0);
-	}
+    // If a valid buffer with the same data type is already
+    //  allocated then use it.
+    ///////////////////////////////////////////////////////////
+    if(m_buffer.get() == 0)
+    {
+        buffer temporaryBuffer(m_bufferDataType);
+        {
+            std::shared_ptr<handlers::writingDataHandler> imageHandler(temporaryBuffer.getWritingDataHandler(m_sizeX * m_sizeY * m_channelsNumber));
+        }
+        return std::dynamic_pointer_cast<handlers::readingDataHandlerNumericBase>(m_buffer->getReadingDataHandler());
+    }
 
-    std::shared_ptr<handlers::readingDataHandler> imageHandler(m_buffer->getReadingDataHandler());
-
-    return std::dynamic_pointer_cast<handlers::readingDataHandlerNumericBase>(imageHandler);
+    return std::dynamic_pointer_cast<handlers::readingDataHandlerNumericBase>(m_buffer->getReadingDataHandler());
 
 	IMEBRA_FUNCTION_END();
 }
@@ -182,9 +160,12 @@ std::shared_ptr<handlers::writingDataHandlerNumericBase> image::getWritingDataHa
 {
     IMEBRA_FUNCTION_START();
 
+    // If a valid buffer with the same data type is already
+    //  allocated then use it.
+    ///////////////////////////////////////////////////////////
     if(m_buffer == 0)
     {
-        return std::shared_ptr<handlers::writingDataHandlerNumericBase>(0);
+        m_buffer = std::make_shared<buffer>(m_bufferDataType);
     }
 
     std::shared_ptr<handlers::writingDataHandler> imageHandler(m_buffer->getWritingDataHandler(m_sizeX * m_sizeY * m_channelsNumber));
@@ -204,7 +185,7 @@ std::shared_ptr<handlers::writingDataHandlerNumericBase> image::getWritingDataHa
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-image::bitDepth image::getDepth() const
+bitDepth image::getDepth() const
 {
 	return m_imageDepth;
 }

@@ -160,7 +160,6 @@ size_t readingDataHandlerStringUnicode::getSize() const
 writingDataHandlerStringUnicode::writingDataHandlerStringUnicode(const std::shared_ptr<buffer> &pBuffer, const charsetsList::tCharsetsList& charsets, const std::string &dataType, const wchar_t separator, const size_t unitSize, const size_t maxSize, const uint8_t paddingByte):
     writingDataHandler(pBuffer, dataType, paddingByte), m_charsets(charsets), m_separator(separator), m_unitSize(unitSize), m_maxSize(maxSize)
 {
-
 }
 
 writingDataHandlerStringUnicode::~writingDataHandlerStringUnicode()

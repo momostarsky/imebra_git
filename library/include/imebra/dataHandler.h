@@ -120,19 +120,19 @@ public:
 
     std::string getDataType() const;
 
-    void setDate(const size_t index, const Date& date);
+    WritingDataHandler& setDate(const size_t index, const Date& date);
 
-    void setAge(const size_t index, const Age& age);
+    WritingDataHandler& setAge(const size_t index, const Age& age);
 
-    void setSignedLong(const size_t index, const std::int32_t value);
+    WritingDataHandler& setSignedLong(const size_t index, const std::int32_t value);
 
-    void setUnsignedLong(const size_t index, const std::uint32_t value);
+    WritingDataHandler& setUnsignedLong(const size_t index, const std::uint32_t value);
 
-    void setDouble(const size_t index, const double value);
+    WritingDataHandler& setDouble(const size_t index, const double value);
 
-    void setString(const size_t index, const std::string& value);
+    WritingDataHandler& setString(const size_t index, const std::string& value);
 
-    void setUnicodeString(const size_t index, const std::wstring& value);
+    WritingDataHandler& setUnicodeString(const size_t index, const std::wstring& value);
 
     void assign(const char* buffer, const size_t bufferSize);
 

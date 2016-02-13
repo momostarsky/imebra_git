@@ -39,7 +39,7 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 
 readingDataHandlerDateTimeBase::readingDataHandlerDateTimeBase(const memory& parseMemory, const std::string& dataType):
-    readingDataHandlerString(parseMemory, dataType, 0x0, 0x20)
+    readingDataHandlerString(parseMemory, dataType, '-', 0x20)
 {
 
 }
@@ -102,7 +102,7 @@ double readingDataHandlerDateTimeBase::getDouble(const size_t index) const
 
 
 writingDataHandlerDateTimeBase::writingDataHandlerDateTimeBase(const std::shared_ptr<buffer> &pBuffer, const std::string &dataType, const size_t unitSize, const size_t maxSize):
-    writingDataHandlerString(pBuffer, dataType, 0x0, unitSize, maxSize, 0x20)
+    writingDataHandlerString(pBuffer, dataType, '-', unitSize, maxSize, 0x20)
 {
 }
 
@@ -342,7 +342,7 @@ std::string writingDataHandlerDateTimeBase::buildTime(
 		|| (offsetMinutes < -59)
 		|| (offsetMinutes > 59))
 	{
-		hour = minutes = seconds = nanoseconds = offsetHours = offsetMinutes = 0;
+        throw;
 	}
 
 	bool bMinus=offsetHours < 0;
@@ -363,6 +363,49 @@ std::string writingDataHandlerDateTimeBase::buildTime(
 	IMEBRA_FUNCTION_END();
 }
 
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
+// Build the time string (without timezone)
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+std::string writingDataHandlerDateTimeBase::buildTimeSimple(
+        std::uint32_t hour,
+        std::uint32_t minutes,
+        std::uint32_t seconds,
+        std::uint32_t nanoseconds
+        ) const
+{
+    IMEBRA_FUNCTION_START();
+
+    if(
+        (hour >= 24)
+        || (minutes >= 60)
+        || (seconds >= 60)
+        || (nanoseconds > 999999))
+    {
+        throw;
+    }
+
+    std::ostringstream timeStream;
+    timeStream << std::setfill('0');
+    timeStream << std::setw(2) << hour;
+    timeStream << std::setw(2) << minutes;
+    timeStream << std::setw(2) << seconds;
+    if(nanoseconds != 0)
+    {
+        timeStream << std::setw(1) << ".";
+        timeStream << std::setw(6) << nanoseconds;
+    }
+
+    return timeStream.str();
+
+    IMEBRA_FUNCTION_END();
+}
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////

@@ -255,9 +255,9 @@ namespace imebra
 		protected:
 			std::shared_ptr<image> m_image;
 
-			std::shared_ptr<image> m_finalImage;
+            std::shared_ptr<image> m_finalImage;
 
-			// Transform that calculates an 8 bit per channel RGB image
+            // Transform that calculates an 8 bit per channel RGB image
 			std::shared_ptr<transforms::transformsChain> m_transformsChain;
 		};
 

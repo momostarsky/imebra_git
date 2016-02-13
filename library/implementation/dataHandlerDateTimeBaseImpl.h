@@ -87,6 +87,13 @@ protected:
         std::int32_t offsetMinutes
         ) const;
 
+    std::string buildTimeSimple(
+        std::uint32_t hour,
+        std::uint32_t minutes,
+        std::uint32_t seconds,
+        std::uint32_t nanoseconds
+        ) const;
+
     std::string padLeft(const std::string& source, const char fillChar, const size_t length) const;
 
 };

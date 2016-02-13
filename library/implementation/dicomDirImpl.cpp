@@ -13,6 +13,7 @@ $fileHeader$
 #include "dataHandlerNumericImpl.h"
 #include "nullStreamImpl.h"
 #include "streamWriterImpl.h"
+#include "dataHandlerImpl.h"
 #include "../include/imebra/exceptions.h"
 #include <map>
 #include <string>
@@ -191,11 +192,20 @@ void directoryRecord::setReferencedRecord(std::shared_ptr<directoryRecord> pRefe
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::string directoryRecord::getFilePart(size_t part) const
+fileParts_t directoryRecord::getFileParts() const
 {
     IMEBRA_FUNCTION_START();
 
-    return getRecordDataSet()->getString(0x0004, 0, 0x1500, 0, part, "");
+    fileParts_t fileParts;
+
+    std::shared_ptr<handlers::readingDataHandler> filePartsHandler = getRecordDataSet()->getReadingDataHandlerThrow(0x0004, 0, 0x1500, 0);
+
+    for(size_t scanParts(0), endParts(filePartsHandler->getSize()); scanParts != endParts; ++scanParts)
+    {
+        fileParts.push_back(filePartsHandler->getString(scanParts));
+    }
+
+    return fileParts;
 
     IMEBRA_FUNCTION_END();
 }
@@ -210,11 +220,18 @@ std::string directoryRecord::getFilePart(size_t part) const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void directoryRecord::setFilePart(size_t part, const std::string& partName)
+void directoryRecord::setFileParts(const fileParts_t& fileParts)
 {
     IMEBRA_FUNCTION_START();
 
-    getRecordDataSet()->setString(0x0004, 0, 0x1500, 0, part, partName);
+    std::shared_ptr<handlers::writingDataHandler> filePartsHandler = getRecordDataSet()->getWritingDataHandler(0x0004, 0, 0x1500, 0);
+    filePartsHandler->setSize(fileParts.size());
+
+    size_t bufferIndex(0);
+    for(fileParts_t::const_iterator scanParts(fileParts.begin()), endParts(fileParts.end()); scanParts != endParts; ++scanParts)
+    {
+        filePartsHandler->setString(bufferIndex++, *scanParts);
+    }
 
     IMEBRA_FUNCTION_END();
 }
@@ -229,14 +246,14 @@ void directoryRecord::setFilePart(size_t part, const std::string& partName)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-directoryRecord::tDirectoryRecordType directoryRecord::getType() const
+directoryRecordType_t directoryRecord::getType() const
 {
     IMEBRA_FUNCTION_START();
 
     std::string typeString(getTypeString());
 
     const tDirectoryRecordTypeDef* typesList(getRecordTypeMap());
-	for(size_t scanTypes(0); typesList[scanTypes].m_type != endOfDirectoryRecordTypes; ++scanTypes)
+    for(size_t scanTypes(0); typesList[scanTypes].m_type != directoryRecordType_t::endOfDirectoryRecordTypes; ++scanTypes)
 	{
 		if(typesList[scanTypes].m_name == typeString)
 		{
@@ -280,16 +297,16 @@ std::string directoryRecord::getTypeString() const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void directoryRecord::setType(tDirectoryRecordType recordType)
+void directoryRecord::setType(directoryRecordType_t recordType)
 {
     IMEBRA_FUNCTION_START();
 
     const tDirectoryRecordTypeDef* typesList(getRecordTypeMap());
-	for(size_t scanTypes(0); typesList[scanTypes].m_type != endOfDirectoryRecordTypes; ++scanTypes)
+    for(size_t scanTypes(0); typesList[scanTypes].m_type != directoryRecordType_t::endOfDirectoryRecordTypes; ++scanTypes)
 	{
 		if(typesList[scanTypes].m_type == recordType)
 		{
-            getRecordDataSet()->setString(0x0004, 0, 0x1430, 0, 0, typesList[scanTypes].m_name);
+            getRecordDataSet()->setString(0x0004, 0, 0x1430, 0, typesList[scanTypes].m_name);
 			return;
 		}
 	}
@@ -315,7 +332,7 @@ void directoryRecord::setTypeString(const std::string& recordType)
 {
     IMEBRA_FUNCTION_START();
 
-    getRecordDataSet()->setString(0x0004, 0, 0x1430, 0, 0, recordType);
+    getRecordDataSet()->setString(0x0004, 0, 0x1430, 0, recordType);
 
     IMEBRA_FUNCTION_END();
 }
@@ -342,7 +359,7 @@ void directoryRecord::updateOffsets()
 	}
 	else
 	{
-        getRecordDataSet()->setUnsignedLong(0x0004, 0, 0x1400, 0, 0, m_pNextRecord->getRecordDataSet()->getItemOffset());
+        getRecordDataSet()->setUnsignedLong(0x0004, 0, 0x1400, 0, m_pNextRecord->getRecordDataSet()->getItemOffset());
 		m_pNextRecord->updateOffsets();
 	}
 
@@ -354,7 +371,7 @@ void directoryRecord::updateOffsets()
 	}
 	else
 	{
-        getRecordDataSet()->setUnsignedLong(0x0004, 0, 0x1420, 0, 0, m_pFirstChildRecord->getRecordDataSet()->getItemOffset());
+        getRecordDataSet()->setUnsignedLong(0x0004, 0, 0x1420, 0, m_pFirstChildRecord->getRecordDataSet()->getItemOffset());
 		m_pFirstChildRecord->updateOffsets();
 	}
 
@@ -366,7 +383,7 @@ void directoryRecord::updateOffsets()
 	}
 	else
 	{
-        getRecordDataSet()->setUnsignedLong(0x0004, 0, 0x1504, 0, 0, m_pReferencedRecord->getRecordDataSet()->getItemOffset());
+        getRecordDataSet()->setUnsignedLong(0x0004, 0, 0x1504, 0, m_pReferencedRecord->getRecordDataSet()->getItemOffset());
 		m_pReferencedRecord->updateOffsets();
 	}
 
@@ -418,34 +435,34 @@ const directoryRecord::tDirectoryRecordTypeDef* directoryRecord::getRecordTypeMa
 
     static const tDirectoryRecordTypeDef typesList[] =
     {
-        {"PATIENT", directoryRecord::patient},
-        {"STUDY", directoryRecord::study},
-        {"SERIES", directoryRecord::series},
-        {"IMAGE", directoryRecord::image},
-        {"OVERLAY", directoryRecord::overlay},
-        {"MODALITY LUT", directoryRecord::modality_lut},
-        {"VOI LUT", directoryRecord::voi_lut},
-        {"CURVE", directoryRecord::curve},
-        {"TOPIC", directoryRecord::topic},
-        {"VISIT", directoryRecord::visit},
-        {"RESULTS", directoryRecord::results},
-        {"INTERPRETATION", directoryRecord::interpretation},
-        {"STUDY COMPONENT", directoryRecord::study_component},
-        {"STORED PRINT", directoryRecord::stored_print},
-        {"RT DOSE", directoryRecord::rt_dose},
-        {"RT STRUCTURE SET", directoryRecord::rt_structure_set},
-        {"RT PLAN", directoryRecord::rt_plan},
-        {"RT TREAT RECORD", directoryRecord::rt_treat_record},
-        {"PRESENTATION", directoryRecord::presentation},
-        {"WAVEFORM", directoryRecord::waveform},
-        {"SR DOCUMENT", directoryRecord::sr_document},
-        {"KEY OBJECT DOC", directoryRecord::key_object_doc},
-        {"SPECTROSCOPY", directoryRecord::spectroscopy},
-        {"RAW DATA", directoryRecord::raw_data},
-        {"REGISTRATION", directoryRecord::registration},
-        {"FIDUCIAL", directoryRecord::fiducial},
-        {"MRDR", directoryRecord::mrdr},
-        {"", directoryRecord::endOfDirectoryRecordTypes}
+        {"PATIENT", directoryRecordType_t::patient},
+        {"STUDY", directoryRecordType_t::study},
+        {"SERIES", directoryRecordType_t::series},
+        {"IMAGE", directoryRecordType_t::image},
+        {"OVERLAY", directoryRecordType_t::overlay},
+        {"MODALITY LUT", directoryRecordType_t::modality_lut},
+        {"VOI LUT", directoryRecordType_t::voi_lut},
+        {"CURVE", directoryRecordType_t::curve},
+        {"TOPIC", directoryRecordType_t::topic},
+        {"VISIT", directoryRecordType_t::visit},
+        {"RESULTS", directoryRecordType_t::results},
+        {"INTERPRETATION", directoryRecordType_t::interpretation},
+        {"STUDY COMPONENT", directoryRecordType_t::study_component},
+        {"STORED PRINT", directoryRecordType_t::stored_print},
+        {"RT DOSE", directoryRecordType_t::rt_dose},
+        {"RT STRUCTURE SET", directoryRecordType_t::rt_structure_set},
+        {"RT PLAN", directoryRecordType_t::rt_plan},
+        {"RT TREAT RECORD", directoryRecordType_t::rt_treat_record},
+        {"PRESENTATION", directoryRecordType_t::presentation},
+        {"WAVEFORM", directoryRecordType_t::waveform},
+        {"SR DOCUMENT", directoryRecordType_t::sr_document},
+        {"KEY OBJECT DOC", directoryRecordType_t::key_object_doc},
+        {"SPECTROSCOPY", directoryRecordType_t::spectroscopy},
+        {"RAW DATA", directoryRecordType_t::raw_data},
+        {"REGISTRATION", directoryRecordType_t::registration},
+        {"FIDUCIAL", directoryRecordType_t::fiducial},
+        {"MRDR", directoryRecordType_t::mrdr},
+        {"", directoryRecordType_t::endOfDirectoryRecordTypes}
     };
 
     return typesList;
@@ -646,7 +663,7 @@ std::shared_ptr<dataSet> dicomDir::buildDataSet()
 	///////////////////////////////////////////////////////////
     if(m_pDataSet->getString(0x2, 0, 0x10, 0, 0, "") == "")
 	{
-        m_pDataSet->setString(0x2, 0, 0x10, 0, 0, "1.2.840.10008.1.2.1");
+        m_pDataSet->setString(0x2, 0, 0x10, 0, "1.2.840.10008.1.2.1");
 	}
 
 	// Adjust the version if it isn't already set
@@ -660,7 +677,7 @@ std::shared_ptr<dataSet> dicomDir::buildDataSet()
 
 	// Adjust the SOP class UID if it isn't already set
 	///////////////////////////////////////////////////////////
-    m_pDataSet->setString(0x2, 0, 0x2, 0, 0, "1.2.840.10008.1.3.10");
+    m_pDataSet->setString(0x2, 0, 0x2, 0, "1.2.840.10008.1.3.10");
 
 	// Allocate offset fields
 	///////////////////////////////////////////////////////////
@@ -683,7 +700,7 @@ std::shared_ptr<dataSet> dicomDir::buildDataSet()
 	if(m_pFirstRootRecord != 0)
 	{
 		m_pFirstRootRecord->updateOffsets();
-        m_pDataSet->setUnsignedLong(0x0004, 0, 0x1200, 0, 0, m_pFirstRootRecord->getRecordDataSet()->getItemOffset());
+        m_pDataSet->setUnsignedLong(0x0004, 0, 0x1200, 0, m_pFirstRootRecord->getRecordDataSet()->getItemOffset());
 	}
 
 	return m_pDataSet;

@@ -10,9 +10,10 @@ $fileHeader$
 #if !defined(imebraImage_A807A3CA_FA04_44f4_85D2_C7AA2FE103C4__INCLUDED_)
 #define imebraImage_A807A3CA_FA04_44f4_85D2_C7AA2FE103C4__INCLUDED_
 
+
 #include <memory>
 #include "dataHandlerNumericImpl.h"
-
+#include "../include/imebra/definitions.h"
 
 namespace imebra
 {
@@ -76,33 +77,16 @@ class image
 {
 public:
 
-	///////////////////////////////////////////////////////////
-	///
-	/// \brief Define the number of allocated bytes per
-	///        value.
-	///
-	///////////////////////////////////////////////////////////
-    enum bitDepth
-	{
-            depthU8,    ///< unsigned integer, 1 byte
-			depthS8,    ///< signed integer, 1 byte
-			depthU16,   ///< unsigned integer, 2 bytes
-			depthS16,   ///< signed integer, 2 bytes
-			depthU32,   ///< unsigned integer, 4 bytes
-            depthS32    ///< signed integer, 4 bytes
-	};
-
-
 	// Constructor
 	///////////////////////////////////////////////////////////
-	image():
-			m_channelsNumber(0),
-            m_imageDepth(depthU8),
-			m_highBit(0),
-			m_sizeX(0),
-			m_sizeY(0),
-			m_sizeMmX(0),
-			m_sizeMmY(0){}
+    image(
+            std::uint32_t sizeX,
+            std::uint32_t sizeY,
+            bitDepth depth,
+            const std::string& colorSpace,
+            std::uint32_t highBit);
+
+    ~image();
 
 
 	/// \brief Create the image.
@@ -250,7 +234,9 @@ public:
 protected:
 	// Image's buffer
 	///////////////////////////////////////////////////////////
-	std::shared_ptr<buffer> m_buffer;
+    std::shared_ptr<buffer> m_buffer;
+
+    std::string m_bufferDataType;
 
 	// Number of channels
 	///////////////////////////////////////////////////////////
@@ -280,7 +266,7 @@ protected:
 
 	// Image's lut (only if the colorspace is PALETTECOLOR
 	///////////////////////////////////////////////////////////
-        std::shared_ptr<palette> m_palette;
+    std::shared_ptr<palette> m_palette;
 
 };
 
