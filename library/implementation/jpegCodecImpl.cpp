@@ -954,7 +954,7 @@ void jpegCodec::readStream(std::shared_ptr<streamReader> pSourceStream, std::sha
         pDataSet->setString(0x0002, 0, 0x0010, 0, "1.2.840.10008.1.2.4.57");
         break;
     default:
-        throw JpegCodecCannotHandleSyntaxError("Jpeg SOF not supported");
+        IMEBRA_THROW(JpegCodecCannotHandleSyntaxError, "Jpeg SOF not supported");
     }
 
     // Number of planes
@@ -2635,7 +2635,7 @@ void jpegChannel::processUnprocessedAmplitudes()
     std::int32_t missingPixels = (std::int32_t)m_sizeX - (std::int32_t)m_losslessPositionX + (std::int32_t)m_sizeX * ((std::int32_t)m_sizeY - (std::int32_t)m_losslessPositionY - 1);
     if(missingPixels < (std::int32_t)m_unprocessedAmplitudesCount)
     {
-        throw CodecCorruptedFileError("Excess data in the lossless jpeg stream");
+        IMEBRA_THROW(CodecCorruptedFileError, "Excess data in the lossless jpeg stream");
     }
 
     if(m_unprocessedAmplitudesPredictor == 0)
@@ -2697,7 +2697,7 @@ void jpegChannel::processUnprocessedAmplitudes()
             m_lastDCValue += *(pSource++);
             break;
         default:
-            throw CodecCorruptedFileError("Wrong predictor index in lossless jpeg stream");
+            IMEBRA_THROW(CodecCorruptedFileError, "Wrong predictor index in lossless jpeg stream");
         }
 
         m_lastDCValue &= m_valuesMask;

@@ -134,7 +134,7 @@ std::uint32_t readingDataHandlerStringAS::getUnsignedLong(const size_t index) co
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-double readingDataHandlerStringAS::getDouble(const size_t index) const
+double readingDataHandlerStringAS::getDouble(const size_t /* index */) const
 {
     IMEBRA_FUNCTION_START();
 
@@ -225,7 +225,7 @@ void writingDataHandlerStringAS::setUnsignedLong(const size_t index, const std::
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void writingDataHandlerStringAS::setDouble(const size_t index, const double value)
+void writingDataHandlerStringAS::setDouble(const size_t /* index */, const double /* value */)
 {
     IMEBRA_FUNCTION_START();
 

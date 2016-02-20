@@ -628,7 +628,7 @@ public:
         }
         else
         {
-            throw std::runtime_error("Data type not valid");
+            IMEBRA_THROW(std::runtime_error, "Data type not valid");
         }
 
         IMEBRA_FUNCTION_END();
@@ -898,7 +898,7 @@ public:
                         destNumChannels);
             break;
         default:
-            throw std::logic_error("Invalid subsampling factor");
+            IMEBRA_THROW(std::logic_error, "Invalid subsampling factor");
         }
 
         IMEBRA_FUNCTION_END();
@@ -963,7 +963,7 @@ typedef writingDataHandlerNumeric<double> writingDataHandlerDouble;
     }\
     else\
     {\
-        throw std::runtime_error("Data type not valid");\
+        IMEBRA_THROW(std::runtime_error, "Data type not valid");\
     }\
     IMEBRA_FUNCTION_END();\
 }

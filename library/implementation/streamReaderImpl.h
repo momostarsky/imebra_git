@@ -304,7 +304,7 @@ public:
 		///////////////////////////////////////////////////////////
         if(m_dataBufferCurrent == m_dataBufferEnd && fillDataBuffer() == 0)
         {
-            throw(StreamEOFError("Attempt to read past the end of the file"));
+            IMEBRA_THROW(StreamEOFError, "Attempt to read past the end of the file");
         }
 
 		// Read one byte. Return immediatly if the tags are not
@@ -318,13 +318,13 @@ public:
         {
             if(++m_dataBufferCurrent == m_dataBufferEnd && fillDataBuffer() == 0)
             {
-                throw(StreamEOFError("Attempt to read past the end of the file"));
+                IMEBRA_THROW(StreamEOFError, "Attempt to read past the end of the file");
             }
         }while(m_dataBuffer[m_dataBufferCurrent] == 0xff);
 
         if(m_dataBuffer[m_dataBufferCurrent++] != 0)
         {
-            throw(StreamJpegTagInStreamError("Corrupted jpeg stream"));
+            IMEBRA_THROW(StreamJpegTagInStreamError, "Corrupted jpeg stream");
         }
 
         return 0xff;

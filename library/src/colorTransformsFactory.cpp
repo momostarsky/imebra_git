@@ -53,7 +53,7 @@ Transform ColorTransformsFactory::getTransform(const std::string& startColorSpac
     Transform transform(factory->getTransform(startColorSpace, endColorSpace));
     if(transform.m_pTransform == 0)
     {
-        throw ColorTransformsFactoryNoTransformError("There is no color transform that can convert between the specified color spaces");
+        IMEBRA_THROW(ColorTransformsFactoryNoTransformError, "There is no color transform that can convert between the specified color spaces " << startColorSpace << " and " << endColorSpace);
     }
     return transform;
 }

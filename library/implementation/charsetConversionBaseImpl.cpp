@@ -76,9 +76,7 @@ const charsetInformation& charsetDictionary::getCharsetInformation(const std::st
     dictionary_t::const_iterator findInfo(m_dictionary.find(normalizedName));
     if(findInfo == m_dictionary.end())
     {
-        std::ostringstream errorMessage;
-        errorMessage << "Charset table " << dicomName << " not found in the charset dictionary";
-        throw CharsetConversionNoTableError(errorMessage.str());
+        IMEBRA_THROW(CharsetConversionNoTableError, "Charset table " << dicomName << " not found in the charset dictionary");
     }
     return findInfo->second;
 

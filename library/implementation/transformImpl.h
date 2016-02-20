@@ -259,7 +259,7 @@ void runTemplateTransform1(
     }
     else
     {
-        throw std::runtime_error("Data type not valid");\
+        IMEBRA_THROW(std::runtime_error, "Data type not valid");\
     }
 
     IMEBRA_FUNCTION_END();
@@ -300,7 +300,7 @@ void runTemplateTransform(
     }
     else
     {
-        throw std::runtime_error("Data type not valid");\
+        IMEBRA_THROW(std::runtime_error, "Data type not valid");\
     }
     IMEBRA_FUNCTION_END();
 }

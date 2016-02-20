@@ -64,19 +64,19 @@ std::shared_ptr<data> dataSet::getTagThrow(std::uint16_t groupId, std::uint16_t 
     tGroups::const_iterator findGroup(m_groups.find(groupId));
     if(findGroup == m_groups.end())
     {
-        throw MissingGroupError("The requested group is missing");
+        IMEBRA_THROW(MissingGroupError, "The requested group is missing");
     }
 
     if(findGroup->second.size() <= order)
     {
-        throw MissingGroupError("The requested group is missing");
+        IMEBRA_THROW(MissingGroupError, "The requested group is missing");
     }
 
     const tTags& tagsMap = findGroup->second.at(order);
     tTags::const_iterator findTag(tagsMap.find(tagId));
     if(findTag == tagsMap.end())
     {
-        throw MissingGroupError("The requested tag is missing");
+        IMEBRA_THROW(MissingGroupError, "The requested tag is missing");
     }
     return findTag->second;
 

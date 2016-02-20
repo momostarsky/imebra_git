@@ -72,7 +72,7 @@ public:
             if(colorTransforms::colorTransformsFactory::normalizeColorSpace(inputHandlerColorSpace) !=
                colorTransforms::colorTransformsFactory::normalizeColorSpace(outputHandlerColorSpace))
             {
-                throw TransformHighBitDifferentColorSpacesError("The input and output image must have the same color space");
+                IMEBRA_THROW(TransformHighBitDifferentColorSpacesError, "The input and output image must have the same color space");
             }
 
             std::uint32_t numChannels(colorTransforms::colorTransformsFactory::getNumberOfChannels(inputHandlerColorSpace));

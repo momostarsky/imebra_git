@@ -161,7 +161,7 @@ void huffmanTable::setValuesPerLength(std::uint32_t length, std::uint32_t numVal
 
     if(length >= m_valuesPerLength.size())
     {
-        throw HuffmanCreateTableError("Huffman code length too big");
+        IMEBRA_THROW(HuffmanCreateTableError, "Huffman code length too big");
     }
     m_valuesPerLength[length] = numValues;
 
@@ -174,7 +174,7 @@ void huffmanTable::addOrderedValue(size_t index, std::uint32_t value)
 
     if(index >= m_orderedValues.size())
     {
-        throw HuffmanCreateTableError("Too many values in the huffman table");
+        IMEBRA_THROW(HuffmanCreateTableError, "Too many values in the huffman table");
     }
     m_orderedValues[index] = value;
 

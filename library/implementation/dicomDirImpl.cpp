@@ -263,7 +263,7 @@ directoryRecordType_t directoryRecord::getType() const
 
 	// Invalid value found . Throw an exception
 	///////////////////////////////////////////////////////////
-    throw DicomDirUnknownDirectoryRecordTypeError("Unknown directory record type");
+    IMEBRA_THROW(DicomDirUnknownDirectoryRecordTypeError, "Unknown directory record type");
 
     IMEBRA_FUNCTION_END();
 }
@@ -313,7 +313,7 @@ void directoryRecord::setType(directoryRecordType_t recordType)
 
 	// Trying to set an invalid type. Throw an exception
 	///////////////////////////////////////////////////////////
-    throw DicomDirUnknownDirectoryRecordTypeError("Unknown directory record type");
+    IMEBRA_THROW(DicomDirUnknownDirectoryRecordTypeError, "Unknown directory record type");
 
     IMEBRA_FUNCTION_END();
 }
@@ -407,7 +407,7 @@ void directoryRecord::checkCircularReference(directoryRecord* pStartRecord)
 
     if(this == pStartRecord)
 	{
-        throw DicomDirCircularReferenceError("Circular reference detected");
+        IMEBRA_THROW(DicomDirCircularReferenceError, "Circular reference detected");
 	}
 
 	if(m_pNextRecord != 0)

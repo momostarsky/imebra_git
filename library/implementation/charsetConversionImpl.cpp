@@ -16,7 +16,7 @@ std::string dicomConversion::convertFromUnicode(const std::wstring& unicodeStrin
     ///////////////////////////////////////////////////////////
     if(pCharsets->empty())
     {
-        throw std::logic_error("The charsets list must be set before converting from unicode");
+        IMEBRA_THROW(std::logic_error, "The charsets list must be set before converting from unicode");
     }
 
     // Setup the conversion objects
@@ -129,7 +129,7 @@ std::wstring dicomConversion::convertToUnicode(const std::string& value, const c
     ///////////////////////////////////////////////////////////
     if(charsets.empty())
     {
-        throw std::logic_error("The charsets list must be set before converting to unicode");
+        IMEBRA_THROW(std::logic_error, "The charsets list must be set before converting to unicode");
     }
 
     // Initialize the conversion engine with the default

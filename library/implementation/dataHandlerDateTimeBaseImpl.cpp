@@ -91,7 +91,7 @@ std::uint32_t readingDataHandlerDateTimeBase::getUnsignedLong(const size_t index
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-double readingDataHandlerDateTimeBase::getDouble(const size_t index) const
+double readingDataHandlerDateTimeBase::getDouble(const size_t /* index */) const
 {
     IMEBRA_FUNCTION_START();
 
@@ -153,7 +153,7 @@ void writingDataHandlerDateTimeBase::setUnsignedLong(const size_t index, const s
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void writingDataHandlerDateTimeBase::setDouble(const size_t index, const double value)
+void writingDataHandlerDateTimeBase::setDouble(const size_t /* index */, const double /* value */)
 {
     IMEBRA_FUNCTION_START();
 
@@ -182,7 +182,7 @@ void readingDataHandlerDateTimeBase::parseDate(
 
     if(dateString.size() != 8)
     {
-        throw InvalidTagContentError("The date/time string has the wrong size");
+        IMEBRA_THROW(InvalidTagContentError, "The date/time string has the wrong size");
     }
 
     std::string dateYear=dateString.substr(0, 4);
