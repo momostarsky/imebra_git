@@ -165,4 +165,9 @@ std::uint64_t streamController::adjustEndian(std::uint64_t buffer, const tByteOr
             ((buffer & 0x00000000000000ff) << 56));
 }
 
+streamController::tByteOrdering streamController::getPlatformEndian()
+{
+    return m_platformByteOrder;
+}
+
 } // namespace imebra

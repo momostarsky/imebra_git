@@ -139,7 +139,7 @@ TEST(dicomCodecTest, testDicom)
 
                     MemoryStreamInput readStream(streamMemory);
                     StreamReader reader(readStream);
-                    DataSet testDataSet = CodecFactory::load(reader, 2048);
+                    DataSet testDataSet = CodecFactory::load(reader, 1);
 
                     EXPECT_EQ(std::string("AAAaa"), testDataSet.getStringThrow(0x0010, 0, 0x0010, 0, 0));
                     EXPECT_EQ(std::string("BBBbbb"), testDataSet.getStringThrow(0x0010, 0, 0x0010, 0, 1));

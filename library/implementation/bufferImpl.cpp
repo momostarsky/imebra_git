@@ -568,12 +568,11 @@ std::shared_ptr<streamReader> buffer::getStreamReader()
 	// If the object must be loaded from the original stream,
 	//  then return the original stream
 	///////////////////////////////////////////////////////////
-    if(m_originalStream != 0)
+    if(m_originalStream != 0 && (m_originalWordLength <= 1 && m_originalEndianType != streamReader::getPlatformEndian()))
 	{
         std::shared_ptr<streamReader> reader(std::make_shared<streamReader>(m_originalStream, m_originalBufferPosition, m_originalBufferLength));
 		return reader;
 	}
-
 
 	// Build a stream from the buffer's memory
 	///////////////////////////////////////////////////////////

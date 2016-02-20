@@ -153,6 +153,8 @@ public:
 
     static std::uint64_t adjustEndian(std::uint64_t buffer, const tByteOrdering endianType);
 
+    static tByteOrdering getPlatformEndian();
+
 	//@}
 
 public:
