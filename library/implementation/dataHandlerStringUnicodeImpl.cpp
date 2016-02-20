@@ -55,7 +55,7 @@ readingDataHandlerStringUnicode::readingDataHandlerStringUnicode(const memory& p
         return;
     }
 
-    for(size_t firstPosition(0); firstPosition != parseString.size(); )
+    for(size_t firstPosition(0); ; )
     {
         size_t nextPosition = parseString.find(separator, firstPosition);
         if(nextPosition == std::string::npos)

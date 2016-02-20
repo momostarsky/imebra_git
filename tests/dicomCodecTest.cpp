@@ -143,7 +143,7 @@ TEST(dicomCodecTest, testDicom)
 
                     EXPECT_EQ(std::string("AAAaa"), testDataSet.getStringThrow(0x0010, 0, 0x0010, 0, 0));
                     EXPECT_EQ(std::string("BBBbbb"), testDataSet.getStringThrow(0x0010, 0, 0x0010, 0, 1));
-                    //EXPECT_EQ(std::string(""), testDataSet.getStringThrow(0x0010, 0, 0x0010, 0, 2));
+                    EXPECT_EQ(std::string(""), testDataSet.getStringThrow(0x0010, 0, 0x0010, 0, 2));
                     EXPECT_EQ(interleaved, testDataSet.getSignedLongThrow(0x0028, 0, 0x0006, 0, 0));
 
                     Image checkImage0 = testDataSet.getImage(0);
