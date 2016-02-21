@@ -30,7 +30,7 @@ bool Transform::isEmpty() const
     return m_pTransform == 0 || m_pTransform->isEmpty();
 }
 
-Image Transform::allocateOutputImage(Image& inputImage, std::uint32_t width, std::uint32_t height) const
+Image Transform::allocateOutputImage(const Image& inputImage, std::uint32_t width, std::uint32_t height) const
 {
     return Image(m_pTransform->allocateOutputImage(inputImage.m_pImage->getDepth(),
                                                    inputImage.m_pImage->getColorSpace(),

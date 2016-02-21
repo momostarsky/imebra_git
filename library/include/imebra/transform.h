@@ -46,7 +46,7 @@ public:
 
     bool isEmpty() const;
 
-    Image allocateOutputImage(Image& pInputImage, std::uint32_t width, std::uint32_t height) const;
+    Image allocateOutputImage(const Image& pInputImage, std::uint32_t width, std::uint32_t height) const;
 
 	void runTransform(
             const Image& inputImage,
