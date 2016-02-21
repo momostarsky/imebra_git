@@ -308,6 +308,7 @@ void memory::assign(const std::uint8_t* pSource, const size_t sourceLength)
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 memoryPool::memoryPool(size_t memoryMinSize, size_t poolMaxSize):
+    m_minMemoryBlockSize(memoryMinSize), m_maxMemoryUsageSize(poolMaxSize),
     m_actualSize(0), m_firstUsedCell(0), m_firstFreeCell(0)
 {
 }
@@ -323,6 +324,13 @@ memoryPool::~memoryPool()
             m_firstUsedCell = 0;
         }
     }
+}
+
+void memoryPool::setMinMaxMemory(size_t memoryMinSize, size_t poolMaxSize)
+{
+    flush();
+    m_minMemoryBlockSize = memoryMinSize;
+    m_maxMemoryUsageSize = poolMaxSize;
 
 }
 
@@ -350,7 +358,7 @@ void memoryPool::reuseMemory(stringUint8* pString)
 	//  doesn't match the requested parameters
 	///////////////////////////////////////////////////////////
     size_t memorySize = pBuffer->size();
-	if(memorySize == 0 || memorySize < IMEBRA_MEMORY_POOL_MIN_SIZE || memorySize > IMEBRA_MEMORY_POOL_MAX_SIZE)
+    if(memorySize == 0 || memorySize < m_minMemoryBlockSize || memorySize > m_maxMemoryUsageSize)
 	{
         return;
 	}
@@ -380,7 +388,7 @@ void memoryPool::reuseMemory(stringUint8* pString)
 	// Remove old unused memory objects if the total unused
 	//  memory is bigger than the specified parameters
 	///////////////////////////////////////////////////////////
-	while(m_actualSize != 0 && m_actualSize > IMEBRA_MEMORY_POOL_MAX_SIZE)
+    while(m_actualSize != 0 && m_actualSize > m_maxMemoryUsageSize)
 	{
 		m_actualSize -= m_memorySize[m_firstUsedCell];
 		delete m_memoryPointer[m_firstUsedCell];
@@ -437,7 +445,7 @@ stringUint8* memoryPool::getMemory(size_t requestedSize)
 {
     IMEBRA_FUNCTION_START();
 
-    if(requestedSize < IMEBRA_MEMORY_POOL_MIN_SIZE || requestedSize > IMEBRA_MEMORY_POOL_MAX_SIZE)
+    if(requestedSize < m_minMemoryBlockSize || requestedSize > m_maxMemoryUsageSize)
     {
         return new stringUint8(requestedSize, 0);
     }
@@ -512,7 +520,7 @@ memoryPoolGetter::~memoryPoolGetter()
 
 thread_local std::unique_ptr<memoryPool> memoryPoolGetter::m_pool = std::unique_ptr<memoryPool>();
 
-memoryPool& memoryPoolGetter::getMemoryPoolLocal(size_t memoryMinSize, size_t poolMaxSize)
+memoryPool& memoryPoolGetter::getMemoryPoolLocal()
 {
     IMEBRA_FUNCTION_START();
 
@@ -520,14 +528,14 @@ memoryPool& memoryPoolGetter::getMemoryPoolLocal(size_t memoryMinSize, size_t po
     memoryPool* pPool = (memoryPool*)pthread_getspecific(m_key);
     if(pPool == 0)
     {
-        pPool = new memoryPool(memoryMinSize, poolMaxSize);
+        pPool = new memoryPool(IMEBRA_MEMORY_POOL_MIN_SIZE, IMEBRA_MEMORY_POOL_MAX_SIZE);
         pthread_setspecific(m_key, pPool);
     }
     return *pPool;
 #else
     if(m_pool.get() == 0)
     {
-        m_pool.reset(new memoryPool(memoryMinSize, poolMaxSize));
+        m_pool.reset(new memoryPool(IMEBRA_MEMORY_POOL_MIN_SIZE, IMEBRA_MEMORY_POOL_MAX_SIZE));
     }
     return *(m_pool.get());
 #endif

@@ -222,6 +222,8 @@ class memoryPool
 public:
     ~memoryPool();
 
+    void setMinMaxMemory(size_t memoryMinSize, size_t poolMaxSize);
+
 	/// \brief Discard all the currently unused memory.
 	///
     /// \return true if some unused memory has been deleted,
@@ -267,6 +269,9 @@ protected:
 
     std::array<size_t, IMEBRA_MEMORY_POOL_SLOTS> m_memorySize;
     std::array<stringUint8*, IMEBRA_MEMORY_POOL_SLOTS>  m_memoryPointer;
+
+    size_t m_minMemoryBlockSize;
+    size_t m_maxMemoryUsageSize;
     size_t m_actualSize;
     size_t m_firstUsedCell;
     size_t m_firstFreeCell;
@@ -290,9 +295,7 @@ protected:
     static memoryPoolGetter& getMemoryPoolGetter();
 
 public:
-    static memoryPool& getMemoryPoolLocal(
-            size_t memoryMinSize = IMEBRA_MEMORY_POOL_MIN_SIZE,
-            size_t poolMaxSize = IMEBRA_MEMORY_POOL_MAX_SIZE);
+    static memoryPool& getMemoryPoolLocal();
 
 protected:
     /// \internal
@@ -305,7 +308,6 @@ protected:
 #ifndef __APPLE__
     thread_local static std::unique_ptr<memoryPool> m_pool;
 #endif
-
 };
 
 } // namespace implementation

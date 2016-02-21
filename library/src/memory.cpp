@@ -73,4 +73,14 @@ void Memory::assign(const char* pSource, const size_t sourceLength)
     m_pMemory->assign((const std::uint8_t*)pSource, sourceLength);
 }
 
+void MemoryPool::flush()
+{
+    implementation::memoryPoolGetter::getMemoryPoolLocal().flush();
+}
+
+void MemoryPool::setMemoryPoolSize(size_t minMemoryBlockSize, size_t maxMemoryPoolSize)
+{
+    implementation::memoryPoolGetter::getMemoryPoolLocal().setMinMaxMemory(minMemoryBlockSize, maxMemoryPoolSize);
+}
+
 }

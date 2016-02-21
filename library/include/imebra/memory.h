@@ -71,7 +71,13 @@ protected:
 #ifndef SWIG
     std::shared_ptr<implementation::memory> m_pMemory;
 #endif
+};
 
+class IMEBRA_API MemoryPool
+{
+public:
+    static void flush();
+    static void setMemoryPoolSize(size_t minMemoryBlockSize, size_t maxMemoryPoolSize);
 };
 
 }
