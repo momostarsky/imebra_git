@@ -14,6 +14,7 @@ $fileHeader$
 
 #include <ios>
 #include <stdio.h>
+#include <mutex>
 
 
 namespace imebra
@@ -40,6 +41,8 @@ public:
 
 protected:
     FILE* m_openFile;
+
+    std::mutex m_mutex;
 
 };
 

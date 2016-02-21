@@ -17,7 +17,7 @@ $fileHeader$
 
 #include <map>
 #include <vector>
-
+#include <mutex>
 
 namespace imebra
 {
@@ -319,6 +319,8 @@ protected:
 	typedef std::shared_ptr<dataSet> ptrDataSet;
 	typedef std::vector<ptrDataSet> tEmbeddedDatasetsMap;
 	tEmbeddedDatasetsMap m_embeddedDataSets;
+
+    mutable std::mutex m_mutex;
 };
 
 /// @}

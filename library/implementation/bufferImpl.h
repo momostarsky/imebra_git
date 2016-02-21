@@ -15,7 +15,7 @@ $fileHeader$
 #include "dataHandlerNumericImpl.h"
 
 #include "charsetsListImpl.h"
-
+#include <mutex>
 
 namespace imebra
 {
@@ -324,6 +324,8 @@ private:
 	// The memory buffer
 	///////////////////////////////////////////////////////////
 	std::shared_ptr<memory> m_memory;
+
+    mutable std::mutex m_mutex;
 
 protected:
 	// The buffer's type, in Dicom standard

@@ -17,6 +17,7 @@ $fileHeader$
 #include <memory>
 #include <set>
 #include <map>
+#include <mutex>
 
 
 namespace imebra
@@ -204,48 +205,30 @@ public:
 	///////////////////////////////////////////////////////////
     void setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage, const std::string& transferSyntax, codecs::codec::quality quality);
 
-	/// \brief Get a frame's offset from the offset table.
-	///
-	/// @param frameNumber the number of the frame for which
-	///                     the offset is requested
-	/// @return the offset for the specified frame
-	///
-	///////////////////////////////////////////////////////////
-    std::uint32_t getFrameOffset(std::uint32_t frameNumber) const;
-
-	/// \brief Retrieve the first and the last buffers used
-	///         to store the image.
-	///
-	/// This function works only with the new Dicom3 streams,
-	///  not with the old NEMA format.
-	///
-	/// This function is used by setImage() and getImage().
-	///
-	/// @param frameNumber the frame for which the buffers 
-	///                     have to be retrieved
-	/// @param pFirstBuffer a pointer to a variable that will
-	///                     contain the id of the first buffer
-	///                     used to store the image
-	/// @param pEndBuffer  a pointer to a variable that will
-	///                     contain the id of the first buffer
-	///                     next to the last one used to store 
-	///                     the image
-	/// @return the total length of the buffers that contain
-	///          the image
-	///
-	///////////////////////////////////////////////////////////
+    /// \brief Retrieve the first and the last buffers used
+    ///         to store the image.
+    ///
+    /// This function works only with the new Dicom3 streams,
+    ///  not with the old NEMA format.
+    ///
+    /// This function is used by setImage() and getImage().
+    ///
+    /// @param frameNumber the frame for which the buffers
+    ///                     have to be retrieved
+    /// @param pFirstBuffer a pointer to a variable that will
+    ///                     contain the id of the first buffer
+    ///                     used to store the image
+    /// @param pEndBuffer  a pointer to a variable that will
+    ///                     contain the id of the first buffer
+    ///                     next to the last one used to store
+    ///                     the image
+    /// @return the total length of the buffers that contain
+    ///          the image
+    ///
+    ///////////////////////////////////////////////////////////
     size_t getFrameBufferIds(std::uint32_t frameNumber, std::uint32_t* pFirstBuffer, std::uint32_t* pEndBuffer) const;
-	
-	/// \brief Return the first buffer's id available where
-	///         a new frame can be saved.
-	///
-	/// @return the id of the first buffer available to store
-	///          a new frame
-	///
-	///////////////////////////////////////////////////////////
-    std::uint32_t getFirstAvailFrameBufferId() const;
 
-	//@}
+    //@}
 
 
 	///////////////////////////////////////////////////////////
@@ -931,6 +914,24 @@ public:
     void setCharsetsList(const charsetsList::tCharsetsList& charsetsList);
 
 private:
+    /// \brief Get a frame's offset from the offset table.
+    ///
+    /// @param frameNumber the number of the frame for which
+    ///                     the offset is requested
+    /// @return the offset for the specified frame
+    ///
+    ///////////////////////////////////////////////////////////
+    std::uint32_t getFrameOffset(std::uint32_t frameNumber) const;
+
+    /// \brief Return the first buffer's id available where
+    ///         a new frame can be saved.
+    ///
+    /// @return the id of the first buffer available to store
+    ///          a new frame
+    ///
+    ///////////////////////////////////////////////////////////
+    std::uint32_t getFirstAvailFrameBufferId() const;
+
     mutable std::vector<size_t> m_imagesPositions;
 
 	// Position of the sequence item in the stream. Used to
@@ -949,11 +950,11 @@ private:
     ///////////////////////////////////////////////////////////
     std::uint32_t getFrameBufferId(std::uint32_t offset) const;
 
-
-
     tGroups m_groups;
 
     charsetsList::tCharsetsList m_charsetsList;
+
+    mutable std::recursive_mutex m_mutex;
 };
 
 

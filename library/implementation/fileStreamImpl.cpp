@@ -49,7 +49,16 @@ void fileStream::openFile(const std::wstring& fileName, std::ios_base::openmode 
 {
     IMEBRA_FUNCTION_START();
 
-    close();
+    std::lock_guard<std::mutex> lock(m_mutex);
+
+    if(m_openFile != 0)
+    {
+        if(::fclose(m_openFile) != 0)
+        {
+            IMEBRA_THROW(StreamCloseError, "Error while closing the file");
+        }
+        m_openFile = 0;
+    }
 
     std::wstring strMode;
 
@@ -118,6 +127,8 @@ void fileStream::close()
 {
     IMEBRA_FUNCTION_START();
 
+    std::lock_guard<std::mutex> lock(m_mutex);
+
     if(m_openFile != 0)
     {
         if(::fclose(m_openFile) != 0)
@@ -144,6 +155,8 @@ void fileStream::close()
 ///////////////////////////////////////////////////////////
 fileStream::~fileStream()
 {
+    std::lock_guard<std::mutex> lock(m_mutex);
+
     if(m_openFile != 0)
     {
         ::fclose(m_openFile);
@@ -225,6 +238,8 @@ void fileStreamOutput::write(size_t startPosition, const std::uint8_t* pBuffer, 
 {
     IMEBRA_FUNCTION_START();
 
+    std::lock_guard<std::mutex> lock(m_mutex);
+
 	::fseek(m_openFile, startPosition, SEEK_SET);
 	if(ferror(m_openFile) != 0)
 	{
@@ -252,6 +267,8 @@ void fileStreamOutput::write(size_t startPosition, const std::uint8_t* pBuffer, 
 size_t fileStreamInput::read(size_t startPosition, std::uint8_t* pBuffer, size_t bufferLength)
 {
     IMEBRA_FUNCTION_START();
+
+    std::lock_guard<std::mutex> lock(m_mutex);
 
 	::fseek(m_openFile, startPosition, SEEK_SET);
 	if(ferror(m_openFile) != 0)

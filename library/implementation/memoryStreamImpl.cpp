@@ -70,6 +70,8 @@ void memoryStreamOutput::write(size_t startPosition, const std::uint8_t* pBuffer
 		return;
 	}
 
+    std::lock_guard<std::mutex> lock(m_mutex);
+
 	// Copy the buffer into the memory
 	///////////////////////////////////////////////////////////
 	if(startPosition + bufferLength > m_memory->size())
@@ -103,6 +105,8 @@ size_t memoryStreamInput::read(size_t startPosition, std::uint8_t* pBuffer, size
 	{
 		return 0;
 	}
+
+    std::lock_guard<std::mutex> lock(m_mutex);
 
 	// Don't read if the requested position isn't valid
 	///////////////////////////////////////////////////////////

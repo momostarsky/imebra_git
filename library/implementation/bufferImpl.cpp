@@ -165,6 +165,8 @@ std::shared_ptr<handlers::readingDataHandler> buffer::getReadingDataHandler() co
 {
     IMEBRA_FUNCTION_START();
 
+    std::lock_guard<std::mutex> lock(m_mutex);
+
     std::shared_ptr<const memory> localMemory(getLocalMemory());
 
     // Retrieve an Application entity handler
@@ -358,6 +360,8 @@ std::shared_ptr<handlers::readingDataHandler> buffer::getReadingDataHandler() co
 std::shared_ptr<handlers::writingDataHandler> buffer::getWritingDataHandler(std::uint32_t size)
 {
     IMEBRA_FUNCTION_START();
+
+    std::lock_guard<std::mutex> lock(m_mutex);
 
     // Reset the pointer to the data handler
     ///////////////////////////////////////////////////////////
@@ -565,6 +569,8 @@ std::shared_ptr<streamReader> buffer::getStreamReader()
 {
     IMEBRA_FUNCTION_START();
 
+    std::lock_guard<std::mutex> lock(m_mutex);
+
 	// If the object must be loaded from the original stream,
 	//  then return the original stream
 	///////////////////////////////////////////////////////////
@@ -599,16 +605,8 @@ std::shared_ptr<streamWriter> buffer::getStreamWriter()
 {
     IMEBRA_FUNCTION_START();
 
-	// Build a stream from the buffer's memory
-	///////////////////////////////////////////////////////////
-    std::shared_ptr<streamWriter> writer;
     std::shared_ptr<handlers::writingDataHandlerRaw> tempHandlerRaw = getWritingDataHandlerRaw(0);
-	if(tempHandlerRaw != 0)
-	{
-        writer = std::make_shared<streamWriter>(std::make_shared<bufferStreamOutput>(tempHandlerRaw), tempHandlerRaw->getSize());
-	}
-
-	return writer;
+    return std::make_shared<streamWriter>(std::make_shared<bufferStreamOutput>(tempHandlerRaw), tempHandlerRaw->getSize());
 
 	IMEBRA_FUNCTION_END();
 }
@@ -628,6 +626,8 @@ std::shared_ptr<handlers::readingDataHandlerRaw> buffer::getReadingDataHandlerRa
 {
     IMEBRA_FUNCTION_START();
 
+    std::lock_guard<std::mutex> lock(m_mutex);
+
     return std::make_shared<handlers::readingDataHandlerRaw>(getLocalMemory(), m_bufferType);
 
 	IMEBRA_FUNCTION_END();
@@ -637,6 +637,8 @@ std::shared_ptr<handlers::readingDataHandlerRaw> buffer::getReadingDataHandlerRa
 std::shared_ptr<handlers::writingDataHandlerRaw> buffer::getWritingDataHandlerRaw(std::uint32_t size)
 {
     IMEBRA_FUNCTION_START();
+
+    std::lock_guard<std::mutex> lock(m_mutex);
 
     return std::make_shared<handlers::writingDataHandlerRaw>(shared_from_this(), size, m_bufferType);
 
@@ -654,6 +656,8 @@ std::shared_ptr<handlers::writingDataHandlerRaw> buffer::getWritingDataHandlerRa
 size_t buffer::getBufferSizeBytes() const
 {
     IMEBRA_FUNCTION_START();
+
+    std::lock_guard<std::mutex> lock(m_mutex);
 
     // The buffer has not been loaded yet
 	///////////////////////////////////////////////////////////
@@ -688,10 +692,11 @@ void buffer::commit(std::shared_ptr<memory> newMemory, const std::string& newBuf
 {
     IMEBRA_FUNCTION_START();
 
-    commit(newMemory, newBufferType);
+    std::lock_guard<std::mutex> lock(m_mutex);
 
-	// Commit the charsets
-	///////////////////////////////////////////////////////////
+    m_memory = newMemory;
+    m_bufferType = newBufferType;
+    m_originalStream.reset();
     m_charsetsList = newCharsetsList;
 
 	IMEBRA_FUNCTION_END();
@@ -709,18 +714,10 @@ void buffer::commit(std::shared_ptr<memory> newMemory, const std::string& newBuf
 {
     IMEBRA_FUNCTION_START();
 
-    // Commit the memory buffer
-    ///////////////////////////////////////////////////////////
+    std::lock_guard<std::mutex> lock(m_mutex);
+
     m_memory = newMemory;
-
-    // Commit the buffer type
-    ///////////////////////////////////////////////////////////
     m_bufferType = newBufferType;
-
-    // The buffer has been updated and the original stream
-    //  is still storing the old version. We don't need
-    //  the original stream anymore, then release it.
-    ///////////////////////////////////////////////////////////
     m_originalStream.reset();
 
     IMEBRA_FUNCTION_END();
@@ -738,7 +735,12 @@ void buffer::commit(std::shared_ptr<memory> newMemory, const std::string& newBuf
 ///////////////////////////////////////////////////////////
 std::string buffer::getDataType() const
 {
+    IMEBRA_FUNCTION_START();
+
+    std::lock_guard<std::mutex> lock(m_mutex);
     return m_bufferType;
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -755,6 +757,7 @@ void buffer::setCharsetsList(const charsetsList::tCharsetsList& charsets)
 {
     IMEBRA_FUNCTION_START();
 
+    std::lock_guard<std::mutex> lock(m_mutex);
     m_charsetsList = charsets;
 
 	IMEBRA_FUNCTION_END();
@@ -774,6 +777,7 @@ void buffer::getCharsetsList(charsetsList::tCharsetsList* pCharsetsList) const
 {
     IMEBRA_FUNCTION_START();
 
+    std::lock_guard<std::mutex> lock(m_mutex);
     pCharsetsList->insert(pCharsetsList->end(), m_charsetsList.begin(), m_charsetsList.end());
 
 	IMEBRA_FUNCTION_END();

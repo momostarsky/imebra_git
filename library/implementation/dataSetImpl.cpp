@@ -61,6 +61,8 @@ std::shared_ptr<data> dataSet::getTagThrow(std::uint16_t groupId, std::uint16_t 
 {
     IMEBRA_FUNCTION_START();
 
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
+
     tGroups::const_iterator findGroup(m_groups.find(groupId));
     if(findGroup == m_groups.end())
     {
@@ -88,6 +90,8 @@ std::shared_ptr<data> dataSet::getTagCreate(std::uint16_t groupId, std::uint16_t
 {
     IMEBRA_FUNCTION_START();
 
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
+
     if(m_groups[groupId].size() <= order)
     {
         m_groups[groupId].resize(order + 1);
@@ -109,8 +113,7 @@ bool dataSet::bufferExists(std::uint16_t groupId, std::uint16_t order, std::uint
 
     try
     {
-        std::shared_ptr<data> tag(getTagThrow(groupId, order, tagId));
-        return tag != 0 && tag->bufferExists(bufferId);
+        return getTagThrow(groupId, order, tagId)->bufferExists(bufferId);
     }
     catch(const MissingDataElementError&)
     {
@@ -133,6 +136,8 @@ bool dataSet::bufferExists(std::uint16_t groupId, std::uint16_t order, std::uint
 std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
 {
     IMEBRA_FUNCTION_START();
+
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
 	// Retrieve the transfer syntax
 	///////////////////////////////////////////////////////////
@@ -318,6 +323,8 @@ std::shared_ptr<image> dataSet::getModalityImage(std::uint32_t frameNumber) cons
 {
     IMEBRA_FUNCTION_START();
 
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
+
     std::shared_ptr<image> originalImage = getImage(frameNumber);
 
     std::shared_ptr<transforms::colorTransforms::colorTransformsFactory> colorFactory(transforms::colorTransforms::colorTransformsFactory::getColorTransformsFactory());
@@ -377,6 +384,8 @@ std::shared_ptr<image> dataSet::getModalityImage(std::uint32_t frameNumber) cons
 void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage, const std::string& transferSyntax, codecs::codec::quality quality)
 {
     IMEBRA_FUNCTION_START();
+
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
 	// bDontChangeAttributes is true if some images already
 	//  exist in the dataset and we must save the new image
@@ -718,6 +727,8 @@ size_t dataSet::getFrameBufferIds(std::uint32_t frameNumber, std::uint32_t* pFir
 {
     IMEBRA_FUNCTION_START();
 
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
+
     try
     {
         std::uint32_t startOffset = getFrameOffset(frameNumber);
@@ -815,6 +826,8 @@ std::shared_ptr<lut> dataSet::getLutThrow(std::uint16_t groupId, std::uint16_t t
 {
     IMEBRA_FUNCTION_START();
 
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
+
     std::shared_ptr<dataSet> embeddedLUT = getSequenceItemThrow(groupId, 0, tagId, lutId);
     std::shared_ptr<handlers::readingDataHandler> descriptorHandle = embeddedLUT->getReadingDataHandlerThrow(0x0028, 0x0, 0x3002, 0x0);
     std::shared_ptr<handlers::readingDataHandler> dataHandle = embeddedLUT->getReadingDataHandlerThrow(0x0028, 0x0, 0x3006, 0x0);
@@ -843,8 +856,7 @@ std::shared_ptr<waveform> dataSet::getWaveformThrow(std::uint32_t waveformId)
 {
     IMEBRA_FUNCTION_START();
 
-    std::shared_ptr<dataSet> embeddedWaveform(getSequenceItemThrow(0x5400, 0, 0x0100, waveformId));
-    return std::make_shared<waveform>(embeddedWaveform);
+    return std::make_shared<waveform>(getSequenceItemThrow(0x5400, 0, 0x0100, waveformId));
 
 	IMEBRA_FUNCTION_END();
 }
@@ -897,6 +909,8 @@ std::int32_t dataSet::getSignedLong(std::uint16_t groupId, std::uint16_t order, 
 void dataSet::setSignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, std::int32_t newValue, const std::string& defaultType /* = "" */)
 {
     IMEBRA_FUNCTION_START();
+
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
     std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, bufferId, defaultType);
     dataHandler->setSize(1);
@@ -954,6 +968,8 @@ void dataSet::setUnsignedLong(std::uint16_t groupId, std::uint16_t order, std::u
 {
     IMEBRA_FUNCTION_START();
 
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
+
     std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, bufferId, defaultType);
     dataHandler->setSize(1);
     dataHandler->setUnsignedLong(0, newValue);
@@ -1008,6 +1024,8 @@ double dataSet::getDouble(std::uint16_t groupId, std::uint16_t order, std::uint1
 void dataSet::setDouble(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, double newValue, const std::string& defaultType /* = "" */)
 {
     IMEBRA_FUNCTION_START();
+
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
     std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, bufferId, defaultType);
     dataHandler->setSize(1);
@@ -1100,6 +1118,8 @@ void dataSet::setString(std::uint16_t groupId, std::uint16_t order, std::uint16_
 {
     IMEBRA_FUNCTION_START();
 
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
+
     std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, bufferId, defaultType);
     dataHandler->setSize(1);
     dataHandler->setString(0, newString);
@@ -1121,6 +1141,8 @@ void dataSet::setUnicodeString(std::uint16_t groupId, std::uint16_t order, std::
 {
     IMEBRA_FUNCTION_START();
 
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
+
     std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, bufferId, defaultType);
     dataHandler->setSize(1);
     dataHandler->setUnicodeString(0, newString);
@@ -1131,6 +1153,8 @@ void dataSet::setUnicodeString(std::uint16_t groupId, std::uint16_t order, std::
 void dataSet::setAge(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, std::uint32_t age, ageUnit_t units, const std::string& defaultType /* = "" */)
 {
     IMEBRA_FUNCTION_START();
+
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
     std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, bufferId, defaultType);
     dataHandler->setSize(1);
@@ -1172,6 +1196,8 @@ std::uint32_t dataSet::getAge(std::uint16_t groupId, std::uint16_t order, std::u
 void dataSet::setDate(uint16_t groupId, uint16_t order, uint16_t tagId, size_t bufferId, uint32_t year, uint32_t month, uint32_t day, uint32_t hour, uint32_t minutes, uint32_t seconds, uint32_t nanoseconds, int32_t offsetHours, int32_t offsetMinutes, const std::string& defaultType /* = "" */)
 {
     IMEBRA_FUNCTION_START();
+
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
     std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, bufferId, defaultType);
     dataHandler->setSize(1);
@@ -1383,6 +1409,8 @@ void dataSet::updateCharsetTag()
 {
     IMEBRA_FUNCTION_START();
 
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
+
     charsetsList::tCharsetsList charsets;
 	getCharsetsList(&charsets);
     std::shared_ptr<handlers::writingDataHandler> charsetHandler(getWritingDataHandler(0x0008, 0, 0x0005, 0));
@@ -1409,6 +1437,8 @@ void dataSet::updateCharsetTag()
 void dataSet::updateTagsCharset()
 {
     IMEBRA_FUNCTION_START();
+
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
     charsetsList::tCharsetsList charsets;
     try
@@ -1441,6 +1471,8 @@ void dataSet::updateTagsCharset()
 ///////////////////////////////////////////////////////////
 void dataSet::setItemOffset(std::uint32_t offset)
 {
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
+
 	m_itemOffset = offset;
 }
 
@@ -1456,12 +1488,16 @@ void dataSet::setItemOffset(std::uint32_t offset)
 ///////////////////////////////////////////////////////////
 std::uint32_t dataSet::getItemOffset() const
 {
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
+
 	return m_itemOffset;
 }
 
 void dataSet::getCharsetsList(charsetsList::tCharsetsList* pCharsetsList) const
 {
     IMEBRA_FUNCTION_START();
+
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
     for(tGroups::const_iterator scanGroups(m_groups.begin()), endGroups(m_groups.end()); scanGroups != endGroups; ++scanGroups)
     {
@@ -1484,6 +1520,8 @@ dataSet::tGroupsIds dataSet::getGroups() const
 {
     IMEBRA_FUNCTION_START();
 
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
+
     dataSet::tGroupsIds groups;
 
     for(tGroups::const_iterator scanGroups(m_groups.begin()), endGroups(m_groups.end()); scanGroups != endGroups; ++scanGroups)
@@ -1499,6 +1537,8 @@ dataSet::tGroupsIds dataSet::getGroups() const
 size_t dataSet::getGroupsNumber(uint16_t groupId) const
 {
     IMEBRA_FUNCTION_START();
+
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
     dataSet::tGroups::const_iterator findGroup(m_groups.find(groupId));
 
@@ -1518,6 +1558,8 @@ const dataSet::tTags& dataSet::getGroupTags(std::uint16_t groupId, size_t groupO
 
     static const dataSet::tTags emptyTags;
 
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
+
     tGroups::const_iterator findGroup(m_groups.find(groupId));
     if(findGroup == m_groups.end() || findGroup->second.size() <= groupOrder)
     {
@@ -1532,6 +1574,8 @@ const dataSet::tTags& dataSet::getGroupTags(std::uint16_t groupId, size_t groupO
 void dataSet::setCharsetsList(const charsetsList::tCharsetsList& charsetsList)
 {
     IMEBRA_FUNCTION_START();
+
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
     m_charsetsList = charsetsList;
     for(tGroups::iterator scanGroups(m_groups.begin()), endGroups(m_groups.end()); scanGroups != endGroups; ++scanGroups)

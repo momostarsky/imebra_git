@@ -12,7 +12,7 @@ $fileHeader$
 
 #include "baseStreamImpl.h"
 #include "memoryImpl.h"
-
+#include <mutex>
 
 namespace imebra
 {
@@ -55,6 +55,8 @@ public:
 
 protected:
     std::shared_ptr<const memory> m_memory;
+
+    std::mutex m_mutex;
 };
 
 class memoryStreamOutput : public baseStreamOutput
@@ -82,6 +84,8 @@ public:
 
 protected:
     std::shared_ptr<memory> m_memory;
+
+    std::mutex m_mutex;
 };
 
 } // namespace implementation
