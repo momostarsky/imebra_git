@@ -207,8 +207,7 @@ int main(int argc, char* argv[])
                 }
             }
 
-            Image finalImage;
-            finalImage.create(width, height, Image::bitDepth::depthU8, "YBR_FULL", 7);
+            Image finalImage(width, height, bitDepth::depthU8, "YBR_FULL", 7);
 
             // Scan through the frames
             //////////////////////////
@@ -246,7 +245,7 @@ int main(int argc, char* argv[])
                 FileStreamOutput writeJpeg;
                 writeJpeg.openFile(jpegFileName.str());
                 StreamWriter writer(writeJpeg);
-                CodecFactory::saveImage(writer, finalImage, jpegTransferSyntax, imageQuality_t::high, "OB", 8, false, false, true, false);
+                CodecFactory::saveImage(writer, finalImage, jpegTransferSyntax, imageQuality_t::veryHigh, "OB", 8, false, false, true, false);
 
                 ++framesCount;
             }
