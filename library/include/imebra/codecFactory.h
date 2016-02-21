@@ -51,15 +51,9 @@ public:
             bool bInterleaved,
             bool b2Complement);
 
-    enum codecType
-    {
-        dicom,
-        jpeg
-    };
-
-    static void save(const DataSet& dataSet, StreamWriter& writer, codecType codecType);
-    static void save(const DataSet& dataSet, const std::wstring& fileName, codecType codecType);
-    static void save(const DataSet& dataSet, const std::string& fileName, codecType codecType);
+    static void save(const DataSet& dataSet, StreamWriter& writer, codecType_t codecType);
+    static void save(const DataSet& dataSet, const std::wstring& fileName, codecType_t codecType);
+    static void save(const DataSet& dataSet, const std::string& fileName, codecType_t codecType);
 };
 
 }

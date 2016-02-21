@@ -134,7 +134,7 @@ TEST(dicomCodecTest, testDicom)
 
                         MemoryStreamOutput writeStream(streamMemory);
                         StreamWriter writer(writeStream);
-                        CodecFactory::save(testDataSet, writer, CodecFactory::dicom);
+                        CodecFactory::save(testDataSet, writer, codecType_t::dicom);
 					}
 
                     MemoryStreamInput readStream(streamMemory);

@@ -63,13 +63,13 @@ void CodecFactory::saveImage(
 }
 
 
-void CodecFactory::save(const DataSet& dataSet, StreamWriter& writer, codecType codecType)
+void CodecFactory::save(const DataSet& dataSet, StreamWriter& writer, codecType_t codecType)
 {
     std::shared_ptr<imebra::implementation::codecs::codec> codec;
 
     switch(codecType)
     {
-    case jpeg:
+    case codecType_t::jpeg:
         codec = std::make_shared<imebra::implementation::codecs::jpegCodec>();
         break;
     default:
@@ -80,7 +80,7 @@ void CodecFactory::save(const DataSet& dataSet, StreamWriter& writer, codecType 
     codec->write(writer.m_pWriter, dataSet.m_pDataSet);
 }
 
-void CodecFactory::save(const DataSet &dataSet, const std::wstring& fileName, codecType codecType)
+void CodecFactory::save(const DataSet &dataSet, const std::wstring& fileName, codecType_t codecType)
 {
     FileStreamOutput file;
     file.openFile(fileName);
@@ -89,7 +89,7 @@ void CodecFactory::save(const DataSet &dataSet, const std::wstring& fileName, co
     CodecFactory::save(dataSet, writer, codecType);
 }
 
-void CodecFactory::save(const DataSet &dataSet, const std::string& fileName, codecType codecType)
+void CodecFactory::save(const DataSet &dataSet, const std::string& fileName, codecType_t codecType)
 {
     FileStreamOutput file;
     file.openFile(fileName);

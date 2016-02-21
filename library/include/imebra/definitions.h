@@ -128,6 +128,12 @@ enum class directoryRecordType_t
     endOfDirectoryRecordTypes
 };
 
+enum class codecType_t
+{
+    dicom,
+    jpeg
+};
+
 typedef std::list<std::string> fileParts_t;
 
 struct IMEBRA_API Age
