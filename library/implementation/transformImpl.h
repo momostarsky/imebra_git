@@ -23,11 +23,11 @@ $fileHeader$
 
 #define DEFINE_RUN_TEMPLATE_TRANSFORM \
 virtual void runTransformHandlers(\
-    std::shared_ptr<imebra::implementation::handlers::readingDataHandlerNumericBase> inputHandler, bitDepth inputDepth, std::uint32_t inputHandlerWidth, const std::string& inputHandlerColorSpace,\
+    std::shared_ptr<imebra::implementation::handlers::readingDataHandlerNumericBase> inputHandler, bitDepth_t inputDepth, std::uint32_t inputHandlerWidth, const std::string& inputHandlerColorSpace,\
     std::shared_ptr<imebra::implementation::palette> inputPalette,\
     std::uint32_t inputHighBit,\
     std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight,\
-    std::shared_ptr<imebra::implementation::handlers::writingDataHandlerNumericBase> outputHandler, bitDepth outputDepth, std::uint32_t outputHandlerWidth, const std::string& outputHandlerColorSpace,\
+    std::shared_ptr<imebra::implementation::handlers::writingDataHandlerNumericBase> outputHandler, bitDepth_t outputDepth, std::uint32_t outputHandlerWidth, const std::string& outputHandlerColorSpace,\
     std::shared_ptr<imebra::implementation::palette> outputPalette,\
     std::uint32_t outputHighBit,\
     std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY) const\
@@ -160,7 +160,7 @@ public:
 	///
 	///////////////////////////////////////////////////////////
     virtual std::shared_ptr<image> allocateOutputImage(
-            bitDepth inputDepth,
+            bitDepth_t inputDepth,
             const std::string& inputColorSpace,
             std::uint32_t inputHighBit,
             std::shared_ptr<palette> inputPalette,
@@ -193,11 +193,11 @@ public:
             std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY) const;
 
     virtual void runTransformHandlers(
-            std::shared_ptr<handlers::readingDataHandlerNumericBase> inputHandler, bitDepth inputDepth, std::uint32_t inputHandlerWidth, const std::string& inputHandlerColorSpace,
+            std::shared_ptr<handlers::readingDataHandlerNumericBase> inputHandler, bitDepth_t inputDepth, std::uint32_t inputHandlerWidth, const std::string& inputHandlerColorSpace,
             std::shared_ptr<palette> inputPalette,
             std::uint32_t inputHighBit,
             std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight,
-            std::shared_ptr<handlers::writingDataHandlerNumericBase> outputHandler, bitDepth outputDepth, std::uint32_t outputHandlerWidth, const std::string& outputHandlerColorSpace,
+            std::shared_ptr<handlers::writingDataHandlerNumericBase> outputHandler, bitDepth_t outputDepth, std::uint32_t outputHandlerWidth, const std::string& outputHandlerColorSpace,
             std::shared_ptr<palette> outputPalette,
             std::uint32_t outputHighBit,
             std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY) const = 0;

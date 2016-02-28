@@ -122,10 +122,10 @@ public:
 	///                 just created tag is returned.
 	///
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<data> getTagThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId) const;
-    std::shared_ptr<data> getTagCreate(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId);
+    std::shared_ptr<data> getTagThrow(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId) const;
+    std::shared_ptr<data> getTagCreate(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId);
 
-    bool bufferExists(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId) const;
+    bool bufferExists(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId) const;
 	
 	//@}
 
@@ -280,7 +280,7 @@ public:
 	///                 dataset is returned
 	///
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<dataSet> getSequenceItemThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t itemId) const;
+    std::shared_ptr<dataSet> getSequenceItemThrow(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t itemId) const;
 
 	/// \brief Retrieve a LUT.
 	///
@@ -353,9 +353,9 @@ public:
 	/// @return        The tag's content, as a signed long
 	///
 	///////////////////////////////////////////////////////////
-    std::int32_t getSignedLongThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
+    std::int32_t getSignedLongThrow(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
 
-    std::int32_t getSignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::int32_t defaultValue) const;
+    std::int32_t getSignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::int32_t defaultValue) const;
 
 	/// \brief Set a tag's value as a signed long.
 	///
@@ -386,7 +386,7 @@ public:
 	///                 this parameter
 	///
 	///////////////////////////////////////////////////////////
-    void setSignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, std::int32_t newValue, const std::string& defaultType = "");
+    void setSignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::int32_t newValue, const std::string& defaultType = "");
 
 	/// \brief Retrieve a tag's value as an unsigned long.
 	///
@@ -413,9 +413,9 @@ public:
 	/// @return        The tag's content, as an unsigned long
 	///
 	///////////////////////////////////////////////////////////
-    std::uint32_t getUnsignedLongThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
+    std::uint32_t getUnsignedLongThrow(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
 
-    std::uint32_t getUnsignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::uint32_t defaultValue) const;
+    std::uint32_t getUnsignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::uint32_t defaultValue) const;
 
 	/// \brief Set a tag's value as an unsigned long.
 	///
@@ -446,7 +446,7 @@ public:
 	///                 this parameter
 	///
 	///////////////////////////////////////////////////////////
-    void setUnsignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, std::uint32_t newValue, const std::string& defaultType = "");
+    void setUnsignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::uint32_t newValue, const std::string& defaultType = "");
 
 	/// \brief Retrieve a tag's value as a double.
 	///
@@ -473,9 +473,9 @@ public:
 	/// @return        The tag's content, as a double
 	///
 	///////////////////////////////////////////////////////////
-    double getDoubleThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
+    double getDoubleThrow(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
 
-    double getDouble(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, double defaultValue) const;
+    double getDouble(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, double defaultValue) const;
 	
 	/// \brief Set a tag's value as a double.
 	///
@@ -506,7 +506,7 @@ public:
 	///                 this parameter
 	///
 	///////////////////////////////////////////////////////////
-    void setDouble(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, double newValue, const std::string& defaultType = "");
+    void setDouble(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, double newValue, const std::string& defaultType = "");
 
 	/// \brief Retrieve a tag's value as a string.
 	///        getUnicodeString() is preferred over this
@@ -535,9 +535,9 @@ public:
 	/// @return        The tag's content, as a string
 	///
 	///////////////////////////////////////////////////////////
-    std::string getStringThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
+    std::string getStringThrow(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
 
-    std::string getString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, const std::string& defaultValue) const;
+    std::string getString(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, const std::string& defaultValue) const;
 
 	/// \brief Retrieve a tag's value as an unicode string.
 	///
@@ -564,9 +564,9 @@ public:
 	/// @return        The tag's content, as an unicode string
 	///
 	///////////////////////////////////////////////////////////
-    std::wstring getUnicodeStringThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
+    std::wstring getUnicodeStringThrow(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
 
-    std::wstring getUnicodeString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, const std::wstring& defaultValue) const;
+    std::wstring getUnicodeString(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, const std::wstring& defaultValue) const;
 
 	/// \brief Set a tag's value as a string.
 	///        setUnicodeString() is preferred over this
@@ -599,7 +599,7 @@ public:
 	///                 this parameter
 	///
 	///////////////////////////////////////////////////////////
-    void setString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, const std::string& newString, const std::string& defaultType = "");
+    void setString(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::string& newString, const std::string& defaultType = "");
 
 	/// \brief Set a tag's value as an unicode string.
 	///
@@ -630,17 +630,17 @@ public:
 	///                 this parameter
 	///
 	///////////////////////////////////////////////////////////
-    void setUnicodeString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, const std::wstring& newString, const std::string& defaultType = "");
+    void setUnicodeString(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::wstring& newString, const std::string& defaultType = "");
 
-    void setAge(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, std::uint32_t age, ageUnit_t units, const std::string& defaultType = "");
+    void setAge(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::uint32_t age, ageUnit_t units, const std::string& defaultType = "");
 
-    std::uint32_t getAgeThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, ageUnit_t* pUnits) const;
+    std::uint32_t getAgeThrow(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, ageUnit_t* pUnits) const;
 
-    std::uint32_t getAge(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId,
+    std::uint32_t getAge(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId,
                                   size_t elementNumber, ageUnit_t* pUnits,
                                   std::uint32_t defaultAge, ageUnit_t defaultUnits) const;
 
-    void setDate(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId,
+    void setDate(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId,
         std::uint32_t year,
         std::uint32_t month,
         std::uint32_t day,
@@ -651,7 +651,7 @@ public:
         std::int32_t offsetHours,
         std::int32_t offsetMinutes, const std::string& defaultType = "");
 
-    void getDateThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber,
+    void getDateThrow(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber,
         std::uint32_t* pYear,
         std::uint32_t* pMonth,
         std::uint32_t* pDay,
@@ -662,7 +662,7 @@ public:
         std::int32_t* pOffsetHours,
         std::int32_t* pOffsetMinutes) const;
 
-    void getDate(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber,
+    void getDate(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber,
         std::uint32_t* pYear,
         std::uint32_t* pMonth,
         std::uint32_t* pDay,
@@ -719,7 +719,7 @@ public:
 	/// @return           a string with the tag's type.
 	///
 	///////////////////////////////////////////////////////////
-    std::string getDataTypeThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId) const;
+    std::string getDataTypeThrow(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId) const;
 
 	/// \brief Return a data handler for the specified tag's
 	///         buffer.
@@ -751,8 +751,8 @@ public:
 	/// @return a pointer to the data handler.
 	///
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<handlers::readingDataHandler> getReadingDataHandlerThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId) const;
-    std::shared_ptr<handlers::writingDataHandler> getWritingDataHandler(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, const std::string& defaultType="");
+    std::shared_ptr<handlers::readingDataHandler> getReadingDataHandlerThrow(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId) const;
+    std::shared_ptr<handlers::writingDataHandler> getWritingDataHandler(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::string& defaultType="");
 
 	/// \brief Return a raw data handler for the specified 
 	///         tag's buffer.
@@ -785,8 +785,8 @@ public:
 	/// @return a pointer to the data handler.
 	///
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<handlers::readingDataHandlerRaw> getReadingDataHandlerRawThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId) const;
-    std::shared_ptr<handlers::writingDataHandlerRaw> getWritingDataHandlerRaw(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, const std::string& defaultType="");
+    std::shared_ptr<handlers::readingDataHandlerRaw> getReadingDataHandlerRawThrow(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId) const;
+    std::shared_ptr<handlers::writingDataHandlerRaw> getWritingDataHandlerRaw(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::string& defaultType="");
 
 	/// \brief Return a streamReader connected to the specified
 	///         tag's buffer's memory.
@@ -809,7 +809,7 @@ public:
 	/// @return a pointer to the streamReader
 	///
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<streamReader> getStreamReaderThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId) const;
+    std::shared_ptr<streamReader> getStreamReaderThrow(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId) const;
 
 	/// \brief Return a streamWriter connected to the specified
 	///         tag's buffer's memory.
@@ -834,7 +834,7 @@ public:
 	/// @return a pointer to the streamWriter
 	///
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<streamWriter> getStreamWriter(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, const std::string& dataType = "");
+    std::shared_ptr<streamWriter> getStreamWriter(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::string& dataType = "");
 
 	//@}
 

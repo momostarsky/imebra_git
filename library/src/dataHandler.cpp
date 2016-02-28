@@ -26,14 +26,35 @@ ReadingDataHandler& ReadingDataHandler::operator=(const ReadingDataHandler& righ
 ReadingDataHandler::ReadingDataHandler(std::shared_ptr<imebra::implementation::handlers::readingDataHandler> pDataHandler): m_pDataHandler(pDataHandler)
 {}
 
-void ReadingDataHandler::close()
-{
-    m_pDataHandler.reset();
-}
-
 size_t ReadingDataHandler::getSize() const
 {
     return m_pDataHandler->getSize();
+}
+
+size_t ReadingDataHandler::getUnitSize() const
+{
+    std::shared_ptr<imebra::implementation::handlers::readingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<imebra::implementation::handlers::readingDataHandlerNumericBase>(m_pDataHandler);
+    if(numericDataHandler == 0)
+    {
+        return 0;
+    }
+    else
+    {
+        return numericDataHandler->getUnitSize();
+    }
+}
+
+bool ReadingDataHandler::isSigned() const
+{
+    std::shared_ptr<imebra::implementation::handlers::readingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<imebra::implementation::handlers::readingDataHandlerNumericBase>(m_pDataHandler);
+    if(numericDataHandler == 0)
+    {
+        return true;
+    }
+    else
+    {
+        return numericDataHandler->isSigned();
+    }
 }
 
 std::string ReadingDataHandler::getDataType() const
@@ -148,6 +169,32 @@ void WritingDataHandler::setSize(const size_t elementsNumber)
 size_t WritingDataHandler::getSize() const
 {
     return m_pDataHandler->getSize();
+}
+
+size_t WritingDataHandler::getUnitSize() const
+{
+    std::shared_ptr<imebra::implementation::handlers::writingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<imebra::implementation::handlers::writingDataHandlerNumericBase>(m_pDataHandler);
+    if(numericDataHandler == 0)
+    {
+        return 0;
+    }
+    else
+    {
+        return numericDataHandler->getUnitSize();
+    }
+}
+
+bool WritingDataHandler::isSigned() const
+{
+    std::shared_ptr<imebra::implementation::handlers::writingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<imebra::implementation::handlers::writingDataHandlerNumericBase>(m_pDataHandler);
+    if(numericDataHandler == 0)
+    {
+        return true;
+    }
+    else
+    {
+        return numericDataHandler->isSigned();
+    }
 }
 
 std::string WritingDataHandler::getDataType() const

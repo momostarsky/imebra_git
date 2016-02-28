@@ -33,7 +33,7 @@ namespace implementation
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 
-image::image(uint32_t sizeX, uint32_t sizeY, bitDepth depth, const std::string &colorSpace, uint32_t highBit):
+image::image(uint32_t sizeX, uint32_t sizeY, bitDepth_t depth, const std::string &colorSpace, uint32_t highBit):
     m_channelsNumber(0),
     m_imageDepth(depth),
     m_highBit(highBit),
@@ -70,27 +70,27 @@ image::image(uint32_t sizeX, uint32_t sizeY, bitDepth depth, const std::string &
 
     switch(depth)
     {
-    case bitDepth::depthU8:
+    case bitDepth_t::depthU8:
         m_bufferDataType = "OB";
         defaultHighBit=7;
         break;
-    case bitDepth::depthS8:
+    case bitDepth_t::depthS8:
         m_bufferDataType = "SB";
         defaultHighBit=7;
         break;
-    case bitDepth::depthU16:
+    case bitDepth_t::depthU16:
         m_bufferDataType = "US";
         defaultHighBit=15;
         break;
-    case bitDepth::depthS16:
+    case bitDepth_t::depthS16:
         m_bufferDataType = "SS";
         defaultHighBit=15;
         break;
-    case bitDepth::depthU32:
+    case bitDepth_t::depthU32:
         m_bufferDataType = "UL";
         defaultHighBit=31;
         break;
-    case bitDepth::depthS32:
+    case bitDepth_t::depthS32:
         m_bufferDataType = "SL";
         defaultHighBit=31;
         break;
@@ -185,7 +185,7 @@ std::shared_ptr<handlers::writingDataHandlerNumericBase> image::getWritingDataHa
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-bitDepth image::getDepth() const
+bitDepth_t image::getDepth() const
 {
 	return m_imageDepth;
 }

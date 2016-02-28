@@ -86,7 +86,7 @@ std::shared_ptr<data> dataSet::getTagThrow(std::uint16_t groupId, std::uint16_t 
 }
 
 
-std::shared_ptr<data> dataSet::getTagCreate(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId)
+std::shared_ptr<data> dataSet::getTagCreate(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId)
 {
     IMEBRA_FUNCTION_START();
 
@@ -107,7 +107,7 @@ std::shared_ptr<data> dataSet::getTagCreate(std::uint16_t groupId, std::uint16_t
     IMEBRA_FUNCTION_END();
 }
 
-bool dataSet::bufferExists(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId) const
+bool dataSet::bufferExists(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId) const
 {
     IMEBRA_FUNCTION_START();
 
@@ -423,8 +423,8 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
 		bSubSampledX = bSubSampledY = false;
 	}
 
-    bitDepth depth = pImage->getDepth();
-    bool b2complement = (depth == bitDepth::depthS32 || depth == bitDepth::depthS16 || depth == bitDepth::depthS8);
+    bitDepth_t depth = pImage->getDepth();
+    bool b2complement = (depth == bitDepth_t::depthS32 || depth == bitDepth_t::depthS16 || depth == bitDepth_t::depthS8);
     std::uint32_t channelsNumber = pImage->getChannelsNumber();
     std::uint8_t allocatedBits = (std::uint8_t)(saveCodec->suggestAllocatedBits(transferSyntax, pImage->getHighBit()));
     bool bInterleaved = (getUnsignedLong(0x0028, 0x0, 0x0006, 0, 0, channelsNumber > 1 ? 0 : 1) == 0x0);
@@ -803,7 +803,7 @@ std::uint32_t dataSet::getFirstAvailFrameBufferId() const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<dataSet> dataSet::getSequenceItemThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t itemId) const
+std::shared_ptr<dataSet> dataSet::getSequenceItemThrow(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t itemId) const
 {
     IMEBRA_FUNCTION_START();
 
@@ -871,7 +871,7 @@ std::shared_ptr<waveform> dataSet::getWaveformThrow(std::uint32_t waveformId)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::int32_t dataSet::getSignedLongThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
+std::int32_t dataSet::getSignedLongThrow(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
 {
     IMEBRA_FUNCTION_START();
 
@@ -880,7 +880,7 @@ std::int32_t dataSet::getSignedLongThrow(std::uint16_t groupId, std::uint16_t or
 	IMEBRA_FUNCTION_END();
 }
 
-std::int32_t dataSet::getSignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::int32_t defaultValue) const
+std::int32_t dataSet::getSignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::int32_t defaultValue) const
 {
     IMEBRA_FUNCTION_START();
 
@@ -906,7 +906,7 @@ std::int32_t dataSet::getSignedLong(std::uint16_t groupId, std::uint16_t order, 
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataSet::setSignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, std::int32_t newValue, const std::string& defaultType /* = "" */)
+void dataSet::setSignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::int32_t newValue, const std::string& defaultType /* = "" */)
 {
     IMEBRA_FUNCTION_START();
 
@@ -929,7 +929,7 @@ void dataSet::setSignedLong(std::uint16_t groupId, std::uint16_t order, std::uin
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::uint32_t dataSet::getUnsignedLongThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
+std::uint32_t dataSet::getUnsignedLongThrow(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
 {
     IMEBRA_FUNCTION_START();
 
@@ -938,7 +938,7 @@ std::uint32_t dataSet::getUnsignedLongThrow(std::uint16_t groupId, std::uint16_t
 	IMEBRA_FUNCTION_END();
 }
 
-std::uint32_t dataSet::getUnsignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::uint32_t defaultValue) const
+std::uint32_t dataSet::getUnsignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::uint32_t defaultValue) const
 {
     IMEBRA_FUNCTION_START();
 
@@ -964,7 +964,7 @@ std::uint32_t dataSet::getUnsignedLong(std::uint16_t groupId, std::uint16_t orde
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataSet::setUnsignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, std::uint32_t newValue, const std::string& defaultType /* = "" */)
+void dataSet::setUnsignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::uint32_t newValue, const std::string& defaultType /* = "" */)
 {
     IMEBRA_FUNCTION_START();
 
@@ -987,7 +987,7 @@ void dataSet::setUnsignedLong(std::uint16_t groupId, std::uint16_t order, std::u
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-double dataSet::getDoubleThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
+double dataSet::getDoubleThrow(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
 {
     IMEBRA_FUNCTION_START();
 
@@ -996,7 +996,7 @@ double dataSet::getDoubleThrow(std::uint16_t groupId, std::uint16_t order, std::
 	IMEBRA_FUNCTION_END();
 }
 
-double dataSet::getDouble(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, double defaultValue) const
+double dataSet::getDouble(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, double defaultValue) const
 {
     IMEBRA_FUNCTION_START();
 
@@ -1021,7 +1021,7 @@ double dataSet::getDouble(std::uint16_t groupId, std::uint16_t order, std::uint1
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataSet::setDouble(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, double newValue, const std::string& defaultType /* = "" */)
+void dataSet::setDouble(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, double newValue, const std::string& defaultType /* = "" */)
 {
     IMEBRA_FUNCTION_START();
 
@@ -1044,7 +1044,7 @@ void dataSet::setDouble(std::uint16_t groupId, std::uint16_t order, std::uint16_
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::string dataSet::getStringThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
+std::string dataSet::getStringThrow(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
 {
     IMEBRA_FUNCTION_START();
 
@@ -1053,7 +1053,7 @@ std::string dataSet::getStringThrow(std::uint16_t groupId, std::uint16_t order, 
 	IMEBRA_FUNCTION_END();
 }
 
-std::string dataSet::getString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, const std::string& defaultValue) const
+std::string dataSet::getString(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, const std::string& defaultValue) const
 {
     IMEBRA_FUNCTION_START();
 
@@ -1079,7 +1079,7 @@ std::string dataSet::getString(std::uint16_t groupId, std::uint16_t order, std::
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::wstring dataSet::getUnicodeStringThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
+std::wstring dataSet::getUnicodeStringThrow(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
 {
     IMEBRA_FUNCTION_START();
 
@@ -1088,7 +1088,7 @@ std::wstring dataSet::getUnicodeStringThrow(std::uint16_t groupId, std::uint16_t
 	IMEBRA_FUNCTION_END();
 }
 
-std::wstring dataSet::getUnicodeString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, const std::wstring& defaultValue) const
+std::wstring dataSet::getUnicodeString(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, const std::wstring& defaultValue) const
 {
     IMEBRA_FUNCTION_START();
 
@@ -1114,7 +1114,7 @@ std::wstring dataSet::getUnicodeString(std::uint16_t groupId, std::uint16_t orde
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataSet::setString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, const std::string& newString, const std::string& defaultType /* = "" */)
+void dataSet::setString(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::string& newString, const std::string& defaultType /* = "" */)
 {
     IMEBRA_FUNCTION_START();
 
@@ -1137,7 +1137,7 @@ void dataSet::setString(std::uint16_t groupId, std::uint16_t order, std::uint16_
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataSet::setUnicodeString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, const std::wstring& newString, const std::string& defaultType /* = "" */)
+void dataSet::setUnicodeString(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::wstring& newString, const std::string& defaultType /* = "" */)
 {
     IMEBRA_FUNCTION_START();
 
@@ -1150,7 +1150,7 @@ void dataSet::setUnicodeString(std::uint16_t groupId, std::uint16_t order, std::
 	IMEBRA_FUNCTION_END();
 }
 
-void dataSet::setAge(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, std::uint32_t age, ageUnit_t units, const std::string& defaultType /* = "" */)
+void dataSet::setAge(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::uint32_t age, ageUnit_t units, const std::string& defaultType /* = "" */)
 {
     IMEBRA_FUNCTION_START();
 
@@ -1163,7 +1163,7 @@ void dataSet::setAge(std::uint16_t groupId, std::uint16_t order, std::uint16_t t
     IMEBRA_FUNCTION_END();
 }
 
-std::uint32_t dataSet::getAgeThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, ageUnit_t* pUnits) const
+std::uint32_t dataSet::getAgeThrow(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, ageUnit_t* pUnits) const
 {
     IMEBRA_FUNCTION_START();
 
@@ -1172,7 +1172,7 @@ std::uint32_t dataSet::getAgeThrow(std::uint16_t groupId, std::uint16_t order, s
     IMEBRA_FUNCTION_END();
 }
 
-std::uint32_t dataSet::getAge(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId,
+std::uint32_t dataSet::getAge(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId,
                               size_t elementNumber, ageUnit_t* pUnits,
                               std::uint32_t defaultAge, ageUnit_t defaultUnits) const
 {
@@ -1193,7 +1193,7 @@ std::uint32_t dataSet::getAge(std::uint16_t groupId, std::uint16_t order, std::u
 }
 
 
-void dataSet::setDate(uint16_t groupId, uint16_t order, uint16_t tagId, size_t bufferId, uint32_t year, uint32_t month, uint32_t day, uint32_t hour, uint32_t minutes, uint32_t seconds, uint32_t nanoseconds, int32_t offsetHours, int32_t offsetMinutes, const std::string& defaultType /* = "" */)
+void dataSet::setDate(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::uint32_t year, std::uint32_t month, std::uint32_t day, std::uint32_t hour, std::uint32_t minutes, std::uint32_t seconds, std::uint32_t nanoseconds, std::int32_t offsetHours, std::int32_t offsetMinutes, const std::string& defaultType /* = "" */)
 {
     IMEBRA_FUNCTION_START();
 
@@ -1206,7 +1206,7 @@ void dataSet::setDate(uint16_t groupId, uint16_t order, uint16_t tagId, size_t b
     IMEBRA_FUNCTION_END();
 }
 
-void dataSet::getDateThrow(uint16_t groupId, uint16_t order, uint16_t tagId, size_t bufferId, size_t elementNumber, uint32_t *pYear, uint32_t *pMonth, uint32_t *pDay, uint32_t *pHour, uint32_t *pMinutes, uint32_t *pSeconds, uint32_t *pNanoseconds, int32_t *pOffsetHours, int32_t *pOffsetMinutes) const
+void dataSet::getDateThrow(uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::uint32_t *pYear, std::uint32_t *pMonth, std::uint32_t *pDay, std::uint32_t *pHour, std::uint32_t *pMinutes, std::uint32_t *pSeconds, std::uint32_t *pNanoseconds, std::int32_t *pOffsetHours, std::int32_t *pOffsetMinutes) const
 {
     IMEBRA_FUNCTION_START();
 
@@ -1215,7 +1215,7 @@ void dataSet::getDateThrow(uint16_t groupId, uint16_t order, uint16_t tagId, siz
     IMEBRA_FUNCTION_END();
 }
 
-void dataSet::getDate(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber,
+void dataSet::getDate(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber,
     std::uint32_t* pYear,
     std::uint32_t* pMonth,
     std::uint32_t* pDay,
@@ -1268,7 +1268,7 @@ void dataSet::getDate(std::uint16_t groupId, std::uint16_t order, std::uint16_t 
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<handlers::readingDataHandler> dataSet::getReadingDataHandlerThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId) const
+std::shared_ptr<handlers::readingDataHandler> dataSet::getReadingDataHandlerThrow(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId) const
 {
     IMEBRA_FUNCTION_START();
 
@@ -1278,7 +1278,7 @@ std::shared_ptr<handlers::readingDataHandler> dataSet::getReadingDataHandlerThro
 }
 
 
-std::shared_ptr<handlers::writingDataHandler> dataSet::getWritingDataHandler(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, const std::string& defaultType /* ="" */)
+std::shared_ptr<handlers::writingDataHandler> dataSet::getWritingDataHandler(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::string& defaultType /* ="" */)
 {
     IMEBRA_FUNCTION_START();
 
@@ -1304,7 +1304,7 @@ std::shared_ptr<handlers::writingDataHandler> dataSet::getWritingDataHandler(std
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<streamReader> dataSet::getStreamReaderThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId) const
+std::shared_ptr<streamReader> dataSet::getStreamReaderThrow(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId) const
 {
     IMEBRA_FUNCTION_START();
 
@@ -1323,7 +1323,7 @@ std::shared_ptr<streamReader> dataSet::getStreamReaderThrow(std::uint16_t groupI
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<streamWriter> dataSet::getStreamWriter(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, const std::string& dataType /* = "" */)
+std::shared_ptr<streamWriter> dataSet::getStreamWriter(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::string& dataType /* = "" */)
 {
     IMEBRA_FUNCTION_START();
 
@@ -1341,7 +1341,7 @@ std::shared_ptr<streamWriter> dataSet::getStreamWriter(std::uint16_t groupId, st
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<handlers::readingDataHandlerRaw> dataSet::getReadingDataHandlerRawThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId) const
+std::shared_ptr<handlers::readingDataHandlerRaw> dataSet::getReadingDataHandlerRawThrow(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId) const
 {
     IMEBRA_FUNCTION_START();
 
@@ -1351,7 +1351,7 @@ std::shared_ptr<handlers::readingDataHandlerRaw> dataSet::getReadingDataHandlerR
 }
 
 
-std::shared_ptr<handlers::writingDataHandlerRaw> dataSet::getWritingDataHandlerRaw(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, const std::string& defaultType /* ="" */)
+std::shared_ptr<handlers::writingDataHandlerRaw> dataSet::getWritingDataHandlerRaw(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::string& defaultType /* ="" */)
 {
     IMEBRA_FUNCTION_START();
 
@@ -1396,7 +1396,7 @@ std::string dataSet::getDefaultDataType(std::uint16_t groupId, std::uint16_t tag
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::string dataSet::getDataTypeThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId) const
+std::string dataSet::getDataTypeThrow(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId) const
 {
     IMEBRA_FUNCTION_START();
 

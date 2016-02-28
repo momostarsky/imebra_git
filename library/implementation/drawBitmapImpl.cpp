@@ -32,7 +32,7 @@ drawBitmap::drawBitmap(std::shared_ptr<image> sourceImage, std::shared_ptr<trans
 	// Allocate the transforms that obtain an RGB24 image
     std::string initialColorSpace;
     std::uint32_t highBit = 7;
-    bitDepth depth = bitDepth::depthU8;
+    bitDepth_t depth = bitDepth_t::depthU8;
 	if(m_transformsChain->isEmpty())
 	{
 		initialColorSpace = m_image->getColorSpace();
@@ -55,7 +55,7 @@ drawBitmap::drawBitmap(std::shared_ptr<image> sourceImage, std::shared_ptr<trans
 		m_transformsChain->addTransform(rgbColorTransform);
 	}
 
-    if(highBit != 7 || depth != bitDepth::depthU8)
+    if(highBit != 7 || depth != bitDepth_t::depthU8)
     {
         std::shared_ptr<transforms::transformHighBit> highBitTransform(std::make_shared<transforms::transformHighBit>());
         m_transformsChain->addTransform(highBitTransform);
@@ -69,7 +69,7 @@ drawBitmap::drawBitmap(std::shared_ptr<image> sourceImage, std::shared_ptr<trans
 	}
 	else
 	{
-        m_finalImage = std::make_shared<image>(width, height, bitDepth::depthU8, "RGB", 7);
+        m_finalImage = std::make_shared<image>(width, height, bitDepth_t::depthU8, "RGB", 7);
     }
 
     IMEBRA_FUNCTION_END();

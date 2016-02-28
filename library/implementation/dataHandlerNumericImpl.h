@@ -74,6 +74,8 @@ public:
 	///////////////////////////////////////////////////////////
 	virtual bool isSigned() const = 0;
 
+    virtual size_t getUnitSize() const = 0;
+
 protected:
 	// Memory buffer
 	///////////////////////////////////////////////////////////
@@ -83,7 +85,7 @@ protected:
 class writingDataHandlerNumericBase: public writingDataHandler
 {
 public:
-    writingDataHandlerNumericBase(const std::shared_ptr<buffer>& pBuffer, const size_t initialSize, const std::string& dataType, size_t unitSize);
+    writingDataHandlerNumericBase(const std::shared_ptr<buffer>& pBuffer, const size_t initialSize, const std::string& dataType, size_t unitSize, bool bIsSigned);
     ~writingDataHandlerNumericBase();
 
     std::uint8_t* getMemoryBuffer() const;
@@ -97,6 +99,10 @@ public:
     // Set the buffer's size, in data elements
     ///////////////////////////////////////////////////////////
     virtual void setSize(const size_t elementsNumber);
+
+    bool isSigned() const;
+
+    size_t getUnitSize() const;
 
     virtual void copyFromInt32Interleaved(const std::int32_t* pSource,
                                           std::uint32_t sourceReplicateX,
@@ -126,6 +132,8 @@ protected:
     std::shared_ptr<memory> m_pMemory;
 
     size_t m_unitSize;
+
+    bool m_bIsSigned;
 };
 
 ///////////////////////////////////////////////////////////
@@ -160,6 +168,16 @@ public:
 
         IMEBRA_FUNCTION_END();
     }
+
+    virtual size_t getUnitSize() const
+    {
+        IMEBRA_FUNCTION_START();
+
+        return sizeof(dataHandlerType);
+
+        IMEBRA_FUNCTION_END();
+    }
+
 
 	// Retrieve the data element as a signed long
 	///////////////////////////////////////////////////////////
@@ -468,7 +486,12 @@ public:
     typedef dataHandlerType value_type;
 
     writingDataHandlerNumeric(const std::shared_ptr<buffer> &pBuffer, const size_t initialSize, const std::string &dataType):
-        writingDataHandlerNumericBase(pBuffer, initialSize, dataType, sizeof(dataHandlerType))
+        writingDataHandlerNumericBase(
+            pBuffer,
+            initialSize,
+            dataType,
+            sizeof(dataHandlerType),
+            ((dataHandlerType) -1) < ((dataHandlerType) 0) )
     {
     }
 

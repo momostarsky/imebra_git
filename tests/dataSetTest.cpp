@@ -22,7 +22,7 @@ TEST(dataSetTest, testFragmentation)
     Image testImage0(buildImageForTest(
 		400, 
 		300, 
-        imebra::bitDepth::depthU8,
+        imebra::bitDepth_t::depthU8,
 		7, 
 		400, 
 		300, 
@@ -32,7 +32,7 @@ TEST(dataSetTest, testFragmentation)
     Image testImage1(buildImageForTest(
 		400, 
 		300, 
-        imebra::bitDepth::depthU8,
+        imebra::bitDepth_t::depthU8,
 		7, 
 		400, 
 		300, 
@@ -51,7 +51,7 @@ TEST(dataSetTest, testFragmentation)
 
     {
         std::uint32_t offset(0);
-        WritingDataHandler offsetHandler = testDataSet.getWritingDataHandler(0x7fe0, 0, 0x0010, 0, "OB");
+        WritingDataHandler offsetHandler = testDataSet.getWritingDataHandler(TagId(imebra::tagId_t::PixelData_7FE0_0010), 0, "OB");
 
         std::list<WritingDataHandler> handlers;
 
@@ -63,9 +63,8 @@ TEST(dataSetTest, testFragmentation)
             offsetHandler.setSize(sizeof(std::uint32_t) * scanBuffers);
             std::uint32_t* pOffsetMemory = (std::uint32_t*)offsetHandler.data(&dataSize);
             pOffsetMemory[scanBuffers - 1] = offset;
-            //streamController::adjustEndian((std::uint8_t*)&(pOffsetMemory[scanBuffers - 1]), sizeof(pOffsetMemory[0]), streamController::lowByteEndian, 1);
 
-            imebra::ReadingDataHandler wholeHandler = testDataSet.getReadingDataHandler(0x7fe0, 0, 0x0010, scanBuffers);
+            imebra::ReadingDataHandler wholeHandler = testDataSet.getReadingDataHandler(TagId(imebra::tagId_t::PixelData_7FE0_0010), scanBuffers);
             size_t totalSize;
             const char* pWholeMemory = wholeHandler.data(&totalSize);
             size_t fragmentedSize = totalSize / 3;
@@ -80,7 +79,7 @@ TEST(dataSetTest, testFragmentation)
                 {
                     thisSize = fragmentedSize;
                 }
-                WritingDataHandler newHandler = testDataSet.getWritingDataHandler(0x7fe0, 0, 0x0010, handlers.size() + 1, "OB");
+                WritingDataHandler newHandler = testDataSet.getWritingDataHandler(TagId(imebra::tagId_t::PixelData_7FE0_0010), handlers.size() + 1, "OB");
                 newHandler.setSize(thisSize);
                 newHandler.assign(pWholeMemory, thisSize);
                 handlers.push_back(newHandler);

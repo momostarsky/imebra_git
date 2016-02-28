@@ -35,24 +35,70 @@ class writingDataHandler;
 namespace imebra
 {
 
+///
+/// \brief The ReadingDataHandler class allows to read the content
+///        of a Dicom tag.
+///
+/// ReadingDataHandler is able to return the tag's content as a string,
+/// a number, a date/time or an age.
+///
+/// When ReadingDataHandler handles numeric tags then it can also return a
+/// pointer to the raw memory that stores the numeric values.
+///
+/// In order to obtain a ReadingDataHandler for a specific tag stored
+/// in a DataSet, call DataSet::getReadingDataHandler().
+///
+/// \warning ReadingDataHandler is NOT thread safe.
+///
+///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API ReadingDataHandler
 {
 public:
-	// Costructor
-	///////////////////////////////////////////////////////////
+    /// \brief Copy constructor.
+    ///
+    /// The new ReadingDataHandler will handle the same tag's content handled
+    /// by the source ReadingDataHandler.
+    ///
+    /// \param right the source ReadingDataHandler
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     ReadingDataHandler(const ReadingDataHandler& right);
-
-    ReadingDataHandler& operator=(const ReadingDataHandler& right);
 
 #ifndef SWIG
     ReadingDataHandler(std::shared_ptr<imebra::implementation::handlers::readingDataHandler> pDataHandler);
 #endif
 
-	void close();
+    /// \brief Copy operator.
+    ///
+    /// The ReadingDataHandler object will drop the handled tag's content
+    /// and will handle the same tag's content as the source ReadingDataHandler.
+    ///
+    /// \param right the source ReadingDataHandler
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    ReadingDataHandler& operator=(const ReadingDataHandler& right);
 
+    /// \brief Returns the number of elements in the Dicom tag handled by the data
+    ///        handler.
+    ///
+    /// If the ReadingDataHandler object is related to a tag that contains strings,
+    /// then it returns the number of strings stored in the tag. Multiple strings
+    /// in a string tag are separated by a separator char.
+    ///
+    /// \return the number of elements stored in the handled Dicom tag
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     size_t getSize() const;
 
+    /// \brief If ReadingDataHandler is handling a numeric tag's content then it
+    ///        returns the number of bytes occupied by each number.
+    ///
+    /// \return the number of bytes occupied by each number stored in the tag
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     size_t getUnitSize() const;
+
+    bool isSigned() const;
 
 	std::string getDataType() const;
 
@@ -118,6 +164,8 @@ public:
 
     size_t getUnitSize() const;
 
+    bool isSigned() const;
+
     std::string getDataType() const;
 
     WritingDataHandler& setDate(const size_t index, const Date& date);
@@ -137,7 +185,6 @@ public:
     void assign(const char* buffer, const size_t bufferSize);
 
     char* data(size_t* pDataSize) const;
-
 
 #ifndef SWIG
 protected:

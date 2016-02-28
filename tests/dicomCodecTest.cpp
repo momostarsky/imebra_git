@@ -13,7 +13,7 @@ Image makeTestImage()
 {
     std::uint32_t sizeX = 301;
     std::uint32_t sizeY = 201;
-    Image dicomImage(sizeX, sizeY, bitDepth::depthU16, "RGB", 15);
+    Image dicomImage(sizeX, sizeY, bitDepth_t::depthU16, "RGB", 15);
 
     WritingDataHandler imageHandler = dicomImage.getWritingDataHandler();
 
@@ -59,14 +59,14 @@ TEST(dicomCodecTest, testDicom)
 			{
 				for(std::uint32_t highBit(0); highBit != 32; ++highBit)
 				{
-                    bitDepth depth(sign == 0 ? bitDepth::depthU8 : bitDepth::depthS8);
+                    bitDepth_t depth(sign == 0 ? bitDepth_t::depthU8 : bitDepth_t::depthS8);
 					if(highBit > 7)
 					{
-                        depth = (sign == 0 ? bitDepth::depthU16 : bitDepth::depthS16);
+                        depth = (sign == 0 ? bitDepth_t::depthU16 : bitDepth_t::depthS16);
 					}
 					if(highBit > 15)
 					{
-                        depth = (sign == 0 ? bitDepth::depthU32 : bitDepth::depthS32);
+                        depth = (sign == 0 ? bitDepth_t::depthU32 : bitDepth_t::depthS32);
 					}
 
                     Image dicomImage0(buildImageForTest(
@@ -123,11 +123,11 @@ TEST(dicomCodecTest, testDicom)
                     Memory streamMemory;
 					{
                         DataSet testDataSet;
-                        testDataSet.getWritingDataHandler(0x0010, 0, 0x0010, 0)
+                        testDataSet.getWritingDataHandler(TagId(0x0010, 0x0010), 0)
                                 .setString(0, "AAAaa")
                                 .setString(1, "BBBbbb")
                                 .setString(2, "");
-                        testDataSet.setUnsignedLong(0x0028, 0, 0x0006, 0, interleaved);
+                        testDataSet.setUnsignedLong(TagId(imebra::tagId_t::PlanarConfiguration_0028_0006), 0, interleaved);
                         testDataSet.setImage(0, dicomImage0, transferSyntax, veryHigh);
                         testDataSet.setImage(1, dicomImage1, transferSyntax, veryHigh);
                         testDataSet.setImage(2, dicomImage2, transferSyntax, veryHigh);
@@ -141,10 +141,10 @@ TEST(dicomCodecTest, testDicom)
                     StreamReader reader(readStream);
                     DataSet testDataSet = CodecFactory::load(reader, 1);
 
-                    EXPECT_EQ(std::string("AAAaa"), testDataSet.getStringThrow(0x0010, 0, 0x0010, 0, 0));
-                    EXPECT_EQ(std::string("BBBbbb"), testDataSet.getStringThrow(0x0010, 0, 0x0010, 0, 1));
-                    EXPECT_EQ(std::string(""), testDataSet.getStringThrow(0x0010, 0, 0x0010, 0, 2));
-                    EXPECT_EQ(interleaved, testDataSet.getSignedLongThrow(0x0028, 0, 0x0006, 0, 0));
+                    EXPECT_EQ(std::string("AAAaa"), testDataSet.getStringThrow(TagId(imebra::tagId_t::PatientName_0010_0010), 0, 0));
+                    EXPECT_EQ(std::string("BBBbbb"), testDataSet.getStringThrow(TagId(imebra::tagId_t::PatientName_0010_0010), 0, 1));
+                    EXPECT_EQ(std::string(""), testDataSet.getStringThrow(TagId(imebra::tagId_t::PatientName_0010_0010), 0, 2));
+                    EXPECT_EQ(interleaved, testDataSet.getSignedLongThrow(TagId(imebra::tagId_t::PlanarConfiguration_0028_0006), 0, 0));
 
                     Image checkImage0 = testDataSet.getImage(0);
                     Image checkImage1 = testDataSet.getImage(1);

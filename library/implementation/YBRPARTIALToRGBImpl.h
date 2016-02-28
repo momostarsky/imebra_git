@@ -51,11 +51,11 @@ public:
         void templateTransform(
             const inputType* inputHandlerData,
             outputType* outputHandlerData,
-            bitDepth /* inputDepth */, std::uint32_t inputHandlerWidth, const std::string& inputHandlerColorSpace,
+            bitDepth_t /* inputDepth */, std::uint32_t inputHandlerWidth, const std::string& inputHandlerColorSpace,
             std::shared_ptr<palette> /* inputPalette */,
             std::uint32_t inputHighBit,
             std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight,
-            bitDepth /* outputDepth */, std::uint32_t outputHandlerWidth, const std::string& outputHandlerColorSpace,
+            bitDepth_t /* outputDepth */, std::uint32_t outputHandlerWidth, const std::string& outputHandlerColorSpace,
             std::shared_ptr<palette> /* outputPalette */,
             std::uint32_t outputHighBit,
             std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY) const
@@ -87,7 +87,7 @@ public:
                     sourceB = (std::int64_t)*(pInputMemory++) - inputMiddleValue;
                     sourceR = (std::int64_t)*(pInputMemory++) - inputMiddleValue;
 
-                    destination = sourceY + ((22970 * sourceR + 8192) / 16384);
+                    destination = sourceY + ((22970 * sourceR + 8191) / 16384);
                     if(destination < 0)
                     {
                         *(pOutputMemory++) = (outputType)outputHandlerMinValue;
@@ -101,7 +101,7 @@ public:
                         *(pOutputMemory++) = (outputType)(outputHandlerMinValue + destination);
                     }
 
-                    destination = sourceY - ((5638 * sourceB + 11700 * sourceR + 8192) / 16384);
+                    destination = sourceY - ((5638 * sourceB + 11700 * sourceR + 8191) / 16384);
                     if(destination < 0)
                     {
                         *(pOutputMemory++) = (outputType)outputHandlerMinValue;
@@ -115,7 +115,7 @@ public:
                         *(pOutputMemory++) = (outputType)(outputHandlerMinValue + destination);
                     }
 
-                    destination = sourceY + ((29032 * sourceB + 8192) / 16384);
+                    destination = sourceY + ((29032 * sourceB + 8191) / 16384);
                     if(destination < 0)
                     {
                         *(pOutputMemory++) = (outputType)outputHandlerMinValue;

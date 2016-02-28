@@ -11,7 +11,7 @@ namespace tests
 imebra::Image buildImageForTest(
 	std::uint32_t pixelsX, 
 	std::uint32_t pixelsY, 
-    imebra::bitDepth depth,
+    imebra::bitDepth_t depth,
 	std::uint32_t highBit, 
 	double sizeX, 
 	double sizeY, 
@@ -24,7 +24,7 @@ imebra::Image buildImageForTest(
 
 	std::int32_t range = (std::uint32_t)1 << highBit;
 	std::int32_t minValue = 0;
-    if(depth == bitDepth::depthS16 || depth == bitDepth::depthS8)
+    if(depth == bitDepth_t::depthS16 || depth == bitDepth_t::depthS8)
 	{
 		minValue = -1 << (highBit - 1);
 	}
@@ -37,7 +37,7 @@ imebra::Image buildImageForTest(
 		{
 			for(std::uint32_t scanChannels = 0; scanChannels != channelsNumber; ++scanChannels)
 			{
-				std::int32_t value = (std::int32_t)(((double)((scanX * channelsNumber+ scanY + scanChannels) % continuity) / (double)continuity) * (double)range)  + minValue;
+                std::int32_t value = (std::int32_t)(((double)((scanX + scanY) % continuity) / (double)continuity) * (double)range)  + minValue;
  				if(value < minValue)
 				{
 					value = minValue;
@@ -84,8 +84,8 @@ double compareImages(const imebra::Image& image0, const imebra::Image& image1)
 		return 1000;
 	}
 
-    bitDepth depth0 = image0.getDepth();
-    bitDepth depth1 = image1.getDepth();
+    bitDepth_t depth0 = image0.getDepth();
+    bitDepth_t depth1 = image1.getDepth();
 	if(depth0 != depth1)
 	{
 		return 1000;

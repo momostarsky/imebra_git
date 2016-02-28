@@ -11,6 +11,8 @@ $fileHeader$
 #define imebraDataHandler_6F85D344_DEF8_468d_BF73_AC5BB17FD22A__INCLUDED_
 
 #include "../include/imebra/definitions.h"
+#include "../include/imebra/exceptions.h"
+#include "exceptionImpl.h"
 #include <memory>
 #include "charsetsListImpl.h"
 
@@ -311,8 +313,53 @@ protected:
     std::shared_ptr<buffer> m_buffer;
 
     const std::uint8_t m_paddingByte;
-
 };
+
+///
+/// \brief Throws an exception if the content of the strings container
+///        does not respect the rules (max size, unit size,
+///        no multiple strings if separator is not allowed).
+///
+template <typename stringContainer>
+void validateStringContainer(const stringContainer& strings, size_t maxSize, size_t unitSize, bool bSeparator)
+{
+    IMEBRA_FUNCTION_START();
+
+    if(!bSeparator && strings.size() > 1)
+    {
+        IMEBRA_THROW(DataHandlerInvalidDataError, "Multiple strings not allowed");
+    }
+
+    if(unitSize != 0)
+    {
+        for(size_t scanStrings(0); scanStrings != strings.size(); ++scanStrings)
+        {
+            if(strings.at(scanStrings).size() != unitSize)
+            {
+                IMEBRA_THROW(DataHandlerInvalidDataError, "Strings must be " << unitSize << " bytes long");
+            }
+        }
+    }
+
+    if(maxSize != 0)
+    {
+        size_t totalSize(0);
+        if(strings.size() > 1)
+        {
+            totalSize += strings.size() - 1;
+        }
+        for(size_t scanStrings(0); scanStrings != strings.size(); ++scanStrings)
+        {
+            totalSize += strings.at(scanStrings).size();
+        }
+        if(totalSize > maxSize)
+        {
+            IMEBRA_THROW(DataHandlerInvalidDataError, "Maximum size is " <<  totalSize << " but should be maximum " << unitSize << " bytes");
+        }
+    }
+
+    IMEBRA_FUNCTION_END();
+}
 
 
 } // namespace handlers

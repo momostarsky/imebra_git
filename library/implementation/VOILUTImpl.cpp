@@ -290,7 +290,7 @@ bool VOILUT::isEmpty() const
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 std::shared_ptr<image> VOILUT::allocateOutputImage(
-        bitDepth inputDepth,
+        bitDepth_t inputDepth,
         const std::string& inputColorSpace,
         std::uint32_t inputHighBit,
         std::shared_ptr<palette> /* inputPalette */,
@@ -315,11 +315,11 @@ std::shared_ptr<image> VOILUT::allocateOutputImage(
 
 		if(bNegative)
 		{
-            inputDepth = bits > 8 ? bitDepth::depthS16 : bitDepth::depthS8;
+            inputDepth = bits > 8 ? bitDepth_t::depthS16 : bitDepth_t::depthS8;
 		}
 		else
 		{
-            inputDepth = bits > 8 ? bitDepth::depthU16 : bitDepth::depthU8;
+            inputDepth = bits > 8 ? bitDepth_t::depthU16 : bitDepth_t::depthU8;
 		}
         return std::make_shared<image>(outputWidth, outputHeight, inputDepth, inputColorSpace, bits - 1);
 	}
@@ -334,10 +334,10 @@ std::shared_ptr<image> VOILUT::allocateOutputImage(
         return std::make_shared<image>(outputWidth, outputHeight, inputDepth, inputColorSpace, inputHighBit);
 	}
 
-    if(inputDepth == bitDepth::depthS8)
-        inputDepth = bitDepth::depthU8;
-    if(inputDepth == bitDepth::depthS16 || inputDepth == bitDepth::depthU32 || inputDepth == bitDepth::depthS32)
-        inputDepth = bitDepth::depthU16;
+    if(inputDepth == bitDepth_t::depthS8)
+        inputDepth = bitDepth_t::depthU8;
+    if(inputDepth == bitDepth_t::depthS16 || inputDepth == bitDepth_t::depthU32 || inputDepth == bitDepth_t::depthS32)
+        inputDepth = bitDepth_t::depthU16;
 
     return std::make_shared<image>(outputWidth, outputHeight, inputDepth, inputColorSpace, inputHighBit);
 

@@ -149,6 +149,7 @@ public:
     ///////////////////////////////////////////////////////////
     virtual void setDouble(const size_t index, const double value);
 
+    virtual void validate() const;
 
 };
 

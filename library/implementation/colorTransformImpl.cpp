@@ -80,7 +80,7 @@ void colorTransform::checkHighBit(std::uint32_t inputHighBit, std::uint32_t outp
 
 
 std::shared_ptr<image> colorTransform::allocateOutputImage(
-        bitDepth inputDepth,
+        bitDepth_t inputDepth,
         const std::string& /* inputColorSpace */,
         std::uint32_t inputHighBit,
         std::shared_ptr<palette> inputPalette,

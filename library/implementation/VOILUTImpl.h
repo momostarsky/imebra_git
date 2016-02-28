@@ -193,11 +193,11 @@ public:
 			void templateTransform(
                     const inputType* inputHandlerData,
                     outputType* outputHandlerData,
-                    bitDepth /* inputDepth */, std::uint32_t inputHandlerWidth, const std::string& /* inputHandlerColorSpace */,
+                    bitDepth_t /* inputDepth */, std::uint32_t inputHandlerWidth, const std::string& /* inputHandlerColorSpace */,
 					std::shared_ptr<palette> /* inputPalette */,
                     std::uint32_t inputHighBit,
                     std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight,
-                    bitDepth /* outputDepth */, std::uint32_t outputHandlerWidth, const std::string& /* outputHandlerColorSpace */,
+                    bitDepth_t /* outputDepth */, std::uint32_t outputHandlerWidth, const std::string& /* outputHandlerColorSpace */,
 					std::shared_ptr<palette> /* outputPalette */,
                     std::uint32_t outputHighBit,
                     std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY) const
@@ -286,7 +286,7 @@ public:
     virtual bool isEmpty() const;
 
     virtual std::shared_ptr<image> allocateOutputImage(
-            bitDepth inputDepth,
+            bitDepth_t inputDepth,
             const std::string& inputColorSpace,
             std::uint32_t inputHighBit,
             std::shared_ptr<palette> inputPalette,

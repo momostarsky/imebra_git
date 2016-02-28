@@ -190,16 +190,6 @@ writingDataHandlerStringUnicode::~writingDataHandlerStringUnicode()
         *(commitMemory->data() + (memorySize - 1)) = m_paddingByte;
     }
 
-    if(m_maxSize != 0 && commitMemory->size() > m_maxSize)
-    {
-        throw;
-    }
-
-    if(m_unitSize != 0 && commitMemory->size() > m_unitSize)
-    {
-        throw;
-    }
-
     m_buffer->commit(commitMemory, m_dataType, m_charsets);
 
     IMEBRA_FUNCTION_END();
@@ -285,8 +275,21 @@ void writingDataHandlerStringUnicode::setUnicodeString(const size_t index, const
     }
     m_strings[index] = value;
 
+    validate();
+
     IMEBRA_FUNCTION_END();
 }
+
+void writingDataHandlerStringUnicode::validate() const
+{
+    IMEBRA_FUNCTION_START();
+
+    validateStringContainer(m_strings, m_maxSize, m_unitSize, m_separator != 0);
+
+    IMEBRA_FUNCTION_END();
+}
+
+
 
 
 } // namespace handlers

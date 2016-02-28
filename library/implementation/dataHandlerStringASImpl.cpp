@@ -8,10 +8,13 @@ $fileHeader$
 */
 
 #include <sstream>
+#include <string>
 #include <iomanip>
 #include "../include/imebra/exceptions.h"
 #include "exceptionImpl.h"
 #include "dataHandlerStringASImpl.h"
+#include "memoryImpl.h"
+#include <memory.h>
 
 namespace imebra
 {
@@ -70,7 +73,10 @@ std::uint32_t readingDataHandlerStringAS::getAge(const size_t index, ageUnit_t* 
     }
     std::istringstream ageStream(ageString);
 	std::uint32_t age;
-	ageStream >> age;
+    if(!(ageStream >> age))
+    {
+        IMEBRA_THROW(DataHandlerCorruptedBufferError, "The AGE is not a number");
+    }
     char unit = ageString[3];
     if(
             unit != (char)ageUnit_t::days &&
@@ -232,6 +238,25 @@ void writingDataHandlerStringAS::setDouble(const size_t /* index */, const doubl
     IMEBRA_THROW(DataHandlerDeniedConversionError, "Cannot convert to VR AS from double");
 
 	IMEBRA_FUNCTION_END();
+}
+
+void writingDataHandlerStringAS::validate() const
+{
+    IMEBRA_FUNCTION_START();
+
+    memory parseMemory(m_strings[0].size());
+    ::memcpy(parseMemory.data(), m_strings[0].data(), parseMemory.size());
+    try
+    {
+        readingDataHandlerStringAS readingHandler(parseMemory);
+    }
+    catch(const DataHandlerCorruptedBufferError& e)
+    {
+        IMEBRA_THROW(DataHandlerConversionError, e.what());
+    }
+    writingDataHandlerString::validate();
+
+    IMEBRA_FUNCTION_END();
 }
 
 

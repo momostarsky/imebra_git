@@ -83,7 +83,7 @@ enum imageQuality_t
 /// in order to retrieve the highest used bit call
 /// getHighBit().
 ///////////////////////////////////////////////////////////
-enum class bitDepth
+enum class bitDepth_t
 {
     depthU8 = 0,    ///< Unsigned byte
     depthS8 = 1,    ///< Signed byte
@@ -167,6 +167,7 @@ struct IMEBRA_API Date
     std::int32_t offsetMinutes;
 
 };
+
 
 typedef std::set<std::uint16_t> groups_t;
 

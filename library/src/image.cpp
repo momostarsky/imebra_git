@@ -18,13 +18,13 @@ namespace imebra
 Image::Image()
 {
     std::string colorSpace("MONOCHROME2");
-    m_pImage = std::make_shared<implementation::image>((std::uint32_t)1, (std::uint32_t)1, bitDepth::depthU8, colorSpace, (std::uint32_t)7);
+    m_pImage = std::make_shared<implementation::image>((std::uint32_t)1, (std::uint32_t)1, bitDepth_t::depthU8, colorSpace, (std::uint32_t)7);
 }
 
 Image::Image(
         std::uint32_t sizeX,
         std::uint32_t sizeY,
-        bitDepth depth,
+        bitDepth_t depth,
         const std::string& colorSpace,
         std::uint32_t highBit):
     m_pImage(std::make_shared<implementation::image>(sizeX, sizeY, depth, colorSpace, highBit))
@@ -96,7 +96,7 @@ std::uint32_t Image::getChannelsNumber() const
     return m_pImage->getChannelsNumber();
 }
 
-bitDepth Image::getDepth() const
+bitDepth_t Image::getDepth() const
 {
     return m_pImage->getDepth();
 }

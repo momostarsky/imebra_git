@@ -262,21 +262,13 @@ void writingDataHandlerString::setString(const size_t index, const std::string& 
 {
     IMEBRA_FUNCTION_START();
 
-    if(m_maxSize != 0 && value.size() > m_maxSize)
-    {
-        throw;
-    }
-
-    if(m_unitSize != 0 && value.size() > m_unitSize)
-    {
-        throw;
-    }
-
     if(index >= getSize())
     {
         setSize(index + 1);
     }
     m_strings[index] = value;
+
+    validate();
 
     IMEBRA_FUNCTION_END();
 }
@@ -288,6 +280,15 @@ void writingDataHandlerString::setUnicodeString(const size_t index, const std::w
     charsetsList::tCharsetsList charsets;
     charsets.push_back("ISO_IR 6");
     setString(index, dicomConversion::convertFromUnicode(value, &charsets));
+
+    IMEBRA_FUNCTION_END();
+}
+
+void writingDataHandlerString::validate() const
+{
+    IMEBRA_FUNCTION_START();
+
+    validateStringContainer(m_strings, m_maxSize, m_unitSize, m_separator != 0);
 
     IMEBRA_FUNCTION_END();
 }

@@ -182,7 +182,7 @@ void readingDataHandlerDateTimeBase::parseDate(
 
     if(dateString.size() != 8)
     {
-        IMEBRA_THROW(InvalidTagContentError, "The date/time string has the wrong size");
+        IMEBRA_THROW(DataHandlerCorruptedBufferError, "The date/time string has the wrong size");
     }
 
     std::string dateYear=dateString.substr(0, 4);

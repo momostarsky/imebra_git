@@ -12,7 +12,7 @@ namespace tests
     imebra::Image buildImageForTest(
         std::uint32_t pixelsX,
         std::uint32_t pixelsY,
-        imebra::bitDepth depth,
+        imebra::bitDepth_t depth,
         std::uint32_t highBit,
 		double sizeX, 
 		double sizeY, 

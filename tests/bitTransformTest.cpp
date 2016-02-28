@@ -12,9 +12,9 @@ TEST(bitTransformTest, bitShift)
 {
     std::uint32_t sizeX = 41;
     std::uint32_t sizeY = 13;
-    Image bits8Image(sizeX, sizeY, bitDepth::depthU8, "RGB", 7);
-    Image bits16Image(sizeX, sizeY, bitDepth::depthU16, "RGB", 15);
-    Image bits4Image(sizeX, sizeY, bitDepth::depthU8, "RGB", 3);
+    Image bits8Image(sizeX, sizeY, bitDepth_t::depthU8, "RGB", 7);
+    Image bits16Image(sizeX, sizeY, bitDepth_t::depthU16, "RGB", 15);
+    Image bits4Image(sizeX, sizeY, bitDepth_t::depthU8, "RGB", 3);
     {
         WritingDataHandler imageHandler = bits8Image.getWritingDataHandler();
 

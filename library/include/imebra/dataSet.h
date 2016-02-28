@@ -19,6 +19,7 @@ $fileHeader$
 #include "dataHandler.h"
 #include "definitions.h"
 #include "tagContent.h"
+#include "tagsEnumeration.h"
 
 namespace imebra
 {
@@ -32,6 +33,27 @@ class dataSet;
 
 namespace imebra
 {
+
+///
+/// \brief Represents a Dicom tag's identification.
+///
+class IMEBRA_API TagId
+{
+public:
+    TagId(std::uint16_t groupId, std::uint16_t tagId);
+    TagId(std::uint16_t groupId, std::uint32_t groupOrder, std::uint16_t tagId);
+    TagId(tagId_t id);
+    TagId(tagId_t id, std::uint32_t groupOrder);
+
+    std::uint16_t getGroupId() const;
+    std::uint32_t getGroupOrder() const;
+    std::uint16_t getTagId() const;
+
+private:
+    std::uint16_t m_groupId;
+    std::uint32_t m_groupOrder;
+    std::uint16_t m_tagId;
+};
 
 ///
 ///
@@ -155,63 +177,61 @@ public:
     ///////////////////////////////////////////////////////////
     void setImage(size_t frameNumber, Image image, const std::string& transferSyntax, imageQuality_t quality);
 
-    DataSet getSequenceItemThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t itemId);
+    DataSet getSequenceItemThrow(const TagId& tagId, size_t itemId);
 
-    ReadingDataHandler getReadingDataHandler(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId) const;
+    ReadingDataHandler getReadingDataHandler(const TagId& tagId, size_t bufferId) const;
 
-    WritingDataHandler getWritingDataHandler(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, const std::string& defaultDataType = "");
+    WritingDataHandler getWritingDataHandler(const TagId& tagId, size_t bufferId, const std::string& defaultDataType = "");
 
-    bool bufferExists(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId);
+    bool bufferExists(const TagId& tagId, size_t bufferId);
 
-    std::int32_t getSignedLongThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
+    std::int32_t getSignedLongThrow(const TagId& tagId, size_t bufferId, size_t elementNumber) const;
 
-    std::int32_t getSignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::int32_t defaultValue) const;
+    std::int32_t getSignedLong(const TagId& tagId, size_t bufferId, size_t elementNumber, std::int32_t defaultValue) const;
 
-    void setSignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, std::int32_t newValue, const std::string& defaultType = "");
+    void setSignedLong(const TagId& tagId, size_t bufferId, std::int32_t newValue, const std::string& defaultType = "");
 
-    std::uint32_t getUnsignedLongThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
+    std::uint32_t getUnsignedLongThrow(const TagId& tagId, size_t bufferId, size_t elementNumber) const;
 
-    std::uint32_t getUnsignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::uint32_t defaultValue) const;
+    std::uint32_t getUnsignedLong(const TagId& tagId, size_t bufferId, size_t elementNumber, std::uint32_t defaultValue) const;
 
-    void setUnsignedLong(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, std::uint32_t newValue, const std::string& defaultType = "");
+    void setUnsignedLong(const TagId& tagId, size_t bufferId, std::uint32_t newValue, const std::string& defaultType = "");
 
-    double getDoubleThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
+    double getDoubleThrow(const TagId& tagId, size_t bufferId, size_t elementNumber) const;
 
-    double getDouble(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, double defaultValue) const;
+    double getDouble(const TagId& tagId, size_t bufferId, size_t elementNumber, double defaultValue) const;
 
-    void setDouble(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, double newValue, const std::string& defaultType = "");
+    void setDouble(const TagId& tagId, size_t bufferId, double newValue, const std::string& defaultType = "");
 
-    std::string getStringThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
+    std::string getStringThrow(const TagId& tagId, size_t bufferId, size_t elementNumber) const;
 
-    std::string getString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, const std::string& defaultValue) const;
+    std::string getString(const TagId& tagId, size_t bufferId, size_t elementNumber, const std::string& defaultValue) const;
 
-    std::wstring getUnicodeStringThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
+    std::wstring getUnicodeStringThrow(const TagId& tagId, size_t bufferId, size_t elementNumber) const;
 
-    std::wstring getUnicodeString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, const std::wstring& defaultValue) const;
+    std::wstring getUnicodeString(const TagId& tagId, size_t bufferId, size_t elementNumber, const std::wstring& defaultValue) const;
 
-    void setString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, const std::string& newString, const std::string& defaultType = "");
+    void setString(const TagId& tagId, size_t bufferId, const std::string& newString, const std::string& defaultType = "");
 
-    void setUnicodeString(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, const std::wstring& newString, const std::string& defaultType = "");
+    void setUnicodeString(const TagId& tagId, size_t bufferId, const std::wstring& newString, const std::string& defaultType = "");
 
-    void setAge(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, const Age& age, const std::string& defaultType = "");
+    void setAge(const TagId& tagId, size_t bufferId, const Age& age, const std::string& defaultType = "");
 
-    Age getAgeThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
+    Age getAgeThrow(const TagId& tagId, size_t bufferId, size_t elementNumber) const;
 
-    Age getAge(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, const Age& defaultValue) const;
+    Age getAge(const TagId& tagId, size_t bufferId, size_t elementNumber, const Age& defaultValue) const;
 
-    void setDate(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, const Date& date, const std::string& defaultType = "");
+    void setDate(const TagId& tagId, size_t bufferId, const Date& date, const std::string& defaultType = "");
 
-    Date getDateThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
+    Date getDateThrow(const TagId& tagId, size_t bufferId, size_t elementNumber) const;
 
-    Date getDate(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, const Date& defaultValue) const;
+    Date getDate(const TagId& tagId, size_t bufferId, size_t elementNumber, const Date& defaultValue) const;
 
-    size_t getRawDataThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, char* buffer, size_t bufferSize) const;
+    size_t getRawDataThrow(const TagId& tagId, size_t bufferId, char* buffer, size_t bufferSize) const;
 
-    void setRawData(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId, size_t bufferId, char* buffer, size_t bufferSize, const std::string& defaultType = "");
+    void setRawData(const TagId& tagId, size_t bufferId, char* buffer, size_t bufferSize, const std::string& defaultType = "");
 
-    std::string getDefaultDataType(std::uint16_t groupId, std::uint16_t tagId) const;
-
-    std::string getDataTypeThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId) const;
+    std::string getDataTypeThrow(const TagId& tagId) const;
 
 #ifndef SWIG
     std::shared_ptr<imebra::implementation::dataSet> m_pDataSet;

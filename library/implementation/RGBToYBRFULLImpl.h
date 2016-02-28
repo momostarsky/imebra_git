@@ -51,11 +51,11 @@ public:
         void templateTransform(
             const inputType* inputHandlerData,
             outputType* outputHandlerData,
-            bitDepth /* inputDepth */, std::uint32_t inputHandlerWidth, const std::string& inputHandlerColorSpace,
+            bitDepth_t /* inputDepth */, std::uint32_t inputHandlerWidth, const std::string& inputHandlerColorSpace,
             std::shared_ptr<palette> /* inputPalette */,
             std::uint32_t inputHighBit,
             std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight,
-            bitDepth /* outputDepth */, std::uint32_t outputHandlerWidth, const std::string& outputHandlerColorSpace,
+            bitDepth_t /* outputDepth */, std::uint32_t outputHandlerWidth, const std::string& outputHandlerColorSpace,
             std::shared_ptr<palette> /* outputPalette */,
             std::uint32_t outputHighBit,
             std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY) const
@@ -85,8 +85,8 @@ public:
                     sourceG = (std::int64_t)*pInputMemory++ - inputHandlerMinValue;
                     sourceB = (std::int64_t)*pInputMemory++ - inputHandlerMinValue;
                     *(pOutputMemory++) = (outputType) ( ((4899 * sourceR + 9617 * sourceG + 1868 * sourceB) / 16384) + outputHandlerMinValue );
-                    *(pOutputMemory++) = (outputType) ( outputMiddleValue + ((8192 * sourceB - 2764 * sourceR - 5428 * sourceG + 8192) / 16384));
-                    *(pOutputMemory++) = (outputType) ( outputMiddleValue + ((8192 * sourceR - 6860 * sourceG - 1332 * sourceB + 8192) / 16384));
+                    *(pOutputMemory++) = (outputType) ( outputMiddleValue + ((8192 * sourceB - 2765 * sourceR - 5427 * sourceG) / 16384));
+                    *(pOutputMemory++) = (outputType) ( outputMiddleValue + ((8192 * sourceR - 6860 * sourceG - 1332 * sourceB) / 16384));
                 }
                 pInputMemory += (inputHandlerWidth - inputWidth) * 3;
                 pOutputMemory += (outputHandlerWidth - inputWidth) * 3;

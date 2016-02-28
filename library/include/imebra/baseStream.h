@@ -32,7 +32,7 @@ namespace imebra
 
 ///
 /// \brief This class represents an input stream, a source
-///        of data from which the DICOM or the Jpeg
+///        of data from which the data can be rea
 ///        decoders read the DICOM or the Jpeg file.
 ///
 /// Specialized classes derived from this one can

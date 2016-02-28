@@ -51,11 +51,11 @@ public:
         void templateTransform(
             const inputType* inputHandlerData,
             outputType* outputHandlerData,
-            bitDepth /* inputDepth */, std::uint32_t inputHandlerWidth, const std::string& inputHandlerColorSpace,
+            bitDepth_t /* inputDepth */, std::uint32_t inputHandlerWidth, const std::string& inputHandlerColorSpace,
             std::shared_ptr<palette> /* inputPalette */,
             std::uint32_t inputHighBit,
             std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight,
-            bitDepth /* outputDepth */, std::uint32_t outputHandlerWidth, const std::string& outputHandlerColorSpace,
+            bitDepth_t /* outputDepth */, std::uint32_t outputHandlerWidth, const std::string& outputHandlerColorSpace,
             std::shared_ptr<palette> /* outputPalette */,
             std::uint32_t outputHighBit,
             std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY) const
@@ -85,9 +85,9 @@ public:
                     sourceR = (std::int64_t)*pInputMemory++ - inputHandlerMinValue;
                     sourceG = (std::int64_t)*pInputMemory++ - inputHandlerMinValue;
                     sourceB = (std::int64_t)*pInputMemory++ - inputHandlerMinValue;
-                    *(pOutputMemory++) = (outputType) ( minY + ((4207 * sourceR + 8259 * sourceG + 1604 * sourceB) / 16384));
-                    *(pOutputMemory++) = (outputType) ( outputMiddleValue + ((7196 * sourceB - 2428 * sourceR - 4768 * sourceG + 8192) / 16384) );
-                    *(pOutputMemory++) = (outputType) ( outputMiddleValue + ((7196 * sourceR - 6026 * sourceG - 1170 * sourceB + 8192) / 16384) );
+                    *(pOutputMemory++) = (outputType) ( minY + ((4207 * sourceR + 8259 * sourceG + 1604 * sourceB + 8191) / 16384));
+                    *(pOutputMemory++) = (outputType) ( outputMiddleValue + ((7196 * sourceB - 2428 * sourceR - 4768 * sourceG + 8191) / 16384) );
+                    *(pOutputMemory++) = (outputType) ( outputMiddleValue + ((7196 * sourceR - 6026 * sourceG - 1170 * sourceB + 8191) / 16384) );
                 }
                 pInputMemory += (inputHandlerWidth - inputWidth) * 3;
                 pOutputMemory += (outputHandlerWidth - inputWidth) * 3;

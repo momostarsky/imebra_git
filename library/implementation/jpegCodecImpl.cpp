@@ -985,7 +985,7 @@ void jpegCodec::readStream(std::shared_ptr<streamReader> pSourceStream, std::sha
 
     // Interleaved (more than 1 channel in the channels list)
     /////////////////////////////////////////////////////////////////
-    pDataSet->setUnsignedLong(0x0028, 0x0, 0x0006, 0, m_channelsList[0] != 0 && m_channelsList[1] != 0 ? 1 : 0);
+    pDataSet->setUnsignedLong(0x0028, 0x0, 0x0006, 0, (m_channelsList[0] != 0 && m_channelsList[1]) != 0 ? 1 : 0);
 
     // Insert the basic offset table
     ////////////////////////////////////////////////////////////////
@@ -1321,11 +1321,11 @@ std::shared_ptr<image> jpegCodec::copyJpegChannelsToImage(bool b2complement, con
 {
     IMEBRA_FUNCTION_START();
 
-    bitDepth depth;
+    bitDepth_t depth;
     if(b2complement)
-        depth = (m_precision==8) ? bitDepth::depthS8 : bitDepth::depthS16;
+        depth = (m_precision==8) ? bitDepth_t::depthS8 : bitDepth_t::depthS16;
     else
-        depth = (m_precision==8) ? bitDepth::depthU8 : bitDepth::depthU16;
+        depth = (m_precision==8) ? bitDepth_t::depthU8 : bitDepth_t::depthU16;
 
     std::shared_ptr<image> destImage(std::make_shared<image>(m_imageSizeX, m_imageSizeY, depth, colorSpace, (std::uint8_t)(m_precision-1)));
 

@@ -74,18 +74,6 @@ public:
     MissingItemError(const std::string& message);
 };
 
-class IMEBRA_API TagContentError: public std::runtime_error
-{
-public:
-    TagContentError(const std::string& message);
-};
-
-class IMEBRA_API InvalidTagContentError: public TagContentError
-{
-public:
-    InvalidTagContentError(const std::string& message);
-};
-
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 /// \brief The base exception for all the exceptions
@@ -372,6 +360,12 @@ class IMEBRA_API DataHandlerCorruptedBufferError: public DataHandlerError
 {
 public:
     DataHandlerCorruptedBufferError(const std::string& message);
+};
+
+class IMEBRA_API DataHandlerInvalidDataError: public DataHandlerError
+{
+public:
+    DataHandlerInvalidDataError(const std::string& message);
 };
 
 ///////////////////////////////////////////////////////////

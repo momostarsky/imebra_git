@@ -27,12 +27,6 @@ MissingBufferError::MissingBufferError(const std::string& message): MissingDataE
 MissingItemError::MissingItemError(const std::string& message): MissingDataElementError(message)
 {}
 
-TagContentError::TagContentError(const std::string &message): std::runtime_error(message)
-{}
-
-InvalidTagContentError::InvalidTagContentError(const std::string &message): TagContentError(message)
-{}
-
 StreamError::StreamError(const std::string& message): std::runtime_error(message)
 {}
 
@@ -94,6 +88,9 @@ DataHandlerConversionError::DataHandlerConversionError(const std::string &messag
 {}
 
 DataHandlerCorruptedBufferError::DataHandlerCorruptedBufferError(const std::string &message): DataHandlerError(message)
+{}
+
+DataHandlerInvalidDataError::DataHandlerInvalidDataError(const std::string &message): DataHandlerError(message)
 {}
 
 DataSetError::DataSetError(const std::string& message): std::runtime_error(message)

@@ -1001,35 +1001,35 @@ std::shared_ptr<image> dicomCodec::getImage(const dataSet& dataset, std::shared_
 
 	// Create an image
 	///////////////////////////////////////////////////////////
-    bitDepth depth;
+    bitDepth_t depth;
 	if(b2Complement)
 	{
 		if(highBit >= 16)
 		{
-            depth = bitDepth::depthS32;
+            depth = bitDepth_t::depthS32;
 		}
 		else if(highBit >= 8)
 		{
-            depth = bitDepth::depthS16;
+            depth = bitDepth_t::depthS16;
 		}
 		else
 		{
-            depth = bitDepth::depthS8;
+            depth = bitDepth_t::depthS8;
 		}
 	}
 	else
 	{
 		if(highBit >= 16)
 		{
-            depth = bitDepth::depthU32;
+            depth = bitDepth_t::depthU32;
 		}
 		else if(highBit >= 8)
 		{
-            depth = bitDepth::depthU16;
+            depth = bitDepth_t::depthU16;
 		}
 		else
 		{
-            depth = bitDepth::depthU8;
+            depth = bitDepth_t::depthU8;
 		}
 	}
 

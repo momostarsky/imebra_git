@@ -95,6 +95,10 @@ public:
 
     virtual void setUnicodeString(const size_t index, const std::wstring& value);
 
+    // Throw an exception if the content is not valid
+    ///////////////////////////////////////////////////////////
+    virtual void validate() const;
+
 protected:
 
     std::vector<std::string> m_strings;

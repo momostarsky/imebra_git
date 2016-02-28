@@ -82,7 +82,7 @@ public:
     image(
             std::uint32_t sizeX,
             std::uint32_t sizeY,
-            bitDepth depth,
+            bitDepth_t depth,
             const std::string& colorSpace,
             std::uint32_t highBit);
 
@@ -119,7 +119,7 @@ public:
     std::shared_ptr<handlers::writingDataHandlerNumericBase> create(
 		const std::uint32_t sizeX,
 		const std::uint32_t sizeY,
-		const bitDepth depth,
+		const bitDepth_t depth,
         const std::string& colorSpace,
         const std::uint32_t  highBit);
 
@@ -220,7 +220,7 @@ public:
 	///
 	/// @return the bit depth.
 	///////////////////////////////////////////////////////////
-    bitDepth getDepth() const;
+    bitDepth_t getDepth() const;
 
 	/// \brief Get the high bit.
 	///
@@ -248,7 +248,7 @@ protected:
 
 	// Depth (enum)
 	///////////////////////////////////////////////////////////
-	bitDepth  m_imageDepth;
+	bitDepth_t  m_imageDepth;
 
 	// High bit (not valid in float mode)
 	///////////////////////////////////////////////////////////

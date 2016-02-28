@@ -80,7 +80,7 @@ bool modalityVOILUT::isEmpty() const
 
 
 std::shared_ptr<image> modalityVOILUT::allocateOutputImage(
-        bitDepth inputDepth,
+        bitDepth_t inputDepth,
         const std::string& inputColorSpace,
         std::uint32_t inputHighBit,
         std::shared_ptr<palette> /* inputPalette */,
@@ -106,35 +106,35 @@ std::shared_ptr<image> modalityVOILUT::allocateOutputImage(
 			bNegative = (m_voiLut->mappedValue(index) < 0);
 		}
 
-        bitDepth depth;
+        bitDepth_t depth;
 		if(bNegative)
 		{
             if(bits > 16)
             {
-                depth = bitDepth::depthS32;
+                depth = bitDepth_t::depthS32;
             }
             else if(bits > 8)
             {
-                depth = bitDepth::depthS16;
+                depth = bitDepth_t::depthS16;
             }
             else
             {
-                depth = bitDepth::depthS8;
+                depth = bitDepth_t::depthS8;
             }
 		}
 		else
 		{
             if(bits > 16)
             {
-                depth = bitDepth::depthU32;
+                depth = bitDepth_t::depthU32;
             }
             else if(bits > 8)
             {
-                depth = bitDepth::depthU16;
+                depth = bitDepth_t::depthU16;
             }
             else
             {
-                depth = bitDepth::depthU8;
+                depth = bitDepth_t::depthU8;
             }
         }
 
@@ -150,7 +150,7 @@ std::shared_ptr<image> modalityVOILUT::allocateOutputImage(
 
 	std::int32_t value0 = 0;
     std::int32_t value1 = ((std::int32_t)1 << (inputHighBit + 1)) - 1;
-    if(inputDepth == bitDepth::depthS16 || inputDepth == bitDepth::depthS8)
+    if(inputDepth == bitDepth_t::depthS16 || inputDepth == bitDepth_t::depthS8)
 	{
         value0 = ((std::int32_t)(-1) << inputHighBit);
         value1 = ((std::int32_t)1 << inputHighBit);
@@ -172,22 +172,22 @@ std::shared_ptr<image> modalityVOILUT::allocateOutputImage(
 
 	if(minValue >= 0 && maxValue <= 255)
 	{
-        return std::make_shared<image>(outputWidth, outputHeight, bitDepth::depthU8, inputColorSpace, 7);
+        return std::make_shared<image>(outputWidth, outputHeight, bitDepth_t::depthU8, inputColorSpace, 7);
 	}
 	if(minValue >= -128 && maxValue <= 127)
 	{
-        return std::make_shared<image>(outputWidth, outputHeight, bitDepth::depthS8, inputColorSpace, 7);
+        return std::make_shared<image>(outputWidth, outputHeight, bitDepth_t::depthS8, inputColorSpace, 7);
 	}
 	if(minValue >= 0 && maxValue <= 65535)
 	{
-        return std::make_shared<image>(outputWidth, outputHeight, bitDepth::depthU16, inputColorSpace, 15);
+        return std::make_shared<image>(outputWidth, outputHeight, bitDepth_t::depthU16, inputColorSpace, 15);
 	}
 	if(minValue >= -32768 && maxValue <= 32767)
 	{
-        return std::make_shared<image>(outputWidth, outputHeight, bitDepth::depthS16, inputColorSpace, 15);
+        return std::make_shared<image>(outputWidth, outputHeight, bitDepth_t::depthS16, inputColorSpace, 15);
 	}
 
-    return std::make_shared<image>(outputWidth, outputHeight, bitDepth::depthS32, inputColorSpace, 31);
+    return std::make_shared<image>(outputWidth, outputHeight, bitDepth_t::depthS32, inputColorSpace, 31);
 
     IMEBRA_FUNCTION_END();
 }

@@ -54,7 +54,7 @@ public:
     Image(
         std::uint32_t sizeX,
         std::uint32_t sizeY,
-        bitDepth depth,
+        bitDepth_t depth,
         const std::string& colorSpace,
         std::uint32_t highBit);
 
@@ -96,7 +96,7 @@ public:
 
     std::uint32_t getChannelsNumber() const;
 
-    bitDepth getDepth() const;
+    bitDepth_t getDepth() const;
 
     std::uint32_t getHighBit() const;
 

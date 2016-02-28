@@ -71,6 +71,8 @@ class writingDataHandlerStringPN: public writingDataHandlerStringUnicode
 {
 public:
     writingDataHandlerStringPN(const std::shared_ptr<buffer>& pBuffer, const charsetsList::tCharsetsList& charsets);
+
+    virtual void validate() const;
 };
 
 } // namespace handlers

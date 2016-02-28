@@ -52,8 +52,8 @@ std::shared_ptr<const memory> readingDataHandlerNumericBase::getMemory() const
     IMEBRA_FUNCTION_END();
 }
 
-writingDataHandlerNumericBase::writingDataHandlerNumericBase(const std::shared_ptr<buffer> &pBuffer, const size_t initialSize, const std::string &dataType, size_t unitSize):
-    writingDataHandler(pBuffer, dataType, 0), m_pMemory(std::make_shared<memory>(initialSize * unitSize)), m_unitSize(unitSize)
+writingDataHandlerNumericBase::writingDataHandlerNumericBase(const std::shared_ptr<buffer> &pBuffer, const size_t initialSize, const std::string &dataType, size_t unitSize, bool bIsSigned):
+    writingDataHandler(pBuffer, dataType, 0), m_pMemory(std::make_shared<memory>(initialSize * unitSize)), m_unitSize(unitSize), m_bIsSigned(bIsSigned)
 {
 }
 
@@ -78,6 +78,24 @@ void writingDataHandlerNumericBase::setSize(const size_t elementsNumber)
     IMEBRA_FUNCTION_START();
 
     m_pMemory->resize(elementsNumber * m_unitSize);
+
+    IMEBRA_FUNCTION_END();
+}
+
+bool writingDataHandlerNumericBase::isSigned() const
+{
+    IMEBRA_FUNCTION_START();
+
+    return m_bIsSigned;
+
+    IMEBRA_FUNCTION_END();
+}
+
+size_t writingDataHandlerNumericBase::getUnitSize() const
+{
+    IMEBRA_FUNCTION_START();
+
+    return m_unitSize;
 
     IMEBRA_FUNCTION_END();
 }
