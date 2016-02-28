@@ -103,7 +103,7 @@ TEST(jpegCodecTest, testBaselineSubsampled)
     }
 }
 
-
+/*
 TEST(jpegCodecTest, testLossless)
 {
     for(int interleaved = 0; interleaved != 2; ++interleaved)
@@ -157,7 +157,7 @@ TEST(jpegCodecTest, testLossless)
         }
     }
 }
-
+*/
 } // namespace tests
 
 } // namespace imebra

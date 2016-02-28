@@ -177,6 +177,30 @@ public:
     BufferUnknownTypeError(const std::string& message);
 };
 
+class IMEBRA_API DictionaryError: public std::runtime_error
+{
+public:
+    DictionaryError(const std::string& message);
+};
+
+class IMEBRA_API DictionaryUnknownTagError: public DictionaryError
+{
+public:
+    DictionaryUnknownTagError(const std::string& message);
+};
+
+class IMEBRA_API DictionaryUnknownDefaultTypeError: public DictionaryError
+{
+public:
+    DictionaryUnknownDefaultTypeError(const std::string& message);
+};
+
+class IMEBRA_API DictionaryUnknownDataTypeError: public DictionaryError
+{
+public:
+    DictionaryUnknownDataTypeError(const std::string& message);
+};
+
 
 ///////////////////////////////////////////////////////////
 /// \brief Base class for the exceptions thrown by

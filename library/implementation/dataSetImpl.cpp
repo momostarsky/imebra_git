@@ -57,7 +57,7 @@ namespace implementation
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<data> dataSet::getTagThrow(std::uint16_t groupId, std::uint16_t order, std::uint16_t tagId) const
+std::shared_ptr<data> dataSet::getTagThrow(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId) const
 {
     IMEBRA_FUNCTION_START();
 

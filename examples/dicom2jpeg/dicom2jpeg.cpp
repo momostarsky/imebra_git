@@ -207,7 +207,7 @@ int main(int argc, char* argv[])
                 }
             }
 
-            Image finalImage(width, height, bitDepth::depthU8, "YBR_FULL", 7);
+            Image finalImage(width, height, bitDepth_t::depthU8, "YBR_FULL", 7);
 
             // Scan through the frames
             //////////////////////////
@@ -273,18 +273,18 @@ int main(int argc, char* argv[])
 
             // Calculate the frames per second from the available tags
             double framesPerSecond(0);
-            double frameTime(loadedDataSet.getDouble(0x0018, 0, 0x1063, 0, 0, 0));
+            double frameTime(loadedDataSet.getDouble(TagId(0x0018, 0x1063), 0, 0, 0));
             if(frameTime > 0.1)
             {
                 framesPerSecond = 1000 / frameTime;
             }
             if(framesPerSecond < 0.1)
             {
-                framesPerSecond = loadedDataSet.getUnsignedLong(0x0018, 0x0, 0x0040, 0x0, 0, 0);
+                framesPerSecond = loadedDataSet.getUnsignedLong(TagId(0x0018, 0x0040), 0x0, 0, 0);
             }
             if(framesPerSecond < 0.1)
             {
-                framesPerSecond = loadedDataSet.getUnsignedLong(0x0008, 0x0, 0x2144, 0x0, 0, 0);
+                framesPerSecond = loadedDataSet.getUnsignedLong(TagId(0x0008, 0x2144), 0x0, 0, 0);
             }
 
             // Add the ffmpeg argument for the frames per second
