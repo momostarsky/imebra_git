@@ -7,39 +7,45 @@ $fileHeader$
 
 */
 
-#if !defined(imebraDrawBitmap_SWIG_3146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_)
-#define imebraDrawBitmap_SWIG_3146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_
+#if !defined(imebraDrawBitmap__INCLUDED_)
+#define imebraDrawBitmap__INCLUDED_
 
 #include <memory>
+#include "definitions.h"
+#include "transformsChain.h"
+#include "image.h"
+#include "memory.h"
 
+#ifndef SWIG
 namespace imebra
 {
-
 namespace implementation
 {
 class drawBitmap;
 }
 
-class DrawBitmap
+}
+#endif
+
+namespace imebra
+{
+
+class IMEBRA_API DrawBitmap
 {
 public:
     DrawBitmap(const DrawBitmap& right);
-    DrawBitmap(const Image& sourceImage, const TransformsChain& transformsChain);
+    DrawBitmap();
+    DrawBitmap(const TransformsChain& transformsChain);
+    virtual ~DrawBitmap();
 
     DrawBitmap& operator=(const DrawBitmap& right);
 
-    int getBitmap(
-        int totalWidthPixels, int totalHeightPixels,
-        int visibleTopLeftX, int visibleTopLeftY, int visibleBottomRightX, int visibleBottomRightY,
-        int* buffer, int bufferSize);
+    size_t getBitmap(const Image& image, drawBitmapType_t drawBitmapType, std::uint32_t rowAlignBytes, char* buffer, size_t bufferSize);
 
-
-    Memory getBitmap(
-        int totalWidthPixels, int totalHeightPixels,
-        int visibleTopLeftX, int visibleTopLeftY, int visibleBottomRightX, int visibleBottomRightY,
-        Memory reuseMemory);
+    ReadWriteMemory getBitmap(const Image& image, drawBitmapType_t drawBitmapType, std::uint32_t rowAlignBytes);
 
 #ifndef SWIG
+protected:
     std::shared_ptr<implementation::drawBitmap> m_pDrawBitmap;
 #endif
 
@@ -47,4 +53,4 @@ public:
 
 }
 
-#endif // !defined(imebraDrawBitmap_SWIG_3146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_)
+#endif // !defined(imebraDrawBitmap__INCLUDED_)
