@@ -15,7 +15,8 @@ $fileHeader$
 #include <memory>
 #include <string>
 #include "definitions.h"
-#include "dataHandler.h"
+#include "readingDataHandlerNumeric.h"
+#include "writingDataHandlerNumeric.h"
 
 namespace imebra
 {

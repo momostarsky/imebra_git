@@ -3,8 +3,7 @@ $fileHeader$
 */
 
 /*! \file dicomDir.h
-    \brief Declaration of the classes that parse/create a DICOMDIR
-        structure (DicomDir and DirectoryRecord)
+    \brief Declaration of the class DicomDir.
 
 */
 
@@ -17,12 +16,12 @@ $fileHeader$
 #include <string>
 #include "dataSet.h"
 #include "definitions.h"
+#include "dicomDirEntry.h"
 
 namespace imebra
 {
 namespace implementation
 {
-class directoryRecord;
 class dicomDir;
 }
 }
@@ -32,52 +31,6 @@ class dicomDir;
 namespace imebra
 {
 
-class IMEBRA_API DirectoryRecord
-{
-#ifndef SWIG
-	friend class DicomDir;
-private:
-    DirectoryRecord(std::shared_ptr<imebra::implementation::directoryRecord> pDirectoryRecord);
-#endif
-
-public:
-	DirectoryRecord();
-	DirectoryRecord(const DirectoryRecord& right);
-    virtual ~DirectoryRecord();
-
-	DirectoryRecord& operator=(const DirectoryRecord& right);
-
-	DataSet getRecordDataSet();
-
-	DirectoryRecord getNextRecord();
-
-	DirectoryRecord getFirstChildRecord();
-	
-	DirectoryRecord getReferencedRecord();
-
-	void setNextRecord(const DirectoryRecord& nextRecord);
-
-	void setFirstChildRecord(const DirectoryRecord& firstChildRecord);
-
-	void setReferencedRecord(const DirectoryRecord& referencedRecord);
-	
-    fileParts_t getFileParts() const;
-
-    void setFileParts(const fileParts_t& fileParts);
-
-    std::string getTypeString() const;
-
-    void setTypeString(const std::string& recordType);
-
-    bool isNull() const;
-
-#ifndef SWIG
-protected:
-    std::shared_ptr<imebra::implementation::directoryRecord> m_pDirectoryRecord;
-#endif
-};
-
-
 class IMEBRA_API DicomDir
 {
 public:
@@ -86,11 +39,11 @@ public:
 
 	DataSet getDirectoryDataSet();
 
-	DirectoryRecord getNewRecord();
+    DicomDirEntry getNewEntry();
 
-	DirectoryRecord getFirstRootRecord();
+    DicomDirEntry getFirstRootEntry();
 
-	void setFirstRootRecord(DirectoryRecord firstRootRecord);
+    void setFirstRootEntry(DicomDirEntry firstEntryRecord);
 
 	DataSet buildDataSet();
 

@@ -14,7 +14,7 @@ $fileHeader$
 #include "definitions.h"
 #include "transformsChain.h"
 #include "image.h"
-#include "memory.h"
+#include "readMemory.h"
 
 #ifndef SWIG
 namespace imebra

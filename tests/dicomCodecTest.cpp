@@ -128,9 +128,9 @@ TEST(dicomCodecTest, testDicom)
                                 .setString(1, "BBBbbb")
                                 .setString(2, "");
                         testDataSet.setUnsignedLong(TagId(imebra::tagId_t::PlanarConfiguration_0028_0006), 0, interleaved);
-                        testDataSet.setImage(0, dicomImage0, transferSyntax, veryHigh);
-                        testDataSet.setImage(1, dicomImage1, transferSyntax, veryHigh);
-                        testDataSet.setImage(2, dicomImage2, transferSyntax, veryHigh);
+                        testDataSet.setImage(0, dicomImage0, transferSyntax, imageQuality_t::veryHigh);
+                        testDataSet.setImage(1, dicomImage1, transferSyntax, imageQuality_t::veryHigh);
+                        testDataSet.setImage(2, dicomImage2, transferSyntax, imageQuality_t::veryHigh);
 
                         MemoryStreamOutput writeStream(streamMemory);
                         StreamWriter writer(writeStream);

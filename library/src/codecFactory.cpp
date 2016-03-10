@@ -8,9 +8,10 @@ $fileHeader$
 
 */
 
-#include <imebra/codecFactory.h>
-#include <imebra/fileStream.h>
-#include <imebra/definitions.h>
+#include "../include/imebra/fileStreamInput.h"
+#include "../include/imebra/fileStreamOutput.h"
+#include "../include/imebra/codecFactory.h"
+#include "../include/imebra/definitions.h"
 
 #include "../implementation/dicomCodecImpl.h"
 #include "../implementation/jpegCodecImpl.h"

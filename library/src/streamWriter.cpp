@@ -8,7 +8,7 @@ $fileHeader$
 */
 
 #include "../include/imebra/streamWriter.h"
-#include "../include/imebra/baseStream.h"
+#include "../include/imebra/baseStreamOutput.h"
 
 #include "../implementation/streamWriterImpl.h"
 

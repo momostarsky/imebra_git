@@ -16,7 +16,8 @@ $fileHeader$
 #include <memory>
 #include <map>
 #include "image.h"
-#include "dataHandler.h"
+#include "readingDataHandlerNumeric.h"
+#include "writingDataHandlerNumeric.h"
 #include "definitions.h"
 #include "streamReader.h"
 #include "streamWriter.h"

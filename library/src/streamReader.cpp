@@ -8,6 +8,7 @@ $fileHeader$
 */
 
 #include "../include/imebra/streamReader.h"
+#include "../include/imebra/baseStreamInput.h"
 #include "../implementation/streamReaderImpl.h"
 
 namespace imebra

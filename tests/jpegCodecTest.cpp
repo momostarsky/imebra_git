@@ -31,12 +31,12 @@ TEST(jpegCodecTest, testBaseline)
 		if(precision == 0)
 		{
             fileName = L"testDicomLossyJpeg8bit.dcm";
-            dataset.setImage(0, ybrImage, "1.2.840.10008.1.2.4.50", veryHigh);
+            dataset.setImage(0, ybrImage, "1.2.840.10008.1.2.4.50", imageQuality_t::veryHigh);
 		}
 		else
 		{
 			fileName = L"testDicomLossyJpeg12bit.dcm";
-            dataset.setImage(0, ybrImage, "1.2.840.10008.1.2.4.51", veryHigh);
+            dataset.setImage(0, ybrImage, "1.2.840.10008.1.2.4.51", imageQuality_t::veryHigh);
 		}
 
         CodecFactory::save(dataset, fileName, codecType_t::dicom);

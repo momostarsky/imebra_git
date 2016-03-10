@@ -14,7 +14,6 @@ $fileHeader$
 
 #include <memory>
 #include "definitions.h"
-#include "baseStream.h"
 
 namespace imebra
 {
@@ -30,6 +29,8 @@ class streamReader;
 
 namespace imebra
 {
+
+class BaseStreamInput;
 
 class CodecFactory;
 
