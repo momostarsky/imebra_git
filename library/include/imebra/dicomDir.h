@@ -4,12 +4,12 @@ $fileHeader$
 
 /*! \file dicomDir.h
     \brief Declaration of the classes that parse/create a DICOMDIR
-		structure (dicomDir and directoryRecord) for SWIG
+        structure (DicomDir and DirectoryRecord)
 
 */
 
-#ifndef imebraDicomDir_SWIG_93F684BF_0024_4bf3_89BA_D98E82A1F44C__INCLUDED_
-#define imebraDicomDir_SWIG_93F684BF_0024_4bf3_89BA_D98E82A1F44C__INCLUDED_
+#if !defined(imebraDicomDir__INCLUDED_)
+#define imebraDicomDir__INCLUDED_
 
 #ifndef SWIG
 
@@ -36,15 +36,14 @@ class IMEBRA_API DirectoryRecord
 {
 #ifndef SWIG
 	friend class DicomDir;
+private:
+    DirectoryRecord(std::shared_ptr<imebra::implementation::directoryRecord> pDirectoryRecord);
 #endif
+
 public:
 	DirectoryRecord();
 	DirectoryRecord(const DirectoryRecord& right);
-
-
-#ifndef SWIG
-    DirectoryRecord(std::shared_ptr<imebra::implementation::directoryRecord> pDirectoryRecord);
-#endif
+    virtual ~DirectoryRecord();
 
 	DirectoryRecord& operator=(const DirectoryRecord& right);
 
@@ -73,7 +72,7 @@ public:
     bool isNull() const;
 
 #ifndef SWIG
-private:
+protected:
     std::shared_ptr<imebra::implementation::directoryRecord> m_pDirectoryRecord;
 #endif
 };
@@ -83,6 +82,7 @@ class IMEBRA_API DicomDir
 {
 public:
 	DicomDir(DataSet fromDataSet);
+    virtual ~DicomDir();
 
 	DataSet getDirectoryDataSet();
 
@@ -95,11 +95,11 @@ public:
 	DataSet buildDataSet();
 
 #ifndef SWIG
-private:
+protected:
     std::shared_ptr<imebra::implementation::dicomDir> m_pDicomDir;
 #endif
 };
 
 }
 
-#endif // !defined(imebraDicomDir_SWIG_93F684BF_0024_4bf3_89BA_D98E82A1F44C__INCLUDED_)
+#endif // !defined(imebraDicomDir__INCLUDED_)

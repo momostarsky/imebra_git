@@ -2,8 +2,8 @@
 $fileHeader$
 */
 
-/*! \file colorTransformsFactory_swig.cpp
-    \brief Implementation of the class ColorTransformsFactory for SWIG.
+/*! \file colorTransformsFactory.cpp
+    \brief Implementation of the class ColorTransformsFactory.
 */
 
 #include "../include/imebra/colorTransformsFactory.h"

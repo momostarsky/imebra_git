@@ -61,7 +61,7 @@ public:
 		std::shared_ptr<streamWriter> pDestStream,
 		std::shared_ptr<image> pImage,
         const std::string& transferSyntax,
-		quality imageQuality_t,
+        imageQuality_t imageQuality,
         const std::string& dataType,
 		std::uint8_t allocatedBits,
 		bool bSubSampledX,
@@ -170,7 +170,7 @@ protected:
 protected:
 	// Read a single tag
 	///////////////////////////////////////////////////////////
-    std::uint32_t readTag(std::shared_ptr<streamReader> pStream, std::shared_ptr<dataSet> pDataSet, std::uint32_t tagLengthDWord, std::uint16_t tagId, std::uint16_t order, std::uint16_t tagSubId, const std::string& tagType, streamController::tByteOrdering endianType, short wordSize, std::uint32_t bufferId, std::uint32_t maxSizeBufferLoad = 0xffffffff);
+    std::uint32_t readTag(std::shared_ptr<streamReader> pStream, std::shared_ptr<dataSet> pDataSet, std::uint32_t tagLengthDWord, std::uint16_t tagId, std::uint16_t order, std::uint16_t tagSubId, const std::string& tagType, streamController::tByteOrdering endianType, size_t wordSize, std::uint32_t bufferId, std::uint32_t maxSizeBufferLoad = 0xffffffff);
 
 	// Calculate the tag's length
 	///////////////////////////////////////////////////////////
@@ -239,8 +239,8 @@ protected:
 	// Write an RLE compressed image
 	///////////////////////////////////////////////////////////
 	void writeRLECompressed(
-		std::uint32_t imageSizeX,
-		std::uint32_t imageSizeY,
+		std::uint32_t imageWidth,
+		std::uint32_t imageHeight,
 		std::uint32_t channelsNumber,
 		streamWriter* pDestStream,
 		std::uint8_t allocatedBits,
@@ -254,8 +254,8 @@ protected:
 	// Read an RLE compressed image
 	///////////////////////////////////////////////////////////
 	void readRLECompressed(
-		std::uint32_t imageSizeX,
-		std::uint32_t imageSizeY,
+		std::uint32_t imageWidth,
+		std::uint32_t imageHeight,
 		std::uint32_t channelsNumber,
 		streamReader* pSourceStream,
 		std::uint8_t allocatedBits,
@@ -293,7 +293,7 @@ protected:
     std::uint16_t m_ioWord;
 	std::uint8_t  m_ioByte;
 
-	void allocChannels(std::uint32_t channelsNumber, std::uint32_t sizeX, std::uint32_t sizeY, bool bSubSampledX, bool bSubSampledY);
+	void allocChannels(std::uint32_t channelsNumber, std::uint32_t width, std::uint32_t height, bool bSubSampledX, bool bSubSampledY);
 
 	typedef std::shared_ptr<channel> ptrChannel;
 	std::vector<ptrChannel> m_channels;

@@ -11,29 +11,29 @@ namespace tests
 
 Image makeTestImage()
 {
-    std::uint32_t sizeX = 301;
-    std::uint32_t sizeY = 201;
-    Image dicomImage(sizeX, sizeY, bitDepth_t::depthU16, "RGB", 15);
+    std::uint32_t width = 301;
+    std::uint32_t height = 201;
+    Image dicomImage(width, height, bitDepth_t::depthU16, "RGB", 15);
 
     WritingDataHandler imageHandler = dicomImage.getWritingDataHandler();
 
 	// Make 3 bands (RGB)
 	size_t pointer(0);
-	for(std::uint32_t y=0; y<sizeY; ++y)
+	for(std::uint32_t y=0; y<height; ++y)
 	{
-		for(std::uint32_t x=0; x<sizeX; ++x)
+		for(std::uint32_t x=0; x<width; ++x)
 		{
 			std::int32_t r, g, b;
-			std::uint32_t value = y * 255 / sizeY;
+			std::uint32_t value = y * 255 / height;
 			r = g = 0;
 			b = value;
-			if(x < sizeX - sizeX/3)
+			if(x < width - width/3)
 			{
 				r = 0;
 				g = value;
 				b = 0;
 			}
-			if(x < sizeX / 3)
+			if(x < width / 3)
 			{
 				r = value;
 				g = 0;
@@ -120,7 +120,7 @@ TEST(dicomCodecTest, testDicom)
                     std::cout << " sign: " << sign;
                     std::cout << " highBit: " << highBit << std::endl;
 
-                    Memory streamMemory;
+                    ReadWriteMemory streamMemory;
 					{
                         DataSet testDataSet;
                         testDataSet.getWritingDataHandler(TagId(0x0010, 0x0010), 0)

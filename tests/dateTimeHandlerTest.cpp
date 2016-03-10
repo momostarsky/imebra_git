@@ -1,4 +1,4 @@
-#include <imebra/dataSet.h>
+#include <imebra/imebra.h>
 #include <gtest/gtest.h>
 
 namespace imebra

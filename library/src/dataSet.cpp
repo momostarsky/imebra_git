@@ -6,6 +6,8 @@ $fileHeader$
 #include "../implementation/dataSetImpl.h"
 #include "../implementation/dataHandlerNumericImpl.h"
 #include "../implementation/charsetConversionBaseImpl.h"
+#include <typeinfo>
+#include <memory>
 
 namespace imebra
 {
@@ -59,6 +61,10 @@ DataSet::DataSet(): m_pDataSet(std::make_shared<imebra::implementation::dataSet>
 }
 
 DataSet::DataSet(const DataSet& right): m_pDataSet(right.m_pDataSet)
+{
+}
+
+DataSet::~DataSet()
 {
 }
 
@@ -126,7 +132,7 @@ Image DataSet::getImageApplyModalityTransform(size_t frameNumber)
 
 void DataSet::setImage(size_t frameNumber, Image image, const std::string& transferSyntax, imageQuality_t quality)
 {
-    m_pDataSet->setImage((std::uint32_t)frameNumber, image.m_pImage, transferSyntax, (imebra::implementation::codecs::codec::quality)quality);
+    m_pDataSet->setImage((std::uint32_t)frameNumber, image.m_pImage, transferSyntax, quality);
 }
 
 DataSet DataSet::getSequenceItemThrow(const TagId& tagId, size_t itemId)
@@ -134,7 +140,7 @@ DataSet DataSet::getSequenceItemThrow(const TagId& tagId, size_t itemId)
     return DataSet(m_pDataSet->getSequenceItemThrow(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), itemId));
 }
 
-ReadingDataHandler DataSet::getReadingDataHandler(const TagId& tagId, size_t bufferId) const
+ReadingDataHandler DataSet::getReadingDataHandlerThrow(const TagId& tagId, size_t bufferId) const
 {
     return ReadingDataHandler(m_pDataSet->getReadingDataHandlerThrow(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), bufferId));
 }
@@ -143,6 +149,29 @@ WritingDataHandler DataSet::getWritingDataHandler(const TagId& tagId, size_t buf
 {
     return WritingDataHandler(m_pDataSet->getWritingDataHandler(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), bufferId, defaultDataType));
 }
+
+ReadingDataHandlerNumeric DataSet::getReadingDataHandlerNumericThrow(const TagId& tagId, size_t bufferId) const
+{
+    std::shared_ptr<implementation::handlers::readingDataHandlerNumericBase> numericHandler =
+            std::dynamic_pointer_cast<implementation::handlers::readingDataHandlerNumericBase>(m_pDataSet->getReadingDataHandlerThrow(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), bufferId));
+    if(numericHandler.get() == 0)
+    {
+        throw std::bad_cast();
+    }
+    return ReadingDataHandlerNumeric(numericHandler);
+}
+
+WritingDataHandlerNumeric DataSet::getWritingDataHandlerNumeric(const TagId& tagId, size_t bufferId, const std::string& defaultDataType)
+{
+    std::shared_ptr<implementation::handlers::writingDataHandlerNumericBase> numericHandler =
+            std::dynamic_pointer_cast<implementation::handlers::writingDataHandlerNumericBase>(m_pDataSet->getWritingDataHandler(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), bufferId, defaultDataType));
+    if(numericHandler.get() == 0)
+    {
+        throw std::bad_cast();
+    }
+    return WritingDataHandlerNumeric(numericHandler);
+}
+
 
 bool DataSet::bufferExists(const TagId& tagId, size_t bufferId)
 {

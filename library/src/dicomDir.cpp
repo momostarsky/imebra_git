@@ -2,9 +2,9 @@
 $fileHeader$
 */
 
-/*! \file dicomDir_swig.cpp
+/*! \file dicomDir.cpp
     \brief Implementation of the classes that parse/create a DICOMDIR
-		structure (dicomDir and directoryRecord) for SWIG.
+        structure (DicomDir and DirectoryRecord).
 
 */
 
@@ -21,6 +21,10 @@ DirectoryRecord::DirectoryRecord(const DirectoryRecord& right): m_pDirectoryReco
 }
 
 DirectoryRecord::DirectoryRecord(std::shared_ptr<imebra::implementation::directoryRecord> pDirectoryRecord): m_pDirectoryRecord(pDirectoryRecord)
+{
+}
+
+DirectoryRecord::~DirectoryRecord()
 {
 }
 
@@ -104,6 +108,10 @@ bool DirectoryRecord::isNull() const
 
 DicomDir::DicomDir(DataSet fromDataSet): m_pDicomDir(std::make_shared<imebra::implementation::dicomDir>(fromDataSet.m_pDataSet))
 {}
+
+DicomDir::~DicomDir()
+{
+}
 
 DataSet DicomDir::getDirectoryDataSet()
 {

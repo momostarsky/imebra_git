@@ -10,7 +10,8 @@ $fileHeader$
 namespace imebra
 {
 
-MemoryStreamOutput::MemoryStreamOutput(Memory& memory): BaseStreamOutput(std::make_shared<implementation::memoryStreamOutput>(memory.m_pMemory))
+MemoryStreamOutput::MemoryStreamOutput(ReadWriteMemory& memory):
+    BaseStreamOutput(std::make_shared<implementation::memoryStreamOutput>(std::const_pointer_cast<implementation::memory>(memory.m_pMemory)))
 {
 }
 
@@ -24,7 +25,11 @@ MemoryStreamOutput& MemoryStreamOutput::operator=(const MemoryStreamOutput& righ
 	return *this;
 }
 
-MemoryStreamInput::MemoryStreamInput(const Memory& memory): BaseStreamInput(std::make_shared<implementation::memoryStreamInput>(memory.m_pMemory))
+MemoryStreamInput::MemoryStreamInput(const ReadMemory& memory): BaseStreamInput(std::make_shared<implementation::memoryStreamInput>(memory.m_pMemory))
+{
+}
+
+MemoryStreamInput::MemoryStreamInput(const ReadWriteMemory& memory): BaseStreamInput(std::make_shared<implementation::memoryStreamInput>(memory.m_pMemory))
 {
 }
 

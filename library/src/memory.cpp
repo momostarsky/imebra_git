@@ -6,72 +6,118 @@ namespace imebra
 {
 
 
-Memory::Memory(): m_pMemory(std::make_shared<implementation::memory>())
+
+ReadMemory::ReadMemory(): m_pMemory(std::make_shared<const implementation::memory>())
 {
 }
 
-Memory::Memory(size_t initialSize): m_pMemory(std::make_shared<implementation::memory>(initialSize))
+ReadMemory::ReadMemory(const char* buffer, size_t bufferSize):
+    m_pMemory(std::make_shared<const implementation::memory>(new implementation::stringUint8((const std::uint8_t*)buffer, bufferSize)))
 {
 }
 
-Memory::Memory(const char* buffer, size_t bufferSize):
-    m_pMemory(std::make_shared<implementation::memory>(new implementation::stringUint8((const std::uint8_t*)buffer, bufferSize)))
+ReadMemory::ReadMemory(const ReadMemory &right): m_pMemory(right.m_pMemory)
 {
 }
 
-Memory::Memory(std::shared_ptr<implementation::memory> pMemory): m_pMemory(pMemory)
+ReadMemory::ReadMemory(std::shared_ptr<const implementation::memory> pMemory): m_pMemory(pMemory)
 {
 }
 
-void Memory::transfer(Memory& transferFrom)
+ReadMemory::~ReadMemory()
 {
-    m_pMemory->transfer(transferFrom.m_pMemory);
 }
 
-void Memory::copyFrom(const Memory& sourceMemory)
+ReadMemory& ReadMemory::operator=(const ReadMemory& right)
 {
-    m_pMemory->copyFrom(sourceMemory.m_pMemory);
+    m_pMemory = right.m_pMemory;
+    return *this;
 }
 
-void Memory::clear()
-{
-    m_pMemory->clear();
-}
-
-void Memory::resize(size_t newSize)
-{
-    m_pMemory->resize(newSize);
-}
-
-void Memory::reserve(size_t reserveSize)
-{
-    m_pMemory->reserve(reserveSize);
-}
-
-size_t Memory::size() const
+size_t ReadMemory::size() const
 {
     return m_pMemory->size();
 }
 
-char* Memory::data()
-{
-    return (char*)(m_pMemory->data());
-}
-
-const char* Memory::data() const
+const char* ReadMemory::data() const
 {
     return (const char*)(m_pMemory->data());
 }
 
-bool Memory::empty() const
+bool ReadMemory::empty() const
 {
     return m_pMemory->empty();
 }
 
-void Memory::assign(const char* pSource, const size_t sourceLength)
+
+
+
+
+ReadWriteMemory::ReadWriteMemory(): ReadMemory()
 {
-    m_pMemory->assign((const std::uint8_t*)pSource, sourceLength);
 }
+
+ReadWriteMemory::ReadWriteMemory(size_t initialSize)
+{
+    m_pMemory = std::make_shared<const implementation::memory>(initialSize);
+}
+
+ReadWriteMemory::ReadWriteMemory(const char* buffer, size_t bufferSize)
+{
+    m_pMemory = std::make_shared<const implementation::memory>(new implementation::stringUint8((const std::uint8_t*)buffer, bufferSize));
+}
+
+ReadWriteMemory::ReadWriteMemory(const ReadWriteMemory &right)
+{
+    m_pMemory = right.m_pMemory;
+}
+
+ReadWriteMemory::ReadWriteMemory(std::shared_ptr<implementation::memory> pMemory)
+{
+    m_pMemory = pMemory;
+}
+
+ReadWriteMemory& ReadWriteMemory::operator=(const ReadWriteMemory& right)
+{
+    m_pMemory = right.m_pMemory;
+    return *this;
+}
+
+void ReadWriteMemory::copyFrom(const ReadMemory& sourceMemory)
+{
+    std::const_pointer_cast<implementation::memory>(m_pMemory)->copyFrom(sourceMemory.m_pMemory);
+}
+
+void ReadWriteMemory::copyFrom(const ReadWriteMemory& sourceMemory)
+{
+    std::const_pointer_cast<implementation::memory>(m_pMemory)->copyFrom(sourceMemory.m_pMemory);
+}
+
+void ReadWriteMemory::clear()
+{
+    std::const_pointer_cast<implementation::memory>(m_pMemory)->clear();
+}
+
+void ReadWriteMemory::resize(size_t newSize)
+{
+    std::const_pointer_cast<implementation::memory>(m_pMemory)->resize(newSize);
+}
+
+void ReadWriteMemory::reserve(size_t reserveSize)
+{
+    std::const_pointer_cast<implementation::memory>(m_pMemory)->reserve(reserveSize);
+}
+
+char* ReadWriteMemory::data()
+{
+    return (char*)(std::const_pointer_cast<implementation::memory>(m_pMemory)->data());
+}
+
+void ReadWriteMemory::assign(const char* pSource, const size_t sourceLength)
+{
+    std::const_pointer_cast<implementation::memory>(m_pMemory)->assign((const std::uint8_t*)pSource, sourceLength);
+}
+
 
 void MemoryPool::flush()
 {

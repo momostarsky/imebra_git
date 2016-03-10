@@ -2,13 +2,13 @@
 $fileHeader$
 */
 
-/*! \file modalityVOILUT_swig.h
-	\brief Declaration of the class ModalityVOILUT for SWIG.
+/*! \file modalityVOILUT.h
+    \brief Declaration of the class ModalityVOILUT.
 
 */
 
-#if !defined(imebraModalityVOILUT_SWIG_F6221390_BC44_4B83_B5BB_3485222FF1DD__INCLUDED_)
-#define imebraModalityVOILUT_SWIG_F6221390_BC44_4B83_B5BB_3485222FF1DD__INCLUDED_
+#if !defined(imebraModalityVOILUT__INCLUDED_)
+#define imebraModalityVOILUT__INCLUDED_
 
 #include "transform.h"
 #include "dataSet.h"
@@ -26,4 +26,4 @@ public:
 
 }
 
-#endif // imebraModalityVOILUT_SWIG_F6221390_BC44_4B83_B5BB_3485222FF1DD__INCLUDED_
+#endif // imebraModalityVOILUT__INCLUDED_

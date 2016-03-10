@@ -283,9 +283,9 @@ std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
         ///////////////////////////////////////////////////////////
         if(pImage != 0)
         {
-            std::uint32_t sizeX, sizeY;
-            pImage->getSize(&sizeX, &sizeY);
-            pImage->setSizeMm(pixelDistanceX*(double)sizeX, pixelDistanceY*(double)sizeY);
+            std::uint32_t width, height;
+            pImage->getSize(&width, &height);
+            pImage->setSizeMm(pixelDistanceX*(double)width, pixelDistanceY*(double)height);
         }
 
         if(pImage->getColorSpace() == "PALETTE COLOR")
@@ -381,7 +381,7 @@ std::shared_ptr<image> dataSet::getModalityImage(std::uint32_t frameNumber) cons
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage, const std::string& transferSyntax, codecs::codec::quality quality)
+void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage, const std::string& transferSyntax, imageQuality_t quality)
 {
     IMEBRA_FUNCTION_START();
 
@@ -416,8 +416,8 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
 
 	// Set the subsampling flags
 	///////////////////////////////////////////////////////////
-	bool bSubSampledX = quality > codecs::codec::high;
-	bool bSubSampledY = quality > codecs::codec::medium;
+    bool bSubSampledX = (std::uint32_t)quality > (std::uint32_t)imageQuality_t::high;
+    bool bSubSampledY = (std::uint32_t)quality > (std::uint32_t)imageQuality_t::medium;
 	if( !transforms::colorTransforms::colorTransformsFactory::canSubsample(pImage->getColorSpace()) )
 	{
 		bSubSampledX = bSubSampledY = false;
@@ -560,10 +560,10 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
         setUnsignedLong(0x0028, 0x0, 0x0102, 0, pImage->getHighBit());     // high bit
         setUnsignedLong(0x0028, 0x0, 0x0103, 0, b2complement ? 1 : 0);
         setUnsignedLong(0x0028, 0x0, 0x0002, 0, channelsNumber);
-		std::uint32_t imageSizeX, imageSizeY;
-		pImage->getSize(&imageSizeX, &imageSizeY);
-        setUnsignedLong(0x0028, 0x0, 0x0011, 0, imageSizeX);
-        setUnsignedLong(0x0028, 0x0, 0x0010, 0, imageSizeY);
+		std::uint32_t imageWidth, imageHeight;
+		pImage->getSize(&imageWidth, &imageHeight);
+        setUnsignedLong(0x0028, 0x0, 0x0011, 0, imageWidth);
+        setUnsignedLong(0x0028, 0x0, 0x0010, 0, imageHeight);
 
         if(colorSpace == "PALETTECOLOR")
 		{

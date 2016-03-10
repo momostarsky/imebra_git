@@ -7,15 +7,14 @@ $fileHeader$
 
 */
 
-#if !defined(imebraMemory_SWIG_A807A3CA_FA04_44f4_85D2_C7AA2FE103C4__INCLUDED_)
-#define imebraMemory_SWIG_A807A3CA_FA04_44f4_85D2_C7AA2FE103C4__INCLUDED_
+#if !defined(imebraMemory__INCLUDED_)
+#define imebraMemory__INCLUDED_
 
 #ifndef SWIG
 
 #include <memory>
 #include <string>
 #include "definitions.h"
-#include "dataHandler.h"
 
 namespace imebra
 {
@@ -30,26 +29,68 @@ class memoryPool;
 namespace imebra
 {
 
-class IMEBRA_API Memory
+class IMEBRA_API ReadMemory
 {
+
+#ifndef SWIG
     friend class MemoryStreamInput;
+    friend class ReadWriteMemory;
+    friend class ReadingDataHandlerNumeric;
+private:
+    ReadMemory(std::shared_ptr<const implementation::memory> pMemory);
+#endif
+
+
+public:
+    ReadMemory();
+
+    ReadMemory(const char* buffer, size_t bufferSize);
+
+    ReadMemory(const ReadMemory& right);
+
+    virtual ~ReadMemory();
+
+    ReadMemory& operator=(const ReadMemory& right);
+
+    size_t size() const;
+
+    const char* data() const;
+
+    bool empty() const;
+
+#ifndef SWIG
+protected:
+    std::shared_ptr<const implementation::memory> m_pMemory;
+#endif
+};
+
+
+class IMEBRA_API ReadWriteMemory: public ReadMemory
+{
+
+#ifndef SWIG
     friend class MemoryStreamOutput;
+    friend class DrawBitmap;
+    friend class WritingDataHandlerNumeric;
+private:
+    ReadWriteMemory(std::shared_ptr<implementation::memory> pMemory);
+#endif
 
 public:
 
-    Memory();
+    ReadWriteMemory();
 
-    Memory(size_t initialSize);
+    ReadWriteMemory(size_t initialSize);
 
-    Memory(const char* buffer, size_t bufferSize);
+    ReadWriteMemory(const char* buffer, size_t bufferSize);
 
-#ifndef SWIG
-    Memory(std::shared_ptr<implementation::memory> pMemory);
-#endif
+    ReadWriteMemory(const ReadWriteMemory& right);
 
-    void transfer(Memory& transferFrom);
+    ReadWriteMemory& operator=(const ReadWriteMemory& right);
 
-    void copyFrom(const Memory& sourceMemory);
+    void copyFrom(const ReadMemory& sourceMemory);
+
+    void copyFrom(const ReadWriteMemory& sourceMemory);
 
     void clear();
 
@@ -57,21 +98,11 @@ public:
 
     void reserve(size_t reserveSize);
 
-    size_t size() const;
-
     char* data();
 
-    const char* data() const;
-
-    bool empty() const;
-
     void assign(const char* pSource, const size_t sourceLength);
-
-protected:
-#ifndef SWIG
-    std::shared_ptr<implementation::memory> m_pMemory;
-#endif
 };
+
 
 class IMEBRA_API MemoryPool
 {
@@ -82,4 +113,4 @@ public:
 
 }
 
-#endif // !defined(imebraImage_SWIG_A807A3CA_FA04_44f4_85D2_C7AA2FE103C4__INCLUDED_)
+#endif // !defined(imebraMemory__INCLUDED_)

@@ -22,20 +22,26 @@ Image::Image()
 }
 
 Image::Image(
-        std::uint32_t sizeX,
-        std::uint32_t sizeY,
+        std::uint32_t width,
+        std::uint32_t height,
         bitDepth_t depth,
         const std::string& colorSpace,
         std::uint32_t highBit):
-    m_pImage(std::make_shared<implementation::image>(sizeX, sizeY, depth, colorSpace, highBit))
+    m_pImage(std::make_shared<implementation::image>(width, height, depth, colorSpace, highBit))
 {
 }
 
 Image::Image(const Image& right): m_pImage(right.m_pImage)
-{}
+{
+}
 
 Image::Image(std::shared_ptr<implementation::image> pImage): m_pImage(pImage)
-{}
+{
+}
+
+Image::~Image()
+{
+}
 
 Image& Image::operator=(const Image& right)
 {
@@ -45,45 +51,45 @@ Image& Image::operator=(const Image& right)
 
 double Image::getSizeMmX() const
 {
-    double sizeX, sizeY;
-    m_pImage->getSizeMm(&sizeX, &sizeY);
-    return sizeX;
+    double width, height;
+    m_pImage->getSizeMm(&width, &height);
+    return width;
 }
 
 double Image::getSizeMmY() const
 {
-    double sizeX, sizeY;
-    m_pImage->getSizeMm(&sizeX, &sizeY);
-    return sizeY;
+    double width, height;
+    m_pImage->getSizeMm(&width, &height);
+    return height;
 }
 
-void Image::setSizeMm(const double sizeX, const double sizeY)
+void Image::setSizeMm(const double width, const double height)
 {
-    m_pImage->setSizeMm(sizeX, sizeY);
+    m_pImage->setSizeMm(width, height);
 }
 
-std::uint32_t Image::getSizeX() const
+std::uint32_t Image::getWidth() const
 {
-    std::uint32_t sizeX, sizeY;
-    m_pImage->getSize(&sizeX, &sizeY);
-    return sizeX;
+    std::uint32_t width, height;
+    m_pImage->getSize(&width, &height);
+    return width;
 }
 
-std::uint32_t Image::getSizeY() const
+std::uint32_t Image::getHeight() const
 {
-    std::uint32_t sizeX, sizeY;
-    m_pImage->getSize(&sizeX, &sizeY);
-    return sizeY;
+    std::uint32_t width, height;
+    m_pImage->getSize(&width, &height);
+    return height;
 }
 
-ReadingDataHandler Image::getReadingDataHandler() const
+ReadingDataHandlerNumeric Image::getReadingDataHandler() const
 {
-    return ReadingDataHandler(m_pImage->getReadingDataHandler());
+    return ReadingDataHandlerNumeric(m_pImage->getReadingDataHandler());
 }
 
-WritingDataHandler Image::getWritingDataHandler()
+WritingDataHandlerNumeric Image::getWritingDataHandler()
 {
-    return WritingDataHandler(m_pImage->getWritingDataHandler());
+    return WritingDataHandlerNumeric(m_pImage->getWritingDataHandler());
 }
 
 std::string Image::getColorSpace() const

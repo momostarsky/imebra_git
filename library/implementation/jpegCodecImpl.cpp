@@ -503,7 +503,7 @@ void jpegCodec::writeStream(std::shared_ptr<streamWriter> pStream, std::shared_p
     // Get the image then write it
     ///////////////////////////////////////////////////////////
     std::shared_ptr<image> decodedImage = pDataSet->getImage(0);
-    setImage(pStream, decodedImage, "1.2.840.10008.1.2.4.50", codecs::codec::high, "OB", 8, true, true, false, false);
+    setImage(pStream, decodedImage, "1.2.840.10008.1.2.4.50", imageQuality_t::high, "OB", 8, true, true, false, false);
 
     IMEBRA_FUNCTION_END();
 
@@ -539,18 +539,18 @@ void jpegCodec::eraseChannels()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void jpegCodec::resetInternal(bool bCompression, quality compQuality)
+void jpegCodec::resetInternal(bool bCompression, imageQuality_t compQuality)
 {
     IMEBRA_FUNCTION_START();
 
     // Factor used to calculate the quantization tables used
     //  for the compression
     ///////////////////////////////////////////////////////////
-    float compQuantization = (float)compQuality / (float)medium;
+    float compQuantization = (float)compQuality / (float)imageQuality_t::medium;
 
     eraseChannels();
 
-    m_imageSizeX = m_imageSizeY = 0;
+    m_imageWidth = m_imageHeight = 0;
 
     m_precision = 8;
     m_valuesMask = ((std::int32_t)1 << m_precision)-1;
@@ -582,8 +582,8 @@ void jpegCodec::resetInternal(bool bCompression, quality compQuality)
     m_mcuProcessedY = 0;
     m_eobRun = 0;
 
-    m_jpegImageSizeX = 0;
-    m_jpegImageSizeY = 0;
+    m_jpegImageWidth = 0;
+    m_jpegImageHeight = 0;
 
     // Reset the QT tables
     ///////////////////////////////////////////////////////////
@@ -664,7 +664,7 @@ void jpegCodec::resetInternal(bool bCompression, quality compQuality)
             // Read the number of codes per length
             /////////////////////////////////////////////////////////////////
             std::uint32_t valueIndex = 0;
-            for(int scanLength = 0; scanLength<16; ++scanLength)
+            for(std::uint32_t scanLength = 0; scanLength != 16; ++scanLength)
             {
                 pHuffman->setValuesPerLength(scanLength + 1, (std::uint32_t)pLengthTable[scanLength]);
                 for(std::uint32_t scanValues(0); scanValues < pLengthTable[scanLength]; ++scanValues)
@@ -714,17 +714,17 @@ void jpegCodec::allocChannels()
 
     if(m_bLossless)
     {
-        m_jpegImageSizeX=(m_imageSizeX+(m_maxSamplingFactorX-1))/m_maxSamplingFactorX;
-        m_jpegImageSizeX*=m_maxSamplingFactorX;
-        m_jpegImageSizeY=(m_imageSizeY+(m_maxSamplingFactorY-1))/m_maxSamplingFactorY;
-        m_jpegImageSizeY*=m_maxSamplingFactorY;
+        m_jpegImageWidth=(m_imageWidth+(m_maxSamplingFactorX-1))/m_maxSamplingFactorX;
+        m_jpegImageWidth*=m_maxSamplingFactorX;
+        m_jpegImageHeight=(m_imageHeight+(m_maxSamplingFactorY-1))/m_maxSamplingFactorY;
+        m_jpegImageHeight*=m_maxSamplingFactorY;
     }
     else
     {
-        m_jpegImageSizeX=(m_imageSizeX+((m_maxSamplingFactorX<<3)-1))/(m_maxSamplingFactorX<<3);
-        m_jpegImageSizeX*=(m_maxSamplingFactorX<<3);
-        m_jpegImageSizeY=(m_imageSizeY+((m_maxSamplingFactorY<<3)-1))/(m_maxSamplingFactorY<<3);
-        m_jpegImageSizeY*=(m_maxSamplingFactorY<<3);
+        m_jpegImageWidth=(m_imageWidth+((m_maxSamplingFactorX<<3)-1))/(m_maxSamplingFactorX<<3);
+        m_jpegImageWidth*=(m_maxSamplingFactorX<<3);
+        m_jpegImageHeight=(m_imageHeight+((m_maxSamplingFactorY<<3)-1))/(m_maxSamplingFactorY<<3);
+        m_jpegImageHeight*=(m_maxSamplingFactorY<<3);
     }
 
     // Allocate the channels' buffers
@@ -736,8 +736,8 @@ void jpegCodec::allocChannels()
         pChannel->m_lastDCValue = pChannel->m_defaultDCValue;
 
         pChannel->allocate(
-                    m_jpegImageSizeX*(std::uint32_t)pChannel->m_samplingFactorX/m_maxSamplingFactorX,
-                    m_jpegImageSizeY*(std::uint32_t)pChannel->m_samplingFactorY/m_maxSamplingFactorY);
+                    m_jpegImageWidth*(std::uint32_t)pChannel->m_samplingFactorX/m_maxSamplingFactorX,
+                    m_jpegImageHeight*(std::uint32_t)pChannel->m_samplingFactorY/m_maxSamplingFactorY);
         pChannel->m_valuesMask = m_valuesMask;
     }
 
@@ -802,8 +802,8 @@ void jpegCodec::findMcuSize()
     {
         pChannel=*channelsIterator;
 
-        pChannel->m_blockMcuX=pChannel->m_samplingFactorX/minSamplingFactorX;
-        pChannel->m_blockMcuY=pChannel->m_samplingFactorY/minSamplingFactorY;
+        pChannel->m_blockMcuX = pChannel->m_samplingFactorX / minSamplingFactorX;
+        pChannel->m_blockMcuY = pChannel->m_samplingFactorY / minSamplingFactorY;
         pChannel->m_blockMcuXY = pChannel->m_blockMcuX * pChannel->m_blockMcuY;
         pChannel->m_losslessPositionX = 0;
         pChannel->m_losslessPositionY = 0;
@@ -816,16 +816,16 @@ void jpegCodec::findMcuSize()
     ///////////////////////////////////////////////////////////
     if(m_bLossless)
     {
-        m_mcuNumberX = m_jpegImageSizeX * minSamplingFactorX / maxSamplingFactorChannelsX;
-        m_mcuNumberY = m_jpegImageSizeY * minSamplingFactorY / maxSamplingFactorChannelsY;
+        m_mcuNumberX = m_jpegImageWidth * minSamplingFactorX / maxSamplingFactorChannelsX;
+        m_mcuNumberY = m_jpegImageHeight * minSamplingFactorY / maxSamplingFactorChannelsY;
     }
     else
     {
         std::uint32_t xBoundary = 8 * maxSamplingFactorChannelsX / minSamplingFactorX;
         std::uint32_t yBoundary = 8 * maxSamplingFactorChannelsY / minSamplingFactorY;
 
-        m_mcuNumberX = (m_imageSizeX + xBoundary - 1) / xBoundary;
-        m_mcuNumberY = (m_imageSizeY + yBoundary - 1) / yBoundary;
+        m_mcuNumberX = (m_imageWidth + xBoundary - 1) / xBoundary;
+        m_mcuNumberY = (m_imageHeight + yBoundary - 1) / yBoundary;
     }
     m_mcuNumberTotal = m_mcuNumberX*m_mcuNumberY;
     m_mcuProcessed = 0;
@@ -854,13 +854,13 @@ void jpegCodec::readStream(std::shared_ptr<streamReader> pSourceStream, std::sha
 
     // Reset the internal variables
     ///////////////////////////////////////////////////////////
-    resetInternal(false, medium);
+    resetInternal(false, imageQuality_t::medium);
 
     // Store the stream's position.
     // This will be used later, in order to reread all the
     //  stream's content and store it into the dataset
     ///////////////////////////////////////////////////////////
-    size_t startPosition=pStream->position();
+    size_t startPosition = pStream->position();
 
     try
     {
@@ -963,11 +963,11 @@ void jpegCodec::readStream(std::shared_ptr<streamReader> pSourceStream, std::sha
 
     // Image's width
     /////////////////////////////////////////////////////////////////
-    pDataSet->setUnsignedLong(0x0028, 0, 0x0011, 0, m_imageSizeX);
+    pDataSet->setUnsignedLong(0x0028, 0, 0x0011, 0, m_imageWidth);
 
     // Image's height
     /////////////////////////////////////////////////////////////////
-    pDataSet->setUnsignedLong(0x0028, 0, 0x0010, 0, m_imageSizeY);
+    pDataSet->setUnsignedLong(0x0028, 0, 0x0010, 0, m_imageHeight);
 
     // Number of frames
     /////////////////////////////////////////////////////////////////
@@ -997,7 +997,7 @@ void jpegCodec::readStream(std::shared_ptr<streamReader> pSourceStream, std::sha
     ////////////////////////////////////////////////////////////////
     size_t finalPosition = pStream->position();
     size_t streamLength = (std::uint32_t)(finalPosition - startPosition);
-    pStream->seek((std::int32_t)startPosition);
+    pStream->seek(startPosition);
 
     std::shared_ptr<handlers::writingDataHandlerRaw> imageHandler = pDataSet->getWritingDataHandlerRaw(0x7fe0, 0, 0x0010, 1, "OB");
     if(imageHandler != 0 && streamLength != 0)
@@ -1102,7 +1102,7 @@ std::shared_ptr<image> jpegCodec::getImage(const dataSet& sourceDataSet, std::sh
 
     // Reset the internal variables
     ////////////////////////////////////////////////////////////////
-    resetInternal(false, medium);
+    resetInternal(false, imageQuality_t::medium);
 
     // Activate the tags in the stream
     ///////////////////////////////////////////////////////////
@@ -1129,20 +1129,6 @@ std::shared_ptr<image> jpegCodec::getImage(const dataSet& sourceDataSet, std::sh
     {
         IMEBRA_THROW(CodecWrongFormatError, "Jpeg signature not valid");
     }
-
-    //
-    // Preallocate the variables used in the loop
-    //
-    ///////////////////////////////////////////////////////////
-
-    int scanBlock;              // scan lossless blocks
-    int scanBlockX, scanBlockY; // scan lossy blocks
-    std::uint32_t amplitudeLength; // lossless amplitude's length
-    std::int32_t amplitude;        // lossless amplitude
-
-    // Used to read the channels' content
-    ///////////////////////////////////////////////////////////
-    std::uint32_t bufferPointer = 0;
 
     // Read until the end of the image is reached
     ///////////////////////////////////////////////////////////
@@ -1218,15 +1204,16 @@ std::shared_ptr<image> jpegCodec::getImage(const dataSet& sourceDataSet, std::sh
                 ///////////////////////////////////////////////////////////
                 if(m_bLossless)
                 {
-                    for(
+                    for(std::uint32_t
                         scanBlock = 0;
                         scanBlock != pChannel->m_blockMcuXY;
                         ++scanBlock)
                     {
-                        amplitudeLength = pChannel->m_pActiveHuffmanTableDC->readHuffmanCode(pSourceStream);
-                        if(amplitudeLength)
+                        std::uint32_t amplitudeLength = pChannel->m_pActiveHuffmanTableDC->readHuffmanCode(pSourceStream);
+                        std::int32_t amplitude;        // lossless amplitude
+                        if(amplitudeLength != 0)
                         {
-                            amplitude = pSourceStream->readBits(amplitudeLength);
+                            amplitude = (std::int32_t)pSourceStream->readBits(amplitudeLength);
                             if(amplitude < ((std::int32_t)1<<(amplitudeLength-1)))
                             {
                                 amplitude -= ((std::int32_t)1<<amplitudeLength)-1;
@@ -1245,14 +1232,14 @@ std::shared_ptr<image> jpegCodec::getImage(const dataSet& sourceDataSet, std::sh
 
                 // Read a lossy MCU
                 ///////////////////////////////////////////////////////////
-                bufferPointer = (m_mcuProcessedY * pChannel->m_blockMcuY * ((m_jpegImageSizeX * pChannel->m_samplingFactorX / m_maxSamplingFactorX) >> 3) + m_mcuProcessedX * pChannel->m_blockMcuX) * 64;
-                for(scanBlockY = pChannel->m_blockMcuY; (scanBlockY != 0); --scanBlockY)
+                std::uint32_t bufferPointer = (m_mcuProcessedY * pChannel->m_blockMcuY * ((m_jpegImageWidth * pChannel->m_samplingFactorX / m_maxSamplingFactorX) >> 3) + m_mcuProcessedX * pChannel->m_blockMcuX) * 64;
+                for(std::uint32_t scanBlockY = pChannel->m_blockMcuY; (scanBlockY != 0); --scanBlockY)
                 {
-                    for(scanBlockX = pChannel->m_blockMcuX; scanBlockX != 0; --scanBlockX)
+                    for(std::uint32_t scanBlockX = pChannel->m_blockMcuX; scanBlockX != 0; --scanBlockX)
                     {
                         readBlock(pSourceStream, &(pChannel->m_pBuffer[bufferPointer]), pChannel);
 
-                        if(m_spectralIndexEnd>=63 && m_bitLow==0)
+                        if(m_spectralIndexEnd >= 63 && m_bitLow==0)
                         {
                             IDCT(
                                         &(pChannel->m_pBuffer[bufferPointer]),
@@ -1327,7 +1314,7 @@ std::shared_ptr<image> jpegCodec::copyJpegChannelsToImage(bool b2complement, con
     else
         depth = (m_precision==8) ? bitDepth_t::depthU8 : bitDepth_t::depthU16;
 
-    std::shared_ptr<image> destImage(std::make_shared<image>(m_imageSizeX, m_imageSizeY, depth, colorSpace, (std::uint8_t)(m_precision-1)));
+    std::shared_ptr<image> destImage(std::make_shared<image>(m_imageWidth, m_imageHeight, depth, colorSpace, (std::uint8_t)(m_precision-1)));
 
     std::shared_ptr<handlers::writingDataHandlerNumericBase> handler = destImage->getWritingDataHandler();
 
@@ -1404,9 +1391,9 @@ std::shared_ptr<image> jpegCodec::copyJpegChannelsToImage(bool b2complement, con
             handler->copyFromInt32Interleaved(
                         pChannel->m_pBuffer,
                         runX, runY,
-                        0, 0, pChannel->m_sizeX * runX, pChannel->m_sizeY * runY,
+                        0, 0, pChannel->m_width * runX, pChannel->m_height * runY,
                         destChannelNumber++,
-                        m_imageSizeX, m_imageSizeY,
+                        m_imageWidth, m_imageHeight,
                         (std::uint32_t)m_channelsMap.size());
 
             continue;
@@ -1414,8 +1401,8 @@ std::shared_ptr<image> jpegCodec::copyJpegChannelsToImage(bool b2complement, con
 
         // Lossy interleaved
         ///////////////////////////////////////////////////////////
-        std::uint32_t totalBlocksY(pChannel->m_sizeY >> 3);
-        std::uint32_t totalBlocksX(pChannel->m_sizeX >> 3);
+        std::uint32_t totalBlocksY(pChannel->m_height >> 3);
+        std::uint32_t totalBlocksX(pChannel->m_width >> 3);
 
         std::int32_t* pSourceBuffer(pChannel->m_pBuffer);
 
@@ -1436,7 +1423,7 @@ std::shared_ptr<image> jpegCodec::copyJpegChannelsToImage(bool b2complement, con
                             endCol,
                             endRow,
                             destChannelNumber,
-                            m_imageSizeX, m_imageSizeY,
+                            m_imageWidth, m_imageHeight,
                             (std::uint32_t)m_channelsMap.size());
 
                 pSourceBuffer += 64;
@@ -1472,7 +1459,7 @@ void jpegCodec::copyImageToJpegChannels(
     IMEBRA_FUNCTION_START();
 
     std::string colorSpace = sourceImage->getColorSpace();
-    sourceImage->getSize(&m_imageSizeX, &m_imageSizeY);
+    sourceImage->getSize(&m_imageWidth, &m_imageHeight);
     m_precision = allocatedBits;
 
     // Create the channels
@@ -1549,9 +1536,9 @@ void jpegCodec::copyImageToJpegChannels(
             imageDataHandler->copyToInt32Interleaved(
                         pChannel->m_pBuffer,
                         runX, runY,
-                        0, 0, pChannel->m_sizeX * runX, pChannel->m_sizeY * runY,
+                        0, 0, pChannel->m_width * runX, pChannel->m_height * runY,
                         sourceChannelNumber++,
-                        m_imageSizeX, m_imageSizeY,
+                        m_imageWidth, m_imageHeight,
                         (std::uint32_t)m_channelsMap.size());
 
             continue;
@@ -1559,8 +1546,8 @@ void jpegCodec::copyImageToJpegChannels(
 
         // Lossy interleaved
         ///////////////////////////////////////////////////////////
-        std::uint32_t totalBlocksY = (pChannel->m_sizeY >> 3);
-        std::uint32_t totalBlocksX = (pChannel->m_sizeX >> 3);
+        std::uint32_t totalBlocksY = (pChannel->m_height >> 3);
+        std::uint32_t totalBlocksX = (pChannel->m_width >> 3);
 
         std::int32_t* pDestBuffer = pChannel->m_pBuffer;
 
@@ -1581,7 +1568,7 @@ void jpegCodec::copyImageToJpegChannels(
                             endCol,
                             endRow,
                             sourceChannelNumber,
-                            m_imageSizeX, m_imageSizeY,
+                            m_imageWidth, m_imageHeight,
                             (std::uint32_t)m_channelsMap.size());
 
                 pDestBuffer += 64;
@@ -1655,7 +1642,7 @@ void jpegCodec::setImage(
         std::shared_ptr<streamWriter> pDestStream,
         std::shared_ptr<image> pImage,
         const std::string& transferSyntax,
-        quality imageQuality,
+        imageQuality_t imageQuality,
         const std::string& /* dataType */,
         std::uint8_t allocatedBits,
         bool bSubSampledX,
@@ -1776,14 +1763,14 @@ void jpegCodec::writeScan(streamWriter* pDestinationStream, bool bCalcHuffman)
             if(m_bLossless)
             {
                 std::int32_t lastValue = pChannel->m_lastDCValue;
-                std::int32_t* pBuffer = pChannel->m_pBuffer + pChannel->m_losslessPositionY * pChannel->m_sizeX + pChannel->m_losslessPositionX;
+                std::int32_t* pBuffer = pChannel->m_pBuffer + pChannel->m_losslessPositionY * pChannel->m_width + pChannel->m_losslessPositionX;
 
-                for(int scanBlock = pChannel->m_blockMcuXY; scanBlock != 0; --scanBlock)
+                for(std::uint32_t scanBlock = pChannel->m_blockMcuXY; scanBlock != 0; --scanBlock)
                 {
                     std::int32_t value(*pBuffer);
                     if(pChannel->m_losslessPositionX == 0 && pChannel->m_losslessPositionY != 0)
                     {
-                        lastValue = *(pBuffer - pChannel->m_sizeX);
+                        lastValue = *(pBuffer - pChannel->m_width);
                     }
                     ++pBuffer;
                     std::int32_t diff = value - lastValue;
@@ -1803,7 +1790,7 @@ void jpegCodec::writeScan(streamWriter* pDestinationStream, bool bCalcHuffman)
                     std::uint32_t amplitude = 0;
                     if(diff != 0)
                     {
-                        amplitude = diff > 0 ? diff : -diff;
+                        amplitude = (diff > 0) ? (std::uint32_t)(diff) : (std::uint32_t)(-diff);
                         for(amplitudeLength = 32; (amplitude & ((std::uint32_t)1 << (amplitudeLength -1))) == 0; --amplitudeLength){};
 
                         if(diff < 0)
@@ -1814,7 +1801,7 @@ void jpegCodec::writeScan(streamWriter* pDestinationStream, bool bCalcHuffman)
                     }
 
                     pChannel->m_lastDCValue = value;
-                    if(++(pChannel->m_losslessPositionX) == pChannel->m_sizeX)
+                    if(++(pChannel->m_losslessPositionX) == pChannel->m_width)
                     {
                         ++(pChannel->m_losslessPositionY);
                         pChannel->m_losslessPositionX = 0;
@@ -1834,11 +1821,11 @@ void jpegCodec::writeScan(streamWriter* pDestinationStream, bool bCalcHuffman)
 
             // write a lossy MCU
             ///////////////////////////////////////////////////////////
-            std::uint32_t bufferPointer = (m_mcuProcessedY * pChannel->m_blockMcuY * ((m_jpegImageSizeX * pChannel->m_samplingFactorX / m_maxSamplingFactorX) >> 3) + m_mcuProcessedX * pChannel->m_blockMcuX) * 64;
+            std::uint32_t bufferPointer = (m_mcuProcessedY * pChannel->m_blockMcuY * ((m_jpegImageWidth * pChannel->m_samplingFactorX / m_maxSamplingFactorX) >> 3) + m_mcuProcessedX * pChannel->m_blockMcuX) * 64;
 
-            for(int scanBlockY = 0; scanBlockY < pChannel->m_blockMcuY; ++scanBlockY)
+            for(std::uint32_t scanBlockY = 0; scanBlockY != pChannel->m_blockMcuY; ++scanBlockY)
             {
-                for(int scanBlockX = 0; scanBlockX < pChannel->m_blockMcuX; ++scanBlockX)
+                for(std::uint32_t scanBlockX = 0; scanBlockX != pChannel->m_blockMcuX; ++scanBlockX)
                 {
                     writeBlock(pDestinationStream, &(pChannel->m_pBuffer[bufferPointer]), pChannel, bCalcHuffman);
                     bufferPointer += 64;
@@ -2174,11 +2161,11 @@ inline void jpegCodec::writeBlock(streamWriter* pStream, std::int32_t* pBuffer, 
 
         // Write out the value
         /////////////////////////////////////////////////////////////////
-        std::uint8_t amplitudeLength = 0;
+        std::uint32_t amplitudeLength = 0;
         std::uint32_t amplitude = 0;
         if(value != 0)
         {
-            amplitude = (value > 0) ? value : -value;
+            amplitude = (value > 0) ? (std::uint32_t)value : (std::uint32_t)(-value);
             for(amplitudeLength = 15; (amplitude & ((std::uint32_t)1 << (amplitudeLength -1))) == 0; --amplitudeLength){};
 
             if(value < 0)
@@ -2628,11 +2615,11 @@ void jpegChannel::processUnprocessedAmplitudes()
         return;
     }
 
-    std::int32_t* pDest = m_pBuffer + (m_losslessPositionY * m_sizeX + m_losslessPositionX);
+    std::int32_t* pDest = m_pBuffer + (m_losslessPositionY * m_width + m_losslessPositionX);
     std::int32_t* pSource = m_unprocessedAmplitudesBuffer;
 
     // Find missing pixels
-    std::int32_t missingPixels = (std::int32_t)m_sizeX - (std::int32_t)m_losslessPositionX + (std::int32_t)m_sizeX * ((std::int32_t)m_sizeY - (std::int32_t)m_losslessPositionY - 1);
+    std::int32_t missingPixels = (std::int32_t)m_width - (std::int32_t)m_losslessPositionX + (std::int32_t)m_width * ((std::int32_t)m_height - (std::int32_t)m_losslessPositionY - 1);
     if(missingPixels < (std::int32_t)m_unprocessedAmplitudesCount)
     {
         IMEBRA_THROW(CodecCorruptedFileError, "Excess data in the lossless jpeg stream");
@@ -2644,7 +2631,7 @@ void jpegChannel::processUnprocessedAmplitudes()
         {
             --m_unprocessedAmplitudesCount;
             *(pDest++) = *(pSource++) & m_valuesMask;
-            if(++m_losslessPositionX == m_sizeX)
+            if(++m_losslessPositionX == m_width)
             {
                 m_losslessPositionX = 0;
                 ++m_losslessPositionY;
@@ -2655,8 +2642,8 @@ void jpegChannel::processUnprocessedAmplitudes()
     }
 
     int applyPrediction;
-    std::int32_t* pPreviousLine = pDest - m_sizeX;
-    std::int32_t* pPreviousLineColumn = pDest - m_sizeX - 1;
+    std::int32_t* pPreviousLine = pDest - m_width;
+    std::int32_t* pPreviousLineColumn = pDest - m_width - 1;
     while(m_unprocessedAmplitudesCount != 0)
     {
         --m_unprocessedAmplitudesCount;
@@ -2705,7 +2692,7 @@ void jpegChannel::processUnprocessedAmplitudes()
 
         ++pPreviousLine;
         ++pPreviousLineColumn;
-        if(++m_losslessPositionX == m_sizeX)
+        if(++m_losslessPositionX == m_width)
         {
             ++m_losslessPositionY;
             m_losslessPositionX = 0;
@@ -2758,7 +2745,7 @@ void tag::writeLength(streamWriter* pStream, std::uint16_t length)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::int32_t tag::readLength(streamReader* pStream)
+std::uint32_t tag::readLength(streamReader* pStream)
 {
     IMEBRA_FUNCTION_START();
 
@@ -2767,7 +2754,7 @@ std::int32_t tag::readLength(streamReader* pStream)
     pStream->adjustEndian((std::uint8_t*)&length, sizeof(length), streamController::highByteEndian);
     if(length > 1)
         length = (std::uint16_t)(length - 2);
-    return (std::int32_t)((std::uint32_t)length);
+    return (std::uint32_t)length;
 
     IMEBRA_FUNCTION_END();
 }
@@ -2820,8 +2807,8 @@ void tagUnknown::readTag(streamReader* pStream, jpegCodec* /* pCodec */, std::ui
 {
     IMEBRA_FUNCTION_START();
 
-    std::int32_t tagLength=readLength(pStream);
-    pStream->seekRelative(tagLength);
+    std::uint32_t tagLength = readLength(pStream);
+    pStream->seekForward(tagLength);
 
     IMEBRA_FUNCTION_END();
 }
@@ -2869,12 +2856,12 @@ void tagSOF::writeTag(streamWriter* pStream, jpegCodec* pCodec)
 
     // Write the image's size, in pixels
     ///////////////////////////////////////////////////////////
-    std::uint16_t imageSizeX=(std::uint16_t)pCodec->m_imageSizeX;
-    std::uint16_t imageSizeY=(std::uint16_t)pCodec->m_imageSizeY;
-    pStream->adjustEndian((std::uint8_t*)&imageSizeY, 2, streamController::highByteEndian);
-    pStream->adjustEndian((std::uint8_t*)&imageSizeX, 2, streamController::highByteEndian);
-    pStream->write((std::uint8_t*)&imageSizeY, 2);
-    pStream->write((std::uint8_t*)&imageSizeX, 2);
+    std::uint16_t imageWidth=(std::uint16_t)pCodec->m_imageWidth;
+    std::uint16_t imageHeight=(std::uint16_t)pCodec->m_imageHeight;
+    pStream->adjustEndian((std::uint8_t*)&imageHeight, 2, streamController::highByteEndian);
+    pStream->adjustEndian((std::uint8_t*)&imageWidth, 2, streamController::highByteEndian);
+    pStream->write((std::uint8_t*)&imageHeight, 2);
+    pStream->write((std::uint8_t*)&imageWidth, 2);
 
     // write the components number
     ///////////////////////////////////////////////////////////
@@ -2919,7 +2906,7 @@ void tagSOF::readTag(streamReader* pStream, jpegCodec* pCodec, std::uint8_t tagE
     // tag dedicated stream (throws if we attempt to read past
     //  the tag bytes
     //////////////////////////////////////////////////////////
-    const std::int32_t tagLength = readLength(pStream);
+    const std::uint32_t tagLength = readLength(pStream);
     std::shared_ptr<streamReader> tagReader(pStream->getReader(tagLength));
 
     pCodec->m_bLossless = (tagEntry==0xc3) || (tagEntry==0xc7);
@@ -2929,27 +2916,27 @@ void tagSOF::readTag(streamReader* pStream, jpegCodec* pCodec, std::uint8_t tagE
     ///////////////////////////////////////////////////////////
     std::uint8_t precisionBits;
     tagReader->read(&precisionBits, 1);
-    pCodec->m_precision = (int)precisionBits;
+    pCodec->m_precision = precisionBits;
 
     // Read the image's size, in pixels
     ///////////////////////////////////////////////////////////
-    std::uint16_t imageSizeX, imageSizeY;
-    tagReader->read((std::uint8_t*)&imageSizeY, 2);
-    tagReader->read((std::uint8_t*)&imageSizeX, 2);
-    tagReader->adjustEndian((std::uint8_t*)&imageSizeY, 2, streamController::highByteEndian);
-    tagReader->adjustEndian((std::uint8_t*)&imageSizeX, 2, streamController::highByteEndian);
+    std::uint16_t imageWidth, imageHeight;
+    tagReader->read((std::uint8_t*)&imageHeight, 2);
+    tagReader->read((std::uint8_t*)&imageWidth, 2);
+    tagReader->adjustEndian((std::uint8_t*)&imageHeight, 2, streamController::highByteEndian);
+    tagReader->adjustEndian((std::uint8_t*)&imageWidth, 2, streamController::highByteEndian);
 
     if(
             precisionBits < 8 ||
             precisionBits > 16 ||
-            imageSizeX > codecFactory::getCodecFactory()->getMaximumImageWidth() ||
-            imageSizeY > codecFactory::getCodecFactory()->getMaximumImageHeight())
+            imageWidth > codecFactory::getCodecFactory()->getMaximumImageWidth() ||
+            imageHeight > codecFactory::getCodecFactory()->getMaximumImageHeight())
     {
         IMEBRA_THROW(CodecImageTooBigError, "The factory settings prevented the loading of this image. Consider using codecFactory::setMaximumImageSize() to modify the settings");
     }
 
-    pCodec->m_imageSizeX=(int)imageSizeX;
-    pCodec->m_imageSizeY=(int)imageSizeY;
+    pCodec->m_imageWidth = imageWidth;
+    pCodec->m_imageHeight = imageHeight;
 
     // Read the components number
     ///////////////////////////////////////////////////////////
@@ -2974,8 +2961,8 @@ void tagSOF::readTag(streamReader* pStream, jpegCodec* pCodec, std::uint8_t tagE
         {
             IMEBRA_THROW(CodecCorruptedFileError, "Corrupted quantization table index in SOF tag");
         }
-        pChannel->m_samplingFactorX = (int)(componentSamplingFactor>>4);
-        pChannel->m_samplingFactorY = (int)(componentSamplingFactor & 0x0f);
+        pChannel->m_samplingFactorX = componentSamplingFactor >> 4;
+        pChannel->m_samplingFactorY = componentSamplingFactor & 0x0f;
         if(
                 (pChannel->m_samplingFactorX != 1 &&
                  pChannel->m_samplingFactorX != 2 &&
@@ -3108,7 +3095,7 @@ void tagDHT::writeTag(streamWriter* pStream, jpegCodec* pCodec)
                 int scanLength;
                 for(scanLength=0; scanLength<16;)
                 {
-                    byte=(std::uint8_t)(pHuffman->getValuesPerLength(++scanLength));
+                    byte = (std::uint8_t)(pHuffman->getValuesPerLength(++scanLength));
                     pStream->write(&byte, 1);
                 }
 
@@ -3119,7 +3106,7 @@ void tagDHT::writeTag(streamWriter* pStream, jpegCodec* pCodec)
                 {
                     for(std::uint32_t scanValues = 0; scanValues < pHuffman->getValuesPerLength(scanLength+1); ++scanValues)
                     {
-                        byte=(std::uint8_t)(pHuffman->getOrderedValue(valueIndex++));
+                        byte = (std::uint8_t)(pHuffman->getOrderedValue(valueIndex++));
                         pStream->write(&byte, 1);
                     }
                 }
@@ -3146,7 +3133,7 @@ void tagDHT::readTag(streamReader* pStream, jpegCodec* pCodec, std::uint8_t /* t
     // tag dedicated stream (throws if we attempt to read past
     //  the tag bytes)
     //////////////////////////////////////////////////////////
-    const std::int32_t tagLength = readLength(pStream);
+    const std::uint32_t tagLength = readLength(pStream);
     std::shared_ptr<streamReader> tagReader(pStream->getReader(tagLength));
 
     // Used to read bytes from the stream
@@ -3175,13 +3162,9 @@ void tagDHT::readTag(streamReader* pStream, jpegCodec* pCodec, std::uint8_t /* t
             /////////////////////////////////////////////////////////////////
             pHuffman->reset();
 
-            // Used to scan all the codes lengths
-            /////////////////////////////////////////////////////////////////
-            int scanLength;
-
             // Read the number of codes per length
             /////////////////////////////////////////////////////////////////
-            for(scanLength=0; scanLength<16L; )
+            for(std::uint32_t scanLength=0; scanLength != 16; )
             {
                 tagReader->read(&byte, 1);
                 pHuffman->setValuesPerLength(++scanLength, (std::uint32_t)byte);
@@ -3193,9 +3176,9 @@ void tagDHT::readTag(streamReader* pStream, jpegCodec* pCodec, std::uint8_t /* t
 
             // Read all the values and store them into the huffman table
             /////////////////////////////////////////////////////////////////
-            for(scanLength = 0; scanLength < 16; ++scanLength)
+            for(std::uint32_t scanLength = 0; scanLength != 16; ++scanLength)
             {
-                for(std::uint32_t scanValues = 0; scanValues < pHuffman->getValuesPerLength(scanLength+1); ++scanValues)
+                for(std::uint32_t scanValues = 0; scanValues != pHuffman->getValuesPerLength(scanLength + 1); ++scanValues)
                 {
                     tagReader->read(&byte, 1);
                     pHuffman->addOrderedValue(valueIndex++, (std::uint32_t)byte);
@@ -3333,7 +3316,7 @@ void tagSOS::readTag(streamReader* pStream, jpegCodec* pCodec, std::uint8_t /* t
     // tag dedicated stream (throws if we attempt to read past
     //  the tag bytes)
     //////////////////////////////////////////////////////////
-    const std::int32_t tagLength = readLength(pStream);
+    const std::uint32_t tagLength = readLength(pStream);
     std::shared_ptr<streamReader> tagReader(pStream->getReader(tagLength));
 
     pCodec->m_eobRun = 0;
@@ -3370,14 +3353,14 @@ void tagSOS::readTag(streamReader* pStream, jpegCodec* pCodec, std::uint8_t /* t
     }
 
     tagReader->read(&byte, 1);
-    pCodec->m_spectralIndexStart=(int)byte;
+    pCodec->m_spectralIndexStart = byte;
 
     tagReader->read(&byte, 1);
-    pCodec->m_spectralIndexEnd=(int)byte;
+    pCodec->m_spectralIndexEnd = byte;
 
     tagReader->read(&byte, 1);
-    pCodec->m_bitHigh=(int)(byte>>4);
-    pCodec->m_bitLow=(int)(byte & 0xf);
+    pCodec->m_bitHigh = byte>>4;
+    pCodec->m_bitLow = byte & 0xf;
 
     pCodec->findMcuSize();
 
@@ -3505,7 +3488,7 @@ void tagDQT::readTag(streamReader* pStream, jpegCodec* pCodec, std::uint8_t /* t
     // tag dedicated stream (throws if we attempt to read past
     //  the tag bytes)
     //////////////////////////////////////////////////////////
-    const std::int32_t tagLength = readLength(pStream);
+    const std::uint32_t tagLength = readLength(pStream);
     std::shared_ptr<streamReader> tagReader(pStream->getReader(tagLength));
 
     std::uint8_t  tablePrecision;
@@ -3604,7 +3587,7 @@ void tagDRI::readTag(streamReader* pStream, jpegCodec* pCodec, std::uint8_t /* t
     // tag dedicated stream (throws if we attempt to read past
     //  the tag bytes)
     //////////////////////////////////////////////////////////
-    const std::int32_t tagLength = readLength(pStream);
+    const std::uint32_t tagLength = readLength(pStream);
     std::shared_ptr<streamReader> tagReader(pStream->getReader(tagLength));
 
     std::uint16_t unitsPerRestartInterval;

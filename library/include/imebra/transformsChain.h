@@ -2,13 +2,13 @@
 $fileHeader$
 */
 
-/*! \file transformChain_swig.h
-	\brief Declaration of transformsChain for SWIG.
+/*! \file transformChain.h
+    \brief Declaration of TransformsChain.
 
 */
 
-#if !defined(imebraTransformsChain_SWIG_F6221390_BC44_4B83_B5BB_3485222FF1DD__INCLUDED_)
-#define imebraTransformsChain_SWIG_F6221390_BC44_4B83_B5BB_3485222FF1DD__INCLUDED_
+#if !defined(imebraTransformsChain__INCLUDED_)
+#define imebraTransformsChain__INCLUDED_
 
 #ifndef SWIG
 
@@ -32,19 +32,16 @@ class transformsChain;
 namespace imebra
 {
 
+class DrawBitmap;
+
 class IMEBRA_API TransformsChain: public Transform
 {
-
 public:
     TransformsChain();
-
-#ifndef SWIG
-    TransformsChain(std::shared_ptr<imebra::implementation::transforms::transformsChain> pTransformsChain);
-#endif
 
     void addTransform(const Transform& transform);
 };
 
 }
 
-#endif // imebraTransformsChain_SWIG_F6221390_BC44_4B83_B5BB_3485222FF1DD__INCLUDED_
+#endif // imebraTransformsChain__INCLUDED_

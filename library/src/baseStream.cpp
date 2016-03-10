@@ -2,13 +2,13 @@
 $fileHeader$
 */
 
-/*! \file baseStream_swig.cpp
-    \brief Implementation of the the base class for the streams (memory, file, ...)
-			for SWIG.
+/*! \file baseStream.cpp
+    \brief Implementation of the the base class for the streams (memory, file, ...).
 */
 
 #include "../include/imebra/baseStream.h"
 #include "../implementation/baseStreamImpl.h"
+#include "../implementation/exceptionImpl.h"
 
 namespace imebra
 {
@@ -24,10 +24,18 @@ BaseStreamOutput::BaseStreamOutput(const BaseStreamOutput& right): m_pStream(rig
 {
 }
 
+BaseStreamOutput::~BaseStreamOutput()
+{
+}
+
 BaseStreamOutput& BaseStreamOutput::operator=(const BaseStreamOutput& right)
 {
+    IMEBRA_FUNCTION_START();
+
 	m_pStream = right.m_pStream;
 	return *this;
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -42,10 +50,18 @@ BaseStreamInput::BaseStreamInput(const BaseStreamInput& right): m_pStream(right.
 {
 }
 
+BaseStreamInput::~BaseStreamInput()
+{
+}
+
 BaseStreamInput& BaseStreamInput::operator=(const BaseStreamInput& right)
 {
+    IMEBRA_FUNCTION_START();
+
     m_pStream = right.m_pStream;
     return *this;
+
+    IMEBRA_FUNCTION_END();
 }
 
 }

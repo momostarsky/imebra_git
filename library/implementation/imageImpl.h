@@ -80,8 +80,8 @@ public:
 	// Constructor
 	///////////////////////////////////////////////////////////
     image(
-            std::uint32_t sizeX,
-            std::uint32_t sizeY,
+            std::uint32_t width,
+            std::uint32_t height,
             bitDepth_t depth,
             const std::string& colorSpace,
             std::uint32_t highBit);
@@ -96,8 +96,8 @@ public:
 	/// The number of channels to allocate is automatically
 	///  calculated using the colorSpace parameter.
 	///
-	/// @param sizeX    the image's width, in pixels.
-	/// @param sizeY    the image's height, in pixels.
+	/// @param width    the image's width, in pixels.
+	/// @param height    the image's height, in pixels.
 	/// @param depth    the size of a single color's component.
 	/// @param colorSpace The color space as defined by the
 	///                 DICOM standard.
@@ -117,8 +117,8 @@ public:
 	///
 	///////////////////////////////////////////////////////////
     std::shared_ptr<handlers::writingDataHandlerNumericBase> create(
-		const std::uint32_t sizeX,
-		const std::uint32_t sizeY,
+		const std::uint32_t width,
+		const std::uint32_t height,
 		const bitDepth_t depth,
         const std::string& colorSpace,
         const std::uint32_t  highBit);
@@ -136,30 +136,30 @@ public:
 	///  from the dicom structure or can be set using
 	///  setSizeMm().
 	///
-	/// @param pSizeX a pointer to the variable to fill with
+	/// @param pWidth a pointer to the variable to fill with
 	///               the image's width (in millimeters).
-	/// @param pSizeY a pointer to the variable to fill with
+	/// @param pHeight a pointer to the variable to fill with
 	///               the image's height (in millimeters).
 	///////////////////////////////////////////////////////////
-    void getSizeMm(double* pSizeX, double* pSizeY) const;
+    void getSizeMm(double* pWidth, double* pHeight) const;
 
 	/// \brief Set the image's size, in millimeters.
 	///
-	/// @param sizeX the new image's width, in millimeters.
-	/// @param sizeY the new image's height, in millimeters.
+	/// @param width the new image's width, in millimeters.
+	/// @param height the new image's height, in millimeters.
 	///
 	///////////////////////////////////////////////////////////
-	void setSizeMm(const double sizeX, const double sizeY);
+	void setSizeMm(const double width, const double height);
 
 	/// \brief Get the image's size, in pixels.
 	///
-	/// @param pSizeX a pointer to the variable to fill with
+	/// @param pWidth a pointer to the variable to fill with
 	///               the image's width (in pixels).
-	/// @param pSizeY a pointer to the variable to fill with
+	/// @param pHeight a pointer to the variable to fill with
 	///               the image's height (in pixels).
 	///
 	///////////////////////////////////////////////////////////
-    void getSize(std::uint32_t* pSizeX, std::uint32_t* pSizeY) const;
+    void getSize(std::uint32_t* pWidth, std::uint32_t* pHeight) const;
 
 	/// \brief Retrieve a data handler for managing the
 	///        image's buffer
@@ -256,8 +256,8 @@ protected:
 
 	// Image's size in pixels
 	///////////////////////////////////////////////////////////
-	std::uint32_t m_sizeX;
-	std::uint32_t m_sizeY;
+	std::uint32_t m_width;
+	std::uint32_t m_height;
 
 	// Image's size in millimeters
 	///////////////////////////////////////////////////////////

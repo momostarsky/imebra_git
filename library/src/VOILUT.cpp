@@ -2,8 +2,8 @@
 $fileHeader$
 */
 
-/*! \file VOILUT_swig.cpp
-    \brief Implementation of the VOILUT class for SWIG.
+/*! \file VOILUT.cpp
+    \brief Implementation of VOILUT.
 
 */
 

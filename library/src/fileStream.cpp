@@ -2,8 +2,8 @@
 $fileHeader$
 */
 
-/*! \file stream_swig.cpp
-    \brief Implementation of the stream class for SWIG.
+/*! \file fileStream.cpp
+    \brief Implementation of the file stream classes.
 
 */
 

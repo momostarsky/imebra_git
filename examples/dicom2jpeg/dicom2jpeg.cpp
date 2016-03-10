@@ -149,8 +149,8 @@ int main(int argc, char* argv[])
             //  and we have to calculate the optimal one
             //////////////////////////////////////////////////////////////////////////////
             Image dataSetImage(loadedDataSet.getImage(0));
-            std::uint32_t width = dataSetImage.getSizeX();
-            std::uint32_t height = dataSetImage.getSizeY();
+            std::uint32_t width = dataSetImage.getWidth();
+            std::uint32_t height = dataSetImage.getHeight();
 
             // Build the transforms chain
             /////////////////////////////

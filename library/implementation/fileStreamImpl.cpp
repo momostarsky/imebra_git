@@ -240,7 +240,7 @@ void fileStreamOutput::write(size_t startPosition, const std::uint8_t* pBuffer, 
 
     std::lock_guard<std::mutex> lock(m_mutex);
 
-	::fseek(m_openFile, startPosition, SEEK_SET);
+    ::fseek(m_openFile, (long)startPosition, SEEK_SET);
 	if(ferror(m_openFile) != 0)
 	{
         IMEBRA_THROW(StreamWriteError, "stream::seek failure");
@@ -270,7 +270,7 @@ size_t fileStreamInput::read(size_t startPosition, std::uint8_t* pBuffer, size_t
 
     std::lock_guard<std::mutex> lock(m_mutex);
 
-	::fseek(m_openFile, startPosition, SEEK_SET);
+    ::fseek(m_openFile, (long)startPosition, SEEK_SET);
 	if(ferror(m_openFile) != 0)
 	{
 		return 0;

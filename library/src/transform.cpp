@@ -2,8 +2,8 @@
 $fileHeader$
 */
 
-/*! \file transform_swig.cpp
-    \brief Implementation of the transform class for SWIG.
+/*! \file transform.cpp
+    \brief Implementation of the Transform class.
 
 */
 
@@ -14,7 +14,12 @@ namespace imebra
 {
 
 Transform::Transform(const Transform& right): m_pTransform(right.m_pTransform)
-{}
+{
+}
+
+Transform::~Transform()
+{
+}
 
 Transform& Transform::operator=(const Transform& right)
 {

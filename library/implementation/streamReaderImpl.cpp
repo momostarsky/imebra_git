@@ -64,7 +64,7 @@ std::shared_ptr<streamReader> streamReader::getReader(size_t virtualLength)
     {
         virtualLength = m_virtualLength - currentPosition;
     }
-    seekRelative((std::int32_t)virtualLength);
+    seekForward((std::uint32_t)virtualLength);
     return std::make_shared<streamReader>(m_pControlledStream, currentPosition + m_virtualStart, virtualLength);
 
     IMEBRA_FUNCTION_END();
@@ -219,7 +219,7 @@ void streamReader::seek(size_t newPosition)
     IMEBRA_FUNCTION_END();
 }
 
-void streamReader::seekRelative(int32_t newPosition)
+void streamReader::seekForward(std::uint32_t newPosition)
 {
     IMEBRA_FUNCTION_START();
 

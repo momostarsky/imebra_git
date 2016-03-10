@@ -82,7 +82,7 @@ public:
 		std::shared_ptr<streamWriter> pDestStream,
 		std::shared_ptr<image> pImage,
         const std::string& transferSyntax,
-		quality imageQuality,
+        imageQuality_t imageQuality,
         const std::string& dataType,
 		std::uint8_t allocatedBits,
 		bool bSubSampledX,
@@ -125,8 +125,8 @@ protected:
 public:
 	// The image's size, in pixels
 	///////////////////////////////////////////////////////////
-	std::uint32_t m_imageSizeX;
-	std::uint32_t m_imageSizeY;
+	std::uint32_t m_imageWidth;
+	std::uint32_t m_imageHeight;
 
 	// Encoding process
 	///////////////////////////////////////////////////////////
@@ -134,7 +134,7 @@ public:
 
 	// The bits per color component
 	///////////////////////////////////////////////////////////
-	int m_precision;
+    std::uint32_t m_precision;
 	std::int32_t m_valuesMask;
 
 	// true when the end of the image has been reached
@@ -206,8 +206,8 @@ public:
 
 	// The image's size, rounded to accomodate all the MCUs
 	///////////////////////////////////////////////////////////
-	std::uint32_t m_jpegImageSizeX;
-	std::uint32_t m_jpegImageSizeY;
+	std::uint32_t m_jpegImageWidth;
+	std::uint32_t m_jpegImageHeight;
 
 
 	// FDCT/IDCT
@@ -274,7 +274,7 @@ protected:
 
 	// Reset the internal variables
 	///////////////////////////////////////////////////////////
-	void resetInternal(bool bCompression, quality compQuality);
+    void resetInternal(bool bCompression, imageQuality_t compQuality);
 
     std::shared_ptr<image> copyJpegChannelsToImage(bool b2complement, const std::string& colorSpace);
 	void copyImageToJpegChannels(std::shared_ptr<image> sourceImage, bool b2complement, std::uint8_t allocatedBits, bool bSubSampledX, bool bSubSampledY);
@@ -345,9 +345,9 @@ public:
 
 	// Blocks per MCU
 	///////////////////////////////////////////////////////////
-	int m_blockMcuX;
-	int m_blockMcuY;
-	int m_blockMcuXY;
+    std::uint32_t m_blockMcuX;
+    std::uint32_t m_blockMcuY;
+    std::uint32_t m_blockMcuXY;
 
 	// Last DC value
 	///////////////////////////////////////////////////////////
@@ -436,7 +436,7 @@ protected:
 
 	// Read the tag's length
 	///////////////////////////////////////////////////////////
-	std::int32_t readLength(streamReader* pStream);
+    std::uint32_t readLength(streamReader* pStream);
 };
 
 

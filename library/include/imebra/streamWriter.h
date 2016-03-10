@@ -2,13 +2,13 @@
 $fileHeader$
 */
 
-/*! \file streamWriter_swig.h
-    \brief Declaration of the the class used to write the streams for SWIG.
+/*! \file streamWriter.h
+    \brief Declaration of the the class used to write the streams.
 
 */
 
-#if !defined(imebraStreamWriter_SWIG_F6221390_BC44_4B83_B5BB_3485222FF1DD__INCLUDED_)
-#define imebraStreamWriter_SWIG_F6221390_BC44_4B83_B5BB_3485222FF1DD__INCLUDED_
+#if !defined(imebraStreamWriter__INCLUDED_)
+#define imebraStreamWriter__INCLUDED_
 
 #ifndef SWIG
 
@@ -31,16 +31,17 @@ class BaseStreamOutput;
 
 class CodecFactory;
 
-/// \addtogroup group_swig_bindings
-/// @{
-
 class IMEBRA_API StreamWriter
 {
-	friend class CodecFactory;
-public:
 #ifndef SWIG
+    friend class CodecFactory;
+    friend class TagContent;
+
+private:
     StreamWriter(std::shared_ptr<implementation::streamWriter> pWriter);
 #endif
+
+public:
     StreamWriter(const BaseStreamOutput& stream, size_t virtualStart = 0, size_t virtualLength = 0);
     StreamWriter(const StreamWriter& right);
     StreamWriter& operator=(const StreamWriter& right);
@@ -51,8 +52,6 @@ protected:
 #endif
 };
 
-///@}
-
 }
 
-#endif // !defined(imebraStreamWriter_SWIG_F6221390_BC44_4B83_B5BB_3485222FF1DD__INCLUDED_)
+#endif // !defined(imebraStreamWriter__INCLUDED_)

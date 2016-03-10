@@ -2,13 +2,13 @@
 $fileHeader$
 */
 
-/*! \file transform_swig.h
-	\brief Declaration of the base class for transforms for SWIG.
+/*! \file transform.h
+    \brief Declaration of the base class for transforms.
 
 */
 
-#if !defined(imebraTransform_SWIG_F6221390_BC44_4B83_B5BB_3485222FF1DD__INCLUDED_)
-#define imebraTransform_SWIG_F6221390_BC44_4B83_B5BB_3485222FF1DD__INCLUDED_
+#if !defined(imebraTransform__INCLUDED_)
+#define imebraTransform__INCLUDED_
 
 #ifndef SWIG
 
@@ -34,14 +34,24 @@ namespace imebra
 class IMEBRA_API Transform
 {
 
-public:
-    Transform(const Transform& right);
-    Transform& operator=(const Transform& right);
-    virtual ~Transform(){}
-
 #ifndef SWIG
+    friend class TransformsChain;
+    friend class DrawBitmap;
+    friend class ColorTransformsFactory;
+    friend class TransformHighBit;
+    friend class ModalityVOILUT;
+    friend class VOILUT;
+
+private:
     Transform(std::shared_ptr<imebra::implementation::transforms::transform> pTransform);
 #endif
+
+
+public:
+    Transform(const Transform& right);
+    virtual ~Transform();
+
+    Transform& operator=(const Transform& right);
 
 
     bool isEmpty() const;
@@ -55,10 +65,11 @@ public:
             std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY) const;
 
 #ifndef SWIG
+protected:
     std::shared_ptr<imebra::implementation::transforms::transform> m_pTransform;
 #endif
 };
 
 }
 
-#endif // imebraTransform_SWIG_F6221390_BC44_4B83_B5BB_3485222FF1DD__INCLUDED_
+#endif // imebraTransform__INCLUDED_

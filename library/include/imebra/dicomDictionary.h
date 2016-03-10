@@ -7,8 +7,8 @@ $fileHeader$
 
 */
 
-#if !defined(imebraDicomDictionary_SWIG_82307D4A_6490_4202_BF86_93399D32721E__INCLUDED_)
-#define imebraDicomDictionary_SWIG_82307D4A_6490_4202_BF86_93399D32721E__INCLUDED_
+#if !defined(imebraDicomDictionary__INCLUDED_)
+#define imebraDicomDictionary__INCLUDED_
 
 #include <string>
 #include "dataSet.h"
@@ -63,4 +63,4 @@ public:
 };
 
 }
-#endif // !defined(imebraDicomDictionary_SWIG_82307D4A_6490_4202_BF86_93399D32721E__INCLUDED_)
+#endif // !defined(imebraDicomDictionary__INCLUDED_)

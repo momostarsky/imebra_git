@@ -2,19 +2,21 @@
 $fileHeader$
 */
 
-/*! \file dataHandler_swig.h
-    \brief Declaration of the class DataHandler for SWIG.
+/// \file dataHandler.h
+/// \brief Declaration of the classes ReadingDataHandler and
+///        WritingDataHandler.
+///
+///////////////////////////////////////////////////////////////////////////////
 
-*/
-
-#if !defined(imebraDataHandler_SWIG_93F684BF_0024_4bf3_89BA_D98E82A1F44C__INCLUDED_)
-#define imebraDataHandler_SWIG_93F684BF_0024_4bf3_89BA_D98E82A1F44C__INCLUDED_
-
-#ifndef SWIG
+#if !defined(imebraDataHandler__INCLUDED_)
+#define imebraDataHandler__INCLUDED_
 
 #include <string>
 #include <memory>
 #include "definitions.h"
+#include "memory.h"
+
+#ifndef SWIG
 
 namespace imebra
 {
@@ -23,14 +25,15 @@ namespace implementation
 namespace handlers
 {
 class readingDataHandler;
+class readingDataHandlerNumericBase;
 class writingDataHandler;
+class writingDataHandlerNumericBase;
 }
 }
 }
 
 #endif
 
-#include "memory.h"
 
 namespace imebra
 {
@@ -42,10 +45,10 @@ namespace imebra
 /// ReadingDataHandler is able to return the tag's content as a string,
 /// a number, a date/time or an age.
 ///
-/// When ReadingDataHandler handles numeric tags then it can also return a
-/// pointer to the raw memory that stores the numeric values.
+/// When a ReadingDataHandler object handles a numeric tag then it can also
+/// return a pointer to the raw memory that stores the numeric values.
 ///
-/// In order to obtain a ReadingDataHandler for a specific tag stored
+/// In order to obtain a ReadingDataHandler object for a specific tag stored
 /// in a DataSet, call DataSet::getReadingDataHandler().
 ///
 /// \warning ReadingDataHandler is NOT thread safe.
@@ -53,7 +56,17 @@ namespace imebra
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API ReadingDataHandler
 {
+#ifndef SWIG
+    friend class DataSet;
+    friend class TagContent;
+    friend class ReadingDataHandlerNumeric;
+
+private:
+    ReadingDataHandler(std::shared_ptr<imebra::implementation::handlers::readingDataHandler> pDataHandler);
+#endif
+
 public:
+
     /// \brief Copy constructor.
     ///
     /// The new ReadingDataHandler will handle the same tag's content handled
@@ -64,9 +77,7 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     ReadingDataHandler(const ReadingDataHandler& right);
 
-#ifndef SWIG
-    ReadingDataHandler(std::shared_ptr<imebra::implementation::handlers::readingDataHandler> pDataHandler);
-#endif
+    virtual ~ReadingDataHandler();
 
     /// \brief Copy operator.
     ///
@@ -90,16 +101,6 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     size_t getSize() const;
 
-    /// \brief If ReadingDataHandler is handling a numeric tag's content then it
-    ///        returns the number of bytes occupied by each number.
-    ///
-    /// \return the number of bytes occupied by each number stored in the tag
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    size_t getUnitSize() const;
-
-    bool isSigned() const;
-
 	std::string getDataType() const;
 
     std::int32_t getSignedLong(size_t index) const;
@@ -116,6 +117,48 @@ public:
 
     Age getAge(const size_t index) const;
 
+#ifndef SWIG
+protected:
+    std::shared_ptr<imebra::implementation::handlers::readingDataHandler> m_pDataHandler;
+#endif
+};
+
+class IMEBRA_API ReadingDataHandlerNumeric: public ReadingDataHandler
+{
+public:
+#ifndef SWIG
+    friend class Image;
+    friend class DataSet;
+    friend class TagContent;
+
+private:
+    ReadingDataHandlerNumeric(std::shared_ptr<imebra::implementation::handlers::readingDataHandlerNumericBase> pDataHandler);
+#endif
+
+public:
+
+    /// \brief Copy constructor.
+    ///
+    /// The new ReadingDataHandlerNumeric will handle the same tag's content
+    /// handler by the source ReadingDataHandlerNumeric.
+    ///
+    /// \param right the source ReadingDataHandlerNumeric
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    ReadingDataHandlerNumeric(const ReadingDataHandlerNumeric& right);
+
+    /// \brief Copy operator.
+    ///
+    /// The ReadingDataHandler object will drop the handled tag's content
+    /// and will handle the same tag's content as the source ReadingDataHandler.
+    ///
+    /// \param right the source ReadingDataHandler
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    ReadingDataHandlerNumeric& operator=(const ReadingDataHandlerNumeric& right);
+
+    const ReadMemory getMemory() const;
+
     ///
     /// \brief Copies the raw representation of the handled data into
     ///        a pre-allocated buffer.
@@ -127,44 +170,54 @@ public:
     /// \param bufferSize the size of the allocated buffer
     /// \return the number of bytes to be copied into the pre-allocated buffer
     ///
+    ///////////////////////////////////////////////////////////////////////////////
     size_t data(char* buffer, const size_t bufferSize) const;
 
     ///
     /// \brief Returns a pointer to the raw representation of the handled data.
+    ///
     /// \param dataSize
     /// \return
     ///
+    ///////////////////////////////////////////////////////////////////////////////
     const char* data(size_t* pDataSize) const;
 
+    /// \brief If ReadingDataHandler is handling a numeric tag's content then it
+    ///        returns the number of bytes occupied by each number.
+    ///
+    /// \return the number of bytes occupied by each number stored in the tag
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    size_t getUnitSize() const;
 
-#ifndef SWIG
-protected:
-    std::shared_ptr<imebra::implementation::handlers::readingDataHandler> m_pDataHandler;
-#endif
+    bool isSigned() const;
 };
 
 class IMEBRA_API WritingDataHandler
 {
+#ifndef SWIG
+    friend class DataSet;
+    friend class TagContent;
+    friend class WritingDataHandlerNumeric;
+
+private:
+    WritingDataHandler(std::shared_ptr<imebra::implementation::handlers::writingDataHandler> pDataHandler);
+#endif
+
 public:
     // Costructor
     ///////////////////////////////////////////////////////////
     WritingDataHandler(const WritingDataHandler& right);
 
-    WritingDataHandler& operator=(const WritingDataHandler& right);
+    virtual ~WritingDataHandler();
 
-#ifndef SWIG
-    WritingDataHandler(std::shared_ptr<imebra::implementation::handlers::writingDataHandler> pDataHandler);
-#endif
+    WritingDataHandler& operator=(const WritingDataHandler& right);
 
     void close();
 
     void setSize(const size_t elementsNumber);
 
     size_t getSize() const;
-
-    size_t getUnitSize() const;
-
-    bool isSigned() const;
 
     std::string getDataType() const;
 
@@ -182,16 +235,40 @@ public:
 
     WritingDataHandler& setUnicodeString(const size_t index, const std::wstring& value);
 
-    void assign(const char* buffer, const size_t bufferSize);
-
-    char* data(size_t* pDataSize) const;
-
 #ifndef SWIG
 protected:
     std::shared_ptr<imebra::implementation::handlers::writingDataHandler> m_pDataHandler;
 #endif
 };
 
+class IMEBRA_API WritingDataHandlerNumeric: public WritingDataHandler
+{
+#ifndef SWIG
+    friend class Image;
+    friend class DataSet;
+    friend class TagContent;
+private:
+    WritingDataHandlerNumeric(std::shared_ptr<imebra::implementation::handlers::writingDataHandlerNumericBase> pDataHandler);
+#endif
+
+public:
+    // Costructor
+    ///////////////////////////////////////////////////////////
+    WritingDataHandlerNumeric(const WritingDataHandlerNumeric& right);
+
+    WritingDataHandlerNumeric& operator=(const WritingDataHandlerNumeric& right);
+
+    ReadWriteMemory getMemory() const;
+
+    void assign(const char* buffer, const size_t bufferSize);
+
+    char* data(size_t* pDataSize) const;
+
+    size_t getUnitSize() const;
+
+    bool isSigned() const;
+};
+
 }
 
-#endif // !defined(imebraDataHandler_SWIG_93F684BF_0024_4bf3_89BA_D98E82A1F44C__INCLUDED_)
+#endif // !defined(imebraDataHandler__INCLUDED_)

@@ -2,13 +2,13 @@
 $fileHeader$
 */
 
-/*! \file streamReader_swig.h
-	\brief Declaration of the the class used to read the streams for SWIG.
+/*! \file streamReader.h
+    \brief Declaration of the the class used to read the streams.
 
 */
 
-#if !defined(imebraStreamReader_SWIG_F6221390_BC44_4B83_B5BB_3485222FF1DD__INCLUDED_)
-#define imebraStreamReader_SWIG_F6221390_BC44_4B83_B5BB_3485222FF1DD__INCLUDED_
+#if !defined(imebraStreamReader__INCLUDED_)
+#define imebraStreamReader__INCLUDED_
 
 #ifndef SWIG
 
@@ -35,16 +35,22 @@ class CodecFactory;
 
 class IMEBRA_API StreamReader
 {
-    friend class CodecFactory;
-public:
 #ifndef SWIG
+    friend class CodecFactory;
+    friend class TagContent;
+
+private:
     StreamReader(std::shared_ptr<implementation::streamReader> pReader);
 #endif
+
+public:
     StreamReader(const BaseStreamInput& stream);
 
     StreamReader(const BaseStreamInput& stream, size_t virtualStart, size_t virtualLength);
 
     StreamReader(const StreamReader& right);
+
+    virtual ~StreamReader();
 
     StreamReader& operator=(const StreamReader& right);
 
@@ -56,4 +62,4 @@ protected:
 
 }
 
-#endif // !defined(imebraStreamReader_SWIG_F6221390_BC44_4B83_B5BB_3485222FF1DD__INCLUDED_)
+#endif // !defined(imebraStreamReader__INCLUDED_)

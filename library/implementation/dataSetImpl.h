@@ -203,7 +203,7 @@ public:
 	///                     compression quality
 	///
 	///////////////////////////////////////////////////////////
-    void setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage, const std::string& transferSyntax, codecs::codec::quality quality);
+    void setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage, const std::string& transferSyntax, imageQuality_t quality);
 
     /// \brief Retrieve the first and the last buffers used
     ///         to store the image.

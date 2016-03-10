@@ -1,6 +1,4 @@
-#include <imebra/codecFactory.h>
-#include <imebra/fileStream.h>
-#include <imebra/exceptions.h>
+#include <imebra/imebra.h>
 #include "testsSettings.h"
 #include <dirent.h>
 #include <gtest/gtest.h>

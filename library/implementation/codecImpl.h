@@ -13,6 +13,7 @@ $fileHeader$
 #include <stdexcept>
 #include <memory>
 #include "memoryImpl.h"
+#include "../include/imebra/definitions.h"
 
 
 namespace imebra
@@ -181,21 +182,6 @@ public:
 	///////////////////////////////////////////////////////////
     virtual std::shared_ptr<image> getImage(const dataSet& sourceDataSet, std::shared_ptr<streamReader> pSourceStream, const std::string& dataType) = 0;
 	
-	/// \brief This enumeration is used by setImage() in order
-	///         to setup the compression parameters.
-	///
-	///////////////////////////////////////////////////////////
-	enum quality
-	{
-		veryHigh = 0,      ///< the image is saved with very high quality. No subsampling is performed and no quantization
-		high = 100,        ///< the image is saved with high quality. No subsampling is performed. Quantization ratios are low
-		aboveMedium = 200, ///< the image is saved in medium quality. Horizontal subsampling is applied. Quantization ratios are low
-		medium = 300,      ///< the image is saved in medium quality. Horizontal subsampling is applied. Quantization ratios are medium
-		belowMedium = 400, ///< the image is saved in medium quality. Horizontal and vertical subsampling are applied. Quantization ratios are medium
-		low = 500,         ///< the image is saved in low quality. Horizontal and vertical subsampling are applied. Quantization ratios are higher than the ratios used in the belowMedium quality
-		veryLow = 600	   ///< the image is saved in low quality. Horizontal and vertical subsampling are applied. Quantization ratios are high
-	};
-
 	/// \brief Stores an image into stream.
 	///
 	/// The image is compressed using the specified transfer
@@ -237,7 +223,7 @@ public:
 		std::shared_ptr<streamWriter> pDestStream,
 		std::shared_ptr<image> pSourceImage, 
         const std::string& transferSyntax,
-		quality imageQuality,
+        imageQuality_t imageQuality,
         const std::string& dataType,
 		std::uint8_t allocatedBits,
 		bool bSubSampledX,
@@ -325,14 +311,14 @@ public:
 	channel(): 
 		m_samplingFactorX(1), 
 		m_samplingFactorY(1),
-		m_sizeX(0),
-		m_sizeY(0),
+		m_width(0),
+		m_height(0),
 		m_pBuffer(0),
 		m_bufferSize(0){}
 
 	// Allocate the channel
 	///////////////////////////////////////////////////////////
-	void allocate(std::uint32_t sizeX, std::uint32_t sizeY);
+	void allocate(std::uint32_t width, std::uint32_t height);
 
 	// Sampling factor
 	///////////////////////////////////////////////////////////
@@ -341,8 +327,8 @@ public:
 
 	// Channel's size in pixels
 	///////////////////////////////////////////////////////////
-	std::uint32_t m_sizeX;
-	std::uint32_t m_sizeY;
+	std::uint32_t m_width;
+	std::uint32_t m_height;
 
 	// Channel's buffer & size
 	///////////////////////////////////////////////////////////

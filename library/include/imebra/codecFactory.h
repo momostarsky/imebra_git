@@ -4,12 +4,12 @@ $fileHeader$
 
 /*! \file codecFactory.h
     \brief Declaration of the class used to retrieve the codec able to
-		handle the requested transfer syntax (SWIG).
+        handle the requested transfer syntax.
 
 */
 
-#if !defined(imebraCodecFactory_SWIG_82307D4A_6490_4202_BF86_93399D32721E__INCLUDED_)
-#define imebraCodecFactory_SWIG_82307D4A_6490_4202_BF86_93399D32721E__INCLUDED_
+#if !defined(imebraCodecFactory__INCLUDED_)
+#define imebraCodecFactory__INCLUDED_
 
 #include <string>
 #include "dataSet.h"
@@ -57,4 +57,4 @@ public:
 };
 
 }
-#endif // !defined(imebraCodecFactory_SWIG_82307D4A_6490_4202_BF86_93399D32721E__INCLUDED_)
+#endif // !defined(imebraCodecFactory__INCLUDED_)

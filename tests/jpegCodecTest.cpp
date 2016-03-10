@@ -18,14 +18,14 @@ TEST(jpegCodecTest, testBaseline)
 
         DataSet dataset;
 
-        std::uint32_t sizeX = 600;
-        std::uint32_t sizeY = 400;
+        std::uint32_t width = 600;
+        std::uint32_t height = 400;
 
-        Image baselineImage(buildImageForTest(sizeX, sizeY, precision == 0 ? bitDepth_t::depthU8 : bitDepth_t::depthU16, bits, 30, 20, "RGB", 50));
+        Image baselineImage(buildImageForTest(width, height, precision == 0 ? bitDepth_t::depthU8 : bitDepth_t::depthU16, bits, 30, 20, "RGB", 50));
 
         Transform colorTransform = ColorTransformsFactory::getTransform("RGB", "YBR_FULL");
-        Image ybrImage = colorTransform.allocateOutputImage(baselineImage, sizeX, sizeY);
-        colorTransform.runTransform(baselineImage, 0, 0, sizeX, sizeY, ybrImage, 0, 0);
+        Image ybrImage = colorTransform.allocateOutputImage(baselineImage, width, height);
+        colorTransform.runTransform(baselineImage, 0, 0, width, height, ybrImage, 0, 0);
 
 		std::wstring fileName;
 		if(precision == 0)
@@ -43,10 +43,10 @@ TEST(jpegCodecTest, testBaseline)
 
         Image checkImage = dataset.getImage(0);
 
-        std::uint32_t checkSizeX(checkImage.getSizeX()), checkSizeY(checkImage.getSizeY());
+        std::uint32_t checkWidth(checkImage.getWidth()), checkHeight(checkImage.getHeight());
         colorTransform = ColorTransformsFactory::getTransform("YBR_FULL", "RGB");
-        Image rgbImage = colorTransform.allocateOutputImage(checkImage, checkSizeX, checkSizeY);
-        colorTransform.runTransform(checkImage, 0, 0, checkSizeX, checkSizeY, rgbImage, 0, 0);
+        Image rgbImage = colorTransform.allocateOutputImage(checkImage, checkWidth, checkHeight);
+        colorTransform.runTransform(checkImage, 0, 0, checkWidth, checkHeight, rgbImage, 0, 0);
 
 		// Compare the buffers. A little difference is allowed
         double differenceRGB = compareImages(baselineImage, rgbImage);
@@ -65,15 +65,15 @@ TEST(jpegCodecTest, testBaselineSubsampled)
         {
             for(int interleaved = 0; interleaved != 2; ++interleaved)
             {
-                std::uint32_t sizeX = 600;
-                std::uint32_t sizeY = 400;
-                Image baselineImage(buildImageForTest(sizeX, sizeY, bitDepth_t::depthU8, 7, 30, 20, "RGB", 50));
+                std::uint32_t width = 600;
+                std::uint32_t height = 400;
+                Image baselineImage(buildImageForTest(width, height, bitDepth_t::depthU8, 7, 30, 20, "RGB", 50));
 
                 Transform colorTransform = ColorTransformsFactory::getTransform("RGB", "YBR_FULL");
-                Image ybrImage = colorTransform.allocateOutputImage(baselineImage, sizeX, sizeY);
-                colorTransform.runTransform(baselineImage, 0, 0, sizeX, sizeY, ybrImage, 0, 0);
+                Image ybrImage = colorTransform.allocateOutputImage(baselineImage, width, height);
+                colorTransform.runTransform(baselineImage, 0, 0, width, height, ybrImage, 0, 0);
 
-                Memory savedJpeg;
+                ReadWriteMemory savedJpeg;
                 {
                     MemoryStreamOutput saveStream(savedJpeg);
                     StreamWriter writer(saveStream);
@@ -88,10 +88,10 @@ TEST(jpegCodecTest, testBaselineSubsampled)
 
                 Image checkImage = readDataSet.getImage(0);
 
-                std::uint32_t checkSizeX(checkImage.getSizeX()), checkSizeY(checkImage.getSizeY());
+                std::uint32_t checkWidth(checkImage.getWidth()), checkHeight(checkImage.getHeight());
                 colorTransform = ColorTransformsFactory::getTransform("YBR_FULL", "RGB");
-                Image rgbImage = colorTransform.allocateOutputImage(checkImage, checkSizeX, checkSizeY);
-                colorTransform.runTransform(checkImage, 0, 0, checkSizeX, checkSizeY, rgbImage, 0, 0);
+                Image rgbImage = colorTransform.allocateOutputImage(checkImage, checkWidth, checkHeight);
+                colorTransform.runTransform(checkImage, 0, 0, checkWidth, checkHeight, rgbImage, 0, 0);
 
                 // Compare the buffers. A little difference is allowed
                 double differenceRGB = compareImages(baselineImage, rgbImage);
@@ -103,7 +103,7 @@ TEST(jpegCodecTest, testBaselineSubsampled)
     }
 }
 
-/*
+
 TEST(jpegCodecTest, testLossless)
 {
     for(int interleaved = 0; interleaved != 2; ++interleaved)
@@ -114,10 +114,17 @@ TEST(jpegCodecTest, testLossless)
             {
                 for(int b2Complement = 0; b2Complement != 2; ++b2Complement)
                 {
+                    std::cout <<
+                                 "Testing lossless jpeg (" << (bits) <<
+                                 " bits, interleaved=" << interleaved <<
+                                 ", firstOrderPrediction=" << firstOrderPrediction <<
+                                 ", 2complement=" << b2Complement<<
+                                 ")"<< std::endl;
+
                     DataSet dataset;
 
-                    std::uint32_t sizeX = 115;
-                    std::uint32_t sizeY = 400;
+                    std::uint32_t width = 115;
+                    std::uint32_t height = 400;
 
                     bitDepth_t depth;
                     if(bits <= 8)
@@ -129,16 +136,18 @@ TEST(jpegCodecTest, testLossless)
                         depth = (b2Complement == 1) ? bitDepth_t::depthS16 : bitDepth_t::depthU16;
                     }
 
-                    Image image(buildImageForTest(sizeX, sizeY, depth, bits, 30, 20, "RGB", 50));
+                    Image image(buildImageForTest(width, height, depth, bits, 30, 20, "RGB", 50));
 
                     std::string transferSyntax = (firstOrderPrediction == 0) ? "1.2.840.10008.1.2.4.57" : "1.2.840.10008.1.2.4.70";
 
-                    Memory savedJpeg;
+                    ReadWriteMemory savedJpeg;
                     {
+                        DataSet dataSet;
+                        dataSet.setImage(0, image, transferSyntax, imageQuality_t::veryHigh);
+
                         MemoryStreamOutput saveStream(savedJpeg);
                         StreamWriter writer(saveStream);
-
-                        CodecFactory::saveImage(writer, image, transferSyntax, imageQuality_t::veryHigh, "OB", 8, false, false, interleaved != 0, b2Complement == 1);
+                        CodecFactory::save(dataSet, writer, codecType_t::dicom);
                     }
 
                     MemoryStreamInput loadStream(savedJpeg);
@@ -157,7 +166,7 @@ TEST(jpegCodecTest, testLossless)
         }
     }
 }
-*/
+
 } // namespace tests
 
 } // namespace imebra

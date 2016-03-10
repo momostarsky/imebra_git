@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
-#include <imebra/dataSet.h>
-#include <imebra/exceptions.h>
+#include <imebra/imebra.h>
 
 namespace imebra
 {

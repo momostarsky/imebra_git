@@ -33,18 +33,18 @@ namespace implementation
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 
-image::image(uint32_t sizeX, uint32_t sizeY, bitDepth_t depth, const std::string &colorSpace, uint32_t highBit):
+image::image(uint32_t width, uint32_t height, bitDepth_t depth, const std::string &colorSpace, uint32_t highBit):
     m_channelsNumber(0),
     m_imageDepth(depth),
     m_highBit(highBit),
-    m_sizeX(sizeX),
-    m_sizeY(sizeY),
+    m_width(width),
+    m_height(height),
     m_sizeMmX(0),
     m_sizeMmY(0)
 {
     IMEBRA_FUNCTION_START();
 
-    if(sizeX == 0 || sizeY == 0)
+    if(width == 0 || height == 0)
     {
         IMEBRA_THROW(ImageInvalidSizeError, "An invalid image's size has been specified");
     }
@@ -146,7 +146,7 @@ std::shared_ptr<handlers::readingDataHandlerNumericBase> image::getReadingDataHa
     {
         buffer temporaryBuffer(m_bufferDataType);
         {
-            std::shared_ptr<handlers::writingDataHandler> imageHandler(temporaryBuffer.getWritingDataHandler(m_sizeX * m_sizeY * m_channelsNumber));
+            std::shared_ptr<handlers::writingDataHandler> imageHandler(temporaryBuffer.getWritingDataHandler(m_width * m_height * m_channelsNumber));
         }
         return std::dynamic_pointer_cast<handlers::readingDataHandlerNumericBase>(m_buffer->getReadingDataHandler());
     }
@@ -168,7 +168,7 @@ std::shared_ptr<handlers::writingDataHandlerNumericBase> image::getWritingDataHa
         m_buffer = std::make_shared<buffer>(m_bufferDataType);
     }
 
-    std::shared_ptr<handlers::writingDataHandler> imageHandler(m_buffer->getWritingDataHandler(m_sizeX * m_sizeY * m_channelsNumber));
+    std::shared_ptr<handlers::writingDataHandler> imageHandler(m_buffer->getWritingDataHandler(m_width * m_height * m_channelsNumber));
 
     return std::dynamic_pointer_cast<handlers::writingDataHandlerNumericBase>(imageHandler);
 
@@ -250,15 +250,15 @@ std::uint32_t image::getChannelsNumber() const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void image::getSize(std::uint32_t* pSizeX, std::uint32_t* pSizeY) const
+void image::getSize(std::uint32_t* pWidth, std::uint32_t* pHeight) const
 {
     IMEBRA_FUNCTION_START();
 
-    if(pSizeX)
-        *pSizeX = m_sizeX;
+    if(pWidth)
+        *pWidth = m_width;
 
-	if(pSizeY)
-        *pSizeY = m_sizeY;
+	if(pHeight)
+        *pHeight = m_height;
 
     IMEBRA_FUNCTION_END();
 }

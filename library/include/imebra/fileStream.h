@@ -2,13 +2,13 @@
 $fileHeader$
 */
 
-/*! \file stream_swig.h
-	\brief Declaration of the stream class for SWIG.
+/*! \file fileStream.h
+    \brief Declaration of the file tream classes.
 
 */
 
-#if !defined(imebraStream_SWIG_146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_)
-#define imebraStream_SWIG_146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_
+#if !defined(imebraFileStream__INCLUDED_)
+#define imebraFileStream__INCLUDED_
 
 #include <string>
 #include "baseStream.h"
@@ -45,4 +45,4 @@ public:
 };
 
 }
-#endif // !defined(imebraStream_SWIG_146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_)
+#endif // !defined(imebraFileStream__INCLUDED_)

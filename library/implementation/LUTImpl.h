@@ -105,7 +105,7 @@ public:
 	///         and the lut's data.
 	///
 	/// This function is usually called when a lut has to be
-	///  written in a dataSet.
+    ///  written to a dataSet.
 	///
 	/// @param pDescriptor   the data handler that manages the
 	///                       buffer that will store the lut

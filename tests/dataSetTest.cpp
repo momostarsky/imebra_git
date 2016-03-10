@@ -1,6 +1,4 @@
-#include <imebra/image.h>
-#include <imebra/definitions.h>
-#include <imebra/dataSet.h>
+#include <imebra/imebra.h>
 
 #include "buildImageForTest.h"
 #include <list>
@@ -51,7 +49,7 @@ TEST(dataSetTest, testFragmentation)
 
     {
         std::uint32_t offset(0);
-        WritingDataHandler offsetHandler = testDataSet.getWritingDataHandler(TagId(imebra::tagId_t::PixelData_7FE0_0010), 0, "OB");
+        WritingDataHandlerNumeric offsetHandler = testDataSet.getWritingDataHandlerNumeric(TagId(imebra::tagId_t::PixelData_7FE0_0010), 0, "OB");
 
         std::list<WritingDataHandler> handlers;
 
@@ -64,7 +62,7 @@ TEST(dataSetTest, testFragmentation)
             std::uint32_t* pOffsetMemory = (std::uint32_t*)offsetHandler.data(&dataSize);
             pOffsetMemory[scanBuffers - 1] = offset;
 
-            imebra::ReadingDataHandler wholeHandler = testDataSet.getReadingDataHandler(TagId(imebra::tagId_t::PixelData_7FE0_0010), scanBuffers);
+            ReadingDataHandlerNumeric wholeHandler = testDataSet.getReadingDataHandlerNumericThrow(TagId(imebra::tagId_t::PixelData_7FE0_0010), scanBuffers);
             size_t totalSize;
             const char* pWholeMemory = wholeHandler.data(&totalSize);
             size_t fragmentedSize = totalSize / 3;
@@ -79,7 +77,7 @@ TEST(dataSetTest, testFragmentation)
                 {
                     thisSize = fragmentedSize;
                 }
-                WritingDataHandler newHandler = testDataSet.getWritingDataHandler(TagId(imebra::tagId_t::PixelData_7FE0_0010), handlers.size() + 1, "OB");
+                WritingDataHandlerNumeric newHandler = testDataSet.getWritingDataHandlerNumeric(TagId(imebra::tagId_t::PixelData_7FE0_0010), handlers.size() + 1, "OB");
                 newHandler.setSize(thisSize);
                 newHandler.assign(pWholeMemory, thisSize);
                 handlers.push_back(newHandler);

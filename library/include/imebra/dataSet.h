@@ -2,13 +2,13 @@
 $fileHeader$
 */
 
-/*! \file dataSet_swig.h
-    \brief Declaration of the class dataSet for SWIG.
+/*! \file dataSet.h
+    \brief Declaration of the DataSet class.
 
 */
 
-#if !defined(imebraDataSet_SWIG_93F684BF_0024_4bf3_89BA_D98E82A1F44C__INCLUDED_)
-#define imebraDataSet_SWIG_93F684BF_0024_4bf3_89BA_D98E82A1F44C__INCLUDED_
+#if !defined(imebraDataSet__INCLUDED_)
+#define imebraDataSet__INCLUDED_
 
 #ifndef SWIG
 
@@ -42,7 +42,15 @@ class IMEBRA_API TagId
 public:
     TagId(std::uint16_t groupId, std::uint16_t tagId);
     TagId(std::uint16_t groupId, std::uint32_t groupOrder, std::uint16_t tagId);
+
+    /// \brief Constructor.
+    ///
+    /// \param id an enumeration representing a tag group and
+    ///           id
+    ///
+    ///////////////////////////////////////////////////////////
     TagId(tagId_t id);
+
     TagId(tagId_t id, std::uint32_t groupOrder);
 
     std::uint16_t getGroupId() const;
@@ -65,6 +73,13 @@ class IMEBRA_API DataSet
 #ifndef SWIG
 	friend class DirectoryRecord;
 	friend class DicomDir;
+    friend class ModalityVOILUT;
+    friend class VOILUT;
+    friend class CodecFactory;
+    friend class TagContent;
+
+private:
+    DataSet(std::shared_ptr<imebra::implementation::dataSet> pDataSet);
 #endif
 public:
     ///
@@ -85,11 +100,9 @@ public:
     ///////////////////////////////////////////////////////////
     DataSet(const DataSet& right);
 
-	DataSet& operator=(const DataSet& right);
+    virtual ~DataSet();
 
-#ifndef SWIG
-    DataSet(std::shared_ptr<imebra::implementation::dataSet> pDataSet);
-#endif
+	DataSet& operator=(const DataSet& right);
 
     groups_t getGroups() const;
 
@@ -179,9 +192,13 @@ public:
 
     DataSet getSequenceItemThrow(const TagId& tagId, size_t itemId);
 
-    ReadingDataHandler getReadingDataHandler(const TagId& tagId, size_t bufferId) const;
+    ReadingDataHandler getReadingDataHandlerThrow(const TagId& tagId, size_t bufferId) const;
 
     WritingDataHandler getWritingDataHandler(const TagId& tagId, size_t bufferId, const std::string& defaultDataType = "");
+
+    ReadingDataHandlerNumeric getReadingDataHandlerNumericThrow(const TagId& tagId, size_t bufferId) const;
+
+    WritingDataHandlerNumeric getWritingDataHandlerNumeric(const TagId& tagId, size_t bufferId, const std::string& defaultDataType = "");
 
     bool bufferExists(const TagId& tagId, size_t bufferId);
 
@@ -234,10 +251,11 @@ public:
     std::string getDataTypeThrow(const TagId& tagId) const;
 
 #ifndef SWIG
+protected:
     std::shared_ptr<imebra::implementation::dataSet> m_pDataSet;
 #endif
 };
 
 }
 
-#endif // !defined(imebraDataSet_SWIG_93F684BF_0024_4bf3_89BA_D98E82A1F44C__INCLUDED_)
+#endif // !defined(imebraDataSet__INCLUDED_)

@@ -7,8 +7,8 @@ $fileHeader$
 
 */
 
-#if !defined(imebraTagContent_SWIG_93F684BF_0024_4bf3_89BA_D98E82A1F44C__INCLUDED_)
-#define imebraTagContent_SWIG_93F684BF_0024_4bf3_89BA_D98E82A1F44C__INCLUDED_
+#if !defined(imebraTagContent__INCLUDED_)
+#define imebraTagContent__INCLUDED_
 #ifndef SWIG
 
 #include <string>
@@ -41,6 +41,14 @@ namespace imebra
 ///////////////////////////////////////////////////////////
 class IMEBRA_API TagContent
 {
+
+#ifndef SWIG
+    friend class DataSet;
+private:
+    TagContent(std::shared_ptr<imebra::implementation::data> pData);
+#endif
+
+
 public:
     ///
     /// \brief Construct an empty dicom dataset.
@@ -60,11 +68,9 @@ public:
     ///////////////////////////////////////////////////////////
     TagContent(const TagContent& right);
 
-    TagContent& operator=(const TagContent& right);
+    virtual ~TagContent();
 
-#ifndef SWIG
-    TagContent(std::shared_ptr<imebra::implementation::data> pData);
-#endif
+    TagContent& operator=(const TagContent& right);
 
     /// \brief Returns the number of buffers in the tag.
     ///
@@ -140,51 +146,9 @@ public:
 
     WritingDataHandler getWritingDataHandler(size_t bufferId, const std::string& defaultType);
 
-    /// \brief Get a raw data handler
-    ///         (handlers::dataHandlerRaw) for the specified
-    ///         buffer.
-    ///
-    /// The raw data handler can be used to read, write and
-    ///  resize the buffer.
-    ///
-    /// A raw data handler (handlers::dataHandlerRaw) always
-    ///  works on a collection of bytes, no matter what the
-    ///  buffer's data type is, while the normal
-    ///  handlers::dataHandler works on data types depending
-    ///  on the buffer's data type.
-    ///
-    /// A handlers::dataHandler can be obtained by calling
-    ///  getDataHandler().
-    ///
-    /// Usually a tag has only one buffer (bufferId = 0),
-    ///  but when a tag is a sequence or has an undefined
-    ///  length, then it could store more than one buffer;
-    /// in this case your application has to specify the
-    ///  id of the buffer for which the data handler is
-    ///  requested.
-    ///
-    /// The application can also specify a data type to use
-    ///  when a buffer doesn't exist yet: in this case a buffer
-    ///  with the specified data type will be allocated.
-    ///
-    /// The returned handlers::dataHandlerRaw works on a local
-    ///  copy of the buffer's data, then it doesn't have to
-    ///  worry about multithreading accesses to the buffer's
-    ///  data.
-    ///
-    /// @param bufferId the zero-based buffer's id the data
-    ///                 handler must use.
-    /// @param bWrite   true if the application wants to write
-    ///                 something into the buffer
-    /// @param defaultType a string that specifies the data
-    ///                  type to use for the new buffers.
-    /// @return a pointer to the data handler for the
-    ///         requested buffer.
-    ///
-    ///////////////////////////////////////////////////////////
-    ReadingDataHandler getReadingDataHandlerRawThrow(size_t bufferId) const;
+    ReadingDataHandlerNumeric getReadingDataHandlerNumericThrow(size_t bufferId) const;
 
-    WritingDataHandler getWritingDataHandlerRaw(size_t bufferId, const std::string& defaultType);
+    WritingDataHandlerNumeric getWritingDataHandlerNumeric(size_t bufferId, const std::string& defaultType);
 
     /// \brief Get a streamReader connected to a buffer's data.
     ///
@@ -293,8 +257,8 @@ public:
     ///////////////////////////////////////////////////////////
     std::string getDataTypeThrow(size_t bufferId) const;
 
-protected:
 #ifndef SWIG
+protected:
     std::shared_ptr<imebra::implementation::data> m_pData;
 #endif
 };
@@ -303,4 +267,4 @@ typedef std::map<std::uint16_t, TagContent> tags_t;
 
 }
 
-#endif // !defined(imebraTagContent_SWIG_93F684BF_0024_4bf3_89BA_D98E82A1F44C__INCLUDED_)
+#endif // !defined(imebraTagContent__INCLUDED_)

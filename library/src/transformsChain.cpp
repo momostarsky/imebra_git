@@ -2,8 +2,8 @@
 $fileHeader$
 */
 
-/*! \file transformsChain_swig.cpp
-    \brief Implementation of the TransformsChain class for SWIG.
+/*! \file transformsChain.cpp
+    \brief Implementation of the TransformsChain class.
 
 */
 
@@ -16,9 +16,6 @@ namespace imebra
 TransformsChain::TransformsChain(): Transform(std::make_shared<imebra::implementation::transforms::transformsChain>())
 {
 }
-
-TransformsChain::TransformsChain(std::shared_ptr<imebra::implementation::transforms::transformsChain> pTransform): Transform(pTransform)
-{}
 
 void TransformsChain::addTransform(const Transform& transform)
 {

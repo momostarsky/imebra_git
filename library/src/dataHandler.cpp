@@ -2,8 +2,8 @@
 $fileHeader$
 */
 
-/*! \file dataHandler_swig.cpp
-    \brief Implementation of the class DataHandler for SWIG.
+/*! \file dataHandler.cpp
+    \brief Implementation of the classes ReadingDataHandler & WritingDataHandler.
 */
 
 #include "../include/imebra/dataHandler.h"
@@ -17,6 +17,10 @@ namespace imebra
 ReadingDataHandler::ReadingDataHandler(const ReadingDataHandler& right) : m_pDataHandler(right.m_pDataHandler)
 {}
 
+ReadingDataHandler::~ReadingDataHandler()
+{
+}
+
 ReadingDataHandler& ReadingDataHandler::operator=(const ReadingDataHandler& right)
 {
     m_pDataHandler = right.m_pDataHandler;
@@ -29,32 +33,6 @@ ReadingDataHandler::ReadingDataHandler(std::shared_ptr<imebra::implementation::h
 size_t ReadingDataHandler::getSize() const
 {
     return m_pDataHandler->getSize();
-}
-
-size_t ReadingDataHandler::getUnitSize() const
-{
-    std::shared_ptr<imebra::implementation::handlers::readingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<imebra::implementation::handlers::readingDataHandlerNumericBase>(m_pDataHandler);
-    if(numericDataHandler == 0)
-    {
-        return 0;
-    }
-    else
-    {
-        return numericDataHandler->getUnitSize();
-    }
-}
-
-bool ReadingDataHandler::isSigned() const
-{
-    std::shared_ptr<imebra::implementation::handlers::readingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<imebra::implementation::handlers::readingDataHandlerNumericBase>(m_pDataHandler);
-    if(numericDataHandler == 0)
-    {
-        return true;
-    }
-    else
-    {
-        return numericDataHandler->isSigned();
-    }
 }
 
 std::string ReadingDataHandler::getDataType() const
@@ -112,40 +90,68 @@ Age ReadingDataHandler::getAge(const size_t index) const
     return Age(age, ageUnits);
 }
 
-size_t ReadingDataHandler::data(char* bufferOut, const size_t bufferSize) const
+
+ReadingDataHandlerNumeric::ReadingDataHandlerNumeric(std::shared_ptr<implementation::handlers::readingDataHandlerNumericBase> pDataHandler):
+    ReadingDataHandler(pDataHandler)
+{
+}
+
+ReadingDataHandlerNumeric::ReadingDataHandlerNumeric(const ReadingDataHandlerNumeric &right):
+    ReadingDataHandler(right)
+{
+}
+
+ReadingDataHandlerNumeric& ReadingDataHandlerNumeric::operator=(const ReadingDataHandlerNumeric& right)
+{
+    m_pDataHandler = right.m_pDataHandler;
+    return *this;
+}
+
+const ReadMemory ReadingDataHandlerNumeric::getMemory() const
 {
     std::shared_ptr<imebra::implementation::handlers::readingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<imebra::implementation::handlers::readingDataHandlerNumericBase>(m_pDataHandler);
-    if(numericDataHandler == 0)
-    {
-        return 0;
-    }
+    return ReadMemory(numericDataHandler->getMemory());
+}
+
+size_t ReadingDataHandlerNumeric::data(char* bufferOut, const size_t bufferSize) const
+{
+    std::shared_ptr<imebra::implementation::handlers::readingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<imebra::implementation::handlers::readingDataHandlerNumericBase>(m_pDataHandler);
     size_t memorySize = numericDataHandler->getMemorySize();
-    if(memorySize == 0)
-    {
-       return 0;
-    }
-    if(bufferOut != 0 && bufferSize >= memorySize)
+    if(bufferOut != 0 && bufferSize >= memorySize && memorySize != 0)
     {
         ::memcpy(bufferOut, numericDataHandler->getMemoryBuffer(), memorySize);
     }
     return memorySize;
 }
 
-const char* ReadingDataHandler::data(size_t* pDataSize) const
+const char* ReadingDataHandlerNumeric::data(size_t* pDataSize) const
 {
     std::shared_ptr<imebra::implementation::handlers::readingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<imebra::implementation::handlers::readingDataHandlerNumericBase>(m_pDataHandler);
-    if(numericDataHandler == 0)
-    {
-        *pDataSize = 0;
-        return 0;
-    }
     *pDataSize = numericDataHandler->getMemorySize();
     return (const char*)numericDataHandler->getMemoryBuffer();
 }
 
+size_t ReadingDataHandlerNumeric::getUnitSize() const
+{
+    std::shared_ptr<imebra::implementation::handlers::readingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<imebra::implementation::handlers::readingDataHandlerNumericBase>(m_pDataHandler);
+    return numericDataHandler->getUnitSize();
+}
+
+bool ReadingDataHandlerNumeric::isSigned() const
+{
+    std::shared_ptr<imebra::implementation::handlers::readingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<imebra::implementation::handlers::readingDataHandlerNumericBase>(m_pDataHandler);
+    return numericDataHandler->isSigned();
+}
+
+
+
 
 WritingDataHandler::WritingDataHandler(const WritingDataHandler& right) : m_pDataHandler(right.m_pDataHandler)
 {}
+
+WritingDataHandler::~WritingDataHandler()
+{
+}
 
 WritingDataHandler& WritingDataHandler::operator=(const WritingDataHandler& right)
 {
@@ -169,32 +175,6 @@ void WritingDataHandler::setSize(const size_t elementsNumber)
 size_t WritingDataHandler::getSize() const
 {
     return m_pDataHandler->getSize();
-}
-
-size_t WritingDataHandler::getUnitSize() const
-{
-    std::shared_ptr<imebra::implementation::handlers::writingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<imebra::implementation::handlers::writingDataHandlerNumericBase>(m_pDataHandler);
-    if(numericDataHandler == 0)
-    {
-        return 0;
-    }
-    else
-    {
-        return numericDataHandler->getUnitSize();
-    }
-}
-
-bool WritingDataHandler::isSigned() const
-{
-    std::shared_ptr<imebra::implementation::handlers::writingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<imebra::implementation::handlers::writingDataHandlerNumericBase>(m_pDataHandler);
-    if(numericDataHandler == 0)
-    {
-        return true;
-    }
-    else
-    {
-        return numericDataHandler->isSigned();
-    }
 }
 
 std::string WritingDataHandler::getDataType() const
@@ -255,28 +235,52 @@ WritingDataHandler& WritingDataHandler::setUnicodeString(const size_t index, con
     return *this;
 }
 
-void WritingDataHandler::assign(const char *buffer, const size_t bufferSize)
+WritingDataHandlerNumeric::WritingDataHandlerNumeric(std::shared_ptr<implementation::handlers::writingDataHandlerNumericBase> pDataHandler):
+    WritingDataHandler(pDataHandler)
+{
+}
+
+WritingDataHandlerNumeric::WritingDataHandlerNumeric(const WritingDataHandlerNumeric &right):
+    WritingDataHandler(right)
+{
+}
+
+WritingDataHandlerNumeric& WritingDataHandlerNumeric::operator=(const WritingDataHandlerNumeric& right)
+{
+    m_pDataHandler = right.m_pDataHandler;
+    return *this;
+}
+
+ReadWriteMemory WritingDataHandlerNumeric::getMemory() const
 {
     std::shared_ptr<imebra::implementation::handlers::writingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<imebra::implementation::handlers::writingDataHandlerNumericBase>(m_pDataHandler);
-    if(numericDataHandler == 0)
-    {
-        return;
-    }
+    return ReadWriteMemory(numericDataHandler->getMemory());
+}
 
+void WritingDataHandlerNumeric::assign(const char *buffer, const size_t bufferSize)
+{
+    std::shared_ptr<imebra::implementation::handlers::writingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<imebra::implementation::handlers::writingDataHandlerNumericBase>(m_pDataHandler);
     numericDataHandler->getMemory()->assign((std::uint8_t*) buffer, bufferSize);
 }
 
-char* WritingDataHandler::data(size_t* pDataSize) const
+char* WritingDataHandlerNumeric::data(size_t* pDataSize) const
 {
     std::shared_ptr<imebra::implementation::handlers::writingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<imebra::implementation::handlers::writingDataHandlerNumericBase>(m_pDataHandler);
-    if(numericDataHandler == 0)
-    {
-        *pDataSize = 0;
-        return 0;
-    }
     *pDataSize = numericDataHandler->getMemorySize();
     return (char*)numericDataHandler->getMemoryBuffer();
 
+}
+
+size_t WritingDataHandlerNumeric::getUnitSize() const
+{
+    std::shared_ptr<imebra::implementation::handlers::writingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<imebra::implementation::handlers::writingDataHandlerNumericBase>(m_pDataHandler);
+    return numericDataHandler->getUnitSize();
+}
+
+bool WritingDataHandlerNumeric::isSigned() const
+{
+    std::shared_ptr<imebra::implementation::handlers::writingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<imebra::implementation::handlers::writingDataHandlerNumericBase>(m_pDataHandler);
+    return numericDataHandler->isSigned();
 }
 
 

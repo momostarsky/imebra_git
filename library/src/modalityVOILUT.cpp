@@ -2,8 +2,8 @@
 $fileHeader$
 */
 
-/*! \file modalityVOILUT_swig.cpp
-    \brief Implementation of the ModalityVOILUT class for SWIG.
+/*! \file modalityVOILUT.cpp
+    \brief Implementation of the ModalityVOILUT class..
 
 */
 

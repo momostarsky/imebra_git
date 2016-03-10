@@ -2,13 +2,13 @@
 $fileHeader$
 */
 
-/*! \file VOILUT_swig.h
-	\brief Declaration of the class VOILUT for SWIG.
+/*! \file VOILUT.h
+    \brief Declaration of the class VOILUT.
 
 */
 
-#if !defined(imebraVOILUT_SWIG_F6221390_BC44_4B83_B5BB_3485222FF1DD__INCLUDED_)
-#define imebraVOILUT_SWIG_F6221390_BC44_4B83_B5BB_3485222FF1DD__INCLUDED_
+#if !defined(imebraVOILUT__INCLUDED_)
+#define imebraVOILUT__INCLUDED_
 
 #include "transform.h"
 #include "definitions.h"
@@ -38,4 +38,4 @@ public:
 
 }
 
-#endif // imebraVOILUT_SWIG_F6221390_BC44_4B83_B5BB_3485222FF1DD__INCLUDED_
+#endif // imebraVOILUT__INCLUDED_

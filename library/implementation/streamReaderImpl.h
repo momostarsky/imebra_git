@@ -127,7 +127,7 @@ public:
 	///////////////////////////////////////////////////////////
     void seek(size_t newPosition);
 
-    void seekRelative(std::int32_t newPosition);
+    void seekForward(std::uint32_t newPosition);
 
 	/// \brief Read the specified amount of bits from the
 	///         stream.

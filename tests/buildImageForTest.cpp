@@ -1,4 +1,4 @@
-#include <imebra/image.h>
+#include <imebra/imebra.h>
 #include <stdlib.h>
 
 namespace imebra
@@ -13,8 +13,8 @@ imebra::Image buildImageForTest(
 	std::uint32_t pixelsY, 
     imebra::bitDepth_t depth,
 	std::uint32_t highBit, 
-	double sizeX, 
-	double sizeY, 
+	double width, 
+	double height, 
     const std::string& colorSpace,
 	std::uint32_t continuity)
 {
@@ -51,7 +51,7 @@ imebra::Image buildImageForTest(
 		}
 	}
 
-    newImage.setSizeMm(sizeX, sizeY);
+    newImage.setSizeMm(width, height);
 
 	return newImage;
 }
@@ -59,10 +59,10 @@ imebra::Image buildImageForTest(
 
 double compareImages(const imebra::Image& image0, const imebra::Image& image1)
 {
-    size_t sizeX0(image0.getSizeX()), sizeY0(image0.getSizeY());
-    size_t sizeX1(image1.getSizeX()), sizeY1(image1.getSizeY());
+    size_t width0(image0.getWidth()), height0(image0.getHeight());
+    size_t width1(image1.getWidth()), height1(image1.getHeight());
 
-    if(sizeX0 != sizeX1 || sizeY0 != sizeY1)
+    if(width0 != width1 || height0 != height1)
 	{
 		return 1000;
 	}
@@ -91,12 +91,12 @@ double compareImages(const imebra::Image& image0, const imebra::Image& image1)
 		return 1000;
 	}
 	
-	if(sizeX0 == 0 || sizeY0 == 0)
+	if(width0 == 0 || height0 == 0)
 	{
 		return 0;
 	}
 
-    size_t valuesNum = sizeX0 * sizeY0 * channelsNumber0;
+    size_t valuesNum = width0 * height0 * channelsNumber0;
 	double divisor = double(valuesNum);
     double range = (double)(1 << image0.getHighBit());
 	double difference(0);

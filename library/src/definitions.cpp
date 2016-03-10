@@ -26,6 +26,8 @@ double Age::years()
         return age / 52.142857;
     case ageUnit_t::days:
         return age / (double)365;
+    default:
+        throw;
     }
 }
 

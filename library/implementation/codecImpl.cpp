@@ -107,13 +107,13 @@ void codec::write(std::shared_ptr<streamWriter> pDestStream, std::shared_ptr<dat
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void channel::allocate(std::uint32_t sizeX, std::uint32_t sizeY)
+void channel::allocate(std::uint32_t width, std::uint32_t height)
 {
     IMEBRA_FUNCTION_START();
 
-	m_sizeX = sizeX;
-	m_sizeY = sizeY;
-	m_bufferSize = sizeX * sizeY;
+	m_width = width;
+	m_height = height;
+	m_bufferSize = width * height;
     m_memory = std::make_shared<memory>(m_bufferSize * sizeof(std::int32_t) );
 	m_pBuffer = (std::int32_t*)(m_memory->data());
 

@@ -2,8 +2,8 @@
 $fileHeader$
 */
 
-/*! \file streamReader_swig.cpp
-    \brief Implementation of the the class used to read the streams for SWIG.
+/*! \file streamReader.cpp
+    \brief Implementation of the the class used to read the streams.
 
 */
 
@@ -27,6 +27,10 @@ StreamReader::StreamReader(const BaseStreamInput& stream, size_t virtualStart, s
 }
 
 StreamReader::StreamReader(const StreamReader& right): m_pReader(right.m_pReader)
+{
+}
+
+StreamReader::~StreamReader()
 {
 }
 

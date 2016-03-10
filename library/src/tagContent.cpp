@@ -20,12 +20,13 @@ TagContent::TagContent(const TagContent& right): m_pData(right.m_pData)
 {
 }
 
-#ifndef SWIG
-TagContent::TagContent(std::shared_ptr<imebra::implementation::data> pData): m_pData(pData)
+TagContent::~TagContent()
 {
 }
 
-#endif
+TagContent::TagContent(std::shared_ptr<imebra::implementation::data> pData): m_pData(pData)
+{
+}
 
 TagContent& TagContent::operator=(const TagContent& right)
 {
@@ -59,14 +60,26 @@ WritingDataHandler TagContent::getWritingDataHandler(size_t bufferId, const std:
     return WritingDataHandler(m_pData->getWritingDataHandler(bufferId, defaultType));
 }
 
-ReadingDataHandler TagContent::getReadingDataHandlerRawThrow(size_t bufferId) const
+ReadingDataHandlerNumeric TagContent::getReadingDataHandlerNumericThrow(size_t bufferId) const
 {
-    return ReadingDataHandler(m_pData->getReadingDataHandlerThrow(bufferId));
+    std::shared_ptr<implementation::handlers::readingDataHandlerNumericBase> numericHandler =
+            std::dynamic_pointer_cast<implementation::handlers::readingDataHandlerNumericBase>(m_pData->getReadingDataHandlerThrow(bufferId));
+    if(numericHandler.get() == 0)
+    {
+        throw std::bad_cast();
+    }
+    return ReadingDataHandlerNumeric(numericHandler);
 }
 
-WritingDataHandler TagContent::getWritingDataHandlerRaw(size_t bufferId, const std::string& defaultType)
+WritingDataHandlerNumeric TagContent::getWritingDataHandlerNumeric(size_t bufferId, const std::string& defaultType)
 {
-    return WritingDataHandler(m_pData->getWritingDataHandlerRaw(bufferId, defaultType));
+    std::shared_ptr<implementation::handlers::writingDataHandlerNumericBase> numericHandler =
+            std::dynamic_pointer_cast<implementation::handlers::writingDataHandlerNumericBase>(m_pData->getWritingDataHandler(bufferId, defaultType));
+    if(numericHandler.get() == 0)
+    {
+        throw std::bad_cast();
+    }
+    return WritingDataHandlerNumeric(numericHandler);
 }
 
 StreamReader TagContent::getStreamReaderThrow(size_t bufferId)

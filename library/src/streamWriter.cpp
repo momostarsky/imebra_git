@@ -2,8 +2,8 @@
 $fileHeader$
 */
 
-/*! \file streamWriter_swig.cpp
-    \brief Implementation of the the class used to write the streams for SWIG.
+/*! \file streamWriter.cpp
+    \brief Implementation of the the class used to write the streams.
 
 */
 

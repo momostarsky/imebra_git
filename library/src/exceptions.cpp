@@ -1,7 +1,13 @@
 #include "../include/imebra/exceptions.h"
+#include "../implementation/exceptionImpl.h"
 
 namespace imebra
 {
+
+std::string ExceptionsManager::getExceptionTrace()
+{
+    return implementation::exceptionsManager::getExceptionsManager()->getMessage();
+}
 
 LutError::LutError(const std::string& message): std::runtime_error(message)
 {}

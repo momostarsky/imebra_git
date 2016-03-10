@@ -2,13 +2,12 @@
 $fileHeader$
 */
 
-/*! \file baseStream_swig.h
-    \brief Declaration of the the base class for the streams (memory, file, ...)
-            for SWIG.
+/*! \file definitions.h
+    \brief Declaration of the enumeration classes and custom types.
 */
 
-#if !defined(imebraDefinitions_SWIG_3146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_)
-#define imebraDefinitions_SWIG_3146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_
+#if !defined(imebraDefinitions__INCLUDED_)
+#define imebraDefinitions__INCLUDED_
 
 #include <set>
 #include <cstdint>
@@ -43,6 +42,9 @@ $fileHeader$
   #define IMEBRA_API
 #endif // IMEBRA_DLL
 
+/// \brief All the Imebra interfaces are defined in the imebra namespace.
+///
+///
 namespace imebra
 {
 
@@ -64,7 +66,7 @@ enum class ageUnit_t: char
 ///        is used.
 ///
 ///////////////////////////////////////////////////////////
-enum imageQuality_t
+enum class imageQuality_t: std::uint32_t
 {
     veryHigh = 0,      ///< the image is saved with very high quality. No subsampling is performed and no quantization
     high = 100,        ///< the image is saved with high quality. No subsampling is performed. Quantization ratios are low
@@ -134,7 +136,21 @@ enum class codecType_t
     jpeg
 };
 
+
+
 typedef std::list<std::string> fileParts_t;
+
+/// \brief Defines the output type of
+///         getBitmap().
+///
+///////////////////////////////////////////////////////////
+enum class drawBitmapType_t
+{
+    drawBitmapRGB  = 0, ///< Generates a BMP image where each pixel contains 3 bytes (R, G and B)
+    drawBitmapBGR  = 1, ///< Generates a BMP image where each pixel contains 3 bytes (B, G and R)
+    drawBitmapRGBA = 2, ///< Generates a BMP image where each pixel contains 4 bytes (R, G, B and A)
+    drawBitmapBGRA = 3  ///< Generates a BMP image where each pixel contains 4 bytes (B, G, R and A)
+};
 
 struct IMEBRA_API Age
 {
@@ -173,4 +189,4 @@ typedef std::set<std::uint16_t> groups_t;
 
 } // namespace imebra
 
-#endif // imebraDefinitions_SWIG_3146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_
+#endif // imebraDefinitions__INCLUDED_

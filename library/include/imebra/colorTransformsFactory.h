@@ -2,13 +2,13 @@
 $fileHeader$
 */
 
-/*! \file colorTransformsFactory_swig.h
-	\brief Declaration of the class ColorTransformsFactory for SWIG.
+/*! \file colorTransformsFactory.h
+    \brief Declaration of the class ColorTransformsFactory.
 
 */
 
-#if !defined(imebraColorTransformsFactory_SWIG_F6221390_BC44_4B83_B5BB_3485222FF1DD__INCLUDED_)
-#define imebraColorTransformsFactory_SWIG_F6221390_BC44_4B83_B5BB_3485222FF1DD__INCLUDED_
+#if !defined(imebraColorTransformsFactory__INCLUDED_)
+#define imebraColorTransformsFactory__INCLUDED_
 
 #include <string>
 #include "transform.h"
@@ -42,4 +42,4 @@ public:
 
 }
 
-#endif // imebraColorTransformsFactory_SWIG_F6221390_BC44_4B83_B5BB_3485222FF1DD__INCLUDED_
+#endif // imebraColorTransformsFactory__INCLUDED_

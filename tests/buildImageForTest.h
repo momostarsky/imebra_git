@@ -1,7 +1,7 @@
 #if !defined(imebraBuildImageForTest_13D4DE03_AD80_4e0a_A01A_54D77C9AF0E8__INCLUDED_)
 #define imebraBuildImageForTest_13D4DE03_AD80_4e0a_A01A_54D77C9AF0E8__INCLUDED_
 
-#include <imebra/image.h>
+#include <imebra/imebra.h>
 
 namespace imebra
 {
@@ -14,8 +14,8 @@ namespace tests
         std::uint32_t pixelsY,
         imebra::bitDepth_t depth,
         std::uint32_t highBit,
-		double sizeX, 
-		double sizeY, 
+		double width, 
+		double height, 
         const std::string& colorSpace,
         std::uint32_t continuity);
 

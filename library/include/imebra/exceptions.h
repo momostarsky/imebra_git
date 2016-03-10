@@ -1,5 +1,5 @@
-#if !defined(imebraExceptions_SWIG_A807A3CA_FA04_44f4_85D2_C7AA2FE103C4__INCLUDED_)
-#define imebraExceptions_SWIG_A807A3CA_FA04_44f4_85D2_C7AA2FE103C4__INCLUDED_
+#if !defined(imebraExceptions__INCLUDED_)
+#define imebraExceptions__INCLUDED_
 
 #include <stdexcept>
 #include <string>
@@ -7,6 +7,12 @@
 
 namespace imebra
 {
+
+class IMEBRA_API ExceptionsManager
+{
+public:
+    static std::string getExceptionTrace();
+};
 
 ///////////////////////////////////////////////////////////
 /// \brief This is the base class for the exceptions thrown
@@ -861,4 +867,4 @@ class IMEBRA_API ImebraBadAlloc: public std::bad_alloc
 
 }
 
-#endif
+#endif // !defined(imebraExceptions__INCLUDED_)
