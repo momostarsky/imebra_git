@@ -125,7 +125,7 @@ std::uint32_t readingDataHandlerStringAS::getUnsignedLong(const size_t index) co
 {
     IMEBRA_FUNCTION_START();
 
-	return (std::int32_t)getDouble(index);
+    return (std::uint32_t)getDouble(index);
 
 	IMEBRA_FUNCTION_END();
 }
