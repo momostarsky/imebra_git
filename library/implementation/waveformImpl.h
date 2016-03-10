@@ -129,14 +129,14 @@ public:
 	///        to retrieve the data
 	///
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<handlers::readingDataHandler> getIntegerData(std::uint32_t channel, std::int32_t paddingValue = 0x7fffffff);
+    std::shared_ptr<handlers::readingDataHandler> getIntegerData(std::uint32_t channel, std::int32_t paddingValue = 0x7fffffff) const;
 
 	/// \brief Return the sequence item used by the waveform.
 	///
 	/// @return the sequence item used by the waveform
 	///
 	///////////////////////////////////////////////////////////
-	std::shared_ptr<dataSet> GetWaveformItem();
+    std::shared_ptr<dataSet> GetWaveformItem() const;
 	
 private:
 	std::shared_ptr<dataSet> m_pDataSet;

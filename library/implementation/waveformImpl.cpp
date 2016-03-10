@@ -110,7 +110,7 @@ std::uint32_t waveform::getSamples() const
 // Returns a data handler for the waveform
 //
 ///////////////////////////////////////////////////////////
-std::shared_ptr<handlers::readingDataHandler> waveform::getIntegerData(std::uint32_t channel, std::int32_t paddingValue)
+std::shared_ptr<handlers::readingDataHandler> waveform::getIntegerData(std::uint32_t channel, std::int32_t paddingValue) const
 {
     IMEBRA_FUNCTION_START();
 
@@ -306,7 +306,7 @@ std::shared_ptr<handlers::readingDataHandler> waveform::getIntegerData(std::uint
 // Returns the sequence item
 //
 ///////////////////////////////////////////////////////////
-std::shared_ptr<dataSet> waveform::GetWaveformItem()
+std::shared_ptr<dataSet> waveform::GetWaveformItem() const
 {
 	return m_pDataSet;
 }
