@@ -94,18 +94,6 @@ public:
     ///////////////////////////////////////////////////////////
     ~memory();
 
-	/// \brief Transfer the content from another memory object.
-	///
-	/// The source memory object will transfer the ownership
-	///  of the managed memory to this object and then will
-	///  reference an empty memory area (size = 0)
-	///
-	/// @param transferFrom the object from which the memory
-	///                      must be transferred
-	///
-	///////////////////////////////////////////////////////////
-	void transfer(const std::shared_ptr<memory>& transferFrom);
-
 	/// \brief Copy the content of the memory managed
 	///         by another memory object into the memory 
 	///         managed by this object.
