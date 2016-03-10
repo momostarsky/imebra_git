@@ -116,7 +116,7 @@ buffer::buffer(
 }
 
 
-std::shared_ptr<memory> buffer::getLocalMemory() const
+std::shared_ptr<const memory> buffer::getLocalMemory() const
 {
     IMEBRA_FUNCTION_START();
 

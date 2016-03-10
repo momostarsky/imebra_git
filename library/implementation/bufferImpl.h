@@ -314,7 +314,7 @@ public:
 
 protected:
 
-    std::shared_ptr<memory> getLocalMemory() const;
+    std::shared_ptr<const memory> getLocalMemory() const;
 
 	//
 	// Attributes
@@ -323,7 +323,7 @@ protected:
 private:
 	// The memory buffer
 	///////////////////////////////////////////////////////////
-	std::shared_ptr<memory> m_memory;
+    std::shared_ptr<const memory> m_memory;
 
     mutable std::mutex m_mutex;
 
