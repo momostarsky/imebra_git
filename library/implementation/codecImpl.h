@@ -225,7 +225,7 @@ public:
         const std::string& transferSyntax,
         imageQuality_t imageQuality,
         const std::string& dataType,
-		std::uint8_t allocatedBits,
+        std::uint32_t allocatedBits,
 		bool bSubSampledX,
 		bool bSubSampledY,
 		bool bInterleaved,

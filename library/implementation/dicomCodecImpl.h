@@ -63,7 +63,7 @@ public:
         const std::string& transferSyntax,
         imageQuality_t imageQuality,
         const std::string& dataType,
-		std::uint8_t allocatedBits,
+        std::uint32_t allocatedBits,
 		bool bSubSampledX,
 		bool bSubSampledY,
 		bool bInterleaved,
@@ -199,8 +199,8 @@ protected:
 		bool bSubSampledX,
 		bool bSubSampledY,
 		streamReader* pSourceStream,
-		std::uint8_t wordSizeBytes,
-		std::uint8_t allocatedBits,
+        std::uint32_t wordSizeBytes,
+        std::uint32_t allocatedBits,
 		std::uint32_t mask
 		);
 
@@ -211,8 +211,8 @@ protected:
 		bool bSubSampledX,
 		bool bSubSampledY,
 		streamWriter* pDestStream,
-		std::uint8_t wordSizeBytes,
-		std::uint8_t allocatedBits,
+        std::uint32_t wordSizeBytes,
+        std::uint32_t allocatedBits,
 		std::uint32_t mask
 		);
 
@@ -221,8 +221,8 @@ protected:
 	void readUncompressedNotInterleaved(
 		std::uint32_t channelsNumber,
 		streamReader* pSourceStream,
-		std::uint8_t wordSizeBytes,
-		std::uint8_t allocatedBits,
+        std::uint32_t wordSizeBytes,
+        std::uint32_t allocatedBits,
 		std::uint32_t mask
 		);
 
@@ -231,8 +231,8 @@ protected:
 	void writeUncompressedNotInterleaved(
 		std::uint32_t channelsNumber,
 		streamWriter* pDestStream,
-		std::uint8_t wordSizeBytes,
-		std::uint8_t allocatedBits,
+        std::uint32_t wordSizeBytes,
+        std::uint32_t allocatedBits,
 		std::uint32_t mask
 		);
 
@@ -243,7 +243,7 @@ protected:
 		std::uint32_t imageHeight,
 		std::uint32_t channelsNumber,
 		streamWriter* pDestStream,
-		std::uint8_t allocatedBits,
+        std::uint32_t allocatedBits,
 		std::uint32_t mask
 		);
 
@@ -258,7 +258,7 @@ protected:
 		std::uint32_t imageHeight,
 		std::uint32_t channelsNumber,
 		streamReader* pSourceStream,
-		std::uint8_t allocatedBits,
+        std::uint32_t allocatedBits,
 		std::uint32_t mask,
 		bool bInterleaved);
 
@@ -271,9 +271,9 @@ protected:
 					std::uint32_t numPixels,
 					std::uint8_t* bitPointer,
 					std::uint8_t* pReadBuffer,
-					const std::uint8_t wordSizeBytes,
-					const std::uint8_t allocatedBits,
-					const std::uint32_t mask);
+                    std::uint32_t wordSizeBytes,
+                    std::uint32_t allocatedBits,
+                    std::uint32_t mask);
 
 	// Write a single pixel of a RAW dicom image
 	///////////////////////////////////////////////////////////
@@ -281,13 +281,13 @@ protected:
 					streamWriter* pDestStream,
 					std::int32_t pixelValue,
 					std::uint8_t*  pBitPointer,
-					std::uint8_t wordSizeBytes,
-					std::uint8_t allocatedBits,
+                    std::uint32_t wordSizeBytes,
+                    std::uint32_t allocatedBits,
 					std::uint32_t mask);
 
 	// Flush the unwritten bytes of an uncompressed image
 	///////////////////////////////////////////////////////////
-	void flushUnwrittenPixels(streamWriter* pDestStream, std::uint8_t* pBitPointer, std::uint8_t wordSizeBytes);
+    void flushUnwrittenPixels(streamWriter* pDestStream, std::uint8_t* pBitPointer, std::uint32_t wordSizeBytes);
 
 	std::uint32_t m_ioDWord;
     std::uint16_t m_ioWord;

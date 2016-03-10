@@ -1057,7 +1057,7 @@ std::shared_ptr<image> dicomCodec::getImage(const dataSet& dataset, std::shared_
     ///////////////////////////////////////////////////////////
     if(!bRleCompressed)
     {
-        std::uint8_t wordSizeBytes= (dataType=="OW") ? 2 : 1;
+        std::uint32_t wordSizeBytes = (dataType == "OW") ? 2 : 1;
 
         // The planes are interleaved
         ///////////////////////////////////////////////////////////
@@ -1231,8 +1231,8 @@ void dicomCodec::readUncompressedInterleaved(
         bool bSubSampledX,
         bool bSubSampledY,
         streamReader* pSourceStream,
-        std::uint8_t wordSizeBytes,
-        std::uint8_t allocatedBits,
+        std::uint32_t wordSizeBytes,
+        std::uint32_t allocatedBits,
         std::uint32_t mask
         )
 {
@@ -1281,7 +1281,7 @@ void dicomCodec::readUncompressedInterleaved(
     std::uint32_t maxSamplingFactorX = bSubSampledX ? 2 : 1;
     std::uint32_t maxSamplingFactorY = bSubSampledY ? 2 : 1;
 
-    std::shared_ptr<memory> readBuffer(std::make_shared<memory>(numValuesPerBlock * ((7+allocatedBits) >> 3)));
+    std::shared_ptr<memory> readBuffer(std::make_shared<memory>(numValuesPerBlock * ((7 + allocatedBits) >> 3)));
 
     // Read all the blocks
     ///////////////////////////////////////////////////////////
@@ -1331,8 +1331,8 @@ void dicomCodec::writeUncompressedInterleaved(
         bool bSubSampledX,
         bool bSubSampledY,
         streamWriter* pDestStream,
-        std::uint8_t wordSizeBytes,
-        std::uint8_t allocatedBits,
+        std::uint32_t wordSizeBytes,
+        std::uint32_t allocatedBits,
         std::uint32_t mask
         )
 {
@@ -1415,8 +1415,8 @@ void dicomCodec::writeUncompressedInterleaved(
 void dicomCodec::readUncompressedNotInterleaved(
         std::uint32_t channelsNumber,
         streamReader* pSourceStream,
-        std::uint8_t wordSizeBytes,
-        std::uint8_t allocatedBits,
+        std::uint32_t wordSizeBytes,
+        std::uint32_t allocatedBits,
         std::uint32_t mask
         )
 {
@@ -1456,8 +1456,8 @@ void dicomCodec::readUncompressedNotInterleaved(
 void dicomCodec::writeUncompressedNotInterleaved(
         std::uint32_t channelsNumber,
         streamWriter* pDestStream,
-        std::uint8_t wordSizeBytes,
-        std::uint8_t allocatedBits,
+        std::uint32_t wordSizeBytes,
+        std::uint32_t allocatedBits,
         std::uint32_t mask
         )
 {
@@ -1495,7 +1495,7 @@ void dicomCodec::writeRLECompressed(
         std::uint32_t imageHeight,
         std::uint32_t channelsNumber,
         streamWriter* pDestStream,
-        std::uint8_t allocatedBits,
+        std::uint32_t allocatedBits,
         std::uint32_t mask
         )
 {
@@ -1525,7 +1525,7 @@ void dicomCodec::writeRLECompressed(
             std::vector<std::uint8_t> differentBytes;
             differentBytes.reserve(imageWidth);
 
-            for(std::int32_t rightShift = ((allocatedBits + 7) & 0xfffffff8) -8; rightShift >= 0; rightShift -= 8)
+            for(std::int32_t rightShift = (std::int32_t)(((allocatedBits + 7) & 0xfffffff8) - 8); rightShift >= 0; rightShift -= 8)
             {
                 std::int32_t* pPixel = m_channels[scanChannels]->m_pBuffer;
 
@@ -1667,7 +1667,7 @@ void dicomCodec::readRLECompressed(
         std::uint32_t imageHeight,
         std::uint32_t channelsNumber,
         streamReader* pSourceStream,
-        std::uint8_t allocatedBits,
+        std::uint32_t allocatedBits,
         std::uint32_t mask,
         bool /*bInterleaved*/)
 {
@@ -1692,7 +1692,7 @@ void dicomCodec::readRLECompressed(
     std::uint8_t segmentNumber = 0;
     for(std::uint32_t channel = 0; channel<loopsNumber; ++channel)
     {
-        for(std::int32_t leftShift = ((allocatedBits + 7) & 0xfffffff8) -8; leftShift >= 0; leftShift -= 8)
+        for(std::int32_t leftShift = (std::int32_t)(((allocatedBits + 7) & 0xfffffff8) - 8); leftShift >= 0; leftShift -= 8)
         {
             // Prepare to scan all the RLE segment
             ///////////////////////////////////////////////////////////
@@ -1796,9 +1796,9 @@ void dicomCodec::readPixel(
         std::uint32_t numPixels,
         std::uint8_t* pBitPointer,
         std::uint8_t* pReadBuffer,
-        const std::uint8_t wordSizeBytes,
-        const std::uint8_t allocatedBits,
-        const std::uint32_t mask)
+        std::uint32_t wordSizeBytes,
+        std::uint32_t allocatedBits,
+        std::uint32_t mask)
 {
     IMEBRA_FUNCTION_START();
 
@@ -1840,7 +1840,7 @@ void dicomCodec::readPixel(
         {
             if(*pBitPointer == 0)
             {
-                if(wordSizeBytes==0x2)
+                if(wordSizeBytes == 2)
                 {
                     pSourceStream->read((std::uint8_t*)&m_ioWord, sizeof(m_ioWord));
                     *pBitPointer = 16;
@@ -1886,8 +1886,8 @@ void dicomCodec::writePixel(
         streamWriter* pDestStream,
         std::int32_t pixelValue,
         std::uint8_t*  pBitPointer,
-        std::uint8_t wordSizeBytes,
-        std::uint8_t allocatedBits,
+        std::uint32_t wordSizeBytes,
+        std::uint32_t allocatedBits,
         std::uint32_t mask)
 {
     IMEBRA_FUNCTION_START();
@@ -1929,11 +1929,11 @@ void dicomCodec::writePixel(
         return;
     }
 
-    std::uint8_t maxBits = (std::uint8_t)(wordSizeBytes << 3);
+    std::uint32_t maxBits = wordSizeBytes << 3;
 
-    for(std::uint8_t writeBits = allocatedBits; writeBits != 0;)
+    for(std::uint32_t writeBits = allocatedBits; writeBits != 0;)
     {
-        std::uint8_t freeBits = (std::uint8_t)(maxBits - *pBitPointer);
+        std::uint32_t freeBits = (maxBits - *pBitPointer);
         if(freeBits == maxBits)
         {
             m_ioWord = 0;
@@ -1942,7 +1942,7 @@ void dicomCodec::writePixel(
         {
             m_ioWord = (std::uint16_t)(m_ioWord | ((pixelValue & (((std::int32_t)1 << freeBits) -1 )) << *pBitPointer));
             *pBitPointer = maxBits;
-            writeBits = (std::uint8_t)(writeBits - freeBits);
+            writeBits = writeBits - freeBits;
             pixelValue >>= freeBits;
         }
         else
@@ -1981,7 +1981,7 @@ void dicomCodec::writePixel(
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dicomCodec::flushUnwrittenPixels(streamWriter* pDestStream, std::uint8_t* pBitPointer, std::uint8_t wordSizeBytes)
+void dicomCodec::flushUnwrittenPixels(streamWriter* pDestStream, std::uint8_t* pBitPointer, std::uint32_t wordSizeBytes)
 {
     IMEBRA_FUNCTION_START();
 
@@ -2023,7 +2023,7 @@ void dicomCodec::setImage(
         const std::string& transferSyntax,
         imageQuality_t /*imageQuality*/,
         const std::string& dataType,
-        std::uint8_t allocatedBits,
+        std::uint32_t allocatedBits,
         bool bSubSampledX,
         bool bSubSampledY,
         bool bInterleaved,

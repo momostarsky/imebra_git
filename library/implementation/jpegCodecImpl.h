@@ -84,7 +84,7 @@ public:
         const std::string& transferSyntax,
         imageQuality_t imageQuality,
         const std::string& dataType,
-		std::uint8_t allocatedBits,
+        std::uint32_t allocatedBits,
 		bool bSubSampledX,
 		bool bSubSampledY,
 		bool bInterleaved,
@@ -277,7 +277,7 @@ protected:
     void resetInternal(bool bCompression, imageQuality_t compQuality);
 
     std::shared_ptr<image> copyJpegChannelsToImage(bool b2complement, const std::string& colorSpace);
-	void copyImageToJpegChannels(std::shared_ptr<image> sourceImage, bool b2complement, std::uint8_t allocatedBits, bool bSubSampledX, bool bSubSampledY);
+    void copyImageToJpegChannels(std::shared_ptr<image> sourceImage, bool b2complement, std::uint32_t allocatedBits, bool bSubSampledX, bool bSubSampledY);
 
 	void writeScan(streamWriter* pDestinationStream, bool bCalcHuffman);
 

@@ -1452,7 +1452,7 @@ std::shared_ptr<image> jpegCodec::copyJpegChannelsToImage(bool b2complement, con
 void jpegCodec::copyImageToJpegChannels(
         std::shared_ptr<image> sourceImage,
         bool b2complement,
-        std::uint8_t allocatedBits,
+        std::uint32_t allocatedBits,
         bool bSubSampledX,
         bool bSubSampledY)
 {
@@ -1644,7 +1644,7 @@ void jpegCodec::setImage(
         const std::string& transferSyntax,
         imageQuality_t imageQuality,
         const std::string& /* dataType */,
-        std::uint8_t allocatedBits,
+        std::uint32_t allocatedBits,
         bool bSubSampledX,
         bool bSubSampledY,
         bool bInterleaved,
@@ -3399,7 +3399,7 @@ void tagDQT::writeTag(streamWriter* pStream, jpegCodec* pCodec)
 
     // Read the tag's length
     /////////////////////////////////////////////////////////////////
-    std::int16_t tagLength = 0;
+    std::uint16_t tagLength = 0;
 
     std::uint8_t  tablePrecision;
     std::uint8_t  tableValue8;
