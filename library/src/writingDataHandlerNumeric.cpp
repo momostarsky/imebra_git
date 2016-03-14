@@ -36,10 +36,10 @@ ReadWriteMemory WritingDataHandlerNumeric::getMemory() const
     return ReadWriteMemory(numericDataHandler->getMemory());
 }
 
-void WritingDataHandlerNumeric::assign(const char *buffer, const size_t bufferSize)
+void WritingDataHandlerNumeric::assign(const char* source, size_t sourceSize)
 {
     std::shared_ptr<imebra::implementation::handlers::writingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<imebra::implementation::handlers::writingDataHandlerNumericBase>(m_pDataHandler);
-    numericDataHandler->getMemory()->assign((std::uint8_t*) buffer, bufferSize);
+    numericDataHandler->getMemory()->assign((std::uint8_t*) source, sourceSize);
 }
 
 char* WritingDataHandlerNumeric::data(size_t* pDataSize) const
@@ -47,7 +47,17 @@ char* WritingDataHandlerNumeric::data(size_t* pDataSize) const
     std::shared_ptr<imebra::implementation::handlers::writingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<imebra::implementation::handlers::writingDataHandlerNumericBase>(m_pDataHandler);
     *pDataSize = numericDataHandler->getMemorySize();
     return (char*)numericDataHandler->getMemoryBuffer();
+}
 
+size_t WritingDataHandlerNumeric::data(char* destination, size_t destinationSize) const
+{
+    std::shared_ptr<imebra::implementation::handlers::writingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<imebra::implementation::handlers::writingDataHandlerNumericBase>(m_pDataHandler);
+    size_t memorySize = numericDataHandler->getMemorySize();
+    if(destination != 0 && destinationSize >= memorySize && memorySize != 0)
+    {
+        ::memcpy(destination, numericDataHandler->getMemoryBuffer(), memorySize);
+    }
+    return memorySize;
 }
 
 size_t WritingDataHandlerNumeric::getUnitSize() const

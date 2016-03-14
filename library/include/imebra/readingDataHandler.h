@@ -111,7 +111,7 @@ public:
 
     Date getDate(size_t index) const;
 
-    Age getAge(const size_t index) const;
+    Age getAge(size_t index) const;
 
 #ifndef SWIG
 protected:

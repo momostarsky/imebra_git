@@ -35,7 +35,7 @@ void WritingDataHandler::close()
     m_pDataHandler.reset();
 }
 
-void WritingDataHandler::setSize(const size_t elementsNumber)
+void WritingDataHandler::setSize(size_t elementsNumber)
 {
     m_pDataHandler->setSize(elementsNumber);
 }
@@ -51,7 +51,7 @@ std::string WritingDataHandler::getDataType() const
 }
 
 
-WritingDataHandler& WritingDataHandler::setDate(const size_t index, const Date& date)
+WritingDataHandler& WritingDataHandler::setDate(size_t index, const Date& date)
 {
     m_pDataHandler->setDate(
         (std::uint32_t)index,
@@ -67,37 +67,37 @@ WritingDataHandler& WritingDataHandler::setDate(const size_t index, const Date& 
     return *this;
 }
 
-WritingDataHandler& WritingDataHandler::setAge(const size_t index, const Age& age)
+WritingDataHandler& WritingDataHandler::setAge(size_t index, const Age& age)
 {
     m_pDataHandler->setAge(index, age.age, age.units);
     return *this;
 }
 
-WritingDataHandler& WritingDataHandler::setSignedLong(const size_t index, const std::int32_t value)
+WritingDataHandler& WritingDataHandler::setSignedLong(size_t index, std::int32_t value)
 {
     m_pDataHandler->setSignedLong(index, value);
     return *this;
 }
 
-WritingDataHandler& WritingDataHandler::setUnsignedLong(const size_t index, const std::uint32_t value)
+WritingDataHandler& WritingDataHandler::setUnsignedLong(size_t index, std::uint32_t value)
 {
     m_pDataHandler->setUnsignedLong(index, value);
     return *this;
 }
 
-WritingDataHandler& WritingDataHandler::setDouble(const size_t index, const double value)
+WritingDataHandler& WritingDataHandler::setDouble(size_t index, double value)
 {
     m_pDataHandler->setDouble(index, value);
     return *this;
 }
 
-WritingDataHandler& WritingDataHandler::setString(const size_t index, const std::string& value)
+WritingDataHandler& WritingDataHandler::setString(size_t index, const std::string& value)
 {
     m_pDataHandler->setString(index, value);
     return *this;
 }
 
-WritingDataHandler& WritingDataHandler::setUnicodeString(const size_t index, const std::wstring& value)
+WritingDataHandler& WritingDataHandler::setUnicodeString(size_t index, const std::wstring& value)
 {
     m_pDataHandler->setUnicodeString(index, value);
     return *this;

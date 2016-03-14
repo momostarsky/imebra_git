@@ -10,11 +10,11 @@ $fileHeader$
 #if !defined(imebraTransform__INCLUDED_)
 #define imebraTransform__INCLUDED_
 
-#ifndef SWIG
-
 #include <memory>
 #include "definitions.h"
 #include "image.h"
+
+#ifndef SWIG
 
 namespace imebra
 {

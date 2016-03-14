@@ -10,12 +10,12 @@ $fileHeader$
 #if !defined(imebraReadWriteMemory__INCLUDED_)
 #define imebraReadWriteMemory__INCLUDED_
 
-#ifndef SWIG
-
 #include <memory>
 #include <string>
 #include "definitions.h"
 #include "readMemory.h"
+
+#ifndef SWIG
 
 namespace imebra
 {
@@ -62,9 +62,12 @@ public:
 
     void reserve(size_t reserveSize);
 
-    char* data();
+#ifndef SWIG
+    char* data(size_t* pDataSize) const;
+#endif
+    size_t data(char* destination, size_t destinationSize) const;
 
-    void assign(const char* pSource, const size_t sourceLength);
+    void assign(const char* source, size_t sourceSize);
 };
 
 }

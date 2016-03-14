@@ -10,11 +10,11 @@ $fileHeader$
 #if !defined(imebraReadMemory__INCLUDED_)
 #define imebraReadMemory__INCLUDED_
 
-#ifndef SWIG
-
 #include <memory>
 #include <string>
 #include "definitions.h"
+
+#ifndef SWIG
 
 namespace imebra
 {
@@ -53,7 +53,10 @@ public:
 
     size_t size() const;
 
-    const char* data() const;
+#ifndef SWIG
+    const char* data(size_t* pDataSize) const;
+#endif
+    size_t data(char* destination, size_t destinationSize) const;
 
     bool empty() const;
 

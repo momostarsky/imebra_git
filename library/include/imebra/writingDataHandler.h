@@ -56,25 +56,25 @@ public:
 
     void close();
 
-    void setSize(const size_t elementsNumber);
+    void setSize(size_t elementsNumber);
 
     size_t getSize() const;
 
     std::string getDataType() const;
 
-    WritingDataHandler& setDate(const size_t index, const Date& date);
+    WritingDataHandler& setDate(size_t index, const Date& date);
 
-    WritingDataHandler& setAge(const size_t index, const Age& age);
+    WritingDataHandler& setAge(size_t index, const Age& age);
 
-    WritingDataHandler& setSignedLong(const size_t index, const std::int32_t value);
+    WritingDataHandler& setSignedLong(size_t index, std::int32_t value);
 
-    WritingDataHandler& setUnsignedLong(const size_t index, const std::uint32_t value);
+    WritingDataHandler& setUnsignedLong(size_t index, std::uint32_t value);
 
-    WritingDataHandler& setDouble(const size_t index, const double value);
+    WritingDataHandler& setDouble(size_t index, double value);
 
-    WritingDataHandler& setString(const size_t index, const std::string& value);
+    WritingDataHandler& setString(size_t index, const std::string& value);
 
-    WritingDataHandler& setUnicodeString(const size_t index, const std::wstring& value);
+    WritingDataHandler& setUnicodeString(size_t index, const std::wstring& value);
 
 #ifndef SWIG
 protected:

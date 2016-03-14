@@ -40,32 +40,32 @@ std::string ReadingDataHandler::getDataType() const
     return m_pDataHandler->getDataType();
 }
 
-std::int32_t ReadingDataHandler::getSignedLong(const size_t index) const
+std::int32_t ReadingDataHandler::getSignedLong(size_t index) const
 {
     return m_pDataHandler->getSignedLong(index);
 }
 
-std::uint32_t ReadingDataHandler::getUnsignedLong(const size_t index) const
+std::uint32_t ReadingDataHandler::getUnsignedLong(size_t index) const
 {
     return m_pDataHandler->getUnsignedLong(index);
 }
 
-double ReadingDataHandler::getDouble(const size_t index) const
+double ReadingDataHandler::getDouble(size_t index) const
 {
     return m_pDataHandler->getDouble(index);
 }
 
-std::string ReadingDataHandler::getString(const size_t index) const
+std::string ReadingDataHandler::getString(size_t index) const
 {
     return m_pDataHandler->getString(index);
 }
 
-std::wstring ReadingDataHandler::getUnicodeString(const size_t index) const
+std::wstring ReadingDataHandler::getUnicodeString(size_t index) const
 {
     return m_pDataHandler->getUnicodeString(index);
 }
 
-Date ReadingDataHandler::getDate(const size_t index) const
+Date ReadingDataHandler::getDate(size_t index) const
 {
     std::uint32_t year, month, day, hour, minutes, seconds, nanoseconds;
     std::int32_t offsetHours, offsetMinutes;
@@ -83,7 +83,7 @@ Date ReadingDataHandler::getDate(const size_t index) const
                 (int)offsetMinutes);
 }
 
-Age ReadingDataHandler::getAge(const size_t index) const
+Age ReadingDataHandler::getAge(size_t index) const
 {
     imebra::ageUnit_t ageUnits;
     std::uint32_t age = m_pDataHandler->getAge(index, &ageUnits);

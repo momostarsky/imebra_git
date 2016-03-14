@@ -14,6 +14,8 @@ $fileHeader$
 #include <list>
 #include <string>
 
+#ifndef SWIG
+
 // Generic helper definitions for shared library support
 #if defined _WIN32 || defined __CYGWIN__
   #define IMEBRA_HELPER_DLL_IMPORT __declspec(dllimport)
@@ -28,9 +30,7 @@ $fileHeader$
   #endif
 #endif
 
-
 // IMEBRA_API is used for the public API symbols
-// IMEBRA_LOCAL is used for non-api symbols
 
 #ifdef IMEBRA_DLL // defined if Imebra is compiled as a DLL
   #ifdef IMEBRA_DLL_EXPORTS // defined if we are building the Imebra DLL (instead of using it)
@@ -41,6 +41,8 @@ $fileHeader$
 #else // IMEBRA_DLL is not defined: this means Imebra is a static lib.
   #define IMEBRA_API
 #endif // IMEBRA_DLL
+
+#endif // SWIG
 
 /// \brief All the Imebra interfaces are defined in the imebra namespace.
 ///
@@ -54,10 +56,10 @@ namespace imebra
 ///////////////////////////////////////////////////////////
 enum class ageUnit_t: char
 {
-    days = L'D',   ///< the age value is in days
-    weeks = L'W',  ///< the age value is in weeks
-    months = L'M', ///< the age value is in months
-    years = L'Y'   ///< the age value is in years
+    days = 'D',   ///< the age value is in days
+    weeks = 'W',  ///< the age value is in weeks
+    months = 'M', ///< the age value is in months
+    years = 'Y'   ///< the age value is in years
 };
 
 ///

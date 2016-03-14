@@ -84,8 +84,9 @@ public:
     /// \return the number of bytes to be copied into the pre-allocated buffer
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    size_t data(char* buffer, const size_t bufferSize) const;
+    size_t data(char* destination, size_t destinationSize) const;
 
+#ifndef SWIG
     ///
     /// \brief Returns a pointer to the raw representation of the handled data.
     ///
@@ -94,6 +95,7 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     const char* data(size_t* pDataSize) const;
+#endif
 
     /// \brief If ReadingDataHandler is handling a numeric tag's content then it
     ///        returns the number of bytes occupied by each number.

@@ -54,9 +54,13 @@ public:
 
     ReadWriteMemory getMemory() const;
 
-    void assign(const char* buffer, const size_t bufferSize);
+    void assign(const char* source, size_t sourceSize);
 
+#ifndef SWIG
     char* data(size_t* pDataSize) const;
+#endif
+
+    size_t data(char* destination, size_t destinationSize) const;
 
     size_t getUnitSize() const;
 

@@ -36,13 +36,13 @@ const ReadMemory ReadingDataHandlerNumeric::getMemory() const
     return ReadMemory(numericDataHandler->getMemory());
 }
 
-size_t ReadingDataHandlerNumeric::data(char* bufferOut, const size_t bufferSize) const
+size_t ReadingDataHandlerNumeric::data(char* destination, size_t destinationSize) const
 {
     std::shared_ptr<imebra::implementation::handlers::readingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<imebra::implementation::handlers::readingDataHandlerNumericBase>(m_pDataHandler);
     size_t memorySize = numericDataHandler->getMemorySize();
-    if(bufferOut != 0 && bufferSize >= memorySize && memorySize != 0)
+    if(destination != 0 && destinationSize >= memorySize && memorySize != 0)
     {
-        ::memcpy(bufferOut, numericDataHandler->getMemoryBuffer(), memorySize);
+        ::memcpy(destination, numericDataHandler->getMemoryBuffer(), memorySize);
     }
     return memorySize;
 }

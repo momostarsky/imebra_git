@@ -1,5 +1,6 @@
 #include "../include/imebra/readWriteMemory.h"
 #include "../implementation/memoryImpl.h"
+#include <memory.h>
 
 namespace imebra
 {
@@ -59,14 +60,27 @@ void ReadWriteMemory::reserve(size_t reserveSize)
     std::const_pointer_cast<implementation::memory>(m_pMemory)->reserve(reserveSize);
 }
 
-char* ReadWriteMemory::data()
+char* ReadWriteMemory::data(size_t* pDataSize) const
 {
-    return (char*)(std::const_pointer_cast<implementation::memory>(m_pMemory)->data());
+    std::shared_ptr<implementation::memory> pMemory = std::const_pointer_cast<implementation::memory>(m_pMemory);
+    *pDataSize = pMemory->size();
+    return (char*)pMemory->data();
 }
 
-void ReadWriteMemory::assign(const char* pSource, const size_t sourceLength)
+size_t ReadWriteMemory::data(char* destination, size_t destinationSize) const
 {
-    std::const_pointer_cast<implementation::memory>(m_pMemory)->assign((const std::uint8_t*)pSource, sourceLength);
+    size_t memorySize = m_pMemory->size();
+    if(destination != 0 && destinationSize >= memorySize && memorySize != 0)
+    {
+        ::memcpy(destination, m_pMemory->data(), memorySize);
+    }
+    return memorySize;
+}
+
+
+void ReadWriteMemory::assign(const char* source, size_t sourceSize)
+{
+    std::const_pointer_cast<implementation::memory>(m_pMemory)->assign((const std::uint8_t*)source, sourceSize);
 }
 
 }
