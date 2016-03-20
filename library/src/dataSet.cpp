@@ -44,40 +44,35 @@ DataSet& DataSet::operator=(const DataSet& right)
 	return *this;
 }
 
-groups_t DataSet::getGroups() const
+tagsIds_t DataSet::getTags() const
 {
-    groups_t returnGroups;
+    tagsIds_t returnTags;
+
     implementation::dataSet::tGroupsIds groups = m_pDataSet->getGroups();
     for(implementation::dataSet::tGroupsIds::const_iterator scanGroups(groups.begin()), endGroups(groups.end());
         scanGroups != endGroups;
         ++scanGroups)
     {
-        returnGroups.insert(*scanGroups);
+        std::uint32_t orders = m_pDataSet->getGroupsNumber(*scanGroups);
+        for(std::uint32_t scanOrders(0); scanOrders != orders; ++scanOrders)
+        {
+            const implementation::dataSet::tTags tags = m_pDataSet->getGroupTags(*scanGroups, scanOrders);
+            for(implementation::dataSet::tTags::const_iterator scanTags(tags.begin()), endTags(tags.end());
+                scanTags != endTags;
+                ++scanTags)
+            {
+                returnTags.push_back(TagId(*scanGroups, orders, scanTags->first));
+            }
+        }
     }
 
-    return returnGroups;
-}
-
-size_t DataSet::getGroupsNumber(std::uint16_t groupId) const
-{
-    return m_pDataSet->getGroupsNumber(groupId);
-}
-
-tags_t DataSet::getGroupTags(std::uint16_t groupId, size_t groupOrder) const
-{
-    tags_t returnTags;
-    implementation::dataSet::tTags tags = m_pDataSet->getGroupTags(groupId, groupOrder);
-    for(implementation::dataSet::tTags::const_iterator scanTags(tags.begin()), endTags(tags.end());
-        scanTags != endTags;
-        ++scanTags)
-    {
-        returnTags.insert(std::pair<std::uint16_t, TagContent>(scanTags->first, TagContent(scanTags->second)));
-
-    }
     return returnTags;
 }
 
-
+TagContent DataSet::getTagContentThrow(const TagId& tagId) const
+{
+    return TagContent(m_pDataSet->getTagThrow(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId()));
+}
 
 Image DataSet::getImage(size_t frameNumber)
 {

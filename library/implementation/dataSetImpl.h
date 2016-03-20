@@ -906,7 +906,7 @@ public:
 
     tGroupsIds getGroups() const;
 
-    size_t getGroupsNumber(std::uint16_t groupId) const;
+    std::uint32_t getGroupsNumber(std::uint16_t groupId) const;
 
     const tTags& getGroupTags(std::uint16_t groupId, size_t groupOrder) const;
 

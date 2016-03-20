@@ -13,8 +13,6 @@ $fileHeader$
 #include "definitions.h"
 #include "tagId.h"
 
-#ifndef SWIG
-
 #include <string>
 #include <cstdint>
 #include <memory>
@@ -22,6 +20,8 @@ $fileHeader$
 #include "readingDataHandlerNumeric.h"
 #include "writingDataHandlerNumeric.h"
 #include "tagContent.h"
+
+#ifndef SWIG
 
 namespace imebra
 {
@@ -36,11 +36,13 @@ class dataSet;
 namespace imebra
 {
 
+class TagContent;
+
 ///
 ///
 /// This class represents a DICOM dataset.
 ///
-///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API DataSet
 {
 #ifndef SWIG
@@ -58,30 +60,32 @@ public:
     ///
     /// \brief Construct an empty dicom dataset.
     ///
-    ///////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////
 	DataSet();
 
     ///
     /// \brief Creates a dataset and shallow copies the data
     ///        from the dataset in the parameters
+    ///
     /// \param right the dataset to copy from
     ///
     /// This dataset and the one in the parameter will refer
     ///  to the same data: changes made in one dataset will be
     ///  reflected in the other dataset.
     ///
-    ///////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////
     DataSet(const DataSet& right);
 
+    /// \brief Destructor.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     virtual ~DataSet();
 
 	DataSet& operator=(const DataSet& right);
 
-    groups_t getGroups() const;
+    tagsIds_t getTags() const;
 
-    size_t getGroupsNumber(std::uint16_t groupId) const;
-
-    tags_t getGroupTags(std::uint16_t groupId, size_t groupOrder) const;
+    TagContent getTagContentThrow(const TagId& tagId) const;
 
     ///
     /// \brief Retrieve an image from the dataset.
@@ -107,7 +111,7 @@ public:
     /// \return an image object containing the decompressed
     ///         image
     ///
-    ///////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////
     Image getImage(size_t frameNumber);
 
     ///
@@ -128,7 +132,7 @@ public:
     /// \return an image object containing the decompressed
     ///         image, processed with ModalityVOILUT
     ///
-    ///////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////
     Image getImageApplyModalityTransform(size_t frameNumber);
 
     ///
@@ -160,7 +164,7 @@ public:
     ///                       compression. Ignored if lossless
     ///                       compression is used
     ///
-    ///////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////
     void setImage(size_t frameNumber, Image image, const std::string& transferSyntax, imageQuality_t quality);
 
     DataSet getSequenceItemThrow(const TagId& tagId, size_t itemId);

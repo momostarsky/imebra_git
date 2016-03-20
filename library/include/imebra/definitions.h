@@ -9,9 +9,8 @@ $fileHeader$
 #if !defined(imebraDefinitions__INCLUDED_)
 #define imebraDefinitions__INCLUDED_
 
-#include <set>
 #include <cstdint>
-#include <list>
+#include <vector>
 #include <string>
 
 #ifndef SWIG
@@ -140,7 +139,7 @@ enum class codecType_t
 
 
 
-typedef std::list<std::string> fileParts_t;
+typedef std::vector<std::string> fileParts_t;
 
 /// \brief Defines the output type of
 ///         getBitmap().
@@ -187,7 +186,7 @@ struct IMEBRA_API Date
 };
 
 
-typedef std::set<std::uint16_t> groups_t;
+typedef std::vector<std::uint16_t> groups_t;
 
 } // namespace imebra
 

@@ -9,7 +9,6 @@ $fileHeader$
 
 #if !defined(imebraTagContent__INCLUDED_)
 #define imebraTagContent__INCLUDED_
-#ifndef SWIG
 
 #include <string>
 #include <cstdint>
@@ -21,6 +20,9 @@ $fileHeader$
 #include "definitions.h"
 #include "streamReader.h"
 #include "streamWriter.h"
+#include "dataSet.h"
+
+#ifndef SWIG
 
 namespace imebra
 {
@@ -204,7 +206,7 @@ public:
     ///////////////////////////////////////////////////////////
     DataSet getSequenceItemThrow(size_t dataSetId) const;
 
-    bool dataSetExists(size_t dataSetId) const;
+    bool sequenceItemExists(size_t dataSetId) const;
 
     /// \brief Set an embedded dataSet to the sequence.
     ///
@@ -222,7 +224,7 @@ public:
     ///                   into the tag
     ///
     ///////////////////////////////////////////////////////////
-    void setDataSet(size_t dataSetId, const DataSet& dataSet);
+    void setSequenceItem(size_t dataSetId, const DataSet& dataSet);
 
     /// \brief Append an embedded dataSet to the sequence.
     ///
@@ -237,7 +239,7 @@ public:
     ///                   into the tag
     ///
     ///////////////////////////////////////////////////////////
-    void appendDataSet(const DataSet& dataSet);
+    void appendSequenceItem(const DataSet& dataSet);
 
     //@}
 
@@ -263,8 +265,6 @@ protected:
     std::shared_ptr<imebra::implementation::data> m_pData;
 #endif
 };
-
-typedef std::map<std::uint16_t, TagContent> tags_t;
 
 }
 

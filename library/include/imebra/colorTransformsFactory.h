@@ -17,6 +17,9 @@ $fileHeader$
 namespace imebra
 {
 
+///
+/// \brief The ColorTransformsFactory can generate
+///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API ColorTransformsFactory
 {
 

@@ -13,6 +13,7 @@ $fileHeader$
 #ifndef SWIG
 
 #include <cstdint>
+#include <vector>
 #include "tagsEnumeration.h"
 
 #endif
@@ -52,6 +53,8 @@ private:
     std::uint32_t m_groupOrder;
     std::uint16_t m_tagId;
 };
+
+typedef std::vector<TagId> tagsIds_t;
 
 }
 

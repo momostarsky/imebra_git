@@ -1534,7 +1534,7 @@ dataSet::tGroupsIds dataSet::getGroups() const
     IMEBRA_FUNCTION_END();
 }
 
-size_t dataSet::getGroupsNumber(uint16_t groupId) const
+std::uint32_t dataSet::getGroupsNumber(uint16_t groupId) const
 {
     IMEBRA_FUNCTION_START();
 
@@ -1547,7 +1547,7 @@ size_t dataSet::getGroupsNumber(uint16_t groupId) const
         return 0;
     }
 
-    return findGroup->second.size();
+    return (std::uint32_t)(findGroup->second.size());
 
     IMEBRA_FUNCTION_END();
 }

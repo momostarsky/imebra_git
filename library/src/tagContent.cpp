@@ -97,17 +97,17 @@ DataSet TagContent::getSequenceItemThrow(size_t dataSetId) const
     return DataSet(m_pData->getSequenceItemThrow(dataSetId));
 }
 
-bool TagContent::dataSetExists(size_t dataSetId) const
+bool TagContent::sequenceItemExists(size_t dataSetId) const
 {
     return m_pData->dataSetExists(dataSetId);
 }
 
-void TagContent::setDataSet(size_t dataSetId, const DataSet& dataSet)
+void TagContent::setSequenceItem(size_t dataSetId, const DataSet& dataSet)
 {
     m_pData->setDataSet(dataSetId, dataSet.m_pDataSet);
 }
 
-void TagContent::appendDataSet(const DataSet& dataSet)
+void TagContent::appendSequenceItem(const DataSet& dataSet)
 {
     m_pData->appendDataSet(dataSet.m_pDataSet);
 }

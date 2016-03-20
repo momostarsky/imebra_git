@@ -30,7 +30,8 @@ TEST(drawBitmapTest, testDrawBitmap)
 
             DrawBitmap testDraw;
             ReadWriteMemory bitmapBuffer(testDraw.getBitmap(testImage, drawBitmapType_t::drawBitmapRGB, 1));
-            char* pBuffer(bitmapBuffer.data());
+            size_t bufferSize;
+            char* pBuffer(bitmapBuffer.data(&bufferSize));
 
             ReadingDataHandler imageHandler = testImage.getReadingDataHandler();
 
