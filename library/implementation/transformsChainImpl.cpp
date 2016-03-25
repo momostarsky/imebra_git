@@ -38,8 +38,6 @@ void transformsChain::addTransform(std::shared_ptr<transform> pTransform)
 
         if(pTransform != 0 && !pTransform->isEmpty())
         {
-            // Store the transform in the chain.
-            ///////////////////////////////////////////////////////////
             m_transformsList.push_back(pTransform);
         }
 

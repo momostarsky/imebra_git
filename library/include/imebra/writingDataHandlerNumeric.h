@@ -40,7 +40,7 @@ class IMEBRA_API WritingDataHandlerNumeric: public WritingDataHandler
 #ifndef SWIG
     friend class Image;
     friend class DataSet;
-    friend class TagContent;
+    friend class Tag;
 private:
     WritingDataHandlerNumeric(std::shared_ptr<imebra::implementation::handlers::writingDataHandlerNumericBase> pDataHandler);
 #endif

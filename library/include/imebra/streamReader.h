@@ -38,7 +38,7 @@ class IMEBRA_API StreamReader
 {
 #ifndef SWIG
     friend class CodecFactory;
-    friend class TagContent;
+    friend class Tag;
 
 private:
     StreamReader(std::shared_ptr<implementation::streamReader> pReader);

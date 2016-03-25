@@ -69,9 +69,9 @@ tagsIds_t DataSet::getTags() const
     return returnTags;
 }
 
-TagContent DataSet::getTagContentThrow(const TagId& tagId) const
+Tag DataSet::getTagContent(const TagId& tagId) const
 {
-    return TagContent(m_pDataSet->getTagThrow(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId()));
+    return Tag(m_pDataSet->getTag(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId()));
 }
 
 Image DataSet::getImage(size_t frameNumber)
@@ -89,14 +89,14 @@ void DataSet::setImage(size_t frameNumber, Image image, const std::string& trans
     m_pDataSet->setImage((std::uint32_t)frameNumber, image.m_pImage, transferSyntax, quality);
 }
 
-DataSet DataSet::getSequenceItemThrow(const TagId& tagId, size_t itemId)
+DataSet DataSet::getSequenceItem(const TagId& tagId, size_t itemId)
 {
-    return DataSet(m_pDataSet->getSequenceItemThrow(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), itemId));
+    return DataSet(m_pDataSet->getSequenceItem(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), itemId));
 }
 
-ReadingDataHandler DataSet::getReadingDataHandlerThrow(const TagId& tagId, size_t bufferId) const
+ReadingDataHandler DataSet::getReadingDataHandler(const TagId& tagId, size_t bufferId) const
 {
-    return ReadingDataHandler(m_pDataSet->getReadingDataHandlerThrow(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), bufferId));
+    return ReadingDataHandler(m_pDataSet->getReadingDataHandler(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), bufferId));
 }
 
 WritingDataHandler DataSet::getWritingDataHandler(const TagId& tagId, size_t bufferId, const std::string& defaultDataType)
@@ -104,14 +104,20 @@ WritingDataHandler DataSet::getWritingDataHandler(const TagId& tagId, size_t buf
     return WritingDataHandler(m_pDataSet->getWritingDataHandler(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), bufferId, defaultDataType));
 }
 
-ReadingDataHandlerNumeric DataSet::getReadingDataHandlerNumericThrow(const TagId& tagId, size_t bufferId) const
+ReadingDataHandlerNumeric DataSet::getReadingDataHandlerNumeric(const TagId& tagId, size_t bufferId) const
 {
     std::shared_ptr<implementation::handlers::readingDataHandlerNumericBase> numericHandler =
-            std::dynamic_pointer_cast<implementation::handlers::readingDataHandlerNumericBase>(m_pDataSet->getReadingDataHandlerThrow(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), bufferId));
+            std::dynamic_pointer_cast<implementation::handlers::readingDataHandlerNumericBase>(m_pDataSet->getReadingDataHandler(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), bufferId));
     if(numericHandler.get() == 0)
     {
         throw std::bad_cast();
     }
+    return ReadingDataHandlerNumeric(numericHandler);
+}
+
+ReadingDataHandlerNumeric DataSet::getReadingDataHandlerRaw(const TagId& tagId, size_t bufferId) const
+{
+    std::shared_ptr<implementation::handlers::readingDataHandlerNumericBase> numericHandler = m_pDataSet->getReadingDataHandlerRaw(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), bufferId);
     return ReadingDataHandlerNumeric(numericHandler);
 }
 
@@ -126,15 +132,20 @@ WritingDataHandlerNumeric DataSet::getWritingDataHandlerNumeric(const TagId& tag
     return WritingDataHandlerNumeric(numericHandler);
 }
 
+WritingDataHandlerNumeric DataSet::getWritingDataHandlerRaw(const TagId& tagId, size_t bufferId, const std::string& defaultDataType)
+{
+    std::shared_ptr<implementation::handlers::writingDataHandlerNumericBase> numericHandler = m_pDataSet->getWritingDataHandlerRaw(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), bufferId, defaultDataType);
+    return WritingDataHandlerNumeric(numericHandler);
+}
 
 bool DataSet::bufferExists(const TagId& tagId, size_t bufferId)
 {
     return m_pDataSet->bufferExists(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), bufferId);
 }
 
-std::int32_t DataSet::getSignedLongThrow(const TagId& tagId, size_t bufferId, size_t elementNumber) const
+std::int32_t DataSet::getSignedLong(const TagId& tagId, size_t bufferId, size_t elementNumber) const
 {
-    return m_pDataSet->getSignedLongThrow(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), bufferId, elementNumber);
+    return m_pDataSet->getSignedLong(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), bufferId, elementNumber);
 }
 
 std::int32_t DataSet::getSignedLong(const TagId& tagId, size_t bufferId, size_t elementNumber, std::int32_t defaultValue) const
@@ -142,14 +153,14 @@ std::int32_t DataSet::getSignedLong(const TagId& tagId, size_t bufferId, size_t 
     return m_pDataSet->getSignedLong(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), bufferId, elementNumber, defaultValue);
 }
 
-void DataSet::setSignedLong(const TagId& tagId, size_t bufferId, std::int32_t newValue, const std::string& defaultType)
+void DataSet::setSignedLong(const TagId& tagId, size_t bufferId, std::int32_t newValue, const std::string& tagVR)
 {
-    m_pDataSet->setSignedLong(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), bufferId, newValue, defaultType);
+    m_pDataSet->setSignedLong(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), bufferId, newValue, tagVR);
 }
 
-std::uint32_t DataSet::getUnsignedLongThrow(const TagId& tagId, size_t bufferId, size_t elementNumber) const
+std::uint32_t DataSet::getUnsignedLong(const TagId& tagId, size_t bufferId, size_t elementNumber) const
 {
-    return m_pDataSet->getUnsignedLongThrow(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), bufferId, elementNumber);
+    return m_pDataSet->getUnsignedLong(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), bufferId, elementNumber);
 }
 
 std::uint32_t DataSet::getUnsignedLong(const TagId& tagId, size_t bufferId, size_t elementNumber, std::uint32_t defaultValue) const
@@ -157,14 +168,14 @@ std::uint32_t DataSet::getUnsignedLong(const TagId& tagId, size_t bufferId, size
     return m_pDataSet->getUnsignedLong(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), bufferId, elementNumber, defaultValue);
 }
 
-void DataSet::setUnsignedLong(const TagId& tagId, size_t bufferId, std::uint32_t newValue, const std::string& defaultType)
+void DataSet::setUnsignedLong(const TagId& tagId, size_t bufferId, std::uint32_t newValue, const std::string& tagVR)
 {
-    m_pDataSet->setUnsignedLong(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), bufferId, newValue, defaultType);
+    m_pDataSet->setUnsignedLong(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), bufferId, newValue, tagVR);
 }
 
-double DataSet::getDoubleThrow(const TagId& tagId, size_t bufferId, size_t elementNumber) const
+double DataSet::getDouble(const TagId& tagId, size_t bufferId, size_t elementNumber) const
 {
-    return m_pDataSet->getDoubleThrow(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), bufferId, elementNumber);
+    return m_pDataSet->getDouble(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), bufferId, elementNumber);
 }
 
 double DataSet::getDouble(const TagId& tagId, size_t bufferId, size_t elementNumber, double defaultValue) const
@@ -172,14 +183,14 @@ double DataSet::getDouble(const TagId& tagId, size_t bufferId, size_t elementNum
     return m_pDataSet->getDouble(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), bufferId, elementNumber, defaultValue);
 }
 
-void DataSet::setDouble(const TagId& tagId, size_t bufferId, double newValue, const std::string& defaultType)
+void DataSet::setDouble(const TagId& tagId, size_t bufferId, double newValue, const std::string& tagVR)
 {
-    m_pDataSet->setDouble(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), bufferId, newValue, defaultType);
+    m_pDataSet->setDouble(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), bufferId, newValue, tagVR);
 }
 
-std::string DataSet::getStringThrow(const TagId& tagId, size_t bufferId, size_t elementNumber) const
+std::string DataSet::getString(const TagId& tagId, size_t bufferId, size_t elementNumber) const
 {
-    return m_pDataSet->getStringThrow(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), bufferId, elementNumber);
+    return m_pDataSet->getString(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), bufferId, elementNumber);
 }
 
 std::string DataSet::getString(const TagId& tagId, size_t bufferId, size_t elementNumber, const std::string& defaultValue) const
@@ -187,9 +198,9 @@ std::string DataSet::getString(const TagId& tagId, size_t bufferId, size_t eleme
     return m_pDataSet->getString(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), bufferId, elementNumber, defaultValue);
 }
 
-std::wstring DataSet::getUnicodeStringThrow(const TagId& tagId, size_t bufferId, size_t elementNumber) const
+std::wstring DataSet::getUnicodeString(const TagId& tagId, size_t bufferId, size_t elementNumber) const
 {
-    return m_pDataSet->getUnicodeStringThrow(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), bufferId, elementNumber);
+    return m_pDataSet->getUnicodeString(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), bufferId, elementNumber);
 }
 
 std::wstring DataSet::getUnicodeString(const TagId& tagId, size_t bufferId, size_t elementNumber, const std::wstring& defaultValue) const
@@ -197,25 +208,25 @@ std::wstring DataSet::getUnicodeString(const TagId& tagId, size_t bufferId, size
     return m_pDataSet->getUnicodeString(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), bufferId, elementNumber, defaultValue);
 }
 
-void DataSet::setString(const TagId& tagId, size_t bufferId, const std::string& newString, const std::string& defaultType)
+void DataSet::setString(const TagId& tagId, size_t bufferId, const std::string& newString, const std::string& tagVR)
 {
-    m_pDataSet->setString(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), bufferId, newString, defaultType);
+    m_pDataSet->setString(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), bufferId, newString, tagVR);
 }
 
-void DataSet::setUnicodeString(const TagId& tagId, size_t bufferId, const std::wstring& newString, const std::string& defaultType)
+void DataSet::setUnicodeString(const TagId& tagId, size_t bufferId, const std::wstring& newString, const std::string& tagVR)
 {
-    m_pDataSet->setUnicodeString(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), bufferId, newString, defaultType);
+    m_pDataSet->setUnicodeString(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), bufferId, newString, tagVR);
 }
 
-void DataSet::setAge(const TagId& tagId, size_t bufferId, const Age& age, const std::string& defaultType)
+void DataSet::setAge(const TagId& tagId, size_t bufferId, const Age& age, const std::string& tagVR)
 {
-    m_pDataSet->setAge(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), bufferId, age.age, age.units, defaultType);
+    m_pDataSet->setAge(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), bufferId, age.age, age.units, tagVR);
 }
 
-Age DataSet::getAgeThrow(const TagId& tagId, size_t bufferId, size_t elementNumber) const
+Age DataSet::getAge(const TagId& tagId, size_t bufferId, size_t elementNumber) const
 {
     imebra::ageUnit_t units;
-    std::uint32_t age = m_pDataSet->getAgeThrow(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), bufferId, elementNumber, &units);
+    std::uint32_t age = m_pDataSet->getAge(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), bufferId, elementNumber, &units);
     return Age(age, units);
 }
 
@@ -226,7 +237,7 @@ Age DataSet::getAge(const TagId& tagId, size_t bufferId, size_t elementNumber, c
     return Age(age, units);
 }
 
-void DataSet::setDate(const TagId& tagId, size_t bufferId, const Date& date, const std::string& defaultType)
+void DataSet::setDate(const TagId& tagId, size_t bufferId, const Date& date, const std::string& tagVR)
 {
     m_pDataSet->setDate(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), bufferId,
                         (std::uint32_t) date.year,
@@ -237,14 +248,14 @@ void DataSet::setDate(const TagId& tagId, size_t bufferId, const Date& date, con
                         (std::uint32_t) date.seconds,
                         (std::uint32_t) date.nanoseconds,
                         (std::int32_t) date.offsetHours,
-                        (std::int32_t) date.offsetMinutes, defaultType);
+                        (std::int32_t) date.offsetMinutes, tagVR);
 }
 
-Date DataSet::getDateThrow(const TagId& tagId, size_t bufferId, size_t elementNumber) const
+Date DataSet::getDate(const TagId& tagId, size_t bufferId, size_t elementNumber) const
 {
     std::uint32_t year, month, day, hour, minutes, seconds, nanoseconds;
     std::int32_t offsetHours, offsetMinutes;
-    m_pDataSet->getDateThrow(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), bufferId, elementNumber,
+    m_pDataSet->getDate(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), bufferId, elementNumber,
                         &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
 
     return Date(
@@ -282,27 +293,9 @@ Date DataSet::getDate(const TagId& tagId, size_t bufferId, size_t elementNumber,
 }
 
 
-size_t DataSet::getRawDataThrow(const TagId& tagId, size_t bufferId, char* buffer, size_t bufferSize) const
+std::string DataSet::getDataType(const TagId& tagId) const
 {
-    std::shared_ptr<imebra::implementation::handlers::readingDataHandlerRaw> dataHandlerRaw = m_pDataSet->getReadingDataHandlerRawThrow(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), bufferId);
-    if(dataHandlerRaw->getSize() > bufferSize)
-    {
-        return dataHandlerRaw->getSize();
-    }
-    dataHandlerRaw->copyTo((std::int8_t*)buffer, dataHandlerRaw->getSize());
-    return dataHandlerRaw->getSize();
-}
-
-void DataSet::setRawData(const TagId& tagId, size_t bufferId, char* buffer, size_t bufferSize, const std::string& defaultType)
-{
-    std::shared_ptr<imebra::implementation::handlers::writingDataHandlerRaw> dataHandlerRaw = m_pDataSet->getWritingDataHandlerRaw(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), bufferId, defaultType);
-    dataHandlerRaw->copyFrom((std::int8_t*)buffer, bufferSize);
-}
-
-
-std::string DataSet::getDataTypeThrow(const TagId& tagId) const
-{
-    return m_pDataSet->getDataTypeThrow(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0);
+    return m_pDataSet->getDataType(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0);
 }
 
 }

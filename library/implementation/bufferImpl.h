@@ -71,14 +71,14 @@ public:
 	/// If no data type is specified, then the Dicom data
 	///  type "OB" is used.
 	///
-	/// @param defaultType  a string with the buffer's type.
+	/// @param tagVR  a string with the buffer's type.
 	///                     The buffer's type must be one of
 	///                      the Dicom data types.
 	///                     A dicom's data type is formed by
 	///                      two uppercase chars
 	///
 	///////////////////////////////////////////////////////////
-    buffer(const std::string& defaultType="");
+    buffer(const std::string& tagVR="");
 
 	/// \brief Constructor. Initialize the buffer object and
 	///         declare the buffer's content on demand.
@@ -87,7 +87,7 @@ public:
 	///  when the application requires the access to the
 	///  buffer.
 	///
-	/// @param defaultType  a string with the buffer's type.
+	/// @param tagVR  a string with the buffer's type.
 	///                     The buffer's type must be one of
 	///                      the Dicom data types.
 	///                     A dicom's data type is formed by
@@ -104,7 +104,7 @@ public:
 	///
 	///////////////////////////////////////////////////////////
     buffer(
-		const std::string& defaultType,
+		const std::string& tagVR,
         const std::shared_ptr<baseStreamInput>& originalStream,
         size_t bufferPosition,
         size_t bufferLength,

@@ -35,7 +35,7 @@ class IMEBRA_API StreamWriter
 {
 #ifndef SWIG
     friend class CodecFactory;
-    friend class TagContent;
+    friend class Tag;
 
 private:
     StreamWriter(std::shared_ptr<implementation::streamWriter> pWriter);

@@ -52,7 +52,7 @@ class waveform;
 ///
 /// Also the tags with the data type SQ (sequence) contains
 ///  one or more embedded dataSets that can be retrieved
-///  by using data::getSequenceItemThrow().
+///  by using data::getSequenceItem().
 ///
 /// If your application creates a new dataset then it can
 ///  set the default dataSet's charset by calling 
@@ -122,7 +122,7 @@ public:
 	///                 just created tag is returned.
 	///
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<data> getTagThrow(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId) const;
+    std::shared_ptr<data> getTag(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId) const;
     std::shared_ptr<data> getTagCreate(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId);
 
     bool bufferExists(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId) const;
@@ -280,7 +280,7 @@ public:
 	///                 dataset is returned
 	///
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<dataSet> getSequenceItemThrow(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t itemId) const;
+    std::shared_ptr<dataSet> getSequenceItem(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t itemId) const;
 
 	/// \brief Retrieve a LUT.
 	///
@@ -303,7 +303,7 @@ public:
 	///                 LUT is returned
 	///
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<lut> getLutThrow(std::uint16_t groupId, std::uint16_t tagId, std::uint32_t lutId) const;
+    std::shared_ptr<lut> getLut(std::uint16_t groupId, std::uint16_t tagId, std::uint32_t lutId) const;
 
 	/// \brief Retrieve a waveform from the dataSet.
 	///
@@ -319,7 +319,7 @@ public:
 	///          the requested waveform doesn't exist
 	///
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<waveform> getWaveformThrow(std::uint32_t waveformId);
+    std::shared_ptr<waveform> getWaveform(std::uint32_t waveformId);
 
 	//@}
 
@@ -353,7 +353,7 @@ public:
 	/// @return        The tag's content, as a signed long
 	///
 	///////////////////////////////////////////////////////////
-    std::int32_t getSignedLongThrow(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
+    std::int32_t getSignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
 
     std::int32_t getSignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::int32_t defaultValue) const;
 
@@ -380,13 +380,13 @@ public:
 	///                 must be set.
 	///                The first element's number is 0
 	/// @param newValue the value to be written into the tag
-	/// @param defaultType if the specified tag doesn't exist
+    /// @param tagVR if the specified tag doesn't exist
 	///                 then the function will create a new
 	///                 tag with the data type specified in
 	///                 this parameter
 	///
 	///////////////////////////////////////////////////////////
-    void setSignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::int32_t newValue, const std::string& defaultType = "");
+    void setSignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::int32_t newValue, const std::string& tagVR = "");
 
 	/// \brief Retrieve a tag's value as an unsigned long.
 	///
@@ -413,7 +413,7 @@ public:
 	/// @return        The tag's content, as an unsigned long
 	///
 	///////////////////////////////////////////////////////////
-    std::uint32_t getUnsignedLongThrow(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
+    std::uint32_t getUnsignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
 
     std::uint32_t getUnsignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::uint32_t defaultValue) const;
 
@@ -440,13 +440,13 @@ public:
 	///                 must be set.
 	///                The first element's number is 0
 	/// @param newValue the value to be written into the tag
-	/// @param defaultType if the specified tag doesn't exist
+    /// @param tagVR if the specified tag doesn't exist
 	///                 then the function will create a new
 	///                 tag with the data type specified in
 	///                 this parameter
 	///
 	///////////////////////////////////////////////////////////
-    void setUnsignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::uint32_t newValue, const std::string& defaultType = "");
+    void setUnsignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::uint32_t newValue, const std::string& tagVR = "");
 
 	/// \brief Retrieve a tag's value as a double.
 	///
@@ -473,7 +473,7 @@ public:
 	/// @return        The tag's content, as a double
 	///
 	///////////////////////////////////////////////////////////
-    double getDoubleThrow(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
+    double getDouble(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
 
     double getDouble(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, double defaultValue) const;
 	
@@ -500,13 +500,13 @@ public:
 	///                 must be set.
 	///                The first element's number is 0
 	/// @param newValue the value to be written into the tag
-	/// @param defaultType if the specified tag doesn't exist
+    /// @param tagVR if the specified tag doesn't exist
 	///                 then the function will create a new
 	///                 tag with the data type specified in
 	///                 this parameter
 	///
 	///////////////////////////////////////////////////////////
-    void setDouble(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, double newValue, const std::string& defaultType = "");
+    void setDouble(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, double newValue, const std::string& tagVR = "");
 
 	/// \brief Retrieve a tag's value as a string.
 	///        getUnicodeString() is preferred over this
@@ -535,7 +535,7 @@ public:
 	/// @return        The tag's content, as a string
 	///
 	///////////////////////////////////////////////////////////
-    std::string getStringThrow(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
+    std::string getString(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
 
     std::string getString(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, const std::string& defaultValue) const;
 
@@ -564,7 +564,7 @@ public:
 	/// @return        The tag's content, as an unicode string
 	///
 	///////////////////////////////////////////////////////////
-    std::wstring getUnicodeStringThrow(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
+    std::wstring getUnicodeString(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
 
     std::wstring getUnicodeString(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, const std::wstring& defaultValue) const;
 
@@ -593,13 +593,13 @@ public:
 	///                 must be set.
 	///                The first element's number is 0
 	/// @param newString the value to be written into the tag
-	/// @param defaultType if the specified tag doesn't exist
+    /// @param tagVR if the specified tag doesn't exist
 	///                 then the function will create a new
 	///                 tag with the data type specified in
 	///                 this parameter
 	///
 	///////////////////////////////////////////////////////////
-    void setString(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::string& newString, const std::string& defaultType = "");
+    void setString(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::string& newString, const std::string& tagVR = "");
 
 	/// \brief Set a tag's value as an unicode string.
 	///
@@ -624,17 +624,17 @@ public:
 	///                 must be set.
 	///                The first element's number is 0
 	/// @param newString the value to be written into the tag
-	/// @param defaultType if the specified tag doesn't exist
+    /// @param tagVR if the specified tag doesn't exist
 	///                 then the function will create a new
 	///                 tag with the data type specified in
 	///                 this parameter
 	///
 	///////////////////////////////////////////////////////////
-    void setUnicodeString(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::wstring& newString, const std::string& defaultType = "");
+    void setUnicodeString(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::wstring& newString, const std::string& tagVR = "");
 
-    void setAge(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::uint32_t age, ageUnit_t units, const std::string& defaultType = "");
+    void setAge(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::uint32_t age, ageUnit_t units, const std::string& tagVR = "");
 
-    std::uint32_t getAgeThrow(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, ageUnit_t* pUnits) const;
+    std::uint32_t getAge(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, ageUnit_t* pUnits) const;
 
     std::uint32_t getAge(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId,
                                   size_t elementNumber, ageUnit_t* pUnits,
@@ -649,9 +649,9 @@ public:
         std::uint32_t seconds,
         std::uint32_t nanoseconds,
         std::int32_t offsetHours,
-        std::int32_t offsetMinutes, const std::string& defaultType = "");
+        std::int32_t offsetMinutes, const std::string& tagVR = "");
 
-    void getDateThrow(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber,
+    void getDate(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber,
         std::uint32_t* pYear,
         std::uint32_t* pMonth,
         std::uint32_t* pDay,
@@ -719,7 +719,7 @@ public:
 	/// @return           a string with the tag's type.
 	///
 	///////////////////////////////////////////////////////////
-    std::string getDataTypeThrow(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId) const;
+    std::string getDataType(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId) const;
 
 	/// \brief Return a data handler for the specified tag's
 	///         buffer.
@@ -744,15 +744,15 @@ public:
 	/// @param bufferId the buffer's id (zero based)
 	/// @param bWrite  true if the application wants to write
 	///                 into the buffer
-	/// @param defaultType a string with the dicom data type 
+    /// @param tagVR a string with the dicom data type
 	///                 to use if the buffer doesn't exist.
 	///                If none is specified, then a default
 	///                 data type will be used
 	/// @return a pointer to the data handler.
 	///
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<handlers::readingDataHandler> getReadingDataHandlerThrow(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId) const;
-    std::shared_ptr<handlers::writingDataHandler> getWritingDataHandler(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::string& defaultType="");
+    std::shared_ptr<handlers::readingDataHandler> getReadingDataHandler(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId) const;
+    std::shared_ptr<handlers::writingDataHandler> getWritingDataHandler(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::string& tagVR="");
 
 	/// \brief Return a raw data handler for the specified 
 	///         tag's buffer.
@@ -778,15 +778,15 @@ public:
 	/// @param bufferId the buffer's id (zero based)
 	/// @param bWrite  true if the application wants to write
 	///                 into the buffer
-	/// @param defaultType a string with the dicom data type 
+    /// @param tagVR a string with the dicom data type
 	///                 to use if the buffer doesn't exist.
 	///                If none is specified, then a default
 	///                 data type will be used
 	/// @return a pointer to the data handler.
 	///
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<handlers::readingDataHandlerRaw> getReadingDataHandlerRawThrow(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId) const;
-    std::shared_ptr<handlers::writingDataHandlerRaw> getWritingDataHandlerRaw(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::string& defaultType="");
+    std::shared_ptr<handlers::readingDataHandlerRaw> getReadingDataHandlerRaw(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId) const;
+    std::shared_ptr<handlers::writingDataHandlerRaw> getWritingDataHandlerRaw(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::string& tagVR="");
 
 	/// \brief Return a streamReader connected to the specified
 	///         tag's buffer's memory.
@@ -809,7 +809,7 @@ public:
 	/// @return a pointer to the streamReader
 	///
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<streamReader> getStreamReaderThrow(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId) const;
+    std::shared_ptr<streamReader> getStreamReader(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId) const;
 
 	/// \brief Return a streamWriter connected to the specified
 	///         tag's buffer's memory.

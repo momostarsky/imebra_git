@@ -141,10 +141,10 @@ TEST(dicomCodecTest, testDicom)
                     StreamReader reader(readStream);
                     DataSet testDataSet = CodecFactory::load(reader, 1);
 
-                    EXPECT_EQ(std::string("AAAaa"), testDataSet.getStringThrow(TagId(imebra::tagId_t::PatientName_0010_0010), 0, 0));
-                    EXPECT_EQ(std::string("BBBbbb"), testDataSet.getStringThrow(TagId(imebra::tagId_t::PatientName_0010_0010), 0, 1));
-                    EXPECT_EQ(std::string(""), testDataSet.getStringThrow(TagId(imebra::tagId_t::PatientName_0010_0010), 0, 2));
-                    EXPECT_EQ(interleaved, testDataSet.getSignedLongThrow(TagId(imebra::tagId_t::PlanarConfiguration_0028_0006), 0, 0));
+                    EXPECT_EQ(std::string("AAAaa"), testDataSet.getString(TagId(imebra::tagId_t::PatientName_0010_0010), 0, 0));
+                    EXPECT_EQ(std::string("BBBbbb"), testDataSet.getString(TagId(imebra::tagId_t::PatientName_0010_0010), 0, 1));
+                    EXPECT_EQ(std::string(""), testDataSet.getString(TagId(imebra::tagId_t::PatientName_0010_0010), 0, 2));
+                    EXPECT_EQ(interleaved, testDataSet.getSignedLong(TagId(imebra::tagId_t::PlanarConfiguration_0028_0006), 0, 0));
 
                     Image checkImage0 = testDataSet.getImage(0);
                     Image checkImage1 = testDataSet.getImage(1);

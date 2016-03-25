@@ -2,8 +2,8 @@
 $fileHeader$
 */
 
-/*! \file tagContent.h
-    \brief Declaration of the class TagContent.
+/*! \file tag.h
+    \brief Declaration of the class Tag.
 
 */
 
@@ -42,22 +42,22 @@ namespace imebra
 /// This class represents a DICOM dataset.
 ///
 ///////////////////////////////////////////////////////////
-class IMEBRA_API TagContent
+class IMEBRA_API Tag
 {
 
 #ifndef SWIG
     friend class DataSet;
 private:
-    TagContent(std::shared_ptr<imebra::implementation::data> pData);
+    Tag(std::shared_ptr<imebra::implementation::data> pData);
 #endif
 
 
 public:
     ///
-    /// \brief Construct an empty dicom dataset.
+    /// \brief Construct an empty dicom tag.
     ///
     ///////////////////////////////////////////////////////////
-    TagContent();
+    Tag();
 
     ///
     /// \brief Creates a dataset and shallow copies the data
@@ -69,11 +69,11 @@ public:
     ///  reflected in the other dataset.
     ///
     ///////////////////////////////////////////////////////////
-    TagContent(const TagContent& right);
+    Tag(const Tag& right);
 
-    virtual ~TagContent();
+    virtual ~Tag();
 
-    TagContent& operator=(const TagContent& right);
+    Tag& operator=(const Tag& right);
 
     /// \brief Returns the number of buffers in the tag.
     ///
@@ -106,7 +106,7 @@ public:
     ///          doesn't exist.
     ///
     ///////////////////////////////////////////////////////////
-    size_t getBufferSizeThrow(size_t bufferId) const;
+    size_t getBufferSize(size_t bufferId) const;
 
     /// \brief Get a data handler for the specified buffer.
     ///
@@ -139,19 +139,23 @@ public:
     ///                 handler must use.
     /// @param bWrite   true if the application wants to write
     ///                 something into the buffer
-    /// @param defaultType a string that specifies the data
+    /// @param tagVR a string that specifies the data
     ///                  type to use for the new buffers.
     /// @return a pointer to the data handler for the
     ///         requested buffer.
     ///
     ///////////////////////////////////////////////////////////
-    ReadingDataHandler getReadingDataHandlerThrow(size_t bufferId) const;
+    ReadingDataHandler getReadingDataHandler(size_t bufferId) const;
 
-    WritingDataHandler getWritingDataHandler(size_t bufferId, const std::string& defaultType);
+    WritingDataHandler getWritingDataHandler(size_t bufferId, const std::string& tagVR);
 
-    ReadingDataHandlerNumeric getReadingDataHandlerNumericThrow(size_t bufferId) const;
+    ReadingDataHandlerNumeric getReadingDataHandlerNumeric(size_t bufferId) const;
 
-    WritingDataHandlerNumeric getWritingDataHandlerNumeric(size_t bufferId, const std::string& defaultType);
+    ReadingDataHandlerNumeric getReadingDataHandlerRaw(size_t bufferId) const;
+
+    WritingDataHandlerNumeric getWritingDataHandlerNumeric(size_t bufferId, const std::string& tagVR);
+
+    WritingDataHandlerNumeric getWritingDataHandlerRaw(size_t bufferId, const std::string& tagVR);
 
     /// \brief Get a streamReader connected to a buffer's data.
     ///
@@ -162,7 +166,7 @@ public:
     ///                    buffer's data.
     ///
     ///////////////////////////////////////////////////////////
-    StreamReader getStreamReaderThrow(size_t bufferId);
+    StreamReader getStreamReader(size_t bufferId);
 
     /// \brief Get a streamWriter connected to a buffer's data.
     ///
@@ -204,7 +208,7 @@ public:
     /// @return           a pointer to the retrieved dataSet
     ///
     ///////////////////////////////////////////////////////////
-    DataSet getSequenceItemThrow(size_t dataSetId) const;
+    DataSet getSequenceItem(size_t dataSetId) const;
 
     bool sequenceItemExists(size_t dataSetId) const;
 
@@ -258,7 +262,7 @@ public:
     /// @return the buffer's data type in Dicom format
     ///
     ///////////////////////////////////////////////////////////
-    std::string getDataTypeThrow(size_t bufferId) const;
+    std::string getDataType(size_t bufferId) const;
 
 #ifndef SWIG
 protected:

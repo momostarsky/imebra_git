@@ -87,7 +87,7 @@ void data::setBuffer(size_t bufferId, const std::shared_ptr<buffer>& newBuffer)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::string data::getDataTypeThrow(size_t bufferId) const
+std::string data::getDataType(size_t bufferId) const
 {
     IMEBRA_FUNCTION_START();
 
@@ -167,7 +167,7 @@ bool data::bufferExists(size_t bufferId) const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-size_t data::getBufferSizeThrow(size_t bufferId) const
+size_t data::getBufferSize(size_t bufferId) const
 {
     IMEBRA_FUNCTION_START();
 
@@ -203,7 +203,7 @@ size_t data::getBufferSizeThrow(size_t bufferId) const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<handlers::readingDataHandler> data::getReadingDataHandlerThrow(size_t bufferId) const
+std::shared_ptr<handlers::readingDataHandler> data::getReadingDataHandler(size_t bufferId) const
 {
     IMEBRA_FUNCTION_START();
 
@@ -228,7 +228,7 @@ std::shared_ptr<handlers::readingDataHandler> data::getReadingDataHandlerThrow(s
 }
 
 
-std::shared_ptr<handlers::writingDataHandler> data::getWritingDataHandler(size_t bufferId, const std::string& defaultType)
+std::shared_ptr<handlers::writingDataHandler> data::getWritingDataHandler(size_t bufferId, const std::string& tagVR)
 {
     IMEBRA_FUNCTION_START();
 
@@ -254,11 +254,11 @@ std::shared_ptr<handlers::writingDataHandler> data::getWritingDataHandler(size_t
             if(
                     !m_buffers.empty() &&
                     !m_buffers.begin()->second->getDataType().empty() &&
-                    defaultType != m_buffers.begin()->second->getDataType())
+                    tagVR != m_buffers.begin()->second->getDataType())
             {
                 throw;
             }
-            pTempBuffer = std::make_shared<buffer>(defaultType);
+            pTempBuffer = std::make_shared<buffer>(tagVR);
 
             pTempBuffer->setCharsetsList(m_charsetsList);
             m_buffers[bufferId]=pTempBuffer;
@@ -280,7 +280,7 @@ std::shared_ptr<handlers::writingDataHandler> data::getWritingDataHandler(size_t
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<handlers::readingDataHandlerRaw> data::getReadingDataHandlerRawThrow(size_t bufferId) const
+std::shared_ptr<handlers::readingDataHandlerRaw> data::getReadingDataHandlerRaw(size_t bufferId) const
 {
     IMEBRA_FUNCTION_START();
 
@@ -302,7 +302,7 @@ std::shared_ptr<handlers::readingDataHandlerRaw> data::getReadingDataHandlerRawT
 }
 
 
-std::shared_ptr<handlers::writingDataHandlerRaw> data::getWritingDataHandlerRaw(size_t bufferId, const std::string& defaultType)
+std::shared_ptr<handlers::writingDataHandlerRaw> data::getWritingDataHandlerRaw(size_t bufferId, const std::string& tagVR)
 {
     IMEBRA_FUNCTION_START();
 
@@ -330,7 +330,7 @@ std::shared_ptr<handlers::writingDataHandlerRaw> data::getWritingDataHandlerRaw(
             }
             else
             {
-                pTempBuffer = std::make_shared<buffer>(defaultType);
+                pTempBuffer = std::make_shared<buffer>(tagVR);
             }
 
             pTempBuffer->setCharsetsList(m_charsetsList);
@@ -353,7 +353,7 @@ std::shared_ptr<handlers::writingDataHandlerRaw> data::getWritingDataHandlerRaw(
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<streamReader> data::getStreamReaderThrow(size_t bufferId)
+std::shared_ptr<streamReader> data::getStreamReader(size_t bufferId)
 {
     IMEBRA_FUNCTION_START();
 
@@ -435,7 +435,7 @@ std::shared_ptr<streamWriter> data::getStreamWriter(size_t bufferId, const std::
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<dataSet> data::getSequenceItemThrow(size_t dataSetId) const
+std::shared_ptr<dataSet> data::getSequenceItem(size_t dataSetId) const
 {
     IMEBRA_FUNCTION_START();
 

@@ -57,7 +57,7 @@ namespace implementation
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<data> dataSet::getTagThrow(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId) const
+std::shared_ptr<data> dataSet::getTag(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId) const
 {
     IMEBRA_FUNCTION_START();
 
@@ -78,7 +78,7 @@ std::shared_ptr<data> dataSet::getTagThrow(std::uint16_t groupId, std::uint32_t 
     tTags::const_iterator findTag(tagsMap.find(tagId));
     if(findTag == tagsMap.end())
     {
-        IMEBRA_THROW(MissingGroupError, "The requested tag is missing");
+        IMEBRA_THROW(MissingTagError, "The requested tag is missing");
     }
     return findTag->second;
 
@@ -113,7 +113,7 @@ bool dataSet::bufferExists(std::uint16_t groupId, std::uint32_t order, std::uint
 
     try
     {
-        return getTagThrow(groupId, order, tagId)->bufferExists(bufferId);
+        return getTag(groupId, order, tagId)->bufferExists(bufferId);
     }
     catch(const MissingDataElementError&)
     {
@@ -141,7 +141,7 @@ std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
 
 	// Retrieve the transfer syntax
 	///////////////////////////////////////////////////////////
-    std::string transferSyntax = getStringThrow(0x0002, 0x0, 0x0010, 0, 0);
+    std::string transferSyntax = getString(0x0002, 0x0, 0x0010, 0, 0);
 
 	// Get the right codec
 	///////////////////////////////////////////////////////////
@@ -149,9 +149,9 @@ std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
 
     try
     {
-        std::shared_ptr<implementation::data> imageTag = getTagThrow(0x7fe0, 0x0, 0x0010);
+        std::shared_ptr<implementation::data> imageTag = getTag(0x7fe0, 0x0, 0x0010);
 
-        const std::string imageStreamDataType(imageTag->getDataTypeThrow(0));
+        const std::string imageStreamDataType(imageTag->getDataType(0));
 
         // Get the number of frames
         ///////////////////////////////////////////////////////////
@@ -176,11 +176,11 @@ std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
             {
                 std::uint32_t firstBufferId(0), endBufferId(0);
                 size_t totalLength(0);
-                if(imageTag->getBufferSizeThrow(0) == 0 && numberOfFrames + 1 == imageTag->getBuffersCount())
+                if(imageTag->getBufferSize(0) == 0 && numberOfFrames + 1 == imageTag->getBuffersCount())
                 {
                     firstBufferId = frameNumber + 1;
                     endBufferId = firstBufferId + 1;
-                    totalLength = imageTag->getBufferSizeThrow(firstBufferId);
+                    totalLength = imageTag->getBufferSize(firstBufferId);
                 }
                 else
                 {
@@ -188,7 +188,7 @@ std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
                 }
                 if(firstBufferId == endBufferId - 1)
                 {
-                    imageStream = imageTag->getStreamReaderThrow(firstBufferId);
+                    imageStream = imageTag->getStreamReader(firstBufferId);
                 }
                 else
                 {
@@ -196,7 +196,7 @@ std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
                     const std::uint8_t* pDest = temporaryMemory->data();
                     for(std::uint32_t scanBuffers = firstBufferId; scanBuffers != endBufferId; ++scanBuffers)
                     {
-                        std::shared_ptr<handlers::readingDataHandlerRaw> bufferHandler = imageTag->getReadingDataHandlerRawThrow(scanBuffers);
+                        std::shared_ptr<handlers::readingDataHandlerRaw> bufferHandler = imageTag->getReadingDataHandlerRaw(scanBuffers);
                         const std::uint8_t* pSource = bufferHandler->getMemoryBuffer();
                         ::memcpy((void*)pDest, (void*)pSource, bufferHandler->getSize());
                         pDest += bufferHandler->getSize();
@@ -217,7 +217,7 @@ std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
         {
             try
             {
-                imageStream = getStreamReaderThrow(0x7fe0, (std::uint16_t)frameNumber, 0x0010, 0x0);
+                imageStream = getStreamReader(0x7fe0, (std::uint16_t)frameNumber, 0x0010, 0x0);
                 bDontNeedImagesPositions = true;
             }
             catch(const MissingDataElementError&)
@@ -232,7 +232,7 @@ std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
         ///////////////////////////////////////////////////////////
         if(imageStream == 0)
         {
-            imageStream = imageTag->getStreamReaderThrow(0x0);
+            imageStream = imageTag->getStreamReader(0x0);
 
             // Reset an internal array that keeps track of the
             //  images position
@@ -291,9 +291,9 @@ std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
         if(pImage->getColorSpace() == "PALETTE COLOR")
         {
             std::shared_ptr<lut> red(std::make_shared<lut>()), green(std::make_shared<lut>()), blue(std::make_shared<lut>());
-            red->setLut(getReadingDataHandlerThrow(0x0028, 0x0, 0x1101, 0), getReadingDataHandlerThrow(0x0028, 0x0, 0x1201, 0), L"");
-            green->setLut(getReadingDataHandlerThrow(0x0028, 0x0, 0x1102, 0), getReadingDataHandlerThrow(0x0028, 0x0, 0x1202, 0), L"");
-            blue->setLut(getReadingDataHandlerThrow(0x0028, 0x0, 0x1103, 0), getReadingDataHandlerThrow(0x0028, 0x0, 0x1203, 0), L"");
+            red->setLut(getReadingDataHandler(0x0028, 0x0, 0x1101, 0), getReadingDataHandler(0x0028, 0x0, 0x1201, 0), L"");
+            green->setLut(getReadingDataHandler(0x0028, 0x0, 0x1102, 0), getReadingDataHandler(0x0028, 0x0, 0x1202, 0), L"");
+            blue->setLut(getReadingDataHandler(0x0028, 0x0, 0x1103, 0), getReadingDataHandler(0x0028, 0x0, 0x1203, 0), L"");
             std::shared_ptr<palette> imagePalette(std::make_shared<palette>(red, green, blue));
             pImage->setPalette(imagePalette);
         }
@@ -399,7 +399,7 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
 	bool bDontChangeAttributes = (numberOfFrames != 0);
 	if(bDontChangeAttributes)
 	{
-        if(transferSyntax != getStringThrow(0x0002, 0x0, 0x0010, 0, 0))
+        if(transferSyntax != getString(0x0002, 0x0, 0x0010, 0, 0))
         {
             IMEBRA_THROW(DataSetDifferentFormatError, "Previous images had a different transfer syntax");
         }
@@ -435,15 +435,15 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
 	///////////////////////////////////////////////////////////
 	if(bDontChangeAttributes)
 	{
-        std::string currentColorSpace = getStringThrow(0x0028, 0x0, 0x0004, 0, 0);
+        std::string currentColorSpace = getString(0x0028, 0x0, 0x0004, 0, 0);
         if(
                 transforms::colorTransforms::colorTransformsFactory::normalizeColorSpace(pImage->getColorSpace()) !=
                     transforms::colorTransforms::colorTransformsFactory::normalizeColorSpace(currentColorSpace) ||
                 bSubSampledX != transforms::colorTransforms::colorTransformsFactory::isSubsampledX(currentColorSpace) ||
                 bSubSampledY != transforms::colorTransforms::colorTransformsFactory::isSubsampledY(currentColorSpace) ||
-                b2complement != (getUnsignedLongThrow(0x0028, 0, 0x0103, 0, 0) != 0) ||
-                allocatedBits != (std::uint8_t)getUnsignedLongThrow(0x0028, 0x0, 0x0100, 0, 0) ||
-                channelsNumber != getUnsignedLongThrow(0x0028, 0x0, 0x0002, 0, 0))
+                b2complement != (getUnsignedLong(0x0028, 0, 0x0103, 0, 0) != 0) ||
+                allocatedBits != (std::uint8_t)getUnsignedLong(0x0028, 0x0, 0x0100, 0, 0) ||
+                channelsNumber != getUnsignedLong(0x0028, 0x0, 0x0002, 0, 0))
         {
             IMEBRA_THROW(DataSetDifferentFormatError, "An image already exists in the dataset and has different attributes");
         }
@@ -471,11 +471,11 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
         {
             if(bufferExists(groupId, 0x0, tagId, 0x1))
             {
-                dataHandlerType = getDataTypeThrow(groupId, 0x0, tagId, 0x1);
+                dataHandlerType = getDataType(groupId, 0x0, tagId, 0x1);
             }
             else
             {
-                std::shared_ptr<handlers::readingDataHandlerRaw> imageHandler0 = getReadingDataHandlerRawThrow(groupId, 0x0, tagId, 0x0);
+                std::shared_ptr<handlers::readingDataHandlerRaw> imageHandler0 = getReadingDataHandlerRaw(groupId, 0x0, tagId, 0x0);
                 size_t bufferSize(imageHandler0->getSize());
 
                 if(bufferSize != 0 && !bufferExists(groupId, 0x0, tagId, 0x1))
@@ -531,7 +531,7 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
         {
             std::shared_ptr<handlers::writingDataHandlerRaw> copyUncompressed(getWritingDataHandlerRaw(groupId, 0, tagId, firstBufferId));
             copyUncompressed->setSize((frameNumber + 1) * uncompressedImage->size());
-            std::shared_ptr<handlers::readingDataHandlerRaw> originalUncompressed(getReadingDataHandlerRawThrow(groupId, 0, tagId, firstBufferId));
+            std::shared_ptr<handlers::readingDataHandlerRaw> originalUncompressed(getReadingDataHandlerRaw(groupId, 0, tagId, firstBufferId));
 
             originalUncompressed->copyTo(copyUncompressed->getMemoryBuffer(), copyUncompressed->getSize());
             std::uint8_t* pSource = uncompressedImage->data();
@@ -595,15 +595,15 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
 	}
 
 	std::uint32_t calculatePosition(0);
-    std::shared_ptr<data> tag(getTagThrow(groupId, 0, tagId));
+    std::shared_ptr<data> tag(getTag(groupId, 0, tagId));
     for(std::uint32_t scanBuffers = 1; scanBuffers < firstBufferId; ++scanBuffers)
 	{
-        calculatePosition += (std::uint32_t)tag->getBufferSizeThrow(scanBuffers);
+        calculatePosition += (std::uint32_t)tag->getBufferSize(scanBuffers);
 		calculatePosition += 8;
 	}
     std::shared_ptr<handlers::writingDataHandlerRaw> offsetHandler(getWritingDataHandlerRaw(groupId, 0, tagId, 0, dataHandlerType));
     offsetHandler->setSize(4 * (frameNumber + 1));
-    std::shared_ptr<handlers::readingDataHandlerRaw> originalOffsetHandler(getReadingDataHandlerRawThrow(groupId, 0, tagId, 0));
+    std::shared_ptr<handlers::readingDataHandlerRaw> originalOffsetHandler(getReadingDataHandlerRaw(groupId, 0, tagId, 0));
     originalOffsetHandler->copyTo(offsetHandler->getMemoryBuffer(), offsetHandler->getSize());
 	std::uint8_t* pOffsetFrame(offsetHandler->getMemoryBuffer() + (frameNumber * 4));
 	*( (std::uint32_t*)pOffsetFrame  ) = calculatePosition;
@@ -628,7 +628,7 @@ std::uint32_t dataSet::getFrameOffset(std::uint32_t frameNumber) const
     {
         // Retrieve the buffer containing the offsets
         ///////////////////////////////////////////////////////////
-        std::shared_ptr<handlers::readingDataHandlerRaw> framesPointer = getReadingDataHandlerRawThrow(0x7fe0, 0x0, 0x0010, 0);
+        std::shared_ptr<handlers::readingDataHandlerRaw> framesPointer = getReadingDataHandlerRaw(0x7fe0, 0x0, 0x0010, 0);
 
         // Get the offset table's size, in number of offsets
         ///////////////////////////////////////////////////////////
@@ -675,7 +675,7 @@ std::uint32_t dataSet::getFrameBufferId(std::uint32_t offset) const
 {
     IMEBRA_FUNCTION_START();
 
-    std::shared_ptr<data> imageTag = getTagThrow(0x7fe0, 0, 0x0010);
+    std::shared_ptr<data> imageTag = getTag(0x7fe0, 0, 0x0010);
 
     // Start from the buffer n. 1 (the buffer 0 contains
     //  the offset table
@@ -696,7 +696,7 @@ std::uint32_t dataSet::getFrameBufferId(std::uint32_t offset) const
         // Calculate the total size of the buffer, including
         //  its descriptor (tag group and id and length)
         ///////////////////////////////////////////////////////////
-        std::uint32_t bufferSize = (std::uint32_t)imageTag->getBufferSizeThrow(scanBuffers);;
+        std::uint32_t bufferSize = (std::uint32_t)imageTag->getBufferSize(scanBuffers);;
         bufferSize += 4; // one WORD for the group id, one WORD for the tag id
         bufferSize += 4; // one DWORD for the tag length
         if(bufferSize > offset)
@@ -745,7 +745,7 @@ size_t dataSet::getFrameBufferIds(std::uint32_t frameNumber, std::uint32_t* pFir
         std::shared_ptr<data> imageTag;
         try
         {
-            imageTag = getTagThrow(0x7fe0, 0, 0x0010);
+            imageTag = getTag(0x7fe0, 0, 0x0010);
         }
         catch(MissingDataElementError& e)
         {
@@ -755,7 +755,7 @@ size_t dataSet::getFrameBufferIds(std::uint32_t frameNumber, std::uint32_t* pFir
         size_t totalSize(0);
         for(std::uint32_t scanBuffers(*pFirstBuffer); scanBuffers != *pEndBuffer; ++scanBuffers)
         {
-            totalSize += imageTag->getBufferSizeThrow(scanBuffers);
+            totalSize += imageTag->getBufferSize(scanBuffers);
         }
         return totalSize;
     }
@@ -803,11 +803,11 @@ std::uint32_t dataSet::getFirstAvailFrameBufferId() const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<dataSet> dataSet::getSequenceItemThrow(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t itemId) const
+std::shared_ptr<dataSet> dataSet::getSequenceItem(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t itemId) const
 {
     IMEBRA_FUNCTION_START();
 
-    return getTagThrow(groupId, order, tagId)->getSequenceItemThrow(itemId);
+    return getTag(groupId, order, tagId)->getSequenceItem(itemId);
 
 	IMEBRA_FUNCTION_END();
 }
@@ -822,21 +822,21 @@ std::shared_ptr<dataSet> dataSet::getSequenceItemThrow(std::uint16_t groupId, st
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<lut> dataSet::getLutThrow(std::uint16_t groupId, std::uint16_t tagId, std::uint32_t lutId) const
+std::shared_ptr<lut> dataSet::getLut(std::uint16_t groupId, std::uint16_t tagId, std::uint32_t lutId) const
 {
     IMEBRA_FUNCTION_START();
 
     std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
-    std::shared_ptr<dataSet> embeddedLUT = getSequenceItemThrow(groupId, 0, tagId, lutId);
-    std::shared_ptr<handlers::readingDataHandler> descriptorHandle = embeddedLUT->getReadingDataHandlerThrow(0x0028, 0x0, 0x3002, 0x0);
-    std::shared_ptr<handlers::readingDataHandler> dataHandle = embeddedLUT->getReadingDataHandlerThrow(0x0028, 0x0, 0x3006, 0x0);
+    std::shared_ptr<dataSet> embeddedLUT = getSequenceItem(groupId, 0, tagId, lutId);
+    std::shared_ptr<handlers::readingDataHandler> descriptorHandle = embeddedLUT->getReadingDataHandler(0x0028, 0x0, 0x3002, 0x0);
+    std::shared_ptr<handlers::readingDataHandler> dataHandle = embeddedLUT->getReadingDataHandler(0x0028, 0x0, 0x3006, 0x0);
 
     std::shared_ptr<lut> pLUT = std::make_shared<lut>();
     pLUT->setLut(
         descriptorHandle,
         dataHandle,
-        embeddedLUT->getUnicodeStringThrow(0x0028, 0x0, 0x3003, 0, 0));
+        embeddedLUT->getUnicodeString(0x0028, 0x0, 0x3003, 0, 0));
 	return pLUT;
 
 	IMEBRA_FUNCTION_END();
@@ -852,11 +852,11 @@ std::shared_ptr<lut> dataSet::getLutThrow(std::uint16_t groupId, std::uint16_t t
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<waveform> dataSet::getWaveformThrow(std::uint32_t waveformId)
+std::shared_ptr<waveform> dataSet::getWaveform(std::uint32_t waveformId)
 {
     IMEBRA_FUNCTION_START();
 
-    return std::make_shared<waveform>(getSequenceItemThrow(0x5400, 0, 0x0100, waveformId));
+    return std::make_shared<waveform>(getSequenceItem(0x5400, 0, 0x0100, waveformId));
 
 	IMEBRA_FUNCTION_END();
 }
@@ -871,11 +871,11 @@ std::shared_ptr<waveform> dataSet::getWaveformThrow(std::uint32_t waveformId)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::int32_t dataSet::getSignedLongThrow(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
+std::int32_t dataSet::getSignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
 {
     IMEBRA_FUNCTION_START();
 
-    return getReadingDataHandlerThrow(groupId, order, tagId, bufferId)->getSignedLong(elementNumber);
+    return getReadingDataHandler(groupId, order, tagId, bufferId)->getSignedLong(elementNumber);
 
 	IMEBRA_FUNCTION_END();
 }
@@ -886,7 +886,7 @@ std::int32_t dataSet::getSignedLong(std::uint16_t groupId, std::uint32_t order, 
 
     try
     {
-        return getSignedLongThrow(groupId, order, tagId, bufferId, elementNumber);
+        return getSignedLong(groupId, order, tagId, bufferId, elementNumber);
     }
     catch(const MissingDataElementError&)
     {
@@ -906,13 +906,13 @@ std::int32_t dataSet::getSignedLong(std::uint16_t groupId, std::uint32_t order, 
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataSet::setSignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::int32_t newValue, const std::string& defaultType /* = "" */)
+void dataSet::setSignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::int32_t newValue, const std::string& tagVR /* = "" */)
 {
     IMEBRA_FUNCTION_START();
 
     std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
-    std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, bufferId, defaultType);
+    std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, bufferId, tagVR);
     dataHandler->setSize(1);
     dataHandler->setSignedLong(0, newValue);
 
@@ -929,11 +929,11 @@ void dataSet::setSignedLong(std::uint16_t groupId, std::uint32_t order, std::uin
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::uint32_t dataSet::getUnsignedLongThrow(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
+std::uint32_t dataSet::getUnsignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
 {
     IMEBRA_FUNCTION_START();
 
-    return getReadingDataHandlerThrow(groupId, order, tagId, bufferId)->getUnsignedLong(elementNumber);
+    return getReadingDataHandler(groupId, order, tagId, bufferId)->getUnsignedLong(elementNumber);
 
 	IMEBRA_FUNCTION_END();
 }
@@ -944,7 +944,7 @@ std::uint32_t dataSet::getUnsignedLong(std::uint16_t groupId, std::uint32_t orde
 
     try
     {
-        return getUnsignedLongThrow(groupId, order, tagId, bufferId, elementNumber);
+        return getUnsignedLong(groupId, order, tagId, bufferId, elementNumber);
     }
     catch(const MissingDataElementError&)
     {
@@ -964,13 +964,13 @@ std::uint32_t dataSet::getUnsignedLong(std::uint16_t groupId, std::uint32_t orde
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataSet::setUnsignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::uint32_t newValue, const std::string& defaultType /* = "" */)
+void dataSet::setUnsignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::uint32_t newValue, const std::string& tagVR /* = "" */)
 {
     IMEBRA_FUNCTION_START();
 
     std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
-    std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, bufferId, defaultType);
+    std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, bufferId, tagVR);
     dataHandler->setSize(1);
     dataHandler->setUnsignedLong(0, newValue);
 
@@ -987,11 +987,11 @@ void dataSet::setUnsignedLong(std::uint16_t groupId, std::uint32_t order, std::u
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-double dataSet::getDoubleThrow(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
+double dataSet::getDouble(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
 {
     IMEBRA_FUNCTION_START();
 
-    return getReadingDataHandlerThrow(groupId, order, tagId, bufferId)->getDouble(elementNumber);
+    return getReadingDataHandler(groupId, order, tagId, bufferId)->getDouble(elementNumber);
 
 	IMEBRA_FUNCTION_END();
 }
@@ -1002,7 +1002,7 @@ double dataSet::getDouble(std::uint16_t groupId, std::uint32_t order, std::uint1
 
     try
     {
-        return getDoubleThrow(groupId, order, tagId, bufferId, elementNumber);
+        return getDouble(groupId, order, tagId, bufferId, elementNumber);
     }
     catch(const MissingDataElementError&)
     {
@@ -1021,13 +1021,13 @@ double dataSet::getDouble(std::uint16_t groupId, std::uint32_t order, std::uint1
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataSet::setDouble(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, double newValue, const std::string& defaultType /* = "" */)
+void dataSet::setDouble(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, double newValue, const std::string& tagVR /* = "" */)
 {
     IMEBRA_FUNCTION_START();
 
     std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
-    std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, bufferId, defaultType);
+    std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, bufferId, tagVR);
     dataHandler->setSize(1);
     dataHandler->setDouble(0, newValue);
 
@@ -1044,11 +1044,11 @@ void dataSet::setDouble(std::uint16_t groupId, std::uint32_t order, std::uint16_
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::string dataSet::getStringThrow(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
+std::string dataSet::getString(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
 {
     IMEBRA_FUNCTION_START();
 
-    return getReadingDataHandlerThrow(groupId, order, tagId, bufferId)->getString(elementNumber);
+    return getReadingDataHandler(groupId, order, tagId, bufferId)->getString(elementNumber);
 
 	IMEBRA_FUNCTION_END();
 }
@@ -1059,7 +1059,7 @@ std::string dataSet::getString(std::uint16_t groupId, std::uint32_t order, std::
 
     try
     {
-        return getStringThrow(groupId, order, tagId, bufferId, elementNumber);
+        return getString(groupId, order, tagId, bufferId, elementNumber);
     }
     catch(const MissingDataElementError&)
     {
@@ -1079,11 +1079,11 @@ std::string dataSet::getString(std::uint16_t groupId, std::uint32_t order, std::
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::wstring dataSet::getUnicodeStringThrow(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
+std::wstring dataSet::getUnicodeString(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
 {
     IMEBRA_FUNCTION_START();
 
-    return getReadingDataHandlerThrow(groupId, order, tagId, bufferId)->getUnicodeString(elementNumber);
+    return getReadingDataHandler(groupId, order, tagId, bufferId)->getUnicodeString(elementNumber);
 
 	IMEBRA_FUNCTION_END();
 }
@@ -1094,7 +1094,7 @@ std::wstring dataSet::getUnicodeString(std::uint16_t groupId, std::uint32_t orde
 
     try
     {
-        return getUnicodeStringThrow(groupId, order, tagId, bufferId, elementNumber);
+        return getUnicodeString(groupId, order, tagId, bufferId, elementNumber);
     }
     catch(const MissingDataElementError&)
     {
@@ -1114,13 +1114,13 @@ std::wstring dataSet::getUnicodeString(std::uint16_t groupId, std::uint32_t orde
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataSet::setString(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::string& newString, const std::string& defaultType /* = "" */)
+void dataSet::setString(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::string& newString, const std::string& tagVR /* = "" */)
 {
     IMEBRA_FUNCTION_START();
 
     std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
-    std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, bufferId, defaultType);
+    std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, bufferId, tagVR);
     dataHandler->setSize(1);
     dataHandler->setString(0, newString);
 
@@ -1137,37 +1137,37 @@ void dataSet::setString(std::uint16_t groupId, std::uint32_t order, std::uint16_
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataSet::setUnicodeString(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::wstring& newString, const std::string& defaultType /* = "" */)
+void dataSet::setUnicodeString(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::wstring& newString, const std::string& tagVR /* = "" */)
 {
     IMEBRA_FUNCTION_START();
 
     std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
-    std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, bufferId, defaultType);
+    std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, bufferId, tagVR);
     dataHandler->setSize(1);
     dataHandler->setUnicodeString(0, newString);
 
 	IMEBRA_FUNCTION_END();
 }
 
-void dataSet::setAge(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::uint32_t age, ageUnit_t units, const std::string& defaultType /* = "" */)
+void dataSet::setAge(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::uint32_t age, ageUnit_t units, const std::string& tagVR /* = "" */)
 {
     IMEBRA_FUNCTION_START();
 
     std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
-    std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, bufferId, defaultType);
+    std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, bufferId, tagVR);
     dataHandler->setSize(1);
     dataHandler->setAge(0, age, units);
 
     IMEBRA_FUNCTION_END();
 }
 
-std::uint32_t dataSet::getAgeThrow(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, ageUnit_t* pUnits) const
+std::uint32_t dataSet::getAge(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, ageUnit_t* pUnits) const
 {
     IMEBRA_FUNCTION_START();
 
-    return getReadingDataHandlerThrow(groupId, order, tagId, bufferId)->getAge(elementNumber, pUnits);
+    return getReadingDataHandler(groupId, order, tagId, bufferId)->getAge(elementNumber, pUnits);
 
     IMEBRA_FUNCTION_END();
 }
@@ -1180,7 +1180,7 @@ std::uint32_t dataSet::getAge(std::uint16_t groupId, std::uint32_t order, std::u
 
     try
     {
-        return getAgeThrow(groupId, order, tagId, bufferId, elementNumber, pUnits);
+        return getAge(groupId, order, tagId, bufferId, elementNumber, pUnits);
     }
     catch(const MissingDataElementError&)
     {
@@ -1193,24 +1193,24 @@ std::uint32_t dataSet::getAge(std::uint16_t groupId, std::uint32_t order, std::u
 }
 
 
-void dataSet::setDate(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::uint32_t year, std::uint32_t month, std::uint32_t day, std::uint32_t hour, std::uint32_t minutes, std::uint32_t seconds, std::uint32_t nanoseconds, std::int32_t offsetHours, std::int32_t offsetMinutes, const std::string& defaultType /* = "" */)
+void dataSet::setDate(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::uint32_t year, std::uint32_t month, std::uint32_t day, std::uint32_t hour, std::uint32_t minutes, std::uint32_t seconds, std::uint32_t nanoseconds, std::int32_t offsetHours, std::int32_t offsetMinutes, const std::string& tagVR /* = "" */)
 {
     IMEBRA_FUNCTION_START();
 
     std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
-    std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, bufferId, defaultType);
+    std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, bufferId, tagVR);
     dataHandler->setSize(1);
     dataHandler->setDate(0, year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes);
 
     IMEBRA_FUNCTION_END();
 }
 
-void dataSet::getDateThrow(uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::uint32_t *pYear, std::uint32_t *pMonth, std::uint32_t *pDay, std::uint32_t *pHour, std::uint32_t *pMinutes, std::uint32_t *pSeconds, std::uint32_t *pNanoseconds, std::int32_t *pOffsetHours, std::int32_t *pOffsetMinutes) const
+void dataSet::getDate(uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::uint32_t *pYear, std::uint32_t *pMonth, std::uint32_t *pDay, std::uint32_t *pHour, std::uint32_t *pMinutes, std::uint32_t *pSeconds, std::uint32_t *pNanoseconds, std::int32_t *pOffsetHours, std::int32_t *pOffsetMinutes) const
 {
     IMEBRA_FUNCTION_START();
 
-    return getReadingDataHandlerThrow(groupId, order, tagId, bufferId)->getDate(elementNumber, pYear, pMonth, pDay, pHour, pMinutes, pSeconds, pNanoseconds, pOffsetHours, pOffsetMinutes);
+    return getReadingDataHandler(groupId, order, tagId, bufferId)->getDate(elementNumber, pYear, pMonth, pDay, pHour, pMinutes, pSeconds, pNanoseconds, pOffsetHours, pOffsetMinutes);
 
     IMEBRA_FUNCTION_END();
 }
@@ -1239,7 +1239,7 @@ void dataSet::getDate(std::uint16_t groupId, std::uint32_t order, std::uint16_t 
 
     try
     {
-        return getDateThrow(groupId, order, tagId, bufferId, elementNumber,
+        return getDate(groupId, order, tagId, bufferId, elementNumber,
                             pYear, pMonth, pDay, pHour, pMinutes, pSeconds, pNanoseconds, pOffsetHours, pOffsetMinutes);
     }
     catch(const MissingDataElementError&)
@@ -1268,28 +1268,28 @@ void dataSet::getDate(std::uint16_t groupId, std::uint32_t order, std::uint16_t 
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<handlers::readingDataHandler> dataSet::getReadingDataHandlerThrow(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId) const
+std::shared_ptr<handlers::readingDataHandler> dataSet::getReadingDataHandler(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId) const
 {
     IMEBRA_FUNCTION_START();
 
-    return getTagThrow(groupId, order, tagId)->getReadingDataHandlerThrow(bufferId);
+    return getTag(groupId, order, tagId)->getReadingDataHandler(bufferId);
 
 	IMEBRA_FUNCTION_END();
 }
 
 
-std::shared_ptr<handlers::writingDataHandler> dataSet::getWritingDataHandler(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::string& defaultType /* ="" */)
+std::shared_ptr<handlers::writingDataHandler> dataSet::getWritingDataHandler(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::string& tagVR /* ="" */)
 {
     IMEBRA_FUNCTION_START();
 
     std::shared_ptr<data> tag(getTagCreate(groupId, order, tagId));
 
-    if(defaultType.length()!=2L)
+    if(tagVR.length()!=2L)
     {
         return tag->getWritingDataHandler(bufferId, getDefaultDataType(groupId, tagId));
     }
 
-    return tag->getWritingDataHandler(bufferId, defaultType);
+    return tag->getWritingDataHandler(bufferId, tagVR);
 
     IMEBRA_FUNCTION_END();
 }
@@ -1304,11 +1304,11 @@ std::shared_ptr<handlers::writingDataHandler> dataSet::getWritingDataHandler(std
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<streamReader> dataSet::getStreamReaderThrow(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId) const
+std::shared_ptr<streamReader> dataSet::getStreamReader(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId) const
 {
     IMEBRA_FUNCTION_START();
 
-    return getTagThrow(groupId, order, tagId)->getStreamReaderThrow(bufferId);
+    return getTag(groupId, order, tagId)->getStreamReader(bufferId);
 
 	IMEBRA_FUNCTION_END();
 }
@@ -1341,28 +1341,28 @@ std::shared_ptr<streamWriter> dataSet::getStreamWriter(std::uint16_t groupId, st
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<handlers::readingDataHandlerRaw> dataSet::getReadingDataHandlerRawThrow(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId) const
+std::shared_ptr<handlers::readingDataHandlerRaw> dataSet::getReadingDataHandlerRaw(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId) const
 {
     IMEBRA_FUNCTION_START();
 
-    return getTagThrow(groupId, order, tagId)->getReadingDataHandlerRawThrow(bufferId);
+    return getTag(groupId, order, tagId)->getReadingDataHandlerRaw(bufferId);
 
 	IMEBRA_FUNCTION_END();
 }
 
 
-std::shared_ptr<handlers::writingDataHandlerRaw> dataSet::getWritingDataHandlerRaw(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::string& defaultType /* ="" */)
+std::shared_ptr<handlers::writingDataHandlerRaw> dataSet::getWritingDataHandlerRaw(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::string& tagVR /* ="" */)
 {
     IMEBRA_FUNCTION_START();
 
     std::shared_ptr<data> tag = getTagCreate(groupId, order, tagId);
 
-    if(defaultType.length() != 2)
+    if(tagVR.length() != 2)
     {
         return tag->getWritingDataHandlerRaw(bufferId, getDefaultDataType(groupId, tagId));
     }
 
-    return tag->getWritingDataHandlerRaw(bufferId, defaultType);
+    return tag->getWritingDataHandlerRaw(bufferId, tagVR);
 
     IMEBRA_FUNCTION_END();
 }
@@ -1396,11 +1396,11 @@ std::string dataSet::getDefaultDataType(std::uint16_t groupId, std::uint16_t tag
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::string dataSet::getDataTypeThrow(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId) const
+std::string dataSet::getDataType(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId) const
 {
     IMEBRA_FUNCTION_START();
 
-    return getTagThrow(groupId, order, tagId)->getDataTypeThrow(bufferId);
+    return getTag(groupId, order, tagId)->getDataType(bufferId);
 
 	IMEBRA_FUNCTION_END();
 }
@@ -1443,7 +1443,7 @@ void dataSet::updateTagsCharset()
     charsetsList::tCharsetsList charsets;
     try
     {
-        std::shared_ptr<handlers::readingDataHandler> charsetHandler(getReadingDataHandlerThrow(0x0008, 0, 0x0005, 0));
+        std::shared_ptr<handlers::readingDataHandler> charsetHandler(getReadingDataHandler(0x0008, 0, 0x0005, 0));
         for(std::uint32_t pointer(0); pointer != charsetHandler->getSize(); ++pointer)
 		{
             charsets.push_back(charsetHandler->getString(pointer));

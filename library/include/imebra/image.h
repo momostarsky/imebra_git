@@ -90,8 +90,8 @@ public:
 
 
 
-    double getSizeMmY() const;
-    double getSizeMmX() const;
+    double getWidthMm() const;
+    double getHeightMm() const;
 
     void setSizeMm(const double width, const double height);
 

@@ -65,7 +65,7 @@ std::uint32_t VOILUT::getVOILUTId(std::uint32_t VOILUTNumber)
         VOILUTNumber -= scanWindow;
         try
         {
-            m_pDataSet->getSequenceItemThrow(0x0028, 0, 0x3010, VOILUTNumber);
+            m_pDataSet->getSequenceItem(0x0028, 0, 0x3010, VOILUTNumber);
             VOILUTId = VOILUTNumber | 0x00100000;
 		}
         catch(const MissingDataElementError&)
@@ -154,7 +154,7 @@ std::wstring VOILUT::getVOILUTDescription(std::uint32_t VOILUTId)
 	///////////////////////////////////////////////////////////
 	if((VOILUTId & 0x00100000))
 	{
-        std::shared_ptr<lut> voiLut = m_pDataSet->getLutThrow(0x0028, 0x3010, VOILUTNumber);
+        std::shared_ptr<lut> voiLut = m_pDataSet->getLut(0x0028, 0x3010, VOILUTNumber);
 		if(voiLut != 0)
 		{
 			VOILUTDescription=voiLut->getDescription();
@@ -196,8 +196,8 @@ void VOILUT::setVOILUT(std::uint32_t VOILUTId)
 	if((VOILUTId & 0x00200000))
 	{
 		setCenterWidth(
-            m_pDataSet->getDoubleThrow(0x0028, 0, 0x1050, 0, VOILUTNumber),
-            m_pDataSet->getDoubleThrow(0x0028, 0, 0x1051, 0, VOILUTNumber));
+            m_pDataSet->getDouble(0x0028, 0, 0x1050, 0, VOILUTNumber),
+            m_pDataSet->getDouble(0x0028, 0, 0x1051, 0, VOILUTNumber));
 		return;
 	}
 
@@ -205,7 +205,7 @@ void VOILUT::setVOILUT(std::uint32_t VOILUTId)
 	///////////////////////////////////////////////////////////
 	if((VOILUTId & 0x00100000))
 	{
-        setLUT(m_pDataSet->getLutThrow(0x0028, 0x3010, VOILUTNumber));
+        setLUT(m_pDataSet->getLut(0x0028, 0x3010, VOILUTNumber));
 		return;
 	}
 

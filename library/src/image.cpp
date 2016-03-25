@@ -49,14 +49,14 @@ Image& Image::operator=(const Image& right)
     return *this;
 }
 
-double Image::getSizeMmX() const
+double Image::getWidthMm() const
 {
     double width, height;
     m_pImage->getSizeMm(&width, &height);
     return width;
 }
 
-double Image::getSizeMmY() const
+double Image::getHeightMm() const
 {
     double width, height;
     m_pImage->getSizeMm(&width, &height);

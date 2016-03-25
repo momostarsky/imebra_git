@@ -43,7 +43,7 @@ modalityVOILUT::modalityVOILUT(std::shared_ptr<const dataSet> pDataSet):
 
 	// Only monochrome images can have the modality voi-lut
 	///////////////////////////////////////////////////////
-    const std::string colorSpace(pDataSet->getStringThrow(0x0028, 0x0, 0x0004, 0, 0));
+    const std::string colorSpace(pDataSet->getString(0x0028, 0x0, 0x0004, 0, 0));
 
 	if(!colorTransforms::colorTransformsFactory::isMonochrome(colorSpace))
 	{
@@ -52,7 +52,7 @@ modalityVOILUT::modalityVOILUT(std::shared_ptr<const dataSet> pDataSet):
 
     try
     {
-        std::shared_ptr<handlers::readingDataHandler> rescaleHandler(m_pDataSet->getReadingDataHandlerThrow(0x0028, 0, 0x1053, 0x0));
+        std::shared_ptr<handlers::readingDataHandler> rescaleHandler(m_pDataSet->getReadingDataHandler(0x0028, 0, 0x1053, 0x0));
         m_rescaleSlope = rescaleHandler->getDouble(0);
         m_bEmpty = false;
     }
@@ -60,7 +60,7 @@ modalityVOILUT::modalityVOILUT(std::shared_ptr<const dataSet> pDataSet):
     {
         try
         {
-            m_voiLut = pDataSet->getLutThrow(0x0028, 0x3000, 0);
+            m_voiLut = pDataSet->getLut(0x0028, 0x3000, 0);
             m_bEmpty = m_voiLut->getSize() != 0;
         }
         catch(const MissingDataElementError&)

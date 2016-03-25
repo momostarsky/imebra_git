@@ -39,7 +39,7 @@ std::uint32_t waveform::getBitsAllocated() const
 {
     IMEBRA_FUNCTION_START();
 
-    return m_pDataSet->getUnsignedLongThrow(0x5400, 0, 0x1004, 0, 0);
+    return m_pDataSet->getUnsignedLong(0x5400, 0, 0x1004, 0, 0);
 
 	IMEBRA_FUNCTION_END();
 }
@@ -54,7 +54,7 @@ std::uint32_t waveform::getBitsStored() const
 {
     IMEBRA_FUNCTION_START();
 
-    return m_pDataSet->getUnsignedLongThrow(0x003A, 0, 0x021A, 0, 0);
+    return m_pDataSet->getUnsignedLong(0x003A, 0, 0x021A, 0, 0);
 
 	IMEBRA_FUNCTION_END();
 }
@@ -69,7 +69,7 @@ std::uint32_t waveform::getChannels() const
 {
     IMEBRA_FUNCTION_START();
 
-    return m_pDataSet->getUnsignedLongThrow(0x003A, 0, 0x0005, 0, 0);
+    return m_pDataSet->getUnsignedLong(0x003A, 0, 0x0005, 0, 0);
 
 	IMEBRA_FUNCTION_END();
 }
@@ -84,7 +84,7 @@ std::string waveform::getInterpretation() const
 {
     IMEBRA_FUNCTION_START();
 
-    return m_pDataSet->getStringThrow(0x5400, 0, 0x1006, 0, 0);
+    return m_pDataSet->getString(0x5400, 0, 0x1006, 0, 0);
 
 	IMEBRA_FUNCTION_END();
 }
@@ -99,7 +99,7 @@ std::uint32_t waveform::getSamples() const
 {
     IMEBRA_FUNCTION_START();
 
-    return m_pDataSet->getUnsignedLongThrow(0x003A, 0, 0x0010, 0, 0);
+    return m_pDataSet->getUnsignedLong(0x003A, 0, 0x0010, 0, 0);
 
 	IMEBRA_FUNCTION_END();
 }
@@ -188,7 +188,7 @@ std::shared_ptr<handlers::readingDataHandler> waveform::getIntegerData(std::uint
 
 	// Get the original data
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<handlers::readingDataHandler> waveformData(m_pDataSet->getReadingDataHandlerThrow(0x5400, 0x0, 0x1010, 0));
+    std::shared_ptr<handlers::readingDataHandler> waveformData(m_pDataSet->getReadingDataHandler(0x5400, 0x0, 0x1010, 0));
 	std::string sourceDataType(waveformData->getDataType());
 	
 	// Get the interpretation, number of channels, number of
@@ -201,7 +201,7 @@ std::shared_ptr<handlers::readingDataHandler> waveform::getIntegerData(std::uint
 	bool bPaddingValueExists(false);
     try
     {
-        std::shared_ptr<handlers::readingDataHandler> paddingTagHandler(m_pDataSet->getReadingDataHandlerThrow(0x5400, 0, 0x100A, 0));
+        std::shared_ptr<handlers::readingDataHandler> paddingTagHandler(m_pDataSet->getReadingDataHandler(0x5400, 0, 0x100A, 0));
 		originalPaddingValue = paddingTagHandler->getUnsignedLong(0);
 		bPaddingValueExists = true;
     }

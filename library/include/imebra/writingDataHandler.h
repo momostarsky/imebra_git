@@ -38,7 +38,7 @@ class IMEBRA_API WritingDataHandler
 {
 #ifndef SWIG
     friend class DataSet;
-    friend class TagContent;
+    friend class Tag;
     friend class WritingDataHandlerNumeric;
 
 private:

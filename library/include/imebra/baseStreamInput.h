@@ -28,7 +28,7 @@ namespace imebra
 {
 
 ///
-/// \brief This class represents a generic input stream,
+/// \brief This class represents a generic input stream.
 ///
 /// Specialized classes derived from this one can read data from files stored
 /// on the computer's disks (FileStreamInput) or from memory
@@ -60,13 +60,6 @@ private:
 #endif
 
 public:
-    /// \brief Construct an empty BaseStreamInput. The new object can be used only
-    ///        after a valid stream object has been assigned to this one via
-    ///        operator=().
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    BaseStreamInput();
-
     /// \brief Copy constructor: build an input stream object referencing the
     ///        same stream object as the source one.
     ///

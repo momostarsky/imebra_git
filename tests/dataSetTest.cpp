@@ -62,7 +62,7 @@ TEST(dataSetTest, testFragmentation)
             std::uint32_t* pOffsetMemory = (std::uint32_t*)offsetHandler.data(&dataSize);
             pOffsetMemory[scanBuffers - 1] = offset;
 
-            ReadingDataHandlerNumeric wholeHandler = testDataSet.getReadingDataHandlerNumericThrow(TagId(imebra::tagId_t::PixelData_7FE0_0010), scanBuffers);
+            ReadingDataHandlerNumeric wholeHandler = testDataSet.getReadingDataHandlerNumeric(TagId(imebra::tagId_t::PixelData_7FE0_0010), scanBuffers);
             size_t totalSize;
             const char* pWholeMemory = wholeHandler.data(&totalSize);
             size_t fragmentedSize = totalSize / 3;

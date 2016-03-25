@@ -64,8 +64,8 @@ namespace implementation
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-buffer::buffer(const std::string& defaultType):
-    m_bufferType(defaultType),
+buffer::buffer(const std::string& tagVR):
+    m_bufferType(tagVR),
     m_originalBufferPosition(0),
     m_originalBufferLength(0),
     m_originalWordLength(1),
@@ -73,9 +73,9 @@ buffer::buffer(const std::string& defaultType):
 {
     IMEBRA_FUNCTION_START();
 
-    if(!dicomDictionary::getDicomDictionary()->isDataTypeValid(defaultType))
+    if(!dicomDictionary::getDicomDictionary()->isDataTypeValid(tagVR))
     {
-        IMEBRA_THROW(BufferUnknownTypeError, "Unknown data type " << defaultType);
+        IMEBRA_THROW(BufferUnknownTypeError, "Unknown data type " << tagVR);
     }
 
 	IMEBRA_FUNCTION_END();
@@ -92,13 +92,13 @@ buffer::buffer(const std::string& defaultType):
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 buffer::buffer(
-		const std::string& defaultType,
+        const std::string& tagVR,
         const std::shared_ptr<baseStreamInput>& originalStream,
         size_t bufferPosition,
         size_t bufferLength,
         size_t wordLength,
 		streamController::tByteOrdering endianType):
-        m_bufferType(defaultType),
+        m_bufferType(tagVR),
 		m_originalStream(originalStream),
 		m_originalBufferPosition(bufferPosition),
 		m_originalBufferLength(bufferLength),
@@ -107,9 +107,9 @@ buffer::buffer(
 {
     IMEBRA_FUNCTION_START();
 
-    if(!dicomDictionary::getDicomDictionary()->isDataTypeValid(defaultType))
+    if(!dicomDictionary::getDicomDictionary()->isDataTypeValid(tagVR))
     {
-        IMEBRA_THROW(BufferUnknownTypeError, "Unknown data type " << defaultType);
+        IMEBRA_THROW(BufferUnknownTypeError, "Unknown data type " << tagVR);
     }
 
 	IMEBRA_FUNCTION_END();

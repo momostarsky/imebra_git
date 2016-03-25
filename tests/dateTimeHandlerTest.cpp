@@ -12,8 +12,8 @@ TEST(dateTimeHandlerTest, dateTest)
     DataSet testDataSet;
 
     testDataSet.setDate(TagId(0x0008, 0x0012), 0, Date(2004, 11, 5, 9, 20, 30, 5000, 1, 2));
-    Date checkDate = testDataSet.getDateThrow(TagId(0x0008, 0x0012), 0, 0);
-    std::string checkString = testDataSet.getStringThrow(TagId(0x0008, 0x0012), 0, 0);
+    Date checkDate = testDataSet.getDate(TagId(0x0008, 0x0012), 0, 0);
+    std::string checkString = testDataSet.getString(TagId(0x0008, 0x0012), 0, 0);
     EXPECT_EQ("20041105", checkString);
     EXPECT_EQ(2004, checkDate.year);
     EXPECT_EQ(11, checkDate.month);
@@ -24,11 +24,11 @@ TEST(dateTimeHandlerTest, dateTest)
     EXPECT_EQ(0, checkDate.nanoseconds);
     EXPECT_EQ(0, checkDate.offsetHours);
     EXPECT_EQ(0, checkDate.offsetMinutes);
-    EXPECT_EQ("DA", testDataSet.getDataTypeThrow(TagId(0x0008, 0x0012)));
+    EXPECT_EQ("DA", testDataSet.getDataType(TagId(0x0008, 0x0012)));
 
 
     testDataSet.setString(TagId(0x0008, 0x0012), 0, "20120910");
-    Date checkDate1 = testDataSet.getDateThrow(TagId(0x0008, 0x0012), 0, 0);
+    Date checkDate1 = testDataSet.getDate(TagId(0x0008, 0x0012), 0, 0);
     EXPECT_EQ(2012, checkDate1.year);
     EXPECT_EQ(9, checkDate1.month);
     EXPECT_EQ(10, checkDate1.day);
@@ -46,8 +46,8 @@ TEST(dateTimeHandlerTest, timeTest)
 
     {
         testDataSet.setDate(TagId(0x0008, 0x0013), 0, Date(2004, 11, 5, 9, 20, 30, 5000, 1, 2));
-        Date checkDate = testDataSet.getDateThrow(TagId(0x0008, 0x0013), 0, 0);
-        std::string checkString = testDataSet.getStringThrow(TagId(0x0008, 0x0013), 0, 0);
+        Date checkDate = testDataSet.getDate(TagId(0x0008, 0x0013), 0, 0);
+        std::string checkString = testDataSet.getString(TagId(0x0008, 0x0013), 0, 0);
         EXPECT_EQ("092030.005000", checkString);
         EXPECT_EQ(0, checkDate.year);
         EXPECT_EQ(0, checkDate.month);
@@ -58,12 +58,12 @@ TEST(dateTimeHandlerTest, timeTest)
         EXPECT_EQ(5000, checkDate.nanoseconds);
         EXPECT_EQ(0, checkDate.offsetHours);
         EXPECT_EQ(0, checkDate.offsetMinutes);
-        EXPECT_EQ("TM", testDataSet.getDataTypeThrow(TagId(0x0008, 0x0013)));
+        EXPECT_EQ("TM", testDataSet.getDataType(TagId(0x0008, 0x0013)));
     }
 
     {
         testDataSet.setString(TagId(0x0008, 0x0013), 0, "101502");
-        Date checkDate = testDataSet.getDateThrow(TagId(0x0008, 0x0013), 0, 0);
+        Date checkDate = testDataSet.getDate(TagId(0x0008, 0x0013), 0, 0);
         EXPECT_EQ(0, checkDate.year);
         EXPECT_EQ(0, checkDate.month);
         EXPECT_EQ(0, checkDate.day);
@@ -77,7 +77,7 @@ TEST(dateTimeHandlerTest, timeTest)
 
     {
         testDataSet.setString(TagId(0x0008, 0x0013), 0, "1015");
-        Date checkDate = testDataSet.getDateThrow(TagId(0x0008, 0x0013), 0, 0);
+        Date checkDate = testDataSet.getDate(TagId(0x0008, 0x0013), 0, 0);
         EXPECT_EQ(0, checkDate.year);
         EXPECT_EQ(0, checkDate.month);
         EXPECT_EQ(0, checkDate.day);
@@ -97,7 +97,7 @@ TEST(dateTimeHandlerTest, dateTimeTest)
     Date testDate(2004, 11, 5, 9, 20, 40, 5000, 1, 2);
     testDataSet.setDate(TagId(0x0008, 0x002A), 0, testDate);
 
-    Date checkDate = testDataSet.getDateThrow(TagId(0x0008, 0x002A), 0, 0);
+    Date checkDate = testDataSet.getDate(TagId(0x0008, 0x002A), 0, 0);
 
     EXPECT_EQ(2004, checkDate.year);
     EXPECT_EQ(11, checkDate.month);
@@ -109,7 +109,7 @@ TEST(dateTimeHandlerTest, dateTimeTest)
     EXPECT_EQ(1, checkDate.offsetHours);
     EXPECT_EQ(2, checkDate.offsetMinutes);
 
-    EXPECT_EQ("20041105092040.005000+0102", testDataSet.getStringThrow(TagId(0x0008, 0x002A), 0, 0));
+    EXPECT_EQ("20041105092040.005000+0102", testDataSet.getString(TagId(0x0008, 0x002A), 0, 0));
 }
 
 
@@ -118,7 +118,7 @@ TEST(dateTimeHandlerTest, incompleteDateTimeTest)
     DataSet testDataSet;
 
     testDataSet.setString(TagId(0x0008, 0x002A), 0, "19990120");
-    Date checkDate = testDataSet.getDateThrow(TagId(0x0008, 0x002A), 0, 0);
+    Date checkDate = testDataSet.getDate(TagId(0x0008, 0x002A), 0, 0);
 
     EXPECT_EQ(1999, checkDate.year);
     EXPECT_EQ(1, checkDate.month);
@@ -131,7 +131,7 @@ TEST(dateTimeHandlerTest, incompleteDateTimeTest)
     EXPECT_EQ(0, checkDate.offsetMinutes);
 
     testDataSet.setString(TagId(0x0008, 0x002A), 0, "1999012012");
-    checkDate = testDataSet.getDateThrow(TagId(0x0008, 0x002A), 0, 0);
+    checkDate = testDataSet.getDate(TagId(0x0008, 0x002A), 0, 0);
 
     EXPECT_EQ(1999, checkDate.year);
     EXPECT_EQ(1, checkDate.month);

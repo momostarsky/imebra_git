@@ -27,7 +27,7 @@
 #include "modalityVOILUT.h"
 #include "streamReader.h"
 #include "streamWriter.h"
-#include "tagContent.h"
+#include "tag.h"
 #include "tagsEnumeration.h"
 #include "transform.h"
 #include "transformHighBit.h"

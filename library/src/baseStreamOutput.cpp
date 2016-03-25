@@ -13,9 +13,6 @@ $fileHeader$
 namespace imebra
 {
 
-BaseStreamOutput::BaseStreamOutput()
-{}
-
 BaseStreamOutput::BaseStreamOutput(std::shared_ptr<implementation::baseStreamOutput> pStream): m_pStream(pStream)
 {
 }

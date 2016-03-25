@@ -476,13 +476,13 @@ void jpegCodec::writeStream(std::shared_ptr<streamWriter> pStream, std::shared_p
 
     // Retrieve the transfer syntax
     ///////////////////////////////////////////////////////////
-    std::string transferSyntax = pDataSet->getStringThrow(0x0002, 0x0, 0x0010, 0, 0);
+    std::string transferSyntax = pDataSet->getString(0x0002, 0x0, 0x0010, 0, 0);
 
     // The buffer can be written as it is
     ///////////////////////////////////////////////////////////
     if(canHandleTransferSyntax(transferSyntax))
     {
-        std::shared_ptr<data> imageData = pDataSet->getTagThrow(0x7fe0, 0, 0x0010);
+        std::shared_ptr<data> imageData = pDataSet->getTag(0x7fe0, 0, 0x0010);
 
         std::uint32_t firstBufferId(0);
         std::uint32_t endBufferId(1);
@@ -492,7 +492,7 @@ void jpegCodec::writeStream(std::shared_ptr<streamWriter> pStream, std::shared_p
         }
         for(std::uint32_t scanBuffers = firstBufferId; scanBuffers != endBufferId; ++scanBuffers)
         {
-            std::shared_ptr<handlers::readingDataHandlerRaw> readHandler = imageData->getReadingDataHandlerRawThrow(scanBuffers);
+            std::shared_ptr<handlers::readingDataHandlerRaw> readHandler = imageData->getReadingDataHandlerRaw(scanBuffers);
             const std::uint8_t* readBuffer = readHandler->getMemoryBuffer();
             pStream->write(readBuffer, readHandler->getSize());
         }
@@ -1274,14 +1274,14 @@ std::shared_ptr<image> jpegCodec::getImage(const dataSet& sourceDataSet, std::sh
     // Check for 2's complement
     ///////////////////////////////////////////////////////////
     bool b2complement = sourceDataSet.getUnsignedLong(0x0028, 0, 0x0103, 0, 0, 0) != 0;
-    std::string colorSpace = sourceDataSet.getStringThrow(0x0028, 0, 0x0004, 0, 0);
+    std::string colorSpace = sourceDataSet.getString(0x0028, 0, 0x0004, 0, 0);
 
     // If the compression is jpeg baseline or jpeg extended
     //  then the color space cannot be "RGB"
     ///////////////////////////////////////////////////////////
     if(colorSpace == "RGB")
     {
-        std::string transferSyntax(sourceDataSet.getStringThrow(0x0002, 0, 0x0010, 0, 0));
+        std::string transferSyntax(sourceDataSet.getString(0x0002, 0, 0x0010, 0, 0));
         if(transferSyntax == "1.2.840.10008.1.2.4.50" ||  // baseline (8 bits lossy)
                 transferSyntax == "1.2.840.10008.1.2.4.51")    // extended (12 bits lossy)
         {

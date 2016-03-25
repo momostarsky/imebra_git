@@ -40,7 +40,8 @@ private:
 #endif
 
 public:
-    DicomDirEntry();
+    DicomDirEntry(const DataSet& fromDataSet);
+
     DicomDirEntry(const DicomDirEntry& right);
     virtual ~DicomDirEntry();
 
@@ -67,8 +68,6 @@ public:
     std::string getTypeString() const;
 
     void setTypeString(const std::string& entryType);
-
-    bool isNull() const;
 
 #ifndef SWIG
 protected:

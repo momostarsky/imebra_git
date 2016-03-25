@@ -80,7 +80,7 @@ void dicomCodec::writeStream(std::shared_ptr<streamWriter> pStream, std::shared_
 
     // Retrieve the transfer syntax
     ///////////////////////////////////////////////////////////
-    std::string transferSyntax = pDataSet->getStringThrow(0x0002, 0, 0x0010, 0, 0);
+    std::string transferSyntax = pDataSet->getString(0x0002, 0, 0x0010, 0, 0);
 
     // Adjust the flags
     ///////////////////////////////////////////////////////////
@@ -233,7 +233,7 @@ void dicomCodec::writeTag(std::shared_ptr<streamWriter> pDestStream, std::shared
 
     // Check the data type
     ///////////////////////////////////////////////////////////
-    std::string dataType = pData->getDataTypeThrow(0);
+    std::string dataType = pData->getDataType(0);
     if(!(dicomDictionary::getDicomDictionary()->isDataTypeValid(dataType)))
     {
         IMEBRA_THROW(BufferUnknownTypeError, "Unknown data type " << dataType);
@@ -280,7 +280,7 @@ void dicomCodec::writeTag(std::shared_ptr<streamWriter> pDestStream, std::shared
     {
         if(pData->bufferExists(scanBuffers))
         {
-            std::shared_ptr<handlers::readingDataHandlerRaw> pDataHandlerRaw = pData->getReadingDataHandlerRawThrow(scanBuffers);
+            std::shared_ptr<handlers::readingDataHandlerRaw> pDataHandlerRaw = pData->getReadingDataHandlerRaw(scanBuffers);
 
             std::uint32_t wordSize = dicomDictionary::getDicomDictionary()->getWordSize(dataType);
             size_t bufferSize = pDataHandlerRaw->getSize();
@@ -322,7 +322,7 @@ void dicomCodec::writeTag(std::shared_ptr<streamWriter> pDestStream, std::shared
         {
             break;
         }
-        std::shared_ptr<dataSet> pDataSet = pData->getSequenceItemThrow(scanBuffers);
+        std::shared_ptr<dataSet> pDataSet = pData->getSequenceItem(scanBuffers);
 
         // Remember the position at which the item has been written
         ///////////////////////////////////////////////////////////
@@ -368,7 +368,7 @@ std::uint32_t dicomCodec::getTagLength(const std::shared_ptr<data>& pData, bool 
 {
     IMEBRA_FUNCTION_START();
 
-    std::string dataType = pData->getDataTypeThrow(0);
+    std::string dataType = pData->getDataType(0);
     *pbSequence = (dataType == "SQ");
     std::uint32_t numberOfElements = 0;
     std::uint32_t totalLength = 0;
@@ -376,7 +376,7 @@ std::uint32_t dicomCodec::getTagLength(const std::shared_ptr<data>& pData, bool 
     {
         if(pData->dataSetExists(scanBuffers))
         {
-            std::shared_ptr<dataSet> pDataSet = pData->getSequenceItemThrow(scanBuffers);
+            std::shared_ptr<dataSet> pDataSet = pData->getSequenceItem(scanBuffers);
             totalLength += getDataSetLength(pDataSet, bExplicitDataType);
             totalLength += 8; // item tag and item length
             *pbSequence = true;
@@ -386,7 +386,7 @@ std::uint32_t dicomCodec::getTagLength(const std::shared_ptr<data>& pData, bool 
         {
             break;
         }
-        totalLength += (std::uint32_t)pData->getBufferSizeThrow(scanBuffers);
+        totalLength += (std::uint32_t)pData->getBufferSize(scanBuffers);
     }
 
     (*pbSequence) |= (numberOfElements > 1);
@@ -662,7 +662,7 @@ void dicomCodec::parseStream(std::shared_ptr<streamReader> pStream,
             // Reverse the last adjust
             pStream->adjustEndian((std::uint8_t*)&tagId, sizeof(tagId), endianType);
 
-            std::string transferSyntax = pDataSet->getStringThrow(0x0002, 0x0, 0x0010, 0, 0);
+            std::string transferSyntax = pDataSet->getString(0x0002, 0x0, 0x0010, 0, 0);
 
             if(transferSyntax == "1.2.840.10008.1.2.2")
                 endianType=streamController::highByteEndian;
@@ -777,11 +777,11 @@ void dicomCodec::parseStream(std::shared_ptr<streamReader> pStream,
             else
             {
                 tagType[0]=tagType[1] = 0;
-                std::string defaultType=pDataSet->getDefaultDataType(tagId, tagSubId);
-                if(defaultType.length()==2L)
+                std::string tagVR=pDataSet->getDefaultDataType(tagId, tagSubId);
+                if(tagVR.length()==2L)
                 {
-                    tagType[0]=defaultType[0];
-                    tagType[1]=defaultType[1];
+                    tagType[0]=tagVR[0];
+                    tagType[1]=tagVR[1];
 
                     wordSize = dicomDictionary::getDicomDictionary()->getWordSize(tagType);
                 }
@@ -934,16 +934,16 @@ std::shared_ptr<image> dicomCodec::getImage(const dataSet& dataset, std::shared_
 
     // Check for RLE compression
     ///////////////////////////////////////////////////////////
-    std::string transferSyntax = dataset.getStringThrow(0x0002, 0x0, 0x0010, 0, 0);
+    std::string transferSyntax = dataset.getString(0x0002, 0x0, 0x0010, 0, 0);
     bool bRleCompressed = (transferSyntax == "1.2.840.10008.1.2.5");
 
     // Check for color space and subsampled channels
     ///////////////////////////////////////////////////////////
-    std::string colorSpace = dataset.getStringThrow(0x0028, 0x0, 0x0004, 0, 0);
+    std::string colorSpace = dataset.getString(0x0028, 0x0, 0x0004, 0, 0);
 
     // Retrieve the number of planes
     ///////////////////////////////////////////////////////////
-    std::uint8_t channelsNumber=(std::uint8_t)dataset.getUnsignedLongThrow(0x0028, 0x0, 0x0002, 0, 0);
+    std::uint8_t channelsNumber=(std::uint8_t)dataset.getUnsignedLong(0x0028, 0x0, 0x0002, 0, 0);
 
     // Adjust the colorspace and the channels number for old
     //  NEMA files that don't specify those data
@@ -961,8 +961,8 @@ std::shared_ptr<image> dicomCodec::getImage(const dataSet& dataset, std::shared_
 
     // Retrieve the image's size
     ///////////////////////////////////////////////////////////
-    std::uint32_t imageWidth = dataset.getUnsignedLongThrow(0x0028, 0x0, 0x0011, 0, 0);
-    std::uint32_t imageHeight = dataset.getUnsignedLongThrow(0x0028, 0x0, 0x0010, 0, 0);
+    std::uint32_t imageWidth = dataset.getUnsignedLong(0x0028, 0x0, 0x0011, 0, 0);
+    std::uint32_t imageHeight = dataset.getUnsignedLong(0x0028, 0x0, 0x0010, 0, 0);
 
     if(
             imageWidth > codecFactory::getCodecFactory()->getMaximumImageWidth() ||
@@ -986,9 +986,9 @@ std::shared_ptr<image> dicomCodec::getImage(const dataSet& dataset, std::shared_
 
     // Retrieve the allocated/stored/high bits
     ///////////////////////////////////////////////////////////
-    std::uint8_t allocatedBits=(std::uint8_t)dataset.getUnsignedLongThrow(0x0028, 0x0, 0x0100, 0, 0);
-    std::uint8_t storedBits=(std::uint8_t)dataset.getUnsignedLongThrow(0x0028, 0x0, 0x0101, 0, 0);
-    std::uint8_t highBit=(std::uint8_t)dataset.getUnsignedLongThrow(0x0028, 0x0, 0x0102, 0, 0);
+    std::uint8_t allocatedBits=(std::uint8_t)dataset.getUnsignedLong(0x0028, 0x0, 0x0100, 0, 0);
+    std::uint8_t storedBits=(std::uint8_t)dataset.getUnsignedLong(0x0028, 0x0, 0x0101, 0, 0);
+    std::uint8_t highBit=(std::uint8_t)dataset.getUnsignedLong(0x0028, 0x0, 0x0102, 0, 0);
     if(highBit < storedBits - 1)
         throw;
 

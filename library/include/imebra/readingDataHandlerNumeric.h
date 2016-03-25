@@ -42,7 +42,7 @@ public:
 #ifndef SWIG
     friend class Image;
     friend class DataSet;
-    friend class TagContent;
+    friend class Tag;
 
 private:
     ReadingDataHandlerNumeric(std::shared_ptr<imebra::implementation::handlers::readingDataHandlerNumericBase> pDataHandler);

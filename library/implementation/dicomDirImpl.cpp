@@ -198,7 +198,7 @@ fileParts_t directoryRecord::getFileParts() const
 
     fileParts_t fileParts;
 
-    std::shared_ptr<handlers::readingDataHandler> filePartsHandler = getRecordDataSet()->getReadingDataHandlerThrow(0x0004, 0, 0x1500, 0);
+    std::shared_ptr<handlers::readingDataHandler> filePartsHandler = getRecordDataSet()->getReadingDataHandler(0x0004, 0, 0x1500, 0);
 
     for(size_t scanParts(0), endParts(filePartsHandler->getSize()); scanParts != endParts; ++scanParts)
     {
@@ -282,7 +282,7 @@ std::string directoryRecord::getTypeString() const
 {
     IMEBRA_FUNCTION_START();
 
-    return getRecordDataSet()->getStringThrow(0x0004, 0, 0x1430, 0, 0);
+    return getRecordDataSet()->getString(0x0004, 0, 0x1430, 0, 0);
 
     IMEBRA_FUNCTION_END();
 }
@@ -513,7 +513,7 @@ dicomDir::dicomDir(std::shared_ptr<dataSet> pDataSet):
 	{
         try
         {
-            std::shared_ptr<dataSet> pDataSet(m_pDataSet->getSequenceItemThrow(0x0004, 0, 0x1220, scanItems));
+            std::shared_ptr<dataSet> pDataSet(m_pDataSet->getSequenceItem(0x0004, 0, 0x1220, scanItems));
             std::shared_ptr<directoryRecord> newRecord(std::make_shared<directoryRecord>(pDataSet));
             offsetsToRecords[pDataSet->getItemOffset()] = newRecord;
             m_recordsList.push_back(newRecord);
@@ -530,7 +530,7 @@ dicomDir::dicomDir(std::shared_ptr<dataSet> pDataSet):
 	{
         try
         {
-            std::uint32_t nextRecordOffset(scanRecords->second->getRecordDataSet()->getUnsignedLongThrow(0x0004, 0, 0x1400, 0, 0));
+            std::uint32_t nextRecordOffset(scanRecords->second->getRecordDataSet()->getUnsignedLong(0x0004, 0, 0x1400, 0, 0));
             tOffsetsToRecords::iterator findNextRecord(offsetsToRecords.find(nextRecordOffset));
             if(findNextRecord != offsetsToRecords.end())
             {
@@ -544,7 +544,7 @@ dicomDir::dicomDir(std::shared_ptr<dataSet> pDataSet):
 
         try
         {
-            std::uint32_t childRecordOffset(scanRecords->second->getRecordDataSet()->getUnsignedLongThrow(0x0004, 0, 0x1420, 0, 0));
+            std::uint32_t childRecordOffset(scanRecords->second->getRecordDataSet()->getUnsignedLong(0x0004, 0, 0x1420, 0, 0));
             tOffsetsToRecords::iterator findChildRecord(offsetsToRecords.find(childRecordOffset));
             if(findChildRecord != offsetsToRecords.end())
             {
@@ -558,7 +558,7 @@ dicomDir::dicomDir(std::shared_ptr<dataSet> pDataSet):
 
         try
         {
-            std::uint32_t referencedRecordOffset(scanRecords->second->getRecordDataSet()->getUnsignedLongThrow(0x0004, 0, 0x1504, 0, 0));
+            std::uint32_t referencedRecordOffset(scanRecords->second->getRecordDataSet()->getUnsignedLong(0x0004, 0, 0x1504, 0, 0));
             tOffsetsToRecords::iterator findReferencedRecord(offsetsToRecords.find(referencedRecordOffset));
             if(findReferencedRecord != offsetsToRecords.end())
             {
@@ -573,7 +573,7 @@ dicomDir::dicomDir(std::shared_ptr<dataSet> pDataSet):
 
 	// Get the position of the first record
 	///////////////////////////////////////////////////////////
-    tOffsetsToRecords::iterator findRecord(offsetsToRecords.find(m_pDataSet->getUnsignedLongThrow(0x0004, 0, 0x1200, 0, 0)));
+    tOffsetsToRecords::iterator findRecord(offsetsToRecords.find(m_pDataSet->getUnsignedLong(0x0004, 0, 0x1200, 0, 0)));
 	if(findRecord == offsetsToRecords.end())
 	{
         throw;

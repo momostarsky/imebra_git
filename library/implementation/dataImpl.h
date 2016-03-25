@@ -100,7 +100,7 @@ public:
 	///          doesn't exist.
 	///
 	///////////////////////////////////////////////////////////
-    size_t getBufferSizeThrow(size_t bufferId) const;
+    size_t getBufferSize(size_t bufferId) const;
 
 	/// \brief Get a data handler for the specified buffer.
 	///
@@ -133,15 +133,15 @@ public:
 	///                 handler must use.
 	/// @param bWrite   true if the application wants to write
 	///                 something into the buffer
-	/// @param defaultType a string that specifies the data
+	/// @param tagVR a string that specifies the data
 	///                  type to use for the new buffers.
 	/// @return a pointer to the data handler for the
 	///         requested buffer.
 	///
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<handlers::readingDataHandler> getReadingDataHandlerThrow(size_t bufferId) const;
+    std::shared_ptr<handlers::readingDataHandler> getReadingDataHandler(size_t bufferId) const;
 
-    std::shared_ptr<handlers::writingDataHandler> getWritingDataHandler(size_t bufferId, const std::string& defaultType);
+    std::shared_ptr<handlers::writingDataHandler> getWritingDataHandler(size_t bufferId, const std::string& tagVR);
 	
 	/// \brief Get a raw data handler 
 	///         (handlers::dataHandlerRaw) for the specified 
@@ -179,15 +179,15 @@ public:
 	///                 handler must use.
 	/// @param bWrite   true if the application wants to write
 	///                 something into the buffer
-	/// @param defaultType a string that specifies the data
+	/// @param tagVR a string that specifies the data
 	///                  type to use for the new buffers.
 	/// @return a pointer to the data handler for the
 	///         requested buffer.
 	///
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<handlers::readingDataHandlerRaw> getReadingDataHandlerRawThrow(size_t bufferId) const;
+    std::shared_ptr<handlers::readingDataHandlerRaw> getReadingDataHandlerRaw(size_t bufferId) const;
 
-    std::shared_ptr<handlers::writingDataHandlerRaw> getWritingDataHandlerRaw(size_t bufferId, const std::string& defaultType);
+    std::shared_ptr<handlers::writingDataHandlerRaw> getWritingDataHandlerRaw(size_t bufferId, const std::string& tagVR);
 
 	/// \brief Get a streamReader connected to a buffer's data.
 	///
@@ -198,7 +198,7 @@ public:
 	///                    buffer's data.
 	///
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<streamReader> getStreamReaderThrow(size_t bufferId);
+    std::shared_ptr<streamReader> getStreamReader(size_t bufferId);
 
 	/// \brief Get a streamWriter connected to a buffer's data.
 	///
@@ -240,7 +240,7 @@ public:
 	/// @return           a pointer to the retrieved dataSet
 	///
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<dataSet> getSequenceItemThrow(size_t dataSetId) const;
+    std::shared_ptr<dataSet> getSequenceItem(size_t dataSetId) const;
 
     bool dataSetExists(size_t dataSetId) const;
 
@@ -294,7 +294,7 @@ public:
 	/// @return the buffer's data type in Dicom format
 	///
 	///////////////////////////////////////////////////////////
-    std::string getDataTypeThrow(size_t bufferId) const;
+    std::string getDataType(size_t bufferId) const;
 
 	//@}
 
