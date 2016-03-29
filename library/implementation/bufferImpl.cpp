@@ -64,21 +64,13 @@ namespace implementation
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-buffer::buffer(const std::string& tagVR):
+buffer::buffer(tagVR_t tagVR):
     m_bufferType(tagVR),
     m_originalBufferPosition(0),
     m_originalBufferLength(0),
     m_originalWordLength(1),
     m_originalEndianType(streamController::lowByteEndian)
 {
-    IMEBRA_FUNCTION_START();
-
-    if(!dicomDictionary::getDicomDictionary()->isDataTypeValid(tagVR))
-    {
-        IMEBRA_THROW(BufferUnknownTypeError, "Unknown data type " << tagVR);
-    }
-
-	IMEBRA_FUNCTION_END();
 }
 
 
@@ -92,7 +84,7 @@ buffer::buffer(const std::string& tagVR):
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 buffer::buffer(
-        const std::string& tagVR,
+        tagVR_t tagVR,
         const std::shared_ptr<baseStreamInput>& originalStream,
         size_t bufferPosition,
         size_t bufferLength,
@@ -105,14 +97,6 @@ buffer::buffer(
 		m_originalWordLength(wordLength),
         m_originalEndianType(endianType)
 {
-    IMEBRA_FUNCTION_START();
-
-    if(!dicomDictionary::getDicomDictionary()->isDataTypeValid(tagVR))
-    {
-        IMEBRA_THROW(BufferUnknownTypeError, "Unknown data type " << tagVR);
-    }
-
-	IMEBRA_FUNCTION_END();
 }
 
 
@@ -169,190 +153,94 @@ std::shared_ptr<handlers::readingDataHandler> buffer::getReadingDataHandler() co
 
     std::shared_ptr<const memory> localMemory(getLocalMemory());
 
-    // Retrieve an Application entity handler
-    ///////////////////////////////////////////////////////////
-    if(m_bufferType=="AE")
+    switch(m_bufferType)
     {
+    case tagVR_t::AE:
         return std::make_shared<handlers::readingDataHandlerStringAE>(*localMemory);
-    }
 
-    // Retrieve an Age string data handler
-    ///////////////////////////////////////////////////////////
-    if(m_bufferType=="AS")
-    {
+    case tagVR_t::AS:
         return std::make_shared<handlers::readingDataHandlerStringAS>(*localMemory);
-    }
 
-    // Retrieve a Code string data handler
-    ///////////////////////////////////////////////////////////
-    if(m_bufferType=="CS")
-    {
+    case tagVR_t::CS:
         return std::make_shared<handlers::readingDataHandlerStringCS>(*localMemory);
-    }
 
-    // Retrieve a Decimal string data handler
-    ///////////////////////////////////////////////////////////
-    if(m_bufferType=="DS")
-    {
+    case tagVR_t::DS:
         return std::make_shared<handlers::readingDataHandlerStringDS>(*localMemory);
-    }
 
-    // Retrieve an Integer string data handler
-    ///////////////////////////////////////////////////////////
-    if(m_bufferType=="IS")
-    {
+    case tagVR_t::IS:
         return std::make_shared<handlers::readingDataHandlerStringIS>(*localMemory);
-    }
 
-    // Retrieve a Long string data handler
-    ///////////////////////////////////////////////////////////
-    if(m_bufferType=="LO")
-    {
+    case tagVR_t::LO:
         return std::make_shared<handlers::readingDataHandlerStringLO>(*localMemory, m_charsetsList);
-    }
 
-    // Retrieve a Long text data handler
-    ///////////////////////////////////////////////////////////
-    if(m_bufferType=="LT")
-    {
+    case tagVR_t::LT:
         return std::make_shared<handlers::readingDataHandlerStringLT>(*localMemory, m_charsetsList);
-    }
 
-    // Retrieve a Person Name data handler
-    ///////////////////////////////////////////////////////////
-    if(m_bufferType=="PN")
-    {
+    case tagVR_t::PN:
         return std::make_shared<handlers::readingDataHandlerStringPN>(*localMemory, m_charsetsList);
-    }
 
-    // Retrieve a Short string data handler
-    ///////////////////////////////////////////////////////////
-    if(m_bufferType=="SH")
-    {
+    case tagVR_t::SH:
         return std::make_shared<handlers::readingDataHandlerStringSH>(*localMemory, m_charsetsList);
-    }
 
-    // Retrieve a Short text data handler
-    ///////////////////////////////////////////////////////////
-    if(m_bufferType=="ST")
-    {
+    case tagVR_t::ST:
         return std::make_shared<handlers::readingDataHandlerStringST>(*localMemory, m_charsetsList);
-    }
 
-    // Retrieve an Unique Identifier data handler
-    ///////////////////////////////////////////////////////////
-    if(m_bufferType=="UI")
-    {
+    case tagVR_t::UI:
         return std::make_shared<handlers::readingDataHandlerStringUI>(*localMemory);
-    }
 
-    // Retrieve an Unlimited text data handler
-    ///////////////////////////////////////////////////////////
-    if(m_bufferType=="UT")
-    {
+    case tagVR_t::UT:
         return std::make_shared< handlers::readingDataHandlerStringUT>(*localMemory, m_charsetsList);
-    }
 
-    // Retrieve an object handler
-    ///////////////////////////////////////////////////////////
-    if(m_bufferType=="OB")
-    {
+    case tagVR_t::OB:
         return std::make_shared<handlers::readingDataHandlerNumeric<std::uint8_t> >(localMemory, m_bufferType);
-    }
 
-    // Retrieve a signed-byte object handler.
-    // Non standard: used by the images handler.
-    ///////////////////////////////////////////////////////////
-    if(m_bufferType=="SB")
-    {
+    case tagVR_t::SB:
         return std::make_shared<handlers::readingDataHandlerNumeric<std::int8_t> >(localMemory, m_bufferType);
-    }
 
-    // Retrieve an unknown object handler
-    ///////////////////////////////////////////////////////////
-    if(m_bufferType=="UN")
-    {
+    case tagVR_t::UN:
         return std::make_shared<handlers::readingDataHandlerNumeric<std::uint8_t> >(localMemory, m_bufferType);
-    }
 
-    // Retrieve a WORD handler
-    ///////////////////////////////////////////////////////////
-    if(m_bufferType=="OW")
-    {
+    case tagVR_t::OW:
         return std::make_shared<handlers::readingDataHandlerNumeric<std::uint16_t> >(localMemory, m_bufferType);
-    }
 
-    // Retrieve a WORD handler (AT)
-    ///////////////////////////////////////////////////////////
-    if(m_bufferType=="AT")
-    {
+    case tagVR_t::AT:
         return std::make_shared<handlers::readingDataHandlerNumeric<std::uint16_t> >(localMemory, m_bufferType);
-    }
 
-    // Retrieve a float handler
-    ///////////////////////////////////////////////////////////
-    if(m_bufferType=="FL" || m_bufferType == "OF")
-    {
+    case tagVR_t::FL:
         return std::make_shared<handlers::readingDataHandlerNumeric<float> >(localMemory, m_bufferType);
-    }
 
-    // Retrieve a double float handler
-    ///////////////////////////////////////////////////////////
-    if(m_bufferType == "FD" || m_bufferType == "OD")
-    {
+    case tagVR_t::OF:
+        return std::make_shared<handlers::readingDataHandlerNumeric<float> >(localMemory, m_bufferType);
+
+    case tagVR_t::FD:
         return std::make_shared<handlers::readingDataHandlerNumeric<double> >(localMemory, m_bufferType);
-    }
 
-    // Retrieve a signed long handler
-    ///////////////////////////////////////////////////////////
-    if(m_bufferType=="SL")
-    {
+    case tagVR_t::OD:
+        return std::make_shared<handlers::readingDataHandlerNumeric<double> >(localMemory, m_bufferType);
+
+    case tagVR_t::SL:
         return std::make_shared<handlers::readingDataHandlerNumeric<std::int32_t> >(localMemory, m_bufferType);
-    }
 
-    // Retrieve a signed short handler
-    ///////////////////////////////////////////////////////////
-    if(m_bufferType=="SS")
-    {
+    case tagVR_t::SS:
         return std::make_shared<handlers::readingDataHandlerNumeric<std::int16_t> >(localMemory, m_bufferType);
-    }
 
-    // Retrieve an unsigned long handler
-    ///////////////////////////////////////////////////////////
-    if(m_bufferType=="UL")
-    {
+    case tagVR_t::UL:
         return std::make_shared<handlers::readingDataHandlerNumeric<std::uint32_t> >(localMemory, m_bufferType);
-    }
 
-    // Retrieve an unsigned short handler
-    ///////////////////////////////////////////////////////////
-    if(m_bufferType=="US")
-    {
+    case tagVR_t::US:
         return std::make_shared<handlers::readingDataHandlerNumeric<std::uint16_t> >(localMemory, m_bufferType);
-    }
 
-    // Retrieve date
-    ///////////////////////////////////////////////////////////
-    if(m_bufferType=="DA")
-    {
+    case tagVR_t::DA:
         return std::make_shared<handlers::readingDataHandlerDate>(*localMemory);
-    }
 
-    // Retrieve date-time
-    ///////////////////////////////////////////////////////////
-    if(m_bufferType=="DT")
-    {
+    case tagVR_t::DT:
         return std::make_shared<handlers::readingDataHandlerDateTime>(*localMemory);
-    }
 
-    // Retrieve time
-    ///////////////////////////////////////////////////////////
-    if(m_bufferType=="TM")
-    {
+    case tagVR_t::TM:
         return std::make_shared<handlers::readingDataHandlerTime>(*localMemory);
     }
 
-    IMEBRA_THROW(BufferUnknownTypeError, "Unknown data type requested (" << m_bufferType << ")");
+    IMEBRA_THROW(BufferUnknownTypeError, "Unregistered data type requested (" << (std::uint16_t)m_bufferType << ")");
 
 	IMEBRA_FUNCTION_END();
 }
@@ -367,186 +255,90 @@ std::shared_ptr<handlers::writingDataHandler> buffer::getWritingDataHandler(std:
     ///////////////////////////////////////////////////////////
     std::shared_ptr<handlers::writingDataHandler> handler;
 
-    // Retrieve an Application entity handler
-    ///////////////////////////////////////////////////////////
-    if(m_bufferType=="AE")
+    switch(m_bufferType)
     {
+    case tagVR_t::AE:
         return std::make_shared<handlers::writingDataHandlerStringAE>(shared_from_this());
-    }
 
-    // Retrieve an Age string data handler
-    ///////////////////////////////////////////////////////////
-    if(m_bufferType=="AS")
-    {
+    case tagVR_t::AS:
         return std::make_shared<handlers::writingDataHandlerStringAS>(shared_from_this());
-    }
 
-    // Retrieve a Code string data handler
-    ///////////////////////////////////////////////////////////
-    if(m_bufferType=="CS")
-    {
+    case tagVR_t::CS:
         return std::make_shared<handlers::writingDataHandlerStringCS>(shared_from_this());
-    }
 
-    // Retrieve a Decimal string data handler
-    ///////////////////////////////////////////////////////////
-    if(m_bufferType=="DS")
-    {
+    case tagVR_t::DS:
         return std::make_shared<handlers::writingDataHandlerStringDS>(shared_from_this());
-    }
 
-    // Retrieve an Integer string data handler
-    ///////////////////////////////////////////////////////////
-    if(m_bufferType=="IS")
-    {
+    case tagVR_t::IS:
         return std::make_shared<handlers::writingDataHandlerStringIS>(shared_from_this());
-    }
 
-    // Retrieve a Long string data handler
-    ///////////////////////////////////////////////////////////
-    if(m_bufferType=="LO")
-    {
+    case tagVR_t::LO:
         return std::make_shared<handlers::writingDataHandlerStringLO>(shared_from_this(), m_charsetsList);
-    }
 
-    // Retrieve a Long text data handler
-    ///////////////////////////////////////////////////////////
-    if(m_bufferType=="LT")
-    {
+    case tagVR_t::LT:
         return std::make_shared<handlers::writingDataHandlerStringLT>(shared_from_this(), m_charsetsList);
-    }
 
-    // Retrieve a Person Name data handler
-    ///////////////////////////////////////////////////////////
-    if(m_bufferType=="PN")
-    {
+    case tagVR_t::PN:
         return std::make_shared<handlers::writingDataHandlerStringPN>(shared_from_this(), m_charsetsList);
-    }
 
-    // Retrieve a Short string data handler
-    ///////////////////////////////////////////////////////////
-    if(m_bufferType=="SH")
-    {
+    case tagVR_t::SH:
         return std::make_shared<handlers::writingDataHandlerStringSH>(shared_from_this(), m_charsetsList);
-    }
 
-    // Retrieve a Short text data handler
-    ///////////////////////////////////////////////////////////
-    if(m_bufferType=="ST")
-    {
+    case tagVR_t::ST:
         return std::make_shared<handlers::writingDataHandlerStringST>(shared_from_this(), m_charsetsList);
-    }
 
-    // Retrieve an Unique Identifier data handler
-    ///////////////////////////////////////////////////////////
-    if(m_bufferType=="UI")
-    {
+    case tagVR_t::UI:
         return std::make_shared<handlers::writingDataHandlerStringUI>(shared_from_this());
-    }
 
-    // Retrieve an Unlimited text data handler
-    ///////////////////////////////////////////////////////////
-    if(m_bufferType=="UT")
-    {
+    case tagVR_t::UT:
         return std::make_shared< handlers::writingDataHandlerStringUT>(shared_from_this(), m_charsetsList);
-    }
 
-    // Retrieve an object handler
-    ///////////////////////////////////////////////////////////
-    if(m_bufferType=="OB")
-    {
+    case tagVR_t::OB:
         return std::make_shared<handlers::writingDataHandlerNumeric<std::uint8_t> >(shared_from_this(), size, m_bufferType);
-    }
 
-    // Retrieve a signed-byte object handler.
-    // Non standard: used by the images handler.
-    ///////////////////////////////////////////////////////////
-    if(m_bufferType=="SB")
-    {
+    case tagVR_t::SB:
         return std::make_shared<handlers::writingDataHandlerNumeric<std::int8_t> >(shared_from_this(), size, m_bufferType);
-    }
 
-    // Retrieve an unknown object handler
-    ///////////////////////////////////////////////////////////
-    if(m_bufferType=="UN")
-    {
+    case tagVR_t::UN:
         return std::make_shared<handlers::writingDataHandlerNumeric<std::uint8_t> >(shared_from_this(), size, m_bufferType);
-    }
 
-    // Retrieve a WORD handler
-    ///////////////////////////////////////////////////////////
-    if(m_bufferType=="OW")
-    {
+    case tagVR_t::OW:
         return std::make_shared<handlers::writingDataHandlerNumeric<std::uint16_t> >(shared_from_this(), size, m_bufferType);
-    }
 
-    // Retrieve a WORD handler (AT)
-    ///////////////////////////////////////////////////////////
-    if(m_bufferType=="AT")
-    {
+    case tagVR_t::AT:
         return std::make_shared<handlers::writingDataHandlerNumeric<std::uint16_t> >(shared_from_this(), size, m_bufferType);
-    }
 
-    // Retrieve a float handler
-    ///////////////////////////////////////////////////////////
-    if(m_bufferType=="FL" || m_bufferType == "OF")
-    {
+    case tagVR_t::FL:
         return std::make_shared<handlers::writingDataHandlerNumeric<float> >(shared_from_this(), size, m_bufferType);
-    }
 
-    // Retrieve a double float handler
-    ///////////////////////////////////////////////////////////
-    if(m_bufferType == "FD" || m_bufferType == "OD")
-    {
+    case tagVR_t::OF:
+        return std::make_shared<handlers::writingDataHandlerNumeric<float> >(shared_from_this(), size, m_bufferType);
+
+    case tagVR_t::FD:
         return std::make_shared<handlers::writingDataHandlerNumeric<double> >(shared_from_this(), size, m_bufferType);
-    }
 
-    // Retrieve a signed long handler
-    ///////////////////////////////////////////////////////////
-    if(m_bufferType=="SL")
-    {
+    case tagVR_t::OD:
+        return std::make_shared<handlers::writingDataHandlerNumeric<double> >(shared_from_this(), size, m_bufferType);
+
+    case tagVR_t::SL:
         return std::make_shared<handlers::writingDataHandlerNumeric<std::int32_t> >(shared_from_this(), size, m_bufferType);
-    }
 
-    // Retrieve a signed short handler
-    ///////////////////////////////////////////////////////////
-    if(m_bufferType=="SS")
-    {
+    case tagVR_t::SS:
         return std::make_shared<handlers::writingDataHandlerNumeric<std::int16_t> >(shared_from_this(), size, m_bufferType);
-    }
 
-    // Retrieve an unsigned long handler
-    ///////////////////////////////////////////////////////////
-    if(m_bufferType=="UL")
-    {
+    case tagVR_t::UL:
         return std::make_shared<handlers::writingDataHandlerNumeric<std::uint32_t> >(shared_from_this(), size, m_bufferType);
-    }
 
-    // Retrieve an unsigned short handler
-    ///////////////////////////////////////////////////////////
-    if(m_bufferType=="US")
-    {
+    case tagVR_t::US:
         return std::make_shared<handlers::writingDataHandlerNumeric<std::uint16_t> >(shared_from_this(), size, m_bufferType);
-    }
 
-    // Retrieve date
-    ///////////////////////////////////////////////////////////
-    if(m_bufferType=="DA")
-    {
+    case tagVR_t::DA:
         return std::make_shared<handlers::writingDataHandlerDate>(shared_from_this());
-    }
 
-    // Retrieve date-time
-    ///////////////////////////////////////////////////////////
-    if(m_bufferType=="DT")
-    {
+    case tagVR_t::DT:
         return std::make_shared<handlers::writingDataHandlerDateTime>(shared_from_this());
-    }
 
-    // Retrieve time
-    ///////////////////////////////////////////////////////////
-    if(m_bufferType=="TM")
-    {
+    case tagVR_t::TM:
         return std::make_shared<handlers::writingDataHandlerTime>(shared_from_this());
     }
 
@@ -688,7 +480,7 @@ size_t buffer::getBufferSizeBytes() const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void buffer::commit(std::shared_ptr<memory> newMemory, const std::string& newBufferType, const charsetsList::tCharsetsList& newCharsetsList)
+void buffer::commit(std::shared_ptr<memory> newMemory, tagVR_t newBufferType, const charsetsList::tCharsetsList& newCharsetsList)
 {
     IMEBRA_FUNCTION_START();
 
@@ -710,7 +502,7 @@ void buffer::commit(std::shared_ptr<memory> newMemory, const std::string& newBuf
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void buffer::commit(std::shared_ptr<memory> newMemory, const std::string& newBufferType)
+void buffer::commit(std::shared_ptr<memory> newMemory, tagVR_t newBufferType)
 {
     IMEBRA_FUNCTION_START();
 
@@ -733,7 +525,7 @@ void buffer::commit(std::shared_ptr<memory> newMemory, const std::string& newBuf
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::string buffer::getDataType() const
+tagVR_t buffer::getDataType() const
 {
     IMEBRA_FUNCTION_START();
 

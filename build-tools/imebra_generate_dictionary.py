@@ -96,6 +96,9 @@ def main():
         '\n'
         '#if !defined(imebraTagsDescription__INCLUDED_)\n'
         '#define imebraTagsDescription__INCLUDED_\n'
+        '\n'
+        '#include "../include/imebra/definitions.h"\n'
+        '\n'
         'namespace imebra\n'
         '{\n'
         '\n'
@@ -107,10 +110,10 @@ def main():
         '///////////////////////////////////////////////////////////////////////////////\n'
         'struct tagDescription_t\n'
         '{\n'
-        '    const std::uint32_t m_tagId;  ///< Tag group and id\n'
-        '    const wchar_t* m_tagDescription; ///< Tag description\n'
-        '    const char* m_tagKeyword;     ///< Tag keyword\n'
-        '    const char* m_vr;             ///< Default VR\n'
+        '    const   std::uint32_t m_tagId;     ///< Tag group and id\n'
+        '    const   wchar_t* m_tagDescription; ///< Tag description\n'
+        '    const   char* m_tagKeyword;        ///< Tag keyword\n'
+        '    tagVR_t m_vr;                      ///< Default VR\n'
         '};\n'
         ''
         'static const tagDescription_t m_tagsDescription[] = \n'
@@ -137,7 +140,7 @@ def main():
     # Write the dictionary's footer
     #------------------------------
     dictionary_file.write(
-        '        {0, 0, 0, 0}\n'
+        '        {0, 0, 0, tagVR_t::defaultType}\n'
         '    };\n'
         '\n'
         '} // namespace implementation\n'
@@ -173,10 +176,10 @@ def extract_table(root, enumeration_file, dictionary_file):
 
                     vr = paragraphs[3].split(' ')[0]
                     if len(vr) != 2:
-                        vr = ''
+                        vr = 'defaultType'
 
                     enumeration[paragraphs[0]] = '    ' + enumeration_item + ' = 0x' + group + id + ', ///< ' + paragraphs[1] + ' ' + paragraphs[0] + '\n'
-                    definition[paragraphs[0]] = '        { 0x' + group + id + ', L"' + paragraphs[1] + '", "' + paragraphs[2] + '", "' + vr + '"},\n'
+                    definition[paragraphs[0]] = '        { 0x' + group + id + ', L"' + paragraphs[1] + '", "' + paragraphs[2] + '", tagVR_t::' + vr + '},\n'
 
     for id in sorted(enumeration.keys()):
         enumeration_file.write(enumeration[id])

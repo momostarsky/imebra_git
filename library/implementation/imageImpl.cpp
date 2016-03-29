@@ -71,27 +71,27 @@ image::image(uint32_t width, uint32_t height, bitDepth_t depth, const std::strin
     switch(depth)
     {
     case bitDepth_t::depthU8:
-        m_bufferDataType = "OB";
+        m_bufferDataType = tagVR_t::OB;
         defaultHighBit=7;
         break;
     case bitDepth_t::depthS8:
-        m_bufferDataType = "SB";
+        m_bufferDataType = tagVR_t::SB;
         defaultHighBit=7;
         break;
     case bitDepth_t::depthU16:
-        m_bufferDataType = "US";
+        m_bufferDataType = tagVR_t::US;
         defaultHighBit=15;
         break;
     case bitDepth_t::depthS16:
-        m_bufferDataType = "SS";
+        m_bufferDataType = tagVR_t::SS;
         defaultHighBit=15;
         break;
     case bitDepth_t::depthU32:
-        m_bufferDataType = "UL";
+        m_bufferDataType = tagVR_t::UL;
         defaultHighBit=31;
         break;
     case bitDepth_t::depthS32:
-        m_bufferDataType = "SL";
+        m_bufferDataType = tagVR_t::SL;
         defaultHighBit=31;
         break;
     default:

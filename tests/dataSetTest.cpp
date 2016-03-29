@@ -49,7 +49,7 @@ TEST(dataSetTest, testFragmentation)
 
     {
         std::uint32_t offset(0);
-        WritingDataHandlerNumeric offsetHandler = testDataSet.getWritingDataHandlerNumeric(TagId(imebra::tagId_t::PixelData_7FE0_0010), 0, "OB");
+        WritingDataHandlerNumeric offsetHandler = testDataSet.getWritingDataHandlerNumeric(TagId(imebra::tagId_t::PixelData_7FE0_0010), 0, tagVR_t::OB);
 
         std::list<WritingDataHandler> handlers;
 
@@ -77,7 +77,7 @@ TEST(dataSetTest, testFragmentation)
                 {
                     thisSize = fragmentedSize;
                 }
-                WritingDataHandlerNumeric newHandler = testDataSet.getWritingDataHandlerNumeric(TagId(imebra::tagId_t::PixelData_7FE0_0010), handlers.size() + 1, "OB");
+                WritingDataHandlerNumeric newHandler = testDataSet.getWritingDataHandlerNumeric(TagId(imebra::tagId_t::PixelData_7FE0_0010), handlers.size() + 1, tagVR_t::OB);
                 newHandler.setSize(thisSize);
                 newHandler.assign(pWholeMemory, thisSize);
                 handlers.push_back(newHandler);

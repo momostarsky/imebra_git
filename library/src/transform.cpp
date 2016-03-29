@@ -8,6 +8,7 @@ $fileHeader$
 */
 
 #include "../include/imebra/transform.h"
+#include "../include/imebra/image.h"
 #include "../implementation/transformImpl.h"
 
 namespace imebra

@@ -91,14 +91,6 @@ public:
 	///////////////////////////////////////////////////////////
     std::shared_ptr<directoryRecord> getFirstChildRecord() const;
 	
-	/// \brief Returns the referenced record, if any.
-	///
-	/// @return the referenced record, or 0 if the record
-	///          doesn't reference any other record
-	///
-	///////////////////////////////////////////////////////////
-    std::shared_ptr<directoryRecord> getReferencedRecord() const;
-
 	/// \brief Sets the next sibling record.
 	///
 	/// The new sibling record takes the place of the old
@@ -119,16 +111,6 @@ public:
 	///////////////////////////////////////////////////////////
 	void setFirstChildRecord(std::shared_ptr<directoryRecord> pFirstChildRecord);
 
-	/// \brief Set the referenced record.
-	///
-	/// The new referenced record takes the place of the old 
-	///  referenced record, if it was already set.
-	///
-	/// @param pReferencedRecord the referenced record
-	///
-	///////////////////////////////////////////////////////////
-	void setReferencedRecord(std::shared_ptr<directoryRecord> pReferencedRecord);
-	
 	/// \brief Get the full path to the  file referenced by
 	///         the record.
 	///
@@ -232,9 +214,8 @@ private:
 
 	std::shared_ptr<directoryRecord> m_pNextRecord;
 	std::shared_ptr<directoryRecord> m_pFirstChildRecord;
-	std::shared_ptr<directoryRecord> m_pReferencedRecord;
 
-	std::shared_ptr<dataSet> m_pDataSet;
+    std::shared_ptr<dataSet> m_pDataSet;
 };
 
 
@@ -307,8 +288,7 @@ public:
 	///  values and specify the relationship with other items
 	///  by calling setFirstRootRecord() or 
 	///  directoryRecord::setNextRecord() or 
-	///  directoryRecord::setFirstChildRecord() or
-	///  directoryRecord::setReferencedRecord().
+    ///  directoryRecord::setFirstChildRecord().
 	///
 	/// @return a new directoryRecord object belonging to the
 	///         DICOMDIR

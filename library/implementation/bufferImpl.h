@@ -13,6 +13,7 @@ $fileHeader$
 #include "streamControllerImpl.h"
 #include "memoryImpl.h"
 #include "dataHandlerNumericImpl.h"
+#include "../include/imebra/definitions.h"
 
 #include "charsetsListImpl.h"
 #include <mutex>
@@ -71,14 +72,10 @@ public:
 	/// If no data type is specified, then the Dicom data
 	///  type "OB" is used.
 	///
-	/// @param tagVR  a string with the buffer's type.
-	///                     The buffer's type must be one of
-	///                      the Dicom data types.
-	///                     A dicom's data type is formed by
-	///                      two uppercase chars
+    /// @param tagVR  the buffer's data type
 	///
 	///////////////////////////////////////////////////////////
-    buffer(const std::string& tagVR="");
+    buffer(tagVR_t tagVR);
 
 	/// \brief Constructor. Initialize the buffer object and
 	///         declare the buffer's content on demand.
@@ -87,11 +84,7 @@ public:
 	///  when the application requires the access to the
 	///  buffer.
 	///
-	/// @param tagVR  a string with the buffer's type.
-	///                     The buffer's type must be one of
-	///                      the Dicom data types.
-	///                     A dicom's data type is formed by
-	///                      two uppercase chars
+    /// @param tagVR  the buffer's data type
 	/// @param originalStream the stream from which the content
 	///                      can be read
 	/// @param bufferPosition the first stream's byte that 
@@ -104,7 +97,7 @@ public:
 	///
 	///////////////////////////////////////////////////////////
     buffer(
-		const std::string& tagVR,
+        tagVR_t tagVR,
         const std::shared_ptr<baseStreamInput>& originalStream,
         size_t bufferPosition,
         size_t bufferLength,
@@ -233,19 +226,16 @@ public:
 
 	/// \brief Returns the buffer's data type.
 	///
-	/// Return a string with the buffer's data type.
-	///
-	/// @return a string with the buffer's data type in Dicom
-	///          format.
-	//
+    /// @return the buffer's data type
+    ///
 	///////////////////////////////////////////////////////////
-    std::string getDataType() const;
+    tagVR_t getDataType() const;
 
 	//@}
 
-    void commit(std::shared_ptr<memory> newMemory, const std::string& newBufferType, const charsetsList::tCharsetsList& newCharsetsList);
+    void commit(std::shared_ptr<memory> newMemory, tagVR_t newBufferType, const charsetsList::tCharsetsList& newCharsetsList);
 
-    void commit(std::shared_ptr<memory> newMemory, const std::string& newBufferType);
+    void commit(std::shared_ptr<memory> newMemory, tagVR_t newBufferType);
 
 	///////////////////////////////////////////////////////////
 	/// \name Charsets
@@ -330,7 +320,7 @@ private:
 protected:
 	// The buffer's type, in Dicom standard
 	///////////////////////////////////////////////////////////
-	std::string m_bufferType;
+    tagVR_t m_bufferType;
 
 protected:
 	// The following variables are used to reread the buffer

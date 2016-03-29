@@ -14,6 +14,7 @@ $fileHeader$
 
 #include "charsetsListImpl.h"
 #include "dataHandlerNumericImpl.h"
+#include "../include/imebra/definitions.h"
 
 #include <map>
 #include <vector>
@@ -141,7 +142,7 @@ public:
 	///////////////////////////////////////////////////////////
     std::shared_ptr<handlers::readingDataHandler> getReadingDataHandler(size_t bufferId) const;
 
-    std::shared_ptr<handlers::writingDataHandler> getWritingDataHandler(size_t bufferId, const std::string& tagVR);
+    std::shared_ptr<handlers::writingDataHandler> getWritingDataHandler(size_t bufferId, tagVR_t tagVR);
 	
 	/// \brief Get a raw data handler 
 	///         (handlers::dataHandlerRaw) for the specified 
@@ -187,7 +188,7 @@ public:
 	///////////////////////////////////////////////////////////
     std::shared_ptr<handlers::readingDataHandlerRaw> getReadingDataHandlerRaw(size_t bufferId) const;
 
-    std::shared_ptr<handlers::writingDataHandlerRaw> getWritingDataHandlerRaw(size_t bufferId, const std::string& tagVR);
+    std::shared_ptr<handlers::writingDataHandlerRaw> getWritingDataHandlerRaw(size_t bufferId, tagVR_t tagVR);
 
 	/// \brief Get a streamReader connected to a buffer's data.
 	///
@@ -211,7 +212,7 @@ public:
 	///                    emptied buffer's data.
 	///
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<streamWriter> getStreamWriter(size_t bufferId, const std::string& dataType = "");
+    std::shared_ptr<streamWriter> getStreamWriter(size_t bufferId, tagVR_t tagVR);
 
 	//@}
 
@@ -286,15 +287,12 @@ public:
 	///////////////////////////////////////////////////////////
 	//@{
 
-	/// \brief Get the tag's buffer type in Dicom format.
+    /// \brief Get the tag's buffer type.
 	///
-	/// A buffer's data type is composed by two uppercase
-	///  chars.
-	///
-	/// @return the buffer's data type in Dicom format
+    /// @return the buffer's data type
 	///
 	///////////////////////////////////////////////////////////
-    std::string getDataType(size_t bufferId) const;
+    tagVR_t getDataType(size_t bufferId) const;
 
 	//@}
 

@@ -48,7 +48,7 @@ namespace handlers
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-readingDataHandlerStringAS::readingDataHandlerStringAS(const memory& parseMemory): readingDataHandlerString(parseMemory, "AS", '\\', 0x20)
+readingDataHandlerStringAS::readingDataHandlerStringAS(const memory& parseMemory): readingDataHandlerString(parseMemory, tagVR_t::AS, '\\', 0x20)
 {
 }
 
@@ -151,7 +151,7 @@ double readingDataHandlerStringAS::getDouble(const size_t /* index */) const
 
 
 writingDataHandlerStringAS::writingDataHandlerStringAS(const std::shared_ptr<buffer> &pBuffer):
-    writingDataHandlerString(pBuffer, "AS", '\\', 4, 4, 0x20)
+    writingDataHandlerString(pBuffer, tagVR_t::AS, '\\', 4, 4, 0x20)
 {
 }
 

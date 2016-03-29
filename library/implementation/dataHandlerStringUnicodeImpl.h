@@ -38,7 +38,7 @@ namespace handlers
 class readingDataHandlerStringUnicode : public readingDataHandler
 {
 public:
-    readingDataHandlerStringUnicode(const memory& parseMemory, const charsetsList::tCharsetsList& charsets, const std::string& dataType, const wchar_t separator, const std::uint8_t paddingByte);
+    readingDataHandlerStringUnicode(const memory& parseMemory, const charsetsList::tCharsetsList& charsets, tagVR_t dataType, const wchar_t separator, const std::uint8_t paddingByte);
 
     // Get the data element as a signed long
     ///////////////////////////////////////////////////////////
@@ -73,7 +73,7 @@ protected:
 class writingDataHandlerStringUnicode : public writingDataHandler
 {
 public:
-    writingDataHandlerStringUnicode(const std::shared_ptr<buffer>& pBuffer, const charsetsList::tCharsetsList& charsets, const std::string& dataType, const wchar_t separator, const size_t unitSize, const size_t maxSize, const std::uint8_t paddingByte);
+    writingDataHandlerStringUnicode(const std::shared_ptr<buffer>& pBuffer, const charsetsList::tCharsetsList& charsets, tagVR_t dataType, const wchar_t separator, const size_t unitSize, const size_t maxSize, const std::uint8_t paddingByte);
 
     ~writingDataHandlerStringUnicode();
 

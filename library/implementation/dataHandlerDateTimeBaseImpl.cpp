@@ -9,6 +9,7 @@ $fileHeader$
 
 #include "exceptionImpl.h"
 #include "dataHandlerDateTimeBaseImpl.h"
+#include "dicomDictImpl.h"
 #include "../include/imebra/exceptions.h"
 #include <time.h>
 #include <stdlib.h>
@@ -38,7 +39,7 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 
-readingDataHandlerDateTimeBase::readingDataHandlerDateTimeBase(const memory& parseMemory, const std::string& dataType):
+readingDataHandlerDateTimeBase::readingDataHandlerDateTimeBase(const memory& parseMemory, tagVR_t dataType):
     readingDataHandlerString(parseMemory, dataType, '-', 0x20)
 {
 
@@ -95,13 +96,13 @@ double readingDataHandlerDateTimeBase::getDouble(const size_t /* index */) const
 {
     IMEBRA_FUNCTION_START();
 
-    IMEBRA_THROW(DataHandlerDeniedConversionError, "Cannot convert VR "<< getDataType() << " to double");
+    IMEBRA_THROW(DataHandlerDeniedConversionError, "Cannot convert VR "<< dicomDictionary::getDicomDictionary()->enumDataTypeToString(getDataType()) << " to double");
 
 	IMEBRA_FUNCTION_END();
 }
 
 
-writingDataHandlerDateTimeBase::writingDataHandlerDateTimeBase(const std::shared_ptr<buffer> &pBuffer, const std::string &dataType, const size_t unitSize, const size_t maxSize):
+writingDataHandlerDateTimeBase::writingDataHandlerDateTimeBase(const std::shared_ptr<buffer> &pBuffer, tagVR_t dataType, const size_t unitSize, const size_t maxSize):
     writingDataHandlerString(pBuffer, dataType, '-', unitSize, maxSize, 0x20)
 {
 }
@@ -157,7 +158,7 @@ void writingDataHandlerDateTimeBase::setDouble(const size_t /* index */, const d
 {
     IMEBRA_FUNCTION_START();
 
-    IMEBRA_THROW(DataHandlerDeniedConversionError, "Cannot convert from double to VR "<< getDataType());
+    IMEBRA_THROW(DataHandlerDeniedConversionError, "Cannot convert from double to VR "<< dicomDictionary::getDicomDictionary()->enumDataTypeToString(getDataType()));
 
 	IMEBRA_FUNCTION_END();
 }

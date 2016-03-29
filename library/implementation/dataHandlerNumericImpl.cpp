@@ -20,7 +20,7 @@ namespace implementation
 namespace handlers
 {
 
-readingDataHandlerNumericBase::readingDataHandlerNumericBase(const std::shared_ptr<const memory>& parseMemory, const std::string& dataType):
+readingDataHandlerNumericBase::readingDataHandlerNumericBase(const std::shared_ptr<const memory>& parseMemory, tagVR_t dataType):
     readingDataHandler(dataType), m_pMemory(parseMemory)
 {
 }
@@ -52,7 +52,7 @@ std::shared_ptr<const memory> readingDataHandlerNumericBase::getMemory() const
     IMEBRA_FUNCTION_END();
 }
 
-writingDataHandlerNumericBase::writingDataHandlerNumericBase(const std::shared_ptr<buffer> &pBuffer, const size_t initialSize, const std::string &dataType, size_t unitSize, bool bIsSigned):
+writingDataHandlerNumericBase::writingDataHandlerNumericBase(const std::shared_ptr<buffer> &pBuffer, const size_t initialSize, tagVR_t dataType, size_t unitSize, bool bIsSigned):
     writingDataHandler(pBuffer, dataType, 0), m_pMemory(std::make_shared<memory>(initialSize * unitSize)), m_unitSize(unitSize), m_bIsSigned(bIsSigned)
 {
 }

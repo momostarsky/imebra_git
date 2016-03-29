@@ -13,7 +13,7 @@ $fileHeader$
 
 #include <memory>
 #include <map>
-
+#include "../include/imebra/definitions.h"
 
 namespace imebra
 {
@@ -46,7 +46,7 @@ class dicomDictionary
 	struct imageDataDictionaryElement
 	{
 		std::wstring m_tagName;
-		std::string m_tagType;
+        tagVR_t m_tagType;
 	};
 
 	struct validDataTypesStruct
@@ -57,8 +57,8 @@ class dicomDictionary
 	};
 
 public:
-	void registerTag(std::uint32_t tagId, const wchar_t* tagName, const char* tagType);
-    void registerVR(const std::string& vr, bool bLongLength, std::uint32_t wordSize, std::uint32_t maxLength);
+    void registerTag(std::uint32_t tagId, const wchar_t* tagName, tagVR_t vr);
+    void registerVR(tagVR_t vr, bool bLongLength, std::uint32_t wordSize, std::uint32_t maxLength);
 
 	/// \brief Retrieve a tag's description.
 	///
@@ -76,7 +76,7 @@ public:
 	/// @return          The tag's data type
 	///
 	///////////////////////////////////////////////////////////
-	std::string getTagType(std::uint16_t groupId, std::uint16_t tagId) const;
+    tagVR_t getTagType(std::uint16_t groupId, std::uint16_t tagId) const;
 
 	/// \brief Retrieve the only valid instance of this class.
 	///
@@ -85,15 +85,10 @@ public:
 	///////////////////////////////////////////////////////////
 	static dicomDictionary* getDicomDictionary();
 
-	/// \brief Return true if the specified string represents
-	///         a valid dicom data type.
-	///
-	/// @param dataType the string to be checked
-	/// @return         true if the specified string is a valid
-	///                  dicom data type
-	///
-	///////////////////////////////////////////////////////////
     bool isDataTypeValid(const std::string& dataType) const;
+
+    tagVR_t stringDataTypeToEnum(const std::string& dataType) const;
+    std::string enumDataTypeToString(tagVR_t dataType) const;
 
 	/// \brief Return true if the tag's length in the dicom 
 	///         stream must be written using a DWORD
@@ -104,7 +99,7 @@ public:
 	///                  length must be written using a DWORD
 	///
 	///////////////////////////////////////////////////////////
-    bool getLongLength(const std::string& dataType) const ;
+    bool getLongLength(tagVR_t dataType) const ;
 	
 	/// \brief Return the size of the data type's elements
 	///
@@ -113,7 +108,7 @@ public:
 	/// @return the size of a single element
 	///
 	///////////////////////////////////////////////////////////
-    std::uint32_t getWordSize(const std::string& dataType) const;
+    std::uint32_t getWordSize(tagVR_t dataType) const;
 	
 	/// \brief Return the maximum size of the tags with
 	///         the specified data type.
@@ -123,13 +118,13 @@ public:
 	/// @return         the maximum tag's size in bytes 
 	///
 	///////////////////////////////////////////////////////////
-    std::uint32_t getMaxSize(const std::string& dataType) const;
+    std::uint32_t getMaxSize(tagVR_t dataType) const;
 
 protected:
 	typedef std::map<std::uint32_t, imageDataDictionaryElement> tDicomDictionary;
 	tDicomDictionary m_dicomDict;
 
-	typedef std::map<std::string, validDataTypesStruct> tVRDictionary;
+    typedef std::map<tagVR_t, validDataTypesStruct> tVRDictionary;
 	tVRDictionary m_vrDict;
 
 };

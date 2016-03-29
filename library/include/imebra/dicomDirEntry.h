@@ -11,12 +11,11 @@ $fileHeader$
 #if !defined(imebraDicomDirEntry__INCLUDED_)
 #define imebraDicomDirEntry__INCLUDED_
 
-#ifndef SWIG
-
 #include <memory>
 #include <string>
-#include "dataSet.h"
 #include "definitions.h"
+
+#ifndef SWIG
 
 namespace imebra
 {
@@ -30,6 +29,8 @@ class directoryRecord;
 
 namespace imebra
 {
+
+class DataSet;
 
 class IMEBRA_API DicomDirEntry
 {
@@ -53,17 +54,17 @@ public:
 
     DicomDirEntry getFirstChildEntry();
 	
-    DicomDirEntry getReferencedEntry();
-
     void setNextEntry(const DicomDirEntry& nextEntry);
 
     void setFirstChildEntry(const DicomDirEntry& firstChildEntry);
 
-    void setReferencedEntry(const DicomDirEntry& referencedEntry);
-	
     fileParts_t getFileParts() const;
 
     void setFileParts(const fileParts_t& fileParts);
+
+    directoryRecordType_t getType() const;
+
+    void setType(directoryRecordType_t entryType);
 
     std::string getTypeString() const;
 

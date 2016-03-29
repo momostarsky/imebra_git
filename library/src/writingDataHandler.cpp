@@ -45,7 +45,7 @@ size_t WritingDataHandler::getSize() const
     return m_pDataHandler->getSize();
 }
 
-std::string WritingDataHandler::getDataType() const
+tagVR_t WritingDataHandler::getDataType() const
 {
     return m_pDataHandler->getDataType();
 }

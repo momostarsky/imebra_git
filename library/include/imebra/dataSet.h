@@ -11,7 +11,6 @@ $fileHeader$
 #define imebraDataSet__INCLUDED_
 
 #include "definitions.h"
-#include "tagId.h"
 
 #include <string>
 #include <cstdint>
@@ -19,7 +18,7 @@ $fileHeader$
 #include "image.h"
 #include "readingDataHandlerNumeric.h"
 #include "writingDataHandlerNumeric.h"
-#include "tag.h"
+#include "tagId.h"
 
 #ifndef SWIG
 
@@ -64,8 +63,8 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
 	DataSet();
 
-    /// \brief Copy constructor: build a DataSet object referencing the same stream
-    ///        implementation object as the source one.
+    /// \brief Copy constructor: build a DataSet object referencing the same
+    ///        DataSet implementation object as the source one.
     ///
     /// \param right another DataSet object to use as source
     ///
@@ -200,7 +199,7 @@ public:
     ///        tag's buffer.
     ///
     /// If the specified Tag does not exist then it creates a new tag with the VR
-    ///  specified in the defaultDataType parameter
+    ///  specified in the tagVR parameter
     ///
     /// The returned WritingDataHandler is connected to a new buffer which is
     /// updated and stored into the tag when WritingDataHandler is destroyed.
@@ -208,12 +207,28 @@ public:
     /// \param tagId  the tag's id containing the requested buffer
     /// \param itemId the position where the new buffer has to be stored into the
     ///               tag. The first buffer position is 0
-    /// \param defaultDataType the tag's VR. If empty then the VR for the tag is
-    ///               retrieved from the DicomDictionary
+    /// \param tagVR the tag's VR
     /// \return a WritingDataHandler object connected to a new Tag's buffer
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    WritingDataHandler getWritingDataHandler(const TagId& tagId, size_t bufferId, const std::string& defaultDataType = "");
+    WritingDataHandler getWritingDataHandler(const TagId& tagId, size_t bufferId, tagVR_t tagVR);
+
+    /// \brief Retrieve a WritingDataHandler object connected to a specific
+    ///        tag's buffer.
+    ///
+    /// If the specified Tag does not exist then it creates a new tag with a
+    ///  default VR retrieved from the DicomDictionary.
+    ///
+    /// The returned WritingDataHandler is connected to a new buffer which is
+    /// updated and stored into the tag when WritingDataHandler is destroyed.
+    ///
+    /// \param tagId  the tag's id containing the requested buffer
+    /// \param itemId the position where the new buffer has to be stored into the
+    ///               tag. The first buffer position is 0
+    /// \return a WritingDataHandler object connected to a new Tag's buffer
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    WritingDataHandler getWritingDataHandler(const TagId& tagId, size_t bufferId);
 
     /// \brief Retrieve a getReadingDataHandlerNumeric object connected to a
     ///        specific tag's numeric buffer.
@@ -261,7 +276,7 @@ public:
     /// If the tag's VR is not a numeric type then throws std::bad_cast.
     ///
     /// If the specified Tag does not exist then it creates a new tag with the VR
-    ///  specified in the defaultDataType parameter
+    ///  specified in the tagVR parameter
     ///
     /// The returned WritingDataHandlerNumeric is connected to a new buffer which
     /// is updated and stored into the tag when WritingDataHandlerNumeric is
@@ -270,14 +285,35 @@ public:
     /// \param tagId  the tag's id containing the requested buffer
     /// \param itemId the position where the new buffer has to be stored into the
     ///               tag. The first buffer position is 0
-    /// \param defaultDataType the tag's VR. If empty then the VR for the tag is
-    ///               retrieved from the DicomDictionary
+    /// \param tagVR the tag's VR
     /// \return a WritingDataHandlerNumeric object connected to a new Tag's buffer
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    WritingDataHandlerNumeric getWritingDataHandlerNumeric(const TagId& tagId, size_t bufferId, const std::string& defaultDataType = "");
+    WritingDataHandlerNumeric getWritingDataHandlerNumeric(const TagId& tagId, size_t bufferId, tagVR_t tagVR);
 
-    WritingDataHandlerNumeric getWritingDataHandlerRaw(const TagId& tagId, size_t bufferId, const std::string& defaultDataType = "");
+    /// \brief Retrieve a WritingDataHandler object connected to a specific
+    ///        tag's buffer.
+    ///
+    /// If the tag's VR is not a numeric type then throws std::bad_cast.
+    ///
+    /// If the specified Tag does not exist then it creates a new tag with a
+    ///  default VR retrieved from the DicomDictionary.
+    ///
+    /// The returned WritingDataHandlerNumeric is connected to a new buffer which
+    /// is updated and stored into the tag when WritingDataHandlerNumeric is
+    /// destroyed.
+    ///
+    /// \param tagId  the tag's id containing the requested buffer
+    /// \param itemId the position where the new buffer has to be stored into the
+    ///               tag. The first buffer position is 0
+    /// \return a WritingDataHandlerNumeric object connected to a new Tag's buffer
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    WritingDataHandlerNumeric getWritingDataHandlerNumeric(const TagId& tagId, size_t bufferId);
+
+    WritingDataHandlerNumeric getWritingDataHandlerRaw(const TagId& tagId, size_t bufferId, tagVR_t tagVR);
+
+    WritingDataHandlerNumeric getWritingDataHandlerRaw(const TagId& tagId, size_t bufferId);
 
     /// \brief Check if the specified tag and tag's buffer exist.
     ///
@@ -333,11 +369,22 @@ public:
     /// \param bufferId the tag's buffer
     /// \param newValue the value to write into the tag
     /// \param tagVR    the tag's type to use when a new tag is created.
-    ///                 If left empty then the default VR for the specified tag ID
-    ///                 will be used
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    void setSignedLong(const TagId& tagId, size_t bufferId, std::int32_t newValue, const std::string& tagVR = "");
+    void setSignedLong(const TagId& tagId, size_t bufferId, std::int32_t newValue, tagVR_t tagVR);
+
+    /// \brief Write a new signed 32 bit integer value into the element 0 of the
+    ///        specified Tag's buffer.
+    ///
+    /// If the specified Tag does not exist then it creates a new tag with a
+    ///  default VR retrieved from the DicomDictionary.
+    ///
+    /// \param tagId    the tag's id
+    /// \param bufferId the tag's buffer
+    /// \param newValue the value to write into the tag
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    void setSignedLong(const TagId& tagId, size_t bufferId, std::int32_t newValue);
 
     /// \brief Retrieve a tag's value as unsigned long integer (32 bit).
     ///
@@ -386,11 +433,22 @@ public:
     /// \param bufferId the tag's buffer
     /// \param newValue the value to write into the tag
     /// \param tagVR    the tag's type to use when a new tag is created.
-    ///                  If left empty then the default VR for the specified tag
-    ///                  ID will be used
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    void setUnsignedLong(const TagId& tagId, size_t bufferId, std::uint32_t newValue, const std::string& tagVR = "");
+    void setUnsignedLong(const TagId& tagId, size_t bufferId, std::uint32_t newValue, tagVR_t tagVR);
+
+    /// \brief Write a new unsigned 32 bit integer value into the element 0 of the
+    ///        specified Tag's buffer.
+    ///
+    /// If the specified Tag does not exist then it creates a new tag with a
+    ///  default VR retrieved from the DicomDictionary.
+    ///
+    /// \param tagId    the tag's id
+    /// \param bufferId the tag's buffer
+    /// \param newValue the value to write into the tag
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    void setUnsignedLong(const TagId& tagId, size_t bufferId, std::uint32_t newValue);
 
     /// \brief Retrieve a tag's value as a 64 bit floating point.
     ///
@@ -439,11 +497,22 @@ public:
     /// \param bufferId the tag's buffer
     /// \param newValue the value to write into the tag
     /// \param tagVR    the tag's type to use when a new tag is created.
-    ///                  If left empty then the default VR for the specified tag
-    ///                  ID will be used
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    void setDouble(const TagId& tagId, size_t bufferId, double newValue, const std::string& tagVR = "");
+    void setDouble(const TagId& tagId, size_t bufferId, double newValue, tagVR_t tagVR);
+
+    /// \brief Write a 64 bit floating point value into the element 0 of the
+    ///        specified Tag's buffer.
+    ///
+    /// If the specified Tag does not exist then it creates a new tag with a
+    ///  default VR retrieved from the DicomDictionary.
+    ///
+    /// \param tagId    the tag's id
+    /// \param bufferId the tag's buffer
+    /// \param newValue the value to write into the tag
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    void setDouble(const TagId& tagId, size_t bufferId, double newValue);
 
     /// \brief Retrieve a tag's value as a string.
     ///
@@ -482,21 +551,20 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     std::string getString(const TagId& tagId, size_t bufferId, size_t elementNumber, const std::string& defaultValue) const;
 
+    void setString(const TagId& tagId, size_t bufferId, const std::string& newString, tagVR_t tagVR);
+
     /// \brief Write a string value into the element 0 of the specified Tag's
     ///        buffer.
     ///
-    /// If the specified Tag or buffer don't exist then a new tag and/or buffer
-    ///  are created using the specified data type (VR).
+    /// If the specified Tag does not exist then it creates a new tag with a
+    ///  default VR retrieved from the DicomDictionary.
     ///
     /// \param tagId     the tag's id
     /// \param bufferId  the tag's buffer
     /// \param newString the string to write into the tag
-    /// \param tagVR     the tag's type to use when a new tag is created.
-    ///                   If left empty then the default VR for the specified tag
-    ///                   ID will be used
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    void setString(const TagId& tagId, size_t bufferId, const std::string& newString, const std::string& tagVR = "");
+    void setString(const TagId& tagId, size_t bufferId, const std::string& newString);
 
     /// \brief Retrieve a tag's value as an unicode string.
     ///
@@ -545,11 +613,22 @@ public:
     /// \param bufferId  the tag's buffer
     /// \param newString the string to write into the tag
     /// \param tagVR     the tag's type to use when a new tag is created.
-    ///                   If left empty then the default VR for the specified tag
-    ///                   ID will be used
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    void setUnicodeString(const TagId& tagId, size_t bufferId, const std::wstring& newString, const std::string& tagVR = "");
+    void setUnicodeString(const TagId& tagId, size_t bufferId, const std::wstring& newString, tagVR_t tagVR);
+
+    /// \brief Write an unicode string value into the element 0 of the specified
+    ///        Tag's buffer.
+    ///
+    /// If the specified Tag does not exist then it creates a new tag with a
+    ///  default VR retrieved from the DicomDictionary.
+    ///
+    /// \param tagId     the tag's id
+    /// \param bufferId  the tag's buffer
+    /// \param newString the string to write into the tag
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    void setUnicodeString(const TagId& tagId, size_t bufferId, const std::wstring& newString);
 
     /// \brief Retrieve a tag's value as Age.
     ///
@@ -592,17 +671,14 @@ public:
     ///        Tag's buffer.
     ///
     /// If the specified Tag or buffer don't exist then a new tag and/or buffer
-    ///  are created using the specified data type (VR).
+    ///  are created using VR tagVR_t::AS.
     ///
     /// \param tagId    the tag's id
     /// \param bufferId the tag's buffer
     /// \param age      the Age to write into the tag
-    /// \param tagVR    the tag's type to use when a new tag is created.
-    ///                  If left empty then the default VR for the specified tag
-    ///                  ID will be used
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    void setAge(const TagId& tagId, size_t bufferId, const Age& age, const std::string& tagVR = "");
+    void setAge(const TagId& tagId, size_t bufferId, const Age& age);
 
     /// \brief Retrieve a tag's value as a Date.
     ///
@@ -651,13 +727,30 @@ public:
     /// \param bufferId the tag's buffer
     /// \param date     the Date to write into the tag
     /// \param tagVR    the tag's type to use when a new tag is created.
-    ///                  If left empty then the default VR for the specified tag
-    ///                  ID will be used
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    void setDate(const TagId& tagId, size_t bufferId, const Date& date, const std::string& tagVR = "");
+    void setDate(const TagId& tagId, size_t bufferId, const Date& date, tagVR_t tagVR);
 
-    std::string getDataType(const TagId& tagId) const;
+    /// \brief Write a Date string into the element 0 of the specified
+    ///        Tag's buffer.
+    ///
+    /// If the specified Tag does not exist then it creates a new tag with a
+    ///  default VR retrieved from the DicomDictionary.
+    ///
+    /// \param tagId    the tag's id
+    /// \param bufferId the tag's buffer
+    /// \param date     the Date to write into the tag
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    void setDate(const TagId& tagId, size_t bufferId, const Date& date);
+
+    /// \brief Return the 2 chars data type (VR) of the specified tag.
+    ///
+    /// \param tagId the id of the tag
+    /// \return the tag's data type (VR)
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    tagVR_t getDataType(const TagId& tagId) const;
 
 #ifndef SWIG
 protected:

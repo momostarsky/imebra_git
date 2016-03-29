@@ -12,8 +12,6 @@ $fileHeader$
 
 #include <memory>
 #include "definitions.h"
-#include "transformsChain.h"
-#include "image.h"
 #include "readWriteMemory.h"
 
 #ifndef SWIG
@@ -29,6 +27,9 @@ class drawBitmap;
 
 namespace imebra
 {
+
+class TransformsChain;
+class Image;
 
 class IMEBRA_API DrawBitmap
 {

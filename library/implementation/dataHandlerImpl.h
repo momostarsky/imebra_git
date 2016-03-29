@@ -49,9 +49,9 @@ public:
     ///         readingDataHandler.
     ///
     ///////////////////////////////////////////////////////////
-    readingDataHandler(const std::string& dataType);
+    readingDataHandler(tagVR_t dataType);
 
-    std::string getDataType() const;
+    tagVR_t getDataType() const;
 
     /// \brief Retrieve the data handler's local buffer buffer
     ///         size (in elements).
@@ -181,17 +181,17 @@ public:
     virtual std::uint32_t getAge(const size_t index, ageUnit_t* pUnit) const;
 
 private:
-    std::string m_dataType;
+    tagVR_t m_dataType;
 };
 
 class writingDataHandler
 {
 public:
-    writingDataHandler(const std::shared_ptr<buffer>& pBuffer, const std::string& dataType, const std::uint8_t paddingByte);
+    writingDataHandler(const std::shared_ptr<buffer>& pBuffer, tagVR_t dataType, const std::uint8_t paddingByte);
 
     virtual ~writingDataHandler();
 
-    std::string getDataType() const;
+    tagVR_t getDataType() const;
 
     virtual size_t getSize() const = 0;
 
@@ -306,7 +306,7 @@ public:
     virtual void setUnicodeString(const size_t index, const std::wstring& value) =0;
 
 protected:
-    std::string m_dataType;
+    tagVR_t m_dataType;
 
     // Pointer to the connected buffer
     ///////////////////////////////////////////////////////////

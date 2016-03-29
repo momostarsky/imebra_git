@@ -22,7 +22,7 @@ $fileHeader$
 namespace imebra
 {
 
-DataSet CodecFactory::load(StreamReader& reader, size_t maxSizeBufferLoad)
+DataSet CodecFactory::load(StreamReader& reader, size_t maxSizeBufferLoad /*  = std::numeric_limits<size_t>::max()) */)
 {
     IMEBRA_FUNCTION_START();
 
@@ -63,7 +63,7 @@ void CodecFactory::saveImage(
         const Image& sourceImage,
         const std::string& transferSyntax,
         imageQuality_t imageQuality,
-        const std::string& dataType,
+        tagVR_t dataType,
         std::uint32_t allocatedBits,
         bool bSubSampledX,
         bool bSubSampledY,

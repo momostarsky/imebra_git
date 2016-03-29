@@ -36,7 +36,7 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 
-readingDataHandlerStringDS::readingDataHandlerStringDS(const memory& parseMemory): readingDataHandlerString(parseMemory, "DS", '\\', 0x20)
+readingDataHandlerStringDS::readingDataHandlerStringDS(const memory& parseMemory): readingDataHandlerString(parseMemory, tagVR_t::DS, '\\', 0x20)
 {
 }
 
@@ -82,7 +82,7 @@ std::uint32_t readingDataHandlerStringDS::getUnsignedLong(const size_t index) co
 
 
 writingDataHandlerStringDS::writingDataHandlerStringDS(const std::shared_ptr<buffer> pBuffer):
-    writingDataHandlerString(pBuffer, "DS", '\\', 0, 16, 0x20)
+    writingDataHandlerString(pBuffer, tagVR_t::DS, '\\', 0, 16, 0x20)
 {
 
 }

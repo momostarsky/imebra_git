@@ -9,6 +9,7 @@ $fileHeader$
 */
 
 #include "../include/imebra/dicomDirEntry.h"
+#include "../include/imebra/dataSet.h"
 #include "../implementation/dicomDirImpl.h"
 
 namespace imebra
@@ -51,11 +52,6 @@ DicomDirEntry DicomDirEntry::getFirstChildEntry()
 	return DicomDirEntry(m_pDirectoryRecord->getFirstChildRecord());
 }
 	
-DicomDirEntry DicomDirEntry::getReferencedEntry()
-{
-	return DicomDirEntry(m_pDirectoryRecord->getReferencedRecord());
-}
-
 void DicomDirEntry::setNextEntry(const DicomDirEntry& nextEntry)
 {
     m_pDirectoryRecord->setNextRecord(nextEntry.m_pDirectoryRecord);
@@ -66,11 +62,6 @@ void DicomDirEntry::setFirstChildEntry(const DicomDirEntry& firstChildEntry)
     m_pDirectoryRecord->setFirstChildRecord(firstChildEntry.m_pDirectoryRecord);
 }
 
-void DicomDirEntry::setReferencedEntry(const DicomDirEntry& referencedEntry)
-{
-    m_pDirectoryRecord->setReferencedRecord(referencedEntry.m_pDirectoryRecord);
-}
-	
 fileParts_t DicomDirEntry::getFileParts() const
 {
     return m_pDirectoryRecord->getFileParts();
@@ -79,6 +70,16 @@ fileParts_t DicomDirEntry::getFileParts() const
 void DicomDirEntry::setFileParts(const fileParts_t& fileParts)
 {
     m_pDirectoryRecord->setFileParts(fileParts);
+}
+
+directoryRecordType_t DicomDirEntry::getType() const
+{
+    return m_pDirectoryRecord->getType();
+}
+
+void DicomDirEntry::setType(directoryRecordType_t entryType)
+{
+    m_pDirectoryRecord->setType(entryType);
 }
 
 std::string DicomDirEntry::getTypeString() const

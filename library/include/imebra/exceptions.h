@@ -542,8 +542,7 @@ public:
 /// \brief This exception is thrown when a call to
 ///        dicomDir::setFirstRootRecord() or
 ///        directoryRecord::setNextRecord() or
-///        directoryRecord::setFirstChildRecord() or
-///        directoryRecord::setReferencedRecord() causes
+///        directoryRecord::setFirstChildRecord() causes
 ///        a circular reference between directoryRecord
 ///        objects.
 ///

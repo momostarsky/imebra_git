@@ -12,6 +12,7 @@ $fileHeader$
 #include "dataSetImpl.h"
 #include "bufferImpl.h"
 #include "../include/imebra/exceptions.h"
+#include "../include/imebra/definitions.h"
 
 namespace imebra
 {
@@ -189,7 +190,7 @@ std::shared_ptr<handlers::readingDataHandler> waveform::getIntegerData(std::uint
 	// Get the original data
 	///////////////////////////////////////////////////////////
     std::shared_ptr<handlers::readingDataHandler> waveformData(m_pDataSet->getReadingDataHandler(0x5400, 0x0, 0x1010, 0));
-	std::string sourceDataType(waveformData->getDataType());
+    tagVR_t sourceDataType(waveformData->getDataType());
 	
 	// Get the interpretation, number of channels, number of
 	//  samples
@@ -213,7 +214,7 @@ std::shared_ptr<handlers::readingDataHandler> waveform::getIntegerData(std::uint
 	
 	// Allocate a buffer for the destination data
 	///////////////////////////////////////////////////////////
-    buffer waveformBuffer("SL");
+    buffer waveformBuffer(tagVR_t::SL);
     std::shared_ptr<handlers::writingDataHandlerRaw> destinationHandler(waveformBuffer.getWritingDataHandlerRaw(numSamples));
     destinationHandler->setSize(numSamples * sizeof(std::int32_t));
     std::int32_t* pWritingMemory = (std::int32_t*)destinationHandler->getMemoryBuffer();
@@ -222,7 +223,7 @@ std::shared_ptr<handlers::readingDataHandler> waveform::getIntegerData(std::uint
 	///////////////////////////////////////////////////////////
 	std::uint32_t waveformPointer(channel);
 	std::uint32_t destinationPointer(0);
-	if(sourceDataType == "UB" || sourceDataType == "US")
+    if(sourceDataType == tagVR_t::OB || sourceDataType == tagVR_t::US)
 	{
 		for(std::uint32_t copySamples (numSamples); copySamples != 0; --copySamples)
 		{

@@ -33,7 +33,7 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 
-readingDataHandlerStringIS::readingDataHandlerStringIS(const memory& parseMemory): readingDataHandlerString(parseMemory, "IS", '\\', 0x20)
+readingDataHandlerStringIS::readingDataHandlerStringIS(const memory& parseMemory): readingDataHandlerString(parseMemory, tagVR_t::IS, '\\', 0x20)
 {
 }
 
@@ -58,7 +58,7 @@ double readingDataHandlerStringIS::getDouble(const size_t index) const
 }
 
 writingDataHandlerStringIS::writingDataHandlerStringIS(const std::shared_ptr<buffer> pBuffer):
-    writingDataHandlerString(pBuffer, "IS", '\\', 0, 12, 0x20)
+    writingDataHandlerString(pBuffer, tagVR_t::IS, '\\', 0, 12, 0x20)
 {
 
 }

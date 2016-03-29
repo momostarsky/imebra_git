@@ -41,11 +41,11 @@ namespace handlers
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-readingDataHandlerStringAE::readingDataHandlerStringAE(const memory &parseMemory): readingDataHandlerString(parseMemory, "AE", '\\', 0x20)
+readingDataHandlerStringAE::readingDataHandlerStringAE(const memory &parseMemory): readingDataHandlerString(parseMemory, tagVR_t::AE, '\\', 0x20)
 {
 }
 
-writingDataHandlerStringAE::writingDataHandlerStringAE(const std::shared_ptr<buffer> &pBuffer): writingDataHandlerString(pBuffer, "AE", '\\', 0, 16, 0x20)
+writingDataHandlerStringAE::writingDataHandlerStringAE(const std::shared_ptr<buffer> &pBuffer): writingDataHandlerString(pBuffer, tagVR_t::AE, '\\', 0, 16, 0x20)
 {
 }
 

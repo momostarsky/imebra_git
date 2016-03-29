@@ -11,6 +11,7 @@ $fileHeader$
 #include "exceptionImpl.h"
 #include "dataHandlerImpl.h"
 #include "memoryImpl.h"
+#include "dicomDictImpl.h"
 
 namespace imebra
 {
@@ -22,7 +23,7 @@ namespace handlers
 {
 
 
-readingDataHandler::readingDataHandler(const std::string& dataType): m_dataType(dataType)
+readingDataHandler::readingDataHandler(tagVR_t dataType): m_dataType(dataType)
 {
 }
 
@@ -35,7 +36,7 @@ readingDataHandler::readingDataHandler(const std::string& dataType): m_dataType(
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::string readingDataHandler::getDataType() const
+tagVR_t readingDataHandler::getDataType() const
 {
     return m_dataType;
 }
@@ -87,7 +88,7 @@ std::uint32_t readingDataHandler::getAge(const size_t /* index */, ageUnit_t *pU
 }
 
 
-writingDataHandler::writingDataHandler(const std::shared_ptr<buffer> &pBuffer, const std::string &dataType, const uint8_t paddingByte):
+writingDataHandler::writingDataHandler(const std::shared_ptr<buffer> &pBuffer, tagVR_t dataType, const uint8_t paddingByte):
     m_dataType(dataType), m_buffer(pBuffer), m_paddingByte(paddingByte)
 {
 }
@@ -105,7 +106,7 @@ writingDataHandler::~writingDataHandler()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::string writingDataHandler::getDataType() const
+tagVR_t writingDataHandler::getDataType() const
 {
     return m_dataType;
 }
@@ -133,7 +134,7 @@ void writingDataHandler::setDate(const size_t /* index */,
 {
     IMEBRA_FUNCTION_START();
 
-    IMEBRA_THROW(DataHandlerDeniedConversionError, "Cannot convert VR "<< getDataType() << " to Date");
+    IMEBRA_THROW(DataHandlerDeniedConversionError, "Cannot convert VR "<< dicomDictionary::getDicomDictionary()->enumDataTypeToString(getDataType()) << " to Date");
 
     IMEBRA_FUNCTION_END();
 }
@@ -142,7 +143,7 @@ void writingDataHandler::setAge(const size_t /* index */, const std::uint32_t /*
 {
     IMEBRA_FUNCTION_START();
 
-    IMEBRA_THROW(DataHandlerDeniedConversionError, "Cannot convert VR "<< getDataType() << " to Age");
+    IMEBRA_THROW(DataHandlerDeniedConversionError, "Cannot convert VR "<< dicomDictionary::getDicomDictionary()->enumDataTypeToString(getDataType()) << " to Age");
 
     IMEBRA_FUNCTION_END();
 }

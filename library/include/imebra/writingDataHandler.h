@@ -13,7 +13,6 @@ $fileHeader$
 #include <string>
 #include <memory>
 #include "definitions.h"
-#include "readWriteMemory.h"
 
 #ifndef SWIG
 
@@ -60,7 +59,7 @@ public:
 
     size_t getSize() const;
 
-    std::string getDataType() const;
+    tagVR_t getDataType() const;
 
     WritingDataHandler& setDate(size_t index, const Date& date);
 

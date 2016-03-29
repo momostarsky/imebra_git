@@ -34,12 +34,12 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 
 readingDataHandlerStringLT::readingDataHandlerStringLT(const memory& parseMemory, const charsetsList::tCharsetsList& initialCharsetsList):
-    readingDataHandlerStringUnicode(parseMemory, initialCharsetsList, "LT", L'\\', 0x20)
+    readingDataHandlerStringUnicode(parseMemory, initialCharsetsList, tagVR_t::LT, L'\\', 0x20)
 {
 }
 
 writingDataHandlerStringLT::writingDataHandlerStringLT(const std::shared_ptr<buffer> &pBuffer, const charsetsList::tCharsetsList &charsets):
-    writingDataHandlerStringUnicode(pBuffer, charsets, "LT", '\\', 0, 10240, 0x20)
+    writingDataHandlerStringUnicode(pBuffer, charsets, tagVR_t::LT, '\\', 0, 10240, 0x20)
 {
 }
 

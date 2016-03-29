@@ -151,7 +151,7 @@ std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
     {
         std::shared_ptr<implementation::data> imageTag = getTag(0x7fe0, 0x0, 0x0010);
 
-        const std::string imageStreamDataType(imageTag->getDataType(0));
+        const tagVR_t imageStreamDataType(imageTag->getDataType(0));
 
         // Get the number of frames
         ///////////////////////////////////////////////////////////
@@ -452,14 +452,14 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
 	// Select the data type OB if not already set in the
 	//  dataset
 	///////////////////////////////////////////////////////////
-    std::string dataHandlerType;
+    tagVR_t dataHandlerType;
     if(transferSyntax == "1.2.840.10008.1.2")
     {
-        dataHandlerType = getDefaultDataType(0x7FE0, 0x0010);
+        dataHandlerType = dicomDictionary::getDicomDictionary()->getTagType(0x7FE0, 0x0010);
     }
     else
     {
-        dataHandlerType = (bEncapsulated || allocatedBits <= 8) ? "OB" : "OW";
+        dataHandlerType = (bEncapsulated || allocatedBits <= 8) ? tagVR_t::OB : tagVR_t::OW;
     }
 
 	// Encapsulated mode. Check if we have the offsets table
@@ -906,7 +906,7 @@ std::int32_t dataSet::getSignedLong(std::uint16_t groupId, std::uint32_t order, 
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataSet::setSignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::int32_t newValue, const std::string& tagVR /* = "" */)
+void dataSet::setSignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::int32_t newValue, tagVR_t tagVR)
 {
     IMEBRA_FUNCTION_START();
 
@@ -917,6 +917,16 @@ void dataSet::setSignedLong(std::uint16_t groupId, std::uint32_t order, std::uin
     dataHandler->setSignedLong(0, newValue);
 
 	IMEBRA_FUNCTION_END();
+}
+
+
+void dataSet::setSignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::int32_t newValue)
+{
+    IMEBRA_FUNCTION_START();
+
+    setSignedLong(groupId, order, tagId, bufferId, newValue, dicomDictionary::getDicomDictionary()->getTagType(groupId, tagId));
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -964,7 +974,7 @@ std::uint32_t dataSet::getUnsignedLong(std::uint16_t groupId, std::uint32_t orde
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataSet::setUnsignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::uint32_t newValue, const std::string& tagVR /* = "" */)
+void dataSet::setUnsignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::uint32_t newValue, tagVR_t tagVR)
 {
     IMEBRA_FUNCTION_START();
 
@@ -975,6 +985,16 @@ void dataSet::setUnsignedLong(std::uint16_t groupId, std::uint32_t order, std::u
     dataHandler->setUnsignedLong(0, newValue);
 
 	IMEBRA_FUNCTION_END();
+}
+
+
+void dataSet::setUnsignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::uint32_t newValue)
+{
+    IMEBRA_FUNCTION_START();
+
+    setUnsignedLong(groupId, order, tagId, bufferId, newValue, dicomDictionary::getDicomDictionary()->getTagType(groupId, tagId));
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -1021,7 +1041,7 @@ double dataSet::getDouble(std::uint16_t groupId, std::uint32_t order, std::uint1
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataSet::setDouble(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, double newValue, const std::string& tagVR /* = "" */)
+void dataSet::setDouble(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, double newValue, tagVR_t tagVR)
 {
     IMEBRA_FUNCTION_START();
 
@@ -1034,6 +1054,15 @@ void dataSet::setDouble(std::uint16_t groupId, std::uint32_t order, std::uint16_
 	IMEBRA_FUNCTION_END();
 }
 
+
+void dataSet::setDouble(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, double newValue)
+{
+    IMEBRA_FUNCTION_START();
+
+    setDouble(groupId, order, tagId, bufferId, newValue, dicomDictionary::getDicomDictionary()->getTagType(groupId, tagId));
+
+    IMEBRA_FUNCTION_END();
+}
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -1114,7 +1143,7 @@ std::wstring dataSet::getUnicodeString(std::uint16_t groupId, std::uint32_t orde
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataSet::setString(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::string& newString, const std::string& tagVR /* = "" */)
+void dataSet::setString(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::string& newString, tagVR_t tagVR)
 {
     IMEBRA_FUNCTION_START();
 
@@ -1128,6 +1157,16 @@ void dataSet::setString(std::uint16_t groupId, std::uint32_t order, std::uint16_
 }
 
 
+void dataSet::setString(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::string& newString)
+{
+    IMEBRA_FUNCTION_START();
+
+    setString(groupId, order, tagId, bufferId, newString, dicomDictionary::getDicomDictionary()->getTagType(groupId, tagId));
+
+    IMEBRA_FUNCTION_END();
+}
+
+
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 //
@@ -1137,7 +1176,7 @@ void dataSet::setString(std::uint16_t groupId, std::uint32_t order, std::uint16_
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataSet::setUnicodeString(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::wstring& newString, const std::string& tagVR /* = "" */)
+void dataSet::setUnicodeString(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::wstring& newString, tagVR_t tagVR)
 {
     IMEBRA_FUNCTION_START();
 
@@ -1150,13 +1189,24 @@ void dataSet::setUnicodeString(std::uint16_t groupId, std::uint32_t order, std::
 	IMEBRA_FUNCTION_END();
 }
 
-void dataSet::setAge(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::uint32_t age, ageUnit_t units, const std::string& tagVR /* = "" */)
+
+void dataSet::setUnicodeString(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::wstring& newString)
+{
+    IMEBRA_FUNCTION_START();
+
+    setUnicodeString(groupId, order, tagId, bufferId, newString, dicomDictionary::getDicomDictionary()->getTagType(groupId, tagId));
+
+    IMEBRA_FUNCTION_END();
+}
+
+
+void dataSet::setAge(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::uint32_t age, ageUnit_t units)
 {
     IMEBRA_FUNCTION_START();
 
     std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
-    std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, bufferId, tagVR);
+    std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, bufferId, tagVR_t::AS);
     dataHandler->setSize(1);
     dataHandler->setAge(0, age, units);
 
@@ -1193,7 +1243,7 @@ std::uint32_t dataSet::getAge(std::uint16_t groupId, std::uint32_t order, std::u
 }
 
 
-void dataSet::setDate(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::uint32_t year, std::uint32_t month, std::uint32_t day, std::uint32_t hour, std::uint32_t minutes, std::uint32_t seconds, std::uint32_t nanoseconds, std::int32_t offsetHours, std::int32_t offsetMinutes, const std::string& tagVR /* = "" */)
+void dataSet::setDate(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::uint32_t year, std::uint32_t month, std::uint32_t day, std::uint32_t hour, std::uint32_t minutes, std::uint32_t seconds, std::uint32_t nanoseconds, std::int32_t offsetHours, std::int32_t offsetMinutes, tagVR_t tagVR)
 {
     IMEBRA_FUNCTION_START();
 
@@ -1202,6 +1252,15 @@ void dataSet::setDate(std::uint16_t groupId, std::uint32_t order, std::uint16_t 
     std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, bufferId, tagVR);
     dataHandler->setSize(1);
     dataHandler->setDate(0, year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes);
+
+    IMEBRA_FUNCTION_END();
+}
+
+void dataSet::setDate(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::uint32_t year, std::uint32_t month, std::uint32_t day, std::uint32_t hour, std::uint32_t minutes, std::uint32_t seconds, std::uint32_t nanoseconds, std::int32_t offsetHours, std::int32_t offsetMinutes)
+{
+    IMEBRA_FUNCTION_START();
+
+    setDate(groupId, order, tagId, bufferId, year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes, dicomDictionary::getDicomDictionary()->getTagType(groupId, tagId));
 
     IMEBRA_FUNCTION_END();
 }
@@ -1278,22 +1337,25 @@ std::shared_ptr<handlers::readingDataHandler> dataSet::getReadingDataHandler(std
 }
 
 
-std::shared_ptr<handlers::writingDataHandler> dataSet::getWritingDataHandler(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::string& tagVR /* ="" */)
+std::shared_ptr<handlers::writingDataHandler> dataSet::getWritingDataHandler(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, tagVR_t tagVR)
 {
     IMEBRA_FUNCTION_START();
 
     std::shared_ptr<data> tag(getTagCreate(groupId, order, tagId));
-
-    if(tagVR.length()!=2L)
-    {
-        return tag->getWritingDataHandler(bufferId, getDefaultDataType(groupId, tagId));
-    }
 
     return tag->getWritingDataHandler(bufferId, tagVR);
 
     IMEBRA_FUNCTION_END();
 }
 
+std::shared_ptr<handlers::writingDataHandler> dataSet::getWritingDataHandler(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId)
+{
+    IMEBRA_FUNCTION_START();
+
+    return getWritingDataHandler(groupId, order, tagId, bufferId, dicomDictionary::getDicomDictionary()->getTagType(groupId, tagId));
+
+    IMEBRA_FUNCTION_END();
+}
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -1323,13 +1385,22 @@ std::shared_ptr<streamReader> dataSet::getStreamReader(std::uint16_t groupId, st
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<streamWriter> dataSet::getStreamWriter(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::string& dataType /* = "" */)
+std::shared_ptr<streamWriter> dataSet::getStreamWriter(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, tagVR_t dataType)
 {
     IMEBRA_FUNCTION_START();
 
     return getTagCreate(groupId, order, tagId)->getStreamWriter(bufferId, dataType);
 
 	IMEBRA_FUNCTION_END();
+}
+
+std::shared_ptr<streamWriter> dataSet::getStreamWriter(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId)
+{
+    IMEBRA_FUNCTION_START();
+
+    return getStreamWriter(groupId, order, tagId, bufferId, dicomDictionary::getDicomDictionary()->getTagType(groupId, tagId));
+
+    IMEBRA_FUNCTION_END();
 }
 
 ///////////////////////////////////////////////////////////
@@ -1351,16 +1422,11 @@ std::shared_ptr<handlers::readingDataHandlerRaw> dataSet::getReadingDataHandlerR
 }
 
 
-std::shared_ptr<handlers::writingDataHandlerRaw> dataSet::getWritingDataHandlerRaw(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::string& tagVR /* ="" */)
+std::shared_ptr<handlers::writingDataHandlerRaw> dataSet::getWritingDataHandlerRaw(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, tagVR_t tagVR)
 {
     IMEBRA_FUNCTION_START();
 
     std::shared_ptr<data> tag = getTagCreate(groupId, order, tagId);
-
-    if(tagVR.length() != 2)
-    {
-        return tag->getWritingDataHandlerRaw(bufferId, getDefaultDataType(groupId, tagId));
-    }
 
     return tag->getWritingDataHandlerRaw(bufferId, tagVR);
 
@@ -1368,22 +1434,13 @@ std::shared_ptr<handlers::writingDataHandlerRaw> dataSet::getWritingDataHandlerR
 }
 
 
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Retrieve the requested tag's default data type
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-std::string dataSet::getDefaultDataType(std::uint16_t groupId, std::uint16_t tagId) const
+std::shared_ptr<handlers::writingDataHandlerRaw> dataSet::getWritingDataHandlerRaw(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId)
 {
     IMEBRA_FUNCTION_START();
 
-	return dicomDictionary::getDicomDictionary()->getTagType(groupId, tagId);
+    return getWritingDataHandlerRaw(groupId, order, tagId, bufferId, dicomDictionary::getDicomDictionary()->getTagType(groupId, tagId));
 
-	IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -1396,7 +1453,7 @@ std::string dataSet::getDefaultDataType(std::uint16_t groupId, std::uint16_t tag
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::string dataSet::getDataType(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId) const
+tagVR_t dataSet::getDataType(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId) const
 {
     IMEBRA_FUNCTION_START();
 

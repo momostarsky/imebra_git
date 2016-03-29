@@ -36,7 +36,7 @@ namespace handlers
 class readingDataHandlerNumericBase: public readingDataHandler
 {
 public:
-    readingDataHandlerNumericBase(const std::shared_ptr<const memory>& pMemory, const std::string& dataType);
+    readingDataHandlerNumericBase(const std::shared_ptr<const memory>& pMemory, tagVR_t dataType);
 
     const std::uint8_t* getMemoryBuffer() const;
 
@@ -85,7 +85,7 @@ protected:
 class writingDataHandlerNumericBase: public writingDataHandler
 {
 public:
-    writingDataHandlerNumericBase(const std::shared_ptr<buffer>& pBuffer, const size_t initialSize, const std::string& dataType, size_t unitSize, bool bIsSigned);
+    writingDataHandlerNumericBase(const std::shared_ptr<buffer>& pBuffer, const size_t initialSize, tagVR_t dataType, size_t unitSize, bool bIsSigned);
     ~writingDataHandlerNumericBase();
 
     std::uint8_t* getMemoryBuffer() const;
@@ -153,7 +153,7 @@ class readingDataHandlerNumeric : public readingDataHandlerNumericBase
 public:
     typedef dataHandlerType value_type;
 
-    readingDataHandlerNumeric(const std::shared_ptr<const memory>& pMemory, const std::string& dataType): readingDataHandlerNumericBase(pMemory, dataType)
+    readingDataHandlerNumeric(const std::shared_ptr<const memory>& pMemory, tagVR_t dataType): readingDataHandlerNumericBase(pMemory, dataType)
     {
 
     }
@@ -485,7 +485,7 @@ class writingDataHandlerNumeric : public writingDataHandlerNumericBase
 public:
     typedef dataHandlerType value_type;
 
-    writingDataHandlerNumeric(const std::shared_ptr<buffer> &pBuffer, const size_t initialSize, const std::string &dataType):
+    writingDataHandlerNumeric(const std::shared_ptr<buffer> &pBuffer, const size_t initialSize, tagVR_t dataType):
         writingDataHandlerNumericBase(
             pBuffer,
             initialSize,

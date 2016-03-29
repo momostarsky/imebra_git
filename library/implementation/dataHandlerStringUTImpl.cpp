@@ -33,12 +33,12 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 
 readingDataHandlerStringUT::readingDataHandlerStringUT(const memory& parseMemory, const charsetsList::tCharsetsList& charsets):
-    readingDataHandlerStringUnicode(parseMemory, charsets, "UT", 0x0, 0x20)
+    readingDataHandlerStringUnicode(parseMemory, charsets, tagVR_t::UT, 0x0, 0x20)
 {
 }
 
 writingDataHandlerStringUT::writingDataHandlerStringUT(const std::shared_ptr<buffer> &pBuffer, const charsetsList::tCharsetsList &charsets):
-    writingDataHandlerStringUnicode(pBuffer, charsets, "UT", 0x0, 0, 0, 0x20)
+    writingDataHandlerStringUnicode(pBuffer, charsets, tagVR_t::UT, 0x0, 0, 0, 0x20)
 {
 }
 

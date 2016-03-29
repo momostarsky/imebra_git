@@ -503,7 +503,7 @@ void jpegCodec::writeStream(std::shared_ptr<streamWriter> pStream, std::shared_p
     // Get the image then write it
     ///////////////////////////////////////////////////////////
     std::shared_ptr<image> decodedImage = pDataSet->getImage(0);
-    setImage(pStream, decodedImage, "1.2.840.10008.1.2.4.50", imageQuality_t::high, "OB", 8, true, true, false, false);
+    setImage(pStream, decodedImage, "1.2.840.10008.1.2.4.50", imageQuality_t::high, tagVR_t::OB, 8, true, true, false, false);
 
     IMEBRA_FUNCTION_END();
 
@@ -989,7 +989,7 @@ void jpegCodec::readStream(std::shared_ptr<streamReader> pSourceStream, std::sha
 
     // Insert the basic offset table
     ////////////////////////////////////////////////////////////////
-    std::shared_ptr<handlers::writingDataHandlerRaw> offsetHandler=pDataSet->getWritingDataHandlerRaw(0x7fe0, 0, 0x0010, 0, "OB");
+    std::shared_ptr<handlers::writingDataHandlerRaw> offsetHandler=pDataSet->getWritingDataHandlerRaw(0x7fe0, 0, 0x0010, 0, tagVR_t::OB);
     offsetHandler->setSize(4);
     ::memset(offsetHandler->getMemoryBuffer(), 0, offsetHandler->getSize());
 
@@ -999,7 +999,7 @@ void jpegCodec::readStream(std::shared_ptr<streamReader> pSourceStream, std::sha
     size_t streamLength = (std::uint32_t)(finalPosition - startPosition);
     pStream->seek(startPosition);
 
-    std::shared_ptr<handlers::writingDataHandlerRaw> imageHandler = pDataSet->getWritingDataHandlerRaw(0x7fe0, 0, 0x0010, 1, "OB");
+    std::shared_ptr<handlers::writingDataHandlerRaw> imageHandler = pDataSet->getWritingDataHandlerRaw(0x7fe0, 0, 0x0010, 1, tagVR_t::OB);
     if(imageHandler != 0 && streamLength != 0)
     {
         imageHandler->setSize(streamLength);
@@ -1094,7 +1094,7 @@ std::uint32_t jpegCodec::suggestAllocatedBits(const std::string& transferSyntax,
 //
 /////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
-std::shared_ptr<image> jpegCodec::getImage(const dataSet& sourceDataSet, std::shared_ptr<streamReader> pStream, const std::string& /* dataType not used */)
+std::shared_ptr<image> jpegCodec::getImage(const dataSet& sourceDataSet, std::shared_ptr<streamReader> pStream, tagVR_t /* dataType not used */)
 {
     IMEBRA_FUNCTION_START();
 
@@ -1643,7 +1643,7 @@ void jpegCodec::setImage(
         std::shared_ptr<image> pImage,
         const std::string& transferSyntax,
         imageQuality_t imageQuality,
-        const std::string& /* dataType */,
+        tagVR_t /* dataType */,
         std::uint32_t allocatedBits,
         bool bSubSampledX,
         bool bSubSampledY,

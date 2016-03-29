@@ -49,7 +49,7 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 
 
-readingDataHandlerString::readingDataHandlerString(const memory &parseMemory, const std::string &dataType, const char separator, const uint8_t paddingByte):
+readingDataHandlerString::readingDataHandlerString(const memory &parseMemory, tagVR_t dataType, const char separator, const uint8_t paddingByte):
     readingDataHandler(dataType)
 {
     IMEBRA_FUNCTION_START();
@@ -167,7 +167,7 @@ size_t readingDataHandlerString::getSize() const
     IMEBRA_FUNCTION_END();
 }
 
-writingDataHandlerString::writingDataHandlerString(const std::shared_ptr<buffer> &pBuffer, const std::string &dataType, const char separator, const size_t unitSize, const size_t maxSize, const uint8_t paddingByte):
+writingDataHandlerString::writingDataHandlerString(const std::shared_ptr<buffer> &pBuffer, tagVR_t dataType, const char separator, const size_t unitSize, const size_t maxSize, const uint8_t paddingByte):
     writingDataHandler(pBuffer, dataType, paddingByte), m_separator(separator), m_unitSize(unitSize), m_maxSize(maxSize)
 {
 }

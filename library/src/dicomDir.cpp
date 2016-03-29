@@ -9,13 +9,22 @@ $fileHeader$
 */
 
 #include "../include/imebra/dicomDir.h"
+#include "../include/imebra/dataSet.h"
+#include "../include/imebra/dicomDirEntry.h"
 #include "../implementation/dicomDirImpl.h"
 
 namespace imebra
 {
 
-DicomDir::DicomDir(DataSet fromDataSet): m_pDicomDir(std::make_shared<imebra::implementation::dicomDir>(fromDataSet.m_pDataSet))
-{}
+DicomDir::DicomDir()
+{
+    DataSet emptyDataSet;
+    m_pDicomDir = std::make_shared<imebra::implementation::dicomDir>(emptyDataSet.m_pDataSet);
+}
+
+DicomDir::DicomDir(const DataSet& fromDataSet): m_pDicomDir(std::make_shared<imebra::implementation::dicomDir>(fromDataSet.m_pDataSet))
+{
+}
 
 DicomDir::~DicomDir()
 {
@@ -36,7 +45,7 @@ DicomDirEntry DicomDir::getFirstRootEntry()
 	return DicomDirEntry(m_pDicomDir->getFirstRootRecord());
 }
 
-void DicomDir::setFirstRootEntry(DicomDirEntry firstEntryRecord)
+void DicomDir::setFirstRootEntry(const DicomDirEntry& firstEntryRecord)
 {
     if(firstEntryRecord.m_pDirectoryRecord == 0) throw std::logic_error("Null directoryRecord");
     m_pDicomDir->setFirstRootRecord(firstEntryRecord.m_pDirectoryRecord);

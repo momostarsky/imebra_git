@@ -53,7 +53,7 @@ class dicomCodec : public codec
 public:
 	// Get an image from a dicom structure
 	///////////////////////////////////////////////////////////
-    virtual std::shared_ptr<image> getImage(const dataSet& dataset, std::shared_ptr<streamReader> pSourceStream, const std::string& dataType);
+    virtual std::shared_ptr<image> getImage(const dataSet& dataset, std::shared_ptr<streamReader> pSourceStream, tagVR_t dataType);
 
 	// Write an image into a dicom structure
 	///////////////////////////////////////////////////////////
@@ -62,7 +62,7 @@ public:
 		std::shared_ptr<image> pImage,
         const std::string& transferSyntax,
         imageQuality_t imageQuality,
-        const std::string& dataType,
+        tagVR_t dataType,
         std::uint32_t allocatedBits,
 		bool bSubSampledX,
 		bool bSubSampledY,
@@ -170,7 +170,7 @@ protected:
 protected:
 	// Read a single tag
 	///////////////////////////////////////////////////////////
-    std::uint32_t readTag(std::shared_ptr<streamReader> pStream, std::shared_ptr<dataSet> pDataSet, std::uint32_t tagLengthDWord, std::uint16_t tagId, std::uint16_t order, std::uint16_t tagSubId, const std::string& tagType, streamController::tByteOrdering endianType, size_t wordSize, std::uint32_t bufferId, std::uint32_t maxSizeBufferLoad = 0xffffffff);
+    std::uint32_t readTag(std::shared_ptr<streamReader> pStream, std::shared_ptr<dataSet> pDataSet, std::uint32_t tagLengthDWord, std::uint16_t tagId, std::uint16_t order, std::uint16_t tagSubId, tagVR_t tagType, streamController::tByteOrdering endianType, size_t wordSize, std::uint32_t bufferId, std::uint32_t maxSizeBufferLoad = 0xffffffff);
 
 	// Calculate the tag's length
 	///////////////////////////////////////////////////////////

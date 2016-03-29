@@ -46,36 +46,38 @@ dicomDictionary::dicomDictionary()
 {
     IMEBRA_FUNCTION_START();
 
-	registerVR("AE", false, 0, 16);
-	registerVR("AS", false, 0, 0);
-	registerVR("AT", false, 2, 0);
-	registerVR("CS", false, 0, 16);
-	registerVR("DA", false, 0, 0);
-	registerVR("DS", false, 0, 16);
-	registerVR("DT", false, 0, 26);
-    registerVR("FL", false, 4, 0);
-    registerVR("FD", false, 8, 0);
-    registerVR("IS", false, 0, 12);
-	registerVR("LO", false, 0, 64);
-	registerVR("LT", false, 0, 10240);
-	registerVR("OB", true,  0, 0);
-    registerVR("SB", true,  0, 0); // Non standard. Used internally for signed bytes
-    registerVR("OF", true,  4, 0);
-    registerVR("OD", true,  8, 0);
-	registerVR("OW", true,  2, 0);
-	registerVR("PN", false, 0, 64);
-	registerVR("SH", false, 0, 16);
-	registerVR("SL", false, 4, 0);
-	registerVR("SQ", true,  0, 0);
-	registerVR("SS", false, 2, 0);
-	registerVR("ST", false, 0, 1024);
-	registerVR("TM", false, 0, 16);
-	registerVR("UI", false, 0, 64);
-	registerVR("UL", false, 4, 0);
-	registerVR("UN", true,  0, 0);
-	registerVR("US", false, 2, 0);
-	registerVR("UT", true, 0, 0);
-	registerVR("IS", false, 0, 0);
+    registerVR(tagVR_t::AE, false, 0, 16);
+    registerVR(tagVR_t::AS, false, 0, 0);
+    registerVR(tagVR_t::AT, false, 2, 0);
+    registerVR(tagVR_t::CS, false, 0, 16);
+    registerVR(tagVR_t::DA, false, 0, 0);
+    registerVR(tagVR_t::DS, false, 0, 16);
+    registerVR(tagVR_t::DT, false, 0, 26);
+    registerVR(tagVR_t::FL, false, 4, 0);
+    registerVR(tagVR_t::FD, false, 8, 0);
+    registerVR(tagVR_t::IS, false, 0, 12);
+    registerVR(tagVR_t::LO, false, 0, 64);
+    registerVR(tagVR_t::LT, false, 0, 10240);
+    registerVR(tagVR_t::OB, true,  0, 0);
+    registerVR(tagVR_t::SB, true,  0, 0); // Non standard. Used internally for signed bytes
+    registerVR(tagVR_t::OD, true,  8, 0);
+    registerVR(tagVR_t::OF, true,  4, 0);
+    registerVR(tagVR_t::OL, true,  4, 0);
+    registerVR(tagVR_t::OW, true,  2, 0);
+    registerVR(tagVR_t::PN, false, 0, 64);
+    registerVR(tagVR_t::SH, false, 0, 16);
+    registerVR(tagVR_t::SL, false, 4, 0);
+    registerVR(tagVR_t::SQ, true,  0, 0);
+    registerVR(tagVR_t::SS, false, 2, 0);
+    registerVR(tagVR_t::ST, false, 0, 1024);
+    registerVR(tagVR_t::TM, false, 0, 16);
+    registerVR(tagVR_t::UC, true, 0, 0);
+    registerVR(tagVR_t::UI, false, 0, 64);
+    registerVR(tagVR_t::UL, false, 4, 0);
+    registerVR(tagVR_t::UN, true,  0, 0);
+    registerVR(tagVR_t::UR, true, 0, 0);
+    registerVR(tagVR_t::US, false, 2, 0);
+    registerVR(tagVR_t::UT, true, 0, 0);
 	
     for(size_t scanDescriptions(0); m_tagsDescription[scanDescriptions].m_tagId != 0; ++scanDescriptions)
     {
@@ -98,13 +100,13 @@ dicomDictionary::dicomDictionary()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dicomDictionary::registerTag(std::uint32_t tagId, const wchar_t* tagName, const char* tagType)
+void dicomDictionary::registerTag(std::uint32_t tagId, const wchar_t* tagName, tagVR_t tagType)
 {
     IMEBRA_FUNCTION_START();
 
 	if(m_dicomDict.find(tagId) != m_dicomDict.end())
 	{
-		return;
+        IMEBRA_THROW(std::logic_error, "Tag registered twice");
 	}
 	imageDataDictionaryElement newElement;
 
@@ -126,13 +128,13 @@ void dicomDictionary::registerTag(std::uint32_t tagId, const wchar_t* tagName, c
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dicomDictionary::registerVR(const std::string& vr, bool bLongLength, std::uint32_t wordSize, std::uint32_t maxLength)
+void dicomDictionary::registerVR(tagVR_t vr, bool bLongLength, std::uint32_t wordSize, std::uint32_t maxLength)
 {
     IMEBRA_FUNCTION_START();
 
 	if(m_vrDict.find(vr) != m_vrDict.end())
 	{
-		return;
+        throw std::logic_error("VR registered twice");
 	}
 	validDataTypesStruct newElement;
 	newElement.m_longLength = bLongLength;
@@ -181,7 +183,7 @@ std::wstring dicomDictionary::getTagName(std::uint16_t groupId, std::uint16_t ta
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::string dicomDictionary::getTagType(std::uint16_t groupId, std::uint16_t tagId) const
+tagVR_t dicomDictionary::getTagType(std::uint16_t groupId, std::uint16_t tagId) const
 {
     IMEBRA_FUNCTION_START();
 
@@ -193,33 +195,47 @@ std::string dicomDictionary::getTagType(std::uint16_t groupId, std::uint16_t tag
         IMEBRA_THROW(DictionaryUnknownTagError, "Unknown tag " << std::hex << groupId << ", " << std::hex << tagId);
     }
 
-    if(findIterator->second.m_tagType.empty())
-    {
-        IMEBRA_THROW(DictionaryUnknownDefaultTypeError, "Unknown default data type for " << std::hex << groupId << ", " << std::hex << tagId);
-    }
-
 	return findIterator->second.m_tagType;
 
 	IMEBRA_FUNCTION_END();
 }
 
 
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Return true if the specified data type is valid
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
 bool dicomDictionary::isDataTypeValid(const std::string& dataType) const
 {
-	tVRDictionary::const_iterator findIterator = m_vrDict.find(dataType);
-
-	return (findIterator != m_vrDict.end());
+    try
+    {
+        stringDataTypeToEnum(dataType);
+        return true;
+    }
+    catch(const DictionaryUnknownDataTypeError&)
+    {
+        return false;
+    }
 }
 
+
+tagVR_t dicomDictionary::stringDataTypeToEnum(const std::string& dataType) const
+{
+    std::uint16_t enumVR = MAKE_VR_ENUM(dataType);
+
+    if(m_vrDict.find((tagVR_t)enumVR) == m_vrDict.end())
+    {
+        IMEBRA_THROW(DictionaryUnknownDataTypeError, "Unknown data type " << dataType);
+    }
+
+    return (tagVR_t)enumVR;
+}
+
+
+std::string dicomDictionary::enumDataTypeToString(tagVR_t dataType) const
+{
+    std::string returnType((size_t)2, ' ');
+    returnType[0] = (char)(((std::uint16_t)dataType >> 8) & 0xff);
+    returnType[1] = (char)((std::uint16_t)dataType & 0xff);
+
+    return returnType;
+}
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -231,7 +247,7 @@ bool dicomDictionary::isDataTypeValid(const std::string& dataType) const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-bool dicomDictionary::getLongLength(const std::string& dataType) const
+bool dicomDictionary::getLongLength(tagVR_t dataType) const
 {
     IMEBRA_FUNCTION_START();
 
@@ -258,7 +274,7 @@ bool dicomDictionary::getLongLength(const std::string& dataType) const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::uint32_t dicomDictionary::getWordSize(const std::string& dataType) const
+std::uint32_t dicomDictionary::getWordSize(tagVR_t dataType) const
 {
     IMEBRA_FUNCTION_START();
 
@@ -266,7 +282,7 @@ std::uint32_t dicomDictionary::getWordSize(const std::string& dataType) const
 
 	if(findIterator == m_vrDict.end())
 	{
-        IMEBRA_THROW(DictionaryUnknownDataTypeError, "Unknown data type " << dataType);
+        IMEBRA_THROW(DictionaryUnknownDataTypeError, "Unregistered data type" << (std::uint16_t)dataType);
     }
 
 	return findIterator->second.m_wordLength;
@@ -285,7 +301,7 @@ std::uint32_t dicomDictionary::getWordSize(const std::string& dataType) const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::uint32_t dicomDictionary::getMaxSize(const std::string& dataType) const
+std::uint32_t dicomDictionary::getMaxSize(tagVR_t dataType) const
 {
     IMEBRA_FUNCTION_START();
 
@@ -293,7 +309,7 @@ std::uint32_t dicomDictionary::getMaxSize(const std::string& dataType) const
 
 	if(findIterator == m_vrDict.end())
 	{
-        IMEBRA_THROW(DictionaryUnknownDataTypeError, "Unknown data type " << dataType);
+        IMEBRA_THROW(DictionaryUnknownDataTypeError, "Unregistered data type " << (std::uint16_t)dataType);
     }
 
 	return findIterator->second.m_maxLength;

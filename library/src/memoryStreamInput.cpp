@@ -3,7 +3,8 @@ $fileHeader$
 */
 
 #include "../include/imebra/memoryStreamInput.h"
-
+#include "../include/imebra/readMemory.h"
+#include "../include/imebra/readWriteMemory.h"
 #include "../implementation/memoryStreamImpl.h"
 #include <memory>
 

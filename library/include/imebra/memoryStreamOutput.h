@@ -9,15 +9,16 @@ $fileHeader$
 #include <string>
 #include "baseStreamOutput.h"
 #include "definitions.h"
-#include "readWriteMemory.h"
 
 namespace imebra
 {
 
+class ReadWriteMemory;
+
 class IMEBRA_API MemoryStreamOutput : public BaseStreamOutput
 {
 public:
-    MemoryStreamOutput(ReadWriteMemory& memory);
+    MemoryStreamOutput(const ReadWriteMemory& memory);
     MemoryStreamOutput(const MemoryStreamOutput& right);
     MemoryStreamOutput& operator=(const MemoryStreamOutput& right);
 };

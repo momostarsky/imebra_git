@@ -9,11 +9,12 @@ $fileHeader$
 #include <string>
 #include "baseStreamInput.h"
 #include "definitions.h"
-#include "readMemory.h"
-#include "readWriteMemory.h"
 
 namespace imebra
 {
+
+class ReadMemory;
+class ReadWriteMemory;
 
 class IMEBRA_API MemoryStreamInput : public BaseStreamInput
 {

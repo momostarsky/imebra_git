@@ -41,13 +41,11 @@ namespace imebra
 /// ReadingDataHandler is able to return the tag's content as a string,
 /// a number, a date/time or an age.
 ///
-/// When a ReadingDataHandler object handles a numeric tag then it can also
-/// return a pointer to the raw memory that stores the numeric values.
-///
 /// In order to obtain a ReadingDataHandler object for a specific tag stored
 /// in a DataSet, call DataSet::getReadingDataHandler().
 ///
-/// \warning ReadingDataHandler is NOT thread safe.
+/// ReadingDataHandler is thread safe: once it has been constructed its
+/// content cannot be changed.
 ///
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API ReadingDataHandler
@@ -97,7 +95,7 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     size_t getSize() const;
 
-	std::string getDataType() const;
+    tagVR_t getDataType() const;
 
     std::int32_t getSignedLong(size_t index) const;
 

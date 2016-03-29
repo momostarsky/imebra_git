@@ -12,6 +12,7 @@ $fileHeader$
 #include "streamWriterImpl.h"
 #include "dataImpl.h"
 #include "dataSetImpl.h"
+#include "dicomDictImpl.h"
 #include "bufferImpl.h"
 #include "dataHandlerImpl.h"
 #include "dataHandlerNumericImpl.h"
@@ -87,7 +88,7 @@ void data::setBuffer(size_t bufferId, const std::shared_ptr<buffer>& newBuffer)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::string data::getDataType(size_t bufferId) const
+tagVR_t data::getDataType(size_t bufferId) const
 {
     IMEBRA_FUNCTION_START();
 
@@ -228,7 +229,7 @@ std::shared_ptr<handlers::readingDataHandler> data::getReadingDataHandler(size_t
 }
 
 
-std::shared_ptr<handlers::writingDataHandler> data::getWritingDataHandler(size_t bufferId, const std::string& tagVR)
+std::shared_ptr<handlers::writingDataHandler> data::getWritingDataHandler(size_t bufferId, tagVR_t tagVR)
 {
     IMEBRA_FUNCTION_START();
 
@@ -253,7 +254,6 @@ std::shared_ptr<handlers::writingDataHandler> data::getWritingDataHandler(size_t
             /////////////////////////////////////////////////////////////
             if(
                     !m_buffers.empty() &&
-                    !m_buffers.begin()->second->getDataType().empty() &&
                     tagVR != m_buffers.begin()->second->getDataType())
             {
                 throw;
@@ -302,7 +302,7 @@ std::shared_ptr<handlers::readingDataHandlerRaw> data::getReadingDataHandlerRaw(
 }
 
 
-std::shared_ptr<handlers::writingDataHandlerRaw> data::getWritingDataHandlerRaw(size_t bufferId, const std::string& tagVR)
+std::shared_ptr<handlers::writingDataHandlerRaw> data::getWritingDataHandlerRaw(size_t bufferId, tagVR_t tagVR)
 {
     IMEBRA_FUNCTION_START();
 
@@ -385,7 +385,7 @@ std::shared_ptr<streamReader> data::getStreamReader(size_t bufferId)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<streamWriter> data::getStreamWriter(size_t bufferId, const std::string& dataType /* = "" */)
+std::shared_ptr<streamWriter> data::getStreamWriter(size_t bufferId, tagVR_t tagVR)
 {
     IMEBRA_FUNCTION_START();
 
@@ -413,7 +413,7 @@ std::shared_ptr<streamWriter> data::getStreamWriter(size_t bufferId, const std::
             }
             else
             {
-                pTempBuffer = std::make_shared<buffer>(dataType);
+                pTempBuffer = std::make_shared<buffer>(tagVR);
             }
 
             m_buffers[bufferId] = pTempBuffer;
@@ -503,6 +503,7 @@ void data::appendDataSet(std::shared_ptr<dataSet> pDataSet)
 
     std::lock_guard<std::mutex> lock(m_mutex);
 
+    pDataSet->setCharsetsList(m_charsetsList);
     m_embeddedDataSets.push_back(pDataSet);
 
 	IMEBRA_FUNCTION_END();

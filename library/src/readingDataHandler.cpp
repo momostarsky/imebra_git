@@ -35,7 +35,7 @@ size_t ReadingDataHandler::getSize() const
     return m_pDataHandler->getSize();
 }
 
-std::string ReadingDataHandler::getDataType() const
+tagVR_t ReadingDataHandler::getDataType() const
 {
     return m_pDataHandler->getDataType();
 }

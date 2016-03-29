@@ -34,7 +34,7 @@ namespace handlers
 class readingDataHandlerString : public readingDataHandler
 {
 public:
-    readingDataHandlerString(const memory& parseMemory, const std::string& dataType, const char separator, const std::uint8_t paddingByte);
+    readingDataHandlerString(const memory& parseMemory, tagVR_t dataType, const char separator, const std::uint8_t paddingByte);
 
     // Get the data element as a signed long
     ///////////////////////////////////////////////////////////
@@ -69,7 +69,7 @@ protected:
 class writingDataHandlerString : public writingDataHandler
 {
 public:
-    writingDataHandlerString(const std::shared_ptr<buffer>& pBuffer, const std::string& dataType, const char separator, const size_t unitSize, const size_t maxSize, const std::uint8_t paddingByte);
+    writingDataHandlerString(const std::shared_ptr<buffer>& pBuffer, tagVR_t dataType, const char separator, const size_t unitSize, const size_t maxSize, const std::uint8_t paddingByte);
 
     ~writingDataHandlerString();
 

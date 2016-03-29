@@ -78,7 +78,7 @@ TEST(jpegCodecTest, testBaselineSubsampled)
                     MemoryStreamOutput saveStream(savedJpeg);
                     StreamWriter writer(saveStream);
 
-                    CodecFactory::saveImage(writer, ybrImage, "1.2.840.10008.1.2.4.50", imageQuality_t::veryHigh, "OB", 8, subsampledX != 0, subsampledY != 0, interleaved != 0, false);
+                    CodecFactory::saveImage(writer, ybrImage, "1.2.840.10008.1.2.4.50", imageQuality_t::veryHigh, tagVR_t::OB, 8, subsampledX != 0, subsampledY != 0, interleaved != 0, false);
                 }
 
                 MemoryStreamInput loadStream(savedJpeg);

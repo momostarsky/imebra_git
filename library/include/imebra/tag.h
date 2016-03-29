@@ -38,10 +38,9 @@ namespace imebra
 {
 
 ///
+/// \brief This class represents a DICOM tag.
 ///
-/// This class represents a DICOM dataset.
-///
-///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API Tag
 {
 
@@ -53,65 +52,59 @@ private:
 
 
 public:
-    ///
     /// \brief Construct an empty dicom tag.
     ///
-    ///////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////
     Tag();
 
+    /// \brief Copy constructor: build a Tag object referencing the same Tag
+    ///        implementation object as the source one.
     ///
-    /// \brief Creates a dataset and shallow copies the data
-    ///        from the dataset in the parameters
-    /// \param right the dataset to copy from
+    /// \param right another Tag object to use as source
     ///
-    /// This dataset and the one in the parameter will refer
-    ///  to the same data: changes made in one dataset will be
-    ///  reflected in the other dataset.
-    ///
-    ///////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////
     Tag(const Tag& right);
 
     virtual ~Tag();
 
+    /// \brief Copy operator: references the same Tag object as the source one.
+    ///
+    /// \param right another Tag object to use as source
+    /// \return a reference to this object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     Tag& operator=(const Tag& right);
 
     /// \brief Returns the number of buffers in the tag.
     ///
     /// @return the number of buffers in the tag
     ///
-    ///////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////
     size_t getBuffersCount() const;
 
-    /// \brief Returns true if the specified buffer exists,
-    ///         otherwise it returns false.
-    ///
-    /// The buffer can be created by requesting a writing
-    ///  handler (see handlers::dataHandler).
+    /// \brief Returns true if the specified buffer exists, otherwise it returns
+    ///        false.
     ///
     /// @param bufferId the zero-based buffer's id the
     ///                 function has to check for
     /// @return true if the buffer exists, false otherwise
     ///
-    ///////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////
     bool bufferExists(size_t bufferId) const;
 
     /// \brief Returns the size of a buffer, in bytes.
     ///
-    /// If the buffer doesn't exist then returns 0.
-    /// See buffer::getBufferSizeBytes() for more info.
+    /// If the buffer doesn't exist then throws MissingBufferError.
     ///
     /// @param bufferId the zero-based buffer's id the
     ///                 function has to check for
-    /// @return the buffer's size in bytes, or 0 if the buffer
-    ///          doesn't exist.
+    /// @return the buffer's size in bytes
     ///
-    ///////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////
     size_t getBufferSize(size_t bufferId) const;
 
-    /// \brief Get a data handler for the specified buffer.
+    /// \brief Get a ReadingDataHandler for the specified buffer.
     ///
-    /// handlers::dataHandler can be used to read, write
-    ///  and resize the buffer.
     ///
     /// handlers::dataHandler manages data types depending
     ///  on the buffer's data type: if your application
@@ -147,15 +140,15 @@ public:
     ///////////////////////////////////////////////////////////
     ReadingDataHandler getReadingDataHandler(size_t bufferId) const;
 
-    WritingDataHandler getWritingDataHandler(size_t bufferId, const std::string& tagVR);
+    WritingDataHandler getWritingDataHandler(size_t bufferId, tagVR_t tagVR);
 
     ReadingDataHandlerNumeric getReadingDataHandlerNumeric(size_t bufferId) const;
 
     ReadingDataHandlerNumeric getReadingDataHandlerRaw(size_t bufferId) const;
 
-    WritingDataHandlerNumeric getWritingDataHandlerNumeric(size_t bufferId, const std::string& tagVR);
+    WritingDataHandlerNumeric getWritingDataHandlerNumeric(size_t bufferId, tagVR_t tagVR);
 
-    WritingDataHandlerNumeric getWritingDataHandlerRaw(size_t bufferId, const std::string& tagVR);
+    WritingDataHandlerNumeric getWritingDataHandlerRaw(size_t bufferId, tagVR_t tagVR);
 
     /// \brief Get a streamReader connected to a buffer's data.
     ///
@@ -179,7 +172,7 @@ public:
     ///                    emptied buffer's data.
     ///
     ///////////////////////////////////////////////////////////
-    StreamWriter getStreamWriter(size_t bufferId, const std::string& dataType = "");
+    StreamWriter getStreamWriter(size_t bufferId, tagVR_t dataVR);
 
     //@}
 
@@ -262,7 +255,7 @@ public:
     /// @return the buffer's data type in Dicom format
     ///
     ///////////////////////////////////////////////////////////
-    std::string getDataType(size_t bufferId) const;
+    tagVR_t getDataType(size_t bufferId) const;
 
 #ifndef SWIG
 protected:

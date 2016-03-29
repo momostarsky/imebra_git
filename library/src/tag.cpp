@@ -55,7 +55,7 @@ ReadingDataHandler Tag::getReadingDataHandler(size_t bufferId) const
     return ReadingDataHandler(m_pData->getReadingDataHandler(bufferId));
 }
 
-WritingDataHandler Tag::getWritingDataHandler(size_t bufferId, const std::string& tagVR)
+WritingDataHandler Tag::getWritingDataHandler(size_t bufferId, tagVR_t tagVR)
 {
     return WritingDataHandler(m_pData->getWritingDataHandler(bufferId, tagVR));
 }
@@ -77,7 +77,7 @@ ReadingDataHandlerNumeric Tag::getReadingDataHandlerRaw(size_t bufferId) const
     return ReadingDataHandlerNumeric(numericHandler);
 }
 
-WritingDataHandlerNumeric Tag::getWritingDataHandlerNumeric(size_t bufferId, const std::string& tagVR)
+WritingDataHandlerNumeric Tag::getWritingDataHandlerNumeric(size_t bufferId, tagVR_t tagVR)
 {
     std::shared_ptr<implementation::handlers::writingDataHandlerNumericBase> numericHandler =
             std::dynamic_pointer_cast<implementation::handlers::writingDataHandlerNumericBase>(m_pData->getWritingDataHandler(bufferId, tagVR));
@@ -88,7 +88,7 @@ WritingDataHandlerNumeric Tag::getWritingDataHandlerNumeric(size_t bufferId, con
     return WritingDataHandlerNumeric(numericHandler);
 }
 
-WritingDataHandlerNumeric Tag::getWritingDataHandlerRaw(size_t bufferId, const std::string& tagVR)
+WritingDataHandlerNumeric Tag::getWritingDataHandlerRaw(size_t bufferId, tagVR_t tagVR)
 {
     std::shared_ptr<implementation::handlers::writingDataHandlerNumericBase> numericHandler = m_pData->getWritingDataHandlerRaw(bufferId, tagVR);
     return WritingDataHandlerNumeric(numericHandler);
@@ -99,9 +99,9 @@ StreamReader Tag::getStreamReader(size_t bufferId)
     return StreamReader(m_pData->getStreamReader(bufferId));
 }
 
-StreamWriter Tag::getStreamWriter(size_t bufferId, const std::string& dataType)
+StreamWriter Tag::getStreamWriter(size_t bufferId, tagVR_t tagVR)
 {
-    return StreamWriter(m_pData->getStreamWriter(bufferId, dataType));
+    return StreamWriter(m_pData->getStreamWriter(bufferId, tagVR));
 }
 
 DataSet Tag::getSequenceItem(size_t dataSetId) const
@@ -124,7 +124,7 @@ void Tag::appendSequenceItem(const DataSet& dataSet)
     m_pData->appendDataSet(dataSet.m_pDataSet);
 }
 
-std::string Tag::getDataType(size_t bufferId) const
+tagVR_t Tag::getDataType(size_t bufferId) const
 {
     return m_pData->getDataType(bufferId);
 }

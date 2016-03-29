@@ -10,16 +10,15 @@ $fileHeader$
 #if !defined(imebraDicomDir__INCLUDED_)
 #define imebraDicomDir__INCLUDED_
 
-#ifndef SWIG
-
 #include <memory>
 #include <string>
-#include "dataSet.h"
 #include "definitions.h"
-#include "dicomDirEntry.h"
+
+#ifndef SWIG
 
 namespace imebra
 {
+
 namespace implementation
 {
 class dicomDir;
@@ -31,19 +30,43 @@ class dicomDir;
 namespace imebra
 {
 
+class DataSet;
+class DicomDirEntry;
+
+///
+/// \brief Represents a DICOMDIR structure.
+///
+/// It parses a DataSet created from parsing a DICOMDIR file and gives access
+/// to the individual DICOMDIR items, each represented by a DicomDirEntry
+/// object.
+///
+///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API DicomDir
 {
 public:
-	DicomDir(DataSet fromDataSet);
+    DicomDir();
+
+    /// \brief Construct a DicomDir from a DataSet object.
+    ///
+    /// \param fromDataSet the DataSet created from reading a DICOMDIR file
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    DicomDir(const DataSet& fromDataSet);
     virtual ~DicomDir();
 
+    /// \brief Return the DataSet that was used to build the DicomDir object, or
+    ///        that was updated via buildDataSet().
+    ///
+    /// \return the DataSet that was used to create the DicomDir, or the last one
+    ///         created via buildDataSet
+    ///////////////////////////////////////////////////////////////////////////////
 	DataSet getDirectoryDataSet();
 
     DicomDirEntry getNewEntry();
 
     DicomDirEntry getFirstRootEntry();
 
-    void setFirstRootEntry(DicomDirEntry firstEntryRecord);
+    void setFirstRootEntry(const DicomDirEntry& firstEntryRecord);
 
 	DataSet buildDataSet();
 

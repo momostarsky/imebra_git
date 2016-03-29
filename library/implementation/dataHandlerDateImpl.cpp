@@ -37,7 +37,7 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 
-readingDataHandlerDate::readingDataHandlerDate(const memory& parseMemory): readingDataHandlerDateTimeBase(parseMemory, "DA")
+readingDataHandlerDate::readingDataHandlerDate(const memory& parseMemory): readingDataHandlerDateTimeBase(parseMemory, tagVR_t::DA)
 {
 
 }
@@ -82,7 +82,7 @@ void readingDataHandlerDate::getDate(const size_t index,
 
 
 writingDataHandlerDate::writingDataHandlerDate(const std::shared_ptr<buffer> &pBuffer):
-    writingDataHandlerDateTimeBase(pBuffer, "DA", 0, 18)
+    writingDataHandlerDateTimeBase(pBuffer, tagVR_t::DA, 0, 18)
 {
 }
 

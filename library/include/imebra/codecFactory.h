@@ -12,6 +12,7 @@ $fileHeader$
 #define imebraCodecFactory__INCLUDED_
 
 #include <string>
+#include <limits>
 #include "dataSet.h"
 #include "streamReader.h"
 #include "streamWriter.h"
@@ -43,7 +44,7 @@ public:
     /// \return a DataSet object representing the input stream's content
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    static DataSet load(StreamReader& reader, size_t maxSizeBufferLoad);
+    static DataSet load(StreamReader& reader, size_t maxSizeBufferLoad = std::numeric_limits<size_t>::max());
 
     /// \brief Parses the content of the input file and returns a DataSet
     ///        representing it.
@@ -84,7 +85,7 @@ public:
             const Image& sourceImage,
             const std::string& transferSyntax,
             imageQuality_t imageQuality_t,
-            const std::string& dataType,
+            tagVR_t dataType,
             std::uint32_t allocatedBits,
             bool bSubSampledX,
             bool bSubSampledY,

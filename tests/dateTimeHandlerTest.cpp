@@ -24,7 +24,7 @@ TEST(dateTimeHandlerTest, dateTest)
     EXPECT_EQ(0, checkDate.nanoseconds);
     EXPECT_EQ(0, checkDate.offsetHours);
     EXPECT_EQ(0, checkDate.offsetMinutes);
-    EXPECT_EQ("DA", testDataSet.getDataType(TagId(0x0008, 0x0012)));
+    EXPECT_EQ(tagVR_t::DA, testDataSet.getDataType(TagId(0x0008, 0x0012)));
 
 
     testDataSet.setString(TagId(0x0008, 0x0012), 0, "20120910");
@@ -58,7 +58,7 @@ TEST(dateTimeHandlerTest, timeTest)
         EXPECT_EQ(5000, checkDate.nanoseconds);
         EXPECT_EQ(0, checkDate.offsetHours);
         EXPECT_EQ(0, checkDate.offsetMinutes);
-        EXPECT_EQ("TM", testDataSet.getDataType(TagId(0x0008, 0x0013)));
+        EXPECT_EQ(tagVR_t::TM, testDataSet.getDataType(TagId(0x0008, 0x0013)));
     }
 
     {

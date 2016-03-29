@@ -180,7 +180,7 @@ public:
 	/// @return a pointer to the loaded image
 	///
 	///////////////////////////////////////////////////////////
-    virtual std::shared_ptr<image> getImage(const dataSet& sourceDataSet, std::shared_ptr<streamReader> pSourceStream, const std::string& dataType) = 0;
+    virtual std::shared_ptr<image> getImage(const dataSet& sourceDataSet, std::shared_ptr<streamReader> pSourceStream, tagVR_t dataType) = 0;
 	
 	/// \brief Stores an image into stream.
 	///
@@ -224,7 +224,7 @@ public:
 		std::shared_ptr<image> pSourceImage, 
         const std::string& transferSyntax,
         imageQuality_t imageQuality,
-        const std::string& dataType,
+        tagVR_t dataType,
         std::uint32_t allocatedBits,
 		bool bSubSampledX,
 		bool bSubSampledY,

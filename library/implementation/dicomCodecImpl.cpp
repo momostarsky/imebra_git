@@ -233,11 +233,7 @@ void dicomCodec::writeTag(std::shared_ptr<streamWriter> pDestStream, std::shared
 
     // Check the data type
     ///////////////////////////////////////////////////////////
-    std::string dataType = pData->getDataType(0);
-    if(!(dicomDictionary::getDicomDictionary()->isDataTypeValid(dataType)))
-    {
-        IMEBRA_THROW(BufferUnknownTypeError, "Unknown data type " << dataType);
-    }
+    tagVR_t dataType = pData->getDataType(0);
 
     // Adjust the tag id endian and write it
     ///////////////////////////////////////////////////////////
@@ -249,7 +245,8 @@ void dicomCodec::writeTag(std::shared_ptr<streamWriter> pDestStream, std::shared
     ///////////////////////////////////////////////////////////
     if(bExplicitDataType)
     {
-        pDestStream->write((std::uint8_t*)(dataType.c_str()), 2);
+        std::string dataTypeString(dicomDictionary::getDicomDictionary()->enumDataTypeToString(dataType));
+        pDestStream->write((std::uint8_t*)(dataTypeString.c_str()), 2);
 
         std::uint16_t tagLengthWord = (std::uint16_t)tagLength;
 
@@ -368,8 +365,8 @@ std::uint32_t dicomCodec::getTagLength(const std::shared_ptr<data>& pData, bool 
 {
     IMEBRA_FUNCTION_START();
 
-    std::string dataType = pData->getDataType(0);
-    *pbSequence = (dataType == "SQ");
+    tagVR_t dataType = pData->getDataType(0);
+    *pbSequence = (dataType == tagVR_t::SQ);
     std::uint32_t numberOfElements = 0;
     std::uint32_t totalLength = 0;
     for(std::uint32_t scanBuffers = 0; ; ++scanBuffers, ++numberOfElements)
@@ -606,13 +603,10 @@ void dicomCodec::parseStream(std::shared_ptr<streamReader> pStream,
     std::uint16_t lastTagId = 0;
 
     std::uint32_t tempReadSubItemLength = 0; // used when the last parameter is not defined
-    char       tagType[3];
     bool       bStopped = false;
     bool       bFirstTag = (pReadSubItemLength == 0);
     bool       bCheckTransferSyntax = bFirstTag;
     size_t     wordSize;
-
-    tagType[2] = 0;
 
     if(pReadSubItemLength == 0)
     {
@@ -704,11 +698,15 @@ void dicomCodec::parseStream(std::shared_ptr<streamReader> pStream,
         // Explicit data type
         //
         ///////////////////////////////////////////////////////////
+        tagVR_t tagType;
+
         if(bExplicitDataType && tagId!=0xfffe)
         {
             // Get the tag's type
             ///////////////////////////////////////////////////////////
-            pStream->read((std::uint8_t*)tagType, 2);
+            std::string tagTypeString((size_t)2, ' ');
+
+            pStream->read((std::uint8_t*)&(tagTypeString[0]), 2);
             (*pReadSubItemLength) += 2;
 
             // Get the tag's length
@@ -719,8 +717,9 @@ void dicomCodec::parseStream(std::shared_ptr<streamReader> pStream,
 
             // The data type is valid
             ///////////////////////////////////////////////////////////
-            if(dicomDictionary::getDicomDictionary()->isDataTypeValid(tagType))
+            try
             {
+                tagType = dicomDictionary::getDicomDictionary()->stringDataTypeToEnum(tagTypeString);
                 tagLengthDWord=(std::uint32_t)tagLengthWord;
                 wordSize = dicomDictionary::getDicomDictionary()->getWordSize(tagType);
                 if(dicomDictionary::getDicomDictionary()->getLongLength(tagType))
@@ -730,15 +729,15 @@ void dicomCodec::parseStream(std::shared_ptr<streamReader> pStream,
                     (*pReadSubItemLength) += (std::uint32_t)sizeof(tagLengthDWord);
                 }
             }
-
-            // The data type is not valid. Switch to implicit data type
-            ///////////////////////////////////////////////////////////
-            else
+            catch(const DictionaryUnknownDataTypeError&)
             {
+                // The data type is not valid. Switch to implicit data type
+                ///////////////////////////////////////////////////////////
+                bExplicitDataType = false;
                 if(endianType == streamController::lowByteEndian)
-                    tagLengthDWord=(((std::uint32_t)tagLengthWord)<<16) | ((std::uint32_t)tagType[0]) | (((std::uint32_t)tagType[1])<<8);
+                    tagLengthDWord=(((std::uint32_t)tagLengthWord)<<16) | ((std::uint32_t)tagTypeString[0]) | (((std::uint32_t)tagTypeString[1])<<8);
                 else
-                    tagLengthDWord=(std::uint32_t)tagLengthWord | (((std::uint32_t)tagType[0])<<24) | (((std::uint32_t)tagType[1])<<16);
+                    tagLengthDWord=(std::uint32_t)tagLengthWord | (((std::uint32_t)tagTypeString[0])<<24) | (((std::uint32_t)tagTypeString[1])<<16);
             }
 
 
@@ -757,8 +756,7 @@ void dicomCodec::parseStream(std::shared_ptr<streamReader> pStream,
             pStream->read((std::uint8_t*)&tagLengthDWord, sizeof(tagLengthDWord));
             pStream->adjustEndian((std::uint8_t*)&tagLengthDWord, sizeof(tagLengthDWord), endianType);
             (*pReadSubItemLength) += (std::uint32_t)sizeof(tagLengthDWord);
-        } // End of the implicit data type read block
-
+        }
 
         ///////////////////////////////////////////////////////////
         //
@@ -771,20 +769,12 @@ void dicomCodec::parseStream(std::shared_ptr<streamReader> pStream,
             ///////////////////////////////////////////////////////////
             if(tagSubId == 0)
             {
-                tagType[0]='U';
-                tagType[1]='L';
+                tagType = tagVR_t::UL;
             }
             else
             {
-                tagType[0]=tagType[1] = 0;
-                std::string tagVR=pDataSet->getDefaultDataType(tagId, tagSubId);
-                if(tagVR.length()==2L)
-                {
-                    tagType[0]=tagVR[0];
-                    tagType[1]=tagVR[1];
-
-                    wordSize = dicomDictionary::getDicomDictionary()->getWordSize(tagType);
-                }
+                tagType = dicomDictionary::getDicomDictionary()->getTagType(tagId, tagSubId);
+                wordSize = dicomDictionary::getDicomDictionary()->getWordSize(tagType);
             }
         }
 
@@ -825,7 +815,7 @@ void dicomCodec::parseStream(std::shared_ptr<streamReader> pStream,
         lastGroupId=tagId;
         lastTagId=tagSubId;
 
-        if(tagLengthDWord != 0xffffffff && ::memcmp(tagType, "SQ", 2) != 0)
+        if(tagLengthDWord != 0xffffffff && tagType != tagVR_t::SQ)
         {
             (*pReadSubItemLength) += readTag(pStream, pDataSet, tagLengthDWord, tagId, order, tagSubId, tagType, endianType, wordSize, 0, maxSizeBufferLoad);
             continue;
@@ -883,7 +873,7 @@ void dicomCodec::parseStream(std::shared_ptr<streamReader> pStream,
             ///////////////////////////////////////////////////////////
             // Parse a sub element
             ///////////////////////////////////////////////////////////
-            if((sequenceItemLength == 0xffffffff) || (::memcmp(tagType, "SQ", 2) == 0))
+            if((sequenceItemLength == 0xffffffff) || tagType == tagVR_t::SQ)
             {
                 std::shared_ptr<dataSet> sequenceDataSet(std::make_shared<dataSet>());
                 sequenceDataSet->setItemOffset(itemOffset);
@@ -926,7 +916,7 @@ void dicomCodec::parseStream(std::shared_ptr<streamReader> pStream,
 //
 /////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
-std::shared_ptr<image> dicomCodec::getImage(const dataSet& dataset, std::shared_ptr<streamReader> pStream, const std::string& dataType)
+std::shared_ptr<image> dicomCodec::getImage(const dataSet& dataset, std::shared_ptr<streamReader> pStream, tagVR_t dataType)
 {
     IMEBRA_FUNCTION_START();
 
@@ -1057,7 +1047,7 @@ std::shared_ptr<image> dicomCodec::getImage(const dataSet& dataset, std::shared_
     ///////////////////////////////////////////////////////////
     if(!bRleCompressed)
     {
-        std::uint32_t wordSizeBytes = (dataType == "OW") ? 2 : 1;
+        std::uint32_t wordSizeBytes = (dataType == tagVR_t::OW) ? 2 : 1;
 
         // The planes are interleaved
         ///////////////////////////////////////////////////////////
@@ -2022,7 +2012,7 @@ void dicomCodec::setImage(
         std::shared_ptr<image> pImage,
         const std::string& transferSyntax,
         imageQuality_t /*imageQuality*/,
-        const std::string& dataType,
+        tagVR_t dataType,
         std::uint32_t allocatedBits,
         bool bSubSampledX,
         bool bSubSampledY,
@@ -2080,7 +2070,7 @@ void dicomCodec::setImage(
         return;
     }
 
-    std::uint8_t wordSizeBytes = ((dataType == "OW") || (dataType == "SS") || (dataType == "US")) ? 2 : 1;
+    std::uint8_t wordSizeBytes = ((dataType == tagVR_t::OW) || (dataType == tagVR_t::SS) || (dataType == tagVR_t::US)) ? 2 : 1;
 
     if(bInterleaved || channelsNumber == 1)
     {
@@ -2194,7 +2184,7 @@ std::uint32_t dicomCodec::readTag(
         std::uint16_t tagId,
         std::uint16_t order,
         std::uint16_t tagSubId,
-        const std::string& tagType,
+        tagVR_t tagType,
         streamController::tByteOrdering endianType,
         size_t wordSize,
         std::uint32_t bufferId,

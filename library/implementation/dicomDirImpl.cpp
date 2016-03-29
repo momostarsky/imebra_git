@@ -103,21 +103,6 @@ std::shared_ptr<directoryRecord> directoryRecord::getFirstChildRecord() const
 ///////////////////////////////////////////////////////////
 //
 //
-// Returns the referenced record
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-std::shared_ptr<directoryRecord> directoryRecord::getReferencedRecord() const
-{
-	return m_pReferencedRecord;
-}
-
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
 // Sets the next sibling record
 //
 //
@@ -159,29 +144,6 @@ void directoryRecord::setFirstChildRecord(std::shared_ptr<directoryRecord> pFirs
     IMEBRA_FUNCTION_END();
 }
 	
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Sets the referenced record
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-void directoryRecord::setReferencedRecord(std::shared_ptr<directoryRecord> pReferencedRecord)
-{
-    IMEBRA_FUNCTION_START();
-
-    if(pReferencedRecord != 0)
-	{
-		pReferencedRecord->checkCircularReference(this);
-	}
-	m_pReferencedRecord = pReferencedRecord;
-
-    IMEBRA_FUNCTION_END();
-}
-
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -355,7 +317,7 @@ void directoryRecord::updateOffsets()
 	///////////////////////////////////////////////////////////
 	if(m_pNextRecord == 0)
 	{
-        getRecordDataSet()->setUnsignedLong(0x0004, 0, 0x1400, 0, 0, 0);
+        getRecordDataSet()->setUnsignedLong(0x0004, 0, 0x1400, 0, 0);
 	}
 	else
 	{
@@ -367,24 +329,12 @@ void directoryRecord::updateOffsets()
 	///////////////////////////////////////////////////////////
 	if(m_pFirstChildRecord == 0)
 	{
-        getRecordDataSet()->setUnsignedLong(0x0004, 0, 0x1420, 0, 0, 0);
+        getRecordDataSet()->setUnsignedLong(0x0004, 0, 0x1420, 0, 0);
 	}
 	else
 	{
         getRecordDataSet()->setUnsignedLong(0x0004, 0, 0x1420, 0, m_pFirstChildRecord->getRecordDataSet()->getItemOffset());
 		m_pFirstChildRecord->updateOffsets();
-	}
-
-	// Update offset for the referenced record
-	///////////////////////////////////////////////////////////
-	if(m_pReferencedRecord == 0)
-	{
-        getRecordDataSet()->setUnsignedLong(0x0004, 0, 0x1504, 0, 0, 0);
-	}
-	else
-	{
-        getRecordDataSet()->setUnsignedLong(0x0004, 0, 0x1504, 0, m_pReferencedRecord->getRecordDataSet()->getItemOffset());
-		m_pReferencedRecord->updateOffsets();
 	}
 
     IMEBRA_FUNCTION_END();
@@ -418,11 +368,6 @@ void directoryRecord::checkCircularReference(directoryRecord* pStartRecord)
 	if(m_pFirstChildRecord != 0)
 	{
 		m_pFirstChildRecord->checkCircularReference(pStartRecord);
-	}
-
-	if(m_pReferencedRecord != 0)
-	{
-		m_pReferencedRecord->checkCircularReference(pStartRecord);
 	}
 
     IMEBRA_FUNCTION_END();
@@ -555,30 +500,23 @@ dicomDir::dicomDir(std::shared_ptr<dataSet> pDataSet):
         {
             // Nothing to do
         }
-
-        try
-        {
-            std::uint32_t referencedRecordOffset(scanRecords->second->getRecordDataSet()->getUnsignedLong(0x0004, 0, 0x1504, 0, 0));
-            tOffsetsToRecords::iterator findReferencedRecord(offsetsToRecords.find(referencedRecordOffset));
-            if(findReferencedRecord != offsetsToRecords.end())
-            {
-                scanRecords->second->setReferencedRecord(findReferencedRecord->second);
-            }
-        }
-        catch(const MissingDataElementError&)
-        {
-            // Nothing to do
-        }
     }
 
 	// Get the position of the first record
-	///////////////////////////////////////////////////////////
-    tOffsetsToRecords::iterator findRecord(offsetsToRecords.find(m_pDataSet->getUnsignedLong(0x0004, 0, 0x1200, 0, 0)));
-	if(findRecord == offsetsToRecords.end())
-	{
-        throw;
-	}
-	setFirstRootRecord(findRecord->second);
+    ///////////////////////////////////////////////////////////
+    try
+    {
+        tOffsetsToRecords::iterator findRecord(offsetsToRecords.find(m_pDataSet->getUnsignedLong(0x0004, 0, 0x1200, 0, 0)));
+        if(findRecord == offsetsToRecords.end())
+        {
+            throw;
+        }
+        setFirstRootRecord(findRecord->second);
+    }
+    catch(const MissingDataElementError&)
+    {
+        // Nothing to do
+    }
 
     IMEBRA_FUNCTION_END();
 }
@@ -669,14 +607,14 @@ std::shared_ptr<dataSet> dicomDir::buildDataSet()
 	// Adjust the version if it isn't already set
     ///////////////////////////////////////////////////////////
     {
-        std::shared_ptr<handlers::writingDataHandlerRaw> versionHandler(m_pDataSet->getWritingDataHandlerRaw(0x2, 0, 0x1, 0, "OB"));
+        std::shared_ptr<handlers::writingDataHandlerRaw> versionHandler(m_pDataSet->getWritingDataHandlerRaw(0x2, 0, 0x1, 0, tagVR_t::OB));
         versionHandler->setSize(2);
         versionHandler->setUnsignedLong(0, 0);
         versionHandler->setUnsignedLong(1, 1);
     }
 
-	// Adjust the SOP class UID if it isn't already set
-	///////////////////////////////////////////////////////////
+    // Adjust the SOP class UID
+    ///////////////////////////
     m_pDataSet->setString(0x2, 0, 0x2, 0, "1.2.840.10008.1.3.10");
 
 	// Allocate offset fields
@@ -685,7 +623,7 @@ std::shared_ptr<dataSet> dicomDir::buildDataSet()
 	{
 		m_pFirstRootRecord->updateOffsets();
 	}
-    m_pDataSet->setUnsignedLong(0x0004, 0, 0x1200, 0, 0, 0);
+    m_pDataSet->setUnsignedLong(0x0004, 0, 0x1200, 0, 0);
 
 
 	// Save to a null stream in order to update the offsets

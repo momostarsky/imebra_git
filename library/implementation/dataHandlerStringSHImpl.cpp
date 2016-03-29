@@ -33,12 +33,12 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 
 readingDataHandlerStringSH::readingDataHandlerStringSH(const memory& parseMemory, const charsetsList::tCharsetsList& charsets):
-    readingDataHandlerStringUnicode(parseMemory, charsets, "SH", L'\\', 0x20)
+    readingDataHandlerStringUnicode(parseMemory, charsets, tagVR_t::SH, L'\\', 0x20)
 {
 }
 
 writingDataHandlerStringSH::writingDataHandlerStringSH(const std::shared_ptr<buffer> &pBuffer, const charsetsList::tCharsetsList &charsets):
-    writingDataHandlerStringUnicode(pBuffer, charsets, "SH", L'\\', 0, 16, 0x20)
+    writingDataHandlerStringUnicode(pBuffer, charsets, tagVR_t::SH, L'\\', 0, 16, 0x20)
 {
 }
 

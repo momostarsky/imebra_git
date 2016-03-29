@@ -12,7 +12,6 @@ $fileHeader$
 
 #include <memory>
 #include "definitions.h"
-#include "image.h"
 
 #ifndef SWIG
 
@@ -30,6 +29,8 @@ class transform;
 
 namespace imebra
 {
+
+class Image;
 
 class IMEBRA_API Transform
 {

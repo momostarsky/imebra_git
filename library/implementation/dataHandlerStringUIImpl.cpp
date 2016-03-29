@@ -33,12 +33,12 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 
 readingDataHandlerStringUI::readingDataHandlerStringUI(const memory& parseMemory):
-    readingDataHandlerString(parseMemory, "UI", 0x0, 0x0)
+    readingDataHandlerString(parseMemory, tagVR_t::UI, 0x0, 0x0)
 {
 }
 
 writingDataHandlerStringUI::writingDataHandlerStringUI(const std::shared_ptr<buffer> &pBuffer):
-    writingDataHandlerString(pBuffer, "UI", 0x0, 0, 64, 0x0)
+    writingDataHandlerString(pBuffer, tagVR_t::UI, 0x0, 0, 64, 0x0)
 {
 }
 

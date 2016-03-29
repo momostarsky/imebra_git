@@ -386,7 +386,9 @@ public:
 	///                 this parameter
 	///
 	///////////////////////////////////////////////////////////
-    void setSignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::int32_t newValue, const std::string& tagVR = "");
+    void setSignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::int32_t newValue, tagVR_t tagVR);
+
+    void setSignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::int32_t newValue);
 
 	/// \brief Retrieve a tag's value as an unsigned long.
 	///
@@ -446,9 +448,11 @@ public:
 	///                 this parameter
 	///
 	///////////////////////////////////////////////////////////
-    void setUnsignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::uint32_t newValue, const std::string& tagVR = "");
+    void setUnsignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::uint32_t newValue, tagVR_t tagVR);
 
-	/// \brief Retrieve a tag's value as a double.
+    void setUnsignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::uint32_t newValue);
+
+    /// \brief Retrieve a tag's value as a double.
 	///
 	/// Read the value of the requested tag and return it as
 	///  a double.
@@ -506,9 +510,11 @@ public:
 	///                 this parameter
 	///
 	///////////////////////////////////////////////////////////
-    void setDouble(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, double newValue, const std::string& tagVR = "");
+    void setDouble(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, double newValue, tagVR_t tagVR);
 
-	/// \brief Retrieve a tag's value as a string.
+    void setDouble(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, double newValue);
+
+    /// \brief Retrieve a tag's value as a string.
 	///        getUnicodeString() is preferred over this
 	///         method.
 	///
@@ -599,7 +605,9 @@ public:
 	///                 this parameter
 	///
 	///////////////////////////////////////////////////////////
-    void setString(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::string& newString, const std::string& tagVR = "");
+    void setString(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::string& newString, tagVR_t tagVR);
+
+    void setString(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::string& newString);
 
 	/// \brief Set a tag's value as an unicode string.
 	///
@@ -630,9 +638,11 @@ public:
 	///                 this parameter
 	///
 	///////////////////////////////////////////////////////////
-    void setUnicodeString(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::wstring& newString, const std::string& tagVR = "");
+    void setUnicodeString(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::wstring& newString, tagVR_t tagVR);
 
-    void setAge(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::uint32_t age, ageUnit_t units, const std::string& tagVR = "");
+    void setUnicodeString(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::wstring& newString);
+
+    void setAge(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::uint32_t age, ageUnit_t units);
 
     std::uint32_t getAge(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, ageUnit_t* pUnits) const;
 
@@ -649,7 +659,18 @@ public:
         std::uint32_t seconds,
         std::uint32_t nanoseconds,
         std::int32_t offsetHours,
-        std::int32_t offsetMinutes, const std::string& tagVR = "");
+        std::int32_t offsetMinutes, tagVR_t tagVR);
+
+    void setDate(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId,
+        std::uint32_t year,
+        std::uint32_t month,
+        std::uint32_t day,
+        std::uint32_t hour,
+        std::uint32_t minutes,
+        std::uint32_t seconds,
+        std::uint32_t nanoseconds,
+        std::int32_t offsetHours,
+        std::int32_t offsetMinutes);
 
     void getDate(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber,
         std::uint32_t* pYear,
@@ -691,20 +712,6 @@ public:
 	///////////////////////////////////////////////////////////
 	//@{
 public:
-	/// \brief Return the default data type for the specified
-	///        tag's id.
-	///
-	/// The default data type is retrieved from an internal
-	///  dictionary which stores the default properties of
-	///  each dicom's tag.
-	///
-	/// @param groupId    The group to which the tag
-	///                   belongs
-	/// @param tagId      The id of the tag.
-	/// @return           the tag's default type.
-	///                   The returned string is a constant.
-	///////////////////////////////////////////////////////////
-    std::string getDefaultDataType(std::uint16_t groupId, std::uint16_t tagId) const;
 
 	/// \brief Return the data type of a tag
 	///
@@ -716,10 +723,10 @@ public:
 	///                    an order of 0.
 	/// @param tagId      The id of the tag for which the type
 	///                    must be retrieved.
-	/// @return           a string with the tag's type.
+    /// @return           the tag's type.
 	///
 	///////////////////////////////////////////////////////////
-    std::string getDataType(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId) const;
+    tagVR_t getDataType(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId) const;
 
 	/// \brief Return a data handler for the specified tag's
 	///         buffer.
@@ -752,7 +759,10 @@ public:
 	///
 	///////////////////////////////////////////////////////////
     std::shared_ptr<handlers::readingDataHandler> getReadingDataHandler(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId) const;
-    std::shared_ptr<handlers::writingDataHandler> getWritingDataHandler(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::string& tagVR="");
+
+    std::shared_ptr<handlers::writingDataHandler> getWritingDataHandler(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, tagVR_t tagVR);
+
+    std::shared_ptr<handlers::writingDataHandler> getWritingDataHandler(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId);
 
 	/// \brief Return a raw data handler for the specified 
 	///         tag's buffer.
@@ -786,7 +796,10 @@ public:
 	///
 	///////////////////////////////////////////////////////////
     std::shared_ptr<handlers::readingDataHandlerRaw> getReadingDataHandlerRaw(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId) const;
-    std::shared_ptr<handlers::writingDataHandlerRaw> getWritingDataHandlerRaw(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::string& tagVR="");
+
+    std::shared_ptr<handlers::writingDataHandlerRaw> getWritingDataHandlerRaw(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, tagVR_t tagVR);
+
+    std::shared_ptr<handlers::writingDataHandlerRaw> getWritingDataHandlerRaw(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId);
 
 	/// \brief Return a streamReader connected to the specified
 	///         tag's buffer's memory.
@@ -834,7 +847,9 @@ public:
 	/// @return a pointer to the streamWriter
 	///
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<streamWriter> getStreamWriter(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::string& dataType = "");
+    std::shared_ptr<streamWriter> getStreamWriter(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, tagVR_t dataType);
+
+    std::shared_ptr<streamWriter> getStreamWriter(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId);
 
 	//@}
 
@@ -951,6 +966,8 @@ private:
     std::uint32_t getFrameBufferId(std::uint32_t offset) const;
 
     tGroups m_groups;
+
+    std::weak_ptr<dataSet> m_pParent;
 
     charsetsList::tCharsetsList m_charsetsList;
 

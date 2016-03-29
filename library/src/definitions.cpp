@@ -14,7 +14,7 @@ Age::Age(uint32_t initialAge, ageUnit_t initialUnits):
 
 }
 
-double Age::years()
+double Age::years() const
 {
     switch(units)
     {
