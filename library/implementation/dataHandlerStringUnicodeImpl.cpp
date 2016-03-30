@@ -190,7 +190,7 @@ writingDataHandlerStringUnicode::~writingDataHandlerStringUnicode()
         *(commitMemory->data() + (memorySize - 1)) = m_paddingByte;
     }
 
-    m_buffer->commit(commitMemory, m_dataType, m_charsets);
+    m_buffer->commit(commitMemory, m_charsets);
 
     IMEBRA_FUNCTION_END();
 }

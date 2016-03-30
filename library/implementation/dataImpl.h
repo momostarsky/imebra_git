@@ -59,7 +59,7 @@ class data
 {
 public:
 
-    data(const charsetsList::tCharsetsList& defaultCharsets);
+    data(tagVR_t tagVR, const charsetsList::tCharsetsList& defaultCharsets);
 
 	///////////////////////////////////////////////////////////
 	/// \name Data handlers
@@ -142,7 +142,7 @@ public:
 	///////////////////////////////////////////////////////////
     std::shared_ptr<handlers::readingDataHandler> getReadingDataHandler(size_t bufferId) const;
 
-    std::shared_ptr<handlers::writingDataHandler> getWritingDataHandler(size_t bufferId, tagVR_t tagVR);
+    std::shared_ptr<handlers::writingDataHandler> getWritingDataHandler(size_t bufferId);
 	
 	/// \brief Get a raw data handler 
 	///         (handlers::dataHandlerRaw) for the specified 
@@ -188,7 +188,7 @@ public:
 	///////////////////////////////////////////////////////////
     std::shared_ptr<handlers::readingDataHandlerRaw> getReadingDataHandlerRaw(size_t bufferId) const;
 
-    std::shared_ptr<handlers::writingDataHandlerRaw> getWritingDataHandlerRaw(size_t bufferId, tagVR_t tagVR);
+    std::shared_ptr<handlers::writingDataHandlerRaw> getWritingDataHandlerRaw(size_t bufferId);
 
 	/// \brief Get a streamReader connected to a buffer's data.
 	///
@@ -212,7 +212,7 @@ public:
 	///                    emptied buffer's data.
 	///
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<streamWriter> getStreamWriter(size_t bufferId, tagVR_t tagVR);
+    std::shared_ptr<streamWriter> getStreamWriter(size_t bufferId);
 
 	//@}
 
@@ -292,7 +292,7 @@ public:
     /// @return the buffer's data type
 	///
 	///////////////////////////////////////////////////////////
-    tagVR_t getDataType(size_t bufferId) const;
+    tagVR_t getDataType() const;
 
 	//@}
 
@@ -306,6 +306,8 @@ public:
 protected:
 
     charsetsList::tCharsetsList m_charsetsList;
+
+    const tagVR_t m_tagVR;
 
 	// Pointers to the internal buffers
 	///////////////////////////////////////////////////////////

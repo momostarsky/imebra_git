@@ -599,10 +599,7 @@ std::shared_ptr<dataSet> dicomDir::buildDataSet()
 
     // Adjust the transfer syntax if it isn't already set
 	///////////////////////////////////////////////////////////
-    if(m_pDataSet->getString(0x2, 0, 0x10, 0, 0, "") == "")
-	{
-        m_pDataSet->setString(0x2, 0, 0x10, 0, "1.2.840.10008.1.2.1");
-	}
+    m_pDataSet->setString(0x2, 0, 0x10, 0, "1.2.840.10008.1.2.1");
 
 	// Adjust the version if it isn't already set
     ///////////////////////////////////////////////////////////

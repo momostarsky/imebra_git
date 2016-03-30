@@ -36,16 +36,14 @@ namespace imebra
 
 ///
 /// \brief The ReadingDataHandler class allows to read the content
-///        of a Dicom tag.
+///        of a Dicom tag's buffer.
 ///
-/// ReadingDataHandler is able to return the tag's content as a string,
+/// ReadingDataHandler is able to return the buffer's content as a string,
 /// a number, a date/time or an age.
 ///
 /// In order to obtain a ReadingDataHandler object for a specific tag stored
-/// in a DataSet, call DataSet::getReadingDataHandler().
-///
-/// ReadingDataHandler is thread safe: once it has been constructed its
-/// content cannot be changed.
+/// in a DataSet, call DataSet::getReadingDataHandler() or
+/// Tag::getReadingDataHandler().
 ///
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API ReadingDataHandler
@@ -75,40 +73,108 @@ public:
 
     /// \brief Copy operator.
     ///
-    /// The ReadingDataHandler object will drop the handled tag's content
-    /// and will handle the same tag's content as the source ReadingDataHandler.
+    /// The ReadingDataHandler object will drop the handled buffer's content
+    /// and will handle the same buffer's content as the source ReadingDataHandler.
     ///
     /// \param right the source ReadingDataHandler
     ///
     ///////////////////////////////////////////////////////////////////////////////
     ReadingDataHandler& operator=(const ReadingDataHandler& right);
 
-    /// \brief Returns the number of elements in the Dicom tag handled by the data
-    ///        handler.
+    /// \brief Returns the number of elements in the tag's buffer handled by the
+    ///        data handler.
     ///
-    /// If the ReadingDataHandler object is related to a tag that contains strings,
-    /// then it returns the number of strings stored in the tag. Multiple strings
-    /// in a string tag are separated by a separator char.
+    /// If the ReadingDataHandler object is related to a buffer that contains
+    /// strings then it returns the number of strings stored in the buffer.
+    /// Multiple strings in buffer are separated by a separator char.
     ///
-    /// \return the number of elements stored in the handled Dicom tag
+    /// \return the number of elements stored in the handled Dicom buffer
     ///
     ///////////////////////////////////////////////////////////////////////////////
     size_t getSize() const;
 
+    /// \brief Returns the data type (VR) of the data handled by the data handler.
+    ///
+    /// \return the data type of the handled data
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     tagVR_t getDataType() const;
 
+    /// \brief Retrieve a buffer's value as signed long integer (32 bit).
+    ///
+    /// If the buffer's value cannot be converted to a signed long integer
+    /// then throws DataHandlerDeniedConversionError.
+    ///
+    /// \param index the element number within the buffer
+    /// \return the tag's value as a signed 32 bit integer
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     std::int32_t getSignedLong(size_t index) const;
 
+    /// \brief Retrieve a buffer's value as an unsigned long integer (32 bit).
+    ///
+    /// If the buffer's value cannot be converted to an unsigned long integer
+    /// then throws DataHandlerDeniedConversionError.
+    ///
+    /// \param index the element number within the buffer
+    /// \return the tag's value as an unsigned 32 bit integer
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     std::uint32_t getUnsignedLong(size_t index) const;
 
+    /// \brief Retrieve a buffer's value as a double floating point value (64 bit).
+    ///
+    /// If the buffer's value cannot be converted to a double value then throws
+    /// DataHandlerDeniedConversionError.
+    ///
+    /// \param index the element number within the buffer
+    /// \return the tag's value as a double floating point value (64 bit)
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     double getDouble(size_t index) const;
 
+    /// \brief Retrieve a buffer's value as an ASCII string.
+    ///
+    /// If the buffer's value cannot be converted to a string then throws
+    /// DataHandlerDeniedConversionError.
+    ///
+    /// \param index the element number within the buffer
+    /// \return the tag's value as an ASCII string
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     std::string getString(size_t index) const;
 
+    /// \brief Retrieve a buffer's value as an Unicode string.
+    ///
+    /// If the buffer's value cannot be converted to a string then throws
+    /// DataHandlerDeniedConversionError.
+    ///
+    /// \param index the element number within the buffer
+    /// \return the tag's value as an Unicode string
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     std::wstring getUnicodeString(size_t index) const;
 
+    /// \brief Retrieve a buffer's value a date or time.
+    ///
+    /// If the buffer's value cannot be converted to a date or time then throws
+    /// DataHandlerDeniedConversionError.
+    ///
+    /// \param index the element number within the buffer
+    /// \return the tag's value as a date or time
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     Date getDate(size_t index) const;
 
+    /// \brief Retrieve a buffer's value as an Age.
+    ///
+    /// If the buffer's value cannot be converted to an Age then throws
+    /// DataHandlerDeniedConversionError.
+    ///
+    /// \param index the element number within the buffer
+    /// \return the tag's value as an Age
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     Age getAge(size_t index) const;
 
 #ifndef SWIG

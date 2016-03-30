@@ -86,7 +86,7 @@ std::shared_ptr<data> dataSet::getTag(std::uint16_t groupId, std::uint32_t order
 }
 
 
-std::shared_ptr<data> dataSet::getTagCreate(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId)
+std::shared_ptr<data> dataSet::getTagCreate(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, tagVR_t tagVR)
 {
     IMEBRA_FUNCTION_START();
 
@@ -99,10 +99,19 @@ std::shared_ptr<data> dataSet::getTagCreate(std::uint16_t groupId, std::uint32_t
 
     if(m_groups[groupId][order][tagId] == 0)
     {
-        m_groups[groupId][order][tagId] = std::make_shared<data>(m_charsetsList);
+        m_groups[groupId][order][tagId] = std::make_shared<data>(tagVR, m_charsetsList);
     }
 
     return m_groups[groupId][order][tagId];
+
+    IMEBRA_FUNCTION_END();
+}
+
+std::shared_ptr<data> dataSet::getTagCreate(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId)
+{
+    IMEBRA_FUNCTION_START();
+
+    return getTagCreate(groupId, order, tagId, dicomDictionary::getDicomDictionary()->getTagType(groupId, tagId));
 
     IMEBRA_FUNCTION_END();
 }
@@ -151,7 +160,7 @@ std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
     {
         std::shared_ptr<implementation::data> imageTag = getTag(0x7fe0, 0x0, 0x0010);
 
-        const tagVR_t imageStreamDataType(imageTag->getDataType(0));
+        const tagVR_t imageStreamDataType(imageTag->getDataType());
 
         // Get the number of frames
         ///////////////////////////////////////////////////////////
@@ -469,9 +478,9 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
 	{
         try
         {
-            if(bufferExists(groupId, 0x0, tagId, 0x1))
+            if(bufferExists(groupId, 0x0, tagId, 0))
             {
-                dataHandlerType = getDataType(groupId, 0x0, tagId, 0x1);
+                dataHandlerType = getDataType(groupId, 0x0, tagId);
             }
             else
             {
@@ -1341,9 +1350,9 @@ std::shared_ptr<handlers::writingDataHandler> dataSet::getWritingDataHandler(std
 {
     IMEBRA_FUNCTION_START();
 
-    std::shared_ptr<data> tag(getTagCreate(groupId, order, tagId));
+    std::shared_ptr<data> tag(getTagCreate(groupId, order, tagId, tagVR));
 
-    return tag->getWritingDataHandler(bufferId, tagVR);
+    return tag->getWritingDataHandler(bufferId);
 
     IMEBRA_FUNCTION_END();
 }
@@ -1389,7 +1398,7 @@ std::shared_ptr<streamWriter> dataSet::getStreamWriter(std::uint16_t groupId, st
 {
     IMEBRA_FUNCTION_START();
 
-    return getTagCreate(groupId, order, tagId)->getStreamWriter(bufferId, dataType);
+    return getTagCreate(groupId, order, tagId, dataType)->getStreamWriter(bufferId);
 
 	IMEBRA_FUNCTION_END();
 }
@@ -1426,9 +1435,9 @@ std::shared_ptr<handlers::writingDataHandlerRaw> dataSet::getWritingDataHandlerR
 {
     IMEBRA_FUNCTION_START();
 
-    std::shared_ptr<data> tag = getTagCreate(groupId, order, tagId);
+    std::shared_ptr<data> tag = getTagCreate(groupId, order, tagId, tagVR);
 
-    return tag->getWritingDataHandlerRaw(bufferId, tagVR);
+    return tag->getWritingDataHandlerRaw(bufferId);
 
     IMEBRA_FUNCTION_END();
 }
@@ -1453,11 +1462,11 @@ std::shared_ptr<handlers::writingDataHandlerRaw> dataSet::getWritingDataHandlerR
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-tagVR_t dataSet::getDataType(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId) const
+tagVR_t dataSet::getDataType(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId) const
 {
     IMEBRA_FUNCTION_START();
 
-    return getTag(groupId, order, tagId)->getDataType(bufferId);
+    return getTag(groupId, order, tagId)->getDataType();
 
 	IMEBRA_FUNCTION_END();
 }

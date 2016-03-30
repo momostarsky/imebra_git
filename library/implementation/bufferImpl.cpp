@@ -64,8 +64,7 @@ namespace implementation
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-buffer::buffer(tagVR_t tagVR):
-    m_bufferType(tagVR),
+buffer::buffer():
     m_originalBufferPosition(0),
     m_originalBufferLength(0),
     m_originalWordLength(1),
@@ -84,13 +83,11 @@ buffer::buffer(tagVR_t tagVR):
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 buffer::buffer(
-        tagVR_t tagVR,
         const std::shared_ptr<baseStreamInput>& originalStream,
         size_t bufferPosition,
         size_t bufferLength,
         size_t wordLength,
 		streamController::tByteOrdering endianType):
-        m_bufferType(tagVR),
 		m_originalStream(originalStream),
 		m_originalBufferPosition(bufferPosition),
 		m_originalBufferLength(bufferLength),
@@ -145,7 +142,7 @@ std::shared_ptr<const memory> buffer::getLocalMemory() const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<handlers::readingDataHandler> buffer::getReadingDataHandler() const
+std::shared_ptr<handlers::readingDataHandler> buffer::getReadingDataHandler(tagVR_t tagVR) const
 {
     IMEBRA_FUNCTION_START();
 
@@ -153,7 +150,7 @@ std::shared_ptr<handlers::readingDataHandler> buffer::getReadingDataHandler() co
 
     std::shared_ptr<const memory> localMemory(getLocalMemory());
 
-    switch(m_bufferType)
+    switch(tagVR)
     {
     case tagVR_t::AE:
         return std::make_shared<handlers::readingDataHandlerStringAE>(*localMemory);
@@ -192,43 +189,43 @@ std::shared_ptr<handlers::readingDataHandler> buffer::getReadingDataHandler() co
         return std::make_shared< handlers::readingDataHandlerStringUT>(*localMemory, m_charsetsList);
 
     case tagVR_t::OB:
-        return std::make_shared<handlers::readingDataHandlerNumeric<std::uint8_t> >(localMemory, m_bufferType);
+        return std::make_shared<handlers::readingDataHandlerNumeric<std::uint8_t> >(localMemory, tagVR);
 
     case tagVR_t::SB:
-        return std::make_shared<handlers::readingDataHandlerNumeric<std::int8_t> >(localMemory, m_bufferType);
+        return std::make_shared<handlers::readingDataHandlerNumeric<std::int8_t> >(localMemory, tagVR);
 
     case tagVR_t::UN:
-        return std::make_shared<handlers::readingDataHandlerNumeric<std::uint8_t> >(localMemory, m_bufferType);
+        return std::make_shared<handlers::readingDataHandlerNumeric<std::uint8_t> >(localMemory, tagVR);
 
     case tagVR_t::OW:
-        return std::make_shared<handlers::readingDataHandlerNumeric<std::uint16_t> >(localMemory, m_bufferType);
+        return std::make_shared<handlers::readingDataHandlerNumeric<std::uint16_t> >(localMemory, tagVR);
 
     case tagVR_t::AT:
-        return std::make_shared<handlers::readingDataHandlerNumeric<std::uint16_t> >(localMemory, m_bufferType);
+        return std::make_shared<handlers::readingDataHandlerNumeric<std::uint16_t> >(localMemory, tagVR);
 
     case tagVR_t::FL:
-        return std::make_shared<handlers::readingDataHandlerNumeric<float> >(localMemory, m_bufferType);
+        return std::make_shared<handlers::readingDataHandlerNumeric<float> >(localMemory, tagVR);
 
     case tagVR_t::OF:
-        return std::make_shared<handlers::readingDataHandlerNumeric<float> >(localMemory, m_bufferType);
+        return std::make_shared<handlers::readingDataHandlerNumeric<float> >(localMemory, tagVR);
 
     case tagVR_t::FD:
-        return std::make_shared<handlers::readingDataHandlerNumeric<double> >(localMemory, m_bufferType);
+        return std::make_shared<handlers::readingDataHandlerNumeric<double> >(localMemory, tagVR);
 
     case tagVR_t::OD:
-        return std::make_shared<handlers::readingDataHandlerNumeric<double> >(localMemory, m_bufferType);
+        return std::make_shared<handlers::readingDataHandlerNumeric<double> >(localMemory, tagVR);
 
     case tagVR_t::SL:
-        return std::make_shared<handlers::readingDataHandlerNumeric<std::int32_t> >(localMemory, m_bufferType);
+        return std::make_shared<handlers::readingDataHandlerNumeric<std::int32_t> >(localMemory, tagVR);
 
     case tagVR_t::SS:
-        return std::make_shared<handlers::readingDataHandlerNumeric<std::int16_t> >(localMemory, m_bufferType);
+        return std::make_shared<handlers::readingDataHandlerNumeric<std::int16_t> >(localMemory, tagVR);
 
     case tagVR_t::UL:
-        return std::make_shared<handlers::readingDataHandlerNumeric<std::uint32_t> >(localMemory, m_bufferType);
+        return std::make_shared<handlers::readingDataHandlerNumeric<std::uint32_t> >(localMemory, tagVR);
 
     case tagVR_t::US:
-        return std::make_shared<handlers::readingDataHandlerNumeric<std::uint16_t> >(localMemory, m_bufferType);
+        return std::make_shared<handlers::readingDataHandlerNumeric<std::uint16_t> >(localMemory, tagVR);
 
     case tagVR_t::DA:
         return std::make_shared<handlers::readingDataHandlerDate>(*localMemory);
@@ -240,12 +237,12 @@ std::shared_ptr<handlers::readingDataHandler> buffer::getReadingDataHandler() co
         return std::make_shared<handlers::readingDataHandlerTime>(*localMemory);
     }
 
-    IMEBRA_THROW(BufferUnknownTypeError, "Unregistered data type requested (" << (std::uint16_t)m_bufferType << ")");
+    IMEBRA_THROW(BufferUnknownTypeError, "Unregistered data type requested (" << (std::uint16_t)tagVR << ")");
 
 	IMEBRA_FUNCTION_END();
 }
 
-std::shared_ptr<handlers::writingDataHandler> buffer::getWritingDataHandler(std::uint32_t size)
+std::shared_ptr<handlers::writingDataHandler> buffer::getWritingDataHandler(tagVR_t tagVR, std::uint32_t size)
 {
     IMEBRA_FUNCTION_START();
 
@@ -255,7 +252,7 @@ std::shared_ptr<handlers::writingDataHandler> buffer::getWritingDataHandler(std:
     ///////////////////////////////////////////////////////////
     std::shared_ptr<handlers::writingDataHandler> handler;
 
-    switch(m_bufferType)
+    switch(tagVR)
     {
     case tagVR_t::AE:
         return std::make_shared<handlers::writingDataHandlerStringAE>(shared_from_this());
@@ -294,43 +291,43 @@ std::shared_ptr<handlers::writingDataHandler> buffer::getWritingDataHandler(std:
         return std::make_shared< handlers::writingDataHandlerStringUT>(shared_from_this(), m_charsetsList);
 
     case tagVR_t::OB:
-        return std::make_shared<handlers::writingDataHandlerNumeric<std::uint8_t> >(shared_from_this(), size, m_bufferType);
+        return std::make_shared<handlers::writingDataHandlerNumeric<std::uint8_t> >(shared_from_this(), size, tagVR);
 
     case tagVR_t::SB:
-        return std::make_shared<handlers::writingDataHandlerNumeric<std::int8_t> >(shared_from_this(), size, m_bufferType);
+        return std::make_shared<handlers::writingDataHandlerNumeric<std::int8_t> >(shared_from_this(), size, tagVR);
 
     case tagVR_t::UN:
-        return std::make_shared<handlers::writingDataHandlerNumeric<std::uint8_t> >(shared_from_this(), size, m_bufferType);
+        return std::make_shared<handlers::writingDataHandlerNumeric<std::uint8_t> >(shared_from_this(), size, tagVR);
 
     case tagVR_t::OW:
-        return std::make_shared<handlers::writingDataHandlerNumeric<std::uint16_t> >(shared_from_this(), size, m_bufferType);
+        return std::make_shared<handlers::writingDataHandlerNumeric<std::uint16_t> >(shared_from_this(), size, tagVR);
 
     case tagVR_t::AT:
-        return std::make_shared<handlers::writingDataHandlerNumeric<std::uint16_t> >(shared_from_this(), size, m_bufferType);
+        return std::make_shared<handlers::writingDataHandlerNumeric<std::uint16_t> >(shared_from_this(), size, tagVR);
 
     case tagVR_t::FL:
-        return std::make_shared<handlers::writingDataHandlerNumeric<float> >(shared_from_this(), size, m_bufferType);
+        return std::make_shared<handlers::writingDataHandlerNumeric<float> >(shared_from_this(), size, tagVR);
 
     case tagVR_t::OF:
-        return std::make_shared<handlers::writingDataHandlerNumeric<float> >(shared_from_this(), size, m_bufferType);
+        return std::make_shared<handlers::writingDataHandlerNumeric<float> >(shared_from_this(), size, tagVR);
 
     case tagVR_t::FD:
-        return std::make_shared<handlers::writingDataHandlerNumeric<double> >(shared_from_this(), size, m_bufferType);
+        return std::make_shared<handlers::writingDataHandlerNumeric<double> >(shared_from_this(), size, tagVR);
 
     case tagVR_t::OD:
-        return std::make_shared<handlers::writingDataHandlerNumeric<double> >(shared_from_this(), size, m_bufferType);
+        return std::make_shared<handlers::writingDataHandlerNumeric<double> >(shared_from_this(), size, tagVR);
 
     case tagVR_t::SL:
-        return std::make_shared<handlers::writingDataHandlerNumeric<std::int32_t> >(shared_from_this(), size, m_bufferType);
+        return std::make_shared<handlers::writingDataHandlerNumeric<std::int32_t> >(shared_from_this(), size, tagVR);
 
     case tagVR_t::SS:
-        return std::make_shared<handlers::writingDataHandlerNumeric<std::int16_t> >(shared_from_this(), size, m_bufferType);
+        return std::make_shared<handlers::writingDataHandlerNumeric<std::int16_t> >(shared_from_this(), size, tagVR);
 
     case tagVR_t::UL:
-        return std::make_shared<handlers::writingDataHandlerNumeric<std::uint32_t> >(shared_from_this(), size, m_bufferType);
+        return std::make_shared<handlers::writingDataHandlerNumeric<std::uint32_t> >(shared_from_this(), size, tagVR);
 
     case tagVR_t::US:
-        return std::make_shared<handlers::writingDataHandlerNumeric<std::uint16_t> >(shared_from_this(), size, m_bufferType);
+        return std::make_shared<handlers::writingDataHandlerNumeric<std::uint16_t> >(shared_from_this(), size, tagVR);
 
     case tagVR_t::DA:
         return std::make_shared<handlers::writingDataHandlerDate>(shared_from_this());
@@ -393,11 +390,11 @@ std::shared_ptr<streamReader> buffer::getStreamReader()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<streamWriter> buffer::getStreamWriter()
+std::shared_ptr<streamWriter> buffer::getStreamWriter(tagVR_t tagVR)
 {
     IMEBRA_FUNCTION_START();
 
-    std::shared_ptr<handlers::writingDataHandlerRaw> tempHandlerRaw = getWritingDataHandlerRaw(0);
+    std::shared_ptr<handlers::writingDataHandlerRaw> tempHandlerRaw = getWritingDataHandlerRaw(tagVR);
     return std::make_shared<streamWriter>(std::make_shared<bufferStreamOutput>(tempHandlerRaw), tempHandlerRaw->getSize());
 
 	IMEBRA_FUNCTION_END();
@@ -414,25 +411,25 @@ std::shared_ptr<streamWriter> buffer::getStreamWriter()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<handlers::readingDataHandlerRaw> buffer::getReadingDataHandlerRaw() const
+std::shared_ptr<handlers::readingDataHandlerRaw> buffer::getReadingDataHandlerRaw(tagVR_t tagVR) const
 {
     IMEBRA_FUNCTION_START();
 
     std::lock_guard<std::mutex> lock(m_mutex);
 
-    return std::make_shared<handlers::readingDataHandlerRaw>(getLocalMemory(), m_bufferType);
+    return std::make_shared<handlers::readingDataHandlerRaw>(getLocalMemory(), tagVR);
 
 	IMEBRA_FUNCTION_END();
 }
 
 
-std::shared_ptr<handlers::writingDataHandlerRaw> buffer::getWritingDataHandlerRaw(std::uint32_t size)
+std::shared_ptr<handlers::writingDataHandlerRaw> buffer::getWritingDataHandlerRaw(tagVR_t tagVR, std::uint32_t size)
 {
     IMEBRA_FUNCTION_START();
 
     std::lock_guard<std::mutex> lock(m_mutex);
 
-    return std::make_shared<handlers::writingDataHandlerRaw>(shared_from_this(), size, m_bufferType);
+    return std::make_shared<handlers::writingDataHandlerRaw>(shared_from_this(), size, tagVR);
 
     IMEBRA_FUNCTION_END();
 }
@@ -480,14 +477,13 @@ size_t buffer::getBufferSizeBytes() const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void buffer::commit(std::shared_ptr<memory> newMemory, tagVR_t newBufferType, const charsetsList::tCharsetsList& newCharsetsList)
+void buffer::commit(std::shared_ptr<memory> newMemory, const charsetsList::tCharsetsList& newCharsetsList)
 {
     IMEBRA_FUNCTION_START();
 
     std::lock_guard<std::mutex> lock(m_mutex);
 
     m_memory = newMemory;
-    m_bufferType = newBufferType;
     m_originalStream.reset();
     m_charsetsList = newCharsetsList;
 
@@ -502,35 +498,14 @@ void buffer::commit(std::shared_ptr<memory> newMemory, tagVR_t newBufferType, co
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void buffer::commit(std::shared_ptr<memory> newMemory, tagVR_t newBufferType)
+void buffer::commit(std::shared_ptr<memory> newMemory)
 {
     IMEBRA_FUNCTION_START();
 
     std::lock_guard<std::mutex> lock(m_mutex);
 
     m_memory = newMemory;
-    m_bufferType = newBufferType;
     m_originalStream.reset();
-
-    IMEBRA_FUNCTION_END();
-}
-
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Returns the data type
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-tagVR_t buffer::getDataType() const
-{
-    IMEBRA_FUNCTION_START();
-
-    std::lock_guard<std::mutex> lock(m_mutex);
-    return m_bufferType;
 
     IMEBRA_FUNCTION_END();
 }

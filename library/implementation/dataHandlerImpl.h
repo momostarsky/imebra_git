@@ -181,7 +181,7 @@ public:
     virtual std::uint32_t getAge(const size_t index, ageUnit_t* pUnit) const;
 
 private:
-    tagVR_t m_dataType;
+    const tagVR_t m_dataType;
 };
 
 class writingDataHandler
@@ -306,7 +306,7 @@ public:
     virtual void setUnicodeString(const size_t index, const std::wstring& value) =0;
 
 protected:
-    tagVR_t m_dataType;
+    const tagVR_t m_dataType;
 
     // Pointer to the connected buffer
     ///////////////////////////////////////////////////////////

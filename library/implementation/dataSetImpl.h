@@ -123,6 +123,9 @@ public:
 	///
 	///////////////////////////////////////////////////////////
     std::shared_ptr<data> getTag(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId) const;
+
+    std::shared_ptr<data> getTagCreate(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, tagVR_t tagVR);
+
     std::shared_ptr<data> getTagCreate(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId);
 
     bool bufferExists(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId) const;
@@ -726,7 +729,7 @@ public:
     /// @return           the tag's type.
 	///
 	///////////////////////////////////////////////////////////
-    tagVR_t getDataType(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId) const;
+    tagVR_t getDataType(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId) const;
 
 	/// \brief Return a data handler for the specified tag's
 	///         buffer.

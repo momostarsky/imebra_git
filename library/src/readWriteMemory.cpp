@@ -40,11 +40,6 @@ void ReadWriteMemory::copyFrom(const ReadMemory& sourceMemory)
     std::const_pointer_cast<implementation::memory>(m_pMemory)->copyFrom(sourceMemory.m_pMemory);
 }
 
-void ReadWriteMemory::copyFrom(const ReadWriteMemory& sourceMemory)
-{
-    std::const_pointer_cast<implementation::memory>(m_pMemory)->copyFrom(sourceMemory.m_pMemory);
-}
-
 void ReadWriteMemory::clear()
 {
     std::const_pointer_cast<implementation::memory>(m_pMemory)->clear();
@@ -66,17 +61,6 @@ char* ReadWriteMemory::data(size_t* pDataSize) const
     *pDataSize = pMemory->size();
     return (char*)pMemory->data();
 }
-
-size_t ReadWriteMemory::data(char* destination, size_t destinationSize) const
-{
-    size_t memorySize = m_pMemory->size();
-    if(destination != 0 && destinationSize >= memorySize && memorySize != 0)
-    {
-        ::memcpy(destination, m_pMemory->data(), memorySize);
-    }
-    return memorySize;
-}
-
 
 void ReadWriteMemory::assign(const char* source, size_t sourceSize)
 {

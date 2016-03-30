@@ -70,10 +70,21 @@ tagsIds_t DataSet::getTags() const
     return returnTags;
 }
 
-Tag DataSet::getTagContent(const TagId& tagId) const
+Tag DataSet::getTag(const TagId& tagId) const
 {
     return Tag(m_pDataSet->getTag(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId()));
 }
+
+Tag DataSet::getTagCreate(const TagId& tagId, tagVR_t tagVR)
+{
+    return Tag(m_pDataSet->getTagCreate(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), tagVR));
+}
+
+Tag DataSet::getTagCreate(const TagId& tagId)
+{
+    return Tag(m_pDataSet->getTagCreate(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId()));
+}
+
 
 Image DataSet::getImage(size_t frameNumber)
 {
@@ -357,7 +368,7 @@ Date DataSet::getDate(const TagId& tagId, size_t bufferId, size_t elementNumber,
 
 tagVR_t DataSet::getDataType(const TagId& tagId) const
 {
-    return m_pDataSet->getDataType(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0);
+    return m_pDataSet->getDataType(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId());
 }
 
 }

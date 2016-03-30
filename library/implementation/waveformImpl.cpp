@@ -214,8 +214,8 @@ std::shared_ptr<handlers::readingDataHandler> waveform::getIntegerData(std::uint
 	
 	// Allocate a buffer for the destination data
 	///////////////////////////////////////////////////////////
-    buffer waveformBuffer(tagVR_t::SL);
-    std::shared_ptr<handlers::writingDataHandlerRaw> destinationHandler(waveformBuffer.getWritingDataHandlerRaw(numSamples));
+    buffer waveformBuffer;
+    std::shared_ptr<handlers::writingDataHandlerRaw> destinationHandler(waveformBuffer.getWritingDataHandlerRaw(tagVR_t::SL, numSamples));
     destinationHandler->setSize(numSamples * sizeof(std::int32_t));
     std::int32_t* pWritingMemory = (std::int32_t*)destinationHandler->getMemoryBuffer();
 
@@ -296,7 +296,7 @@ std::shared_ptr<handlers::readingDataHandler> waveform::getIntegerData(std::uint
 	}
     destinationHandler.reset();
 
-    return waveformBuffer.getReadingDataHandler();
+    return waveformBuffer.getReadingDataHandler(tagVR_t::SL);
 
 	IMEBRA_FUNCTION_END();
 }

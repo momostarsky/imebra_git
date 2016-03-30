@@ -10,10 +10,10 @@ $fileHeader$
 namespace imebra
 {
 
-Tag::Tag()
+Tag::Tag(tagVR_t tagVR)
 {
     implementation::charsetsList::tCharsetsList tempCharset;
-    m_pData = std::make_shared<imebra::implementation::data>(tempCharset);
+    m_pData = std::make_shared<imebra::implementation::data>(tagVR, tempCharset);
 }
 
 Tag::Tag(const Tag& right): m_pData(right.m_pData)
@@ -55,9 +55,9 @@ ReadingDataHandler Tag::getReadingDataHandler(size_t bufferId) const
     return ReadingDataHandler(m_pData->getReadingDataHandler(bufferId));
 }
 
-WritingDataHandler Tag::getWritingDataHandler(size_t bufferId, tagVR_t tagVR)
+WritingDataHandler Tag::getWritingDataHandler(size_t bufferId)
 {
-    return WritingDataHandler(m_pData->getWritingDataHandler(bufferId, tagVR));
+    return WritingDataHandler(m_pData->getWritingDataHandler(bufferId));
 }
 
 ReadingDataHandlerNumeric Tag::getReadingDataHandlerNumeric(size_t bufferId) const
@@ -77,10 +77,10 @@ ReadingDataHandlerNumeric Tag::getReadingDataHandlerRaw(size_t bufferId) const
     return ReadingDataHandlerNumeric(numericHandler);
 }
 
-WritingDataHandlerNumeric Tag::getWritingDataHandlerNumeric(size_t bufferId, tagVR_t tagVR)
+WritingDataHandlerNumeric Tag::getWritingDataHandlerNumeric(size_t bufferId)
 {
     std::shared_ptr<implementation::handlers::writingDataHandlerNumericBase> numericHandler =
-            std::dynamic_pointer_cast<implementation::handlers::writingDataHandlerNumericBase>(m_pData->getWritingDataHandler(bufferId, tagVR));
+            std::dynamic_pointer_cast<implementation::handlers::writingDataHandlerNumericBase>(m_pData->getWritingDataHandler(bufferId));
     if(numericHandler.get() == 0)
     {
         throw std::bad_cast();
@@ -88,9 +88,9 @@ WritingDataHandlerNumeric Tag::getWritingDataHandlerNumeric(size_t bufferId, tag
     return WritingDataHandlerNumeric(numericHandler);
 }
 
-WritingDataHandlerNumeric Tag::getWritingDataHandlerRaw(size_t bufferId, tagVR_t tagVR)
+WritingDataHandlerNumeric Tag::getWritingDataHandlerRaw(size_t bufferId)
 {
-    std::shared_ptr<implementation::handlers::writingDataHandlerNumericBase> numericHandler = m_pData->getWritingDataHandlerRaw(bufferId, tagVR);
+    std::shared_ptr<implementation::handlers::writingDataHandlerNumericBase> numericHandler = m_pData->getWritingDataHandlerRaw(bufferId);
     return WritingDataHandlerNumeric(numericHandler);
 }
 
@@ -99,9 +99,9 @@ StreamReader Tag::getStreamReader(size_t bufferId)
     return StreamReader(m_pData->getStreamReader(bufferId));
 }
 
-StreamWriter Tag::getStreamWriter(size_t bufferId, tagVR_t tagVR)
+StreamWriter Tag::getStreamWriter(size_t bufferId)
 {
-    return StreamWriter(m_pData->getStreamWriter(bufferId, tagVR));
+    return StreamWriter(m_pData->getStreamWriter(bufferId));
 }
 
 DataSet Tag::getSequenceItem(size_t dataSetId) const
@@ -124,9 +124,9 @@ void Tag::appendSequenceItem(const DataSet& dataSet)
     m_pData->appendDataSet(dataSet.m_pDataSet);
 }
 
-tagVR_t Tag::getDataType(size_t bufferId) const
+tagVR_t Tag::getDataType() const
 {
-    return m_pData->getDataType(bufferId);
+    return m_pData->getDataType();
 }
 
 }

@@ -144,14 +144,14 @@ std::shared_ptr<handlers::readingDataHandlerNumericBase> image::getReadingDataHa
     ///////////////////////////////////////////////////////////
     if(m_buffer.get() == 0)
     {
-        buffer temporaryBuffer(m_bufferDataType);
+        buffer temporaryBuffer;
         {
-            std::shared_ptr<handlers::writingDataHandler> imageHandler(temporaryBuffer.getWritingDataHandler(m_width * m_height * m_channelsNumber));
+            std::shared_ptr<handlers::writingDataHandler> imageHandler(temporaryBuffer.getWritingDataHandler(m_bufferDataType, m_width * m_height * m_channelsNumber));
         }
-        return std::dynamic_pointer_cast<handlers::readingDataHandlerNumericBase>(m_buffer->getReadingDataHandler());
+        return std::dynamic_pointer_cast<handlers::readingDataHandlerNumericBase>(m_buffer->getReadingDataHandler(m_bufferDataType));
     }
 
-    return std::dynamic_pointer_cast<handlers::readingDataHandlerNumericBase>(m_buffer->getReadingDataHandler());
+    return std::dynamic_pointer_cast<handlers::readingDataHandlerNumericBase>(m_buffer->getReadingDataHandler(m_bufferDataType));
 
 	IMEBRA_FUNCTION_END();
 }
@@ -165,10 +165,10 @@ std::shared_ptr<handlers::writingDataHandlerNumericBase> image::getWritingDataHa
     ///////////////////////////////////////////////////////////
     if(m_buffer == 0)
     {
-        m_buffer = std::make_shared<buffer>(m_bufferDataType);
+        m_buffer = std::make_shared<buffer>();
     }
 
-    std::shared_ptr<handlers::writingDataHandler> imageHandler(m_buffer->getWritingDataHandler(m_width * m_height * m_channelsNumber));
+    std::shared_ptr<handlers::writingDataHandler> imageHandler(m_buffer->getWritingDataHandler(m_bufferDataType, m_width * m_height * m_channelsNumber));
 
     return std::dynamic_pointer_cast<handlers::writingDataHandlerNumericBase>(imageHandler);
 

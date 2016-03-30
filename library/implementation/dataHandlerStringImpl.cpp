@@ -196,7 +196,7 @@ writingDataHandlerString::~writingDataHandlerString()
         *(commitMemory->data() + (memorySize - 1)) = m_paddingByte;
     }
 
-    m_buffer->commit(commitMemory, m_dataType);
+    m_buffer->commit(commitMemory);
 }
 
 // Set the data element as a signed long

@@ -98,7 +98,26 @@ public:
     /// \return the Tag with the specified ID
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    Tag getTagContent(const TagId& tagId) const;
+    Tag getTag(const TagId& tagId) const;
+
+    /// \brief Retrieve the Tag with the specified ID or create it if it doesn't
+    ///        exist.
+    ///
+    /// \param tagId the ID of the tag to retrieve
+    /// \param tagVR the VR to use for the new tag if one doesn't exist already
+    /// \return the Tag with the specified ID
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    Tag getTagCreate(const TagId& tagId, tagVR_t tagVR);
+
+    /// \brief Retrieve the Tag with the specified ID or create it if it doesn't
+    ///        exist.
+    ///
+    /// \param tagId the ID of the tag to retrieve
+    /// \return the Tag with the specified ID
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    Tag getTagCreate(const TagId& tagId);
 
     /// \brief Retrieve an image from the dataset.
     ///

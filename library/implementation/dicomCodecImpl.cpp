@@ -233,7 +233,7 @@ void dicomCodec::writeTag(std::shared_ptr<streamWriter> pDestStream, std::shared
 
     // Check the data type
     ///////////////////////////////////////////////////////////
-    tagVR_t dataType = pData->getDataType(0);
+    tagVR_t dataType = pData->getDataType();
 
     // Adjust the tag id endian and write it
     ///////////////////////////////////////////////////////////
@@ -365,7 +365,7 @@ std::uint32_t dicomCodec::getTagLength(const std::shared_ptr<data>& pData, bool 
 {
     IMEBRA_FUNCTION_START();
 
-    tagVR_t dataType = pData->getDataType(0);
+    tagVR_t dataType = pData->getDataType();
     *pbSequence = (dataType == tagVR_t::SQ);
     std::uint32_t numberOfElements = 0;
     std::uint32_t totalLength = 0;
@@ -882,7 +882,7 @@ void dicomCodec::parseStream(std::shared_ptr<streamReader> pStream,
                 (*pReadSubItemLength) += effectiveLength;
                 if(tagLengthDWord!=0xffffffff)
                     tagLengthDWord-=effectiveLength;
-                std::shared_ptr<data> sequenceTag=pDataSet->getTagCreate(tagId, 0x0, tagSubId);
+                std::shared_ptr<data> sequenceTag=pDataSet->getTagCreate(tagId, 0x0, tagSubId, tagType);
                 sequenceTag->setDataSet(bufferId, sequenceDataSet);
                 ++bufferId;
 
@@ -2208,10 +2208,9 @@ std::uint32_t dicomCodec::readTag(
             IMEBRA_THROW(CodecCorruptedFileError, "dicomCodec::readTag detected a corrupted tag");
         }
 
-        std::shared_ptr<data> writeData (pDataSet->getTagCreate(tagId, order, tagSubId));
+        std::shared_ptr<data> writeData (pDataSet->getTagCreate(tagId, order, tagSubId, tagType));
         std::shared_ptr<buffer> newBuffer(
                     std::make_shared<buffer>(
-                        tagType,
                         pStream->getControlledStream(),
                         streamPosition,
                         bufferLength,

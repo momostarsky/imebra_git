@@ -114,7 +114,7 @@ writingDataHandlerNumericBase::~writingDataHandlerNumericBase()
             *(m_pMemory->data() + (memorySize - 1)) = m_paddingByte;
         }
 
-        m_buffer->commit(m_pMemory, m_dataType);
+        m_buffer->commit(m_pMemory);
     }
 }
 

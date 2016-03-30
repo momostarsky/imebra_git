@@ -49,8 +49,8 @@ namespace implementation
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-data::data(const charsetsList::tCharsetsList &defaultCharsets):
-    m_charsetsList(defaultCharsets)
+data::data(tagVR_t tagVR, const charsetsList::tCharsetsList &defaultCharsets):
+    m_tagVR(tagVR), m_charsetsList(defaultCharsets)
 {
 }
 
@@ -88,25 +88,11 @@ void data::setBuffer(size_t bufferId, const std::shared_ptr<buffer>& newBuffer)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-tagVR_t data::getDataType(size_t bufferId) const
+tagVR_t data::getDataType() const
 {
     IMEBRA_FUNCTION_START();
 
-    std::shared_ptr<buffer> pTempBuffer;
-
-    {
-        std::lock_guard<std::mutex> lock(m_mutex);
-        tBuffersMap::const_iterator findBuffer = m_buffers.find(bufferId);
-        if(findBuffer == m_buffers.end())
-        {
-            IMEBRA_THROW(MissingBufferError, "The buffer with ID " << bufferId << " is missing");
-        }
-        pTempBuffer = findBuffer->second;
-    }
-
-    return pTempBuffer->getDataType();
-	
-
+    return m_tagVR;
 
 	IMEBRA_FUNCTION_END();
 }
@@ -223,13 +209,13 @@ std::shared_ptr<handlers::readingDataHandler> data::getReadingDataHandler(size_t
         pTempBuffer = findBuffer->second;
     }
 
-    return pTempBuffer->getReadingDataHandler();
+    return pTempBuffer->getReadingDataHandler(m_tagVR);
 
 	IMEBRA_FUNCTION_END();
 }
 
 
-std::shared_ptr<handlers::writingDataHandler> data::getWritingDataHandler(size_t bufferId, tagVR_t tagVR)
+std::shared_ptr<handlers::writingDataHandler> data::getWritingDataHandler(size_t bufferId)
 {
     IMEBRA_FUNCTION_START();
 
@@ -249,23 +235,13 @@ std::shared_ptr<handlers::writingDataHandler> data::getWritingDataHandler(size_t
         ///////////////////////////////////////////////////////////
         if(pTempBuffer == 0)
         {
-            // If a buffer already exists, then check the already defined
-            //  datatype
-            /////////////////////////////////////////////////////////////
-            if(
-                    !m_buffers.empty() &&
-                    tagVR != m_buffers.begin()->second->getDataType())
-            {
-                throw;
-            }
-            pTempBuffer = std::make_shared<buffer>(tagVR);
-
+            pTempBuffer = std::make_shared<buffer>();
             pTempBuffer->setCharsetsList(m_charsetsList);
             m_buffers[bufferId]=pTempBuffer;
         }
     }
 
-    return pTempBuffer->getWritingDataHandler();
+    return pTempBuffer->getWritingDataHandler(m_tagVR);
 
     IMEBRA_FUNCTION_END();
 }
@@ -296,13 +272,13 @@ std::shared_ptr<handlers::readingDataHandlerRaw> data::getReadingDataHandlerRaw(
         pTempBuffer = findBuffer->second;
     }
 
-    return pTempBuffer->getReadingDataHandlerRaw();
+    return pTempBuffer->getReadingDataHandlerRaw(m_tagVR);
 
 	IMEBRA_FUNCTION_END();
 }
 
 
-std::shared_ptr<handlers::writingDataHandlerRaw> data::getWritingDataHandlerRaw(size_t bufferId, tagVR_t tagVR)
+std::shared_ptr<handlers::writingDataHandlerRaw> data::getWritingDataHandlerRaw(size_t bufferId)
 {
     IMEBRA_FUNCTION_START();
 
@@ -321,24 +297,13 @@ std::shared_ptr<handlers::writingDataHandlerRaw> data::getWritingDataHandlerRaw(
         ///////////////////////////////////////////////////////////
         if(pTempBuffer == 0)
         {
-            // If a buffer already exists, then use the already defined
-            //  datatype
-            ///////////////////////////////////////////////////////////
-            if( !m_buffers.empty() )
-            {
-                pTempBuffer = std::make_shared<buffer>(m_buffers.begin()->second->getDataType());
-            }
-            else
-            {
-                pTempBuffer = std::make_shared<buffer>(tagVR);
-            }
-
+            pTempBuffer = std::make_shared<buffer>();
             pTempBuffer->setCharsetsList(m_charsetsList);
-            m_buffers[bufferId]=pTempBuffer;
+            m_buffers[bufferId] = pTempBuffer;
         }
     }
 
-    return pTempBuffer->getWritingDataHandlerRaw();
+    return pTempBuffer->getWritingDataHandlerRaw(m_tagVR);
 
     IMEBRA_FUNCTION_END();
 }
@@ -385,7 +350,7 @@ std::shared_ptr<streamReader> data::getStreamReader(size_t bufferId)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<streamWriter> data::getStreamWriter(size_t bufferId, tagVR_t tagVR)
+std::shared_ptr<streamWriter> data::getStreamWriter(size_t bufferId)
 {
     IMEBRA_FUNCTION_START();
 
@@ -404,23 +369,12 @@ std::shared_ptr<streamWriter> data::getStreamWriter(size_t bufferId, tagVR_t tag
         ///////////////////////////////////////////////////////////
         if(pTempBuffer == 0)
         {
-            // If a buffer already exists, then use the already defined
-            //  datatype
-            ///////////////////////////////////////////////////////////
-            if( !m_buffers.empty() )
-            {
-                pTempBuffer = std::make_shared<buffer>(m_buffers.begin()->second->getDataType());
-            }
-            else
-            {
-                pTempBuffer = std::make_shared<buffer>(tagVR);
-            }
-
+            pTempBuffer = std::make_shared<buffer>();
             m_buffers[bufferId] = pTempBuffer;
         }
     }
 
-	return pTempBuffer->getStreamWriter();
+    return pTempBuffer->getStreamWriter(m_tagVR);
 
 	IMEBRA_FUNCTION_END();
 }

@@ -55,7 +55,7 @@ public:
     /// \brief Construct an empty dicom tag.
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    Tag();
+    Tag(tagVR_t tagVR);
 
     /// \brief Copy constructor: build a Tag object referencing the same Tag
     ///        implementation object as the source one.
@@ -105,50 +105,23 @@ public:
 
     /// \brief Get a ReadingDataHandler for the specified buffer.
     ///
-    ///
-    /// handlers::dataHandler manages data types depending
-    ///  on the buffer's data type: if your application
-    ///  has to work directly on the buffer's bytes,
-    ///  then it should obtain a handlers::dataHandlerRaw by
-    ///  calling getDataHandlerRaw().
-    ///
-    /// Usually a tag has only one buffer (bufferId = 0),
-    ///  but when a tag is a sequence or has an undefined
-    ///  length, then it could store more than one buffer;
-    /// in this case your application has to specify the
-    ///  id of the buffer for which the handlers::dataHandler
-    ///  is requested.
-    ///
-    /// The application can also specify a data type to use
-    ///  when a buffer doesn't exist yet: in this case a buffer
-    ///  with the specified data type will be allocated.
-    ///
-    /// The returned handlers::dataHandler works on a local
-    ///  copy of the buffer's data, then it doesn't have to
-    ///  worry about multithreading accesses to the buffer's
-    ///  data.
-    ///
-    /// @param bufferId the zero-based buffer's id the data
-    ///                 handler must use.
-    /// @param bWrite   true if the application wants to write
-    ///                 something into the buffer
-    /// @param tagVR a string that specifies the data
-    ///                  type to use for the new buffers.
-    /// @return a pointer to the data handler for the
+    /// \param bufferId the buffer to connect to the ReadingDataHandler object.
+    ///                 The first buffer has an Id = 0
+    /// \return a ReadingDataHandler object connected to the specified buffer
     ///         requested buffer.
     ///
-    ///////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////
     ReadingDataHandler getReadingDataHandler(size_t bufferId) const;
 
-    WritingDataHandler getWritingDataHandler(size_t bufferId, tagVR_t tagVR);
+    WritingDataHandler getWritingDataHandler(size_t bufferId);
 
     ReadingDataHandlerNumeric getReadingDataHandlerNumeric(size_t bufferId) const;
 
     ReadingDataHandlerNumeric getReadingDataHandlerRaw(size_t bufferId) const;
 
-    WritingDataHandlerNumeric getWritingDataHandlerNumeric(size_t bufferId, tagVR_t tagVR);
+    WritingDataHandlerNumeric getWritingDataHandlerNumeric(size_t bufferId);
 
-    WritingDataHandlerNumeric getWritingDataHandlerRaw(size_t bufferId, tagVR_t tagVR);
+    WritingDataHandlerNumeric getWritingDataHandlerRaw(size_t bufferId);
 
     /// \brief Get a streamReader connected to a buffer's data.
     ///
@@ -172,10 +145,7 @@ public:
     ///                    emptied buffer's data.
     ///
     ///////////////////////////////////////////////////////////
-    StreamWriter getStreamWriter(size_t bufferId, tagVR_t dataVR);
-
-    //@}
-
+    StreamWriter getStreamWriter(size_t bufferId);
 
     ///////////////////////////////////////////////////////////
     /// \name Embedded data sets.
@@ -238,15 +208,6 @@ public:
     ///////////////////////////////////////////////////////////
     void appendSequenceItem(const DataSet& dataSet);
 
-    //@}
-
-
-    ///////////////////////////////////////////////////////////
-    /// \name Buffer's data type
-    ///
-    ///////////////////////////////////////////////////////////
-    //@{
-
     /// \brief Get the tag's buffer type in Dicom format.
     ///
     /// A buffer's data type is composed by two uppercase
@@ -255,7 +216,7 @@ public:
     /// @return the buffer's data type in Dicom format
     ///
     ///////////////////////////////////////////////////////////
-    tagVR_t getDataType(size_t bufferId) const;
+    tagVR_t getDataType() const;
 
 #ifndef SWIG
 protected:

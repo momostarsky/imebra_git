@@ -75,7 +75,7 @@ public:
     /// @param tagVR  the buffer's data type
 	///
 	///////////////////////////////////////////////////////////
-    buffer(tagVR_t tagVR);
+    buffer();
 
 	/// \brief Constructor. Initialize the buffer object and
 	///         declare the buffer's content on demand.
@@ -97,7 +97,6 @@ public:
 	///
 	///////////////////////////////////////////////////////////
     buffer(
-        tagVR_t tagVR,
         const std::shared_ptr<baseStreamInput>& originalStream,
         size_t bufferPosition,
         size_t bufferLength,
@@ -134,9 +133,9 @@ public:
 	/// @return a pointer to a dataHandler object
 	///
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<handlers::readingDataHandler> getReadingDataHandler() const;
+    std::shared_ptr<handlers::readingDataHandler> getReadingDataHandler(tagVR_t tagVR) const;
 
-    std::shared_ptr<handlers::writingDataHandler> getWritingDataHandler(std::uint32_t size = 0);
+    std::shared_ptr<handlers::writingDataHandler> getWritingDataHandler(tagVR_t tagVR, std::uint32_t size = 0);
 
 	/// \brief Retrieve a raw data handler that can be used to
 	///         read, write and resize the memory controlled by 
@@ -163,9 +162,9 @@ public:
 	/// @return a pointer to a dataHandler object
 	///
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<handlers::readingDataHandlerRaw> getReadingDataHandlerRaw() const;
+    std::shared_ptr<handlers::readingDataHandlerRaw> getReadingDataHandlerRaw(tagVR_t tagVR) const;
 
-    std::shared_ptr<handlers::writingDataHandlerRaw> getWritingDataHandlerRaw(std::uint32_t size = 0);
+    std::shared_ptr<handlers::writingDataHandlerRaw> getWritingDataHandlerRaw(tagVR_t tagVR, std::uint32_t size = 0);
 
 	//@}
 
@@ -213,29 +212,13 @@ public:
 	/// @return          a pointer to a stream writer
 	///
 	///////////////////////////////////////////////////////////
-	std::shared_ptr<streamWriter> getStreamWriter();
+    std::shared_ptr<streamWriter> getStreamWriter(tagVR_t tagVR);
 
 	//@}
 
+    void commit(std::shared_ptr<memory> newMemory, const charsetsList::tCharsetsList& newCharsetsList);
 
-	///////////////////////////////////////////////////////////
-	/// \name Buffer's data type
-	///
-	///////////////////////////////////////////////////////////
-	//@{
-
-	/// \brief Returns the buffer's data type.
-	///
-    /// @return the buffer's data type
-    ///
-	///////////////////////////////////////////////////////////
-    tagVR_t getDataType() const;
-
-	//@}
-
-    void commit(std::shared_ptr<memory> newMemory, tagVR_t newBufferType, const charsetsList::tCharsetsList& newCharsetsList);
-
-    void commit(std::shared_ptr<memory> newMemory, tagVR_t newBufferType);
+    void commit(std::shared_ptr<memory> newMemory);
 
 	///////////////////////////////////////////////////////////
 	/// \name Charsets
@@ -316,11 +299,6 @@ private:
     std::shared_ptr<const memory> m_memory;
 
     mutable std::mutex m_mutex;
-
-protected:
-	// The buffer's type, in Dicom standard
-	///////////////////////////////////////////////////////////
-    tagVR_t m_bufferType;
 
 protected:
 	// The following variables are used to reread the buffer
