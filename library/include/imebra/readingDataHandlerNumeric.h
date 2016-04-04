@@ -108,10 +108,11 @@ public:
     const char* data(size_t* pDataSize) const;
 #endif
 
-    /// \brief Returns the number of bytes occupied by each number store in the
-    ///        buffer
+    /// \brief Returns the number of bytes occupied by the numbers handled by the
+    ///        data handler
     ///
-    /// \return the number of bytes occupied by each number stored in the buffer
+    /// \return the number of bytes occupied by the numbers handled by the data
+    ///         handler
     ///
     ///////////////////////////////////////////////////////////////////////////////
     size_t getUnitSize() const;

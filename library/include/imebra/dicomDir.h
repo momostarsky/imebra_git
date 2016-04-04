@@ -60,11 +60,11 @@ public:
     /// \return the DataSet that was used to create the DicomDir, or the last one
     ///         created via buildDataSet
     ///////////////////////////////////////////////////////////////////////////////
-	DataSet getDirectoryDataSet();
+    DataSet getDirectoryDataSet() const;
 
     DicomDirEntry getNewEntry();
 
-    DicomDirEntry getFirstRootEntry();
+    DicomDirEntry getFirstRootEntry() const;
 
     void setFirstRootEntry(const DicomDirEntry& firstEntryRecord);
 

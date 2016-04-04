@@ -32,6 +32,11 @@ namespace imebra
 
 class Image;
 
+///
+/// \brief Represents a transform: a transform takes one Image as input
+///        and produces an output Image.
+///
+///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API Transform
 {
 

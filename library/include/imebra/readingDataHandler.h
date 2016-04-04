@@ -45,6 +45,11 @@ namespace imebra
 /// in a DataSet, call DataSet::getReadingDataHandler() or
 /// Tag::getReadingDataHandler().
 ///
+/// The ReadingDataHandler object keeps a reference to the buffer's memory:
+/// the buffer's memory is never modified but only replaced by a new memory
+/// area, therefore the ReadingDataHandler client does not need to worry about
+/// other clients modifying the memory being read.
+///
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API ReadingDataHandler
 {
@@ -105,7 +110,8 @@ public:
     /// If the buffer's value cannot be converted to a signed long integer
     /// then throws DataHandlerDeniedConversionError.
     ///
-    /// \param index the element number within the buffer
+    /// \param index the element number within the buffer. Must be smaller than
+    ///        getSize()
     /// \return the tag's value as a signed 32 bit integer
     ///
     ///////////////////////////////////////////////////////////////////////////////
@@ -116,7 +122,8 @@ public:
     /// If the buffer's value cannot be converted to an unsigned long integer
     /// then throws DataHandlerDeniedConversionError.
     ///
-    /// \param index the element number within the buffer
+    /// \param index the element number within the buffer. Must be smaller than
+    ///        getSize()
     /// \return the tag's value as an unsigned 32 bit integer
     ///
     ///////////////////////////////////////////////////////////////////////////////
@@ -127,7 +134,8 @@ public:
     /// If the buffer's value cannot be converted to a double value then throws
     /// DataHandlerDeniedConversionError.
     ///
-    /// \param index the element number within the buffer
+    /// \param index the element number within the buffer. Must be smaller than
+    ///        getSize()
     /// \return the tag's value as a double floating point value (64 bit)
     ///
     ///////////////////////////////////////////////////////////////////////////////
@@ -138,7 +146,8 @@ public:
     /// If the buffer's value cannot be converted to a string then throws
     /// DataHandlerDeniedConversionError.
     ///
-    /// \param index the element number within the buffer
+    /// \param index the element number within the buffer. Must be smaller than
+    ///        getSize()
     /// \return the tag's value as an ASCII string
     ///
     ///////////////////////////////////////////////////////////////////////////////
@@ -149,7 +158,8 @@ public:
     /// If the buffer's value cannot be converted to a string then throws
     /// DataHandlerDeniedConversionError.
     ///
-    /// \param index the element number within the buffer
+    /// \param index the element number within the buffer. Must be smaller than
+    ///        getSize()
     /// \return the tag's value as an Unicode string
     ///
     ///////////////////////////////////////////////////////////////////////////////
@@ -160,7 +170,8 @@ public:
     /// If the buffer's value cannot be converted to a date or time then throws
     /// DataHandlerDeniedConversionError.
     ///
-    /// \param index the element number within the buffer
+    /// \param index the element number within the buffer. Must be smaller than
+    ///        getSize()
     /// \return the tag's value as a date or time
     ///
     ///////////////////////////////////////////////////////////////////////////////
@@ -171,7 +182,8 @@ public:
     /// If the buffer's value cannot be converted to an Age then throws
     /// DataHandlerDeniedConversionError.
     ///
-    /// \param index the element number within the buffer
+    /// \param index the element number within the buffer. Must be smaller than
+    ///        getSize()
     /// \return the tag's value as an Age
     ///
     ///////////////////////////////////////////////////////////////////////////////

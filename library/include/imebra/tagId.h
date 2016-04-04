@@ -26,6 +26,7 @@ namespace imebra
 ///
 /// \brief Represents a Dicom tag's identification.
 ///
+///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API TagId
 {
 public:
