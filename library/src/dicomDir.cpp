@@ -30,7 +30,7 @@ DicomDir::~DicomDir()
 {
 }
 
-DataSet DicomDir::getDirectoryDataSet()
+DataSet DicomDir::getDirectoryDataSet() const
 {
 	return DataSet(m_pDicomDir->getDirectoryDataSet());
 }
@@ -40,7 +40,7 @@ DicomDirEntry DicomDir::getNewEntry()
 	return DicomDirEntry(m_pDicomDir->getNewRecord());
 }
 
-DicomDirEntry DicomDir::getFirstRootEntry()
+DicomDirEntry DicomDir::getFirstRootEntry() const
 {
 	return DicomDirEntry(m_pDicomDir->getFirstRootRecord());
 }
