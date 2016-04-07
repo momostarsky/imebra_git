@@ -204,11 +204,11 @@ public:
     ///  MissingGroupError.
     ///
     /// If the specified Tag does not contain the specified buffer item then
-    ///  throws MissingItemError.
+    ///  throws MissingBufferError.
     ///
-    /// \param tagId  the tag's id containing the requested buffer
-    /// \param itemId the buffer to connect to the ReadingDataHandler object.
-    ///               The first buffer has an Id = 0
+    /// \param tagId    the tag's id containing the requested buffer
+    /// \param bufferId the buffer to connect to the ReadingDataHandler object.
+    ///                 The first buffer has an Id = 0
     /// \return a ReadingDataHandler object connected to the requested Tag's buffer
     ///
     ///////////////////////////////////////////////////////////////////////////////
@@ -223,10 +223,10 @@ public:
     /// The returned WritingDataHandler is connected to a new buffer which is
     /// updated and stored into the tag when WritingDataHandler is destroyed.
     ///
-    /// \param tagId  the tag's id containing the requested buffer
-    /// \param itemId the position where the new buffer has to be stored into the
-    ///               tag. The first buffer position is 0
-    /// \param tagVR the tag's VR
+    /// \param tagId    the tag's id containing the requested buffer
+    /// \param bufferId the position where the new buffer has to be stored into the
+    ///                 tag. The first buffer position is 0
+    /// \param tagVR    the tag's VR
     /// \return a WritingDataHandler object connected to a new Tag's buffer
     ///
     ///////////////////////////////////////////////////////////////////////////////
@@ -241,9 +241,9 @@ public:
     /// The returned WritingDataHandler is connected to a new buffer which is
     /// updated and stored into the tag when WritingDataHandler is destroyed.
     ///
-    /// \param tagId  the tag's id containing the requested buffer
-    /// \param itemId the position where the new buffer has to be stored into the
-    ///               tag. The first buffer position is 0
+    /// \param tagId    the tag's id containing the requested buffer
+    /// \param bufferId the position where the new buffer has to be stored into the
+    ///                 tag. The first buffer position is 0
     /// \return a WritingDataHandler object connected to a new Tag's buffer
     ///
     ///////////////////////////////////////////////////////////////////////////////
@@ -260,9 +260,9 @@ public:
     /// If the specified Tag does not contain the specified buffer item then
     ///  throws MissingItemError.
     ///
-    /// \param tagId  the tag's id containing the requested buffer
-    /// \param itemId the buffer to connect to the ReadingDataHandler object.
-    ///               The first buffer has an Id = 0
+    /// \param tagId    the tag's id containing the requested buffer
+    /// \param bufferId the buffer to connect to the ReadingDataHandler object.
+    ///                 The first buffer has an Id = 0
     /// \return a ReadingDataHandlerNumeric object connected to the requested
     ///         Tag's buffer
     ///
@@ -280,16 +280,16 @@ public:
     /// If the specified Tag does not contain the specified buffer item then
     ///  throws MissingItemError.
     ///
-    /// \param tagId  the tag's id containing the requested buffer
-    /// \param itemId the buffer to connect to the ReadingDataHandler object.
-    ///               The first buffer has an Id = 0
+    /// \param tagId    the tag's id containing the requested buffer
+    /// \param bufferId the buffer to connect to the ReadingDataHandler object.
+    ///                 The first buffer has an Id = 0
     /// \return a ReadingDataHandlerNumeric object connected to the requested
     ///         Tag's buffer
     ///
     ///////////////////////////////////////////////////////////////////////////////
     ReadingDataHandlerNumeric getReadingDataHandlerRaw(const TagId& tagId, size_t bufferId) const;
 
-    /// \brief Retrieve a WritingDataHandler object connected to a specific
+    /// \brief Retrieve a WritingDataHandlerNumeric object connected to a specific
     ///        tag's buffer.
     ///
     /// If the tag's VR is not a numeric type then throws std::bad_cast.
@@ -301,16 +301,16 @@ public:
     /// is updated and stored into the tag when WritingDataHandlerNumeric is
     /// destroyed.
     ///
-    /// \param tagId  the tag's id containing the requested buffer
-    /// \param itemId the position where the new buffer has to be stored into the
-    ///               tag. The first buffer position is 0
-    /// \param tagVR the tag's VR
+    /// \param tagId    the tag's id containing the requested buffer
+    /// \param bufferId the position where the new buffer has to be stored into the
+    ///                 tag. The first buffer position is 0
+    /// \param tagVR    the tag's VR
     /// \return a WritingDataHandlerNumeric object connected to a new Tag's buffer
     ///
     ///////////////////////////////////////////////////////////////////////////////
     WritingDataHandlerNumeric getWritingDataHandlerNumeric(const TagId& tagId, size_t bufferId, tagVR_t tagVR);
 
-    /// \brief Retrieve a WritingDataHandler object connected to a specific
+    /// \brief Retrieve a WritingDataHandlerNumeric object connected to a specific
     ///        tag's buffer.
     ///
     /// If the tag's VR is not a numeric type then throws std::bad_cast.
@@ -322,16 +322,53 @@ public:
     /// is updated and stored into the tag when WritingDataHandlerNumeric is
     /// destroyed.
     ///
-    /// \param tagId  the tag's id containing the requested buffer
-    /// \param itemId the position where the new buffer has to be stored into the
-    ///               tag. The first buffer position is 0
+    /// \param tagId    the tag's id containing the requested buffer
+    /// \param bufferId the position where the new buffer has to be stored into the
+    ///                 tag. The first buffer position is 0
     /// \return a WritingDataHandlerNumeric object connected to a new Tag's buffer
     ///
     ///////////////////////////////////////////////////////////////////////////////
     WritingDataHandlerNumeric getWritingDataHandlerNumeric(const TagId& tagId, size_t bufferId);
 
+    /// \brief Retrieve a WritingDataHandlerNumeric object connected to a specific
+    ///        tag's buffer. The handler content is casted to bytes
+    ///
+    /// If the tag's VR is not a numeric type then throws std::bad_cast.
+    ///
+    /// If the specified Tag does not exist then it creates a new tag with the VR
+    ///  specified in the tagVR parameter
+    ///
+    /// The returned WritingDataHandlerNumeric is connected to a new buffer which
+    /// is updated and stored into the tag when WritingDataHandlerNumeric is
+    /// destroyed.
+    ///
+    /// \param tagId    the tag's id containing the requested buffer
+    /// \param bufferId the position where the new buffer has to be stored into the
+    ///                 tag. The first buffer position is 0
+    /// \param tagVR    the tag's VR
+    /// \return a WritingDataHandlerNumeric object connected to a new Tag's buffer
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     WritingDataHandlerNumeric getWritingDataHandlerRaw(const TagId& tagId, size_t bufferId, tagVR_t tagVR);
 
+    /// \brief Retrieve a WritingDataHandlerNumeric object connected to a specific
+    ///        tag's buffer. The handler content is casted to bytes
+    ///
+    /// If the tag's VR is not a numeric type then throws std::bad_cast.
+    ///
+    /// If the specified Tag does not exist then it creates a new tag with a
+    ///  default VR retrieved from the DicomDictionary.
+    ///
+    /// The returned WritingDataHandlerNumeric is connected to a new buffer which
+    /// is updated and stored into the tag when WritingDataHandlerNumeric is
+    /// destroyed.
+    ///
+    /// \param tagId    the tag's id containing the requested buffer
+    /// \param bufferId the position where the new buffer has to be stored into the
+    ///                 tag. The first buffer position is 0
+    /// \return a WritingDataHandlerNumeric object connected to a new Tag's buffer
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     WritingDataHandlerNumeric getWritingDataHandlerRaw(const TagId& tagId, size_t bufferId);
 
     /// \brief Check if the specified tag and tag's buffer exist.

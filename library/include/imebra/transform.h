@@ -33,8 +33,8 @@ namespace imebra
 class Image;
 
 ///
-/// \brief Represents a transform: a transform takes one Image as input
-///        and produces an output Image.
+/// \brief Represents a transform: a transform takes one Image as input,
+///        processes it and outputs the processed Image.
 ///
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API Transform
@@ -54,16 +54,48 @@ private:
 
 
 public:
+
+    /// \brief Copy constructor.
+    ///
+    /// \param right the source Transform
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     Transform(const Transform& right);
+
     virtual ~Transform();
 
+    /// \brief Copy operator.
+    ///
+    /// \param right the source Transform
+    /// \return a reference to this transform
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     Transform& operator=(const Transform& right);
 
-
+    /// \brief Returns true if the transform doesn't perform any processing
+    ///        (the output image will be identical to the input one).
+    ///
+    /// \return true if the Transform doesn't perform any processing
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     bool isEmpty() const;
 
-    Image allocateOutputImage(const Image& pInputImage, std::uint32_t width, std::uint32_t height) const;
+    /// \brief Allocate an image ready to accomodate the result of the
+    ///        image processing performed by the runTransform() method.
+    ///
+    /// \param inputImage the image that will be set as input of the runTransform()
+    ///                   method
+    /// \param width      the width of the output image
+    /// \param height     the height of the output image
+    /// \return an image ready to be passed as outputImage to runTransform()
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    Image allocateOutputImage(const Image& inputImage, std::uint32_t width, std::uint32_t height) const;
 
+    /// \brief Run the processing function of the Transform.
+    ///
+    /// \param inputImage the image to use as input
+    ///
 	void runTransform(
             const Image& inputImage,
             std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight,

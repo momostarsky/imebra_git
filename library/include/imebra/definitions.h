@@ -245,7 +245,7 @@ struct IMEBRA_API Date
     /// \param initialMinutes minutes (0...59)
     /// \param initialSeconds seconds (0...59)
     /// \param initialNanoseconds nanoseconds
-    /// \param initialOffseHours    hours offset from UTC
+    /// \param initialOffsetHours   hours offset from UTC
     /// \param initialOffsetMinutes minutes offset from UTC
     ///////////////////////////////////////////////////////////////////////////////
     Date(const std::uint32_t initialYear,

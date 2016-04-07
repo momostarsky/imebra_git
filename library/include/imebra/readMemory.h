@@ -116,7 +116,7 @@ public:
     /// \brief Return true if the referenced memory is zero bytes long or hasn't
     ///        been allocated yet.
     ///
-    /// \true if the referenced memory does not exist or is empty
+    /// \return true if the referenced memory does not exist or is empty
     ///
     ///////////////////////////////////////////////////////////////////////////////
     bool empty() const;

@@ -50,9 +50,10 @@ private:
     Tag(std::shared_ptr<imebra::implementation::data> pData);
 #endif
 
-
 public:
     /// \brief Construct an empty dicom tag.
+    ///
+    /// \param tagVR the Tag's VR (data type)
     ///
     ///////////////////////////////////////////////////////////////////////////////
     Tag(tagVR_t tagVR);
@@ -77,7 +78,7 @@ public:
 
     /// \brief Returns the number of buffers in the tag.
     ///
-    /// @return the number of buffers in the tag
+    /// \return the number of buffers in the tag
     ///
     ///////////////////////////////////////////////////////////////////////////////
     size_t getBuffersCount() const;
@@ -85,9 +86,9 @@ public:
     /// \brief Returns true if the specified buffer exists, otherwise it returns
     ///        false.
     ///
-    /// @param bufferId the zero-based buffer's id the
+    /// \param bufferId the zero-based buffer's id the
     ///                 function has to check for
-    /// @return true if the buffer exists, false otherwise
+    /// \return true if the buffer exists, false otherwise
     ///
     ///////////////////////////////////////////////////////////////////////////////
     bool bufferExists(size_t bufferId) const;
@@ -96,23 +97,39 @@ public:
     ///
     /// If the buffer doesn't exist then throws MissingBufferError.
     ///
-    /// @param bufferId the zero-based buffer's id the
+    /// \param bufferId the zero-based buffer's id the
     ///                 function has to check for
-    /// @return the buffer's size in bytes
+    /// \return the buffer's size in bytes
     ///
     ///////////////////////////////////////////////////////////////////////////////
     size_t getBufferSize(size_t bufferId) const;
 
-    /// \brief Get a ReadingDataHandler for the specified buffer.
+    /// \brief Retrieve a ReadingDataHandler object connected to a specific
+    ///        buffer.
+    ///
+    /// If the specified buffer does not exist then throws or MissingBufferError.
     ///
     /// \param bufferId the buffer to connect to the ReadingDataHandler object.
     ///                 The first buffer has an Id = 0
-    /// \return a ReadingDataHandler object connected to the specified buffer
-    ///         requested buffer.
+    /// \return a ReadingDataHandler object connected to the requested buffer
     ///
     ///////////////////////////////////////////////////////////////////////////////
     ReadingDataHandler getReadingDataHandler(size_t bufferId) const;
 
+    /// \brief Retrieve a WritingDataHandler object connected to a specific
+    ///        tag's buffer.
+    ///
+    /// If the specified Tag does not exist then it creates a new tag with the VR
+    ///  specified in the tagVR parameter
+    ///
+    /// The returned WritingDataHandler is connected to a new buffer which is
+    /// updated and stored into the tag when WritingDataHandler is destroyed.
+    ///
+    /// \param bufferId the position where the new buffer has to be stored into the
+    ///                 tag. The first buffer position is 0
+    /// \return a WritingDataHandler object connected to a new Tag's buffer
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     WritingDataHandler getWritingDataHandler(size_t bufferId);
 
     ReadingDataHandlerNumeric getReadingDataHandlerNumeric(size_t bufferId) const;
@@ -123,99 +140,71 @@ public:
 
     WritingDataHandlerNumeric getWritingDataHandlerRaw(size_t bufferId);
 
-    /// \brief Get a streamReader connected to a buffer's data.
+    /// \brief Get a StreamReader connected to a buffer's data.
     ///
-    /// @param bufferId   the id of the buffer for which the
-    ///                    streamReader is required. This
-    ///                    parameter is usually 0
-    /// @return           the streamReader connected to the
-    ///                    buffer's data.
+    /// \param bufferId   the id of the buffer for which the StreamReader is
+    ///                    required. This parameter is usually 0
+    /// \return           the streamReader connected to the buffer's data.
     ///
-    ///////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////
     StreamReader getStreamReader(size_t bufferId);
 
-    /// \brief Get a streamWriter connected to a buffer's data.
+    /// \brief Get a StreamWriter connected to a buffer's data.
     ///
-    /// @param bufferId   the id of the buffer for which the
-    ///                    streamWriter is required. This
-    ///                    parameter is usually 0
-    /// @param dataType   the datatype used to create the
-    ///                    buffer if it doesn't exist already
-    /// @return           the streamWriter connected to the
-    ///                    emptied buffer's data.
+    /// @param bufferId   the id of the buffer for which the StreamWriter is
+    ///                    required. This parameter is usually 0
+    /// @return           the StreamWriter connected to the buffer's data.
     ///
-    ///////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////
     StreamWriter getStreamWriter(size_t bufferId);
 
-    ///////////////////////////////////////////////////////////
-    /// \name Embedded data sets.
+    /// \brief Retrieve an embedded DataSet.
     ///
-    /// Get or set an embedded dataSet
+    /// Sequence tags (VR=SQ) store embedded dicom structures.
     ///
-    ///////////////////////////////////////////////////////////
-    //@{
-
-    /// \brief Retrieve an embedded data set.
+    /// @param dataSetId  the ID of the sequence item to retrieve. Several sequence
+    ///                   items can be embedded in one tag.
+    /// @return           the sequence DataSet
     ///
-    /// Sequence tags (dicom type=SQ) store embedded dicom
-    ///  structures inside.
-    ///
-    /// Sequences allow to nest several dicom structures.
-    /// Sequences are used by dicom directories and by some
-    ///  tags in the normal dataSet.
-    ///
-    /// @param dataSetId  the ID of the dataSet to retrieve.
-    ///                   Several data sets can be embedded
-    ///                   in the tag.
-    ///                   The first dataSet's ID is zero.
-    /// @return           a pointer to the retrieved dataSet
-    ///
-    ///////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////
     DataSet getSequenceItem(size_t dataSetId) const;
 
+    /// \brief Check for the existance of a sequence item.
+    ///
+    /// \param dataSetId the ID of the sequence item to check for
+    /// \return true if the sequence item exists, false otherwise
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     bool sequenceItemExists(size_t dataSetId) const;
 
-    /// \brief Set an embedded dataSet to the sequence.
+    /// \brief Insert a sequence item into the Tag.
     ///
-    /// Several data sets can be nested one inside each other.
-    /// When a data set is embedded into a tag, then the
-    ///  tag will have a sequence type (dicom type=SQ).
+    /// Several sequence items can be nested one inside each other.
+    /// When a sequence item is embedded into a Tag, then the tag will have a
+    /// sequence VR (VR = SQ).
     ///
-    /// Sequences are used to build dicom directories and
-    ///  other tags in normal data sets.
+    /// \param dataSetId  the ID of the sequence item
+    /// \param dataSet    the DataSet containing the sequence item data
     ///
-    /// @param dataSetId  The Id of the dataSet inside the tag.
-    ///                   Tags can store several data sets.
-    ///                   The first dataSet has an ID of zero
-    /// @param pDataSet   A pointer to the dataSet to store
-    ///                   into the tag
-    ///
-    ///////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////
     void setSequenceItem(size_t dataSetId, const DataSet& dataSet);
 
-    /// \brief Append an embedded dataSet to the sequence.
+    /// \brief Append a sequence item into the Tag.
     ///
-    /// Several data sets can be nested one inside each other.
-    /// When a data set is embedded into a tag, then the
-    ///  tag will have a sequence type (dicom type=SQ).
+    /// Several sequence items can be nested one inside each other.
+    /// When a sequence item is embedded into a Tag, then the tag will have a
+    /// sequence VR (VR = SQ).
     ///
-    /// Sequences are used to build dicom directories and
-    ///  other tags in normal data sets.
+    /// \param dataSet    the DataSet containing the sequence item data
     ///
-    /// @param pDataSet   A pointer to the dataSet to store
-    ///                   into the tag
-    ///
-    ///////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////
     void appendSequenceItem(const DataSet& dataSet);
 
-    /// \brief Get the tag's buffer type in Dicom format.
+    /// \brief Get the tag's data type.
     ///
-    /// A buffer's data type is composed by two uppercase
-    ///  chars.
+    /// @return the tag's data type
     ///
-    /// @return the buffer's data type in Dicom format
-    ///
-    ///////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////
     tagVR_t getDataType() const;
 
 #ifndef SWIG

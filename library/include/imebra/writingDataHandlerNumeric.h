@@ -69,6 +69,7 @@ public:
     /// handled by the source WritingDataHandlerNumeric.
     ///
     /// \param right the source WritingDataHandlerNumeric
+    /// \return a reference to this object
     ///
     ///////////////////////////////////////////////////////////////////////////////
     WritingDataHandlerNumeric& operator=(const WritingDataHandlerNumeric& right);

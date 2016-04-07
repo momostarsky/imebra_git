@@ -30,11 +30,6 @@ WritingDataHandler& WritingDataHandler::operator=(const WritingDataHandler& righ
 WritingDataHandler::WritingDataHandler(std::shared_ptr<imebra::implementation::handlers::writingDataHandler> pDataHandler): m_pDataHandler(pDataHandler)
 {}
 
-void WritingDataHandler::close()
-{
-    m_pDataHandler.reset();
-}
-
 void WritingDataHandler::setSize(size_t elementsNumber)
 {
     m_pDataHandler->setSize(elementsNumber);

@@ -87,8 +87,6 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     WritingDataHandler& operator=(const WritingDataHandler& right);
 
-    void close();
-
     /// \brief Resize the memory to contain the specified number of elements.
     ///
     /// By default the WritingDataHandler buffer allocates an empty memory block
@@ -129,6 +127,7 @@ public:
     ///
     /// \param index the element number within the buffer. Must be smaller than
     ///        getSize()
+    /// \param value the value to write
     /// \return the new signed 32 bit integer value
     ///
     ///////////////////////////////////////////////////////////////////////////////
@@ -141,6 +140,7 @@ public:
     ///
     /// \param index the element number within the buffer. Must be smaller than
     ///        getSize()
+    /// \param value the value to write
     /// \return the new unsigned 32 bit integer value
     ///
     ///////////////////////////////////////////////////////////////////////////////
@@ -153,6 +153,7 @@ public:
     ///
     /// \param index the element number within the buffer. Must be smaller than
     ///        getSize()
+    /// \param value the value to write
     /// \return the 64 bit floating point value
     ///
     ///////////////////////////////////////////////////////////////////////////////
@@ -165,6 +166,7 @@ public:
     ///
     /// \param index the element number within the buffer. Must be smaller than
     ///        getSize()
+    /// \param value the value to write
     /// \return the string value
     ///
     ///////////////////////////////////////////////////////////////////////////////
@@ -177,6 +179,7 @@ public:
     ///
     /// \param index the element number within the buffer. Must be smaller than
     ///        getSize()
+    /// \param value the value to write
     /// \return the Unicode string value
     ///
     ///////////////////////////////////////////////////////////////////////////////
@@ -189,6 +192,7 @@ public:
     ///
     /// \param index the element number within the buffer. Must be smaller than
     ///        getSize()
+    /// \param date  the value to write
     /// \return the Date value
     ///
     ///////////////////////////////////////////////////////////////////////////////
@@ -201,6 +205,7 @@ public:
     ///
     /// \param index the element number within the buffer. Must be smaller than
     ///        getSize()
+    /// \param age   the value to write
     /// \return the Age value
     ///
     ///////////////////////////////////////////////////////////////////////////////
