@@ -34,6 +34,9 @@ namespace imebra
 
 class IMEBRA_API TransformHighBit: public Transform
 {
+    TransformHighBit(const TransformHighBit&) = delete;
+    TransformHighBit& operator=(const TransformHighBit&) = delete;
+
 public:
     TransformHighBit();
 

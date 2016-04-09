@@ -14,17 +14,8 @@ $fileHeader$
 namespace imebra
 {
 
-ReadingDataHandler::ReadingDataHandler(const ReadingDataHandler& right) : m_pDataHandler(right.m_pDataHandler)
-{}
-
 ReadingDataHandler::~ReadingDataHandler()
 {
-}
-
-ReadingDataHandler& ReadingDataHandler::operator=(const ReadingDataHandler& right)
-{
-    m_pDataHandler = right.m_pDataHandler;
-    return *this;
 }
 
 ReadingDataHandler::ReadingDataHandler(std::shared_ptr<imebra::implementation::handlers::readingDataHandler> pDataHandler): m_pDataHandler(pDataHandler)

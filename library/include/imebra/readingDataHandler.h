@@ -53,6 +53,9 @@ namespace imebra
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API ReadingDataHandler
 {
+    ReadingDataHandler(const ReadingDataHandler&) = delete;
+    ReadingDataHandler& operator=(const ReadingDataHandler&) = delete;
+
 #ifndef SWIG
     friend class DataSet;
     friend class Tag;
@@ -64,27 +67,7 @@ private:
 
 public:
 
-    /// \brief Copy constructor.
-    ///
-    /// The new ReadingDataHandler will handle the same tag's content handled
-    /// by the source ReadingDataHandler.
-    ///
-    /// \param right the source ReadingDataHandler
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    ReadingDataHandler(const ReadingDataHandler& right);
-
     virtual ~ReadingDataHandler();
-
-    /// \brief Copy operator.
-    ///
-    /// The ReadingDataHandler object will drop the handled buffer's content
-    /// and will handle the same buffer's content as the source ReadingDataHandler.
-    ///
-    /// \param right the source ReadingDataHandler
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    ReadingDataHandler& operator=(const ReadingDataHandler& right);
 
     /// \brief Returns the number of elements in the tag's buffer handled by the
     ///        data handler.

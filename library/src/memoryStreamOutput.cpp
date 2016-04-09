@@ -15,14 +15,4 @@ MemoryStreamOutput::MemoryStreamOutput(const ReadWriteMemory& memory):
 {
 }
 
-MemoryStreamOutput::MemoryStreamOutput(const MemoryStreamOutput& right): BaseStreamOutput(right.m_pStream)
-{
-}
-
-MemoryStreamOutput& MemoryStreamOutput::operator=(const MemoryStreamOutput& right)
-{
-	m_pStream = right.m_pStream;
-	return *this;
-}
-
 }

@@ -19,21 +19,10 @@ ReadingDataHandlerNumeric::ReadingDataHandlerNumeric(std::shared_ptr<implementat
 {
 }
 
-ReadingDataHandlerNumeric::ReadingDataHandlerNumeric(const ReadingDataHandlerNumeric &right):
-    ReadingDataHandler(right)
-{
-}
-
-ReadingDataHandlerNumeric& ReadingDataHandlerNumeric::operator=(const ReadingDataHandlerNumeric& right)
-{
-    m_pDataHandler = right.m_pDataHandler;
-    return *this;
-}
-
-const ReadMemory ReadingDataHandlerNumeric::getMemory() const
+const ReadMemory* ReadingDataHandlerNumeric::getMemory() const
 {
     std::shared_ptr<imebra::implementation::handlers::readingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<imebra::implementation::handlers::readingDataHandlerNumericBase>(m_pDataHandler);
-    return ReadMemory(numericDataHandler->getMemory());
+    return new ReadMemory(numericDataHandler->getMemory());
 }
 
 size_t ReadingDataHandlerNumeric::data(char* destination, size_t destinationSize) const

@@ -44,6 +44,9 @@ namespace imebra
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API WritingDataHandlerNumeric: public WritingDataHandler
 {
+    WritingDataHandlerNumeric(const WritingDataHandlerNumeric&) = delete;
+    WritingDataHandlerNumeric& operator=(const WritingDataHandlerNumeric&) = delete;
+
 #ifndef SWIG
     friend class Image;
     friend class DataSet;
@@ -53,33 +56,13 @@ private:
 #endif
 
 public:
-    /// \brief Copy constructor.
-    ///
-    /// The new WritingDataHandlerNumeric will handle the same content
-    /// handled by the source WritingDataHandlerNumeric.
-    ///
-    /// \param right the source WritingDataHandlerNumeric
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    WritingDataHandlerNumeric(const WritingDataHandlerNumeric& right);
-
-    /// \brief Copy operator.
-    ///
-    /// The WritingDataHandlerNumeric object will handle the same content
-    /// handled by the source WritingDataHandlerNumeric.
-    ///
-    /// \param right the source WritingDataHandlerNumeric
-    /// \return a reference to this object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    WritingDataHandlerNumeric& operator=(const WritingDataHandlerNumeric& right);
 
     /// \brief Return a ReadWriteMemory object referencing the raw buffer's data.
     ///
     /// \return a ReadWriteMemory object referencing the raw buffer's data
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    ReadWriteMemory getMemory() const;
+    ReadWriteMemory* getMemory() const;
 
     /// \brief Copy the content of the specified buffer into the content managed
     ///        by data handler.

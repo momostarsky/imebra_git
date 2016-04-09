@@ -44,6 +44,8 @@ namespace imebra
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API BaseStreamInput
 {
+    BaseStreamInput(const BaseStreamInput&) = delete;
+    BaseStreamInput& operator=(const BaseStreamInput&) = delete;
 
 #ifndef SWIG
 	friend class StreamReader;
@@ -60,27 +62,10 @@ private:
 #endif
 
 public:
-    /// \brief Copy constructor: build an input stream object referencing the
-    ///        same stream object as the source one.
-    ///
-    /// \param right another BaseStreamInput object to use as source
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    BaseStreamInput(const BaseStreamInput& right);
-
     /// \brief Destructor.
     ///
     ///////////////////////////////////////////////////////////////////////////////
     virtual ~BaseStreamInput();
-
-    /// \brief Copy operator: references the same input stream object as the
-    ///        source one.
-    ///
-    /// \param right another BaseStreamInput object to use as source
-    /// \return a reference to this object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    BaseStreamInput& operator=(const BaseStreamInput& right);
 
 #ifndef SWIG
 protected:

@@ -45,7 +45,7 @@
 %include "../include/imebra/writingDataHandler.h"
 %include "../include/imebra/writingDataHandlerNumeric.h"
 %include "../include/imebra/image.h"
-%include "../include/imebra/tagContent.h"
+%include "../include/imebra/tag.h"
 %include "../include/imebra/dataSet.h"
 %include "../include/imebra/codecFactory.h"
 %include "../include/imebra/transform.h"

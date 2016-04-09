@@ -30,19 +30,19 @@ DicomDir::~DicomDir()
 {
 }
 
-DataSet DicomDir::getDirectoryDataSet() const
+DataSet* DicomDir::getDirectoryDataSet() const
 {
-	return DataSet(m_pDicomDir->getDirectoryDataSet());
+    return new DataSet(m_pDicomDir->getDirectoryDataSet());
 }
 
-DicomDirEntry DicomDir::getNewEntry()
+DicomDirEntry* DicomDir::getNewEntry()
 {
-	return DicomDirEntry(m_pDicomDir->getNewRecord());
+    return new DicomDirEntry(m_pDicomDir->getNewRecord());
 }
 
-DicomDirEntry DicomDir::getFirstRootEntry() const
+DicomDirEntry* DicomDir::getFirstRootEntry() const
 {
-	return DicomDirEntry(m_pDicomDir->getFirstRootRecord());
+    return new DicomDirEntry(m_pDicomDir->getFirstRootRecord());
 }
 
 void DicomDir::setFirstRootEntry(const DicomDirEntry& firstEntryRecord)
@@ -51,9 +51,9 @@ void DicomDir::setFirstRootEntry(const DicomDirEntry& firstEntryRecord)
     m_pDicomDir->setFirstRootRecord(firstEntryRecord.m_pDirectoryRecord);
 }
 
-DataSet DicomDir::buildDataSet()
+DataSet* DicomDir::buildDataSet()
 {
-	return DataSet(m_pDicomDir->buildDataSet());
+    return new DataSet(m_pDicomDir->buildDataSet());
 }
 
 }

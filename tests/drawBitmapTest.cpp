@@ -14,7 +14,7 @@ TEST(drawBitmapTest, testDrawBitmap)
 	{
 		for(int subsample = 1; subsample != 4; subsample <<= 1)
 		{
-            Image testImage(buildImageForTest(
+            std::unique_ptr<Image> testImage(buildImageForTest(
                     401,
                     301,
                     bitDepth_t::depthU8,
@@ -26,31 +26,31 @@ TEST(drawBitmapTest, testDrawBitmap)
 					50));
 
             DataSet testDataSet;
-            testDataSet.setImage(0, testImage, "1.2.840.10008.1.2", imageQuality_t::high);
+            testDataSet.setImage(0, *testImage, "1.2.840.10008.1.2", imageQuality_t::high);
 
             DrawBitmap testDraw;
-            ReadWriteMemory bitmapBuffer(testDraw.getBitmap(testImage, drawBitmapType_t::drawBitmapRGB, 1));
+            std::unique_ptr<ReadWriteMemory> bitmapBuffer(testDraw.getBitmap(*testImage, drawBitmapType_t::drawBitmapRGB, 1));
             size_t bufferSize;
-            char* pBuffer(bitmapBuffer.data(&bufferSize));
+            char* pBuffer(bitmapBuffer->data(&bufferSize));
 
-            ReadingDataHandler imageHandler = testImage.getReadingDataHandler();
+            std::unique_ptr<ReadingDataHandler> imageHandler(testImage->getReadingDataHandler());
 
             std::uint32_t red, green, blue;
             size_t index(0);
-            for(int scanY = 0; scanY != testImage.getHeight(); ++scanY)
+            for(int scanY = 0; scanY != testImage->getHeight(); ++scanY)
 			{
-                for(int scanX = 0; scanX != testImage.getWidth(); ++scanX)
+                for(int scanX = 0; scanX != testImage->getWidth(); ++scanX)
 				{
                     if(monochrome)
                     {
-                        red = imageHandler.getUnsignedLong(index++);
+                        red = imageHandler->getUnsignedLong(index++);
                         green = blue = red;
                     }
                     else
                     {
-                        red = imageHandler.getUnsignedLong(index++);
-                        green = imageHandler.getUnsignedLong(index++);
-                        blue = imageHandler.getUnsignedLong(index++);
+                        red = imageHandler->getUnsignedLong(index++);
+                        green = imageHandler->getUnsignedLong(index++);
+                        blue = imageHandler->getUnsignedLong(index++);
                     }
 
 					std::uint8_t displayRed(*pBuffer++);

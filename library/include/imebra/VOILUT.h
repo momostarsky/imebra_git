@@ -20,6 +20,8 @@ class DataSet;
 
 class IMEBRA_API VOILUT: public Transform
 {
+    VOILUT(const VOILUT&) = delete;
+    VOILUT& operator=(const VOILUT&) = delete;
 
 public:
     VOILUT(const DataSet& dataset);
@@ -27,7 +29,7 @@ public:
     std::uint32_t getVOILUTId(std::uint32_t VOILUTNumber) const;
     std::wstring getVOILUTDescription(std::uint32_t VOILUTId) const;
     void setVOILUT(std::uint32_t VOILUTId);
-    void applyOptimalVOI(Image inputImage, std::uint32_t topLeftX, std::uint32_t topLeftY, std::uint32_t width, std::uint32_t height);
+    void applyOptimalVOI(const Image& inputImage, std::uint32_t topLeftX, std::uint32_t topLeftY, std::uint32_t width, std::uint32_t height);
 	//void setLUT(std::shared_ptr<lut> pLut);
     void setCenterWidth(std::int32_t center, std::int32_t width);
     double getCenter() const;

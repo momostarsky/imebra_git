@@ -45,6 +45,9 @@ namespace imebra
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API ReadingDataHandlerNumeric: public ReadingDataHandler
 {
+    ReadingDataHandlerNumeric(const ReadingDataHandlerNumeric&) = delete;
+    ReadingDataHandlerNumeric& operator=(const ReadingDataHandlerNumeric&) = delete;
+
 public:
 #ifndef SWIG
     friend class Image;
@@ -57,33 +60,12 @@ private:
 
 public:
 
-    /// \brief Copy constructor.
-    ///
-    /// The new ReadingDataHandlerNumeric will handle the same buffer's content
-    /// handled by the source ReadingDataHandlerNumeric.
-    ///
-    /// \param right the source ReadingDataHandlerNumeric
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    ReadingDataHandlerNumeric(const ReadingDataHandlerNumeric& right);
-
-    /// \brief Copy operator.
-    ///
-    /// The ReadingDataHandlerNumeric object will drop the handled buffer's content
-    /// and will handle the same buffer's content as the source
-    /// ReadingDataHandlerNumeric.
-    ///
-    /// \param right the source ReadingDataHandlerNumeric
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    ReadingDataHandlerNumeric& operator=(const ReadingDataHandlerNumeric& right);
-
     /// \brief Return a ReadMemory object referencing the raw buffer's data.
     ///
     /// \return a ReadMemory object referencing the raw buffer's data
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    const ReadMemory getMemory() const;
+    const ReadMemory* getMemory() const;
 
     /// \brief Copies the buffer's raw memory content into the specified buffer.
     ///

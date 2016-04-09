@@ -18,11 +18,12 @@ class ReadWriteMemory;
 
 class IMEBRA_API MemoryStreamInput : public BaseStreamInput
 {
+    MemoryStreamInput(const MemoryStreamInput&) = delete;
+    MemoryStreamInput& operator=(const MemoryStreamInput&) = delete;
+
 public:
     MemoryStreamInput(const ReadMemory& memory);
     MemoryStreamInput(const ReadWriteMemory& memory);
-    MemoryStreamInput(const MemoryStreamInput& right);
-    MemoryStreamInput& operator=(const MemoryStreamInput& right);
 };
 
 }

@@ -39,6 +39,8 @@ class Image;
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API Transform
 {
+    Transform(const Transform&) = delete;
+    Transform& operator=(const Transform&) = delete;
 
 #ifndef SWIG
     friend class TransformsChain;
@@ -55,22 +57,7 @@ private:
 
 public:
 
-    /// \brief Copy constructor.
-    ///
-    /// \param right the source Transform
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    Transform(const Transform& right);
-
     virtual ~Transform();
-
-    /// \brief Copy operator.
-    ///
-    /// \param right the source Transform
-    /// \return a reference to this transform
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    Transform& operator=(const Transform& right);
 
     /// \brief Returns true if the transform doesn't perform any processing
     ///        (the output image will be identical to the input one).
@@ -90,7 +77,7 @@ public:
     /// \return an image ready to be passed as outputImage to runTransform()
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    Image allocateOutputImage(const Image& inputImage, std::uint32_t width, std::uint32_t height) const;
+    Image* allocateOutputImage(const Image& inputImage, std::uint32_t width, std::uint32_t height) const;
 
     /// \brief Run the processing function of the Transform.
     ///

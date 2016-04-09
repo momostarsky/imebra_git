@@ -14,17 +14,8 @@ $fileHeader$
 namespace imebra
 {
 
-WritingDataHandler::WritingDataHandler(const WritingDataHandler& right) : m_pDataHandler(right.m_pDataHandler)
-{}
-
 WritingDataHandler::~WritingDataHandler()
 {
-}
-
-WritingDataHandler& WritingDataHandler::operator=(const WritingDataHandler& right)
-{
-    m_pDataHandler = right.m_pDataHandler;
-    return *this;
 }
 
 WritingDataHandler::WritingDataHandler(std::shared_ptr<imebra::implementation::handlers::writingDataHandler> pDataHandler): m_pDataHandler(pDataHandler)

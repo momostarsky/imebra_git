@@ -19,10 +19,6 @@ DicomDirEntry::DicomDirEntry(const DataSet& fromDataSet):
     m_pDirectoryRecord(std::make_shared<imebra::implementation::directoryRecord>(fromDataSet.m_pDataSet))
 {}
 
-DicomDirEntry::DicomDirEntry(const DicomDirEntry& right): m_pDirectoryRecord(right.m_pDirectoryRecord)
-{
-}
-
 DicomDirEntry::DicomDirEntry(std::shared_ptr<imebra::implementation::directoryRecord> pDirectoryRecord): m_pDirectoryRecord(pDirectoryRecord)
 {
 }
@@ -31,25 +27,19 @@ DicomDirEntry::~DicomDirEntry()
 {
 }
 
-DicomDirEntry& DicomDirEntry::operator=(const DicomDirEntry& right)
+DataSet* DicomDirEntry::getEntryDataSet()
 {
-	m_pDirectoryRecord = right.m_pDirectoryRecord;
-	return *this;
+    return new DataSet(m_pDirectoryRecord->getRecordDataSet());
 }
 
-DataSet DicomDirEntry::getEntryDataSet()
+DicomDirEntry* DicomDirEntry::getNextEntry()
 {
-	return DataSet(m_pDirectoryRecord->getRecordDataSet());
+    return new DicomDirEntry(m_pDirectoryRecord->getNextRecord());
 }
 
-DicomDirEntry DicomDirEntry::getNextEntry()
+DicomDirEntry* DicomDirEntry::getFirstChildEntry()
 {
-	return DicomDirEntry(m_pDirectoryRecord->getNextRecord());
-}
-
-DicomDirEntry DicomDirEntry::getFirstChildEntry()
-{
-	return DicomDirEntry(m_pDirectoryRecord->getFirstChildRecord());
+    return new DicomDirEntry(m_pDirectoryRecord->getFirstChildRecord());
 }
 	
 void DicomDirEntry::setNextEntry(const DicomDirEntry& nextEntry)

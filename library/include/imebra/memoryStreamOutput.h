@@ -17,10 +17,11 @@ class ReadWriteMemory;
 
 class IMEBRA_API MemoryStreamOutput : public BaseStreamOutput
 {
+    MemoryStreamOutput(const MemoryStreamOutput&) = delete;
+    MemoryStreamOutput& operator=(const MemoryStreamOutput&) = delete;
+
 public:
     MemoryStreamOutput(const ReadWriteMemory& memory);
-    MemoryStreamOutput(const MemoryStreamOutput& right);
-    MemoryStreamOutput& operator=(const MemoryStreamOutput& right);
 };
 
 }

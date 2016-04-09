@@ -51,6 +51,9 @@ namespace imebra
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API WritingDataHandler
 {
+    WritingDataHandler(const WritingDataHandler&) = delete;
+    WritingDataHandler& operator=(const WritingDataHandler&) = delete;
+
 #ifndef SWIG
     friend class DataSet;
     friend class Tag;
@@ -61,31 +64,11 @@ private:
 #endif
 
 public:
-    /// \brief Copy constructor.
-    ///
-    /// The new WritingDataHandler will handle the same tag's content handled
-    /// by the source WritingDataHandler.
-    ///
-    /// \param right the source WritingDataHandler
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    WritingDataHandler(const WritingDataHandler& right);
-
     /// \brief Destructor: replaces the tag buffer's memory with the memory created
     ///        by this WritingDataHandler.
     ///
     ///////////////////////////////////////////////////////////////////////////////
     virtual ~WritingDataHandler();
-
-    /// \brief Copy operator.
-    ///
-    /// The WritingDataHandler object will handle the same tag's content handled
-    /// by the source WritingDataHandler.
-    ///
-    /// \param right the source WritingDataHandler
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    WritingDataHandler& operator=(const WritingDataHandler& right);
 
     /// \brief Resize the memory to contain the specified number of elements.
     ///

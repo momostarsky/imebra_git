@@ -27,18 +27,8 @@ StreamReader::StreamReader(const BaseStreamInput& stream, size_t virtualStart, s
 {
 }
 
-StreamReader::StreamReader(const StreamReader& right): m_pReader(right.m_pReader)
-{
-}
-
 StreamReader::~StreamReader()
 {
-}
-
-StreamReader& StreamReader::operator=(const StreamReader& right)
-{
-    m_pReader = right.m_pReader;
-    return *this;
 }
 
 }

@@ -19,21 +19,10 @@ WritingDataHandlerNumeric::WritingDataHandlerNumeric(std::shared_ptr<implementat
 {
 }
 
-WritingDataHandlerNumeric::WritingDataHandlerNumeric(const WritingDataHandlerNumeric &right):
-    WritingDataHandler(right)
-{
-}
-
-WritingDataHandlerNumeric& WritingDataHandlerNumeric::operator=(const WritingDataHandlerNumeric& right)
-{
-    m_pDataHandler = right.m_pDataHandler;
-    return *this;
-}
-
-ReadWriteMemory WritingDataHandlerNumeric::getMemory() const
+ReadWriteMemory* WritingDataHandlerNumeric::getMemory() const
 {
     std::shared_ptr<imebra::implementation::handlers::writingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<imebra::implementation::handlers::writingDataHandlerNumericBase>(m_pDataHandler);
-    return ReadWriteMemory(numericDataHandler->getMemory());
+    return new ReadWriteMemory(numericDataHandler->getMemory());
 }
 
 void WritingDataHandlerNumeric::assign(const char* source, size_t sourceSize)

@@ -43,7 +43,13 @@ class DicomDirEntry;
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API DicomDir
 {
+    DicomDir(const DicomDir&) = delete;
+    DicomDir& operator=(const DicomDir&) = delete;
+
 public:
+    /// \brief Construct an empty DicomDir.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     DicomDir();
 
     /// \brief Construct a DicomDir from a DataSet object.
@@ -52,6 +58,7 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     DicomDir(const DataSet& fromDataSet);
+
     virtual ~DicomDir();
 
     /// \brief Return the DataSet that was used to build the DicomDir object, or
@@ -60,15 +67,15 @@ public:
     /// \return the DataSet that was used to create the DicomDir, or the last one
     ///         created via buildDataSet
     ///////////////////////////////////////////////////////////////////////////////
-    DataSet getDirectoryDataSet() const;
+    DataSet* getDirectoryDataSet() const;
 
-    DicomDirEntry getNewEntry();
+    DicomDirEntry* getNewEntry();
 
-    DicomDirEntry getFirstRootEntry() const;
+    DicomDirEntry* getFirstRootEntry() const;
 
     void setFirstRootEntry(const DicomDirEntry& firstEntryRecord);
 
-	DataSet buildDataSet();
+    DataSet* buildDataSet();
 
 #ifndef SWIG
 protected:

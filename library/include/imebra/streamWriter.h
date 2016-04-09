@@ -33,6 +33,9 @@ class CodecFactory;
 
 class IMEBRA_API StreamWriter
 {
+    StreamWriter(const StreamWriter&) = delete;
+    StreamWriter& operator=(const StreamWriter&) = delete;
+
 #ifndef SWIG
     friend class CodecFactory;
     friend class Tag;
@@ -43,8 +46,6 @@ private:
 
 public:
     StreamWriter(const BaseStreamOutput& stream, size_t virtualStart = 0, size_t virtualLength = 0);
-    StreamWriter(const StreamWriter& right);
-    StreamWriter& operator=(const StreamWriter& right);
 
 #ifndef SWIG
 protected:

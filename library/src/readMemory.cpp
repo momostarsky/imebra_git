@@ -14,22 +14,12 @@ ReadMemory::ReadMemory(const char* buffer, size_t bufferSize):
 {
 }
 
-ReadMemory::ReadMemory(const ReadMemory &right): m_pMemory(right.m_pMemory)
-{
-}
-
 ReadMemory::ReadMemory(std::shared_ptr<const implementation::memory> pMemory): m_pMemory(pMemory)
 {
 }
 
 ReadMemory::~ReadMemory()
 {
-}
-
-ReadMemory& ReadMemory::operator=(const ReadMemory& right)
-{
-    m_pMemory = right.m_pMemory;
-    return *this;
 }
 
 size_t ReadMemory::size() const

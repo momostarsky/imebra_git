@@ -8,7 +8,7 @@ namespace tests
 {
 
 
-imebra::Image buildImageForTest(
+imebra::Image* buildImageForTest(
 	std::uint32_t pixelsX, 
 	std::uint32_t pixelsY, 
     imebra::bitDepth_t depth,
@@ -18,9 +18,9 @@ imebra::Image buildImageForTest(
     const std::string& colorSpace,
 	std::uint32_t continuity)
 {
-    imebra::Image newImage(pixelsX, pixelsY, depth, colorSpace, highBit);
-    imebra::WritingDataHandler handler = newImage.getWritingDataHandler();
-    std::uint32_t channelsNumber = newImage.getChannelsNumber();
+    std::unique_ptr<Image> newImage(new Image(pixelsX, pixelsY, depth, colorSpace, highBit));
+    std::unique_ptr<WritingDataHandler> handler(newImage->getWritingDataHandler());
+    std::uint32_t channelsNumber = newImage->getChannelsNumber();
 
 	std::int32_t range = (std::uint32_t)1 << highBit;
 	std::int32_t minValue = 0;
@@ -46,14 +46,14 @@ imebra::Image buildImageForTest(
 				{
 					value = maxValue - 1;
 				}
-                handler.setSignedLong(index++, value);
+                handler->setSignedLong(index++, value);
 			}
 		}
 	}
 
-    newImage.setSizeMm(width, height);
+    newImage->setSizeMm(width, height);
 
-	return newImage;
+    return newImage.release();
 }
 
 
@@ -74,8 +74,8 @@ double compareImages(const imebra::Image& image0, const imebra::Image& image1)
 		return 1000;
 	}
 
-    ReadingDataHandler hImage0 = image0.getReadingDataHandler();
-    ReadingDataHandler hImage1 = image1.getReadingDataHandler();
+    std::unique_ptr<ReadingDataHandler> hImage0(image0.getReadingDataHandler());
+    std::unique_ptr<ReadingDataHandler> hImage1(image1.getReadingDataHandler());
 
     std::uint32_t highBit0 = image0.getHighBit();
     std::uint32_t highBit1 = image1.getHighBit();
@@ -104,8 +104,8 @@ double compareImages(const imebra::Image& image0, const imebra::Image& image1)
 	unsigned long long total(0);
 	while(valuesNum--)
 	{
-        difference += 1000 * (double)labs(hImage0.getSignedLong(index) - hImage1.getSignedLong(index)) / range;
-        total += labs(hImage0.getSignedLong(index));
+        difference += 1000 * (double)labs(hImage0->getSignedLong(index) - hImage1->getSignedLong(index)) / range;
+        total += labs(hImage0->getSignedLong(index));
 		++index;
 	}
 

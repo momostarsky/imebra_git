@@ -19,20 +19,9 @@ ReadWriteMemory::ReadWriteMemory(const char* buffer, size_t bufferSize)
     m_pMemory = std::make_shared<const implementation::memory>(new implementation::stringUint8((const std::uint8_t*)buffer, bufferSize));
 }
 
-ReadWriteMemory::ReadWriteMemory(const ReadWriteMemory &right)
-{
-    m_pMemory = right.m_pMemory;
-}
-
 ReadWriteMemory::ReadWriteMemory(std::shared_ptr<implementation::memory> pMemory)
 {
     m_pMemory = pMemory;
-}
-
-ReadWriteMemory& ReadWriteMemory::operator=(const ReadWriteMemory& right)
-{
-    m_pMemory = right.m_pMemory;
-    return *this;
 }
 
 void ReadWriteMemory::copyFrom(const ReadMemory& sourceMemory)

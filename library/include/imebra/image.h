@@ -38,6 +38,8 @@ class DrawBitmap;
 
 class IMEBRA_API Image
 {
+    Image(const Image&) = delete;
+    Image& operator=(const Image&) = delete;
 
 #ifndef SWIG
     friend class CodecFactory;
@@ -52,15 +54,6 @@ private:
 
 public:
 
-    /// \brief Construct an empty image.
-    ///
-    /// You can assign an image to the object by using the
-    /// operator=() or by calling create() to allocate an
-    /// image with the desidered size.
-    ///
-	///////////////////////////////////////////////////////////
-	Image();
-
     Image(
         std::uint32_t width,
         std::uint32_t height,
@@ -68,27 +61,7 @@ public:
         const std::string& colorSpace,
         std::uint32_t highBit);
 
-    /// \brief Construct an image that references the image
-    ///        passed in the parameter.
-    ///
-    /// \param right the Image object referencing the image to
-    ///              reference in this object
-    ///
-    ///////////////////////////////////////////////////////////
-	Image(const Image& right);
-
     virtual ~Image();
-
-    /// \brief Copy into the object the reference to the image
-    ///        referenced by the parameter.
-    ///
-    /// \param right the Image object referencing the image to
-    ///              reference in this object
-    ///
-    ///////////////////////////////////////////////////////////
-    Image& operator=(const Image& right);
-
-
 
     double getWidthMm() const;
     double getHeightMm() const;
@@ -98,8 +71,8 @@ public:
     std::uint32_t getWidth() const;
     std::uint32_t getHeight() const;
 
-    ReadingDataHandlerNumeric getReadingDataHandler() const;
-    WritingDataHandlerNumeric getWritingDataHandler();
+    ReadingDataHandlerNumeric* getReadingDataHandler() const;
+    WritingDataHandlerNumeric* getWritingDataHandler();
 
     std::string getColorSpace() const;
 

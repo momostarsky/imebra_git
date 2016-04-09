@@ -44,7 +44,7 @@ public:
     /// \return a DataSet object representing the input stream's content
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    static DataSet load(StreamReader& reader, size_t maxSizeBufferLoad = std::numeric_limits<size_t>::max());
+    static DataSet* load(StreamReader& reader, size_t maxSizeBufferLoad = std::numeric_limits<size_t>::max());
 
     /// \brief Parses the content of the input file and returns a DataSet
     ///        representing it.
@@ -61,7 +61,7 @@ public:
     /// \return a DataSet object representing the input file's content
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    static DataSet load(const std::wstring& fileName, size_t maxSizeBufferLoad);
+    static DataSet* load(const std::wstring& fileName, size_t maxSizeBufferLoad);
 
     /// \brief Parses the content of the input file and returns a DataSet
     ///        representing it.
@@ -78,7 +78,7 @@ public:
     /// \return a DataSet object representing the input file's content
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    static DataSet load(const std::string& fileName, size_t maxSizeBufferLoad);
+    static DataSet* load(const std::string& fileName, size_t maxSizeBufferLoad);
 
     static void saveImage(
             StreamWriter& destStream,

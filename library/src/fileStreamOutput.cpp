@@ -17,16 +17,6 @@ FileStreamOutput::FileStreamOutput(): BaseStreamOutput(std::make_shared<implemen
 {
 }
 
-FileStreamOutput::FileStreamOutput(const FileStreamOutput& right): BaseStreamOutput(right.m_pStream)
-{
-}
-
-FileStreamOutput& FileStreamOutput::operator=(const FileStreamOutput& right)
-{
-	m_pStream = right.m_pStream;
-	return *this;
-}
-
 void FileStreamOutput::openFile(const std::wstring& name)
 {
     std::dynamic_pointer_cast<implementation::fileStreamOutput>(m_pStream)->openFile(name);

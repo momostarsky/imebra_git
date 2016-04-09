@@ -19,14 +19,4 @@ MemoryStreamInput::MemoryStreamInput(const ReadWriteMemory& memory): BaseStreamI
 {
 }
 
-MemoryStreamInput::MemoryStreamInput(const MemoryStreamInput& right): BaseStreamInput(right.m_pStream)
-{
-}
-
-MemoryStreamInput& MemoryStreamInput::operator=(const MemoryStreamInput& right)
-{
-    m_pStream = right.m_pStream;
-    return *this;
-}
-
 }

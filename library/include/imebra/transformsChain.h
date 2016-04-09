@@ -36,6 +36,9 @@ class DrawBitmap;
 
 class IMEBRA_API TransformsChain: public Transform
 {
+    TransformsChain(const TransformsChain&) = delete;
+    TransformsChain& operator=(const TransformsChain&) = delete;
+
 public:
     TransformsChain();
 

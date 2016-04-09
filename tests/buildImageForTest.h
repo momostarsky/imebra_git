@@ -9,7 +9,7 @@ namespace imebra
 namespace tests
 {
 
-    imebra::Image buildImageForTest(
+    imebra::Image* buildImageForTest(
         std::uint32_t pixelsX,
         std::uint32_t pixelsY,
         imebra::bitDepth_t depth,

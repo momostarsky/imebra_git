@@ -14,18 +14,8 @@ $fileHeader$
 namespace imebra
 {
 
-Transform::Transform(const Transform& right): m_pTransform(right.m_pTransform)
-{
-}
-
 Transform::~Transform()
 {
-}
-
-Transform& Transform::operator=(const Transform& right)
-{
-    m_pTransform = right.m_pTransform;
-    return *this;
 }
 
 Transform::Transform(std::shared_ptr<imebra::implementation::transforms::transform> pTransform): m_pTransform(pTransform)
@@ -36,9 +26,9 @@ bool Transform::isEmpty() const
     return m_pTransform == 0 || m_pTransform->isEmpty();
 }
 
-Image Transform::allocateOutputImage(const Image& inputImage, std::uint32_t width, std::uint32_t height) const
+Image* Transform::allocateOutputImage(const Image& inputImage, std::uint32_t width, std::uint32_t height) const
 {
-    return Image(m_pTransform->allocateOutputImage(inputImage.m_pImage->getDepth(),
+    return new Image(m_pTransform->allocateOutputImage(inputImage.m_pImage->getDepth(),
                                                    inputImage.m_pImage->getColorSpace(),
                                                    inputImage.m_pImage->getHighBit(),
                                                    inputImage.m_pImage->getPalette(),

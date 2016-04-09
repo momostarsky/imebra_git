@@ -17,22 +17,8 @@ BaseStreamOutput::BaseStreamOutput(std::shared_ptr<implementation::baseStreamOut
 {
 }
 
-BaseStreamOutput::BaseStreamOutput(const BaseStreamOutput& right): m_pStream(right.m_pStream)
-{
-}
-
 BaseStreamOutput::~BaseStreamOutput()
 {
-}
-
-BaseStreamOutput& BaseStreamOutput::operator=(const BaseStreamOutput& right)
-{
-    IMEBRA_FUNCTION_START();
-
-	m_pStream = right.m_pStream;
-	return *this;
-
-    IMEBRA_FUNCTION_END();
 }
 
 }

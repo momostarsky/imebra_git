@@ -15,12 +15,6 @@ $fileHeader$
 namespace imebra
 {
 
-Image::Image()
-{
-    std::string colorSpace("MONOCHROME2");
-    m_pImage = std::make_shared<implementation::image>((std::uint32_t)1, (std::uint32_t)1, bitDepth_t::depthU8, colorSpace, (std::uint32_t)7);
-}
-
 Image::Image(
         std::uint32_t width,
         std::uint32_t height,
@@ -31,22 +25,12 @@ Image::Image(
 {
 }
 
-Image::Image(const Image& right): m_pImage(right.m_pImage)
-{
-}
-
 Image::Image(std::shared_ptr<implementation::image> pImage): m_pImage(pImage)
 {
 }
 
 Image::~Image()
 {
-}
-
-Image& Image::operator=(const Image& right)
-{
-    m_pImage = right.m_pImage;
-    return *this;
 }
 
 double Image::getWidthMm() const
@@ -82,14 +66,14 @@ std::uint32_t Image::getHeight() const
     return height;
 }
 
-ReadingDataHandlerNumeric Image::getReadingDataHandler() const
+ReadingDataHandlerNumeric* Image::getReadingDataHandler() const
 {
-    return ReadingDataHandlerNumeric(m_pImage->getReadingDataHandler());
+    return new ReadingDataHandlerNumeric(m_pImage->getReadingDataHandler());
 }
 
-WritingDataHandlerNumeric Image::getWritingDataHandler()
+WritingDataHandlerNumeric* Image::getWritingDataHandler()
 {
-    return WritingDataHandlerNumeric(m_pImage->getWritingDataHandler());
+    return new WritingDataHandlerNumeric(m_pImage->getWritingDataHandler());
 }
 
 std::string Image::getColorSpace() const

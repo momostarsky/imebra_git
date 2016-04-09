@@ -23,14 +23,4 @@ StreamWriter::StreamWriter(const BaseStreamOutput& stream, size_t virtualStart, 
 {
 }
 
-StreamWriter::StreamWriter(const StreamWriter& right): m_pWriter(right.m_pWriter)
-{
-}
-
-StreamWriter& StreamWriter::operator=(const StreamWriter& right)
-{
-    m_pWriter = right.m_pWriter;
-    return *this;
-}
-
 }

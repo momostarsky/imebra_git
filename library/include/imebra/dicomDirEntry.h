@@ -34,6 +34,9 @@ class DataSet;
 
 class IMEBRA_API DicomDirEntry
 {
+    DicomDirEntry(const DicomDirEntry&) = delete;
+    DicomDirEntry& operator=(const DicomDirEntry&) = delete;
+
 #ifndef SWIG
 	friend class DicomDir;
 private:
@@ -43,16 +46,13 @@ private:
 public:
     DicomDirEntry(const DataSet& fromDataSet);
 
-    DicomDirEntry(const DicomDirEntry& right);
     virtual ~DicomDirEntry();
 
-    DicomDirEntry& operator=(const DicomDirEntry& right);
+    DataSet* getEntryDataSet();
 
-    DataSet getEntryDataSet();
+    DicomDirEntry* getNextEntry();
 
-    DicomDirEntry getNextEntry();
-
-    DicomDirEntry getFirstChildEntry();
+    DicomDirEntry* getFirstChildEntry();
 	
     void setNextEntry(const DicomDirEntry& nextEntry);
 

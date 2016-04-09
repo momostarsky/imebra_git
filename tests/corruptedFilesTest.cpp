@@ -40,9 +40,9 @@ TEST(corruptedFilesTest, corruptedFilesTest)
 
         std::cout << "Processing corrupted file " << fullName.str() << std::endl;
 
-        imebra::DataSet dataset = imebra::CodecFactory::load(fullName.str(), 2048);
+        std::unique_ptr<DataSet> dataset(imebra::CodecFactory::load(fullName.str(), 2048));
 
-        ASSERT_THROW(dataset.getImage(0), imebra::CodecError);
+        ASSERT_THROW(dataset->getImage(0), imebra::CodecError);
     }
 
 }

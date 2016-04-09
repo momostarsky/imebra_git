@@ -17,16 +17,6 @@ FileStreamInput::FileStreamInput(): BaseStreamInput(std::make_shared<implementat
 {
 }
 
-FileStreamInput::FileStreamInput(const FileStreamInput& right): BaseStreamInput(right.m_pStream)
-{
-}
-
-FileStreamInput& FileStreamInput::operator=(const FileStreamInput& right)
-{
-    m_pStream = right.m_pStream;
-    return *this;
-}
-
 void FileStreamInput::openFile(const std::wstring& name)
 {
     (dynamic_cast<implementation::fileStreamInput*>(m_pStream.get()))->openFile(name);

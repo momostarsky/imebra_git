@@ -19,10 +19,11 @@ namespace imebra
 
 class IMEBRA_API FileStreamOutput : public BaseStreamOutput
 {
+    FileStreamOutput(const FileStreamOutput&) = delete;
+    FileStreamOutput& operator=(const FileStreamOutput&) = delete;
+
 public:
     FileStreamOutput();
-    FileStreamOutput(const FileStreamOutput& right);
-    FileStreamOutput& operator=(const FileStreamOutput& right);
 
     void openFile(const std::wstring& name);
     void openFile(const std::string& name);

@@ -33,17 +33,19 @@ class Image;
 
 class IMEBRA_API DrawBitmap
 {
-public:
-    DrawBitmap(const DrawBitmap& right);
-    DrawBitmap();
-    DrawBitmap(const TransformsChain& transformsChain);
-    virtual ~DrawBitmap();
+    DrawBitmap(const DrawBitmap&) = delete;
+    DrawBitmap& operator=(const DrawBitmap&) = delete;
 
-    DrawBitmap& operator=(const DrawBitmap& right);
+public:
+    DrawBitmap();
+
+    DrawBitmap(const TransformsChain& transformsChain);
+
+    virtual ~DrawBitmap();
 
     size_t getBitmap(const Image& image, drawBitmapType_t drawBitmapType, std::uint32_t rowAlignBytes, char* buffer, size_t bufferSize);
 
-    ReadWriteMemory getBitmap(const Image& image, drawBitmapType_t drawBitmapType, std::uint32_t rowAlignBytes);
+    ReadWriteMemory* getBitmap(const Image& image, drawBitmapType_t drawBitmapType, std::uint32_t rowAlignBytes);
 
 #ifndef SWIG
 protected:

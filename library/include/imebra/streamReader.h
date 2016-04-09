@@ -36,6 +36,9 @@ class CodecFactory;
 
 class IMEBRA_API StreamReader
 {
+    StreamReader(const StreamReader&) = delete;
+    StreamReader& operator=(const StreamReader&) = delete;
+
 #ifndef SWIG
     friend class CodecFactory;
     friend class Tag;
@@ -49,11 +52,7 @@ public:
 
     StreamReader(const BaseStreamInput& stream, size_t virtualStart, size_t virtualLength);
 
-    StreamReader(const StreamReader& right);
-
     virtual ~StreamReader();
-
-    StreamReader& operator=(const StreamReader& right);
 
 #ifndef SWIG
 protected:

@@ -44,6 +44,8 @@ namespace imebra
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API BaseStreamOutput
 {
+    BaseStreamOutput(const BaseStreamOutput&) = delete;
+    BaseStreamOutput& operator=(const BaseStreamOutput&) = delete;
 
 #ifndef SWIG
     friend class StreamWriter;
@@ -60,27 +62,10 @@ private:
 #endif
 
 public:
-    /// \brief Copy constructor: build an output stream object referencing the
-    ///        same stream implementation object as the source one.
-    ///
-    /// \param right another BaseStreamOutput object to use as source
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    BaseStreamOutput(const BaseStreamOutput& right);
-
     /// \brief Destructor.
     ///
     ///////////////////////////////////////////////////////////////////////////////
     virtual ~BaseStreamOutput();
-
-    /// \brief Copy operator: references the same output stream object as the
-    ///        source one.
-    ///
-    /// \param right another BaseStreamOutput object to use as source
-    /// \return a reference to this object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    BaseStreamOutput& operator=(const BaseStreamOutput& right);
 
 #ifndef SWIG
 protected:

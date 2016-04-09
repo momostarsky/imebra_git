@@ -46,6 +46,9 @@ class Tag;
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API DataSet
 {
+    DataSet(const DataSet&) = delete;
+    DataSet& operator=(const DataSet&) = delete;
+
 #ifndef SWIG
     friend class DicomDirEntry;
 	friend class DicomDir;
@@ -63,26 +66,10 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
 	DataSet();
 
-    /// \brief Copy constructor: build a DataSet object referencing the same
-    ///        DataSet implementation object as the source one.
-    ///
-    /// \param right another DataSet object to use as source
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    DataSet(const DataSet& right);
-
     /// \brief Destructor.
     ///
     ///////////////////////////////////////////////////////////////////////////////
     virtual ~DataSet();
-
-    /// \brief Copy operator: references the same DataSet object as the source one.
-    ///
-    /// \param right another DataSet object to use as source
-    /// \return a reference to this object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    DataSet& operator=(const DataSet& right);
 
     /// \brief Returns a list of all the tags stored in the DataSet, ordered by
     ///        group and tag ID.
@@ -98,7 +85,7 @@ public:
     /// \return the Tag with the specified ID
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    Tag getTag(const TagId& tagId) const;
+    Tag* getTag(const TagId& tagId) const;
 
     /// \brief Retrieve the Tag with the specified ID or create it if it doesn't
     ///        exist.
@@ -108,7 +95,7 @@ public:
     /// \return the Tag with the specified ID
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    Tag getTagCreate(const TagId& tagId, tagVR_t tagVR);
+    Tag* getTagCreate(const TagId& tagId, tagVR_t tagVR);
 
     /// \brief Retrieve the Tag with the specified ID or create it if it doesn't
     ///        exist.
@@ -117,7 +104,7 @@ public:
     /// \return the Tag with the specified ID
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    Tag getTagCreate(const TagId& tagId);
+    Tag* getTagCreate(const TagId& tagId);
 
     /// \brief Retrieve an image from the dataset.
     ///
@@ -138,7 +125,7 @@ public:
     /// \return an Image object containing the decompressed image
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    Image getImage(size_t frameNumber);
+    Image* getImage(size_t frameNumber);
 
     /// \brief Retrieve an image from the dataset and if necessary process it with
     ///        ModalityVOILUT before returning it.
@@ -155,7 +142,7 @@ public:
     ///         ModalityVOILUT
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    Image getImageApplyModalityTransform(size_t frameNumber);
+    Image* getImageApplyModalityTransform(size_t frameNumber);
 
     /// \brief Insert an image into the dataset.
     ///
@@ -180,7 +167,7 @@ public:
     ///                        if lossless compression is used
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    void setImage(size_t frameNumber, Image image, const std::string& transferSyntax, imageQuality_t quality);
+    void setImage(size_t frameNumber, const Image& image, const std::string& transferSyntax, imageQuality_t quality);
 
     /// \brief Retrieve a sequence item stored in a tag.
     ///
@@ -195,7 +182,7 @@ public:
     /// \return the requested sequence item
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    DataSet getSequenceItem(const TagId& tagId, size_t itemId);
+    DataSet* getSequenceItem(const TagId& tagId, size_t itemId);
 
     /// \brief Retrieve a ReadingDataHandler object connected to a specific
     ///        tag's buffer.
@@ -212,7 +199,7 @@ public:
     /// \return a ReadingDataHandler object connected to the requested Tag's buffer
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    ReadingDataHandler getReadingDataHandler(const TagId& tagId, size_t bufferId) const;
+    ReadingDataHandler* getReadingDataHandler(const TagId& tagId, size_t bufferId) const;
 
     /// \brief Retrieve a WritingDataHandler object connected to a specific
     ///        tag's buffer.
@@ -230,7 +217,7 @@ public:
     /// \return a WritingDataHandler object connected to a new Tag's buffer
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    WritingDataHandler getWritingDataHandler(const TagId& tagId, size_t bufferId, tagVR_t tagVR);
+    WritingDataHandler* getWritingDataHandler(const TagId& tagId, size_t bufferId, tagVR_t tagVR);
 
     /// \brief Retrieve a WritingDataHandler object connected to a specific
     ///        tag's buffer.
@@ -247,7 +234,7 @@ public:
     /// \return a WritingDataHandler object connected to a new Tag's buffer
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    WritingDataHandler getWritingDataHandler(const TagId& tagId, size_t bufferId);
+    WritingDataHandler* getWritingDataHandler(const TagId& tagId, size_t bufferId);
 
     /// \brief Retrieve a getReadingDataHandlerNumeric object connected to a
     ///        specific tag's numeric buffer.
@@ -267,7 +254,7 @@ public:
     ///         Tag's buffer
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    ReadingDataHandlerNumeric getReadingDataHandlerNumeric(const TagId& tagId, size_t bufferId) const;
+    ReadingDataHandlerNumeric* getReadingDataHandlerNumeric(const TagId& tagId, size_t bufferId) const;
 
     /// \brief Retrieve a getReadingDataHandlerNumeric object connected to a
     ///        specific tag's buffer, no matter what the tag's data type.
@@ -287,7 +274,7 @@ public:
     ///         Tag's buffer
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    ReadingDataHandlerNumeric getReadingDataHandlerRaw(const TagId& tagId, size_t bufferId) const;
+    ReadingDataHandlerNumeric* getReadingDataHandlerRaw(const TagId& tagId, size_t bufferId) const;
 
     /// \brief Retrieve a WritingDataHandlerNumeric object connected to a specific
     ///        tag's buffer.
@@ -308,7 +295,7 @@ public:
     /// \return a WritingDataHandlerNumeric object connected to a new Tag's buffer
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    WritingDataHandlerNumeric getWritingDataHandlerNumeric(const TagId& tagId, size_t bufferId, tagVR_t tagVR);
+    WritingDataHandlerNumeric* getWritingDataHandlerNumeric(const TagId& tagId, size_t bufferId, tagVR_t tagVR);
 
     /// \brief Retrieve a WritingDataHandlerNumeric object connected to a specific
     ///        tag's buffer.
@@ -328,7 +315,7 @@ public:
     /// \return a WritingDataHandlerNumeric object connected to a new Tag's buffer
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    WritingDataHandlerNumeric getWritingDataHandlerNumeric(const TagId& tagId, size_t bufferId);
+    WritingDataHandlerNumeric* getWritingDataHandlerNumeric(const TagId& tagId, size_t bufferId);
 
     /// \brief Retrieve a WritingDataHandlerNumeric object connected to a specific
     ///        tag's buffer. The handler content is casted to bytes
@@ -349,7 +336,7 @@ public:
     /// \return a WritingDataHandlerNumeric object connected to a new Tag's buffer
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    WritingDataHandlerNumeric getWritingDataHandlerRaw(const TagId& tagId, size_t bufferId, tagVR_t tagVR);
+    WritingDataHandlerNumeric* getWritingDataHandlerRaw(const TagId& tagId, size_t bufferId, tagVR_t tagVR);
 
     /// \brief Retrieve a WritingDataHandlerNumeric object connected to a specific
     ///        tag's buffer. The handler content is casted to bytes
@@ -369,7 +356,7 @@ public:
     /// \return a WritingDataHandlerNumeric object connected to a new Tag's buffer
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    WritingDataHandlerNumeric getWritingDataHandlerRaw(const TagId& tagId, size_t bufferId);
+    WritingDataHandlerNumeric* getWritingDataHandlerRaw(const TagId& tagId, size_t bufferId);
 
     /// \brief Check if the specified tag and tag's buffer exist.
     ///
@@ -703,7 +690,7 @@ public:
     /// \return the tag's value as Age
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    Age getAge(const TagId& tagId, size_t bufferId, size_t elementNumber) const;
+    Age* getAge(const TagId& tagId, size_t bufferId, size_t elementNumber) const;
 
     /// \brief Retrieve a tag's value as Age.
     ///
@@ -721,7 +708,7 @@ public:
     ///         don't exist
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    Age getAge(const TagId& tagId, size_t bufferId, size_t elementNumber, const Age& defaultValue) const;
+    Age* getAge(const TagId& tagId, size_t bufferId, size_t elementNumber, const Age& defaultValue) const;
 
     /// \brief Write an Age string into the element 0 of the specified
     ///        Tag's buffer.
@@ -753,7 +740,7 @@ public:
     /// \return the tag's value as a Date
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    Date getDate(const TagId& tagId, size_t bufferId, size_t elementNumber) const;
+    Date* getDate(const TagId& tagId, size_t bufferId, size_t elementNumber) const;
 
     /// \brief Retrieve a tag's value as a Date.
     ///
@@ -771,7 +758,7 @@ public:
     ///         don't exist
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    Date getDate(const TagId& tagId, size_t bufferId, size_t elementNumber, const Date& defaultValue) const;
+    Date* getDate(const TagId& tagId, size_t bufferId, size_t elementNumber, const Date& defaultValue) const;
 
     /// \brief Write a Date string into the element 0 of the specified
     ///        Tag's buffer.

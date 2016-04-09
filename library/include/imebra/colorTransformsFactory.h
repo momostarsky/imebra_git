@@ -120,7 +120,7 @@ public:
     ///         input color space to output one
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    static Transform getTransform(const std::string& startColorSpace, const std::string& endColorSpace);
+    static Transform* getTransform(const std::string& startColorSpace, const std::string& endColorSpace);
 
 };
 

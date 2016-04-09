@@ -38,6 +38,8 @@ namespace imebra
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API ReadMemory
 {
+    ReadMemory(const ReadMemory&) = delete;
+    ReadMemory& operator=(const ReadMemory&) = delete;
 
 #ifndef SWIG
     friend class MemoryStreamInput;
@@ -62,26 +64,7 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     ReadMemory(const char* buffer, size_t bufferSize);
 
-    /// \brief Copy constructor.
-    ///
-    /// References the same memory area referenced in the source object
-    ///
-    /// \param right the source memory object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    ReadMemory(const ReadMemory& right);
-
     virtual ~ReadMemory();
-
-    /// \brief Copy operator.
-    ///
-    /// References the same memory area referenced in the source object.
-    ///
-    /// \param right the source memory object
-    /// \return a reference to this object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    ReadMemory& operator=(const ReadMemory& right);
 
     /// \brief Return the memory size, in bytes.
     ///

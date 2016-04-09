@@ -16,10 +16,6 @@ Tag::Tag(tagVR_t tagVR)
     m_pData = std::make_shared<imebra::implementation::data>(tagVR, tempCharset);
 }
 
-Tag::Tag(const Tag& right): m_pData(right.m_pData)
-{
-}
-
 Tag::~Tag()
 {
 }
@@ -27,13 +23,6 @@ Tag::~Tag()
 Tag::Tag(std::shared_ptr<imebra::implementation::data> pData): m_pData(pData)
 {
 }
-
-Tag& Tag::operator=(const Tag& right)
-{
-    m_pData = right.m_pData;
-    return *this;
-}
-
 
 size_t Tag::getBuffersCount() const
 {
@@ -50,17 +39,17 @@ size_t Tag::getBufferSize(size_t bufferId) const
     return m_pData->getBufferSize(bufferId);
 }
 
-ReadingDataHandler Tag::getReadingDataHandler(size_t bufferId) const
+ReadingDataHandler* Tag::getReadingDataHandler(size_t bufferId) const
 {
-    return ReadingDataHandler(m_pData->getReadingDataHandler(bufferId));
+    return new ReadingDataHandler(m_pData->getReadingDataHandler(bufferId));
 }
 
-WritingDataHandler Tag::getWritingDataHandler(size_t bufferId)
+WritingDataHandler* Tag::getWritingDataHandler(size_t bufferId)
 {
-    return WritingDataHandler(m_pData->getWritingDataHandler(bufferId));
+    return new WritingDataHandler(m_pData->getWritingDataHandler(bufferId));
 }
 
-ReadingDataHandlerNumeric Tag::getReadingDataHandlerNumeric(size_t bufferId) const
+ReadingDataHandlerNumeric* Tag::getReadingDataHandlerNumeric(size_t bufferId) const
 {
     std::shared_ptr<implementation::handlers::readingDataHandlerNumericBase> numericHandler =
             std::dynamic_pointer_cast<implementation::handlers::readingDataHandlerNumericBase>(m_pData->getReadingDataHandler(bufferId));
@@ -68,16 +57,16 @@ ReadingDataHandlerNumeric Tag::getReadingDataHandlerNumeric(size_t bufferId) con
     {
         throw std::bad_cast();
     }
-    return ReadingDataHandlerNumeric(numericHandler);
+    return new ReadingDataHandlerNumeric(numericHandler);
 }
 
-ReadingDataHandlerNumeric Tag::getReadingDataHandlerRaw(size_t bufferId) const
+ReadingDataHandlerNumeric* Tag::getReadingDataHandlerRaw(size_t bufferId) const
 {
     std::shared_ptr<implementation::handlers::readingDataHandlerNumericBase> numericHandler = m_pData->getReadingDataHandlerRaw(bufferId);
-    return ReadingDataHandlerNumeric(numericHandler);
+    return new ReadingDataHandlerNumeric(numericHandler);
 }
 
-WritingDataHandlerNumeric Tag::getWritingDataHandlerNumeric(size_t bufferId)
+WritingDataHandlerNumeric* Tag::getWritingDataHandlerNumeric(size_t bufferId)
 {
     std::shared_ptr<implementation::handlers::writingDataHandlerNumericBase> numericHandler =
             std::dynamic_pointer_cast<implementation::handlers::writingDataHandlerNumericBase>(m_pData->getWritingDataHandler(bufferId));
@@ -85,28 +74,28 @@ WritingDataHandlerNumeric Tag::getWritingDataHandlerNumeric(size_t bufferId)
     {
         throw std::bad_cast();
     }
-    return WritingDataHandlerNumeric(numericHandler);
+    return new WritingDataHandlerNumeric(numericHandler);
 }
 
-WritingDataHandlerNumeric Tag::getWritingDataHandlerRaw(size_t bufferId)
+WritingDataHandlerNumeric* Tag::getWritingDataHandlerRaw(size_t bufferId)
 {
     std::shared_ptr<implementation::handlers::writingDataHandlerNumericBase> numericHandler = m_pData->getWritingDataHandlerRaw(bufferId);
-    return WritingDataHandlerNumeric(numericHandler);
+    return new WritingDataHandlerNumeric(numericHandler);
 }
 
-StreamReader Tag::getStreamReader(size_t bufferId)
+StreamReader* Tag::getStreamReader(size_t bufferId)
 {
-    return StreamReader(m_pData->getStreamReader(bufferId));
+    return new StreamReader(m_pData->getStreamReader(bufferId));
 }
 
-StreamWriter Tag::getStreamWriter(size_t bufferId)
+StreamWriter* Tag::getStreamWriter(size_t bufferId)
 {
-    return StreamWriter(m_pData->getStreamWriter(bufferId));
+    return new StreamWriter(m_pData->getStreamWriter(bufferId));
 }
 
-DataSet Tag::getSequenceItem(size_t dataSetId) const
+DataSet* Tag::getSequenceItem(size_t dataSetId) const
 {
-    return DataSet(m_pData->getSequenceItem(dataSetId));
+    return new DataSet(m_pData->getSequenceItem(dataSetId));
 }
 
 bool Tag::sequenceItemExists(size_t dataSetId) const

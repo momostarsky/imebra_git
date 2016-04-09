@@ -43,6 +43,8 @@ namespace imebra
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API Tag
 {
+    Tag(const Tag&) = delete;
+    Tag& operator=(const Tag&) = delete;
 
 #ifndef SWIG
     friend class DataSet;
@@ -58,23 +60,7 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     Tag(tagVR_t tagVR);
 
-    /// \brief Copy constructor: build a Tag object referencing the same Tag
-    ///        implementation object as the source one.
-    ///
-    /// \param right another Tag object to use as source
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    Tag(const Tag& right);
-
     virtual ~Tag();
-
-    /// \brief Copy operator: references the same Tag object as the source one.
-    ///
-    /// \param right another Tag object to use as source
-    /// \return a reference to this object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    Tag& operator=(const Tag& right);
 
     /// \brief Returns the number of buffers in the tag.
     ///
@@ -114,7 +100,7 @@ public:
     /// \return a ReadingDataHandler object connected to the requested buffer
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    ReadingDataHandler getReadingDataHandler(size_t bufferId) const;
+    ReadingDataHandler* getReadingDataHandler(size_t bufferId) const;
 
     /// \brief Retrieve a WritingDataHandler object connected to a specific
     ///        tag's buffer.
@@ -130,15 +116,15 @@ public:
     /// \return a WritingDataHandler object connected to a new Tag's buffer
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    WritingDataHandler getWritingDataHandler(size_t bufferId);
+    WritingDataHandler* getWritingDataHandler(size_t bufferId);
 
-    ReadingDataHandlerNumeric getReadingDataHandlerNumeric(size_t bufferId) const;
+    ReadingDataHandlerNumeric* getReadingDataHandlerNumeric(size_t bufferId) const;
 
-    ReadingDataHandlerNumeric getReadingDataHandlerRaw(size_t bufferId) const;
+    ReadingDataHandlerNumeric* getReadingDataHandlerRaw(size_t bufferId) const;
 
-    WritingDataHandlerNumeric getWritingDataHandlerNumeric(size_t bufferId);
+    WritingDataHandlerNumeric* getWritingDataHandlerNumeric(size_t bufferId);
 
-    WritingDataHandlerNumeric getWritingDataHandlerRaw(size_t bufferId);
+    WritingDataHandlerNumeric* getWritingDataHandlerRaw(size_t bufferId);
 
     /// \brief Get a StreamReader connected to a buffer's data.
     ///
@@ -147,7 +133,7 @@ public:
     /// \return           the streamReader connected to the buffer's data.
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    StreamReader getStreamReader(size_t bufferId);
+    StreamReader* getStreamReader(size_t bufferId);
 
     /// \brief Get a StreamWriter connected to a buffer's data.
     ///
@@ -156,7 +142,7 @@ public:
     /// @return           the StreamWriter connected to the buffer's data.
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    StreamWriter getStreamWriter(size_t bufferId);
+    StreamWriter* getStreamWriter(size_t bufferId);
 
     /// \brief Retrieve an embedded DataSet.
     ///
@@ -167,7 +153,7 @@ public:
     /// @return           the sequence DataSet
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    DataSet getSequenceItem(size_t dataSetId) const;
+    DataSet* getSequenceItem(size_t dataSetId) const;
 
     /// \brief Check for the existance of a sequence item.
     ///

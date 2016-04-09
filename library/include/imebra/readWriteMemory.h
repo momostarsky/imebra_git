@@ -40,6 +40,8 @@ namespace imebra
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API ReadWriteMemory: public ReadMemory
 {
+    ReadWriteMemory(const ReadWriteMemory&) = delete;
+    ReadWriteMemory& operator=(const ReadWriteMemory&) = delete;
 
 #ifndef SWIG
     friend class MemoryStreamOutput;
@@ -74,25 +76,6 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     ReadWriteMemory(const char* buffer, size_t bufferSize);
-
-    /// \brief Copy constructor.
-    ///
-    /// References the same memory area referenced in the source object
-    ///
-    /// \param right the source memory object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    ReadWriteMemory(const ReadWriteMemory& right);
-
-    /// \brief Copy operator.
-    ///
-    /// References the same memory area referenced in the source object.
-    ///
-    /// \param right the source memory object
-    /// \return a reference to this object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    ReadWriteMemory& operator=(const ReadWriteMemory& right);
 
     /// \brief Copy the content from another memory object.
     ///

@@ -19,10 +19,10 @@ namespace imebra
 
 class IMEBRA_API FileStreamInput : public BaseStreamInput
 {
+    FileStreamInput(const FileStreamInput&) = delete;
+    FileStreamInput& operator=(const FileStreamInput&) = delete;
 public:
     FileStreamInput();
-    FileStreamInput(const FileStreamInput& right);
-    FileStreamInput& operator=(const FileStreamInput& right);
 
     void openFile(const std::wstring& name);
     void openFile(const std::string& name);

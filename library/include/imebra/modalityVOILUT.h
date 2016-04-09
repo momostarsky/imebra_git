@@ -19,6 +19,8 @@ namespace imebra
 
 class IMEBRA_API ModalityVOILUT: public Transform
 {
+    ModalityVOILUT(const ModalityVOILUT&) = delete;
+    ModalityVOILUT& operator=(const ModalityVOILUT&) = delete;
 
 public:
     ModalityVOILUT(const DataSet& dataset);
