@@ -36,9 +36,12 @@ class DicomDirEntry;
 ///
 /// \brief Represents a DICOMDIR structure.
 ///
-/// It parses a DataSet created from parsing a DICOMDIR file and gives access
-/// to the individual DICOMDIR items, each represented by a DicomDirEntry
-/// object.
+/// In order to work DicomDir needs a DataSet, which embeds the DicomDir's
+/// entries.
+///
+/// If the DicomDir's content is modified then the method updateDataSet()
+/// has to be called before the managed DataSet can be stored as a DICOMDIR
+/// file.
 ///
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API DicomDir
@@ -59,23 +62,49 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     DicomDir(const DataSet& fromDataSet);
 
+    /// \brief Destructor.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     virtual ~DicomDir();
 
-    /// \brief Return the DataSet that was used to build the DicomDir object, or
-    ///        that was updated via buildDataSet().
+    /// \brief Return a new DicomDirEntry record and insert it into the DicomDir's
+    ///        DataSet.
     ///
-    /// \return the DataSet that was used to create the DicomDir, or the last one
-    ///         created via buildDataSet
+    /// \param recordType the type of the new entry
+    /// \return a new DicomDirEntry object that can be inserted into the DicomDir
+    ///         object or one of its children DicomDirEntry entries.
+    ///
     ///////////////////////////////////////////////////////////////////////////////
-    DataSet* getDirectoryDataSet() const;
+    DicomDirEntry* getNewEntry(directoryRecordType_t recordType);
 
-    DicomDirEntry* getNewEntry();
-
+    /// \brief Retrieve the first DicomDir's root entry.
+    ///
+    /// \return the root DicomDir's entry
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     DicomDirEntry* getFirstRootEntry() const;
 
+    /// \brief Set the specified entry as the first DicomDir's root record.
+    ///
+    /// After the DicomDir's content has been modified it is necessary to call
+    /// updateDataSet() before the DataSet managed by DicomDir can be used.
+    ///
+    /// \param firstEntryRecord the DicomDirEntry object to set as the first root
+    ///                         entry
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     void setFirstRootEntry(const DicomDirEntry& firstEntryRecord);
 
-    DataSet* buildDataSet();
+    /// \brief This method has to be called to update the managed DataSet after
+    ///        the DicomDir's content has been updated.
+    ///
+    /// It is not necessary to call updateDataSet() after every DicomDir update,
+    /// just call it when the updated DataSet object is needed.
+    ///
+    /// \return the updated managed DataSet object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    DataSet* updateDataSet();
 
 #ifndef SWIG
 protected:

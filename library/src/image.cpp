@@ -47,7 +47,7 @@ double Image::getHeightMm() const
     return height;
 }
 
-void Image::setSizeMm(const double width, const double height)
+void Image::setSizeMm(double width, double height)
 {
     m_pImage->setSizeMm(width, height);
 }

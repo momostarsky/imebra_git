@@ -17,18 +17,35 @@ $fileHeader$
 namespace imebra
 {
 
+///
+/// \brief Represents an output file stream.
+///
+///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API FileStreamOutput : public BaseStreamOutput
 {
     FileStreamOutput(const FileStreamOutput&) = delete;
     FileStreamOutput& operator=(const FileStreamOutput&) = delete;
 
 public:
-    FileStreamOutput();
+    /// \brief Constructor.
+    ///
+    /// \param name the path to the file to open in write mode
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    FileStreamOutput(const std::wstring& name);
 
-    void openFile(const std::wstring& name);
-    void openFile(const std::string& name);
+    /// \brief Constructor.
+    ///
+    /// \param name the path to the file to open in write mode
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    FileStreamOutput(const std::string& name);
 
-	void close();
+    /// \brief Destructor. Closes the file
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    ~FileStreamOutput();
+
 };
 
 }

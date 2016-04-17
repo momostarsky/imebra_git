@@ -875,6 +875,43 @@ std::shared_ptr<waveform> dataSet::getWaveform(std::uint32_t waveformId)
 ///////////////////////////////////////////////////////////
 //
 //
+// Returns the settings for the values of interest
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+vois_t dataSet::getVOIs()
+{
+    IMEBRA_FUNCTION_START();
+
+    vois_t vois;
+
+    try
+    {
+        for(size_t voiIndex(0); ; ++voiIndex)
+        {
+            VOIDescription voi;
+            voi.center = getDouble(0x0028, 0, 0x1050, 0, voiIndex);
+            voi.width = getDouble(0x0028, 0, 0x1051, 0, voiIndex);
+            voi.description = getUnicodeString(0x0028, 0, 0x1055, 0, voiIndex, L"");
+            vois.push_back(voi);
+        }
+    }
+    catch(const MissingItemError&)
+    {
+        // VOI not present
+    }
+
+    return vois;
+
+    IMEBRA_FUNCTION_END();
+}
+
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
 // Get a tag as a signed long
 //
 //

@@ -237,8 +237,6 @@ std::shared_ptr<handlers::readingDataHandler> buffer::getReadingDataHandler(tagV
         return std::make_shared<handlers::readingDataHandlerTime>(*localMemory);
     }
 
-    IMEBRA_THROW(BufferUnknownTypeError, "Unregistered data type requested (" << (std::uint16_t)tagVR << ")");
-
 	IMEBRA_FUNCTION_END();
 }
 
@@ -339,8 +337,6 @@ std::shared_ptr<handlers::writingDataHandler> buffer::getWritingDataHandler(tagV
         return std::make_shared<handlers::writingDataHandlerTime>(shared_from_this());
     }
 
-    IMEBRA_THROW(BufferUnknownTypeError, "Unknown data type requested");
-
     IMEBRA_FUNCTION_END();
 }
 
@@ -395,7 +391,7 @@ std::shared_ptr<streamWriter> buffer::getStreamWriter(tagVR_t tagVR)
     IMEBRA_FUNCTION_START();
 
     std::shared_ptr<handlers::writingDataHandlerRaw> tempHandlerRaw = getWritingDataHandlerRaw(tagVR);
-    return std::make_shared<streamWriter>(std::make_shared<bufferStreamOutput>(tempHandlerRaw), tempHandlerRaw->getSize());
+    return std::make_shared<streamWriter>(std::make_shared<bufferStreamOutput>(tempHandlerRaw));
 
 	IMEBRA_FUNCTION_END();
 }

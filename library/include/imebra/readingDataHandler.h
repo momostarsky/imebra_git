@@ -36,12 +36,12 @@ namespace imebra
 
 ///
 /// \brief The ReadingDataHandler class allows to read the content
-///        of a Dicom tag's buffer.
+///        of a Dicom Tag.
 ///
-/// ReadingDataHandler is able to return the buffer's content as a string,
+/// ReadingDataHandler is able to return the Tag's content as a string,
 /// a number, a date/time or an age.
 ///
-/// In order to obtain a ReadingDataHandler object for a specific tag stored
+/// In order to obtain a ReadingDataHandler object for a specific Tag stored
 /// in a DataSet, call DataSet::getReadingDataHandler() or
 /// Tag::getReadingDataHandler().
 ///
@@ -69,12 +69,12 @@ public:
 
     virtual ~ReadingDataHandler();
 
-    /// \brief Returns the number of elements in the tag's buffer handled by the
+    /// \brief Returns the number of elements in the Tag's buffer handled by the
     ///        data handler.
     ///
     /// If the ReadingDataHandler object is related to a buffer that contains
     /// strings then it returns the number of strings stored in the buffer.
-    /// Multiple strings in buffer are separated by a separator char.
+    /// Multiple strings are separated by a separator char.
     ///
     /// \return the number of elements stored in the handled Dicom buffer
     ///

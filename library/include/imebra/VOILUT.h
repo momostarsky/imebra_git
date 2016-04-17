@@ -18,21 +18,61 @@ namespace imebra
 
 class DataSet;
 
+///
+/// \brief A VOILUT transform is applied to an Image to enhance the visibility
+///        of a specific range of pixels values.
+///
+/// The VOI/LUT settings can be read from a specific DataSet via
+/// DataSet::getVOIs() and applied with setCenterWidth().
+///
+///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API VOILUT: public Transform
 {
     VOILUT(const VOILUT&) = delete;
     VOILUT& operator=(const VOILUT&) = delete;
 
 public:
-    VOILUT(const DataSet& dataset);
+    /// \brief Constructor.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    VOILUT();
 
-    std::uint32_t getVOILUTId(std::uint32_t VOILUTNumber) const;
-    std::wstring getVOILUTDescription(std::uint32_t VOILUTId) const;
-    void setVOILUT(std::uint32_t VOILUTId);
+    /// \brief Find the optimal VOI settings for a specific image's area and apply
+    ///        it with setCenterWidth().
+    ///
+    /// \param inputImage   the image to analyze
+    /// \param topLeftX     the horizontal coordinate of the top-left angle of the
+    ///                     area to analyze
+    /// \param topLeftY     the vertical coordinate of the top-left angle of the
+    ///                     area to analyze
+    /// \param width        the width of the area to analyze
+    /// \param height       the height of the area to analyze
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     void applyOptimalVOI(const Image& inputImage, std::uint32_t topLeftX, std::uint32_t topLeftY, std::uint32_t width, std::uint32_t height);
-	//void setLUT(std::shared_ptr<lut> pLut);
-    void setCenterWidth(std::int32_t center, std::int32_t width);
+
+    //void setLUT(std::shared_ptr<lut> pLut);
+
+    /// \brief Set the VOI settings applied by the transform.
+    ///
+    /// \param center the VOI center
+    /// \param width  the VOI width
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    void setCenterWidth(double center, double width);
+
+    /// \brief Retrieve the VOI center applied by the transform.
+    ///
+    /// \return the VOI center applied by the transform
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     double getCenter() const;
+
+    /// \brief Retrieve the VOI width applied by the transform.
+    ///
+    /// \return the VOI width applied by the transform
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     double getWidth() const;
 
 

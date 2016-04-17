@@ -55,85 +55,7 @@ public:
     ///        comes from
     ///
     ///////////////////////////////////////////////////////////
-	VOILUT(std::shared_ptr<dataSet> pDataSet): m_pDataSet(pDataSet), m_windowCenter(0), m_windowWidth(0){}
-
-	/// \brief Retrieve an ID for a VOI or a LUT.
-	///
-	/// The returned ID can be used with the functions
-	///  getVOILUTDescription() and setVOILUT().
-	///
-	/// The function returns 0 when the requested VOI/LUT
-	///  doesn't exist.
-	///
-	/// The parameter VOILUTNumber is a zero based index used
-	///  to scan all the available VOIs first and then all the
-	///  LUTs.
-	/// For instance, if VOILUTNumber is 3 and the dataSet
-	///  contains 2 VOIs and 3 LUTs, then the function will
-	///  return the ID for the second LUT.
-	///
-	/// @param VOILUTNumber  a number that identifies the
-	///                       VOI or the LUT for which the
-	///                       ID is requested.
-	///                      The value 0 refers to the first
-	///                       VOI in the dataSet or to the
-	///                       first LUT if there isn't any
-	///                       defined VOI. Bigger values refer
-	///                       to the following VOIs or LUTs
-	///                       when all the VOIs have been
-	///                       scanned
-	/// @return an ID that can be used with
-	///          getVOILUTDescription() and setVOILUT(), or 0
-	///                       if the requested VOI/LUT doesn't
-	///                       exist
-	///
-	///////////////////////////////////////////////////////////
-	std::uint32_t getVOILUTId(std::uint32_t VOILUTNumber);
-
-    /// \brief List of ids of the VOIs and LUTs defined in
-    ///        the dataset.
-    ///
-    /// The list is returned by getVOILUTIds() and each id can
-    ///  be used with getVOILUTDescription() and setVOILUT().
-    ///
-    ///////////////////////////////////////////////////////////
-    typedef std::list<std::uint32_t> voilutIds_t;
-
-    /// \brief Return a list of ids of the VOIs and LUTs
-    ///        defined in the database.
-    ///
-    /// @return a list of ids of the available VOI/LUTs
-    ///
-    ///////////////////////////////////////////////////////////
-    voilutIds_t getVOILUTIds();
-
-	/// \brief Return a description for the VOI or LUT with
-	///         the specified ID.
-	///
-	/// The VOI/LUT ID can be obtained by calling
-	///  getVOILUTId().
-	///
-	/// @param VOILUTId the id of the VOI/LUT for which the
-	///                  description is required
-	/// @return         the VOI/LUT description
-	///
-	///////////////////////////////////////////////////////////
-	std::wstring getVOILUTDescription(std::uint32_t VOILUTId);
-
-	/// \brief Define the VOI/LUT to use for the
-	///         transformation.
-	///
-	/// The VOI/LUT ID can be obtained by calling
-	///  getVOILUTId().
-	///
-	/// Disable the VOI/LUT transform if the parameter is 0.
-	///
-	/// @param VOILUTId the ID of the VOI/LUT to use for the
-	///                  transformation, or 0 to disable the
-	///                  transformation
-	///
-	///////////////////////////////////////////////////////////
-	void setVOILUT(std::uint32_t VOILUTId);
+    VOILUT(): m_windowCenter(0), m_windowWidth(0){}
 
 	/// \brief Define the LUT to use for the transformation.
 	///
@@ -332,7 +254,6 @@ protected:
 
     }
 
-    std::shared_ptr<dataSet> m_pDataSet;
 	std::shared_ptr<lut> m_pLUT;
     double m_windowCenter;
     double m_windowWidth;

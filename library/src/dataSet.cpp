@@ -93,6 +93,11 @@ DataSet* DataSet::getSequenceItem(const TagId& tagId, size_t itemId)
     return new DataSet(m_pDataSet->getSequenceItem(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), itemId));
 }
 
+vois_t DataSet::getVOIs()
+{
+    return m_pDataSet->getVOIs();
+}
+
 ReadingDataHandler* DataSet::getReadingDataHandler(const TagId& tagId, size_t bufferId) const
 {
     return new ReadingDataHandler(m_pDataSet->getReadingDataHandler(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), bufferId));

@@ -291,6 +291,9 @@ public:
 	/// This function retrieve the sequence and build
 	///  a \ref lut object describing the LUT.
 	///
+    /// To retrieve the LUTs to use in the VOILUT transform
+    /// retrieve the lut from the sequence tag 0028,3010.
+    ///
 	/// @param groupId The group to which the LUT sequence 
 	///                 belongs
 	/// @param tagId   The id of the tag to containing the
@@ -323,6 +326,8 @@ public:
 	///
 	///////////////////////////////////////////////////////////
     std::shared_ptr<waveform> getWaveform(std::uint32_t waveformId);
+
+    vois_t getVOIs();
 
 	//@}
 

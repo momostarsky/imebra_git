@@ -19,6 +19,10 @@ StreamWriter::StreamWriter(std::shared_ptr<implementation::streamWriter> pWriter
 {
 }
 
+StreamWriter::StreamWriter(const BaseStreamOutput& stream): m_pWriter(std::make_shared<implementation::streamWriter>(stream.m_pStream))
+{
+}
+
 StreamWriter::StreamWriter(const BaseStreamOutput& stream, size_t virtualStart, size_t virtualLength): m_pWriter(std::make_shared<implementation::streamWriter>(stream.m_pStream, virtualStart, virtualLength))
 {
 }

@@ -34,6 +34,19 @@ class BaseStreamInput;
 
 class CodecFactory;
 
+///
+/// \brief A StreamReader is used to read data from a BaseStreamInput
+///        object.
+///
+/// A StreamReader can be mapped to only a portion of the BaseStreamInput it
+/// manages: for instance this is used by the Imebra classes to read Jpeg
+/// streams embedded into a DICOM stream.
+///
+/// \warning  The StreamReader object IS NOT THREAD-SAFE: however, several
+///           StreamReader objects from different threads can be connected to
+///           the same BaseStreamInput object.
+///
+///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API StreamReader
 {
     StreamReader(const StreamReader&) = delete;
@@ -48,8 +61,25 @@ private:
 #endif
 
 public:
+    /// \brief Constructor.
+    ///
+    /// \param stream the BaseStreamInput object from which the StreamReader will
+    ///               read
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     StreamReader(const BaseStreamInput& stream);
 
+    /// \brief Constructor.
+    ///
+    /// This version of the constructor limits the portion of the stream that
+    /// the StreamReader will see.
+    ///
+    /// \param stream        the BaseStreamInput object from which the StreamReader
+    ///                      will read
+    /// \param virtualStart  the first visible byte of the managed stream
+    /// \param virtualLength the number of visible bytes in the managed stream
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     StreamReader(const BaseStreamInput& stream, size_t virtualStart, size_t virtualLength);
 
     virtual ~StreamReader();

@@ -431,6 +431,31 @@ const directoryRecord::tDirectoryRecordTypeDef* directoryRecord::getRecordTypeMa
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 
+dicomDir::dicomDir(): m_pDataSet(std::make_shared<dataSet>())
+{
+    // Adjust the transfer syntax
+    /////////////////////////////
+    m_pDataSet->setString(0x2, 0, 0x10, 0, "1.2.840.10008.1.2.1");
+
+    // Adjust the version
+    /////////////////////
+    {
+        std::shared_ptr<handlers::writingDataHandlerRaw> versionHandler(m_pDataSet->getWritingDataHandlerRaw(0x2, 0, 0x1, 0, tagVR_t::OB));
+        versionHandler->setSize(2);
+        versionHandler->setUnsignedLong(0, 0);
+        versionHandler->setUnsignedLong(1, 1);
+    }
+
+    // Adjust the SOP class UID
+    ///////////////////////////
+    m_pDataSet->setString(0x2, 0, 0x2, 0, "1.2.840.10008.1.3.10");
+
+    implementation::charsetsList::tCharsetsList list;
+    list.push_back("ISO 2022 IR 6");
+    m_pDataSet->setCharsetsList(list);
+}
+
+
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 //
@@ -566,7 +591,7 @@ std::shared_ptr<dataSet> dicomDir::getDirectoryDataSet() const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<directoryRecord> dicomDir::getNewRecord()
+std::shared_ptr<directoryRecord> dicomDir::getNewRecord(directoryRecordType_t recordType)
 {
     IMEBRA_FUNCTION_START();
 
@@ -575,6 +600,7 @@ std::shared_ptr<directoryRecord> dicomDir::getNewRecord()
 	recordsTag->appendDataSet(recordDataSet);
 
     std::shared_ptr<directoryRecord> newRecord(std::make_shared<directoryRecord>(recordDataSet));
+    newRecord->setType(recordType);
 	m_recordsList.push_back(newRecord);
 
 	return newRecord;
@@ -596,23 +622,6 @@ std::shared_ptr<directoryRecord> dicomDir::getNewRecord()
 std::shared_ptr<dataSet> dicomDir::buildDataSet()
 {
     IMEBRA_FUNCTION_START();
-
-    // Adjust the transfer syntax if it isn't already set
-	///////////////////////////////////////////////////////////
-    m_pDataSet->setString(0x2, 0, 0x10, 0, "1.2.840.10008.1.2.1");
-
-	// Adjust the version if it isn't already set
-    ///////////////////////////////////////////////////////////
-    {
-        std::shared_ptr<handlers::writingDataHandlerRaw> versionHandler(m_pDataSet->getWritingDataHandlerRaw(0x2, 0, 0x1, 0, tagVR_t::OB));
-        versionHandler->setSize(2);
-        versionHandler->setUnsignedLong(0, 0);
-        versionHandler->setUnsignedLong(1, 1);
-    }
-
-    // Adjust the SOP class UID
-    ///////////////////////////
-    m_pDataSet->setString(0x2, 0, 0x2, 0, "1.2.840.10008.1.3.10");
 
 	// Allocate offset fields
 	///////////////////////////////////////////////////////////

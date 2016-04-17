@@ -14,11 +14,11 @@ public:
     static std::string getExceptionTrace();
 };
 
-///////////////////////////////////////////////////////////
-/// \brief This is the base class for the exceptions thrown
-///         by the lut class
+
 ///
-///////////////////////////////////////////////////////////
+/// \brief This is the base class for the exceptions thrown by the LUT class.
+///
+///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API LutError: public std::runtime_error
 {
 public:
@@ -26,12 +26,11 @@ public:
 };
 
 
-///////////////////////////////////////////////////////////
-/// \brief This exception is thrown by the lut class when
-///         the wrong index or id is specified as a
-///         parameter.
 ///
-///////////////////////////////////////////////////////////
+/// \brief This exception is thrown by the LUT class when the wrong index or
+///        id is specified as a parameter.
+///
+///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API LutWrongIndexError: public LutError
 {
 public:
@@ -39,11 +38,11 @@ public:
 };
 
 
-///////////////////////////////////////////////////////////
-/// \brief This exception is thrown by the lut class when
-///         the the LUT information is corrupted.
 ///
-///////////////////////////////////////////////////////////
+/// \brief This exception is thrown by the lut class when the the LUT
+///        information is corrupted.
+///
+///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API LutCorruptedError: public LutError
 {
 public:
@@ -94,12 +93,10 @@ public:
 };
 
 
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-/// \brief Exception thrown when the stream cannot be
-///         open.
 ///
-///////////////////////////////////////////////////////////
+/// \brief Exception thrown when the stream cannot be open.
+///
+///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API StreamOpenError : public StreamError
 {
 public:
@@ -107,13 +104,10 @@ public:
 };
 
 
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-/// \brief Exception thrown when there is an error during
-///         the read phase.
 ///
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
+/// \brief Exception thrown when there is an error during the read phase.
+///
+///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API StreamReadError : public StreamError
 {
 public:
@@ -121,13 +115,11 @@ public:
 };
 
 
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-/// \brief Exception thrown when there is an error during
-///         the write phase.
 ///
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
+/// \brief Exception thrown when there is an error during the write phase.
+///
+///////////////////////////////////////////////////////////////////////////////
+
 class IMEBRA_API StreamWriteError : public StreamError
 {
 public:
@@ -135,53 +127,17 @@ public:
 };
 
 
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-/// \brief Exception thrown when there are problems during
-///         the closure of the stream.
 ///
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
+/// \brief Exception thrown when there are problems while closing of the
+///        stream.
+///
+///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API StreamCloseError : public StreamError
 {
 public:
     StreamCloseError(const std::string& message);
 };
 
-
-
-///////////////////////////////////////////////////////////
-/// \brief This is the base class for the exceptions thrown
-///         by the buffer class.
-///
-///////////////////////////////////////////////////////////
-class IMEBRA_API BufferError: public std::runtime_error
-{
-public:
-    /// \brief Build a buffer exception
-    ///
-    /// @param message the message to store into the exception
-    ///
-    ///////////////////////////////////////////////////////////
-    BufferError(const std::string& message);
-};
-
-
-///////////////////////////////////////////////////////////
-/// \brief This exception is throw by the buffer when an
-///         handler for an unknown data type is asked.
-///
-///////////////////////////////////////////////////////////
-class IMEBRA_API BufferUnknownTypeError: public BufferError
-{
-public:
-    /// \brief Build a wrong data type exception
-    ///
-    /// @param message the message to store into the exception
-    ///
-    ///////////////////////////////////////////////////////////
-    BufferUnknownTypeError(const std::string& message);
-};
 
 class IMEBRA_API DictionaryError: public std::runtime_error
 {
@@ -193,12 +149,6 @@ class IMEBRA_API DictionaryUnknownTagError: public DictionaryError
 {
 public:
     DictionaryUnknownTagError(const std::string& message);
-};
-
-class IMEBRA_API DictionaryUnknownDefaultTypeError: public DictionaryError
-{
-public:
-    DictionaryUnknownDefaultTypeError(const std::string& message);
 };
 
 class IMEBRA_API DictionaryUnknownDataTypeError: public DictionaryError

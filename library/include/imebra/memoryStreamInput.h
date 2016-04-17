@@ -16,13 +16,28 @@ namespace imebra
 class ReadMemory;
 class ReadWriteMemory;
 
+///
+/// \brief An input stream that reads data from a memory region.
+///
+///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API MemoryStreamInput : public BaseStreamInput
 {
     MemoryStreamInput(const MemoryStreamInput&) = delete;
     MemoryStreamInput& operator=(const MemoryStreamInput&) = delete;
 
 public:
+    /// \brief Constructor.
+    ///
+    /// \param memory the memory region from which the stream will read the data
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     MemoryStreamInput(const ReadMemory& memory);
+
+    /// \brief Constructor.
+    ///
+    /// \param memory the memory region from which the stream will read the data
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     MemoryStreamInput(const ReadWriteMemory& memory);
 };
 

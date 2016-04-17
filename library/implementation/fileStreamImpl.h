@@ -59,23 +59,8 @@ protected:
 class fileStreamInput : public baseStreamInput, public fileStream
 {
 public:
-    /// \brief Open a file.
-	///
-	/// The function uses the standard library function
-	///  fopen to open the specified file.
-	///
-	/// The created file object will be automatically
-	///  closed and destroyed when one of the following events
-	///  will occur:
-	/// - the stream class will be destroyed
-	/// - this function will be called again
-	///
-	/// @param fileName the name of the file to be opened
-	///
-	///////////////////////////////////////////////////////////
-    void openFile(const std::string& fileName);
-
-    void openFile(const std::wstring& fileName);
+    fileStreamInput(const std::string& fileName);
+    fileStreamInput(const std::wstring& fileName);
 
 	///////////////////////////////////////////////////////////
 	//
@@ -89,38 +74,9 @@ public:
 class fileStreamOutput : public baseStreamOutput, public fileStream
 {
 public:
-    /// \brief Open a file.
-    ///
-    /// The function uses the standard library function
-    ///  fopen to open the specified file.
-    ///
-    /// The created file object will be automatically
-    ///  closed and destroyed when one of the following events
-    ///  will occur:
-    /// - the stream class will be destroyed
-    /// - this function will be called again
-    ///
-    /// @param fileName the name of the file to be opened
-    /// @param mode     the opening mode.
-    ///                 Can be the combination of one or
-    ///                 more of the following values:
-    ///                 - ios_base::in the file will be opened
-    ///                   for reading operations
-    ///                 - ios_base::out the file will be
-    ///                   opened for writing operations
-    ///                 - ios_base::app the writing operations
-    ///                   will append data to the existing file
-    ///                 - ios_base::trunc the existing file
-    ///                   will be truncated to zero length
-    ///                 - ios_base::binary the file will be
-    ///                   opened in binary mode. Please note
-    ///                   that this flag is useless, since all
-    ///                   the files ARE OPENED IN BINARY MODE.
-    ///
-    ///////////////////////////////////////////////////////////
-    void openFile(const std::string& fileName);
+    fileStreamOutput(const std::string& fileName);
 
-    void openFile(const std::wstring& fileName);
+    fileStreamOutput(const std::wstring& fileName);
 
     ///////////////////////////////////////////////////////////
     //

@@ -33,7 +33,7 @@ namespace imebra
 ///
 /// The buffer of memory is usually associated with a Tag buffer content.
 ///
-/// ReadMemory and ReadWriteMemory are managed by MemoryPool.
+/// The memory used by ReadMemory and ReadWriteMemory is managed by MemoryPool.
 ///
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API ReadMemory

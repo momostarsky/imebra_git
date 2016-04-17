@@ -48,20 +48,10 @@ StreamWriteError::StreamWriteError(const std::string& message): StreamError(mess
 StreamCloseError::StreamCloseError(const std::string& message): StreamError(message)
 {}
 
-BufferError::BufferError(const std::string& message): std::runtime_error(message)
-{}
-
-BufferUnknownTypeError::BufferUnknownTypeError(const std::string& message): BufferError(message)
-{}
-
-
 DictionaryError::DictionaryError(const std::string& message): std::runtime_error(message)
 {}
 
 DictionaryUnknownTagError::DictionaryUnknownTagError(const std::string &message): DictionaryError(message)
-{}
-
-DictionaryUnknownDefaultTypeError::DictionaryUnknownDefaultTypeError(const std::string& message): DictionaryError(message)
 {}
 
 DictionaryUnknownDataTypeError::DictionaryUnknownDataTypeError(const std::string &message): DictionaryError(message)

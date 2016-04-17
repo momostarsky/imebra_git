@@ -15,28 +15,11 @@ $fileHeader$
 namespace imebra
 {
 
-VOILUT::VOILUT(const DataSet& dataset): Transform(std::make_shared<imebra::implementation::transforms::VOILUT>(dataset.m_pDataSet))
+VOILUT::VOILUT(): Transform(std::make_shared<imebra::implementation::transforms::VOILUT>())
 {
 }
 
-std::uint32_t VOILUT::getVOILUTId(std::uint32_t VOILUTNumber) const
-{
-    return ((imebra::implementation::transforms::VOILUT*)m_pTransform.get())->getVOILUTId(VOILUTNumber);
-
-}
-
-std::wstring VOILUT::getVOILUTDescription(std::uint32_t VOILUTId) const
-{
-    return ((imebra::implementation::transforms::VOILUT*)m_pTransform.get())->getVOILUTDescription(VOILUTId);
-
-}
-
-void VOILUT::setVOILUT(std::uint32_t VOILUTId)
-{
-    ((imebra::implementation::transforms::VOILUT*)m_pTransform.get())->setVOILUT(VOILUTId);
-}
-
-void VOILUT::setCenterWidth(std::int32_t center, std::int32_t width)
+void VOILUT::setCenterWidth(double center, double width)
 {
     ((imebra::implementation::transforms::VOILUT*)m_pTransform.get())->setCenterWidth(center, width);
 }

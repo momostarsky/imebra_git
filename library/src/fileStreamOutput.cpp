@@ -13,23 +13,16 @@ $fileHeader$
 namespace imebra
 {
 
-FileStreamOutput::FileStreamOutput(): BaseStreamOutput(std::make_shared<implementation::fileStreamOutput>())
+FileStreamOutput::FileStreamOutput(const std::wstring& name): BaseStreamOutput(std::make_shared<implementation::fileStreamOutput>(name))
 {
 }
 
-void FileStreamOutput::openFile(const std::wstring& name)
+FileStreamOutput::FileStreamOutput(const std::string& name): BaseStreamOutput(std::make_shared<implementation::fileStreamOutput>(name))
 {
-    std::dynamic_pointer_cast<implementation::fileStreamOutput>(m_pStream)->openFile(name);
 }
 
-void FileStreamOutput::openFile(const std::string& name)
+FileStreamOutput::~FileStreamOutput()
 {
-    std::dynamic_pointer_cast<implementation::fileStreamOutput>(m_pStream)->openFile(name);
-}
-
-void FileStreamOutput::close()
-{
-    static_cast<implementation::fileStreamOutput*>(m_pStream.get())->close();
 }
 
 }

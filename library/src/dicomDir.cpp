@@ -19,7 +19,7 @@ namespace imebra
 DicomDir::DicomDir()
 {
     DataSet emptyDataSet;
-    m_pDicomDir = std::make_shared<imebra::implementation::dicomDir>(emptyDataSet.m_pDataSet);
+    m_pDicomDir = std::make_shared<imebra::implementation::dicomDir>();
 }
 
 DicomDir::DicomDir(const DataSet& fromDataSet): m_pDicomDir(std::make_shared<imebra::implementation::dicomDir>(fromDataSet.m_pDataSet))
@@ -30,14 +30,9 @@ DicomDir::~DicomDir()
 {
 }
 
-DataSet* DicomDir::getDirectoryDataSet() const
+DicomDirEntry* DicomDir::getNewEntry(directoryRecordType_t recordType)
 {
-    return new DataSet(m_pDicomDir->getDirectoryDataSet());
-}
-
-DicomDirEntry* DicomDir::getNewEntry()
-{
-    return new DicomDirEntry(m_pDicomDir->getNewRecord());
+    return new DicomDirEntry(m_pDicomDir->getNewRecord(recordType));
 }
 
 DicomDirEntry* DicomDir::getFirstRootEntry() const
@@ -47,11 +42,10 @@ DicomDirEntry* DicomDir::getFirstRootEntry() const
 
 void DicomDir::setFirstRootEntry(const DicomDirEntry& firstEntryRecord)
 {
-    if(firstEntryRecord.m_pDirectoryRecord == 0) throw std::logic_error("Null directoryRecord");
     m_pDicomDir->setFirstRootRecord(firstEntryRecord.m_pDirectoryRecord);
 }
 
-DataSet* DicomDir::buildDataSet()
+DataSet* DicomDir::updateDataSet()
 {
     return new DataSet(m_pDicomDir->buildDataSet());
 }

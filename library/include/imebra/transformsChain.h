@@ -34,14 +34,31 @@ namespace imebra
 
 class DrawBitmap;
 
+///
+/// \brief The TransformsChain applies a series of Transforms to the input
+///        image.
+///
+/// Transforms can be added to the chain by using addTransform().
+///
+///////////////////////////////////////////////////////////////////////////////
+
 class IMEBRA_API TransformsChain: public Transform
 {
     TransformsChain(const TransformsChain&) = delete;
     TransformsChain& operator=(const TransformsChain&) = delete;
 
 public:
+    /// \brief Constructor.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     TransformsChain();
 
+    /// \brief Add a transform to the chain of transforms that will be applied to
+    ///        the input image.
+    ///
+    /// \param transform the Transform to add to the chain of transforms
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     void addTransform(const Transform& transform);
 };
 

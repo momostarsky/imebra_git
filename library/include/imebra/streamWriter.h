@@ -31,6 +31,18 @@ class BaseStreamOutput;
 
 class CodecFactory;
 
+///
+/// \brief A StreamWriter is used to write data into a BaseStreamOutput
+///        object.
+///
+/// A StreamWriter can be mapped to only a portion of the BaseStreamOutput it
+/// manages.
+///
+/// \warning: The StreamWriter object IS NOT THREAD-SAFE: however, several
+///           StreamWriter objects from different threads can be connected to
+///           the same BaseStreamOutput object.
+///
+///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API StreamWriter
 {
     StreamWriter(const StreamWriter&) = delete;
@@ -45,7 +57,26 @@ private:
 #endif
 
 public:
-    StreamWriter(const BaseStreamOutput& stream, size_t virtualStart = 0, size_t virtualLength = 0);
+    /// \brief Constructor.
+    ///
+    /// \param stream the BaseStreamOutput object on which the StreamWriter will
+    ///               write
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    StreamWriter(const BaseStreamOutput& stream);
+
+    /// \brief Constructor.
+    ///
+    /// This version of the constructor limits the portion of the stream that
+    /// the StreamWriter will be able to use.
+    ///
+    /// \param stream        the BaseStreamOutput object on which the StreamWriter
+    ///                      will write
+    /// \param virtualStart  the first visible byte of the managed stream
+    /// \param virtualLength the number of visible bytes in the managed stream
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    StreamWriter(const BaseStreamOutput& stream, size_t virtualStart, size_t virtualLength);
 
 #ifndef SWIG
 protected:

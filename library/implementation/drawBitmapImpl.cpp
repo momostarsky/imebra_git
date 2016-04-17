@@ -49,6 +49,23 @@ size_t drawBitmap::getBitmap(const std::shared_ptr<const image>& sourceImage, dr
 {
     IMEBRA_FUNCTION_START();
 
+    std::uint32_t width, height;
+    sourceImage->getSize(&width, &height);
+    std::uint32_t destPixelSize((drawBitmapType == drawBitmapType_t::drawBitmapRGBA || drawBitmapType == drawBitmapType_t::drawBitmapBGRA) ? 4 : 3);
+
+    // Calculate the row' size, in bytes
+    ///////////////////////////////////////////////////////////
+    std::uint32_t rowSizeBytes = (width * destPixelSize + rowAlignBytes - 1) / rowAlignBytes;
+    rowSizeBytes *= rowAlignBytes;
+
+    // Allocate the memory for the final bitmap
+    ///////////////////////////////////////////////////////////
+    std::uint32_t memorySize(rowSizeBytes * height);
+    if(memorySize > bufferSize)
+    {
+        return memorySize;
+    }
+
     // This chain contains all the necessary transforms, including color transforms
     //  and high bit shift
     ///////////////////////////////////////////////////////////////////////////////
@@ -87,23 +104,6 @@ size_t drawBitmap::getBitmap(const std::shared_ptr<const image>& sourceImage, dr
     {
         std::shared_ptr<transforms::transformHighBit> highBitTransform(std::make_shared<transforms::transformHighBit>());
         chain.addTransform(highBitTransform);
-    }
-
-    std::uint32_t width, height;
-    sourceImage->getSize(&width, &height);
-    std::uint32_t destPixelSize((drawBitmapType == drawBitmapType_t::drawBitmapRGBA || drawBitmapType == drawBitmapType_t::drawBitmapBGRA) ? 4 : 3);
-
-    // Calculate the row' size, in bytes
-    ///////////////////////////////////////////////////////////
-    std::uint32_t rowSizeBytes = (width * destPixelSize + rowAlignBytes - 1) / rowAlignBytes;
-    rowSizeBytes *= rowAlignBytes;
-
-    // Allocate the memory for the final bitmap
-    ///////////////////////////////////////////////////////////
-    std::uint32_t memorySize(rowSizeBytes * height);
-    if(memorySize > bufferSize)
-    {
-        return memorySize;
     }
 
     // If a transform chain is active then allocate a temporary

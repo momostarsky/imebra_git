@@ -44,12 +44,13 @@ You can download the latest version of imebra from http://imebra.com
    :maxdepth: 2
    :caption: API
 
-   api
+   definition_classes
    loading_saving_classes
    dicom_dataset_tag_classes
    imaging_classes
    dicomdir_classes
    memory_management_classes
+   transforms_classes
    dicom_dictionary_classes
 
 

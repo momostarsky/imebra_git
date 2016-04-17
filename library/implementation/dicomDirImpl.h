@@ -247,6 +247,8 @@ private:
 class dicomDir
 {
 public:
+    dicomDir();
+
 	/// \brief Initializes a dicomDir object and attach it to 
 	///         a dataset.
 	///
@@ -294,7 +296,7 @@ public:
 	///         DICOMDIR
 	///
 	///////////////////////////////////////////////////////////
-	std::shared_ptr<directoryRecord> getNewRecord();
+    std::shared_ptr<directoryRecord> getNewRecord(directoryRecordType_t recordType);
 
 	/// \brief Returns the first root record in the DICOMDIR.
 	///

@@ -32,12 +32,20 @@ class transformHighBit;
 namespace imebra
 {
 
+///
+/// \brief The TransformHighBit transform shifts the input image's values
+///        so they match the high-bit settings of the Transform output image.
+///
+///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API TransformHighBit: public Transform
 {
     TransformHighBit(const TransformHighBit&) = delete;
     TransformHighBit& operator=(const TransformHighBit&) = delete;
 
 public:
+    /// \brief Constructor.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     TransformHighBit();
 
 };

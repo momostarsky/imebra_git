@@ -169,6 +169,16 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     void setImage(size_t frameNumber, const Image& image, const std::string& transferSyntax, imageQuality_t quality);
 
+    /// \brief Return the list of VOI settings stored in the DataSet.
+    ///
+    /// Each VOI setting includes the center & width values that can be used with
+    /// the VOILUT transform to highlight different parts of an Image.
+    ///
+    /// \return a list of VOIDescription objects defined in the DataSet
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    vois_t getVOIs();
+
     /// \brief Retrieve a sequence item stored in a tag.
     ///
     /// If the specified Tag does not exist then throws MissingTagError or

@@ -174,7 +174,7 @@ fileStream::~fileStream()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void fileStreamInput::openFile(const std::string& fileName)
+fileStreamInput::fileStreamInput(const std::string& fileName)
 {
     IMEBRA_FUNCTION_START();
 
@@ -185,21 +185,21 @@ void fileStreamInput::openFile(const std::string& fileName)
 	{
 		wFileName[copyChars] = (wchar_t)fileName[copyChars];
 	}
-    fileStream::openFile(wFileName, std::ios::in);
+    openFile(wFileName, std::ios::in);
 
 	IMEBRA_FUNCTION_END();
 }
 
-void fileStreamInput::openFile(const std::wstring& fileName)
+fileStreamInput::fileStreamInput(const std::wstring& fileName)
 {
     IMEBRA_FUNCTION_START();
 
-    fileStream::openFile(fileName, std::ios::in);
+    openFile(fileName, std::ios::in);
 
     IMEBRA_FUNCTION_END();
 }
 
-void fileStreamOutput::openFile(const std::string& fileName)
+fileStreamOutput::fileStreamOutput(const std::string& fileName)
 {
     IMEBRA_FUNCTION_START();
 
@@ -210,16 +210,16 @@ void fileStreamOutput::openFile(const std::string& fileName)
     {
         wFileName[copyChars] = (wchar_t)fileName[copyChars];
     }
-    fileStream::openFile(wFileName, std::ios::out);
+    openFile(wFileName, std::ios::out);
 
     IMEBRA_FUNCTION_END();
 }
 
-void fileStreamOutput::openFile(const std::wstring &fileName)
+fileStreamOutput::fileStreamOutput(const std::wstring &fileName)
 {
     IMEBRA_FUNCTION_START();
 
-    fileStream::openFile(fileName, std::ios::out);
+    openFile(fileName, std::ios::out);
 
     IMEBRA_FUNCTION_END();
 }

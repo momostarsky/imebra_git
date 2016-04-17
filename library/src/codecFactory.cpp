@@ -36,8 +36,7 @@ DataSet* CodecFactory::load(const std::wstring& fileName, size_t maxSizeBufferLo
 {
     IMEBRA_FUNCTION_START();
 
-    FileStreamInput file;
-    file.openFile(fileName);
+    FileStreamInput file(fileName);
 
     StreamReader reader(file);
     return load(reader, maxSizeBufferLoad);
@@ -49,8 +48,7 @@ DataSet* CodecFactory::load(const std::string& fileName, size_t maxSizeBufferLoa
 {
     IMEBRA_FUNCTION_START();
 
-    FileStreamInput file;
-    file.openFile(fileName);
+    FileStreamInput file(fileName);
 
     StreamReader reader(file);
     return load(reader, maxSizeBufferLoad);
@@ -105,8 +103,7 @@ void CodecFactory::save(const DataSet &dataSet, const std::wstring& fileName, co
 {
     IMEBRA_FUNCTION_START();
 
-    FileStreamOutput file;
-    file.openFile(fileName);
+    FileStreamOutput file(fileName);
 
     StreamWriter writer(file);
     CodecFactory::save(dataSet, writer, codecType);
@@ -118,8 +115,7 @@ void CodecFactory::save(const DataSet &dataSet, const std::string& fileName, cod
 {
     IMEBRA_FUNCTION_START();
 
-    FileStreamOutput file;
-    file.openFile(fileName);
+    FileStreamOutput file(fileName);
 
     StreamWriter writer(file);
     CodecFactory::save(dataSet, writer, codecType);

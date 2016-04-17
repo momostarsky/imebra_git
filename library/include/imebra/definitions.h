@@ -139,48 +139,83 @@ enum class directoryRecordType_t: std::uint32_t
 ///////////////////////////////////////////////////////////////////////////////
 enum class codecType_t: std::uint32_t
 {
-    dicom,
-    jpeg
+    dicom, ///< DICOM codec
+    jpeg   ///< JPEG codec
 };
 
 #define MAKE_VR_ENUM(string) ((((std::uint16_t)string[0]) << 8) | (std::uint16_t)string[1])
 
+/// \brief Enumerates the DICOM VRs (data types).
+///
+///////////////////////////////////////////////////////////////////////////////
 enum class tagVR_t: std::uint32_t
 {
-    AE = MAKE_VR_ENUM("AE"), ///< Application Entity
-    AS = MAKE_VR_ENUM("AS"),
-    AT = MAKE_VR_ENUM("AT"),
-    CS = MAKE_VR_ENUM("CS"),
-    DA = MAKE_VR_ENUM("DA"),
-    DS = MAKE_VR_ENUM("DS"),
-    DT = MAKE_VR_ENUM("DT"),
-    FL = MAKE_VR_ENUM("FL"),
-    FD = MAKE_VR_ENUM("FD"),
-    IS = MAKE_VR_ENUM("IS"),
-    LO = MAKE_VR_ENUM("LO"),
-    LT = MAKE_VR_ENUM("LT"),
-    OB = MAKE_VR_ENUM("OB"),
-    SB = MAKE_VR_ENUM("SB"), // Non standard. Used internally for signed bytes
-    OD = MAKE_VR_ENUM("OD"),
-    OF = MAKE_VR_ENUM("OF"),
-    OL = MAKE_VR_ENUM("OL"),
-    OW = MAKE_VR_ENUM("OW"),
-    PN = MAKE_VR_ENUM("PN"),
-    SH = MAKE_VR_ENUM("SH"),
-    SL = MAKE_VR_ENUM("SL"),
-    SQ = MAKE_VR_ENUM("SQ"),
-    SS = MAKE_VR_ENUM("SS"),
-    ST = MAKE_VR_ENUM("ST"),
-    TM = MAKE_VR_ENUM("TM"),
-    UC = MAKE_VR_ENUM("UC"),
-    UI = MAKE_VR_ENUM("UI"),
-    UL = MAKE_VR_ENUM("UL"),
-    UN = MAKE_VR_ENUM("UN"),
-    UR = MAKE_VR_ENUM("UR"),
-    US = MAKE_VR_ENUM("US"),
-    UT = MAKE_VR_ENUM("UT")
+    AE = 0x4145, ///< Application Entity
+    AS = 0x4153, ///< Age String
+    AT = 0x4154, ///< Attribute Tag
+    CS = 0x4353, ///< Code String
+    DA = 0x4441, ///< Date
+    DS = 0x4453, ///< Decimal String
+    DT = 0x4454, ///< Date Time
+    FL = 0x464c, ///< Floating Point Single
+    FD = 0x4644, ///< Floating Point Double
+    IS = 0x4953, ///< Integer String
+    LO = 0x4c4f, ///< Long String
+    LT = 0x4c54, ///< Long Text
+    OB = 0x4f42, ///< Other Byte String
+    SB = 0x5342, ///< Non standard. Used internally for signed bytes
+    OD = 0x4f44, ///< Other Double String
+    OF = 0x4f46, ///< Other Float String
+    OL = 0x4f4c, ///<
+    OW = 0x4f57, ///< Other Word String
+    PN = 0x504e, ///< Person Name
+    SH = 0x5348, ///< Short String
+    SL = 0x534c, ///< Signed Long
+    SQ = 0x5351, ///< Sequence of Items
+    SS = 0x5353, ///< Signed Short
+    ST = 0x5354, ///< Short Text
+    TM = 0x544d, ///< Time
+    UC = 0x5543, ///<
+    UI = 0x5549, ///< Unique Identifier
+    UL = 0x554c, ///< Unsigned Long
+    UN = 0x554e, ///< Unknown
+    UR = 0x5552,
+    US = 0x5553, ///< Unsigned Short
+    UT = 0x5554  ///< Unlimited Text
 };
 
+static_assert((std::uint16_t)tagVR_t::AE == MAKE_VR_ENUM("AE"), "Wrong VR enumeration value");
+static_assert((std::uint16_t)tagVR_t::AS == MAKE_VR_ENUM("AS"), "Wrong VR enumeration value");
+static_assert((std::uint16_t)tagVR_t::AT == MAKE_VR_ENUM("AT"), "Wrong VR enumeration value");
+static_assert((std::uint16_t)tagVR_t::CS == MAKE_VR_ENUM("CS"), "Wrong VR enumeration value");
+static_assert((std::uint16_t)tagVR_t::DA == MAKE_VR_ENUM("DA"), "Wrong VR enumeration value");
+static_assert((std::uint16_t)tagVR_t::DS == MAKE_VR_ENUM("DS"), "Wrong VR enumeration value");
+static_assert((std::uint16_t)tagVR_t::DT == MAKE_VR_ENUM("DT"), "Wrong VR enumeration value");
+static_assert((std::uint16_t)tagVR_t::FL == MAKE_VR_ENUM("FL"), "Wrong VR enumeration value");
+static_assert((std::uint16_t)tagVR_t::FD == MAKE_VR_ENUM("FD"), "Wrong VR enumeration value");
+static_assert((std::uint16_t)tagVR_t::IS == MAKE_VR_ENUM("IS"), "Wrong VR enumeration value");
+static_assert((std::uint16_t)tagVR_t::LO == MAKE_VR_ENUM("LO"), "Wrong VR enumeration value");
+static_assert((std::uint16_t)tagVR_t::LT == MAKE_VR_ENUM("LT"), "Wrong VR enumeration value");
+static_assert((std::uint16_t)tagVR_t::OB == MAKE_VR_ENUM("OB"), "Wrong VR enumeration value");
+static_assert((std::uint16_t)tagVR_t::SB == MAKE_VR_ENUM("SB"), "Wrong VR enumeration value");
+static_assert((std::uint16_t)tagVR_t::OD == MAKE_VR_ENUM("OD"), "Wrong VR enumeration value");
+static_assert((std::uint16_t)tagVR_t::OF == MAKE_VR_ENUM("OF"), "Wrong VR enumeration value");
+static_assert((std::uint16_t)tagVR_t::OL == MAKE_VR_ENUM("OL"), "Wrong VR enumeration value");
+static_assert((std::uint16_t)tagVR_t::OW == MAKE_VR_ENUM("OW"), "Wrong VR enumeration value");
+static_assert((std::uint16_t)tagVR_t::PN == MAKE_VR_ENUM("PN"), "Wrong VR enumeration value");
+static_assert((std::uint16_t)tagVR_t::SH == MAKE_VR_ENUM("SH"), "Wrong VR enumeration value");
+static_assert((std::uint16_t)tagVR_t::SL == MAKE_VR_ENUM("SL"), "Wrong VR enumeration value");
+static_assert((std::uint16_t)tagVR_t::SQ == MAKE_VR_ENUM("SQ"), "Wrong VR enumeration value");
+static_assert((std::uint16_t)tagVR_t::SS == MAKE_VR_ENUM("SS"), "Wrong VR enumeration value");
+static_assert((std::uint16_t)tagVR_t::ST == MAKE_VR_ENUM("ST"), "Wrong VR enumeration value");
+static_assert((std::uint16_t)tagVR_t::TM == MAKE_VR_ENUM("TM"), "Wrong VR enumeration value");
+static_assert((std::uint16_t)tagVR_t::UC == MAKE_VR_ENUM("UC"), "Wrong VR enumeration value");
+static_assert((std::uint16_t)tagVR_t::UI == MAKE_VR_ENUM("UI"), "Wrong VR enumeration value");
+static_assert((std::uint16_t)tagVR_t::UL == MAKE_VR_ENUM("UL"), "Wrong VR enumeration value");
+static_assert((std::uint16_t)tagVR_t::UN == MAKE_VR_ENUM("UN"), "Wrong VR enumeration value");
+static_assert((std::uint16_t)tagVR_t::UR == MAKE_VR_ENUM("UR"), "Wrong VR enumeration value");
+static_assert((std::uint16_t)tagVR_t::US == MAKE_VR_ENUM("US"), "Wrong VR enumeration value");
+static_assert((std::uint16_t)tagVR_t::UT == MAKE_VR_ENUM("UT"), "Wrong VR enumeration value");
 
 
 
@@ -270,8 +305,30 @@ struct IMEBRA_API Date
 
 };
 
+///
+/// \brief Stores a VOI Description and Settings
+///
+/// The VOI settings can be retrieved from a DataSet with DataSet::getVOIs(),
+/// which returns all the VOI settings registered in the DataSet.
+///
+/// Once retrieved, the VOI center and width can be passed to the VOILUT
+/// transform that apply the VOI settings to an Image.
+///
+///////////////////////////////////////////////////////////////////////////////
+struct IMEBRA_API VOIDescription
+{
+    double center;            ///< The VOI center
+    double width;             ///< The VOI width
+    std::wstring description; ///< The VOI's description
+};
 
-typedef std::vector<std::uint16_t> groups_t;
+/// \brief A collection of VOI settings.
+///
+/// The VOI settings registered in the dataset can be retrieved with
+/// DataSet::getVOIs().
+///
+///////////////////////////////////////////////////////////////////////////////
+typedef std::vector<VOIDescription> vois_t;
 
 } // namespace imebra
 

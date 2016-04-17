@@ -21,7 +21,21 @@ namespace implementation
 // Constructor
 //
 ///////////////////////////////////////////////////////////
-streamWriter::streamWriter(std::shared_ptr<baseStreamOutput> pControlledStream, size_t virtualStart /* =0 */, size_t virtualLength /* =0 */):
+streamWriter::streamWriter(std::shared_ptr<baseStreamOutput> pControlledStream):
+    streamController(0, 0),
+    m_pControlledStream(pControlledStream),
+    m_outBitsBuffer(0),
+    m_outBitsNum(0)
+{
+}
+
+
+///////////////////////////////////////////////////////////
+//
+// Constructor
+//
+///////////////////////////////////////////////////////////
+streamWriter::streamWriter(std::shared_ptr<baseStreamOutput> pControlledStream, size_t virtualStart, size_t virtualLength):
     streamController(virtualStart, virtualLength),
     m_pControlledStream(pControlledStream),
 	m_outBitsBuffer(0),

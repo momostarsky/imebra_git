@@ -36,7 +36,9 @@ class streamWriter: public streamController
 {
 public:
 
-	/// \brief Creates the streamWriter and connects it to a 
+    streamWriter(std::shared_ptr<baseStreamOutput> pControlledStream);
+
+    /// \brief Creates the streamWriter and connects it to a
 	///         baseStream object.
 	///
 	/// @param pControlledStream   the stream used by the 
@@ -50,7 +52,7 @@ public:
 	///                             see all the bytes
 	///
 	///////////////////////////////////////////////////////////
-    streamWriter(std::shared_ptr<baseStreamOutput> pControlledStream, size_t virtualStart = 0, size_t virtualLength = 0);
+    streamWriter(std::shared_ptr<baseStreamOutput> pControlledStream, size_t virtualStart, size_t virtualLength);
 
     /// \brief Flushes the internal buffer, disconnects the
     ///         stream and destroys the streamWriter.
