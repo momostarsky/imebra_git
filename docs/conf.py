@@ -32,7 +32,6 @@ import subprocess
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.intersphinx',
-    'rst2pdf.pdfbuilder',
     'breathe'
 ]
 
