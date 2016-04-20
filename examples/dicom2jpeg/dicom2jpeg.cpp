@@ -146,11 +146,11 @@ int main(int argc, char* argv[])
 
             if(ColorTransformsFactory::isMonochrome(dataSetImage->getColorSpace()))
             {
-                VOILUT presentationVOILUT(*loadedDataSet);
-                std::uint32_t firstVOILUTID(presentationVOILUT.getVOILUTId(0));
-                if(firstVOILUTID != 0)
+                VOILUT presentationVOILUT;
+                vois_t vois = loadedDataSet->getVOIs();
+                if(!vois.empty())
                 {
-                    presentationVOILUT.setVOILUT(firstVOILUTID);
+                    presentationVOILUT.setCenterWidth(vois.front().center, vois.front().width);
                 }
                 else
                 {
@@ -229,8 +229,7 @@ int main(int argc, char* argv[])
                 }
                 jpegFileName << extension;
 
-                FileStreamOutput writeJpeg;
-                writeJpeg.openFile(jpegFileName.str());
+                FileStreamOutput writeJpeg(jpegFileName.str());
                 StreamWriter writer(writeJpeg);
                 CodecFactory::saveImage(writer, *finalImage, jpegTransferSyntax, imageQuality_t::veryHigh, tagVR_t::OB, 8, false, false, true, false);
 
