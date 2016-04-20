@@ -184,6 +184,7 @@ enum class tagVR_t: std::uint32_t
     UT = 0x5554  ///< Unlimited Text
 };
 
+#ifndef SWIG
 static_assert((std::uint16_t)tagVR_t::AE == MAKE_VR_ENUM("AE"), "Wrong VR enumeration value");
 static_assert((std::uint16_t)tagVR_t::AS == MAKE_VR_ENUM("AS"), "Wrong VR enumeration value");
 static_assert((std::uint16_t)tagVR_t::AT == MAKE_VR_ENUM("AT"), "Wrong VR enumeration value");
@@ -216,7 +217,7 @@ static_assert((std::uint16_t)tagVR_t::UN == MAKE_VR_ENUM("UN"), "Wrong VR enumer
 static_assert((std::uint16_t)tagVR_t::UR == MAKE_VR_ENUM("UR"), "Wrong VR enumeration value");
 static_assert((std::uint16_t)tagVR_t::US == MAKE_VR_ENUM("US"), "Wrong VR enumeration value");
 static_assert((std::uint16_t)tagVR_t::UT == MAKE_VR_ENUM("UT"), "Wrong VR enumeration value");
-
+#endif
 
 
 typedef std::vector<std::string> fileParts_t;
