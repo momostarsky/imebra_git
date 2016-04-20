@@ -9,25 +9,18 @@
 Imebra
 ======
 
-Copyright 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016
-by Paolo Brandoli/Binarno s.p.
-
-Imebra is available for free under the :ref:`gpl-license`.
-
-If you do not want to be bound by the GPL terms (such as the requirement
-that your application must also be GPL), you may purchase a commercial license
-for Imebra from the Imebra's website (http://imebra.com).
-
-You can download the latest version of imebra from http://imebra.com
-
-.. _introduction-docs:
+.. toctree::
+   :maxdepth: 2
+   :caption: Legal
+   
+   copyright
+   gplv2
 
 .. toctree::
    :maxdepth: 2
    :caption: Introduction
    
    introduction
-   gplv2
 
 .. user-docs:
 
@@ -35,8 +28,16 @@ You can download the latest version of imebra from http://imebra.com
    :maxdepth: 2
    :caption: User documentation
    
-   introduction
-   gplv2
+   compiling_imebra
+   getting_started
+   design_concepts
+   add_to_project
+   loading_files
+   getting_tag_values
+   getting_images
+   processing_images
+   rendering_images
+   reading_dicomdir
 
 .. _api-docs:
 

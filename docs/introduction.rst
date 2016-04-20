@@ -10,3 +10,4 @@ in memory managed by the :cpp:class:`imebra::DataSet` class.
 
 Other functions in the dataset allow the application to read or write into
 the DICOM tags, or to store new images into the dataSet.
+
