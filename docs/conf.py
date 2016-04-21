@@ -14,7 +14,10 @@
 
 import sys
 import os
-import subprocess
+
+# Run doxygen first
+from subprocess import call 
+call('doxygen')
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -346,30 +349,5 @@ epub_exclude_files = ['search.html']
 
 
 # Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {'http://docs.python.org/': None}
+#intersphinx_mapping = {'http://docs.python.org/': None}
 
-def run_doxygen(folder):
-    """Run the doxygen make command in the designated folder"""
-
-    try:
-        retcode = subprocess.call("cd %s; make" % folder, shell=True)
-        if retcode < 0:
-            sys.stderr.write("doxygen terminated by signal %s" % (-retcode))
-    except OSError as e:
-        sys.stderr.write("doxygen execution failed: %s" % e)
-
-
-def generate_doxygen_xml(app):
-    """Run the doxygen make commands if we're on the ReadTheDocs server"""
-
-    read_the_docs_build = os.environ.get('READTHEDOCS', None) == 'True'
-
-    if read_the_docs_build:
-
-        run_doxygen("DoxyfileXML")
-
-
-def setup(app):
-
-    # Add hook for building doxygen xml when needed
-    app.connect("builder-inited", generate_doxygen_xml)
