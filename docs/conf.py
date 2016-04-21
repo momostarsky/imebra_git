@@ -39,7 +39,7 @@ extensions = [
 ]
 
 breathe_projects = {
-    "imebra":"./generated_doc/xml/",
+    "imebra":"./doxygen_xml/",
     }
 
 breathe_default_project = "imebra"
