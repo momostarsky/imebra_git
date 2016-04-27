@@ -123,6 +123,8 @@ public:
     /// \brief 
     directoryRecordType_t getType() const;
 
+    std::string getTypeString() const;
+
 #ifndef SWIG
 protected:
     std::shared_ptr<imebra::implementation::directoryRecord> m_pDirectoryRecord;

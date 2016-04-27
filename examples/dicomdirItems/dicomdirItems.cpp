@@ -5,10 +5,9 @@
 #include <string>
 #include <sstream>
 #include <fstream>
-#include "../../library/imebra/include/imebra.h"
+#include <imebra/imebra.h>
 
-using namespace puntoexe;
-using namespace puntoexe::imebra;
+using namespace imebra;
 
 ///////////////////////////////////////////////////////////
 //
@@ -57,32 +56,35 @@ std::wstring xmlEntities(std::wstring value)
 // Output a tag from the dataset in an XML tag
 //
 ///////////////////////////////////////////////////////////
-void outputTag(ptr<dataSet> pDataSet, imbxUint16 group, imbxUint16 tag, std::wostream* pOutputStream, std::wstring tagName, imbxUint16 id = 0)
+void outputTag(const DataSet& dataSet, std::uint16_t group, std::uint16_t tag, std::wostream* pOutputStream, std::wstring tagName, std::uint16_t id = 0)
 {
-	ptr<handlers::dataHandler> tagHandler(pDataSet->getDataHandler(group, 0, tag, 0, false));
-	if(tagHandler == 0)
-	{
-		*pOutputStream << L"<" << tagName << L" />\n";
-		return;
-	}
+    try
+    {
+        std::unique_ptr<ReadingDataHandler> tagHandler(dataSet.getReadingDataHandler(TagId(group, tag), 0));
 
-	*pOutputStream << L"<" << tagName;
-	if(id != 0)
-	{
-		*pOutputStream << L" tagid=\"" << id << L"\" ";
-	}
-	*pOutputStream << L">";
+        *pOutputStream << L"<" << tagName;
+        if(id != 0)
+        {
+            *pOutputStream << L" tagid=\"" << id << L"\" ";
+        }
+        *pOutputStream << L">";
 
-        for(size_t scanValues(0); tagHandler->pointerIsValid(scanValues); ++scanValues)
-	{
-                if(scanValues != 0)
-		{
-			*pOutputStream << L"\\";
-		}
-                *pOutputStream << xmlEntities(tagHandler->getUnicodeString(scanValues));
-	}
+        for(size_t scanValues(0); scanValues!= tagHandler->getSize(); ++scanValues)
+        {
+            if(scanValues != 0)
+            {
+                *pOutputStream << L"\\";
+            }
+            *pOutputStream << xmlEntities(tagHandler->getUnicodeString(scanValues));
+        }
 
-	*pOutputStream << L"</" << tagName << L">\n";
+        *pOutputStream << L"</" << tagName << L">\n";
+
+    }
+    catch(MissingItemError&)
+    {
+        *pOutputStream << L"<" << tagName << L" />\n";
+    }
 }
 
 
@@ -92,61 +94,62 @@ void outputTag(ptr<dataSet> pDataSet, imbxUint16 group, imbxUint16 tag, std::wos
 //  the specified one
 //
 ///////////////////////////////////////////////////////////
-void scanChildren(ptr<directoryRecord> pRecord, std::wostream* pOutputStream)
+void scanChildren(DicomDirEntry* pRecord, std::wostream* pOutputStream)
 {
-	for(;pRecord != 0; pRecord = pRecord->getNextRecord())
+    for(; pRecord != 0; pRecord = pRecord->getNextEntry())
 	{
-		ptr<dataSet> pRecordDataSet(pRecord->getRecordDataSet());
+        std::unique_ptr<DicomDirEntry> entry(pRecord);
+
+        std::unique_ptr<DataSet> pRecordDataSet(pRecord->getEntryDataSet());
 
 		// Output the record
 		(*pOutputStream) <<
-			L"<record id=\"" <<
-			pRecordDataSet->getItemOffset() <<
 			L"\" type=\"" <<
-			pRecord->getTypeString() << L"\">\n";
+            pRecord->getTypeString() << L"\">\n";
 
 		// Output the file parts
-		outputTag(pRecordDataSet, 0x4, 0x1500, pOutputStream, L"file");
+        outputTag(*pRecordDataSet, 0x4, 0x1500, pOutputStream, L"file");
 
 		// Output the class UID
-		outputTag(pRecordDataSet, 0x4, 0x1510, pOutputStream, L"class");
+        outputTag(*pRecordDataSet, 0x4, 0x1510, pOutputStream, L"class");
 
 		// Output the instance UID
-		outputTag(pRecordDataSet, 0x4, 0x1511, pOutputStream, L"instance");
+        outputTag(*pRecordDataSet, 0x4, 0x1511, pOutputStream, L"instance");
 
 		// Output the transfer syntax
-		outputTag(pRecordDataSet, 0x4, 0x1512, pOutputStream, L"transfer");
+        outputTag(*pRecordDataSet, 0x4, 0x1512, pOutputStream, L"transfer");
 
 		// Output the groups (everything but group 2 and 4)
-		ptr<dataCollectionIterator<dataGroup> > scanGroups(pRecordDataSet->getDataIterator());
-		for(scanGroups->reset(); scanGroups->isValid(); scanGroups->incIterator())
-		{
-			imbxUint16 groupId(scanGroups->getId());
-			if(groupId == 2 || groupId == 4)
-			{
-				continue;
-			}
-			*pOutputStream << L"<group groupid=\"" << groupId << L"\">";
-
-			ptr<dataCollectionIterator<data> > scanTags(scanGroups->getData()->getDataIterator());
-			for(scanTags->reset(); scanTags->isValid(); scanTags->incIterator())
-			{
-				imbxUint16 id(scanTags->getId());
-				if(id == 0)
-				{
-					continue;
-				}
-				outputTag(pRecordDataSet, groupId, id, pOutputStream, L"tag", id);
-			}
-
-			*pOutputStream << L"</group>";
-
-		}
-
+        tagsIds_t tags = pRecordDataSet->getTags();
+        std::uint16_t previousGroup = 0;
+        for(tagsIds_t::const_iterator scanTags(tags.begin()), endTags(tags.end()); scanTags != endTags; ++scanTags)
+        {
+            std::uint16_t groupId = (*scanTags).getGroupId();
+            std::uint16_t tagId = (*scanTags).getTagId();
+            if(groupId == 2 || groupId == 4)
+            {
+                continue;
+            }
+            if(groupId != previousGroup)
+            {
+                previousGroup = groupId;
+                if(previousGroup != 0)
+                {
+                    *pOutputStream << L"</group>" << std::endl;
+                }
+                *pOutputStream << L"<group groupid=\"" << groupId << L"\">" << std::endl;
+            }
+            outputTag(*pRecordDataSet, groupId, tagId, pOutputStream, L"tag", tagId);
+        }
+        if(previousGroup != 0)
+        {
+            *pOutputStream << L"</group>" << std::endl;
+        }
 
 		// Output the child records
 		(*pOutputStream) << L"<children>\n";
-		scanChildren(pRecord->getFirstChildRecord(), pOutputStream);
+        std::unique_ptr<DicomDirEntry> rootEntry(pRecord->getFirstChildEntry());
+        scanChildren(rootEntry.get(), pOutputStream);
 		(*pOutputStream) << L"</children>\n";
 
 
@@ -175,31 +178,23 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 
-	// Open the file containing the dicom directory
-	ptr<puntoexe::stream> inputStream(new puntoexe::stream);
-	inputStream->openFile(argv[1], std::ios_base::in);
-
-	// Connect a stream reader to the dicom stream
-	ptr<puntoexe::streamReader> reader(new streamReader(inputStream));
-
-	// Get a codec factory and let it use the right codec to create a dataset
-	//  from the input stream
-	ptr<codecs::codecFactory> codecsFactory(codecs::codecFactory::getCodecFactory());
-	ptr<dataSet> loadedDataSet(codecsFactory->load(reader, 2048));
+    // Open the file containing the dicom directory
+    std::unique_ptr<DataSet> loadedDataSet(CodecFactory::load(argv[1], 2048));
 
 	// Now create a dicomdir object
-	ptr<dicomDir> directory(new dicomDir(loadedDataSet));
+    std::unique_ptr<DicomDir> directory(new DicomDir(*loadedDataSet));
 
 	try
 	{
 		std::wcout << L"<dicomdir>";
-		scanChildren(directory->getFirstRootRecord(), &(std::wcout));
+        std::unique_ptr<DicomDirEntry> rootEntry(directory->getFirstRootEntry());
+        scanChildren(rootEntry.get(), &(std::wcout));
 		std::wcout << L"</dicomdir>";
 		return 0;
 	}
 	catch(...)
 	{
-		std::wcout << exceptionsManager::getMessage();
+        std::cout << ExceptionsManager::getExceptionTrace();
 		return 1;
 	}
 }
