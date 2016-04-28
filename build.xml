@@ -147,7 +147,7 @@ The author can be contacted by email at info@binarno.com or by mail at
 			<arg value="-b" />
 			<arg value="html" />
 			<arg path="${build_release}/docs" />
-			<arg path="${build_release}/html" />
+			<arg path="${build_release}/docs/html" />
 		</exec>
 	</target>
 
