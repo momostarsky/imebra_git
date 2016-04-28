@@ -146,7 +146,7 @@ The author can be contacted by email at info@binarno.com or by mail at
 		<exec executable="sphinx-build" dir="${build_release}/docs">
 			<arg value="-b" />
 			<arg value="html" />
-			<arg path="." />
+			<arg path="${build_release}/docs" />
 			<arg path="html" />
 		</exec>
 	</target>
