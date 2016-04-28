@@ -160,13 +160,13 @@ The author can be contacted by email at info@binarno.com or by mail at
 			<fileset dir="${build_release}/library" />
 		</copy>
 		<copy todir="${source_distribution}/examples">
-			<fileset dir="{build_release}/examples" />
+			<fileset dir="${build_release}/examples" />
 		</copy>
 		<copy todir="${source_distribution}/tests">
-			<fileset dir="{build_release}/tests" />
+			<fileset dir="${build_release}/tests" />
 		</copy>
 		<copy todir="${source_distribution}/docs/html">
-			<fileset dir="{build_release}/docs/html" />
+			<fileset dir="${build_release}/docs/html" />
 		</copy>
 		<copy todir="${source_distribution}" file="{build_release}/readme.md" />
 	</target>
