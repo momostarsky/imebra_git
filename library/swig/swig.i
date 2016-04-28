@@ -30,9 +30,6 @@
 #include "../include/imebra/imebra.h"
 %}
 
-%newobject DataSet::get*;
-%newobject getImage;
-
 %include "../include/imebra/tagsEnumeration.h"
 %include "../include/imebra/definitions.h"
 %include "../include/imebra/tagId.h"
