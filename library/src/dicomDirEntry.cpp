@@ -69,7 +69,7 @@ directoryRecordType_t DicomDirEntry::getType() const
     return m_pDirectoryRecord->getType();
 }
 
-directoryRecordType_t DicomDirEntry::getTypeString() const
+std::string DicomDirEntry::getTypeString() const
 {
     return m_pDirectoryRecord->getTypeString();
 }
