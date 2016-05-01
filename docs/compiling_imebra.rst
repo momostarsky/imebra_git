@@ -29,14 +29,15 @@ Compiling the C++ version of Imebra
 Follow those steps:
 
 # Create a folder that will contain the result of the compilation (artifacts)
-# cd into the artifacts folder
+# cd into the created artifacts folder
 # execute cmake with the path to the Imebra's library folder as parameter
 # launch make
 
 ::
 
-    cd artifacts/folder
-    cmake path/to/imebra/library
+    md artifacts
+    cd artifacts
+    cmake ../imebra/library
     make .
 
 

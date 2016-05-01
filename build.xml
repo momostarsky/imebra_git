@@ -52,24 +52,14 @@
 	</target>
 
 	<!-- Create the directory for the test execution and code coverage -->
-	<target name="create_tests_dir" depends="version" description="Create the directory for the tests execution">
-		<property name="build_tests_dir" location="./ant-build-tests" />
-		<delete dir="${build_tests_dir}" failonerror="false" />
-		<mkdir dir="${build_tests_dir}" />
-		<copy todir="${build_tests_dir}/library">
-			<fileset dir="library" />
-		</copy>
-		<copy todir="${build_tests_dir}/examples">
-			<fileset dir="examples" />
-		</copy>
-		<copy todir="${build_tests_dir}/tests">
-			<fileset dir="tests" />
-		</copy>
-		<copy todir="${build_tests_dir}" file="readme.md" />
+	<target name="create_test_dir" depends="version" description="Create the directory for the tests execution">
+		<property name="build_dir" location="./ant-build-tests" />
+		<delete dir="${build_dir}" failonerror="false" />
+		<mkdir dir="${build_dir}" />
 
-		<property name="build_library_for_tests" location="${build_tests_dir}/library-build" />
+		<property name="build_library_for_tests" location="${build_dir}/library-build" />
 		<mkdir dir="${build_library_for_tests}" />
-		<property name="build_tests" location="${build_tests_dir}/tests-build" />
+		<property name="build_tests" location="${build_dir}/tests-build" />
 		<mkdir dir="${build_tests}" />
 	</target>
 
@@ -173,26 +163,25 @@ The author can be contacted by email at info@binarno.com or by mail at
 
 
 	<!-- Build the test cases -->
-	<target name="build_test_cases" depends="create_source_distribution" description="Build the Imebra test cases">
-        <delete file="${build_library_for_tests}/CMakeCache.txt" failonerror="false" />
+	<target name="build_test_cases" depends="create_source_distribution, create_test_dir" description="Build the Imebra test cases">
 		<exec executable="cmake" failonerror="true" dir="${build_library_for_tests}">
             <arg value="--verbose"/>
             <arg value="-DCMAKE_BUILD_TYPE=DEBUG" />
-            <arg path="${build_tests_dir}/library"/>
+            <arg path="${build_release}/library"/>
 		</exec>
 		<exec executable="make" failonerror="true" dir="${build_library_for_tests}" />
 
 		<property name="gtest_source" value="/usr/src/gtest" />
-                <mkdir dir="${build_tests}/gtest" />
-                <copy todir="${build_tests}/gtest">
-                        <fileset dir="${gtest_source}" />
-                </copy>
-                <delete file="${build_tests}/gtest/CMakeCache.txt" failonerror="false" />
-                <delete file="${build_tests}/CMakeCache.txt" failonerror="false" />
+        <mkdir dir="${build_tests}/gtest" />
+        <copy todir="${build_tests}/gtest">
+                <fileset dir="${gtest_source}" />
+        </copy>
+        <delete file="${build_tests}/gtest/CMakeCache.txt" failonerror="false" />
+        <delete file="${build_tests}/CMakeCache.txt" failonerror="false" />
 		<exec executable="cmake" failonerror="true" dir="${build_tests}/gtest">
-                    <arg value="--verbose"/>
-                    <arg value="-DCMAKE_BUILD_TYPE=DEBUG" />
-                    <arg path="${build_tests}/gtest"/>
+	        <arg value="--verbose"/>
+	        <arg value="-DCMAKE_BUILD_TYPE=DEBUG" />
+	        <arg path="${build_tests}/gtest"/>
 		</exec>
 		<exec executable="make" failonerror="true" dir="${build_tests}/gtest" />
 

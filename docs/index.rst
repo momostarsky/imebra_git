@@ -30,8 +30,8 @@ Imebra
    
    compiling_imebra
    getting_started
-   design_concepts
    add_to_project
+   design_concepts
    loading_files
    getting_tag_values
    getting_images
