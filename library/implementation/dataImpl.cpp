@@ -50,7 +50,7 @@ namespace implementation
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 data::data(tagVR_t tagVR, const charsetsList::tCharsetsList &defaultCharsets):
-    m_tagVR(tagVR), m_charsetsList(defaultCharsets)
+    m_charsetsList(defaultCharsets), m_tagVR(tagVR)
 {
 }
 

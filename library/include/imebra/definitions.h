@@ -143,7 +143,7 @@ enum class codecType_t: std::uint32_t
     jpeg   ///< JPEG codec
 };
 
-#define MAKE_VR_ENUM(string) ((((std::uint16_t)string[0]) << 8) | (std::uint16_t)string[1])
+#define MAKE_VR_ENUM(string) ((std::uint16_t)((((std::uint16_t)string[0]) << 8) | (std::uint16_t)string[1]))
 
 /// \brief Enumerates the DICOM VRs (data types).
 ///
@@ -166,7 +166,7 @@ enum class tagVR_t: std::uint32_t
     SB = 0x5342, ///< Non standard. Used internally for signed bytes
     OD = 0x4f44, ///< Other Double String
     OF = 0x4f46, ///< Other Float String
-    OL = 0x4f4c, ///<
+    OL = 0x4f4c, ///< Other Long String
     OW = 0x4f57, ///< Other Word String
     PN = 0x504e, ///< Person Name
     SH = 0x5348, ///< Short String

@@ -267,7 +267,7 @@ void huffmanTable::calcHuffmanCodesLength(const std::uint32_t maxCodeLength)
 		}
 	}
 
-	long insertPosition = 0;
+    size_t insertPosition(0);
 	for(tLengthOrderedMap::iterator scanLengths = lengthOrderedValues.begin(); scanLengths != lengthOrderedValues.end(); ++scanLengths)
 	{
 		m_orderedValues[insertPosition++] = scanLengths->first.m_value;
@@ -323,8 +323,8 @@ void huffmanTable::calcHuffmanTables()
 
 	std::uint32_t valueIndex = 0;
 
-	::memset(m_minValuePerLength, 0xffffffff, sizeof(m_minValuePerLength));
-	::memset(m_maxValuePerLength, 0xffffffff, sizeof(m_maxValuePerLength));
+    ::memset(m_minValuePerLength, 0xff, sizeof(m_minValuePerLength));
+    ::memset(m_maxValuePerLength, 0xff, sizeof(m_maxValuePerLength));
     m_firstValuesPerLength = 0;
     m_firstMinValue = 0xffffffff;
     m_firstMaxValue = 0xffffffff;

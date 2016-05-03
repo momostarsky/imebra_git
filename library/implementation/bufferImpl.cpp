@@ -191,6 +191,9 @@ std::shared_ptr<handlers::readingDataHandler> buffer::getReadingDataHandler(tagV
     case tagVR_t::OB:
         return std::make_shared<handlers::readingDataHandlerNumeric<std::uint8_t> >(localMemory, tagVR);
 
+    case tagVR_t::OL:
+        return std::make_shared<handlers::readingDataHandlerNumeric<std::int32_t> >(localMemory, tagVR);
+
     case tagVR_t::SB:
         return std::make_shared<handlers::readingDataHandlerNumeric<std::int8_t> >(localMemory, tagVR);
 
@@ -235,6 +238,9 @@ std::shared_ptr<handlers::readingDataHandler> buffer::getReadingDataHandler(tagV
 
     case tagVR_t::TM:
         return std::make_shared<handlers::readingDataHandlerTime>(*localMemory);
+
+    case tagVR_t::SQ:
+        IMEBRA_THROW(std::logic_error, "Cannot retrieve a SQ data handler");
     }
 
 	IMEBRA_FUNCTION_END();
@@ -291,6 +297,9 @@ std::shared_ptr<handlers::writingDataHandler> buffer::getWritingDataHandler(tagV
     case tagVR_t::OB:
         return std::make_shared<handlers::writingDataHandlerNumeric<std::uint8_t> >(shared_from_this(), size, tagVR);
 
+    case tagVR_t::OL:
+        return std::make_shared<handlers::writingDataHandlerNumeric<std::int32_t> >(shared_from_this(), size, tagVR);
+
     case tagVR_t::SB:
         return std::make_shared<handlers::writingDataHandlerNumeric<std::int8_t> >(shared_from_this(), size, tagVR);
 
@@ -335,6 +344,9 @@ std::shared_ptr<handlers::writingDataHandler> buffer::getWritingDataHandler(tagV
 
     case tagVR_t::TM:
         return std::make_shared<handlers::writingDataHandlerTime>(shared_from_this());
+
+    case tagVR_t::SQ:
+        IMEBRA_THROW(std::logic_error, "Cannot retrieve a SQ data handler");
     }
 
     IMEBRA_FUNCTION_END();

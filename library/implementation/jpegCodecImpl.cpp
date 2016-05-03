@@ -1904,13 +1904,8 @@ inline void jpegCodec::readBlock(streamReader* pStream, std::int32_t* pBuffer, j
         ++spectralIndex;
     }
 
-    std::uint32_t amplitude;
-    std::uint32_t hufCode;
     std::int32_t value = 0;
     std::int32_t oldValue;
-    std::uint8_t amplitudeLength;
-    int runLength;
-    std::uint32_t tempEobRun;
     std::int32_t positiveBitLow((std::int32_t)1 << m_bitLow);
     std::int32_t negativeBitLow((std::int32_t)-1 << m_bitLow);
 
@@ -1932,9 +1927,7 @@ inline void jpegCodec::readBlock(streamReader* pStream, std::int32_t* pBuffer, j
                 continue;
             }
 
-            amplitude = pStream->readBit();
-
-            if(amplitude != 0 && (oldValue & positiveBitLow)==0)
+            if(pStream->readBit() != 0 && (oldValue & positiveBitLow)==0)
             {
                 oldValue += (oldValue>0 ? positiveBitLow : negativeBitLow);
                 pBuffer[JpegDeZigZagOrder[spectralIndex]] = oldValue;
@@ -1946,6 +1939,7 @@ inline void jpegCodec::readBlock(streamReader* pStream, std::int32_t* pBuffer, j
         // AC/DC pass
         //
         /////////////////////////////////////////////////////////////////
+        std::uint32_t hufCode;
         if(spectralIndex != 0)
         {
             hufCode = pChannel->m_pActiveHuffmanTableAC->readHuffmanCode(pStream);
@@ -1983,11 +1977,11 @@ inline void jpegCodec::readBlock(streamReader* pStream, std::int32_t* pBuffer, j
 
         // Find bit coded coeff. amplitude
         /////////////////////////////////////////////////////////////////
-        amplitudeLength=(std::uint8_t)(hufCode & 0xf);
+        std::uint8_t amplitudeLength = (std::uint8_t)(hufCode & 0xf);
 
         // Find zero run length
         /////////////////////////////////////////////////////////////////
-        runLength=(int)(hufCode>>4);
+        std::uint32_t runLength = (std::uint32_t)(hufCode>>4);
 
         // First DC or AC pass or refine AC pass but not EOB run
         /////////////////////////////////////////////////////////////////
@@ -2026,8 +2020,7 @@ inline void jpegCodec::readBlock(streamReader* pStream, std::int32_t* pBuffer, j
                         oldValue = pBuffer[JpegDeZigZagOrder[spectralIndex]];
                         if(oldValue != 0)
                         {
-                            amplitude = pStream->readBit();
-                            if(amplitude != 0 && (oldValue & positiveBitLow) == 0)
+                            if(pStream->readBit() != 0 && (oldValue & positiveBitLow) == 0)
                             {
                                 oldValue += (oldValue>0 ? positiveBitLow : negativeBitLow);
                                 pBuffer[JpegDeZigZagOrder[spectralIndex]] = oldValue;
@@ -2071,9 +2064,8 @@ inline void jpegCodec::readBlock(streamReader* pStream, std::int32_t* pBuffer, j
         /////////////////////////////////////////////////////////////////
         else
         {
-            tempEobRun = pStream->readBits(runLength);
-            m_eobRun+=(std::uint32_t)1<<runLength;
-            m_eobRun+=tempEobRun;
+            m_eobRun += (std::uint32_t)1 << runLength;
+            m_eobRun += pStream->readBits(runLength);
             --spectralIndex;
         }
     }
