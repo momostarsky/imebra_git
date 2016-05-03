@@ -563,8 +563,6 @@ void jpegCodec::resetInternal(bool bCompression, imageQuality_t compQuality)
 
     m_spectralIndexStart = 0;
     m_spectralIndexEnd = 63;
-    m_bitHigh = 0;
-    m_bitLow = 0;
 
     m_bLossless = false;
 
@@ -1239,7 +1237,7 @@ std::shared_ptr<image> jpegCodec::getImage(const dataSet& sourceDataSet, std::sh
                     {
                         readBlock(pSourceStream, &(pChannel->m_pBuffer[bufferPointer]), pChannel);
 
-                        if(m_spectralIndexEnd >= 63 && m_bitLow==0)
+                        if(m_spectralIndexEnd >= 63)
                         {
                             IDCT(
                                         &(pChannel->m_pBuffer[bufferPointer]),
@@ -1906,8 +1904,6 @@ inline void jpegCodec::readBlock(streamReader* pStream, std::int32_t* pBuffer, j
 
     std::int32_t value = 0;
     std::int32_t oldValue;
-    std::int32_t positiveBitLow((std::int32_t)1 << m_bitLow);
-    std::int32_t negativeBitLow((std::int32_t)-1 << m_bitLow);
 
     // Scan the specified spectral values
     /////////////////////////////////////////////////////////////////
@@ -1917,22 +1913,7 @@ inline void jpegCodec::readBlock(streamReader* pStream, std::int32_t* pBuffer, j
         /////////////////////////////////////////////////////////////////
         if(m_eobRun != 0)
         {
-            if(m_bitHigh == 0)
-            {
-                break;
-            }
-            oldValue = pBuffer[JpegDeZigZagOrder[spectralIndex]];
-            if(oldValue == 0)
-            {
-                continue;
-            }
-
-            if(pStream->readBit() != 0 && (oldValue & positiveBitLow)==0)
-            {
-                oldValue += (oldValue>0 ? positiveBitLow : negativeBitLow);
-                pBuffer[JpegDeZigZagOrder[spectralIndex]] = oldValue;
-            }
-            continue;
+            break;
         }
 
         //
@@ -1955,18 +1936,7 @@ inline void jpegCodec::readBlock(streamReader* pStream, std::int32_t* pBuffer, j
         }
         else
         {
-            // First pass
-            /////////////////////////////////////////////////////////////////
-            if(m_bitHigh)
-            {
-                hufCode = pStream->readBit();
-                value=(int)hufCode;
-                hufCode = 0;
-            }
-            else
-            {
-                hufCode = pChannel->m_pActiveHuffmanTableDC->readHuffmanCode(pStream);
-            }
+            hufCode = pChannel->m_pActiveHuffmanTableDC->readHuffmanCode(pStream);
         }
 
 
@@ -1983,75 +1953,37 @@ inline void jpegCodec::readBlock(streamReader* pStream, std::int32_t* pBuffer, j
         /////////////////////////////////////////////////////////////////
         std::uint32_t runLength = (std::uint32_t)(hufCode>>4);
 
-        // First DC or AC pass or refine AC pass but not EOB run
+        // First DC or AC pass but not EOB run
         /////////////////////////////////////////////////////////////////
         if(spectralIndex == 0 || amplitudeLength != 0 || runLength == 0xf)
         {
-            //
-            // First DC pass and all the AC passes are similar,
-            //  then use the same algorithm
-            //
+            // Read coeff
             /////////////////////////////////////////////////////////////////
-            if(m_bitHigh == 0 || spectralIndex != 0)
+            if(amplitudeLength != 0)
             {
-                // Read coeff
-                /////////////////////////////////////////////////////////////////
-                if(amplitudeLength != 0)
+                value = (std::int32_t)(pStream->readBits(amplitudeLength));
+                if(value < ((std::int32_t)1 << (amplitudeLength-1)) )
                 {
-                    value = (std::int32_t)(pStream->readBits(amplitudeLength));
-                    if(value < ((std::int32_t)1 << (amplitudeLength-1)) )
-                    {
-                        value -= ((std::int32_t)1 << amplitudeLength) - 1;
-                    }
-                }
-                else
-                {
-                    value = 0;
-                }
-
-                // Move spectral index forward by zero run length
-                /////////////////////////////////////////////////////////////////
-                if(m_bitHigh && spectralIndex)
-                {
-                    // Read the correction bits
-                    /////////////////////////////////////////////////////////////////
-                    for(/* none */; spectralIndex <= m_spectralIndexEnd; ++spectralIndex)
-                    {
-                        oldValue = pBuffer[JpegDeZigZagOrder[spectralIndex]];
-                        if(oldValue != 0)
-                        {
-                            if(pStream->readBit() != 0 && (oldValue & positiveBitLow) == 0)
-                            {
-                                oldValue += (oldValue>0 ? positiveBitLow : negativeBitLow);
-                                pBuffer[JpegDeZigZagOrder[spectralIndex]] = oldValue;
-                            }
-                            continue;
-                        }
-                        if(runLength == 0)
-                        {
-                            break;
-                        }
-                        --runLength;
-                    }
-                }
-                else
-                {
-                    spectralIndex += runLength;
-                    runLength = 0;
+                    value -= ((std::int32_t)1 << amplitudeLength) - 1;
                 }
             }
+            else
+            {
+                value = 0;
+            }
+
+            spectralIndex += runLength;
+            runLength = 0;
 
             // Store coeff.
             /////////////////////////////////////////////////////////////////
-            if(spectralIndex<=m_spectralIndexEnd)
+            if(spectralIndex <= m_spectralIndexEnd)
             {
-                oldValue = value<<m_bitLow;
-                if(m_bitHigh)
-                    oldValue |= pBuffer[JpegDeZigZagOrder[spectralIndex]];
+                oldValue = value;
 
                 // DC coeff added to the previous value.
                 /////////////////////////////////////////////////////////////////
-                if(spectralIndex == 0 && m_bitHigh == 0)
+                if(spectralIndex == 0)
                 {
                     oldValue += pChannel->m_lastDCValue;
                     pChannel->m_lastDCValue=oldValue;
@@ -3284,8 +3216,7 @@ void tagSOS::writeTag(streamWriter* pStream, jpegCodec* pCodec)
 
     // Write the hi/lo bit
     /////////////////////////////////////////////////////////////////
-    byte = (std::uint8_t)(((pCodec->m_bitHigh & 0xf) << 4) | (pCodec->m_bitLow & 0xf));
-
+    byte = 0;
     pStream->write(&byte, 1);
 
     IMEBRA_FUNCTION_END();
@@ -3351,8 +3282,10 @@ void tagSOS::readTag(streamReader* pStream, jpegCodec* pCodec, std::uint8_t /* t
     pCodec->m_spectralIndexEnd = byte;
 
     tagReader->read(&byte, 1);
-    pCodec->m_bitHigh = byte>>4;
-    pCodec->m_bitLow = byte & 0xf;
+    if(byte != 0)
+    {
+        throw;
+    }
 
     pCodec->findMcuSize();
 

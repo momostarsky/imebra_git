@@ -185,8 +185,6 @@ public:
 	///////////////////////////////////////////////////////////
 	std::uint32_t m_spectralIndexStart;
 	std::uint32_t m_spectralIndexEnd;
-	std::uint32_t m_bitHigh;
-	std::uint32_t m_bitLow;
 
 	// true if we are reading a lossless jpeg image
 	///////////////////////////////////////////////////////////
