@@ -45,6 +45,14 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     static void flush();
 
+    /// \brief Return the total size of the memory that has been released but not
+    ///        yet freed.
+    ///
+    /// \return the total size of the memory released but not yet freed
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    static size_t getUnusedMemorySize();
+
     /// \brief Set the maximum size of the kept unused memory.
     ///
     /// \param minMemoryBlockSize  if a memory region is smaller than this size

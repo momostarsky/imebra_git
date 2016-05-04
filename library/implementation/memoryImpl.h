@@ -212,6 +212,8 @@ public:
 
     void setMinMaxMemory(size_t memoryMinSize, size_t poolMaxSize);
 
+    size_t getUnusedMemorySize();
+
 	/// \brief Discard all the currently unused memory.
 	///
     /// \return true if some unused memory has been deleted,
