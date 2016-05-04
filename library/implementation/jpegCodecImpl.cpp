@@ -3284,7 +3284,7 @@ void tagSOS::readTag(streamReader* pStream, jpegCodec* pCodec, std::uint8_t /* t
     tagReader->read(&byte, 1);
     if(byte != 0)
     {
-        throw;
+        IMEBRA_THROW(CodecCorruptedFileError, "Progressive JPEG not supported");
     }
 
     pCodec->findMcuSize();
