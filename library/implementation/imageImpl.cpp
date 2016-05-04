@@ -148,7 +148,7 @@ std::shared_ptr<handlers::readingDataHandlerNumericBase> image::getReadingDataHa
         {
             std::shared_ptr<handlers::writingDataHandler> imageHandler(temporaryBuffer.getWritingDataHandler(m_bufferDataType, m_width * m_height * m_channelsNumber));
         }
-        return std::dynamic_pointer_cast<handlers::readingDataHandlerNumericBase>(m_buffer->getReadingDataHandler(m_bufferDataType));
+        return std::dynamic_pointer_cast<handlers::readingDataHandlerNumericBase>(temporaryBuffer.getReadingDataHandler(m_bufferDataType));
     }
 
     return std::dynamic_pointer_cast<handlers::readingDataHandlerNumericBase>(m_buffer->getReadingDataHandler(m_bufferDataType));
