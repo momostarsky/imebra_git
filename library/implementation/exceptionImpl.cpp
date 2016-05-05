@@ -16,20 +16,7 @@ namespace imebra
 namespace implementation
 {
 
-///////////////////////////////////////////////////////////
-// Force the construction of the exceptions manager before
-//  main() starts
-///////////////////////////////////////////////////////////
-static exceptionsManager::forceExceptionsConstruction forceConstruction;
 
-///////////////////////////////////////////////////////////
-// Protected constructor
-///////////////////////////////////////////////////////////
-exceptionsManager::exceptionsManager()
-{
-
-}
-	
 ///////////////////////////////////////////////////////////
 // Return the message info for the specified thread
 ///////////////////////////////////////////////////////////
@@ -56,20 +43,13 @@ std::string exceptionsManager::getMessage()
 ///////////////////////////////////////////////////////////
 void exceptionsManager::getExceptionInfo(tExceptionInfoList* pList)
 {
-	std::shared_ptr<exceptionsManager> pManager(getExceptionsManager());
-
-    tInfoMap::iterator findInformation = pManager->m_information.find(std::this_thread::get_id());
-	if(findInformation == pManager->m_information.end())
-	{
-		return;
-	}
-	for(tExceptionInfoList::iterator scanInformation = findInformation->second.begin(); 
-		scanInformation != findInformation->second.end(); 
+    for(tExceptionInfoList::iterator scanInformation = m_information.begin();
+        scanInformation != m_information.end();
 		++scanInformation)
 	{
 		pList->push_back(*scanInformation);
 	}
-	pManager->m_information.erase(findInformation);
+    m_information.clear();
 }
 
 
@@ -78,9 +58,8 @@ void exceptionsManager::getExceptionInfo(tExceptionInfoList* pList)
 ///////////////////////////////////////////////////////////
 void exceptionsManager::startExceptionInfo(const exceptionInfo& info)
 {
-    std::shared_ptr<exceptionsManager> pManager(getExceptionsManager());
-    pManager->m_information[std::this_thread::get_id()].clear();
-    pManager->m_information[std::this_thread::get_id()].push_back(info);
+    m_information.clear();
+    m_information.push_back(info);
 }
 
 
@@ -89,34 +68,7 @@ void exceptionsManager::startExceptionInfo(const exceptionInfo& info)
 ///////////////////////////////////////////////////////////
 void exceptionsManager::addExceptionInfo(const exceptionInfo& info)
 {
-	std::shared_ptr<exceptionsManager> pManager(getExceptionsManager());
-    pManager->m_information[std::this_thread::get_id()].push_back(info);
-}
-
-
-///////////////////////////////////////////////////////////
-// Clears the information list for the current thread
-///////////////////////////////////////////////////////////
-void exceptionsManager::clearExceptionInfo()
-{
-	std::shared_ptr<exceptionsManager> pManager(getExceptionsManager());
-    tInfoMap::iterator findInformation = pManager->m_information.find(std::this_thread::get_id());
-	if(findInformation == pManager->m_information.end())
-	{
-		return;
-	}
-	pManager->m_information.erase(findInformation);
-}
-
-///////////////////////////////////////////////////////////
-// Return a pointer to the exceptions manager
-///////////////////////////////////////////////////////////
-std::shared_ptr<exceptionsManager> exceptionsManager::getExceptionsManager()
-{
-    // Violation to requirement REQ_MAKE_SHARED due to protected constructor
-    static std::shared_ptr<exceptionsManager> m_manager(new exceptionsManager());
-
-	return m_manager;
+    m_information.push_back(info);
 }
 
 
@@ -132,12 +84,6 @@ exceptionInfo::exceptionInfo(const std::string& functionName, const std::string&
 {}
 
 ///////////////////////////////////////////////////////////
-// Construct the exceptionInfo object
-///////////////////////////////////////////////////////////
-exceptionInfo::exceptionInfo(): m_lineNumber(0)
-{}
-	
-///////////////////////////////////////////////////////////
 // Copy constructor
 ///////////////////////////////////////////////////////////
 exceptionInfo::exceptionInfo(const exceptionInfo& right):
@@ -147,19 +93,6 @@ exceptionInfo::exceptionInfo(const exceptionInfo& right):
 			m_exceptionType(right.m_exceptionType),
 			m_exceptionMessage(right.m_exceptionMessage)
 {}
-
-///////////////////////////////////////////////////////////
-// Copy operator
-///////////////////////////////////////////////////////////
-exceptionInfo& exceptionInfo::operator=(const exceptionInfo& right)
-{
-	m_functionName = right.m_functionName;
-	m_fileName = right.m_fileName;
-	m_lineNumber = right.m_lineNumber;
-	m_exceptionType = right.m_exceptionType;
-	m_exceptionMessage = right.m_exceptionMessage;
-	return *this;
-}
 
 ///////////////////////////////////////////////////////////
 // Return the exceptionInfo content in a string
@@ -174,6 +107,64 @@ std::string exceptionInfo::getMessage()
     message << " exception message: " << m_exceptionMessage << "\n";
 	return message.str();
 }
+
+
+
+exceptionsManagerGetter::exceptionsManagerGetter()
+{
+    IMEBRA_FUNCTION_START();
+
+#ifdef __APPLE__
+    ::pthread_key_create(&m_key, &exceptionsManagerGetter::deleteExceptionsManager);
+#endif
+
+    IMEBRA_FUNCTION_END();
+}
+
+exceptionsManagerGetter::~exceptionsManagerGetter()
+{
+#ifdef __APPLE__
+    ::pthread_key_delete(m_key)
+#endif
+}
+
+exceptionsManagerGetter& exceptionsManagerGetter::getExceptionsManagerGetter()
+{
+    static exceptionsManagerGetter getter;
+    return getter;
+}
+
+thread_local std::unique_ptr<exceptionsManager> exceptionsManagerGetter::m_pManager = std::unique_ptr<exceptionsManager>();
+
+exceptionsManager& exceptionsManagerGetter::getExceptionsManager()
+{
+    IMEBRA_FUNCTION_START();
+
+#ifdef __APPLE__
+    exceptionsManager* pManager = (exceptionsManager*)pthread_getspecific(m_key);
+    if(pManager == 0)
+    {
+        pManager = new exceptionsManager();
+        pthread_setspecific(m_key, pManager);
+    }
+    return *pManager;
+#else
+    if(m_pManager.get() == 0)
+    {
+        m_pManager.reset(new exceptionsManager());
+    }
+    return *(m_pManager.get());
+#endif
+
+    IMEBRA_FUNCTION_END();
+}
+
+#ifdef __APPLE__
+void exceptionsManagerGetter::deleteExceptionsManager(void* pManager)
+{
+    delete (exceptionsManager*)pManager;
+}
+#endif
 
 } // namespace implementation
 

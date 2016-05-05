@@ -6,7 +6,7 @@ namespace imebra
 
 std::string ExceptionsManager::getExceptionTrace()
 {
-    return implementation::exceptionsManager::getExceptionsManager()->getMessage();
+    return implementation::exceptionsManagerGetter::getExceptionsManagerGetter().getExceptionsManager().getMessage();
 }
 
 LutError::LutError(const std::string& message): std::runtime_error(message)

@@ -66,11 +66,7 @@ public:
 	///////////////////////////////////////////////////////////
     exceptionInfo(const std::string& functionName, const std::string& fileName, const long lineNumber, const std::string& exceptionType, const std::string& exceptionMessage);
 
-	exceptionInfo();
-	
 	exceptionInfo(const exceptionInfo& right);
-
-	exceptionInfo& operator=(const exceptionInfo& right);
 
 	/// \brief Return the object's content formatted in
 	///         a string.
@@ -120,7 +116,7 @@ public:
 class exceptionsManager
 {
 public:
-    static void startExceptionInfo(const exceptionInfo& info);
+    void startExceptionInfo(const exceptionInfo& info);
 
 	/// \brief Add an exceptionInfo object to the active
 	///         thread's information list.
@@ -132,7 +128,7 @@ public:
 	///         to the active thread's information list
 	///
 	///////////////////////////////////////////////////////////
-	static void addExceptionInfo(const exceptionInfo& info);
+    void addExceptionInfo(const exceptionInfo& info);
 	
 	/// \brief Returns the same information returned by
 	///         getExceptionInfo(), but formatted in a text
@@ -144,7 +140,7 @@ public:
 	/// @return the information formatted as a text message
 	///
 	///////////////////////////////////////////////////////////
-    static std::string getMessage();
+    std::string getMessage();
 
 	/// \brief Defines a list of exceptionInfo objects.
 	///
@@ -162,41 +158,35 @@ public:
 	///               collected before the call.
 	///
 	///////////////////////////////////////////////////////////
-	static void getExceptionInfo(tExceptionInfoList* pList);
-
-	/// \brief Clear the information list for the active
-	///         thread.
-	///
-	///////////////////////////////////////////////////////////
-	static void clearExceptionInfo();
-
-	// Return a pointer to the statically allocated
-	//         instance of exceptionsManager.
-	///////////////////////////////////////////////////////////
-	static std::shared_ptr<exceptionsManager> getExceptionsManager();
+    void getExceptionInfo(tExceptionInfoList* pList);
 
 protected:
-    exceptionsManager();
-
-    typedef std::map<std::thread::id, tExceptionInfoList> tInfoMap;
-
-	tInfoMap m_information;
-
-public:
-	// Force the construction of the exceptions manager before
-	//  main() starts
-	///////////////////////////////////////////////////////////
-	class forceExceptionsConstruction
-	{
-	public:
-		forceExceptionsConstruction()
-		{
-			exceptionsManager::getExceptionsManager();
-		}
-	};
-
+    tExceptionInfoList m_information;
 };
 
+
+class exceptionsManagerGetter
+{
+protected:
+    exceptionsManagerGetter();
+    ~exceptionsManagerGetter();
+
+public:
+    static exceptionsManagerGetter& getExceptionsManagerGetter();
+
+    exceptionsManager& getExceptionsManager();
+
+protected:
+
+#ifdef __APPLE__
+    void deleteExceptionsManager(void* pMemoryPool)
+    pthread_key_t m_key;
+#endif
+
+#ifndef __APPLE__
+    thread_local static std::unique_ptr<exceptionsManager> m_pManager;
+#endif
+};
 
 
 
@@ -250,13 +240,13 @@ public:
 	catch(std::exception& e)\
 	{\
         imebra::implementation::exceptionInfo info(IMEBRA_METHOD_NAME(), __FILE__, __LINE__, typeid(e).name(), e.what());\
-        imebra::implementation::exceptionsManager::addExceptionInfo(info);\
+        imebra::implementation::exceptionsManagerGetter::getExceptionsManagerGetter().getExceptionsManager().addExceptionInfo(info);\
 		throw;\
 	}\
 	catch(...)\
 	{\
         imebra::implementation::exceptionInfo info(IMEBRA_METHOD_NAME(), __FILE__, __LINE__, "unknown", "");\
-        imebra::implementation::exceptionsManager::addExceptionInfo(info);\
+        imebra::implementation::exceptionsManagerGetter::getExceptionsManagerGetter().getExceptionsManager().addExceptionInfo(info);\
 		throw;\
 	}
 
@@ -282,19 +272,19 @@ public:
     catch(catchType& e)\
     {\
         imebra::implementation::exceptionInfo info(IMEBRA_METHOD_NAME(), __FILE__, __LINE__, typeid(e).name(), e.what());\
-        imebra::implementation::exceptionsManager::addExceptionInfo(info);\
+        imebra::implementation::exceptionsManagerGetter::getExceptionsManagerGetter().getExceptionsManager().addExceptionInfo(info);\
         IMEBRA_THROW(throwType, e.what());\
     }\
     catch(std::exception& e)\
     {\
         imebra::implementation::exceptionInfo info(IMEBRA_METHOD_NAME(), __FILE__, __LINE__, typeid(e).name(), e.what());\
-        imebra::implementation::exceptionsManager::addExceptionInfo(info);\
+        imebra::implementation::exceptionsManagerGetter::getExceptionsManagerGetter().getExceptionsManager().addExceptionInfo(info);\
         throw;\
     }\
     catch(...)\
     {\
         imebra::implementation::exceptionInfo info(IMEBRA_METHOD_NAME(), __FILE__, __LINE__, "unknown", "");\
-        imebra::implementation::exceptionsManager::addExceptionInfo(info);\
+        imebra::implementation::exceptionsManagerGetter::getExceptionsManagerGetter().getExceptionsManager().addExceptionInfo(info);\
         throw;\
     }
 
@@ -319,7 +309,7 @@ public:
         buildMessage << message; \
         exceptionType imebraTrackException(buildMessage.str());\
         imebra::implementation::exceptionInfo info(IMEBRA_METHOD_NAME(), __FILE__, __LINE__, typeid(imebraTrackException).name(), imebraTrackException.what());\
-        imebra::implementation::exceptionsManager::startExceptionInfo(info);\
+        imebra::implementation::exceptionsManagerGetter::getExceptionsManagerGetter().getExceptionsManager().startExceptionInfo(info);\
         throw imebraTrackException;\
 	}
 
@@ -339,7 +329,7 @@ public:
 #define IMEBRA_RETHROW(what) \
 	{\
         imebra::implementation::exceptionInfo info(IMEBRA_METHOD_NAME(), __FILE__, __LINE__, "rethrowing", what);\
-        imebra::implementation::exceptionsManager::addExceptionInfo(info);\
+        imebra::implementation::exceptionsManagerGetter::getExceptionsManagerGetter().getExceptionsManager().addExceptionInfo(info);\
 		throw;\
 	}
 
