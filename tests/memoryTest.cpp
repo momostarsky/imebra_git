@@ -13,18 +13,26 @@ void memoryThread(size_t minSize, size_t maxSize)
 {
     MemoryPool::setMemoryPoolSize(minSize, maxSize);
 
+    // Wait for the other threads to settle. This is done to
+    // check that every thread is using its own private MemoryPool
+    // object
+    //////////////////////////////////////////////////////////////
     ::sleep(2);
 
+
+    // Small memory chuncks should not go in the memory pool
+    ////////////////////////////////////////////////////////
     {
         ReadWriteMemory memory(1);
         size_t dataSize;
         *memory.data(&dataSize) = 2;
         EXPECT_EQ(1, dataSize);
     }
-
     ::sleep(2);
     EXPECT_EQ(0, MemoryPool::getUnusedMemorySize());
 
+    // Check that released memory goes into the memory pool
+    ///////////////////////////////////////////////////////
     {
         ReadWriteMemory memory(minSize);
         size_t dataSize;
@@ -34,12 +42,14 @@ void memoryThread(size_t minSize, size_t maxSize)
             *pData = 3;
         }
     }
-
     ::sleep(2);
     EXPECT_EQ(minSize, MemoryPool::getUnusedMemorySize());
     MemoryPool::flush();
     EXPECT_EQ(0, MemoryPool::getUnusedMemorySize());
 
+    // Release memory and reallocate the same size: it should retrieve
+    //  it from the memory pool
+    //////////////////////////////////////////////////////////////////
     {
         ReadWriteMemory memory(minSize);
         size_t dataSize;
@@ -59,7 +69,9 @@ void memoryThread(size_t minSize, size_t maxSize)
     MemoryPool::flush();
     EXPECT_EQ(0, MemoryPool::getUnusedMemorySize());
 
-    size_t totalAllocated = 0;
+    // Release more memory than the memory pool can hold. Check how
+    // much memory it keeps
+    ///////////////////////////////////////////////////////////////
     for(size_t memorySize(minSize), totalAllocated(0); totalAllocated < maxSize + 100; ++memorySize)
     {
         ReadWriteMemory memory(memorySize);
@@ -69,7 +81,7 @@ void memoryThread(size_t minSize, size_t maxSize)
     EXPECT_LE(MemoryPool::getUnusedMemorySize(), maxSize);
 }
 
-// A buffer initialized to a default data type should use the data type OB
+// Launch several threads each one testing its own MemoryPool object
 TEST(memoryTest, testMemoryPool)
 {
     std::array<std::unique_ptr<std::thread>, 3> threads;
