@@ -171,7 +171,7 @@ std::shared_ptr<dataSet> codecFactory::load(std::shared_ptr<streamReader> pStrea
 		}
         catch(CodecWrongFormatError& /* e */)
 		{
-			exceptionsManager::getMessage(); // Reset the messages stack
+            exceptionsManagerGetter::getExceptionsManagerGetter().getExceptionsManager().getMessage(); // Reset the messages stack
 			continue;
 		}
 	}
