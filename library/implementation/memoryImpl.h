@@ -274,18 +274,17 @@ protected:
     memoryPoolGetter();
     ~memoryPoolGetter();
 
-#ifdef __APPLE__
-    memoryPool& getMemoryPoolLocal();
-    void memoryPoolGetter::deleteMemoryPool(void* pMemoryPool)
+public:
+    static memoryPoolGetter& getMemoryPoolGetter();
 
+    memoryPool& getMemoryPoolLocal();
+
+protected:
+#ifdef __APPLE__
+    void deleteMemoryPool(void* pMemoryPool)
     pthread_key_t m_key;
 #endif
     std::new_handler m_oldNewHandler;
-
-    static memoryPoolGetter& getMemoryPoolGetter();
-
-public:
-    static memoryPool& getMemoryPoolLocal();
 
 protected:
     /// \internal

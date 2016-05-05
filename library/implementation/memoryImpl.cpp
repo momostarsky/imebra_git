@@ -51,7 +51,7 @@ memory::memory(stringUint8* pBuffer):
 }
 
 memory::memory(size_t initialSize):
-    m_pMemoryBuffer(memoryPoolGetter::getMemoryPoolLocal().getMemory(initialSize))
+    m_pMemoryBuffer(memoryPoolGetter::getMemoryPoolGetter().getMemoryPoolLocal().getMemory(initialSize))
 {
 }
 
@@ -67,7 +67,7 @@ memory::memory(size_t initialSize):
 ///////////////////////////////////////////////////////////
 memory::~memory()
 {
-    memoryPoolGetter::getMemoryPoolLocal().reuseMemory(m_pMemoryBuffer.release());
+    memoryPoolGetter::getMemoryPoolGetter().getMemoryPoolLocal().reuseMemory(m_pMemoryBuffer.release());
 }
 
 
@@ -514,6 +514,12 @@ memoryPoolGetter::~memoryPoolGetter()
 #endif
 }
 
+memoryPoolGetter& memoryPoolGetter::getMemoryPoolGetter()
+{
+    static memoryPoolGetter getter;
+    return getter;
+}
+
 thread_local std::unique_ptr<memoryPool> memoryPoolGetter::m_pool = std::unique_ptr<memoryPool>();
 
 memoryPool& memoryPoolGetter::getMemoryPoolLocal()
@@ -557,7 +563,7 @@ void memoryPoolGetter::deleteMemoryPool(void* pMemoryPool)
 ///////////////////////////////////////////////////////////
 void memoryPoolGetter::newHandler()
 {
-    if(!memoryPoolGetter::getMemoryPoolLocal().flush())
+    if(!memoryPoolGetter::getMemoryPoolGetter().getMemoryPoolLocal().flush())
     {
         throw ImebraBadAlloc();
     }
