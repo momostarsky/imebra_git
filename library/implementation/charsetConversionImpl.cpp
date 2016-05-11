@@ -129,7 +129,8 @@ std::wstring dicomConversion::convertToUnicode(const std::string& value, const c
     ///////////////////////////////////////////////////////////
     if(charsets.empty())
     {
-        IMEBRA_THROW(std::logic_error, "The charsets list must be set before converting to unicode");
+        std::unique_ptr<defaultCharsetConversion> localCharsetConversion(new defaultCharsetConversion("ISO_IR 6"));
+        return localCharsetConversion->toUnicode(value);
     }
 
     // Initialize the conversion engine with the default
