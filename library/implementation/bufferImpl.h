@@ -66,13 +66,7 @@ public:
 	///////////////////////////////////////////////////////////
 	//@{
 
-	/// \brief Constructor. Initialize the buffer object and
-	///        set the default data type.
-	///
-	/// If no data type is specified, then the Dicom data
-	///  type "OB" is used.
-	///
-    /// @param tagVR  the buffer's data type
+    /// \brief Constructor.
 	///
 	///////////////////////////////////////////////////////////
     buffer();
@@ -166,7 +160,10 @@ public:
 
     std::shared_ptr<handlers::writingDataHandlerRaw> getWritingDataHandlerRaw(tagVR_t tagVR, std::uint32_t size = 0);
 
-	//@}
+    std::shared_ptr<handlers::readingDataHandlerNumericBase> getReadingDataHandlerNumeric(tagVR_t tagVR) const;
+
+    std::shared_ptr<handlers::writingDataHandlerNumericBase> getWritingDataHandlerNumeric(tagVR_t tagVR, std::uint32_t size = 0);
+    //@}
 
 
 	///////////////////////////////////////////////////////////

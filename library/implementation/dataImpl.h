@@ -190,7 +190,11 @@ public:
 
     std::shared_ptr<handlers::writingDataHandlerRaw> getWritingDataHandlerRaw(size_t bufferId);
 
-	/// \brief Get a streamReader connected to a buffer's data.
+    std::shared_ptr<handlers::readingDataHandlerNumericBase> getReadingDataHandlerNumeric(size_t bufferId) const;
+
+    std::shared_ptr<handlers::writingDataHandlerNumericBase> getWritingDataHandlerNumeric(size_t bufferId);
+
+    /// \brief Get a streamReader connected to a buffer's data.
 	///
 	/// @param bufferId   the id of the buffer for which the
 	///                    streamReader is required. This 

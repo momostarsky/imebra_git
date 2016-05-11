@@ -53,6 +53,7 @@ public:
     friend class Image;
     friend class DataSet;
     friend class Tag;
+    friend class LUT;
 
 private:
     ReadingDataHandlerNumeric(std::shared_ptr<imebra::implementation::handlers::readingDataHandlerNumericBase> pDataHandler);

@@ -150,7 +150,7 @@ std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
 
 	// Retrieve the transfer syntax
 	///////////////////////////////////////////////////////////
-    std::string transferSyntax = getString(0x0002, 0x0, 0x0010, 0, 0);
+    std::string transferSyntax = getString(0x0002, 0x0, 0x0010, 0, 0, "1.2.840.10008.1.2.1");
 
 	// Get the right codec
 	///////////////////////////////////////////////////////////
@@ -299,10 +299,9 @@ std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
 
         if(pImage->getColorSpace() == "PALETTE COLOR")
         {
-            std::shared_ptr<lut> red(std::make_shared<lut>()), green(std::make_shared<lut>()), blue(std::make_shared<lut>());
-            red->setLut(getReadingDataHandler(0x0028, 0x0, 0x1101, 0), getReadingDataHandler(0x0028, 0x0, 0x1201, 0), L"");
-            green->setLut(getReadingDataHandler(0x0028, 0x0, 0x1102, 0), getReadingDataHandler(0x0028, 0x0, 0x1202, 0), L"");
-            blue->setLut(getReadingDataHandler(0x0028, 0x0, 0x1103, 0), getReadingDataHandler(0x0028, 0x0, 0x1203, 0), L"");
+            std::shared_ptr<lut> red(std::make_shared<lut>(getReadingDataHandlerNumeric(0x0028, 0x0, 0x1101, 0), getReadingDataHandlerNumeric(0x0028, 0x0, 0x1201, 0), L"", pImage->isSigned()));
+            std::shared_ptr<lut> green(std::make_shared<lut>(getReadingDataHandlerNumeric(0x0028, 0x0, 0x1102, 0), getReadingDataHandlerNumeric(0x0028, 0x0, 0x1202, 0), L"", pImage->isSigned()));
+            std::shared_ptr<lut> blue(std::make_shared<lut>(getReadingDataHandlerNumeric(0x0028, 0x0, 0x1103, 0), getReadingDataHandlerNumeric(0x0028, 0x0, 0x1203, 0), L"", pImage->isSigned()));
             std::shared_ptr<palette> imagePalette(std::make_shared<palette>(red, green, blue));
             pImage->setPalette(imagePalette);
         }
@@ -432,8 +431,7 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
 		bSubSampledX = bSubSampledY = false;
 	}
 
-    bitDepth_t depth = pImage->getDepth();
-    bool b2complement = (depth == bitDepth_t::depthS32 || depth == bitDepth_t::depthS16 || depth == bitDepth_t::depthS8);
+    bool b2complement = pImage->isSigned();
     std::uint32_t channelsNumber = pImage->getChannelsNumber();
     std::uint8_t allocatedBits = (std::uint8_t)(saveCodec->suggestAllocatedBits(transferSyntax, pImage->getHighBit()));
     bool bInterleaved = (getUnsignedLong(0x0028, 0x0, 0x0006, 0, 0, channelsNumber > 1 ? 0 : 1) == 0x0);
@@ -576,14 +574,7 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
 
         if(colorSpace == "PALETTECOLOR")
 		{
-            std::shared_ptr<palette> imagePalette(pImage->getPalette());
-			if(imagePalette != 0)
-			{
-                imagePalette->getRed()->fillHandlers(getWritingDataHandler(0x0028, 0x0, 0x1101, 0), getWritingDataHandler(0x0028, 0x0, 0x1201, 0));
-                imagePalette->getGreen()->fillHandlers(getWritingDataHandler(0x0028, 0x0, 0x1102, 0), getWritingDataHandler(0x0028, 0x0, 0x1202, 0));
-                imagePalette->getBlue()->fillHandlers(getWritingDataHandler(0x0028, 0x0, 0x1103, 0), getWritingDataHandler(0x0028, 0x0, 0x1203, 0));
-			}
-
+            throw;
 		}
 
 		double imageSizeMmX, imageSizeMmY;
@@ -838,14 +829,14 @@ std::shared_ptr<lut> dataSet::getLut(std::uint16_t groupId, std::uint16_t tagId,
     std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
     std::shared_ptr<dataSet> embeddedLUT = getSequenceItem(groupId, 0, tagId, lutId);
-    std::shared_ptr<handlers::readingDataHandler> descriptorHandle = embeddedLUT->getReadingDataHandler(0x0028, 0x0, 0x3002, 0x0);
-    std::shared_ptr<handlers::readingDataHandler> dataHandle = embeddedLUT->getReadingDataHandler(0x0028, 0x0, 0x3006, 0x0);
+    std::shared_ptr<handlers::readingDataHandlerNumericBase> descriptorHandle = embeddedLUT->getReadingDataHandlerNumeric(0x0028, 0x0, 0x3002, 0x0);
+    std::shared_ptr<handlers::readingDataHandlerNumericBase> dataHandle = embeddedLUT->getReadingDataHandlerNumeric(0x0028, 0x0, 0x3006, 0x0);
 
-    std::shared_ptr<lut> pLUT = std::make_shared<lut>();
-    pLUT->setLut(
+    std::shared_ptr<lut> pLUT = std::make_shared<lut>(
         descriptorHandle,
         dataHandle,
-        embeddedLUT->getUnicodeString(0x0028, 0x0, 0x3003, 0, 0));
+        embeddedLUT->getUnicodeString(0x0028, 0x0, 0x3003, 0, 0),
+        getUnsignedLong(0x0028, 0, 0x0103, 0, 0, 0) != 0);
 	return pLUT;
 
 	IMEBRA_FUNCTION_END();
@@ -1485,6 +1476,38 @@ std::shared_ptr<handlers::writingDataHandlerRaw> dataSet::getWritingDataHandlerR
     IMEBRA_FUNCTION_START();
 
     return getWritingDataHandlerRaw(groupId, order, tagId, bufferId, dicomDictionary::getDicomDictionary()->getTagType(groupId, tagId));
+
+    IMEBRA_FUNCTION_END();
+}
+
+
+std::shared_ptr<handlers::readingDataHandlerNumericBase> dataSet::getReadingDataHandlerNumeric(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId) const
+{
+    IMEBRA_FUNCTION_START();
+
+    return getTag(groupId, order, tagId)->getReadingDataHandlerNumeric(bufferId);
+
+    IMEBRA_FUNCTION_END();
+}
+
+
+std::shared_ptr<handlers::writingDataHandlerNumericBase> dataSet::getWritingDataHandlerNumeric(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, tagVR_t tagVR)
+{
+    IMEBRA_FUNCTION_START();
+
+    std::shared_ptr<data> tag = getTagCreate(groupId, order, tagId, tagVR);
+
+    return tag->getWritingDataHandlerNumeric(bufferId);
+
+    IMEBRA_FUNCTION_END();
+}
+
+
+std::shared_ptr<handlers::writingDataHandlerNumericBase> dataSet::getWritingDataHandlerNumeric(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId)
+{
+    IMEBRA_FUNCTION_START();
+
+    return getWritingDataHandlerNumeric(groupId, order, tagId, bufferId, dicomDictionary::getDicomDictionary()->getTagType(groupId, tagId));
 
     IMEBRA_FUNCTION_END();
 }

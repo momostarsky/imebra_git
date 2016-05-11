@@ -443,6 +443,41 @@ std::shared_ptr<handlers::writingDataHandlerRaw> buffer::getWritingDataHandlerRa
 }
 
 
+std::shared_ptr<handlers::readingDataHandlerNumericBase> buffer::getReadingDataHandlerNumeric(tagVR_t tagVR) const
+{
+    IMEBRA_FUNCTION_START();
+
+    std::shared_ptr<handlers::readingDataHandler> handler = getReadingDataHandler(tagVR);
+    std::shared_ptr<handlers::readingDataHandlerNumericBase> numericHandler = std::dynamic_pointer_cast<handlers::readingDataHandlerNumericBase>(handler);
+    if(numericHandler == 0)
+    {
+        IMEBRA_THROW(DataHandlerConversionError, "The data handler does not handle numeric data");
+    }
+
+    return numericHandler;
+
+    IMEBRA_FUNCTION_END();
+}
+
+
+std::shared_ptr<handlers::writingDataHandlerNumericBase> buffer::getWritingDataHandlerNumeric(tagVR_t tagVR, std::uint32_t size)
+{
+    IMEBRA_FUNCTION_START();
+
+    std::shared_ptr<handlers::writingDataHandler> handler = getWritingDataHandler(tagVR, size);
+    std::shared_ptr<handlers::writingDataHandlerNumericBase> numericHandler = std::dynamic_pointer_cast<handlers::writingDataHandlerNumericBase>(handler);
+    if(numericHandler == 0)
+    {
+        IMEBRA_THROW(DataHandlerConversionError, "The data handler does not handle numeric data");
+    }
+
+    return numericHandler;
+
+    IMEBRA_FUNCTION_END();
+}
+
+
+
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 //

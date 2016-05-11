@@ -309,6 +309,59 @@ std::shared_ptr<handlers::writingDataHandlerRaw> data::getWritingDataHandlerRaw(
 }
 
 
+std::shared_ptr<handlers::readingDataHandlerNumericBase> data::getReadingDataHandlerNumeric(size_t bufferId) const
+{
+    IMEBRA_FUNCTION_START();
+
+    std::shared_ptr<buffer> pTempBuffer;
+    {
+        std::lock_guard<std::mutex> lock(m_mutex);
+
+        tBuffersMap::const_iterator findBuffer = m_buffers.find(bufferId);
+        if(findBuffer == m_buffers.end() )
+        {
+            IMEBRA_THROW(MissingBufferError, "The buffer with ID " << bufferId << " is missing");
+        }
+        pTempBuffer = findBuffer->second;
+    }
+
+    return pTempBuffer->getReadingDataHandlerNumeric(m_tagVR);
+
+    IMEBRA_FUNCTION_END();
+}
+
+
+std::shared_ptr<handlers::writingDataHandlerNumericBase> data::getWritingDataHandlerNumeric(size_t bufferId)
+{
+    IMEBRA_FUNCTION_START();
+
+    std::shared_ptr<buffer> pTempBuffer;
+
+    {
+        std::lock_guard<std::mutex> lock(m_mutex);
+
+        tBuffersMap::iterator findBuffer = m_buffers.find(bufferId);
+        if(findBuffer != m_buffers.end() )
+        {
+            pTempBuffer = findBuffer->second;
+        }
+
+        // If the buffer doesn't exist, then create a new one
+        ///////////////////////////////////////////////////////////
+        if(pTempBuffer == 0)
+        {
+            pTempBuffer = std::make_shared<buffer>();
+            pTempBuffer->setCharsetsList(m_charsetsList);
+            m_buffers[bufferId] = pTempBuffer;
+        }
+    }
+
+    return pTempBuffer->getWritingDataHandlerNumeric(m_tagVR);
+
+    IMEBRA_FUNCTION_END();
+}
+
+
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 //

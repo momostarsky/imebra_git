@@ -809,7 +809,15 @@ public:
 
     std::shared_ptr<handlers::writingDataHandlerRaw> getWritingDataHandlerRaw(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId);
 
-	/// \brief Return a streamReader connected to the specified
+
+    std::shared_ptr<handlers::readingDataHandlerNumericBase> getReadingDataHandlerNumeric(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId) const;
+
+    std::shared_ptr<handlers::writingDataHandlerNumericBase> getWritingDataHandlerNumeric(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, tagVR_t tagVR);
+
+    std::shared_ptr<handlers::writingDataHandlerNumericBase> getWritingDataHandlerNumeric(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId);
+
+
+    /// \brief Return a streamReader connected to the specified
 	///         tag's buffer's memory.
 	///
 	/// A tag can store several buffers: the application
