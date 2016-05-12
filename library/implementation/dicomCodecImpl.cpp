@@ -656,10 +656,16 @@ void dicomCodec::parseStream(std::shared_ptr<streamReader> pStream,
             // Reverse the last adjust
             pStream->adjustEndian((std::uint8_t*)&tagId, sizeof(tagId), endianType);
 
-            std::string transferSyntax = pDataSet->getString(0x0002, 0x0, 0x0010, 0, 0);
+            std::string transferSyntax = pDataSet->getString(
+                        0x0002,
+                        0x0,
+                        0x0010,
+                        0,
+                        0,
+                        endianType == streamController::lowByteEndian ? "1.2.840.10008.1.2.1" : "1.2.840.10008.1.2.2");
 
             if(transferSyntax == "1.2.840.10008.1.2.2")
-                endianType=streamController::highByteEndian;
+                endianType = streamController::highByteEndian;
             if(transferSyntax == "1.2.840.10008.1.2")
                 bExplicitDataType=false;
 
@@ -924,7 +930,7 @@ std::shared_ptr<image> dicomCodec::getImage(const dataSet& dataset, std::shared_
 
     // Check for RLE compression
     ///////////////////////////////////////////////////////////
-    std::string transferSyntax = dataset.getString(0x0002, 0x0, 0x0010, 0, 0);
+    std::string transferSyntax = dataset.getString(0x0002, 0x0, 0x0010, 0, 0, "1.2.840.10008.1.2.1");
     bool bRleCompressed = (transferSyntax == "1.2.840.10008.1.2.5");
 
     // Check for color space and subsampled channels
@@ -972,7 +978,7 @@ std::shared_ptr<image> dicomCodec::getImage(const dataSet& dataset, std::shared_
 
     // Check for 2's complement
     ///////////////////////////////////////////////////////////
-    bool b2Complement = dataset.getUnsignedLong(0x0028, 0x0, 0x0103, 0, 0, 0)!=0x0;
+    bool b2Complement = dataset.getUnsignedLong(0x0028, 0x0, 0x0103, 0, 0, 0) != 0x0;
 
     // Retrieve the allocated/stored/high bits
     ///////////////////////////////////////////////////////////
