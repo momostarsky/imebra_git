@@ -65,7 +65,7 @@ void transform::runTransform(
     std::uint64_t inputNumValues((std::uint64_t)1 << (inputHighBit + 1));
     std::int32_t inputMinValue(0);
     bitDepth_t inputDepth(inputImage->getDepth());
-    if(inputDepth == bitDepth_t::depthS32 || inputDepth == bitDepth_t::depthS16 || inputDepth == bitDepth_t::depthS8)
+    if(inputImage->isSigned())
 	{
 		inputMinValue -= (std::int32_t)(inputNumValues >> 1);
 	}
@@ -77,7 +77,7 @@ void transform::runTransform(
     std::uint64_t outputNumValues((std::uint64_t)1 << (outputHighBit + 1));
 	std::int32_t outputMinValue(0);
     bitDepth_t outputDepth(outputImage->getDepth());
-    if(outputDepth == bitDepth_t::depthS32 || outputDepth == bitDepth_t::depthS16 || outputDepth == bitDepth_t::depthS8)
+    if(outputImage->isSigned())
 	{
 		outputMinValue -= (std::int32_t)(outputNumValues >> 1);
 	}
