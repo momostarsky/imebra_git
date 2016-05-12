@@ -12,9 +12,6 @@ std::string ExceptionsManager::getExceptionTrace()
 LutError::LutError(const std::string& message): std::runtime_error(message)
 {}
 
-LutWrongIndexError::LutWrongIndexError(const std::string& message): LutError(message)
-{}
-
 LutCorruptedError::LutCorruptedError(const std::string& message): LutError(message)
 {}
 

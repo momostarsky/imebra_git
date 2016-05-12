@@ -27,18 +27,6 @@ public:
 
 
 ///
-/// \brief This exception is thrown by the LUT class when the wrong index or
-///        id is specified as a parameter.
-///
-///////////////////////////////////////////////////////////////////////////////
-class IMEBRA_API LutWrongIndexError: public LutError
-{
-public:
-    LutWrongIndexError(const std::string& message);
-};
-
-
-///
 /// \brief This exception is thrown by the lut class when the the LUT
 ///        information is corrupted.
 ///
