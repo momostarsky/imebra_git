@@ -12,7 +12,7 @@ $fileHeader$
 
 #include <map>
 #include <memory>
-
+#include "dataHandlerNumericImpl.h"
 
 namespace imebra
 {
@@ -24,6 +24,7 @@ namespace handlers
 {
     class readingDataHandler;
     class writingDataHandler;
+    class buffer;
 }
 
 /// \addtogroup group_image
@@ -44,14 +45,6 @@ namespace handlers
 class lut
 {
 public:
-	// Constructor
-	///////////////////////////////////////////////////////////
-	lut():
-	  m_size(0),
-		m_firstMapped(0),
-		m_bits(0),
-		m_pMappedValues(0){}
-
     // Destructor
     ///////////////////////////////////////////////////////////
     virtual ~lut();
@@ -70,52 +63,9 @@ public:
 	///                       lut
 	///
 	///////////////////////////////////////////////////////////
-    void setLut(std::shared_ptr<handlers::readingDataHandler> pDescriptor, std::shared_ptr<handlers::readingDataHandler> pData, const std::wstring& description);
+    lut(std::shared_ptr<handlers::readingDataHandlerNumericBase> pDescriptor, std::shared_ptr<handlers::readingDataHandlerNumericBase> pData, const std::wstring& description, bool signedData);
 
-	/// \brief Create an empty lut.
-	///
-	/// Subsequent calls to setLutValue() must be made in
-	///  order to fill the lut with the data.
-	///
-	/// @param size          the number of mapped values that
-	///                       will be set by setLutValue()
-	/// @param firstMapped   the id of the first mapped value
-	/// @param bits          the number of bits to use to
-	///                       store the mapped values
-	/// @param description   a string that describes the lut
-	///
-	///////////////////////////////////////////////////////////
-    void create(std::uint32_t size, std::int32_t firstMapped, std::uint8_t bits, const std::wstring& description);
-
-	/// \brief Store a mapped value in the lut.
-	///
-	/// This function has to be called if the lut has been
-	///  created by create().
-	///
-	/// Call this function for every mapped value that must be
-	///  stored in the lut.
-	///
-	/// @param startValue   the id of the mapped value
-	/// @param lutValue     the mapped value
-	///
-	///////////////////////////////////////////////////////////
-    void setLutValue(std::int32_t startValue, std::int32_t lutValue);
-
-	/// \brief Fill the data handlers with the lut's descriptor
-	///         and the lut's data.
-	///
-	/// This function is usually called when a lut has to be
-    ///  written to a dataSet.
-	///
-	/// @param pDescriptor   the data handler that manages the
-	///                       buffer that will store the lut
-	///                       descriptor
-	/// @param pData         the data handler that manages the
-	///                       buffer that will store the lut
-	///                       data
-	///
-	///////////////////////////////////////////////////////////
-    void fillHandlers(std::shared_ptr<handlers::writingDataHandler> pDescriptor, std::shared_ptr<handlers::writingDataHandler> pData) const;
+    std::shared_ptr<handlers::readingDataHandlerNumericBase> getReadingDataHandler() const;
 
 	/// \brief Return the lut's description.
 	///
@@ -139,41 +89,9 @@ public:
 	///////////////////////////////////////////////////////////
     std::uint32_t getSize() const;
 
-	/// \brief Checks if the data in the LUT is consistent
-	///         with the number of bits specified in number
-	///         of bits.
-	///
-	/// @return true if the data is correct, false otherwise
-	///
-	///////////////////////////////////////////////////////////
-    bool checkValidDataRange() const;
-
-	/// \brief Return the id of the first mapped value
-	///
-	/// @return the id of the first mapped value
-	///
-	///////////////////////////////////////////////////////////
     std::int32_t getFirstMapped() const;
 
-	/// \brief Retrieve the value mapped by the specified id.
-	///
-	/// @param  id the id to look for
-	/// @return the value mapped by the specified id
-	///
-	///////////////////////////////////////////////////////////
-    std::int32_t mappedValue(std::int32_t id) const;
-
-	/// \brief Copy the lut's data into an std::int32_t array.
-	///
-	/// @param pDestination a pointer to the first element of
-	///                      the std::int32_t array
-	/// @param destSize     the size of the array, in elements
-	/// @param pFirstMapped a pointer to a variable that this
-	///                      function will fill with the id
-	///                      of the first mapped element
-	///
-	///////////////////////////////////////////////////////////
-    void copyToInt32(std::int32_t* pDestination, size_t destSize, std::int32_t* pFirstMapped) const;
+    std::int32_t getMappedValue(std::int32_t index) const;
 
 protected:
     // Convert a signed value in the LUT descriptor to an
@@ -187,7 +105,7 @@ protected:
 
 	std::wstring m_description;
 
-	std::int32_t* m_pMappedValues;
+    std::shared_ptr<handlers::readingDataHandlerNumericBase> m_pDataHandler;
 };
 
 

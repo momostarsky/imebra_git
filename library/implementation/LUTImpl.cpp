@@ -10,6 +10,7 @@ $fileHeader$
 #include "exceptionImpl.h"
 #include "LUTImpl.h"
 #include "dataHandlerNumericImpl.h"
+#include "bufferImpl.h"
 #include "../include/imebra/exceptions.h"
 
 #include <string.h>
@@ -24,17 +25,58 @@ namespace implementation
 ///////////////////////////////////////////////////////////
 //
 //
-// Destructor
+// Create a LUT from a data handler
 //
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-lut::~lut()
+lut::lut(std::shared_ptr<handlers::readingDataHandlerNumericBase> pDescriptor, std::shared_ptr<handlers::readingDataHandlerNumericBase> pData, const std::wstring& description, bool signedData):
+    m_size(0),
+      m_firstMapped(0),
+      m_bits(0)
+
 {
-	if(m_pMappedValues)
-	{
-        delete[] m_pMappedValues;
-	}
+    IMEBRA_FUNCTION_START();
+
+    if(pDescriptor->getSize() < 3)
+    {
+        IMEBRA_THROW(LutCorruptedError, "The LUT is corrupted");
+    }
+
+    m_size = descriptorSignedToUnsigned(pDescriptor->getSignedLong(0));
+
+    if(signedData)
+    {
+        m_firstMapped = pDescriptor->getSignedLong(1);
+    }
+    else
+    {
+        m_firstMapped = pDescriptor->getUnsignedLong(1);
+    }
+
+    m_bits = pDescriptor->getUnsignedLong(2);
+    if(m_bits > 16)
+    {
+        IMEBRA_THROW(LutCorruptedError, "The LUT items cannot be more than 16 bit wide");
+    }
+
+    if(m_size != pData->getSize())
+    {
+        IMEBRA_THROW(LutCorruptedError, "The LUT is corrupted");
+    }
+
+    m_pDataHandler = pData;
+
+    m_description = description;
+
+
+    IMEBRA_FUNCTION_END();
+}
+
+
+std::shared_ptr<handlers::readingDataHandlerNumericBase> lut::getReadingDataHandler() const
+{
+    return m_pDataHandler;
 }
 
 
@@ -42,35 +84,13 @@ lut::~lut()
 ///////////////////////////////////////////////////////////
 //
 //
-// Create a LUT from a data handler
+// Destructor
 //
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void lut::setLut(std::shared_ptr<handlers::readingDataHandler> pDescriptor, std::shared_ptr<handlers::readingDataHandler> pData, const std::wstring& description)
+lut::~lut()
 {
-    IMEBRA_FUNCTION_START();
-
-	if(pDescriptor->getSize() < 3)
-	{
-        IMEBRA_THROW(LutCorruptedError, "The LUT is corrupted");
-	}
-    std::uint32_t lutSize(descriptorSignedToUnsigned(pDescriptor->getSignedLong(0)));
-
-    std::int32_t lutFirstMapped = pDescriptor->getSignedLong(1);
-
-    std::uint32_t lutBits = pDescriptor->getUnsignedLong(2);
-
-	if((size_t)lutSize != pData->getSize())
-	{
-        IMEBRA_THROW(LutCorruptedError, "The LUT is corrupted");
-	}
-
-	create(lutSize, lutFirstMapped, (std::uint8_t)lutBits, description);
-
-    std::dynamic_pointer_cast<handlers::readingDataHandlerNumericBase>(pData)->copyTo(m_pMappedValues, lutSize);
-
-    IMEBRA_FUNCTION_END();
 }
 
 
@@ -104,79 +124,6 @@ std::uint32_t lut::descriptorSignedToUnsigned(std::int32_t signedValue)
     IMEBRA_FUNCTION_END();
 }
 
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Create a LUT
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-void lut::create(std::uint32_t size, std::int32_t firstMapped, std::uint8_t bits, const std::wstring& description)
-{
-    IMEBRA_FUNCTION_START();
-
-	// If some values were previously allocated, then remove
-	//  them
-	///////////////////////////////////////////////////////////
-	if(m_pMappedValues)
-	{
-		delete m_pMappedValues;
-		m_pMappedValues= 0;
-	}
-
-	m_size = 0;
-
-	m_description = description;
-
-    if(size != 0)
-	{
-        m_size = size;
-        m_firstMapped = firstMapped;
-        m_bits = bits;
-        m_pMappedValues = new std::int32_t[m_size];
-	}
-
-    IMEBRA_FUNCTION_END();
-}
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Fill the data handlers in a dataset with the lut
-//  information
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-void lut::fillHandlers(std::shared_ptr<handlers::writingDataHandler> pDescriptor, std::shared_ptr<handlers::writingDataHandler> pData) const
-{
-    IMEBRA_FUNCTION_START();
-
-	pDescriptor->setSize(3);
-    std::uint32_t lutSize = (std::uint32_t)getSize();
-	if(lutSize == 0x00010000)
-	{
-		pDescriptor->setSignedLong(0, 0);
-	}
-	else
-	{
-		pDescriptor->setUnsignedLong(0, lutSize);
-	}
-
-    std::int32_t lutFirstMapped = getFirstMapped();
-	pDescriptor->setSignedLong(1, lutFirstMapped);
-
-	std::uint8_t bits = getBits();
-	pDescriptor->setUnsignedLong(2, bits);
-
-	pData->setSize(lutSize);
-    std::dynamic_pointer_cast<handlers::writingDataHandlerNumericBase>(pData)->copyFrom(m_pMappedValues, lutSize);
-
-    IMEBRA_FUNCTION_END();
-}
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -190,40 +137,6 @@ void lut::fillHandlers(std::shared_ptr<handlers::writingDataHandler> pDescriptor
 std::uint32_t lut::getSize() const
 {
 	return m_size;
-}
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Check the validity of the data in the LUT
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-bool lut::checkValidDataRange() const
-{
-    IMEBRA_FUNCTION_START();
-
-    std::int32_t maxValue(65535);
-    std::int32_t minValue(-32768);
-    if(m_bits == 8)
-    {
-        maxValue = 255;
-        minValue = -128;
-    }
-    const std::int32_t* pScanValues(m_pMappedValues);
-    for(std::uint32_t checkData(0); checkData != m_size; ++checkData)
-    {
-        if(*pScanValues < minValue || *pScanValues > maxValue)
-        {
-            return false;
-        }
-        ++pScanValues;
-    }
-    return true;
-
-    IMEBRA_FUNCTION_END();
 }
 
 
@@ -242,28 +155,21 @@ std::int32_t lut::getFirstMapped() const
 }
 
 
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Insert a new value into the LUT
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-void lut::setLutValue(std::int32_t startValue, std::int32_t lutValue)
+std::int32_t lut::getMappedValue(std::int32_t index) const
 {
     IMEBRA_FUNCTION_START();
 
-    if(startValue < m_firstMapped)
-	{
-        IMEBRA_THROW(LutWrongIndexError, "The start index is below the first mapped index");
-	}
-    startValue -= m_firstMapped;
-    if(startValue < (std::int32_t)m_size)
-	{
-		m_pMappedValues[startValue]=lutValue;
-	}
+    if(index < m_firstMapped)
+    {
+        index = m_firstMapped;
+    }
+
+    std::uint32_t correctedIndex = (std::uint32_t)(index - m_firstMapped);
+    if(correctedIndex >= m_size)
+    {
+        correctedIndex = m_size - 1;
+    }
+    return m_pDataHandler->getSignedLong(correctedIndex);
 
     IMEBRA_FUNCTION_END();
 }
@@ -297,68 +203,6 @@ std::wstring lut::getDescription() const
 std::uint8_t lut::getBits() const
 {
 	return m_bits;
-}
-
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Lookup the requested value
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-std::int32_t lut::mappedValue(std::int32_t id) const
-{
-    IMEBRA_FUNCTION_START();
-
-    // The LUT's size is zero, return
-	///////////////////////////////////////////////////////////
-	if(m_size == 0)
-	{
-		return 0;
-	}
-
-	// Subtract the first mapped value
-	///////////////////////////////////////////////////////////
-    if(m_firstMapped > id)
-    {
-        return m_pMappedValues[0];
-    }
-
-    id -= m_firstMapped;
-    if(id < (std::int32_t)m_size)
-	{
-        return m_pMappedValues[(std::uint32_t)id];
-	}
-	return m_pMappedValues[m_size-1];
-
-    IMEBRA_FUNCTION_END();
-}
-
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Copy the palette's data to an array of std::int32_t
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-void lut::copyToInt32(std::int32_t* pDestination, size_t destSize, std::int32_t* pFirstMapped) const
-{
-    IMEBRA_FUNCTION_START();
-
-    if(destSize > m_size)
-	{
-		destSize = m_size;
-	}
-    ::memcpy(pDestination, m_pMappedValues, destSize * sizeof(std::int32_t));
-	*pFirstMapped = m_firstMapped;
-
-    IMEBRA_FUNCTION_END();
 }
 
 
