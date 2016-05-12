@@ -11,6 +11,7 @@ $fileHeader$
 #include "../include/imebra/VOILUT.h"
 #include "../include/imebra/dataSet.h"
 #include "../implementation/VOILUTImpl.h"
+#include "../include/imebra/lut.h"
 
 namespace imebra
 {
@@ -22,6 +23,11 @@ VOILUT::VOILUT(): Transform(std::make_shared<imebra::implementation::transforms:
 void VOILUT::setCenterWidth(double center, double width)
 {
     ((imebra::implementation::transforms::VOILUT*)m_pTransform.get())->setCenterWidth(center, width);
+}
+
+void VOILUT::setLUT(const LUT &lut)
+{
+    ((imebra::implementation::transforms::VOILUT*)m_pTransform.get())->setLUT(lut.m_pLut);
 }
 
 void VOILUT::applyOptimalVOI(const Image& inputImage, std::uint32_t topLeftX, std::uint32_t topLeftY, std::uint32_t width, std::uint32_t height)

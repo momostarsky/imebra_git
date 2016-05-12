@@ -17,6 +17,7 @@ namespace imebra
 {
 
 class DataSet;
+class LUT;
 
 ///
 /// \brief A VOILUT transform is applied to an Image to enhance the visibility
@@ -51,8 +52,6 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     void applyOptimalVOI(const Image& inputImage, std::uint32_t topLeftX, std::uint32_t topLeftY, std::uint32_t width, std::uint32_t height);
 
-    //void setLUT(std::shared_ptr<lut> pLut);
-
     /// \brief Set the VOI settings applied by the transform.
     ///
     /// \param center the VOI center
@@ -60,6 +59,13 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     void setCenterWidth(double center, double width);
+
+    /// \brief Set the LUT applied by the transform.
+    ///
+    /// \param lut  the LUT to apply
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    void setLUT(const LUT& lut);
 
     /// \brief Retrieve the VOI center applied by the transform.
     ///
