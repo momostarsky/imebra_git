@@ -70,7 +70,7 @@ public:
             IMEBRA_FUNCTION_START();
 
             checkColorSpaces(inputHandlerColorSpace, outputHandlerColorSpace);
-            std::uint32_t inputHighBit = inputPalette->getRed()->getBits();
+            std::uint32_t inputHighBit = inputPalette->getRed()->getBits() - 1;
             checkHighBit(inputHighBit, outputHighBit);
 
             const inputType* pInputMemory(inputHandlerData);
@@ -91,9 +91,9 @@ public:
                 for(std::uint32_t scanPixels(inputWidth); scanPixels != 0; --scanPixels)
                 {
                     paletteValue = (std::int32_t) (*pInputMemory++);
-                    *pOutputMemory++ = (outputType)(pRed->mappedValue(paletteValue) + outputHandlerMinValue);
-                    *pOutputMemory++ = (outputType)(pGreen->mappedValue(paletteValue) + outputHandlerMinValue);
-                    *pOutputMemory++ = (outputType)(pBlue->mappedValue(paletteValue) + outputHandlerMinValue);
+                    *pOutputMemory++ = (outputType)(pRed->getMappedValue(paletteValue) + outputHandlerMinValue);
+                    *pOutputMemory++ = (outputType)(pGreen->getMappedValue(paletteValue) + outputHandlerMinValue);
+                    *pOutputMemory++ = (outputType)(pBlue->getMappedValue(paletteValue) + outputHandlerMinValue);
                 }
                 pInputMemory += inputHandlerWidth - inputWidth;
                 pOutputMemory += (outputHandlerWidth - inputWidth) * 3;

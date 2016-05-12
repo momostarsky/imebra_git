@@ -90,7 +90,16 @@ std::shared_ptr<image> colorTransform::allocateOutputImage(
 
     if(inputPalette != 0)
     {
-        inputHighBit = inputPalette->getRed()->getBits();
+        std::uint8_t bits = inputPalette->getRed()->getBits();
+        inputHighBit = bits - 1;
+        if(bits > 8)
+        {
+            inputDepth = bitDepth_t::depthU16;
+        }
+        else
+        {
+            inputDepth = bitDepth_t::depthU8;
+        }
     }
 
     return std::make_shared<image>(outputWidth, outputHeight, inputDepth, getFinalColorSpace(), inputHighBit);
