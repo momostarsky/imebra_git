@@ -42,8 +42,15 @@ void outputDatasetTags(const DataSet& dataset, const std::wstring& prefix)
         scanTags != endTags;
         ++scanTags)
     {
-        std::wstring tagName = DicomDictionary::getUnicodeTagName(*scanTags);
-        std::wcout << prefix << L"Tag " << (*scanTags).getGroupId() << L"," << (*scanTags).getTagId() << L" (" << tagName << L")" << std::endl;
+        try
+        {
+            std::wstring tagName = DicomDictionary::getUnicodeTagName(*scanTags);
+            std::wcout << prefix << L"Tag " << (*scanTags).getGroupId() << L"," << (*scanTags).getTagId() << L" (" << tagName << L")" << std::endl;
+        }
+        catch(const DictionaryUnknownTagError&)
+        {
+            std::wcout << prefix << L"Tag " << (*scanTags).getGroupId() << L"," << (*scanTags).getTagId() << L" (Unknown tag)" << std::endl;
+        }
 
         std::unique_ptr<Tag> tag(dataset.getTag(*scanTags));
 
@@ -174,14 +181,6 @@ int main(int argc, char* argv[])
                 initialColorSpace = startImage->getColorSpace();
             }
 
-            /*
-            Transform bw = ColorTransformsFactory::getTransform("YBR_FULL", "MONOCHROME2");
-            Image bwImage = bw.allocateOutputImage(dataSetImage, width, height);
-            bw.runTransform(dataSetImage, 0, 0, width, height, bwImage, 0, 0);
-            dataSetImage = bwImage;
-            initialColorSpace = "MONOCHROME2";
-            */
-
             // Color transform to YCrCb
             ///////////////////////////
             if(initialColorSpace != "YBR_FULL")
@@ -193,6 +192,18 @@ int main(int argc, char* argv[])
                 }
             }
 
+            // Tell the chain transform to allocate the output image:
+            // if it has an high-bit different from 7 then we need to add
+            //  a TransformHighBit.
+            /////////////////////////////////////////////////////////////
+            std::unique_ptr<Image> testImage(chain.allocateOutputImage(*dataSetImage, 1, 1));
+            if(testImage->getHighBit() != 7)
+            {
+                chain.addTransform(TransformHighBit());
+            }
+
+            // Allocate the image used to build the jpeg file
+            /////////////////////////////////////////////////
             Image rgb8Image(width, height, bitDepth_t::depthU8, "YBR_FULL", 7);
             Image* finalImage = &rgb8Image;
 
@@ -205,11 +216,6 @@ int main(int argc, char* argv[])
                     dataSetImage.reset(loadedDataSet->getImageApplyModalityTransform(frameNumber));
                 }
 
-                if(frameNumber == 0 && (dataSetImage->getDepth() != rgb8Image.getDepth() || dataSetImage->getHighBit() != rgb8Image.getHighBit()))
-                {
-                    chain.addTransform(TransformHighBit());
-                }
-
                 if(!chain.isEmpty())
                 {
                     chain.runTransform(*dataSetImage, 0, 0, width, height, rgb8Image, 0, 0);
@@ -220,7 +226,7 @@ int main(int argc, char* argv[])
                 }
 
                 // Open a stream for the jpeg
-                const std::string jpegTransferSyntax("1.2.840.10008.1.2.4.50");
+                /////////////////////////////
                 std::ostringstream jpegFileName;
                 jpegFileName << outputFileName;
                 if(frameNumber != 0 || ffmpegFlag >= 0)
@@ -231,6 +237,8 @@ int main(int argc, char* argv[])
 
                 FileStreamOutput writeJpeg(jpegFileName.str());
                 StreamWriter writer(writeJpeg);
+
+                const std::string jpegTransferSyntax("1.2.840.10008.1.2.4.50");
                 CodecFactory::saveImage(writer, *finalImage, jpegTransferSyntax, imageQuality_t::veryHigh, tagVR_t::OB, 8, false, false, true, false);
 
                 ++framesCount;
@@ -326,7 +334,7 @@ int main(int argc, char* argv[])
     }
     catch(...)
     {
-        //std::wcout << exceptionsManager::getMessage();
+        std::cout << ExceptionsManager::getExceptionTrace();
         return 1;
     }
 }
