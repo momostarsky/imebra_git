@@ -191,6 +191,14 @@ bitDepth_t image::getDepth() const
 }
 
 
+bool image::isSigned() const
+{
+    return m_imageDepth == bitDepth_t::depthS8 ||
+            m_imageDepth == bitDepth_t::depthS16 ||
+            m_imageDepth == bitDepth_t::depthS32;
+}
+
+
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 //

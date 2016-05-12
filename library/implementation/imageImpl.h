@@ -219,8 +219,18 @@ public:
 	///  store every single value.
 	///
 	/// @return the bit depth.
+    ///
 	///////////////////////////////////////////////////////////
     bitDepth_t getDepth() const;
+
+    /// \brief Return true if the image's pixels contain signed
+    ///        values.
+    ///
+    /// @return true if the image's pixels contain signed
+    ///         values
+    ///
+    ///////////////////////////////////////////////////////////
+    bool isSigned() const;
 
 	/// \brief Get the high bit.
 	///
