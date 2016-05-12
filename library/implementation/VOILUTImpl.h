@@ -63,7 +63,7 @@ public:
 	///              transformation
 	///
 	///////////////////////////////////////////////////////////
-	void setLUT(std::shared_ptr<lut> pLut);
+    void setLUT(const std::shared_ptr<lut>& pLut);
 
 	/// \brief Define the VOI width/center to use for the
 	///         transformation.
@@ -146,7 +146,7 @@ public:
             {
                 for(std::uint32_t scanPixels(inputWidth); scanPixels != 0; --scanPixels)
                 {
-                    *(pOutputMemory++) = (outputType)( outputHandlerMinValue + m_pLUT->mappedValue((std::int32_t)*pInputMemory++ ));
+                    *(pOutputMemory++) = (outputType)( outputHandlerMinValue + m_pLUT->getMappedValue((std::int32_t)*pInputMemory++ ));
                 }
                 pInputMemory += (inputHandlerWidth - inputWidth);
                 pOutputMemory += (outputHandlerWidth - inputWidth);
@@ -254,7 +254,7 @@ protected:
 
     }
 
-	std::shared_ptr<lut> m_pLUT;
+    std::shared_ptr<const lut> m_pLUT;
     double m_windowCenter;
     double m_windowWidth;
 };

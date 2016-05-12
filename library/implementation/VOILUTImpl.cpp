@@ -31,7 +31,7 @@ namespace transforms
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void VOILUT::setLUT(std::shared_ptr<lut> pLut)
+void VOILUT::setLUT(const std::shared_ptr<lut>& pLut)
 {
 	m_pLUT = pLut;
 	m_windowCenter = 0;
@@ -114,20 +114,14 @@ std::shared_ptr<image> VOILUT::allocateOutputImage(
 	{
 		std::uint8_t bits = m_pLUT->getBits();
 
-		bool bNegative(false);
-        for(std::int32_t index(m_pLUT->getFirstMapped()), size((std::int32_t)m_pLUT->getSize()); !bNegative && size != 0; --size, ++index)
-		{
-			bNegative = (m_pLUT->mappedValue(index) < 0);
-		}
-
-		if(bNegative)
-		{
-            inputDepth = bits > 8 ? bitDepth_t::depthS16 : bitDepth_t::depthS8;
-		}
-		else
-		{
-            inputDepth = bits > 8 ? bitDepth_t::depthU16 : bitDepth_t::depthU8;
-		}
+        if(bits > 8)
+        {
+            inputDepth = bitDepth_t::depthU16;
+        }
+        else
+        {
+            inputDepth = bitDepth_t::depthU8;
+        }
         return std::make_shared<image>(outputWidth, outputHeight, inputDepth, inputColorSpace, bits - 1);
 	}
 

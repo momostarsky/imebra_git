@@ -93,13 +93,13 @@ public:
 		// Modality LUT found
 		//
 		///////////////////////////////////////////////////////////
-		if(m_voiLut != 0 && m_voiLut->getSize() != 0 && m_voiLut->checkValidDataRange())
+        if(m_voiLut != 0 && m_voiLut->getSize() != 0)
 		{
 			for(; inputHeight != 0; --inputHeight)
 			{
                 for(std::uint32_t scanPixels(inputWidth); scanPixels != 0; --scanPixels)
 				{
-                    *(pOutputMemory++) = (outputType) ( m_voiLut->mappedValue((std::int32_t) *(pInputMemory++)) );
+                    *(pOutputMemory++) = (outputType) ( m_voiLut->getMappedValue((std::int32_t)*(pInputMemory++)));
 				}
 				pInputMemory += (inputHandlerWidth - inputWidth);
 				pOutputMemory += (outputHandlerWidth - inputWidth);

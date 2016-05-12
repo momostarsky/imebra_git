@@ -95,47 +95,18 @@ std::shared_ptr<image> modalityVOILUT::allocateOutputImage(
 
 	// LUT
 	///////////////////////////////////////////////////////////
-	if(m_voiLut != 0 && m_voiLut->getSize() != 0 && m_voiLut->checkValidDataRange())
+    if(m_voiLut != 0 && m_voiLut->getSize() != 0)
 	{
 		std::uint8_t bits(m_voiLut->getBits());
 
-		// Look for negative outputs
-		bool bNegative(false);
-        for(std::int32_t index(m_voiLut->getFirstMapped()), size((std::int32_t)m_voiLut->getSize()); !bNegative && size != 0; --size, ++index)
-		{
-			bNegative = (m_voiLut->mappedValue(index) < 0);
-		}
-
         bitDepth_t depth;
-		if(bNegative)
-		{
-            if(bits > 16)
-            {
-                depth = bitDepth_t::depthS32;
-            }
-            else if(bits > 8)
-            {
-                depth = bitDepth_t::depthS16;
-            }
-            else
-            {
-                depth = bitDepth_t::depthS8;
-            }
-		}
-		else
-		{
-            if(bits > 16)
-            {
-                depth = bitDepth_t::depthU32;
-            }
-            else if(bits > 8)
-            {
-                depth = bitDepth_t::depthU16;
-            }
-            else
-            {
-                depth = bitDepth_t::depthU8;
-            }
+        if(bits > 8)
+        {
+            depth = bitDepth_t::depthU16;
+        }
+        else
+        {
+            depth = bitDepth_t::depthU8;
         }
 
         return std::make_shared<image>(outputWidth, outputHeight, depth, inputColorSpace, bits - 1);
