@@ -20,6 +20,16 @@ DataSet::DataSet(): m_pDataSet(std::make_shared<imebra::implementation::dataSet>
     m_pDataSet->setCharsetsList(list);
 }
 
+DataSet::DataSet(const charsetsList_t& charsets): m_pDataSet(std::make_shared<imebra::implementation::dataSet>())
+{
+    implementation::charsetsList::tCharsetsList list;
+    for(charsetsList_t::const_iterator scanCharsets(charsets.begin()), endCharsets(charsets.end()); scanCharsets != endCharsets; ++scanCharsets)
+    {
+        list.push_back(*scanCharsets);
+    }
+    m_pDataSet->setCharsetsList(list);
+}
+
 DataSet::~DataSet()
 {
 }

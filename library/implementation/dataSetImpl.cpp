@@ -19,7 +19,6 @@ $fileHeader$
 #include "codecImpl.h"
 #include "imageImpl.h"
 #include "LUTImpl.h"
-#include "waveformImpl.h"
 #include "colorTransformsFactoryImpl.h"
 #include "transformsChainImpl.h"
 #include "transformHighBitImpl.h"
@@ -150,7 +149,7 @@ std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
 
 	// Retrieve the transfer syntax
 	///////////////////////////////////////////////////////////
-    std::string transferSyntax = getString(0x0002, 0x0, 0x0010, 0, 0, "1.2.840.10008.1.2.1");
+    std::string transferSyntax = getString(0x0002, 0x0, 0x0010, 0, 0, "1.2.840.10008.1.2");
 
 	// Get the right codec
 	///////////////////////////////////////////////////////////
@@ -838,25 +837,6 @@ std::shared_ptr<lut> dataSet::getLut(std::uint16_t groupId, std::uint16_t tagId,
         embeddedLUT->getUnicodeString(0x0028, 0x0, 0x3003, 0, 0),
         getUnsignedLong(0x0028, 0, 0x0103, 0, 0, 0) != 0);
 	return pLUT;
-
-	IMEBRA_FUNCTION_END();
-}
-
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Retrieve a waveform
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-std::shared_ptr<waveform> dataSet::getWaveform(std::uint32_t waveformId)
-{
-    IMEBRA_FUNCTION_START();
-
-    return std::make_shared<waveform>(getSequenceItem(0x5400, 0, 0x0100, waveformId));
 
 	IMEBRA_FUNCTION_END();
 }
