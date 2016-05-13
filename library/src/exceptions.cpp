@@ -84,6 +84,10 @@ CodecWrongTransferSyntaxError::CodecWrongTransferSyntaxError(const std::string& 
 CodecImageTooBigError::CodecImageTooBigError(const std::string& message): CodecError(message)
 {}
 
+InvalidSequenceItemError::InvalidSequenceItemError(const std::string &message): CodecError(message)
+{
+}
+
 DataHandlerError::DataHandlerError(const std::string& message): std::runtime_error(message)
 {}
 

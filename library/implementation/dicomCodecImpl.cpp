@@ -250,7 +250,7 @@ void dicomCodec::writeTag(std::shared_ptr<streamWriter> pDestStream, std::shared
 
         std::uint16_t tagLengthWord = (std::uint16_t)tagLength;
 
-        if(bSequence | dicomDictionary::getDicomDictionary()->getLongLength(dataType))
+        if(dicomDictionary::getDicomDictionary()->getLongLength(dataType))
         {
             std::uint32_t tagLengthDWord = bSequence ? 0xffffffff : tagLength;
             tagLengthWord = 0;
@@ -260,6 +260,10 @@ void dicomCodec::writeTag(std::shared_ptr<streamWriter> pDestStream, std::shared
         }
         else
         {
+            if(bSequence)
+            {
+                IMEBRA_THROW(InvalidSequenceItemError, "Sequences cannot be used with dataType " << dataTypeString);
+            }
             pDestStream->adjustEndian((std::uint8_t*)&tagLengthWord, 2, endianType);
             pDestStream->write((std::uint8_t*)&tagLengthWord, 2);
         }
@@ -677,7 +681,7 @@ void dicomCodec::parseStream(std::shared_ptr<streamReader> pStream,
 
         // The first tag's ID has been read
         ///////////////////////////////////////////////////////////
-        bFirstTag=false;
+        bFirstTag = false;
 
         // Set the word's length to the default value
         ///////////////////////////////////////////////////////////
@@ -930,7 +934,7 @@ std::shared_ptr<image> dicomCodec::getImage(const dataSet& dataset, std::shared_
 
     // Check for RLE compression
     ///////////////////////////////////////////////////////////
-    std::string transferSyntax = dataset.getString(0x0002, 0x0, 0x0010, 0, 0, "1.2.840.10008.1.2.1");
+    std::string transferSyntax = dataset.getString(0x0002, 0x0, 0x0010, 0, 0, "1.2.840.10008.1.2");
     bool bRleCompressed = (transferSyntax == "1.2.840.10008.1.2.5");
 
     // Check for color space and subsampled channels

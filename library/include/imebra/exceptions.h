@@ -306,6 +306,25 @@ public:
 };
 
 
+///////////////////////////////////////////////////////////
+/// \brief This exception is thrown when the codec is
+///         attempting to create a sequence with an
+///         incompatible data type.
+///
+///////////////////////////////////////////////////////////
+class IMEBRA_API InvalidSequenceItemError: public CodecError
+{
+public:
+    /// \brief Build a InvalidSequenceItemError
+    ///         exception.
+    ///
+    /// @param message the message to store into the exception
+    ///
+    ///////////////////////////////////////////////////////////
+    InvalidSequenceItemError(const std::string& message);
+};
+
+
 class IMEBRA_API DataHandlerError: public std::runtime_error
 {
 public:
