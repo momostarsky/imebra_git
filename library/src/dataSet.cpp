@@ -4,6 +4,7 @@ $fileHeader$
 
 #include "../include/imebra/dataSet.h"
 #include "../include/imebra/tag.h"
+#include "../include/imebra/lut.h"
 #include "../implementation/dataSetImpl.h"
 #include "../implementation/dataHandlerNumericImpl.h"
 #include "../implementation/charsetConversionBaseImpl.h"
@@ -101,6 +102,11 @@ void DataSet::setImage(size_t frameNumber, const Image& image, const std::string
 DataSet* DataSet::getSequenceItem(const TagId& tagId, size_t itemId)
 {
     return new DataSet(m_pDataSet->getSequenceItem(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), itemId));
+}
+
+LUT* DataSet::getLUT(const TagId &tagId, size_t itemId)
+{
+    return new LUT(m_pDataSet->getLut(tagId.getGroupId(), tagId.getTagId(), itemId));
 }
 
 vois_t DataSet::getVOIs()

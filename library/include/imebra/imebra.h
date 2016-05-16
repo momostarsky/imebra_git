@@ -19,6 +19,7 @@
 #include "fileStreamInput.h"
 #include "fileStreamOutput.h"
 #include "image.h"
+#include "lut.h"
 #include "readMemory.h"
 #include "readWriteMemory.h"
 #include "memoryPool.h"

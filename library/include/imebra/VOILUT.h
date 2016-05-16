@@ -20,10 +20,11 @@ class DataSet;
 class LUT;
 
 ///
-/// \brief A VOILUT transform is applied to an Image to enhance the visibility
-///        of a specific range of pixels values.
+/// \brief A VOILUT transform enhances the visibility of a specific range of
+///        brightness in an image.
 ///
-/// The VOI/LUT settings can be read from a specific DataSet via
+///
+/// VOILUTSequence_0028_3010
 /// DataSet::getVOIs() and applied with setCenterWidth().
 ///
 ///////////////////////////////////////////////////////////////////////////////
@@ -60,7 +61,14 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     void setCenterWidth(double center, double width);
 
-    /// \brief Set the LUT applied by the transform.
+    /// \brief Set the LUT that will be used by the transform to enhance the
+    ///        contrast.
+    ///
+    /// The LUTs to be used for the VOILUT transform are stored in the DataSet's
+    /// sequence tagId_t::VOILUTSequence_0028_3010.
+    /// Each item in the sequence stores the a single LUT.
+    ///
+    /// Use DataSet::getLUT() to retrieve the LUT from the DataSet.
     ///
     /// \param lut  the LUT to apply
     ///

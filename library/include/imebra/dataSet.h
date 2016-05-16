@@ -36,6 +36,7 @@ namespace imebra
 {
 
 class Tag;
+class LUT;
 
 ///
 ///  \brief This class represents a DICOM dataset.
@@ -200,6 +201,21 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     DataSet* getSequenceItem(const TagId& tagId, size_t itemId);
+
+    /// \brief Retrieve a LUT stored in a sequence item.
+    ///
+    /// If the specified Tag does not exist then throws MissingTagError or
+    ///  MissingGroupError.
+    ///
+    /// If the specified Tag does not contain the specified sequence item then
+    ///  throws MissingItemError.
+    ///
+    /// \param tagId  the tag's id containing the sequence that stores the LUTs
+    /// \param itemId the sequence item to retrieve. The first item has an Id = 0
+    /// \return the LUT stored in the requested sequence item
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    LUT* getLUT(const TagId& tagId, size_t itemId);
 
     /// \brief Retrieve a ReadingDataHandler object connected to a specific
     ///        tag's buffer.

@@ -97,6 +97,53 @@ TEST(voilut, voilutUnsigned8OptimalVOI)
 }
 
 
+TEST(voilut, voilutUnsigned8LUT)
+{
+    Image unsigned8(6, 1, bitDepth_t::depthU8, "MONOCHROME2", 7);
+    {
+        std::unique_ptr<WritingDataHandler> unsigned8Handler(unsigned8.getWritingDataHandler());
+        unsigned8Handler->setUnsignedLong(0, 0);
+        unsigned8Handler->setUnsignedLong(1, 1);
+        unsigned8Handler->setUnsignedLong(2, 2);
+        unsigned8Handler->setUnsignedLong(3, 3);
+        unsigned8Handler->setUnsignedLong(4, 4);
+        unsigned8Handler->setUnsignedLong(5, 5);
+    }
+
+    DataSet testDataSet;
+    std::unique_ptr<Tag> sequenceTag(testDataSet.getTagCreate(TagId(tagId_t::VOILUTSequence_0028_3010)));
+    DataSet lutItem;
+    {
+        std::unique_ptr<WritingDataHandlerNumeric> descriptor(lutItem.getWritingDataHandlerNumeric(TagId(tagId_t::LUTDescriptor_0028_3002), 0, tagVR_t::US));
+        std::unique_ptr<WritingDataHandlerNumeric> data(lutItem.getWritingDataHandlerNumeric(TagId(tagId_t::LUTData_0028_3006), 0, tagVR_t::US));
+        descriptor->setUnsignedLong(0, 3);
+        descriptor->setUnsignedLong(1, 2);
+        descriptor->setUnsignedLong(2, 16);
+
+        data->setUnsignedLong(0, 100);
+        data->setUnsignedLong(1, 200);
+        data->setUnsignedLong(2, 300);
+    }
+    sequenceTag->setSequenceItem(0, lutItem);
+    std::unique_ptr<LUT> lut(testDataSet.getLUT(TagId(tagId_t::VOILUTSequence_0028_3010), 0));
+
+
+    VOILUT voilut;
+    voilut.setLUT(*lut);
+
+    std::unique_ptr<Image> paletteOut(voilut.allocateOutputImage(unsigned8, 6, 1));
+    voilut.runTransform(unsigned8, 0, 0, 6, 1, *paletteOut, 0, 0);
+
+    std::unique_ptr<ReadingDataHandler> paletteHandler(paletteOut->getReadingDataHandler());
+
+    ASSERT_EQ(100, paletteHandler->getUnsignedLong(0));
+    ASSERT_EQ(100, paletteHandler->getUnsignedLong(1));
+    ASSERT_EQ(100, paletteHandler->getUnsignedLong(2));
+    ASSERT_EQ(200, paletteHandler->getUnsignedLong(3));
+    ASSERT_EQ(300, paletteHandler->getUnsignedLong(4));
+    ASSERT_EQ(300, paletteHandler->getUnsignedLong(5));
+
+}
 
 }
 

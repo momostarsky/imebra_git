@@ -834,7 +834,7 @@ std::shared_ptr<lut> dataSet::getLut(std::uint16_t groupId, std::uint16_t tagId,
     std::shared_ptr<lut> pLUT = std::make_shared<lut>(
         descriptorHandle,
         dataHandle,
-        embeddedLUT->getUnicodeString(0x0028, 0x0, 0x3003, 0, 0),
+        embeddedLUT->getUnicodeString(0x0028, 0x0, 0x3003, 0, 0, L""),
         getUnsignedLong(0x0028, 0, 0x0103, 0, 0, 0) != 0);
 	return pLUT;
 

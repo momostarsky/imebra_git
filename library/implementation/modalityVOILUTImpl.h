@@ -118,7 +118,7 @@ public:
 		{
             for(std::uint32_t scanPixels(inputWidth); scanPixels != 0; --scanPixels)
 			{
-				*(pOutputMemory++) = (outputType)((double)(*(pInputMemory++)) * m_rescaleSlope + m_rescaleIntercept + 0.5);
+                *(pOutputMemory++) = (outputType)((double)(*(pInputMemory++)) * m_rescaleSlope + m_rescaleIntercept);
 			}
 			pInputMemory += (inputHandlerWidth - inputWidth);
 			pOutputMemory += (outputHandlerWidth - inputWidth);

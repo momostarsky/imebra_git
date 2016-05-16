@@ -61,11 +61,11 @@ modalityVOILUT::modalityVOILUT(std::shared_ptr<const dataSet> pDataSet):
         try
         {
             m_voiLut = pDataSet->getLut(0x0028, 0x3000, 0);
-            m_bEmpty = m_voiLut->getSize() != 0;
+            m_bEmpty = m_voiLut->getSize() == 0;
         }
         catch(const MissingDataElementError&)
         {
-            // Nothing to do. Transformis empty
+            // Nothing to do. Transform is empty
         }
 
     }
@@ -126,8 +126,8 @@ std::shared_ptr<image> modalityVOILUT::allocateOutputImage(
         value0 = ((std::int32_t)(-1) << inputHighBit);
         value1 = ((std::int32_t)1 << inputHighBit);
 	}
-	std::int32_t finalValue0((std::int32_t) ((double)value0 * m_rescaleSlope + m_rescaleIntercept + 0.5) );
-	std::int32_t finalValue1((std::int32_t) ((double)value1 * m_rescaleSlope + m_rescaleIntercept + 0.5) );
+    std::int32_t finalValue0((std::int32_t) ((double)value0 * m_rescaleSlope + m_rescaleIntercept) );
+    std::int32_t finalValue1((std::int32_t) ((double)value1 * m_rescaleSlope + m_rescaleIntercept) );
 
 	std::int32_t minValue, maxValue;
 	if(finalValue0 < finalValue1)
