@@ -95,6 +95,8 @@ public:
 
     virtual ~charsetConversionBase();
 
+    static_assert(sizeof(wchar_t) == 2 || sizeof(wchar_t) == 4, "Unsupported UTF char size");
+
     /// \brief Retrieve the only instance of the charset
     ///         dictionary.
     ///

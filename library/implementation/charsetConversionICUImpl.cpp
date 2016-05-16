@@ -8,7 +8,6 @@ $fileHeader$
 */
 
 #include "configurationImpl.h"
-
 #if defined(IMEBRA_USE_ICU)
 
 #include "exceptionImpl.h"
@@ -34,9 +33,12 @@ charsetConversionICU::charsetConversionICU(const std::string& dicomName)
     m_pIcuConverter = ucnv_open(info.m_isoRegistration.c_str(), &errorCode);
     if(U_FAILURE(errorCode))
     {
-        std::ostringstream buildErrorString;
-        buildErrorString << "ICU library returned error " << errorCode << " for table " << dicomName;
-        IMEBRA_THROW(charsetConversionExceptionNoSupportedTable, buildErrorString.str());
+        IMEBRA_THROW(CharsetConversionNoSupportedTableError, "ICU library returned error " << errorCode << " for table " << dicomName);
+    }
+    ucnv_setSubstChars(m_pIcuConverter, "?", 1, &errorCode);
+    if(U_FAILURE(errorCode))
+    {
+        IMEBRA_THROW(CharsetConversionNoSupportedTableError, "ICU library returned error " << errorCode << " while setting the substitution char for table " << dicomName);
     }
 
     IMEBRA_FUNCTION_END();
@@ -78,8 +80,6 @@ std::string charsetConversionICU::fromUnicode(const std::wstring& unicodeString)
     case 4:
         unicodeStringConversion = UnicodeString::fromUTF32((UChar32*)&(unicodeString[0]), (std::int32_t)unicodeString.size());
         break;
-    default:
-        IMEBRA_THROW(charsetConversionExceptionUtfSizeNotSupported, "The system utf size is not supported");
     }
     UErrorCode errorCode(U_ZERO_ERROR);
     int32_t conversionLength = unicodeStringConversion.extract(0, 0, m_pIcuConverter, errorCode);
@@ -88,11 +88,9 @@ std::string charsetConversionICU::fromUnicode(const std::wstring& unicodeString)
     unicodeStringConversion.extract(&(returnString[0]), conversionLength, m_pIcuConverter, errorCode);
     if(U_FAILURE(errorCode))
     {
-        std::ostringstream buildErrorString;
-        buildErrorString << "ICU library returned error " << errorCode;
-        IMEBRA_THROW(charsetConversionException, buildErrorString.str());
+        IMEBRA_THROW(CharsetConversionError, "ICU library returned error " << errorCode);
     }
-    if(returnString == "\x1a")
+    if(returnString == "?" && unicodeString != L"?")
     {
         return "";
     }
@@ -134,8 +132,6 @@ std::wstring charsetConversionICU::toUnicode(const std::string& asciiString) con
         unicodeString.toUTF32((UChar32*)&(returnString[0]), conversionLength, errorCode);
         return returnString;
     }
-    default:
-        IMEBRA_THROW(charsetConversionExceptionUtfSizeNotSupported, "The system utf size is not supported");
     }
 
 	IMEBRA_FUNCTION_END();

@@ -52,9 +52,7 @@ charsetConversionIconv::charsetConversionIconv(const std::string& dicomName)
     m_iconvFromUnicode = iconv_open(toCodeIgnore.c_str(), utfCode);
     if(m_iconvToUnicode == (iconv_t)-1 || m_iconvFromUnicode == (iconv_t)-1)
     {
-        std::ostringstream buildErrorString;
-        buildErrorString << "Table " << dicomName << " not supported by the system";
-        IMEBRA_THROW(CharsetConversionNoSupportedTableError, buildErrorString.str());
+        IMEBRA_THROW(CharsetConversionNoSupportedTableError, "Table " << dicomName << " not supported by the system");
     }
 
     IMEBRA_FUNCTION_END();

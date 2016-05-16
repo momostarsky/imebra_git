@@ -343,18 +343,12 @@ void validateStringContainer(const stringContainer& strings, size_t maxSize, siz
 
     if(maxSize != 0)
     {
-        size_t totalSize(0);
-        if(strings.size() > 1)
-        {
-            totalSize += strings.size() - 1;
-        }
         for(size_t scanStrings(0); scanStrings != strings.size(); ++scanStrings)
         {
-            totalSize += strings.at(scanStrings).size();
-        }
-        if(totalSize > maxSize)
-        {
-            IMEBRA_THROW(DataHandlerInvalidDataError, "Maximum size is " <<  totalSize << " but should be maximum " << unitSize << " bytes");
+            if(strings.at(scanStrings).size() > maxSize)
+            {
+                IMEBRA_THROW(DataHandlerInvalidDataError, "Element size is " << strings.at(scanStrings).size() << " but should be maximum " << maxSize << " bytes");
+            }
         }
     }
 

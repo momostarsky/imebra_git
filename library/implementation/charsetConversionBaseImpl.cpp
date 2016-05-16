@@ -61,7 +61,7 @@ charsetDictionary::charsetDictionary()
     {
         if(!scanInfo->second.m_escapeSequence.empty())
         {
-            m_escapeSequences[scanInfo->second.m_escapeSequence] = scanInfo->first;
+            m_escapeSequences[scanInfo->second.m_escapeSequence] = scanInfo->second.m_dicomName;
         }
     }
 
