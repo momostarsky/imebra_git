@@ -571,9 +571,9 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
         setUnsignedLong(0x0028, 0x0, 0x0011, 0, imageWidth);
         setUnsignedLong(0x0028, 0x0, 0x0010, 0, imageHeight);
 
-        if(colorSpace == "PALETTECOLOR")
+        if(colorSpace == "PALETTE COLOR")
 		{
-            throw;
+            IMEBRA_THROW(DataSetImagePaletteColorIsReadOnly, "Cannot set images with color space PALETTE COLOR");
 		}
 
 		double imageSizeMmX, imageSizeMmY;
@@ -868,7 +868,7 @@ vois_t dataSet::getVOIs()
             vois.push_back(voi);
         }
     }
-    catch(const MissingItemError&)
+    catch(const MissingDataElementError&)
     {
         // VOI not present
     }

@@ -87,7 +87,7 @@ std::int32_t readingDataHandlerString::getSignedLong(const size_t index) const
 {
     IMEBRA_FUNCTION_START();
 
-    std::istringstream conversion(m_strings.at(index));
+    std::istringstream conversion(getString(index));
     std::int32_t value;
     if(!(conversion >> value))
     {
@@ -104,7 +104,7 @@ std::uint32_t readingDataHandlerString::getUnsignedLong(const size_t index) cons
 {
     IMEBRA_FUNCTION_START();
 
-    std::istringstream conversion(m_strings.at(index));
+    std::istringstream conversion(getString(index));
     std::uint32_t value;
     if(!(conversion >> value))
     {
@@ -121,7 +121,7 @@ double readingDataHandlerString::getDouble(const size_t index) const
 {
     IMEBRA_FUNCTION_START();
 
-    std::istringstream conversion(m_strings.at(index));
+    std::istringstream conversion(getString(index));
     double value;
     if(!(conversion >> value))
     {
@@ -137,6 +137,11 @@ double readingDataHandlerString::getDouble(const size_t index) const
 std::string readingDataHandlerString::getString(const size_t index) const
 {
     IMEBRA_FUNCTION_START();
+
+    if(index >= getSize())
+    {
+        IMEBRA_THROW(MissingItemError, "Missing item " << index);
+    }
 
     return m_strings.at(index);
 

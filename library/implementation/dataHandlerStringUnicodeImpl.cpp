@@ -77,7 +77,7 @@ std::int32_t readingDataHandlerStringUnicode::getSignedLong(const size_t index) 
 {
     IMEBRA_FUNCTION_START();
 
-    std::wistringstream conversion(m_strings.at(index));
+    std::wistringstream conversion(getUnicodeString(index));
     std::int32_t value;
     if(!(conversion >> value))
     {
@@ -94,7 +94,7 @@ std::uint32_t readingDataHandlerStringUnicode::getUnsignedLong(const size_t inde
 {
     IMEBRA_FUNCTION_START();
 
-    std::wistringstream conversion(m_strings.at(index));
+    std::wistringstream conversion(getUnicodeString(index));
     std::uint32_t value;
     if(!(conversion >> value))
     {
@@ -111,7 +111,7 @@ double readingDataHandlerStringUnicode::getDouble(const size_t index) const
 {
     IMEBRA_FUNCTION_START();
 
-    std::wistringstream conversion(m_strings.at(index));
+    std::wistringstream conversion(getUnicodeString(index));
     double value;
     if(!(conversion >> value))
     {
@@ -130,7 +130,7 @@ std::string readingDataHandlerStringUnicode::getString(const size_t index) const
 
     charsetsList::tCharsetsList charsets;
     charsets.push_back("ISO 2022 IR 6");
-    return dicomConversion::convertFromUnicode(m_strings.at(index), &charsets);
+    return dicomConversion::convertFromUnicode(getUnicodeString(index), &charsets);
 
     IMEBRA_FUNCTION_END();
 }
@@ -141,6 +141,10 @@ std::wstring readingDataHandlerStringUnicode::getUnicodeString(const size_t inde
 {
     IMEBRA_FUNCTION_START();
 
+    if(index >= getSize())
+    {
+        IMEBRA_THROW(MissingItemError, "Missing item " << index);
+    }
     return m_strings.at(index);
 
     IMEBRA_FUNCTION_END();

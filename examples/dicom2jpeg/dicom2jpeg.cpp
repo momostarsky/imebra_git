@@ -62,7 +62,7 @@ void outputDatasetTags(const DataSet& dataset, const std::wstring& prefix)
                 std::wcout << prefix << L"  SEQUENCE " << itemId << std::endl;
                 outputDatasetTags(*sequence, prefix + L"    ");
             }
-            catch(const MissingItemError&)
+            catch(const MissingDataElementError&)
             {
                 break;
             }
@@ -141,15 +141,13 @@ int main(int argc, char* argv[])
             // Get the first image. We use it in case there isn't any presentation VOI/LUT
             //  and we have to calculate the optimal one
             //////////////////////////////////////////////////////////////////////////////
-            std::unique_ptr<Image> dataSetImage(loadedDataSet->getImage(0));
+            std::unique_ptr<Image> dataSetImage(loadedDataSet->getImageApplyModalityTransform(0));
             std::uint32_t width = dataSetImage->getWidth();
             std::uint32_t height = dataSetImage->getHeight();
 
             // Build the transforms chain
             /////////////////////////////
             TransformsChain chain;
-
-            chain.addTransform(ModalityVOILUT(*loadedDataSet));
 
             if(ColorTransformsFactory::isMonochrome(dataSetImage->getColorSpace()))
             {

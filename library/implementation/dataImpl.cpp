@@ -450,7 +450,7 @@ std::shared_ptr<dataSet> data::getSequenceItem(size_t dataSetId) const
 
     if(m_embeddedDataSets.size() <= dataSetId)
 	{
-        IMEBRA_THROW(MissingItemError, "The requested sequence item does not exist");
+        IMEBRA_THROW(MissingDataElementError, "The requested sequence item does not exist");
 	}
 
 	return m_embeddedDataSets[dataSetId];

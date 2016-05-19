@@ -185,6 +185,10 @@ public:
 	{
         IMEBRA_FUNCTION_START();
 
+        if(index >= getSize())
+        {
+            IMEBRA_THROW(MissingItemError, "Missing item " << index);
+        }
         return (std::int32_t) (((const dataHandlerType*)m_pMemory->data())[index]);
 
         IMEBRA_FUNCTION_END();
@@ -196,6 +200,10 @@ public:
 	{
         IMEBRA_FUNCTION_START();
 
+        if(index >= getSize())
+        {
+            IMEBRA_THROW(MissingItemError, "Missing item " << index);
+        }
         return (std::uint32_t) (((const dataHandlerType*)m_pMemory->data())[index]);
 
         IMEBRA_FUNCTION_END();
@@ -207,6 +215,10 @@ public:
 	{
         IMEBRA_FUNCTION_START();
 
+        if(index >= getSize())
+        {
+            IMEBRA_THROW(MissingItemError, "Missing item " << index);
+        }
         return (double) (((const dataHandlerType*)m_pMemory->data())[index]);
 
         IMEBRA_FUNCTION_END();
@@ -218,7 +230,12 @@ public:
 	{
         IMEBRA_FUNCTION_START();
 
-		std::ostringstream convStream;
+        if(index >= getSize())
+        {
+            IMEBRA_THROW(MissingItemError, "Missing item " << index);
+        }
+
+        std::ostringstream convStream;
 
         if(std::is_same<dataHandlerType, std::uint8_t>::value ||
                 std::is_same<dataHandlerType, std::int8_t>::value )
