@@ -51,13 +51,40 @@ lut::lut(std::shared_ptr<handlers::readingDataHandlerNumericBase> pDescriptor, s
     }
     else
     {
-        m_firstMapped = pDescriptor->getUnsignedLong(1);
+        m_firstMapped = (std::int32_t)pDescriptor->getUnsignedLong(1);
     }
 
-    m_bits = pDescriptor->getUnsignedLong(2);
+    m_bits = (std::uint8_t)pDescriptor->getUnsignedLong(2);
+
+    // If the LUT descriptor says 8 bit but it is actually 16 bits
+    // then correct the descriptor's information
+    //////////////////////////////////////////////////////////////
+    if(m_bits <= 8 && pData->getUnitSize() * pData->getSize() == m_size * 2)
+    {
+        m_bits = 16;
+    }
+
+    // More than 16 bits per element are not allowed
+    ////////////////////////////////////////////////
     if(m_bits > 16)
     {
         IMEBRA_THROW(LutCorruptedError, "The LUT items cannot be more than 16 bit wide");
+    }
+
+    // If 8 bits are stored in 16 bit elements, then extract them
+    /////////////////////////////////////////////////////////////
+    if(m_bits <= 8 && pData->getUnitSize() == 2)
+    {
+        std::shared_ptr<buffer> temporaryBuffer(std::make_shared<buffer>());
+        std::shared_ptr<handlers::writingDataHandlerNumericBase> writingHandler(temporaryBuffer->getWritingDataHandlerNumeric(tagVR_t::OB, m_size));
+        for(size_t scanData(0); scanData != pData->getSize(); ++scanData)
+        {
+            std::uint32_t data = pData->getUnsignedLong(scanData);
+            writingHandler->setUnsignedLong(scanData * 2, data & 0xff);
+            writingHandler->setUnsignedLong(scanData * 2 + 1, data >> 8);
+        }
+        writingHandler.reset();
+        pData = temporaryBuffer->getReadingDataHandlerNumeric(tagVR_t::OB);
     }
 
     if(m_size != pData->getSize())
@@ -68,7 +95,6 @@ lut::lut(std::shared_ptr<handlers::readingDataHandlerNumericBase> pDescriptor, s
     m_pDataHandler = pData;
 
     m_description = description;
-
 
     IMEBRA_FUNCTION_END();
 }
