@@ -437,22 +437,35 @@ public:
     DataSetOldFormatError(const std::string& message);
 };
 
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
 /// \brief This exception is thrown when the an image that
 ///         doesn't exist is requested.
 ///
 ///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
 class IMEBRA_API DataSetImageDoesntExistError: public DataSetError
 {
 public:
-    /// \brief Build a dataSetImageDoesntExist exception
+    /// \brief Build a DataSetImageDoesntExistError exception
     ///
     /// @param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////
     DataSetImageDoesntExistError(const std::string& message);
+};
+
+/// \brief This exception is thrown when the the client
+///         tries to store a palette color image into the
+///         dataset.
+///
+///////////////////////////////////////////////////////////
+class IMEBRA_API DataSetImagePaletteColorIsReadOnly: public DataSetError
+{
+public:
+    /// \brief Build a DataSetImageDoesntExistError exception
+    ///
+    /// @param message the message to store into the exception
+    ///
+    ///////////////////////////////////////////////////////////
+    DataSetImagePaletteColorIsReadOnly(const std::string& message);
 };
 
 ///////////////////////////////////////////////////////////
@@ -465,7 +478,8 @@ public:
 class IMEBRA_API DataSetCorruptedOffsetTableError: public DataSetError
 {
 public:
-    /// \brief Build a dataSetImageDoesntExist exception
+    /// \brief Build a DataSetCorruptedOffsetTableError
+    ///        exception
     ///
     /// @param message the message to store into the exception
     ///

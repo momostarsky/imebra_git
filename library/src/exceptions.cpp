@@ -121,6 +121,9 @@ DataSetOldFormatError::DataSetOldFormatError(const std::string& message): DataSe
 DataSetImageDoesntExistError::DataSetImageDoesntExistError(const std::string& message): DataSetError(message)
 {}
 
+DataSetImagePaletteColorIsReadOnly::DataSetImagePaletteColorIsReadOnly(const std::string &message): DataSetError(message)
+{}
+
 DataSetCorruptedOffsetTableError::DataSetCorruptedOffsetTableError(const std::string& message): DataSetError(message)
 {}
 
