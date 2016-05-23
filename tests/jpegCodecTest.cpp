@@ -114,53 +114,56 @@ TEST(jpegCodecTest, testLossless)
             {
                 for(int b2Complement = 0; b2Complement != 2; ++b2Complement)
                 {
-                    std::cout <<
-                                 "Testing lossless jpeg (" << (bits) <<
-                                 " bits, interleaved=" << interleaved <<
-                                 ", firstOrderPrediction=" << firstOrderPrediction <<
-                                 ", 2complement=" << b2Complement<<
-                                 ")"<< std::endl;
-
-                    DataSet dataset;
-
-                    std::uint32_t width = 115;
-                    std::uint32_t height = 400;
-
-                    bitDepth_t depth;
-                    if(bits <= 8)
+                    for(int colorSpace(0); colorSpace != 2; ++colorSpace)
                     {
-                        depth = (b2Complement == 1) ? bitDepth_t::depthS8 : bitDepth_t::depthU8;
+                        std::cout <<
+                                     "Testing lossless jpeg (" << (bits) <<
+                                     " bits, interleaved=" << interleaved <<
+                                     ", firstOrderPrediction=" << firstOrderPrediction <<
+                                     ", 2complement=" << b2Complement <<
+                                     ", colorSpace=" << (colorSpace == 0 ? "RGB" : "MONOCHROME2") <<
+                                     ")"<< std::endl;
+
+                        DataSet dataset;
+
+                        std::uint32_t width = 115;
+                        std::uint32_t height = 400;
+
+                        bitDepth_t depth;
+                        if(bits <= 8)
+                        {
+                            depth = (b2Complement == 1) ? bitDepth_t::depthS8 : bitDepth_t::depthU8;
+                        }
+                        else
+                        {
+                            depth = (b2Complement == 1) ? bitDepth_t::depthS16 : bitDepth_t::depthU16;
+                        }
+
+                        std::unique_ptr<Image> image(buildImageForTest(width, height, depth, bits, 30, 20, colorSpace == 0 ? "RGB" : "MONOCHROME2", 50));
+
+                        std::string transferSyntax = (firstOrderPrediction == 0) ? "1.2.840.10008.1.2.4.57" : "1.2.840.10008.1.2.4.70";
+
+                        ReadWriteMemory savedJpeg;
+                        {
+                            DataSet dataSet;
+                            dataSet.setImage(0, *image, transferSyntax, imageQuality_t::veryHigh);
+
+                            MemoryStreamOutput saveStream(savedJpeg);
+                            StreamWriter writer(saveStream);
+                            CodecFactory::save(dataSet, writer, codecType_t::dicom);
+                        }
+
+                        MemoryStreamInput loadStream(savedJpeg);
+                        StreamReader reader(loadStream);
+
+                        std::unique_ptr<DataSet> readDataSet(CodecFactory::load(reader, 0xffff));
+
+                        std::unique_ptr<Image> checkImage(readDataSet->getImage(0));
+
+                        // Compare the buffers
+                        double difference = compareImages(*image, *checkImage);
+                        ASSERT_FLOAT_EQ(difference, 0);
                     }
-                    else
-                    {
-                        depth = (b2Complement == 1) ? bitDepth_t::depthS16 : bitDepth_t::depthU16;
-                    }
-
-                    std::unique_ptr<Image> image(buildImageForTest(width, height, depth, bits, 30, 20, "RGB", 50));
-
-                    std::string transferSyntax = (firstOrderPrediction == 0) ? "1.2.840.10008.1.2.4.57" : "1.2.840.10008.1.2.4.70";
-
-                    ReadWriteMemory savedJpeg;
-                    {
-                        DataSet dataSet;
-                        dataSet.setImage(0, *image, transferSyntax, imageQuality_t::veryHigh);
-
-                        MemoryStreamOutput saveStream(savedJpeg);
-                        StreamWriter writer(saveStream);
-                        CodecFactory::save(dataSet, writer, codecType_t::dicom);
-                    }
-
-                    MemoryStreamInput loadStream(savedJpeg);
-                    StreamReader reader(loadStream);
-
-                    std::unique_ptr<DataSet> readDataSet(CodecFactory::load(reader, 0xffff));
-
-                    std::unique_ptr<Image> checkImage(readDataSet->getImage(0));
-
-                    // Compare the buffers
-                    double difference = compareImages(*image, *checkImage);
-                    ASSERT_FLOAT_EQ(difference, 0);
-
                 }
             }
         }

@@ -95,6 +95,39 @@ TEST(dataSetTest, testFragmentation)
         ASSERT_TRUE(compareImages(*testImage0, *compareImage1) > 30);
 }
 
+
+TEST(dataSetTest, testVOIs)
+{
+    DataSet testDataSet;
+
+    vois_t vois0 = testDataSet.getVOIs();
+    ASSERT_TRUE(vois0.empty());
+
+    {
+        std::unique_ptr<WritingDataHandler> centerHandler(testDataSet.getWritingDataHandler(TagId(0x0028, 0x1050), 0));
+        centerHandler->setDouble(0, 10.4);
+        centerHandler->setDouble(1, 20.4);
+
+        std::unique_ptr<WritingDataHandler> widthHandler(testDataSet.getWritingDataHandler(TagId(0x0028, 0x1051), 0));
+        widthHandler->setDouble(0, 12.5);
+        widthHandler->setDouble(1, 22.5);
+
+        std::unique_ptr<WritingDataHandler> descriptionHandler(testDataSet.getWritingDataHandler(TagId(0x0028, 0x1055), 0));
+        descriptionHandler->setUnicodeString(0, L"Test1");
+        descriptionHandler->setUnicodeString(1, L"Test2");
+    }
+
+    vois_t vois1 = testDataSet.getVOIs();
+    ASSERT_EQ(2, vois1.size());
+    ASSERT_DOUBLE_EQ(10.4, vois1.at(0).center);
+    ASSERT_DOUBLE_EQ(12.5, vois1.at(0).width);
+    ASSERT_EQ(L"Test1", vois1.at(0).description);
+
+    ASSERT_DOUBLE_EQ(20.4, vois1.at(1).center);
+    ASSERT_DOUBLE_EQ(22.5, vois1.at(1).width);
+    ASSERT_EQ(L"Test2", vois1.at(1).description);
+}
+
 } // namespace tests
 
 } // namespace imebra

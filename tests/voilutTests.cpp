@@ -24,6 +24,8 @@ TEST(voilut, voilutUnsigned8)
 
     VOILUT voilut;
     voilut.setCenterWidth(0, 50);
+    ASSERT_EQ(0, voilut.getCenter());
+    ASSERT_EQ(50, voilut.getWidth());
 
     std::unique_ptr<Image> unsigned8Out(voilut.allocateOutputImage(unsigned8, 6, 1));
     voilut.runTransform(unsigned8, 0, 0, 6, 1, *unsigned8Out, 0, 0);
@@ -69,6 +71,8 @@ TEST(voilut, voilutUnsigned8OptimalVOI)
 
     VOILUT voilut;
     voilut.applyOptimalVOI(unsigned8, 0, 0, 6, 1);
+    ASSERT_EQ(25, voilut.getCenter());
+    ASSERT_EQ(50, voilut.getWidth());
 
     std::unique_ptr<Image> unsigned8Out(voilut.allocateOutputImage(unsigned8, 6, 1));
     voilut.runTransform(unsigned8, 0, 0, 6, 1, *unsigned8Out, 0, 0);

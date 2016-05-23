@@ -53,6 +53,40 @@ TEST(colorConversion, YBRFULL2RGB)
     ASSERT_EQ(255, rgb1Handler->getSignedLong(2));
 }
 
+TEST(colorConversion, factoryTest)
+{
+    ASSERT_FALSE(ColorTransformsFactory::canSubsample("RGB"));
+    ASSERT_FALSE(ColorTransformsFactory::canSubsample("MONOCHROME2"));
+    ASSERT_FALSE(ColorTransformsFactory::canSubsample("MONOCHROME1"));
+    ASSERT_FALSE(ColorTransformsFactory::canSubsample("PALETTE COLOR"));
+    ASSERT_TRUE(ColorTransformsFactory::canSubsample("YBR_FULL"));
+    ASSERT_TRUE(ColorTransformsFactory::canSubsample("YBR_PARTIAL"));
+
+    ASSERT_FALSE(ColorTransformsFactory::isMonochrome("RGB"));
+    ASSERT_TRUE(ColorTransformsFactory::isMonochrome("MONOCHROME2"));
+    ASSERT_TRUE(ColorTransformsFactory::isMonochrome("MONOCHROME1"));
+    ASSERT_FALSE(ColorTransformsFactory::isMonochrome("PALETTE COLOR"));
+    ASSERT_FALSE(ColorTransformsFactory::isMonochrome("YBR_FULL"));
+    ASSERT_FALSE(ColorTransformsFactory::isMonochrome("YBR_PARTIAL"));
+
+    ASSERT_EQ(3, ColorTransformsFactory::getNumberOfChannels("RGB"));
+    ASSERT_EQ(1, ColorTransformsFactory::getNumberOfChannels("MONOCHROME2"));
+    ASSERT_EQ(1, ColorTransformsFactory::getNumberOfChannels("MONOCHROME1"));
+    ASSERT_EQ(1, ColorTransformsFactory::getNumberOfChannels("PALETTE COLOR"));
+    ASSERT_EQ(3, ColorTransformsFactory::getNumberOfChannels("YBR_FULL"));
+    ASSERT_EQ(3, ColorTransformsFactory::getNumberOfChannels("YBR_PARTIAL"));
+
+    ASSERT_EQ("YBR_PARTIAL_422", ColorTransformsFactory::makeSubsampled("YBR_PARTIAL", true, false));
+    ASSERT_EQ("YBR_PARTIAL_420", ColorTransformsFactory::makeSubsampled("YBR_PARTIAL", true, true));
+    ASSERT_EQ("YBR_PARTIAL", ColorTransformsFactory::makeSubsampled("YBR_PARTIAL", false, false));
+
+    ASSERT_EQ("YBR_FULL", ColorTransformsFactory::normalizeColorSpace("YBR_FULL_422"));
+    ASSERT_TRUE(ColorTransformsFactory::isSubsampledX("YBR_FULL_422"));
+    ASSERT_FALSE(ColorTransformsFactory::isSubsampledY("YBR_FULL_422"));
+    ASSERT_TRUE(ColorTransformsFactory::isSubsampledY("YBR_FULL_420"));
+    ASSERT_EQ("PALETTE COLOR", ColorTransformsFactory::normalizeColorSpace("PALETTE COLOR"));
+}
+
 }
 
 }
