@@ -27,20 +27,36 @@ TEST(modalityVoilut, voilutUnsigned8)
     testDataSet.setDouble(TagId(tagId_t::RescaleIntercept_0028_1052), 0, -1);
     testDataSet.setImage(0, unsigned8, "1.2.840.10008.1.2.1", imageQuality_t::veryHigh);
 
-    ModalityVOILUT voilut(testDataSet);
+    {
+        ModalityVOILUT voilut(testDataSet);
 
-    std::unique_ptr<Image> signed8Out(voilut.allocateOutputImage(unsigned8, 6, 1));
-    voilut.runTransform(unsigned8, 0, 0, 6, 1, *signed8Out, 0, 0);
-    ASSERT_EQ(bitDepth_t::depthS16, signed8Out->getDepth());
+        std::unique_ptr<Image> signed8Out(voilut.allocateOutputImage(unsigned8, 6, 1));
+        voilut.runTransform(unsigned8, 0, 0, 6, 1, *signed8Out, 0, 0);
+        ASSERT_EQ(bitDepth_t::depthS16, signed8Out->getDepth());
 
-    std::unique_ptr<ReadingDataHandler> signed8Handler(signed8Out->getReadingDataHandler());
+        std::unique_ptr<ReadingDataHandler> signed8Handler(signed8Out->getReadingDataHandler());
 
-    ASSERT_EQ(-1, signed8Handler->getUnsignedLong(0));
-    ASSERT_EQ(19, signed8Handler->getUnsignedLong(1));
-    ASSERT_EQ(39, signed8Handler->getUnsignedLong(2));
-    ASSERT_EQ(59, signed8Handler->getUnsignedLong(3));
-    ASSERT_EQ(79, signed8Handler->getUnsignedLong(4));
-    ASSERT_EQ(99, signed8Handler->getUnsignedLong(5));
+        ASSERT_EQ(-1, signed8Handler->getUnsignedLong(0));
+        ASSERT_EQ(19, signed8Handler->getUnsignedLong(1));
+        ASSERT_EQ(39, signed8Handler->getUnsignedLong(2));
+        ASSERT_EQ(59, signed8Handler->getUnsignedLong(3));
+        ASSERT_EQ(79, signed8Handler->getUnsignedLong(4));
+        ASSERT_EQ(99, signed8Handler->getUnsignedLong(5));
+    }
+
+    {
+        std::unique_ptr<Image> signed8Out(testDataSet.getImageApplyModalityTransform(0));
+        ASSERT_EQ(bitDepth_t::depthS16, signed8Out->getDepth());
+
+        std::unique_ptr<ReadingDataHandler> signed8Handler(signed8Out->getReadingDataHandler());
+
+        ASSERT_EQ(-1, signed8Handler->getUnsignedLong(0));
+        ASSERT_EQ(19, signed8Handler->getUnsignedLong(1));
+        ASSERT_EQ(39, signed8Handler->getUnsignedLong(2));
+        ASSERT_EQ(59, signed8Handler->getUnsignedLong(3));
+        ASSERT_EQ(79, signed8Handler->getUnsignedLong(4));
+        ASSERT_EQ(99, signed8Handler->getUnsignedLong(5));
+    }
 }
 
 
@@ -74,20 +90,34 @@ TEST(modalityVoilut, voilutUnsigned8LUT)
     }
     sequenceTag->setSequenceItem(0, lutItem);
 
-    ModalityVOILUT voilut(testDataSet);
+    {
+        ModalityVOILUT voilut(testDataSet);
 
-    std::unique_ptr<Image> unsigned8Out(voilut.allocateOutputImage(unsigned8, 6, 1));
-    voilut.runTransform(unsigned8, 0, 0, 6, 1, *unsigned8Out, 0, 0);
+        std::unique_ptr<Image> unsigned8Out(voilut.allocateOutputImage(unsigned8, 6, 1));
+        voilut.runTransform(unsigned8, 0, 0, 6, 1, *unsigned8Out, 0, 0);
 
-    std::unique_ptr<ReadingDataHandler> unsignedHandler(unsigned8Out->getReadingDataHandler());
+        std::unique_ptr<ReadingDataHandler> unsignedHandler(unsigned8Out->getReadingDataHandler());
 
-    ASSERT_EQ(100, unsignedHandler->getUnsignedLong(0));
-    ASSERT_EQ(100, unsignedHandler->getUnsignedLong(1));
-    ASSERT_EQ(100, unsignedHandler->getUnsignedLong(2));
-    ASSERT_EQ(200, unsignedHandler->getUnsignedLong(3));
-    ASSERT_EQ(300, unsignedHandler->getUnsignedLong(4));
-    ASSERT_EQ(300, unsignedHandler->getUnsignedLong(5));
+        ASSERT_EQ(100, unsignedHandler->getUnsignedLong(0));
+        ASSERT_EQ(100, unsignedHandler->getUnsignedLong(1));
+        ASSERT_EQ(100, unsignedHandler->getUnsignedLong(2));
+        ASSERT_EQ(200, unsignedHandler->getUnsignedLong(3));
+        ASSERT_EQ(300, unsignedHandler->getUnsignedLong(4));
+        ASSERT_EQ(300, unsignedHandler->getUnsignedLong(5));
+    }
 
+    {
+        std::unique_ptr<Image> unsigned8Out(testDataSet.getImageApplyModalityTransform(0));
+
+        std::unique_ptr<ReadingDataHandler> unsignedHandler(unsigned8Out->getReadingDataHandler());
+
+        ASSERT_EQ(100, unsignedHandler->getUnsignedLong(0));
+        ASSERT_EQ(100, unsignedHandler->getUnsignedLong(1));
+        ASSERT_EQ(100, unsignedHandler->getUnsignedLong(2));
+        ASSERT_EQ(200, unsignedHandler->getUnsignedLong(3));
+        ASSERT_EQ(300, unsignedHandler->getUnsignedLong(4));
+        ASSERT_EQ(300, unsignedHandler->getUnsignedLong(5));
+    }
 }
 
 }
