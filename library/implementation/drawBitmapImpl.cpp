@@ -94,6 +94,8 @@ size_t drawBitmap::getBitmap(const std::shared_ptr<const image>& sourceImage, dr
                                                                                  sourceImage->getHighBit(),
                                                                                  sourceImage->getPalette(),
                                                                                  1, 1));
+        highBit = startImage->getHighBit();
+        depth = startImage->getDepth();
         initialColorSpace = startImage->getColorSpace();
     }
     std::shared_ptr<transforms::colorTransforms::colorTransformsFactory> pColorTransformsFactory(transforms::colorTransforms::colorTransformsFactory::getColorTransformsFactory());
@@ -117,12 +119,7 @@ size_t drawBitmap::getBitmap(const std::shared_ptr<const image>& sourceImage, dr
     }
     else
     {
-        std::shared_ptr<image> outputImage = chain.allocateOutputImage(sourceImage->getDepth(),
-                                                                       sourceImage->getColorSpace(),
-                                                                       sourceImage->getHighBit(),
-                                                                       sourceImage->getPalette(),
-                                                                       width, height);
-
+        std::shared_ptr<image> outputImage = std::make_shared<image>(width, height, bitDepth_t::depthU8, "RGB",7);
         chain.runTransform(sourceImage, 0, 0, width, height, outputImage, 0, 0);
         imageHandler = outputImage->getReadingDataHandler();
     }

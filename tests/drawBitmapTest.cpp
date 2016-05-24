@@ -12,13 +12,13 @@ TEST(drawBitmapTest, testDrawBitmap)
 {
 	for(int monochrome(0); monochrome != 2; ++monochrome)
 	{
-		for(int subsample = 1; subsample != 4; subsample <<= 1)
+        for(int highBit = 15; highBit != 2; --highBit)
 		{
             std::unique_ptr<Image> testImage(buildImageForTest(
                     401,
                     301,
-                    bitDepth_t::depthU8,
-					7,
+                    bitDepth_t::depthU32,
+                    highBit,
                     401,
                     301,
                     monochrome == 1 ? "MONOCHROME2" :
@@ -41,9 +41,17 @@ TEST(drawBitmapTest, testDrawBitmap)
 			{
                 for(int scanX = 0; scanX != testImage->getWidth(); ++scanX)
 				{
+                    std::uint8_t displayRed(*pBuffer++);
+                    std::uint8_t displayGreen(*pBuffer++);
+                    std::uint8_t displayBlue(*pBuffer++);
+
                     if(monochrome)
                     {
                         red = imageHandler->getUnsignedLong(index++);
+                        if(highBit > 7)
+                        {
+                            red >>= (highBit - 7);
+                        }
                         green = blue = red;
                     }
                     else
@@ -51,11 +59,20 @@ TEST(drawBitmapTest, testDrawBitmap)
                         red = imageHandler->getUnsignedLong(index++);
                         green = imageHandler->getUnsignedLong(index++);
                         blue = imageHandler->getUnsignedLong(index++);
+                        if(highBit > 7)
+                        {
+                            red >>= (highBit - 7);
+                            green >>= (highBit - 7);
+                            blue >>= (highBit - 7);
+                        }
                     }
 
-					std::uint8_t displayRed(*pBuffer++);
-					std::uint8_t displayGreen(*pBuffer++);
-					std::uint8_t displayBlue(*pBuffer++);
+                    if(highBit < 7)
+                    {
+                        displayRed >>= (7 - highBit);
+                        displayGreen >>= (7 - highBit);
+                        displayBlue >>= (7 - highBit);
+                    }
                     EXPECT_EQ(red, displayRed);
                     EXPECT_EQ(green, displayGreen);
                     EXPECT_EQ(blue, displayBlue);
