@@ -64,15 +64,7 @@ void readingDataHandler::getDate(const size_t /* index */,
 {
     IMEBRA_FUNCTION_START();
 
-    *pYear = 0;
-	*pMonth = 0;
-	*pDay = 0;
-	*pHour = 0;
-	*pMinutes = 0;
-	*pSeconds = 0;
-	*pNanoseconds = 0;
-	*pOffsetHours = 0;
-	*pOffsetMinutes = 0;
+    IMEBRA_THROW(DataHandlerDeniedConversionError, "Cannot convert VR "<< dicomDictionary::getDicomDictionary()->enumDataTypeToString(getDataType()) << " to Date");
 
     IMEBRA_FUNCTION_END();
 }
@@ -81,8 +73,7 @@ std::uint32_t readingDataHandler::getAge(const size_t /* index */, ageUnit_t *pU
 {
     IMEBRA_FUNCTION_START();
 
-    *pUnit = ageUnit_t::years;
-    return 0;
+    IMEBRA_THROW(DataHandlerDeniedConversionError, "Cannot convert VR "<< dicomDictionary::getDicomDictionary()->enumDataTypeToString(getDataType()) << " to Age");
 
     IMEBRA_FUNCTION_END();
 }
@@ -134,7 +125,7 @@ void writingDataHandler::setDate(const size_t /* index */,
 {
     IMEBRA_FUNCTION_START();
 
-    IMEBRA_THROW(DataHandlerDeniedConversionError, "Cannot convert VR "<< dicomDictionary::getDicomDictionary()->enumDataTypeToString(getDataType()) << " to Date");
+    IMEBRA_THROW(DataHandlerDeniedConversionError, "Cannot convert Date to VR "<< dicomDictionary::getDicomDictionary()->enumDataTypeToString(getDataType()));
 
     IMEBRA_FUNCTION_END();
 }
@@ -143,7 +134,7 @@ void writingDataHandler::setAge(const size_t /* index */, const std::uint32_t /*
 {
     IMEBRA_FUNCTION_START();
 
-    IMEBRA_THROW(DataHandlerDeniedConversionError, "Cannot convert VR "<< dicomDictionary::getDicomDictionary()->enumDataTypeToString(getDataType()) << " to Age");
+    IMEBRA_THROW(DataHandlerDeniedConversionError, "Cannot convert Age to VR "<< dicomDictionary::getDicomDictionary()->enumDataTypeToString(getDataType()));
 
     IMEBRA_FUNCTION_END();
 }
