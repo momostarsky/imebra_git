@@ -71,6 +71,7 @@ public:
             pOutputMemory += (outputTopLeftY * outputHandlerWidth + outputTopLeftX) * 3;
 
             std::int64_t inputHandlerMinValue = getMinValue<inputType>(inputHighBit);
+            std::int64_t minY(inputHandlerMinValue + ((std::int64_t)1 << (inputHighBit - 3)));
             std::int64_t outputHandlerMinValue = getMinValue<outputType>(outputHighBit);
 
             std::int64_t inputMiddleValue(inputHandlerMinValue + ((std::int64_t)1 << inputHighBit));
@@ -83,11 +84,11 @@ public:
             {
                 for(std::uint32_t scanPixels(inputWidth); scanPixels != 0; --scanPixels)
                 {
-                    sourceY = (std::int64_t)*(pInputMemory++);
+                    sourceY = (std::int64_t)*(pInputMemory++) - minY;
                     sourceB = (std::int64_t)*(pInputMemory++) - inputMiddleValue;
                     sourceR = (std::int64_t)*(pInputMemory++) - inputMiddleValue;
 
-                    destination = sourceY + ((22970 * sourceR + 8191) / 16384);
+                    destination = (19071 * sourceY + 26148 * sourceR + 8191) / 16384;
                     if(destination < 0)
                     {
                         *(pOutputMemory++) = (outputType)outputHandlerMinValue;
@@ -101,7 +102,7 @@ public:
                         *(pOutputMemory++) = (outputType)(outputHandlerMinValue + destination);
                     }
 
-                    destination = sourceY - ((5638 * sourceB + 11700 * sourceR + 8191) / 16384);
+                    destination = (19071 * sourceY - 13320 * sourceR - 6406 * sourceB + 8191) / 16384;
                     if(destination < 0)
                     {
                         *(pOutputMemory++) = (outputType)outputHandlerMinValue;
@@ -115,7 +116,7 @@ public:
                         *(pOutputMemory++) = (outputType)(outputHandlerMinValue + destination);
                     }
 
-                    destination = sourceY + ((29032 * sourceB + 8191) / 16384);
+                    destination = (19071 * sourceY + 33063 * sourceB + 8191) / 16384;
                     if(destination < 0)
                     {
                         *(pOutputMemory++) = (outputType)outputHandlerMinValue;
