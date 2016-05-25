@@ -82,7 +82,7 @@ public:
             {
                 for(std::uint32_t scanPixels(inputWidth); scanPixels != 0; --scanPixels)
                 {
-                    outputValue = (outputType)(outputHandlerMinValue + inputHandlerNumValuesMinusOne - (std::int64_t)pInputMemory++ + inputHandlerMinValue);
+                    outputValue = (outputType)(outputHandlerMinValue + inputHandlerNumValuesMinusOne - (std::int64_t)*pInputMemory++ + inputHandlerMinValue);
                     *pOutputMemory = outputValue;
                     *++pOutputMemory = outputValue;
                     *++pOutputMemory = outputValue;
