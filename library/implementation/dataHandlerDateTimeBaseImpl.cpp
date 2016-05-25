@@ -408,43 +408,6 @@ std::string writingDataHandlerDateTimeBase::buildTimeSimple(
     IMEBRA_FUNCTION_END();
 }
 
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Split several parts of a string
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-void readingDataHandlerDateTimeBase::split(const std::string& timeString, const std::string& separators, std::vector<std::string> *pComponents) const
-{
-    IMEBRA_FUNCTION_START();
-
-    if(timeString.empty())
-    {
-        return;
-    }
-
-	for(size_t startPos(0), sepPos(timeString.find_first_of(separators)); /* empty */; sepPos = timeString.find_first_of(separators, startPos))
-	{
-        if(sepPos == timeString.npos)
-        {
-            pComponents->push_back(timeString.substr(startPos));
-            break;
-        }
-		pComponents->push_back(timeString.substr(startPos, sepPos - startPos));
-		startPos = ++sepPos;
-        if(startPos == timeString.size())
-        {
-            pComponents->push_back("");
-            break;
-        }
-	}
-
-	IMEBRA_FUNCTION_END();
-}
-
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////

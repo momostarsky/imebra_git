@@ -59,8 +59,6 @@ protected:
         std::uint32_t* pNanoseconds,
 		std::int32_t* pOffsetHours,
 		std::int32_t* pOffsetMinutes) const;
-
-    void split(const std::string& timeString, const std::string& separators, std::vector<std::string> *pComponents) const;
 };
 
 class writingDataHandlerDateTimeBase: public writingDataHandlerString
