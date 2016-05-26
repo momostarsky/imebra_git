@@ -77,6 +77,8 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     ReadWriteMemory(const char* buffer, size_t bufferSize);
 
+    virtual ~ReadWriteMemory();
+
     /// \brief Copy the content from another memory object.
     ///
     /// \param sourceMemory the source memory object

@@ -35,6 +35,8 @@ class writingDataHandlerNumericBase;
 namespace imebra
 {
 
+class ReadingDataHandlerNumeric;
+
 ///
 /// \brief Specialized WritingDataHandler for numeric data types.
 ///
@@ -51,11 +53,14 @@ class IMEBRA_API WritingDataHandlerNumeric: public WritingDataHandler
     friend class Image;
     friend class DataSet;
     friend class Tag;
+    friend class ReadingDataHandlerNumeric;
 private:
     WritingDataHandlerNumeric(std::shared_ptr<imebra::implementation::handlers::writingDataHandlerNumericBase> pDataHandler);
 #endif
 
 public:
+
+    virtual ~WritingDataHandlerNumeric();
 
     /// \brief Return a ReadWriteMemory object referencing the raw buffer's data.
     ///
@@ -113,6 +118,16 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     bool isSigned() const;
+
+    /// \brief Copies data from another data handler, converting the data type
+    ///        if necessary.
+    ///
+    /// The data handler is resized to the same size of the source data handler.
+    ///
+    /// \param source the data handler from which the data must be copied
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    void copyFrom(const ReadingDataHandlerNumeric& source);
 };
 
 }

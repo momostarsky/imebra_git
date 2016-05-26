@@ -18,4 +18,8 @@ TransformHighBit::TransformHighBit(): Transform(std::make_shared<imebra::impleme
 {
 }
 
+TransformHighBit::~TransformHighBit()
+{
+}
+
 }

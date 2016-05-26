@@ -91,7 +91,7 @@ public:
     /// \brief Retrieve a buffer's value as signed long integer (32 bit).
     ///
     /// If the buffer's value cannot be converted to a signed long integer
-    /// then throws DataHandlerDeniedConversionError.
+    /// then throws DataHandlerConversionError.
     ///
     /// \param index the element number within the buffer. Must be smaller than
     ///        getSize()
@@ -103,7 +103,7 @@ public:
     /// \brief Retrieve a buffer's value as an unsigned long integer (32 bit).
     ///
     /// If the buffer's value cannot be converted to an unsigned long integer
-    /// then throws DataHandlerDeniedConversionError.
+    /// then throws DataHandlerConversionError.
     ///
     /// \param index the element number within the buffer. Must be smaller than
     ///        getSize()
@@ -115,7 +115,7 @@ public:
     /// \brief Retrieve a buffer's value as a double floating point value (64 bit).
     ///
     /// If the buffer's value cannot be converted to a double value then throws
-    /// DataHandlerDeniedConversionError.
+    /// DataHandlerConversionError.
     ///
     /// \param index the element number within the buffer. Must be smaller than
     ///        getSize()
@@ -127,7 +127,7 @@ public:
     /// \brief Retrieve a buffer's value as an ASCII string.
     ///
     /// If the buffer's value cannot be converted to a string then throws
-    /// DataHandlerDeniedConversionError.
+    /// DataHandlerConversionError.
     ///
     /// \param index the element number within the buffer. Must be smaller than
     ///        getSize()
@@ -139,7 +139,7 @@ public:
     /// \brief Retrieve a buffer's value as an Unicode string.
     ///
     /// If the buffer's value cannot be converted to a string then throws
-    /// DataHandlerDeniedConversionError.
+    /// DataHandlerConversionError.
     ///
     /// \param index the element number within the buffer. Must be smaller than
     ///        getSize()
@@ -151,7 +151,7 @@ public:
     /// \brief Retrieve a buffer's value a date or time.
     ///
     /// If the buffer's value cannot be converted to a date or time then throws
-    /// DataHandlerDeniedConversionError.
+    /// DataHandlerConversionError.
     ///
     /// \param index the element number within the buffer. Must be smaller than
     ///        getSize()
@@ -163,7 +163,7 @@ public:
     /// \brief Retrieve a buffer's value as an Age.
     ///
     /// If the buffer's value cannot be converted to an Age then throws
-    /// DataHandlerDeniedConversionError.
+    /// DataHandlerConversionError.
     ///
     /// \param index the element number within the buffer. Must be smaller than
     ///        getSize()

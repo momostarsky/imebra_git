@@ -39,6 +39,8 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     VOILUT();
 
+    virtual ~VOILUT();
+
     /// \brief Find the optimal VOI settings for a specific image's area and apply
     ///        it with setCenterWidth().
     ///

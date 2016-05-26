@@ -33,6 +33,8 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     MemoryStreamOutput(const ReadWriteMemory& memory);
+
+    virtual ~MemoryStreamOutput();
 };
 
 }

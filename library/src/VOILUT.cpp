@@ -20,6 +20,10 @@ VOILUT::VOILUT(): Transform(std::make_shared<imebra::implementation::transforms:
 {
 }
 
+VOILUT::~VOILUT()
+{
+}
+
 void VOILUT::setCenterWidth(double center, double width)
 {
     ((imebra::implementation::transforms::VOILUT*)m_pTransform.get())->setCenterWidth(center, width);

@@ -19,4 +19,8 @@ MemoryStreamInput::MemoryStreamInput(const ReadWriteMemory& memory): BaseStreamI
 {
 }
 
+MemoryStreamInput::~MemoryStreamInput()
+{
+}
+
 }

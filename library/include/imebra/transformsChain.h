@@ -53,6 +53,8 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     TransformsChain();
 
+    virtual ~TransformsChain();
+
     /// \brief Add a transform to the chain of transforms that will be applied to
     ///        the input image.
     ///

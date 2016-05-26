@@ -24,6 +24,10 @@ ReadWriteMemory::ReadWriteMemory(std::shared_ptr<implementation::memory> pMemory
     m_pMemory = pMemory;
 }
 
+ReadWriteMemory::~ReadWriteMemory()
+{
+}
+
 void ReadWriteMemory::copyFrom(const ReadMemory& sourceMemory)
 {
     std::const_pointer_cast<implementation::memory>(m_pMemory)->copyFrom(sourceMemory.m_pMemory);

@@ -27,4 +27,8 @@ StreamWriter::StreamWriter(const BaseStreamOutput& stream, size_t virtualStart, 
 {
 }
 
+StreamWriter::~StreamWriter()
+{
+}
+
 }

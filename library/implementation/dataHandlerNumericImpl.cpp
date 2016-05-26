@@ -52,6 +52,53 @@ std::shared_ptr<const memory> readingDataHandlerNumericBase::getMemory() const
     IMEBRA_FUNCTION_END();
 }
 
+void readingDataHandlerNumericBase::copyTo(std::shared_ptr<writingDataHandlerNumericBase> pDestination)
+{
+    IMEBRA_FUNCTION_START();
+
+    imebra::implementation::handlers::writingDataHandlerNumericBase* pHandler(pDestination.get());
+    if(typeid(*pHandler) == typeid(imebra::implementation::handlers::writingDataHandlerNumeric<std::uint8_t>) ||
+        dynamic_cast<imebra::implementation::handlers::writingDataHandlerNumeric<std::uint8_t>* >(pHandler) != 0)
+    {
+        copyTo((std::uint8_t*)pHandler->getMemoryBuffer(), pHandler->getSize());
+    }
+    else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::writingDataHandlerNumeric<std::int8_t>))
+    {
+        copyTo((std::int8_t*)pHandler->getMemoryBuffer(), pHandler->getSize());
+    }
+    else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::writingDataHandlerNumeric<std::uint16_t>))
+    {
+        copyTo((std::uint16_t*)pHandler->getMemoryBuffer(), pHandler->getSize());
+    }
+    else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::writingDataHandlerNumeric<std::int16_t>))
+    {
+        copyTo((std::int16_t*)pHandler->getMemoryBuffer(), pHandler->getSize());
+    }
+    else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::writingDataHandlerNumeric<std::uint32_t>))
+    {
+        copyTo((std::uint32_t*)pHandler->getMemoryBuffer(), pHandler->getSize());
+    }
+    else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::writingDataHandlerNumeric<std::int32_t>))
+    {
+        copyTo((std::int32_t*)pHandler->getMemoryBuffer(), pHandler->getSize());
+    }
+    else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::writingDataHandlerNumeric<float>))
+    {
+        copyTo((float*)pHandler->getMemoryBuffer(), pHandler->getSize());
+    }
+    else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::writingDataHandlerNumeric<double>))
+    {
+        copyTo((double*)pHandler->getMemoryBuffer(), pHandler->getSize());
+    }
+    else
+    {
+        IMEBRA_THROW(std::runtime_error, "Data type not valid");
+    }
+
+    IMEBRA_FUNCTION_END();
+}
+
+
 writingDataHandlerNumericBase::writingDataHandlerNumericBase(const std::shared_ptr<buffer> &pBuffer, const size_t initialSize, tagVR_t dataType, size_t unitSize, bool bIsSigned):
     writingDataHandler(pBuffer, dataType, 0), m_pMemory(std::make_shared<memory>(initialSize * unitSize)), m_unitSize(unitSize), m_bIsSigned(bIsSigned)
 {
@@ -136,6 +183,54 @@ size_t writingDataHandlerNumericBase::getMemorySize() const
     IMEBRA_FUNCTION_END();
 }
 
+// Copy the data from another handler
+///////////////////////////////////////////////////////////
+void writingDataHandlerNumericBase::copyFrom(std::shared_ptr<readingDataHandlerNumericBase> pSource)
+{
+    IMEBRA_FUNCTION_START();
+
+    imebra::implementation::handlers::readingDataHandlerNumericBase* pHandler(pSource.get());
+    if(typeid(*pHandler) == typeid(imebra::implementation::handlers::readingDataHandlerNumeric<std::uint8_t>) ||
+        dynamic_cast<imebra::implementation::handlers::readingDataHandlerNumeric<std::uint8_t>* >(pHandler) != 0)
+    {
+        copyFrom((std::uint8_t*)pHandler->getMemoryBuffer(), pHandler->getSize());
+    }
+    else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::readingDataHandlerNumeric<std::int8_t>))
+    {
+        copyFrom((std::int8_t*)pHandler->getMemoryBuffer(), pHandler->getSize());
+    }
+    else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::readingDataHandlerNumeric<std::uint16_t>))
+    {
+        copyFrom((std::uint16_t*)pHandler->getMemoryBuffer(), pHandler->getSize());
+    }
+    else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::readingDataHandlerNumeric<std::int16_t>))
+    {
+        copyFrom((std::int16_t*)pHandler->getMemoryBuffer(), pHandler->getSize());
+    }
+    else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::readingDataHandlerNumeric<std::uint32_t>))
+    {
+        copyFrom((std::uint32_t*)pHandler->getMemoryBuffer(), pHandler->getSize());
+    }
+    else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::readingDataHandlerNumeric<std::int32_t>))
+    {
+        copyFrom((std::int32_t*)pHandler->getMemoryBuffer(), pHandler->getSize());
+    }
+    else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::readingDataHandlerNumeric<float>))
+    {
+        copyFrom((float*)pHandler->getMemoryBuffer(), pHandler->getSize());
+    }
+    else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::readingDataHandlerNumeric<double>))
+    {
+        copyFrom((double*)pHandler->getMemoryBuffer(), pHandler->getSize());
+    }
+    else
+    {
+        IMEBRA_THROW(std::runtime_error, "Data type not valid");
+    }
+
+    IMEBRA_FUNCTION_END();
+
+}
 
 
 }

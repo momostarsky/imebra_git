@@ -15,4 +15,8 @@ MemoryStreamOutput::MemoryStreamOutput(const ReadWriteMemory& memory):
 {
 }
 
+MemoryStreamOutput::~MemoryStreamOutput()
+{
+}
+
 }

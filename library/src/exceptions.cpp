@@ -91,9 +91,6 @@ InvalidSequenceItemError::InvalidSequenceItemError(const std::string &message): 
 DataHandlerError::DataHandlerError(const std::string& message): std::runtime_error(message)
 {}
 
-DataHandlerDeniedConversionError::DataHandlerDeniedConversionError(const std::string &message): DataHandlerError(message)
-{}
-
 DataHandlerConversionError::DataHandlerConversionError(const std::string &message): DataHandlerError(message)
 {}
 

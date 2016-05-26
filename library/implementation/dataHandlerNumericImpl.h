@@ -29,6 +29,8 @@ namespace implementation
 namespace handlers
 {
 
+class writingDataHandlerNumericBase;
+
 /// \brief This is the base class for the %data handlers
 ///         that manage numeric values.
 ///
@@ -44,6 +46,7 @@ public:
 
     std::shared_ptr<const memory> getMemory() const;
 
+    virtual void copyTo(std::shared_ptr<writingDataHandlerNumericBase> pDestination);
     virtual void copyTo(std::uint8_t* pMemory, size_t memorySize) const = 0;
     virtual void copyTo(std::int8_t* pMemory, size_t memorySize) const = 0;
     virtual void copyTo(std::uint16_t* pMemory, size_t memorySize) const = 0;
@@ -116,7 +119,8 @@ public:
                                           std::uint32_t destHeight,
                                           std::uint32_t destNumChannels) = 0;
 
-    virtual void copyFrom(std::shared_ptr<readingDataHandlerNumericBase> pSource) = 0;
+    void copyFrom(std::shared_ptr<readingDataHandlerNumericBase> pSource);
+
     virtual void copyFrom(std::uint8_t* pMemory, size_t memorySize) = 0;
     virtual void copyFrom(std::int8_t* pMemory, size_t memorySize) = 0;
     virtual void copyFrom(std::uint16_t* pMemory, size_t memorySize) = 0;
@@ -281,27 +285,6 @@ public:
         return m_pMemory->size() / sizeof(dataHandlerType);
 
 		IMEBRA_FUNCTION_END();
-	}
-
-	template<class destHandlerType>
-    void copyToMemory(destHandlerType* pDestination, size_t destSize) const
-	{
-        IMEBRA_FUNCTION_START();
-
-        if(getSize() < destSize)
-		{
-			destSize = getSize();
-		}
-        if(destSize != 0)
-        {
-            const dataHandlerType* pSource((const dataHandlerType*)m_pMemory->data());
-            while(destSize-- != 0)
-            {
-                *(pDestination++) = (destHandlerType)*(pSource++);
-            }
-        }
-
-        IMEBRA_FUNCTION_END();
 	}
 
     virtual void copyTo(std::uint8_t* pMemory, size_t memorySize) const
@@ -494,6 +477,29 @@ public:
 
         IMEBRA_FUNCTION_END();
     }
+
+protected:
+    template<class destHandlerType>
+    void copyToMemory(destHandlerType* pDestination, size_t destSize) const
+    {
+        IMEBRA_FUNCTION_START();
+
+        if(getSize() < destSize)
+        {
+            destSize = getSize();
+        }
+        if(destSize != 0)
+        {
+            const dataHandlerType* pSource((const dataHandlerType*)m_pMemory->data());
+            while(destSize-- != 0)
+            {
+                *(pDestination++) = (destHandlerType)*(pSource++);
+            }
+        }
+
+        IMEBRA_FUNCTION_END();
+    }
+
 };
 
 template<class dataHandlerType>
@@ -583,6 +589,10 @@ public:
             }
         }
 
+        if(index >= getSize())
+        {
+            setSize(index + 1);
+        }
         ((dataHandlerType*)m_pMemory->data())[index] = tempValue;
 
         IMEBRA_FUNCTION_END();
@@ -601,80 +611,6 @@ public:
 
         IMEBRA_FUNCTION_END();
     }
-
-
-    /// \brief Copy the values from a memory location to
-    ///         the buffer managed by the handler
-    ///
-    /// @param pSource a pointer to the first byte of the
-    ///         memory area to copy
-    /// @param sourceSize the number of values to copy
-    ///
-    ///////////////////////////////////////////////////////////
-    template<class sourceHandlerType>
-    void copyFromMemory(sourceHandlerType* pSource, size_t sourceSize)
-    {
-        IMEBRA_FUNCTION_START();
-
-        setSize(sourceSize);
-        dataHandlerType* pDest((dataHandlerType*)m_pMemory->data());
-        while(sourceSize-- != 0)
-        {
-            *(pDest++) = (dataHandlerType)*(pSource++);
-        }
-
-        IMEBRA_FUNCTION_END();
-    }
-
-    // Copy the data from another handler
-    ///////////////////////////////////////////////////////////
-    virtual void copyFrom(std::shared_ptr<readingDataHandlerNumericBase> pSource)
-    {
-        IMEBRA_FUNCTION_START();
-
-        imebra::implementation::handlers::readingDataHandlerNumericBase* pHandler(pSource.get());
-        if(typeid(*pHandler) == typeid(imebra::implementation::handlers::readingDataHandlerNumeric<std::uint8_t>) ||
-            dynamic_cast<imebra::implementation::handlers::readingDataHandlerNumeric<std::uint8_t>* >(pHandler) != 0)
-        {
-            copyFromMemory<std::uint8_t> ((std::uint8_t*)pHandler->getMemoryBuffer(), pHandler->getSize());
-        }
-        else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::readingDataHandlerNumeric<std::int8_t>))
-        {
-            copyFromMemory<std::int8_t> ((std::int8_t*)pHandler->getMemoryBuffer(), pHandler->getSize());
-        }
-        else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::readingDataHandlerNumeric<std::uint16_t>))
-        {
-            copyFromMemory<std::uint16_t> ((std::uint16_t*)pHandler->getMemoryBuffer(), pHandler->getSize());
-        }
-        else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::readingDataHandlerNumeric<std::int16_t>))
-        {
-            copyFromMemory<std::int16_t> ((std::int16_t*)pHandler->getMemoryBuffer(), pHandler->getSize());
-        }
-        else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::readingDataHandlerNumeric<std::uint32_t>))
-        {
-            copyFromMemory<std::uint32_t> ((std::uint32_t*)pHandler->getMemoryBuffer(), pHandler->getSize());
-        }
-        else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::readingDataHandlerNumeric<std::int32_t>))
-        {
-            copyFromMemory<std::int32_t> ((std::int32_t*)pHandler->getMemoryBuffer(), pHandler->getSize());
-        }
-        else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::readingDataHandlerNumeric<float>))
-        {
-            copyFromMemory<float> ((float*)pHandler->getMemoryBuffer(), pHandler->getSize());
-        }
-        else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::readingDataHandlerNumeric<double>))
-        {
-            copyFromMemory<double> ((double*)pHandler->getMemoryBuffer(), pHandler->getSize());
-        }
-        else
-        {
-            IMEBRA_THROW(std::runtime_error, "Data type not valid");
-        }
-
-        IMEBRA_FUNCTION_END();
-
-    }
-
 
     virtual void copyFrom(std::uint8_t* pMemory, size_t memorySize)
     {
@@ -943,6 +879,31 @@ public:
 
         IMEBRA_FUNCTION_END();
     }
+
+protected:
+    /// \brief Copy the values from a memory location to
+    ///         the buffer managed by the handler
+    ///
+    /// @param pSource a pointer to the first byte of the
+    ///         memory area to copy
+    /// @param sourceSize the number of values to copy
+    ///
+    ///////////////////////////////////////////////////////////
+    template<class sourceHandlerType>
+    void copyFromMemory(sourceHandlerType* pSource, size_t sourceSize)
+    {
+        IMEBRA_FUNCTION_START();
+
+        setSize(sourceSize);
+        dataHandlerType* pDest((dataHandlerType*)m_pMemory->data());
+        while(sourceSize-- != 0)
+        {
+            *(pDest++) = (dataHandlerType)*(pSource++);
+        }
+
+        IMEBRA_FUNCTION_END();
+    }
+
 
 };
 

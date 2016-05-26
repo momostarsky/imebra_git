@@ -331,12 +331,6 @@ public:
     DataHandlerError(const std::string& message);
 };
 
-class IMEBRA_API DataHandlerDeniedConversionError: public DataHandlerError
-{
-public:
-    DataHandlerDeniedConversionError(const std::string& message);
-};
-
 class IMEBRA_API DataHandlerConversionError: public DataHandlerError
 {
 public:

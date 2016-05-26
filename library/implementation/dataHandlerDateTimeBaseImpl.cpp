@@ -96,7 +96,7 @@ double readingDataHandlerDateTimeBase::getDouble(const size_t /* index */) const
 {
     IMEBRA_FUNCTION_START();
 
-    IMEBRA_THROW(DataHandlerDeniedConversionError, "Cannot convert VR "<< dicomDictionary::getDicomDictionary()->enumDataTypeToString(getDataType()) << " to double");
+    IMEBRA_THROW(DataHandlerConversionError, "Cannot convert VR "<< dicomDictionary::getDicomDictionary()->enumDataTypeToString(getDataType()) << " to double");
 
 	IMEBRA_FUNCTION_END();
 }
@@ -158,7 +158,7 @@ void writingDataHandlerDateTimeBase::setDouble(const size_t /* index */, const d
 {
     IMEBRA_FUNCTION_START();
 
-    IMEBRA_THROW(DataHandlerDeniedConversionError, "Cannot convert from double to VR "<< dicomDictionary::getDicomDictionary()->enumDataTypeToString(getDataType()));
+    IMEBRA_THROW(DataHandlerConversionError, "Cannot convert from double to VR "<< dicomDictionary::getDicomDictionary()->enumDataTypeToString(getDataType()));
 
 	IMEBRA_FUNCTION_END();
 }

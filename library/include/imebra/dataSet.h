@@ -401,7 +401,7 @@ public:
     /// \brief Retrieve a tag's value as signed long integer (32 bit).
     ///
     /// If the tag's value cannot be converted to a signed long integer
-    /// then throws DataHandlerDeniedConversionError.
+    /// then throws DataHandlerConversionError.
     ///
     /// If the specified Tag does not exist then throws MissingTagError or
     ///  MissingGroupError.
@@ -420,7 +420,7 @@ public:
     /// \brief Retrieve a tag's value as signed long integer (32 bit).
     ///
     /// If the tag's value cannot be converted to a signed long integer
-    /// then throws DataHandlerDeniedConversionError.
+    /// then throws DataHandlerConversionError.
     ///
     /// If the specified Tag does not exist or it does not contain the specified
     /// buffer then returns the default value specified in the parameter.
@@ -465,7 +465,7 @@ public:
     /// \brief Retrieve a tag's value as unsigned long integer (32 bit).
     ///
     /// If the tag's value cannot be converted to an unsigned long integer
-    /// then throws DataHandlerDeniedConversionError.
+    /// then throws DataHandlerConversionError.
     ///
     /// If the specified Tag does not exist then throws MissingTagError or
     ///  MissingGroupError.
@@ -484,7 +484,7 @@ public:
     /// \brief Retrieve a tag's value as unsigned long integer (32 bit).
     ///
     /// If the tag's value cannot be converted to an unsigned long integer
-    /// then throws DataHandlerDeniedConversionError.
+    /// then throws DataHandlerConversionError.
     ///
     /// If the specified Tag does not exist or it does not contain the specified
     /// buffer then returns the default value specified in the parameter.
@@ -529,7 +529,7 @@ public:
     /// \brief Retrieve a tag's value as a 64 bit floating point.
     ///
     /// If the tag's value cannot be converted to a floating point value
-    /// then throws DataHandlerDeniedConversionError.
+    /// then throws DataHandlerConversionError.
     ///
     /// If the specified Tag does not exist then throws MissingTagError or
     ///  MissingGroupError.
@@ -548,7 +548,7 @@ public:
     /// \brief Retrieve a tag's value as a 64 bit floating point.
     ///
     /// If the tag's value cannot be converted to a floating point value
-    ///  then throws DataHandlerDeniedConversionError.
+    ///  then throws DataHandlerConversionError.
     ///
     /// If the specified Tag does not exist or it does not contain the specified
     ///  buffer then returns the default value specified in the parameter.
@@ -593,7 +593,7 @@ public:
     /// \brief Retrieve a tag's value as a string.
     ///
     /// If the tag's value cannot be converted to a string then throws
-    ///  DataHandlerDeniedConversionError.
+    ///  DataHandlerConversionError.
     ///
     /// If the specified Tag does not exist then throws MissingTagError or
     ///  MissingGroupError.
@@ -612,7 +612,7 @@ public:
     /// \brief Retrieve a tag's value as a string.
     ///
     /// If the tag's value cannot be converted to a string then throws
-    ///  DataHandlerDeniedConversionError.
+    ///  DataHandlerConversionError.
     ///
     /// If the specified Tag does not exist or it does not contain the specified
     ///  buffer then returns the default value specified in the parameter.
@@ -645,7 +645,7 @@ public:
     /// \brief Retrieve a tag's value as an unicode string.
     ///
     /// If the tag's value cannot be converted to an unicode string
-    /// then throws DataHandlerDeniedConversionError.
+    /// then throws DataHandlerConversionError.
     ///
     /// If the specified Tag does not exist then throws MissingTagError or
     ///  MissingGroupError.
@@ -664,7 +664,7 @@ public:
     /// \brief Retrieve a tag's value as an unicode string.
     ///
     /// If the tag's value cannot be converted to an unicode string then throws
-    ///  DataHandlerDeniedConversionError.
+    ///  DataHandlerConversionError.
     ///
     /// If the specified Tag does not exist or it does not contain the specified
     ///  buffer then returns the default value specified in the parameter.
@@ -709,7 +709,7 @@ public:
     /// \brief Retrieve a tag's value as Age.
     ///
     /// If the tag's value cannot be converted to Age then throws
-    ///  DataHandlerDeniedConversionError.
+    ///  DataHandlerConversionError.
     ///
     /// If the specified Tag does not exist then throws MissingTagError or
     ///  MissingGroupError.
@@ -728,7 +728,7 @@ public:
     /// \brief Retrieve a tag's value as Age.
     ///
     /// If the tag's value cannot be converted to Age then throws
-    ///  DataHandlerDeniedConversionError.
+    ///  DataHandlerConversionError.
     ///
     /// If the specified Tag does not exist or it does not contain the specified
     ///  buffer then returns the default value specified in the parameter.
@@ -759,7 +759,7 @@ public:
     /// \brief Retrieve a tag's value as a Date.
     ///
     /// If the tag's value cannot be converted to a Date then throws
-    ///  DataHandlerDeniedConversionError.
+    ///  DataHandlerConversionError.
     ///
     /// If the specified Tag does not exist then throws MissingTagError or
     ///  MissingGroupError.
@@ -778,7 +778,7 @@ public:
     /// \brief Retrieve a tag's value as a Date.
     ///
     /// If the tag's value cannot be converted to a date then throws
-    ///  DataHandlerDeniedConversionError.
+    ///  DataHandlerConversionError.
     ///
     /// If the specified Tag does not exist or it does not contain the specified
     ///  buffer then returns the default value specified in the parameter.

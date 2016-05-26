@@ -49,6 +49,8 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     ModalityVOILUT(const DataSet& dataset);
+
+    virtual ~ModalityVOILUT();
 };
 
 }

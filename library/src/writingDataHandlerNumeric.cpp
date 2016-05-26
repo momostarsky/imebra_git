@@ -7,6 +7,7 @@ $fileHeader$
 */
 
 #include "../include/imebra/writingDataHandlerNumeric.h"
+#include "../include/imebra/readingDataHandlerNumeric.h"
 #include "../implementation/dataHandlerImpl.h"
 #include "../implementation/dataHandlerNumericImpl.h"
 #include <cstring>
@@ -16,6 +17,10 @@ namespace imebra
 
 WritingDataHandlerNumeric::WritingDataHandlerNumeric(std::shared_ptr<implementation::handlers::writingDataHandlerNumericBase> pDataHandler):
     WritingDataHandler(pDataHandler)
+{
+}
+
+WritingDataHandlerNumeric::~WritingDataHandlerNumeric()
 {
 }
 
@@ -59,6 +64,12 @@ bool WritingDataHandlerNumeric::isSigned() const
 {
     std::shared_ptr<imebra::implementation::handlers::writingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<imebra::implementation::handlers::writingDataHandlerNumericBase>(m_pDataHandler);
     return numericDataHandler->isSigned();
+}
+
+void WritingDataHandlerNumeric::copyFrom(const ReadingDataHandlerNumeric& source)
+{
+    std::shared_ptr<imebra::implementation::handlers::writingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<imebra::implementation::handlers::writingDataHandlerNumericBase>(m_pDataHandler);
+    return numericDataHandler->copyFrom(std::dynamic_pointer_cast<imebra::implementation::handlers::readingDataHandlerNumericBase>(source.m_pDataHandler));
 }
 
 }

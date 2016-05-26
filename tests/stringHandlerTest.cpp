@@ -181,13 +181,13 @@ TEST(stringHandlerTest, ASTest)
     EXPECT_EQ("003D", dataSet.getString(TagId(imebra::tagId_t::PatientAge_0010_1010), 0, 0));
     EXPECT_FLOAT_EQ(0.008219178, age->years());
 
-    ASSERT_THROW(dataSet.setDouble(TagId(imebra::tagId_t::PatientAge_0010_1010), 0, .01), imebra::DataHandlerDeniedConversionError);
+    ASSERT_THROW(dataSet.setDouble(TagId(imebra::tagId_t::PatientAge_0010_1010), 0, .01), imebra::DataHandlerConversionError);
 
-    ASSERT_THROW(dataSet.setUnsignedLong(TagId(imebra::tagId_t::PatientAge_0010_1010), 0, 1), imebra::DataHandlerDeniedConversionError);
+    ASSERT_THROW(dataSet.setUnsignedLong(TagId(imebra::tagId_t::PatientAge_0010_1010), 0, 1), imebra::DataHandlerConversionError);
 
-    ASSERT_THROW(dataSet.setSignedLong(TagId(imebra::tagId_t::PatientAge_0010_1010), 0, 1), imebra::DataHandlerDeniedConversionError);
+    ASSERT_THROW(dataSet.setSignedLong(TagId(imebra::tagId_t::PatientAge_0010_1010), 0, 1), imebra::DataHandlerConversionError);
 
-    ASSERT_THROW(dataSet.setDate(TagId(imebra::tagId_t::PatientAge_0010_1010), 0, imebra::Date(2000, 1, 1, 0, 0, 0, 0, 0, 0)), imebra::DataHandlerDeniedConversionError);
+    ASSERT_THROW(dataSet.setDate(TagId(imebra::tagId_t::PatientAge_0010_1010), 0, imebra::Date(2000, 1, 1, 0, 0, 0, 0, 0, 0)), imebra::DataHandlerConversionError);
 
     dataSet.setString(TagId(imebra::tagId_t::PatientAge_0010_1010), 0, "005M");
     age.reset(dataSet.getAge(TagId(imebra::tagId_t::PatientAge_0010_1010), 0, 0));

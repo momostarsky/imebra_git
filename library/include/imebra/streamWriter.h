@@ -78,6 +78,8 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     StreamWriter(const BaseStreamOutput& stream, size_t virtualStart, size_t virtualLength);
 
+    virtual ~StreamWriter();
+
 #ifndef SWIG
 protected:
     std::shared_ptr<implementation::streamWriter> m_pWriter;

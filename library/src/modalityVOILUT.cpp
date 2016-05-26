@@ -18,4 +18,8 @@ ModalityVOILUT::ModalityVOILUT(const DataSet& dataset): Transform(std::make_shar
 {
 }
 
+ModalityVOILUT::~ModalityVOILUT()
+{
+}
+
 }

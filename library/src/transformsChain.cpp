@@ -17,6 +17,10 @@ TransformsChain::TransformsChain(): Transform(std::make_shared<imebra::implement
 {
 }
 
+TransformsChain::~TransformsChain()
+{
+}
+
 void TransformsChain::addTransform(const Transform& transform)
 {
     ((imebra::implementation::transforms::transformsChain*)m_pTransform.get())->addTransform(transform.m_pTransform);

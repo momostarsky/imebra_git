@@ -39,6 +39,8 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     MemoryStreamInput(const ReadWriteMemory& memory);
+
+    virtual ~MemoryStreamInput();
 };
 
 }

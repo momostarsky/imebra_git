@@ -106,7 +106,7 @@ public:
     /// \brief Write a signed long integer (32 bit).
     ///
     /// If the value cannot be converted from a signed long integer
-    /// then throws DataHandlerDeniedConversionError.
+    /// then throws DataHandlerConversionError.
     ///
     /// \param index the element number within the buffer. Must be smaller than
     ///        getSize()
@@ -119,7 +119,7 @@ public:
     /// \brief Write an unsigned long integer (32 bit).
     ///
     /// If the value cannot be converted from an unsigned long integer
-    /// then throws DataHandlerDeniedConversionError.
+    /// then throws DataHandlerConversionError.
     ///
     /// \param index the element number within the buffer. Must be smaller than
     ///        getSize()
@@ -132,7 +132,7 @@ public:
     /// \brief Write a double floating point value (64 bit).
     ///
     /// If the value cannot be converted from a double floating point
-    /// then throws DataHandlerDeniedConversionError.
+    /// then throws DataHandlerConversionError.
     ///
     /// \param index the element number within the buffer. Must be smaller than
     ///        getSize()
@@ -145,7 +145,7 @@ public:
     /// \brief Write a string.
     ///
     /// If the value cannot be converted from a string
-    /// then throws DataHandlerDeniedConversionError.
+    /// then throws DataHandlerConversionError.
     ///
     /// \param index the element number within the buffer. Must be smaller than
     ///        getSize()
@@ -158,7 +158,7 @@ public:
     /// \brief Write an Unicode string.
     ///
     /// If the value cannot be converted from an Unicode string
-    /// then throws DataHandlerDeniedConversionError.
+    /// then throws DataHandlerConversionError.
     ///
     /// \param index the element number within the buffer. Must be smaller than
     ///        getSize()
@@ -171,7 +171,7 @@ public:
     /// \brief Write a date and/or a time.
     ///
     /// If the value cannot be converted from a Date
-    /// then throws DataHandlerDeniedConversionError.
+    /// then throws DataHandlerConversionError.
     ///
     /// \param index the element number within the buffer. Must be smaller than
     ///        getSize()
@@ -184,7 +184,7 @@ public:
     /// \brief Write an Age value.
     ///
     /// If the value cannot be converted from an Age
-    /// then throws DataHandlerDeniedConversionError.
+    /// then throws DataHandlerConversionError.
     ///
     /// \param index the element number within the buffer. Must be smaller than
     ///        getSize()
