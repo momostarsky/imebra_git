@@ -144,7 +144,7 @@ double readingDataHandlerStringAS::getDouble(const size_t /* index */) const
 {
     IMEBRA_FUNCTION_START();
 
-    IMEBRA_THROW(DataHandlerDeniedConversionError, "Cannot convert an Age to a number")
+    IMEBRA_THROW(DataHandlerConversionError, "Cannot convert an Age to a number")
 
 	IMEBRA_FUNCTION_END();
 }
@@ -235,7 +235,7 @@ void writingDataHandlerStringAS::setDouble(const size_t /* index */, const doubl
 {
     IMEBRA_FUNCTION_START();
 
-    IMEBRA_THROW(DataHandlerDeniedConversionError, "Cannot convert to VR AS from double");
+    IMEBRA_THROW(DataHandlerConversionError, "Cannot convert to VR AS from double");
 
 	IMEBRA_FUNCTION_END();
 }
