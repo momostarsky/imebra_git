@@ -285,6 +285,8 @@ public:
 	///////////////////////////////////////////////////////////
     std::shared_ptr<dataSet> getSequenceItem(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t itemId) const;
 
+    void setSequenceItem(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t itemId, std::shared_ptr<dataSet> pDataSet);
+
 	/// \brief Retrieve a LUT.
 	///
 	/// LUT are encoded into sequences.

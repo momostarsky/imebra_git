@@ -816,6 +816,25 @@ std::shared_ptr<dataSet> dataSet::getSequenceItem(std::uint16_t groupId, std::ui
 ///////////////////////////////////////////////////////////
 //
 //
+// Set a sequence item
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+void dataSet::setSequenceItem(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t itemId, std::shared_ptr<dataSet> pDataSet)
+{
+    IMEBRA_FUNCTION_START();
+
+    getTagCreate(groupId, order, tagId, tagVR_t::SQ)->setSequenceItem(itemId, pDataSet);
+
+    IMEBRA_FUNCTION_END();
+}
+
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
 // Retrieve a LUT from the data set
 //
 //

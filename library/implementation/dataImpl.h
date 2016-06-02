@@ -265,7 +265,7 @@ public:
 	///                   into the tag
 	///
 	///////////////////////////////////////////////////////////
-    void setDataSet(size_t dataSetId, std::shared_ptr<dataSet> pDataSet);
+    void setSequenceItem(size_t dataSetId, std::shared_ptr<dataSet> pDataSet);
 
 	/// \brief Append an embedded dataSet to the sequence.
 	///

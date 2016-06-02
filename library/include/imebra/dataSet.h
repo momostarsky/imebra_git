@@ -202,6 +202,18 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     DataSet* getSequenceItem(const TagId& tagId, size_t itemId);
 
+    /// \brief Set a sequence item.
+    ///
+    /// If the specified Tag does not exist then creates a new one with VR
+    ///  tagVR_t::SQ.
+    ///
+    /// \param tagId  the tag's id in which the sequence must be stored
+    /// \param itemId the sequence item to set. The first item has an Id = 0
+    /// \param item   the DataSet to store as a sequence item
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    void setSequenceItem(const TagId& tagId, size_t itemId, const DataSet& item);
+
     /// \brief Retrieve a LUT stored in a sequence item.
     ///
     /// If the specified Tag does not exist then throws MissingTagError or
@@ -406,16 +418,12 @@ public:
     /// If the specified Tag does not exist then throws MissingTagError or
     ///  MissingGroupError.
     ///
-    /// If the specified Tag does not contain the specified buffer item then
-    ///  throws MissingItemError.
-    ///
     /// \param tagId    the tag's id
-    /// \param bufferId the tag's buffer (zero based)
     /// \param elementNumber the element number within the buffer
     /// \return the tag's value as a signed 32 bit integer
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    std::int32_t getSignedLong(const TagId& tagId, size_t bufferId, size_t elementNumber) const;
+    std::int32_t getSignedLong(const TagId& tagId, size_t elementNumber) const;
 
     /// \brief Retrieve a tag's value as signed long integer (32 bit).
     ///
@@ -426,41 +434,38 @@ public:
     /// buffer then returns the default value specified in the parameter.
     ///
     /// \param tagId         the tag's id
-    /// \param bufferId      the tag's buffer (zero based)
     /// \param elementNumber the element number within the buffer
-    /// \param defaultValue  the value to return if the tag or buffer don't exist
+    /// \param defaultValue  the value to return if the tag doesn't exist
     /// \return the tag's value as a signed 32 bit integer, or defaultValue if
-    ///         the tag or buffer don't exist
+    ///         the tag doesn't exist
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    std::int32_t getSignedLong(const TagId& tagId, size_t bufferId, size_t elementNumber, std::int32_t defaultValue) const;
+    std::int32_t getSignedLong(const TagId& tagId, size_t elementNumber, std::int32_t defaultValue) const;
 
     /// \brief Write a new signed 32 bit integer value into the element 0 of the
-    ///        specified Tag's buffer.
+    ///        specified Tag's buffer 0.
     ///
-    /// If the specified Tag or buffer don't exist then a new tag and/or buffer
-    ///  are created using the specified data type (VR).
+    /// If the specified Tag or buffer don't exist then a new tag is created
+    /// using the specified data type (VR).
     ///
     /// \param tagId    the tag's id
-    /// \param bufferId the tag's buffer
     /// \param newValue the value to write into the tag
     /// \param tagVR    the tag's type to use when a new tag is created.
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    void setSignedLong(const TagId& tagId, size_t bufferId, std::int32_t newValue, tagVR_t tagVR);
+    void setSignedLong(const TagId& tagId, std::int32_t newValue, tagVR_t tagVR);
 
     /// \brief Write a new signed 32 bit integer value into the element 0 of the
-    ///        specified Tag's buffer.
+    ///        specified Tag's buffer 0.
     ///
     /// If the specified Tag does not exist then it creates a new tag with a
     ///  default VR retrieved from the DicomDictionary.
     ///
     /// \param tagId    the tag's id
-    /// \param bufferId the tag's buffer
     /// \param newValue the value to write into the tag
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    void setSignedLong(const TagId& tagId, size_t bufferId, std::int32_t newValue);
+    void setSignedLong(const TagId& tagId, std::int32_t newValue);
 
     /// \brief Retrieve a tag's value as unsigned long integer (32 bit).
     ///
@@ -470,61 +475,54 @@ public:
     /// If the specified Tag does not exist then throws MissingTagError or
     ///  MissingGroupError.
     ///
-    /// If the specified Tag does not contain the specified buffer item then
-    ///  throws MissingItemError.
-    ///
     /// \param tagId    the tag's id
-    /// \param bufferId the tag's buffer (zero based)
     /// \param elementNumber the element number within the buffer
     /// \return the tag's value as an unsigned 32 bit integer
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    std::uint32_t getUnsignedLong(const TagId& tagId, size_t bufferId, size_t elementNumber) const;
+    std::uint32_t getUnsignedLong(const TagId& tagId, size_t elementNumber) const;
 
     /// \brief Retrieve a tag's value as unsigned long integer (32 bit).
     ///
     /// If the tag's value cannot be converted to an unsigned long integer
     /// then throws DataHandlerConversionError.
     ///
-    /// If the specified Tag does not exist or it does not contain the specified
-    /// buffer then returns the default value specified in the parameter.
+    /// If the specified Tag does not exist then returns the default value
+    /// specified in the parameter.
     ///
     /// \param tagId         the tag's id
-    /// \param bufferId      the tag's buffer (zero based)
     /// \param elementNumber the element number within the buffer
-    /// \param defaultValue  the value to return if the tag or buffer don't exist
+    /// \param defaultValue  the value to return if the tag doesn't exist
     /// \return the tag's value as an unsigned 32 bit integer, or defaultValue if
-    ///         the tag or buffer don't exist
+    ///         the tag doesn't exist
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    std::uint32_t getUnsignedLong(const TagId& tagId, size_t bufferId, size_t elementNumber, std::uint32_t defaultValue) const;
+    std::uint32_t getUnsignedLong(const TagId& tagId, size_t elementNumber, std::uint32_t defaultValue) const;
 
     /// \brief Write a new unsigned 32 bit integer value into the element 0 of the
-    ///        specified Tag's buffer.
+    ///        specified Tag's buffer 0.
     ///
-    /// If the specified Tag or buffer don't exist then a new tag and/or buffer
-    ///  are created using the specified data type (VR).
+    /// If the specified Tag doesn't exist then a new tag is created using
+    /// the specified data type (VR).
     ///
     /// \param tagId    the tag's id
-    /// \param bufferId the tag's buffer
     /// \param newValue the value to write into the tag
     /// \param tagVR    the tag's type to use when a new tag is created.
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    void setUnsignedLong(const TagId& tagId, size_t bufferId, std::uint32_t newValue, tagVR_t tagVR);
+    void setUnsignedLong(const TagId& tagId, std::uint32_t newValue, tagVR_t tagVR);
 
     /// \brief Write a new unsigned 32 bit integer value into the element 0 of the
-    ///        specified Tag's buffer.
+    ///        specified Tag's buffer 0.
     ///
     /// If the specified Tag does not exist then it creates a new tag with a
     ///  default VR retrieved from the DicomDictionary.
     ///
     /// \param tagId    the tag's id
-    /// \param bufferId the tag's buffer
     /// \param newValue the value to write into the tag
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    void setUnsignedLong(const TagId& tagId, size_t bufferId, std::uint32_t newValue);
+    void setUnsignedLong(const TagId& tagId, std::uint32_t newValue);
 
     /// \brief Retrieve a tag's value as a 64 bit floating point.
     ///
@@ -534,61 +532,54 @@ public:
     /// If the specified Tag does not exist then throws MissingTagError or
     ///  MissingGroupError.
     ///
-    /// If the specified Tag does not contain the specified buffer item then
-    ///  throws MissingItemError.
-    ///
     /// \param tagId    the tag's id
-    /// \param bufferId the tag's buffer (zero based)
     /// \param elementNumber the element number within the buffer
     /// \return the tag's value as a 64 bit floating point
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    double getDouble(const TagId& tagId, size_t bufferId, size_t elementNumber) const;
+    double getDouble(const TagId& tagId, size_t elementNumber) const;
 
     /// \brief Retrieve a tag's value as a 64 bit floating point.
     ///
     /// If the tag's value cannot be converted to a floating point value
     ///  then throws DataHandlerConversionError.
     ///
-    /// If the specified Tag does not exist or it does not contain the specified
-    ///  buffer then returns the default value specified in the parameter.
+    /// If the specified Tag does not exist then returns the default value
+    /// specified in the parameter.
     ///
     /// \param tagId         the tag's id
-    /// \param bufferId      the tag's buffer (zero based)
     /// \param elementNumber the element number within the buffer
-    /// \param defaultValue  the value to return if the tag or buffer don't exist
+    /// \param defaultValue  the value to return if the tag doesn't exist
     /// \return the tag's value as a 64 bit floating point, or defaultValue if
-    ///         the tag or buffer don't exist
+    ///         the tag doesn't exist
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    double getDouble(const TagId& tagId, size_t bufferId, size_t elementNumber, double defaultValue) const;
+    double getDouble(const TagId& tagId, size_t elementNumber, double defaultValue) const;
 
     /// \brief Write a 64 bit floating point value into the element 0 of the
-    ///        specified Tag's buffer.
+    ///        specified Tag's buffer 0.
     ///
-    /// If the specified Tag or buffer don't exist then a new tag and/or buffer
-    ///  are created using the specified data type (VR).
+    /// If the specified Tag or buffer don't exist then a new tag
+    ///  is created using the specified data type (VR).
     ///
     /// \param tagId    the tag's id
-    /// \param bufferId the tag's buffer
     /// \param newValue the value to write into the tag
     /// \param tagVR    the tag's type to use when a new tag is created.
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    void setDouble(const TagId& tagId, size_t bufferId, double newValue, tagVR_t tagVR);
+    void setDouble(const TagId& tagId, double newValue, tagVR_t tagVR);
 
     /// \brief Write a 64 bit floating point value into the element 0 of the
-    ///        specified Tag's buffer.
+    ///        specified Tag's buffer 0.
     ///
     /// If the specified Tag does not exist then it creates a new tag with a
     ///  default VR retrieved from the DicomDictionary.
     ///
     /// \param tagId    the tag's id
-    /// \param bufferId the tag's buffer
     /// \param newValue the value to write into the tag
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    void setDouble(const TagId& tagId, size_t bufferId, double newValue);
+    void setDouble(const TagId& tagId, double newValue);
 
     /// \brief Retrieve a tag's value as a string.
     ///
@@ -598,49 +589,43 @@ public:
     /// If the specified Tag does not exist then throws MissingTagError or
     ///  MissingGroupError.
     ///
-    /// If the specified Tag does not contain the specified buffer item then
-    ///  throws MissingItemError.
-    ///
     /// \param tagId    the tag's id
-    /// \param bufferId the tag's buffer (zero based)
     /// \param elementNumber the element number within the buffer
     /// \return the tag's value as a string
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    std::string getString(const TagId& tagId, size_t bufferId, size_t elementNumber) const;
+    std::string getString(const TagId& tagId, size_t elementNumber) const;
 
     /// \brief Retrieve a tag's value as a string.
     ///
     /// If the tag's value cannot be converted to a string then throws
     ///  DataHandlerConversionError.
     ///
-    /// If the specified Tag does not exist or it does not contain the specified
-    ///  buffer then returns the default value specified in the parameter.
+    /// If the specified Tag does not exist then returns the default value
+    /// specified in the parameter.
     ///
     /// \param tagId         the tag's id
-    /// \param bufferId      the tag's buffer (zero based)
     /// \param elementNumber the element number within the buffer
-    /// \param defaultValue  the value to return if the tag or buffer don't exist
+    /// \param defaultValue  the value to return if the tag doesn't exist
     /// \return the tag's value as a string, or defaultValue if
-    ///         the tag or buffer don't exist
+    ///         the tag doesn't exist
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    std::string getString(const TagId& tagId, size_t bufferId, size_t elementNumber, const std::string& defaultValue) const;
+    std::string getString(const TagId& tagId, size_t elementNumber, const std::string& defaultValue) const;
 
-    void setString(const TagId& tagId, size_t bufferId, const std::string& newString, tagVR_t tagVR);
+    void setString(const TagId& tagId, const std::string& newString, tagVR_t tagVR);
 
     /// \brief Write a string value into the element 0 of the specified Tag's
-    ///        buffer.
+    ///        buffer 0.
     ///
     /// If the specified Tag does not exist then it creates a new tag with a
     ///  default VR retrieved from the DicomDictionary.
     ///
     /// \param tagId     the tag's id
-    /// \param bufferId  the tag's buffer
     /// \param newString the string to write into the tag
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    void setString(const TagId& tagId, size_t bufferId, const std::string& newString);
+    void setString(const TagId& tagId, const std::string& newString);
 
     /// \brief Retrieve a tag's value as an unicode string.
     ///
@@ -650,61 +635,54 @@ public:
     /// If the specified Tag does not exist then throws MissingTagError or
     ///  MissingGroupError.
     ///
-    /// If the specified Tag does not contain the specified buffer item then
-    ///  throws MissingItemError.
-    ///
     /// \param tagId    the tag's id
-    /// \param bufferId the tag's buffer (zero based)
     /// \param elementNumber the element number within the buffer
     /// \return the tag's value as an unicode string
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    std::wstring getUnicodeString(const TagId& tagId, size_t bufferId, size_t elementNumber) const;
+    std::wstring getUnicodeString(const TagId& tagId, size_t elementNumber) const;
 
     /// \brief Retrieve a tag's value as an unicode string.
     ///
     /// If the tag's value cannot be converted to an unicode string then throws
     ///  DataHandlerConversionError.
     ///
-    /// If the specified Tag does not exist or it does not contain the specified
-    ///  buffer then returns the default value specified in the parameter.
+    /// If the specified Tag does not exist then returns the default value
+    /// specified in the parameter.
     ///
     /// \param tagId         the tag's id
-    /// \param bufferId      the tag's buffer (zero based)
     /// \param elementNumber the element number within the buffer
-    /// \param defaultValue  the value to return if the tag or buffer don't exist
+    /// \param defaultValue  the value to return if the tag doesn't exist
     /// \return the tag's value as an unicode string, or defaultValue if
-    ///         the tag or buffer don't exist
+    ///         the tag doesn't exist
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    std::wstring getUnicodeString(const TagId& tagId, size_t bufferId, size_t elementNumber, const std::wstring& defaultValue) const;
+    std::wstring getUnicodeString(const TagId& tagId, size_t elementNumber, const std::wstring& defaultValue) const;
 
     /// \brief Write an unicode string value into the element 0 of the specified
-    ///        Tag's buffer.
+    ///        Tag's buffer 0.
     ///
-    /// If the specified Tag or buffer don't exist then a new tag and/or buffer
-    ///  are created using the specified data type (VR).
+    /// If the specified Tag doesn't exist then a new tag is created using
+    /// the specified VR.
     ///
     /// \param tagId     the tag's id
-    /// \param bufferId  the tag's buffer
     /// \param newString the string to write into the tag
     /// \param tagVR     the tag's type to use when a new tag is created.
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    void setUnicodeString(const TagId& tagId, size_t bufferId, const std::wstring& newString, tagVR_t tagVR);
+    void setUnicodeString(const TagId& tagId, const std::wstring& newString, tagVR_t tagVR);
 
     /// \brief Write an unicode string value into the element 0 of the specified
-    ///        Tag's buffer.
+    ///        Tag's buffer 0.
     ///
     /// If the specified Tag does not exist then it creates a new tag with a
     ///  default VR retrieved from the DicomDictionary.
     ///
     /// \param tagId     the tag's id
-    /// \param bufferId  the tag's buffer
     /// \param newString the string to write into the tag
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    void setUnicodeString(const TagId& tagId, size_t bufferId, const std::wstring& newString);
+    void setUnicodeString(const TagId& tagId, const std::wstring& newString);
 
     /// \brief Retrieve a tag's value as Age.
     ///
@@ -714,47 +692,40 @@ public:
     /// If the specified Tag does not exist then throws MissingTagError or
     ///  MissingGroupError.
     ///
-    /// If the specified Tag does not contain the specified buffer item then
-    ///  throws MissingItemError.
-    ///
     /// \param tagId    the tag's id
-    /// \param bufferId the tag's buffer (zero based)
     /// \param elementNumber the element number within the buffer
     /// \return the tag's value as Age
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    Age* getAge(const TagId& tagId, size_t bufferId, size_t elementNumber) const;
+    Age* getAge(const TagId& tagId, size_t elementNumber) const;
 
     /// \brief Retrieve a tag's value as Age.
     ///
     /// If the tag's value cannot be converted to Age then throws
     ///  DataHandlerConversionError.
     ///
-    /// If the specified Tag does not exist or it does not contain the specified
-    ///  buffer then returns the default value specified in the parameter.
+    /// If the specified Tag does not exist then returns the default value
+    /// specified in the parameter.
     ///
     /// \param tagId         the tag's id
-    /// \param bufferId      the tag's buffer (zero based)
-    /// \param elementNumber the element number within the buffer
-    /// \param defaultValue  the value to return if the tag or buffer don't exist
-    /// \return the tag's value as Age, or defaultValue if the tag or buffer
-    ///         don't exist
+    /// \param elementNumber the element number within the buffer 0
+    /// \param defaultValue  the value to return if the tag doesn't exist
+    /// \return the tag's value as Age, or defaultValue if the tag doesn't exist
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    Age* getAge(const TagId& tagId, size_t bufferId, size_t elementNumber, const Age& defaultValue) const;
+    Age* getAge(const TagId& tagId, size_t elementNumber, const Age& defaultValue) const;
 
     /// \brief Write an Age string into the element 0 of the specified
-    ///        Tag's buffer.
+    ///        Tag's buffer 0.
     ///
-    /// If the specified Tag or buffer don't exist then a new tag and/or buffer
-    ///  are created using VR tagVR_t::AS.
+    /// If the specified Tag doesn't exist then a new tag and is created using
+    /// the VR tagVR_t::AS.
     ///
     /// \param tagId    the tag's id
-    /// \param bufferId the tag's buffer
     /// \param age      the Age to write into the tag
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    void setAge(const TagId& tagId, size_t bufferId, const Age& age);
+    void setAge(const TagId& tagId, const Age& age);
 
     /// \brief Retrieve a tag's value as a Date.
     ///
@@ -764,61 +735,55 @@ public:
     /// If the specified Tag does not exist then throws MissingTagError or
     ///  MissingGroupError.
     ///
-    /// If the specified Tag does not contain the specified buffer item then
-    ///  throws MissingItemError.
+    /// If the specified Tag does not exist then throws MissingItemError.
     ///
     /// \param tagId    the tag's id
-    /// \param bufferId the tag's buffer (zero based)
-    /// \param elementNumber the element number within the buffer
+    /// \param elementNumber the element number within the buffer 0
     /// \return the tag's value as a Date
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    Date* getDate(const TagId& tagId, size_t bufferId, size_t elementNumber) const;
+    Date* getDate(const TagId& tagId, size_t elementNumber) const;
 
     /// \brief Retrieve a tag's value as a Date.
     ///
     /// If the tag's value cannot be converted to a date then throws
     ///  DataHandlerConversionError.
     ///
-    /// If the specified Tag does not exist or it does not contain the specified
-    ///  buffer then returns the default value specified in the parameter.
+    /// If the specified Tag does not exist then returns the default value
+    /// specified in the parameter.
     ///
     /// \param tagId         the tag's id
-    /// \param bufferId      the tag's buffer (zero based)
     /// \param elementNumber the element number within the buffer
-    /// \param defaultValue  the value to return if the tag or buffer don't exist
-    /// \return the tag's value as a Date, or defaultValue if the tag or buffer
-    ///         don't exist
+    /// \param defaultValue  the value to return if the tag doesn't exist
+    /// \return the tag's value as a Date, or defaultValue if the tag doesn't exist
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    Date* getDate(const TagId& tagId, size_t bufferId, size_t elementNumber, const Date& defaultValue) const;
+    Date* getDate(const TagId& tagId, size_t elementNumber, const Date& defaultValue) const;
 
     /// \brief Write a Date string into the element 0 of the specified
-    ///        Tag's buffer.
+    ///        Tag's buffer 0.
     ///
     /// If the specified Tag or buffer don't exist then a new tag and/or buffer
     ///  are created using the specified data type (VR).
     ///
     /// \param tagId    the tag's id
-    /// \param bufferId the tag's buffer
     /// \param date     the Date to write into the tag
     /// \param tagVR    the tag's type to use when a new tag is created.
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    void setDate(const TagId& tagId, size_t bufferId, const Date& date, tagVR_t tagVR);
+    void setDate(const TagId& tagId, const Date& date, tagVR_t tagVR);
 
     /// \brief Write a Date string into the element 0 of the specified
-    ///        Tag's buffer.
+    ///        Tag's buffer 0.
     ///
     /// If the specified Tag does not exist then it creates a new tag with a
     ///  default VR retrieved from the DicomDictionary.
     ///
     /// \param tagId    the tag's id
-    /// \param bufferId the tag's buffer
     /// \param date     the Date to write into the tag
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    void setDate(const TagId& tagId, size_t bufferId, const Date& date);
+    void setDate(const TagId& tagId, const Date& date);
 
     /// \brief Return the 2 chars data type (VR) of the specified tag.
     ///

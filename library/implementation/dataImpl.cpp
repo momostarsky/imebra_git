@@ -479,7 +479,7 @@ bool data::dataSetExists(size_t dataSetId) const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void data::setDataSet(size_t dataSetId, std::shared_ptr<dataSet> pDataSet)
+void data::setSequenceItem(size_t dataSetId, std::shared_ptr<dataSet> pDataSet)
 {
     IMEBRA_FUNCTION_START();
 
