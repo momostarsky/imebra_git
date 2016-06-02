@@ -128,7 +128,7 @@ TEST(dicomCodecTest, testDicom)
                         writingDataHandler->setString(1, "BBBbbb");
                         writingDataHandler->setString(2, "");
                         writingDataHandler.reset();
-                        testDataSet.setUnsignedLong(TagId(imebra::tagId_t::PlanarConfiguration_0028_0006), 0, interleaved);
+                        testDataSet.setUnsignedLong(TagId(imebra::tagId_t::PlanarConfiguration_0028_0006), interleaved);
                         testDataSet.setImage(0, *dicomImage0, transferSyntax, imageQuality_t::veryHigh);
                         testDataSet.setImage(1, *dicomImage1, transferSyntax, imageQuality_t::veryHigh);
                         testDataSet.setImage(2, *dicomImage2, transferSyntax, imageQuality_t::veryHigh);
@@ -142,10 +142,10 @@ TEST(dicomCodecTest, testDicom)
                     StreamReader reader(readStream);
                     std::unique_ptr<DataSet> testDataSet(CodecFactory::load(reader, 1));
 
-                    EXPECT_EQ(std::string("AAAaa"), testDataSet->getString(TagId(imebra::tagId_t::PatientName_0010_0010), 0, 0));
-                    EXPECT_EQ(std::string("BBBbbb"), testDataSet->getString(TagId(imebra::tagId_t::PatientName_0010_0010), 0, 1));
-                    EXPECT_EQ(std::string(""), testDataSet->getString(TagId(imebra::tagId_t::PatientName_0010_0010), 0, 2));
-                    EXPECT_EQ(interleaved, testDataSet->getSignedLong(TagId(imebra::tagId_t::PlanarConfiguration_0028_0006), 0, 0));
+                    EXPECT_EQ(std::string("AAAaa"), testDataSet->getString(TagId(imebra::tagId_t::PatientName_0010_0010), 0));
+                    EXPECT_EQ(std::string("BBBbbb"), testDataSet->getString(TagId(imebra::tagId_t::PatientName_0010_0010), 1));
+                    EXPECT_EQ(std::string(""), testDataSet->getString(TagId(imebra::tagId_t::PatientName_0010_0010), 2));
+                    EXPECT_EQ(interleaved, testDataSet->getSignedLong(TagId(imebra::tagId_t::PlanarConfiguration_0028_0006), 0));
 
                     std::unique_ptr<Image> checkImage0(testDataSet->getImage(0));
                     std::unique_ptr<Image> checkImage1(testDataSet->getImage(1));

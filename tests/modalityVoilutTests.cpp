@@ -23,8 +23,8 @@ TEST(modalityVoilut, voilutUnsigned8)
     }
 
     DataSet testDataSet;
-    testDataSet.setDouble(TagId(tagId_t::RescaleSlope_0028_1053), 0, 2);
-    testDataSet.setDouble(TagId(tagId_t::RescaleIntercept_0028_1052), 0, -1);
+    testDataSet.setDouble(TagId(tagId_t::RescaleSlope_0028_1053), 2);
+    testDataSet.setDouble(TagId(tagId_t::RescaleIntercept_0028_1052), -1);
     testDataSet.setImage(0, unsigned8, "1.2.840.10008.1.2.1", imageQuality_t::veryHigh);
 
     {

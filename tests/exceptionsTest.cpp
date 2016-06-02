@@ -20,7 +20,7 @@ void exceptionsThread(size_t exceptionType)
             break;
         case 1:
             DataSet test;
-            test.getString(TagId(16, 16), 0, 0);
+            test.getString(TagId(16, 16), 0);
         }
     }
     catch(...)
@@ -95,7 +95,7 @@ TEST(exceptionsTest, testAutomaticClear)
     try
     {
         DataSet test;
-        test.getString(TagId(16, 16), 0, 0);
+        test.getString(TagId(16, 16), 0);
     }
     catch(...)
     {

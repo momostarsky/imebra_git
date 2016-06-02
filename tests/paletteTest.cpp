@@ -60,7 +60,7 @@ TEST(paletteTest, testPalette)
     }
 
     testDataSet.setImage(0, paletteImage, "1.2.840.10008.1.2.1", imageQuality_t::veryHigh);
-    testDataSet.setString(TagId(tagId_t::PhotometricInterpretation_0028_0004), 0, "PALETTE COLOR");
+    testDataSet.setString(TagId(tagId_t::PhotometricInterpretation_0028_0004), "PALETTE COLOR");
 
     std::unique_ptr<Transform> colorTransform(ColorTransformsFactory::getTransform("PALETTE COLOR", "RGB"));
     std::unique_ptr<Image> storedImage(testDataSet.getImage(0));
