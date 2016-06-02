@@ -267,6 +267,10 @@ void writingDataHandlerString::setString(const size_t index, const std::string& 
 {
     IMEBRA_FUNCTION_START();
 
+    if(m_separator == 0 && index != 0)
+    {
+        IMEBRA_THROW(DataHandlerInvalidDataError, "Cannot insert more than one item in this string tag");
+    }
     if(index >= getSize())
     {
         setSize(index + 1);

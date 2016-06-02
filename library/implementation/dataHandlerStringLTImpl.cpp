@@ -39,7 +39,7 @@ readingDataHandlerStringLT::readingDataHandlerStringLT(const memory& parseMemory
 }
 
 writingDataHandlerStringLT::writingDataHandlerStringLT(const std::shared_ptr<buffer> &pBuffer, const charsetsList::tCharsetsList &charsets):
-    writingDataHandlerStringUnicode(pBuffer, charsets, tagVR_t::LT, '\\', 0, 10240, 0x20)
+    writingDataHandlerStringUnicode(pBuffer, charsets, tagVR_t::LT, 0, 0, 10240, 0x20)
 {
 }
 
