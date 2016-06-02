@@ -74,19 +74,6 @@ public:
 	///////////////////////////////////////////////////////////
     virtual std::string getFinalColorSpace() const = 0;
 
-	/// \brief Create another instance of the colorTransform
-	///         class.
-	///
-	/// The new instance will have the same type of the 
-	///  instance on which this function is called.
-	///
-	/// @return a new instance of the colorTransform. The new
-	///          instance will have the same class of the
-	///          instance on which the function is called
-	///
-	///////////////////////////////////////////////////////////
-	virtual std::shared_ptr<colorTransform> createColorTransform()=0;
-
     virtual std::shared_ptr<image> allocateOutputImage(
             bitDepth_t inputDepth,
             const std::string& inputColorSpace,
@@ -101,32 +88,6 @@ protected:
 
     void checkHighBit(std::uint32_t inputHighBit, std::uint32_t outputHighBit) const;
 
-};
-
-
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-/// \internal
-/// \brief This class is used by the colorTransform derived
-///         classes to register themself.
-///
-/// Each colorTransform derived class statically allocate
-///  a registerColorTransform class that register the
-///  color transforms in the colorTransformsFactory.
-///
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-class registerColorTransform
-{
-public:
-	/// \brief Register the specified color transform
-	///
-	/// @param newColorTransform the color transform to be
-	///                           registered
-	///
-	///////////////////////////////////////////////////////////
-	registerColorTransform(std::shared_ptr<colorTransform> newColorTransform);
 };
 
 /// @}

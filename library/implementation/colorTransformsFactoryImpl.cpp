@@ -351,7 +351,7 @@ std::shared_ptr<transform> colorTransformsFactory::getTransform(const std::strin
 		if( (*scanSingleTransform)->getInitialColorSpace() == normalizedStartColorSpace && 
 			(*scanSingleTransform)->getFinalColorSpace() == normalizedEndColorSpace)
 		{
-			std::shared_ptr<colorTransform> newTransform = (*scanSingleTransform)->createColorTransform();
+            std::shared_ptr<colorTransform> newTransform = *scanSingleTransform;
 			return newTransform;
 		}
 	}
@@ -371,8 +371,8 @@ std::shared_ptr<transform> colorTransformsFactory::getTransform(const std::strin
 				continue;
 			}
 
-			std::shared_ptr<colorTransform> newTransform0 = (*scanMultipleTransforms)->createColorTransform();
-			std::shared_ptr<colorTransform> newTransform1 = (*secondTransform)->createColorTransform();
+            std::shared_ptr<colorTransform> newTransform0 = *scanMultipleTransforms;
+            std::shared_ptr<colorTransform> newTransform1 = *secondTransform;
 
             std::shared_ptr<transformsChain> chain = std::make_shared<transformsChain>();
 			chain->addTransform(newTransform0);
