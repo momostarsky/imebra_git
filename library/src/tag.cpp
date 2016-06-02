@@ -10,12 +10,6 @@ $fileHeader$
 namespace imebra
 {
 
-Tag::Tag(tagVR_t tagVR)
-{
-    implementation::charsetsList::tCharsetsList tempCharset;
-    m_pData = std::make_shared<imebra::implementation::data>(tagVR, tempCharset);
-}
-
 Tag::~Tag()
 {
 }
@@ -105,7 +99,7 @@ bool Tag::sequenceItemExists(size_t dataSetId) const
 
 void Tag::setSequenceItem(size_t dataSetId, const DataSet& dataSet)
 {
-    m_pData->setDataSet(dataSetId, dataSet.m_pDataSet);
+    m_pData->setSequenceItem(dataSetId, dataSet.m_pDataSet);
 }
 
 void Tag::appendSequenceItem(const DataSet& dataSet)

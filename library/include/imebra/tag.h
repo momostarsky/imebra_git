@@ -53,13 +53,6 @@ private:
 #endif
 
 public:
-    /// \brief Construct an empty dicom tag.
-    ///
-    /// \param tagVR the Tag's VR (data type)
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    Tag(tagVR_t tagVR);
-
     virtual ~Tag();
 
     /// \brief Returns the number of buffers in the tag.
