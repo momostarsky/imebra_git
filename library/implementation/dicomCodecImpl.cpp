@@ -80,7 +80,7 @@ void dicomCodec::writeStream(std::shared_ptr<streamWriter> pStream, std::shared_
 
     // Retrieve the transfer syntax
     ///////////////////////////////////////////////////////////
-    std::string transferSyntax = pDataSet->getString(0x0002, 0, 0x0010, 0, 0);
+    std::string transferSyntax = pDataSet->getString(0x0002, 0, 0x0010, 0, 0, "1.2.840.10008.1.2");
 
     // Adjust the flags
     ///////////////////////////////////////////////////////////
@@ -528,6 +528,7 @@ void dicomCodec::readStream(std::shared_ptr<streamReader> pStream, std::shared_p
     ///////////////////////////////////////////////////////////
     std::uint8_t dicomSignature[4];
     pStream->read(dicomSignature, 4);
+
     // Check the DICM signature
     ///////////////////////////////////////////////////////////
     const char* checkSignature="DICM";
@@ -893,7 +894,7 @@ void dicomCodec::parseStream(std::shared_ptr<streamReader> pStream,
                 if(tagLengthDWord!=0xffffffff)
                     tagLengthDWord-=effectiveLength;
                 std::shared_ptr<data> sequenceTag=pDataSet->getTagCreate(tagId, 0x0, tagSubId, tagType);
-                sequenceTag->setDataSet(bufferId, sequenceDataSet);
+                sequenceTag->setSequenceItem(bufferId, sequenceDataSet);
                 ++bufferId;
 
                 continue;
