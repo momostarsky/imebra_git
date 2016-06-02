@@ -55,11 +55,6 @@ std::string MONOCHROME1ToRGB::getFinalColorSpace() const
     return "RGB";
 }
 
-std::shared_ptr<colorTransform> MONOCHROME1ToRGB::createColorTransform()
-{
-    return std::shared_ptr<colorTransform>(std::make_shared<MONOCHROME1ToRGB>());
-}
-
 } // namespace colorTransforms
 
 } // namespace transforms

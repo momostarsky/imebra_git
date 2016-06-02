@@ -55,21 +55,6 @@ std::string YBRFULLToMONOCHROME2::getFinalColorSpace() const
 }
 
 
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Create a new YBRFULLToMONOCHROME2 object
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-std::shared_ptr<colorTransform> YBRFULLToMONOCHROME2::createColorTransform()
-{
-    return std::shared_ptr<colorTransform>(std::make_shared<YBRFULLToMONOCHROME2>());
-}
-
-
 } // namespace colorTransforms
 
 } // namespace transforms

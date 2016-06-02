@@ -54,13 +54,6 @@ std::string RGBToYBRFULL::getFinalColorSpace() const
     return "YBR_FULL";
 }
 
-
-std::shared_ptr<colorTransform> RGBToYBRFULL::createColorTransform()
-{
-    return std::shared_ptr<colorTransform>(std::make_shared<RGBToYBRFULL>());
-}
-
-
 } // namespace colorTransforms
 
 } // namespace transforms

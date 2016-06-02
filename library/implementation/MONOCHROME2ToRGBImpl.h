@@ -43,12 +43,11 @@ class MONOCHROME2ToRGB: public colorTransform
 public:
     virtual std::string getInitialColorSpace() const;
     virtual std::string getFinalColorSpace() const;
-	virtual std::shared_ptr<colorTransform> createColorTransform();
 
-        DEFINE_RUN_TEMPLATE_TRANSFORM;
+    DEFINE_RUN_TEMPLATE_TRANSFORM;
 
-        template <class inputType, class outputType>
-        void templateTransform(
+    template <class inputType, class outputType>
+    void templateTransform(
             const inputType* inputHandlerData,
             outputType* outputHandlerData,
             bitDepth_t /* inputDepth */, std::uint32_t inputHandlerWidth, const std::string& inputHandlerColorSpace,
@@ -59,39 +58,39 @@ public:
             std::shared_ptr<palette> /* outputPalette */,
             std::uint32_t outputHighBit,
             std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY) const
+    {
+        IMEBRA_FUNCTION_START();
+
+        checkColorSpaces(inputHandlerColorSpace, outputHandlerColorSpace);
+        checkHighBit(inputHighBit, outputHighBit);
+
+        const inputType* pInputMemory(inputHandlerData);
+        outputType* pOutputMemory(outputHandlerData);
+
+        pInputMemory += inputTopLeftY * inputHandlerWidth + inputTopLeftX;
+        pOutputMemory += (outputTopLeftY * outputHandlerWidth + outputTopLeftX) * 3;
+
+        std::int64_t inputHandlerMinValue = getMinValue<inputType>(inputHighBit);
+        std::int64_t outputHandlerMinValue = getMinValue<outputType>(outputHighBit);
+
+        outputType outputValue;
+
+        for(; inputHeight != 0; --inputHeight)
         {
-            IMEBRA_FUNCTION_START();
-
-            checkColorSpaces(inputHandlerColorSpace, outputHandlerColorSpace);
-            checkHighBit(inputHighBit, outputHighBit);
-
-            const inputType* pInputMemory(inputHandlerData);
-            outputType* pOutputMemory(outputHandlerData);
-
-            pInputMemory += inputTopLeftY * inputHandlerWidth + inputTopLeftX;
-            pOutputMemory += (outputTopLeftY * outputHandlerWidth + outputTopLeftX) * 3;
-
-            std::int64_t inputHandlerMinValue = getMinValue<inputType>(inputHighBit);
-            std::int64_t outputHandlerMinValue = getMinValue<outputType>(outputHighBit);
-
-            outputType outputValue;
-
-            for(; inputHeight != 0; --inputHeight)
+            for(std::uint32_t scanPixels(inputWidth); scanPixels != 0; --scanPixels)
             {
-                for(std::uint32_t scanPixels(inputWidth); scanPixels != 0; --scanPixels)
-                {
-                    outputValue = (outputType)(outputHandlerMinValue + (std::int64_t)*pInputMemory++ - inputHandlerMinValue);
-                    *pOutputMemory = outputValue;
-                    *++pOutputMemory = outputValue;
-                    *++pOutputMemory = outputValue;
-                    ++pOutputMemory;
-                }
-                pInputMemory += inputHandlerWidth - inputWidth;
-                pOutputMemory += (outputHandlerWidth - inputWidth) * 3;
+                outputValue = (outputType)(outputHandlerMinValue + (std::int64_t)*pInputMemory++ - inputHandlerMinValue);
+                *pOutputMemory = outputValue;
+                *++pOutputMemory = outputValue;
+                *++pOutputMemory = outputValue;
+                ++pOutputMemory;
             }
-
-            IMEBRA_FUNCTION_END();
+            pInputMemory += inputHandlerWidth - inputWidth;
+            pOutputMemory += (outputHandlerWidth - inputWidth) * 3;
         }
+
+        IMEBRA_FUNCTION_END();
+    }
 
 };
 

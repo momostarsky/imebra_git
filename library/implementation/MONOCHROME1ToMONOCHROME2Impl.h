@@ -42,12 +42,11 @@ class MONOCHROME1ToMONOCHROME2: public colorTransform
 public:
     virtual std::string getInitialColorSpace() const;
     virtual std::string getFinalColorSpace() const;
-	virtual std::shared_ptr<colorTransform> createColorTransform();
 
-        DEFINE_RUN_TEMPLATE_TRANSFORM;
+    DEFINE_RUN_TEMPLATE_TRANSFORM;
 
-        template <class inputType, class outputType>
-        void templateTransform(
+    template <class inputType, class outputType>
+    void templateTransform(
             const inputType* inputHandlerData,
             outputType* outputHandlerData,
             bitDepth_t /* inputDepth */, std::uint32_t inputHandlerWidth, const std::string& inputHandlerColorSpace,
@@ -58,34 +57,34 @@ public:
             std::shared_ptr<palette> /* outputPalette */,
             std::uint32_t outputHighBit,
             std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY) const
+    {
+        IMEBRA_FUNCTION_START();
+
+        checkColorSpaces(inputHandlerColorSpace, outputHandlerColorSpace);
+        checkHighBit(inputHighBit, outputHighBit);
+
+        const inputType* pInputMemory(inputHandlerData);
+        outputType* pOutputMemory(outputHandlerData);
+
+        pInputMemory += inputTopLeftY * inputHandlerWidth + inputTopLeftX;
+        pOutputMemory += outputTopLeftY * outputHandlerWidth + outputTopLeftX;
+
+        std::int64_t inputHandlerMinValue = getMinValue<inputType>(inputHighBit);
+        std::int64_t outputHandlerMinValue = getMinValue<outputType>(outputHighBit);
+        std::int64_t inputHandlerNumValuesMinusOne = ((std::int64_t)1 << (inputHighBit + 1)) - 1;
+
+        for(; inputHeight != 0; --inputHeight)
         {
-            IMEBRA_FUNCTION_START();
-
-            checkColorSpaces(inputHandlerColorSpace, outputHandlerColorSpace);
-            checkHighBit(inputHighBit, outputHighBit);
-
-            const inputType* pInputMemory(inputHandlerData);
-            outputType* pOutputMemory(outputHandlerData);
-
-            pInputMemory += inputTopLeftY * inputHandlerWidth + inputTopLeftX;
-            pOutputMemory += outputTopLeftY * outputHandlerWidth + outputTopLeftX;
-
-            std::int64_t inputHandlerMinValue = getMinValue<inputType>(inputHighBit);
-            std::int64_t outputHandlerMinValue = getMinValue<outputType>(outputHighBit);
-            std::int64_t inputHandlerNumValuesMinusOne = ((std::int64_t)1 << (inputHighBit + 1)) - 1;
-
-            for(; inputHeight != 0; --inputHeight)
+            for(std::uint32_t scanPixels(inputWidth); scanPixels != 0; --scanPixels)
             {
-                for(std::uint32_t scanPixels(inputWidth); scanPixels != 0; --scanPixels)
-                {
-                    *pOutputMemory++ = (outputType)(outputHandlerMinValue + inputHandlerNumValuesMinusOne - (std::int64_t)*pInputMemory++ + inputHandlerMinValue);
-                }
-                pInputMemory += inputHandlerWidth - inputWidth;
-                pOutputMemory += outputHandlerWidth - inputWidth;
+                *pOutputMemory++ = (outputType)(outputHandlerMinValue + inputHandlerNumValuesMinusOne - (std::int64_t)*pInputMemory++ + inputHandlerMinValue);
             }
-
-            IMEBRA_FUNCTION_END();
+            pInputMemory += inputHandlerWidth - inputWidth;
+            pOutputMemory += outputHandlerWidth - inputWidth;
         }
+
+        IMEBRA_FUNCTION_END();
+    }
 
 };
 
@@ -104,7 +103,6 @@ class MONOCHROME2ToMONOCHROME1: public MONOCHROME1ToMONOCHROME2
 public:
     virtual std::string getInitialColorSpace() const;
     virtual std::string getFinalColorSpace() const;
-	virtual std::shared_ptr<colorTransform> createColorTransform();
 };
 
 /// @}

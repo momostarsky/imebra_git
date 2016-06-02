@@ -43,12 +43,11 @@ class YBRPARTIALToRGB: public colorTransform
 public:
     virtual std::string getInitialColorSpace() const;
     virtual std::string getFinalColorSpace() const;
-	virtual std::shared_ptr<colorTransform> createColorTransform();
 
-        DEFINE_RUN_TEMPLATE_TRANSFORM;
+    DEFINE_RUN_TEMPLATE_TRANSFORM;
 
-        template <class inputType, class outputType>
-        void templateTransform(
+    template <class inputType, class outputType>
+    void templateTransform(
             const inputType* inputHandlerData,
             outputType* outputHandlerData,
             bitDepth_t /* inputDepth */, std::uint32_t inputHandlerWidth, const std::string& inputHandlerColorSpace,
@@ -59,83 +58,83 @@ public:
             std::shared_ptr<palette> /* outputPalette */,
             std::uint32_t outputHighBit,
             std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY) const
+    {
+        IMEBRA_FUNCTION_START();
+
+        checkColorSpaces(inputHandlerColorSpace, outputHandlerColorSpace);
+
+        const inputType* pInputMemory(inputHandlerData);
+        outputType* pOutputMemory(outputHandlerData);
+
+        pInputMemory += (inputTopLeftY * inputHandlerWidth + inputTopLeftX) * 3;
+        pOutputMemory += (outputTopLeftY * outputHandlerWidth + outputTopLeftX) * 3;
+
+        std::int64_t inputHandlerMinValue = getMinValue<inputType>(inputHighBit);
+        std::int64_t minY(inputHandlerMinValue + ((std::int64_t)1 << (inputHighBit - 3)));
+        std::int64_t outputHandlerMinValue = getMinValue<outputType>(outputHighBit);
+
+        std::int64_t inputMiddleValue(inputHandlerMinValue + ((std::int64_t)1 << inputHighBit));
+        std::int64_t sourceY, sourceB, sourceR, destination;
+
+        std::int64_t inputHandlerNumValues = (std::int64_t)1 << (inputHighBit + 1);
+        std::int64_t outputHandlerNumValues = (std::int64_t)1 << (outputHighBit + 1);
+
+        for(; inputHeight != 0; --inputHeight)
         {
-            IMEBRA_FUNCTION_START();
-
-            checkColorSpaces(inputHandlerColorSpace, outputHandlerColorSpace);
-
-            const inputType* pInputMemory(inputHandlerData);
-            outputType* pOutputMemory(outputHandlerData);
-
-            pInputMemory += (inputTopLeftY * inputHandlerWidth + inputTopLeftX) * 3;
-            pOutputMemory += (outputTopLeftY * outputHandlerWidth + outputTopLeftX) * 3;
-
-            std::int64_t inputHandlerMinValue = getMinValue<inputType>(inputHighBit);
-            std::int64_t minY(inputHandlerMinValue + ((std::int64_t)1 << (inputHighBit - 3)));
-            std::int64_t outputHandlerMinValue = getMinValue<outputType>(outputHighBit);
-
-            std::int64_t inputMiddleValue(inputHandlerMinValue + ((std::int64_t)1 << inputHighBit));
-            std::int64_t sourceY, sourceB, sourceR, destination;
-
-            std::int64_t inputHandlerNumValues = (std::int64_t)1 << (inputHighBit + 1);
-            std::int64_t outputHandlerNumValues = (std::int64_t)1 << (outputHighBit + 1);
-
-            for(; inputHeight != 0; --inputHeight)
+            for(std::uint32_t scanPixels(inputWidth); scanPixels != 0; --scanPixels)
             {
-                for(std::uint32_t scanPixels(inputWidth); scanPixels != 0; --scanPixels)
+                sourceY = (std::int64_t)*(pInputMemory++) - minY;
+                sourceB = (std::int64_t)*(pInputMemory++) - inputMiddleValue;
+                sourceR = (std::int64_t)*(pInputMemory++) - inputMiddleValue;
+
+                destination = (19071 * sourceY + 26148 * sourceR + 8191) / 16384;
+                if(destination < 0)
                 {
-                    sourceY = (std::int64_t)*(pInputMemory++) - minY;
-                    sourceB = (std::int64_t)*(pInputMemory++) - inputMiddleValue;
-                    sourceR = (std::int64_t)*(pInputMemory++) - inputMiddleValue;
-
-                    destination = (19071 * sourceY + 26148 * sourceR + 8191) / 16384;
-                    if(destination < 0)
-                    {
-                        *(pOutputMemory++) = (outputType)outputHandlerMinValue;
-                    }
-                    else if (destination >= inputHandlerNumValues)
-                    {
-                        *(pOutputMemory++) = (outputType)(outputHandlerMinValue + outputHandlerNumValues - 1);
-                    }
-                    else
-                    {
-                        *(pOutputMemory++) = (outputType)(outputHandlerMinValue + destination);
-                    }
-
-                    destination = (19071 * sourceY - 13320 * sourceR - 6406 * sourceB + 8191) / 16384;
-                    if(destination < 0)
-                    {
-                        *(pOutputMemory++) = (outputType)outputHandlerMinValue;
-                    }
-                    else if (destination >= (std::int32_t)inputHandlerNumValues)
-                    {
-                        *(pOutputMemory++) = (outputType)(outputHandlerMinValue + outputHandlerNumValues - 1);
-                    }
-                    else
-                    {
-                        *(pOutputMemory++) = (outputType)(outputHandlerMinValue + destination);
-                    }
-
-                    destination = (19071 * sourceY + 33063 * sourceB + 8191) / 16384;
-                    if(destination < 0)
-                    {
-                        *(pOutputMemory++) = (outputType)outputHandlerMinValue;
-                    }
-                    else if (destination >= (std::int32_t)inputHandlerNumValues)
-                    {
-                        *(pOutputMemory++) = (outputType)(outputHandlerMinValue + outputHandlerNumValues - 1);
-                    }
-                    else
-                    {
-                        *(pOutputMemory++) = (outputType)(outputHandlerMinValue +destination);
-                    }
+                    *(pOutputMemory++) = (outputType)outputHandlerMinValue;
                 }
-                pInputMemory += (inputHandlerWidth - inputWidth) * 3;
-                pOutputMemory += (outputHandlerWidth - inputWidth) * 3;
-            }
+                else if (destination >= inputHandlerNumValues)
+                {
+                    *(pOutputMemory++) = (outputType)(outputHandlerMinValue + outputHandlerNumValues - 1);
+                }
+                else
+                {
+                    *(pOutputMemory++) = (outputType)(outputHandlerMinValue + destination);
+                }
 
-            IMEBRA_FUNCTION_END();
+                destination = (19071 * sourceY - 13320 * sourceR - 6406 * sourceB + 8191) / 16384;
+                if(destination < 0)
+                {
+                    *(pOutputMemory++) = (outputType)outputHandlerMinValue;
+                }
+                else if (destination >= (std::int32_t)inputHandlerNumValues)
+                {
+                    *(pOutputMemory++) = (outputType)(outputHandlerMinValue + outputHandlerNumValues - 1);
+                }
+                else
+                {
+                    *(pOutputMemory++) = (outputType)(outputHandlerMinValue + destination);
+                }
+
+                destination = (19071 * sourceY + 33063 * sourceB + 8191) / 16384;
+                if(destination < 0)
+                {
+                    *(pOutputMemory++) = (outputType)outputHandlerMinValue;
+                }
+                else if (destination >= (std::int32_t)inputHandlerNumValues)
+                {
+                    *(pOutputMemory++) = (outputType)(outputHandlerMinValue + outputHandlerNumValues - 1);
+                }
+                else
+                {
+                    *(pOutputMemory++) = (outputType)(outputHandlerMinValue +destination);
+                }
+            }
+            pInputMemory += (inputHandlerWidth - inputWidth) * 3;
+            pOutputMemory += (outputHandlerWidth - inputWidth) * 3;
         }
+
+        IMEBRA_FUNCTION_END();
+    }
 };
 
 /// @}

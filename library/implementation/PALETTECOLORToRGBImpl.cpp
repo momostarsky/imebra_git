@@ -54,11 +54,6 @@ std::string PALETTECOLORToRGB::getFinalColorSpace() const
     return "RGB";
 }
 
-std::shared_ptr<colorTransform> PALETTECOLORToRGB::createColorTransform()
-{
-    return std::shared_ptr<colorTransform>(std::make_shared<PALETTECOLORToRGB>());
-}
-
 } // namespace colorTransforms
 
 } // namespace transforms

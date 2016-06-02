@@ -49,12 +49,11 @@ class PALETTECOLORToRGB: public colorTransform
 public:
     virtual std::string getInitialColorSpace() const;
     virtual std::string getFinalColorSpace() const;
-    virtual std::shared_ptr<colorTransform> createColorTransform();
 
-        DEFINE_RUN_TEMPLATE_TRANSFORM;
+    DEFINE_RUN_TEMPLATE_TRANSFORM;
 
-        template <class inputType, class outputType>
-        void templateTransform(
+    template <class inputType, class outputType>
+    void templateTransform(
             const inputType* inputHandlerData,
             outputType* outputHandlerData,
             bitDepth_t /* inputDepth */, std::uint32_t inputHandlerWidth, const std::string& inputHandlerColorSpace,
@@ -66,42 +65,41 @@ public:
             std::uint32_t outputHighBit,
             std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY) const
 
+    {
+        IMEBRA_FUNCTION_START();
+
+        checkColorSpaces(inputHandlerColorSpace, outputHandlerColorSpace);
+        std::uint32_t inputHighBit = inputPalette->getRed()->getBits() - 1;
+        checkHighBit(inputHighBit, outputHighBit);
+
+        const inputType* pInputMemory(inputHandlerData);
+        outputType* pOutputMemory(outputHandlerData);
+
+        lut* pRed = inputPalette->getRed().get();
+        lut* pGreen = inputPalette->getGreen().get();
+        lut* pBlue = inputPalette->getBlue().get();
+
+        pInputMemory += inputTopLeftY * inputHandlerWidth + inputTopLeftX;
+        pOutputMemory += (outputTopLeftY * outputHandlerWidth + outputTopLeftX) * 3;
+
+        std::int64_t outputHandlerMinValue = getMinValue<outputType>(outputHighBit);
+
+        std::int32_t paletteValue;
+        for(; inputHeight != 0; --inputHeight)
         {
-            IMEBRA_FUNCTION_START();
-
-            checkColorSpaces(inputHandlerColorSpace, outputHandlerColorSpace);
-            std::uint32_t inputHighBit = inputPalette->getRed()->getBits() - 1;
-            checkHighBit(inputHighBit, outputHighBit);
-
-            const inputType* pInputMemory(inputHandlerData);
-            outputType* pOutputMemory(outputHandlerData);
-
-            lut* pRed = inputPalette->getRed().get();
-            lut* pGreen = inputPalette->getGreen().get();
-            lut* pBlue = inputPalette->getBlue().get();
-
-            pInputMemory += inputTopLeftY * inputHandlerWidth + inputTopLeftX;
-            pOutputMemory += (outputTopLeftY * outputHandlerWidth + outputTopLeftX) * 3;
-
-            std::int64_t outputHandlerMinValue = getMinValue<outputType>(outputHighBit);
-
-            std::int32_t paletteValue;
-            for(; inputHeight != 0; --inputHeight)
+            for(std::uint32_t scanPixels(inputWidth); scanPixels != 0; --scanPixels)
             {
-                for(std::uint32_t scanPixels(inputWidth); scanPixels != 0; --scanPixels)
-                {
-                    paletteValue = (std::int32_t) (*pInputMemory++);
-                    *pOutputMemory++ = (outputType)(pRed->getMappedValue(paletteValue) + outputHandlerMinValue);
-                    *pOutputMemory++ = (outputType)(pGreen->getMappedValue(paletteValue) + outputHandlerMinValue);
-                    *pOutputMemory++ = (outputType)(pBlue->getMappedValue(paletteValue) + outputHandlerMinValue);
-                }
-                pInputMemory += inputHandlerWidth - inputWidth;
-                pOutputMemory += (outputHandlerWidth - inputWidth) * 3;
+                paletteValue = (std::int32_t) (*pInputMemory++);
+                *pOutputMemory++ = (outputType)(pRed->getMappedValue(paletteValue) + outputHandlerMinValue);
+                *pOutputMemory++ = (outputType)(pGreen->getMappedValue(paletteValue) + outputHandlerMinValue);
+                *pOutputMemory++ = (outputType)(pBlue->getMappedValue(paletteValue) + outputHandlerMinValue);
             }
-
-            IMEBRA_FUNCTION_END();
+            pInputMemory += inputHandlerWidth - inputWidth;
+            pOutputMemory += (outputHandlerWidth - inputWidth) * 3;
         }
 
+        IMEBRA_FUNCTION_END();
+    }
 
 };
 

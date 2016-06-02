@@ -54,13 +54,6 @@ std::string MONOCHROME2ToYBRFULL::getFinalColorSpace() const
     return "YBR_FULL";
 }
 
-
-std::shared_ptr<colorTransform> MONOCHROME2ToYBRFULL::createColorTransform()
-{
-    return std::shared_ptr<colorTransform>(std::make_shared<MONOCHROME2ToYBRFULL>());
-}
-
-
 } // namespace colorTransforms
 
 } // namespace transforms

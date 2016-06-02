@@ -54,11 +54,6 @@ std::string RGBToMONOCHROME2::getFinalColorSpace() const
     return "MONOCHROME2";
 }
 
-std::shared_ptr<colorTransform> RGBToMONOCHROME2::createColorTransform()
-{
-    return std::shared_ptr<colorTransform>(std::make_shared<RGBToMONOCHROME2>());
-}
-
 } // namespace colorTransforms
 
 } // namespace transforms
