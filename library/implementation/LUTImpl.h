@@ -91,7 +91,7 @@ public:
 
     std::int32_t getFirstMapped() const;
 
-    std::int32_t getMappedValue(std::int32_t index) const;
+    std::uint32_t getMappedValue(std::int32_t index) const;
 
 protected:
     // Convert a signed value in the LUT descriptor to an

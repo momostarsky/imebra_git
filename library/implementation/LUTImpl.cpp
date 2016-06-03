@@ -38,20 +38,20 @@ lut::lut(std::shared_ptr<handlers::readingDataHandlerNumericBase> pDescriptor, s
 {
     IMEBRA_FUNCTION_START();
 
-    if(pDescriptor->getSize() < 3)
+    if(pDescriptor->getSize() != 3)
     {
         IMEBRA_THROW(LutCorruptedError, "The LUT is corrupted");
     }
 
     m_size = descriptorSignedToUnsigned(pDescriptor->getSignedLong(0));
 
+    m_firstMapped = (std::int32_t)pDescriptor->getUnsignedLong(1);
     if(signedData)
     {
-        m_firstMapped = pDescriptor->getSignedLong(1);
-    }
-    else
-    {
-        m_firstMapped = (std::int32_t)pDescriptor->getUnsignedLong(1);
+        if(m_firstMapped >= 32768)
+        {
+            m_firstMapped -= 65536;
+        }
     }
 
     m_bits = (std::uint8_t)pDescriptor->getUnsignedLong(2);
@@ -181,7 +181,7 @@ std::int32_t lut::getFirstMapped() const
 }
 
 
-std::int32_t lut::getMappedValue(std::int32_t index) const
+std::uint32_t lut::getMappedValue(std::int32_t index) const
 {
     IMEBRA_FUNCTION_START();
 
@@ -195,7 +195,7 @@ std::int32_t lut::getMappedValue(std::int32_t index) const
     {
         correctedIndex = m_size - 1;
     }
-    return m_pDataHandler->getSignedLong(correctedIndex);
+    return m_pDataHandler->getUnsignedLong(correctedIndex);
 
     IMEBRA_FUNCTION_END();
 }
