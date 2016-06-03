@@ -47,17 +47,6 @@ private:
 #endif
 
 public:
-    /// \brief Initializes the lut with the values stored in the data handlers
-    ///        retrieved from a dataset.
-    ///
-    /// @param pDescriptor   the handler referencing the lut descriptor (size,
-    ///                       first mapped value and number of bits)
-    /// @param pData         the handler referencing the lut data
-    /// @param description   a string that describes the lut
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    LUT(ReadingDataHandlerNumeric& descriptor, ReadingDataHandlerNumeric& data, const std::wstring& description, bool pixelRepresentation);
-
     virtual ~LUT();
 
     /// \brief Returns the LUT's description.
@@ -65,7 +54,28 @@ public:
     /// \return the LUT's description
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    std::wstring getDescription();
+    std::wstring getDescription() const;
+
+    ReadingDataHandlerNumeric* getReadingDataHandler() const;
+
+    /// \brief Return the number of bits used to store a LUT value.
+    ///
+    /// @return the number of bits used to store a mapped value
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    size_t getBits() const;
+
+    /// \brief Return the lut's size (the number of stored values).
+    ///
+    /// @return the number of mapped values stored in the lut
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    size_t getSize() const;
+
+    std::int32_t getFirstMapped() const;
+
+    std::uint32_t getMappedValue(std::int32_t index) const;
+
 
 #ifndef SWIG
 protected:

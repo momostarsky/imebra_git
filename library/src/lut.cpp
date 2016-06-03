@@ -13,22 +13,40 @@ LUT::LUT(std::shared_ptr<implementation::lut> pLut): m_pLut(pLut)
 {
 }
 
-LUT::LUT(ReadingDataHandlerNumeric &descriptor, ReadingDataHandlerNumeric &data, const std::wstring &description, bool pixelRepresentation):
-    m_pLut(std::make_shared<implementation::lut>(
-               std::dynamic_pointer_cast<implementation::handlers::readingDataHandlerNumericBase>(descriptor.m_pDataHandler),
-               std::dynamic_pointer_cast<implementation::handlers::readingDataHandlerNumericBase>(data.m_pDataHandler),
-               description, pixelRepresentation))
-{
-}
-
 LUT::~LUT()
 {
 }
 
-std::wstring LUT::getDescription()
+std::wstring LUT::getDescription() const
 {
     return m_pLut->getDescription();
 }
+
+ReadingDataHandlerNumeric* LUT::getReadingDataHandler() const
+{
+    return new ReadingDataHandlerNumeric(m_pLut->getReadingDataHandler());
+}
+
+size_t LUT::getBits() const
+{
+    return m_pLut->getBits();
+}
+
+size_t LUT:: getSize() const
+{
+    return m_pLut->getSize();
+}
+
+std::int32_t LUT::getFirstMapped() const
+{
+    return m_pLut->getFirstMapped();
+}
+
+std::uint32_t LUT::getMappedValue(std::int32_t index) const
+{
+    return m_pLut->getMappedValue(index);
+}
+
 
 }
 
