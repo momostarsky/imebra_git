@@ -311,7 +311,7 @@ public:
 	///                 LUT is returned
 	///
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<lut> getLut(std::uint16_t groupId, std::uint16_t tagId, std::uint32_t lutId) const;
+    std::shared_ptr<lut> getLut(std::uint16_t groupId, std::uint16_t tagId, size_t lutId) const;
 
     vois_t getVOIs();
 

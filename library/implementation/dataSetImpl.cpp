@@ -840,7 +840,7 @@ void dataSet::setSequenceItem(std::uint16_t groupId, std::uint32_t order, std::u
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<lut> dataSet::getLut(std::uint16_t groupId, std::uint16_t tagId, std::uint32_t lutId) const
+std::shared_ptr<lut> dataSet::getLut(std::uint16_t groupId, std::uint16_t tagId, size_t lutId) const
 {
     IMEBRA_FUNCTION_START();
 
