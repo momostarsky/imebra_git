@@ -47,6 +47,7 @@ TEST(dicomDirTest, createDicomDir)
     std::unique_ptr<DicomDirEntry> testRootRecord(testDicomDir.getFirstRootEntry());
     std::unique_ptr<DataSet> testRootRecordDataSet(testRootRecord->getEntryDataSet());
     EXPECT_EQ(directoryRecordType_t::patient, testRootRecord->getType());
+    EXPECT_EQ("PATIENT", testRootRecord->getTypeString());
     EXPECT_EQ(std::wstring(L"Surname"), testRootRecordDataSet->getUnicodeString(TagId(tagId_t::PatientName_0010_0010), 0));
 
     std::unique_ptr<DicomDirEntry> testNextRecord(testRootRecord->getNextEntry());
