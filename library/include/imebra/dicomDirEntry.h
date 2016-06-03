@@ -54,8 +54,6 @@ private:
     DicomDirEntry(std::shared_ptr<imebra::implementation::directoryRecord> pDirectoryRecord);
 #endif
 
-    DicomDirEntry(const DataSet& fromDataSet, directoryRecordType_t entryType);
-
 public:
 
     virtual ~DicomDirEntry();

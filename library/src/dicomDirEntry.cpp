@@ -15,12 +15,6 @@ $fileHeader$
 namespace imebra
 {
 
-DicomDirEntry::DicomDirEntry(const DataSet& fromDataSet, directoryRecordType_t entryType):
-    m_pDirectoryRecord(std::make_shared<imebra::implementation::directoryRecord>(fromDataSet.m_pDataSet))
-{
-    m_pDirectoryRecord->setType(entryType);
-}
-
 DicomDirEntry::DicomDirEntry(std::shared_ptr<imebra::implementation::directoryRecord> pDirectoryRecord): m_pDirectoryRecord(pDirectoryRecord)
 {
 }
