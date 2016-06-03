@@ -126,7 +126,7 @@ size_t drawBitmap::getBitmap(const std::shared_ptr<const image>& sourceImage, dr
 
     const std::uint8_t* pImagePointer = imageHandler->getMemoryBuffer();
 
-    std::uint32_t nextRowGap = rowSizeBytes - width * 3;
+    std::uint32_t nextRowGap = rowSizeBytes - (width * destPixelSize);
 
     // Scan all the final bitmap's rows
     ///////////////////////////////////////////////////////////
