@@ -111,10 +111,9 @@ public:
     /// \param index the element number within the buffer. Must be smaller than
     ///        getSize()
     /// \param value the value to write
-    /// \return the new signed 32 bit integer value
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    WritingDataHandler& setSignedLong(size_t index, std::int32_t value);
+    void setSignedLong(size_t index, std::int32_t value);
 
     /// \brief Write an unsigned long integer (32 bit).
     ///
@@ -124,10 +123,9 @@ public:
     /// \param index the element number within the buffer. Must be smaller than
     ///        getSize()
     /// \param value the value to write
-    /// \return the new unsigned 32 bit integer value
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    WritingDataHandler& setUnsignedLong(size_t index, std::uint32_t value);
+    void setUnsignedLong(size_t index, std::uint32_t value);
 
     /// \brief Write a double floating point value (64 bit).
     ///
@@ -137,10 +135,9 @@ public:
     /// \param index the element number within the buffer. Must be smaller than
     ///        getSize()
     /// \param value the value to write
-    /// \return the 64 bit floating point value
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    WritingDataHandler& setDouble(size_t index, double value);
+    void setDouble(size_t index, double value);
 
     /// \brief Write a string.
     ///
@@ -150,10 +147,9 @@ public:
     /// \param index the element number within the buffer. Must be smaller than
     ///        getSize()
     /// \param value the value to write
-    /// \return the string value
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    WritingDataHandler& setString(size_t index, const std::string& value);
+    void setString(size_t index, const std::string& value);
 
     /// \brief Write an Unicode string.
     ///
@@ -163,10 +159,9 @@ public:
     /// \param index the element number within the buffer. Must be smaller than
     ///        getSize()
     /// \param value the value to write
-    /// \return the Unicode string value
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    WritingDataHandler& setUnicodeString(size_t index, const std::wstring& value);
+    void setUnicodeString(size_t index, const std::wstring& value);
 
     /// \brief Write a date and/or a time.
     ///
@@ -176,10 +171,9 @@ public:
     /// \param index the element number within the buffer. Must be smaller than
     ///        getSize()
     /// \param date  the value to write
-    /// \return the Date value
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    WritingDataHandler& setDate(size_t index, const Date& date);
+    void setDate(size_t index, const Date& date);
 
     /// \brief Write an Age value.
     ///
@@ -189,10 +183,9 @@ public:
     /// \param index the element number within the buffer. Must be smaller than
     ///        getSize()
     /// \param age   the value to write
-    /// \return the Age value
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    WritingDataHandler& setAge(size_t index, const Age& age);
+    void setAge(size_t index, const Age& age);
 
 
 #ifndef SWIG

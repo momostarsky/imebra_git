@@ -37,7 +37,7 @@ tagVR_t WritingDataHandler::getDataType() const
 }
 
 
-WritingDataHandler& WritingDataHandler::setDate(size_t index, const Date& date)
+void WritingDataHandler::setDate(size_t index, const Date& date)
 {
     m_pDataHandler->setDate(
         (std::uint32_t)index,
@@ -50,43 +50,36 @@ WritingDataHandler& WritingDataHandler::setDate(size_t index, const Date& date)
         (std::uint32_t)date.nanoseconds,
         (std::int32_t)date.offsetHours,
         (std::int32_t)date.offsetMinutes);
-    return *this;
 }
 
-WritingDataHandler& WritingDataHandler::setAge(size_t index, const Age& age)
+void WritingDataHandler::setAge(size_t index, const Age& age)
 {
     m_pDataHandler->setAge(index, age.age, age.units);
-    return *this;
 }
 
-WritingDataHandler& WritingDataHandler::setSignedLong(size_t index, std::int32_t value)
+void WritingDataHandler::setSignedLong(size_t index, std::int32_t value)
 {
     m_pDataHandler->setSignedLong(index, value);
-    return *this;
 }
 
-WritingDataHandler& WritingDataHandler::setUnsignedLong(size_t index, std::uint32_t value)
+void WritingDataHandler::setUnsignedLong(size_t index, std::uint32_t value)
 {
     m_pDataHandler->setUnsignedLong(index, value);
-    return *this;
 }
 
-WritingDataHandler& WritingDataHandler::setDouble(size_t index, double value)
+void WritingDataHandler::setDouble(size_t index, double value)
 {
     m_pDataHandler->setDouble(index, value);
-    return *this;
 }
 
-WritingDataHandler& WritingDataHandler::setString(size_t index, const std::string& value)
+void WritingDataHandler::setString(size_t index, const std::string& value)
 {
     m_pDataHandler->setString(index, value);
-    return *this;
 }
 
-WritingDataHandler& WritingDataHandler::setUnicodeString(size_t index, const std::wstring& value)
+void WritingDataHandler::setUnicodeString(size_t index, const std::wstring& value)
 {
     m_pDataHandler->setUnicodeString(index, value);
-    return *this;
 }
 
 }
