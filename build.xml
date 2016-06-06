@@ -125,7 +125,25 @@ The author can be contacted by email at info@binarno.com or by mail at
 			<arg value="com.imebra" />
 			<arg value="swig.i" />
 		</exec>
-		<replace dir="${build_release}/library/swig" includes="*.java" token=", false);" value=", true);" />
+
+		<fileset id="existing" dir="${build_release}/library/swig">
+		    <patternset id="files">
+		        <include name="**/*.java" />
+		    </patternset>
+		</fileset>
+
+		<fileset id="matches" dir="${build_release}/library/swig">
+		    <patternset refid="files" />
+		    <contains text=", false);" />
+		</fileset>
+
+		<fail message="Found non managed memory objects in one or more files in '${build_release}/library/swig'">
+		    <condition>
+		    	<!-- Counter is 2 because TagsIds and VOIs return non-owned objects -->
+		        <resourcecount when="greater" count="2" refid="matches" />
+		    </condition>
+		</fail>
+
 	</target>
 
 	<!-- Documentation -->
