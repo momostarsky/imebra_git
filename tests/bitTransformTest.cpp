@@ -105,6 +105,28 @@ TEST(bitTransformTest, bitShift)
     }
 }
 
+TEST(bitTransformTest, allocateOutputImage)
+{
+    std::uint32_t width = 2;
+    std::uint32_t height = 2;
+    Image bits8Image(width, height, bitDepth_t::depthU8, "RGB", 7);
+    Image bits16Image(width, height, bitDepth_t::depthU16, "MONOCHROME2", 15);
+    Image bits4Image(width, height, bitDepth_t::depthU8, "YBR_FULL", 3);
+
+    TransformHighBit transform;
+    std::unique_ptr<Image> allocated8bits(transform.allocateOutputImage(bits8Image, 1, 1));
+    std::unique_ptr<Image> allocated16bits(transform.allocateOutputImage(bits16Image, 1, 1));
+    std::unique_ptr<Image> allocated4bits(transform.allocateOutputImage(bits4Image, 1, 1));
+
+    ASSERT_EQ(7, allocated8bits->getHighBit());
+    ASSERT_EQ("RGB", allocated8bits->getColorSpace());
+    ASSERT_EQ(15, allocated16bits->getHighBit());
+    ASSERT_EQ("MONOCHROME2", allocated16bits->getColorSpace());
+    ASSERT_EQ(3, allocated4bits->getHighBit());
+    ASSERT_EQ("YBR_FULL", allocated4bits->getColorSpace());
+
+}
+
 } // namespace tests
 
 } // namespace imebra

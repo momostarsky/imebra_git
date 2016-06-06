@@ -96,6 +96,20 @@ TEST(memoryTest, testMemoryPool)
     }
 }
 
+TEST(memoryTest, readMemory)
+{
+    std::string testString("Test string");
+    ReadMemory readMemory(testString.c_str(), testString.size());
+    ASSERT_EQ(testString.size(), readMemory.size());
+    ASSERT_FALSE(readMemory.empty());
+
+    size_t storedSize;
+    const char* storedData(readMemory.data(&storedSize));
+    ASSERT_EQ(testString.size(), storedSize);
+    ASSERT_EQ(testString, std::string(storedData, storedSize));
+
+}
+
 
 
 } // namespace tests
