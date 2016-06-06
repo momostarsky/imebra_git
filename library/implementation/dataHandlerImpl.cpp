@@ -52,15 +52,15 @@ tagVR_t readingDataHandler::getDataType() const
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 void readingDataHandler::getDate(const size_t /* index */,
-        std::uint32_t* pYear,
-        std::uint32_t* pMonth,
-        std::uint32_t* pDay,
-        std::uint32_t* pHour,
-        std::uint32_t* pMinutes,
-        std::uint32_t* pSeconds,
-        std::uint32_t* pNanoseconds,
-		std::int32_t* pOffsetHours,
-		std::int32_t* pOffsetMinutes) const
+        std::uint32_t* /* pYear */,
+        std::uint32_t* /* pMonth */,
+        std::uint32_t* /* pDay */,
+        std::uint32_t* /* pHour */,
+        std::uint32_t* /* pMinutes */,
+        std::uint32_t* /* pSeconds */,
+        std::uint32_t* /* pNanoseconds */,
+        std::int32_t* /* pOffsetHours */,
+        std::int32_t* /* pOffsetMinutes */) const
 {
     IMEBRA_FUNCTION_START();
 
@@ -69,7 +69,7 @@ void readingDataHandler::getDate(const size_t /* index */,
     IMEBRA_FUNCTION_END();
 }
 
-std::uint32_t readingDataHandler::getAge(const size_t /* index */, ageUnit_t *pUnit) const
+std::uint32_t readingDataHandler::getAge(const size_t /* index */, ageUnit_t * /* pUnit */) const
 {
     IMEBRA_FUNCTION_START();
 

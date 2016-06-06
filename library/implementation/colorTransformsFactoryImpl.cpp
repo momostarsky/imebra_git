@@ -193,7 +193,7 @@ bool colorTransformsFactory::isSubsampledX(const std::string& colorSpace)
 {
     IMEBRA_FUNCTION_START();
 
-    return (colorSpace.find("_42")!=colorSpace.npos);
+    return (colorSpace.find("_42") != colorSpace.npos);
 
 	IMEBRA_FUNCTION_END();
 }

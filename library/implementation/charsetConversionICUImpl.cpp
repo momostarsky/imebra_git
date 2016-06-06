@@ -120,7 +120,7 @@ std::wstring charsetConversionICU::toUnicode(const std::string& asciiString) con
     {
     case 2:
     {
-        std::wstring returnString(unicodeString.length(), wchar_t(0));
+        std::wstring returnString((size_t)unicodeString.length(), wchar_t(0));
         unicodeString.extract((UChar*)&(returnString[0]), unicodeString.length(), errorCode);
         return returnString;
     }
@@ -128,7 +128,7 @@ std::wstring charsetConversionICU::toUnicode(const std::string& asciiString) con
     {
         int32_t conversionLength = unicodeString.toUTF32((UChar32*)0, (int32_t)0, errorCode);
         errorCode = U_ZERO_ERROR;
-        std::wstring returnString(conversionLength, wchar_t(0));
+        std::wstring returnString((size_t)conversionLength, wchar_t(0));
         unicodeString.toUTF32((UChar32*)&(returnString[0]), conversionLength, errorCode);
         return returnString;
     }
