@@ -81,9 +81,14 @@ public:
 #ifndef SWIG
     /// \brief Returns a pointer to the buffer's raw memory content.
     ///
+    /// The referenced buffer is owned by the WritingDataHandlerNumeric
+    /// object and must not be freed by the client.
+    ///
     /// \param pDataSize a variable that will contain the raw memory's size in
     ///                  bytes
-    /// \return a pointer to the buffer's raw memory
+    /// \return a pointer to the buffer's raw memory. The referenced buffer
+    ///         is owned by the WritingDataHandlerNumeric object and must not be
+    ///         freed by the client
     ///
     ///////////////////////////////////////////////////////////////////////////////
     char* data(size_t* pDataSize) const;

@@ -109,9 +109,15 @@ public:
 #ifndef SWIG
     /// \brief Return a pointer to the referenced memory.
     ///
+    /// The referenced buffer is owned by the ReadWriteMemory object and must
+    /// not be freed by the client.
+    ///
     /// \param pDataSize pointer to a variable that will be filled with the
     ///        memory size, in bytes
-    /// \return a pointer to the referenced memory
+    /// \return a pointer to the referenced memory.
+    ///        The referenced buffer is owned by the ReadWriteMemory object and
+    ///        must not be freed by the client.
+    ///
     ///
     ///////////////////////////////////////////////////////////////////////////////
     char* data(size_t* pDataSize) const;
