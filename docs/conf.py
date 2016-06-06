@@ -261,7 +261,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
   ('index', 'Imebra', u'Imebra Documentation',
-   u'Paolo Brandoli', 'Imebra', 'One line description of project.',
+   u'Paolo Brandoli', 'Imebra', 'C++ DICOM library.',
    'Miscellaneous'),
 ]
 
