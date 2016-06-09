@@ -1047,10 +1047,8 @@ std::shared_ptr<image> dicomCodec::getImage(const dataSet& dataset, std::shared_
     ///////////////////////////////////////////////////////////
     allocChannels(channelsNumber, imageWidth, imageHeight, bSubSampledX, bSubSampledY);
 
-    std::uint32_t mask( (std::uint32_t)0x1 << highBit );
-    mask <<= 1;
-    --mask;
-    mask-=((std::uint32_t)0x1<<(highBit+1-storedBits))-1;
+    std::uint32_t mask = (std::uint32_t)( ((std::uint64_t)1 << (highBit + 1)) - 1);
+    mask -= (std::uint32_t)(((std::uint64_t)1 << (highBit + 1 - storedBits)) - 1);
 
     //
     // The image is not compressed
@@ -1103,8 +1101,8 @@ std::shared_ptr<image> dicomCodec::getImage(const dataSet& dataset, std::shared_
     ///////////////////////////////////////////////////////////
     if(b2Complement)
     {
-        std::int32_t checkSign = (std::int32_t)0x1<<highBit;
-        std::int32_t orMask = ((std::int32_t)-1)<<highBit;
+        std::int32_t checkSign = (std::int32_t)1 << highBit;
+        std::int32_t orMask = ((std::int32_t)-1) << highBit;
 
         for(size_t adjChannels = 0; adjChannels < m_channels.size(); ++adjChannels)
         {
@@ -1286,31 +1284,37 @@ void dicomCodec::readUncompressedInterleaved(
 
     // Read all the blocks
     ///////////////////////////////////////////////////////////
-    for(
-        std::uint32_t numBlocks = (adjWidth / maxSamplingFactorX) * (adjHeight / maxSamplingFactorY);
-        numBlocks != 0;
-        --numBlocks)
+    std::uint32_t numBlocksY = adjHeight / maxSamplingFactorY;
+    std::uint32_t numBlocksX = adjWidth / maxSamplingFactorX;
+    for(std::uint32_t blockY(0); blockY != numBlocksY; ++blockY)
     {
-        std::int32_t* readBlockValuesPtr(&(readBlockValues[0]));
-        readPixel(pSourceStream, readBlockValuesPtr, numValuesPerBlock, &bitPointer, readBuffer->data(), wordSizeBytes, allocatedBits, mask);
-
-        // Read channel 0 (not subsampled)
-        ///////////////////////////////////////////////////////////
-        *(channelsMemory[0]++) = *readBlockValuesPtr++;
-        if(bSubSampledX)
+        for(std::uint32_t blockX(0); blockX != numBlocksX; ++blockX)
         {
+            std::int32_t* readBlockValuesPtr(&(readBlockValues[0]));
+            readPixel(pSourceStream, readBlockValuesPtr, numValuesPerBlock, &bitPointer, readBuffer->data(), wordSizeBytes, allocatedBits, mask);
+
+            // Read channel 0 (not subsampled)
+            ///////////////////////////////////////////////////////////
             *(channelsMemory[0]++) = *readBlockValuesPtr++;
+            if(bSubSampledX)
+            {
+                *(channelsMemory[0]++) = *readBlockValuesPtr++;
+            }
+            if(bSubSampledY)
+            {
+                *(channelsMemory[0]+adjWidth-2) = *readBlockValuesPtr++;
+                *(channelsMemory[0]+adjWidth-1) = *readBlockValuesPtr++;
+            }
+            // Read channels 1... (subsampled)
+            ///////////////////////////////////////////////////////////
+            for(std::uint32_t scanSubSampled = 1; scanSubSampled < channelsNumber; ++scanSubSampled)
+            {
+                *(channelsMemory[scanSubSampled]++) = *readBlockValuesPtr++;
+            }
         }
         if(bSubSampledY)
         {
-            *(channelsMemory[0]+adjWidth-2) = *readBlockValuesPtr++;
-            *(channelsMemory[0]+adjWidth-1) = *readBlockValuesPtr++;
-        }
-        // Read channels 1... (subsampled)
-        ///////////////////////////////////////////////////////////
-        for(std::uint32_t scanSubSampled = 1; scanSubSampled < channelsNumber; ++scanSubSampled)
-        {
-            *(channelsMemory[scanSubSampled]++) = *readBlockValuesPtr++;
+            channelsMemory[0] += adjWidth;
         }
     }
 
@@ -1373,28 +1377,34 @@ void dicomCodec::writeUncompressedInterleaved(
 
     // Write all the blocks
     ///////////////////////////////////////////////////////////
-    for(
-        std::uint32_t numBlocks = (adjWidth / maxSamplingFactorX) * (adjHeight / maxSamplingFactorY);
-        numBlocks != 0;
-        --numBlocks)
+    std::uint32_t numBlocksY = adjHeight / maxSamplingFactorY;
+    std::uint32_t numBlocksX = adjWidth / maxSamplingFactorX;
+    for(std::uint32_t blockY(0); blockY != numBlocksY; ++blockY)
     {
-        // Write channel 0 (not subsampled)
-        ///////////////////////////////////////////////////////////
-        writePixel(pDestStream, *(channelsMemory[0]++), &bitPointer, wordSizeBytes, allocatedBits, mask);
-        if(bSubSampledX)
+        for(std::uint32_t blockX(0); blockX != numBlocksX; ++blockX)
         {
+            // Write channel 0 (not subsampled)
+            ///////////////////////////////////////////////////////////
             writePixel(pDestStream, *(channelsMemory[0]++), &bitPointer, wordSizeBytes, allocatedBits, mask);
+            if(bSubSampledX)
+            {
+                writePixel(pDestStream, *(channelsMemory[0]++), &bitPointer, wordSizeBytes, allocatedBits, mask);
+            }
+            if(bSubSampledY)
+            {
+                writePixel(pDestStream, *(channelsMemory[0]+adjWidth-2), &bitPointer, wordSizeBytes, allocatedBits, mask);
+                writePixel(pDestStream, *(channelsMemory[0]+adjWidth-1), &bitPointer, wordSizeBytes, allocatedBits, mask);
+            }
+            // Write channels 1... (subsampled)
+            ///////////////////////////////////////////////////////////
+            for(std::uint32_t scanSubSampled = 1; scanSubSampled < channelsNumber; ++scanSubSampled)
+            {
+                writePixel(pDestStream, *(channelsMemory[scanSubSampled]++), &bitPointer, wordSizeBytes, allocatedBits, mask);
+            }
         }
         if(bSubSampledY)
         {
-            writePixel(pDestStream, *(channelsMemory[0]+adjWidth-2), &bitPointer, wordSizeBytes, allocatedBits, mask);
-            writePixel(pDestStream, *(channelsMemory[0]+adjWidth-1), &bitPointer, wordSizeBytes, allocatedBits, mask);
-        }
-        // Write channels 1... (subsampled)
-        ///////////////////////////////////////////////////////////
-        for(std::uint32_t scanSubSampled = 1; scanSubSampled < channelsNumber; ++scanSubSampled)
-        {
-            writePixel(pDestStream, *(channelsMemory[scanSubSampled]++), &bitPointer, wordSizeBytes, allocatedBits, mask);
+            channelsMemory[0] += adjWidth;
         }
     }
 
@@ -1862,7 +1872,7 @@ void dicomCodec::readPixel(
                 continue;
             }
 
-            *pDest |= (m_ioWord & (((std::uint16_t)1<<bitsToRead) - 1)) << (allocatedBits - bitsToRead);
+            *pDest |= (m_ioWord & (std::uint16_t)(((std::uint32_t) 1 << bitsToRead) - 1)) << (allocatedBits - bitsToRead);
             m_ioWord = (std::uint16_t)(m_ioWord >> bitsToRead);
             *pBitPointer = (std::uint8_t)(*pBitPointer - bitsToRead);
             bitsToRead = 0;
@@ -1920,7 +1930,7 @@ void dicomCodec::writePixel(
     {
         if(wordSizeBytes == 1)
         {
-            m_ioDWord = pDestStream->adjustEndian((std::uint32_t)m_ioDWord, streamController::lowByteEndian);
+            m_ioDWord = pDestStream->adjustEndian((std::uint32_t)pixelValue, streamController::lowByteEndian);
         }
         else
         {
@@ -2067,7 +2077,7 @@ void dicomCodec::setImage(
                     channelsNumber);
     }
 
-    std::uint32_t mask = ((std::uint32_t)1 << (highBit + 1)) - 1;
+    std::uint32_t mask = (std::uint32_t)(((std::uint64_t)1 << (highBit + 1)) - 1);
 
     if(bRleCompressed)
     {
