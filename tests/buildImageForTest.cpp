@@ -1,6 +1,5 @@
 #include <imebra/imebra.h>
 #include <stdlib.h>
-
 namespace imebra
 {
 
@@ -57,6 +56,50 @@ imebra::Image* buildImageForTest(
 }
 
 
+imebra::Image* buildSubsampledImage(
+    std::uint32_t pixelsX,
+    std::uint32_t pixelsY,
+    imebra::bitDepth_t depth,
+    std::uint32_t highBit,
+    double width,
+    double height,
+    const std::string& colorSpace)
+{
+    std::unique_ptr<Image> newImage(new Image(pixelsX, pixelsY, depth, colorSpace, highBit));
+    std::unique_ptr<WritingDataHandler> handler(newImage->getWritingDataHandler());
+    std::uint32_t channelsNumber = newImage->getChannelsNumber();
+
+
+    std::uint32_t index(0);
+    for(std::uint32_t scanY(0); scanY != pixelsY; ++scanY)
+    {
+        for(std::uint32_t scanX(0); scanX != pixelsX; ++scanX)
+        {
+            for(std::uint32_t scanChannels = 0; scanChannels != channelsNumber; ++scanChannels)
+            {
+                std::int32_t value = std::int32_t(1) << highBit;
+                value /= 4;
+                if(scanX >= ((pixelsX / 2) & 0xfffffffe) || scanY >= ((pixelsY / 2) & 0xfffffffe))
+                {
+                    if(highBit >= 2)
+                    {
+                        value = std::int32_t(1) << (highBit - 2);;
+                    }
+                    else
+                    {
+                        value = 0;
+                    }
+                }
+                handler->setSignedLong(index++, value);
+            }
+        }
+    }
+
+    newImage->setSizeMm(width, height);
+
+    return newImage.release();
+}
+
 double compareImages(const imebra::Image& image0, const imebra::Image& image1)
 {
     size_t width0(image0.getWidth()), height0(image0.getHeight());
@@ -98,16 +141,24 @@ double compareImages(const imebra::Image& image0, const imebra::Image& image1)
 
     size_t valuesNum = width0 * height0 * channelsNumber0;
 	double divisor = double(valuesNum);
-    double range = (double)(1 << image0.getHighBit());
+    std::uint64_t range = (std::int64_t)1 << image0.getHighBit();
 	double difference(0);
 	int index(0);
 	unsigned long long total(0);
-	while(valuesNum--)
-	{
-        difference += 1000 * (double)labs(hImage0->getSignedLong(index) - hImage1->getSignedLong(index)) / range;
-        total += labs(hImage0->getSignedLong(index));
-		++index;
-	}
+    for(size_t y(0); y != height0; ++y)
+    {
+        for(size_t x(0); x != width0; ++x)
+        {
+            for(size_t ch(0); ch != channelsNumber0; ++ch)
+            {
+                std::int32_t p0 = hImage0->getSignedLong(index);
+                std::int32_t p1 = hImage1->getSignedLong(index);
+                difference += (1000 * (std::uint64_t)labs(p0 - p1)) / range;
+                total += labs(hImage0->getSignedLong(index));
+                ++index;
+            }
+        }
+    }
 
 	difference /= divisor;
 

@@ -1,7 +1,7 @@
 #include <imebra/imebra.h>
 #include "buildImageForTest.h"
 #include <gtest/gtest.h>
-
+#include <limits>
 
 namespace imebra
 {
@@ -16,16 +16,16 @@ TEST(dicomCodecTest, testDicom)
 
     for(int transferSyntaxId(0); transferSyntaxId != 4; ++transferSyntaxId)
 	{
-		for(int interleaved(0); interleaved != 2; ++interleaved)
+        for(int interleaved(0); interleaved != 2; ++interleaved)
 		{
 			for(unsigned int sign=0; sign != 2; ++sign)
 			{
-				for(std::uint32_t highBit(0); highBit != 32; ++highBit)
+                for(std::uint32_t highBit(0); highBit != 32; ++highBit)
 				{
                     for(unsigned int colorSpaceIndex(0); colorSpaceIndex != sizeof(colorSpaces)/sizeof(colorSpaces[0]); ++colorSpaceIndex)
                     {
                         std::string colorSpace(colorSpaces[colorSpaceIndex]);
-                        if((highBit > 28 || transferSyntaxId == 3) &&
+                        if((highBit > 24 || transferSyntaxId == 3 || interleaved == 0) &&
                                 (ColorTransformsFactory::isSubsampledX(colorSpace) || ColorTransformsFactory::isSubsampledX(colorSpace)))
                         {
                             continue;
@@ -41,33 +41,66 @@ TEST(dicomCodecTest, testDicom)
                             depth = (sign == 0 ? bitDepth_t::depthU32 : bitDepth_t::depthS32);
                         }
 
-                        std::unique_ptr<Image> dicomImage0(buildImageForTest(
-                                301,
-                                201,
-                                depth,
-                                highBit,
-                                30,
-                                20,
-                                colorSpace,
-                                1));
-                        std::unique_ptr<Image> dicomImage1(buildImageForTest(
-                                301,
-                                201,
-                                depth,
-                                highBit,
-                                30,
-                                20,
-                                colorSpace,
-                                100));
-                        std::unique_ptr<Image> dicomImage2(buildImageForTest(
-                                301,
-                                201,
-                                depth,
-                                highBit,
-                                30,
-                                20,
-                                colorSpace,
-                                150));
+                        std::unique_ptr<Image> dicomImage0, dicomImage1, dicomImage2;
+
+                        if(ColorTransformsFactory::isSubsampledY(colorSpace) || ColorTransformsFactory::isSubsampledX(colorSpace))
+                        {
+                            dicomImage0.reset(buildSubsampledImage(
+                                    301,
+                                    201,
+                                    depth,
+                                    highBit,
+                                    30,
+                                    20,
+                                    colorSpace));
+                            dicomImage1.reset(buildSubsampledImage(
+                                    301,
+                                    201,
+                                    depth,
+                                    highBit,
+                                    30,
+                                    20,
+                                    colorSpace));
+                            dicomImage2.reset(buildSubsampledImage(
+                                    301,
+                                    201,
+                                    depth,
+                                    highBit,
+                                    30,
+                                    20,
+                                    colorSpace));
+                        }
+                        else
+                        {
+                            dicomImage0.reset(buildImageForTest(
+                                    301,
+                                    201,
+                                    depth,
+                                    highBit,
+                                    30,
+                                    20,
+                                    colorSpace,
+                                    1));
+                            dicomImage1.reset(buildImageForTest(
+                                    301,
+                                    201,
+                                    depth,
+                                    highBit,
+                                    30,
+                                    20,
+                                    colorSpace,
+                                    100));
+                            dicomImage2.reset(buildImageForTest(
+                                    301,
+                                    201,
+                                    depth,
+                                    highBit,
+                                    30,
+                                    20,
+                                    colorSpace,
+                                    150));
+
+                        }
 
                         std::string transferSyntax;
 
@@ -112,7 +145,7 @@ TEST(dicomCodecTest, testDicom)
                             writingDataHandler->setString(2, "");
                             writingDataHandler.reset();
                             testDataSet.setDouble(TagId(tagId_t::TimeRange_0008_1163), 50.6);
-                            testDataSet.setUnsignedLong(TagId(imebra::tagId_t::PlanarConfiguration_0028_0006), interleaved);
+                            testDataSet.setUnsignedLong(TagId(imebra::tagId_t::PlanarConfiguration_0028_0006), 1 - interleaved);
                             testDataSet.setImage(0, *dicomImage0, transferSyntax, quality);
                             testDataSet.setImage(1, *dicomImage1, transferSyntax, quality);
                             testDataSet.setImage(2, *dicomImage2, transferSyntax, quality);
@@ -122,36 +155,39 @@ TEST(dicomCodecTest, testDicom)
                             CodecFactory::save(testDataSet, writer, codecType_t::dicom);
                         }
 
-                        MemoryStreamInput readStream(streamMemory);
-                        StreamReader reader(readStream);
-                        std::unique_ptr<DataSet> testDataSet(CodecFactory::load(reader, 1));
-
-                        EXPECT_EQ(std::string("AAAaa"), testDataSet->getString(TagId(imebra::tagId_t::PatientName_0010_0010), 0));
-                        EXPECT_EQ(std::string("BBBbbb"), testDataSet->getString(TagId(imebra::tagId_t::PatientName_0010_0010), 1));
-                        EXPECT_EQ(std::string(""), testDataSet->getString(TagId(imebra::tagId_t::PatientName_0010_0010), 2));
-                        EXPECT_FLOAT_EQ(50.6, testDataSet->getDouble(TagId(tagId_t::TimeRange_0008_1163), 0));
-                        EXPECT_EQ(interleaved, testDataSet->getSignedLong(TagId(imebra::tagId_t::PlanarConfiguration_0028_0006), 0));
-
-                        std::unique_ptr<Image> checkImage0(testDataSet->getImage(0));
-                        std::unique_ptr<Image> checkImage1(testDataSet->getImage(1));
-                        std::unique_ptr<Image> checkImage2(testDataSet->getImage(2));
-
-                        std::cout << " DIFF: " << compareImages(*checkImage0, *dicomImage0) << std::endl;
-                        std::cout << " DIFF: " << compareImages(*checkImage1, *dicomImage1) << std::endl;
-                        std::cout << " DIFF: " << compareImages(*checkImage2, *dicomImage2) << std::endl;
-
-                        double maxDiff(0);
-                        if(quality == imageQuality_t::medium)
+                        for(unsigned int lazyLoad(0); lazyLoad != 2; ++lazyLoad)
                         {
-                            maxDiff = 10;
+                            MemoryStreamInput readStream(streamMemory);
+                            StreamReader reader(readStream);
+                            std::unique_ptr<DataSet> testDataSet(CodecFactory::load(reader, lazyLoad == 0 ? std::numeric_limits<size_t>::max() : 1));
+
+                            EXPECT_EQ(std::string("AAAaa"), testDataSet->getString(TagId(imebra::tagId_t::PatientName_0010_0010), 0));
+                            EXPECT_EQ(std::string("BBBbbb"), testDataSet->getString(TagId(imebra::tagId_t::PatientName_0010_0010), 1));
+                            EXPECT_EQ(std::string(""), testDataSet->getString(TagId(imebra::tagId_t::PatientName_0010_0010), 2));
+                            EXPECT_FLOAT_EQ(50.6, testDataSet->getDouble(TagId(tagId_t::TimeRange_0008_1163), 0));
+                            EXPECT_EQ(1 - interleaved, testDataSet->getSignedLong(TagId(imebra::tagId_t::PlanarConfiguration_0028_0006), 0));
+
+                            std::unique_ptr<Image> checkImage0(testDataSet->getImage(0));
+                            std::unique_ptr<Image> checkImage1(testDataSet->getImage(1));
+                            std::unique_ptr<Image> checkImage2(testDataSet->getImage(2));
+
+                            std::cout << " DIFF: " << compareImages(*checkImage0, *dicomImage0) << std::endl;
+                            std::cout << " DIFF: " << compareImages(*checkImage1, *dicomImage1) << std::endl;
+                            std::cout << " DIFF: " << compareImages(*checkImage2, *dicomImage2) << std::endl;
+
+                            double maxDiff(0);
+                            if(quality == imageQuality_t::medium)
+                            {
+                                maxDiff = 10;
+                            }
+                            else if(quality == imageQuality_t::belowMedium)
+                            {
+                                maxDiff = 100;
+                            }
+                            ASSERT_EQ(0, compareImages(*checkImage0, *dicomImage0));
+                            ASSERT_EQ(0, compareImages(*checkImage1, *dicomImage1));
+                            ASSERT_EQ(0, compareImages(*checkImage2, *dicomImage2));
                         }
-                        else if(quality == imageQuality_t::belowMedium)
-                        {
-                            maxDiff = 100;
-                        }
-                        ASSERT_GE(100, compareImages(*checkImage0, *dicomImage0));
-                        ASSERT_GE(100, compareImages(*checkImage1, *dicomImage1));
-                        ASSERT_GE(100, compareImages(*checkImage2, *dicomImage2));
                     }
 				}
 			}

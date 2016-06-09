@@ -19,6 +19,15 @@ namespace tests
         const std::string& colorSpace,
         std::uint32_t continuity);
 
+    imebra::Image* buildSubsampledImage(
+        std::uint32_t pixelsX,
+        std::uint32_t pixelsY,
+        imebra::bitDepth_t depth,
+        std::uint32_t highBit,
+        double width,
+        double height,
+        const std::string& colorSpace);
+
     double compareImages(const Image& image0, const Image& image1);
 
 
