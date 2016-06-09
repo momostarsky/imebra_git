@@ -414,66 +414,56 @@ public:
 		{
 			return;
 		}
-        const dataHandlerType *pSourceRowScan = &(((const dataHandlerType*)m_pMemory->data())[(sourceStartRow*sourceWidth+sourceStartCol)*sourceNumChannels+sourceStartChannel]);
-		std::int32_t* pDestRowScan = pDest;
 
-		std::uint32_t subSampleXCount;
-		std::uint32_t subSampleYCount = destSubSampleY;
-		std::uint32_t subSampleYIncrease = (sourceEndCol - sourceStartCol) / destSubSampleX;
+        if(destSubSampleX == 1 && destSubSampleY == 1)
+        {
+            std::int32_t lastValue(0);
+            for(std::uint32_t scanRow(sourceStartRow); scanRow != sourceEndRow; ++scanRow)
+            {
+                const dataHandlerType *pSource = &(((const dataHandlerType*)m_pMemory->data())[(scanRow * sourceWidth + sourceStartCol) * sourceNumChannels + sourceStartChannel]);
+                for(std::uint32_t scanCol(sourceStartCol); scanCol != sourceEndCol; ++scanCol)
+                {
+                    if(scanCol < sourceWidth && scanRow < sourceHeight)
+                    {
+                        lastValue = *pSource;
+                        pSource += sourceNumChannels;
+                    }
+                    *pDest++ = lastValue;
+                }
+            }
+            return;
+        }
 
-        const dataHandlerType *pSourceColScan;
-		std::int32_t* pDestColScan;
-
-		std::int32_t lastValue = (std::int32_t)*pSourceRowScan;
-
-		for(std::uint32_t scanRow = sourceStartRow; scanRow < sourceEndRow; ++scanRow)
+        for(std::uint32_t scanRow = sourceStartRow; scanRow != sourceEndRow; ++scanRow)
 		{
-            pSourceColScan = pSourceRowScan;
-			pDestColScan = pDestRowScan;
-			subSampleXCount = destSubSampleX;
+            const dataHandlerType *pSourceRowScan = &(((const dataHandlerType*)m_pMemory->data())[(scanRow * sourceWidth + sourceStartCol) * sourceNumChannels + sourceStartChannel]);
+            std::int32_t* pDestRowAddress = &pDest[(sourceEndCol - sourceStartCol) * (scanRow - sourceStartRow) / (destSubSampleY * destSubSampleX)];
 
-			for(std::uint32_t scanCol = sourceStartCol; scanCol < sourceEndCol; ++scanCol)
-			{
-				if(scanCol < sourceWidth)
-				{
-					lastValue = (std::int32_t)*pSourceColScan;
-					pSourceColScan += sourceNumChannels;
-				}
-				*pDestColScan += (std::int32_t)lastValue;
-				if(--subSampleXCount == 0)
-				{
-					subSampleXCount = destSubSampleX;
-					++pDestColScan;
-				}
-			}
-			if(scanRow < sourceHeight - 1)
-			{
-				pSourceRowScan += sourceWidth * sourceNumChannels;
-			}
-			if(--subSampleYCount == 0)
-			{
-				subSampleYCount = destSubSampleY;
-				pDestRowScan += subSampleYIncrease;
-			}
-		}
+            for(std::uint32_t scanCol(sourceStartCol); scanCol != sourceEndCol; ++scanCol)
+            {
+                if(scanCol < sourceWidth && scanRow < sourceHeight)
+                {
+                    pDestRowAddress[(scanCol - sourceStartCol) / destSubSampleX] += (*pSourceRowScan) * 8 + 1;
+                    pSourceRowScan += sourceNumChannels;
+                }
+            }
+        }
 
-		std::int32_t rightShift = 0;
-		if(destSubSampleX == 2)
-		{
-			++rightShift;
-		}
-		if(destSubSampleY == 2)
-		{
-			++rightShift;
-		}
-		if(rightShift == 0)
-		{
-			return;
-		}
-		for(std::int32_t* scanDivide = pDest; scanDivide < pDestRowScan; ++scanDivide)
-		{
-			*scanDivide >>= rightShift;
-		}
+        for(std::uint32_t scanRow = sourceStartRow; scanRow < sourceEndRow; scanRow += destSubSampleY)
+        {
+            std::int32_t* pDestRowAddress = &pDest[(sourceEndCol - sourceStartCol) * (scanRow - sourceStartRow) / (destSubSampleY * destSubSampleX)];
+
+            for(std::uint32_t scanCol(sourceStartCol); scanCol < sourceEndCol; scanCol += destSubSampleX)
+            {
+                std::int32_t cellValue = pDestRowAddress[(scanCol - sourceStartCol) / destSubSampleX];
+                std::int32_t divisor = 8 * (cellValue & 0x7);
+                if(divisor == 0)
+                {
+                    divisor = 8;
+                }
+                pDestRowAddress[(scanCol - sourceStartCol) / destSubSampleX] = cellValue / divisor;
+            }
+        }
 
         IMEBRA_FUNCTION_END();
     }
