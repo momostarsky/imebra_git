@@ -217,8 +217,7 @@ dataType getMinValue(std::uint32_t highBit)
     {
         return 0;
     }
-    dataType divide = (dataType)((dataType)1 << (sizeof(dataType) * 8 - highBit - 1));
-    return (dataType)(std::numeric_limits<dataType>::min() / divide);
+    return (dataType)(((std::int64_t)-1) << highBit);
 
     IMEBRA_FUNCTION_END();
 }
