@@ -8,7 +8,7 @@ $fileHeader$
 #include <imebra/imebra.h>
 #include <sstream>
 
-#ifdef IMEBRA_WINDOWS
+#if defined(WIN32) || defined(WIN64)
 #include <process.h>
 #else
 #include <spawn.h>
@@ -314,7 +314,7 @@ int main(int argc, char* argv[])
             ffArgv.get()[options.size()] = 0;
 
             // Launch ffmpeg
-#ifdef PUNTOEXE_WINDOWS
+#if defined(WIN32) || defined(WIN64)
             return (int)_spawnvp(_P_WAIT , argv[ffmpegFlag + 1], ffArgv.get());
 #else
             char *environment[] = {0};
