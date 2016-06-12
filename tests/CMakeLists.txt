@@ -2,11 +2,14 @@ cmake_minimum_required(VERSION 2.8)
 
 project("ImebraTests")
 
+find_library(gtest_library NAMES gtest libgtest HINTS ${CMAKE_BINARY_DIR} ${CMAKE_BINARY_DIR}/gtest)
+find_library(imebra_library NAMES imebra libimebra HINTS ${CMAKE_BINARY_DIR} ${CMAKE_BINARY_DIR}/imebra ${CMAKE_BINARY_DIR}/../library-build )
+
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     message(STATUS "GCC detected, adding compile flags")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wall -Wextra -Wpedantic -Wconversion -Wfloat-equal -pthread")
 
-    set(IMEBRA_LIBRARIES pthread)
+    set(IMEBRA_LIBRARIES ${imebra_library} ${gtest_library} pthread)
 
     if(CMAKE_BUILD_TYPE MATCHES DEBUG)
         message("debug mode")
@@ -19,12 +22,14 @@ elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     message(STATUS "CLANG detected, adding compile flags")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wall -Wextra -Wpedantic -Wconversion -Wfloat-equal -pthread")
 
-    set(IMEBRA_LIBRARIES pthread)
+    set(IMEBRA_LIBRARIES ${imebra_library} ${gtest_library} pthread)
 
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 
     message(STATUS "MSVC detected, adding compile flags")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /Wp64")
+
+    set(IMEBRA_LIBRARIES ${imebra_library} ${gtest_library} pthread)
 
 endif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 
@@ -39,9 +44,6 @@ add_executable(ImebraTests
     ${imebra_tests_src}
 )
 
-find_library(gtest_library NAMES gtest libgtest HINTS ${CMAKE_BINARY_DIR} ${CMAKE_BINARY_DIR}/gtest)
-find_library(imebra_library NAMES imebra libimebra HINTS ${CMAKE_BINARY_DIR} ${CMAKE_BINARY_DIR}/imebra ${CMAKE_BINARY_DIR}/../library-build )
-
-target_link_libraries(ImebraTests ${imebra_library} ${gtest_library} pthread gcov)
+target_link_libraries(ImebraTests ${IMEBRA_LIBRARIES})
 
 
