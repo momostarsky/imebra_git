@@ -13,7 +13,7 @@ This file is not included automatically by implementation.h
 #define imebraDrawBitmap_3146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_
 
 #include "memoryImpl.h"
-#include "transformsChainImpl.h"
+#include "transformImpl.h"
 #include "../include/imebra/exceptions.h"
 #include "../include/imebra/definitions.h"
 
@@ -54,7 +54,7 @@ namespace imebra
 			///                      automatically by this class
 			///
 			///////////////////////////////////////////////////////////
-            drawBitmap(std::shared_ptr<transforms::transformsChain> transformsChain);
+            drawBitmap(std::shared_ptr<transforms::transform> transformsChain);
 
 			/// \brief Renders the image specified in the constructor
 			///         into an RGB or BGR buffer.
@@ -95,7 +95,7 @@ namespace imebra
 
 		protected:
             // Transform that calculates an 8 bit per channel RGB image
-            std::shared_ptr<transforms::transformsChain> m_userTransforms;
+            std::shared_ptr<transforms::transform> m_userTransforms;
 		};
 
 		/// @}

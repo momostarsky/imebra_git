@@ -10,18 +10,18 @@ $fileHeader$
 #include "../include/imebra/drawBitmap.h"
 #include "../implementation/drawBitmapImpl.h"
 #include "../include/imebra/image.h"
-#include "../include/imebra/transformsChain.h"
+#include "../include/imebra/transform.h"
 
 namespace imebra
 {
 
 DrawBitmap::DrawBitmap():
-    m_pDrawBitmap(std::make_shared<implementation::drawBitmap>(std::shared_ptr<implementation::transforms::transformsChain>()))
+    m_pDrawBitmap(std::make_shared<implementation::drawBitmap>(std::shared_ptr<implementation::transforms::transform>()))
 {
 }
 
-DrawBitmap::DrawBitmap(const TransformsChain& transformsChain):
-    m_pDrawBitmap(std::make_shared<implementation::drawBitmap>(std::dynamic_pointer_cast<implementation::transforms::transformsChain>(transformsChain.m_pTransform)))
+DrawBitmap::DrawBitmap(const Transform& transform):
+    m_pDrawBitmap(std::make_shared<implementation::drawBitmap>(transform.m_pTransform))
 {
 }
 

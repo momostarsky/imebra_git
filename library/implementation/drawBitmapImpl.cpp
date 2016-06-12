@@ -11,6 +11,7 @@ $fileHeader$
 #include "imageImpl.h"
 #include "colorTransformsFactoryImpl.h"
 #include "transformHighBitImpl.h"
+#include "transformsChainImpl.h"
 
 namespace imebra
 {
@@ -19,7 +20,7 @@ namespace implementation
 {
 
 
-drawBitmap::drawBitmap(std::shared_ptr<transforms::transformsChain> transformsChain):
+drawBitmap::drawBitmap(std::shared_ptr<transforms::transform> transformsChain):
     m_userTransforms(transformsChain)
 {
 }

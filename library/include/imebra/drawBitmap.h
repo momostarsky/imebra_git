@@ -28,7 +28,7 @@ class drawBitmap;
 namespace imebra
 {
 
-class TransformsChain;
+class Transform;
 class Image;
 
 ///
@@ -61,7 +61,7 @@ public:
     ///        getBitmap() method
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    DrawBitmap(const TransformsChain& transformsChain);
+    DrawBitmap(const Transform& transformsChain);
 
     /// \brief Destructor
     ///
