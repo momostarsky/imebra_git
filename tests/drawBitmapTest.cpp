@@ -83,6 +83,7 @@ TEST(drawBitmapTest, testDrawBitmapRGB)
 	}
 }
 
+
 TEST(drawBitmapTest, testDrawBitmapBGR)
 {
     for(int monochrome(0); monochrome != 2; ++monochrome)

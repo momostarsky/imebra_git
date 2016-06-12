@@ -2,6 +2,7 @@
 #include <imebra/imebra.h>
 #include <thread>
 #include <array>
+#include <chrono>
 
 namespace imebra
 {
@@ -17,7 +18,7 @@ void memoryThread(size_t minSize, size_t maxSize)
     // check that every thread is using its own private MemoryPool
     // object
     //////////////////////////////////////////////////////////////
-    ::sleep(2);
+    std::this_thread::sleep_for(std::chrono::seconds(2));
 
 
     // Small memory chuncks should not go in the memory pool
@@ -28,7 +29,7 @@ void memoryThread(size_t minSize, size_t maxSize)
         *memory.data(&dataSize) = 2;
         EXPECT_EQ(1, dataSize);
     }
-    ::sleep(2);
+    std::this_thread::sleep_for(std::chrono::seconds(2));
     EXPECT_EQ(0, MemoryPool::getUnusedMemorySize());
 
     // Check that released memory goes into the memory pool
@@ -42,7 +43,7 @@ void memoryThread(size_t minSize, size_t maxSize)
             *pData = 3;
         }
     }
-    ::sleep(2);
+    std::this_thread::sleep_for(std::chrono::seconds(2));
     EXPECT_EQ(minSize, MemoryPool::getUnusedMemorySize());
     MemoryPool::flush();
     EXPECT_EQ(0, MemoryPool::getUnusedMemorySize());
@@ -60,7 +61,7 @@ void memoryThread(size_t minSize, size_t maxSize)
         }
     }
 
-    ::sleep(2);
+    std::this_thread::sleep_for(std::chrono::seconds(2));
     EXPECT_EQ(minSize, MemoryPool::getUnusedMemorySize());
     {
         ReadWriteMemory retrieveMemory(minSize);

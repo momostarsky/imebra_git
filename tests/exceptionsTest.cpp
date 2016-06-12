@@ -2,6 +2,7 @@
 #include <imebra/imebra.h>
 #include <array>
 #include <thread>
+#include <chrono>
 
 namespace imebra
 {
@@ -25,7 +26,7 @@ void exceptionsThread(size_t exceptionType)
     }
     catch(...)
     {
-        ::sleep(2);
+        std::this_thread::sleep_for(std::chrono::seconds(2));
         switch(exceptionType)
         {
         case 0:
