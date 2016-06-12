@@ -1,17 +1,17 @@
 Loading files
 =============
 
-Imebra can read 2 kind of files:
+Imebra can read 2 kinds of files:
 
 - DICOM files
 - Jpeg files
 
-In order to do this it supplies two different codecs able to parse the two different streams.
-Both the codes store the parsed content into a :cpp:class:`imebra::DataSet` class (yes, also the Jpeg codec).
+In order to do this, it supplies two different codecs able to parse the two different streams.
+Both the codes store the parsed content into an :cpp:class:`imebra::DataSet` class (yes, also the Jpeg codec).
 
-Imebra choses automatically the correct codec according to the stream content.
+Imebra chooses automatically the correct codec according to the stream content.
 
-In order to create a :cpp:class:`imebra::DataSet` from a stream you should use the class :cpp:class:`imebra::CodecFactory`.
+In order to create an :cpp:class:`imebra::DataSet` from a stream you should use the class :cpp:class:`imebra::CodecFactory`.
 
 .. code-block:: c++
 

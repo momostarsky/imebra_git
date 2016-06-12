@@ -1,7 +1,7 @@
 Compiling Imebra
 ================
 
-If you want to compile Imebra from the source code, then you shoud download the Imebra Source Distribution.
+If you want to compile Imebra from the source code, then you should download the Imebra Source Distribution.
 The result of the Imebra compilation is a shared library for your operating system of choice.
 
 The Imebra Source Distribution includes:
@@ -12,8 +12,8 @@ The Imebra Source Distribution includes:
 - pre-generated JNI headers for Java
 
 
-Tools needed to build Imebra
-----------------------------
+Prerequisites
+-------------
 
 In order to build the library from the Imebra Source Distribution you need:
 
@@ -28,10 +28,10 @@ Compiling the C++ version of Imebra
 
 Follow those steps:
 
-# Create a folder that will contain the result of the compilation (artifacts)
-# cd into the created artifacts folder
-# execute cmake with the path to the Imebra's library folder as parameter
-# launch make
+1. Create a folder that will contain the result of the compilation (artifacts)
+2. cd into the created artifacts folder
+3. execute cmake with the path to the Imebra's library folder as parameter
+4. launch make
 
 ::
 
