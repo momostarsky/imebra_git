@@ -265,18 +265,18 @@ int main(int argc, char* argv[])
 
             // Calculate the frames per second from the available tags
             double framesPerSecond(0);
-            double frameTime(loadedDataSet->getDouble(TagId(tagId_t::FrameTime_0018_1063), 0, 0, 0));
+            double frameTime(loadedDataSet->getDouble(TagId(tagId_t::FrameTime_0018_1063), 0, 0));
             if(frameTime > 0.1)
             {
                 framesPerSecond = 1000 / frameTime;
             }
             if(framesPerSecond < 0.1)
             {
-                framesPerSecond = loadedDataSet->getUnsignedLong(TagId(tagId_t::CineRate_0018_0040), 0x0, 0, 0);
+                framesPerSecond = loadedDataSet->getUnsignedLong(TagId(tagId_t::CineRate_0018_0040), 0, 0);
             }
             if(framesPerSecond < 0.1)
             {
-                framesPerSecond = loadedDataSet->getUnsignedLong(TagId(tagId_t::RecommendedDisplayFrameRate_0008_2144), 0x0, 0, 0);
+                framesPerSecond = loadedDataSet->getUnsignedLong(TagId(tagId_t::RecommendedDisplayFrameRate_0008_2144), 0, 0);
             }
 
             // Add the ffmpeg argument for the frames per second
