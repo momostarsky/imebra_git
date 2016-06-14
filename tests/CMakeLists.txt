@@ -29,7 +29,7 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     message(STATUS "MSVC detected, adding compile flags")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /Wp64")
 
-    set(IMEBRA_LIBRARIES ${imebra_library} ${gtest_library} pthread)
+    set(IMEBRA_LIBRARIES ${imebra_library} ${gtest_library})
 
 endif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 
