@@ -29,7 +29,7 @@ TEST(corruptedFilesTest, corruptedFilesTest)
 #ifdef _WIN32
     WIN32_FIND_DATA findFileData;
     std::string filter(folder);
-    folder += "\\*";
+    filter += "\\*";
     HANDLE hFind(FindFirstFile(filter.c_str(), &findFileData));
     if(hFind == INVALID_HANDLE_VALUE)
     {
@@ -46,7 +46,7 @@ TEST(corruptedFilesTest, corruptedFilesTest)
                 continue;
             }
             std::ostringstream fullName;
-            fullName << folder << "/" << fileName;
+            fullName << folder << "\\" << fileName;
 
             std::cout << "Processing corrupted file " << fullName.str() << std::endl;
 
