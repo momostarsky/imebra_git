@@ -28,7 +28,9 @@ TEST(corruptedFilesTest, corruptedFilesTest)
 
 #ifdef _WIN32
     WIN32_FIND_DATA findFileData;
-    HANDLE hFind(FindFirstFile(folder.c_str() + "\\*", &findFileData));
+    std::string filter(folder);
+    folder += "\\*";
+    HANDLE hFind(FindFirstFile(filter.c_str(), &findFileData));
     if(hFind == INVALID_HANDLE_VALUE)
     {
         return;
@@ -52,7 +54,7 @@ TEST(corruptedFilesTest, corruptedFilesTest)
 
             ASSERT_THROW(dataset->getImage(0), imebra::CodecError);
         }
-        while (FindNextFile(hFind, &findFileData) != 0)
+        while (FindNextFile(hFind, &findFileData) != 0);
     }
     catch(...)
     {
