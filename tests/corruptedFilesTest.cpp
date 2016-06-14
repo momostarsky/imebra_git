@@ -1,6 +1,11 @@
 #include <imebra/imebra.h>
 #include "testsSettings.h"
-#include <dirent.h>
+
+#ifdef _WIN32
+    #include <windows.h>
+#else
+    #include <dirent.h>
+#endif
 #include <gtest/gtest.h>
 
 namespace imebra
@@ -21,6 +26,41 @@ TEST(corruptedFilesTest, corruptedFilesTest)
         return;
     }
 
+#ifdef _WIN32
+    WIN32_FIND_DATA findFileData;
+    HANDLE hFind(FindFirstFile(folder.c_str() + "\\*", &findFileData));
+    if(hFind == INVALID_HANDLE_VALUE)
+    {
+        return;
+    }
+
+    try
+    {
+        do
+        {
+            const std::string fileName(findFileData.cFileName);
+            if(fileName.at(0) == '.')
+            {
+                continue;
+            }
+            std::ostringstream fullName;
+            fullName << folder << "/" << fileName;
+
+            std::cout << "Processing corrupted file " << fullName.str() << std::endl;
+
+            std::unique_ptr<DataSet> dataset(imebra::CodecFactory::load(fullName.str(), 2048));
+
+            ASSERT_THROW(dataset->getImage(0), imebra::CodecError);
+        }
+        while (FindNextFile(hFind, &findFileData) != 0)
+    }
+    catch(...)
+    {
+        FindClose(hFind);
+        throw;
+    }
+
+#else
     DIR * dir = opendir(folder.c_str());
     if(dir == 0)
     {
@@ -44,7 +84,7 @@ TEST(corruptedFilesTest, corruptedFilesTest)
 
         ASSERT_THROW(dataset->getImage(0), imebra::CodecError);
     }
-
+#endif
 }
 
 }

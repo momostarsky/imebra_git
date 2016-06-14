@@ -83,7 +83,7 @@ TEST(unicodeStringHandlerTest, iso2022Test)
     }
 }
 
-
+#if !defined(_WIN32) && !defined(__CYGWIN__)
 TEST(unicodeStringHandlerTest, supplementaryUnicodeChars)
 {
     // Try supplementary chars
@@ -120,6 +120,7 @@ TEST(unicodeStringHandlerTest, supplementaryUnicodeChars)
         EXPECT_EQ(patientName1, testDataSet->getUnicodeString(TagId(0x0010, 0x0010), 1));
     }
 }
+#endif
 
 TEST(unicodeStringHandlerTest, unicodeNumericConversion)
 {

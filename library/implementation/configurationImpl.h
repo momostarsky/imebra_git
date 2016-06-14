@@ -19,7 +19,7 @@ $fileHeader$
 
 #if !defined(IMEBRA_WINDOWS) && !defined(IMEBRA_POSIX)
 
-#if defined(WIN32) || defined(WIN64)
+#if defined(_WIN32)
 #define IMEBRA_WINDOWS 1
 #endif
 

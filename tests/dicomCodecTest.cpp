@@ -1,5 +1,6 @@
 #include <imebra/imebra.h>
 #include "buildImageForTest.h"
+#include "testsSettings.h"
 #include <gtest/gtest.h>
 #include <limits>
 
@@ -14,13 +15,24 @@ TEST(dicomCodecTest, testDicom)
 {
     char* colorSpaces[] = {"RGB", "YBR_FULL", "YBR_FULL_422", "YBR_FULL_420", "MONOCHROME2"};
 
+    std::uint32_t highBitStep = 1;
+    std::uint32_t interleavedStart = 0;
+    std::uint32_t signStep = 1;
+
+    if(::tests::settings::getSettings().get("--fast") == "1")
+    {
+        highBitStep = 4;
+        interleavedStart = 1;
+        signStep = 2;
+    }
+
     for(int transferSyntaxId(0); transferSyntaxId != 4; ++transferSyntaxId)
 	{
-        for(int interleaved(0); interleaved != 2; ++interleaved)
+        for(std::uint32_t interleaved(interleavedStart); interleaved != 2; ++interleaved)
 		{
-			for(unsigned int sign=0; sign != 2; ++sign)
+            for(std::uint32_t sign=0; sign != 2; sign += signStep)
 			{
-                for(std::uint32_t highBit(0); highBit != 32; ++highBit)
+                for(std::uint32_t highBit(0); highBit != 32; highBit += highBitStep)
 				{
                     for(unsigned int colorSpaceIndex(0); colorSpaceIndex != sizeof(colorSpaces)/sizeof(colorSpaces[0]); ++colorSpaceIndex)
                     {
