@@ -425,7 +425,7 @@ public:
                 {
                     if(scanCol < sourceWidth && scanRow < sourceHeight)
                     {
-                        lastValue = *pSource;
+                        lastValue = (std::int32_t)*pSource;
                         pSource += sourceNumChannels;
                     }
                     *pDest++ = lastValue;
