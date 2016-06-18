@@ -10,7 +10,6 @@ namespace imebra
 namespace tests
 {
 
-// A buffer initialized to a default data type should use the data type OB
 TEST(dicomCodecTest, testDicom)
 {
     char* colorSpaces[] = {"RGB", "YBR_FULL", "YBR_FULL_422", "YBR_FULL_420", "MONOCHROME2"};
@@ -187,15 +186,6 @@ TEST(dicomCodecTest, testDicom)
                             std::cout << " DIFF: " << compareImages(*checkImage1, *dicomImage1) << std::endl;
                             std::cout << " DIFF: " << compareImages(*checkImage2, *dicomImage2) << std::endl;
 
-                            double maxDiff(0);
-                            if(quality == imageQuality_t::medium)
-                            {
-                                maxDiff = 10;
-                            }
-                            else if(quality == imageQuality_t::belowMedium)
-                            {
-                                maxDiff = 100;
-                            }
                             ASSERT_EQ(0, compareImages(*checkImage0, *dicomImage0));
                             ASSERT_EQ(0, compareImages(*checkImage1, *dicomImage1));
                             ASSERT_EQ(0, compareImages(*checkImage2, *dicomImage2));
@@ -205,6 +195,75 @@ TEST(dicomCodecTest, testDicom)
 			}
 		}
 	} // transferSyntaxId
+}
+
+
+TEST(dicomCodecTest, testDicom32bit)
+{
+    for(int transferSyntaxId(0); transferSyntaxId != 4; ++transferSyntaxId)
+    {
+        std::string colorSpace("MONOCHROME2");
+
+        std::unique_ptr<Image> dicomImage(new Image(3, 1, bitDepth_t::depthU32, colorSpace, 31));
+        {
+            std::unique_ptr<WritingDataHandlerNumeric> write(dicomImage->getWritingDataHandler());
+            write->setUnsignedLong(0, std::numeric_limits<std::uint32_t>::max());
+            write->setUnsignedLong(1, std::numeric_limits<std::uint32_t>::max() / 2);
+            write->setUnsignedLong(2, 0);
+        }
+
+        std::string transferSyntax;
+
+        switch(transferSyntaxId)
+        {
+        case 0:
+            transferSyntax = "1.2.840.10008.1.2";
+            break;
+        case 1:
+            transferSyntax = "1.2.840.10008.1.2.1";
+            break;
+        case 2:
+            transferSyntax = "1.2.840.10008.1.2.2";
+            break;
+        case 3:
+            transferSyntax = "1.2.840.10008.1.2.5";
+            break;
+        }
+
+        std::cout << "Dicom test. Transfer syntax: " << transferSyntax;
+        std::cout << " maxValue: " << std::numeric_limits<std::uint32_t>::max() << std::endl;
+
+        imageQuality_t quality = imageQuality_t::veryHigh;
+        if(ColorTransformsFactory::isSubsampledY(colorSpace))
+        {
+            quality = imageQuality_t::belowMedium;
+        }
+        else if(ColorTransformsFactory::isSubsampledX(colorSpace))
+        {
+            quality = imageQuality_t::medium;
+        }
+
+        ReadWriteMemory streamMemory;
+        {
+            DataSet testDataSet;
+            testDataSet.setImage(0, *dicomImage, transferSyntax, imageQuality_t::veryHigh);
+
+            MemoryStreamOutput writeStream(streamMemory);
+            StreamWriter writer(writeStream);
+            CodecFactory::save(testDataSet, writer, codecType_t::dicom);
+        }
+
+        MemoryStreamInput readStream(streamMemory);
+        StreamReader reader(readStream);
+        std::unique_ptr<DataSet> testDataSet(CodecFactory::load(reader, std::numeric_limits<size_t>::max()));
+
+        std::unique_ptr<Image> checkImage(testDataSet->getImage(0));
+
+        std::unique_ptr<ReadingDataHandlerNumeric> read(checkImage->getReadingDataHandler());
+        EXPECT_EQ(std::numeric_limits<std::uint32_t>::max(), read->getUnsignedLong(0));
+        EXPECT_EQ(std::numeric_limits<std::uint32_t>::max() / 2, read->getUnsignedLong(1));
+        EXPECT_EQ(0, read->getUnsignedLong(2));
+    }
 }
 
 
