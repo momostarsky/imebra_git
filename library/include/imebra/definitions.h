@@ -175,11 +175,11 @@ enum class tagVR_t: std::uint32_t
     SS = 0x5353, ///< Signed Short
     ST = 0x5354, ///< Short Text
     TM = 0x544d, ///< Time
-    UC = 0x5543, ///<
+    UC = 0x5543, ///< Unlimited characters
     UI = 0x5549, ///< Unique Identifier
     UL = 0x554c, ///< Unsigned Long
     UN = 0x554e, ///< Unknown
-    UR = 0x5552,
+    UR = 0x5552, ///< Unified Resource Identifier
     US = 0x5553, ///< Unsigned Short
     UT = 0x5554  ///< Unlimited Text
 };
