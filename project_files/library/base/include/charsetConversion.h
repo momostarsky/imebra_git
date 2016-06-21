@@ -6,5 +6,9 @@
 #include "charsetConversionICU.h"
 #include "charsetConversionWindows.h"
 
+#if defined(PUNTOEXE_USE_JAVA)
+#include "../../../../../swig/charsetConversionJava.h"
+#endif
+
 #endif // imebraCharsetConversion_3146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_
 
