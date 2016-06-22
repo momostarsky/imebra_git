@@ -63,6 +63,8 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     static DataSet* load(const std::wstring& fileName, size_t maxSizeBufferLoad);
 
+#ifndef SWIG // Use Unicode strings only with SWIG
+
     /// \brief Parses the content of the input file and returns a DataSet
     ///        representing it.
     ///
@@ -79,6 +81,8 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     static DataSet* load(const std::string& fileName, size_t maxSizeBufferLoad);
+
+#endif
 
     static void saveImage(
             StreamWriter& destStream,
@@ -112,6 +116,8 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     static void save(const DataSet& dataSet, const std::wstring& fileName, codecType_t codecType);
 
+#ifndef SWIG // Use Unicode strings only with SWIG
+
     /// \brief Saves the content of a DataSet object to an output file using the
     ///        requested codec.
     ///
@@ -121,6 +127,8 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     static void save(const DataSet& dataSet, const std::string& fileName, codecType_t codecType);
+
+#endif
 };
 
 }

@@ -34,12 +34,16 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     FileStreamOutput(const std::wstring& name);
 
+#ifndef SWIG // Use Unicode strings only with SWIG
+
     /// \brief Constructor.
     ///
     /// \param name the path to the file to open in write mode
     ///
     ///////////////////////////////////////////////////////////////////////////////
     FileStreamOutput(const std::string& name);
+
+#endif
 
     /// \brief Destructor. Closes the file
     ///

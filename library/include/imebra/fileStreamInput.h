@@ -35,12 +35,16 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     FileStreamInput(const std::wstring& name);
 
+#ifndef SWIG // Use Unicode strings only with SWIG
+
     /// \brief Constructor.
     ///
     /// \param name the path to the file to open in read mode
     ///
     ///////////////////////////////////////////////////////////////////////////////
     FileStreamInput(const std::string& name);
+
+#endif
 
     /// \brief Destructor. Closes the file.
     ///
