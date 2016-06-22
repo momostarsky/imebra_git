@@ -9,12 +9,17 @@ $fileHeader$
 namespace imebra
 {
 
+#ifndef SWIGJAVA
+
 /// \brief Enumerates the tags stored in the DicomDictionary.
 ///
 /// Can be used with TagId to create an ID for a known tag.
 ///
 /// Unlike other enumerations, each item starts with an uppercase letter, to
 /// reflect the tag name used in the Dicom standard.
+///
+/// \warning Very large enumeration classes cause an error in Java, therefore
+///          the tagId_t enumeration is not supported in Java.
 ///
 ///////////////////////////////////////////////////////////////////////////////
 enum class tagId_t: std::uint32_t
@@ -3641,6 +3646,8 @@ enum class tagId_t: std::uint32_t
     SequenceDelimitationItem_FFFE_E0DD = 0xFFFEE0DD, ///< Sequence Delimitation Item (FFFE,E0DD)
     endOfEnumerations = 0
 };
+
+#endif
 
 } //namespace imebra
 

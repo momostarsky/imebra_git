@@ -49,9 +49,13 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     TagId(std::uint16_t groupId, std::uint32_t groupOrder, std::uint16_t tagId);
 
+#ifndef SWIGJAVA
     /// \brief Constructor.
     ///
     /// \param id an enumeration representing a tag group and id
+    ///
+    /// \warning Very large enumeration classes cause an error in Java, therefore
+    ///          the tagId_t enumeration is not supported in Java.
     ///
     ///////////////////////////////////////////////////////////////////////////////
     TagId(tagId_t id);
@@ -65,6 +69,7 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     TagId(tagId_t id, std::uint32_t groupOrder);
+#endif
 
     virtual ~TagId();
 

@@ -64,6 +64,7 @@
 #ifdef SWIGJAVA
 
 	%include <arrays_java.i>
+	%include <enums.swg>
 	%apply(char *STRING, size_t LENGTH) { (const char *source, size_t sourceSize) };
 	%apply(char *STRING, size_t LENGTH) { (char* destination, size_t destinationSize) };
 
