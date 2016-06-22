@@ -118,26 +118,29 @@ The author can be contacted by email at info@binarno.com or by mail at
 
 	<!-- SWIG -->
 	<target name="swig" depends="replace_version">
+		<mkdir dir="${build_release}/library/swig/src/com/imebra" />
 		<exec executable="swig" failonerror="true" dir="${build_release}/library/swig">
 			<arg value="-java" />
 			<arg value="-c++" />
 			<arg value="-package" />
 			<arg value="com.imebra" />
+			<arg value="-outdir" />
+			<arg path="${build_release}/library/swig/src/com/imebra" />
 			<arg value="swig.i" />
 		</exec>
 
-		<fileset id="existing" dir="${build_release}/library/swig">
+		<fileset id="existing" dir="${build_release}/library/swig/src/com/imebra">
 		    <patternset id="files">
 		        <include name="**/*.java" />
 		    </patternset>
 		</fileset>
 
-		<fileset id="matches" dir="${build_release}/library/swig">
+		<fileset id="matches" dir="${build_release}/library/swig/src/com/imebra">
 		    <patternset refid="files" />
 		    <contains text=", false);" />
 		</fileset>
 
-		<fail message="Found non managed memory objects in one or more files in '${build_release}/library/swig'">
+		<fail message="Found non managed memory objects in one or more files in '${build_release}/library/swig/src/com/imebra'">
 		    <condition>
 		    	<!-- Counter is 2 because TagsIds and VOIs return non-owned objects -->
 		        <resourcecount when="greater" count="2" refid="matches" />
