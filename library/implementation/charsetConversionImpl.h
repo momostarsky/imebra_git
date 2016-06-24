@@ -5,6 +5,7 @@
 #include "charsetConversionIconvImpl.h"
 #include "charsetConversionICUImpl.h"
 #include "charsetConversionWindowsImpl.h"
+#include "charsetConversionJavaImpl.h"
 #include "charsetsListImpl.h"
 
 #include <string>

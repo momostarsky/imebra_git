@@ -12,7 +12,6 @@ $fileHeader$
 #include "configurationImpl.h"
 #include "streamControllerImpl.h"
 
-#include "onloadImpl.h"
 #include "exceptionImpl.h"
 #include "charsetConversionJavaImpl.h"
 #include <memory>
@@ -20,13 +19,41 @@ $fileHeader$
 namespace imebra
 {
 
+JavaVM* m_javaVM = 0;
+
+extern "C"
+{
+
+    //------------------------------------------------------------------------
+    JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* aVm, void* aReserved)
+    {
+        // cache java VM
+        m_javaVM = aVm;
+
+        return JNI_VERSION_1_6;
+    }
+
+} // extern "C"
+
+JavaVM* get_imebra_javaVM()
+{
+    return m_javaVM;
+}
+
 ///////////////////////////////////////////////////////////
 //
 // Constructor
 //
 ///////////////////////////////////////////////////////////
-charsetConversionJava::charsetConversionJava()
+charsetConversionJava::charsetConversionJava(const std::string& dicomName)
 {
+    IMEBRA_FUNCTION_START();
+
+    const charsetInformation& info = getDictionary().getCharsetInformation(dicomName);
+    m_tableName = info.m_isoRegistration;
+
+    IMEBRA_FUNCTION_END();
+
 }
 
 
@@ -37,37 +64,6 @@ charsetConversionJava::charsetConversionJava()
 ///////////////////////////////////////////////////////////
 charsetConversionJava::~charsetConversionJava()
 {
-	close();
-}
-
-
-///////////////////////////////////////////////////////////
-//
-// Initialize the charsetConversion object
-//
-///////////////////////////////////////////////////////////
-void charsetConversionJava::initialize(const int requestedTable)
-{
-    IMEBRA_FUNCTION_START();
-
-    m_tableName = m_charsetTable[requestedTable].m_iconvName;
-
-	IMEBRA_FUNCTION_END();
-}
-
-
-///////////////////////////////////////////////////////////
-//
-// Uninitialize the charsetConversion object
-//
-///////////////////////////////////////////////////////////
-void charsetConversionJava::close()
-{
-    IMEBRA_FUNCTION_START();
-
-    charsetConversion::close();
-
-	IMEBRA_FUNCTION_END();
 }
 
 
@@ -91,14 +87,14 @@ std::string charsetConversionJava::fromUnicode(const std::wstring& unicodeString
 	std::string bytes;
 	bytes.resize(unicodeString.length() * sizeof(wchar_t));
 	::memcpy(&bytes[0], &(unicodeString[0]), bytes.size());
-	implementation::streamController::adjustEndian((imbxUint8*)&(bytes[0]), sizeof(wchar_t), implementation::streamController::highByteEndian, unicodeString.size());
+    streamController::adjustEndian((std::uint8_t*)&(bytes[0]), sizeof(wchar_t), streamController::highByteEndian, unicodeString.size());
 	jstring javaString = getNativeJavaString(env, bytes, sizeof(wchar_t) == 2 ? "UTF-16BE" : "UTF-32BE");
 
 	std::string returnValue;
 
 	if(javaString != 0)
 	{
-	    returnValue = getBytesFromString(env, javaString, m_tableName);
+        returnValue = getBytesFromString(env, javaString, m_tableName.c_str());
 	    env->DeleteLocalRef(javaString);
 	}
 
@@ -131,7 +127,7 @@ std::wstring charsetConversionJava::toUnicode(const std::string& asciiString) co
 	JNIEnv* env = getJavaEnv(&bDetach);
 
     std::wstring returnValue;
-    jstring javaString = getNativeJavaString(env, asciiString, m_tableName);
+    jstring javaString = getNativeJavaString(env, asciiString, m_tableName.c_str());
     if(javaString != 0)
     {
         std::string bytes = getBytesFromString(env, javaString, sizeof(wchar_t) == 2 ? "UTF-16BE" : "UTF-32BE");
@@ -139,7 +135,7 @@ std::wstring charsetConversionJava::toUnicode(const std::string& asciiString) co
         {
             returnValue.resize(bytes.size() / sizeof(wchar_t));
             ::memcpy(&(returnValue[0]), &(bytes[0]), bytes.size());
-            implementation::streamController::adjustEndian((imbxUint8*)&(returnValue[0]), sizeof(wchar_t), implementation::streamController::highByteEndian, returnValue.size());
+            streamController::adjustEndian((std::uint8_t*)&(returnValue[0]), sizeof(wchar_t), streamController::highByteEndian, returnValue.size());
         }
         env->DeleteLocalRef(javaString);
     }
@@ -152,11 +148,6 @@ std::wstring charsetConversionJava::toUnicode(const std::string& asciiString) co
     return returnValue;
 
 	IMEBRA_FUNCTION_END();
-}
-
-charsetConversion* allocateCharsetConversion()
-{
-    return new charsetConversionJava();
 }
 
 
