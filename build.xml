@@ -118,31 +118,31 @@ The author can be contacted by email at info@binarno.com or by mail at
 
 	<!-- SWIG -->
 	<target name="swig" depends="replace_version">
-		<mkdir dir="${build_release}/library/wrappers/javaWrapper/src/com/imebra" />
-		<mkdir dir="${build_release}/library/wrappers/javaWrapper/jni" />
-		<exec executable="swig" failonerror="true" dir="${build_release}/library/wrappers">
+		<mkdir dir="${build_release}/wrappers/javaWrapper/src/com/imebra" />
+		<mkdir dir="${build_release}/wrappers/javaWrapper/jni" />
+		<exec executable="swig" failonerror="true" dir="${build_release}/wrappers">
 			<arg value="-java" />
 			<arg value="-c++" />
 			<arg value="-package" />
 			<arg value="com.imebra" />
 			<arg value="-outdir" />
-			<arg path="${build_release}/library/wrappers/javaWrapper/src/com/imebra" />
+			<arg path="${build_release}/wrappers/javaWrapper/src/com/imebra" />
 			<arg value="swig.i" />
 		</exec>
-		<move file="${build_release}/library/wrappers/swig_wrap.cxx" tofile="${build_release}/library/wrappers/javaWrapper/jni/swig_wrap.cxx" />
+		<move file="${build_release}/wrappers/swig_wrap.cxx" tofile="${build_release}/wrappers/javaWrapper/jni/swig_wrap.cxx" />
 
-		<fileset id="existing" dir="${build_release}/library/wrappers/javaWrapper/src/com/imebra">
+		<fileset id="existing" dir="${build_release}/wrappers/javaWrapper/src/com/imebra">
 		    <patternset id="files">
 		        <include name="**/*.java" />
 		    </patternset>
 		</fileset>
 
-		<fileset id="matches" dir="${build_release}/library/wrappers/javaWrapper/src/com/imebra">
+		<fileset id="matches" dir="${build_release}/wrappers/javaWrapper/src/com/imebra">
 		    <patternset refid="files" />
 		    <contains text=", false);" />
 		</fileset>
 
-		<fail message="Found non managed memory objects in one or more files in '${build_release}/library/wrappers/javaWrapper/src/com/imebra'">
+		<fail message="Found non managed memory objects in one or more files in '${build_release}/wrappers/javaWrapper/src/com/imebra'">
 		    <condition>
 		    	<!-- Counter is 2 because TagsIds and VOIs return non-owned objects -->
 		        <resourcecount when="greater" count="2" refid="matches" />
