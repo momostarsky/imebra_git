@@ -1,5 +1,14 @@
 %module imebra
 
+#ifdef SWIGJAVA
+	%javaconst(1);
+	%include <arrays_java.i>
+	%include <enums.swg>
+	%apply(char *STRING, size_t LENGTH) { (const char *source, size_t sourceSize) };
+	%apply(char *STRING, size_t LENGTH) { (char* destination, size_t destinationSize) };
+	%rename(assign) operator=;
+#endif
+
 #define IMEBRA_API
 
 // Declare which methods return an object that should be
@@ -60,17 +69,6 @@
 
 %include <std_string.i>
 %include <std_wstring.i>
-
-#ifdef SWIGJAVA
-
-	%include <arrays_java.i>
-	%include <enums.swg>
-	%apply(char *STRING, size_t LENGTH) { (const char *source, size_t sourceSize) };
-	%apply(char *STRING, size_t LENGTH) { (char* destination, size_t destinationSize) };
-
-	%rename(assign) operator=;
-
-#endif
 
 %include <exception.i>
 %include <stdint.i>
