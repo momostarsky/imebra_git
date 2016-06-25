@@ -11,6 +11,29 @@
 
 #define IMEBRA_API
 
+%{
+#include "../library/include/imebra/imebra.h"
+%}
+
+%include <std_string.i>
+%include <std_wstring.i>
+
+%include <exception.i>
+%include <stdint.i>
+%include <std_except.i>
+%include <std_vector.i>
+%include <std_map.i>
+
+%apply int[] {int *};
+%template(FileParts) std::vector<std::string>;
+%template(Groups) std::vector<std::uint16_t>;
+%template(TagsIds) std::vector<imebra::TagId>;
+%template(VOIs) std::vector<imebra::VOIDescription>;
+
+%apply(const Image& image, drawBitmapType_t drawBitmapType, std::uint32_t rowAlignBytes, char *STRING, size_t LENGTH)
+    { (const Image& image, drawBitmapType_t drawBitmapType, std::uint32_t rowAlignBytes, char* buffer, size_t bufferSize) };
+
+
 // Declare which methods return an object that should be
 // managed by the client.
 ////////////////////////////////////////////////////////
@@ -67,32 +90,10 @@
 
 %newobject imebra::WritingDataHandlerNumeric::getMemory;
 
-%include <std_string.i>
-%include <std_wstring.i>
-
-%include <exception.i>
-%include <stdint.i>
-%include <std_except.i>
-%include <std_vector.i>
-%include <std_map.i>
-
-%apply int[] {int *};
-%template(FileParts) std::vector<std::string>;
-%template(Groups) std::vector<std::uint16_t>;
-%template(TagsIds) std::vector<imebra::TagId>;
-%template(VOIs) std::vector<imebra::VOIDescription>;
-
-%apply(const Image& image, drawBitmapType_t drawBitmapType, std::uint32_t rowAlignBytes, char *STRING, size_t LENGTH)
-    { (const Image& image, drawBitmapType_t drawBitmapType, std::uint32_t rowAlignBytes, char* buffer, size_t bufferSize) };
-
-
-%{
-#include "../library/include/imebra/imebra.h"
-%}
 
 %include "../library/include/imebra/tagsEnumeration.h"
-%include "../library/include/imebra/definitions.h"
 %include "../library/include/imebra/tagId.h"
+%include "../library/include/imebra/definitions.h"
 %include "../library/include/imebra/readMemory.h"
 %include "../library/include/imebra/readWriteMemory.h"
 %include "../library/include/imebra/memoryPool.h"
