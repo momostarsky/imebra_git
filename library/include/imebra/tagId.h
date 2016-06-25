@@ -30,6 +30,9 @@ namespace imebra
 class IMEBRA_API TagId
 {
 public:
+
+    TagId(){}
+
     /// \brief Constructor.
     ///
     /// \param groupId    the group id
