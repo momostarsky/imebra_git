@@ -1,7 +1,6 @@
 %module imebra
 
 #ifdef SWIGJAVA
-	%javaconst(1);
 	%include <arrays_java.i>
 	%include <enums.swg>
 	%apply(char *STRING, size_t LENGTH) { (const char *source, size_t sourceSize) };
