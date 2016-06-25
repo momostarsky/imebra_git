@@ -12,6 +12,10 @@ $fileHeader$
 namespace imebra
 {
 
+TagId::TagId()
+{
+}
+
 TagId::TagId(std::uint16_t groupId, std::uint16_t tagId):
     m_groupId(groupId), m_groupOrder(0), m_tagId(tagId)
 {
