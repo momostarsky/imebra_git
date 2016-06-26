@@ -12,7 +12,7 @@ $fileHeader$
 namespace imebra
 {
 
-TagId::TagId()
+TagId::TagId(): m_groupId(0), m_groupOrder(0), m_tagId(0)
 {
 }
 

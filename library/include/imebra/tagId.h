@@ -31,7 +31,12 @@ class IMEBRA_API TagId
 {
 public:
 
-    TagId(){}
+    /// \brief Default constructor.
+    ///
+    /// Initializes the group id and the tag id to 0.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    TagId();
 
     /// \brief Constructor.
     ///
