@@ -2,10 +2,10 @@ Loading & saving classes
 ========================
 
 The classes described in this section are used to load and store DICOM structures
-stored in the class imebra::DataSet.
+(represented by the class :cpp:class:`imebra::DataSet`).
 
-The easiest way to load and store a DataSet object is by using the static methods
-of the imebra::CodecFactory class.
+The easiest way to load and store an :cpp:class:`imebra::DataSet` object is by using the static methods
+of the :cpp:class:`imebra::CodecFactory` class.
 
 
 BaseStreamInput

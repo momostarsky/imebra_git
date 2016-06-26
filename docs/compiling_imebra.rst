@@ -12,8 +12,11 @@ The Imebra Source Distribution includes:
 - pre-generated JNI headers for Java
 
 
+Compiling the C++ version of Imebra
+-----------------------------------
+
 Prerequisites
--------------
+.............
 
 In order to build the library from the Imebra Source Distribution you need:
 
@@ -22,8 +25,8 @@ In order to build the library from the Imebra Source Distribution you need:
 - JDK (only if you want to build the Java version)
 - Android SDK & NDK (only if you want to build the Android version)
 
-Compiling the C++ version of Imebra
------------------------------------
+Building Imebra
+...............
 
 The library folder contains a CMakeLists file, which contains the information needed by
 CMake to generata a solution file for your platform (a make file, a VisualStudio solution, etc).
@@ -48,6 +51,37 @@ make file on Linux, a VisualStudio solution of Windows, an XCode project on Mac.
 
 The second CMake command with the --build option will launch make, VisualStudio or the build
 chain defined on your machine.
+
+
+Compiling the Android version of Imebra
+---------------------------------------
+
+Prerequisites
+.............
+
+In order to build the Android version of Imebra you need:
+
+- the Android SDK
+- the Android NDK
+
+Building Imebra
+...............
+
+The Android version of the library needs both the Java source code (located in the wrappers/javaWrapper folder)
+and the C++ source code (located in the library folder)
+
+To generate the Imebra Jar library:
+
+1. cd into the Imebra wrappers/javaWrapper folder
+2. run ant and define the properties sdk.dir and ndk.dir to the home folder of the Android SDK and NDK respectively
+3. the produced JAR will be located in the folder wrappers/javaWrapper/out/artifacts
+
+For instance:
+::
+
+    cd wrappers/javaWrapper
+    ant -Dsdk.dir=path/to/Android/SDK -Dndk.dir=path/to/Android/NDK
+    
 
 
 
