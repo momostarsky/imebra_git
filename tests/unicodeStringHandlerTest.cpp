@@ -18,8 +18,7 @@ TEST(unicodeStringHandlerTest, unicodeTest)
     {
         charsetsList_t charsets;
         charsets.push_back("ISO_IR 6");
-        DataSet testDataSet(charsets);
-        testDataSet.setString(TagId(0x2, 0x10), "1.2.840.10008.1.2.1");
+        DataSet testDataSet("1.2.840.10008.1.2.1", charsets);
 
         {
             std::unique_ptr<WritingDataHandler> handler(testDataSet.getWritingDataHandler(TagId(0x10, 0x10), 0));
@@ -58,8 +57,7 @@ TEST(unicodeStringHandlerTest, iso2022Test)
     {
         charsetsList_t charsets;
         charsets.push_back("ISO 2022 IR 6");
-        DataSet testDataSet(charsets);
-        testDataSet.setString(TagId(0x2, 0x10), "1.2.840.10008.1.2.1");
+        DataSet testDataSet("1.2.840.10008.1.2.1", charsets);
 
         {
             std::unique_ptr<WritingDataHandler> handler(testDataSet.getWritingDataHandler(TagId(0x10, 0x10), 0));
@@ -94,8 +92,7 @@ TEST(unicodeStringHandlerTest, supplementaryUnicodeChars)
     {
         charsetsList_t charsets;
         charsets.push_back("ISO_IR 192");
-        DataSet testDataSet(charsets);
-        testDataSet.setString(TagId(0x2, 0x10), "1.2.840.10008.1.2.1");
+        DataSet testDataSet("1.2.840.10008.1.2.1", charsets);
 
         {
             std::unique_ptr<WritingDataHandler> handler(testDataSet.getWritingDataHandler(TagId(0x10, 0x10), 0));
@@ -133,8 +130,7 @@ TEST(unicodeStringHandlerTest, unicodeNumericConversion)
     {
         charsetsList_t charsets;
         charsets.push_back("ISO_IR 6");
-        DataSet testDataSet(charsets);
-        testDataSet.setString(TagId(0x2, 0x10), "1.2.840.10008.1.2.1");
+        DataSet testDataSet("1.2.840.10008.1.2.1", charsets);
 
         {
             std::unique_ptr<WritingDataHandler> handler(testDataSet.getWritingDataHandler(TagId(0x10, 0x10), 0));

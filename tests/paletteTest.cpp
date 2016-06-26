@@ -11,7 +11,7 @@ namespace tests
 // A buffer initialized to a default data type should use the data type OB
 TEST(paletteTest, testPalette)
 {
-    DataSet testDataSet;
+    DataSet testDataSet("1.2.840.10008.1.2.1");
 
     {
         std::unique_ptr<WritingDataHandlerNumeric> redDescriptor(testDataSet.getWritingDataHandlerNumeric(TagId(tagId_t::RedPaletteColorLookupTableDescriptor_0028_1101), 0, tagVR_t::US));
@@ -59,7 +59,7 @@ TEST(paletteTest, testPalette)
         }
     }
 
-    testDataSet.setImage(0, paletteImage, "1.2.840.10008.1.2.1", imageQuality_t::veryHigh);
+    testDataSet.setImage(0, paletteImage, imageQuality_t::veryHigh);
     testDataSet.setString(TagId(tagId_t::PhotometricInterpretation_0028_0004), "PALETTE COLOR");
 
     std::unique_ptr<Transform> colorTransform(ColorTransformsFactory::getTransform("PALETTE COLOR", "RGB"));

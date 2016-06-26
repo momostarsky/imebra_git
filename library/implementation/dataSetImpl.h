@@ -76,7 +76,9 @@ class dataSet : public std::enable_shared_from_this<dataSet>
 public:
 	// Costructor
 	///////////////////////////////////////////////////////////
-    dataSet(): m_itemOffset(0) {}
+    dataSet();
+
+    dataSet(const std::string& transferSyntax);
 
 	///////////////////////////////////////////////////////////
 	/// \name Get/set groups/tags
@@ -199,14 +201,11 @@ public:
 	///                    The first frame's id is 0.
 	/// @param pImage      A pointer to the image object to
 	///                     be stored into the data set.
-	/// @param transferSyntax the transfer syntax that
-	///                     specifies the codec and the 
-	///                     parameters to use for the encoding
 	/// @param quality     an enumeration that set the 
 	///                     compression quality
 	///
 	///////////////////////////////////////////////////////////
-    void setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage, const std::string& transferSyntax, imageQuality_t quality);
+    void setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage, imageQuality_t quality);
 
     /// \brief Retrieve the first and the last buffers used
     ///         to store the image.

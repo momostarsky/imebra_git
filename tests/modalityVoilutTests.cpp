@@ -22,10 +22,10 @@ TEST(modalityVoilut, voilutUnsigned8)
         unsigned8Handler->setUnsignedLong(5, 50);
     }
 
-    DataSet testDataSet;
+    DataSet testDataSet("1.2.840.10008.1.2.1");
     testDataSet.setDouble(TagId(tagId_t::RescaleSlope_0028_1053), 2);
     testDataSet.setDouble(TagId(tagId_t::RescaleIntercept_0028_1052), -1);
-    testDataSet.setImage(0, unsigned8, "1.2.840.10008.1.2.1", imageQuality_t::veryHigh);
+    testDataSet.setImage(0, unsigned8, imageQuality_t::veryHigh);
 
     {
         ModalityVOILUT voilut(testDataSet);
@@ -73,8 +73,8 @@ TEST(modalityVoilut, voilutUnsigned8LUT)
         unsigned8Handler->setUnsignedLong(5, 5);
     }
 
-    DataSet testDataSet;
-    testDataSet.setImage(0, unsigned8, "1.2.840.10008.1.2.1", imageQuality_t::veryHigh);
+    DataSet testDataSet("1.2.840.10008.1.2.1");
+    testDataSet.setImage(0, unsigned8, imageQuality_t::veryHigh);
     std::unique_ptr<Tag> sequenceTag(testDataSet.getTagCreate(TagId(tagId_t::ModalityLUTSequence_0028_3000)));
     DataSet lutItem;
     {

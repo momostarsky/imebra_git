@@ -16,7 +16,8 @@ TEST(jpegCodecTest, testBaseline)
         std::uint32_t bits = precision == 0 ? 7 : 11;
         std::cout << "Testing baseline jpeg (" << (bits + 1) << " bits)"<< std::endl;
 
-        DataSet dataset;
+        std::string transferSyntax = precision == 0 ? "1.2.840.10008.1.2.4.50" : "1.2.840.10008.1.2.4.51";
+        DataSet dataset(transferSyntax);
 
         std::uint32_t width = 600;
         std::uint32_t height = 400;
@@ -31,13 +32,12 @@ TEST(jpegCodecTest, testBaseline)
 		if(precision == 0)
 		{
             fileName = L"testDicomLossyJpeg8bit.dcm";
-            dataset.setImage(0, *ybrImage, "1.2.840.10008.1.2.4.50", imageQuality_t::veryHigh);
 		}
 		else
 		{
 			fileName = L"testDicomLossyJpeg12bit.dcm";
-            dataset.setImage(0, *ybrImage, "1.2.840.10008.1.2.4.51", imageQuality_t::veryHigh);
 		}
+        dataset.setImage(0, *ybrImage, imageQuality_t::veryHigh);
 
         CodecFactory::save(dataset, fileName, codecType_t::dicom);
 
@@ -124,7 +124,9 @@ TEST(jpegCodecTest, testLossless)
                                      ", colorSpace=" << (colorSpace == 0 ? "RGB" : "MONOCHROME2") <<
                                      ")"<< std::endl;
 
-                        DataSet dataset;
+                        std::string transferSyntax = (firstOrderPrediction == 0) ? "1.2.840.10008.1.2.4.57" : "1.2.840.10008.1.2.4.70";
+
+                        DataSet dataset(transferSyntax);
 
                         std::uint32_t width = 115;
                         std::uint32_t height = 400;
@@ -141,12 +143,11 @@ TEST(jpegCodecTest, testLossless)
 
                         std::unique_ptr<Image> image(buildImageForTest(width, height, depth, bits, 30, 20, colorSpace == 0 ? "RGB" : "MONOCHROME2", 50));
 
-                        std::string transferSyntax = (firstOrderPrediction == 0) ? "1.2.840.10008.1.2.4.57" : "1.2.840.10008.1.2.4.70";
 
                         ReadWriteMemory savedJpeg;
                         {
                             DataSet dataSet;
-                            dataSet.setImage(0, *image, transferSyntax, imageQuality_t::veryHigh);
+                            dataSet.setImage(0, *image, imageQuality_t::veryHigh);
 
                             MemoryStreamOutput saveStream(savedJpeg);
                             StreamWriter writer(saveStream);

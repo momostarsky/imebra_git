@@ -37,9 +37,9 @@ TEST(dataSetTest, testFragmentation)
         "RGB",
 		20));
 
-    imebra::DataSet testDataSet;
-    testDataSet.setImage(0, *testImage0, "1.2.840.10008.1.2.4.70", imageQuality_t::high);
-    testDataSet.setImage(1, *testImage1, "1.2.840.10008.1.2.4.70", imageQuality_t::high);
+    imebra::DataSet testDataSet("1.2.840.10008.1.2.4.70");
+    testDataSet.setImage(0, *testImage0, imageQuality_t::high);
+    testDataSet.setImage(1, *testImage1, imageQuality_t::high);
 
     // Verify the two images
     std::unique_ptr<Image> verifyImage0(testDataSet.getImage(0));

@@ -21,7 +21,14 @@ DataSet::DataSet(): m_pDataSet(std::make_shared<imebra::implementation::dataSet>
     m_pDataSet->setCharsetsList(list);
 }
 
-DataSet::DataSet(const charsetsList_t& charsets): m_pDataSet(std::make_shared<imebra::implementation::dataSet>())
+DataSet::DataSet(const std::string& transferSyntax): m_pDataSet(std::make_shared<imebra::implementation::dataSet>(transferSyntax))
+{
+    implementation::charsetsList::tCharsetsList list;
+    list.push_back("ISO 2022 IR 6");
+    m_pDataSet->setCharsetsList(list);
+}
+
+DataSet::DataSet(const std::string& transferSyntax, const charsetsList_t& charsets): m_pDataSet(std::make_shared<imebra::implementation::dataSet>(transferSyntax))
 {
     implementation::charsetsList::tCharsetsList list;
     for(charsetsList_t::const_iterator scanCharsets(charsets.begin()), endCharsets(charsets.end()); scanCharsets != endCharsets; ++scanCharsets)
@@ -94,9 +101,9 @@ Image* DataSet::getImageApplyModalityTransform(size_t frameNumber)
     return new Image(m_pDataSet->getModalityImage((std::uint32_t)frameNumber));
 }
 
-void DataSet::setImage(size_t frameNumber, const Image& image, const std::string& transferSyntax, imageQuality_t quality)
+void DataSet::setImage(size_t frameNumber, const Image& image, imageQuality_t quality)
 {
-    m_pDataSet->setImage((std::uint32_t)frameNumber, image.m_pImage, transferSyntax, quality);
+    m_pDataSet->setImage((std::uint32_t)frameNumber, image.m_pImage, quality);
 }
 
 DataSet* DataSet::getSequenceItem(const TagId& tagId, size_t itemId)

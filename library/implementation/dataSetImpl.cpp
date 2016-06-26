@@ -47,6 +47,16 @@ namespace implementation
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 
+dataSet::dataSet(): m_itemOffset(0)
+{
+    setString(0x0002, 0x0, 0x0010, 0, "1.2.840.10008.1.2.1");
+}
+
+dataSet::dataSet(const std::string& transferSyntax): m_itemOffset(0)
+{
+    setString(0x0002, 0x0, 0x0010, 0, transferSyntax);
+}
+
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 //
@@ -388,7 +398,7 @@ std::shared_ptr<image> dataSet::getModalityImage(std::uint32_t frameNumber) cons
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage, const std::string& transferSyntax, imageQuality_t quality)
+void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage, imageQuality_t quality)
 {
     IMEBRA_FUNCTION_START();
 
@@ -404,13 +414,7 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
         IMEBRA_THROW(DataSetWrongFrameError, "The frames must be inserted in sequence");
 	}
 	bool bDontChangeAttributes = (numberOfFrames != 0);
-	if(bDontChangeAttributes)
-	{
-        if(transferSyntax != getString(0x0002, 0x0, 0x0010, 0, 0))
-        {
-            IMEBRA_THROW(DataSetDifferentFormatError, "Previous images had a different transfer syntax");
-        }
-	}
+    std::string transferSyntax = getString(0x0002, 0x0, 0x0010, 0, 0, "1.2.840.10008.1.2");
 
 	// Select the right codec
 	///////////////////////////////////////////////////////////

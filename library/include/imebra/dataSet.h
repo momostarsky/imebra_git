@@ -67,12 +67,15 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
 	DataSet();
 
+    DataSet(const std::string& transferSyntax);
+
     /// \brief Construct an empty dicom dataset and specifies the default charsets.
     ///
     /// \param charsets a list of charsets supported by the DataSet
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    DataSet(const charsetsList_t& charsets);
+    DataSet(const std::string& transferSyntax, const charsetsList_t& charsets);
+
 
     /// \brief Destructor.
     ///
@@ -169,13 +172,11 @@ public:
     ///
     /// \param frameNumber    the frame number (the first frame is 0)
     /// \param image          the image
-    /// \param transferSyntax the transfer syntax. This influence also the format
-    ///                        used to store the entire dataset
     /// \param quality        the quality to use for lossy compression. Ignored
     ///                        if lossless compression is used
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    void setImage(size_t frameNumber, const Image& image, const std::string& transferSyntax, imageQuality_t quality);
+    void setImage(size_t frameNumber, const Image& image, imageQuality_t quality);
 
     /// \brief Return the list of VOI settings stored in the DataSet.
     ///

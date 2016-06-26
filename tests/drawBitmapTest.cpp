@@ -25,8 +25,8 @@ TEST(drawBitmapTest, testDrawBitmapRGB)
                                       "RGB",
 					50));
 
-            DataSet testDataSet;
-            testDataSet.setImage(0, *testImage, "1.2.840.10008.1.2", imageQuality_t::high);
+            DataSet testDataSet("1.2.840.10008.1.2");
+            testDataSet.setImage(0, *testImage, imageQuality_t::high);
 
             DrawBitmap testDraw;
             std::unique_ptr<ReadWriteMemory> bitmapBuffer(testDraw.getBitmap(*testImage, drawBitmapType_t::drawBitmapRGB, 1));
@@ -101,8 +101,8 @@ TEST(drawBitmapTest, testDrawBitmapBGR)
                                       "RGB",
                     50));
 
-            DataSet testDataSet;
-            testDataSet.setImage(0, *testImage, "1.2.840.10008.1.2", imageQuality_t::high);
+            DataSet testDataSet("1.2.840.10008.1.2");
+            testDataSet.setImage(0, *testImage, imageQuality_t::high);
 
             DrawBitmap testDraw;
             std::unique_ptr<ReadWriteMemory> bitmapBuffer(testDraw.getBitmap(*testImage, drawBitmapType_t::drawBitmapBGR, 4));
@@ -177,8 +177,8 @@ TEST(drawBitmapTest, testDrawBitmapRGBA)
                                       "RGB",
                     50));
 
-            DataSet testDataSet;
-            testDataSet.setImage(0, *testImage, "1.2.840.10008.1.2", imageQuality_t::high);
+            DataSet testDataSet("1.2.840.10008.1.2");
+            testDataSet.setImage(0, *testImage, imageQuality_t::high);
 
             DrawBitmap testDraw;
             std::unique_ptr<ReadWriteMemory> bitmapBuffer(testDraw.getBitmap(*testImage, drawBitmapType_t::drawBitmapRGBA, 1));
@@ -253,8 +253,8 @@ TEST(drawBitmapTest, testDrawBitmapBGRA)
                                       "RGB",
                     50));
 
-            DataSet testDataSet;
-            testDataSet.setImage(0, *testImage, "1.2.840.10008.1.2", imageQuality_t::high);
+            DataSet testDataSet("1.2.840.10008.1.2");
+            testDataSet.setImage(0, *testImage, imageQuality_t::high);
 
             DrawBitmap testDraw;
             std::unique_ptr<ReadWriteMemory> bitmapBuffer(testDraw.getBitmap(*testImage, drawBitmapType_t::drawBitmapBGRA, 4));

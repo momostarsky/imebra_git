@@ -149,7 +149,7 @@ TEST(dicomCodecTest, testDicom)
 
                         ReadWriteMemory streamMemory;
                         {
-                            DataSet testDataSet;
+                            DataSet testDataSet(transferSyntax);
                             std::unique_ptr<WritingDataHandler> writingDataHandler(testDataSet.getWritingDataHandler(TagId(0x0010, 0x0010), 0));
                             writingDataHandler->setString(0, "AAAaa");
                             writingDataHandler->setString(1, "BBBbbb");
@@ -157,9 +157,9 @@ TEST(dicomCodecTest, testDicom)
                             writingDataHandler.reset();
                             testDataSet.setDouble(TagId(tagId_t::TimeRange_0008_1163), 50.6);
                             testDataSet.setUnsignedLong(TagId(imebra::tagId_t::PlanarConfiguration_0028_0006), 1 - interleaved);
-                            testDataSet.setImage(0, *dicomImage0, transferSyntax, quality);
-                            testDataSet.setImage(1, *dicomImage1, transferSyntax, quality);
-                            testDataSet.setImage(2, *dicomImage2, transferSyntax, quality);
+                            testDataSet.setImage(0, *dicomImage0, quality);
+                            testDataSet.setImage(1, *dicomImage1, quality);
+                            testDataSet.setImage(2, *dicomImage2, quality);
 
                             MemoryStreamOutput writeStream(streamMemory);
                             StreamWriter writer(writeStream);
@@ -245,8 +245,8 @@ TEST(dicomCodecTest, testDicom32bit)
 
         ReadWriteMemory streamMemory;
         {
-            DataSet testDataSet;
-            testDataSet.setImage(0, *dicomImage, transferSyntax, imageQuality_t::veryHigh);
+            DataSet testDataSet(transferSyntax);
+            testDataSet.setImage(0, *dicomImage, imageQuality_t::veryHigh);
 
             MemoryStreamOutput writeStream(streamMemory);
             StreamWriter writer(writeStream);

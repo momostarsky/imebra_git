@@ -111,7 +111,7 @@ int main(int argc, char* argv[])
 
 
 		// Now we create a new dataset and copy the tags and images from the loaded dataset
-        DataSet newDataSet;
+        DataSet newDataSet(transferSyntax);
 
 		// Copy the images first
 		try
@@ -119,7 +119,7 @@ int main(int argc, char* argv[])
             for(size_t scanImages(0);; ++scanImages)
 			{
                 std::unique_ptr<Image> copyImage(loadedDataSet->getImage(scanImages));
-                newDataSet.setImage(scanImages, *copyImage, transferSyntax, imageQuality_t::high);
+                newDataSet.setImage(scanImages, *copyImage, imageQuality_t::high);
 			}
 		}
         catch(const DataSetImageDoesntExistError&)
