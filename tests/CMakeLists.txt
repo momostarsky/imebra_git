@@ -37,6 +37,10 @@ endif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 file(GLOB imebra_tests_include "${CMAKE_CURRENT_SOURCE_DIR}/*.h")
 file(GLOB imebra_tests_src "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
 
+if("${gtest_include}" STREQUAL "")
+    set(gtest_include ".")
+endif("${gtest_include}" STREQUAL "")
+
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../library/include)
 
 add_executable(ImebraTests
