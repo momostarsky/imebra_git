@@ -41,7 +41,7 @@ if("${gtest_include}" STREQUAL "")
     set(gtest_include ".")
 endif("${gtest_include}" STREQUAL "")
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../library/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../library/include ${gtest_include})
 
 add_executable(ImebraTests
     ${imebra_tests_include}
