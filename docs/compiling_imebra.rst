@@ -31,12 +31,12 @@ Building Imebra
 The library folder contains a CMakeLists file, which contains the information needed by
 CMake to generata a solution file for your platform (a make file, a VisualStudio solution, etc).
 
-To generate the solution file for your platform, execute the following steps:
+To generate the Imebra shared library, execute the following steps:
 
 1. Create a folder that will contain the result of the compilation (artifacts)
 2. cd into the created artifacts folder
 3. execute cmake with the path to the Imebra's library folder as parameter
-3. execute cmake with the --build option
+3. execute cmake with the --build option, and on Windows optionally specify the build configuration
 
 For instance:
 ::
@@ -51,6 +51,18 @@ make file on Linux, a VisualStudio solution of Windows, an XCode project on Mac.
 
 The second CMake command with the --build option will launch make, VisualStudio or the build
 chain defined on your machine.
+
+On Windows, the last cmake command can be followed by --config release or --config debug, like
+this:
+::
+
+    cmake --build . --config release
+
+or
+::
+
+    cmake --build . --config debug
+
 
 
 Compiling the Android version of Imebra
@@ -83,6 +95,37 @@ For instance:
     ant -Dsdk.dir=path/to/Android/SDK -Dndk.dir=path/to/Android/NDK
     
 
+
+Compiling the test units
+------------------------
+
+Prerequisites
+.............
+
+In order to build and execute the tests you need:
+
+- a compiled gtest library and its include file (get it here https://github.com/google/googletest)
+- the compiled C++ version of Imebra
+
+Building the tests
+..................
+
+To compile te tests, execute the following steps:
+
+1. create a folder that will contain the test units executable
+2. cd into the created folder
+3. run cmake with the path to the tests/CMakeLists.txt as parameter. You can also define the
+   CMake variables imebra_library, gtest_library and gtest_include with the path to the
+   imebra library, gtest library and gtest include folder respectively
+4. run cmake --build .
+
+For instance:
+::
+
+    md tests_artifacts
+    cd tests_artifacts
+    cmake -Dimebra_library="path/to/imebra/library" -Dgtest_library="path/to/gtest/library" -Dgtest_include="path/to/gtest/include" imebra_location/tests
+    cmake --build .
 
 
 
