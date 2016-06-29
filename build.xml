@@ -44,6 +44,9 @@
 		<copy todir="${build_release}/docs">
 			<fileset dir="docs" />
 		</copy>
+		<copy todir="${build_release}/wrappers">
+			<fileset dir="wrappers" />
+		</copy>
 		<copy todir="${build_release}" file="build.xml" />
 		<copy todir="${build_release}" file="readme.md" />
 	</target>
@@ -174,6 +177,9 @@ The author can be contacted by email at info@binarno.com or by mail at
 		</copy>
 		<copy todir="${source_distribution}/tests">
 			<fileset dir="${build_release}/tests" />
+		</copy>
+		<copy todir="${source_distribution}/wrappers">
+			<fileset dir="${build_release}/wrappers" />
 		</copy>
 		<copy todir="${source_distribution}/docs/html">
 			<fileset dir="${build_release}/docs/html" />
