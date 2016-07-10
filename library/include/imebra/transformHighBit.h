@@ -2,8 +2,8 @@
 $fileHeader$
 */
 
-/*! \file transformChain.h
-    \brief Declaration of TransformsHighBit.
+/*! \file transformHighBit.h
+    \brief Declaration of TransformHighBit.
 
 */
 

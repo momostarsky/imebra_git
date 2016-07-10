@@ -86,7 +86,7 @@ and the C++ source code (located in the library folder)
 To generate the Imebra Jar library:
 
 1. cd into the Imebra wrappers/javaWrapper folder
-2. run ant and define the properties sdk.dir and ndk.dir to the home folder of the Android SDK and NDK respectively
+2. run ant and define the properties sdk.dir and ndk.dir so they point to the home folders of the Android SDK and NDK respectively
 3. the produced JAR will be located in the folder wrappers/javaWrapper/out/artifacts
 
 For instance:

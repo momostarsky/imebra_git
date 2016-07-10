@@ -53,6 +53,15 @@ Imebra
    memory_management_classes
    transforms_classes
    dicom_dictionary_classes
+   exception_classes
+
+.. _build-distribution:
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Build distributions
+
+   build_distribution
 
 
    

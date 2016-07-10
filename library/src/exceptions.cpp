@@ -164,16 +164,10 @@ TransformInvalidAreaError::TransformInvalidAreaError(const std::string& message)
 TransformDifferentHighBitError::TransformDifferentHighBitError(const std::string &message): TransformError(message)
 {}
 
-TransformsChainError::TransformsChainError(const std::string& message): TransformError(message)
-{}
-
 ColorTransformError::ColorTransformError(const std::string& message): TransformError(message)
 {}
 
 ColorTransformWrongColorSpaceError::ColorTransformWrongColorSpaceError(const std::string& message): ColorTransformError(message)
-{}
-
-ColorTransformWrongSizeError::ColorTransformWrongSizeError(const std::string& message): ColorTransformError(message)
 {}
 
 ColorTransformsFactoryError::ColorTransformsFactoryError(const std::string& message): TransformError(message)
@@ -195,9 +189,6 @@ StreamJpegTagInStreamError::StreamJpegTagInStreamError(const std::string& messag
 {}
 
 ModalityVOILUTError::ModalityVOILUTError(const std::string& message): TransformError(message)
-{}
-
-PALETTECOLORToRGBError::PALETTECOLORToRGBError(const std::string& message): ColorTransformError(message)
 {}
 
 DicomCodecError::DicomCodecError(const std::string& message): CodecError(message)

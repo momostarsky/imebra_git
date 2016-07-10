@@ -76,9 +76,9 @@ public:
     /// \param drawBitmapType the type of bitmap to generate
     /// \param rowAlignBytes  the number of bytes on which the bitmap rows are
     ///                       aligned
-    /// \param buffer         a pointer to the pre-allocated buffer where
+    /// \param destination    a pointer to the pre-allocated buffer where
     ///                       getBitmap() will store the generated bitmap
-    /// \param bufferSize     the size of the allocated buffer
+    /// \param destinationSize the size of the allocated buffer
     /// \return the number of bytes occupied by the bitmap in the pre-allocated
     ///         buffer. If the number of occupied bytes is bigger than the value
     ///         of the parameter bufferSize then the method doesn't generate

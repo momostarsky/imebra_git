@@ -2,7 +2,7 @@
 $fileHeader$
 */
 
-/*! \file transformChain.h
+/*! \file transformsChain.h
     \brief Declaration of TransformsChain.
 
 */
