@@ -18,12 +18,8 @@ TEST(dicomCodecTest, testDicom)
     std::uint32_t interleavedStart = 0;
     std::uint32_t signStep = 1;
 
-    if(::tests::settings::getSettings().get("--fast") == "1")
-    {
-        highBitStep = 4;
-        interleavedStart = 1;
-        signStep = 2;
-    }
+    std::uint32_t sizeX(301);
+    std::uint32_t sizeY(201);
 
     for(int transferSyntaxId(0); transferSyntaxId != 4; ++transferSyntaxId)
 	{
@@ -57,24 +53,24 @@ TEST(dicomCodecTest, testDicom)
                         if(ColorTransformsFactory::isSubsampledY(colorSpace) || ColorTransformsFactory::isSubsampledX(colorSpace))
                         {
                             dicomImage0.reset(buildSubsampledImage(
-                                    301,
-                                    201,
+                                    sizeX,
+                                    sizeY,
                                     depth,
                                     highBit,
                                     30,
                                     20,
                                     colorSpace));
                             dicomImage1.reset(buildSubsampledImage(
-                                    301,
-                                    201,
+                                    sizeX,
+                                    sizeY,
                                     depth,
                                     highBit,
                                     30,
                                     20,
                                     colorSpace));
                             dicomImage2.reset(buildSubsampledImage(
-                                    301,
-                                    201,
+                                    sizeX,
+                                    sizeY,
                                     depth,
                                     highBit,
                                     30,
@@ -84,8 +80,8 @@ TEST(dicomCodecTest, testDicom)
                         else
                         {
                             dicomImage0.reset(buildImageForTest(
-                                    301,
-                                    201,
+                                    sizeX,
+                                    sizeY,
                                     depth,
                                     highBit,
                                     30,
@@ -93,8 +89,8 @@ TEST(dicomCodecTest, testDicom)
                                     colorSpace,
                                     1));
                             dicomImage1.reset(buildImageForTest(
-                                    301,
-                                    201,
+                                    sizeX,
+                                    sizeY,
                                     depth,
                                     highBit,
                                     30,
@@ -102,8 +98,8 @@ TEST(dicomCodecTest, testDicom)
                                     colorSpace,
                                     100));
                             dicomImage2.reset(buildImageForTest(
-                                    301,
-                                    201,
+                                    sizeX,
+                                    sizeY,
                                     depth,
                                     highBit,
                                     30,
@@ -182,13 +178,17 @@ TEST(dicomCodecTest, testDicom)
                             std::unique_ptr<Image> checkImage1(testDataSet->getImage(1));
                             std::unique_ptr<Image> checkImage2(testDataSet->getImage(2));
 
-                            std::cout << " DIFF: " << compareImages(*checkImage0, *dicomImage0) << std::endl;
-                            std::cout << " DIFF: " << compareImages(*checkImage1, *dicomImage1) << std::endl;
-                            std::cout << " DIFF: " << compareImages(*checkImage2, *dicomImage2) << std::endl;
+                            ASSERT_TRUE(identicalImages(*checkImage0, *dicomImage0));
+                            ASSERT_TRUE(identicalImages(*checkImage1, *dicomImage1));
+                            ASSERT_TRUE(identicalImages(*checkImage2, *dicomImage2));
 
-                            ASSERT_EQ(0, compareImages(*checkImage0, *dicomImage0));
-                            ASSERT_EQ(0, compareImages(*checkImage1, *dicomImage1));
-                            ASSERT_EQ(0, compareImages(*checkImage2, *dicomImage2));
+                            //std::cout << " DIFF: " << compareImages(*checkImage0, *dicomImage0) << std::endl;
+                            //std::cout << " DIFF: " << compareImages(*checkImage1, *dicomImage1) << std::endl;
+                            //std::cout << " DIFF: " << compareImages(*checkImage2, *dicomImage2) << std::endl;
+
+                            //ASSERT_EQ(0, compareImages(*checkImage0, *dicomImage0));
+                            //ASSERT_EQ(0, compareImages(*checkImage1, *dicomImage1));
+                            //ASSERT_EQ(0, compareImages(*checkImage2, *dicomImage2));
                         }
                     }
 				}

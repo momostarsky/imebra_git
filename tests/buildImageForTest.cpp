@@ -1,5 +1,7 @@
 #include <imebra/imebra.h>
 #include <stdlib.h>
+#include <memory.h>
+
 namespace imebra
 {
 
@@ -165,6 +167,52 @@ double compareImages(const imebra::Image& image0, const imebra::Image& image1)
 	return difference;
 }
 
+bool identicalImages(const imebra::Image& image0, const imebra::Image& image1)
+{
+    size_t width0(image0.getWidth()), height0(image0.getHeight());
+    size_t width1(image1.getWidth()), height1(image1.getHeight());
+
+    if(width0 != width1 || height0 != height1)
+    {
+        return false;
+    }
+
+    std::uint32_t channelsNumber0(image0.getChannelsNumber());
+    std::uint32_t channelsNumber1(image1.getChannelsNumber());
+    if(channelsNumber0 != channelsNumber1)
+    {
+        return false;
+    }
+
+    std::unique_ptr<ReadingDataHandlerNumeric> hImage0(image0.getReadingDataHandler());
+    std::unique_ptr<ReadingDataHandlerNumeric> hImage1(image1.getReadingDataHandler());
+
+    std::uint32_t highBit0 = image0.getHighBit();
+    std::uint32_t highBit1 = image1.getHighBit();
+    if(highBit0 != highBit1)
+    {
+        return false;
+    }
+
+    bitDepth_t depth0 = image0.getDepth();
+    bitDepth_t depth1 = image1.getDepth();
+    if(depth0 != depth1)
+    {
+        return false;
+    }
+
+    if(width0 == 0 || height0 == 0)
+    {
+        return true;
+    }
+
+    std::unique_ptr<ReadMemory> memory0(hImage0->getMemory());
+    std::unique_ptr<ReadMemory> memory1(hImage1->getMemory());
+    size_t dataSize0, dataSize1;
+    const char* pData0(memory0->data(&dataSize0));
+    const char* pData1(memory1->data(&dataSize1));
+    return ::memcmp(pData0, pData1, dataSize0) == 0;
+}
 
 } // namespace tests
 

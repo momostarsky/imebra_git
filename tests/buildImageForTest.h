@@ -30,6 +30,8 @@ namespace tests
 
     double compareImages(const Image& image0, const Image& image1);
 
+    bool identicalImages(const imebra::Image& image0, const imebra::Image& image1);
+
 
 } // namespace tests
 
