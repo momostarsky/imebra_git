@@ -62,14 +62,48 @@ private:
     DataSet(std::shared_ptr<imebra::implementation::dataSet> pDataSet);
 #endif
 public:
-    /// \brief Construct an empty dicom dataset.
+    /// \brief Construct an empty dicom dataset with transfer syntax
+    ///        "1.2.840.10008.1.2.1" (Explicit VR little endian) and charset
+    ///        "ISO 2022 IR 6".
     ///
     ///////////////////////////////////////////////////////////////////////////////
 	DataSet();
 
+    /// \brief Construct an empty dicom dataset with charset "ISO 2022 IR 6" and
+    ///        the desidered transfer syntax.
+    ///
+    /// \param transferSyntax the dataSet's transfer syntax. The following transfer
+    ///                       syntaxes are supported:
+    ///                       - "1.2.840.10008.1.2" (Implicit VR little endian)
+    ///                       - "1.2.840.10008.1.2.1" (Explicit VR little endian)
+    ///                       - "1.2.840.10008.1.2.2" (Explicit VR big endian)
+    ///                       - "1.2.840.10008.1.2.5" (RLE compression)
+    ///                       - "1.2.840.10008.1.2.4.50" (Jpeg baseline 8 bit
+    ///                         lossy)
+    ///                       - "1.2.840.10008.1.2.4.51" (Jpeg extended 12 bit
+    ///                         lossy)
+    ///                       - "1.2.840.10008.1.2.4.57" (Jpeg lossless NH)
+    ///                       - "1.2.840.10008.1.2.4.70" (Jpeg lossless NH first
+    ///                         order prediction)
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     DataSet(const std::string& transferSyntax);
 
     /// \brief Construct an empty dicom dataset and specifies the default charsets.
+    ///
+    /// \param transferSyntax the dataSet's transfer syntax. The following transfer
+    ///                       syntaxes are supported:
+    ///                       - "1.2.840.10008.1.2" (Implicit VR little endian)
+    ///                       - "1.2.840.10008.1.2.1" (Explicit VR little endian)
+    ///                       - "1.2.840.10008.1.2.2" (Explicit VR big endian)
+    ///                       - "1.2.840.10008.1.2.5" (RLE compression)
+    ///                       - "1.2.840.10008.1.2.4.50" (Jpeg baseline 8 bit
+    ///                         lossy)
+    ///                       - "1.2.840.10008.1.2.4.51" (Jpeg extended 12 bit
+    ///                         lossy)
+    ///                       - "1.2.840.10008.1.2.4.57" (Jpeg lossless NH)
+    ///                       - "1.2.840.10008.1.2.4.70" (Jpeg lossless NH first
+    ///                         order prediction)
     ///
     /// \param charsets a list of charsets supported by the DataSet
     ///

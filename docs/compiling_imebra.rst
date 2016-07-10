@@ -1,7 +1,8 @@
 Compiling Imebra
 ================
 
-If you want to compile Imebra from the source code, then you should download the Imebra Source Distribution.
+This section explain how to compile Imebra from the source distribution.
+
 The result of the Imebra compilation is a shared library for your operating system of choice.
 
 The Imebra Source Distribution includes:

@@ -23,9 +23,23 @@ class LUT;
 /// \brief A VOILUT transform enhances the visibility of a specific range of
 ///        brightness in an image.
 ///
+/// The client can use VOILUT in three ways:
+/// - by declaring the minimum and maximum values of the pixels that must be
+///   visible via the method setCenterWidth()
+/// - by declaring a LUT via the method setLUT()
+/// - by letting the transform calculate the most appropriate center/width
+///   values via the method applyOptimalVOI()
 ///
-/// VOILUTSequence_0028_3010
-/// DataSet::getVOIs() and applied with setCenterWidth().
+/// The DataSet may already supply suitable values for the methods
+/// setCenterWidth() and setLUT().
+///
+/// In order to retrieve from the DataSet the suggested center/width values,
+/// call DataSet.getVOIs().
+///
+/// To get from the DataSet a list of LUTs that can be used with the VOILUT
+/// transform use DataSet.getLUT(TagId(tagId_t::VOILUTSequence_0028_3010), X)
+/// where X is a 0 base index (the DataSet may provide more than one LUT for
+/// the VOILUT transform).
 ///
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API VOILUT: public Transform
