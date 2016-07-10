@@ -93,6 +93,8 @@ int main(int argc, char* argv[])
     std::wstring version(L"1.0.0.1");
     std::wcout << L"dicom2jpeg version " << version << std::endl;
 
+    imebra::CodecFactory::setMaximumImageSize(8000, 8000);
+
     try
     {
 
@@ -330,9 +332,11 @@ int main(int argc, char* argv[])
         return 0;
 
     }
-    catch(...)
+    catch(const std::exception& e)
     {
-        std::cout << ExceptionsManager::getExceptionTrace();
+        imebra::DataSet convertMessage;
+        convertMessage.setString(TagId(10, 10), imebra::ExceptionsManager::getExceptionTrace(), imebra::tagVR_t::LT);
+        std::wcout << std::endl << "Error: " << std::endl << convertMessage.getUnicodeString(TagId(10, 10), 0) << std::endl;
         return 1;
     }
 }
