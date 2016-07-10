@@ -67,13 +67,11 @@ public:
     MissingItemError(const std::string& message);
 };
 
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-/// \brief The base exception for all the exceptions
-///         thrown by the function in baseStream.
+
+/// \brief The base exception for all the exceptions thrown by the function
+///        in baseStream.
 ///
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API StreamError: public std::runtime_error
 {
 public:
@@ -146,11 +144,9 @@ public:
 };
 
 
-///////////////////////////////////////////////////////////
-/// \brief Base class for the exceptions thrown by
-///         charsetConversion.
+/// \brief Base class for the exceptions thrown by charsetConversion.
 ///
-///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API CharsetConversionError: public std::runtime_error
 {
 public:
@@ -158,11 +154,10 @@ public:
 };
 
 
-///////////////////////////////////////////////////////////
-/// \brief Exception thrown when the requested charset
-///         is not supported by the DICOM standard.
+/// \brief Exception thrown when the requested charset is not supported by the
+///        DICOM standard.
 ///
-///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API CharsetConversionNoTableError: public CharsetConversionError
 {
 public:
@@ -170,11 +165,10 @@ public:
 };
 
 
-///////////////////////////////////////////////////////////
-/// \brief Exception thrown when the requested charset
-///         is not supported by the system.
+/// \brief Exception thrown when the requested charset is not supported by
+///        the system.
 ///
-///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API CharsetConversionNoSupportedTableError: public CharsetConversionError
 {
 public:
@@ -182,104 +176,59 @@ public:
 };
 
 
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-/// \brief This is the base class for the exceptions thrown
-///         by the class charsetsList.
+/// \brief This exception is thrown when a conversion from an unicode string
+///        causes the dicom dataSet to change its default charset.
 ///
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-class IMEBRA_API CharsetsListError: public std::runtime_error
-{
-public:
-    CharsetsListError(const std::string& message);
-};
-
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-/// \brief This exception is thrown when a conversion from
-///         an unicode string causes the dicom dataSet
-///         to change its default charset.
+/// For instace, the default charset is ISO IR 6 but a value written by the
+/// application in one tag causes the default charset to switch to
+/// ISO 2022 IR 100.
 ///
-/// For instace, the default charset is ISO IR 6 but a
-///  value written by the application in one tag causes
-///  the default charset to switch to ISO 2022 IR 100.
-///
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-class IMEBRA_API CharsetListDiffDefaultError: public CharsetsListError
+///////////////////////////////////////////////////////////////////////////////
+class IMEBRA_API CharsetListDiffDefaultError: public CharsetConversionError
 {
 public:
     CharsetListDiffDefaultError(const std::string& message);
 };
 
 
-///////////////////////////////////////////////////////////
-/// \brief This is the base class for the exceptions thrown
-///         by the codec derived classes.
+/// \brief This is the base class for the exceptions thrown by the codec derived classes.
 ///
-///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API CodecError: public std::runtime_error
 {
 public:
-    /// \brief Build a codec exception
-    ///
-    /// @param message the message to store into the exception
-    ///
-    ///////////////////////////////////////////////////////////
     CodecError(const std::string& message);
 };
 
 
-///////////////////////////////////////////////////////////
-/// \brief This exception is thrown when the file being
-///         parsed is not valid for the codec.
+/// \brief This exception is thrown when the file being parsed is not valid
+///        for the codec.
 ///
-///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API CodecWrongFormatError: public CodecError
 {
 public:
-    /// \brief Build a codecExceptionWrongFormat exception
-    ///
-    /// @param message the message to store into the exception
-    ///
-    ///////////////////////////////////////////////////////////
     CodecWrongFormatError(const std::string& message);
 };
 
 
-///////////////////////////////////////////////////////////
-/// \brief This exception is thrown when the file being
-///         parsed is corrupted.
+/// \brief This exception is thrown when the file being parsed is corrupted.
 ///
-///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API CodecCorruptedFileError: public CodecError
 {
 public:
-    /// \brief Build a codecExceptionCorruptedFile exception
-    ///
-    /// @param message the message to store into the exception
-    ///
-    ///////////////////////////////////////////////////////////
     CodecCorruptedFileError(const std::string& message);
 };
 
 
-///////////////////////////////////////////////////////////
-/// \brief This exception is thrown when the transfer
-///         syntax is not recognized by the codec.
+/// \brief This exception is thrown when the transfer syntax is not recognized
+///        by the codec.
 ///
-///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API CodecWrongTransferSyntaxError: public CodecError
 {
 public:
-    /// \brief Build a codecExceptionWrongTransferSyntax
-    ///         exception.
-    ///
-    /// @param message the message to store into the exception
-    ///
-    ///////////////////////////////////////////////////////////
     CodecWrongTransferSyntaxError(const std::string& message);
 };
 
@@ -722,10 +671,10 @@ public:
 };
 
 
-/// \brief Exception thrown when an attempt to read past
-///         the end of the file is made.
+/// \brief Exception thrown when an attempt to read past the end of the file
+///        is made.
 ///
-///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API StreamEOFError : public StreamError
 {
 public:
@@ -736,24 +685,19 @@ public:
 ///
 /// @{
 
-/// \brief Exception thrown when a jpeg tag is found but
-///         wasn't expected.
+/// \brief Exception thrown when a jpeg tag is found but wasn't expected.
 ///
-///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API StreamJpegTagInStreamError : public StreamError
 {
 public:
     StreamJpegTagInStreamError(const std::string& message);
 };
 
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-/// \brief This exception is thrown by modalityVOILUT
-///         when the images passed to the transform are
-///         not monochromatic.
+/// \brief This exception is thrown by modalityVOILUT when the images passed
+///        to the transform are not monochromatic.
 ///
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API ModalityVOILUTError: public TransformError
 {
 public:
@@ -828,6 +772,27 @@ public:
 class IMEBRA_API ImebraBadAlloc: public std::bad_alloc
 {
 };
+
+/// \brief Base exception for errors in ReadMemory and ReadWriteMemory.
+///
+///////////////////////////////////////////////////////////////////////////////
+class IMEBRA_API MemoryError: public std::runtime_error
+{
+public:
+    MemoryError(const std::string& message);
+};
+
+/// \brief Exception throw when the memory size is too small for the requested
+///        operation.
+///
+///////////////////////////////////////////////////////////////////////////////
+class IMEBRA_API MemorySizeError: public MemoryError
+{
+public:
+    MemorySizeError(const std::string& message);
+};
+
+
 
 }
 

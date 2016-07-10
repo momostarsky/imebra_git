@@ -6,7 +6,8 @@ namespace imebra
 
 std::string ExceptionsManager::getExceptionTrace()
 {
-    return implementation::exceptionsManagerGetter::getExceptionsManagerGetter().getExceptionsManager().getMessage();
+    std::string message(implementation::exceptionsManagerGetter::getExceptionsManagerGetter().getExceptionsManager().getMessage());
+    return message;
 }
 
 LutError::LutError(const std::string& message): std::runtime_error(message)
@@ -63,10 +64,7 @@ CharsetConversionNoTableError::CharsetConversionNoTableError(const std::string& 
 CharsetConversionNoSupportedTableError::CharsetConversionNoSupportedTableError(const std::string& message): CharsetConversionError(message)
 {}
 
-CharsetsListError::CharsetsListError(const std::string& message): std::runtime_error(message)
-{}
-
-CharsetListDiffDefaultError::CharsetListDiffDefaultError(const std::string& message): CharsetsListError(message)
+CharsetListDiffDefaultError::CharsetListDiffDefaultError(const std::string& message): CharsetConversionError(message)
 {}
 
 CodecError::CodecError(const std::string& message): std::runtime_error(message)
@@ -213,5 +211,12 @@ JpegCodecError::JpegCodecError(const std::string& message): CodecError(message)
 
 JpegCodecCannotHandleSyntaxError::JpegCodecCannotHandleSyntaxError(const std::string& message): JpegCodecError(message)
 {}
+
+MemoryError::MemoryError(const std::string& message): std::runtime_error(message)
+{}
+
+MemorySizeError::MemorySizeError(const std::string& message): MemoryError(message)
+{}
+
 
 }
