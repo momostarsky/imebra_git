@@ -18,7 +18,7 @@ namespace implementation
 
 
 ///////////////////////////////////////////////////////////
-// Return the message info for the specified thread
+// Return the message info for the current thread
 ///////////////////////////////////////////////////////////
 std::string exceptionsManager::getMessage()
 {
@@ -99,7 +99,6 @@ exceptionInfo::exceptionInfo(const exceptionInfo& right):
 ///////////////////////////////////////////////////////////
 std::string exceptionInfo::getMessage()
 {
-    defaultCharsetConversion convertUnicode("ISO_IR 6");
     std::ostringstream message;
 	message << "[" << m_functionName << "]" << "\n";
     message << " file: " << m_fileName << "  line: " << m_lineNumber << "\n";
@@ -134,7 +133,9 @@ exceptionsManagerGetter& exceptionsManagerGetter::getExceptionsManagerGetter()
     return getter;
 }
 
+#ifndef __APPLE__
 thread_local std::unique_ptr<exceptionsManager> exceptionsManagerGetter::m_pManager = std::unique_ptr<exceptionsManager>();
+#endif
 
 exceptionsManager& exceptionsManagerGetter::getExceptionsManager()
 {
