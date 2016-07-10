@@ -37,9 +37,9 @@ TEST(drawBitmapTest, testDrawBitmapRGB)
 
             std::uint32_t red, green, blue;
             size_t index(0);
-            for(int scanY = 0; scanY != testImage->getHeight(); ++scanY)
+            for(std::uint32_t scanY = 0; scanY != testImage->getHeight(); ++scanY)
 			{
-                for(int scanX = 0; scanX != testImage->getWidth(); ++scanX)
+                for(std::uint32_t scanX = 0; scanX != testImage->getWidth(); ++scanX)
 				{
                     std::uint8_t displayRed(*pBuffer++);
                     std::uint8_t displayGreen(*pBuffer++);
