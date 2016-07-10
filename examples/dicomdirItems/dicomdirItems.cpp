@@ -96,16 +96,12 @@ void outputTag(const DataSet& dataSet, std::uint16_t group, std::uint16_t tag, s
 ///////////////////////////////////////////////////////////
 void scanChildren(DicomDirEntry* pRecord, std::wostream* pOutputStream)
 {
+
     for(; pRecord != 0; pRecord = pRecord->getNextEntry())
 	{
         std::unique_ptr<DicomDirEntry> entry(pRecord);
 
         std::unique_ptr<DataSet> pRecordDataSet(pRecord->getEntryDataSet());
-
-		// Output the record
-		(*pOutputStream) <<
-			L"\" type=\"" <<
-            pRecord->getTypeString() << L"\">\n";
 
 		// Output the file parts
         outputTag(*pRecordDataSet, 0x4, 0x1500, pOutputStream, L"file");
