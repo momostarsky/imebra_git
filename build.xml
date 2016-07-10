@@ -2,10 +2,6 @@
 <project name="Imebra" default="make_distribution" basedir="." >
 
 	<!-- This is an ant build file
-
-
-
-
 	-->
 
 
@@ -20,7 +16,7 @@
 	<target name="version" description="Initialize the build number">
 		<property environment="env"/>
 		<property name="version" value="${IMEBRA_MAJOR_VERSION}.${IMEBRA_MINOR_VERSION}.${IMEBRA_REVISION}" />
-		<property name="short_version" value="${IMEBRA_MAJOR_VERSION}.${IMEBRA_MINOR_VERSION}" />
+		<property name="short_version" value="${IMEBRA_MAJOR_VERSION}.${IMEBRA_MINOR_VERSION}.${IMEBRA_REVISION}" />
         <property name="fileVersion" value="${env.BUILD_BRANCH}_build_${version}"/>
         <property name="fullVersionReadable" value="${env.BUILD_BRANCH} build ${version}"/>
         <property name="productName" value="Imebra ${fullVersionReadable}"/>
@@ -65,6 +61,7 @@
 
 	<!-- Replace the version number and license info -->
 	<target name="replace_version" depends="create_build_dir">
+		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt, *.rst, *.py" token="$version$" value="${fullVersionReadable}" />
 		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt, *.rst, *.py" token="1.0.0.1" value="${fullVersionReadable}" />
 		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt, *.rst, *.py" token="&quot;1.0.0.1&quot;" value="&quot;${fullVersionReadable}&quot;" />
 		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt, *.rst, *.py" token="L&quot;1.0.0.1&quot;" value="L&quot;${fullVersionReadable}&quot;" />
@@ -121,6 +118,7 @@ The author can be contacted by email at info@binarno.com or by mail at
 
 	<!-- SWIG -->
 	<target name="swig" depends="replace_version">
+		<delete dir="${build_release}/wrappers/javaWrapper/src" failonerror="false" />
 		<mkdir dir="${build_release}/wrappers/javaWrapper/src/com/imebra" />
 		<mkdir dir="${build_release}/wrappers/javaWrapper/jni" />
 		<exec executable="swig" failonerror="true" dir="${build_release}/wrappers">
@@ -132,7 +130,6 @@ The author can be contacted by email at info@binarno.com or by mail at
 			<arg path="${build_release}/wrappers/javaWrapper/src/com/imebra" />
 			<arg value="swig.i" />
 		</exec>
-		<move file="${build_release}/wrappers/swig_wrap.cxx" tofile="${build_release}/wrappers/javaWrapper/jni/swig_wrap.cxx" />
 
 		<fileset id="existing" dir="${build_release}/wrappers/javaWrapper/src/com/imebra">
 		    <patternset id="files">
@@ -268,6 +265,7 @@ The author can be contacted by email at info@binarno.com or by mail at
 
 	<!-- Build -->
     <target name="make_distribution" depends="run_test_cases, collect_coverage">
+    	<zip destfile="imebra_source_distribution.zip" basedir="${source_distribution}" />
 	</target>
 
 
