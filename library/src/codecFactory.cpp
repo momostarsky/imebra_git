@@ -77,6 +77,17 @@ void CodecFactory::saveImage(
     IMEBRA_FUNCTION_END();
 }
 
+void CodecFactory::setMaximumImageSize(const std::uint32_t maximumWidth, const std::uint32_t maximumHeight)
+{
+    IMEBRA_FUNCTION_START();
+
+    std::shared_ptr<imebra::implementation::codecs::codecFactory> factory(imebra::implementation::codecs::codecFactory::getCodecFactory());
+    factory->setMaximumImageSize(maximumWidth, maximumHeight);
+
+    IMEBRA_FUNCTION_END();
+
+}
+
 
 void CodecFactory::save(const DataSet& dataSet, StreamWriter& writer, codecType_t codecType)
 {

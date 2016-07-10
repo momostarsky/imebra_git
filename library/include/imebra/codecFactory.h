@@ -61,7 +61,7 @@ public:
     /// \return a DataSet object representing the input file's content
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    static DataSet* load(const std::wstring& fileName, size_t maxSizeBufferLoad);
+    static DataSet* load(const std::wstring& fileName, size_t maxSizeBufferLoad = std::numeric_limits<size_t>::max());
 
 #ifndef SWIG // Use Unicode strings only with SWIG
 
@@ -80,7 +80,7 @@ public:
     /// \return a DataSet object representing the input file's content
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    static DataSet* load(const std::string& fileName, size_t maxSizeBufferLoad);
+    static DataSet* load(const std::string& fileName, size_t maxSizeBufferLoad = std::numeric_limits<size_t>::max());
 
 #endif
 
@@ -129,6 +129,17 @@ public:
     static void save(const DataSet& dataSet, const std::string& fileName, codecType_t codecType);
 
 #endif
+
+    /// \brief Set the maximum image's width & height accepted by Imebra.
+    ///
+    /// By default both the maximum width and height are set to 4096 pixels.
+    ///
+    /// \param maximumWidth      the maximum image's width accepted by Imebra
+    /// \param maximumHeight     the maximum image's height accepted by Imebra
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    static void setMaximumImageSize(const std::uint32_t maximumWidth, const std::uint32_t maximumHeight);
+
 };
 
 }
