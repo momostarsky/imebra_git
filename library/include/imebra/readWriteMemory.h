@@ -71,11 +71,18 @@ public:
 
     /// \brief Construct a buffer of memory and copy the specified content into it.
     ///
-    /// \param buffer      a pointer to the source data
-    /// \param bufferSize  the amount of data to copy into the allocated memory
+    /// \param sourceMemory the object containing the initial memory's content
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    ReadWriteMemory(const char* buffer, size_t bufferSize);
+    ReadWriteMemory(const ReadMemory& sourceMemory);
+
+    /// \brief Construct a buffer of memory and copy the specified content into it.
+    ///
+    /// \param source      a pointer to the source data
+    /// \param sourceSize  the amount of data to copy into the allocated memory
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    ReadWriteMemory(const char* source, size_t sourceSize);
 
     virtual ~ReadWriteMemory();
 
@@ -131,6 +138,19 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     void assign(const char* source, size_t sourceSize);
+
+    /// \brief Copy the content of the specified buffer into a region of the
+    ///        ReadWriteMemory.
+    ///
+    /// The memory size remains unchanged.
+    ///
+    /// \param source     a pointer to the source memory buffer
+    /// \param sourceSize the number of bytes to copy
+    /// \param destinationOffset the offset into the ReadWriteMemory at which the
+    ///                   data must be copied
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    void assignRegion(const char* source, size_t sourceSize, size_t destinationOffset);
 };
 
 }

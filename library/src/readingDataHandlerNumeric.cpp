@@ -24,7 +24,7 @@ ReadingDataHandlerNumeric::~ReadingDataHandlerNumeric()
 {
 }
 
-const ReadMemory* ReadingDataHandlerNumeric::getMemory() const
+ReadMemory* ReadingDataHandlerNumeric::getMemory() const
 {
     std::shared_ptr<imebra::implementation::handlers::readingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<imebra::implementation::handlers::readingDataHandlerNumericBase>(m_pDataHandler);
     return new ReadMemory(numericDataHandler->getMemory());

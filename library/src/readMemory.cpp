@@ -1,5 +1,7 @@
 #include "../include/imebra/readMemory.h"
 #include "../implementation/memoryImpl.h"
+#include "../implementation/exceptionImpl.h"
+#include "../include/imebra/exceptions.h"
 #include <memory.h>
 
 namespace imebra
@@ -42,6 +44,21 @@ size_t ReadMemory::data(char* destination, size_t destinationSize) const
     }
     return memorySize;
 }
+
+void ReadMemory::regionData(char* destination, size_t destinationSize, size_t sourceOffset) const
+{
+    IMEBRA_FUNCTION_START();
+
+    size_t memorySize = m_pMemory->size();
+    if(m_pMemory->size() < sourceOffset + destinationSize)
+    {
+        IMEBRA_THROW(MemorySizeError, "The source memory region exceedes the memory size");
+    }
+    ::memcpy(destination, m_pMemory->data() + sourceOffset, memorySize);
+
+    IMEBRA_FUNCTION_END();
+}
+
 
 bool ReadMemory::empty() const
 {

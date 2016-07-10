@@ -14,6 +14,12 @@ ReadWriteMemory::ReadWriteMemory(size_t initialSize)
     m_pMemory = std::make_shared<const implementation::memory>(initialSize);
 }
 
+ReadWriteMemory::ReadWriteMemory(const ReadMemory &sourceMemory)
+{
+    m_pMemory = std::make_shared<const implementation::memory>(sourceMemory.size());
+    std::const_pointer_cast<implementation::memory>(m_pMemory)->copyFrom(sourceMemory.m_pMemory);
+}
+
 ReadWriteMemory::ReadWriteMemory(const char* buffer, size_t bufferSize)
 {
     m_pMemory = std::make_shared<const implementation::memory>(new implementation::stringUint8((const std::uint8_t*)buffer, bufferSize));
@@ -58,6 +64,11 @@ char* ReadWriteMemory::data(size_t* pDataSize) const
 void ReadWriteMemory::assign(const char* source, size_t sourceSize)
 {
     std::const_pointer_cast<implementation::memory>(m_pMemory)->assign((const std::uint8_t*)source, sourceSize);
+}
+
+void ReadWriteMemory::assignRegion(const char* source, size_t sourceSize, size_t destinationOffset)
+{
+    std::const_pointer_cast<implementation::memory>(m_pMemory)->assignRegion((const std::uint8_t*)source, sourceSize, destinationOffset);
 }
 
 }

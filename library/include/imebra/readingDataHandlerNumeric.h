@@ -70,7 +70,7 @@ public:
     /// \return a ReadMemory object referencing the raw buffer's data
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    const ReadMemory* getMemory() const;
+    ReadMemory* getMemory() const;
 
     /// \brief Copies the buffer's raw memory content into the specified buffer.
     ///

@@ -109,8 +109,35 @@ TEST(memoryTest, readMemory)
     ASSERT_EQ(testString.size(), storedSize);
     ASSERT_EQ(testString, std::string(storedData, storedSize));
 
+    std::string getRegion("aa");
+    ASSERT_THROW(readMemory.regionData(&(getRegion.at(0)), 2, testString.size() - 1), MemorySizeError);
+    readMemory.regionData(&(getRegion.at(0)), 2, 2);
+    ASSERT_EQ("st", getRegion);
 }
 
+TEST(memoryTest, readWriteMemory)
+{
+    std::string testString("Test string");
+    ReadWriteMemory readWriteMemory(testString.c_str(), testString.size());
+
+    ASSERT_EQ(testString.size(), readWriteMemory.size());
+    ASSERT_FALSE(readWriteMemory.empty());
+
+    size_t storedSize;
+    const char* storedData(readWriteMemory.data(&storedSize));
+    ASSERT_EQ(testString.size(), storedSize);
+    ASSERT_EQ(testString, std::string(storedData, storedSize));
+
+    std::string regionString("aa");
+    ASSERT_THROW(readWriteMemory.assignRegion(regionString.data(), 2, testString.size() - 1), MemorySizeError);
+    ASSERT_THROW(readWriteMemory.assignRegion(regionString.data(), 2, testString.size()), MemorySizeError);
+    readWriteMemory.assignRegion(regionString.data(), 2, 2);
+
+    storedData = readWriteMemory.data(&storedSize);
+    ASSERT_EQ(testString.size(), storedSize);
+    ASSERT_EQ("Teaa string", std::string(storedData, storedSize));
+
+}
 
 
 } // namespace tests

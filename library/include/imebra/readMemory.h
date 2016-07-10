@@ -58,11 +58,11 @@ public:
 
     /// \brief Construct a buffer of memory and copy the specified content into it.
     ///
-    /// \param buffer      a pointer to the source data
-    /// \param bufferSize  the amount of data to copy into the allocated memory
+    /// \param source      a pointer to the source data
+    /// \param sourceSize  the amount of data to copy into the allocated memory
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    ReadMemory(const char* buffer, size_t bufferSize);
+    ReadMemory(const char* source, size_t sourceSize);
 
     virtual ~ReadMemory();
 
@@ -84,6 +84,18 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     size_t data(char* destination, size_t destinationSize) const;
+
+    /// \brief Copies the raw memory region into the specified buffer.
+    ///
+    /// If the memory's size is too small to extract the requested region then
+    /// throws MemorySizeError.
+    ///
+    /// \param destination     a pointer to the allocated buffer
+    /// \param destinationSize the size of the allocated buffer, in bytes
+    /// \param sourceOffset    the offset
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    void regionData(char* destination, size_t destinationSize, size_t sourceOffset) const;
 
 #ifndef SWIG
     /// \brief Return a pointer to the constant referenced memory.
