@@ -10,6 +10,7 @@ $fileHeader$
 #include "memoryImpl.h"
 #include "exceptionImpl.h"
 #include "../include/imebra/exceptions.h"
+#include <string.h>
 
 namespace imebra
 {
@@ -262,6 +263,24 @@ void memory::assign(const std::uint8_t* pSource, const size_t sourceLength)
 	m_pMemoryBuffer->assign(pSource, sourceLength);
 
     IMEBRA_FUNCTION_END();
+}
+
+void memory::assignRegion(const std::uint8_t* pSource, const size_t sourceLength, const size_t destinationOffset)
+{
+    IMEBRA_FUNCTION_START();
+
+    if(m_pMemoryBuffer.get() == 0)
+    {
+        m_pMemoryBuffer.reset(new stringUint8);
+    }
+    if(m_pMemoryBuffer->size() < destinationOffset + sourceLength)
+    {
+        IMEBRA_THROW(MemorySizeError, "The memory size is too small to accept the source region");
+    }
+    ::memcpy(&(m_pMemoryBuffer->at(destinationOffset)), pSource, sourceLength);
+
+    IMEBRA_FUNCTION_END();
+
 }
 
 

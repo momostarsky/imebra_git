@@ -166,6 +166,21 @@ public:
 	///////////////////////////////////////////////////////////
     void assign(const std::uint8_t* pSource, const size_t sourceLength);
 
+    /// \brief Copy the specified array of bytes into a region
+    ///         of the managed memory.
+    ///
+    /// @param pSource      a pointer to the buffer containing
+    ///                      the bytes to be copied
+    /// @param sourceLength the number of bytes stored in the
+    ///                      buffer pSource and to be copied
+    ///                      into the managed memory
+    /// @param destinationOffset the offset at which the data
+    ///                      must be copied
+    ///
+    ///////////////////////////////////////////////////////////
+    void assignRegion(const std::uint8_t* pSource, const size_t sourceLength, const size_t destinationOffset);
+
+
 protected:
     std::unique_ptr<stringUint8> m_pMemoryBuffer;
 };
