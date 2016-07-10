@@ -85,7 +85,7 @@ public:
     ///         the bitmap
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    size_t getBitmap(const Image& image, drawBitmapType_t drawBitmapType, std::uint32_t rowAlignBytes, char* buffer, size_t bufferSize);
+    size_t getBitmap(const Image& image, drawBitmapType_t drawBitmapType, std::uint32_t rowAlignBytes, char* destination, size_t destinationSize);
 
     /// \brief Apply the transforms defined in the constructor (if any) to the
     ///        input image, then calculate an array of bytes containing a bitmap

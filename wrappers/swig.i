@@ -1,12 +1,14 @@
 %module imebra
 
-#ifdef SWIGJAVA
+//#ifdef SWIGJAVA
 	%include <arrays_java.i>
 	%include <enums.swg>
-	%apply(char *STRING, size_t LENGTH) { (const char *source, size_t sourceSize) };
-	%apply(char *STRING, size_t LENGTH) { (char* destination, size_t destinationSize) };
+        %apply int[] {int *};
+        %apply(char *STRING, size_t LENGTH) { (const char *source, size_t sourceSize) };
+        %apply(char *STRING, size_t LENGTH) { (char* destination, size_t destinationSize) };
+
 	%rename(assign) operator=;
-#endif
+//#endif
 
 #define IMEBRA_API
 
@@ -23,15 +25,10 @@
 %include <std_vector.i>
 %include <std_map.i>
 
-%apply int[] {int *};
 %template(FileParts) std::vector<std::string>;
 %template(Groups) std::vector<std::uint16_t>;
 %template(TagsIds) std::vector<imebra::TagId>;
 %template(VOIs) std::vector<imebra::VOIDescription>;
-
-%apply(const Image& image, drawBitmapType_t drawBitmapType, std::uint32_t rowAlignBytes, char *STRING, size_t LENGTH)
-    { (const Image& image, drawBitmapType_t drawBitmapType, std::uint32_t rowAlignBytes, char* buffer, size_t bufferSize) };
-
 
 // Declare which methods return an object that should be
 // managed by the client.
@@ -90,6 +87,58 @@
 %newobject imebra::WritingDataHandlerNumeric::getMemory;
 
 
+%exception {
+    try {
+        $action
+    } catch(const imebra::MissingDataElementError& e) {
+        std::string error(imebra::ExceptionsManager::getExceptionTrace());
+        SWIG_exception(SWIG_IndexError, error.c_str());
+    } catch(const imebra::LutError& e) {
+        std::string error(imebra::ExceptionsManager::getExceptionTrace());
+        SWIG_exception(SWIG_RuntimeError, error.c_str());
+    } catch(const imebra::StreamError& e) {
+        std::string error(imebra::ExceptionsManager::getExceptionTrace());
+        SWIG_exception(SWIG_IOError, error.c_str());
+    } catch(const imebra::DictionaryError& e) {
+        std::string error(imebra::ExceptionsManager::getExceptionTrace());
+        SWIG_exception(SWIG_ValueError, error.c_str());
+    } catch(const imebra::CharsetConversionError& e) {
+        std::string error(imebra::ExceptionsManager::getExceptionTrace());
+        SWIG_exception(SWIG_RuntimeError, error.c_str());
+    } catch(const imebra::CodecError& e) {
+        std::string error(imebra::ExceptionsManager::getExceptionTrace());
+        SWIG_exception(SWIG_IOError, error.c_str());
+    } catch(const imebra::DataHandlerError& e) {
+        std::string error(imebra::ExceptionsManager::getExceptionTrace());
+        SWIG_exception(SWIG_ValueError, error.c_str());
+    } catch(const imebra::DataSetError& e) {
+        std::string error(imebra::ExceptionsManager::getExceptionTrace());
+        SWIG_exception(SWIG_ValueError, error.c_str());
+    } catch(const imebra::DicomDirError& e) {
+        std::string error(imebra::ExceptionsManager::getExceptionTrace());
+        SWIG_exception(SWIG_RuntimeError, error.c_str());
+    } catch(const imebra::HuffmanError& e) {
+        std::string error(imebra::ExceptionsManager::getExceptionTrace());
+        SWIG_exception(SWIG_IOError, error.c_str());
+    } catch(const imebra::ImageError& e) {
+        std::string error(imebra::ExceptionsManager::getExceptionTrace());
+        SWIG_exception(SWIG_ValueError, error.c_str());
+    } catch(const imebra::TransformError& e) {
+        std::string error(imebra::ExceptionsManager::getExceptionTrace());
+        SWIG_exception(SWIG_ValueError, error.c_str());
+    } catch(const imebra::MemoryError& e) {
+        std::string error(imebra::ExceptionsManager::getExceptionTrace());
+        SWIG_exception(SWIG_MemoryError, error.c_str());
+    } catch(const std::runtime_error& e) {
+        std::string error(imebra::ExceptionsManager::getExceptionTrace());
+        SWIG_exception(SWIG_RuntimeError, error.c_str());
+    } catch(const std::exception& e) {
+        std::string error(imebra::ExceptionsManager::getExceptionTrace());
+        SWIG_exception(SWIG_RuntimeError, error.c_str());
+    }
+}
+
+
 %include "../library/include/imebra/tagsEnumeration.h"
 %include "../library/include/imebra/tagId.h"
 %include "../library/include/imebra/definitions.h"
@@ -119,7 +168,6 @@
 %include "../library/include/imebra/dicomDir.h"
 %include "../library/include/imebra/dicomDictionary.h"
 %include "../library/include/imebra/drawBitmap.h"
-%include "../library/include/imebra/exceptions.h"
 %include "../library/include/imebra/fileStreamInput.h"
 %include "../library/include/imebra/fileStreamOutput.h"
 %include "../library/include/imebra/memoryStreamInput.h"
