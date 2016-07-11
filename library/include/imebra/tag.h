@@ -102,7 +102,7 @@ public:
     ///  specified in the tagVR parameter
     ///
     /// The returned WritingDataHandler is connected to a new buffer which is
-    /// updated and stored into the tag when WritingDataHandler is destroyed.
+    /// updated and stored in the tag when WritingDataHandler is destroyed.
     ///
     /// \param bufferId the position where the new buffer has to be stored into the
     ///                 tag. The first buffer position is 0

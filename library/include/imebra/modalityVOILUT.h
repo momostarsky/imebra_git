@@ -30,7 +30,7 @@ namespace imebra
 /// value that has a meaning only when used by the device that generated it:
 /// applying the rescale slope/intercept to pixel value converts the original
 /// values into optical density or other known measurement units
-/// (e.g. hounsfield).
+/// (e.g. Hounsfield).
 ///
 /// When the transformation is not linear, then a LUT (lookup table) is
 /// applied.

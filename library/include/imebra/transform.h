@@ -70,8 +70,8 @@ public:
     /// \brief Allocate an image ready to accomodate the result of the
     ///        image processing performed by the runTransform() method.
     ///
-    /// \param inputImage the image that will be set as input of the runTransform()
-    ///                   method
+    /// \param inputImage the image that will be set as the input of the
+    ///                   runTransform() method
     /// \param width      the width of the output image
     /// \param height     the height of the output image
     /// \return an image ready to be passed as outputImage to runTransform()

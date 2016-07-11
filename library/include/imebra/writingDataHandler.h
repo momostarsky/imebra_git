@@ -38,7 +38,7 @@ namespace imebra
 ///        of a Dicom tag's buffer.
 ///
 /// WritingDataHandler is able to write into the buffer's content strings,
-/// a numbers, a date/time or an ages.
+/// numbers, date/time or ages.
 ///
 /// In order to obtain a WritingDataHandler object for a specific tag stored
 /// in a DataSet, call DataSet::getWritingDataHandler() or
@@ -72,10 +72,10 @@ public:
 
     /// \brief Resize the memory to contain the specified number of elements.
     ///
-    /// By default the WritingDataHandler buffer allocates an empty memory block
+    /// By default, the WritingDataHandler buffer allocates an empty memory block
     /// that must be resized in order to be filled with data.
     ///
-    /// The type of the contained elements depend on the tag's VR. The VR can be
+    /// The type of the contained elements depends on the tag's VR. The VR can be
     /// retrieved with getDataType().
     ///
     /// \param elementsNumber the number of elements to store in the buffer.
@@ -88,10 +88,10 @@ public:
     ///
     /// The memory size can be changed with setSize().
     ///
-    /// The type of the contained elements depend on the tag's VR. The VR can be
+    /// The type of the contained elements depends on the tag's VR. The VR can be
     /// retrieved with getDataType().
     ///
-    /// \return the number of elements that can be stored into the buffer
+    /// \return the number of elements that can be stored in the buffer
     ///
     ///////////////////////////////////////////////////////////////////////////////
     size_t getSize() const;
@@ -153,7 +153,7 @@ public:
 
     /// \brief Write an Unicode string.
     ///
-    /// If the value cannot be converted from an Unicode string
+    /// If the value cannot be converted from a Unicode string
     /// then throws DataHandlerConversionError.
     ///
     /// \param index the element number within the buffer. Must be smaller than

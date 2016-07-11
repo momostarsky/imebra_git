@@ -1,7 +1,7 @@
 Compiling Imebra
 ================
 
-This section explain how to compile Imebra from the source distribution.
+This section explains how to compile Imebra from the source distribution.
 
 The result of the Imebra compilation is a shared library for your operating system of choice.
 
@@ -30,7 +30,7 @@ Building Imebra
 ...............
 
 The library folder contains a CMakeLists file, which contains the information needed by
-CMake to generata a solution file for your platform (a make file, a VisualStudio solution, etc).
+CMake to generate a solution file for your platform (a make file, a VisualStudio solution, etc).
 
 To generate the Imebra shared library, execute the following steps:
 
@@ -115,7 +115,7 @@ To compile te tests, execute the following steps:
 
 1. create a folder that will contain the test units executable
 2. cd into the created folder
-3. run cmake with the path to the tests/CMakeLists.txt as parameter. You can also define the
+3. run cmake with the path to the tests/CMakeLists.txt as a parameter. You can also define the
    CMake variables imebra_library, gtest_library and gtest_include with the path to the
    imebra library, gtest library and gtest include folder respectively
 4. run cmake --build .

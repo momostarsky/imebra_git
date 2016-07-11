@@ -35,7 +35,7 @@ namespace imebra
 {
 
 ///
-/// \brief The ReadingDataHandler class allows to read the content
+/// \brief The ReadingDataHandler class allows reading the content
 ///        of a Dicom Tag.
 ///
 /// ReadingDataHandler is able to return the Tag's content as a string,
@@ -136,14 +136,14 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     std::string getString(size_t index) const;
 
-    /// \brief Retrieve a buffer's value as an Unicode string.
+    /// \brief Retrieve a buffer's value as a Unicode string.
     ///
     /// If the buffer's value cannot be converted to a string then throws
     /// DataHandlerConversionError.
     ///
     /// \param index the element number within the buffer. Must be smaller than
     ///        getSize()
-    /// \return the tag's value as an Unicode string
+    /// \return the tag's value as a Unicode string
     ///
     ///////////////////////////////////////////////////////////////////////////////
     std::wstring getUnicodeString(size_t index) const;

@@ -37,6 +37,9 @@ class Image;
 /// 
 /// DrawBitmap can apply several transformations to the Image before generating
 /// the bitmap.
+///
+/// DrawBitmap applies automatically the necessary color transform and high
+/// bit shift in order to obtain a 8 bits per channel RGB image.
 /// 
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API DrawBitmap
@@ -72,7 +75,7 @@ public:
     ///        input image, then calculate an array of bytes containing a bitmap
     ///        that can be rendered by the operating system.
     ///
-    /// \param Image          the image for which the bitmap must be calculated
+    /// \param image          the image for which the bitmap must be calculated
     /// \param drawBitmapType the type of bitmap to generate
     /// \param rowAlignBytes  the number of bytes on which the bitmap rows are
     ///                       aligned
@@ -91,7 +94,7 @@ public:
     ///        input image, then calculate an array of bytes containing a bitmap
     ///        that can be rendered by the operating system.
     ///
-    /// \param Image          the image for which the bitmap must be calculated
+    /// \param image          the image for which the bitmap must be calculated
     /// \param drawBitmapType the type of bitmap to generate
     /// \param rowAlignBytes  the number of bytes on which the bitmap rows are
     ///                       aligned

@@ -50,7 +50,11 @@ TEST(numericHandlerTest, testDouble)
             ASSERT_EQ(floatTags[scanVR], handler->getDataType());
 
             ASSERT_TRUE(handler->isSigned());
+            ASSERT_TRUE(handler->isFloat());
         }
+
+        std::unique_ptr<ReadingDataHandlerNumeric> readingHandler(testDataSet.getReadingDataHandlerNumeric(TagId(10, 10), 0));
+        ASSERT_TRUE(readingHandler->isFloat());
 
         ASSERT_FLOAT_EQ(5.6, testDataSet.getDouble(TagId(10, 10), 0));
         ASSERT_FLOAT_EQ(3.6, testDataSet.getDouble(TagId(10, 10), 1));
@@ -129,7 +133,12 @@ TEST(numericHandlerTest, testInteger)
                       integerTags[scanVR] == tagVR_t::SL ||
                       integerTags[scanVR] == tagVR_t::SS,
                       handler->isSigned());
+
+            ASSERT_FALSE(handler->isFloat());
         }
+
+        std::unique_ptr<ReadingDataHandlerNumeric> readingHandler(testDataSet.getReadingDataHandlerNumeric(TagId(10, 10), 0));
+        ASSERT_FALSE(readingHandler->isFloat());
 
         ASSERT_FLOAT_EQ(5, testDataSet.getDouble(TagId(10, 10), 0));
         ASSERT_FLOAT_EQ(3, testDataSet.getDouble(TagId(10, 10), 1));

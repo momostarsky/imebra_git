@@ -4,7 +4,7 @@ Adding Imebra to your project
 Add Imebra to a C++ project
 ---------------------------
 
-In order to use Imebra in your C++ application your app must include the file imebra/imebra.h, which in turn includes
+In order to use Imebra in your C++ applications your app must include the file imebra/imebra.h, which in turn includes
 all the other necessary files. You should also link your project with the imebra library built following the instructions
 outlined in `Compiling Imebra`_.
 

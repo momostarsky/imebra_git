@@ -32,7 +32,7 @@ Imebra
    getting_started
    add_to_project
    design_concepts
-   loading_files
+   quick_tour
    getting_tag_values
    getting_images
    processing_images

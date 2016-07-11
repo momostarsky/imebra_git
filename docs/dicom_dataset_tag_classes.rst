@@ -1,7 +1,7 @@
 DICOM dataSet & tags classes
 ============================
 
-This section describes the classes and methods responsible for retrieving and setting the information that compose the
+This section describes the classes and methods responsible for retrieving and setting the information that composes the
 DICOM structure, represented by the class :cpp:class:`imebra::DataSet`.
 
 Each individual piece of information is stored into a tag (see :cpp:class:`imebra::Tag`) inside the DICOM structure.

@@ -41,7 +41,7 @@ class LUT;
 ///
 ///  \brief This class represents a DICOM dataset.
 ///
-/// The information it contains is organized in groups and each group may
+/// The information it contains is organized into groups and each group may
 /// contain several tags.
 ///
 ///////////////////////////////////////////////////////////////////////////////
@@ -62,14 +62,14 @@ private:
     DataSet(std::shared_ptr<imebra::implementation::dataSet> pDataSet);
 #endif
 public:
-    /// \brief Construct an empty dicom dataset with transfer syntax
+    /// \brief Construct an empty DICOM dataset with transfer syntax
     ///        "1.2.840.10008.1.2.1" (Explicit VR little endian) and charset
     ///        "ISO 2022 IR 6".
     ///
     ///////////////////////////////////////////////////////////////////////////////
 	DataSet();
 
-    /// \brief Construct an empty dicom dataset with charset "ISO 2022 IR 6" and
+    /// \brief Construct an empty DICOM dataset with charset "ISO 2022 IR 6" and
     ///        the desidered transfer syntax.
     ///
     /// \param transferSyntax the dataSet's transfer syntax. The following transfer
@@ -89,7 +89,7 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     DataSet(const std::string& transferSyntax);
 
-    /// \brief Construct an empty dicom dataset and specifies the default charsets.
+    /// \brief Construct an empty DICOM dataset and specifies the default charsets.
     ///
     /// \param transferSyntax the dataSet's transfer syntax. The following transfer
     ///                       syntaxes are supported:
@@ -183,7 +183,7 @@ public:
     /// Throws DataSetImageDoesntExistError if the requested frame does not exist.
     ///
     /// \param frameNumber the frame to retrieve (the first frame is 0)
-    /// \return an image object containing the decompressed image, processed with
+    /// \return an image object containing the decompressed image processed with
     ///         ModalityVOILUT
     ///
     ///////////////////////////////////////////////////////////////////////////////
@@ -191,7 +191,7 @@ public:
 
     /// \brief Insert an image into the dataset.
     ///
-    /// In multi-frame datasets the images must be inserted in order: first insert
+    /// In multi-frame datasets the images must be inserted in order: first, insert
     ///  the frame 0, then the frame 1, then the frame 2 and so on.
     ///
     /// All the inserted images must have the same transfer syntax and the same
@@ -291,7 +291,7 @@ public:
     /// updated and stored into the tag when WritingDataHandler is destroyed.
     ///
     /// \param tagId    the tag's id containing the requested buffer
-    /// \param bufferId the position where the new buffer has to be stored into the
+    /// \param bufferId the position where the new buffer has to be stored in the
     ///                 tag. The first buffer position is 0
     /// \param tagVR    the tag's VR
     /// \return a WritingDataHandler object connected to a new Tag's buffer
@@ -309,7 +309,7 @@ public:
     /// updated and stored into the tag when WritingDataHandler is destroyed.
     ///
     /// \param tagId    the tag's id containing the requested buffer
-    /// \param bufferId the position where the new buffer has to be stored into the
+    /// \param bufferId the position where the new buffer has to be stored in the
     ///                 tag. The first buffer position is 0
     /// \return a WritingDataHandler object connected to a new Tag's buffer
     ///
@@ -369,7 +369,7 @@ public:
     /// destroyed.
     ///
     /// \param tagId    the tag's id containing the requested buffer
-    /// \param bufferId the position where the new buffer has to be stored into the
+    /// \param bufferId the position where the new buffer has to be stored in the
     ///                 tag. The first buffer position is 0
     /// \param tagVR    the tag's VR
     /// \return a WritingDataHandlerNumeric object connected to a new Tag's buffer
@@ -390,7 +390,7 @@ public:
     /// destroyed.
     ///
     /// \param tagId    the tag's id containing the requested buffer
-    /// \param bufferId the position where the new buffer has to be stored into the
+    /// \param bufferId the position where the new buffer has to be stored in the
     ///                 tag. The first buffer position is 0
     /// \return a WritingDataHandlerNumeric object connected to a new Tag's buffer
     ///
@@ -398,7 +398,7 @@ public:
     WritingDataHandlerNumeric* getWritingDataHandlerNumeric(const TagId& tagId, size_t bufferId);
 
     /// \brief Retrieve a WritingDataHandlerNumeric object connected to a specific
-    ///        tag's buffer. The handler content is casted to bytes
+    ///        tag's buffer. The handler content is cast to bytes
     ///
     /// If the tag's VR is not a numeric type then throws std::bad_cast.
     ///
@@ -410,7 +410,7 @@ public:
     /// destroyed.
     ///
     /// \param tagId    the tag's id containing the requested buffer
-    /// \param bufferId the position where the new buffer has to be stored into the
+    /// \param bufferId the position where the new buffer has to be stored in the
     ///                 tag. The first buffer position is 0
     /// \param tagVR    the tag's VR
     /// \return a WritingDataHandlerNumeric object connected to a new Tag's buffer
@@ -419,7 +419,7 @@ public:
     WritingDataHandlerNumeric* getWritingDataHandlerRaw(const TagId& tagId, size_t bufferId, tagVR_t tagVR);
 
     /// \brief Retrieve a WritingDataHandlerNumeric object connected to a specific
-    ///        tag's buffer. The handler content is casted to bytes
+    ///        tag's buffer. The handler content is cast to bytes
     ///
     /// If the tag's VR is not a numeric type then throws std::bad_cast.
     ///
@@ -431,7 +431,7 @@ public:
     /// destroyed.
     ///
     /// \param tagId    the tag's id containing the requested buffer
-    /// \param bufferId the position where the new buffer has to be stored into the
+    /// \param bufferId the position where the new buffer has to be stored in the
     ///                 tag. The first buffer position is 0
     /// \return a WritingDataHandlerNumeric object connected to a new Tag's buffer
     ///
@@ -662,9 +662,9 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     void setString(const TagId& tagId, const std::string& newString);
 
-    /// \brief Retrieve a tag's value as an unicode string.
+    /// \brief Retrieve a tag's value as an Unicode string.
     ///
-    /// If the tag's value cannot be converted to an unicode string
+    /// If the tag's value cannot be converted to a Unicode string
     /// then throws DataHandlerConversionError.
     ///
     /// If the specified Tag does not exist then throws MissingTagError or
@@ -679,7 +679,7 @@ public:
 
     /// \brief Retrieve a tag's value as an unicode string.
     ///
-    /// If the tag's value cannot be converted to an unicode string then throws
+    /// If the tag's value cannot be converted to a Unicode string then throws
     ///  DataHandlerConversionError.
     ///
     /// If the specified Tag does not exist then returns the default value

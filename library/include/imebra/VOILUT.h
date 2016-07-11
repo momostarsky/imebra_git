@@ -82,7 +82,7 @@ public:
     ///
     /// The LUTs to be used for the VOILUT transform are stored in the DataSet's
     /// sequence tagId_t::VOILUTSequence_0028_3010 (group 0x0028, tag 0x3010).
-    /// Each item in the sequence stores the a single LUT.
+    /// Each item in the sequence stores a single LUT.
     ///
     /// Use DataSet::getLUT() to retrieve the LUT from the DataSet.
     ///
