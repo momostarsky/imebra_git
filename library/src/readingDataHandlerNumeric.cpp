@@ -60,6 +60,12 @@ bool ReadingDataHandlerNumeric::isSigned() const
     return numericDataHandler->isSigned();
 }
 
+bool ReadingDataHandlerNumeric::isFloat() const
+{
+    std::shared_ptr<imebra::implementation::handlers::readingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<imebra::implementation::handlers::readingDataHandlerNumericBase>(m_pDataHandler);
+    return numericDataHandler->isFloat();
+}
+
 void ReadingDataHandlerNumeric::copyTo(const WritingDataHandlerNumeric& destination)
 {
     std::shared_ptr<imebra::implementation::handlers::readingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<imebra::implementation::handlers::readingDataHandlerNumericBase>(m_pDataHandler);

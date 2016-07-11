@@ -13,6 +13,7 @@ $fileHeader$
 #include <sstream>
 #include <iomanip>
 #include <type_traits>
+#include <numeric>
 #include "../include/imebra/exceptions.h"
 #include "exceptionImpl.h"
 #include "dataHandlerImpl.h"
@@ -77,6 +78,8 @@ public:
 	///////////////////////////////////////////////////////////
 	virtual bool isSigned() const = 0;
 
+    virtual bool isFloat() const = 0;
+
     virtual size_t getUnitSize() const = 0;
 
 protected:
@@ -88,7 +91,7 @@ protected:
 class writingDataHandlerNumericBase: public writingDataHandler
 {
 public:
-    writingDataHandlerNumericBase(const std::shared_ptr<buffer>& pBuffer, const size_t initialSize, tagVR_t dataType, size_t unitSize, bool bIsSigned);
+    writingDataHandlerNumericBase(const std::shared_ptr<buffer>& pBuffer, const size_t initialSize, tagVR_t dataType, size_t unitSize);
     ~writingDataHandlerNumericBase();
 
     std::uint8_t* getMemoryBuffer() const;
@@ -102,10 +105,6 @@ public:
     // Set the buffer's size, in data elements
     ///////////////////////////////////////////////////////////
     virtual void setSize(const size_t elementsNumber);
-
-    bool isSigned() const;
-
-    size_t getUnitSize() const;
 
     virtual void copyFromInt32Interleaved(const std::int32_t* pSource,
                                           std::uint32_t sourceReplicateX,
@@ -130,14 +129,16 @@ public:
     virtual void copyFrom(float* pMemory, size_t memorySize) = 0;
     virtual void copyFrom(double* pMemory, size_t memorySize) = 0;
 
+    virtual bool isSigned() const = 0;
+
+    virtual bool isFloat() const = 0;
+
+    virtual size_t getUnitSize() const = 0;
+
 protected:
     // Memory buffer
     ///////////////////////////////////////////////////////////
     std::shared_ptr<memory> m_pMemory;
-
-    size_t m_unitSize;
-
-    bool m_bIsSigned;
 };
 
 ///////////////////////////////////////////////////////////
@@ -173,6 +174,15 @@ public:
         IMEBRA_FUNCTION_END();
     }
 
+    virtual bool isFloat() const
+    {
+        IMEBRA_FUNCTION_START();
+
+        return !std::numeric_limits<dataHandlerType>::is_integer;
+
+        IMEBRA_FUNCTION_END();
+    }
+
     virtual size_t getUnitSize() const
     {
         IMEBRA_FUNCTION_START();
@@ -181,7 +191,6 @@ public:
 
         IMEBRA_FUNCTION_END();
     }
-
 
 	// Retrieve the data element as a signed long
 	///////////////////////////////////////////////////////////
@@ -503,9 +512,37 @@ public:
             pBuffer,
             initialSize,
             dataType,
-            sizeof(dataHandlerType),
-            ((dataHandlerType) -1) < ((dataHandlerType) 0) )
+            sizeof(dataHandlerType))
     {
+    }
+
+    virtual bool isSigned() const
+    {
+        IMEBRA_FUNCTION_START();
+
+        dataHandlerType firstValue((dataHandlerType) -1);
+        dataHandlerType secondValue((dataHandlerType) 0);
+        return firstValue < secondValue;
+
+        IMEBRA_FUNCTION_END();
+    }
+
+    virtual bool isFloat() const
+    {
+        IMEBRA_FUNCTION_START();
+
+        return !std::numeric_limits<dataHandlerType>::is_integer;
+
+        IMEBRA_FUNCTION_END();
+    }
+
+    virtual size_t getUnitSize() const
+    {
+        IMEBRA_FUNCTION_START();
+
+        return sizeof(dataHandlerType);
+
+        IMEBRA_FUNCTION_END();
     }
 
     // Set the data element as a signed long

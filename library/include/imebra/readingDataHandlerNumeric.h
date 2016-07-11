@@ -41,7 +41,7 @@ class WritingDataHandlerNumeric;
 ///
 /// \brief Specialized ReadingDataHandler for numeric data types.
 ///
-/// Includes few methods that allow to access the raw memory containing the
+/// Includes few methods that allow accessing the raw memory containing the
 /// buffer's data.
 ///
 ///////////////////////////////////////////////////////////////////////////////
@@ -118,6 +118,15 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     bool isSigned() const;
+
+    /// \brief Returns true if the numbers stored in the buffer are floating point
+    ///        numbers, false otherwise.
+    ///
+    /// \return true if the numbers stored in the buffer are floating point
+    ///         numbers, false otherwise
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    bool isFloat() const;
 
     /// \brief Copies the content of the data handler into another data handler,
     ///        converting the data to the destination handler data type.
