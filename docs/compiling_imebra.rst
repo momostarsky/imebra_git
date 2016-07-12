@@ -23,8 +23,6 @@ In order to build the library from the Imebra Source Distribution you need:
 
 - a modern C++ compiler (GCC, clang, Visual Studio, etc)
 - CMake version 2.8 or newer (https://cmake.org/)
-- JDK (only if you want to build the Java version)
-- Android SDK & NDK (only if you want to build the Android version)
 
 Building Imebra
 ...............
@@ -37,9 +35,10 @@ To generate the Imebra shared library, execute the following steps:
 1. Create a folder that will contain the result of the compilation (artifacts)
 2. cd into the created artifacts folder
 3. execute cmake with the path to the Imebra's library folder as parameter
-3. execute cmake with the --build option, and on Windows optionally specify the build configuration
+4. execute cmake with the --build option, and on Windows optionally specify the build configuration
 
 For instance:
+
 ::
 
     md artifacts
@@ -55,11 +54,13 @@ chain defined on your machine.
 
 On Windows, the last cmake command can be followed by --config release or --config debug, like
 this:
+
 ::
 
     cmake --build . --config release
 
 or
+
 ::
 
     cmake --build . --config debug
@@ -74,6 +75,7 @@ Prerequisites
 
 In order to build the Android version of Imebra you need:
 
+- Apache Ant
 - the Android SDK
 - the Android NDK
 
@@ -90,6 +92,7 @@ To generate the Imebra Jar library:
 3. the produced JAR will be located in the folder wrappers/javaWrapper/out/artifacts
 
 For instance:
+
 ::
 
     cd wrappers/javaWrapper
@@ -121,6 +124,7 @@ To compile te tests, execute the following steps:
 4. run cmake --build .
 
 For instance:
+
 ::
 
     md tests_artifacts
