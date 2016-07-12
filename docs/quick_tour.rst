@@ -298,7 +298,7 @@ in C++
     // apply to the image before displaying it
     imebra::TransformsChain chain;
 
-    if(image->isMonochrome())
+    if(imebra::ColorTransformsFactory::isMonochrome(image->getColorSpace())
     {
         // Allocate a VOILUT transform. If the DataSet does not contain any pre-defined
         //  settings then we will find the optimal ones.
@@ -347,7 +347,7 @@ in Java
     // apply to the image before displaying it
     com.imebra.TransformsChain chain = new com.imebra.TransformsChain();
 
-    if(image.isMonochrome())
+    if(com.imebra.ColorTransformsFactory.isMonochrome(image.getColorSpace())
     {
         // Allocate a VOILUT transform. If the DataSet does not contain any pre-defined
         //  settings then we will find the optimal ones.
