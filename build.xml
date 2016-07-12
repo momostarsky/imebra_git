@@ -14,11 +14,13 @@
 
 	-->
 	<target name="version" description="Initialize the build number">
+		<exec executable="python" dir=".">
+			<arg path="./getVersion.py" />
+		</exec>
+		<loadproperties srcFile="version.property" />
 		<property environment="env"/>
-		<property name="version" value="${IMEBRA_MAJOR_VERSION}.${IMEBRA_MINOR_VERSION}.${IMEBRA_REVISION}" />
-		<property name="short_version" value="${IMEBRA_MAJOR_VERSION}.${IMEBRA_MINOR_VERSION}.${IMEBRA_REVISION}" />
-        <property name="fileVersion" value="${env.BUILD_BRANCH}_build_${version}"/>
-        <property name="fullVersionReadable" value="${env.BUILD_BRANCH} build ${version}"/>
+        <property name="fileVersion" value="${version}"/>
+        <property name="fullVersionReadable" value="${version}"/>
         <property name="productName" value="Imebra ${fullVersionReadable}"/>
 	</target>
 
@@ -61,13 +63,14 @@
 
 	<!-- Replace the version number and license info -->
 	<target name="replace_version" depends="create_build_dir">
-		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt, *.rst, *.py" token="$version$" value="${fullVersionReadable}" />
-		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt, *.rst, *.py" token="1.0.0.1" value="${fullVersionReadable}" />
-		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt, *.rst, *.py" token="&quot;1.0.0.1&quot;" value="&quot;${fullVersionReadable}&quot;" />
-		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt, *.rst, *.py" token="L&quot;1.0.0.1&quot;" value="L&quot;${fullVersionReadable}&quot;" />
-		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt, *.rst, *.py" token="1.0.0" value="${short_version}" />
-		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt, *.rst, *.py" token="&quot;1.0.0&quot;" value="&quot;${short_version}&quot;" />
-		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt, *.rst, *.py" token="L&quot;1.0.0&quot;" value="L&quot;${short_version}&quot;" />
+		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt" token="$version$" value="${fullVersionReadable}" />
+		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt" token="1.0.0.1" value="${fullVersionReadable}" />
+		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt" token="&quot;1.0.0.1&quot;" value="&quot;${fullVersionReadable}&quot;" />
+		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt" token="L&quot;1.0.0.1&quot;" value="L&quot;${fullVersionReadable}&quot;" />
+		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt" token="1.0.0" value="${short_version}" />
+		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt" token="&quot;1.0.0&quot;" value="&quot;${short_version}&quot;" />
+		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt" token="L&quot;1.0.0&quot;" value="L&quot;${short_version}&quot;" />
+		<replace file="${build_release}/wrappers/javaWrapper/AndroidManifest.xml" token="&quot;1.0.0&quot;" value="&quot;${short_version}&quot;" />
 		<replace dir="${build_release}" token="$fileHeader$">
 			<replacevalue><![CDATA[
 $imebraVersion$
