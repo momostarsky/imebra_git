@@ -1,0 +1,8 @@
+image: binarno/imebra_docker_build
+
+pipelines:
+  default:
+    - step:
+        script:
+          - ant 
+          - python uploadDropbox.py ./imebra_source_distribution.zip

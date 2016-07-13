@@ -1,7 +1,13 @@
+# parameter 1 = file to upload
+# enviroment variable DROPBOX_SECRET = app authorization key
+
+import dropbox
+import os
+import sys
 import subprocess
 
-f = open('version.property', 'w')
-
+# Get the version
+#----------------
 hgbranch = 'hg branch'
 hgprocess = subprocess.Popen(hgbranch.split(), stdout=subprocess.PIPE)
 branch = hgprocess.stdout.readlines()[0].rstrip()
@@ -18,11 +24,12 @@ hgrelease = 'hg log -b default --template . --rev ancestors(.)'
 hgprocess = subprocess.Popen(hgrelease.split(), stdout=subprocess.PIPE)
 release = version + '.' + str(hgprocess.stdout.readlines()[0].count('.'))
 
-hgid = 'hg id -i'
-hgprocess = subprocess.Popen(hgid.split(), stdout=subprocess.PIPE)
-release += ' changeset ' + str(hgprocess.stdout.readlines()[0].rstrip())
+file_name = "imebra_" + release.replace('.', '_') + '.zip'
 
-f.write("short_version = " + version + "\n")
-f.write("version = " + release + "\n")
+# Upload to dropbox
+#------------------
+client = dropbox.client.DropboxClient(os.environ['DROPBOX_SECRET'])
 
+f = open(sys.argv[1], 'rb')
+response = client.put_file(file_name, f)
 f.close()
