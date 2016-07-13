@@ -104,8 +104,6 @@ TEST(unicodeStringHandlerTest, supplementaryUnicodeChars)
         MemoryStreamOutput writeStream(streamMemory);
         StreamWriter writer(writeStream);
         CodecFactory::save(testDataSet, writer, codecType_t::dicom);
-
-        CodecFactory::save(testDataSet, "/home/paolo/testcharset.dcm", codecType_t::dicom);
     }
 
     {
