@@ -1,5 +1,7 @@
-Creating a source distribution from the code in the VCS
-=======================================================
+.. _build-distribution-label:
+
+Creating the source distribution from the code in the VCS
+=========================================================
 
 This section describes how to create an Imebra Source Distribution containing the full
 C++source code, the Java wrappers for Android, the HTML documentation, the test units code coverage
@@ -58,4 +60,17 @@ Finally, cd into the imebra folder and execute ant to build the source distribut
     cd imebra
     ant
 
+
+Versioning
+==========
+
+Public releases of Imebra V4 are versioned according to the rules defined in `Semantic versioning <http://semver.org/>`_.
+
+Nightly releases are versioned as public releases but their minor version or patch number are set to 999 (the master branch
+or the major version branches have a minor version set to 999, the minor version branches have a patch number set to 999).
+
+For instance:
+
+- version 4.1.999.45 indicates a nightly build of version 4.1, build from the commit number 45 in the branch.
+- version 4.999.999.678 indicates a nightly build of version 4 (master branch), build from the commit number 678 in the branch.
 

@@ -1,7 +1,11 @@
+.. _compiling-imebra-label:
+
 Compiling Imebra
 ================
 
 This section explains how to compile Imebra from the source distribution.
+You can download the source distribution from https://imebra.com, or you can create a source distribution
+by following the instructions at :ref:`build-distribution-label`
 
 The result of the Imebra compilation is a shared library for your operating system of choice.
 
