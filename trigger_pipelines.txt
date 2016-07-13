@@ -1,2 +1,0 @@
-This file is updated to trigger the bitbucket-pipelines in branches
-
