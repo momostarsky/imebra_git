@@ -70,17 +70,17 @@ copyright = u'2016, Paolo Brandoli'
 hgbranch = 'hg branch'
 hgprocess = subprocess.Popen(hgbranch.split(), stdout=subprocess.PIPE)
 branch = hgprocess.stdout.readlines()[0].rstrip()
-if branch == "default":
-  branch = "4"
 
 version = branch
+if version == "default":
+  version = "4"
+
 if version.count('.') == 0:
   version += ".999"  
 if version.count('.') == 1:
   version += ".999"
 
-# The full version, including alpha/beta/rc tags.
-hgrelease = 'hg log -b default --template . --rev ancestors(.)'
+hgrelease = 'hg log -b " + branch + " --template . --rev ancestors(.)'
 hgprocess = subprocess.Popen(hgrelease.split(), stdout=subprocess.PIPE)
 release = version + '.' + str(hgprocess.stdout.readlines()[0].count('.'))
 
