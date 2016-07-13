@@ -119,6 +119,27 @@ TEST(stringHandlerTest, AETest)
 }
 
 
+TEST(stringHandlerTest, URTest)
+{
+    DataSet testDataSet;
+
+    std::string longString((size_t)40000, 'a');
+    testDataSet.setString(TagId(0x0010, 0x0010), longString, tagVR_t::UR);
+    ASSERT_EQ(longString, testDataSet.getString(TagId(0x0010, 0x0010), 0));
+
+    ASSERT_THROW(testDataSet.getDate(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
+    ASSERT_THROW(testDataSet.getAge(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
+
+    ASSERT_EQ(tagVR_t::UR, testDataSet.getDataType(TagId(0x0010, 0x0010)));
+
+    {
+        std::unique_ptr<WritingDataHandler> dataHandler(testDataSet.getWritingDataHandler(TagId(0x0010, 0x0010), 0, tagVR_t::LT));
+        dataHandler->setString(0, "test");
+        ASSERT_THROW(dataHandler->setString(1, "test");, DataHandlerInvalidDataError);
+    }
+}
+
+
 TEST(stringHandlerTest, LOTest)
 {
     DataSet testDataSet;

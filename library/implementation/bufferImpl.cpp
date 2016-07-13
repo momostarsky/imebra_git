@@ -26,6 +26,7 @@ $fileHeader$
 #include "dataHandlerStringSTImpl.h"
 #include "dataHandlerStringUCImpl.h"
 #include "dataHandlerStringUIImpl.h"
+#include "dataHandlerStringURImpl.h"
 #include "dataHandlerStringUTImpl.h"
 #include "dataHandlerDateImpl.h"
 #include "dataHandlerDateTimeImpl.h"
@@ -189,6 +190,9 @@ std::shared_ptr<handlers::readingDataHandler> buffer::getReadingDataHandler(tagV
     case tagVR_t::UI:
         return std::make_shared<handlers::readingDataHandlerStringUI>(*localMemory);
 
+    case tagVR_t::UR:
+        return std::make_shared<handlers::readingDataHandlerStringUR>(*localMemory);
+
     case tagVR_t::UT:
         return std::make_shared< handlers::readingDataHandlerStringUT>(*localMemory, m_charsetsList);
 
@@ -276,6 +280,9 @@ std::shared_ptr<handlers::writingDataHandler> buffer::getWritingDataHandler(tagV
 
     case tagVR_t::IS:
         return std::make_shared<handlers::writingDataHandlerStringIS>(shared_from_this());
+
+    case tagVR_t::UR:
+        return std::make_shared<handlers::writingDataHandlerStringUR>(shared_from_this());
 
     case tagVR_t::LO:
         return std::make_shared<handlers::writingDataHandlerStringLO>(shared_from_this(), m_charsetsList);
