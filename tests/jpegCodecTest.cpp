@@ -65,9 +65,9 @@ TEST(jpegCodecTest, testBaselineSubsampled)
         {
             for(int interleaved = 0; interleaved != 2; ++interleaved)
             {
-                std::uint32_t width = 600;
-                std::uint32_t height = 400;
-                std::unique_ptr<Image> baselineImage(buildImageForTest(width, height, bitDepth_t::depthU8, 7, 30, 20, "RGB", 50));
+                std::uint32_t width = 300;
+                std::uint32_t height = 200;
+                std::unique_ptr<Image> baselineImage(buildSubsampledImage(width, height, bitDepth_t::depthU8, 7, 30, 20, "RGB"));
 
                 std::unique_ptr<Transform> colorTransform(ColorTransformsFactory::getTransform("RGB", "YBR_FULL"));
                 std::unique_ptr<Image> ybrImage(colorTransform->allocateOutputImage(*baselineImage, width, height));
@@ -94,9 +94,9 @@ TEST(jpegCodecTest, testBaselineSubsampled)
                 colorTransform->runTransform(*checkImage, 0, 0, checkWidth, checkHeight, *rgbImage, 0, 0);
 
                 // Compare the buffers. A little difference is allowed
-                double differenceRGB = compareImages(*baselineImage, *rgbImage);
+                double differenceRGB = identicalImages(*baselineImage, *rgbImage);
                 double differenceYBR = compareImages(*ybrImage, *checkImage);
-                ASSERT_LE(differenceRGB, 5);
+                ASSERT_LE(differenceRGB, 2);
                 ASSERT_LE(differenceYBR, 1);
             }
         }
