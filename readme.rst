@@ -9,12 +9,10 @@ Imebra is a C++ DICOM library able to parse & build DICOM files decompress/compr
 A JNI interface allow to use the library also with the JAVA language, including on Android OS.
 
 
-.. _build-distribution-label:
-
 Creating the source distribution from the code in the VCS
 =========================================================
 
-If you downloaded the source distribution then you can skip this part and jump directly to :ref:`compiling-imebra-label`.
+If you downloaded the source distribution then you can skip this part and jump directly to "Compiling Imebra".
 
 This section describes how to create an Imebra Source Distribution containing the full
 C++source code, the Java wrappers for Android, the HTML documentation, the test units code coverage
@@ -88,14 +86,12 @@ For instance:
 - version 4.999.999.678 indicates a nightly build of version 4 (master branch), build from the commit number 678 in the branch.
 
 
-.. _compiling-imebra-label:
-
 Compiling Imebra
 ================
 
 This section explains how to compile Imebra from the source distribution.
 You can download the source distribution from https://imebra.com, or you can create a source distribution
-by following the instructions at :ref:`build-distribution-label`
+by following the instructions at "Creating the source distribution from the code in the VCS"
 
 The result of the Imebra compilation is a shared library for your operating system of choice.
 
