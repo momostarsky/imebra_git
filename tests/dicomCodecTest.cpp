@@ -18,8 +18,8 @@ TEST(dicomCodecTest, testDicom)
     std::uint32_t interleavedStart = 0;
     std::uint32_t signStep = 1;
 
-    std::uint32_t sizeX(301);
-    std::uint32_t sizeY(201);
+    std::uint32_t sizeX(201);
+    std::uint32_t sizeY(151);
 
     for(int transferSyntaxId(0); transferSyntaxId != 4; ++transferSyntaxId)
 	{
