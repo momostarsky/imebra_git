@@ -123,7 +123,7 @@ exceptionsManagerGetter::exceptionsManagerGetter()
 exceptionsManagerGetter::~exceptionsManagerGetter()
 {
 #ifdef __APPLE__
-    ::pthread_key_delete(m_key)
+    ::pthread_key_delete(m_key);
 #endif
 }
 

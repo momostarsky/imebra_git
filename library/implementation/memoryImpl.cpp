@@ -529,7 +529,7 @@ memoryPoolGetter::~memoryPoolGetter()
 {
     std::set_new_handler(m_oldNewHandler);
 #ifdef __APPLE__
-    ::pthread_key_delete(m_key)
+    ::pthread_key_delete(m_key);
 #endif
 }
 
@@ -539,7 +539,9 @@ memoryPoolGetter& memoryPoolGetter::getMemoryPoolGetter()
     return getter;
 }
 
+#ifndef __APPLE__
 thread_local std::unique_ptr<memoryPool> memoryPoolGetter::m_pool = std::unique_ptr<memoryPool>();
+#endif
 
 memoryPool& memoryPoolGetter::getMemoryPoolLocal()
 {

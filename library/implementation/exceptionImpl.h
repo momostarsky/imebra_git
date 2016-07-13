@@ -179,7 +179,7 @@ public:
 protected:
 
 #ifdef __APPLE__
-    void deleteExceptionsManager(void* pMemoryPool)
+    static void deleteExceptionsManager(void* pMemoryPool);
     pthread_key_t m_key;
 #endif
 

@@ -296,7 +296,7 @@ public:
 
 protected:
 #ifdef __APPLE__
-    void deleteMemoryPool(void* pMemoryPool)
+    static void deleteMemoryPool(void* pMemoryPool);
     pthread_key_t m_key;
 #endif
     std::new_handler m_oldNewHandler;
