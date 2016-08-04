@@ -11,3 +11,8 @@ in memory managed by the :cpp:class:`imebra::DataSet` class.
 Other functions in the dataset allow the application to read or write into
 the DICOM tags, or to store new images into the dataSet.
 
+You can get Imebra from https://imebra.com
+
+Before committing to the usage of Imebra, please read the :ref:`REQUIREMENTS` that the library
+fullfills as well as the :ref:`RISKS` that the usage of the library introduces.
+
