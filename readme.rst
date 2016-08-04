@@ -6,7 +6,7 @@ Introduction
 
 Imebra is a C++ DICOM library able to parse & build DICOM files decompress/compress/process the embedded images.
 
-A JNI interface allow to use the library also with the JAVA language, including on Android OS.
+A JNI interface allows to use the library also with the JAVA language, including on Android OS.
 
 
 .. _build-distribution-label:
