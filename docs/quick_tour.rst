@@ -6,16 +6,15 @@ Loading files
 
 Imebra can read 2 kinds of files:
 
-- DICOM files
-- Jpeg files
+- DICOM files (via the Imebra DICOM codec)
+- Jpeg files (via the Imebra Jpeg codec)
 
-In order to do this, Imebra supplies a DICOM codec and a JPEG codec.
-Both the codes store the parsed content into a DICOM structure represented by the :cpp:class:`imebra::DataSet` class 
+When parsing a DICOM or a Jpeg file both the DICOM and the Jpeg codes generate an in-memory DICOM structure represented by the :cpp:class:`imebra::DataSet` class
 (yes, also the Jpeg codec produces a DICOM structure containing an embedded JPEG file).
 
 Imebra chooses the correct codec automatically according to the stream's content.
 
-In order to create an :cpp:class:`imebra::DataSet` from a stream you use the class :cpp:class:`imebra::CodecFactory`.
+To create an :cpp:class:`imebra::DataSet` from a stream use the class :cpp:class:`imebra::CodecFactory`.
 
 In C++:
 
@@ -29,9 +28,9 @@ In Java:
 
     com.imebra.DataSet loadedDataSet = com.imebra.CodecFactory.load("DicomFile.dcm");
 
-The previous line loads the file DicomFile.dcm.
+The previous code loads the file DicomFile.dcm.
 
-Imebra allows to perform a "lazy loading", which leaves the data on the input stream and loads it into memory
+Imebra can perform a "lazy loading", which leaves the data on the input stream and loads it into memory
 only when necessary; large tags that are not needed are loaded only when necessary and then discarded from memory 
 until they are needed once again.
 
@@ -82,7 +81,7 @@ If you are reading a tag containing numeric values then you can retrieve the Tag
 (via :cpp:member:`imebra::DataSet::getReadingDataHandlerNumeric`) which exposes the raw memory that stores the actual data: in some cases
 this allow for faster information processing.
 
-In order to identify the tag to read you must use the class :cpp:class:`imebra::TagId` which as parameters takes the group ID and the tag ID or
+In order to identify the tag to read you must use the class :cpp:class:`imebra::TagId` which takes as parameters the group ID and the tag ID or
 an :cpp:enum:`imebra::tagId_t` enumeration (only in C++, not in Java).
 
 This is how you retrieve the patient's name from the DataSet in C++:
@@ -116,7 +115,7 @@ and in Java:
     String patientNameIdeographic = loadedDataSet.getUnicodeString(new com.imebra.TagId(0x10, 0x10), 0);
     std::wstring patientNameIdeographic = loadedDataSet->getUnicodeString(imebra::TagId(0x10, 0x10), 1);
 
-Note that the following code will throw one of the exceptions derived from :cpp:class:`imebra::MissingDataElementError`
+Note that the previous code will throw one of the exceptions derived from :cpp:class:`imebra::MissingDataElementError`
 if the desidered patient name component is not present in the :cpp:class:`imebra::DataSet`.
 
 You can specify a return value that is returned when the value is not present in order to avoid throwing an exception when
