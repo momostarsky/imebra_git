@@ -5,7 +5,6 @@ project("imebra")
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     message(STATUS "GCC detected, adding compile flags")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wall -Wextra -Wpedantic -Wconversion -Wfloat-equal -fvisibility=hidden -fvisibility-inlines-hidden")
-
     set(IMEBRA_LIBRARIES pthread)
 
     if(CMAKE_BUILD_TYPE MATCHES DEBUG)
@@ -18,13 +17,13 @@ elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 
     message(STATUS "CLANG detected, adding compile flags")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wall -Wextra -Wpedantic -Wconversion -Wfloat-equal -fvisibility=hidden -fvisibility-inlines-hidden")
-
     set(IMEBRA_LIBRARIES pthread)
 
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 
     message(STATUS "MSVC detected, adding compile flags")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /Wp64")
+    set(IMEBRA_LIBRARIES Kernel32)
 
 endif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 
@@ -50,15 +49,14 @@ elseif(IMEBRA_CHARSET_CONVERSION MATCHES JAVA)
 elseif(IMEBRA_CHARSET_CONVERSION MATCHES WINDOWS)
     message("Using WINDOWS CHARSET CONVERSION")
     add_definitions(-DIMEBRA_USE_WINDOWS_CHARSET)
-    set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} Kernel32)
 else(IMEBRA_CHARSET_CONVERSION MATCHES ICONV)
 	if(WIN32)
-		message("Using WINDOWS CHARSET CONVERSION (default)")
-		add_definitions(-DIMEBRA_USE_WINDOWS_CHARSET)
-	else(WIN32)
-    message("Using ICONV (default)")
-    add_definitions(-DIMEBRA_USE_ICONV)
-	endif(WIN32)
+            message("Using WINDOWS CHARSET CONVERSION (default)")
+            add_definitions(-DIMEBRA_USE_WINDOWS_CHARSET)
+        else(WIN32)
+            message("Using ICONV (default)")
+            add_definitions(-DIMEBRA_USE_ICONV)
+        endif(WIN32)
 endif(IMEBRA_CHARSET_CONVERSION MATCHES ICONV)
 
 message("Linked libraries: ${IMEBRA_LIBRARIES}")
