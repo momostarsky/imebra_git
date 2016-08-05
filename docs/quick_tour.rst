@@ -1,5 +1,5 @@
-Quick tour
-==========
+Getting started
+===============
 
 Loading files
 -------------
