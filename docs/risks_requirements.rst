@@ -4,7 +4,7 @@
 Requirements
 ------------
 
-This section lists the top level requirement and the requirements needed to mitigate the identified risks.
+This section lists the Imebra v.4 top level requirements and the requirements needed to mitigate the identified risks.
 
 
 .. _REQ_FUNC:
@@ -646,54 +646,52 @@ The risks are ordered by their total mitigated risk (severity * likelihood - mit
 When a risk is mitigated then it contains a link to the mitigating requirement.
 
 
-.. _RISK_BUFFER_RESET:
+.. _RISK_BUFFER_OVERFLOW:
 
-[RISK_BUFFER_RESET] When a client wants to write several values in the buffer it may inadvertently reset the buffer
-...................................................................................................................
+[RISK_BUFFER_OVERFLOW] The library and its client may read or write memory outside the allocated buffer
+.......................................................................................................
 
-Because a writing data handler always starts in an empty state, a client
-may inadvertently erase the buffer content when writing new content into it.
 
-Likelihood: 100% If the library supplies a function able to write in different locations of a buffer then it is very likely that the client will use such function.
 
-Severity: 100 (0 = no impact, 100 = deadly) The final dicom content may not represent what the client intended.
+Likelihood: 100% 
+
+Severity: 100 (0 = no impact, 100 = deadly) 
 
 Total risk (Likelyhood by Severity, 0 = no risk, 10000 = maximum risk): 10000
 
-Mitigated total risk (0 = no risk, 10000 = maximum risk): 1000
+Mitigated total risk (0 = no risk, 10000 = maximum risk): 10000
 
 Caused by:
 
-- :ref:`REQ_WRITING_HANDLER_EMPTY`
+- :ref:`REQ_CPP`
+- :ref:`REQ_RAW_MEMORY`
 
 
 
+.. _RISK_RECEIVE_DEFAULT_VALUE:
 
+[RISK_RECEIVE_DEFAULT_VALUE] When receiving default values for non-existent data the client may understand that the tag is actually present
+...........................................................................................................................................
 
+When receiving default values for non-existent data the client may understand that the tag is
+actually present.
 
+Likelihood: 100% It is really common that a dataset is missing some tags.
 
+Severity: 100 (0 = no impact, 100 = deadly) If the client application is not aware of the fact that the library may have returned a default value instead of the actual one (that is missing) then it could use it as base for clinical actions or diagnoses.
 
+Total risk (Likelyhood by Severity, 0 = no risk, 10000 = maximum risk): 10000
 
+Mitigated total risk (0 = no risk, 10000 = maximum risk): 5000
 
+Caused by:
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+- :ref:`REQ_RETURN_DEFAULT_VALUE`
 
 
 Mitigated by: 
 
-- :ref:`REQ_DONT_EXPOSE_INDEXED_WRITING` (by 90%)
+- :ref:`REQ_APP_DECIDES_DEFAULT_VALUE` (by 50%)
 
 .. _RISK_VR_CONVERSION:
 
@@ -717,79 +715,9 @@ Caused by:
 - :ref:`REQ_VR_CONVERSION`
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 Mitigated by: 
 
 - :ref:`REQ_THROW_WRONG_CONVERSION` (by 80%)
-
-.. _RISK_BUFFER_OVERFLOW:
-
-[RISK_BUFFER_OVERFLOW] The library and its client may read or write memory outside the allocated buffer
-.......................................................................................................
-
-
-
-Likelihood: 100% 
-
-Severity: 100 (0 = no impact, 100 = deadly) 
-
-Total risk (Likelyhood by Severity, 0 = no risk, 10000 = maximum risk): 10000
-
-Mitigated total risk (0 = no risk, 10000 = maximum risk): 10000
-
-Caused by:
-
-- :ref:`REQ_CPP`
-- :ref:`REQ_RAW_MEMORY`
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 .. _RISK_MEMORY_ALLOC:
 
@@ -809,30 +737,6 @@ Mitigated total risk (0 = no risk, 10000 = maximum risk): 2000
 Caused by:
 
 - :ref:`REQ_CPP`
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 Mitigated by: 
@@ -859,176 +763,34 @@ Caused by:
 - :ref:`REQ_CPP`
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 Mitigated by: 
 
 - :ref:`REQ_OBJECT_ALLOCATION` (by 80%)
 
-.. _RISK_RECEIVE_DEFAULT_VALUE:
+.. _RISK_BUFFER_RESET:
 
-[RISK_RECEIVE_DEFAULT_VALUE] When receiving default values for non-existent data the client may understand that the tag is actually present
-...........................................................................................................................................
+[RISK_BUFFER_RESET] When a client wants to write several values in the buffer it may inadvertently reset the buffer
+...................................................................................................................
 
-When receiving default values for non-existent data the client may understand that the tag is
-actually present.
+Because a writing data handler always starts in an empty state, a client
+may inadvertently erase the buffer content when writing new content into it.
 
-Likelihood: 100% It is really common that a dataset is missing some tags.
+Likelihood: 100% If the library supplies a function able to write in different locations of a buffer then it is very likely that the client will use such function.
 
-Severity: 100 (0 = no impact, 100 = deadly) If the client application is not aware of the fact that the library may have returned a default value instead of the actual one (that is missing) then it could use it as base for clinical actions or diagnoses.
-
-Total risk (Likelyhood by Severity, 0 = no risk, 10000 = maximum risk): 10000
-
-Mitigated total risk (0 = no risk, 10000 = maximum risk): 5000
-
-Caused by:
-
-- :ref:`REQ_RETURN_DEFAULT_VALUE`
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Mitigated by: 
-
-- :ref:`REQ_APP_DECIDES_DEFAULT_VALUE` (by 50%)
-
-.. _RISK_TAGS_DONT_EXIST:
-
-[RISK_TAGS_DONT_EXIST] The client may ask for tags that don't exist
-...................................................................
-
-The client may ask for data not included in the dataset
-
-Likelihood: 100% The chances of requesting a non-existing tag are really high and may happen on every loaded dataset.
-
-Severity: 100 (0 = no impact, 100 = deadly) Missing tags may be essential in making sense of the image and the information contained in the dataset.
+Severity: 100 (0 = no impact, 100 = deadly) The final dicom content may not represent what the client intended.
 
 Total risk (Likelyhood by Severity, 0 = no risk, 10000 = maximum risk): 10000
 
-Mitigated total risk (0 = no risk, 10000 = maximum risk): 0
+Mitigated total risk (0 = no risk, 10000 = maximum risk): 1000
 
 Caused by:
 
-- :ref:`REQ_READ_TAGS`
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+- :ref:`REQ_WRITING_HANDLER_EMPTY`
 
 
 Mitigated by: 
 
-- :ref:`REQ_THROW_ON_MISSING_DATA` (by 100%)
-
-.. _RISK_LONG_PARAMETERS_LIST:
-
-[RISK_LONG_PARAMETERS_LIST] Specifying the tag id in the dataset methods may create a long confusing list of parameters
-.......................................................................................................................
-
-Because the tag id is composed by group id and tag id (and optionally order id),
-the list of parameters in the methods that access a dataset's tags may become too long
-and confuse the developers that use the library.
-
-Likelihood: 80% It is very easy to get confused when a long list of parameters is used in a method call, specially when all the parameters are integers (e.g. when setting an integer tag's value).
-
-Severity: 100 (0 = no impact, 100 = deadly) Referencing the wrong tag may cause wrong diagnoses or therapies and lead to death.
-
-Total risk (Likelyhood by Severity, 0 = no risk, 10000 = maximum risk): 8000
-
-Mitigated total risk (0 = no risk, 10000 = maximum risk): 0
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Mitigated by: 
-
-- :ref:`REQ_TAGID_SEPARATE_CLASS` (by 100%)
+- :ref:`REQ_DONT_EXPOSE_INDEXED_WRITING` (by 90%)
 
 .. _RISK_SHARED_PTR_NEW:
 
@@ -1052,129 +814,9 @@ Caused by:
 - :ref:`REQ_OBJECT_ALLOCATION`
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 Mitigated by: 
 
 - :ref:`REQ_MAKE_SHARED` (by 90%)
-
-.. _RISK_FULL_MEMORY:
-
-[RISK_FULL_MEMORY] The memory retained in the memory pool may cause an out-of-memory error
-..........................................................................................
-
-
-
-Likelihood: 50% On embedded or small devices (e.g. mobile phones) the amount of RAM may be limited. The usage of a memory pool causes the accumulation.
-
-Severity: 10 (0 = no impact, 100 = deadly) This is a low risk error: the software will stop working and report the error.
-
-Total risk (Likelyhood by Severity, 0 = no risk, 10000 = maximum risk): 500
-
-Mitigated total risk (0 = no risk, 10000 = maximum risk): 250
-
-Caused by:
-
-- :ref:`REQ_MEMORY_POOL`
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Mitigated by: 
-
-- :ref:`REQ_MEMORY_POOL_NEW_HANDLER` (by 50%)
-
-.. _RISK_OUT_OF_MEMORY_BIG_IMAGE:
-
-[RISK_OUT_OF_MEMORY_BIG_IMAGE] Big images or corrupted image size tags may cause an out-of-memory error
-.......................................................................................................
-
-Big images or corrupted image size tags may cause an out-of-memory error
-
-Likelihood: 50% This could happen on embedded or small devices (e.g. mobile phones) where the amount of RAM may be limited.
-
-Severity: 10 (0 = no impact, 100 = deadly) This is a low risk error: the software will stop working and report the error.
-
-Total risk (Likelyhood by Severity, 0 = no risk, 10000 = maximum risk): 500
-
-Mitigated total risk (0 = no risk, 10000 = maximum risk): 100
-
-Caused by:
-
-- :ref:`REQ_DECOMPRESS_IMAGES`
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Mitigated by: 
-
-- :ref:`REQ_MAX_IMAGE_SIZE` (by 80%)
 
 .. _RISK_WRONG_MODALITY_VOILUT_DATASET:
 
@@ -1197,29 +839,29 @@ Caused by:
 
 
 
+.. _RISK_FULL_MEMORY:
+
+[RISK_FULL_MEMORY] The memory retained in the memory pool may cause an out-of-memory error
+..........................................................................................
 
 
 
+Likelihood: 50% On embedded or small devices (e.g. mobile phones) the amount of RAM may be limited. The usage of a memory pool causes the accumulation.
+
+Severity: 10 (0 = no impact, 100 = deadly) This is a low risk error: the software will stop working and report the error.
+
+Total risk (Likelyhood by Severity, 0 = no risk, 10000 = maximum risk): 500
+
+Mitigated total risk (0 = no risk, 10000 = maximum risk): 250
+
+Caused by:
+
+- :ref:`REQ_MEMORY_POOL`
 
 
+Mitigated by: 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+- :ref:`REQ_MEMORY_POOL_NEW_HANDLER` (by 50%)
 
 .. _RISK_WRONG_VOILUT_DATASET:
 
@@ -1242,28 +884,74 @@ Caused by:
 
 
 
+.. _RISK_OUT_OF_MEMORY_BIG_IMAGE:
+
+[RISK_OUT_OF_MEMORY_BIG_IMAGE] Big images or corrupted image size tags may cause an out-of-memory error
+.......................................................................................................
+
+Big images or corrupted image size tags may cause an out-of-memory error
+
+Likelihood: 50% This could happen on embedded or small devices (e.g. mobile phones) where the amount of RAM may be limited.
+
+Severity: 10 (0 = no impact, 100 = deadly) This is a low risk error: the software will stop working and report the error.
+
+Total risk (Likelyhood by Severity, 0 = no risk, 10000 = maximum risk): 500
+
+Mitigated total risk (0 = no risk, 10000 = maximum risk): 100
+
+Caused by:
+
+- :ref:`REQ_DECOMPRESS_IMAGES`
 
 
+Mitigated by: 
+
+- :ref:`REQ_MAX_IMAGE_SIZE` (by 80%)
+
+.. _RISK_LONG_PARAMETERS_LIST:
+
+[RISK_LONG_PARAMETERS_LIST] Specifying the tag id in the dataset methods may create a long confusing list of parameters
+.......................................................................................................................
+
+Because the tag id is composed by group id and tag id (and optionally order id),
+the list of parameters in the methods that access a dataset's tags may become too long
+and confuse the developers that use the library.
+
+Likelihood: 80% It is very easy to get confused when a long list of parameters is used in a method call, specially when all the parameters are integers (e.g. when setting an integer tag's value).
+
+Severity: 100 (0 = no impact, 100 = deadly) Referencing the wrong tag may cause wrong diagnoses or therapies and lead to death.
+
+Total risk (Likelyhood by Severity, 0 = no risk, 10000 = maximum risk): 8000
+
+Mitigated total risk (0 = no risk, 10000 = maximum risk): 0
 
 
+Mitigated by: 
+
+- :ref:`REQ_TAGID_SEPARATE_CLASS` (by 100%)
+
+.. _RISK_TAGS_DONT_EXIST:
+
+[RISK_TAGS_DONT_EXIST] The client may ask for tags that don't exist
+...................................................................
+
+The client may ask for data not included in the dataset
+
+Likelihood: 100% The chances of requesting a non-existing tag are really high and may happen on every loaded dataset.
+
+Severity: 100 (0 = no impact, 100 = deadly) Missing tags may be essential in making sense of the image and the information contained in the dataset.
+
+Total risk (Likelyhood by Severity, 0 = no risk, 10000 = maximum risk): 10000
+
+Mitigated total risk (0 = no risk, 10000 = maximum risk): 0
+
+Caused by:
+
+- :ref:`REQ_READ_TAGS`
 
 
+Mitigated by: 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+- :ref:`REQ_THROW_ON_MISSING_DATA` (by 100%)
 
 
