@@ -129,6 +129,9 @@ TEST(stringHandlerTest, URTest)
 
     ASSERT_THROW(testDataSet.getDate(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
     ASSERT_THROW(testDataSet.getAge(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
+    ASSERT_THROW(testDataSet.getUnsignedLong(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
+    ASSERT_THROW(testDataSet.getSignedLong(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
+    ASSERT_THROW(testDataSet.getDouble(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
 
     ASSERT_EQ(tagVR_t::UR, testDataSet.getDataType(TagId(0x0010, 0x0010)));
 
@@ -294,6 +297,36 @@ TEST(stringHandlerTest, UITest)
 }
 
 
+TEST(stringHandlerTest, UCTest)
+{
+    DataSet testDataSet;
+
+    testDataSet.setUnicodeString(TagId(0x0010, 0x0010), L"0123456789012345", tagVR_t::UC);
+    ASSERT_EQ("0123456789012345", testDataSet.getString(TagId(0x0010, 0x0010), 0));
+    ASSERT_EQ(L"0123456789012345", testDataSet.getUnicodeString(TagId(0x0010, 0x0010), 0));
+    ASSERT_THROW(testDataSet.getDate(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
+    ASSERT_THROW(testDataSet.getAge(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
+
+    {
+        {
+            std::unique_ptr<WritingDataHandler> dataHandler(testDataSet.getWritingDataHandler(TagId(0x0010, 0x0010), 0, tagVR_t::UC));
+            dataHandler->setUnicodeString(0, L"test0");
+            dataHandler->setUnicodeString(1, L"test1");
+        }
+        ASSERT_EQ(L"test0", testDataSet.getUnicodeString(TagId(0x0010, 0x0010), 0));
+        ASSERT_EQ(L"test1", testDataSet.getUnicodeString(TagId(0x0010, 0x0010), 1));
+    }
+
+    {
+        std::string longString((size_t)100000, 'a');
+        testDataSet.setString(TagId(0x0010, 0x0010), longString, tagVR_t::UC);
+        ASSERT_EQ(longString, testDataSet.getString(TagId(0x0010, 0x0010), 0));
+        ASSERT_EQ(tagVR_t::UC, testDataSet.getDataType(TagId(0x0010, 0x0010)));
+    }
+
+}
+
+
 TEST(stringHandlerTest, UTTest)
 {
     DataSet testDataSet;
@@ -337,6 +370,10 @@ TEST(stringHandlerTest, PNTest)
     ASSERT_EQ("Patient 0", testDataSet.getString(TagId(0x0010, 0x0010), 0));
     ASSERT_EQ("Patient 1", testDataSet.getString(TagId(0x0010, 0x0010), 1));
     ASSERT_EQ("Patient 2", testDataSet.getString(TagId(0x0010, 0x0010), 2));
+    ASSERT_THROW(testDataSet.getUnsignedLong(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
+    ASSERT_THROW(testDataSet.getSignedLong(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
+    ASSERT_THROW(testDataSet.getDouble(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
+
     std::unique_ptr<ReadingDataHandlerNumeric> rawHandler(testDataSet.getReadingDataHandlerRaw(TagId(0x0010, 0x0010), 0));
     size_t dataSize;
     const char* data = rawHandler->data(&dataSize);
