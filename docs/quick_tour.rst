@@ -1,6 +1,29 @@
 Getting started
 ===============
 
+Include files
+-------------
+
+In C++ you have to include the file imebra/imebra.h:
+
+.. code-block:: c++
+
+    include <imebra/imebra.h>
+
+
+In Java, everything is in the package imebra:
+
+.. code-block:: java
+
+    import com.imebra.*;
+
+In Java, before using any Imebra class you have to load the native code contained in the jar:
+
+.. code-block:: java
+    
+    System.loadLibrary("imebra_lib")
+
+
 Loading files
 -------------
 
