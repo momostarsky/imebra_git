@@ -21,6 +21,7 @@ Imebra
    :caption: Introduction
    
    introduction
+   changes_log
 
 .. user-docs:
 
