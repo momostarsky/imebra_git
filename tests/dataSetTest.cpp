@@ -244,40 +244,61 @@ TEST(dataSetTest, defaults)
 
 TEST(dataSetTest, testSequence)
 {
-    DataSet testDataSet;
-    testDataSet.setString(TagId(tagId_t::TransferSyntaxUID_0002_0010), "1.2.840.10008.1.2.1");
-
+    for(int transferSyntaxId(0); transferSyntaxId != 4; ++transferSyntaxId)
     {
-        DataSet sequence0;
-        DataSet sequence1;
+        std::string transferSyntax;
+        switch(transferSyntaxId)
+        {
+        case 0:
+            transferSyntax = "1.2.840.10008.1.2";
+            break;
+        case 1:
+            transferSyntax = "1.2.840.10008.1.2.1";
+            break;
+        case 2:
+            transferSyntax = "1.2.840.10008.1.2.2";
+            break;
+        case 3:
+            transferSyntax = "1.2.840.10008.1.2.5";
+            break;
+        }
 
-        sequence0.setString(TagId(0x10, 0x10), "Test0");
-        sequence1.setString(TagId(0x10, 0x10), "Test1");
+        std::cout << "Sequence test. Transfer syntax: " << transferSyntax << std::endl;
 
-        testDataSet.setSequenceItem(TagId(0x10, 0x10), 0, sequence0);
-        testDataSet.setSequenceItem(TagId(0x10, 0x10), 1, sequence1);
-    }
+        DataSet testDataSet(transferSyntax);
 
-    {
-        std::unique_ptr<DataSet> sequence0(testDataSet.getSequenceItem(TagId(0x10, 0x10), 0));
-        std::unique_ptr<DataSet> sequence1(testDataSet.getSequenceItem(TagId(0x10, 0x10), 1));
-        ASSERT_EQ("Test0", sequence0->getString(TagId(0x10, 0x10), 0));
-        ASSERT_EQ("Test1", sequence1->getString(TagId(0x10, 0x10), 0));
-    }
+        {
+            DataSet sequence0;
+            DataSet sequence1;
 
-    ReadWriteMemory encodedDataSet;
-    MemoryStreamOutput outputStream(encodedDataSet);
-    StreamWriter outputWriter(outputStream);
-    CodecFactory::save(testDataSet, outputWriter, codecType_t::dicom);
+            sequence0.setString(TagId(0x10, 0x10), "Test0");
+            sequence1.setString(TagId(0x10, 0x10), "Test1");
 
-    MemoryStreamInput inputStream(encodedDataSet);
-    StreamReader inputReader(inputStream);
-    std::unique_ptr<DataSet> readDataSet(CodecFactory::load(inputReader));
-    {
-        std::unique_ptr<DataSet> sequence0(readDataSet->getSequenceItem(TagId(0x10, 0x10), 0));
-        std::unique_ptr<DataSet> sequence1(readDataSet->getSequenceItem(TagId(0x10, 0x10), 1));
-        ASSERT_EQ("Test0", sequence0->getString(TagId(0x10, 0x10), 0));
-        ASSERT_EQ("Test1", sequence1->getString(TagId(0x10, 0x10), 0));
+            testDataSet.setSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 0, sequence0);
+            testDataSet.setSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 1, sequence1);
+        }
+
+        {
+            std::unique_ptr<DataSet> sequence0(testDataSet.getSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 0));
+            std::unique_ptr<DataSet> sequence1(testDataSet.getSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 1));
+            ASSERT_EQ("Test0", sequence0->getString(TagId(0x10, 0x10), 0));
+            ASSERT_EQ("Test1", sequence1->getString(TagId(0x10, 0x10), 0));
+        }
+
+        ReadWriteMemory encodedDataSet;
+        MemoryStreamOutput outputStream(encodedDataSet);
+        StreamWriter outputWriter(outputStream);
+        CodecFactory::save(testDataSet, outputWriter, codecType_t::dicom);
+
+        MemoryStreamInput inputStream(encodedDataSet);
+        StreamReader inputReader(inputStream);
+        std::unique_ptr<DataSet> readDataSet(CodecFactory::load(inputReader));
+        {
+            std::unique_ptr<DataSet> sequence0(readDataSet->getSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 0));
+            std::unique_ptr<DataSet> sequence1(readDataSet->getSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 1));
+            ASSERT_EQ("Test0", sequence0->getString(TagId(0x10, 0x10), 0));
+            ASSERT_EQ("Test1", sequence1->getString(TagId(0x10, 0x10), 0));
+        }
     }
 }
 

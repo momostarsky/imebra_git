@@ -62,9 +62,12 @@ private:
     DataSet(std::shared_ptr<imebra::implementation::dataSet> pDataSet);
 #endif
 public:
-    /// \brief Construct an empty DICOM dataset with transfer syntax
-    ///        "1.2.840.10008.1.2.1" (Explicit VR little endian) and charset
-    ///        "ISO 2022 IR 6".
+    /// \brief Construct an empty DICOM dataset with unspecified transfer syntax
+    ///        (which represents the default value "1.2.840.10008.1.2" or
+    ///        "Implicit VR little endian") and charset "ISO 2022 IR 6".
+    ///
+    /// Use this method when creating a DataSet that will be embedded as a sequence
+    /// item.
     ///
     ///////////////////////////////////////////////////////////////////////////////
 	DataSet();

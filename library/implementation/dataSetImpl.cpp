@@ -49,7 +49,6 @@ namespace implementation
 
 dataSet::dataSet(): m_itemOffset(0)
 {
-    setString(0x0002, 0x0, 0x0010, 0, "1.2.840.10008.1.2.1");
 }
 
 dataSet::dataSet(const std::string& transferSyntax): m_itemOffset(0)
