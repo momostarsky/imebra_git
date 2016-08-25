@@ -136,6 +136,34 @@ TEST(memoryTest, readWriteMemory)
     storedData = readWriteMemory.data(&storedSize);
     ASSERT_EQ(testString.size(), storedSize);
     ASSERT_EQ("Teaa string", std::string(storedData, storedSize));
+}
+
+
+TEST(memoryTest, readWriteMemoryCopy)
+{
+    std::string testString("Test string");
+    ReadMemory readOnlyMemory(testString.c_str(), testString.size());
+
+    ReadWriteMemory readWriteMemory(readOnlyMemory);
+
+    ASSERT_EQ(testString.size(), readWriteMemory.size());
+    ASSERT_FALSE(readWriteMemory.empty());
+
+    size_t storedSize;
+    const char* storedData(readWriteMemory.data(&storedSize));
+    ASSERT_EQ(testString.size(), storedSize);
+    ASSERT_EQ(testString, std::string(storedData, storedSize));
+
+    readWriteMemory.resize(4);
+    storedData = readWriteMemory.data(&storedSize);
+    ASSERT_EQ(4, storedSize);
+    ASSERT_EQ("Test", std::string(storedData, storedSize));
+
+    readWriteMemory.clear();
+    ASSERT_TRUE(readWriteMemory.empty());
+    storedData = readWriteMemory.data(&storedSize);
+    ASSERT_EQ(0, storedSize);
+    ASSERT_EQ("", std::string(storedData, storedSize));
 
 }
 
