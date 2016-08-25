@@ -84,11 +84,36 @@ TEST(colorConversion, RGB2MONOCHROME2)
     std::unique_ptr<Transform> toMonochrome2(ColorTransformsFactory::getTransform("RGB", "MONOCHROME2"));
 
     Image monochrome2(2, 1, bitDepth_t::depthU8, "MONOCHROME2", 7);
-    toMonochrome2->runTransform(rgb, 0, 0, 1, 1, monochrome2, 0, 0);
+    toMonochrome2->runTransform(rgb, 0, 0, 2, 1, monochrome2, 0, 0);
 
     std::unique_ptr<ReadingDataHandler> monochromeHandler(monochrome2.getReadingDataHandler());
     ASSERT_EQ(255, monochromeHandler->getSignedLong(0));
     ASSERT_EQ(0, monochromeHandler->getSignedLong(1));
+}
+
+
+TEST(colorConversion, RGB2MONOCHROME1)
+{
+    Image rgb(2, 1, bitDepth_t::depthU8, "RGB", 7);
+
+    {
+        std::unique_ptr<WritingDataHandler> rgbHandler(rgb.getWritingDataHandler());
+        rgbHandler->setUnsignedLong(0, 255);
+        rgbHandler->setUnsignedLong(1, 255);
+        rgbHandler->setUnsignedLong(2, 255);
+        rgbHandler->setUnsignedLong(3, 0);
+        rgbHandler->setUnsignedLong(4, 0);
+        rgbHandler->setUnsignedLong(5, 0);
+    }
+
+    std::unique_ptr<Transform> toMonochrome1(ColorTransformsFactory::getTransform("RGB", "MONOCHROME1"));
+
+    Image monochrome1(2, 1, bitDepth_t::depthU8, "MONOCHROME1", 7);
+    toMonochrome1->runTransform(rgb, 0, 0, 2, 1, monochrome1, 0, 0);
+
+    std::unique_ptr<ReadingDataHandler> monochromeHandler(monochrome1.getReadingDataHandler());
+    ASSERT_EQ(0, monochromeHandler->getSignedLong(0));
+    ASSERT_EQ(255, monochromeHandler->getSignedLong(1));
 }
 
 
