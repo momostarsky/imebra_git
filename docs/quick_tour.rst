@@ -129,14 +129,13 @@ or
 
 and in Java:
 
-.. code-block:: c++
+.. code-block:: java
 
     // A patient's name can contain up to 5 values, representing different interpretations of the same name
     // (e.g. alphabetic representation, ideographic representation and phonetic representation)
     // Here we retrieve the first 2 interpretations (index 0 and 1)
     String patientNameCharacter = loadedDataSet.getUnicodeString(new com.imebra.TagId(0x10, 0x10), 0);
-    String patientNameIdeographic = loadedDataSet.getUnicodeString(new com.imebra.TagId(0x10, 0x10), 0);
-    std::wstring patientNameIdeographic = loadedDataSet->getUnicodeString(imebra::TagId(0x10, 0x10), 1);
+    String patientNameIdeographic = loadedDataSet.getUnicodeString(new com.imebra.TagId(0x10, 0x10), 1);
 
 Note that the previous code will throw one of the exceptions derived from :cpp:class:`imebra::MissingDataElementError`
 if the desidered patient name component is not present in the :cpp:class:`imebra::DataSet`.
@@ -160,7 +159,7 @@ or
 
 and in Java:
 
-.. code-block:: c++
+.. code-block:: java
 
     // Return an empty name if the tag is not present
     String patientNameCharacter = loadedDataSet.getUnicodeString(new com.imebra.TagId(0x10, 0x10), 0, "");
@@ -429,7 +428,7 @@ In C++
 
 In Java
 
-.. code-block:: c++
+.. code-block:: java
 
     // We create a DrawBitmap that always apply the chain transform before getting the RGB image
     com.imebra.DrawBitmap draw = new com.imebra.DrawBitmap(chain);
@@ -474,7 +473,7 @@ To create an empty DataSet in C++:
 
 In Java:
 
-.. code-block:: c++
+.. code-block:: java
 
     // We specify the transfer syntax and the charset
     com.imebra.DataSet dataSet = new com.imebra.DataSet("1.2.840.10008.1.2.1", "ISO 2022 IR 6");
