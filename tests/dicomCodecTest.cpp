@@ -157,6 +157,11 @@ TEST(dicomCodecTest, testDicom)
                             testDataSet.setImage(1, *dicomImage1, quality);
                             testDataSet.setImage(2, *dicomImage2, quality);
 
+                            DataSet sequenceItem;
+                            sequenceItem.setString(TagId(tagId_t::PatientName_0010_0010), "test test");
+
+                            testDataSet.setSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 0, sequenceItem);
+
                             MemoryStreamOutput writeStream(streamMemory);
                             StreamWriter writer(writeStream);
                             CodecFactory::save(testDataSet, writer, codecType_t::dicom);
@@ -168,11 +173,20 @@ TEST(dicomCodecTest, testDicom)
                             StreamReader reader(readStream);
                             std::unique_ptr<DataSet> testDataSet(CodecFactory::load(reader, lazyLoad == 0 ? std::numeric_limits<size_t>::max() : 1));
 
+                            EXPECT_EQ(0, testDataSet->getUnsignedLong(TagId(tagId_t::FileMetaInformationVersion_0002_0001), 0));
+                            EXPECT_EQ(1, testDataSet->getUnsignedLong(TagId(tagId_t::FileMetaInformationVersion_0002_0001), 1));
+                            EXPECT_THROW(testDataSet->getUnsignedLong(TagId(tagId_t::FileMetaInformationVersion_0002_0001), 2), MissingItemError);
+                            EXPECT_EQ(tagVR_t::OB, testDataSet->getDataType(TagId(tagId_t::FileMetaInformationVersion_0002_0001)));
+
                             EXPECT_EQ(std::string("AAAaa"), testDataSet->getString(TagId(imebra::tagId_t::PatientName_0010_0010), 0));
                             EXPECT_EQ(std::string("BBBbbb"), testDataSet->getString(TagId(imebra::tagId_t::PatientName_0010_0010), 1));
                             EXPECT_EQ(std::string(""), testDataSet->getString(TagId(imebra::tagId_t::PatientName_0010_0010), 2));
                             EXPECT_FLOAT_EQ(50.6, testDataSet->getDouble(TagId(tagId_t::TimeRange_0008_1163), 0));
                             EXPECT_EQ(1 - interleaved, testDataSet->getSignedLong(TagId(imebra::tagId_t::PlanarConfiguration_0028_0006), 0));
+
+                            std::unique_ptr<DataSet> sequenceItem(testDataSet->getSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 0));
+                            EXPECT_EQ("test test", sequenceItem->getString(TagId(tagId_t::PatientName_0010_0010), 0));
+                            EXPECT_THROW(sequenceItem->getUnsignedLong(TagId(tagId_t::FileMetaInformationVersion_0002_0001), 0), MissingGroupError);
 
                             std::unique_ptr<Image> checkImage0(testDataSet->getImage(0));
                             std::unique_ptr<Image> checkImage1(testDataSet->getImage(1));
@@ -182,13 +196,6 @@ TEST(dicomCodecTest, testDicom)
                             ASSERT_TRUE(identicalImages(*checkImage1, *dicomImage1));
                             ASSERT_TRUE(identicalImages(*checkImage2, *dicomImage2));
 
-                            //std::cout << " DIFF: " << compareImages(*checkImage0, *dicomImage0) << std::endl;
-                            //std::cout << " DIFF: " << compareImages(*checkImage1, *dicomImage1) << std::endl;
-                            //std::cout << " DIFF: " << compareImages(*checkImage2, *dicomImage2) << std::endl;
-
-                            //ASSERT_EQ(0, compareImages(*checkImage0, *dicomImage0));
-                            //ASSERT_EQ(0, compareImages(*checkImage1, *dicomImage1));
-                            //ASSERT_EQ(0, compareImages(*checkImage2, *dicomImage2));
                         }
                     }
 				}

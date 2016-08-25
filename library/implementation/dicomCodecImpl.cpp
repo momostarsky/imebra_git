@@ -102,7 +102,7 @@ void dicomCodec::writeStream(std::shared_ptr<streamWriter> pStream, std::shared_
 
     // Build the stream
     ///////////////////////////////////////////////////////////
-    buildStream(pStream, pDataSet, bExplicitDataType, endianType);
+    buildStream(pStream, pDataSet, bExplicitDataType, endianType, streamType_t::mediaStorage);
 
     IMEBRA_FUNCTION_END();
 }
@@ -117,7 +117,7 @@ void dicomCodec::writeStream(std::shared_ptr<streamWriter> pStream, std::shared_
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dicomCodec::buildStream(std::shared_ptr<streamWriter> pStream, std::shared_ptr<dataSet> pDataSet, bool bExplicitDataType, streamController::tByteOrdering endianType)
+void dicomCodec::buildStream(std::shared_ptr<streamWriter> pStream, std::shared_ptr<dataSet> pDataSet, bool bExplicitDataType, streamController::tByteOrdering endianType, streamType_t streamType)
 {
     IMEBRA_FUNCTION_START();
 
@@ -129,6 +129,25 @@ void dicomCodec::buildStream(std::shared_ptr<streamWriter> pStream, std::shared_
         for(size_t scanGroupsNumber(0); scanGroupsNumber != numGroups; ++scanGroupsNumber)
         {
             const dataSet::tTags& tags(pDataSet->getGroupTags(*scanGroups, scanGroupsNumber));
+
+            // When writing a media storage file, the tag 0002,0001 must be 0,1 (OB)
+            ////////////////////////////////////////////////////////////////////////
+            if(streamType == streamType_t::mediaStorage && *scanGroups == 0x0002 && tags.find(0x0001) == tags.end())
+            {
+                dataSet::tTags temporaryTags(tags);
+                charsetsList::tCharsetsList charsets;
+                pDataSet->getCharsetsList(&charsets);
+                std::shared_ptr<data> metaInformationTag(std::make_shared<data>(tagVR_t::OB, charsets));
+                {
+                    std::shared_ptr<handlers::writingDataHandler> handler(metaInformationTag->getWritingDataHandler(0));
+                    handler->setUnsignedLong(0, 0);
+                    handler->setUnsignedLong(1, 1);
+                }
+                temporaryTags[1] = metaInformationTag;
+                writeGroup(pStream, temporaryTags, *scanGroups, bExplicitDataType, endianType);
+                continue;
+            }
+
             writeGroup(pStream, tags, *scanGroups, bExplicitDataType, endianType);
         }
     }
@@ -339,7 +358,7 @@ void dicomCodec::writeTag(std::shared_ptr<streamWriter> pDestStream, std::shared
 
         // write the dataset
         ///////////////////////////////////////////////////////////
-        buildStream(pDestStream, pDataSet, bExplicitDataType, endianType);
+        buildStream(pDestStream, pDataSet, bExplicitDataType, endianType, streamType_t::normal);
     }
 
     // write the sequence item end marker

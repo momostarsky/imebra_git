@@ -129,6 +129,15 @@ public:
 		std::uint32_t* pReadSubItemLength = 0,
 		std::uint32_t depth = 0);
 
+    /// \brief Indicates the type of DICOM stream to build
+    ///
+    ///////////////////////////////////////////////////////////
+    enum class streamType_t
+    {
+        normal,      ///< DICOM stream for embedded datasets
+        mediaStorage ///< DICOM stream form media storage
+    };
+
 	/// \brief Write the dataSet to the specified stream
 	///         in Dicom format, without the file header and
 	///         signature.
@@ -139,9 +148,10 @@ public:
 	///                   write the data type, false if
 	///                   the data type is implicit
 	/// @param endianType the endian type to be generated
+    /// @param streamType the type of DICOM stream to build
 	///
 	///////////////////////////////////////////////////////////
-	void buildStream(std::shared_ptr<streamWriter> pStream, std::shared_ptr<dataSet> pDataSet, bool bExplicitDataType, streamController::tByteOrdering endianType);
+    void buildStream(std::shared_ptr<streamWriter> pStream, std::shared_ptr<dataSet> pDataSet, bool bExplicitDataType, streamController::tByteOrdering endianType, streamType_t streamType);
 
 	// Returns true if the codec can handle the transfer
 	//  syntax
