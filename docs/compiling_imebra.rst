@@ -25,6 +25,7 @@ Prerequisites
 
 In order to build the library from the Imebra Source Distribution you need:
 
+- the source distribution of Imebra, available here: https://imebra.com/get-it/
 - a modern C++ compiler (GCC, clang, Visual Studio, etc)
 - CMake version 2.8 or newer (https://cmake.org/)
 
@@ -79,6 +80,7 @@ Prerequisites
 
 In order to build the Android version of Imebra you need:
 
+- the source distribution of Imebra, available here: https://imebra.com/get-it/
 - Apache Ant
 - the Android SDK
 - the Android NDK
