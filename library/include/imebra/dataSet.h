@@ -44,6 +44,59 @@ class LUT;
 /// The information it contains is organized into groups and each group may
 /// contain several tags.
 ///
+/// You can create a DataSet from a DICOM file by using the
+/// CodecFactory::load() function:
+///
+/// In C++:
+/// \code
+/// using namespace imebra;
+/// std::unique_ptr<DataSet> pDataSet(CodecFactory::load("/path/to/file));
+/// \endcode
+///
+/// In Java:
+/// \code
+/// com.imebra.DataSet dataSet = com.imebra.CodecFactory.load("/path/to/file");
+/// \endcode
+///
+/// You can also create an empty DataSet that can be filled with data and
+/// images and then saved to a DICOM file via CodecFactory::save().
+///
+/// When creating an empty DataSet you should specify the proper transfer
+/// syntax in the DataSet constructor.
+///
+/// To retrieve the DataSet's content, use one of the following methods which
+/// give direct access to the tags' values:
+/// - getImage()
+/// - getImageApplyModalityTransform()
+/// - getSequenceItem()
+/// - getSignedLong()
+/// - getUnsignedLong()
+/// - getDouble()
+/// - getString()
+/// - getUnicodeString()
+/// - getAge()
+/// - getDate()
+///
+/// In alternative, you can first retrieve a ReadingDataHandler with
+/// getReadingDataHandler() and then access the tag's content via the handler.
+///
+/// To set the DataSet's content, use one of the following methods:
+/// - setImage()
+/// - setSequenceItem()
+/// - setSignedLong()
+/// - setUnsignedLong()
+/// - setDouble()
+/// - setString()
+/// - setUnicodeString()
+/// - setAge()
+/// - setDate()
+///
+/// The previous methods allow to write just the first item in the tag's
+/// content and before writing wipe out the old tag's content (all the items).
+/// If you have to write more than one item in a tag, retrieve a
+/// WritingDataHandler with getWritingDataHandler() and then modify all the
+/// tag's items using the WritingDataHandler.
+///
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API DataSet
 {
@@ -651,6 +704,17 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     std::string getString(const TagId& tagId, size_t elementNumber, const std::string& defaultValue) const;
 
+    /// \brief Write a string value into the element 0 of the specified Tag's
+    ///        buffer 0.
+    ///
+    /// If the specified Tag does not exist then it creates a new tag with a
+    ///  specific VR.
+    ///
+    /// \param tagId     the tag's id
+    /// \param newString the string to write into the tag
+    /// \param tagVR     the tag's type to use when a new tag is created.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     void setString(const TagId& tagId, const std::string& newString, tagVR_t tagVR);
 
     /// \brief Write a string value into the element 0 of the specified Tag's
