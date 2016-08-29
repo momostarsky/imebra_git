@@ -6,6 +6,14 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Fixed bug #121 (Wrong Java examples in the documentation)
+- Improved test units
+- Improved the documentation for the class DataSet
+- Improved the section "Compiling Imebra" of the documentation
+
+Version 4.0.1.1
+---------------
+
 - Fixed bug #119 (Imebra does not create the tag 0002,0001 when writing a DICOM file)
 - Fixed bug #120 (When creating an empty DataSet with unspecified transfer syntax then the transfer syntax is set to 1.2.840.10008.1.2.1)
 - Added changes log
