@@ -39,7 +39,7 @@ public:
 
     /// \brief Constructor.
     ///
-    /// \param name the path to the file to open in read mode
+    /// \param name the path to the file to open in read mode, in encoded in UTF8
     ///
     ///////////////////////////////////////////////////////////////////////////////
     FileStreamInput(const std::string& name);

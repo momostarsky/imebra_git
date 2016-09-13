@@ -61,9 +61,9 @@ public:
     /// \return a DataSet object representing the input file's content
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    static DataSet* load(const std::wstring& fileName, size_t maxSizeBufferLoad = std::numeric_limits<size_t>::max());
-
 #ifndef SWIG // Use Unicode strings only with SWIG
+    static DataSet* load(const std::wstring& fileName, size_t maxSizeBufferLoad = std::numeric_limits<size_t>::max());
+#endif
 
     /// \brief Parses the content of the input file and returns a DataSet
     ///        representing it.
@@ -81,8 +81,6 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     static DataSet* load(const std::string& fileName, size_t maxSizeBufferLoad = std::numeric_limits<size_t>::max());
-
-#endif
 
     static void saveImage(
             StreamWriter& destStream,
@@ -114,9 +112,9 @@ public:
     /// \param codecType         the codec to use to save the DataSet
     ///
     ///////////////////////////////////////////////////////////////////////////////
+#ifndef SWIG // Use UTF8 strings only with SWIG
     static void save(const DataSet& dataSet, const std::wstring& fileName, codecType_t codecType);
-
-#ifndef SWIG // Use Unicode strings only with SWIG
+#endif
 
     /// \brief Saves the content of a DataSet object to an output file using the
     ///        requested codec.
@@ -128,7 +126,6 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     static void save(const DataSet& dataSet, const std::string& fileName, codecType_t codecType);
 
-#endif
 
     /// \brief Set the maximum image's width & height accepted by Imebra.
     ///
