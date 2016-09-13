@@ -129,7 +129,7 @@ std::string readingDataHandlerStringUnicode::getString(const size_t index) const
     IMEBRA_FUNCTION_START();
 
     charsetsList::tCharsetsList charsets;
-    charsets.push_back("ISO 2022 IR 6");
+    charsets.push_back("ISO_IR 192");
     return dicomConversion::convertFromUnicode(getUnicodeString(index), &charsets);
 
     IMEBRA_FUNCTION_END();
@@ -263,7 +263,7 @@ void writingDataHandlerStringUnicode::setString(const size_t index, const std::s
     IMEBRA_FUNCTION_START();
 
     charsetsList::tCharsetsList charsets;
-    charsets.push_back("ISO 2022 IR 6");
+    charsets.push_back("ISO_IR 192");
     setUnicodeString(index, dicomConversion::convertToUnicode(value, charsets));
 
     IMEBRA_FUNCTION_END();

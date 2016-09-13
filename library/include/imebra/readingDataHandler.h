@@ -136,6 +136,7 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     std::string getString(size_t index) const;
 
+#ifndef SWIG
     /// \brief Retrieve a buffer's value as a Unicode string.
     ///
     /// If the buffer's value cannot be converted to a string then throws
@@ -147,6 +148,7 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     std::wstring getUnicodeString(size_t index) const;
+#endif
 
     /// \brief Retrieve a buffer's value a date or time.
     ///
