@@ -729,6 +729,8 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     void setString(const TagId& tagId, const std::string& newString);
 
+    // The Java wrapper uses the UTF8 encoded strings only
+#ifndef SWIG
     /// \brief Retrieve a tag's value as an Unicode string.
     ///
     /// If the tag's value cannot be converted to a Unicode string
@@ -785,6 +787,8 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     void setUnicodeString(const TagId& tagId, const std::wstring& newString);
+
+#endif
 
     /// \brief Retrieve a tag's value as Age.
     ///

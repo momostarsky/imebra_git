@@ -120,10 +120,6 @@ TEST(unicodeStringHandlerTest, supplementaryUnicodeChars)
 TEST(unicodeStringHandlerTest, unicodeNumericConversion)
 {
 
-    // Try a cyrillic/arabic patient name
-    std::wstring patientName0 = L"??\x0628\x062a\x062b\x062f^\0x400\0x410\0x420";
-    std::wstring patientName1 = L"\0x420\x062a\x062b^\0x400\0x410\x0628\x062a";
-
     ReadWriteMemory streamMemory;
     {
         charsetsList_t charsets;
