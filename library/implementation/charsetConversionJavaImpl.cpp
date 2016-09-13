@@ -271,7 +271,7 @@ JNIEnv* charsetConversionJava::getJavaEnv(bool* bDetach)
     int getEnvStat = javaVM->GetEnv((void **)&env, JNI_VERSION_1_6);
     if (getEnvStat == JNI_EDETACHED)
     {
-        if (javaVM->AttachCurrentThread((void**)&env, 0) == 0)
+        if (javaVM->AttachCurrentThread(&env, 0) == 0)
         {
             *bDetach = true;
             return env;
