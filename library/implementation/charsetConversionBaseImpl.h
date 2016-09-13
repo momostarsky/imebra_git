@@ -4,7 +4,7 @@ $fileHeader$
 
 /*! \file charsetConversion.h
     \brief Declaration of the class used to convert a string between different
-	        charsets.
+            charsets.
 
 The class hides the platform specific implementations and supplies a common
  interface for the charsets translations.
@@ -40,6 +40,7 @@ struct charsetInformation
             const std::string& dicomName,
             const std::string& escapeSequence,
             const std::string& isoRegistration,
+            const std::string& javaRegistration,
             unsigned long codePage,
             bool bZeroFlag);
 
@@ -50,6 +51,7 @@ struct charsetInformation
     std::string m_dicomName;       ///< DICOM name for the charset
     std::string m_escapeSequence;  ///< Escape sequence for ISO 2022
     std::string m_isoRegistration; ///< ISO registration string
+    std::string m_javaRegistration;///< Java registration string
     unsigned long m_codePage;      ///< codePage used by Windows
     bool m_bZeroFlag;              ///< needs flags=0 in Windows
 };
@@ -71,7 +73,7 @@ public:
     const escapeSequences_t& getEscapeSequences() const;
 
 private:
-    void registerCharset(const std::string& dicomName, const std::string& escapeSequence, const std::string& isoName, const unsigned long windowsPage, const bool bZeroFlag);
+    void registerCharset(const std::string& dicomName, const std::string& escapeSequence, const std::string& isoName, const std::string& javaName, const unsigned long windowsPage, const bool bZeroFlag);
 
     typedef std::map<std::string, charsetInformation> dictionary_t;
     dictionary_t m_dictionary;
@@ -114,30 +116,30 @@ public:
     ///////////////////////////////////////////////////////////
     static std::string normalizeIsoCharset(const std::string& isoCharset);
 
-	/// \brief Transform a multibyte string into an unicode
-	///         string using the charset declared with the
-	///         method initialize().
-	///
-	/// initialize() must have been called before calling this
-	///  method.
-	///
-	/// @param unicodeStr
-	///
-	///////////////////////////////////////////////////////////
+    /// \brief Transform a multibyte string into an unicode
+    ///         string using the charset declared with the
+    ///         method initialize().
+    ///
+    /// initialize() must have been called before calling this
+    ///  method.
+    ///
+    /// @param unicodeStr
+    ///
+    ///////////////////////////////////////////////////////////
     virtual std::string fromUnicode(const std::wstring& unicodeString) const = 0;
 
-	/// \brief Transform a multibyte string into an unicode
-	///         string using the charset declared with the
-	///         method initialize().
-	///
-	/// initialize() must have been called before calling this
-	///  method.
-	///
-	/// @param asciiString the multibyte string that will be
-	///                     converted to unicode
-	/// @return            the converted unicode string
-	///
-	///////////////////////////////////////////////////////////
+    /// \brief Transform a multibyte string into an unicode
+    ///         string using the charset declared with the
+    ///         method initialize().
+    ///
+    /// initialize() must have been called before calling this
+    ///  method.
+    ///
+    /// @param asciiString the multibyte string that will be
+    ///                     converted to unicode
+    /// @return            the converted unicode string
+    ///
+    ///////////////////////////////////////////////////////////
     virtual std::wstring toUnicode(const std::string& asciiString) const = 0;
 };
 
