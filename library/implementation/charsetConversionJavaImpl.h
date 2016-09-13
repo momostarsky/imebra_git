@@ -2,9 +2,9 @@
 $fileHeader$
 */
 
-/*! \file charsetConversionICU.h
+/*! \file charsetConversionJava.h
     \brief Declaration of the class used to convert a string between different
-            charsets using the ICU library.
+            charsets using the JVM.
 
 The class hides the platform specific implementations and supplies a common
  interface for the charsets translations.

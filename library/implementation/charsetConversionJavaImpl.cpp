@@ -2,8 +2,8 @@
 $fileHeader$
 */
 
-/*! \file charsetConversionICU.cpp
-    \brief Implementation of the charsetConversion class using the ICU library.
+/*! \file charsetConversionJava.cpp
+    \brief Implementation of the charsetConversion class using the JVM.
 
 */
 
@@ -14,7 +14,7 @@ $fileHeader$
 
 #include "exceptionImpl.h"
 #include "charsetConversionJavaImpl.h"
-#include <memory>
+#include <memory.h>
 
 namespace imebra
 {
@@ -35,6 +35,7 @@ extern "C"
 
 } // extern "C"
 
+
 JavaVM* get_imebra_javaVM()
 {
     return m_javaVM;
@@ -50,10 +51,9 @@ charsetConversionJava::charsetConversionJava(const std::string& dicomName)
     IMEBRA_FUNCTION_START();
 
     const charsetInformation& info = getDictionary().getCharsetInformation(dicomName);
-    m_tableName = info.m_isoRegistration;
+    m_tableName = info.m_javaRegistration;
 
     IMEBRA_FUNCTION_END();
-
 }
 
 
@@ -76,36 +76,46 @@ std::string charsetConversionJava::fromUnicode(const std::wstring& unicodeString
 {
     IMEBRA_FUNCTION_START();
 
-	if(unicodeString.empty())
-	{
-		return std::string();
-	}
+    if(unicodeString.empty())
+    {
+        return std::string();
+    }
 
-	bool bDetach(false);
-	JNIEnv* env = getJavaEnv(&bDetach);
+    bool bDetach(false);
+    JNIEnv* env = getJavaEnv(&bDetach);
 
-	std::string bytes;
-	bytes.resize(unicodeString.length() * sizeof(wchar_t));
-	::memcpy(&bytes[0], &(unicodeString[0]), bytes.size());
+    std::string bytes;
+    bytes.resize(unicodeString.length() * sizeof(wchar_t));
+    ::memcpy(&bytes[0], &(unicodeString[0]), bytes.size());
     streamController::adjustEndian((std::uint8_t*)&(bytes[0]), sizeof(wchar_t), streamController::highByteEndian, unicodeString.size());
-	jstring javaString = getNativeJavaString(env, bytes, sizeof(wchar_t) == 2 ? "UTF-16BE" : "UTF-32BE");
+    jstring javaString = getNativeJavaString(env, bytes, sizeof(wchar_t) == 2 ? "UTF-16BE" : "UTF-32BE");
 
-	std::string returnValue;
+    std::string returnValue;
 
-	if(javaString != 0)
-	{
+    if(javaString != 0)
+    {
         returnValue = getBytesFromString(env, javaString, m_tableName.c_str());
-	    env->DeleteLocalRef(javaString);
-	}
+        env->DeleteLocalRef(javaString);
+    }
 
     if(bDetach)
     {
         get_imebra_javaVM()->DetachCurrentThread();
     }
 
+    if(returnValue == "?" && unicodeString != L"?")
+    {
+        return "";
+    }
+
+    if(returnValue == "\x22\x44" && unicodeString != L"\xbf")
+    {
+        return "";
+    }
+
     return returnValue;
 
-	IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -118,13 +128,13 @@ std::wstring charsetConversionJava::toUnicode(const std::string& asciiString) co
 {
     IMEBRA_FUNCTION_START();
 
-	if(asciiString.empty())
-	{
-		return std::wstring();
-	}
+    if(asciiString.empty())
+    {
+        return std::wstring();
+    }
 
-	bool bDetach(false);
-	JNIEnv* env = getJavaEnv(&bDetach);
+    bool bDetach(false);
+    JNIEnv* env = getJavaEnv(&bDetach);
 
     std::wstring returnValue;
     jstring javaString = getNativeJavaString(env, asciiString, m_tableName.c_str());
@@ -147,7 +157,7 @@ std::wstring charsetConversionJava::toUnicode(const std::string& asciiString) co
 
     return returnValue;
 
-	IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -168,7 +178,7 @@ jstring charsetConversionJava::getNativeJavaString(JNIEnv *env, const std::strin
 
     if (env->EnsureLocalCapacity(2) < 0)
     {
-        return 0;
+        throw;
     }
 
     size_t len = str.size();
@@ -182,11 +192,16 @@ jstring charsetConversionJava::getNativeJavaString(JNIEnv *env, const std::strin
             jstring result = (jstring)env->NewObject(Class_java_lang_String, MID_String_init, bytes, jTableName);
             env->DeleteLocalRef(jTableName);
             env->DeleteLocalRef(bytes);
+            if(result == 0)
+            {
+                throw;
+            }
             return result;
         }
         env->DeleteLocalRef(bytes);
     }
 
+    throw;
     return 0;
 
     IMEBRA_FUNCTION_END();
@@ -256,7 +271,7 @@ JNIEnv* charsetConversionJava::getJavaEnv(bool* bDetach)
     int getEnvStat = javaVM->GetEnv((void **)&env, JNI_VERSION_1_6);
     if (getEnvStat == JNI_EDETACHED)
     {
-        if (javaVM->AttachCurrentThread(&env, 0) == 0)
+        if (javaVM->AttachCurrentThread((void**)&env, 0) == 0)
         {
             *bDetach = true;
             return env;
@@ -275,7 +290,5 @@ JNIEnv* charsetConversionJava::getJavaEnv(bool* bDetach)
 
 
 } // namespace imebra
-
-
 
 #endif
