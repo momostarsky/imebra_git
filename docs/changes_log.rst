@@ -6,6 +6,13 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Fixed bug #122 (Failure to open a file with Java Wrappers)
+- Fixed bug #123 (SWIG translates the Java String to UTF16 and not UTF32 when filling std::wstring)
+- Fixef bug #124 (Java charset conversion fails)
+
+Version 4.0.1.6
+---------------
+
 - Fixed bug #121 (Wrong Java examples in the documentation)
 - Improved test units
 - Improved the documentation for the class DataSet
