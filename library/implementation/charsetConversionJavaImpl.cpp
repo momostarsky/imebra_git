@@ -108,7 +108,7 @@ std::string charsetConversionJava::fromUnicode(const std::wstring& unicodeString
         return "";
     }
 
-    if(returnValue == "\x22\x44" && unicodeString != L"\xbf")
+    if(returnValue == "\x22\x44" && unicodeString != L"\xbf" && m_tableName == "JIS_X0212-1990")
     {
         return "";
     }
@@ -271,7 +271,11 @@ JNIEnv* charsetConversionJava::getJavaEnv(bool* bDetach)
     int getEnvStat = javaVM->GetEnv((void **)&env, JNI_VERSION_1_6);
     if (getEnvStat == JNI_EDETACHED)
     {
+#ifdef __ANDROID__
         if (javaVM->AttachCurrentThread(&env, 0) == 0)
+#else
+        if (javaVM->AttachCurrentThread((void**)&env, 0) == 0)
+#endif
         {
             *bDetach = true;
             return env;
