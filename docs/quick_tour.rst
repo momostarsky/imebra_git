@@ -92,8 +92,8 @@ In order to retrieve a tag's value, use one of the following methods
 - :cpp:member:`imebra::DataSet::getSignedLong`
 - :cpp:member:`imebra::DataSet::getUnsignedLong`
 - :cpp:member:`imebra::DataSet::getDouble`
-- :cpp:member:`imebra::DataSet::getString`
-- :cpp:member:`imebra::DataSet::getUnicodeString`
+- :cpp:member:`imebra::DataSet::getString` (In Java all the strings are Unicode)
+- :cpp:member:`imebra::DataSet::getUnicodeString` (C++ only)
 - :cpp:member:`imebra::DataSet::getAge`
 - :cpp:member:`imebra::DataSet::getDate`
 
@@ -125,7 +125,7 @@ or
     // (e.g. alphabetic representation, ideographic representation and phonetic representation)
     // Here we retrieve the first 2 interpretations (index 0 and 1)
     std::wstring patientNameCharacter = loadedDataSet->getUnicodeString(imebra::TagId(0x10, 0x10), 0);
-    std::wstring patientNameIdeographic = loadedDataSet->getUnicodeString(imebra::TagId(0x10, 0x10), 1);
+    std::wstring patientNameIdeographic = loadedDataSet->getUnicode(imebra::TagId(0x10, 0x10), 1);
 
 and in Java:
 
@@ -134,8 +134,8 @@ and in Java:
     // A patient's name can contain up to 5 values, representing different interpretations of the same name
     // (e.g. alphabetic representation, ideographic representation and phonetic representation)
     // Here we retrieve the first 2 interpretations (index 0 and 1)
-    String patientNameCharacter = loadedDataSet.getUnicodeString(new com.imebra.TagId(0x10, 0x10), 0);
-    String patientNameIdeographic = loadedDataSet.getUnicodeString(new com.imebra.TagId(0x10, 0x10), 1);
+    String patientNameCharacter = loadedDataSet.getString(new com.imebra.TagId(0x10, 0x10), 0);
+    String patientNameIdeographic = loadedDataSet.getString(new com.imebra.TagId(0x10, 0x10), 1);
 
 Note that the previous code will throw one of the exceptions derived from :cpp:class:`imebra::MissingDataElementError`
 if the desidered patient name component is not present in the :cpp:class:`imebra::DataSet`.
@@ -162,8 +162,8 @@ and in Java:
 .. code-block:: java
 
     // Return an empty name if the tag is not present
-    String patientNameCharacter = loadedDataSet.getUnicodeString(new com.imebra.TagId(0x10, 0x10), 0, "");
-    String patientNameIdeographic = loadedDataSet.getUnicodeString(new com.imebra.TagId(0x10, 0x10), 1, "");
+    String patientNameCharacter = loadedDataSet.getString(new com.imebra.TagId(0x10, 0x10), 0, "");
+    String patientNameIdeographic = loadedDataSet.getString(new com.imebra.TagId(0x10, 0x10), 1, "");
 
 
 Retrieving an image
@@ -497,8 +497,8 @@ In order to write a tag's value, use one of the following methods
 - :cpp:member:`imebra::DataSet::setSignedLong`
 - :cpp:member:`imebra::DataSet::setUnsignedLong`
 - :cpp:member:`imebra::DataSet::setDouble`
-- :cpp:member:`imebra::DataSet::setString`
-- :cpp:member:`imebra::DataSet::setUnicodeString`
+- :cpp:member:`imebra::DataSet::setString` (In Java all the strings are Unicode)
+- :cpp:member:`imebra::DataSet::setUnicodeString` (C++ only)
 - :cpp:member:`imebra::DataSet::setAge`
 - :cpp:member:`imebra::DataSet::setDate`
 
@@ -517,7 +517,7 @@ In Java:
 
 .. code-block:: java
 
-    dataSet.setUnicodeString(TagId(0x10, 0x10), "Patient^Name");
+    dataSet.setString(TagId(0x10, 0x10), "Patient^Name");
 
 You can also set tags values by retrieving a WritingDataHandler and populating it: the WritingDataHandler will commit the data
 into the DataSet when it is destroyed:
@@ -541,12 +541,12 @@ in Java:
     
     {
         com.imebra.WritingDataHandler dataHandler = dataSet.getWritingDataHandler(0);
-        dataHandler.setUnicodeString(0, "AlphabeticName");
-        dataHandler.setUnicodeString(1, "IdeographicName");
-        dataHandler.setUnicodeString(2, "PhoneticName");
+        dataHandler.setString(0, "AlphabeticName");
+        dataHandler.setString(1, "IdeographicName");
+        dataHandler.setString(2, "PhoneticName");
 
         // Force the commit, don't wait for the garbage collector
-        dataHandler.finalize();
+        dataHandler.delete();
     }
 
 
@@ -603,7 +603,7 @@ in Java++
         }
 
         // Force the commit, don't wait for the garbage collector
-        dataHandler.finalize();
+        dataHandler.delete();
     }
 
     dataSet.setImage(0, image);
