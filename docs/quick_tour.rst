@@ -334,7 +334,7 @@ in C++
         {
             try
             {
-                luts.push_back(loadedDataSet->getLUT(scanLUTs));
+                luts.push_back(loadedDataSet->getLUT(imebra::TagId(imebra::tagId_t::VOILUTSequence_0028_3010), scanLUTs));
             }
             catch(const imebra::MissingDataElementError&)
             {
@@ -379,11 +379,11 @@ in Java
 
         // Retrieve the LUTs
         List<com.imebra.LUT> luts = new ArrayList<com.imebra.LUT>();
-        for(int scanLUTs = 0; ; scanLUTs++)
+        for(long scanLUTs = 0; ; scanLUTs++)
         {
             try
             {
-                luts.add(loadedDataSet.getLUT(scanLUTs));
+                luts.add(loadedDataSet.getLUT(new com.imebra.TagId(0x0028,0x3010), scanLUTs));
             }
             catch(Exception e)
             {
