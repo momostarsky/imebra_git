@@ -517,7 +517,7 @@ In Java:
 
 .. code-block:: java
 
-    dataSet.setString(TagId(0x10, 0x10), "Patient^Name");
+    dataSet.setString(new com.imebra.TagId(0x10, 0x10), "Patient^Name");
 
 You can also set tags values by retrieving a WritingDataHandler and populating it: the WritingDataHandler will commit the data
 into the DataSet when it is destroyed:
