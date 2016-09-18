@@ -338,7 +338,7 @@ in C++
             }
             catch(const imebra::MissingDataElementError&)
             {
-                // Ignore: means end-of-LUTs
+                break;
             }
         }
 
@@ -387,7 +387,7 @@ in Java
             }
             catch(Exception e)
             {
-                // Ignore: means end-of-LUTs
+                break;
             }
         }
 
