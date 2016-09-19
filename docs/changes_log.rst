@@ -6,6 +6,14 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Fixed bug #125 (Documentation: The Java examples use the methods setUnicodeString and getUnicodeString and finalize)
+- Fixed bug #126 (Documentation: Wrong call to getLut in the examples)
+- Fixed bug #127 (Documentation: wrong Java Example for writing a Tag into a DataSet)
+- Fixed bug #129 (Documentation: The example that retrieves the LUTs out never exit from the loop)
+
+Version 4.0.2.1
+---------------
+
 - Fixed bug #122 (Failure to open a file with Java Wrappers)
 - Fixed bug #123 (SWIG translates the Java String to UTF16 and not UTF32 when filling std::wstring)
 - Fixef bug #124 (Java charset conversion fails)
