@@ -12,13 +12,20 @@ $fileHeader$
 
 #include "streamControllerImpl.h"
 #include "../include/imebra/exceptions.h"
-
+#include <exception>
 
 namespace imebra
 {
 
 namespace implementation
 {
+
+class JpegEoiFound: public std::runtime_error
+{
+public:
+    JpegEoiFound(const std::string& message): std::runtime_error(message)
+    {}
+};
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -322,10 +329,15 @@ public:
             }
         }while(m_dataBuffer[m_dataBufferCurrent] == 0xff);
 
-        if(m_dataBuffer[m_dataBufferCurrent++] != 0)
+        if(m_dataBuffer[m_dataBufferCurrent] != 0)
         {
+            if(m_dataBuffer[m_dataBufferCurrent] == 0xd9)
+            {
+                IMEBRA_THROW(JpegEoiFound, "Jpeg End of Image tag found");
+            }
             IMEBRA_THROW(StreamJpegTagInStreamError, "Corrupted jpeg stream");
         }
+        ++m_dataBufferCurrent;
 
         return 0xff;
 

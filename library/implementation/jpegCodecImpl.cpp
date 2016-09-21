@@ -1186,76 +1186,83 @@ std::shared_ptr<image> jpegCodec::getImage(const dataSet& sourceDataSet, std::sh
 
         }
 
-        jpeg::jpegChannel* pChannel; // Used in the loops
-        while(m_mcuProcessed < nextMcuStop && !pSourceStream->endReached())
+        try
         {
-            // Read an MCU
-            ///////////////////////////////////////////////////////////
-
-            // Scan all components
-            ///////////////////////////////////////////////////////////
-            for(jpeg::jpegChannel** channelsIterator = m_channelsList; *channelsIterator != 0; ++channelsIterator)
+            jpeg::jpegChannel* pChannel; // Used in the loops
+            while(m_mcuProcessed < nextMcuStop && !pSourceStream->endReached())
             {
-                pChannel = *channelsIterator;
-
-                // Read a lossless pixel
+                // Read an MCU
                 ///////////////////////////////////////////////////////////
-                if(m_bLossless)
+
+                // Scan all components
+                ///////////////////////////////////////////////////////////
+                for(jpeg::jpegChannel** channelsIterator = m_channelsList; *channelsIterator != 0; ++channelsIterator)
                 {
-                    for(std::uint32_t
-                        scanBlock = 0;
-                        scanBlock != pChannel->m_blockMcuXY;
-                        ++scanBlock)
+                    pChannel = *channelsIterator;
+
+                    // Read a lossless pixel
+                    ///////////////////////////////////////////////////////////
+                    if(m_bLossless)
                     {
-                        std::uint32_t amplitudeLength = pChannel->m_pActiveHuffmanTableDC->readHuffmanCode(pSourceStream);
-                        std::int32_t amplitude;        // lossless amplitude
-                        if(amplitudeLength != 0)
+                        for(std::uint32_t
+                            scanBlock = 0;
+                            scanBlock != pChannel->m_blockMcuXY;
+                            ++scanBlock)
                         {
-                            amplitude = (std::int32_t)pSourceStream->readBits(amplitudeLength);
-                            if(amplitude < ((std::int32_t)1<<(amplitudeLength-1)))
+                            std::uint32_t amplitudeLength = pChannel->m_pActiveHuffmanTableDC->readHuffmanCode(pSourceStream);
+                            std::int32_t amplitude;        // lossless amplitude
+                            if(amplitudeLength != 0)
                             {
-                                amplitude -= ((std::int32_t)1<<amplitudeLength)-1;
+                                amplitude = (std::int32_t)pSourceStream->readBits(amplitudeLength);
+                                if(amplitude < ((std::int32_t)1<<(amplitudeLength-1)))
+                                {
+                                    amplitude -= ((std::int32_t)1<<amplitudeLength)-1;
+                                }
                             }
-                        }
-                        else
-                        {
-                            amplitude = 0;
+                            else
+                            {
+                                amplitude = 0;
+                            }
+
+                            pChannel->addUnprocessedAmplitude(amplitude, m_spectralIndexStart, m_mcuLastRestart == m_mcuProcessed && scanBlock == 0);
                         }
 
-                        pChannel->addUnprocessedAmplitude(amplitude, m_spectralIndexStart, m_mcuLastRestart == m_mcuProcessed && scanBlock == 0);
+                        continue;
                     }
 
-                    continue;
-                }
-
-                // Read a lossy MCU
-                ///////////////////////////////////////////////////////////
-                std::uint32_t bufferPointer = (m_mcuProcessedY * pChannel->m_blockMcuY * ((m_jpegImageWidth * pChannel->m_samplingFactorX / m_maxSamplingFactorX) >> 3) + m_mcuProcessedX * pChannel->m_blockMcuX) * 64;
-                for(std::uint32_t scanBlockY = pChannel->m_blockMcuY; (scanBlockY != 0); --scanBlockY)
-                {
-                    for(std::uint32_t scanBlockX = pChannel->m_blockMcuX; scanBlockX != 0; --scanBlockX)
+                    // Read a lossy MCU
+                    ///////////////////////////////////////////////////////////
+                    std::uint32_t bufferPointer = (m_mcuProcessedY * pChannel->m_blockMcuY * ((m_jpegImageWidth * pChannel->m_samplingFactorX / m_maxSamplingFactorX) >> 3) + m_mcuProcessedX * pChannel->m_blockMcuX) * 64;
+                    for(std::uint32_t scanBlockY = pChannel->m_blockMcuY; (scanBlockY != 0); --scanBlockY)
                     {
-                        readBlock(pSourceStream, &(pChannel->m_pBuffer[bufferPointer]), pChannel);
-
-                        if(m_spectralIndexEnd >= 63)
+                        for(std::uint32_t scanBlockX = pChannel->m_blockMcuX; scanBlockX != 0; --scanBlockX)
                         {
-                            IDCT(
-                                        &(pChannel->m_pBuffer[bufferPointer]),
-                                        m_decompressionQuantizationTable[pChannel->m_quantTable]
-                                    );
+                            readBlock(pSourceStream, &(pChannel->m_pBuffer[bufferPointer]), pChannel);
+
+                            if(m_spectralIndexEnd >= 63)
+                            {
+                                IDCT(
+                                            &(pChannel->m_pBuffer[bufferPointer]),
+                                            m_decompressionQuantizationTable[pChannel->m_quantTable]
+                                        );
+                            }
+                            bufferPointer += 64;
                         }
-                        bufferPointer += 64;
+                        bufferPointer += (m_mcuNumberX -1) * pChannel->m_blockMcuX * 64;
                     }
-                    bufferPointer += (m_mcuNumberX -1) * pChannel->m_blockMcuX * 64;
+                }
+
+                ++m_mcuProcessed;
+                if(++m_mcuProcessedX == m_mcuNumberX)
+                {
+                    m_mcuProcessedX = 0;
+                    ++m_mcuProcessedY;
                 }
             }
-
-            ++m_mcuProcessed;
-            if(++m_mcuProcessedX == m_mcuNumberX)
-            {
-                m_mcuProcessedX = 0;
-                ++m_mcuProcessedY;
-            }
+        }
+        catch(const JpegEoiFound&)
+        {
+            break; // The end of the image has been prematurely found
         }
     }
 
