@@ -65,39 +65,51 @@ TEST(jpegCodecTest, testBaselineSubsampled)
         {
             for(int interleaved = 0; interleaved != 2; ++interleaved)
             {
-                std::uint32_t width = 300;
-                std::uint32_t height = 200;
-                std::unique_ptr<Image> baselineImage(buildSubsampledImage(width, height, bitDepth_t::depthU8, 7, 30, 20, "RGB"));
-
-                std::unique_ptr<Transform> colorTransform(ColorTransformsFactory::getTransform("RGB", "YBR_FULL"));
-                std::unique_ptr<Image> ybrImage(colorTransform->allocateOutputImage(*baselineImage, width, height));
-                colorTransform->runTransform(*baselineImage, 0, 0, width, height, *ybrImage, 0, 0);
-
-                ReadWriteMemory savedJpeg;
+                for(int prematureEoi(0); prematureEoi != 2; ++prematureEoi)
                 {
-                    MemoryStreamOutput saveStream(savedJpeg);
-                    StreamWriter writer(saveStream);
+                    std::uint32_t width = 300;
+                    std::uint32_t height = 200;
+                    std::unique_ptr<Image> baselineImage(buildSubsampledImage(width, height, bitDepth_t::depthU8, 7, 30, 20, "RGB"));
 
-                    CodecFactory::saveImage(writer, *ybrImage, "1.2.840.10008.1.2.4.50", imageQuality_t::veryHigh, tagVR_t::OB, 8, subsampledX != 0, subsampledY != 0, interleaved != 0, false);
+                    std::unique_ptr<Transform> colorTransform(ColorTransformsFactory::getTransform("RGB", "YBR_FULL"));
+                    std::unique_ptr<Image> ybrImage(colorTransform->allocateOutputImage(*baselineImage, width, height));
+                    colorTransform->runTransform(*baselineImage, 0, 0, width, height, *ybrImage, 0, 0);
+
+                    ReadWriteMemory savedJpeg;
+                    {
+                        MemoryStreamOutput saveStream(savedJpeg);
+                        StreamWriter writer(saveStream);
+
+                        CodecFactory::saveImage(writer, *ybrImage, "1.2.840.10008.1.2.4.50", imageQuality_t::veryHigh, tagVR_t::OB, 8, subsampledX != 0, subsampledY != 0, interleaved != 0, false);
+                    }
+                    if(prematureEoi == 1)
+                    {
+                        // Insert a premature EOI tag
+                        /////////////////////////////
+                        size_t dataSize;
+                        char* pData = savedJpeg.data(&dataSize);
+                        pData[dataSize - 10] = 0xff;
+                        pData[dataSize - 9] = 0xd9;
+                    }
+
+                    MemoryStreamInput loadStream(savedJpeg);
+                    StreamReader reader(loadStream);
+
+                    std::unique_ptr<DataSet> readDataSet(CodecFactory::load(reader, 0xffff));
+
+                    std::unique_ptr<Image> checkImage(readDataSet->getImage(0));
+
+                    std::uint32_t checkWidth(checkImage->getWidth()), checkHeight(checkImage->getHeight());
+                    colorTransform.reset(ColorTransformsFactory::getTransform("YBR_FULL", "RGB"));
+                    std::unique_ptr<Image> rgbImage(colorTransform->allocateOutputImage(*checkImage, checkWidth, checkHeight));
+                    colorTransform->runTransform(*checkImage, 0, 0, checkWidth, checkHeight, *rgbImage, 0, 0);
+
+                    // Compare the buffers. A little difference is allowed
+                    double differenceRGB = compareImages(*baselineImage, *rgbImage);
+                    double differenceYBR = compareImages(*ybrImage, *checkImage);
+                    ASSERT_LE(differenceRGB, 20);
+                    ASSERT_LE(differenceYBR, prematureEoi ? 2.0 : 1.0);
                 }
-
-                MemoryStreamInput loadStream(savedJpeg);
-                StreamReader reader(loadStream);
-
-                std::unique_ptr<DataSet> readDataSet(CodecFactory::load(reader, 0xffff));
-
-                std::unique_ptr<Image> checkImage(readDataSet->getImage(0));
-
-                std::uint32_t checkWidth(checkImage->getWidth()), checkHeight(checkImage->getHeight());
-                colorTransform.reset(ColorTransformsFactory::getTransform("YBR_FULL", "RGB"));
-                std::unique_ptr<Image> rgbImage(colorTransform->allocateOutputImage(*checkImage, checkWidth, checkHeight));
-                colorTransform->runTransform(*checkImage, 0, 0, checkWidth, checkHeight, *rgbImage, 0, 0);
-
-                // Compare the buffers. A little difference is allowed
-                double differenceRGB = identicalImages(*baselineImage, *rgbImage);
-                double differenceYBR = compareImages(*ybrImage, *checkImage);
-                ASSERT_LE(differenceRGB, 2);
-                ASSERT_LE(differenceYBR, 1);
             }
         }
     }

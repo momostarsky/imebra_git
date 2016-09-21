@@ -6,6 +6,11 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Implemented enhancement #130 (Allow the decompression of Jpeg images that have a premature EOI tag)
+
+Version 4.0.2.6
+---------------
+
 - Fixed bug #125 (Documentation: The Java examples use the methods setUnicodeString and getUnicodeString and finalize)
 - Fixed bug #126 (Documentation: Wrong call to getLut in the examples)
 - Fixed bug #127 (Documentation: wrong Java Example for writing a Tag into a DataSet)
