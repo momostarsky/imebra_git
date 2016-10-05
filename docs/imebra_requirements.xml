@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <?xml-stylesheet type="text/xsl" href="Documents/riskanalysis/schema/riskAnalysis.xsl"?>
-<project id="imebrav4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="file:/home/paolo/Documents/riskanalysis/schema/riskAnalysis.xsd">
+<project id="imebrav4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="file:riskAnalysis.xsd">
     <title>Imebra v.4</title>
     <description/>
     
@@ -37,6 +37,9 @@
                 A class must be used to specify a Dicom tag's id (group, order, id).
             </description>
             <priority>10</priority>
+            <implementedIn>
+                Class imebra::TagId
+            </implementedIn>
         </requirement>
         <requirement id="REQ_DONT_EXPOSE_INDEXED_WRITING" categoryIdref="REQ_IMPL">
             <mitigates>
