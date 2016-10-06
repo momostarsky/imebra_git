@@ -38,27 +38,48 @@ void CopyGroups(DataSet* source, DataSet* destination)
 
     for(tagsIds_t::const_iterator scanTags(tags.begin()), endTags(tags.end()); scanTags != endTags; ++scanTags)
     {
-        std::unique_ptr<Tag> sourceTag(source->getTag(*scanTags));
-        std::unique_ptr<Tag> destTag(destination->getTagCreate(*scanTags, sourceTag->getDataType()));
-
-        for(size_t scanItem(0); ; ++scanItem)
+        if((*scanTags).getGroupId() == 0x7fe0)
         {
+            continue;
+        }
+        try
+        {
+            destination->getTag(*scanTags);
+        }
+        catch(const MissingDataElementError&)
+        {
+            std::unique_ptr<Tag> sourceTag(source->getTag(*scanTags));
+            std::unique_ptr<Tag> destTag(destination->getTagCreate(*scanTags, sourceTag->getDataType()));
+
             try
             {
-                std::unique_ptr<DataSet> sequence(sourceTag->getSequenceItem(scanItem));
-                DataSet destSequence;
-                CopyGroups(sequence.get(), &destSequence);
-                destination->setSequenceItem(*scanTags, scanItem, destSequence);
+                for(size_t buffer(0); ; ++buffer)
+                {
+                    try
+                    {
+                        std::unique_ptr<DataSet> sequence(sourceTag->getSequenceItem(buffer));
+                        DataSet destSequence;
+                        CopyGroups(sequence.get(), &destSequence);
+                        destination->setSequenceItem(*scanTags, buffer, destSequence);
+                    }
+                    catch(const MissingDataElementError&)
+                    {
+                        std::unique_ptr<ReadingDataHandler> sourceHandler(sourceTag->getReadingDataHandler(buffer));
+                        std::unique_ptr<WritingDataHandler> destHandler(destTag->getWritingDataHandler(buffer));
+                        destHandler->setSize(sourceHandler->getSize());
+                        for(size_t item(0); item != sourceHandler->getSize(); ++item)
+                        {
+                            destHandler->setUnicodeString(item, sourceHandler->getUnicodeString(item));
+                        }
+                    }
+                }
             }
             catch(const MissingDataElementError&)
             {
-                std::unique_ptr<ReadingDataHandlerNumeric> sourceHandler(sourceTag->getReadingDataHandlerRaw(scanItem));
-                std::unique_ptr<WritingDataHandlerNumeric> destHandler(destTag->getWritingDataHandlerRaw(scanItem));
-                sourceHandler->copyTo(*destHandler);
+
             }
         }
     }
-
 }
 
 int main(int argc, char* argv[])
@@ -71,31 +92,44 @@ int main(int argc, char* argv[])
 		std::string inputFileName;
 		std::string outputFileName;
         std::string transferSyntax;
-		if(argc == 4)
+        std::uint32_t maxHighBit;
+
+        if(argc == 4)
 		{
+			inputFileName = argv[1];
+			outputFileName = argv[2];
+
             const char* transferSyntaxAllowedValues[]=
-			{
+            {
                 "1.2.840.10008.1.2.1", // Explicit VR little endian
                 "1.2.840.10008.1.2.2", // Explicit VR big endian
                 "1.2.840.10008.1.2.5", // RLE compression
                 "1.2.840.10008.1.2.4.50", // Jpeg baseline (8 bits lossy)
                 "1.2.840.10008.1.2.4.51", // Jpeg extended (12 bits lossy)
                 "1.2.840.10008.1.2.4.57" // Jpeg lossless NH
-			};
+            };
 
-			inputFileName = argv[1];
-			outputFileName = argv[2];
+            const std::uint32_t maxHighBitValues[]=
+            {
+                31,
+                31,
+                31,
+                7,
+                11,
+                15
+            };
 
-			std::istringstream convertTransferSyntax(argv[3]);
+            std::istringstream convertTransferSyntax(argv[3]);
 			int transferSyntaxValue(-1);
 			convertTransferSyntax >> transferSyntaxValue;
             if(transferSyntaxValue >= 0 && (size_t)transferSyntaxValue < sizeof(transferSyntaxAllowedValues)/sizeof(char*))
 			{
 				transferSyntax = transferSyntaxAllowedValues[transferSyntaxValue];
+                maxHighBit = maxHighBitValues[transferSyntaxValue];
 			}
 		}
 
-		if(inputFileName.empty() || outputFileName.empty() || transferSyntax.empty())
+        if(inputFileName.empty() || outputFileName.empty() || transferSyntax.empty())
 		{
                     std::cout << "Usage: changeTransferSyntax inputFileName outputFileName newTransferSyntax" << std::endl;
                     std::cout << "newTransferSyntax values: 0 = Explicit VR little endian" << std::endl;
@@ -119,6 +153,12 @@ int main(int argc, char* argv[])
             for(size_t scanImages(0);; ++scanImages)
 			{
                 std::unique_ptr<Image> copyImage(loadedDataSet->getImage(scanImages));
+                if(copyImage->getHighBit() > maxHighBit)
+                {
+                    std::cout << "WARNING: image has highBit=" << copyImage->getHighBit() <<
+                                 " but the selected transfer syntax support highBit<=" <<
+                                 maxHighBit << std::endl;
+                }
                 newDataSet.setImage(scanImages, *copyImage, imageQuality_t::high);
 			}
 		}
