@@ -72,6 +72,14 @@ Imebra
 
    risks_requirements
 
+.. _sops
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Standard operating procedures
+
+   sop
+   
 
 
 
