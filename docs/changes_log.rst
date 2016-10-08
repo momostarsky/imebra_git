@@ -6,6 +6,13 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Fixed bug #134 (The example ChangeTransferSyntax copies the tags over the images created using the new transfer syntax)
+- Added XSD file for the imebra_requirements.xml file
+- Added Standard Operating Procedures for future development
+
+Version 4.0.3.1
+---------------
+
 - Implemented enhancement #130 (Allow the decompression of Jpeg images that have a premature EOI tag)
 
 Version 4.0.2.6
