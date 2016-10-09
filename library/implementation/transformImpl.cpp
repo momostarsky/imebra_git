@@ -62,25 +62,13 @@ void transform::runTransform(
 	std::shared_ptr<palette> inputPalette(inputImage->getPalette());
     std::string inputColorSpace(inputImage->getColorSpace());
 	std::uint32_t inputHighBit(inputImage->getHighBit());
-    std::uint64_t inputNumValues((std::uint64_t)1 << (inputHighBit + 1));
-    std::int32_t inputMinValue(0);
     bitDepth_t inputDepth(inputImage->getDepth());
-    if(inputImage->isSigned())
-	{
-		inputMinValue -= (std::int32_t)(inputNumValues >> 1);
-	}
 
     std::shared_ptr<handlers::writingDataHandlerNumericBase> outputHandler(outputImage->getWritingDataHandler());
 	std::shared_ptr<palette> outputPalette(outputImage->getPalette());
     std::string outputColorSpace(outputImage->getColorSpace());
 	std::uint32_t outputHighBit(outputImage->getHighBit());
-    std::uint64_t outputNumValues((std::uint64_t)1 << (outputHighBit + 1));
-	std::int32_t outputMinValue(0);
     bitDepth_t outputDepth(outputImage->getDepth());
-    if(outputImage->isSigned())
-	{
-		outputMinValue -= (std::int32_t)(outputNumValues >> 1);
-	}
 
 	if(isEmpty())
 	{
