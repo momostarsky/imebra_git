@@ -81,7 +81,7 @@ void outputTag(const DataSet& dataSet, std::uint16_t group, std::uint16_t tag, s
         *pOutputStream << L"</" << tagName << L">\n";
 
     }
-    catch(MissingItemError&)
+    catch(MissingDataElementError&)
     {
         *pOutputStream << L"<" << tagName << L" />\n";
     }
@@ -94,13 +94,11 @@ void outputTag(const DataSet& dataSet, std::uint16_t group, std::uint16_t tag, s
 //  the specified one
 //
 ///////////////////////////////////////////////////////////
-void scanChildren(DicomDirEntry* pRecord, std::wostream* pOutputStream)
+void scanChildren(std::shared_ptr<DicomDirEntry> pRecord, std::wostream* pOutputStream)
 {
 
-    for(; pRecord != 0; pRecord = pRecord->getNextEntry())
+    for(; pRecord != 0; pRecord = std::shared_ptr<DicomDirEntry>(pRecord->getNextEntry()))
 	{
-        std::unique_ptr<DicomDirEntry> entry(pRecord);
-
         std::unique_ptr<DataSet> pRecordDataSet(pRecord->getEntryDataSet());
 
 		// Output the file parts
@@ -144,8 +142,7 @@ void scanChildren(DicomDirEntry* pRecord, std::wostream* pOutputStream)
 
 		// Output the child records
 		(*pOutputStream) << L"<children>\n";
-        std::unique_ptr<DicomDirEntry> rootEntry(pRecord->getFirstChildEntry());
-        scanChildren(rootEntry.get(), pOutputStream);
+        scanChildren(std::shared_ptr<DicomDirEntry>(pRecord->getFirstChildEntry()), pOutputStream);
 		(*pOutputStream) << L"</children>\n";
 
 
@@ -183,8 +180,7 @@ int main(int argc, char* argv[])
 	try
 	{
 		std::wcout << L"<dicomdir>";
-        std::unique_ptr<DicomDirEntry> rootEntry(directory->getFirstRootEntry());
-        scanChildren(rootEntry.get(), &(std::wcout));
+        scanChildren(std::shared_ptr<DicomDirEntry>(directory->getFirstRootEntry()), &(std::wcout));
 		std::wcout << L"</dicomdir>";
 		return 0;
 	}
