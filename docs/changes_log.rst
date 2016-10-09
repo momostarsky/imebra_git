@@ -6,6 +6,7 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Fixed bug #131 (Unused variables in transformImpl.cpp) as per :ref:`FIXBUG_1`
 - Fixed bug #136 (Segmentation fault when navigating the DicomDir entries) as per :ref:`FIXBUG_1`
 - Fixed bug #137 (The example DicomDirItems throws an exception while scanning the DicomDirEntry tags) as per :ref:`FIXBUG_1`
 
