@@ -534,9 +534,12 @@ dicomDir::dicomDir(std::shared_ptr<dataSet> pDataSet):
         tOffsetsToRecords::iterator findRecord(offsetsToRecords.find(m_pDataSet->getUnsignedLong(0x0004, 0, 0x1200, 0, 0)));
         if(findRecord == offsetsToRecords.end())
         {
-            throw;
+            setFirstRootRecord(std::shared_ptr<directoryRecord>());
         }
-        setFirstRootRecord(findRecord->second);
+        else
+        {
+            setFirstRootRecord(findRecord->second);
+        }
     }
     catch(const MissingDataElementError&)
     {

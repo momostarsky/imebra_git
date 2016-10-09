@@ -67,14 +67,21 @@ public:
 
     /// \brief Return the next sibling entry (on the same depth level).
     /// 
-    /// \return the next sibling DicomDirEntry object.
+    /// If the next DicomDirEntry is missing (this is the last entry) then
+    /// return a null pointer.
+    ///
+    /// \return the next sibling DicomDirEntry object, or a null pointer if the
+    ///         next sibling DicomDirEntry does not exist
     /// 
     ///////////////////////////////////////////////////////////////////////////////
     DicomDirEntry* getNextEntry();
 
     /// \brief Return the first child entry (one level deeper).
     /// 
-    /// \return the first child DicomDirEntry object.
+    /// If the first child DicomDirEntry is missing then return a null pointer.
+    ///
+    /// \return the first child DicomDirEntry object, or a null pointer if there
+    ///         aren't any children
     /// 
     ///////////////////////////////////////////////////////////////////////////////
     DicomDirEntry* getFirstChildEntry();

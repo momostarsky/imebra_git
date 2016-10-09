@@ -54,6 +54,7 @@ TEST(dicomDirTest, createDicomDir)
     std::unique_ptr<DataSet> testNextRecordDataSet(testNextRecord->getEntryDataSet());
     EXPECT_EQ(directoryRecordType_t::patient, testNextRecord->getType());
     EXPECT_EQ(std::wstring(L"Surname 1"), testNextRecordDataSet->getUnicodeString(TagId(tagId_t::PatientName_0010_0010), 0));
+    EXPECT_EQ(0, testNextRecord->getNextEntry());
 
     std::unique_ptr<DicomDirEntry> testImageRecord(testNextRecord->getFirstChildEntry());
     std::unique_ptr<DataSet> testImageRecordDataSet(testImageRecord->getEntryDataSet());
@@ -61,8 +62,28 @@ TEST(dicomDirTest, createDicomDir)
     EXPECT_EQ(std::string("1.2.840.34.56.78999654.235"), testImageRecordDataSet->getString(TagId(tagId_t::SOPInstanceUID_0008_0018), 0));
     EXPECT_EQ(std::string("folder"), testImageRecord->getFileParts().at(0));
     EXPECT_EQ(std::string("file.dcm"), testImageRecord->getFileParts().at(1));
+    EXPECT_EQ(0, testImageRecord->getFirstChildEntry());
 }
 
+
+TEST(dicomDirTest, emptyDicomDir)
+{
+    DicomDir newDicomDir;
+
+    std::unique_ptr<DataSet> dicomDirDataSet(newDicomDir.updateDataSet());
+
+    ReadWriteMemory streamMemory;
+    MemoryStreamOutput memStream(streamMemory);
+    StreamWriter writer(memStream);
+    CodecFactory::save(*dicomDirDataSet, writer, codecType_t::dicom);
+
+    MemoryStreamInput inputMemStream(streamMemory);
+    StreamReader reader(inputMemStream);
+    std::unique_ptr<DataSet> readDataSet(CodecFactory::load(reader));
+
+    const DicomDir testDicomDir(*readDataSet);
+    EXPECT_EQ(0, testDicomDir.getFirstRootEntry());
+}
 
 } // namespace tests
 
