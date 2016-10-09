@@ -37,7 +37,12 @@ DicomDirEntry* DicomDir::getNewEntry(directoryRecordType_t recordType)
 
 DicomDirEntry* DicomDir::getFirstRootEntry() const
 {
-    return new DicomDirEntry(m_pDicomDir->getFirstRootRecord());
+    std::shared_ptr<implementation::directoryRecord> pRootRecord(m_pDicomDir->getFirstRootRecord());
+    if(pRootRecord == 0)
+    {
+        return 0;
+    }
+    return new DicomDirEntry(pRootRecord);
 }
 
 void DicomDir::setFirstRootEntry(const DicomDirEntry& firstEntryRecord)

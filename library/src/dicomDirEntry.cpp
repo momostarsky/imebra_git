@@ -30,12 +30,22 @@ DataSet* DicomDirEntry::getEntryDataSet()
 
 DicomDirEntry* DicomDirEntry::getNextEntry()
 {
-    return new DicomDirEntry(m_pDirectoryRecord->getNextRecord());
+    std::shared_ptr<implementation::directoryRecord> pNextEntry(m_pDirectoryRecord->getNextRecord());
+    if(pNextEntry == 0)
+    {
+        return 0;
+    }
+    return new DicomDirEntry(pNextEntry);
 }
 
 DicomDirEntry* DicomDirEntry::getFirstChildEntry()
 {
-    return new DicomDirEntry(m_pDirectoryRecord->getFirstChildRecord());
+    std::shared_ptr<implementation::directoryRecord> pChildEntry(m_pDirectoryRecord->getFirstChildRecord());
+    if(pChildEntry == 0)
+    {
+        return 0;
+    }
+    return new DicomDirEntry(pChildEntry);
 }
 	
 void DicomDirEntry::setNextEntry(const DicomDirEntry& nextEntry)

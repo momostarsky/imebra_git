@@ -6,6 +6,11 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Fixed bug #136 (Segmentation fault when navigating the DicomDir entries) as per :ref:`FIXBUG_1`
+
+Version 4.0.3.5
+---------------
+
 - Fixed bug #134 (The example ChangeTransferSyntax copies the tags over the images created using the new transfer syntax)
 - Added XSD file for the imebra_requirements.xml file
 - Added Standard Operating Procedures for future development

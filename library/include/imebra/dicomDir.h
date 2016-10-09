@@ -79,7 +79,10 @@ public:
 
     /// \brief Retrieve the first DicomDir's root entry.
     ///
-    /// \return the root DicomDir's entry
+    /// If the root entry is missing then return a null pointer.
+    ///
+    /// \return the root DicomDirEntry or a null pointer if the root
+    ///         DicomDirEntry does noot exist
     ///
     ///////////////////////////////////////////////////////////////////////////////
     DicomDirEntry* getFirstRootEntry() const;
