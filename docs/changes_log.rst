@@ -6,6 +6,7 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Implemented enhancement #138 (Redundant check in dicomCodec::allocChannels) as per :ref:`DEVENH_1`
 - Fixed bug #139 (On Windows the preprocessor macro NOMINMAX has to be defined if windows.h is included) as per :ref:`FIXBUG_1`
 
 Version 4.0.4.1

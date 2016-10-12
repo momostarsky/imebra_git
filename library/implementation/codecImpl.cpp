@@ -111,15 +111,15 @@ void channel::allocate(std::uint32_t width, std::uint32_t height)
 {
     IMEBRA_FUNCTION_START();
 
-	m_width = width;
-	m_height = height;
-	m_bufferSize = width * height;
+    m_width = width;
+    m_height = height;
+    m_bufferSize = width * height;
     m_memory = std::make_shared<memory>(m_bufferSize * sizeof(std::int32_t) );
-	m_pBuffer = (std::int32_t*)(m_memory->data());
+    m_pBuffer = (std::int32_t*)(m_memory->data());
 
-	::memset(m_pBuffer, 0, m_bufferSize * sizeof(std::int32_t));
+    ::memset(m_pBuffer, 0, m_bufferSize * sizeof(std::int32_t));
 
-	IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 
