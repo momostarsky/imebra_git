@@ -7,8 +7,6 @@ $fileHeader$
 
 */
 
-#define NOMINMAX
-
 #include "exceptionImpl.h"
 #include "modalityVOILUTImpl.h"
 #include "dataSetImpl.h"

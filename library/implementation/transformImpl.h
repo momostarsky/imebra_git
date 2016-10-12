@@ -10,16 +10,10 @@ $fileHeader$
 #if !defined(imebraTransform_5DB89BFD_F105_45e7_B9D9_3756AC93C821__INCLUDED_)
 #define imebraTransform_5DB89BFD_F105_45e7_B9D9_3756AC93C821__INCLUDED_
 
-#define NOMINMAX
-
 #include <memory>
 #include <limits>
 #include "dataHandlerNumericImpl.h"
 #include "imageImpl.h"
-
-
-
-
 
 #define DEFINE_RUN_TEMPLATE_TRANSFORM \
 virtual void runTransformHandlers(\
@@ -39,7 +33,6 @@ virtual void runTransformHandlers(\
             outputTopLeftX, outputTopLeftY);\
     IMEBRA_FUNCTION_END();\
 }
-
 
 namespace imebra
 {

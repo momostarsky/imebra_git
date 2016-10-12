@@ -32,6 +32,7 @@ endif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 
 add_definitions(-DIMEBRA_DLL)
 add_definitions(-DIMEBRA_DLL_EXPORTS)
+add_definitions(-DNOMINMAX)
 
 # Select the proper libraries according to the charset conversion method
 #-----------------------------------------------------------------------
