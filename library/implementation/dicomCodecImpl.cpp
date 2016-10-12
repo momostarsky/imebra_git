@@ -1195,7 +1195,6 @@ void dicomCodec::allocChannels(std::uint32_t channelsNumber, std::uint32_t width
     m_channels.resize(channelsNumber);
     for(std::uint32_t channelNum = 0; channelNum < channelsNumber; ++channelNum)
     {
-        ptrChannel newChannel(std::make_shared<channel>());
         std::uint32_t channelWidth = width;
         std::uint32_t channelHeight = height;
         std::uint32_t samplingFactorX = 1;
@@ -1222,10 +1221,10 @@ void dicomCodec::allocChannels(std::uint32_t channelsNumber, std::uint32_t width
                 ++samplingFactorY;
             }
         }
-        newChannel->allocate(channelWidth, channelHeight);
 
-        if(channelNum == 0)
-            newChannel->m_samplingFactorX = samplingFactorX;
+        ptrChannel newChannel(std::make_shared<channel>());
+        newChannel->allocate(channelWidth, channelHeight);
+        newChannel->m_samplingFactorX = samplingFactorX;
         newChannel->m_samplingFactorY = samplingFactorY;
 
         m_channels[channelNum] = newChannel;

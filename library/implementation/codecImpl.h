@@ -308,17 +308,17 @@ class channel
 public:
 	// Constructor
 	///////////////////////////////////////////////////////////
-	channel(): 
-		m_samplingFactorX(1), 
-		m_samplingFactorY(1),
-		m_width(0),
-		m_height(0),
-		m_pBuffer(0),
-		m_bufferSize(0){}
+    channel():
+        m_samplingFactorX(1),
+        m_samplingFactorY(1),
+        m_width(0),
+        m_height(0),
+        m_pBuffer(0),
+        m_bufferSize(0){}
 
-	// Allocate the channel
-	///////////////////////////////////////////////////////////
-	void allocate(std::uint32_t width, std::uint32_t height);
+    // Allocate the channel
+    ///////////////////////////////////////////////////////////
+    void allocate(std::uint32_t width, std::uint32_t height);
 
 	// Sampling factor
 	///////////////////////////////////////////////////////////
