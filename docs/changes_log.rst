@@ -10,6 +10,7 @@ Version |release| (this version)
 - Implemented enhancement #138 (Redundant check in dicomCodec::allocChannels) as per :ref:`DEVENH_1`
 - Fixed bug #139 (On Windows the preprocessor macro NOMINMAX has to be defined if windows.h is included) as per :ref:`FIXBUG_1`
 - Implemented enhancement #140 (Remove the macro NOMINMAX from the Imebra source code and place it in CMake) as per :ref:`DEVENH_1`
+- Fixed bug #142 (The DICOM VR "LT" (long text) should not treat the backslash as a separator) as per :ref:`FIXBUG_1`
 
 Version 4.0.4.1
 ---------------

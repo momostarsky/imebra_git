@@ -34,7 +34,7 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 
 readingDataHandlerStringLT::readingDataHandlerStringLT(const memory& parseMemory, const charsetsList::tCharsetsList& initialCharsetsList):
-    readingDataHandlerStringUnicode(parseMemory, initialCharsetsList, tagVR_t::LT, L'\\', 0x20)
+    readingDataHandlerStringUnicode(parseMemory, initialCharsetsList, tagVR_t::LT, 0, 0x20)
 {
 }
 
