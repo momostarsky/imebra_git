@@ -27,15 +27,14 @@ class IMEBRA_API FileStreamInput : public BaseStreamInput
     FileStreamInput& operator=(const FileStreamInput&) = delete;
 
 public:
-
     /// \brief Constructor.
     ///
     /// \param name the path to the file to open in read mode
     ///
     ///////////////////////////////////////////////////////////////////////////////
+#ifndef SWIG // Use only UTF-8 strings with SWIG
     FileStreamInput(const std::wstring& name);
-
-#ifndef SWIG // Use Unicode strings only with SWIG
+#endif
 
     /// \brief Constructor.
     ///
@@ -44,7 +43,6 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     FileStreamInput(const std::string& name);
 
-#endif
 
     /// \brief Destructor. Closes the file.
     ///
