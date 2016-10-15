@@ -177,14 +177,14 @@ TEST(stringHandlerTest, LTTest)
 {
     DataSet testDataSet;
 
-    testDataSet.setString(TagId(0x0010, 0x0010), "0123456789012345", tagVR_t::LT);
-    ASSERT_EQ("0123456789012345", testDataSet.getString(TagId(0x0010, 0x0010), 0));
+    testDataSet.setString(TagId(0x0010, 0x0010), "0123456789012345\\0123", tagVR_t::LT);
+    ASSERT_EQ("0123456789012345\\0123", testDataSet.getString(TagId(0x0010, 0x0010), 0));
     ASSERT_THROW(testDataSet.getDate(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
     ASSERT_THROW(testDataSet.getAge(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
 
     {
         std::unique_ptr<WritingDataHandler> dataHandler(testDataSet.getWritingDataHandler(TagId(0x0010, 0x0010), 0, tagVR_t::LT));
-        dataHandler->setString(0, "test");
+        dataHandler->setString(0, "test\\test1");
         ASSERT_THROW(dataHandler->setString(1, "test");, DataHandlerInvalidDataError);
     }
 
