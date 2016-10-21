@@ -6,6 +6,11 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Fixed bug #117 (build fails on OSX)
+
+Version 4.0.5.1
+---------------
+
 - Fixed bug #135 (openFile failure) as per :ref:`FIXBUG_1`
 - Implemented enhancement #138 (Redundant check in dicomCodec::allocChannels) as per :ref:`DEVENH_1`
 - Fixed bug #139 (On Windows the preprocessor macro NOMINMAX has to be defined if windows.h is included) as per :ref:`FIXBUG_1`
