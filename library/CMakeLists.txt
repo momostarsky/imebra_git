@@ -39,6 +39,9 @@ add_definitions(-DNOMINMAX)
 if(IMEBRA_CHARSET_CONVERSION MATCHES ICONV)
     message("Using ICONV")
     add_definitions(-DIMEBRA_USE_ICONV)
+    if(APPLE)
+        set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} iconv)
+    endif(APPLE)
 elseif(IMEBRA_CHARSET_CONVERSION MATCHES ICU)
     message("Using ICU")
     add_definitions(-DIMEBRA_USE_ICU)
@@ -51,12 +54,15 @@ elseif(IMEBRA_CHARSET_CONVERSION MATCHES WINDOWS)
     message("Using WINDOWS CHARSET CONVERSION")
     add_definitions(-DIMEBRA_USE_WINDOWS_CHARSET)
 else(IMEBRA_CHARSET_CONVERSION MATCHES ICONV)
-	if(WIN32)
+        if(WIN32)
             message("Using WINDOWS CHARSET CONVERSION (default)")
             add_definitions(-DIMEBRA_USE_WINDOWS_CHARSET)
         else(WIN32)
             message("Using ICONV (default)")
             add_definitions(-DIMEBRA_USE_ICONV)
+            if(APPLE)
+                set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} iconv)
+            endif(APPLE)
         endif(WIN32)
 endif(IMEBRA_CHARSET_CONVERSION MATCHES ICONV)
 
@@ -162,11 +168,11 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/copyright"
         GROUP_READ
         WORLD_READ)
 
-install(TARGETS imebra LIBRARY DESTINATION lib 
-						ARCHIVE DESTINATION lib
-						LIBRARY DESTINATION lib
-						RUNTIME DESTINATION bin
-						COMPONENT "Shared library")
+install(TARGETS imebra LIBRARY DESTINATION lib
+                                                ARCHIVE DESTINATION lib
+                                                LIBRARY DESTINATION lib
+                                                RUNTIME DESTINATION bin
+                                                COMPONENT "Shared library")
 
 install(FILES ${imebra_interface} DESTINATION include/imebra COMPONENT "Include files")
 
