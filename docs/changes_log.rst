@@ -6,6 +6,13 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Implemented enhancement #144 (Improve the bug fixing/feature implementation SOPs so they are developed in separate branches).
+  Improved SOPs FIXBUG (:ref:`FIXBUG_2`) DEVFEAT (:ref:`DEVFEAT_2`) DEVENH (:ref:`DEVENH_2`), updated SOP RELEASE (:ref:`RELEASE_2`)
+  as per SOPs :ref:`MODSOP_1`, :ref:`DEVENH_1`
+
+Version 4.0.5.3
+---------------
+
 - Fixed bug #117 (build fails on OSX)
 
 Version 4.0.5.1
