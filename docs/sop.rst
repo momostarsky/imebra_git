@@ -537,8 +537,13 @@ Open the file docs/changes_log.txt in a text editor.
 Step 1
 ......
 
-If this is the first modification to the changelog since the last Imebra public distribution, then rename the title "Version |release| (this version)" with 
-the actual name of the last Imebra public distribution, otherwise skip to step 2.
+If this is the first modification to the changelog since the last Imebra public distribution, then rename the title
+
+::
+
+    Version |release| (this version)
+
+with the actual name of the last Imebra public distribution, otherwise skip to step 2.
 
 For instance, the following text:
 
@@ -560,12 +565,22 @@ should be modified into
     - fixed bug #1 (sample bug)
     - implemented feature #2 (sample feature)
 
-Then above the modified title, insert the changes log for the new release, with the title "Version |release| (this version)".
+Then above the modified title, insert the changes log for the new release, with the title
+
+::
+
+    Version |release| (this version)
 
 Step 2
 ......
 
-Below the title "Version |release| (this version)" add the changes that will be committed.
+Below the title
+
+::
+
+    Version |release| (this version)
+
+add the changes that will be committed.
 For each changelog line, indicate the SOP procedures used to implement the feature, referencing them with:
 
 ::
