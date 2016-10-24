@@ -69,8 +69,10 @@ private:
 
 public:
 
-    /// \brief Constructor. Allocates the memory necessary to store all the
-    ///        channels' values.
+    /// \brief Constructor.
+    ///
+    /// The memory for the image is not allocated by the constructor but only when
+    /// a WritingDataHandler is requested with getWritingDataHandler().
     ///
     /// \param width      the image width, in pixels
     /// \param height     the image height, in pixels
