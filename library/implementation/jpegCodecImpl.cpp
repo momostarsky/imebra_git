@@ -1980,7 +1980,6 @@ inline void jpegCodec::readBlock(streamReader* pStream, std::int32_t* pBuffer, j
             }
 
             spectralIndex += runLength;
-            runLength = 0;
 
             // Store coeff.
             /////////////////////////////////////////////////////////////////
