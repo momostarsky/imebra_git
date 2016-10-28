@@ -18,6 +18,7 @@ Version |release| (this version)
       Version |release| (this version)
 
   is replaced with the current version) as per SOP :ref:`FIXBUG_2`
+- Implemented #146 enhancement (Explain how to compile the 64bit version of the library on Windows) as per SOP :ref:`DEVENH_2`
 
 Version 4.0.5.3
 ---------------

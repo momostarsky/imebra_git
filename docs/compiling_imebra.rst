@@ -57,19 +57,60 @@ make file on Linux, a VisualStudio solution of Windows, an XCode project on Mac.
 The second CMake command with the --build option will launch make, VisualStudio or the build
 chain defined on your machine.
 
-On Windows, the last cmake command can be followed by --config release or --config debug, like
-this:
+
+Windows specific instructions
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+On Windows cmake will, by default, generate a 32 bit solution for the most recent Visual Studio compiler installed on
+the system.
+
+Additionally, when specifying the --build option it is possible to specify the debug or relase configuration via
+the option "--config Debug" or "--config Release"
+
+It is possible to build a 64 bit version of the library by explicitly specifying a 64 bit generator when launching cmake.
+
+The cmake generators available on Windows include:
+
+- Visual Studio 14 2015 [arch] = Generates Visual Studio 2015 project files.
+                                 Optional [arch] can be "Win64" or "ARM".
+- Visual Studio 12 2013 [arch] = Generates Visual Studio 2013 project files.
+                                 Optional [arch] can be "Win64" or "ARM".
+- Visual Studio 11 2012 [arch] = Generates Visual Studio 2012 project files.
+                                 Optional [arch] can be "Win64" or "ARM".
+- Visual Studio 10 2010 [arch] = Generates Visual Studio 2010 project files.
+                                 Optional [arch] can be "Win64" or "IA64".
+- Visual Studio 9 2008 [arch]  = Generates Visual Studio 2008 project files.
+                                 Optional [arch] can be "Win64" or "IA64".
+- Visual Studio 8 2005 [arch]  = Generates Visual Studio 2005 project files.
+                                 Optional [arch] can be "Win64".
+
+To generate the 64 bit version of the library just specify the proper generator and architecture.
+For instance the following script will compile a Release 64 bit version of imebra using Visual Studio 14 (2015):
 
 ::
 
-    cmake --build . --config release
+    mkdir artifacts_64bit_release
+    cd artifacts_64bit_release
+    cmake -G "Visual Studio 14 2015 Win64" imebra_location/library
+    cmake --build . --config Release
 
-or
+The following example will compile a Debug 64 bit version of imebra using Visual Studio 14 (2015):
 
 ::
 
-    cmake --build . --config debug
+    mkdir artifacts_64bit_debug
+    cd artifacts_64bit_debug
+    cmake -G "Visual Studio 14 2015 Win64" imebra_location/library
+    cmake --build . --config Debug
 
+To generate the 32 bit version of the library, just omit the architecture after the name of the cmake generator:
+
+::
+
+    mkdir artifacts_32bit_debug
+    cd artifacts_32bit_debug
+    cmake -G "Visual Studio 14 2015" imebra_location/library
+    cmake --build . --config Debug
 
 
 Compiling the Android version of Imebra
