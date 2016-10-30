@@ -27,13 +27,6 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 
 endif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 
-
-
-
-add_definitions(-DIMEBRA_DLL)
-add_definitions(-DIMEBRA_DLL_EXPORTS)
-add_definitions(-DNOMINMAX)
-
 # Select the proper libraries according to the charset conversion method
 #-----------------------------------------------------------------------
 if(IMEBRA_CHARSET_CONVERSION MATCHES ICONV)
@@ -66,6 +59,19 @@ else(IMEBRA_CHARSET_CONVERSION MATCHES ICONV)
         endif(WIN32)
 endif(IMEBRA_CHARSET_CONVERSION MATCHES ICONV)
 
+if(APPLE AND APPLE_PLATFORM MATCHES IOS)
+    set(IMEBRA_SHARED_STATIC "STATIC")
+else(APPLE AND APPLE_PLATFORM MATCHES IOS)
+    set(IMEBRA_SHARED_STATIC "SHARED")
+endif(APPLE AND APPLE_PLATFORM MATCHES IOS)
+
+if(IMEBRA_SHARED_STATIC MATCHES SHARED)
+    add_definitions(-DIMEBRA_DLL)
+    add_definitions(-DIMEBRA_DLL_EXPORTS)
+endif(IMEBRA_SHARED_STATIC MATCHES SHARED)
+
+add_definitions(-DNOMINMAX)
+
 message("Linked libraries: ${IMEBRA_LIBRARIES}")
 
 include_directories(include)
@@ -76,7 +82,7 @@ file(GLOB imebra_src "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 file(GLOB imebra_implementation_src "${CMAKE_CURRENT_SOURCE_DIR}/implementation/*.cpp")
 file(GLOB imebra_implementation_include "${CMAKE_CURRENT_SOURCE_DIR}/implementation/*.h")
 
-add_library(imebra SHARED
+add_library(imebra ${IMEBRA_SHARED_STATIC}
     ${imebra_implementation_src}
     ${imebra_implementation_include}
     ${imebra_include}
@@ -85,7 +91,6 @@ add_library(imebra SHARED
 )
 
 target_link_libraries(imebra ${IMEBRA_LIBRARIES})
-#target_link_libraries(imebra gcov)
 
 # Set the library version from IMEBRA_MAJOR_VERSION, IMEBRA_MINOR_VERSION,
 #  & IMEBRA_REVISION
