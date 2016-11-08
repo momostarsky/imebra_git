@@ -1,8 +1,19 @@
+# Options:
+# -DIMEBRA_SHARED_STATIC=SHARED|STATIC (default = SHARED)
+# -DIMEBRA_CHARSET_CONVERSION=ICONV|ICU|JAVA|WINDOWS (default = ICONV on posix, WINDOWS on Windows)
+# -DIOS=PHONE|SIMULATOR (default not defined)
+# -DCMAKE_OSX_SYSROOT
+
 cmake_minimum_required(VERSION 2.8)
 
 project("imebra")
 
+set(CMAKE_CONFIGURATION_TYPES Debug Release)
+
+# Add flags specific to the compiler
+#-----------------------------------
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+
     message(STATUS "GCC detected, adding compile flags")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wall -Wextra -Wpedantic -Wconversion -Wfloat-equal -fvisibility=hidden -fvisibility-inlines-hidden")
     set(IMEBRA_LIBRARIES pthread)
@@ -27,8 +38,8 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 
 endif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 
-# Select the proper libraries according to the charset conversion method
-#-----------------------------------------------------------------------
+# Select the proper charset conversion libraries according to the charset conversion method
+#------------------------------------------------------------------------------------------
 if(IMEBRA_CHARSET_CONVERSION MATCHES ICONV)
     message("Using ICONV")
     add_definitions(-DIMEBRA_USE_ICONV)
@@ -47,34 +58,44 @@ elseif(IMEBRA_CHARSET_CONVERSION MATCHES WINDOWS)
     message("Using WINDOWS CHARSET CONVERSION")
     add_definitions(-DIMEBRA_USE_WINDOWS_CHARSET)
 else(IMEBRA_CHARSET_CONVERSION MATCHES ICONV)
-        if(WIN32)
-            message("Using WINDOWS CHARSET CONVERSION (default)")
-            add_definitions(-DIMEBRA_USE_WINDOWS_CHARSET)
-        else(WIN32)
-            message("Using ICONV (default)")
-            add_definitions(-DIMEBRA_USE_ICONV)
-            if(APPLE)
-                set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} iconv)
-            endif(APPLE)
-        endif(WIN32)
+    if(WIN32)
+        message("Using WINDOWS CHARSET CONVERSION (default)")
+        add_definitions(-DIMEBRA_USE_WINDOWS_CHARSET)
+    else(WIN32)
+        message("Using ICONV (default)")
+        add_definitions(-DIMEBRA_USE_ICONV)
+        if(APPLE)
+            set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} iconv)
+        endif(APPLE)
+    endif(WIN32)
 endif(IMEBRA_CHARSET_CONVERSION MATCHES ICONV)
 
-if(APPLE AND APPLE_PLATFORM MATCHES IOS)
-    set(IMEBRA_SHARED_STATIC "STATIC")
-else(APPLE AND APPLE_PLATFORM MATCHES IOS)
+# For IPhone build a static library, otherwise build a dynamic library
+#---------------------------------------------------------------------
+if(NOT DEFINED IMEBRA_SHARED_STATIC)
     set(IMEBRA_SHARED_STATIC "SHARED")
-endif(APPLE AND APPLE_PLATFORM MATCHES IOS)
+endif(NOT DEFINED IMEBRA_SHARED_STATIC)
 
-if(IMEBRA_SHARED_STATIC MATCHES SHARED)
-    add_definitions(-DIMEBRA_DLL)
-    add_definitions(-DIMEBRA_DLL_EXPORTS)
-endif(IMEBRA_SHARED_STATIC MATCHES SHARED)
+if(APPLE AND IOS)
+    set(IMEBRA_SHARED_STATIC "STATIC")
+    if("${IOS}" MATCHES "PHONE")
+        exec_program(xcrun ARGS --sdk iphoneos --show-sdk-path OUTPUT_VARIABLE CMAKE_OSX_SYSROOT)
+        set (CMAKE_OSX_ARCHITECTURES armv6 armv7)
+    elseif("${IOS}" MATCHES "SIMULATOR")
+        exec_program(xcrun ARGS --sdk iphonesimulator --show-sdk-path OUTPUT_VARIABLE CMAKE_OSX_SYSROOT)
+        set (CMAKE_OSX_ARCHITECTURES i386)
+    else("${IOS}" MATCHES "PHONE")
+        message (FATAL_ERROR "Set IOS to PHONE or SIMULATOR")
+    endif("${IOS}" MATCHES "PHONE")
+endif(APPLE AND IOS)
 
+message("Library type: ${IMEBRA_SHARED_STATIC}")
+
+add_definitions(-DIMEBRA_DLL)
+add_definitions(-DIMEBRA_DLL_EXPORTS)
 add_definitions(-DNOMINMAX)
 
 message("Linked libraries: ${IMEBRA_LIBRARIES}")
-
-include_directories(include)
 
 file(GLOB imebra_interface "${CMAKE_CURRENT_SOURCE_DIR}/include/**/*.h")
 file(GLOB imebra_include "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h")
@@ -91,6 +112,7 @@ add_library(imebra ${IMEBRA_SHARED_STATIC}
 )
 
 target_link_libraries(imebra ${IMEBRA_LIBRARIES})
+target_include_directories(imebra PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 # Set the library version from IMEBRA_MAJOR_VERSION, IMEBRA_MINOR_VERSION,
 #  & IMEBRA_REVISION
