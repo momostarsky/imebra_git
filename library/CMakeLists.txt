@@ -80,22 +80,17 @@ if(APPLE AND IOS)
     set(IMEBRA_SHARED_STATIC "STATIC")
     if("${IOS}" MATCHES "PHONE")
         exec_program(xcrun ARGS --sdk iphoneos --show-sdk-path OUTPUT_VARIABLE CMAKE_OSX_SYSROOT)
-        set (CMAKE_OSX_ARCHITECTURES armv6 armv7)
     elseif("${IOS}" MATCHES "SIMULATOR")
         exec_program(xcrun ARGS --sdk iphonesimulator --show-sdk-path OUTPUT_VARIABLE CMAKE_OSX_SYSROOT)
-        set (CMAKE_OSX_ARCHITECTURES i386)
     else("${IOS}" MATCHES "PHONE")
         message (FATAL_ERROR "Set IOS to PHONE or SIMULATOR")
     endif("${IOS}" MATCHES "PHONE")
+    message ("IOS SDK ROOT: ${CMAKE_OSX_SYSROOT}")
 endif(APPLE AND IOS)
-
-message("Library type: ${IMEBRA_SHARED_STATIC}")
 
 add_definitions(-DIMEBRA_DLL)
 add_definitions(-DIMEBRA_DLL_EXPORTS)
 add_definitions(-DNOMINMAX)
-
-message("Linked libraries: ${IMEBRA_LIBRARIES}")
 
 file(GLOB imebra_interface "${CMAKE_CURRENT_SOURCE_DIR}/include/**/*.h")
 file(GLOB imebra_include "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h")
