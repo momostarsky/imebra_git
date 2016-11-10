@@ -29,6 +29,9 @@ In order to build the library from the Imebra Source Distribution you need:
 - a modern C++ compiler (GCC, clang, Visual Studio, etc)
 - CMake version 2.8 or newer (https://cmake.org/)
 
+
+
+
 Building Imebra
 ...............
 
@@ -111,6 +114,57 @@ To generate the 32 bit version of the library, just omit the architecture after 
     cd artifacts_32bit_debug
     cmake -G "Visual Studio 14 2015" imebra_location/library
     cmake --build . --config Debug
+
+
+OS-X/iOS specific instructions
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+On Mac, CMake will generate a build for OS-X. In order to generate a build of iOS you have to add one of
+the following arguments::
+
+    -DIOS=IPHONE
+
+or::
+
+    -DIOS=SIMULATOR
+
+The first flag forces CMake to generate a library for iPhone (real hardware), while the second forces CMake
+to generate a library for the iPhone simulator.
+
+To generate a library for OS-X, type the following (replace imebra_location with the path to Imebra):
+
+::
+
+    mkdir imebra_for_osx
+    cd imebra_for_osx
+    cmake imebra_location/library
+    cmake --build .
+
+To generate a library for iPhone, type the following (replace imebra_location with the path to Imebra):
+
+::
+
+    mkdir imebra_for_ios
+    cd imebra_for_ios
+    cmake imebra_location/library -DIOS=IPHONE
+    cmake --build .
+
+To generate a library for iPhone, type the following (replace imebra_location with the path to Imebra):
+
+::
+
+    mkdir imebra_for_ios
+    cd imebra_for_ios
+    cmake imebra_location/library -DIOS=SIMULATOR
+    cmake --build .
+
+To generate a project that can be opened with XCode append the argument -G xcode (replace imebra_location with the path to Imebra):
+
+::
+
+    mkdir xcode_project
+    cd xcode_project
+    cmake imebra_location/library -G xcode
 
 
 Compiling the Android version of Imebra

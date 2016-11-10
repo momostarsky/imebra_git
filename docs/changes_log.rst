@@ -11,14 +11,15 @@ Version |release| (this version)
 - Implemented enhancement #144 (Improve the bug fixing/feature implementation SOPs so they are developed in separate branches).
   Improved SOPs FIXBUG (:ref:`FIXBUG_2`) DEVFEAT (:ref:`DEVFEAT_2`) DEVENH (:ref:`DEVENH_2`), updated SOP RELEASE (:ref:`RELEASE_2`)
   as per SOPs :ref:`MODSOP_1`, :ref:`DEVENH_1`
-- Fixed bug #145 (In the SOP CHGLOG/1 the text 
+- Fixed bug #145 (In the SOP CHGLOG/1 the text
 
   ::
   
       Version |release| (this version)
 
   is replaced with the current version) as per SOP :ref:`FIXBUG_2`
-- Implemented #146 enhancement (Explain how to compile the 64bit version of the library on Windows) as per SOP :ref:`DEVENH_2`
+- Implemented enhancement #146 (Explain how to compile the 64bit version of the library on Windows) as per SOP :ref:`DEVENH_2`
+- Implemented enhancement #148 (Modify CMake for iOS target) as per SOP :ref:`DEVENH_2`
 
 Version 4.0.5.3
 ---------------
