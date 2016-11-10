@@ -226,10 +226,47 @@ In order to acknowledge the bug:
 - click "Change" to record the acknowledgment
 
 
+.. _FIXBUG_2:
+
+SOP FIXBUG/2 Fixing a bug
+-------------------------
+
+Replaces :ref:`FIXBUG_1`
+
+- Date: 2016-10-23
+- Version: 2
+- Author: Paolo Brandoli
+- Intended audience: QA, developers
+
+The scope of this SOP is to guide the developer through the procedures necessary to fix a bug in Imebra.
+
+This SOP can be executed only after the :ref:`ACKBUG_1` has been executed for the bug being fixed.
+
+- if the bug is specific to a specific branch of Imebra (e.g. 4.0 or 4.1) then switch the active branch
+  to the specific branch on the development machine, otherwise switch to the default branch.
+- write a test unit that forces the bug to manifest itself and cause the test to fail
+- start fixing the bug on the development machine
+- all the commits relative to the bugfix must:
+  
+  - be in a branch named "bugfix_XXX_DDD" where XXX is the bug number in the issue tracker and DDD is a short
+    bug description with underscores instead of spaces
+  - the commit messages must contain the text "Addresses #XXX_ZZZ" where XXX is the bug number in the issue tracker
+    and ZZZ is a description of the changes in the commit
+    
+- when the bug is resolved then merge the bugfix branch into the one from which it has been forked.
+  THE BUG IS RESOLVED WHEN THE SOURCE CODE IS CLEAN, ALL THE TEST UNITS PASS, THE DOCUMENTATION IS UPDATED AND
+  THE CHANGES LOG has been updated as per :ref:`CHGLOG_1`.
+  The merge commit message must contain the text "Resolves #XXX (DDD)" and "As per SOP FIXBUG_2" where XXX is the bug 
+  number in the issue tracker and DDD is a short bug description
+- when the bugfix has been released then close the bugfix branch
+
+
 .. _FIXBUG_1:
 
 SOP FIXBUG/1 Fixing a bug
 -------------------------
+
+Superseded by :ref:`FIXBUG_2`
 
 - Date: 2016-10-01
 - Version: 1
@@ -348,10 +385,47 @@ To open the new enhancement issue:
 - Click on "Create issue" to submit the enhancement.
 
 
+.. _DEVFEAT_2:
+
+SOP DEVFEAT/2 Implementing a new feature
+----------------------------------------
+
+Replaces :ref:`DEVFEAT_1`
+
+- Date: 2016-10-23
+- Version: 2
+- Author: Paolo Brandoli
+- Intended audience: developers
+
+The scope of this SOP is to explain how the developer should act to implement an announced feature.
+
+This SOP can be executed only after the feature has been announced using :ref:`NEWFEAT_1`.
+
+- Switch to the default branch
+- start implementing the feature on the development machine
+- all the commits relative to the feature must:
+  
+  - be in a branch named "feature_XXX_DDD" where XXX is the issue number in the issue tracker and DDD is a short
+    feature description with underscores instead of spaces
+  - the commit messages must contain the text "Addresses #XXX_ZZZ" where XXX is the issue number in the issue tracker
+    and ZZZ is a description of the changes in the commit
+    
+- in the docs/imebra_requirements.xml file, find the requirement related to the implemented feature and add the tag
+  "implementedIn", in which you must describe which class/methods implement the new feature
+- when the feature is resolved then merge the feature branch into the default one.
+  THE FEATURE IS IMPLEMENTED WHEN THE SOURCE CODE IS CLEAN, ALL THE TEST UNITS PASS, THE DOCUMENTATION IS UPDATED AND
+  THE CHANGES LOG has been updated as per :ref:`CHGLOG_1`.
+  The merge commit message must contain the text "Resolves #XXX (DDD)" and "As per SOP FIXBUG_2" where XXX is the issue 
+  number in the issue tracker and DDD is a short feature description
+- when the feature has been released then close the feature branch
+
+
 .. _DEVFEAT_1:
 
 SOP DEVFEAT/1 Implementing a new feature
 ----------------------------------------
+
+Superseded by :ref:`DEVFEAT_2`
 
 - Date: 2016-10-01
 - Version: 1
@@ -379,10 +453,45 @@ This SOP can be executed only after the feature has been announced using :ref:`N
   "implementedIn", in which you should describe which class/methods implement the new feature
 
 
+.. _DEVENH_2:
+
+SOP DEVENH/2 Implementing a new enhancement
+--------------------------------------------
+
+Replaces :ref:`DEVENH_1`
+
+- Date: 2016-10-23
+- Version: 2
+- Author: Paolo Brandoli
+- Intended audience: developers
+
+The scope of this SOP is to explain how the developer should act to implement an announced enhancement.
+
+This SOP can be executed only after the enhancement has been announced using :ref:`NEWENH_1`.
+
+- Switch to the default or default branch
+- start implementing the enhancement
+- all the commits relative to the enhancement must:
+  
+  - be in a branch named "enhancement_XXX_DDD" where XXX is the issue number in the issue tracker and DDD is a short
+    enhancement description with underscores instead of spaces
+  - the commit messages must contain the text "Addresses #XXX_ZZZ" where XXX is the issue number in the issue tracker
+    and ZZZ is a description of the changes in the commit
+    
+- when the enhancement is complete then merge the enhancement branch into the one from which it has been forked.
+  THE ENHANCEMENT IS IMPLEMENTED WHEN THE SOURCE CODE IS CLEAN, ALL THE TEST UNITS PASS, THE DOCUMENTATION IS UPDATED AND
+  THE CHANGES LOG has been updated as per :ref:`CHGLOG_1`.
+  The merge commit message must contain the text "Resolves #XXX (DDD)" and "As per SOP DEVENH_2" where XXX is the issue
+  number in the issue tracker and DDD is a short enhancement description
+- when the feature has been released then close the feature branch
+
+
 .. _DEVENH_1:
 
 SOP DEVENH/1 Implementing a new enhancement
 --------------------------------------------
+
+Superseeded by :ref:`DEVENH_2`
 
 - Date: 2016-10-01
 - Version: 1
@@ -428,8 +537,13 @@ Open the file docs/changes_log.txt in a text editor.
 Step 1
 ......
 
-If this is the first modification to the changelog since the last Imebra public distribution, then rename the title "Version |release| (this version)" with 
-the actual name of the last Imebra public distribution, otherwise skip to step 2.
+If this is the first modification to the changelog since the last Imebra public distribution, then rename the title
+
+::
+
+    Version |release| (this version)
+
+with the actual name of the last Imebra public distribution, otherwise skip to step 2.
 
 For instance, the following text:
 
@@ -451,12 +565,22 @@ should be modified into
     - fixed bug #1 (sample bug)
     - implemented feature #2 (sample feature)
 
-Then above the modified title, insert the changes log for the new release, with the title "Version |release| (this version)".
+Then above the modified title, insert the changes log for the new release, with the title
+
+::
+
+    Version |release| (this version)
 
 Step 2
 ......
 
-Below the title "Version |release| (this version)" add the changes that will be committed.
+Below the title
+
+::
+
+    Version |release| (this version)
+
+add the changes that will be committed.
 For each changelog line, indicate the SOP procedures used to implement the feature, referencing them with:
 
 ::
@@ -487,10 +611,61 @@ Step 3
 Save the changes log.
 
 
+.. _RELEASE_2:
+
+SOP RELEASE/2 Preparation of a new release
+------------------------------------------
+
+Replaces :ref:`RELEASE_1`
+
+- Date: 2016-10-23
+- Version: 2
+- Author: Paolo Brandoli
+- Intended audience: developers
+
+The scope of this SOP is to explain how to produce a new public release of Imebra.
+
+A new release can be prepared after features or bugs have been addressed by following :ref:`DEVENH_2`, :ref:`DEVFEAT_2` or :ref:`FIXBUG_2`.
+
+Push the repository to the remote repo (hg push), then check Bitbucket Pipelines (https://bitbucket.org/binarno/imebra/addon/pipelines/home/)
+to see if the build succeeds. If the build fails then fix the code and repeat this SOP.
+
+If the modifications to the library included back-compatible changes to the library's API then:
+
+- from the master branch create a new minor version branch, where the minor version is the current minor version+1 (e.g. 4.5 to 4.6)
+- from the new minor version branch, create a new patch branch (e.g. 4.6.0)
+- push the repository to the remote repo (hg push) and check if the builds succeed (check https://bitbucket.org/binarno/imebra/addon/pipelines/home/)
+
+If the modifications to the library didn't modify the library's API but included changes in the library's source code then:
+
+- if the modifications were done in the master branch then cherry pick all the modifications and bring them to the proper minor-version
+  branches (e.g. 4.5 and/or 4.6)
+- from the minor version branch, create a new branch with an increased patch number (e.g. 4.5.3 to 4.5.4)
+- push the repository to the remote repo (hg push) and check if the builds succeed (check https://bitbucket.org/binarno/imebra/addon/pipelines/home/)
+
+If the modifications to the library didn't involve any source code but only changes to auxiliary files (e.g. documentation, tests, make files, etc) then:
+
+- if the modifications were done in the master branch then cherry pick all the modifications and bring them to the proper minor-version
+  branches (e.g. 4.5 and/or 4.6)
+- cherry pick the new modifications from the minor version branch (e.g. 4.5 or 4.6) and bring them to the patch branch (e.g. 4.5.4)
+- push the repository to the remote repo (hg push) and check if the builds succeed (check https://bitbucket.org/binarno/imebra/addon/pipelines/home/)
+
+If the build fails, then fix the code in the proper branch (the branch that where the first modifications were made) and then repeat this SOP.
+
+After the builds succeed:
+
+- upload the build from Dropbox to the Imebra Download Files on Bitbucket (https://bitbucket.org/binarno/imebra/downloads).
+- on the local repository, switch the branch back to default
+- from the default branch, tag the commit used for the build with the actual build number (e.g. 4.5.2.1)
+- push the repository to Bitbucket (hg push)
+
+
 .. _RELEASE_1:
 
 SOP RELEASE/1 Preparation of a new release
 ------------------------------------------
+
+Superseeded by :ref:`RELEASE_2`
 
 - Date: 2016-10-01
 - Version: 1

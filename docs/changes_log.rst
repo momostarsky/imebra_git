@@ -6,6 +6,24 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Fixed bug #132 (Dead assignment to runLength in the Jpeg codec) as per SOP :ref:`FIXBUG_2`
+- Fixed bug #143 (The documentation wrongly states that Image::Image() allocates the image memory) as per SOP :ref:`FIXBUG_2`
+- Implemented enhancement #144 (Improve the bug fixing/feature implementation SOPs so they are developed in separate branches).
+  Improved SOPs FIXBUG (:ref:`FIXBUG_2`) DEVFEAT (:ref:`DEVFEAT_2`) DEVENH (:ref:`DEVENH_2`), updated SOP RELEASE (:ref:`RELEASE_2`)
+  as per SOPs :ref:`MODSOP_1`, :ref:`DEVENH_1`
+- Fixed bug #145 (In the SOP CHGLOG/1 the text
+
+  ::
+  
+      Version |release| (this version)
+
+  is replaced with the current version) as per SOP :ref:`FIXBUG_2`
+- Implemented enhancement #146 (Explain how to compile the 64bit version of the library on Windows) as per SOP :ref:`DEVENH_2`
+- Implemented enhancement #148 (Modify CMake for iOS target) as per SOP :ref:`DEVENH_2`
+
+Version 4.0.5.3
+---------------
+
 - Fixed bug #117 (build fails on OSX)
 
 Version 4.0.5.1

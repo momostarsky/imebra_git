@@ -1,7 +1,16 @@
+# Options:
+# -DIMEBRA_SHARED_STATIC=SHARED|STATIC (default = SHARED)
+# -DIMEBRA_CHARSET_CONVERSION=ICONV|ICU|JAVA|WINDOWS (default = ICONV on posix, WINDOWS on Windows)
+# -DIOS=PHONE|SIMULATOR (default not defined)
+# -DCMAKE_OSX_SYSROOT
 cmake_minimum_required(VERSION 2.8)
 
 project("imebra")
 
+set(CMAKE_CONFIGURATION_TYPES Debug Release)
+
+# Add flags specific to the compiler
+#-----------------------------------
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     message(STATUS "GCC detected, adding compile flags")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wall -Wextra -Wpedantic -Wconversion -Wfloat-equal -fvisibility=hidden -fvisibility-inlines-hidden")
@@ -30,12 +39,8 @@ endif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 
 
 
-add_definitions(-DIMEBRA_DLL)
-add_definitions(-DIMEBRA_DLL_EXPORTS)
-add_definitions(-DNOMINMAX)
-
-# Select the proper libraries according to the charset conversion method
-#-----------------------------------------------------------------------
+# Select the proper charset conversion libraries according to the charset conversion method
+#------------------------------------------------------------------------------------------
 if(IMEBRA_CHARSET_CONVERSION MATCHES ICONV)
     message("Using ICONV")
     add_definitions(-DIMEBRA_USE_ICONV)
@@ -66,9 +71,29 @@ else(IMEBRA_CHARSET_CONVERSION MATCHES ICONV)
         endif(WIN32)
 endif(IMEBRA_CHARSET_CONVERSION MATCHES ICONV)
 
-message("Linked libraries: ${IMEBRA_LIBRARIES}")
+# For IPhone build a static library, otherwise build a dynamic library
+#---------------------------------------------------------------------
+if(NOT DEFINED IMEBRA_SHARED_STATIC)
+    set(IMEBRA_SHARED_STATIC "SHARED")
+endif(NOT DEFINED IMEBRA_SHARED_STATIC)
 
-include_directories(include)
+if(APPLE AND IOS)
+    set(IMEBRA_SHARED_STATIC "STATIC")
+    if("${IOS}" MATCHES "PHONE")
+        exec_program(xcrun ARGS --sdk iphoneos --show-sdk-path OUTPUT_VARIABLE CMAKE_OSX_SYSROOT)
+        set (CMAKE_OSX_ARCHITECTURES armv7 armv7s arm64)
+    elseif("${IOS}" MATCHES "SIMULATOR")
+        exec_program(xcrun ARGS --sdk iphonesimulator --show-sdk-path OUTPUT_VARIABLE CMAKE_OSX_SYSROOT)
+        set (CMAKE_OSX_ARCHITECTURES i386 x86_64)
+    else("${IOS}" MATCHES "PHONE")
+        message (FATAL_ERROR "Set IOS to PHONE or SIMULATOR")
+    endif("${IOS}" MATCHES "PHONE")
+    message ("IOS SDK ROOT: ${CMAKE_OSX_SYSROOT}")
+endif(APPLE AND IOS)
+
+add_definitions(-DIMEBRA_DLL)
+add_definitions(-DIMEBRA_DLL_EXPORTS)
+add_definitions(-DNOMINMAX)
 
 file(GLOB imebra_interface "${CMAKE_CURRENT_SOURCE_DIR}/include/**/*.h")
 file(GLOB imebra_include "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h")
@@ -76,7 +101,7 @@ file(GLOB imebra_src "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 file(GLOB imebra_implementation_src "${CMAKE_CURRENT_SOURCE_DIR}/implementation/*.cpp")
 file(GLOB imebra_implementation_include "${CMAKE_CURRENT_SOURCE_DIR}/implementation/*.h")
 
-add_library(imebra SHARED
+add_library(imebra ${IMEBRA_SHARED_STATIC}
     ${imebra_implementation_src}
     ${imebra_implementation_include}
     ${imebra_include}
@@ -85,7 +110,7 @@ add_library(imebra SHARED
 )
 
 target_link_libraries(imebra ${IMEBRA_LIBRARIES})
-#target_link_libraries(imebra gcov)
+target_include_directories(imebra PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 # Set the library version from IMEBRA_MAJOR_VERSION, IMEBRA_MINOR_VERSION,
 #  & IMEBRA_REVISION
