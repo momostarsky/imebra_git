@@ -436,7 +436,6 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
     std::uint32_t channelsNumber = pImage->getChannelsNumber();
     std::uint8_t allocatedBits = (std::uint8_t)(saveCodec->suggestAllocatedBits(transferSyntax, pImage->getHighBit()));
     bool bInterleaved = (getUnsignedLong(0x0028, 0x0, 0x0006, 0, 0, channelsNumber > 1 ? 0 : 1) == 0x0);
-    setUnsignedLong(0x0028, 0, 0x0006, 0, bInterleaved ? 0 : 1);
 
 	// If the attributes cannot be changed, then check the
 	//  attributes already stored in the dataset
@@ -562,7 +561,10 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
 
         std::string colorSpace = pImage->getColorSpace();
         setString(0x0028, 0x0, 0x0004, 0, transforms::colorTransforms::colorTransformsFactory::makeSubsampled(colorSpace, bSubSampledX, bSubSampledY));
-        setUnsignedLong(0x0028, 0x0, 0x0006, 0, bInterleaved ? 0 : 1);
+        if(channelsNumber > 1)
+        {
+            setUnsignedLong(0x0028, 0x0, 0x0006, 0, bInterleaved ? 0 : 1);
+        }
         setUnsignedLong(0x0028, 0x0, 0x0100, 0, allocatedBits);            // allocated bits
         setUnsignedLong(0x0028, 0x0, 0x0101, 0, pImage->getHighBit() + 1); // stored bits
         setUnsignedLong(0x0028, 0x0, 0x0102, 0, pImage->getHighBit());     // high bit

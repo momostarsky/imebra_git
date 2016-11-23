@@ -983,7 +983,10 @@ void jpegCodec::readStream(std::shared_ptr<streamReader> pSourceStream, std::sha
 
     // Interleaved (more than 1 channel in the channels list)
     /////////////////////////////////////////////////////////////////
-    pDataSet->setUnsignedLong(0x0028, 0x0, 0x0006, 0, (m_channelsList[0] != 0 && m_channelsList[1]) != 0 ? 1 : 0);
+    if(m_channelsMap.size() != 1)
+    {
+        pDataSet->setUnsignedLong(0x0028, 0x0, 0x0006, 0, (m_channelsList[0] != 0 && m_channelsList[1]) != 0 ? 1 : 0);
+    }
 
     // Insert the basic offset table
     ////////////////////////////////////////////////////////////////

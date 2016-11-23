@@ -12,7 +12,7 @@ namespace tests
 
 TEST(dicomCodecTest, testDicom)
 {
-    char* colorSpaces[] = {"RGB", "YBR_FULL", "YBR_FULL_422", "YBR_FULL_420", "MONOCHROME2"};
+    char* colorSpaces[] = {"MONOCHROME2", "RGB", "YBR_FULL", "YBR_FULL_422", "YBR_FULL_420"};
 
     std::uint32_t highBitStep = 1;
     std::uint32_t interleavedStart = 0;
@@ -152,7 +152,10 @@ TEST(dicomCodecTest, testDicom)
                             writingDataHandler->setString(2, "");
                             writingDataHandler.reset();
                             testDataSet.setDouble(TagId(tagId_t::TimeRange_0008_1163), 50.6);
-                            testDataSet.setUnsignedLong(TagId(imebra::tagId_t::PlanarConfiguration_0028_0006), 1 - interleaved);
+                            if(ColorTransformsFactory::getNumberOfChannels(colorSpace) > 1)
+                            {
+                                testDataSet.setUnsignedLong(TagId(imebra::tagId_t::PlanarConfiguration_0028_0006), 1 - interleaved);
+                            }
                             testDataSet.setImage(0, *dicomImage0, quality);
                             testDataSet.setImage(1, *dicomImage1, quality);
                             testDataSet.setImage(2, *dicomImage2, quality);
@@ -182,7 +185,6 @@ TEST(dicomCodecTest, testDicom)
                             EXPECT_EQ(std::string("BBBbbb"), testDataSet->getString(TagId(imebra::tagId_t::PatientName_0010_0010), 1));
                             EXPECT_EQ(std::string(""), testDataSet->getString(TagId(imebra::tagId_t::PatientName_0010_0010), 2));
                             EXPECT_FLOAT_EQ(50.6, testDataSet->getDouble(TagId(tagId_t::TimeRange_0008_1163), 0));
-                            EXPECT_EQ(1 - interleaved, testDataSet->getSignedLong(TagId(imebra::tagId_t::PlanarConfiguration_0028_0006), 0));
 
                             std::unique_ptr<DataSet> sequenceItem(testDataSet->getSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 0));
                             EXPECT_EQ("test test", sequenceItem->getString(TagId(tagId_t::PatientName_0010_0010), 0));
@@ -191,6 +193,15 @@ TEST(dicomCodecTest, testDicom)
                             std::unique_ptr<Image> checkImage0(testDataSet->getImage(0));
                             std::unique_ptr<Image> checkImage1(testDataSet->getImage(1));
                             std::unique_ptr<Image> checkImage2(testDataSet->getImage(2));
+
+                            if(checkImage0->getChannelsNumber() == 1)
+                            {
+                                ASSERT_THROW(testDataSet->getTag(TagId(tagId_t::PlanarConfiguration_0028_0006)), MissingDataElementError);
+                            }
+                            else
+                            {
+                                EXPECT_EQ(1 - interleaved, testDataSet->getSignedLong(TagId(imebra::tagId_t::PlanarConfiguration_0028_0006), 0));
+                            }
 
                             ASSERT_TRUE(identicalImages(*checkImage0, *dicomImage0));
                             ASSERT_TRUE(identicalImages(*checkImage1, *dicomImage1));
