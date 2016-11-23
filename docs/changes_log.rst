@@ -6,6 +6,11 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Fixed bug #151 (Imebra creates the tag 0028,0006 even when the number of color channel is 1) as per SOP :ref:`FIXBUG_2`
+
+Version 4.0.6.1
+---------------
+
 - Fixed bug #132 (Dead assignment to runLength in the Jpeg codec) as per SOP :ref:`FIXBUG_2`
 - Fixed bug #143 (The documentation wrongly states that Image::Image() allocates the image memory) as per SOP :ref:`FIXBUG_2`
 - Implemented enhancement #144 (Improve the bug fixing/feature implementation SOPs so they are developed in separate branches).
