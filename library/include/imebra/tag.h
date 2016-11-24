@@ -111,12 +111,68 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     WritingDataHandler* getWritingDataHandler(size_t bufferId);
 
+    /// \brief Retrieve a ReadingDataHandlerNumeric object connected to the
+    ///        Tag's numeric buffer.
+    ///
+    /// If the tag's VR is not a numeric type then throws std::bad_cast.
+    ///
+    /// If the specified Tag does not contain the specified buffer then
+    ///  throws MissingBufferError.
+    ///
+    /// \param bufferId the buffer to connect to the ReadingDataHandler object.
+    ///                 The first buffer has an Id = 0
+    /// \return a ReadingDataHandlerNumeric object connected to the Tag's buffer
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     ReadingDataHandlerNumeric* getReadingDataHandlerNumeric(size_t bufferId) const;
 
+    /// \brief Retrieve a ReadingDataHandlerNumeric object connected to the
+    ///        Tag's raw data buffer (8 bit unsigned integers).
+    ///
+    /// If the tag's VR is not a numeric type then throws std::bad_cast.
+    ///
+    /// If the specified Tag does not contain the specified buffer then
+    ///  throws MissingBufferError.
+    ///
+    /// \param bufferId the buffer to connect to the ReadingDataHandler object.
+    ///                 The first buffer has an Id = 0
+    /// \return a ReadingDataHandlerNumeric object connected to the Tag's buffer
+    ///         (raw content represented by 8 bit unsigned integers)
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     ReadingDataHandlerNumeric* getReadingDataHandlerRaw(size_t bufferId) const;
 
+    /// \brief Retrieve a WritingDataHandlerNumeric object connected to the
+    ///        Tag's buffer.
+    ///
+    /// If the tag's VR is not a numeric type then throws std::bad_cast.
+    ///
+    /// The returned WritingDataHandlerNumeric is connected to a new buffer which
+    /// is updated and stored into the tag when WritingDataHandlerNumeric is
+    /// destroyed.
+    ///
+    /// \param bufferId the position where the new buffer has to be stored in the
+    ///                 tag. The first buffer position is 0
+    /// \return a WritingDataHandlerNumeric object connected to a new Tag's buffer
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     WritingDataHandlerNumeric* getWritingDataHandlerNumeric(size_t bufferId);
 
+    /// \brief Retrieve a WritingDataHandlerNumeric object connected to the
+    ///        Tag's raw data buffer (8 bit unsigned integers).
+    ///
+    /// If the tag's VR is not a numeric type then throws std::bad_cast.
+    ///
+    /// The returned WritingDataHandlerNumeric is connected to a new buffer which
+    /// is updated and stored into the tag when WritingDataHandlerNumeric is
+    /// destroyed.
+    ///
+    /// \param bufferId the position where the new buffer has to be stored in the
+    ///                 tag. The first buffer position is 0
+    /// \return a WritingDataHandlerNumeric object connected to a new Tag's buffer
+    ///         (the buffer contains raw data of 8 bit integers)
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     WritingDataHandlerNumeric* getWritingDataHandlerRaw(size_t bufferId);
 
     /// \brief Get a StreamReader connected to a buffer's data.
