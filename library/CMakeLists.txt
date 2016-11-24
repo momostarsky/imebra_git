@@ -3,7 +3,6 @@
 # -DIMEBRA_CHARSET_CONVERSION=ICONV|ICU|JAVA|WINDOWS (default = ICONV on posix, WINDOWS on Windows)
 # -DIOS=PHONE|SIMULATOR (default not defined)
 # -DCMAKE_OSX_SYSROOT
-
 cmake_minimum_required(VERSION 2.8)
 
 project("imebra")
@@ -13,7 +12,6 @@ set(CMAKE_CONFIGURATION_TYPES Debug Release)
 # Add flags specific to the compiler
 #-----------------------------------
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-
     message(STATUS "GCC detected, adding compile flags")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wall -Wextra -Wpedantic -Wconversion -Wfloat-equal -fvisibility=hidden -fvisibility-inlines-hidden")
     set(IMEBRA_LIBRARIES pthread)
@@ -38,6 +36,9 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 
 endif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 
+
+
+
 # Select the proper charset conversion libraries according to the charset conversion method
 #------------------------------------------------------------------------------------------
 if(IMEBRA_CHARSET_CONVERSION MATCHES ICONV)
@@ -58,16 +59,16 @@ elseif(IMEBRA_CHARSET_CONVERSION MATCHES WINDOWS)
     message("Using WINDOWS CHARSET CONVERSION")
     add_definitions(-DIMEBRA_USE_WINDOWS_CHARSET)
 else(IMEBRA_CHARSET_CONVERSION MATCHES ICONV)
-    if(WIN32)
-        message("Using WINDOWS CHARSET CONVERSION (default)")
-        add_definitions(-DIMEBRA_USE_WINDOWS_CHARSET)
-    else(WIN32)
-        message("Using ICONV (default)")
-        add_definitions(-DIMEBRA_USE_ICONV)
-        if(APPLE)
-            set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} iconv)
-        endif(APPLE)
-    endif(WIN32)
+        if(WIN32)
+            message("Using WINDOWS CHARSET CONVERSION (default)")
+            add_definitions(-DIMEBRA_USE_WINDOWS_CHARSET)
+        else(WIN32)
+            message("Using ICONV (default)")
+            add_definitions(-DIMEBRA_USE_ICONV)
+            if(APPLE)
+                set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} iconv)
+            endif(APPLE)
+        endif(WIN32)
 endif(IMEBRA_CHARSET_CONVERSION MATCHES ICONV)
 
 # For IPhone build a static library, otherwise build a dynamic library
