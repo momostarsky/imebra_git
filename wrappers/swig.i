@@ -1,15 +1,21 @@
 %module imebra
 
-//#ifdef SWIGJAVA
+#ifdef SWIGJAVA
 	%include <arrays_java.i>
 	%include <enums.swg>
-        %apply int[] {int *};
-        %apply(char *STRING, size_t LENGTH) { (const char *source, size_t sourceSize) };
-        %apply(char *STRING, size_t LENGTH) { (char* destination, size_t destinationSize) };
 
-	%rename(assign) operator=;
-//#endif
+#endif
+#ifdef SWIGPYTHON
+	%include <carrays.i>
+#endif
 
+%rename(assign) operator=;
+
+%apply int[] {int *};
+%apply(char *STRING, size_t LENGTH) { (const char *source, size_t sourceSize) };
+%apply(char *STRING, size_t LENGTH) { (char* destination, size_t destinationSize) };
+
+	
 #define IMEBRA_API
 
 %{
