@@ -42,7 +42,10 @@
 		<copy todir="${build_release}/docs">
 			<fileset dir="docs" />
 		</copy>
-		<copy todir="${build_release}/wrappers">
+		<copy todir="${build_release}/javaWrappers">
+			<fileset dir="wrappers" />
+		</copy>
+		<copy todir="${build_release}/pythonWrappers">
 			<fileset dir="wrappers" />
 		</copy>
 		<copy todir="${build_release}" file="build.xml" />
@@ -63,14 +66,14 @@
 
 	<!-- Replace the version number and license info -->
 	<target name="replace_version" depends="create_build_dir">
-		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt" token="$version$" value="${fullVersionReadable}" />
-		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt" token="1.0.0.1" value="${fullVersionReadable}" />
-		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt" token="&quot;1.0.0.1&quot;" value="&quot;${fullVersionReadable}&quot;" />
-		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt" token="L&quot;1.0.0.1&quot;" value="L&quot;${fullVersionReadable}&quot;" />
-		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt" token="1.0.0" value="${short_version}" />
-		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt" token="&quot;1.0.0&quot;" value="&quot;${short_version}&quot;" />
-		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt" token="L&quot;1.0.0&quot;" value="L&quot;${short_version}&quot;" />
-		<replace file="${build_release}/wrappers/javaWrapper/AndroidManifest.xml" token="&quot;1.0.0&quot;" value="&quot;${short_version}&quot;" />
+		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt, *.py" token="$version$" value="${fullVersionReadable}" />
+		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt, *.py" token="1.0.0.1" value="${fullVersionReadable}" />
+		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt, *.py" token="&quot;1.0.0.1&quot;" value="&quot;${fullVersionReadable}&quot;" />
+		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt, *.py" token="L&quot;1.0.0.1&quot;" value="L&quot;${fullVersionReadable}&quot;" />
+		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt, *.py" token="1.0.0" value="${short_version}" />
+		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt, *.py" token="&quot;1.0.0&quot;" value="&quot;${short_version}&quot;" />
+		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt, *.py" token="L&quot;1.0.0&quot;" value="L&quot;${short_version}&quot;" />
+		<replace file="${build_release}/javaWrappers/javaWrapper/AndroidManifest.xml" token="&quot;1.0.0&quot;" value="&quot;${short_version}&quot;" />
 		<replace dir="${build_release}" token="$fileHeader$">
 			<replacevalue><![CDATA[
 $imebraVersion$
@@ -119,33 +122,34 @@ The author can be contacted by email at info@binarno.com or by mail at
 		<replace dir="${build_release}" token="$imebraVersion$" value="${productName}" />
 	</target>
 
-	<!-- SWIG -->
-	<target name="swig" depends="replace_version">
-		<delete dir="${build_release}/wrappers/javaWrapper/src" failonerror="false" />
-		<mkdir dir="${build_release}/wrappers/javaWrapper/src/com/imebra" />
-		<mkdir dir="${build_release}/wrappers/javaWrapper/jni" />
-		<exec executable="swig" failonerror="true" dir="${build_release}/wrappers">
+	<!-- JAVA SWIG -->
+	<target name="java_swig" depends="replace_version">
+		<delete dir="${build_release}/javaWrappers/javaWrapper/src" failonerror="false" />
+		<mkdir dir="${build_release}/javaWrappers/javaWrapper/src/com/imebra" />
+		<mkdir dir="${build_release}/javaWrappers/javaWrapper/jni" />
+		<exec executable="swig" failonerror="true" dir="${build_release}/javaWrappers/">
 			<arg value="-java" />
 			<arg value="-c++" />
+			<arg value="-I${build_release}/library/include" />
 			<arg value="-package" />
 			<arg value="com.imebra" />
 			<arg value="-outdir" />
-			<arg path="${build_release}/wrappers/javaWrapper/src/com/imebra" />
-			<arg value="swig.i" />
+			<arg path="${build_release}/javaWrappers/javaWrapper/src/com/imebra" />
+			<arg path="${build_release}/javaWrappers/swig.i" />
 		</exec>
 
-		<fileset id="existing" dir="${build_release}/wrappers/javaWrapper/src/com/imebra">
+		<fileset id="existing" dir="${build_release}/javaWrappers/javaWrapper/src/com/imebra">
 		    <patternset id="files">
 		        <include name="**/*.java" />
 		    </patternset>
 		</fileset>
 
-		<fileset id="matches" dir="${build_release}/wrappers/javaWrapper/src/com/imebra">
+		<fileset id="matches" dir="${build_release}/javaWrappers/javaWrapper/src/com/imebra">
 		    <patternset refid="files" />
 		    <contains text=", false);" />
 		</fileset>
 
-		<fail message="Found non managed memory objects in one or more files in '${build_release}/wrappers/javaWrapper/src/com/imebra'">
+		<fail message="Found non managed memory objects in one or more files in '${build_release}/javaWrappers/javaWrapper/src/com/imebra'">
 		    <condition>
 		    	<!-- Counter is 2 because TagsIds and VOIs return non-owned objects -->
 		        <resourcecount when="greater" count="2" refid="matches" />
@@ -153,6 +157,28 @@ The author can be contacted by email at info@binarno.com or by mail at
 		</fail>
 
 	</target>
+
+	<!-- PYTHON SWIG -->
+	<target name="python_swig" depends="replace_version">
+		<delete dir="${build_release}/pythonWrappers/pythonWrapper" failonerror="false" />
+		<exec executable="swig" failonerror="true" dir="${build_release}/pythonWrappers/">
+			<arg value="-python" />
+			<arg value="-c++" />
+			<arg value="-I${build_release}/library/include" />
+			<arg value="-module" />
+			<arg value="imebra" />
+			<arg path="${build_release}/pythonWrappers/swig.i" />
+		</exec>
+
+		<fileset id="existing" dir="${build_release}/pythonWrappers/javaWrapper/src/com/imebra">
+		    <patternset id="files">
+		        <include name="**/*.java" />
+		    </patternset>
+		</fileset>
+
+	</target>
+
+	<target name="swig" depends="java_swig, python_swig" />
 
 	<!-- Documentation -->
 	<target name="documentation" depends="replace_version" >
@@ -178,8 +204,8 @@ The author can be contacted by email at info@binarno.com or by mail at
 		<copy todir="${source_distribution}/tests">
 			<fileset dir="${build_release}/tests" />
 		</copy>
-		<copy todir="${source_distribution}/wrappers">
-			<fileset dir="${build_release}/wrappers" />
+		<copy todir="${source_distribution}/javaWrappers">
+			<fileset dir="${build_release}/javaWrappers" />
 		</copy>
 		<copy todir="${source_distribution}/docs/html">
 			<fileset dir="${build_release}/docs/html" />

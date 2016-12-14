@@ -19,7 +19,7 @@
 #define IMEBRA_API
 
 %{
-#include "../library/include/imebra/imebra.h"
+#include <imebra/imebra.h>
 %}
 
 %include <std_string.i>
