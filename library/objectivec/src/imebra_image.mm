@@ -1,6 +1,7 @@
 #include <imebra/imebra.h>
 #include <memory>
-#import "objc_image.h"
+#import "../include/imebra_objc/imebra_image.h"
+#import <Foundation/Foundation.h>
 
 void CGDataProviderCallbackFunc(void *info, const void *data, size_t size)
 {
@@ -9,12 +10,14 @@ void CGDataProviderCallbackFunc(void *info, const void *data, size_t size)
     delete (imebra::ReadWriteMemory*)info;
 }
 
+/*
 #ifdef TARGET_OS_IPHONE
-UIImage* getImage(const imebra::Image& image, const imebra::Transform& transform)
+UIImage* getImebraImage(const imebra::Image& image, const imebra::Transform& transform)
 #else
-NSImage* getImage(const imebra::Image& image, const imebra::Transform& transform)
+NSImage* getImebraImage(const imebra::Image& image, const imebra::Transform& transform)
 #endif
 {
+
     // Allocate the drawBitmap class
     ////////////////////////////////
     imebra::DrawBitmap drawBitmap(transform);
@@ -26,7 +29,7 @@ NSImage* getImage(const imebra::Image& image, const imebra::Transform& transform
 
     // Get the result raw data
     //////////////////////////
-    std::unique_ptr<ReadWriteMemory> pMemory(drawBitmap.getBitmap(image, imebra::drawBitmapType_t::drawBitmapRGBA, 4));
+    std::unique_ptr<imebra::ReadWriteMemory> pMemory(drawBitmap.getBitmap(image, imebra::drawBitmapType_t::drawBitmapRGBA, 4));
     size_t dataSize;
     char* pData = pMemory->data(&dataSize);
 
@@ -58,3 +61,4 @@ NSImage* getImage(const imebra::Image& image, const imebra::Transform& transform
     CGColorSpaceRelease(colorSpaceRef);
     return returnImage;
 }
+*/

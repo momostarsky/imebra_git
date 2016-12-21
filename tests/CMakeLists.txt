@@ -33,19 +33,35 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 
 endif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 
-
 file(GLOB imebra_tests_include "${CMAKE_CURRENT_SOURCE_DIR}/*.h")
 file(GLOB imebra_tests_src "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
+
+if(APPLE)
+    set(IMEBRA_OBJC 1)
+endif(APPLE)
+
+set(imebra_tests_objc_src "")
+if("${IMEBRA_OBJC}" STREQUAL "1")
+    file(GLOB imebra_tests_objc_src "${CMAKE_CURRENT_SOURCE_DIR}/objectivec/*.mm")
+endif("${IMEBRA_OBJC}" STREQUAL "1")
+
+
 
 if("${gtest_include}" STREQUAL "")
     set(gtest_include ".")
 endif("${gtest_include}" STREQUAL "")
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../library/include ${gtest_include})
+if("${IMEBRA_OBJC}" STREQUAL "1")
+    if(NOT APPLE)
+        include_directories("/usr/include/GNUstep")
+    endif(NOT APPLE)
+endif("${IMEBRA_OBJC}" STREQUAL "1")
 
 add_executable(ImebraTests
     ${imebra_tests_include}
     ${imebra_tests_src}
+    ${imebra_tests_objc_src}
 )
 
 target_link_libraries(ImebraTests ${IMEBRA_LIBRARIES})

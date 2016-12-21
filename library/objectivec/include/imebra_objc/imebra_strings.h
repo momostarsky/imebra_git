@@ -13,18 +13,18 @@
 /// @{
 
 /**
- * @brief Convert an NSString to a std::wstring accepted by imebra.
+ * @brief Convert an NSString to a std::string accepted by imebra.
  * @param str an NSString
- * @return a std::wstring
+ * @return a std::string
  */
-std::wstring NSStringToStringW ( NSString* str );
+std::string NSStringToString ( NSString* str );
 
 
 /**
- * @brief Convert a std::wstring to an NSString.
- * @param str an std::wstring
+ * @brief Convert a std::string to an NSString.
+ * @param str an std::string
  * @return a NSString
  */
-NSString* StringWToNSString ( const std::wstring& str );
+NSString* StringToNSString ( const std::string& str );
 
 ///@}

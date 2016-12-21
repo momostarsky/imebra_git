@@ -1,8 +1,10 @@
 # Options:
 # -DIMEBRA_SHARED_STATIC=SHARED|STATIC (default = SHARED)
 # -DIMEBRA_CHARSET_CONVERSION=ICONV|ICU|JAVA|WINDOWS (default = ICONV on posix, WINDOWS on Windows)
+# -DIMEBRA_OBJC=1|0 (default = 0)
 # -DIOS=PHONE|SIMULATOR (default not defined)
 # -DCMAKE_OSX_SYSROOT
+# -DIMEBRA_GNUSTEP_INCLUDE="gnustep folder" (default "")
 
 cmake_minimum_required(VERSION 2.8)
 
@@ -76,19 +78,22 @@ if(NOT DEFINED IMEBRA_SHARED_STATIC)
     set(IMEBRA_SHARED_STATIC "SHARED")
 endif(NOT DEFINED IMEBRA_SHARED_STATIC)
 
-if(APPLE AND IOS)
-    set(IMEBRA_SHARED_STATIC "STATIC")
-    if("${IOS}" MATCHES "PHONE")
-        exec_program(xcrun ARGS --sdk iphoneos --show-sdk-path OUTPUT_VARIABLE CMAKE_OSX_SYSROOT)
-        set (CMAKE_OSX_ARCHITECTURES armv7 armv7s arm64)
-    elseif("${IOS}" MATCHES "SIMULATOR")
-        exec_program(xcrun ARGS --sdk iphonesimulator --show-sdk-path OUTPUT_VARIABLE CMAKE_OSX_SYSROOT)
-        set (CMAKE_OSX_ARCHITECTURES i386 x86_64)
-    else("${IOS}" MATCHES "PHONE")
-        message (FATAL_ERROR "Set IOS to PHONE or SIMULATOR")
-    endif("${IOS}" MATCHES "PHONE")
-    message ("IOS SDK ROOT: ${CMAKE_OSX_SYSROOT}")
-endif(APPLE AND IOS)
+if(APPLE)
+    set(IMEBRA_OBJC 1)
+    if(IOS)
+        set(IMEBRA_SHARED_STATIC "STATIC")
+        if("${IOS}" MATCHES "PHONE")
+            exec_program(xcrun ARGS --sdk iphoneos --show-sdk-path OUTPUT_VARIABLE CMAKE_OSX_SYSROOT)
+            set (CMAKE_OSX_ARCHITECTURES armv7 armv7s arm64)
+        elseif("${IOS}" MATCHES "SIMULATOR")
+            exec_program(xcrun ARGS --sdk iphonesimulator --show-sdk-path OUTPUT_VARIABLE CMAKE_OSX_SYSROOT)
+            set (CMAKE_OSX_ARCHITECTURES i386 x86_64)
+        else("${IOS}" MATCHES "PHONE")
+            message (FATAL_ERROR "Set IOS to PHONE or SIMULATOR")
+        endif("${IOS}" MATCHES "PHONE")
+        message ("IOS SDK ROOT: ${CMAKE_OSX_SYSROOT}")
+    endif(IOS)
+endif(APPLE)
 
 add_definitions(-DIMEBRA_DLL)
 add_definitions(-DIMEBRA_DLL_EXPORTS)
@@ -100,16 +105,36 @@ file(GLOB imebra_src "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 file(GLOB imebra_implementation_src "${CMAKE_CURRENT_SOURCE_DIR}/implementation/*.cpp")
 file(GLOB imebra_implementation_include "${CMAKE_CURRENT_SOURCE_DIR}/implementation/*.h")
 
+# Add OBJC sources
+#-----------------
+set(imebra_obj_src "")
+set(imebra_obj_include "")
+if("${IMEBRA_OBJC}" STREQUAL "1")
+    file(GLOB imebra_objc_src "${CMAKE_CURRENT_SOURCE_DIR}/objectivec/src/*.mm")
+    file(GLOB imebra_objc_include "${CMAKE_CURRENT_SOURCE_DIR}/objectivec/include/**/*.h")
+endif("${IMEBRA_OBJC}" STREQUAL "1")
+
 add_library(imebra ${IMEBRA_SHARED_STATIC}
     ${imebra_implementation_src}
     ${imebra_implementation_include}
     ${imebra_include}
+    ${imebra_objc_src}
+    ${imebra_objc_include}
     ${imebra_src}
     ${imebra_interface}
 )
 
+if("${IMEBRA_OBJC}" STREQUAL "1")
+    target_include_directories(imebra PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/objectivec/include)
+    if(NOT APPLE)
+        target_include_directories(imebra PRIVATE "/usr/include/GNUstep")
+        set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} gnustep-base objc)
+    endif(NOT APPLE)
+endif("${IMEBRA_OBJC}" STREQUAL "1")
+
 target_link_libraries(imebra ${IMEBRA_LIBRARIES})
 target_include_directories(imebra PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+
 
 # Set the library version from IMEBRA_MAJOR_VERSION, IMEBRA_MINOR_VERSION,
 #  & IMEBRA_REVISION
