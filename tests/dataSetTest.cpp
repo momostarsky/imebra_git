@@ -18,24 +18,24 @@ TEST(dataSetTest, testFragmentation)
 {
     // Add two images to a dataset, then fragment the first image
     std::unique_ptr<Image> testImage0(buildImageForTest(
-		400, 
-		300, 
+        400,
+        300,
         imebra::bitDepth_t::depthU8,
-		7, 
-		400, 
-		300, 
+        7,
+        400,
+        300,
         "RGB",
-		50));
+        50));
 
     std::unique_ptr<Image> testImage1(buildImageForTest(
-		400, 
-		300, 
+        400,
+        300,
         imebra::bitDepth_t::depthU8,
-		7, 
-		400, 
-		300, 
+        7,
+        400,
+        300,
         "RGB",
-		20));
+        20));
 
     imebra::DataSet testDataSet("1.2.840.10008.1.2.4.70");
     testDataSet.setImage(0, *testImage0, imageQuality_t::high);
@@ -379,6 +379,62 @@ TEST(dataSetTest, dataHandler)
 }
 
 
+TEST(dataSetTest, testEmptySequence)
+{
+    for(int transferSyntaxId(0); transferSyntaxId != 4; ++transferSyntaxId)
+    {
+        std::string transferSyntax;
+        switch(transferSyntaxId)
+        {
+        case 0:
+            transferSyntax = "1.2.840.10008.1.2";
+            break;
+        case 1:
+            transferSyntax = "1.2.840.10008.1.2.1";
+            break;
+        case 2:
+            transferSyntax = "1.2.840.10008.1.2.2";
+            break;
+        case 3:
+            transferSyntax = "1.2.840.10008.1.2.5";
+            break;
+        }
+
+        std::cout << "Sequence test. Transfer syntax: " << transferSyntax << std::endl;
+
+        DataSet testDataSet(transferSyntax);
+
+        {
+            DataSet sequence0;
+            DataSet sequence1;
+
+            testDataSet.setSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 0, sequence0);
+            testDataSet.setSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 1, sequence1);
+        }
+
+        {
+            std::unique_ptr<DataSet> sequence0(testDataSet.getSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 0));
+            std::unique_ptr<DataSet> sequence1(testDataSet.getSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 1));
+        }
+
+        ReadWriteMemory encodedDataSet;
+        MemoryStreamOutput outputStream(encodedDataSet);
+        StreamWriter outputWriter(outputStream);
+        CodecFactory::save(testDataSet, outputWriter, codecType_t::dicom);
+
+        MemoryStreamInput inputStream(encodedDataSet);
+        StreamReader inputReader(inputStream);
+        std::unique_ptr<DataSet> readDataSet(CodecFactory::load(inputReader));
+        {
+            std::unique_ptr<Tag> sequenceTag(readDataSet->getTag(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111)));
+            ASSERT_EQ(tagVR_t::SQ, sequenceTag->getDataType());
+            ASSERT_THROW(sequenceTag->getSequenceItem(0), MissingDataElementError);
+            ASSERT_THROW(sequenceTag->getSequenceItem(1), MissingDataElementError);
+            ASSERT_THROW(readDataSet->getSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 0), MissingDataElementError);
+            ASSERT_THROW(readDataSet->getSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 1), MissingDataElementError);
+        }
+    }
+}
 
 
 } // namespace tests
