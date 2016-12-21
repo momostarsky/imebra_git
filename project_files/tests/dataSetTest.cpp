@@ -130,6 +130,134 @@ TEST(dataSetTest, testSetTagTwice)
 
 }
 
+TEST(dataSetTest, testSequence)
+{
+    for(int transferSyntaxId(0); transferSyntaxId != 4; ++transferSyntaxId)
+    {
+        std::string transferSyntax;
+        switch(transferSyntaxId)
+        {
+        case 0:
+            transferSyntax = "1.2.840.10008.1.2";
+            break;
+        case 1:
+            transferSyntax = "1.2.840.10008.1.2.1";
+            break;
+        case 2:
+            transferSyntax = "1.2.840.10008.1.2.2";
+            break;
+        case 3:
+            transferSyntax = "1.2.840.10008.1.2.5";
+            break;
+        }
+
+        std::cout << "Sequence test. Transfer syntax: " << transferSyntax << std::endl;
+
+        ptr<dataSet> testDataSet(new dataSet());
+
+        testDataSet->setString(0x0002, 0, 0x0010, 0, transferSyntax);
+
+        {
+            ptr<dataSet> sequence0(new dataSet());
+            ptr<dataSet> sequence1(new dataSet());
+
+            sequence0->setString(0x10, 0, 0x10, 0, "Test0");
+            sequence1->setString(0x10, 0, 0x10, 0, "Test1");
+
+            ptr<data> sequenceTag = testDataSet->getTag(0x0008, 0, 0x1111, true);
+            sequenceTag->setDataSet(0, sequence0);
+            sequenceTag->setDataSet(1, sequence1);
+        }
+
+        {
+            ptr<dataSet> sequence0(testDataSet->getSequenceItem(0x0008, 0, 0x1111, 0));
+            ptr<dataSet> sequence1(testDataSet->getSequenceItem(0x0008, 0, 0x1111, 1));
+            ASSERT_EQ("Test0", sequence0->getString(0x10, 0, 0x10, 0));
+            ASSERT_EQ("Test1", sequence1->getString(0x10, 0, 0x10, 0));
+        }
+
+        ptr<memory> encodedDataSet(new memory());
+        {
+            ptr<memoryStream> outputStream(new memoryStream(encodedDataSet));
+            ptr<streamWriter> outputWriter(new streamWriter(outputStream));
+            ptr<codecs::dicomCodec> codec(new codecs::dicomCodec);
+            codec->write(outputWriter, testDataSet);
+        }
+
+        ptr<memoryStream> inputStream(new memoryStream(encodedDataSet));
+        ptr<streamReader> inputReader(new streamReader(inputStream));
+        ptr<dataSet> readDataSet(codecs::codecFactory::getCodecFactory()->load(inputReader));
+        {
+            ptr<dataSet> sequence0(readDataSet->getSequenceItem(0x0008, 0, 0x1111, 0));
+            ptr<dataSet> sequence1(readDataSet->getSequenceItem(0x0008, 0, 0x1111, 1));
+            ASSERT_EQ("Test0", sequence0->getString(0x10, 0, 0x10, 0));
+            ASSERT_EQ("Test1", sequence1->getString(0x10, 0, 0x10, 0));
+        }
+    }
+}
+
+TEST(dataSetTest, testEmptySequence)
+{
+    for(int transferSyntaxId(0); transferSyntaxId != 4; ++transferSyntaxId)
+    {
+        std::string transferSyntax;
+        switch(transferSyntaxId)
+        {
+        case 0:
+            transferSyntax = "1.2.840.10008.1.2";
+            break;
+        case 1:
+            transferSyntax = "1.2.840.10008.1.2.1";
+            break;
+        case 2:
+            transferSyntax = "1.2.840.10008.1.2.2";
+            break;
+        case 3:
+            transferSyntax = "1.2.840.10008.1.2.5";
+            break;
+        }
+
+        std::cout << "Sequence test. Transfer syntax: " << transferSyntax << std::endl;
+
+        ptr<dataSet> testDataSet(new dataSet());
+
+        testDataSet->setString(0x0002, 0, 0x0010, 0, transferSyntax);
+
+        {
+            ptr<dataSet> sequence0(new dataSet());
+            ptr<dataSet> sequence1(new dataSet());
+
+            ptr<data> sequenceTag = testDataSet->getTag(0x0008, 0, 0x1111, true);
+            sequenceTag->setDataSet(0, sequence0);
+            sequenceTag->setDataSet(1, sequence1);
+        }
+
+        {
+            ptr<dataSet> sequence0(testDataSet->getSequenceItem(0x0008, 0, 0x1111, 0));
+            ptr<dataSet> sequence1(testDataSet->getSequenceItem(0x0008, 0, 0x1111, 1));
+            ASSERT_TRUE(sequence0 != 0);
+            ASSERT_TRUE(sequence1 != 0);
+        }
+
+        ptr<memory> encodedDataSet(new memory());
+        {
+            ptr<memoryStream> outputStream(new memoryStream(encodedDataSet));
+            ptr<streamWriter> outputWriter(new streamWriter(outputStream));
+            ptr<codecs::dicomCodec> codec(new codecs::dicomCodec);
+            codec->write(outputWriter, testDataSet);
+        }
+
+        ptr<memoryStream> inputStream(new memoryStream(encodedDataSet));
+        ptr<streamReader> inputReader(new streamReader(inputStream));
+        ptr<dataSet> readDataSet(codecs::codecFactory::getCodecFactory()->load(inputReader));
+        {
+            ptr<dataSet> sequence0(readDataSet->getSequenceItem(0x0008, 0, 0x1111, 0));
+            ptr<dataSet> sequence1(readDataSet->getSequenceItem(0x0008, 0, 0x1111, 1));
+            ASSERT_TRUE(sequence0 == 0);
+            ASSERT_TRUE(sequence1 == 0);
+        }
+    }
+}
 
 } // namespace tests
 

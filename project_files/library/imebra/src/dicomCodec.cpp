@@ -326,7 +326,8 @@ void dicomCodec::writeTag(ptr<streamWriter> pDestStream, ptr<data> pData, std::u
 		// Write a nested dataset
 		///////////////////////////////////////////////////////////
 		ptr<dataSet> pDataSet = pData->getDataSet(scanBuffers);
-		if(pDataSet == 0)
+
+        if(pDataSet == 0 || !pDataSet->getDataIterator()->isValid())
 		{
 			break;
 		}
