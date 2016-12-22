@@ -50,7 +50,7 @@ NSImage* getImebraImage(const imebra::Image& image, imebra::DrawBitmap& drawBitm
 #if TARGET_OS_IPHONE
     UIImage* returnImage = [[UIImage alloc] initWithCGImage:imageRef];
 #else
-    NSImage* returnImage = [[NSImage alloc] initWithCGImage:imageRef size:NsZeroSize];
+    NSImage* returnImage = [[NSImage alloc] initWithCGImage:imageRef size:NZeroSize];
 #endif
     CGDataProviderRelease(dataProviderRef);
     CGImageRelease(imageRef);
