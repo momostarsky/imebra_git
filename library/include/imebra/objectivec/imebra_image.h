@@ -2,6 +2,7 @@
 #define imebraObjcImage__INCLUDED_
 
 #if defined(__APPLE__)
+#include "TargetConditionals.h"
 
 #import <Foundation/Foundation.h>
 #include "../definitions.h"
@@ -12,8 +13,6 @@
 #import <AppKit/NSImage.h>
 #endif
 #include <imebra/imebra.h>
-
-#include "TargetConditionals.h"
 
 #ifdef TARGET_OS_IPHONE
 IMEBRA_API UIImage* getImebraImage(const imebra::Image& image, const imebra::Transform& transform);
