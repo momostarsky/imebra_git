@@ -15,9 +15,9 @@
 #include <imebra/imebra.h>
 
 #if TARGET_OS_IPHONE
-IMEBRA_API UIImage* getImebraImage(const imebra::Image& image, const imebra::Transform& transform);
+IMEBRA_API UIImage* getImebraImage(const imebra::Image& image, imebra::DrawBitmap& drawBitmap);
 #else
-IMEBRA_API NSImage* getImebraImage(const imebra::Image& image, const imebra::Transform& transform);
+IMEBRA_API NSImage* getImebraImage(const imebra::Image& image, imebra::DrawBitmap& drawBitmap);
 #endif
 
 #endif //__APPLE__

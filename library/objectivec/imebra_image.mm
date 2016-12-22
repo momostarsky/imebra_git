@@ -13,16 +13,11 @@ void CGDataProviderCallbackFunc(void *info, const void *data, size_t size)
 }
 
 #if TARGET_OS_IPHONE
-UIImage* getImebraImage(const imebra::Image& image, const imebra::Transform& transform)
+UIImage* getImebraImage(const imebra::Image& image, imebra::DrawBitmap& drawBitmap)
 #else
-NSImage* getImebraImage(const imebra::Image& image, const imebra::Transform& transform)
+NSImage* getImebraImage(const imebra::Image& image, imebra::DrawBitmap& drawBitmap)
 #endif
 {
-
-    // Allocate the drawBitmap class
-    ////////////////////////////////
-    imebra::DrawBitmap drawBitmap(transform);
-
     // Get the amount of memory needed for the conversion
     /////////////////////////////////////////////////////
     std::uint32_t width(image.getWidth());

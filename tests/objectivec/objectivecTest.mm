@@ -2,6 +2,7 @@
 #include <imebra/imebra.h>
 #include <imebra/objectivec/imebra_strings.h>
 #include <imebra/objectivec/imebra_image.h>
+#include "../buildImageForTest.h"
 
 namespace imebra
 {
@@ -107,14 +108,15 @@ TEST(objectivec, images)
     colorTransform->runTransform(*baselineImage, 0, 0, width, height, *ybrImage, 0, 0);
 
     TransformsChain chain;
-    NSImage* nsImage = getImebraImage(*ybrImage, chain);
+    DrawBitmap drawBitmap(chain);
+    NSImage* nsImage = getImebraImage(*ybrImage, drawBitmap);
 
     NSData *imageData = [nsImage TIFFRepresentation];
     NSBitmapImageRep *imageRep = [NSBitmapImageRep imageRepWithData:imageData];
     NSDictionary *imageProps = [NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:1.0] forKey:NSImageCompressionFactor];
     imageData = [imageRep representationUsingType:NSJPEGFileType properties:imageProps];
 
-    ReadWriteMemory dataMemory([imageData bytes], [imageData length]);
+    ReadWriteMemory dataMemory((const char*)[imageData bytes], [imageData length]);
     MemoryStreamInput dataStream(dataMemory);
     StreamReader dataReader(dataStream);
 
