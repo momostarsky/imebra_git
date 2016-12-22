@@ -12,7 +12,7 @@ void CGDataProviderCallbackFunc(void *info, const void *data, size_t size)
     delete (imebra::ReadWriteMemory*)info;
 }
 
-#ifdef TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE
 UIImage* getImebraImage(const imebra::Image& image, const imebra::Transform& transform)
 #else
 NSImage* getImebraImage(const imebra::Image& image, const imebra::Transform& transform)
@@ -52,7 +52,7 @@ NSImage* getImebraImage(const imebra::Image& image, const imebra::Transform& tra
                 colorSpaceRef, bitmapInfo, dataProviderRef, NULL, YES, renderingIntent);
 
 
-#ifdef TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE
     UIImage* returnImage = [[UIImage alloc] initWithCGImage:imageRef];
 #else
     NSImage* returnImage = [[NSImage alloc] initWithCGImage:imageRef];
