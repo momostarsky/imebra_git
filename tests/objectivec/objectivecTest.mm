@@ -90,7 +90,7 @@ TEST(objectivec, NSStringToStringTest)
 }
 
 
-#if defined(APPLE)
+#if defined(__APPLE__)
 // Test NSImage
 TEST(objectivec, images)
 {
