@@ -55,6 +55,8 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../library/include ${gtest_inclu
 if("${IMEBRA_OBJC}" STREQUAL "1")
     if(NOT APPLE)
         include_directories("/usr/include/GNUstep")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fconstant-string-class=NSConstantString")
+        set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} gnustep-base objc)
     endif(NOT APPLE)
 endif("${IMEBRA_OBJC}" STREQUAL "1")
 

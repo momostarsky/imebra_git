@@ -12,33 +12,7 @@ project("imebra")
 
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
 
-# Add flags specific to the compiler
-#-----------------------------------
-if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-
-    message(STATUS "GCC detected, adding compile flags")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wall -Wextra -Wpedantic -Wconversion -Wfloat-equal -fvisibility=hidden -fvisibility-inlines-hidden")
-    set(IMEBRA_LIBRARIES pthread)
-
-    if(CMAKE_BUILD_TYPE MATCHES DEBUG)
-        message("debug mode")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
-        set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} gcov)
-    endif(CMAKE_BUILD_TYPE MATCHES DEBUG)
-
-elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-
-    message(STATUS "CLANG detected, adding compile flags")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wall -Wextra -Wpedantic -Wconversion -Wfloat-equal -fvisibility=hidden -fvisibility-inlines-hidden")
-    set(IMEBRA_LIBRARIES pthread)
-
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-
-    message(STATUS "MSVC detected, adding compile flags")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /Wp64")
-    set(IMEBRA_LIBRARIES Kernel32)
-
-endif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+set(IMEBRA_LIBRARIES "")
 
 # Select the proper charset conversion libraries according to the charset conversion method
 #------------------------------------------------------------------------------------------
@@ -99,7 +73,7 @@ add_definitions(-DIMEBRA_DLL)
 add_definitions(-DIMEBRA_DLL_EXPORTS)
 add_definitions(-DNOMINMAX)
 
-file(GLOB imebra_interface "${CMAKE_CURRENT_SOURCE_DIR}/include/**/*.h")
+file(GLOB imebra_interface "${CMAKE_CURRENT_SOURCE_DIR}/include/imebra/*.h")
 file(GLOB imebra_include "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h")
 file(GLOB imebra_src "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 file(GLOB imebra_implementation_src "${CMAKE_CURRENT_SOURCE_DIR}/implementation/*.cpp")
@@ -110,8 +84,8 @@ file(GLOB imebra_implementation_include "${CMAKE_CURRENT_SOURCE_DIR}/implementat
 set(imebra_obj_src "")
 set(imebra_obj_include "")
 if("${IMEBRA_OBJC}" STREQUAL "1")
-    file(GLOB imebra_objc_src "${CMAKE_CURRENT_SOURCE_DIR}/objectivec/src/*.mm")
-    file(GLOB imebra_objc_include "${CMAKE_CURRENT_SOURCE_DIR}/objectivec/include/**/*.h")
+    file(GLOB imebra_objc_src "${CMAKE_CURRENT_SOURCE_DIR}/objectivec/*.mm")
+    file(GLOB imebra_objc_include "${CMAKE_CURRENT_SOURCE_DIR}/include/imebra/objectivec/*.h")
 endif("${IMEBRA_OBJC}" STREQUAL "1")
 
 add_library(imebra ${IMEBRA_SHARED_STATIC}
@@ -125,8 +99,8 @@ add_library(imebra ${IMEBRA_SHARED_STATIC}
 )
 
 if("${IMEBRA_OBJC}" STREQUAL "1")
-    target_include_directories(imebra PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/objectivec/include)
     if(NOT APPLE)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fconstant-string-class=NSConstantString")
         target_include_directories(imebra PRIVATE "/usr/include/GNUstep")
         set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} gnustep-base objc)
     endif(NOT APPLE)
@@ -134,6 +108,36 @@ endif("${IMEBRA_OBJC}" STREQUAL "1")
 
 target_link_libraries(imebra ${IMEBRA_LIBRARIES})
 target_include_directories(imebra PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+# Add flags specific to the compiler
+#-----------------------------------
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+
+    message(STATUS "GCC detected, adding compile flags")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wall -Wextra -Wpedantic -Wconversion -Wfloat-equal -fvisibility=hidden -fvisibility-inlines-hidden")
+    set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} pthread)
+
+    if(CMAKE_BUILD_TYPE MATCHES DEBUG)
+        message("debug mode")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
+        set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} gcov)
+    endif(CMAKE_BUILD_TYPE MATCHES DEBUG)
+
+elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+
+    message(STATUS "CLANG detected, adding compile flags")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wall -Wextra -Wpedantic -Wconversion -Wfloat-equal -fvisibility=hidden -fvisibility-inlines-hidden")
+    set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} pthread)
+
+elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+
+    message(STATUS "MSVC detected, adding compile flags")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /Wp64")
+    set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} Kernel32)
+
+endif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+
+
 
 
 # Set the library version from IMEBRA_MAJOR_VERSION, IMEBRA_MINOR_VERSION,

@@ -1,6 +1,8 @@
+#if defined(APPLE)
+
 #include <imebra/imebra.h>
 #include <memory>
-#import "../include/imebra_objc/imebra_image.h"
+#import "../include/imebra/objectivec/imebra_image.h"
 #import <Foundation/Foundation.h>
 
 void CGDataProviderCallbackFunc(void *info, const void *data, size_t size)
@@ -10,7 +12,6 @@ void CGDataProviderCallbackFunc(void *info, const void *data, size_t size)
     delete (imebra::ReadWriteMemory*)info;
 }
 
-/*
 #ifdef TARGET_OS_IPHONE
 UIImage* getImebraImage(const imebra::Image& image, const imebra::Transform& transform)
 #else
@@ -61,4 +62,5 @@ NSImage* getImebraImage(const imebra::Image& image, const imebra::Transform& tra
     CGColorSpaceRelease(colorSpaceRef);
     return returnImage;
 }
-*/
+
+#endif
