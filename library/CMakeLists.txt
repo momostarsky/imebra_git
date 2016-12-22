@@ -4,8 +4,6 @@
 # -DIMEBRA_OBJC=1|0 (default = 0)
 # -DIOS=PHONE|SIMULATOR (default not defined)
 # -DCMAKE_OSX_SYSROOT
-# -DIMEBRA_GNUSTEP_INCLUDE="gnustep folder" (default "")
-
 cmake_minimum_required(VERSION 2.8)
 
 project("imebra")
@@ -99,11 +97,13 @@ add_library(imebra ${IMEBRA_SHARED_STATIC}
 )
 
 if("${IMEBRA_OBJC}" STREQUAL "1")
-    if(NOT APPLE)
+    if(APPLE)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -framework Foundation -framework CoreServices")
+    else(APPLE)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fconstant-string-class=NSConstantString")
         target_include_directories(imebra PRIVATE "/usr/include/GNUstep")
         set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} gnustep-base objc)
-    endif(NOT APPLE)
+    endif(APPLE)
 endif("${IMEBRA_OBJC}" STREQUAL "1")
 
 target_link_libraries(imebra ${IMEBRA_LIBRARIES})
