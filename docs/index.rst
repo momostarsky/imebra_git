@@ -55,6 +55,7 @@ Imebra
    transforms_classes
    dicom_dictionary_classes
    exception_classes
+   objectivec_classes
 
 .. _build-distribution:
 
