@@ -5,6 +5,9 @@
 #import "../include/imebra/objectivec/imebra_image.h"
 #import <Foundation/Foundation.h>
 
+namespace  imebra
+{
+
 void CGDataProviderCallbackFunc(void *info, const void *data, size_t size)
 {
     // Release the shared pointer holding the memory
@@ -57,5 +60,7 @@ NSImage* getImebraImage(const imebra::Image& image, imebra::DrawBitmap& drawBitm
     CGColorSpaceRelease(colorSpaceRef);
     return returnImage;
 }
+
+} // namespace imebra
 
 #endif
