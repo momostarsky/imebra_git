@@ -19,7 +19,8 @@ namespace imebra
 
 #if TARGET_OS_IPHONE
 /**
- * Generates a UIImage from a 24bpp RGB image returned by imebra::DrawBitmap::getImage().
+ * Generates a NSImage on OS-X or an UIImage on iOS from a 24bpp RGB image returned by
+ * imebra::DrawBitmap::getBitmap().
  *
  * @param image      the image to pass as parameter to imebra::DrawBitmap::getImage()
  * @param drawBitmap the imebra::DrawBitmap object to use to generate the 24bpp RGB
@@ -31,7 +32,8 @@ IMEBRA_API UIImage* getImebraImage(const imebra::Image& image, imebra::DrawBitma
 #else
 
 /**
- * Generates a NSImage from a 24bpp RGB image returned by imebra::DrawBitmap::getImage().
+ * Generates a NSImage on OS-X or an UIImage on iOS from a 24bpp RGB image returned by
+ * imebra::DrawBitmap::getBitmap().
  *
  * @param image      the image to pass as parameter to imebra::DrawBitmap::getImage()
  * @param drawBitmap the imebra::DrawBitmap object to use to generate the 24bpp RGB
