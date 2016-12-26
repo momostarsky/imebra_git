@@ -426,6 +426,16 @@ In C++
     std::string buffer(requestedBufferSize, char(0));
     draw.getBitmap(image, imebra::drawBitmapType_t::drawBitmapRGBA, 4, &(buffer.at(0)), requestedBufferSize);
 
+On OS-X or iOS you can use the provided method :cpp:func:`imebra::getImebraImage` to obtain a NSImage or an UIImage:
+
+.. code-block:: c++
+
+    // We create a DrawBitmap that always apply the chain transform before getting the RGB image
+    imebra::DrawBitmap draw(chain);
+
+    // Get an NSImage (or UIImage on iOS)
+    NSImage* nsImage = getImebraImage(*ybrImage, draw);
+
 In Java
 
 .. code-block:: java
@@ -445,6 +455,7 @@ In Java
     renderBitmap.copyPixelsFromBuffer(byteBuffer);
 
     // The Bitmap can be assigned to an ImageView on Android
+
 
 
 Creating an empty DataSet
