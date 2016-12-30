@@ -428,10 +428,10 @@ TEST(dataSetTest, testEmptySequence)
         {
             std::unique_ptr<Tag> sequenceTag(readDataSet->getTag(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111)));
             ASSERT_EQ(tagVR_t::SQ, sequenceTag->getDataType());
-            ASSERT_THROW(sequenceTag->getSequenceItem(0), MissingDataElementError);
-            ASSERT_THROW(sequenceTag->getSequenceItem(1), MissingDataElementError);
-            ASSERT_THROW(readDataSet->getSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 0), MissingDataElementError);
-            ASSERT_THROW(readDataSet->getSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 1), MissingDataElementError);
+            ASSERT_THROW(sequenceTag->getSequenceItem(0), MissingItemError);
+            ASSERT_THROW(sequenceTag->getSequenceItem(1), MissingItemError);
+            ASSERT_THROW(readDataSet->getSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 0), MissingItemError);
+            ASSERT_THROW(readDataSet->getSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 1), MissingItemError);
         }
     }
 }
