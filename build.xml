@@ -50,6 +50,7 @@
 		</copy>
 		<copy todir="${build_release}" file="build.xml" />
 		<copy todir="${build_release}" file="readme.rst" />
+		<copy todir="${build_release}" file="setup.py" />
 	</target>
 
 	<!-- Create the directory for the test execution and code coverage -->
