@@ -58,6 +58,14 @@ public:
 
     /// \brief Construct a buffer of memory and copy the specified content into it.
     ///
+    /// <b>Java</b>
+    ///
+    /// In Java this method accepts a single parameter (a byte array).
+    ///
+    /// <b>Python</b>
+    ///
+    /// In Python this method accepts a single parameter (an array).
+    ///
     /// \param source      a pointer to the source data
     /// \param sourceSize  the amount of data to copy into the allocated memory
     ///
@@ -78,6 +86,18 @@ public:
     /// If the allocated buffer is not large enough then the method doesn't
     ///  copy any data and just returns the required buffer' size.
     ///
+    /// <b>Java</b>
+    ///
+    /// In Java this method accepts a single parameter (a byte array).
+    /// The size of the byte array must be equal or greater than the number of
+    /// bytes stored by the data handler.
+    ///
+    /// <b>Python</b>
+    ///
+    /// In Python this method accepts a single parameter (an array).
+    /// The size of the array (in bytes) must be equal or greater than the number
+    /// of bytes stored by the data handler.
+    ///
     /// \param destination     a pointer to the allocated buffer
     /// \param destinationSize the size of the allocated buffer, in bytes
     /// \return the number of bytes to be copied into the pre-allocated buffer
@@ -89,6 +109,18 @@ public:
     ///
     /// If the memory's size is too small to extract the requested region then
     /// throws MemorySizeError.
+    ///
+    /// <b>Java</b>
+    ///
+    /// In Java this method accepts two parameters:
+    /// - a byte array
+    /// - a long integer (sourceOffset)
+    ///
+    /// <b>Python</b>
+    ///
+    /// In Python this method accepts two parameters:
+    /// - an array
+    /// - an integer (sourceOffset)
     ///
     /// \param destination     a pointer to the allocated buffer
     /// \param destinationSize the size of the allocated buffer, in bytes
