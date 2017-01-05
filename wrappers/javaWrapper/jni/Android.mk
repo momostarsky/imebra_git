@@ -9,7 +9,7 @@ LOCAL_LDLIBS :=  -llog
 
 FILE_LIST := $(wildcard $(LOCAL_PATH)/../../../library/src/*.cpp)
 FILE_LIST += $(wildcard $(LOCAL_PATH)/../../../library/implementation/*.cpp)
-FILE_LIST += $(LOCAL_PATH)/../../swig_wrap.cxx
+FILE_LIST += $(LOCAL_PATH)/../../java_wrapper.cxx
 LOCAL_SRC_FILES := $(FILE_LIST:$(LOCAL_PATH)/%=%)
 
 
