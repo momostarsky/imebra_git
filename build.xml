@@ -71,6 +71,8 @@
 		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt, *.py" token="1.0.0" value="${short_version}" />
 		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt, *.py" token="&quot;1.0.0&quot;" value="&quot;${short_version}&quot;" />
 		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt, *.py" token="L&quot;1.0.0&quot;" value="L&quot;${short_version}&quot;" />
+		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt, *.py" token="$major_version$" value="${version_major}" />
+		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt, *.py" token="$minor_version$" value="${version_minor}" />
 		<replace file="${build_release}/wrappers/javaWrapper/AndroidManifest.xml" token="&quot;1.0.0&quot;" value="&quot;${short_version}&quot;" />
 		<replace dir="${build_release}" token="$fileHeader$">
 			<replacevalue><![CDATA[
