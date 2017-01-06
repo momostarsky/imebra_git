@@ -15,12 +15,15 @@ def get_sources(root_folder):
 
 # set proper libraries according to OS
 librariesArray = []
+compileFlags = []
 
 if sys.platform.startswith('linux'):
     librariesArray.append('pthread')
+    compileFlags = ["-std=c++0x", "-Wall", "-Wextra", "-Wpedantic", "-Wconversion", "-Wfloat-equal"]
 
 if sys.platform.startswith('darwin'):
     librariesArray.append('iconv')
+    compileFlags = ["-std=c++0x", "-Wall", "-Wextra", "-Wpedantic", "-Wconversion", "-Wfloat-equal"]
 
 if sys.platform.startswith('win'):
     librariesArray.append('kernel32')
@@ -29,11 +32,11 @@ imebra_sources = get_sources("./library")
 imebra_sources.extend(get_sources("./wrappers"))
 
 imebraModule = Extension('_imebra',
-                    define_macros = [('MAJOR_VERSION', '1'),
-                                     ('MINOR_VERSION', '0')],
+                    define_macros = [('MAJOR_VERSION', '$major_version$'),
+                                     ('MINOR_VERSION', '$minor_version$')],
                     libraries = librariesArray,
                     sources = imebra_sources,
-                    extra_compile_args = ["-std=c++0x", "-Wall", "-Wextra", "-Wpedantic", "-Wconversion", "-Wfloat-equal"],
+                    extra_compile_args = compileFlags,
                     include_dirs= ["./library/include"])
 
 setup (name = 'imebra',
