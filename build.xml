@@ -290,9 +290,30 @@ The author can be contacted by email at info@binarno.com or by mail at
         </exec>
     </target>
 
+    <target name="test_python" depends="create_source_distribution">
+
+    	<!-- Copy the source distribution to don't pollute it -->
+		<property name="python_test" location="./ant-python_test" />
+		<delete dir="${python_test}" failonerror="false" />
+		<mkdir dir="${python_test}" />
+
+		<copy todir="${python_test}">
+			<fileset dir="${source_distribution}" />
+		</copy>
+        <exec executable="python" dir="${python_test}" resolveexecutable="true" failonerror="true">
+            <arg value="setup.py" />
+            <arg value="install" />
+            <arg value="--user" />
+        </exec>
+        <exec executable="python" dir="${python_test}/tests/python" resolveexecutable="true" failonerror="true">
+            <arg value="tests.py" />
+        </exec>
+    </target>
+
 	<!-- Build -->
-    <target name="make_distribution" depends="run_test_cases, collect_coverage">
+    <target name="make_distribution" depends="run_test_cases, test_python, collect_coverage">
     	<zip destfile="imebra_source_distribution.zip" basedir="${source_distribution}" />
+
 	</target>
 
 
