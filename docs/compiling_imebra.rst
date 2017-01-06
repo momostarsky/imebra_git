@@ -201,6 +201,39 @@ For instance:
     
 
 
+Compiling the Python version of Imebra
+--------------------------------------
+
+Prerequisites
+.............
+
+In order to build Imebra for Python you need:
+
+- Python installed
+- setuptools
+
+Building Imebra
+...............
+
+The root folder of the source distribution contains the setup.py file necessary to build and install Imebra for Python.
+
+In order to build and install Imebra for Python:
+
+- cd into the root folder of the Imebra Source Distribution
+- run the setup.py file with the install option (requires administrator privileges):
+
+::
+
+    cd imebra
+    python setup.py install
+
+To remove the Python version of Imebra from your system:
+
+::
+
+    pip uninstall imebra
+
+
 Compiling the test units
 ------------------------
 

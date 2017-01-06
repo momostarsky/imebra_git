@@ -6,6 +6,11 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Implemented enhancement #153 (Modify swig.i so a Python wrapper can be generated with swig) as per SOP :ref:`DEVENH_2`
+
+Version 4.0.7.1
+---------------
+
 - Fixed bug #150 (Missing documentation for Tag members that return numeric and raw data handlers) as per SOP :ref:`FIXBUG_2`
 - Fixed bug #151 (Imebra creates the tag 0028,0006 even when the number of color channel is 1) as per SOP :ref:`FIXBUG_2`
 
