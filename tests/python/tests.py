@@ -4,7 +4,10 @@ import unittest
 
 class TestDataSet(unittest.TestCase):
 
+    # Test DataSet.setString
+    #-----------------------
     def test_string(self):
+
         dataset = DataSet()
 
         patientName = 'Test patient'
@@ -12,7 +15,10 @@ class TestDataSet(unittest.TestCase):
 
         self.assertEqual(patientName, dataset.getString(TagId(tagId_t_PatientName_0010_0010), 0))
 
-    def test_image(self):
+    # Test DataSet.setImage
+    #----------------------
+    def test_set_image(self):
+
         dataset = DataSet()
 
         image = Image(300, 100, bitDepth_t_depthU16, "RGB", 15)
@@ -47,6 +53,40 @@ class TestDataSet(unittest.TestCase):
                 self.assertEqual(intArray[(y * 300 + x) * 3], y)
                 self.assertEqual(intArray[(y * 300 + x) * 3 + 1], x)
                 self.assertEqual(intArray[(y * 300 + x) * 3 + 2], x+1)
+
+
+class TestMemoryStream(unittest.TestCase):
+
+    # Test Save/Load
+    #---------------
+    def test_image(self):
+
+        dataset = DataSet()
+
+        patientName = 'Test patient'
+        dataset.setString(TagId(tagId_t_PatientName_0010_0010), patientName)
+
+        streamMemory = ReadWriteMemory()
+
+        streamOutput = MemoryStreamOutput(streamMemory)
+
+        streamWriter = StreamWriter(streamOutput)
+
+        CodecFactory.save(dataset, streamWriter, codecType_t_dicom)
+
+        streamWriter = None
+        streamOutput = None
+
+        streamInput = MemoryStreamInput(streamMemory)
+
+        streamReader = StreamReader(streamInput)
+
+        loadedDataSet = CodecFactory.load(streamReader)
+
+        self.assertEqual(patientName, loadedDataSet.getString(TagId(tagId_t_PatientName_0010_0010), 0))
+
+
+
 
 if __name__ == '__main__':
     unittest.main()
