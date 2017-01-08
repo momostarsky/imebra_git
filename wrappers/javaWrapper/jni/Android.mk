@@ -3,7 +3,7 @@ LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 
 LOCAL_MODULE := imebra_lib
-LOCAL_CPPFLAGS += -fexceptions -pthread
+LOCAL_CPPFLAGS += -fexceptions -pthread -I../../../library/include
 LOCAL_CPPFLAGS += -DIMEBRA_USE_JAVA -DIMEBRA_MEMORY_POOL_MAX_SIZE=4000000
 LOCAL_LDLIBS :=  -llog
 
