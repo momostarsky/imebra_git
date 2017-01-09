@@ -23,6 +23,13 @@ In Java, before using any Imebra class you have to load the native code containe
     
     System.loadLibrary("imebra_lib")
 
+In Python, import the package imebra:
+
+.. code-block:: python
+
+    from imebra.imebra import *
+
+
 
 Loading files
 -------------
@@ -51,6 +58,13 @@ In Java:
 
     com.imebra.DataSet loadedDataSet = com.imebra.CodecFactory.load("DicomFile.dcm");
 
+In Python:
+
+.. code-block:: python
+
+    loadedDataSet = CodecFactory.load("DicomFile.dcm")
+
+
 The previous code loads the file DicomFile.dcm.
 
 Imebra can perform a "lazy loading", which leaves the data on the input stream and loads it into memory
@@ -70,14 +84,21 @@ Lazy loading in C++:
     // Load tags in memory only if their size is equal or smaller than 2048 bytes
     std::unique_ptr<imebra::DataSet> loadedDataSet(imebra::CodecFactory::load("DicomFile.dcm", 2048));
 
-and in Java
+in Java
 
 .. code-block:: java
 
     // Load tags in memory only if their size is equal or smaller than 2048 bytes
     com.imebra.DataSet loadedDataSet = com.imebra.CodecFactory.load("DicomFile.dcm", 2048);
 
+and finally in Python
 
+.. code-block:: python
+
+    # Load tags in memory only if their size is equal or smaller than 2048 bytes
+    loadedDataSet = CodecFactory.load("DicomFile.dcm", 2048)
+
+    
 Reading the tag's values
 ------------------------
 
@@ -137,6 +158,17 @@ and in Java:
     String patientNameCharacter = loadedDataSet.getString(new com.imebra.TagId(0x10, 0x10), 0);
     String patientNameIdeographic = loadedDataSet.getString(new com.imebra.TagId(0x10, 0x10), 1);
 
+In python, you do it like this:
+
+.. code-block:: python
+
+    # A patient's name can contain up to 5 values, representing different interpretations of the same name
+    # (e.g. alphabetic representation, ideographic representation and phonetic representation)
+    # Here we retrieve the first 2 interpretations (index 0 and 1)
+    patientNameCharacter = loadedDataSet.getString(TagId(tagId_t_PatientName_0010_0010), 0)
+    patientNameIdeographic = loadedDataSet.getString(TagId(tagId_t_PatientName_0010_0010), 1)
+
+
 Note that the previous code will throw one of the exceptions derived from :cpp:class:`imebra::MissingDataElementError`
 if the desidered patient name component is not present in the :cpp:class:`imebra::DataSet`.
 
@@ -157,13 +189,21 @@ or
     std::wstring patientNameCharacter = loadedDataSet->getUnicodeString(imebra::TagId(0x10, 0x10), 0, L"");
     std::wstring patientNameIdeographic = loadedDataSet->getUnicodeString(imebra::TagId(0x10, 0x10), 1, L"");
 
-and in Java:
+in Java:
 
 .. code-block:: java
 
     // Return an empty name if the tag is not present
     String patientNameCharacter = loadedDataSet.getString(new com.imebra.TagId(0x10, 0x10), 0, "");
     String patientNameIdeographic = loadedDataSet.getString(new com.imebra.TagId(0x10, 0x10), 1, "");
+
+and in Python:
+
+.. code-block:: python
+
+    # Return an empty name if the tag is not present
+    patientNameCharacter = loadedDataSet.getString(TagId(tagId_t_PatientName_0010_0010), 0, "")
+    patientNameIdeographic = loadedDataSet.getString(TagId(tagId_t_PatientName_0010_0010), 1, "")
 
 
 Retrieving an image
@@ -206,6 +246,20 @@ To retrieve an image in Java:
     // Get the size in pixels
     long width = image.getWidth();
     long height = image.getHeight();
+
+To retrieve an image in Python:
+
+.. code-block:: python
+
+    # Retrieve the first image (index = 0)
+    image = loadedDataSet.getImageApplyModalityTransform(0)
+
+    # Get the color space
+    colorSpace = image.getColorSpace()
+
+    # Get the size in pixels
+    width = image.getWidth()
+    height = image.getHeight()
 
 In order to access the image's pixels you can obtain a :cpp:class:`imebra::ReadingDataHandlerNumeric` and then
 access the individual pixels via :cpp:member:`imebra::ReadingDataHandler::getSignedLong` or 
@@ -259,6 +313,27 @@ How to access the pixels in Java:
             int b = dataHandler.getSignedLong((scanY * width + scanX) * 3 + 2);
         }
     }
+
+How to access the pixels in Python:
+
+.. code-block:: python
+
+    # let's assume that we already have the image's size in the variables width and height
+    # (see previous code snippet)
+
+    # Retrieve the data handler
+    dataHandler = image.getReadingDataHandler()
+
+    for scanY in range(0, height):
+        for scanX in range(0, width):
+
+            # For monochrome images
+            luminance = dataHandler.getSignedLong(scanY * width + scanX)
+
+            # For RGB images
+            r = dataHandler.getSignedLong((scanY * width + scanX) * 3)
+            g = dataHandler.getSignedLong((scanY * width + scanX) * 3 + 1)
+            b = dataHandler.getSignedLong((scanY * width + scanX) * 3 + 2)
 
 In order to make things faster you can retrieve the memory containing the data in raw format from the :cpp:class:`imebra::ReadingDataHandlerNumeric`
 object:
@@ -426,6 +501,16 @@ In C++
     std::string buffer(requestedBufferSize, char(0));
     draw.getBitmap(image, imebra::drawBitmapType_t::drawBitmapRGBA, 4, &(buffer.at(0)), requestedBufferSize);
 
+On OS-X or iOS you can use the provided method :cpp:func:`imebra::getImebraImage` to obtain a NSImage or an UIImage:
+
+.. code-block:: c++
+
+    // We create a DrawBitmap that always apply the chain transform before getting the RGB image
+    imebra::DrawBitmap draw(chain);
+
+    // Get an NSImage (or UIImage on iOS)
+    NSImage* nsImage = getImebraImage(*ybrImage, draw);
+
 In Java
 
 .. code-block:: java
@@ -445,6 +530,7 @@ In Java
     renderBitmap.copyPixelsFromBuffer(byteBuffer);
 
     // The Bitmap can be assigned to an ImageView on Android
+
 
 
 Creating an empty DataSet
@@ -477,6 +563,14 @@ In Java:
 
     // We specify the transfer syntax and the charset
     com.imebra.DataSet dataSet = new com.imebra.DataSet("1.2.840.10008.1.2.1", "ISO 2022 IR 6");
+
+In Python:
+
+.. code-block:: python
+
+    # We specify the transfer syntax and the charset
+    dataSet = DataSet("1.2.840.10008.1.2.1", "ISO 2022 IR 6")
+
 
 
 Modifying the dataset's content
@@ -519,6 +613,13 @@ In Java:
 
     dataSet.setString(new com.imebra.TagId(0x10, 0x10), "Patient^Name");
 
+In Python:
+
+.. code-block:: python
+
+    dataSet.setString(TagId(tagId_t_PatientName_0010_0010), "Patient^Name")
+
+
 You can also set tags values by retrieving a WritingDataHandler and populating it: the WritingDataHandler will commit the data
 into the DataSet when it is destroyed:
 
@@ -548,6 +649,18 @@ in Java:
         // Force the commit, don't wait for the garbage collector
         dataHandler.delete();
     }
+
+in Python:
+
+.. code-block:: python
+    
+    dataHandler = dataSet.getWritingDataHandler(0)
+    dataHandler.setString(0, "AlphabeticName")
+    dataHandler.setString(1, "IdeographicName")
+    dataHandler.setString(2, "PhoneticName")
+
+    # Force the commit
+    dataHandler = None
 
 
 Embedding images into the dataSet
@@ -608,6 +721,28 @@ in Java++
 
     dataSet.setImage(0, image);
 
+in Python
+
+.. code-block:: python
+
+    # Create a 300 by 200 pixel image, 15 bits per color channel, RGB
+    image = Image(300, 200, bitDepth_t_depthU16, "RGB", 15)
+    
+    WritingDataHandlerNumeric dataHandler = image.getWritingDataHandler();
+
+    # Set all the pixels to red
+    for scanY in range(0, 200):
+        for scanX in range(0, 300):
+            dataHandler.setUnsignedLong((scanY * 300 + scanX) * 3, 65535)
+            dataHandler.setUnsignedLong((scanY * 300 + scanX) * 3 + 1, 0)
+            dataHandler.setUnsignedLong((scanY * 300 + scanX) * 3 + 2, 0)
+
+    # Force the commit, don't wait for the garbage collector
+    dataHandler = None
+
+    dataSet.setImage(0, image);
+
+
 
 Saving a DataSet
 ----------------
@@ -626,3 +761,8 @@ in Java++
 
     com.imebra.CodecFactory.save(dataSet, "dicomFile.dcm", com.imebra.codecType_t.dicom);
 
+in Python
+
+.. code-block:: python
+
+    CodecFactory.save(dataSet, "dicomFile.dcm", codecType_t_dicom);

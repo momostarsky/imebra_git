@@ -77,6 +77,18 @@ public:
     /// If the allocated buffer is not large enough then the method doesn't
     ///  copy any data and just returns the required buffer' size.
     ///
+    /// <b>Java</b>
+    ///
+    /// In Java this method accepts a single parameter (a byte array).
+    /// The size of the byte array must be equal or greater than the number of
+    /// bytes stored by the data handler.
+    ///
+    /// <b>Python</b>
+    ///
+    /// In Python this method accepts a single parameter (an array).
+    /// The size of the array (in bytes) must be equal or greater than the number
+    /// of bytes stored by the data handler.
+    ///
     /// \param destination     a pointer to the allocated buffer
     /// \param destinationSize the size of the allocated buffer
     /// \return the number of bytes to be copied into the pre-allocated buffer

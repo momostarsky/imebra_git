@@ -47,6 +47,7 @@
 		</copy>
 		<copy todir="${build_release}" file="build.xml" />
 		<copy todir="${build_release}" file="readme.rst" />
+		<copy todir="${build_release}" file="setup.py" />
 	</target>
 
 	<!-- Create the directory for the test execution and code coverage -->
@@ -63,13 +64,15 @@
 
 	<!-- Replace the version number and license info -->
 	<target name="replace_version" depends="create_build_dir">
-		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt" token="$version$" value="${fullVersionReadable}" />
-		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt" token="1.0.0.1" value="${fullVersionReadable}" />
-		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt" token="&quot;1.0.0.1&quot;" value="&quot;${fullVersionReadable}&quot;" />
-		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt" token="L&quot;1.0.0.1&quot;" value="L&quot;${fullVersionReadable}&quot;" />
-		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt" token="1.0.0" value="${short_version}" />
-		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt" token="&quot;1.0.0&quot;" value="&quot;${short_version}&quot;" />
-		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt" token="L&quot;1.0.0&quot;" value="L&quot;${short_version}&quot;" />
+		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt, *.py" token="$version$" value="${fullVersionReadable}" />
+		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt, *.py" token="1.0.0.1" value="${fullVersionReadable}" />
+		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt, *.py" token="&quot;1.0.0.1&quot;" value="&quot;${fullVersionReadable}&quot;" />
+		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt, *.py" token="L&quot;1.0.0.1&quot;" value="L&quot;${fullVersionReadable}&quot;" />
+		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt, *.py" token="1.0.0" value="${short_version}" />
+		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt, *.py" token="&quot;1.0.0&quot;" value="&quot;${short_version}&quot;" />
+		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt, *.py" token="L&quot;1.0.0&quot;" value="L&quot;${short_version}&quot;" />
+		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt, *.py" token="$major_version$" value="${version_major}" />
+		<replace dir="${build_release}" includes="*.h,*.cpp, *.txt, *.py" token="$minor_version$" value="${version_minor}" />
 		<replace file="${build_release}/wrappers/javaWrapper/AndroidManifest.xml" token="&quot;1.0.0&quot;" value="&quot;${short_version}&quot;" />
 		<replace dir="${build_release}" token="$fileHeader$">
 			<replacevalue><![CDATA[
@@ -119,19 +122,22 @@ The author can be contacted by email at info@binarno.com or by mail at
 		<replace dir="${build_release}" token="$imebraVersion$" value="${productName}" />
 	</target>
 
-	<!-- SWIG -->
-	<target name="swig" depends="replace_version">
+	<!-- JAVA SWIG -->
+	<target name="java_swig" depends="replace_version">
 		<delete dir="${build_release}/wrappers/javaWrapper/src" failonerror="false" />
 		<mkdir dir="${build_release}/wrappers/javaWrapper/src/com/imebra" />
 		<mkdir dir="${build_release}/wrappers/javaWrapper/jni" />
-		<exec executable="swig" failonerror="true" dir="${build_release}/wrappers">
+		<exec executable="swig" failonerror="true" dir="${build_release}/wrappers/">
 			<arg value="-java" />
 			<arg value="-c++" />
+			<arg value="-I${build_release}/library/include" />
 			<arg value="-package" />
 			<arg value="com.imebra" />
 			<arg value="-outdir" />
 			<arg path="${build_release}/wrappers/javaWrapper/src/com/imebra" />
-			<arg value="swig.i" />
+			<arg value="-o" />
+			<arg value="java_wrapper.cxx" />
+			<arg path="${build_release}/wrappers/swig.i" />
 		</exec>
 
 		<fileset id="existing" dir="${build_release}/wrappers/javaWrapper/src/com/imebra">
@@ -153,6 +159,25 @@ The author can be contacted by email at info@binarno.com or by mail at
 		</fail>
 
 	</target>
+
+	<!-- PYTHON SWIG -->
+	<target name="python_swig" depends="replace_version">
+		<exec executable="swig" failonerror="true" dir="${build_release}/wrappers/">
+			<arg value="-python" />
+			<arg value="-c++" />
+			<arg value="-I${build_release}/library/include" />
+			<arg value="-module" />
+			<arg value="imebra" />
+			<arg value="-outdir" />
+			<arg path="${build_release}/wrappers/pythonWrapper" />
+			<arg value="-o" />
+			<arg value="python_wrapper.cxx" />
+			<arg path="${build_release}/wrappers/swig.i" />
+		</exec>
+
+	</target>
+
+	<target name="swig" depends="java_swig, python_swig" />
 
 	<!-- Documentation -->
 	<target name="documentation" depends="replace_version" >
@@ -185,6 +210,7 @@ The author can be contacted by email at info@binarno.com or by mail at
 			<fileset dir="${build_release}/docs/html" />
 		</copy>
 		<copy todir="${source_distribution}" file="${build_release}/readme.rst" />
+		<copy todir="${source_distribution}" file="${build_release}/setup.py" />
 	</target>
 
 
@@ -218,7 +244,10 @@ The author can be contacted by email at info@binarno.com or by mail at
 		<exec executable="make" failonerror="true" dir="${build_tests}" />
 	</target>
 
-    <target name="clear_coverage" depends="build_test_cases" description="Initializes the coverage data">
+	<!-- Run the test cases posix -->
+    <target name="run_test_cases" depends="build_test_cases" description="Run the test cases">
+
+    	<!-- Clear coverage -->
         <exec executable="lcov" dir="${build_tests}" resolveexecutable="true" failonerror="true">
             <arg value="--zerocounters" />
             <arg value="--directory" />
@@ -232,16 +261,13 @@ The author can be contacted by email at info@binarno.com or by mail at
             <arg value="--output-file" />
             <arg path="${build_library_for_tests}/test.info" />
         </exec>
-    </target>
 
-	<!-- Run the test cases posix -->
-    <target name="run_test_cases" depends="build_test_cases, clear_coverage" description="Run the test cases">
+        <!-- Run tests -->
         <exec executable="${build_tests}/ImebraTests" dir="${build_tests}" resolveexecutable="true" failonerror="true">
             <arg prefix="--corruptedFilesFolder=" path="${build_release}/tests/corruptedfiles" />
         </exec>
-    </target>
 
-    <target name="collect_coverage" depends="run_test_cases" description="Collect the coverage data">
+        <!-- Collect coverage -->
         <exec executable="lcov" dir="${build_tests}" resolveexecutable="true" failonerror="true">
             <arg value="--capture" />
             <arg value="--no-checksum" />
@@ -266,9 +292,30 @@ The author can be contacted by email at info@binarno.com or by mail at
         </exec>
     </target>
 
+    <target name="test_python" depends="create_source_distribution">
+
+    	<!-- Copy the source distribution to don't pollute it -->
+		<property name="python_test" location="./ant-python_test" />
+		<delete dir="${python_test}" failonerror="false" />
+		<mkdir dir="${python_test}" />
+
+		<copy todir="${python_test}">
+			<fileset dir="${source_distribution}" />
+		</copy>
+        <exec executable="python" dir="${python_test}" resolveexecutable="true" failonerror="true">
+            <arg value="setup.py" />
+            <arg value="install" />
+            <arg value="--user" />
+        </exec>
+        <exec executable="python" dir="${python_test}/tests/python" resolveexecutable="true" failonerror="true">
+            <arg value="tests.py" />
+        </exec>
+    </target>
+
 	<!-- Build -->
-    <target name="make_distribution" depends="run_test_cases, collect_coverage">
+    <target name="make_distribution" depends="create_source_distribution, run_test_cases, test_python">
     	<zip destfile="imebra_source_distribution.zip" basedir="${source_distribution}" />
+
 	</target>
 
 

@@ -344,6 +344,13 @@ void dicomCodec::writeTag(std::shared_ptr<streamWriter> pDestStream, std::shared
         }
         std::shared_ptr<dataSet> pDataSet = pData->getSequenceItem(scanBuffers);
 
+        // Don't write empty datasets
+        ///////////////////////////////////////////////////////////
+        if(pDataSet->getGroups().empty())
+        {
+            continue;
+        }
+
         // Remember the position at which the item has been written
         ///////////////////////////////////////////////////////////
         pDataSet->setItemOffset((std::uint32_t)pDestStream->getControlledStreamPosition());
@@ -865,6 +872,10 @@ void dicomCodec::parseStream(std::shared_ptr<streamReader> pStream,
         std::uint32_t bufferId = 0;
         while(tagLengthDWord && !pStream->endReached())
         {
+            // Add the tag to the dataset
+            ///////////////////////////////////////////////////////////
+            std::shared_ptr<data> sequenceTag = pDataSet->getTagCreate(tagId, 0x0, tagSubId, tagType);
+
             // Remember the item's position (used by DICOMDIR
             //  structures)
             ///////////////////////////////////////////////////////////
@@ -912,7 +923,6 @@ void dicomCodec::parseStream(std::shared_ptr<streamReader> pStream,
                 (*pReadSubItemLength) += effectiveLength;
                 if(tagLengthDWord!=0xffffffff)
                     tagLengthDWord-=effectiveLength;
-                std::shared_ptr<data> sequenceTag=pDataSet->getTagCreate(tagId, 0x0, tagSubId, tagType);
                 sequenceTag->setSequenceItem(bufferId, sequenceDataSet);
                 ++bufferId;
 
