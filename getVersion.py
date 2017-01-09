@@ -23,7 +23,12 @@ hgid = 'hg id -i'
 hgprocess = subprocess.Popen(hgid.split(), stdout=subprocess.PIPE)
 release += ' changeset ' + str(hgprocess.stdout.readlines()[0].rstrip())
 
+# split the version
+version_components = version.split('.')
 f.write("short_version = " + version + "\n")
 f.write("version = " + release + "\n")
+f.write("version_major = " + version_components[0] + "\n")
+f.write("version_minor = " + version_components[1] + "\n")
+f.write("version_patch = " + version_components[2] + "\n")
 
 f.close()

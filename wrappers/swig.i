@@ -1,19 +1,26 @@
 %module imebra
 
-//#ifdef SWIGJAVA
+#ifdef SWIGJAVA
 	%include <arrays_java.i>
 	%include <enums.swg>
-        %apply int[] {int *};
-        %apply(char *STRING, size_t LENGTH) { (const char *source, size_t sourceSize) };
-        %apply(char *STRING, size_t LENGTH) { (char* destination, size_t destinationSize) };
 
-	%rename(assign) operator=;
-//#endif
+	%apply(char *STRING, size_t LENGTH) { (const char *source, size_t sourceSize) };
+	%apply(char *STRING, size_t LENGTH) { (char* destination, size_t destinationSize) };
+#endif
+#ifdef SWIGPYTHON
+	%include <carrays.i>
+	%include <pybuffer.i>
+	%pybuffer_mutable_binary(void *STRING, size_t LENGTH)
+	%apply(void *STRING, size_t LENGTH) { (const char *source, size_t sourceSize) };
+	%apply(void *STRING, size_t LENGTH) { (char* destination, size_t destinationSize) };
+#endif
+
+%rename(assign) operator=;
 
 #define IMEBRA_API
 
 %{
-#include "../library/include/imebra/imebra.h"
+#include <imebra/imebra.h>
 %}
 
 %include <std_string.i>
