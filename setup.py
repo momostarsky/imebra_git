@@ -1,7 +1,36 @@
+#
+# This script allows to build and install the Python version
+# of the Imebra library.
+#
+# The Python version of Imebra is composed by the Imebra C++
+# code and by Python wrappers generated with SWIG.
+#
+# To install Imebra:
+#
+#    cd imebra_folder
+#    python setup.py install
+#
+# To install on a local folder (don't need administrator 
+# permissions):
+#
+#    cd imebra_folder
+#    python setup.py install --user
+#
+# To uninstall Imebra:
+#
+#    pip uninstall imebra
+#
+# Imebra is distributed under GPLv2 license.
+# Commercial licenses are available at http://imebra.com
+#
+#-----------------------------------------------------------------
+
 from distutils.core import setup, Extension
 import sys
 import os
 
+# Get all the Imebra C++ source files
+#------------------------------------
 def get_sources(root_folder):
     modules_files = []
 
@@ -13,7 +42,8 @@ def get_sources(root_folder):
     return modules_files
 
 
-# set proper libraries according to OS
+# Set proper libraries and flags according to the OS
+#---------------------------------------------------
 librariesArray = []
 compileFlags = []
 
@@ -31,6 +61,8 @@ if sys.platform.startswith('win'):
 imebra_sources = get_sources("./library")
 imebra_sources.extend(get_sources("./wrappers"))
 
+# Define the C++ module
+#----------------------
 imebraModule = Extension('_imebra',
                     define_macros = [('MAJOR_VERSION', '$major_version$'),
                                      ('MINOR_VERSION', '$minor_version$')],
@@ -39,8 +71,10 @@ imebraModule = Extension('_imebra',
                     extra_compile_args = compileFlags,
                     include_dirs= ["./library/include"])
 
+# Define the package
+#-------------------
 setup (name = 'imebra',
-       version = '1.0',
+       version = '$major_version$.$minor_version$',
        description = 'Imebra library for Python',
        author = 'Paolo Brandoli',
        author_email = 'paolo@binarno.com',
