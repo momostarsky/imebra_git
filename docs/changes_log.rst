@@ -6,6 +6,12 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Implemented enhancement #161 (Add the full license text in the project root folder, add a short link to the license in each 
+  source file) as per SOP :ref:`DEVENH_2`
+
+Version 4.0.7.1
+---------------
+
 - Implemented enhancement #153 (Modify swig.i so a Python wrapper can be generated with swig) as per SOP :ref:`DEVENH_2`
 - Implemented enhancement #154 (Add a objective-c helper that return an UIImage or NSImage) as per SOP :ref:`DEVENH_2`
 - Fixed bug #155 (Empty embedded datasets should not be written) as per SOP FIXBUG/2
