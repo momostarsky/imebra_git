@@ -6,10 +6,15 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Fixed bug #162 (Dataset: useless copy when inserting non encapsulated images) as per SOP :ref:`FIXBUG_2`
+
+Version 4.0.8.1
+---------------
+
 - Implemented enhancement #153 (Modify swig.i so a Python wrapper can be generated with swig) as per SOP :ref:`DEVENH_2`
 - Implemented enhancement #154 (Add a objective-c helper that return an UIImage or NSImage) as per SOP :ref:`DEVENH_2`
-- Fixed bug #155 (Empty embedded datasets should not be written) as per SOP FIXBUG/2
-- Fixed bug #156 (getSequenceItem throws MissingDataElementError instead of MissingItemError) as per SOP FIXBUG/2
+- Fixed bug #155 (Empty embedded datasets should not be written) as per SOP :ref:`FIXBUG_2`
+- Fixed bug #156 (getSequenceItem throws MissingDataElementError instead of MissingItemError) as per SOP :ref:`FIXBUG_2`
 
 Version 4.0.7.1
 ---------------
