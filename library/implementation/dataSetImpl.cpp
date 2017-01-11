@@ -537,13 +537,9 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
         if(!bEncapsulated && frameNumber != 0)
         {
             std::shared_ptr<handlers::writingDataHandlerRaw> copyUncompressed(getWritingDataHandlerRaw(groupId, 0, tagId, firstBufferId));
-            copyUncompressed->setSize((frameNumber + 1) * uncompressedImage->size());
+            copyUncompressed->setSize(uncompressedImage->size());
             std::shared_ptr<handlers::readingDataHandlerRaw> originalUncompressed(getReadingDataHandlerRaw(groupId, 0, tagId, firstBufferId));
-
             originalUncompressed->copyTo(copyUncompressed->getMemoryBuffer(), copyUncompressed->getSize());
-            std::uint8_t* pSource = uncompressedImage->data();
-            std::uint8_t* pDest = copyUncompressed->getMemoryBuffer() + (frameNumber * uncompressedImage->size());
-            ::memcpy(pDest, pSource, uncompressedImage->size());
         }
     }
 
