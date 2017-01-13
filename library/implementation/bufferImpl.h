@@ -78,7 +78,6 @@ public:
 	///  when the application requires the access to the
 	///  buffer.
 	///
-    /// @param tagVR  the buffer's data type
 	/// @param originalStream the stream from which the content
 	///                      can be read
 	/// @param bufferPosition the first stream's byte that 
@@ -164,6 +163,16 @@ public:
 
     std::shared_ptr<handlers::writingDataHandlerNumericBase> getWritingDataHandlerNumeric(tagVR_t tagVR, std::uint32_t size = 0);
     //@}
+
+    /// \brief Add a new block of memory to the current data.
+    ///
+    /// The appended block of memory should not be modified
+    /// after it has been appended.
+    ///
+    /// @param pMemory the memory to append
+    ///
+    ///////////////////////////////////////////////////////////
+    void appendMemory(std::shared_ptr<const memory> pMemory);
 
 
 	///////////////////////////////////////////////////////////
@@ -284,7 +293,26 @@ public:
 
 protected:
 
+    /// \brief Returns a memory block containing the buffer
+    ///        data.
+    ///
+    /// If a lazy load is enabled and the data is available on
+    /// a stream then load the data into a temporary block of
+    /// memory and return it.
+    ///
+    /// @return a block of memory containing the buffer's data
+    ///
+    ///////////////////////////////////////////////////////////
     std::shared_ptr<const memory> getLocalMemory() const;
+
+    /// \brief Join all the appended memory blocks into a
+    ///        single block.
+    ///
+    /// @return a single memory block containing all the
+    ///         appended data
+    ///
+    ///////////////////////////////////////////////////////////
+    std::shared_ptr<const memory> joinMemory() const;
 
 	//
 	// Attributes
@@ -293,7 +321,7 @@ protected:
 private:
 	// The memory buffer
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<const memory> m_memory;
+    mutable std::list<std::shared_ptr<const memory> > m_memory;
 
     mutable std::mutex m_mutex;
 

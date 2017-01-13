@@ -35,6 +35,7 @@ $fileHeader$
 #include "../include/imebra/exceptions.h"
 
 #include <vector>
+#include <string.h>
 
 
 namespace imebra
@@ -124,15 +125,61 @@ std::shared_ptr<const memory> buffer::getLocalMemory() const
         return localMemory;
     }
 
-    if(m_memory == 0)
+    return joinMemory();
+
+    IMEBRA_FUNCTION_END();
+}
+
+std::shared_ptr<const memory> buffer::joinMemory() const
+{
+    IMEBRA_FUNCTION_START();
+
+    if(m_memory.empty())
     {
         return std::make_shared<memory>();
     }
 
-    return m_memory;
+    if(m_memory.size() == 1 && (m_memory.front()->size() & 1) == 0)
+    {
+        return m_memory.front();
+    }
+
+    size_t totalSize(0);
+    for(std::list<std::shared_ptr<const memory> >::const_iterator scanMemory(m_memory.begin()), endMemory(m_memory.end());
+        scanMemory != endMemory;
+        ++scanMemory)
+    {
+        totalSize += (*scanMemory)->size();
+    }
+    if((totalSize & 1) == 1)
+    {
+        totalSize++;
+    }
+
+    std::shared_ptr<memory> newMemory(std::make_shared<memory>(totalSize));
+
+    size_t copyIndex(0);
+    for(std::list<std::shared_ptr<const memory> >::const_iterator scanMemory(m_memory.begin()), endMemory(m_memory.end());
+        scanMemory != endMemory;
+        ++scanMemory)
+    {
+        ::memcpy(newMemory->data() + copyIndex, (*scanMemory)->data(), (*scanMemory)->size());
+        copyIndex += (*scanMemory)->size();
+    }
+
+    if((copyIndex & 1) == 1)
+    {
+        newMemory->data()[copyIndex] = 0;
+    }
+
+    m_memory.clear();
+    m_memory.push_back(newMemory);
+
+    return m_memory.front();
 
     IMEBRA_FUNCTION_END();
 }
+
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -491,6 +538,24 @@ std::shared_ptr<handlers::writingDataHandlerNumericBase> buffer::getWritingDataH
 }
 
 
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+// Append a block of memory
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+void buffer::appendMemory(std::shared_ptr<const memory> pMemory)
+{
+    IMEBRA_FUNCTION_START();
+
+    std::lock_guard<std::mutex> lock(m_mutex);
+
+    m_memory.push_back(pMemory);
+
+    IMEBRA_FUNCTION_END();
+}
+
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -512,16 +577,18 @@ size_t buffer::getBufferSizeBytes() const
 		return m_originalBufferLength;
 	}
 
-	// The buffer has no memory
-	///////////////////////////////////////////////////////////
-	if(m_memory == 0)
-	{
-		return 0;
-	}
+    size_t totalSize(0);
+    for(std::list<std::shared_ptr<const memory> >::const_iterator scanMemory(m_memory.begin()), endMemory(m_memory.end()); scanMemory != endMemory; ++scanMemory)
+    {
+        totalSize += (*scanMemory)->size();
+    }
 
-	// Return the memory's size
-	///////////////////////////////////////////////////////////
-	return m_memory->size();
+    if((totalSize & 1) == 1)
+    {
+        ++totalSize;
+    }
+
+    return totalSize;
 
     IMEBRA_FUNCTION_END();
 }
@@ -540,7 +607,8 @@ void buffer::commit(std::shared_ptr<memory> newMemory, const charsetsList::tChar
 
     std::lock_guard<std::mutex> lock(m_mutex);
 
-    m_memory = newMemory;
+    m_memory.clear();
+    m_memory.push_back(newMemory);
     m_originalStream.reset();
     m_charsetsList = newCharsetsList;
 
@@ -561,7 +629,8 @@ void buffer::commit(std::shared_ptr<memory> newMemory)
 
     std::lock_guard<std::mutex> lock(m_mutex);
 
-    m_memory = newMemory;
+    m_memory.clear();
+    m_memory.push_back(newMemory);
     m_originalStream.reset();
 
     IMEBRA_FUNCTION_END();

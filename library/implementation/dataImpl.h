@@ -103,6 +103,10 @@ public:
 	///////////////////////////////////////////////////////////
     size_t getBufferSize(size_t bufferId) const;
 
+    std::shared_ptr<buffer> getBuffer(size_t bufferId) const;
+
+    std::shared_ptr<buffer> getBufferCreate(size_t bufferId);
+
 	/// \brief Get a data handler for the specified buffer.
 	///
 	/// handlers::dataHandler can be used to read, write 

@@ -22,6 +22,7 @@ $fileHeader$
 #include "transformsChainImpl.h"
 #include "transformHighBitImpl.h"
 #include "modalityVOILUTImpl.h"
+#include "bufferImpl.h"
 #include <iostream>
 #include <string.h>
 
@@ -510,7 +511,7 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
     {
         std::shared_ptr<streamWriter> outputStream;
         std::shared_ptr<memory> uncompressedImage(std::make_shared<memory>());
-        if(bEncapsulated || frameNumber == 0)
+        if(bEncapsulated)
         {
             outputStream = getStreamWriter(groupId, 0, tagId, firstBufferId, dataHandlerType);
         }
@@ -532,14 +533,12 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
             bSubSampledX, bSubSampledY,
             bInterleaved,
             b2complement);
+
         outputStream->flushDataBuffer();
 
-        if(!bEncapsulated && frameNumber != 0)
+        if(!bEncapsulated)
         {
-            std::shared_ptr<handlers::writingDataHandlerRaw> copyUncompressed(getWritingDataHandlerRaw(groupId, 0, tagId, firstBufferId));
-            copyUncompressed->setSize(uncompressedImage->size());
-            std::shared_ptr<handlers::readingDataHandlerRaw> originalUncompressed(getReadingDataHandlerRaw(groupId, 0, tagId, firstBufferId));
-            originalUncompressed->copyTo(copyUncompressed->getMemoryBuffer(), copyUncompressed->getSize());
+            getTagCreate(groupId, 0, tagId, dataHandlerType)->getBufferCreate(firstBufferId)->appendMemory(uncompressedImage);
         }
     }
 
