@@ -211,6 +211,7 @@ The author can be contacted by email at info@binarno.com or by mail at
 			<fileset dir="${build_release}/docs/html" />
 		</copy>
 		<copy todir="${source_distribution}" file="${build_release}/readme.rst" />
+		<copy todir="${source_distribution}" file="${build_release}/license.rst" />
 		<copy todir="${source_distribution}" file="${build_release}/setup.py" />
 	</target>
 
