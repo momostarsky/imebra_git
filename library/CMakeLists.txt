@@ -12,6 +12,9 @@ set(CMAKE_CONFIGURATION_TYPES Debug Release)
 
 set(IMEBRA_LIBRARIES "")
 
+
+
+
 # Select the proper charset conversion libraries according to the charset conversion method
 #------------------------------------------------------------------------------------------
 if(IMEBRA_CHARSET_CONVERSION MATCHES ICONV)
@@ -32,16 +35,16 @@ elseif(IMEBRA_CHARSET_CONVERSION MATCHES WINDOWS)
     message("Using WINDOWS CHARSET CONVERSION")
     add_definitions(-DIMEBRA_USE_WINDOWS_CHARSET)
 else(IMEBRA_CHARSET_CONVERSION MATCHES ICONV)
-    if(WIN32)
-        message("Using WINDOWS CHARSET CONVERSION (default)")
-        add_definitions(-DIMEBRA_USE_WINDOWS_CHARSET)
-    else(WIN32)
-        message("Using ICONV (default)")
-        add_definitions(-DIMEBRA_USE_ICONV)
-        if(APPLE)
-            set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} iconv)
-        endif(APPLE)
-    endif(WIN32)
+        if(WIN32)
+            message("Using WINDOWS CHARSET CONVERSION (default)")
+            add_definitions(-DIMEBRA_USE_WINDOWS_CHARSET)
+        else(WIN32)
+            message("Using ICONV (default)")
+            add_definitions(-DIMEBRA_USE_ICONV)
+            if(APPLE)
+                set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} iconv)
+            endif(APPLE)
+        endif(WIN32)
 endif(IMEBRA_CHARSET_CONVERSION MATCHES ICONV)
 
 # For IPhone build a static library, otherwise build a dynamic library
@@ -53,17 +56,17 @@ endif(NOT DEFINED IMEBRA_SHARED_STATIC)
 if(APPLE)
     set(IMEBRA_OBJC 1)
     if(IOS)
-        set(IMEBRA_SHARED_STATIC "STATIC")
-        if("${IOS}" MATCHES "PHONE")
-            exec_program(xcrun ARGS --sdk iphoneos --show-sdk-path OUTPUT_VARIABLE CMAKE_OSX_SYSROOT)
-            set (CMAKE_OSX_ARCHITECTURES armv7 armv7s arm64)
-        elseif("${IOS}" MATCHES "SIMULATOR")
-            exec_program(xcrun ARGS --sdk iphonesimulator --show-sdk-path OUTPUT_VARIABLE CMAKE_OSX_SYSROOT)
-            set (CMAKE_OSX_ARCHITECTURES i386 x86_64)
-        else("${IOS}" MATCHES "PHONE")
-            message (FATAL_ERROR "Set IOS to PHONE or SIMULATOR")
-        endif("${IOS}" MATCHES "PHONE")
-        message ("IOS SDK ROOT: ${CMAKE_OSX_SYSROOT}")
+    set(IMEBRA_SHARED_STATIC "STATIC")
+    if("${IOS}" MATCHES "PHONE")
+        exec_program(xcrun ARGS --sdk iphoneos --show-sdk-path OUTPUT_VARIABLE CMAKE_OSX_SYSROOT)
+        set (CMAKE_OSX_ARCHITECTURES armv7 armv7s arm64)
+    elseif("${IOS}" MATCHES "SIMULATOR")
+        exec_program(xcrun ARGS --sdk iphonesimulator --show-sdk-path OUTPUT_VARIABLE CMAKE_OSX_SYSROOT)
+        set (CMAKE_OSX_ARCHITECTURES i386 x86_64)
+    else("${IOS}" MATCHES "PHONE")
+        message (FATAL_ERROR "Set IOS to PHONE or SIMULATOR")
+    endif("${IOS}" MATCHES "PHONE")
+    message ("IOS SDK ROOT: ${CMAKE_OSX_SYSROOT}")
     endif(IOS)
 endif(APPLE)
 
@@ -76,7 +79,6 @@ file(GLOB imebra_include "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h")
 file(GLOB imebra_src "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 file(GLOB imebra_implementation_src "${CMAKE_CURRENT_SOURCE_DIR}/implementation/*.cpp")
 file(GLOB imebra_implementation_include "${CMAKE_CURRENT_SOURCE_DIR}/implementation/*.h")
-
 # Add OBJC sources
 #-----------------
 set(imebra_obj_src "")
@@ -110,10 +112,8 @@ if("${IMEBRA_OBJC}" STREQUAL "1")
         set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} gnustep-base objc)
     endif(APPLE)
 endif("${IMEBRA_OBJC}" STREQUAL "1")
-
 target_link_libraries(imebra ${IMEBRA_LIBRARIES})
 target_include_directories(imebra PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
-
 # Add flags specific to the compiler
 #-----------------------------------
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
@@ -141,9 +141,6 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} Kernel32)
 
 endif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-
-
-
 
 # Set the library version from IMEBRA_MAJOR_VERSION, IMEBRA_MINOR_VERSION,
 #  & IMEBRA_REVISION
