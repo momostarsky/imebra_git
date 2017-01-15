@@ -6,6 +6,8 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Implemented enhancement #161 (Add the full license text in the project root folder, add a short link to the license in each 
+  source file) as per SOP :ref:`DEVENH_2`
 - Fixed bug #162 (Dataset: useless copy when inserting non encapsulated images) as per SOP :ref:`FIXBUG_2`
 
 Version 4.0.8.1

@@ -63,7 +63,17 @@ def main():
     enumeration_file = open(include_folder + '/tagsEnumeration.h', 'w')
     enumeration_file.write(
         '/*\n'
-        '$fileHeader$\n'
+        '/*\n'
+        'Copyright 2005 - 2017 by Paolo Brandoli/Binarno s.p.\n'
+        '\n'
+        'Imebra is available for free under the GNU General Public License.\n'
+        '\n'
+        'The full text of the license is available in the file license.rst\n'
+        ' in the project root folder.\n'
+        '\n'
+        'If you do not want to be bound by the GPL terms (such as the requirement\n'
+        ' that your application must also be GPL), you may purchase a commercial\n'
+        ' license for Imebra from the Imebra’s website (http://imebra.com).\n'
         '*/\n'
         '/* This file was automatically generated\n'
         '*/\n'
