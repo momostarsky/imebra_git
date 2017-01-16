@@ -76,8 +76,8 @@ size_t drawBitmap::getBitmap(const std::shared_ptr<const image>& sourceImage, dr
         return memorySize;
     }
 
-    // This chain contains all the necessary transforms, including color transforms
-    //  and high bit shift
+    // This chain will contain all the necessary transforms, including color
+    //  transforms and high bit shift
     ///////////////////////////////////////////////////////////////////////////////
     transforms::transformsChain chain;
 
@@ -86,33 +86,32 @@ size_t drawBitmap::getBitmap(const std::shared_ptr<const image>& sourceImage, dr
         chain.addTransform(m_userTransforms);
     }
 
-    // Allocate the transforms that obtain an RGB24 image
+    // Allocate the transforms that obtain an RGB image
     ///////////////////////////////////////////////////////////////////////////////
-    std::string initialColorSpace;
-    std::uint32_t highBit = 7;
-    bitDepth_t depth = bitDepth_t::depthU8;
-    if(chain.isEmpty())
+    std::shared_ptr<const image> chainEndImage(sourceImage);
+    if(!chain.isEmpty())
     {
-        initialColorSpace = sourceImage->getColorSpace();
-        highBit = sourceImage->getHighBit();
-        depth = sourceImage->getDepth();
+        chainEndImage = chain.allocateOutputImage(sourceImage->getDepth(),
+                                                  sourceImage->getColorSpace(),
+                                                  sourceImage->getHighBit(),
+                                                  sourceImage->getPalette(),
+                                                  1, 1);
     }
-    else
-    {
-        std::shared_ptr<image> startImage(chain.allocateOutputImage(sourceImage->getDepth(),
-                                                                                 sourceImage->getColorSpace(),
-                                                                                 sourceImage->getHighBit(),
-                                                                                 sourceImage->getPalette(),
-                                                                                 1, 1));
-        highBit = startImage->getHighBit();
-        depth = startImage->getDepth();
-        initialColorSpace = startImage->getColorSpace();
-    }
-    std::shared_ptr<transforms::colorTransforms::colorTransformsFactory> pColorTransformsFactory(transforms::colorTransforms::colorTransformsFactory::getColorTransformsFactory());
-    std::shared_ptr<transforms::transform> rgbColorTransform(pColorTransformsFactory->getTransform(initialColorSpace, "RGB"));
-    chain.addTransform(rgbColorTransform);
 
-    if(highBit != 7 || depth != bitDepth_t::depthU8)
+    std::shared_ptr<transforms::colorTransforms::colorTransformsFactory> pColorTransformsFactory(transforms::colorTransforms::colorTransformsFactory::getColorTransformsFactory());
+    std::shared_ptr<transforms::transform> rgbColorTransform(pColorTransformsFactory->getTransform(chainEndImage->getColorSpace(), "RGB"));
+
+    if(rgbColorTransform != 0 && !rgbColorTransform->isEmpty())
+    {
+        chain.addTransform(rgbColorTransform);
+        chainEndImage = chain.allocateOutputImage(sourceImage->getDepth(),
+                                                  sourceImage->getColorSpace(),
+                                                  sourceImage->getHighBit(),
+                                                  sourceImage->getPalette(),
+                                                  1, 1);
+    }
+
+    if(chainEndImage->getHighBit() != 7 || chainEndImage->getDepth() != bitDepth_t::depthU8)
     {
         std::shared_ptr<transforms::transformHighBit> highBitTransform(std::make_shared<transforms::transformHighBit>());
         chain.addTransform(highBitTransform);
