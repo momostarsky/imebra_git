@@ -80,11 +80,7 @@ size_t drawBitmap::getBitmap(const std::shared_ptr<const image>& sourceImage, dr
     //  transforms and high bit shift
     ///////////////////////////////////////////////////////////////////////////////
     transforms::transformsChain chain;
-
-    if(m_userTransforms != 0 && !m_userTransforms->isEmpty())
-    {
-        chain.addTransform(m_userTransforms);
-    }
+    chain.addTransform(m_userTransforms);
 
     // Allocate the transforms that obtain an RGB image
     ///////////////////////////////////////////////////////////////////////////////
