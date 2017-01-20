@@ -305,6 +305,9 @@ std::shared_ptr<handlers::readingDataHandler> buffer::getReadingDataHandler(tagV
 
     case tagVR_t::SQ:
         IMEBRA_THROW(std::logic_error, "Cannot retrieve a SQ data handler");
+
+    default:
+        IMEBRA_THROW(std::logic_error, "The buffer was created with an invalid buffer type");
     }
 
 	IMEBRA_FUNCTION_END();
@@ -417,6 +420,9 @@ std::shared_ptr<handlers::writingDataHandler> buffer::getWritingDataHandler(tagV
 
     case tagVR_t::SQ:
         IMEBRA_THROW(std::logic_error, "Cannot retrieve a SQ data handler");
+
+    default:
+        IMEBRA_THROW(std::logic_error, "The buffer was created with an invalid buffer type");
     }
 
     IMEBRA_FUNCTION_END();

@@ -7,6 +7,7 @@ Version |release| (this version)
 --------------------------------
 
 - Fixed bug #163 (DrawBitmap fails with 16 bits palette images) as per SOP :ref:`FIXBUG_2`
+- Implemented enhancement #164 (Remove warnings "control reaches end of non-void function" in bufferImpl.cpp) as per SOP :ref:`DEVENH_2`
 
 Version 4.0.9.1
 ---------------
