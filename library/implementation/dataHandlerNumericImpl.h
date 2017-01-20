@@ -461,7 +461,7 @@ public:
             {
                 if(scanCol < sourceWidth && scanRow < sourceHeight)
                 {
-                    pDestRowAddress[(scanCol - sourceStartCol) / destSubSampleX] += (*pSourceRowScan) * 8 + 1;
+                    pDestRowAddress[(scanCol - sourceStartCol) / destSubSampleX] += (std::int32_t)((*pSourceRowScan) * 8 + 1);
                     pSourceRowScan += sourceNumChannels;
                 }
             }
