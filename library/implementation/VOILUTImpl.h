@@ -191,7 +191,7 @@ public:
 
             for(std::uint32_t scanPixels(inputWidth); scanPixels != 0; --scanPixels)
             {
-                outputValue = 0.5 + ((std::int64_t)*(pInputMemory++) - minValue) * ratio + (double)outputHandlerMinValue ;
+                outputValue = 0.5f + (double)((std::int64_t)*(pInputMemory++) - minValue) * ratio + (double)outputHandlerMinValue ;
                 if(outputValue <= outputMin)
                 {
                     *pOutputMemory++ = (outputType)outputHandlerMinValue;
