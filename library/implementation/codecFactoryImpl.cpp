@@ -20,9 +20,12 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "configurationImpl.h"
 #include "exceptionImpl.h"
 #include "streamReaderImpl.h"
-#include "codecImpl.h"
-#include "jpegCodecImpl.h"
-#include "dicomCodecImpl.h"
+#include "streamCodecImpl.h"
+#include "imageCodecImpl.h"
+#include "jpegStreamCodecImpl.h"
+#include "dicomStreamCodecImpl.h"
+#include "jpegImageCodecImpl.h"
+#include "dicomImageCodecImpl.h"
 #include "../include/imebra/exceptions.h"
 
 namespace imebra
@@ -60,9 +63,11 @@ codecFactory::codecFactory(): m_maximumImageWidth(MAXIMUM_IMAGE_WIDTH), m_maximu
 {
     IMEBRA_FUNCTION_START();
 
-    registerCodec(std::make_shared<dicomCodec>());
-    registerCodec(std::make_shared<jpegCodec>());
+    registerStreamCodec(codecType_t::dicom, std::make_shared<dicomStreamCodec>());
+    registerStreamCodec(codecType_t::jpeg, std::make_shared<jpegStreamCodec>());
 
+    registerImageCodec(std::make_shared<jpegImageCodec>());
+    registerImageCodec(std::make_shared<dicomImageCodec>());
 
     IMEBRA_FUNCTION_END();
 }
@@ -77,16 +82,48 @@ codecFactory::codecFactory(): m_maximumImageWidth(MAXIMUM_IMAGE_WIDTH), m_maximu
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void codecFactory::registerCodec(std::shared_ptr<codec> pCodec)
+void codecFactory::registerStreamCodec(codecType_t codecType, std::shared_ptr<streamCodec> pCodec)
 {
     IMEBRA_FUNCTION_START();
 
-	if(pCodec == 0)
+    m_streamCodecs[codecType] = pCodec;
+
+	IMEBRA_FUNCTION_END();
+}
+
+void codecFactory::registerImageCodec(std::shared_ptr<imageCodec> pCodec)
+{
+    IMEBRA_FUNCTION_START();
+
+    m_imageCodecs.push_back(pCodec);
+
+    IMEBRA_FUNCTION_END();
+
+}
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
+// Retrieve a codec that can handle the specified
+//  transfer syntax
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+std::shared_ptr<const imageCodec> codecFactory::getImageCodec(const std::string& transferSyntax)
+{
+    IMEBRA_FUNCTION_START();
+
+    for(std::list<std::shared_ptr<const imageCodec> >::iterator scanCodecs(m_imageCodecs.begin()); scanCodecs != m_imageCodecs.end(); ++scanCodecs)
 	{
-		return;
+		if((*scanCodecs)->canHandleTransferSyntax(transferSyntax))
+		{
+            return *scanCodecs;
+		}
 	}
 
-	m_codecsList.push_back(pCodec);
+    IMEBRA_THROW(DataSetUnknownTransferSyntaxError, "None of the codecs support the specified transfer syntax");
 
 	IMEBRA_FUNCTION_END();
 }
@@ -102,25 +139,14 @@ void codecFactory::registerCodec(std::shared_ptr<codec> pCodec)
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<codec> codecFactory::getCodec(const std::string& transferSyntax)
+std::shared_ptr<const streamCodec> codecFactory::getStreamCodec(codecType_t codecType)
 {
     IMEBRA_FUNCTION_START();
 
-	std::shared_ptr<codecFactory> pFactory(getCodecFactory());
+    return m_streamCodecs[codecType];
 
-	for(std::list<std::shared_ptr<codec> >::iterator scanCodecs=pFactory->m_codecsList.begin(); scanCodecs!=pFactory->m_codecsList.end(); ++scanCodecs)
-	{
-		if((*scanCodecs)->canHandleTransferSyntax(transferSyntax))
-		{
-			return (*scanCodecs)->createCodec();
-		}
-	}
-
-    IMEBRA_THROW(DataSetUnknownTransferSyntaxError, "None of the codecs support the specified transfer syntax");
-
-	IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
-
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -161,28 +187,20 @@ std::shared_ptr<dataSet> codecFactory::load(std::shared_ptr<streamReader> pStrea
 	// Copy the list of codecs in a local list so we don't have
 	//  to lock the object for a long time
 	///////////////////////////////////////////////////////////
-	std::list<std::shared_ptr<codec> > localCodecsList;
-	std::shared_ptr<codecFactory> pFactory(getCodecFactory());
+    std::shared_ptr<dataSet> pDataSet;
 	{
-		for(std::list<std::shared_ptr<codec> >::iterator scanCodecs=pFactory->m_codecsList.begin(); scanCodecs!=pFactory->m_codecsList.end(); ++scanCodecs)
+        for(std::map<codecType_t, std::shared_ptr<const streamCodec> >::const_iterator scanCodecs(m_streamCodecs.begin()); scanCodecs != m_streamCodecs.end(); ++scanCodecs)
 		{
-			std::shared_ptr<codec> copyCodec((*scanCodecs)->createCodec());
-			localCodecsList.push_back(copyCodec);
-		}
-	}
-
-	std::shared_ptr<dataSet> pDataSet;
-	for(std::list<std::shared_ptr<codec> >::iterator scanCodecs=localCodecsList.begin(); scanCodecs != localCodecsList.end() && pDataSet == 0; ++scanCodecs)
-	{
-		try
-		{
-			return (*scanCodecs)->read(pStream, maxSizeBufferLoad);
-		}
-        catch(CodecWrongFormatError& /* e */)
-		{
-            exceptionsManagerGetter::getExceptionsManagerGetter().getExceptionsManager().getMessage(); // Reset the messages stack
-			continue;
-		}
+            try
+            {
+                return scanCodecs->second->read(pStream, maxSizeBufferLoad);
+            }
+            catch(CodecWrongFormatError& /* e */)
+            {
+                exceptionsManagerGetter::getExceptionsManagerGetter().getExceptionsManager().getMessage(); // Reset the messages stack
+                continue;
+            }
+        }
 	}
 
 	if(pDataSet == 0)

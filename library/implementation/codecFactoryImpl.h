@@ -21,7 +21,10 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #define imebraCodecFactory_82307D4A_6490_4202_BF86_93399D32721E__INCLUDED_
 
 #include <memory>
+#include <map>
 #include <list>
+#include <functional>
+#include "../include/imebra/codecFactory.h"
 #include "dataSetImpl.h"
 
 
@@ -43,7 +46,9 @@ namespace codecs
 ///
 /// @{
 
-class codec;
+class streamCodec;
+
+class imageCodec;
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -68,18 +73,22 @@ class codecFactory
 
 public:
 
+    typedef std::function<std::shared_ptr<streamCodec>()> createCodecFunction_t;
+
 	/// \brief Register a new codec.
 	///
 	/// This function is called by the framework during the
     ///  library's startup, in order to register all the Imebra
-	///  codecs.
+    ///  stream codecs.
     /// The codecs distributed with the Imebra library are
 	///  automatically registered.
 	///
 	/// @param pCodec a pointer to the codec to register
 	///
 	///////////////////////////////////////////////////////////
-	void registerCodec(std::shared_ptr<codec> pCodec);
+    void registerStreamCodec(codecType_t codecType, std::shared_ptr<streamCodec> pCodec);
+
+    void registerImageCodec(std::shared_ptr<imageCodec> pCodec);
 
 	/// \brief Get a pointer to the codec that can handle
 	///        the requested transfer syntax.
@@ -100,7 +109,9 @@ public:
 	///         registerCodec()
 	///
 	///////////////////////////////////////////////////////////
-    static std::shared_ptr<codec> getCodec(const std::string& transferSyntax);
+    std::shared_ptr<const streamCodec> getStreamCodec(codecType_t codecType);
+
+    std::shared_ptr<const imageCodec> getImageCodec(const std::string& transferSyntax);
 
 	/// \brief Retrieve the only reference to the codecFactory
 	///         instance.
@@ -172,7 +183,9 @@ public:
 protected:
 	// The list of the registered codecs
 	///////////////////////////////////////////////////////////
-	std::list<std::shared_ptr<codec> > m_codecsList;
+    std::map<codecType_t, std::shared_ptr<const streamCodec> > m_streamCodecs;
+
+    std::list<std::shared_ptr<const imageCodec> > m_imageCodecs;
 
     // Maximum allowed image size
     ///////////////////////////////////////////////////////////

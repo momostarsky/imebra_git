@@ -19,7 +19,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "exceptionImpl.h"
 #include "streamReaderImpl.h"
 #include "streamWriterImpl.h"
-#include "codecImpl.h"
+#include "streamCodecImpl.h"
 #include "dataSetImpl.h"
 #include "codecFactoryImpl.h"
 #include "../include/imebra/exceptions.h"
@@ -44,7 +44,7 @@ namespace codecs
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<dataSet> codec::read(std::shared_ptr<streamReader> pSourceStream, std::uint32_t maxSizeBufferLoad /* = 0xffffffff */)
+std::shared_ptr<dataSet> streamCodec::read(std::shared_ptr<streamReader> pSourceStream, std::uint32_t maxSizeBufferLoad /* = 0xffffffff */) const
 {
     IMEBRA_FUNCTION_START();
 
@@ -91,7 +91,7 @@ std::shared_ptr<dataSet> codec::read(std::shared_ptr<streamReader> pSourceStream
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void codec::write(std::shared_ptr<streamWriter> pDestStream, std::shared_ptr<dataSet> pSourceDataSet)
+void streamCodec::write(std::shared_ptr<streamWriter> pDestStream, std::shared_ptr<dataSet> pSourceDataSet) const
 {
     IMEBRA_FUNCTION_START();
 
@@ -105,33 +105,6 @@ void codec::write(std::shared_ptr<streamWriter> pDestStream, std::shared_ptr<dat
 
 	IMEBRA_FUNCTION_END();
 }
-
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Allocate a channel's memory
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-void channel::allocate(std::uint32_t width, std::uint32_t height)
-{
-    IMEBRA_FUNCTION_START();
-
-    m_width = width;
-    m_height = height;
-    m_bufferSize = width * height;
-    m_memory = std::make_shared<memory>(m_bufferSize * sizeof(std::int32_t) );
-    m_pBuffer = (std::int32_t*)(m_memory->data());
-
-    ::memset(m_pBuffer, 0, m_bufferSize * sizeof(std::int32_t));
-
-    IMEBRA_FUNCTION_END();
-}
-
-
 
 } // namespace codecs
 
