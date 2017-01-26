@@ -11,8 +11,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-/*! \file dicomCodec.h
-    \brief Declaration of the class dicomCodec.
+/*! \file dicomImageCodec.h
+    \brief Declaration of the class dicomImageCodec.
 
 */
 
@@ -63,7 +63,7 @@ struct dicomInformation
 ///////////////////////////////////////////////////////////
 /// \brief The Dicom codec.
 ///
-/// This class is used to decode and encode a DICOM stream.
+/// This class is used to decode and encode a DICOM image.
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////

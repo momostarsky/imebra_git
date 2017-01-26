@@ -11,8 +11,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-/*! \file dicomCodec.cpp
-    \brief Implementation of the class dicomCodec.
+/*! \file dicomStreamCodec.cpp
+    \brief Implementation of the class dicomStreamCodec.
 
 */
 

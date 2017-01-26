@@ -12,7 +12,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 */
 
 /*! \file dicomCodec.cpp
-    \brief Implementation of the class dicomCodec.
+    \brief Implementation of the class dicomImageCodec.
 
 */
 

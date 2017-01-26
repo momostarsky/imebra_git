@@ -11,8 +11,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-/*! \file jpegCodec.h
-    \brief Declaration of the class jpegCodec.
+/*! \file jpegImageCodec.h
+    \brief Declaration of the class jpegImageCodec.
 
 */
 
@@ -42,7 +42,7 @@ namespace codecs
 ///////////////////////////////////////////////////////////
 /// \brief The Jpeg codec.
 ///
-/// This class is used to decode and encode a Jpeg stream.
+/// This class is used to decode and encode a Jpeg image.
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////

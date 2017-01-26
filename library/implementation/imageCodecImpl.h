@@ -11,8 +11,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-/*! \file codec.h
-    \brief Declaration of the base class used by the codecs.
+/*! \file imageCodecImpl.h
+    \brief Declaration of the base class used by the image codecs.
 
 */
 
@@ -56,32 +56,14 @@ namespace codecs
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 /// \brief This is the base class for all the Imebra
-///         codecs.
+///         image codecs.
 ///
-/// When the Imebra codecs read the content of a file, they
-///  don't return a decompressed image: instead they build
-///  a DICOM structure in memory, with the image(s)
-///  embedded in it.
+/// An image codec is used to decompress an image stored
+///  in a DICOM dataset.
 ///
 /// A call to the dataSet::getImage() method will
 ///  return the decompressed image embedded into the dicom
 ///  structure.
-///
-/// E.G:
-///  A call to jpegCodec::read() will build a
-///   dataSet object with a jpeg image embedded in
-///   it.
-///  Your application should call 
-///   dataSet::getImage()in order to get the 
-///   decompressed image.
-///
-/// The same concept is used when your application must
-///  generate a file with a compressed image in it.
-/// Your application should:
-///  - allocate a dicom structure (see dataSet)
-///  - insert an image into the structure by calling
-///     dataSet::setImage()
-///  - generate the final file using the preferred codec.
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////

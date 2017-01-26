@@ -11,8 +11,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-/*! \file codec.cpp
-    \brief Implementation of the base class for the codecs.
+/*! \file streamCodecImpl.cpp
+    \brief Implementation of the base class for the stream codecs.
 
 */
 

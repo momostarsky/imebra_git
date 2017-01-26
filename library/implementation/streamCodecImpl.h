@@ -11,8 +11,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-/*! \file codec.h
-    \brief Declaration of the base class used by the codecs.
+/*! \file streamCodecImpl.h
+    \brief Declaration of the base class used by the stream codecs.
 
 */
 
@@ -55,16 +55,12 @@ namespace codecs
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 /// \brief This is the base class for all the Imebra
-///         codecs.
+///         stream codecs.
 ///
 /// When the Imebra codecs read the content of a file, they
 ///  don't return a decompressed image: instead they build
 ///  a DICOM structure in memory, with the image(s)
 ///  embedded in it.
-///
-/// A call to the dataSet::getImage() method will
-///  return the decompressed image embedded into the dicom
-///  structure.
 ///
 /// E.G:
 ///  A call to jpegCodec::read() will build a
