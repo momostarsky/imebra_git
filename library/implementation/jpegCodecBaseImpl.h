@@ -129,7 +129,7 @@ namespace jpeg
     {
         jpegInformation();
 
-        void reset(bool bCompression, imageQuality_t compQuality);
+        void reset(imageQuality_t compQuality);
 
         // Erase the allocated channels
         ///////////////////////////////////////////////////////////

@@ -508,11 +508,11 @@ namespace jpeg
 
 jpegInformation::jpegInformation()
 {
-    reset(true, imageQuality_t::veryHigh);
+    reset(imageQuality_t::veryHigh);
 }
 
 
-void jpegInformation::reset(bool bCompression, imageQuality_t compQuality)
+void jpegInformation::reset(imageQuality_t compQuality)
 {
     IMEBRA_FUNCTION_START();
 
@@ -584,22 +584,16 @@ void jpegInformation::reset(bool bCompression, imageQuality_t compQuality)
         {
             for(std::uint8_t col = 0; col < 8; ++col)
             {
-                if(bCompression)
+                std::uint32_t quant = (std::uint32_t) ((float)(pSourceTable[tableIndex]) * compQuantization);
+                if(quant < 1)
                 {
-                    std::uint32_t quant = (std::uint32_t) ((float)(pSourceTable[tableIndex]) * compQuantization);
-                    if(quant < 1)
-                    {
-                        quant = 1;
-                    }
-                    if(quant > 255)
-                    {
-                        quant = 255;
-                    }
-                    m_quantizationTable[resetQT][tableIndex++] = quant;
-                    continue;
+                    quant = 1;
                 }
-                m_quantizationTable[resetQT][tableIndex] = pSourceTable[tableIndex];
-                ++tableIndex;
+                if(quant > 255)
+                {
+                    quant = 255;
+                }
+                m_quantizationTable[resetQT][tableIndex++] = quant;
             }
         }
         recalculateQuantizationTables(resetQT);
@@ -607,62 +601,10 @@ void jpegInformation::reset(bool bCompression, imageQuality_t compQuality)
 
     // Reset the huffman tables
     ///////////////////////////////////////////////////////////
-    for(int DcAc = 0; DcAc < 2; ++DcAc)
+    for(int resetHT=0; resetHT < 16; ++resetHT)
     {
-        for(int resetHT=0; resetHT < 16; ++resetHT)
-        {
-            std::shared_ptr<huffmanTable> pHuffman;
-            const std::uint32_t* pLengthTable;
-            const std::uint32_t* pValuesTable;
-            if(DcAc == 0)
-            {
-                pHuffman = m_pHuffmanTableDC[resetHT];
-                if(resetHT == 0)
-                {
-                    pLengthTable=JpegBitsDcLuminance;
-                    pValuesTable=JpegValDcLuminance;
-                }
-                else
-                {
-                    pLengthTable=JpegBitsDcChrominance;
-                    pValuesTable=JpegValDcChrominance;
-                }
-            }
-            else
-            {
-                pHuffman=m_pHuffmanTableAC[resetHT];
-                if(resetHT == 0)
-                {
-                    pLengthTable=JpegBitsAcLuminance;
-                    pValuesTable=JpegValAcLuminance;
-                }
-                else
-                {
-                    pLengthTable=JpegBitsAcChrominance;
-                    pValuesTable=JpegValAcChrominance;
-                }
-            }
-
-            pHuffman->reset();
-            if(bCompression)
-            {
-                continue;
-            }
-
-            // Read the number of codes per length
-            /////////////////////////////////////////////////////////////////
-            std::uint32_t valueIndex = 0;
-            for(std::uint32_t scanLength = 0; scanLength != 16; ++scanLength)
-            {
-                pHuffman->setValuesPerLength(scanLength + 1, (std::uint32_t)pLengthTable[scanLength]);
-                for(std::uint32_t scanValues(0); scanValues < pLengthTable[scanLength]; ++scanValues)
-                {
-                    pHuffman->addOrderedValue(valueIndex, pValuesTable[valueIndex]);
-                    ++valueIndex;
-                }
-            }
-            pHuffman->calcHuffmanTables();
-        }
+        m_pHuffmanTableDC[resetHT]->reset();
+        m_pHuffmanTableAC[resetHT]->reset();
     }
 
     IMEBRA_FUNCTION_END();

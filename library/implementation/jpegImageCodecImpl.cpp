@@ -1005,7 +1005,7 @@ void jpegImageCodec::setImage(
     // Reset the internal variables
     ////////////////////////////////////////////////////////////////
     jpeg::jpegInformation information;
-    information.reset(true, imageQuality);
+    information.reset(imageQuality);
 
     information.m_bLossless = transferSyntax == "1.2.840.10008.1.2.4.57" ||  // lossless NH
             transferSyntax == "1.2.840.10008.1.2.4.70";    // lossless NH first order prediction
