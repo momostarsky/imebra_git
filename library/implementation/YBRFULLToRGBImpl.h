@@ -146,6 +146,22 @@ public:
     }
 };
 
+
+///////////////////////////////////////////////////////////
+/// \brief Transforms an image from the colorspace
+///         YBR_ICT into the color space RGB.
+///
+/// The input image has to have the colorspace YBR_ICT,
+///  while the output image is created by the transform
+///  and will have the colorspace RGB.
+///
+///////////////////////////////////////////////////////////
+class YBRICTToRGB: public YBRFULLToRGB
+{
+public:
+    virtual std::string getInitialColorSpace() const;
+};
+
 /// @}
 
 } // namespace colorTransforms
