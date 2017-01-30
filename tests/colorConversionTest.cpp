@@ -11,24 +11,28 @@ namespace tests
 
 TEST(colorConversion, RGB2YBRFULL)
 {
-    Image rgb(1, 1, bitDepth_t::depthU8, "RGB", 7);
-
+    for(int ict(0); ict != 2; ++ict)
     {
-        std::unique_ptr<WritingDataHandler> rgbHandler(rgb.getWritingDataHandler());
-        rgbHandler->setUnsignedLong(0, 255);
-        rgbHandler->setUnsignedLong(1, 255);
-        rgbHandler->setUnsignedLong(2, 255);
+        Image rgb(1, 1, bitDepth_t::depthU8, "RGB", 7);
+
+        {
+            std::unique_ptr<WritingDataHandler> rgbHandler(rgb.getWritingDataHandler());
+            rgbHandler->setUnsignedLong(0, 255);
+            rgbHandler->setUnsignedLong(1, 255);
+            rgbHandler->setUnsignedLong(2, 255);
+        }
+
+        std::string destinationColorSpace(ict == 0 ? "YBR_FULL" : "YBR_ICT");
+        std::unique_ptr<Transform> rgb2ybr(ColorTransformsFactory::getTransform("RGB", destinationColorSpace));
+
+        Image ybr(1, 1, bitDepth_t::depthU8, destinationColorSpace, 7);
+        rgb2ybr->runTransform(rgb, 0, 0, 1, 1, ybr, 0, 0);
+
+        std::unique_ptr<ReadingDataHandler> ybr1Handler(ybr.getReadingDataHandler());
+        ASSERT_EQ(255, ybr1Handler->getSignedLong(0));
+        ASSERT_EQ(128, ybr1Handler->getSignedLong(1));
+        ASSERT_EQ(128, ybr1Handler->getSignedLong(2));
     }
-
-    std::unique_ptr<Transform> rgb2ybr(ColorTransformsFactory::getTransform("RGB", "YBR_FULL"));
-
-    Image ybr(1, 1, bitDepth_t::depthU8, "YBR_FULL", 7);
-    rgb2ybr->runTransform(rgb, 0, 0, 1, 1, ybr, 0, 0);
-
-    std::unique_ptr<ReadingDataHandler> ybr1Handler(ybr.getReadingDataHandler());
-    ASSERT_EQ(255, ybr1Handler->getSignedLong(0));
-    ASSERT_EQ(128, ybr1Handler->getSignedLong(1));
-    ASSERT_EQ(128, ybr1Handler->getSignedLong(2));
 }
 
 
@@ -200,82 +204,94 @@ TEST(colorConversion, MONOCHROME22RGB)
 
 TEST(colorConversion, MONOCHROME2YBRFULL)
 {
-    Image monochrome2(3, 1, bitDepth_t::depthU8, "MONOCHROME2", 7);
-
+    for(int ict(0); ict != 2; ++ict)
     {
-        std::unique_ptr<WritingDataHandler> monochrome2Handler(monochrome2.getWritingDataHandler());
-        monochrome2Handler->setUnsignedLong(0, 255);
-        monochrome2Handler->setUnsignedLong(1, 254);
-        monochrome2Handler->setUnsignedLong(2, 253);
+        Image monochrome2(3, 1, bitDepth_t::depthU8, "MONOCHROME2", 7);
+
+        {
+            std::unique_ptr<WritingDataHandler> monochrome2Handler(monochrome2.getWritingDataHandler());
+            monochrome2Handler->setUnsignedLong(0, 255);
+            monochrome2Handler->setUnsignedLong(1, 254);
+            monochrome2Handler->setUnsignedLong(2, 253);
+        }
+
+        std::string destinationColorSpace(ict == 0 ? "YBR_FULL" : "YBR_ICT");
+        std::unique_ptr<Transform> toYBR(ColorTransformsFactory::getTransform("MONOCHROME2", destinationColorSpace));
+
+        Image ybr(3, 1, bitDepth_t::depthU8, destinationColorSpace, 7);
+        toYBR->runTransform(monochrome2, 0, 0, 3, 1, ybr, 0, 0);
+
+        std::unique_ptr<ReadingDataHandler> ybrHandler(ybr.getReadingDataHandler());
+        ASSERT_EQ(255, ybrHandler->getSignedLong(0));
+        ASSERT_EQ(128, ybrHandler->getSignedLong(1));
+        ASSERT_EQ(128, ybrHandler->getSignedLong(2));
+        ASSERT_EQ(254, ybrHandler->getSignedLong(3));
+        ASSERT_EQ(128, ybrHandler->getSignedLong(4));
+        ASSERT_EQ(128, ybrHandler->getSignedLong(5));
+        ASSERT_EQ(253, ybrHandler->getSignedLong(6));
+        ASSERT_EQ(128, ybrHandler->getSignedLong(7));
+        ASSERT_EQ(128, ybrHandler->getSignedLong(8));
     }
-
-    std::unique_ptr<Transform> toYBR(ColorTransformsFactory::getTransform("MONOCHROME2", "YBR_FULL"));
-
-    Image ybr(3, 1, bitDepth_t::depthU8, "YBR_FULL", 7);
-    toYBR->runTransform(monochrome2, 0, 0, 3, 1, ybr, 0, 0);
-
-    std::unique_ptr<ReadingDataHandler> ybrHandler(ybr.getReadingDataHandler());
-    ASSERT_EQ(255, ybrHandler->getSignedLong(0));
-    ASSERT_EQ(128, ybrHandler->getSignedLong(1));
-    ASSERT_EQ(128, ybrHandler->getSignedLong(2));
-    ASSERT_EQ(254, ybrHandler->getSignedLong(3));
-    ASSERT_EQ(128, ybrHandler->getSignedLong(4));
-    ASSERT_EQ(128, ybrHandler->getSignedLong(5));
-    ASSERT_EQ(253, ybrHandler->getSignedLong(6));
-    ASSERT_EQ(128, ybrHandler->getSignedLong(7));
-    ASSERT_EQ(128, ybrHandler->getSignedLong(8));
 }
 
 
 TEST(colorConversion, YBRFULL2MONOCHROME2)
 {
-    Image ybr(3, 1, bitDepth_t::depthU8, "YBR_FULL", 7);
-
+    for(int ict(0); ict != 2; ++ict)
     {
-        std::unique_ptr<WritingDataHandler> ybrHandler(ybr.getWritingDataHandler());
-        ybrHandler->setUnsignedLong(0, 255);
-        ybrHandler->setUnsignedLong(1, 128);
-        ybrHandler->setUnsignedLong(2, 128);
-        ybrHandler->setUnsignedLong(3, 254);
-        ybrHandler->setUnsignedLong(4, 128);
-        ybrHandler->setUnsignedLong(5, 128);
-        ybrHandler->setUnsignedLong(6, 253);
-        ybrHandler->setUnsignedLong(7, 128);
-        ybrHandler->setUnsignedLong(8, 128);
+        std::string sourceColorSpace(ict == 0 ? "YBR_FULL" : "YBR_ICT");
+        Image ybr(3, 1, bitDepth_t::depthU8, sourceColorSpace, 7);
+
+        {
+            std::unique_ptr<WritingDataHandler> ybrHandler(ybr.getWritingDataHandler());
+            ybrHandler->setUnsignedLong(0, 255);
+            ybrHandler->setUnsignedLong(1, 128);
+            ybrHandler->setUnsignedLong(2, 128);
+            ybrHandler->setUnsignedLong(3, 254);
+            ybrHandler->setUnsignedLong(4, 128);
+            ybrHandler->setUnsignedLong(5, 128);
+            ybrHandler->setUnsignedLong(6, 253);
+            ybrHandler->setUnsignedLong(7, 128);
+            ybrHandler->setUnsignedLong(8, 128);
+        }
+
+        std::unique_ptr<Transform> toMonochrome2(ColorTransformsFactory::getTransform(sourceColorSpace, "MONOCHROME2"));
+
+        Image monochrome2(3, 1, bitDepth_t::depthU8, "MONOCHROME2", 7);
+        toMonochrome2->runTransform(ybr, 0, 0, 3, 1, monochrome2, 0, 0);
+
+        std::unique_ptr<ReadingDataHandler> monochromeHandler(monochrome2.getReadingDataHandler());
+        ASSERT_EQ(255, monochromeHandler->getSignedLong(0));
+        ASSERT_EQ(254, monochromeHandler->getSignedLong(1));
+        ASSERT_EQ(253, monochromeHandler->getSignedLong(2));
     }
-
-    std::unique_ptr<Transform> toMonochrome2(ColorTransformsFactory::getTransform("YBR_FULL", "MONOCHROME2"));
-
-    Image monochrome2(3, 1, bitDepth_t::depthU8, "MONOCHROME2", 7);
-    toMonochrome2->runTransform(ybr, 0, 0, 3, 1, monochrome2, 0, 0);
-
-    std::unique_ptr<ReadingDataHandler> monochromeHandler(monochrome2.getReadingDataHandler());
-    ASSERT_EQ(255, monochromeHandler->getSignedLong(0));
-    ASSERT_EQ(254, monochromeHandler->getSignedLong(1));
-    ASSERT_EQ(253, monochromeHandler->getSignedLong(2));
 }
 
 
 TEST(colorConversion, YBRFULL2RGB)
 {
-    Image ybr(1, 1, bitDepth_t::depthU8, "YBR_FULL", 7);
-
+    for(int ict(0); ict != 2; ++ict)
     {
-        std::unique_ptr<WritingDataHandler> ybrHandler(ybr.getWritingDataHandler());
-        ybrHandler->setUnsignedLong(0, 255);
-        ybrHandler->setUnsignedLong(1, 128);
-        ybrHandler->setUnsignedLong(2, 128);
+        std::string sourceColorSpace(ict == 0 ? "YBR_FULL" : "YBR_ICT");
+        Image ybr(1, 1, bitDepth_t::depthU8, sourceColorSpace, 7);
+
+        {
+            std::unique_ptr<WritingDataHandler> ybrHandler(ybr.getWritingDataHandler());
+            ybrHandler->setUnsignedLong(0, 255);
+            ybrHandler->setUnsignedLong(1, 128);
+            ybrHandler->setUnsignedLong(2, 128);
+        }
+
+        std::unique_ptr<Transform> ybr2rgb(ColorTransformsFactory::getTransform(sourceColorSpace, "RGB"));
+
+        Image rgb1(1, 1, bitDepth_t::depthU8, "RGB", 7);
+        ybr2rgb->runTransform(ybr, 0, 0, 1, 1, rgb1, 0, 0);
+        std::unique_ptr<ReadingDataHandler> rgb1Handler(rgb1.getReadingDataHandler());
+
+        ASSERT_EQ(255, rgb1Handler->getSignedLong(0));
+        ASSERT_EQ(255, rgb1Handler->getSignedLong(1));
+        ASSERT_EQ(255, rgb1Handler->getSignedLong(2));
     }
-
-    std::unique_ptr<Transform> ybr2rgb(ColorTransformsFactory::getTransform("YBR_FULL", "RGB"));
-
-    Image rgb1(1, 1, bitDepth_t::depthU8, "RGB", 7);
-    ybr2rgb->runTransform(ybr, 0, 0, 1, 1, rgb1, 0, 0);
-    std::unique_ptr<ReadingDataHandler> rgb1Handler(rgb1.getReadingDataHandler());
-
-    ASSERT_EQ(255, rgb1Handler->getSignedLong(0));
-    ASSERT_EQ(255, rgb1Handler->getSignedLong(1));
-    ASSERT_EQ(255, rgb1Handler->getSignedLong(2));
 }
 
 
