@@ -11,6 +11,7 @@ Version |release| (this version)
 - Implemented enhancement #167 (Remove compilation warning conversion from float/double to int in dataHandlerNumericImpl.h) as per SOP :ref:`DEVENH_2`
 - Implemented enhancement #168 (Remove warning VOILUTImpl.h:194:82: conversion to 'double' from 'int64_t') as per SOP :ref:`DEVENH_2`
 - Implemented enhancement #169 (Separate the stream codecs from the image codecs) as per SOP :ref:`DEVENH_2`
+- Implemented enhancement #173 (Add the color spaces YBR_ICT and YBR_RCT) as per SOP :ref:`DEVENH_2`
 
 Version 4.0.9.1
 ---------------
