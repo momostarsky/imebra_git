@@ -36,6 +36,36 @@ TEST(colorConversion, RGB2YBRFULL)
 }
 
 
+TEST(colorConversion, RGB2YBRRCT)
+{
+    Image rgb(255, 255, bitDepth_t::depthU8, "RGB", 7);
+
+    {
+        std::unique_ptr<WritingDataHandler> rgbHandler(rgb.getWritingDataHandler());
+        for(int y = 0; y != 255; ++y)
+        {
+            for(int x = 0; x != 255; ++x)
+            {
+                rgbHandler->setUnsignedLong((x + y * 50) * 3, x);
+                rgbHandler->setUnsignedLong((x + y * 50) * 3 + 1, y);
+                rgbHandler->setUnsignedLong((x + y * 50) * 3 + 2, (y + x) / 2);
+            }
+        }
+    }
+
+
+    std::unique_ptr<Transform> rgb2ybr(ColorTransformsFactory::getTransform("RGB", "YBR_RCT"));
+    std::unique_ptr<Image> ybr(rgb2ybr->allocateOutputImage(rgb, 255, 255));
+    rgb2ybr->runTransform(rgb, 0, 0, 255, 255, *ybr, 0, 0);
+
+    std::unique_ptr<Transform> ybr2rgb(ColorTransformsFactory::getTransform("YBR_RCT", "RGB"));
+    std::unique_ptr<Image> rgb1(ybr2rgb->allocateOutputImage(*ybr, 255, 255));
+    ybr2rgb->runTransform(*ybr, 0, 0, 255, 255, *rgb1, 0, 0);
+
+    ASSERT_GE(1, compareImages(rgb, *rgb1)); // Account for ceiling/floor adjustment
+}
+
+
 TEST(colorConversion, RGB2YBRPARTIAL)
 {
     Image rgb(3, 1, bitDepth_t::depthU8, "RGB", 7);

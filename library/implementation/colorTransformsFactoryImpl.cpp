@@ -31,9 +31,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "RGBToMONOCHROME2Impl.h"
 #include "RGBToYBRFULLImpl.h"
 #include "RGBToYBRPARTIALImpl.h"
+#include "RGBToYBRRCTImpl.h"
 #include "YBRFULLToMONOCHROME2Impl.h"
 #include "YBRFULLToRGBImpl.h"
 #include "YBRPARTIALToRGBImpl.h"
+#include "YBRRCTToRGBImpl.h"
 
 namespace imebra
 {
@@ -87,11 +89,13 @@ colorTransformsFactory::colorTransformsFactory()
     registerTransform(std::make_shared<RGBToMONOCHROME2>());
     registerTransform(std::make_shared<RGBToYBRFULL>());
     registerTransform(std::make_shared<RGBToYBRICT>());
+    registerTransform(std::make_shared<RGBToYBRRCT>());
     registerTransform(std::make_shared<RGBToYBRPARTIAL>());
     registerTransform(std::make_shared<YBRFULLToMONOCHROME2>());
     registerTransform(std::make_shared<YBRICTToMONOCHROME2>());
     registerTransform(std::make_shared<YBRFULLToRGB>());
     registerTransform(std::make_shared<YBRICTToRGB>());
+    registerTransform(std::make_shared<YBRRCTToRGB>());
     registerTransform(std::make_shared<YBRPARTIALToRGB>());
 
     IMEBRA_FUNCTION_END();
