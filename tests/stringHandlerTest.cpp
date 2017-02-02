@@ -115,7 +115,16 @@ TEST(stringHandlerTest, AETest)
     ASSERT_EQ(tagVR_t::AE, testDataSet.getDataType(TagId(0x0010, 0x0010)));
 
     ASSERT_THROW(testDataSet.setString(TagId(0x0010, 0x0010), "01234567890123456", tagVR_t::AE), DataHandlerInvalidDataError);
+}
 
+
+TEST(stringHandlerTest, zeroPad)
+{
+    DataSet testDataSet;
+
+    testDataSet.setString(TagId(0x0010, 0x0010), "0\000", tagVR_t::AE);
+    ASSERT_EQ("0", testDataSet.getString(TagId(0x0010, 0x0010), 0));
+    ASSERT_EQ(1, testDataSet.getString(TagId(0x0010, 0x0010), 0).length());
 }
 
 
