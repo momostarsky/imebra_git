@@ -12,6 +12,7 @@ Version |release| (this version)
 - Implemented enhancement #168 (Remove warning VOILUTImpl.h:194:82: conversion to 'double' from 'int64_t') as per SOP :ref:`DEVENH_2`
 - Implemented enhancement #169 (Separate the stream codecs from the image codecs) as per SOP :ref:`DEVENH_2`
 - Implemented enhancement #173 (Add the color spaces YBR_ICT and YBR_RCT) as per SOP :ref:`DEVENH_2`
+- Implemented enhancement #175 (Accept string tags that pad the value with 0x0 instead of spaces) as per SOP :ref:`DEVENH_2`
 
 Version 4.0.9.1
 ---------------
