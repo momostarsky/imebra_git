@@ -11,13 +11,13 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-/*! \file YBRFULLToRGB.h
-    \brief Declaration of the class YBRFULLToRGB.
+/*! \file YBRRCTToRGB.h
+    \brief Declaration of the class YBRRCTToRGB.
 
 */
 
-#if !defined(imebraYBRFULLToRGB_E27C63E7_A907_4899_9BD3_8026AD7D110C__INCLUDED_)
-#define imebraYBRFULLToRGB_E27C63E7_A907_4899_9BD3_8026AD7D110C__INCLUDED_
+#if !defined(imebraYBRRCTToRGB_E27C63E7_A907_4899_9BD3_8026AD7D110C__INCLUDED_)
+#define imebraYBRRCTToRGB_E27C63E7_A907_4899_9BD3_8026AD7D110C__INCLUDED_
 
 #include "colorTransformImpl.h"
 
@@ -40,14 +40,14 @@ namespace colorTransforms
 
 ///////////////////////////////////////////////////////////
 /// \brief Transforms an image from the colorspace 
-///         YBR_FULL into the color space RGB.
+///         YBR_RCT into the color space RGB.
 ///
-/// The input image has to have the colorspace YBR_FULL,
+/// The input image has to have the colorspace YBR_RCT,
 ///  while the output image is created by the transform
 ///  and will have the colorspace RGB.
 ///
 ///////////////////////////////////////////////////////////
-class YBRFULLToRGB: public colorTransform
+class YBRRCTToRGB: public colorTransform
 {
 public:
     virtual std::string getInitialColorSpace() const;
@@ -83,59 +83,62 @@ public:
         std::int64_t outputHandlerMinValue = getMinValue<outputType>(outputHighBit);
 
         std::int64_t inputMiddleValue(inputHandlerMinValue + ((std::int64_t)1 << inputHighBit));
-        std::int64_t sourceY, sourceB, sourceR, destination;
+        std::int64_t sourceY, sourceB, sourceR;
 
         std::int64_t inputHandlerNumValues = (std::int64_t)1 << (inputHighBit + 1);
         std::int64_t outputHandlerNumValues = (std::int64_t)1 << (outputHighBit + 1);
+
+        std::int64_t R, G, B;
 
         for(; inputHeight != 0; --inputHeight)
         {
             for(std::uint32_t scanPixels(inputWidth); scanPixels != 0; --scanPixels)
             {
-                sourceY = (std::int64_t)*(pInputMemory++);
+                sourceY = (std::int64_t)*(pInputMemory++) - inputHandlerMinValue;
                 sourceB = (std::int64_t)*(pInputMemory++) - inputMiddleValue;
                 sourceR = (std::int64_t)*(pInputMemory++) - inputMiddleValue;
 
-                destination = sourceY + ((22970 * sourceR) / 16384);
-                if(destination < 0)
+                G = sourceY - (sourceR + sourceB) / 4;
+                R = sourceR + G;
+                B = sourceB + G;
+
+                if(R < 0)
                 {
                     *(pOutputMemory++) = (outputType)outputHandlerMinValue;
                 }
-                else if (destination >= inputHandlerNumValues)
+                else if (R >= inputHandlerNumValues)
                 {
                     *(pOutputMemory++) = (outputType)(outputHandlerMinValue + outputHandlerNumValues - 1);
                 }
                 else
                 {
-                    *(pOutputMemory++) = (outputType)(outputHandlerMinValue + destination);
+                    *(pOutputMemory++) = (outputType)(outputHandlerMinValue + R);
                 }
 
-                destination = sourceY - ((5638 * sourceB + 11700 * sourceR) / 16384);
-                if(destination < 0)
+                if(G < 0)
                 {
                     *(pOutputMemory++) = (outputType)outputHandlerMinValue;
                 }
-                else if (destination >= inputHandlerNumValues)
+                else if (G >= inputHandlerNumValues)
                 {
                     *(pOutputMemory++) = (outputType)(outputHandlerMinValue + outputHandlerNumValues - 1);
                 }
                 else
                 {
-                    *(pOutputMemory++) = (outputType)(outputHandlerMinValue + destination);
+                    *(pOutputMemory++) = (outputType)(outputHandlerMinValue + G);
                 }
 
-                destination = sourceY + ((29032 * sourceB) / 16384);
-                if(destination < 0)
+                if(B < 0)
                 {
                     *(pOutputMemory++) = (outputType)outputHandlerMinValue;
                 }
-                else if (destination >= inputHandlerNumValues)
+                else if (B >= inputHandlerNumValues)
                 {
                     *(pOutputMemory++) = (outputType)(outputHandlerMinValue + outputHandlerNumValues - 1);
                 }
                 else
                 {
-                    *(pOutputMemory++) = (outputType)(outputHandlerMinValue + destination);
+                    *(pOutputMemory++) = (outputType)(outputHandlerMinValue + B);
                 }
             }
             pInputMemory += (inputHandlerWidth - inputWidth) * 3;
@@ -144,22 +147,17 @@ public:
 
         IMEBRA_FUNCTION_END();
     }
-};
 
+    virtual std::shared_ptr<image> allocateOutputImage(
+            bitDepth_t inputDepth,
+            const std::string& inputColorSpace,
+            std::uint32_t inputHighBit,
+            std::shared_ptr<palette> inputPalette,
+            std::uint32_t outputWidth, std::uint32_t outputHeight) const;
 
-///////////////////////////////////////////////////////////
-/// \brief Transforms an image from the colorspace
-///         YBR_ICT into the color space RGB.
-///
-/// The input image has to have the colorspace YBR_ICT,
-///  while the output image is created by the transform
-///  and will have the colorspace RGB.
-///
-///////////////////////////////////////////////////////////
-class YBRICTToRGB: public YBRFULLToRGB
-{
-public:
-    virtual std::string getInitialColorSpace() const;
+protected:
+    virtual void checkHighBit(std::uint32_t inputHighBit, std::uint32_t outputHighBit) const;
+
 };
 
 /// @}
@@ -172,4 +170,4 @@ public:
 
 } // namespace imebra
 
-#endif // !defined(imebraYBRFULLToRGB_E27C63E7_A907_4899_9BD3_8026AD7D110C__INCLUDED_)
+#endif // !defined(imebraYBRRCTToRGB_E27C63E7_A907_4899_9BD3_8026AD7D110C__INCLUDED_)

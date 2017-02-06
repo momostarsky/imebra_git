@@ -6,6 +6,19 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Fixed bug #163 (DrawBitmap fails with 16 bits palette images) as per SOP :ref:`FIXBUG_2`
+- Implemented enhancement #164 (Remove warnings "control reaches end of non-void function" in bufferImpl.cpp) as per SOP :ref:`DEVENH_2`
+- Implemented enhancement #167 (Remove compilation warning conversion from float/double to int in dataHandlerNumericImpl.h) as per SOP :ref:`DEVENH_2`
+- Implemented enhancement #168 (Remove warning VOILUTImpl.h:194:82: conversion to 'double' from 'int64_t') as per SOP :ref:`DEVENH_2`
+- Implemented enhancement #169 (Separate the stream codecs from the image codecs) as per SOP :ref:`DEVENH_2`
+- Implemented enhancement #172 (Add an experimental jpeg2000 decoder)
+- Implemented enhancement #173 (Add the color spaces YBR_ICT and YBR_RCT) as per SOP :ref:`DEVENH_2`
+- Implemented enhancement #175 (Accept string tags that pad the value with 0x0 instead of spaces) as per SOP :ref:`DEVENH_2`
+- Implemented enhancement #176 (Add internal method streamReader readSome) as per SOP :ref:`DEVENH_2`
+
+Version 4.0.9.1
+---------------
+
 - Implemented enhancement #161 (Add the full license text in the project root folder, add a short link to the license in each 
   source file) as per SOP :ref:`DEVENH_2`
 - Fixed bug #162 (Dataset: useless copy when inserting non encapsulated images) as per SOP :ref:`FIXBUG_2`

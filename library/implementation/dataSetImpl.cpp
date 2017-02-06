@@ -24,7 +24,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "dataHandlerNumericImpl.h"
 #include "dicomDictImpl.h"
 #include "codecFactoryImpl.h"
-#include "codecImpl.h"
+#include "streamCodecImpl.h"
+#include "imageCodecImpl.h"
 #include "imageImpl.h"
 #include "LUTImpl.h"
 #include "colorTransformsFactoryImpl.h"
@@ -171,7 +172,7 @@ std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
 
 	// Get the right codec
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<codecs::codec> pCodec=codecs::codecFactory::getCodec(transferSyntax);
+    std::shared_ptr<const codecs::imageCodec> pCodec(codecs::codecFactory::getCodecFactory()->getImageCodec(transferSyntax));
 
     try
     {
@@ -426,7 +427,7 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
 
 	// Select the right codec
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<codecs::codec> saveCodec(codecs::codecFactory::getCodec(transferSyntax));
+    std::shared_ptr<const codecs::imageCodec> saveCodec(codecs::codecFactory::getCodecFactory()->getImageCodec(transferSyntax));
 
 	// Do we have to save the basic offset table?
 	///////////////////////////////////////////////////////////

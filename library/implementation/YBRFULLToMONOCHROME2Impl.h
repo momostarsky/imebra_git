@@ -98,6 +98,23 @@ public:
     }
 };
 
+
+///////////////////////////////////////////////////////////
+/// \brief Transforms an image from the colorspace
+///         YBR_ICT into the color space MONOCHROME2.
+///
+/// The input image has to have the colorspace YBR_ICT,
+///  while the output image is created by the transform
+///  and will have the colorspace MONOCHROME2.
+///
+///////////////////////////////////////////////////////////
+class YBRICTToMONOCHROME2: public YBRFULLToMONOCHROME2
+{
+public:
+    virtual std::string getInitialColorSpace() const;
+
+};
+
 /// @}
 
 } // namespace colorTransforms

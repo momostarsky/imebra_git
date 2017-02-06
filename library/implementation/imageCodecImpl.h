@@ -11,13 +11,13 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-/*! \file codec.h
-    \brief Declaration of the base class used by the codecs.
+/*! \file imageCodecImpl.h
+    \brief Declaration of the base class used by the image codecs.
 
 */
 
-#if !defined(imebraCodec_299706D7_4761_44a1_9F2D_8C38A7BD7AD5__INCLUDED_)
-#define imebraCodec_299706D7_4761_44a1_9F2D_8C38A7BD7AD5__INCLUDED_
+#if !defined(imebraImageCodec_299706D7_4761_44a1_9F2D_8C38A7BD7AD5__INCLUDED_)
+#define imebraImageCodec_299706D7_4761_44a1_9F2D_8C38A7BD7AD5__INCLUDED_
 
 #include <stdexcept>
 #include <memory>
@@ -56,103 +56,20 @@ namespace codecs
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 /// \brief This is the base class for all the Imebra
-///         codecs.
+///         image codecs.
 ///
-/// When the Imebra codecs read the content of a file, they
-///  don't return a decompressed image: instead they build
-///  a DICOM structure in memory, with the image(s)
-///  embedded in it.
+/// An image codec is used to decompress an image stored
+///  in a DICOM dataset.
 ///
 /// A call to the dataSet::getImage() method will
 ///  return the decompressed image embedded into the dicom
 ///  structure.
 ///
-/// E.G:
-///  A call to jpegCodec::read() will build a
-///   dataSet object with a jpeg image embedded in
-///   it.
-///  Your application should call 
-///   dataSet::getImage()in order to get the 
-///   decompressed image.
-///
-/// The same concept is used when your application must
-///  generate a file with a compressed image in it.
-/// Your application should:
-///  - allocate a dicom structure (see dataSet)
-///  - insert an image into the structure by calling
-///     dataSet::setImage()
-///  - generate the final file using the preferred codec.
-///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class codec
+class imageCodec
 {
 public:
-	///////////////////////////////////////////////////////////
-	/// \name Streams read/write
-	///
-	///////////////////////////////////////////////////////////
-	//@{
-
-	/// \brief Read a stream and build an in-memory dicom 
-	///        structure.
-	///
-	/// The specified stream is parsed and its content is
-	///  saved into a dataSet object.
-	///
-	/// The type of codec to use depends on the stream's
-	///  type (the jpeg codec jpegCodec will parse a
-	///  jpeg stream, the DICOM codec dicomCodec will
-	///  parse a DICOM stream).
-	/// 
-	/// If you want to autodetect the file type, just
-	///  try to parse the stream with several codecs until
-	///  one of them return a valid result.
-	/// This task is easier if you use the class 
-	///  codecFactory, which automatically scans all the
-    ///  Imebra codecs until one can decompress the stream.
-	///
-	/// Each codec will rewind the stream's position if
-	///  an error occurs.
-	///
-	/// If the codec parses the stream correctly (no error
-	///  occurs) then the resulting dataSet object will
-	///  contain a valid dicom structure.
-	///
-	/// @param pSourceStream Stream a pointer to the baseStream
-	///                 object to parse.
-	///                If the codec cannot parse the stream's
-	///                 content, then the stream is rewinded to
-	///                 its initial position.
-	/// @param maxSizeBufferLoad if a loaded buffer exceedes
-	///                 the size in the parameter then it is
-	///                 not loaded immediatly but it will be
-	///                 loaded on demand. Some codecs may 
-	///                 ignore this parameter.
-	///                Set to -1 to load all the buffers 
-	///                 immediatly
-	/// @return        a pointer to the loaded dataSet
-	///
-	///////////////////////////////////////////////////////////
-	std::shared_ptr<dataSet> read(std::shared_ptr<streamReader> pSourceStream, std::uint32_t maxSizeBufferLoad = 0xffffffff);
-
-	/// \brief Write a dicom structure into a stream.
-	///
-	/// The specified dataSet object is transformed into
-	///  the desidered kind of stream (the jpeg codec
-	///  jpegCodec will produce a jpeg stream, the DICOM
-	///  codec dicomCodec will produce a DICOM stream).
-	///
-	/// @param pDestStream a pointer to the stream to use for
-	///                     writing.
-	/// @param pSourceDataSet a pointer to the Dicom structure 
-	///                     to write into the stream
-	///
-	///////////////////////////////////////////////////////////
-	void write(std::shared_ptr<streamWriter> pDestStream, std::shared_ptr<dataSet> pSourceDataSet);
-
-	//@}
-
 
 	///////////////////////////////////////////////////////////
 	/// \name Set/get the image in the dicom structure
@@ -189,7 +106,7 @@ public:
 	/// @return a pointer to the loaded image
 	///
 	///////////////////////////////////////////////////////////
-    virtual std::shared_ptr<image> getImage(const dataSet& sourceDataSet, std::shared_ptr<streamReader> pSourceStream, tagVR_t dataType) = 0;
+    virtual std::shared_ptr<image> getImage(const dataSet& sourceDataSet, std::shared_ptr<streamReader> pSourceStream, tagVR_t dataType) const = 0;
 	
 	/// \brief Stores an image into stream.
 	///
@@ -238,7 +155,7 @@ public:
 		bool bSubSampledX,
 		bool bSubSampledY,
 		bool bInterleaved,
-		bool b2Complement)=0;
+        bool b2Complement) const = 0;
 
 	//@}
 
@@ -248,15 +165,6 @@ public:
 	///
 	///////////////////////////////////////////////////////////
 	//@{
-
-	/// \brief Create another codec of the same type of the
-	///         codec where the function is being called.
-	///
-	/// @return a pointer to a codec of the same type of the
-	///          codec where the function is being called
-	///
-	///////////////////////////////////////////////////////////
-	virtual std::shared_ptr<codec> createCodec()=0;
 
 	/// \brief This function returns true if the codec can
 	///        handle the requested DICOM transfer syntax.
@@ -305,10 +213,6 @@ public:
 
 	//@}
 
-
-protected:
-	virtual void readStream(std::shared_ptr<streamReader> pInputStream, std::shared_ptr<dataSet> pDestDataSet, std::uint32_t maxSizeBufferLoad = 0xffffffff) =0;
-	virtual void writeStream(std::shared_ptr<streamWriter> pDestStream, std::shared_ptr<dataSet> pSourceDataSet) =0;
 };
 
 

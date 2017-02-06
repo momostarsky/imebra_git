@@ -155,51 +155,81 @@ void streamReader::read(std::uint8_t* pBuffer, size_t bufferLength)
 {
     IMEBRA_FUNCTION_START();
 
+    std::uint8_t* pReadBuffer(pBuffer);
     while(bufferLength != 0)
-	{
-		// Update the data buffer if it is empty
-		///////////////////////////////////////////////////////////
-        if(m_dataBufferCurrent == m_dataBufferEnd)
-		{
-            if(bufferLength >= m_dataBuffer.size())
-			{
-				// read the data directly into the destination buffer
-				///////////////////////////////////////////////////////////
-                size_t readBytes(fillDataBuffer(pBuffer, bufferLength));
-
-                m_dataBufferCurrent = m_dataBufferEnd = 0;
-				m_dataBufferStreamPosition += readBytes;
-				pBuffer += readBytes;
-				bufferLength -= readBytes;
-				if(readBytes == 0)
-				{
-                    IMEBRA_THROW(StreamEOFError, "Attempt to read past the end of the file");
-				}
-				continue;
-			}
-
-			if(fillDataBuffer() == 0)
-			{
-                IMEBRA_THROW(StreamEOFError, "Attempt to read past the end of the file");
-			}
-		}
-
-		// Copy the available data into the return buffer
-		///////////////////////////////////////////////////////////
-        size_t copySize = bufferLength;
-        size_t maxSize = (size_t)(m_dataBufferEnd - m_dataBufferCurrent);
-		if(copySize > maxSize)
-		{
-			copySize = maxSize;
-		}
-        ::memcpy(pBuffer, &(m_dataBuffer[m_dataBufferCurrent]), copySize);
-		bufferLength -= copySize;
-		pBuffer += copySize;
-        m_dataBufferCurrent += copySize;
-	}
+    {
+        size_t readBytes = readSome(pReadBuffer, bufferLength);
+        pReadBuffer += readBytes;
+        bufferLength -= readBytes;
+    }
 
     IMEBRA_FUNCTION_END();
 }
+
+
+///////////////////////////////////////////////////////////
+//
+// Return the specified number of bytes from the stream
+//
+///////////////////////////////////////////////////////////
+size_t streamReader::readSome(std::uint8_t* pBuffer, size_t bufferLength)
+{
+    IMEBRA_FUNCTION_START();
+
+    size_t originalSize(bufferLength);
+
+    while(bufferLength != 0)
+    {
+        // Update the data buffer if it is empty
+        ///////////////////////////////////////////////////////////
+        if(m_dataBufferCurrent == m_dataBufferEnd)
+        {
+            if(bufferLength != originalSize)
+            {
+                return originalSize - bufferLength;
+            }
+            if(bufferLength >= m_dataBuffer.size())
+            {
+                // read the data directly into the destination buffer
+                ///////////////////////////////////////////////////////////
+                size_t readBytes(fillDataBuffer(pBuffer, bufferLength));
+
+                m_dataBufferCurrent = m_dataBufferEnd = 0;
+                m_dataBufferStreamPosition += readBytes;
+                pBuffer += readBytes;
+                bufferLength -= readBytes;
+                if(readBytes == 0)
+                {
+                    IMEBRA_THROW(StreamEOFError, "Attempt to read past the end of the file");
+                }
+                continue;
+            }
+
+            if(fillDataBuffer() == 0)
+            {
+                IMEBRA_THROW(StreamEOFError, "Attempt to read past the end of the file");
+            }
+        }
+
+        // Copy the available data into the return buffer
+        ///////////////////////////////////////////////////////////
+        size_t copySize = bufferLength;
+        size_t maxSize = (size_t)(m_dataBufferEnd - m_dataBufferCurrent);
+        if(copySize > maxSize)
+        {
+            copySize = maxSize;
+        }
+        ::memcpy(pBuffer, &(m_dataBuffer[m_dataBufferCurrent]), copySize);
+        bufferLength -= copySize;
+        pBuffer += copySize;
+        m_dataBufferCurrent += copySize;
+    }
+
+    return originalSize;
+
+    IMEBRA_FUNCTION_END();
+}
+
 
 
 ///////////////////////////////////////////////////////////

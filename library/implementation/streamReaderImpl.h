@@ -119,6 +119,8 @@ public:
 	///////////////////////////////////////////////////////////
     void read(std::uint8_t* pBuffer, size_t bufferLength);
 
+    size_t readSome(std::uint8_t* pBuffer, size_t bufferLength);
+
 	/// \brief Returns true if the last byte in the stream
 	///         has already been read.
 	///

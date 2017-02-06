@@ -21,11 +21,9 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "../include/imebra/fileStreamOutput.h"
 #include "../include/imebra/codecFactory.h"
 #include "../include/imebra/definitions.h"
-
-#include "../implementation/dicomCodecImpl.h"
-#include "../implementation/jpegCodecImpl.h"
 #include "../implementation/codecFactoryImpl.h"
-#include "../implementation/codecImpl.h"
+#include "../implementation/streamCodecImpl.h"
+#include "../implementation/imageCodecImpl.h"
 #include "../implementation/exceptionImpl.h"
 
 namespace imebra
@@ -80,7 +78,7 @@ void CodecFactory::saveImage(
     IMEBRA_FUNCTION_START();
 
     std::shared_ptr<imebra::implementation::codecs::codecFactory> factory(imebra::implementation::codecs::codecFactory::getCodecFactory());
-    std::shared_ptr<implementation::codecs::codec> pCodec = factory->getCodec(transferSyntax);
+    std::shared_ptr<const implementation::codecs::imageCodec> pCodec = factory->getImageCodec(transferSyntax);
     pCodec->setImage(destStream.m_pWriter, sourceImage.m_pImage, transferSyntax, imageQuality, dataType, allocatedBits, bSubSampledX, bSubSampledY, bInterleaved, b2Complement);
 
     IMEBRA_FUNCTION_END();
@@ -102,19 +100,10 @@ void CodecFactory::save(const DataSet& dataSet, StreamWriter& writer, codecType_
 {
     IMEBRA_FUNCTION_START();
 
-    std::shared_ptr<imebra::implementation::codecs::codec> codec;
+    std::shared_ptr<imebra::implementation::codecs::codecFactory> factory(imebra::implementation::codecs::codecFactory::getCodecFactory());
+    std::shared_ptr<const implementation::codecs::streamCodec> pCodec = factory->getStreamCodec(codecType);
 
-    switch(codecType)
-    {
-    case codecType_t::jpeg:
-        codec = std::make_shared<imebra::implementation::codecs::jpegCodec>();
-        break;
-    default:
-        codec = std::make_shared<imebra::implementation::codecs::dicomCodec>();
-        break;
-    }
-
-    codec->write(writer.m_pWriter, dataSet.m_pDataSet);
+    pCodec->write(writer.m_pWriter, dataSet.m_pDataSet);
 
     IMEBRA_FUNCTION_END();
 }

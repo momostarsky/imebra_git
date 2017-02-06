@@ -18,7 +18,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #include "dicomDirImpl.h"
 #include "dataSetImpl.h"
-#include "dicomCodecImpl.h"
+#include "dicomStreamCodecImpl.h"
 #include "dataHandlerNumericImpl.h"
 #include "nullStreamImpl.h"
 #include "streamWriterImpl.h"
@@ -648,7 +648,7 @@ std::shared_ptr<dataSet> dicomDir::buildDataSet()
 	///////////////////////////////////////////////////////////
     std::shared_ptr<nullStreamWriter> saveStream(std::make_shared<nullStreamWriter>());
     std::shared_ptr<streamWriter> writer(std::make_shared<streamWriter>(saveStream));
-    std::shared_ptr<codecs::dicomCodec> writerCodec(std::make_shared<codecs::dicomCodec>());
+    std::shared_ptr<codecs::dicomStreamCodec> writerCodec(std::make_shared<codecs::dicomStreamCodec>());
 	writerCodec->write(writer, m_pDataSet);
 
 	// Scan all the records and update the pointers

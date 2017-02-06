@@ -64,7 +64,7 @@ readingDataHandlerString::readingDataHandlerString(const memory &parseMemory, ta
     IMEBRA_FUNCTION_START();
 
     std::string parseString((const char*)parseMemory.data(), parseMemory.size());
-    while(!parseString.empty() && parseString.back() == (char)paddingByte)
+    while(!parseString.empty() && (parseString.back() == (char)paddingByte || parseString.back() == 0))
     {
         parseString.pop_back();
     }

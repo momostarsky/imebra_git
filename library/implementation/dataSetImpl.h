@@ -20,7 +20,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #define imebraDataSet_93F684BF_0024_4bf3_89BA_D98E82A1F44C__INCLUDED_
 
 #include "exceptionImpl.h"
-#include "codecImpl.h"
+#include "streamCodecImpl.h"
 #include "dataImpl.h"
 #include <vector>
 #include <memory>

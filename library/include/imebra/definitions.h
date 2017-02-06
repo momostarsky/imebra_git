@@ -93,6 +93,9 @@ enum class imageQuality_t: std::uint32_t
 /// This enumeration does not specify the highest bit used:
 /// in order to retrieve the highest used bit call Image::getHighBit().
 ///
+/// The lower bit of the enumerations is 1 if it represents a signed depth,
+/// 0 if it represents an unsigned depth,
+///
 ///////////////////////////////////////////////////////////////////////////////
 enum class bitDepth_t: std::uint32_t
 {

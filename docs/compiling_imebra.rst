@@ -61,6 +61,35 @@ The second CMake command with the --build option will launch make, VisualStudio 
 chain defined on your machine.
 
 
+Adding support for the Jpeg2000 decoder
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+Imebra contains an experimental Jpeg2000 decoder which can be used to decompress Jpeg2000 images
+embedded into DICOM datasets.
+
+The Jpeg2000 codec depends on the open source library OpenJpeg, available at http://www.openjpeg.org
+
+Both the major versions of openjpeg (1 and 2) are supported.
+
+After you have compiled and installed openjpeg, you must add the following command line options
+when launching cmake:
+
+To use the version 1.X of openjpeg::
+
+    DJPEG2000=1
+
+To use the version 2.X of openjpeg::
+
+    DJPEG2000=2
+
+For instance, the complete sequence of commands to build imebra with support for openjpeg 1.X would be::
+
+    md artifacts
+    cd artifacts
+    cmake DJPEG2000=1 imebra_location/library
+    cmake --build .
+
+
 Windows specific instructions
 ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 

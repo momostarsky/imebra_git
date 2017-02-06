@@ -95,7 +95,7 @@ protected:
 	///////////////////////////////////////////////////////////
     void checkColorSpaces(const std::string& inputHandlerColorSpace, const std::string& outputHandlerColorSpace) const;
 
-    void checkHighBit(std::uint32_t inputHighBit, std::uint32_t outputHighBit) const;
+    virtual void checkHighBit(std::uint32_t inputHighBit, std::uint32_t outputHighBit) const;
 
 };
 
