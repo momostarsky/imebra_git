@@ -24,8 +24,14 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "imageCodecImpl.h"
 #include "jpegStreamCodecImpl.h"
 #include "dicomStreamCodecImpl.h"
+
 #include "jpegImageCodecImpl.h"
 #include "dicomImageCodecImpl.h"
+
+#ifdef JPEG2000
+#include "jpeg2000ImageCodecImpl.h"
+#endif
+
 #include "../include/imebra/exceptions.h"
 
 namespace imebra
@@ -68,6 +74,10 @@ codecFactory::codecFactory(): m_maximumImageWidth(MAXIMUM_IMAGE_WIDTH), m_maximu
 
     registerImageCodec(std::make_shared<jpegImageCodec>());
     registerImageCodec(std::make_shared<dicomImageCodec>());
+
+#ifdef JPEG2000
+    registerImageCodec(std::make_shared<jpeg2000ImageCodec>());
+#endif
 
     IMEBRA_FUNCTION_END();
 }
