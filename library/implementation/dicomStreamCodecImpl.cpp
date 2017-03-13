@@ -797,7 +797,14 @@ void dicomStreamCodec::parseStream(std::shared_ptr<streamReader> pStream,
             }
             else
             {
-                tagType = dicomDictionary::getDicomDictionary()->getTagType(tagId, tagSubId);
+                try
+                {
+                    tagType = dicomDictionary::getDicomDictionary()->getTagType(tagId, tagSubId);
+                }
+                catch(const DictionaryUnknownTagError&)
+                {
+                    tagType = tagVR_t::UN;
+                }
                 wordSize = dicomDictionary::getDicomDictionary()->getWordSize(tagType);
             }
         }
