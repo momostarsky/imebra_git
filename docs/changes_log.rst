@@ -6,6 +6,11 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Fixed bug #177 (Imebra cannot read private tags for implicit VR syntax) as per SOP :ref:`FIXBUG_2`
+
+Version 4.0.10.1
+----------------
+
 - Fixed bug #163 (DrawBitmap fails with 16 bits palette images) as per SOP :ref:`FIXBUG_2`
 - Implemented enhancement #164 (Remove warnings "control reaches end of non-void function" in bufferImpl.cpp) as per SOP :ref:`DEVENH_2`
 - Implemented enhancement #167 (Remove compilation warning conversion from float/double to int in dataHandlerNumericImpl.h) as per SOP :ref:`DEVENH_2`
