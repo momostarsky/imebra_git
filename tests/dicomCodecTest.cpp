@@ -285,6 +285,35 @@ TEST(dicomCodecTest, testDicom32bit)
 }
 
 
+TEST(dicomCodecTest, testImplicitPrivateTags)
+{
+    ReadWriteMemory streamMemory;
+    {
+        DataSet testDataSet("1.2.840.10008.1.2");
+        testDataSet.setString(TagId(tagId_t::PatientName_0010_0010), "Patient name");
+        testDataSet.setString(TagId(std::uint16_t(11), std::uint16_t(2)), "Private tag", tagVR_t::ST);
+
+        MemoryStreamOutput writeStream(streamMemory);
+        StreamWriter writer(writeStream);
+        CodecFactory::save(testDataSet, writer, codecType_t::dicom);
+    }
+
+    MemoryStreamInput readStream(streamMemory);
+    StreamReader reader(readStream);
+    std::unique_ptr<DataSet> testDataSet(CodecFactory::load(reader, std::numeric_limits<size_t>::max()));
+
+    EXPECT_EQ("Patient name", testDataSet->getString(TagId(tagId_t::PatientName_0010_0010), 0));
+
+    std::unique_ptr<ReadingDataHandlerNumeric> privateHandler(testDataSet->getReadingDataHandlerNumeric(TagId(std::uint16_t(11), std::uint16_t(2)), 0));
+    EXPECT_EQ(tagVR_t::UN, privateHandler->getDataType());
+
+    size_t length;
+    std::string privateString(privateHandler->data(&length));
+    EXPECT_EQ("Private tag ", privateString); // Even length
+
+
+}
+
 } // namespace tests
 
 } // namespace imebra
