@@ -63,6 +63,8 @@ class baseStreamInput
 {
 
 public:
+    virtual ~baseStreamInput();
+
 	/// \brief Read raw data from the stream.
 	///
 	/// The function is multithreading-safe and is called by
@@ -88,6 +90,8 @@ class baseStreamOutput
 {
 
 public:
+    virtual ~baseStreamOutput();
+
     /// \brief Writes raw data into the stream.
     ///
     /// The function is multithreading-safe and is called by
