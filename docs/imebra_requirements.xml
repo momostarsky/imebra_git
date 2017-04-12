@@ -650,10 +650,40 @@
         <parentRequirement idref="REQ_DUL"/>
       </introducedBy>
 
-
       <title>There must be a generic streaming protocol able to transport DUL messages</title>
-
       <description>There must be a generic streaming protocol able to transport DUL messages.
+
+          The generic streaming protocol must derive from the Imebra base stream class and offer
+          timeout capabilities and termination capabilities when waiting for incoming or outgoing data.
+      </description>
+      <priority>100</priority>
+    </requirement>
+
+    <requirement categoryIdref="REQ_FUNC" id="REQ_TCPIP_PROTOCOL">
+      <mitigates/>
+
+      <introducedBy>
+        <parentRequirement idref="REQ_DUL"/>
+      </introducedBy>
+
+      <title>Imebra must supply a basic TCP streaming class</title>
+      <description>A basic TCP streaming class must be provided so that it can be used with DUL.
+
+          TLS is out of the scope of this class.
+      </description>
+      <priority>100</priority>
+    </requirement>
+
+    <requirement categoryIdref="REQ_FUNC" id="REQ_USER_PROTOCOL">
+      <mitigates/>
+
+      <introducedBy>
+        <parentRequirement idref="REQ_TCPIP_PROTOCOL"/>
+      </introducedBy>
+
+      <title>Imebra must supply a base class for IO streaming</title>
+      <description>Since Imebra does not provide TLS, it must provide a base IO streaming class
+      	  from which the user can build its own streaming class.
       </description>
       <priority>100</priority>
     </requirement>

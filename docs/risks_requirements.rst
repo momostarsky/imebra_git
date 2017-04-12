@@ -56,6 +56,131 @@ The following transfer syntaxes must be supported:
 
 
 
+.. _REQ_DIMSE:
+
+[REQ_DIMSE] The library must be able to send and receive DIMSE messages
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+The library must be able to build and parse DIMSE messages through a generic message oriented
+transport mechanism.
+
+The following DIMSE services must be supported:
+
+- C-STORE
+- C-GET
+- C-MOVE
+- C-FIND
+- C-ECHO
+- N-EVENT-REPORT
+- N-GET
+- N-SET
+- N-ACTION
+- N-CREATE
+- N-DELETE
+
+
+
+Children requirements: 
+
+- :ref:`REQ_GENERIC_MSG_PROTOCOL`
+
+
+
+.. _REQ_DUL:
+
+[REQ_DUL] The library must be able to send and receive DUL messages through a generic transport mechanism
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+The library must be able to send and receive DUL messages through a generic stream oriented
+transport mechanism.
+
+The DUL messages should be offered as generic message oriented transport system to transmit
+DIMSE messages.
+
+The DUL management should not be exposed in the API.
+
+
+
+Children requirements: 
+
+- :ref:`REQ_GENERIC_MSG_PROTOCOL`
+- :ref:`REQ_GENERIC_STREAM_PROTOCOL`
+- :ref:`REQ_TCPIP_PROTOCOL`
+
+
+
+.. _REQ_GENERIC_MSG_PROTOCOL:
+
+[REQ_GENERIC_MSG_PROTOCOL] There must be a generic messaging protocol able to transport DIMSE messages
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+There must be a generic messaging protocol able to transport DIMSE messages.
+
+Also the DUL messages should be managed by a messaging protocol derived from the generic one.
+
+
+Parent requirements:
+
+- :ref:`REQ_DIMSE`
+- :ref:`REQ_DUL`
+
+
+
+
+.. _REQ_GENERIC_STREAM_PROTOCOL:
+
+[REQ_GENERIC_STREAM_PROTOCOL] There must be a generic streaming protocol able to transport DUL messages
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+There must be a generic streaming protocol able to transport DUL messages.
+
+The generic streaming protocol must derive from the Imebra base stream class and offer
+timeout capabilities and termination capabilities when waiting for incoming or outgoing data.
+
+
+Parent requirements:
+
+- :ref:`REQ_DUL`
+
+
+
+
+.. _REQ_TCPIP_PROTOCOL:
+
+[REQ_TCPIP_PROTOCOL] Imebra must supply a basic TCP streaming class
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+A basic TCP streaming class must be provided so that it can be used with DUL.
+
+TLS is out of the scope of this class.
+
+
+Parent requirements:
+
+- :ref:`REQ_DUL`
+
+Children requirements: 
+
+- :ref:`REQ_USER_PROTOCOL`
+
+
+
+.. _REQ_USER_PROTOCOL:
+
+[REQ_USER_PROTOCOL] Imebra must supply a base class for IO streaming
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+Since Imebra does not provide TLS, it must provide a base IO streaming class
+from which the user can build its own streaming class.
+
+
+Parent requirements:
+
+- :ref:`REQ_TCPIP_PROTOCOL`
+
+
+
+
 .. _REQ_ENDIANESS_PLATFORM:
 
 [REQ_ENDIANESS_PLATFORM] Exposed memory with raw numerical data must use the platform endianess to represent numbers
