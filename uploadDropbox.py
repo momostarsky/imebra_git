@@ -21,7 +21,7 @@ if version.count('.') == 0:
 if version.count('.') == 1:
   version += ".999"
 
-hgrelease = 'hg log -b ' + branch + ' --template . --rev ancestors(.)'
+hgrelease = 'hg log -b "' + branch + '" --template . --rev ancestors(.)'
 hgprocess = subprocess.Popen(hgrelease.split(), stdout=subprocess.PIPE)
 release = version + '.' + str(hgprocess.stdout.readlines()[0].count('.'))
 
