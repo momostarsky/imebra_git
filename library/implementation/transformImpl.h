@@ -137,6 +137,8 @@ class transform
 {
 
 public:
+    virtual ~transform();
+
 	/// \brief Returns true if the transform doesn't do
 	///         anything.
 	///

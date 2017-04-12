@@ -60,6 +60,8 @@ public:
     ///////////////////////////////////////////////////////////
     readingDataHandler(tagVR_t dataType);
 
+    virtual ~readingDataHandler();
+
     tagVR_t getDataType() const;
 
     /// \brief Retrieve the data handler's local buffer buffer
