@@ -6,6 +6,11 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Fixed bug #160 (Replace "Java++" with "Java" in the section "Getting started" of the documentation) as per SOP :ref:`FIXBUG_2`
+
+Version 4.0.11.1
+----------------
+
 - Fixed bug #177 (Imebra cannot read private tags for implicit VR syntax) as per SOP :ref:`FIXBUG_2`
 - Fixed bug #181 (The implementation classes baseStreamInput, baseStreamOutput, readingDataHandler, 
   transform don't provide a virtual destructor) as per SOP :ref:`FIXBUG_2`
