@@ -7,6 +7,7 @@ Version |release| (this version)
 --------------------------------
 
 - Fixed bug #160 (Replace "Java++" with "Java" in the section "Getting started" of the documentation) as per SOP :ref:`FIXBUG_2`
+- Implemented enhancement #182 (Add a section that explains how to download Imebra) as per SOP :ref:`DEVENH_2`
 
 Version 4.0.11.1
 ----------------
