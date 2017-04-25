@@ -964,6 +964,21 @@ public:
 };
 
 
+/// \brief Exception thrown when writing into a closed stream.
+///
+///////////////////////////////////////////////////////////////////////////////
+class IMEBRA_API StreamClosedError: public StreamError
+{
+public:
+    /// \brief Constructor.
+    ///
+    /// \param message the message to store into the exception
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    StreamClosedError(const std::string& message);
+};
+
+
 /// \brief Exception thrown when a jpeg tag is found but wasn't expected.
 ///
 ///////////////////////////////////////////////////////////////////////////////
@@ -1093,6 +1108,52 @@ public:
     MemorySizeError(const std::string& message);
 };
 
+
+/// \brief Exception thrown by the ACSE services (negotiation).
+///
+///////////////////////////////////////////////////////////////////////////////
+class IMEBRA_API AcseError: public std::runtime_error
+{
+public:
+    /// \brief Constructor.
+    ///
+    /// \param message the message to store into the exception
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    AcseError(const std::string& message);
+};
+
+
+/// \brief Exception thrown by the ACSE services when an unknown item is
+///        encountered.
+///
+///////////////////////////////////////////////////////////////////////////////
+class IMEBRA_API UnknownAcseItemError: public AcseError
+{
+public:
+    /// \brief Constructor.
+    ///
+    /// \param message the message to store into the exception
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    UnknownAcseItemError(const std::string& message);
+};
+
+
+/// \brief Exception thrown by the ACSE services when an ACSE message is
+///        corrupted.
+///
+///////////////////////////////////////////////////////////////////////////////
+class CorruptedAcseMessageError: public AcseError
+{
+public:
+    /// \brief Constructor.
+    ///
+    /// \param message the message to store into the exception
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    CorruptedAcseMessageError(const std::string& message);
+};
 
 
 }

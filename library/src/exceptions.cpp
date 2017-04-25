@@ -198,6 +198,9 @@ TransformHighBitDifferentColorSpacesError::TransformHighBitDifferentColorSpacesE
 StreamEOFError::StreamEOFError(const std::string& message): StreamError(message)
 {}
 
+StreamClosedError::StreamClosedError(const std::string& message): StreamError(message)
+{}
+
 StreamJpegTagInStreamError::StreamJpegTagInStreamError(const std::string& message): StreamError(message)
 {}
 
@@ -222,5 +225,13 @@ MemoryError::MemoryError(const std::string& message): std::runtime_error(message
 MemorySizeError::MemorySizeError(const std::string& message): MemoryError(message)
 {}
 
+AcseError::AcseError(const std::string& message): std::runtime_error(message)
+{}
+
+UnknownAcseItemError::UnknownAcseItemError(const std::string& message): AcseError(message)
+{}
+
+CorruptedAcseMessageError::CorruptedAcseMessageError(const std::string &message): AcseError(message)
+{}
 
 }
