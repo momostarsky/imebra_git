@@ -61,6 +61,51 @@ StreamCloseError
 .. doxygenclass:: imebra::StreamCloseError
    :members:
 
+StreamClosedError
+-----------------
+.. doxygenclass:: imebra::StreamClosedError
+   :members:
+
+TCPError
+--------
+.. doxygenclass:: imebra::TCPError
+   :members:
+   
+TCPConnectionRefused
+--------------------
+.. doxygenclass:: imebra::TCPConnectionRefused
+   :members:
+
+TCPAddressAlreadyInUse
+----------------------
+.. doxygenclass:: imebra::TCPAddressAlreadyInUse
+   :members:
+
+PermissionDeniedError
+---------------------
+.. doxygenclass:: imebra::PermissionDeniedError
+   :members:
+
+AddressError
+------------
+.. doxygenclass:: imebra::AddressError
+   :members:
+
+AddressTryAgainError
+--------------------
+.. doxygenclass:: imebra::AddressTryAgainError
+   :members:
+
+AddressNoNameError
+------------------
+.. doxygenclass:: imebra::AddressNoNameError
+   :members:
+
+AddressServiceNotSupportedError
+-------------------------------
+.. doxygenclass:: imebra::AddressServiceNotSupportedError
+   :members:
+
 DictionaryError
 ---------------
 .. doxygenclass:: imebra::DictionaryError

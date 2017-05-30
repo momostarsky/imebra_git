@@ -18,6 +18,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #include "streamWriterImpl.h"
 #include <string.h>
+#include "../include/imebra/exceptions.h"
 
 namespace imebra
 {
@@ -60,7 +61,14 @@ streamWriter::streamWriter(std::shared_ptr<baseStreamOutput> pControlledStream, 
 ///////////////////////////////////////////////////////////
 streamWriter::~streamWriter()
 {
-	flushDataBuffer();
+    try
+    {
+        flushDataBuffer();
+    }
+    catch(const StreamClosedError&)
+    {
+
+    }
 }
 
 

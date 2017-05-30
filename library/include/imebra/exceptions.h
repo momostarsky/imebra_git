@@ -204,7 +204,6 @@ public:
 /// \brief Exception thrown when there is an error during the write phase.
 ///
 ///////////////////////////////////////////////////////////////////////////////
-
 class IMEBRA_API StreamWriteError : public StreamError
 {
 public:
@@ -230,6 +229,104 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     StreamCloseError(const std::string& message);
+};
+
+
+///
+/// \brief The peer refused the attempted connection.
+///
+///////////////////////////////////////////////////////////////////////////////
+class IMEBRA_API TCPConnectionRefused: public StreamOpenError
+{
+public:
+    TCPConnectionRefused(const std::string& message);
+};
+
+
+///
+/// \brief The specified address is already in use by another socket.
+///
+///////////////////////////////////////////////////////////////////////////////
+class IMEBRA_API TCPAddressAlreadyInUse: public StreamOpenError
+{
+public:
+    TCPAddressAlreadyInUse(const std::string& message);
+};
+
+
+///
+/// \brief The application does not have the permissions to carry out the
+///        operation
+///
+///////////////////////////////////////////////////////////////////////////////
+class IMEBRA_API PermissionDeniedError: public std::runtime_error
+{
+public:
+    PermissionDeniedError(const std::string& message);
+};
+
+
+///
+/// \brief Base class for the exceptions thrown by TCPAddress.
+///
+///////////////////////////////////////////////////////////////////////////////
+class IMEBRA_API AddressError: public std::runtime_error
+{
+public:
+    /// \brief Constructor.
+    ///
+    /// \param message the message to store into the exception
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    AddressError(const std::string& message);
+};
+
+
+/// \brief Exception thrown by TCPAddress when a temporary malfunction
+///        prevented the address resolution. Trying again may cancel the error
+///        condition.
+///
+///////////////////////////////////////////////////////////////////////////////
+class IMEBRA_API AddressTryAgainError: public AddressError
+{
+public:
+    /// \brief Constructor.
+    ///
+    /// \param message the message to store into the exception
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    AddressTryAgainError(const std::string& message);
+};
+
+
+/// \brief Exception thrown by TCPAddress when the name cannot be resolved.
+///
+///////////////////////////////////////////////////////////////////////////////
+class IMEBRA_API AddressNoNameError: public AddressError
+{
+public:
+    /// \brief Constructor.
+    ///
+    /// \param message the message to store into the exception
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    AddressNoNameError(const std::string& message);
+};
+
+
+/// \brief Exception thrown by TCPAddress when the specified service is
+///        not supported.
+///
+///////////////////////////////////////////////////////////////////////////////
+class IMEBRA_API AddressServiceNotSupportedError: public AddressError
+{
+public:
+    /// \brief Constructor.
+    ///
+    /// \param message the message to store into the exception
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    AddressServiceNotSupportedError(const std::string& message);
 };
 
 
@@ -964,10 +1061,10 @@ public:
 };
 
 
-/// \brief Exception thrown when writing into a closed stream.
+/// \brief Exception thrown when a stream has been closed
 ///
 ///////////////////////////////////////////////////////////////////////////////
-class IMEBRA_API StreamClosedError: public StreamError
+class IMEBRA_API StreamClosedError: public StreamEOFError
 {
 public:
     /// \brief Constructor.
@@ -1108,6 +1205,11 @@ public:
     MemorySizeError(const std::string& message);
 };
 
+
+class IMEBRA_API TCPError: public std::runtime_error
+{
+
+};
 
 /// \brief Exception thrown by the ACSE services (negotiation).
 ///

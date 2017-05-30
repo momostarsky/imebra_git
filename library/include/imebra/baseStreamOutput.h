@@ -57,6 +57,7 @@ class IMEBRA_API BaseStreamOutput
     BaseStreamOutput& operator=(const BaseStreamOutput&) = delete;
 
 #ifndef SWIG
+    friend class TCPStream;
     friend class StreamWriter;
     friend class FileStreamOutput;
     friend class MemoryStreamOutput;

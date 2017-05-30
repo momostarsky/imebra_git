@@ -198,10 +198,32 @@ TransformHighBitDifferentColorSpacesError::TransformHighBitDifferentColorSpacesE
 StreamEOFError::StreamEOFError(const std::string& message): StreamError(message)
 {}
 
-StreamClosedError::StreamClosedError(const std::string& message): StreamError(message)
+StreamClosedError::StreamClosedError(const std::string& message): StreamEOFError(message)
+{}
+
+
+TCPConnectionRefused::TCPConnectionRefused(const std::string& message): StreamOpenError(message)
+{}
+
+TCPAddressAlreadyInUse::TCPAddressAlreadyInUse(const std::string& message): StreamOpenError(message)
+{}
+
+PermissionDeniedError::PermissionDeniedError(const std::string& message): std::runtime_error(message)
 {}
 
 StreamJpegTagInStreamError::StreamJpegTagInStreamError(const std::string& message): StreamError(message)
+{}
+
+AddressError::AddressError(const std::string &message): std::runtime_error(message)
+{}
+
+AddressTryAgainError::AddressTryAgainError(const std::string &message): AddressError(message)
+{}
+
+AddressNoNameError::AddressNoNameError(const std::string& message): AddressError(message)
+{}
+
+AddressServiceNotSupportedError::AddressServiceNotSupportedError(const std::string &message): AddressError(message)
 {}
 
 ModalityVOILUTError::ModalityVOILUTError(const std::string& message): TransformError(message)

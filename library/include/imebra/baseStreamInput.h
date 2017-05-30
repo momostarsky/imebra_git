@@ -57,7 +57,8 @@ class IMEBRA_API BaseStreamInput
     BaseStreamInput& operator=(const BaseStreamInput&) = delete;
 
 #ifndef SWIG
-	friend class StreamReader;
+    friend class TCPStream;
+    friend class StreamReader;
     friend class FileStreamInput;
     friend class MemoryStreamInput;
 
