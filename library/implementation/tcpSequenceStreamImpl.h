@@ -22,6 +22,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <atomic>
 #include <vector>
 
+#include "configurationImpl.h"
+
 #ifdef IMEBRA_WINDOWS
 #include <Winsock2.h>
 #else
