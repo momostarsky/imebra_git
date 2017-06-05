@@ -21,12 +21,20 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #include <atomic>
 #include <vector>
+
+#ifdef IMEBRA_WINDOWS
+#include <Winsock2.h>
+#else
 #include <netdb.h>
+#endif
+
 #include <condition_variable>
 #include <mutex>
 #include "baseSequenceStreamImpl.h"
 
+#ifndef IMEBRA_TCP_TIMEOUT_MS
 #define IMEBRA_TCP_TIMEOUT_MS 500
+#endif
 
 namespace imebra
 {
@@ -34,7 +42,32 @@ namespace imebra
 namespace implementation
 {
 
+#ifdef IMEBRA_WINDOWS
+
+class initWinsock
+{
+public:
+    initWinsock();
+    ~initWinsock();
+
+    static std::shared_ptr<initWinsock> getWinsockInitialization();
+
+    class forceWinsockInitialization
+    {
+    public:
+        forceWinsockInitialization()
+        {
+            initWinsock::getWinsockInitialization();
+        }
+    }
+
+};
+
+#endif
+
+
 long throwTcpException(long socketOperationResult);
+
 
 ///
 /// \brief A TCP address.
@@ -62,6 +95,9 @@ public:
     int getProtocol() const;
 
 private:
+#ifdef IMEBRA_WINDOWS
+    initWinsock m_initWinsock;
+#endif
     std::string m_node;
     std::string m_service;
     std::vector<std::uint8_t> m_sockAddr;
@@ -115,7 +151,6 @@ public:
     void isTerminating();
 
 private:
-
     std::atomic<bool> m_bTerminate;
     std::atomic<int> m_waiting;
     std::condition_variable m_waitingCondition;
@@ -186,6 +221,10 @@ public:
     void terminate();
 
 private:
+#ifdef IMEBRA_WINDOWS
+    initWinsock m_initWinsock;
+#endif
+
     int m_socket;
     const std::shared_ptr<tcpAddress> m_pAddress;
 
@@ -238,6 +277,10 @@ public:
     std::shared_ptr<tcpSequenceStream> waitForConnection();
 
 private:
+#ifdef IMEBRA_WINDOWS
+    initWinsock m_initWinsock;
+#endif
+
     int m_socket;
 
     tcpTerminate m_terminate;

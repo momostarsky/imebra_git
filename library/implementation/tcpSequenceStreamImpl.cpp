@@ -22,7 +22,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #ifdef IMEBRA_WINDOWS
 
-#include <winsock2.h>
 #include <Ws2tcpip.h>
 
 #else
@@ -33,11 +32,56 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <fcntl.h>
 
 #endif
+
+
 namespace imebra
 {
 
 namespace implementation
 {
+
+#ifdef IMEBRA_WINDOWS
+
+//
+// Force the Winsock initialization
+//  starts.
+//
+///////////////////////////////////////////////////////////
+static initWinsock::forceWinsockInitialization forceInitialization;
+
+initWinsock::initWinsock()
+{
+    IMEBRA_FUNCTION_START();
+
+    WSADATA wsaData;
+
+    if(WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
+    {
+        IMEBRA_THROW(std::runtime_error, "WSA socket initialization failure");
+    }
+
+    IMEBRA_FUNCTION_END();
+}
+
+initWinsock::~initWinsock()
+{
+    WSACleanup();
+}
+
+std::shared_ptr<initWinsock> initWinsock::getWinsockInitialization()
+{
+    IMEBRA_FUNCTION_START();
+
+    // Violation to requirement REQ_MAKE_SHARED due to protected constructor
+    static std::shared_ptr<initWinsock> m_initWinsock(std::make_shared<initWinsock>());
+
+    return m_initWinsock;
+
+    IMEBRA_FUNCTION_END();
+}
+
+#endif
+
 
 ///////////////////////////////////////////////////////////
 //
