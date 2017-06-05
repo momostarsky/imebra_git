@@ -118,7 +118,7 @@ long throwTcpException(long socketOperationResult)
     switch(WSAGetLastError())
     {
     case WSAECONNREFUSED:
-        IMEBRA_THROW(TCPConnectionRefused, "Connection refused")
+        IMEBRA_THROW(TCPConnectionRefused, "Connection refused");
     case WSAENOBUFS:
     case WSAEMFILE:
         throw std::bad_alloc();
@@ -137,7 +137,7 @@ long throwTcpException(long socketOperationResult)
     case EPIPE:
         IMEBRA_THROW(StreamClosedError, "Socket closed");
     case WSAEADDRINUSE:
-        IMEBRA_THROW(TCPAddressAlreadyInUse, "The specified address is already in use.")
+        IMEBRA_THROW(TCPAddressAlreadyInUse, "The specified address is already in use.");
 
     }
 #else

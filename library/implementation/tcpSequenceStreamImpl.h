@@ -61,7 +61,7 @@ public:
         {
             initWinsock::getWinsockInitialization();
         }
-    }
+    };
 
 };
 
