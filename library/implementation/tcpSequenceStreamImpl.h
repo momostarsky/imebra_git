@@ -26,6 +26,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #ifdef IMEBRA_WINDOWS
 #include <Winsock2.h>
+#include <WS2tcpip.h>
 #else
 #include <netdb.h>
 #endif
