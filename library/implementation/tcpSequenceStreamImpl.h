@@ -109,39 +109,40 @@ private:
 
 
 ///
-/// \brief Used by tcpListener and tcpSequenceStream to
-///        perform a graceful termination of blocking
-///        methods
+/// \brief Base class for tcpSequenceStream and
+///        tcpListener
 ///
 ///////////////////////////////////////////////////////////
-class tcpTerminate
+class tcpBaseSocket
 {
 public:
     ///
-    /// \brief Allocate this class at the beginning of a
-    ///        blocking method.
-    ///
-    ///////////////////////////////////////////////////////////
-    class tcpTerminateWaiting
-    {
-    public:
-        tcpTerminateWaiting(tcpTerminate& terminateObject);
-        ~tcpTerminateWaiting();
-
-        tcpTerminate& m_terminateObject;
-    };
-
-    ///
     /// \brief Constructor
     ///
+    /// \param socket the socket number
+    ///
     ///////////////////////////////////////////////////////////
-    tcpTerminate();
+    tcpBaseSocket(int socket);
 
     ///
-    /// \brief Instruct the blocking method to terminate.
+    /// \brief Destructor. Closes the socket.
     ///
-    ///        The blocking method will terminate by throwing
-    ///        a StreamClosedException.
+    ///////////////////////////////////////////////////////////
+    virtual ~tcpBaseSocket();
+
+    ///
+    /// \brief Enable or disable the blocking mode
+    ///
+    /// \param bBlocking true to enable the blocking mode,
+    ///                  false to disable it
+    ///
+    ///////////////////////////////////////////////////////////
+    void setBlockingMode(bool bBlocking);
+
+    ///
+    /// \brief Forces a termination of pending and subsequent
+    ///        read and write operations by causing them to
+    ///        throw SocketClosedException.
     ///
     ///////////////////////////////////////////////////////////
     void terminate();
@@ -153,18 +154,35 @@ public:
     ///////////////////////////////////////////////////////////
     void isTerminating();
 
-private:
+    ///
+    /// \brief Allocate this class at the beginning of a
+    ///        blocking method.
+    ///
+    ///////////////////////////////////////////////////////////
+    class tcpTerminateWaiting
+    {
+    public:
+        tcpTerminateWaiting(tcpBaseSocket& terminateObject);
+        ~tcpTerminateWaiting();
+
+        tcpBaseSocket& m_terminateObject;
+    };
+
+protected:
+    int m_socket;
+
     std::atomic<bool> m_bTerminate;
     std::atomic<int> m_waiting;
     std::condition_variable m_waitingCondition;
     std::mutex m_waitingMutex;
 };
 
+
 ///
 /// \brief A TCP socket
 ///
 ///////////////////////////////////////////////////////////
-class tcpSequenceStream: public baseSequenceStreamInput, public baseSequenceStreamOutput
+class tcpSequenceStream: public tcpBaseSocket, public baseSequenceStreamInput, public baseSequenceStreamOutput
 {
 public:
 
@@ -213,26 +231,16 @@ public:
     ///
     /// \return the peer's address
     ///
+    ///////////////////////////////////////////////////////////
     std::shared_ptr<tcpAddress> getPeerAddress() const;
 
-    ///
-    /// \brief Forces a termination of pending and subsequent
-    ///        read and write operations by causing them to
-    ///        throw SocketClosedException.
-    ///
-    ///////////////////////////////////////////////////////////
-    void terminate();
 
 private:
 #ifdef IMEBRA_WINDOWS
     initWinsock m_initWinsock;
 #endif
 
-    int m_socket;
     const std::shared_ptr<tcpAddress> m_pAddress;
-
-    tcpTerminate m_terminate;
-
 };
 
 
@@ -240,7 +248,7 @@ private:
 /// \brief Listens for incoming TCP connections.
 ///
 ///////////////////////////////////////////////////////////
-class tcpListener
+class tcpListener: public tcpBaseSocket
 {
 public:
     ///
@@ -261,13 +269,6 @@ public:
     ~tcpListener();
 
     ///
-    /// \brief Forces the termination of pending
-    ///        waitForConnection() calls.
-    ///
-    ///////////////////////////////////////////////////////////
-    void terminate();
-
-    ///
     /// \brief Wait for an incoming connection until a
     ///        connection is accepted or the socket is
     ///        terminated by the destructor or terminate(),
@@ -284,9 +285,6 @@ private:
     initWinsock m_initWinsock;
 #endif
 
-    int m_socket;
-
-    tcpTerminate m_terminate;
 };
 
 

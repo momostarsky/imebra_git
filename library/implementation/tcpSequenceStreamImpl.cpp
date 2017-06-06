@@ -357,7 +357,7 @@ int tcpAddress::getProtocol() const
 // long running functions (listen read and write)
 //
 ///////////////////////////////////////////////////////////
-tcpTerminate::tcpTerminateWaiting::tcpTerminateWaiting(tcpTerminate& terminateObject):
+tcpBaseSocket::tcpTerminateWaiting::tcpTerminateWaiting(tcpBaseSocket& terminateObject):
     m_terminateObject(terminateObject)
 {
     IMEBRA_FUNCTION_START();
@@ -372,19 +372,73 @@ tcpTerminate::tcpTerminateWaiting::tcpTerminateWaiting(tcpTerminate& terminateOb
     IMEBRA_FUNCTION_END();
 }
 
-tcpTerminate::tcpTerminateWaiting::~tcpTerminateWaiting()
+
+tcpBaseSocket::tcpTerminateWaiting::~tcpTerminateWaiting()
 {
     std::unique_lock<std::mutex> lock(m_terminateObject.m_waitingMutex);
     std::atomic_fetch_sub(&(m_terminateObject.m_waiting), 1);
     m_terminateObject.m_waitingCondition.notify_all();
 }
 
-tcpTerminate::tcpTerminate():
-    m_bTerminate(false), m_waiting(0)
+
+///////////////////////////////////////////////////////////
+///
+/// Base class for tcpSequenceStream and tcpListener
+///
+///////////////////////////////////////////////////////////
+tcpBaseSocket::tcpBaseSocket(int socket):
+    m_socket(socket), m_bTerminate(false), m_waiting(0)
 {
+    // Set timeout
+#ifdef IMEBRA_WINDOWS
+    std::uint32_t timeout(IMEBRA_TCP_TIMEOUT_MS);
+    setsockopt(m_socket, SOL_SOCKET, SO_RCVTIMEO, (const char*)&timeout, sizeof(timeout));
+    setsockopt(m_socket, SOL_SOCKET, SO_SNDTIMEO, (const char*)&timeout, sizeof(timeout));
+
+#else
+    timeval timeout;
+    timeout.tv_sec = 0;
+    timeout.tv_usec = IMEBRA_TCP_TIMEOUT_MS * 1000;
+    setsockopt(m_socket, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
+    setsockopt(m_socket, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout));
+#endif
 }
 
-void tcpTerminate::terminate()
+
+tcpBaseSocket::~tcpBaseSocket()
+{
+    if(m_socket >= 0)
+    {
+#ifdef IMEBRA_WINDOWS
+        ::closesocket(m_socket);
+#else
+        ::close(m_socket);
+#endif
+    }
+}
+
+
+void tcpBaseSocket::setBlockingMode(bool bBlocking)
+{
+#ifdef IMEBRA_WINDOWS
+    long block(bBlocking ? 0 : 1);
+    throwTcpException(ioctlsocket(m_socket, FIONBIO, &block));
+#else
+    // Enable blocking mode
+    int flags = (int)throwTcpException(fcntl(m_socket, F_GETFL, 0));
+    if(bBlocking)
+    {
+        throwTcpException(fcntl(m_socket, F_SETFL, flags & ~O_NONBLOCK));
+    }
+    else
+    {
+        throwTcpException(fcntl(m_socket, F_SETFL, flags | O_NONBLOCK));
+    }
+#endif
+}
+
+
+void tcpBaseSocket::terminate()
 {
     m_bTerminate.store(true);
     std::unique_lock<std::mutex> lock(m_waitingMutex);
@@ -394,7 +448,7 @@ void tcpTerminate::terminate()
     }
 }
 
-void tcpTerminate::isTerminating()
+void tcpBaseSocket::isTerminating()
 {
     IMEBRA_FUNCTION_START();
 
@@ -413,27 +467,19 @@ void tcpTerminate::isTerminating()
 //
 ///////////////////////////////////////////////////////////
 tcpSequenceStream::tcpSequenceStream(int tcpSocket, std::shared_ptr<tcpAddress> pAddress):
-    m_socket(tcpSocket),
+    tcpBaseSocket(tcpSocket),
     m_pAddress(pAddress)
 {
     IMEBRA_FUNCTION_START();
 
     // Enable blocking mode
-    int flags = (int)throwTcpException(fcntl(m_socket, F_GETFL, 0));
-    throwTcpException(fcntl(m_socket, F_SETFL, flags & ~O_NONBLOCK));
-
-    // Set timeout
-    timeval timeout;
-    timeout.tv_sec = 0;
-    timeout.tv_usec = IMEBRA_TCP_TIMEOUT_MS * 1000;
-    setsockopt(m_socket, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
-    setsockopt(m_socket, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout));
+    setBlockingMode(true);
 
     IMEBRA_FUNCTION_END();
 }
 
 tcpSequenceStream::tcpSequenceStream(std::shared_ptr<tcpAddress> pAddress):
-    m_socket((int)throwTcpException(socket(pAddress->getFamily(), pAddress->getType(), pAddress->getProtocol()))),
+    tcpBaseSocket((int)throwTcpException(socket(pAddress->getFamily(), pAddress->getType(), pAddress->getProtocol()))),
     m_pAddress(pAddress)
 {
     IMEBRA_FUNCTION_START();
@@ -445,32 +491,13 @@ tcpSequenceStream::tcpSequenceStream(std::shared_ptr<tcpAddress> pAddress):
 #endif
 
     // Connect in non-blocking mode, then enable blocking
-    int flags = (int)throwTcpException(fcntl(m_socket, F_GETFL, 0));
-    throwTcpException(fcntl(m_socket, F_SETFL, flags | O_NONBLOCK));
+    setBlockingMode(false);
 
     throwTcpException(connect(m_socket, pAddress->getSockAddr(), pAddress->getSockAddrLen()));
 
-    throwTcpException(fcntl(m_socket, F_SETFL, flags & ~O_NONBLOCK));
-
-    // Set timeout
-    timeval timeout;
-    timeout.tv_sec = 0;
-    timeout.tv_usec = IMEBRA_TCP_TIMEOUT_MS * 1000;
-    setsockopt(m_socket, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
-    setsockopt(m_socket, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout));
+    setBlockingMode(true);
 
     IMEBRA_FUNCTION_END();
-}
-
-
-///////////////////////////////////////////////////////////
-//
-// Trigger the termination of the read and write operations
-//
-///////////////////////////////////////////////////////////
-void tcpSequenceStream::terminate()
-{
-    m_terminate.terminate();
 }
 
 
@@ -483,8 +510,11 @@ tcpSequenceStream::~tcpSequenceStream()
 {
     terminate();
 
+#ifdef IMEBRA_WINDOWS
+    shutdown(m_socket, SD_BOTH);
+#else
     shutdown(m_socket, SHUT_RDWR);
-    close(m_socket);
+#endif
 }
 
 
@@ -497,14 +527,14 @@ size_t tcpSequenceStream::read(std::uint8_t* pBuffer, size_t bufferLength)
 {
     IMEBRA_FUNCTION_START();
 
-    tcpTerminate::tcpTerminateWaiting waiting(m_terminate);
+    tcpTerminateWaiting waiting(*this);
 
     // A peer shutdown causes the reception of a zero
     // bytes buffer
     ///////////////////////////////////////////////////////////
     if(bufferLength == 0)
     {
-        m_terminate.isTerminating();
+        isTerminating();
         return 0;
     }
 
@@ -513,11 +543,11 @@ size_t tcpSequenceStream::read(std::uint8_t* pBuffer, size_t bufferLength)
     ///////////////////////////////////////////////////////////
     for(;;)
     {
-        m_terminate.isTerminating();
+        isTerminating();
 
         try
         {
-            long receivedBytes(throwTcpException(recv(m_socket, pBuffer, bufferLength, 0)));
+            long receivedBytes(throwTcpException(recv(m_socket, (char*)pBuffer, bufferLength, 0)));
             if(receivedBytes == 0)
             {
                 return 0;
@@ -546,7 +576,7 @@ void tcpSequenceStream::write(const std::uint8_t* pBuffer, size_t bufferLength)
 {
     IMEBRA_FUNCTION_START();
 
-    tcpTerminate::tcpTerminateWaiting waiting(m_terminate);
+    tcpTerminateWaiting waiting(*this);
 
     // Don't send zero bytes buffer (this is done via shutdown)
     ///////////////////////////////////////////////////////////
@@ -562,12 +592,12 @@ void tcpSequenceStream::write(const std::uint8_t* pBuffer, size_t bufferLength)
     {
         try
         {
-            m_terminate.isTerminating();
+            isTerminating();
 
 #if (__linux__ == 1)
-            long sentBytes = throwTcpException((long)send(m_socket, pBuffer + totalSentBytes, bufferLength - totalSentBytes, MSG_NOSIGNAL));
+            long sentBytes = throwTcpException((long)send(m_socket, (const char*)(pBuffer + totalSentBytes), bufferLength - totalSentBytes, MSG_NOSIGNAL));
 #else
-            long sentBytes = throwTcpException((long)send(m_socket, pBuffer + totalSentBytes, bufferLength - totalSentBytes, 0));
+            long sentBytes = throwTcpException((long)send(m_socket, (const char*)(pBuffer + totalSentBytes), bufferLength - totalSentBytes, 0));
 #endif
 
             totalSentBytes += (size_t)sentBytes;
@@ -599,38 +629,19 @@ std::shared_ptr<tcpAddress> tcpSequenceStream::getPeerAddress() const
 //
 ///////////////////////////////////////////////////////////
 tcpListener::tcpListener(std::shared_ptr<tcpAddress> pAddress):
-    m_socket((int)throwTcpException(socket(pAddress->getFamily(), pAddress->getType(), pAddress->getProtocol())))
+    tcpBaseSocket((int)throwTcpException(socket(pAddress->getFamily(), pAddress->getType(), pAddress->getProtocol())))
 {
     IMEBRA_FUNCTION_START();
 
     // Connect in non-blocking mode, then enable blocking
-    int flags = (int)throwTcpException(fcntl(m_socket, F_GETFL, 0));
-    throwTcpException(fcntl(m_socket, F_SETFL, flags | O_NONBLOCK));
+    setBlockingMode(false);
 
     throwTcpException(bind(m_socket, pAddress->getSockAddr(), pAddress->getSockAddrLen()));
     throwTcpException(listen(m_socket, SOMAXCONN));
 
-    throwTcpException(fcntl(m_socket, F_SETFL, flags & ~O_NONBLOCK));
-
-    // Set timeout
-    timeval timeout;
-    timeout.tv_sec = 0;
-    timeout.tv_usec = 100000;
-    throwTcpException(setsockopt(m_socket, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout)));
-    throwTcpException(setsockopt(m_socket, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout)));
+    setBlockingMode(true);
 
     IMEBRA_FUNCTION_END();
-}
-
-
-///////////////////////////////////////////////////////////
-//
-// Trigger the listener's termination
-//
-///////////////////////////////////////////////////////////
-void tcpListener::terminate()
-{
-    m_terminate.terminate();
 }
 
 
@@ -642,7 +653,6 @@ void tcpListener::terminate()
 tcpListener::~tcpListener()
 {
     terminate();
-    ::close(m_socket);
 }
 
 
@@ -655,13 +665,13 @@ std::shared_ptr<tcpSequenceStream> tcpListener::waitForConnection()
 {
     IMEBRA_FUNCTION_START();
 
-    tcpTerminate::tcpTerminateWaiting waiting(m_terminate);
+    tcpTerminateWaiting waiting(*this);
 
     // Wait for connections until terminated
     ///////////////////////////////////////////////////////////
     for(;;)
     {
-        m_terminate.isTerminating();
+        isTerminating();
 
         sockaddr_in addr;
         socklen_t sockaddrLen(sizeof(addr));
