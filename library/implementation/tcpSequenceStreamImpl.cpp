@@ -421,7 +421,7 @@ tcpBaseSocket::~tcpBaseSocket()
 void tcpBaseSocket::setBlockingMode(bool bBlocking)
 {
 #ifdef IMEBRA_WINDOWS
-    long block(bBlocking ? 0 : 1);
+    unsigned long block(bBlocking ? 0 : 1);
     throwTcpException(ioctlsocket(m_socket, FIONBIO, &block));
 #else
     // Enable blocking mode
