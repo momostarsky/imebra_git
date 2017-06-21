@@ -382,7 +382,7 @@ std::uint32_t huffmanTable::readHuffmanCode(streamReader* pStream)
     IMEBRA_FUNCTION_START();
 
     // Read initial number of bits
-	std::uint32_t readBuffer(pStream->readBits(m_firstValidLength));
+    std::uint32_t readBuffer(pStream->readJpegBits(m_firstValidLength));
 
 	// Validate the current Huffman code. If it's OK, then
 	//  return the ordered value
@@ -410,11 +410,11 @@ std::uint32_t huffmanTable::readHuffmanCode(streamReader* pStream)
 		readBuffer <<= missingBits;
 		if(missingBits == 1)
 		{
-			readBuffer |= pStream->readBit();
+            readBuffer |= pStream->readJpegBit();
 		}
 		else
 		{
-			readBuffer |= pStream->readBits(missingBits);
+            readBuffer |= pStream->readJpegBits(missingBits);
 		}
 
 		// Validate the current Huffman code. If it's OK, then
@@ -456,7 +456,7 @@ void huffmanTable::writeHuffmanCode(const std::uint32_t code, streamWriter* pStr
 	{
         IMEBRA_THROW(HuffmanWriteError, "Trying to write an invalid huffman code");
 	}
-	pStream->writeBits(m_valuesToHuffman[code], m_valuesToHuffmanLength[code]);
+    pStream->writeJpegBits(m_valuesToHuffman[code], m_valuesToHuffmanLength[code]);
 
 	IMEBRA_FUNCTION_END();
 }

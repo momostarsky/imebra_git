@@ -435,10 +435,6 @@ std::shared_ptr<image> jpegImageCodec::getImage(const dataSet& sourceDataSet, st
 
     streamReader* pSourceStream = pStream.get();
 
-    // Activate the tags in the stream
-    ///////////////////////////////////////////////////////////
-    pSourceStream->m_bJpegTags = true;
-
     // Read the Jpeg signature
     ///////////////////////////////////////////////////////////
     std::uint8_t jpegSignature[2];
@@ -464,7 +460,7 @@ std::shared_ptr<image> jpegImageCodec::getImage(const dataSet& sourceDataSet, st
     // Read until the end of the image is reached
     ///////////////////////////////////////////////////////////
     jpeg::jpegInformation information;
-    for(; !information.m_bEndOfImage; pSourceStream->resetInBitsBuffer())
+    for(; !information.m_bEndOfImage; pSourceStream->resetJpegInBitsBuffer())
     {
         std::uint32_t nextMcuStop = information.m_mcuNumberTotal;
         if(information.m_mcuPerRestartInterval != 0)
@@ -548,7 +544,7 @@ std::shared_ptr<image> jpegImageCodec::getImage(const dataSet& sourceDataSet, st
                             std::int32_t amplitude;        // lossless amplitude
                             if(amplitudeLength != 0)
                             {
-                                amplitude = (std::int32_t)pSourceStream->readBits(amplitudeLength);
+                                amplitude = (std::int32_t)pSourceStream->readJpegBits(amplitudeLength);
                                 if(amplitude < ((std::int32_t)1<<(amplitudeLength-1)))
                                 {
                                     amplitude -= ((std::int32_t)1<<amplitudeLength)-1;
@@ -998,10 +994,6 @@ void jpegImageCodec::setImage(
 
     streamWriter* pDestinationStream = pDestStream.get();
 
-    // Activate the tags in the stream
-    ///////////////////////////////////////////////////////////
-    pDestinationStream->m_bJpegTags = true;
-
     // Reset the internal variables
     ////////////////////////////////////////////////////////////////
     jpeg::jpegInformation information;
@@ -1158,7 +1150,7 @@ void jpegImageCodec::writeScan(streamWriter* pDestinationStream, jpeg::jpegInfor
                         continue;
                     }
                     pChannel->m_pActiveHuffmanTableDC->writeHuffmanCode(amplitudeLength, pDestinationStream);
-                    pDestinationStream->writeBits(amplitude, amplitudeLength);
+                    pDestinationStream->writeJpegBits(amplitude, amplitudeLength);
                 }
 
                 continue;
@@ -1192,7 +1184,7 @@ void jpegImageCodec::writeScan(streamWriter* pDestinationStream, jpeg::jpegInfor
 
     if(!bCalcHuffman)
     {
-        pDestinationStream->resetOutBitsBuffer();
+        pDestinationStream->resetJpegOutBitsBuffer();
     }
 
     IMEBRA_FUNCTION_END();
@@ -1282,7 +1274,7 @@ inline void jpegImageCodec::readBlock(streamReader* pStream, jpeg::jpegInformati
             /////////////////////////////////////////////////////////////////
             if(amplitudeLength != 0)
             {
-                value = (std::int32_t)(pStream->readBits(amplitudeLength));
+                value = (std::int32_t)(pStream->readJpegBits(amplitudeLength));
                 if(value < ((std::int32_t)1 << (amplitudeLength-1)) )
                 {
                     value -= ((std::int32_t)1 << amplitudeLength) - 1;
@@ -1317,7 +1309,7 @@ inline void jpegImageCodec::readBlock(streamReader* pStream, jpeg::jpegInformati
         else
         {
             information.m_eobRun += (std::uint32_t)1 << runLength;
-            information.m_eobRun += pStream->readBits(runLength);
+            information.m_eobRun += pStream->readJpegBits(runLength);
             --spectralIndex;
         }
     }
@@ -1427,7 +1419,7 @@ inline void jpegImageCodec::writeBlock(streamWriter* pStream, jpeg::jpegInformat
         pActiveHuffmanTable->writeHuffmanCode(hufCode, pStream);
         if(amplitudeLength != 0)
         {
-            pStream->writeBits(amplitude, amplitudeLength);
+            pStream->writeJpegBits(amplitude, amplitudeLength);
         }
     }
 

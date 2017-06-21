@@ -166,15 +166,6 @@ public:
 
 	//@}
 
-public:
-
-	/// \brief true writeByte() must write all 0xff as
-        ///         0xff, 0x00 anf readByte() as to convert all
-        ///         0xff,0x00 to 0xff, as in jpeg streams.
-	///
-	///////////////////////////////////////////////////////////
-	bool m_bJpegTags;
-
 
 protected:
 	/// \brief Used for buffered IO

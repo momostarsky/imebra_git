@@ -33,12 +33,11 @@ static const streamController::tByteOrdering m_platformByteOrder((*pBytePointer)
 //
 ///////////////////////////////////////////////////////////
 streamController::streamController(size_t virtualStart /* =0 */, size_t virtualLength /* =0 */):
-	m_bJpegTags(false),
-        m_dataBuffer(size_t(IMEBRA_STREAM_CONTROLLER_MEMORY_SIZE), 0),
-		m_virtualStart(virtualStart),
-		m_virtualLength(virtualLength),
-        m_dataBufferStreamPosition(0),
-        m_dataBufferCurrent(0), m_dataBufferEnd(0)
+    m_dataBuffer(size_t(IMEBRA_STREAM_CONTROLLER_MEMORY_SIZE), 0),
+    m_virtualStart(virtualStart),
+    m_virtualLength(virtualLength),
+    m_dataBufferStreamPosition(0),
+    m_dataBufferCurrent(0), m_dataBufferEnd(0)
 {
 }
 

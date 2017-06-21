@@ -135,8 +135,8 @@ public:
 	/// The read position is moved to the specified byte in the
 	///  stream.
 	/// Subsequent calls to the read operations like read(),
-	///  readBits(), readBit(), addBit() and readByte() will
-	///  read data from the position specified here.
+    ///  readJpegBits(), readJpegBit() and  readJpegByte()
+    ///  will read data from the position specified here.
 	///
 	/// @param newPosition the new position to use for read
 	///                   operations, in bytes from the
@@ -162,7 +162,7 @@ public:
 	///                   aligned
 	///
 	///////////////////////////////////////////////////////////
-    inline std::uint32_t readBits(size_t bitsNum)
+    inline std::uint32_t readJpegBits(size_t bitsNum)
 	{
         IMEBRA_FUNCTION_START();
 
@@ -198,7 +198,7 @@ public:
 		{
 			if(bitsNum <= 8)
 			{
-                m_inBitsBuffer = readByte();
+                m_inBitsBuffer = readJpegByte();
 				returnValue |= (m_inBitsBuffer >> (bufferSize - bitsNum));
 				m_inBitsBuffer <<= bitsNum;
 				m_inBitsNum = 8 - bitsNum;
@@ -206,7 +206,7 @@ public:
 			}
 
 			bitsNum -= 8;
-			returnValue |= ((std::uint32_t)readByte()) << bitsNum;
+            returnValue |= ((std::uint32_t)readJpegByte()) << bitsNum;
 		}
 
         IMEBRA_FUNCTION_END();
@@ -223,13 +223,13 @@ public:
 	/// @return the value of the read bit (1 or 0)
     ///
 	///////////////////////////////////////////////////////////
-	inline std::uint32_t readBit()
+    inline std::uint32_t readJpegBit()
 	{
         IMEBRA_FUNCTION_START();
 
         if(m_inBitsNum == 0)
         {
-            m_inBitsBuffer = readByte();
+            m_inBitsBuffer = readJpegByte();
             m_inBitsNum = 8;
         }
         --m_inBitsNum;
@@ -240,50 +240,19 @@ public:
 	}
 
 
-	/// \brief Read one bit from the stream and add its value
-	///         to the specified buffer.
+    /// \brief Reset the bit pointer used by readJpegBits(),
+    ///         and readJpegBit().
 	///
-	/// The buffer pointed by the pBuffer parameter is
-	///  left-shifted before the read bit is inserted in the
-	///  least significant bit of the buffer.
-	///
-	/// The function throws a streamExceptionRead if an error
-	///  occurs.
-	///
-	/// @param pBuffer   a pointer to a std::uint32_t value that
-	///                   will be left shifted and filled
-	///                   with the read bit.
-    ///
-	///////////////////////////////////////////////////////////
-	inline void addBit(std::uint32_t* const pBuffer)
-	{
-        IMEBRA_FUNCTION_START();
-
-        (*pBuffer) <<= 1;
-                
-        if(m_inBitsNum == 0)
-        {
-            m_inBitsBuffer = readByte();
-            m_inBitsNum = 8;
-        }
-        m_inBitsBuffer <<= 1;
-        --m_inBitsNum;
-        *pBuffer |= (m_inBitsBuffer >> 8) & 1;
-
-		IMEBRA_FUNCTION_END();
-	}
-
-	/// \brief Reset the bit pointer used by readBits(),
-	///         readBit() and addBit().
-	///
-	/// A subsequent call to readBits(), readBit and
-	///  addBit() will read data from a byte-aligned boundary.
+    /// A subsequent call to readJpegBits() and readJpegBit
+    ///  will read data from a byte-aligned boundary.
 	///
 	///////////////////////////////////////////////////////////
-	inline void resetInBitsBuffer()
+    inline void resetJpegInBitsBuffer()
 	{
 		m_inBitsNum = 0;
 	}
+
+private:
 
 	/// \brief Read a single byte from the stream, parsing it
 	///         if m_pTagByte is not zero.
@@ -314,7 +283,7 @@ public:
 	/// @return          the read byte
 	///
 	///////////////////////////////////////////////////////////
-	inline std::uint8_t readByte()
+    inline std::uint8_t readJpegByte()
 	{
         IMEBRA_FUNCTION_START();
 
@@ -328,7 +297,7 @@ public:
 		// Read one byte. Return immediatly if the tags are not
 		//  activated
 		///////////////////////////////////////////////////////////
-        if(m_dataBuffer[m_dataBufferCurrent] != 0xff || !m_bJpegTags)
+        if(m_dataBuffer[m_dataBufferCurrent] != 0xff)
         {
             return m_dataBuffer[m_dataBufferCurrent++];
         }
@@ -355,7 +324,6 @@ public:
         IMEBRA_FUNCTION_END();
     }
 
-private:
 	/// \brief Read data from the file into the data buffer.
 	///
 	/// The function reads as many bytes as possible until the

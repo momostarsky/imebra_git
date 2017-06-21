@@ -110,7 +110,7 @@ public:
 	///                  The function can write max 32 bits
 	///                   
 	///////////////////////////////////////////////////////////
-    inline void writeBits(const std::uint32_t buffer, size_t bitsNum)
+    inline void writeJpegBits(const std::uint32_t buffer, size_t bitsNum)
 	{
         IMEBRA_FUNCTION_START();
 
@@ -125,7 +125,7 @@ public:
                 if(m_outBitsNum==8)
                 {
                         m_outBitsNum = 0;
-                        writeByte(m_outBitsBuffer);
+                        writeJpegByte(m_outBitsBuffer);
                         m_outBitsBuffer = 0;
                 }
                 return;
@@ -133,13 +133,13 @@ public:
 			if(m_outBitsNum == 0 && bitsNum >= 8)
             {
                     bitsNum -= 8;
-                    writeByte(std::uint8_t(tempBuffer >> bitsNum));
+                    writeJpegByte(std::uint8_t(tempBuffer >> bitsNum));
             }
             else
             {
                 m_outBitsBuffer |= (std::uint8_t)(tempBuffer >> (bitsNum + m_outBitsNum - 8));
                 bitsNum -= (8-m_outBitsNum);
-                writeByte(m_outBitsBuffer);
+                writeJpegByte(m_outBitsBuffer);
                 m_outBitsBuffer = 0;
                 m_outBitsNum = 0;
             }
@@ -151,26 +151,28 @@ public:
 		IMEBRA_FUNCTION_END();
 	}
 
-	/// \brief Reset the bit pointer used by writeBits().
+    /// \brief Reset the bit pointer used by writeJpegBits().
 	///
-	/// A subsequent call to writeBits() will write data to
+    /// A subsequent call to writeJpegBits() will write data to
 	///  a byte-aligned boundary.
 	///
 	///////////////////////////////////////////////////////////
-	inline void resetOutBitsBuffer()
+    inline void resetJpegOutBitsBuffer()
 	{
         IMEBRA_FUNCTION_START();
 
 		if(m_outBitsNum == 0)
 			return;
 
-		writeByte(m_outBitsBuffer);
+        writeJpegByte(m_outBitsBuffer);
 		flushDataBuffer();
 		m_outBitsBuffer = 0;
 		m_outBitsNum = 0;
 
 		IMEBRA_FUNCTION_END();
 	}
+
+private:
 
 	/// \brief Write a single byte to the stream, parsing it
 	///         if m_pTagByte is not zero.
@@ -190,7 +192,7 @@ public:
 	/// @param buffer    byte to be written
 	///
 	///////////////////////////////////////////////////////////
-	inline void writeByte(const std::uint8_t buffer)
+    inline void writeJpegByte(const std::uint8_t buffer)
 	{
         IMEBRA_FUNCTION_START();
 
@@ -199,7 +201,7 @@ public:
 			flushDataBuffer();
 		}
         m_dataBuffer[m_dataBufferCurrent++] = buffer;
-		if(m_bJpegTags && buffer == (std::uint8_t)0xff)
+        if(buffer == (std::uint8_t)0xff)
 		{
             if(m_dataBufferCurrent == m_dataBuffer.size())
 			{
@@ -211,7 +213,6 @@ public:
         IMEBRA_FUNCTION_END();
     }
 
-private:
     std::shared_ptr<baseStreamOutput> m_pControlledStream;
 
 	std::uint8_t m_outBitsBuffer;

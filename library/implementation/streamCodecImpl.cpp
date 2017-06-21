@@ -50,7 +50,7 @@ std::shared_ptr<dataSet> streamCodec::read(std::shared_ptr<streamReader> pSource
 
 	// Reset the codec's bits buffer
 	///////////////////////////////////////////////////////////
-	pSourceStream->resetInBitsBuffer();
+    pSourceStream->resetJpegInBitsBuffer();
 
 	// Store the stream's position
 	///////////////////////////////////////////////////////////
@@ -99,7 +99,7 @@ void streamCodec::write(std::shared_ptr<streamWriter> pDestStream, std::shared_p
 	///////////////////////////////////////////////////////////
 	pSourceDataSet->updateCharsetTag();
 
-	pDestStream->resetOutBitsBuffer();
+    pDestStream->resetJpegOutBitsBuffer();
 	writeStream(pDestStream, pSourceDataSet);
 	pDestStream->flushDataBuffer();
 
