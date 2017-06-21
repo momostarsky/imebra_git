@@ -25,6 +25,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "configurationImpl.h"
 
 #ifdef IMEBRA_WINDOWS
+#pragma comment(lib, "Ws2_32.lib")
 #include <Winsock2.h>
 #include <WS2tcpip.h>
 #else
