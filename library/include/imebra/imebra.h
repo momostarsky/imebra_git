@@ -51,5 +51,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "tcpAddress.h"
 #include "tcpStream.h"
 #include "tcpListener.h"
+#include "pipe.h"
 
 #endif // IMEBRA_INCLUDED

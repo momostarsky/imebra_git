@@ -27,12 +27,12 @@ StreamReader::StreamReader(std::shared_ptr<implementation::streamReader> pReader
 {
 }
 
-StreamReader::StreamReader(const BaseStreamInput& stream): m_pReader(std::make_shared<implementation::streamReader>(stream.m_pStream))
+StreamReader::StreamReader(const BaseStreamInput& stream): m_pReader(std::make_shared<implementation::streamReader>(stream.m_pInputStream))
 {
 }
 
 
-StreamReader::StreamReader(const BaseStreamInput& stream, size_t virtualStart, size_t virtualLength): m_pReader(std::make_shared<implementation::streamReader>(stream.m_pStream, virtualStart, virtualLength))
+StreamReader::StreamReader(const BaseStreamInput& stream, size_t virtualStart, size_t virtualLength): m_pReader(std::make_shared<implementation::streamReader>(stream.m_pInputStream, virtualStart, virtualLength))
 {
 }
 

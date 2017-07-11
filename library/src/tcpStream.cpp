@@ -25,7 +25,7 @@ namespace imebra
 
 TCPStream::TCPStream(const TCPActiveAddress& address):
     BaseStreamInput(std::make_shared<implementation::tcpSequenceStream>(address.m_pAddress)),
-    BaseStreamOutput(std::static_pointer_cast<implementation::tcpSequenceStream>(BaseStreamInput::m_pStream))
+    BaseStreamOutput(std::static_pointer_cast<implementation::tcpSequenceStream>(BaseStreamInput::m_pInputStream))
 {
 }
 
@@ -38,12 +38,12 @@ TCPStream::TCPStream(std::shared_ptr<imebra::implementation::tcpSequenceStream> 
 
 TCPAddress* TCPStream::getPeerAddress() const
 {
-    return new TCPAddress((std::static_pointer_cast<implementation::tcpSequenceStream>(BaseStreamInput::m_pStream))->getPeerAddress());
+    return new TCPAddress((std::static_pointer_cast<implementation::tcpSequenceStream>(m_pInputStream))->getPeerAddress());
 }
 
 void TCPStream::terminate()
 {
-    (std::static_pointer_cast<implementation::tcpSequenceStream>(BaseStreamInput::m_pStream))->terminate();
+    (std::static_pointer_cast<implementation::tcpSequenceStream>(m_pInputStream))->terminate();
 }
 
 }
