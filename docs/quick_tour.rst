@@ -694,7 +694,7 @@ in C++
 
     dataSet.setImage(0, image);
 
-in Java++
+in Java
 
 .. code-block:: java
 
@@ -755,7 +755,7 @@ in C++
 
     imebra::CodecFactory::save(dataSet, "dicomFile.dcm", imebra::codecType_t::dicom);
 
-in Java++
+in Java
 
 .. code-block:: java
 

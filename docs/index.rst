@@ -11,6 +11,12 @@ Imebra
 
 .. toctree::
    :maxdepth: 2
+   :caption: Download Imebra
+   
+   download
+   
+.. toctree::
+   :maxdepth: 2
    :caption: Legal
    
    copyright
