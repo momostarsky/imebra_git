@@ -17,6 +17,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 */
 
 #include "streamControllerImpl.h"
+#include <memory.h>
 
 namespace imebra
 {
@@ -41,6 +42,21 @@ streamController::streamController(size_t virtualStart /* =0 */, size_t virtualL
         m_dataBufferCurrent(0), m_dataBufferEnd(0)
 {
 }
+
+
+streamController::streamController(size_t virtualStart, size_t virtualLength,
+                 std::uint8_t* pBuffer, size_t bufferSize):
+    m_bJpegTags(false),
+        m_dataBuffer(size_t(IMEBRA_STREAM_CONTROLLER_MEMORY_SIZE), 0),
+        m_virtualStart(virtualStart),
+        m_virtualLength(virtualLength),
+        m_dataBufferStreamPosition(0),
+        m_dataBufferCurrent(0), m_dataBufferEnd(bufferSize)
+{
+    ::memcpy(&(m_dataBuffer[0]), pBuffer, bufferSize);
+}
+
+
 
 
 ///////////////////////////////////////////////////////////

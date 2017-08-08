@@ -83,6 +83,8 @@ public:
 	///////////////////////////////////////////////////////////
     streamReader(std::shared_ptr<baseStreamInput> pControlledStream, size_t virtualStart, size_t virtualLength);
 
+    streamReader(std::shared_ptr<baseStreamInput> pControlledStream, size_t virtualStart, size_t virtualLength, std::uint8_t* pBuffer, size_t bufferLength);
+
     std::shared_ptr<baseStreamInput> getControlledStream();
 
     /// \brief Returns a new streamReader object that starts
