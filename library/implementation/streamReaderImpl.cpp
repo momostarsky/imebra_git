@@ -55,6 +55,24 @@ streamReader::streamReader(std::shared_ptr<baseStreamInput> pControlledStream, s
 }
 
 
+streamReader::streamReader(std::shared_ptr<baseStreamInput> pControlledStream, size_t virtualStart, size_t virtualLength, std::uint8_t* pBuffer, size_t bufferLength):
+    streamController(virtualStart, virtualLength, pBuffer, bufferLength),
+    m_pControlledStream(pControlledStream),
+    m_inBitsBuffer(0),
+    m_inBitsNum(0)
+{
+    IMEBRA_FUNCTION_START();
+
+    if(virtualLength == 0)
+    {
+        IMEBRA_THROW(StreamEOFError, "Virtual stream with zero length");
+    }
+
+    IMEBRA_FUNCTION_END();
+}
+
+
+
 std::shared_ptr<baseStreamInput> streamReader::getControlledStream()
 {
     return m_pControlledStream;
@@ -68,13 +86,28 @@ std::shared_ptr<streamReader> streamReader::getReader(size_t virtualLength)
     {
         IMEBRA_THROW(StreamEOFError, "Virtual stream with zero length");
     }
+
     size_t currentPosition = position();
     if(currentPosition + virtualLength > m_virtualLength && m_virtualLength != 0)
     {
         virtualLength = m_virtualLength - currentPosition;
     }
+
+    size_t readerBufferSize = m_dataBufferEnd - m_dataBufferCurrent;
+    if(readerBufferSize > virtualLength)
+    {
+        readerBufferSize = virtualLength;
+    }
+    std::uint8_t* pReaderBuffer = &(m_dataBuffer[m_dataBufferCurrent]);
+
     seekForward((std::uint32_t)virtualLength);
-    return std::make_shared<streamReader>(m_pControlledStream, currentPosition + m_virtualStart, virtualLength);
+
+    return std::make_shared<streamReader>(
+                m_pControlledStream,
+                currentPosition + m_virtualStart,
+                virtualLength,
+                pReaderBuffer,
+                readerBufferSize);
 
     IMEBRA_FUNCTION_END();
 }

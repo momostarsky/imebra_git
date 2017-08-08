@@ -72,6 +72,9 @@ public:
 	///////////////////////////////////////////////////////////
     streamController(size_t virtualStart = 0, size_t virtualLength = 0);
 
+    streamController(size_t virtualStart, size_t virtualLength,
+                     std::uint8_t* pBuffer, size_t bufferSize);
+
     virtual ~streamController();
 
 	/// \brief Get the stream's position relative to the
