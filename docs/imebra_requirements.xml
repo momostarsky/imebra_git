@@ -688,6 +688,21 @@
       <priority>100</priority>
     </requirement>
 
+    <requirement categoryIdref="REQ_IMPL" id="REQ_NO_CALLBACK">
+      <mitigates/>
+
+      <introducedBy>
+        <parentRequirement idref="REQ_USER_PROTOCOL"/>
+      </introducedBy>
+
+      <title>User extensions should not be achievable by extending Imebra classes or by supplying callbacks</title>
+      <description>Allowing the user to extend Imebra classes or to provide callback functions complicates the separation
+          between the Imebra's interface and its implementation.
+      </description>
+      <priority>100</priority>
+    </requirement>
+
+
   </requirements>
 
   <risks>

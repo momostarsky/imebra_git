@@ -70,7 +70,6 @@ size_t pipeSequenceStream::read(std::uint8_t* pBuffer, size_t bufferLength)
         {
             throw StreamClosedError("The pipe has been closed");
         }
-
         if(m_availableData != 0)
         {
             size_t readData(0);
@@ -150,7 +149,10 @@ void pipeSequenceStream::write(const std::uint8_t* pBuffer, size_t bufferLength)
             m_positionConditionVariable.notify_all();
         }
 
-        m_positionConditionVariable.wait_for(lock, std::chrono::milliseconds(IMEBRA_PIPE_TIMEOUT_MS));
+        if(remainingData != 0)
+        {
+            m_positionConditionVariable.wait_for(lock, std::chrono::milliseconds(IMEBRA_PIPE_TIMEOUT_MS));
+        }
     }
 }
 

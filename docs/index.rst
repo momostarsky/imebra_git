@@ -54,6 +54,7 @@ Imebra
 
    definition_classes
    loading_saving_classes
+   pipe_classes
    tcp_classes
    dicom_dataset_tag_classes
    imaging_classes

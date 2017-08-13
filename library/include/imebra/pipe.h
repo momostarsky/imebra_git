@@ -54,7 +54,7 @@ class pipeSequenceStream;
 ///   calling sink()
 ///
 ///////////////////////////////////////////////////////////////////////////////
-class IMEBRA_API Pipe: public BaseStreamInput, BaseStreamOutput
+class IMEBRA_API Pipe: public BaseStreamInput, public BaseStreamOutput
 {
     Pipe(const Pipe&) = delete;
     Pipe& operator=(const Pipe&) = delete;
