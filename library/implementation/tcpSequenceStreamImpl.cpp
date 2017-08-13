@@ -168,7 +168,8 @@ long throwTcpException(long socketOperationResult)
         IMEBRA_THROW(TCPAddressAlreadyInUse, "The specified address is already in use.")
     }
 #endif
-    throw;
+
+    throw std::runtime_error("Unexpected TCP error");
 
     IMEBRA_FUNCTION_END();
 }
