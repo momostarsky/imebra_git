@@ -58,7 +58,10 @@ size_t baseSequenceStreamInput::read(size_t startPosition, std::uint8_t* pBuffer
             m_currentPosition += availableBytes;
         }
     }
-    return read(pBuffer, bufferLength);
+    size_t returnBytes(read(pBuffer, bufferLength));
+    m_currentPosition += returnBytes;
+
+    return returnBytes;
 
     IMEBRA_FUNCTION_END();
 }
@@ -95,6 +98,8 @@ void baseSequenceStreamOutput::write(size_t startPosition, const std::uint8_t* p
         }
     }
     write(pBuffer, bufferLength);
+
+    m_currentPosition += bufferLength;
 
     IMEBRA_FUNCTION_END();
 }
