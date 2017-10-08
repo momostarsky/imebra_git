@@ -88,7 +88,7 @@ dicomDictionary::dicomDictionary()
     registerVR(tagVR_t::US, false, 2, 0);
     registerVR(tagVR_t::UT, true, 0, 0);
 	
-    for(size_t scanDescriptions(0); m_tagsDescription[scanDescriptions].m_tagId != 0; ++scanDescriptions)
+    for(size_t scanDescriptions(0); m_tagsDescription[scanDescriptions].m_tagId != (std::uint32_t)0xffffffff; ++scanDescriptions)
     {
         registerTag(m_tagsDescription[scanDescriptions].m_tagId,
                     m_tagsDescription[scanDescriptions].m_tagDescription,
