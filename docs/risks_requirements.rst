@@ -61,8 +61,7 @@ The following transfer syntaxes must be supported:
 [REQ_DIMSE] The library must be able to send and receive DIMSE messages
 ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
-The library must be able to build and parse DIMSE messages through a generic message oriented
-transport mechanism.
+The library must be able to build and parse DIMSE messages through a ACSE service.
 
 The following DIMSE services must be supported:
 
@@ -83,29 +82,26 @@ The following DIMSE services must be supported:
 Children requirements: 
 
 - :ref:`REQ_GENERIC_MSG_PROTOCOL`
+- :ref:`REQ_GENERIC_STREAM_PROTOCOL`
+- :ref:`REQ_TCPIP_PROTOCOL`
 
 
 
-.. _REQ_DUL:
+.. _REQ_ACSE:
 
-[REQ_DUL] The library must be able to send and receive DUL messages through a generic transport mechanism
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+[REQ_ACSE] The library must be able to send and receive ACSE messages through a generic transport mechanism
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
 The library must be able to send and receive DUL messages through a generic stream oriented
 transport mechanism.
 
-The DUL messages should be offered as generic message oriented transport system to transmit
-DIMSE messages.
-
-The DUL management should not be exposed in the API.
+The DIMSE management should not be exposed in the API.
 
 
 
 Children requirements: 
 
 - :ref:`REQ_GENERIC_MSG_PROTOCOL`
-- :ref:`REQ_GENERIC_STREAM_PROTOCOL`
-- :ref:`REQ_TCPIP_PROTOCOL`
 
 
 
@@ -122,17 +118,17 @@ Also the DUL messages should be managed by a messaging protocol derived from the
 Parent requirements:
 
 - :ref:`REQ_DIMSE`
-- :ref:`REQ_DUL`
+- :ref:`REQ_ACSE`
 
 
 
 
 .. _REQ_GENERIC_STREAM_PROTOCOL:
 
-[REQ_GENERIC_STREAM_PROTOCOL] There must be a generic streaming protocol able to transport DUL messages
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+[REQ_GENERIC_STREAM_PROTOCOL] There must be a generic streaming protocol able to transport DIMSE messages
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
-There must be a generic streaming protocol able to transport DUL messages.
+There must be a generic streaming protocol able to transport DIMSE messages.
 
 The generic streaming protocol must derive from the Imebra base stream class and offer
 timeout capabilities and termination capabilities when waiting for incoming or outgoing data.
@@ -140,7 +136,7 @@ timeout capabilities and termination capabilities when waiting for incoming or o
 
 Parent requirements:
 
-- :ref:`REQ_DUL`
+- :ref:`REQ_DIMSE`
 
 
 
@@ -157,7 +153,7 @@ TLS is out of the scope of this class.
 
 Parent requirements:
 
-- :ref:`REQ_DUL`
+- :ref:`REQ_DIMSE`
 
 Children requirements: 
 
@@ -178,6 +174,9 @@ Parent requirements:
 
 - :ref:`REQ_TCPIP_PROTOCOL`
 
+Children requirements: 
+
+- :ref:`REQ_NO_CALLBACK`
 
 
 
@@ -477,6 +476,22 @@ The library should throw specific C++ exceptions to report errors.
 
 Implementation requirements
 ...........................
+
+
+
+
+.. _REQ_NO_CALLBACK:
+
+[REQ_NO_CALLBACK] User extensions should not be achievable by extending Imebra classes or by supplying callbacks
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+Allowing the user to extend Imebra classes or to provide callback functions complicates the separation
+between the Imebra's interface and its implementation.
+
+
+Parent requirements:
+
+- :ref:`REQ_USER_PROTOCOL`
 
 
 

@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet type="text/xsl" href="https://bitbucket.org/binarno/imebra/raw/default/docs/riskAnalysis.xsd	"?>
-<project id="imebrav4" xsi:noNamespaceSchemaLocation="file:riskAnalysis.xsd"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<project xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="imebrav4" xsi:noNamespaceSchemaLocation="./riskAnalysis.xsd">
   <title>Imebra v.4</title>
 
   <description/>
@@ -587,8 +584,7 @@
 
       <title>The library must be able to send and receive DIMSE messages</title>
 
-      <description>The library must be able to build and parse DIMSE messages through a generic message oriented
-                transport mechanism.
+      <description>The library must be able to build and parse DIMSE messages through a ACSE service.
                 
                 The following DIMSE services must be supported:
 
@@ -607,20 +603,17 @@
       <priority>100</priority>
     </requirement>
 
-    <requirement categoryIdref="REQ_FUNC" id="REQ_DUL">
+    <requirement categoryIdref="REQ_FUNC" id="REQ_ACSE">
       <mitigates/>
 
       <introducedBy/>
 
-      <title>The library must be able to send and receive DUL messages through a generic transport mechanism</title>
+      <title>The library must be able to send and receive ACSE messages through a generic transport mechanism</title>
 
       <description>The library must be able to send and receive DUL messages through a generic stream oriented
                 transport mechanism.
                 
-                The DUL messages should be offered as generic message oriented transport system to transmit
-                DIMSE messages.
-                
-                The DUL management should not be exposed in the API.
+                The DIMSE management should not be exposed in the API.
       </description>
       <priority>100</priority>
     </requirement>
@@ -630,7 +623,7 @@
 
       <introducedBy>
         <parentRequirement idref="REQ_DIMSE"/>
-        <parentRequirement idref="REQ_DUL"/>
+        <parentRequirement idref="REQ_ACSE"/>
       </introducedBy>
 
 
@@ -647,11 +640,11 @@
       <mitigates/>
 
       <introducedBy>
-        <parentRequirement idref="REQ_DUL"/>
+        <parentRequirement idref="REQ_DIMSE"/>
       </introducedBy>
 
-      <title>There must be a generic streaming protocol able to transport DUL messages</title>
-      <description>There must be a generic streaming protocol able to transport DUL messages.
+      <title>There must be a generic streaming protocol able to transport DIMSE messages</title>
+      <description>There must be a generic streaming protocol able to transport DIMSE messages.
 
           The generic streaming protocol must derive from the Imebra base stream class and offer
           timeout capabilities and termination capabilities when waiting for incoming or outgoing data.
@@ -663,7 +656,7 @@
       <mitigates/>
 
       <introducedBy>
-        <parentRequirement idref="REQ_DUL"/>
+        <parentRequirement idref="REQ_DIMSE"/>
       </introducedBy>
 
       <title>Imebra must supply a basic TCP streaming class</title>
@@ -911,7 +904,7 @@
       </severity>
     </risk>
 
-    <risk categoryIdref="REQ_FUNC" id="RISK_RECEIVE_DEFAULT_VALUE">
+    <risk id="RISK_RECEIVE_DEFAULT_VALUE">
       <causedBy>
         <causedByRequirement idref="REQ_RETURN_DEFAULT_VALUE"/>
       </causedBy>
