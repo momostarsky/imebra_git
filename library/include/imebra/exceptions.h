@@ -1206,11 +1206,6 @@ public:
 };
 
 
-class IMEBRA_API TCPError: public std::runtime_error
-{
-
-};
-
 /// \brief Exception thrown by the ACSE services (negotiation).
 ///
 ///////////////////////////////////////////////////////////////////////////////
@@ -1226,27 +1221,11 @@ public:
 };
 
 
-/// \brief Exception thrown by the ACSE services when an unknown item is
-///        encountered.
-///
-///////////////////////////////////////////////////////////////////////////////
-class IMEBRA_API UnknownAcseItemError: public AcseError
-{
-public:
-    /// \brief Constructor.
-    ///
-    /// \param message the message to store into the exception
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    UnknownAcseItemError(const std::string& message);
-};
-
-
 /// \brief Exception thrown by the ACSE services when an ACSE message is
 ///        corrupted.
 ///
 ///////////////////////////////////////////////////////////////////////////////
-class CorruptedAcseMessageError: public AcseError
+class AcseCorruptedMessageError: public AcseError
 {
 public:
     /// \brief Constructor.
@@ -1254,9 +1233,260 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    CorruptedAcseMessageError(const std::string& message);
+    AcseCorruptedMessageError(const std::string& message);
 };
 
+
+///
+/// \brief Exception thrown when no transfer syntax was negotiated for a
+///        presentation context.
+///
+///////////////////////////////////////////////////////////////////////////////
+class AcseNoTransferSyntaxError: public AcseError
+{
+public:
+    AcseNoTransferSyntaxError(const std::string& message);
+};
+
+
+/// \brief Exception thrown by the ACSE services when the message's
+///        presentation context was not requested during the
+///        association negotiation.
+///
+///////////////////////////////////////////////////////////////////////////////
+class AcsePresentationContextNotRequestedError: public AcseError
+{
+public:
+    /// \brief Constructor.
+    ///
+    /// \param message the message to store into the exception
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    AcsePresentationContextNotRequestedError(const std::string& message);
+};
+
+
+/// \brief Exception thrown by the ACSE services when a command is sent to
+///        a destination that cannot accept it
+///
+///////////////////////////////////////////////////////////////////////////////
+class AcseWrongRoleError: public AcseError
+{
+public:
+    /// \brief Constructor.
+    ///
+    /// \param message the message to store into the exception
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    AcseWrongRoleError(const std::string& message);
+};
+
+
+///
+/// \brief Base class for the exception related to a wrong message ID.
+///
+///////////////////////////////////////////////////////////////////////////////
+class AcseWrongIdError: public AcseError
+{
+public:
+    AcseWrongIdError(const std::string& message);
+};
+
+
+///
+/// \brief Exception thrown when a response ID is related to a command that
+///        has already been responded to or was never sent.
+///
+///////////////////////////////////////////////////////////////////////////////
+class AcseWrongResponseIdError: public AcseWrongIdError
+{
+public:
+    AcseWrongResponseIdError(const std::string& message);
+};
+
+
+///
+/// \brief Exception thrown when a command has a wrong message ID.
+///
+///////////////////////////////////////////////////////////////////////////////
+class AcseWrongCommandIdError: public AcseWrongIdError
+{
+public:
+    AcseWrongCommandIdError(const std::string& message);
+};
+
+
+///
+/// \brief Base class for the association rejection exceptions.
+///
+///////////////////////////////////////////////////////////////////////////////
+class AcseRejectedAssociationError: public AcseError
+{
+public:
+    AcseRejectedAssociationError(const std::string& message, bool bPermanent);
+
+    ///
+    /// \brief Returns true if the rejection is permanent.
+    ///
+    /// \return true if the rejection is permanent, false otherwise
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    bool isPermanent() const;
+
+    ///
+    /// \brief Returns true if the rejection is temporary.
+    ///
+    /// \return true if the rejection is temporary, false otherwise
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    bool isTemporary() const;
+
+private:
+    const bool m_bPermanent;
+};
+
+
+///
+/// \brief Generic exception thrown when the association is rejected.
+///
+///////////////////////////////////////////////////////////////////////////////
+class AcseSCUNoReasonGivenError: public AcseRejectedAssociationError
+{
+public:
+    AcseSCUNoReasonGivenError(const std::string& message, bool bPermanent);
+};
+
+
+///
+/// \brief Exception thrown when the association is rejected because the
+///        application context name is not supported.
+///
+///////////////////////////////////////////////////////////////////////////////
+class AcseSCUApplicationContextNameNotSupportedError: public AcseRejectedAssociationError
+{
+public:
+    AcseSCUApplicationContextNameNotSupportedError(const std::string& message, bool bPermanent);
+};
+
+
+///
+/// \brief Exception thrown when the association is rejected because the
+///        calling AE title is not recognized.
+///
+///////////////////////////////////////////////////////////////////////////////
+class AcseSCUCallingAETNotRecognizedError: public AcseRejectedAssociationError
+{
+public:
+    AcseSCUCallingAETNotRecognizedError(const std::string& message, bool bPermanent);
+};
+
+
+///
+/// \brief Exception thrown when the association is rejected because the
+///        called AE title is not recognized.
+///
+///////////////////////////////////////////////////////////////////////////////
+class AcseSCUCalledAETNotRecognizedError: public AcseRejectedAssociationError
+{
+public:
+    AcseSCUCalledAETNotRecognizedError(const std::string& message, bool bPermanent);
+};
+
+
+///
+/// \brief Exception thrown when the association is rejected by the SCP
+///        without any particular reason given.
+///
+///////////////////////////////////////////////////////////////////////////////
+class AcseSCPNoReasonGivenError: public AcseRejectedAssociationError
+{
+public:
+    AcseSCPNoReasonGivenError(const std::string& message, bool bPermanent);
+};
+
+
+///
+/// \brief Exception thrown when the association is rejected by the SCP
+///        because it does not support the requested protocol version.
+///
+///////////////////////////////////////////////////////////////////////////////
+class AcseSCPAcseProtocolVersionNotSupportedError: public AcseRejectedAssociationError
+{
+public:
+    AcseSCPAcseProtocolVersionNotSupportedError(const std::string& message, bool bPermanent);
+};
+
+
+///
+/// \brief Exception thrown when the association is rejected by the SCP
+///        because the selected presentation context is reserved.
+///
+///////////////////////////////////////////////////////////////////////////////
+class AcseSCPPresentationReservedError: public AcseRejectedAssociationError
+{
+public:
+    AcseSCPPresentationReservedError(const std::string& message, bool bPermanent);
+};
+
+
+///
+/// \brief Exception thrown when the association is rejected by the SCP
+///        because there is a temporary congestion.
+///
+///////////////////////////////////////////////////////////////////////////////
+class AcseSCPPresentationTemporaryCongestionError: public AcseRejectedAssociationError
+{
+public:
+    AcseSCPPresentationTemporaryCongestionError(const std::string& message, bool bPermanent);
+};
+
+
+///
+/// \brief Exception thrown when the association is rejected by the SCP
+///        because is out of resources.
+///
+///////////////////////////////////////////////////////////////////////////////
+class AcseSCPPresentationLocalLimitExcededError: public AcseRejectedAssociationError
+{
+public:
+    AcseSCPPresentationLocalLimitExcededError(const std::string& message, bool bPermanent);
+};
+
+
+///
+/// \brief Exception thrown when too many simultaneous operations have been
+///        requested.
+///
+///////////////////////////////////////////////////////////////////////////////
+class AcseTooManyOperationsPerformedError: public AcseError
+{
+public:
+    AcseTooManyOperationsPerformedError(const std::string& message);
+};
+
+
+///
+/// \brief Exception thrown when too many simultaneous operations have been
+///        invoked.
+///
+///////////////////////////////////////////////////////////////////////////////
+class AcseTooManyOperationsInvokedError: public AcseError
+{
+public:
+    AcseTooManyOperationsInvokedError(const std::string& message);
+};
+
+
+///
+/// \brief Exception thrown when a command does not have a payload but it
+///        should have one.
+///
+///////////////////////////////////////////////////////////////////////////////
+class AcseNoPayloadError: public AcseError
+{
+public:
+    AcseNoPayloadError(const std::string& message);
+};
 
 }
 

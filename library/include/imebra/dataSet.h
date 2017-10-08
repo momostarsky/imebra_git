@@ -119,6 +119,7 @@ class IMEBRA_API DataSet
     friend class VOILUT;
     friend class CodecFactory;
     friend class Tag;
+    friend class AssociationMessage;
 
 private:
     DataSet(std::shared_ptr<imebra::implementation::dataSet> pDataSet);

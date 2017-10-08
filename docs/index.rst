@@ -59,6 +59,7 @@ Imebra
    dicom_dataset_tag_classes
    imaging_classes
    dicomdir_classes
+   acse_classes
    memory_management_classes
    transforms_classes
    dicom_dictionary_classes

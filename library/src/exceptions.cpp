@@ -250,10 +250,87 @@ MemorySizeError::MemorySizeError(const std::string& message): MemoryError(messag
 AcseError::AcseError(const std::string& message): std::runtime_error(message)
 {}
 
-UnknownAcseItemError::UnknownAcseItemError(const std::string& message): AcseError(message)
+AcseCorruptedMessageError::AcseCorruptedMessageError(const std::string &message): AcseError(message)
 {}
 
-CorruptedAcseMessageError::CorruptedAcseMessageError(const std::string &message): AcseError(message)
+AcseNoTransferSyntaxError::AcseNoTransferSyntaxError(const std::string& message): AcseError(message)
+{}
+
+AcsePresentationContextNotRequestedError::AcsePresentationContextNotRequestedError(const std::string& message): AcseError(message)
+{}
+
+AcseWrongRoleError::AcseWrongRoleError(const std::string& message): AcseError(message)
+{}
+
+AcseWrongIdError::AcseWrongIdError(const std::string& message): AcseError(message)
+{}
+
+AcseWrongResponseIdError::AcseWrongResponseIdError(const std::string& message): AcseWrongIdError(message)
+{}
+
+AcseWrongCommandIdError::AcseWrongCommandIdError(const std::string& message): AcseWrongIdError(message)
+{}
+
+AcseRejectedAssociationError::AcseRejectedAssociationError(const std::string& message, bool bPermanent):
+    AcseError(message), m_bPermanent(bPermanent)
+{}
+
+bool AcseRejectedAssociationError::isPermanent() const
+{
+    return m_bPermanent;
+}
+
+bool AcseRejectedAssociationError::isTemporary() const
+{
+    return !m_bPermanent;
+}
+
+AcseSCUNoReasonGivenError::AcseSCUNoReasonGivenError(const std::string& message, bool bPermanent):
+    AcseRejectedAssociationError(message, bPermanent)
+{}
+
+AcseSCUApplicationContextNameNotSupportedError::AcseSCUApplicationContextNameNotSupportedError(const std::string& message, bool bPermanent):
+    AcseRejectedAssociationError(message, bPermanent)
+{}
+
+AcseSCUCallingAETNotRecognizedError::AcseSCUCallingAETNotRecognizedError(const std::string& message, bool bPermanent):
+    AcseRejectedAssociationError(message, bPermanent)
+{}
+
+AcseSCUCalledAETNotRecognizedError::AcseSCUCalledAETNotRecognizedError(const std::string& message, bool bPermanent):
+    AcseRejectedAssociationError(message, bPermanent)
+{}
+
+AcseSCPNoReasonGivenError::AcseSCPNoReasonGivenError(const std::string& message, bool bPermanent):
+    AcseRejectedAssociationError(message, bPermanent)
+{}
+
+AcseSCPAcseProtocolVersionNotSupportedError::AcseSCPAcseProtocolVersionNotSupportedError(const std::string& message, bool bPermanent):
+    AcseRejectedAssociationError(message, bPermanent)
+{}
+
+AcseSCPPresentationReservedError::AcseSCPPresentationReservedError(const std::string& message, bool bPermanent):
+    AcseRejectedAssociationError(message, bPermanent)
+{}
+
+AcseSCPPresentationTemporaryCongestionError::AcseSCPPresentationTemporaryCongestionError(const std::string& message, bool bPermanent):
+    AcseRejectedAssociationError(message, bPermanent)
+{}
+
+AcseSCPPresentationLocalLimitExcededError::AcseSCPPresentationLocalLimitExcededError(const std::string& message, bool bPermanent):
+    AcseRejectedAssociationError(message, bPermanent)
+{}
+
+AcseTooManyOperationsPerformedError::AcseTooManyOperationsPerformedError(const std::string& message):
+    AcseError(message)
+{}
+
+AcseTooManyOperationsInvokedError::AcseTooManyOperationsInvokedError(const std::string& message):
+    AcseError(message)
+{}
+
+AcseNoPayloadError::AcseNoPayloadError(const std::string& message):
+    AcseError(message)
 {}
 
 }

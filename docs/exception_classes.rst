@@ -391,3 +391,108 @@ LutCorruptedError
 .. doxygenclass:: imebra::LutCorruptedError
    :members:
 
+AcseError
+---------
+.. doxygenclass:: imebra::AcseError
+   :members:
+
+AcseCorruptedMessageError
+-------------------------
+.. doxygenclass:: imebra::AcseCorruptedMessageError
+   :members:
+
+AcseNoTransferSyntaxError
+-------------------------
+.. doxygenclass:: imebra::AcseNoTransferSyntaxError
+   :members:
+
+AcsePresentationContextNotRequestedError
+----------------------------------------
+.. doxygenclass:: imebra::AcsePresentationContextNotRequestedError
+   :members:
+
+AcseWrongRoleError
+------------------
+.. doxygenclass:: imebra::AcseWrongRoleError
+   :members:
+
+AcseWrongIdError
+----------------
+.. doxygenclass:: imebra::AcseWrongIdError
+   :members:
+
+AcseWrongResponseIdError
+------------------------
+.. doxygenclass:: imebra::AcseWrongResponseIdError
+   :members:
+
+AcseWrongCommandIdError
+-----------------------
+.. doxygenclass:: imebra::AcseWrongCommandIdError
+   :members:
+
+AcseRejectedAssociationError
+----------------------------
+.. doxygenclass:: imebra::AcseRejectedAssociationError
+   :members:
+
+AcseSCUNoReasonGivenError
+-------------------------
+.. doxygenclass:: imebra::AcseSCUNoReasonGivenError
+   :members:
+
+AcseSCUApplicationContextNameNotSupportedError
+----------------------------------------------
+.. doxygenclass:: imebra::AcseSCUApplicationContextNameNotSupportedError
+   :members:
+
+AcseSCUCallingAETNotRecognizedError
+-----------------------------------
+.. doxygenclass:: imebra::AcseSCUCallingAETNotRecognizedError
+   :members:
+
+AcseSCUCalledAETNotRecognizedError
+----------------------------------
+.. doxygenclass:: imebra::AcseSCUCalledAETNotRecognizedError
+   :members:
+
+AcseSCPNoReasonGivenError
+-------------------------
+.. doxygenclass:: imebra::AcseSCPNoReasonGivenError
+   :members:
+
+AcseSCPAcseProtocolVersionNotSupportedError
+-------------------------------------------
+.. doxygenclass:: imebra::AcseSCPAcseProtocolVersionNotSupportedError
+   :members:
+
+AcseSCPPresentationReservedError
+--------------------------------
+.. doxygenclass:: imebra::AcseSCPPresentationReservedError
+   :members:
+
+AcseSCPPresentationTemporaryCongestionError
+-------------------------------------------
+.. doxygenclass:: imebra::AcseSCPPresentationTemporaryCongestionError
+   :members:
+
+AcseSCPPresentationLocalLimitExcededError
+-----------------------------------------
+.. doxygenclass:: imebra::AcseSCPPresentationLocalLimitExcededError
+   :members:
+
+AcseTooManyOperationsPerformedError
+-----------------------------------
+.. doxygenclass:: imebra::AcseTooManyOperationsPerformedError
+   :members:
+
+AcseTooManyOperationsInvokedError
+---------------------------------
+.. doxygenclass:: imebra::AcseTooManyOperationsInvokedError
+   :members:
+
+AcseNoPayloadError
+------------------
+.. doxygenclass:: imebra::AcseNoPayloadError
+   :members:
+

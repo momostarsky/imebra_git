@@ -93,6 +93,12 @@
 
 %newobject imebra::WritingDataHandlerNumeric::getMemory;
 
+%newobject imebra::AssociationMessage::getCommand;
+%newobject imebra::AssociationMessage::getPayload;
+
+%newobject imebra::AssociationBase::getCommand;
+%newobject imebra::AssociationBase::getResponse;
+
 
 %exception {
     try {
@@ -179,6 +185,7 @@
 %include "../library/include/imebra/fileStreamOutput.h"
 %include "../library/include/imebra/memoryStreamInput.h"
 %include "../library/include/imebra/memoryStreamOutput.h"
+%include "../library/include/imebra/acse.h"
 
 
 
