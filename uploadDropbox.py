@@ -25,7 +25,7 @@ hgrelease = 'hg log -b ' + branch + ' --template . --rev ancestors(.)'
 hgprocess = subprocess.Popen(hgrelease.split(), stdout=subprocess.PIPE)
 release = version + '.' + str(hgprocess.stdout.readlines()[0].count('.'))
 
-file_name = "imebra_" + release.replace('.', '_') + '.zip'
+file_name = "/imebra_" + release.replace('.', '_') + '.zip'
 
 # Upload to dropbox
 #------------------
