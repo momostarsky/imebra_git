@@ -29,8 +29,8 @@ file_name = "imebra_" + release.replace('.', '_') + '.zip'
 
 # Upload to dropbox
 #------------------
-client = dropbox.client.DropboxClient(os.environ['DROPBOX_SECRET'])
+client = dropbox.Dropbox(os.environ['DROPBOX_SECRET'])
 
 f = open(sys.argv[1], 'rb')
-response = client.put_file(file_name, f)
+response = files_upload(f, file_name)
 f.close()
