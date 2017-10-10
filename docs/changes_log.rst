@@ -7,6 +7,8 @@ Version |release| (this version)
 --------------------------------
 
 - Implemented enhancement #187 (Modify the virtual streams so no seek is necessary when streamReader::getReader() is called) as per SOP :ref:`DEVENH_2`
+- Fixed bug #188 (The build fails when uploading the artifacts to dropbox) as per SOP :ref:`FIXBUG_2`
+- Fixed bug #189 (Remove warnings C4275 and C4251from Windows builds) as per SOP :ref:`FIXBUG_2`
 
 Version 4.0.11.2
 ----------------

@@ -28,6 +28,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #if defined _WIN32 || defined __CYGWIN__
   #define IMEBRA_HELPER_DLL_IMPORT __declspec(dllimport)
   #define IMEBRA_HELPER_DLL_EXPORT __declspec(dllexport)
+  #pragma warning(disable: 4275)
+  #pragma warning(disable: 4251)
 #else
   #if __GNUC__ >= 4
     #define IMEBRA_HELPER_DLL_IMPORT __attribute__ ((visibility ("default")))
