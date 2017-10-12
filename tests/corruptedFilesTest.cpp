@@ -30,6 +30,9 @@ TEST(corruptedFilesTest, corruptedFilesTest)
     WIN32_FIND_DATA findFileData;
     std::string filter(folder);
     filter += "\\*";
+
+    std::cout << "Processing corrupted files in folder " << filter << std::endl;
+
     HANDLE hFind(FindFirstFile(filter.c_str(), &findFileData));
     if(hFind == INVALID_HANDLE_VALUE)
     {
