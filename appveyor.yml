@@ -7,7 +7,7 @@ test_script:
 - cmd: >-
     cd build_tests\release
 
-    ImebraTests --fast --corruptedFilesFolder=".\\tests\\corruptedfiles"
+    ImebraTests --fast --corruptedFilesFolder=".\tests\corruptedfiles"
 artifacts:
 - path: artifacts
   name: imebra_windows
