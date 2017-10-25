@@ -48,8 +48,6 @@ TEST(objectivec, stringToNSStringTest)
         EXPECT_TRUE([nsPatientName0 isEqualToString:@"??\xD0\xA1\xD0\xBC\xD1\x8B\xD1\x81\xD0\xBB\x20\xD0\xB2\xD1\x81\xD0\xB5\xD0\xB9"]);
         EXPECT_TRUE([nsPatientName1 isEqualToString:@"\xD0\xA1\xD0\xBC\xD1\x8B\xD1\x81\xD0\xBB\x20\xD0\xB2\xD1\x81\xD0\xB5\xD0\xB9"]);
 
-        [nsPatientName0 release];
-        [nsPatientName1 release];
     }
 }
 
