@@ -197,7 +197,6 @@ public:
 protected:
     std::shared_ptr<implementation::image> m_pImage;
 #endif
-
 };
 
 }

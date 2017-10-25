@@ -14,18 +14,23 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #if !defined(imebraObjcImage__INCLUDED_)
 #define imebraObjcImage__INCLUDED_
 
+#include "../definitions.h"
+#import <Foundation/Foundation.h>
+
+namespace imebra
+{
+    class Image;
+    class DrawBitmap;
+}
+
 #if defined(__APPLE__)
 #include "TargetConditionals.h"
-
-#import <Foundation/Foundation.h>
-#include "../definitions.h"
 
 #if TARGET_OS_IPHONE
 #import <UIKit/UIImage.h>
 #else
 #import <AppKit/NSImage.h>
 #endif
-#include <imebra/imebra.h>
 
 namespace imebra
 {
@@ -59,6 +64,69 @@ IMEBRA_API NSImage* getImebraImage(const imebra::Image& image, imebra::DrawBitma
 } // namespace imebra
 
 #endif //__APPLE__
+
+typedef NS_ENUM(unsigned int, ImebraBitDepth_t)
+{
+    depthU8 = (unsigned int)imebra::bitDepth_t::depthU8,
+    depthS8 = (unsigned int)imebra::bitDepth_t::depthS8,
+    depthU16 = (unsigned int)imebra::bitDepth_t::depthU16,
+    depthS16 = (unsigned int)imebra::bitDepth_t::depthS16,
+    depthU32 = (unsigned int)imebra::bitDepth_t::depthU32,
+    depthS32 = (unsigned int)imebra::bitDepth_t::depthS32
+};
+
+@class ImebraReadingDataHandlerNumeric;
+@class ImebraWritingDataHandlerNumeric;
+
+@interface ImebraImage: NSObject
+{
+    @public
+    imebra::Image* m_pImage;
+}
+
+    -(id)initWithImebraImage:(imebra::Image*)pImage;
+
+    /// \brief Constructor.
+    ///
+    /// The memory for the image is not allocated by the constructor but only when
+    /// a WritingDataHandler is requested with getWritingDataHandler().
+    ///
+    /// \param width      the image width, in pixels
+    /// \param height     the image height, in pixels
+    /// \param depth      the channel values data types
+    /// \param colorSpace the Image's color space
+    /// \param highBit    the highest bit occupied by the channels' values
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(id)initWithSize:(unsigned int)width height:(unsigned int)height depth:(ImebraBitDepth_t)depth colorSpace:(NSString*)colorSpace highBit:(unsigned int)highBit;
+
+    ///
+    /// \ Destructor
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(void)dealloc;
+
+    -(ImebraReadingDataHandlerNumeric*) getReadingDataHandler:(NSError**)pError;
+
+    -(ImebraWritingDataHandlerNumeric*) getWritingDataHandler:(NSError**)pError;
+
+    @property double widthMm;
+
+    @property double heightMm;
+
+    @property (readonly) unsigned int width;
+
+    @property (readonly) unsigned int height;
+
+    @property (readonly) NSString* colorSpace;
+
+    @property (readonly) unsigned int getChannelsNumber;
+
+    @property (readonly) ImebraBitDepth_t getDepth;
+
+    @property (readonly) unsigned int getHighBit;
+
+@end
 
 #endif // imebraObjcImage__INCLUDED_
 

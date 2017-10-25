@@ -11,11 +11,17 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
+#include <../include/imebra/imebra.h>
+#import "../include/imebra/objectivec/imebra_nserror.h"
+#import "../include/imebra/objectivec/imebra_image.h"
+#import "../include/imebra/objectivec/imebra_readingDataHandlerNumeric.h"
+#import "../include/imebra/objectivec/imebra_writingDataHandlerNumeric.h"
+#import "../include/imebra/objectivec/imebra_strings.h"
+
 #if defined(__APPLE__)
 
-#include <imebra/imebra.h>
 #include <memory>
-#import "../include/imebra/objectivec/imebra_image.h"
+
 #import <Foundation/Foundation.h>
 
 namespace  imebra
@@ -77,3 +83,109 @@ NSImage* getImebraImage(const imebra::Image& image, imebra::DrawBitmap& drawBitm
 } // namespace imebra
 
 #endif
+
+@implementation ImebraImage
+
+-(id)initWithImebraImage:(imebra::Image*)pImage
+{
+    self =  [super init];
+    if(self)
+    {
+        self->m_pImage = pImage;
+    }
+    return self;
+}
+
+-(id)initWithSize:(unsigned int)width height:(unsigned int)height depth:(ImebraBitDepth_t)depth colorSpace:(NSString*)colorSpace highBit:(unsigned int)highBit
+{
+    self =  [super init];
+    if(self)
+    {
+        self->m_pImage = new imebra::Image(
+                                 width,
+                                 height,
+                                 (imebra::bitDepth_t)depth,
+                                 imebra::NSStringToString(colorSpace),
+                                 highBit);
+    }
+    return self;
+}
+
+///
+/// \ Destructor
+///
+///////////////////////////////////////////////////////////////////////////////
+-(void)dealloc
+{
+    delete m_pImage;
+    [super dealloc];
+}
+
+-(ImebraReadingDataHandlerNumeric*) getReadingDataHandler:(NSError**)pError
+{
+    try
+    {
+        return [[ImebraReadingDataHandlerNumeric alloc] initWithImebraReadingDataHandler:m_pImage->getReadingDataHandler()];
+    }
+    catch(const std::runtime_error& e)
+    {
+        imebra::setNSError(e, pError);
+        return nil;
+    }
+}
+
+-(ImebraWritingDataHandlerNumeric*) getWritingDataHandler:(NSError**)pError
+{
+    try
+    {
+        return [[ImebraWritingDataHandlerNumeric alloc] initWithImebraWritingDataHandler:m_pImage->getWritingDataHandler()];
+    }
+    catch(const std::runtime_error& e)
+    {
+        imebra::setNSError(e, pError);
+        return nil;
+    }
+}
+
+-(double) widthMm
+{
+    return m_pImage->getWidthMm();
+}
+
+-(double) heightMm
+{
+    return m_pImage->getHeightMm();
+}
+
+-(unsigned int) width
+{
+    return m_pImage->getWidth();
+}
+
+-(unsigned int) height
+{
+    return m_pImage->getHeight();
+}
+
+-(NSString*) colorSpace
+{
+    return imebra::stringToNSString(m_pImage->getColorSpace());
+}
+
+-(unsigned int) getChannelsNumber
+{
+    return m_pImage->getChannelsNumber();
+}
+
+-(ImebraBitDepth_t) getDepth
+{
+    return (ImebraBitDepth_t)m_pImage->getDepth();
+}
+
+-(unsigned int) getHighBit
+{
+    return m_pImage->getHighBit();
+}
+
+@end
+

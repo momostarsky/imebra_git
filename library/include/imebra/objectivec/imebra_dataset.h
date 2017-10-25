@@ -1,0 +1,284 @@
+/*
+Copyright 2005 - 2017 by Paolo Brandoli/Binarno s.p.
+
+Imebra is available for free under the GNU General Public License.
+
+The full text of the license is available in the file license.rst
+ in the project root folder.
+
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
+ license for Imebra from the Imebra’s website (http://imebra.com).
+*/
+
+#if !defined(imebraObjcDataSet__INCLUDED_)
+#define imebraObjcDataSet__INCLUDED_
+
+#include "../definitions.h"
+#import <Foundation/Foundation.h>
+
+namespace imebra
+{
+    class DataSet;
+}
+
+@class ImebraImage;
+@class ImebraAge;
+@class ImebraDate;
+@class ImebraReadingDataHandler;
+@class ImebraWritingDataHandler;
+@class ImebraTagId;
+
+IMEBRA_API
+typedef NS_ENUM(unsigned short, ImebraTagVR_t)
+{
+    AE = (unsigned short)imebra::tagVR_t::AE,
+    AS = (unsigned short)imebra::tagVR_t::AS,
+    AT = (unsigned short)imebra::tagVR_t::AT,
+    CS = (unsigned short)imebra::tagVR_t::CS,
+    DA = (unsigned short)imebra::tagVR_t::DA,
+    DS = (unsigned short)imebra::tagVR_t::DS,
+    DT = (unsigned short)imebra::tagVR_t::DT,
+    FL = (unsigned short)imebra::tagVR_t::FL,
+    FD = (unsigned short)imebra::tagVR_t::FD,
+    IS = (unsigned short)imebra::tagVR_t::IS,
+    LO = (unsigned short)imebra::tagVR_t::LO,
+    LT = (unsigned short)imebra::tagVR_t::LT,
+    OB = (unsigned short)imebra::tagVR_t::OB,
+    SB = (unsigned short)imebra::tagVR_t::SB,
+    OD = (unsigned short)imebra::tagVR_t::OD,
+    OF = (unsigned short)imebra::tagVR_t::OF,
+    OL = (unsigned short)imebra::tagVR_t::OL,
+    OW = (unsigned short)imebra::tagVR_t::OW,
+    PN = (unsigned short)imebra::tagVR_t::PN,
+    SH = (unsigned short)imebra::tagVR_t::SH,
+    SL = (unsigned short)imebra::tagVR_t::SL,
+    SQ = (unsigned short)imebra::tagVR_t::SQ,
+    SS = (unsigned short)imebra::tagVR_t::SS,
+    ST = (unsigned short)imebra::tagVR_t::ST,
+    TM = (unsigned short)imebra::tagVR_t::TM,
+    UC = (unsigned short)imebra::tagVR_t::UC,
+    UI = (unsigned short)imebra::tagVR_t::UI,
+    UL = (unsigned short)imebra::tagVR_t::UL,
+    UN = (unsigned short)imebra::tagVR_t::UN,
+    UR = (unsigned short)imebra::tagVR_t::UR,
+    US = (unsigned short)imebra::tagVR_t::US,
+    UT = (unsigned short)imebra::tagVR_t::UT
+};
+
+typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
+{
+    veryHigh = (unsigned int)imebra::imageQuality_t::veryHigh,       ///< the image is saved with very high quality. No subsampling is performed and no quantization
+    high = (unsigned int)imebra::imageQuality_t::high,               ///< the image is saved with high quality. No subsampling is performed. Quantization ratios are low
+    aboveMedium = (unsigned int)imebra::imageQuality_t::aboveMedium, ///< the image is saved in medium quality. Horizontal subsampling is applied. Quantization ratios are low
+    medium = (unsigned int)imebra::imageQuality_t::medium,           ///< the image is saved in medium quality. Horizontal subsampling is applied. Quantization ratios are medium
+    belowMedium = (unsigned int)imebra::imageQuality_t::belowMedium, ///< the image is saved in medium quality. Horizontal and vertical subsampling are applied. Quantization ratios are medium
+    low = (unsigned int)imebra::imageQuality_t::low,                 ///< the image is saved in low quality. Horizontal and vertical subsampling are applied. Quantization ratios are higher than the ratios used in the belowMedium quality
+    veryLow = (unsigned int)imebra::imageQuality_t::veryLow          ///< the image is saved in low quality. Horizontal and vertical subsampling are applied. Quantization ratios are high
+
+};
+
+
+///
+///  \brief This class represents a DICOM dataset.
+///
+/// The information it contains is organized into groups and each group may
+/// contain several tags.
+///
+/// You can create a DataSet from a DICOM file by using the
+/// ImebraCodecFactory::load() function:
+///
+/// \code
+/// NSError* error = nil;
+/// ImebraDataSet* pDataSet = [ImebraCodecFactory load:@"dicomFile.dcm" error:&error];
+/// \endcode
+///
+/// You can also create an empty ImebraDataSet that can be filled with data and
+/// images and then saved to a DICOM file via ImebraCodecFactory::save().
+///
+/// When creating an empty ImebraDataSet you should specify the proper transfer
+/// syntax in the init method.
+///
+/// To retrieve the DataSet's content, use one of the following methods which
+/// give direct access to the tags' values:
+/// - getImage()
+/// - getImageApplyModalityTransform()
+/// - getSequenceItem()
+/// - getSignedLong()
+/// - getUnsignedLong()
+/// - getDouble()
+/// - getString()
+/// - getUnicodeString()
+/// - getAge()
+/// - getDate()
+///
+/// In alternative, you can first retrieve a ImebraReadingDataHandler with
+/// getReadingDataHandler() and then access the tag's content via the handler.
+///
+/// To set the ImebraDataSet's content, use one of the following methods:
+/// - setImage()
+/// - setSequenceItem()
+/// - setSignedLong()
+/// - setUnsignedLong()
+/// - setDouble()
+/// - setString()
+/// - setUnicodeString()
+/// - setAge()
+/// - setDate()
+///
+/// The previous methods allow to write just the first item in the tag's
+/// content and before writing wipe out the old tag's content (all the items).
+/// If you have to write more than one item in a tag, retrieve a
+/// ImebraWritingDataHandler with getWritingDataHandler() and then modify all
+/// the tag's items using the ImebraWritingDataHandler.
+///
+///////////////////////////////////////////////////////////////////////////////
+@interface ImebraDataSet: NSObject
+{
+    @public
+    imebra::DataSet* m_pDataSet;
+}
+
+    -(id)initWithImebraDataSet:(imebra::DataSet*)pDataSet;
+
+    /// \brief Construct an empty DICOM dataset with unspecified transfer syntax
+    ///        (e.g. to be used in a sequence) charset "ISO 2022 IR 6".
+    ///
+    /// Use this method when creating a DataSet that will be embedded in a sequence
+    /// item.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(id)init;
+
+    /// \brief Construct an empty DICOM dataset with charset "ISO 2022 IR 6" and
+    ///        the desidered transfer syntax.
+    ///
+    /// \param transferSyntax the dataSet's transfer syntax. The following transfer
+    ///                       syntaxes are supported:
+    ///                       - "1.2.840.10008.1.2" (Implicit VR little endian)
+    ///                       - "1.2.840.10008.1.2.1" (Explicit VR little endian)
+    ///                       - "1.2.840.10008.1.2.2" (Explicit VR big endian)
+    ///                       - "1.2.840.10008.1.2.5" (RLE compression)
+    ///                       - "1.2.840.10008.1.2.4.50" (Jpeg baseline 8 bit
+    ///                         lossy)
+    ///                       - "1.2.840.10008.1.2.4.51" (Jpeg extended 12 bit
+    ///                         lossy)
+    ///                       - "1.2.840.10008.1.2.4.57" (Jpeg lossless NH)
+    ///                       - "1.2.840.10008.1.2.4.70" (Jpeg lossless NH first
+    ///                         order prediction)
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(id)initWithTransferSyntax:(NSString*)transferSyntax;
+
+    -(void)dealloc;
+
+    /// \brief Retrieve an image from the dataset.
+    ///
+    /// Images should be retrieved in order (first frame 0, then frame 1, then
+    /// frame 2 and so on).
+    /// Images can be retrieved also in random order but this introduces
+    /// performance penalties.
+    ///
+    /// Set NSError and returns nil if the requested image does not exist.
+    ///
+    /// \note Images retrieved from the ImebraDataSet should be processed by the
+    ///       ImebraModalityVOILUT transform, which converts the modality-specific
+    ///       pixel values to values that the application can understand. Consider
+    ///       using getImageApplyModalityTransform() to retrieve the image already
+    ///       processed by ImebraModalityVOILUT.
+    ///
+    /// \param frameNumber the frame to retrieve (the first frame is 0)
+    /// \param pError      a pointer to a NSError pointer which is set when an
+    ///                    error occurs
+    /// \return an ImebraImage object containing the decompressed image
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(ImebraImage*) getImage:(unsigned int) frameNumber error:(NSError**)pError;
+
+    /// \brief Retrieve an image from the dataset and if necessary process it with
+    ///        ImebraModalityVOILUT before returning it.
+    ///
+    /// Images should be retrieved in order (first frame 0, then frame 1, then
+    ///  frame 2 and so on).
+    /// Images can be retrieved also in random order but this introduces
+    ///  performance penalties.
+    ///
+    /// Set NSError and returns nil if the requested image does not exist.
+    ///
+    /// \param frameNumber the frame to retrieve (the first frame is 0)
+    /// \param pError      a pointer to a NSError pointer which is set when an
+    ///                    error occurs
+    /// \return an ImebraImage object containing the decompressed image
+    ///         processed by ImebraModalityVOILUT (if present)
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(ImebraImage*) getImageApplyModalityTransform:(unsigned int) frameNumber error:(NSError**)pError;
+
+
+    -(void) setImage:(unsigned int)frameNumber image:(ImebraImage*)image quality:(ImebraImageQuality_t)quality error:(NSError**)pError;
+
+
+    -(ImebraReadingDataHandler*) getReadingDataHandler:(ImebraTagId*)tagId bufferId:(unsigned int)bufferId error:(NSError**)pError;
+
+    -(ImebraWritingDataHandler*) getWritingDataHandler:(ImebraTagId*)tagId bufferId:(unsigned int)bufferId tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError;
+
+    -(ImebraWritingDataHandler*) getWritingDataHandler:(ImebraTagId*)tagId bufferId:(unsigned int)bufferId error:(NSError**)pError;
+
+
+    -(signed int)getSignedLong:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber error:(NSError**)pError;
+
+    -(signed int)getSignedLong:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber defaultValue:(signed int)defaultValue error:(NSError**)pError;
+
+    -(void)setSignedLong:(ImebraTagId*)tagId newValue:(signed int)newValue tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError;
+
+    -(void)setSignedLong:(ImebraTagId*)tagId newValue:(signed int)newValue error:(NSError**)pError;
+
+
+    -(unsigned int)getUnsignedLong:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber error:(NSError**)pError;
+
+    -(unsigned int)getUnsignedLong:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber defaultValue:(unsigned int)defaultValue error:(NSError**)pError;
+
+    -(void)setUnsignedLong:(ImebraTagId*)tagId newValue:(unsigned int)newValue tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError;
+
+    -(void)setUnsignedLong:(ImebraTagId*)tagId newValue:(unsigned int)newValue error:(NSError**)pError;
+
+
+    -(double)getDouble:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber error:(NSError**)pError;
+
+    -(double)getDouble:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber defaultValue:(double)defaultValue error:(NSError**)pError;
+
+    -(void)setDouble:(ImebraTagId*)tagId newValue:(double)newValue tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError;
+
+    -(void)setDouble:(ImebraTagId*)tagId newValue:(double)newValue error:(NSError**)pError;
+
+
+    -(NSString*)getString:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber error:(NSError**)pError;
+
+    -(NSString*)getString:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber defaultValue:(NSString*)defaultValue error:(NSError**)pError;
+
+    -(void)setString:(ImebraTagId*)tagId newValue:(NSString*)newValue tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError;
+
+    -(void)setString:(ImebraTagId*)tagId newValue:(NSString*)newValue error:(NSError**)pError;
+
+
+    -(ImebraAge*)getAge:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber error:(NSError**)pError;
+
+    -(ImebraAge*)getAge:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber defaultValue:(ImebraAge*)defaultValue error:(NSError**)pError;
+
+    -(void)setAge:(ImebraTagId*)tagId newValue:(ImebraAge*)newValue error:(NSError**)pError;
+
+
+    -(ImebraDate*)getDate:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber error:(NSError**)pError;
+
+    -(ImebraDate*)getDate:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber defaultValue:(ImebraDate*)defaultValue error:(NSError**)pError;
+
+    -(void)setDate:(ImebraTagId*)tagId newValue:(ImebraDate*)newValue tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError;
+
+    -(void)setDate:(ImebraTagId*)tagId newValue:(ImebraDate*)newValue error:(NSError**)pError;
+
+
+@end
+
+#endif // imebraObjcDataSet__INCLUDED_
+
+

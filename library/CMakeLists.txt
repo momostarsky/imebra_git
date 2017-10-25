@@ -92,6 +92,7 @@ set(imebra_obj_include "")
 if("${IMEBRA_OBJC}" STREQUAL "1")
     file(GLOB imebra_objc_src "${CMAKE_CURRENT_SOURCE_DIR}/objectivec/*.mm")
     file(GLOB imebra_objc_include "${CMAKE_CURRENT_SOURCE_DIR}/include/imebra/objectivec/*.h")
+    add_definitions(-DIMEBRA_OBJC)
 endif("${IMEBRA_OBJC}" STREQUAL "1")
 
 # Add jpeg2000 if specified
@@ -125,7 +126,7 @@ endif(NOT "${ADDITIONAL_INCLUDE_PATH}" STREQUAL "")
 
 if("${IMEBRA_OBJC}" STREQUAL "1")
     if(APPLE)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -framework Foundation -framework CoreServices")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -framework Foundation -framework CoreServices -fobjc-arc")
         if(IOS)
             set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -framework UIKit")
         else(IOS)
@@ -136,6 +137,7 @@ if("${IMEBRA_OBJC}" STREQUAL "1")
         target_include_directories(imebra PRIVATE "/usr/include/GNUstep")
         set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} gnustep-base objc)
     endif(APPLE)
+
 endif("${IMEBRA_OBJC}" STREQUAL "1")
 
 target_link_libraries(imebra ${IMEBRA_LIBRARIES})
@@ -147,7 +149,11 @@ target_include_directories(imebra PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 
     message(STATUS "GCC detected, adding compile flags")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wall -Wextra -Wpedantic -Wconversion -Wfloat-equal -fvisibility=hidden -fvisibility-inlines-hidden")
+
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wall -Wextra -Wpedantic -Wconversion -Wfloat-equal")
+    if(NOT "${IMEBRA_OBJC}" STREQUAL "1")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden -fvisibility-inlines-hidden")
+    endif(NOT "${IMEBRA_OBJC}" STREQUAL "1")
     set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} pthread)
 
     if(CMAKE_BUILD_TYPE MATCHES DEBUG)
@@ -159,7 +165,10 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 
     message(STATUS "CLANG detected, adding compile flags")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wall -Wextra -Wpedantic -Wconversion -Wfloat-equal -fvisibility=hidden -fvisibility-inlines-hidden")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wall -Wextra -Wpedantic -Wconversion -Wfloat-equal")
+    if(NOT "${IMEBRA_OBJC}" STREQUAL "1")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden -fvisibility-inlines-hidden")
+    endif(NOT "${IMEBRA_OBJC}" STREQUAL "1")
     set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} pthread)
 
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")

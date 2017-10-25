@@ -43,9 +43,8 @@ endif(APPLE)
 set(imebra_tests_objc_src "")
 if("${IMEBRA_OBJC}" STREQUAL "1")
     file(GLOB imebra_tests_objc_src "${CMAKE_CURRENT_SOURCE_DIR}/objectivec/*.mm")
+    add_definitions(-DIMEBRA_OBJC)
 endif("${IMEBRA_OBJC}" STREQUAL "1")
-
-
 
 if("${gtest_include}" STREQUAL "")
     set(gtest_include ".")
@@ -54,7 +53,7 @@ endif("${gtest_include}" STREQUAL "")
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../library/include ${gtest_include})
 if("${IMEBRA_OBJC}" STREQUAL "1")
     if(APPLE)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -framework Foundation -framework CoreServices")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -framework Foundation -framework CoreServices -fobjc-arc")
         if(IOS)
             set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -framework UIKit")
         else(IOS)
@@ -65,6 +64,7 @@ if("${IMEBRA_OBJC}" STREQUAL "1")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fconstant-string-class=NSConstantString")
         set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} gnustep-base objc)
     endif(APPLE)
+
 endif("${IMEBRA_OBJC}" STREQUAL "1")
 
 add_executable(ImebraTests

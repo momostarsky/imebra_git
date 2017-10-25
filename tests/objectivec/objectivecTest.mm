@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 #include <imebra/imebra.h>
-#include <imebra/objectivec/imebra_strings.h>
-#include <imebra/objectivec/imebra_image.h>
+#include <imebra/objectivec/imebra.h>
 #include "../buildImageForTest.h"
 
 namespace imebra
@@ -88,6 +87,97 @@ TEST(objectivec, NSStringToStringTest)
         EXPECT_EQ("Test 2", patientName1);
 
     }
+}
+
+
+TEST(objectivec, CodecFactory)
+{
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+
+    DataSet testDataSet("1.2.840.10008.1.2");
+    testDataSet.setString(TagId(tagId_t::PatientName_0010_0010), "Test^Patient");
+    testDataSet.setString(TagId(tagId_t::PatientID_0010_0020), "TestID");
+    CodecFactory::save(testDataSet, "testCodecFactory.dcm", codecType_t::dicom);
+
+    NSError* error = nil;
+    ImebraDataSet* pDataSet = [ImebraCodecFactory load:@"testCodecFactory.dcm" error:&error];
+    NSString* checkPatientName = [pDataSet getString:[[ImebraTagId alloc] init:0x10 tag:0x10] elementNumber:0 error:&error];
+    NSString* checkPatientID = [pDataSet getString:[[ImebraTagId alloc] init:0x10 tag:0x20] elementNumber:0 error:&error];
+
+    EXPECT_EQ(imebra::NSStringToString(checkPatientName), "Test^Patient");
+    EXPECT_EQ(imebra::NSStringToString(checkPatientID), "TestID");
+
+    [pool drain];
+}
+
+TEST(objectivec, CodecFactoryFailLoad)
+{
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+
+    NSError* error = nil;
+    ImebraDataSet* pDataSet = [ImebraCodecFactory load:@"fail.dcm" error:&error];
+    EXPECT_EQ(pDataSet, nullptr);
+    EXPECT_EQ(imebra::NSStringToString([error domain]), "imebra");
+
+    [pool drain];
+}
+
+TEST(objectivec, image)
+{
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+
+    ImebraImage* pImage = [[ImebraImage alloc] initWithSize:5 height:5 depth:depthU16 colorSpace:@"MONOCHROME2" highBit:15];
+
+    NSError* error = nil;
+    {
+        ImebraWritingDataHandlerNumeric* writingDataHandler = [pImage getWritingDataHandler:&error];
+        for(unsigned int pixel(0); pixel != 25; ++pixel)
+        {
+            [writingDataHandler setUnsignedLong:pixel withValue:pixel error:&error];
+        }
+#if !__has_feature(objc_arc)
+        [writingDataHandler release];
+#endif
+    }
+
+    ImebraDataSet* pDataSet = [[ImebraDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
+    [pDataSet setImage:0 image:pImage quality:veryHigh error:&error];
+
+    ImebraImage* pCheckImage = [pDataSet getImage:0 error:&error];
+    ImebraReadingDataHandlerNumeric* readingDataHandler = [pCheckImage getReadingDataHandler:&error];
+    for(unsigned int pixel(0); pixel != 25; ++pixel)
+    {
+        EXPECT_EQ([readingDataHandler getUnsignedLong:pixel error:&error], pixel);
+    }
+}
+
+
+TEST(objectivec, datasetValues)
+{
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+
+    NSError* error = nil;
+
+    ImebraDataSet* pDataSet = [[ImebraDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
+
+    [pDataSet setString:[[ImebraTagId alloc] init:0x10 tag:0x10] newValue:@"TestPatient" error:&error];
+    [pDataSet setAge:[[ImebraTagId alloc] init:0x10 tag:0x1010] newValue:[[ImebraAge alloc] initWithAge:10 units:years] error:&error];
+
+    NSString* checkPatient0 = [pDataSet getString:[[ImebraTagId alloc] init:0x10 tag:0x10] elementNumber:0 error:&error];
+    ImebraAge* checkAge = [pDataSet getAge:[[ImebraTagId alloc] init:0x10 tag:0x1010] elementNumber:0 error:&error];
+
+    EXPECT_EQ(error, nil);
+    NSString* checkPatient1 = [pDataSet getString:[[ImebraTagId alloc] init:0x10 tag:0x11] elementNumber:0 error:&error];
+    EXPECT_EQ(imebra::NSStringToString([error domain]), "imebra");
+
+    NSString* checkPatient2 = [pDataSet getString:[[ImebraTagId alloc] init:0x10 tag:0x11] elementNumber:0 defaultValue:@"defaultValue" error:&error];
+
+    EXPECT_EQ(imebra::NSStringToString(checkPatient0), "TestPatient");
+    EXPECT_EQ(checkPatient1, nil);
+    EXPECT_EQ(imebra::NSStringToString(checkPatient2), "defaultValue");
+
+    EXPECT_EQ([checkAge age], 10);
+    EXPECT_EQ([checkAge units], years);
 }
 
 
