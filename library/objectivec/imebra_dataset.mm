@@ -58,7 +58,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 -(void)dealloc
 {
     delete m_pDataSet;
-    [super dealloc];
 }
 
 -(ImebraImage*) getImage:(unsigned int) frameNumber error:(NSError**)pError

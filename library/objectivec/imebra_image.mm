@@ -118,7 +118,6 @@ NSImage* getImebraImage(const imebra::Image& image, imebra::DrawBitmap& drawBitm
 -(void)dealloc
 {
     delete m_pImage;
-    [super dealloc];
 }
 
 -(ImebraReadingDataHandlerNumeric*) getReadingDataHandler:(NSError**)pError

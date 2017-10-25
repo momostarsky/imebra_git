@@ -27,7 +27,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(void)dealloc
 {
-    [super dealloc];
 }
 
 -(ImebraReadMemory*)getMemory:(NSError**)pError

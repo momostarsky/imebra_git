@@ -20,7 +20,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 -(void)dealloc
 {
     delete m_pAge;
-    [super dealloc];
 }
 
 -(id)initWithAge:(unsigned int)initialAge units:(ImebraAgeUnit_t)initialUnits
@@ -56,7 +55,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 -(void)dealloc
 {
     delete self->m_pDate;
-    [super dealloc];
 }
 
 -(id)initWithDate:(unsigned int)initialYear

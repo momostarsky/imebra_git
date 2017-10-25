@@ -29,7 +29,6 @@ namespace imebra
 @class ImebraWritingDataHandler;
 @class ImebraTagId;
 
-IMEBRA_API
 typedef NS_ENUM(unsigned short, ImebraTagVR_t)
 {
     AE = (unsigned short)imebra::tagVR_t::AE,

@@ -34,7 +34,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 -(void)dealloc
 {
     delete self->m_pDataHandler;
-    [super dealloc];
 }
 
 -(unsigned int) size
