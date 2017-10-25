@@ -117,10 +117,10 @@ TEST(objectivec, image)
     ImebraImage* pImage = [[ImebraImage alloc] initWithSize:5 height:5 depth:depthU16 colorSpace:@"MONOCHROME2" highBit:15];
 
     NSError* error = nil;
-    {
 #if __has_feature(objc_arc)
-        @autoreleasepool
+    @autoreleasepool
 #endif
+    {
         ImebraWritingDataHandlerNumeric* writingDataHandler = [pImage getWritingDataHandler:&error];
         for(unsigned int pixel(0); pixel != 25; ++pixel)
         {
