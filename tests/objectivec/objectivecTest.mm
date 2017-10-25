@@ -12,44 +12,47 @@ namespace tests
 // Test NSString conversion functions
 TEST(objectivec, stringToNSStringTest)
 {
-    // Try a cyrillic/arabic patient name
-    std::string patientName0 = "??\xD0\xA1\xD0\xBC\xD1\x8B\xD1\x81\xD0\xBB\x20\xD0\xB2\xD1\x81\xD0\xB5\xD0\xB9";
-    std::string patientName1 = "\xD0\xA1\xD0\xBC\xD1\x8B\xD1\x81\xD0\xBB\x20\xD0\xB2\xD1\x81\xD0\xB5\xD0\xB9";
-
-    ReadWriteMemory streamMemory;
+    @autoreleasepool
     {
-        charsetsList_t charsets;
-        charsets.push_back("ISO_IR 6");
-        DataSet testDataSet("1.2.840.10008.1.2.1", charsets);
+        // Try a cyrillic/arabic patient name
+        std::string patientName0 = "??\xD0\xA1\xD0\xBC\xD1\x8B\xD1\x81\xD0\xBB\x20\xD0\xB2\xD1\x81\xD0\xB5\xD0\xB9";
+        std::string patientName1 = "\xD0\xA1\xD0\xBC\xD1\x8B\xD1\x81\xD0\xBB\x20\xD0\xB2\xD1\x81\xD0\xB5\xD0\xB9";
 
+        ReadWriteMemory streamMemory;
         {
-            std::unique_ptr<WritingDataHandler> handler(testDataSet.getWritingDataHandler(TagId(0x10, 0x10), 0));
+            charsetsList_t charsets;
+            charsets.push_back("ISO_IR 6");
+            DataSet testDataSet("1.2.840.10008.1.2.1", charsets);
 
-            handler->setString(0, patientName0);
-            handler->setString(1, patientName1);
+            {
+                std::unique_ptr<WritingDataHandler> handler(testDataSet.getWritingDataHandler(TagId(0x10, 0x10), 0));
+
+                handler->setString(0, patientName0);
+                handler->setString(1, patientName1);
+            }
+
+            MemoryStreamOutput writeStream(streamMemory);
+            StreamWriter writer(writeStream);
+            CodecFactory::save(testDataSet, writer, codecType_t::dicom);
         }
 
-        MemoryStreamOutput writeStream(streamMemory);
-        StreamWriter writer(writeStream);
-        CodecFactory::save(testDataSet, writer, codecType_t::dicom);
-    }
+        {
+            MemoryStreamInput readStream(streamMemory);
+            StreamReader reader(readStream);
+            std::unique_ptr<DataSet> testDataSet(CodecFactory::load(reader));
 
-    {
-        MemoryStreamInput readStream(streamMemory);
-        StreamReader reader(readStream);
-        std::unique_ptr<DataSet> testDataSet(CodecFactory::load(reader));
+            std::string patientName0(testDataSet->getString(TagId(0x0010, 0x0010), 0));
+            std::string patientName1(testDataSet->getString(TagId(0x0010, 0x0010), 1));
 
-        std::string patientName0(testDataSet->getString(TagId(0x0010, 0x0010), 0));
-        std::string patientName1(testDataSet->getString(TagId(0x0010, 0x0010), 1));
+            NSString* nsPatientName0 = stringToNSString(patientName0);
+            NSString* nsPatientName1 = stringToNSString(patientName1);
 
-        NSString* nsPatientName0 = stringToNSString(patientName0);
-        NSString* nsPatientName1 = stringToNSString(patientName1);
+            EXPECT_TRUE([nsPatientName0 isEqualToString:@"??\xD0\xA1\xD0\xBC\xD1\x8B\xD1\x81\xD0\xBB\x20\xD0\xB2\xD1\x81\xD0\xB5\xD0\xB9"]);
+            EXPECT_TRUE([nsPatientName1 isEqualToString:@"\xD0\xA1\xD0\xBC\xD1\x8B\xD1\x81\xD0\xBB\x20\xD0\xB2\xD1\x81\xD0\xB5\xD0\xB9"]);
 
-        EXPECT_TRUE([nsPatientName0 isEqualToString:@"??\xD0\xA1\xD0\xBC\xD1\x8B\xD1\x81\xD0\xBB\x20\xD0\xB2\xD1\x81\xD0\xB5\xD0\xB9"]);
-        EXPECT_TRUE([nsPatientName1 isEqualToString:@"\xD0\xA1\xD0\xBC\xD1\x8B\xD1\x81\xD0\xBB\x20\xD0\xB2\xD1\x81\xD0\xB5\xD0\xB9"]);
-
-        [nsPatientName0 release];
-        [nsPatientName1 release];
+            [nsPatientName0 release];
+            [nsPatientName1 release];
+        }
     }
 }
 
@@ -57,127 +60,128 @@ TEST(objectivec, stringToNSStringTest)
 // Test NSString conversion functions
 TEST(objectivec, NSStringToStringTest)
 {
-    ReadWriteMemory streamMemory;
+    @autoreleasepool
     {
-        charsetsList_t charsets;
-        charsets.push_back("ISO_IR 6");
-        DataSet testDataSet("1.2.840.10008.1.2.1", charsets);
-
+        ReadWriteMemory streamMemory;
         {
-            std::unique_ptr<WritingDataHandler> handler(testDataSet.getWritingDataHandler(TagId(0x10, 0x10), 0));
+            charsetsList_t charsets;
+            charsets.push_back("ISO_IR 6");
+            DataSet testDataSet("1.2.840.10008.1.2.1", charsets);
 
-            handler->setString(0, NSStringToString(@"Test 1"));
-            handler->setString(1, NSStringToString(@"Test 2"));
+            {
+                std::unique_ptr<WritingDataHandler> handler(testDataSet.getWritingDataHandler(TagId(0x10, 0x10), 0));
+
+                handler->setString(0, NSStringToString(@"Test 1"));
+                handler->setString(1, NSStringToString(@"Test 2"));
+            }
+
+            MemoryStreamOutput writeStream(streamMemory);
+            StreamWriter writer(writeStream);
+            CodecFactory::save(testDataSet, writer, codecType_t::dicom);
         }
 
-        MemoryStreamOutput writeStream(streamMemory);
-        StreamWriter writer(writeStream);
-        CodecFactory::save(testDataSet, writer, codecType_t::dicom);
-    }
+        {
+            MemoryStreamInput readStream(streamMemory);
+            StreamReader reader(readStream);
+            std::unique_ptr<DataSet> testDataSet(CodecFactory::load(reader));
 
-    {
-        MemoryStreamInput readStream(streamMemory);
-        StreamReader reader(readStream);
-        std::unique_ptr<DataSet> testDataSet(CodecFactory::load(reader));
+            std::string patientName0(testDataSet->getString(TagId(0x0010, 0x0010), 0));
+            std::string patientName1(testDataSet->getString(TagId(0x0010, 0x0010), 1));
 
-        std::string patientName0(testDataSet->getString(TagId(0x0010, 0x0010), 0));
-        std::string patientName1(testDataSet->getString(TagId(0x0010, 0x0010), 1));
+            EXPECT_EQ("Test 1", patientName0);
+            EXPECT_EQ("Test 2", patientName1);
 
-        EXPECT_EQ("Test 1", patientName0);
-        EXPECT_EQ("Test 2", patientName1);
-
+        }
     }
 }
 
 
 TEST(objectivec, CodecFactory)
 {
-    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+    @autoreleasepool
+    {
+        DataSet testDataSet("1.2.840.10008.1.2");
+        testDataSet.setString(TagId(tagId_t::PatientName_0010_0010), "Test^Patient");
+        testDataSet.setString(TagId(tagId_t::PatientID_0010_0020), "TestID");
+        CodecFactory::save(testDataSet, "testCodecFactory.dcm", codecType_t::dicom);
 
-    DataSet testDataSet("1.2.840.10008.1.2");
-    testDataSet.setString(TagId(tagId_t::PatientName_0010_0010), "Test^Patient");
-    testDataSet.setString(TagId(tagId_t::PatientID_0010_0020), "TestID");
-    CodecFactory::save(testDataSet, "testCodecFactory.dcm", codecType_t::dicom);
+        NSError* error = nil;
+        ImebraDataSet* pDataSet = [[ImebraCodecFactory load:@"testCodecFactory.dcm" error:&error] autorelease];
+        NSString* checkPatientName = [[pDataSet getString:[[ImebraTagId alloc] init:0x10 tag:0x10] elementNumber:0 error:&error] autorelease];
+        NSString* checkPatientID = [[pDataSet getString:[[ImebraTagId alloc] init:0x10 tag:0x20] elementNumber:0 error:&error] autorelease];
 
-    NSError* error = nil;
-    ImebraDataSet* pDataSet = [ImebraCodecFactory load:@"testCodecFactory.dcm" error:&error];
-    NSString* checkPatientName = [pDataSet getString:[[ImebraTagId alloc] init:0x10 tag:0x10] elementNumber:0 error:&error];
-    NSString* checkPatientID = [pDataSet getString:[[ImebraTagId alloc] init:0x10 tag:0x20] elementNumber:0 error:&error];
-
-    EXPECT_EQ(imebra::NSStringToString(checkPatientName), "Test^Patient");
-    EXPECT_EQ(imebra::NSStringToString(checkPatientID), "TestID");
-
-    [pool drain];
+        EXPECT_EQ(imebra::NSStringToString(checkPatientName), "Test^Patient");
+        EXPECT_EQ(imebra::NSStringToString(checkPatientID), "TestID");
+    }
 }
 
 TEST(objectivec, CodecFactoryFailLoad)
 {
-    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
-
-    NSError* error = nil;
-    ImebraDataSet* pDataSet = [ImebraCodecFactory load:@"fail.dcm" error:&error];
-    EXPECT_EQ(pDataSet, nullptr);
-    EXPECT_EQ(imebra::NSStringToString([error domain]), "imebra");
-
-    [pool drain];
+    @autoreleasepool
+    {
+        NSError* error = nil;
+        ImebraDataSet* pDataSet = [[ImebraCodecFactory load:@"fail.dcm" error:&error] autorelease];
+        EXPECT_EQ(pDataSet, nullptr);
+        EXPECT_EQ(imebra::NSStringToString([error domain]), "imebra");
+    }
 }
 
 TEST(objectivec, image)
 {
-    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
-
-    ImebraImage* pImage = [[ImebraImage alloc] initWithSize:5 height:5 depth:depthU16 colorSpace:@"MONOCHROME2" highBit:15];
-
-    NSError* error = nil;
+    @autoreleasepool
     {
-        ImebraWritingDataHandlerNumeric* writingDataHandler = [pImage getWritingDataHandler:&error];
+        ImebraImage* pImage = [[[ImebraImage alloc] initWithSize:5 height:5 depth:depthU16 colorSpace:@"MONOCHROME2" highBit:15] autorelease];
+
+        NSError* error = nil;
+        @autoreleasepool
+        {
+            ImebraWritingDataHandlerNumeric* writingDataHandler = [[pImage getWritingDataHandler:&error] autorelease];
+            for(unsigned int pixel(0); pixel != 25; ++pixel)
+            {
+                [writingDataHandler setUnsignedLong:pixel withValue:pixel error:&error];
+            }
+        }
+
+        ImebraDataSet* pDataSet = [[[ImebraDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"] autorelease];
+        [pDataSet setImage:0 image:pImage quality:veryHigh error:&error];
+
+        ImebraImage* pCheckImage = [[pDataSet getImage:0 error:&error] autorelease];
+        ImebraReadingDataHandlerNumeric* readingDataHandler = [[pCheckImage getReadingDataHandler:&error] autorelease];
         for(unsigned int pixel(0); pixel != 25; ++pixel)
         {
-            [writingDataHandler setUnsignedLong:pixel withValue:pixel error:&error];
+            EXPECT_EQ([readingDataHandler getUnsignedLong:pixel error:&error], pixel);
         }
-#if !__has_feature(objc_arc)
-        [writingDataHandler release];
-#endif
-    }
-
-    ImebraDataSet* pDataSet = [[ImebraDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
-    [pDataSet setImage:0 image:pImage quality:veryHigh error:&error];
-
-    ImebraImage* pCheckImage = [pDataSet getImage:0 error:&error];
-    ImebraReadingDataHandlerNumeric* readingDataHandler = [pCheckImage getReadingDataHandler:&error];
-    for(unsigned int pixel(0); pixel != 25; ++pixel)
-    {
-        EXPECT_EQ([readingDataHandler getUnsignedLong:pixel error:&error], pixel);
     }
 }
 
 
 TEST(objectivec, datasetValues)
 {
-    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+    @autoreleasepool
+    {
+        NSError* error = nil;
 
-    NSError* error = nil;
+        ImebraDataSet* pDataSet = [[[ImebraDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"] autorelease];
 
-    ImebraDataSet* pDataSet = [[ImebraDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
+        [pDataSet setString:[[[ImebraTagId alloc] init:0x10 tag:0x10] autorelease] newValue:@"TestPatient" error:&error];
+        [pDataSet setAge:[[[ImebraTagId alloc] init:0x10 tag:0x1010] autorelease] newValue:[[[ImebraAge alloc] initWithAge:10 units:years] autorelease] error:&error];
 
-    [pDataSet setString:[[ImebraTagId alloc] init:0x10 tag:0x10] newValue:@"TestPatient" error:&error];
-    [pDataSet setAge:[[ImebraTagId alloc] init:0x10 tag:0x1010] newValue:[[ImebraAge alloc] initWithAge:10 units:years] error:&error];
+        NSString* checkPatient0 = [[pDataSet getString:[[ImebraTagId alloc] init:0x10 tag:0x10] elementNumber:0 error:&error] autorelease];
+        ImebraAge* checkAge = [[pDataSet getAge:[[ImebraTagId alloc] init:0x10 tag:0x1010] elementNumber:0 error:&error] autorelease];
 
-    NSString* checkPatient0 = [pDataSet getString:[[ImebraTagId alloc] init:0x10 tag:0x10] elementNumber:0 error:&error];
-    ImebraAge* checkAge = [pDataSet getAge:[[ImebraTagId alloc] init:0x10 tag:0x1010] elementNumber:0 error:&error];
+        EXPECT_EQ(error, nil);
+        NSString* checkPatient1 = [[pDataSet getString:[[ImebraTagId alloc] init:0x10 tag:0x11] elementNumber:0 error:&error] autorelease];
+        EXPECT_EQ(imebra::NSStringToString([error domain]), "imebra");
 
-    EXPECT_EQ(error, nil);
-    NSString* checkPatient1 = [pDataSet getString:[[ImebraTagId alloc] init:0x10 tag:0x11] elementNumber:0 error:&error];
-    EXPECT_EQ(imebra::NSStringToString([error domain]), "imebra");
+        NSString* checkPatient2 = [[pDataSet getString:[[ImebraTagId alloc] init:0x10 tag:0x11] elementNumber:0 defaultValue:@"defaultValue" error:&error] autorelease];
 
-    NSString* checkPatient2 = [pDataSet getString:[[ImebraTagId alloc] init:0x10 tag:0x11] elementNumber:0 defaultValue:@"defaultValue" error:&error];
+        EXPECT_EQ(imebra::NSStringToString(checkPatient0), "TestPatient");
+        EXPECT_EQ(checkPatient1, nil);
+        EXPECT_EQ(imebra::NSStringToString(checkPatient2), "defaultValue");
 
-    EXPECT_EQ(imebra::NSStringToString(checkPatient0), "TestPatient");
-    EXPECT_EQ(checkPatient1, nil);
-    EXPECT_EQ(imebra::NSStringToString(checkPatient2), "defaultValue");
-
-    EXPECT_EQ([checkAge age], 10);
-    EXPECT_EQ([checkAge units], years);
+        EXPECT_EQ([checkAge age], 10);
+        EXPECT_EQ([checkAge units], years);
+    }
 }
 
 

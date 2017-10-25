@@ -56,6 +56,9 @@ If you do not want to be bound by the GPL terms (such as the requirement
 -(void)dealloc
 {
     delete m_pTagId;
+#if !__has_feature(objc_arc)
+    [super dealloc];
+#endif
 }
 
 -(unsigned short) groupId

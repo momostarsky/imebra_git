@@ -20,6 +20,9 @@ If you do not want to be bound by the GPL terms (such as the requirement
 -(void)dealloc
 {
     delete m_pAge;
+#if !__has_feature(objc_arc)
+    [super dealloc];
+#endif
 }
 
 -(id)initWithAge:(unsigned int)initialAge units:(ImebraAgeUnit_t)initialUnits
@@ -54,7 +57,10 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(void)dealloc
 {
-    delete self->m_pDate;
+    delete m_pDate;
+#if !__has_feature(objc_arc)
+    [super dealloc];
+#endif
 }
 
 -(id)initWithDate:(unsigned int)initialYear

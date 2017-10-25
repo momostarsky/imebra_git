@@ -58,6 +58,9 @@ If you do not want to be bound by the GPL terms (such as the requirement
 -(void)dealloc
 {
     delete m_pDataSet;
+#if !__has_feature(objc_arc)
+    [super dealloc];
+#endif
 }
 
 -(ImebraImage*) getImage:(unsigned int) frameNumber error:(NSError**)pError
