@@ -104,7 +104,7 @@ void dicomStreamCodec::writeStream(std::shared_ptr<streamWriter> pStream, std::s
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dicomStreamCodec::buildStream(std::shared_ptr<streamWriter> pStream, std::shared_ptr<dataSet> pDataSet, bool bExplicitDataType, streamController::tByteOrdering endianType, streamType_t streamType)
+void dicomStreamCodec::buildStream(std::shared_ptr<streamWriter> pStream, std::shared_ptr<const dataSet> pDataSet, bool bExplicitDataType, streamController::tByteOrdering endianType, streamType_t streamType)
 {
     IMEBRA_FUNCTION_START();
 

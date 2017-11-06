@@ -163,7 +163,11 @@ class IMEBRA_API AssociationMessage
 
 #ifndef SWIG
     friend class AssociationBase;
+    friend class DimseService;
+    friend class DimseCommand;
+    friend class DimseResponse;
 protected:
+    AssociationMessage();
     AssociationMessage(std::shared_ptr<implementation::associationMessage> pMessage);
 #endif
 
@@ -209,11 +213,11 @@ public:
     bool hasPayload() const;
 
     ///
-    /// \brief Add a DataSet to the message.
+    /// \brief Add a command DataSet to the message.
     ///
-    /// Several datasets can be transmitted at once: the first DataSet should be
-    /// a DICOM command, while subsequent datasets should be added if the command
-    /// requires them.
+    /// Two datasets can be transmitted at once: the first DataSet should be
+    /// a DICOM command, while the second dataset should be added if the command
+    /// requires a payload.
     ///
     /// \param dataSet a DataSet to add to the message
     ///
@@ -236,6 +240,10 @@ class IMEBRA_API AssociationBase
 {
     AssociationBase(const AssociationBase&) = delete;
     AssociationBase& operator=(const AssociationBase&) = delete;
+
+#ifndef SWIG
+    friend class DimseService;
+#endif
 
 protected:
     AssociationBase();
@@ -278,8 +286,8 @@ public:
     ///
     /// \brief Releases the association.
     ///
-    /// The caller must wait for the response by calling getCommand(), which will
-    /// throw StreamClosedError.
+    /// The method blocks until the other party acknowledges the release command
+    /// or until the ACSE timout expires.
     ///
     ///////////////////////////////////////////////////////////////////////////////
     void release();
@@ -287,8 +295,8 @@ public:
     ///
     /// \brief Aborts the association.
     ///
-    /// The association will be aborted as soon as possible and the caller will
-    /// not receive any confirmation of this operation.
+    /// The association will be aborted as soon as possible. The other party
+    /// will not acknowledge the abort command.
     ///
     ///////////////////////////////////////////////////////////////////////////////
     void abort();

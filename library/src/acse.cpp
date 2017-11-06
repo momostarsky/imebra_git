@@ -60,6 +60,10 @@ void PresentationContexts::addPresentationContext(const PresentationContext& pre
 }
 
 
+AssociationMessage::AssociationMessage()
+{
+}
+
 
 AssociationMessage::AssociationMessage(std::shared_ptr<implementation::associationMessage> pMessage):
     m_pMessage(pMessage)
@@ -73,35 +77,36 @@ AssociationMessage::AssociationMessage(const std::string& abstractSyntax):
 
 std::string AssociationMessage::getAbstractSyntax() const
 {
-    return m_pMessage->abstractSyntax;
+    return m_pMessage->getAbstractSyntax();
 }
 
 DataSet* AssociationMessage::getCommand() const
 {
-    return new DataSet(m_pMessage->dataSets.front());
+    return new DataSet(m_pMessage->getCommand());
 }
 
 DataSet* AssociationMessage::getPayload() const
 {
     IMEBRA_FUNCTION_START();
 
-    if(m_pMessage->dataSets.size() != 2)
+    std::shared_ptr<implementation::dataSet> pDataSet(m_pMessage->getPayload());
+    if(pDataSet == nullptr)
     {
         IMEBRA_THROW(AcseNoPayloadError, "Payload not available");
     }
-    return new DataSet(m_pMessage->dataSets.back());
+    return new DataSet(pDataSet);
 
     IMEBRA_FUNCTION_END();
 }
 
 bool AssociationMessage::hasPayload() const
 {
-    return m_pMessage->dataSets.size() > 1;
+    return m_pMessage->getPayload() != nullptr;
 }
 
 void AssociationMessage::addDataSet(const DataSet& dataSet)
 {
-    m_pMessage->dataSets.push_back(dataSet.m_pDataSet);
+    m_pMessage->addDataset(dataSet.m_pDataSet);
 }
 
 
@@ -123,7 +128,7 @@ AssociationMessage* AssociationBase::getCommand()
 
 AssociationMessage* AssociationBase::getResponse(unsigned long messageId)
 {
-    return new AssociationMessage(m_pAssociation->getResponse(messageId));
+    return new AssociationMessage(m_pAssociation->getResponse((std::uint16_t)messageId));
 }
 
 void AssociationBase::sendMessage(const AssociationMessage& messageDataSet)

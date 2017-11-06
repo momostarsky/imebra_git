@@ -26,6 +26,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <list>
 #include <set>
 #include <atomic>
+#include <mutex>
+#include <condition_variable>
 #include "configurationImpl.h"
 #include "streamReaderImpl.h"
 
@@ -39,8 +41,6 @@ class streamWriter;
 class streamReader;
 class memory;
 class dataSet;
-
-class dimseMessage;
 
 ///
 /// @brief Base class for the Items encoded in the ACSE messages
@@ -1118,6 +1118,20 @@ public:
     //////////////////////////////////////////////////////////////////
     associationMessage(const std::string& abstractSyntax);
 
+    associationMessage(const std::string& abstractSyntax, std::shared_ptr<dataSet> pCommand);
+
+    associationMessage(const std::string& abstractSyntax, std::shared_ptr<dataSet> pCommand, std::shared_ptr<dataSet> pPayload);
+
+    virtual ~associationMessage();
+
+    void addDataset(const std::shared_ptr<dataSet> pDataset);
+
+    const std::string& getAbstractSyntax() const;
+
+    std::shared_ptr<dataSet> getCommand() const;
+
+    std::shared_ptr<dataSet> getPayload() const;
+
     ///
     /// \brief Return true if the message is complete, false otherwise
     ///        (e.g. the check if the message includes the payload).
@@ -1127,9 +1141,11 @@ public:
     //////////////////////////////////////////////////////////////////
     bool isComplete() const;
 
-    std::string abstractSyntax;
+protected:
+    const std::string m_abstractSyntax;
 
-    std::list<std::shared_ptr<dataSet> > dataSets;
+    std::shared_ptr<dataSet> m_pCommand;
+    std::shared_ptr<dataSet> m_pPayload;
 };
 
 
@@ -1159,7 +1175,7 @@ public:
     /// \param message the message to send
     ///
     //////////////////////////////////////////////////////////////////
-    void sendMessage(std::shared_ptr<associationMessage> message);
+    void sendMessage(std::shared_ptr<const associationMessage> message);
 
     ///
     /// \brief Retrieve the next received command.
@@ -1178,7 +1194,7 @@ public:
     /// \return the received response
     ///
     //////////////////////////////////////////////////////////////////
-    std::shared_ptr<associationMessage> getResponse(unsigned long messageId);
+    std::shared_ptr<associationMessage> getResponse(std::uint16_t messageId);
 
     ///
     /// \brief Abort the association. The other peer will not send
@@ -1190,13 +1206,34 @@ public:
     void abort(acsePDUAAbort::reason_t reason);
 
     ///
-    /// \brief Release the association. The other peer will send
-    ///        an acknowledgement response.
+    /// \brief Release the association. Waits for the acknowledgement
+    ///        response or the ACSE timeout.
     ///
     //////////////////////////////////////////////////////////////////
     void release();
 
+    ///
+    /// \brief Returns our AET.
+    ///
+    /// \return our AET
+    ///
+    //////////////////////////////////////////////////////////////////
+    std::string getThisAET() const;
+
+    ///
+    /// \brief Returns the other party's AET.
+    ///
+    /// \return the connected peer's AET
+    ///
+    //////////////////////////////////////////////////////////////////
+    std::string getOtherAET() const;
+
+    std::string getPresentationContextTransferSyntax(const std::string& abstractSyntax);
+
+    void getMessagesThread();
+
 protected:
+
     associationBase(
             role_t role,
             const std::string& thisAET,
@@ -1206,9 +1243,9 @@ protected:
             std::shared_ptr<streamReader> pReader,
             std::shared_ptr<streamWriter> pWriter);
 
-    std::shared_ptr<associationMessage> getMessage(unsigned long messageId, bool bResponse);
+    std::shared_ptr<associationMessage> getMessage(std::uint16_t messageId, bool bResponse);
 
-    role_t m_role;
+    const role_t m_role;
 
     ///
     /// \brief Maps a presentation context ID to the
@@ -1225,22 +1262,28 @@ protected:
     std::uint32_t m_maxOperationsInvoked;
     std::uint32_t m_maxOperationsPerformed;
 
-    std::atomic<bool> m_bAssociated;
-
+    ///
+    /// \brief 1 if the association is active, 0 if the
+    ///        association has been aborted or released.
+    ///
+    ///////////////////////////////////////////////////////////
+    std::atomic<int> m_bAssociated;
 
     std::uint32_t m_maxPDULength;
 
     std::shared_ptr<streamReader> m_pReader;
     std::shared_ptr<streamWriter> m_pWriter;
 
+    std::unique_ptr<std::thread> m_readDataSetsThread;
+
 private:
+
     struct receivedDataset
     {
         receivedDataset(const std::string& presentationContext, std::shared_ptr<dataSet> pDataset);
         const std::string m_presentationContext;
         std::shared_ptr<dataSet> m_pDataset;
     };
-
 
     ///
     /// \brief Decodes several PDUs until a full dataset
@@ -1249,19 +1292,25 @@ private:
     /// \return a decoded dataSet
     ///
     ///////////////////////////////////////////////////////////
-    std::shared_ptr<receivedDataset> decodePDU();
+    std::shared_ptr<receivedDataset> decodePDU(std::list<std::shared_ptr<acseItemPDataValue> >& pendingData, size_t& m_numberOfLastPData) const;
 
-    // Datasets ready to be retrieved by getDataSet()
+    /// Datasets ready to be retrieved by getMessage()
+    ///////////////////////////////////////////////////////////
     typedef std::list<std::shared_ptr<associationMessage> > readyDatasets_t;
     readyDatasets_t m_readyDataSets;
+    std::atomic<bool> m_bTerminated;
+    std::mutex m_lockReadyDataSets;
+    std::condition_variable m_notifyReadyDataSets;
 
-    // Pending pdata values not yet decoded into a dataset
+    // Lock while writing commands (only one command at the
+    // time may be sent to the other party)
     ///////////////////////////////////////////////////////////
-    std::list<std::shared_ptr<acseItemPDataValue> > m_pendingPData;
+    mutable std::mutex m_lockWrite;
 
-    // Number of pdata values with the last value flag
+    // Lock access to m_waitingResponses and
+    // m_processingCommands
     ///////////////////////////////////////////////////////////
-    size_t m_numberOfLastPData;
+    std::mutex m_lockCommandsResponses;
 
     // ID of the responses that we are expecting
     ///////////////////////////////////////////////////////////

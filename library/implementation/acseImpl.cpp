@@ -20,6 +20,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "configurationImpl.h"
 #include "dicomStreamCodecImpl.h"
 #include <memory.h>
+#include <cctype>
 #include <cassert>
 
 namespace imebra
@@ -1592,6 +1593,7 @@ presentationContexts::presentationContexts()
 
 }
 
+
 presentationContexts::presentationContexts(const presentationContexts &right)
 {
     for(const std::shared_ptr<presentationContext>& context: right.m_presentationContexts)
@@ -1600,16 +1602,70 @@ presentationContexts::presentationContexts(const presentationContexts &right)
     }
 }
 
-associationMessage::associationMessage(const std::string& abstractSyntaxParameter):
-    abstractSyntax(abstractSyntaxParameter)
+
+associationMessage::associationMessage(const std::string& abstractSyntax):
+    associationMessage(abstractSyntax, nullptr)
 {
 }
 
+
+associationMessage::associationMessage(const std::string& abstractSyntax, std::shared_ptr<dataSet> pCommand):
+    associationMessage(abstractSyntax, pCommand, nullptr)
+{
+}
+
+
+associationMessage::associationMessage(const std::string& abstractSyntax, std::shared_ptr<dataSet> pCommand, std::shared_ptr<dataSet> pPayload):
+    m_abstractSyntax(abstractSyntax), m_pCommand(pCommand), m_pPayload(pPayload)
+{
+}
+
+
+associationMessage::~associationMessage()
+{
+}
+
+
+void associationMessage::addDataset(const std::shared_ptr<dataSet> pDataset)
+{
+    if(m_pCommand == nullptr)
+    {
+        m_pCommand = pDataset;
+        return;
+    }
+
+    if(m_pPayload == nullptr)
+    {
+        m_pPayload = pDataset;
+        return;
+    }
+
+    throw;
+}
+
+const std::string& associationMessage::getAbstractSyntax() const
+{
+    return m_abstractSyntax;
+}
+
+std::shared_ptr<dataSet> associationMessage::getCommand() const
+{
+    return m_pCommand;
+}
+
+std::shared_ptr<dataSet> associationMessage::getPayload() const
+{
+    return m_pPayload;
+}
+
+
+
+
 bool associationMessage::isComplete() const
 {
-    return !dataSets.empty() &&
-            dataSets.front()->bufferExists(0, 0, 0x100, 0) &&
-            (dataSets.front()->getUnsignedLong(0, 0, 0x800, 0, 0, 0x0101) == 0x0101 || dataSets.size() > 1);
+    return m_pCommand != nullptr &&
+            m_pCommand->bufferExists(0, 0, 0x100, 0) &&
+            (m_pCommand->getUnsignedLong(0, 0, 0x800, 0, 0, 0x0101) == 0x0101 || m_pPayload != nullptr);
 }
 
 
@@ -1627,22 +1683,26 @@ associationBase::associationBase(
     m_otherAET(otherAET),
     m_maxOperationsInvoked(maxOperationsWeInvoke),
     m_maxOperationsPerformed(maxOperationsWeCanPerform),
-    m_bAssociated(true),
+    m_bAssociated(1),
     m_maxPDULength(MAXIMUM_PDU_SIZE),
     m_pReader(pReader),
     m_pWriter(pWriter),
-    m_numberOfLastPData(0)
+    m_bTerminated(false)
 {
 }
 
 
 associationBase::~associationBase()
 {
-    abort(acsePDUAAbort::reason_t::serviceProviderReasonNotSpecified);
+    m_pReader->terminate();
+    if(m_readDataSetsThread != nullptr)
+    {
+        m_readDataSetsThread->join();
+    }
 }
 
 
-void associationBase::sendMessage(std::shared_ptr<associationMessage> message)
+void associationBase::sendMessage(std::shared_ptr<const associationMessage> message)
 {
     IMEBRA_FUNCTION_START();
 
@@ -1651,12 +1711,12 @@ void associationBase::sendMessage(std::shared_ptr<associationMessage> message)
     ///////////////////////////////////////////////////////////
     std::string transferSyntax;
     std::uint8_t presentationContextId(0);
-    std::shared_ptr<presentationContext> pPresentationContext;
+    std::shared_ptr<const presentationContext> pPresentationContext;
     for(presentationContextsIds_t::const_iterator scanPresentationContexts(m_presentationContextsIds.begin()), endPresentationContexts(m_presentationContextsIds.end());
         scanPresentationContexts != endPresentationContexts;
         ++scanPresentationContexts)
     {
-        if(message->abstractSyntax == scanPresentationContexts->second.first->m_abstractSyntax)
+        if(message->getAbstractSyntax() == scanPresentationContexts->second.first->m_abstractSyntax)
         {
             transferSyntax = scanPresentationContexts->second.second;
             presentationContextId = scanPresentationContexts->first;
@@ -1671,7 +1731,7 @@ void associationBase::sendMessage(std::shared_ptr<associationMessage> message)
     }
     if(transferSyntax.empty())
     {
-        IMEBRA_THROW(AcseNoTransferSyntaxError, "No transfer syntax for the selected presentation context with abstract syntax " << message->abstractSyntax);
+        IMEBRA_THROW(AcseNoTransferSyntaxError, "No transfer syntax for the selected presentation context with abstract syntax " << message->getAbstractSyntax());
     }
 
     // Adjust the transfer syntax flags
@@ -1686,18 +1746,23 @@ void associationBase::sendMessage(std::shared_ptr<associationMessage> message)
     ///////////////////////////////////////////////////////////
     std::shared_ptr<acsePDUPData> pData;
 
-    unsigned long dataSetCount(0);
+    std::unique_lock<std::mutex> lockWrite(m_lockWrite);
 
-    for(std::list<std::shared_ptr<dataSet> >::const_iterator scanDataSets(message->dataSets.begin()), endDataSets(message->dataSets.end());
-        scanDataSets != endDataSets;
-        ++scanDataSets, ++dataSetCount)
+    for(size_t dataSetCount(0); dataSetCount != 2; ++dataSetCount)
     {
-        if((*scanDataSets)->bufferExists(0, 0, 0x100, 0))
+
+        std::shared_ptr<const dataSet> pDataSet(dataSetCount == 0 ? message->getCommand() : message->getPayload());
+        if(pDataSet == nullptr)
+        {
+            break;
+        }
+
+        if(pDataSet->bufferExists(0, 0, 0x100, 0))
         {
             // Check if the role is correct for the selected
             // presentation context
             ///////////////////////////////////////////////////////////
-            bool bResponse( ((*scanDataSets)->getUnsignedLong(0x0, 0, 0x100, 0, 0, 0) & 0x00008000) != 0);
+            const bool bResponse( (pDataSet->getUnsignedLong(0x0, 0, 0x100, 0, 0, 0) & 0x00008000) != 0);
             if(m_role == role_t::scu)
             {
                 if(
@@ -1717,10 +1782,11 @@ void associationBase::sendMessage(std::shared_ptr<associationMessage> message)
                 }
             }
 
+            std::unique_lock<std::mutex> lockCommandsResponses(m_lockCommandsResponses);
             if(bResponse)
             {
-                std::uint32_t responseId = (*scanDataSets)->getUnsignedLong(0x0, 0, 0x120, 0, 0, 0);
-                if(((*scanDataSets)->getUnsignedLong(0x0, 0, 0x900, 0, 0, 0) & 0xfff0) == 0xff00)
+                std::uint32_t responseId = pDataSet->getUnsignedLong(0x0, 0, 0x120, 0, 0, 0);
+                if((pDataSet->getUnsignedLong(0x0, 0, 0x900, 0, 0, 0) & 0xfff0) == 0xff00)
                 {
                     // partial response
                     if(m_processingCommands.find(responseId) == m_processingCommands.end())
@@ -1735,9 +1801,9 @@ void associationBase::sendMessage(std::shared_ptr<associationMessage> message)
             }
             else
             {
-                std::uint32_t commandId = (*scanDataSets)->getUnsignedLong(0x0, 0, 0x110, 0, 0, 0);
-                if((*scanDataSets)->getUnsignedLong(0x0, 0, 0x100, 0, 0, 0) == 0x0fff)
+                if(pDataSet->getUnsignedLong(0x0, 0, 0x100, 0, 0, 0) == 0x0fff)
                 {
+                    const std::uint32_t commandId(pDataSet->getUnsignedLong(0x0, 0, 0x120, 0, 0, 0));
                     // cancel request
                     if(m_waitingResponses.find(commandId) == m_waitingResponses.end())
                     {
@@ -1746,6 +1812,7 @@ void associationBase::sendMessage(std::shared_ptr<associationMessage> message)
                 }
                 else
                 {
+                    const std::uint32_t commandId(pDataSet->getUnsignedLong(0x0, 0, 0x110, 0, 0, 0));
                     if(m_waitingResponses.count(commandId) != 0)
                     {
                         IMEBRA_THROW(AcseWrongCommandIdError, "Sending a command with the same ID of a command still being processed");
@@ -1758,6 +1825,7 @@ void associationBase::sendMessage(std::shared_ptr<associationMessage> message)
                 }
             }
         }
+
         if(dataSetCount == 1)
         {
             // Commands are written in a separate PDU
@@ -1775,7 +1843,7 @@ void associationBase::sendMessage(std::shared_ptr<associationMessage> message)
         {
             std::shared_ptr<memoryStreamOutput> pWriteCommand(std::make_shared<memoryStreamOutput>(pEncodedDataSet));
             std::shared_ptr<streamWriter> pCommandWriter(std::make_shared<streamWriter>(pWriteCommand));
-            codecs::dicomStreamCodec::buildStream(pCommandWriter, *scanDataSets, bExplicitDataType, endianType, codecs::dicomStreamCodec::streamType_t::normal);
+            codecs::dicomStreamCodec::buildStream(pCommandWriter, pDataSet, bExplicitDataType, endianType, codecs::dicomStreamCodec::streamType_t::normal);
         }
 
         if((pEncodedDataSet->size() & 0x1) != 0)
@@ -1811,7 +1879,7 @@ std::shared_ptr<associationMessage> associationBase::getCommand()
 // Get a response dataset
 //
 ///////////////////////////////////////////////////////////
-std::shared_ptr<associationMessage> associationBase::getResponse(unsigned long messageId)
+std::shared_ptr<associationMessage> associationBase::getResponse(std::uint16_t messageId)
 {
     return getMessage(messageId, true);
 }
@@ -1822,13 +1890,15 @@ std::shared_ptr<associationMessage> associationBase::getResponse(unsigned long m
 // Get a message (command + payload)
 //
 ///////////////////////////////////////////////////////////
-std::shared_ptr<associationMessage> associationBase::getMessage(unsigned long messageId, bool bResponse)
+std::shared_ptr<associationMessage> associationBase::getMessage(std::uint16_t messageId, bool bResponse)
 {
     IMEBRA_FUNCTION_START();
 
+    std::unique_lock<std::mutex> lock(m_lockReadyDataSets);
+
     // Loop until all the message's dataset have been found
     ///////////////////////////////////////////////////////////
-    for(;;)
+    while(!m_bTerminated)
     {
         for(readyDatasets_t::iterator scanDatasets(m_readyDataSets.begin()), endDatasets(m_readyDataSets.end());
             scanDatasets != endDatasets;
@@ -1837,12 +1907,12 @@ std::shared_ptr<associationMessage> associationBase::getMessage(unsigned long me
             readyDatasets_t::iterator nextDataset(scanDatasets);
             ++nextDataset;
 
-            std::shared_ptr<dataSet> commandDataset((*scanDatasets)->dataSets.front());
+            std::shared_ptr<dataSet> commandDataset((*scanDatasets)->getCommand());
 
             if(
                     (*scanDatasets)->isComplete() &&
                     (((commandDataset->getUnsignedLong(0x0, 0, 0x100, 0, 0, 0)) & 0x00008000) != 0) == bResponse && // Check if this is a response
-                    (!bResponse || commandDataset->getUnsignedLong(0, 0, 0x0120, 0, 0) == messageId)) // If is a response check the message id
+                    (!bResponse || (std::uint16_t)commandDataset->getUnsignedLong(0, 0, 0x0120, 0, 0) == messageId)) // If is a response check the message id
             {
                 std::shared_ptr<associationMessage> pMessage(*scanDatasets);
                 m_readyDataSets.erase(scanDatasets);
@@ -1851,76 +1921,10 @@ std::shared_ptr<associationMessage> associationBase::getMessage(unsigned long me
 
             scanDatasets = nextDataset;
         }
-
-        std::shared_ptr<receivedDataset> pReceivedDataset(decodePDU());
-
-        if(pReceivedDataset->m_pDataset->bufferExists(0, 0, 0x100, 0))
-        {
-            bool bResponse( (pReceivedDataset->m_pDataset->getUnsignedLong(0x0, 0, 0x100, 0, 0, 0) & 0x00008000) != 0);
-            if(bResponse)
-            {
-                if( (pReceivedDataset->m_pDataset->getUnsignedLong(0x0, 0, 0x900, 0, 0, 0) & 0x0000fff0) == 0xff00)
-                {
-                    // partial response
-                    if(m_waitingResponses.find(pReceivedDataset->m_pDataset->getUnsignedLong(0, 0, 0x0120, 0, 0)) == m_waitingResponses.end())
-                    {
-                        abort(acsePDUAAbort::reason_t::serviceProviderInvalidPDUParameterValue);
-                        IMEBRA_THROW(AcseWrongResponseIdError, "Received a partial response with a wrong ID");
-                    }
-
-                }
-                else if(m_waitingResponses.erase(pReceivedDataset->m_pDataset->getUnsignedLong(0, 0, 0x0120, 0, 0)) == 0)
-                {
-                    abort(acsePDUAAbort::reason_t::serviceProviderInvalidPDUParameterValue);
-                    IMEBRA_THROW(AcseWrongResponseIdError, "Received a response with a wrong ID");
-                }
-            }
-            else
-            {
-                if(pReceivedDataset->m_pDataset->getUnsignedLong(0x0, 0, 0x100, 0, 0, 0) == 0x0fff)
-                {
-                    // Cancel operation received
-                    if(m_processingCommands.find(pReceivedDataset->m_pDataset->getUnsignedLong(0, 0, 0x0110, 0, 0)) == m_processingCommands.end())
-                    {
-                        abort(acsePDUAAbort::reason_t::serviceProviderInvalidPDUParameterValue);
-                        IMEBRA_THROW(AcseWrongCommandIdError, "Canceling a command that is not being processed");
-                    }
-                }
-                else
-                {
-                    if(m_processingCommands.count(pReceivedDataset->m_pDataset->getUnsignedLong(0, 0, 0x0110, 0, 0)) != 0)
-                    {
-                        abort(acsePDUAAbort::reason_t::serviceProviderInvalidPDUParameterValue);
-                        IMEBRA_THROW(AcseWrongCommandIdError, "Received a command with an ID from a command still being processed");
-                    }
-                    if(m_maxOperationsPerformed != 0 && m_processingCommands.size() == m_maxOperationsPerformed)
-                    {
-                        IMEBRA_THROW(AcseTooManyOperationsPerformedError, "Performing too many operations (max is " << m_maxOperationsPerformed << ")");
-                    }
-                    m_processingCommands.insert(pReceivedDataset->m_pDataset->getUnsignedLong(0, 0, 0x0110, 0, 0));
-                }
-            }
-
-            if(!m_readyDataSets.empty() && !m_readyDataSets.back()->isComplete())
-            {
-                abort(acsePDUAAbort::reason_t::serviceProviderUnexpectedPDU);
-                IMEBRA_THROW(AcseCorruptedMessageError, "Payload expected");
-            }
-            m_readyDataSets.push_back(std::make_shared<associationMessage>(pReceivedDataset->m_presentationContext));
-        }
-        if(m_readyDataSets.empty())
-        {
-            abort(acsePDUAAbort::reason_t::serviceProviderUnexpectedPDU);
-            IMEBRA_THROW(AcseCorruptedMessageError, "Payload received before a command");
-        }
-        if(m_readyDataSets.back()->abstractSyntax != pReceivedDataset->m_presentationContext)
-        {
-            abort(acsePDUAAbort::reason_t::serviceProviderInvalidPDUParameterValue);
-            IMEBRA_THROW(AcseCorruptedMessageError, "The payload has an abstract syntax different from the command");
-        }
-        m_readyDataSets.back()->dataSets.push_back(pReceivedDataset->m_pDataset);
-
+        m_notifyReadyDataSets.wait(lock);
     }
+
+    IMEBRA_THROW(StreamClosedError, "The input stream has been closed");
 
     IMEBRA_FUNCTION_END();
 }
@@ -1938,7 +1942,7 @@ associationBase::receivedDataset::receivedDataset(const std::string& presentatio
 // Decode and return a complete dataset
 //
 ///////////////////////////////////////////////////////////
-std::shared_ptr<associationBase::receivedDataset> associationBase::decodePDU()
+std::shared_ptr<associationBase::receivedDataset> associationBase::decodePDU(std::list<std::shared_ptr<acseItemPDataValue> >& pendingPData, size_t& numberOfLastPData) const
 {
     IMEBRA_FUNCTION_START();
 
@@ -1946,10 +1950,9 @@ std::shared_ptr<associationBase::receivedDataset> associationBase::decodePDU()
     ///////////////////////////////////////////////////////////
     for(;;)
     {
-
         // Check if a complete dataset is available
         ///////////////////////////////////////////////////////////
-        if(m_numberOfLastPData != 0)
+        if(numberOfLastPData != 0)
         {
             // Decode all the pdata values until the last one of a
             // dataset is found
@@ -1957,7 +1960,7 @@ std::shared_ptr<associationBase::receivedDataset> associationBase::decodePDU()
             size_t datasetSize(0);
             std::string abstractSyntax;
             std::string transferSyntax;
-            for(std::shared_ptr<acseItemPDataValue> pData: m_pendingPData)
+            for(std::shared_ptr<acseItemPDataValue> pData: pendingPData)
             {
                 datasetSize += pData->m_memorySize;
                 if(pData->m_bLast)
@@ -1978,8 +1981,8 @@ std::shared_ptr<associationBase::receivedDataset> associationBase::decodePDU()
             size_t memoryOffset(0);
             for(;;)
             {
-                std::shared_ptr<acseItemPDataValue> pData(m_pendingPData.front());
-                m_pendingPData.pop_front();
+                std::shared_ptr<acseItemPDataValue> pData(pendingPData.front());
+                pendingPData.pop_front();
                 ::memcpy(datasetMemory->data() + memoryOffset,
                          pData->m_pMemory->data() + pData->m_memoryOffset,
                          pData->m_memorySize);
@@ -1989,7 +1992,7 @@ std::shared_ptr<associationBase::receivedDataset> associationBase::decodePDU()
                     break;
                 }
             }
-            --m_numberOfLastPData;
+            --numberOfLastPData;
 
             // Adjust the transfer syntax flags
             ///////////////////////////////////////////////////////////
@@ -2019,6 +2022,7 @@ std::shared_ptr<associationBase::receivedDataset> associationBase::decodePDU()
             // release request. Send a release response and
             // throw an StreamClosedError exception
             {
+                std::unique_lock<std::mutex> lock(m_lockWrite);
                 std::shared_ptr<acsePDUAReleaseRP> releaseRP(std::make_shared<acsePDUAReleaseRP>());
                 releaseRP->encodePDU(m_pWriter);
                 IMEBRA_THROW(StreamClosedError, "The association has been released");
@@ -2041,10 +2045,10 @@ std::shared_ptr<associationBase::receivedDataset> associationBase::decodePDU()
                 {
                     if(pDataValue->m_memorySize != 0)
                     {
-                        m_pendingPData.push_back(pDataValue);
+                        pendingPData.push_back(pDataValue);
                         if(pDataValue->m_bLast)
                         {
-                            ++m_numberOfLastPData;
+                            ++numberOfLastPData;
                         }
                     }
                 }
@@ -2064,11 +2068,14 @@ void associationBase::abort(acsePDUAAbort::reason_t reason)
 {
     IMEBRA_FUNCTION_START();
 
-    if(m_bAssociated.load())
+    if(m_bAssociated.fetch_and(0))
     {
-        std::shared_ptr<acsePDUAAbort> abort(std::make_shared<acsePDUAAbort>(reason));
-        abort->encodePDU(m_pWriter);
-        m_bAssociated.store(false);
+        {
+            std::unique_lock<std::mutex> lock(m_lockWrite);
+            std::shared_ptr<acsePDUAAbort> abort(std::make_shared<acsePDUAAbort>(reason));
+            abort->encodePDU(m_pWriter);
+        }
+        m_pReader->terminate();
     }
 
     IMEBRA_FUNCTION_END();
@@ -2078,13 +2085,193 @@ void associationBase::release()
 {
     IMEBRA_FUNCTION_START();
 
-    if(m_bAssociated.load())
+    if(m_bAssociated.fetch_and(0))
     {
-        std::shared_ptr<acsePDUAReleaseRQ> release(std::make_shared<acsePDUAReleaseRQ>());
-        release->encodePDU(m_pWriter);
+        {
+            std::unique_lock<std::mutex> lock(m_lockWrite);
+            std::shared_ptr<acsePDUAReleaseRQ> release(std::make_shared<acsePDUAReleaseRQ>());
+            release->encodePDU(m_pWriter);
+        }
+
+        // Wait for release response
+        std::unique_lock<std::mutex> lock(m_lockReadyDataSets);
+        while(!m_bTerminated)
+        {
+            m_notifyReadyDataSets.wait(lock);
+        }
     }
 
     IMEBRA_FUNCTION_END();
+}
+
+std::string associationBase::getThisAET() const
+{
+    IMEBRA_FUNCTION_START();
+
+    return m_thisAET;
+
+    IMEBRA_FUNCTION_END();
+}
+
+std::string associationBase::getOtherAET() const
+{
+    IMEBRA_FUNCTION_START();
+
+    return m_otherAET;
+
+    IMEBRA_FUNCTION_END();
+}
+
+std::string associationBase::getPresentationContextTransferSyntax(const std::string& abstractSyntax)
+{
+    IMEBRA_FUNCTION_START();
+
+    for(const presentationContextsIds_t::value_type& scanContexts: m_presentationContextsIds)
+    {
+        if(scanContexts.second.first->m_abstractSyntax == abstractSyntax)
+        {
+            if(scanContexts.second.second.empty())
+            {
+                IMEBRA_THROW(AcseNoTransferSyntaxError, "None of the proposed transfer syntax was accepted during the negotiation for the abstract syntax " << abstractSyntax);
+            }
+            return scanContexts.second.second;
+        }
+    }
+
+    IMEBRA_THROW(AcsePresentationContextNotRequestedError, "The abstract syntax " << abstractSyntax << " was not negotiated");
+
+    IMEBRA_FUNCTION_END();
+}
+
+
+void associationBase::getMessagesThread()
+{
+    std::shared_ptr<associationMessage> pMessage;
+
+    std::list<std::shared_ptr<acseItemPDataValue> > pendingData;
+    size_t numberOfLastPData(0);
+
+    try
+    {
+        // Loop until terminated
+        ///////////////////////////////////////////////////////////
+        for(;;)
+        {
+            std::shared_ptr<receivedDataset> pReceivedDataset(decodePDU(pendingData, numberOfLastPData));
+
+            if(pReceivedDataset->m_pDataset->bufferExists(0, 0, 0x100, 0))
+            {
+                std::unique_lock<std::mutex> lockCommandsResponses(m_lockCommandsResponses);
+
+                // We received a command or response dataset
+                ///////////////////////////////////////////////////////////
+                if( (pReceivedDataset->m_pDataset->getUnsignedLong(0x0, 0, 0x100, 0, 0, 0) & 0x00008000) != 0)
+                {
+                    // We received a response
+                    ///////////////////////////////////////////////////////////
+
+                    // Check for a partial response
+                    ///////////////////////////////////////////////////////////
+                    if( (pReceivedDataset->m_pDataset->getUnsignedLong(0x0, 0, 0x900, 0, 0, 0) & 0x0000fff0) == 0xff00)
+                    {
+                        // We received a partial response
+                        ///////////////////////////////////////////////////////////
+                        if(m_waitingResponses.find(pReceivedDataset->m_pDataset->getUnsignedLong(0, 0, 0x0120, 0, 0)) == m_waitingResponses.end())
+                        {
+                            abort(acsePDUAAbort::reason_t::serviceProviderInvalidPDUParameterValue);
+                            IMEBRA_THROW(AcseWrongResponseIdError, "Received a partial response with a wrong ID");
+                        }
+                    }
+                    else if(m_waitingResponses.erase(pReceivedDataset->m_pDataset->getUnsignedLong(0, 0, 0x0120, 0, 0)) == 0)
+                    {
+                        abort(acsePDUAAbort::reason_t::serviceProviderInvalidPDUParameterValue);
+                        IMEBRA_THROW(AcseWrongResponseIdError, "Received a response with a wrong ID");
+                    }
+                }
+                else
+                {
+                    // We received a command
+                    ///////////////////////////////////////////////////////////
+
+                    // Check for a cancel command
+                    ///////////////////////////////////////////////////////////
+                    if(pReceivedDataset->m_pDataset->getUnsignedLong(0x0, 0, 0x100, 0, 0, 0) == 0x0fff)
+                    {
+                        // Cancel operation received
+                        ///////////////////////////////////////////////////////////
+                        if(m_processingCommands.find(pReceivedDataset->m_pDataset->getUnsignedLong(0, 0, 0x0110, 0, 0)) == m_processingCommands.end())
+                        {
+                            abort(acsePDUAAbort::reason_t::serviceProviderInvalidPDUParameterValue);
+                            IMEBRA_THROW(AcseWrongCommandIdError, "Canceling a command that is not being processed");
+                        }
+                    }
+                    else
+                    {
+                        if(m_processingCommands.count(pReceivedDataset->m_pDataset->getUnsignedLong(0, 0, 0x0110, 0, 0)) != 0)
+                        {
+                            abort(acsePDUAAbort::reason_t::serviceProviderInvalidPDUParameterValue);
+                            IMEBRA_THROW(AcseWrongCommandIdError, "Received a command with an ID from a command still being processed");
+                        }
+                        if(m_maxOperationsPerformed != 0 && m_processingCommands.size() == m_maxOperationsPerformed)
+                        {
+                            IMEBRA_THROW(AcseTooManyOperationsPerformedError, "Performing too many operations (max is " << m_maxOperationsPerformed << ")");
+                        }
+                        m_processingCommands.insert(pReceivedDataset->m_pDataset->getUnsignedLong(0, 0, 0x0110, 0, 0));
+                    }
+                }
+
+                // We already have an incomplete message for which
+                // the payload hasn't arrived yet
+                ///////////////////////////////////////////////////////////
+                if(pMessage != nullptr)
+                {
+                    abort(acsePDUAAbort::reason_t::serviceProviderUnexpectedPDU);
+                    IMEBRA_THROW(AcseCorruptedMessageError, "Payload expected");
+                }
+
+                // Create the new message
+                ///////////////////////////////////////////////////////////
+                pMessage = std::make_shared<associationMessage>(pReceivedDataset->m_presentationContext, pReceivedDataset->m_pDataset);
+
+            }
+            else
+            {
+                // We received the payload
+                ///////////////////////////////////////////////////////////
+                if(pMessage == nullptr)
+                {
+                    abort(acsePDUAAbort::reason_t::serviceProviderUnexpectedPDU);
+                    IMEBRA_THROW(AcseCorruptedMessageError, "Payload received before a command");
+                }
+                if(pMessage->getAbstractSyntax() != pReceivedDataset->m_presentationContext)
+                {
+                    abort(acsePDUAAbort::reason_t::serviceProviderInvalidPDUParameterValue);
+                    IMEBRA_THROW(AcseCorruptedMessageError, "The payload has an abstract syntax different from the command");
+                }
+                pMessage->addDataset(pReceivedDataset->m_pDataset);
+            }
+
+            // If the message is complete then add it to the list of
+            // received messages
+            if(pMessage != nullptr && pMessage->isComplete())
+            {
+                std::unique_lock<std::mutex> lock(m_lockReadyDataSets);
+                m_readyDataSets.push_back(pMessage);
+                pMessage.reset();
+                m_notifyReadyDataSets.notify_all();
+            }
+
+        }
+    }
+    catch(const StreamEOFError& e)
+    {
+        // Set the terminated flag, release current getMessage()
+        // operations
+        std::unique_lock<std::mutex> lock(m_lockReadyDataSets);
+        m_bTerminated = true;
+        m_notifyReadyDataSets.notify_all();
+    }
+
 }
 
 associationSCU::associationSCU(
@@ -2277,6 +2464,8 @@ associationSCU::associationSCU(
         IMEBRA_THROW(AcseCorruptedMessageError, "Unexpected message type");
     }
 
+    m_readDataSetsThread.reset(new std::thread(&associationBase::getMessagesThread, this));
+
     IMEBRA_FUNCTION_END();
 }
 
@@ -2464,6 +2653,8 @@ associationSCP::associationSCP(
     default:
         IMEBRA_THROW(AcseCorruptedMessageError, "Unexpected message type (was expecting an association request)");
     }
+
+    m_readDataSetsThread.reset(new std::thread(&associationBase::getMessagesThread, this));
 
     IMEBRA_FUNCTION_END_MODIFY(CodecCorruptedFileError, AcseCorruptedMessageError);
 }
