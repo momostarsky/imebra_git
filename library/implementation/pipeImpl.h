@@ -84,7 +84,7 @@ public:
     ///        operations.
     ///
     ///////////////////////////////////////////////////////////
-    void terminate();
+    virtual void terminate() override;
 
 private:
 

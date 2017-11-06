@@ -161,6 +161,7 @@ long throwTcpException(long socketOperationResult)
     case ENOTSOCK:
         IMEBRA_THROW(std::logic_error, "Operation on invalid socket");
     case EWOULDBLOCK:
+    case EINTR:
         IMEBRA_THROW(SocketTimeout, "Timed out");
     case EPIPE:
         IMEBRA_THROW(StreamClosedError, "Socket closed");
@@ -168,7 +169,6 @@ long throwTcpException(long socketOperationResult)
         IMEBRA_THROW(TCPAddressAlreadyInUse, "The specified address is already in use.")
     }
 #endif
-
     throw std::runtime_error("Unexpected TCP error");
 
     IMEBRA_FUNCTION_END();
@@ -621,6 +621,11 @@ void tcpSequenceStream::write(const std::uint8_t* pBuffer, size_t bufferLength)
 std::shared_ptr<tcpAddress> tcpSequenceStream::getPeerAddress() const
 {
     return m_pAddress;
+}
+
+void tcpSequenceStream::terminate()
+{
+    tcpBaseSocket::terminate();
 }
 
 

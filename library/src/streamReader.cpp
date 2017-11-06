@@ -36,6 +36,11 @@ StreamReader::StreamReader(const BaseStreamInput& stream, size_t virtualStart, s
 {
 }
 
+void StreamReader::terminate()
+{
+    m_pReader->terminate();
+}
+
 StreamReader::~StreamReader()
 {
 }

@@ -93,6 +93,15 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     StreamReader(const BaseStreamInput& stream, size_t virtualStart, size_t virtualLength);
 
+    ///
+    /// \brief Cause the controlled stream to throw StreamClosedError during the
+    ///        mext read operation.
+    ///
+    /// This can be used to cause reading threads to terminate.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    void terminate();
+
     virtual ~StreamReader();
 
 #ifndef SWIG

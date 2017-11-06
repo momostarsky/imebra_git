@@ -295,6 +295,12 @@ size_t fileStreamInput::read(size_t startPosition, std::uint8_t* pBuffer, size_t
 	IMEBRA_FUNCTION_END();
 }
 
+
+void fileStreamInput::terminate()
+{
+
+}
+
 } // namespace implementation
 
 } // namespace imebra

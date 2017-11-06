@@ -264,6 +264,17 @@ size_t streamReader::readSome(std::uint8_t* pBuffer, size_t bufferLength)
 }
 
 
+///////////////////////////////////////////////////////////
+//
+// Causes current and subsequent read operations
+// to fail with StreamClosedError.
+//
+///////////////////////////////////////////////////////////
+void streamReader::terminate()
+{
+    m_pControlledStream->terminate();
+}
+
 
 ///////////////////////////////////////////////////////////
 //

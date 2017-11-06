@@ -183,7 +183,7 @@ protected:
 /// \brief A TCP socket
 ///
 ///////////////////////////////////////////////////////////
-class tcpSequenceStream: public tcpBaseSocket, public baseSequenceStreamInput, public baseSequenceStreamOutput
+class tcpSequenceStream: protected tcpBaseSocket, public baseSequenceStreamInput, public baseSequenceStreamOutput
 {
 public:
 
@@ -235,7 +235,7 @@ public:
     ///////////////////////////////////////////////////////////
     std::shared_ptr<tcpAddress> getPeerAddress() const;
 
-
+    virtual void terminate() override;
 private:
 #ifdef IMEBRA_WINDOWS
     initWinsock m_initWinsock;
