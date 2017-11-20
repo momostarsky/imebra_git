@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include <imebra/imebra.h>
 #include <imebra/objectivec/imebra.h>
+#include <imebra/objectivec/imebra_strings.h>
 #include "../buildImageForTest.h"
 
 namespace imebra

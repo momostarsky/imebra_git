@@ -14,7 +14,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #if !defined(imebraObjcDateAge__INCLUDED_)
 #define imebraObjcDateAge__INCLUDED_
 
-#include "../definitions.h"
 #import <Foundation/Foundation.h>
 
 namespace imebra
@@ -25,10 +24,10 @@ struct Date;
 
 typedef NS_ENUM(char, ImebraAgeUnit_t)
 {
-    days = (char)imebra::ageUnit_t::days,
-    weeks = (char)imebra::ageUnit_t::weeks,
-    months = (char)imebra::ageUnit_t::months,
-    years = (char)imebra::ageUnit_t::years
+    days = (char)'D',
+    weeks = (char)'W',
+    months = (char)'M',
+    years = (char)'Y'
 };
 
 ///

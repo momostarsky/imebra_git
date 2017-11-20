@@ -14,7 +14,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #if !defined(imebraObjcTagId__INCLUDED_)
 #define imebraObjcTagId__INCLUDED_
 
-#include "../definitions.h"
 #import <Foundation/Foundation.h>
 
 namespace imebra

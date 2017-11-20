@@ -14,7 +14,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #if !defined(imebraObjcImage__INCLUDED_)
 #define imebraObjcImage__INCLUDED_
 
-#include "../definitions.h"
 #import <Foundation/Foundation.h>
 
 namespace imebra
@@ -67,12 +66,12 @@ IMEBRA_API NSImage* getImebraImage(const imebra::Image& image, imebra::DrawBitma
 
 typedef NS_ENUM(unsigned int, ImebraBitDepth_t)
 {
-    depthU8 = (unsigned int)imebra::bitDepth_t::depthU8,
-    depthS8 = (unsigned int)imebra::bitDepth_t::depthS8,
-    depthU16 = (unsigned int)imebra::bitDepth_t::depthU16,
-    depthS16 = (unsigned int)imebra::bitDepth_t::depthS16,
-    depthU32 = (unsigned int)imebra::bitDepth_t::depthU32,
-    depthS32 = (unsigned int)imebra::bitDepth_t::depthS32
+    depthU8 = 0,
+    depthS8 = 1,
+    depthU16 = 2,
+    depthS16 = 3,
+    depthU32 = 4,
+    depthS32 = 5
 };
 
 @class ImebraReadingDataHandlerNumeric;

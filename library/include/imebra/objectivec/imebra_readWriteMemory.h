@@ -15,7 +15,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #define imebraObjcReadWriteMemory__INCLUDED_
 
 #import "imebra_readMemory.h"
-#include "../definitions.h"
 #import <Foundation/Foundation.h>
 
 namespace imebra

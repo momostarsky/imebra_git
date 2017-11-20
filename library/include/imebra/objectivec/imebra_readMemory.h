@@ -14,7 +14,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #if !defined(imebraObjcReadMemory__INCLUDED_)
 #define imebraObjcReadMemory__INCLUDED_
 
-#include "../definitions.h"
 #import <Foundation/Foundation.h>
 
 namespace imebra

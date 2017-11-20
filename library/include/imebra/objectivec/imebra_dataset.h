@@ -14,7 +14,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #if !defined(imebraObjcDataSet__INCLUDED_)
 #define imebraObjcDataSet__INCLUDED_
 
-#include "../definitions.h"
 #import <Foundation/Foundation.h>
 
 namespace imebra
@@ -31,50 +30,49 @@ namespace imebra
 
 typedef NS_ENUM(unsigned short, ImebraTagVR_t)
 {
-    AE = (unsigned short)imebra::tagVR_t::AE,
-    AS = (unsigned short)imebra::tagVR_t::AS,
-    AT = (unsigned short)imebra::tagVR_t::AT,
-    CS = (unsigned short)imebra::tagVR_t::CS,
-    DA = (unsigned short)imebra::tagVR_t::DA,
-    DS = (unsigned short)imebra::tagVR_t::DS,
-    DT = (unsigned short)imebra::tagVR_t::DT,
-    FL = (unsigned short)imebra::tagVR_t::FL,
-    FD = (unsigned short)imebra::tagVR_t::FD,
-    IS = (unsigned short)imebra::tagVR_t::IS,
-    LO = (unsigned short)imebra::tagVR_t::LO,
-    LT = (unsigned short)imebra::tagVR_t::LT,
-    OB = (unsigned short)imebra::tagVR_t::OB,
-    SB = (unsigned short)imebra::tagVR_t::SB,
-    OD = (unsigned short)imebra::tagVR_t::OD,
-    OF = (unsigned short)imebra::tagVR_t::OF,
-    OL = (unsigned short)imebra::tagVR_t::OL,
-    OW = (unsigned short)imebra::tagVR_t::OW,
-    PN = (unsigned short)imebra::tagVR_t::PN,
-    SH = (unsigned short)imebra::tagVR_t::SH,
-    SL = (unsigned short)imebra::tagVR_t::SL,
-    SQ = (unsigned short)imebra::tagVR_t::SQ,
-    SS = (unsigned short)imebra::tagVR_t::SS,
-    ST = (unsigned short)imebra::tagVR_t::ST,
-    TM = (unsigned short)imebra::tagVR_t::TM,
-    UC = (unsigned short)imebra::tagVR_t::UC,
-    UI = (unsigned short)imebra::tagVR_t::UI,
-    UL = (unsigned short)imebra::tagVR_t::UL,
-    UN = (unsigned short)imebra::tagVR_t::UN,
-    UR = (unsigned short)imebra::tagVR_t::UR,
-    US = (unsigned short)imebra::tagVR_t::US,
-    UT = (unsigned short)imebra::tagVR_t::UT
+    AE = 0x4145, ///< Application Entity
+    AS = 0x4153, ///< Age String
+    AT = 0x4154, ///< Attribute Tag
+    CS = 0x4353, ///< Code String
+    DA = 0x4441, ///< Date
+    DS = 0x4453, ///< Decimal String
+    DT = 0x4454, ///< Date Time
+    FL = 0x464c, ///< Floating Point Single
+    FD = 0x4644, ///< Floating Point Double
+    IS = 0x4953, ///< Integer String
+    LO = 0x4c4f, ///< Long String
+    LT = 0x4c54, ///< Long Text
+    OB = 0x4f42, ///< Other Byte String
+    SB = 0x5342, ///< Non standard. Used internally for signed bytes
+    OD = 0x4f44, ///< Other Double String
+    OF = 0x4f46, ///< Other Float String
+    OL = 0x4f4c, ///< Other Long String
+    OW = 0x4f57, ///< Other Word String
+    PN = 0x504e, ///< Person Name
+    SH = 0x5348, ///< Short String
+    SL = 0x534c, ///< Signed Long
+    SQ = 0x5351, ///< Sequence of Items
+    SS = 0x5353, ///< Signed Short
+    ST = 0x5354, ///< Short Text
+    TM = 0x544d, ///< Time
+    UC = 0x5543, ///< Unlimited characters
+    UI = 0x5549, ///< Unique Identifier
+    UL = 0x554c, ///< Unsigned Long
+    UN = 0x554e, ///< Unknown
+    UR = 0x5552, ///< Unified Resource Identifier
+    US = 0x5553, ///< Unsigned Short
+    UT = 0x5554  ///< Unlimited Text
 };
 
 typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
 {
-    veryHigh = (unsigned int)imebra::imageQuality_t::veryHigh,       ///< the image is saved with very high quality. No subsampling is performed and no quantization
-    high = (unsigned int)imebra::imageQuality_t::high,               ///< the image is saved with high quality. No subsampling is performed. Quantization ratios are low
-    aboveMedium = (unsigned int)imebra::imageQuality_t::aboveMedium, ///< the image is saved in medium quality. Horizontal subsampling is applied. Quantization ratios are low
-    medium = (unsigned int)imebra::imageQuality_t::medium,           ///< the image is saved in medium quality. Horizontal subsampling is applied. Quantization ratios are medium
-    belowMedium = (unsigned int)imebra::imageQuality_t::belowMedium, ///< the image is saved in medium quality. Horizontal and vertical subsampling are applied. Quantization ratios are medium
-    low = (unsigned int)imebra::imageQuality_t::low,                 ///< the image is saved in low quality. Horizontal and vertical subsampling are applied. Quantization ratios are higher than the ratios used in the belowMedium quality
-    veryLow = (unsigned int)imebra::imageQuality_t::veryLow          ///< the image is saved in low quality. Horizontal and vertical subsampling are applied. Quantization ratios are high
-
+    veryHigh = 0,      ///< the image is saved with very high quality. No subsampling is performed and no quantization
+    high = 100,        ///< the image is saved with high quality. No subsampling is performed. Quantization ratios are low
+    aboveMedium = 200, ///< the image is saved in medium quality. Horizontal subsampling is applied. Quantization ratios are low
+    medium = 300,      ///< the image is saved in medium quality. Horizontal subsampling is applied. Quantization ratios are medium
+    belowMedium = 400, ///< the image is saved in medium quality. Horizontal and vertical subsampling are applied. Quantization ratios are medium
+    low = 500,         ///< the image is saved in low quality. Horizontal and vertical subsampling are applied. Quantization ratios are higher than the ratios used in the belowMedium quality
+    veryLow = 600      ///< the image is saved in low quality. Horizontal and vertical subsampling are applied. Quantization ratios are high
 };
 
 
