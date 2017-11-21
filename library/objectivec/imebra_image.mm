@@ -94,6 +94,16 @@ If you do not want to be bound by the GPL terms (such as the requirement
     return m_pImage->getHeightMm();
 }
 
+-(void) setWidthMm:(double)width
+{
+    m_pImage->setSizeMm(width, m_pImage->getHeightMm());
+}
+
+-(void) setHeightMm:(double)height
+{
+    m_pImage->setSizeMm(m_pImage->getWidthMm(), height);
+}
+
 -(unsigned int) width
 {
     return m_pImage->getWidth();

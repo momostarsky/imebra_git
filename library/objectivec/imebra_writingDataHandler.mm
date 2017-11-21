@@ -39,7 +39,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #endif
 }
 
--(unsigned int)getSize
+-(unsigned int)size
 {
     return (unsigned int)m_pDataHandler->getSize();
 }
