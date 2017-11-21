@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <imebra/imebra.h>
 #include <imebra/objectivec/imebra.h>
-#include <imebra/objectivec/imebra_strings.h>
+#include "../objectivec/imebra_strings.h"
 #include "../buildImageForTest.h"
 
 namespace imebra
@@ -159,7 +159,6 @@ TEST(objectivec, datasetValues)
     EXPECT_EQ(error, nil);
     NSString* checkPatient1 = [pDataSet getString:[[ImebraTagId alloc] init:0x10 tag:0x11] elementNumber:0 error:&error];
     EXPECT_EQ(imebra::NSStringToString([error domain]), "imebra");
-
     NSString* checkPatient2 = [pDataSet getString:[[ImebraTagId alloc] init:0x10 tag:0x11] elementNumber:0 defaultValue:@"defaultValue" error:&error];
 
     EXPECT_EQ(imebra::NSStringToString(checkPatient0), "TestPatient");

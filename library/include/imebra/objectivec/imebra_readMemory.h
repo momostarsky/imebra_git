@@ -16,16 +16,21 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #import <Foundation/Foundation.h>
 
+#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
 namespace imebra
 {
 class ReadMemory;
 }
-
+#endif
 
 @interface ImebraReadMemory: NSObject
+
+#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
 {
     imebra::ReadMemory* m_pMemory;
 }
+#endif
+
     -(id)initWithImebraReadMemory:(imebra::ReadMemory*)pReadMemory;
 
     -(id)init;

@@ -12,8 +12,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 */
 
 #include "../include/imebra/imebra.h"
-#import "../include/imebra/objectivec/imebra_nserror.h"
-#import "../include/imebra/objectivec/imebra_strings.h"
+#import "imebra_nserror.h"
+#import "imebra_strings.h"
 #import "../include/imebra/objectivec/imebra_dateAge.h"
 #import "../include/imebra/objectivec/imebra_writingDataHandler.h"
 #import <Foundation/NSString.h>
@@ -101,7 +101,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     try
     {
-        m_pDataHandler->setDate(index, *(value->m_pDate));
+        m_pDataHandler->setDate(index, *(imebra::Date*)(value->m_pDate));
     }
     catch(const std::runtime_error& e)
     {
@@ -113,7 +113,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     try
     {
-        m_pDataHandler->setAge(index, *(value->m_pAge));
+        m_pDataHandler->setAge(index, *(imebra::Age*)(value->m_pAge));
     }
     catch(const std::runtime_error& e)
     {

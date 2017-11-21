@@ -12,16 +12,21 @@ If you do not want to be bound by the GPL terms (such as the requirement
 */
 
 #include "../include/imebra/imebra.h"
-#import "../include/imebra/objectivec/imebra_nserror.h"
+#import "imebra_nserror.h"
+#import "imebra_strings.h"
 #import "../include/imebra/objectivec/imebra_tagId.h"
 #import "../include/imebra/objectivec/imebra_dataset.h"
-#import "../include/imebra/objectivec/imebra_strings.h"
 #import "../include/imebra/objectivec/imebra_dateAge.h"
 #import "../include/imebra/objectivec/imebra_image.h"
 #import "../include/imebra/objectivec/imebra_readingDataHandler.h"
 #import "../include/imebra/objectivec/imebra_writingDataHandler.h"
 #import <Foundation/NSString.h>
 
+@interface ImebraDataSet()
+
+    imebra::DataSet* m_pDataSet;
+
+@end
 
 @implementation ImebraDataSet
 
@@ -363,7 +368,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     try
     {
-        std::unique_ptr<imebra::Age> pAge(m_pDataSet->getAge(*(tagId->m_pTagId), elementNumber, *(defaultValue->m_pAge)));
+        std::unique_ptr<imebra::Age> pAge(m_pDataSet->getAge(*(tagId->m_pTagId), elementNumber, *(imebra::Age*)(defaultValue->m_pAge)));
         return [[ImebraAge alloc] initWithAge:pAge->age units:(ImebraAgeUnit_t)pAge->units];
     }
     catch(const std::runtime_error& e)
@@ -377,7 +382,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     try
     {
-        m_pDataSet->setAge(*(tagId->m_pTagId), *(newValue->m_pAge));
+        m_pDataSet->setAge(*(tagId->m_pTagId), *(imebra::Age*)(newValue->m_pAge));
     }
     catch(const std::runtime_error& e)
     {
@@ -412,7 +417,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     try
     {
-        std::unique_ptr<imebra::Date> pDate(m_pDataSet->getDate(*(tagId->m_pTagId), elementNumber, *(defaultValue->m_pDate)));
+        std::unique_ptr<imebra::Date> pDate(m_pDataSet->getDate(*(tagId->m_pTagId), elementNumber, *(imebra::Date*)(defaultValue->m_pDate)));
         return [[ImebraDate alloc] initWithDate:pDate->year
                 month:pDate->month
                 day:pDate->day
@@ -434,7 +439,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     try
     {
-        m_pDataSet->setDate(*(tagId->m_pTagId), *(newValue->m_pDate), (imebra::tagVR_t)tagVR);
+        m_pDataSet->setDate(*(tagId->m_pTagId), *(imebra::Date*)(newValue->m_pDate), (imebra::tagVR_t)tagVR);
     }
     catch(const std::runtime_error& e)
     {
@@ -446,7 +451,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     try
     {
-        m_pDataSet->setDate(*(tagId->m_pTagId), *(newValue->m_pDate));
+        m_pDataSet->setDate(*(tagId->m_pTagId), *(imebra::Date*)(newValue->m_pDate));
     }
     catch(const std::runtime_error& e)
     {

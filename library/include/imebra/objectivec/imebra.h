@@ -11,6 +11,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
+#define __IMEBRA_OBJECTIVEC_BRIDGING__
 
 #import "imebra_codecFactory.h"
 #import "imebra_dataset.h"

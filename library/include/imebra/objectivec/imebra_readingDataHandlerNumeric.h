@@ -17,10 +17,12 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #if !defined(imebraObjcReadingDataHandlerNumeric__INCLUDED_)
 #define imebraObjcReadingDataHandlerNumeric__INCLUDED_
 
+#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
 namespace imebra
 {
 class ReadingDataHandlerNumeric;
 }
+#endif
 
 @class ImebraWritingDataHandlerNumeric;
 @class ImebraReadMemory;

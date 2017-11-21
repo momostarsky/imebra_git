@@ -16,14 +16,24 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #import <Foundation/Foundation.h>
 
+#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
+namespace imebra
+{
+class WritingDataHandler;
+}
+#endif
+
 @class ImebraDate;
 @class ImebraAge;
 
 @interface ImebraWritingDataHandler: NSObject
+
+#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
 {
     @public
     imebra::WritingDataHandler* m_pDataHandler;
 }
+#endif
 
     -(id)initWithImebraWritingDataHandler:(imebra::WritingDataHandler*)pWritingDataHandler;
 

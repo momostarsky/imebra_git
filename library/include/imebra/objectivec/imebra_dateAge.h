@@ -16,11 +16,13 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #import <Foundation/Foundation.h>
 
+#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
 namespace imebra
 {
 struct Age;
 struct Date;
 }
+#endif
 
 typedef NS_ENUM(char, ImebraAgeUnit_t)
 {
@@ -35,11 +37,15 @@ typedef NS_ENUM(char, ImebraAgeUnit_t)
 ///
 ///////////////////////////////////////////////////////////////////////////////
 @interface ImebraAge: NSObject
+
+#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
 {
     @public
     imebra::Age* m_pAge;
 
 }
+#endif
+
     -(void)dealloc;
 
     /// \brief Constructor.
@@ -66,10 +72,13 @@ typedef NS_ENUM(char, ImebraAgeUnit_t)
 
 
 @interface ImebraDate: NSObject
+
+#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
 {
     @public
     imebra::Date* m_pDate;
 }
+#endif
 
     -(void)dealloc;
 

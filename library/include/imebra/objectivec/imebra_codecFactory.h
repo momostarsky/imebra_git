@@ -16,11 +16,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #import <Foundation/Foundation.h>
 
-namespace imebra
-{
-    class DataSet;
-}
-
 @class ImebraDataSet;
 
 ///

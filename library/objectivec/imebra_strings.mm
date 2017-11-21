@@ -11,7 +11,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#import "../include/imebra/objectivec/imebra_strings.h"
+#import "imebra_strings.h"
 #import <Foundation/NSString.h>
 
 namespace imebra

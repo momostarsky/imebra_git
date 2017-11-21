@@ -12,7 +12,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 */
 
 #include "../include/imebra/imebra.h"
-#import "../include/imebra/objectivec/imebra_nserror.h"
+#import "imebra_nserror.h"
 #import "../include/imebra/objectivec/imebra_readMemory.h"
 
 @implementation ImebraReadMemory

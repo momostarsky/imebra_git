@@ -16,10 +16,12 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #import <Foundation/Foundation.h>
 
+#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
 namespace imebra
 {
     class DataSet;
 }
+#endif
 
 @class ImebraImage;
 @class ImebraAge;
@@ -131,10 +133,13 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
 ///
 ///////////////////////////////////////////////////////////////////////////////
 @interface ImebraDataSet: NSObject
+
+#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
 {
     @public
     imebra::DataSet* m_pDataSet;
 }
+#endif
 
     -(id)initWithImebraDataSet:(imebra::DataSet*)pDataSet;
 

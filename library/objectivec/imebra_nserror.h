@@ -14,7 +14,9 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #if !defined(imebraObjcNSError__INCLUDED_)
 #define imebraObjcNSError__INCLUDED_
 
-#include "imebra_strings.h"
+#import <Foundation/Foundation.h>
+
+#include <stdexcept>
 
 namespace imebra
 {
