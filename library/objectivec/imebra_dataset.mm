@@ -22,12 +22,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #import "../include/imebra/objectivec/imebra_writingDataHandler.h"
 #import <Foundation/NSString.h>
 
-@interface ImebraDataSet()
-
-    imebra::DataSet* m_pDataSet;
-
-@end
-
 @implementation ImebraDataSet
 
 -(id)initWithImebraDataSet:(imebra::DataSet*)pDataSet
