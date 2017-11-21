@@ -169,45 +169,6 @@ TEST(objectivec, datasetValues)
     EXPECT_EQ([checkAge units], years);
 }
 
-
-#if defined(__APPLE__)
-// Test NSImage
-TEST(objectivec, images)
-{
-    std::string transferSyntax = "1.2.840.10008.1.2.4.50";
-    DataSet dataset(transferSyntax);
-
-    std::uint32_t width = 600;
-    std::uint32_t height = 400;
-
-    std::unique_ptr<Image> baselineImage(buildImageForTest(width, height, bitDepth_t::depthU8, 7, 30, 20, "RGB", 50));
-
-    std::unique_ptr<Transform> colorTransform(ColorTransformsFactory::getTransform("RGB", "YBR_FULL"));
-    std::unique_ptr<Image> ybrImage(colorTransform->allocateOutputImage(*baselineImage, width, height));
-    colorTransform->runTransform(*baselineImage, 0, 0, width, height, *ybrImage, 0, 0);
-
-    TransformsChain chain;
-    DrawBitmap drawBitmap(chain);
-    NSImage* nsImage = getImebraImage(*ybrImage, drawBitmap);
-
-    NSData *imageData = [nsImage TIFFRepresentation];
-    NSBitmapImageRep *imageRep = [NSBitmapImageRep imageRepWithData:imageData];
-    NSDictionary *imageProps = [NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:1.0] forKey:NSImageCompressionFactor];
-    imageData = [imageRep representationUsingType:NSJPEGFileType properties:imageProps];
-
-    ReadWriteMemory dataMemory((const char*)[imageData bytes], [imageData length]);
-    MemoryStreamInput dataStream(dataMemory);
-    StreamReader dataReader(dataStream);
-
-    std::unique_ptr<DataSet> loadedDataSet(CodecFactory::load(dataReader));
-    std::unique_ptr<Image> loadedImage(loadedDataSet->getImage(0));
-
-    // Compare the buffers. A little difference is allowed
-    double differenceYBR = compareImages(*ybrImage, *loadedImage);
-    ASSERT_LE(differenceYBR, 1);
-}
-#endif
-
 } // namespace tests
 
 } // namespace imebra
