@@ -29,9 +29,9 @@ class ReadMemory;
 {
     imebra::ReadMemory* m_pMemory;
 }
-#endif
 
     -(id)initWithImebraReadMemory:(imebra::ReadMemory*)pReadMemory;
+#endif
 
     -(id)init;
 

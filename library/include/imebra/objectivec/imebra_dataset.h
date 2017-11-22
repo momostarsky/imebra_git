@@ -139,9 +139,10 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
     @public
     imebra::DataSet* m_pDataSet;
 }
-#endif
 
     -(id)initWithImebraDataSet:(imebra::DataSet*)pDataSet;
+#endif
+
 
     /// \brief Construct an empty DICOM dataset with unspecified transfer syntax
     ///        (e.g. to be used in a sequence) charset "ISO 2022 IR 6".

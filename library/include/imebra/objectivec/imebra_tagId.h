@@ -27,7 +27,6 @@ class TagId;
 /// \brief Specifies an age, in days, weeks, months or years.
 ///
 ///////////////////////////////////////////////////////////////////////////////
-IMEBRA_API
 @interface ImebraTagId: NSObject
 
 #ifndef __IMEBRA_OBJECTIVEC_BRIDGING__

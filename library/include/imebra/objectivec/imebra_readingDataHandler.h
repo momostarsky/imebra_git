@@ -34,9 +34,9 @@ class ReadingDataHandler;
     @public
     imebra::ReadingDataHandler* m_pDataHandler;
 }
-#endif
 
     -(id)initWithImebraReadingDataHandler:(imebra::ReadingDataHandler*)pReadingDataHandler;
+#endif
 
     -(void)dealloc;
 

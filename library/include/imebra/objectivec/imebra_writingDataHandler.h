@@ -33,9 +33,9 @@ class WritingDataHandler;
     @public
     imebra::WritingDataHandler* m_pDataHandler;
 }
-#endif
 
     -(id)initWithImebraWritingDataHandler:(imebra::WritingDataHandler*)pWritingDataHandler;
+#endif
 
     -(void)dealloc;
 

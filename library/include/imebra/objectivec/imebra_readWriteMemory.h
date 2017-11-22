@@ -27,7 +27,9 @@ class ReadWriteMemory;
 
 @interface ImebraReadWriteMemory: ImebraReadMemory
 
+#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
     -(id)initWithImebraReadWriteMemory:(imebra::ReadWriteMemory*)pReadWriteMemory;
+#endif
 
     -(id)init;
 

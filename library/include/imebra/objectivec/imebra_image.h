@@ -44,9 +44,9 @@ typedef NS_ENUM(unsigned int, ImebraBitDepth_t)
     @public
     imebra::Image* m_pImage;
 }
-#endif
 
     -(id)initWithImebraImage:(imebra::Image*)pImage;
+#endif
 
     /// \brief Constructor.
     ///
