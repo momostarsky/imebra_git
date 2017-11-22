@@ -41,17 +41,24 @@ class ReadWriteMemory;
 
     -(void)dealloc;
 
-    -(void)copyFrom:(ImebraReadMemory*)source error:(NSError**)pError;
+    -(void)copyFrom:(ImebraReadMemory*)source error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
 
-    -(void)clear:(NSError**)pError;
+    -(void)clear:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
 
-    -(void)resize:(unsigned int)newSize error:(NSError**)pError;
+    -(void)resize:(unsigned int)newSize error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
 
-    -(void)reserve:(unsigned int)reserveSize error:(NSError**)pError;
+    -(void)reserve:(unsigned int)reserveSize error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
 
-    -(void)assign:(const char*)data withSize:(unsigned int)size error:(NSError**)pError;
+    -(void)assign:(const char*)data withSize:(unsigned int)size error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
 
-    -(void)assignRegion:(const char*)data  withSize:(unsigned int)size offset:(unsigned int)destinationOffset error:(NSError**)pError;
+    -(void)assignRegion:(const char*)data  withSize:(unsigned int)size offset:(unsigned int)destinationOffset error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
+
 @end
 
 #endif // !defined(imebraObjcReadWriteMemory__INCLUDED_)

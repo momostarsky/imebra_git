@@ -41,17 +41,23 @@ class WritingDataHandler;
 
     @property unsigned int size;
 
-    -(void) setSignedLong:(unsigned int)index withValue:(int)value error:(NSError**)pError;
+    -(void) setSignedLong:(unsigned int)index withValue:(int)value error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
 
-    -(void) setUnsignedLong:(unsigned int)index withValue:(unsigned int)value error:(NSError**)pError;
+    -(void) setUnsignedLong:(unsigned int)index withValue:(unsigned int)value error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
 
-    -(void) setDouble:(unsigned int)index withValue:(double)value error:(NSError**)pError;
+    -(void) setDouble:(unsigned int)index withValue:(double)value error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
 
-    -(void) setString:(unsigned int)index withValue:(NSString*)value error:(NSError**)pError;
+    -(void) setString:(unsigned int)index withValue:(NSString*)value error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
 
-    -(void) setDate:(unsigned int)index withValue:(ImebraDate*)value error:(NSError**)pError;
+    -(void) setDate:(unsigned int)index withValue:(ImebraDate*)value error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
 
-    -(void) setAge:(unsigned int)index withValue:(ImebraAge*)value error:(NSError**)pError;
+    -(void) setAge:(unsigned int)index withValue:(ImebraAge*)value error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
 
 @end
 

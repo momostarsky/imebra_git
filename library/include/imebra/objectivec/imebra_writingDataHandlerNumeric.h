@@ -37,9 +37,11 @@ class WritingDataHandlerNumeric;
 
     -(ImebraReadWriteMemory*)getMemory:(NSError**)pError;
 
-    -(void)assign:(const char*)data withSize:(unsigned int)size error:(NSError**)pError;
+    -(void)assign:(const char*)data withSize:(unsigned int)size error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
 
-    -(void)copyFrom:(ImebraReadingDataHandlerNumeric*)source error:(NSError**)pError;
+    -(void)copyFrom:(ImebraReadingDataHandlerNumeric*)source error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
 
     @property (readonly) char* data;
     @property (readonly) unsigned int dataSizeBytes;

@@ -37,7 +37,8 @@ class ReadingDataHandlerNumeric;
 
     -(ImebraReadMemory*)getMemory: (NSError**)pError;
 
-    -(void)copyTo:(ImebraWritingDataHandlerNumeric*)destination error:(NSError**)pError;
+    -(void)copyTo:(ImebraWritingDataHandlerNumeric*)destination error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
 
     @property (readonly) const char* data;
     @property (readonly) unsigned int dataSizeBytes;

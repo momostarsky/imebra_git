@@ -42,11 +42,14 @@ class ReadingDataHandler;
 
     @property (readonly) unsigned int size;
 
-    -(int) getSignedLong:(unsigned int)index error:(NSError**)pError;
+    -(int) getSignedLong:(unsigned int)index error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
 
-    -(unsigned int) getUnsignedLong:(unsigned int)index error:(NSError**)pError;
+    -(unsigned int) getUnsignedLong:(unsigned int)index error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
 
-    -(double) getDouble:(unsigned int)index error:(NSError**)pError;
+    -(double) getDouble:(unsigned int)index error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
 
     -(NSString*) getString:(unsigned int)index error:(NSError**)pError;
 
