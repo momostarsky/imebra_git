@@ -144,16 +144,12 @@ protected:
 
 
 ///
-/// \brief A message composed by one or more datasets.
+/// \brief A message composed by one or two datasets.
 ///
 /// When sending a message through an AssociationBase derived object then
-/// several dataset can be included into the message: the first dataset should
-/// be the command dataset, while the subsequent ones should contain the
-/// command's parameters (if needed).
-///
-/// When retrieving a message from an AssociationBase derived object then only
-/// one dataset is present in the returned in the message, either a command or
-/// a dataset needed by a previously retrieved command.
+/// up to two dataset can be included into the message: the first dataset is
+/// be the command dataset, while the optional second one is the
+/// command's payload.
 ///
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API AssociationMessage
@@ -215,9 +211,8 @@ public:
     ///
     /// \brief Add a command DataSet to the message.
     ///
-    /// Two datasets can be transmitted at once: the first DataSet should be
-    /// a DICOM command, while the second dataset should be added if the command
-    /// requires a payload.
+    /// Two datasets can be transmitted at once: the first DataSet is the
+    /// DICOM command, while the second optional one is the command payload.
     ///
     /// \param dataSet a DataSet to add to the message
     ///
@@ -273,7 +268,7 @@ public:
     /// \return an AssociationDataSet containing a response and its payload.
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    AssociationMessage* getResponse(unsigned long messageId);
+    AssociationMessage* getResponse(std::uint16_t messageId);
 
     ///
     /// \brief Send a DICOM message to the connected peer.
@@ -300,6 +295,24 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     void abort();
+
+    ///
+    /// \brief Returns our AET.
+    ///
+    /// \return our AET
+    ///
+    //////////////////////////////////////////////////////////////////
+    std::string getThisAET() const;
+
+    ///
+    /// \brief Returns the other party's AET.
+    ///
+    /// \return the connected peer's AET
+    ///
+    //////////////////////////////////////////////////////////////////
+    std::string getOtherAET() const;
+
+    std::string getTransferSyntax(const std::string& abstractSyntax) const;
 
 #ifndef SWIG
 protected:
@@ -342,6 +355,7 @@ public:
     /// \param pOutput              output stream into which the SCP writes
     ///                             data. When using a TCPStream the same object
     ///                             can act as both input and output
+    /// \param dimseTimeout         DIMSE timeout, in seconds. 0 means infinite
     ///
     /// The constructor blocks until an association has been successfully
     /// negotiated or until an error happens (an exception is thrown).
@@ -361,7 +375,8 @@ public:
             std::uint32_t performedOperations,
             const PresentationContexts& presentationContexts,
             StreamReader& pInput,
-            StreamWriter& pOutput);
+            StreamWriter& pOutput,
+            std::uint32_t dimseTimeout);
 };
 
 
@@ -414,6 +429,8 @@ public:
     /// \param pOutput              output stream into which the SCP writes
     ///                             data. When using a TCPStream the same object
     ///                             can act as both input and output
+    /// \param dimseTimeout         DIMSE timeout, in seconds. 0 means infinite
+    ///
     ///
     /// The constructor blocks until an association has been successfully
     /// negotiated or until an error happens (an exception is thrown).
@@ -432,7 +449,8 @@ public:
             std::uint32_t performedOperations,
             const PresentationContexts& presentationContexts,
             StreamReader& pInput,
-            StreamWriter& pOutput);
+            StreamWriter& pOutput,
+            std::uint32_t dimseTimeout);
 };
 
 }

@@ -1488,6 +1488,28 @@ public:
     AcseNoPayloadError(const std::string& message);
 };
 
+
+///
+/// \brief Base class for the exceptions thrown by the DIMSE services.
+///
+///////////////////////////////////////////////////////////////////////////////
+class DimseError: public std::runtime_error
+{
+public:
+    DimseError(const std::string& message);
+};
+
+
+///
+/// \brief Exception thrown when a DIMSE command cannot be validated.
+///
+///////////////////////////////////////////////////////////////////////////////
+class DimseInvalidCommand: public DimseError
+{
+public:
+    DimseInvalidCommand(const std::string& message);
+};
+
 }
 
 #endif // !defined(imebraExceptions__INCLUDED_)

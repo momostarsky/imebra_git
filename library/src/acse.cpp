@@ -82,14 +82,14 @@ std::string AssociationMessage::getAbstractSyntax() const
 
 DataSet* AssociationMessage::getCommand() const
 {
-    return new DataSet(m_pMessage->getCommand());
+    return new DataSet(m_pMessage->getCommandDataSet());
 }
 
 DataSet* AssociationMessage::getPayload() const
 {
     IMEBRA_FUNCTION_START();
 
-    std::shared_ptr<implementation::dataSet> pDataSet(m_pMessage->getPayload());
+    std::shared_ptr<implementation::dataSet> pDataSet(m_pMessage->getPayloadDataSetNoThrow());
     if(pDataSet == nullptr)
     {
         IMEBRA_THROW(AcseNoPayloadError, "Payload not available");
@@ -101,7 +101,7 @@ DataSet* AssociationMessage::getPayload() const
 
 bool AssociationMessage::hasPayload() const
 {
-    return m_pMessage->getPayload() != nullptr;
+    return m_pMessage->getPayloadDataSetNoThrow() != nullptr;
 }
 
 void AssociationMessage::addDataSet(const DataSet& dataSet)
@@ -126,9 +126,9 @@ AssociationMessage* AssociationBase::getCommand()
     return new AssociationMessage(m_pAssociation->getCommand());
 }
 
-AssociationMessage* AssociationBase::getResponse(unsigned long messageId)
+AssociationMessage* AssociationBase::getResponse(std::uint16_t messageId)
 {
-    return new AssociationMessage(m_pAssociation->getResponse((std::uint16_t)messageId));
+    return new AssociationMessage(m_pAssociation->getResponse(messageId));
 }
 
 void AssociationBase::sendMessage(const AssociationMessage& messageDataSet)
@@ -146,6 +146,21 @@ void AssociationBase::abort()
     m_pAssociation->abort(implementation::acsePDUAAbort::reason_t::serviceUser);
 }
 
+std::string AssociationBase::getThisAET() const
+{
+    return m_pAssociation->getThisAET();
+}
+
+std::string AssociationBase::getOtherAET() const
+{
+    return m_pAssociation->getOtherAET();
+}
+
+std::string AssociationBase::getTransferSyntax(const std::string &abstractSyntax) const
+{
+    return m_pAssociation->getPresentationContextTransferSyntax(abstractSyntax);
+}
+
 
 AssociationSCU::AssociationSCU(
         const std::string& thisAET,
@@ -154,7 +169,8 @@ AssociationSCU::AssociationSCU(
         std::uint32_t performedOperations,
         const PresentationContexts& presentationContexts,
         StreamReader& pInput,
-        StreamWriter& pOutput)
+        StreamWriter& pOutput,
+        std::uint32_t dimseTimeout)
 {
     m_pAssociation = std::make_shared<implementation::associationSCU>(
                 presentationContexts.m_pPresentationContexts,
@@ -163,7 +179,8 @@ AssociationSCU::AssociationSCU(
                 invokedOperations,
                 performedOperations,
                 pInput.m_pReader,
-                pOutput.m_pWriter);
+                pOutput.m_pWriter,
+                dimseTimeout);
 }
 
 
@@ -173,7 +190,8 @@ AssociationSCP::AssociationSCP(
         std::uint32_t performedOperations,
         const PresentationContexts& presentationContexts,
         StreamReader& pInput,
-        StreamWriter& pOutput)
+        StreamWriter& pOutput,
+        std::uint32_t dimseTimeout)
 {
     m_pAssociation = std::make_shared<implementation::associationSCP>(
                 presentationContexts.m_pPresentationContexts,
@@ -181,7 +199,8 @@ AssociationSCP::AssociationSCP(
                 invokedOperations,
                 performedOperations,
                 pInput.m_pReader,
-                pOutput.m_pWriter);
+                pOutput.m_pWriter,
+                dimseTimeout);
 }
 
 

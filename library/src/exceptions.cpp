@@ -333,4 +333,14 @@ AcseNoPayloadError::AcseNoPayloadError(const std::string& message):
     AcseError(message)
 {}
 
+DimseError::DimseError(const std::string &message):
+    std::runtime_error(message)
+{}
+
+DimseInvalidCommand::DimseInvalidCommand(const std::string &message):
+    DimseError(message)
+{}
+
+
+
 }

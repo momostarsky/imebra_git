@@ -553,6 +553,8 @@ protected:
 
     result_t m_result;
 
+    bool m_bCheckResultCorrectness;
+
     std::shared_ptr<acseItemAbstractSyntax> m_pAbstractSyntax;
 
     typedef std::list<std::shared_ptr<acseItemTransferSyntax> > transferSyntaxesList_t;
@@ -1128,10 +1130,11 @@ public:
 
     const std::string& getAbstractSyntax() const;
 
-    std::shared_ptr<dataSet> getCommand() const;
+    std::shared_ptr<dataSet> getCommandDataSet() const;
 
-    std::shared_ptr<dataSet> getPayload() const;
+    std::shared_ptr<dataSet> getPayloadDataSetNoThrow() const;
 
+    std::shared_ptr<dataSet> getPayloadDataSet() const;
     ///
     /// \brief Return true if the message is complete, false otherwise
     ///        (e.g. the check if the message includes the payload).
@@ -1228,7 +1231,7 @@ public:
     //////////////////////////////////////////////////////////////////
     std::string getOtherAET() const;
 
-    std::string getPresentationContextTransferSyntax(const std::string& abstractSyntax);
+    std::string getPresentationContextTransferSyntax(const std::string& abstractSyntax) const;
 
     void getMessagesThread();
 
@@ -1241,7 +1244,8 @@ protected:
             std::uint32_t maxOperationsWeInvoke,
             std::uint32_t maxOperationsWeCanPerform,
             std::shared_ptr<streamReader> pReader,
-            std::shared_ptr<streamWriter> pWriter);
+            std::shared_ptr<streamWriter> pWriter,
+            std::uint32_t dimseTimeout);
 
     std::shared_ptr<associationMessage> getMessage(std::uint16_t messageId, bool bResponse);
 
@@ -1292,7 +1296,7 @@ private:
     /// \return a decoded dataSet
     ///
     ///////////////////////////////////////////////////////////
-    std::shared_ptr<receivedDataset> decodePDU(std::list<std::shared_ptr<acseItemPDataValue> >& pendingData, size_t& m_numberOfLastPData) const;
+    std::shared_ptr<receivedDataset> decodePDU(bool bCommand, std::list<std::shared_ptr<acseItemPDataValue> >& pendingData, size_t& m_numberOfLastPData) const;
 
     /// Datasets ready to be retrieved by getMessage()
     ///////////////////////////////////////////////////////////
@@ -1319,6 +1323,10 @@ private:
     // ID of the commands that we received are still processing
     ///////////////////////////////////////////////////////////
     std::set<std::uint32_t> m_processingCommands;
+
+    // DIMSE Timeout, in seconds (0 = infinite)
+    ///////////////////////////////////////////////////////////
+    std::uint32_t m_dimseTimeout;
 };
 
 
@@ -1353,6 +1361,8 @@ public:
     ///                             received
     /// \param pWriter              writer on which the messages are
     ///                             sent
+    /// \param dimseTimeout         DIMSE timeout, in seconds. 0
+    ///                             means infinite
     ///
     //////////////////////////////////////////////////////////////////
     associationSCU(
@@ -1362,7 +1372,8 @@ public:
             std::uint32_t maxOperationsWeInvoke,
             std::uint32_t maxOperationsWeCanPerform,
             std::shared_ptr<streamReader> pReader,
-            std::shared_ptr<streamWriter> pWriter);
+            std::shared_ptr<streamWriter> pWriter,
+            std::uint32_t dimseTimeout);
 
 };
 
@@ -1399,6 +1410,8 @@ public:
     ///                             received
     /// \param pWriter              writer on which the messages are
     ///                             sent
+    /// \param dimseTimeout         DIMSE timeout, in seconds. 0
+    ///                             means infinite
     ///
     //////////////////////////////////////////////////////////////////
     associationSCP(
@@ -1407,7 +1420,8 @@ public:
             std::uint32_t maxOperationsWeInvoke,
             std::uint32_t maxOperationsWeCanPerform,
             std::shared_ptr<streamReader> pReader,
-            std::shared_ptr<streamWriter> pWriter);
+            std::shared_ptr<streamWriter> pWriter,
+            std::uint32_t dimseTimeout);
 
 };
 
