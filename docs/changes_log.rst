@@ -10,6 +10,7 @@ Version |release| (this version)
 - Fixed bug #188 (The build fails when uploading the artifacts to dropbox) as per SOP :ref:`FIXBUG_2`
 - Fixed bug #189 (Remove warnings C4275 and C4251from Windows builds) as per SOP :ref:`FIXBUG_2`
 - Fixed bug #192 (Test with corrupted files does not run on Windows) as per SOP :ref:`FIXBUG_2`
+- Fixed bug #200 (The attribute with VR AT should be 4 bytes wide, but instead is treated as a 2 bytes attribute) as per SOP :ref:`FIXBUG_2`
 
 Version 4.0.11.2
 ----------------

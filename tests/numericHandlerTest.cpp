@@ -187,6 +187,9 @@ TEST(numericHandlerTest, testInteger)
         ASSERT_EQ(123, std::stol(testDataSet.getUnicodeString(TagId(10, 10), 6).c_str()));
         ASSERT_EQ(124, std::stol(testDataSet.getUnicodeString(TagId(10, 10), 7).c_str()));
         ASSERT_THROW(testDataSet.getString(TagId(10, 10), 8), MissingItemError);
+
+        testDataSet.setUnsignedLong(TagId(tagId_t::DimensionIndexPointer_0020_9165), (std::uint32_t)tagId_t::PatientName_0010_0010);
+        ASSERT_EQ(tagId_t::PatientName_0010_0010, (tagId_t)testDataSet.getUnsignedLong(TagId(tagId_t::DimensionIndexPointer_0020_9165), 0));
     }
 }
 
