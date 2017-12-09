@@ -584,7 +584,7 @@
 
       <title>The library must be able to send and receive DIMSE messages</title>
 
-      <description>The library must be able to build and parse DIMSE messages through a ACSE service.
+      <description>The library must be able to build and parse DIMSE messages through an ACSE service.
                 
                 The following DIMSE services must be supported:
 
@@ -593,6 +593,7 @@
                 - C-MOVE
                 - C-FIND
                 - C-ECHO
+                - C-CANCEL
                 - N-EVENT-REPORT
                 - N-GET
                 - N-SET
@@ -613,25 +614,7 @@
       <description>The library must be able to send and receive DUL messages through a generic stream oriented
                 transport mechanism.
                 
-                The DIMSE management should not be exposed in the API.
-      </description>
-      <priority>100</priority>
-    </requirement>
-
-    <requirement categoryIdref="REQ_FUNC" id="REQ_GENERIC_MSG_PROTOCOL">
-      <mitigates/>
-
-      <introducedBy>
-        <parentRequirement idref="REQ_DIMSE"/>
-        <parentRequirement idref="REQ_ACSE"/>
-      </introducedBy>
-
-
-      <title>There must be a generic messaging protocol able to transport DIMSE messages</title>
-
-      <description>There must be a generic messaging protocol able to transport DIMSE messages.
-
-                Also the DUL messages should be managed by a messaging protocol derived from the generic one.
+                The ACSE management should not be exposed in the API.
       </description>
       <priority>100</priority>
     </requirement>

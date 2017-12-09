@@ -60,6 +60,7 @@ Imebra
    imaging_classes
    dicomdir_classes
    acse_classes
+   dimse_classes
    memory_management_classes
    transforms_classes
    dicom_dictionary_classes

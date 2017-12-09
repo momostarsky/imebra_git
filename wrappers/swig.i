@@ -1,4 +1,5 @@
-%module imebra
+%module (threads="1") imebra
+
 
 #ifdef SWIGJAVA
 	%include <arrays_java.i>
@@ -99,6 +100,22 @@
 %newobject imebra::AssociationBase::getCommand;
 %newobject imebra::AssociationBase::getResponse;
 
+%newobject imebra::DimseCommandBase::getCommandDataSet;
+%newobject imebra::DimseCommandBase::getPayloadDataSet;
+
+%newobject imebra::DimseService::getCommand;
+%newobject imebra::DimseService::getCStoreResponse;
+%newobject imebra::DimseService::getCGetResponse;
+%newobject imebra::DimseService::getCMoveResponse;
+%newobject imebra::DimseService::getCFindResponse;
+%newobject imebra::DimseService::getCEchoResponse;
+%newobject imebra::DimseService::getNEventReportResponse;
+%newobject imebra::DimseService::getNGetResponse;
+%newobject imebra::DimseService::getNSetResponse;
+%newobject imebra::DimseService::getNActionResponse;
+%newobject imebra::DimseService::getNCreateResponse;
+%newobject imebra::DimseService::getNDeleteResponse;
+
 
 %exception {
     try {
@@ -186,6 +203,7 @@
 %include "../library/include/imebra/memoryStreamInput.h"
 %include "../library/include/imebra/memoryStreamOutput.h"
 %include "../library/include/imebra/acse.h"
+%include "../library/include/imebra/dimse.h"
 
 
 

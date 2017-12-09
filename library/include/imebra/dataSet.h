@@ -120,6 +120,30 @@ class IMEBRA_API DataSet
     friend class CodecFactory;
     friend class Tag;
     friend class AssociationMessage;
+    friend class DimseService;
+    friend class DimseResponse;
+    friend class CStoreCommand;
+    friend class CGetCommand;
+    friend class CGetResponse;
+    friend class CFindCommand;
+    friend class CFindResponse;
+    friend class CMoveCommand;
+    friend class CMoveResponse;
+    friend class CEchoCommand;
+    friend class CEchoResponse;
+    friend class NEventReportCommand;
+    friend class NEventReportResponse;
+    friend class NGetCommand;
+    friend class NGetResponse;
+    friend class NSetCommand;
+    friend class NSetResponse;
+    friend class NActionCommand;
+    friend class NActionResponse;
+    friend class NCreateCommand;
+    friend class NCreateResponse;
+    friend class NDeleteCommand;
+    friend class NDeleteResponse;
+    friend class DimseCommandBase;
 
 private:
     DataSet(std::shared_ptr<imebra::implementation::dataSet> pDataSet);

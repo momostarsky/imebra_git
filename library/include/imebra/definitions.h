@@ -21,6 +21,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <cstdint>
 #include <vector>
 #include <string>
+#include "tagsEnumeration.h"
 
 #ifndef SWIG
 
@@ -346,6 +347,109 @@ struct IMEBRA_API VOIDescription
 ///
 ///////////////////////////////////////////////////////////////////////////////
 typedef std::vector<VOIDescription> vois_t;
+
+
+///
+/// \brief DIMSE command types.
+///
+///////////////////////////////////////////////////////////////////////////////
+enum class dimseCommandType_t: std::uint16_t
+{
+    cStore = 0x1,         ///< C-STORE
+    cGet = 0x10,          ///< C-GET
+    cFind = 0x20,         ///< C-FIND
+    cMove = 0x21,         ///< C-MOVE
+    cCancel = 0xfff,      ///< C-CANCEL
+    cEcho = 0x30,         ///< C-ECHO
+    nEventReport = 0x100, ///< N-EVENT_REPORT
+    nGet = 0x110,         ///< N-GET
+    nSet = 0x120,         ///< N-SET
+    nAction = 0x130,      ///< N-ACTION
+    nCreate = 0x140,      ///< N-CREATE
+    nDelete = 0x150,      ///< N-DELETE
+    response = 0x8000     ///< Bit set for response messages
+};
+
+
+///
+/// \brief DIMSE command priorities.
+///
+///////////////////////////////////////////////////////////////////////////////
+enum class dimseCommandPriority_t: std::uint16_t
+{
+    low = 0x2,  ///< Low priority
+    medium = 0, ///< Medium priority
+    high = 0x1  ///< High priority
+};
+
+
+///
+/// \brief The DICOM response status code.
+///
+//////////////////////////////////////////////////////////////////
+enum class dimseStatusCode_t: std::uint16_t
+{
+    success = 0,                                           ///< Success
+    unsupportedOptionalAttributes = 0x0001,                ///< Requested optional Attributes are not supported
+    cannotUpdateperformedProcedureStepObject = 0x0110,     ///< Performed Procedure Step Object may no longer be updated
+    unsupportedSOPClass = 0x0122,                          ///< SOP Class not Supported
+    outOfResources = 0xa700,                               ///< Refused: Out of resources
+    outOfResourcesCannotCalculateNumberOfMatches = 0xa701, ///< Refused: Out of Resources - Unable to calculate number of matches
+    outOfResourcesCannotPerformSubOperations = 0xa702,     ///< Refused: Out of Resources - Unable to perform sub-operations
+    moveDestinationUnknown = 0xa801,                       ///< Refused: Move Destination unknown
+    identifierDoesNotMatchSOPClass = 0xa900,               ///< Identifier does not match SOP Class
+    subOperationCompletedWithErrors = 0xb000,              ///< Sub-operations Complete - One or more Failures
+    elementDiscarded = 0xb006,                             ///< Element discarded
+    datasetDoesNotMatchSOPClass = 0xb007,                  ///< Data Set does not match SOP Class
+    UPSAlreadyCanceled = 0xb304,                           ///< The UPS is already in the requested state of CANCELED
+    coercedInvalidValuesToValidValues = 0xb305,            ///< Coerced invalid values to valid values
+    UPSStateAlreadyCompleted = 0xb306,                     ///< The UPS is already in the requested state of COMPLETED
+    unableToProcess = 0xc000,                              ///< Unable to process
+    moreThanOneMatchFound = 0xc100,                        ///< More than one match found,
+    CannotSupportRequestedTemplate = 0xc200,               ///< Unable to support requested template
+    UPSNotUpdated = 0xc300,                                ///< Refused: The UPS may no longer be updated
+    transactionUIDNotProvided = 0xc301,                    ///< Refused: The correct Transaction UID was not provided
+    UPSAlreadyInProgress = 0xc302,                         ///< Refused: The UPS is already IN PROGRESS
+    canScheduleOnlyWithNCreate = 0xc303,                   ///< Refused: The UPS may only become SCHEDULED via N-CREATE, not N-SET or N-ACTION
+    UPSCannotChangeState = 0xc304,                         ///< Refused: The UPS has not met final state requirements for the requested state change
+    instanceUIDDoesNotExist = 0xc307,                      ///< Specified SOP Instance UID does not exist or is not a UPS Instance managed by this SCP
+    unknownAETitle = 0xc308,                               ///< Receiving AE-TITLE is Unknown to this SCP
+    UPSNotSchedule = 0xc309,                               ///< Refused: The provided value of UPS State was not SCHEDULED
+    UPSNotInProgress = 0xc310,                             ///< Refused: The UPS is not yet in the "IN PROGRESS" state
+    UPSAlreadyCompleted = 0xc311,                          ///< Refused: The UPS is already COMPLETED
+    performerCannotBeContacted = 0xc312,                   ///< Refused: The performer cannot be contacted
+    performerDoesNotCancel = 0xc313,                       ///< Refused: Performer chooses not to cancel
+    unappropriateActionForInstance = 0xc314,               ///< Refused: Specified action not appropriate for specified instance
+    SCPDoesNotSupportEventReports = 0xc315,                ///< Refused: SCP does not support Event Reports
+    canceled = 0xfe00,                                     ///< Terminated due to Cancel request
+    pending = 0xff00,                                      ///< Pending
+    pendingWithWarnings = 0xff01                           ///< Pending with warnings
+};
+
+
+///
+/// \brief Simplified DIMSE response status code, derived from
+///        dimseStatusCode_t.
+///
+//////////////////////////////////////////////////////////////////
+enum class dimseStatus_t
+{
+    success, ///< The operation was completed succesfully
+    warning, ///< The operation was completed with warnings
+    failure, ///< The operation failed
+    cancel,  ///< The operation was canceled
+    pending  ///< The operation is still running
+
+};
+
+
+///
+/// \brief List of tag ids.
+///
+//////////////////////////////////////////////////////////////////
+typedef std::vector<tagId_t> attributeIdentifierList_t;
+
+
 
 } // namespace imebra
 
