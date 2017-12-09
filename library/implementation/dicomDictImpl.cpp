@@ -57,7 +57,7 @@ dicomDictionary::dicomDictionary()
 
     registerVR(tagVR_t::AE, false, 0, 16);
     registerVR(tagVR_t::AS, false, 0, 0);
-    registerVR(tagVR_t::AT, false, 2, 0);
+    registerVR(tagVR_t::AT, false, 4, 0);
     registerVR(tagVR_t::CS, false, 0, 16);
     registerVR(tagVR_t::DA, false, 0, 0);
     registerVR(tagVR_t::DS, false, 0, 16);
