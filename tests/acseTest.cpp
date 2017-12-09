@@ -14,7 +14,7 @@ void scpThread(const std::string& name, PresentationContexts& presentationContex
 {
     try
     {
-        AssociationSCP scp(name, 1, 1, presentationContexts, readSCP, writeSCP);
+        AssociationSCP scp(name, 1, 1, presentationContexts, readSCP, writeSCP, 0);
 
         for(;;)
         {
@@ -63,11 +63,11 @@ void scpThread(const std::string& name, PresentationContexts& presentationContex
 }
 
 
-void scpThreadMultipleOperations(const std::string& name, PresentationContexts& presentationContexts, StreamReader& readSCP, StreamWriter& writeSCP, size_t maxPerformed)
+void scpThreadMultipleOperations(const std::string& name, PresentationContexts& presentationContexts, StreamReader& readSCP, StreamWriter& writeSCP, std::uint32_t maxPerformed)
 {
     try
     {
-        AssociationSCP scp(name, 1, maxPerformed, presentationContexts, readSCP, writeSCP);
+        AssociationSCP scp(name, 1, maxPerformed, presentationContexts, readSCP, writeSCP, 0);
 
         for(;;)
         {
@@ -107,7 +107,7 @@ void scpThreadRejectCalledAET(const std::string& name, PresentationContexts& pre
 {
     try
     {
-        AssociationSCP scp(name, 1, 1, presentationContexts, readSCP, writeSCP);
+        AssociationSCP scp(name, 1, 1, presentationContexts, readSCP, writeSCP, 0);
 
         for(;;)
         {
@@ -125,7 +125,7 @@ void scpThreadDontAnswer(const std::string& name, PresentationContexts& presenta
 {
     try
     {
-        AssociationSCP scp(name, 1, 1, presentationContexts, readSCP, writeSCP);
+        AssociationSCP scp(name, 1, 1, presentationContexts, readSCP, writeSCP, 0);
 
         for(;;)
         {
@@ -163,7 +163,7 @@ TEST(acseTest, negotiationOneTransferSyntax)
 
     std::thread scp(imebra::tests::scpThread, std::ref(scpName), std::ref(presentationContexts), std::ref(readSCP), std::ref(writeSCP));
 
-    AssociationSCU scu("SCU", scpName, 1, 1, presentationContexts, readSCU, writeSCU);
+    AssociationSCU scu("SCU", scpName, 1, 1, presentationContexts, readSCU, writeSCU, 0);
 
     AssociationMessage command("1.2.840.10008.1.1");
     DataSet dataset0;
@@ -206,7 +206,7 @@ TEST(acseTest, scpScuRole)
     std::thread scp(imebra::tests::scpThread, std::ref(scpName), std::ref(presentationContexts), std::ref(readSCP), std::ref(writeSCP));
 
     {
-        AssociationSCU scu("SCU", scpName, 1, 1, presentationContexts, readSCU, writeSCU);
+        AssociationSCU scu("SCU", scpName, 1, 1, presentationContexts, readSCU, writeSCU, 0);
 
         AssociationMessage command("1.2.840.10008.1.1");
         DataSet dataset0;
@@ -244,7 +244,7 @@ TEST(acseTest, negotiationMultipleTransferSyntaxes)
 
     std::thread scp(imebra::tests::scpThread, std::ref(scpName), std::ref(presentationContexts), std::ref(readSCP), std::ref(writeSCP));
 
-    AssociationSCU scu("SCU", scpName, 1, 1, presentationContexts, readSCU, writeSCU);
+    AssociationSCU scu("SCU", scpName, 1, 1, presentationContexts, readSCU, writeSCU, 0);
 
     AssociationMessage command("1.2.840.10008.1.1");
     DataSet dataset0;
@@ -292,7 +292,7 @@ TEST(acseTest, negotiationPartialMatchTransferSyntaxes)
 
     std::thread scp(imebra::tests::scpThread, std::ref(scpName), std::ref(scpPresentationContexts), std::ref(readSCP), std::ref(writeSCP));
 
-    AssociationSCU scu("SCU", scpName, 1, 1, scuPresentationContexts, readSCU, writeSCU);
+    AssociationSCU scu("SCU", scpName, 1, 1, scuPresentationContexts, readSCU, writeSCU, 0);
 
     AssociationMessage command("1.2.840.10008.1.1");
     DataSet dataset0;
@@ -345,7 +345,7 @@ TEST(acseTest, sendPayload)
     std::thread scp(imebra::tests::scpThread, std::ref(scpName), std::ref(scpPresentationContexts), std::ref(readSCP), std::ref(writeSCP));
 
     {
-        AssociationSCU scu("SCU", scpName, 1, 1, scuPresentationContexts, readSCU, writeSCU);
+        AssociationSCU scu("SCU", scpName, 1, 1, scuPresentationContexts, readSCU, writeSCU, 0);
 
         for(size_t payloadSize(1); payloadSize < maxPayloadSize; payloadSize += 128)
         {
@@ -397,17 +397,17 @@ TEST(acseTest, sendPayload)
 }
 
 
-void scuThread(AssociationSCU& scu, size_t firstMessageId, size_t numberOfMessages)
+void scuThread(AssociationSCU& scu, std::uint16_t firstMessageId, size_t numberOfMessages)
 {
     const size_t payloadSize(100);
 
-    for(size_t messageNumber(0); messageNumber != numberOfMessages; ++messageNumber)
+    for(std::uint16_t messageNumber(0); messageNumber != numberOfMessages; ++messageNumber)
     {
         AssociationMessage command("1.2.840.10008.1.1");
 
         DataSet dataset0;
         dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
-        dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), firstMessageId + messageNumber, tagVR_t::US);
+        dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), (std::uint16_t)(firstMessageId + messageNumber), tagVR_t::US);
         dataset0.setUnsignedLong(TagId(tagId_t::CommandDataSetType_0000_0800), 0);
 
         command.addDataSet(dataset0);
@@ -427,7 +427,7 @@ void scuThread(AssociationSCU& scu, size_t firstMessageId, size_t numberOfMessag
 
         scu.sendMessage(command);
 
-        std::unique_ptr<AssociationMessage> pResponse(scu.getResponse(firstMessageId + messageNumber));
+        std::unique_ptr<AssociationMessage> pResponse(scu.getResponse((std::uint16_t)(firstMessageId + messageNumber)));
         std::unique_ptr<DataSet> responseCommand(pResponse->getCommand());
         std::unique_ptr<DataSet> responsePayload(pResponse->getPayload());
 
@@ -475,11 +475,11 @@ TEST(acseTest, overlappingOperations)
     std::thread scp(imebra::tests::scpThreadMultipleOperations, std::ref(scpName), std::ref(scpPresentationContexts), std::ref(readSCP), std::ref(writeSCP), maxInvoked);
 
     {
-        AssociationSCU scu("SCU", scpName, maxInvoked, 1, scuPresentationContexts, readSCU, writeSCU);
+        AssociationSCU scu("SCU", scpName, maxInvoked, 1, scuPresentationContexts, readSCU, writeSCU, 0);
 
         std::vector<std::shared_ptr<std::thread> > scuThreads;
 
-        for(size_t launchThreads(0); launchThreads != maxInvoked; ++launchThreads)
+        for(std::uint16_t launchThreads(0); launchThreads != maxInvoked; ++launchThreads)
         {
             scuThreads.push_back(std::make_shared<std::thread>(imebra::tests::scuThread, std::ref(scu), launchThreads * numMessages, numMessages));
         }
@@ -530,7 +530,7 @@ TEST(acseTest, negotiationMultiplePresentationContexts)
 
     std::thread scp(imebra::tests::scpThread, std::ref(scpName), std::ref(scpPresentationContexts), std::ref(readSCP), std::ref(writeSCP));
 
-    AssociationSCU scu("SCU", scpName, 1, 1, scuPresentationContexts, readSCU, writeSCU);
+    AssociationSCU scu("SCU", scpName, 1, 1, scuPresentationContexts, readSCU, writeSCU, 0);
 
     {
         AssociationMessage command("1.2.840.10008.1.1");
@@ -609,7 +609,7 @@ TEST(acseTest, negotiationNoTransferSyntax)
 
     std::thread scp(imebra::tests::scpThread, std::ref(scpName), std::ref(scpPresentationContexts), std::ref(readSCP), std::ref(writeSCP));
 
-    AssociationSCU scu("SCU", scpName, 1, 1, scuPresentationContexts, readSCU, writeSCU);
+    AssociationSCU scu("SCU", scpName, 1, 1, scuPresentationContexts, readSCU, writeSCU, 0);
 
     {
         AssociationMessage command("1.2.840.10008.1.1");
@@ -699,7 +699,7 @@ TEST(acseTest, negotiationNoPresentationContext)
 
     std::thread scp(imebra::tests::scpThread, std::ref(scpName), std::ref(scpPresentationContexts), std::ref(readSCP), std::ref(writeSCP));
 
-    AssociationSCU scu("SCU", scpName, 1, 1, scuPresentationContexts, readSCU, writeSCU);
+    AssociationSCU scu("SCU", scpName, 1, 1, scuPresentationContexts, readSCU, writeSCU, 0);
 
     {
         AssociationMessage command("1.2.840.10008.1.1");
@@ -802,7 +802,7 @@ TEST(acseTest, rejectAssociationName)
 
     std::thread scp(imebra::tests::scpThreadRejectCalledAET, std::ref(scpName), std::ref(scpPresentationContexts), std::ref(readSCP), std::ref(writeSCP));
 
-    EXPECT_THROW(AssociationSCU scu("SCU", scpName + "wrong", 1, 1, scuPresentationContexts, readSCU, writeSCU), imebra::AcseSCUCalledAETNotRecognizedError);
+    EXPECT_THROW(AssociationSCU scu("SCU", scpName + "wrong", 1, 1, scuPresentationContexts, readSCU, writeSCU, 0), imebra::AcseSCUCalledAETNotRecognizedError);
 
     scp.join();
 }
@@ -839,7 +839,7 @@ TEST(acseTest, invokeTooManyOperations)
     std::thread scp(imebra::tests::scpThreadDontAnswer, std::ref(scpName), std::ref(scpPresentationContexts), std::ref(readSCP), std::ref(writeSCP));
 
     {
-        AssociationSCU scu("SCU", scpName, 1, 1, scuPresentationContexts, readSCU, writeSCU);
+        AssociationSCU scu("SCU", scpName, 1, 1, scuPresentationContexts, readSCU, writeSCU, 0);
 
         {
             AssociationMessage command("1.2.840.10008.1.1");
