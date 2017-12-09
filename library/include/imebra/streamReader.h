@@ -64,6 +64,8 @@ class IMEBRA_API StreamReader
 #ifndef SWIG
     friend class CodecFactory;
     friend class Tag;
+    friend class AssociationSCU;
+    friend class AssociationSCP;
 
 private:
     StreamReader(std::shared_ptr<implementation::streamReader> pReader);
@@ -90,6 +92,15 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     StreamReader(const BaseStreamInput& stream, size_t virtualStart, size_t virtualLength);
+
+    ///
+    /// \brief Cause the controlled stream to throw StreamClosedError during the
+    ///        mext read operation.
+    ///
+    /// This can be used to cause reading threads to terminate.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    void terminate();
 
     virtual ~StreamReader();
 

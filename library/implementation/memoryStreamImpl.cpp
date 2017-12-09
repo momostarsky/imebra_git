@@ -145,6 +145,12 @@ size_t memoryStreamInput::read(size_t startPosition, std::uint8_t* pBuffer, size
 	IMEBRA_FUNCTION_END();
 }
 
+
+void memoryStreamInput::terminate()
+{
+
+}
+
 } // namespace implementation
 
 } // namespace imebra

@@ -56,6 +56,130 @@ The following transfer syntaxes must be supported:
 
 
 
+.. _REQ_DIMSE:
+
+[REQ_DIMSE] The library must be able to send and receive DIMSE messages
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+The library must be able to build and parse DIMSE messages through a ACSE service.
+
+The following DIMSE services must be supported:
+
+- C-STORE
+- C-GET
+- C-MOVE
+- C-FIND
+- C-ECHO
+- N-EVENT-REPORT
+- N-GET
+- N-SET
+- N-ACTION
+- N-CREATE
+- N-DELETE
+
+
+
+Children requirements: 
+
+- :ref:`REQ_GENERIC_MSG_PROTOCOL`
+- :ref:`REQ_GENERIC_STREAM_PROTOCOL`
+- :ref:`REQ_TCPIP_PROTOCOL`
+
+
+
+.. _REQ_ACSE:
+
+[REQ_ACSE] The library must be able to send and receive ACSE messages through a generic transport mechanism
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+The library must be able to send and receive DUL messages through a generic stream oriented
+transport mechanism.
+
+The DIMSE management should not be exposed in the API.
+
+
+
+Children requirements: 
+
+- :ref:`REQ_GENERIC_MSG_PROTOCOL`
+
+
+
+.. _REQ_GENERIC_MSG_PROTOCOL:
+
+[REQ_GENERIC_MSG_PROTOCOL] There must be a generic messaging protocol able to transport DIMSE messages
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+There must be a generic messaging protocol able to transport DIMSE messages.
+
+Also the DUL messages should be managed by a messaging protocol derived from the generic one.
+
+
+Parent requirements:
+
+- :ref:`REQ_DIMSE`
+- :ref:`REQ_ACSE`
+
+
+
+
+.. _REQ_GENERIC_STREAM_PROTOCOL:
+
+[REQ_GENERIC_STREAM_PROTOCOL] There must be a generic streaming protocol able to transport DIMSE messages
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+There must be a generic streaming protocol able to transport DIMSE messages.
+
+The generic streaming protocol must derive from the Imebra base stream class and offer
+timeout capabilities and termination capabilities when waiting for incoming or outgoing data.
+
+
+Parent requirements:
+
+- :ref:`REQ_DIMSE`
+
+
+
+
+.. _REQ_TCPIP_PROTOCOL:
+
+[REQ_TCPIP_PROTOCOL] Imebra must supply a basic TCP streaming class
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+A basic TCP streaming class must be provided so that it can be used with DUL.
+
+TLS is out of the scope of this class.
+
+
+Parent requirements:
+
+- :ref:`REQ_DIMSE`
+
+Children requirements: 
+
+- :ref:`REQ_USER_PROTOCOL`
+
+
+
+.. _REQ_USER_PROTOCOL:
+
+[REQ_USER_PROTOCOL] Imebra must supply a base class for IO streaming
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+Since Imebra does not provide TLS, it must provide a base IO streaming class
+from which the user can build its own streaming class.
+
+
+Parent requirements:
+
+- :ref:`REQ_TCPIP_PROTOCOL`
+
+Children requirements: 
+
+- :ref:`REQ_NO_CALLBACK`
+
+
+
 .. _REQ_ENDIANESS_PLATFORM:
 
 [REQ_ENDIANESS_PLATFORM] Exposed memory with raw numerical data must use the platform endianess to represent numbers
@@ -352,6 +476,22 @@ The library should throw specific C++ exceptions to report errors.
 
 Implementation requirements
 ...........................
+
+
+
+
+.. _REQ_NO_CALLBACK:
+
+[REQ_NO_CALLBACK] User extensions should not be achievable by extending Imebra classes or by supplying callbacks
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+Allowing the user to extend Imebra classes or to provide callback functions complicates the separation
+between the Imebra's interface and its implementation.
+
+
+Parent requirements:
+
+- :ref:`REQ_USER_PROTOCOL`
 
 
 

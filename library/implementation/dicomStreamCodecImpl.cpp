@@ -104,7 +104,7 @@ void dicomStreamCodec::writeStream(std::shared_ptr<streamWriter> pStream, std::s
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dicomStreamCodec::buildStream(std::shared_ptr<streamWriter> pStream, std::shared_ptr<dataSet> pDataSet, bool bExplicitDataType, streamController::tByteOrdering endianType, streamType_t streamType)
+void dicomStreamCodec::buildStream(std::shared_ptr<streamWriter> pStream, std::shared_ptr<const dataSet> pDataSet, bool bExplicitDataType, streamController::tByteOrdering endianType, streamType_t streamType)
 {
     IMEBRA_FUNCTION_START();
 
@@ -117,25 +117,28 @@ void dicomStreamCodec::buildStream(std::shared_ptr<streamWriter> pStream, std::s
         {
             const dataSet::tTags& tags(pDataSet->getGroupTags(*scanGroups, scanGroupsNumber));
 
-            // When writing a media storage file, the tag 0002,0001 must be 0,1 (OB)
-            ////////////////////////////////////////////////////////////////////////
-            if(streamType == streamType_t::mediaStorage && *scanGroups == 0x0002 && tags.find(0x0001) == tags.end())
+            if(*scanGroups == 0x0002)
             {
-                dataSet::tTags temporaryTags(tags);
-                charsetsList::tCharsetsList charsets;
-                pDataSet->getCharsetsList(&charsets);
-                std::shared_ptr<data> metaInformationTag(std::make_shared<data>(tagVR_t::OB, charsets));
+                // When writing a media storage file, the tag 0002,0001 must be 0,1 (OB)
+                ////////////////////////////////////////////////////////////////////////
+                if(streamType == streamType_t::mediaStorage)
                 {
-                    std::shared_ptr<handlers::writingDataHandler> handler(metaInformationTag->getWritingDataHandler(0));
-                    handler->setUnsignedLong(0, 0);
-                    handler->setUnsignedLong(1, 1);
+                    dataSet::tTags temporaryTags(tags);
+                    charsetsList::tCharsetsList charsets;
+                    std::shared_ptr<data> metaInformationTag(std::make_shared<data>(tagVR_t::OB, charsets));
+                    {
+                        std::shared_ptr<handlers::writingDataHandler> handler(metaInformationTag->getWritingDataHandler(0));
+                        handler->setUnsignedLong(0, 0);
+                        handler->setUnsignedLong(1, 1);
+                    }
+                    temporaryTags[1] = metaInformationTag;
+                    writeGroup(pStream, temporaryTags, *scanGroups, bExplicitDataType, endianType);
                 }
-                temporaryTags[1] = metaInformationTag;
-                writeGroup(pStream, temporaryTags, *scanGroups, bExplicitDataType, endianType);
-                continue;
             }
-
-            writeGroup(pStream, tags, *scanGroups, bExplicitDataType, endianType);
+            else
+            {
+                writeGroup(pStream, tags, *scanGroups, bExplicitDataType, endianType);
+            }
         }
     }
 
@@ -669,7 +672,7 @@ void dicomStreamCodec::parseStream(std::shared_ptr<streamReader> pStream,
         // If this tag's id is not 0x0002, then load the
         //  transfer syntax and set the byte endian.
         ///////////////////////////////////////////////////////////
-        if(tagId!=0x0002 && bCheckTransferSyntax)
+        if(tagId != 0x0002 && bCheckTransferSyntax)
         {
             // Reverse the last adjust
             pStream->adjustEndian((std::uint8_t*)&tagId, sizeof(tagId), endianType);
@@ -687,10 +690,10 @@ void dicomStreamCodec::parseStream(std::shared_ptr<streamReader> pStream,
             if(transferSyntax == "1.2.840.10008.1.2")
                 bExplicitDataType=false;
 
-            bCheckTransferSyntax=false;
-
             // Redo the byte adjustment
             pStream->adjustEndian((std::uint8_t*)&tagId, sizeof(tagId), endianType);
+
+            bCheckTransferSyntax=false;
         }
 
         // The first tag's ID has been read
@@ -832,7 +835,7 @@ void dicomStreamCodec::parseStream(std::shared_ptr<streamReader> pStream,
         //  id are present.
         //
         ///////////////////////////////////////////////////////////
-        if(tagId<=lastGroupId && tagSubId<=lastTagId)
+        if(tagId != 0 && tagId<=lastGroupId && tagSubId<=lastTagId)
         {
             ++order;
         }

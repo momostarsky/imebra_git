@@ -78,6 +78,7 @@ public:
 	///////////////////////////////////////////////////////////
     virtual size_t read(size_t startPosition, std::uint8_t* pBuffer, size_t bufferLength);
 
+    virtual void terminate() override;
 };
 
 class fileStreamOutput : public baseStreamOutput, public fileStream

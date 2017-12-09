@@ -83,6 +83,15 @@ public:
 	///
 	///////////////////////////////////////////////////////////
     virtual size_t read(size_t startPosition, std::uint8_t* pBuffer, size_t bufferLength) = 0;
+
+    ///
+    /// \brief Causes subsequent and current read operations
+    ///        to fail with a StreamClosedError exception
+    ///
+    ///////////////////////////////////////////////////////////
+    virtual void terminate() = 0;
+
+
 };
 
 

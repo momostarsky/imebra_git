@@ -22,7 +22,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 namespace imebra
 {
 
-BaseStreamInput::BaseStreamInput(std::shared_ptr<implementation::baseStreamInput> pStream): m_pStream(pStream)
+BaseStreamInput::BaseStreamInput(std::shared_ptr<implementation::baseStreamInput> pInputStream): m_pInputStream(pInputStream)
 {
 }
 
