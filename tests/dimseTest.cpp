@@ -1087,7 +1087,7 @@ TEST(dimseTest, neventReportSCUSCP)
 
 ///////////////////////////////////////////////////////////
 //
-// A SCP that wait for a N-EVENT-REPORT command
+// A SCP that wait for a N-GET command
 //
 ///////////////////////////////////////////////////////////
 void ngetScpThread(
@@ -1127,9 +1127,9 @@ void ngetScpThread(
 
 ///////////////////////////////////////////////////////////
 //
-// N-EVENT-REPORT SCU test
+// N-GET SCU test
 //
-// This test requests a N-EVENT-REPORT
+// This test requests a N-GET to a SCP
 //
 ///////////////////////////////////////////////////////////
 TEST(dimseTest, ngetSCUSCP)
@@ -1183,6 +1183,389 @@ TEST(dimseTest, ngetSCUSCP)
 }
 
 
+
+
+///////////////////////////////////////////////////////////
+//
+// A SCP that wait for a N-SET command
+//
+///////////////////////////////////////////////////////////
+void nsetScpThread(
+        const std::string& name,
+        PresentationContexts& presentationContexts,
+        StreamReader& readSCP,
+        StreamWriter& writeSCP)
+{
+    try
+    {
+        AssociationSCP scp(name, 1, 1, presentationContexts, readSCP, writeSCP, 0);
+
+        DimseService dimseService(scp);
+
+        for(;;)
+        {
+            std::unique_ptr<NSetCommand> command(dynamic_cast<NSetCommand*>(dimseService.getCommand()));
+            std::unique_ptr<DataSet> pSetDataSet(command->getPayloadDataSet());
+
+            attributeIdentifierList_t identifierList;
+
+            if(pSetDataSet->getString(TagId(tagId_t::PatientName_0010_0010), 0) == "SET^PATIENT")
+            {
+                identifierList.push_back(tagId_t::PatientName_0010_0010);
+                dimseService.sendCommandOrResponse(NSetResponse(*command, identifierList));
+            }
+            else
+            {
+                dimseService.sendCommandOrResponse(NSetResponse(*command, dimseStatusCode_t::unableToProcess));
+            }
+        }
+    }
+    catch(const StreamClosedError&)
+    {
+
+    }
+}
+
+
+///////////////////////////////////////////////////////////
+//
+// N-SET SCU test
+//
+// This test requests a N-SET to a SCP
+//
+///////////////////////////////////////////////////////////
+TEST(dimseTest, nsetSCUSCP)
+{
+    Pipe toSCU(1024), toSCP(1024);
+
+    StreamReader readSCU(toSCU);
+    StreamWriter writeSCU(toSCP);
+
+    StreamReader readSCP(toSCP);
+    StreamWriter writeSCP(toSCU);
+
+    PresentationContext context("1.2.840.10008.5.1.4.34.6.4");
+    context.addTransferSyntax("1.2.840.10008.1.2.1"); // explicit VR little endian
+    PresentationContexts presentationContexts;
+    presentationContexts.addPresentationContext(context);
+
+    const std::string scpName("SCP");
+
+    std::thread thread(
+                imebra::tests::nsetScpThread,
+                std::ref(scpName),
+                std::ref(presentationContexts),
+                std::ref(readSCP),
+                std::ref(writeSCP));
+
+    AssociationSCU scu("SCU", scpName, 1, 1, presentationContexts, readSCU, writeSCU, 0);
+    DimseService dimse(scu);
+
+    DataSet setDataset(dimse.getTransferSyntax("1.2.840.10008.5.1.4.34.6.4"));
+    setDataset.setString(TagId(tagId_t::PatientName_0010_0010), "SET^PATIENT");
+
+    NSetCommand setCommand(
+                "1.2.840.10008.5.1.4.34.6.4",
+                dimse.getNextCommandID(),
+                "1.1.1.1.1",
+                "1.1.1.1.1.1.1",
+                setDataset);
+    dimse.sendCommandOrResponse(setCommand);
+
+    std::unique_ptr<NSetResponse> pResponse(dimse.getNSetResponse(setCommand));
+
+    attributeIdentifierList_t identifier(pResponse->getModifiedAttributes());
+
+    ASSERT_EQ(1, identifier.size());
+    EXPECT_EQ(tagId_t::PatientName_0010_0010, identifier[0]);
+
+    toSCU.terminate();
+    toSCP.terminate();
+
+    thread.join();
+}
+
+
+
+///////////////////////////////////////////////////////////
+//
+// A SCP that wait for a N-ACTION command
+//
+///////////////////////////////////////////////////////////
+void nActionScpThread(
+        const std::string& name,
+        PresentationContexts& presentationContexts,
+        StreamReader& readSCP,
+        StreamWriter& writeSCP)
+{
+    try
+    {
+        AssociationSCP scp(name, 1, 1, presentationContexts, readSCP, writeSCP, 0);
+
+        DimseService dimseService(scp);
+
+        for(;;)
+        {
+            std::unique_ptr<NActionCommand> command(dynamic_cast<NActionCommand*>(dimseService.getCommand()));
+            std::unique_ptr<DataSet> pSetDataSet(command->getPayloadDataSet());
+
+            if(pSetDataSet->getString(TagId(tagId_t::PatientName_0010_0010), 0) == "ACTION^PATIENT")
+            {
+                dimseService.sendCommandOrResponse(NActionResponse(*command, *pSetDataSet));
+            }
+            else
+            {
+                dimseService.sendCommandOrResponse(NActionResponse(*command, dimseStatusCode_t::unableToProcess));
+            }
+        }
+    }
+    catch(const StreamClosedError&)
+    {
+
+    }
+}
+
+
+///////////////////////////////////////////////////////////
+//
+// N-ACTION SCU test
+//
+// This test requests a N-ACTION to a SCP
+//
+///////////////////////////////////////////////////////////
+TEST(dimseTest, nActionSCUSCP)
+{
+    Pipe toSCU(1024), toSCP(1024);
+
+    StreamReader readSCU(toSCU);
+    StreamWriter writeSCU(toSCP);
+
+    StreamReader readSCP(toSCP);
+    StreamWriter writeSCP(toSCU);
+
+    PresentationContext context("1.2.840.10008.5.1.4.34.6.4");
+    context.addTransferSyntax("1.2.840.10008.1.2.1"); // explicit VR little endian
+    PresentationContexts presentationContexts;
+    presentationContexts.addPresentationContext(context);
+
+    const std::string scpName("SCP");
+
+    std::thread thread(
+                imebra::tests::nActionScpThread,
+                std::ref(scpName),
+                std::ref(presentationContexts),
+                std::ref(readSCP),
+                std::ref(writeSCP));
+
+    AssociationSCU scu("SCU", scpName, 1, 1, presentationContexts, readSCU, writeSCU, 0);
+    DimseService dimse(scu);
+
+    DataSet actionDataset(dimse.getTransferSyntax("1.2.840.10008.5.1.4.34.6.4"));
+    actionDataset.setString(TagId(tagId_t::PatientName_0010_0010), "ACTION^PATIENT");
+
+    std::uint16_t actionID(101);
+
+    NActionCommand actionCommand(
+                "1.2.840.10008.5.1.4.34.6.4",
+                dimse.getNextCommandID(),
+                "1.1.1.1.1",
+                "1.1.1.1.1.1.1",
+                actionID,
+                actionDataset);
+    dimse.sendCommandOrResponse(actionCommand);
+
+    std::unique_ptr<NActionResponse> pResponse(dimse.getNActionResponse(actionCommand));
+    ASSERT_EQ((std::uint16_t)dimseStatusCode_t::success, pResponse->getStatusCode());
+    ASSERT_EQ(actionID, pResponse->getActionID());
+
+    std::unique_ptr<DataSet> pResponseDataSet(pResponse->getPayloadDataSet());
+    EXPECT_EQ("ACTION^PATIENT", pResponseDataSet->getString(TagId(tagId_t::PatientName_0010_0010), 0));
+
+    toSCU.terminate();
+    toSCP.terminate();
+
+    thread.join();
+}
+
+
+
+///////////////////////////////////////////////////////////
+//
+// A SCP that wait for a N-CREATE command
+//
+///////////////////////////////////////////////////////////
+void nCreateScpThread(
+        const std::string& name,
+        PresentationContexts& presentationContexts,
+        StreamReader& readSCP,
+        StreamWriter& writeSCP)
+{
+    try
+    {
+        AssociationSCP scp(name, 1, 1, presentationContexts, readSCP, writeSCP, 0);
+
+        DimseService dimseService(scp);
+
+        for(;;)
+        {
+            std::unique_ptr<NCreateCommand> command(dynamic_cast<NCreateCommand*>(dimseService.getCommand()));
+            std::unique_ptr<DataSet> pCreateDataSet(command->getPayloadDataSet());
+
+            if(pCreateDataSet->getString(TagId(tagId_t::PatientName_0010_0010), 0) == "CREATE^PATIENT")
+            {
+                dimseService.sendCommandOrResponse(NCreateResponse(*command, *pCreateDataSet));
+            }
+            else
+            {
+                dimseService.sendCommandOrResponse(NCreateResponse(*command, dimseStatusCode_t::outOfResources));
+            }
+        }
+    }
+    catch(const StreamClosedError&)
+    {
+
+    }
+}
+
+
+///////////////////////////////////////////////////////////
+//
+// N-CREATE SCU test
+//
+// This test requests a N-CREATE to a SCP
+//
+///////////////////////////////////////////////////////////
+TEST(dimseTest, nCreateSCUSCP)
+{
+    Pipe toSCU(1024), toSCP(1024);
+
+    StreamReader readSCU(toSCU);
+    StreamWriter writeSCU(toSCP);
+
+    StreamReader readSCP(toSCP);
+    StreamWriter writeSCP(toSCU);
+
+    PresentationContext context("1.2.840.10008.5.1.4.34.6.4");
+    context.addTransferSyntax("1.2.840.10008.1.2.1"); // explicit VR little endian
+    PresentationContexts presentationContexts;
+    presentationContexts.addPresentationContext(context);
+
+    const std::string scpName("SCP");
+
+    std::thread thread(
+                imebra::tests::nCreateScpThread,
+                std::ref(scpName),
+                std::ref(presentationContexts),
+                std::ref(readSCP),
+                std::ref(writeSCP));
+
+    AssociationSCU scu("SCU", scpName, 1, 1, presentationContexts, readSCU, writeSCU, 0);
+    DimseService dimse(scu);
+
+    DataSet createDataset(dimse.getTransferSyntax("1.2.840.10008.5.1.4.34.6.4"));
+    createDataset.setString(TagId(tagId_t::PatientName_0010_0010), "CREATE^PATIENT");
+
+    NCreateCommand createCommand(
+                "1.2.840.10008.5.1.4.34.6.4",
+                dimse.getNextCommandID(),
+                "1.1.1.1.1",
+                "1.1.1.1.1.1.1",
+                createDataset);
+    dimse.sendCommandOrResponse(createCommand);
+
+    std::unique_ptr<NCreateResponse> pResponse(dimse.getNCreateResponse(createCommand));
+    ASSERT_EQ((std::uint16_t)dimseStatusCode_t::success, pResponse->getStatusCode());
+
+    std::unique_ptr<DataSet> pResponseDataSet(pResponse->getPayloadDataSet());
+    EXPECT_EQ("CREATE^PATIENT", pResponseDataSet->getString(TagId(tagId_t::PatientName_0010_0010), 0));
+
+    toSCU.terminate();
+    toSCP.terminate();
+
+    thread.join();
+}
+
+
+
+///////////////////////////////////////////////////////////
+//
+// A SCP that wait for a N-ACTION command
+//
+///////////////////////////////////////////////////////////
+void nDeleteScpThread(
+        const std::string& name,
+        PresentationContexts& presentationContexts,
+        StreamReader& readSCP,
+        StreamWriter& writeSCP)
+{
+    try
+    {
+        AssociationSCP scp(name, 1, 1, presentationContexts, readSCP, writeSCP, 0);
+
+        DimseService dimseService(scp);
+
+        for(;;)
+        {
+            std::unique_ptr<NDeleteCommand> command(dynamic_cast<NDeleteCommand*>(dimseService.getCommand()));
+            dimseService.sendCommandOrResponse(NDeleteResponse(*command, dimseStatusCode_t::success));
+        }
+    }
+    catch(const StreamClosedError&)
+    {
+
+    }
+}
+
+
+///////////////////////////////////////////////////////////
+//
+// N-ACTION SCU test
+//
+// This test requests a N-ACTION to a SCP
+//
+///////////////////////////////////////////////////////////
+TEST(dimseTest, nDeleteSCUSCP)
+{
+    Pipe toSCU(1024), toSCP(1024);
+
+    StreamReader readSCU(toSCU);
+    StreamWriter writeSCU(toSCP);
+
+    StreamReader readSCP(toSCP);
+    StreamWriter writeSCP(toSCU);
+
+    PresentationContext context("1.2.840.10008.5.1.4.34.6.4");
+    context.addTransferSyntax("1.2.840.10008.1.2.1"); // explicit VR little endian
+    PresentationContexts presentationContexts;
+    presentationContexts.addPresentationContext(context);
+
+    const std::string scpName("SCP");
+
+    std::thread thread(
+                imebra::tests::nDeleteScpThread,
+                std::ref(scpName),
+                std::ref(presentationContexts),
+                std::ref(readSCP),
+                std::ref(writeSCP));
+
+    AssociationSCU scu("SCU", scpName, 1, 1, presentationContexts, readSCU, writeSCU, 0);
+    DimseService dimse(scu);
+
+    NDeleteCommand deleteCommand(
+                "1.2.840.10008.5.1.4.34.6.4",
+                dimse.getNextCommandID(),
+                "1.1.1.1.1",
+                "1.1.1.1.1.1.1");
+    dimse.sendCommandOrResponse(deleteCommand);
+
+    std::unique_ptr<NDeleteResponse> pResponse(dimse.getNDeleteResponse(deleteCommand));
+    ASSERT_EQ("1.1.1.1.1.1.1", pResponse->getAffectedSopInstanceUid());
+
+    toSCU.terminate();
+    toSCP.terminate();
+
+    thread.join();
+}
 
 
 } // namespace tests
