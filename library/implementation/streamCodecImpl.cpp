@@ -52,25 +52,13 @@ std::shared_ptr<dataSet> streamCodec::read(std::shared_ptr<streamReader> pSource
 	///////////////////////////////////////////////////////////
 	pSourceStream->resetInBitsBuffer();
 
-	// Store the stream's position
-	///////////////////////////////////////////////////////////
-    size_t position = pSourceStream->position();
-
 	// Create a new dataset
 	///////////////////////////////////////////////////////////
     std::shared_ptr<dataSet> pDestDataSet(std::make_shared<dataSet>());
 
 	// Read the stream
 	///////////////////////////////////////////////////////////
-	try
-	{
-		readStream(pSourceStream, pDestDataSet, maxSizeBufferLoad);
-	}
-    catch(CodecWrongFormatError&)
-	{
-        pSourceStream->seek(position);
-        IMEBRA_RETHROW("Detected a wrong format. Rewinding file");
-	}
+    readStream(pSourceStream, pDestDataSet, maxSizeBufferLoad);
 
 	// Update the charsets in the tags
 	///////////////////////////////////////////////////////////

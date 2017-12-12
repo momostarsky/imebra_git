@@ -85,6 +85,8 @@ public:
 
     streamReader(std::shared_ptr<baseStreamInput> pControlledStream, size_t virtualStart, size_t virtualLength, std::uint8_t* pBuffer, size_t bufferLength);
 
+    streamReader(std::shared_ptr<baseStreamInput> pControlledStream, size_t virtualStart, std::uint8_t* pBuffer, size_t bufferLength);
+
     std::shared_ptr<baseStreamInput> getControlledStream();
 
     /// \brief Returns a new streamReader object that starts
@@ -155,6 +157,10 @@ public:
     void seek(size_t newPosition);
 
     void seekForward(std::uint32_t newPosition);
+
+    bool seekable() const;
+
+    size_t getVirtualLength() const;
 
 	/// \brief Read the specified amount of bits from the
 	///         stream.

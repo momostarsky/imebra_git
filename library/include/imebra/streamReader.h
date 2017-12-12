@@ -94,6 +94,21 @@ public:
     StreamReader(const BaseStreamInput& stream, size_t virtualStart, size_t virtualLength);
 
     ///
+    /// \brief Returns a virtual stream that has a restricted view into the
+    ///        stream.
+    ///
+    /// The reading position of this stream advances to the end of the virtual
+    /// stream.
+    ///
+    /// \param virtualStreamLength the number of bytes that the virtual
+    ///                            stream can read
+    /// \return a virtual stream that sees a limited number of bytes of this
+    ///         stream
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    StreamReader* getVirtualStream(size_t virtualStreamLength);
+
+    ///
     /// \brief Cause the controlled stream to throw StreamClosedError during the
     ///        mext read operation.
     ///

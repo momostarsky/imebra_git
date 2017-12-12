@@ -43,6 +43,9 @@ public:
     /// 
     /// If none of the codecs supplied by Imebra is able to decode the stream's
     /// content then it throws a CodecWrongFormatError exception.
+    ///
+    /// The read position of the StreamReader is undefined when this method
+    /// returns.
     /// 
     /// \param reader            a StreamReader connected to the input stream
     /// \param maxSizeBufferLoad the maximum size of the tags that are loaded

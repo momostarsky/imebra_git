@@ -107,9 +107,6 @@ public:
 	///  codecFactory, which automatically scans all the
     ///  Imebra codecs until one can decompress the stream.
 	///
-	/// Each codec will rewind the stream's position if
-	///  an error occurs.
-	///
 	/// If the codec parses the stream correctly (no error
 	///  occurs) then the resulting dataSet object will
 	///  contain a valid dicom structure.

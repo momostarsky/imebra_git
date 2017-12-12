@@ -64,6 +64,8 @@ public:
 
     virtual void terminate() override;
 
+    virtual bool seekable() const override;
+
 
 protected:
     std::shared_ptr<const memory> m_memory;

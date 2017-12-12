@@ -298,7 +298,11 @@ size_t fileStreamInput::read(size_t startPosition, std::uint8_t* pBuffer, size_t
 
 void fileStreamInput::terminate()
 {
+}
 
+bool fileStreamInput::seekable() const
+{
+    return true;
 }
 
 } // namespace implementation

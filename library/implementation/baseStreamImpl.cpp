@@ -29,6 +29,11 @@ baseStreamInput::~baseStreamInput()
 {
 }
 
+bool baseStreamInput::seekable() const
+{
+    return false;
+}
+
 baseStreamOutput::~baseStreamOutput()
 {
 }

@@ -91,6 +91,23 @@ public:
     ///////////////////////////////////////////////////////////
     virtual void terminate() = 0;
 
+    ///
+    /// \brief Return True if the reading position can be
+    ///        moved backward, false otherwise.
+    ///
+    /// The default behaviour is not-seekable (returns false).
+    ///
+    /// This hack is necessary to keep compatibility across
+    /// the imebra 4.X series.
+    /// Imebra 5.X should have a base non-seekable object with
+    /// a derived seekable one.
+    ///
+    /// \return true if the reading position can be moved
+    ///         backward, false otherwise
+    ///
+    ///////////////////////////////////////////////////////////
+    virtual bool seekable() const;
+
 
 };
 

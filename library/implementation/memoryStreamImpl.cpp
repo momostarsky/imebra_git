@@ -151,6 +151,13 @@ void memoryStreamInput::terminate()
 
 }
 
+
+bool memoryStreamInput::seekable() const
+{
+    return true;
+}
+
+
 } // namespace implementation
 
 } // namespace imebra

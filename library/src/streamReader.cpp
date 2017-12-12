@@ -36,6 +36,15 @@ StreamReader::StreamReader(const BaseStreamInput& stream, size_t virtualStart, s
 {
 }
 
+StreamReader* StreamReader::getVirtualStream(size_t virtualStreamLength)
+{
+    IMEBRA_FUNCTION_START();
+
+    return new StreamReader(m_pReader->getReader(virtualStreamLength));
+
+    IMEBRA_FUNCTION_END();
+}
+
 void StreamReader::terminate()
 {
     m_pReader->terminate();

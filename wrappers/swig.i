@@ -38,6 +38,52 @@
 %template(TagsIds) std::vector<imebra::TagId>;
 %template(VOIs) std::vector<imebra::VOIDescription>;
 
+
+%typemap(out) imebra::DimseCommand* imebra::DimseService::getCommand() {
+
+    switch($1->getCommandType())
+    {
+    case imebra::dimseCommandType_t::cStore:
+        $result = SWIG_NewPointerObj(SWIG_as_voidptr($1), $descriptor(imebra::CStoreCommand*), $owner);
+        break;
+    case imebra::dimseCommandType_t::cMove:
+        $result = SWIG_NewPointerObj(SWIG_as_voidptr($1), $descriptor(imebra::CMoveCommand*), $owner);
+        break;
+    case imebra::dimseCommandType_t::cGet:
+        $result = SWIG_NewPointerObj(SWIG_as_voidptr($1), $descriptor(imebra::CGetCommand*), $owner);
+        break;
+    case imebra::dimseCommandType_t::cFind:
+        $result = SWIG_NewPointerObj(SWIG_as_voidptr($1), $descriptor(imebra::CFindCommand*), $owner);
+        break;
+    case imebra::dimseCommandType_t::cEcho:
+        $result = SWIG_NewPointerObj(SWIG_as_voidptr($1), $descriptor(imebra::CEchoCommand*), $owner);
+        break;
+    case imebra::dimseCommandType_t::cCancel:
+        $result = SWIG_NewPointerObj(SWIG_as_voidptr($1), $descriptor(imebra::CCancelCommand*), $owner);
+        break;
+    case imebra::dimseCommandType_t::nAction:
+        $result = SWIG_NewPointerObj(SWIG_as_voidptr($1), $descriptor(imebra::NActionCommand*), $owner);
+        break;
+    case imebra::dimseCommandType_t::nEventReport:
+        $result = SWIG_NewPointerObj(SWIG_as_voidptr($1), $descriptor(imebra::NEventReportCommand*), $owner);
+        break;
+    case imebra::dimseCommandType_t::nCreate:
+        $result = SWIG_NewPointerObj(SWIG_as_voidptr($1), $descriptor(imebra::NCreateCommand*), $owner);
+        break;
+    case imebra::dimseCommandType_t::nDelete:
+        $result = SWIG_NewPointerObj(SWIG_as_voidptr($1), $descriptor(imebra::NDeleteCommand*), $owner);
+        break;
+    case imebra::dimseCommandType_t::nSet:
+        $result = SWIG_NewPointerObj(SWIG_as_voidptr($1), $descriptor(imebra::NSetCommand*), $owner);
+        break;
+    case imebra::dimseCommandType_t::nGet:
+        $result = SWIG_NewPointerObj(SWIG_as_voidptr($1), $descriptor(imebra::NGetCommand*), $owner);
+        break;
+    }
+
+}
+
+
 // Declare which methods return an object that should be
 // managed by the client.
 ////////////////////////////////////////////////////////
@@ -116,6 +162,11 @@
 %newobject imebra::DimseService::getNCreateResponse;
 %newobject imebra::DimseService::getNDeleteResponse;
 
+%newobject imebra::TCPListener::waitForConnection;
+%newobject imebra::TCPStream::getPeerAddress;
+%newobject imebra::StreamReader::getVirtualStream;
+
+
 
 %exception {
     try {
@@ -188,6 +239,10 @@
 %include "../library/include/imebra/tag.h"
 %include "../library/include/imebra/dataSet.h"
 %include "../library/include/imebra/codecFactory.h"
+%include "../library/include/imebra/tcpAddress.h"
+%include "../library/include/imebra/tcpListener.h"
+%include "../library/include/imebra/tcpStream.h"
+%include "../library/include/imebra/pipe.h"
 %include "../library/include/imebra/transform.h"
 %include "../library/include/imebra/transformHighBit.h"
 %include "../library/include/imebra/transformsChain.h"
