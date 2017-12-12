@@ -115,6 +115,17 @@ std::uint16_t DimseCommand::getID() const
     return (std::static_pointer_cast<implementation::dimseCCommand>(m_pCommand))->getID();
 }
 
+
+//////////////////////////////////////////////////////////////////
+//
+// Get the command type
+//
+//////////////////////////////////////////////////////////////////
+dimseCommandType_t DimseCommand::getCommandType() const
+{
+    return (std::static_pointer_cast<implementation::dimseNCommand>(m_pCommand))->getCommandType();
+}
+
 //////////////////////////////////////////////////////////////////
 //
 // Get the affected SOP instance UID
@@ -1287,6 +1298,12 @@ NActionResponse::NActionResponse(
 }
 
 
+std::uint16_t NActionResponse::getActionID() const
+{
+    return (std::static_pointer_cast<implementation::nActionResponse>(m_pCommand))->getActionID();
+}
+
+
 
 
 //////////////////////////////////////////////////////////////////
@@ -1492,12 +1509,12 @@ NDeleteResponse::NDeleteResponse(std::shared_ptr<implementation::nDeleteResponse
 
 
 NDeleteResponse::NDeleteResponse(
-        NDeleteResponse& receivedCommand,
+        NDeleteCommand& receivedCommand,
         dimseStatusCode_t responseCode
         ):
     DimseResponse(
-        std::make_shared<implementation::nCreateResponse>(
-            std::static_pointer_cast<implementation::nCreateCommand>(receivedCommand.m_pCommand),
+        std::make_shared<implementation::nDeleteResponse>(
+            std::static_pointer_cast<implementation::nDeleteCommand>(receivedCommand.m_pCommand),
             responseCode) )
 {
 }

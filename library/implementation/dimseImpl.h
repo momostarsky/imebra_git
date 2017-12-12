@@ -161,6 +161,14 @@ public:
     std::uint16_t getID() const;
 
     ///
+    /// \brief Returns the command type.
+    ///
+    /// \return command type
+    ///
+    //////////////////////////////////////////////////////////////////
+    dimseCommandType_t getCommandType() const;
+
+    ///
     /// \brief Validate the command.
     ///
     /// Throw if the command is not valid.
@@ -1315,7 +1323,7 @@ class nActionResponse: public dimseResponse
 {
 public:
     ///
-    /// \brief Constructor for a successful reply.
+    /// \brief Constructor for a successful response.
     ///
     /// \param pCommand     the command for which this response is
     ///                     being constructed
@@ -1329,7 +1337,7 @@ public:
             );
 
     ///
-    /// \brief Constructor for a successful reply.
+    /// \brief Constructor.
     ///
     /// \param pCommand     the command for which this response is
     ///                     being constructed
@@ -1349,6 +1357,13 @@ public:
     //////////////////////////////////////////////////////////////////
     nActionResponse(std::shared_ptr<const associationMessage> pMessage);
 
+    ///
+    /// \brief Returns the action's ID.
+    ///
+    /// \return the action's ID
+    ///
+    //////////////////////////////////////////////////////////////////
+    std::uint16_t getActionID() const;
 };
 
 
@@ -1530,7 +1545,7 @@ public:
     ///
     //////////////////////////////////////////////////////////////////
     nDeleteResponse(
-            std::shared_ptr<nActionCommand> pCommand,
+            std::shared_ptr<nDeleteCommand> pCommand,
             dimseStatusCode_t responseCode
             );
 

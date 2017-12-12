@@ -167,12 +167,20 @@ protected:
 
 public:
     ///
-    /// \brief Returns command ID.
+    /// \brief Returns the command ID.
     ///
     /// \return the command ID
     ///
     //////////////////////////////////////////////////////////////////
     std::uint16_t getID() const;
+
+    ///
+    /// \brief Returns the command type.
+    ///
+    /// \return the command type
+    ///
+    //////////////////////////////////////////////////////////////////
+    dimseCommandType_t getCommandType() const;
 
 };
 
@@ -1264,6 +1272,13 @@ public:
             dimseStatusCode_t responseCode
             );
 
+    ///
+    /// \brief Returns the action's ID.
+    ///
+    /// \return the action's ID
+    ///
+    //////////////////////////////////////////////////////////////////
+    std::uint16_t getActionID() const;
 };
 
 
@@ -1471,7 +1486,7 @@ public:
     ///
     //////////////////////////////////////////////////////////////////
     NDeleteResponse(
-            NDeleteResponse& receivedCommand,
+            NDeleteCommand& receivedCommand,
             dimseStatusCode_t responseCode
             );
 };

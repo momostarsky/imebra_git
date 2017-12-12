@@ -121,6 +121,17 @@ std::uint16_t dimseNCommand::getID() const
 
 //////////////////////////////////////////////////////////////////
 //
+// Get the command type
+//
+//////////////////////////////////////////////////////////////////
+dimseCommandType_t dimseNCommand::getCommandType() const
+{
+    return (dimseCommandType_t)(getCommandDataSet()->getUnsignedLong(0x0, 0, 0x0100, 0, 0));
+}
+
+
+//////////////////////////////////////////////////////////////////
+//
 // Return the affected SOP instance UID
 //
 //////////////////////////////////////////////////////////////////
@@ -1768,6 +1779,17 @@ nActionResponse::nActionResponse(std::shared_ptr<const associationMessage> pMess
 }
 
 
+//////////////////////////////////////////////////////////////////
+//
+// Get action ID
+//
+//////////////////////////////////////////////////////////////////
+std::uint16_t nActionResponse::getActionID() const
+{
+    return (std::uint16_t)(m_pCommand->getUnsignedLong(0x0, 0, 0x1008, 0, 0));
+}
+
+
 
 
 //////////////////////////////////////////////////////////////////
@@ -1953,7 +1975,7 @@ nDeleteCommand::nDeleteCommand(
         const std::string& requestedSopClassUid,
         const std::string& requestedSopInstanceUid
         ):
-    dimseNCommand(abstractSyntax, dimseCommandType_t::nAction, messageID)
+    dimseNCommand(abstractSyntax, dimseCommandType_t::nDelete, messageID)
 {
     m_pCommand->setString(0x0, 0, 0x0003, 0, requestedSopClassUid);
     m_pCommand->setString(0x0, 0, 0x1001, 0, requestedSopInstanceUid);
@@ -2002,7 +2024,7 @@ void nDeleteCommand::validate() const
 //
 //////////////////////////////////////////////////////////////////
 nDeleteResponse::nDeleteResponse(
-        std::shared_ptr<nActionCommand> pCommand,
+        std::shared_ptr<nDeleteCommand> pCommand,
         dimseStatusCode_t responseCode
         ):
     dimseResponse(pCommand, responseCode)
