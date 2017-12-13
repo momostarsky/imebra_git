@@ -398,7 +398,7 @@ tcpBaseSocket::tcpBaseSocket(int socket):
     // Set timeout
 #ifdef IMEBRA_WINDOWS
 
-    INIT_WINSOCK();
+    INIT_WINSOCK;
     std::uint32_t timeout(IMEBRA_TCP_TIMEOUT_MS);
     setsockopt(m_socket, SOL_SOCKET, SO_RCVTIMEO, (const char*)&timeout, sizeof(timeout));
     setsockopt(m_socket, SOL_SOCKET, SO_SNDTIMEO, (const char*)&timeout, sizeof(timeout));
