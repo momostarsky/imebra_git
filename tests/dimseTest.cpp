@@ -1,6 +1,7 @@
 #include <imebra/imebra.h>
 #include <gtest/gtest.h>
 #include <thread>
+#include <chrono>
 #include <array>
 #include <list>
 #include <stdio.h>
@@ -111,190 +112,6 @@ TEST(dimseTest, storeSCUSCP)
 }
 
 
-///////////////////////////////////////////////////////////
-//
-// Get all the files in a folder
-//
-///////////////////////////////////////////////////////////
-std::list<std::string> getFilesInDirectory(const std::string &directory)
-{
-    std::list<std::string> files;
-
-    DIR* dir(opendir(directory.c_str()));
-    for(dirent* ent(readdir(dir)); ent != NULL; ent = readdir(dir))
-    {
-        const std::string fileName(ent->d_name);
-        if(fileName[0] == '.')
-        {
-            continue;
-        }
-        const std::string fullFileName(directory + "/" + fileName);
-
-        struct stat st;
-        if (stat(fullFileName.c_str(), &st) == -1)
-        {
-            continue;
-        }
-
-        if((st.st_mode & S_IFDIR) == 0)
-        {
-            files.push_back(fullFileName);
-        }
-    }
-    closedir(dir);
-
-    return files;
-}
-
-
-
-//
-// Store SCU interoperability test
-//
-// This test sends a DataSet to a DCMTK STORE SCP
-// and check that the sent payload was received correctly.
-//
-///////////////////////////////////////////////////////////
-TEST(dimseTest, storeSCUInteroperabilityTest)
-{
-    char* tempDirName = ::tempnam(0, "imebra");
-    std::string dirName(tempDirName);
-    free(tempDirName);
-
-    mkdir(dirName.c_str(), 0700);
-
-    pid_t pID = fork();
-    if (pID == 0)                // child
-    {
-        execlp("storescp", "storescp", "-od", dirName.c_str(), "30003", 0);
-    }
-    else if (pID < 0)            // failed to fork
-    {
-        ASSERT_TRUE(false);
-    }
-
-    try
-    {
-        sleep(5);
-
-        TCPStream tcpStream(TCPActiveAddress("127.0.0.1", "30003"));
-
-        StreamReader readSCU(tcpStream);
-        StreamWriter writeSCU(tcpStream);
-
-        std::string transferSyntax("1.2.840.10008.1.2.1");
-        PresentationContext context("1.2.840.10008.1.1");
-        context.addTransferSyntax(transferSyntax); // implicit VR little endian
-        PresentationContexts presentationContexts;
-        presentationContexts.addPresentationContext(context);
-
-        AssociationSCU scu("SCU", "SCP", 1, 1, presentationContexts, readSCU, writeSCU, 0);
-
-        DimseService dimse(scu);
-
-        DataSet payload(transferSyntax);
-        payload.setString(TagId(tagId_t::SOPInstanceUID_0008_0018), "1.1.1.1");
-        payload.setString(TagId(tagId_t::SOPClassUID_0008_0016), "1.1.1.1");
-        payload.setString(TagId(tagId_t::PatientName_0010_0010),"Patient^Test");
-        CStoreCommand command(
-                    "1.2.840.10008.1.1",
-                    dimse.getNextCommandID(),
-                    dimseCommandPriority_t::medium,
-                    payload.getString(TagId(tagId_t::SOPClassUID_0008_0016), 0),
-                    payload.getString(TagId(tagId_t::SOPInstanceUID_0008_0018), 0),
-                    "",
-                    0,
-                    payload);
-        dimse.sendCommandOrResponse(command);
-        std::unique_ptr<DimseResponse> response(dimse.getCStoreResponse(command));
-
-        ASSERT_EQ(response->getStatus(), dimseStatus_t::success);
-
-        std::list<std::string> files(getFilesInDirectory(dirName));
-
-        ASSERT_EQ(files.size(), 1);
-
-        std::unique_ptr<DataSet> readDataSet(CodecFactory::load(files.front()));
-
-        ASSERT_EQ(readDataSet->getString(TagId(tagId_t::PatientName_0010_0010), 0), "Patient^Test");
-    }
-    catch(...)
-    {
-        kill(pID, SIGTERM);
-        throw;
-    }
-
-    kill(pID, SIGTERM);
-}
-
-
-///////////////////////////////////////////////////////////
-//
-// Executes a DCMTK Store SCU command
-//
-///////////////////////////////////////////////////////////
-void storeScuThread(std::string transferSyntax, std::string sopClassUid, std::string sopInstanceUid)
-{
-    sleep(5);
-
-    char* tempFileName = ::tempnam(0, "dcmimebra");
-    std::string fileName(tempFileName);
-    free(tempFileName);
-
-    DataSet dataSet(transferSyntax);
-    dataSet.setString(TagId(tagId_t::SOPClassUID_0008_0016), sopClassUid);
-    dataSet.setString(TagId(tagId_t::SOPInstanceUID_0008_0018), sopInstanceUid);
-    dataSet.setString(TagId(tagId_t::PatientName_0010_0010), "Test^Patient");
-    CodecFactory::save(dataSet, fileName, codecType_t::dicom);
-
-    std::string command("storescu -v -aet scu -aec SCP 127.0.0.1 30004 ");
-    command += fileName;
-
-    system(command.c_str());
-}
-
-
-
-
-TEST(dimseTest, storeSCPInteroperabilityTest)
-{
-
-    std::string transferSyntax("1.2.840.10008.1.2.1");
-    std::string sopClassUid("1.2.840.10008.5.1.4.1.1.1");
-    std::string sopInstanceUid("1.1.1.1.1.1");
-    std::thread thread(
-                imebra::tests::storeScuThread,
-                transferSyntax,
-                sopClassUid,
-                sopInstanceUid);
-
-    TCPListener tcpListener(TCPPassiveAddress("", "30004"));
-    std::unique_ptr<TCPStream> tcpStream(tcpListener.waitForConnection());
-
-    StreamReader readSCU(*tcpStream);
-    StreamWriter writeSCU(*tcpStream);
-
-    PresentationContext context(sopClassUid);
-    context.addTransferSyntax(transferSyntax);
-    PresentationContexts presentationContexts;
-    presentationContexts.addPresentationContext(context);
-
-    AssociationSCP scp("SCP", 1, 1, presentationContexts, readSCU, writeSCU, 0);
-
-    DimseService dimse(scp);
-
-    std::unique_ptr<CStoreCommand> command(dynamic_cast<CStoreCommand*>(dimse.getCommand()));
-    std::unique_ptr<DataSet> pPayload(command->getPayloadDataSet());
-
-    ASSERT_EQ("Test^Patient", pPayload->getString(TagId(tagId_t::PatientName_0010_0010), 0));
-
-    dimse.sendCommandOrResponse(CStoreResponse(*command, dimseStatusCode_t::success));
-
-    sleep(5);
-
-    thread.join();
-
-}
 
 
 ///////////////////////////////////////////////////////////
@@ -549,56 +366,6 @@ TEST(dimseTest, moveSCUSCP)
 }
 
 
-void moveScuThread()
-{
-    sleep(5);
-    std::string command("movescu -v -k 0010,0020=\"100\" -P -aet scu -aec SCP -aem SCP1 127.0.0.1 30005");
-    system(command.c_str());
-}
-
-
-//
-// Move SCU interoperability test
-//
-// This executes the DCMTK command movescu and check that
-// it is interpreted correctly by Imebra
-//
-///////////////////////////////////////////////////////////
-TEST(dimseTest, moveSCPInteroperabilityTest)
-{
-    std::thread thread(
-                imebra::tests::moveScuThread);
-
-    {
-        TCPListener tcpListener(TCPPassiveAddress("", "30005"));
-        std::unique_ptr<TCPStream> tcpStream(tcpListener.waitForConnection());
-
-        StreamReader readSCP(*tcpStream);
-        StreamWriter writeSCP(*tcpStream);
-
-        PresentationContext context("1.2.840.10008.5.1.4.1.2.1.2");
-        context.addTransferSyntax("1.2.840.10008.1.2.1"); // explicit VR little endian
-        PresentationContexts presentationContexts;
-        presentationContexts.addPresentationContext(context);
-
-        AssociationSCP scp("SCP", 1, 1, presentationContexts, readSCP, writeSCP, 0);
-        DimseService dimse(scp);
-
-        std::unique_ptr<CMoveCommand> pMove(dynamic_cast<CMoveCommand*>(dimse.getCommand()));
-
-        std::unique_ptr<DataSet> pIdentifier(pMove->getPayloadDataSet());
-
-        EXPECT_EQ("100", pIdentifier->getString(TagId(tagId_t::PatientID_0010_0020), 0));
-
-        dimse.sendCommandOrResponse(CMoveResponse(*pMove, dimseStatusCode_t::pending, 1, 0, 0, 0));
-        dimse.sendCommandOrResponse(CMoveResponse(*pMove, dimseStatusCode_t::success, 0, 1, 0, 0));
-
-        sleep(5);
-    }
-    thread.join();
-}
-
-
 ///////////////////////////////////////////////////////////
 //
 // A SCP that responds to C-FIND commands.
@@ -684,8 +451,6 @@ TEST(dimseTest, findSCUSCP)
     AssociationSCU scu("SCU", scpName, 1, 1, presentationContexts, readSCU, writeSCU, 0);
     DimseService dimse(scu);
 
-
-
     DataSet keys(dimse.getTransferSyntax("1.2.840.10008.5.1.4.1.2.1.1"));
     keys.setString(TagId(tagId_t::QueryRetrieveLevel_0008_0052), "STUDY");
     keys.setString(TagId(tagId_t::PatientID_0010_0020), "100");
@@ -714,89 +479,6 @@ TEST(dimseTest, findSCUSCP)
     toSCU.terminate();
     toSCP.terminate();
     thread.join();
-}
-
-
-//
-// Executes a command and returns its output
-//
-///////////////////////////////////////////////////////////
-std::string execute(const char* cmd)
-{
-    std::array<char, 128> buffer;
-    std::string result;
-    std::shared_ptr<FILE> pipe(popen(cmd, "r"), pclose);
-    if (!pipe) throw std::runtime_error("popen() failed!");
-    while (!feof(pipe.get()))
-    {
-        if(fgets(buffer.data(), 128, pipe.get()) != nullptr)
-        {
-            result += buffer.data();
-        }
-    }
-    return result;
-}
-
-
-void findScuThread(std::string* pResponse)
-{
-    sleep(5);
-    std::string command("findscu -v -k 0010,0020=\"100\" -P -aet scu -aec SCP 127.0.0.1 30005 2>&1");
-    *pResponse = execute(command.c_str());
-}
-
-
-//
-// Find SCU interoperability test
-//
-// This executes the DCMTK command findscu and check that
-// it is interpreted correctly by Imebra
-//
-///////////////////////////////////////////////////////////
-TEST(dimseTest, findSCPInteroperabilityTest)
-{
-    std::string responseString;
-    std::thread thread(imebra::tests::findScuThread, &responseString);
-
-    {
-        TCPListener tcpListener(TCPPassiveAddress("", "30005"));
-        std::unique_ptr<TCPStream> tcpStream(tcpListener.waitForConnection());
-
-        StreamReader readSCP(*tcpStream);
-        StreamWriter writeSCP(*tcpStream);
-
-        PresentationContext context("1.2.840.10008.5.1.4.1.2.1.1");
-        context.addTransferSyntax("1.2.840.10008.1.2.1"); // explicit VR little endian
-        PresentationContexts presentationContexts;
-        presentationContexts.addPresentationContext(context);
-
-        AssociationSCP scp("SCP", 1, 1, presentationContexts, readSCP, writeSCP, 0);
-        DimseService dimse(scp);
-
-        std::unique_ptr<CFindCommand> pFind(dynamic_cast<CFindCommand*>(dimse.getCommand()));
-
-        std::unique_ptr<DataSet> pIdentifier(pFind->getPayloadDataSet());
-
-        EXPECT_EQ("100", pIdentifier->getString(TagId(tagId_t::PatientID_0010_0020), 0));
-
-        DataSet study0(dimse.getTransferSyntax(pFind->getAbstractSyntax()));
-        study0.setString(TagId(tagId_t::PatientID_0010_0020), "100");
-        study0.setString(TagId(tagId_t::StudyID_0020_0010), "110");
-        dimse.sendCommandOrResponse(CFindResponse(*pFind, study0));
-
-        DataSet study1(dimse.getTransferSyntax(pFind->getAbstractSyntax()));
-        study1.setString(TagId(tagId_t::PatientID_0010_0020), "100");
-        study1.setString(TagId(tagId_t::StudyID_0020_0010), "120");
-        dimse.sendCommandOrResponse(CFindResponse(*pFind, study1));
-
-        dimse.sendCommandOrResponse(CFindResponse(*pFind, dimseStatusCode_t::success));
-
-        sleep(5);
-    }
-    thread.join();
-
-    EXPECT_NE(std::string::npos, responseString.find("110"));
-    EXPECT_NE(std::string::npos, responseString.find("120"));
 }
 
 
@@ -977,7 +659,7 @@ TEST(dimseTest, cancelSCUSCP)
     CCancelCommand cancel1("1.2.840.10008.5.1.4.1.2.1.2", dimse.getNextCommandID(), dimseCommandPriority_t::medium, moveCommand.getID());
     dimse.sendCommandOrResponse(cancel1);
 
-    sleep(5);
+    std::this_thread::sleep_for(std::chrono::seconds(5));
 
     std::unique_ptr<CMoveResponse> response(dimse.getCMoveResponse(moveCommand));
 
@@ -1566,6 +1248,337 @@ TEST(dimseTest, nDeleteSCUSCP)
 
     thread.join();
 }
+
+
+
+
+
+
+
+
+
+
+#ifndef DISABLE_DIMSE_INTEROPERABILITY_TEST
+
+///////////////////////////////////////////////////////////
+//
+// Get all the files in a folder
+//
+///////////////////////////////////////////////////////////
+std::list<std::string> getFilesInDirectory(const std::string &directory)
+{
+    std::list<std::string> files;
+
+    DIR* dir(opendir(directory.c_str()));
+    for(dirent* ent(readdir(dir)); ent != NULL; ent = readdir(dir))
+    {
+        const std::string fileName(ent->d_name);
+        if(fileName[0] == '.')
+        {
+            continue;
+        }
+        const std::string fullFileName(directory + "/" + fileName);
+
+        struct stat st;
+        if (stat(fullFileName.c_str(), &st) == -1)
+        {
+            continue;
+        }
+
+        if((st.st_mode & S_IFDIR) == 0)
+        {
+            files.push_back(fullFileName);
+        }
+    }
+    closedir(dir);
+
+    return files;
+}
+
+
+
+//
+// Store SCU interoperability test
+//
+// This test sends a DataSet to a DCMTK STORE SCP
+// and check that the sent payload was received correctly.
+//
+///////////////////////////////////////////////////////////
+TEST(dimseTest, storeSCUInteroperabilityTest)
+{
+    char* tempDirName = ::tempnam(0, "imebra");
+    std::string dirName(tempDirName);
+    free(tempDirName);
+
+    mkdir(dirName.c_str(), 0700);
+
+    pid_t pID = fork();
+    if (pID == 0)                // child
+    {
+        execlp("storescp", "storescp", "-od", dirName.c_str(), "30003", 0);
+    }
+    else if (pID < 0)            // failed to fork
+    {
+        ASSERT_TRUE(false);
+    }
+
+    try
+    {
+        std::this_thread::sleep_for(std::chrono::seconds(5));
+
+        TCPStream tcpStream(TCPActiveAddress("127.0.0.1", "30003"));
+
+        StreamReader readSCU(tcpStream);
+        StreamWriter writeSCU(tcpStream);
+
+        std::string transferSyntax("1.2.840.10008.1.2.1");
+        PresentationContext context("1.2.840.10008.1.1");
+        context.addTransferSyntax(transferSyntax); // implicit VR little endian
+        PresentationContexts presentationContexts;
+        presentationContexts.addPresentationContext(context);
+
+        AssociationSCU scu("SCU", "SCP", 1, 1, presentationContexts, readSCU, writeSCU, 0);
+
+        DimseService dimse(scu);
+
+        DataSet payload(transferSyntax);
+        payload.setString(TagId(tagId_t::SOPInstanceUID_0008_0018), "1.1.1.1");
+        payload.setString(TagId(tagId_t::SOPClassUID_0008_0016), "1.1.1.1");
+        payload.setString(TagId(tagId_t::PatientName_0010_0010),"Patient^Test");
+        CStoreCommand command(
+                    "1.2.840.10008.1.1",
+                    dimse.getNextCommandID(),
+                    dimseCommandPriority_t::medium,
+                    payload.getString(TagId(tagId_t::SOPClassUID_0008_0016), 0),
+                    payload.getString(TagId(tagId_t::SOPInstanceUID_0008_0018), 0),
+                    "",
+                    0,
+                    payload);
+        dimse.sendCommandOrResponse(command);
+        std::unique_ptr<DimseResponse> response(dimse.getCStoreResponse(command));
+
+        ASSERT_EQ(response->getStatus(), dimseStatus_t::success);
+
+        std::list<std::string> files(getFilesInDirectory(dirName));
+
+        ASSERT_EQ(files.size(), 1);
+
+        std::unique_ptr<DataSet> readDataSet(CodecFactory::load(files.front()));
+
+        ASSERT_EQ(readDataSet->getString(TagId(tagId_t::PatientName_0010_0010), 0), "Patient^Test");
+    }
+    catch(...)
+    {
+        kill(pID, SIGTERM);
+        throw;
+    }
+
+    kill(pID, SIGTERM);
+}
+
+
+///////////////////////////////////////////////////////////
+//
+// Executes a DCMTK Store SCU command
+//
+///////////////////////////////////////////////////////////
+void storeScuThread(std::string transferSyntax, std::string sopClassUid, std::string sopInstanceUid)
+{
+    std::this_thread::sleep_for(std::chrono::seconds(5));
+
+    char* tempFileName = ::tempnam(0, "dcmimebra");
+    std::string fileName(tempFileName);
+    free(tempFileName);
+
+    DataSet dataSet(transferSyntax);
+    dataSet.setString(TagId(tagId_t::SOPClassUID_0008_0016), sopClassUid);
+    dataSet.setString(TagId(tagId_t::SOPInstanceUID_0008_0018), sopInstanceUid);
+    dataSet.setString(TagId(tagId_t::PatientName_0010_0010), "Test^Patient");
+    CodecFactory::save(dataSet, fileName, codecType_t::dicom);
+
+    std::string command("storescu -v -aet scu -aec SCP 127.0.0.1 30004 ");
+    command += fileName;
+
+    system(command.c_str());
+}
+
+
+TEST(dimseTest, storeSCPInteroperabilityTest)
+{
+
+    std::string transferSyntax("1.2.840.10008.1.2.1");
+    std::string sopClassUid("1.2.840.10008.5.1.4.1.1.1");
+    std::string sopInstanceUid("1.1.1.1.1.1");
+    std::thread thread(
+                imebra::tests::storeScuThread,
+                transferSyntax,
+                sopClassUid,
+                sopInstanceUid);
+
+    TCPListener tcpListener(TCPPassiveAddress("", "30004"));
+    std::unique_ptr<TCPStream> tcpStream(tcpListener.waitForConnection());
+
+    StreamReader readSCU(*tcpStream);
+    StreamWriter writeSCU(*tcpStream);
+
+    PresentationContext context(sopClassUid);
+    context.addTransferSyntax(transferSyntax);
+    PresentationContexts presentationContexts;
+    presentationContexts.addPresentationContext(context);
+
+    AssociationSCP scp("SCP", 1, 1, presentationContexts, readSCU, writeSCU, 0);
+
+    DimseService dimse(scp);
+
+    std::unique_ptr<CStoreCommand> command(dynamic_cast<CStoreCommand*>(dimse.getCommand()));
+    std::unique_ptr<DataSet> pPayload(command->getPayloadDataSet());
+
+    ASSERT_EQ("Test^Patient", pPayload->getString(TagId(tagId_t::PatientName_0010_0010), 0));
+
+    dimse.sendCommandOrResponse(CStoreResponse(*command, dimseStatusCode_t::success));
+
+    std::this_thread::sleep_for(std::chrono::seconds(5));
+
+    thread.join();
+
+}
+
+
+void moveScuThread()
+{
+    std::this_thread::sleep_for(std::chrono::seconds(5));
+    std::string command("movescu -v -k 0010,0020=\"100\" -P -aet scu -aec SCP -aem SCP1 127.0.0.1 30005");
+    system(command.c_str());
+}
+
+
+//
+// Move SCU interoperability test
+//
+// This executes the DCMTK command movescu and check that
+// it is interpreted correctly by Imebra
+//
+///////////////////////////////////////////////////////////
+TEST(dimseTest, moveSCPInteroperabilityTest)
+{
+    std::thread thread(
+                imebra::tests::moveScuThread);
+
+    {
+        TCPListener tcpListener(TCPPassiveAddress("", "30005"));
+        std::unique_ptr<TCPStream> tcpStream(tcpListener.waitForConnection());
+
+        StreamReader readSCP(*tcpStream);
+        StreamWriter writeSCP(*tcpStream);
+
+        PresentationContext context("1.2.840.10008.5.1.4.1.2.1.2");
+        context.addTransferSyntax("1.2.840.10008.1.2.1"); // explicit VR little endian
+        PresentationContexts presentationContexts;
+        presentationContexts.addPresentationContext(context);
+
+        AssociationSCP scp("SCP", 1, 1, presentationContexts, readSCP, writeSCP, 0);
+        DimseService dimse(scp);
+
+        std::unique_ptr<CMoveCommand> pMove(dynamic_cast<CMoveCommand*>(dimse.getCommand()));
+
+        std::unique_ptr<DataSet> pIdentifier(pMove->getPayloadDataSet());
+
+        EXPECT_EQ("100", pIdentifier->getString(TagId(tagId_t::PatientID_0010_0020), 0));
+
+        dimse.sendCommandOrResponse(CMoveResponse(*pMove, dimseStatusCode_t::pending, 1, 0, 0, 0));
+        dimse.sendCommandOrResponse(CMoveResponse(*pMove, dimseStatusCode_t::success, 0, 1, 0, 0));
+
+        std::this_thread::sleep_for(std::chrono::seconds(5));
+    }
+    thread.join();
+}
+
+
+//
+// Executes a command and returns its output
+//
+///////////////////////////////////////////////////////////
+std::string execute(const char* cmd)
+{
+    std::array<char, 128> buffer;
+    std::string result;
+    std::shared_ptr<FILE> pipe(popen(cmd, "r"), pclose);
+    if (!pipe) throw std::runtime_error("popen() failed!");
+    while (!feof(pipe.get()))
+    {
+        if(fgets(buffer.data(), 128, pipe.get()) != nullptr)
+        {
+            result += buffer.data();
+        }
+    }
+    return result;
+}
+
+
+void findScuThread(std::string* pResponse)
+{
+    std::this_thread::sleep_for(std::chrono::seconds(5));
+    std::string command("findscu -v -k 0010,0020=\"100\" -P -aet scu -aec SCP 127.0.0.1 30005 2>&1");
+    *pResponse = execute(command.c_str());
+}
+
+
+//
+// Find SCU interoperability test
+//
+// This executes the DCMTK command findscu and check that
+// it is interpreted correctly by Imebra
+//
+///////////////////////////////////////////////////////////
+TEST(dimseTest, findSCPInteroperabilityTest)
+{
+    std::string responseString;
+    std::thread thread(imebra::tests::findScuThread, &responseString);
+
+    {
+        TCPListener tcpListener(TCPPassiveAddress("", "30005"));
+        std::unique_ptr<TCPStream> tcpStream(tcpListener.waitForConnection());
+
+        StreamReader readSCP(*tcpStream);
+        StreamWriter writeSCP(*tcpStream);
+
+        PresentationContext context("1.2.840.10008.5.1.4.1.2.1.1");
+        context.addTransferSyntax("1.2.840.10008.1.2.1"); // explicit VR little endian
+        PresentationContexts presentationContexts;
+        presentationContexts.addPresentationContext(context);
+
+        AssociationSCP scp("SCP", 1, 1, presentationContexts, readSCP, writeSCP, 0);
+        DimseService dimse(scp);
+
+        std::unique_ptr<CFindCommand> pFind(dynamic_cast<CFindCommand*>(dimse.getCommand()));
+
+        std::unique_ptr<DataSet> pIdentifier(pFind->getPayloadDataSet());
+
+        EXPECT_EQ("100", pIdentifier->getString(TagId(tagId_t::PatientID_0010_0020), 0));
+
+        DataSet study0(dimse.getTransferSyntax(pFind->getAbstractSyntax()));
+        study0.setString(TagId(tagId_t::PatientID_0010_0020), "100");
+        study0.setString(TagId(tagId_t::StudyID_0020_0010), "110");
+        dimse.sendCommandOrResponse(CFindResponse(*pFind, study0));
+
+        DataSet study1(dimse.getTransferSyntax(pFind->getAbstractSyntax()));
+        study1.setString(TagId(tagId_t::PatientID_0010_0020), "100");
+        study1.setString(TagId(tagId_t::StudyID_0020_0010), "120");
+        dimse.sendCommandOrResponse(CFindResponse(*pFind, study1));
+
+        dimse.sendCommandOrResponse(CFindResponse(*pFind, dimseStatusCode_t::success));
+
+        std::this_thread::sleep_for(std::chrono::seconds(5));
+    }
+    thread.join();
+
+    EXPECT_NE(std::string::npos, responseString.find("110"));
+    EXPECT_NE(std::string::npos, responseString.find("120"));
+}
+
+
+#endif // DISABLE_DIMSE_INTEROPERABILITY_TEST
+
 
 
 } // namespace tests

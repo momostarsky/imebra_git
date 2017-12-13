@@ -1,6 +1,7 @@
 #include <imebra/imebra.h>
 #include <gtest/gtest.h>
 #include <thread>
+#include <chrono>
 #include <functional>
 
 namespace imebra
@@ -23,7 +24,7 @@ void feedDataThread(Pipe& source, size_t maxBlockBytes, unsigned int delayMs, un
         source.feed(block);
         if(delayMs != 0)
         {
-            ::usleep(delayMs * 1000);
+            std::this_thread::sleep_for(std::chrono::milliseconds(delayMs));
         }
     }
     source.close(closeWait);
@@ -73,7 +74,7 @@ TEST(pipeTest, sendReceiveCloseAndWait)
 
     for(size_t blockBytes(1); blockBytes != maxBlockBytes; ++blockBytes)
     {
-        ::usleep(1000000);
+        std::this_thread::sleep_for(std::chrono::seconds(1));
         while(buffer.size() < blockBytes)
         {
             size_t dataSize(source.sink(block));
@@ -107,7 +108,7 @@ TEST(pipeTest, sendReceiveCloseNoWait)
     {
         for(size_t blockBytes(1); blockBytes != maxBlockBytes; ++blockBytes)
         {
-            ::usleep(5000000);
+            std::this_thread::sleep_for(std::chrono::seconds(5));
             while(buffer.size() < blockBytes)
             {
                 size_t dataSize(source.sink(block));
