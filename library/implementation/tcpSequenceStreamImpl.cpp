@@ -72,7 +72,6 @@ std::shared_ptr<initWinsock> initWinsock::getWinsockInitialization()
 {
     IMEBRA_FUNCTION_START();
 
-    // Violation to requirement REQ_MAKE_SHARED due to protected constructor
     static std::shared_ptr<initWinsock> m_initWinsock(std::make_shared<initWinsock>());
 
     return m_initWinsock;
@@ -227,6 +226,8 @@ tcpAddress::tcpAddress(const std::string& node, const std::string& service, pass
 {
     IMEBRA_FUNCTION_START();
 
+    INIT_WINSOCK;
+
     addrinfo hints;
     ::memset(&hints, 0, sizeof(hints));
     hints.ai_socktype = SOCK_STREAM;
@@ -249,6 +250,8 @@ tcpAddress::tcpAddress(const std::string& node, const std::string& service, pass
 tcpAddress::tcpAddress(const sockaddr& address, socklen_t addressLength)
 {
     IMEBRA_FUNCTION_START();
+
+    INIT_WINSOCK;
 
     char host[NI_MAXHOST];
     char service[NI_MAXSERV];
@@ -363,6 +366,8 @@ tcpBaseSocket::tcpTerminateWaiting::tcpTerminateWaiting(tcpBaseSocket& terminate
 {
     IMEBRA_FUNCTION_START();
 
+    INIT_WINSOCK;
+
     std::unique_lock<std::mutex> lock(m_terminateObject.m_waitingMutex);
     if(m_terminateObject.m_bTerminate.load())
     {
@@ -392,6 +397,8 @@ tcpBaseSocket::tcpBaseSocket(int socket):
 {
     // Set timeout
 #ifdef IMEBRA_WINDOWS
+
+    INIT_WINSOCK();
     std::uint32_t timeout(IMEBRA_TCP_TIMEOUT_MS);
     setsockopt(m_socket, SOL_SOCKET, SO_RCVTIMEO, (const char*)&timeout, sizeof(timeout));
     setsockopt(m_socket, SOL_SOCKET, SO_SNDTIMEO, (const char*)&timeout, sizeof(timeout));

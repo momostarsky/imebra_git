@@ -67,6 +67,12 @@ public:
 
 };
 
+#define INIT_WINSOCK std::shared_ptr<initWinsock> windowsInitWinsock(initWinsock::getWinsockInitialization())
+
+#else
+
+#define INIT_WINSOCK
+
 #endif
 
 
