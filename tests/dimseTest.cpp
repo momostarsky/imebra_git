@@ -5,8 +5,11 @@
 #include <array>
 #include <list>
 #include <stdio.h>
-#include <dirent.h>
-#include <sys/stat.h>
+
+#ifndef DISABLE_DIMSE_INTEROPERABILITY_TEST
+    #include <dirent.h>
+    #include <sys/stat.h>
+#endif
 
 namespace imebra
 {
