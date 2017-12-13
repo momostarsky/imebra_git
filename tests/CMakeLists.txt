@@ -2,6 +2,17 @@ cmake_minimum_required(VERSION 2.8)
 
 project("ImebraTests")
 
+# Find the DCMTK package.
+# Disable interoperability tests if the package cannot be found
+#--------------------------------------------------------------
+find_package(DCMTK)
+if(${DCMTK_FOUND})
+    message(STATUS "DCMTK found. Interoperability tests enabled")
+else(${DCMTK_FOUND})
+    add_definitions(-DDISABLE_DIMSE_INTEROPERABILITY_TEST)
+    message(WARNING "WARNING: DCMTK not found. Disabling interoperability tests")
+endif(${DCMTK_FOUND})
+
 find_library(gtest_library NAMES gtest libgtest HINTS ${CMAKE_BINARY_DIR} ${CMAKE_BINARY_DIR}/gtest)
 find_library(imebra_library NAMES imebra libimebra HINTS ${CMAKE_BINARY_DIR} ${CMAKE_BINARY_DIR}/imebra ${CMAKE_BINARY_DIR}/../library-build )
 
@@ -44,8 +55,6 @@ set(imebra_tests_objc_src "")
 if("${IMEBRA_OBJC}" STREQUAL "1")
     file(GLOB imebra_tests_objc_src "${CMAKE_CURRENT_SOURCE_DIR}/objectivec/*.mm")
 endif("${IMEBRA_OBJC}" STREQUAL "1")
-
-
 
 if("${gtest_include}" STREQUAL "")
     set(gtest_include ".")
