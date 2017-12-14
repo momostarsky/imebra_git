@@ -178,7 +178,9 @@ To generate a library for iPhone, type the following (replace imebra_location wi
     cmake imebra_location/library -DIOS=IPHONE
     cmake --build .
 
-To generate a library for iPhone, type the following (replace imebra_location with the path to Imebra):
+.. seealso:: iOS applications based on Imebra need to be linked also with libiconv.a or libiconv.tbd.
+
+To generate a library for the iPhone simulator, type the following (replace imebra_location with the path to Imebra):
 
 ::
 
@@ -186,6 +188,8 @@ To generate a library for iPhone, type the following (replace imebra_location wi
     cd imebra_for_ios
     cmake imebra_location/library -DIOS=SIMULATOR
     cmake --build .
+
+.. seealso:: iOS applications based on Imebra need to be linked also with libiconv.a or libiconv.tbd.
 
 To generate a project that can be opened with XCode append the argument -G xcode (replace imebra_location with the path to Imebra):
 
