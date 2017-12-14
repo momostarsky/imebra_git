@@ -198,7 +198,32 @@ TransformHighBitDifferentColorSpacesError::TransformHighBitDifferentColorSpacesE
 StreamEOFError::StreamEOFError(const std::string& message): StreamError(message)
 {}
 
+StreamClosedError::StreamClosedError(const std::string& message): StreamEOFError(message)
+{}
+
+
+TCPConnectionRefused::TCPConnectionRefused(const std::string& message): StreamOpenError(message)
+{}
+
+TCPAddressAlreadyInUse::TCPAddressAlreadyInUse(const std::string& message): StreamOpenError(message)
+{}
+
+PermissionDeniedError::PermissionDeniedError(const std::string& message): std::runtime_error(message)
+{}
+
 StreamJpegTagInStreamError::StreamJpegTagInStreamError(const std::string& message): StreamError(message)
+{}
+
+AddressError::AddressError(const std::string &message): std::runtime_error(message)
+{}
+
+AddressTryAgainError::AddressTryAgainError(const std::string &message): AddressError(message)
+{}
+
+AddressNoNameError::AddressNoNameError(const std::string& message): AddressError(message)
+{}
+
+AddressServiceNotSupportedError::AddressServiceNotSupportedError(const std::string &message): AddressError(message)
 {}
 
 ModalityVOILUTError::ModalityVOILUTError(const std::string& message): TransformError(message)
@@ -221,6 +246,101 @@ MemoryError::MemoryError(const std::string& message): std::runtime_error(message
 
 MemorySizeError::MemorySizeError(const std::string& message): MemoryError(message)
 {}
+
+AcseError::AcseError(const std::string& message): std::runtime_error(message)
+{}
+
+AcseCorruptedMessageError::AcseCorruptedMessageError(const std::string &message): AcseError(message)
+{}
+
+AcseNoTransferSyntaxError::AcseNoTransferSyntaxError(const std::string& message): AcseError(message)
+{}
+
+AcsePresentationContextNotRequestedError::AcsePresentationContextNotRequestedError(const std::string& message): AcseError(message)
+{}
+
+AcseWrongRoleError::AcseWrongRoleError(const std::string& message): AcseError(message)
+{}
+
+AcseWrongIdError::AcseWrongIdError(const std::string& message): AcseError(message)
+{}
+
+AcseWrongResponseIdError::AcseWrongResponseIdError(const std::string& message): AcseWrongIdError(message)
+{}
+
+AcseWrongCommandIdError::AcseWrongCommandIdError(const std::string& message): AcseWrongIdError(message)
+{}
+
+AcseRejectedAssociationError::AcseRejectedAssociationError(const std::string& message, bool bPermanent):
+    AcseError(message), m_bPermanent(bPermanent)
+{}
+
+bool AcseRejectedAssociationError::isPermanent() const
+{
+    return m_bPermanent;
+}
+
+bool AcseRejectedAssociationError::isTemporary() const
+{
+    return !m_bPermanent;
+}
+
+AcseSCUNoReasonGivenError::AcseSCUNoReasonGivenError(const std::string& message, bool bPermanent):
+    AcseRejectedAssociationError(message, bPermanent)
+{}
+
+AcseSCUApplicationContextNameNotSupportedError::AcseSCUApplicationContextNameNotSupportedError(const std::string& message, bool bPermanent):
+    AcseRejectedAssociationError(message, bPermanent)
+{}
+
+AcseSCUCallingAETNotRecognizedError::AcseSCUCallingAETNotRecognizedError(const std::string& message, bool bPermanent):
+    AcseRejectedAssociationError(message, bPermanent)
+{}
+
+AcseSCUCalledAETNotRecognizedError::AcseSCUCalledAETNotRecognizedError(const std::string& message, bool bPermanent):
+    AcseRejectedAssociationError(message, bPermanent)
+{}
+
+AcseSCPNoReasonGivenError::AcseSCPNoReasonGivenError(const std::string& message, bool bPermanent):
+    AcseRejectedAssociationError(message, bPermanent)
+{}
+
+AcseSCPAcseProtocolVersionNotSupportedError::AcseSCPAcseProtocolVersionNotSupportedError(const std::string& message, bool bPermanent):
+    AcseRejectedAssociationError(message, bPermanent)
+{}
+
+AcseSCPPresentationReservedError::AcseSCPPresentationReservedError(const std::string& message, bool bPermanent):
+    AcseRejectedAssociationError(message, bPermanent)
+{}
+
+AcseSCPPresentationTemporaryCongestionError::AcseSCPPresentationTemporaryCongestionError(const std::string& message, bool bPermanent):
+    AcseRejectedAssociationError(message, bPermanent)
+{}
+
+AcseSCPPresentationLocalLimitExcededError::AcseSCPPresentationLocalLimitExcededError(const std::string& message, bool bPermanent):
+    AcseRejectedAssociationError(message, bPermanent)
+{}
+
+AcseTooManyOperationsPerformedError::AcseTooManyOperationsPerformedError(const std::string& message):
+    AcseError(message)
+{}
+
+AcseTooManyOperationsInvokedError::AcseTooManyOperationsInvokedError(const std::string& message):
+    AcseError(message)
+{}
+
+AcseNoPayloadError::AcseNoPayloadError(const std::string& message):
+    AcseError(message)
+{}
+
+DimseError::DimseError(const std::string &message):
+    std::runtime_error(message)
+{}
+
+DimseInvalidCommand::DimseInvalidCommand(const std::string &message):
+    DimseError(message)
+{}
+
 
 
 }

@@ -48,5 +48,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "transformsChain.h"
 #include "VOILUT.h"
 #include "tagId.h"
+#include "tcpAddress.h"
+#include "tcpStream.h"
+#include "tcpListener.h"
+#include "pipe.h"
+#include "acse.h"
+#include "dimse.h"
 
 #endif // IMEBRA_INCLUDED

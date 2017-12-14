@@ -62,6 +62,11 @@ public:
 	///////////////////////////////////////////////////////////
     virtual size_t read(size_t startPosition, std::uint8_t* pBuffer, size_t bufferLength);
 
+    virtual void terminate() override;
+
+    virtual bool seekable() const override;
+
+
 protected:
     std::shared_ptr<const memory> m_memory;
 

@@ -72,6 +72,14 @@ streamReader::streamReader(std::shared_ptr<baseStreamInput> pControlledStream, s
 }
 
 
+streamReader::streamReader(std::shared_ptr<baseStreamInput> pControlledStream, size_t virtualStart, std::uint8_t* pBuffer, size_t bufferLength):
+    streamController(virtualStart, 0, pBuffer, bufferLength),
+    m_pControlledStream(pControlledStream),
+    m_inBitsBuffer(0),
+    m_inBitsNum(0)
+{
+}
+
 
 std::shared_ptr<baseStreamInput> streamReader::getControlledStream()
 {
@@ -264,6 +272,17 @@ size_t streamReader::readSome(std::uint8_t* pBuffer, size_t bufferLength)
 }
 
 
+///////////////////////////////////////////////////////////
+//
+// Causes current and subsequent read operations
+// to fail with StreamClosedError.
+//
+///////////////////////////////////////////////////////////
+void streamReader::terminate()
+{
+    m_pControlledStream->terminate();
+}
+
 
 ///////////////////////////////////////////////////////////
 //
@@ -300,6 +319,16 @@ void streamReader::seekForward(std::uint32_t newPosition)
     seek(finalPosition);
 
     IMEBRA_FUNCTION_END();
+}
+
+bool streamReader::seekable() const
+{
+    return m_pControlledStream->seekable();
+}
+
+size_t streamReader::getVirtualLength() const
+{
+    return m_virtualLength;
 }
 
 } // namespace implementation

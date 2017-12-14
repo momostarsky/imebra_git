@@ -25,6 +25,9 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #ifndef MAXIMUM_IMAGE_HEIGHT
     #define MAXIMUM_IMAGE_HEIGHT 4096
 #endif
+#ifndef MAXIMUM_PDU_SIZE
+    #define MAXIMUM_PDU_SIZE 32768
+#endif
 
 #if !defined(IMEBRA_WINDOWS) && !defined(IMEBRA_POSIX)
 

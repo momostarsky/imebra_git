@@ -138,7 +138,7 @@ public:
     /// @param streamType the type of DICOM stream to build
 	///
 	///////////////////////////////////////////////////////////
-    static void buildStream(std::shared_ptr<streamWriter> pStream, std::shared_ptr<dataSet> pDataSet, bool bExplicitDataType, streamController::tByteOrdering endianType, streamType_t streamType);
+    static void buildStream(std::shared_ptr<streamWriter> pStream, std::shared_ptr<const dataSet> pDataSet, bool bExplicitDataType, streamController::tByteOrdering endianType, streamType_t streamType);
 
 protected:
 	// Write a dicom stream

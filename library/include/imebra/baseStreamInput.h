@@ -57,9 +57,11 @@ class IMEBRA_API BaseStreamInput
     BaseStreamInput& operator=(const BaseStreamInput&) = delete;
 
 #ifndef SWIG
-	friend class StreamReader;
+    friend class TCPStream;
+    friend class StreamReader;
     friend class FileStreamInput;
     friend class MemoryStreamInput;
+    friend class Pipe;
 
 private:
     /// \brief Construct a BaseStreamInput object from an implementation object.
@@ -67,7 +69,7 @@ private:
     /// \param pStream the implementation of BaseStreamInput
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    BaseStreamInput(std::shared_ptr<implementation::baseStreamInput> pStream);
+    BaseStreamInput(std::shared_ptr<implementation::baseStreamInput> pInputStream);
 #endif
 
 public:
@@ -78,7 +80,7 @@ public:
 
 #ifndef SWIG
 protected:
-    std::shared_ptr<implementation::baseStreamInput> m_pStream;
+    std::shared_ptr<implementation::baseStreamInput> m_pInputStream;
 #endif
 };
 

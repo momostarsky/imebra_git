@@ -194,31 +194,56 @@ std::shared_ptr<dataSet> codecFactory::load(std::shared_ptr<streamReader> pStrea
 {
     IMEBRA_FUNCTION_START();
 
+    // This hack is necessary to keep compatibility across
+    // the imebra 4.X series.
+    // Imebra 5.X should have a base non-seekable object with
+    // a derived seekable one.
+    ///////////////////////////////////////////////////////////
+    if(maxSizeBufferLoad != 0xffffffff && !pStream->seekable())
+    {
+        IMEBRA_THROW(std::logic_error, "Codec factory supports only file and memory streams")
+    }
+
+    std::uint8_t buffer[IMEBRA_STREAM_CONTROLLER_MEMORY_SIZE];
+
+    size_t startPosition = pStream->position();
+    size_t bufferSize(pStream->readSome(buffer, sizeof(buffer)));
+
 	// Copy the list of codecs in a local list so we don't have
 	//  to lock the object for a long time
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<dataSet> pDataSet;
-	{
-        for(std::map<codecType_t, std::shared_ptr<const streamCodec> >::const_iterator scanCodecs(m_streamCodecs.begin()); scanCodecs != m_streamCodecs.end(); ++scanCodecs)
-		{
-            try
-            {
-                return scanCodecs->second->read(pStream, maxSizeBufferLoad);
-            }
-            catch(CodecWrongFormatError& /* e */)
-            {
-                exceptionsManagerGetter::getExceptionsManagerGetter().getExceptionsManager().getMessage(); // Reset the messages stack
-                continue;
-            }
+    for(std::map<codecType_t, std::shared_ptr<const streamCodec> >::const_iterator scanCodecs(m_streamCodecs.begin()); scanCodecs != m_streamCodecs.end(); ++scanCodecs)
+    {
+        std::shared_ptr<streamReader> pTempReader;
+        if(pStream->getVirtualLength() != 0)
+        {
+            pTempReader = std::make_shared<streamReader>(pStream->getControlledStream(),
+                                                         startPosition,
+                                                         pStream->getVirtualLength(),
+                                                         buffer,
+                                                         bufferSize);
         }
-	}
+        else
+        {
+            pTempReader = std::make_shared<streamReader>(pStream->getControlledStream(),
+                                                         startPosition,
+                                                         buffer,
+                                                         bufferSize);
+        }
 
-	if(pDataSet == 0)
-	{
-        IMEBRA_THROW(CodecWrongFormatError, "none of the codecs recognized the file format");
-	}
+        try
+        {
+            std::shared_ptr<dataSet> pDataSet(scanCodecs->second->read(pTempReader, maxSizeBufferLoad));
+            return pDataSet;
+        }
+        catch(CodecWrongFormatError&)
+        {
+            exceptionsManagerGetter::getExceptionsManagerGetter().getExceptionsManager().getMessage(); // Reset the messages stack
+            continue;
+        }
+    }
 
-	return pDataSet;
+    IMEBRA_THROW(CodecWrongFormatError, "none of the codecs recognized the file format");
 
 	IMEBRA_FUNCTION_END();
 }

@@ -147,7 +147,7 @@ target_include_directories(imebra PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 
     message(STATUS "GCC detected, adding compile flags")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wall -Wextra -Wpedantic -Wconversion -Wfloat-equal -fvisibility=hidden -fvisibility-inlines-hidden")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Wpedantic -Wconversion -Wfloat-equal -fvisibility=hidden -fvisibility-inlines-hidden")
     set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} pthread)
 
     if(CMAKE_BUILD_TYPE MATCHES DEBUG)
@@ -159,7 +159,7 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 
     message(STATUS "CLANG detected, adding compile flags")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wall -Wextra -Wpedantic -Wconversion -Wfloat-equal -fvisibility=hidden -fvisibility-inlines-hidden")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Wpedantic -Wconversion -Wfloat-equal -fvisibility=hidden -fvisibility-inlines-hidden")
     set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} pthread)
 
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")

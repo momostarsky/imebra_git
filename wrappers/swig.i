@@ -1,4 +1,5 @@
-%module imebra
+%module (threads="1") imebra
+
 
 #ifdef SWIGJAVA
 	%include <arrays_java.i>
@@ -36,6 +37,52 @@
 %template(Groups) std::vector<std::uint16_t>;
 %template(TagsIds) std::vector<imebra::TagId>;
 %template(VOIs) std::vector<imebra::VOIDescription>;
+
+
+%typemap(out) imebra::DimseCommand* imebra::DimseService::getCommand() {
+
+    switch($1->getCommandType())
+    {
+    case imebra::dimseCommandType_t::cStore:
+        $result = SWIG_NewPointerObj(SWIG_as_voidptr($1), $descriptor(imebra::CStoreCommand*), $owner);
+        break;
+    case imebra::dimseCommandType_t::cMove:
+        $result = SWIG_NewPointerObj(SWIG_as_voidptr($1), $descriptor(imebra::CMoveCommand*), $owner);
+        break;
+    case imebra::dimseCommandType_t::cGet:
+        $result = SWIG_NewPointerObj(SWIG_as_voidptr($1), $descriptor(imebra::CGetCommand*), $owner);
+        break;
+    case imebra::dimseCommandType_t::cFind:
+        $result = SWIG_NewPointerObj(SWIG_as_voidptr($1), $descriptor(imebra::CFindCommand*), $owner);
+        break;
+    case imebra::dimseCommandType_t::cEcho:
+        $result = SWIG_NewPointerObj(SWIG_as_voidptr($1), $descriptor(imebra::CEchoCommand*), $owner);
+        break;
+    case imebra::dimseCommandType_t::cCancel:
+        $result = SWIG_NewPointerObj(SWIG_as_voidptr($1), $descriptor(imebra::CCancelCommand*), $owner);
+        break;
+    case imebra::dimseCommandType_t::nAction:
+        $result = SWIG_NewPointerObj(SWIG_as_voidptr($1), $descriptor(imebra::NActionCommand*), $owner);
+        break;
+    case imebra::dimseCommandType_t::nEventReport:
+        $result = SWIG_NewPointerObj(SWIG_as_voidptr($1), $descriptor(imebra::NEventReportCommand*), $owner);
+        break;
+    case imebra::dimseCommandType_t::nCreate:
+        $result = SWIG_NewPointerObj(SWIG_as_voidptr($1), $descriptor(imebra::NCreateCommand*), $owner);
+        break;
+    case imebra::dimseCommandType_t::nDelete:
+        $result = SWIG_NewPointerObj(SWIG_as_voidptr($1), $descriptor(imebra::NDeleteCommand*), $owner);
+        break;
+    case imebra::dimseCommandType_t::nSet:
+        $result = SWIG_NewPointerObj(SWIG_as_voidptr($1), $descriptor(imebra::NSetCommand*), $owner);
+        break;
+    case imebra::dimseCommandType_t::nGet:
+        $result = SWIG_NewPointerObj(SWIG_as_voidptr($1), $descriptor(imebra::NGetCommand*), $owner);
+        break;
+    }
+
+}
+
 
 // Declare which methods return an object that should be
 // managed by the client.
@@ -92,6 +139,33 @@
 %newobject imebra::Transform::allocateOutputImage;
 
 %newobject imebra::WritingDataHandlerNumeric::getMemory;
+
+%newobject imebra::AssociationMessage::getCommand;
+%newobject imebra::AssociationMessage::getPayload;
+
+%newobject imebra::AssociationBase::getCommand;
+%newobject imebra::AssociationBase::getResponse;
+
+%newobject imebra::DimseCommandBase::getCommandDataSet;
+%newobject imebra::DimseCommandBase::getPayloadDataSet;
+
+%newobject imebra::DimseService::getCommand;
+%newobject imebra::DimseService::getCStoreResponse;
+%newobject imebra::DimseService::getCGetResponse;
+%newobject imebra::DimseService::getCMoveResponse;
+%newobject imebra::DimseService::getCFindResponse;
+%newobject imebra::DimseService::getCEchoResponse;
+%newobject imebra::DimseService::getNEventReportResponse;
+%newobject imebra::DimseService::getNGetResponse;
+%newobject imebra::DimseService::getNSetResponse;
+%newobject imebra::DimseService::getNActionResponse;
+%newobject imebra::DimseService::getNCreateResponse;
+%newobject imebra::DimseService::getNDeleteResponse;
+
+%newobject imebra::TCPListener::waitForConnection;
+%newobject imebra::TCPStream::getPeerAddress;
+%newobject imebra::StreamReader::getVirtualStream;
+
 
 
 %exception {
@@ -165,6 +239,10 @@
 %include "../library/include/imebra/tag.h"
 %include "../library/include/imebra/dataSet.h"
 %include "../library/include/imebra/codecFactory.h"
+%include "../library/include/imebra/tcpAddress.h"
+%include "../library/include/imebra/tcpListener.h"
+%include "../library/include/imebra/tcpStream.h"
+%include "../library/include/imebra/pipe.h"
 %include "../library/include/imebra/transform.h"
 %include "../library/include/imebra/transformHighBit.h"
 %include "../library/include/imebra/transformsChain.h"
@@ -179,6 +257,8 @@
 %include "../library/include/imebra/fileStreamOutput.h"
 %include "../library/include/imebra/memoryStreamInput.h"
 %include "../library/include/imebra/memoryStreamOutput.h"
+%include "../library/include/imebra/acse.h"
+%include "../library/include/imebra/dimse.h"
 
 
 

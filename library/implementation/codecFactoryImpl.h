@@ -134,6 +134,10 @@ public:
 	/// The function selects automatically the codec that can
 	///  read the specified stream.
 	///
+    /// The read position of the streamReader is undefined
+    /// when this method returns.
+    ///
+    ///
 	/// @param pStream the stream that contain the data to be
 	///                 parsed
 	/// @param maxSizeBufferLoad if a loaded buffer exceedes

@@ -322,6 +322,16 @@ protected:
         throw imebraTrackException;\
 	}
 
+#define IMEBRA_THROW_ADDITIONAL_PARAM(exceptionType, message, additional) \
+    {\
+        std::ostringstream buildMessage; \
+        buildMessage << message; \
+        exceptionType imebraTrackException(buildMessage.str(), additional);\
+        imebra::implementation::exceptionInfo info(IMEBRA_METHOD_NAME(), __FILE__, __LINE__, typeid(imebraTrackException).name(), imebraTrackException.what());\
+        imebra::implementation::exceptionsManagerGetter::getExceptionsManagerGetter().getExceptionsManager().startExceptionInfo(info);\
+        throw imebraTrackException;\
+    }
+
 /// \def IMEBRA_RETHROW(what)
 ///
 /// \brief Rethrow an exception caught by a catch block
