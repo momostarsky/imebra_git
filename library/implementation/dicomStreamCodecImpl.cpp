@@ -621,7 +621,6 @@ void dicomStreamCodec::parseStream(std::shared_ptr<streamReader> pStream,
     std::uint16_t lastTagId = 0;
 
     std::uint32_t tempReadSubItemLength = 0; // used when the last parameter is not defined
-    bool       bStopped = false;
     bool       bFirstTag = (pReadSubItemLength == 0);
     bool       bCheckTransferSyntax = bFirstTag;
     size_t     wordSize;
@@ -637,7 +636,7 @@ void dicomStreamCodec::parseStream(std::shared_ptr<streamReader> pStream,
     // Read all the tags
     //
     ///////////////////////////////////////////////////////////
-    while(!bStopped && !pStream->endReached() && (*pReadSubItemLength < subItemLength))
+    while(!pStream->endReached() && (*pReadSubItemLength < subItemLength))
     {
         // Get the tag's ID
         ///////////////////////////////////////////////////////////
