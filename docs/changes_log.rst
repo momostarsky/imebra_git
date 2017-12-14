@@ -8,6 +8,7 @@ Version |release| (this version)
 
 - Implemented enhancement #199 (Specify that on OS-X and iOS the iconv library must be explicitly linked when using a static Imebra library) as
   per SOP :ref:`DEVENH_2`
+- Fixed bug #184 (Remove variable bStopped from dicomStreamCodec::parseStream) as per SOP :ref:`FIXBUG_2`
 
 Version 4.0.12.1
 ----------------
