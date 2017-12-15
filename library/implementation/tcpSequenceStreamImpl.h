@@ -55,16 +55,6 @@ public:
     ~initWinsock();
 
     static std::shared_ptr<initWinsock> getWinsockInitialization();
-
-    class forceWinsockInitialization
-    {
-    public:
-        forceWinsockInitialization()
-        {
-            initWinsock::getWinsockInitialization();
-        }
-    };
-
 };
 
 #define INIT_WINSOCK std::shared_ptr<initWinsock> windowsInitWinsock(initWinsock::getWinsockInitialization())

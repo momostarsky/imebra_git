@@ -33,21 +33,14 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #endif
 
-
 namespace imebra
 {
 
 namespace implementation
 {
 
-#ifdef IMEBRA_WINDOWS
 
-//
-// Force the Winsock initialization
-//  starts.
-//
-///////////////////////////////////////////////////////////
-static initWinsock::forceWinsockInitialization forceInitialization;
+#ifdef IMEBRA_WINDOWS
 
 initWinsock::initWinsock()
 {
@@ -59,7 +52,6 @@ initWinsock::initWinsock()
     {
         IMEBRA_THROW(std::runtime_error, "WSA socket initialization failure");
     }
-
     IMEBRA_FUNCTION_END();
 }
 
