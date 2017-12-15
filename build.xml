@@ -267,6 +267,7 @@ The author can be contacted by email at info@binarno.com or by mail at
         <!-- Run tests -->
         <exec executable="${build_tests}/ImebraTests" dir="${build_tests}" resolveexecutable="true" failonerror="true">
             <arg prefix="--corruptedFilesFolder=" path="${build_release}/tests/corruptedfiles" />
+            <arg value="--gtest_catch_exceptions" />
         </exec>
 
         <!-- Collect coverage -->
