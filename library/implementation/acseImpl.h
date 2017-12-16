@@ -1361,7 +1361,7 @@ public:
     ///                             received
     /// \param pWriter              writer on which the messages are
     ///                             sent
-    /// \param dimseTimeout         DIMSE timeout, in seconds. 0
+    /// \param dimseTimeoutSeconds  DIMSE timeout, in seconds. 0
     ///                             means infinite
     ///
     //////////////////////////////////////////////////////////////////
@@ -1373,7 +1373,7 @@ public:
             std::uint32_t maxOperationsWeCanPerform,
             std::shared_ptr<streamReader> pReader,
             std::shared_ptr<streamWriter> pWriter,
-            std::uint32_t dimseTimeout);
+            std::uint32_t dimseTimeoutSeconds);
 
 };
 
@@ -1410,8 +1410,11 @@ public:
     ///                             received
     /// \param pWriter              writer on which the messages are
     ///                             sent
-    /// \param dimseTimeout         DIMSE timeout, in seconds. 0
+    /// \param dimseTimeoutSeconds  DIMSE timeout, in seconds. 0
     ///                             means infinite
+    /// \param artimTimeoutSeconds  maximum time, in seconds, that can
+    ///                             pass before an association request
+    ///                             arrives
     ///
     //////////////////////////////////////////////////////////////////
     associationSCP(
@@ -1421,7 +1424,8 @@ public:
             std::uint32_t maxOperationsWeCanPerform,
             std::shared_ptr<streamReader> pReader,
             std::shared_ptr<streamWriter> pWriter,
-            std::uint32_t dimseTimeout);
+            std::uint32_t dimseTimeoutSeconds,
+            std::uint32_t artimTimeoutSeconds);
 
 };
 

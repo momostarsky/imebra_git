@@ -170,7 +170,7 @@ AssociationSCU::AssociationSCU(
         const PresentationContexts& presentationContexts,
         StreamReader& pInput,
         StreamWriter& pOutput,
-        std::uint32_t dimseTimeout)
+        std::uint32_t dimseTimeoutSeconds)
 {
     m_pAssociation = std::make_shared<implementation::associationSCU>(
                 presentationContexts.m_pPresentationContexts,
@@ -180,7 +180,7 @@ AssociationSCU::AssociationSCU(
                 performedOperations,
                 pInput.m_pReader,
                 pOutput.m_pWriter,
-                dimseTimeout);
+                dimseTimeoutSeconds);
 }
 
 
@@ -191,7 +191,8 @@ AssociationSCP::AssociationSCP(
         const PresentationContexts& presentationContexts,
         StreamReader& pInput,
         StreamWriter& pOutput,
-        std::uint32_t dimseTimeout)
+        std::uint32_t dimseTimeoutSeconds,
+        std::uint32_t artimTimeoutSeconds)
 {
     m_pAssociation = std::make_shared<implementation::associationSCP>(
                 presentationContexts.m_pPresentationContexts,
@@ -200,7 +201,8 @@ AssociationSCP::AssociationSCP(
                 performedOperations,
                 pInput.m_pReader,
                 pOutput.m_pWriter,
-                dimseTimeout);
+                dimseTimeoutSeconds,
+                artimTimeoutSeconds);
 }
 
 

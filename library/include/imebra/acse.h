@@ -355,7 +355,7 @@ public:
     /// \param pOutput              output stream into which the SCP writes
     ///                             data. When using a TCPStream the same object
     ///                             can act as both input and output
-    /// \param dimseTimeout         DIMSE timeout, in seconds. 0 means infinite
+    /// \param dimseTimeoutSeconds  DIMSE timeout, in seconds. 0 means infinite
     ///
     /// The constructor blocks until an association has been successfully
     /// negotiated or until an error happens (an exception is thrown).
@@ -376,7 +376,7 @@ public:
             const PresentationContexts& presentationContexts,
             StreamReader& pInput,
             StreamWriter& pOutput,
-            std::uint32_t dimseTimeout);
+            std::uint32_t dimseTimeoutSeconds);
 };
 
 
@@ -429,8 +429,10 @@ public:
     /// \param pOutput              output stream into which the SCP writes
     ///                             data. When using a TCPStream the same object
     ///                             can act as both input and output
-    /// \param dimseTimeout         DIMSE timeout, in seconds. 0 means infinite
-    ///
+    /// \param dimseTimeoutSeconds  DIMSE timeout, in seconds. 0 means infinite
+    /// \param artimTimeoutSeconds  ARTIM timeout, in seconds. Amount of time that
+    ///                             is allowed to pass before an association
+    ///                             request arrives
     ///
     /// The constructor blocks until an association has been successfully
     /// negotiated or until an error happens (an exception is thrown).
@@ -450,7 +452,8 @@ public:
             const PresentationContexts& presentationContexts,
             StreamReader& pInput,
             StreamWriter& pOutput,
-            std::uint32_t dimseTimeout);
+            std::uint32_t dimseTimeoutSeconds,
+            std::uint32_t artimTimeoutSeconds);
 };
 
 }

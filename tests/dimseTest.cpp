@@ -31,7 +31,7 @@ void storeScpThread(
 {
     try
     {
-        AssociationSCP scp(name, 1, 1, presentationContexts, readSCP, writeSCP, 0);
+        AssociationSCP scp(name, 1, 1, presentationContexts, readSCP, writeSCP, 0, 10);
 
         DimseService dimseService(scp);
 
@@ -132,7 +132,7 @@ void getScpThread(
 {
     try
     {
-        AssociationSCP scp(name, 1, 1, presentationContexts, readSCP, writeSCP, 0);
+        AssociationSCP scp(name, 1, 1, presentationContexts, readSCP, writeSCP, 0, 10);
 
         DimseService dimseService(scp);
 
@@ -274,7 +274,7 @@ void moveScpThread(
 {
     try
     {
-        AssociationSCP scp(name, 1, 1, presentationContexts, readSCP, writeSCP, 0);
+        AssociationSCP scp(name, 1, 1, presentationContexts, readSCP, writeSCP, 0, 10);
 
         DimseService dimseService(scp);
 
@@ -383,7 +383,7 @@ void findScpThread(
 {
     try
     {
-        AssociationSCP scp(name, 1, 1, presentationContexts, readSCP, writeSCP, 0);
+        AssociationSCP scp(name, 1, 1, presentationContexts, readSCP, writeSCP, 0, 10);
 
         DimseService dimseService(scp);
 
@@ -501,7 +501,7 @@ void echoScpThread(
 {
     try
     {
-        AssociationSCP scp(name, 1, 1, presentationContexts, readSCP, writeSCP, 0);
+        AssociationSCP scp(name, 1, 1, presentationContexts, readSCP, writeSCP, 0, 10);
 
         DimseService dimseService(scp);
 
@@ -585,7 +585,7 @@ void cancelScpThread(
 {
     try
     {
-        AssociationSCP scp(name, 1, 1, presentationContexts, readSCP, writeSCP, 0);
+        AssociationSCP scp(name, 1, 1, presentationContexts, readSCP, writeSCP, 0, 10);
 
         DimseService dimseService(scp);
 
@@ -690,7 +690,7 @@ void neventReportScpThread(
 {
     try
     {
-        AssociationSCP scp(name, 1, 1, presentationContexts, readSCP, writeSCP, 0);
+        AssociationSCP scp(name, 1, 1, presentationContexts, readSCP, writeSCP, 0, 10);
 
         DimseService dimseService(scp);
 
@@ -783,7 +783,7 @@ void ngetScpThread(
 {
     try
     {
-        AssociationSCP scp(name, 1, 1, presentationContexts, readSCP, writeSCP, 0);
+        AssociationSCP scp(name, 1, 1, presentationContexts, readSCP, writeSCP, 0, 10);
 
         DimseService dimseService(scp);
 
@@ -883,7 +883,7 @@ void nsetScpThread(
 {
     try
     {
-        AssociationSCP scp(name, 1, 1, presentationContexts, readSCP, writeSCP, 0);
+        AssociationSCP scp(name, 1, 1, presentationContexts, readSCP, writeSCP, 0, 10);
 
         DimseService dimseService(scp);
 
@@ -985,7 +985,7 @@ void nActionScpThread(
 {
     try
     {
-        AssociationSCP scp(name, 1, 1, presentationContexts, readSCP, writeSCP, 0);
+        AssociationSCP scp(name, 1, 1, presentationContexts, readSCP, writeSCP, 0, 10);
 
         DimseService dimseService(scp);
 
@@ -1087,7 +1087,7 @@ void nCreateScpThread(
 {
     try
     {
-        AssociationSCP scp(name, 1, 1, presentationContexts, readSCP, writeSCP, 0);
+        AssociationSCP scp(name, 1, 1, presentationContexts, readSCP, writeSCP, 0, 10);
 
         DimseService dimseService(scp);
 
@@ -1185,7 +1185,7 @@ void nDeleteScpThread(
 {
     try
     {
-        AssociationSCP scp(name, 1, 1, presentationContexts, readSCP, writeSCP, 0);
+        AssociationSCP scp(name, 1, 1, presentationContexts, readSCP, writeSCP, 0, 10);
 
         DimseService dimseService(scp);
 
@@ -1253,6 +1253,74 @@ TEST(dimseTest, nDeleteSCUSCP)
 }
 
 
+///////////////////////////////////////////////////////////
+//
+// A DIMSE SCP that will timeout after 10 seconds
+//
+///////////////////////////////////////////////////////////
+void timeoutScpThread(
+        const std::string& name,
+        PresentationContexts& presentationContexts,
+        StreamReader& readSCP,
+        StreamWriter& writeSCP)
+{
+    try
+    {
+        AssociationSCP scp(name, 1, 1, presentationContexts, readSCP, writeSCP, 10, 10);
+
+        DimseService dimseService(scp);
+
+        for(;;)
+        {
+            dimseService.getCommand();
+        }
+    }
+    catch(const StreamClosedError&)
+    {
+
+    }
+}
+
+
+TEST(dimseTest, dimseTimeoutTest)
+{
+    Pipe toSCU(1024), toSCP(1024);
+
+    StreamReader readSCU(toSCU);
+    StreamWriter writeSCU(toSCP);
+
+    StreamReader readSCP(toSCP);
+    StreamWriter writeSCP(toSCU);
+
+    PresentationContext context("1.2.840.10008.5.1.4.34.6.4");
+    context.addTransferSyntax("1.2.840.10008.1.2.1"); // explicit VR little endian
+    PresentationContexts presentationContexts;
+    presentationContexts.addPresentationContext(context);
+
+    const std::string scpName("SCP");
+
+    std::thread thread(
+                imebra::tests::timeoutScpThread,
+                std::ref(scpName),
+                std::ref(presentationContexts),
+                std::ref(readSCP),
+                std::ref(writeSCP));
+
+    AssociationSCU scu("SCU", scpName, 1, 1, presentationContexts, readSCU, writeSCU, 0);
+
+    try
+    {
+        scu.getCommand();
+        EXPECT_TRUE(false);
+    }
+    catch(const StreamClosedError& e)
+    {
+
+    }
+
+    thread.join();
+
+}
 
 
 
@@ -1429,7 +1497,7 @@ TEST(dimseTest, storeSCPInteroperabilityTest)
     PresentationContexts presentationContexts;
     presentationContexts.addPresentationContext(context);
 
-    AssociationSCP scp("SCP", 1, 1, presentationContexts, readSCU, writeSCU, 0);
+    AssociationSCP scp("SCP", 1, 1, presentationContexts, readSCU, writeSCU, 0, 10);
 
     DimseService dimse(scp);
 
@@ -1479,7 +1547,7 @@ TEST(dimseTest, moveSCPInteroperabilityTest)
         PresentationContexts presentationContexts;
         presentationContexts.addPresentationContext(context);
 
-        AssociationSCP scp("SCP", 1, 1, presentationContexts, readSCP, writeSCP, 0);
+        AssociationSCP scp("SCP", 1, 1, presentationContexts, readSCP, writeSCP, 0, 10);
         DimseService dimse(scp);
 
         std::unique_ptr<CMoveCommand> pMove(dynamic_cast<CMoveCommand*>(dimse.getCommand()));
@@ -1550,7 +1618,7 @@ TEST(dimseTest, findSCPInteroperabilityTest)
         PresentationContexts presentationContexts;
         presentationContexts.addPresentationContext(context);
 
-        AssociationSCP scp("SCP", 1, 1, presentationContexts, readSCP, writeSCP, 0);
+        AssociationSCP scp("SCP", 1, 1, presentationContexts, readSCP, writeSCP, 0, 10);
         DimseService dimse(scp);
 
         std::unique_ptr<CFindCommand> pFind(dynamic_cast<CFindCommand*>(dimse.getCommand()));

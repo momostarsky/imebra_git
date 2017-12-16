@@ -14,7 +14,7 @@ void scpThread(const std::string& name, PresentationContexts& presentationContex
 {
     try
     {
-        AssociationSCP scp(name, 1, 1, presentationContexts, readSCP, writeSCP, 0);
+        AssociationSCP scp(name, 1, 1, presentationContexts, readSCP, writeSCP, 0, 10);
 
         for(;;)
         {
@@ -67,7 +67,7 @@ void scpThreadMultipleOperations(const std::string& name, PresentationContexts& 
 {
     try
     {
-        AssociationSCP scp(name, 1, maxPerformed, presentationContexts, readSCP, writeSCP, 0);
+        AssociationSCP scp(name, 1, maxPerformed, presentationContexts, readSCP, writeSCP, 0, 10);
 
         for(;;)
         {
@@ -107,7 +107,7 @@ void scpThreadRejectCalledAET(const std::string& name, PresentationContexts& pre
 {
     try
     {
-        AssociationSCP scp(name, 1, 1, presentationContexts, readSCP, writeSCP, 0);
+        AssociationSCP scp(name, 1, 1, presentationContexts, readSCP, writeSCP, 0, 10);
 
         for(;;)
         {
@@ -125,7 +125,7 @@ void scpThreadDontAnswer(const std::string& name, PresentationContexts& presenta
 {
     try
     {
-        AssociationSCP scp(name, 1, 1, presentationContexts, readSCP, writeSCP, 0);
+        AssociationSCP scp(name, 1, 1, presentationContexts, readSCP, writeSCP, 0, 10);
 
         for(;;)
         {
@@ -881,6 +881,34 @@ TEST(acseTest, invokeTooManyOperations)
     }
 
     scp.join();
+}
+
+
+TEST(acseTest, artimTest)
+{
+    Pipe toSCU(1024), toSCP(1024);
+
+    StreamReader readSCP(toSCP);
+    StreamWriter writeSCP(toSCU);
+
+    PresentationContext scuContext("1.2.840.10008.1.1");
+    scuContext.addTransferSyntax("1.2.840.10008.1.2"); // implicit VR little endian
+
+    PresentationContexts presentationContexts;
+    presentationContexts.addPresentationContext(scuContext);
+
+    const std::string scpName("SCP");
+
+    try
+    {
+        AssociationSCP scp("SCP", 1, 1, presentationContexts, readSCP, writeSCP, 0, 10);
+        EXPECT_TRUE(false);
+    }
+    catch(const StreamClosedError&)
+    {
+
+    }
+
 }
 
 
