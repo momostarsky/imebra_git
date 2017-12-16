@@ -18,6 +18,11 @@ BaseStreamOutput
 .. doxygenclass:: imebra::BaseStreamOutput
    :members:
 
+StreamTimeout
+-------------
+.. doxygenclass:: imebra::StreamTimeout
+   :members:
+
 CodecFactory
 ------------
 .. doxygenclass:: imebra::CodecFactory

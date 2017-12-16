@@ -30,4 +30,14 @@ BaseStreamInput::~BaseStreamInput()
 {
 }
 
+
+StreamTimeout::StreamTimeout(BaseStreamInput& stream, std::uint32_t timeoutSeconds):
+    m_pStreamTimeout(std::make_shared<implementation::streamTimeout>(stream.m_pInputStream, std::chrono::seconds(timeoutSeconds)))
+{
+}
+
+StreamTimeout::~StreamTimeout()
+{
+}
+
 }

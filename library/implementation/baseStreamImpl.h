@@ -25,7 +25,10 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <vector>
 #include <map>
 #include <stdexcept>
-
+#include <atomic>
+#include <mutex>
+#include <thread>
+#include <condition_variable>
 
 namespace imebra
 {
@@ -112,6 +115,16 @@ public:
 };
 
 
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+/// \brief This class represents an output stream.
+///
+/// Specialized classes derived from this class can
+///  write to files stored on the computer's disks, on the
+///  network or to memory.
+///
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
 class baseStreamOutput
 {
 
@@ -135,6 +148,57 @@ public:
     virtual void write(size_t startPosition, const std::uint8_t* pBuffer, size_t bufferLength) = 0;
 
 };
+
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+///
+/// \brief This class calls baseStreamInput::terminate
+///        if the destructor is not called before the
+///        specified timeout.
+///
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+class streamTimeout
+{
+public:
+    ///
+    /// \brief Constructor.
+    ///
+    /// Will launch a separate thread that will call
+    /// baseStreamInput::terminate on the specified stream if
+    /// this class is not destructed before the timeout
+    /// occurs.
+    ///
+    /// \param pStream         stream on which terminate
+    ///                        has to be called
+    /// \param timeoutDuration time after which terminate
+    ///                        must be called
+    ///
+    ///////////////////////////////////////////////////////////
+    streamTimeout(std::shared_ptr<baseStreamInput> pStream, std::chrono::seconds timeoutDuration);
+
+    ///
+    /// \brief Destructor. Cancel the thread that will call
+    ///        terminate() after the timeout.
+    ///
+    ///////////////////////////////////////////////////////////
+    ~streamTimeout();
+
+private:
+    void waitTimeout(std::shared_ptr<baseStreamInput> pStream, std::chrono::seconds timeoutDuration);
+
+    std::atomic<bool> m_bExitTimeout;
+
+    std::mutex m_lockFlag;
+
+    std::condition_variable m_flagCondition;
+
+    std::thread m_waitTimeoutThread;
+
+};
+
+
 
 } // namespace implementation
 

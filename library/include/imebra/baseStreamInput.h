@@ -28,6 +28,7 @@ namespace imebra
 namespace implementation
 {
     class baseStreamInput;
+    class streamTimeout;
 }
 }
 
@@ -62,6 +63,7 @@ class IMEBRA_API BaseStreamInput
     friend class FileStreamInput;
     friend class MemoryStreamInput;
     friend class Pipe;
+    friend class StreamTimeout;
 
 private:
     /// \brief Construct a BaseStreamInput object from an implementation object.
@@ -81,6 +83,41 @@ public:
 #ifndef SWIG
 protected:
     std::shared_ptr<implementation::baseStreamInput> m_pInputStream;
+#endif
+};
+
+
+///
+/// \brief Triggers a timeout on a selected stream if the class is not
+///        deallocated within the specified amount of time.
+///
+///////////////////////////////////////////////////////////////////////////////
+class IMEBRA_API StreamTimeout
+{
+public:
+    ///
+    /// \brief Constructor. Starts a separate thread that closes the stream in
+    ///        the parameter if this class destructor is not called before the
+    ///        timeout expires.
+    ///
+    /// \param stream         stream that must be closed when the timeout
+    ///                       expires
+    /// \param timeoutSeconds timeout in milliseconds
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    StreamTimeout(BaseStreamInput& stream, std::uint32_t timeoutSeconds);
+
+    ///
+    /// \brief Destructor. If the timeout has not yet expired then terminates the
+    ///        thread that closes the stream, preventing it from closing the
+    ///        stream.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    ~StreamTimeout();
+
+#ifndef SWIG
+protected:
+    std::shared_ptr<implementation::streamTimeout> m_pStreamTimeout;
 #endif
 };
 
