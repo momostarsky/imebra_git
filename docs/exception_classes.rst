@@ -496,3 +496,13 @@ AcseNoPayloadError
 .. doxygenclass:: imebra::AcseNoPayloadError
    :members:
 
+DimseError
+----------
+.. doxygenclass:: imebra::DimseError
+   :members:
+
+DimseInvalidCommand
+-------------------
+.. doxygenclass:: imebra::DimseInvalidCommand
+   :members:
+
