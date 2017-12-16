@@ -160,7 +160,7 @@ long throwTcpException(long socketOperationResult)
         IMEBRA_THROW(TCPAddressAlreadyInUse, "The specified address is already in use.")
     }
 #endif
-    throw std::runtime_error("Unexpected TCP error");
+    IMEBRA_THROW(StreamError, "Unexpected TCP error");
 
     IMEBRA_FUNCTION_END();
 }
@@ -454,7 +454,7 @@ void tcpBaseSocket::isTerminating()
 
     if(m_bTerminate.load())
     {
-        throw StreamClosedError("The socket has been closed");
+        IMEBRA_THROW(StreamClosedError, "The socket has been closed");
     }
 
     IMEBRA_FUNCTION_END();

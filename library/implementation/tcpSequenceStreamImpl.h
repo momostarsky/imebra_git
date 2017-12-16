@@ -95,9 +95,6 @@ public:
     int getProtocol() const;
 
 private:
-#ifdef IMEBRA_WINDOWS
-    initWinsock m_initWinsock;
-#endif
     std::string m_node;
     std::string m_service;
     std::vector<std::uint8_t> m_sockAddr;
@@ -232,10 +229,8 @@ public:
     std::shared_ptr<tcpAddress> getPeerAddress() const;
 
     virtual void terminate() override;
+
 private:
-#ifdef IMEBRA_WINDOWS
-    initWinsock m_initWinsock;
-#endif
 
     const std::shared_ptr<tcpAddress> m_pAddress;
 };
@@ -276,11 +271,6 @@ public:
     ///
     ///////////////////////////////////////////////////////////
     std::shared_ptr<tcpSequenceStream> waitForConnection();
-
-private:
-#ifdef IMEBRA_WINDOWS
-    initWinsock m_initWinsock;
-#endif
 
 };
 

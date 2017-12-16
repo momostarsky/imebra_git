@@ -60,6 +60,8 @@ pipeSequenceStream::~pipeSequenceStream()
 ///////////////////////////////////////////////////////////
 size_t pipeSequenceStream::read(std::uint8_t* pBuffer, size_t bufferLength)
 {
+    IMEBRA_FUNCTION_START();
+
     std::unique_lock<std::mutex> lock(m_positionMutex);
 
     // Execute until termination or some data has been read
@@ -68,7 +70,7 @@ size_t pipeSequenceStream::read(std::uint8_t* pBuffer, size_t bufferLength)
     {
         if(m_bTerminate.load())
         {
-            throw StreamClosedError("The pipe has been closed");
+            IMEBRA_THROW(StreamClosedError, "The pipe has been closed");
         }
         if(m_availableData != 0)
         {
@@ -98,6 +100,8 @@ size_t pipeSequenceStream::read(std::uint8_t* pBuffer, size_t bufferLength)
 
         m_positionConditionVariable.wait_for(lock, std::chrono::milliseconds(IMEBRA_PIPE_TIMEOUT_MS));
     }
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -107,6 +111,8 @@ size_t pipeSequenceStream::read(std::uint8_t* pBuffer, size_t bufferLength)
 ///////////////////////////////////////////////////////////
 void pipeSequenceStream::write(const std::uint8_t* pBuffer, size_t bufferLength)
 {
+    IMEBRA_FUNCTION_START();
+
     std::unique_lock<std::mutex> lock(m_positionMutex);
 
     const std::uint8_t* pWriteData(pBuffer);
@@ -118,7 +124,7 @@ void pipeSequenceStream::write(const std::uint8_t* pBuffer, size_t bufferLength)
     {
         if(m_bTerminate.load())
         {
-            throw StreamClosedError("The pipe has been closed");
+            IMEBRA_THROW(StreamClosedError, "The pipe has been closed");
         }
 
         while(remainingData != 0 && m_availableData != m_pMemory->size())
@@ -154,6 +160,8 @@ void pipeSequenceStream::write(const std::uint8_t* pBuffer, size_t bufferLength)
             m_positionConditionVariable.wait_for(lock, std::chrono::milliseconds(IMEBRA_PIPE_TIMEOUT_MS));
         }
     }
+
+    IMEBRA_FUNCTION_END();
 }
 
 

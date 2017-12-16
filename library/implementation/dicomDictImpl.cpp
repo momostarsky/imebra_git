@@ -143,7 +143,7 @@ void dicomDictionary::registerVR(tagVR_t vr, bool bLongLength, std::uint32_t wor
 
 	if(m_vrDict.find(vr) != m_vrDict.end())
 	{
-        throw std::logic_error("VR registered twice");
+        IMEBRA_THROW(std::logic_error, "VR registered twice");
 	}
 	validDataTypesStruct newElement;
 	newElement.m_longLength = bLongLength;
