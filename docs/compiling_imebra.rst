@@ -35,14 +35,14 @@ In order to build the library from the Imebra Source Distribution you need:
 Building Imebra
 ...............
 
-The library folder contains a CMakeLists file, which contains the information needed by
-CMake to generate a solution file for your platform (a make file, a VisualStudio solution, etc).
+The root folder of the source distributions contains a CMakeLists file, which contains the information
+needed by CMake to generate a solution file for your platform (a make file, a VisualStudio solution, etc).
 
 To generate the Imebra shared library, execute the following steps:
 
 1. Create a folder that will contain the result of the compilation (artifacts)
 2. cd into the created artifacts folder
-3. execute cmake with the path to the Imebra's library folder as parameter
+3. execute cmake with the path to the Imebra's distributrion root folder as parameter
 4. execute cmake with the --build option, and on Windows optionally specify the build configuration
 
 For instance:
@@ -51,7 +51,7 @@ For instance:
 
     md artifacts
     cd artifacts
-    cmake imebra_location/library
+    cmake imebra_location
     cmake --build .
 
 The first CMake command will generate a solution file for the your platform: this will be a 
@@ -86,7 +86,7 @@ For instance, the complete sequence of commands to build imebra with support for
 
     md artifacts
     cd artifacts
-    cmake DJPEG2000=1 imebra_location/library
+    cmake DJPEG2000=1 imebra_location
     cmake --build .
 
 
@@ -123,7 +123,7 @@ For instance the following script will compile a Release 64 bit version of imebr
 
     mkdir artifacts_64bit_release
     cd artifacts_64bit_release
-    cmake -G "Visual Studio 14 2015 Win64" imebra_location/library
+    cmake -G "Visual Studio 14 2015 Win64" imebra_location
     cmake --build . --config Release
 
 The following example will compile a Debug 64 bit version of imebra using Visual Studio 14 (2015):
@@ -132,7 +132,7 @@ The following example will compile a Debug 64 bit version of imebra using Visual
 
     mkdir artifacts_64bit_debug
     cd artifacts_64bit_debug
-    cmake -G "Visual Studio 14 2015 Win64" imebra_location/library
+    cmake -G "Visual Studio 14 2015 Win64" imebra_location
     cmake --build . --config Debug
 
 To generate the 32 bit version of the library, just omit the architecture after the name of the cmake generator:
@@ -141,7 +141,7 @@ To generate the 32 bit version of the library, just omit the architecture after 
 
     mkdir artifacts_32bit_debug
     cd artifacts_32bit_debug
-    cmake -G "Visual Studio 14 2015" imebra_location/library
+    cmake -G "Visual Studio 14 2015" imebra_location
     cmake --build . --config Debug
 
 
@@ -166,7 +166,7 @@ To generate a library for OS-X, type the following (replace imebra_location with
 
     mkdir imebra_for_osx
     cd imebra_for_osx
-    cmake imebra_location/library
+    cmake imebra_location
     cmake --build .
 
 To generate a library for iPhone, type the following (replace imebra_location with the path to Imebra):
@@ -175,7 +175,7 @@ To generate a library for iPhone, type the following (replace imebra_location wi
 
     mkdir imebra_for_ios
     cd imebra_for_ios
-    cmake imebra_location/library -DIOS=IPHONE
+    cmake imebra_location -DIOS=IPHONE
     cmake --build .
 
 .. seealso:: iOS applications based on Imebra need to be linked also with libiconv.a or libiconv.tbd.
@@ -186,7 +186,7 @@ To generate a library for the iPhone simulator, type the following (replace imeb
 
     mkdir imebra_for_ios
     cd imebra_for_ios
-    cmake imebra_location/library -DIOS=SIMULATOR
+    cmake imebra_location -DIOS=SIMULATOR
     cmake --build .
 
 .. seealso:: iOS applications based on Imebra need to be linked also with libiconv.a or libiconv.tbd.
@@ -197,7 +197,7 @@ To generate a project that can be opened with XCode append the argument -G xcode
 
     mkdir xcode_project
     cd xcode_project
-    cmake imebra_location/library -G xcode
+    cmake imebra_location -G xcode
 
 
 Compiling the Android version of Imebra
@@ -281,23 +281,8 @@ In order to build and execute the tests you need:
 Building the tests
 ..................
 
-To compile te tests, execute the following steps:
+The same CMakeLists.txt file used to build the Imebra library builds the test if it finds the GTest framework.
 
-1. create a folder that will contain the test units executable
-2. cd into the created folder
-3. run cmake with the path to the tests/CMakeLists.txt as a parameter. You can also define the
-   CMake variables imebra_library, gtest_library and gtest_include with the path to the
-   imebra library, gtest library and gtest include folder respectively
-4. run cmake --build .
-
-For instance:
-
-::
-
-    md tests_artifacts
-    cd tests_artifacts
-    cmake -Dimebra_library="path/to/imebra/library" -Dgtest_library="path/to/gtest/library" -Dgtest_include="path/to/gtest/include" imebra_location/tests
-    cmake --build .
 
 
 
