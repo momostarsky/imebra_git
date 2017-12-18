@@ -935,8 +935,32 @@ public:
 
     const tTags& getGroupTags(std::uint16_t groupId, size_t groupOrder) const;
 
+    ///
+    /// \brief Update the charsets list in the parameter with
+    ///        the list of used charsets.
+    ///
+    /// \param pCharsetsList list to which the used charsets
+    ///                      are added
+    ///
+    ///////////////////////////////////////////////////////////
     void getCharsetsList(charsetsList::tCharsetsList* pCharsetsList) const;
+
+    ///
+    /// \brief Set the dataset's list of charsets to use.
+    ///
+    /// \param charsetsList list of charsets
+    ///
+    ///////////////////////////////////////////////////////////
     void setCharsetsList(const charsetsList::tCharsetsList& charsetsList);
+
+    ///
+    /// \brief Set the dataset's and its children list of
+    ///        charsets to use.
+    ///
+    /// \param charsetsList list of charsets
+    ///
+    ///////////////////////////////////////////////////////////
+    void setChildrenCharsetsList(const charsetsList::tCharsetsList& charsetsList);
 
 private:
     /// \brief Get a frame's offset from the offset table.
