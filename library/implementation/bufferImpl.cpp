@@ -647,6 +647,7 @@ void buffer::commit(std::shared_ptr<memory> newMemory)
     m_memory.clear();
     m_memory.push_back(newMemory);
     m_originalStream.reset();
+    m_charsetsList.clear();
 
     IMEBRA_FUNCTION_END();
 }

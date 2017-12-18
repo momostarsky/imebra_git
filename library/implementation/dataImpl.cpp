@@ -437,7 +437,7 @@ void data::setCharsetsList(const charsetsList::tCharsetsList& charsetsList)
 
 	for(tEmbeddedDatasetsMap::iterator scanEmbeddedDataSets = m_embeddedDataSets.begin(); scanEmbeddedDataSets != m_embeddedDataSets.end(); ++scanEmbeddedDataSets)
 	{
-        (*scanEmbeddedDataSets)->setCharsetsList(charsetsList);
+        (*scanEmbeddedDataSets)->setChildrenCharsetsList(charsetsList);
 	}
 
 	for(tBuffersMap::iterator scanBuffers = m_buffers.begin(); scanBuffers != m_buffers.end(); ++scanBuffers)

@@ -10,6 +10,7 @@ Version |release| (this version)
 - Implemented enhancement #199 (Specify that on OS-X and iOS the iconv library must be explicitly linked when using a static Imebra library) as
   per SOP :ref:`DEVENH_2`
 - Fixed bug #201 (The build system fails to upload the artifacts to dropbox) as per SOP :ref:`FIXBUG_2`
+- Fixed bug #202 (The Specific Charset Tag is populated even when not necessary) as per SOP :ref:`FIXBUG_2`
 
 Version 4.0.12.1
 ----------------
