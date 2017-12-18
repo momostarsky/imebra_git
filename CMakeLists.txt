@@ -71,15 +71,20 @@ if(APPLE)
     endif(IOS)
 endif(APPLE)
 
+##############################################
+#
+# LIBRARY
+#
+##############################################
 add_definitions(-DIMEBRA_DLL)
 add_definitions(-DIMEBRA_DLL_EXPORTS)
 add_definitions(-DNOMINMAX)
 
-file(GLOB imebra_interface "${CMAKE_CURRENT_SOURCE_DIR}/include/imebra/*.h")
-file(GLOB imebra_include "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h")
-file(GLOB imebra_src "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
-file(GLOB imebra_implementation_src "${CMAKE_CURRENT_SOURCE_DIR}/implementation/*.cpp")
-file(GLOB imebra_implementation_include "${CMAKE_CURRENT_SOURCE_DIR}/implementation/*.h")
+file(GLOB imebra_interface "${CMAKE_CURRENT_SOURCE_DIR}/library/include/imebra/*.h")
+file(GLOB imebra_include "${CMAKE_CURRENT_SOURCE_DIR}/library/src/*.h")
+file(GLOB imebra_src "${CMAKE_CURRENT_SOURCE_DIR}/library/src/*.cpp")
+file(GLOB imebra_implementation_src "${CMAKE_CURRENT_SOURCE_DIR}/library/implementation/*.cpp")
+file(GLOB imebra_implementation_include "${CMAKE_CURRENT_SOURCE_DIR}/library/implementation/*.h")
 
 if(NOT "${ADDITIONAL_LIB_PATH}" STREQUAL "")
     link_directories(${LINK_DIRECTORIES} ${ADDITIONAL_LIB_PATH})
@@ -90,8 +95,8 @@ endif(NOT "${ADDITIONAL_LIB_PATH}" STREQUAL "")
 set(imebra_obj_src "")
 set(imebra_obj_include "")
 if("${IMEBRA_OBJC}" STREQUAL "1")
-    file(GLOB imebra_objc_src "${CMAKE_CURRENT_SOURCE_DIR}/objectivec/*.mm")
-    file(GLOB imebra_objc_include "${CMAKE_CURRENT_SOURCE_DIR}/include/imebra/objectivec/*.h")
+    file(GLOB imebra_objc_src "${CMAKE_CURRENT_SOURCE_DIR}/library/objectivec/*.mm")
+    file(GLOB imebra_objc_include "${CMAKE_CURRENT_SOURCE_DIR}/library/include/imebra/objectivec/*.h")
 endif("${IMEBRA_OBJC}" STREQUAL "1")
 
 # Add jpeg2000 if specified
@@ -138,10 +143,6 @@ if("${IMEBRA_OBJC}" STREQUAL "1")
     endif(APPLE)
 endif("${IMEBRA_OBJC}" STREQUAL "1")
 
-target_link_libraries(imebra ${IMEBRA_LIBRARIES})
-
-target_include_directories(imebra PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
-
 # Add flags specific to the compiler
 #-----------------------------------
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
@@ -170,8 +171,13 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 
 endif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 
+# Define dependency libraries
+#----------------------------
+target_link_libraries(imebra ${IMEBRA_LIBRARIES})
 
-
+# Define Imebra public folder
+#----------------------------
+target_include_directories(imebra PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/library/include)
 
 # Set the library version from IMEBRA_MAJOR_VERSION, IMEBRA_MINOR_VERSION,
 #  & IMEBRA_REVISION
@@ -199,13 +205,76 @@ set(IMEBRA_VERSION "${IMEBRA_MAJOR_VERSION}.${IMEBRA_MINOR_VERSION}.${IMEBRA_REV
 set_target_properties(imebra PROPERTIES VERSION ${IMEBRA_VERSION}
                                           SOVERSION ${IMEBRA_MAJOR_VERSION})
 
+
+##############################################
+#
+# TESTS
+#
+##############################################
+
+find_package(GTest)
+if(${GTEST_FOUND})
+    find_package(DCMTK)
+    if(${DCMTK_FOUND})
+        message(STATUS "DCMTK found. Interoperability tests enabled")
+    else(${DCMTK_FOUND})
+        add_definitions(-DDISABLE_DIMSE_INTEROPERABILITY_TEST)
+        message(WARNING "WARNING: DCMTK not found. Disabling interoperability tests")
+    endif(${DCMTK_FOUND})
+
+    file(GLOB imebra_tests_include "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.h")
+    file(GLOB imebra_tests_src "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.cpp")
+
+    set(imebra_tests_objc_src "")
+    if("${IMEBRA_OBJC}" STREQUAL "1")
+        file(GLOB imebra_tests_objc_src "${CMAKE_CURRENT_SOURCE_DIR}/tests/objectivec/*.mm")
+    endif("${IMEBRA_OBJC}" STREQUAL "1")
+
+    if("${gtest_include}" STREQUAL "")
+        set(gtest_include ".")
+    endif("${gtest_include}" STREQUAL "")
+
+    include_directories(${gtest_include})
+    if("${IMEBRA_OBJC}" STREQUAL "1")
+        if(APPLE)
+            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -framework Foundation -framework CoreServices")
+            if(IOS)
+                set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -framework UIKit")
+            else(IOS)
+                set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -framework AppKit")
+            endif(IOS)
+        else(APPLE)
+            include_directories("/usr/include/GNUstep")
+            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fconstant-string-class=NSConstantString")
+            set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} gnustep-base objc)
+        endif(APPLE)
+    endif("${IMEBRA_OBJC}" STREQUAL "1")
+
+    add_executable(ImebraTests
+        ${imebra_tests_include}
+        ${imebra_tests_src}
+        ${imebra_tests_objc_src}
+    )
+
+    target_link_libraries(ImebraTests imebra ${GTEST_LIBRARIES})
+else(${GTEST_FOUND})
+    message(WARNING "WARNING: GTEST not found. Skipping tests")
+endif(${GTEST_FOUND})
+
+
+##############################################
+#
+# PACKAGING
+#
+##############################################
+
 # Set packaging variables
 #------------------------
 set(CPACK_PACKAGE_NAME "libimebra${IMEBRA_MAJOR_VERSION}")
 set(CPACK_PACKAGE_CONTACT "paolo@binarno.com")
 set(CPACK_PACKAGE_VERSION ${IMEBRA_VERSION})
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Imebra library for DICOM medical files")
-set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/../readme.rst")
+set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/readme.rst")
 
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "libc6")
 set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "https://imebra.com")
