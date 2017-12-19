@@ -211,75 +211,101 @@ set_target_properties(imebra PROPERTIES VERSION ${IMEBRA_VERSION}
 # TESTS
 #
 ##############################################
+if(NOT IOS)
 
-# We need thread support
-find_package(Threads REQUIRED)
+    # We need thread support
+    find_package(Threads REQUIRED)
 
-# Enable ExternalProject CMake module
-include(ExternalProject)
+    # Enable ExternalProject CMake module
+    include(ExternalProject)
 
-# Download and install GoogleTest
-ExternalProject_Add(
-    gtest
-    URL https://github.com/google/googletest/archive/release-1.7.0.zip
-	CMAKE_ARGS "-Dgtest_force_shared_crt=ON"
-    PREFIX ${CMAKE_CURRENT_BINARY_DIR}/gtest
-	INSTALL_COMMAND ""
-)
+    # Download and install GoogleTest
+    ExternalProject_Add(
+        gtest
+        URL https://github.com/google/googletest/archive/release-1.7.0.zip
+            CMAKE_ARGS "-Dgtest_force_shared_crt=ON"
+        PREFIX ${CMAKE_CURRENT_BINARY_DIR}/gtest
+            INSTALL_COMMAND ""
+    )
 
-# Get GTest source and binary directories from CMake project
-ExternalProject_Get_Property(gtest source_dir binary_dir)
+    # Get GTest source and binary directories from CMake project
+    ExternalProject_Get_Property(gtest source_dir binary_dir)
 
-# Create a libgtest target to be used as a dependency by test programs
-add_library(libgtest IMPORTED STATIC GLOBAL)
-add_dependencies(libgtest gtest)
+    # Create a libgtest target to be used as a dependency by test programs
+    add_library(libgtest IMPORTED STATIC GLOBAL)
+    add_dependencies(libgtest gtest)
 
 
-# Set libgtest properties
-set_target_properties(libgtest PROPERTIES
-    "IMPORTED_LOCATION" "${binary_dir}/libgtest.so"
-    "IMPORTED_LOCATION_DEBUG" "${binary_dir}/Debug/gtest.lib"
-    "IMPORTED_LOCATION_RELEASE" "${binary_dir}/Release/gtest.lib"
-    "IMPORTED_LINK_INTERFACE_LIBRARIES" "${CMAKE_THREAD_LIBS_INIT}"
-)
+    # Set libgtest properties
+    if(APPLE)
+    set_target_properties(libgtest PROPERTIES
+        "IMPORTED_LOCATION" "${binary_dir}/libgtest.a"
+        "IMPORTED_LOCATION_DEBUG" "${binary_dir}/Debug/libgtest.a"
+        "IMPORTED_LOCATION_RELEASE" "${binary_dir}/Release/libgtest.a"
+        "IMPORTED_LINK_INTERFACE_LIBRARIES" "${CMAKE_THREAD_LIBS_INIT}"
+    )
+    elseif(MSVC)
+    set_target_properties(libgtest PROPERTIES
+        "IMPORTED_LOCATION" "${binary_dir}/gtest.lib"
+        "IMPORTED_LOCATION_DEBUG" "${binary_dir}/Debug/gtest.lib"
+        "IMPORTED_LOCATION_RELEASE" "${binary_dir}/Release/gtest.lib"
+        "IMPORTED_LINK_INTERFACE_LIBRARIES" "${CMAKE_THREAD_LIBS_INIT}"
+    )
+    else(APPLE)
+    set_target_properties(libgtest PROPERTIES
+        "IMPORTED_LOCATION" "${binary_dir}/libgtest.a"
+        "IMPORTED_LINK_INTERFACE_LIBRARIES" "${CMAKE_THREAD_LIBS_INIT}"
+    )
+    endif(APPLE OR MSVC)
 
-# Find DCMTK for interoperability tests.
-find_package(DCMTK)
-if(${DCMTK_FOUND})
-	message(STATUS "DCMTK found. Interoperability tests enabled")
-else(${DCMTK_FOUND})
-	add_definitions(-DDISABLE_DIMSE_INTEROPERABILITY_TEST)
-	message(WARNING "WARNING: DCMTK not found. Disabling interoperability tests")
-endif(${DCMTK_FOUND})
+    # Find DCMTK for interoperability tests.
+    find_package(DCMTK)
+    if(${DCMTK_FOUND})
+            message(STATUS "DCMTK found. Interoperability tests enabled")
+    else(${DCMTK_FOUND})
+            add_definitions(-DDISABLE_DIMSE_INTEROPERABILITY_TEST)
+            message(WARNING "WARNING: DCMTK not found. Disabling interoperability tests")
+    endif(${DCMTK_FOUND})
 
-file(GLOB imebra_tests_include "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.h")
-file(GLOB imebra_tests_src "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.cpp")
+    file(GLOB imebra_tests_include "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.h")
+    file(GLOB imebra_tests_src "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.cpp")
 
-set(imebra_tests_objc_src "")
+    set(imebra_tests_objc_src "")
 
-if("${IMEBRA_OBJC}" STREQUAL "1")
-	if(APPLE)
-		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -framework Foundation -framework CoreServices")
-		if(IOS)
-			set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -framework UIKit")
-		else(IOS)
-			set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -framework AppKit")
-		endif(IOS)
-	else(APPLE)
-		include_directories("/usr/include/GNUstep")
-		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fconstant-string-class=NSConstantString")
-		set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} gnustep-base objc)
-	endif(APPLE)
-endif("${IMEBRA_OBJC}" STREQUAL "1")
+    if("${IMEBRA_OBJC}" STREQUAL "1")
+            if(APPLE)
+                    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -framework Foundation -framework CoreServices")
+                    if(IOS)
+                            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -framework UIKit")
+                    else(IOS)
+                            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -framework AppKit")
+                    endif(IOS)
+            else(APPLE)
+                    include_directories("/usr/include/GNUstep")
+                    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fconstant-string-class=NSConstantString")
+                    set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} gnustep-base objc)
+            endif(APPLE)
+    endif("${IMEBRA_OBJC}" STREQUAL "1")
 
-add_executable(ImebraTests
-	${imebra_tests_include}
-	${imebra_tests_src}
-	${imebra_tests_objc_src}
-)
-target_include_directories(ImebraTests PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/gtest/src/gtest/include)
-target_link_libraries(ImebraTests imebra libgtest)
+    add_executable(ImebraTests
+            ${imebra_tests_include}
+            ${imebra_tests_src}
+            ${imebra_tests_objc_src}
+    )
+    target_include_directories(ImebraTests PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/gtest/src/gtest/include)
+    target_link_libraries(ImebraTests imebra libgtest)
 
+
+    ##############################################
+    #
+    # RUN TESTS
+    #
+    ##############################################
+    enable_testing()
+
+    add_test(RunImebraTests ImebraTests --corruptedFilesFolder=${CMAKE_CURRENT_SOURCE_DIR}/tests/corruptedfiles)
+
+endif(not IOS)
 
 ##############################################
 #

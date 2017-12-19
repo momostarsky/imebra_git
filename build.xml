@@ -258,9 +258,9 @@ Slovenia
         </exec>
 
         <!-- Run tests -->
-        <exec executable="${build_library_for_tests}/ImebraTests" dir="${build_library_for_tests}" resolveexecutable="true" failonerror="true">
-            <arg value="--gtest_catch_exceptions" />
-            <arg prefix="--corruptedFilesFolder=" path="${build_release}/tests/corruptedfiles" />
+        <exec executable="ctest" dir="${build_library_for_tests}" resolveexecutable="true" failonerror="true">
+            <arg value="-V" />
+            <arg path="${build_library_for_tests}" />
         </exec>
 
         <!-- Collect coverage -->
