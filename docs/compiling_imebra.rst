@@ -31,7 +31,6 @@ In order to build the library from the Imebra Source Distribution you need:
 
 
 
-
 Building Imebra
 ...............
 
@@ -44,6 +43,7 @@ To generate the Imebra shared library, execute the following steps:
 2. cd into the created artifacts folder
 3. execute cmake with the path to the Imebra's distributrion root folder as parameter
 4. execute cmake with the --build option, and on Windows optionally specify the build configuration
+5. run the tests with ctest -V .
 
 For instance:
 
@@ -53,6 +53,7 @@ For instance:
     cd artifacts
     cmake imebra_location
     cmake --build .
+    ctest -V .
 
 The first CMake command will generate a solution file for the your platform: this will be a 
 make file on Linux, a VisualStudio solution of Windows, an XCode project on Mac.
@@ -60,34 +61,7 @@ make file on Linux, a VisualStudio solution of Windows, an XCode project on Mac.
 The second CMake command with the --build option will launch make, VisualStudio or the build
 chain defined on your machine.
 
-
-Adding support for the Jpeg2000 decoder
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-
-Imebra contains an experimental Jpeg2000 decoder which can be used to decompress Jpeg2000 images
-embedded into DICOM datasets.
-
-The Jpeg2000 codec depends on the open source library OpenJpeg, available at http://www.openjpeg.org
-
-Both the major versions of openjpeg (1 and 2) are supported.
-
-After you have compiled and installed openjpeg, you must add the following command line options
-when launching cmake:
-
-To use the version 1.X of openjpeg::
-
-    DJPEG2000=1
-
-To use the version 2.X of openjpeg::
-
-    DJPEG2000=2
-
-For instance, the complete sequence of commands to build imebra with support for openjpeg 1.X would be::
-
-    md artifacts
-    cd artifacts
-    cmake DJPEG2000=1 imebra_location
-    cmake --build .
+The CTest command will launch the test application.
 
 
 Windows specific instructions
@@ -265,24 +239,6 @@ To remove the Python version of Imebra from your system:
 ::
 
     pip uninstall imebra
-
-
-Compiling the test units
-------------------------
-
-Prerequisites
-.............
-
-In order to build and execute the tests you need:
-
-- a compiled gtest library and its include file (get it here https://github.com/google/googletest)
-- the compiled C++ version of Imebra
-
-Building the tests
-..................
-
-The same CMakeLists.txt file used to build the Imebra library builds the test if it finds the GTest framework.
-
 
 
 
