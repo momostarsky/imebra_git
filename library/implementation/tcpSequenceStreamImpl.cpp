@@ -491,7 +491,7 @@ tcpSequenceStream::tcpSequenceStream(std::shared_ptr<tcpAddress> pAddress):
 #if !defined(IMEBRA_WINDOWS) && (__linux__ != 1)
     // Disable SIGPIPE
     int sigpipe = 1;
-    setsockopt(sd, SOL_SOCKET, SO_NOSIGPIPE, (void *)&sigpipe, sizeof(sigpipe));
+    setsockopt(m_socket, SOL_SOCKET, SO_NOSIGPIPE, (void *)&sigpipe, sizeof(sigpipe));
 #endif
 
     // Connect in non-blocking mode, then enable blocking
