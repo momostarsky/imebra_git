@@ -212,8 +212,41 @@ set_target_properties(imebra PROPERTIES VERSION ${IMEBRA_VERSION}
 #
 ##############################################
 
-find_package(GTest)
-if(${GTEST_FOUND})
+# We need thread support
+find_package(Threads REQUIRED)
+
+# Enable ExternalProject CMake module
+include(ExternalProject)
+
+# Download and install GoogleTest
+ExternalProject_Add(
+    gtest
+    URL https://github.com/google/googletest/archive/release-1.7.0.zip
+	CMAKE_ARGS "-DBUILD_SHARED_LIBS=1"
+    PREFIX ${CMAKE_CURRENT_BINARY_DIR}/gtest
+	INSTALL_COMMAND ""
+)
+
+# Get GTest source and binary directories from CMake project
+ExternalProject_Get_Property(gtest source_dir binary_dir)
+
+# Create a libgtest target to be used as a dependency by test programs
+add_library(libgtest IMPORTED STATIC GLOBAL)
+add_dependencies(libgtest gtest)
+
+# Find generated gtest libraries
+
+
+# Set libgtest properties
+# Set libgtest properties
+set_target_properties(libgtest PROPERTIES
+    "IMPORTED_LOCATION" "${binary_dir}/libgtest.so"
+    "IMPORTED_LOCATION_DEBUG" "${binary_dir}/Debug/gtest.lib"
+    "IMPORTED_LOCATION_RELEASE" "${binary_dir}/Release/gtest.lib"
+    "IMPORTED_LINK_INTERFACE_LIBRARIES" "${CMAKE_THREAD_LIBS_INIT}"
+)
+
+#if(${GTEST_FOUND})
     find_package(DCMTK)
     if(${DCMTK_FOUND})
         message(STATUS "DCMTK found. Interoperability tests enabled")
@@ -226,15 +259,7 @@ if(${GTEST_FOUND})
     file(GLOB imebra_tests_src "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.cpp")
 
     set(imebra_tests_objc_src "")
-    if("${IMEBRA_OBJC}" STREQUAL "1")
-        file(GLOB imebra_tests_objc_src "${CMAKE_CURRENT_SOURCE_DIR}/tests/objectivec/*.mm")
-    endif("${IMEBRA_OBJC}" STREQUAL "1")
 
-    if("${gtest_include}" STREQUAL "")
-        set(gtest_include ".")
-    endif("${gtest_include}" STREQUAL "")
-
-    include_directories(${gtest_include})
     if("${IMEBRA_OBJC}" STREQUAL "1")
         if(APPLE)
             set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -framework Foundation -framework CoreServices")
@@ -255,11 +280,11 @@ if(${GTEST_FOUND})
         ${imebra_tests_src}
         ${imebra_tests_objc_src}
     )
-
-    target_link_libraries(ImebraTests imebra ${GTEST_LIBRARIES})
-else(${GTEST_FOUND})
-    message(WARNING "WARNING: GTEST not found. Skipping tests")
-endif(${GTEST_FOUND})
+	target_include_directories(ImebraTests PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/gtest/src/gtest/include)
+    target_link_libraries(ImebraTests imebra libgtest)
+#else(${GTEST_FOUND})
+#    message(WARNING "WARNING: GTEST not found. Skipping tests")
+#endif(${GTEST_FOUND})
 
 
 ##############################################
