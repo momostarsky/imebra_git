@@ -1,13 +1,47 @@
+
 version: 1.0.{build}
 configuration: Debug
 platform: x86
 build_script:
-- cmd: "cmake --help\n\nappveyor DownloadFile https://github.com/google/googletest/archive/release-1.7.0.zip -FileName gtest-1.7.0.zip\n7z x gtest-1.7.0.zip > NUL\ncd googletest-release-1.7.0\nmd build\ncd build\ncmake -DBUILD_SHARED_LIBS=ON -DCMAKE_CXX_FLAGS=/D_VARIADIC_MAX=10 -G \"Visual Studio 14 2015 Win64\" .. \ncmake --build . --config Release\ncd ..\\..\n\nmkdir build_imebra\ncd build_imebra\ncmake -G \"Visual Studio 14 2015 Win64\" ../library\ncmake --build . --config release\ncmake --build . --config debug\n\ncd ..\nmkdir build_tests\ncd build_tests\ncmake -G \"Visual Studio 14 2015 Win64\" -Dimebra_library=../build_imebra/release/imebra.lib -Dgtest_library=../googletest-release-1.7.0/build/release/gtest.lib -Dgtest_include=../googletest-release-1.7.0/include ../tests\ncmake --build . --config release\n\ncp ..\\googletest-release-1.7.0\\build\\release\\gtest.dll release\\gtest.dll\ncp ..\\build_imebra\\release\\imebra.dll release\\imebra.dll\ncd ..\n\nmkdir artifacts\nmkdir artifacts\\bin\nmkdir artifacts\\bin\\release\nmkdir artifacts\\bin\\debug\nmkdir artifacts\\include\ncp build_imebra\\release\\imebra.dll artifacts\\bin\\release\ncp build_imebra\\release\\imebra.lib artifacts\\bin\\release\ncp build_imebra\\debug\\imebra.dll artifacts\\bin\\debug\ncp build_imebra\\debug\\imebra.lib artifacts\\bin\\debug\nxcopy library\\include artifacts\\include /s /e"
-test_script:
 - cmd: >-
-    cd build_tests\release
+    cmake --help
 
-    ImebraTests --fast --corruptedFilesFolder="..\..\tests\corruptedfiles"
+
+    mkdir build_imebra
+
+    cd build_imebra
+
+    cmake -G "Visual Studio 14 2015 Win64" ..
+
+    cmake --build --config Release .
+
+    ctest -V .
+
+    cd ..
+
+
+
+    mkdir artifacts
+
+    mkdir artifacts\bin
+
+    mkdir artifacts\bin\release
+
+    mkdir artifacts\bin\debug
+
+    mkdir artifacts\include
+
+    cp build_imebra\release\imebra.dll artifacts\bin\release
+
+    cp build_imebra\release\imebra.lib artifacts\bin\release
+
+    cp build_imebra\debug\imebra.dll artifacts\bin\debug
+
+    cp build_imebra\debug\imebra.lib artifacts\bin\debug
+
+    xcopy library\include artifacts\include /s /e
+test_script:
+- cmd: 
 artifacts:
 - path: artifacts
   name: imebra_windows
