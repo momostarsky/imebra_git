@@ -305,7 +305,7 @@ if(NOT IOS)
 
     add_test(RunImebraTests ImebraTests --corruptedFilesFolder=${CMAKE_CURRENT_SOURCE_DIR}/tests/corruptedfiles)
 
-endif(not IOS)
+endif(NOT IOS)
 
 ##############################################
 #
