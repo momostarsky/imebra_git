@@ -256,7 +256,7 @@ if(NOT IOS)
         "IMPORTED_LOCATION" "${binary_dir}/libgtest.a"
         "IMPORTED_LINK_INTERFACE_LIBRARIES" "${CMAKE_THREAD_LIBS_INIT}"
     )
-    endif(APPLE OR MSVC)
+    endif(APPLE)
 
     # Find DCMTK for interoperability tests.
     find_package(DCMTK)
