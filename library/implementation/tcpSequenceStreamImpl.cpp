@@ -497,16 +497,16 @@ tcpSequenceStream::tcpSequenceStream(std::shared_ptr<tcpAddress> pAddress):
     // Connect in non-blocking mode, then enable blocking
     setBlockingMode(false);
 
-	int connectReturn(connect(m_socket, pAddress->getSockAddr(), pAddress->getSockAddrLen()));
-
 #ifdef IMEBRA_WINDOWS
+    int connectReturn(connect(m_socket, pAddress->getSockAddr(), pAddress->getSockAddrLen()));
 	if (connectReturn < 0 && WSAGetLastError() != WSAEWOULDBLOCK)
 	{
 		throwTcpException(connectReturn);
 	}
 #else
-
+    throwTcpException(connect(m_socket, pAddress->getSockAddr(), pAddress->getSockAddrLen()));
 #endif
+
     setBlockingMode(true);
 
     IMEBRA_FUNCTION_END();
