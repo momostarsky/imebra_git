@@ -2210,49 +2210,51 @@ void associationBase::getMessagesThread()
 
             if(pReceivedDataset->m_pDataset->bufferExists(0, 0, 0x100, 0))
             {
-                std::unique_lock<std::mutex> lockCommandsResponses(m_lockCommandsResponses);
-
-                // We received a command or response dataset
-                ///////////////////////////////////////////////////////////
-                if( (pReceivedDataset->m_pDataset->getUnsignedLong(0x0, 0, 0x100, 0, 0, 0) & 0x00008000) != 0)
                 {
-                    // We received a response
-                    ///////////////////////////////////////////////////////////
+                    std::unique_lock<std::mutex> lockCommandsResponses(m_lockCommandsResponses);
 
-                    // Check for a partial response
+                    // We received a command or response dataset
                     ///////////////////////////////////////////////////////////
-                    if( (pReceivedDataset->m_pDataset->getUnsignedLong(0x0, 0, 0x900, 0, 0, 0) & 0x0000fff0) == 0xff00)
+                    if( (pReceivedDataset->m_pDataset->getUnsignedLong(0x0, 0, 0x100, 0, 0, 0) & 0x00008000) != 0)
                     {
-                        // We received a partial response
+                        // We received a response
                         ///////////////////////////////////////////////////////////
-                        if(m_waitingResponses.find(pReceivedDataset->m_pDataset->getUnsignedLong(0, 0, 0x0120, 0, 0)) == m_waitingResponses.end())
+
+                        // Check for a partial response
+                        ///////////////////////////////////////////////////////////
+                        if( (pReceivedDataset->m_pDataset->getUnsignedLong(0x0, 0, 0x900, 0, 0, 0) & 0x0000fff0) == 0xff00)
+                        {
+                            // We received a partial response
+                            ///////////////////////////////////////////////////////////
+                            if(m_waitingResponses.find(pReceivedDataset->m_pDataset->getUnsignedLong(0, 0, 0x0120, 0, 0)) == m_waitingResponses.end())
+                            {
+                                abort(acsePDUAAbort::reason_t::serviceProviderInvalidPDUParameterValue);
+                                IMEBRA_THROW(AcseWrongResponseIdError, "Received a partial response with a wrong ID");
+                            }
+                        }
+                        else if(m_waitingResponses.erase(pReceivedDataset->m_pDataset->getUnsignedLong(0, 0, 0x0120, 0, 0)) == 0)
                         {
                             abort(acsePDUAAbort::reason_t::serviceProviderInvalidPDUParameterValue);
-                            IMEBRA_THROW(AcseWrongResponseIdError, "Received a partial response with a wrong ID");
+                            IMEBRA_THROW(AcseWrongResponseIdError, "Received a response with a wrong ID");
                         }
                     }
-                    else if(m_waitingResponses.erase(pReceivedDataset->m_pDataset->getUnsignedLong(0, 0, 0x0120, 0, 0)) == 0)
+                    else
                     {
-                        abort(acsePDUAAbort::reason_t::serviceProviderInvalidPDUParameterValue);
-                        IMEBRA_THROW(AcseWrongResponseIdError, "Received a response with a wrong ID");
-                    }
-                }
-                else
-                {
-                    // We received a command (not cancel)
-                    ///////////////////////////////////////////////////////////
-                    if(pReceivedDataset->m_pDataset->getUnsignedLong(0x0, 0, 0x100, 0, 0, 0) != 0x0fff)
-                    {
-                        if(m_processingCommands.count(pReceivedDataset->m_pDataset->getUnsignedLong(0, 0, 0x0110, 0, 0)) != 0)
+                        // We received a command (not cancel)
+                        ///////////////////////////////////////////////////////////
+                        if(pReceivedDataset->m_pDataset->getUnsignedLong(0x0, 0, 0x100, 0, 0, 0) != 0x0fff)
                         {
-                            abort(acsePDUAAbort::reason_t::serviceProviderInvalidPDUParameterValue);
-                            IMEBRA_THROW(AcseWrongCommandIdError, "Received a command with an ID from a command still being processed");
+                            if(m_processingCommands.count(pReceivedDataset->m_pDataset->getUnsignedLong(0, 0, 0x0110, 0, 0)) != 0)
+                            {
+                                abort(acsePDUAAbort::reason_t::serviceProviderInvalidPDUParameterValue);
+                                IMEBRA_THROW(AcseWrongCommandIdError, "Received a command with an ID from a command still being processed");
+                            }
+                            if(m_maxOperationsPerformed != 0 && m_processingCommands.size() == m_maxOperationsPerformed)
+                            {
+                                IMEBRA_THROW(AcseTooManyOperationsPerformedError, "Performing too many operations (max is " << m_maxOperationsPerformed << ")");
+                            }
+                            m_processingCommands.insert(pReceivedDataset->m_pDataset->getUnsignedLong(0, 0, 0x0110, 0, 0));
                         }
-                        if(m_maxOperationsPerformed != 0 && m_processingCommands.size() == m_maxOperationsPerformed)
-                        {
-                            IMEBRA_THROW(AcseTooManyOperationsPerformedError, "Performing too many operations (max is " << m_maxOperationsPerformed << ")");
-                        }
-                        m_processingCommands.insert(pReceivedDataset->m_pDataset->getUnsignedLong(0, 0, 0x0110, 0, 0));
                     }
                 }
 
