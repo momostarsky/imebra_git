@@ -1225,7 +1225,7 @@ public:
 ///        corrupted.
 ///
 ///////////////////////////////////////////////////////////////////////////////
-class AcseCorruptedMessageError: public AcseError
+class IMEBRA_API AcseCorruptedMessageError: public AcseError
 {
 public:
     /// \brief Constructor.
@@ -1242,7 +1242,7 @@ public:
 ///        presentation context.
 ///
 ///////////////////////////////////////////////////////////////////////////////
-class AcseNoTransferSyntaxError: public AcseError
+class IMEBRA_API AcseNoTransferSyntaxError: public AcseError
 {
 public:
     AcseNoTransferSyntaxError(const std::string& message);
@@ -1254,7 +1254,7 @@ public:
 ///        association negotiation.
 ///
 ///////////////////////////////////////////////////////////////////////////////
-class AcsePresentationContextNotRequestedError: public AcseError
+class IMEBRA_API AcsePresentationContextNotRequestedError: public AcseError
 {
 public:
     /// \brief Constructor.
@@ -1270,7 +1270,7 @@ public:
 ///        a destination that cannot accept it
 ///
 ///////////////////////////////////////////////////////////////////////////////
-class AcseWrongRoleError: public AcseError
+class IMEBRA_API AcseWrongRoleError: public AcseError
 {
 public:
     /// \brief Constructor.
@@ -1286,7 +1286,7 @@ public:
 /// \brief Base class for the exception related to a wrong message ID.
 ///
 ///////////////////////////////////////////////////////////////////////////////
-class AcseWrongIdError: public AcseError
+class IMEBRA_API AcseWrongIdError: public AcseError
 {
 public:
     AcseWrongIdError(const std::string& message);
@@ -1298,7 +1298,7 @@ public:
 ///        has already been responded to or was never sent.
 ///
 ///////////////////////////////////////////////////////////////////////////////
-class AcseWrongResponseIdError: public AcseWrongIdError
+class IMEBRA_API AcseWrongResponseIdError: public AcseWrongIdError
 {
 public:
     AcseWrongResponseIdError(const std::string& message);
@@ -1309,7 +1309,7 @@ public:
 /// \brief Exception thrown when a command has a wrong message ID.
 ///
 ///////////////////////////////////////////////////////////////////////////////
-class AcseWrongCommandIdError: public AcseWrongIdError
+class IMEBRA_API AcseWrongCommandIdError: public AcseWrongIdError
 {
 public:
     AcseWrongCommandIdError(const std::string& message);
@@ -1320,7 +1320,7 @@ public:
 /// \brief Base class for the association rejection exceptions.
 ///
 ///////////////////////////////////////////////////////////////////////////////
-class AcseRejectedAssociationError: public AcseError
+class IMEBRA_API AcseRejectedAssociationError: public AcseError
 {
 public:
     AcseRejectedAssociationError(const std::string& message, bool bPermanent);
@@ -1350,7 +1350,7 @@ private:
 /// \brief Generic exception thrown when the association is rejected.
 ///
 ///////////////////////////////////////////////////////////////////////////////
-class AcseSCUNoReasonGivenError: public AcseRejectedAssociationError
+class IMEBRA_API AcseSCUNoReasonGivenError: public AcseRejectedAssociationError
 {
 public:
     AcseSCUNoReasonGivenError(const std::string& message, bool bPermanent);
@@ -1362,7 +1362,7 @@ public:
 ///        application context name is not supported.
 ///
 ///////////////////////////////////////////////////////////////////////////////
-class AcseSCUApplicationContextNameNotSupportedError: public AcseRejectedAssociationError
+class IMEBRA_API AcseSCUApplicationContextNameNotSupportedError: public AcseRejectedAssociationError
 {
 public:
     AcseSCUApplicationContextNameNotSupportedError(const std::string& message, bool bPermanent);
@@ -1374,7 +1374,7 @@ public:
 ///        calling AE title is not recognized.
 ///
 ///////////////////////////////////////////////////////////////////////////////
-class AcseSCUCallingAETNotRecognizedError: public AcseRejectedAssociationError
+class IMEBRA_API AcseSCUCallingAETNotRecognizedError: public AcseRejectedAssociationError
 {
 public:
     AcseSCUCallingAETNotRecognizedError(const std::string& message, bool bPermanent);
@@ -1386,7 +1386,7 @@ public:
 ///        called AE title is not recognized.
 ///
 ///////////////////////////////////////////////////////////////////////////////
-class AcseSCUCalledAETNotRecognizedError: public AcseRejectedAssociationError
+class IMEBRA_API AcseSCUCalledAETNotRecognizedError: public AcseRejectedAssociationError
 {
 public:
     AcseSCUCalledAETNotRecognizedError(const std::string& message, bool bPermanent);
@@ -1398,7 +1398,7 @@ public:
 ///        without any particular reason given.
 ///
 ///////////////////////////////////////////////////////////////////////////////
-class AcseSCPNoReasonGivenError: public AcseRejectedAssociationError
+class IMEBRA_API AcseSCPNoReasonGivenError: public AcseRejectedAssociationError
 {
 public:
     AcseSCPNoReasonGivenError(const std::string& message, bool bPermanent);
@@ -1410,7 +1410,7 @@ public:
 ///        because it does not support the requested protocol version.
 ///
 ///////////////////////////////////////////////////////////////////////////////
-class AcseSCPAcseProtocolVersionNotSupportedError: public AcseRejectedAssociationError
+class IMEBRA_API AcseSCPAcseProtocolVersionNotSupportedError: public AcseRejectedAssociationError
 {
 public:
     AcseSCPAcseProtocolVersionNotSupportedError(const std::string& message, bool bPermanent);
@@ -1422,7 +1422,7 @@ public:
 ///        because the selected presentation context is reserved.
 ///
 ///////////////////////////////////////////////////////////////////////////////
-class AcseSCPPresentationReservedError: public AcseRejectedAssociationError
+class IMEBRA_API AcseSCPPresentationReservedError: public AcseRejectedAssociationError
 {
 public:
     AcseSCPPresentationReservedError(const std::string& message, bool bPermanent);
@@ -1434,7 +1434,7 @@ public:
 ///        because there is a temporary congestion.
 ///
 ///////////////////////////////////////////////////////////////////////////////
-class AcseSCPPresentationTemporaryCongestionError: public AcseRejectedAssociationError
+class IMEBRA_API AcseSCPPresentationTemporaryCongestionError: public AcseRejectedAssociationError
 {
 public:
     AcseSCPPresentationTemporaryCongestionError(const std::string& message, bool bPermanent);
@@ -1446,7 +1446,7 @@ public:
 ///        because is out of resources.
 ///
 ///////////////////////////////////////////////////////////////////////////////
-class AcseSCPPresentationLocalLimitExcededError: public AcseRejectedAssociationError
+class IMEBRA_API AcseSCPPresentationLocalLimitExcededError: public AcseRejectedAssociationError
 {
 public:
     AcseSCPPresentationLocalLimitExcededError(const std::string& message, bool bPermanent);
@@ -1458,7 +1458,7 @@ public:
 ///        requested.
 ///
 ///////////////////////////////////////////////////////////////////////////////
-class AcseTooManyOperationsPerformedError: public AcseError
+class IMEBRA_API AcseTooManyOperationsPerformedError: public AcseError
 {
 public:
     AcseTooManyOperationsPerformedError(const std::string& message);
@@ -1470,7 +1470,7 @@ public:
 ///        invoked.
 ///
 ///////////////////////////////////////////////////////////////////////////////
-class AcseTooManyOperationsInvokedError: public AcseError
+class IMEBRA_API AcseTooManyOperationsInvokedError: public AcseError
 {
 public:
     AcseTooManyOperationsInvokedError(const std::string& message);
@@ -1482,7 +1482,7 @@ public:
 ///        should have one.
 ///
 ///////////////////////////////////////////////////////////////////////////////
-class AcseNoPayloadError: public AcseError
+class IMEBRA_API AcseNoPayloadError: public AcseError
 {
 public:
     AcseNoPayloadError(const std::string& message);
@@ -1493,7 +1493,7 @@ public:
 /// \brief Base class for the exceptions thrown by the DIMSE services.
 ///
 ///////////////////////////////////////////////////////////////////////////////
-class DimseError: public std::runtime_error
+class IMEBRA_API DimseError: public std::runtime_error
 {
 public:
     DimseError(const std::string& message);
@@ -1504,7 +1504,7 @@ public:
 /// \brief Exception thrown when a DIMSE command cannot be validated.
 ///
 ///////////////////////////////////////////////////////////////////////////////
-class DimseInvalidCommand: public DimseError
+class IMEBRA_API DimseInvalidCommand: public DimseError
 {
 public:
     DimseInvalidCommand(const std::string& message);
