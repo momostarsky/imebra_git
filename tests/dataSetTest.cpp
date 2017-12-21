@@ -437,6 +437,74 @@ TEST(dataSetTest, testEmptySequence)
 }
 
 
+TEST(dataSetTest, charsetNotNecessaryTest)
+{
+
+    ReadWriteMemory streamMemory;
+
+    charsetsList_t charsets;
+    charsets.push_back("ISO_IR 6");
+    DataSet testDataSet("1.2.840.10008.1.2.1", charsets);
+
+    testDataSet.setString(TagId(tagId_t::PatientAge_0010_1010), "012Y");
+    testDataSet.setString(TagId(tagId_t::SOPInstanceUID_0008_0018), "1.2.3.4.5");
+
+    MemoryStreamOutput writeStream(streamMemory);
+    StreamWriter writer(writeStream);
+    CodecFactory::save(testDataSet, writer, codecType_t::dicom);
+
+    MemoryStreamInput readStream(streamMemory);
+    StreamReader reader(readStream);
+    std::unique_ptr<DataSet> pLoadedDataSet(CodecFactory::load(reader));
+
+    EXPECT_THROW(pLoadedDataSet->getTag(TagId(tagId_t::SpecificCharacterSet_0008_0005)), MissingDataElementError);
+}
+
+
+TEST(dataSetTest, sequenceNoCharsetTest)
+{
+    std::wstring patientName0 = L"??\x0628\x062a\x062b\x062f^\0x400\0x410\0x420";
+    std::wstring patientName1 = L"\0x420\x062a\x062b^\0x400\0x410\x0628\x062a";
+
+    ReadWriteMemory streamMemory;
+
+    charsetsList_t charsets;
+    charsets.push_back("ISO_IR 6");
+    DataSet testDataSet("1.2.840.10008.1.2.1", charsets);
+
+    testDataSet.setString(TagId(tagId_t::PatientAge_0010_1010), "012Y");
+    testDataSet.setString(TagId(tagId_t::SOPInstanceUID_0008_0018), "1.2.3.4.5");
+
+    {
+        DataSet sequence0;
+        DataSet sequence1;
+
+        sequence0.setUnicodeString(TagId(0x10, 0x10), patientName0);
+        sequence1.setUnicodeString(TagId(0x10, 0x10), patientName1);
+
+        testDataSet.setSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 0, sequence0);
+        testDataSet.setSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 1, sequence1);
+    }
+
+    MemoryStreamOutput writeStream(streamMemory);
+    StreamWriter writer(writeStream);
+    CodecFactory::save(testDataSet, writer, codecType_t::dicom);
+
+    MemoryStreamInput readStream(streamMemory);
+    StreamReader reader(readStream);
+    std::unique_ptr<DataSet> pLoadedDataSet(CodecFactory::load(reader));
+
+    EXPECT_NO_THROW(pLoadedDataSet->getTag(TagId(tagId_t::SpecificCharacterSet_0008_0005)));
+
+    std::unique_ptr<DataSet> sequence0(pLoadedDataSet->getSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 0));
+    std::unique_ptr<DataSet> sequence1(pLoadedDataSet->getSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 1));
+    EXPECT_THROW(sequence0->getTag(TagId(tagId_t::SpecificCharacterSet_0008_0005)), MissingDataElementError);
+    EXPECT_THROW(sequence1->getTag(TagId(tagId_t::SpecificCharacterSet_0008_0005)), MissingDataElementError);
+    ASSERT_EQ(patientName0, sequence0->getUnicodeString(TagId(0x10, 0x10), 0));
+    ASSERT_EQ(patientName1, sequence1->getUnicodeString(TagId(0x10, 0x10), 0));
+}
+
+
 } // namespace tests
 
 } // namespace imebra

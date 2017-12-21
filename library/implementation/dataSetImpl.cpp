@@ -834,6 +834,7 @@ void dataSet::setSequenceItem(std::uint16_t groupId, std::uint32_t order, std::u
 {
     IMEBRA_FUNCTION_START();
 
+    pDataSet->setCharsetsList(m_charsetsList);
     getTagCreate(groupId, order, tagId, tagVR_t::SQ)->setSequenceItem(itemId, pDataSet);
 
     IMEBRA_FUNCTION_END();
@@ -1547,13 +1548,16 @@ void dataSet::updateCharsetTag()
 
     charsetsList::tCharsetsList charsets;
 	getCharsetsList(&charsets);
-    std::shared_ptr<handlers::writingDataHandler> charsetHandler(getWritingDataHandler(0x0008, 0, 0x0005, 0));
-	charsetHandler->setSize((std::uint32_t)(charsets.size()));
-	std::uint32_t pointer(0);
-	for(charsetsList::tCharsetsList::iterator scanCharsets = charsets.begin(); scanCharsets != charsets.end(); ++scanCharsets)
-	{
-        charsetHandler->setString(pointer++, *scanCharsets);
-	}
+    if(!charsets.empty())
+    {
+        std::shared_ptr<handlers::writingDataHandler> charsetHandler(getWritingDataHandler(0x0008, 0, 0x0005, 0));
+        charsetHandler->setSize((std::uint32_t)(charsets.size()));
+        std::uint32_t pointer(0);
+        for(charsetsList::tCharsetsList::iterator scanCharsets = charsets.begin(); scanCharsets != charsets.end(); ++scanCharsets)
+        {
+            charsetHandler->setString(pointer++, *scanCharsets);
+        }
+    }
 
     IMEBRA_FUNCTION_END();
 }
@@ -1585,10 +1589,18 @@ void dataSet::updateTagsCharset()
 	}
     catch(const MissingDataElementError&)
     {
-        // TODO
     }
 
-    setCharsetsList(charsets);
+    for(tGroups::iterator scanGroups(m_groups.begin()), endGroups(m_groups.end()); scanGroups != endGroups; ++scanGroups)
+    {
+        for(tGroupsList::iterator scanGroupsList(scanGroups->second.begin()), endGroupsList(scanGroups->second.end()); scanGroupsList != endGroupsList; ++scanGroupsList)
+        {
+            for(tTags::iterator scanTags((*scanGroupsList).begin()), endTags((*scanGroupsList).end()); scanTags != endTags; ++scanTags)
+            {
+                scanTags->second->setCharsetsList(charsets);
+            }
+        }
+    }
 
     IMEBRA_FUNCTION_END();
 }
@@ -1710,8 +1722,18 @@ void dataSet::setCharsetsList(const charsetsList::tCharsetsList& charsetsList)
     IMEBRA_FUNCTION_START();
 
     std::lock_guard<std::recursive_mutex> lock(m_mutex);
-
     m_charsetsList = charsetsList;
+
+    IMEBRA_FUNCTION_END();
+}
+
+void dataSet::setChildrenCharsetsList(const charsetsList::tCharsetsList& charsetsList)
+{
+    IMEBRA_FUNCTION_START();
+
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
+    m_charsetsList = charsetsList;
+
     for(tGroups::iterator scanGroups(m_groups.begin()), endGroups(m_groups.end()); scanGroups != endGroups; ++scanGroups)
     {
         for(tGroupsList::iterator scanGroupsList(scanGroups->second.begin()), endGroupsList(scanGroups->second.end()); scanGroupsList != endGroupsList; ++scanGroupsList)
