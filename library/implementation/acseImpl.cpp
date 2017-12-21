@@ -255,42 +255,34 @@ std::string acseItem::normalizeName(const std::string& name)
     std::istringstream stringstream(name);
     std::ostringstream value;
 
-    stringstream.exceptions(std::ios_base::failbit | std::ios_base::eofbit);
-
     bool bAddDot(false);
-    try
+    for(;;)
     {
-        for(;;)
+        const char nextChar((const char)stringstream.get());
+        if(stringstream.eof())
         {
-            const char nextChar((const char)stringstream.get());
-            if(std::isdigit(nextChar))
-            {
-                if(bAddDot)
-                {
-                    if(value.str().empty())
-                    {
-                        value << "0";
-                    }
-                    value << ".";
-                    bAddDot = false;
-                }
-                value.put(nextChar);
-            }
-            else if(nextChar == '.')
-            {
-                if(bAddDot)
-                {
-                    value << ".0";
-                }
-                bAddDot = true;
-            }
+            break;
         }
-    }
-    catch(const std::ios_base::failure&)
-    {
-        if(!stringstream.eof())
+        if(std::isdigit(nextChar))
         {
-            IMEBRA_THROW(AcseCorruptedMessageError, "Corrupted UID");
+            if(bAddDot)
+            {
+                if(value.str().empty())
+                {
+                    value << "0";
+                }
+                value << ".";
+                bAddDot = false;
+            }
+            value.put(nextChar);
+        }
+        else if(nextChar == '.')
+        {
+            if(bAddDot)
+            {
+                value << ".0";
+            }
+            bAddDot = true;
         }
     }
 
