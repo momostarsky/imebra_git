@@ -6,6 +6,7 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Implemented enhancement #180 (Implement the DICOM part 7 DIMSE and part 8 DUL) as per SOP :ref:`DEVENH_2`
 - Fixed bug #184 (Remove variable bStopped from dicomStreamCodec::parseStream) as per SOP :ref:`FIXBUG_2`
 - Implemented enhancement #199 (Specify that on OS-X and iOS the iconv library must be explicitly linked when using a static Imebra library) as
   per SOP :ref:`DEVENH_2`
