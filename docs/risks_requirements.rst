@@ -61,7 +61,7 @@ The following transfer syntaxes must be supported:
 [REQ_DIMSE] The library must be able to send and receive DIMSE messages
 ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
-The library must be able to build and parse DIMSE messages through a ACSE service.
+The library must be able to build and parse DIMSE messages through an ACSE service.
 
 The following DIMSE services must be supported:
 
@@ -70,6 +70,7 @@ The following DIMSE services must be supported:
 - C-MOVE
 - C-FIND
 - C-ECHO
+- C-CANCEL
 - N-EVENT-REPORT
 - N-GET
 - N-SET
@@ -81,7 +82,6 @@ The following DIMSE services must be supported:
 
 Children requirements: 
 
-- :ref:`REQ_GENERIC_MSG_PROTOCOL`
 - :ref:`REQ_GENERIC_STREAM_PROTOCOL`
 - :ref:`REQ_TCPIP_PROTOCOL`
 
@@ -95,30 +95,9 @@ Children requirements:
 The library must be able to send and receive DUL messages through a generic stream oriented
 transport mechanism.
 
-The DIMSE management should not be exposed in the API.
+The ACSE management should not be exposed in the API.
 
 
-
-Children requirements: 
-
-- :ref:`REQ_GENERIC_MSG_PROTOCOL`
-
-
-
-.. _REQ_GENERIC_MSG_PROTOCOL:
-
-[REQ_GENERIC_MSG_PROTOCOL] There must be a generic messaging protocol able to transport DIMSE messages
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-
-There must be a generic messaging protocol able to transport DIMSE messages.
-
-Also the DUL messages should be managed by a messaging protocol derived from the generic one.
-
-
-Parent requirements:
-
-- :ref:`REQ_DIMSE`
-- :ref:`REQ_ACSE`
 
 
 
