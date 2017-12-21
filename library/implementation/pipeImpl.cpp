@@ -98,7 +98,10 @@ size_t pipeSequenceStream::read(std::uint8_t* pBuffer, size_t bufferLength)
             return readData;
         }
 
-        m_positionConditionVariable.wait_for(lock, std::chrono::milliseconds(IMEBRA_PIPE_TIMEOUT_MS));
+        if(m_availableData == 0)
+        {
+            m_positionConditionVariable.wait_for(lock, std::chrono::milliseconds(IMEBRA_PIPE_TIMEOUT_MS));
+        }
     }
 
     IMEBRA_FUNCTION_END();
@@ -155,7 +158,7 @@ void pipeSequenceStream::write(const std::uint8_t* pBuffer, size_t bufferLength)
             m_positionConditionVariable.notify_all();
         }
 
-        if(remainingData != 0)
+        if(remainingData != 0 && m_availableData == m_pMemory->size())
         {
             m_positionConditionVariable.wait_for(lock, std::chrono::milliseconds(IMEBRA_PIPE_TIMEOUT_MS));
         }
