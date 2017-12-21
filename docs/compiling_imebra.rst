@@ -14,7 +14,6 @@ The Imebra Source Distribution includes:
 - the source code for the library
 - the source code for the tests
 - pre-built documentation
-- pre-generated JNI headers for Java
 
 
 Compiling the C++ version of Imebra
@@ -172,40 +171,6 @@ To generate a project that can be opened with XCode append the argument -G xcode
     mkdir xcode_project
     cd xcode_project
     cmake imebra_location -G xcode
-
-
-Compiling the Android version of Imebra
----------------------------------------
-
-Prerequisites
-.............
-
-In order to build the Android version of Imebra you need:
-
-- the source distribution of Imebra, available here: https://imebra.com/get-it/
-- Apache Ant
-- the Android SDK
-- the Android NDK
-
-Building Imebra
-...............
-
-The Android version of the library needs both the Java source code (located in the wrappers/javaWrapper folder)
-and the C++ source code (located in the library folder)
-
-To generate the Imebra Jar library:
-
-1. cd into the Imebra wrappers/javaWrapper folder
-2. run ant and define the properties sdk.dir and ndk.dir so they point to the home folders of the Android SDK and NDK respectively
-3. the produced JAR will be located in the folder wrappers/javaWrapper/out/artifacts
-
-For instance:
-
-::
-
-    cd wrappers/javaWrapper
-    ant -Dsdk.dir=path/to/Android/SDK -Dndk.dir=path/to/Android/NDK
-    
 
 
 Compiling the Python version of Imebra

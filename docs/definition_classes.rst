@@ -52,3 +52,22 @@ vois_t
 --------------
 .. doxygentypedef:: imebra::vois_t
 
+dimseCommandType_t
+------------------
+.. doxygenenum:: imebra::dimseCommandType_t
+
+dimseCommandPriority_t
+----------------------
+.. doxygenenum:: imebra::dimseCommandPriority_t
+
+dimseStatusCode_t
+-----------------
+.. doxygenenum:: imebra::dimseStatusCode_t
+
+dimseStatus_t
+-------------
+.. doxygenenum:: imebra::dimseStatus_t
+
+attributeIdentifierList_t
+-------------------------
+.. doxygentypedef:: imebra::attributeIdentifierList_t

@@ -312,6 +312,22 @@ public:
     //////////////////////////////////////////////////////////////////
     std::string getOtherAET() const;
 
+    ///
+    /// \brief Returns the transfer syntax negotiated for a specific
+    ///        abstract syntax.
+    ///
+    /// Throws:
+    /// - AcseNoTransferSyntaxError if no transfer syntax
+    ///   is available for the requested abstract syntax or
+    /// - AcsePresentationContextNotRequestedError if the abstract
+    ///   syntax was not negotiated at all.
+    ///
+    /// \param abstractSyntax the abstract syntax for which the
+    ///                       transfer syntax is requested
+    /// \return the negotiated transfer syntax for the specified
+    ///         abstract syntax
+    ///
+    //////////////////////////////////////////////////////////////////
     std::string getTransferSyntax(const std::string& abstractSyntax) const;
 
 #ifndef SWIG

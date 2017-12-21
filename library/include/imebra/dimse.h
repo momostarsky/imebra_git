@@ -1496,8 +1496,9 @@ public:
 /// \brief Sends and receives DICOM commands and responses through
 ///        a AssociationSCU or an AssociationSCP.
 ///
-/// The DimseService class assigns an unique message ID to all
-/// the outgoing commands.
+/// The DimseService supplies getNextCommandID() in order to
+/// obtain the ID for the commands sent through the DimseService
+/// object.
 ///
 /// \param association the AssociationBase derived class through
 ///                    which the DICOM commands and responses are
@@ -1524,6 +1525,8 @@ public:
     /// \brief Returns the negotiated transfer syntax for a specific
     ///        abstract syntax.
     ///
+    /// This method is multithread safe.
+    ///
     /// \param abstractSyntax the abstract syntax for which the
     ///                       transfer syntax is needed
     /// \return the negotiated transfer syntax for the specified
@@ -1536,6 +1539,8 @@ public:
     /// \brief Retrieves an ID that can be used on the next command
     ///        sent through this DimseService object.
     ///
+    /// This method is multithread safe.
+    ///
     /// \return an ID that can be used as command ID on a command sent
     ///         through this DimseService object
     ///
@@ -1544,6 +1549,28 @@ public:
 
     ///
     /// \brief Retrieves the next incoming DICOM command.
+    ///
+    /// The command blocks until the command is available or until
+    /// the association is closed, either by the connected peer or
+    /// by other means (e.g because of the DIMSE timeout), in which
+    /// case the exception StreamEOFError is thrown.
+    ///
+    /// Other threads can wait for other commands or responses from
+    /// the same DIMSE service. All the commands and responses are
+    /// received by a secondary thread and distributed to all the
+    /// listener waiting for a command or a response.
+    ///
+    /// This method can be called by several threads at once:
+    /// each thread will receive a DIMSE command and can reply
+    /// to the command via sendCommandOrResponse().
+    ///
+    /// The underlying AssociationBase object will take care of
+    /// limiting the number of incoming command according to the
+    /// maximum number of performed operation negotiated for
+    /// the association.
+    ///
+    /// Throws StreamEOFError if the association is closed while the
+    /// method is waiting for an incoming command.
     ///
     /// \return the next incoming DICOM command
     ///
@@ -1554,6 +1581,8 @@ public:
     /// \brief Sends a DICOM command or response through the
     ///        association.
     ///
+    /// This method is multithread safe.
+    ///
     /// \param command the command or response to send
     ///
     //////////////////////////////////////////////////////////////////
@@ -1562,6 +1591,11 @@ public:
     ///
     /// \brief Wait for the response for the specified C-STORE
     ///        command and returns it.
+    ///
+    /// Other threads can wait for other commands or responses from
+    /// the same DIMSE service. All the commands and responses are
+    /// received by a secondary thread and distributed to all the
+    /// listener waiting for a command or a response.
     ///
     /// \param command the sent C-CSTORE command for which to
     ///                wait for a response
@@ -1574,6 +1608,11 @@ public:
     /// \brief Wait for the response for the specified C-GET
     ///        command and returns it.
     ///
+    /// Other threads can wait for other commands or responses from
+    /// the same DIMSE service. All the commands and responses are
+    /// received by a secondary thread and distributed to all the
+    /// listener waiting for a command or a response.
+    ///
     /// \param command the sent C-GET command for which to
     ///                wait for a response
     /// \return the response for the specified command
@@ -1584,6 +1623,11 @@ public:
     ///
     /// \brief Wait for the response for the specified C-FIND
     ///        command and returns it.
+    ///
+    /// Other threads can wait for other commands or responses from
+    /// the same DIMSE service. All the commands and responses are
+    /// received by a secondary thread and distributed to all the
+    /// listener waiting for a command or a response.
     ///
     /// \param command the sent C-FIND command for which to
     ///                wait for a response
@@ -1596,6 +1640,11 @@ public:
     /// \brief Wait for the response for the specified C-MOVE
     ///        command and returns it.
     ///
+    /// Other threads can wait for other commands or responses from
+    /// the same DIMSE service. All the commands and responses are
+    /// received by a secondary thread and distributed to all the
+    /// listener waiting for a command or a response.
+    ///
     /// \param command the sent C-MOVE command for which to
     ///                wait for a response
     /// \return the response for the specified command
@@ -1606,6 +1655,11 @@ public:
     ///
     /// \brief Wait for the response for the specified C-ECHO
     ///        command and returns it.
+    ///
+    /// Other threads can wait for other commands or responses from
+    /// the same DIMSE service. All the commands and responses are
+    /// received by a secondary thread and distributed to all the
+    /// listener waiting for a command or a response.
     ///
     /// \param command the sent C-ECHO command for which to
     ///                wait for a response
@@ -1618,6 +1672,11 @@ public:
     /// \brief Wait for the response for the specified N-EVENT-REPORT
     ///        command and returns it.
     ///
+    /// Other threads can wait for other commands or responses from
+    /// the same DIMSE service. All the commands and responses are
+    /// received by a secondary thread and distributed to all the
+    /// listener waiting for a command or a response.
+    ///
     /// \param command the sent N-EVENT-REPORT command for which to
     ///                wait for a response
     /// \return the response for the specified command
@@ -1628,6 +1687,11 @@ public:
     ///
     /// \brief Wait for the response for the specified N-GET
     ///        command and returns it.
+    ///
+    /// Other threads can wait for other commands or responses from
+    /// the same DIMSE service. All the commands and responses are
+    /// received by a secondary thread and distributed to all the
+    /// listener waiting for a command or a response.
     ///
     /// \param command the sent N-GET command for which to
     ///                wait for a response
@@ -1640,6 +1704,11 @@ public:
     /// \brief Wait for the response for the specified N-SET
     ///        command and returns it.
     ///
+    /// Other threads can wait for other commands or responses from
+    /// the same DIMSE service. All the commands and responses are
+    /// received by a secondary thread and distributed to all the
+    /// listener waiting for a command or a response.
+    ///
     /// \param command the sent N-SET command for which to
     ///                wait for a response
     /// \return the response for the specified command
@@ -1650,6 +1719,11 @@ public:
     ///
     /// \brief Wait for the response for the specified N-ACTION
     ///        command and returns it.
+    ///
+    /// Other threads can wait for other commands or responses from
+    /// the same DIMSE service. All the commands and responses are
+    /// received by a secondary thread and distributed to all the
+    /// listener waiting for a command or a response.
     ///
     /// \param command the sent N-ACTION command for which to
     ///                wait for a response
@@ -1662,6 +1736,11 @@ public:
     /// \brief Wait for the response for the specified N-CREATE
     ///        command and returns it.
     ///
+    /// Other threads can wait for other commands or responses from
+    /// the same DIMSE service. All the commands and responses are
+    /// received by a secondary thread and distributed to all the
+    /// listener waiting for a command or a response.
+    ///
     /// \param command the sent N-CREATE command for which to
     ///                wait for a response
     /// \return the response for the specified command
@@ -1672,6 +1751,11 @@ public:
     ///
     /// \brief Wait for the response for the specified N-DELETE
     ///        command and returns it.
+    ///
+    /// Other threads can wait for other commands or responses from
+    /// the same DIMSE service. All the commands and responses are
+    /// received by a secondary thread and distributed to all the
+    /// listener waiting for a command or a response.
     ///
     /// \param command the sent N-DELETE command for which to
     ///                wait for a response

@@ -11,18 +11,6 @@ In C++ you have to include the file imebra/imebra.h:
     include <imebra/imebra.h>
 
 
-In Java, everything is in the package imebra:
-
-.. code-block:: java
-
-    import com.imebra.*;
-
-In Java, before using any Imebra class you have to load the native code contained in the jar:
-
-.. code-block:: java
-    
-    System.loadLibrary("imebra_lib")
-
 In Python, import the package imebra:
 
 .. code-block:: python
@@ -52,11 +40,6 @@ In C++:
 
     std::unique_ptr<imebra::DataSet> loadedDataSet(imebra::CodecFactory::load("DicomFile.dcm"));
 
-In Java:
-
-.. code-block:: java
-
-    com.imebra.DataSet loadedDataSet = com.imebra.CodecFactory.load("DicomFile.dcm");
 
 In Python:
 
@@ -84,14 +67,8 @@ Lazy loading in C++:
     // Load tags in memory only if their size is equal or smaller than 2048 bytes
     std::unique_ptr<imebra::DataSet> loadedDataSet(imebra::CodecFactory::load("DicomFile.dcm", 2048));
 
-in Java
 
-.. code-block:: java
-
-    // Load tags in memory only if their size is equal or smaller than 2048 bytes
-    com.imebra.DataSet loadedDataSet = com.imebra.CodecFactory.load("DicomFile.dcm", 2048);
-
-and finally in Python
+and in Python
 
 .. code-block:: python
 
@@ -113,7 +90,7 @@ In order to retrieve a tag's value, use one of the following methods
 - :cpp:member:`imebra::DataSet::getSignedLong`
 - :cpp:member:`imebra::DataSet::getUnsignedLong`
 - :cpp:member:`imebra::DataSet::getDouble`
-- :cpp:member:`imebra::DataSet::getString` (In Java all the strings are Unicode)
+- :cpp:member:`imebra::DataSet::getString` (In Python all the strings are Unicode)
 - :cpp:member:`imebra::DataSet::getUnicodeString` (C++ only)
 - :cpp:member:`imebra::DataSet::getAge`
 - :cpp:member:`imebra::DataSet::getDate`
@@ -126,7 +103,7 @@ If you are reading a tag containing numeric values then you can retrieve the Tag
 this allow for faster information processing.
 
 In order to identify the tag to read you must use the class :cpp:class:`imebra::TagId` which takes as parameters the group ID and the tag ID or
-an :cpp:enum:`imebra::tagId_t` enumeration (only in C++, not in Java).
+an :cpp:enum:`imebra::tagId_t` enumeration.
 
 This is how you retrieve the patient's name from the DataSet in C++:
 
@@ -148,15 +125,6 @@ or
     std::wstring patientNameCharacter = loadedDataSet->getUnicodeString(imebra::TagId(0x10, 0x10), 0);
     std::wstring patientNameIdeographic = loadedDataSet->getUnicode(imebra::TagId(0x10, 0x10), 1);
 
-and in Java:
-
-.. code-block:: java
-
-    // A patient's name can contain up to 5 values, representing different interpretations of the same name
-    // (e.g. alphabetic representation, ideographic representation and phonetic representation)
-    // Here we retrieve the first 2 interpretations (index 0 and 1)
-    String patientNameCharacter = loadedDataSet.getString(new com.imebra.TagId(0x10, 0x10), 0);
-    String patientNameIdeographic = loadedDataSet.getString(new com.imebra.TagId(0x10, 0x10), 1);
 
 In python, you do it like this:
 
@@ -189,13 +157,6 @@ or
     std::wstring patientNameCharacter = loadedDataSet->getUnicodeString(imebra::TagId(0x10, 0x10), 0, L"");
     std::wstring patientNameIdeographic = loadedDataSet->getUnicodeString(imebra::TagId(0x10, 0x10), 1, L"");
 
-in Java:
-
-.. code-block:: java
-
-    // Return an empty name if the tag is not present
-    String patientNameCharacter = loadedDataSet.getString(new com.imebra.TagId(0x10, 0x10), 0, "");
-    String patientNameIdeographic = loadedDataSet.getString(new com.imebra.TagId(0x10, 0x10), 1, "");
 
 and in Python:
 
@@ -233,19 +194,6 @@ To retrieve an image in C++:
     std::uint32_t width = image->getWidth();
     std::uint32_t height = image->getHeight();
 
-To retrieve an image in Java:
-
-.. code-block:: java
-
-    // Retrieve the first image (index = 0)
-    com.imebra.Image image = loadedDataSet.getImageApplyModalityTransform(0);
-
-    // Get the color space
-    String colorSpace = image.getColorSpace();
-
-    // Get the size in pixels
-    long width = image.getWidth();
-    long height = image.getHeight();
 
 To retrieve an image in Python:
 
@@ -287,30 +235,6 @@ This is how you scan all the pixels in C++, the slow way
             std::int32_t r = dataHandler->getSignedLong((scanY * width + scanX) * 3);
             std::int32_t g = dataHandler->getSignedLong((scanY * width + scanX) * 3 + 1);
             std::int32_t b = dataHandler->getSignedLong((scanY * width + scanX) * 3 + 2);
-        }
-    }
-
-How to access the pixels in Java:
-
-.. code-block:: java
-
-    // let's assume that we already have the image's size in the variables width and height
-    // (see previous code snippet)
-
-    // Retrieve the data handler
-    com.imebra.ReadingDataHandlerNumeric dataHandler = image->getReadingDataHandler();
-
-    for(long scanY = 0; scanY != height; scanY++)
-    {
-        for(long scanX = 0; scanX != width; scanX++)
-        {
-            // For monochrome images
-            int luminance = dataHandler.getSignedLong(scanY * width + scanX);
-
-            // For RGB images
-            int r = dataHandler.getSignedLong((scanY * width + scanX) * 3);
-            int g = dataHandler.getSignedLong((scanY * width + scanX) * 3 + 1);
-            int b = dataHandler.getSignedLong((scanY * width + scanX) * 3 + 2);
         }
     }
 
@@ -435,54 +359,6 @@ in C++
 
     // If the image is monochromatic then now chain contains the VOILUT transform
 
-in Java
-
-.. code-block:: java
-
-    // The transforms chain will contain all the transform that we want to 
-    // apply to the image before displaying it
-    com.imebra.TransformsChain chain = new com.imebra.TransformsChain();
-
-    if(com.imebra.ColorTransformsFactory.isMonochrome(image.getColorSpace())
-    {
-        // Allocate a VOILUT transform. If the DataSet does not contain any pre-defined
-        //  settings then we will find the optimal ones.
-        VOILUT voilutTransform = new VOILUT();
-
-        // Retrieve the VOIs (center/width pairs)
-        com.imebra.vois_t vois = loadedDataSet.getVOIs();
-
-        // Retrieve the LUTs
-        List<com.imebra.LUT> luts = new ArrayList<com.imebra.LUT>();
-        for(long scanLUTs = 0; ; scanLUTs++)
-        {
-            try
-            {
-                luts.add(loadedDataSet.getLUT(new com.imebra.TagId(0x0028,0x3010), scanLUTs));
-            }
-            catch(Exception e)
-            {
-                break;
-            }
-        }
-
-        if(!vois.isEmpty())
-        {
-            voilutTransform.setCenterWidth(vois.get(0).center, vois.get(0).width);
-        }
-        else if(!luts.isEmpty())
-        {
-            voilutTransform.setLUT(luts.get(0));
-        }
-        else
-        {
-            voilutTransform.applyOptimalVOI(image, 0, 0, width, height);
-        }
-        
-        chain.add(voilutTransform);        
-    }
-
-    // If the image is monochromatic then now chain contains the VOILUT transform
 
 Now we can display the image. We use :cpp:class:`imebra::DrawBitmap` to obtain an RGB image
 ready to be displayed.
@@ -511,26 +387,6 @@ On OS-X or iOS you can use the provided method :cpp:func:`imebra::getImebraImage
     // Get an NSImage (or UIImage on iOS)
     NSImage* nsImage = getImebraImage(*ybrImage, draw);
 
-In Java
-
-.. code-block:: java
-
-    // We create a DrawBitmap that always apply the chain transform before getting the RGB image
-    com.imebra.DrawBitmap draw = new com.imebra.DrawBitmap(chain);
-
-    // Ask for the size of the buffer (in bytes)
-    long requestedBufferSize = draw.getBitmap(image, imebra::drawBitmapType_t::drawBitmapRGBA, 4, new byte[0]);
-    
-    byte buffer[] = new byte[(int)requestedBufferSize]; // Ideally you want to reuse this in subsequent calls to getBitmap()
-    ByteBuffer byteBuffer = ByteBuffer.wrap(buffer);
-
-    // Now fill the buffer with the image data and create a bitmap from it
-    drawBitmap.getBitmap(image, drawBitmapType_t.drawBitmapRGBA, 4, buffer);
-    Bitmap renderBitmap = Bitmap.createBitmap((int)image.getWidth(), (int)image.getHeight(), Bitmap.Config.ARGB_8888);
-    renderBitmap.copyPixelsFromBuffer(byteBuffer);
-
-    // The Bitmap can be assigned to an ImageView on Android
-
 
 
 Creating an empty DataSet
@@ -557,12 +413,6 @@ To create an empty DataSet in C++:
     // We specify the transfer syntax and the charset
     imebra::DataSet dataSet("1.2.840.10008.1.2.1", "ISO 2022 IR 6");
 
-In Java:
-
-.. code-block:: java
-
-    // We specify the transfer syntax and the charset
-    com.imebra.DataSet dataSet = new com.imebra.DataSet("1.2.840.10008.1.2.1", "ISO 2022 IR 6");
 
 In Python:
 
@@ -591,7 +441,7 @@ In order to write a tag's value, use one of the following methods
 - :cpp:member:`imebra::DataSet::setSignedLong`
 - :cpp:member:`imebra::DataSet::setUnsignedLong`
 - :cpp:member:`imebra::DataSet::setDouble`
-- :cpp:member:`imebra::DataSet::setString` (In Java all the strings are Unicode)
+- :cpp:member:`imebra::DataSet::setString` (In Python all the strings are Unicode)
 - :cpp:member:`imebra::DataSet::setUnicodeString` (C++ only)
 - :cpp:member:`imebra::DataSet::setAge`
 - :cpp:member:`imebra::DataSet::setDate`
@@ -606,12 +456,6 @@ In C++:
 .. code-block:: c++
 
     dataSet.setUnicodeString(TagId(imebra::tagId_t::PatientName_0010_0010), L"Patient^Name");
-
-In Java:
-
-.. code-block:: java
-
-    dataSet.setString(new com.imebra.TagId(0x10, 0x10), "Patient^Name");
 
 In Python:
 
@@ -634,20 +478,6 @@ in C++:
         dataHandler->setUnicodeString(2, L"PhoneticName");
 
         // dataHandler will go out of scope and will commit the data into the dataSet
-    }
-
-in Java:
-
-.. code-block:: java
-    
-    {
-        com.imebra.WritingDataHandler dataHandler = dataSet.getWritingDataHandler(0);
-        dataHandler.setString(0, "AlphabeticName");
-        dataHandler.setString(1, "IdeographicName");
-        dataHandler.setString(2, "PhoneticName");
-
-        // Force the commit, don't wait for the garbage collector
-        dataHandler.delete();
     }
 
 in Python:
@@ -694,33 +524,6 @@ in C++
 
     dataSet.setImage(0, image);
 
-in Java
-
-.. code-block:: java
-
-    // Create a 300 by 200 pixel image, 15 bits per color channel, RGB
-    com.imebra.Image image = new com.imebra.Image(300, 200, com.imebra.bitDepth_t.depthU16, "RGB", 15);
-    
-    {
-        WritingDataHandlerNumeric dataHandler = image.getWritingDataHandler();
-
-        // Set all the pixels to red
-        for(long scanY = 0; scanY != 200; scanY++)
-        {
-            for(long scanX =0; scanX != 300; scanX++)
-            {
-                dataHandler.setUnsignedLong((scanY * 300 + scanX) * 3, 65535);
-                dataHandler.setUnsignedLong((scanY * 300 + scanX) * 3 + 1, 0);
-                dataHandler.setUnsignedLong((scanY * 300 + scanX) * 3 + 2, 0);
-            }
-        }
-
-        // Force the commit, don't wait for the garbage collector
-        dataHandler.delete();
-    }
-
-    dataSet.setImage(0, image);
-
 in Python
 
 .. code-block:: python
@@ -755,14 +558,148 @@ in C++
 
     imebra::CodecFactory::save(dataSet, "dicomFile.dcm", imebra::codecType_t::dicom);
 
-in Java
-
-.. code-block:: java
-
-    com.imebra.CodecFactory.save(dataSet, "dicomFile.dcm", com.imebra.codecType_t.dicom);
-
 in Python
 
 .. code-block:: python
 
     CodecFactory.save(dataSet, "dicomFile.dcm", codecType_t_dicom);
+
+
+
+Sending a DICOM command through an SCU
+--------------------------------------
+
+A SCU (Service User) acts as a client in a DICOM association (negotiated connection between 2 peers).
+
+A DICOM association uses a TCP connection to send and receive data.
+
+The DIMSE service (see :cpp:class:`imebra::DimseService`) communicates via an association, represented
+either by an AssociationSCU (see :cpp:class:`imebra::AssociationSCU`) or by an AssociationSCP (see :cpp:class:`imebra::AssociationSCP`).
+
+The AssociationSCU usually is the client of a DICOM service, but occasionally can act as an SCP if the SCP role for an abstractSyntax has been
+negotiated: this is useful to receive data via C-GET commands, where the SCP sends the requested data to the SCU via a separate C-STORE command.
+
+The following code sends a C-STORE command to an SCP: the C-STORE command instruct the SCP to take a DICOM DataSet. In the example
+we prepare the separate DataSet (see :cpp:class:`imebra::DataSet`) and we initialize it with the transfer syntax that we negotiated
+in the association.
+
+We then send the command and wait for a response:
+
+.. code-block:: c++
+
+    // Allocate a TCP stream that connects to the DICOM SCP
+    imebra::TCPStream tcpStream(TCPActiveAddress("scpHost.company.com", "104"));
+
+    // Allocate a stream reader and a writer that use the TCP stream.
+    // If you need a more complex stream (e.g. a stream that uses your
+    // own services to send and receive data) then use a Pipe
+    imebra::StreamReader readSCU(tcpStream);
+    imebra::StreamWriter writeSCU(tcpStream);
+
+    // Add all the abstract syntaxes and the supported transfer
+    // syntaxes for each abstract syntax (the pair abstract/transfer syntax is
+    // called "presentation context")
+    imebra::PresentationContext context("1.2.840.10008.5.1.4.1.1.4.1"); // Enhanced MR Image Storage
+    context.addTransferSyntax("1.2.840.10008.1.2.1"); // Explicit VR little endian
+    imebra::PresentationContexts presentationContexts;
+    presentationContexts.addPresentationContext(context);
+
+    // The AssociationSCU constructor will negotiate a connection through
+    // the readSCU and writeSCU stream reader and writer
+    imebra::AssociationSCU scu("SCU", "SCP", 1, 1, presentationContexts, readSCU, writeSCU, 0);
+
+    // The DIMSE service will use the negotiated association to send and receive
+    // DICOM commands
+    imebra::DimseService dimse(scu);
+
+    // Let's prepare a dataset to store on the SCP
+    imebra::DataSet payload(dimse.getTransferSyntax("1.2.840.10008.5.1.4.1.1.4.1")); // We will use the negotiated transfer syntax
+    payload.setString(TagId(tagId_t::SOPInstanceUID_0008_0018), "1.1.1.1");
+    payload.setString(TagId(tagId_t::SOPClassUID_0008_0016), "1.2.840.10008.5.1.4.1.1.4.1");
+    payload.setString(TagId(tagId_t::PatientName_0010_0010),"Patient^Test");
+    
+    //
+    // Fill appropriately all the DataSet tag
+    //
+
+    imebra::CStoreCommand command(
+                "1.2.840.10008.5.1.4.1.1.4.1", //< one of the negotiated abstract syntaxes
+                dimse.getNextCommandID(),
+                dimseCommandPriority_t::medium,
+                payload.getString(TagId(tagId_t::SOPClassUID_0008_0016), 0),
+                payload.getString(TagId(tagId_t::SOPInstanceUID_0008_0018), 0),
+                "",
+                0,
+                payload);
+    dimse.sendCommandOrResponse(command);
+    std::unique_ptr<imebra::DimseResponse> response(dimse.getCStoreResponse(command));
+
+    if(response->getStatus() == imebra::dimseStatus_t::success)
+    {
+        // SUCCESS!
+    }
+
+
+Implementign a DICOM SCP
+------------------------
+
+A DICOM SCP listen for incoming connection and then communicate with the connected peer through a negotiated
+DICOM association.
+
+In this example we use the :cpp:class:`imebra::TCPListener` to wait for incoming connections and then negotiate
+the association via a AssociationSCP (see :cpp:class:`imebra::AssociationSCP`).
+
+A :cpp:class:`imebra::DimseService` will be used on top of the :cpp:class:`imebra::AssociationSCP` in order to
+receive commands and send the responses.
+
+.. code-block:: c++
+
+    // Bind the port 104 to a listening socket
+    imebra::TCPListener tcpListener(TCPPassiveAddress("", "104"));
+    
+    // Wait until a connection arrives or terminate() is called on the tcpListener
+    std::unique_ptr<imebra::TCPStream> tcpStream(tcpListener.waitForConnection());
+
+    // tcpStream now represents the connected socket. Allocate a stream reader and a writer
+    // to read and write on the connected socket
+    imebra::StreamReader readSCU(*tcpStream);
+    imebra::StreamWriter writeSCU(*tcpStream);
+
+    // Specify which presentation contexts we accept
+    imebra::PresentationContext context(sopClassUid);
+    context.addTransferSyntax(transferSyntax);
+    imebra::PresentationContexts presentationContexts;
+    presentationContexts.addPresentationContext(context);
+
+    // The AssociationSCP constructor will negotiate the assocation
+    imebra::AssociationSCP scp("SCP", 1, 1, presentationContexts, readSCU, writeSCU, 0, 10);
+
+    // Receive commands via the dimse service
+    imebra::DimseService dimse(scp);
+
+    try
+    {
+        // Receive commands until the association is closed
+        for(;;)
+        {
+            // We assume we are going to receive a C-Store. Normally you should check the command type
+            // (using DimseCommand::getCommandType()) and then cast to the proper class.
+            std::unique_ptr<imebra::CStoreCommand> command(dynamic_cast<imebra::CStoreCommand*>(dimse.getCommand()));
+
+            // The store command has a payload. We can do something with it, or we can
+            // use the methods in CStoreCommand to get other data sent by the peer
+            std::unique_ptr<imebra::DataSet> pPayload(command->getPayloadDataSet());
+
+            // Do something with the payload
+
+            // Send a response
+            dimse.sendCommandOrResponse(CStoreResponse(*command, dimseStatusCode_t::success));
+        }
+    }
+    catch(const StreamEOFError&)
+    {
+        // The association has been closed
+    }
+
+
+
