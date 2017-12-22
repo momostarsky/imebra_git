@@ -65,7 +65,15 @@ Imebra
    transforms_classes
    dicom_dictionary_classes
    exception_classes
-   objectivec_classes
+
+.. toctree::
+   :maxdepth: 3
+   :caption: Objective-C API
+
+   objc_loading_saving_classes
+   objc_dicom_dataset_tag_classes
+   objc_imaging_classes
+
 
 .. _build-distribution:
 

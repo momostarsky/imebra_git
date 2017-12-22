@@ -11,20 +11,16 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#import "imebra_strings.h"
-#import <Foundation/NSString.h>
+#define __IMEBRA_OBJECTIVEC_BRIDGING__
 
-namespace imebra
-{
-
-std::string NSStringToString ( NSString* str )
-{
-    return std::string([str UTF8String]);
-}
-
-NSString* stringToNSString ( const std::string& str )
-{
-    return [ [ NSString alloc] initWithUTF8String: str.c_str()];
-}
-
-} // namespace imebra
+#import "imebra_codecFactory.h"
+#import "imebra_dataset.h"
+#import "imebra_dateAge.h"
+#import "imebra_image.h"
+#import "imebra_readingDataHandler.h"
+#import "imebra_readingDataHandlerNumeric.h"
+#import "imebra_readMemory.h"
+#import "imebra_readWriteMemory.h"
+#import "imebra_tagId.h"
+#import "imebra_writingDataHandler.h"
+#import "imebra_writingDataHandlerNumeric.h"

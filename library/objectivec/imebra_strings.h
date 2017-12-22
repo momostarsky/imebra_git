@@ -14,9 +14,9 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #if !defined(imebraObjcStrings__INCLUDED_)
 #define imebraObjcStrings__INCLUDED_
 
+#include <imebra/definitions.h>
 #import <Foundation/Foundation.h>
 #include <string>
-#include "../definitions.h"
 
 namespace imebra
 {
