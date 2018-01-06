@@ -26,10 +26,10 @@ struct Date;
 
 typedef NS_ENUM(char, ImebraAgeUnit_t)
 {
-    days = (char)'D',
-    weeks = (char)'W',
-    months = (char)'M',
-    years = (char)'Y'
+    ImebraDays = (char)'D',
+    ImebraWeeks = (char)'W',
+    ImebraMonths = (char)'M',
+    ImebraYears = (char)'Y'
 };
 
 ///

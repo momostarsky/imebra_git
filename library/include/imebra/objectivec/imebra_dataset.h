@@ -32,49 +32,49 @@ namespace imebra
 
 typedef NS_ENUM(unsigned short, ImebraTagVR_t)
 {
-    AE = 0x4145, ///< Application Entity
-    AS = 0x4153, ///< Age String
-    AT = 0x4154, ///< Attribute Tag
-    CS = 0x4353, ///< Code String
-    DA = 0x4441, ///< Date
-    DS = 0x4453, ///< Decimal String
-    DT = 0x4454, ///< Date Time
-    FL = 0x464c, ///< Floating Point Single
-    FD = 0x4644, ///< Floating Point Double
-    IS = 0x4953, ///< Integer String
-    LO = 0x4c4f, ///< Long String
-    LT = 0x4c54, ///< Long Text
-    OB = 0x4f42, ///< Other Byte String
-    SB = 0x5342, ///< Non standard. Used internally for signed bytes
-    OD = 0x4f44, ///< Other Double String
-    OF = 0x4f46, ///< Other Float String
-    OL = 0x4f4c, ///< Other Long String
-    OW = 0x4f57, ///< Other Word String
-    PN = 0x504e, ///< Person Name
-    SH = 0x5348, ///< Short String
-    SL = 0x534c, ///< Signed Long
-    SQ = 0x5351, ///< Sequence of Items
-    SS = 0x5353, ///< Signed Short
-    ST = 0x5354, ///< Short Text
-    TM = 0x544d, ///< Time
-    UC = 0x5543, ///< Unlimited characters
-    UI = 0x5549, ///< Unique Identifier
-    UL = 0x554c, ///< Unsigned Long
-    UN = 0x554e, ///< Unknown
-    UR = 0x5552, ///< Unified Resource Identifier
-    US = 0x5553, ///< Unsigned Short
-    UT = 0x5554  ///< Unlimited Text
+    ImebraAE = 0x4145, ///< Application Entity
+    ImebraAS = 0x4153, ///< Age String
+    ImebraAT = 0x4154, ///< Attribute Tag
+    ImebraCS = 0x4353, ///< Code String
+    ImebraDA = 0x4441, ///< Date
+    ImebraDS = 0x4453, ///< Decimal String
+    ImebraDT = 0x4454, ///< Date Time
+    ImebraFL = 0x464c, ///< Floating Point Single
+    ImebraFD = 0x4644, ///< Floating Point Double
+    ImebraIS = 0x4953, ///< Integer String
+    ImebraLO = 0x4c4f, ///< Long String
+    ImebraLT = 0x4c54, ///< Long Text
+    ImebraOB = 0x4f42, ///< Other Byte String
+    ImebraSB = 0x5342, ///< Non standard. Used internally for signed bytes
+    ImebraOD = 0x4f44, ///< Other Double String
+    ImebraOF = 0x4f46, ///< Other Float String
+    ImebraOL = 0x4f4c, ///< Other Long String
+    ImebraOW = 0x4f57, ///< Other Word String
+    ImebraPN = 0x504e, ///< Person Name
+    ImebraSH = 0x5348, ///< Short String
+    ImebraSL = 0x534c, ///< Signed Long
+    ImebraSQ = 0x5351, ///< Sequence of Items
+    ImebraSS = 0x5353, ///< Signed Short
+    ImebraST = 0x5354, ///< Short Text
+    ImebraTM = 0x544d, ///< Time
+    ImebraUC = 0x5543, ///< Unlimited characters
+    ImebraUI = 0x5549, ///< Unique Identifier
+    ImebraUL = 0x554c, ///< Unsigned Long
+    ImebraUN = 0x554e, ///< Unknown
+    ImebraUR = 0x5552, ///< Unified Resource Identifier
+    ImebraUS = 0x5553, ///< Unsigned Short
+    ImebraUT = 0x5554  ///< Unlimited Text
 };
 
 typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
 {
-    veryHigh = 0,      ///< the image is saved with very high quality. No subsampling is performed and no quantization
-    high = 100,        ///< the image is saved with high quality. No subsampling is performed. Quantization ratios are low
-    aboveMedium = 200, ///< the image is saved in medium quality. Horizontal subsampling is applied. Quantization ratios are low
-    medium = 300,      ///< the image is saved in medium quality. Horizontal subsampling is applied. Quantization ratios are medium
-    belowMedium = 400, ///< the image is saved in medium quality. Horizontal and vertical subsampling are applied. Quantization ratios are medium
-    low = 500,         ///< the image is saved in low quality. Horizontal and vertical subsampling are applied. Quantization ratios are higher than the ratios used in the belowMedium quality
-    veryLow = 600      ///< the image is saved in low quality. Horizontal and vertical subsampling are applied. Quantization ratios are high
+    ImebraQualityVeryHigh = 0,      ///< the image is saved with very high quality. No subsampling is performed and no quantization
+    ImebraQualityHigh = 100,        ///< the image is saved with high quality. No subsampling is performed. Quantization ratios are low
+    ImebraQualityAboveMedium = 200, ///< the image is saved in medium quality. Horizontal subsampling is applied. Quantization ratios are low
+    ImebraQualityMedium = 300,      ///< the image is saved in medium quality. Horizontal subsampling is applied. Quantization ratios are medium
+    ImebraQualityBelowMedium = 400, ///< the image is saved in medium quality. Horizontal and vertical subsampling are applied. Quantization ratios are medium
+    ImebraQualityLow = 500,         ///< the image is saved in low quality. Horizontal and vertical subsampling are applied. Quantization ratios are higher than the ratios used in the belowMedium quality
+    ImebraQualityVeryLow = 600      ///< the image is saved in low quality. Horizontal and vertical subsampling are applied. Quantization ratios are high
 };
 
 
@@ -229,9 +229,11 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
     -(ImebraWritingDataHandler*) getWritingDataHandler:(ImebraTagId*)tagId bufferId:(unsigned int)bufferId error:(NSError**)pError;
 
 
-    -(signed int)getSignedLong:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber error:(NSError**)pError;
+    -(signed int)getSignedLong:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
 
-    -(signed int)getSignedLong:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber defaultValue:(signed int)defaultValue error:(NSError**)pError;
+    -(signed int)getSignedLong:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber defaultValue:(signed int)defaultValue error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
 
     -(void)setSignedLong:(ImebraTagId*)tagId newValue:(signed int)newValue tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
@@ -239,9 +241,11 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
     -(void)setSignedLong:(ImebraTagId*)tagId newValue:(signed int)newValue error:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
 
-    -(unsigned int)getUnsignedLong:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber error:(NSError**)pError;
+    -(unsigned int)getUnsignedLong:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
 
-    -(unsigned int)getUnsignedLong:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber defaultValue:(unsigned int)defaultValue error:(NSError**)pError;
+    -(unsigned int)getUnsignedLong:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber defaultValue:(unsigned int)defaultValue error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
 
     -(void)setUnsignedLong:(ImebraTagId*)tagId newValue:(unsigned int)newValue tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
@@ -249,9 +253,11 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
     -(void)setUnsignedLong:(ImebraTagId*)tagId newValue:(unsigned int)newValue error:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
 
-    -(double)getDouble:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber error:(NSError**)pError;
+    -(double)getDouble:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
 
-    -(double)getDouble:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber defaultValue:(double)defaultValue error:(NSError**)pError;
+    -(double)getDouble:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber defaultValue:(double)defaultValue error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
 
     -(void)setDouble:(ImebraTagId*)tagId newValue:(double)newValue tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
@@ -284,6 +290,9 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
         __attribute__((swift_error(nonnull_error)));
 
     -(void)setDate:(ImebraTagId*)tagId newValue:(ImebraDate*)newValue error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
+
+    -(ImebraTagVR_t)getDataType:(ImebraTagId*)tagId error:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
 
 

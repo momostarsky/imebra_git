@@ -35,7 +35,8 @@ class ReadingDataHandlerNumeric;
 
     -(void)dealloc;
 
-    -(ImebraReadMemory*)getMemory: (NSError**)pError;
+    -(ImebraReadMemory*)getMemory: (NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
 
     -(void)copyTo:(ImebraWritingDataHandlerNumeric*)destination error:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));

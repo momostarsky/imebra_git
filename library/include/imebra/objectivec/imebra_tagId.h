@@ -48,7 +48,7 @@ class TagId;
 
     @property (readonly) unsigned int groupOrder;
 
-    @property (readonly) unsigned int tagId;
+    @property (readonly) unsigned short tagId;
 
 @end
 

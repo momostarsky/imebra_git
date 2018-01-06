@@ -26,12 +26,12 @@ namespace imebra
 
 typedef NS_ENUM(unsigned int, ImebraBitDepth_t)
 {
-    depthU8 = 0,
-    depthS8 = 1,
-    depthU16 = 2,
-    depthS16 = 3,
-    depthU32 = 4,
-    depthS32 = 5
+    ImebraBitDepthU8 = 0,
+    ImebraBitDepthS8 = 1,
+    ImebraBitDepthU16 = 2,
+    ImebraBitDepthS16 = 3,
+    ImebraBitDepthU32 = 4,
+    ImebraBitDepthS32 = 5
 };
 
 @class ImebraReadingDataHandlerNumeric;

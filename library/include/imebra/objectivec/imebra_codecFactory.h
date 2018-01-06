@@ -17,6 +17,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #import <Foundation/Foundation.h>
 
 @class ImebraDataSet;
+@class ImebraStreamReader;
 
 ///
 /// \brief The ImebraCodecFactory class can load or save a DataSet or an Image
@@ -24,6 +25,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 ///
 ///////////////////////////////////////////////////////////////////////////////
 @interface ImebraCodecFactory: NSObject
+
 
     /// \brief Parses the content of the input file and returns a ImebraDataSet
     ///        representing it.
@@ -37,7 +39,13 @@ If you do not want to be bound by the GPL terms (such as the requirement
     /// \return a ImebraDataSet object representing the input file's content
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    +(ImebraDataSet*)load:(NSString*) fileName error:(NSError**)pError;
+    +(ImebraDataSet*)loadFromFile:(NSString*)fileName error:(NSError**)pError;
+
+    +(ImebraDataSet*)loadFromFileMaxSize:(NSString*)fileName maxBufferSize:(unsigned int)maxBufferSize error:(NSError**)pError;
+
+    +(ImebraDataSet*)loadFromStream:(ImebraStreamReader*)pReader error:(NSError**)pError;
+
+    +(ImebraDataSet*)loadFromStreamMaxSize:(ImebraStreamReader*)pReader maxBufferSize:(unsigned int)maxBufferSize error:(NSError**)pError;
 
 @end
 
