@@ -85,6 +85,12 @@ file(GLOB imebra_include "${CMAKE_CURRENT_SOURCE_DIR}/library/src/*.h")
 file(GLOB imebra_src "${CMAKE_CURRENT_SOURCE_DIR}/library/src/*.cpp")
 file(GLOB imebra_implementation_src "${CMAKE_CURRENT_SOURCE_DIR}/library/implementation/*.cpp")
 file(GLOB imebra_implementation_include "${CMAKE_CURRENT_SOURCE_DIR}/library/implementation/*.h")
+if("${IMEBRA_OBJC}" STREQUAL "1")
+    file(GLOB imebra_objc_src "${CMAKE_CURRENT_SOURCE_DIR}/library/objectivec/*.mm")
+    file(GLOB imebra_objc_include "${CMAKE_CURRENT_SOURCE_DIR}/library/include/imebra/objectivec/*.h")
+    add_definitions(-DIMEBRA_OBJC)
+endif("${IMEBRA_OBJC}" STREQUAL "1")
+
 
 if(NOT "${ADDITIONAL_LIB_PATH}" STREQUAL "")
     link_directories(${LINK_DIRECTORIES} ${ADDITIONAL_LIB_PATH})
@@ -128,6 +134,8 @@ if(NOT "${ADDITIONAL_INCLUDE_PATH}" STREQUAL "")
     target_include_directories(imebra PRIVATE ${ADDITIONAL_INCLUDE_PATH})
 endif(NOT "${ADDITIONAL_INCLUDE_PATH}" STREQUAL "")
 
+set(HIDDEN_FLAGS "-fvisibility=hidden -fvisibility-inlines-hidden")
+
 if("${IMEBRA_OBJC}" STREQUAL "1")
     if(APPLE)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -framework Foundation -framework CoreServices")
@@ -141,6 +149,8 @@ if("${IMEBRA_OBJC}" STREQUAL "1")
         target_include_directories(imebra PRIVATE "/usr/include/GNUstep")
         set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} gnustep-base objc)
     endif(APPLE)
+
+    set(HIDDEN_FLAGS "")
 endif("${IMEBRA_OBJC}" STREQUAL "1")
 
 # Add flags specific to the compiler
@@ -148,7 +158,7 @@ endif("${IMEBRA_OBJC}" STREQUAL "1")
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 
     message(STATUS "GCC detected, adding compile flags")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Wpedantic -Wconversion -Wfloat-equal -fvisibility=hidden -fvisibility-inlines-hidden")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Wpedantic -Wconversion -Wfloat-equal ${HIDDEN_FLAGS}")
     set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} pthread)
 
     if(CMAKE_BUILD_TYPE MATCHES DEBUG)
@@ -160,7 +170,7 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 
     message(STATUS "CLANG detected, adding compile flags")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Wpedantic -Wconversion -Wfloat-equal -fvisibility=hidden -fvisibility-inlines-hidden")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Wpedantic -Wconversion -Wfloat-equal ${HIDDEN_FLAGS}")
     set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} pthread)
 
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
@@ -267,24 +277,26 @@ if(NOT IOS)
             message(WARNING "WARNING: DCMTK not found. Disabling interoperability tests")
     endif(${DCMTK_FOUND})
 
-    file(GLOB imebra_tests_include "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.h")
-    file(GLOB imebra_tests_src "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.cpp")
-
     set(imebra_tests_objc_src "")
 
+    file(GLOB imebra_tests_include "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.h")
+    file(GLOB imebra_tests_src "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.cpp")
     if("${IMEBRA_OBJC}" STREQUAL "1")
-            if(APPLE)
-                    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -framework Foundation -framework CoreServices")
-                    if(IOS)
-                            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -framework UIKit")
-                    else(IOS)
-                            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -framework AppKit")
-                    endif(IOS)
-            else(APPLE)
-                    include_directories("/usr/include/GNUstep")
-                    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fconstant-string-class=NSConstantString")
-                    set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} gnustep-base objc)
-            endif(APPLE)
+        if(APPLE)
+                set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -framework Foundation -framework CoreServices")
+                if(IOS)
+                        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -framework UIKit")
+                else(IOS)
+                        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -framework AppKit")
+                endif(IOS)
+        else(APPLE)
+                include_directories("/usr/include/GNUstep")
+                set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fconstant-string-class=NSConstantString")
+                set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} gnustep-base objc)
+        endif(APPLE)
+
+        file(GLOB imebra_tests_objc_src "${CMAKE_CURRENT_SOURCE_DIR}/tests/objectivec/*.mm")
+
     endif("${IMEBRA_OBJC}" STREQUAL "1")
 
     add_executable(ImebraTests

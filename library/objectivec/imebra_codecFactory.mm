@@ -15,27 +15,51 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "imebra_nserror.h"
 #import "../include/imebra/objectivec/imebra_codecFactory.h"
 #import "../include/imebra/objectivec/imebra_dataset.h"
+#import "../include/imebra/objectivec/imebra_streamReader.h"
 #import "imebra_strings.h"
 #import <Foundation/NSString.h>
-#import <Foundation/NSDictionary.h>
-
 
 @implementation ImebraCodecFactory
 
-+(ImebraDataSet*)load:(NSString*) fileName error:(NSError**)pError
++(ImebraDataSet*)loadFromFile:(NSString*) fileName error:(NSError**)pError
 {
-    try
-    {
-        std::unique_ptr<imebra::DataSet> pDataSet(imebra::CodecFactory::load(imebra::NSStringToString(fileName)));
-        return [[ImebraDataSet alloc] initWithImebraDataSet:pDataSet.release()];
-    }
-    catch(const std::runtime_error& e)
-    {
-        imebra::setNSError(e, pError);
-        return nil;
-    }
+    OBJC_IMEBRA_FUNCTION_START();
+
+    std::unique_ptr<imebra::DataSet> pDataSet(imebra::CodecFactory::load(imebra::NSStringToString(fileName)));
+    return [[ImebraDataSet alloc] initWithImebraDataSet:pDataSet.release()];
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
 
++(ImebraDataSet*)loadFromFileMaxSize:(NSString*) fileName maxBufferSize:(unsigned int)maxBufferSize error:(NSError**)pError
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    std::unique_ptr<imebra::DataSet> pDataSet(imebra::CodecFactory::load(imebra::NSStringToString(fileName), maxBufferSize));
+    return [[ImebraDataSet alloc] initWithImebraDataSet:pDataSet.release()];
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+}
+
++(ImebraDataSet*)loadFromStream:(ImebraStreamReader*)pReader error:(NSError**)pError
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    std::unique_ptr<imebra::DataSet> pDataSet(imebra::CodecFactory::load(*(pReader->m_pReader)));
+    return [[ImebraDataSet alloc] initWithImebraDataSet:pDataSet.release()];
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+}
+
++(ImebraDataSet*)loadFromStreamMaxSize:(ImebraStreamReader*)pReader maxBufferSize:(unsigned int)maxBufferSize error:(NSError**)pError
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    std::unique_ptr<imebra::DataSet> pDataSet(imebra::CodecFactory::load(*(pReader->m_pReader), maxBufferSize));
+    return [[ImebraDataSet alloc] initWithImebraDataSet:pDataSet.release()];
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+}
 
 @end
 

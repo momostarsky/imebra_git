@@ -27,6 +27,10 @@ If you do not want to be bound by the GPL terms (such as the requirement
     {
         self->m_pDataHandler = pReadingDataHandler;
     }
+    else
+    {
+        delete pReadingDataHandler;
+    }
     return self;
 
 }
@@ -46,92 +50,67 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(int) getSignedLong:(unsigned int)index error:(NSError**)pError
 {
-    try
-    {
-        return self->m_pDataHandler->getSignedLong(index);
-    }
-    catch(const std::runtime_error& e)
-    {
-        imebra::setNSError(e, pError);
-        return 0;
-    }
+    OBJC_IMEBRA_FUNCTION_START();
+
+    return self->m_pDataHandler->getSignedLong(index);
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(0);
 }
 
 -(unsigned int) getUnsignedLong:(unsigned int)index error:(NSError**)pError
 {
-    try
-    {
-        return self->m_pDataHandler->getUnsignedLong(index);
-    }
-    catch(const std::runtime_error& e)
-    {
-        imebra::setNSError(e, pError);
-        return 0;
-    }
+    OBJC_IMEBRA_FUNCTION_START();
+
+    return self->m_pDataHandler->getUnsignedLong(index);
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(0);
 }
 
 -(double) getDouble:(unsigned int)index error:(NSError**)pError
 {
-    try
-    {
-        return self->m_pDataHandler->getDouble(index);
-    }
-    catch(const std::runtime_error& e)
-    {
-        imebra::setNSError(e, pError);
-        return 0.0f;
-    }
+    OBJC_IMEBRA_FUNCTION_START();
+
+    return self->m_pDataHandler->getDouble(index);
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(0.0f);
 }
 
 -(NSString*) getString:(unsigned int)index error:(NSError**)pError
 {
-    try
-    {
-        return imebra::stringToNSString(self->m_pDataHandler->getString(index));
-    }
-    catch(const std::runtime_error& e)
-    {
-        imebra::setNSError(e, pError);
-        return nil;
-    }
+    OBJC_IMEBRA_FUNCTION_START();
+
+    return imebra::stringToNSString(self->m_pDataHandler->getString(index));
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
 
 -(ImebraDate*) getDate:(unsigned int)index error:(NSError**)pError
 {
-    try
-    {
-        imebra::Date date(self->m_pDataHandler->getDate(index));
-        return [[ImebraDate alloc] initWithDate:date.year
-                month:date.month
-                day:date.day
-                hour:date.hour
-                minutes:date.minutes
-                seconds:date.seconds
-                nanoseconds:date.nanoseconds
-                offsetHours:date.offsetHours
-                offsetMinutes:date.offsetMinutes];
-    }
-    catch(const std::runtime_error& e)
-    {
-        imebra::setNSError(e, pError);
-        return nil;
-    }
+    OBJC_IMEBRA_FUNCTION_START();
+
+    imebra::Date date(self->m_pDataHandler->getDate(index));
+    return [[ImebraDate alloc] initWithDate:date.year
+            month:date.month
+            day:date.day
+            hour:date.hour
+            minutes:date.minutes
+            seconds:date.seconds
+            nanoseconds:date.nanoseconds
+            offsetHours:date.offsetHours
+            offsetMinutes:date.offsetMinutes];
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
 
 -(ImebraAge*) getAge:(unsigned int)index error:(NSError**)pError
 {
-    imebra::Age age(0, imebra::ageUnit_t::days);
-    try
-    {
-        imebra::Age age(self->m_pDataHandler->getAge(index));
-        return [[ImebraAge alloc] initWithAge:age.age
-                units:(ImebraAgeUnit_t)age.units];
-    }
-    catch(const std::runtime_error& e)
-    {
-        imebra::setNSError(e, pError);
-        return nil;
-    }
+    OBJC_IMEBRA_FUNCTION_START();
+
+    imebra::Age age(self->m_pDataHandler->getAge(index));
+    return [[ImebraAge alloc] initWithAge:age.age
+            units:(ImebraAgeUnit_t)age.units];
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
 
 

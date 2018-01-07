@@ -18,7 +18,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 namespace imebra
 {
 
-void setNSError(const std::runtime_error& error, NSError** pError)
+void setNSError(const std::runtime_error& error, NSError** pError, Class errorClass)
 {
     if(pError)
     {
@@ -34,7 +34,7 @@ void setNSError(const std::runtime_error& error, NSError** pError)
         }
         NSMutableDictionary* details = [NSMutableDictionary dictionary];
         [details setValue:imebra::stringToNSString(stackTrace) forKey:NSUnderlyingErrorKey];
-        *pError = [NSError errorWithDomain:@"imebra" code:errorCode userInfo: details];
+        *pError = [errorClass errorWithDomain:@"imebra" code:errorCode userInfo: details];
     }
 }
 

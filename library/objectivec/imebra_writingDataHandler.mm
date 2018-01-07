@@ -28,6 +28,10 @@ If you do not want to be bound by the GPL terms (such as the requirement
     {
         m_pDataHandler = pWritingDataHandler;
     }
+    else
+    {
+        delete pWritingDataHandler;
+    }
     return self;
 }
 
@@ -51,74 +55,56 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(void) setSignedLong:(unsigned int)index withValue:(int)value error:(NSError**)pError
 {
-    try
-    {
-        m_pDataHandler->setSignedLong(index, value);
-    }
-    catch(const std::runtime_error& e)
-    {
-        imebra::setNSError(e, pError);
-    }
+    OBJC_IMEBRA_FUNCTION_START();
+
+    m_pDataHandler->setSignedLong(index, value);
+
+    OBJC_IMEBRA_FUNCTION_END();
 }
 
 -(void) setUnsignedLong:(unsigned int)index withValue:(unsigned int)value error:(NSError**)pError
 {
-    try
-    {
-        m_pDataHandler->setUnsignedLong(index, value);
-    }
-    catch(const std::runtime_error& e)
-    {
-        imebra::setNSError(e, pError);
-    }
+    OBJC_IMEBRA_FUNCTION_START();
+
+    m_pDataHandler->setUnsignedLong(index, value);
+
+    OBJC_IMEBRA_FUNCTION_END();
 }
 
 -(void) setDouble:(unsigned int)index withValue:(double)value error:(NSError**)pError
 {
-    try
-    {
-        m_pDataHandler->setDouble(index, value);
-    }
-    catch(const std::runtime_error& e)
-    {
-        imebra::setNSError(e, pError);
-    }
+    OBJC_IMEBRA_FUNCTION_START();
+
+    m_pDataHandler->setDouble(index, value);
+
+    OBJC_IMEBRA_FUNCTION_END();
 }
 
 -(void) setString:(unsigned int)index withValue:(NSString*)value error:(NSError**)pError
 {
-    try
-    {
-        m_pDataHandler->setString(index, imebra::NSStringToString(value));
-    }
-    catch(const std::runtime_error& e)
-    {
-        imebra::setNSError(e, pError);
-    }
+    OBJC_IMEBRA_FUNCTION_START();
+
+    m_pDataHandler->setString(index, imebra::NSStringToString(value));
+
+    OBJC_IMEBRA_FUNCTION_END();
 }
 
 -(void) setDate:(unsigned int)index withValue:(ImebraDate*)value error:(NSError**)pError
 {
-    try
-    {
-        m_pDataHandler->setDate(index, *(imebra::Date*)(value->m_pDate));
-    }
-    catch(const std::runtime_error& e)
-    {
-        imebra::setNSError(e, pError);
-    }
+    OBJC_IMEBRA_FUNCTION_START();
+
+    m_pDataHandler->setDate(index, *(imebra::Date*)(value->m_pDate));
+
+    OBJC_IMEBRA_FUNCTION_END();
 }
 
 -(void) setAge:(unsigned int)index withValue:(ImebraAge*)value error:(NSError**)pError
 {
-    try
-    {
-        m_pDataHandler->setAge(index, *(imebra::Age*)(value->m_pAge));
-    }
-    catch(const std::runtime_error& e)
-    {
-        imebra::setNSError(e, pError);
-    }
+    OBJC_IMEBRA_FUNCTION_START();
+
+    m_pDataHandler->setAge(index, *(imebra::Age*)(value->m_pAge));
+
+    OBJC_IMEBRA_FUNCTION_END();
 }
 
 @end

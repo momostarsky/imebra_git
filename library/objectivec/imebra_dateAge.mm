@@ -27,10 +27,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(id)initWithAge:(unsigned int)initialAge units:(ImebraAgeUnit_t)initialUnits
 {
+    m_pAge = 0;
     self = [super init];
     if(self)
     {
-        self->m_pAge = new imebra::Age(initialAge, (imebra::ageUnit_t)initialUnits);
+        m_pAge = new imebra::Age(initialAge, (imebra::ageUnit_t)initialUnits);
     }
     return self;
 }

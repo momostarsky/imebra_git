@@ -23,10 +23,15 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(id)initWithImebraImage:(imebra::Image*)pImage
 {
+    m_pImage = 0;
     self =  [super init];
     if(self)
     {
-        self->m_pImage = pImage;
+        m_pImage = pImage;
+    }
+    else
+    {
+        delete pImage;
     }
     return self;
 }
@@ -36,7 +41,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     self =  [super init];
     if(self)
     {
-        self->m_pImage = new imebra::Image(
+        m_pImage = new imebra::Image(
                                  width,
                                  height,
                                  (imebra::bitDepth_t)depth,
@@ -60,28 +65,20 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(ImebraReadingDataHandlerNumeric*) getReadingDataHandler:(NSError**)pError
 {
-    try
-    {
-        return [[ImebraReadingDataHandlerNumeric alloc] initWithImebraReadingDataHandler:m_pImage->getReadingDataHandler()];
-    }
-    catch(const std::runtime_error& e)
-    {
-        imebra::setNSError(e, pError);
-        return nil;
-    }
+    OBJC_IMEBRA_FUNCTION_START();
+
+    return [[ImebraReadingDataHandlerNumeric alloc] initWithImebraReadingDataHandler:m_pImage->getReadingDataHandler()];
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
 
 -(ImebraWritingDataHandlerNumeric*) getWritingDataHandler:(NSError**)pError
 {
-    try
-    {
-        return [[ImebraWritingDataHandlerNumeric alloc] initWithImebraWritingDataHandler:m_pImage->getWritingDataHandler()];
-    }
-    catch(const std::runtime_error& e)
-    {
-        imebra::setNSError(e, pError);
-        return nil;
-    }
+    OBJC_IMEBRA_FUNCTION_START();
+
+    return [[ImebraWritingDataHandlerNumeric alloc] initWithImebraWritingDataHandler:m_pImage->getWritingDataHandler()];
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
 
 -(double) widthMm

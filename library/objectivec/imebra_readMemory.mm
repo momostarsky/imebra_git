@@ -19,10 +19,15 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(id)initWithImebraReadMemory:(imebra::ReadMemory*)pReadMemory
 {
+    self->m_pMemory = 0;
     self = [super init];
     if(self)
     {
         self->m_pMemory = pReadMemory;
+    }
+    else
+    {
+        delete pReadMemory;
     }
     return self;
 }

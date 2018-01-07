@@ -34,27 +34,20 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(ImebraReadMemory*)getMemory:(NSError**)pError
 {
-    try
-    {
-        return [[ImebraReadMemory alloc] initWithImebraReadMemory:((imebra::ReadingDataHandlerNumeric*)m_pDataHandler)->getMemory()];
-    }
-    catch(const std::runtime_error& e)
-    {
-        imebra::setNSError(e, pError);
-        return nil;
-    }
+    OBJC_IMEBRA_FUNCTION_START();
+
+    return [[ImebraReadMemory alloc] initWithImebraReadMemory:((imebra::ReadingDataHandlerNumeric*)m_pDataHandler)->getMemory()];
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
 
 -(void)copyTo:(ImebraWritingDataHandlerNumeric*)destination error:(NSError**)pError
 {
-    try
-    {
-        ((imebra::ReadingDataHandlerNumeric*)m_pDataHandler)->copyTo(*((imebra::WritingDataHandlerNumeric*)destination->m_pDataHandler));
-    }
-    catch(const std::runtime_error& e)
-    {
-        imebra::setNSError(e, pError);
-    }
+    OBJC_IMEBRA_FUNCTION_START();
+
+    ((imebra::ReadingDataHandlerNumeric*)m_pDataHandler)->copyTo(*((imebra::WritingDataHandlerNumeric*)destination->m_pDataHandler));
+
+    OBJC_IMEBRA_FUNCTION_END();
 }
 
 -(const char*) data

@@ -34,39 +34,29 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(ImebraReadWriteMemory*)getMemory:(NSError**)pError
 {
-    try
-    {
-        return [[ImebraReadWriteMemory alloc] initWithImebraReadWriteMemory:((imebra::WritingDataHandlerNumeric*)m_pDataHandler)->getMemory()];
-    }
-    catch(const std::runtime_error& e)
-    {
-        imebra::setNSError(e, pError);
-        return nil;
-    }
+    OBJC_IMEBRA_FUNCTION_START();
+
+    return [[ImebraReadWriteMemory alloc] initWithImebraReadWriteMemory:((imebra::WritingDataHandlerNumeric*)m_pDataHandler)->getMemory()];
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
 
 -(void)assign:(const char*)data withSize:(unsigned int)size error:(NSError**)pError
 {
-    try
-    {
-        ((imebra::WritingDataHandlerNumeric*)m_pDataHandler)->assign((char*)data, size);
-    }
-    catch(const std::runtime_error& e)
-    {
-        imebra::setNSError(e, pError);
-    }
+    OBJC_IMEBRA_FUNCTION_START();
+
+    ((imebra::WritingDataHandlerNumeric*)m_pDataHandler)->assign((char*)data, size);
+
+    OBJC_IMEBRA_FUNCTION_END();
 }
 
 -(void)copyFrom:(ImebraReadingDataHandlerNumeric*)source error:(NSError**)pError
 {
-    try
-    {
-        ((imebra::WritingDataHandlerNumeric*)m_pDataHandler)->copyFrom(*((imebra::ReadingDataHandlerNumeric*)source->m_pDataHandler));
-    }
-    catch(const std::runtime_error& e)
-    {
-        imebra::setNSError(e, pError);
-    }
+    OBJC_IMEBRA_FUNCTION_START();
+
+    ((imebra::WritingDataHandlerNumeric*)m_pDataHandler)->copyFrom(*((imebra::ReadingDataHandlerNumeric*)source->m_pDataHandler));
+
+    OBJC_IMEBRA_FUNCTION_END();
 }
 
 -(char*) data

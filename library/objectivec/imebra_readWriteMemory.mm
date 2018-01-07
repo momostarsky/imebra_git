@@ -51,74 +51,56 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(void)copyFrom:(ImebraReadMemory*)source error:(NSError**)pError
 {
-    try
-    {
-        ((imebra::ReadWriteMemory*)m_pMemory)->copyFrom(*(source->m_pMemory));
-    }
-    catch(const std::runtime_error& e)
-    {
-        imebra::setNSError(e, pError);
-    }
+    OBJC_IMEBRA_FUNCTION_START();
+
+    ((imebra::ReadWriteMemory*)m_pMemory)->copyFrom(*(source->m_pMemory));
+
+    OBJC_IMEBRA_FUNCTION_END();
 }
 
 -(void)clear:(NSError**)pError
 {
-    try
-    {
-        ((imebra::ReadWriteMemory*)m_pMemory)->clear();
-    }
-    catch(const std::runtime_error& e)
-    {
-        imebra::setNSError(e, pError);
-    }
+    OBJC_IMEBRA_FUNCTION_START();
+
+    ((imebra::ReadWriteMemory*)m_pMemory)->clear();
+
+    OBJC_IMEBRA_FUNCTION_END();
 }
 
 -(void)resize:(unsigned int)newSize error:(NSError**)pError
 {
-    try
-    {
-        ((imebra::ReadWriteMemory*)m_pMemory)->resize((size_t)newSize);
-    }
-    catch(const std::runtime_error& e)
-    {
-        imebra::setNSError(e, pError);
-    }
+    OBJC_IMEBRA_FUNCTION_START();
+
+    ((imebra::ReadWriteMemory*)m_pMemory)->resize((size_t)newSize);
+
+    OBJC_IMEBRA_FUNCTION_END();
 }
 
 -(void)reserve:(unsigned int)reserveSize error:(NSError**)pError
 {
-    try
-    {
-        ((imebra::ReadWriteMemory*)m_pMemory)->reserve((size_t)reserveSize);
-    }
-    catch(const std::runtime_error& e)
-    {
-        imebra::setNSError(e, pError);
-    }
+    OBJC_IMEBRA_FUNCTION_START();
+
+    ((imebra::ReadWriteMemory*)m_pMemory)->reserve((size_t)reserveSize);
+
+    OBJC_IMEBRA_FUNCTION_END();
 }
 
 -(void)assign:(const char*)data withSize:(unsigned int)size error:(NSError**)pError
 {
-    try
-    {
-        ((imebra::ReadWriteMemory*)m_pMemory)->assign(data, (size_t)size);
-    }
-    catch(const std::runtime_error& e)
-    {
-        imebra::setNSError(e, pError);
-    }
+    OBJC_IMEBRA_FUNCTION_START();
+
+    ((imebra::ReadWriteMemory*)m_pMemory)->assign(data, (size_t)size);
+
+    OBJC_IMEBRA_FUNCTION_END();
 }
 
 -(void)assignRegion:(const char*)data  withSize:(unsigned int)size offset:(unsigned int)destinationOffset error:(NSError**)pError
 {
-    try
-    {
-        ((imebra::ReadWriteMemory*)m_pMemory)->assignRegion(data, (size_t)size, (size_t)destinationOffset);
-    }
-    catch(const std::runtime_error& e)
-    {
-        imebra::setNSError(e, pError);
-    }
+    OBJC_IMEBRA_FUNCTION_START();
+
+    ((imebra::ReadWriteMemory*)m_pMemory)->assignRegion(data, (size_t)size, (size_t)destinationOffset);
+
+    OBJC_IMEBRA_FUNCTION_END();
 }
 
 @end

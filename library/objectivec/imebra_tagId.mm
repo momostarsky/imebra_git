@@ -71,7 +71,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     return m_pTagId->getGroupOrder();
 }
 
--(unsigned int) tagId
+-(unsigned short) tagId
 {
     return m_pTagId->getTagId();
 }
