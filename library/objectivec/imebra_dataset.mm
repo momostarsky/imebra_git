@@ -58,6 +58,24 @@ If you do not want to be bound by the GPL terms (such as the requirement
     return self;
 }
 
+-(id)initWithTransferSyntaxAndCharsets:(NSString*)transferSyntax charsets:(NSArray*)pCharsets
+{
+    self = [super init];
+    if(self)
+    {
+        imebra::charsetsList_t charsets;
+
+        size_t charsetsCount = [pCharsets count];
+        for(size_t scanCharsets(0); scanCharsets != charsetsCount; ++scanCharsets)
+        {
+            charsets.push_back(imebra::NSStringToString([pCharsets objectAtIndex:scanCharsets]));
+        }
+
+        m_pDataSet = new imebra::DataSet(imebra::NSStringToString(transferSyntax), charsets);
+    }
+    return self;
+}
+
 -(void)dealloc
 {
     delete m_pDataSet;

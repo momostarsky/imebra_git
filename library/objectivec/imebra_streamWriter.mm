@@ -14,8 +14,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "../include/imebra/imebra.h"
 #import "imebra_nserror.h"
 #import "../include/imebra/objectivec/imebra_streamWriter.h"
-
-#import <Foundation/Foundation.h>
+#import "../include/imebra/objectivec/imebra_baseStreamOutput.h"
+#import "../include/imebra/objectivec/imebra_baseStreamInputOutput.h"
 
 @implementation ImebraStreamWriter: NSObject
 
@@ -43,7 +43,17 @@ If you do not want to be bound by the GPL terms (such as the requirement
         self->m_pWriter = new imebra::StreamWriter(*(pOutput->m_pBaseStreamOutput));
     }
     return self;
+}
 
+-(id)initWithInputOutputStream:(ImebraBaseStreamInputOutput*)pInputOutput
+{
+    self->m_pWriter = 0;
+    self = [super init];
+    if(self)
+    {
+        self->m_pWriter = new imebra::StreamWriter(*(imebra::BaseStreamOutput*)(pInputOutput->m_pBaseStreamInput));
+    }
+    return self;
 }
 
 -(void)dealloc

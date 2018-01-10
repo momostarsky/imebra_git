@@ -13,42 +13,50 @@ namespace tests
 // Test NSString conversion functions
 TEST(objectivec, stringToNSStringTest)
 {
-    // Try a cyrillic/arabic patient name
-    std::string patientName0 = "??\xD0\xA1\xD0\xBC\xD1\x8B\xD1\x81\xD0\xBB\x20\xD0\xB2\xD1\x81\xD0\xB5\xD0\xB9";
-    std::string patientName1 = "\xD0\xA1\xD0\xBC\xD1\x8B\xD1\x81\xD0\xBB\x20\xD0\xB2\xD1\x81\xD0\xB5\xD0\xB9";
+    NSAutoreleasePool *myPool = [[NSAutoreleasePool alloc] init];
 
-    ReadWriteMemory streamMemory;
+    NSString* patient0 = [[NSString alloc] initWithUTF8String:"??\xD0\xA1\xD0\xBC\xD1\x8B\xD1\x81\xD0\xBB\x20\xD0\xB2\xD1\x81\xD0\xB5\xD0\xB9"];
+    NSString* patient1 = [[NSString alloc] initWithUTF8String:"\xD0\xA1\xD0\xBC\xD1\x8B\xD1\x81\xD0\xBB\x20\xD0\xB2\xD1\x81\xD0\xB5\xD0\xB9"];
+
+    ImebraReadWriteMemory* pStreamMemory = [[ImebraReadWriteMemory alloc] init];
+    ImebraTagId* pPatientTag = [[ImebraTagId alloc] init:0x10 tag:0x10];
     {
-        charsetsList_t charsets;
-        charsets.push_back("ISO_IR 6");
-        DataSet testDataSet("1.2.840.10008.1.2.1", charsets);
+        NSMutableArray* pCharsets = [[NSMutableArray alloc] init];
+        [pCharsets addObject: @"ISO_IR 6"];
+        ImebraDataSet* pDataSet = [[ImebraDataSet alloc] initWithTransferSyntaxAndCharsets:@"1.2.840.10008.1.2.1" charsets:pCharsets];
 
         {
-            std::unique_ptr<WritingDataHandler> handler(testDataSet.getWritingDataHandler(TagId(0x10, 0x10), 0));
+            NSError* pError = 0;
+            ImebraWritingDataHandler* pHandler = [pDataSet getWritingDataHandler:pPatientTag bufferId:0 error:&pError];
 
-            handler->setString(0, patientName0);
-            handler->setString(1, patientName1);
+            [pHandler setString:0 withValue:patient0 error:&pError];
+            [pHandler setString:1 withValue:patient1 error:&pError];
+
+            [pHandler release];
         }
 
-        MemoryStreamOutput writeStream(streamMemory);
-        StreamWriter writer(writeStream);
-        CodecFactory::save(testDataSet, writer, codecType_t::dicom);
+        ImebraMemoryStreamOutput* pWriteStream = [[ImebraMemoryStreamOutput alloc] initWithReadWriteMemory:pStreamMemory];
+        ImebraStreamWriter* pWriter = [[ImebraStreamWriter alloc] initWithOutputStream: pWriteStream];
+        NSError* pError = 0;
+        [ImebraCodecFactory saveToStream:pWriter dataSet:pDataSet codecType:ImebraCodecTypeDicom error:&pError];
+
+        [pWriter release];
+        [pWriteStream release];
     }
 
     {
-        MemoryStreamInput readStream(streamMemory);
-        StreamReader reader(readStream);
-        std::unique_ptr<DataSet> testDataSet(CodecFactory::load(reader));
+        ImebraMemoryStreamInput* pReadStream = [[ImebraMemoryStreamInput alloc] initWithReadMemory:pStreamMemory];
 
-        std::string patientName0(testDataSet->getString(TagId(0x0010, 0x0010), 0));
-        std::string patientName1(testDataSet->getString(TagId(0x0010, 0x0010), 1));
+        ImebraStreamReader* pReader = [[ImebraStreamReader alloc] initWithInputStream:pReadStream];
 
-        NSString* nsPatientName0 = stringToNSString(patientName0);
-        NSString* nsPatientName1 = stringToNSString(patientName1);
+        NSError* pError = 0;
+        ImebraDataSet* pTestDataSet = [ImebraCodecFactory loadFromStream:pReader error:&pError];
 
-        EXPECT_TRUE([nsPatientName0 isEqualToString:@"??\xD0\xA1\xD0\xBC\xD1\x8B\xD1\x81\xD0\xBB\x20\xD0\xB2\xD1\x81\xD0\xB5\xD0\xB9"]);
-        EXPECT_TRUE([nsPatientName1 isEqualToString:@"\xD0\xA1\xD0\xBC\xD1\x8B\xD1\x81\xD0\xBB\x20\xD0\xB2\xD1\x81\xD0\xB5\xD0\xB9"]);
+        NSString* nsPatientName0 = [pTestDataSet getString:pPatientTag elementNumber:0 error:&pError];
+        NSString* nsPatientName1 = [pTestDataSet getString:pPatientTag elementNumber:1 error:&pError];
 
+        EXPECT_TRUE([nsPatientName0 isEqualToString:patient0]);
+        EXPECT_TRUE([nsPatientName1 isEqualToString:patient1]);
     }
 }
 
@@ -168,6 +176,44 @@ TEST(objectivec, datasetValues)
     EXPECT_EQ([checkAge age], 10);
     EXPECT_EQ([checkAge units], ImebraYears);
 }
+
+#if defined(__APPLE__)
+// Test NSImage
+TEST(objectivec, images)
+{
+    std::string transferSyntax = "1.2.840.10008.1.2.4.50";
+    DataSet dataset(transferSyntax);
+
+    std::uint32_t width = 600;
+    std::uint32_t height = 400;
+
+    std::unique_ptr<Image> baselineImage(buildImageForTest(width, height, bitDepth_t::depthU8, 7, 30, 20, "RGB", 50));
+
+    std::unique_ptr<Transform> colorTransform(ColorTransformsFactory::getTransform("RGB", "YBR_FULL"));
+    std::unique_ptr<Image> ybrImage(colorTransform->allocateOutputImage(*baselineImage, width, height));
+    colorTransform->runTransform(*baselineImage, 0, 0, width, height, *ybrImage, 0, 0);
+
+    TransformsChain chain;
+    DrawBitmap drawBitmap(chain);
+    NSImage* nsImage = getImebraImage(*ybrImage, drawBitmap);
+
+    NSData *imageData = [nsImage TIFFRepresentation];
+    NSBitmapImageRep *imageRep = [NSBitmapImageRep imageRepWithData:imageData];
+    NSDictionary *imageProps = [NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:1.0] forKey:NSImageCompressionFactor];
+    imageData = [imageRep representationUsingType:NSJPEGFileType properties:imageProps];
+
+    ReadWriteMemory dataMemory((const char*)[imageData bytes], [imageData length]);
+    MemoryStreamInput dataStream(dataMemory);
+    StreamReader dataReader(dataStream);
+
+    std::unique_ptr<DataSet> loadedDataSet(CodecFactory::load(dataReader));
+    std::unique_ptr<Image> loadedImage(loadedDataSet->getImage(0));
+
+    // Compare the buffers. A little difference is allowed
+    double differenceYBR = compareImages(*ybrImage, *loadedImage);
+    ASSERT_LE(differenceYBR, 1);
+}
+#endif
 
 } // namespace tests
 
