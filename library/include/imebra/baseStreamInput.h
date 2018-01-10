@@ -71,7 +71,7 @@ private:
     /// \param pStream the implementation of BaseStreamInput
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    BaseStreamInput(std::shared_ptr<implementation::baseStreamInput> pInputStream);
+    explicit BaseStreamInput(std::shared_ptr<implementation::baseStreamInput> pInputStream);
 #endif
 
 public:
@@ -105,7 +105,7 @@ public:
     /// \param timeoutSeconds timeout in milliseconds
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    StreamTimeout(BaseStreamInput& stream, std::uint32_t timeoutSeconds);
+    explicit StreamTimeout(BaseStreamInput& stream, std::uint32_t timeoutSeconds);
 
     ///
     /// \brief Destructor. If the timeout has not yet expired then terminates the

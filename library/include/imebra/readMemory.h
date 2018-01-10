@@ -55,7 +55,7 @@ class IMEBRA_API ReadMemory
     friend class ReadWriteMemory;
     friend class ReadingDataHandlerNumeric;
 private:
-    ReadMemory(std::shared_ptr<const implementation::memory> pMemory);
+    explicit ReadMemory(std::shared_ptr<const implementation::memory> pMemory);
 #endif
 
 
@@ -79,7 +79,7 @@ public:
     /// \param sourceSize  the amount of data to copy into the allocated memory
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    ReadMemory(const char* source, size_t sourceSize);
+    explicit ReadMemory(const char* source, size_t sourceSize);
 
     virtual ~ReadMemory();
 

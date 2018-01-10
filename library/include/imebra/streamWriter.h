@@ -64,7 +64,7 @@ class IMEBRA_API StreamWriter
     friend class AssociationSCP;
 
 private:
-    StreamWriter(std::shared_ptr<implementation::streamWriter> pWriter);
+    explicit StreamWriter(std::shared_ptr<implementation::streamWriter> pWriter);
 #endif
 
 public:
@@ -74,7 +74,7 @@ public:
     ///               write
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    StreamWriter(const BaseStreamOutput& stream);
+    explicit StreamWriter(const BaseStreamOutput& stream);
 
     /// \brief Constructor.
     ///
@@ -87,7 +87,7 @@ public:
     /// \param virtualLength the number of visible bytes in the managed stream
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    StreamWriter(const BaseStreamOutput& stream, size_t virtualStart, size_t virtualLength);
+    explicit StreamWriter(const BaseStreamOutput& stream, size_t virtualStart, size_t virtualLength);
 
     virtual ~StreamWriter();
 

@@ -58,7 +58,7 @@ class IMEBRA_API Tag
 #ifndef SWIG
     friend class DataSet;
 private:
-    Tag(std::shared_ptr<imebra::implementation::data> pData);
+    explicit Tag(std::shared_ptr<imebra::implementation::data> pData);
 #endif
 
 public:

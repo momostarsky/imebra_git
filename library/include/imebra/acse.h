@@ -75,7 +75,7 @@ public:
     ///                       context
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    PresentationContext(const std::string& abstractSyntax);
+    explicit PresentationContext(const std::string& abstractSyntax);
 
     ///
     /// \brief Constructor.
@@ -90,7 +90,7 @@ public:
     ///                       the same abstract syntax
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    PresentationContext(const std::string& abstractSyntax, bool bSCURole, bool bSCPRole);
+    explicit PresentationContext(const std::string& abstractSyntax, bool bSCURole, bool bSCPRole);
 
     ///
     /// \brief Add a supported transfer syntax to the presentation context.

@@ -73,7 +73,7 @@ class IMEBRA_API Image
     friend class DrawBitmap;
 
 private:
-    Image(std::shared_ptr<imebra::implementation::image> pImage);
+    explicit Image(std::shared_ptr<imebra::implementation::image> pImage);
 #endif
 
 public:
@@ -90,7 +90,7 @@ public:
     /// \param highBit    the highest bit occupied by the channels' values
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    Image(
+    explicit Image(
         std::uint32_t width,
         std::uint32_t height,
         bitDepth_t depth,
