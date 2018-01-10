@@ -27,6 +27,7 @@ class ReadMemory;
 
 #ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
 {
+    @public
     imebra::ReadMemory* m_pMemory;
 }
 

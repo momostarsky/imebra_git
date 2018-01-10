@@ -14,7 +14,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #if !defined(imebraObjcStreamWriter__INCLUDED_)
 #define imebraObjcStreamWriter__INCLUDED_
 
-#import "imebra_baseStreamOutput.h"
 #import <Foundation/Foundation.h>
 
 #ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
@@ -23,6 +22,9 @@ namespace imebra
 class StreamWriter;
 }
 #endif
+
+@class ImebraBaseStreamOutput;
+@class ImebraBaseStreamInputOutput;
 
 @interface ImebraStreamWriter: NSObject
 
@@ -36,6 +38,8 @@ class StreamWriter;
 #endif
 
     -(id)initWithOutputStream:(ImebraBaseStreamOutput*)pOutput;
+
+    -(id)initWithInputOutputStream:(ImebraBaseStreamInputOutput*)pInputOutput;
 
     -(void)dealloc;
 

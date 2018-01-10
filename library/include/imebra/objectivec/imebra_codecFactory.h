@@ -18,6 +18,13 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @class ImebraDataSet;
 @class ImebraStreamReader;
+@class ImebraStreamWriter;
+
+typedef NS_ENUM(unsigned short, ImebraCodecType_t)
+{
+    ImebraCodecTypeDicom, ///< DICOM codec
+    ImebraCodecTypeJpeg   ///< JPEG codec
+};
 
 ///
 /// \brief The ImebraCodecFactory class can load or save a DataSet or an Image
@@ -46,6 +53,12 @@ If you do not want to be bound by the GPL terms (such as the requirement
     +(ImebraDataSet*)loadFromStream:(ImebraStreamReader*)pReader error:(NSError**)pError;
 
     +(ImebraDataSet*)loadFromStreamMaxSize:(ImebraStreamReader*)pReader maxBufferSize:(unsigned int)maxBufferSize error:(NSError**)pError;
+
+    +(void)saveToFile:(NSString*)fileName dataSet:(ImebraDataSet*) pDataSet codecType:(ImebraCodecType_t) codecType error:(NSError**)pError;
+
+    +(void)saveToStream:(ImebraStreamWriter*)pWriter dataSet:(ImebraDataSet*)pDataSet codecType:(ImebraCodecType_t) codecType error:(NSError**)pError;
+
+    +(void)setMaximumImageSize:(unsigned int)maximumWidth maxHeight:(unsigned int)maximumHeight;
 
 @end
 

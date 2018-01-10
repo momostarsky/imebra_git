@@ -173,6 +173,28 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
     ///////////////////////////////////////////////////////////////////////////////
     -(id)initWithTransferSyntax:(NSString*)transferSyntax;
 
+    /// \brief Construct an empty DICOM dataset and specifies the default charsets.
+    ///
+    /// \param transferSyntax the dataSet's transfer syntax. The following transfer
+    ///                       syntaxes are supported:
+    ///                       - "1.2.840.10008.1.2" (Implicit VR little endian)
+    ///                       - "1.2.840.10008.1.2.1" (Explicit VR little endian)
+    ///                       - "1.2.840.10008.1.2.2" (Explicit VR big endian)
+    ///                       - "1.2.840.10008.1.2.5" (RLE compression)
+    ///                       - "1.2.840.10008.1.2.4.50" (Jpeg baseline 8 bit
+    ///                         lossy)
+    ///                       - "1.2.840.10008.1.2.4.51" (Jpeg extended 12 bit
+    ///                         lossy)
+    ///                       - "1.2.840.10008.1.2.4.57" (Jpeg lossless NH)
+    ///                       - "1.2.840.10008.1.2.4.70" (Jpeg lossless NH first
+    ///                         order prediction)
+    ///
+    /// \param pCharsets a NSArray of NSString specifying the charsets supported
+    ///                  by the DataSet
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(id)initWithTransferSyntaxAndCharsets:(NSString*)transferSyntax charsets:(NSArray*)pCharsets;
+
     -(void)dealloc;
 
     /// \brief Retrieve an image from the dataset.
