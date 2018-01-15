@@ -11,14 +11,9 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#if !defined(imebraObjcBaseStreamInputOutput__INCLUDED_)
-#define imebraObjcBaseStreamInputOutput__INCLUDED_
-
-#import <Foundation/Foundation.h>
-#import "../include/imebra/objectivec/imebra_baseStreamInputOutput.h"
+#include "imebra_bridgeStructures.h"
 
 @implementation ImebraBaseStreamInputOutput
 
 @end
 
-#endif // !defined(imebraObjcBaseStreamInputOutput__INCLUDED_)

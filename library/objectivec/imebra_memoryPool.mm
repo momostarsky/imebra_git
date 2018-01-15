@@ -13,21 +13,25 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #include "imebra_bridgeStructures.h"
 
-@implementation ImebraMemoryStreamInput
+@implementation ImebraMemoryPool
 
--(id)initWithReadMemory:(ImebraReadMemory*)pMemory
++(void) flush
 {
-    m_pBaseStreamInput = 0;
-    self =  [super init];
-    if(self)
-    {
-        m_pBaseStreamInput = new imebra::MemoryStreamInput(*(pMemory->m_pMemory));
-    }
-    return self;
+    imebra::MemoryPool::flush();
 }
 
++(unsigned int) getUnusedMemorySize
+{
+    return (unsigned int)imebra::MemoryPool::getUnusedMemorySize();
+}
+
++(void) setMemoryPoolSize:(unsigned int)minMemoryBlockSize maxSize:(unsigned int)maxMemoryPoolSize
+{
+    imebra::MemoryPool::setMemoryPoolSize((size_t)minMemoryBlockSize, (size_t)maxMemoryPoolSize);
+}
 
 @end
+
 
 
 

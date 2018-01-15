@@ -11,11 +11,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#include "../include/imebra/imebra.h"
-#import "imebra_nserror.h"
-#import "../include/imebra/objectivec/imebra_readingDataHandlerNumeric.h"
-#import "../include/imebra/objectivec/imebra_writingDataHandlerNumeric.h"
-#import "../include/imebra/objectivec/imebra_readMemory.h"
+#include "imebra_bridgeStructures.h"
 
 @implementation ImebraReadingDataHandlerNumeric
 
@@ -48,19 +44,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
     ((imebra::ReadingDataHandlerNumeric*)m_pDataHandler)->copyTo(*((imebra::WritingDataHandlerNumeric*)destination->m_pDataHandler));
 
     OBJC_IMEBRA_FUNCTION_END();
-}
-
--(const char*) data
-{
-    size_t dummy;
-    return ((imebra::ReadingDataHandlerNumeric*)m_pDataHandler)->data(&dummy);
-}
-
--(unsigned int) dataSizeBytes
-{
-    size_t size;
-    ((imebra::ReadingDataHandlerNumeric*)m_pDataHandler)->data(&size);
-    return (unsigned int)size;
 }
 
 -(unsigned int) unitSize

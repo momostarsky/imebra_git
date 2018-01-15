@@ -11,13 +11,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#include <../include/imebra/imebra.h>
-#import "imebra_nserror.h"
-#import "../include/imebra/objectivec/imebra_image.h"
-#import "../include/imebra/objectivec/imebra_readingDataHandlerNumeric.h"
-#import "../include/imebra/objectivec/imebra_writingDataHandlerNumeric.h"
-#import "imebra_strings.h"
-
+#include "imebra_bridgeStructures.h"
 
 @implementation ImebraImage
 
@@ -57,8 +51,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 ///////////////////////////////////////////////////////////////////////////////
 -(void)dealloc
 {
-    delete m_pImage;
 #if !__has_feature(objc_arc)
+    [m_pImage release];
     [super dealloc];
 #endif
 }

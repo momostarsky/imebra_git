@@ -11,9 +11,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#include "../include/imebra/imebra.h"
-#import "imebra_nserror.h"
-#import "../include/imebra/objectivec/imebra_readMemory.h"
+#include "imebra_bridgeStructures.h"
 
 @implementation ImebraReadMemory
 
@@ -42,12 +40,13 @@ If you do not want to be bound by the GPL terms (such as the requirement
     return self;
 }
 
--(id)initWithData:(const char*)source size:(unsigned int)size
+
+-(id)initWithData:(NSData*)pSource
 {
     self = [super init];
     if(self)
     {
-        self->m_pMemory = new imebra::ReadMemory(source, (size_t)size);
+        self->m_pMemory = new imebra::ReadMemory((char*)pSource.bytes, (size_t)pSource.length);
     }
     return self;
 }
@@ -60,15 +59,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #endif
 }
 
--(unsigned int) size
+-(NSData*)data
 {
-    return (unsigned int)m_pMemory->size();
-}
-
--(const char*) data
-{
-    size_t dummy;
-    return m_pMemory->data(&dummy);
+    size_t dataSize;
+    const char* pMemory(m_pMemory->data(&dataSize));
+    NSData* pData = [[NSData alloc] init:pMemory size:dataSize];
 }
 
 -(bool)empty

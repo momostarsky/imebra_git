@@ -11,9 +11,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#include "../include/imebra/imebra.h"
-#import "imebra_nserror.h"
-#import "../include/imebra/objectivec/imebra_readWriteMemory.h"
+#include "imebra_bridgeStructures.h"
 
 @implementation ImebraReadWriteMemory
 
@@ -37,9 +35,14 @@ If you do not want to be bound by the GPL terms (such as the requirement
     return [super initWithImebraReadMemory:(new imebra::ReadWriteMemory(*(source->m_pMemory)))];
 }
 
--(id)initWithData:(const char*)source size:(unsigned int)size
+-(id)initWithData:(NSData*)pSource
 {
-    return [super initWithData:source size:size];
+    self = [super init];
+    if(self)
+    {
+        self->m_pMemory = new imebra::ReadWriteMemory((char*)pSource.bytes, (size_t)pSource.length);
+    }
+    return self;
 }
 
 -(void)dealloc
@@ -85,20 +88,20 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_END();
 }
 
--(void)assign:(const char*)data withSize:(unsigned int)size error:(NSError**)pError
+-(void)assign:(NSData*)pSource error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    ((imebra::ReadWriteMemory*)m_pMemory)->assign(data, (size_t)size);
+    ((imebra::ReadWriteMemory*)m_pMemory)->assign((char*)pSource.bytes, (size_t)pSource.length);
 
     OBJC_IMEBRA_FUNCTION_END();
 }
 
--(void)assignRegion:(const char*)data  withSize:(unsigned int)size offset:(unsigned int)destinationOffset error:(NSError**)pError
+-(void)assignRegion:(NSData*)pSource offset:(unsigned int)destinationOffset error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    ((imebra::ReadWriteMemory*)m_pMemory)->assignRegion(data, (size_t)size, (size_t)destinationOffset);
+    ((imebra::ReadWriteMemory*)m_pMemory)->assignRegion((char*)pSource.bytes, (size_t)pSource.length, (size_t)destinationOffset);
 
     OBJC_IMEBRA_FUNCTION_END();
 }

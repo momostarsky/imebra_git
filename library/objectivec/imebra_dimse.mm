@@ -11,13 +11,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#include "../include/imebra/imebra.h"
-#include "imebra_strings.h"
-#import "../include/imebra/objectivec/imebra_dataset.h"
-#import "../include/imebra/objectivec/imebra_dimse.h"
-#import "../include/imebra/objectivec/imebra_tagId.h"
-#import "../include/imebra/objectivec/imebra_acse.h"
-#import "imebra_nserror.h"
+#include "imebra_bridgeStructures.h"
 
 @implementation ImebraDimseCommandBase
 
@@ -625,26 +619,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @implementation ImebraNGetCommand
 
-    ///
-    /// \brief Initializes the N-GET command.
-    ///
-    /// \param abstractSyntax         the message's abstract syntax
-    ///                               (previously negotiated via the
-    ///                               PresentationContexts parameter
-    ///                               of the AssociationSCP or
-    ///                               AssociationSCU constructors)
-    /// \param messageID              message ID (can be retrieved
-    ///                               with
-    ///                               DimseService::getNextCommandID()
-    /// \param requestedSopClassUid    the requested SOP class UID
-    /// \param requestedSopInstanceUid the requested SOP instance
-    ///                                UID
-    /// \param attributeIdentifierList An array of ImebraTagId.
-    ///                                The list of identifier tags.
-    ///                                An empty list means "all the
-    ///                                tags".
-    ///
-    //////////////////////////////////////////////////////////////////
 -(id)initCommand:(NSString*)abstractSyntax
     messageID:(unsigned short)messageID
     requestedSopClassUid:(NSString*)requestedSopClassUid

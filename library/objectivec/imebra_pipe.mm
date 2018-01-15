@@ -11,11 +11,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#include "../include/imebra/imebra.h"
-#import "../include/imebra/objectivec/imebra_pipe.h"
-#import "../include/imebra/objectivec/imebra_readMemory.h"
-#import "../include/imebra/objectivec/imebra_readWriteMemory.h"
-#import "imebra_nserror.h"
+#include "imebra_bridgeStructures.h"
 
 @implementation ImebraPipe
 
@@ -42,7 +38,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return (unsigned int)((imebra::Pipe*)m_pBaseStreamInput)->sink(*(imebra::ReadWriteMemory*)[buffer m_pMemory]);
+    return (unsigned int)((imebra::Pipe*)m_pBaseStreamInput)->sink(*(imebra::ReadWriteMemory*)(buffer->m_pMemory));
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(0);
 }

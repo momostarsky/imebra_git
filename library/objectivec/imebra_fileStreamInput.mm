@@ -13,21 +13,22 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #include "imebra_bridgeStructures.h"
 
-@implementation ImebraMemoryStreamInput
+@implementation ImebraFileStreamInput
 
--(id)initWithReadMemory:(ImebraReadMemory*)pMemory
+-(id)initWithName:(NSString*)fileName error:(NSError**)pError
 {
+    OBJC_IMEBRA_FUNCTION_START();
+
     m_pBaseStreamInput = 0;
     self =  [super init];
     if(self)
     {
-        m_pBaseStreamInput = new imebra::MemoryStreamInput(*(pMemory->m_pMemory));
+        m_pBaseStreamInput = new imebra::FileStreamInput(imebra::NSStringToString(fileName));
     }
     return self;
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
 
 
 @end
-
-
-

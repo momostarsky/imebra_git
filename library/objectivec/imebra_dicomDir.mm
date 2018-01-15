@@ -11,11 +11,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#include "../include/imebra/imebra.h"
-#import "../include/imebra/objectivec/imebra_dicomDir.h"
-#import "../include/imebra/objectivec/imebra_dataset.h"
-#import "imebra_nserror.h"
-#import "imebra_strings.h"
+#include "imebra_bridgeStructures.h"
 
 
 @implementation ImebraDicomDirEntry

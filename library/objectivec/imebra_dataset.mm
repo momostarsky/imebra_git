@@ -11,16 +11,42 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#include "../include/imebra/imebra.h"
-#import "imebra_nserror.h"
-#import "imebra_strings.h"
-#import "../include/imebra/objectivec/imebra_tagId.h"
-#import "../include/imebra/objectivec/imebra_dataset.h"
-#import "../include/imebra/objectivec/imebra_dateAge.h"
-#import "../include/imebra/objectivec/imebra_image.h"
-#import "../include/imebra/objectivec/imebra_readingDataHandler.h"
-#import "../include/imebra/objectivec/imebra_writingDataHandler.h"
+#include "imebra_bridgeStructures.h"
+
 #import <Foundation/NSString.h>
+
+@implementation ImebraVOIDescription
+
+-(id)init:(double)center width:(double)width description:(NSString*)description
+{
+    self = [super init];
+    if(self)
+    {
+        m_center = center;
+        m_width = width;
+        m_description = description;
+    }
+    return self;
+
+}
+
+-(double) center
+{
+    return m_center;
+}
+
+-(double) width
+{
+    return m_width;
+}
+
+-(NSString*) description
+{
+    return m_description;
+}
+
+@end
+
 
 @implementation ImebraDataSet
 
@@ -84,6 +110,47 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #endif
 }
 
+
+-(NSArray*)getTags
+{
+    NSMutableArray* pIds = [[NSMutableArray alloc] init];
+    imebra::tagsIds_t ids = m_pDataSet->getTags();
+    for(const imebra::TagId& tagId: ids)
+    {
+        [pIds addObject: [[ImebraTagId alloc] init:tagId.getGroupId() groupOrder:tagId.getGroupOrder() tag:tagId.getTagId()] ];
+    }
+
+    return pIds;
+}
+
+
+-(ImebraTag*) getTag:(ImebraTagId*)tagId error:(NSError**)pError
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    return [[ImebraTag alloc] initWithImebraTag:m_pDataSet->getTag(*(tagId->m_pTagId))];
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+}
+
+-(ImebraTag*) getTagCreate:(ImebraTagId*)tagId VR:(ImebraTagVR_t)tagVR error:(NSError**)pError
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    return [[ImebraTag alloc] initWithImebraTag:m_pDataSet->getTagCreate(*(tagId->m_pTagId), (imebra::tagVR_t)tagVR)];
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+}
+
+-(ImebraTag*) getTagCreate:(ImebraTagId*)tagId error:(NSError**)pError
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    return [[ImebraTag alloc] initWithImebraTag:m_pDataSet->getTagCreate(*(tagId->m_pTagId))];
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+}
+
 -(ImebraImage*) getImage:(unsigned int) frameNumber error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
@@ -111,6 +178,48 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_END();
 }
 
+-(NSArray*) getVOIs:(NSError**)pError
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    NSMutableArray* pVOIs = [[NSMutableArray alloc] init];
+    imebra::vois_t vois = m_pDataSet->getVOIs();
+    for(const imebra::VOIDescription& description: vois)
+    {
+        [pVOIs addObject: [[ImebraVOIDescription alloc] init:description.center width:description.width description:imebra::stringToNSString(description.description)] ];
+    }
+
+    return pVOIs;
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+}
+
+-(ImebraDataSet*) getSequenceItem:(ImebraTagId*)pTagId item:(unsigned int)itemId error:(NSError**)pError
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    return [[ImebraDataSet alloc] initWithImebraDataSet:m_pDataSet->getSequenceItem(imebra::TagId((std::uint16_t)pTagId.groupId, (std::uint32_t)pTagId.groupOrder, (std::uint16_t)pTagId.tagId), (size_t)itemId)];
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+}
+
+-(void) setSequenceItem:(ImebraTagId*)pTagId item:(unsigned int)itemId dataSet:(ImebraDataSet*)pDataSet error:(NSError**)pError
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    m_pDataSet->setSequenceItem(imebra::TagId((std::uint16_t)pTagId.groupId, (std::uint32_t)pTagId.groupOrder, (std::uint16_t)pTagId.tagId), (size_t)itemId, *(pDataSet->m_pDataSet));
+
+    OBJC_IMEBRA_FUNCTION_END();
+}
+
+-(ImebraLUT*) getLUT:(ImebraTagId*)pTagId item:(unsigned int)itemId error:(NSError**)pError
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    return [[ImebraLUT alloc] initWithImebraLut:m_pDataSet->getLUT(imebra::TagId((std::uint16_t)pTagId.groupId, (std::uint32_t)pTagId.groupOrder, (std::uint16_t)pTagId.tagId), (size_t)itemId)];
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+}
 
 -(ImebraReadingDataHandler*) getReadingDataHandler:(ImebraTagId*)tagId bufferId:(unsigned int)bufferId error:(NSError**)pError
 {

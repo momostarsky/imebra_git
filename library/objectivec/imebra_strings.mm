@@ -27,4 +27,9 @@ NSString* stringToNSString ( const std::string& str )
     return [ [ NSString alloc] initWithUTF8String: str.c_str()];
 }
 
+NSString* stringToNSString ( const std::wstring& str )
+{
+    return [ [ NSString alloc] initWithBytes: str.c_str() length:str.size() * 4 encoding:NSUTF32LittleEndianStringEncoding];
+}
+
 } // namespace imebra

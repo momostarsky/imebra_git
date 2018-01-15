@@ -11,11 +11,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#include "../include/imebra/imebra.h"
-#import "imebra_nserror.h"
-#import "../include/imebra/objectivec/imebra_writingDataHandlerNumeric.h"
-#import "../include/imebra/objectivec/imebra_readingDataHandlerNumeric.h"
-#import "../include/imebra/objectivec/imebra_readWriteMemory.h"
+#include "imebra_bridgeStructures.h"
 
 @implementation ImebraWritingDataHandlerNumeric
 
@@ -41,35 +37,22 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
 
--(void)assign:(const char*)data withSize:(unsigned int)size error:(NSError**)pError
+-(void)assign:(NSData*)pSource error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    ((imebra::WritingDataHandlerNumeric*)m_pDataHandler)->assign((char*)data, size);
+    ((imebra::WritingDataHandlerNumeric*)m_pDataHandler)->assign((char*)pSource.bytes, (size_t)pSource.length);
 
     OBJC_IMEBRA_FUNCTION_END();
 }
 
--(void)copyFrom:(ImebraReadingDataHandlerNumeric*)source error:(NSError**)pError
+-(void)copyFrom:(ImebraReadingDataHandlerNumeric*)pSource error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    ((imebra::WritingDataHandlerNumeric*)m_pDataHandler)->copyFrom(*((imebra::ReadingDataHandlerNumeric*)source->m_pDataHandler));
+    ((imebra::WritingDataHandlerNumeric*)m_pDataHandler)->copyFrom(*((imebra::ReadingDataHandlerNumeric*)pSource->m_pDataHandler));
 
     OBJC_IMEBRA_FUNCTION_END();
-}
-
--(char*) data
-{
-    size_t dummy;
-    return ((imebra::WritingDataHandlerNumeric*)m_pDataHandler)->data(&dummy);
-}
-
--(unsigned int) dataSizeBytes
-{
-    size_t size;
-    ((imebra::WritingDataHandlerNumeric*)m_pDataHandler)->data(&size);
-    return (unsigned int)size;
 }
 
 -(unsigned int) unitSize

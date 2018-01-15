@@ -13,21 +13,25 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #include "imebra_bridgeStructures.h"
 
-@implementation ImebraMemoryStreamInput
+@implementation ImebraTransformsChain
 
--(id)initWithReadMemory:(ImebraReadMemory*)pMemory
+-(id)init
 {
-    m_pBaseStreamInput = 0;
-    self =  [super init];
+    m_pTransform = 0;
+    self = [super init];
     if(self)
     {
-        m_pBaseStreamInput = new imebra::MemoryStreamInput(*(pMemory->m_pMemory));
+        m_pTransform = new imebra::TransformsChain();
     }
     return self;
 }
 
+-(void)addTransform:(ImebraTransform*)pTransform
+{
+    ((imebra::TransformsChain*)m_pTransform)->addTransform(*(pTransform->m_pTransform));
+}
+
 
 @end
-
 
 
