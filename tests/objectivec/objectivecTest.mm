@@ -228,7 +228,7 @@ void listenerThread()
     }
 }
 
-TEST(objectivec, tcp)
+TEST(objectivec, dimse)
 {
     std::thread scp(imebra::tests::listenerThread);
     try
@@ -308,6 +308,30 @@ TEST(objectivec, images)
     unsigned int height = 400;
 
     ImebraImage* pBaselineImage = [[ImebraImage alloc] initWithSize:width height:height depth:ImebraBitDepthU8 colorSpace:@"RGB" highBit:7];
+
+    {
+        ImebraWritingDataHandler* pWritingDataHandler = [pBaselineImage getWritingDataHandler:&pError];
+
+        unsigned int index(0);
+        for(unsigned int y(0); y != height; ++y)
+        {
+            for(unsigned int x(0); x != width; ++x)
+            {
+                int r = x < 100 ? 10: 100;
+                int g = x < 200 ? 40: 200;
+                int b = x < 300 ? 100: 4;
+                [pWritingDataHandler setUnsignedLong:index++ withValue:r error:&pError];
+                [pWritingDataHandler setUnsignedLong:index++ withValue:g error:&pError];
+                [pWritingDataHandler setUnsignedLong:index++ withValue:b error:&pError];
+
+            }
+        }
+        #if !__has_feature(objc_arc)
+            [pWritingDataHandler release];
+        #endif
+
+    }
+
 
     ImebraTransform* pColorTransform = [ImebraColorTransformsFactory getTransform:@"RGB" finalColorSpace:@"YBR_FULL" error:&pError];
 
