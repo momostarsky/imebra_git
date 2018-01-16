@@ -98,6 +98,7 @@ TEST(objectivec, NSStringToStringTest)
 }
 
 
+// Test the codec factory (save and reload a dataset)
 TEST(objectivec, CodecFactory)
 {
     DataSet testDataSet("1.2.840.10008.1.2");
@@ -114,6 +115,8 @@ TEST(objectivec, CodecFactory)
     EXPECT_EQ(imebra::NSStringToString(checkPatientID), "TestID");
 }
 
+
+// Test NSError on non-existent file
 TEST(objectivec, CodecFactoryFailLoad)
 {
     NSError* error = nil;
@@ -122,6 +125,8 @@ TEST(objectivec, CodecFactoryFailLoad)
     EXPECT_EQ(imebra::NSStringToString([error domain]), "imebra");
 }
 
+
+// Initialize and check an image content
 TEST(objectivec, image)
 {
     ImebraImage* pImage = [[ImebraImage alloc] initWithSize:5 height:5 depth:ImebraBitDepthU16 colorSpace:@"MONOCHROME2" highBit:15];
@@ -153,6 +158,7 @@ TEST(objectivec, image)
 }
 
 
+// Set different dataset tags
 TEST(objectivec, datasetValues)
 {
     NSError* error = nil;
@@ -228,6 +234,8 @@ void listenerThread()
     }
 }
 
+
+// Send a CStore command to a SCP via TCP
 TEST(objectivec, dimse)
 {
     std::thread scp(imebra::tests::listenerThread);
@@ -298,6 +306,8 @@ TEST(objectivec, dimse)
 
 }
 
+
+// Test DrawBitmap generating a NSImage
 #if defined(__APPLE__)
 
 TEST(objectivec, images)

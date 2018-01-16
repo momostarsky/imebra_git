@@ -63,7 +63,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     size_t dataSize;
     const char* pMemory(m_pMemory->data(&dataSize));
-    NSData* pData = [[NSData alloc] init:pMemory length:dataSize];
+    NSData* pData = [NSData dataWithBytes:pMemory length:dataSize];
     return pData;
 }
 
