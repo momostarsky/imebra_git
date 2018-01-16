@@ -317,7 +317,7 @@ TEST(objectivec, images)
 
     ImebraDrawBitmap* pDrawBitmap = [[ImebraDrawBitmap alloc] init];
 
-    NSImage* pNsImage = [drawBitmap getImebraImage:pYbrImage error:&pError];
+    NSImage* pNsImage = [pDrawBitmap getImebraImage:pYbrImage error:&pError];
 
     NSData* pImageData = [pNsImage TIFFRepresentation];
     NSBitmapImageRep* pImageRep = [NSBitmapImageRep imageRepWithData:pImageData];
