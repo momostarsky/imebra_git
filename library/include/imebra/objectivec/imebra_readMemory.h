@@ -36,12 +36,12 @@ class ReadMemory;
 
     -(id)init;
 
-    -(id)initWithData:(const char*)source size:(unsigned int)size;
+    -(id)initWithData:(NSData*)source;
+
+    -(NSData*)data;
 
     -(void)dealloc;
 
-    @property (readonly) const char* data;
-    @property (readonly) unsigned int size;
     @property (readonly) bool empty;
 
 @end

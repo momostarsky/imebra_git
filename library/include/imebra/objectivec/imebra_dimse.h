@@ -27,6 +27,8 @@ class AssociationMessage;
 class AssociationBase;
 class AssociationSCU;
 class AssociationSCP;
+class DimseCommandBase;
+class DimseService;
 }
 #endif
 

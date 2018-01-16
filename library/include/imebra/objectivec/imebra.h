@@ -11,7 +11,10 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#define __IMEBRA_OBJECTIVEC_BRIDGING__
+
+#ifndef NS_ENUM
+#define NS_ENUM(_type, _name) enum _name : _type
+#endif
 
 #import "imebra_acse.h"
 #import "imebra_baseStreamInput.h"
@@ -26,9 +29,14 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #import "imebra_dimse.h"
 #import "imebra_drawBitmap.h"
 #import "imebra_exceptions.h"
+#import "imebra_fileStreamInput.h"
+#import "imebra_fileStreamOutput.h"
 #import "imebra_image.h"
+#import "imebra_lut.h"
+#import "imebra_memoryPool.h"
 #import "imebra_memoryStreamInput.h"
 #import "imebra_memoryStreamOutput.h"
+#import "imebra_modalityVOILUT.h"
 #import "imebra_pipe.h"
 #import "imebra_readingDataHandler.h"
 #import "imebra_readingDataHandlerNumeric.h"
@@ -36,7 +44,14 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #import "imebra_readWriteMemory.h"
 #import "imebra_streamReader.h"
 #import "imebra_streamWriter.h"
+#import "imebra_tag.h"
 #import "imebra_tagId.h"
+#import "imebra_tcpAddress.h"
+#import "imebra_tcpListener.h"
+#import "imebra_tcpStream.h"
 #import "imebra_transform.h"
+#import "imebra_transformHighBit.h"
+#import "imebra_transformsChain.h"
+#import "imebra_VOILUT.h"
 #import "imebra_writingDataHandler.h"
 #import "imebra_writingDataHandlerNumeric.h"

@@ -15,7 +15,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @implementation ImebraPipe
 
--init:(unsigned int)circularBufferSize
+-(id)init:(unsigned int)circularBufferSize
 {
     self =  [super init];
     if(self)

@@ -15,7 +15,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #define imebraObjcMemoryStreamInput__INCLUDED_
 
 #import <Foundation/Foundation.h>
-#import "imebra_baseStreamInput.h";
+#import "imebra_baseStreamInput.h"
 
 @class ImebraReadMemory;
 

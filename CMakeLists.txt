@@ -80,13 +80,15 @@ add_definitions(-DIMEBRA_DLL)
 add_definitions(-DIMEBRA_DLL_EXPORTS)
 add_definitions(-DNOMINMAX)
 
+set(imebra_obj_src "")
+set(imebra_obj_include "")
 file(GLOB imebra_interface "${CMAKE_CURRENT_SOURCE_DIR}/library/include/imebra/*.h")
 file(GLOB imebra_include "${CMAKE_CURRENT_SOURCE_DIR}/library/src/*.h")
 file(GLOB imebra_src "${CMAKE_CURRENT_SOURCE_DIR}/library/src/*.cpp")
 file(GLOB imebra_implementation_src "${CMAKE_CURRENT_SOURCE_DIR}/library/implementation/*.cpp")
 file(GLOB imebra_implementation_include "${CMAKE_CURRENT_SOURCE_DIR}/library/implementation/*.h")
 if("${IMEBRA_OBJC}" STREQUAL "1")
-    file(GLOB imebra_objc_src "${CMAKE_CURRENT_SOURCE_DIR}/library/objectivec/*.mm")
+    file(GLOB imebra_objc_src "${CMAKE_CURRENT_SOURCE_DIR}/library/objectivec/*.*")
     file(GLOB imebra_objc_include "${CMAKE_CURRENT_SOURCE_DIR}/library/include/imebra/objectivec/*.h")
     add_definitions(-DIMEBRA_OBJC)
 endif("${IMEBRA_OBJC}" STREQUAL "1")
@@ -95,15 +97,6 @@ endif("${IMEBRA_OBJC}" STREQUAL "1")
 if(NOT "${ADDITIONAL_LIB_PATH}" STREQUAL "")
     link_directories(${LINK_DIRECTORIES} ${ADDITIONAL_LIB_PATH})
 endif(NOT "${ADDITIONAL_LIB_PATH}" STREQUAL "")
-
-# Add OBJC sources
-#-----------------
-set(imebra_obj_src "")
-set(imebra_obj_include "")
-if("${IMEBRA_OBJC}" STREQUAL "1")
-    file(GLOB imebra_objc_src "${CMAKE_CURRENT_SOURCE_DIR}/library/objectivec/*.mm")
-    file(GLOB imebra_objc_include "${CMAKE_CURRENT_SOURCE_DIR}/library/include/imebra/objectivec/*.h")
-endif("${IMEBRA_OBJC}" STREQUAL "1")
 
 # Add jpeg2000 if specified
 if("${JPEG2000}" STREQUAL "1")
@@ -295,7 +288,7 @@ if(NOT IOS)
                 set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} gnustep-base objc)
         endif(APPLE)
 
-        file(GLOB imebra_tests_objc_src "${CMAKE_CURRENT_SOURCE_DIR}/tests/objectivec/*.mm")
+        file(GLOB imebra_tests_objc_src "${CMAKE_CURRENT_SOURCE_DIR}/tests/objectivec/*.m*")
 
     endif("${IMEBRA_OBJC}" STREQUAL "1")
 
@@ -317,7 +310,13 @@ if(NOT IOS)
 
     add_test(RunImebraTests ImebraTests --corruptedFilesFolder=${CMAKE_CURRENT_SOURCE_DIR}/tests/corruptedfiles)
 
+
+
+
 endif(NOT IOS)
+
+
+
 
 ##############################################
 #

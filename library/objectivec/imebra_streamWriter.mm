@@ -47,7 +47,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     self = [super init];
     if(self)
     {
-        self->m_pWriter = new imebra::StreamWriter(*(imebra::BaseStreamOutput*)(pInputOutput->m_pBaseStreamInput));
+        self->m_pWriter = new imebra::StreamWriter(*(dynamic_cast<imebra::BaseStreamOutput*>(pInputOutput->m_pBaseStreamInput)));
     }
     return self;
 }

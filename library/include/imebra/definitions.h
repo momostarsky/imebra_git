@@ -55,14 +55,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #endif // SWIG
 
-#ifdef IMEBRA_OBJC
-
-#ifndef NS_ENUM
-#define NS_ENUM(_type, _name) enum _name : _type
-#endif
-
-#endif
-
 namespace imebra
 {
 

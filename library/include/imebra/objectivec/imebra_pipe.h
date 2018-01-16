@@ -29,7 +29,7 @@ class Pipe;
 
 @interface ImebraPipe: ImebraBaseStreamInputOutput
 
-    -init:(unsigned int)circularBufferSize;
+    -(id)init:(unsigned int)circularBufferSize;
 
     ///
     /// \brief Copy data into the Pipe so it can be retrieved by a

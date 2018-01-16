@@ -24,7 +24,6 @@ class ReadWriteMemory;
 }
 #endif
 
-
 @interface ImebraReadWriteMemory: ImebraReadMemory
 
 #ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
@@ -37,7 +36,7 @@ class ReadWriteMemory;
 
     -(id)initWithMemory:(ImebraReadMemory*)source;
 
-    -(id)initWithData:(const char*)source size:(unsigned int)size;
+    -(id)initWithData:(NSData*)pSource;
 
     -(void)dealloc;
 
@@ -53,10 +52,10 @@ class ReadWriteMemory;
     -(void)reserve:(unsigned int)reserveSize error:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
 
-    -(void)assign:(const char*)data withSize:(unsigned int)size error:(NSError**)pError
+    -(void)assign:(NSData*)pSource error:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
 
-    -(void)assignRegion:(const char*)data  withSize:(unsigned int)size offset:(unsigned int)destinationOffset error:(NSError**)pError
+    -(void)assignRegion:(NSData*)pSource offset:(unsigned int)destinationOffset error:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
 
 @end

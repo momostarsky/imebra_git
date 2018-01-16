@@ -20,7 +20,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 namespace imebra
 {
     class Image;
-    class DrawBitmap;
 }
 #endif
 

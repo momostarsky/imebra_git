@@ -26,8 +26,10 @@ namespace imebra
 @class ImebraImage;
 @class ImebraAge;
 @class ImebraDate;
+@class ImebraLUT;
 @class ImebraReadingDataHandler;
 @class ImebraWritingDataHandler;
+@class ImebraTag;
 @class ImebraTagId;
 
 typedef NS_ENUM(unsigned short, ImebraTagVR_t)
@@ -77,6 +79,24 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
     ImebraQualityVeryLow = 600      ///< the image is saved in low quality. Horizontal and vertical subsampling are applied. Quantization ratios are high
 };
 
+
+@interface ImebraVOIDescription: NSObject
+
+#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
+{
+    double m_center;            ///< The VOI center
+    double m_width;             ///< The VOI width
+    NSString* m_description;    ///< The VOI's description
+}
+
+    -(id)init:(double)center width:(double)width description:(NSString*)description;
+#endif
+
+    @property (readonly) double center;
+    @property (readonly) double width;
+    @property (readonly) NSString* description;
+
+@end
 
 ///
 ///  \brief This class represents a DICOM dataset.
@@ -197,6 +217,41 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
 
     -(void)dealloc;
 
+    /// \brief Returns a list of all the tags stored in the DataSet, ordered by
+    ///        group and tag ID.
+    ///
+    /// \return an NSArray containing an ordered list of ImebraTagId objects
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(NSArray*)getTags;
+
+    /// \brief Retrieve the Tag with the specified ID.
+    ///
+    /// \param tagId the ID of the tag to retrieve
+    /// \return the Tag with the specified ID
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(ImebraTag*) getTag:(ImebraTagId*)tagId error:(NSError**)pError;
+
+    /// \brief Retrieve the Tag with the specified ID or create it if it doesn't
+    ///        exist.
+    ///
+    /// \param tagId the ID of the tag to retrieve
+    /// \param tagVR the VR to use for the new tag if one doesn't exist already
+    /// \return the Tag with the specified ID
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(ImebraTag*) getTagCreate:(ImebraTagId*)tagId VR:(ImebraTagVR_t)tagVR error:(NSError**)pError;
+
+    /// \brief Retrieve the Tag with the specified ID or create it if it doesn't
+    ///        exist.
+    ///
+    /// \param tagId the ID of the tag to retrieve
+    /// \return the Tag with the specified ID
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(ImebraTag*) getTagCreate:(ImebraTagId*)tagId error:(NSError**)pError;
+
     /// \brief Retrieve an image from the dataset.
     ///
     /// Images should be retrieved in order (first frame 0, then frame 1, then
@@ -243,6 +298,58 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
     -(void) setImage:(unsigned int)frameNumber image:(ImebraImage*)image quality:(ImebraImageQuality_t)quality error:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
 
+    /// \brief Return the list of VOI settings stored in the DataSet.
+    ///
+    /// Each VOI setting includes the center & width values that can be used with
+    /// the VOILUT transform to highlight different parts of an Image.
+    ///
+    /// \return an NSArray containing a list of ImebraVOIDescription objects
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(NSArray*) getVOIs:(NSError**)pError;
+
+    /// \brief Retrieve a sequence item stored in a tag.
+    ///
+    /// If the specified Tag does not exist then throws MissingTagError or
+    ///  MissingGroupError.
+    ///
+    /// If the specified Tag does not contain the specified sequence item then
+    ///  throws MissingItemError.
+    ///
+    /// \param pTagId the tag's id containing the sequence item
+    /// \param itemId the sequence item to retrieve. The first item has an Id = 0
+    /// \return the requested sequence item
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(ImebraDataSet*) getSequenceItem:(ImebraTagId*)pTagId item:(unsigned int)itemId error:(NSError**)pError;
+
+    /// \brief Set a sequence item.
+    ///
+    /// If the specified Tag does not exist then creates a new one with VR
+    ///  tagVR_t::SQ.
+    ///
+    /// \param pTagId the tag's id in which the sequence must be stored
+    /// \param itemId the sequence item to set. The first item has an Id = 0
+    /// \param item   the DataSet to store as a sequence item
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(void) setSequenceItem:(ImebraTagId*)pTagId item:(unsigned int)itemId dataSet:(ImebraDataSet*)pDataSet error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
+
+    /// \brief Retrieve a LUT stored in a sequence item.
+    ///
+    /// If the specified Tag does not exist then throws MissingTagError or
+    ///  MissingGroupError.
+    ///
+    /// If the specified Tag does not contain the specified sequence item then
+    ///  throws MissingItemError.
+    ///
+    /// \param pTagId the tag's id containing the sequence that stores the LUTs
+    /// \param itemId the sequence item to retrieve. The first item has an Id = 0
+    /// \return the LUT stored in the requested sequence item
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(ImebraLUT*) getLUT:(ImebraTagId*)pTagId item:(unsigned int)itemId error:(NSError**)pError;
 
     -(ImebraReadingDataHandler*) getReadingDataHandler:(ImebraTagId*)tagId bufferId:(unsigned int)bufferId error:(NSError**)pError;
 
