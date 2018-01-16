@@ -33,7 +33,7 @@ class TCPAddress;
 
 }
 
-    -(id)initWithImebraTcpAddress:(imebra::TCPAddress*)pTcpAddress;
+    -(id)initWithImebraTCPAddress:(imebra::TCPAddress*)pTcpAddress;
 
 #endif
 

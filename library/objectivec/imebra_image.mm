@@ -51,8 +51,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 ///////////////////////////////////////////////////////////////////////////////
 -(void)dealloc
 {
+    delete m_pImage;
 #if !__has_feature(objc_arc)
-    [m_pImage release];
     [super dealloc];
 #endif
 }

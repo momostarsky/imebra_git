@@ -251,7 +251,7 @@ TEST(objectivec, tcp)
 
     [pContexts addPresentationContext:pContext];
 
-    ImebraAssociationSCU* pSCU = [[ImebraAssociationSCP alloc]
+    ImebraAssociationSCU* pSCU = [[ImebraAssociationSCU alloc]
             init:@"SCU" otherAET:@"SCP" maxInvokedOperations:1 maxPerformedOperations:1 presentationContexts:pContexts
                  reader:pReader writer:pWriter dimseTimeoutSeconds:30 error:&pError];
 
@@ -277,6 +277,8 @@ TEST(objectivec, tcp)
 
     ImebraCStoreResponse* pResponse = [pDimse getCStoreResponse:pCommand error:&pError];
 
+    EXPECT_EQ(ImebraDimseStatusSuccess, pResponse.status);
+
 #if !__has_feature(objc_arc)
 
     [pDimse release];
@@ -297,41 +299,43 @@ TEST(objectivec, tcp)
 }
 
 #if defined(__APPLE__)
-/* Test NSImage
+
 TEST(objectivec, images)
 {
-    ImebraDataSet* pDataSet = [[ImebraDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2.4.50"];
+    NSError* pError(0);
 
     unsigned int width = 600;
-    unsigned intt height = 400;
+    unsigned int height = 400;
 
     ImebraImage* pBaselineImage = [[ImebraImage alloc] initWithSize:width height:height depth:ImebraBitDepthU8 colorSpace:@"RGB" highBit:7];
 
-    std::unique_ptr<Transform> colorTransform(ColorTransformsFactory::getTransform("RGB", "YBR_FULL"));
-    std::unique_ptr<Image> ybrImage(colorTransform->allocateOutputImage(*baselineImage, width, height));
-    colorTransform->runTransform(*baselineImage, 0, 0, width, height, *ybrImage, 0, 0);
+    ImebraTransform* pColorTransform = [ImebraColorTransformsFactory getTransform:@"RGB" finalColorSpace:@"YBR_FULL" error:&pError];
 
-    TransformsChain chain;
-    DrawBitmap drawBitmap(chain);
-    NSImage* nsImage = [drawBitmap getImebraImage:ybrImage];
+    ImebraImage* pYbrImage = [pColorTransform allocateOutputImage:pBaselineImage width:width height:height error:&pError];
 
-    NSData *imageData = [nsImage TIFFRepresentation];
-    NSBitmapImageRep *imageRep = [NSBitmapImageRep imageRepWithData:imageData];
-    NSDictionary *imageProps = [NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:1.0] forKey:NSImageCompressionFactor];
-    imageData = [imageRep representationUsingType:NSJPEGFileType properties:imageProps];
+    [pColorTransform runTransform:pBaselineImage inputTopLeftX:0 inputTopLeftY:0 inputWidth:width inputHeight:height outputImage:pYbrImage outputTopLeftX:0 outputTopLeftY:0 error:&pError];
 
-    ReadWriteMemory dataMemory((const char*)[imageData bytes], [imageData length]);
-    MemoryStreamInput dataStream(dataMemory);
-    StreamReader dataReader(dataStream);
+    ImebraDrawBitmap* pDrawBitmap = [[ImebraDrawBitmap alloc] init];
 
-    std::unique_ptr<DataSet> loadedDataSet(CodecFactory::load(dataReader));
-    std::unique_ptr<Image> loadedImage(loadedDataSet->getImage(0));
+    NSImage* pNsImage = [drawBitmap getImebraImage:pYbrImage error:&pError];
+
+    NSData* pImageData = [pNsImage TIFFRepresentation];
+    NSBitmapImageRep* pImageRep = [NSBitmapImageRep imageRepWithData:pImageData];
+    NSDictionary *pImageProps = [NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:1.0] forKey:NSImageCompressionFactor];
+    pImageData = [pImageRep representationUsingType:NSJPEGFileType properties:pImageProps];
+
+    ImebraReadWriteMemory* pDataMemory = [[ImebraReadWriteMemory alloc] initWithData:pImageData];
+    ImebraMemoryStreamInput* pDataStream = [[ImebraMemoryStreamInput alloc] initWithReadMemory:pDataMemory];
+    ImebraStreamReader* pDataReader = [[ImebraStreamReader alloc] initWithInputStream:pDataStream];
+
+    ImebraDataSet* pLoadedDataSet = [ImebraCodecFactory loadFromStream:pDataReader error:&pError];
+    ImebraImage* pLoadedImage = [pLoadedDataSet getImage:0 error:&pError];
 
     // Compare the buffers. A little difference is allowed
-    double differenceYBR = compareImages(*ybrImage, *loadedImage);
+    double differenceYBR = compareImages(*(pYbrImage->m_pImage), *(pLoadedImage->m_pImage));
     ASSERT_LE(differenceYBR, 1);
 }
-*/
+
 #endif
 
 } // namespace tests

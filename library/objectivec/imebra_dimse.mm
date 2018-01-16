@@ -82,7 +82,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
 
--(NSString*)getRequestedSopInstanceUid:(NSError**)pError;
+-(NSString*)getRequestedSopInstanceUid:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 
@@ -91,7 +91,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
 
--(NSString*)getRequestedSopClassUid:(NSError**)pError;
+-(NSString*)getRequestedSopClassUid:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 

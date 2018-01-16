@@ -16,7 +16,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 @implementation ImebraTransform
 
 
--(id)initImebraTransform:(imebra::Transform*)pTransform
+-(id)initWithImebraTransform:(imebra::Transform*)pTransform
 {
     m_pTransform = 0;
     self = [super init];

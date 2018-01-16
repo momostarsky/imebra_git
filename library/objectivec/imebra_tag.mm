@@ -49,7 +49,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 }
 
 
--(unsigned int) getBufferSize:(unsigned int) bufferId error:(NSError**)pError;
+-(unsigned int) getBufferSize:(unsigned int) bufferId error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 

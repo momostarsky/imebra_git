@@ -13,7 +13,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #include "imebra_bridgeStructures.h"
 
-void CGDataProviderCallbackFunc(void *info, const void *data, size_t size)
+void CGDataProviderCallbackFunc(void *info, const void* /* data */, size_t /* size */)
 {
     // Release the shared pointer holding the memory
     ////////////////////////////////////////////////

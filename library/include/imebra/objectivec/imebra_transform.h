@@ -34,7 +34,7 @@ class Transform;
 
 }
 
-    -(id)initImebraTransform:(imebra::Transform*)pTransform;
+    -(id)initWithImebraTransform:(imebra::Transform*)pTransform;
 
 #endif
 
