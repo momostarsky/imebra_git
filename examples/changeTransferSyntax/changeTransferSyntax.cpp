@@ -8,7 +8,7 @@ $fileHeader$
 #include <imebra/imebra.h>
 #include <sstream>
 
-#ifdef PUNTOEXE_WINDOWS
+#if defined(WIN32) || defined(WIN64)
 #include <process.h>
 #else
 #include <spawn.h>
