@@ -206,12 +206,13 @@ set_target_properties(imebra PROPERTIES VERSION ${IMEBRA_VERSION}
                                           SOVERSION ${IMEBRA_MAJOR_VERSION})
 
 
-##############################################
-#
-# TESTS
-#
-##############################################
 if(NOT IOS)
+
+    ##############################################
+    #
+    # TESTS
+    #
+    ##############################################
 
     # We need thread support
     find_package(Threads REQUIRED)
@@ -304,6 +305,51 @@ if(NOT IOS)
     enable_testing()
 
     add_test(RunImebraTests ImebraTests --corruptedFilesFolder=${CMAKE_CURRENT_SOURCE_DIR}/tests/corruptedfiles)
+
+
+    ##############################################
+    #
+    # DICOM2JPEG example
+    #
+    ##############################################
+    file(GLOB dicom2jpeg_sources "${CMAKE_CURRENT_SOURCE_DIR}/examples/dicom2jpeg/*.cpp")
+
+    # Add the source files to the project
+    #------------------------------------
+    add_executable(dicom2jpeg ${dicom2jpeg_sources})
+
+    target_link_libraries(dicom2jpeg imebra)
+
+
+    ##############################################
+    #
+    # CHANGETRANSFERSYNTAX example
+    #
+    ##############################################
+    file(GLOB changeTransferSyntax_sources "${CMAKE_CURRENT_SOURCE_DIR}/examples/changeTransferSyntax/*.cpp")
+
+    # Add the source files to the project
+    #------------------------------------
+    add_executable(changeTransferSyntax ${changeTransferSyntax_sources})
+
+    target_link_libraries(changeTransferSyntax imebra)
+
+
+    ##############################################
+    #
+    # DICOMDIRITEMS example
+    #
+    ##############################################
+    file(GLOB dicomdirItems_sources "${CMAKE_CURRENT_SOURCE_DIR}/examples/dicomdirItems/*.cpp")
+
+    # Add the source files to the project
+    #------------------------------------
+    add_executable(dicomDirItems ${dicomdirItems_sources})
+
+    target_link_libraries(dicomDirItems imebra)
+
+
+
 
 endif(NOT IOS)
 
