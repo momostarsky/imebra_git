@@ -15,6 +15,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #define imebraObjcTagId__INCLUDED_
 
 #import <Foundation/Foundation.h>
+#import "tagsEnumeration.h"
 
 #ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
 namespace imebra
@@ -39,6 +40,8 @@ class TagId;
     -(id)init;
 
     -(id)init:(unsigned short)groupId tag:(unsigned short)tagId;
+
+    -(id)init:(ImebraTagId_t)tagId;
 
     -(id)init:(unsigned short)groupId groupOrder:(unsigned int)groupOrder tag:(unsigned short)tagId;
 

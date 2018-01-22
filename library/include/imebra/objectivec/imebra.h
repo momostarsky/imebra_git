@@ -11,8 +11,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-
-#ifndef NS_ENUM
+#if !defined(__APPLE__) && !defined(NS_ENUM)
 #define NS_ENUM(_type, _name) enum _name : _type
 #endif
 
@@ -55,3 +54,4 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #import "imebra_VOILUT.h"
 #import "imebra_writingDataHandler.h"
 #import "imebra_writingDataHandlerNumeric.h"
+#import "tagsEnumeration.h"

@@ -29,6 +29,18 @@ If you do not want to be bound by the GPL terms (such as the requirement
     return self;
 }
 
+
+-(id)init:(ImebraTagId_t)tagId
+{
+    self = [super init];
+    if(self)
+    {
+        self->m_pTagId = new imebra::TagId((imebra::tagId_t)tagId);
+    }
+    return self;
+}
+
+
 -(id)init:(unsigned short)groupId tag:(unsigned short)tagId
 {
     self = [super init];
