@@ -1,6 +1,6 @@
 #include <imebra/imebra.h>
 #include "testsSettings.h"
-
+#include <iostream>
 #ifdef _WIN32
     #include <windows.h>
 #else
@@ -14,8 +14,6 @@ namespace imebra
 namespace tests
 {
 
-
-// A buffer initialized to a default data type should use the data type OB
 TEST(corruptedFilesTest, corruptedFilesTest)
 {
     ::tests::settings& settings = ::tests::settings::getSettings();

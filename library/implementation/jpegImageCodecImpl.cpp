@@ -546,7 +546,11 @@ std::shared_ptr<image> jpegImageCodec::getImage(const dataSet& sourceDataSet, st
                         {
                             std::uint32_t amplitudeLength = pChannel->m_pActiveHuffmanTableDC->readHuffmanCode(pSourceStream);
                             std::int32_t amplitude;        // lossless amplitude
-                            if(amplitudeLength != 0)
+                            if(amplitudeLength == information.m_precision)
+                            {
+                                amplitude = (std::int32_t)1 << (information.m_precision - 1);
+                            }
+                            else if(amplitudeLength != 0)
                             {
                                 amplitude = (std::int32_t)pSourceStream->readBits(amplitudeLength);
                                 if(amplitude < ((std::int32_t)1<<(amplitudeLength-1)))
@@ -631,7 +635,7 @@ std::shared_ptr<image> jpegImageCodec::getImage(const dataSet& sourceDataSet, st
 
     return copyJpegChannelsToImage(information, b2complement, colorSpace);
 
-    IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END_MODIFY(HuffmanReadError, CodecCorruptedFileError);
 }
 
 
@@ -1158,7 +1162,10 @@ void jpegImageCodec::writeScan(streamWriter* pDestinationStream, jpeg::jpegInfor
                         continue;
                     }
                     pChannel->m_pActiveHuffmanTableDC->writeHuffmanCode(amplitudeLength, pDestinationStream);
-                    pDestinationStream->writeBits(amplitude, amplitudeLength);
+                    if(amplitudeLength != information.m_precision)
+                    {
+                        pDestinationStream->writeBits(amplitude, amplitudeLength);
+                    }
                 }
 
                 continue;
