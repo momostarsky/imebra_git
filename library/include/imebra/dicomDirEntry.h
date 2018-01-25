@@ -60,7 +60,7 @@ class IMEBRA_API DicomDirEntry
 #ifndef SWIG
 	friend class DicomDir;
 private:
-    DicomDirEntry(std::shared_ptr<imebra::implementation::directoryRecord> pDirectoryRecord);
+    explicit DicomDirEntry(std::shared_ptr<imebra::implementation::directoryRecord> pDirectoryRecord);
 #endif
 
 public:

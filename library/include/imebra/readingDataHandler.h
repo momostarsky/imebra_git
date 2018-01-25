@@ -71,7 +71,7 @@ class IMEBRA_API ReadingDataHandler
     friend class ReadingDataHandlerNumeric;
 
 private:
-    ReadingDataHandler(std::shared_ptr<imebra::implementation::handlers::readingDataHandler> pDataHandler);
+    explicit ReadingDataHandler(std::shared_ptr<imebra::implementation::handlers::readingDataHandler> pDataHandler);
 #endif
 
 public:

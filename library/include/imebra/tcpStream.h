@@ -47,7 +47,7 @@ class IMEBRA_API TCPStream: public BaseStreamInput, public BaseStreamOutput
 #ifndef SWIG
     friend class TCPListener;
 private:
-    TCPStream(std::shared_ptr<imebra::implementation::tcpSequenceStream> pTcpStream);
+    explicit TCPStream(std::shared_ptr<imebra::implementation::tcpSequenceStream> pTcpStream);
 #endif
 
 public:
@@ -61,7 +61,7 @@ public:
     /// \param address the address to which the socket has to be connected.
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    TCPStream(const TCPActiveAddress& address);
+    explicit TCPStream(const TCPActiveAddress& address);
 
     ///
     /// \brief Returns the address of the connected peer.

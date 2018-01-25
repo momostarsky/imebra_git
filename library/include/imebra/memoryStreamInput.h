@@ -40,14 +40,14 @@ public:
     /// \param memory the memory region from which the stream will read the data
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    MemoryStreamInput(const ReadMemory& memory);
+    explicit MemoryStreamInput(const ReadMemory& memory);
 
     /// \brief Constructor.
     ///
     /// \param memory the memory region from which the stream will read the data
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    MemoryStreamInput(const ReadWriteMemory& memory);
+    explicit MemoryStreamInput(const ReadWriteMemory& memory);
 
     virtual ~MemoryStreamInput();
 };
