@@ -1,4 +1,4 @@
-#import "../include/imebra/objectivec/imebra_exceptions.h"
+#import <imebraobjc/imebra_exceptions.h>
 
 
 @implementation ImebraLutError: NSError

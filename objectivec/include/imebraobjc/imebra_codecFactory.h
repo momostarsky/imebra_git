@@ -22,8 +22,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 typedef NS_ENUM(unsigned short, ImebraCodecType_t)
 {
-    ImebraCodecTypeDicom, ///< DICOM codec
-    ImebraCodecTypeJpeg   ///< JPEG codec
+    ImebraCodecTypeDicom = 0, ///< DICOM codec
+    ImebraCodecTypeJpeg  = 1  ///< JPEG codec
 };
 
 ///

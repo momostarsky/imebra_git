@@ -50,7 +50,7 @@ Imebra
 
 .. toctree::
    :maxdepth: 3
-   :caption: API
+   :caption: C++ API
 
    definition_classes
    loading_saving_classes

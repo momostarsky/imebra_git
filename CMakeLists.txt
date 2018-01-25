@@ -14,7 +14,7 @@ project("imebra")
 
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
 
-set(IMEBRA_LIBRARIES "")
+set(imebra_libraries "")
 
 # Select the proper charset conversion libraries according to the charset conversion method
 #------------------------------------------------------------------------------------------
@@ -22,13 +22,13 @@ if(IMEBRA_CHARSET_CONVERSION MATCHES ICONV)
     message("Using ICONV")
     add_definitions(-DIMEBRA_USE_ICONV)
     if(APPLE)
-        set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} iconv)
+        set(imebra_libraries ${imebra_libraries} iconv)
     endif(APPLE)
 elseif(IMEBRA_CHARSET_CONVERSION MATCHES ICU)
     message("Using ICU")
     add_definitions(-DIMEBRA_USE_ICU)
-    set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} icuuc)
-    set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} icuio)
+    set(imebra_libraries ${imebra_libraries} icuuc)
+    set(imebra_libraries ${imebra_libraries} icuio)
 elseif(IMEBRA_CHARSET_CONVERSION MATCHES JAVA)
     message("Using JAVA")
     add_definitions(-DIMEBRA_USE_JAVA)
@@ -43,7 +43,7 @@ else(IMEBRA_CHARSET_CONVERSION MATCHES ICONV)
         message("Using ICONV (default)")
         add_definitions(-DIMEBRA_USE_ICONV)
         if(APPLE)
-            set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} iconv)
+            set(imebra_libraries ${imebra_libraries} iconv)
         endif(APPLE)
     endif(WIN32)
 endif(IMEBRA_CHARSET_CONVERSION MATCHES ICONV)
@@ -71,6 +71,7 @@ if(APPLE)
     endif(IOS)
 endif(APPLE)
 
+
 ##############################################
 #
 # LIBRARY
@@ -80,56 +81,24 @@ add_definitions(-DIMEBRA_DLL)
 add_definitions(-DIMEBRA_DLL_EXPORTS)
 add_definitions(-DNOMINMAX)
 
-set(imebra_obj_src "")
-set(imebra_obj_include "")
 file(GLOB imebra_interface "${CMAKE_CURRENT_SOURCE_DIR}/library/include/imebra/*.h")
 file(GLOB imebra_include "${CMAKE_CURRENT_SOURCE_DIR}/library/src/*.h")
 file(GLOB imebra_src "${CMAKE_CURRENT_SOURCE_DIR}/library/src/*.cpp")
 file(GLOB imebra_implementation_src "${CMAKE_CURRENT_SOURCE_DIR}/library/implementation/*.cpp")
 file(GLOB imebra_implementation_include "${CMAKE_CURRENT_SOURCE_DIR}/library/implementation/*.h")
+set(imebra_objc_src "")
+set(imebra_objc_include "")
+set(imebra_objc_include_dir "")
+set(imebra_objc_gnustep_dir "")
+
 if("${IMEBRA_OBJC}" STREQUAL "1")
-    file(GLOB imebra_objc_src "${CMAKE_CURRENT_SOURCE_DIR}/library/objectivec/*.*")
-    file(GLOB imebra_objc_include "${CMAKE_CURRENT_SOURCE_DIR}/library/include/imebra/objectivec/*.h")
+
+    file(GLOB imebra_objc_src "${CMAKE_CURRENT_SOURCE_DIR}/objectivec/src/*.*")
+    file(GLOB imebra_objc_include "${CMAKE_CURRENT_SOURCE_DIR}/objectivec/include/imebraobjc/*.h")
     add_definitions(-DIMEBRA_OBJC)
-endif("${IMEBRA_OBJC}" STREQUAL "1")
 
+    set(imebra_objc_include_dirs ${CMAKE_CURRENT_SOURCE_DIR}/objectivec/include)
 
-if(NOT "${ADDITIONAL_LIB_PATH}" STREQUAL "")
-    link_directories(${LINK_DIRECTORIES} ${ADDITIONAL_LIB_PATH})
-endif(NOT "${ADDITIONAL_LIB_PATH}" STREQUAL "")
-
-# Add jpeg2000 if specified
-if("${JPEG2000}" STREQUAL "1")
-    set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} openjpeg)
-    add_definitions(-DJPEG2000)
-    add_definitions(-DJPEG2000_V1)
-    message(STATUS "Adding experimental Jpeg2000 codec (based on OpenJpeg v1.X)")
-endif("${JPEG2000}" STREQUAL "1")
-
-if("${JPEG2000}" STREQUAL "2")
-    set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} openjp2)
-    add_definitions(-DJPEG2000)
-    add_definitions(-DJPEG2000_V2)
-    message(STATUS "Adding experimental Jpeg2000 codec (based on OpenJpeg v2.X)")
-endif("${JPEG2000}" STREQUAL "2")
-
-add_library(imebra ${IMEBRA_SHARED_STATIC}
-    ${imebra_implementation_src}
-    ${imebra_implementation_include}
-    ${imebra_include}
-    ${imebra_objc_src}
-    ${imebra_objc_include}
-    ${imebra_src}
-    ${imebra_interface}
-)
-
-if(NOT "${ADDITIONAL_INCLUDE_PATH}" STREQUAL "")
-    target_include_directories(imebra PRIVATE ${ADDITIONAL_INCLUDE_PATH})
-endif(NOT "${ADDITIONAL_INCLUDE_PATH}" STREQUAL "")
-
-set(HIDDEN_FLAGS "-fvisibility=hidden -fvisibility-inlines-hidden")
-
-if("${IMEBRA_OBJC}" STREQUAL "1")
     if(APPLE)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -framework Foundation -framework CoreServices")
         if(IOS)
@@ -139,12 +108,51 @@ if("${IMEBRA_OBJC}" STREQUAL "1")
         endif(IOS)
     else(APPLE)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fconstant-string-class=NSConstantString")
-        target_include_directories(imebra PRIVATE "/usr/include/GNUstep")
-        set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} gnustep-base objc)
+        set(imebra_objc_gnustep_dir "/usr/include/GNUstep")
+        set(imebra_libraries ${imebra_libraries} gnustep-base objc)
     endif(APPLE)
 
-    set(HIDDEN_FLAGS "")
 endif("${IMEBRA_OBJC}" STREQUAL "1")
+
+if(NOT "${ADDITIONAL_LIB_PATH}" STREQUAL "")
+    link_directories(${LINK_DIRECTORIES} ${ADDITIONAL_LIB_PATH})
+endif(NOT "${ADDITIONAL_LIB_PATH}" STREQUAL "")
+
+# Add jpeg2000 if specified
+if("${JPEG2000}" STREQUAL "1")
+    set(imebra_libraries ${imebra_libraries} openjpeg)
+    add_definitions(-DJPEG2000)
+    add_definitions(-DJPEG2000_V1)
+    message(STATUS "Adding experimental Jpeg2000 codec (based on OpenJpeg v1.X)")
+endif("${JPEG2000}" STREQUAL "1")
+
+if("${JPEG2000}" STREQUAL "2")
+    set(imebra_libraries ${imebra_libraries} openjp2)
+    add_definitions(-DJPEG2000)
+    add_definitions(-DJPEG2000_V2)
+    message(STATUS "Adding experimental Jpeg2000 codec (based on OpenJpeg v2.X)")
+endif("${JPEG2000}" STREQUAL "2")
+
+add_library(imebra ${IMEBRA_SHARED_STATIC}
+    ${imebra_implementation_src}
+    ${imebra_implementation_include}
+    ${imebra_objc_src}
+    ${imebra_objc_include}
+    ${imebra_include}
+    ${imebra_src}
+    ${imebra_interface}
+)
+
+if(NOT "${ADDITIONAL_INCLUDE_PATH}" STREQUAL "")
+    target_include_directories(imebra PRIVATE ${ADDITIONAL_INCLUDE_PATH})
+endif(NOT "${ADDITIONAL_INCLUDE_PATH}" STREQUAL "")
+
+if("${IMEBRA_OBJC}" STREQUAL "1")
+    set(HIDDEN_FLAGS "")
+else("${IMEBRA_OBJC}" STREQUAL "1")
+    set(HIDDEN_FLAGS "-fvisibility=hidden -fvisibility-inlines-hidden")
+endif("${IMEBRA_OBJC}" STREQUAL "1")
+
 
 # Add flags specific to the compiler
 #-----------------------------------
@@ -152,35 +160,40 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 
     message(STATUS "GCC detected, adding compile flags")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Wpedantic -Wconversion -Wfloat-equal ${HIDDEN_FLAGS}")
-    set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} pthread)
+    set(imebra_libraries ${imebra_libraries} pthread)
 
     if(CMAKE_BUILD_TYPE MATCHES DEBUG)
         message("debug mode")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
-        set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} gcov)
+        set(imebra_libraries ${imebra_libraries} gcov)
     endif(CMAKE_BUILD_TYPE MATCHES DEBUG)
 
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 
     message(STATUS "CLANG detected, adding compile flags")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Wpedantic -Wconversion -Wfloat-equal ${HIDDEN_FLAGS}")
-    set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} pthread)
+    set(imebra_libraries ${imebra_libraries} pthread)
 
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 
     message(STATUS "MSVC detected, adding compile flags")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /Wp64")
-    set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} Kernel32)
+    set(imebra_libraries ${imebra_libraries} Kernel32)
 
 endif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 
 # Define dependency libraries
 #----------------------------
-target_link_libraries(imebra ${IMEBRA_LIBRARIES})
+target_link_libraries(imebra ${imebra_libraries})
+
+message (STATUS "OBJC INCLUDE:${imebra_objc_include_dirs}")
+message (STATUS "GNU INCLUDE:${imebra_objc_gnustep_dir}")
 
 # Define Imebra public folder
 #----------------------------
-target_include_directories(imebra PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/library/include)
+target_include_directories(imebra PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/library/include
+                                  PUBLIC ${imebra_objc_include_dirs}
+                                  PUBLIC ${imebra_objc_gnustep_dir})
 
 # Set the library version from IMEBRA_MAJOR_VERSION, IMEBRA_MINOR_VERSION,
 #  & IMEBRA_REVISION
@@ -275,18 +288,6 @@ if(NOT IOS)
     file(GLOB imebra_tests_include "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.h")
     file(GLOB imebra_tests_src "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.cpp")
     if("${IMEBRA_OBJC}" STREQUAL "1")
-        if(APPLE)
-                set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -framework Foundation -framework CoreServices")
-                if(IOS)
-                        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -framework UIKit")
-                else(IOS)
-                        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -framework AppKit")
-                endif(IOS)
-        else(APPLE)
-                include_directories("/usr/include/GNUstep")
-                set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fconstant-string-class=NSConstantString")
-                set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} gnustep-base objc)
-        endif(APPLE)
 
         file(GLOB imebra_tests_objc_src "${CMAKE_CURRENT_SOURCE_DIR}/tests/objectivec/*.m*")
 
@@ -309,9 +310,6 @@ if(NOT IOS)
     enable_testing()
 
     add_test(RunImebraTests ImebraTests --corruptedFilesFolder=${CMAKE_CURRENT_SOURCE_DIR}/tests/corruptedfiles)
-
-
-
 
 endif(NOT IOS)
 

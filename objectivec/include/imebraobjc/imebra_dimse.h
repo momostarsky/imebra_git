@@ -110,11 +110,11 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatusCode_t)
 //////////////////////////////////////////////////////////////////
 typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
 {
-    ImebraDimseStatusSuccess, ///< The operation was completed succesfully
-    ImebraDimseStatusWarning, ///< The operation was completed with warnings
-    ImebraDimseStatusFailure, ///< The operation failed
-    ImebraDimseStatusCancel,  ///< The operation was canceled
-    ImebraDimseStatusPending  ///< The operation is still running
+    ImebraDimseStatusSuccess = 0, ///< The operation was completed succesfully
+    ImebraDimseStatusWarning = 1, ///< The operation was completed with warnings
+    ImebraDimseStatusFailure = 2, ///< The operation failed
+    ImebraDimseStatusCancel  = 3, ///< The operation was canceled
+    ImebraDimseStatusPending = 4  ///< The operation is still running
 
 };
 

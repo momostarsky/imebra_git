@@ -14,8 +14,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #if !defined(imebraObjcNSError__INCLUDED_)
 #define imebraObjcNSError__INCLUDED_
 
-#import "../include/imebra/objectivec/imebra_exceptions.h"
-#import "../include/imebra/exceptions.h"
+#include <imebra/exceptions.h>
+#import <imebraobjc/imebra_exceptions.h>
 #import <Foundation/Foundation.h>
 
 #include <stdexcept>
