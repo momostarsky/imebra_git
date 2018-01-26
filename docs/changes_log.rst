@@ -7,6 +7,7 @@ Version |release| (this version)
 --------------------------------
 
 - Implemented enhancement #204 (Move the examples make files to the main CMakeLists.txt) as per SOP :ref:`DEVENH_2`
+- Fixed bug #205 (Lossless jpeg codec wrongly writes/reads amplitude value when the amplitude length is equal to the max bit depth) as per SOP :ref:`FIXBUG_2`
 
 Version 4.1.0.1
 ----------------
