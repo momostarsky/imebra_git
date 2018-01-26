@@ -15,22 +15,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @implementation ImebraPresentationContext
 
--(id)initWithImebraPresentationContext:(imebra::PresentationContext*)pPresentationContext
-{
-    m_pPresentationContext = 0;
-    self = [super init];
-    if(self)
-    {
-        m_pPresentationContext = pPresentationContext;
-    }
-    else
-    {
-        delete pPresentationContext;
-    }
-    return self;
-
-}
-
 -(id)initWithAbstractSyntax:(NSString*)abstractSyntax
 {
     m_pPresentationContext = 0;
@@ -70,21 +54,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 
 @implementation ImebraPresentationContexts
-
--(id)initWithImebraPresentationContexts:(imebra::PresentationContexts*)pPresentationContexts
-{
-    m_pPresentationContexts = 0;
-    self = [super init];
-    if(self)
-    {
-        m_pPresentationContexts = pPresentationContexts;
-    }
-    else
-    {
-        delete pPresentationContexts;
-    }
-    return self;
-}
 
 -(id)init
 {
