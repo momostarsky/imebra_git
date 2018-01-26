@@ -99,20 +99,26 @@ if("${IMEBRA_OBJC}" STREQUAL "1")
 
     set(imebra_objc_include_dirs ${CMAKE_CURRENT_SOURCE_DIR}/objectivec/include)
 
+    set(objc_compiler_flags "")
     if(APPLE)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -framework Foundation -framework CoreServices")
+        set(objc_compiler_flags "-framework Foundation -framework CoreServices")
         if(IOS)
-            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -framework UIKit")
+            set(objc_compiler_flags "${objc_compiler_flags} -framework UIKit")
         else(IOS)
-            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -framework AppKit")
+            set(objc_compiler_flags "${objc_compiler_flags} -framework AppKit")
         endif(IOS)
     else(APPLE)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fconstant-string-class=NSConstantString")
+        set(objc_compiler_flags "${objc_compiler_flags} -fconstant-string-class=NSConstantString")
         set(imebra_objc_gnustep_dir "/usr/include/GNUstep")
         set(imebra_libraries ${imebra_libraries} gnustep-base objc)
     endif(APPLE)
 
+    foreach(objcfile ${imebra_objc_src})
+        set_source_files_properties(${objcfile} PROPERTIES COMPILE_FLAGS ${objc_compiler_flags})
+    endforeach(objcfile ${imebra_objc_src})
+
 endif("${IMEBRA_OBJC}" STREQUAL "1")
+
 
 if(NOT "${ADDITIONAL_LIB_PATH}" STREQUAL "")
     link_directories(${LINK_DIRECTORIES} ${ADDITIONAL_LIB_PATH})
@@ -172,6 +178,9 @@ elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 
     message(STATUS "CLANG detected, adding compile flags")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Wpedantic -Wconversion -Wfloat-equal ${HIDDEN_FLAGS}")
+    if(APPLE)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -embed-bitcode")
+    endif(APPLE)
     set(imebra_libraries ${imebra_libraries} pthread)
 
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
@@ -291,6 +300,10 @@ if(NOT IOS)
     if("${IMEBRA_OBJC}" STREQUAL "1")
 
         file(GLOB imebra_tests_objc_src "${CMAKE_CURRENT_SOURCE_DIR}/tests/objectivec/*.m*")
+
+        foreach(objcfile ${imebra_tests_objc_src})
+            set_source_files_properties(${objcfile} PROPERTIES COMPILE_FLAGS ${objc_compiler_flags})
+        endforeach(objcfile ${imebra_objc_src})
 
     endif("${IMEBRA_OBJC}" STREQUAL "1")
 
