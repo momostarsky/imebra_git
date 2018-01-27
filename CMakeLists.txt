@@ -101,11 +101,13 @@ if("${IMEBRA_OBJC}" STREQUAL "1")
 
     set(objc_compiler_flags "")
     if(APPLE)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -framework Foundation -framework CoreServices")
+        set(CMAKE_STATIC_LINKER_FLAGS "${CMAKE_STATIC_LINKER_FLAGS} -framework Foundation -framework CoreServices")
+        set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -framework Foundation -framework CoreServices")
         if(IOS)
-            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -framework UIKit")
+            set(CMAKE_STATIC_LINKER_FLAGS "${CMAKE_STATIC_LINKER_FLAGS} -framework UIKit")
         else(IOS)
-            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -framework AppKit")
+            set(CMAKE_STATIC_LINKER_FLAGS "${CMAKE_STATIC_LINKER_FLAGS} -framework AppKit")
+            set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -framework AppKit")
         endif(IOS)
     else(APPLE)
         set(objc_compiler_flags "${objc_compiler_flags} -fconstant-string-class=NSConstantString")
@@ -113,9 +115,13 @@ if("${IMEBRA_OBJC}" STREQUAL "1")
         set(imebra_libraries ${imebra_libraries} gnustep-base objc)
     endif(APPLE)
 
-    foreach(objcfile ${imebra_objc_src})
-        set_source_files_properties(${objcfile} PROPERTIES COMPILE_FLAGS ${objc_compiler_flags})
-    endforeach(objcfile ${imebra_objc_src})
+    if(NOT "${objc_compiler_flags}" STREQUAL "")
+
+        foreach(objcfile ${imebra_objc_src})
+            set_source_files_properties(${objcfile} PROPERTIES COMPILE_FLAGS ${objc_compiler_flags})
+        endforeach(objcfile ${imebra_objc_src})
+
+    endif(NOT "${objc_compiler_flags}" STREQUAL "")
 
 endif("${IMEBRA_OBJC}" STREQUAL "1")
 
