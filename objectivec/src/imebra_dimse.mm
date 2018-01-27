@@ -657,7 +657,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
     for(const imebra::tagId_t tagId: identifiersList)
     {
-        [pIdentifiers addObject: [[ImebraTagId alloc] init:(unsigned short)((std::uint32_t)tagId >> 16) tag:(unsigned short)((std::uint32_t)tagId & 0xffff)]];
+        [pIdentifiers addObject: [[ImebraTagId alloc] initWithGroupAndTagId:(unsigned short)((std::uint32_t)tagId >> 16) tag:(unsigned short)((std::uint32_t)tagId & 0xffff)]];
     }
 
     return pIdentifiers;
@@ -775,7 +775,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
     for(const imebra::tagId_t tagId: identifiersList)
     {
-        [pIdentifiers addObject: [[ImebraTagId alloc] init:(unsigned short)((std::uint32_t)tagId >> 16) tag:(unsigned short)((std::uint32_t)tagId & 0xffff)]];
+        [pIdentifiers addObject: [[ImebraTagId alloc] initWithGroupAndTagId:(unsigned short)((std::uint32_t)tagId >> 16) tag:(unsigned short)((std::uint32_t)tagId & 0xffff)]];
     }
 
     return pIdentifiers;

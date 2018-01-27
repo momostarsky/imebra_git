@@ -30,7 +30,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 }
 
 
--(id)init:(ImebraTagId_t)tagId
+-(id)initWithId:(ImebraTagId_t)tagId
 {
     self = [super init];
     if(self)
@@ -41,7 +41,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 }
 
 
--(id)init:(unsigned short)groupId tag:(unsigned short)tagId
+-(id)initWithGroupAndTagId:(unsigned short)groupId tag:(unsigned short)tagId
 {
     self = [super init];
     if(self)
@@ -52,7 +52,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 }
 
--(id)init:(unsigned short)groupId groupOrder:(unsigned int)groupOrder tag:(unsigned short)tagId
+-(id)initWithGroupOrderAndTagId:(unsigned short)groupId groupOrder:(unsigned int)groupOrder tag:(unsigned short)tagId
 {
     self = [super init];
     if(self)

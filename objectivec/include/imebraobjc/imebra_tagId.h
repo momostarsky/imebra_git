@@ -39,11 +39,11 @@ class TagId;
 
     -(id)init;
 
-    -(id)init:(unsigned short)groupId tag:(unsigned short)tagId;
+    -(id)initWithGroupAndTagId:(unsigned short)groupId tag:(unsigned short)tagId;
 
-    -(id)init:(ImebraTagId_t)tagId;
+    -(id)initWithId:(ImebraTagId_t)tagId;
 
-    -(id)init:(unsigned short)groupId groupOrder:(unsigned int)groupOrder tag:(unsigned short)tagId;
+    -(id)initWithGroupOrderAndTagId:(unsigned short)groupId groupOrder:(unsigned int)groupOrder tag:(unsigned short)tagId;
 
     -(void)dealloc;
 

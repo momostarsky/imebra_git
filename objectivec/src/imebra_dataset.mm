@@ -117,7 +117,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     imebra::tagsIds_t ids = m_pDataSet->getTags();
     for(const imebra::TagId& tagId: ids)
     {
-        [pIds addObject: [[ImebraTagId alloc] init:tagId.getGroupId() groupOrder:tagId.getGroupOrder() tag:tagId.getTagId()] ];
+        [pIds addObject: [[ImebraTagId alloc] initWithGroupOrderAndTagId:tagId.getGroupId() groupOrder:tagId.getGroupOrder() tag:tagId.getTagId()] ];
     }
 
     return pIds;
