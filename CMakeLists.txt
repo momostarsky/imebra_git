@@ -307,9 +307,13 @@ if(NOT IOS)
 
         file(GLOB imebra_tests_objc_src "${CMAKE_CURRENT_SOURCE_DIR}/tests/objectivec/*.m*")
 
-        foreach(objcfile ${imebra_tests_objc_src})
-            set_source_files_properties(${objcfile} PROPERTIES COMPILE_FLAGS ${objc_compiler_flags})
-        endforeach(objcfile ${imebra_objc_src})
+        if(NOT "${objc_compiler_flags}" STREQUAL "")
+
+            foreach(objcfile ${imebra_tests_objc_src})
+                set_source_files_properties(${objcfile} PROPERTIES COMPILE_FLAGS ${objc_compiler_flags})
+            endforeach(objcfile ${imebra_objc_src})
+
+        endif(NOT "${objc_compiler_flags}" STREQUAL "")
 
     endif("${IMEBRA_OBJC}" STREQUAL "1")
 
