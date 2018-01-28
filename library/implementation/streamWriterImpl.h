@@ -120,7 +120,7 @@ public:
 		{
 			if(bitsNum <= (8 - m_outBitsNum))
 			{
-				m_outBitsBuffer |= (std::uint8_t)(tempBuffer << (8 - m_outBitsNum - bitsNum));
+                m_outBitsBuffer = (std::uint8_t)(m_outBitsBuffer | (tempBuffer << (8 - m_outBitsNum - bitsNum)));
 				m_outBitsNum += bitsNum;
                 if(m_outBitsNum==8)
                 {
