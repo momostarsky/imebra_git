@@ -6,6 +6,8 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Fixed bug #174 (Remove warning "conversion to 'uint8_t {aka unsigned char}' from int 
+  may alter its value") as per SOP :ref:`FIXBUG_2`
 - Fixed bug #197 (Remove unused variables from jpegStreamCodecImpl.cpp) as per SOP :ref:`FIXBUG_2`
 - Implemented enhancement #204 (Move the examples make files to the main CMakeLists.txt) as per SOP :ref:`DEVENH_2`
 - Fixed bug #205 (Lossless jpeg codec wrongly writes/reads amplitude value when the amplitude length is equal to the max bit depth) as per SOP :ref:`FIXBUG_2`
