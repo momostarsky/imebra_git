@@ -69,7 +69,7 @@ private:
     /// \param pStream the implementation of BaseStreamOutput
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    BaseStreamOutput(std::shared_ptr<implementation::baseStreamOutput> pOutputStream);
+    explicit BaseStreamOutput(std::shared_ptr<implementation::baseStreamOutput> pOutputStream);
 #endif
 
 public:

@@ -57,7 +57,7 @@ class IMEBRA_API ReadWriteMemory: public ReadMemory
     friend class DrawBitmap;
     friend class WritingDataHandlerNumeric;
 private:
-    ReadWriteMemory(std::shared_ptr<implementation::memory> pMemory);
+    explicit ReadWriteMemory(std::shared_ptr<implementation::memory> pMemory);
 #endif
 
 public:
@@ -76,14 +76,14 @@ public:
     /// \param initialSize the initial memory's size, in bytes
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    ReadWriteMemory(size_t initialSize);
+    explicit ReadWriteMemory(size_t initialSize);
 
     /// \brief Construct a buffer of memory and copy the specified content into it.
     ///
     /// \param sourceMemory the object containing the initial memory's content
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    ReadWriteMemory(const ReadMemory& sourceMemory);
+    explicit ReadWriteMemory(const ReadMemory& sourceMemory);
 
     /// \brief Construct a buffer of memory and copy the specified content into it.
     ///
@@ -99,7 +99,7 @@ public:
     /// \param sourceSize  the amount of data to copy into the allocated memory
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    ReadWriteMemory(const char* source, size_t sourceSize);
+    explicit ReadWriteMemory(const char* source, size_t sourceSize);
 
     virtual ~ReadWriteMemory();
 

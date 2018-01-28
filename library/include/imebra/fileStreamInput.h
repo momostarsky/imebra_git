@@ -42,7 +42,7 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
 #ifndef SWIG // Use only UTF-8 strings with SWIG
-    FileStreamInput(const std::wstring& name);
+    explicit FileStreamInput(const std::wstring& name);
 #endif
 
     /// \brief Constructor.
@@ -50,7 +50,7 @@ public:
     /// \param name the path to the file to open in read mode, in encoded in UTF8
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    FileStreamInput(const std::string& name);
+    explicit FileStreamInput(const std::string& name);
 
 
     /// \brief Destructor. Closes the file.

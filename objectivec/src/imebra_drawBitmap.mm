@@ -11,37 +11,78 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#if defined(__APPLE__)
+#include "imebra_bridgeStructures.h"
 
-#include <imebra/imebra.h>
-#include <memory>
-#import "../include/imebra/objectivec/imebra_image.h"
-#import <Foundation/Foundation.h>
-
-namespace  imebra
-{
-
-void CGDataProviderCallbackFunc(void *info, const void *data, size_t size)
+void CGDataProviderCallbackFunc(void *info, const void* /* data */, size_t /* size */)
 {
     // Release the shared pointer holding the memory
     ////////////////////////////////////////////////
     delete (imebra::ReadWriteMemory*)info;
 }
 
+
+@implementation ImebraDrawBitmap
+
+-(id)init
+{
+    m_pDrawBitmap = 0;
+    self = [super init];
+    if(self)
+    {
+        m_pDrawBitmap = new imebra::DrawBitmap();
+    }
+    return self;
+}
+
+-(id)initWithTransform:(ImebraTransform*)pTransform
+{
+    m_pDrawBitmap = 0;
+    self = [super init];
+    if(self)
+    {
+        m_pDrawBitmap = new imebra::DrawBitmap(*(pTransform->m_pTransform));
+    }
+    return self;
+}
+
+-(void)dealloc
+{
+    delete m_pDrawBitmap;
+#if !__has_feature(objc_arc)
+    [super dealloc];
+#endif
+
+}
+
+
+-(ImebraReadWriteMemory*) getBitmap:(ImebraImage*)pImage bitmapType:(ImebraDrawBitmapType_t)drawBitmapType rowAlignBytes:(unsigned int)rowAlignBytes error:(NSError**)pError
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    return [[ImebraReadWriteMemory alloc] initWithImebraReadWriteMemory:m_pDrawBitmap->getBitmap(*(pImage->m_pImage), (imebra::drawBitmapType_t)drawBitmapType, (std::uint32_t)rowAlignBytes)];
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+}
+
+
+#if defined(__APPLE__)
+
 #if TARGET_OS_IPHONE
-UIImage* getImebraImage(const imebra::Image& image, imebra::DrawBitmap& drawBitmap)
+-(UIImage*)getImebraImage:(ImebraImage*)pImage error:(NSError**)pError
 #else
-NSImage* getImebraImage(const imebra::Image& image, imebra::DrawBitmap& drawBitmap)
+-(NSImage*)getImebraImage:(ImebraImage*)pImage error:(NSError**)pError
 #endif
 {
+    OBJC_IMEBRA_FUNCTION_START();
+
     // Get the amount of memory needed for the conversion
     /////////////////////////////////////////////////////
-    std::uint32_t width(image.getWidth());
-    std::uint32_t height(image.getHeight());
+    std::uint32_t width(pImage->m_pImage->getWidth());
+    std::uint32_t height(pImage->m_pImage->getHeight());
 
     // Get the result raw data
     //////////////////////////
-    std::unique_ptr<imebra::ReadWriteMemory> pMemory(drawBitmap.getBitmap(image, imebra::drawBitmapType_t::drawBitmapRGBA, 4));
+    std::unique_ptr<imebra::ReadWriteMemory> pMemory(m_pDrawBitmap->getBitmap(*(pImage->m_pImage), imebra::drawBitmapType_t::drawBitmapRGBA, 4));
     size_t dataSize;
     char* pData = pMemory->data(&dataSize);
 
@@ -72,8 +113,10 @@ NSImage* getImebraImage(const imebra::Image& image, imebra::DrawBitmap& drawBitm
     CGImageRelease(imageRef);
     CGColorSpaceRelease(colorSpaceRef);
     return returnImage;
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
 
-} // namespace imebra
-
 #endif
+
+@end

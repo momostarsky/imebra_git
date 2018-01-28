@@ -101,7 +101,7 @@ public:
     friend class DimseService;
 
 protected:
-    DimseCommandBase(std::shared_ptr<implementation::dimseCommandBase> pCommand);
+    explicit DimseCommandBase(std::shared_ptr<implementation::dimseCommandBase> pCommand);
 #endif
 
 public:
@@ -162,7 +162,7 @@ class IMEBRA_API DimseCommand: public DimseCommandBase
     friend class DimseService;
     friend class DimseResponse;
 protected:
-    DimseCommand(std::shared_ptr<implementation::dimseNCommand> pCommand);
+    explicit DimseCommand(std::shared_ptr<implementation::dimseNCommand> pCommand);
 #endif
 
 public:
@@ -197,7 +197,7 @@ class IMEBRA_API DimseResponse: public DimseCommandBase
 #ifndef SWIG
     friend class DimseService;
 protected:
-    DimseResponse(std::shared_ptr<implementation::dimseResponse> pResponse);
+    explicit DimseResponse(std::shared_ptr<implementation::dimseResponse> pResponse);
 #endif
 
 public:
@@ -219,7 +219,7 @@ class IMEBRA_API CPartialResponse: public DimseResponse
 
 #ifndef SWIG
 protected:
-    CPartialResponse(std::shared_ptr<implementation::cPartialResponse> pResponse);
+    explicit CPartialResponse(std::shared_ptr<implementation::cPartialResponse> pResponse);
 #endif
 
 public:
@@ -271,7 +271,7 @@ class IMEBRA_API CStoreCommand: public DimseCommand
 #ifndef SWIG
     friend class DimseService;
 protected:
-    CStoreCommand(std::shared_ptr<implementation::cStoreCommand> pCommand);
+    explicit CStoreCommand(std::shared_ptr<implementation::cStoreCommand> pCommand);
 #endif
 
 public:
@@ -296,7 +296,7 @@ public:
     /// \param payload                C-STORE payload
     ///
     //////////////////////////////////////////////////////////////////
-    CStoreCommand(
+    explicit CStoreCommand(
             const std::string& abstractSyntax,
             std::uint16_t messageID,
             dimseCommandPriority_t priority,
@@ -342,7 +342,7 @@ class IMEBRA_API CStoreResponse: public DimseResponse
 #ifndef SWIG
     friend class DimseService;
 protected:
-    CStoreResponse(std::shared_ptr<implementation::cStoreResponse> pResponse);
+    explicit CStoreResponse(std::shared_ptr<implementation::cStoreResponse> pResponse);
 #endif
 
 public:
@@ -354,7 +354,7 @@ public:
     /// \param responseCode the response code.
     ///
     //////////////////////////////////////////////////////////////////
-    CStoreResponse(const CStoreCommand& command, dimseStatusCode_t responseCode);
+    explicit CStoreResponse(const CStoreCommand& command, dimseStatusCode_t responseCode);
 };
 
 
@@ -375,7 +375,7 @@ class IMEBRA_API CGetCommand: public DimseCommand
 #ifndef SWIG
     friend class DimseService;
 protected:
-    CGetCommand(std::shared_ptr<implementation::cGetCommand> pCommand);
+    explicit CGetCommand(std::shared_ptr<implementation::cGetCommand> pCommand);
 #endif
 
 public:
@@ -396,7 +396,7 @@ public:
     ///                               C-GET query
     ///
     //////////////////////////////////////////////////////////////////
-    CGetCommand(
+    explicit CGetCommand(
             const std::string& abstractSyntax,
             std::uint16_t messageID,
             dimseCommandPriority_t priority,
@@ -417,7 +417,7 @@ class IMEBRA_API CGetResponse: public CPartialResponse
 #ifndef SWIG
     friend class DimseService;
 protected:
-    CGetResponse(std::shared_ptr<implementation::cGetResponse> pResponse);
+    explicit CGetResponse(std::shared_ptr<implementation::cGetResponse> pResponse);
 #endif
 
 public:
@@ -448,7 +448,7 @@ public:
     ///                               (0008,0058)
     ///
     //////////////////////////////////////////////////////////////////
-    CGetResponse(
+    explicit CGetResponse(
             const CGetCommand& receivedCommand,
             dimseStatusCode_t responseCode,
             std::uint32_t remainingSubOperations,
@@ -475,7 +475,7 @@ public:
     ///                               completed with warnings
     ///
     //////////////////////////////////////////////////////////////////
-    CGetResponse(
+    explicit CGetResponse(
             const CGetCommand& receivedCommand,
             dimseStatusCode_t responseCode,
             std::uint32_t remainingSubOperations,
@@ -498,7 +498,7 @@ class IMEBRA_API CFindCommand: public DimseCommand
 #ifndef SWIG
     friend class DimseService;
 protected:
-    CFindCommand(std::shared_ptr<implementation::cFindCommand> pCommand);
+    explicit CFindCommand(std::shared_ptr<implementation::cFindCommand> pCommand);
 #endif
 
 public:
@@ -520,7 +520,7 @@ public:
     ///                            requested values)
     ///
     //////////////////////////////////////////////////////////////////
-    CFindCommand(
+    explicit CFindCommand(
             const std::string& abstractSyntax,
             std::uint16_t messageID,
             dimseCommandPriority_t priority,
@@ -541,7 +541,7 @@ class IMEBRA_API CFindResponse: public DimseResponse
 #ifndef SWIG
     friend class DimseService;
 protected:
-    CFindResponse(std::shared_ptr<implementation::cFindResponse> pResponse);
+    explicit CFindResponse(std::shared_ptr<implementation::cFindResponse> pResponse);
 #endif
 
 public:
@@ -556,7 +556,7 @@ public:
     /// \param identifier      one item from the C-FIND query results
     ///
     //////////////////////////////////////////////////////////////////
-    CFindResponse(
+    explicit CFindResponse(
             const CFindCommand& receivedCommand,
             const DataSet& identifier);
 
@@ -569,7 +569,7 @@ public:
     /// \param responseCode    response code
     ///
     //////////////////////////////////////////////////////////////////
-    CFindResponse(
+    explicit CFindResponse(
             const CFindCommand& receivedCommand,
             dimseStatusCode_t responseCode);
 };
@@ -587,7 +587,7 @@ class IMEBRA_API CMoveCommand: public DimseCommand
 #ifndef SWIG
     friend class DimseService;
 protected:
-    CMoveCommand(std::shared_ptr<implementation::cMoveCommand> pCommand);
+    explicit CMoveCommand(std::shared_ptr<implementation::cMoveCommand> pCommand);
 #endif
 
 public:
@@ -609,7 +609,7 @@ public:
     ///                            requested values)
     ///
     //////////////////////////////////////////////////////////////////
-    CMoveCommand(
+    explicit CMoveCommand(
             const std::string& abstractSyntax,
             std::uint16_t messageID,
             dimseCommandPriority_t priority,
@@ -631,7 +631,7 @@ class IMEBRA_API CMoveResponse: public CPartialResponse
 #ifndef SWIG
     friend class DimseService;
 protected:
-    CMoveResponse(std::shared_ptr<implementation::cMoveResponse> pResponse);
+    explicit CMoveResponse(std::shared_ptr<implementation::cMoveResponse> pResponse);
 #endif
 
 public:
@@ -661,7 +661,7 @@ public:
     ///                               (0008,0058)
     ///
     //////////////////////////////////////////////////////////////////
-    CMoveResponse(
+    explicit CMoveResponse(
             const CMoveCommand& receivedCommand,
             dimseStatusCode_t responseCode,
             std::uint32_t remainingSubOperations,
@@ -688,7 +688,7 @@ public:
     ///                               completed with warnings
     ///
     //////////////////////////////////////////////////////////////////
-    CMoveResponse(
+    explicit CMoveResponse(
             const CMoveCommand& receivedCommand,
             dimseStatusCode_t responseCode,
             std::uint32_t remainingSubOperations,
@@ -710,7 +710,7 @@ class IMEBRA_API CEchoCommand: public DimseCommand
 #ifndef SWIG
     friend class DimseService;
 protected:
-    CEchoCommand(std::shared_ptr<implementation::cEchoCommand> pCommand);
+    explicit CEchoCommand(std::shared_ptr<implementation::cEchoCommand> pCommand);
 #endif
 
 public:
@@ -729,7 +729,7 @@ public:
     /// \param affectedSopClassUid the affected SOP class UID
     ///
     //////////////////////////////////////////////////////////////////
-    CEchoCommand(
+    explicit CEchoCommand(
             const std::string& abstractSyntax,
             std::uint16_t messageID,
             dimseCommandPriority_t priority,
@@ -750,7 +750,7 @@ class IMEBRA_API CEchoResponse: public DimseResponse
 #ifndef SWIG
     friend class DimseService;
 protected:
-    CEchoResponse(std::shared_ptr<implementation::cEchoResponse> pResponse);
+    explicit CEchoResponse(std::shared_ptr<implementation::cEchoResponse> pResponse);
 #endif
 
 public:
@@ -762,7 +762,7 @@ public:
     /// \param responseCode    the response code
     ///
     //////////////////////////////////////////////////////////////////
-    CEchoResponse(
+    explicit CEchoResponse(
             const CEchoCommand& receivedCommand,
             dimseStatusCode_t responseCode);
 };
@@ -780,7 +780,7 @@ class IMEBRA_API CCancelCommand: public DimseCommand
 #ifndef SWIG
     friend class DimseService;
 protected:
-    CCancelCommand(std::shared_ptr<implementation::cCancelCommand> pCommand);
+    explicit CCancelCommand(std::shared_ptr<implementation::cCancelCommand> pCommand);
 #endif
 
 public:
@@ -799,7 +799,7 @@ public:
     /// \param cancelMessageID        the ID of the message to cancel
     ///
     //////////////////////////////////////////////////////////////////
-    CCancelCommand(
+    explicit CCancelCommand(
             const std::string& abstractSyntax,
             std::uint16_t messageID,
             dimseCommandPriority_t priority,
@@ -829,7 +829,7 @@ class IMEBRA_API NEventReportCommand: public DimseCommand
 #ifndef SWIG
     friend class DimseService;
 protected:
-    NEventReportCommand(std::shared_ptr<implementation::nEventReportCommand> pCommand);
+    explicit NEventReportCommand(std::shared_ptr<implementation::nEventReportCommand> pCommand);
 #endif
 
 public:
@@ -849,7 +849,7 @@ public:
     /// \param eventID                the event ID
     ///
     //////////////////////////////////////////////////////////////////
-    NEventReportCommand(
+    explicit NEventReportCommand(
             const std::string& abstractSyntax,
             std::uint16_t messageID,
             const std::string& affectedSopClassUid,
@@ -875,7 +875,7 @@ public:
     ///                               information
     ///
     //////////////////////////////////////////////////////////////////
-    NEventReportCommand(
+    explicit NEventReportCommand(
             const std::string& abstractSyntax,
             std::uint16_t messageID,
             const std::string& affectedSopClassUid,
@@ -907,7 +907,7 @@ class IMEBRA_API NEventReportResponse: public DimseResponse
 #ifndef SWIG
     friend class DimseService;
 protected:
-    NEventReportResponse(std::shared_ptr<implementation::nEventReportResponse> pResponse);
+    explicit NEventReportResponse(std::shared_ptr<implementation::nEventReportResponse> pResponse);
 #endif
 
 public:
@@ -920,7 +920,7 @@ public:
     /// \param eventReply      the response payload
     ///
     //////////////////////////////////////////////////////////////////
-    NEventReportResponse(
+    explicit NEventReportResponse(
             const NEventReportCommand& receivedCommand,
             const DataSet& eventReply
             );
@@ -933,7 +933,7 @@ public:
     /// \param responseCode    the response code
     ///
     //////////////////////////////////////////////////////////////////
-    NEventReportResponse(
+    explicit NEventReportResponse(
             const NEventReportCommand& receivedCommand,
             dimseStatusCode_t responseCode
             );
@@ -962,7 +962,7 @@ class IMEBRA_API NGetCommand: public DimseCommand
 #ifndef SWIG
     friend class DimseService;
 protected:
-    NGetCommand(std::shared_ptr<implementation::nGetCommand> pCommand);
+    explicit NGetCommand(std::shared_ptr<implementation::nGetCommand> pCommand);
 #endif
 
 public:
@@ -985,7 +985,7 @@ public:
     ///                                tags"
     ///
     //////////////////////////////////////////////////////////////////
-    NGetCommand(
+    explicit NGetCommand(
             const std::string& abstractSyntax,
             std::uint16_t messageID,
             const std::string& requestedSopClassUid,
@@ -1017,7 +1017,7 @@ class IMEBRA_API NGetResponse: public DimseResponse
 #ifndef SWIG
     friend class DimseService;
 protected:
-    NGetResponse(std::shared_ptr<implementation::nGetResponse> pResponse);
+    explicit NGetResponse(std::shared_ptr<implementation::nGetResponse> pResponse);
 #endif
 
 public:
@@ -1031,7 +1031,7 @@ public:
     ///                        attribute identifiers
     ///
     //////////////////////////////////////////////////////////////////
-    NGetResponse(
+    explicit NGetResponse(
             const NGetCommand& receivedCommand,
             dimseStatusCode_t responseCode,
             const DataSet& attributeList
@@ -1045,7 +1045,7 @@ public:
     /// \param responseCode    response code
     ///
     //////////////////////////////////////////////////////////////////
-    NGetResponse(
+    explicit NGetResponse(
             const NGetCommand& receivedCommand,
             dimseStatusCode_t responseCode
             );
@@ -1065,7 +1065,7 @@ class IMEBRA_API NSetCommand: public DimseCommand
 #ifndef SWIG
     friend class DimseService;
 protected:
-    NSetCommand(std::shared_ptr<implementation::nSetCommand> pCommand);
+    explicit NSetCommand(std::shared_ptr<implementation::nSetCommand> pCommand);
 #endif
 
 public:
@@ -1087,7 +1087,7 @@ public:
     ///                                attributes values
     ///
     //////////////////////////////////////////////////////////////////
-    NSetCommand(
+    explicit NSetCommand(
             const std::string& abstractSyntax,
             std::uint16_t messageID,
             const std::string& requestedSopClassUid,
@@ -1110,7 +1110,7 @@ class IMEBRA_API NSetResponse: public DimseResponse
 #ifndef SWIG
     friend class DimseService;
 protected:
-    NSetResponse(std::shared_ptr<implementation::nSetResponse> pResponse);
+    explicit NSetResponse(std::shared_ptr<implementation::nSetResponse> pResponse);
 #endif
 
 public:
@@ -1122,7 +1122,7 @@ public:
     /// \param modifiedAttributes list of modified attributes
     ///
     //////////////////////////////////////////////////////////////////
-    NSetResponse(
+    explicit NSetResponse(
             const NSetCommand& receivedCommand,
             attributeIdentifierList_t modifiedAttributes
             );
@@ -1135,7 +1135,7 @@ public:
     /// \param responseCode       response code
     ///
     //////////////////////////////////////////////////////////////////
-    NSetResponse(
+    explicit NSetResponse(
             const NSetCommand& receivedCommand,
             dimseStatusCode_t responseCode
             );
@@ -1162,7 +1162,7 @@ class IMEBRA_API NActionCommand: public DimseCommand
 #ifndef SWIG
     friend class DimseService;
 protected:
-    NActionCommand(std::shared_ptr<implementation::nActionCommand> pCommand);
+    explicit NActionCommand(std::shared_ptr<implementation::nActionCommand> pCommand);
 #endif
 
 public:
@@ -1185,7 +1185,7 @@ public:
     ///                                about the action
     ///
     //////////////////////////////////////////////////////////////////
-    NActionCommand(
+    explicit NActionCommand(
             const std::string& abstractSyntax,
             std::uint16_t messageID,
             const std::string& requestedSopClassUid,
@@ -1211,7 +1211,7 @@ public:
     /// \param actionID                action ID
     ///
     //////////////////////////////////////////////////////////////////
-    NActionCommand(
+    explicit NActionCommand(
             const std::string& abstractSyntax,
             std::uint16_t messageID,
             const std::string& requestedSopClassUid,
@@ -1241,7 +1241,7 @@ class IMEBRA_API NActionResponse: public DimseResponse
 #ifndef SWIG
     friend class DimseService;
 protected:
-    NActionResponse(std::shared_ptr<implementation::nActionResponse> pResponse);
+    explicit NActionResponse(std::shared_ptr<implementation::nActionResponse> pResponse);
 #endif
 
 public:
@@ -1254,7 +1254,7 @@ public:
     ///                        action reply
     ///
     //////////////////////////////////////////////////////////////////
-    NActionResponse(
+    explicit NActionResponse(
             const NActionCommand& receivedCommand,
             const DataSet& actionReply
             );
@@ -1267,7 +1267,7 @@ public:
     /// \param responseCode    the response code
     ///
     //////////////////////////////////////////////////////////////////
-    NActionResponse(
+    explicit NActionResponse(
             const NActionCommand& receivedCommand,
             dimseStatusCode_t responseCode
             );
@@ -1294,7 +1294,7 @@ class IMEBRA_API NCreateCommand: public DimseCommand
 #ifndef SWIG
     friend class DimseService;
 protected:
-    NCreateCommand(std::shared_ptr<implementation::nCreateCommand> pCommand);
+    explicit NCreateCommand(std::shared_ptr<implementation::nCreateCommand> pCommand);
 #endif
 
 public:
@@ -1315,7 +1315,7 @@ public:
     ///                               attributes and values
     ///
     //////////////////////////////////////////////////////////////////
-    NCreateCommand(
+    explicit NCreateCommand(
             const std::string& abstractSyntax,
             std::uint16_t messageID,
             const std::string& affectedSopClassUid,
@@ -1338,7 +1338,7 @@ public:
     /// \param affectedSopInstanceUid the affected SOP instance UID
     ///
     //////////////////////////////////////////////////////////////////
-    NCreateCommand(
+    explicit NCreateCommand(
             const std::string& abstractSyntax,
             std::uint16_t messageID,
             const std::string& affectedSopClassUid,
@@ -1360,7 +1360,7 @@ class IMEBRA_API NCreateResponse: public DimseResponse
 #ifndef SWIG
     friend class DimseService;
 protected:
-    NCreateResponse(std::shared_ptr<implementation::nCreateResponse> pResponse);
+    explicit NCreateResponse(std::shared_ptr<implementation::nCreateResponse> pResponse);
 #endif
 
 public:
@@ -1386,7 +1386,7 @@ public:
     /// \param attributeList   dataset containing the attributes list
     ///
     //////////////////////////////////////////////////////////////////
-    NCreateResponse(
+    explicit NCreateResponse(
             const NCreateCommand& receivedCommand,
             const std::string& affectedSopInstanceUid,
             const DataSet& attributeList
@@ -1400,7 +1400,7 @@ public:
     /// \param responseCode the response code
     ///
     //////////////////////////////////////////////////////////////////
-    NCreateResponse(
+    explicit NCreateResponse(
             const NCreateCommand& receivedCommand,
             dimseStatusCode_t responseCode
             );
@@ -1413,7 +1413,7 @@ public:
     /// \param affectedSopInstanceUid created SOP instance UID
     ///
     //////////////////////////////////////////////////////////////////
-    NCreateResponse(
+    explicit NCreateResponse(
             const NCreateCommand& receivedCommand,
             const std::string& affectedSopInstanceUid
             );
@@ -1433,7 +1433,7 @@ class IMEBRA_API NDeleteCommand: public DimseCommand
 #ifndef SWIG
     friend class DimseService;
 protected:
-    NDeleteCommand(std::shared_ptr<implementation::nDeleteCommand> pCommand);
+    explicit NDeleteCommand(std::shared_ptr<implementation::nDeleteCommand> pCommand);
 #endif
 
 public:
@@ -1452,7 +1452,7 @@ public:
     /// \param requestedSopInstanceUid the requested SOP instance UID
     ///
     //////////////////////////////////////////////////////////////////
-    NDeleteCommand(
+    explicit NDeleteCommand(
             const std::string& abstractSyntax,
             std::uint16_t messageID,
             const std::string& requestedSopClassUid,
@@ -1473,7 +1473,7 @@ class IMEBRA_API NDeleteResponse: public DimseResponse
 #ifndef SWIG
     friend class DimseService;
 protected:
-    NDeleteResponse(std::shared_ptr<implementation::nDeleteResponse> pResponse);
+    explicit NDeleteResponse(std::shared_ptr<implementation::nDeleteResponse> pResponse);
 #endif
 
 public:
@@ -1485,7 +1485,7 @@ public:
     /// \param responseCode    response code
     ///
     //////////////////////////////////////////////////////////////////
-    NDeleteResponse(
+    explicit NDeleteResponse(
             NDeleteCommand& receivedCommand,
             dimseStatusCode_t responseCode
             );
@@ -1519,7 +1519,7 @@ public:
     ///                    sent and received
     ///
     //////////////////////////////////////////////////////////////////
-    DimseService(AssociationBase& association);
+    explicit DimseService(AssociationBase& association);
 
     ///
     /// \brief Returns the negotiated transfer syntax for a specific

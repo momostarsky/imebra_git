@@ -60,7 +60,7 @@ class IMEBRA_API Transform
     friend class VOILUT;
 
 private:
-    Transform(std::shared_ptr<imebra::implementation::transforms::transform> pTransform);
+    explicit Transform(std::shared_ptr<imebra::implementation::transforms::transform> pTransform);
 #endif
 
 

@@ -51,7 +51,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    LutError(const std::string& message);
+    explicit LutError(const std::string& message);
 };
 
 
@@ -68,7 +68,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    LutCorruptedError(const std::string& message);
+    explicit LutCorruptedError(const std::string& message);
 };
 
 
@@ -84,7 +84,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    MissingDataElementError(const std::string& message);
+    explicit MissingDataElementError(const std::string& message);
 };
 
 
@@ -100,7 +100,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    MissingGroupError(const std::string& message);
+    explicit MissingGroupError(const std::string& message);
 };
 
 
@@ -116,7 +116,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    MissingTagError(const std::string& message);
+    explicit MissingTagError(const std::string& message);
 };
 
 
@@ -132,7 +132,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    MissingBufferError(const std::string& message);
+    explicit MissingBufferError(const std::string& message);
 };
 
 
@@ -148,7 +148,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    MissingItemError(const std::string& message);
+    explicit MissingItemError(const std::string& message);
 };
 
 
@@ -164,7 +164,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    StreamError(const std::string& message);
+    explicit StreamError(const std::string& message);
 };
 
 
@@ -180,7 +180,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    StreamOpenError(const std::string& message);
+    explicit StreamOpenError(const std::string& message);
 };
 
 
@@ -196,7 +196,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    StreamReadError(const std::string& message);
+    explicit StreamReadError(const std::string& message);
 };
 
 
@@ -212,7 +212,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    StreamWriteError(const std::string& message);
+    explicit StreamWriteError(const std::string& message);
 };
 
 
@@ -228,7 +228,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    StreamCloseError(const std::string& message);
+    explicit StreamCloseError(const std::string& message);
 };
 
 
@@ -239,7 +239,7 @@ public:
 class IMEBRA_API TCPConnectionRefused: public StreamOpenError
 {
 public:
-    TCPConnectionRefused(const std::string& message);
+    explicit TCPConnectionRefused(const std::string& message);
 };
 
 
@@ -250,7 +250,7 @@ public:
 class IMEBRA_API TCPAddressAlreadyInUse: public StreamOpenError
 {
 public:
-    TCPAddressAlreadyInUse(const std::string& message);
+    explicit TCPAddressAlreadyInUse(const std::string& message);
 };
 
 
@@ -262,7 +262,7 @@ public:
 class IMEBRA_API PermissionDeniedError: public std::runtime_error
 {
 public:
-    PermissionDeniedError(const std::string& message);
+    explicit PermissionDeniedError(const std::string& message);
 };
 
 
@@ -278,7 +278,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    AddressError(const std::string& message);
+    explicit AddressError(const std::string& message);
 };
 
 
@@ -295,7 +295,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    AddressTryAgainError(const std::string& message);
+    explicit AddressTryAgainError(const std::string& message);
 };
 
 
@@ -310,7 +310,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    AddressNoNameError(const std::string& message);
+    explicit AddressNoNameError(const std::string& message);
 };
 
 
@@ -326,7 +326,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    AddressServiceNotSupportedError(const std::string& message);
+    explicit AddressServiceNotSupportedError(const std::string& message);
 };
 
 
@@ -341,7 +341,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    DictionaryError(const std::string& message);
+    explicit DictionaryError(const std::string& message);
 };
 
 
@@ -357,7 +357,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    DictionaryUnknownTagError(const std::string& message);
+    explicit DictionaryUnknownTagError(const std::string& message);
 };
 
 
@@ -374,7 +374,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    DictionaryUnknownDataTypeError(const std::string& message);
+    explicit DictionaryUnknownDataTypeError(const std::string& message);
 };
 
 
@@ -389,7 +389,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    CharsetConversionError(const std::string& message);
+    explicit CharsetConversionError(const std::string& message);
 };
 
 
@@ -405,7 +405,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    CharsetConversionNoTableError(const std::string& message);
+    explicit CharsetConversionNoTableError(const std::string& message);
 };
 
 
@@ -421,7 +421,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    CharsetConversionNoSupportedTableError(const std::string& message);
+    explicit CharsetConversionNoSupportedTableError(const std::string& message);
 };
 
 
@@ -441,7 +441,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    CharsetListDiffDefaultError(const std::string& message);
+    explicit CharsetListDiffDefaultError(const std::string& message);
 };
 
 
@@ -456,7 +456,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    CodecError(const std::string& message);
+    explicit CodecError(const std::string& message);
 };
 
 
@@ -472,7 +472,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    CodecWrongFormatError(const std::string& message);
+    explicit CodecWrongFormatError(const std::string& message);
 };
 
 
@@ -487,7 +487,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    CodecCorruptedFileError(const std::string& message);
+    explicit CodecCorruptedFileError(const std::string& message);
 };
 
 
@@ -503,7 +503,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    CodecWrongTransferSyntaxError(const std::string& message);
+    explicit CodecWrongTransferSyntaxError(const std::string& message);
 };
 
 
@@ -522,7 +522,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    CodecImageTooBigError(const std::string& message);
+    explicit CodecImageTooBigError(const std::string& message);
 };
 
 
@@ -539,7 +539,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    InvalidSequenceItemError(const std::string& message);
+    explicit InvalidSequenceItemError(const std::string& message);
 };
 
 
@@ -554,7 +554,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    DataHandlerError(const std::string& message);
+    explicit DataHandlerError(const std::string& message);
 };
 
 
@@ -570,7 +570,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    DataHandlerConversionError(const std::string& message);
+    explicit DataHandlerConversionError(const std::string& message);
 };
 
 
@@ -585,7 +585,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    DataHandlerCorruptedBufferError(const std::string& message);
+    explicit DataHandlerCorruptedBufferError(const std::string& message);
 };
 
 
@@ -601,7 +601,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    DataHandlerInvalidDataError(const std::string& message);
+    explicit DataHandlerInvalidDataError(const std::string& message);
 };
 
 /// \brief This is the base class for the exceptions thrown by the dataSet.
@@ -615,7 +615,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    DataSetError(const std::string& message);
+    explicit DataSetError(const std::string& message);
 };
 
 
@@ -632,7 +632,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    DataSetDifferentFormatError(const std::string& message);
+    explicit DataSetDifferentFormatError(const std::string& message);
 };
 
 
@@ -648,7 +648,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    DataSetUnknownTransferSyntaxError(const std::string& message);
+    explicit DataSetUnknownTransferSyntaxError(const std::string& message);
 };
 
 
@@ -667,7 +667,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    DataSetWrongFrameError(const std::string& message);
+    explicit DataSetWrongFrameError(const std::string& message);
 };
 
 
@@ -685,7 +685,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    DataSetOldFormatError(const std::string& message);
+    explicit DataSetOldFormatError(const std::string& message);
 };
 
 
@@ -701,7 +701,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    DataSetImageDoesntExistError(const std::string& message);
+    explicit DataSetImageDoesntExistError(const std::string& message);
 };
 
 /// \brief This exception is thrown when the the client tries to store a
@@ -716,7 +716,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    DataSetImagePaletteColorIsReadOnly(const std::string& message);
+    explicit DataSetImagePaletteColorIsReadOnly(const std::string& message);
 };
 
 /// \brief This exception is thrown when the basic offset table is corrupted.
@@ -730,7 +730,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    DataSetCorruptedOffsetTableError(const std::string& message);
+    explicit DataSetCorruptedOffsetTableError(const std::string& message);
 };
 
 
@@ -747,7 +747,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    DicomDirError(const std::string& message);
+    explicit DicomDirError(const std::string& message);
 };
 
 
@@ -765,7 +765,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    DicomDirCircularReferenceError(const std::string& message);
+    explicit DicomDirCircularReferenceError(const std::string& message);
 };
 
 
@@ -781,7 +781,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    DicomDirUnknownDirectoryRecordTypeError(const std::string& message);
+    explicit DicomDirUnknownDirectoryRecordTypeError(const std::string& message);
 };
 
 
@@ -796,7 +796,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    HuffmanError(const std::string& message);
+    explicit HuffmanError(const std::string& message);
 };
 
 
@@ -812,7 +812,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    HuffmanCreateTableError(const std::string& message);
+    explicit HuffmanCreateTableError(const std::string& message);
 };
 
 
@@ -828,7 +828,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    HuffmanReadError(const std::string& message);
+    explicit HuffmanReadError(const std::string& message);
 };
 
 
@@ -844,7 +844,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    HuffmanWriteError(const std::string& message);
+    explicit HuffmanWriteError(const std::string& message);
 };
 
 
@@ -859,7 +859,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    ImageError(const std::string& message);
+    explicit ImageError(const std::string& message);
 };
 
 /// \brief This exception is thrown when an unknown depth is specified as a
@@ -874,7 +874,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    ImageUnknownDepthError(const std::string& message);
+    explicit ImageUnknownDepthError(const std::string& message);
 };
 
 
@@ -890,7 +890,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    ImageUnknownColorSpaceError(const std::string& message);
+    explicit ImageUnknownColorSpaceError(const std::string& message);
 };
 
 
@@ -906,7 +906,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    ImageInvalidSizeError(const std::string& message);
+    explicit ImageInvalidSizeError(const std::string& message);
 };
 
 
@@ -921,7 +921,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    TransformError(const std::string& message);
+    explicit TransformError(const std::string& message);
 };
 
 /// \brief Exception thrown when the image areas to be processed are out
@@ -936,7 +936,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    TransformInvalidAreaError(const std::string& message);
+    explicit TransformInvalidAreaError(const std::string& message);
 };
 
 
@@ -952,7 +952,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    TransformDifferentHighBitError(const std::string& message);
+    explicit TransformDifferentHighBitError(const std::string& message);
 };
 
 
@@ -968,7 +968,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    ColorTransformError(const std::string& message);
+    explicit ColorTransformError(const std::string& message);
 };
 
 
@@ -984,7 +984,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    ColorTransformWrongColorSpaceError(const std::string& message);
+    explicit ColorTransformWrongColorSpaceError(const std::string& message);
 };
 
 
@@ -1000,7 +1000,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    ColorTransformsFactoryError(const std::string& message);
+    explicit ColorTransformsFactoryError(const std::string& message);
 };
 
 
@@ -1017,7 +1017,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    ColorTransformsFactoryNoTransformError(const std::string& message);
+    explicit ColorTransformsFactoryNoTransformError(const std::string& message);
 };
 
 
@@ -1029,7 +1029,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    TransformHighBitError(const std::string& message);
+    explicit TransformHighBitError(const std::string& message);
 };
 
 
@@ -1041,7 +1041,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    TransformHighBitDifferentColorSpacesError(const std::string& message);
+    explicit TransformHighBitDifferentColorSpacesError(const std::string& message);
 };
 
 
@@ -1057,7 +1057,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    StreamEOFError(const std::string& message);
+    explicit StreamEOFError(const std::string& message);
 };
 
 
@@ -1072,7 +1072,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    StreamClosedError(const std::string& message);
+    explicit StreamClosedError(const std::string& message);
 };
 
 
@@ -1087,7 +1087,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    StreamJpegTagInStreamError(const std::string& message);
+    explicit StreamJpegTagInStreamError(const std::string& message);
 };
 
 
@@ -1103,7 +1103,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    ModalityVOILUTError(const std::string& message);
+    explicit ModalityVOILUTError(const std::string& message);
 };
 
 
@@ -1119,7 +1119,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    DicomCodecError(const std::string& message);
+    explicit DicomCodecError(const std::string& message);
 };
 
 
@@ -1135,7 +1135,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    DicomCodecDepthLimitReachedError(const std::string&message);
+    explicit DicomCodecDepthLimitReachedError(const std::string&message);
 
 };
 
@@ -1151,7 +1151,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    JpegCodecError(const std::string& message);
+    explicit JpegCodecError(const std::string& message);
 };
 
 
@@ -1166,7 +1166,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    JpegCodecCannotHandleSyntaxError(const std::string& message);
+    explicit JpegCodecCannotHandleSyntaxError(const std::string& message);
 };
 
 
@@ -1186,7 +1186,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    MemoryError(const std::string& message);
+    explicit MemoryError(const std::string& message);
 };
 
 
@@ -1202,7 +1202,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    MemorySizeError(const std::string& message);
+    explicit MemorySizeError(const std::string& message);
 };
 
 
@@ -1217,7 +1217,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    AcseError(const std::string& message);
+    explicit AcseError(const std::string& message);
 };
 
 
@@ -1233,7 +1233,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    AcseCorruptedMessageError(const std::string& message);
+    explicit AcseCorruptedMessageError(const std::string& message);
 };
 
 
@@ -1245,7 +1245,7 @@ public:
 class IMEBRA_API AcseNoTransferSyntaxError: public AcseError
 {
 public:
-    AcseNoTransferSyntaxError(const std::string& message);
+    explicit AcseNoTransferSyntaxError(const std::string& message);
 };
 
 
@@ -1262,7 +1262,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    AcsePresentationContextNotRequestedError(const std::string& message);
+    explicit AcsePresentationContextNotRequestedError(const std::string& message);
 };
 
 
@@ -1278,7 +1278,7 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    AcseWrongRoleError(const std::string& message);
+    explicit AcseWrongRoleError(const std::string& message);
 };
 
 
@@ -1289,7 +1289,7 @@ public:
 class IMEBRA_API AcseWrongIdError: public AcseError
 {
 public:
-    AcseWrongIdError(const std::string& message);
+    explicit AcseWrongIdError(const std::string& message);
 };
 
 
@@ -1301,7 +1301,7 @@ public:
 class IMEBRA_API AcseWrongResponseIdError: public AcseWrongIdError
 {
 public:
-    AcseWrongResponseIdError(const std::string& message);
+    explicit AcseWrongResponseIdError(const std::string& message);
 };
 
 
@@ -1312,7 +1312,7 @@ public:
 class IMEBRA_API AcseWrongCommandIdError: public AcseWrongIdError
 {
 public:
-    AcseWrongCommandIdError(const std::string& message);
+    explicit AcseWrongCommandIdError(const std::string& message);
 };
 
 
@@ -1323,7 +1323,7 @@ public:
 class IMEBRA_API AcseRejectedAssociationError: public AcseError
 {
 public:
-    AcseRejectedAssociationError(const std::string& message, bool bPermanent);
+    explicit AcseRejectedAssociationError(const std::string& message, bool bPermanent);
 
     ///
     /// \brief Returns true if the rejection is permanent.
@@ -1353,7 +1353,7 @@ private:
 class IMEBRA_API AcseSCUNoReasonGivenError: public AcseRejectedAssociationError
 {
 public:
-    AcseSCUNoReasonGivenError(const std::string& message, bool bPermanent);
+    explicit AcseSCUNoReasonGivenError(const std::string& message, bool bPermanent);
 };
 
 
@@ -1365,7 +1365,7 @@ public:
 class IMEBRA_API AcseSCUApplicationContextNameNotSupportedError: public AcseRejectedAssociationError
 {
 public:
-    AcseSCUApplicationContextNameNotSupportedError(const std::string& message, bool bPermanent);
+    explicit AcseSCUApplicationContextNameNotSupportedError(const std::string& message, bool bPermanent);
 };
 
 
@@ -1377,7 +1377,7 @@ public:
 class IMEBRA_API AcseSCUCallingAETNotRecognizedError: public AcseRejectedAssociationError
 {
 public:
-    AcseSCUCallingAETNotRecognizedError(const std::string& message, bool bPermanent);
+    explicit AcseSCUCallingAETNotRecognizedError(const std::string& message, bool bPermanent);
 };
 
 
@@ -1389,7 +1389,7 @@ public:
 class IMEBRA_API AcseSCUCalledAETNotRecognizedError: public AcseRejectedAssociationError
 {
 public:
-    AcseSCUCalledAETNotRecognizedError(const std::string& message, bool bPermanent);
+    explicit AcseSCUCalledAETNotRecognizedError(const std::string& message, bool bPermanent);
 };
 
 
@@ -1401,7 +1401,7 @@ public:
 class IMEBRA_API AcseSCPNoReasonGivenError: public AcseRejectedAssociationError
 {
 public:
-    AcseSCPNoReasonGivenError(const std::string& message, bool bPermanent);
+    explicit AcseSCPNoReasonGivenError(const std::string& message, bool bPermanent);
 };
 
 
@@ -1413,7 +1413,7 @@ public:
 class IMEBRA_API AcseSCPAcseProtocolVersionNotSupportedError: public AcseRejectedAssociationError
 {
 public:
-    AcseSCPAcseProtocolVersionNotSupportedError(const std::string& message, bool bPermanent);
+    explicit AcseSCPAcseProtocolVersionNotSupportedError(const std::string& message, bool bPermanent);
 };
 
 
@@ -1425,7 +1425,7 @@ public:
 class IMEBRA_API AcseSCPPresentationReservedError: public AcseRejectedAssociationError
 {
 public:
-    AcseSCPPresentationReservedError(const std::string& message, bool bPermanent);
+    explicit AcseSCPPresentationReservedError(const std::string& message, bool bPermanent);
 };
 
 
@@ -1437,7 +1437,7 @@ public:
 class IMEBRA_API AcseSCPPresentationTemporaryCongestionError: public AcseRejectedAssociationError
 {
 public:
-    AcseSCPPresentationTemporaryCongestionError(const std::string& message, bool bPermanent);
+    explicit AcseSCPPresentationTemporaryCongestionError(const std::string& message, bool bPermanent);
 };
 
 
@@ -1449,7 +1449,7 @@ public:
 class IMEBRA_API AcseSCPPresentationLocalLimitExcededError: public AcseRejectedAssociationError
 {
 public:
-    AcseSCPPresentationLocalLimitExcededError(const std::string& message, bool bPermanent);
+    explicit AcseSCPPresentationLocalLimitExcededError(const std::string& message, bool bPermanent);
 };
 
 
@@ -1461,7 +1461,7 @@ public:
 class IMEBRA_API AcseTooManyOperationsPerformedError: public AcseError
 {
 public:
-    AcseTooManyOperationsPerformedError(const std::string& message);
+    explicit AcseTooManyOperationsPerformedError(const std::string& message);
 };
 
 
@@ -1473,7 +1473,7 @@ public:
 class IMEBRA_API AcseTooManyOperationsInvokedError: public AcseError
 {
 public:
-    AcseTooManyOperationsInvokedError(const std::string& message);
+    explicit AcseTooManyOperationsInvokedError(const std::string& message);
 };
 
 
@@ -1485,7 +1485,7 @@ public:
 class IMEBRA_API AcseNoPayloadError: public AcseError
 {
 public:
-    AcseNoPayloadError(const std::string& message);
+    explicit AcseNoPayloadError(const std::string& message);
 };
 
 
@@ -1496,7 +1496,7 @@ public:
 class IMEBRA_API DimseError: public std::runtime_error
 {
 public:
-    DimseError(const std::string& message);
+    explicit DimseError(const std::string& message);
 };
 
 
@@ -1507,7 +1507,7 @@ public:
 class IMEBRA_API DimseInvalidCommand: public DimseError
 {
 public:
-    DimseInvalidCommand(const std::string& message);
+    explicit DimseInvalidCommand(const std::string& message);
 };
 
 }

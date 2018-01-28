@@ -69,7 +69,7 @@ public:
     /// \param fromDataSet the DataSet created from reading a DICOMDIR file
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    DicomDir(const DataSet& fromDataSet);
+    explicit DicomDir(const DataSet& fromDataSet);
 
     /// \brief Destructor.
     ///
