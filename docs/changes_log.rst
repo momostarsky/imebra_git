@@ -11,6 +11,8 @@ Version |release| (this version)
 - Fixed bug #197 (Remove unused variables from jpegStreamCodecImpl.cpp) as per SOP :ref:`FIXBUG_2`
 - Implemented enhancement #204 (Move the examples make files to the main CMakeLists.txt) as per SOP :ref:`DEVENH_2`
 - Fixed bug #205 (Lossless jpeg codec wrongly writes/reads amplitude value when the amplitude length is equal to the max bit depth) as per SOP :ref:`FIXBUG_2`
+- Fixes bug #207 (Specify the keyword "override" next to methods that override methods in the super
+  class) as per SOP :ref:`FIXBUG_2`
 
 Version 4.1.0.1
 ----------------

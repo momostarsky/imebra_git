@@ -54,7 +54,7 @@ class jpeg2000ImageCodec : public imageCodec
 public:
 	// Retrieve the image from a dataset
 	///////////////////////////////////////////////////////////
-    virtual std::shared_ptr<image> getImage(const dataSet& sourceDataSet, std::shared_ptr<streamReader> pStream, tagVR_t dataType) const;
+    virtual std::shared_ptr<image> getImage(const dataSet& sourceDataSet, std::shared_ptr<streamReader> pStream, tagVR_t dataType) const override;
 
 	// Insert a jpeg compressed image into a dataset
 	///////////////////////////////////////////////////////////
@@ -68,21 +68,21 @@ public:
 		bool bSubSampledX,
 		bool bSubSampledY,
 		bool bInterleaved,
-        bool b2Complement) const;
+        bool b2Complement) const override;
 
 	// Return true if the codec can handle the transfer
 	///////////////////////////////////////////////////////////
-    virtual bool canHandleTransferSyntax(const std::string& transferSyntax) const;
+    virtual bool canHandleTransferSyntax(const std::string& transferSyntax) const override;
 
 	// Returns true if the transfer syntax has to be
 	//  encapsulated
 	//
 	///////////////////////////////////////////////////////////
-    virtual bool encapsulated(const std::string& transferSyntax) const;
+    virtual bool encapsulated(const std::string& transferSyntax) const override;
 
 	// Return the suggested allocated bits
 	///////////////////////////////////////////////////////////
-    virtual std::uint32_t suggestAllocatedBits(const std::string& transferSyntax, std::uint32_t highBit) const;
+    virtual std::uint32_t suggestAllocatedBits(const std::string& transferSyntax, std::uint32_t highBit) const override;
 
 };
 

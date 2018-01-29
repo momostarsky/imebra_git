@@ -44,11 +44,11 @@ public:
 
 	// Overwritten to use getDouble()
 	///////////////////////////////////////////////////////////
-	virtual std::int32_t getSignedLong(const size_t index) const;
+    virtual std::int32_t getSignedLong(const size_t index) const override;
 
 	// Overwritten to use getDouble()
 	///////////////////////////////////////////////////////////
-	virtual std::uint32_t getUnsignedLong(const size_t index) const;
+    virtual std::uint32_t getUnsignedLong(const size_t index) const override;
 
 };
 
@@ -59,11 +59,11 @@ public:
 
     // Overwritten to use setDouble()
     ///////////////////////////////////////////////////////////
-    virtual void setSignedLong(const size_t index, const std::int32_t value);
+    virtual void setSignedLong(const size_t index, const std::int32_t value) override;
 
     // Overwritten to use setDouble()
     ///////////////////////////////////////////////////////////
-    virtual void setUnsignedLong(const size_t index, const std::uint32_t value);
+    virtual void setUnsignedLong(const size_t index, const std::uint32_t value) override;
 };
 
 } // namespace handlers

@@ -50,8 +50,8 @@ namespace colorTransforms
 class MONOCHROME2ToYBRFULL: public colorTransform
 {
 public:
-    virtual std::string getInitialColorSpace() const;
-    virtual std::string getFinalColorSpace() const;
+    virtual std::string getInitialColorSpace() const override;
+    virtual std::string getFinalColorSpace() const override;
 
     DEFINE_RUN_TEMPLATE_TRANSFORM;
 
@@ -114,7 +114,7 @@ public:
 class MONOCHROME2ToYBRICT: public MONOCHROME2ToYBRFULL
 {
 public:
-    virtual std::string getFinalColorSpace() const;
+    virtual std::string getFinalColorSpace() const override;
 
 };
 

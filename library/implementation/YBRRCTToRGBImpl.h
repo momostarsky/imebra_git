@@ -50,8 +50,8 @@ namespace colorTransforms
 class YBRRCTToRGB: public colorTransform
 {
 public:
-    virtual std::string getInitialColorSpace() const;
-    virtual std::string getFinalColorSpace() const;
+    virtual std::string getInitialColorSpace() const override;
+    virtual std::string getFinalColorSpace() const override;
 
     DEFINE_RUN_TEMPLATE_TRANSFORM;
 
@@ -153,10 +153,10 @@ public:
             const std::string& inputColorSpace,
             std::uint32_t inputHighBit,
             std::shared_ptr<palette> inputPalette,
-            std::uint32_t outputWidth, std::uint32_t outputHeight) const;
+            std::uint32_t outputWidth, std::uint32_t outputHeight) const override;
 
 protected:
-    virtual void checkHighBit(std::uint32_t inputHighBit, std::uint32_t outputHighBit) const;
+    virtual void checkHighBit(std::uint32_t inputHighBit, std::uint32_t outputHighBit) const override;
 
 };
 

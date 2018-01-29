@@ -68,7 +68,7 @@ public:
 	///               pUnit
 	///
 	///////////////////////////////////////////////////////////
-    virtual std::uint32_t getAge(const size_t index, ageUnit_t* pUnit) const;
+    virtual std::uint32_t getAge(const size_t index, ageUnit_t* pUnit) const override;
 
 	/// \brief Retrieve the age from the handled buffer.
 	///
@@ -80,7 +80,7 @@ public:
 	///          years
 	///
 	///////////////////////////////////////////////////////////
-	virtual std::int32_t getSignedLong(const size_t index) const;
+    virtual std::int32_t getSignedLong(const size_t index) const override;
 
 	/// \brief Retrieve the age from the handled buffer.
 	///
@@ -92,7 +92,7 @@ public:
 	///          years
 	///
 	///////////////////////////////////////////////////////////
-	virtual std::uint32_t getUnsignedLong(const size_t index) const;
+    virtual std::uint32_t getUnsignedLong(const size_t index) const override;
 
 	/// \brief Retrieve the age from the handled buffer.
 	///
@@ -107,7 +107,7 @@ public:
 	///          years
 	///
 	///////////////////////////////////////////////////////////
-	virtual double getDouble(const size_t index) const;
+    virtual double getDouble(const size_t index) const override;
 };
 
 
@@ -125,7 +125,7 @@ public:
     /// @param unit  the units used for the parameter age
     ///
     ///////////////////////////////////////////////////////////
-    virtual void setAge(const size_t index, const std::uint32_t age, const ageUnit_t unit);
+    virtual void setAge(const size_t index, const std::uint32_t age, const ageUnit_t unit) override;
 
     /// \brief Write the specified age into the handled buffer.
     ///
@@ -134,7 +134,7 @@ public:
     /// @param value the age to be written, in years
     ///
     ///////////////////////////////////////////////////////////
-    virtual void setSignedLong(const size_t index, const std::int32_t value);
+    virtual void setSignedLong(const size_t index, const std::int32_t value) override;
 
     /// \brief Write the specified age into the handled buffer.
     ///
@@ -143,7 +143,7 @@ public:
     /// @param value the age to be written, in years
     ///
     ///////////////////////////////////////////////////////////
-    virtual void setUnsignedLong(const size_t index, const std::uint32_t value);
+    virtual void setUnsignedLong(const size_t index, const std::uint32_t value) override;
 
     /// \brief Write the specified age into the handled buffer.
     ///
@@ -156,9 +156,9 @@ public:
     /// @param value the age to be written, in years
     ///
     ///////////////////////////////////////////////////////////
-    virtual void setDouble(const size_t index, const double value);
+    virtual void setDouble(const size_t index, const double value) override;
 
-    virtual void validate() const;
+    virtual void validate() const override;
 
 };
 

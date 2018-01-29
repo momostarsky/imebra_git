@@ -359,11 +359,11 @@ class tagUnknown: public tag
 public:
 	// Write the tag's content.
 	///////////////////////////////////////////////////////////
-    virtual void writeTag(streamWriter* pStream, jpegInformation& information) const;
+    virtual void writeTag(streamWriter* pStream, jpegInformation& information) const override;
 
 	// Read the tag's content.
 	///////////////////////////////////////////////////////////
-    virtual void readTag(streamReader* pStream, jpegInformation* pInformation, std::uint8_t tagEntry) const;
+    virtual void readTag(streamReader* pStream, jpegInformation* pInformation, std::uint8_t tagEntry) const override;
 
 };
 
@@ -384,11 +384,11 @@ class tagSOF: public tag
 public:
 	// Write the tag's content.
 	///////////////////////////////////////////////////////////
-    virtual void writeTag(streamWriter* pStream, jpegInformation& information) const;
+    virtual void writeTag(streamWriter* pStream, jpegInformation& information) const override;
 
 	// Read the tag's content.
 	///////////////////////////////////////////////////////////
-    virtual void readTag(streamReader* pStream, jpegInformation* pInformation, std::uint8_t tagEntry) const;
+    virtual void readTag(streamReader* pStream, jpegInformation* pInformation, std::uint8_t tagEntry) const override;
 
 };
 
@@ -407,11 +407,11 @@ class tagDHT: public tag
 public:
 	// Write the tag's content.
 	///////////////////////////////////////////////////////////
-    virtual void writeTag(streamWriter* pStream, jpegInformation& information) const;
+    virtual void writeTag(streamWriter* pStream, jpegInformation& information) const override;
 
 	// Read the tag's content.
 	///////////////////////////////////////////////////////////
-    virtual void readTag(streamReader* pStream, jpegInformation* pInformation, std::uint8_t tagEntry) const;
+    virtual void readTag(streamReader* pStream, jpegInformation* pInformation, std::uint8_t tagEntry) const override;
 
 };
 
@@ -430,11 +430,11 @@ class tagSOS: public tag
 public:
 	// Write the tag's content.
 	///////////////////////////////////////////////////////////
-    virtual void writeTag(streamWriter* pStream, jpegInformation& information) const;
+    virtual void writeTag(streamWriter* pStream, jpegInformation& information) const override;
 
 	// Read the tag's content.
 	///////////////////////////////////////////////////////////
-    virtual void readTag(streamReader* pStream, jpegInformation* pInformation, std::uint8_t tagEntry) const;
+    virtual void readTag(streamReader* pStream, jpegInformation* pInformation, std::uint8_t tagEntry) const override;
 
 };
 
@@ -453,11 +453,11 @@ class tagDQT: public tag
 public:
 	// Write the tag's content.
 	///////////////////////////////////////////////////////////
-    virtual void writeTag(streamWriter* pStream, jpegInformation& information) const;
+    virtual void writeTag(streamWriter* pStream, jpegInformation& information) const override;
 
 	// Read the tag's content.
 	///////////////////////////////////////////////////////////
-    virtual void readTag(streamReader* pStream, jpegInformation* pInformation, std::uint8_t tagEntry) const;
+    virtual void readTag(streamReader* pStream, jpegInformation* pInformation, std::uint8_t tagEntry) const override;
 
 };
 
@@ -476,11 +476,11 @@ class tagDRI: public tag
 public:
 	// Write the tag's content.
 	///////////////////////////////////////////////////////////
-    virtual void writeTag(streamWriter* pStream, jpegInformation& information) const;
+    virtual void writeTag(streamWriter* pStream, jpegInformation& information) const override;
 
 	// Read the tag's content.
 	///////////////////////////////////////////////////////////
-    virtual void readTag(streamReader* pStream, jpegInformation* pInformation, std::uint8_t tagEntry) const;
+    virtual void readTag(streamReader* pStream, jpegInformation* pInformation, std::uint8_t tagEntry) const override;
 
 };
 
@@ -499,11 +499,11 @@ class tagRST: public tag
 public:
 	// Write the tag's content.
 	///////////////////////////////////////////////////////////
-    virtual void writeTag(streamWriter* pStream, jpegInformation& information) const;
+    virtual void writeTag(streamWriter* pStream, jpegInformation& information) const override;
 
 	// Read the tag's content.
 	///////////////////////////////////////////////////////////
-    virtual void readTag(streamReader* pStream, jpegInformation* pInformation, std::uint8_t tagEntry) const;
+    virtual void readTag(streamReader* pStream, jpegInformation* pInformation, std::uint8_t tagEntry) const override;
 
 };
 
@@ -522,11 +522,11 @@ class tagEOI: public tag
 public:
 	// Write the tag's content.
 	///////////////////////////////////////////////////////////
-    virtual void writeTag(streamWriter* pStream, jpegInformation& information) const;
+    virtual void writeTag(streamWriter* pStream, jpegInformation& information) const override;
 
 	// Read the tag's content.
 	///////////////////////////////////////////////////////////
-    virtual void readTag(streamReader* pStream, jpegInformation* pInformation, std::uint8_t tagEntry) const;
+    virtual void readTag(streamReader* pStream, jpegInformation* pInformation, std::uint8_t tagEntry) const override;
 
 };
 

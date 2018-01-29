@@ -76,7 +76,7 @@ public:
 	// Virtual stream's functions
 	//
 	///////////////////////////////////////////////////////////
-    virtual size_t read(size_t startPosition, std::uint8_t* pBuffer, size_t bufferLength);
+    virtual size_t read(size_t startPosition, std::uint8_t* pBuffer, size_t bufferLength) override;
 
     virtual void terminate() override;
 
@@ -95,7 +95,7 @@ public:
     // Virtual stream's functions
     //
     ///////////////////////////////////////////////////////////
-    virtual void write(size_t startPosition, const std::uint8_t* pBuffer, size_t bufferLength);
+    virtual void write(size_t startPosition, const std::uint8_t* pBuffer, size_t bufferLength) override;
 
 };
 

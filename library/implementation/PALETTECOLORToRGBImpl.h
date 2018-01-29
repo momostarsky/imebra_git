@@ -56,8 +56,8 @@ namespace colorTransforms
 class PALETTECOLORToRGB: public colorTransform
 {
 public:
-    virtual std::string getInitialColorSpace() const;
-    virtual std::string getFinalColorSpace() const;
+    virtual std::string getInitialColorSpace() const override;
+    virtual std::string getFinalColorSpace() const override;
 
     DEFINE_RUN_TEMPLATE_TRANSFORM;
 

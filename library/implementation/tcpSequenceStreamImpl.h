@@ -216,8 +216,8 @@ public:
     ///////////////////////////////////////////////////////////
     ~tcpSequenceStream();
 
-    virtual size_t read(std::uint8_t* pBuffer, size_t bufferLength);
-    virtual void write(const std::uint8_t* pBuffer, size_t bufferLength);
+    virtual size_t read(std::uint8_t* pBuffer, size_t bufferLength) override;
+    virtual void write(const std::uint8_t* pBuffer, size_t bufferLength) override;
 
     ///
     /// \brief Returns the address to which the socket is

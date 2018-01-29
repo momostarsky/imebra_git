@@ -64,8 +64,8 @@ public:
     ///////////////////////////////////////////////////////////
     ~pipeSequenceStream();
 
-    virtual size_t read(std::uint8_t* pBuffer, size_t bufferLength);
-    virtual void write(const std::uint8_t* pBuffer, size_t bufferLength);
+    virtual size_t read(std::uint8_t* pBuffer, size_t bufferLength) override;
+    virtual void write(const std::uint8_t* pBuffer, size_t bufferLength) override;
 
     ///
     /// \brief Waits for the circular buffer to become empty

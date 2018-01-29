@@ -39,9 +39,9 @@ public:
     charsetConversionJava(const std::string& dicomName);
     virtual ~charsetConversionJava();
 
-    virtual std::string fromUnicode(const std::wstring& unicodeString) const;
+    virtual std::string fromUnicode(const std::wstring& unicodeString) const override;
 
-    virtual std::wstring toUnicode(const std::string& asciiString) const;
+    virtual std::wstring toUnicode(const std::string& asciiString) const override;
 
 protected:
     static jstring getNativeJavaString(JNIEnv *env, const std::string& str, const char* tableName);
