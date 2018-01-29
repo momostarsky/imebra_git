@@ -40,9 +40,9 @@ public:
     charsetConversionIconv(const std::string& dicomName);
     virtual ~charsetConversionIconv();
 
-    virtual std::string fromUnicode(const std::wstring& unicodeString) const;
+    virtual std::string fromUnicode(const std::wstring& unicodeString) const override;
 
-    virtual std::wstring toUnicode(const std::string& asciiString) const;
+    virtual std::wstring toUnicode(const std::string& asciiString) const override;
 
 protected:
 

@@ -54,7 +54,7 @@ public:
         std::uint32_t* pSeconds,
         std::uint32_t* pNanoseconds,
 		std::int32_t* pOffsetHours,
-		std::int32_t* pOffsetMinutes) const;
+        std::int32_t* pOffsetMinutes) const override;
 };
 
 class writingDataHandlerDate: public writingDataHandlerDateTimeBase
@@ -71,7 +71,7 @@ public:
         std::uint32_t seconds,
         std::uint32_t nanoseconds,
         std::int32_t offsetHours,
-        std::int32_t offsetMinutes);
+        std::int32_t offsetMinutes) override;
 };
 
 } // namespace handlers

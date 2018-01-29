@@ -135,14 +135,14 @@ public:
 		IMEBRA_FUNCTION_END();
 	}
 
-    virtual bool isEmpty() const;
+    virtual bool isEmpty() const override;
 
     virtual std::shared_ptr<image> allocateOutputImage(
             bitDepth_t inputDepth,
             const std::string& inputColorSpace,
             std::uint32_t inputHighBit,
             std::shared_ptr<palette> inputPalette,
-            std::uint32_t outputWidth, std::uint32_t outputHeight) const;
+            std::uint32_t outputWidth, std::uint32_t outputHeight) const override;
 
 private:
     std::shared_ptr<const dataSet> m_pDataSet;

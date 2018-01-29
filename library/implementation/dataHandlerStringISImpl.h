@@ -44,7 +44,7 @@ public:
 
 	// Overwritten to use getSignedLong()
 	///////////////////////////////////////////////////////////
-	virtual double getDouble(const size_t index) const;
+    virtual double getDouble(const size_t index) const override;
 
 };
 
@@ -55,7 +55,7 @@ public:
 
     // Overwritten to use setSignedLong()
     ///////////////////////////////////////////////////////////
-    virtual void setDouble(const size_t index, const double value);
+    virtual void setDouble(const size_t index, const double value) override;
 };
 
 } // namespace handlers

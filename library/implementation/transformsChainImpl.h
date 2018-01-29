@@ -73,7 +73,7 @@ public:
             std::shared_ptr<handlers::writingDataHandlerNumericBase> outputHandler, bitDepth_t outputDepth, std::uint32_t outputHandlerWidth, const std::string& outputHandlerColorSpace,
             std::shared_ptr<palette> outputPalette,
             std::uint32_t outputHighBit,
-            std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY) const;
+            std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY) const override;
 
 	/// \brief Returns true if the transform doesn't do
 	///         anything.
@@ -83,14 +83,14 @@ public:
 	///          empty transformsChain object).
 	///
 	///////////////////////////////////////////////////////////
-    virtual bool isEmpty() const;
+    virtual bool isEmpty() const override;
 
     virtual std::shared_ptr<image> allocateOutputImage(
             bitDepth_t inputDepth,
             const std::string& inputColorSpace,
             std::uint32_t inputHighBit,
             std::shared_ptr<palette> inputPalette,
-            std::uint32_t outputWidth, std::uint32_t outputHeight) const;
+            std::uint32_t outputWidth, std::uint32_t outputHeight) const override;
 
 protected:
     typedef std::vector<std::shared_ptr<transform> > tTransformsList;

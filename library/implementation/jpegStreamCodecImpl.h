@@ -56,11 +56,11 @@ public:
 protected:
 	// Read a jpeg stream and build a Dicom dataset
 	///////////////////////////////////////////////////////////
-    virtual void readStream(std::shared_ptr<streamReader> pSourceStream, std::shared_ptr<dataSet> pDataSet, std::uint32_t maxSizeBufferLoad = 0xffffffff) const;
+    virtual void readStream(std::shared_ptr<streamReader> pSourceStream, std::shared_ptr<dataSet> pDataSet, std::uint32_t maxSizeBufferLoad = 0xffffffff) const override;
 
 	// Write a Dicom dataset as a Jpeg stream
 	///////////////////////////////////////////////////////////
-    virtual void writeStream(std::shared_ptr<streamWriter> pSourceStream, std::shared_ptr<dataSet> pDataSet) const;
+    virtual void writeStream(std::shared_ptr<streamWriter> pSourceStream, std::shared_ptr<dataSet> pDataSet) const override;
 };
 
 

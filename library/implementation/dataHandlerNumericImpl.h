@@ -107,13 +107,13 @@ public:
 
     size_t getMemorySize() const;
 
-    virtual size_t getSize() const;
+    virtual size_t getSize() const override;
 
     std::shared_ptr<memory> getMemory() const;
 
     // Set the buffer's size, in data elements
     ///////////////////////////////////////////////////////////
-    virtual void setSize(const size_t elementsNumber);
+    virtual void setSize(const size_t elementsNumber) override;
 
     virtual void copyFromInt32Interleaved(const std::int32_t* pSource,
                                           std::uint32_t sourceReplicateX,

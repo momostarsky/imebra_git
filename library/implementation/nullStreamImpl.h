@@ -50,7 +50,8 @@ public:
 	// Virtual stream's functions
 	//
 	///////////////////////////////////////////////////////////
-    virtual void write(size_t, const std::uint8_t*, size_t){}
+    virtual void write(size_t, const std::uint8_t*, size_t)  override
+    {}
 };
 
 } // namespace implementation

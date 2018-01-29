@@ -33,7 +33,7 @@ virtual void runTransformHandlers(\
     std::shared_ptr<imebra::implementation::handlers::writingDataHandlerNumericBase> outputHandler, bitDepth_t outputDepth, std::uint32_t outputHandlerWidth, const std::string& outputHandlerColorSpace,\
     std::shared_ptr<imebra::implementation::palette> outputPalette,\
     std::uint32_t outputHighBit,\
-    std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY) const\
+    std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY) const override\
 {\
     IMEBRA_FUNCTION_START();\
     runTemplateTransform(*this, inputHandler, outputHandler, inputDepth, inputHandlerWidth, inputHandlerColorSpace, inputPalette, inputHighBit,\

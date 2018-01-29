@@ -49,7 +49,7 @@ class baseSequenceStreamInput: public baseStreamInput
 public:
     baseSequenceStreamInput();
 
-    virtual size_t read(size_t startPosition, std::uint8_t* pBuffer, size_t bufferLength);
+    virtual size_t read(size_t startPosition, std::uint8_t* pBuffer, size_t bufferLength) override;
 
     virtual size_t read(std::uint8_t* pBuffer, size_t bufferLength) = 0;
 
@@ -78,7 +78,7 @@ class baseSequenceStreamOutput: public baseStreamOutput
 public:
     baseSequenceStreamOutput();
 
-    virtual void write(size_t startPosition, const std::uint8_t* pBuffer, size_t bufferLength);
+    virtual void write(size_t startPosition, const std::uint8_t* pBuffer, size_t bufferLength) override;
 
     virtual void write(const std::uint8_t* pBuffer, size_t bufferLength) = 0;
 

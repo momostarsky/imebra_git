@@ -163,8 +163,8 @@ public:
     const std::string& getName() const;
 
 protected:
-    virtual void encodeItemPayload(std::shared_ptr<streamWriter>) const;
-    virtual void decodeItemPayload(std::shared_ptr<streamReader> pReader);
+    virtual void encodeItemPayload(std::shared_ptr<streamWriter>) const override;
+    virtual void decodeItemPayload(std::shared_ptr<streamReader> pReader) override;
 
     std::string m_name;
 };
@@ -179,7 +179,7 @@ class acseItemApplicationContext: public acseItemName
 public:
     using acseItemName::acseItemName;
 
-    virtual itemType_t getItemType() const;
+    virtual itemType_t getItemType() const override;
 };
 
 
@@ -192,7 +192,7 @@ class acseItemAbstractSyntax: public acseItemName
 public:
     using acseItemName::acseItemName;
 
-    virtual itemType_t getItemType() const;
+    virtual itemType_t getItemType() const override;
 };
 
 
@@ -205,7 +205,7 @@ class acseItemTransferSyntax: public acseItemName
 public:
     using acseItemName::acseItemName;
 
-    virtual itemType_t getItemType() const;
+    virtual itemType_t getItemType() const override;
 };
 
 
@@ -218,7 +218,7 @@ class acseItemImplementationClassUID: public acseItemName
 public:
     using acseItemName::acseItemName;
 
-    virtual itemType_t getItemType() const;
+    virtual itemType_t getItemType() const override;
 };
 
 
@@ -231,7 +231,7 @@ class acseItemImplementationVersionName: public acseItemName
 public:
     using acseItemName::acseItemName;
 
-    virtual itemType_t getItemType() const;
+    virtual itemType_t getItemType() const override;
 };
 
 
@@ -258,11 +258,11 @@ public:
     //////////////////////////////////////////////////////////////////
     std::uint32_t getMaxLength() const;
 
-    virtual itemType_t getItemType() const;
+    virtual itemType_t getItemType() const override;
 
 protected:
-    virtual void encodeItemPayload(std::shared_ptr<streamWriter>) const;
-    virtual void decodeItemPayload(std::shared_ptr<streamReader> pReader);
+    virtual void encodeItemPayload(std::shared_ptr<streamWriter>) const override;
+    virtual void decodeItemPayload(std::shared_ptr<streamReader> pReader) override;
 
     std::uint32_t m_maxLength;
 };
@@ -311,11 +311,11 @@ public:
     //////////////////////////////////////////////////////////////////
     std::uint16_t getMaxOperationsPerformed() const;
 
-    virtual itemType_t getItemType() const;
+    virtual itemType_t getItemType() const override;
 
 protected:
-    virtual void encodeItemPayload(std::shared_ptr<streamWriter>) const;
-    virtual void decodeItemPayload(std::shared_ptr<streamReader> pReader);
+    virtual void encodeItemPayload(std::shared_ptr<streamWriter>) const override;
+    virtual void decodeItemPayload(std::shared_ptr<streamReader> pReader) override;
 
     std::uint16_t m_maxOperationsInvoked;
     std::uint16_t m_maxOperationsPerformed;
@@ -370,11 +370,11 @@ public:
     //////////////////////////////////////////////////////////////////
     bool getSCP() const;
 
-    virtual itemType_t getItemType() const;
+    virtual itemType_t getItemType() const override;
 
 protected:
-    virtual void encodeItemPayload(std::shared_ptr<streamWriter>) const;
-    virtual void decodeItemPayload(std::shared_ptr<streamReader> pReader);
+    virtual void encodeItemPayload(std::shared_ptr<streamWriter>) const override;
+    virtual void decodeItemPayload(std::shared_ptr<streamReader> pReader) override;
 
     std::string m_sopClassUID;
     bool m_bSCU;
@@ -457,11 +457,11 @@ public:
     //////////////////////////////////////////////////////////////////
     const scpScuSelectionList_t& getScpScuRoles();
 
-    virtual itemType_t getItemType() const;
+    virtual itemType_t getItemType() const override;
 
 protected:
-    virtual void encodeItemPayload(std::shared_ptr<streamWriter>) const;
-    virtual void decodeItemPayload(std::shared_ptr<streamReader> pReader);
+    virtual void encodeItemPayload(std::shared_ptr<streamWriter>) const override;
+    virtual void decodeItemPayload(std::shared_ptr<streamReader> pReader) override;
 
     std::shared_ptr<acseItemMaxLength> m_maximumLength;
     std::shared_ptr<acseItemImplementationClassUID> m_implementationClassUID;
@@ -546,8 +546,8 @@ protected:
     acseItemPresentationContextBase(std::uint8_t id, const std::string& abstractSyntax, const transferSyntaxes_t& transferSyntaxes);
     acseItemPresentationContextBase(std::uint8_t id, result_t result, const std::string& transferSyntax);
 
-    virtual void encodeItemPayload(std::shared_ptr<streamWriter>) const;
-    virtual void decodeItemPayload(std::shared_ptr<streamReader> pReader);
+    virtual void encodeItemPayload(std::shared_ptr<streamWriter>) const override;
+    virtual void decodeItemPayload(std::shared_ptr<streamReader> pReader) override;
 
     std::uint8_t m_id;
 
@@ -583,7 +583,7 @@ public:
     //////////////////////////////////////////////////////////////////
     acseItemPresentationContextRQ(std::uint8_t id, const std::string& abstractSyntax, const transferSyntaxes_t& transferSyntaxes);
 
-    virtual itemType_t getItemType() const;
+    virtual itemType_t getItemType() const override;
 };
 
 
@@ -606,7 +606,7 @@ public:
     ///
     acseItemPresentationContextAC(std::uint8_t id, result_t result, const std::string& transferSyntax);
 
-    virtual itemType_t getItemType() const;
+    virtual itemType_t getItemType() const override;
 };
 
 
@@ -812,8 +812,8 @@ public:
     const std::shared_ptr<acseItemUserInformation>& getItemUserInformation() const;
 
 protected:
-    virtual void encodePDUPayload(std::shared_ptr<streamWriter>) const;
-    virtual void decodePDUPayload(std::shared_ptr<streamReader> pReader);
+    virtual void encodePDUPayload(std::shared_ptr<streamWriter>) const override;
+    virtual void decodePDUPayload(std::shared_ptr<streamReader> pReader) override;
 
     std::string m_callingAETitle;
     std::string m_calledAETitle;
@@ -837,7 +837,7 @@ public:
 
     using acsePDUAssociateBase::acsePDUAssociateBase;
 
-    virtual pduType_t getPDUType() const;
+    virtual pduType_t getPDUType() const override;
 };
 
 
@@ -851,7 +851,7 @@ public:
 
     using acsePDUAssociateBase::acsePDUAssociateBase;
 
-    virtual pduType_t getPDUType() const;
+    virtual pduType_t getPDUType() const override;
 };
 
 
@@ -919,11 +919,11 @@ public:
     //////////////////////////////////////////////////////////////////
     reason_t getReason() const;
 
-    virtual pduType_t getPDUType() const;
+    virtual pduType_t getPDUType() const override;
 
 protected:
-    virtual void encodePDUPayload(std::shared_ptr<streamWriter>) const;
-    virtual void decodePDUPayload(std::shared_ptr<streamReader> pReader);
+    virtual void encodePDUPayload(std::shared_ptr<streamWriter>) const override;
+    virtual void decodePDUPayload(std::shared_ptr<streamReader> pReader) override;
 
     result_t m_result;
     reason_t m_reason;
@@ -937,7 +937,7 @@ protected:
 class acsePDUPData: public acsePDU
 {
 public:
-    virtual pduType_t getPDUType() const;
+    virtual pduType_t getPDUType() const override;
 
     ///
     /// \brief Add data to the PDU.
@@ -977,8 +977,8 @@ public:
     const pdataValues_t& getValues() const;
 
 protected:
-    virtual void encodePDUPayload(std::shared_ptr<streamWriter>) const;
-    virtual void decodePDUPayload(std::shared_ptr<streamReader> pReader);
+    virtual void encodePDUPayload(std::shared_ptr<streamWriter>) const override;
+    virtual void decodePDUPayload(std::shared_ptr<streamReader> pReader) override;
 
     pdataValues_t m_values;
 };
@@ -991,8 +991,8 @@ protected:
 class acsePDUARelease: public acsePDU
 {
 protected:
-    virtual void encodePDUPayload(std::shared_ptr<streamWriter>) const;
-    virtual void decodePDUPayload(std::shared_ptr<streamReader> pReader);
+    virtual void encodePDUPayload(std::shared_ptr<streamWriter>) const override;
+    virtual void decodePDUPayload(std::shared_ptr<streamReader> pReader) override;
 };
 
 
@@ -1003,7 +1003,7 @@ protected:
 class acsePDUAReleaseRQ: public acsePDUARelease
 {
 public:
-    virtual pduType_t getPDUType() const;
+    virtual pduType_t getPDUType() const override;
 };
 
 
@@ -1014,7 +1014,7 @@ public:
 class acsePDUAReleaseRP: public acsePDUARelease
 {
 public:
-    virtual pduType_t getPDUType() const;
+    virtual pduType_t getPDUType() const override;
 };
 
 
@@ -1058,11 +1058,11 @@ public:
     //////////////////////////////////////////////////////////////////
     reason_t getReason() const;
 
-    virtual pduType_t getPDUType() const;
+    virtual pduType_t getPDUType() const override;
 
 protected:
-    virtual void encodePDUPayload(std::shared_ptr<streamWriter>) const;
-    virtual void decodePDUPayload(std::shared_ptr<streamReader> reader);
+    virtual void encodePDUPayload(std::shared_ptr<streamWriter>) const override;
+    virtual void decodePDUPayload(std::shared_ptr<streamReader> reader) override;
 
     reason_t m_reason;
 };

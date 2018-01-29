@@ -49,9 +49,9 @@ class readingDataHandlerDateTimeBase : public readingDataHandlerString
 public:
     readingDataHandlerDateTimeBase(const memory& parseMemory, tagVR_t dataType);
 
-    virtual std::int32_t getSignedLong(const size_t index) const;
-    virtual std::uint32_t getUnsignedLong(const size_t index) const;
-    virtual double getDouble(const size_t index) const;
+    virtual std::int32_t getSignedLong(const size_t index) const override;
+    virtual std::uint32_t getUnsignedLong(const size_t index) const override;
+    virtual double getDouble(const size_t index) const override;
 
 protected:
 	void parseDate(
@@ -75,9 +75,9 @@ class writingDataHandlerDateTimeBase: public writingDataHandlerString
 public:
     writingDataHandlerDateTimeBase(const std::shared_ptr<buffer>& pBuffer, tagVR_t dataType, const size_t unitSize, const size_t maxSize);
 
-    virtual void setSignedLong(const size_t index, const std::int32_t value);
-    virtual void setUnsignedLong(const size_t index, const std::uint32_t value);
-    virtual void setDouble(const size_t index, const double value);
+    virtual void setSignedLong(const size_t index, const std::int32_t value) override;
+    virtual void setUnsignedLong(const size_t index, const std::uint32_t value) override;
+    virtual void setDouble(const size_t index, const double value) override;
 
 protected:
     std::string buildDate(
