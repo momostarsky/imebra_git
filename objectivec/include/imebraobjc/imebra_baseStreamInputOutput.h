@@ -17,6 +17,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #import <Foundation/Foundation.h>
 #import "imebra_baseStreamInput.h"
 
+///
+/// \brief Base class for stream that can act as both input and output
+///        streams (e.g. ImebraTcpStream and ImebraPipe).
+///
+///////////////////////////////////////////////////////////////////////////////
 @interface ImebraBaseStreamInputOutput: ImebraBaseStreamInput
 
 @end

@@ -29,12 +29,6 @@ class ReadingDataHandlerNumeric;
 
 @interface ImebraReadingDataHandlerNumeric: ImebraReadingDataHandler
 
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
-    -(id)initWithImebraReadingDataHandler:(imebra::ReadingDataHandlerNumeric*)pReadingDataHandler;
-#endif
-
-    -(void)dealloc;
-
     -(ImebraReadMemory*)getMemory: (NSError**)pError
         __attribute__((swift_error(nonnull_error)));
 

@@ -24,12 +24,17 @@ struct Date;
 }
 #endif
 
+///
+/// \brief Used by ImebraAge::setAge() and ImebraAge::getAge() to specify the
+///        unit of the age value.
+///
+///////////////////////////////////////////////////////////////////////////////
 typedef NS_ENUM(char, ImebraAgeUnit_t)
 {
-    ImebraDays = (char)'D',
-    ImebraWeeks = (char)'W',
-    ImebraMonths = (char)'M',
-    ImebraYears = (char)'Y'
+    ImebraDays = (char)'D',   ///< Days
+    ImebraWeeks = (char)'W',  ///< Weeks
+    ImebraMonths = (char)'M', ///< Months
+    ImebraYears = (char)'Y'   ///< Years
 };
 
 ///
@@ -64,8 +69,18 @@ typedef NS_ENUM(char, ImebraAgeUnit_t)
     ///////////////////////////////////////////////////////////////////////////////
     @property (readonly) double years;
 
+    /// \brief Return the age in the units returned by the property units.
+    ///
+    /// \return the stored age, speficied using the stored units.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     @property (readonly) unsigned int age;
 
+    /// \brief Return the age's units.
+    ///
+    /// \return the age's units
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     @property (readonly) ImebraAgeUnit_t units;
 
 @end

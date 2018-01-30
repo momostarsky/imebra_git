@@ -29,12 +29,6 @@ class WritingDataHandlerNumeric;
 
 @interface ImebraWritingDataHandlerNumeric: ImebraWritingDataHandler
 
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
-    -(id)initWithImebraWritingDataHandler:(imebra::WritingDataHandlerNumeric*)pWritingDataHandler;
-#endif
-
-    -(void)dealloc;
-
     -(ImebraReadWriteMemory*)getMemory:(NSError**)pError;
 
     -(void)assign:(NSData*)pSource error:(NSError**)pError

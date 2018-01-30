@@ -26,8 +26,11 @@ class ColorTransformsFactory;
 @class ImebraTransform;
 
 ///
-/// \brief The ImebraCodecFactory class can load or save a DataSet or an Image
-///        object using one of the codecs supplied by the Imebra library.
+/// \brief ImebraColorTransformsFactory has the knowledge about the color
+///        spaces supported by the library: it can construct ImebraTransform
+///        objects that transform images' content from one color space to
+///        another and can return specific information about the supported
+///        color spaces.
 ///
 ///////////////////////////////////////////////////////////////////////////////
 @interface ImebraColorTransformsFactory: NSObject
@@ -114,12 +117,13 @@ class ColorTransformsFactory;
     ///////////////////////////////////////////////////////////////////////////////
     +(unsigned int)getNumberOfChannels:(NSString*)colorSpace;
 
-    /// \brief Returns a Transform object able to transform an image's content from
-    ///        one color space to another one.
+    /// \brief Returns a ImebraTransform object able to transform an image's
+    ///        content from one color space to another one.
     ///
     /// \param startColorSpace the color space of the input image's content
     /// \param endColorSpace   the color space of the output image's content
-    /// \return a Transform object able to transform the image's content from
+    /// \param pError          set if an error occurs
+    /// \return a ImebraTransform object able to transform the image's content from
     ///         input color space to output one
     ///
     ///////////////////////////////////////////////////////////////////////////////

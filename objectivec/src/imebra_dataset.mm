@@ -248,6 +248,42 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
 
+-(ImebraReadingDataHandlerNumeric*) getReadingDataHandlerNumeric:(ImebraTagId*)tagId bufferId:(unsigned int)bufferId error:(NSError**)pError
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    return [[ImebraReadingDataHandlerNumeric alloc] initWithImebraReadingDataHandler:m_pDataSet->getReadingDataHandlerNumeric(*(tagId->m_pTagId), bufferId)];
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+}
+
+-(ImebraReadingDataHandlerNumeric*) getReadingDataHandlerRaw:(ImebraTagId*)tagId bufferId:(unsigned int)bufferId error:(NSError**)pError;
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    return [[ImebraReadingDataHandlerNumeric alloc] initWithImebraReadingDataHandler:m_pDataSet->getReadingDataHandlerRaw(*(tagId->m_pTagId), bufferId)];
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+}
+
+-(ImebraWritingDataHandlerNumeric*) getWritingDataHandlerNumeric:(ImebraTagId*)tagId bufferId:(unsigned long)bufferId tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    return [[ImebraWritingDataHandlerNumeric alloc] initWithImebraWritingDataHandler:m_pDataSet->getWritingDataHandlerNumeric(*(tagId->m_pTagId), bufferId, (imebra::tagVR_t)tagVR)];
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+}
+
+-(ImebraWritingDataHandlerNumeric*) getWritingDataHandlerNumeric:(ImebraTagId*)tagId bufferId:(unsigned long)bufferId error:(NSError**)pError
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    return [[ImebraWritingDataHandlerNumeric alloc] initWithImebraWritingDataHandler:m_pDataSet->getWritingDataHandlerNumeric(*(tagId->m_pTagId), bufferId)];
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+}
+
 -(signed int)getSignedLong:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();

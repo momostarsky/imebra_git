@@ -23,6 +23,17 @@ class BaseStreamOutput;
 }
 #endif
 
+///
+/// \brief This class represents a generic output stream.
+///
+/// Specialized classes derived from this one can write into files on the
+/// computer's disks (ImebraFileStreamOutput) or to memory
+/// (ImebraMemoryStreamOutput).
+///
+/// The application can write into the stream by using a ImebraStreamWriter
+/// object.
+///
+///////////////////////////////////////////////////////////////////////////////
 @interface ImebraBaseStreamOutput: NSObject
 
 #ifndef __IMEBRA_OBJECTIVEC_BRIDGING__

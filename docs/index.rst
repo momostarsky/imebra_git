@@ -70,6 +70,7 @@ Imebra
    :maxdepth: 3
    :caption: Objective-C API
 
+   objc_definitions
    objc_loading_saving_classes
    objc_dicom_dataset_tag_classes
    objc_imaging_classes

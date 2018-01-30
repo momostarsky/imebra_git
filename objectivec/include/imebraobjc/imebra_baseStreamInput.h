@@ -23,6 +23,23 @@ class BaseStreamInput;
 }
 #endif
 
+///
+/// \brief This class represents a generic input stream.
+///
+/// Specialized classes derived from this one can read data from files stored
+/// on the computer's disks (ImebraFileStreamInput) or from memory
+/// (ImebraMemoryStreamInput).
+///
+/// The client application cannot read the data directly from a
+/// ImebraBaseStreamInput but must use a ImebraStreamReader. Several
+/// ImebraStreamReader objects can read data from the same
+/// ImebraBaseStreamInput object.
+///
+/// The ImebraStreamReader class is not thread-safe, but different
+/// ImebraStreamReader objects in different threads can access the same
+/// ImebraBaseStreamInput object.
+///
+///////////////////////////////////////////////////////////////////////////////
 @interface ImebraBaseStreamInput: NSObject
 
 #ifndef __IMEBRA_OBJECTIVEC_BRIDGING__

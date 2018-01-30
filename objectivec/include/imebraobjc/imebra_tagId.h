@@ -25,7 +25,7 @@ class TagId;
 #endif
 
 ///
-/// \brief Specifies an age, in days, weeks, months or years.
+/// \brief Represents a Dicom tag's identification.
 ///
 ///////////////////////////////////////////////////////////////////////////////
 @interface ImebraTagId: NSObject
