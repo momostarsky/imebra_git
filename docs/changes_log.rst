@@ -14,6 +14,8 @@ Version |release| (this version)
 - Fixes bug #207 (Specify the keyword "override" next to methods that override methods in the super
   class) as per SOP :ref:`FIXBUG_2`
 - Fixes bug #208 (Remove unused static variables from the jpeg codec) as per SOP :ref:`FIXBUG_2`
+- Fixes bug #209 (Move the implementation of the tagDQT class into jpegCodecImageImpl.cpp) as per
+  SOP :ref:`FIXBUG_2`
 
 Version 4.1.0.1
 ----------------
