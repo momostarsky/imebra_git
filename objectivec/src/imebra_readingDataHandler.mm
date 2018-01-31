@@ -84,7 +84,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_START();
 
     imebra::Date date(self->m_pDataHandler->getDate(index));
-    return [[ImebraDate alloc] initWithDate:date.year
+    return [[ImebraDate alloc] initWithYear:date.year
             month:date.month
             day:date.day
             hour:date.hour
