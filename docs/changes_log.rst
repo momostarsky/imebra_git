@@ -13,6 +13,7 @@ Version |release| (this version)
 - Fixed bug #205 (Lossless jpeg codec wrongly writes/reads amplitude value when the amplitude length is equal to the max bit depth) as per SOP :ref:`FIXBUG_2`
 - Fixes bug #207 (Specify the keyword "override" next to methods that override methods in the super
   class) as per SOP :ref:`FIXBUG_2`
+- Fixes bug #208 (Remove unused static variables from the jpeg codec) as per SOP :ref:`FIXBUG_2`
 
 Version 4.1.0.1
 ----------------
