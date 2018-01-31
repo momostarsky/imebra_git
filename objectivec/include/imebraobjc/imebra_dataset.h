@@ -91,7 +91,7 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
     NSString* m_description;    ///< The VOI's description
 }
 
-    -(id)init:(double)center width:(double)width description:(NSString*)description;
+    -(id)initWithCenter:(double)center width:(double)width description:(NSString*)description;
 #endif
 
     @property (readonly) double center;

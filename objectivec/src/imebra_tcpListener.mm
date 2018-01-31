@@ -15,7 +15,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @implementation ImebraTCPListener
 
--(id)init:(ImebraTCPPassiveAddress*)pAddress error:(NSError**)pError
+-(id)initWithAddress:(ImebraTCPPassiveAddress*)pAddress error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 

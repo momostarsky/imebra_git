@@ -32,7 +32,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 }
 
 
--(id)init:(ImebraTCPActiveAddress*)pAddress error:(NSError**)pError
+-(id)initWithAddress:(ImebraTCPActiveAddress*)pAddress error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 

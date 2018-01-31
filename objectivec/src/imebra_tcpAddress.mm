@@ -54,7 +54,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @implementation ImebraTCPActiveAddress
 
--(id)init:(NSString*)node service:(NSString*)service error:(NSError**)pError
+-(id)initWithNode:(NSString*)node service:(NSString*)service error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 
@@ -73,7 +73,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @implementation ImebraTCPPassiveAddress
 
--(id)init:(NSString*)node service:(NSString*)service error:(NSError**)pError
+-(id)initWithNode:(NSString*)node service:(NSString*)service error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 

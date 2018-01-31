@@ -45,7 +45,7 @@ class TCPStream;
     /// \param pAddress the address to which the socket has to be connected.
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    -(id)init:(ImebraTCPActiveAddress*)pAddress error:(NSError**)pError;
+    -(id)initWithAddress:(ImebraTCPActiveAddress*)pAddress error:(NSError**)pError;
 
     ///
     /// \brief Returns the address of the connected peer.

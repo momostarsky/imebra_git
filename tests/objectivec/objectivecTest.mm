@@ -204,8 +204,8 @@ void listenerThread()
     try
     {
     NSError* pError;
-    ImebraTCPPassiveAddress* pAddress = [[ImebraTCPPassiveAddress alloc] init:@"localhost" service:@"20000" error:&pError];
-    ImebraTCPListener* pListener = [[ImebraTCPListener alloc] init:pAddress error:&pError];
+    ImebraTCPPassiveAddress* pAddress = [[ImebraTCPPassiveAddress alloc] initWithNode:@"localhost" service:@"20000" error:&pError];
+    ImebraTCPListener* pListener = [[ImebraTCPListener alloc] initWithAddress:pAddress error:&pError];
 
     ImebraTCPStream* pStream = [pListener waitForConnection:&pError];
 
@@ -220,14 +220,14 @@ void listenerThread()
     [pContexts addPresentationContext:pContext];
 
     ImebraAssociationSCP* pSCP = [[ImebraAssociationSCP alloc]
-            init:@"SCP" maxInvokedOperations:1 maxPerformedOperations:1 presentationContexts:pContexts
+            initWithThisAET:@"SCP" maxInvokedOperations:1 maxPerformedOperations:1 presentationContexts:pContexts
                  reader:pReader writer:pWriter dimseTimeoutSeconds:30 artimTimeoutSeconds:30 error:&pError];
 
-    ImebraDimseService* pDimse = [[ImebraDimseService alloc]init:pSCP];
+    ImebraDimseService* pDimse = [[ImebraDimseService alloc]initWithAssociation:pSCP];
 
     ImebraCStoreCommand* pCommand = (ImebraCStoreCommand*)[pDimse getCommand:&pError];
 
-    ImebraCStoreResponse* pResponse = [[ImebraCStoreResponse alloc]initResponse:pCommand responseCode:ImebraDimseSuccess];
+    ImebraCStoreResponse* pResponse = [[ImebraCStoreResponse alloc]initWithcommand:pCommand responseCode:ImebraDimseSuccess];
 
     [pDimse sendCommandOrResponse:pResponse error:&pError];
 
@@ -259,9 +259,9 @@ TEST(objectivec, dimse)
     std::this_thread::sleep_for(std::chrono::seconds(5));
 
     NSError* pError(0);
-    ImebraTCPActiveAddress* pAddress = [[ImebraTCPActiveAddress alloc] init:@"localhost" service:@"20000" error:&pError];
+    ImebraTCPActiveAddress* pAddress = [[ImebraTCPActiveAddress alloc] initWithNode:@"localhost" service:@"20000" error:&pError];
 
-    ImebraTCPStream* pStream = [[ImebraTCPStream alloc] init:pAddress error:&pError];
+    ImebraTCPStream* pStream = [[ImebraTCPStream alloc] initWithAddress:pAddress error:&pError];
 
     ImebraStreamReader* pReader = [[ImebraStreamReader alloc] initWithInputStream:pStream];
     ImebraStreamWriter* pWriter = [[ImebraStreamWriter alloc] initWithInputOutputStream:pStream];
@@ -274,10 +274,10 @@ TEST(objectivec, dimse)
     [pContexts addPresentationContext:pContext];
 
     ImebraAssociationSCU* pSCU = [[ImebraAssociationSCU alloc]
-            init:@"SCU" otherAET:@"SCP" maxInvokedOperations:1 maxPerformedOperations:1 presentationContexts:pContexts
+            initWithThisAET:@"SCU" otherAET:@"SCP" maxInvokedOperations:1 maxPerformedOperations:1 presentationContexts:pContexts
                  reader:pReader writer:pWriter dimseTimeoutSeconds:30 error:&pError];
 
-    ImebraDimseService* pDimse = [[ImebraDimseService alloc]init:pSCU];
+    ImebraDimseService* pDimse = [[ImebraDimseService alloc]initWithAssociation:pSCU];
 
     ImebraDataSet* pDataSet = [[ImebraDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
 

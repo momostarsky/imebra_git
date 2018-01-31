@@ -47,14 +47,14 @@ class TCPAddress;
 
 @interface ImebraTCPActiveAddress: ImebraTCPAddress
 
-    -(id)init:(NSString*)node service:(NSString*)service error:(NSError**)pError;
+    -(id)initWithNode:(NSString*)node service:(NSString*)service error:(NSError**)pError;
 
 @end
 
 
 @interface ImebraTCPPassiveAddress: ImebraTCPAddress
 
-    -(id)init:(NSString*)node service:(NSString*)service error:(NSError**)pError;
+    -(id)initWithNode:(NSString*)node service:(NSString*)service error:(NSError**)pError;
 
 @end
 

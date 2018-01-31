@@ -37,7 +37,7 @@ class TCPListener;
 
 #endif
 
-    -(id)init:(ImebraTCPPassiveAddress*)pAddress error:(NSError**)pError;
+    -(id)initWithAddress:(ImebraTCPPassiveAddress*)pAddress error:(NSError**)pError;
 
     -(void)dealloc;
 

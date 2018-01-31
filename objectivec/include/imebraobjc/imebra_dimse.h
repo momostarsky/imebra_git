@@ -208,7 +208,7 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
 
 @interface ImebraCStoreResponse: ImebraDimseResponse
 
-    -(id)initResponse:(ImebraCStoreCommand*)pCommand
+    -(id)initWithcommand:(ImebraCStoreCommand*)pCommand
         responseCode:(ImebraDimseStatusCode_t)responseCode;
 
 @end
@@ -227,7 +227,7 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
 
 @interface ImebraCGetResponse: ImebraCPartialResponse
 
-    -(id)initResponseWithIdentifier:(ImebraCGetCommand*)pReceivedCommand
+    -(id)initWithCommand:(ImebraCGetCommand*)pReceivedCommand
         responseCode:(ImebraDimseStatusCode_t)responseCode
         remainingSubOperations:(unsigned int)remainingSubOperations
         completedSubOperations:(unsigned int)completedSubOperations
@@ -235,7 +235,7 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
         warningSubOperations:(unsigned int)warningSubOperations
         identifier:(ImebraDataSet*)pIdentifier;
 
-    -(id)initResponse:(ImebraCGetCommand*)pReceivedCommand
+    -(id)initWithcommand:(ImebraCGetCommand*)pReceivedCommand
         responseCode:(ImebraDimseStatusCode_t)responseCode
         remainingSubOperations:(unsigned int)remainingSubOperations
         completedSubOperations:(unsigned int)completedSubOperations
@@ -258,10 +258,10 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
 
 @interface ImebraCFindResponse: ImebraDimseResponse
 
-    -(id)initResponseWithIdentifier:(ImebraCFindCommand*)pReceivedCommand
+    -(id)initWithCommand:(ImebraCFindCommand*)pReceivedCommand
         identifier:(ImebraDataSet*)pIdentifier;
 
-    -(id)initResponse:(ImebraCFindCommand*)pReceivedCommand
+    -(id)initWithcommand:(ImebraCFindCommand*)pReceivedCommand
         responseCode:(ImebraDimseStatusCode_t)responseCode;
 @end
 
@@ -277,7 +277,7 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
 
 @interface ImebraCMoveResponse: ImebraCPartialResponse
 
-    -(id)initResponseWithIdentifier:(ImebraCMoveCommand*)pReceivedCommand
+    -(id)initWithCommand:(ImebraCMoveCommand*)pReceivedCommand
         responseCode:(ImebraDimseStatusCode_t)responseCode
         remainingSubOperations:(unsigned int)remainingSubOperations
         completedSubOperations:(unsigned int)completedSubOperations
@@ -285,7 +285,7 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
         warningSubOperations:(unsigned int)warningSubOperations
         identifier:(ImebraDataSet*)pIdentifier;
 
-    -(id)initResponse:(ImebraCMoveCommand*)pReceivedCommand
+    -(id)initWithcommand:(ImebraCMoveCommand*)pReceivedCommand
         responseCode:(ImebraDimseStatusCode_t)responseCode
         remainingSubOperations:(unsigned int)remainingSubOperations
         completedSubOperations:(unsigned int)completedSubOperations
@@ -307,7 +307,7 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
 
 @interface ImebraCEchoResponse: ImebraDimseResponse
 
-    -(id)initResponse:(ImebraCEchoCommand*)pReceivedCommand
+    -(id)initWithcommand:(ImebraCEchoCommand*)pReceivedCommand
         responseCode:(ImebraDimseStatusCode_t)responseCode;
 
 @end
@@ -348,10 +348,10 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
 
 @interface ImebraNEventReportResponse: ImebraDimseResponse
 
-    -(id)initResponseWithEventReply:(ImebraNEventReportCommand*)pReceivedCommand
+    -(id)initWithCommand:(ImebraNEventReportCommand*)pReceivedCommand
         eventReply:(ImebraDataSet*)pEventReply;
 
-    -(id)initResponse:(ImebraNEventReportCommand*)pReceivedCommand
+    -(id)initWithcommand:(ImebraNEventReportCommand*)pReceivedCommand
         responseCode:(ImebraDimseStatusCode_t)responseCode;
 
     @property (readonly) unsigned short eventID;
@@ -394,11 +394,11 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
 
 @interface ImebraNGetResponse: ImebraDimseResponse
 
-    -(id)initResponseWithAttributeList:(ImebraNGetCommand*)pReceivedCommand
+    -(id)initWithCommand:(ImebraNGetCommand*)pReceivedCommand
         responseCode:(ImebraDimseStatusCode_t)responseCode
         attributeList:(ImebraDataSet*)pAttributeList;
 
-    -(id)initResponse:(ImebraNGetCommand*)pReceivedCommand
+    -(id)initWithcommand:(ImebraNGetCommand*)pReceivedCommand
         responseCode:(ImebraDimseStatusCode_t)responseCode;
 
 @end
@@ -417,10 +417,10 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
 
 @interface ImebraNSetResponse: ImebraDimseResponse
 
-    -(id)initResponseWithAttributeList:(ImebraNSetCommand*)pReceivedCommand
+    -(id)initWithCommand:(ImebraNSetCommand*)pReceivedCommand
         modifiedAttributes:(NSArray*)pModifiedAttributes;
 
-    -(id)initResponse:(ImebraNSetCommand*)pReceivedCommand
+    -(id)initWithcommand:(ImebraNSetCommand*)pReceivedCommand
         responseCode:(ImebraDimseStatusCode_t)responseCode;
 
     @property (readonly) NSArray* modifiedAttributes;
@@ -450,10 +450,10 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
 
 @interface ImebraNActionResponse: ImebraDimseResponse
 
-    -(id)initResponseWithActionResponse:(ImebraNActionCommand*)pReceivedCommand
+    -(id)initWithCommand:(ImebraNActionCommand*)pReceivedCommand
         actionReply:(ImebraDataSet*)pActionReply;
 
-    -(id)initResponse:(ImebraNActionCommand*)pReceivedCommand
+    -(id)initWithcommand:(ImebraNActionCommand*)pReceivedCommand
         responseCode:(ImebraDimseStatusCode_t)responseCode;
 
     @property (readonly) unsigned short actionID;
@@ -479,17 +479,17 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
 
 @interface ImebraNCreateResponse: ImebraDimseResponse
 
-    -(id)initResponseWithAttributeList:(ImebraNCreateCommand*)pReceivedCommand
+    -(id)initWithCommand:(ImebraNCreateCommand*)pReceivedCommand
         attributeList:(ImebraDataSet*)pAttributeList;
 
-    -(id)initResponseWithAffectedSopInstanceAndAttributeList:(ImebraNCreateCommand*)pReceivedCommand
+    -(id)initWithCommand:(ImebraNCreateCommand*)pReceivedCommand
         affectedSopInstanceUid:(NSString*)affectedSopInstanceUid
         attributeList:(ImebraDataSet*)pAttributeList;
 
-    -(id)initResponseWithAffectedSopInstance:(ImebraNCreateCommand*)pReceivedCommand
+    -(id)initWithCommand:(ImebraNCreateCommand*)pReceivedCommand
         affectedSopInstanceUid:(NSString*)affectedSopInstanceUid;
 
-    -(id)initResponse:(ImebraNCreateCommand*)pReceivedCommand
+    -(id)initWithcommand:(ImebraNCreateCommand*)pReceivedCommand
         responseCode:(ImebraDimseStatusCode_t)responseCode;
 
 @end
@@ -507,7 +507,7 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
 
 @interface ImebraNDeleteResponse: ImebraDimseResponse
 
-    -(id)initResponse:(ImebraNDeleteCommand*)pReceivedCommand
+    -(id)initWithcommand:(ImebraNDeleteCommand*)pReceivedCommand
         responseCode:(ImebraDimseStatusCode_t)responseCode;
 
 @end
@@ -522,7 +522,7 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
 
 #endif
 
-    -(id)init:(ImebraAssociationBase*)pAssociation;
+    -(id)initWithAssociation:(ImebraAssociationBase*)pAssociation;
 
     -(void)dealloc;
 

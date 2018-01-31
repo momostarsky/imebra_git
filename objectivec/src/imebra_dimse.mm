@@ -221,7 +221,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @implementation ImebraCStoreResponse
 
--(id)initResponse:(ImebraCStoreCommand*)pCommand
+-(id)initWithcommand:(ImebraCStoreCommand*)pCommand
     responseCode:(ImebraDimseStatusCode_t)responseCode
 {
     m_pDimseCommandBase = 0;
@@ -266,7 +266,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @implementation ImebraCGetResponse
 
--(id)initResponseWithIdentifier:(ImebraCGetCommand*)pReceivedCommand
+-(id)initWithCommand:(ImebraCGetCommand*)pReceivedCommand
     responseCode:(ImebraDimseStatusCode_t)responseCode
     remainingSubOperations:(unsigned int)remainingSubOperations
     completedSubOperations:(unsigned int)completedSubOperations
@@ -290,7 +290,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     return self;
 }
 
--(id)initResponse:(ImebraCGetCommand*)pReceivedCommand
+-(id)initWithcommand:(ImebraCGetCommand*)pReceivedCommand
     responseCode:(ImebraDimseStatusCode_t)responseCode
     remainingSubOperations:(unsigned int)remainingSubOperations
     completedSubOperations:(unsigned int)completedSubOperations
@@ -343,7 +343,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @implementation ImebraCFindResponse
 
--(id)initResponseWithIdentifier:(ImebraCFindCommand*)pReceivedCommand
+-(id)initWithCommand:(ImebraCFindCommand*)pReceivedCommand
     identifier:(ImebraDataSet*)pIdentifier
 {
     m_pDimseCommandBase = 0;
@@ -357,7 +357,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     return self;
 }
 
--(id)initResponse:(ImebraCFindCommand*)pReceivedCommand
+-(id)initWithcommand:(ImebraCFindCommand*)pReceivedCommand
     responseCode:(ImebraDimseStatusCode_t)responseCode
 {
     m_pDimseCommandBase = 0;
@@ -401,7 +401,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @implementation ImebraCMoveResponse
 
--(id)initResponseWithIdentifier:(ImebraCMoveCommand*)pReceivedCommand
+-(id)initWithCommand:(ImebraCMoveCommand*)pReceivedCommand
     responseCode:(ImebraDimseStatusCode_t)responseCode
     remainingSubOperations:(unsigned int)remainingSubOperations
     completedSubOperations:(unsigned int)completedSubOperations
@@ -426,7 +426,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 }
 
--(id)initResponse:(ImebraCMoveCommand*)pReceivedCommand
+-(id)initWithcommand:(ImebraCMoveCommand*)pReceivedCommand
     responseCode:(ImebraDimseStatusCode_t)responseCode
     remainingSubOperations:(unsigned int)remainingSubOperations
     completedSubOperations:(unsigned int)completedSubOperations
@@ -479,7 +479,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @implementation ImebraCEchoResponse
 
--(id)initResponse:(ImebraCEchoCommand*)pReceivedCommand
+-(id)initWithcommand:(ImebraCEchoCommand*)pReceivedCommand
     responseCode:(ImebraDimseStatusCode_t)responseCode
 {
     m_pDimseCommandBase = 0;
@@ -579,7 +579,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @implementation ImebraNEventReportResponse
 
--(id)initResponseWithEventReply:(ImebraNEventReportCommand*)pReceivedCommand
+-(id)initWithCommand:(ImebraNEventReportCommand*)pReceivedCommand
     eventReply:(ImebraDataSet*)pEventReply
 {
     m_pDimseCommandBase = 0;
@@ -594,7 +594,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 }
 
--(id)initResponse:(ImebraNEventReportCommand*)pReceivedCommand
+-(id)initWithcommand:(ImebraNEventReportCommand*)pReceivedCommand
     responseCode:(ImebraDimseStatusCode_t)responseCode
 {
     m_pDimseCommandBase = 0;
@@ -668,7 +668,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @implementation ImebraNGetResponse
 
--(id)initResponseWithAttributeList:(ImebraNGetCommand*)pReceivedCommand
+-(id)initWithCommand:(ImebraNGetCommand*)pReceivedCommand
     responseCode:(ImebraDimseStatusCode_t)responseCode
     attributeList:(ImebraDataSet*)pAttributeList
 {
@@ -685,7 +685,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 }
 
--(id)initResponse:(ImebraNGetCommand*)pReceivedCommand
+-(id)initWithcommand:(ImebraNGetCommand*)pReceivedCommand
     responseCode:(ImebraDimseStatusCode_t)responseCode
 {
     m_pDimseCommandBase = 0;
@@ -730,7 +730,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @implementation ImebraNSetResponse
 
--(id)initResponseWithAttributeList:(ImebraNSetCommand*)pReceivedCommand
+-(id)initWithCommand:(ImebraNSetCommand*)pReceivedCommand
     modifiedAttributes:(NSArray*)pModifiedAttributes
 {
     m_pDimseCommandBase = 0;
@@ -753,7 +753,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     return self;
 }
 
--(id)initResponse:(ImebraNSetCommand*)pReceivedCommand
+-(id)initWithcommand:(ImebraNSetCommand*)pReceivedCommand
     responseCode:(ImebraDimseStatusCode_t)responseCode
 {
     m_pDimseCommandBase = 0;
@@ -841,7 +841,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @implementation ImebraNActionResponse
 
--(id)initResponseWithActionResponse:(ImebraNActionCommand*)pReceivedCommand
+-(id)initWithCommand:(ImebraNActionCommand*)pReceivedCommand
     actionReply:(ImebraDataSet*)pActionReply
 {
     m_pDimseCommandBase = 0;
@@ -856,7 +856,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 }
 
--(id)initResponse:(ImebraNActionCommand*)pReceivedCommand
+-(id)initWithcommand:(ImebraNActionCommand*)pReceivedCommand
     responseCode:(ImebraDimseStatusCode_t)responseCode
 {
     m_pDimseCommandBase = 0;
@@ -924,7 +924,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @implementation ImebraNCreateResponse
 
--(id)initResponseWithAttributeList:(ImebraNCreateCommand*)pReceivedCommand
+-(id)initWithCommand:(ImebraNCreateCommand*)pReceivedCommand
     attributeList:(ImebraDataSet*)pAttributeList
 {
     m_pDimseCommandBase = 0;
@@ -939,7 +939,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 }
 
--(id)initResponseWithAffectedSopInstanceAndAttributeList:(ImebraNCreateCommand*)pReceivedCommand
+-(id)initWithCommand:(ImebraNCreateCommand*)pReceivedCommand
     affectedSopInstanceUid:(NSString*)affectedSopInstanceUid
     attributeList:(ImebraDataSet*)pAttributeList
 {
@@ -956,7 +956,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 }
 
--(id)initResponseWithAffectedSopInstance:(ImebraNCreateCommand*)pReceivedCommand
+-(id)initWithCommand:(ImebraNCreateCommand*)pReceivedCommand
     affectedSopInstanceUid:(NSString*)affectedSopInstanceUid
 {
     m_pDimseCommandBase = 0;
@@ -971,7 +971,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 }
 
--(id)initResponse:(ImebraNCreateCommand*)pReceivedCommand
+-(id)initWithcommand:(ImebraNCreateCommand*)pReceivedCommand
     responseCode:(ImebraDimseStatusCode_t)responseCode
 {
     m_pDimseCommandBase = 0;
@@ -1015,7 +1015,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @implementation ImebraNDeleteResponse
 
--(id)initResponse:(ImebraNDeleteCommand*)pReceivedCommand
+-(id)initWithcommand:(ImebraNDeleteCommand*)pReceivedCommand
     responseCode:(ImebraDimseStatusCode_t)responseCode
 {
     m_pDimseCommandBase = 0;
@@ -1034,7 +1034,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @implementation ImebraDimseService
 
--(id)init:(ImebraAssociationBase*)pAssociation
+-(id)initWithAssociation:(ImebraAssociationBase*)pAssociation
 {
     m_pDimseService = 0;
     self = [super init];

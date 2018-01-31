@@ -340,7 +340,7 @@ class AssociationSCP;
     ///                             - ImebraDicomCodecDepthLimitReachedError
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    -(id)init:(NSString*)thisAET otherAET:(NSString*)otherAET
+    -(id)initWithThisAET:(NSString*)thisAET otherAET:(NSString*)otherAET
                                     maxInvokedOperations:(unsigned int)invokedOperations
                                     maxPerformedOperations:(unsigned int)performedOperations
                                     presentationContexts:(ImebraPresentationContexts*)presentationContexts
@@ -408,7 +408,7 @@ class AssociationSCP;
     ///                             - ImebraDicomCodecDepthLimitReachedError
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    -(id)init:(NSString*)thisAET
+    -(id)initWithThisAET:(NSString*)thisAET
                                     maxInvokedOperations:(unsigned int)invokedOperations
                                     maxPerformedOperations:(unsigned int)performedOperations
                                     presentationContexts:(ImebraPresentationContexts*)presentationContexts

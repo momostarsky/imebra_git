@@ -17,7 +17,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @implementation ImebraVOIDescription
 
--(id)init:(double)center width:(double)width description:(NSString*)description
+-(id)initWithCenter:(double)center width:(double)width description:(NSString*)description
 {
     self = [super init];
     if(self)
@@ -186,7 +186,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     imebra::vois_t vois = m_pDataSet->getVOIs();
     for(const imebra::VOIDescription& description: vois)
     {
-        [pVOIs addObject: [[ImebraVOIDescription alloc] init:description.center width:description.width description:imebra::stringToNSString(description.description)] ];
+        [pVOIs addObject: [[ImebraVOIDescription alloc] initWithCenter:description.center width:description.width description:imebra::stringToNSString(description.description)] ];
     }
 
     return pVOIs;

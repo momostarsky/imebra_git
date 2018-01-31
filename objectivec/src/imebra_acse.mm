@@ -239,7 +239,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @implementation ImebraAssociationSCU
 
--(id)init:(NSString*)thisAET otherAET:(NSString*)otherAET
+-(id)initWithThisAET:(NSString*)thisAET otherAET:(NSString*)otherAET
     maxInvokedOperations:(unsigned int)invokedOperations
     maxPerformedOperations:(unsigned int)performedOperations
     presentationContexts:(ImebraPresentationContexts*)presentationContexts
@@ -273,7 +273,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @implementation ImebraAssociationSCP
 
--(id)init:(NSString*)thisAET
+-(id)initWithThisAET:(NSString*)thisAET
     maxInvokedOperations:(unsigned int)invokedOperations
     maxPerformedOperations:(unsigned int)performedOperations
     presentationContexts:(ImebraPresentationContexts*)presentationContexts
