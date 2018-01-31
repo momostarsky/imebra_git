@@ -72,7 +72,7 @@ class AssociationSCP;
     ///                       the same abstract syntax
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    -(id)initWithRole:(NSString*)abstractSyntax scuRole:(BOOL)bSCURole scpRole:(BOOL)bSCPRole;
+    -(id)initWithAbstractSyntax:(NSString*)abstractSyntax scuRole:(BOOL)bSCURole scpRole:(BOOL)bSCPRole;
 
     -(void)dealloc;
 

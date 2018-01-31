@@ -44,7 +44,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 }
 
--(id)initWithInputStreamAndRegion:(ImebraBaseStreamInput*)pInput virtualStart:(unsigned int)virtualStart virtualEnd:(unsigned int)virtualEnd
+-(id)initWithInputStream:(ImebraBaseStreamInput*)pInput virtualStart:(unsigned int)virtualStart virtualEnd:(unsigned int)virtualEnd
 {
     self->m_pReader = 0;
     self = [super init];

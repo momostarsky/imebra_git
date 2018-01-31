@@ -64,7 +64,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #endif
 }
 
--(id)initWithDate:(unsigned int)initialYear
+-(id)initWithYear:(unsigned int)initialYear
                                 month:(unsigned int)initialMonth
                                 day:(unsigned int)initialDay
                                 hour:(unsigned int)initialHour

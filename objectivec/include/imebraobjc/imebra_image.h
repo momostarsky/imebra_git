@@ -59,7 +59,7 @@ typedef NS_ENUM(unsigned int, ImebraBitDepth_t)
     /// \param highBit    the highest bit occupied by the channels' values
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    -(id)initWithSize:(unsigned int)width height:(unsigned int)height depth:(ImebraBitDepth_t)depth colorSpace:(NSString*)colorSpace highBit:(unsigned int)highBit;
+    -(id)initWithWidth:(unsigned int)width height:(unsigned int)height depth:(ImebraBitDepth_t)depth colorSpace:(NSString*)colorSpace highBit:(unsigned int)highBit;
 
     ///
     /// \ Destructor

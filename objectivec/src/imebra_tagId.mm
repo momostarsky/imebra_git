@@ -41,7 +41,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 }
 
 
--(id)initWithGroupAndTagId:(unsigned short)groupId tag:(unsigned short)tagId
+-(id)initWithGroup:(unsigned short)groupId tag:(unsigned short)tagId
 {
     self = [super init];
     if(self)
@@ -52,7 +52,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 }
 
--(id)initWithGroupOrderAndTagId:(unsigned short)groupId groupOrder:(unsigned int)groupOrder tag:(unsigned short)tagId
+-(id)initWithGroup:(unsigned short)groupId groupOrder:(unsigned int)groupOrder tag:(unsigned short)tagId
 {
     self = [super init];
     if(self)

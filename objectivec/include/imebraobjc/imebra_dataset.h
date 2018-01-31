@@ -215,7 +215,7 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
     ///                  by the DataSet
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    -(id)initWithTransferSyntaxAndCharsets:(NSString*)transferSyntax charsets:(NSArray*)pCharsets;
+    -(id)initWithTransferSyntax:(NSString*)transferSyntax charsets:(NSArray*)pCharsets;
 
     -(void)dealloc;
 

@@ -84,7 +84,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     return self;
 }
 
--(id)initWithTransferSyntaxAndCharsets:(NSString*)transferSyntax charsets:(NSArray*)pCharsets
+-(id)initWithTransferSyntax:(NSString*)transferSyntax charsets:(NSArray*)pCharsets
 {
     self = [super init];
     if(self)
@@ -117,7 +117,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     imebra::tagsIds_t ids = m_pDataSet->getTags();
     for(const imebra::TagId& tagId: ids)
     {
-        [pIds addObject: [[ImebraTagId alloc] initWithGroupOrderAndTagId:tagId.getGroupId() groupOrder:tagId.getGroupOrder() tag:tagId.getTagId()] ];
+        [pIds addObject: [[ImebraTagId alloc] initWithGroup:tagId.getGroupId() groupOrder:tagId.getGroupOrder() tag:tagId.getTagId()] ];
     }
 
     return pIds;
@@ -257,7 +257,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
 
--(ImebraReadingDataHandlerNumeric*) getReadingDataHandlerRaw:(ImebraTagId*)tagId bufferId:(unsigned int)bufferId error:(NSError**)pError;
+-(ImebraReadingDataHandlerNumeric*) getReadingDataHandlerRaw:(ImebraTagId*)tagId bufferId:(unsigned int)bufferId error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 

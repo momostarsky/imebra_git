@@ -24,7 +24,7 @@ TEST(objectivec, stringToNSStringTest)
     {
         NSMutableArray* pCharsets = [[NSMutableArray alloc] init];
         [pCharsets addObject: @"ISO_IR 6"];
-        ImebraDataSet* pDataSet = [[ImebraDataSet alloc] initWithTransferSyntaxAndCharsets:@"1.2.840.10008.1.2.1" charsets:pCharsets];
+        ImebraDataSet* pDataSet = [[ImebraDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2.1" charsets:pCharsets];
 
         {
             NSError* pError = 0;
@@ -122,8 +122,8 @@ TEST(objectivec, CodecFactory)
 
     NSError* error = nil;
     ImebraDataSet* pDataSet = [ImebraCodecFactory loadFromFile:@"testCodecFactory.dcm" error:&error];
-    NSString* checkPatientName = [pDataSet getString:[[ImebraTagId alloc] initWithGroupAndTagId:0x10 tag:0x10] elementNumber:0 error:&error];
-    NSString* checkPatientID = [pDataSet getString:[[ImebraTagId alloc] initWithGroupAndTagId:0x10 tag:0x20] elementNumber:0 error:&error];
+    NSString* checkPatientName = [pDataSet getString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] elementNumber:0 error:&error];
+    NSString* checkPatientID = [pDataSet getString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x20] elementNumber:0 error:&error];
 
     EXPECT_EQ(imebra::NSStringToString(checkPatientName), "Test^Patient");
     EXPECT_EQ(imebra::NSStringToString(checkPatientID), "TestID");
@@ -143,7 +143,7 @@ TEST(objectivec, CodecFactoryFailLoad)
 // Initialize and check an image content
 TEST(objectivec, image)
 {
-    ImebraImage* pImage = [[ImebraImage alloc] initWithSize:5 height:5 depth:ImebraBitDepthU16 colorSpace:@"MONOCHROME2" highBit:15];
+    ImebraImage* pImage = [[ImebraImage alloc] initWithWidth:5 height:5 depth:ImebraBitDepthU16 colorSpace:@"MONOCHROME2" highBit:15];
 
     NSError* error = nil;
 #if __has_feature(objc_arc)
@@ -179,16 +179,16 @@ TEST(objectivec, datasetValues)
 
     ImebraDataSet* pDataSet = [[ImebraDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
 
-    [pDataSet setString:[[ImebraTagId alloc] initWithGroupAndTagId:0x10 tag:0x10] newValue:@"TestPatient" error:&error];
-    [pDataSet setAge:[[ImebraTagId alloc] initWithGroupAndTagId:0x10 tag:0x1010] newValue:[[ImebraAge alloc] initWithAge:10 units:ImebraYears] error:&error];
+    [pDataSet setString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"TestPatient" error:&error];
+    [pDataSet setAge:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1010] newValue:[[ImebraAge alloc] initWithAge:10 units:ImebraYears] error:&error];
 
-    NSString* checkPatient0 = [pDataSet getString:[[ImebraTagId alloc] initWithGroupAndTagId:0x10 tag:0x10] elementNumber:0 error:&error];
-    ImebraAge* checkAge = [pDataSet getAge:[[ImebraTagId alloc] initWithGroupAndTagId:0x10 tag:0x1010] elementNumber:0 error:&error];
+    NSString* checkPatient0 = [pDataSet getString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] elementNumber:0 error:&error];
+    ImebraAge* checkAge = [pDataSet getAge:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1010] elementNumber:0 error:&error];
 
     EXPECT_EQ(error, nil);
-    NSString* checkPatient1 = [pDataSet getString:[[ImebraTagId alloc] initWithGroupAndTagId:0x10 tag:0x11] elementNumber:0 error:&error];
+    NSString* checkPatient1 = [pDataSet getString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x11] elementNumber:0 error:&error];
     EXPECT_EQ(imebra::NSStringToString([error domain]), "imebra");
-    NSString* checkPatient2 = [pDataSet getString:[[ImebraTagId alloc] initWithGroupAndTagId:0x10 tag:0x11] elementNumber:0 defaultValue:@"defaultValue" error:&error];
+    NSString* checkPatient2 = [pDataSet getString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x11] elementNumber:0 defaultValue:@"defaultValue" error:&error];
 
     EXPECT_EQ(imebra::NSStringToString(checkPatient0), "TestPatient");
     EXPECT_EQ(checkPatient1, nil);
@@ -281,8 +281,8 @@ TEST(objectivec, dimse)
 
     ImebraDataSet* pDataSet = [[ImebraDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
 
-    [pDataSet setString:[[ImebraTagId alloc] initWithGroupAndTagId:0x10 tag:0x10] newValue:@"TestPatient" error:&pError];
-    [pDataSet setAge:[[ImebraTagId alloc] initWithGroupAndTagId:0x10 tag:0x1010] newValue:[[ImebraAge alloc] initWithAge:10 units:ImebraYears] error:&pError];
+    [pDataSet setString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"TestPatient" error:&pError];
+    [pDataSet setAge:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1010] newValue:[[ImebraAge alloc] initWithAge:10 units:ImebraYears] error:&pError];
 
     ImebraCStoreCommand* pCommand = [[ImebraCStoreCommand alloc]initCommand:
         @"1.2.840.10008.1.1"
@@ -331,7 +331,7 @@ TEST(objectivec, images)
     unsigned int width = 600;
     unsigned int height = 400;
 
-    ImebraImage* pBaselineImage = [[ImebraImage alloc] initWithSize:width height:height depth:ImebraBitDepthU8 colorSpace:@"RGB" highBit:7];
+    ImebraImage* pBaselineImage = [[ImebraImage alloc] initWithWidth:width height:height depth:ImebraBitDepthU8 colorSpace:@"RGB" highBit:7];
 
     {
         ImebraWritingDataHandler* pWritingDataHandler = [pBaselineImage getWritingDataHandler:&pError];

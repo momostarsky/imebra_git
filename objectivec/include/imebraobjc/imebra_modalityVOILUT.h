@@ -20,7 +20,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @interface ImebraModalityVOILUT: ImebraTransform
 
-    -(id)initWithDataSet:(ImebraDataSet*)pTransform;
+    -(id)initWithDataSet:(ImebraDataSet*)pDataSet;
 
 @end
 

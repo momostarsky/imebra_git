@@ -111,7 +111,7 @@ typedef NS_ENUM(char, ImebraAgeUnit_t)
     /// \param initialOffsetHours   hours offset from UTC
     /// \param initialOffsetMinutes minutes offset from UTC
     ///////////////////////////////////////////////////////////////////////////////
-    -(id)initWithDate:(unsigned int)initialYear
+    -(id)initWithYear:(unsigned int)initialYear
                                     month:(unsigned int)initialMonth
                                     day:(unsigned int)initialDay
                                     hour:(unsigned int)initialHour

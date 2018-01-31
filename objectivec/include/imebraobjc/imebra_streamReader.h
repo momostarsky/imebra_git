@@ -37,7 +37,7 @@ class StreamReader;
 
     -(id)initWithInputStream:(ImebraBaseStreamInput*)pInput;
 
-    -(id)initWithInputStreamAndRegion:(ImebraBaseStreamInput*)pInput virtualStart:(unsigned int)virtualStart virtualEnd:(unsigned int)virtualEnd;
+    -(id)initWithInputStream:(ImebraBaseStreamInput*)pInput virtualStart:(unsigned int)virtualStart virtualEnd:(unsigned int)virtualEnd;
 
     -(void)dealloc;
 
