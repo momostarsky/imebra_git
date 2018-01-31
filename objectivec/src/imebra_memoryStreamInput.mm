@@ -11,20 +11,23 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#import "../include/imebra/objectivec/imebra_strings.h"
-#import <Foundation/NSString.h>
+#include "imebra_bridgeStructures.h"
 
-namespace imebra
-{
+@implementation ImebraMemoryStreamInput
 
-std::string NSStringToString ( NSString* str )
+-(id)initWithReadMemory:(ImebraReadMemory*)pMemory
 {
-    return std::string([str UTF8String]);
+    m_pBaseStreamInput = 0;
+    self =  [super init];
+    if(self)
+    {
+        m_pBaseStreamInput = new imebra::MemoryStreamInput(*(pMemory->m_pMemory));
+    }
+    return self;
 }
 
-NSString* stringToNSString ( const std::string& str )
-{
-    return [ [ NSString alloc] initWithUTF8String: str.c_str()];
-}
 
-} // namespace imebra
+@end
+
+
+

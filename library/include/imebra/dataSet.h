@@ -146,7 +146,7 @@ class IMEBRA_API DataSet
     friend class DimseCommandBase;
 
 private:
-    DataSet(std::shared_ptr<imebra::implementation::dataSet> pDataSet);
+    explicit DataSet(std::shared_ptr<imebra::implementation::dataSet> pDataSet);
 #endif
 public:
     /// \brief Construct an empty DICOM dataset with unspecified transfer syntax
@@ -177,7 +177,7 @@ public:
     ///                         order prediction)
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    DataSet(const std::string& transferSyntax);
+    explicit DataSet(const std::string& transferSyntax);
 
     /// \brief Construct an empty DICOM dataset and specifies the default charsets.
     ///
@@ -198,7 +198,7 @@ public:
     /// \param charsets a list of charsets supported by the DataSet
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    DataSet(const std::string& transferSyntax, const charsetsList_t& charsets);
+    explicit DataSet(const std::string& transferSyntax, const charsetsList_t& charsets);
 
 
     /// \brief Destructor.

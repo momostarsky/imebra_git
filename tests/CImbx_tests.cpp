@@ -3,7 +3,7 @@
 #include <gtest/gtest.h>
 
 #include "testsSettings.h"
-
+#include <imebra/imebra.h>
 int main(int argc, char **argv)
 {
     ::testing::InitGoogleTest(&argc, argv);
@@ -17,6 +17,8 @@ int main(int argc, char **argv)
     }
 
     return RUN_ALL_TESTS();
+
+    imebra::MemoryPool::flush();
 }
 
 

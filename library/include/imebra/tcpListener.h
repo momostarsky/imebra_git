@@ -59,7 +59,7 @@ public:
     /// @param address the address to which the listening socket must be bound
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    TCPListener(const TCPPassiveAddress& address);
+    explicit TCPListener(const TCPPassiveAddress& address);
 
     /// \brief Waits for an incoming connection on the listening socket.
     ///

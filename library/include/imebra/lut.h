@@ -52,7 +52,7 @@ class IMEBRA_API LUT
     friend class DataSet;
     friend class VOILUT;
 private:
-    LUT(std::shared_ptr<imebra::implementation::lut> pLut);
+    explicit LUT(std::shared_ptr<imebra::implementation::lut> pLut);
 #endif
 
 public:

@@ -48,7 +48,7 @@ class IMEBRA_API TCPAddress
     friend class TCPStream;
     friend class TCPListener;
 protected:
-    TCPAddress(std::shared_ptr<imebra::implementation::tcpAddress> pAddress);
+    explicit TCPAddress(std::shared_ptr<imebra::implementation::tcpAddress> pAddress);
 #endif
 
 public:
