@@ -23,6 +23,12 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <list>
 #include "imageCodecImpl.h"
 
+
+// Bits used to left shift the values before they are passed to the
+// DCT
+#define JPEG_DECOMPRESSION_BITS_PRECISION 14
+
+
 namespace imebra
 {
 
