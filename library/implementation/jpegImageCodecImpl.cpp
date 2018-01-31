@@ -64,7 +64,170 @@ static const std::uint32_t JpegDeZigZagOrder[]=
     53, 60, 61, 54, 47, 55, 62, 63
 };
 
-#define JPEG_DECOMPRESSION_BITS_PRECISION 14
+
+
+/////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
+//
+//
+//
+// jpegCodecTagDQT
+//
+//
+//
+/////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
+namespace jpeg
+{
+
+/////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
+//
+//
+// Write the DQT tag
+//
+//
+/////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
+void tagDQT::writeTag(streamWriter* pStream, jpegInformation& information) const
+{
+    IMEBRA_FUNCTION_START();
+
+    // Read the tag's length
+    /////////////////////////////////////////////////////////////////
+    std::uint16_t tagLength = 0;
+
+    std::uint8_t  tablePrecision;
+    std::uint8_t  tableValue8;
+    std::uint16_t tableValue16;
+
+    for(int phase = 0; phase < 2; ++phase)
+    {
+        if(phase != 0)
+        {
+            writeLength(pStream, tagLength);
+        }
+        for(std::uint8_t tableId = 0; tableId < 16; ++tableId)
+        {
+            // bAdd is true if the huffman table is used by a channel
+            /////////////////////////////////////////////////////////////////
+            bool bAdd=false;
+
+            for(jpeg::jpegInformation::tChannelsMap::iterator channelsIterator = information.m_channelsMap.begin(); !bAdd && channelsIterator != information.m_channelsMap.end(); ++channelsIterator)
+            {
+                ptrChannel pChannel=channelsIterator->second;
+                bAdd=pChannel->m_quantTable==tableId;
+            }
+
+            if(!bAdd)
+            {
+                continue;
+            }
+            // Calculate the table's precision
+            bool b16Bits = information.m_precision > 8;
+            for(int tableIndex = 0; !b16Bits && (tableIndex < 64); ++tableIndex)
+            {
+                if(information.m_quantizationTable[tableId][tableIndex] >= 256)
+                {
+                    b16Bits=true;
+                }
+            }
+
+            if(phase == 0)
+            {
+                tagLength = (std::uint16_t)(tagLength + 1 + (b16Bits ? 128 : 64));
+            }
+            else
+            {
+                tablePrecision = (std::uint8_t)(tableId | (b16Bits ? 0x10 : 0));
+                pStream->write(&tablePrecision, 1);
+                if(b16Bits)
+                {
+                    for(int tableIndex = 0; tableIndex < 64; ++tableIndex)
+                    {
+                        tableValue16 = (std::uint16_t)information.m_quantizationTable[tableId][JpegDeZigZagOrder[tableIndex]];
+                        pStream->adjustEndian((std::uint8_t*)&tableValue16, 2, streamController::highByteEndian);
+                        pStream->write((std::uint8_t*)&tableValue16, 2);
+                    }
+                }
+                else
+                {
+                    for(int tableIndex = 0; tableIndex < 64; ++tableIndex)
+                    {
+                        tableValue8=(std::uint8_t)information.m_quantizationTable[tableId][JpegDeZigZagOrder[tableIndex]];
+                        pStream->write(&tableValue8, 1);
+                    }
+                }
+            }
+
+            information.recalculateQuantizationTables(tableId);
+        }
+    }
+
+    IMEBRA_FUNCTION_END();
+}
+
+
+/////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
+//
+//
+// Read the DQT tag
+//
+//
+/////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
+void tagDQT::readTag(streamReader* pStream, jpegInformation* pInformation, std::uint8_t /* tagEntry */) const
+{
+    IMEBRA_FUNCTION_START();
+
+    // tag dedicated stream (throws if we attempt to read past
+    //  the tag bytes)
+    //////////////////////////////////////////////////////////
+    const std::uint32_t tagLength = readLength(pStream);
+    std::shared_ptr<streamReader> tagReader(pStream->getReader(tagLength));
+
+    std::uint8_t  tablePrecision;
+    std::uint8_t  tableValue8;
+    std::uint16_t tableValue16;
+    while(!tagReader->endReached())
+    {
+        tagReader->read(&tablePrecision, 1);
+
+        // Read a DQT table
+        /////////////////////////////////////////////////////////////////
+        for(int tableIndex = 0; tableIndex < 64; ++tableIndex)
+        {
+            // 16 bits precision
+            /////////////////////////////////////////////////////////////////
+            if((tablePrecision & 0xf0) != 0)
+            {
+                tagReader->read((std::uint8_t*)&tableValue16, 2);
+                tagReader->adjustEndian((std::uint8_t*)&tableValue16, 2, streamController::highByteEndian);
+                pInformation->m_quantizationTable[tablePrecision & 0x0f][JpegDeZigZagOrder[tableIndex]]=tableValue16;
+            }
+
+            // 8 bits precision
+            /////////////////////////////////////////////////////////////////
+            else
+            {
+                tagReader->read(&tableValue8, 1);
+                pInformation->m_quantizationTable[tablePrecision & 0x0f][JpegDeZigZagOrder[tableIndex]]=tableValue8;
+            }
+
+        } // ----- End of table reading
+
+        pInformation->recalculateQuantizationTables(tablePrecision & 0x0f);
+    }
+
+    IMEBRA_FUNCTION_END_MODIFY(StreamEOFError, CodecCorruptedFileError);
+
+}
+
+} // namespace jpeg
+
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
