@@ -467,7 +467,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_START();
 
     std::unique_ptr<imebra::Date> pDate(m_pDataSet->getDate(*(tagId->m_pTagId), elementNumber));
-    return [[ImebraDate alloc] initWithDate:pDate->year
+    return [[ImebraDate alloc] initWithYear:pDate->year
             month:pDate->month
             day:pDate->day
             hour:pDate->hour
@@ -485,7 +485,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_START();
 
     std::unique_ptr<imebra::Date> pDate(m_pDataSet->getDate(*(tagId->m_pTagId), elementNumber, *(imebra::Date*)(defaultValue->m_pDate)));
-    return [[ImebraDate alloc] initWithDate:pDate->year
+    return [[ImebraDate alloc] initWithYear:pDate->year
             month:pDate->month
             day:pDate->day
             hour:pDate->hour
