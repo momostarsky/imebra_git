@@ -123,6 +123,11 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
 @class ImebraTagId;
 @class ImebraAssociationBase;
 
+
+///
+/// \brief Base class for the DICOM commands and responses.
+///
+//////////////////////////////////////////////////////////////////
 @interface ImebraDimseCommandBase: NSObject
 #ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
 {
@@ -134,33 +139,108 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
 
     -(void)dealloc;
 
+    ///
+    /// \brief Returns the ImebraDataSet containing the command data.
+    ///
+    /// \param pError set to a NSError derived class in case of error
+    /// \return the ImebraDataSet containing the command data
+    ///
+    //////////////////////////////////////////////////////////////////
     -(ImebraDataSet*)getCommandDataSet:(NSError**)pError;
+
+    ///
+    /// \brief Returns the ImebraDataSet containing the payload data.
+    ///
+    /// \param pError set to a NSError derived class in case of error
+    /// \return the ImebraDataSet containing the payload data
+    ///
+    //////////////////////////////////////////////////////////////////
     -(ImebraDataSet*)getPayloadDataSet:(NSError**)pError;
 
+    ///
+    /// \brief Returns the message abstract syntax.
+    ///
+    /// \return the message abstract syntax
+    ///
+    //////////////////////////////////////////////////////////////////
     -(NSString*)getAbstractSyntax;
 
+    ///
+    /// \brief Returns the affected SOP instance UID.
+    ///
+    /// \param pError set to a NSError derived class in case of error
+    /// \return the affected SOP instance UID
+    ///
+    //////////////////////////////////////////////////////////////////
     -(NSString*)getAffectedSopInstanceUid:(NSError**)pError;
 
+    ///
+    /// \brief Returns the affected SOP Class UID.
+    ///
+    /// \param pError set to a NSError derived class in case of error
+    /// \return the affected SOP Class UID
+    ///
+    //////////////////////////////////////////////////////////////////
     -(NSString*)getAffectedSopClassUid:(NSError**)pError;
 
+    ///
+    /// \brief Returns the requested SOP instance UID.
+    ///
+    /// \param pError set to a NSError derived class in case of error
+    /// \return requested SOP instance UID
+    ///
+    //////////////////////////////////////////////////////////////////
     -(NSString*)getRequestedSopInstanceUid:(NSError**)pError;
 
+    ///
+    /// \brief Returns the requested SOP class UID.
+    ///
+    /// \param pError set to a NSError derived class in case of error
+    /// \return requested SOP class UID
+    ///
+    //////////////////////////////////////////////////////////////////
     -(NSString*)getRequestedSopClassUid:(NSError**)pError;
 
 @end
 
 
+///
+/// \brief Base class for the DICOM commands.
+///
+//////////////////////////////////////////////////////////////////
 @interface ImebraDimseCommand: ImebraDimseCommandBase
 
+    ///
+    /// \brief Returns the command ID.
+    ///
+    //////////////////////////////////////////////////////////////////
     @property (readonly) unsigned short ID;
+
+    ///
+    /// \brief Returns the command type.
+    ///
+    //////////////////////////////////////////////////////////////////
     @property (readonly) ImebraDimseCommandType_t commandType;
 
 @end
 
 
+///
+/// \brief Base class for the DICOM responses.
+///
+//////////////////////////////////////////////////////////////////
 @interface ImebraDimseResponse: ImebraDimseCommandBase
 
+    ///
+    /// \brief Returns the response status.
+    ///
+    //////////////////////////////////////////////////////////////////
     @property (readonly) ImebraDimseStatus_t status;
+
+    ///
+    /// \brief Returns the response status code.
+    ///
+    //////////////////////////////////////////////////////////////////
     @property (readonly) unsigned short statusCode;
 
 @end
@@ -173,24 +253,84 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
 //////////////////////////////////////////////////////////////////
 @interface ImebraCPartialResponse: ImebraDimseResponse
 
+    ///
+    /// \brief Returns the number of remaining C-STORE sub operations.
+    ///
+    /// \param pError set to ImebraMissingDataElementError if the
+    ///               data is missing
+    /// \return number of remaining C-STORE sub operations
+    ///
+    //////////////////////////////////////////////////////////////////
     -(unsigned int)getRemainingSubOperations:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
 
+    ///
+    /// \brief Returns the number of completed C-STORE sub operations.
+    ///
+    /// \param pError set to ImebraMissingDataElementError if the
+    ///               data is missing
+    /// \return number of completed C-STORE sub operations
+    ///
+    //////////////////////////////////////////////////////////////////
     -(unsigned int)getCompletedSubOperations:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
 
+    ///
+    /// \brief Returns the number of failed C-STORE sub operations.
+    ///
+    /// \param pError set to ImebraMissingDataElementError if the
+    ///               data is missing
+    /// \return number of failed C-STORE sub operations
+    ///
+    //////////////////////////////////////////////////////////////////
     -(unsigned int)getFailedSubOperations:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
 
+    ///
+    /// \brief Returns the number of C-STORE sub operations completed
+    ///        with warnings
+    ///
+    /// \param pError set to ImebraMissingDataElementError if the
+    ///               data is missing
+    /// \return number of C-STORE sub operations completed with
+    ///         warnings
+    ///
+    //////////////////////////////////////////////////////////////////
     -(unsigned int)getWarningSubOperations:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
 
 @end
 
 
+///
+/// \brief Represents a C-STORE request.
+///
+//////////////////////////////////////////////////////////////////
 @interface ImebraCStoreCommand: ImebraDimseCommand
 
-    -(id)initCommand:(NSString*)abstractSyntax
+    ///
+    /// \brief Initializer.
+    ///
+    /// \param abstractSyntax      the message's abstract syntax
+    ///                            (previously negotiated via the
+    ///                            ImebraPresentationContexts
+    ///                            parameter of the
+    ///                            ImebraAssociationSCP or
+    ///                            ImebraAssociationSCU initializers)
+    /// \param messageID              message ID (can be retrieved
+    ///                               with
+    ///                               ImebraDimseService::getNextCommandID()
+    /// \param priority               message priority
+    /// \param affectedSopClassUid    affected SOP instance UID
+    /// \param affectedSopInstanceUid affected SOP instance UID
+    /// \param originatorAET          originator AET (issuer of the
+    ///                               C-MOVE or C-GET command)
+    /// \param originatorMessageID    message ID of the C-MOVE or
+    ///                               C-GET that triggered the C-STORE
+    /// \param pPayload               C-STORE payload
+    ///
+    //////////////////////////////////////////////////////////////////
+    -(id)initWithabstractsyntax:(NSString*)abstractSyntax
         messageID:(unsigned short)messageID
         priority:(ImebraDimseCommandPriority_t)priority
         affectedSopClassUid:(NSString*)affectedSopClassUid
@@ -199,24 +339,75 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
         originatorMessageID:(unsigned short)originatorMessageID
         payload:(ImebraDataSet*)pPayload;
 
+    ///
+    /// \brief Returns the AET of the entity that triggered this
+    ///        C-STORE request either via a C-MOVE or a C-GET
+    ///        request.
+    ///
+    //////////////////////////////////////////////////////////////////
     @property (readonly) NSString* originatorAET;
 
+    ///
+    /// \brief Returns the message ID of the C-MOVE or C-GET request
+    ///        that triggered this C-STORE request.
+    ///
+    //////////////////////////////////////////////////////////////////
     @property (readonly) unsigned short originatorMessageID;
 
 @end
 
 
+///
+/// \brief Represents a C-STORE response.
+///
+//////////////////////////////////////////////////////////////////
 @interface ImebraCStoreResponse: ImebraDimseResponse
 
-    -(id)initWithcommand:(ImebraCStoreCommand*)pCommand
+    ///
+    /// \brief Initializer.
+    ///
+    /// \param pReceivedCommand the C-STORE command for which this
+    ///                          response is being constructed
+    /// \param responseCode     the response code.
+    ///
+    //////////////////////////////////////////////////////////////////
+    -(id)initWithcommand:(ImebraCStoreCommand*)pReceivedCommand
         responseCode:(ImebraDimseStatusCode_t)responseCode;
 
 @end
 
 
+///
+/// \brief Represents a C-GET command.
+///
+/// C-GET triggers a C-STORE command that is issued through
+/// the same association used for the C-GET, therefore the
+/// SCU must have negotiated the SCP role for the abstract
+/// syntax (see ImebraPresentationContexts and
+/// ImebraAssociationSCU).
+///
+//////////////////////////////////////////////////////////////////
 @interface ImebraCGetCommand: ImebraDimseCommand
 
-    -(id)initCommand:(NSString*)abstractSyntax
+    ///
+    /// \brief Initializer.
+    ///
+    /// \param abstractSyntax      the message's abstract syntax
+    ///                            (previously negotiated via the
+    ///                            ImebraPresentationContexts
+    ///                            parameter of the
+    ///                            ImebraAssociationSCP or
+    ///                            ImebraAssociationSCU initializers)
+    /// \param messageID              message ID (can be retrieved
+    ///                               with
+    ///                               ImebraDimseService::getNextCommandID()
+    /// \param priority               message priority
+    /// \param affectedSopClassUid    the affected SOP class UID
+    /// \param pIdentifier            the keys to use for the
+    ///                               C-GET query
+    ///
+    //////////////////////////////////////////////////////////////////
+    -(id)initWithabstractsyntax:(NSString*)abstractSyntax
         messageID:(unsigned short)messageID
         priority:(ImebraDimseCommandPriority_t)priority
         affectedSopClassUid:(NSString*)affectedSopClassUid
@@ -225,8 +416,38 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
 @end
 
 
+///
+/// \brief Represents a C-GET response.
+///
+//////////////////////////////////////////////////////////////////
 @interface ImebraCGetResponse: ImebraCPartialResponse
 
+    ///
+    /// \brief Initializer to use when failed C-STORE operations
+    ///        are present.
+    ///
+    /// This constructor should be used when the response code
+    /// identifies a canceled operation, a failure, a refused
+    /// operation or a warning.
+    ///
+    /// \param pReceivedCommand       the C-GET command for which
+    ///                               this response is being
+    ///                               constructed
+    /// \param responseCode           the response code.
+    /// \param remainingSubOperations number of remaining C-STORE
+    ///                               operations
+    /// \param completedSubOperations number of completed C-STORE
+    ///                               operations
+    /// \param failedSubOperations    number of failed C-STORE
+    ///                               operations
+    /// \param warningSubOperations   number of C-STORE operations
+    ///                               completed with warnings
+    /// \param pIdentifier            DataSet with the list of failed
+    ///                               instance UIDs in the tag
+    ///                               FailedSOPInstanceUIDList
+    ///                               (0008,0058)
+    ///
+    //////////////////////////////////////////////////////////////////
     -(id)initWithCommand:(ImebraCGetCommand*)pReceivedCommand
         responseCode:(ImebraDimseStatusCode_t)responseCode
         remainingSubOperations:(unsigned int)remainingSubOperations
@@ -235,6 +456,23 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
         warningSubOperations:(unsigned int)warningSubOperations
         identifier:(ImebraDataSet*)pIdentifier;
 
+    ///
+    /// \brief Initializer.
+    ///
+    /// \param pReceivedCommand       the C-GET command for which
+    ///                               this response is being
+    ///                               constructed
+    /// \param responseCode           the response code.
+    /// \param remainingSubOperations number of remaining C-STORE
+    ///                               operations
+    /// \param completedSubOperations number of completed C-STORE
+    ///                               operations
+    /// \param failedSubOperations    number of failed C-STORE
+    ///                               operations
+    /// \param warningSubOperations   number of C-STORE operations
+    ///                               completed with warnings
+    ///
+    //////////////////////////////////////////////////////////////////
     -(id)initWithcommand:(ImebraCGetCommand*)pReceivedCommand
         responseCode:(ImebraDimseStatusCode_t)responseCode
         remainingSubOperations:(unsigned int)remainingSubOperations
@@ -245,9 +483,32 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
 @end
 
 
+///
+/// \brief Represents a C-FIND command.
+///
+//////////////////////////////////////////////////////////////////
 @interface ImebraCFindCommand: ImebraDimseCommand
 
-    -(id)initCommand:(NSString*)abstractSyntax
+    ///
+    /// \brief Initializer.
+    ///
+    /// \param abstractSyntax      the message's abstract syntax
+    ///                            (previously negotiated via the
+    ///                            ImebraPresentationContexts
+    ///                            parameter of the
+    ///                            ImebraAssociationSCP or
+    ///                            ImebraAssociationSCU initializers)
+    /// \param messageID           message ID (can be retrieved
+    ///                            with
+    ///                            ImebraDimseService::getNextCommandID()
+    /// \param priority            the message priority
+    /// \param affectedSopClassUid the affected SOP class UID
+    /// \param pIdentifier         the dataset with the identifier
+    ///                            (list of tags to match and their
+    ///                            requested values)
+    ///
+    //////////////////////////////////////////////////////////////////
+    -(id)initWithabstractsyntax:(NSString*)abstractSyntax
         messageID:(unsigned short)messageID
         priority:(ImebraDimseCommandPriority_t)priority
         affectedSopClassUid:(NSString*)affectedSopClassUid
@@ -256,27 +517,104 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
 @end
 
 
+///
+/// \brief Represents a C-FIND response.
+///
+//////////////////////////////////////////////////////////////////
 @interface ImebraCFindResponse: ImebraDimseResponse
 
+    ///
+    /// \brief Initializer for responses with pending status.
+    ///
+    /// Responses with pending status carry a ImebraDataSet with a
+    /// single item from the C-FIND query results.
+    ///
+    /// \param receivedCommand command for which the reponse is being
+    ///                        constructed
+    /// \param identifier      one item from the C-FIND query results
+    ///
+    //////////////////////////////////////////////////////////////////
     -(id)initWithCommand:(ImebraCFindCommand*)pReceivedCommand
         identifier:(ImebraDataSet*)pIdentifier;
 
+    ///
+    /// \brief Initializer for final C-FIND response (success or
+    ///        failure).
+    ///
+    /// \param pReceivedCommand command for which the response is
+    ///                         being constructed
+    /// \param responseCode    response code
+    ///
+    //////////////////////////////////////////////////////////////////
     -(id)initWithcommand:(ImebraCFindCommand*)pReceivedCommand
         responseCode:(ImebraDimseStatusCode_t)responseCode;
 @end
 
 
+///
+/// \brief Represents a C-MOVE command.
+///
+//////////////////////////////////////////////////////////////////
 @interface ImebraCMoveCommand: ImebraDimseCommand
 
-    -(id)initCommand:(NSString*)abstractSyntax
+    ///
+    /// \brief Initializer.
+    ///
+    /// \param abstractSyntax      the message's abstract syntax
+    ///                            (previously negotiated via the
+    ///                            ImebraPresentationContexts
+    ///                            parameter of the
+    ///                            ImebraAssociationSCP or
+    ///                            ImebraAssociationSCU initializers)
+    /// \param messageID           message ID (can be retrieved
+    ///                            with
+    ///                            ImebraDimseService::getNextCommandID()
+    /// \param priority            the message priority
+    /// \param affectedSopClassUid affected SOP class UID
+    /// \param identifier          the dataset with the identifier
+    ///                            (list of tags to match and their
+    ///                            requested values)
+    ///
+    //////////////////////////////////////////////////////////////////
+    -(id)initWithabstractsyntax:(NSString*)abstractSyntax
         messageID:(unsigned short)messageID
         priority:(ImebraDimseCommandPriority_t)priority
         affectedSopClassUid:(NSString*)affectedSopClassUid
         identifier:(ImebraDataSet*)pIdentifier;
 @end
 
+
+///
+/// \brief Represents the C-MOVE response.
+///
+//////////////////////////////////////////////////////////////////
 @interface ImebraCMoveResponse: ImebraCPartialResponse
 
+    ///
+    /// \brief Initializer for failed C-STORE operations.
+    ///
+    /// This constructor should be used when the response code
+    /// identifies a canceled operation, a failure, a refused
+    /// operation or a warning.
+    ///
+    /// \param pReceivedCommand       the C-GET command for which
+    ///                               this response is being
+    ///                               constructed
+    /// \param responseCode           the response code.
+    /// \param remainingSubOperations number of remaining C-STORE
+    ///                               operations
+    /// \param completedSubOperations number of completed C-STORE
+    ///                               operations
+    /// \param failedSubOperations    number of failed C-STORE
+    ///                               operations
+    /// \param warningSubOperations   number of C-STORE operations
+    ///                               completed with warnings
+    /// \param identifier             ImebraDataSet with the list of
+    ///                               failed instance UIDs in the tag
+    ///                               FailedSOPInstanceUIDList
+    ///                               (0008,0058)
+    ///
+    //////////////////////////////////////////////////////////////////
     -(id)initWithCommand:(ImebraCMoveCommand*)pReceivedCommand
         responseCode:(ImebraDimseStatusCode_t)responseCode
         remainingSubOperations:(unsigned int)remainingSubOperations
@@ -285,6 +623,23 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
         warningSubOperations:(unsigned int)warningSubOperations
         identifier:(ImebraDataSet*)pIdentifier;
 
+    ///
+    /// \brief Initializer.
+    ///
+    /// \param pReceivedCommand       the C-GET command for which
+    ///                               this response is being
+    ///                               constructed
+    /// \param responseCode           the response code.
+    /// \param remainingSubOperations number of remaining C-STORE
+    ///                               operations
+    /// \param completedSubOperations number of completed C-STORE
+    ///                               operations
+    /// \param failedSubOperations    number of failed C-STORE
+    ///                               operations
+    /// \param warningSubOperations   number of C-STORE operations
+    ///                               completed with warnings
+    ///
+    //////////////////////////////////////////////////////////////////
     -(id)initWithcommand:(ImebraCMoveCommand*)pReceivedCommand
         responseCode:(ImebraDimseStatusCode_t)responseCode
         remainingSubOperations:(unsigned int)remainingSubOperations
@@ -295,9 +650,29 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
 @end
 
 
+///
+/// \brief Represents a C-ECHO command.
+///
+//////////////////////////////////////////////////////////////////
 @interface ImebraCEchoCommand: ImebraDimseCommand
 
-    -(id)initCommand:(NSString*)abstractSyntax
+    ///
+    /// \brief Initializer.
+    ///
+    /// \param abstractSyntax      the message's abstract syntax
+    ///                            (previously negotiated via the
+    ///                            ImebraPresentationContexts
+    ///                            parameter of the
+    ///                            ImebraAssociationSCP or
+    ///                            ImebraAssociationSCU initializers)
+    /// \param messageID           message ID (can be retrieved
+    ///                            with
+    ///                            ImebraDimseService::getNextCommandID()
+    /// \param priority            the priority
+    /// \param affectedSopClassUid the affected SOP class UID
+    ///
+    //////////////////////////////////////////////////////////////////
+    -(id)initWithabstractsyntax:(NSString*)abstractSyntax
         messageID:(unsigned short)messageID
         priority:(ImebraDimseCommandPriority_t)priority
         affectedSopClassUid:(NSString*)affectedSopClassUid;
@@ -305,108 +680,273 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
 @end
 
 
+///
+/// \brief Represents a C-ECHO response.
+///
+//////////////////////////////////////////////////////////////////
 @interface ImebraCEchoResponse: ImebraDimseResponse
 
+    ///
+    /// \brief Initializer.
+    ///
+    /// \param pReceivedCommand command for which the response is being
+    ///                        constructed
+    /// \param responseCode    the response code
+    ///
+    //////////////////////////////////////////////////////////////////
     -(id)initWithcommand:(ImebraCEchoCommand*)pReceivedCommand
         responseCode:(ImebraDimseStatusCode_t)responseCode;
 
 @end
 
 
+///
+/// \brief Represents the C-CANCEL command.
+///
+//////////////////////////////////////////////////////////////////
 @interface ImebraCCancelCommand: ImebraDimseCommand
 
-    -(id)initCommand:(NSString*)abstractSyntax
+    ///
+    /// \brief Initializer.
+    ///
+    /// \param abstractSyntax      the message's abstract syntax
+    ///                            (previously negotiated via the
+    ///                            ImebraPresentationContexts
+    ///                            parameter of the
+    ///                            ImebraAssociationSCP or
+    ///                            ImebraAssociationSCU initializers)
+    /// \param messageID              message ID (can be retrieved
+    ///                               with
+    ///                               ImebraDimseService::getNextCommandID()
+    /// \param priority               the message priority
+    /// \param cancelMessageID        the ID of the message to cancel
+    ///
+    //////////////////////////////////////////////////////////////////
+    -(id)initWithabstractsyntax:(NSString*)abstractSyntax
         messageID:(unsigned short)messageID
         priority:(ImebraDimseCommandPriority_t)priority
         cancelMessageID:(unsigned short)cancelMessageID;
 
 
+    ///
+    /// \brief Returns the ID of the message to cancel.
+    ///
+    //////////////////////////////////////////////////////////////////
     @property (readonly) unsigned short cancelMessageID;
 
 @end
 
 
+///
+/// \brief Represents a N-EVENT-REPORT command.
+///
+//////////////////////////////////////////////////////////////////
 @interface ImebraNEventReportCommand: ImebraDimseCommand
 
-    -(id)initCommand:(NSString*)abstractSyntax
+    ///
+    /// \brief Initializer.
+    ///
+    /// \param abstractSyntax      the message's abstract syntax
+    ///                            (previously negotiated via the
+    ///                            ImebraPresentationContexts
+    ///                            parameter of the
+    ///                            ImebraAssociationSCP or
+    ///                            ImebraAssociationSCU initializers)
+    /// \param messageID              message ID (can be retrieved
+    ///                               with
+    ///                               ImebraDimseService::getNextCommandID()
+    /// \param affectedSopClassUid    the affected SOP class UID
+    /// \param affectedSopInstanceUid the affected SOP instance UID
+    /// \param eventID                the event ID
+    ///
+    //////////////////////////////////////////////////////////////////
+    -(id)initWithabstractsyntax:(NSString*)abstractSyntax
         messageID:(unsigned short)messageID
         affectedSopClassUid:(NSString*)affectedSopClassUid
         affectedSopInstanceUid:(NSString*)affectedSopInstanceUid
         eventID:(unsigned short)eventID;
 
-    -(id)initCommandWithInformation:(NSString*)abstractSyntax
+    ///
+    /// \brief Initializer.
+    ///
+    /// \param abstractSyntax      the message's abstract syntax
+    ///                            (previously negotiated via the
+    ///                            ImebraPresentationContexts
+    ///                            parameter of the
+    ///                            ImebraAssociationSCP or
+    ///                            ImebraAssociationSCU initializers)
+    /// \param messageID              message ID (can be retrieved
+    ///                               with
+    ///                               DimseService::getNextCommandID()
+    /// \param affectedSopClassUid    the affected SOP class UID
+    /// \param affectedSopInstanceUid the affected SOP instance UID
+    /// \param eventID                the event ID
+    /// \param pEventInformation      the dataset with event
+    ///                               information
+    ///
+    //////////////////////////////////////////////////////////////////
+    -(id)initWithAbstractSyntax:(NSString*)abstractSyntax
         messageID:(unsigned short)messageID
         affectedSopClassUid:(NSString*)affectedSopClassUid
         affectedSopInstanceUid:(NSString*)affectedSopInstanceUid
         eventID:(unsigned short)eventID
         eventInformation:(ImebraDataSet*)pEventInformation;
 
+    ///
+    /// \brief Returns the event ID.
+    ///
+    //////////////////////////////////////////////////////////////////
     @property (readonly) unsigned short eventID;
 
 @end
 
 
+///
+/// \brief N-EVENT-REPORT response.
+///
+//////////////////////////////////////////////////////////////////
 @interface ImebraNEventReportResponse: ImebraDimseResponse
 
+    ///
+    /// \brief Initializer which includes a payload.
+    ///        This implies a successful operation.
+    ///
+    /// \param pReceivedCommand the N-EVENT request command for which
+    ///                         the response is being constructed
+    /// \param pEventReply      the response payload
+    ///
+    //////////////////////////////////////////////////////////////////
     -(id)initWithCommand:(ImebraNEventReportCommand*)pReceivedCommand
         eventReply:(ImebraDataSet*)pEventReply;
 
+    ///
+    /// \brief Initializer.
+    ///
+    /// \param pReceivedCommand the N-EVENT request command for which
+    ///                         the response is being constructed
+    /// \param responseCode     the response code
+    ///
+    //////////////////////////////////////////////////////////////////
     -(id)initWithcommand:(ImebraNEventReportCommand*)pReceivedCommand
         responseCode:(ImebraDimseStatusCode_t)responseCode;
 
+    ///
+    /// \brief Get the event ID. The response may omit this
+    ///        information.
+    ///
+    //////////////////////////////////////////////////////////////////
     @property (readonly) unsigned short eventID;
 
 @end
 
 
+///
+/// \brief Represents a N-GET command.
+///
+//////////////////////////////////////////////////////////////////
 @interface ImebraNGetCommand: ImebraDimseCommand
 
     ///
     /// \brief Initializes the N-GET command.
     ///
-    /// \param abstractSyntax         the message's abstract syntax
-    ///                               (previously negotiated via the
-    ///                               PresentationContexts parameter
-    ///                               of the AssociationSCP or
-    ///                               AssociationSCU constructors)
+    /// \param abstractSyntax      the message's abstract syntax
+    ///                            (previously negotiated via the
+    ///                            ImebraPresentationContexts
+    ///                            parameter of the
+    ///                            ImebraAssociationSCP or
+    ///                            ImebraAssociationSCU initializers)
     /// \param messageID              message ID (can be retrieved
     ///                               with
-    ///                               DimseService::getNextCommandID()
+    ///                               ImebraDimseService::getNextCommandID()
     /// \param requestedSopClassUid    the requested SOP class UID
     /// \param requestedSopInstanceUid the requested SOP instance
     ///                                UID
-    /// \param attributeIdentifierList An array of ImebraTagId.
-    ///                                The list of identifier tags.
+    /// \param attributeIdentifierList A NSArray of ImebraTagId
+    ///                                objects, representing the tags
+    ///                                to retrieve.
     ///                                An empty list means "all the
     ///                                tags".
     ///
     //////////////////////////////////////////////////////////////////
-    -(id)initCommand:(NSString*)abstractSyntax
+    -(id)initWithabstractsyntax:(NSString*)abstractSyntax
         messageID:(unsigned short)messageID
         requestedSopClassUid:(NSString*)requestedSopClassUid
         requestedSopInstanceUid:(NSString*)requestedSopInstanceUid
         attributeIdentifierList:(NSArray*)attributeIdentifierList;
 
+    ///
+    /// \brief Return the list of tags to retrieve. an empty
+    ///        list means all the tags.
+    ///
+    /// The returned NSArray object is filled with ImebraTagId
+    /// objects.
+    ///
+    //////////////////////////////////////////////////////////////////
     @property (readonly) NSArray* attributeList;
 
 @end
 
 
+///
+/// \brief Represents a N-GET response.
+///
+//////////////////////////////////////////////////////////////////
 @interface ImebraNGetResponse: ImebraDimseResponse
 
+    ///
+    /// \brief Initializer.
+    ///
+    /// \param pReceivedCommand command for which the response is
+    ///                        being constructed
+    /// \param responseCode    response code
+    /// \param pAttributeList  dataset containing the list of
+    ///                        attribute identifiers
+    ///
+    //////////////////////////////////////////////////////////////////
     -(id)initWithCommand:(ImebraNGetCommand*)pReceivedCommand
         responseCode:(ImebraDimseStatusCode_t)responseCode
         attributeList:(ImebraDataSet*)pAttributeList;
 
+    ///
+    /// \brief Initializer.
+    ///
+    /// \param pReceivedCommand command for which the response is being
+    ///                        constructed
+    /// \param responseCode    response code
+    ///
+    //////////////////////////////////////////////////////////////////
     -(id)initWithcommand:(ImebraNGetCommand*)pReceivedCommand
         responseCode:(ImebraDimseStatusCode_t)responseCode;
 
 @end
 
 
+///
+/// \brief Represents the N-SET command
+///
+//////////////////////////////////////////////////////////////////
 @interface ImebraNSetCommand: ImebraDimseCommand
 
-    -(id)initCommand:(NSString*)abstractSyntax
+    ///
+    /// \brief Initializer.
+    ///
+    /// \param abstractSyntax      the message's abstract syntax
+    ///                            (previously negotiated via the
+    ///                            ImebraPresentationContexts
+    ///                            parameter of the
+    ///                            ImebraAssociationSCP or
+    ///                            ImebraAssociationSCU initializers)
+    /// \param messageID              message ID (can be retrieved
+    ///                               with
+    ///                               ImebraDimseService::getNextCommandID()
+    /// \param requestedSopClassUid    the requested SOP class UID
+    /// \param requestedSopInstanceUid the requested SOP instance
+    ///                                UID
+    /// \param pModificationList       dataset containing the new
+    ///                                attributes values
+    ///
+    //////////////////////////////////////////////////////////////////
+    -(id)initWithabstractsyntax:(NSString*)abstractSyntax
         messageID:(unsigned short)messageID
         requestedSopClassUid:(NSString*)requestedSopClassUid
         requestedSopInstanceUid:(NSString*)requestedSopInstanceUid
@@ -415,61 +955,196 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
 @end
 
 
+///
+/// \brief Represents the N-SET response.
+///
+//////////////////////////////////////////////////////////////////
 @interface ImebraNSetResponse: ImebraDimseResponse
 
+    ///
+    /// \brief Initializer of a successful response.
+    ///
+    /// \param pReceivedCommand    the command for which this response
+    ///                            is being constructed
+    /// \param pModifiedAttributes list of modified attributes. A
+    ///                            NSArray of ImebraTagId objects
+    ///
+    //////////////////////////////////////////////////////////////////
     -(id)initWithCommand:(ImebraNSetCommand*)pReceivedCommand
         modifiedAttributes:(NSArray*)pModifiedAttributes;
 
+    ///
+    /// \brief Initializer.
+    ///
+    /// \param pReceivedCommand    the command for which this response
+    ///                            is being constructed
+    /// \param responseCode        response code
+    ///
+    //////////////////////////////////////////////////////////////////
     -(id)initWithcommand:(ImebraNSetCommand*)pReceivedCommand
         responseCode:(ImebraDimseStatusCode_t)responseCode;
 
+    ///
+    /// \brief Returns the list of modified attributes.
+    ///        A NSArray of ImebraTagId objects.
+    ///
+    //////////////////////////////////////////////////////////////////
     @property (readonly) NSArray* modifiedAttributes;
 
 @end
 
 
+///
+/// \brief Represents the N-ACTION command.
+///
+//////////////////////////////////////////////////////////////////
 @interface ImebraNActionCommand: ImebraDimseCommand
 
-    -(id)initCommandWithActionInformation:(NSString*)abstractSyntax
+    ///
+    /// \brief Initializer.
+    ///
+    /// \param abstractSyntax      the message's abstract syntax
+    ///                            (previously negotiated via the
+    ///                            ImebraPresentationContexts
+    ///                            parameter of the
+    ///                            ImebraAssociationSCP or
+    ///                            ImebraAssociationSCU initializers)
+    /// \param messageID              message ID (can be retrieved
+    ///                               with
+    ///                               ImebraDimseService::getNextCommandID()
+    /// \param requestedSopClassUid    the requested SOP class UID
+    /// \param requestedSopInstanceUid the requested SOP instance
+    ///                                UID
+    /// \param actionID                action ID
+    /// \param pActionInformation      dataset containing information
+    ///                                about the action
+    ///
+    //////////////////////////////////////////////////////////////////
+    -(id)initWithAbstractSyntax:(NSString*)abstractSyntax
         messageID:(unsigned short)messageID
         requestedSopClassUid:(NSString*)requestedSopClassUid
         requestedSopInstanceUid:(NSString*)requestedSopInstanceUid
         actionID:(unsigned short)actionID
         actionInformation:(ImebraDataSet*)pActionInformation;
 
-    -(id)initCommand:(NSString*)abstractSyntax
+    ///
+    /// \brief Initializer.
+    ///
+    /// \param abstractSyntax      the message's abstract syntax
+    ///                            (previously negotiated via the
+    ///                            ImebraPresentationContexts
+    ///                            parameter of the
+    ///                            ImebraAssociationSCP or
+    ///                            ImebraAssociationSCU initializers)
+    /// \param messageID              message ID (can be retrieved
+    ///                               with
+    ///                               ImebraDimseService::getNextCommandID()
+    /// \param requestedSopClassUid    the requested SOP class UID
+    /// \param requestedSopInstanceUid the requested SOP instance
+    ///                                UID
+    /// \param actionID                action ID
+    ///
+    //////////////////////////////////////////////////////////////////
+    -(id)initWithabstractsyntax:(NSString*)abstractSyntax
         messageID:(unsigned short)messageID
         requestedSopClassUid:(NSString*)requestedSopClassUid
         requestedSopInstanceUid:(NSString*)requestedSopInstanceUid
         actionID:(unsigned short)actionID;
 
+    ///
+    /// \brief Returns the action's ID.
+    ///
+    //////////////////////////////////////////////////////////////////
     @property (readonly) unsigned short actionID;
 
 @end
 
 
+///
+/// \brief Represents the N-ACTION response.
+///
+//////////////////////////////////////////////////////////////////
 @interface ImebraNActionResponse: ImebraDimseResponse
 
+    ///
+    /// \brief Initializer for a successful reply.
+    ///
+    /// \param pReceivedCommand the command for which this response is
+    ///                         being constructed
+    /// \param pActionReply     dataSet with information about the
+    ///                         action reply
+    ///
+    //////////////////////////////////////////////////////////////////
     -(id)initWithCommand:(ImebraNActionCommand*)pReceivedCommand
         actionReply:(ImebraDataSet*)pActionReply;
 
+    ///
+    /// \brief Initializer.
+    ///
+    /// \param pReceivedCommand the command for which this response is
+    ///                         being constructed
+    /// \param responseCode     the response code
+    ///
+    //////////////////////////////////////////////////////////////////
     -(id)initWithcommand:(ImebraNActionCommand*)pReceivedCommand
         responseCode:(ImebraDimseStatusCode_t)responseCode;
 
+    ///
+    /// \brief Returns the action's ID.
+    ///
+    //////////////////////////////////////////////////////////////////
     @property (readonly) unsigned short actionID;
 
 @end
 
 
+///
+/// \brief The N-CREATE command.
+///
+//////////////////////////////////////////////////////////////////
 @interface ImebraNCreateCommand: ImebraDimseCommand
 
-    -(id)initCommandWithAttributeList:(NSString*)abstractSyntax
+    ///
+    /// \brief Initializer.
+    ///
+    /// \param abstractSyntax      the message's abstract syntax
+    ///                            (previously negotiated via the
+    ///                            ImebraPresentationContexts
+    ///                            parameter of the
+    ///                            ImebraAssociationSCP or
+    ///                            ImebraAssociationSCU initializers)
+    /// \param messageID              message ID (can be retrieved
+    ///                               with
+    ///                               ImebraDimseService::getNextCommandID()
+    /// \param affectedSopClassUid    the affected SOP class UID
+    /// \param affectedSopInstanceUid the affected SOP instance UID
+    /// \param pAttributeList         the dataset containing the
+    ///                               attributes and values
+    ///
+    //////////////////////////////////////////////////////////////////
+    -(id)initAbstractSyntax:(NSString*)abstractSyntax
         messageID:(unsigned short)messageID
         affectedSopClassUid:(NSString*)affectedSopClassUid
         affectedSopInstanceUid:(NSString*)affectedSopInstanceUid
         attributeList:(ImebraDataSet*)pAttributeList;
 
-    -(id)initCommandWithAttributeList:(NSString*)abstractSyntax
+    ///
+    /// \brief Initializer.
+    ///
+    /// \param abstractSyntax      the message's abstract syntax
+    ///                            (previously negotiated via the
+    ///                            ImebraPresentationContexts
+    ///                            parameter of the
+    ///                            ImebraAssociationSCP or
+    ///                            ImebraAssociationSCU initializers)
+    /// \param messageID              message ID (can be retrieved
+    ///                               with
+    ///                               ImebraDimseService::getNextCommandID()
+    /// \param affectedSopClassUid    the affected SOP class UID
+    /// \param affectedSopInstanceUid the affected SOP instance UID
+    ///
+    //////////////////////////////////////////////////////////////////
+    -(id)initAbstractSyntax:(NSString*)abstractSyntax
         messageID:(unsigned short)messageID
         affectedSopClassUid:(NSString*)affectedSopClassUid
         affectedSopInstanceUid:(NSString*)affectedSopInstanceUid;
@@ -477,27 +1152,84 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
 @end
 
 
+///
+/// \brief Represents the N-CREATE response.
+///
+//////////////////////////////////////////////////////////////////
 @interface ImebraNCreateResponse: ImebraDimseResponse
 
+    ///
+    /// \brief Initializer.
+    ///
+    /// \param pReceivedCommand command for which the response is
+    ///                        being constructed
+    /// \param pAttributeList   dataset containing the attributes list
+    ///
+    //////////////////////////////////////////////////////////////////
     -(id)initWithCommand:(ImebraNCreateCommand*)pReceivedCommand
         attributeList:(ImebraDataSet*)pAttributeList;
 
+    ///
+    /// \brief Initializer.
+    ///
+    /// \param pReceivedCommand command for which the response is
+    ///                         being constructed
+    /// \param affectedSopInstanceUid affected SOP instance UID
+    /// \param pAttributeList   dataset containing the attributes list
+    ///
+    //////////////////////////////////////////////////////////////////
     -(id)initWithCommand:(ImebraNCreateCommand*)pReceivedCommand
         affectedSopInstanceUid:(NSString*)affectedSopInstanceUid
         attributeList:(ImebraDataSet*)pAttributeList;
 
+    ///
+    /// \brief Constructor.
+    ///
+    /// \param pReceivedCommand       command for which the response is
+    ///                               being constructed
+    /// \param affectedSopInstanceUid created SOP instance UID
+    ///
+    //////////////////////////////////////////////////////////////////
     -(id)initWithCommand:(ImebraNCreateCommand*)pReceivedCommand
         affectedSopInstanceUid:(NSString*)affectedSopInstanceUid;
 
+    ///
+    /// \brief Constructor.
+    ///
+    /// \param pReceivedCommand command for which the response is
+    ///                        being constructed
+    /// \param responseCode the response code
+    ///
+    //////////////////////////////////////////////////////////////////
     -(id)initWithcommand:(ImebraNCreateCommand*)pReceivedCommand
         responseCode:(ImebraDimseStatusCode_t)responseCode;
 
 @end
 
 
+///
+/// \brief The N-DELETE command.
+///
+//////////////////////////////////////////////////////////////////
 @interface ImebraNDeleteCommand: ImebraDimseCommand
 
-    -(id)initCommand:(NSString*)abstractSyntax
+    ///
+    /// \brief Initializer.
+    ///
+    /// \param abstractSyntax      the message's abstract syntax
+    ///                            (previously negotiated via the
+    ///                            ImebraPresentationContexts
+    ///                            parameter of the
+    ///                            ImebraAssociationSCP or
+    ///                            ImebraAssociationSCU initializers)
+    /// \param messageID              message ID (can be retrieved
+    ///                               with
+    ///                               ImebraDimseService::getNextCommandID()
+    /// \param requestedSopClassUid    the requested SOP class UID
+    /// \param requestedSopInstanceUid the requested SOP instance UID
+    ///
+    //////////////////////////////////////////////////////////////////
+    -(id)initWithabstractsyntax:(NSString*)abstractSyntax
         messageID:(unsigned short)messageID
         requestedSopClassUid:(NSString*)requestedSopClassUid
         requestedSopInstanceUid:(NSString*)requestedSopInstanceUid;
@@ -505,14 +1237,35 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
 @end
 
 
+///
+/// \brief The N-DELETE response.
+///
+//////////////////////////////////////////////////////////////////
 @interface ImebraNDeleteResponse: ImebraDimseResponse
 
+    ///
+    /// \brief Initializer.
+    ///
+    /// \param pReceivedCommand command for which the response is
+    ///                         being constructed
+    /// \param responseCode     response code
+    ///
+    //////////////////////////////////////////////////////////////////
     -(id)initWithcommand:(ImebraNDeleteCommand*)pReceivedCommand
         responseCode:(ImebraDimseStatusCode_t)responseCode;
 
 @end
 
 
+///
+/// \brief Sends and receives DICOM commands and responses through
+///        an ImebraAssociationSCU or an ImebraAssociationSCP.
+///
+/// ImebraDimseService supplies getNextCommandID() in order to
+/// obtain the ID for the commands sent through the
+/// ImebraDimseService object.
+///
+//////////////////////////////////////////////////////////////////
 @interface ImebraDimseService: NSObject
 #ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
 {
@@ -522,6 +1275,14 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
 
 #endif
 
+    ///
+    /// \brief Initializer.
+    ///
+    /// \param pAssociation the AssociationBase derived class through
+    ///                     which the DICOM commands and responses are
+    ///                     sent and received
+    ///
+    //////////////////////////////////////////////////////////////////
     -(id)initWithAssociation:(ImebraAssociationBase*)pAssociation;
 
     -(void)dealloc;
@@ -555,10 +1316,10 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
     ///
     /// \brief Retrieves the next incoming DICOM command.
     ///
-    /// The command blocks until the command is available or until
+    /// The method blocks until the command is available or until
     /// the association is closed, either by the connected peer or
     /// by other means (e.g because of the DIMSE timeout), in which
-    /// case the exception StreamEOFError is thrown.
+    /// case the exception ImebraStreamEOFError is set in pError.
     ///
     /// Other threads can wait for other commands or responses from
     /// the same DIMSE service. All the commands and responses are
@@ -574,9 +1335,11 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
     /// maximum number of performed operation negotiated for
     /// the association.
     ///
-    /// Throws StreamEOFError if the association is closed while the
-    /// method is waiting for an incoming command.
+    /// Set pError to StreamEOFError if the association is closed
+    /// while the method is waiting for an incoming command or
+    /// response.
     ///
+    /// \param pError set to a NSError derived class in case of error
     /// \return the next incoming DICOM command
     ///
     //////////////////////////////////////////////////////////////////
@@ -589,6 +1352,7 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
     /// This method is multithread safe.
     ///
     /// \param pCommand the command or response to send
+    /// \param pError set to a NSError derived class in case of error
     ///
     //////////////////////////////////////////////////////////////////
     -(void)sendCommandOrResponse:(ImebraDimseCommandBase*)pCommand error:(NSError**)pError
@@ -603,8 +1367,13 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
     /// received by a secondary thread and distributed to all the
     /// listener waiting for a command or a response.
     ///
+    /// Set pError to StreamEOFError if the association is closed
+    /// while the method is waiting for an incoming command or
+    /// response.
+    ///
     /// \param pCommand the sent C-CSTORE command for which to
     ///                wait for a response
+    /// \param pError set to a NSError derived class in case of error
     /// \return the response for the specified command
     ///
     //////////////////////////////////////////////////////////////////
@@ -619,8 +1388,13 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
     /// received by a secondary thread and distributed to all the
     /// listener waiting for a command or a response.
     ///
+    /// Set pError to StreamEOFError if the association is closed
+    /// while the method is waiting for an incoming command or
+    /// response.
+    ///
     /// \param pCommand the sent C-GET command for which to
     ///                wait for a response
+    /// \param pError set to a NSError derived class in case of error
     /// \return the response for the specified command
     ///
     //////////////////////////////////////////////////////////////////
@@ -635,8 +1409,13 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
     /// received by a secondary thread and distributed to all the
     /// listener waiting for a command or a response.
     ///
+    /// Set pError to StreamEOFError if the association is closed
+    /// while the method is waiting for an incoming command or
+    /// response.
+    ///
     /// \param pCommand the sent C-FIND command for which to
     ///                wait for a response
+    /// \param pError set to a NSError derived class in case of error
     /// \return the response for the specified command
     ///
     //////////////////////////////////////////////////////////////////
@@ -651,8 +1430,13 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
     /// received by a secondary thread and distributed to all the
     /// listener waiting for a command or a response.
     ///
+    /// Set pError to StreamEOFError if the association is closed
+    /// while the method is waiting for an incoming command or
+    /// response.
+    ///
     /// \param pCommand the sent C-MOVE command for which to
     ///                wait for a response
+    /// \param pError set to a NSError derived class in case of error
     /// \return the response for the specified command
     ///
     //////////////////////////////////////////////////////////////////
@@ -667,8 +1451,13 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
     /// received by a secondary thread and distributed to all the
     /// listener waiting for a command or a response.
     ///
+    /// Set pError to StreamEOFError if the association is closed
+    /// while the method is waiting for an incoming command or
+    /// response.
+    ///
     /// \param pCommand the sent C-ECHO command for which to
     ///                wait for a response
+    /// \param pError set to a NSError derived class in case of error
     /// \return the response for the specified command
     ///
     //////////////////////////////////////////////////////////////////
@@ -683,8 +1472,13 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
     /// received by a secondary thread and distributed to all the
     /// listener waiting for a command or a response.
     ///
+    /// Set pError to StreamEOFError if the association is closed
+    /// while the method is waiting for an incoming command or
+    /// response.
+    ///
     /// \param pCommand the sent N-EVENT-REPORT command for which to
     ///                wait for a response
+    /// \param pError set to a NSError derived class in case of error
     /// \return the response for the specified command
     ///
     //////////////////////////////////////////////////////////////////
@@ -699,8 +1493,13 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
     /// received by a secondary thread and distributed to all the
     /// listener waiting for a command or a response.
     ///
+    /// Set pError to StreamEOFError if the association is closed
+    /// while the method is waiting for an incoming command or
+    /// response.
+    ///
     /// \param pCommand the sent N-GET command for which to
     ///                wait for a response
+    /// \param pError set to a NSError derived class in case of error
     /// \return the response for the specified command
     ///
     //////////////////////////////////////////////////////////////////
@@ -715,8 +1514,13 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
     /// received by a secondary thread and distributed to all the
     /// listener waiting for a command or a response.
     ///
+    /// Set pError to StreamEOFError if the association is closed
+    /// while the method is waiting for an incoming command or
+    /// response.
+    ///
     /// \param pCommand the sent N-SET command for which to
     ///                wait for a response
+    /// \param pError set to a NSError derived class in case of error
     /// \return the response for the specified command
     ///
     //////////////////////////////////////////////////////////////////
@@ -731,8 +1535,13 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
     /// received by a secondary thread and distributed to all the
     /// listener waiting for a command or a response.
     ///
+    /// Set pError to StreamEOFError if the association is closed
+    /// while the method is waiting for an incoming command or
+    /// response.
+    ///
     /// \param pCommand the sent N-ACTION command for which to
     ///                wait for a response
+    /// \param pError set to a NSError derived class in case of error
     /// \return the response for the specified command
     ///
     //////////////////////////////////////////////////////////////////
@@ -747,8 +1556,13 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
     /// received by a secondary thread and distributed to all the
     /// listener waiting for a command or a response.
     ///
+    /// Set pError to StreamEOFError if the association is closed
+    /// while the method is waiting for an incoming command or
+    /// response.
+    ///
     /// \param pCommand the sent N-CREATE command for which to
     ///                wait for a response
+    /// \param pError set to a NSError derived class in case of error
     /// \return the response for the specified command
     ///
     //////////////////////////////////////////////////////////////////
@@ -763,8 +1577,13 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
     /// received by a secondary thread and distributed to all the
     /// listener waiting for a command or a response.
     ///
+    /// Set pError to StreamEOFError if the association is closed
+    /// while the method is waiting for an incoming command or
+    /// response.
+    ///
     /// \param pCommand the sent N-DELETE command for which to
     ///                wait for a response
+    /// \param pError set to a NSError derived class in case of error
     /// \return the response for the specified command
     ///
     //////////////////////////////////////////////////////////////////

@@ -284,7 +284,7 @@ TEST(objectivec, dimse)
     [pDataSet setString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"TestPatient" error:&pError];
     [pDataSet setAge:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1010] newValue:[[ImebraAge alloc] initWithAge:10 units:ImebraYears] error:&pError];
 
-    ImebraCStoreCommand* pCommand = [[ImebraCStoreCommand alloc]initCommand:
+    ImebraCStoreCommand* pCommand = [[ImebraCStoreCommand alloc]initWithabstractsyntax:
         @"1.2.840.10008.1.1"
         messageID:[pDimse getNextCommandID]
         priority:ImebraPriorityMedium

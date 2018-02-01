@@ -178,7 +178,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @implementation ImebraCStoreCommand
 
--(id)initCommand:(NSString*)abstractSyntax
+-(id)initWithabstractsyntax:(NSString*)abstractSyntax
     messageID:(unsigned short)messageID
     priority:(ImebraDimseCommandPriority_t)priority
     affectedSopClassUid:(NSString*)affectedSopClassUid
@@ -241,7 +241,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @implementation ImebraCGetCommand
 
--(id)initCommand:(NSString*)abstractSyntax
+-(id)initWithabstractsyntax:(NSString*)abstractSyntax
     messageID:(unsigned short)messageID
     priority:(ImebraDimseCommandPriority_t)priority
     affectedSopClassUid:(NSString*)affectedSopClassUid
@@ -318,7 +318,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @implementation ImebraCFindCommand
 
--(id)initCommand:(NSString*)abstractSyntax
+-(id)initWithabstractsyntax:(NSString*)abstractSyntax
     messageID:(unsigned short)messageID
     priority:(ImebraDimseCommandPriority_t)priority
     affectedSopClassUid:(NSString*)affectedSopClassUid
@@ -376,7 +376,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @implementation ImebraCMoveCommand
 
--(id)initCommand:(NSString*)abstractSyntax
+-(id)initWithabstractsyntax:(NSString*)abstractSyntax
     messageID:(unsigned short)messageID
     priority:(ImebraDimseCommandPriority_t)priority
     affectedSopClassUid:(NSString*)affectedSopClassUid
@@ -455,7 +455,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @implementation ImebraCEchoCommand
 
--(id)initCommand:(NSString*)abstractSyntax
+-(id)initWithabstractsyntax:(NSString*)abstractSyntax
     messageID:(unsigned short)messageID
     priority:(ImebraDimseCommandPriority_t)priority
     affectedSopClassUid:(NSString*)affectedSopClassUid
@@ -499,7 +499,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @implementation ImebraCCancelCommand
 
--(id)initCommand:(NSString*)abstractSyntax
+-(id)initWithabstractsyntax:(NSString*)abstractSyntax
     messageID:(unsigned short)messageID
     priority:(ImebraDimseCommandPriority_t)priority
     cancelMessageID:(unsigned short)cancelMessageID
@@ -527,7 +527,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @implementation ImebraNEventReportCommand
 
--(id)initCommand:(NSString*)abstractSyntax
+-(id)initWithabstractsyntax:(NSString*)abstractSyntax
     messageID:(unsigned short)messageID
     affectedSopClassUid:(NSString*)affectedSopClassUid
     affectedSopInstanceUid:(NSString*)affectedSopInstanceUid
@@ -547,7 +547,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     return self;
 }
 
--(id)initCommandWithInformation:(NSString*)abstractSyntax
+-(id)initWithAbstractSyntax:(NSString*)abstractSyntax
     messageID:(unsigned short)messageID
     affectedSopClassUid:(NSString*)affectedSopClassUid
     affectedSopInstanceUid:(NSString*)affectedSopInstanceUid
@@ -619,7 +619,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @implementation ImebraNGetCommand
 
--(id)initCommand:(NSString*)abstractSyntax
+-(id)initWithabstractsyntax:(NSString*)abstractSyntax
     messageID:(unsigned short)messageID
     requestedSopClassUid:(NSString*)requestedSopClassUid
     requestedSopInstanceUid:(NSString*)requestedSopInstanceUid
@@ -704,7 +704,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @implementation ImebraNSetCommand
 
--(id)initCommand:(NSString*)abstractSyntax
+-(id)initWithabstractsyntax:(NSString*)abstractSyntax
     messageID:(unsigned short)messageID
     requestedSopClassUid:(NSString*)requestedSopClassUid
     requestedSopInstanceUid:(NSString*)requestedSopInstanceUid
@@ -787,7 +787,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @implementation ImebraNActionCommand
 
--(id)initCommandWithActionInformation:(NSString*)abstractSyntax
+-(id)initWithAbstractSyntax:(NSString*)abstractSyntax
     messageID:(unsigned short)messageID
     requestedSopClassUid:(NSString*)requestedSopClassUid
     requestedSopInstanceUid:(NSString*)requestedSopInstanceUid
@@ -810,7 +810,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 }
 
--(id)initCommand:(NSString*)abstractSyntax
+-(id)initWithabstractsyntax:(NSString*)abstractSyntax
     messageID:(unsigned short)messageID
     requestedSopClassUid:(NSString*)requestedSopClassUid
     requestedSopInstanceUid:(NSString*)requestedSopInstanceUid
@@ -881,7 +881,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @implementation ImebraNCreateCommand
 
--(id)initCommandWithAttributeList:(NSString*)abstractSyntax
+-(id)initAbstractSyntax:(NSString*)abstractSyntax
     messageID:(unsigned short)messageID
     affectedSopClassUid:(NSString*)affectedSopClassUid
     affectedSopInstanceUid:(NSString*)affectedSopInstanceUid
@@ -901,7 +901,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     return self;
 }
 
--(id)initCommandWithAttributeList:(NSString*)abstractSyntax
+-(id)initAbstractSyntax:(NSString*)abstractSyntax
     messageID:(unsigned short)messageID
     affectedSopClassUid:(NSString*)affectedSopClassUid
     affectedSopInstanceUid:(NSString*)affectedSopInstanceUid
@@ -991,7 +991,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @implementation ImebraNDeleteCommand
 
--(id)initCommand:(NSString*)abstractSyntax
+-(id)initWithabstractsyntax:(NSString*)abstractSyntax
     messageID:(unsigned short)messageID
     requestedSopClassUid:(NSString*)requestedSopClassUid
     requestedSopInstanceUid:(NSString*)requestedSopInstanceUid
