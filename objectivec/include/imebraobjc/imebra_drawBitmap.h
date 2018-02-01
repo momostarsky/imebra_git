@@ -41,6 +41,18 @@ typedef NS_ENUM(unsigned int, ImebraDrawBitmapType_t)
 };
 
 
+///
+/// \brief ImebraDrawBitmap takes care of converting an Image object into an
+///        array of bytes that can be displayed by the operating system
+///        facilities.
+///
+/// ImebraDrawBitmap can apply several transformations to the Image before
+/// generating the bitmap.
+///
+/// DrawBitmap applies automatically the necessary color transform and high
+/// bit shift in order to obtain a 8 bits per channel RGB image.
+///
+///////////////////////////////////////////////////////////////////////////////
 @interface ImebraDrawBitmap: NSObject
 
 #ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
@@ -50,8 +62,23 @@ typedef NS_ENUM(unsigned int, ImebraDrawBitmapType_t)
 
 #endif
 
+    /// \brief Initializes a ImebraDrawBitmap with no transforms.
+    ///
+    /// The getBitmap() method will not apply any transform to the Image before
+    /// generating the bitmap (except for the high bit and color space to obtain
+    /// a 24bpp RGB image).
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     -(id)init;
 
+    /// \brief Initializes a ImebraDrawBitmap object that always apply the
+    ///        transform specified in the parameter when calling getBitmap()
+    ///        or getImebraImage().
+    ///
+    /// \param pTransform the transforms to apply to the Image in the
+    ///                   getBitmap() method
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     -(id)initWithTransform:(ImebraTransform*)pTransform;
 
     -(void)dealloc;
@@ -60,12 +87,12 @@ typedef NS_ENUM(unsigned int, ImebraDrawBitmapType_t)
     ///        input image, then calculate an array of bytes containing a bitmap
     ///        that can be rendered by the operating system.
     ///
-    /// \param image          the image for which the bitmap must be calculated
+    /// \param pImage         the image for which the bitmap must be calculated
     /// \param drawBitmapType the type of bitmap to generate
     /// \param rowAlignBytes  the number of bytes on which the bitmap rows are
     ///                       aligned
-    /// \return a ReadWriteMemory object referencing the buffer containing the
-    ///         generated bitmap
+    /// \return a ImebraReadWriteMemory object referencing the buffer containing
+    ///         the generated bitmap
     ///
     ///////////////////////////////////////////////////////////////////////////////
     -(ImebraReadWriteMemory*) getBitmap:(ImebraImage*)pImage bitmapType:(ImebraDrawBitmapType_t) drawBitmapType rowAlignBytes:(unsigned int)rowAlignBytes error:(NSError**)pError;
