@@ -19,8 +19,17 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @class ImebraReadMemory;
 
+///
+/// \brief An input stream that reads data from a memory region.
+///
+///////////////////////////////////////////////////////////////////////////////
 @interface ImebraMemoryStreamInput : ImebraBaseStreamInput
 
+    /// \brief Initializer.
+    ///
+    /// \param pMemory the memory region from which the stream will read the data
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     -(id)initWithReadMemory:(ImebraReadMemory*)pMemory;
 
 @end

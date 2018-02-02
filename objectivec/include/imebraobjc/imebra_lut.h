@@ -25,6 +25,10 @@ class LUT;
 
 @class ImebraReadingDataHandlerNumeric;
 
+///
+/// \brief This class represents Lookup Table.
+///
+///////////////////////////////////////////////////////////////////////////////
 @interface ImebraLUT : NSObject
 
 #ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
@@ -38,13 +42,40 @@ class LUT;
 
     -(void)dealloc;
 
+    /// \brief Return a numeric handler for the memory containing the mapped
+    ///        values.
+    ///
+    /// \return a reading data handler that points to the mapped values
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     -(ImebraReadingDataHandlerNumeric*) getReadingDataHandler;
 
+    /// \brief Return the mapped value for a specific index
+    ///
+    /// \param index a LUT index
+    /// \return the mapped value for the requested index
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     -(unsigned int)getMappedValue:(int)index;
 
+    /// \brief Returns the LUT's description.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     @property (readonly) NSString* description;
+
+    /// \brief Return the number of bits used to store a LUT value.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     @property (readonly) unsigned int bits;
+
+    /// \brief Return the lut's size (the number of stored values).
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     @property (readonly) unsigned int size;
+
+    /// \brief Return the first LUT index that has a mapped value
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     @property (readonly) int firstMappedValue;
 
 @end

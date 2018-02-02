@@ -17,8 +17,18 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #import <Foundation/Foundation.h>
 #import "imebra_baseStreamInput.h"
 
+///
+/// \brief Represents an input file stream.
+///
+///////////////////////////////////////////////////////////////////////////////
 @interface ImebraFileStreamInput: ImebraBaseStreamInput
 
+    /// \brief Initializer.
+    ///
+    /// \param fileName the path to the file to open in read mode
+    /// \param pError   set to a NSError derived class in case of error
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     -(id)initWithName:(NSString*)fileName error:(NSError**)pError;
 
 @end

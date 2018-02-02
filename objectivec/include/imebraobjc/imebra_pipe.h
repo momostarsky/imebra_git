@@ -27,8 +27,33 @@ class Pipe;
 @class ImebraReadMemory;
 @class ImebraReadWriteMemory;
 
+///
+/// \brief A pipe can be used to push and pull data to/from an Imebra codec.
+///
+/// This is useful when an Imebra codec must be used with a data source
+/// or a data sink not supported by the library (e.g. a TLS stream).
+///
+/// In order to allow Imebra to read data from a custom data source:
+/// - allocate a ImebraPipe class and use it as parameter for the
+///   ImebraStreamReader needed by the codec
+/// - from a secondary thread feed the data to the data source by calling
+///   feed()
+///
+/// In order to allow Imebra to write data to a custom data source:
+/// - allocate a ImebraPipe class and use it as parameter for the
+///   ImebraStreamWriter needed by the codec
+/// - from a secondary thread read the data to feed to the data sink by
+///   calling sink()
+///
+///////////////////////////////////////////////////////////////////////////////
 @interface ImebraPipe: ImebraBaseStreamInputOutput
 
+    /// \brief Initializer.
+    ///
+    /// \param circularBufferSize the size of the buffer that stores the data
+    ///                           fed to the Pipe until it is fetched
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     -(id)initWithBufferSize:(unsigned int)circularBufferSize;
 
     ///
@@ -74,7 +99,7 @@ class Pipe;
     /// \brief Instruct any pending operation to terminate.
     ///
     /// Current and subsequent read and write operations will fail by
-    /// throwing the exception StreamClosedError.
+    /// setting pError to ImebraStreamClosedError.
     ///
     ///////////////////////////////////////////////////////////////////////////////
     -(void) terminate;

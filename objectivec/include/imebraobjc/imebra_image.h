@@ -36,6 +36,21 @@ typedef NS_ENUM(unsigned int, ImebraBitDepth_t)
 @class ImebraReadingDataHandlerNumeric;
 @class ImebraWritingDataHandlerNumeric;
 
+
+///
+/// \brief Represents a DICOM image.
+///
+/// The class manages an uncompressed DICOM image. Images are compressed
+/// when they are inserted into the DataSet via DataSet::setImage() and are
+/// decompressed when they are referenced by the Image class.
+///
+/// The image is stored in a contiguous area of memory: each channel's value
+/// can occupy 1, 2 or 4 bytes, according to the Image's data type.
+///
+/// Channels' values are always interleaved in the Image class, regardless
+/// of how they are stored in the DataSet object.
+///
+///////////////////////////////////////////////////////////////////////////////
 @interface ImebraImage: NSObject
 
 #ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
@@ -47,7 +62,7 @@ typedef NS_ENUM(unsigned int, ImebraBitDepth_t)
     -(id)initWithImebraImage:(imebra::Image*)pImage;
 #endif
 
-    /// \brief Constructor.
+    /// \brief Initializer.
     ///
     /// The memory for the image is not allocated by the constructor but only when
     /// a WritingDataHandler is requested with getWritingDataHandler().
@@ -61,30 +76,74 @@ typedef NS_ENUM(unsigned int, ImebraBitDepth_t)
     ///////////////////////////////////////////////////////////////////////////////
     -(id)initWithWidth:(unsigned int)width height:(unsigned int)height depth:(ImebraBitDepth_t)depth colorSpace:(NSString*)colorSpace highBit:(unsigned int)highBit;
 
-    ///
-    /// \ Destructor
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
     -(void)dealloc;
 
+    /// \brief Retrieve a ImebraReadingDataHandlerNumeric object referencing the
+    ///        image's memory (read only).
+    ///
+    /// The memory referenced by ImageReadingDataHandlerNumeric contains all the
+    /// image's pixels. The color channels are interleaved.
+    ///
+    /// \return a ImebraReadingDataHandlerNumeric object referencing the Image's
+    ///         memory in read-only mode
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     -(ImebraReadingDataHandlerNumeric*) getReadingDataHandler:(NSError**)pError;
 
+    /// \brief Retrieve a ImebraWritingDataHandlerNumeric object referencing the
+    ///        image's memory (mutable).
+    ///
+    /// The memory referenced by the ImebraWritingDataHandlerNumeric object is
+    /// uninitialized.
+    ///
+    /// When the ImebraWritingDataHandlerNumeric object is destroyed then the
+    /// memory managed by the handler replaces the old image's memory.
+    ///
+    /// \return a ImebraWritingDataHandlerNumeric object referencing an
+    ///         uninitialized memory buffer that the client has to fill the the
+    ///         image's data
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     -(ImebraWritingDataHandlerNumeric*) getWritingDataHandler:(NSError**)pError;
 
+    /// \brief Image's width, in millimiters
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     @property double widthMm;
 
+    /// \brief Image's height, in millimiters
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     @property double heightMm;
 
+    /// \brief Retrieve the image's width, in pixels.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     @property (readonly) unsigned int width;
 
+    /// \brief Retrieve the image's height, in pixels.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     @property (readonly) unsigned int height;
 
+    /// \brief Retrieve the Image's color space
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     @property (readonly) NSString* colorSpace;
 
+    /// \brief Return the number of color channels contained by the image
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     @property (readonly) unsigned int getChannelsNumber;
 
+    /// \brief Return the type of the channels' values.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     @property (readonly) ImebraBitDepth_t getDepth;
 
+    /// \brief Return the highest bit occupied by the channels' values.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     @property (readonly) unsigned int getHighBit;
 
 @end

@@ -18,8 +18,32 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @class ImebraDataSet;
 
+///
+/// \brief The ImebraModalityVOILUT transform applies the Modality VOI or LUT
+///        to the input image.
+///
+/// The Modality VOI/LUT applies a rescale intercept and a slope
+/// to transform the pixel values of the image into values that are meaningful
+/// to the application.
+///
+/// For instance, the original pixel values could store a device specific
+/// value that has a meaning only when used by the device that generated it:
+/// applying the rescale slope/intercept to pixel value converts the original
+/// values into optical density or other known measurement units
+/// (e.g. Hounsfield).
+///
+/// When the transformation is not linear, then a LUT (lookup table) is
+/// applied.
+///
+///////////////////////////////////////////////////////////////////////////////
 @interface ImebraModalityVOILUT: ImebraTransform
 
+    /// \brief Initializer.
+    ///
+    /// \param pDataset the ImebraDataSet from which the modality VOI or LUT data
+    ///                 is retrieved
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     -(id)initWithDataSet:(ImebraDataSet*)pDataSet;
 
 @end

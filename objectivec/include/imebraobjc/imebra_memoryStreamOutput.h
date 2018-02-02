@@ -19,8 +19,19 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @class ImebraReadWriteMemory;
 
+///
+/// \brief An output stream that writes data into a memory region.
+///
+/// When new data is written into the memory then it is resized as necessary.
+///
+///////////////////////////////////////////////////////////////////////////////
 @interface ImebraMemoryStreamOutput : ImebraBaseStreamOutput
 
+    /// \brief Initializer.
+    ///
+    /// \param pMemory the memory region into which the stream will write the data
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     -(id)initWithReadWriteMemory:(ImebraReadWriteMemory*)pMemory;
 
 @end
