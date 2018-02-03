@@ -172,6 +172,43 @@ TEST(objectivec, image)
 }
 
 
+// Initialize and check an image content
+TEST(objectivec, imageNSData)
+{
+    ImebraImage* pImage = [[ImebraImage alloc] initWithWidth:5 height:5 depth:ImebraBitDepthU16 colorSpace:@"MONOCHROME2" highBit:15];
+
+    NSError* error = nil;
+#if __has_feature(objc_arc)
+    @autoreleasepool
+#endif
+    {
+        std::uint16_t buffer[25];
+        for(unsigned int pixel(0); pixel != 25; ++pixel)
+        {
+            buffer[pixel] = pixel + 1;
+        }
+        NSData* pSource = [[NSData alloc] initWithBytes:buffer length:sizeof(buffer)];
+        ImebraWritingDataHandlerNumeric* writingDataHandler = [pImage getWritingDataHandler:&error];
+        [writingDataHandler assign:pSource error:&error];
+#if !__has_feature(objc_arc)
+        [writingDataHandler release];
+#endif
+    }
+
+    ImebraDataSet* pDataSet = [[ImebraDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
+    [pDataSet setImage:0 image:pImage quality:ImebraQualityVeryHigh error:&error];
+
+    ImebraImage* pCheckImage = [pDataSet getImage:0 error:&error];
+    ImebraReadingDataHandlerNumeric* readingDataHandler = [pCheckImage getReadingDataHandler:&error];
+    NSData* pData = [readingDataHandler getMemory:&error].data;
+    for(unsigned int pixel(0); pixel != 25; ++pixel)
+    {
+        EXPECT_EQ(pixel + 1, ((std::uint16_t*)(pData.bytes))[pixel]);
+    }
+}
+
+
+
 // Set different dataset tags
 TEST(objectivec, datasetValues)
 {
