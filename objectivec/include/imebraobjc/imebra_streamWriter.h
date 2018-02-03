@@ -26,6 +26,11 @@ class StreamWriter;
 @class ImebraBaseStreamOutput;
 @class ImebraBaseStreamInputOutput;
 
+///
+/// \brief A ImebraStreamWriter is used to write data into a
+///        ImebraBaseStreamOutput object.
+///
+///////////////////////////////////////////////////////////////////////////////
 @interface ImebraStreamWriter: NSObject
 
 #ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
@@ -37,8 +42,20 @@ class StreamWriter;
     -(id)initWithImebraStreamWriter:(imebra::StreamWriter*)pStreamWriter;
 #endif
 
+    /// \brief Initializer.
+    ///
+    /// \param pOutput the ImebraBaseStreamOutput object on which the
+    ///                ImebraStreamWriter will write
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     -(id)initWithOutputStream:(ImebraBaseStreamOutput*)pOutput;
 
+    /// \brief Initializer.
+    ///
+    /// \param pInputOutput the ImebraBaseStreamInputOutput object on which the
+    ///                     ImebraStreamWriter will write
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     -(id)initWithInputOutputStream:(ImebraBaseStreamInputOutput*)pInputOutput;
 
     -(void)dealloc;

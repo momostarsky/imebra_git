@@ -23,6 +23,15 @@ class ReadMemory;
 }
 #endif
 
+///
+/// \brief Manages a read-only buffer of memory.
+///
+/// The buffer of memory is usually associated with a ImebraTag buffer content.
+///
+/// The memory used by ImebraReadMemory and ImebraReadWriteMemory is managed
+/// by ImebraMemoryPool.
+///
+///////////////////////////////////////////////////////////////////////////////
 @interface ImebraReadMemory: NSObject
 
 #ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
@@ -36,12 +45,27 @@ class ReadMemory;
 
     -(id)init;
 
+    /// \brief Construct a buffer of memory and copy the specified content into it.
+    ///
+    /// \param source a pointer to the source data
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     -(id)initWithData:(NSData*)source;
 
+    /// \brief Copies the raw memory content into a NSData object and returns it.
+    ///
+    /// \return a NSData containing a copy of the memory managed by
+    ///         ImebraReadMemory
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     -(NSData*)data;
 
     -(void)dealloc;
 
+    /// \brief Return true if the referenced memory is zero bytes long or hasn't
+    ///        been allocated yet.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     @property (readonly) bool empty;
 
 @end
