@@ -1,5 +1,6 @@
 #include <imebra/imebra.h>
 #include <gtest/gtest.h>
+#include <iostream>
 #include <thread>
 
 namespace imebra
@@ -100,6 +101,36 @@ TEST(tcpTest, prematureClose)
     acceptConnectionAndCloseThread.join();
 }
 
+
+TEST(tcpTest, refusedConnection)
+{
+    TCPActiveAddress connectToAddress("", "20000");
+
+    TCPStream newStream(connectToAddress);
+
+    std::this_thread::sleep_for(std::chrono::seconds(5));
+
+    DataSet dataSet("1.2.840.10008.1.2.1");
+    dataSet.setUnsignedLong(TagId(11, 11), 1, tagVR_t::UL);
+
+    StreamWriter writer(newStream);
+
+    try
+    {
+        CodecFactory::save(dataSet, writer, codecType_t::dicom);
+        EXPECT_TRUE(false);
+    }
+    catch(const TCPConnectionRefused&)
+    {
+        EXPECT_TRUE(true);
+    }
+    catch(const StreamError& e)
+    {
+        std::cout << "Caught wrong exception: " << e.what();
+        EXPECT_TRUE(false);
+    }
+
+}
 
 
 

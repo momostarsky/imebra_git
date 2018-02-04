@@ -106,8 +106,8 @@ long throwTcpException(long socketOperationResult)
     }
 
 #ifdef IMEBRA_WINDOWS
-	int lastError(WSAGetLastError());
-    switch(lastError)
+    int error(WSAGetLastError());
+    switch(error)
     {
 	case WSAETIMEDOUT:
 		IMEBRA_THROW(SocketTimeout, "Timed out");
@@ -164,7 +164,7 @@ long throwTcpException(long socketOperationResult)
         IMEBRA_THROW(TCPAddressAlreadyInUse, "The specified address is already in use.")
     }
 #endif
-    IMEBRA_THROW(StreamError, "Unexpected TCP error");
+    IMEBRA_THROW(StreamError, "Unexpected TCP error (code " << error << ")");
 
     IMEBRA_FUNCTION_END();
 }
