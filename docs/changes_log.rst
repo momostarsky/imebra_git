@@ -16,6 +16,8 @@ Version |release| (this version)
 - Fixes bug #208 (Remove unused static variables from the jpeg codec) as per SOP :ref:`FIXBUG_2`
 - Fixes bug #209 (Move the implementation of the tagDQT class into jpegCodecImageImpl.cpp) as per
   SOP :ref:`FIXBUG_2`
+- Implemented enhancement #210 (Output the TCP error number in the exception for unexpected TCP errors)
+  as per SOP :ref:`DEVENH_2`
 
 Version 4.1.0.1
 ----------------
