@@ -70,6 +70,12 @@ typedef NS_ENUM(unsigned short, ImebraTagVR_t)
     ImebraUT = 0x5554  ///< Unlimited Text
 };
 
+///
+/// \enum ImebraImageQuality_t
+/// \brief This enumeration specifies the quality of the compressed image
+///        when a lossy compression format is used.
+///
+///////////////////////////////////////////////////////////////////////////////
 typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
 {
     ImebraQualityVeryHigh = 0,      ///< the image is saved with very high quality. No subsampling is performed and no quantization

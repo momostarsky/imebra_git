@@ -31,17 +31,17 @@ ImebraDrawBitmapType_t
 
 ImebraAge
 ---------
-.. doxygenstruct:: ImebraAge
+.. doxygenclass:: ImebraAge
    :members:
 
 ImebraDate
 ----------
-.. doxygenstruct:: ImebraDate
+.. doxygenclass:: ImebraDate
    :members:
 
 ImebraVOIDescription
 --------------------
-.. doxygenstruct:: ImebraVOIDescription
+.. doxygenclass:: ImebraVOIDescription
    :members:
 
 ImebraDimseCommandType_t
