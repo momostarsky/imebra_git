@@ -16,6 +16,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #import "imebra_transform.h"
 
+///
+/// \brief ImebraTransformHighBit shifts the input image's values
+///        so they match the high-bit settings of the output image.
+///
+///////////////////////////////////////////////////////////////////////////////
 @interface ImebraTransformHighBit: ImebraTransform
 
     -(id)init;

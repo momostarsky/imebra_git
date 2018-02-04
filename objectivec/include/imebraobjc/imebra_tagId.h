@@ -39,18 +39,49 @@ class TagId;
 
     -(id)init;
 
+    /// \brief Initializer.
+    ///
+    /// \param groupId    the group id
+    /// \param tagId      the tag id
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     -(id)initWithGroup:(unsigned short)groupId tag:(unsigned short)tagId;
 
+    /// \brief Initializer.
+    ///
+    /// \param id an enumeration representing a tag group and id
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     -(id)initWithId:(ImebraTagId_t)tagId;
 
+    /// \brief Initializer.
+    ///
+    /// \param groupId    the group id
+    /// \param groupOrder old DICOM files may have several groups with the same id.
+    ///                   This parameter specifies which of the groups with the
+    ///                   same id must be taken into consideration
+    /// \param tagId      the tag id
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     -(id)initWithGroup:(unsigned short)groupId groupOrder:(unsigned int)groupOrder tag:(unsigned short)tagId;
 
     -(void)dealloc;
 
+    /// \brief Retrieve the group id.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     @property (readonly) unsigned short groupId;
 
+    /// \brief Return the group order. Old DICOM files may have several groups
+    ///        with the same id. This value specifies which of the groups with the
+    ///        same id has been taken into consideration.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     @property (readonly) unsigned int groupOrder;
 
+    /// \brief Retrieve the tag id.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     @property (readonly) unsigned short tagId;
 
 @end

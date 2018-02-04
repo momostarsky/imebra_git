@@ -27,6 +27,11 @@ class TCPStream;
 @class ImebraTCPActiveAddress;
 @class ImebraTCPAddress;
 
+
+///
+/// \brief Represents a TCP stream.
+///
+///////////////////////////////////////////////////////////////////////////////
 @interface ImebraTCPStream: ImebraBaseStreamInputOutput
 
 #ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
@@ -43,6 +48,7 @@ class TCPStream;
     /// the communication happens.
     ///
     /// \param pAddress the address to which the socket has to be connected.
+    /// \param pError   set to a StreamError derived class in case of error
     ///
     ///////////////////////////////////////////////////////////////////////////////
     -(id)initWithAddress:(ImebraTCPActiveAddress*)pAddress error:(NSError**)pError;
@@ -50,6 +56,7 @@ class TCPStream;
     ///
     /// \brief Returns the address of the connected peer.
     ///
+    /// \param pError   set to a StreamError derived class in case of error
     /// \return the address of the connected peer
     ///
     ///////////////////////////////////////////////////////////////////////////////
@@ -58,8 +65,8 @@ class TCPStream;
     ///
     /// \brief Instruct any pending operation to terminate.
     ///
-    /// Current and subsequent read and write operations will fail by throwing
-    /// the exception StreamClosedError.
+    /// Current and subsequent read and write operations will fail by setting
+    /// pError to StreamClosedError.
     ///
     ///////////////////////////////////////////////////////////////////////////////
     -(void) terminate;

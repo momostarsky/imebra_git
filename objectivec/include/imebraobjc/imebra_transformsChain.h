@@ -16,6 +16,13 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #import "imebra_transform.h"
 
+///
+/// \brief ImebraTransformsChain applies a series of ImebraTransforms to the
+///        input image.
+///
+/// Transforms can be added to the chain by using addTransform().
+///
+///////////////////////////////////////////////////////////////////////////////
 @interface ImebraTransformsChain: ImebraTransform
 
     -(id)init;

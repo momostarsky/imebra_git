@@ -26,6 +26,16 @@ class TCPListener;
 @class ImebraTCPPassiveAddress;
 @class ImebraTCPStream;
 
+///
+/// \brief Represents listening TCP socket.
+///
+/// Once allocated the socket starts listening at the address declared in
+/// the constructor.
+///
+/// A loop in the client application should call waitForConnection() in order
+/// to retrieve all the connections accepted by the socket.
+///
+///////////////////////////////////////////////////////////////////////////////
 @interface ImebraTCPListener: NSObject
 
 #ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
@@ -37,12 +47,42 @@ class TCPListener;
 
 #endif
 
+    /// \brief Initializer.
+    ///
+    /// Constructs a listening socket and starts listening for incoming
+    /// connections.
+    ///
+    /// \param address the address to which the listening socket must be bound
+    /// \param pError  set to a NSError derived class in case of error
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     -(id)initWithAddress:(ImebraTCPPassiveAddress*)pAddress error:(NSError**)pError;
 
     -(void)dealloc;
 
+    /// \brief Waits for an incoming connection on the listening socket.
+    ///
+    /// The method blocks until a new connection is accepted or until the socket
+    /// is closed, in which case pError is set to StreamClosedError.
+    ///
+    /// The socket is closed by the ImebraTCPStream's destructor or by a call to
+    /// terminate().
+    ///
+    /// \param pError set to a ImebraStreamError derived class in case of error
+    /// \return a new ImebraTCPStream object bound to the new accepted connection.
+    ///         The returned ImebraTCPStream object will be owned by the caller
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     -(ImebraTCPStream*)waitForConnection:(NSError**)pError;
 
+    ///
+    /// \brief Instructs the listener to terminate any pending action.
+    ///
+    /// If a thread is in the method waitForConnection() then it will receive
+    /// the exception StreamClosedError. StreamClosedError will be also be set
+    /// for each subsequent call to waitForConnection().
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     -(void)terminate;
 
 @end
