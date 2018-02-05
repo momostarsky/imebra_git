@@ -133,6 +133,10 @@ TEST(tcpTest, refusedConnection)
     {
         EXPECT_TRUE(true);
     }
+    catch(const StreamClosedError&)
+    {
+        EXPECT_TRUE(true);
+    }
     catch(const StreamError& e)
     {
         std::cout << "Caught wrong exception: " << e.what();
