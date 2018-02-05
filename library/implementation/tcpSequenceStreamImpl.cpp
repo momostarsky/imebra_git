@@ -111,6 +111,8 @@ long throwTcpException(long socketOperationResult)
     {
 	case WSAETIMEDOUT:
 		IMEBRA_THROW(SocketTimeout, "Timed out");
+    case WSAEHOSTDOWN:
+        IMEBRA_THROW(SocketTimeout, "Host is down");
     case WSAECONNREFUSED:
         IMEBRA_THROW(TCPConnectionRefused, "Connection refused");
     case WSAENOBUFS:
@@ -130,6 +132,7 @@ long throwTcpException(long socketOperationResult)
 		IMEBRA_THROW(SocketTimeout, "Timed out");
     case EPIPE:
 	case WSAECONNABORTED:
+    case WSAENETRESET:
         IMEBRA_THROW(StreamClosedError, "Socket closed");
     case WSAEADDRINUSE:
         IMEBRA_THROW(TCPAddressAlreadyInUse, "The specified address is already in use.");
@@ -141,6 +144,8 @@ long throwTcpException(long socketOperationResult)
     {
     case ECONNREFUSED:
         IMEBRA_THROW(TCPConnectionRefused, "Connection refused")
+    case EHOSTDOWN:
+        IMEBRA_THROW(TCPConnectionRefused, "The host is down")
     case ENOBUFS:
     case ENOMEM:
     case EMFILE:
@@ -155,10 +160,13 @@ long throwTcpException(long socketOperationResult)
         IMEBRA_THROW(std::logic_error, "Invalid argument");
     case ENOTSOCK:
         IMEBRA_THROW(std::logic_error, "Operation on invalid socket");
+    case ENOTCONN:
     case EWOULDBLOCK:
     case EINTR:
         IMEBRA_THROW(SocketTimeout, "Timed out");
     case EPIPE:
+    case ECONNRESET:
+    case ECONNABORTED:
         IMEBRA_THROW(StreamClosedError, "Socket closed");
     case EADDRINUSE:
         IMEBRA_THROW(TCPAddressAlreadyInUse, "The specified address is already in use.")
