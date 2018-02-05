@@ -27,6 +27,10 @@ namespace imebra
 }
 #endif
 
+/// \enum ImebraDirectoryRecordType_t
+/// \brief Specifies the directory item's type.
+///
+///////////////////////////////////////////////////////////////////////////////
 typedef NS_ENUM(unsigned int, ImebraDirectoryRecordType_t)
 {
     ImebraDicomDirPatient,

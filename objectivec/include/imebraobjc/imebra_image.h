@@ -23,14 +23,25 @@ namespace imebra
 }
 #endif
 
+/// \enum ImebraBitDepth_t
+/// \brief Defines the size of the memory allocated for each
+///        pixel's color component and its representation (signed/unsigned).
+///
+/// This enumeration does not specify the highest bit used:
+/// in order to retrieve the highest used bit call Image::getHighBit().
+///
+/// The lower bit of the enumerations is 1 if it represents a signed depth,
+/// 0 if it represents an unsigned depth,
+///
+///////////////////////////////////////////////////////////////////////////////
 typedef NS_ENUM(unsigned int, ImebraBitDepth_t)
 {
-    ImebraBitDepthU8 = 0,
-    ImebraBitDepthS8 = 1,
-    ImebraBitDepthU16 = 2,
-    ImebraBitDepthS16 = 3,
-    ImebraBitDepthU32 = 4,
-    ImebraBitDepthS32 = 5
+    ImebraBitDepthU8 = 0,  ///< 8 bit integer, unsigned
+    ImebraBitDepthS8 = 1,  ///< 8 bit integer, signed
+    ImebraBitDepthU16 = 2, ///< 16 bit integer, unsigned
+    ImebraBitDepthS16 = 3, ///< 16 bit integer, signed
+    ImebraBitDepthU32 = 4, ///< 32 bit integer, unsigned
+    ImebraBitDepthS32 = 5  ///< 32 bit integer, signed
 };
 
 @class ImebraReadingDataHandlerNumeric;

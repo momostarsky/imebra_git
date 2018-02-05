@@ -24,7 +24,7 @@ struct Date;
 }
 #endif
 
-///
+/// \enum ImebraAgeUnit_t
 /// \brief Used by ImebraAge::setAge() and ImebraAge::getAge() to specify the
 ///        unit of the age value.
 ///

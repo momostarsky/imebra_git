@@ -32,6 +32,10 @@ class DimseService;
 }
 #endif
 
+/// \enum
+/// \brief DIMSE command types.
+///
+///////////////////////////////////////////////////////////////////////////////
 typedef NS_ENUM(unsigned short, ImebraDimseCommandType_t)
 {
     ImebraDimseCStore = 0x1,         ///< C-STORE

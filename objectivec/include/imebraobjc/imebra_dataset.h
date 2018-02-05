@@ -34,6 +34,10 @@ namespace imebra
 @class ImebraTag;
 @class ImebraTagId;
 
+/// \enum ImebraTagVR_t
+/// \brief Enumerates the DICOM VRs (data types).
+///
+///////////////////////////////////////////////////////////////////////////////
 typedef NS_ENUM(unsigned short, ImebraTagVR_t)
 {
     ImebraAE = 0x4145, ///< Application Entity

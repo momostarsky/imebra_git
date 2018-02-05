@@ -20,6 +20,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
 @class ImebraStreamReader;
 @class ImebraStreamWriter;
 
+
+/// \enum ImebraCodecType_t
+/// \brief Defines the data stream & images codec.
+///
+///////////////////////////////////////////////////////////////////////////////
 typedef NS_ENUM(unsigned short, ImebraCodecType_t)
 {
     ImebraCodecTypeDicom = 0, ///< DICOM codec
