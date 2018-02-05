@@ -69,7 +69,7 @@ class IMEBRA_API WritingDataHandler
     friend class WritingDataHandlerNumeric;
 
 private:
-    WritingDataHandler(std::shared_ptr<imebra::implementation::handlers::writingDataHandler> pDataHandler);
+    explicit WritingDataHandler(std::shared_ptr<imebra::implementation::handlers::writingDataHandler> pDataHandler);
 #endif
 
 public:

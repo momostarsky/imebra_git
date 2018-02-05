@@ -50,7 +50,7 @@ Imebra
 
 .. toctree::
    :maxdepth: 3
-   :caption: API
+   :caption: C++ API
 
    definition_classes
    loading_saving_classes
@@ -65,7 +65,25 @@ Imebra
    transforms_classes
    dicom_dictionary_classes
    exception_classes
-   objectivec_classes
+
+.. toctree::
+   :maxdepth: 3
+   :caption: Objective-C API
+
+   objc_definition_classes
+   objc_loading_saving_classes
+   objc_pipe_classes
+   objc_tcp_classes
+   objc_dicom_dataset_tag_classes
+   objc_imaging_classes
+   objc_dicomdir_classes
+   objc_acse_classes
+   objc_dimse_classes
+   objc_memory_management_classes
+   objc_transforms_classes
+   objc_dicom_dictionary_classes
+   objc_exception_classes
+
 
 .. _build-distribution:
 

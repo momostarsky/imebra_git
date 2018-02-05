@@ -31,6 +31,9 @@
         <copy todir="${build_release}/library">
             <fileset dir="library" />
         </copy>
+        <copy todir="${build_release}/objectivec">
+            <fileset dir="objectivec" />
+        </copy>
         <copy todir="${build_release}/examples">
             <fileset dir="examples" />
         </copy>
@@ -197,6 +200,9 @@ Slovenia
         <copy todir="${source_distribution}/library">
                 <fileset dir="${build_release}/library" />
         </copy>
+        <copy todir="${source_distribution}/objectivec">
+                <fileset dir="${build_release}/objectivec" />
+        </copy>
         <copy todir="${source_distribution}/examples">
                 <fileset dir="${build_release}/examples" />
         </copy>
@@ -218,19 +224,6 @@ Slovenia
 
     <!-- Build the test cases -->
     <target name="build_test_cases" depends="create_source_distribution, create_test_dir" description="Build the Imebra test cases">
-        <property name="gtest_source" value="/usr/src/gtest" />
-        <mkdir dir="${build_tests}/gtest" />
-        <copy todir="${build_tests}/gtest">
-            <fileset dir="${gtest_source}" />
-        </copy>
-        <delete file="${build_tests}/gtest/CMakeCache.txt" />
-        <exec executable="cmake" failonerror="true" dir="${build_tests}/gtest">
-            <arg value="--verbose"/>
-            <arg value="-DCMAKE_BUILD_TYPE=DEBUG" />
-            <arg path="${build_tests}/gtest"/>
-        </exec>
-        <exec executable="make" failonerror="true" dir="${build_tests}/gtest" />
-
         <exec executable="cmake" failonerror="true" dir="${build_library_for_tests}">
             <arg value="--verbose"/>
             <arg value="-DCMAKE_BUILD_TYPE=DEBUG" />
@@ -277,6 +270,8 @@ Slovenia
             <arg path="${build_library_for_tests}/test.info" />
             <arg path="${build_release}/library/*/*.*" />
             <arg path="${build_release}/library/*/*/*.*" />
+            <arg path="${build_release}/objectivec/*/*.*" />
+            <arg path="${build_release}/objectivec/*/*/*.*" />
             <arg value="--output-file" />
             <arg path="${build_library_for_tests}/extracted.info" />
         </exec>

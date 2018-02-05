@@ -57,7 +57,7 @@ public:
     ///                is retrieved
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    ModalityVOILUT(const DataSet& dataset);
+    explicit ModalityVOILUT(const DataSet& dataset);
 
     virtual ~ModalityVOILUT();
 };

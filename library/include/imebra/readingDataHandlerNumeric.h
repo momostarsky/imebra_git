@@ -68,7 +68,7 @@ public:
     friend class WritingDataHandlerNumeric;
 
 private:
-    ReadingDataHandlerNumeric(std::shared_ptr<imebra::implementation::handlers::readingDataHandlerNumericBase> pDataHandler);
+    explicit ReadingDataHandlerNumeric(std::shared_ptr<imebra::implementation::handlers::readingDataHandlerNumericBase> pDataHandler);
 #endif
 
 public:

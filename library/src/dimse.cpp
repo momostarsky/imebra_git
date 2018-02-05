@@ -1554,100 +1554,32 @@ DimseCommand* DimseService::getCommand()
 
     std::shared_ptr<implementation::dimseNCommand> pCommand(m_pDimseService->getCommand());
 
+    switch(pCommand->getCommandType())
     {
-        std::shared_ptr<implementation::cStoreCommand> pStoreCommand(std::dynamic_pointer_cast<implementation::cStoreCommand>(pCommand));
-        if(pStoreCommand != nullptr)
-        {
-            return new CStoreCommand(pStoreCommand);
-        }
-    }
-
-    {
-        std::shared_ptr<implementation::cGetCommand> pGetCommand(std::dynamic_pointer_cast<implementation::cGetCommand>(pCommand));
-        if(pGetCommand != nullptr)
-        {
-            return new CGetCommand(pGetCommand);
-        }
-    }
-
-    {
-        std::shared_ptr<implementation::cMoveCommand> pMoveCommand(std::dynamic_pointer_cast<implementation::cMoveCommand>(pCommand));
-        if(pMoveCommand != nullptr)
-        {
-            return new CMoveCommand(pMoveCommand);
-        }
-    }
-
-    {
-        std::shared_ptr<implementation::cFindCommand> pFindCommand(std::dynamic_pointer_cast<implementation::cFindCommand>(pCommand));
-        if(pFindCommand != nullptr)
-        {
-            return new CFindCommand(pFindCommand);
-        }
-    }
-
-    {
-        std::shared_ptr<implementation::cEchoCommand> pEchoCommand(std::dynamic_pointer_cast<implementation::cEchoCommand>(pCommand));
-        if(pEchoCommand != nullptr)
-        {
-            return new CEchoCommand(pEchoCommand);
-        }
-    }
-
-    {
-        std::shared_ptr<implementation::cCancelCommand> pCancelCommand(std::dynamic_pointer_cast<implementation::cCancelCommand>(pCommand));
-        if(pCancelCommand != nullptr)
-        {
-            return new CCancelCommand(pCancelCommand);
-        }
-    }
-
-    {
-        std::shared_ptr<implementation::nEventReportCommand> pEventReportCommand(std::dynamic_pointer_cast<implementation::nEventReportCommand>(pCommand));
-        if(pEventReportCommand != nullptr)
-        {
-            return new NEventReportCommand(pEventReportCommand);
-        }
-    }
-
-    {
-        std::shared_ptr<implementation::nGetCommand> pGetCommand(std::dynamic_pointer_cast<implementation::nGetCommand>(pCommand));
-        if(pGetCommand != nullptr)
-        {
-            return new NGetCommand(pGetCommand);
-        }
-    }
-
-    {
-        std::shared_ptr<implementation::nSetCommand> pSetCommand(std::dynamic_pointer_cast<implementation::nSetCommand>(pCommand));
-        if(pSetCommand != nullptr)
-        {
-            return new NSetCommand(pSetCommand);
-        }
-    }
-
-    {
-        std::shared_ptr<implementation::nActionCommand> pActionCommand(std::dynamic_pointer_cast<implementation::nActionCommand>(pCommand));
-        if(pActionCommand != nullptr)
-        {
-            return new NActionCommand(pActionCommand);
-        }
-    }
-
-    {
-        std::shared_ptr<implementation::nCreateCommand> pCreateCommand(std::dynamic_pointer_cast<implementation::nCreateCommand>(pCommand));
-        if(pCreateCommand != nullptr)
-        {
-            return new NCreateCommand(pCreateCommand);
-        }
-    }
-
-    {
-        std::shared_ptr<implementation::nDeleteCommand> pDeleteCommand(std::dynamic_pointer_cast<implementation::nDeleteCommand>(pCommand));
-        if(pDeleteCommand != nullptr)
-        {
-            return new NDeleteCommand(pDeleteCommand);
-        }
+    case dimseCommandType_t::cStore:
+        return new CStoreCommand(std::dynamic_pointer_cast<implementation::cStoreCommand>(pCommand));
+    case dimseCommandType_t::cGet:
+        return new CGetCommand(std::dynamic_pointer_cast<implementation::cGetCommand>(pCommand));
+    case dimseCommandType_t::cMove:
+        return new CMoveCommand(std::dynamic_pointer_cast<implementation::cMoveCommand>(pCommand));
+    case dimseCommandType_t::cFind:
+        return new CFindCommand(std::dynamic_pointer_cast<implementation::cFindCommand>(pCommand));
+    case dimseCommandType_t::cEcho:
+        return new CEchoCommand(std::dynamic_pointer_cast<implementation::cEchoCommand>(pCommand));
+    case dimseCommandType_t::cCancel:
+        return new CCancelCommand(std::dynamic_pointer_cast<implementation::cCancelCommand>(pCommand));
+    case dimseCommandType_t::nEventReport:
+        return new NEventReportCommand(std::dynamic_pointer_cast<implementation::nEventReportCommand>(pCommand));
+    case dimseCommandType_t::nGet:
+        return new NGetCommand(std::dynamic_pointer_cast<implementation::nGetCommand>(pCommand));
+    case dimseCommandType_t::nSet:
+        return new NSetCommand(std::dynamic_pointer_cast<implementation::nSetCommand>(pCommand));
+    case dimseCommandType_t::nAction:
+        return new NActionCommand(std::dynamic_pointer_cast<implementation::nActionCommand>(pCommand));
+    case dimseCommandType_t::nCreate:
+        return new NCreateCommand(std::dynamic_pointer_cast<implementation::nCreateCommand>(pCommand));
+    case dimseCommandType_t::nDelete:
+        return new NDeleteCommand(std::dynamic_pointer_cast<implementation::nDeleteCommand>(pCommand));
     }
 
     IMEBRA_THROW(std::logic_error, "Should have received a valid command from the implementation layer");
