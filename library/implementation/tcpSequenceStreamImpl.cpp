@@ -490,7 +490,7 @@ short tcpBaseSocket::poll(short flags)
         return 0;
     }
 
-    if((fds[0].revents & (POLLHUP | POLLERR)) != 0)
+    if((fds[0].revents & POLLHUP) != 0)
     {
         IMEBRA_THROW(StreamClosedError, "Stream closed");
     }
@@ -509,7 +509,8 @@ short tcpBaseSocket::poll(short flags)
 ///////////////////////////////////////////////////////////
 tcpSequenceStream::tcpSequenceStream(int tcpSocket, std::shared_ptr<tcpAddress> pAddress):
     tcpBaseSocket(tcpSocket),
-    m_pAddress(pAddress)
+    m_pAddress(pAddress),
+    m_bConnectionRealized(false)
 {
 }
 
@@ -570,9 +571,6 @@ size_t tcpSequenceStream::read(std::uint8_t* pBuffer, size_t bufferLength)
 
     tcpTerminateWaiting waiting(*this);
 
-    // A peer shutdown causes the reception of a zero
-    // bytes buffer
-    ///////////////////////////////////////////////////////////
     if(bufferLength == 0)
     {
         isTerminating();
@@ -585,6 +583,19 @@ size_t tcpSequenceStream::read(std::uint8_t* pBuffer, size_t bufferLength)
     for(;;)
     {
         isTerminating();
+
+        // Wait for connection
+        if(!m_bConnectionRealized)
+        {
+            if((poll(POLLOUT) & POLLOUT) != 0)
+            {
+                m_bConnectionRealized = true;
+            }
+            else
+            {
+                continue;
+            }
+        }
 
         if((poll(POLLIN) & POLLIN) != 0)
         {
@@ -631,6 +642,7 @@ void tcpSequenceStream::write(const std::uint8_t* pBuffer, size_t bufferLength)
 
         if((poll(POLLOUT) & POLLOUT) != 0)
         {
+            m_bConnectionRealized = true;
 
 #if (__linux__ == 1)
             long sentBytes = throwTcpException((long)send(m_socket, (const char*)(pBuffer + totalSentBytes), bufferLength - totalSentBytes, MSG_NOSIGNAL));

@@ -244,6 +244,8 @@ public:
 private:
 
     const std::shared_ptr<tcpAddress> m_pAddress;
+
+    std::atomic<bool> m_bConnectionRealized;
 };
 
 
