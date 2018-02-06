@@ -581,7 +581,7 @@ size_t tcpSequenceStream::read(std::uint8_t* pBuffer, size_t bufferLength)
     {
         isTerminating();
 
-        if((poll(POLLIN | POLLHUP) & POLLIN) != 0)
+        if((poll(POLLIN) & POLLIN) != 0)
         {
             long receivedBytes(throwTcpException(recv(m_socket, (char*)pBuffer, bufferLength, 0)));
             if(receivedBytes == 0)
@@ -624,7 +624,7 @@ void tcpSequenceStream::write(const std::uint8_t* pBuffer, size_t bufferLength)
     {
         isTerminating();
 
-        if((poll(POLLOUT | POLLHUP) & POLLOUT) != 0)
+        if((poll(POLLOUT) & POLLOUT) != 0)
         {
 
 #if (__linux__ == 1)

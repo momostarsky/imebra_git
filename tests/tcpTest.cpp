@@ -30,7 +30,7 @@ void sendDataThread(unsigned long maxConnections, std::string port)
     }
     catch(const std::exception& e)
     {
-        std::cout << "Errot in sending thread" << std::endl;
+        std::cout << "Error in sending thread" << std::endl;
         std::cout << e.what() << std::endl;
         std::cout << imebra::ExceptionsManager::getExceptionTrace() << std::endl;
     }
