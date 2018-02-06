@@ -30,6 +30,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <sys/socket.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <poll.h>
 
 #endif
 
@@ -465,6 +466,37 @@ void tcpBaseSocket::isTerminating()
 }
 
 
+short tcpBaseSocket::poll(short flags)
+{
+    IMEBRA_FUNCTION_START();
+
+#ifdef IMEBRA_WINDOWS
+    WSAPOLLFD fds[1];
+#else
+    pollfd fds[1];
+#endif
+    fds[0].fd = m_socket;
+    fds[0].events = flags;
+    fds[0].revents = 0;
+
+#ifdef IMEBRA_WINDOWS
+    long pollResult = throwTcpException(::WSAPoll(fds, 1, IMEBRA_TCP_TIMEOUT_MS));
+#else
+    long pollResult = throwTcpException(::poll(fds, 1, IMEBRA_TCP_TIMEOUT_MS));
+#endif
+
+    if(pollResult == 0)
+    {
+        return 0;
+    }
+
+    return fds[0].revents;
+
+    IMEBRA_FUNCTION_END();
+
+}
+
+
 ///////////////////////////////////////////////////////////
 //
 // TCP I/O class constructors
@@ -474,12 +506,6 @@ tcpSequenceStream::tcpSequenceStream(int tcpSocket, std::shared_ptr<tcpAddress> 
     tcpBaseSocket(tcpSocket),
     m_pAddress(pAddress)
 {
-    IMEBRA_FUNCTION_START();
-
-    // Enable blocking mode
-    setBlockingMode(true);
-
-    IMEBRA_FUNCTION_END();
 }
 
 tcpSequenceStream::tcpSequenceStream(std::shared_ptr<tcpAddress> pAddress):
@@ -506,8 +532,6 @@ tcpSequenceStream::tcpSequenceStream(std::shared_ptr<tcpAddress> pAddress):
 #else
     throwTcpException(connect(m_socket, pAddress->getSockAddr(), pAddress->getSockAddrLen()));
 #endif
-
-    setBlockingMode(true);
 
     IMEBRA_FUNCTION_END();
 }
@@ -557,7 +581,7 @@ size_t tcpSequenceStream::read(std::uint8_t* pBuffer, size_t bufferLength)
     {
         isTerminating();
 
-        try
+        if((poll(POLLIN | POLLHUP) & POLLIN) != 0)
         {
             long receivedBytes(throwTcpException(recv(m_socket, (char*)pBuffer, bufferLength, 0)));
             if(receivedBytes == 0)
@@ -568,10 +592,6 @@ size_t tcpSequenceStream::read(std::uint8_t* pBuffer, size_t bufferLength)
             {
                 return (size_t)receivedBytes;
             }
-        }
-        catch(const SocketTimeout&)
-        {
-            // Socket time out. Retry
         }
     }
 
@@ -602,21 +622,17 @@ void tcpSequenceStream::write(const std::uint8_t* pBuffer, size_t bufferLength)
     ///////////////////////////////////////////////////////////
     for(size_t totalSentBytes(0); totalSentBytes != bufferLength; /* incremented in the loop */)
     {
-        try
+        isTerminating();
+
+        if((poll(POLLOUT | POLLHUP) & POLLOUT) != 0)
         {
-            isTerminating();
 
 #if (__linux__ == 1)
             long sentBytes = throwTcpException((long)send(m_socket, (const char*)(pBuffer + totalSentBytes), bufferLength - totalSentBytes, MSG_NOSIGNAL));
 #else
             long sentBytes = throwTcpException((long)send(m_socket, (const char*)(pBuffer + totalSentBytes), bufferLength - totalSentBytes, 0));
 #endif
-
             totalSentBytes += (size_t)sentBytes;
-        }
-        catch(const SocketTimeout&)
-        {
-            // Socket timeout. Retry
         }
     }
 

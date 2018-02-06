@@ -149,6 +149,17 @@ public:
     void isTerminating();
 
     ///
+    /// \brief Execute a poll on the socket for the specified
+    ///        flags. The timeout is defined by
+    ///        IMEBRA_TCP_TIMEOUT_MS.
+    ///
+    /// \param flags flags to poll
+    /// \return polled flags
+    ///
+    ///////////////////////////////////////////////////////////
+    short poll(short flags);
+
+    ///
     /// \brief Allocate this class at the beginning of a
     ///        blocking method.
     ///
