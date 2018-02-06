@@ -62,7 +62,7 @@ TEST(tcpTest, sendReceive)
     }
     catch(const std::exception& e)
     {
-        std::cout << "Errot in sending sendreceive test" << std::endl;
+        std::cout << "Error in sending sendreceive test" << std::endl;
         std::cout << e.what() << std::endl;
         std::cout << imebra::ExceptionsManager::getExceptionTrace() << std::endl;
         throw;
@@ -139,7 +139,7 @@ TEST(tcpTest, refusedConnection)
         CodecFactory::save(dataSet, writer, codecType_t::dicom);
         EXPECT_TRUE(false);
     }
-    catch(const TCPConnectionRefused&)
+    catch(const StreamClosedError&)
     {
         EXPECT_TRUE(true);
     }

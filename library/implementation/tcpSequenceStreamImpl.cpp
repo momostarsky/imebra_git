@@ -490,6 +490,11 @@ short tcpBaseSocket::poll(short flags)
         return 0;
     }
 
+    if((fds[0].revents & (POLLHUP | POLLERR)) != 0)
+    {
+        IMEBRA_THROW(StreamClosedError, "Stream closed");
+    }
+
     return fds[0].revents;
 
     IMEBRA_FUNCTION_END();

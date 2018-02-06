@@ -37,7 +37,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "baseSequenceStreamImpl.h"
 
 #ifndef IMEBRA_TCP_TIMEOUT_MS
-#define IMEBRA_TCP_TIMEOUT_MS 500
+#define IMEBRA_TCP_TIMEOUT_MS 1000
 #endif
 
 namespace imebra
