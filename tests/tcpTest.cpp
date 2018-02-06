@@ -13,17 +13,26 @@ void sendDataThread(unsigned long maxConnections, std::string port)
 {
     TCPActiveAddress connectToAddress("", port);
 
-    for(unsigned long connectionNumber(0); connectionNumber != maxConnections; ++connectionNumber)
+    try
     {
-        TCPStream newStream(connectToAddress);
+        for(unsigned long connectionNumber(0); connectionNumber != maxConnections; ++connectionNumber)
+        {
+            TCPStream newStream(connectToAddress);
 
-        DataSet dataSet("1.2.840.10008.1.2.1");
-        dataSet.setUnsignedLong(TagId(11, 11), connectionNumber, tagVR_t::UL);
+            DataSet dataSet("1.2.840.10008.1.2.1");
+            dataSet.setUnsignedLong(TagId(11, 11), connectionNumber, tagVR_t::UL);
 
-        std::this_thread::sleep_for(std::chrono::seconds(5));
+            std::this_thread::sleep_for(std::chrono::seconds(5));
 
-        StreamWriter writer(newStream);
-        CodecFactory::save(dataSet, writer, codecType_t::dicom);
+            StreamWriter writer(newStream);
+            CodecFactory::save(dataSet, writer, codecType_t::dicom);
+        }
+    }
+    catch(const std::exception& e)
+    {
+        std::cout << "Errot in sending thread" << std::endl;
+        std::cout << e.what() << std::endl;
+        std::cout << imebra::ExceptionsManager::getExceptionTrace() << std::endl;
     }
 }
 
@@ -39,14 +48,24 @@ TEST(tcpTest, sendReceive)
 
     std::thread sendDataThread(imebra::tests::sendDataThread, maxConnections, listeningPort);
 
-    for(unsigned long connectionNumber(0); connectionNumber != maxConnections; ++connectionNumber)
+    try
     {
-        std::unique_ptr<TCPStream> newStream(listener.waitForConnection());
+        for(unsigned long connectionNumber(0); connectionNumber != maxConnections; ++connectionNumber)
+        {
+            std::unique_ptr<TCPStream> newStream(listener.waitForConnection());
 
-        StreamReader reader(*newStream);
-        std::unique_ptr<DataSet> pDataSet(CodecFactory::load(reader));
+            StreamReader reader(*newStream);
+            std::unique_ptr<DataSet> pDataSet(CodecFactory::load(reader));
 
-        ASSERT_EQ(connectionNumber, pDataSet->getUnsignedLong(TagId(11, 11), 0));
+            ASSERT_EQ(connectionNumber, pDataSet->getUnsignedLong(TagId(11, 11), 0));
+        }
+    }
+    catch(const std::exception& e)
+    {
+        std::cout << "Errot in sending sendreceive test" << std::endl;
+        std::cout << e.what() << std::endl;
+        std::cout << imebra::ExceptionsManager::getExceptionTrace() << std::endl;
+        throw;
     }
 
     sendDataThread.join();
