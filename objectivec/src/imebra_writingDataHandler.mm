@@ -15,12 +15,12 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @implementation ImebraWritingDataHandler
 
--(id)initWithImebraWritingDataHandler:(imebra::WritingDataHandler*)pWritingDataHandler
+-(id)initWithImebraWritingDataHandler:(void*)pWritingDataHandler
 {
     self = [super init];
     if(self)
     {
-        m_pDataHandler = pWritingDataHandler;
+        m_pWritingDataHandlerVoidPointer = pWritingDataHandler;
     }
     else
     {
@@ -32,7 +32,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 -(void)dealloc
 {
     NSLog(@"Writer deallocated");
-    delete m_pDataHandler;
+    delete m_pWritingDataHandler;
 #if !__has_feature(objc_arc)
     [super dealloc];
 #endif
@@ -40,19 +40,19 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(unsigned int)size
 {
-    return (unsigned int)m_pDataHandler->getSize();
+    return (unsigned int)m_pWritingDataHandler->getSize();
 }
 
 -(void)setSize:(unsigned int)size
 {
-    m_pDataHandler->setSize(size);
+    m_pWritingDataHandler->setSize(size);
 }
 
 -(void) setSignedLong:(unsigned int)index withValue:(int)value error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    m_pDataHandler->setSignedLong(index, value);
+    m_pWritingDataHandler->setSignedLong(index, value);
 
     OBJC_IMEBRA_FUNCTION_END();
 }
@@ -61,7 +61,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    m_pDataHandler->setUnsignedLong(index, value);
+    m_pWritingDataHandler->setUnsignedLong(index, value);
 
     OBJC_IMEBRA_FUNCTION_END();
 }
@@ -70,7 +70,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    m_pDataHandler->setDouble(index, value);
+    m_pWritingDataHandler->setDouble(index, value);
 
     OBJC_IMEBRA_FUNCTION_END();
 }
@@ -79,7 +79,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    m_pDataHandler->setString(index, imebra::NSStringToString(value));
+    m_pWritingDataHandler->setString(index, imebra::NSStringToString(value));
 
     OBJC_IMEBRA_FUNCTION_END();
 }
@@ -88,7 +88,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    m_pDataHandler->setDate(index, *(imebra::Date*)(value->m_pDate));
+    m_pWritingDataHandler->setDate(index, *(imebra::Date*)(value->m_pDate));
 
     OBJC_IMEBRA_FUNCTION_END();
 }
@@ -97,7 +97,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    m_pDataHandler->setAge(index, *(imebra::Age*)(value->m_pAge));
+    m_pWritingDataHandler->setAge(index, *(imebra::Age*)(value->m_pAge));
 
     OBJC_IMEBRA_FUNCTION_END();
 }

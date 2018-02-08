@@ -20,7 +20,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     self = [super init];
     if(self)
     {
-        self->m_pDataHandler = pReadingDataHandler;
+        m_pReadingDataHandler = pReadingDataHandler;
     }
     else
     {
@@ -32,7 +32,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(void)dealloc
 {
-    delete self->m_pDataHandler;
+    delete m_pReadingDataHandler;
 #if !__has_feature(objc_arc)
     [super dealloc];
 #endif
@@ -40,14 +40,14 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(unsigned int) size
 {
-    return (unsigned int)self->m_pDataHandler->getSize();
+    return (unsigned int)m_pReadingDataHandler->getSize();
 }
 
 -(int) getSignedLong:(unsigned int)index error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return self->m_pDataHandler->getSignedLong(index);
+    return m_pReadingDataHandler->getSignedLong(index);
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(0);
 }
@@ -56,7 +56,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return self->m_pDataHandler->getUnsignedLong(index);
+    return m_pReadingDataHandler->getUnsignedLong(index);
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(0);
 }
@@ -65,7 +65,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return self->m_pDataHandler->getDouble(index);
+    return m_pReadingDataHandler->getDouble(index);
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(0.0f);
 }
@@ -74,7 +74,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return imebra::stringToNSString(self->m_pDataHandler->getString(index));
+    return imebra::stringToNSString(m_pReadingDataHandler->getString(index));
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -83,7 +83,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    imebra::Date date(self->m_pDataHandler->getDate(index));
+    imebra::Date date(m_pReadingDataHandler->getDate(index));
     return [[ImebraDate alloc] initWithYear:date.year
             month:date.month
             day:date.day
@@ -101,7 +101,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    imebra::Age age(self->m_pDataHandler->getAge(index));
+    imebra::Age age(m_pReadingDataHandler->getAge(index));
     return [[ImebraAge alloc] initWithAge:age.age
             units:(ImebraAgeUnit_t)age.units];
 

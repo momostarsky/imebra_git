@@ -50,7 +50,7 @@ class ReadingDataHandler;
 #ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
 {
     @public
-    imebra::ReadingDataHandler* m_pDataHandler;
+    imebra::ReadingDataHandler* m_pReadingDataHandler;
 }
 
     -(id)initWithImebraReadingDataHandler:(imebra::ReadingDataHandler*)pReadingDataHandler;

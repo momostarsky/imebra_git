@@ -16,13 +16,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #import <Foundation/Foundation.h>
 
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
-namespace imebra
-{
-class WritingDataHandler;
-}
-#endif
-
 @class ImebraDate;
 @class ImebraAge;
 
@@ -45,15 +38,12 @@ class WritingDataHandler;
 ///
 ///////////////////////////////////////////////////////////////////////////////
 @interface ImebraWritingDataHandler: NSObject
-
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
 {
     @public
-    imebra::WritingDataHandler* m_pDataHandler;
+    void* m_pWritingDataHandlerVoidPointer;
 }
 
-    -(id)initWithImebraWritingDataHandler:(imebra::WritingDataHandler*)pWritingDataHandler;
-#endif
+    -(id)initWithImebraWritingDataHandler:(void*)pWritingDataHandler;
 
     -(void)dealloc;
 

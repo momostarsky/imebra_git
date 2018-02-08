@@ -6,6 +6,9 @@
 #import "imebra_strings.h"
 #import <imebraobjc/imebra.h>
 
+#define castWritingDataHandler(dataHandler) ((imebra::WritingDataHandler*)dataHandler)
+#define m_pWritingDataHandler castWritingDataHandler(m_pWritingDataHandlerVoidPointer)
+
 #endif // imebraObjcBridgeStructures__INCLUDED_
 
 

@@ -19,7 +19,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraReadMemory alloc] initWithImebraReadMemory:((imebra::ReadingDataHandlerNumeric*)m_pDataHandler)->getMemory()];
+    return [[ImebraReadMemory alloc] initWithImebraReadMemory:((imebra::ReadingDataHandlerNumeric*)m_pReadingDataHandler)->getMemory()];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -28,24 +28,24 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    ((imebra::ReadingDataHandlerNumeric*)m_pDataHandler)->copyTo(*((imebra::WritingDataHandlerNumeric*)destination->m_pDataHandler));
+    ((imebra::ReadingDataHandlerNumeric*)m_pReadingDataHandler)->copyTo(*((imebra::WritingDataHandlerNumeric*)destination->m_pWritingDataHandlerVoidPointer));
 
     OBJC_IMEBRA_FUNCTION_END();
 }
 
 -(unsigned int) unitSize
 {
-    return (unsigned int)((imebra::ReadingDataHandlerNumeric*)m_pDataHandler)->getUnitSize();
+    return (unsigned int)((imebra::ReadingDataHandlerNumeric*)m_pReadingDataHandler)->getUnitSize();
 }
 
 -(bool) isSigned
 {
-    return ((imebra::ReadingDataHandlerNumeric*)m_pDataHandler)->isSigned();
+    return ((imebra::ReadingDataHandlerNumeric*)m_pReadingDataHandler)->isSigned();
 }
 
 -(bool) isFloat
 {
-    return ((imebra::ReadingDataHandlerNumeric*)m_pDataHandler)->isFloat();
+    return ((imebra::ReadingDataHandlerNumeric*)m_pReadingDataHandler)->isFloat();
 }
 
 @end
