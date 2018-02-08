@@ -31,7 +31,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(void)dealloc
 {
-    NSLog(@"Writer deallocated");
     delete m_pWritingDataHandler;
 #if !__has_feature(objc_arc)
     [super dealloc];
@@ -129,7 +128,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
     OBJC_IMEBRA_FUNCTION_END();
 }
-
 
 -(void) commit
 {
