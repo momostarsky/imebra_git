@@ -150,7 +150,7 @@ TEST(objectivec, image)
     @autoreleasepool
 #endif
     {
-        ImebraWritingDataHandlerNumeric* writingDataHandler = [pImage getWritingDataHandler:&error];
+        ImebraWritingDataHandler* writingDataHandler = [pImage getWritingDataHandler:&error];
         for(unsigned int pixel(0); pixel != 25; ++pixel)
         {
             [writingDataHandler setUnsignedLong:pixel withValue:pixel error:&error];

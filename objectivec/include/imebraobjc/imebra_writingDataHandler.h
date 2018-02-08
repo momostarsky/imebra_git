@@ -33,8 +33,12 @@ If you do not want to be bound by the GPL terms (such as the requirement
 ///
 /// The ImebraWritingDataHandler object always works on a new and clean
 /// memory area.
-/// The buffer's memory is replaced by the ImebraWritingDataHandler memory
-/// when the data handler is destroyed (the reference counter reaches zero).
+/// Once the data has been written into the data handler then call commit()
+/// in order to commit the data.
+/// The data is committed also when the data handler is deallocated.
+///
+/// Once the data has been committed then the data handler does not respond
+/// to further data modifications.
 ///
 ///////////////////////////////////////////////////////////////////////////////
 @interface ImebraWritingDataHandler: NSObject
@@ -139,6 +143,12 @@ If you do not want to be bound by the GPL terms (such as the requirement
     ///////////////////////////////////////////////////////////////////////////////
     -(void) setAge:(unsigned int)index withValue:(ImebraAge*)value error:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
+
+    /// \brief Commit the changes to the handler's memory.
+    ///
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(void) commit;
 
 @end
 

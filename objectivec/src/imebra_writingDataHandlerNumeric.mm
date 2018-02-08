@@ -19,7 +19,14 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraReadWriteMemory alloc] initWithImebraReadWriteMemory:((imebra::WritingDataHandlerNumeric*)m_pWritingDataHandler)->getMemory()];
+    if(m_pWritingDataHandler != 0)
+    {
+        return [[ImebraReadWriteMemory alloc] initWithImebraReadWriteMemory:((imebra::WritingDataHandlerNumeric*)m_pWritingDataHandler)->getMemory()];
+    }
+    else
+    {
+        return nil;
+    }
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -28,7 +35,10 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    ((imebra::WritingDataHandlerNumeric*)m_pWritingDataHandler)->assign((char*)pSource.bytes, (size_t)pSource.length);
+    if(m_pWritingDataHandler != 0)
+    {
+        ((imebra::WritingDataHandlerNumeric*)m_pWritingDataHandler)->assign((char*)pSource.bytes, (size_t)pSource.length);
+    }
 
     OBJC_IMEBRA_FUNCTION_END();
 }
@@ -37,24 +47,48 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    ((imebra::WritingDataHandlerNumeric*)m_pWritingDataHandler)->copyFrom(*((imebra::ReadingDataHandlerNumeric*)pSource->m_pReadingDataHandler));
+    if(m_pWritingDataHandler != 0)
+    {
+        ((imebra::WritingDataHandlerNumeric*)m_pWritingDataHandler)->copyFrom(*((imebra::ReadingDataHandlerNumeric*)pSource->m_pReadingDataHandler));
+    }
 
     OBJC_IMEBRA_FUNCTION_END();
 }
 
 -(unsigned int) unitSize
 {
-    return (unsigned int)((imebra::WritingDataHandlerNumeric*)m_pWritingDataHandler)->getUnitSize();
+    if(m_pWritingDataHandler != 0)
+    {
+        return (unsigned int)((imebra::WritingDataHandlerNumeric*)m_pWritingDataHandler)->getUnitSize();
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 -(bool) isSigned
 {
-    return ((imebra::WritingDataHandlerNumeric*)m_pWritingDataHandler)->isSigned();
+    if(m_pWritingDataHandler != 0)
+    {
+        return ((imebra::WritingDataHandlerNumeric*)m_pWritingDataHandler)->isSigned();
+    }
+    else
+    {
+        return false;
+    }
 }
 
 -(bool) isFloat
 {
-    return ((imebra::WritingDataHandlerNumeric*)m_pWritingDataHandler)->isFloat();
+    if(m_pWritingDataHandler != 0)
+    {
+        return ((imebra::WritingDataHandlerNumeric*)m_pWritingDataHandler)->isFloat();
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 @end
