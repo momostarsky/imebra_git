@@ -15,7 +15,7 @@ void sendDataThread(unsigned long maxConnections, std::string port)
 
     try
     {
-        for(unsigned long connectionNumber(0); connectionNumber != maxConnections; ++connectionNumber)
+        for(unsigned int connectionNumber(0); connectionNumber != maxConnections; ++connectionNumber)
         {
             TCPStream newStream(connectToAddress);
 
@@ -50,8 +50,9 @@ TEST(tcpTest, sendReceive)
 
     try
     {
-        for(unsigned long connectionNumber(0); connectionNumber != maxConnections; ++connectionNumber)
+        for(unsigned int connectionNumber(0); connectionNumber != maxConnections; ++connectionNumber)
         {
+            std::cout << "Send receive number << " << connectionNumber << std::endl;
             std::unique_ptr<TCPStream> newStream(listener.waitForConnection());
 
             StreamReader reader(*newStream);
