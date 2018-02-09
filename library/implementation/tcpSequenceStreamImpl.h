@@ -154,10 +154,11 @@ public:
     ///        IMEBRA_TCP_TIMEOUT_MS.
     ///
     /// \param flags flags to poll
-    /// \return polled flags
+    /// \return true if the requested flags were satisfied,
+    ///         false on timeout
     ///
     ///////////////////////////////////////////////////////////
-    short poll(short flags);
+    bool poll(short flags);
 
     ///
     /// \brief Allocate this class at the beginning of a

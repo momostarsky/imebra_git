@@ -466,7 +466,7 @@ void tcpBaseSocket::isTerminating()
 }
 
 
-short tcpBaseSocket::poll(short flags)
+bool tcpBaseSocket::poll(short flags)
 {
     IMEBRA_FUNCTION_START();
 
@@ -487,7 +487,7 @@ short tcpBaseSocket::poll(short flags)
 
     if(pollResult == 0)
     {
-        return 0;
+        return false;
     }
 
     if((fds[0].revents & POLLHUP) != 0)
@@ -495,7 +495,7 @@ short tcpBaseSocket::poll(short flags)
         IMEBRA_THROW(StreamClosedError, "Stream closed");
     }
 
-    return fds[0].revents;
+    return ((fds[0].revents & flags) != 0);
 
     IMEBRA_FUNCTION_END();
 
@@ -587,7 +587,7 @@ size_t tcpSequenceStream::read(std::uint8_t* pBuffer, size_t bufferLength)
         // Wait for connection
         if(!m_bConnectionRealized)
         {
-            if((poll(POLLOUT) & POLLOUT) != 0)
+            if(poll(POLLOUT))
             {
                 m_bConnectionRealized = true;
             }
@@ -597,7 +597,7 @@ size_t tcpSequenceStream::read(std::uint8_t* pBuffer, size_t bufferLength)
             }
         }
 
-        if((poll(POLLIN) & POLLIN) != 0)
+        if(poll(POLLIN))
         {
             long receivedBytes(throwTcpException(recv(m_socket, (char*)pBuffer, bufferLength, 0)));
             if(receivedBytes == 0)
@@ -640,7 +640,7 @@ void tcpSequenceStream::write(const std::uint8_t* pBuffer, size_t bufferLength)
     {
         isTerminating();
 
-        if((poll(POLLOUT) & POLLOUT) != 0)
+        if(poll(POLLOUT))
         {
             m_bConnectionRealized = true;
 
