@@ -154,11 +154,9 @@ public:
     ///        IMEBRA_TCP_TIMEOUT_MS.
     ///
     /// \param flags flags to poll
-    /// \return true if the requested flags were satisfied,
-    ///         false on timeout
     ///
     ///////////////////////////////////////////////////////////
-    bool poll(short flags);
+    void poll(short flags);
 
     ///
     /// \brief Allocate this class at the beginning of a
@@ -245,8 +243,6 @@ public:
 private:
 
     const std::shared_ptr<tcpAddress> m_pAddress;
-
-    std::atomic<bool> m_bConnectionRealized;
 };
 
 

@@ -473,7 +473,7 @@ void tcpBaseSocket::isTerminating()
 }
 
 
-bool tcpBaseSocket::poll(short flags)
+void tcpBaseSocket::poll(short flags)
 {
     IMEBRA_FUNCTION_START();
 
@@ -494,12 +494,12 @@ bool tcpBaseSocket::poll(short flags)
 
     if(pollResult == 0)
     {
-        return false;
+        return;
     }
 
     if((fds[0].revents & flags) != 0)
     {
-        return true;
+        return;
     }
 
     if((fds[0].revents & POLLHUP) != 0)
@@ -507,7 +507,10 @@ bool tcpBaseSocket::poll(short flags)
         IMEBRA_THROW(StreamClosedError, "Stream closed");
     }
 
-    return false;
+    if((fds[0].revents & POLLERR) != 0)
+    {
+        IMEBRA_THROW(TCPConnectionRefused, "Stream closed");
+    }
 
     IMEBRA_FUNCTION_END();
 
@@ -521,8 +524,7 @@ bool tcpBaseSocket::poll(short flags)
 ///////////////////////////////////////////////////////////
 tcpSequenceStream::tcpSequenceStream(int tcpSocket, std::shared_ptr<tcpAddress> pAddress):
     tcpBaseSocket(tcpSocket),
-    m_pAddress(pAddress),
-    m_bConnectionRealized(false)
+    m_pAddress(pAddress)
 {
 }
 
@@ -596,21 +598,13 @@ size_t tcpSequenceStream::read(std::uint8_t* pBuffer, size_t bufferLength)
     {
         isTerminating();
 
-        // Wait for connection
-        if(!m_bConnectionRealized)
+        try
         {
-            if(poll(POLLOUT))
-            {
-                m_bConnectionRealized = true;
-            }
-            else
-            {
-                continue;
-            }
-        }
+            poll(POLLIN);
 
-        if(poll(POLLIN))
-        {
+            // Read anyway. (windows may not signal an error on the
+            // socket via poll, so we will get it via read)
+            ///////////////////////////////////////////////////////////
             long receivedBytes(throwTcpException(recv(m_socket, (char*)pBuffer, bufferLength, 0)));
             if(receivedBytes == 0)
             {
@@ -620,6 +614,10 @@ size_t tcpSequenceStream::read(std::uint8_t* pBuffer, size_t bufferLength)
             {
                 return (size_t)receivedBytes;
             }
+        }
+        catch(const SocketTimeout&)
+        {
+            // Ignore timeout
         }
     }
 
@@ -652,16 +650,23 @@ void tcpSequenceStream::write(const std::uint8_t* pBuffer, size_t bufferLength)
     {
         isTerminating();
 
-        if(poll(POLLOUT))
+        try
         {
-            m_bConnectionRealized = true;
+            poll(POLLOUT);
 
+            // Write anyway. (windows may not signal an error on the
+            // socket via poll, so we will get it via write)
+            ///////////////////////////////////////////////////////////
 #if (__linux__ == 1)
             long sentBytes = throwTcpException((long)send(m_socket, (const char*)(pBuffer + totalSentBytes), bufferLength - totalSentBytes, MSG_NOSIGNAL));
 #else
             long sentBytes = throwTcpException((long)send(m_socket, (const char*)(pBuffer + totalSentBytes), bufferLength - totalSentBytes, 0));
 #endif
             totalSentBytes += (size_t)sentBytes;
+        }
+        catch(const SocketTimeout&)
+        {
+            // Ignore timeout
         }
     }
 
