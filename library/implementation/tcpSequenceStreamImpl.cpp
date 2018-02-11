@@ -487,16 +487,16 @@ void tcpBaseSocket::poll(pollType_t pollType)
     FD_ZERO(&errorSockets);
     if(pollType == pollType_t::read)
     {
-        FD_SET(m_socket, readSockets);
+        FD_SET(m_socket, &readSockets);
     }
     else
     {
-        FD_SET(m_socket, writeSockets);
+        FD_SET(m_socket, &writeSockets);
     }
     timeval timeout;
     timeout.tv_sec = IMEBRA_TCP_TIMEOUT_MS / 1000;
     timeout.tv_usec = (IMEBRA_TCP_TIMEOUT_MS - timeout.tv_sec * 1000) * 1000;
-    throwTcpException(::select(m_socket + 1, readSockets, writeSockets, errorSockets, timeout));
+    throwTcpException(::select(m_socket + 1, &readSockets, &writeSockets, &errorSockets, timeout));
 #else
     short flags = pollType == pollType_t::read ? POLLIN : POLLOUT;
     pollfd fds[1];
