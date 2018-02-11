@@ -132,6 +132,7 @@ long throwTcpException(long socketOperationResult)
     case WSAEWOULDBLOCK:
         IMEBRA_THROW(SocketTimeout, "Timed out");
     case EPIPE:
+    case WSAENOTCONN:
     case WSAECONNABORTED:
     case WSAENETRESET:
         IMEBRA_THROW(StreamClosedError, "Socket closed");
@@ -473,31 +474,38 @@ void tcpBaseSocket::isTerminating()
 }
 
 
-void tcpBaseSocket::poll(short flags)
+void tcpBaseSocket::poll(pollType_t pollType)
 {
     IMEBRA_FUNCTION_START();
 
 #ifdef IMEBRA_WINDOWS
-    WSAPOLLFD fds[1];
+    fd_set readSockets;
+    fd_set writeSockets;
+    fd_set errorSockets;
+    FD_ZERO(&readSockets);
+    FD_ZERO(&writeSockets);
+    FD_ZERO(&errorSockets);
+    if(pollType == pollType_t::read)
+    {
+        FD_SET(m_socket, readSockets);
+    }
+    else
+    {
+        FD_SET(m_socket, writeSockets);
+    }
+    timeval timeout;
+    timeout.tv_sec = IMEBRA_TCP_TIMEOUT_MS / 1000;
+    timeout.tv_usec = (IMEBRA_TCP_TIMEOUT_MS - timeout.tv_sec * 1000) * 1000;
+    throwTcpException(::select(m_socket + 1, readSockets, writeSockets, errorSockets, timeout));
 #else
+    short flags = pollType == pollType_t::read ? POLLIN : POLLOUT;
     pollfd fds[1];
-#endif
     fds[0].fd = m_socket;
     fds[0].events = flags;
     fds[0].revents = 0;
-
-#ifdef IMEBRA_WINDOWS
-    long pollResult = throwTcpException(::WSAPoll(fds, 1, IMEBRA_TCP_TIMEOUT_MS));
-#else
     long pollResult = throwTcpException(::poll(fds, 1, IMEBRA_TCP_TIMEOUT_MS));
-#endif
 
-    if(pollResult == 0)
-    {
-        return;
-    }
-
-    if((fds[0].revents & flags) != 0)
+    if(pollResult == 0 || (fds[0].revents & flags) != 0)
     {
         return;
     }
@@ -511,6 +519,8 @@ void tcpBaseSocket::poll(short flags)
     {
         IMEBRA_THROW(TCPConnectionRefused, "Stream closed");
     }
+
+#endif
 
     IMEBRA_FUNCTION_END();
 
@@ -600,7 +610,7 @@ size_t tcpSequenceStream::read(std::uint8_t* pBuffer, size_t bufferLength)
 
         try
         {
-            poll(POLLIN);
+            poll(pollType_t::read);
 
             // Read anyway. (windows may not signal an error on the
             // socket via poll, so we will get it via read)
@@ -652,7 +662,7 @@ void tcpSequenceStream::write(const std::uint8_t* pBuffer, size_t bufferLength)
 
         try
         {
-            poll(POLLOUT);
+            poll(pollType_t::write);
 
             // Write anyway. (windows may not signal an error on the
             // socket via poll, so we will get it via write)

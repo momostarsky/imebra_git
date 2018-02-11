@@ -148,6 +148,12 @@ public:
     ///////////////////////////////////////////////////////////
     void isTerminating();
 
+    enum class pollType_t
+    {
+        read = 0,
+        write = 1
+    };
+
     ///
     /// \brief Execute a poll on the socket for the specified
     ///        flags. The timeout is defined by
@@ -156,7 +162,7 @@ public:
     /// \param flags flags to poll
     ///
     ///////////////////////////////////////////////////////////
-    void poll(short flags);
+    void poll(pollType_t pollType);
 
     ///
     /// \brief Allocate this class at the beginning of a
