@@ -18,6 +18,7 @@ Version |release| (this version)
   SOP :ref:`FIXBUG_2`
 - Implemented enhancement #210 (Output the TCP error number in the exception for unexpected TCP errors)
   as per SOP :ref:`DEVENH_2`
+- Implemented enhancement #212 (Use poll to wait for writable/readable sockets) as per SOP :ref:`DEVENH_2`
 
 Version 4.1.0.1
 ----------------

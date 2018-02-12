@@ -37,7 +37,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "baseSequenceStreamImpl.h"
 
 #ifndef IMEBRA_TCP_TIMEOUT_MS
-#define IMEBRA_TCP_TIMEOUT_MS 500
+#define IMEBRA_TCP_TIMEOUT_MS 1000
 #endif
 
 namespace imebra
@@ -147,6 +147,22 @@ public:
     ///
     ///////////////////////////////////////////////////////////
     void isTerminating();
+
+    enum class pollType_t
+    {
+        read = 0,
+        write = 1
+    };
+
+    ///
+    /// \brief Execute a poll on the socket for the specified
+    ///        flags. The timeout is defined by
+    ///        IMEBRA_TCP_TIMEOUT_MS.
+    ///
+    /// \param flags flags to poll
+    ///
+    ///////////////////////////////////////////////////////////
+    void poll(pollType_t pollType);
 
     ///
     /// \brief Allocate this class at the beginning of a

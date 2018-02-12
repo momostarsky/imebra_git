@@ -30,6 +30,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <sys/socket.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <poll.h>
 
 #endif
 
@@ -109,8 +110,10 @@ long throwTcpException(long socketOperationResult)
     int error(WSAGetLastError());
     switch(error)
     {
-	case WSAETIMEDOUT:
-		IMEBRA_THROW(SocketTimeout, "Timed out");
+    case WSAETIMEDOUT:
+        IMEBRA_THROW(SocketTimeout, "Timed out");
+    case WSAEHOSTDOWN:
+        IMEBRA_THROW(SocketTimeout, "Host is down");
     case WSAECONNREFUSED:
         IMEBRA_THROW(TCPConnectionRefused, "Connection refused");
     case WSAENOBUFS:
@@ -127,9 +130,12 @@ long throwTcpException(long socketOperationResult)
     case WSAENOTSOCK:
         IMEBRA_THROW(std::logic_error, "Operation on invalid socket");
     case WSAEWOULDBLOCK:
-		IMEBRA_THROW(SocketTimeout, "Timed out");
+        IMEBRA_THROW(SocketTimeout, "Timed out");
     case EPIPE:
-	case WSAECONNABORTED:
+    case WSAECONNRESET:
+    case WSAENOTCONN:
+    case WSAECONNABORTED:
+    case WSAENETRESET:
         IMEBRA_THROW(StreamClosedError, "Socket closed");
     case WSAEADDRINUSE:
         IMEBRA_THROW(TCPAddressAlreadyInUse, "The specified address is already in use.");
@@ -141,6 +147,8 @@ long throwTcpException(long socketOperationResult)
     {
     case ECONNREFUSED:
         IMEBRA_THROW(TCPConnectionRefused, "Connection refused")
+    case EHOSTDOWN:
+        IMEBRA_THROW(TCPConnectionRefused, "The host is down")
     case ENOBUFS:
     case ENOMEM:
     case EMFILE:
@@ -155,10 +163,13 @@ long throwTcpException(long socketOperationResult)
         IMEBRA_THROW(std::logic_error, "Invalid argument");
     case ENOTSOCK:
         IMEBRA_THROW(std::logic_error, "Operation on invalid socket");
+    case ENOTCONN:
     case EWOULDBLOCK:
     case EINTR:
         IMEBRA_THROW(SocketTimeout, "Timed out");
     case EPIPE:
+    case ECONNRESET:
+    case ECONNABORTED:
         IMEBRA_THROW(StreamClosedError, "Socket closed");
     case EADDRINUSE:
         IMEBRA_THROW(TCPAddressAlreadyInUse, "The specified address is already in use.")
@@ -168,7 +179,6 @@ long throwTcpException(long socketOperationResult)
 
     IMEBRA_FUNCTION_END();
 }
-
 
 ///////////////////////////////////////////////////////////
 //
@@ -465,6 +475,59 @@ void tcpBaseSocket::isTerminating()
 }
 
 
+void tcpBaseSocket::poll(pollType_t pollType)
+{
+    IMEBRA_FUNCTION_START();
+
+#ifdef IMEBRA_WINDOWS
+    fd_set readSockets;
+    fd_set writeSockets;
+    fd_set errorSockets;
+    FD_ZERO(&readSockets);
+    FD_ZERO(&writeSockets);
+    FD_ZERO(&errorSockets);
+    if(pollType == pollType_t::read)
+    {
+        FD_SET(m_socket, &readSockets);
+    }
+    else
+    {
+        FD_SET(m_socket, &writeSockets);
+    }
+    timeval timeout;
+    timeout.tv_sec = IMEBRA_TCP_TIMEOUT_MS / 1000;
+    timeout.tv_usec = (IMEBRA_TCP_TIMEOUT_MS - timeout.tv_sec * 1000) * 1000;
+    throwTcpException(::select(m_socket + 1, &readSockets, &writeSockets, &errorSockets, &timeout));
+#else
+    short flags = pollType == pollType_t::read ? POLLIN : POLLOUT;
+    pollfd fds[1];
+    fds[0].fd = m_socket;
+    fds[0].events = flags;
+    fds[0].revents = 0;
+    long pollResult = throwTcpException(::poll(fds, 1, IMEBRA_TCP_TIMEOUT_MS));
+
+    if(pollResult == 0 || (fds[0].revents & flags) != 0)
+    {
+        return;
+    }
+
+    if((fds[0].revents & POLLHUP) != 0)
+    {
+        IMEBRA_THROW(StreamClosedError, "Stream closed");
+    }
+
+    if((fds[0].revents & POLLERR) != 0)
+    {
+        IMEBRA_THROW(TCPConnectionRefused, "Stream closed");
+    }
+
+#endif
+
+    IMEBRA_FUNCTION_END();
+
+}
+
+
 ///////////////////////////////////////////////////////////
 //
 // TCP I/O class constructors
@@ -474,12 +537,6 @@ tcpSequenceStream::tcpSequenceStream(int tcpSocket, std::shared_ptr<tcpAddress> 
     tcpBaseSocket(tcpSocket),
     m_pAddress(pAddress)
 {
-    IMEBRA_FUNCTION_START();
-
-    // Enable blocking mode
-    setBlockingMode(true);
-
-    IMEBRA_FUNCTION_END();
 }
 
 tcpSequenceStream::tcpSequenceStream(std::shared_ptr<tcpAddress> pAddress):
@@ -506,8 +563,6 @@ tcpSequenceStream::tcpSequenceStream(std::shared_ptr<tcpAddress> pAddress):
 #else
     throwTcpException(connect(m_socket, pAddress->getSockAddr(), pAddress->getSockAddrLen()));
 #endif
-
-    setBlockingMode(true);
 
     IMEBRA_FUNCTION_END();
 }
@@ -541,9 +596,6 @@ size_t tcpSequenceStream::read(std::uint8_t* pBuffer, size_t bufferLength)
 
     tcpTerminateWaiting waiting(*this);
 
-    // A peer shutdown causes the reception of a zero
-    // bytes buffer
-    ///////////////////////////////////////////////////////////
     if(bufferLength == 0)
     {
         isTerminating();
@@ -559,6 +611,11 @@ size_t tcpSequenceStream::read(std::uint8_t* pBuffer, size_t bufferLength)
 
         try
         {
+            poll(pollType_t::read);
+
+            // Read anyway. (windows may not signal an error on the
+            // socket via poll, so we will get it via read)
+            ///////////////////////////////////////////////////////////
             long receivedBytes(throwTcpException(recv(m_socket, (char*)pBuffer, bufferLength, 0)));
             if(receivedBytes == 0)
             {
@@ -571,7 +628,7 @@ size_t tcpSequenceStream::read(std::uint8_t* pBuffer, size_t bufferLength)
         }
         catch(const SocketTimeout&)
         {
-            // Socket time out. Retry
+            // Ignore timeout
         }
     }
 
@@ -602,21 +659,25 @@ void tcpSequenceStream::write(const std::uint8_t* pBuffer, size_t bufferLength)
     ///////////////////////////////////////////////////////////
     for(size_t totalSentBytes(0); totalSentBytes != bufferLength; /* incremented in the loop */)
     {
+        isTerminating();
+
         try
         {
-            isTerminating();
+            poll(pollType_t::write);
 
+            // Write anyway. (windows may not signal an error on the
+            // socket via poll, so we will get it via write)
+            ///////////////////////////////////////////////////////////
 #if (__linux__ == 1)
             long sentBytes = throwTcpException((long)send(m_socket, (const char*)(pBuffer + totalSentBytes), bufferLength - totalSentBytes, MSG_NOSIGNAL));
 #else
             long sentBytes = throwTcpException((long)send(m_socket, (const char*)(pBuffer + totalSentBytes), bufferLength - totalSentBytes, 0));
 #endif
-
             totalSentBytes += (size_t)sentBytes;
         }
         catch(const SocketTimeout&)
         {
-            // Socket timeout. Retry
+            // Ignore timeout
         }
     }
 
