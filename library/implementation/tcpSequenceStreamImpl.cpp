@@ -214,7 +214,7 @@ void throwAddrException(int addrOperationResult)
         throwTcpException(-1);
 #endif
     default:
-        IMEBRA_THROW(AddressError, errorDescription);
+        IMEBRA_THROW(AddressError, "Unexpected TCP Address error " << errorDescription << " code: " << addrOperationResult);
     }
 
     IMEBRA_FUNCTION_END();
