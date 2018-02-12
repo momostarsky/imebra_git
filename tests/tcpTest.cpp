@@ -264,13 +264,26 @@ TEST(tcpTest, delayedConnection)
 
 TEST(tcpTest, nonExistentAddress)
 {
-    EXPECT_THROW(TCPActiveAddress("abcdefgfdgfdghvbbcvxftetrtert54rzefgh.com", "20000"), AddressError);
+    EXPECT_THROW(TCPActiveAddress("gfsdgf.bbbgfdgfasd.netdasfsdf", "20000"), AddressError);
 }
 
 
 TEST(tcpTest, noService)
 {
-    EXPECT_THROW(TCPActiveAddress("localhost", "abcdzy"), AddressServiceNotSupportedError);
+    try
+    {
+        TCPActiveAddress("localhost.com", "abcdzy");
+        EXPECT_TRUE(false);
+    }
+    catch(const AddressServiceNotSupportedError&)
+    {
+        EXPECT_TRUE(true);
+    }
+    catch(const AddressError& e)
+    {
+        std::cout << "Caught wrong exception: " << e.what();
+        EXPECT_TRUE(false);
+    }
 }
 
 
