@@ -263,9 +263,17 @@ TEST(tcpTest, delayedConnection)
 }
 
 
+TEST(tcpTest, nonExistentAddress)
+{
+    EXPECT_THROW(TCPActiveAddress("gfsdgf.bbbgfdgfasd.netdasfsdf", "20000"), AddressError);
+}
 
 
 
+TEST(tcpTest, noService)
+{
+    EXPECT_THROW(TCPActiveAddress("localhost", "abcdzy"), AddressError);
+}
 } // namespace tests
 
 } // namespace imebra
