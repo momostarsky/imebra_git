@@ -270,20 +270,7 @@ TEST(tcpTest, nonExistentAddress)
 
 TEST(tcpTest, noService)
 {
-    try
-    {
-        TCPActiveAddress("localhost.com", "abcdzy");
-        EXPECT_TRUE(false);
-    }
-    catch(const AddressServiceNotSupportedError&)
-    {
-        EXPECT_TRUE(true);
-    }
-    catch(const AddressError& e)
-    {
-        std::cout << "Caught wrong exception: " << e.what();
-        EXPECT_TRUE(false);
-    }
+    EXPECT_THROW(TCPActiveAddress("localhost", "abcdzy"), AddressError);
 }
 
 
