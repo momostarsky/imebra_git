@@ -214,7 +214,7 @@ void throwAddrException(int addrOperationResult)
         throwTcpException(-1);
 #endif
     default:
-        IMEBRA_THROW(std::logic_error, errorDescription);
+        IMEBRA_THROW(AddressError, "Unexpected TCP Address error " << errorDescription << " code: " << addrOperationResult);
     }
 
     IMEBRA_FUNCTION_END();
@@ -244,7 +244,7 @@ tcpAddress::tcpAddress(const std::string& node, const std::string& service, pass
     const char* pNode(node.empty() ? 0 : node.c_str());
     const char* pService(service.empty() ? 0 : service.c_str());
     addrinfo* address(0);
-    throwTcpException(getaddrinfo(pNode, pService, &hints, &address));
+    throwAddrException(getaddrinfo(pNode, pService, &hints, &address));
 
     m_sockAddr.resize(address->ai_addrlen);
     ::memcpy(&(m_sockAddr[0]), address->ai_addr, address->ai_addrlen);
@@ -261,7 +261,7 @@ tcpAddress::tcpAddress(const sockaddr& address, socklen_t addressLength)
 
     char host[NI_MAXHOST];
     char service[NI_MAXSERV];
-    throwTcpException(getnameinfo(&address, addressLength, host, sizeof(host), service, sizeof(service), 0));
+    throwAddrException(getnameinfo(&address, addressLength, host, sizeof(host), service, sizeof(service), 0));
 
     m_sockAddr.resize(addressLength);
     ::memcpy(&(m_sockAddr[0]), &address, addressLength);
