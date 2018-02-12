@@ -132,6 +132,7 @@ long throwTcpException(long socketOperationResult)
     case WSAEWOULDBLOCK:
         IMEBRA_THROW(SocketTimeout, "Timed out");
     case EPIPE:
+    case WSAECONNRESET:
     case WSAENOTCONN:
     case WSAECONNABORTED:
     case WSAENETRESET:

@@ -208,7 +208,7 @@ void DelayConnectionThread(std::string port)
         }
     }
 
-    #ifdef IMEBRA_WINDOWS
+    #ifdef _WIN32
             ::closesocket(acceptedSocket);
             ::closesocket(listeningSocket);
     #else
