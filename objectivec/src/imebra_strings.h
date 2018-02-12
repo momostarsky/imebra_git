@@ -16,7 +16,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #import <Foundation/Foundation.h>
 #include <string>
-#include "../definitions.h"
 
 namespace imebra
 {
@@ -27,7 +26,7 @@ namespace imebra
  * @param str an NSString
  * @return a UTF-8 encoded std::string
  */
-IMEBRA_API std::string NSStringToString ( NSString* str );
+std::string NSStringToString ( NSString* str );
 
 
 /**
@@ -36,7 +35,17 @@ IMEBRA_API std::string NSStringToString ( NSString* str );
  * @param str a UTF-8 encoded std::string
  * @return a NSString
  */
-IMEBRA_API NSString* stringToNSString ( const std::string& str );
+NSString* stringToNSString ( const std::string& str );
+
+
+/**
+ * @brief Convert a UTF-32 encoded std::wstring to an NSString.
+ *
+ * @param str a UTF-32 encoded std::wstring
+ * @return a NSString
+ */
+NSString* stringToNSString ( const std::wstring& str );
+
 
 } // namespace imebra
 

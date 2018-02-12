@@ -53,7 +53,7 @@ public:
     /// \param tagId      the tag id
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    TagId(std::uint16_t groupId, std::uint16_t tagId);
+    explicit TagId(std::uint16_t groupId, std::uint16_t tagId);
 
     /// \brief Constructor.
     ///
@@ -64,7 +64,7 @@ public:
     /// \param tagId      the tag id
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    TagId(std::uint16_t groupId, std::uint32_t groupOrder, std::uint16_t tagId);
+    explicit TagId(std::uint16_t groupId, std::uint32_t groupOrder, std::uint16_t tagId);
 
 #ifndef SWIGJAVA
     /// \brief Constructor.
@@ -75,7 +75,7 @@ public:
     ///          the tagId_t enumeration is not supported in Java.
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    TagId(tagId_t id);
+    explicit TagId(tagId_t id);
 
     /// \brief Constructor.
     ///
@@ -85,7 +85,7 @@ public:
     ///                   same id must be taken into consideration
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    TagId(tagId_t id, std::uint32_t groupOrder);
+    explicit TagId(tagId_t id, std::uint32_t groupOrder);
 #endif
 
     virtual ~TagId();

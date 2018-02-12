@@ -41,7 +41,7 @@ public:
     /// \param memory the memory region into which the stream will write the data
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    MemoryStreamOutput(const ReadWriteMemory& memory);
+    explicit MemoryStreamOutput(const ReadWriteMemory& memory);
 
     virtual ~MemoryStreamOutput();
 };

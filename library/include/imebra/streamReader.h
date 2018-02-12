@@ -68,7 +68,7 @@ class IMEBRA_API StreamReader
     friend class AssociationSCP;
 
 private:
-    StreamReader(std::shared_ptr<implementation::streamReader> pReader);
+    explicit StreamReader(std::shared_ptr<implementation::streamReader> pReader);
 #endif
 
 public:
@@ -78,7 +78,7 @@ public:
     ///               read
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    StreamReader(const BaseStreamInput& stream);
+    explicit StreamReader(const BaseStreamInput& stream);
 
     /// \brief Constructor.
     ///
@@ -91,7 +91,7 @@ public:
     /// \param virtualLength the number of visible bytes in the managed stream
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    StreamReader(const BaseStreamInput& stream, size_t virtualStart, size_t virtualLength);
+    explicit StreamReader(const BaseStreamInput& stream, size_t virtualStart, size_t virtualLength);
 
     ///
     /// \brief Returns a virtual stream that has a restricted view into the

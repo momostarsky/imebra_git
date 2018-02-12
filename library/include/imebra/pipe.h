@@ -66,7 +66,7 @@ public:
     ///                           fed to the Pipe until it is fetched
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    Pipe(size_t circularBufferSize);
+    explicit Pipe(size_t circularBufferSize);
 
     ///
     /// \brief Copy data into the Pipe so it can be retrieved by a

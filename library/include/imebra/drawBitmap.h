@@ -73,7 +73,7 @@ public:
     ///        getBitmap() method
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    DrawBitmap(const Transform& transformsChain);
+    explicit DrawBitmap(const Transform& transformsChain);
 
     /// \brief Destructor
     ///

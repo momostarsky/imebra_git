@@ -110,8 +110,8 @@ long throwTcpException(long socketOperationResult)
     int error(WSAGetLastError());
     switch(error)
     {
-    case WSAETIMEDOUT:
-        IMEBRA_THROW(SocketTimeout, "Timed out");
+	case WSAETIMEDOUT:
+		IMEBRA_THROW(SocketTimeout, "Timed out");
     case WSAEHOSTDOWN:
         IMEBRA_THROW(SocketTimeout, "Host is down");
     case WSAECONNREFUSED:
@@ -130,11 +130,11 @@ long throwTcpException(long socketOperationResult)
     case WSAENOTSOCK:
         IMEBRA_THROW(std::logic_error, "Operation on invalid socket");
     case WSAEWOULDBLOCK:
-        IMEBRA_THROW(SocketTimeout, "Timed out");
+		IMEBRA_THROW(SocketTimeout, "Timed out");
     case EPIPE:
     case WSAECONNRESET:
     case WSAENOTCONN:
-    case WSAECONNABORTED:
+	case WSAECONNABORTED:
     case WSAENETRESET:
         IMEBRA_THROW(StreamClosedError, "Socket closed");
     case WSAEADDRINUSE:
@@ -179,6 +179,7 @@ long throwTcpException(long socketOperationResult)
 
     IMEBRA_FUNCTION_END();
 }
+
 
 ///////////////////////////////////////////////////////////
 //
@@ -526,8 +527,6 @@ void tcpBaseSocket::poll(pollType_t pollType)
     IMEBRA_FUNCTION_END();
 
 }
-
-
 ///////////////////////////////////////////////////////////
 //
 // TCP I/O class constructors
@@ -660,7 +659,6 @@ void tcpSequenceStream::write(const std::uint8_t* pBuffer, size_t bufferLength)
     for(size_t totalSentBytes(0); totalSentBytes != bufferLength; /* incremented in the loop */)
     {
         isTerminating();
-
         try
         {
             poll(pollType_t::write);
@@ -673,6 +671,7 @@ void tcpSequenceStream::write(const std::uint8_t* pBuffer, size_t bufferLength)
 #else
             long sentBytes = throwTcpException((long)send(m_socket, (const char*)(pBuffer + totalSentBytes), bufferLength - totalSentBytes, 0));
 #endif
+
             totalSentBytes += (size_t)sentBytes;
         }
         catch(const SocketTimeout&)
