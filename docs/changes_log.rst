@@ -6,6 +6,12 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Fixed bug #214 (The lossless jpeg codec should not encode/decode the amplitude only 
+  when the amplitude length is 16) as per SOP :ref:`FIXBUG_2`
+
+Version 4.1.1.1
+----------------
+
 - Fixed bug #174 (Remove warning "conversion to 'uint8_t {aka unsigned char}' from int 
   may alter its value") as per SOP :ref:`FIXBUG_2`
 - Fixed bug #197 (Remove unused variables from jpegStreamCodecImpl.cpp) as per SOP :ref:`FIXBUG_2`
