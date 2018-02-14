@@ -443,10 +443,10 @@ std::shared_ptr<image> jpegImageCodec::getImage(const dataSet& sourceDataSet, st
                             ++scanBlock)
                         {
                             std::uint32_t amplitudeLength = pChannel->m_pActiveHuffmanTableDC->readHuffmanCode(pSourceStream);
-                            std::int32_t amplitude;        // lossless amplitude
-                            if(amplitudeLength == information.m_precision)
+                            std::int32_t amplitude;
+                            if(amplitudeLength == 16) // logically we should compare with information.m_precision, but DICOM says otherwise
                             {
-                                amplitude = (std::int32_t)1 << (information.m_precision - 1);
+                                amplitude = (std::int32_t)1 << 15;
                             }
                             else if(amplitudeLength != 0)
                             {
@@ -1060,7 +1060,7 @@ void jpegImageCodec::writeScan(streamWriter* pDestinationStream, jpeg::jpegInfor
                         continue;
                     }
                     pChannel->m_pActiveHuffmanTableDC->writeHuffmanCode(amplitudeLength, pDestinationStream);
-                    if(amplitudeLength != information.m_precision)
+                    if(amplitudeLength != 16)
                     {
                         pDestinationStream->writeBits(amplitude, amplitudeLength);
                     }
