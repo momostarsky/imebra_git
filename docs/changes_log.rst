@@ -6,6 +6,12 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Fixed bug #214 (The lossless jpeg codec should not encode/decode the amplitude only 
+  when the amplitude length is 16) as per SOP :ref:`FIXBUG_2`
+
+Version 4.0.14.1
+----------------
+
 - Fixed bug #205 (Lossless jpeg codec wrongly writes/reads amplitude value when the amplitude length is equal to the max bit depth) as per SOP :ref:`FIXBUG_2`
 
 Version 4.0.13.1
