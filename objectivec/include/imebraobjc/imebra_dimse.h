@@ -334,7 +334,7 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
     /// \param pPayload               C-STORE payload
     ///
     //////////////////////////////////////////////////////////////////
-    -(id)initWithabstractsyntax:(NSString*)abstractSyntax
+    -(id)initWithAbstractSyntax:(NSString*)abstractSyntax
         messageID:(unsigned short)messageID
         priority:(ImebraDimseCommandPriority_t)priority
         affectedSopClassUid:(NSString*)affectedSopClassUid
@@ -411,7 +411,7 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
     ///                               C-GET query
     ///
     //////////////////////////////////////////////////////////////////
-    -(id)initWithabstractsyntax:(NSString*)abstractSyntax
+    -(id)initWithAbstractSyntax:(NSString*)abstractSyntax
         messageID:(unsigned short)messageID
         priority:(ImebraDimseCommandPriority_t)priority
         affectedSopClassUid:(NSString*)affectedSopClassUid
@@ -512,7 +512,7 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
     ///                            requested values)
     ///
     //////////////////////////////////////////////////////////////////
-    -(id)initWithabstractsyntax:(NSString*)abstractSyntax
+    -(id)initWithAbstractSyntax:(NSString*)abstractSyntax
         messageID:(unsigned short)messageID
         priority:(ImebraDimseCommandPriority_t)priority
         affectedSopClassUid:(NSString*)affectedSopClassUid
@@ -580,7 +580,7 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
     ///                            requested values)
     ///
     //////////////////////////////////////////////////////////////////
-    -(id)initWithabstractsyntax:(NSString*)abstractSyntax
+    -(id)initWithAbstractSyntax:(NSString*)abstractSyntax
         messageID:(unsigned short)messageID
         priority:(ImebraDimseCommandPriority_t)priority
         affectedSopClassUid:(NSString*)affectedSopClassUid
@@ -676,7 +676,7 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
     /// \param affectedSopClassUid the affected SOP class UID
     ///
     //////////////////////////////////////////////////////////////////
-    -(id)initWithabstractsyntax:(NSString*)abstractSyntax
+    -(id)initWithAbstractSyntax:(NSString*)abstractSyntax
         messageID:(unsigned short)messageID
         priority:(ImebraDimseCommandPriority_t)priority
         affectedSopClassUid:(NSString*)affectedSopClassUid;
@@ -726,7 +726,7 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
     /// \param cancelMessageID        the ID of the message to cancel
     ///
     //////////////////////////////////////////////////////////////////
-    -(id)initWithabstractsyntax:(NSString*)abstractSyntax
+    -(id)initWithAbstractSyntax:(NSString*)abstractSyntax
         messageID:(unsigned short)messageID
         priority:(ImebraDimseCommandPriority_t)priority
         cancelMessageID:(unsigned short)cancelMessageID;
@@ -764,7 +764,7 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
     /// \param eventID                the event ID
     ///
     //////////////////////////////////////////////////////////////////
-    -(id)initWithabstractsyntax:(NSString*)abstractSyntax
+    -(id)initWithAbstractSyntax:(NSString*)abstractSyntax
         messageID:(unsigned short)messageID
         affectedSopClassUid:(NSString*)affectedSopClassUid
         affectedSopInstanceUid:(NSString*)affectedSopInstanceUid
@@ -872,7 +872,7 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
     ///                                tags".
     ///
     //////////////////////////////////////////////////////////////////
-    -(id)initWithabstractsyntax:(NSString*)abstractSyntax
+    -(id)initWithAbstractSyntax:(NSString*)abstractSyntax
         messageID:(unsigned short)messageID
         requestedSopClassUid:(NSString*)requestedSopClassUid
         requestedSopInstanceUid:(NSString*)requestedSopInstanceUid
@@ -950,7 +950,7 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
     ///                                attributes values
     ///
     //////////////////////////////////////////////////////////////////
-    -(id)initWithabstractsyntax:(NSString*)abstractSyntax
+    -(id)initWithAbstractSyntax:(NSString*)abstractSyntax
         messageID:(unsigned short)messageID
         requestedSopClassUid:(NSString*)requestedSopClassUid
         requestedSopInstanceUid:(NSString*)requestedSopInstanceUid
@@ -1049,7 +1049,7 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
     /// \param actionID                action ID
     ///
     //////////////////////////////////////////////////////////////////
-    -(id)initWithabstractsyntax:(NSString*)abstractSyntax
+    -(id)initWithAbstractSyntax:(NSString*)abstractSyntax
         messageID:(unsigned short)messageID
         requestedSopClassUid:(NSString*)requestedSopClassUid
         requestedSopInstanceUid:(NSString*)requestedSopInstanceUid
@@ -1233,7 +1233,7 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
     /// \param requestedSopInstanceUid the requested SOP instance UID
     ///
     //////////////////////////////////////////////////////////////////
-    -(id)initWithabstractsyntax:(NSString*)abstractSyntax
+    -(id)initWithAbstractSyntax:(NSString*)abstractSyntax
         messageID:(unsigned short)messageID
         requestedSopClassUid:(NSString*)requestedSopClassUid
         requestedSopInstanceUid:(NSString*)requestedSopInstanceUid;

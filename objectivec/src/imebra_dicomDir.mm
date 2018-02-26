@@ -163,7 +163,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     return self;
 }
 
--(id)initFromDataSet:(ImebraDataSet*)pDataSet error:(NSError**)pError
+-(id)initWithDataSet:(ImebraDataSet*)pDataSet error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 

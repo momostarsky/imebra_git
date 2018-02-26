@@ -207,7 +207,7 @@ typedef NS_ENUM(unsigned int, ImebraDirectoryRecordType_t)
     /// \param pError   set to an NSError derived class in case of error
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    -(id)initFromDataSet:(ImebraDataSet*)pDataSet error:(NSError**)pError;
+    -(id)initWithDataSet:(ImebraDataSet*)pDataSet error:(NSError**)pError;
 
     -(void)dealloc;
 
