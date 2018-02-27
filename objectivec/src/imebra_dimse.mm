@@ -785,6 +785,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 @end
 
 
+
 @implementation ImebraNActionCommand
 
 -(id)initWithAbstractSyntax:(NSString*)abstractSyntax
@@ -881,7 +882,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @implementation ImebraNCreateCommand
 
--(id)initAbstractSyntax:(NSString*)abstractSyntax
+-(id)initWithAbstractSyntax:(NSString*)abstractSyntax
     messageID:(unsigned short)messageID
     affectedSopClassUid:(NSString*)affectedSopClassUid
     affectedSopInstanceUid:(NSString*)affectedSopInstanceUid
@@ -901,7 +902,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     return self;
 }
 
--(id)initAbstractSyntax:(NSString*)abstractSyntax
+-(id)initWithAbstractSyntax:(NSString*)abstractSyntax
     messageID:(unsigned short)messageID
     affectedSopClassUid:(NSString*)affectedSopClassUid
     affectedSopInstanceUid:(NSString*)affectedSopInstanceUid

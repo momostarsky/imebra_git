@@ -1126,7 +1126,7 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
     ///                               attributes and values
     ///
     //////////////////////////////////////////////////////////////////
-    -(id)initAbstractSyntax:(NSString*)abstractSyntax
+    -(id)initWithAbstractSyntax:(NSString*)abstractSyntax
         messageID:(unsigned short)messageID
         affectedSopClassUid:(NSString*)affectedSopClassUid
         affectedSopInstanceUid:(NSString*)affectedSopInstanceUid
@@ -1148,7 +1148,7 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
     /// \param affectedSopInstanceUid the affected SOP instance UID
     ///
     //////////////////////////////////////////////////////////////////
-    -(id)initAbstractSyntax:(NSString*)abstractSyntax
+    -(id)initWithAbstractSyntax:(NSString*)abstractSyntax
         messageID:(unsigned short)messageID
         affectedSopClassUid:(NSString*)affectedSopClassUid
         affectedSopInstanceUid:(NSString*)affectedSopInstanceUid;
