@@ -13,6 +13,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #include "imebra_bridgeStructures.h"
 
+
 @implementation ImebraDimseCommandBase
 
 -(id)initWithImebraCommand:(imebra::DimseCommandBase*)pCommand
@@ -1121,7 +1122,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    std::unique_ptr<imebra::DimseResponse> pResponse(m_pDimseService->getCStoreResponse(*(imebra::CStoreCommand*)(pCommand->m_pDimseCommandBase)));
+    std::unique_ptr<imebra::CStoreResponse> pResponse(m_pDimseService->getCStoreResponse(*(imebra::CStoreCommand*)(pCommand->m_pDimseCommandBase)));
     return [[ImebraCStoreResponse alloc] initWithImebraCommand:pResponse.release()];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
@@ -1131,7 +1132,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    std::unique_ptr<imebra::DimseResponse> pResponse(m_pDimseService->getCGetResponse(*(imebra::CGetCommand*)(pCommand->m_pDimseCommandBase)));
+    std::unique_ptr<imebra::CGetResponse> pResponse(m_pDimseService->getCGetResponse(*(imebra::CGetCommand*)(pCommand->m_pDimseCommandBase)));
     return [[ImebraCGetResponse alloc] initWithImebraCommand:pResponse.release()];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
@@ -1141,7 +1142,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    std::unique_ptr<imebra::DimseResponse> pResponse(m_pDimseService->getCFindResponse(*(imebra::CFindCommand*)(pCommand->m_pDimseCommandBase)));
+    std::unique_ptr<imebra::CFindResponse> pResponse(m_pDimseService->getCFindResponse(*(imebra::CFindCommand*)(pCommand->m_pDimseCommandBase)));
     return [[ImebraCFindResponse alloc] initWithImebraCommand:pResponse.release()];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
@@ -1151,7 +1152,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    std::unique_ptr<imebra::DimseResponse> pResponse(m_pDimseService->getCMoveResponse(*(imebra::CMoveCommand*)(pCommand->m_pDimseCommandBase)));
+    std::unique_ptr<imebra::CMoveResponse> pResponse(m_pDimseService->getCMoveResponse(*(imebra::CMoveCommand*)(pCommand->m_pDimseCommandBase)));
     return [[ImebraCMoveResponse alloc] initWithImebraCommand:pResponse.release()];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
@@ -1161,7 +1162,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    std::unique_ptr<imebra::DimseResponse> pResponse(m_pDimseService->getCEchoResponse(*(imebra::CEchoCommand*)(pCommand->m_pDimseCommandBase)));
+    std::unique_ptr<imebra::CEchoResponse> pResponse(m_pDimseService->getCEchoResponse(*(imebra::CEchoCommand*)(pCommand->m_pDimseCommandBase)));
     return [[ImebraCEchoResponse alloc] initWithImebraCommand:pResponse.release()];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
@@ -1171,7 +1172,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    std::unique_ptr<imebra::DimseResponse> pResponse(m_pDimseService->getNEventReportResponse(*(imebra::NEventReportCommand*)(pCommand->m_pDimseCommandBase)));
+    std::unique_ptr<imebra::NEventReportResponse> pResponse(m_pDimseService->getNEventReportResponse(*(imebra::NEventReportCommand*)(pCommand->m_pDimseCommandBase)));
     return [[ImebraNEventReportResponse alloc] initWithImebraCommand:pResponse.release()];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
@@ -1181,7 +1182,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    std::unique_ptr<imebra::DimseResponse> pResponse(m_pDimseService->getNGetResponse(*(imebra::NGetCommand*)(pCommand->m_pDimseCommandBase)));
+    std::unique_ptr<imebra::NGetResponse> pResponse(m_pDimseService->getNGetResponse(*(imebra::NGetCommand*)(pCommand->m_pDimseCommandBase)));
     return [[ImebraNGetResponse alloc] initWithImebraCommand:pResponse.release()];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
@@ -1191,7 +1192,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    std::unique_ptr<imebra::DimseResponse> pResponse(m_pDimseService->getNSetResponse(*(imebra::NSetCommand*)(pCommand->m_pDimseCommandBase)));
+    std::unique_ptr<imebra::NSetResponse> pResponse(m_pDimseService->getNSetResponse(*(imebra::NSetCommand*)(pCommand->m_pDimseCommandBase)));
     return [[ImebraNSetResponse alloc] initWithImebraCommand:pResponse.release()];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
@@ -1201,7 +1202,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    std::unique_ptr<imebra::DimseResponse> pResponse(m_pDimseService->getNActionResponse(*(imebra::NActionCommand*)(pCommand->m_pDimseCommandBase)));
+    std::unique_ptr<imebra::NActionResponse> pResponse(m_pDimseService->getNActionResponse(*(imebra::NActionCommand*)(pCommand->m_pDimseCommandBase)));
     return [[ImebraNActionResponse alloc] initWithImebraCommand:pResponse.release()];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
@@ -1211,7 +1212,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    std::unique_ptr<imebra::DimseResponse> pResponse(m_pDimseService->getNCreateResponse(*(imebra::NCreateCommand*)(pCommand->m_pDimseCommandBase)));
+    std::unique_ptr<imebra::NCreateResponse> pResponse(m_pDimseService->getNCreateResponse(*(imebra::NCreateCommand*)(pCommand->m_pDimseCommandBase)));
     return [[ImebraNCreateResponse alloc] initWithImebraCommand:pResponse.release()];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
@@ -1221,7 +1222,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    std::unique_ptr<imebra::DimseResponse> pResponse(m_pDimseService->getNDeleteResponse(*(imebra::NDeleteCommand*)(pCommand->m_pDimseCommandBase)));
+    std::unique_ptr<imebra::NDeleteResponse> pResponse(m_pDimseService->getNDeleteResponse(*(imebra::NDeleteCommand*)(pCommand->m_pDimseCommandBase)));
     return [[ImebraNDeleteResponse alloc] initWithImebraCommand:pResponse.release()];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
