@@ -240,7 +240,7 @@ void listenerThread()
 {
     try
     {
-    NSError* pError;
+    NSError* pError(0);
     ImebraTCPPassiveAddress* pAddress = [[ImebraTCPPassiveAddress alloc] initWithNode:@"localhost" service:@"20000" error:&pError];
     ImebraTCPListener* pListener = [[ImebraTCPListener alloc] initWithAddress:pAddress error:&pError];
 
