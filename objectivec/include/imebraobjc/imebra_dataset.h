@@ -255,7 +255,7 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
     /// \return the Tag with the specified ID
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    -(ImebraTag*) getTagCreate:(ImebraTagId*)tagId VR:(ImebraTagVR_t)tagVR error:(NSError**)pError;
+    -(ImebraTag*) getTagCreate:(ImebraTagId*)tagId tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError;
 
     /// \brief Retrieve the ImebraTag with the specified ID or create it if it
     ///        doesn't exist. Set the proper VR according to the tag ID.

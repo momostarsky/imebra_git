@@ -57,7 +57,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     }
 }
 
--(void) setSignedLong:(unsigned int)index withValue:(int)value error:(NSError**)pError
+-(void) setSignedLong:(unsigned int)index newValue:(int)value error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 
@@ -69,7 +69,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_END();
 }
 
--(void) setUnsignedLong:(unsigned int)index withValue:(unsigned int)value error:(NSError**)pError
+-(void) setUnsignedLong:(unsigned int)index newValue:(unsigned int)value error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 
@@ -81,7 +81,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_END();
 }
 
--(void) setDouble:(unsigned int)index withValue:(double)value error:(NSError**)pError
+-(void) setDouble:(unsigned int)index newValue:(double)value error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 
@@ -93,7 +93,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_END();
 }
 
--(void) setString:(unsigned int)index withValue:(NSString*)value error:(NSError**)pError
+-(void) setString:(unsigned int)index newValue:(NSString*)value error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 
@@ -105,7 +105,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_END();
 }
 
--(void) setDate:(unsigned int)index withValue:(ImebraDate*)value error:(NSError**)pError
+-(void) setDate:(unsigned int)index newValue:(ImebraDate*)value error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 
@@ -117,7 +117,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_END();
 }
 
--(void) setAge:(unsigned int)index withValue:(ImebraAge*)value error:(NSError**)pError
+-(void) setAge:(unsigned int)index newValue:(ImebraAge*)value error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 

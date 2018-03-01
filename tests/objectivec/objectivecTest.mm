@@ -30,8 +30,8 @@ TEST(objectivec, stringToNSStringTest)
             NSError* pError = 0;
             ImebraWritingDataHandler* pHandler = [pDataSet getWritingDataHandler:pPatientTag bufferId:0 error:&pError];
 
-            [pHandler setString:0 withValue:patient0 error:&pError];
-            [pHandler setString:1 withValue:patient1 error:&pError];
+            [pHandler setString:0 newValue:patient0 error:&pError];
+            [pHandler setString:1 newValue:patient1 error:&pError];
 
             [pHandler release];
         }
@@ -153,7 +153,7 @@ TEST(objectivec, image)
         ImebraWritingDataHandler* writingDataHandler = [pImage getWritingDataHandler:&error];
         for(unsigned int pixel(0); pixel != 25; ++pixel)
         {
-            [writingDataHandler setUnsignedLong:pixel withValue:pixel error:&error];
+            [writingDataHandler setUnsignedLong:pixel newValue:pixel error:&error];
         }
 #if !__has_feature(objc_arc)
         [writingDataHandler release];
@@ -219,6 +219,24 @@ TEST(objectivec, datasetValues)
     [pDataSet setString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"TestPatient" error:&error];
     [pDataSet setAge:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1010] newValue:[[ImebraAge alloc] initWithAge:10 units:ImebraYears] error:&error];
 
+    [pDataSet setSignedLong:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1011] newValue:10 tagVR:ImebraSL error:&error];
+    [pDataSet setUnsignedLong:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1012] newValue:11 tagVR:ImebraUL error:&error];
+    [pDataSet setDouble:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1013] newValue:12.0f tagVR:ImebraUL error:&error];
+
+    ImebraTag* pTag = [pDataSet getTagCreate:[[ImebraTagId alloc] initWithGroup:0x12 tag:0x12] tagVR:ImebraFD error:&error];
+    {
+        ImebraWritingDataHandlerNumeric* pWriteDouble = [pTag getWritingDataHandlerNumeric:0 error:&error];
+        [pWriteDouble setSize:4];
+        EXPECT_EQ(4, pWriteDouble.size);
+        [pWriteDouble setDouble:0 newValue:0 error:&error];
+        [pWriteDouble setDouble:1 newValue:1 error:&error];
+        [pWriteDouble setDouble:2 newValue:2 error:&error];
+        [pWriteDouble setDouble:3 newValue:3 error:&error];
+#if !__has_feature(objc_arc)
+        [pWriteDouble release];
+#endif
+    }
+
     NSString* checkPatient0 = [pDataSet getString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] elementNumber:0 error:&error];
     ImebraAge* checkAge = [pDataSet getAge:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1010] elementNumber:0 error:&error];
 
@@ -233,6 +251,18 @@ TEST(objectivec, datasetValues)
 
     EXPECT_EQ([checkAge age], 10);
     EXPECT_EQ([checkAge units], ImebraYears);
+
+    EXPECT_EQ(10, [pDataSet getSignedLong:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1011] elementNumber:0 error:&error]);
+    EXPECT_EQ(11, [pDataSet getUnsignedLong:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1012] elementNumber:0 error:&error]);
+    EXPECT_DOUBLE_EQ(12.0f, [pDataSet getUnsignedLong:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1013] elementNumber:0 error:&error]);
+    EXPECT_EQ(12, [pDataSet getSignedLong:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1020] elementNumber:0 defaultValue:12 error:&error]);
+    EXPECT_EQ(13, [pDataSet getUnsignedLong:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1021] elementNumber:0 defaultValue:13 error:&error]);
+    EXPECT_DOUBLE_EQ(14.0f, [pDataSet getDouble:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1022] elementNumber:0 defaultValue:14.0f error:&error]);
+
+    EXPECT_DOUBLE_EQ(0.0f, [pDataSet getDouble:[[ImebraTagId alloc] initWithGroup:0x12 tag:0x12] elementNumber:0 error:&error]);
+    EXPECT_DOUBLE_EQ(1.0f, [pDataSet getDouble:[[ImebraTagId alloc] initWithGroup:0x12 tag:0x12] elementNumber:1 error:&error]);
+    EXPECT_DOUBLE_EQ(2.0f, [pDataSet getDouble:[[ImebraTagId alloc] initWithGroup:0x12 tag:0x12] elementNumber:2 error:&error]);
+    EXPECT_DOUBLE_EQ(3.0f, [pDataSet getDouble:[[ImebraTagId alloc] initWithGroup:0x12 tag:0x12] elementNumber:3 error:&error]);
 }
 
 
@@ -700,9 +730,9 @@ TEST(objectivec, images)
                 int r = x < 100 ? 10: 100;
                 int g = x < 200 ? 40: 200;
                 int b = x < 300 ? 100: 4;
-                [pWritingDataHandler setUnsignedLong:index++ withValue:r error:&pError];
-                [pWritingDataHandler setUnsignedLong:index++ withValue:g error:&pError];
-                [pWritingDataHandler setUnsignedLong:index++ withValue:b error:&pError];
+                [pWritingDataHandler setUnsignedLong:index++ newValue:r error:&pError];
+                [pWritingDataHandler setUnsignedLong:index++ newValue:g error:&pError];
+                [pWritingDataHandler setUnsignedLong:index++ newValue:b error:&pError];
 
             }
         }

@@ -133,7 +133,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
 
--(ImebraTag*) getTagCreate:(ImebraTagId*)tagId VR:(ImebraTagVR_t)tagVR error:(NSError**)pError
+-(ImebraTag*) getTagCreate:(ImebraTagId*)tagId tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 

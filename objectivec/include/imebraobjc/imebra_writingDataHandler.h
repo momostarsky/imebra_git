@@ -71,7 +71,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     /// \param pError set to a NSError derived class in case of error
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    -(void) setSignedLong:(unsigned int)index withValue:(int)value error:(NSError**)pError
+    -(void) setSignedLong:(unsigned int)index newValue:(int)value error:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
 
     /// \brief Write an unsigned long integer (32 bit).
@@ -85,7 +85,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     /// \param pError set to a NSError derived class in case of error
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    -(void) setUnsignedLong:(unsigned int)index withValue:(unsigned int)value error:(NSError**)pError
+    -(void) setUnsignedLong:(unsigned int)index newValue:(unsigned int)value error:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
 
     /// \brief Write a double floating point value (64 bit).
@@ -99,7 +99,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     /// \param pError set to a NSError derived class in case of error
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    -(void) setDouble:(unsigned int)index withValue:(double)value error:(NSError**)pError
+    -(void) setDouble:(unsigned int)index newValue:(double)value error:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
 
     /// \brief Write a string.
@@ -113,7 +113,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     /// \param pError set to a NSError derived class in case of error
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    -(void) setString:(unsigned int)index withValue:(NSString*)value error:(NSError**)pError
+    -(void) setString:(unsigned int)index newValue:(NSString*)value error:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
 
     /// \brief Write a date and/or a time.
@@ -127,7 +127,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     /// \param pError set to a NSError derived class in case of error
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    -(void) setDate:(unsigned int)index withValue:(ImebraDate*)value error:(NSError**)pError
+    -(void) setDate:(unsigned int)index newValue:(ImebraDate*)value error:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
 
     /// \brief Write an Age value.
@@ -141,7 +141,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     /// \param pError set to a NSError derived class in case of error
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    -(void) setAge:(unsigned int)index withValue:(ImebraAge*)value error:(NSError**)pError
+    -(void) setAge:(unsigned int)index newValue:(ImebraAge*)value error:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
 
     /// \brief Commit the changes to the handler's memory.
