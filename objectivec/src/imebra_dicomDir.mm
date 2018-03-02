@@ -123,7 +123,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
     return (ImebraDirectoryRecordType_t)m_pDicomDirEntry->getType();
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(ImebraDirectoryRecordType_t::ImebraDicomDirPatient);
+    OBJC_IMEBRA_FUNCTION_END_RETURN(ImebraDicomDirPatient);
 }
 
 -(NSString*)getTypeString:(NSError**)pError
