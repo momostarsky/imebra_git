@@ -33,7 +33,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
     return (ImebraTagVR_t)(imebra::DicomDictionary::getTagType(*(tagId->m_pTagId)));
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(ImebraTagVR_t::ImebraAE);
+    OBJC_IMEBRA_FUNCTION_END_RETURN(ImebraAE);
 }
 
 +(unsigned int)getWordSize:(ImebraTagVR_t)dataType
