@@ -57,4 +57,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #import "imebra_writingDataHandler.h"
 #import "imebra_writingDataHandlerNumeric.h"
 #import "tagsEnumeration.h"
+#import "uidsEnumeration.h"
+
 
