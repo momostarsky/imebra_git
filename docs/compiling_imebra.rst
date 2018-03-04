@@ -121,8 +121,8 @@ To generate the 32 bit version of the library, just omit the architecture after 
 OS-X/iOS specific instructions
 ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
-On Mac, CMake will generate a build for OS-X. In order to generate a build of iOS you have to add one of
-the following arguments::
+On Mac, CMake will generate a build for OS-X. In order to generate a build for iOS you have to add one of
+the following arguments to cmake::
 
     -DIOS=IPHONE
 
@@ -151,7 +151,7 @@ To generate a library for iPhone, type the following (replace imebra_location wi
     cmake imebra_location -DIOS=IPHONE
     cmake --build .
 
-.. seealso:: iOS applications based on Imebra need to be linked also with libiconv.a or libiconv.tbd.
+.. warning:: iOS applications based on Imebra need to be linked also with libiconv.a or libiconv.tbd.
 
 To generate a library for the iPhone simulator, type the following (replace imebra_location with the path to Imebra):
 
@@ -162,7 +162,7 @@ To generate a library for the iPhone simulator, type the following (replace imeb
     cmake imebra_location -DIOS=SIMULATOR
     cmake --build .
 
-.. seealso:: iOS applications based on Imebra need to be linked also with libiconv.a or libiconv.tbd.
+.. warning:: iOS applications based on Imebra need to be linked also with libiconv.a or libiconv.tbd.
 
 To generate a project that can be opened with XCode append the argument -G xcode (replace imebra_location with the path to Imebra):
 
@@ -171,6 +171,18 @@ To generate a project that can be opened with XCode append the argument -G xcode
     mkdir xcode_project
     cd xcode_project
     cmake imebra_location -G xcode
+
+
+Using Imebra with Swift
+'''''''''''''''''''''''
+Imebra can be imported into a Swift project.
+
+After compiling the library for OS-X or iOS, import the library's Objective-C header into your Swift project (import /objectivec/include/imebraobjc/imebra_swift.h)
+and link with imebra and iconv.
+
+For instance, the following command line instruction launches the swift compiler and instructs it to load the imebra header and link with Imebra and iconv::
+
+    swiftc -import-objc-header imebra_location/objectivec/include/imebraobjc/imebra_swift.h myCode.swift -Lbuild_imebra_location -liconv -lc++ -limebra -o myCodeApp
 
 
 Compiling the Python version of Imebra

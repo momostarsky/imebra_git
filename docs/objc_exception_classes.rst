@@ -5,11 +5,6 @@ This section describes the exception classes thrown by Imebra.
 
 Each exception class derive from NSError.
 
-ImebraExceptionsManager
------------------------
-.. doxygenclass:: ImebraExceptionsManager
-   :members:
-
 ImebraMissingDataElementError
 -----------------------------
 .. doxygenclass:: ImebraMissingDataElementError
@@ -365,9 +360,9 @@ ImebraJpegCodecCannotHandleSyntaxError
 .. doxygenclass:: ImebraJpegCodecCannotHandleSyntaxError
    :members:
 
-ImebraImebraBadAlloc
---------------------
-.. doxygenclass:: ImebraImebraBadAlloc
+ImebraBadAlloc
+--------------
+.. doxygenclass:: ImebraBadAlloc
    :members:
 
 ImebraMemoryError
