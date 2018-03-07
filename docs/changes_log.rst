@@ -6,6 +6,11 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Implemented enhancement #193 as per SOP :ref:`DEVENH_2`
+
+Version 4.1.2.1
+----------------
+
 - Fixed bug #214 (The lossless jpeg codec should not encode/decode the amplitude only 
   when the amplitude length is 16) as per SOP :ref:`FIXBUG_2`
 
