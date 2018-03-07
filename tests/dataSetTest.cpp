@@ -444,7 +444,8 @@ TEST(dataSetTest, charsetNotNecessaryTest)
 
     charsetsList_t charsets;
     charsets.push_back("ISO_IR 6");
-    DataSet testDataSet("1.2.840.10008.1.2.1", charsets);
+    DataSet testDataSet(uidExplicitVRLittleEndian_1_2_840_10008_1_2_1, charsets);
+    EXPECT_EQ("1.2.840.10008.1.2.1", testDataSet.getString(TagId(tagId_t::TransferSyntaxUID_0002_0010), 0));
 
     testDataSet.setString(TagId(tagId_t::PatientAge_0010_1010), "012Y");
     testDataSet.setString(TagId(tagId_t::SOPInstanceUID_0008_0018), "1.2.3.4.5");
