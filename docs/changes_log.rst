@@ -6,7 +6,8 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
-- Implemented enhancement #193 as per SOP :ref:`DEVENH_2`
+- Implemented enhancement #193 (Add Objective-C wrappers) as per SOP :ref:`DEVENH_2`
+- Implemented enhancement #215 (Add DICOM well known Uids) as per SOP :ref:`DEVENH_2`
 
 Version 4.1.2.1
 ----------------
