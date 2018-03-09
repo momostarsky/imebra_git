@@ -6,6 +6,11 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Fixed bug #216 (Undocumented ImebraDrawBitmap::getImebraImage) as per SOP :ref:`FIXBUG_2`
+
+Version 4.2.0.1
+----------------
+
 - Implemented enhancement #193 (Add Objective-C wrappers) as per SOP :ref:`DEVENH_2`
 - Implemented enhancement #215 (Add DICOM well known Uids) as per SOP :ref:`DEVENH_2`
 
