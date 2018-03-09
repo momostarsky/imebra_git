@@ -96,14 +96,26 @@ typedef NS_ENUM(unsigned int, ImebraDrawBitmapType_t)
     /// \param drawBitmapType the type of bitmap to generate
     /// \param rowAlignBytes  the number of bytes on which the bitmap rows are
     ///                       aligned
+    /// \param pError         set to a NSError derived class in case of error
     /// \return a ImebraReadWriteMemory object referencing the buffer containing
     ///         the generated bitmap
     ///
     ///////////////////////////////////////////////////////////////////////////////
     -(ImebraReadWriteMemory*) getBitmap:(ImebraImage*)pImage bitmapType:(ImebraDrawBitmapType_t) drawBitmapType rowAlignBytes:(unsigned int)rowAlignBytes error:(NSError**)pError;
 
+
 #if defined(__APPLE__)
 
+    /// \brief Apply the transforms defined in the constructor (if any) to the
+    ///        input image, then return a NSImage (on OS-X) or an UIImage
+    ///        (on iOS).
+    ///
+    /// \param pImage         the image for which the NSImage or UIImage
+    ///                       must be calculated
+    /// \param pError         set to a NSError derived class in case of error
+    /// \return a NSImage on OS-X or an UIImage on iOS
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
 #if TARGET_OS_IPHONE
     -(UIImage*)getImebraImage:(ImebraImage*)pImage error:(NSError**)pError;
 #else
