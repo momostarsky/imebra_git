@@ -23,6 +23,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <vector>
 #include <map>
 #include <array>
+#include <limits>
 
 
 namespace imebra
@@ -198,11 +199,11 @@ protected:
 	class valueObject
 	{
 	public:
-		valueObject():m_freq(0), m_codeLength(0), m_nextCode(-1){}
+        valueObject():m_freq(0), m_codeLength(0), m_nextCode(std::numeric_limits<std::uint32_t>::max()){}
 		valueObject(const valueObject& right):m_freq(right.m_freq), m_codeLength(right.m_codeLength), m_nextCode(right.m_nextCode){}
 		std::uint32_t m_freq;
 		std::uint32_t m_codeLength;
-		std::int32_t m_nextCode;
+        std::uint32_t m_nextCode;
 	};
 
 	class freqValue

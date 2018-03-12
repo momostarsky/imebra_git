@@ -251,13 +251,13 @@ void huffmanTable::calcHuffmanCodesLength(const std::uint32_t maxCodeLength)
 		freqOrderedValues[key0] = true;
 
 		std::uint32_t chainedValue;
-		for(chainedValue = key0.m_value; m_valuesFreq[chainedValue].m_nextCode != -1; /* empty */)
+        for(chainedValue = key0.m_value; m_valuesFreq[chainedValue].m_nextCode != std::numeric_limits<std::uint32_t>::max(); /* empty */)
 		{
 			chainedValue = (std::uint32_t)m_valuesFreq[chainedValue].m_nextCode;
 			m_valuesFreq[chainedValue].m_codeLength++;
 		}
 		m_valuesFreq[chainedValue].m_nextCode = key1.m_value;
-		while(m_valuesFreq[chainedValue].m_nextCode != -1)
+        while(m_valuesFreq[chainedValue].m_nextCode != std::numeric_limits<std::uint32_t>::max())
 		{
 			chainedValue = (std::uint32_t)m_valuesFreq[chainedValue].m_nextCode;
 			m_valuesFreq[chainedValue].m_codeLength++;
