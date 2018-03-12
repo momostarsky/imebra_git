@@ -6,6 +6,12 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Fixed bug #198 (Remove warning "implicit conversion changes signedness" in jpegImageCodecImpl.cpp)
+  as per SOP :ref:`FIXBUG_2`
+
+Version 4.2.0.2
+----------------
+
 - Fixed bug #216 (Undocumented ImebraDrawBitmap::getImebraImage) as per SOP :ref:`FIXBUG_2`
 
 Version 4.2.0.1
