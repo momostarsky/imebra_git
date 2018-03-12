@@ -6,6 +6,8 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Fixed bug #196 (Remove warning "implicit conversion changes signedness" in jpegCodecBaseImpl.cpp)
+  as per SOP :ref:`FIXBUG_2`
 - Fixed bug #198 (Remove warning "implicit conversion changes signedness" in jpegImageCodecImpl.cpp)
   as per SOP :ref:`FIXBUG_2`
 
