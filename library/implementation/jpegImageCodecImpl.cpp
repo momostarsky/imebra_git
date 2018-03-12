@@ -1042,7 +1042,7 @@ void jpegImageCodec::writeScan(streamWriter* pDestinationStream, jpeg::jpegInfor
 
                         if(diff < 0)
                         {
-                            amplitude = ((std::uint32_t)1 << amplitudeLength) + diff - 1;
+                            amplitude = (std::uint32_t) (((std::int32_t)1 << amplitudeLength) + diff - 1);
                         }
 
                     }
@@ -1319,7 +1319,7 @@ inline void jpegImageCodec::writeBlock(streamWriter* pStream, jpeg::jpegInformat
 
             if(value < 0)
             {
-                amplitude = ((std::uint32_t)1 << amplitudeLength) + value -1;
+                amplitude = (std::uint32_t) (((std::int32_t)1 << amplitudeLength) + value -1);
             }
             hufCode |= amplitudeLength;
         }
