@@ -6,6 +6,8 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Fixed bug #195 (Remove warning "Implicit conversion changes signdness" in huffmanTableImpl.cpp)
+  as per SOP :ref:`FIXBUG_2`
 - Fixed bug #196 (Remove warning "implicit conversion changes signedness" in jpegCodecBaseImpl.cpp)
   as per SOP :ref:`FIXBUG_2`
 - Fixed bug #198 (Remove warning "implicit conversion changes signedness" in jpegImageCodecImpl.cpp)
