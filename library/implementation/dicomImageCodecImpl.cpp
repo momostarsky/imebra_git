@@ -700,7 +700,7 @@ void dicomImageCodec::writeRLECompressed(
 
                     for(std::uint32_t scanX = imageWidth; scanX != 0; --scanX)
                     {
-                        *(rowBytesPointer++) = (std::uint8_t)((*pPixel & mask) >> rightShift);
+                        *(rowBytesPointer++) = (std::uint8_t)( ((std::uint32_t)*pPixel & mask) >> rightShift);
                         ++pPixel;
                     }
 
@@ -897,7 +897,7 @@ void dicomImageCodec::readRLECompressed(
                     pScanCopyBytes = copyBytesBuffer;
                     while(copyBytes-- && channelSize != 0)
                     {
-                        *pChannelMemory |= ((*pScanCopyBytes++) << leftShift) & mask;
+                        *pChannelMemory |= (std::int32_t) ((((std::uint32_t)(*pScanCopyBytes++)) << leftShift) & mask);
                         ++pChannelMemory;
                         --channelSize;
                     }
@@ -921,7 +921,7 @@ void dicomImageCodec::readRLECompressed(
                 }
                 while(runLength-- && channelSize != 0)
                 {
-                    *pChannelMemory |= (runByte << leftShift) & mask;
+                    *pChannelMemory |= (std::int32_t) (((std::uint32_t)runByte << leftShift) & mask);
                     ++pChannelMemory;
                     --channelSize;
                 }
