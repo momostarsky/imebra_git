@@ -87,7 +87,7 @@ TEST(dicomCodecTest, testDicom)
                                     30,
                                     20,
                                     colorSpace,
-                                    1));
+                                    2));
                             dicomImage1.reset(buildImageForTest(
                                     sizeX,
                                     sizeY,

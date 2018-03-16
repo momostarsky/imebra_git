@@ -43,7 +43,7 @@ TEST(multipleImagesTest, testLosslessImages)
                 1024,
                 1024,
                 colorSpace,
-                1));
+                2));
 
         std::string transferSyntax;
         switch(transferSyntaxId)

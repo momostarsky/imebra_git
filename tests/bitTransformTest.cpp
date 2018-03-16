@@ -24,7 +24,7 @@ TEST(bitTransformTest, bitShift)
         {
             for(std::uint32_t x=0; x<width; ++x)
             {
-                std::int32_t r, g, b;
+                std::uint32_t r, g, b;
                 std::uint32_t value = y * 255 / height;
                 r = g = 0;
                 b = value;
@@ -60,7 +60,7 @@ TEST(bitTransformTest, bitShift)
     {
         for(std::uint32_t checkX = 0; checkX < width; ++checkX)
         {
-            std::int32_t r, g, b;
+            std::uint32_t r, g, b;
             std::uint32_t value = checkY * 255 / height;
             r = g = 0;
             b = value;
@@ -77,17 +77,17 @@ TEST(bitTransformTest, bitShift)
                 b = 0;
             }
 
-            std::int32_t value0r = bits8Handler->getUnsignedLong(elementNumber);
-            std::int32_t value1r = bits16Handler->getUnsignedLong(elementNumber);
-            std::int32_t value2r = bits4Handler->getUnsignedLong(elementNumber++);
+            std::uint32_t value0r = bits8Handler->getUnsignedLong(elementNumber);
+            std::uint32_t value1r = bits16Handler->getUnsignedLong(elementNumber);
+            std::uint32_t value2r = bits4Handler->getUnsignedLong(elementNumber++);
 
-            std::int32_t value0g = bits8Handler->getUnsignedLong(elementNumber);
-            std::int32_t value1g = bits16Handler->getUnsignedLong(elementNumber);
-            std::int32_t value2g = bits4Handler->getUnsignedLong(elementNumber++);
+            std::uint32_t value0g = bits8Handler->getUnsignedLong(elementNumber);
+            std::uint32_t value1g = bits16Handler->getUnsignedLong(elementNumber);
+            std::uint32_t value2g = bits4Handler->getUnsignedLong(elementNumber++);
 
-            std::int32_t value0b = bits8Handler->getUnsignedLong(elementNumber);
-            std::int32_t value1b = bits16Handler->getUnsignedLong(elementNumber);
-            std::int32_t value2b = bits4Handler->getUnsignedLong(elementNumber++);
+            std::uint32_t value0b = bits8Handler->getUnsignedLong(elementNumber);
+            std::uint32_t value1b = bits16Handler->getUnsignedLong(elementNumber);
+            std::uint32_t value2b = bits4Handler->getUnsignedLong(elementNumber++);
 
             EXPECT_EQ(value0r, r);
             EXPECT_EQ(value0g, g);
@@ -118,11 +118,11 @@ TEST(bitTransformTest, allocateOutputImage)
     std::unique_ptr<Image> allocated16bits(transform.allocateOutputImage(bits16Image, 1, 1));
     std::unique_ptr<Image> allocated4bits(transform.allocateOutputImage(bits4Image, 1, 1));
 
-    ASSERT_EQ(7, allocated8bits->getHighBit());
+    ASSERT_EQ((std::uint32_t)7, allocated8bits->getHighBit());
     ASSERT_EQ("RGB", allocated8bits->getColorSpace());
-    ASSERT_EQ(15, allocated16bits->getHighBit());
+    ASSERT_EQ((std::uint32_t)15, allocated16bits->getHighBit());
     ASSERT_EQ("MONOCHROME2", allocated16bits->getColorSpace());
-    ASSERT_EQ(3, allocated4bits->getHighBit());
+    ASSERT_EQ((std::uint32_t)3, allocated4bits->getHighBit());
     ASSERT_EQ("YBR_FULL", allocated4bits->getColorSpace());
 
 }
