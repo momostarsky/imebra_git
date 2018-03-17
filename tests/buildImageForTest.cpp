@@ -1,6 +1,7 @@
 #include <imebra/imebra.h>
 #include <stdlib.h>
 #include <memory.h>
+#include <algorithm>
 #include <gtest/gtest.h>
 #include "buildImageForTest.h"
 
