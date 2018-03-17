@@ -42,13 +42,13 @@ TEST(colorConversion, RGB2YBRRCT)
 
     {
         std::unique_ptr<WritingDataHandler> rgbHandler(rgb.getWritingDataHandler());
-        for(int y = 0; y != 255; ++y)
+        for(std::uint32_t y = 0; y != 255u; ++y)
         {
-            for(int x = 0; x != 255; ++x)
+            for(std::uint32_t x = 0; x != 255u; ++x)
             {
-                rgbHandler->setUnsignedLong((x + y * 50) * 3, x);
-                rgbHandler->setUnsignedLong((x + y * 50) * 3 + 1, y);
-                rgbHandler->setUnsignedLong((x + y * 50) * 3 + 2, (y + x) / 2);
+                rgbHandler->setUnsignedLong((x + y * 50u) * 3u, x);
+                rgbHandler->setUnsignedLong((x + y * 50u) * 3u + 1u, y);
+                rgbHandler->setUnsignedLong((x + y * 50u) * 3u + 2u, (y + x) / 2u);
             }
         }
     }
@@ -62,7 +62,7 @@ TEST(colorConversion, RGB2YBRRCT)
     std::unique_ptr<Image> rgb1(ybr2rgb->allocateOutputImage(*ybr, 255, 255));
     ybr2rgb->runTransform(*ybr, 0, 0, 255, 255, *rgb1, 0, 0);
 
-    ASSERT_GE(1, compareImages(rgb, *rgb1)); // Account for ceiling/floor adjustment
+    ASSERT_GE(1.0f, compareImages(rgb, *rgb1)); // Account for ceiling/floor adjustment
 }
 
 
@@ -72,15 +72,15 @@ TEST(colorConversion, RGB2YBRPARTIAL)
 
     {
         std::unique_ptr<WritingDataHandler> rgbHandler(rgb.getWritingDataHandler());
-        rgbHandler->setUnsignedLong(0, 255);
-        rgbHandler->setUnsignedLong(1, 255);
-        rgbHandler->setUnsignedLong(2, 255);
-        rgbHandler->setUnsignedLong(3, 0);
-        rgbHandler->setUnsignedLong(4, 0);
-        rgbHandler->setUnsignedLong(5, 0);
-        rgbHandler->setUnsignedLong(6, 255);
-        rgbHandler->setUnsignedLong(7, 0);
-        rgbHandler->setUnsignedLong(8, 0);
+        rgbHandler->setUnsignedLong(0, 255u);
+        rgbHandler->setUnsignedLong(1, 255u);
+        rgbHandler->setUnsignedLong(2, 255u);
+        rgbHandler->setUnsignedLong(3, 0u);
+        rgbHandler->setUnsignedLong(4, 0u);
+        rgbHandler->setUnsignedLong(5, 0u);
+        rgbHandler->setUnsignedLong(6, 255u);
+        rgbHandler->setUnsignedLong(7, 0u);
+        rgbHandler->setUnsignedLong(8, 0u);
     }
 
     std::unique_ptr<Transform> rgb2ybr(ColorTransformsFactory::getTransform("RGB", "YBR_PARTIAL"));
@@ -132,12 +132,12 @@ TEST(colorConversion, RGB2MONOCHROME1)
 
     {
         std::unique_ptr<WritingDataHandler> rgbHandler(rgb.getWritingDataHandler());
-        rgbHandler->setUnsignedLong(0, 255);
-        rgbHandler->setUnsignedLong(1, 255);
-        rgbHandler->setUnsignedLong(2, 255);
-        rgbHandler->setUnsignedLong(3, 0);
-        rgbHandler->setUnsignedLong(4, 0);
-        rgbHandler->setUnsignedLong(5, 0);
+        rgbHandler->setUnsignedLong(0, 255u);
+        rgbHandler->setUnsignedLong(1, 255u);
+        rgbHandler->setUnsignedLong(2, 255u);
+        rgbHandler->setUnsignedLong(3, 0u);
+        rgbHandler->setUnsignedLong(4, 0u);
+        rgbHandler->setUnsignedLong(5, 0u);
     }
 
     std::unique_ptr<Transform> toMonochrome1(ColorTransformsFactory::getTransform("RGB", "MONOCHROME1"));
@@ -180,9 +180,9 @@ TEST(colorConversion, MONOCHROME12RGB)
 
     {
         std::unique_ptr<WritingDataHandler> monochrome1Handler(monochrome1.getWritingDataHandler());
-        monochrome1Handler->setUnsignedLong(0, 255);
-        monochrome1Handler->setUnsignedLong(1, 254);
-        monochrome1Handler->setUnsignedLong(2, 253);
+        monochrome1Handler->setUnsignedLong(0, 255u);
+        monochrome1Handler->setUnsignedLong(1, 254u);
+        monochrome1Handler->setUnsignedLong(2, 253u);
     }
 
     std::unique_ptr<Transform> toRGB(ColorTransformsFactory::getTransform("MONOCHROME1", "RGB"));
@@ -274,15 +274,15 @@ TEST(colorConversion, YBRFULL2MONOCHROME2)
 
         {
             std::unique_ptr<WritingDataHandler> ybrHandler(ybr.getWritingDataHandler());
-            ybrHandler->setUnsignedLong(0, 255);
-            ybrHandler->setUnsignedLong(1, 128);
-            ybrHandler->setUnsignedLong(2, 128);
-            ybrHandler->setUnsignedLong(3, 254);
-            ybrHandler->setUnsignedLong(4, 128);
-            ybrHandler->setUnsignedLong(5, 128);
-            ybrHandler->setUnsignedLong(6, 253);
-            ybrHandler->setUnsignedLong(7, 128);
-            ybrHandler->setUnsignedLong(8, 128);
+            ybrHandler->setUnsignedLong(0, 255u);
+            ybrHandler->setUnsignedLong(1, 128u);
+            ybrHandler->setUnsignedLong(2, 128u);
+            ybrHandler->setUnsignedLong(3, 254u);
+            ybrHandler->setUnsignedLong(4, 128u);
+            ybrHandler->setUnsignedLong(5, 128u);
+            ybrHandler->setUnsignedLong(6, 253u);
+            ybrHandler->setUnsignedLong(7, 128u);
+            ybrHandler->setUnsignedLong(8, 128u);
         }
 
         std::unique_ptr<Transform> toMonochrome2(ColorTransformsFactory::getTransform(sourceColorSpace, "MONOCHROME2"));
@@ -331,21 +331,21 @@ TEST(colorConversion, YBRPARTIAL2RGB)
 
     {
         std::unique_ptr<WritingDataHandler> ybrHandler(ybr.getWritingDataHandler());
-        ybrHandler->setUnsignedLong(0, 235);
-        ybrHandler->setUnsignedLong(1, 128);
-        ybrHandler->setUnsignedLong(2, 128);
-        ybrHandler->setUnsignedLong(3, 255);
-        ybrHandler->setUnsignedLong(4, 128);
-        ybrHandler->setUnsignedLong(5, 128);
-        ybrHandler->setUnsignedLong(6, 16);
-        ybrHandler->setUnsignedLong(7, 128);
-        ybrHandler->setUnsignedLong(8, 128);
-        ybrHandler->setUnsignedLong(9, 0);
-        ybrHandler->setUnsignedLong(10, 128);
-        ybrHandler->setUnsignedLong(11, 128);
-        ybrHandler->setUnsignedLong(12, 81);
-        ybrHandler->setUnsignedLong(13, 91);
-        ybrHandler->setUnsignedLong(14, 240);
+        ybrHandler->setUnsignedLong(0, 235u);
+        ybrHandler->setUnsignedLong(1, 128u);
+        ybrHandler->setUnsignedLong(2, 128u);
+        ybrHandler->setUnsignedLong(3, 255u);
+        ybrHandler->setUnsignedLong(4, 128u);
+        ybrHandler->setUnsignedLong(5, 128u);
+        ybrHandler->setUnsignedLong(6, 16u);
+        ybrHandler->setUnsignedLong(7, 128u);
+        ybrHandler->setUnsignedLong(8, 128u);
+        ybrHandler->setUnsignedLong(9, 0u);
+        ybrHandler->setUnsignedLong(10, 128u);
+        ybrHandler->setUnsignedLong(11, 128u);
+        ybrHandler->setUnsignedLong(12, 81u);
+        ybrHandler->setUnsignedLong(13, 91u);
+        ybrHandler->setUnsignedLong(14, 240u);
     }
 
     std::unique_ptr<Transform> ybr2rgb(ColorTransformsFactory::getTransform("YBR_PARTIAL", "RGB"));
@@ -387,12 +387,12 @@ TEST(colorConversion, factoryTest)
     ASSERT_FALSE(ColorTransformsFactory::isMonochrome("YBR_FULL"));
     ASSERT_FALSE(ColorTransformsFactory::isMonochrome("YBR_PARTIAL"));
 
-    ASSERT_EQ(3, ColorTransformsFactory::getNumberOfChannels("RGB"));
-    ASSERT_EQ(1, ColorTransformsFactory::getNumberOfChannels("MONOCHROME2"));
-    ASSERT_EQ(1, ColorTransformsFactory::getNumberOfChannels("MONOCHROME1"));
-    ASSERT_EQ(1, ColorTransformsFactory::getNumberOfChannels("PALETTE COLOR"));
-    ASSERT_EQ(3, ColorTransformsFactory::getNumberOfChannels("YBR_FULL"));
-    ASSERT_EQ(3, ColorTransformsFactory::getNumberOfChannels("YBR_PARTIAL"));
+    ASSERT_EQ(3u, ColorTransformsFactory::getNumberOfChannels("RGB"));
+    ASSERT_EQ(1u, ColorTransformsFactory::getNumberOfChannels("MONOCHROME2"));
+    ASSERT_EQ(1u, ColorTransformsFactory::getNumberOfChannels("MONOCHROME1"));
+    ASSERT_EQ(1u, ColorTransformsFactory::getNumberOfChannels("PALETTE COLOR"));
+    ASSERT_EQ(3u, ColorTransformsFactory::getNumberOfChannels("YBR_FULL"));
+    ASSERT_EQ(3u, ColorTransformsFactory::getNumberOfChannels("YBR_PARTIAL"));
 
     ASSERT_EQ("YBR_PARTIAL_422", ColorTransformsFactory::makeSubsampled("YBR_PARTIAL", true, false));
     ASSERT_EQ("YBR_PARTIAL_420", ColorTransformsFactory::makeSubsampled("YBR_PARTIAL", true, true));

@@ -15,7 +15,7 @@ TEST(stringHandlerTest, DSTest)
         std::string decimalString = testDataSet.getString(TagId(0x0028, 0x1051), 0);
         ASSERT_TRUE(decimalString == "1e-006" || decimalString == "1e-06" || decimalString == "1e-6");
         double decimalValue = testDataSet.getDouble(TagId(0x0028, 0x1051), 0);
-        ASSERT_FLOAT_EQ(0.000001, decimalValue);
+        ASSERT_DOUBLE_EQ(0.000001, decimalValue);
         ASSERT_EQ(tagVR_t::DS, testDataSet.getDataType(TagId(0x0028, 0x1051)));
         ASSERT_THROW(testDataSet.getDate(TagId(0x0028, 0x1051), 0), DataHandlerConversionError);
         ASSERT_THROW(testDataSet.getAge(TagId(0x0028, 0x1051), 0), DataHandlerConversionError);
@@ -29,7 +29,7 @@ TEST(stringHandlerTest, DSTest)
     {
         DataSet testDataSet;
         testDataSet.setString(TagId(0x0028, 0x1051), "-2e-8", tagVR_t::DS);
-        ASSERT_FLOAT_EQ(-0.00000002, testDataSet.getDouble(TagId(0x0028, 0x1051), 0));
+        ASSERT_DOUBLE_EQ(-0.00000002, testDataSet.getDouble(TagId(0x0028, 0x1051), 0));
         ASSERT_THROW(testDataSet.getSignedLong(TagId(0x0028, 0x1051), 1), MissingItemError);
         ASSERT_EQ(tagVR_t::DS, testDataSet.getDataType(TagId(0x0028, 0x1051)));
     }
@@ -37,7 +37,7 @@ TEST(stringHandlerTest, DSTest)
     {
         DataSet testDataSet;
         testDataSet.setString(TagId(0x0028, 0x1051), "20", tagVR_t::DS);
-        ASSERT_FLOAT_EQ(20, testDataSet.getDouble(TagId(0x0028, 0x1051), 0));
+        ASSERT_DOUBLE_EQ(20.0, testDataSet.getDouble(TagId(0x0028, 0x1051), 0));
         ASSERT_EQ(20, testDataSet.getSignedLong(TagId(0x0028, 0x1051), 0));
         ASSERT_EQ(20, testDataSet.getUnsignedLong(TagId(0x0028, 0x1051), 0));
         ASSERT_EQ(tagVR_t::DS, testDataSet.getDataType(TagId(0x0028, 0x1051)));
@@ -76,7 +76,7 @@ TEST(stringHandlerTest, ISTest)
         testDataSet.setDouble(TagId(0x0028, 0x1051), 12.004, tagVR_t::IS);
         ASSERT_EQ("12", testDataSet.getString(TagId(0x0028, 0x1051), 0));
         ASSERT_EQ(12, testDataSet.getSignedLong(TagId(0x0028, 0x1051), 0));
-        ASSERT_FLOAT_EQ(12.0, testDataSet.getDouble(TagId(0x0028, 0x1051), 0));
+        ASSERT_DOUBLE_EQ(12.0, testDataSet.getDouble(TagId(0x0028, 0x1051), 0));
         ASSERT_EQ(tagVR_t::IS, testDataSet.getDataType(TagId(0x0028, 0x1051)));
         ASSERT_THROW(testDataSet.getDate(TagId(0x0028, 0x1051), 0), DataHandlerConversionError);
         ASSERT_THROW(testDataSet.getAge(TagId(0x0028, 0x1051), 0), DataHandlerConversionError);
@@ -87,7 +87,7 @@ TEST(stringHandlerTest, ISTest)
         testDataSet.setSignedLong(TagId(0x0028, 0x1051), 20, tagVR_t::IS);
         ASSERT_EQ("20", testDataSet.getString(TagId(0x0028, 0x1051), 0));
         ASSERT_EQ(20, testDataSet.getSignedLong(TagId(0x0028, 0x1051), 0));
-        ASSERT_FLOAT_EQ(20.0, testDataSet.getDouble(TagId(0x0028, 0x1051), 0));
+        ASSERT_DOUBLE_EQ(20.0, testDataSet.getDouble(TagId(0x0028, 0x1051), 0));
         ASSERT_EQ(tagVR_t::IS, testDataSet.getDataType(TagId(0x0028, 0x1051)));
     }
 
@@ -422,7 +422,7 @@ TEST(stringHandlerTest, ASTest)
     EXPECT_EQ(3, age->age);
     EXPECT_EQ(imebra::ageUnit_t::days, age->units);
     EXPECT_EQ("003D", dataSet.getString(TagId(imebra::tagId_t::PatientAge_0010_1010), 0));
-    EXPECT_FLOAT_EQ(0.008219178, age->years());
+    ASSERT_DOUBLE_EQ(0.00821917808219178, age->years());
 
     ASSERT_THROW(dataSet.setDouble(TagId(imebra::tagId_t::PatientAge_0010_1010), .01), imebra::DataHandlerConversionError);
 
@@ -448,7 +448,7 @@ TEST(stringHandlerTest, ASTest)
     age.reset(dataSet.getAge(TagId(imebra::tagId_t::PatientAge_0010_1010), 0));
     EXPECT_EQ(90, age->age);
     EXPECT_EQ(imebra::ageUnit_t::years, age->units);
-    EXPECT_DOUBLE_EQ(90, age->years());
+    EXPECT_DOUBLE_EQ(90.0, age->years());
 }
 
 

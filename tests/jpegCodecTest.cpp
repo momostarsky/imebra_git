@@ -175,7 +175,7 @@ TEST(jpegCodecTest, testLossless)
 
                         // Compare the buffers
                         double difference = compareImages(*image, *checkImage);
-                        ASSERT_FLOAT_EQ(difference, 0);
+                        ASSERT_DOUBLE_EQ(0.0, difference);
                     }
                 }
             }

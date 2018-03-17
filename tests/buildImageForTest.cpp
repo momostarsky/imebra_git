@@ -55,7 +55,7 @@ imebra::Image* buildImageForTest(
                 }
                 else
                 {
-                    handler->setUnsignedLong(index++, (std::int32_t)value);
+                    handler->setUnsignedLong(index++, (std::uint32_t)value);
                 }
 			}
 		}
@@ -145,7 +145,7 @@ TEST(buildImage, testCompareImage)
         "RGB",
         10));
 
-    EXPECT_DOUBLE_EQ(0.0f, compareImages(*testImage0, *testImage0));
+    EXPECT_DOUBLE_EQ(0.0, compareImages(*testImage0, *testImage0));
     EXPECT_GT(compareImages(*testImage0, *testImage1), 10.0f);
 
 }
@@ -238,7 +238,7 @@ double compareImages(const imebra::Image& image0, const imebra::Image& image1)
     std::uint64_t range = (std::int64_t)1 << image0.getHighBit();
     std::uint64_t difference(0);
     size_t index(0);
-	unsigned long long total(0);
+    std::uint64_t total(0);
     for(size_t y(0); y != height0; ++y)
     {
         for(size_t x(0); x != width0; ++x)
@@ -257,7 +257,7 @@ double compareImages(const imebra::Image& image0, const imebra::Image& image1)
                     {
                         difference += (1000 * (std::uint64_t)(p1 - p0)) / range;
                     }
-                    total += labs(hImage0->getSignedLong(index));
+                    total += difference;
                 }
                 else
                 {
@@ -271,7 +271,7 @@ double compareImages(const imebra::Image& image0, const imebra::Image& image1)
                     {
                         difference += (1000 * (std::uint64_t)(p1 - p0)) / range;
                     }
-                    total += labs(hImage0->getSignedLong(index));
+                    total += difference;
 
                 }
                 ++index;

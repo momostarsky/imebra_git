@@ -81,7 +81,7 @@ TEST(dataSetTest, testFragmentation)
                 newHandler->setSize(thisSize);
                 newHandler->assign(pWholeMemory, thisSize);
                 handlers.push_back(newHandler);
-                offset += thisSize + 8;
+                offset += (std::uint32_t)thisSize + 8u;
                 totalSize -= thisSize;
                 pWholeMemory += thisSize;
             }
@@ -119,12 +119,12 @@ TEST(dataSetTest, testVOIs)
 
     vois_t vois1 = testDataSet.getVOIs();
     ASSERT_EQ(2, vois1.size());
-    ASSERT_FLOAT_EQ(10.4, vois1.at(0).center);
-    ASSERT_FLOAT_EQ(12.5, vois1.at(0).width);
+    ASSERT_DOUBLE_EQ(10.4, vois1.at(0).center);
+    ASSERT_DOUBLE_EQ(12.5, vois1.at(0).width);
     ASSERT_EQ(L"Test1", vois1.at(0).description);
 
-    ASSERT_FLOAT_EQ(20.4, vois1.at(1).center);
-    ASSERT_FLOAT_EQ(22.5, vois1.at(1).width);
+    ASSERT_DOUBLE_EQ(20.4, vois1.at(1).center);
+    ASSERT_DOUBLE_EQ(22.5, vois1.at(1).width);
     ASSERT_EQ(L"Test2", vois1.at(1).description);
 }
 
@@ -202,7 +202,7 @@ TEST(dataSetTest, testSetGetTags)
     ASSERT_EQ(2, date1->day);
 
     ASSERT_EQ("Test patient", testDataSet.getString(TagId(tagId_t::PatientName_0010_0010), 0));
-    ASSERT_FLOAT_EQ(45.6, testDataSet.getDouble(TagId(0x20, 0x20), 0));
+    ASSERT_DOUBLE_EQ(45.6, testDataSet.getDouble(TagId(0x20, 0x20), 0));
     ASSERT_EQ(50, testDataSet.getSignedLong(TagId(0x20, 0x21), 0));
     ASSERT_EQ(60, testDataSet.getUnsignedLong(TagId(0x20, 0x22), 0));
 
@@ -237,7 +237,7 @@ TEST(dataSetTest, defaults)
 
     ASSERT_EQ(defaultUnsigned, testDataSet.getUnsignedLong(TagId(20, 20), 0, defaultUnsigned));
     ASSERT_EQ(defaultSigned, testDataSet.getSignedLong(TagId(20, 20), 0, defaultSigned));
-    ASSERT_FLOAT_EQ(defaultDouble, testDataSet.getDouble(TagId(20, 20), 0, defaultDouble));
+    ASSERT_DOUBLE_EQ(defaultDouble, testDataSet.getDouble(TagId(20, 20), 0, defaultDouble));
     ASSERT_EQ(defaultString, testDataSet.getString(TagId(20, 20), 0, defaultString));
     ASSERT_EQ(defaultUnicodeString, testDataSet.getUnicodeString(TagId(20, 20), 0, defaultUnicodeString));
 }

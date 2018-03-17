@@ -254,15 +254,15 @@ TEST(objectivec, datasetValues)
 
     EXPECT_EQ(10, [pDataSet getSignedLong:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1011] elementNumber:0 error:&error]);
     EXPECT_EQ(11, [pDataSet getUnsignedLong:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1012] elementNumber:0 error:&error]);
-    EXPECT_DOUBLE_EQ(12.0f, [pDataSet getUnsignedLong:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1013] elementNumber:0 error:&error]);
+    EXPECT_DOUBLE_EQ(12.0, [pDataSet getUnsignedLong:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1013] elementNumber:0 error:&error]);
     EXPECT_EQ(12, [pDataSet getSignedLong:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1020] elementNumber:0 defaultValue:12 error:&error]);
     EXPECT_EQ(13, [pDataSet getUnsignedLong:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1021] elementNumber:0 defaultValue:13 error:&error]);
-    EXPECT_DOUBLE_EQ(14.0f, [pDataSet getDouble:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1022] elementNumber:0 defaultValue:14.0f error:&error]);
+    EXPECT_DOUBLE_EQ(14.0, [pDataSet getDouble:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1022] elementNumber:0 defaultValue:14.0f error:&error]);
 
-    EXPECT_DOUBLE_EQ(0.0f, [pDataSet getDouble:[[ImebraTagId alloc] initWithGroup:0x12 tag:0x12] elementNumber:0 error:&error]);
-    EXPECT_DOUBLE_EQ(1.0f, [pDataSet getDouble:[[ImebraTagId alloc] initWithGroup:0x12 tag:0x12] elementNumber:1 error:&error]);
-    EXPECT_DOUBLE_EQ(2.0f, [pDataSet getDouble:[[ImebraTagId alloc] initWithGroup:0x12 tag:0x12] elementNumber:2 error:&error]);
-    EXPECT_DOUBLE_EQ(3.0f, [pDataSet getDouble:[[ImebraTagId alloc] initWithGroup:0x12 tag:0x12] elementNumber:3 error:&error]);
+    EXPECT_DOUBLE_EQ(0.0, [pDataSet getDouble:[[ImebraTagId alloc] initWithGroup:0x12 tag:0x12] elementNumber:0 error:&error]);
+    EXPECT_DOUBLE_EQ(1.0, [pDataSet getDouble:[[ImebraTagId alloc] initWithGroup:0x12 tag:0x12] elementNumber:1 error:&error]);
+    EXPECT_DOUBLE_EQ(2.0, [pDataSet getDouble:[[ImebraTagId alloc] initWithGroup:0x12 tag:0x12] elementNumber:2 error:&error]);
+    EXPECT_DOUBLE_EQ(3.0, [pDataSet getDouble:[[ImebraTagId alloc] initWithGroup:0x12 tag:0x12] elementNumber:3 error:&error]);
 }
 
 

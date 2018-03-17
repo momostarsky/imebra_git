@@ -56,15 +56,28 @@ TEST(numericHandlerTest, testDouble)
         std::unique_ptr<ReadingDataHandlerNumeric> readingHandler(testDataSet.getReadingDataHandlerNumeric(TagId(10, 10), 0));
         ASSERT_TRUE(readingHandler->isFloat());
 
-        ASSERT_FLOAT_EQ(5.6, testDataSet.getDouble(TagId(10, 10), 0));
-        ASSERT_FLOAT_EQ(3.6, testDataSet.getDouble(TagId(10, 10), 1));
-        ASSERT_FLOAT_EQ(2.6, testDataSet.getDouble(TagId(10, 10), 3));
-        ASSERT_FLOAT_EQ(10, testDataSet.getDouble(TagId(10, 10), 4));
-        ASSERT_FLOAT_EQ(20, testDataSet.getDouble(TagId(10, 10), 5));
-        ASSERT_FLOAT_EQ(123.7, testDataSet.getDouble(TagId(10, 10), 6));
-        ASSERT_FLOAT_EQ(124.9, testDataSet.getDouble(TagId(10, 10), 7));
-        ASSERT_THROW(testDataSet.getDouble(TagId(10, 10), 8), MissingItemError);
+        if(floatTags[scanVR] == tagVR_t::FL || floatTags[scanVR] == tagVR_t::OF)
+        {
+            ASSERT_FLOAT_EQ(5.6f, (float)testDataSet.getDouble(TagId(10, 10), 0));
+            ASSERT_FLOAT_EQ(3.6f, (float)testDataSet.getDouble(TagId(10, 10), 1));
+            ASSERT_FLOAT_EQ(2.6f, (float)testDataSet.getDouble(TagId(10, 10), 3));
+            ASSERT_FLOAT_EQ(10.0f, (float)testDataSet.getDouble(TagId(10, 10), 4));
+            ASSERT_FLOAT_EQ(20.0f, (float)testDataSet.getDouble(TagId(10, 10), 5));
+            ASSERT_FLOAT_EQ(123.7f, (float)testDataSet.getDouble(TagId(10, 10), 6));
+            ASSERT_FLOAT_EQ(124.9f, (float)testDataSet.getDouble(TagId(10, 10), 7));
+        }
+        else
+        {
+            ASSERT_DOUBLE_EQ(5.6, testDataSet.getDouble(TagId(10, 10), 0));
+            ASSERT_DOUBLE_EQ(3.6, testDataSet.getDouble(TagId(10, 10), 1));
+            ASSERT_DOUBLE_EQ(2.6, testDataSet.getDouble(TagId(10, 10), 3));
+            ASSERT_DOUBLE_EQ(10.0, testDataSet.getDouble(TagId(10, 10), 4));
+            ASSERT_DOUBLE_EQ(20.0, testDataSet.getDouble(TagId(10, 10), 5));
+            ASSERT_DOUBLE_EQ(123.7, testDataSet.getDouble(TagId(10, 10), 6));
+            ASSERT_DOUBLE_EQ(124.9, testDataSet.getDouble(TagId(10, 10), 7));
+        }
 
+        ASSERT_THROW(testDataSet.getDouble(TagId(10, 10), 8), MissingItemError);
         ASSERT_THROW(testDataSet.getDate(TagId(10, 10), 0), DataHandlerConversionError);
         ASSERT_THROW(testDataSet.getAge(TagId(10, 10), 0), DataHandlerConversionError);
 
@@ -86,22 +99,22 @@ TEST(numericHandlerTest, testDouble)
         ASSERT_EQ(124, testDataSet.getUnsignedLong(TagId(10, 10), 7));
         ASSERT_THROW(testDataSet.getUnsignedLong(TagId(10, 10), 8), MissingItemError);
 
-        ASSERT_FLOAT_EQ(5.6, std::stod(testDataSet.getString(TagId(10, 10), 0).c_str()));
-        ASSERT_FLOAT_EQ(3.6, std::stod(testDataSet.getString(TagId(10, 10), 1).c_str()));
-        ASSERT_FLOAT_EQ(2.6, std::stod(testDataSet.getString(TagId(10, 10), 3).c_str()));
-        ASSERT_FLOAT_EQ(10, std::stod(testDataSet.getString(TagId(10, 10), 4).c_str()));
-        ASSERT_FLOAT_EQ(20, std::stod(testDataSet.getString(TagId(10, 10), 5).c_str()));
-        ASSERT_FLOAT_EQ(123.7, std::stod(testDataSet.getString(TagId(10, 10), 6).c_str()));
-        ASSERT_FLOAT_EQ(124.9, std::stod(testDataSet.getString(TagId(10, 10), 7).c_str()));
+        ASSERT_DOUBLE_EQ(5.6, std::stod(testDataSet.getString(TagId(10, 10), 0).c_str()));
+        ASSERT_DOUBLE_EQ(3.6, std::stod(testDataSet.getString(TagId(10, 10), 1).c_str()));
+        ASSERT_DOUBLE_EQ(2.6, std::stod(testDataSet.getString(TagId(10, 10), 3).c_str()));
+        ASSERT_DOUBLE_EQ(10.0, std::stod(testDataSet.getString(TagId(10, 10), 4).c_str()));
+        ASSERT_DOUBLE_EQ(20.0, std::stod(testDataSet.getString(TagId(10, 10), 5).c_str()));
+        ASSERT_DOUBLE_EQ(123.7, std::stod(testDataSet.getString(TagId(10, 10), 6).c_str()));
+        ASSERT_DOUBLE_EQ(124.9, std::stod(testDataSet.getString(TagId(10, 10), 7).c_str()));
         ASSERT_THROW(testDataSet.getString(TagId(10, 10), 8), MissingItemError);
 
-        ASSERT_FLOAT_EQ(5.6, std::stod(testDataSet.getUnicodeString(TagId(10, 10), 0).c_str()));
-        ASSERT_FLOAT_EQ(3.6, std::stod(testDataSet.getUnicodeString(TagId(10, 10), 1).c_str()));
-        ASSERT_FLOAT_EQ(2.6, std::stod(testDataSet.getUnicodeString(TagId(10, 10), 3).c_str()));
-        ASSERT_FLOAT_EQ(10, std::stod(testDataSet.getUnicodeString(TagId(10, 10), 4).c_str()));
-        ASSERT_FLOAT_EQ(20, std::stod(testDataSet.getUnicodeString(TagId(10, 10), 5).c_str()));
-        ASSERT_FLOAT_EQ(123.7, std::stod(testDataSet.getUnicodeString(TagId(10, 10), 6).c_str()));
-        ASSERT_FLOAT_EQ(124.9, std::stod(testDataSet.getUnicodeString(TagId(10, 10), 7).c_str()));
+        ASSERT_DOUBLE_EQ(5.6, std::stod(testDataSet.getUnicodeString(TagId(10, 10), 0).c_str()));
+        ASSERT_DOUBLE_EQ(3.6, std::stod(testDataSet.getUnicodeString(TagId(10, 10), 1).c_str()));
+        ASSERT_DOUBLE_EQ(2.6, std::stod(testDataSet.getUnicodeString(TagId(10, 10), 3).c_str()));
+        ASSERT_DOUBLE_EQ(10.0, std::stod(testDataSet.getUnicodeString(TagId(10, 10), 4).c_str()));
+        ASSERT_DOUBLE_EQ(20.0, std::stod(testDataSet.getUnicodeString(TagId(10, 10), 5).c_str()));
+        ASSERT_DOUBLE_EQ(123.7, std::stod(testDataSet.getUnicodeString(TagId(10, 10), 6).c_str()));
+        ASSERT_DOUBLE_EQ(124.9, std::stod(testDataSet.getUnicodeString(TagId(10, 10), 7).c_str()));
         ASSERT_THROW(testDataSet.getString(TagId(10, 10), 8), MissingItemError);
     }
 }
@@ -140,13 +153,13 @@ TEST(numericHandlerTest, testInteger)
         std::unique_ptr<ReadingDataHandlerNumeric> readingHandler(testDataSet.getReadingDataHandlerNumeric(TagId(10, 10), 0));
         ASSERT_FALSE(readingHandler->isFloat());
 
-        ASSERT_FLOAT_EQ(5, testDataSet.getDouble(TagId(10, 10), 0));
-        ASSERT_FLOAT_EQ(3, testDataSet.getDouble(TagId(10, 10), 1));
-        ASSERT_FLOAT_EQ(2, testDataSet.getDouble(TagId(10, 10), 3));
-        ASSERT_FLOAT_EQ(10, testDataSet.getDouble(TagId(10, 10), 4));
-        ASSERT_FLOAT_EQ(20, testDataSet.getDouble(TagId(10, 10), 5));
-        ASSERT_FLOAT_EQ(123, testDataSet.getDouble(TagId(10, 10), 6));
-        ASSERT_FLOAT_EQ(124, testDataSet.getDouble(TagId(10, 10), 7));
+        ASSERT_DOUBLE_EQ(5.0, testDataSet.getDouble(TagId(10, 10), 0));
+        ASSERT_DOUBLE_EQ(3.0, testDataSet.getDouble(TagId(10, 10), 1));
+        ASSERT_DOUBLE_EQ(2.0, testDataSet.getDouble(TagId(10, 10), 3));
+        ASSERT_DOUBLE_EQ(10.0, testDataSet.getDouble(TagId(10, 10), 4));
+        ASSERT_DOUBLE_EQ(20.0, testDataSet.getDouble(TagId(10, 10), 5));
+        ASSERT_DOUBLE_EQ(123.0, testDataSet.getDouble(TagId(10, 10), 6));
+        ASSERT_DOUBLE_EQ(124.0, testDataSet.getDouble(TagId(10, 10), 7));
         ASSERT_THROW(testDataSet.getDouble(TagId(10, 10), 8), MissingItemError);
 
         ASSERT_THROW(testDataSet.getDate(TagId(10, 10), 0), DataHandlerConversionError);
@@ -226,8 +239,8 @@ TEST(numericHandlerTest, testCopyFrom)
 
             for(size_t checkData(0); checkData != 10; ++checkData)
             {
-                ASSERT_FLOAT_EQ((double)checkData, dest->getDouble(checkData));
-                ASSERT_FLOAT_EQ((double)checkData, source->getDouble(checkData));
+                ASSERT_DOUBLE_EQ((double)checkData, dest->getDouble(checkData));
+                ASSERT_DOUBLE_EQ((double)checkData, source->getDouble(checkData));
             }
 
         }
@@ -269,8 +282,8 @@ TEST(numericHandlerTest, testCopyTo)
 
             for(size_t checkData(0); checkData != 10; ++checkData)
             {
-                ASSERT_FLOAT_EQ((double)checkData, dest->getDouble(checkData));
-                ASSERT_FLOAT_EQ((double)checkData, source->getDouble(checkData));
+                ASSERT_DOUBLE_EQ((double)checkData, dest->getDouble(checkData));
+                ASSERT_DOUBLE_EQ((double)checkData, source->getDouble(checkData));
             }
 
         }

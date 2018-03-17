@@ -184,7 +184,7 @@ TEST(dicomCodecTest, testDicom)
                             EXPECT_EQ(std::string("AAAaa"), testDataSet->getString(TagId(imebra::tagId_t::PatientName_0010_0010), 0));
                             EXPECT_EQ(std::string("BBBbbb"), testDataSet->getString(TagId(imebra::tagId_t::PatientName_0010_0010), 1));
                             EXPECT_EQ(std::string(""), testDataSet->getString(TagId(imebra::tagId_t::PatientName_0010_0010), 2));
-                            EXPECT_FLOAT_EQ(50.6, testDataSet->getDouble(TagId(tagId_t::TimeRange_0008_1163), 0));
+                            EXPECT_DOUBLE_EQ(50.6, testDataSet->getDouble(TagId(tagId_t::TimeRange_0008_1163), 0));
 
                             std::unique_ptr<DataSet> sequenceItem(testDataSet->getSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 0));
                             EXPECT_EQ("test test", sequenceItem->getString(TagId(tagId_t::PatientName_0010_0010), 0));
