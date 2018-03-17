@@ -12,7 +12,7 @@ TEST(drawBitmapTest, testDrawBitmapRGB)
 {
 	for(int monochrome(0); monochrome != 2; ++monochrome)
 	{
-        for(int highBit = 15; highBit != 2; --highBit)
+        for(std::uint32_t highBit = 15; highBit != 2; --highBit)
 		{
             std::unique_ptr<Image> testImage(buildImageForTest(
                     401,
@@ -31,7 +31,7 @@ TEST(drawBitmapTest, testDrawBitmapRGB)
             DrawBitmap testDraw;
             std::unique_ptr<ReadWriteMemory> bitmapBuffer(testDraw.getBitmap(*testImage, drawBitmapType_t::drawBitmapRGB, 1));
             size_t bufferSize;
-            char* pBuffer(bitmapBuffer->data(&bufferSize));
+            std::uint8_t* pBuffer((std::uint8_t*)(bitmapBuffer->data(&bufferSize)));
 
             std::unique_ptr<ReadingDataHandler> imageHandler(testImage->getReadingDataHandler());
 
@@ -41,9 +41,9 @@ TEST(drawBitmapTest, testDrawBitmapRGB)
 			{
                 for(std::uint32_t scanX = 0; scanX != testImage->getWidth(); ++scanX)
 				{
-                    std::uint8_t displayRed(*pBuffer++);
-                    std::uint8_t displayGreen(*pBuffer++);
-                    std::uint8_t displayBlue(*pBuffer++);
+                    std::uint32_t displayRed(*pBuffer++);
+                    std::uint32_t displayGreen(*pBuffer++);
+                    std::uint32_t displayBlue(*pBuffer++);
 
                     if(monochrome)
                     {
@@ -88,7 +88,7 @@ TEST(drawBitmapTest, testDrawBitmapBGR)
 {
     for(int monochrome(0); monochrome != 2; ++monochrome)
     {
-        for(int highBit = 15; highBit != 2; --highBit)
+        for(std::uint32_t highBit = 15; highBit != 2; --highBit)
         {
             std::unique_ptr<Image> testImage(buildImageForTest(
                     401,
@@ -107,19 +107,19 @@ TEST(drawBitmapTest, testDrawBitmapBGR)
             DrawBitmap testDraw;
             std::unique_ptr<ReadWriteMemory> bitmapBuffer(testDraw.getBitmap(*testImage, drawBitmapType_t::drawBitmapBGR, 4));
             size_t bufferSize;
-            char* pBuffer(bitmapBuffer->data(&bufferSize));
+            std::uint8_t* pBuffer((std::uint8_t*)(bitmapBuffer->data(&bufferSize)));
 
             std::unique_ptr<ReadingDataHandler> imageHandler(testImage->getReadingDataHandler());
 
             std::uint32_t red, green, blue;
             size_t index(0);
-            for(int scanY = 0; scanY != testImage->getHeight(); ++scanY)
+            for(std::uint32_t scanY = 0; scanY != testImage->getHeight(); ++scanY)
             {
-                for(int scanX = 0; scanX != testImage->getWidth(); ++scanX)
+                for(std::uint32_t scanX = 0; scanX != testImage->getWidth(); ++scanX)
                 {
-                    std::uint8_t displayBlue(*pBuffer++);
-                    std::uint8_t displayGreen(*pBuffer++);
-                    std::uint8_t displayRed(*pBuffer++);
+                    std::uint32_t displayBlue(*pBuffer++);
+                    std::uint32_t displayGreen(*pBuffer++);
+                    std::uint32_t displayRed(*pBuffer++);
 
                     if(monochrome)
                     {
@@ -164,7 +164,7 @@ TEST(drawBitmapTest, testDrawBitmapRGBA)
 {
     for(int monochrome(0); monochrome != 2; ++monochrome)
     {
-        for(int highBit = 15; highBit != 2; --highBit)
+        for(std::uint32_t highBit = 15; highBit != 2; --highBit)
         {
             std::unique_ptr<Image> testImage(buildImageForTest(
                     401,
@@ -183,20 +183,20 @@ TEST(drawBitmapTest, testDrawBitmapRGBA)
             DrawBitmap testDraw;
             std::unique_ptr<ReadWriteMemory> bitmapBuffer(testDraw.getBitmap(*testImage, drawBitmapType_t::drawBitmapRGBA, 1));
             size_t bufferSize;
-            char* pBuffer(bitmapBuffer->data(&bufferSize));
+            std::uint8_t* pBuffer((std::uint8_t*)(bitmapBuffer->data(&bufferSize)));
 
             std::unique_ptr<ReadingDataHandler> imageHandler(testImage->getReadingDataHandler());
 
             std::uint32_t red, green, blue;
             size_t index(0);
-            for(int scanY = 0; scanY != testImage->getHeight(); ++scanY)
+            for(std::uint32_t scanY = 0; scanY != testImage->getHeight(); ++scanY)
             {
-                for(int scanX = 0; scanX != testImage->getWidth(); ++scanX)
+                for(std::uint32_t scanX = 0; scanX != testImage->getWidth(); ++scanX)
                 {
-                    std::uint8_t displayRed(*pBuffer++);
-                    std::uint8_t displayGreen(*pBuffer++);
-                    std::uint8_t displayBlue(*pBuffer++);
-                    std::uint8_t displayAlpha(*pBuffer++);
+                    std::uint32_t displayRed(*pBuffer++);
+                    std::uint32_t displayGreen(*pBuffer++);
+                    std::uint32_t displayBlue(*pBuffer++);
+                    std::uint32_t displayAlpha(*pBuffer++);
 
                     if(monochrome)
                     {
@@ -240,7 +240,7 @@ TEST(drawBitmapTest, testDrawBitmapBGRA)
 {
     for(int monochrome(0); monochrome != 2; ++monochrome)
     {
-        for(int highBit = 15; highBit != 2; --highBit)
+        for(std::uint32_t highBit = 15; highBit != 2; --highBit)
         {
             std::unique_ptr<Image> testImage(buildImageForTest(
                     401,
@@ -259,20 +259,20 @@ TEST(drawBitmapTest, testDrawBitmapBGRA)
             DrawBitmap testDraw;
             std::unique_ptr<ReadWriteMemory> bitmapBuffer(testDraw.getBitmap(*testImage, drawBitmapType_t::drawBitmapBGRA, 4));
             size_t bufferSize;
-            char* pBuffer(bitmapBuffer->data(&bufferSize));
+            std::uint8_t* pBuffer((std::uint8_t*)(bitmapBuffer->data(&bufferSize)));
 
             std::unique_ptr<ReadingDataHandler> imageHandler(testImage->getReadingDataHandler());
 
             std::uint32_t red, green, blue;
             size_t index(0);
-            for(int scanY = 0; scanY != testImage->getHeight(); ++scanY)
+            for(std::uint32_t scanY = 0; scanY != testImage->getHeight(); ++scanY)
             {
-                for(int scanX = 0; scanX != testImage->getWidth(); ++scanX)
+                for(std::uint32_t scanX = 0; scanX != testImage->getWidth(); ++scanX)
                 {
-                    std::uint8_t displayBlue(*pBuffer++);
-                    std::uint8_t displayGreen(*pBuffer++);
-                    std::uint8_t displayRed(*pBuffer++);
-                    std::uint8_t displayAlpha(*pBuffer++);
+                    std::uint32_t displayBlue(*pBuffer++);
+                    std::uint32_t displayGreen(*pBuffer++);
+                    std::uint32_t displayRed(*pBuffer++);
+                    std::uint32_t displayAlpha(*pBuffer++);
 
                     if(monochrome)
                     {
@@ -319,23 +319,23 @@ TEST(drawBitmapTest, testPalette)
     {
         std::unique_ptr<WritingDataHandlerNumeric> redDescriptor(testDataSet.getWritingDataHandlerNumeric(TagId(tagId_t::RedPaletteColorLookupTableDescriptor_0028_1101), 0, tagVR_t::US));
         std::unique_ptr<WritingDataHandlerNumeric> redData(testDataSet.getWritingDataHandlerNumeric(TagId(tagId_t::RedPaletteColorLookupTableData_0028_1201), 0, tagVR_t::US));
-        redDescriptor->setUnsignedLong(0, 256);
-        redDescriptor->setUnsignedLong(1, 0);
-        redDescriptor->setUnsignedLong(2, 8);
+        redDescriptor->setUnsignedLong(0, 256u);
+        redDescriptor->setUnsignedLong(1, 0u);
+        redDescriptor->setUnsignedLong(2, 8u);
 
         std::unique_ptr<WritingDataHandlerNumeric> greenDescriptor(testDataSet.getWritingDataHandlerNumeric(TagId(tagId_t::GreenPaletteColorLookupTableDescriptor_0028_1102), 0, tagVR_t::US));
         std::unique_ptr<WritingDataHandlerNumeric> greenData(testDataSet.getWritingDataHandlerNumeric(TagId(tagId_t::GreenPaletteColorLookupTableData_0028_1202), 0, tagVR_t::US));
-        greenDescriptor->setUnsignedLong(0, 256);
-        greenDescriptor->setUnsignedLong(1, 0);
-        greenDescriptor->setUnsignedLong(2, 8);
+        greenDescriptor->setUnsignedLong(0, 256u);
+        greenDescriptor->setUnsignedLong(1, 0u);
+        greenDescriptor->setUnsignedLong(2, 8u);
 
         std::unique_ptr<WritingDataHandlerNumeric> blueDescriptor(testDataSet.getWritingDataHandlerNumeric(TagId(tagId_t::BluePaletteColorLookupTableDescriptor_0028_1103), 0, tagVR_t::US));
         std::unique_ptr<WritingDataHandlerNumeric> blueData(testDataSet.getWritingDataHandlerNumeric(TagId(tagId_t::BluePaletteColorLookupTableData_0028_1203), 0, tagVR_t::US));
-        blueDescriptor->setUnsignedLong(0, 256);
-        blueDescriptor->setUnsignedLong(1, 0);
-        blueDescriptor->setUnsignedLong(2, 8);
+        blueDescriptor->setUnsignedLong(0, 256u);
+        blueDescriptor->setUnsignedLong(1, 0u);
+        blueDescriptor->setUnsignedLong(2, 8u);
 
-        for(size_t fillPalette(0); fillPalette != 256; fillPalette += 2)
+        for(std::uint32_t fillPalette(0); fillPalette != 256; fillPalette += 2)
         {
             redData->setUnsignedLong(fillPalette / 2, ((fillPalette + 10) & 0xff) | (((fillPalette + 11) & 0xff) << 8));
             greenData->setUnsignedLong(fillPalette / 2, ((fillPalette + 21) & 0xff) | (((fillPalette + 22) & 0xff) << 8));
@@ -343,7 +343,7 @@ TEST(drawBitmapTest, testPalette)
         }
     }
 
-    size_t sizeX(300), sizeY(300);
+    std::uint32_t sizeX(300), sizeY(300);
     Image paletteImage(sizeX, sizeY, bitDepth_t::depthU8, "MONOCHROME2", 7);
 
     {
@@ -415,7 +415,7 @@ TEST(drawBitmapTest, testPalette16bit)
         blueDescriptor->setUnsignedLong(1, 0);
         blueDescriptor->setUnsignedLong(2, 16);
 
-        for(size_t fillPalette(0); fillPalette != 256; fillPalette++)
+        for(std::uint32_t fillPalette(0); fillPalette != 256; fillPalette++)
         {
             redData->setUnsignedLong(fillPalette, ((fillPalette + 10) & 0xff) * 256);
             greenData->setUnsignedLong(fillPalette, ((fillPalette + 21) & 0xff) * 256);
@@ -423,7 +423,7 @@ TEST(drawBitmapTest, testPalette16bit)
         }
     }
 
-    size_t sizeX(300), sizeY(300);
+    std::uint32_t sizeX(300), sizeY(300);
     Image paletteImage(sizeX, sizeY, bitDepth_t::depthU8, "MONOCHROME2", 7);
 
     {

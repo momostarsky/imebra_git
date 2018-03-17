@@ -32,7 +32,7 @@ TEST(paletteTest, testPalette)
         blueDescriptor->setUnsignedLong(1, 0);
         blueDescriptor->setUnsignedLong(2, 8);
 
-        for(size_t fillPalette(0); fillPalette != 256; fillPalette += 2)
+        for(std::uint32_t fillPalette(0); fillPalette != 256; fillPalette += 2)
         {
             redData->setUnsignedLong(fillPalette / 2, ((fillPalette + 10) & 0xff) | (((fillPalette + 11) & 0xff) << 8));
             greenData->setUnsignedLong(fillPalette / 2, ((fillPalette + 21) & 0xff) | (((fillPalette + 22) & 0xff) << 8));
@@ -40,13 +40,13 @@ TEST(paletteTest, testPalette)
         }
     }
 
-    size_t sizeX(300), sizeY(300);
+    std::uint32_t sizeX(300), sizeY(300);
     Image paletteImage(sizeX, sizeY, bitDepth_t::depthU8, "MONOCHROME2", 7);
 
     {
         std::unique_ptr<WritingDataHandlerNumeric> imageHandler(paletteImage.getWritingDataHandler());
 
-        size_t pointer(0);
+        std::uint32_t pointer(0);
 
         // Make 3 bands (RGB)
         for(std::uint32_t y=0; y<sizeY; ++y)
@@ -73,7 +73,7 @@ TEST(paletteTest, testPalette)
 
     std::unique_ptr<ReadingDataHandlerNumeric> rgbHandler(rgbImage->getReadingDataHandler());
 
-    size_t pointer = 0;
+    std::uint32_t pointer = 0;
     size_t rgbPointer = 0;
     for(std::uint32_t checkY = 0; checkY < sizeY; ++checkY)
     {
@@ -117,7 +117,7 @@ TEST(paletteTest, testPalette16bit)
         blueDescriptor->setUnsignedLong(1, 0);
         blueDescriptor->setUnsignedLong(2, 16);
 
-        for(size_t fillPalette(0); fillPalette != 256; fillPalette++)
+        for(std::uint32_t fillPalette(0); fillPalette != 256; fillPalette++)
         {
             redData->setUnsignedLong(fillPalette, (fillPalette + 10) & 0xff);
             greenData->setUnsignedLong(fillPalette, (fillPalette + 21) & 0xff);
@@ -125,13 +125,13 @@ TEST(paletteTest, testPalette16bit)
         }
     }
 
-    size_t sizeX(300), sizeY(300);
+    std::uint32_t sizeX(300), sizeY(300);
     Image paletteImage(sizeX, sizeY, bitDepth_t::depthU8, "MONOCHROME2", 7);
 
     {
         std::unique_ptr<WritingDataHandlerNumeric> imageHandler(paletteImage.getWritingDataHandler());
 
-        size_t pointer(0);
+        std::uint32_t pointer(0);
 
         // Make 3 bands (RGB)
         for(std::uint32_t y=0; y<sizeY; ++y)
@@ -158,7 +158,7 @@ TEST(paletteTest, testPalette16bit)
 
     std::unique_ptr<ReadingDataHandlerNumeric> rgbHandler(rgbImage->getReadingDataHandler());
 
-    size_t pointer = 0;
+    std::uint32_t pointer = 0;
     size_t rgbPointer = 0;
     for(std::uint32_t checkY = 0; checkY < sizeY; ++checkY)
     {

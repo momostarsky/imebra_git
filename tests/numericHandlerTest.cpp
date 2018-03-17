@@ -218,9 +218,9 @@ TEST(numericHandlerTest, testCopyFrom)
 
             {
                 std::unique_ptr<WritingDataHandlerNumeric> handler(testDataSet.getWritingDataHandlerNumeric(TagId(10, 11), 0, allTags[sourceVR]));
-                for(size_t fillData(0); fillData != 10; ++fillData)
+                for(std::uint32_t fillData(0); fillData != 10; ++fillData)
                 {
-                    handler->setSignedLong(fillData, fillData);
+                    handler->setSignedLong(fillData, (std::int32_t)fillData);
                 }
             }
 
@@ -234,8 +234,8 @@ TEST(numericHandlerTest, testCopyFrom)
             std::unique_ptr<ReadingDataHandlerNumeric> source(testDataSet.getReadingDataHandlerNumeric(TagId(10, 11), 0));
             std::unique_ptr<ReadingDataHandlerNumeric> dest(testDataSet.getReadingDataHandlerNumeric(TagId(10, 10), 0));
 
-            ASSERT_EQ(10, dest->getSize());
-            ASSERT_EQ(10, source->getSize());
+            ASSERT_EQ(10u, dest->getSize());
+            ASSERT_EQ(10u, source->getSize());
 
             for(size_t checkData(0); checkData != 10; ++checkData)
             {
@@ -260,9 +260,9 @@ TEST(numericHandlerTest, testCopyTo)
 
             {
                 std::unique_ptr<WritingDataHandlerNumeric> handler(testDataSet.getWritingDataHandlerNumeric(TagId(10, 11), 0, allTags[sourceVR]));
-                for(size_t fillData(0); fillData != 10; ++fillData)
+                for(std::uint32_t fillData(0); fillData != 10; ++fillData)
                 {
-                    handler->setSignedLong(fillData, fillData);
+                    handler->setSignedLong(fillData, (std::int32_t)fillData);
                 }
             }
 
@@ -277,8 +277,8 @@ TEST(numericHandlerTest, testCopyTo)
             std::unique_ptr<ReadingDataHandlerNumeric> source(testDataSet.getReadingDataHandlerNumeric(TagId(10, 11), 0));
             std::unique_ptr<ReadingDataHandlerNumeric> dest(testDataSet.getReadingDataHandlerNumeric(TagId(10, 10), 0));
 
-            ASSERT_EQ(12, dest->getSize());
-            ASSERT_EQ(10, source->getSize());
+            ASSERT_EQ(12u, dest->getSize());
+            ASSERT_EQ(10u, source->getSize());
 
             for(size_t checkData(0); checkData != 10; ++checkData)
             {

@@ -18,28 +18,28 @@ TEST(lut, simpleLut)
         std::unique_ptr<WritingDataHandlerNumeric> data(lutItem.getWritingDataHandlerNumeric(TagId(tagId_t::LUTData_0028_3006), 0, tagVR_t::US));
         lutItem.setString(TagId(tagId_t::LUTExplanation_0028_3003), "Test LUT");
 
-        descriptor->setUnsignedLong(0, 3);
-        descriptor->setUnsignedLong(1, 2);
-        descriptor->setUnsignedLong(2, 16);
+        descriptor->setUnsignedLong(0, 3u);
+        descriptor->setUnsignedLong(1, 2u);
+        descriptor->setUnsignedLong(2, 16u);
 
-        data->setUnsignedLong(0, 100);
-        data->setUnsignedLong(1, 200);
-        data->setUnsignedLong(2, 300);
+        data->setUnsignedLong(0, 100u);
+        data->setUnsignedLong(1, 200u);
+        data->setUnsignedLong(2, 300u);
     }
     sequenceTag->setSequenceItem(0, lutItem);
 
     {
         std::unique_ptr<LUT> lut(testDataSet.getLUT(TagId(tagId_t::ModalityLUTSequence_0028_3000), 0));
         ASSERT_EQ(L"Test LUT", lut->getDescription());
-        ASSERT_EQ(3, lut->getSize());
-        ASSERT_EQ(16, lut->getBits());
+        ASSERT_EQ(3u, lut->getSize());
+        ASSERT_EQ(16u, lut->getBits());
         ASSERT_EQ(2, lut->getFirstMapped());
-        ASSERT_EQ(100, lut->getMappedValue(0));
-        ASSERT_EQ(100, lut->getMappedValue(1));
-        ASSERT_EQ(100, lut->getMappedValue(2));
-        ASSERT_EQ(200, lut->getMappedValue(3));
-        ASSERT_EQ(300, lut->getMappedValue(4));
-        ASSERT_EQ(300, lut->getMappedValue(5));
+        ASSERT_EQ(100u, lut->getMappedValue(0));
+        ASSERT_EQ(100u, lut->getMappedValue(1));
+        ASSERT_EQ(100u, lut->getMappedValue(2));
+        ASSERT_EQ(200u, lut->getMappedValue(3));
+        ASSERT_EQ(300u, lut->getMappedValue(4));
+        ASSERT_EQ(300u, lut->getMappedValue(5));
     }
 }
 
@@ -189,7 +189,7 @@ TEST(lut, simpleLut16bitFull)
         descriptor->setUnsignedLong(1, 0);
         descriptor->setUnsignedLong(2, 16);
 
-        for(size_t fillLut(0); fillLut != 65536; ++fillLut)
+        for(std::uint32_t fillLut(0); fillLut != 65536; ++fillLut)
         {
             data->setUnsignedLong(fillLut, fillLut);
         }
@@ -202,7 +202,7 @@ TEST(lut, simpleLut16bitFull)
         ASSERT_EQ(65536, lut->getSize());
         ASSERT_EQ(16, lut->getBits());
         ASSERT_EQ(0, lut->getFirstMapped());
-        for(size_t checkLut(0); checkLut != 65536; ++checkLut)
+        for(std::uint32_t checkLut(0); checkLut != 65536; ++checkLut)
         {
             ASSERT_EQ(checkLut, lut->getMappedValue(checkLut));
         }

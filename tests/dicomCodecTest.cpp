@@ -12,7 +12,7 @@ namespace tests
 
 TEST(dicomCodecTest, testDicom)
 {
-    char* colorSpaces[] = {"MONOCHROME2", "RGB", "YBR_FULL", "YBR_FULL_422", "YBR_FULL_420"};
+    const char* const colorSpaces[] = {"MONOCHROME2", "RGB", "YBR_FULL", "YBR_FULL_422", "YBR_FULL_420"};
 
     std::uint32_t highBitStep = 1;
     std::uint32_t interleavedStart = 0;
@@ -176,8 +176,8 @@ TEST(dicomCodecTest, testDicom)
                             StreamReader reader(readStream);
                             std::unique_ptr<DataSet> testDataSet(CodecFactory::load(reader, lazyLoad == 0 ? std::numeric_limits<size_t>::max() : 1));
 
-                            EXPECT_EQ(0, testDataSet->getUnsignedLong(TagId(tagId_t::FileMetaInformationVersion_0002_0001), 0));
-                            EXPECT_EQ(1, testDataSet->getUnsignedLong(TagId(tagId_t::FileMetaInformationVersion_0002_0001), 1));
+                            EXPECT_EQ(0u, testDataSet->getUnsignedLong(TagId(tagId_t::FileMetaInformationVersion_0002_0001), 0));
+                            EXPECT_EQ(1u, testDataSet->getUnsignedLong(TagId(tagId_t::FileMetaInformationVersion_0002_0001), 1));
                             EXPECT_THROW(testDataSet->getUnsignedLong(TagId(tagId_t::FileMetaInformationVersion_0002_0001), 2), MissingItemError);
                             EXPECT_EQ(tagVR_t::OB, testDataSet->getDataType(TagId(tagId_t::FileMetaInformationVersion_0002_0001)));
 
@@ -200,7 +200,7 @@ TEST(dicomCodecTest, testDicom)
                             }
                             else
                             {
-                                EXPECT_EQ(1 - interleaved, testDataSet->getSignedLong(TagId(imebra::tagId_t::PlanarConfiguration_0028_0006), 0));
+                                EXPECT_EQ((std::int32_t)(1 - interleaved), testDataSet->getSignedLong(TagId(imebra::tagId_t::PlanarConfiguration_0028_0006), 0));
                             }
 
                             ASSERT_TRUE(identicalImages(*checkImage0, *dicomImage0));

@@ -118,7 +118,7 @@ TEST(dataSetTest, testVOIs)
     }
 
     vois_t vois1 = testDataSet.getVOIs();
-    ASSERT_EQ(2, vois1.size());
+    ASSERT_EQ(2u, vois1.size());
     ASSERT_DOUBLE_EQ(10.4, vois1.at(0).center);
     ASSERT_DOUBLE_EQ(12.5, vois1.at(0).width);
     ASSERT_EQ(L"Test1", vois1.at(0).description);
@@ -178,7 +178,7 @@ TEST(dataSetTest, testSetGetTags)
     testDataSet.setUnsignedLong(TagId(0x20, 0x22), 60, tagVR_t::UL);
 
     std::unique_ptr<Age> age0(testDataSet.getAge(TagId(tagId_t::PatientAge_0010_1010), 0));
-    ASSERT_EQ(3, age0->age);
+    ASSERT_EQ(3u, age0->age);
     ASSERT_EQ(ageUnit_t::months, age0->units);
     ASSERT_EQ("003M", testDataSet.getString(TagId(tagId_t::PatientAge_0010_1010), 0));
     ASSERT_THROW(testDataSet.getSignedLong(TagId(tagId_t::PatientAge_0010_1010), 0), DataHandlerConversionError);
@@ -213,7 +213,7 @@ TEST(dataSetTest, defaults)
     Age defaultAge(5, ageUnit_t::years);
     Date defaultDate(2015, 3, 2, 12, 0, 0, 0, 0, 0);
     std::uint32_t defaultUnsigned(150);
-    std::uint32_t defaultSigned(-10);
+    std::int32_t defaultSigned(-10);
     double defaultDouble(10.0);
     std::string defaultString("defaultstring");
     std::wstring defaultUnicodeString(L"defaultUnicodeString");

@@ -27,7 +27,7 @@ void memoryThread(size_t minSize, size_t maxSize)
         ReadWriteMemory memory(1);
         size_t dataSize;
         *memory.data(&dataSize) = 2;
-        EXPECT_EQ(1, dataSize);
+        EXPECT_EQ(1u, dataSize);
     }
     std::this_thread::sleep_for(std::chrono::seconds(2));
     EXPECT_EQ(0, MemoryPool::getUnusedMemorySize());

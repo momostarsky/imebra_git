@@ -87,7 +87,7 @@ TEST(jpegCodecTest, testBaselineSubsampled)
                         // Insert a premature EOI tag
                         /////////////////////////////
                         size_t dataSize;
-                        char* pData = savedJpeg.data(&dataSize);
+                        std::uint8_t* pData = (std::uint8_t*)(savedJpeg.data(&dataSize));
                         pData[dataSize - 10] = 0xff;
                         pData[dataSize - 9] = 0xd9;
                     }
@@ -120,7 +120,7 @@ TEST(jpegCodecTest, testLossless)
 {
     for(int interleaved = 0; interleaved != 2; ++interleaved)
     {
-        for(int bits = 8; bits <= 16; bits += 8)
+        for(std::uint32_t bits = 8; bits <= 16; bits += 8)
         {
             for(int firstOrderPrediction = 0; firstOrderPrediction != 2; ++firstOrderPrediction)
             {

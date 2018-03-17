@@ -39,7 +39,7 @@ TEST(stringHandlerTest, DSTest)
         testDataSet.setString(TagId(0x0028, 0x1051), "20", tagVR_t::DS);
         ASSERT_DOUBLE_EQ(20.0, testDataSet.getDouble(TagId(0x0028, 0x1051), 0));
         ASSERT_EQ(20, testDataSet.getSignedLong(TagId(0x0028, 0x1051), 0));
-        ASSERT_EQ(20, testDataSet.getUnsignedLong(TagId(0x0028, 0x1051), 0));
+        ASSERT_EQ(20u, testDataSet.getUnsignedLong(TagId(0x0028, 0x1051), 0));
         ASSERT_EQ(tagVR_t::DS, testDataSet.getDataType(TagId(0x0028, 0x1051)));
     }
 
@@ -48,7 +48,7 @@ TEST(stringHandlerTest, DSTest)
         testDataSet.setSignedLong(TagId(0x0028, 0x1051), 40, tagVR_t::DS);
         ASSERT_EQ("40", testDataSet.getString(TagId(0x0028, 0x1051), 0));
         ASSERT_EQ(40, testDataSet.getSignedLong(TagId(0x0028, 0x1051), 0));
-        ASSERT_EQ(40, testDataSet.getUnsignedLong(TagId(0x0028, 0x1051), 0));
+        ASSERT_EQ(40u, testDataSet.getUnsignedLong(TagId(0x0028, 0x1051), 0));
         ASSERT_EQ(tagVR_t::DS, testDataSet.getDataType(TagId(0x0028, 0x1051)));
     }
 
@@ -57,7 +57,7 @@ TEST(stringHandlerTest, DSTest)
         testDataSet.setUnsignedLong(TagId(0x0028, 0x1051), 50, tagVR_t::DS);
         ASSERT_EQ("50", testDataSet.getString(TagId(0x0028, 0x1051), 0));
         ASSERT_EQ(50, testDataSet.getSignedLong(TagId(0x0028, 0x1051), 0));
-        ASSERT_EQ(50, testDataSet.getUnsignedLong(TagId(0x0028, 0x1051), 0));
+        ASSERT_EQ(50u, testDataSet.getUnsignedLong(TagId(0x0028, 0x1051), 0));
         ASSERT_EQ(tagVR_t::DS, testDataSet.getDataType(TagId(0x0028, 0x1051)));
     }
 
@@ -124,7 +124,7 @@ TEST(stringHandlerTest, zeroPad)
 
     testDataSet.setString(TagId(0x0010, 0x0010), "0\000", tagVR_t::AE);
     ASSERT_EQ("0", testDataSet.getString(TagId(0x0010, 0x0010), 0));
-    ASSERT_EQ(1, testDataSet.getString(TagId(0x0010, 0x0010), 0).length());
+    ASSERT_EQ(1u, testDataSet.getString(TagId(0x0010, 0x0010), 0).length());
 }
 
 

@@ -24,20 +24,20 @@ TEST(voilut, voilutUnsigned8)
 
     VOILUT voilut;
     voilut.setCenterWidth(0, 50);
-    ASSERT_EQ(0, voilut.getCenter());
-    ASSERT_EQ(50, voilut.getWidth());
+    ASSERT_DOUBLE_EQ(0.0, voilut.getCenter());
+    ASSERT_DOUBLE_EQ(50.0, voilut.getWidth());
 
     std::unique_ptr<Image> unsigned8Out(voilut.allocateOutputImage(unsigned8, 6, 1));
     voilut.runTransform(unsigned8, 0, 0, 6, 1, *unsigned8Out, 0, 0);
 
     std::unique_ptr<ReadingDataHandler> unsigned8Handler(unsigned8Out->getReadingDataHandler());
 
-    ASSERT_EQ(128, unsigned8Handler->getUnsignedLong(0));
-    ASSERT_EQ(179, unsigned8Handler->getUnsignedLong(1));
-    ASSERT_EQ(230, unsigned8Handler->getUnsignedLong(2));
-    ASSERT_EQ(255, unsigned8Handler->getUnsignedLong(3));
-    ASSERT_EQ(255, unsigned8Handler->getUnsignedLong(4));
-    ASSERT_EQ(255, unsigned8Handler->getUnsignedLong(5));
+    ASSERT_EQ(128u, unsigned8Handler->getUnsignedLong(0));
+    ASSERT_EQ(179u, unsigned8Handler->getUnsignedLong(1));
+    ASSERT_EQ(230u, unsigned8Handler->getUnsignedLong(2));
+    ASSERT_EQ(255u, unsigned8Handler->getUnsignedLong(3));
+    ASSERT_EQ(255u, unsigned8Handler->getUnsignedLong(4));
+    ASSERT_EQ(255u, unsigned8Handler->getUnsignedLong(5));
 
     voilut.setCenterWidth(70, 50);
 
@@ -71,20 +71,20 @@ TEST(voilut, voilutUnsigned8OptimalVOI)
 
     VOILUT voilut;
     voilut.applyOptimalVOI(unsigned8, 0, 0, 6, 1);
-    ASSERT_EQ(25, voilut.getCenter());
-    ASSERT_EQ(50, voilut.getWidth());
+    ASSERT_DOUBLE_EQ(25.0, voilut.getCenter());
+    ASSERT_DOUBLE_EQ(50.0, voilut.getWidth());
 
     std::unique_ptr<Image> unsigned8Out(voilut.allocateOutputImage(unsigned8, 6, 1));
     voilut.runTransform(unsigned8, 0, 0, 6, 1, *unsigned8Out, 0, 0);
 
     std::unique_ptr<ReadingDataHandler> unsigned8Handler(unsigned8Out->getReadingDataHandler());
 
-    ASSERT_EQ(0, unsigned8Handler->getUnsignedLong(0));
-    ASSERT_EQ(51, unsigned8Handler->getUnsignedLong(1));
-    ASSERT_EQ(102, unsigned8Handler->getUnsignedLong(2));
-    ASSERT_EQ(154, unsigned8Handler->getUnsignedLong(3));
-    ASSERT_EQ(205, unsigned8Handler->getUnsignedLong(4));
-    ASSERT_EQ(255, unsigned8Handler->getUnsignedLong(5));
+    ASSERT_EQ(0u, unsigned8Handler->getUnsignedLong(0));
+    ASSERT_EQ(51u, unsigned8Handler->getUnsignedLong(1));
+    ASSERT_EQ(102u, unsigned8Handler->getUnsignedLong(2));
+    ASSERT_EQ(154u, unsigned8Handler->getUnsignedLong(3));
+    ASSERT_EQ(205u, unsigned8Handler->getUnsignedLong(4));
+    ASSERT_EQ(255u, unsigned8Handler->getUnsignedLong(5));
 
     Image signed16Out(6, 1, bitDepth_t::depthS16, "MONOCHROME2", 15);
     voilut.runTransform(unsigned8, 0, 0, 6, 1, signed16Out, 0, 0);
@@ -140,12 +140,12 @@ TEST(voilut, voilutUnsigned8LUT)
 
     std::unique_ptr<ReadingDataHandler> paletteHandler(paletteOut->getReadingDataHandler());
 
-    ASSERT_EQ(100, paletteHandler->getUnsignedLong(0));
-    ASSERT_EQ(100, paletteHandler->getUnsignedLong(1));
-    ASSERT_EQ(100, paletteHandler->getUnsignedLong(2));
-    ASSERT_EQ(200, paletteHandler->getUnsignedLong(3));
-    ASSERT_EQ(300, paletteHandler->getUnsignedLong(4));
-    ASSERT_EQ(300, paletteHandler->getUnsignedLong(5));
+    ASSERT_EQ(100u, paletteHandler->getUnsignedLong(0));
+    ASSERT_EQ(100u, paletteHandler->getUnsignedLong(1));
+    ASSERT_EQ(100u, paletteHandler->getUnsignedLong(2));
+    ASSERT_EQ(200u, paletteHandler->getUnsignedLong(3));
+    ASSERT_EQ(300u, paletteHandler->getUnsignedLong(4));
+    ASSERT_EQ(300u, paletteHandler->getUnsignedLong(5));
 
 }
 

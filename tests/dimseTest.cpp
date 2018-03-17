@@ -104,12 +104,12 @@ TEST(dimseTest, storeSCUSCP)
     dimse.sendCommandOrResponse(storeCommand);
     std::unique_ptr<CStoreResponse> response(dimse.getCStoreResponse(storeCommand));
 
-    EXPECT_EQ(receivedCommands.size(), 1);
-    EXPECT_EQ(receivedCommands.front()->getOriginatorAET(), "Origin");
-    EXPECT_EQ(receivedCommands.front()->getAffectedSopInstanceUid(), "1.1.1.1.2");
-    EXPECT_EQ(receivedCommands.front()->getAffectedSopClassUid(), "1.1.1.1.1");
+    EXPECT_EQ(1u, receivedCommands.size());
+    EXPECT_EQ("Origin", receivedCommands.front()->getOriginatorAET());
+    EXPECT_EQ("1.1.1.1.2", receivedCommands.front()->getAffectedSopInstanceUid());
+    EXPECT_EQ("1.1.1.1.1", receivedCommands.front()->getAffectedSopClassUid());
     std::unique_ptr<imebra::DataSet> pPayload(receivedCommands.front()->getPayloadDataSet());
-    EXPECT_EQ(pPayload->getString(TagId(tagId_t::PatientName_0010_0010), 0), "Test^Patient");
+    EXPECT_EQ("Test^Patient", pPayload->getString(TagId(tagId_t::PatientName_0010_0010), 0));
 
     thread.join();
 }
@@ -365,7 +365,7 @@ TEST(dimseTest, moveSCUSCP)
     toSCP.terminate();
     thread.join();
 
-    EXPECT_EQ(1, receivedRequests);
+    EXPECT_EQ(1u, receivedRequests);
 }
 
 
