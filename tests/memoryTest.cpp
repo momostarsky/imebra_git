@@ -30,7 +30,7 @@ void memoryThread(size_t minSize, size_t maxSize)
         EXPECT_EQ(1u, dataSize);
     }
     std::this_thread::sleep_for(std::chrono::seconds(2));
-    EXPECT_EQ(0, MemoryPool::getUnusedMemorySize());
+    EXPECT_EQ(0u, MemoryPool::getUnusedMemorySize());
 
     // Check that released memory goes into the memory pool
     ///////////////////////////////////////////////////////
@@ -46,7 +46,7 @@ void memoryThread(size_t minSize, size_t maxSize)
     std::this_thread::sleep_for(std::chrono::seconds(2));
     EXPECT_EQ(minSize, MemoryPool::getUnusedMemorySize());
     MemoryPool::flush();
-    EXPECT_EQ(0, MemoryPool::getUnusedMemorySize());
+    EXPECT_EQ(0u, MemoryPool::getUnusedMemorySize());
 
     // Release memory and reallocate the same size: it should retrieve
     //  it from the memory pool
@@ -65,10 +65,10 @@ void memoryThread(size_t minSize, size_t maxSize)
     EXPECT_EQ(minSize, MemoryPool::getUnusedMemorySize());
     {
         ReadWriteMemory retrieveMemory(minSize);
-        EXPECT_EQ(0, MemoryPool::getUnusedMemorySize());
+        EXPECT_EQ(0u, MemoryPool::getUnusedMemorySize());
     }
     MemoryPool::flush();
-    EXPECT_EQ(0, MemoryPool::getUnusedMemorySize());
+    EXPECT_EQ(0u, MemoryPool::getUnusedMemorySize());
 
     // Release more memory than the memory pool can hold. Check how
     // much memory it keeps
@@ -156,13 +156,13 @@ TEST(memoryTest, readWriteMemoryCopy)
 
     readWriteMemory.resize(4);
     storedData = readWriteMemory.data(&storedSize);
-    ASSERT_EQ(4, storedSize);
+    ASSERT_EQ(4u, storedSize);
     ASSERT_EQ("Test", std::string(storedData, storedSize));
 
     readWriteMemory.clear();
     ASSERT_TRUE(readWriteMemory.empty());
     storedData = readWriteMemory.data(&storedSize);
-    ASSERT_EQ(0, storedSize);
+    ASSERT_EQ(0u, storedSize);
     ASSERT_EQ("", std::string(storedData, storedSize));
 
 }

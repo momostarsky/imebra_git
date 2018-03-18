@@ -67,8 +67,8 @@ TEST(lut, simpleLutNegative)
     {
         std::unique_ptr<LUT> lut(testDataSet.getLUT(TagId(tagId_t::ModalityLUTSequence_0028_3000), 0));
         ASSERT_EQ(L"Test LUT", lut->getDescription());
-        ASSERT_EQ(3, lut->getSize());
-        ASSERT_EQ(16, lut->getBits());
+        ASSERT_EQ(3u, lut->getSize());
+        ASSERT_EQ(16u, lut->getBits());
         ASSERT_EQ(-2, lut->getFirstMapped());
         ASSERT_EQ(100, lut->getMappedValue(-4));
         ASSERT_EQ(100, lut->getMappedValue(-3));
@@ -199,12 +199,12 @@ TEST(lut, simpleLut16bitFull)
     {
         std::unique_ptr<LUT> lut(testDataSet.getLUT(TagId(tagId_t::ModalityLUTSequence_0028_3000), 0));
         ASSERT_EQ(L"Test LUT", lut->getDescription());
-        ASSERT_EQ(65536, lut->getSize());
-        ASSERT_EQ(16, lut->getBits());
+        ASSERT_EQ(65536u, lut->getSize());
+        ASSERT_EQ(16u, lut->getBits());
         ASSERT_EQ(0, lut->getFirstMapped());
         for(std::uint32_t checkLut(0); checkLut != 65536; ++checkLut)
         {
-            ASSERT_EQ(checkLut, lut->getMappedValue(checkLut));
+            ASSERT_EQ(checkLut, lut->getMappedValue((std::int32_t)checkLut));
         }
     }
 }

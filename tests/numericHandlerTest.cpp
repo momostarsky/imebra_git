@@ -90,13 +90,13 @@ TEST(numericHandlerTest, testDouble)
         ASSERT_EQ(124, testDataSet.getSignedLong(TagId(10, 10), 7));
         ASSERT_THROW(testDataSet.getSignedLong(TagId(10, 10), 8), MissingItemError);
 
-        ASSERT_EQ(5, testDataSet.getUnsignedLong(TagId(10, 10), 0));
-        ASSERT_EQ(3, testDataSet.getUnsignedLong(TagId(10, 10), 1));
-        ASSERT_EQ(2, testDataSet.getUnsignedLong(TagId(10, 10), 3));
-        ASSERT_EQ(10, testDataSet.getUnsignedLong(TagId(10, 10), 4));
-        ASSERT_EQ(20, testDataSet.getUnsignedLong(TagId(10, 10), 5));
-        ASSERT_EQ(123, testDataSet.getUnsignedLong(TagId(10, 10), 6));
-        ASSERT_EQ(124, testDataSet.getUnsignedLong(TagId(10, 10), 7));
+        ASSERT_EQ(5u, testDataSet.getUnsignedLong(TagId(10, 10), 0));
+        ASSERT_EQ(3u, testDataSet.getUnsignedLong(TagId(10, 10), 1));
+        ASSERT_EQ(2u, testDataSet.getUnsignedLong(TagId(10, 10), 3));
+        ASSERT_EQ(10u, testDataSet.getUnsignedLong(TagId(10, 10), 4));
+        ASSERT_EQ(20u, testDataSet.getUnsignedLong(TagId(10, 10), 5));
+        ASSERT_EQ(123u, testDataSet.getUnsignedLong(TagId(10, 10), 6));
+        ASSERT_EQ(124u, testDataSet.getUnsignedLong(TagId(10, 10), 7));
         ASSERT_THROW(testDataSet.getUnsignedLong(TagId(10, 10), 8), MissingItemError);
 
         ASSERT_DOUBLE_EQ(5.6, std::stod(testDataSet.getString(TagId(10, 10), 0).c_str()));
@@ -174,13 +174,13 @@ TEST(numericHandlerTest, testInteger)
         ASSERT_EQ(124, testDataSet.getSignedLong(TagId(10, 10), 7));
         ASSERT_THROW(testDataSet.getSignedLong(TagId(10, 10), 8), MissingItemError);
 
-        ASSERT_EQ(5, testDataSet.getUnsignedLong(TagId(10, 10), 0));
-        ASSERT_EQ(3, testDataSet.getUnsignedLong(TagId(10, 10), 1));
-        ASSERT_EQ(2, testDataSet.getUnsignedLong(TagId(10, 10), 3));
-        ASSERT_EQ(10, testDataSet.getUnsignedLong(TagId(10, 10), 4));
-        ASSERT_EQ(20, testDataSet.getUnsignedLong(TagId(10, 10), 5));
-        ASSERT_EQ(123, testDataSet.getUnsignedLong(TagId(10, 10), 6));
-        ASSERT_EQ(124, testDataSet.getUnsignedLong(TagId(10, 10), 7));
+        ASSERT_EQ(5u, testDataSet.getUnsignedLong(TagId(10, 10), 0));
+        ASSERT_EQ(3u, testDataSet.getUnsignedLong(TagId(10, 10), 1));
+        ASSERT_EQ(2u, testDataSet.getUnsignedLong(TagId(10, 10), 3));
+        ASSERT_EQ(10u, testDataSet.getUnsignedLong(TagId(10, 10), 4));
+        ASSERT_EQ(20u, testDataSet.getUnsignedLong(TagId(10, 10), 5));
+        ASSERT_EQ(123u, testDataSet.getUnsignedLong(TagId(10, 10), 6));
+        ASSERT_EQ(124u, testDataSet.getUnsignedLong(TagId(10, 10), 7));
         ASSERT_THROW(testDataSet.getUnsignedLong(TagId(10, 10), 8), MissingItemError);
 
         ASSERT_EQ(5, std::stol(testDataSet.getString(TagId(10, 10), 0).c_str()));

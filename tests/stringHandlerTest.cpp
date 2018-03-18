@@ -419,7 +419,7 @@ TEST(stringHandlerTest, ASTest)
 
     dataSet.setAge(TagId(0x0010, 0x1010), Age(3, imebra::ageUnit_t::days));
     std::unique_ptr<imebra::Age> age(dataSet.getAge(TagId(imebra::tagId_t::PatientAge_0010_1010), 0));
-    EXPECT_EQ(3, age->age);
+    EXPECT_EQ(3u, age->age);
     EXPECT_EQ(imebra::ageUnit_t::days, age->units);
     EXPECT_EQ("003D", dataSet.getString(TagId(imebra::tagId_t::PatientAge_0010_1010), 0));
     ASSERT_DOUBLE_EQ(0.00821917808219178, age->years());
@@ -440,13 +440,13 @@ TEST(stringHandlerTest, ASTest)
 
     dataSet.setString(TagId(imebra::tagId_t::PatientAge_0010_1010), "018W");
     age.reset(dataSet.getAge(TagId(imebra::tagId_t::PatientAge_0010_1010), 0));
-    EXPECT_EQ(18, age->age);
+    EXPECT_EQ(18u, age->age);
     EXPECT_EQ(imebra::ageUnit_t::weeks, age->units);
     EXPECT_DOUBLE_EQ(0.34520548039782323, age->years());
 
     dataSet.setString(TagId(imebra::tagId_t::PatientAge_0010_1010), "090Y");
     age.reset(dataSet.getAge(TagId(imebra::tagId_t::PatientAge_0010_1010), 0));
-    EXPECT_EQ(90, age->age);
+    EXPECT_EQ(90u, age->age);
     EXPECT_EQ(imebra::ageUnit_t::years, age->units);
     EXPECT_DOUBLE_EQ(90.0, age->years());
 }
