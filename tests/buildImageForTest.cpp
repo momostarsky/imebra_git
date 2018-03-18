@@ -106,7 +106,7 @@ TEST(buildImage, testBuildImage)
                 minG = std::min(minG, g);
                 minB = std::min(minB, b);
 
-                if(r != maxR and r != minR)
+                if(r != maxR && r != minR)
                 {
                     midR = r;
                 }
