@@ -62,7 +62,7 @@ TEST(colorConversion, RGB2YBRRCT)
     std::unique_ptr<Image> rgb1(ybr2rgb->allocateOutputImage(*ybr, 255, 255));
     ybr2rgb->runTransform(*ybr, 0, 0, 255, 255, *rgb1, 0, 0);
 
-    ASSERT_GE(1.0f, compareImages(rgb, *rgb1)); // Account for ceiling/floor adjustment
+    ASSERT_GE(1.0, compareImages(rgb, *rgb1)); // Account for ceiling/floor adjustment
 }
 
 

@@ -111,12 +111,12 @@ TEST(modalityVoilut, voilutUnsigned8LUT)
 
         std::unique_ptr<ReadingDataHandler> unsignedHandler(unsigned8Out->getReadingDataHandler());
 
-        ASSERT_EQ(100, unsignedHandler->getUnsignedLong(0));
-        ASSERT_EQ(100, unsignedHandler->getUnsignedLong(1));
-        ASSERT_EQ(100, unsignedHandler->getUnsignedLong(2));
-        ASSERT_EQ(200, unsignedHandler->getUnsignedLong(3));
-        ASSERT_EQ(300, unsignedHandler->getUnsignedLong(4));
-        ASSERT_EQ(300, unsignedHandler->getUnsignedLong(5));
+        ASSERT_EQ(100u, unsignedHandler->getUnsignedLong(0));
+        ASSERT_EQ(100u, unsignedHandler->getUnsignedLong(1));
+        ASSERT_EQ(100u, unsignedHandler->getUnsignedLong(2));
+        ASSERT_EQ(200u, unsignedHandler->getUnsignedLong(3));
+        ASSERT_EQ(300u, unsignedHandler->getUnsignedLong(4));
+        ASSERT_EQ(300u, unsignedHandler->getUnsignedLong(5));
     }
 }
 

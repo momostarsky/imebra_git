@@ -147,7 +147,7 @@ TEST(buildImage, testCompareImage)
         10));
 
     EXPECT_DOUBLE_EQ(0.0, compareImages(*testImage0, *testImage0));
-    EXPECT_GT(compareImages(*testImage0, *testImage1), 10.0f);
+    EXPECT_GT(compareImages(*testImage0, *testImage1), 10.0);
 
 }
 

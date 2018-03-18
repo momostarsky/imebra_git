@@ -434,7 +434,7 @@ TEST(stringHandlerTest, ASTest)
 
     dataSet.setString(TagId(imebra::tagId_t::PatientAge_0010_1010), "005M");
     age.reset(dataSet.getAge(TagId(imebra::tagId_t::PatientAge_0010_1010), 0));
-    EXPECT_EQ(5, age->age);
+    EXPECT_EQ(5u, age->age);
     EXPECT_EQ(imebra::ageUnit_t::months, age->units);
     EXPECT_DOUBLE_EQ(0.41666666666666669, age->years());
 

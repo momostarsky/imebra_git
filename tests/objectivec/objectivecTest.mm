@@ -185,7 +185,7 @@ TEST(objectivec, imageNSData)
         std::uint16_t buffer[25];
         for(unsigned int pixel(0); pixel != 25; ++pixel)
         {
-            buffer[pixel] = pixel + 1;
+            buffer[pixel] = pixel + 1u;
         }
         NSData* pSource = [[NSData alloc] initWithBytes:buffer length:sizeof(buffer)];
         ImebraWritingDataHandlerNumeric* writingDataHandler = [pImage getWritingDataHandler:&error];
@@ -249,15 +249,15 @@ TEST(objectivec, datasetValues)
     EXPECT_EQ(checkPatient1, nil);
     EXPECT_EQ(imebra::NSStringToString(checkPatient2), "defaultValue");
 
-    EXPECT_EQ([checkAge age], 10);
-    EXPECT_EQ([checkAge units], ImebraYears);
+    EXPECT_EQ(10u, [checkAge age]);
+    EXPECT_EQ(ImebraYears, [checkAge units]);
 
     EXPECT_EQ(10, [pDataSet getSignedLong:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1011] elementNumber:0 error:&error]);
     EXPECT_EQ(11, [pDataSet getUnsignedLong:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1012] elementNumber:0 error:&error]);
     EXPECT_DOUBLE_EQ(12.0, [pDataSet getUnsignedLong:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1013] elementNumber:0 error:&error]);
-    EXPECT_EQ(12, [pDataSet getSignedLong:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1020] elementNumber:0 defaultValue:12 error:&error]);
-    EXPECT_EQ(13, [pDataSet getUnsignedLong:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1021] elementNumber:0 defaultValue:13 error:&error]);
-    EXPECT_DOUBLE_EQ(14.0, [pDataSet getDouble:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1022] elementNumber:0 defaultValue:14.0f error:&error]);
+    EXPECT_EQ(12, [pDataSet getSignedLong:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1020] elementNumber:0 defaultValue:12u error:&error]);
+    EXPECT_EQ(13, [pDataSet getUnsignedLong:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1021] elementNumber:0 defaultValue:13u error:&error]);
+    EXPECT_DOUBLE_EQ(14.0, [pDataSet getDouble:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1022] elementNumber:0 defaultValue:14.0 error:&error]);
 
     EXPECT_DOUBLE_EQ(0.0, [pDataSet getDouble:[[ImebraTagId alloc] initWithGroup:0x12 tag:0x12] elementNumber:0 error:&error]);
     EXPECT_DOUBLE_EQ(1.0, [pDataSet getDouble:[[ImebraTagId alloc] initWithGroup:0x12 tag:0x12] elementNumber:1 error:&error]);
@@ -727,9 +727,9 @@ TEST(objectivec, images)
         {
             for(unsigned int x(0); x != width; ++x)
             {
-                int r = x < 100 ? 10: 100;
-                int g = x < 200 ? 40: 200;
-                int b = x < 300 ? 100: 4;
+                unsigned int r = x < 100 ? 10: 100;
+                unsigned int g = x < 200 ? 40: 200;
+                unsigned int b = x < 300 ? 100: 4;
                 [pWritingDataHandler setUnsignedLong:index++ newValue:r error:&pError];
                 [pWritingDataHandler setUnsignedLong:index++ newValue:g error:&pError];
                 [pWritingDataHandler setUnsignedLong:index++ newValue:b error:&pError];

@@ -70,12 +70,12 @@ TEST(lut, simpleLutNegative)
         ASSERT_EQ(3u, lut->getSize());
         ASSERT_EQ(16u, lut->getBits());
         ASSERT_EQ(-2, lut->getFirstMapped());
-        ASSERT_EQ(100, lut->getMappedValue(-4));
-        ASSERT_EQ(100, lut->getMappedValue(-3));
-        ASSERT_EQ(100, lut->getMappedValue(-2));
-        ASSERT_EQ(200, lut->getMappedValue(-1));
-        ASSERT_EQ(300, lut->getMappedValue(0));
-        ASSERT_EQ(300, lut->getMappedValue(1));
+        ASSERT_EQ(100u, lut->getMappedValue(-4));
+        ASSERT_EQ(100u, lut->getMappedValue(-3));
+        ASSERT_EQ(100u, lut->getMappedValue(-2));
+        ASSERT_EQ(200u, lut->getMappedValue(-1));
+        ASSERT_EQ(300u, lut->getMappedValue(0));
+        ASSERT_EQ(300u, lut->getMappedValue(1));
     }
 }
 
@@ -90,14 +90,14 @@ TEST(lut, simpleLutCorruptedDescriptor)
         std::unique_ptr<WritingDataHandlerNumeric> data(lutItem.getWritingDataHandlerNumeric(TagId(tagId_t::LUTData_0028_3006), 0, tagVR_t::US));
         lutItem.setString(TagId(tagId_t::LUTExplanation_0028_3003), "Test LUT");
 
-        descriptor->setUnsignedLong(0, 3);
+        descriptor->setUnsignedLong(0, 3u);
         descriptor->setSignedLong(1, -2);
-        descriptor->setUnsignedLong(2, 16);
-        descriptor->setUnsignedLong(3, 0);
+        descriptor->setUnsignedLong(2, 16u);
+        descriptor->setUnsignedLong(3, 0u);
 
-        data->setUnsignedLong(0, 100);
-        data->setUnsignedLong(1, 200);
-        data->setUnsignedLong(2, 300);
+        data->setUnsignedLong(0, 100u);
+        data->setUnsignedLong(1, 200u);
+        data->setUnsignedLong(2, 300u);
     }
     sequenceTag->setSequenceItem(0, lutItem);
 
@@ -118,9 +118,9 @@ TEST(lut, simpleLutCorruptedDescriptor1)
         descriptor->setUnsignedLong(0, 3);
         descriptor->setSignedLong(1, -2);
 
-        data->setUnsignedLong(0, 100);
-        data->setUnsignedLong(1, 200);
-        data->setUnsignedLong(2, 300);
+        data->setUnsignedLong(0, 100u);
+        data->setUnsignedLong(1, 200u);
+        data->setUnsignedLong(2, 300u);
     }
     sequenceTag->setSequenceItem(0, lutItem);
 
@@ -138,13 +138,13 @@ TEST(lut, simpleLutCorruptedDescriptor2)
         std::unique_ptr<WritingDataHandlerNumeric> data(lutItem.getWritingDataHandlerNumeric(TagId(tagId_t::LUTData_0028_3006), 0, tagVR_t::US));
         lutItem.setString(TagId(tagId_t::LUTExplanation_0028_3003), "Test LUT");
 
-        descriptor->setUnsignedLong(0, 3);
+        descriptor->setUnsignedLong(0, 3u);
         descriptor->setSignedLong(1, -2);
-        descriptor->setUnsignedLong(2, 17);
+        descriptor->setUnsignedLong(2, 17u);
 
-        data->setUnsignedLong(0, 100);
-        data->setUnsignedLong(1, 200);
-        data->setUnsignedLong(2, 300);
+        data->setUnsignedLong(0, 100u);
+        data->setUnsignedLong(1, 200u);
+        data->setUnsignedLong(2, 300u);
     }
     sequenceTag->setSequenceItem(0, lutItem);
 
@@ -162,13 +162,13 @@ TEST(lut, simpleLutCorruptedDescriptor3)
         std::unique_ptr<WritingDataHandlerNumeric> data(lutItem.getWritingDataHandlerNumeric(TagId(tagId_t::LUTData_0028_3006), 0, tagVR_t::US));
         lutItem.setString(TagId(tagId_t::LUTExplanation_0028_3003), "Test LUT");
 
-        descriptor->setUnsignedLong(0, 4);
+        descriptor->setUnsignedLong(0, 4u);
         descriptor->setSignedLong(1, -2);
-        descriptor->setUnsignedLong(2, 16);
+        descriptor->setUnsignedLong(2, 16u);
 
-        data->setUnsignedLong(0, 100);
-        data->setUnsignedLong(1, 200);
-        data->setUnsignedLong(2, 300);
+        data->setUnsignedLong(0, 100u);
+        data->setUnsignedLong(1, 200u);
+        data->setUnsignedLong(2, 300u);
     }
     sequenceTag->setSequenceItem(0, lutItem);
 
@@ -185,11 +185,11 @@ TEST(lut, simpleLut16bitFull)
         std::unique_ptr<WritingDataHandlerNumeric> data(lutItem.getWritingDataHandlerNumeric(TagId(tagId_t::LUTData_0028_3006), 0, tagVR_t::US));
         lutItem.setString(TagId(tagId_t::LUTExplanation_0028_3003), "Test LUT");
 
-        descriptor->setUnsignedLong(0, 0);
-        descriptor->setUnsignedLong(1, 0);
-        descriptor->setUnsignedLong(2, 16);
+        descriptor->setUnsignedLong(0, 0u);
+        descriptor->setUnsignedLong(1, 0u);
+        descriptor->setUnsignedLong(2, 16u);
 
-        for(std::uint32_t fillLut(0); fillLut != 65536; ++fillLut)
+        for(std::uint32_t fillLut(0); fillLut != 65536u; ++fillLut)
         {
             data->setUnsignedLong(fillLut, fillLut);
         }
