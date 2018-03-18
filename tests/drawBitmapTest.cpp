@@ -229,7 +229,7 @@ TEST(drawBitmapTest, testDrawBitmapRGBA)
                     EXPECT_EQ(red, displayRed);
                     EXPECT_EQ(green, displayGreen);
                     EXPECT_EQ(blue, displayBlue);
-                    EXPECT_EQ(255, displayAlpha);
+                    EXPECT_EQ(255u, displayAlpha);
                 }
             }
         }
@@ -305,7 +305,7 @@ TEST(drawBitmapTest, testDrawBitmapBGRA)
                     EXPECT_EQ(red, displayRed);
                     EXPECT_EQ(green, displayGreen);
                     EXPECT_EQ(blue, displayBlue);
-                    EXPECT_EQ(255, displayAlpha);
+                    EXPECT_EQ(255u, displayAlpha);
                 }
             }
         }

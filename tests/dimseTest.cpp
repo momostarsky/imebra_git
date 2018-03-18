@@ -961,7 +961,7 @@ TEST(dimseTest, nsetSCUSCP)
 
     attributeIdentifierList_t identifier(pResponse->getModifiedAttributes());
 
-    ASSERT_EQ(1, identifier.size());
+    ASSERT_EQ(1u, identifier.size());
     EXPECT_EQ(tagId_t::PatientName_0010_0010, identifier[0]);
 
     toSCU.terminate();

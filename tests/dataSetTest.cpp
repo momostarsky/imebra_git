@@ -188,23 +188,23 @@ TEST(dataSetTest, testSetGetTags)
     ASSERT_THROW(testDataSet.getDate(TagId(tagId_t::PatientAge_0010_1010), 0), DataHandlerConversionError);
 
     std::unique_ptr<Date> date0(testDataSet.getDate(TagId(tagId_t::AcquisitionDateTime_0008_002A), 0));
-    ASSERT_EQ(2014, date0->year);
-    ASSERT_EQ(2, date0->month);
-    ASSERT_EQ(1, date0->day);
+    ASSERT_EQ(2014u, date0->year);
+    ASSERT_EQ(2u, date0->month);
+    ASSERT_EQ(1u, date0->day);
     ASSERT_THROW(testDataSet.getSignedLong(TagId(tagId_t::AcquisitionDateTime_0008_002A), 0), DataHandlerConversionError);
     ASSERT_THROW(testDataSet.getUnsignedLong(TagId(tagId_t::AcquisitionDateTime_0008_002A), 0), DataHandlerConversionError);
     ASSERT_THROW(testDataSet.getDouble(TagId(tagId_t::AcquisitionDateTime_0008_002A), 0), DataHandlerConversionError);
     ASSERT_THROW(testDataSet.getAge(TagId(tagId_t::AcquisitionDateTime_0008_002A), 0), DataHandlerConversionError);
 
     std::unique_ptr<Date> date1(testDataSet.getDate(TagId(tagId_t::PatientBirthDate_0010_0030), 0));
-    ASSERT_EQ(2000, date1->year);
-    ASSERT_EQ(1, date1->month);
-    ASSERT_EQ(2, date1->day);
+    ASSERT_EQ(2000u, date1->year);
+    ASSERT_EQ(1u, date1->month);
+    ASSERT_EQ(2u, date1->day);
 
     ASSERT_EQ("Test patient", testDataSet.getString(TagId(tagId_t::PatientName_0010_0010), 0));
     ASSERT_DOUBLE_EQ(45.6, testDataSet.getDouble(TagId(0x20, 0x20), 0));
     ASSERT_EQ(50, testDataSet.getSignedLong(TagId(0x20, 0x21), 0));
-    ASSERT_EQ(60, testDataSet.getUnsignedLong(TagId(0x20, 0x22), 0));
+    ASSERT_EQ(60u, testDataSet.getUnsignedLong(TagId(0x20, 0x22), 0));
 
 }
 
@@ -310,13 +310,13 @@ TEST(dataSetTest, dataHandler)
             std::unique_ptr<WritingDataHandler> handler(testDataSet.getWritingDataHandler(TagId(tagId_t::PatientName_0010_0010), 0, tagVR_t::UL));
             handler->setSize(10);
             ASSERT_EQ(tagVR_t::UL, handler->getDataType());
-            ASSERT_EQ(10, handler->getSize());
+            ASSERT_EQ(10u, handler->getSize());
         }
         std::unique_ptr<ReadingDataHandler> handler(testDataSet.getReadingDataHandler(TagId(tagId_t::PatientName_0010_0010), 0));
         std::unique_ptr<ReadingDataHandler> raw(testDataSet.getReadingDataHandlerRaw(TagId(tagId_t::PatientName_0010_0010), 0));
         ASSERT_EQ(tagVR_t::UL, handler->getDataType());
-        ASSERT_EQ(10, handler->getSize());
-        ASSERT_EQ(40, raw->getSize());
+        ASSERT_EQ(10u, handler->getSize());
+        ASSERT_EQ(40u, raw->getSize());
     }
 
     {
@@ -326,14 +326,14 @@ TEST(dataSetTest, dataHandler)
             handler->setSignedLong(0, 100);
             handler->setSize(10);
             ASSERT_EQ(tagVR_t::UL, handler->getDataType());
-            ASSERT_EQ(10, handler->getSize());
+            ASSERT_EQ(10u, handler->getSize());
         }
         std::unique_ptr<ReadingDataHandlerNumeric> handler(testDataSet.getReadingDataHandlerNumeric(TagId(tagId_t::RegionLocationMinX0_0018_6018), 0));
         std::unique_ptr<ReadingDataHandler> raw(testDataSet.getReadingDataHandlerRaw(TagId(tagId_t::RegionLocationMinX0_0018_6018), 0));
         ASSERT_EQ(100, handler->getSignedLong(0));
         ASSERT_EQ(tagVR_t::UL, handler->getDataType());
-        ASSERT_EQ(10, handler->getSize());
-        ASSERT_EQ(40, raw->getSize());
+        ASSERT_EQ(10u, handler->getSize());
+        ASSERT_EQ(40u, raw->getSize());
     }
 
     {
@@ -342,13 +342,13 @@ TEST(dataSetTest, dataHandler)
             std::unique_ptr<WritingDataHandlerNumeric> handler(testDataSet.getWritingDataHandlerRaw(TagId(tagId_t::RegionLocationMinX0_0018_6018), 0));
             handler->setSize(16);
             ASSERT_EQ(tagVR_t::UL, handler->getDataType());
-            ASSERT_EQ(16, handler->getSize());
+            ASSERT_EQ(16u, handler->getSize());
         }
         std::unique_ptr<ReadingDataHandlerNumeric> handler(testDataSet.getReadingDataHandlerNumeric(TagId(tagId_t::RegionLocationMinX0_0018_6018), 0));
         std::unique_ptr<ReadingDataHandler> raw(testDataSet.getReadingDataHandlerRaw(TagId(tagId_t::RegionLocationMinX0_0018_6018), 0));
         ASSERT_EQ(tagVR_t::UL, handler->getDataType());
-        ASSERT_EQ(4, handler->getSize());
-        ASSERT_EQ(16, raw->getSize());
+        ASSERT_EQ(4u, handler->getSize());
+        ASSERT_EQ(16u, raw->getSize());
     }
 
     {
@@ -357,11 +357,11 @@ TEST(dataSetTest, dataHandler)
             std::unique_ptr<WritingDataHandler> handler(testDataSet.getWritingDataHandler(TagId(tagId_t::PatientName_0010_0010), 0));
             handler->setSize(2);
             ASSERT_EQ(tagVR_t::PN, handler->getDataType());
-            ASSERT_EQ(2, handler->getSize());
+            ASSERT_EQ(2u, handler->getSize());
         }
         std::unique_ptr<ReadingDataHandler> handler(testDataSet.getReadingDataHandler(TagId(tagId_t::PatientName_0010_0010), 0));
         ASSERT_EQ(tagVR_t::PN, handler->getDataType());
-        ASSERT_EQ(2, handler->getSize());
+        ASSERT_EQ(2u, handler->getSize());
     }
 
     {
@@ -370,11 +370,11 @@ TEST(dataSetTest, dataHandler)
             std::unique_ptr<WritingDataHandlerNumeric> handler(testDataSet.getWritingDataHandlerRaw(TagId(tagId_t::PixelData_7FE0_0010), 0, tagVR_t::OW));
             handler->setSize(20);
             ASSERT_EQ(tagVR_t::OW, handler->getDataType());
-            ASSERT_EQ(20, handler->getSize());
+            ASSERT_EQ(20u, handler->getSize());
         }
         std::unique_ptr<ReadingDataHandlerNumeric> handler(testDataSet.getReadingDataHandlerNumeric(TagId(tagId_t::PixelData_7FE0_0010), 0));
         ASSERT_EQ(tagVR_t::OW, handler->getDataType());
-        ASSERT_EQ(10, handler->getSize());
+        ASSERT_EQ(10u, handler->getSize());
     }
 }
 

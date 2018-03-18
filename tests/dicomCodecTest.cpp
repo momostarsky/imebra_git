@@ -280,7 +280,7 @@ TEST(dicomCodecTest, testDicom32bit)
         std::unique_ptr<ReadingDataHandlerNumeric> read(checkImage->getReadingDataHandler());
         EXPECT_EQ(std::numeric_limits<std::uint32_t>::max(), read->getUnsignedLong(0));
         EXPECT_EQ(std::numeric_limits<std::uint32_t>::max() / 2, read->getUnsignedLong(1));
-        EXPECT_EQ(0, read->getUnsignedLong(2));
+        EXPECT_EQ(0u, read->getUnsignedLong(2));
     }
 }
 
