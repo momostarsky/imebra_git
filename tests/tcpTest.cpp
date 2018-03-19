@@ -201,7 +201,7 @@ void DelayConnectionThread(std::string port)
         long receivedBytes((long)recv(listeningSocket, buffer, sizeof(buffer), 0));
         if(receivedBytes > 0)
         {
-            totalReceivedBytes += receivedBytes;
+            totalReceivedBytes += (size_t)receivedBytes;
         }
         else
         {
