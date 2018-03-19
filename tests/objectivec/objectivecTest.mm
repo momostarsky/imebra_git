@@ -254,10 +254,10 @@ TEST(objectivec, datasetValues)
     EXPECT_EQ(ImebraYears, [checkAge units]);
 
     EXPECT_EQ(10, [pDataSet getSignedLong:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1011] elementNumber:0 error:&error]);
-    EXPECT_EQ(11, [pDataSet getUnsignedLong:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1012] elementNumber:0 error:&error]);
-    EXPECT_DOUBLE_EQ(12.0, [pDataSet getUnsignedLong:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1013] elementNumber:0 error:&error]);
+    EXPECT_EQ(11u, [pDataSet getUnsignedLong:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1012] elementNumber:0 error:&error]);
+    EXPECT_DOUBLE_EQ(12.0, [pDataSet getDouble:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1013] elementNumber:0 error:&error]);
     EXPECT_EQ(12, [pDataSet getSignedLong:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1020] elementNumber:0 defaultValue:12u error:&error]);
-    EXPECT_EQ(13, [pDataSet getUnsignedLong:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1021] elementNumber:0 defaultValue:13u error:&error]);
+    EXPECT_EQ(13u, [pDataSet getUnsignedLong:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1021] elementNumber:0 defaultValue:13u error:&error]);
     EXPECT_DOUBLE_EQ(14.0, [pDataSet getDouble:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1022] elementNumber:0 defaultValue:14.0 error:&error]);
 
     EXPECT_DOUBLE_EQ(0.0, [pDataSet getDouble:[[ImebraTagId alloc] initWithGroup:0x12 tag:0x12] elementNumber:0 error:&error]);
