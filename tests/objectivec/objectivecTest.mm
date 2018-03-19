@@ -11,10 +11,11 @@ namespace imebra
 namespace tests
 {
 
+
 // Test NSString conversion functions
 TEST(objectivec, stringToNSStringTest)
 {
-    NSAutoreleasePool *myPool = [[NSAutoreleasePool alloc] init];
+    //NSAutoreleasePool *myPool = [[NSAutoreleasePool alloc] init];
 
     NSString* patient0 = [[NSString alloc] initWithUTF8String:"??\xD0\xA1\xD0\xBC\xD1\x8B\xD1\x81\xD0\xBB\x20\xD0\xB2\xD1\x81\xD0\xB5\xD0\xB9"];
     NSString* patient1 = [[NSString alloc] initWithUTF8String:"\xD0\xA1\xD0\xBC\xD1\x8B\xD1\x81\xD0\xBB\x20\xD0\xB2\xD1\x81\xD0\xB5\xD0\xB9"];
@@ -183,9 +184,9 @@ TEST(objectivec, imageNSData)
 #endif
     {
         std::uint16_t buffer[25];
-        for(unsigned int pixel(0); pixel != 25; ++pixel)
+        for(std::uint16_t pixel(0); pixel != 25; ++pixel)
         {
-            buffer[pixel] = pixel + 1u;
+            buffer[pixel] = (std::uint16_t)(pixel + 1u);
         }
         NSData* pSource = [[NSData alloc] initWithBytes:buffer length:sizeof(buffer)];
         ImebraWritingDataHandlerNumeric* writingDataHandler = [pImage getWritingDataHandler:&error];
@@ -227,7 +228,7 @@ TEST(objectivec, datasetValues)
     {
         ImebraWritingDataHandlerNumeric* pWriteDouble = [pTag getWritingDataHandlerNumeric:0 error:&error];
         [pWriteDouble setSize:4];
-        EXPECT_EQ(4, pWriteDouble.size);
+        EXPECT_EQ(4u, pWriteDouble.size);
         [pWriteDouble setDouble:0 newValue:0 error:&error];
         [pWriteDouble setDouble:1 newValue:1 error:&error];
         [pWriteDouble setDouble:2 newValue:2 error:&error];
@@ -268,6 +269,10 @@ TEST(objectivec, datasetValues)
 
 void listenerThread()
 {
+#if !__has_feature(objc_arc)
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+#endif
+
     try
     {
     NSError* pError(0);
@@ -372,6 +377,10 @@ void listenerThread()
         std::cout << imebra::ExceptionsManager::getExceptionTrace();
 
     }
+
+#if !__has_feature(objc_arc)
+    [pool drain];
+#endif
 }
 
 
