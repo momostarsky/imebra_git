@@ -14,6 +14,7 @@ Version |release| (this version)
   as per SOP :ref:`FIXBUG_2`
 - Fixed bug #198 (Remove warning "implicit conversion changes signedness" in jpegImageCodecImpl.cpp)
   as per SOP :ref:`FIXBUG_2`
+- Fixed bug #203 (Remove all the build warnings from the tests) as per SOP :ref:`FIXBUG_2`
 
 Version 4.2.0.2
 ----------------
