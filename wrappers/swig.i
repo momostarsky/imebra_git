@@ -38,6 +38,7 @@
 %template(TagsIds) std::vector<imebra::TagId>;
 %template(VOIs) std::vector<imebra::VOIDescription>;
 
+#ifndef SWIGJAVA
 
 %typemap(out) imebra::DimseCommand* imebra::DimseService::getCommand() {
 
@@ -79,10 +80,12 @@
     case imebra::dimseCommandType_t::nGet:
         $result = SWIG_NewPointerObj(SWIG_as_voidptr($1), $descriptor(imebra::NGetCommand*), $owner);
         break;
+    default:
+        throw std::logic_error("Corrupted data");
     }
-
 }
 
+#endif
 
 // Declare which methods return an object that should be
 // managed by the client.
@@ -260,5 +263,16 @@
 %include "../library/include/imebra/acse.h"
 %include "../library/include/imebra/dimse.h"
 
+%extend imebra::StreamWriter {
+    StreamWriter(const imebra::TCPStream& stream)
+    {
+        return new imebra::StreamWriter(stream);
+    }
+
+    StreamWriter(const imebra::Pipe& stream)
+    {
+        return new imebra::StreamWriter(stream);
+    }
+};
 
 

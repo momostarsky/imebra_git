@@ -3910,6 +3910,10 @@ enum class tagId_t: std::uint32_t
 
 } //namespace imebra
 
+#else
+
+typedef std::uint32_t tagId_t;
+
 #endif // SWIGJAVA
 #endif // imebraTagsEnumeration__INCLUDED_
 
