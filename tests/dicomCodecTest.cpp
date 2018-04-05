@@ -163,6 +163,10 @@ TEST(dicomCodecTest, testDicom)
                             DataSet sequenceItem;
                             sequenceItem.setString(TagId(tagId_t::PatientName_0010_0010), "test test");
 
+                            DataSet sequenceItem1;
+                            sequenceItem1.setString(TagId(tagId_t::PatientName_0010_0010), "test test1");
+                            sequenceItem.setSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 0, sequenceItem1);
+
                             testDataSet.setSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 0, sequenceItem);
 
                             MemoryStreamOutput writeStream(streamMemory);
@@ -189,6 +193,10 @@ TEST(dicomCodecTest, testDicom)
                             std::unique_ptr<DataSet> sequenceItem(testDataSet->getSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 0));
                             EXPECT_EQ("test test", sequenceItem->getString(TagId(tagId_t::PatientName_0010_0010), 0));
                             EXPECT_THROW(sequenceItem->getUnsignedLong(TagId(tagId_t::FileMetaInformationVersion_0002_0001), 0), MissingGroupError);
+
+                            std::unique_ptr<DataSet> sequenceItem1(sequenceItem->getSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 0));
+                            EXPECT_EQ("test test1", sequenceItem1->getString(TagId(tagId_t::PatientName_0010_0010), 0));
+                            EXPECT_THROW(sequenceItem1->getUnsignedLong(TagId(tagId_t::FileMetaInformationVersion_0002_0001), 0), MissingGroupError);
 
                             std::unique_ptr<Image> checkImage0(testDataSet->getImage(0));
                             std::unique_ptr<Image> checkImage1(testDataSet->getImage(1));

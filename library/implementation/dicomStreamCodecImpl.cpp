@@ -27,6 +27,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "dataSetImpl.h"
 #include "dicomDictImpl.h"
 #include "bufferImpl.h"
+#include "nullStreamImpl.h"
 #include "../include/imebra/exceptions.h"
 
 namespace imebra
@@ -475,28 +476,13 @@ std::uint32_t dicomStreamCodec::getDataSetLength(std::shared_ptr<dataSet> pDataS
 {
     IMEBRA_FUNCTION_START();
 
-    dataSet::tGroupsIds groups(pDataSet->getGroups());
+    std::shared_ptr<nullStreamWriter> pNullStream(std::make_shared<nullStreamWriter>());
 
-    std::uint32_t totalLength(0);
+    std::shared_ptr<streamWriter> pWriter(std::make_shared<streamWriter>(pNullStream));
 
-    for(dataSet::tGroupsIds::const_iterator scanGroups(groups.begin()), endGroups(groups.end()); scanGroups != endGroups; ++scanGroups)
-    {
-        size_t numGroups(pDataSet->getGroupsNumber(*scanGroups));
-        for(size_t scanGroupsNumber(0); scanGroupsNumber != numGroups; ++scanGroupsNumber)
-        {
-            const dataSet::tTags& tags(pDataSet->getGroupTags(*scanGroups, scanGroupsNumber));
-            totalLength += getGroupLength(tags, bExplicitDataType);
-            totalLength += 4; // Add space for the tag 0
-            if(bExplicitDataType) // Add space for the data type
-            {
-                totalLength += 2;
-            }
-            totalLength += 2; // Add space for the tag's length
-            totalLength += 4; // Add space for the group's length
-        }
-    }
+    buildStream(pWriter, pDataSet, bExplicitDataType, streamController::lowByteEndian, streamType_t::normal);
 
-    return totalLength;
+    return (std::uint32_t)pWriter->position();
 
     IMEBRA_FUNCTION_END();
 }
