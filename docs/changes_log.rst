@@ -6,6 +6,11 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Fixed bug #219 (When writing sequences that embed sequences, the item length is wrong) as per SOP :ref:`FIXBUG_2`
+
+Version 4.1.2.1
+----------------
+
 - Fixed bug #214 (The lossless jpeg codec should not encode/decode the amplitude only 
   when the amplitude length is 16) as per SOP :ref:`FIXBUG_2`
 
