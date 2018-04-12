@@ -61,8 +61,16 @@
 
         <property name="build_library_for_tests" location="${build_dir}/library-build" />
         <mkdir dir="${build_library_for_tests}" />
+
         <property name="build_tests" location="${build_dir}/tests-build" />
         <mkdir dir="${build_tests}" />
+
+        <property name="build_java" location="${build_dir}/java-build" />
+        <mkdir dir="${build_java}" />
+        <property name="build_jar" location="${build_dir}/jar-build" />
+        <mkdir dir="${build_jar}" />
+        <property name="build_jni" location="${build_dir}/jni-build" />
+        <mkdir dir="${build_jni}" />
     </target>
 
     <!-- Replace the version number and license info -->
@@ -181,6 +189,19 @@ Slovenia
     </target>
 
     <target name="swig" depends="java_swig, python_swig" />
+
+    <target name="imebrajar" depends="java_swig, create_test_dir" >
+        <exec executable="cmake" failonerror="true" dir="${build_jni}">
+            <arg value="--verbose"/>
+            <arg value="-DCMAKE_BUILD_TYPE=DEBUG" />
+            <arg path="${build_release}/wrappers"/>
+        </exec>
+        <exec executable="make" failonerror="true" dir="${build_jni}" />
+        <copy todir="${build_java}" file="${build_jni}/libimebrajni.so" />
+        <javac srcdir="${build_release}/wrappers/javaWrapper/src" destdir="${build_java}"/>
+        <jar destfile="${build_jar}/imebrajni.jar" basedir="${build_java}" />
+
+    </target>
 
     <!-- Documentation -->
     <target name="documentation" depends="replace_version" >
