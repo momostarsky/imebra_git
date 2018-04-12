@@ -106,7 +106,7 @@
             jmethodID mid = jenv->GetMethodID(clazz, "<init>", "(JZ)V");
             if (mid) {
                 jlong cptr = 0;
-                *(imebra::className **)& cptr = pStore;
+                *(imebra::className **)& cptr = pDowncast;
                 $result = jenv->NewObject(clazz, mid, cptr, $owner);
             }
         }
