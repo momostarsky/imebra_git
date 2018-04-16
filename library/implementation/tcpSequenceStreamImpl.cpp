@@ -31,6 +31,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <unistd.h>
 #include <fcntl.h>
 #include <poll.h>
+#include <netinet/in.h>
 
 #endif
 
