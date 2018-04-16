@@ -15,7 +15,7 @@ This file was automatically generated
 
 #if !defined(imebraTagsEnumeration__INCLUDED_)
 #define imebraTagsEnumeration__INCLUDED_
-#ifndef SWIGJAVA
+#if !defined(SWIGJAVA) && !defined(IMEBRA_USE_JAVA)
 
 namespace imebra
 {
@@ -3910,6 +3910,11 @@ enum class tagId_t: std::uint32_t
 
 } //namespace imebra
 
-#endif // SWIGJAVA
+#else
+
+typedef std::uint32_t tagId_t;
+
+#endif // #if !defined(SWIGJAVA) && !defined(IMEBRA_USE_JAVA)
+
 #endif // imebraTagsEnumeration__INCLUDED_
 
