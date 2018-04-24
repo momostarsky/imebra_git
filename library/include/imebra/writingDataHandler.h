@@ -160,7 +160,6 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     void setString(size_t index, const std::string& value);
 
-#ifndef SWIG
     /// \brief Write an Unicode string.
     ///
     /// If the value cannot be converted from a Unicode string
@@ -172,7 +171,6 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     void setUnicodeString(size_t index, const std::wstring& value);
-#endif
 
     /// \brief Write a date and/or a time.
     ///

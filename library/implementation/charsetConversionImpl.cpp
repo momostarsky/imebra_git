@@ -52,14 +52,14 @@ std::string dicomConversion::convertFromUnicode(const std::wstring& unicodeStrin
     ///////////////////////////////////////////////////////////
     for(size_t scanString = 0; scanString != unicodeString.size(); ++scanString)
     {
-        // Get the UNICODE char. On windows the code may be spread
-        //  across 2 16 bit wide codes.
+        // Get the UNICODE char. On windows & Android the code may
+        //  be spread across 2 16 bit wide codes.
         ///////////////////////////////////////////////////////////
-        std::wstring code(size_t(1), unicodeString[scanString]);
+        std::wstring code(1u, unicodeString[scanString]);
 
-        // Check UTF-16 extension (Windows only)
+        // Check UTF-16 extension (Windows & Android)
         ///////////////////////////////////////////////////////////
-        if(sizeof(wchar_t) == 2)
+        if(sizeof(wchar_t) == 2u)
         {
             if(code[0] >= 0xd800 && code[0] <=0xdfff && scanString < (unicodeString.size() - 1))
             {
