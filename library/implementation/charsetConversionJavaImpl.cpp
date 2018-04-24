@@ -34,7 +34,7 @@ extern "C"
 {
 
     //------------------------------------------------------------------------
-    JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* aVm, void* aReserved)
+    JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* aVm, void* /* aReserved */)
     {
         // cache java VM
         m_javaVM = aVm;

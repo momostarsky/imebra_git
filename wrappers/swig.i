@@ -33,11 +33,13 @@
 %include <std_vector.i>
 %include <std_map.i>
 
+
 %template(FileParts) std::vector<std::string>;
 %template(Groups) std::vector<std::uint16_t>;
 %template(TagsIds) std::vector<imebra::TagId>;
 %template(VOIs) std::vector<imebra::VOIDescription>;
 
+#ifndef SWIGJAVA
 
 %typemap(out) imebra::DimseCommand* imebra::DimseService::getCommand() {
 
@@ -79,9 +81,61 @@
     case imebra::dimseCommandType_t::nGet:
         $result = SWIG_NewPointerObj(SWIG_as_voidptr($1), $descriptor(imebra::NGetCommand*), $owner);
         break;
+    default:
+        throw std::logic_error("Corrupted data");
     }
+}
+
+#else
+
+%typemap(jni) imebra::DimseCommand* getCommand "jobject"
+%typemap(jtype) imebra::DimseCommand* getCommand "DimseCommand"
+%typemap(jstype) imebra::DimseCommand* getCommand "DimseCommand"
+%typemap(javaout) imebra::DimseCommand* getCommand {
+    return $jnicall;
+  }
+
+%define downcastDimseCommand(className)
+
+{
+    imebra::className* pDowncast = dynamic_cast<imebra::className*>($1);
+    if(pDowncast != 0)
+    {
+        jclass clazz = jenv->FindClass("com/imebra/className");
+        if (clazz) {
+            jmethodID mid = jenv->GetMethodID(clazz, "<init>", "(JZ)V");
+            if (mid) {
+                jlong cptr = 0;
+                *(imebra::className **)& cptr = pDowncast;
+                $result = jenv->NewObject(clazz, mid, cptr, $owner);
+            }
+        }
+    }
+}
+
+%enddef
+
+%typemap(out) imebra::DimseCommand* {
+    imebra::CStoreCommand* pStore = dynamic_cast<imebra::CStoreCommand*>($1);
+    imebra::CMoveCommand* pMove = dynamic_cast<imebra::CMoveCommand*>($1);
+    imebra::CGetCommand* pGet = dynamic_cast<imebra::CGetCommand*>($1);
+
+    downcastDimseCommand(CStoreCommand);
+    downcastDimseCommand(CMoveCommand);
+    downcastDimseCommand(CGetCommand);
+    downcastDimseCommand(CFindCommand);
+    downcastDimseCommand(CEchoCommand);
+    downcastDimseCommand(CCancelCommand);
+    downcastDimseCommand(NActionCommand);
+    downcastDimseCommand(NEventReportCommand);
+    downcastDimseCommand(NCreateCommand);
+    downcastDimseCommand(NDeleteCommand);
+    downcastDimseCommand(NSetCommand);
+    downcastDimseCommand(NGetCommand);
 
 }
+
+#endif
 
 
 // Declare which methods return an object that should be
@@ -167,6 +221,7 @@
 %newobject imebra::StreamReader::getVirtualStream;
 
 
+%factory(imebra::DimseCommand* imebra::DimseService::getCommand, imebra::CStoreCommand, imebra::CMoveCommand);
 
 %exception {
     try {
@@ -260,5 +315,16 @@
 %include "../library/include/imebra/acse.h"
 %include "../library/include/imebra/dimse.h"
 
+%extend imebra::StreamWriter {
+    StreamWriter(const imebra::TCPStream& stream)
+    {
+        return new imebra::StreamWriter(stream);
+    }
+
+    StreamWriter(const imebra::Pipe& stream)
+    {
+        return new imebra::StreamWriter(stream);
+    }
+};
 
 
