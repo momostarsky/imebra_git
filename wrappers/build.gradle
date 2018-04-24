@@ -18,16 +18,37 @@ buildscript {
 
     dependencies {
         classpath "com.android.tools.build:gradle:3.0.1"
+
+        // Unit testing dependencies
     }
 }
+
 apply plugin: 'com.android.library'
+
+dependencies {
+    androidTestCompile 'com.android.support:support-annotations:24.0.0'
+    androidTestCompile 'com.android.support.test:runner:0.5'
+    androidTestCompile 'com.android.support.test:rules:0.5'
+    // Optional -- Hamcrest library
+    androidTestCompile 'org.hamcrest:hamcrest-library:1.3'
+    // Optional -- UI testing with Espresso
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
+    // Optional -- UI testing with UI Automator
+    androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
+    androidTestCompile 'junit:junit:4.12'
+    androidTestCompile 'org.mockito:mockito-core:1.10.19'
+}
 
 
 android {
+    repositories {
+        maven { url 'http://repo1.maven.org/maven2' }
+    }
+
     compileSdkVersion 23
     buildToolsVersion "27.0.3"
     defaultConfig {
-        minSdkVersion 10
+        minSdkVersion 22
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -36,6 +57,7 @@ android {
                 arguments "NDK_APPLICATION_MK:=javaWrapper/jni/Application.mk"
             }
         }
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     externalNativeBuild{
         ndkBuild{
@@ -50,8 +72,14 @@ android {
                 srcDir 'javaWrapper/src'
             }
         }
-    }
+        androidTest {
+            manifest.srcFile 'javaWrapper/AndroidManifest.xml'
+            java {
+                srcDir 'javaTests/src'
+            }
 
+        }
+    }
 
 }
 
