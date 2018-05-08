@@ -11,6 +11,19 @@ In C++ you have to include the file imebra/imebra.h:
     include <imebra/imebra.h>
 
 
+In Java, everything is in the package imebra:
+
+.. code-block:: java
+
+    import com.imebra.*;
+
+In Java, before using any Imebra class you have to load the native code contained in the jar:
+
+.. code-block:: java
+    
+    System.loadLibrary("imebra_lib")
+    
+
 In Python, import the package imebra:
 
 .. code-block:: python
@@ -41,6 +54,13 @@ In C++:
     std::unique_ptr<imebra::DataSet> loadedDataSet(imebra::CodecFactory::load("DicomFile.dcm"));
 
 
+In Java:
+
+.. code-block:: java
+
+    com.imebra.DataSet loadedDataSet = com.imebra.CodecFactory.load("DicomFile.dcm");
+
+
 In Python:
 
 .. code-block:: python
@@ -67,6 +87,14 @@ Lazy loading in C++:
     // Load tags in memory only if their size is equal or smaller than 2048 bytes
     std::unique_ptr<imebra::DataSet> loadedDataSet(imebra::CodecFactory::load("DicomFile.dcm", 2048));
 
+
+in Java
+
+.. code-block:: java
+
+    // Load tags in memory only if their size is equal or smaller than 2048 bytes
+    com.imebra.DataSet loadedDataSet = com.imebra.CodecFactory.load("DicomFile.dcm", 2048);
+    
 
 and in Python
 
@@ -126,6 +154,17 @@ or
     std::wstring patientNameIdeographic = loadedDataSet->getUnicode(imebra::TagId(0x10, 0x10), 1);
 
 
+and in Java:
+
+.. code-block:: java
+
+    // A patient's name can contain up to 5 values, representing different interpretations of the same name
+    // (e.g. alphabetic representation, ideographic representation and phonetic representation)
+    // Here we retrieve the first 2 interpretations (index 0 and 1)
+    String patientNameCharacter = loadedDataSet.getString(new com.imebra.TagId(0x10, 0x10), 0);
+    String patientNameIdeographic = loadedDataSet.getString(new com.imebra.TagId(0x10, 0x10), 1);
+
+
 In python, you do it like this:
 
 .. code-block:: python
@@ -156,6 +195,15 @@ or
     // Return an empty name if the tag is not present
     std::wstring patientNameCharacter = loadedDataSet->getUnicodeString(imebra::TagId(0x10, 0x10), 0, L"");
     std::wstring patientNameIdeographic = loadedDataSet->getUnicodeString(imebra::TagId(0x10, 0x10), 1, L"");
+
+
+in Java:
+
+.. code-block:: java
+
+    // Return an empty name if the tag is not present
+    String patientNameCharacter = loadedDataSet.getString(new com.imebra.TagId(0x10, 0x10), 0, "");
+    String patientNameIdeographic = loadedDataSet.getString(new com.imebra.TagId(0x10, 0x10), 1, "");
 
 
 and in Python:
@@ -193,6 +241,21 @@ To retrieve an image in C++:
     // Get the size in pixels
     std::uint32_t width = image->getWidth();
     std::uint32_t height = image->getHeight();
+
+
+To retrieve an image in Java:
+
+.. code-block:: java
+
+    // Retrieve the first image (index = 0)
+    com.imebra.Image image = loadedDataSet.getImageApplyModalityTransform(0);
+
+    // Get the color space
+    String colorSpace = image.getColorSpace();
+
+    // Get the size in pixels
+    long width = image.getWidth();
+    long height = image.getHeight();
 
 
 To retrieve an image in Python:
@@ -235,6 +298,31 @@ This is how you scan all the pixels in C++, the slow way
             std::int32_t r = dataHandler->getSignedLong((scanY * width + scanX) * 3);
             std::int32_t g = dataHandler->getSignedLong((scanY * width + scanX) * 3 + 1);
             std::int32_t b = dataHandler->getSignedLong((scanY * width + scanX) * 3 + 2);
+        }
+    }
+
+
+How to access the pixels in Java:
+
+.. code-block:: java
+
+    // let's assume that we already have the image's size in the variables width and height
+    // (see previous code snippet)
+
+    // Retrieve the data handler
+    com.imebra.ReadingDataHandlerNumeric dataHandler = image->getReadingDataHandler();
+
+    for(long scanY = 0; scanY != height; scanY++)
+    {
+        for(long scanX = 0; scanX != width; scanX++)
+        {
+            // For monochrome images
+            int luminance = dataHandler.getSignedLong(scanY * width + scanX);
+
+            // For RGB images
+            int r = dataHandler.getSignedLong((scanY * width + scanX) * 3);
+            int g = dataHandler.getSignedLong((scanY * width + scanX) * 3 + 1);
+            int b = dataHandler.getSignedLong((scanY * width + scanX) * 3 + 2);
         }
     }
 
@@ -360,6 +448,57 @@ in C++
     // If the image is monochromatic then now chain contains the VOILUT transform
 
 
+in Java
+
+.. code-block:: java
+
+    // The transforms chain will contain all the transform that we want to 
+    // apply to the image before displaying it
+    com.imebra.TransformsChain chain = new com.imebra.TransformsChain();
+
+    if(com.imebra.ColorTransformsFactory.isMonochrome(image.getColorSpace())
+    {
+        // Allocate a VOILUT transform. If the DataSet does not contain any pre-defined
+        //  settings then we will find the optimal ones.
+        VOILUT voilutTransform = new VOILUT();
+
+        // Retrieve the VOIs (center/width pairs)
+        com.imebra.vois_t vois = loadedDataSet.getVOIs();
+
+        // Retrieve the LUTs
+        List<com.imebra.LUT> luts = new ArrayList<com.imebra.LUT>();
+        for(long scanLUTs = 0; ; scanLUTs++)
+        {
+            try
+            {
+                luts.add(loadedDataSet.getLUT(new com.imebra.TagId(0x0028,0x3010), scanLUTs));
+            }
+            catch(Exception e)
+            {
+                break;
+            }
+        }
+
+        if(!vois.isEmpty())
+        {
+            voilutTransform.setCenterWidth(vois.get(0).center, vois.get(0).width);
+        }
+        else if(!luts.isEmpty())
+        {
+            voilutTransform.setLUT(luts.get(0));
+        }
+        else
+        {
+            voilutTransform.applyOptimalVOI(image, 0, 0, width, height);
+        }
+        
+        chain.add(voilutTransform);        
+    }
+
+    // If the image is monochromatic then now chain contains the VOILUT transform
+
+
+
 Now we can display the image. We use :cpp:class:`imebra::DrawBitmap` to obtain an RGB image
 ready to be displayed.
 
@@ -388,6 +527,26 @@ On OS-X or iOS you can use the provided method :cpp:func:`imebra::getImebraImage
     NSImage* nsImage = getImebraImage(*ybrImage, draw);
 
 
+In Java
+
+.. code-block:: java
+
+    // We create a DrawBitmap that always apply the chain transform before getting the RGB image
+    com.imebra.DrawBitmap draw = new com.imebra.DrawBitmap(chain);
+
+    // Ask for the size of the buffer (in bytes)
+    long requestedBufferSize = draw.getBitmap(image, imebra::drawBitmapType_t::drawBitmapRGBA, 4, new byte[0]);
+    
+    byte buffer[] = new byte[(int)requestedBufferSize]; // Ideally you want to reuse this in subsequent calls to getBitmap()
+    ByteBuffer byteBuffer = ByteBuffer.wrap(buffer);
+
+    // Now fill the buffer with the image data and create a bitmap from it
+    drawBitmap.getBitmap(image, drawBitmapType_t.drawBitmapRGBA, 4, buffer);
+    Bitmap renderBitmap = Bitmap.createBitmap((int)image.getWidth(), (int)image.getHeight(), Bitmap.Config.ARGB_8888);
+    renderBitmap.copyPixelsFromBuffer(byteBuffer);
+
+    // The Bitmap can be assigned to an ImageView on Android
+
 
 Creating an empty DataSet
 -------------------------
@@ -412,6 +571,15 @@ To create an empty DataSet in C++:
 
     // We specify the transfer syntax and the charset
     imebra::DataSet dataSet("1.2.840.10008.1.2.1", "ISO 2022 IR 6");
+
+
+In Java:
+
+.. code-block:: java
+
+    // We specify the transfer syntax and the charset
+    com.imebra.DataSet dataSet = new com.imebra.DataSet("1.2.840.10008.1.2.1", "ISO 2022 IR 6");
+
 
 
 In Python:
@@ -457,6 +625,12 @@ In C++:
 
     dataSet.setUnicodeString(TagId(imebra::tagId_t::PatientName_0010_0010), L"Patient^Name");
 
+In Java:
+
+.. code-block:: java
+
+    dataSet.setString(new com.imebra.TagId(0x10, 0x10), "Patient^Name");
+
 In Python:
 
 .. code-block:: python
@@ -478,6 +652,20 @@ in C++:
         dataHandler->setUnicodeString(2, L"PhoneticName");
 
         // dataHandler will go out of scope and will commit the data into the dataSet
+    }
+
+in Java:
+
+.. code-block:: java
+    
+    {
+        com.imebra.WritingDataHandler dataHandler = dataSet.getWritingDataHandler(0);
+        dataHandler.setString(0, "AlphabeticName");
+        dataHandler.setString(1, "IdeographicName");
+        dataHandler.setString(2, "PhoneticName");
+
+        // Force the commit, don't wait for the garbage collector
+        dataHandler.delete();
     }
 
 in Python:
@@ -524,6 +712,33 @@ in C++
 
     dataSet.setImage(0, image);
 
+in Java
+
+.. code-block:: java
+
+    // Create a 300 by 200 pixel image, 15 bits per color channel, RGB
+    com.imebra.Image image = new com.imebra.Image(300, 200, com.imebra.bitDepth_t.depthU16, "RGB", 15);
+    
+    {
+        WritingDataHandlerNumeric dataHandler = image.getWritingDataHandler();
+
+        // Set all the pixels to red
+        for(long scanY = 0; scanY != 200; scanY++)
+        {
+            for(long scanX =0; scanX != 300; scanX++)
+            {
+                dataHandler.setUnsignedLong((scanY * 300 + scanX) * 3, 65535);
+                dataHandler.setUnsignedLong((scanY * 300 + scanX) * 3 + 1, 0);
+                dataHandler.setUnsignedLong((scanY * 300 + scanX) * 3 + 2, 0);
+            }
+        }
+
+        // Force the commit, don't wait for the garbage collector
+        dataHandler.delete();
+    }
+
+    dataSet.setImage(0, image);
+
 in Python
 
 .. code-block:: python
@@ -557,6 +772,12 @@ in C++
 .. code-block:: c++
 
     imebra::CodecFactory::save(dataSet, "dicomFile.dcm", imebra::codecType_t::dicom);
+
+in Java
+
+.. code-block:: java
+
+    com.imebra.CodecFactory.save(dataSet, "dicomFile.dcm", com.imebra.codecType_t.dicom);
 
 in Python
 

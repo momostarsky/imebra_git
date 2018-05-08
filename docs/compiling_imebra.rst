@@ -185,6 +185,31 @@ For instance, the following command line instruction launches the swift compiler
     swiftc -import-objc-header imebra_location/objectivec/include/imebraobjc/imebra_swift.h myCode.swift -Lbuild_imebra_location -liconv -lc++ -limebra -o myCodeApp
 
 
+Compiling the Android version of Imebra
+---------------------------------------
+
+Prerequisites
+.............
+
+In order to build the Android version of Imebra you need:
+
+- the source distribution of Imebra, available here: https://imebra.com/get-it/
+- Android SDK
+- Android NDK
+- Android Studio
+
+Building Imebra
+...............
+
+The Android version of the library needs both the Java source code (located in the wrappers/javaWrapper folder) and the C++ source code (located in the library folder)
+
+To generate the Imebra Jar library:
+
+- Launch Android Studio
+- Open the gradle project in the wrappers folder
+- Build the project
+
+
 Compiling the Python version of Imebra
 --------------------------------------
 
