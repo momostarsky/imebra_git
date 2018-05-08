@@ -7,8 +7,11 @@ Version |release| (this version)
 --------------------------------
 
 - Implemented enhancement #185 (Make Imebra compatible with latest Android SDK) as per SOP :ref:`DEVENH_2`
-
+- Fixed bug #218 (Java does not support the multiple inheritance used by Pipe and TcpStream) as per
+  SOP :ref:`FIXBUG_2`
+  
 Version 4.2.1.1
+---------------
 
 - Fixed bug #194 (Remove warning "Implicit conversion changes signdness" in dicomImageCodecImpl.cpp)
   as per SOP :ref:`FIXBUG_2`
