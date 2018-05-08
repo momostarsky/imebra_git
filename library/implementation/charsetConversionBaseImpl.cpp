@@ -44,9 +44,7 @@ charsetDictionary::charsetDictionary()
     registerCharset("ISO_IR 14",  "", "ISO-IR-14", "EUC-JP", 932, false );
     registerCharset("ISO_IR 166", "", "ISO-IR-166", "TIS-620", 874, false);
     registerCharset("ISO_IR 87",  "", "ISO-IR-87", "EUC-JP", 20932, false);
-#if !defined(IMEBRA_USE_JAVA)
     registerCharset("ISO_IR 159", "", "ISO-IR-159", "JIS_X0212-1990", 20932, false);
-#endif
 
     registerCharset("ISO 2022 IR 6",   "\x1b\x28\x42", "ISO-IR-6", "US-ASCII", 1252, false);
     registerCharset("ISO 2022 IR 100", "\x1b\x2d\x41", "ISO-IR-100", "ISO-8859-1", 1252, false);
@@ -63,9 +61,7 @@ charsetDictionary::charsetDictionary()
     registerCharset("ISO 2022 IR 14",  "\x1b\x28\x4a", "ISO-IR-14", "EUC-JP", 932, false);
     registerCharset("ISO 2022 IR 166", "\x1b\x2d\x54", "ISO-IR-166", "TIS-620", 874, false);
     registerCharset("ISO 2022 IR 87",  "\x1b\x24\x42", "ISO-IR-87", "EUC-JP", 20932, false);
-#if !defined(IMEBRA_USE_JAVA)
     registerCharset("ISO 2022 IR 159", "\x1b\x24\x28\x44", "ISO-IR-159", "JIS_X0212-1990", 20932, false);
-#endif
     registerCharset("ISO_IR 192", "", "UTF-8", "UTF-8", 65001, true);
     registerCharset("GB18030",    "", "GB18030", "GB18030", 54936, true);
 
