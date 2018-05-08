@@ -15,7 +15,8 @@ This file was automatically generated
 
 #if !defined(imebraTagsEnumeration__INCLUDED_)
 #define imebraTagsEnumeration__INCLUDED_
-#ifndef SWIGJAVA
+
+#if !defined(SWIGJAVA) && !defined(IMEBRA_USE_JAVA)
 
 namespace imebra
 {
