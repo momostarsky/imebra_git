@@ -65,14 +65,6 @@ charsetDictionary::charsetDictionary()
     registerCharset("ISO_IR 192", "", "UTF-8", "UTF-8", 65001, true);
     registerCharset("GB18030",    "", "GB18030", "GB18030", 54936, true);
 
-    for(dictionary_t::const_iterator scanInfo(m_dictionary.begin()), endInfo(m_dictionary.end()); scanInfo != endInfo; ++scanInfo)
-    {
-        if(!scanInfo->second.m_escapeSequence.empty())
-        {
-            m_escapeSequences[scanInfo->second.m_escapeSequence] = scanInfo->second.m_dicomName;
-        }
-    }
-
     IMEBRA_FUNCTION_END();
 }
 
@@ -96,6 +88,11 @@ const charsetDictionary::escapeSequences_t& charsetDictionary::getEscapeSequence
     return m_escapeSequences;
 }
 
+const charsetDictionary::orderedEscapeSequences_t& charsetDictionary::getOrderedEscapeSequences() const
+{
+    return m_orderedEscapeSequences;
+}
+
 void charsetDictionary::registerCharset(const std::string& dicomName, const std::string& escapeSequence, const std::string& isoName, const std::string& javaName, const unsigned long windowsPage, const bool bZeroFlag)
 {
     IMEBRA_FUNCTION_START();
@@ -103,6 +100,12 @@ void charsetDictionary::registerCharset(const std::string& dicomName, const std:
     m_dictionary.insert(std::pair<std::string, charsetInformation>(
                             charsetConversionBase::normalizeIsoCharset(dicomName),
                             charsetInformation(dicomName, escapeSequence, isoName, javaName, windowsPage, bZeroFlag)));
+
+    if(!escapeSequence.empty())
+    {
+        m_escapeSequences[escapeSequence] = dicomName;
+        m_orderedEscapeSequences.push_back(escapeSequence);
+    }
 
     IMEBRA_FUNCTION_END();
 }
