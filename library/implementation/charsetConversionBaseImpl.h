@@ -28,6 +28,7 @@ The class hides the platform specific implementations and supplies a common
 #include <string>
 #include <stdexcept>
 #include <map>
+#include <list>
 
 
 namespace imebra
@@ -81,11 +82,16 @@ public:
     typedef std::map<std::string, std::string> escapeSequences_t;
     const escapeSequences_t& getEscapeSequences() const;
 
+    typedef std::list<std::string> orderedEscapeSequences_t;
+    const orderedEscapeSequences_t& getOrderedEscapeSequences() const;
+
 private:
     void registerCharset(const std::string& dicomName, const std::string& escapeSequence, const std::string& isoName, const std::string& javaName, const unsigned long windowsPage, const bool bZeroFlag);
 
     typedef std::map<std::string, charsetInformation> dictionary_t;
     dictionary_t m_dictionary;
+
+    orderedEscapeSequences_t m_orderedEscapeSequences;
 
     escapeSequences_t m_escapeSequences;
 };

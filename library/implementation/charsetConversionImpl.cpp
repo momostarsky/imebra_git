@@ -39,6 +39,7 @@ std::string dicomConversion::convertFromUnicode(const std::wstring& unicodeStrin
     // Get the escape sequences from the unicode conversion
     //  engine
     ///////////////////////////////////////////////////////////
+    const charsetDictionary::orderedEscapeSequences_t& orderedEscapes(localCharsetConversion->getDictionary().getOrderedEscapeSequences());
     const charsetDictionary::escapeSequences_t& escapes(localCharsetConversion->getDictionary().getEscapeSequences());
 
     // Returned string
@@ -88,17 +89,16 @@ std::string dicomConversion::convertFromUnicode(const std::wstring& unicodeStrin
 
         // Find the escape sequence
         ///////////////////////////////////////////////////////////
-        for(charsetDictionary::escapeSequences_t::const_iterator scanEscapes(escapes.begin()), endEscapes(escapes.end());
-            scanEscapes != endEscapes;
-            ++scanEscapes)
+        for(const std::string& sequence: orderedEscapes)
         {
             try
             {
-                std::unique_ptr<defaultCharsetConversion> testEscapeSequence(new defaultCharsetConversion(scanEscapes->second));
+                const std::string& dicomCharset = escapes.find(sequence)->second;
+                std::unique_ptr<defaultCharsetConversion> testEscapeSequence(new defaultCharsetConversion(dicomCharset));
                 std::string convertedChar(testEscapeSequence->fromUnicode(code));
                 if(!convertedChar.empty())
                 {
-                    rawString += scanEscapes->first;
+                    rawString += sequence;
                     rawString += convertedChar;
 
                     localCharsetConversion.reset(testEscapeSequence.release());
@@ -108,7 +108,7 @@ std::string dicomConversion::convertFromUnicode(const std::wstring& unicodeStrin
                     bool bAlreadyUsed = false;
                     for(charsetsList::tCharsetsList::const_iterator scanUsedCharsets = pCharsets->begin(); scanUsedCharsets != pCharsets->end(); ++scanUsedCharsets)
                     {
-                        if(*scanUsedCharsets == scanEscapes->second)
+                        if(*scanUsedCharsets == dicomCharset)
                         {
                             bAlreadyUsed = true;
                             break;
@@ -116,7 +116,7 @@ std::string dicomConversion::convertFromUnicode(const std::wstring& unicodeStrin
                     }
                     if(!bAlreadyUsed)
                     {
-                        pCharsets->push_back(scanEscapes->second);
+                        pCharsets->push_back(dicomCharset);
                     }
                     break;
                 }

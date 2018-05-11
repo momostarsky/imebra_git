@@ -50,13 +50,15 @@ TEST(unicodeStringHandlerTest, unicodeTest)
 TEST(unicodeStringHandlerTest, iso2022Test)
 {
 	// Try a cyrillic /greek/latin patient name
+
     std::wstring patientName0 = L"???\x0430\x0402\x0403\x00c9^\x00d0\x0410\x00d5";
 	std::wstring patientName1 = L"\x0420\x00df\x0062^\x0394\x0410\x00d7\x0072";
+    std::wstring patientName2 = L"??\x0628\x062a\x062b\x062f^\0x400\0x410\0x420\0x00c6\0x0104\0x00c6";
 
     ReadWriteMemory streamMemory;
     {
         charsetsList_t charsets;
-        charsets.push_back("ISO 2022 IR 6");
+        charsets.push_back("ISO IR 6");
         DataSet testDataSet("1.2.840.10008.1.2.1", charsets);
 
         {
@@ -64,6 +66,7 @@ TEST(unicodeStringHandlerTest, iso2022Test)
 
             handler->setUnicodeString(0, patientName0);
             handler->setUnicodeString(1, patientName1);
+            handler->setUnicodeString(2, patientName2);
         }
 
         MemoryStreamOutput writeStream(streamMemory);
@@ -78,6 +81,7 @@ TEST(unicodeStringHandlerTest, iso2022Test)
 
         EXPECT_EQ(patientName0, testDataSet->getUnicodeString(TagId(0x0010, 0x0010), 0));
         EXPECT_EQ(patientName1, testDataSet->getUnicodeString(TagId(0x0010, 0x0010), 1));
+        EXPECT_EQ(patientName2, testDataSet->getUnicodeString(TagId(0x0010, 0x0010), 2));
     }
 }
 
