@@ -70,6 +70,8 @@ public:
 
     data(tagVR_t tagVR, const charsetsList::tCharsetsList& defaultCharsets);
 
+    virtual ~data();
+
 	///////////////////////////////////////////////////////////
 	/// \name Data handlers
 	///
