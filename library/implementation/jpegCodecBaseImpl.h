@@ -328,6 +328,8 @@ public:
 	typedef std::shared_ptr<jpeg::jpegChannel> ptrChannel;
 
 public:
+    virtual ~tag();
+
 	// Write the tag's content.
 	// The function should call WriteLength first.
 	///////////////////////////////////////////////////////////
