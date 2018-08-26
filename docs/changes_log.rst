@@ -7,6 +7,7 @@ Version |release| (this version)
 --------------------------------
 
 - Fixed bug #222 (imebra::implementation::codecs::streamCodec needs virtual destructor) as per SOP :ref:`FIXBUG_2`
+- Fixed bug #223 (imebra::implementation::data needs virtual destructor) as per SOP :ref:`FIXBUG_2`
 
 Version 4.2.2.1
 ---------------
