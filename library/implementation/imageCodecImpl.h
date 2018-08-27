@@ -71,6 +71,8 @@ class imageCodec
 {
 public:
 
+    virtual ~imageCodec();
+
 	///////////////////////////////////////////////////////////
 	/// \name Set/get the image in the dicom structure
 	///

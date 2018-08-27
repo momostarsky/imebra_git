@@ -247,6 +247,7 @@ class jpegCodecBase
 {
 public:
     jpegCodecBase();
+    virtual ~jpegCodecBase();
 
 	/// \internal
 	/// \brief This enumeration contains the tags used by
