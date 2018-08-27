@@ -10,6 +10,7 @@ Version |release| (this version)
 - Fixed bug #223 (imebra::implementation::data needs virtual destructor) as per SOP :ref:`FIXBUG_2`
 - Fixed bug #224 (imebra::implementation::buffer needs virtual destructor) as per SOP :ref:`FIXBUG_2`
 - Fixed bug #225 (imebra::implementation::codecs::jpeg::tag needs virtual destructor) as per SOP :ref:`FIXBUG_2`
+- Fixed bug #227 (The classes jpegCodecBase and imageCodec need a virtual destructor) as per SOP :ref:`FIXBUG_2`
 
 Version 4.2.2.1
 ---------------
