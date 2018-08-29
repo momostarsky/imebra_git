@@ -6,6 +6,16 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Fixed bug #222 (imebra::implementation::codecs::streamCodec needs virtual destructor) as per SOP :ref:`FIXBUG_2`
+- Fixed bug #223 (imebra::implementation::data needs virtual destructor) as per SOP :ref:`FIXBUG_2`
+- Fixed bug #224 (imebra::implementation::buffer needs virtual destructor) as per SOP :ref:`FIXBUG_2`
+- Fixed bug #225 (imebra::implementation::codecs::jpeg::tag needs virtual destructor) as per SOP :ref:`FIXBUG_2`
+- Fixed bug #227 (The classes jpegCodecBase and imageCodec need a virtual destructor) as per SOP :ref:`FIXBUG_2`
+- Fixed bug #228 (Cast from long to int32_t in CPartialResponse getXXXSubOperations methods) as per SOP :ref:`FIXBUG_2`
+
+Version 4.2.2.1
+---------------
+
 - Implemented enhancement #185 (Make Imebra compatible with latest Android SDK) as per SOP :ref:`DEVENH_2`
 - Fixed bug #218 (Java does not support the multiple inheritance used by Pipe and TcpStream) as per
   SOP :ref:`FIXBUG_2`

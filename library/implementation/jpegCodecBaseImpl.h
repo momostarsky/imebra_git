@@ -247,6 +247,7 @@ class jpegCodecBase
 {
 public:
     jpegCodecBase();
+    virtual ~jpegCodecBase();
 
 	/// \internal
 	/// \brief This enumeration contains the tags used by
@@ -328,6 +329,8 @@ public:
 	typedef std::shared_ptr<jpeg::jpegChannel> ptrChannel;
 
 public:
+    virtual ~tag();
+
 	// Write the tag's content.
 	// The function should call WriteLength first.
 	///////////////////////////////////////////////////////////

@@ -83,6 +83,9 @@ namespace codecs
 class streamCodec
 {
 public:
+
+    virtual ~streamCodec();
+
 	///////////////////////////////////////////////////////////
 	/// \name Streams read/write
 	///
