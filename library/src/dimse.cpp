@@ -389,7 +389,7 @@ CPartialResponse::CPartialResponse(std::shared_ptr<implementation::cPartialRespo
 //////////////////////////////////////////////////////////////////
 std::uint32_t CPartialResponse::getRemainingSubOperations() const
 {
-    return (unsigned long)(std::static_pointer_cast<implementation::cPartialResponse>(m_pCommand))->getRemainingSubOperations();
+    return (std::static_pointer_cast<implementation::cPartialResponse>(m_pCommand))->getRemainingSubOperations();
 }
 
 
@@ -400,7 +400,7 @@ std::uint32_t CPartialResponse::getRemainingSubOperations() const
 //////////////////////////////////////////////////////////////////
 std::uint32_t CPartialResponse::getCompletedSubOperations() const
 {
-    return (unsigned long)(std::static_pointer_cast<implementation::cPartialResponse>(m_pCommand))->getCompletedSubOperations();
+    return (std::static_pointer_cast<implementation::cPartialResponse>(m_pCommand))->getCompletedSubOperations();
 }
 
 
@@ -411,7 +411,7 @@ std::uint32_t CPartialResponse::getCompletedSubOperations() const
 //////////////////////////////////////////////////////////////////
 std::uint32_t CPartialResponse::getFailedSubOperations() const
 {
-    return (unsigned long)(std::static_pointer_cast<implementation::cPartialResponse>(m_pCommand))->getFailedSubOperations();
+    return (std::static_pointer_cast<implementation::cPartialResponse>(m_pCommand))->getFailedSubOperations();
 }
 
 
@@ -422,7 +422,7 @@ std::uint32_t CPartialResponse::getFailedSubOperations() const
 //////////////////////////////////////////////////////////////////
 std::uint32_t CPartialResponse::getWarningSubOperations() const
 {
-    return (unsigned long)(std::static_pointer_cast<implementation::cPartialResponse>(m_pCommand))->getWarningSubOperations();
+    return (std::static_pointer_cast<implementation::cPartialResponse>(m_pCommand))->getWarningSubOperations();
 }
 
 
