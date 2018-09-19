@@ -55,7 +55,8 @@ class dicomDictionary
 	struct imageDataDictionaryElement
 	{
 		std::wstring m_tagName;
-        tagVR_t m_tagType;
+        tagVR_t m_vr0;
+        tagVR_t m_vr1;
 	};
 
 	struct validDataTypesStruct
@@ -66,7 +67,7 @@ class dicomDictionary
 	};
 
 public:
-    void registerTag(std::uint32_t tagId, const wchar_t* tagName, tagVR_t vr);
+    void registerTag(std::uint32_t tagId, const wchar_t* tagName, tagVR_t vr0, tagVR_t vr1);
     void registerVR(tagVR_t vr, bool bLongLength, std::uint32_t wordSize, std::uint32_t maxLength);
 
 	/// \brief Retrieve a tag's description.

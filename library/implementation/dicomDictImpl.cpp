@@ -92,7 +92,7 @@ dicomDictionary::dicomDictionary()
     {
         registerTag(m_tagsDescription[scanDescriptions].m_tagId,
                     m_tagsDescription[scanDescriptions].m_tagDescription,
-                    m_tagsDescription[scanDescriptions].m_vr);
+                    m_tagsDescription[scanDescriptions].m_vr0, m_tagsDescription[scanDescriptions].m_vr0);
 
     }
 
@@ -109,7 +109,7 @@ dicomDictionary::dicomDictionary()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dicomDictionary::registerTag(std::uint32_t tagId, const wchar_t* tagName, tagVR_t tagType)
+void dicomDictionary::registerTag(std::uint32_t tagId, const wchar_t* tagName, tagVR_t vr0, tagVR_t vr1)
 {
     IMEBRA_FUNCTION_START();
 
@@ -120,7 +120,8 @@ void dicomDictionary::registerTag(std::uint32_t tagId, const wchar_t* tagName, t
 	imageDataDictionaryElement newElement;
 
 	newElement.m_tagName = tagName;
-    newElement.m_tagType = tagType;
+    newElement.m_vr0 = vr0;
+    newElement.m_vr1 = vr1;
 
 	m_dicomDict[tagId] = newElement;
 
@@ -204,7 +205,7 @@ tagVR_t dicomDictionary::getTagType(std::uint16_t groupId, std::uint16_t tagId) 
         IMEBRA_THROW(DictionaryUnknownTagError, "Unknown tag " << std::hex << groupId << ", " << std::hex << tagId);
     }
 
-	return findIterator->second.m_tagType;
+    return findIterator->second.m_vr0;
 
 	IMEBRA_FUNCTION_END();
 }
