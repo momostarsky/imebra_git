@@ -6,6 +6,12 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Implemented enhancement #229 (Update the tag dictionary to the latest standard, allow more than one VR, account 
+  for multiple groups) as per SOP :ref:`DEVENH_2`
+
+Version 4.2.3.1
+---------------
+
 - Fixed bug #222 (imebra::implementation::codecs::streamCodec needs virtual destructor) as per SOP :ref:`FIXBUG_2`
 - Fixed bug #223 (imebra::implementation::data needs virtual destructor) as per SOP :ref:`FIXBUG_2`
 - Fixed bug #224 (imebra::implementation::buffer needs virtual destructor) as per SOP :ref:`FIXBUG_2`
