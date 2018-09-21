@@ -91,8 +91,9 @@ dicomDictionary::dicomDictionary()
     for(size_t scanDescriptions(0); m_tagsDescription[scanDescriptions].m_tagId != (std::uint32_t)0xffffffff; ++scanDescriptions)
     {
         registerTag(m_tagsDescription[scanDescriptions].m_tagId,
+                    m_tagsDescription[scanDescriptions].m_tagMask,
                     m_tagsDescription[scanDescriptions].m_tagDescription,
-                    m_tagsDescription[scanDescriptions].m_vr0, m_tagsDescription[scanDescriptions].m_vr0);
+                    m_tagsDescription[scanDescriptions].m_vr0, m_tagsDescription[scanDescriptions].m_vr1);
 
     }
 
@@ -109,21 +110,24 @@ dicomDictionary::dicomDictionary()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dicomDictionary::registerTag(std::uint32_t tagId, const wchar_t* tagName, tagVR_t vr0, tagVR_t vr1)
+void dicomDictionary::registerTag(std::uint32_t tagId, std::uint32_t tagMask, const wchar_t* tagName, tagVR_t vr0, tagVR_t vr1)
 {
     IMEBRA_FUNCTION_START();
 
-	if(m_dicomDict.find(tagId) != m_dicomDict.end())
-	{
-        IMEBRA_THROW(std::logic_error, "Tag registered twice");
-	}
-	imageDataDictionaryElement newElement;
+    std::uint32_t increaseValue = 1u;
+    while(tagMask != 0xffffffff && (increaseValue & tagMask) != 0)
+    {
+        increaseValue <<= 1;
+    }
 
-	newElement.m_tagName = tagName;
-    newElement.m_vr0 = vr0;
-    newElement.m_vr1 = vr1;
-
-	m_dicomDict[tagId] = newElement;
+    for(std::uint32_t registerTagId(tagId); (registerTagId & tagMask) == tagId; registerTagId += increaseValue)
+    {
+        imageDataDictionaryElement newElement;
+        newElement.m_tagName = tagName;
+        newElement.m_vr0 = vr0;
+        newElement.m_vr1 = vr1;
+        m_dicomDict[registerTagId] = newElement;
+    }
 
 	IMEBRA_FUNCTION_END();
 }

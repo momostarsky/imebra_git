@@ -17,6 +17,16 @@ TEST(dicomDictionaryTest, getTagInfo)
 }
 
 
+TEST(dicomDictionaryTest, testMask)
+{
+    for(std::uint16_t overlayRow(0); overlayRow != 0x0100; ++overlayRow)
+    {
+        ASSERT_TRUE(DicomDictionary::getTagName(TagId(0x6000 | overlayRow, 0x0010)).find("Overlay Row") != std::string::npos);
+    }
+
+    ASSERT_THROW(DicomDictionary::getTagName(TagId(0x6100, 0x0010)), DictionaryUnknownTagError);
+}
+
 } // namespace tests
 
 } // namespace imebra

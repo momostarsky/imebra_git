@@ -67,7 +67,7 @@ class dicomDictionary
 	};
 
 public:
-    void registerTag(std::uint32_t tagId, const wchar_t* tagName, tagVR_t vr0, tagVR_t vr1);
+    void registerTag(std::uint32_t tagId, std::uint32_t tagMask, const wchar_t* tagName, tagVR_t vr0, tagVR_t vr1);
     void registerVR(tagVR_t vr, bool bLongLength, std::uint32_t wordSize, std::uint32_t maxLength);
 
 	/// \brief Retrieve a tag's description.
