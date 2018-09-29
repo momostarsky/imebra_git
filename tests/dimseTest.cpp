@@ -352,6 +352,7 @@ TEST(dimseTest, moveSCUSCP)
                 dimse.getNextCommandID(),
                 dimseCommandPriority_t::medium,
                 "1.1.1.1.1",
+                "Destination",
                 keys);
 
     dimse.sendCommandOrResponse(getCommand);
@@ -654,6 +655,7 @@ TEST(dimseTest, cancelSCUSCP)
                 dimse.getNextCommandID(),
                 dimseCommandPriority_t::medium,
                 "1.1.1.1.1",
+                "Destination",
                 keys);
     dimse.sendCommandOrResponse(moveCommand);
 
@@ -1551,6 +1553,8 @@ TEST(dimseTest, moveSCPInteroperabilityTest)
         DimseService dimse(scp);
 
         std::unique_ptr<CMoveCommand> pMove(dynamic_cast<CMoveCommand*>(dimse.getCommand()));
+
+        EXPECT_EQ("SCP1", pMove->getDestinationAET());
 
         std::unique_ptr<DataSet> pIdentifier(pMove->getPayloadDataSet());
 

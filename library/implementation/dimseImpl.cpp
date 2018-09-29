@@ -929,11 +929,13 @@ cMoveCommand::cMoveCommand(
         std::uint16_t messageID,
         dimseCommandPriority_t priority,
         const std::string& affectedSopClassUid,
+        const std::string& destinationAET,
         std::shared_ptr<dataSet> pIdentifier):
     dimseCCommand(abstractSyntax, dimseCommandType_t::cMove, priority, messageID, pIdentifier)
 {
     // Set the affected SOP class UID
     m_pCommand->setString(0x0, 0, 0x0002, 0, affectedSopClassUid);
+    m_pCommand->setString(0x0, 0, 0x0600, 0, destinationAET);
 }
 
 
@@ -950,7 +952,18 @@ cMoveCommand::cMoveCommand(std::shared_ptr<const associationMessage> pMessage):
 
 //////////////////////////////////////////////////////////////////
 //
-// Constructor
+// Get the destination AET
+//
+//////////////////////////////////////////////////////////////////
+std::string cMoveCommand::getDestinationAET() const
+{
+    return m_pCommand->getString(0x0, 0, 0x0600, 0, 0);
+}
+
+
+//////////////////////////////////////////////////////////////////
+//
+// Validate
 //
 //////////////////////////////////////////////////////////////////
 void cMoveCommand::validate() const
@@ -959,6 +972,7 @@ void cMoveCommand::validate() const
 
     getAffectedSopClassUid();
     getPayloadDataSet();
+    getDestinationAET();
 }
 
 

@@ -574,6 +574,7 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
     ///                            ImebraDimseService::getNextCommandID()
     /// \param priority            the message priority
     /// \param affectedSopClassUid affected SOP class UID
+    /// \param destinationAET      destination AET
     /// \param identifier          the dataset with the identifier
     ///                            (list of tags to match and their
     ///                            requested values)
@@ -583,7 +584,20 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
         messageID:(unsigned short)messageID
         priority:(ImebraDimseCommandPriority_t)priority
         affectedSopClassUid:(NSString*)affectedSopClassUid
+        destinationAET:(NSString*)destinationAET
         identifier:(ImebraDataSet*)pIdentifier;
+
+    ///
+    /// \brief Returns the destination AET
+    ///
+    /// \param pError set to ImebraMissingDataElementError if the
+    ///               data is missing
+    /// \return the destination AET
+    ///
+    //////////////////////////////////////////////////////////////////
+    -(NSString*)getDestinationAET:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
+
 @end
 
 

@@ -381,6 +381,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     messageID:(unsigned short)messageID
     priority:(ImebraDimseCommandPriority_t)priority
     affectedSopClassUid:(NSString*)affectedSopClassUid
+    destinationAET:(NSString*)destinationAET
     identifier:(ImebraDataSet*)pIdentifier
 {
     m_pDimseCommandBase = 0;
@@ -392,9 +393,19 @@ If you do not want to be bound by the GPL terms (such as the requirement
                     (std::uint16_t)messageID,
                     (imebra::dimseCommandPriority_t)priority,
                     imebra::NSStringToString(affectedSopClassUid),
+                    imebra::NSStringToString(destinationAET),
                     *(pIdentifier->m_pDataSet));
     }
     return self;
+}
+
+-(NSString*)getDestinationAET:(NSError**)pError
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    return imebra::stringToNSString(((imebra::CMoveCommand*)m_pDimseCommandBase)->getDestinationAET());
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
 
 @end

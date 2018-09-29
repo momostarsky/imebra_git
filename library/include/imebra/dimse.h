@@ -591,6 +591,35 @@ protected:
 #endif
 
 public:
+    //
+    // \brief Constructor (deprecated).
+    //
+    // \deprecated This method has a major bug (it does not take
+    //             the destination AET). Use the new constructor
+    //             instead.
+    //
+    // \param abstractSyntax      the message's abstract syntax
+    //                            (previously negotiated via the
+    //                            PresentationContexts parameter
+    //                            of the AssociationSCP or
+    //                            AssociationSCU constructors)
+    // \param messageID           message ID (can be retrieved
+    //                            with
+    //                            DimseService::getNextCommandID()
+    // \param priority            the message priority
+    // \param affectedSopClassUid affected SOP class UID
+    // \param identifier          the dataset with the identifier
+    //                            (list of tags to match and their
+    //                            requested values)
+    //
+    //////////////////////////////////////////////////////////////////
+    explicit CMoveCommand(
+            const std::string& abstractSyntax,
+            std::uint16_t messageID,
+            dimseCommandPriority_t priority,
+            const std::string& affectedSopClassUid,
+            const DataSet& identifier);
+
     ///
     /// \brief Constructor.
     ///
@@ -604,6 +633,7 @@ public:
     ///                            DimseService::getNextCommandID()
     /// \param priority            the message priority
     /// \param affectedSopClassUid affected SOP class UID
+    /// \param destinationAET      the destination AET
     /// \param identifier          the dataset with the identifier
     ///                            (list of tags to match and their
     ///                            requested values)
@@ -614,7 +644,16 @@ public:
             std::uint16_t messageID,
             dimseCommandPriority_t priority,
             const std::string& affectedSopClassUid,
+            const std::string& destinationAET,
             const DataSet& identifier);
+
+    ///
+    /// \brief Returns the destination AET.
+    ///
+    /// \return the destination AET
+    ///
+    //////////////////////////////////////////////////////////////////
+    std::string getDestinationAET() const;
 
 };
 
