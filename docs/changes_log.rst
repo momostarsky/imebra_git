@@ -6,6 +6,11 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Fixed bug #233 (C-MOVE does not specify the destination) as per SOP :ref:`FIXBUG_2`
+
+Version 4.2.3.1
+---------------
+
 - Fixed bug #222 (imebra::implementation::codecs::streamCodec needs virtual destructor) as per SOP :ref:`FIXBUG_2`
 - Fixed bug #223 (imebra::implementation::data needs virtual destructor) as per SOP :ref:`FIXBUG_2`
 - Fixed bug #224 (imebra::implementation::buffer needs virtual destructor) as per SOP :ref:`FIXBUG_2`
