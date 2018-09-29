@@ -81,7 +81,7 @@ ImebraCMoveCommand
 
 ImebraCMoveResponse
 -------------------
-.. doxygenclass:: ImebraCMoveCommand
+.. doxygenclass:: ImebraCMoveResponse
    :members:
 
 

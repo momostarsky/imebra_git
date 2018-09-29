@@ -83,7 +83,7 @@ CMoveCommand
 
 CMoveResponse
 -------------
-.. doxygenclass:: imebra::CMoveCommand
+.. doxygenclass:: imebra::CMoveResponse
    :members:
 
 
