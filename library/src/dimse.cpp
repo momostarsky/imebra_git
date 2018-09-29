@@ -605,7 +605,7 @@ CMoveCommand::CMoveCommand(std::shared_ptr<implementation::cMoveCommand> pComman
 
 //////////////////////////////////////////////////////////////////
 //
-// Constructor
+// Constructor (deprecated)
 //
 //////////////////////////////////////////////////////////////////
 CMoveCommand::CMoveCommand(
@@ -619,11 +619,44 @@ CMoveCommand::CMoveCommand(
                      messageID,
                      priority,
                      affectedSopClassUid,
+                     "",
                      identifier.m_pDataSet))
 {
 }
 
 
+//////////////////////////////////////////////////////////////////
+//
+// Constructor
+//
+//////////////////////////////////////////////////////////////////
+CMoveCommand::CMoveCommand(
+        const std::string& abstractSyntax,
+        std::uint16_t messageID,
+        dimseCommandPriority_t priority,
+        const std::string& affectedSopClassUid,
+        const std::string& destinationAET,
+        const DataSet& identifier):
+    DimseCommand(std::make_shared<implementation::cMoveCommand>(
+                     abstractSyntax,
+                     messageID,
+                     priority,
+                     affectedSopClassUid,
+                     destinationAET,
+                     identifier.m_pDataSet))
+{
+}
+
+
+//////////////////////////////////////////////////////////////////
+//
+// Return the destination AET
+//
+//////////////////////////////////////////////////////////////////
+std::string CMoveCommand::getDestinationAET() const
+{
+    return (std::static_pointer_cast<implementation::cMoveCommand>(m_pCommand))->getDestinationAET();
+}
 
 
 //////////////////////////////////////////////////////////////////

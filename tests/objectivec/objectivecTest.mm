@@ -328,6 +328,7 @@ void listenerThread()
                                                                    completedSubOperations:1
                                                                    failedSubOperations:0
                                                                    warningSubOperations:0];
+            EXPECT_EQ("DEST", imebra::NSStringToString([(ImebraCMoveCommand*)pCommand getDestinationAET:&pError]));
             break;
         case ImebraDimseCEcho:
             pResponse = [[ImebraCEchoResponse alloc]initWithcommand:(ImebraCEchoCommand*)pCommand responseCode:ImebraDimseSuccess];
@@ -486,6 +487,7 @@ TEST(objectivec, dimse)
             messageID:[pDimse getNextCommandID]
             priority:ImebraPriorityMedium
             affectedSopClassUid:@"1.2.840.10008.1.1"
+            destinationAET:@"DEST"
             identifier:pDataSet];
 
         [pDimse sendCommandOrResponse:pCommand error:&pError];

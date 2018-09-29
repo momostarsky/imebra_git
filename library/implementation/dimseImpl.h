@@ -704,6 +704,7 @@ public:
     /// \param messageID           the message ID
     /// \param priority            the message priority
     /// \param affectedSopClassUid affected SOP class UID
+    /// \param destinationAET      the destination AET
     /// \param pIdentifier         the dataset with the identifier
     ///                            (list of tags to match and their
     ///                            requested values)
@@ -714,6 +715,7 @@ public:
             std::uint16_t messageID,
             dimseCommandPriority_t priority,
             const std::string& affectedSopClassUid,
+            const std::string& destinationAET,
             std::shared_ptr<dataSet> pIdentifier);
 
     ///
@@ -723,6 +725,14 @@ public:
     ///
     //////////////////////////////////////////////////////////////////
     cMoveCommand(std::shared_ptr<const associationMessage> pMessage);
+
+    ///
+    /// \brief Constructor.
+    ///
+    /// \param pMessage dimse message containing the C-MOVE command
+    ///
+    //////////////////////////////////////////////////////////////////
+    std::string getDestinationAET() const;
 
     virtual void validate() const override;
 
