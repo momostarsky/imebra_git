@@ -343,7 +343,7 @@ if(NOT IOS)
     # DICOM2JPEG example
     #
     ##############################################
-    file(GLOB dicom2jpeg_sources "${CMAKE_CURRENT_SOURCE_DIR}/examples/dicom2jpeg/*.cpp")
+    file(GLOB dicom2jpeg_sources "${CMAKE_CURRENT_SOURCE_DIR}/examples/c++/dicom2jpeg/*.cpp")
 
     # Add the source files to the project
     #------------------------------------
@@ -357,7 +357,7 @@ if(NOT IOS)
     # CHANGETRANSFERSYNTAX example
     #
     ##############################################
-    file(GLOB changeTransferSyntax_sources "${CMAKE_CURRENT_SOURCE_DIR}/examples/changeTransferSyntax/*.cpp")
+    file(GLOB changeTransferSyntax_sources "${CMAKE_CURRENT_SOURCE_DIR}/examples/c++/changeTransferSyntax/*.cpp")
 
     # Add the source files to the project
     #------------------------------------
@@ -371,7 +371,7 @@ if(NOT IOS)
     # DICOMDIRITEMS example
     #
     ##############################################
-    file(GLOB dicomdirItems_sources "${CMAKE_CURRENT_SOURCE_DIR}/examples/dicomdirItems/*.cpp")
+    file(GLOB dicomdirItems_sources "${CMAKE_CURRENT_SOURCE_DIR}/examples/c++/dicomdirItems/*.cpp")
 
     # Add the source files to the project
     #------------------------------------
