@@ -75,7 +75,7 @@ func waitForIncomingData(address: ImebraTCPPassiveAddress) -> ImebraDataSet
         if command.commandType == ImebraDimseCommandType_t.cStore
         {
             let dataSet = try command.getPayloadDataSet()
-            try ImebraCodecFactory.saveToFile(instanceUID, dataSet: dataSet, codecType: ImebraCodecType_t.dicom)
+            try ImebraCodecFactory.save(toFile: instanceUID, dataSet: dataSet, codecType: ImebraCodecType_t.dicom)
         }
 
         try scp.release()
@@ -131,12 +131,12 @@ do
 
     // Create a datase where we set the matching tags used to find the instances to move
     let identifierDataset = ImebraDataSet(transferSyntax: ImebraUidImplicitVRLittleEndian_1_2_840_10008_1_2)
-    try identifierDataset!.setString(ImebraTagId(id: ImebraTagId_t.SOPInstanceUID_0008_0018), newValue: instanceUID)
+    try identifierDataset!.setString(ImebraTagId(id: ImebraTagId_t.tagSOPInstanceUID_0008_0018), newValue: instanceUID)
 
     // Prepare a C-MOVE command and send it to the SCP
     let moveCommand = try ImebraCMoveCommand(abstractSyntax: classUID, 
                                              messageID: scuDimseService!.getNextCommandID(),
-                                             priority: ImebraDimseCommandPriority_t.medium,
+                                             priority: ImebraDimseCommandPriority_t.priorityMedium,
                                              affectedSopClassUid: ImebraUidEnhancedMRImageStorage_1_2_840_10008_5_1_4_1_1_4_1,
                                              destinationAET:destinationAET, 
                                              identifier: identifierDataset)
