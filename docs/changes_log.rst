@@ -7,6 +7,7 @@ Version |release| (this version)
 --------------------------------
 
 - Fixed bug #233 (C-MOVE does not specify the destination) as per SOP :ref:`FIXBUG_2`
+- Fixed bug #234 (The documentation for CMOVE response is missing) as per SOP :ref:`FIXBUG_2`
 
 Version 4.2.3.1
 ---------------
