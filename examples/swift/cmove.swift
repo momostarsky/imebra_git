@@ -134,17 +134,17 @@ do
     try identifierDataset!.setString(ImebraTagId(id: ImebraTagId_t.tagSOPInstanceUID_0008_0018), newValue: instanceUID)
 
     // Prepare a C-MOVE command and send it to the SCP
-    let moveCommand = try ImebraCMoveCommand(abstractSyntax: classUID, 
-                                             messageID: scuDimseService!.getNextCommandID(),
-                                             priority: ImebraDimseCommandPriority_t.priorityMedium,
-                                             affectedSopClassUid: ImebraUidEnhancedMRImageStorage_1_2_840_10008_5_1_4_1_1_4_1,
-                                             destinationAET:destinationAET, 
-                                             identifier: identifierDataset)
+    let moveCommand = ImebraCMoveCommand(abstractSyntax: classUID, 
+                                         messageID: scuDimseService!.getNextCommandID(),
+                                         priority: ImebraDimseCommandPriority_t.priorityMedium,
+                                         affectedSopClassUid: ImebraUidEnhancedMRImageStorage_1_2_840_10008_5_1_4_1_1_4_1,
+                                         destinationAET:destinationAET, 
+                                         identifier: identifierDataset)
 
-    scuDimseService.sendCommandOrResponse(moveCommand)
+    try scuDimseService!.sendCommandOrResponse(moveCommand)
 
     // Wait for a response to the C-MOVE command
-    let moveResponse = scuDimseService.getCMoveResponse(moveCommand)
+    let moveResponse = scuDimseService!.getCMoveResponse(moveCommand)
     if moveResponse.status == ImebraDimseStatus_t.success
     {
         print("OK")
