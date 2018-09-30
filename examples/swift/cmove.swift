@@ -11,7 +11,7 @@ import Foundation
 
 if CommandLine.arguments.count < 9
 {
-    print "Usage: cmove ourAET serverAET destinationAET ourPort serverAddress serverPort instanceUID classUID"
+    print("Usage: cmove ourAET serverAET destinationAET ourPort serverAddress serverPort instanceUID classUID")
     exit(0)
 }
 
@@ -61,8 +61,8 @@ func waitForIncomingData(address: ImebraTCPPassiveAddress) -> ImebraDataSet
                                            maxInvokedOperations: 1, 
                                            maxPerformedOperations: 1, 
                                            presentationContexts: presentationContexts, 
-                                           reader: readScu, 
-                                           writer: writeScu, 
+                                           reader: readScp, 
+                                           writer: writeScp, 
                                            dimseTimeoutSeconds: 30, 
                                            artimTimeoutSeconds:30)
 
@@ -72,10 +72,10 @@ func waitForIncomingData(address: ImebraTCPPassiveAddress) -> ImebraDataSet
         // We wait for just one command
         let command = scpDimseService.getCommand()
 
-        if command.commandType == ImebraDimseCStore
+        if command.commandType == ImebraDimseCommandType_t.ImebraDimseCStore
         {
             let dataSet = command.getPayloadDataSet()
-            ImebraCodecFactory.saveToFile(instanceUID, dataSet, ImebraCodecTypeDicom)
+            ImebraCodecFactory.saveToFile(instanceUID, dataSet, ImebraCodecType_t.ImebraCodecTypeDicom)
         }
 
         scp.release()
@@ -127,16 +127,16 @@ do
                                        dimseTimeoutSeconds: 0)
 
     // Use a DIMSE service to send and receive commands/response
-    let scuDimseService = try ImebraDimseService(association: scu)
+    let scuDimseService = ImebraDimseService(association: scu)
 
     // Create a datase where we set the matching tags used to find the instances to move
     let identifierDataset = ImebraDataSet(transferSyntax: ImebraUidImplicitVRLittleEndian_1_2_840_10008_1_2)
-    identifierDataset.setString(ImebraTagId(id: ImebraTagSOPInstanceUID_0008_0018), newValue: instanceUID)
+    identifierDataset.setString(ImebraTagId(id: ImebraTagId_t.ImebraTagSOPInstanceUID_0008_0018), newValue: instanceUID)
 
     // Prepare a C-MOVE command and send it to the SCP
     let moveCommand = try ImebraCMoveCommand(abstractSyntax: classUID, 
-                                             messageID: dimseService.getNextCommandID(),
-                                             priority: ImebraPriorityMedium,
+                                             messageID: scuDimseService.getNextCommandID(),
+                                             priority: ImebraDimseCommandPriority_t.ImebraPriorityMedium,
                                              affectedSopClassUid: ImebraUidEnhancedMRImageStorage_1_2_840_10008_5_1_4_1_1_4_1,
                                              destinationAET:destinationAET, 
                                              identifier: identifierDataset)
@@ -145,17 +145,17 @@ do
 
     // Wait for a response to the C-MOVE command
     let moveResponse = scuDimseService.getCMoveResponse(moveCommand)
-    if moveResponse.status == ImebraDimseStatusSuccess && moveResponse.getCompletedSubOperations() == 1
+    if moveResponse.status == ImebraDimseStatus_t.ImebraDimseStatusSuccess
     {
-        print "Dataset moved"
+        print("OK")
     }
     else
     {
-        print "Error"
+        print("Error")
     }
 
     // Release gracefully
-    scu.release()
+    try scu.release()
 
     
 
