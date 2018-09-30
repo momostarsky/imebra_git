@@ -8,6 +8,8 @@ Version |release| (this version)
 
 - Implemented enhancement #229 (Update the tag dictionary to the latest standard, allow more than one VR, account 
   for multiple groups) as per SOP :ref:`DEVENH_2`
+- Fixed bug #233 (C-MOVE does not specify the destination) as per SOP :ref:`FIXBUG_2`
+- Fixed bug #234 (The documentation for CMOVE response is missing) as per SOP :ref:`FIXBUG_2`
 
 Version 4.2.3.1
 ---------------
