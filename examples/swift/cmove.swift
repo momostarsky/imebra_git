@@ -144,7 +144,7 @@ do
     try scuDimseService!.sendCommandOrResponse(moveCommand)
 
     // Wait for a response to the C-MOVE command
-    let moveResponse = scuDimseService!.getCMoveResponse(moveCommand)
+    let moveResponse = try scuDimseService!.getCMoveResponse(moveCommand)
     if moveResponse.status == ImebraDimseStatus_t.success
     {
         print("OK")
