@@ -24,78 +24,75 @@ let serverPort = CommandLine.arguments[6]
 let instanceUID = CommandLine.arguments[7]
 let classUID = CommandLine.arguments[8]
 
-func waitForIncomingData(address: ImebraTCPPassiveAddress) -> ImebraDataSet
-{
-    do
-    {
-        //---------------------------------------
-        //
-        // Create the SCP that will receive the
-        // data
-        //
-        //---------------------------------------
-
-        // Open a TCP stream connected to the other SCP
-        let tcpListener = try ImebraTCPListener(address: address)
-
-        let tcpStream = try tcpListener.waitForConnection()
-
-        // Allocate a reader and a writer that read and write into the TCP stream
-        let readScp = ImebraStreamReader(inputStream: tcpStream)
-        let writeScp = ImebraStreamWriter(inputOutputStream: tcpStream)
-
-        // Tell that we accept the class UID specified in the command line, and which
-        // transfer syntaxes we can handle for that class
-        let context = ImebraPresentationContext(abstractSyntax: classUID)
-        context?.addTransferSyntax(ImebraUidImplicitVRLittleEndian_1_2_840_10008_1_2)
-        context?.addTransferSyntax(ImebraUidExplicitVRLittleEndian_1_2_840_10008_1_2_1)
-        context?.addTransferSyntax(ImebraUidJPEGBaselineProcess1_1_2_840_10008_1_2_4_50)
-        context?.addTransferSyntax(ImebraUidJPEGExtendedProcess2_4_1_2_840_10008_1_2_4_51)
-        context?.addTransferSyntax(ImebraUidJPEGLosslessNonHierarchicalProcess14_1_2_840_10008_1_2_4_57)
-        context?.addTransferSyntax(ImebraUidJPEGLosslessNonHierarchicalFirstOrderPredictionProcess14SelectionValue1_1_2_840_10008_1_2_4_70)
-        let presentationContexts = ImebraPresentationContexts()
-        presentationContexts?.add(context)
-
-        // Negotiate the association with the SCP
-        let scp = try ImebraAssociationSCP(thisAET: ourAET, 
-                                           maxInvokedOperations: 1, 
-                                           maxPerformedOperations: 1, 
-                                           presentationContexts: presentationContexts, 
-                                           reader: readScp, 
-                                           writer: writeScp, 
-                                           dimseTimeoutSeconds: 30, 
-                                           artimTimeoutSeconds:30)
-
-        // Use a DIMSE service to send and receive commands/response
-        let scpDimseService = ImebraDimseService(association: scp)
-
-        // We wait for just one command
-        let command = try scpDimseService!.getCommand()
-
-        if command.commandType == ImebraDimseCommandType_t.cStore
-        {
-            let dataSet = try command.getPayloadDataSet()
-            try ImebraCodecFactory.save(toFile: instanceUID, dataSet: dataSet, codecType: ImebraCodecType_t.dicom)
-        }
-
-        try scp.release()
-    }
-    catch let error as ImebraStreamError 
-    {
-        print("ImebraStreamError")
-        print("Error: \(error.domain)")
-        print(error.userInfo[NSUnderlyingErrorKey])
-    }
-    catch let error as NSError 
-    {
-        print("NSError")
-        print("Error: \(error.domain)")
-        print(error.userInfo[NSUnderlyingErrorKey])
-    }
-}
-
 do
 {
+    // Open a TCP stream used to receive the data
+    let tcpListener = try ImebraTCPListener(address: ImebraTCPPassiveAddress(node: "", service: ourPort))
+
+    // Launch a tread that will receive the moved data
+    DispatchQueue.global(qos: .background).async
+    {
+        do
+        {
+            // Wait for an incoming connection. Will throw if the listener is closed
+            // before a connection arrives
+            let tcpStream = try tcpListener.waitForConnection()
+
+            // Allocate a reader and a writer that read and write into the TCP stream
+            let readScp = ImebraStreamReader(inputStream: tcpStream)
+            let writeScp = ImebraStreamWriter(inputOutputStream: tcpStream)
+
+            // Tell that we accept the class UID specified in the command line, and which
+            // transfer syntaxes we can handle for that class
+            let context = ImebraPresentationContext(abstractSyntax: classUID)
+            context?.addTransferSyntax(ImebraUidImplicitVRLittleEndian_1_2_840_10008_1_2)
+            context?.addTransferSyntax(ImebraUidExplicitVRLittleEndian_1_2_840_10008_1_2_1)
+            context?.addTransferSyntax(ImebraUidJPEGBaselineProcess1_1_2_840_10008_1_2_4_50)
+            context?.addTransferSyntax(ImebraUidJPEGExtendedProcess2_4_1_2_840_10008_1_2_4_51)
+            context?.addTransferSyntax(ImebraUidJPEGLosslessNonHierarchicalProcess14_1_2_840_10008_1_2_4_57)
+            context?.addTransferSyntax(ImebraUidJPEGLosslessNonHierarchicalFirstOrderPredictionProcess14SelectionValue1_1_2_840_10008_1_2_4_70)
+            let presentationContexts = ImebraPresentationContexts()
+            presentationContexts?.add(context)
+
+            // Negotiate the association with the SCU (we act as SCP here)
+            let scp = try ImebraAssociationSCP(thisAET: ourAET, 
+                                               maxInvokedOperations: 1, 
+                                               maxPerformedOperations: 1, 
+                                               presentationContexts: presentationContexts, 
+                                               reader: readScp, 
+                                               writer: writeScp, 
+                                               dimseTimeoutSeconds: 30, 
+                                               artimTimeoutSeconds:30)
+
+            // Use a DIMSE service to send and receive commands/response
+            let scpDimseService = ImebraDimseService(association: scp)
+
+            // We wait for just one command
+            let command = try scpDimseService!.getCommand()
+    
+            if command.commandType == ImebraDimseCommandType_t.cStore
+            {
+                let dataSet = try command.getPayloadDataSet()
+                try ImebraCodecFactory.save(toFile: instanceUID, dataSet: dataSet, codecType: ImebraCodecType_t.dicom)
+            }
+
+            try scp.release()
+        }
+        catch let error as ImebraStreamError 
+        {
+            print("ImebraStreamError")
+            print("Error: \(error.domain)")
+            print(error.userInfo[NSUnderlyingErrorKey])
+        }
+        catch let error as NSError 
+        {
+            print("NSError")
+            print("Error: \(error.domain)")
+            print(error.userInfo[NSUnderlyingErrorKey])
+        }
+    }
+
+
     //---------------------------------------
     //
     // Create the SCU
