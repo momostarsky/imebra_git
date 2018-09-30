@@ -72,10 +72,10 @@ func waitForIncomingData(address: ImebraTCPPassiveAddress) -> ImebraDataSet
         // We wait for just one command
         let command = try scpDimseService!.getCommand()
 
-        if command.commandType == ImebraDimseCommandType_t.CStore
+        if command.commandType == ImebraDimseCommandType_t.cStore
         {
-            let dataSet = command.getPayloadDataSet()
-            ImebraCodecFactory.saveToFile(instanceUID, dataSet: dataSet, codecType: ImebraCodecType_t.Dicom)
+            let dataSet = try command.getPayloadDataSet()
+            try ImebraCodecFactory.saveToFile(instanceUID, dataSet: dataSet, codecType: ImebraCodecType_t.dicom)
         }
 
         try scp.release()
@@ -136,7 +136,7 @@ do
     // Prepare a C-MOVE command and send it to the SCP
     let moveCommand = try ImebraCMoveCommand(abstractSyntax: classUID, 
                                              messageID: scuDimseService!.getNextCommandID(),
-                                             priority: ImebraDimseCommandPriority_t.Medium,
+                                             priority: ImebraDimseCommandPriority_t.medium,
                                              affectedSopClassUid: ImebraUidEnhancedMRImageStorage_1_2_840_10008_5_1_4_1_1_4_1,
                                              destinationAET:destinationAET, 
                                              identifier: identifierDataset)
@@ -145,7 +145,7 @@ do
 
     // Wait for a response to the C-MOVE command
     let moveResponse = scuDimseService.getCMoveResponse(moveCommand)
-    if moveResponse.status == ImebraDimseStatus_t.Success
+    if moveResponse.status == ImebraDimseStatus_t.success
     {
         print("OK")
     }
