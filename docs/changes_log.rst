@@ -10,6 +10,7 @@ Version |release| (this version)
   for multiple groups) as per SOP :ref:`DEVENH_2`
 - Fixed bug #233 (C-MOVE does not specify the destination) as per SOP :ref:`FIXBUG_2`
 - Fixed bug #234 (The documentation for CMOVE response is missing) as per SOP :ref:`FIXBUG_2`
+- Fixed bug #235 (ImebraCodecFactory::saveXXX must have the attribute swift_error(nonnull_error)) as per SOP :ref:`FIXBUG_2`
 
 Version 4.2.3.1
 ---------------
