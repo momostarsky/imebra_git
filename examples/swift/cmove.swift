@@ -72,10 +72,10 @@ func waitForIncomingData(address: ImebraTCPPassiveAddress) -> ImebraDataSet
         // We wait for just one command
         let command = try scpDimseService!.getCommand()
 
-        if command.commandType == ImebraDimseCommandType_t.ImebraDimseCStore
+        if command.commandType == ImebraDimseCommandType_t.CStore
         {
             let dataSet = command.getPayloadDataSet()
-            ImebraCodecFactory.saveToFile(instanceUID, dataSet, ImebraCodecType_t.ImebraCodecTypeDicom)
+            ImebraCodecFactory.saveToFile(instanceUID, dataSet: dataSet, codecType: ImebraCodecType_t.Dicom)
         }
 
         try scp.release()
@@ -131,12 +131,12 @@ do
 
     // Create a datase where we set the matching tags used to find the instances to move
     let identifierDataset = ImebraDataSet(transferSyntax: ImebraUidImplicitVRLittleEndian_1_2_840_10008_1_2)
-    try identifierDataset!.setString(ImebraTagId(id: ImebraTagId_t.ImebraTagSOPInstanceUID_0008_0018), newValue: instanceUID)
+    try identifierDataset!.setString(ImebraTagId(id: ImebraTagId_t.SOPInstanceUID_0008_0018), newValue: instanceUID)
 
     // Prepare a C-MOVE command and send it to the SCP
     let moveCommand = try ImebraCMoveCommand(abstractSyntax: classUID, 
                                              messageID: scuDimseService!.getNextCommandID(),
-                                             priority: ImebraDimseCommandPriority_t.ImebraPriorityMedium,
+                                             priority: ImebraDimseCommandPriority_t.Medium,
                                              affectedSopClassUid: ImebraUidEnhancedMRImageStorage_1_2_840_10008_5_1_4_1_1_4_1,
                                              destinationAET:destinationAET, 
                                              identifier: identifierDataset)
@@ -145,7 +145,7 @@ do
 
     // Wait for a response to the C-MOVE command
     let moveResponse = scuDimseService.getCMoveResponse(moveCommand)
-    if moveResponse.status == ImebraDimseStatus_t.ImebraDimseStatusSuccess
+    if moveResponse.status == ImebraDimseStatus_t.Success
     {
         print("OK")
     }
