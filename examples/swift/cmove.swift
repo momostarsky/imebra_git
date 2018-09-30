@@ -67,7 +67,7 @@ func waitForIncomingData(address: ImebraTCPPassiveAddress) -> ImebraDataSet
                                            artimTimeoutSeconds:30)
 
         // Use a DIMSE service to send and receive commands/response
-        let scpDimseService = try ImebraDimseService(association: scp)
+        let scpDimseService = ImebraDimseService(association: scp)
 
         // We wait for just one command
         let command = try scpDimseService!.getCommand()
