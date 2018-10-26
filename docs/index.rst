@@ -10,20 +10,20 @@ Imebra
 ======
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: Download Imebra
    
    download
    
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: Legal
    
    copyright
    gplv2
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: Introduction
    
    introduction
@@ -32,7 +32,7 @@ Imebra
 .. user-docs:
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: User documentation
    
    compiling_imebra
@@ -49,21 +49,19 @@ Imebra
 .. _api-docs:
 
 .. toctree::
-   :maxdepth: 3
-   :caption: C++ API
+   :maxdepth: 5
+   :caption: API
 
-   definition_classes
-   loading_saving_classes
-   pipe_classes
-   tcp_classes
-   dicom_dataset_tag_classes
+   dicom_data_classes
+   stream_classes
    imaging_classes
-   dicomdir_classes
+   transforms_classes
+   memory_management_classes
    acse_classes
    dimse_classes
-   memory_management_classes
-   transforms_classes
+   dicomdir_classes
    dicom_dictionary_classes
+   definition_classes
    exception_classes
 
 .. toctree::
@@ -71,16 +69,9 @@ Imebra
    :caption: Objective-C API
 
    objc_definition_classes
-   objc_loading_saving_classes
-   objc_pipe_classes
-   objc_tcp_classes
-   objc_dicom_dataset_tag_classes
-   objc_imaging_classes
    objc_dicomdir_classes
-   objc_acse_classes
    objc_dimse_classes
    objc_memory_management_classes
-   objc_transforms_classes
    objc_dicom_dictionary_classes
    objc_exception_classes
 
@@ -88,7 +79,7 @@ Imebra
 .. _build-distribution:
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: Build distributions
 
    build_distribution
@@ -96,7 +87,7 @@ Imebra
 .. _requirements
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: Requirements & Risks
 
    risks_requirements
@@ -104,7 +95,7 @@ Imebra
 .. _sops
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: Standard operating procedures
 
    sop
