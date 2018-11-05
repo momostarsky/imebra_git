@@ -100,7 +100,9 @@ public:
     ///
     /// \param destination     a pointer to the allocated buffer
     /// \param destinationSize the size of the allocated buffer
-    /// \return the number of bytes to be copied into the pre-allocated buffer
+    /// \return the number of bytes copied into the pre-allocated buffer, or the
+    ///         desired size of destination if destinationSize is smaller than
+    ///         the return value
     ///
     ///////////////////////////////////////////////////////////////////////////////
     size_t data(char* destination, size_t destinationSize) const;
