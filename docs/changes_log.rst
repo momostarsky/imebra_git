@@ -6,6 +6,7 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Implemented enhancement #238 (Update the introduction to Imebra with the latest features) as per SOP :ref:`DEVENH_2`
 - Implemented enhancement #239 (Expand the introductory sections in the API docs) as per SOP :ref:`DEVENH_2`
 
 Version 4.3.0.1
