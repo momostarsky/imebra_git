@@ -2,14 +2,14 @@ Introduction
 ============
 
 Imebra is a C++ library able to parse and build DICOM files (including DICOMDIR
-files). It also supplies the necessary codecs to encode and decode the images
-embedded in the DICOM files.
+files) and send and receives ACSE messages and DIMSE commands and responses.
 
-When Imebra reads a file then it inserts the file content into a Dicom structure 
-in memory managed by the :cpp:class:`imebra::DataSet` class.
+It also supplies the necessary codecs to encode and decode the images embedded in the DICOM structures.
 
-Other functions in the dataset allow the application to read or write into
-the DICOM tags, or to store new images into the dataSet.
+When Imebra reads a DICOM stream then it inserts the DICOM content into the :ref:`DataSet` class.
+
+Other functions allow the application to read or write into the DICOM tags, or to store new images 
+into the dataSet.
 
 You can get Imebra from https://imebra.com
 

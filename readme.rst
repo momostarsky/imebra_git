@@ -4,9 +4,15 @@ Imebra V4
 Introduction
 ============
 
-Imebra is a C++ DICOM library able to parse & build DICOM files decompress/compress/process the embedded images.
+Imebra is a C++ DICOM library able to:
+
+- parse & build DICOM files
+- decompress/compress/process the embedded DICOM images
+- send and receive DIMSE commands and responses as an SCU or SCP
 
 A JNI interface allows to use the library also with the JAVA language, including on Android OS.
+
+Objective-C wrappers (compatible with Swift) are also available.
 
 
 Creating the source distribution from the code in the VCS
@@ -18,7 +24,7 @@ This section describes how to create an Imebra Source Distribution containing th
 C++source code, the Java wrappers for Android, the HTML documentation, the test units code coverage
 information.
 
-The Imebra image is built on Ubuntu 16.04 with the following apt packages:
+The Imebra image is built on Ubuntu 18.04 with the following apt packages:
 
 - mercurial
 - doxygen
@@ -189,37 +195,5 @@ For instance:
     ant -Dsdk.dir=path/to/Android/SDK -Dndk.dir=path/to/Android/NDK
     
 
-
-Compiling the test units
-------------------------
-
-Prerequisites
-.............
-
-In order to build and execute the tests you need:
-
-- a compiled gtest library and its include file (get it here https://github.com/google/googletest)
-- the compiled C++ version of Imebra
-
-Building the tests
-..................
-
-To compile te tests, execute the following steps:
-
-1. create a folder that will contain the test units executable
-2. cd into the created folder
-3. run cmake with the path to the tests/CMakeLists.txt as a parameter. You can also define the
-   CMake variables imebra_library, gtest_library and gtest_include with the path to the
-   imebra library, gtest library and gtest include folder respectively
-4. run cmake --build .
-
-For instance:
-
-::
-
-    md tests_artifacts
-    cd tests_artifacts
-    cmake -Dimebra_library="path/to/imebra/library" -Dgtest_library="path/to/gtest/library" -Dgtest_include="path/to/gtest/include" imebra_location/tests
-    cmake --build .
 
 
