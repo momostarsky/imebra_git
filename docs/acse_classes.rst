@@ -106,6 +106,8 @@ Objective-C/Swift
 Association classes
 -------------------
 
+.. _AssociationBase:
+
 AssociationBase
 ...............
 

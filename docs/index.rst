@@ -64,18 +64,6 @@ Imebra
    definition_classes
    exception_classes
 
-.. toctree::
-   :maxdepth: 3
-   :caption: Objective-C API
-
-   objc_definition_classes
-   objc_dicomdir_classes
-   objc_dimse_classes
-   objc_memory_management_classes
-   objc_dicom_dictionary_classes
-   objc_exception_classes
-
-
 .. _build-distribution:
 
 .. toctree::

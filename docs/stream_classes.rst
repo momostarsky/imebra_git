@@ -4,10 +4,10 @@ Stream classes
 Introduction
 ------------
 
-The classes described in this section are used to load and store DICOM data structures (represented by a :ref:`DataSet`)
+The classes described in this chapter are used to load and store DICOM data structures (represented by a :ref:`DataSet`)
 and to send and receive DICOM messages.
 
-The following classes are described in this section:
+The following classes are described in this chapter:
 
 +----------------------------------------+--------------------------------------+-------------------------------+
 |C++ class                               |Objective-C/Swift class               |Description                    |
@@ -241,7 +241,8 @@ Pipe classes
 The Pipe class can be used to provide custom streams for the ACSE and DIMSE services or for any operation that
 takes a `StreamReader`_ or `StreamWriter`_ as parameter.
 
-An example of custom stream may be:
+An example of custom stream could be:
+
 - a secure TCP connection
 - a connection through a dedicated custom network
 - etc.
@@ -288,8 +289,9 @@ server) can be realized with the class :cpp:class:`imebra::TCPStream`.
 
 Both :cpp:class:`imebra::TCPListener` and :cpp:class:`imebra::TCPStream` expose blocking methods (except for
 the constructors which connect to the peer in non-blocking mode).
-You can exit a blocking method to terminate by closing the socket or by calling the terminate() method.
+You can exit a blocking method by closing the socket or by calling the terminate() method.
 
+.. _TCPStream:
 
 TCPStream
 .........
