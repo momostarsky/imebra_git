@@ -15,27 +15,3 @@ the constructors which connect to the peer in non-blocking mode).
 You can exit a blocking method to terminate by closing the socket or by calling the terminate() method.
 
 
-TCPAddress
-----------
-.. doxygenclass:: imebra::TCPAddress
-   :members:
-
-TCPActiveAddress
-----------------
-.. doxygenclass:: imebra::TCPActiveAddress
-   :members:
-
-TCPPassiveAddress
------------------
-.. doxygenclass:: imebra::TCPPassiveAddress
-   :members:
-
-TCPStream
----------
-.. doxygenclass:: imebra::TCPStream
-   :members:
-
-TCPListener
------------
-.. doxygenclass:: imebra::TCPListener
-   :members:

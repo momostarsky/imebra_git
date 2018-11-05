@@ -6,6 +6,11 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Implemented enhancement #239 (Expand the introductory sections in the API docs) as per SOP :ref:`DEVENH_2`
+
+Version 4.3.0.1
+---------------
+
 - Implemented enhancement #229 (Update the tag dictionary to the latest standard, allow more than one VR, account 
   for multiple groups) as per SOP :ref:`DEVENH_2`
 - Implemented enhancement #230 (Add Swift examples to the documentation) as per SOP :ref:`DEVENH_2`
