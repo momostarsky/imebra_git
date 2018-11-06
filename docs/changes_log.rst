@@ -10,6 +10,7 @@ Version |release| (this version)
 - Fixed bug #237 (Documentation of the return value for ReadMemory::data is wrong) as per SOP :ref:`FIXBUG_2` 
 - Implemented enhancement #238 (Update the introduction to Imebra with the latest features) as per SOP :ref:`DEVENH_2`
 - Implemented enhancement #239 (Expand the introductory sections in the API docs) as per SOP :ref:`DEVENH_2`
+- Fixed bug #240 (The objective-c equivalent of StreamTimeout is missing)
 
 Version 4.3.0.1
 ---------------
