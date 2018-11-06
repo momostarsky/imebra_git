@@ -26,3 +26,26 @@ If you do not want to be bound by the GPL terms (such as the requirement
 @end
 
 
+@implementation ImebraStreamTimeout
+
+-(id)initWithInputStream:(ImebraBaseStreamInput*)pStream timeoutSeconds:(unsigned int)timeoutSeconds
+{
+    self = [super init];
+    if(self)
+    {
+        m_pStreamTimeout = new imebra::StreamTimeout(*(pStream->m_pBaseStreamInput), (std::uint32_t)timeoutSeconds);
+    }
+    return self;
+}
+
+-(void)dealloc
+{
+    delete m_pStreamTimeout;
+#if !__has_feature(objc_arc)
+    [super dealloc];
+#endif
+}
+
+@end
+
+

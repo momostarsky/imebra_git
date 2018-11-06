@@ -20,6 +20,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 namespace imebra
 {
 class BaseStreamInput;
+class StreamTimeout;
 }
 #endif
 
@@ -49,6 +50,38 @@ class BaseStreamInput;
 }
 
 #endif
+
+    -(void)dealloc;
+
+@end
+
+
+///
+/// \brief Triggers a timeout on a selected stream if the class is not
+///        deallocated within the specified amount of time.
+///
+///////////////////////////////////////////////////////////////////////////////
+@interface ImebraStreamTimeout: NSObject
+
+#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
+{
+    @public
+    imebra::StreamTimeout* m_pStreamTimeout;
+}
+
+#endif
+
+    ///
+    /// \brief Initializer. Starts a separate thread that closes the stream in
+    ///        the parameter if this class destructor is not called before the
+    ///        timeout expires.
+    ///
+    /// \param pStream        stream that must be closed when the timeout
+    ///                       expires
+    /// \param timeoutSeconds timeout in seconds
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(id)initWithInputStream:(ImebraBaseStreamInput*)pStream timeoutSeconds:(unsigned int)timeoutSeconds;
 
     -(void)dealloc;
 
