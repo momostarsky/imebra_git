@@ -52,6 +52,7 @@ Imebra
    :maxdepth: 5
    :caption: API
 
+   objects_lifecycle
    dicom_data_classes
    stream_classes
    imaging_classes
