@@ -31,7 +31,7 @@ Pointer to objects are owned by the client application
 
 When an Imebra method returns a pointer to an object, then it is the responsibility of the client application to delete it.
 
-Since the objects returned by Imebra are jist handles for the real implementation objects, the client application can safely delete
+Since the objects returned by Imebra are just handles for the real implementation objects, the client application can safely delete
 the received object as soon as it has finished using it while resting assured that the underlying implementation object will be
 deallocated only when all the classes and methods using it have finished using it.
 
