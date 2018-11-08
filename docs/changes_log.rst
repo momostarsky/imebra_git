@@ -6,6 +6,12 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Implemented enhancement #243 (Add a documentation section describing the memory management and object ownership in Imebra)
+  as per SOP :ref:`DEVENH_2`
+  
+Version 4.3.0.1
+---------------
+
 - Fixed bug #236 (Documentation of the return value for ReadingDataHandler::data is wrong) as per SOP :ref:`FIXBUG_2` 
 - Fixed bug #237 (Documentation of the return value for ReadMemory::data is wrong) as per SOP :ref:`FIXBUG_2` 
 - Implemented enhancement #238 (Update the introduction to Imebra with the latest features) as per SOP :ref:`DEVENH_2`
