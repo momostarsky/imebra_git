@@ -130,7 +130,7 @@ std::shared_ptr<image> modalityVOILUT::allocateOutputImage(
     std::int32_t value1 = ((std::int32_t)1 << (inputHighBit + 1)) - 1;
     if(inputDepth == bitDepth_t::depthS16 || inputDepth == bitDepth_t::depthS8)
 	{
-        value0 = ((std::int32_t)(-1) << inputHighBit);
+        value0 = (std::int32_t)((std::int32_t)-1 * ((std::int32_t)1 << inputHighBit));
         value1 = ((std::int32_t)1 << inputHighBit);
 	}
     std::int32_t finalValue0((std::int32_t) ((double)value0 * m_rescaleSlope + m_rescaleIntercept) );

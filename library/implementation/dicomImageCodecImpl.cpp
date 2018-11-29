@@ -242,7 +242,7 @@ std::shared_ptr<image> dicomImageCodec::getImage(const dataSet& dataset, std::sh
     if(b2Complement)
     {
         std::int32_t checkSign = (std::int32_t)1 << highBit;
-        std::int32_t orMask = ((std::int32_t)-1) << highBit;
+        std::int32_t orMask = (std::int32_t)((std::int32_t)-1 * ((std::int32_t)1 << highBit));
 
         for(size_t adjChannels = 0; adjChannels < information.m_channels.size(); ++adjChannels)
         {

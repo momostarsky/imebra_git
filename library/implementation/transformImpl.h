@@ -209,22 +209,17 @@ public:
 
 
 template <typename dataType>
-dataType getMinValue(std::uint32_t highBit)
+typename std::enable_if<std::is_unsigned<dataType>::value, dataType>::type getMinValue(std::uint32_t /* highBit */)
 {
-    IMEBRA_FUNCTION_START();
-
-    if(
-            std::is_same<dataType, std::uint8_t>::value ||
-            std::is_same<dataType, std::uint16_t>::value ||
-            std::is_same<dataType, std::uint32_t>::value
-            )
-    {
-        return 0;
-    }
-    return (dataType)(((std::int64_t)-1) << highBit);
-
-    IMEBRA_FUNCTION_END();
+    return 0;
 }
+
+template <typename dataType>
+typename std::enable_if<std::is_signed<dataType>::value, dataType>::type getMinValue(std::uint32_t highBit)
+{
+    return (dataType)((std::int64_t)-1 * ((std::int64_t)1 << highBit));
+}
+
 
 template <typename transformClass, typename inputType, typename... Args>
 void runTemplateTransform1(
