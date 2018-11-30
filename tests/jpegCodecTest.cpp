@@ -138,8 +138,6 @@ TEST(jpegCodecTest, testLossless)
 
                         std::string transferSyntax = (firstOrderPrediction == 0) ? "1.2.840.10008.1.2.4.57" : "1.2.840.10008.1.2.4.70";
 
-                        DataSet dataset(transferSyntax);
-
                         std::uint32_t width = 115;
                         std::uint32_t height = 400;
 
@@ -158,7 +156,7 @@ TEST(jpegCodecTest, testLossless)
 
                         ReadWriteMemory savedJpeg;
                         {
-                            DataSet dataSet;
+                            DataSet dataSet(transferSyntax);
                             dataSet.setImage(0, *image, imageQuality_t::veryHigh);
 
                             MemoryStreamOutput saveStream(savedJpeg);
