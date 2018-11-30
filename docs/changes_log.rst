@@ -6,10 +6,15 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Fixed bug #247 (GCC 7.3 emits warning "left shift of negative value") as per SOP :ref:`FIXBUG_2` 
+
+Version 4.4.0.2
+---------------
+
 - Implemented enhancement #243 (Add a documentation section describing the memory management and object ownership in Imebra)
   as per SOP :ref:`DEVENH_2`
   
-Version 4.3.0.1
+Version 4.4.0.1
 ---------------
 
 - Fixed bug #236 (Documentation of the return value for ReadingDataHandler::data is wrong) as per SOP :ref:`FIXBUG_2` 
