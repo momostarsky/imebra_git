@@ -860,7 +860,7 @@ void jpegImageCodec::copyImageToJpegChannels(
         }
 
         pChannelBuffer = pChannel->m_pBuffer;
-        std::int32_t orValue   = (std::int32_t)((std::int32_t)- 1 * ((std::int32_t)1 << information.m_precision));
+        std::int32_t orValue   = (std::int32_t)((std::int32_t)-1 * ((std::int32_t)1 << information.m_precision));
         for(std::uint32_t adjustHighBits = pChannel->m_bufferSize; adjustHighBits != 0; --adjustHighBits)
         {
             if((*pChannelBuffer & offsetValue) != 0)
