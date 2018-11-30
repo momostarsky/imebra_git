@@ -60,6 +60,57 @@ TEST(modalityVoilut, voilutUnsigned8)
 }
 
 
+TEST(modalityVoilut, voilutSigned8)
+{
+    Image unsigned8(6, 1, bitDepth_t::depthS8, "MONOCHROME2", 7);
+    {
+        std::unique_ptr<WritingDataHandler> unsigned8Handler(unsigned8.getWritingDataHandler());
+        unsigned8Handler->setUnsignedLong(0, -30);
+        unsigned8Handler->setUnsignedLong(1, -20);
+        unsigned8Handler->setUnsignedLong(2, -10);
+        unsigned8Handler->setUnsignedLong(3, 0);
+        unsigned8Handler->setUnsignedLong(4, 10);
+        unsigned8Handler->setUnsignedLong(5, 20);
+    }
+
+    DataSet testDataSet("1.2.840.10008.1.2.1");
+    testDataSet.setDouble(TagId(tagId_t::RescaleSlope_0028_1053), 2);
+    testDataSet.setDouble(TagId(tagId_t::RescaleIntercept_0028_1052), 40);
+    testDataSet.setImage(0, unsigned8, imageQuality_t::veryHigh);
+
+    {
+        ModalityVOILUT voilut(testDataSet);
+
+        std::unique_ptr<Image> signed8Out(voilut.allocateOutputImage(unsigned8, 6, 1));
+        voilut.runTransform(unsigned8, 0, 0, 6, 1, *signed8Out, 0, 0);
+        ASSERT_EQ(bitDepth_t::depthS16, signed8Out->getDepth());
+
+        std::unique_ptr<ReadingDataHandler> signed8Handler(signed8Out->getReadingDataHandler());
+
+        ASSERT_EQ(-20, signed8Handler->getSignedLong(0));
+        ASSERT_EQ(0, signed8Handler->getSignedLong(1));
+        ASSERT_EQ(20, signed8Handler->getSignedLong(2));
+        ASSERT_EQ(40, signed8Handler->getSignedLong(3));
+        ASSERT_EQ(60, signed8Handler->getSignedLong(4));
+        ASSERT_EQ(80, signed8Handler->getSignedLong(5));
+    }
+
+    {
+        std::unique_ptr<Image> signed8Out(testDataSet.getImageApplyModalityTransform(0));
+        ASSERT_EQ(bitDepth_t::depthS16, signed8Out->getDepth());
+
+        std::unique_ptr<ReadingDataHandler> signed8Handler(signed8Out->getReadingDataHandler());
+
+        ASSERT_EQ(-20, signed8Handler->getSignedLong(0));
+        ASSERT_EQ(0, signed8Handler->getSignedLong(1));
+        ASSERT_EQ(20, signed8Handler->getSignedLong(2));
+        ASSERT_EQ(40, signed8Handler->getSignedLong(3));
+        ASSERT_EQ(60, signed8Handler->getSignedLong(4));
+        ASSERT_EQ(80, signed8Handler->getSignedLong(5));
+    }
+}
+
+
 TEST(modalityVoilut, voilutUnsigned8LUT)
 {
     Image unsigned8(6, 1, bitDepth_t::depthU8, "MONOCHROME2", 7);
