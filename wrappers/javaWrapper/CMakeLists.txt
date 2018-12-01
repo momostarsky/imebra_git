@@ -25,17 +25,17 @@ add_definitions(-DIMEBRA_USE_JAVA)
 
 find_package(JNI REQUIRED)
 
-set(IMEBRA_INCLUDE "${CMAKE_CURRENT_SOURCE_DIR}/../library/include" ${JNI_INCLUDE_DIRS})
+set(IMEBRA_INCLUDE "${CMAKE_CURRENT_SOURCE_DIR}/../../library/include" ${JNI_INCLUDE_DIRS})
 set(IMEBRA_LIBRARIES ${IMEBRA_LIBRARIES} ${JNI_LIBRARIES})
 message("Java libraries: ${JNI_LIBRARIES}")
 
 include_directories(${IMEBRA_INCLUDE})
 
-file(GLOB imebra_interface "${CMAKE_CURRENT_SOURCE_DIR}/../library/include/**/*.h")
-file(GLOB imebra_include "${CMAKE_CURRENT_SOURCE_DIR}/../library/src/*.h")
-file(GLOB imebra_src "${CMAKE_CURRENT_SOURCE_DIR}/../library/src/*.cpp")
-file(GLOB imebra_implementation_src "${CMAKE_CURRENT_SOURCE_DIR}/../library/implementation/*.cpp")
-file(GLOB imebra_implementation_include "${CMAKE_CURRENT_SOURCE_DIR}/../library/implementation/*.h")
+file(GLOB imebra_interface "${CMAKE_CURRENT_SOURCE_DIR}/../../library/include/**/*.h")
+file(GLOB imebra_include "${CMAKE_CURRENT_SOURCE_DIR}/../../library/src/*.h")
+file(GLOB imebra_src "${CMAKE_CURRENT_SOURCE_DIR}/../../library/src/*.cpp")
+file(GLOB imebra_implementation_src "${CMAKE_CURRENT_SOURCE_DIR}/../../library/implementation/*.cpp")
+file(GLOB imebra_implementation_include "${CMAKE_CURRENT_SOURCE_DIR}/../../library/implementation/*.h")
 file(GLOB imebra_swig_implementation "${CMAKE_CURRENT_SOURCE_DIR}/java_wrapper.cxx")
 
 add_library(imebrajni SHARED

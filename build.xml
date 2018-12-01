@@ -147,7 +147,7 @@ Slovenia
             <arg value="-outdir" />
             <arg path="${build_release}/wrappers/javaWrapper/src/com/imebra" />
             <arg value="-o" />
-            <arg value="java_wrapper.cxx" />
+            <arg path="${build_release}/wrappers/javaWrapper/java_wrapper.cxx" />
             <arg path="${build_release}/wrappers/swig.i" />
         </exec>
 
