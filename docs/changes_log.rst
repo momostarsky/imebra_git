@@ -6,7 +6,8 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
-- Fixed bug #247 (GCC 7.3 emits warning "left shift of negative value") as per SOP :ref:`FIXBUG_2` 
+- Fixed bug #247 (GCC 7.3 emits warning "left shift of negative value") as per SOP :ref:`FIXBUG_2`
+- Fixed bug #248 (The lossless jpeg test does not test the jpeg codec) as per SOP :ref:`FIXBUG_2`
 
 Version 4.4.0.2
 ---------------
