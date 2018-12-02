@@ -13,7 +13,7 @@ define the macro in the Solution's configuration (Connfiguration properties/C-C+
 
 
 Add Imebra to an Android project
-================================
+--------------------------------
 
 Imebra can be compiled as a AAR library which contains both the C++ source code and the necessary Java wrapper: 
 a precompiled AAR library is available at http://imebra.com, or you can compile it yourself by following the instructions 
@@ -27,7 +27,7 @@ All the Imebra classes are in the package “com.imebra”.
 
 
 Add Imebra to a Java project
-============================
+----------------------------
 
 Compile Imebra by following the instructions at :ref:`compiling-imebra-java-linux`.
 
