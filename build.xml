@@ -194,7 +194,7 @@ Slovenia
         <exec executable="cmake" failonerror="true" dir="${build_jni}">
             <arg value="--verbose"/>
             <arg value="-DCMAKE_BUILD_TYPE=DEBUG" />
-            <arg path="${build_release}/wrappers"/>
+            <arg path="${build_release}/wrappers/javaWrapper"/>
         </exec>
         <exec executable="make" failonerror="true" dir="${build_jni}" />
         <copy todir="${build_java}" file="${build_jni}/libimebrajni.so" />
