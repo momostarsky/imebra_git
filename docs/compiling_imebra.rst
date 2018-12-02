@@ -194,9 +194,9 @@ Prerequisites
 In order to build the Android version of Imebra you need:
 
 - the source distribution of Imebra, available here: https://imebra.com/get-it/
+- Android Studio
 - Android SDK
 - Android NDK
-- Android Studio
 
 Building Imebra
 ...............
@@ -206,8 +206,76 @@ The Android version of the library needs both the Java source code (located in t
 To generate the Imebra Jar library:
 
 - Launch Android Studio
-- Open the gradle project in the wrappers folder
+- Open the gradle project in the wrappers/javaWrapper folder
 - Build the project
+
+
+.. _compiling-imebra-java-linux:
+
+Compiling the Java version of Imebra for Linux
+----------------------------------------------
+
+Prerequisites
+.............
+
+In order to build the Java version of Imebra you need:
+
+- the source distribution of Imebra, available here: https://imebra.com/get-it/
+- a modern C++ compiler (GCC or clang)
+- CMake version 2.8 or newer (https://cmake.org/)
+- the Java JDK
+- the Java JNI headers
+
+Building Imebra
+...............
+
+The Java version of the library needs both the Java source code (located in the wrappers/javaWrapper folder) and the C++ source code (located in the library folder).
+
+The C++ code will be compiled into a dynamic library, while the java code can be added directly to your app or can be compiled into a Jar.
+
+
+Compiling the C++ code
+,,,,,,,,,,,,,,,,,,,,,,
+
+To generate the native Imebra dynamic library (libimebrajni):
+
+1. Create a folder that will contain the result of the compilation (artifacts)
+2. cd into the created artifacts folder
+3. execute cmake with the path to the Imebra's "wrappers/javaWrapper" folder as parameter
+4. execute cmake with the --build option
+
+For instance:
+
+::
+
+    md artifacts
+    cd artifacts
+    cmake imebra_location/wrapper/javaWrappers
+    cmake --build .
+
+The first CMake command will generate a solution file for the your platform, the second CMake command with the --build option will launch make.
+
+
+Compiling the Java code
+,,,,,,,,,,,,,,,,,,,,,,,
+
+The Java code is in the source distribution folder "wrappers/javaWrapper/src". Compile it with the java compiler (javac) and pack it into a Jar
+or add it directly to your Java application.
+
+
+Loading the native library
+..........................
+
+Before your application can call any method on any Imebra class it must load the native dynamic library.
+
+In your application startup code add:
+
+::
+
+    System.loadLibrary("imebrajni");
+
+
+When you launch the application, specify the folder containing the native dynamic library by setting the "java.library.path" property.
 
 
 Compiling the Python version of Imebra

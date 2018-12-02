@@ -26,6 +26,16 @@ In your code call System.loadLibrary(“imebra_lib”) before using any of the I
 All the Imebra classes are in the package “com.imebra”.
 
 
+Add Imebra to a Java project
+============================
 
+Compile Imebra by following the instructions at :ref:`compiling-imebra-java-linux`.
+
+In order to use Imebra in your Java project, simply add the Java source code in "wrappers/javaWrapper/src" to your application.
+
+In your code call System.loadLibrary(“imebrajni”) before using any of the Imebra methods.
+All the Imebra classes are in the package “com.imebra”.
+
+When launching your application, define the property "java.library.path" with the value of the folder containing the Imebra JNI shared library (libimebrajni.so).
 
 
