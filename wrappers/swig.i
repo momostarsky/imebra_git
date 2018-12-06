@@ -7,16 +7,33 @@
 
 	%apply(char *STRING, size_t LENGTH) { (const char *source, size_t sourceSize) };
 	%apply(char *STRING, size_t LENGTH) { (char* destination, size_t destinationSize) };
+
+        %rename(assign) operator=;
 #endif
 #ifdef SWIGPYTHON
-	%include <carrays.i>
+	%include <cdata.i>
 	%include <pybuffer.i>
 	%pybuffer_mutable_binary(void *STRING, size_t LENGTH)
 	%apply(void *STRING, size_t LENGTH) { (const char *source, size_t sourceSize) };
 	%apply(void *STRING, size_t LENGTH) { (char* destination, size_t destinationSize) };
+
+        %rename(assign) operator=;
+
 #endif
 
-%rename(assign) operator=;
+#ifdef SWIGGO
+	%include <cdata.i>
+	%include <gostring.swg>
+
+        %typemap(gotype) (char* destination, size_t destinationSize) %{[]byte%}
+
+        %typemap(in) (char* destination, size_t destinationSize) {
+         $1 = ($1_ltype)$input.array;
+         $2 = $input.len;
+        }
+	%apply(void *STRING, size_t LENGTH) { (const char *source, size_t sourceSize) };
+
+#endif
 
 #define IMEBRA_API
 
@@ -24,11 +41,12 @@
 #include <imebra/imebra.h>
 %}
 
+%include <stl.i>
 %include <std_string.i>
-%include <std_wstring.i>
 
 %include <exception.i>
 %include <stdint.i>
+%include <std_common.i>
 %include <std_except.i>
 %include <std_vector.i>
 %include <std_map.i>
@@ -39,7 +57,7 @@
 %template(TagsIds) std::vector<imebra::TagId>;
 %template(VOIs) std::vector<imebra::VOIDescription>;
 
-#ifndef SWIGJAVA
+#ifdef SWIGPYTHON
 
 %typemap(out) imebra::DimseCommand* imebra::DimseService::getCommand() {
 
@@ -86,7 +104,9 @@
     }
 }
 
-#else
+#endif
+
+#ifdef SWIGJAVA
 
 %typemap(jni) imebra::DimseCommand* getCommand "jobject"
 %typemap(jtype) imebra::DimseCommand* getCommand "DimseCommand"
@@ -137,6 +157,9 @@
 
 #endif
 
+#ifdef SWIGGO
+
+#endif
 
 // Declare which methods return an object that should be
 // managed by the client.
