@@ -311,7 +311,86 @@ To remove the Python version of Imebra from your system:
     pip uninstall imebra
 
 
+Compiling the Go version of Imebra
+----------------------------------
+
+Prerequisites
+.............
+
+In order to build Imebra for Go you need:
+
+- the source distribution of Imebra, available here: https://imebra.com/get-it/
+- a modern C++ compiler (GCC or clang)
+- CMake version 2.8 or newer (https://cmake.org/)
+- Golang (https://golang.org/)
 
 
+Building Imebra
+...............
+
+The Go version of the library needs both the Go source code (located in the wrappers/goWrapper folder) and the C++ source code (located in the library folder).
+
+The C++ code will be compiled into a static library which later will be linked to the Go code.
 
 
+Compiling the C++ code
+,,,,,,,,,,,,,,,,,,,,,,
+
+To generate the native Imebra static library (libimebra.a):
+
+1. Create a folder that will contain the result of the compilation (artifacts)
+2. cd into the created artifacts folder
+3. execute cmake with the parameter -DIMEBRA_SHARED_STATIC=STATIC and the path to the Imebra's "wrappers/javaWrapper" folder
+4. execute cmake with the --build option
+
+For instance:
+
+::
+
+    md artifacts
+    cd artifacts
+    cmake -DIMEBRA_SHARED_STATIC=STATIC path/to/imebra_location
+    cmake --build .
+
+The first CMake command will generate a solution file for the your platform, the second CMake command with the --build option will build the library.
+
+At the end of this step the library libimebra.a will be in the artifacts folder.
+
+
+Compiling the Go code
+,,,,,,,,,,,,,,,,,,,,,
+
+The Go code is in the source distribution folder "wrappers/goWrapper".
+
+- copy the entire content of the folder goWrapper/imebra into the %GOPATH/src folder
+- cd into the $GOPATH/src/imebra folder
+- set the enviroment variable CGO_LDFLAGS with the location of the artifacts folder created when compiling the C++ code and with the name of the library
+  (export CGO_LDFLAGS=-L/home/user/location_of_artifacts_folder -limebra)
+- set the enviroment variable CGO_CXXFLAGS with the location of the imebra include folder
+  (export CGO_CXXFLAGS=-I/home/user/imebra_location/library/include)
+- compile and install the go package (go install)
+
+For instance:
+
+::
+
+    cp -r imebra_location/wrappers/goWrapper/imebra $GOPATH/src
+    cd $GOPATH/src/imebra
+    export CGO_LDFLAGS=-L/home/user/location_of_artifacts_folder -limebra
+    export CGO_CXXFLAGS=-I/home/user/imebra_location/library/include
+    go install
+
+
+Loading the native library
+..........................
+
+Before your application can call any method on any Imebra class it must load the native dynamic library.
+
+In your application startup code add:
+
+::
+
+    System.loadLibrary("imebrajni");
+
+
+When you launch the application, specify the folder containing the native dynamic library by setting the "java.library.path" property.
