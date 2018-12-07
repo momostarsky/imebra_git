@@ -33,6 +33,10 @@
         }
 	%apply(void *STRING, size_t LENGTH) { (const char *source, size_t sourceSize) };
 
+%insert(cgo_comment_typedefs) %{
+#cgo LDFLAGS: -limebra
+%}
+
 #endif
 
 #define IMEBRA_API
