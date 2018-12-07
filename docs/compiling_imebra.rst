@@ -340,8 +340,10 @@ To generate the native Imebra static library (libimebra.a):
 
 1. Create a folder that will contain the result of the compilation (artifacts)
 2. cd into the created artifacts folder
-3. execute cmake with the parameter -DIMEBRA_SHARED_STATIC=STATIC and the path to the Imebra's "wrappers/javaWrapper" folder
+3. execute cmake with the parameter set to the path to the Imebra's root folder
 4. execute cmake with the --build option
+5. install with "make install"
+6. update the shared libraries path with ldconfig
 
 For instance:
 
@@ -349,12 +351,12 @@ For instance:
 
     md artifacts
     cd artifacts
-    cmake -DIMEBRA_SHARED_STATIC=STATIC path/to/imebra_location
+    cmake path/to/imebra_location
     cmake --build .
+    sudo make install
+    sudo ldconfig
 
 The first CMake command will generate a solution file for the your platform, the second CMake command with the --build option will build the library.
-
-At the end of this step the library libimebra.a will be in the artifacts folder.
 
 
 Compiling the Go code
@@ -364,10 +366,6 @@ The Go code is in the source distribution folder "wrappers/goWrapper".
 
 - copy the entire content of the folder goWrapper/imebra into the %GOPATH/src folder
 - cd into the $GOPATH/src/imebra folder
-- set the enviroment variable CGO_LDFLAGS with the location of the artifacts folder created when compiling the C++ code and with the name of the library
-  (export CGO_LDFLAGS=-L/home/user/location_of_artifacts_folder -limebra)
-- set the enviroment variable CGO_CXXFLAGS with the location of the imebra include folder
-  (export CGO_CXXFLAGS=-I/home/user/imebra_location/library/include)
 - compile and install the go package (go install)
 
 For instance:
@@ -376,21 +374,6 @@ For instance:
 
     cp -r imebra_location/wrappers/goWrapper/imebra $GOPATH/src
     cd $GOPATH/src/imebra
-    export CGO_LDFLAGS=-L/home/user/location_of_artifacts_folder -limebra
-    export CGO_CXXFLAGS=-I/home/user/imebra_location/library/include
     go install
 
 
-Loading the native library
-..........................
-
-Before your application can call any method on any Imebra class it must load the native dynamic library.
-
-In your application startup code add:
-
-::
-
-    System.loadLibrary("imebrajni");
-
-
-When you launch the application, specify the folder containing the native dynamic library by setting the "java.library.path" property.
