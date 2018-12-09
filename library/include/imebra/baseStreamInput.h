@@ -102,7 +102,7 @@ public:
     ///
     /// \param stream         stream that must be closed when the timeout
     ///                       expires
-    /// \param timeoutSeconds timeout in milliseconds
+    /// \param timeoutSeconds timeout in seconds
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit StreamTimeout(BaseStreamInput& stream, std::uint32_t timeoutSeconds);
