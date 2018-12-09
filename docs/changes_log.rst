@@ -6,6 +6,7 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Fixed bug #241 (The documentation for StreamTimeout::StreamTimeout() is wrong) as per SOP :ref:`FIXBUG_2`
 - Fixed bug #247 (GCC 7.3 emits warning "left shift of negative value") as per SOP :ref:`FIXBUG_2`
 - Fixed bug #248 (The lossless jpeg test does not test the jpeg codec) as per SOP :ref:`FIXBUG_2`
 - Implemented enhancement #249 (Update and re-organize the Java wrapper files) as per SOP :ref:`DEVENH_2`
