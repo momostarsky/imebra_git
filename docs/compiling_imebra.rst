@@ -322,7 +322,7 @@ In order to build Imebra for Go you need:
 - the source distribution of Imebra, available here: https://imebra.com/get-it/
 - a modern C++ compiler (GCC or clang)
 - CMake version 2.8 or newer (https://cmake.org/)
-- Golang (https://golang.org/)
+- Golang 1.10 or newer (https://golang.org/)
 
 
 Building Imebra
@@ -330,13 +330,13 @@ Building Imebra
 
 The Go version of the library needs both the Go source code (located in the wrappers/goWrapper folder) and the C++ source code (located in the library folder).
 
-The C++ code will be compiled into a static library which later will be linked to the Go code.
+The C++ code will be compiled into a dynamic library which later will be linked to the Go code.
 
 
 Compiling the C++ code
 ,,,,,,,,,,,,,,,,,,,,,,
 
-To generate the native Imebra static library (libimebra.a):
+To generate the native Imebra dynamic library (libimebra.a):
 
 1. Create a folder that will contain the result of the compilation (artifacts)
 2. cd into the created artifacts folder
