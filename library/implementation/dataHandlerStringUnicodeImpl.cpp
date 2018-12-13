@@ -179,11 +179,7 @@ writingDataHandlerStringUnicode::writingDataHandlerStringUnicode(const std::shar
 
 writingDataHandlerStringUnicode::~writingDataHandlerStringUnicode()
 {
-    IMEBRA_FUNCTION_START();
-
     m_buffer->commit(m_commitMemory, m_charsets);
-
-    IMEBRA_FUNCTION_END();
 }
 
 // Set the data element as a signed long
