@@ -113,6 +113,9 @@ public:
     virtual void validate() const;
 
 protected:
+
+    std::shared_ptr<memory> m_commitMemory;
+
     std::vector<std::wstring> m_strings;
 
     charsetsList::tCharsetsList m_charsets;
@@ -120,6 +123,10 @@ protected:
     wchar_t m_separator;
     size_t m_unitSize;
     size_t m_maxSize;
+
+private:
+
+    void buildCommitMemory();
 
 
 };

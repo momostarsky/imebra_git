@@ -171,7 +171,9 @@ size_t readingDataHandlerStringUnicode::getSize() const
 }
 
 writingDataHandlerStringUnicode::writingDataHandlerStringUnicode(const std::shared_ptr<buffer> &pBuffer, const charsetsList::tCharsetsList& charsets, tagVR_t dataType, const wchar_t separator, const size_t unitSize, const size_t maxSize, const uint8_t paddingByte):
-    writingDataHandler(pBuffer, dataType, paddingByte), m_charsets(charsets), m_separator(separator), m_unitSize(unitSize), m_maxSize(maxSize)
+    writingDataHandler(pBuffer, dataType, paddingByte),
+    m_commitMemory(std::make_shared<memory>()),
+    m_charsets(charsets), m_separator(separator), m_unitSize(unitSize), m_maxSize(maxSize)
 {
 }
 
@@ -179,31 +181,7 @@ writingDataHandlerStringUnicode::~writingDataHandlerStringUnicode()
 {
     IMEBRA_FUNCTION_START();
 
-    std::wstring completeString;
-    for(size_t stringsIterator(0); stringsIterator != m_strings.size(); ++stringsIterator)
-    {
-        if(stringsIterator != 0)
-        {
-            completeString += m_separator;
-        }
-        completeString += m_strings.at(stringsIterator);
-    }
-
-    std::string asciiString = dicomConversion::convertFromUnicode(completeString, &m_charsets);
-
-    std::shared_ptr<memory> commitMemory = std::make_shared<memory>(asciiString.size());
-    commitMemory->assign((std::uint8_t*)asciiString.data(), asciiString.size());
-
-    // The buffer's size must be an even number
-    ///////////////////////////////////////////////////////////
-    size_t memorySize = commitMemory->size();
-    if((memorySize & 0x1) != 0)
-    {
-        commitMemory->resize(++memorySize);
-        *(commitMemory->data() + (memorySize - 1)) = m_paddingByte;
-    }
-
-    m_buffer->commit(commitMemory, m_charsets);
+    m_buffer->commit(m_commitMemory, m_charsets);
 
     IMEBRA_FUNCTION_END();
 }
@@ -255,6 +233,8 @@ void writingDataHandlerStringUnicode::setSize(const size_t elementsNumber)
 
     m_strings.resize(elementsNumber);
 
+    buildCommitMemory();
+
     IMEBRA_FUNCTION_END();
 }
 
@@ -294,6 +274,8 @@ void writingDataHandlerStringUnicode::setUnicodeString(const size_t index, const
 
     validate();
 
+    buildCommitMemory();
+
     IMEBRA_FUNCTION_END();
 }
 
@@ -302,6 +284,39 @@ void writingDataHandlerStringUnicode::validate() const
     IMEBRA_FUNCTION_START();
 
     validateStringContainer(m_strings, m_maxSize, m_unitSize, m_separator != 0);
+
+    IMEBRA_FUNCTION_END();
+}
+
+void writingDataHandlerStringUnicode::buildCommitMemory()
+{
+    IMEBRA_FUNCTION_START();
+
+    // Build the raw bytes
+    ///////////////////////////////////////////////////////////
+    std::wstring completeString;
+    for(size_t stringsIterator(0); stringsIterator != m_strings.size(); ++stringsIterator)
+    {
+        if(stringsIterator != 0)
+        {
+            completeString += m_separator;
+        }
+        completeString += m_strings.at(stringsIterator);
+    }
+
+    std::string asciiString = dicomConversion::convertFromUnicode(completeString, &m_charsets);
+
+    m_commitMemory = std::make_shared<memory>(asciiString.size());
+    m_commitMemory->assign((std::uint8_t*)asciiString.data(), asciiString.size());
+
+    // The buffer's size must be an even number
+    ///////////////////////////////////////////////////////////
+    size_t memorySize = m_commitMemory->size();
+    if((memorySize & 0x1) != 0)
+    {
+        m_commitMemory->resize(++memorySize);
+        *(m_commitMemory->data() + (memorySize - 1)) = m_paddingByte;
+    }
 
     IMEBRA_FUNCTION_END();
 }
