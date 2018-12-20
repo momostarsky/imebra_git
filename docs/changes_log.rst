@@ -11,6 +11,8 @@ Version |release| (this version)
 - Fixed bug #248 (The lossless jpeg test does not test the jpeg codec) as per SOP :ref:`FIXBUG_2`
 - Implemented enhancement #249 (Update and re-organize the Java wrapper files) as per SOP :ref:`DEVENH_2`
 - Fixed bug #254 (The data handler for the unicode strings may throw in the destructor) as per SOP :ref:`FIXBUG_2`
+- Implemented enhancement #256 (Move the gradle folder into the javaWrapper folder and update the gradle build file) 
+  as per SOP :ref:`DEVENH_2`
 
 Version 4.4.0.2
 ---------------
