@@ -182,7 +182,7 @@ Slovenia
             <arg value="-outdir" />
             <arg path="${build_release}/wrappers/pythonWrapper" />
             <arg value="-o" />
-            <arg value="python_wrapper.cxx" />
+            <arg value="${build_release}/wrappers/pythonWrapper/python_wrapper.cxx" />
             <arg path="${build_release}/wrappers/swig.i" />
         </exec>
 
