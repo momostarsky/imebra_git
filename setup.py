@@ -59,7 +59,7 @@ if sys.platform.startswith('win'):
     librariesArray.append('kernel32')
 
 imebra_sources = get_sources("./library")
-imebra_sources.extend(get_sources("./wrappers"))
+imebra_sources.extend(get_sources("./wrappers/pythonWrapper"))
 
 # Define the C++ module
 #----------------------
