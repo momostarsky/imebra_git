@@ -42,7 +42,9 @@
 #define IMEBRA_API
 
 %{
+
 #include <imebra/imebra.h>
+
 %}
 
 %include <stl.i>
@@ -230,6 +232,19 @@
 %newobject imebra::DimseCommandBase::getCommandDataSet;
 %newobject imebra::DimseCommandBase::getPayloadDataSet;
 
+%newobject imebra::DimseCommand::getAsCStoreCommand;
+%newobject imebra::DimseCommand::getAsCMoveCommand;
+%newobject imebra::DimseCommand::getAsCGetCommand;
+%newobject imebra::DimseCommand::getAsCFindCommand;
+%newobject imebra::DimseCommand::getAsCEchoCommand;
+%newobject imebra::DimseCommand::getAsCCancelCommand;
+%newobject imebra::DimseCommand::getAsNActionCommand;
+%newobject imebra::DimseCommand::getAsNEventReportCommand;
+%newobject imebra::DimseCommand::getAsNCreateCommand;
+%newobject imebra::DimseCommand::getAsNDeleteCommand;
+%newobject imebra::DimseCommand::getAsNSetCommand;
+%newobject imebra::DimseCommand::getAsNGetCommand;
+
 %newobject imebra::DimseService::getCommand;
 %newobject imebra::DimseService::getCStoreResponse;
 %newobject imebra::DimseService::getCGetResponse;
@@ -292,6 +307,9 @@
     } catch(const imebra::MemoryError& e) {
         std::string error(imebra::ExceptionsManager::getExceptionTrace());
         SWIG_exception(SWIG_MemoryError, error.c_str());
+    } catch(const std::bad_cast& e) {
+        std::string error(imebra::ExceptionsManager::getExceptionTrace());
+        SWIG_exception(SWIG_TypeError, error.c_str());
     } catch(const std::runtime_error& e) {
         std::string error(imebra::ExceptionsManager::getExceptionTrace());
         SWIG_exception(SWIG_RuntimeError, error.c_str());
@@ -353,5 +371,4 @@
         return new imebra::StreamWriter(stream);
     }
 };
-
 
