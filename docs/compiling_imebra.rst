@@ -311,7 +311,69 @@ To remove the Python version of Imebra from your system:
     pip uninstall imebra
 
 
+Compiling the Go version of Imebra
+----------------------------------
+
+Prerequisites
+.............
+
+In order to build Imebra for Go you need:
+
+- the source distribution of Imebra, available here: https://imebra.com/get-it/
+- a modern C++ compiler (GCC or clang)
+- CMake version 2.8 or newer (https://cmake.org/)
+- Golang 1.10 or newer (https://golang.org/)
 
 
+Building Imebra
+...............
+
+The Go version of the library needs both the Go source code (located in the wrappers/goWrapper folder) and the C++ source code (located in the library folder).
+
+The C++ code will be compiled into a dynamic library which later will be linked to the Go code.
+
+
+Compiling the C++ code
+,,,,,,,,,,,,,,,,,,,,,,
+
+To generate the native Imebra dynamic library (libimebra.a):
+
+1. Create a folder that will contain the result of the compilation (artifacts)
+2. cd into the created artifacts folder
+3. execute cmake with the parameter set to the path to the Imebra's root folder
+4. execute cmake with the --build option
+5. install with "make install"
+6. update the shared libraries path with ldconfig
+
+For instance:
+
+::
+
+    md artifacts
+    cd artifacts
+    cmake path/to/imebra_location
+    cmake --build .
+    sudo make install
+    sudo ldconfig
+
+The first CMake command will generate a solution file for the your platform, the second CMake command with the --build option will build the library.
+
+
+Compiling the Go code
+,,,,,,,,,,,,,,,,,,,,,
+
+The Go code is in the source distribution folder "wrappers/goWrapper".
+
+- copy the entire content of the folder goWrapper/imebra into the %GOPATH/src folder
+- cd into the $GOPATH/src/imebra folder
+- compile and install the go package (go install)
+
+For instance:
+
+::
+
+    cp -r imebra_location/wrappers/goWrapper/imebra $GOPATH/src
+    cd $GOPATH/src/imebra
+    go install
 
 

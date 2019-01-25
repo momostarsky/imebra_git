@@ -7,28 +7,52 @@
 
 	%apply(char *STRING, size_t LENGTH) { (const char *source, size_t sourceSize) };
 	%apply(char *STRING, size_t LENGTH) { (char* destination, size_t destinationSize) };
+
+        %rename(assign) operator=;
 #endif
 #ifdef SWIGPYTHON
-	%include <carrays.i>
+	%include <cdata.i>
 	%include <pybuffer.i>
 	%pybuffer_mutable_binary(void *STRING, size_t LENGTH)
 	%apply(void *STRING, size_t LENGTH) { (const char *source, size_t sourceSize) };
 	%apply(void *STRING, size_t LENGTH) { (char* destination, size_t destinationSize) };
+
+        %rename(assign) operator=;
+
 #endif
 
-%rename(assign) operator=;
+#ifdef SWIGGO
+	%include <cdata.i>
+	%include <gostring.swg>
+
+        %typemap(gotype) (char* destination, size_t destinationSize) %{[]byte%}
+
+        %typemap(in) (char* destination, size_t destinationSize) {
+         $1 = ($1_ltype)$input.array;
+         $2 = $input.len;
+        }
+	%apply(void *STRING, size_t LENGTH) { (const char *source, size_t sourceSize) };
+
+%insert(cgo_comment_typedefs) %{
+#cgo LDFLAGS: -limebra
+%}
+
+#endif
 
 #define IMEBRA_API
 
 %{
+
 #include <imebra/imebra.h>
+
 %}
 
+%include <stl.i>
 %include <std_string.i>
-%include <std_wstring.i>
 
 %include <exception.i>
 %include <stdint.i>
+%include <std_common.i>
 %include <std_except.i>
 %include <std_vector.i>
 %include <std_map.i>
@@ -39,7 +63,7 @@
 %template(TagsIds) std::vector<imebra::TagId>;
 %template(VOIs) std::vector<imebra::VOIDescription>;
 
-#ifndef SWIGJAVA
+#ifdef SWIGPYTHON
 
 %typemap(out) imebra::DimseCommand* imebra::DimseService::getCommand() {
 
@@ -86,7 +110,9 @@
     }
 }
 
-#else
+#endif
+
+#ifdef SWIGJAVA
 
 %typemap(jni) imebra::DimseCommand* getCommand "jobject"
 %typemap(jtype) imebra::DimseCommand* getCommand "DimseCommand"
@@ -137,6 +163,9 @@
 
 #endif
 
+#ifdef SWIGGO
+
+#endif
 
 // Declare which methods return an object that should be
 // managed by the client.
@@ -203,6 +232,19 @@
 %newobject imebra::DimseCommandBase::getCommandDataSet;
 %newobject imebra::DimseCommandBase::getPayloadDataSet;
 
+%newobject imebra::DimseCommand::getAsCStoreCommand;
+%newobject imebra::DimseCommand::getAsCMoveCommand;
+%newobject imebra::DimseCommand::getAsCGetCommand;
+%newobject imebra::DimseCommand::getAsCFindCommand;
+%newobject imebra::DimseCommand::getAsCEchoCommand;
+%newobject imebra::DimseCommand::getAsCCancelCommand;
+%newobject imebra::DimseCommand::getAsNActionCommand;
+%newobject imebra::DimseCommand::getAsNEventReportCommand;
+%newobject imebra::DimseCommand::getAsNCreateCommand;
+%newobject imebra::DimseCommand::getAsNDeleteCommand;
+%newobject imebra::DimseCommand::getAsNSetCommand;
+%newobject imebra::DimseCommand::getAsNGetCommand;
+
 %newobject imebra::DimseService::getCommand;
 %newobject imebra::DimseService::getCStoreResponse;
 %newobject imebra::DimseService::getCGetResponse;
@@ -265,6 +307,9 @@
     } catch(const imebra::MemoryError& e) {
         std::string error(imebra::ExceptionsManager::getExceptionTrace());
         SWIG_exception(SWIG_MemoryError, error.c_str());
+    } catch(const std::bad_cast& e) {
+        std::string error(imebra::ExceptionsManager::getExceptionTrace());
+        SWIG_exception(SWIG_TypeError, error.c_str());
     } catch(const std::runtime_error& e) {
         std::string error(imebra::ExceptionsManager::getExceptionTrace());
         SWIG_exception(SWIG_RuntimeError, error.c_str());
@@ -326,5 +371,4 @@
         return new imebra::StreamWriter(stream);
     }
 };
-
 

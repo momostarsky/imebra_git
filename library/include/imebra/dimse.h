@@ -72,6 +72,18 @@ namespace imebra
 {
 
 class DataSet;
+class CStoreCommand;
+class CMoveCommand;
+class CGetCommand;
+class CFindCommand;
+class CEchoCommand;
+class CCancelCommand;
+class NActionCommand;
+class NEventReportCommand;
+class NCreateCommand;
+class NDeleteCommand;
+class NSetCommand;
+class NGetCommand;
 
 
 ///
@@ -182,6 +194,186 @@ public:
     //////////////////////////////////////////////////////////////////
     dimseCommandType_t getCommandType() const;
 
+    ///
+    /// \brief Downcast the DimseCommand to a CStoreCommand,
+    ///        unless the command cannot be casted in which case
+    ///        a std::bad_cast exception is thrown.
+    ///
+    /// This method can be used with wrapper languages that don't
+    /// support downcast (e.g. Golang).
+    /// Other languages can still use the downcast functionalities
+    /// embedded into the language.
+    ///
+    /// \return the DimseCommand downcasted to a CStoreCommand
+    ///
+    //////////////////////////////////////////////////////////////////
+    const CStoreCommand* getAsCStoreCommand() const;
+
+    ///
+    /// \brief Downcast the DimseCommand to a CMoveCommand,
+    ///        unless the command cannot be casted in which case
+    ///        a std::bad_cast exception is thrown.
+    ///
+    /// This method can be used with wrapper languages that don't
+    /// support downcast (e.g. Golang).
+    /// Other languages can still use the downcast functionalities
+    /// embedded into the language.
+    ///
+    /// \return the DimseCommand downcasted to a CMoveCommand
+    ///
+    //////////////////////////////////////////////////////////////////
+    const CMoveCommand* getAsCMoveCommand() const;
+
+    ///
+    /// \brief Downcast the DimseCommand to a CGetCommand,
+    ///        unless the command cannot be casted in which case
+    ///        a std::bad_cast exception is thrown.
+    ///
+    /// This method can be used with wrapper languages that don't
+    /// support downcast (e.g. Golang).
+    /// Other languages can still use the downcast functionalities
+    /// embedded into the language.
+    ///
+    /// \return the DimseCommand downcasted to a CGetCommand
+    ///
+    //////////////////////////////////////////////////////////////////
+    const CGetCommand* getAsCGetCommand() const;
+
+    ///
+    /// \brief Downcast the DimseCommand to a CFindCommand,
+    ///        unless the command cannot be casted in which case
+    ///        a std::bad_cast exception is thrown.
+    ///
+    /// This method can be used with wrapper languages that don't
+    /// support downcast (e.g. Golang).
+    /// Other languages can still use the downcast functionalities
+    /// embedded into the language.
+    ///
+    /// \return the DimseCommand downcasted to a CFindCommand
+    ///
+    //////////////////////////////////////////////////////////////////
+    const CFindCommand* getAsCFindCommand() const;
+
+    ///
+    /// \brief Downcast the DimseCommand to a CEchoCommand,
+    ///        unless the command cannot be casted in which case
+    ///        a std::bad_cast exception is thrown.
+    ///
+    /// This method can be used with wrapper languages that don't
+    /// support downcast (e.g. Golang).
+    /// Other languages can still use the downcast functionalities
+    /// embedded into the language.
+    ///
+    /// \return the DimseCommand downcasted to a CEchoCommand
+    ///
+    //////////////////////////////////////////////////////////////////
+    const CEchoCommand* getAsCEchoCommand() const;
+
+    ///
+    /// \brief Downcast the DimseCommand to a CCancelCommand,
+    ///        unless the command cannot be casted in which case
+    ///        a std::bad_cast exception is thrown.
+    ///
+    /// This method can be used with wrapper languages that don't
+    /// support downcast (e.g. Golang).
+    /// Other languages can still use the downcast functionalities
+    /// embedded into the language.
+    ///
+    /// \return the DimseCommand downcasted to a CCancelCommand
+    ///
+    //////////////////////////////////////////////////////////////////
+    const CCancelCommand* getAsCCancelCommand() const;
+
+    ///
+    /// \brief Downcast the DimseCommand to a NActionCommand,
+    ///        unless the command cannot be casted in which case
+    ///        a std::bad_cast exception is thrown.
+    ///
+    /// This method can be used with wrapper languages that don't
+    /// support downcast (e.g. Golang).
+    /// Other languages can still use the downcast functionalities
+    /// embedded into the language.
+    ///
+    /// \return the DimseCommand downcasted to a NActionCommand
+    ///
+    //////////////////////////////////////////////////////////////////
+    const NActionCommand* getAsNActionCommand() const;
+
+    ///
+    /// \brief Downcast the DimseCommand to a NEventReportCommand,
+    ///        unless the command cannot be casted in which case
+    ///        a std::bad_cast exception is thrown.
+    ///
+    /// This method can be used with wrapper languages that don't
+    /// support downcast (e.g. Golang).
+    /// Other languages can still use the downcast functionalities
+    /// embedded into the language.
+    ///
+    /// \return the DimseCommand downcasted to a NEventReportCommand
+    ///
+    //////////////////////////////////////////////////////////////////
+    const NEventReportCommand* getAsNEventReportCommand() const;
+
+    ///
+    /// \brief Downcast the DimseCommand to a NCreateCommand,
+    ///        unless the command cannot be casted in which case
+    ///        a std::bad_cast exception is thrown.
+    ///
+    /// This method can be used with wrapper languages that don't
+    /// support downcast (e.g. Golang).
+    /// Other languages can still use the downcast functionalities
+    /// embedded into the language.
+    ///
+    /// \return the DimseCommand downcasted to a NCreateCommand
+    ///
+    //////////////////////////////////////////////////////////////////
+    const NCreateCommand* getAsNCreateCommand() const;
+
+    ///
+    /// \brief Downcast the DimseCommand to a NDeleteCommand,
+    ///        unless the command cannot be casted in which case
+    ///        a std::bad_cast exception is thrown.
+    ///
+    /// This method can be used with wrapper languages that don't
+    /// support downcast (e.g. Golang).
+    /// Other languages can still use the downcast functionalities
+    /// embedded into the language.
+    ///
+    /// \return the DimseCommand downcasted to a NDeleteCommand
+    ///
+    //////////////////////////////////////////////////////////////////
+    const NDeleteCommand* getAsNDeleteCommand() const;
+
+    ///
+    /// \brief Downcast the DimseCommand to a NSetCommand,
+    ///        unless the command cannot be casted in which case
+    ///        a std::bad_cast exception is thrown.
+    ///
+    /// This method can be used with wrapper languages that don't
+    /// support downcast (e.g. Golang).
+    /// Other languages can still use the downcast functionalities
+    /// embedded into the language.
+    ///
+    /// \return the DimseCommand downcasted to a NSetCommand
+    ///
+    //////////////////////////////////////////////////////////////////
+    const NSetCommand* getAsNSetCommand() const;
+
+    ///
+    /// \brief Downcast the DimseCommand to a NGetCommand,
+    ///        unless the command cannot be casted in which case
+    ///        a std::bad_cast exception is thrown.
+    ///
+    /// This method can be used with wrapper languages that don't
+    /// support downcast (e.g. Golang).
+    /// Other languages can still use the downcast functionalities
+    /// embedded into the language.
+    ///
+    /// \return the DimseCommand downcasted to a NGetCommand
+    ///
+    //////////////////////////////////////////////////////////////////
+    const NGetCommand* getAsNGetCommand() const;
+
 };
 
 
@@ -270,6 +462,7 @@ class IMEBRA_API CStoreCommand: public DimseCommand
 
 #ifndef SWIG
     friend class DimseService;
+    friend class DimseCommand;
 protected:
     explicit CStoreCommand(std::shared_ptr<implementation::cStoreCommand> pCommand);
 #endif
@@ -374,6 +567,7 @@ class IMEBRA_API CGetCommand: public DimseCommand
 
 #ifndef SWIG
     friend class DimseService;
+    friend class DimseCommand;
 protected:
     explicit CGetCommand(std::shared_ptr<implementation::cGetCommand> pCommand);
 #endif
@@ -497,6 +691,7 @@ class IMEBRA_API CFindCommand: public DimseCommand
 
 #ifndef SWIG
     friend class DimseService;
+    friend class DimseCommand;
 protected:
     explicit CFindCommand(std::shared_ptr<implementation::cFindCommand> pCommand);
 #endif
@@ -586,6 +781,7 @@ class IMEBRA_API CMoveCommand: public DimseCommand
 
 #ifndef SWIG
     friend class DimseService;
+    friend class DimseCommand;
 protected:
     explicit CMoveCommand(std::shared_ptr<implementation::cMoveCommand> pCommand);
 #endif
@@ -748,6 +944,7 @@ class IMEBRA_API CEchoCommand: public DimseCommand
 
 #ifndef SWIG
     friend class DimseService;
+    friend class DimseCommand;
 protected:
     explicit CEchoCommand(std::shared_ptr<implementation::cEchoCommand> pCommand);
 #endif
@@ -818,6 +1015,7 @@ class IMEBRA_API CCancelCommand: public DimseCommand
 
 #ifndef SWIG
     friend class DimseService;
+    friend class DimseCommand;
 protected:
     explicit CCancelCommand(std::shared_ptr<implementation::cCancelCommand> pCommand);
 #endif
@@ -867,6 +1065,7 @@ class IMEBRA_API NEventReportCommand: public DimseCommand
 
 #ifndef SWIG
     friend class DimseService;
+    friend class DimseCommand;
 protected:
     explicit NEventReportCommand(std::shared_ptr<implementation::nEventReportCommand> pCommand);
 #endif
@@ -1000,6 +1199,7 @@ class IMEBRA_API NGetCommand: public DimseCommand
 
 #ifndef SWIG
     friend class DimseService;
+    friend class DimseCommand;
 protected:
     explicit NGetCommand(std::shared_ptr<implementation::nGetCommand> pCommand);
 #endif
@@ -1103,6 +1303,7 @@ class IMEBRA_API NSetCommand: public DimseCommand
 
 #ifndef SWIG
     friend class DimseService;
+    friend class DimseCommand;
 protected:
     explicit NSetCommand(std::shared_ptr<implementation::nSetCommand> pCommand);
 #endif
@@ -1200,6 +1401,7 @@ class IMEBRA_API NActionCommand: public DimseCommand
 
 #ifndef SWIG
     friend class DimseService;
+    friend class DimseCommand;
 protected:
     explicit NActionCommand(std::shared_ptr<implementation::nActionCommand> pCommand);
 #endif
@@ -1332,6 +1534,7 @@ class IMEBRA_API NCreateCommand: public DimseCommand
 
 #ifndef SWIG
     friend class DimseService;
+    friend class DimseCommand;
 protected:
     explicit NCreateCommand(std::shared_ptr<implementation::nCreateCommand> pCommand);
 #endif
@@ -1471,6 +1674,7 @@ class IMEBRA_API NDeleteCommand: public DimseCommand
 
 #ifndef SWIG
     friend class DimseService;
+    friend class DimseCommand;
 protected:
     explicit NDeleteCommand(std::shared_ptr<implementation::nDeleteCommand> pCommand);
 #endif

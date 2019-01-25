@@ -18,6 +18,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "../include/imebra/dimse.h"
 #include "../include/imebra/dataSet.h"
 #include "../implementation/dimseImpl.h"
+#include <typeinfo>
 
 namespace imebra
 {
@@ -81,6 +82,48 @@ std::string DimseCommandBase::getAbstractSyntax() const
 }
 
 
+//////////////////////////////////////////////////////////////////
+//
+// Get the affected SOP instance UID
+//
+//////////////////////////////////////////////////////////////////
+std::string DimseCommandBase::getAffectedSopInstanceUid() const
+{
+    return (std::static_pointer_cast<implementation::dimseCCommand>(m_pCommand))->getAffectedSopInstanceUid();
+}
+
+
+//////////////////////////////////////////////////////////////////
+//
+// Get the affected SOP class UID
+//
+//////////////////////////////////////////////////////////////////
+std::string DimseCommandBase::getAffectedSopClassUid() const
+{
+    return (std::static_pointer_cast<implementation::dimseCCommand>(m_pCommand))->getAffectedSopClassUid();
+}
+
+
+//////////////////////////////////////////////////////////////////
+//
+// Get the requested SOP instance UID
+//
+//////////////////////////////////////////////////////////////////
+std::string DimseCommandBase::getRequestedSopInstanceUid() const
+{
+    return (std::static_pointer_cast<implementation::dimseCCommand>(m_pCommand))->getRequestedSopInstanceUid();
+}
+
+
+//////////////////////////////////////////////////////////////////
+//
+// Get the requested SOP class UID
+//
+//////////////////////////////////////////////////////////////////
+std::string DimseCommandBase::getRequestedSopClassUid() const
+{
+    return (std::static_pointer_cast<implementation::dimseCCommand>(m_pCommand))->getRequestedSopClassUid();
+}
 
 
 
@@ -126,49 +169,197 @@ dimseCommandType_t DimseCommand::getCommandType() const
     return (std::static_pointer_cast<implementation::dimseNCommand>(m_pCommand))->getCommandType();
 }
 
+
 //////////////////////////////////////////////////////////////////
 //
-// Get the affected SOP instance UID
+// Get the command as a CStoreCommand
 //
 //////////////////////////////////////////////////////////////////
-std::string DimseCommandBase::getAffectedSopInstanceUid() const
+const CStoreCommand* DimseCommand::getAsCStoreCommand() const
 {
-    return (std::static_pointer_cast<implementation::dimseCCommand>(m_pCommand))->getAffectedSopInstanceUid();
+    std::shared_ptr<implementation::cStoreCommand> pCommand(std::dynamic_pointer_cast<implementation::cStoreCommand>(m_pCommand));
+    if(pCommand.get() == nullptr)
+    {
+        throw std::bad_cast();
+    }
+    return new const CStoreCommand(pCommand);
 }
 
 
 //////////////////////////////////////////////////////////////////
 //
-// Get the affected SOP class UID
+// Get the command as a CMoveCommand
 //
 //////////////////////////////////////////////////////////////////
-std::string DimseCommandBase::getAffectedSopClassUid() const
+const CMoveCommand* DimseCommand::getAsCMoveCommand() const
 {
-    return (std::static_pointer_cast<implementation::dimseCCommand>(m_pCommand))->getAffectedSopClassUid();
+    std::shared_ptr<implementation::cMoveCommand> pCommand(std::dynamic_pointer_cast<implementation::cMoveCommand>(m_pCommand));
+    if(pCommand.get() == nullptr)
+    {
+        throw std::bad_cast();
+    }
+    return new const CMoveCommand(pCommand);
 }
 
 
 //////////////////////////////////////////////////////////////////
 //
-// Get the requested SOP instance UID
+// Get the command as a CGetCommand
 //
 //////////////////////////////////////////////////////////////////
-std::string DimseCommandBase::getRequestedSopInstanceUid() const
+const CGetCommand* DimseCommand::getAsCGetCommand() const
 {
-    return (std::static_pointer_cast<implementation::dimseCCommand>(m_pCommand))->getRequestedSopInstanceUid();
+    std::shared_ptr<implementation::cGetCommand> pCommand(std::dynamic_pointer_cast<implementation::cGetCommand>(m_pCommand));
+    if(pCommand.get() == nullptr)
+    {
+        throw std::bad_cast();
+    }
+    return new const CGetCommand(pCommand);
 }
 
 
 //////////////////////////////////////////////////////////////////
 //
-// Get the requested SOP class UID
+// Get the command as a CFindCommand
 //
 //////////////////////////////////////////////////////////////////
-std::string DimseCommandBase::getRequestedSopClassUid() const
+const CFindCommand* DimseCommand::getAsCFindCommand() const
 {
-    return (std::static_pointer_cast<implementation::dimseCCommand>(m_pCommand))->getRequestedSopClassUid();
+    std::shared_ptr<implementation::cFindCommand> pCommand(std::dynamic_pointer_cast<implementation::cFindCommand>(m_pCommand));
+    if(pCommand.get() == nullptr)
+    {
+        throw std::bad_cast();
+    }
+    return new const CFindCommand(pCommand);
 }
 
+
+//////////////////////////////////////////////////////////////////
+//
+// Get the command as a CEchoCommand
+//
+//////////////////////////////////////////////////////////////////
+const CEchoCommand* DimseCommand::getAsCEchoCommand() const
+{
+    std::shared_ptr<implementation::cEchoCommand> pCommand(std::dynamic_pointer_cast<implementation::cEchoCommand>(m_pCommand));
+    if(pCommand.get() == nullptr)
+    {
+        throw std::bad_cast();
+    }
+    return new const CEchoCommand(pCommand);
+}
+
+
+//////////////////////////////////////////////////////////////////
+//
+// Get the command as a CCancelCommand
+//
+//////////////////////////////////////////////////////////////////
+const CCancelCommand* DimseCommand::getAsCCancelCommand() const
+{
+    std::shared_ptr<implementation::cCancelCommand> pCommand(std::dynamic_pointer_cast<implementation::cCancelCommand>(m_pCommand));
+    if(pCommand.get() == nullptr)
+    {
+        throw std::bad_cast();
+    }
+    return new const CCancelCommand(pCommand);
+}
+
+
+//////////////////////////////////////////////////////////////////
+//
+// Get the command as a NActionCommand
+//
+//////////////////////////////////////////////////////////////////
+const NActionCommand* DimseCommand::getAsNActionCommand() const
+{
+    std::shared_ptr<implementation::nActionCommand> pCommand(std::dynamic_pointer_cast<implementation::nActionCommand>(m_pCommand));
+    if(pCommand.get() == nullptr)
+    {
+        throw std::bad_cast();
+    }
+    return new const NActionCommand(pCommand);
+}
+
+
+//////////////////////////////////////////////////////////////////
+//
+// Get the command as a NEventReportCommand
+//
+//////////////////////////////////////////////////////////////////
+const NEventReportCommand* DimseCommand::getAsNEventReportCommand() const
+{
+    std::shared_ptr<implementation::nEventReportCommand> pCommand(std::dynamic_pointer_cast<implementation::nEventReportCommand>(m_pCommand));
+    if(pCommand.get() == nullptr)
+    {
+        throw std::bad_cast();
+    }
+    return new const NEventReportCommand(pCommand);
+}
+
+
+//////////////////////////////////////////////////////////////////
+//
+// Get the command as a NCreate
+//
+//////////////////////////////////////////////////////////////////
+const NCreateCommand* DimseCommand::getAsNCreateCommand() const
+{
+    std::shared_ptr<implementation::nCreateCommand> pCommand(std::dynamic_pointer_cast<implementation::nCreateCommand>(m_pCommand));
+    if(pCommand.get() == nullptr)
+    {
+        throw std::bad_cast();
+    }
+    return new const NCreateCommand(pCommand);
+}
+
+
+//////////////////////////////////////////////////////////////////
+//
+// Get the command as a NDeleteCommand
+//
+//////////////////////////////////////////////////////////////////
+const NDeleteCommand* DimseCommand::getAsNDeleteCommand() const
+{
+    std::shared_ptr<implementation::nDeleteCommand> pCommand(std::dynamic_pointer_cast<implementation::nDeleteCommand>(m_pCommand));
+    if(pCommand.get() == nullptr)
+    {
+        throw std::bad_cast();
+    }
+    return new const NDeleteCommand(pCommand);
+}
+
+
+//////////////////////////////////////////////////////////////////
+//
+// Get the command as a NSetCommand
+//
+//////////////////////////////////////////////////////////////////
+const NSetCommand* DimseCommand::getAsNSetCommand() const
+{
+    std::shared_ptr<implementation::nSetCommand> pCommand(std::dynamic_pointer_cast<implementation::nSetCommand>(m_pCommand));
+    if(pCommand.get() == nullptr)
+    {
+        throw std::bad_cast();
+    }
+    return new const NSetCommand(pCommand);
+}
+
+
+//////////////////////////////////////////////////////////////////
+//
+// Get the command as a NGetCommand
+//
+//////////////////////////////////////////////////////////////////
+const NGetCommand* DimseCommand::getAsNGetCommand() const
+{
+    std::shared_ptr<implementation::nGetCommand> pCommand(std::dynamic_pointer_cast<implementation::nGetCommand>(m_pCommand));
+    if(pCommand.get() == nullptr)
+    {
+        throw std::bad_cast();
+    }
+    return new const NGetCommand(pCommand);
+}
 
 
 
