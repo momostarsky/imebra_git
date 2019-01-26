@@ -109,12 +109,32 @@ Objective-C/Swift
    :members:
    
 
-Base command and response classes
----------------------------------
+Commands and response classes
+-----------------------------
 
 All the DIMSE commands are identified by an unique ID, which can be retrieved via the :ref:`DimseService` class.
 
 DIMSE responses are built from the DIMSE command and have the same ID of the command they are related to.
+
+After receiving a command, use :cpp:member:`imebra::DimseCommand::getCommandType` to retrieve the command type, then cast the
+received command to the proper type (:cpp:class:`imebra::CStoreCommand`, :cpp:class:`imebra::CMoveCommand`,
+:cpp:class:`imebra::CGetCommand`, :cpp:class:`imebra::CFindCommand`, :cpp:class:`imebra::CEchoCommand`, :cpp:class:`imebra::CCancelCommand`,
+:cpp:class:`imebra::NActionCommand`, :cpp:class:`imebra::NEventReportCommand`, :cpp:class:`imebra::NCreateCommand`,
+:cpp:class:`imebra::NDeleteCommand`, :cpp:class:`imebra::NSetCommand`, :cpp:class:`imebra::NGetCommand`).
+Instead of casting (e.g. when using the Golang wrapper) you can also call one of the following functions:
+
+- :cpp:member:`imebra::DimseCommand::getAsCStoreCommand`
+- :cpp:member:`imebra::DimseCommand::getAsCMoveCommand`
+- :cpp:member:`imebra::DimseCommand::getAsCGetCommand`
+- :cpp:member:`imebra::DimseCommand::getAsCFindCommand`
+- :cpp:member:`imebra::DimseCommand::getAsCEchoCommand`
+- :cpp:member:`imebra::DimseCommand::getAsCCancelCommand`
+- :cpp:member:`imebra::DimseCommand::getAsNActionCommand`
+- :cpp:member:`imebra::DimseCommand::getAsNEventReportCommand`
+- :cpp:member:`imebra::DimseCommand::getAsNCreateCommand`
+- :cpp:member:`imebra::DimseCommand::getAsNDeleteCommand`
+- :cpp:member:`imebra::DimseCommand::getAsNSetCommand`
+- :cpp:member:`imebra::DimseCommand::NGetCommand`
 
 
 DimseCommandBase
