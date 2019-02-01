@@ -31,6 +31,14 @@ In Python, import the package imebra:
     from imebra.imebra import *
 
 
+In Golang, import the package "imebra":
+
+.. code-block:: go
+
+    import (
+        "imebra"
+    )
+
 
 Loading files
 -------------
@@ -68,6 +76,13 @@ In Python:
     loadedDataSet = CodecFactory.load("DicomFile.dcm")
 
 
+In Golang:
+
+.. code-block:: go
+
+    var loadedDataSet = imebra.CodecFactoryLoad("DicomFile.dcm")
+
+
 The previous code loads the file DicomFile.dcm.
 
 Imebra can perform a "lazy loading", which leaves the data on the input stream and loads it into memory
@@ -96,12 +111,20 @@ in Java
     com.imebra.DataSet loadedDataSet = com.imebra.CodecFactory.load("DicomFile.dcm", 2048);
     
 
-and in Python
+in Python
 
 .. code-block:: python
 
     # Load tags in memory only if their size is equal or smaller than 2048 bytes
     loadedDataSet = CodecFactory.load("DicomFile.dcm", 2048)
+
+
+in Golang
+
+.. code-block:: go
+
+    // Load tags in memory only if their size is equal or smaller than 2048 bytes
+    var loadedDataSet = imebra.CodecFactoryLoad("DicomFile.dcm", int64(2048))
 
     
 Reading the tag's values
@@ -172,12 +195,23 @@ In python, you do it like this:
     # A patient's name can contain up to 5 values, representing different interpretations of the same name
     # (e.g. alphabetic representation, ideographic representation and phonetic representation)
     # Here we retrieve the first 2 interpretations (index 0 and 1)
-    patientNameCharacter = loadedDataSet.getString(TagId(tagId_t_PatientName_0010_0010), 0)
+    patientNameCharacter = loadedDataSet.GetString(TagId(tagId_t_PatientName_0010_0010), 0)
     patientNameIdeographic = loadedDataSet.getString(TagId(tagId_t_PatientName_0010_0010), 1)
 
 
+In Golang, you do it like this:
+
+.. code-block:: go
+
+    // A patient's name can contain up to 5 values, representing different interpretations of the same name
+    // (e.g. alphabetic representation, ideographic representation and phonetic representation)
+    // Here we retrieve the first 2 interpretations (index 0 and 1)
+    var patientNameCharacter = loadedDataSet.GetString(imebra.NewTagId(imebra.TagId_t_PatientName_0010_0010), int64(0))
+    var patientNameIdeographic = loadedDataSet.GetString(imebra.NewTagId(imebra.TagId_t_PatientName_0010_0010), int64(1))
+
+
 Note that the previous code will throw one of the exceptions derived from :cpp:class:`imebra::MissingDataElementError`
-if the desidered patient name component is not present in the :cpp:class:`imebra::DataSet`.
+if the desidered patient name component is not present in the :cpp:class:`imebra::DataSet` (in Golang a panic is raised).
 
 You can specify a return value that is returned when the value is not present in order to avoid throwing an exception when
 a tag's value cannot be found in the DataSet :
@@ -206,13 +240,22 @@ in Java:
     String patientNameIdeographic = loadedDataSet.getString(new com.imebra.TagId(0x10, 0x10), 1, "");
 
 
-and in Python:
+in Python:
 
 .. code-block:: python
 
     # Return an empty name if the tag is not present
     patientNameCharacter = loadedDataSet.getString(TagId(tagId_t_PatientName_0010_0010), 0, "")
     patientNameIdeographic = loadedDataSet.getString(TagId(tagId_t_PatientName_0010_0010), 1, "")
+
+
+In Golang:
+
+.. code-block:: go
+
+    // Return an empty name if the tag is not present
+    var patientNameCharacter = loadedDataSet.GetString(imebra.NewTagId(imebra.TagId_t_PatientName_0010_0010), int64(0), "")
+    var patientNameIdeographic = loadedDataSet.GetString(imebra.NewTagId(imebra.TagId_t_PatientName_0010_0010), int64(1), "")
 
 
 Retrieving an image
@@ -263,7 +306,7 @@ To retrieve an image in Python:
 .. code-block:: python
 
     # Retrieve the first image (index = 0)
-    image = loadedDataSet.getImageApplyModalityTransform(0)
+    image = loadedDataSet.GetImageApplyModalityTransform(0)
 
     # Get the color space
     colorSpace = image.getColorSpace()
@@ -271,6 +314,22 @@ To retrieve an image in Python:
     # Get the size in pixels
     width = image.getWidth()
     height = image.getHeight()
+
+
+To retrieve an image in Golang:
+
+.. code-block:: go
+
+    // Retrieve the first image (index = 0)
+    var image = loadedDataSet.GetImageApplyModalityTransform(0)
+
+    // Get the color space
+    var colorSpace = image.GetColorSpace()
+
+    // Get the size in pixels
+    var width = image.GetWidth()
+    var height = image.GetHeight()
+
 
 In order to access the image's pixels you can obtain a :cpp:class:`imebra::ReadingDataHandlerNumeric` and then
 access the individual pixels via :cpp:member:`imebra::ReadingDataHandler::getSignedLong` or 
@@ -347,6 +406,31 @@ How to access the pixels in Python:
             g = dataHandler.getSignedLong((scanY * width + scanX) * 3 + 1)
             b = dataHandler.getSignedLong((scanY * width + scanX) * 3 + 2)
 
+
+How to access the pixels in Golang:
+
+.. code-block:: go
+
+    // let's assume that we already have the image's size in the variables width and height
+    // (see previous code snippet)
+
+    // Retrieve the data handler
+    var dataHandler = image.GetReadingDataHandler()
+
+    for scanY := uint(0); scanY != height; scanY++ {
+        for scanX := uint(0); scanX != width; scanX++ {
+            // For monochrome images
+            var luminance = dataHandler.GetSignedLong(int64(scanY * width + scanX));
+
+            // For RGB images
+            var r = dataHandler.GetSignedLong(int64((scanY * width + scanX) * 3));
+            var g = dataHandler.GetSignedLong(int64((scanY * width + scanX) * 3 + 1));
+            var b = dataHandler.GetSignedLong(int64((scanY * width + scanX) * 3 + 2));
+
+        }
+    }
+
+
 In order to make things faster you can retrieve the memory containing the data in raw format from the :cpp:class:`imebra::ReadingDataHandlerNumeric`
 object:
 
@@ -366,6 +450,30 @@ object:
     bool bIsSigned = dataHandler->isSigned();
 
     // Do something with the pixels...A template function would come handy
+
+
+Faster pixel access in Golang:
+
+.. code-block:: go
+
+    // Retrieve the data handler
+    var dataHandler = image.GetReadingDataHandler()
+
+    // Get the mem
+    var memory = dataHandler.GetMemory();
+    var dataSize = memory.Size();
+    var byteArray = make([]byte, dataSize);
+    memory.Data(byteArray); // Fill the array with raw data from the first image
+
+    // Get the number of bytes per each value (1, 2, or 4 for images)
+    var bytesPerValue = dataHandler.GetUnitSize();
+
+    // Are the values signed?
+    var isSigned = dataHandler.IsSigned();
+
+    // Do something with the pixels...they are in byteArray, bytesPerValue
+    // specifies how many bytes form one pixel, while isSigned says if
+    // the pixel values are signed or unsigned...
 
 
 Displaying an image
