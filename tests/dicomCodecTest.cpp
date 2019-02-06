@@ -259,16 +259,6 @@ TEST(dicomCodecTest, testDicom32bit)
         std::cout << "Dicom test. Transfer syntax: " << transferSyntax;
         std::cout << " maxValue: " << std::numeric_limits<std::uint32_t>::max() << std::endl;
 
-        imageQuality_t quality = imageQuality_t::veryHigh;
-        if(ColorTransformsFactory::isSubsampledY(colorSpace))
-        {
-            quality = imageQuality_t::belowMedium;
-        }
-        else if(ColorTransformsFactory::isSubsampledX(colorSpace))
-        {
-            quality = imageQuality_t::medium;
-        }
-
         ReadWriteMemory streamMemory;
         {
             DataSet testDataSet(transferSyntax);
