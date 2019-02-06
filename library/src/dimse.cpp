@@ -1804,6 +1804,8 @@ DimseCommand* DimseService::getCommand()
         return new NCreateCommand(std::dynamic_pointer_cast<implementation::nCreateCommand>(pCommand));
     case dimseCommandType_t::nDelete:
         return new NDeleteCommand(std::dynamic_pointer_cast<implementation::nDeleteCommand>(pCommand));
+    default:
+        {}
     }
 
     IMEBRA_THROW(std::logic_error, "Should have received a valid command from the implementation layer");
