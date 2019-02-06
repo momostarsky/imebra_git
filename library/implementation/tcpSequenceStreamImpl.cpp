@@ -214,6 +214,7 @@ void throwAddrException(int addrOperationResult)
 #ifndef IMEBRA_WINDOWS
     case EAI_SYSTEM:
         throwTcpException(-1);
+        break;
 #endif
     default:
         IMEBRA_THROW(AddressError, "Unexpected TCP Address error " << errorDescription << " code: " << addrOperationResult);
