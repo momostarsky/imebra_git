@@ -2490,6 +2490,8 @@ associationSCU::associationSCU(
             IMEBRA_THROW_ADDITIONAL_PARAM(AcseSCPPresentationLocalLimitExcededError, "Presentation local limit exceeded", bPermanent);
         }
 
+        IMEBRA_THROW_ADDITIONAL_PARAM(AcseSCUNoReasonGivenError, "Service user no reason given", bPermanent);
+
     }
     default:
         IMEBRA_THROW(AcseCorruptedMessageError, "Unexpected message type");
