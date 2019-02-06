@@ -11,6 +11,7 @@ Version |release| (this version)
 - Fixed bug #261 (Remove warning "variable quality set but not used") as per SOP :ref:`FIXBUG_2`
 - Fixed bug #262 (Remove the warning gtest.h:1448:16: warning: comparison between signed and unsigned integer expressions) as per SOP :ref:`FIXBUG_2`
 - Fixed bug #263 (Replace std::auto_ptr with std::unique_ptr in dicom2jpeg) as per SOP :ref:`FIXBUG_2`
+- Fixed bug #264 (Remove warning "acseImpl.cpp:2491:9: warning: this statement may fall through")
 
 Version 4.4.1.1
 ---------------
