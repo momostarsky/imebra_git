@@ -8,6 +8,7 @@ Version |release| (this version)
 
 - Implemented enhancement #245 (Modify the Swig IDL to generate Golang bindings)
 - Fixed bug #260 (Remove warning "enumeration response not handled in switch") as per SOP :ref:`FIXBUG_2`
+- Fixed bug #261 (Remove warning "variable quality set but not used") as per SOP :ref:`FIXBUG_2`
 - Fixed bug #263 (Replace std::auto_ptr with std::unique_ptr in dicom2jpeg) as per SOP :ref:`FIXBUG_2`
 
 Version 4.4.1.1
