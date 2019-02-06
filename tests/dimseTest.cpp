@@ -1434,7 +1434,7 @@ TEST(dimseTest, storeSCUInteroperabilityTest)
 
         std::list<std::string> files(getFilesInDirectory(dirName));
 
-        ASSERT_EQ(files.size(), 1);
+        ASSERT_EQ(files.size(), 1u);
 
         std::unique_ptr<DataSet> readDataSet(CodecFactory::load(files.front()));
 
