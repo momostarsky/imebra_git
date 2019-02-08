@@ -13,6 +13,7 @@ Version |release| (this version)
 - Fixed bug #263 (Replace std::auto_ptr with std::unique_ptr in dicom2jpeg) as per SOP :ref:`FIXBUG_2`
 - Fixed bug #264 (Remove warning "acseImpl.cpp:2491:9: warning: this statement may fall through")
 - Fixed bug #265 (Remove warning "dicomStreamCodecImpl.cpp:713:17: warning: ‘tagType’ may be used uninitialized in this function")
+- Fixed bug #266 (Remove warning "imageImpl.cpp:274:5: warning: this ‘if’ clause does not guard")
 - Fixed bug #267 (Remove warning "tcpSequenceStreamImpl.cpp:216:26: warning: this statement may fall through") as per SOP :ref:`FIXBUG_2`
 
 Version 4.4.1.1
