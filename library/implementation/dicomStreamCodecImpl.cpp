@@ -710,7 +710,7 @@ void dicomStreamCodec::parseStream(std::shared_ptr<streamReader> pStream,
         // Explicit data type
         //
         ///////////////////////////////////////////////////////////
-        tagVR_t tagType;
+        tagVR_t tagType(tagVR_t::UN);
 
         if(bExplicitDataType && tagId!=0xfffe)
         {
