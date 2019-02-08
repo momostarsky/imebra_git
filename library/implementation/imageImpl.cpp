@@ -272,10 +272,14 @@ void image::getSize(std::uint32_t* pWidth, std::uint32_t* pHeight) const
     IMEBRA_FUNCTION_START();
 
     if(pWidth)
+    {
         *pWidth = m_width;
+    }
 
 	if(pHeight)
+    {
         *pHeight = m_height;
+    }
 
     IMEBRA_FUNCTION_END();
 }
@@ -295,10 +299,14 @@ void image::getSizeMm(double* pSizeMmX, double* pSizeMmY) const
     IMEBRA_FUNCTION_START();
 
 	if(pSizeMmX)
+    {
         *pSizeMmX = m_sizeMmX;
+    }
 
 	if(pSizeMmY)
+    {
         *pSizeMmY = m_sizeMmY;
+    }
 
 	IMEBRA_FUNCTION_END();
 }
