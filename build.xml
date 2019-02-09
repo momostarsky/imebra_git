@@ -257,6 +257,9 @@ Slovenia
         <copy todir="${source_distribution}/docs/html">
                 <fileset dir="${build_release}/docs/html" />
         </copy>
+        <copy todir="${source_distribution}/docs/">
+                <fileset file="${build_release}/docs/index.html" />
+        </copy>
         <copy todir="${source_distribution}" file="${build_release}/readme.rst" />
         <copy todir="${source_distribution}" file="${build_release}/license.rst" />
         <copy todir="${source_distribution}" file="${build_release}/setup.py" />
