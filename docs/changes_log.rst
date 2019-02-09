@@ -7,6 +7,7 @@ Version |release| (this version)
 --------------------------------
 
 - Implemented enhancement #245 (Modify the Swig IDL to generate Golang bindings)
+- Implemented enhancement #259 (Add a starter html page in the documentation folder) as per SOP :ref:`DEVENH_2`
 - Fixed bug #260 (Remove warning "enumeration response not handled in switch") as per SOP :ref:`FIXBUG_2`
 - Fixed bug #261 (Remove warning "variable quality set but not used") as per SOP :ref:`FIXBUG_2`
 - Fixed bug #262 (Remove the warning gtest.h:1448:16: warning: comparison between signed and unsigned integer expressions) as per SOP :ref:`FIXBUG_2`
