@@ -89,6 +89,7 @@ public:
 
     dataSet(const std::string& transferSyntax);
 
+
 	///////////////////////////////////////////////////////////
 	/// \name Get/set groups/tags
 	///
@@ -324,7 +325,6 @@ public:
     vois_t getVOIs();
 
 	//@}
-
 
 	///////////////////////////////////////////////////////////
 	/// \name Get/set the tags' values
@@ -1000,8 +1000,6 @@ private:
     std::uint32_t getFrameBufferId(std::uint32_t offset) const;
 
     tGroups m_groups;
-
-    std::weak_ptr<dataSet> m_pParent;
 
     charsetsList::tCharsetsList m_charsetsList;
 
