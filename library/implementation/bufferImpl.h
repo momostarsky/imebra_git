@@ -105,6 +105,7 @@ public:
         size_t wordLength,
 		streamController::tByteOrdering endianType);
 
+
 	//@}
 
     virtual ~buffer();
@@ -332,7 +333,7 @@ protected:
 private:
 	// The memory buffer
 	///////////////////////////////////////////////////////////
-    mutable std::list<std::shared_ptr<const memory> > m_memory;
+    std::list<std::shared_ptr<const memory> > m_memory;
 
     mutable std::mutex m_mutex;
 

@@ -195,10 +195,7 @@ std::shared_ptr<const memory> buffer::joinMemory() const
         newMemory->data()[copyIndex] = 0;
     }
 
-    m_memory.clear();
-    m_memory.push_back(newMemory);
-
-    return m_memory.front();
+    return newMemory;
 
     IMEBRA_FUNCTION_END();
 }
