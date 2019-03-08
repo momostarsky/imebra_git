@@ -95,6 +95,32 @@
       <priority>6</priority>
     </requirement>
 
+    <requirement categoryIdref="REQ_FUNC" id="REQ_IMMUTABLE_CLASSES">
+      <mitigates>
+        <mitigatedRisk idref="RISK_COPY_CONST_OBJECTS">
+          <riskReduction>100</riskReduction>
+          <rationale>By having separate mutable and immutable classes, the compiler will not allow copying an immutable object into a mutable one.</rationale>
+        </mitigatedRisk>
+      </mitigates>
+
+      <title>Data classes should be immutable, with mutable subclasses</title>
+
+      <description>The data classes should be immutable. Mutable subclasses should be used for objects that need to be modified.</description>
+
+      <priority>6</priority>
+    </requirement>
+
+    <requirement categoryIdref="REQ_FUNC" id="REQ_DONT_RETURN_POINTER">
+      <title>The API should not return pointers to allocated objects</title>
+
+      <description>Instead of returning pointers to the allocated objects, the library should return the object instead.
+      	           Because the API allocated objects hold just pointer to the implementation classes, copying them around
+      	           should not impact the performances.</description>
+
+      <priority>6</priority>
+    </requirement>
+
+
     <requirement categoryIdref="REQ_PERF" id="REQ_MEMORY_POOL_THREAD">
       <introducedBy>
         <parentRequirement idref="REQ_MEMORY_POOL"/>
@@ -678,6 +704,15 @@
       <priority>100</priority>
     </requirement>
 
+    <requirement categoryIdref="REQ_IMPL" id="REQ_NO_MULTIPLE_INHERITANCE">
+      <mitigates/>
+
+      <title>Multiple inheritance is not allowed</title>
+      <description>Some language for which bindings are required don't support multiple inheritance, therefore it should not be used.</description>
+      <priority>100</priority>
+    </requirement>
+
+
 
   </requirements>
 
@@ -822,6 +857,29 @@
         <rationale/>
       </severity>
     </risk>
+
+    <risk id="RISK_COPY_CONST_OBJECTS">
+      <causedBy>
+        <causedByRequirement idref="REQ_DONT_RETURN_POINTER"/>
+      </causedBy>
+
+      <title>A const object may be copied into a non-const object</title>
+
+      <description>Because the objects returned by the API are just handlers to implementation objects, the user
+                may copy a const object into a non-const one, introducing the possibility that the implementation object
+                pointed by the const object may be changed through the non-const object.</description>
+
+      <likelihood>
+        <factor>100</factor>
+        <rationale/>
+      </likelihood>
+
+      <severity>
+        <factor>100</factor>
+        <rationale/>
+      </severity>
+    </risk>
+
 
     <risk id="RISK_BUFFER_OVERFLOW">
       <causedBy>
