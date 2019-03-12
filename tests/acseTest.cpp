@@ -279,14 +279,21 @@ TEST(acseTest, negotiationPartialMatchTransferSyntaxes)
     StreamReader readSCP(toSCP.getStreamInput());
     StreamWriter writeSCP(toSCU.getStreamOutput());
 
-    PresentationContext scuContext("1.2.840.10008.1.1");
-    scuContext.addTransferSyntax("1.2.840.10008.1.2"); // implicit VR little endian
-    scuContext.addTransferSyntax("1.2.840.10008.1.2.1"); // explicit VR little endian
+    PresentationContext scuContext0("1.2.840.10008.1.1");
+    scuContext0.addTransferSyntax("1.2.840.10008.1.2"); // implicit VR little endian
+    scuContext0.addTransferSyntax("1.2.840.10008.1.2.1"); // explicit VR little endian
+
+    PresentationContext scuContext1("1.2.840.10008.1.1.1.1.1.1.1.1"); // This will be rejected
+    scuContext1.addTransferSyntax("1.2.840.10008.1.2"); // implicit VR little endian
+    scuContext1.addTransferSyntax("1.2.840.10008.1.2.1"); // explicit VR little endian
+
     PresentationContexts scuPresentationContexts;
-    scuPresentationContexts.addPresentationContext(scuContext);
+    scuPresentationContexts.addPresentationContext(scuContext0);
+    scuPresentationContexts.addPresentationContext(scuContext1);
 
     PresentationContext scpContext("1.2.840.10008.1.1");
     scpContext.addTransferSyntax("1.2.840.10008.1.2.1"); // explicit VR little endian
+
     PresentationContexts scpPresentationContexts;
     scpPresentationContexts.addPresentationContext(scpContext);
 
@@ -295,6 +302,10 @@ TEST(acseTest, negotiationPartialMatchTransferSyntaxes)
     std::thread scp(imebra::tests::scpThread, std::ref(scpName), std::ref(scpPresentationContexts), std::ref(readSCP), std::ref(writeSCP));
 
     AssociationSCU scu("SCU", scpName, 1, 1, scuPresentationContexts, readSCU, writeSCU, 0);
+
+    EXPECT_EQ("1.2.840.10008.1.2.1", scu.getTransferSyntax("1.2.840.10008.1.1"));
+    EXPECT_THROW(scu.getTransferSyntax("1.2.840.10008.1.1.1.1.1.1.1.1"), AcseNoTransferSyntaxError);
+    EXPECT_THROW(scu.getTransferSyntax("1"), AcsePresentationContextNotRequestedError);
 
     MutableAssociationMessage command("1.2.840.10008.1.1");
     MutableDataSet dataset0;

@@ -1409,12 +1409,31 @@ TEST(dimseTest, storeSCUInteroperabilityTest)
         StreamWriter writeSCU(tcpStream.getStreamOutput());
 
         std::string transferSyntax("1.2.840.10008.1.2.1");
+
+        // Presentation context with a valid transfer syntax and an invalid one
         PresentationContext context("1.2.840.10008.1.1");
+        context.addTransferSyntax("1"); // dummy transfer syntax
         context.addTransferSyntax(transferSyntax); // implicit VR little endian
+
+        // Presentation context with dummy abstract syntax and valid transfer syntax
+        PresentationContext dummy("1"); // dummy abstract syntax
+        dummy.addTransferSyntax(transferSyntax); // implicit VR little endian
+
+        // Presentation context with all dummy transfer syntaxes
+        PresentationContext dummySyntaxes("1.2.840.10008.5.1.1.27");
+        dummySyntaxes.addTransferSyntax("1"); // dummy transfer syntax
+        dummySyntaxes.addTransferSyntax("2"); // dummy transfer syntax
+
         PresentationContexts presentationContexts;
         presentationContexts.addPresentationContext(context);
+        presentationContexts.addPresentationContext(dummy);
+        presentationContexts.addPresentationContext(dummySyntaxes);
 
         AssociationSCU scu("SCU", "SCP", 1, 1, presentationContexts, readSCU, writeSCU, 0);
+
+        EXPECT_EQ(transferSyntax, scu.getTransferSyntax("1.2.840.10008.1.1"));
+        EXPECT_THROW(scu.getTransferSyntax("1"), AcseNoTransferSyntaxError);
+        EXPECT_THROW(scu.getTransferSyntax("1.2.840.10008.5.1.1.27"), AcseNoTransferSyntaxError);
 
         DimseService dimse(scu);
 
