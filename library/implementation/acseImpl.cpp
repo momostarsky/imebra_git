@@ -513,7 +513,10 @@ void acseItemPresentationContextBase::decodeItemPayload(std::shared_ptr<streamRe
                 m_pAbstractSyntax = std::dynamic_pointer_cast<acseItemAbstractSyntax>(item);
                 break;
             case acseItem::itemType_t::transferSyntax:
-                m_transferSyntaxes.push_back(std::dynamic_pointer_cast<acseItemTransferSyntax>(item));
+                if(m_result == result_t::acceptance)
+                {
+                    m_transferSyntaxes.push_back(std::dynamic_pointer_cast<acseItemTransferSyntax>(item));
+                }
                 break;
             default:
                 // ignore
