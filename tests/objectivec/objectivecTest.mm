@@ -49,6 +49,10 @@ TEST(objectivec, stringToNSStringTest)
 #endif
         }
 
+#if __has_feature(objc_arc)
+        @autoreleasepool
+#endif
+        {
         ImebraMemoryStreamOutput* pWriteStream = [[ImebraMemoryStreamOutput alloc] initWithMutableMemory:pStreamMemory];
         ImebraStreamWriter* pWriter = [[ImebraStreamWriter alloc] initWithOutputStream: pWriteStream];
         NSError* pError = 0;
@@ -58,6 +62,7 @@ TEST(objectivec, stringToNSStringTest)
         [pWriter release];
         [pWriteStream release];
 #endif
+        }
 
         NSArray* pTags = [pDataSet getTags];
         size_t numTags = [pTags count];
