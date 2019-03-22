@@ -15,8 +15,6 @@ namespace tests
 // Test NSString conversion functions
 TEST(objectivec, stringToNSStringTest)
 {
-    //NSAutoreleasePool *myPool = [[NSAutoreleasePool alloc] init];
-
     NSString* patient0 = [[NSString alloc] initWithUTF8String:"??\xD0\xA1\xD0\xBC\xD1\x8B\xD1\x81\xD0\xBB\x20\xD0\xB2\xD1\x81\xD0\xB5\xD0\xB9"];
     NSString* patient1 = [[NSString alloc] initWithUTF8String:"\xD0\xA1\xD0\xBC\xD1\x8B\xD1\x81\xD0\xBB\x20\xD0\xB2\xD1\x81\xD0\xB5\xD0\xB9"];
 
@@ -27,6 +25,9 @@ TEST(objectivec, stringToNSStringTest)
         [pCharsets addObject: @"ISO_IR 6"];
         ImebraDataSet* pDataSet = [[ImebraDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2.1" charsets:pCharsets];
 
+#if __has_feature(objc_arc)
+        @autoreleasepool
+#endif
         {
             NSError* pError = 0;
             ImebraWritingDataHandler* pHandler = [pDataSet getWritingDataHandler:pPatientTag bufferId:0 error:&pError];
@@ -34,16 +35,25 @@ TEST(objectivec, stringToNSStringTest)
             [pHandler setString:0 newValue:patient0 error:&pError];
             [pHandler setString:1 newValue:patient1 error:&pError];
 
+#if !__has_feature(objc_arc)
             [pHandler release];
+#endif
         }
 
-        ImebraMemoryStreamOutput* pWriteStream = [[ImebraMemoryStreamOutput alloc] initWithReadWriteMemory:pStreamMemory];
-        ImebraStreamWriter* pWriter = [[ImebraStreamWriter alloc] initWithOutputStream: pWriteStream];
-        NSError* pError = 0;
-        [ImebraCodecFactory saveToStream:pWriter dataSet:pDataSet codecType:ImebraCodecTypeDicom error:&pError];
+#if __has_feature(objc_arc)
+        @autoreleasepool
+#endif
+        {
+            ImebraMemoryStreamOutput* pWriteStream = [[ImebraMemoryStreamOutput alloc] initWithReadWriteMemory:pStreamMemory];
+            ImebraStreamWriter* pWriter = [[ImebraStreamWriter alloc] initWithOutputStream: pWriteStream];
+            NSError* pError = 0;
+            [ImebraCodecFactory saveToStream:pWriter dataSet:pDataSet codecType:ImebraCodecTypeDicom error:&pError];
 
-        [pWriter release];
-        [pWriteStream release];
+#if !__has_feature(objc_arc)
+            [pWriter release];
+            [pWriteStream release];
+#endif
+        }
 
         NSArray* pTags = [pDataSet getTags];
         size_t numTags = [pTags count];
