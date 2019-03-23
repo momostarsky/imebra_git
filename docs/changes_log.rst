@@ -6,6 +6,12 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Implemented enhancement #273 (Enable compiler flag -fobjc-arc when compiling on Apple machines) as per 
+  SOP :ref:`DEVENH_2`
+
+Version 4.5.2.1
+---------------
+
 - Fixed bug #272 (Ignore the transfer syntaxes in the Acse Presentation Context Item Fields if the reason field is not "acceptance") as per 
   SOP :ref:`FIXBUG_2`
 
