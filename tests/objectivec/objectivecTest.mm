@@ -54,13 +54,13 @@ TEST(objectivec, stringToNSStringTest)
 #endif
         {
         ImebraMemoryStreamOutput* pWriteStream = [[ImebraMemoryStreamOutput alloc] initWithMutableMemory:pStreamMemory];
-        ImebraStreamWriter* pWriter = [[ImebraStreamWriter alloc] initWithOutputStream: pWriteStream];
-        NSError* pError = 0;
-        [ImebraCodecFactory saveToStream:pWriter dataSet:pDataSet codecType:ImebraCodecTypeDicom error:&pError];
+            ImebraStreamWriter* pWriter = [[ImebraStreamWriter alloc] initWithOutputStream: pWriteStream];
+            NSError* pError = 0;
+            [ImebraCodecFactory saveToStream:pWriter dataSet:pDataSet codecType:ImebraCodecTypeDicom error:&pError];
 
 #if !__has_feature(objc_arc)
-        [pWriter release];
-        [pWriteStream release];
+            [pWriter release];
+            [pWriteStream release];
 #endif
         }
 
@@ -266,6 +266,10 @@ TEST(objectivec, datasetValues)
     [pDataSet setDouble:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1013] newValue:12.0f tagVR:ImebraUL error:&error];
 
     ImebraMutableTag* pTag = [pDataSet getTagCreate:[[ImebraTagId alloc] initWithGroup:0x12 tag:0x12] tagVR:ImebraFD error:&error];
+
+#if __has_feature(objc_arc)
+    @autoreleasepool
+#endif
     {
         ImebraWritingDataHandlerNumeric* pWriteDouble = [pTag getWritingDataHandlerNumeric:0 error:&error];
         [pWriteDouble setSize:4];
@@ -775,6 +779,9 @@ TEST(objectivec, images)
 
     ImebraMutableImage* pBaselineImage = [[ImebraImage alloc] initWithWidth:width height:height depth:ImebraBitDepthU8 colorSpace:@"RGB" highBit:7];
 
+#if __has_feature(objc_arc)
+    @autoreleasepool
+#endif
     {
         ImebraWritingDataHandler* pWritingDataHandler = [pBaselineImage getWritingDataHandler:&pError];
 
@@ -795,7 +802,6 @@ TEST(objectivec, images)
         #if !__has_feature(objc_arc)
             [pWritingDataHandler release];
         #endif
-
     }
 
 
