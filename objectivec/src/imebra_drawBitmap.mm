@@ -64,11 +64,11 @@ void CGDataProviderCallbackFunc(void *info, const void* /* data */, size_t /* si
 }
 
 
--(ImebraMutableMemory*) getBitmap:(ImebraImage*)pImage bitmapType:(ImebraDrawBitmapType_t)drawBitmapType rowAlignBytes:(unsigned int)rowAlignBytes error:(NSError**)pError
+-(ImebraMemory*) getBitmap:(ImebraImage*)pImage bitmapType:(ImebraDrawBitmapType_t)drawBitmapType rowAlignBytes:(unsigned int)rowAlignBytes error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraMutableMemory alloc] initWithImebraMutableMemory:new imebra::MutableMemory(get_imebra_object_holder(DrawBitmap)->getBitmap(*get_other_imebra_object_holder(pImage, Image), (imebra::drawBitmapType_t)drawBitmapType, (std::uint32_t)rowAlignBytes))];
+    return [[ImebraMemory alloc] initWithImebraMemory:new imebra::Memory(get_imebra_object_holder(DrawBitmap)->getBitmap(*get_other_imebra_object_holder(pImage, Image), (imebra::drawBitmapType_t)drawBitmapType, (std::uint32_t)rowAlignBytes))];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -91,7 +91,7 @@ void CGDataProviderCallbackFunc(void *info, const void* /* data */, size_t /* si
 
     // Get the result raw data
     //////////////////////////
-    std::unique_ptr<imebra::MutableMemory> pMemory(get_imebra_object_holder(DrawBitmap)->getBitmap(*get_other_imebra_object_holder(pImage, Image), imebra::drawBitmapType_t::drawBitmapRGBA, 4));
+    std::unique_ptr<imebra::Memory> pMemory(get_imebra_object_holder(DrawBitmap)->getBitmap(*get_other_imebra_object_holder(pImage, Image), imebra::drawBitmapType_t::drawBitmapRGBA, 4));
     size_t dataSize;
     char* pData = pMemory->data(&dataSize);
 

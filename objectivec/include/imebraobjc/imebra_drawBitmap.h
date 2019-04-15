@@ -26,7 +26,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @class ImebraImage;
 @class ImebraTransform;
-@class ImebraMutableMemory;
+@class ImebraMemory;
 
 
 /// \enum ImebraDrawBitmapType_t
@@ -90,11 +90,11 @@ typedef NS_ENUM(unsigned int, ImebraDrawBitmapType_t)
     /// \param rowAlignBytes  the number of bytes on which the bitmap rows are
     ///                       aligned
     /// \param pError         set to a NSError derived class in case of error
-    /// \return a ImebraMutableMemory object referencing the buffer containing
+    /// \return a ImebraMemory object containing the buffer containing
     ///         the generated bitmap
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    -(ImebraMutableMemory*) getBitmap:(ImebraImage*)pImage bitmapType:(ImebraDrawBitmapType_t) drawBitmapType rowAlignBytes:(unsigned int)rowAlignBytes error:(NSError**)pError;
+    -(ImebraMemory*) getBitmap:(ImebraImage*)pImage bitmapType:(ImebraDrawBitmapType_t) drawBitmapType rowAlignBytes:(unsigned int)rowAlignBytes error:(NSError**)pError;
 
 
 #if defined(__APPLE__)
