@@ -39,8 +39,8 @@ do
             let tcpStream = try tcpListener.waitForConnection()
 
             // Allocate a reader and a writer that read and write into the TCP stream
-            let readScp = ImebraStreamReader(inputStream: tcpStream)
-            let writeScp = ImebraStreamWriter(inputOutputStream: tcpStream)
+            let readScp = ImebraStreamReader(inputStream: tcpStream.getStreamInput())
+            let writeScp = ImebraStreamWriter(inputOutputStream: tcpStream.getStreamOutput())
 
             // Tell that we accept the class UID specified in the command line, and which
             // transfer syntaxes we can handle for that class
@@ -103,8 +103,8 @@ do
     let tcpStream = try ImebraTCPStream(address: ImebraTCPActiveAddress(node: serverAddress, service: serverPort))
 
     // Allocate a reader and a writer that read and write into the TCP stream
-    let readScu = ImebraStreamReader(inputStream: tcpStream)
-    let writeScu = ImebraStreamWriter(inputOutputStream: tcpStream)
+    let readScu = ImebraStreamReader(inputStream: tcpStream.getStreamInput())
+    let writeScu = ImebraStreamWriter(inputOutputStream: tcpStream.getStreamOutput())
 
     // Tell that we want to use C-MOVE
     let context = ImebraPresentationContext(abstractSyntax: ImebraUidPatientRootQueryRetrieveInformationModelMOVE_1_2_840_10008_5_1_4_1_2_1_2)
@@ -127,7 +127,7 @@ do
     let scuDimseService = ImebraDimseService(association: scu)
 
     // Create a datase where we set the matching tags used to find the instances to move
-    let identifierDataset = ImebraDataSet(transferSyntax: ImebraUidImplicitVRLittleEndian_1_2_840_10008_1_2)
+    let identifierDataset = ImebraMutableDataSet(transferSyntax: ImebraUidImplicitVRLittleEndian_1_2_840_10008_1_2)
     try identifierDataset!.setString(ImebraTagId(id: ImebraTagId_t.tagSOPInstanceUID_0008_0018), newValue: instanceUID)
 
     // Prepare a C-MOVE command and send it to the SCP
