@@ -21,21 +21,15 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #include <memory>
 #include "definitions.h"
-#include "readWriteMemory.h"
+#include "mutableMemory.h"
 
-#ifndef SWIG
 namespace imebra
 {
+
 namespace implementation
 {
-class drawBitmap;
+    class drawBitmap;
 }
-
-}
-#endif
-
-namespace imebra
-{
 
 class Transform;
 class Image;
@@ -53,8 +47,6 @@ class Image;
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API DrawBitmap
 {
-    DrawBitmap(const DrawBitmap&) = delete;
-    DrawBitmap& operator=(const DrawBitmap&) = delete;
 
 public:
     /// \brief Construct a DrawBitmap with no transforms.
@@ -74,6 +66,23 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit DrawBitmap(const Transform& transformsChain);
+
+    ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source DrawBitmap object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    DrawBitmap(const DrawBitmap& source);
+
+    ///
+    /// \brief Assign operator.
+    ///
+    /// \param source source DrawBitmap object
+    /// \return a reference to this DrawBitmap object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    DrawBitmap& operator=(const DrawBitmap& source);
 
     /// \brief Destructor
     ///
@@ -107,14 +116,15 @@ public:
     /// \param drawBitmapType the type of bitmap to generate
     /// \param rowAlignBytes  the number of bytes on which the bitmap rows are
     ///                       aligned
-    /// \return a ReadWriteMemory object referencing the buffer containing the
+    /// \return a Memory object referencing the buffer containing the
     ///         generated bitmap
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    ReadWriteMemory* getBitmap(const Image& image, drawBitmapType_t drawBitmapType, std::uint32_t rowAlignBytes);
+    const Memory getBitmap(const Image& image, drawBitmapType_t drawBitmapType, std::uint32_t rowAlignBytes);
 
 #ifndef SWIG
-protected:
+private:
+    friend const std::shared_ptr<implementation::drawBitmap>& getDrawBitmapImplementation(const DrawBitmap& drawBitmap);
     std::shared_ptr<implementation::drawBitmap> m_pDrawBitmap;
 #endif
 

@@ -16,12 +16,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #import <Foundation/Foundation.h>
 
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
-namespace imebra
-{
-class TCPListener;
-}
-#endif
+#include "imebra_macros.h"
 
 @class ImebraTCPPassiveAddress;
 @class ImebraTCPStream;
@@ -38,14 +33,10 @@ class TCPListener;
 ///////////////////////////////////////////////////////////////////////////////
 @interface ImebraTCPListener: NSObject
 
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
 {
     @public
-    imebra::TCPListener* m_pTcpListener;
-
+    define_imebra_object_holder(TCPListener);
 }
-
-#endif
 
     /// \brief Initializer.
     ///

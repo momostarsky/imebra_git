@@ -207,6 +207,32 @@ void pipeSequenceStream::terminate()
 }
 
 
+pipeSequenceStreamInput::pipeSequenceStreamInput(std::shared_ptr<pipeSequenceStream> pPipeStream):
+    m_pPipeStream(pPipeStream)
+{
+}
+
+size_t pipeSequenceStreamInput::read(std::uint8_t* pBuffer, size_t bufferLength)
+{
+    return m_pPipeStream->read(pBuffer, bufferLength);
+}
+
+void pipeSequenceStreamInput::terminate()
+{
+    m_pPipeStream->terminate();
+}
+
+pipeSequenceStreamOutput::pipeSequenceStreamOutput(std::shared_ptr<pipeSequenceStream> pPipeStream):
+    m_pPipeStream(pPipeStream)
+{
+}
+
+void pipeSequenceStreamOutput::write(const std::uint8_t* pBuffer, size_t bufferLength)
+{
+    m_pPipeStream->write(pBuffer, bufferLength);
+}
+
+
 } // namespace implementation
 
 } // namespace imebra

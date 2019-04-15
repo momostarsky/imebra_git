@@ -11,9 +11,20 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#include "imebra_bridgeStructures.h"
+#import "../include/imebraobjc/imebra_baseStreamInputOutput.h"
+
+#include <imebra/baseStreamOutput.h>
+#include "imebra_implementation_macros.h"
 
 @implementation ImebraBaseStreamInputOutput
+
+-(void)dealloc
+{
+    // Don't delete (same object as parent class)
+#if !__has_feature(objc_arc)
+    [super dealloc];
+#endif
+}
 
 @end
 

@@ -23,8 +23,19 @@ If you do not want to be bound by the GPL terms (such as the requirement
 namespace imebra
 {
 
-ModalityVOILUT::ModalityVOILUT(const DataSet& dataset): Transform(std::make_shared<imebra::implementation::transforms::modalityVOILUT>(dataset.m_pDataSet))
+ModalityVOILUT::ModalityVOILUT(const DataSet& dataset):
+    Transform(std::make_shared<imebra::implementation::transforms::modalityVOILUT>(getDataSetImplementation(dataset)))
 {
+}
+
+ModalityVOILUT::ModalityVOILUT(const ModalityVOILUT& source): Transform(source)
+{
+}
+
+ModalityVOILUT& ModalityVOILUT::operator=(const ModalityVOILUT& source)
+{
+    Transform::operator =(source);
+    return *this;
 }
 
 ModalityVOILUT::~ModalityVOILUT()

@@ -32,29 +32,29 @@ TEST(numericHandlerTest, testDouble)
 {
     for(size_t scanVR(0); scanVR != sizeof(floatTags) / sizeof(tagVR_t); ++scanVR)
     {
-        DataSet testDataSet;
+        MutableDataSet testDataSet;
 
         {
-            std::unique_ptr<WritingDataHandlerNumeric> handler(testDataSet.getWritingDataHandlerNumeric(TagId(10, 10), 0, floatTags[scanVR]));
-            handler->setDouble(0, 5.6);
-            handler->setDouble(1, 3.6);
-            handler->setDouble(3, 2.6);
-            handler->setSignedLong(4, 10);
-            handler->setUnsignedLong(5, 20);
-            handler->setString(6, "123.7");
-            handler->setUnicodeString(7, L"124.9");
-            ASSERT_THROW(handler->setDate(8, Date(2000, 1, 1, 0, 0, 0, 0, 0, 0)), DataHandlerConversionError);
-            ASSERT_THROW(handler->setAge(8, Age(3, ageUnit_t::days)), DataHandlerConversionError);
-            ASSERT_THROW(handler->setString(8, "test"), DataHandlerConversionError);
+            WritingDataHandlerNumeric handler = testDataSet.getWritingDataHandlerNumeric(TagId(10, 10), 0, floatTags[scanVR]);
+            handler.setDouble(0, 5.6);
+            handler.setDouble(1, 3.6);
+            handler.setDouble(3, 2.6);
+            handler.setSignedLong(4, 10);
+            handler.setUnsignedLong(5, 20);
+            handler.setString(6, "123.7");
+            handler.setUnicodeString(7, L"124.9");
+            ASSERT_THROW(handler.setDate(8, Date(2000, 1, 1, 0, 0, 0, 0, 0, 0)), DataHandlerConversionError);
+            ASSERT_THROW(handler.setAge(8, Age(3, ageUnit_t::days)), DataHandlerConversionError);
+            ASSERT_THROW(handler.setString(8, "test"), DataHandlerConversionError);
 
-            ASSERT_EQ(floatTags[scanVR], handler->getDataType());
+            ASSERT_EQ(floatTags[scanVR], handler.getDataType());
 
-            ASSERT_TRUE(handler->isSigned());
-            ASSERT_TRUE(handler->isFloat());
+            ASSERT_TRUE(handler.isSigned());
+            ASSERT_TRUE(handler.isFloat());
         }
 
-        std::unique_ptr<ReadingDataHandlerNumeric> readingHandler(testDataSet.getReadingDataHandlerNumeric(TagId(10, 10), 0));
-        ASSERT_TRUE(readingHandler->isFloat());
+        ReadingDataHandlerNumeric readingHandler = testDataSet.getReadingDataHandlerNumeric(TagId(10, 10), 0);
+        ASSERT_TRUE(readingHandler.isFloat());
 
         if(floatTags[scanVR] == tagVR_t::FL || floatTags[scanVR] == tagVR_t::OF)
         {
@@ -124,34 +124,34 @@ TEST(numericHandlerTest, testInteger)
 {
     for(size_t scanVR(0); scanVR != sizeof(integerTags) / sizeof(tagVR_t); ++scanVR)
     {
-        DataSet testDataSet;
+        MutableDataSet testDataSet;
 
         {
-            std::unique_ptr<WritingDataHandlerNumeric> handler(testDataSet.getWritingDataHandlerNumeric(TagId(10, 10), 0, integerTags[scanVR]));
-            handler->setDouble(0, 5.6);
-            handler->setDouble(1, 3.6);
-            handler->setDouble(3, 2.6);
-            handler->setSignedLong(4, 10);
-            handler->setUnsignedLong(5, 20);
-            handler->setString(6, "123.7");
-            handler->setUnicodeString(7, L"124.9");
-            ASSERT_THROW(handler->setDate(8, Date(2000, 1, 1, 0, 0, 0, 0, 0, 0)), DataHandlerConversionError);
-            ASSERT_THROW(handler->setAge(8, Age(3, ageUnit_t::days)), DataHandlerConversionError);
-            ASSERT_THROW(handler->setString(8, "test"), DataHandlerConversionError);
+            WritingDataHandlerNumeric handler = testDataSet.getWritingDataHandlerNumeric(TagId(10, 10), 0, integerTags[scanVR]);
+            handler.setDouble(0, 5.6);
+            handler.setDouble(1, 3.6);
+            handler.setDouble(3, 2.6);
+            handler.setSignedLong(4, 10);
+            handler.setUnsignedLong(5, 20);
+            handler.setString(6, "123.7");
+            handler.setUnicodeString(7, L"124.9");
+            ASSERT_THROW(handler.setDate(8, Date(2000, 1, 1, 0, 0, 0, 0, 0, 0)), DataHandlerConversionError);
+            ASSERT_THROW(handler.setAge(8, Age(3, ageUnit_t::days)), DataHandlerConversionError);
+            ASSERT_THROW(handler.setString(8, "test"), DataHandlerConversionError);
 
-            ASSERT_EQ(integerTags[scanVR], handler->getDataType());
+            ASSERT_EQ(integerTags[scanVR], handler.getDataType());
 
             ASSERT_EQ(integerTags[scanVR] == tagVR_t::OL ||
                       integerTags[scanVR] == tagVR_t::SB ||
                       integerTags[scanVR] == tagVR_t::SL ||
                       integerTags[scanVR] == tagVR_t::SS,
-                      handler->isSigned());
+                      handler.isSigned());
 
-            ASSERT_FALSE(handler->isFloat());
+            ASSERT_FALSE(handler.isFloat());
         }
 
-        std::unique_ptr<ReadingDataHandlerNumeric> readingHandler(testDataSet.getReadingDataHandlerNumeric(TagId(10, 10), 0));
-        ASSERT_FALSE(readingHandler->isFloat());
+        ReadingDataHandlerNumeric readingHandler = testDataSet.getReadingDataHandlerNumeric(TagId(10, 10), 0);
+        ASSERT_FALSE(readingHandler.isFloat());
 
         ASSERT_DOUBLE_EQ(5.0, testDataSet.getDouble(TagId(10, 10), 0));
         ASSERT_DOUBLE_EQ(3.0, testDataSet.getDouble(TagId(10, 10), 1));
@@ -214,33 +214,33 @@ TEST(numericHandlerTest, testCopyFrom)
 
         for(size_t sourceVR(0); sourceVR != sizeof(allTags) / sizeof(tagVR_t); ++sourceVR)
         {
-            DataSet testDataSet;
+            MutableDataSet testDataSet;
 
             {
-                std::unique_ptr<WritingDataHandlerNumeric> handler(testDataSet.getWritingDataHandlerNumeric(TagId(10, 11), 0, allTags[sourceVR]));
+                WritingDataHandlerNumeric handler = testDataSet.getWritingDataHandlerNumeric(TagId(10, 11), 0, allTags[sourceVR]);
                 for(std::uint32_t fillData(0); fillData != 10; ++fillData)
                 {
-                    handler->setSignedLong(fillData, (std::int32_t)fillData);
+                    handler.setSignedLong(fillData, (std::int32_t)fillData);
                 }
             }
 
             {
-                std::unique_ptr<WritingDataHandlerNumeric> handler(testDataSet.getWritingDataHandlerNumeric(TagId(10, 10), 0, allTags[destVR]));
-                std::unique_ptr<ReadingDataHandlerNumeric> source(testDataSet.getReadingDataHandlerNumeric(TagId(10, 11), 0));
+                WritingDataHandlerNumeric handler = testDataSet.getWritingDataHandlerNumeric(TagId(10, 10), 0, allTags[destVR]);
+                ReadingDataHandlerNumeric source = testDataSet.getReadingDataHandlerNumeric(TagId(10, 11), 0);
 
-                handler->copyFrom(*source);
+                handler.copyFrom(source);
             }
 
-            std::unique_ptr<ReadingDataHandlerNumeric> source(testDataSet.getReadingDataHandlerNumeric(TagId(10, 11), 0));
-            std::unique_ptr<ReadingDataHandlerNumeric> dest(testDataSet.getReadingDataHandlerNumeric(TagId(10, 10), 0));
+            ReadingDataHandlerNumeric source = testDataSet.getReadingDataHandlerNumeric(TagId(10, 11), 0);
+            ReadingDataHandlerNumeric dest = testDataSet.getReadingDataHandlerNumeric(TagId(10, 10), 0);
 
-            ASSERT_EQ(10u, dest->getSize());
-            ASSERT_EQ(10u, source->getSize());
+            ASSERT_EQ(10u, dest.getSize());
+            ASSERT_EQ(10u, source.getSize());
 
             for(size_t checkData(0); checkData != 10; ++checkData)
             {
-                ASSERT_DOUBLE_EQ((double)checkData, dest->getDouble(checkData));
-                ASSERT_DOUBLE_EQ((double)checkData, source->getDouble(checkData));
+                ASSERT_DOUBLE_EQ((double)checkData, dest.getDouble(checkData));
+                ASSERT_DOUBLE_EQ((double)checkData, source.getDouble(checkData));
             }
 
         }
@@ -256,34 +256,34 @@ TEST(numericHandlerTest, testCopyTo)
 
         for(size_t sourceVR(0); sourceVR != sizeof(allTags) / sizeof(tagVR_t); ++sourceVR)
         {
-            DataSet testDataSet;
+            MutableDataSet testDataSet;
 
             {
-                std::unique_ptr<WritingDataHandlerNumeric> handler(testDataSet.getWritingDataHandlerNumeric(TagId(10, 11), 0, allTags[sourceVR]));
+                WritingDataHandlerNumeric handler = testDataSet.getWritingDataHandlerNumeric(TagId(10, 11), 0, allTags[sourceVR]);
                 for(std::uint32_t fillData(0); fillData != 10; ++fillData)
                 {
-                    handler->setSignedLong(fillData, (std::int32_t)fillData);
+                    handler.setSignedLong(fillData, (std::int32_t)fillData);
                 }
             }
 
             {
-                std::unique_ptr<WritingDataHandlerNumeric> handler(testDataSet.getWritingDataHandlerNumeric(TagId(10, 10), 0, allTags[destVR]));
-                handler->setSize(12);
-                std::unique_ptr<ReadingDataHandlerNumeric> source(testDataSet.getReadingDataHandlerNumeric(TagId(10, 11), 0));
+                WritingDataHandlerNumeric handler = testDataSet.getWritingDataHandlerNumeric(TagId(10, 10), 0, allTags[destVR]);
+                handler.setSize(12);
+                ReadingDataHandlerNumeric source = testDataSet.getReadingDataHandlerNumeric(TagId(10, 11), 0);
 
-                source->copyTo(*handler);
+                source.copyTo(handler);
             }
 
-            std::unique_ptr<ReadingDataHandlerNumeric> source(testDataSet.getReadingDataHandlerNumeric(TagId(10, 11), 0));
-            std::unique_ptr<ReadingDataHandlerNumeric> dest(testDataSet.getReadingDataHandlerNumeric(TagId(10, 10), 0));
+            ReadingDataHandlerNumeric source = testDataSet.getReadingDataHandlerNumeric(TagId(10, 11), 0);
+            ReadingDataHandlerNumeric dest = testDataSet.getReadingDataHandlerNumeric(TagId(10, 10), 0);
 
-            ASSERT_EQ(12u, dest->getSize());
-            ASSERT_EQ(10u, source->getSize());
+            ASSERT_EQ(12u, dest.getSize());
+            ASSERT_EQ(10u, source.getSize());
 
             for(size_t checkData(0); checkData != 10; ++checkData)
             {
-                ASSERT_DOUBLE_EQ((double)checkData, dest->getDouble(checkData));
-                ASSERT_DOUBLE_EQ((double)checkData, source->getDouble(checkData));
+                ASSERT_DOUBLE_EQ((double)checkData, dest.getDouble(checkData));
+                ASSERT_DOUBLE_EQ((double)checkData, source.getDouble(checkData));
             }
 
         }

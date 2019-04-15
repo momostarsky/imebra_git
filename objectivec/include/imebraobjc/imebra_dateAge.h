@@ -15,14 +15,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #define imebraObjcDateAge__INCLUDED_
 
 #import <Foundation/Foundation.h>
-
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
-namespace imebra
-{
-struct Age;
-struct Date;
-}
-#endif
+#include "imebra_macros.h"
 
 /// \enum ImebraAgeUnit_t
 /// \brief Used by ImebraAge::setAge() and ImebraAge::getAge() to specify the
@@ -43,13 +36,10 @@ typedef NS_ENUM(char, ImebraAgeUnit_t)
 ///////////////////////////////////////////////////////////////////////////////
 @interface ImebraAge: NSObject
 
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
 {
     @public
-    imebra::Age* m_pAge;
-
+    define_imebra_object_holder(Age);
 }
-#endif
 
     -(void)dealloc;
 
@@ -88,12 +78,10 @@ typedef NS_ENUM(char, ImebraAgeUnit_t)
 
 @interface ImebraDate: NSObject
 
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
 {
     @public
-    imebra::Date* m_pDate;
+    define_imebra_object_holder(Date);
 }
-#endif
 
     -(void)dealloc;
 

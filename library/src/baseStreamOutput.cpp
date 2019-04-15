@@ -22,12 +22,28 @@ If you do not want to be bound by the GPL terms (such as the requirement
 namespace imebra
 {
 
-BaseStreamOutput::BaseStreamOutput(std::shared_ptr<implementation::baseStreamOutput> pOutputStream): m_pOutputStream(pOutputStream)
+BaseStreamOutput::BaseStreamOutput(const BaseStreamOutput &source):
+    m_pOutputStream(getBaseStreamOutputImplementation(source))
 {
+}
+
+BaseStreamOutput::BaseStreamOutput(const std::shared_ptr<implementation::baseStreamOutput>& pOutputStream): m_pOutputStream(pOutputStream)
+{
+}
+
+BaseStreamOutput& BaseStreamOutput::operator=(const BaseStreamOutput& source)
+{
+    m_pOutputStream = getBaseStreamOutputImplementation(source);
+    return *this;
 }
 
 BaseStreamOutput::~BaseStreamOutput()
 {
+}
+
+const std::shared_ptr<implementation::baseStreamOutput>& getBaseStreamOutputImplementation(const BaseStreamOutput& baseStreamOutput)
+{
+    return baseStreamOutput.m_pOutputStream;
 }
 
 }

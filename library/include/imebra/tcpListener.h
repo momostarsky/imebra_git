@@ -28,7 +28,7 @@ namespace imebra
 
 namespace implementation
 {
-class tcpListener;
+    class tcpListener;
 }
 
 class TCPPassiveAddress;
@@ -47,8 +47,6 @@ class TCPStream;
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API TCPListener
 {
-    TCPListener(const TCPListener&) = delete;
-    TCPListener& operator=(const TCPListener&) = delete;
 
 public:
     /// \brief Constructor.
@@ -60,6 +58,23 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit TCPListener(const TCPPassiveAddress& address);
+
+    ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source TCPListener object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    TCPListener(const TCPListener& source);
+
+    ///
+    /// \brief Assign operator.
+    ///
+    /// \param source source TCPListener object
+    /// \return a reference to this TCPListener object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    TCPListener& operator=(const TCPListener& source);
 
     /// \brief Waits for an incoming connection on the listening socket.
     ///
@@ -73,7 +88,7 @@ public:
     ///         the returned TCPStream object will be owned by the caller
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    TCPStream* waitForConnection();
+    TCPStream waitForConnection();
 
     ///
     /// \brief Instruct the listener to terminate any pending action.
@@ -86,7 +101,8 @@ public:
     void terminate();
 
 #ifndef SWIG
-protected:
+private:
+    friend const std::shared_ptr<implementation::tcpListener>& getTCPListenerImplementation(const TCPListener& source);
     std::shared_ptr<implementation::tcpListener> m_pListener;
 #endif
 

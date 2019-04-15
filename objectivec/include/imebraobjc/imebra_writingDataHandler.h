@@ -15,6 +15,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #define imebraObjcWritingDataHandler__INCLUDED_
 
 #import <Foundation/Foundation.h>
+#include "imebra_macros.h"
 
 @class ImebraDate;
 @class ImebraAge;
@@ -44,10 +45,10 @@ If you do not want to be bound by the GPL terms (such as the requirement
 @interface ImebraWritingDataHandler: NSObject
 {
     @public
-    void* m_pWritingDataHandlerVoidPointer;
+    define_imebra_object_holder(WritingDataHandler);
 }
 
-    -(id)initWithImebraWritingDataHandler:(void*)pWritingDataHandler;
+    -(id)initWithImebraWritingDataHandler:define_imebra_parameter(WritingDataHandler);
 
     -(void)dealloc;
 

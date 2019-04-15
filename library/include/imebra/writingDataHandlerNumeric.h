@@ -22,27 +22,20 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <string>
 #include <memory>
 #include "definitions.h"
-#include "readWriteMemory.h"
+#include "mutableMemory.h"
 #include "writingDataHandler.h"
 
-#ifndef SWIG
 
 namespace imebra
 {
+
 namespace implementation
 {
 namespace handlers
 {
-class writingDataHandlerNumericBase;
+    class writingDataHandlerNumericBase;
 }
 }
-}
-
-#endif
-
-
-namespace imebra
-{
 
 class ReadingDataHandlerNumeric;
 
@@ -55,28 +48,38 @@ class ReadingDataHandlerNumeric;
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API WritingDataHandlerNumeric: public WritingDataHandler
 {
-    WritingDataHandlerNumeric(const WritingDataHandlerNumeric&) = delete;
-    WritingDataHandlerNumeric& operator=(const WritingDataHandlerNumeric&) = delete;
 
-#ifndef SWIG
-    friend class Image;
-    friend class DataSet;
-    friend class Tag;
+    friend class MutableImage;
+    friend class MutableDataSet;
+    friend class MutableTag;
     friend class ReadingDataHandlerNumeric;
-private:
-    explicit WritingDataHandlerNumeric(std::shared_ptr<imebra::implementation::handlers::writingDataHandlerNumericBase> pDataHandler);
-#endif
 
 public:
+    ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source WritingDataHandlerNumeric object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    WritingDataHandlerNumeric(const WritingDataHandlerNumeric& source);
+
+    ///
+    /// \brief Assign operator.
+    ///
+    /// \param source source WritingDataHandlerNumeric object
+    /// \return a reference to this WritingDataHandlerNumeric object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    WritingDataHandlerNumeric& operator=(const WritingDataHandlerNumeric& source);
 
     virtual ~WritingDataHandlerNumeric();
 
-    /// \brief Return a ReadWriteMemory object referencing the raw buffer's data.
+    /// \brief Return a MutableMemory object referencing the raw buffer's data.
     ///
-    /// \return a ReadWriteMemory object referencing the raw buffer's data
+    /// \return a MutableMemory object referencing the raw buffer's data
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    ReadWriteMemory* getMemory() const;
+    MutableMemory getMemory() const;
 
     /// \brief Copy the content of the specified buffer into the content managed
     ///        by data handler.
@@ -159,6 +162,9 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     void copyFrom(const ReadingDataHandlerNumeric& source);
+
+protected:
+    explicit WritingDataHandlerNumeric(const std::shared_ptr<implementation::handlers::writingDataHandlerNumericBase>& pDataHandler);
 };
 
 }

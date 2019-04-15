@@ -10,21 +10,24 @@ namespace imebra
 namespace tests
 {
 
-void feedDataThread(Pipe& source, size_t maxBlockBytes, unsigned int delayMs, unsigned int closeWait)
+void feedDataThread(PipeStream& source, size_t maxBlockBytes, unsigned int delayMs, unsigned int closeWait)
 {
-    for(size_t blockBytes(1); blockBytes != maxBlockBytes; ++blockBytes)
     {
+        StreamWriter writer(source.getStreamOutput());
+        for(size_t blockBytes(1); blockBytes != maxBlockBytes; ++blockBytes)
+        {
 
-        std::vector<std::uint8_t> values(blockBytes);
-        for(size_t resetBlock(0); resetBlock != blockBytes; ++resetBlock)
-        {
-            values[resetBlock] = (std::uint8_t)(resetBlock & 0xff);
-        }
-        ReadMemory block((char*)values.data(), blockBytes);
-        source.feed(block);
-        if(delayMs != 0)
-        {
-            std::this_thread::sleep_for(std::chrono::milliseconds(delayMs));
+            std::vector<std::uint8_t> values(blockBytes);
+            for(size_t resetBlock(0); resetBlock != blockBytes; ++resetBlock)
+            {
+                values[resetBlock] = (std::uint8_t)(resetBlock & 0xff);
+            }
+            Memory block((char*)values.data(), blockBytes);
+            writer.write(block);
+            if(delayMs != 0)
+            {
+                std::this_thread::sleep_for(std::chrono::milliseconds(delayMs));
+            }
         }
     }
     source.close(closeWait);
@@ -32,23 +35,23 @@ void feedDataThread(Pipe& source, size_t maxBlockBytes, unsigned int delayMs, un
 
 TEST(pipeTest, sendReceive)
 {
-    Pipe source(1024);
+    PipeStream source(1024);
 
     size_t maxBlockBytes(3000);
     std::thread feedData(imebra::tests::feedDataThread, std::ref(source), maxBlockBytes, 0, 1000);
 
     std::string buffer;
 
-    ReadWriteMemory block(maxBlockBytes);
+    StreamReader reader(source.getStreamInput());
 
     for(size_t blockBytes(1); blockBytes != maxBlockBytes; ++blockBytes)
     {
         while(buffer.size() < blockBytes)
         {
-            size_t dataSize(source.sink(block));
-            size_t dummy;
-            const char* pData(block.data(&dummy));
-            buffer.append(pData, dataSize);
+            Memory block = reader.readSome(blockBytes);
+            size_t blockSize;
+            const char* pData(block.data(&blockSize));
+            buffer.append(pData, blockSize);
 
         }
         for(size_t checkBlock(0); checkBlock != blockBytes; ++checkBlock)
@@ -63,24 +66,24 @@ TEST(pipeTest, sendReceive)
 
 TEST(pipeTest, sendReceiveCloseAndWait)
 {
-    Pipe source(1024);
+    PipeStream source(1024);
 
     size_t maxBlockBytes(5);
     std::thread feedData(imebra::tests::feedDataThread, std::ref(source), maxBlockBytes, 0, 10000);
 
     std::string buffer;
 
-    ReadWriteMemory block(maxBlockBytes);
+    StreamReader reader(source.getStreamInput());
 
     for(size_t blockBytes(1); blockBytes != maxBlockBytes; ++blockBytes)
     {
         std::this_thread::sleep_for(std::chrono::seconds(1));
         while(buffer.size() < blockBytes)
         {
-            size_t dataSize(source.sink(block));
-            size_t dummy;
-            const char* pData(block.data(&dummy));
-            buffer.append(pData, dataSize);
+            Memory block = reader.read(maxBlockBytes);
+            size_t blockSize;
+            const char* pData(block.data(&blockSize));
+            buffer.append(pData, blockSize);
 
         }
         for(size_t checkBlock(0); checkBlock != blockBytes; ++checkBlock)
@@ -95,14 +98,14 @@ TEST(pipeTest, sendReceiveCloseAndWait)
 
 TEST(pipeTest, sendReceiveCloseNoWait)
 {
-    Pipe source(1024);
+    PipeStream source(1024);
 
     size_t maxBlockBytes(5);
     std::thread feedData(imebra::tests::feedDataThread, std::ref(source), maxBlockBytes, 0, 0);
 
     std::string buffer;
 
-    ReadWriteMemory block(maxBlockBytes);
+    StreamReader reader(source.getStreamInput());
 
     try
     {
@@ -111,10 +114,10 @@ TEST(pipeTest, sendReceiveCloseNoWait)
             std::this_thread::sleep_for(std::chrono::seconds(5));
             while(buffer.size() < blockBytes)
             {
-                size_t dataSize(source.sink(block));
-                size_t dummy;
-                const char* pData(block.data(&dummy));
-                buffer.append(pData, dataSize);
+                Memory block = reader.read(maxBlockBytes);
+                size_t blockSize;
+                const char* pData(block.data(&blockSize));
+                buffer.append(pData, blockSize);
 
             }
             for(size_t checkBlock(0); checkBlock != blockBytes; ++checkBlock)

@@ -27,35 +27,51 @@ Transform::~Transform()
 {
 }
 
-Transform::Transform(std::shared_ptr<imebra::implementation::transforms::transform> pTransform): m_pTransform(pTransform)
+Transform::Transform(const std::shared_ptr<imebra::implementation::transforms::transform>& pTransform): m_pTransform(pTransform)
 {}
+
+Transform::Transform(const Transform &source): m_pTransform(getTransformImplementation(source))
+{
+}
+
+Transform& Transform::operator=(const Transform& source)
+{
+    m_pTransform = getTransformImplementation(source);
+    return *this;
+}
+
+const std::shared_ptr<imebra::implementation::transforms::transform>& getTransformImplementation(const Transform& transform)
+{
+    return transform.m_pTransform;
+}
 
 bool Transform::isEmpty() const
 {
     return m_pTransform == 0 || m_pTransform->isEmpty();
 }
 
-Image* Transform::allocateOutputImage(const Image& inputImage, std::uint32_t width, std::uint32_t height) const
+MutableImage Transform::allocateOutputImage(const Image& inputImage, std::uint32_t width, std::uint32_t height) const
 {
-    return new Image(m_pTransform->allocateOutputImage(inputImage.m_pImage->getDepth(),
-                                                   inputImage.m_pImage->getColorSpace(),
-                                                   inputImage.m_pImage->getHighBit(),
-                                                   inputImage.m_pImage->getPalette(),
+    const std::shared_ptr<implementation::image> pImage(getImageImplementation(inputImage));
+    return MutableImage(m_pTransform->allocateOutputImage(pImage->getDepth(),
+                                                   pImage->getColorSpace(),
+                                                   pImage->getHighBit(),
+                                                   pImage->getPalette(),
                                                    width, height));
 }
 
 void Transform::runTransform(
             const Image& inputImage,
             std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight,
-            Image& outputImage,
+            MutableImage& outputImage,
             std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY) const
 {
-    m_pTransform->runTransform(inputImage.m_pImage,
+    m_pTransform->runTransform(getImageImplementation(inputImage),
         inputTopLeftX,
         inputTopLeftY,
         inputWidth,
         inputHeight,
-        outputImage.m_pImage,
+        getImageImplementation(outputImage),
         outputTopLeftX,
         outputTopLeftY);
 }

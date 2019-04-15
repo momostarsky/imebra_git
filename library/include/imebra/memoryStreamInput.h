@@ -22,8 +22,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 namespace imebra
 {
 
-class ReadMemory;
-class ReadWriteMemory;
+class Memory;
+class MutableMemory;
 
 ///
 /// \brief An input stream that reads data from a memory region.
@@ -31,8 +31,6 @@ class ReadWriteMemory;
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API MemoryStreamInput : public BaseStreamInput
 {
-    MemoryStreamInput(const MemoryStreamInput&) = delete;
-    MemoryStreamInput& operator=(const MemoryStreamInput&) = delete;
 
 public:
     /// \brief Constructor.
@@ -40,14 +38,24 @@ public:
     /// \param memory the memory region from which the stream will read the data
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    explicit MemoryStreamInput(const ReadMemory& memory);
+    explicit MemoryStreamInput(const Memory& memory);
 
-    /// \brief Constructor.
     ///
-    /// \param memory the memory region from which the stream will read the data
+    /// \brief Copy constructor.
+    ///
+    /// \param source source MemoryStreamInput object
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    explicit MemoryStreamInput(const ReadWriteMemory& memory);
+    MemoryStreamInput(const MemoryStreamInput& source);
+
+    ///
+    /// \brief Assign operator.
+    ///
+    /// \param source source MemoryStreamInput object
+    /// \return a reference to this MemoryStreamInput object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    MemoryStreamInput& operator=(const MemoryStreamInput& source);
 
     virtual ~MemoryStreamInput();
 };

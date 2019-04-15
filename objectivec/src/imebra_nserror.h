@@ -27,8 +27,7 @@ namespace imebra
 
 #define OBJC_IMEBRA_FUNCTION_START() try {
 
-#define OBJC_IMEBRA_FUNCTION_END() \
-    }\
+#define OBJC_IMEBRA_FUNCTION_END() } \
     catch(imebra::LutCorruptedError& e)\
     {\
         imebra::setNSError(e, pError, [ImebraLutCorruptedError class]);\
@@ -413,7 +412,7 @@ namespace imebra
     {\
         imebra::setNSError(e, pError, [ImebraDimseError class]);\
     }\
-    catch(imebra::StreamError& e)\
+    catch(const imebra::StreamError& e)\
     {\
         imebra::setNSError(e, pError, [ImebraStreamError class]);\
     }

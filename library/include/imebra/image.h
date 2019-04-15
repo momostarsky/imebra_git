@@ -19,8 +19,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #if !defined(imebraImage__INCLUDED_)
 #define imebraImage__INCLUDED_
 
-#ifndef SWIG
-
 #include <memory>
 #include <string>
 #include "definitions.h"
@@ -29,15 +27,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 namespace imebra
 {
+
 namespace implementation
 {
-class image;
+    class image;
 }
-}
-#endif
-
-namespace imebra
-{
 
 class CodecFactory;
 class Transform;
@@ -45,9 +39,8 @@ class VOILUT;
 class DataSet;
 class DrawBitmap;
 
-
 ///
-/// \brief Represents a DICOM image.
+/// \brief Represents an immutable DICOM image.
 ///
 /// The class manages an uncompressed DICOM image. Images are compressed
 /// when they are inserted into the DataSet via DataSet::setImage() and are
@@ -62,40 +55,25 @@ class DrawBitmap;
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API Image
 {
-    Image(const Image&) = delete;
-    Image& operator=(const Image&) = delete;
-
-#ifndef SWIG
-    friend class CodecFactory;
-    friend class Transform;
-    friend class VOILUT;
     friend class DataSet;
-    friend class DrawBitmap;
-
-private:
-    explicit Image(std::shared_ptr<imebra::implementation::image> pImage);
-#endif
 
 public:
-
-    /// \brief Constructor.
     ///
-    /// The memory for the image is not allocated by the constructor but only when
-    /// a WritingDataHandler is requested with getWritingDataHandler().
+    /// \brief Copy constructor.
     ///
-    /// \param width      the image width, in pixels
-    /// \param height     the image height, in pixels
-    /// \param depth      the channel values data types
-    /// \param colorSpace the Image's color space
-    /// \param highBit    the highest bit occupied by the channels' values
+    /// \param source source Image object
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    explicit Image(
-        std::uint32_t width,
-        std::uint32_t height,
-        bitDepth_t depth,
-        const std::string& colorSpace,
-        std::uint32_t highBit);
+    Image(const Image& source);
+
+    ///
+    /// \brief Assign operator.
+    ///
+    /// \param source source Image object
+    /// \return a reference to this Image object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    Image& operator=(const Image& source);
 
     /// \brief Destructor.
     ///
@@ -115,14 +93,6 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     double getHeightMm() const;
-
-    /// \brief Set the image's size, in millimiters.
-    ///
-    /// \param width   the image's width, in millimiters
-    /// \param height  the image's height, in millimiters
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    void setSizeMm(double width, double height);
 
     /// \brief Retrieve the image's width, in pixels.
     ///
@@ -148,22 +118,7 @@ public:
     ///         in read-only mode
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    ReadingDataHandlerNumeric* getReadingDataHandler() const;
-
-    /// \brief Retrieve a WritingDataHandlerNumeric object referencing the Image's
-    ///        memory (mutable).
-    ///
-    /// The memory referenced by the WritingDataHandlerNumeric object is
-    /// uninitialized.
-    ///
-    /// When the WritingDataHandlerNumeric is destroyed then the memory managed
-    /// by the WritingDataHandlerNumeric object replaces the old Image's memory.
-    ///
-    /// \return a WritingDataHandlerNumeric object referencing an uninitialized
-    ///         memory buffer that the client has to fill the the image's data
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    WritingDataHandlerNumeric* getWritingDataHandler();
+    ReadingDataHandlerNumeric getReadingDataHandler() const;
 
     /// \brief Retrieve the Image's color space
     ///
@@ -195,9 +150,99 @@ public:
 
 #ifndef SWIG
 protected:
+    explicit Image(const std::shared_ptr<imebra::implementation::image>& pImage);
+
+private:
+    friend const std::shared_ptr<implementation::image>& getImageImplementation(const Image& image);
     std::shared_ptr<implementation::image> m_pImage;
 #endif
 };
+
+///
+/// \brief Represents a mutable DICOM image.
+///
+/// The class manages an uncompressed DICOM image. Images are compressed
+/// when they are inserted into the DataSet via DataSet::setImage() and are
+/// decompressed when they are referenced by the Image class.
+///
+/// The image is stored in a contiguous area of memory: each channel's value
+/// can occupy 1, 2 or 4 bytes, according to the Image's data type.
+///
+/// Channels' values are always interleaved in the Image class, regardless
+/// of how they are stored in the DataSet object.
+///
+///////////////////////////////////////////////////////////////////////////////
+class IMEBRA_API MutableImage: public Image
+{
+
+    friend class Transform;
+
+public:
+
+    /// \brief Constructor.
+    ///
+    /// The memory for the image is not allocated by the constructor but only when
+    /// a WritingDataHandler is requested with getWritingDataHandler().
+    ///
+    /// \param width      the image width, in pixels
+    /// \param height     the image height, in pixels
+    /// \param depth      the channel values data types
+    /// \param colorSpace the Image's color space
+    /// \param highBit    the highest bit occupied by the channels' values
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    explicit MutableImage(
+        std::uint32_t width,
+        std::uint32_t height,
+        bitDepth_t depth,
+        const std::string& colorSpace,
+        std::uint32_t highBit);
+
+    ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source MutableImage object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    MutableImage(const MutableImage& source);
+
+    ///
+    /// \brief Assign operator.
+    ///
+    /// \param source source MutableImage object
+    /// \return a reference to this MutableImage object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    MutableImage& operator=(const MutableImage& source);
+
+    /// \brief Set the image's size, in millimiters.
+    ///
+    /// \param width   the image's width, in millimiters
+    /// \param height  the image's height, in millimiters
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    void setSizeMm(double width, double height);
+
+    /// \brief Retrieve a WritingDataHandlerNumeric object referencing the Image's
+    ///        memory (mutable).
+    ///
+    /// The memory referenced by the WritingDataHandlerNumeric object is
+    /// uninitialized.
+    ///
+    /// When the WritingDataHandlerNumeric is destroyed then the memory managed
+    /// by the WritingDataHandlerNumeric object replaces the old Image's memory.
+    ///
+    /// \return a WritingDataHandlerNumeric object referencing an uninitialized
+    ///         memory buffer that the client has to fill the the image's data
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    WritingDataHandlerNumeric getWritingDataHandler();
+
+protected:
+    explicit MutableImage(std::shared_ptr<imebra::implementation::image> pImage);
+
+};
+
 
 }
 

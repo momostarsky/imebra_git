@@ -26,13 +26,23 @@ TransformsChain::TransformsChain(): Transform(std::make_shared<imebra::implement
 {
 }
 
+TransformsChain::TransformsChain(const TransformsChain& source): Transform(source)
+{
+}
+
+TransformsChain& TransformsChain::operator=(const TransformsChain& source)
+{
+    Transform::operator =(source);
+    return *this;
+}
+
 TransformsChain::~TransformsChain()
 {
 }
 
 void TransformsChain::addTransform(const Transform& transform)
 {
-    ((imebra::implementation::transforms::transformsChain*)m_pTransform.get())->addTransform(transform.m_pTransform);
+    ((imebra::implementation::transforms::transformsChain*)m_pTransform.get())->addTransform(getTransformImplementation(transform));
 }
 
 }

@@ -16,6 +16,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #import "imebra_baseStreamInput.h"
 #import <Foundation/Foundation.h>
+#include "imebra_macros.h"
 
 #ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
 namespace imebra
@@ -42,10 +43,10 @@ class StreamReader;
 #ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
 {
     @public
-    imebra::StreamReader* m_pReader;
+    define_imebra_object_holder(StreamReader);
 }
 
-    -(id)initWithImebraStreamReader:(imebra::StreamReader*)pStreamReader;
+    -(id)initWithImebraStreamReader:define_imebra_parameter(StreamReader);
 #endif
 
     /// \brief Initializer.

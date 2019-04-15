@@ -11,7 +11,10 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#include "imebra_bridgeStructures.h"
+#include "imebra_nserror.h"
+#include "imebra_strings.h"
+
+#include <imebra/exceptions.h>
 
 namespace imebra
 {

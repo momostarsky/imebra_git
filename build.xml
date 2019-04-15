@@ -157,17 +157,6 @@ Slovenia
             </patternset>
         </fileset>
 
-        <fileset id="matches" dir="${build_release}/wrappers/javaWrapper/src/com/imebra">
-            <patternset refid="files" />
-            <contains text=", false);" />
-        </fileset>
-
-        <fail message="Found non managed memory objects in one or more files in '${build_release}/wrappers/javaWrapper/src/com/imebra'">
-            <condition>
-                <!-- Counter is 2 because TagsIds and VOIs return non-owned objects -->
-                <resourcecount when="greater" count="2" refid="matches" />
-            </condition>
-        </fail>
     </target>
 
     <!-- GO SWIG -->

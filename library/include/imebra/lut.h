@@ -24,20 +24,13 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "readingDataHandlerNumeric.h"
 #include "definitions.h"
 
-#ifndef SWIG
-
 namespace imebra
 {
+
 namespace implementation
 {
-class lut;
+    class lut;
 }
-}
-
-#endif
-
-namespace imebra
-{
 
 ///
 /// \brief This class represents Lookup Table.
@@ -45,17 +38,29 @@ namespace imebra
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API LUT
 {
-    LUT(const LUT&) = delete;
-    LUT& operator=(const LUT&) = delete;
 
-#ifndef SWIG
     friend class DataSet;
+    friend class MutableDataSet;
     friend class VOILUT;
-private:
-    explicit LUT(std::shared_ptr<imebra::implementation::lut> pLut);
-#endif
 
 public:
+    ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source LUT object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    LUT(const LUT& source);
+
+    ///
+    /// \brief Assign operator.
+    ///
+    /// \param source source LUT object
+    /// \return a reference to this LUT object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    LUT& operator=(const LUT& source);
+
     virtual ~LUT();
 
     /// \brief Returns the LUT's description.
@@ -65,7 +70,7 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     std::wstring getDescription() const;
 
-    ReadingDataHandlerNumeric* getReadingDataHandler() const;
+    ReadingDataHandlerNumeric getReadingDataHandler() const;
 
     /// \brief Return the number of bits used to store a LUT value.
     ///
@@ -85,9 +90,12 @@ public:
 
     std::uint32_t getMappedValue(std::int32_t index) const;
 
-
 #ifndef SWIG
 protected:
+    explicit LUT(const std::shared_ptr<imebra::implementation::lut>& pLut);
+
+private:
+    friend const std::shared_ptr<imebra::implementation::lut>& getLUTImplementation(const LUT& lut);
     std::shared_ptr<imebra::implementation::lut> m_pLut;
 #endif
 };

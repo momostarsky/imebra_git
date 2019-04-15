@@ -24,25 +24,19 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <string>
 #include "definitions.h"
 
-#ifndef SWIG
-
 namespace imebra
 {
+
 namespace implementation
 {
-class directoryRecord;
+    class directoryRecord;
 }
-}
-
-#endif
-
-namespace imebra
-{
 
 class DataSet;
+class MutableDataSet;
 
 ///
-/// \brief Represents a single DICOMDIR entry.
+/// \brief Represents a single immutable DICOMDIR entry.
 ///
 /// Each entry can be followed by a sibling entry (on the same depth level)
 /// or can point to its first child entry (one level deeper).
@@ -54,16 +48,27 @@ class DataSet;
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API DicomDirEntry
 {
-    DicomDirEntry(const DicomDirEntry&) = delete;
-    DicomDirEntry& operator=(const DicomDirEntry&) = delete;
 
-#ifndef SWIG
-	friend class DicomDir;
-private:
-    explicit DicomDirEntry(std::shared_ptr<imebra::implementation::directoryRecord> pDirectoryRecord);
-#endif
+    friend class DicomDir;
 
 public:
+
+    ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source DICOMDIR entry
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    DicomDirEntry(const DicomDirEntry& source);
+
+    ///
+    /// \brief Assignent operator.
+    ///
+    /// \param source source DICOMDIR entry
+    /// \return a reference to this DICOMDIR entry
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    DicomDirEntry& operator=(const DicomDirEntry& source);
 
     virtual ~DicomDirEntry();
 
@@ -72,7 +77,9 @@ public:
     /// \return the DataSet managed by the DicomDirEntry object
     /// 
     ///////////////////////////////////////////////////////////////////////////////
-    DataSet* getEntryDataSet();
+    DataSet getEntryDataSet() const;
+
+    bool hasNextEntry() const;
 
     /// \brief Return the next sibling entry (on the same depth level).
     /// 
@@ -83,7 +90,9 @@ public:
     ///         next sibling DicomDirEntry does not exist
     /// 
     ///////////////////////////////////////////////////////////////////////////////
-    DicomDirEntry* getNextEntry();
+    DicomDirEntry getNextEntry() const;
+
+    bool hasChildren() const;
 
     /// \brief Return the first child entry (one level deeper).
     /// 
@@ -93,22 +102,8 @@ public:
     ///         aren't any children
     /// 
     ///////////////////////////////////////////////////////////////////////////////
-    DicomDirEntry* getFirstChildEntry();
+    DicomDirEntry getFirstChildEntry() const;
 	
-    /// \brief Set the next sibling entry (one the same depth level).
-    /// 
-    /// \param nextEntry the next sibling DicomDirEntry object
-    /// 
-    ///////////////////////////////////////////////////////////////////////////////
-    void setNextEntry(const DicomDirEntry& nextEntry);
-
-    /// \brief Set the first child entry (one level deeper).
-    /// 
-    /// \param firstChildEntry the first child DicomDirEntry object
-    /// 
-    ///////////////////////////////////////////////////////////////////////////////
-    void setFirstChildEntry(const DicomDirEntry& firstChildEntry);
-
     /// \brief Returns the parts that form the name of the file referenced by the
     ///        DicomDirEntry object.
     /// 
@@ -121,28 +116,90 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     fileParts_t getFileParts() const;
 
-    /// \brief Set the parts that form the name of the file referenced by the
-    ///        DicomDirEntry object.
-    /// 
-    /// \param fileParts  a list of strings that form the name of the file 
-    ///                   referenced by the DicomDirEntry object. The last item 
-    ///                   in the list is the file name, while the preceding items 
-    ///                   contain the folders names.
-    ///                   For instance, on Linux the parts "folder0", "folder1", 
-    ///                   "fileName" represent the path "folder0/folder1/fileName"
-    /// 
-    ///////////////////////////////////////////////////////////////////////////////
-    void setFileParts(const fileParts_t& fileParts);
-
-    /// \brief 
-    directoryRecordType_t getType() const;
-
     std::string getTypeString() const;
 
 #ifndef SWIG
 protected:
+    explicit DicomDirEntry(const std::shared_ptr<imebra::implementation::directoryRecord>& pDirectoryRecord);
+
+private:
+    friend const std::shared_ptr<implementation::directoryRecord>& getDicomDirEntryImplementation(const DicomDirEntry& dicomDirEntry);
     std::shared_ptr<imebra::implementation::directoryRecord> m_pDirectoryRecord;
 #endif
+};
+
+
+///
+/// \brief Represents a single mutable DICOMDIR entry.
+///
+/// Each entry can be followed by a sibling entry (on the same depth level)
+/// or can point to its first child entry (one level deeper).
+///
+/// Each DicomDirEntry object manages a DataSet which is used to store the
+/// entry's data. The DataSet objects managed by DicomDirEntry objects are
+/// inserted as sequence items into the DicomDir's DataSet.
+///
+///////////////////////////////////////////////////////////////////////////////
+class IMEBRA_API MutableDicomDirEntry: public DicomDirEntry
+{
+    friend class MutableDicomDir;
+
+public:
+    ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source mutable DICOMDIR entry
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    MutableDicomDirEntry(const MutableDicomDirEntry& source);
+
+    ///
+    /// \brief Assignent operator.
+    ///
+    /// \param source source mutable DICOMDIR entry
+    /// \return a reference to this mutable DICOMDIR entry
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    MutableDicomDirEntry& operator=(const MutableDicomDirEntry& source);
+
+    /// \brief Return the MutableDataSet managed by the MutableDicomDirEntry
+    ///        object.
+    ///
+    /// \return the MutableDataSet managed by the MutableDicomDirEntry object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    MutableDataSet getEntryDataSet();
+
+    /// \brief Set the next sibling entry (one the same depth level).
+    ///
+    /// \param nextEntry the next sibling DicomDirEntry object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    void setNextEntry(const DicomDirEntry& nextEntry);
+
+    /// \brief Set the first child entry (one level deeper).
+    ///
+    /// \param firstChildEntry the first child DicomDirEntry object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    void setFirstChildEntry(const DicomDirEntry& firstChildEntry);
+
+    /// \brief Set the parts that form the name of the file referenced by the
+    ///        DicomDirEntry object.
+    ///
+    /// \param fileParts  a list of strings that form the name of the file
+    ///                   referenced by the DicomDirEntry object. The last item
+    ///                   in the list is the file name, while the preceding items
+    ///                   contain the folders names.
+    ///                   For instance, on Linux the parts "folder0", "folder1",
+    ///                   "fileName" represent the path "folder0/folder1/fileName"
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    void setFileParts(const fileParts_t& fileParts);
+
+protected:
+    explicit MutableDicomDirEntry(const std::shared_ptr<imebra::implementation::directoryRecord>& pDirectoryRecord);
+
 };
 
 }

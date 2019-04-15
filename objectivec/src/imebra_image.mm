@@ -11,36 +11,34 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#include "imebra_bridgeStructures.h"
+#import "../include/imebraobjc/imebra_image.h"
+#import "../include/imebraobjc/imebra_readingDataHandler.h"
+#import "../include/imebraobjc/imebra_readingDataHandlerNumeric.h"
+#import "../include/imebraobjc/imebra_writingDataHandler.h"
+#import "../include/imebraobjc/imebra_writingDataHandlerNumeric.h"
+
+#include "imebra_implementation_macros.h"
+#include "imebra_nserror.h"
+#include "imebra_strings.h"
+#include <imebra/image.h>
+#include <imebra/readingDataHandler.h>
+#include <imebra/readingDataHandlerNumeric.h>
+#include <imebra/writingDataHandler.h>
+#include <imebra/writingDataHandlerNumeric.h>
 
 @implementation ImebraImage
 
--(id)initWithImebraImage:(imebra::Image*)pImage
+-(id)initWithImebraImage:define_imebra_parameter(Image)
 {
-    m_pImage = 0;
+    reset_imebra_object_holder(Image);
     self =  [super init];
     if(self)
     {
-        m_pImage = pImage;
+        set_imebra_object_holder(Image, get_imebra_parameter(Image));
     }
     else
     {
-        delete pImage;
-    }
-    return self;
-}
-
--(id)initWithWidth:(unsigned int)width height:(unsigned int)height depth:(ImebraBitDepth_t)depth colorSpace:(NSString*)colorSpace highBit:(unsigned int)highBit
-{
-    self =  [super init];
-    if(self)
-    {
-        m_pImage = new imebra::Image(
-                                 width,
-                                 height,
-                                 (imebra::bitDepth_t)depth,
-                                 imebra::NSStringToString(colorSpace),
-                                 highBit);
+        delete get_imebra_parameter(Image);
     }
     return self;
 }
@@ -51,7 +49,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 ///////////////////////////////////////////////////////////////////////////////
 -(void)dealloc
 {
-    delete m_pImage;
+    delete_imebra_object_holder(Image);
 #if !__has_feature(objc_arc)
     [super dealloc];
 #endif
@@ -61,69 +59,69 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraReadingDataHandlerNumeric alloc] initWithImebraReadingDataHandler:m_pImage->getReadingDataHandler()];
+    return [[ImebraReadingDataHandlerNumeric alloc] initWithImebraReadingDataHandler:new imebra::ReadingDataHandler(get_imebra_object_holder(Image)->getReadingDataHandler())];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+}
+
+-(unsigned int) width
+{
+    return get_imebra_object_holder(Image)->getWidth();
+}
+
+-(unsigned int) height
+{
+    return get_imebra_object_holder(Image)->getHeight();
+}
+
+-(NSString*) colorSpace
+{
+    return imebra::stringToNSString(get_imebra_object_holder(Image)->getColorSpace());
+}
+
+-(unsigned int) getChannelsNumber
+{
+    return get_imebra_object_holder(Image)->getChannelsNumber();
+}
+
+-(ImebraBitDepth_t) getDepth
+{
+    return (ImebraBitDepth_t)get_imebra_object_holder(Image)->getDepth();
+}
+
+-(unsigned int) getHighBit
+{
+    return get_imebra_object_holder(Image)->getHighBit();
+}
+
+@end
+
+
+@implementation ImebraMutableImage
+
+
+-(id)initWithWidth:(unsigned int)width height:(unsigned int)height depth:(ImebraBitDepth_t)depth colorSpace:(NSString*)colorSpace highBit:(unsigned int)highBit
+{
+    self =  [super init];
+    if(self)
+    {
+        set_imebra_object_holder(Image, new imebra::MutableImage(
+                                     width,
+                                     height,
+                                     (imebra::bitDepth_t)depth,
+                                     imebra::NSStringToString(colorSpace),
+                                     highBit));
+    }
+    return self;
 }
 
 -(ImebraWritingDataHandlerNumeric*) getWritingDataHandler:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraWritingDataHandlerNumeric alloc] initWithImebraWritingDataHandler:m_pImage->getWritingDataHandler()];
+    return [[ImebraWritingDataHandlerNumeric alloc] initWithImebraWritingDataHandler:new imebra::WritingDataHandler(((imebra::MutableImage*)get_imebra_object_holder(Image))->getWritingDataHandler())];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
 
--(double) widthMm
-{
-    return m_pImage->getWidthMm();
-}
-
--(double) heightMm
-{
-    return m_pImage->getHeightMm();
-}
-
--(void) setWidthMm:(double)width
-{
-    m_pImage->setSizeMm(width, m_pImage->getHeightMm());
-}
-
--(void) setHeightMm:(double)height
-{
-    m_pImage->setSizeMm(m_pImage->getWidthMm(), height);
-}
-
--(unsigned int) width
-{
-    return m_pImage->getWidth();
-}
-
--(unsigned int) height
-{
-    return m_pImage->getHeight();
-}
-
--(NSString*) colorSpace
-{
-    return imebra::stringToNSString(m_pImage->getColorSpace());
-}
-
--(unsigned int) getChannelsNumber
-{
-    return m_pImage->getChannelsNumber();
-}
-
--(ImebraBitDepth_t) getDepth
-{
-    return (ImebraBitDepth_t)m_pImage->getDepth();
-}
-
--(unsigned int) getHighBit
-{
-    return m_pImage->getHighBit();
-}
-
 @end
-

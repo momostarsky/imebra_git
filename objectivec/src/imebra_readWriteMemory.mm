@@ -11,28 +11,32 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#include "imebra_bridgeStructures.h"
+#import "../include/imebraobjc/imebra_readWriteMemory.h"
 
-@implementation ImebraReadWriteMemory
+#include "imebra_implementation_macros.h"
+#include "imebra_nserror.h"
+#include <imebra/mutableMemory.h>
 
--(id)initWithImebraReadWriteMemory:(imebra::ReadWriteMemory*)pReadWriteMemory
+@implementation ImebraMutableMemory
+
+-(id)initWithImebraMutableMemory:define_imebra_parameter(MutableMemory)
 {
-    return [super initWithImebraReadMemory:pReadWriteMemory];
+    return [super initWithImebraMemory:get_imebra_parameter(MutableMemory)];
 }
 
 -(id)init
 {
-    return [super initWithImebraReadMemory:new imebra::ReadWriteMemory()];
+    return [super initWithImebraMemory:new imebra::MutableMemory()];
 }
 
 -(id)initWithSize:(unsigned int)size
 {
-    return [super initWithImebraReadMemory:new imebra::ReadWriteMemory((size_t)size)];
+    return [super initWithImebraMemory:new imebra::MutableMemory((size_t)size)];
 }
 
--(id)initWithMemory:(ImebraReadMemory*)source
+-(id)initWithMemory:(ImebraMemory*)source
 {
-    return [super initWithImebraReadMemory:(new imebra::ReadWriteMemory(*(source->m_pMemory)))];
+    return [super initWithImebraMemory:(new imebra::MutableMemory(*get_other_imebra_object_holder(source, Memory)))];
 }
 
 -(id)initWithData:(NSData*)pSource
@@ -40,7 +44,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     self = [super init];
     if(self)
     {
-        self->m_pMemory = new imebra::ReadWriteMemory((char*)pSource.bytes, (size_t)pSource.length);
+        set_imebra_object_holder(Memory, new imebra::MutableMemory((char*)pSource.bytes, (size_t)pSource.length));
     }
     return self;
 }
@@ -52,11 +56,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #endif
 }
 
--(void)copyFrom:(ImebraReadMemory*)source error:(NSError**)pError
+-(void)copyFrom:(ImebraMemory*)source error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    ((imebra::ReadWriteMemory*)m_pMemory)->copyFrom(*(source->m_pMemory));
+    ((imebra::MutableMemory*)get_imebra_object_holder(Memory))->copyFrom(*get_other_imebra_object_holder(source, Memory));
 
     OBJC_IMEBRA_FUNCTION_END();
 }
@@ -65,7 +69,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    ((imebra::ReadWriteMemory*)m_pMemory)->clear();
+    ((imebra::MutableMemory*)get_imebra_object_holder(Memory))->clear();
 
     OBJC_IMEBRA_FUNCTION_END();
 }
@@ -74,7 +78,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    ((imebra::ReadWriteMemory*)m_pMemory)->resize((size_t)newSize);
+    ((imebra::MutableMemory*)get_imebra_object_holder(Memory))->resize((size_t)newSize);
 
     OBJC_IMEBRA_FUNCTION_END();
 }
@@ -83,7 +87,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    ((imebra::ReadWriteMemory*)m_pMemory)->reserve((size_t)reserveSize);
+    ((imebra::MutableMemory*)get_imebra_object_holder(Memory))->reserve((size_t)reserveSize);
 
     OBJC_IMEBRA_FUNCTION_END();
 }
@@ -92,7 +96,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    ((imebra::ReadWriteMemory*)m_pMemory)->assign((char*)pSource.bytes, (size_t)pSource.length);
+    ((imebra::MutableMemory*)get_imebra_object_holder(Memory))->assign((char*)pSource.bytes, (size_t)pSource.length);
 
     OBJC_IMEBRA_FUNCTION_END();
 }
@@ -101,7 +105,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    ((imebra::ReadWriteMemory*)m_pMemory)->assignRegion((char*)pSource.bytes, (size_t)pSource.length, (size_t)destinationOffset);
+    ((imebra::MutableMemory*)get_imebra_object_holder(Memory))->assignRegion((char*)pSource.bytes, (size_t)pSource.length, (size_t)destinationOffset);
 
     OBJC_IMEBRA_FUNCTION_END();
 }

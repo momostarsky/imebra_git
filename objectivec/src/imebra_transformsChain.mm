@@ -11,24 +11,28 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#include "imebra_bridgeStructures.h"
+#include "../include/imebraobjc/imebra_transformsChain.h"
+
+#include "imebra_implementation_macros.h"
+
+#include <imebra/transformsChain.h>
 
 @implementation ImebraTransformsChain
 
 -(id)init
 {
-    m_pTransform = 0;
+    reset_imebra_object_holder(Transform);
     self = [super init];
     if(self)
     {
-        m_pTransform = new imebra::TransformsChain();
+        set_imebra_object_holder(Transform, new imebra::TransformsChain());
     }
     return self;
 }
 
 -(void)addTransform:(ImebraTransform*)pTransform
 {
-    ((imebra::TransformsChain*)m_pTransform)->addTransform(*(pTransform->m_pTransform));
+    ((imebra::TransformsChain*)get_imebra_object_holder(Transform))->addTransform(*get_other_imebra_object_holder(pTransform, Transform));
 }
 
 

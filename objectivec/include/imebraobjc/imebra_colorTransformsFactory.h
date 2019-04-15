@@ -16,13 +16,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #import <Foundation/Foundation.h>
 
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
-namespace imebra
-{
-class ColorTransformsFactory;
-}
-#endif
-
 @class ImebraTransform;
 
 ///

@@ -11,7 +11,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#include "imebra_bridgeStructures.h"
+#import "../include/imebraobjc/imebra_tagId.h"
+
+#include "imebra_implementation_macros.h"
+
+#include <imebra/tagId.h>
 
 ///
 /// \brief Specifies an age, in days, weeks, months or years.
@@ -21,10 +25,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(id)init
 {
+    reset_imebra_object_holder(TagId);
     self = [super init];
     if(self)
     {
-        self->m_pTagId = new imebra::TagId();
+        set_imebra_object_holder(TagId, new imebra::TagId());
     }
     return self;
 }
@@ -32,10 +37,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(id)initWithId:(ImebraTagId_t)tagId
 {
+    reset_imebra_object_holder(TagId);
     self = [super init];
     if(self)
     {
-        self->m_pTagId = new imebra::TagId((imebra::tagId_t)tagId);
+        set_imebra_object_holder(TagId, new imebra::TagId((imebra::tagId_t)tagId));
     }
     return self;
 }
@@ -43,10 +49,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(id)initWithGroup:(unsigned short)groupId tag:(unsigned short)tagId
 {
+    reset_imebra_object_holder(TagId);
     self = [super init];
     if(self)
     {
-        self->m_pTagId = new imebra::TagId(groupId, tagId);
+        set_imebra_object_holder(TagId, new imebra::TagId(groupId, tagId));
     }
     return self;
 
@@ -54,10 +61,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(id)initWithGroup:(unsigned short)groupId groupOrder:(unsigned int)groupOrder tag:(unsigned short)tagId
 {
+    reset_imebra_object_holder(TagId);
     self = [super init];
     if(self)
     {
-        self->m_pTagId = new imebra::TagId(groupId, groupOrder, tagId);
+        set_imebra_object_holder(TagId, new imebra::TagId(groupId, groupOrder, tagId));
     }
     return self;
 
@@ -65,7 +73,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(void)dealloc
 {
-    delete m_pTagId;
+    delete_imebra_object_holder(TagId);
 #if !__has_feature(objc_arc)
     [super dealloc];
 #endif
@@ -73,17 +81,17 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(unsigned short) groupId
 {
-    return m_pTagId->getGroupId();
+    return get_imebra_object_holder(TagId)->getGroupId();
 }
 
 -(unsigned int) groupOrder
 {
-    return m_pTagId->getGroupOrder();
+    return get_imebra_object_holder(TagId)->getGroupOrder();
 }
 
 -(unsigned short) tagId
 {
-    return m_pTagId->getTagId();
+    return get_imebra_object_holder(TagId)->getTagId();
 }
 
 @end

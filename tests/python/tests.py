@@ -8,7 +8,7 @@ class TestDataSet(unittest.TestCase):
     #-----------------------
     def test_string(self):
 
-        dataset = DataSet()
+        dataset = MutableDataSet()
 
         patientName = 'Test patient'
         dataset.setString(TagId(tagId_t_PatientName_0010_0010), patientName)
@@ -19,9 +19,9 @@ class TestDataSet(unittest.TestCase):
     #----------------------
     def test_set_image(self):
 
-        dataset = DataSet()
+        dataset = MutableDataSet()
 
-        image = Image(300, 100, bitDepth_t_depthU16, "RGB", 15)
+        image = MutableImage(300, 100, bitDepth_t_depthU16, "RGB", 15)
 
 
         handler = image.getWritingDataHandler()
@@ -61,12 +61,12 @@ class TestMemoryStream(unittest.TestCase):
     #---------------
     def test_image(self):
 
-        dataset = DataSet()
+        dataset = MutableDataSet()
 
         patientName = 'Test patient'
         dataset.setString(TagId(tagId_t_PatientName_0010_0010), patientName)
 
-        streamMemory = ReadWriteMemory()
+        streamMemory = MutableMemory()
 
         streamOutput = MemoryStreamOutput(streamMemory)
 

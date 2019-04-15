@@ -19,26 +19,20 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #if !defined(imebraStreamWriter__INCLUDED_)
 #define imebraStreamWriter__INCLUDED_
 
-#ifndef SWIG
-
 #include <memory>
 #include "definitions.h"
 
 namespace imebra
 {
+
 namespace implementation
 {
-class streamWriter;
+    class streamWriter;
 }
-}
-#endif
-
-namespace imebra
-{
 
 class BaseStreamOutput;
-
 class CodecFactory;
+class Memory;
 
 ///
 /// \brief A StreamWriter is used to write data into a BaseStreamOutput
@@ -54,18 +48,11 @@ class CodecFactory;
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API StreamWriter
 {
-    StreamWriter(const StreamWriter&) = delete;
-    StreamWriter& operator=(const StreamWriter&) = delete;
 
-#ifndef SWIG
     friend class CodecFactory;
-    friend class Tag;
+    friend class MutableTag;
     friend class AssociationSCU;
     friend class AssociationSCP;
-
-private:
-    explicit StreamWriter(std::shared_ptr<implementation::streamWriter> pWriter);
-#endif
 
 public:
     /// \brief Constructor.
@@ -89,10 +76,55 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     explicit StreamWriter(const BaseStreamOutput& stream, size_t virtualStart, size_t virtualLength);
 
+    ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source StreamWriter object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    StreamWriter(const StreamWriter& source);
+
+    ///
+    /// \brief Assign operator.
+    ///
+    /// \param source source StreamWriter object
+    /// \return a reference to this StreamWriter object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    StreamWriter& operator=(const StreamWriter& source);
+
+    ///
+    /// \brief Write raw data into the stream.
+    ///
+    /// \param data         a pointer to the buffer which stores the data that
+    ///                     must be written intothe stream
+    /// \param bufferLength the number of bytes that must be written to the stream
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    void write(char* data, size_t dataSize);
+
+    ///
+    /// \brief Write raw data into the stream.
+    ///
+    /// \param memory a Memory object containing the data to write
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    void write(const Memory& memory);
+
+    ///
+    /// \brief Flush all the unwritten data into the controlled stream
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    void flush();
+
     virtual ~StreamWriter();
 
 #ifndef SWIG
 protected:
+    explicit StreamWriter(const std::shared_ptr<implementation::streamWriter>& pWriter);
+
+private:
+    friend const std::shared_ptr<implementation::streamWriter>& getStreamWriterImplementation(const StreamWriter& streamWriter);
     std::shared_ptr<implementation::streamWriter> m_pWriter;
 #endif
 };

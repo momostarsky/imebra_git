@@ -15,14 +15,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #define imebraObjcReadingDataHandler__INCLUDED_
 
 #import <Foundation/Foundation.h>
-
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
-namespace imebra
-{
-class ReadingDataHandler;
-}
-#endif
-
+#include "imebra_macros.h"
 
 @class ImebraDate;
 @class ImebraAge;
@@ -47,14 +40,12 @@ class ReadingDataHandler;
 ///////////////////////////////////////////////////////////////////////////////
 @interface ImebraReadingDataHandler: NSObject
 
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
 {
     @public
-    imebra::ReadingDataHandler* m_pReadingDataHandler;
+    define_imebra_object_holder(ReadingDataHandler);
 }
 
-    -(id)initWithImebraReadingDataHandler:(imebra::ReadingDataHandler*)pReadingDataHandler;
-#endif
+    -(id)initWithImebraReadingDataHandler:define_imebra_parameter(ReadingDataHandler);
 
     -(void)dealloc;
 

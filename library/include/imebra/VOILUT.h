@@ -53,14 +53,29 @@ class LUT;
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API VOILUT: public Transform
 {
-    VOILUT(const VOILUT&) = delete;
-    VOILUT& operator=(const VOILUT&) = delete;
 
 public:
     /// \brief Constructor.
     ///
     ///////////////////////////////////////////////////////////////////////////////
     VOILUT();
+
+    ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source VOILUT object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    VOILUT(const VOILUT& source);
+
+    ///
+    /// \brief Assign operator.
+    ///
+    /// \param source source VOILUT object
+    /// \return a reference to this VOILUT object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    VOILUT& operator=(const VOILUT& source);
 
     virtual ~VOILUT();
 

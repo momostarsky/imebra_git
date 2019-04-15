@@ -19,29 +19,20 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #if !defined(imebraStreamReader__INCLUDED_)
 #define imebraStreamReader__INCLUDED_
 
-#ifndef SWIG
-
 #include <memory>
 #include "definitions.h"
 
 namespace imebra
 {
+
 namespace implementation
 {
-class streamReader;
+    class streamReader;
 }
-
-}
-
-#endif
-
-
-namespace imebra
-{
 
 class BaseStreamInput;
-
 class CodecFactory;
+class Memory;
 
 ///
 /// \brief A StreamReader is used to read data from a BaseStreamInput
@@ -58,18 +49,11 @@ class CodecFactory;
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API StreamReader
 {
-    StreamReader(const StreamReader&) = delete;
-    StreamReader& operator=(const StreamReader&) = delete;
 
-#ifndef SWIG
     friend class CodecFactory;
     friend class Tag;
     friend class AssociationSCU;
     friend class AssociationSCP;
-
-private:
-    explicit StreamReader(std::shared_ptr<implementation::streamReader> pReader);
-#endif
 
 public:
     /// \brief Constructor.
@@ -94,6 +78,23 @@ public:
     explicit StreamReader(const BaseStreamInput& stream, size_t virtualStart, size_t virtualLength);
 
     ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source StreamReader object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    StreamReader(const StreamReader& source);
+
+    ///
+    /// \brief Assign operator.
+    ///
+    /// \param source source StreamReader object
+    /// \return a reference to this StreamReader object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    StreamReader& operator=(const StreamReader& source);
+
+    ///
     /// \brief Returns a virtual stream that has a restricted view into the
     ///        stream.
     ///
@@ -106,7 +107,44 @@ public:
     ///         stream
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    StreamReader* getVirtualStream(size_t virtualStreamLength);
+    StreamReader getVirtualStream(size_t virtualStreamLength);
+
+    ///
+    /// \brief Read data from the stream.
+    ///
+    /// \param destination     pointer to the destination buffer
+    /// \param destinationSize number of bytes to read
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    void read(char* destination, size_t destinationSize);
+
+    ///
+    /// \brief Read data from the stream.
+    ///
+    /// \param destination     pointer to the destination buffer
+    /// \param destinationSize maximum number of bytes to read
+    /// \return the number of bytes that have been read
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    size_t readSome(char* destination, size_t destinationSize);
+
+    ///
+    /// \brief Read data from the stream.
+    ///
+    /// \param readSize number of bytes to read
+    /// \return memory block containing the read data
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    Memory read(size_t readSize);
+
+    ///
+    /// \brief Read data from the stream.
+    ///
+    /// \param readSize maximum number of bytes to read
+    /// \return memory block containing the read data
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    Memory readSome(size_t readSize);
 
     ///
     /// \brief Cause the controlled stream to throw StreamClosedError during the
@@ -121,6 +159,10 @@ public:
 
 #ifndef SWIG
 protected:
+    explicit StreamReader(const std::shared_ptr<implementation::streamReader>& pReader);
+
+private:
+    friend const std::shared_ptr<implementation::streamReader>& getStreamReaderImplementation(const StreamReader& streamReader);
     std::shared_ptr<implementation::streamReader> m_pReader;
 #endif
 };

@@ -31,37 +31,41 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "streamWriter.h"
 #include "dataSet.h"
 
-#ifndef SWIG
-
 namespace imebra
 {
+
 namespace implementation
 {
-class data;
+    class data;
 }
-}
-
-#endif
-
-namespace imebra
-{
 
 ///
-/// \brief This class represents a DICOM tag.
+/// \brief This class represents an immutable DICOM tag.
 ///
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API Tag
 {
-    Tag(const Tag&) = delete;
-    Tag& operator=(const Tag&) = delete;
 
-#ifndef SWIG
     friend class DataSet;
-private:
-    explicit Tag(std::shared_ptr<imebra::implementation::data> pData);
-#endif
 
 public:
+    ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source Tag object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    Tag(const Tag& source);
+
+    ///
+    /// \brief Assign operator.
+    ///
+    /// \param source source Tag object
+    /// \return a reference to this Tag object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    Tag& operator=(const Tag& source);
+
     virtual ~Tag();
 
     /// \brief Returns the number of buffers in the tag.
@@ -102,23 +106,7 @@ public:
     /// \return a ReadingDataHandler object connected to the requested buffer
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    ReadingDataHandler* getReadingDataHandler(size_t bufferId) const;
-
-    /// \brief Retrieve a WritingDataHandler object connected to a specific
-    ///        tag's buffer.
-    ///
-    /// If the specified Tag does not exist then it creates a new tag with the VR
-    ///  specified in the tagVR parameter
-    ///
-    /// The returned WritingDataHandler is connected to a new buffer which is
-    /// updated and stored in the tag when WritingDataHandler is destroyed.
-    ///
-    /// \param bufferId the position where the new buffer has to be stored into the
-    ///                 tag. The first buffer position is 0
-    /// \return a WritingDataHandler object connected to a new Tag's buffer
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    WritingDataHandler* getWritingDataHandler(size_t bufferId);
+    ReadingDataHandler getReadingDataHandler(size_t bufferId) const;
 
     /// \brief Retrieve a ReadingDataHandlerNumeric object connected to the
     ///        Tag's numeric buffer.
@@ -133,7 +121,7 @@ public:
     /// \return a ReadingDataHandlerNumeric object connected to the Tag's buffer
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    ReadingDataHandlerNumeric* getReadingDataHandlerNumeric(size_t bufferId) const;
+    ReadingDataHandlerNumeric getReadingDataHandlerNumeric(size_t bufferId) const;
 
     /// \brief Retrieve a ReadingDataHandlerNumeric object connected to the
     ///        Tag's raw data buffer (8 bit unsigned integers).
@@ -149,7 +137,95 @@ public:
     ///         (raw content represented by 8 bit unsigned integers)
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    ReadingDataHandlerNumeric* getReadingDataHandlerRaw(size_t bufferId) const;
+    ReadingDataHandlerNumeric getReadingDataHandlerRaw(size_t bufferId) const;
+
+    /// \brief Get a StreamReader connected to a buffer's data.
+    ///
+    /// \param bufferId   the id of the buffer for which the StreamReader is
+    ///                    required. This parameter is usually 0
+    /// \return           the streamReader connected to the buffer's data.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    StreamReader getStreamReader(size_t bufferId) const;
+
+    /// \brief Retrieve an embedded DataSet.
+    ///
+    /// Sequence tags (VR=SQ) store embedded dicom structures.
+    ///
+    /// @param dataSetId  the ID of the sequence item to retrieve. Several sequence
+    ///                   items can be embedded in one tag.
+    /// @return           the sequence DataSet
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    const DataSet getSequenceItem(size_t dataSetId) const;
+
+    /// \brief Check for the existance of a sequence item.
+    ///
+    /// \param dataSetId the ID of the sequence item to check for
+    /// \return true if the sequence item exists, false otherwise
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    bool sequenceItemExists(size_t dataSetId) const;
+
+    /// \brief Get the tag's data type.
+    ///
+    /// @return the tag's data type
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    tagVR_t getDataType() const;
+
+#ifndef SWIG
+protected:
+    explicit Tag(const std::shared_ptr<imebra::implementation::data>& pData);
+
+private:
+    friend const std::shared_ptr<imebra::implementation::data>& getTagImplementation(const Tag& tag);
+    std::shared_ptr<imebra::implementation::data> m_pData;
+#endif
+};
+
+///
+/// \brief This class represents a mutable DICOM tag.
+///
+///////////////////////////////////////////////////////////////////////////////
+class IMEBRA_API MutableTag: public Tag
+{
+
+    friend class MutableDataSet;
+
+public:
+    ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source MutableTag object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    MutableTag(const MutableTag& source);
+
+    ///
+    /// \brief Assign operator.
+    ///
+    /// \param source source MutableTag object
+    /// \return a reference to this MutableTag object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    MutableTag& operator=(const MutableTag& source);
+
+    /// \brief Retrieve a WritingDataHandler object connected to a specific
+    ///        tag's buffer.
+    ///
+    /// If the specified Tag does not exist then it creates a new tag with the VR
+    ///  specified in the tagVR parameter
+    ///
+    /// The returned WritingDataHandler is connected to a new buffer which is
+    /// updated and stored in the tag when WritingDataHandler is destroyed.
+    ///
+    /// \param bufferId the position where the new buffer has to be stored into the
+    ///                 tag. The first buffer position is 0
+    /// \return a WritingDataHandler object connected to a new Tag's buffer
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    WritingDataHandler getWritingDataHandler(size_t bufferId);
 
     /// \brief Retrieve a WritingDataHandlerNumeric object connected to the
     ///        Tag's buffer.
@@ -165,7 +241,7 @@ public:
     /// \return a WritingDataHandlerNumeric object connected to a new Tag's buffer
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    WritingDataHandlerNumeric* getWritingDataHandlerNumeric(size_t bufferId);
+    WritingDataHandlerNumeric getWritingDataHandlerNumeric(size_t bufferId);
 
     /// \brief Retrieve a WritingDataHandlerNumeric object connected to the
     ///        Tag's raw data buffer (8 bit unsigned integers).
@@ -182,16 +258,7 @@ public:
     ///         (the buffer contains raw data of 8 bit integers)
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    WritingDataHandlerNumeric* getWritingDataHandlerRaw(size_t bufferId);
-
-    /// \brief Get a StreamReader connected to a buffer's data.
-    ///
-    /// \param bufferId   the id of the buffer for which the StreamReader is
-    ///                    required. This parameter is usually 0
-    /// \return           the streamReader connected to the buffer's data.
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    StreamReader* getStreamReader(size_t bufferId);
+    WritingDataHandlerNumeric getWritingDataHandlerRaw(size_t bufferId);
 
     /// \brief Get a StreamWriter connected to a buffer's data.
     ///
@@ -200,26 +267,7 @@ public:
     /// @return           the StreamWriter connected to the buffer's data.
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    StreamWriter* getStreamWriter(size_t bufferId);
-
-    /// \brief Retrieve an embedded DataSet.
-    ///
-    /// Sequence tags (VR=SQ) store embedded dicom structures.
-    ///
-    /// @param dataSetId  the ID of the sequence item to retrieve. Several sequence
-    ///                   items can be embedded in one tag.
-    /// @return           the sequence DataSet
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    DataSet* getSequenceItem(size_t dataSetId) const;
-
-    /// \brief Check for the existance of a sequence item.
-    ///
-    /// \param dataSetId the ID of the sequence item to check for
-    /// \return true if the sequence item exists, false otherwise
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    bool sequenceItemExists(size_t dataSetId) const;
+    StreamWriter getStreamWriter(size_t bufferId);
 
     /// \brief Insert a sequence item into the Tag.
     ///
@@ -244,17 +292,8 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     void appendSequenceItem(const DataSet& dataSet);
 
-    /// \brief Get the tag's data type.
-    ///
-    /// @return the tag's data type
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    tagVR_t getDataType() const;
-
-#ifndef SWIG
 protected:
-    std::shared_ptr<imebra::implementation::data> m_pData;
-#endif
+    explicit MutableTag(const std::shared_ptr<imebra::implementation::data>& pData);
 };
 
 }

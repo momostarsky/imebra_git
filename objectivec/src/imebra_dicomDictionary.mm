@@ -11,10 +11,12 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#include "imebra_bridgeStructures.h"
-
-
-@class ImebraTagId;
+#include "../include/imebraobjc/imebra_dicomDictionary.h"
+#include "../include/imebraobjc/imebra_tagId.h"
+#include "imebra_nserror.h"
+#include "imebra_strings.h"
+#include "imebra_implementation_macros.h"
+#include <imebra/dicomDictionary.h>
 
 @implementation ImebraDicomDictionary
 
@@ -22,7 +24,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return imebra::stringToNSString(imebra::DicomDictionary::getTagName(*(tagId->m_pTagId)));
+    return imebra::stringToNSString(imebra::DicomDictionary::getTagName(*get_other_imebra_object_holder(tagId, TagId)));
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -31,7 +33,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return (ImebraTagVR_t)(imebra::DicomDictionary::getTagType(*(tagId->m_pTagId)));
+    return (ImebraTagVR_t)(imebra::DicomDictionary::getTagType(*get_other_imebra_object_holder(tagId, TagId)));
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(ImebraAE);
 }

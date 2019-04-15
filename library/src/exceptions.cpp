@@ -141,6 +141,9 @@ DicomDirError::DicomDirError(const std::string& message): std::runtime_error(mes
 DicomDirCircularReferenceError::DicomDirCircularReferenceError(const std::string& message): DicomDirError(message)
 {}
 
+DicomDirNoEntryError::DicomDirNoEntryError(const std::string& message): DicomDirError(message)
+{}
+
 DicomDirUnknownDirectoryRecordTypeError::DicomDirUnknownDirectoryRecordTypeError(const std::string& message): DicomDirError(message)
 {}
 

@@ -23,27 +23,19 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <string>
 #include <memory>
 #include "definitions.h"
-#include "readMemory.h"
+#include "memory.h"
 #include "readingDataHandler.h"
-
-#ifndef SWIG
 
 namespace imebra
 {
+
 namespace implementation
 {
 namespace handlers
 {
-class readingDataHandlerNumericBase;
+    class readingDataHandlerNumericBase;
 }
 }
-}
-
-#endif
-
-
-namespace imebra
-{
 
 class WritingDataHandlerNumeric;
 
@@ -56,30 +48,39 @@ class WritingDataHandlerNumeric;
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API ReadingDataHandlerNumeric: public ReadingDataHandler
 {
-    ReadingDataHandlerNumeric(const ReadingDataHandlerNumeric&) = delete;
-    ReadingDataHandlerNumeric& operator=(const ReadingDataHandlerNumeric&) = delete;
 
 public:
-#ifndef SWIG
     friend class Image;
     friend class DataSet;
     friend class Tag;
     friend class LUT;
-    friend class WritingDataHandlerNumeric;
-
-private:
-    explicit ReadingDataHandlerNumeric(std::shared_ptr<imebra::implementation::handlers::readingDataHandlerNumericBase> pDataHandler);
-#endif
 
 public:
-    virtual ~ReadingDataHandlerNumeric();
-
-    /// \brief Return a ReadMemory object referencing the raw buffer's data.
     ///
-    /// \return a ReadMemory object referencing the raw buffer's data
+    /// \brief Copy constructor.
+    ///
+    /// \param source source ReadingDataHandlerNumeric object
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    ReadMemory* getMemory() const;
+    ReadingDataHandlerNumeric(const ReadingDataHandlerNumeric& source);
+
+    ///
+    /// \brief Assign operator.
+    ///
+    /// \param source source ReadingDataHandlerNumeric object
+    /// \return a reference to this ReadingDataHandlerNumeric object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    ReadingDataHandlerNumeric& operator=(const ReadingDataHandlerNumeric& source);
+
+    virtual ~ReadingDataHandlerNumeric();
+
+    /// \brief Return a Memory object referencing the raw buffer's data.
+    ///
+    /// \return a Memory object referencing the raw buffer's data
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    const Memory getMemory() const;
 
     /// \brief Copies the buffer's raw memory content into the specified buffer.
     ///
@@ -162,6 +163,9 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     void copyTo(const WritingDataHandlerNumeric& destination);
+
+protected:
+    explicit ReadingDataHandlerNumeric(const std::shared_ptr<implementation::handlers::readingDataHandlerNumericBase>& pDataHandler);
 };
 
 }

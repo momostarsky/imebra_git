@@ -18,7 +18,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #import <Foundation/Foundation.h>
 
 @class ImebraReadingDataHandlerNumeric;
-@class ImebraReadWriteMemory;
+@class ImebraMutableMemory;
 
 
 ///
@@ -30,14 +30,14 @@ If you do not want to be bound by the GPL terms (such as the requirement
 ///////////////////////////////////////////////////////////////////////////////
 @interface ImebraWritingDataHandlerNumeric: ImebraWritingDataHandler
 
-    /// \brief Return a ImebraReadWriteMemory object referencing the raw buffer's
+    /// \brief Return a ImebraMutableMemory object referencing the raw buffer's
     ///        data.
     ///
     /// \param pError set to a NSError derived class in case of error
-    /// \return a ImebraReadWriteMemory object referencing the raw buffer's data
+    /// \return a ImebraMutableMemory object referencing the raw buffer's data
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    -(ImebraReadWriteMemory*)getMemory:(NSError**)pError;
+    -(ImebraMutableMemory*)getMemory:(NSError**)pError;
 
     /// \brief Copy the content of the specified buffer into the content managed
     ///        by data handler.

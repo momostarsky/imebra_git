@@ -19,27 +19,20 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #if !defined(imebraTransformsChain__INCLUDED_)
 #define imebraTransformsChain__INCLUDED_
 
-#ifndef SWIG
-
 #include <memory>
 #include "definitions.h"
 #include "transform.h"
 
 namespace imebra
 {
+
 namespace implementation
 {
 namespace transforms
 {
-class transformsChain;
+    class transformsChain;
 }
 }
-}
-
-#endif
-
-namespace imebra
-{
 
 class DrawBitmap;
 
@@ -53,14 +46,29 @@ class DrawBitmap;
 
 class IMEBRA_API TransformsChain: public Transform
 {
-    TransformsChain(const TransformsChain&) = delete;
-    TransformsChain& operator=(const TransformsChain&) = delete;
 
 public:
     /// \brief Constructor.
     ///
     ///////////////////////////////////////////////////////////////////////////////
     TransformsChain();
+
+    ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source TransformsChain object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    TransformsChain(const TransformsChain& source);
+
+    ///
+    /// \brief Assign operator.
+    ///
+    /// \param source source TransformsChain object
+    /// \return a reference to this TransformsChain object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    TransformsChain& operator=(const TransformsChain& source);
 
     virtual ~TransformsChain();
 

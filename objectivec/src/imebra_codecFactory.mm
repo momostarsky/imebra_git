@@ -11,35 +11,44 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#include "imebra_bridgeStructures.h"
+#import "../include/imebraobjc/imebra_codecFactory.h"
+#import "../include/imebraobjc/imebra_dataset.h"
+#import "../include/imebraobjc/imebra_streamReader.h"
+#import "../include/imebraobjc/imebra_streamWriter.h"
+#include "imebra_implementation_macros.h"
+#include "imebra_nserror.h"
+#include "imebra_strings.h"
+#include <imebra/codecFactory.h>
+#include <imebra/dataSet.h>
+#include <imebra/streamReader.h>
 
 @implementation ImebraCodecFactory
 
 +(ImebraDataSet*)loadFromFile:(NSString*) fileName error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_IMEBRA_FUNCTION_START()
 
-    std::unique_ptr<imebra::DataSet> pDataSet(imebra::CodecFactory::load(imebra::NSStringToString(fileName)));
+    std::unique_ptr<imebra::DataSet> pDataSet(new imebra::DataSet(imebra::CodecFactory::load(imebra::NSStringToString(fileName))));
     return [[ImebraDataSet alloc] initWithImebraDataSet:pDataSet.release()];
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_IMEBRA_FUNCTION_END_RETURN(nil)
 }
 
 +(ImebraDataSet*)loadFromFileMaxSize:(NSString*) fileName maxBufferSize:(unsigned int)maxBufferSize error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_IMEBRA_FUNCTION_START()
 
-    std::unique_ptr<imebra::DataSet> pDataSet(imebra::CodecFactory::load(imebra::NSStringToString(fileName), maxBufferSize));
+    std::unique_ptr<imebra::DataSet> pDataSet(new imebra::DataSet(imebra::CodecFactory::load(imebra::NSStringToString(fileName), maxBufferSize)));
     return [[ImebraDataSet alloc] initWithImebraDataSet:pDataSet.release()];
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_IMEBRA_FUNCTION_END_RETURN(nil)
 }
 
 +(ImebraDataSet*)loadFromStream:(ImebraStreamReader*)pReader error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    std::unique_ptr<imebra::DataSet> pDataSet(imebra::CodecFactory::load(*(pReader->m_pReader)));
+    std::unique_ptr<imebra::DataSet> pDataSet(new imebra::DataSet(imebra::CodecFactory::load(*get_other_imebra_object_holder(pReader, StreamReader))));
     return [[ImebraDataSet alloc] initWithImebraDataSet:pDataSet.release()];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
@@ -49,7 +58,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    std::unique_ptr<imebra::DataSet> pDataSet(imebra::CodecFactory::load(*(pReader->m_pReader), maxBufferSize));
+    std::unique_ptr<imebra::DataSet> pDataSet(new imebra::DataSet(imebra::CodecFactory::load(*get_other_imebra_object_holder(pReader, StreamReader), maxBufferSize)));
     return [[ImebraDataSet alloc] initWithImebraDataSet:pDataSet.release()];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
@@ -59,7 +68,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    imebra::CodecFactory::save(*(pDataSet->m_pDataSet), imebra::NSStringToString(fileName), (imebra::codecType_t)codecType);
+    imebra::CodecFactory::save(*get_other_imebra_object_holder(pDataSet, DataSet), imebra::NSStringToString(fileName), (imebra::codecType_t)codecType);
 
     OBJC_IMEBRA_FUNCTION_END();
 }
@@ -68,7 +77,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    imebra::CodecFactory::save(*(pDataSet->m_pDataSet), *(pWriter->m_pWriter), (imebra::codecType_t)codecType);
+    imebra::CodecFactory::save(*get_other_imebra_object_holder(pDataSet, DataSet), *get_other_imebra_object_holder(pWriter, StreamWriter), (imebra::codecType_t)codecType);
 
     OBJC_IMEBRA_FUNCTION_END();
 

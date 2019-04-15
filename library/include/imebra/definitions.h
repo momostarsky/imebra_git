@@ -112,43 +112,6 @@ enum class bitDepth_t: std::uint32_t
 
 
 ///
-/// \brief Specifies the directory item's type.
-///
-///////////////////////////////////////////////////////////////////////////////
-enum class directoryRecordType_t: std::uint32_t
-{
-    patient,
-    study,
-    series,
-    image,
-    overlay,
-    modality_lut,
-    voi_lut,
-    curve,
-    topic,
-    visit,
-    results,
-    interpretation,
-    study_component,
-    stored_print,
-    rt_dose,
-    rt_structure_set,
-    rt_plan,
-    rt_treat_record,
-    presentation,
-    waveform,
-    sr_document,
-    key_object_doc,
-    spectroscopy,
-    raw_data,
-    registration,
-    fiducial,
-    mrdr,
-    endOfDirectoryRecordTypes
-};
-
-
-///
 /// \brief Defines the data stream & images codec.
 ///
 ///////////////////////////////////////////////////////////////////////////////

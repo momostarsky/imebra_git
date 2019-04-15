@@ -11,22 +11,29 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#include "imebra_bridgeStructures.h"
+#import "../include/imebraobjc/imebra_transform.h"
+#import "../include/imebraobjc/imebra_image.h"
+
+#include "imebra_implementation_macros.h"
+#include "imebra_nserror.h"
+
+#include <imebra/transform.h>
+#include <imebra/image.h>
 
 @implementation ImebraTransform
 
 
--(id)initWithImebraTransform:(imebra::Transform*)pTransform
+-(id)initWithImebraTransform:define_imebra_parameter(Transform)
 {
-    m_pTransform = 0;
+    reset_imebra_object_holder(Transform);
     self = [super init];
     if(self)
     {
-        m_pTransform = pTransform;
+        set_imebra_object_holder(Transform, get_imebra_parameter(Transform));
     }
     else
     {
-        delete pTransform;
+        delete get_imebra_parameter(Transform);
     }
     return self;
 }
@@ -34,7 +41,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(void)dealloc
 {
-    delete m_pTransform;
+    delete_imebra_object_holder(Transform);
 #if !__has_feature(objc_arc)
     [super dealloc];
 #endif
@@ -49,7 +56,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraImage alloc] initWithImebraImage:m_pTransform->allocateOutputImage(*(pInputImage->m_pImage), (std::uint32_t)width, (std::uint32_t)height)];
+    return [[ImebraImage alloc] initWithImebraImage:new imebra::Image(get_imebra_object_holder(Transform)->allocateOutputImage(*get_other_imebra_object_holder(pInputImage, Image), (std::uint32_t)width, (std::uint32_t)height))];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -61,28 +68,29 @@ If you do not want to be bound by the GPL terms (such as the requirement
     inputTopLeftY:(unsigned int)inputTopLeftY
     inputWidth:(unsigned int)inputWidth
     inputHeight:(unsigned int)inputHeight
-    outputImage:(ImebraImage*)pOutputImage
+    outputImage:(ImebraMutableImage*)pOutputImage
     outputTopLeftX:(unsigned int)outputTopLeftX
     outputTopLeftY:(unsigned int)outputTopLeftY
     error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    m_pTransform->runTransform(*(pInputImage->m_pImage),
-                               (std::uint32_t)inputTopLeftX,
-                               (std::uint32_t)inputTopLeftY,
-                               (std::uint32_t)inputWidth,
-                               (std::uint32_t)inputHeight,
-                               *(pOutputImage->m_pImage),
-                               (std::uint32_t)outputTopLeftX,
-                               (std::uint32_t)outputTopLeftY);
+    get_imebra_object_holder(Transform)->runTransform(
+                *get_other_imebra_object_holder(pInputImage, Image),
+                (std::uint32_t)inputTopLeftX,
+                (std::uint32_t)inputTopLeftY,
+                (std::uint32_t)inputWidth,
+                (std::uint32_t)inputHeight,
+                *(imebra::MutableImage*)get_other_imebra_object_holder(pOutputImage, Image),
+                (std::uint32_t)outputTopLeftX,
+                (std::uint32_t)outputTopLeftY);
 
     OBJC_IMEBRA_FUNCTION_END();
 }
 
 -(BOOL)isEmpty
 {
-    return (BOOL)(m_pTransform->isEmpty());
+    return (BOOL)(get_imebra_object_holder(Transform)->isEmpty());
 }
 
 @end

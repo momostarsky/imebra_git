@@ -15,14 +15,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #define imebraObjcBaseStreamInput__INCLUDED_
 
 #import <Foundation/Foundation.h>
-
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
-namespace imebra
-{
-class BaseStreamInput;
-class StreamTimeout;
-}
-#endif
+#import "imebra_macros.h"
 
 ///
 /// \brief This class represents a generic input stream.
@@ -43,13 +36,12 @@ class StreamTimeout;
 ///////////////////////////////////////////////////////////////////////////////
 @interface ImebraBaseStreamInput: NSObject
 
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
 {
     @public
-    imebra::BaseStreamInput* m_pBaseStreamInput;
+    define_imebra_object_holder(BaseStreamInput);
 }
 
-#endif
+    -(id)initWithImebraBaseStreamInput:define_imebra_parameter(BaseStreamInput);
 
     -(void)dealloc;
 
@@ -63,13 +55,10 @@ class StreamTimeout;
 ///////////////////////////////////////////////////////////////////////////////
 @interface ImebraStreamTimeout: NSObject
 
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
 {
     @public
-    imebra::StreamTimeout* m_pStreamTimeout;
+    define_imebra_object_holder(StreamTimeout);
 }
-
-#endif
 
     ///
     /// \brief Initializer. Starts a separate thread that closes the stream in

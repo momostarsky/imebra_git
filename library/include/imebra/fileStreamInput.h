@@ -32,8 +32,6 @@ namespace imebra
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API FileStreamInput : public BaseStreamInput
 {
-    FileStreamInput(const FileStreamInput&) = delete;
-    FileStreamInput& operator=(const FileStreamInput&) = delete;
 
 public:
     /// \brief Constructor.
@@ -52,6 +50,22 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     explicit FileStreamInput(const std::string& name);
 
+    ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source FileStreamInput object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    FileStreamInput(const FileStreamInput& source);
+
+    ///
+    /// \brief Assign operator.
+    ///
+    /// \param source source FileStreamInput object
+    /// \return a reference to this FileStreamInput object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    FileStreamInput& operator=(const FileStreamInput& source);
 
     /// \brief Destructor. Closes the file.
     ///

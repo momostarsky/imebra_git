@@ -17,19 +17,16 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #import <Foundation/Foundation.h>
 #import "imebra_dataset.h"
 
+#include "imebra_macros.h"
+
 @class ImebraReadingDataHandler;
 @class ImebraWritingDataHandler;
 @class ImebraReadingDataHandlerNumeric;
 @class ImebraWritingDataHandlerNumeric;
 @class ImebraStreamWriter;
 @class ImebraStreamReader;
+@class ImebraDataSet;
 
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
-namespace imebra
-{
-class Tag;
-}
-#endif
 
 ///
 /// \brief This class represents a DICOM tag.
@@ -37,14 +34,12 @@ class Tag;
 ///////////////////////////////////////////////////////////////////////////////
 @interface ImebraTag: NSObject
 
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
 {
     @public
-    imebra::Tag* m_pTag;
+    define_imebra_object_holder(Tag);
 }
 
-    -(id)initWithImebraTag:(imebra::Tag*)pTag;
-#endif
+    -(id)initWithImebraTag:define_imebra_parameter(Tag);
 
     -(void)dealloc;
 
@@ -91,19 +86,6 @@ class Tag;
     ///////////////////////////////////////////////////////////////////////////////
     -(ImebraReadingDataHandler*) getReadingDataHandler:(unsigned int) bufferId error:(NSError**)pError;
 
-    /// \brief Retrieve a ImebraWritingDataHandler object connected to a specific
-    ///        tag's buffer.
-    ///
-    /// If the specified buffer does not exist then it creates a new buffer.
-    ///
-    /// \param bufferId the position where the new buffer has to be stored into the
-    ///                 tag. The first buffer position is 0
-    /// \param pError   set to a NSError derived class in case of error
-    /// \return a ImebraWritingDataHandler object connected to a new tag's buffer
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    -(ImebraWritingDataHandler*) getWritingDataHandler:(unsigned int) bufferId error:(NSError**)pError;
-
     /// \brief Retrieve a ImebraReadingDataHandlerNumeric object connected to the
     ///        Tag's numeric buffer.
     ///
@@ -137,6 +119,68 @@ class Tag;
     ///
     ///////////////////////////////////////////////////////////////////////////////
     -(ImebraReadingDataHandlerNumeric*) getReadingDataHandlerRaw:(unsigned int) bufferId error:(NSError**)pError;
+
+    /// \brief Get a StreamReader connected to a buffer's data.
+    ///
+    /// \param bufferId   the id of the buffer for which the StreamReader is
+    ///                    required. This parameter is usually 0
+    /// \param pError   set to a NSError derived class in case of error
+    /// \return           the streamReader connected to the buffer's data.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(ImebraStreamReader*) getStreamReader:(unsigned int) bufferId error:(NSError**)pError;
+
+    /// \brief Retrieve an embedded DataSet.
+    ///
+    /// Sequence tags (VR=SQ) store embedded dicom structures.
+    ///
+    /// \param dataSetId  the ID of the sequence item to retrieve. Several sequence
+    ///                   items can be embedded in one tag.
+    /// \param pError   set to a NSError derived class in case of error
+    /// \return           the sequence DataSet
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(ImebraDataSet*) getSequenceItem:(unsigned int) dataSetId error:(NSError**)pError;
+
+    /// \brief Check for the existance of a sequence item.
+    ///
+    /// \param dataSetId the ID of the sequence item to check for
+    /// \return true if the sequence item exists, false otherwise
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(BOOL)sequenceItemExists:(unsigned int) dataSetId;
+
+    /// \brief Get the tag's data type.
+    ///
+    /// @return the tag's data type
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    @property (readonly) ImebraTagVR_t dataType;
+
+@end
+
+
+
+///
+/// \brief This class represents a DICOM tag.
+///
+///////////////////////////////////////////////////////////////////////////////
+@interface ImebraMutableTag: ImebraTag
+
+    -(id)initWithImebraMutableTag:define_imebra_parameter(MutableTag);
+
+    /// \brief Retrieve a ImebraWritingDataHandler object connected to a specific
+    ///        tag's buffer.
+    ///
+    /// If the specified buffer does not exist then it creates a new buffer.
+    ///
+    /// \param bufferId the position where the new buffer has to be stored into the
+    ///                 tag. The first buffer position is 0
+    /// \param pError   set to a NSError derived class in case of error
+    /// \return a ImebraWritingDataHandler object connected to a new tag's buffer
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(ImebraWritingDataHandler*) getWritingDataHandler:(unsigned int) bufferId error:(NSError**)pError;
 
     /// \brief Retrieve a WritingDataHandlerNumeric object connected to the
     ///        Tag's buffer.
@@ -173,16 +217,6 @@ class Tag;
     ///////////////////////////////////////////////////////////////////////////////
     -(ImebraWritingDataHandlerNumeric*) getWritingDataHandlerRaw:(unsigned int) bufferId error:(NSError**)pError;
 
-    /// \brief Get a StreamReader connected to a buffer's data.
-    ///
-    /// \param bufferId   the id of the buffer for which the StreamReader is
-    ///                    required. This parameter is usually 0
-    /// \param pError   set to a NSError derived class in case of error
-    /// \return           the streamReader connected to the buffer's data.
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    -(ImebraStreamReader*) getStreamReader:(unsigned int) bufferId error:(NSError**)pError;
-
     /// \brief Get a StreamWriter connected to a buffer's data.
     ///
     /// \param bufferId   the id of the buffer for which the StreamWriter is
@@ -192,26 +226,6 @@ class Tag;
     ///
     ///////////////////////////////////////////////////////////////////////////////
     -(ImebraStreamWriter*) getStreamWriter:(unsigned int) bufferId error:(NSError**)pError;
-
-    /// \brief Retrieve an embedded DataSet.
-    ///
-    /// Sequence tags (VR=SQ) store embedded dicom structures.
-    ///
-    /// \param dataSetId  the ID of the sequence item to retrieve. Several sequence
-    ///                   items can be embedded in one tag.
-    /// \param pError   set to a NSError derived class in case of error
-    /// \return           the sequence DataSet
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    -(ImebraDataSet*) getSequenceItem:(unsigned int) dataSetId error:(NSError**)pError;
-
-    /// \brief Check for the existance of a sequence item.
-    ///
-    /// \param dataSetId the ID of the sequence item to check for
-    /// \return true if the sequence item exists, false otherwise
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    -(BOOL)sequenceItemExists:(unsigned int) dataSetId;
 
     /// \brief Insert a sequence item into the Tag.
     ///
@@ -239,13 +253,6 @@ class Tag;
     ///////////////////////////////////////////////////////////////////////////////
     -(void) appendSequenceItem:(ImebraDataSet*)pDataSet error:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
-
-    /// \brief Get the tag's data type.
-    ///
-    /// @return the tag's data type
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    @property (readonly) ImebraTagVR_t dataType;
 
 @end
 

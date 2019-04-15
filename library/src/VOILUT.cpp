@@ -29,6 +29,16 @@ VOILUT::VOILUT(): Transform(std::make_shared<imebra::implementation::transforms:
 {
 }
 
+VOILUT::VOILUT(const VOILUT& source): Transform(source)
+{
+}
+
+VOILUT& VOILUT::operator=(const VOILUT& source)
+{
+    m_pTransform = getTransformImplementation(source);
+    return *this;
+}
+
 VOILUT::~VOILUT()
 {
 }
@@ -45,7 +55,7 @@ void VOILUT::setLUT(const LUT &lut)
 
 void VOILUT::applyOptimalVOI(const Image& inputImage, std::uint32_t topLeftX, std::uint32_t topLeftY, std::uint32_t width, std::uint32_t height)
 {
-    ((imebra::implementation::transforms::VOILUT*)m_pTransform.get())->applyOptimalVOI(inputImage.m_pImage, topLeftX, topLeftY, width, height);
+    ((imebra::implementation::transforms::VOILUT*)m_pTransform.get())->applyOptimalVOI(getImageImplementation(inputImage), topLeftX, topLeftY, width, height);
 }
 
 double VOILUT::getCenter() const

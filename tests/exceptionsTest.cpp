@@ -20,7 +20,7 @@ void exceptionsThread(size_t exceptionType)
             CodecFactory::load("\\nonExistentFile___##$$$", 2);
             break;
         case 1:
-            DataSet test;
+            MutableDataSet test;
             test.getString(TagId(16, 16), 0);
         }
     }
@@ -95,7 +95,7 @@ TEST(exceptionsTest, testAutomaticClear)
 
     try
     {
-        DataSet test;
+        MutableDataSet test;
         test.getString(TagId(16, 16), 0);
     }
     catch(...)

@@ -16,21 +16,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #import <Foundation/Foundation.h>
 
+#import "imebra_macros.h"
 #import "imebra_dataset.h"
 #import "imebra_streamReader.h"
 #import "imebra_streamWriter.h"
 
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
-namespace imebra
-{
-class PresentationContext;
-class PresentationContexts;
-class AssociationMessage;
-class AssociationBase;
-class AssociationSCU;
-class AssociationSCP;
-}
-#endif
 
 ///
 /// \brief A presentation context defines which transfer syntaxes are supported
@@ -38,13 +28,10 @@ class AssociationSCP;
 ///
 ///////////////////////////////////////////////////////////////////////////////
 @interface ImebraPresentationContext: NSObject
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
 {
     @public
-    imebra::PresentationContext* m_pPresentationContext;
+    define_imebra_object_holder(PresentationContext);
 }
-
-#endif
 
     ///
     /// \brief Initializer.
@@ -92,13 +79,10 @@ class AssociationSCP;
 ///
 ///////////////////////////////////////////////////////////////////////////////
 @interface ImebraPresentationContexts: NSObject
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
 {
     @public
-    imebra::PresentationContexts* m_pPresentationContexts;
+    define_imebra_object_holder(PresentationContexts);
 }
-
-#endif
 
     ///
     /// \brief Initializer.
@@ -130,22 +114,12 @@ class AssociationSCP;
 ///
 ///////////////////////////////////////////////////////////////////////////////
 @interface ImebraAssociationMessage: NSObject
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
 {
     @public
-    imebra::AssociationMessage* m_pAssociationMessage;
+    define_imebra_object_holder(AssociationMessage);
 }
 
-    -(id)initWithImebraAssociationMessage:(imebra::AssociationMessage*)pAssociationMessage;
- #endif
-
-    ///
-    /// \brief Initializer.
-    ///
-    /// \param abstractSyntax the abstract syntax of the message.
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    -(id)initWithAbstractSyntax:(NSString*)abstractSyntax;
+    -(id)initWithImebraAssociationMessage:define_imebra_parameter(AssociationMessage);
 
     -(void)dealloc;
 
@@ -174,6 +148,38 @@ class AssociationSCP;
     -(BOOL)hasPayload;
 
     ///
+    /// \brief The message's abstract syntax
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    @property (readonly) NSString* abstractSyntax;
+
+@end
+
+
+
+
+
+
+///
+/// \brief A message composed by one or two datasets.
+///
+/// When sending a message through an ImebraAssociationBase derived object
+/// then up to two dataset can be included into the message: the first
+/// dataset is the command dataset, while the optional second one is the
+/// command's payload.
+///
+///////////////////////////////////////////////////////////////////////////////
+@interface ImebraMutableAssociationMessage: ImebraAssociationMessage
+
+    ///
+    /// \brief Initializer.
+    ///
+    /// \param abstractSyntax the abstract syntax of the message.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(id)initWithAbstractSyntax:(NSString*)abstractSyntax;
+
+    ///
     /// \brief Add a command ImebraDataSet to the message.
     ///
     /// Two datasets can be transmitted at once: the first data set is the
@@ -186,13 +192,13 @@ class AssociationSCP;
     -(void)addDataSet:(ImebraDataSet*)pDataSet error:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
 
-    ///
-    /// \brief The message's abstract syntax
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    @property (readonly) NSString* abstractSyntax;
-
 @end
+
+
+
+
+
+
 
 
 ///
@@ -200,13 +206,10 @@ class AssociationSCP;
 ///
 ///////////////////////////////////////////////////////////////////////////////
 @interface ImebraAssociationBase: NSObject
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
 {
     @public
-    imebra::AssociationBase* m_pAssociation;
+    define_imebra_object_holder(AssociationBase);
 }
-
-#endif
 
     -(void)dealloc;
 

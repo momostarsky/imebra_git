@@ -12,7 +12,7 @@ namespace tests
 {
 
 
-imebra::Image* buildImageForTest(
+imebra::Image buildImageForTest(
 	std::uint32_t pixelsX, 
 	std::uint32_t pixelsY, 
     imebra::bitDepth_t depth,
@@ -22,9 +22,9 @@ imebra::Image* buildImageForTest(
     const std::string& colorSpace,
 	std::uint32_t continuity)
 {
-    std::unique_ptr<Image> newImage(new Image(pixelsX, pixelsY, depth, colorSpace, highBit));
-    std::unique_ptr<WritingDataHandler> handler(newImage->getWritingDataHandler());
-    std::uint32_t channelsNumber = newImage->getChannelsNumber();
+    MutableImage newImage(pixelsX, pixelsY, depth, colorSpace, highBit);
+    WritingDataHandler handler = newImage.getWritingDataHandler();
+    std::uint32_t channelsNumber = newImage.getChannelsNumber();
 
     std::int64_t range = (std::int64_t)1 << (highBit + 1);
     std::int64_t minValue = 0;
@@ -52,24 +52,24 @@ imebra::Image* buildImageForTest(
 				}
                 if(depth == bitDepth_t::depthS32 || depth == bitDepth_t::depthS16 || depth == bitDepth_t::depthS8)
                 {
-                    handler->setSignedLong(index++, (std::int32_t)value);
+                    handler.setSignedLong(index++, (std::int32_t)value);
                 }
                 else
                 {
-                    handler->setUnsignedLong(index++, (std::uint32_t)value);
+                    handler.setUnsignedLong(index++, (std::uint32_t)value);
                 }
 			}
 		}
 	}
 
-    newImage->setSizeMm(width, height);
+    newImage.setSizeMm(width, height);
 
-    return newImage.release();
+    return newImage;
 }
 
 TEST(buildImage, testBuildImage)
 {
-    std::unique_ptr<Image> testImage(buildImageForTest(
+    Image testImage = buildImageForTest(
         400,
         300,
         imebra::bitDepth_t::depthU8,
@@ -77,11 +77,11 @@ TEST(buildImage, testBuildImage)
         400,
         300,
         "RGB",
-        50));
+        50);
 
     std::uint32_t r, g, b, maxR, maxG, maxB, minR, minG, minB, midR;
 
-    std::unique_ptr<ReadingDataHandlerNumeric> handler(testImage->getReadingDataHandler());
+    ReadingDataHandlerNumeric handler = testImage.getReadingDataHandler();
     size_t index(0);
 
     for(size_t scanY(0); scanY != 300; ++scanY)
@@ -90,15 +90,15 @@ TEST(buildImage, testBuildImage)
         {
             if(index == 0)
             {
-                midR = maxR = minR = handler->getUnsignedLong(index++);
-                maxG = minG = handler->getUnsignedLong(index++);
-                maxB = minB = handler->getUnsignedLong(index++);
+                midR = maxR = minR = handler.getUnsignedLong(index++);
+                maxG = minG = handler.getUnsignedLong(index++);
+                maxB = minB = handler.getUnsignedLong(index++);
             }
             else
             {
-                r = handler->getUnsignedLong(index++);
-                g = handler->getUnsignedLong(index++);
-                b = handler->getUnsignedLong(index++);
+                r = handler.getUnsignedLong(index++);
+                g = handler.getUnsignedLong(index++);
+                b = handler.getUnsignedLong(index++);
                 maxR = std::max(maxR, r);
                 maxG = std::max(maxG, g);
                 maxB = std::max(maxB, b);
@@ -126,7 +126,7 @@ TEST(buildImage, testBuildImage)
 
 TEST(buildImage, testCompareImage)
 {
-    std::unique_ptr<Image> testImage0(buildImageForTest(
+    Image testImage0 = buildImageForTest(
         400,
         300,
         imebra::bitDepth_t::depthU8,
@@ -134,9 +134,9 @@ TEST(buildImage, testCompareImage)
         400,
         300,
         "RGB",
-        50));
+        50);
 
-    std::unique_ptr<Image> testImage1(buildImageForTest(
+    Image testImage1 = buildImageForTest(
         400,
         300,
         imebra::bitDepth_t::depthU8,
@@ -144,14 +144,14 @@ TEST(buildImage, testCompareImage)
         400,
         300,
         "RGB",
-        10));
+        10);
 
-    EXPECT_DOUBLE_EQ(0.0, compareImages(*testImage0, *testImage0));
-    EXPECT_GT(compareImages(*testImage0, *testImage1), 10.0);
+    EXPECT_DOUBLE_EQ(0.0, compareImages(testImage0, testImage0));
+    EXPECT_GT(compareImages(testImage0, testImage1), 10.0);
 
 }
 
-imebra::Image* buildSubsampledImage(
+imebra::Image buildSubsampledImage(
     std::uint32_t pixelsX,
     std::uint32_t pixelsY,
     imebra::bitDepth_t depth,
@@ -160,9 +160,9 @@ imebra::Image* buildSubsampledImage(
     double height,
     const std::string& colorSpace)
 {
-    std::unique_ptr<Image> newImage(new Image(pixelsX, pixelsY, depth, colorSpace, highBit));
-    std::unique_ptr<WritingDataHandler> handler(newImage->getWritingDataHandler());
-    std::uint32_t channelsNumber = newImage->getChannelsNumber();
+    MutableImage newImage(pixelsX, pixelsY, depth, colorSpace, highBit);
+    WritingDataHandler handler = newImage.getWritingDataHandler();
+    std::uint32_t channelsNumber = newImage.getChannelsNumber();
 
 
     std::uint32_t index(0);
@@ -185,14 +185,14 @@ imebra::Image* buildSubsampledImage(
                         value = 0;
                     }
                 }
-                handler->setSignedLong(index++, value);
+                handler.setSignedLong(index++, value);
             }
         }
     }
 
-    newImage->setSizeMm(width, height);
+    newImage.setSizeMm(width, height);
 
-    return newImage.release();
+    return newImage;
 }
 
 double compareImages(const imebra::Image& image0, const imebra::Image& image1)
@@ -212,8 +212,8 @@ double compareImages(const imebra::Image& image0, const imebra::Image& image1)
 		return 1000;
 	}
 
-    std::unique_ptr<ReadingDataHandler> hImage0(image0.getReadingDataHandler());
-    std::unique_ptr<ReadingDataHandler> hImage1(image1.getReadingDataHandler());
+    ReadingDataHandler hImage0 = image0.getReadingDataHandler();
+    ReadingDataHandler hImage1 = image1.getReadingDataHandler();
 
     std::uint32_t highBit0 = image0.getHighBit();
     std::uint32_t highBit1 = image1.getHighBit();
@@ -248,8 +248,8 @@ double compareImages(const imebra::Image& image0, const imebra::Image& image1)
             {
                 if(depth0 == bitDepth_t::depthS32 || depth0 == bitDepth_t::depthS16 || depth0 == bitDepth_t::depthS8)
                 {
-                    std::int32_t p0 = hImage0->getSignedLong(index);
-                    std::int32_t p1 = hImage1->getSignedLong(index);
+                    std::int32_t p0 = hImage0.getSignedLong(index);
+                    std::int32_t p1 = hImage1.getSignedLong(index);
                     if(p0 > p1)
                     {
                         difference += (1000 * (std::uint64_t)(p0 - p1)) / range;
@@ -262,8 +262,8 @@ double compareImages(const imebra::Image& image0, const imebra::Image& image1)
                 }
                 else
                 {
-                    std::uint32_t p0 = hImage0->getUnsignedLong(index);
-                    std::uint32_t p1 = hImage1->getUnsignedLong(index);
+                    std::uint32_t p0 = hImage0.getUnsignedLong(index);
+                    std::uint32_t p1 = hImage1.getUnsignedLong(index);
                     if(p0 > p1)
                     {
                         difference += (1000 * (std::uint64_t)(p0 - p1)) / range;
@@ -300,8 +300,8 @@ bool identicalImages(const imebra::Image& image0, const imebra::Image& image1)
         return false;
     }
 
-    std::unique_ptr<ReadingDataHandlerNumeric> hImage0(image0.getReadingDataHandler());
-    std::unique_ptr<ReadingDataHandlerNumeric> hImage1(image1.getReadingDataHandler());
+    ReadingDataHandlerNumeric hImage0 = image0.getReadingDataHandler();
+    ReadingDataHandlerNumeric hImage1 = image1.getReadingDataHandler();
 
     std::uint32_t highBit0 = image0.getHighBit();
     std::uint32_t highBit1 = image1.getHighBit();
@@ -322,11 +322,11 @@ bool identicalImages(const imebra::Image& image0, const imebra::Image& image1)
         return true;
     }
 
-    std::unique_ptr<ReadMemory> memory0(hImage0->getMemory());
-    std::unique_ptr<ReadMemory> memory1(hImage1->getMemory());
+    Memory memory0(hImage0.getMemory());
+    Memory memory1(hImage1.getMemory());
     size_t dataSize0, dataSize1;
-    const char* pData0(memory0->data(&dataSize0));
-    const char* pData1(memory1->data(&dataSize1));
+    const char* pData0(memory0.data(&dataSize0));
+    const char* pData1(memory1.data(&dataSize1));
     return ::memcmp(pData0, pData1, dataSize0) == 0;
 }
 

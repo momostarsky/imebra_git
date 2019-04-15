@@ -22,9 +22,25 @@ If you do not want to be bound by the GPL terms (such as the requirement
 namespace imebra
 {
 
-TCPAddress::TCPAddress(std::shared_ptr<implementation::tcpAddress> pAddress):
+TCPAddress::TCPAddress(const std::shared_ptr<implementation::tcpAddress>& pAddress):
     m_pAddress(pAddress)
 {
+}
+
+TCPAddress::TCPAddress(const TCPAddress& source): m_pAddress(getTCPAddressImplementation(source))
+{
+}
+
+TCPAddress& TCPAddress::operator=(const TCPAddress& source)
+{
+    m_pAddress = getTCPAddressImplementation(source);
+    return *this;
+}
+
+
+const std::shared_ptr<imebra::implementation::tcpAddress>& getTCPAddressImplementation(const TCPAddress& tcpAddress)
+{
+    return tcpAddress.m_pAddress;
 }
 
 std::string TCPAddress::getNode() const
@@ -47,8 +63,16 @@ TCPActiveAddress::TCPActiveAddress(const std::string& node, const std::string& s
 {
 }
 
+TCPActiveAddress::TCPActiveAddress(const TCPActiveAddress &source): TCPAddress(getTCPAddressImplementation(source))
+{
+}
+
 TCPPassiveAddress::TCPPassiveAddress(const std::string& node, const std::string& service):
     TCPAddress(std::make_shared<implementation::tcpAddress>(node, service, implementation::tcpAddress::passiveSocket_t::passive))
+{
+}
+
+TCPPassiveAddress::TCPPassiveAddress(const TCPPassiveAddress &source): TCPAddress(getTCPAddressImplementation(source))
 {
 }
 

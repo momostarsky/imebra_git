@@ -15,30 +15,29 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #define imebraObjcTcpStream__INCLUDED_
 
 #import <Foundation/Foundation.h>
-#import "imebra_baseStreamInputOutput.h"
 
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
-namespace imebra
-{
-class TCPStream;
-}
-#endif
+#include "imebra_macros.h"
 
 @class ImebraTCPActiveAddress;
 @class ImebraTCPAddress;
+@class ImebraBaseStreamInput;
+@class ImebraBaseStreamOutput;
 
 
 ///
 /// \brief Represents a TCP stream.
 ///
 ///////////////////////////////////////////////////////////////////////////////
-@interface ImebraTCPStream: ImebraBaseStreamInputOutput
+@interface ImebraTCPStream: NSObject
 
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
+{
+    @public
+    define_imebra_object_holder(TCPStream);
+}
 
-    -(id)initWithImebraTcpStream:(imebra::TCPStream*)pTcpStream;
+    -(id)initWithImebraTcpStream:define_imebra_parameter(TCPStream);
 
-#endif
+    -(void)dealloc;
 
     ///
     /// \brief Construct a TCP socket and connects it to the destination address.
@@ -62,15 +61,9 @@ class TCPStream;
     ///////////////////////////////////////////////////////////////////////////////
     -(ImebraTCPAddress*) getPeerAddress: (NSError**)pError;
 
-    ///
-    /// \brief Instruct any pending operation to terminate.
-    ///
-    /// Current and subsequent read and write operations will fail by setting
-    /// pError to StreamClosedError.
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    -(void) terminate;
+    -(ImebraBaseStreamInput*) getStreamInput;
 
+    -(ImebraBaseStreamOutput*) getStreamOutput;
 
 @end
 

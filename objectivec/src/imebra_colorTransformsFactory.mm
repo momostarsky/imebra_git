@@ -11,7 +11,13 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#include "imebra_bridgeStructures.h"
+#import "../include/imebraobjc/imebra_colorTransformsFactory.h"
+#import "../include/imebraobjc/imebra_transform.h"
+#include "imebra_implementation_macros.h"
+#include "imebra_strings.h"
+#include "imebra_nserror.h"
+#include <imebra/colorTransformsFactory.h>
+#include <imebra/transform.h>
 
 
 @implementation ImebraColorTransformsFactory
@@ -62,7 +68,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraTransform alloc] initWithImebraTransform: imebra::ColorTransformsFactory::getTransform(imebra::NSStringToString(startColorSpace), imebra::NSStringToString(endColorSpace))];
+    return [[ImebraTransform alloc] initWithImebraTransform:
+        new imebra::Transform(imebra::ColorTransformsFactory::getTransform(imebra::NSStringToString(startColorSpace), imebra::NSStringToString(endColorSpace)))];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }

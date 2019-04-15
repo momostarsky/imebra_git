@@ -18,31 +18,72 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #include "../include/imebra/streamReader.h"
 #include "../include/imebra/baseStreamInput.h"
+#include "../include/imebra/memory.h"
 #include "../implementation/streamReaderImpl.h"
+#include "../implementation/memoryImpl.h"
 
 namespace imebra
 {
 
-StreamReader::StreamReader(std::shared_ptr<implementation::streamReader> pReader): m_pReader(pReader)
+StreamReader::StreamReader(const std::shared_ptr<implementation::streamReader>& pReader): m_pReader(pReader)
 {
 }
 
-StreamReader::StreamReader(const BaseStreamInput& stream): m_pReader(std::make_shared<implementation::streamReader>(stream.m_pInputStream))
+StreamReader::StreamReader(const BaseStreamInput& stream): m_pReader(std::make_shared<implementation::streamReader>(getBaseStreamInputImplementation(stream)))
 {
 }
 
-
-StreamReader::StreamReader(const BaseStreamInput& stream, size_t virtualStart, size_t virtualLength): m_pReader(std::make_shared<implementation::streamReader>(stream.m_pInputStream, virtualStart, virtualLength))
+StreamReader::StreamReader(const BaseStreamInput& stream, size_t virtualStart, size_t virtualLength): m_pReader(std::make_shared<implementation::streamReader>(getBaseStreamInputImplementation(stream), virtualStart, virtualLength))
 {
 }
 
-StreamReader* StreamReader::getVirtualStream(size_t virtualStreamLength)
+StreamReader::StreamReader(const StreamReader& source): m_pReader(getStreamReaderImplementation(source))
+{
+}
+
+StreamReader& StreamReader::operator=(const StreamReader& source)
+{
+    m_pReader = getStreamReaderImplementation(source);
+    return *this;
+}
+
+const std::shared_ptr<implementation::streamReader>& getStreamReaderImplementation(const StreamReader& streamReader)
+{
+    return streamReader.m_pReader;
+}
+
+StreamReader StreamReader::getVirtualStream(size_t virtualStreamLength)
 {
     IMEBRA_FUNCTION_START();
 
-    return new StreamReader(m_pReader->getReader(virtualStreamLength));
+    return StreamReader(m_pReader->getReader(virtualStreamLength));
 
     IMEBRA_FUNCTION_END();
+}
+
+void StreamReader::read(char* destination, size_t destinationSize)
+{
+    m_pReader->read((std::uint8_t*)destination, destinationSize);
+}
+
+size_t StreamReader::readSome(char* destination, size_t destinationSize)
+{
+    return m_pReader->readSome((std::uint8_t*)destination, destinationSize);
+}
+
+Memory StreamReader::read(size_t readSize)
+{
+    std::shared_ptr<implementation::memory> readMemory(std::make_shared<implementation::memory> (readSize));
+    m_pReader->read(readMemory->data(), readSize);
+    return Memory(readMemory);
+}
+
+Memory StreamReader::readSome(size_t readSize)
+{
+    std::shared_ptr<implementation::memory> readMemory(std::make_shared<implementation::memory> (readSize));
+    size_t actuallyRead = m_pReader->readSome(readMemory->data(), readSize);
+    readMemory->resize(actuallyRead);
+    return Memory(readMemory);
 }
 
 void StreamReader::terminate()

@@ -19,11 +19,26 @@ If you do not want to be bound by the GPL terms (such as the requirement
 namespace imebra
 {
 
+Tag::Tag(const Tag& source): m_pData(getTagImplementation(source))
+{
+}
+
+Tag& Tag::operator=(const Tag& source)
+{
+    m_pData = getTagImplementation(source);
+    return *this;
+}
+
+const std::shared_ptr<imebra::implementation::data>& getTagImplementation(const Tag& tag)
+{
+    return tag.m_pData;
+}
+
 Tag::~Tag()
 {
 }
 
-Tag::Tag(std::shared_ptr<imebra::implementation::data> pData): m_pData(pData)
+Tag::Tag(const std::shared_ptr<imebra::implementation::data>& pData): m_pData(pData)
 {
 }
 
@@ -42,17 +57,12 @@ size_t Tag::getBufferSize(size_t bufferId) const
     return m_pData->getBufferSize(bufferId);
 }
 
-ReadingDataHandler* Tag::getReadingDataHandler(size_t bufferId) const
+ReadingDataHandler Tag::getReadingDataHandler(size_t bufferId) const
 {
-    return new ReadingDataHandler(m_pData->getReadingDataHandler(bufferId));
+    return ReadingDataHandler(m_pData->getReadingDataHandler(bufferId));
 }
 
-WritingDataHandler* Tag::getWritingDataHandler(size_t bufferId)
-{
-    return new WritingDataHandler(m_pData->getWritingDataHandler(bufferId));
-}
-
-ReadingDataHandlerNumeric* Tag::getReadingDataHandlerNumeric(size_t bufferId) const
+ReadingDataHandlerNumeric Tag::getReadingDataHandlerNumeric(size_t bufferId) const
 {
     std::shared_ptr<implementation::handlers::readingDataHandlerNumericBase> numericHandler =
             std::dynamic_pointer_cast<implementation::handlers::readingDataHandlerNumericBase>(m_pData->getReadingDataHandler(bufferId));
@@ -60,45 +70,23 @@ ReadingDataHandlerNumeric* Tag::getReadingDataHandlerNumeric(size_t bufferId) co
     {
         throw std::bad_cast();
     }
-    return new ReadingDataHandlerNumeric(numericHandler);
+    return ReadingDataHandlerNumeric(numericHandler);
 }
 
-ReadingDataHandlerNumeric* Tag::getReadingDataHandlerRaw(size_t bufferId) const
+ReadingDataHandlerNumeric Tag::getReadingDataHandlerRaw(size_t bufferId) const
 {
     std::shared_ptr<implementation::handlers::readingDataHandlerNumericBase> numericHandler = m_pData->getReadingDataHandlerRaw(bufferId);
-    return new ReadingDataHandlerNumeric(numericHandler);
+    return ReadingDataHandlerNumeric(numericHandler);
 }
 
-WritingDataHandlerNumeric* Tag::getWritingDataHandlerNumeric(size_t bufferId)
+StreamReader Tag::getStreamReader(size_t bufferId) const
 {
-    std::shared_ptr<implementation::handlers::writingDataHandlerNumericBase> numericHandler =
-            std::dynamic_pointer_cast<implementation::handlers::writingDataHandlerNumericBase>(m_pData->getWritingDataHandler(bufferId));
-    if(numericHandler.get() == 0)
-    {
-        throw std::bad_cast();
-    }
-    return new WritingDataHandlerNumeric(numericHandler);
+    return StreamReader(m_pData->getStreamReader(bufferId));
 }
 
-WritingDataHandlerNumeric* Tag::getWritingDataHandlerRaw(size_t bufferId)
+const DataSet Tag::getSequenceItem(size_t dataSetId) const
 {
-    std::shared_ptr<implementation::handlers::writingDataHandlerNumericBase> numericHandler = m_pData->getWritingDataHandlerRaw(bufferId);
-    return new WritingDataHandlerNumeric(numericHandler);
-}
-
-StreamReader* Tag::getStreamReader(size_t bufferId)
-{
-    return new StreamReader(m_pData->getStreamReader(bufferId));
-}
-
-StreamWriter* Tag::getStreamWriter(size_t bufferId)
-{
-    return new StreamWriter(m_pData->getStreamWriter(bufferId));
-}
-
-DataSet* Tag::getSequenceItem(size_t dataSetId) const
-{
-    return new DataSet(m_pData->getSequenceItem(dataSetId));
+    return DataSet(m_pData->getSequenceItem(dataSetId));
 }
 
 bool Tag::sequenceItemExists(size_t dataSetId) const
@@ -106,19 +94,61 @@ bool Tag::sequenceItemExists(size_t dataSetId) const
     return m_pData->dataSetExists(dataSetId);
 }
 
-void Tag::setSequenceItem(size_t dataSetId, const DataSet& dataSet)
-{
-    m_pData->setSequenceItem(dataSetId, dataSet.m_pDataSet);
-}
-
-void Tag::appendSequenceItem(const DataSet& dataSet)
-{
-    m_pData->appendDataSet(dataSet.m_pDataSet);
-}
-
 tagVR_t Tag::getDataType() const
 {
     return m_pData->getDataType();
+}
+
+MutableTag::MutableTag(const std::shared_ptr<imebra::implementation::data>& pData): Tag(pData)
+{
+}
+
+MutableTag::MutableTag(const MutableTag& source): Tag(source)
+{
+}
+
+MutableTag& MutableTag::operator=(const MutableTag& source)
+{
+    Tag::operator =(source);
+    return *this;
+}
+
+
+WritingDataHandler MutableTag::getWritingDataHandler(size_t bufferId)
+{
+    return WritingDataHandler(getTagImplementation(*this)->getWritingDataHandler(bufferId));
+}
+
+WritingDataHandlerNumeric MutableTag::getWritingDataHandlerNumeric(size_t bufferId)
+{
+    std::shared_ptr<implementation::handlers::writingDataHandlerNumericBase> numericHandler =
+            std::dynamic_pointer_cast<implementation::handlers::writingDataHandlerNumericBase>(getTagImplementation(*this)->getWritingDataHandler(bufferId));
+    if(numericHandler.get() == 0)
+    {
+        throw std::bad_cast();
+    }
+    return WritingDataHandlerNumeric(numericHandler);
+}
+
+WritingDataHandlerNumeric MutableTag::getWritingDataHandlerRaw(size_t bufferId)
+{
+    std::shared_ptr<implementation::handlers::writingDataHandlerNumericBase> numericHandler = getTagImplementation(*this)->getWritingDataHandlerRaw(bufferId);
+    return WritingDataHandlerNumeric(numericHandler);
+}
+
+StreamWriter MutableTag::getStreamWriter(size_t bufferId)
+{
+    return StreamWriter(getTagImplementation(*this)->getStreamWriter(bufferId));
+}
+
+void MutableTag::setSequenceItem(size_t dataSetId, const DataSet& dataSet)
+{
+    getTagImplementation(*this)->setSequenceItem(dataSetId, getDataSetImplementation(dataSet));
+}
+
+void MutableTag::appendSequenceItem(const DataSet& dataSet)
+{
+    getTagImplementation(*this)->appendDataSet(getDataSetImplementation(dataSet));
 }
 
 }

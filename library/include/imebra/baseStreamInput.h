@@ -18,24 +18,17 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #if !defined(imebraBaseStreamInput__INCLUDED_)
 #define imebraBaseStreamInput__INCLUDED_
 
-#ifndef SWIG
-
 #include <memory>
 #include "definitions.h"
 
 namespace imebra
 {
+
 namespace implementation
 {
     class baseStreamInput;
     class streamTimeout;
 }
-}
-
-#endif
-
-namespace imebra
-{
 
 ///
 /// \brief This class represents a generic input stream.
@@ -54,27 +47,28 @@ namespace imebra
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API BaseStreamInput
 {
-    BaseStreamInput(const BaseStreamInput&) = delete;
-    BaseStreamInput& operator=(const BaseStreamInput&) = delete;
-
-#ifndef SWIG
     friend class TCPStream;
-    friend class StreamReader;
-    friend class FileStreamInput;
-    friend class MemoryStreamInput;
-    friend class Pipe;
-    friend class StreamTimeout;
-
-private:
-    /// \brief Construct a BaseStreamInput object from an implementation object.
-    ///
-    /// \param pStream the implementation of BaseStreamInput
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    explicit BaseStreamInput(std::shared_ptr<implementation::baseStreamInput> pInputStream);
-#endif
+    friend class PipeStream;
 
 public:
+    ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source base input stream
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    BaseStreamInput(const BaseStreamInput& source);
+
+    ///
+    /// \brief Assignment operator
+    ///
+    /// \param source source base stream input
+    /// \return reference to this stream input
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    BaseStreamInput& operator=(const BaseStreamInput& source);
+
+    ///
     /// \brief Destructor.
     ///
     ///////////////////////////////////////////////////////////////////////////////
@@ -82,6 +76,11 @@ public:
 
 #ifndef SWIG
 protected:
+
+    explicit BaseStreamInput(const std::shared_ptr<implementation::baseStreamInput>& pInputStream);
+
+private:
+    friend const std::shared_ptr<implementation::baseStreamInput>& getBaseStreamInputImplementation(const BaseStreamInput& baseStreamInput);
     std::shared_ptr<implementation::baseStreamInput> m_pInputStream;
 #endif
 };
@@ -108,6 +107,23 @@ public:
     explicit StreamTimeout(BaseStreamInput& stream, std::uint32_t timeoutSeconds);
 
     ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source stream timeout
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    StreamTimeout(const StreamTimeout& source);
+
+    ///
+    /// \brief Assignment operator
+    ///
+    /// \param source source stream timeout
+    /// \return reference to this stream timeout
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    StreamTimeout& operator=(const StreamTimeout& source);
+
+    ///
     /// \brief Destructor. If the timeout has not yet expired then terminates the
     ///        thread that closes the stream, preventing it from closing the
     ///        stream.
@@ -116,7 +132,8 @@ public:
     ~StreamTimeout();
 
 #ifndef SWIG
-protected:
+private:
+    friend const std::shared_ptr<implementation::streamTimeout>& getStreamTimeoutImplementation(const StreamTimeout& streamTimeout);
     std::shared_ptr<implementation::streamTimeout> m_pStreamTimeout;
 #endif
 };

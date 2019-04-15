@@ -34,6 +34,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #include <condition_variable>
 #include <mutex>
+#include <memory>
 #include "baseSequenceStreamImpl.h"
 
 #ifndef IMEBRA_TCP_TIMEOUT_MS
@@ -64,6 +65,9 @@ public:
 #define INIT_WINSOCK
 
 #endif
+
+class tcpSequenceStreamInput;
+class tcpSequenceStreamOutput;
 
 
 long throwTcpException(long socketOperationResult);
@@ -192,8 +196,11 @@ protected:
 /// \brief A TCP socket
 ///
 ///////////////////////////////////////////////////////////
-class tcpSequenceStream: protected tcpBaseSocket, public baseSequenceStreamInput, public baseSequenceStreamOutput
+class tcpSequenceStream: protected tcpBaseSocket
 {
+    friend class tcpSequenceStreamInput;
+    friend class tcpSequenceStreamOutput;
+
 public:
 
     ///
@@ -232,9 +239,6 @@ public:
     ///////////////////////////////////////////////////////////
     ~tcpSequenceStream();
 
-    virtual size_t read(std::uint8_t* pBuffer, size_t bufferLength) override;
-    virtual void write(const std::uint8_t* pBuffer, size_t bufferLength) override;
-
     ///
     /// \brief Returns the address to which the socket is
     ///        connected.
@@ -244,11 +248,39 @@ public:
     ///////////////////////////////////////////////////////////
     std::shared_ptr<tcpAddress> getPeerAddress() const;
 
+    void terminate();
+
+private:
+    size_t read(std::uint8_t* pBuffer, size_t bufferLength);
+    void write(const std::uint8_t* pBuffer, size_t bufferLength);
+
+    const std::shared_ptr<tcpAddress> m_pAddress;
+};
+
+
+class tcpSequenceStreamInput: public baseSequenceStreamInput
+{
+public:
+    tcpSequenceStreamInput(std::shared_ptr<tcpSequenceStream> pTcpStream);
+
+    virtual size_t read(std::uint8_t* pBuffer, size_t bufferLength) override;
+
     virtual void terminate() override;
 
 private:
+    std::shared_ptr<tcpSequenceStream> m_pTcpStream;
+};
 
-    const std::shared_ptr<tcpAddress> m_pAddress;
+
+class tcpSequenceStreamOutput: public baseSequenceStreamOutput
+{
+public:
+    tcpSequenceStreamOutput(std::shared_ptr<tcpSequenceStream> pTcpStream);
+
+    void write(const std::uint8_t* pBuffer, size_t bufferLength) override;
+
+private:
+    std::shared_ptr<tcpSequenceStream> m_pTcpStream;
 };
 
 

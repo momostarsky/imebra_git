@@ -14,17 +14,17 @@ TEST(unicodeStringHandlerTest, unicodeTest)
     std::wstring patientName0 = L"??\x0628\x062a\x062b\x062f^\0x400\0x410\0x420";
 	std::wstring patientName1 = L"\0x420\x062a\x062b^\0x400\0x410\x0628\x062a";
 
-    ReadWriteMemory streamMemory;
+    MutableMemory streamMemory;
     {
         charsetsList_t charsets;
         charsets.push_back("ISO_IR 6");
-        DataSet testDataSet("1.2.840.10008.1.2.1", charsets);
+        MutableDataSet testDataSet("1.2.840.10008.1.2.1", charsets);
 
         {
-            std::unique_ptr<WritingDataHandler> handler(testDataSet.getWritingDataHandler(TagId(0x10, 0x10), 0));
+            WritingDataHandler handler = testDataSet.getWritingDataHandler(TagId(0x10, 0x10), 0);
 
-            handler->setUnicodeString(0, patientName0);
-            handler->setUnicodeString(1, patientName1);
+            handler.setUnicodeString(0, patientName0);
+            handler.setUnicodeString(1, patientName1);
         }
 
         MemoryStreamOutput writeStream(streamMemory);
@@ -35,15 +35,15 @@ TEST(unicodeStringHandlerTest, unicodeTest)
 	{
         MemoryStreamInput readStream(streamMemory);
         StreamReader reader(readStream);
-        std::unique_ptr<DataSet> testDataSet(CodecFactory::load(reader));
+        DataSet testDataSet = CodecFactory::load(reader);
 
-        EXPECT_EQ(patientName0, testDataSet->getUnicodeString(TagId(0x0010, 0x0010), 0));
-        EXPECT_EQ(patientName1, testDataSet->getUnicodeString(TagId(0x0010, 0x0010), 1));
-        EXPECT_THROW(testDataSet->getUnicodeString(TagId(0x0010, 0x0010), 2), MissingItemError);
-        EXPECT_THROW(testDataSet->getString(TagId(0x0010, 0x0010), 2), MissingItemError);
-        EXPECT_THROW(testDataSet->getSignedLong(TagId(0x0010, 0x0010), 2), MissingItemError);
-        EXPECT_THROW(testDataSet->getUnsignedLong(TagId(0x0010, 0x0010), 2), MissingItemError);
-        EXPECT_THROW(testDataSet->getDouble(TagId(0x0010, 0x0010), 2), MissingItemError);
+        EXPECT_EQ(patientName0, testDataSet.getUnicodeString(TagId(0x0010, 0x0010), 0));
+        EXPECT_EQ(patientName1, testDataSet.getUnicodeString(TagId(0x0010, 0x0010), 1));
+        EXPECT_THROW(testDataSet.getUnicodeString(TagId(0x0010, 0x0010), 2), MissingItemError);
+        EXPECT_THROW(testDataSet.getString(TagId(0x0010, 0x0010), 2), MissingItemError);
+        EXPECT_THROW(testDataSet.getSignedLong(TagId(0x0010, 0x0010), 2), MissingItemError);
+        EXPECT_THROW(testDataSet.getUnsignedLong(TagId(0x0010, 0x0010), 2), MissingItemError);
+        EXPECT_THROW(testDataSet.getDouble(TagId(0x0010, 0x0010), 2), MissingItemError);
     }
 }
 
@@ -55,18 +55,18 @@ TEST(unicodeStringHandlerTest, iso2022Test)
 	std::wstring patientName1 = L"\x0420\x00df\x0062^\x0394\x0410\x00d7\x0072";
     std::wstring patientName2 = L"??\x0628\x062a\x062b\x062f^\0x400\0x410\0x420\0x00c6\0x0104\0x00c6";
 
-    ReadWriteMemory streamMemory;
+    MutableMemory streamMemory;
     {
         charsetsList_t charsets;
         charsets.push_back("ISO IR 6");
-        DataSet testDataSet("1.2.840.10008.1.2.1", charsets);
+        MutableDataSet testDataSet("1.2.840.10008.1.2.1", charsets);
 
         {
-            std::unique_ptr<WritingDataHandler> handler(testDataSet.getWritingDataHandler(TagId(0x10, 0x10), 0));
+            WritingDataHandler handler = testDataSet.getWritingDataHandler(TagId(0x10, 0x10), 0);
 
-            handler->setUnicodeString(0, patientName0);
-            handler->setUnicodeString(1, patientName1);
-            handler->setUnicodeString(2, patientName2);
+            handler.setUnicodeString(0, patientName0);
+            handler.setUnicodeString(1, patientName1);
+            handler.setUnicodeString(2, patientName2);
         }
 
         MemoryStreamOutput writeStream(streamMemory);
@@ -77,11 +77,11 @@ TEST(unicodeStringHandlerTest, iso2022Test)
 	{
         MemoryStreamInput readStream(streamMemory);
         StreamReader reader(readStream);
-        std::unique_ptr<DataSet> testDataSet(CodecFactory::load(reader));
+        DataSet testDataSet = CodecFactory::load(reader);
 
-        EXPECT_EQ(patientName0, testDataSet->getUnicodeString(TagId(0x0010, 0x0010), 0));
-        EXPECT_EQ(patientName1, testDataSet->getUnicodeString(TagId(0x0010, 0x0010), 1));
-        EXPECT_EQ(patientName2, testDataSet->getUnicodeString(TagId(0x0010, 0x0010), 2));
+        EXPECT_EQ(patientName0, testDataSet.getUnicodeString(TagId(0x0010, 0x0010), 0));
+        EXPECT_EQ(patientName1, testDataSet.getUnicodeString(TagId(0x0010, 0x0010), 1));
+        EXPECT_EQ(patientName2, testDataSet.getUnicodeString(TagId(0x0010, 0x0010), 2));
     }
 }
 
@@ -92,17 +92,17 @@ TEST(unicodeStringHandlerTest, supplementaryUnicodeChars)
     std::wstring patientName0 = L"\x2070e\x20731\x20779\x20c53^\x00d0\x0410\x00d5";
     std::wstring patientName1 = L"\x0420\x00df\x0062^\x0394\x0410\x00d7\x0072";
 
-    ReadWriteMemory streamMemory;
+    MutableMemory streamMemory;
     {
         charsetsList_t charsets;
         charsets.push_back("ISO_IR 192");
-        DataSet testDataSet("1.2.840.10008.1.2.1", charsets);
+        MutableDataSet testDataSet("1.2.840.10008.1.2.1", charsets);
 
         {
-            std::unique_ptr<WritingDataHandler> handler(testDataSet.getWritingDataHandler(TagId(0x10, 0x10), 0));
+            WritingDataHandler handler = testDataSet.getWritingDataHandler(TagId(0x10, 0x10), 0);
 
-            handler->setUnicodeString(0, patientName0);
-            handler->setUnicodeString(1, patientName1);
+            handler.setUnicodeString(0, patientName0);
+            handler.setUnicodeString(1, patientName1);
         }
 
         MemoryStreamOutput writeStream(streamMemory);
@@ -113,10 +113,10 @@ TEST(unicodeStringHandlerTest, supplementaryUnicodeChars)
     {
         MemoryStreamInput readStream(streamMemory);
         StreamReader reader(readStream);
-        std::unique_ptr<DataSet> testDataSet(CodecFactory::load(reader));
+        DataSet testDataSet = CodecFactory::load(reader);
 
-        EXPECT_EQ(patientName0, testDataSet->getUnicodeString(TagId(0x0010, 0x0010), 0));
-        EXPECT_EQ(patientName1, testDataSet->getUnicodeString(TagId(0x0010, 0x0010), 1));
+        EXPECT_EQ(patientName0, testDataSet.getUnicodeString(TagId(0x0010, 0x0010), 0));
+        EXPECT_EQ(patientName1, testDataSet.getUnicodeString(TagId(0x0010, 0x0010), 1));
     }
 }
 #endif
@@ -124,18 +124,18 @@ TEST(unicodeStringHandlerTest, supplementaryUnicodeChars)
 TEST(unicodeStringHandlerTest, unicodeNumericConversion)
 {
 
-    ReadWriteMemory streamMemory;
+    MutableMemory streamMemory;
     {
         charsetsList_t charsets;
         charsets.push_back("ISO_IR 6");
-        DataSet testDataSet("1.2.840.10008.1.2.1", charsets);
+        MutableDataSet testDataSet("1.2.840.10008.1.2.1", charsets);
 
         {
-            std::unique_ptr<WritingDataHandler> handler(testDataSet.getWritingDataHandler(TagId(0x10, 0x10), 0));
+            WritingDataHandler handler = testDataSet.getWritingDataHandler(TagId(0x10, 0x10), 0);
 
-            handler->setDouble(0, 1000);
-            handler->setUnsignedLong(1, 2000);
-            handler->setSignedLong(2, 3000);
+            handler.setDouble(0, 1000);
+            handler.setUnsignedLong(1, 2000);
+            handler.setSignedLong(2, 3000);
         }
 
         MemoryStreamOutput writeStream(streamMemory);
@@ -146,20 +146,20 @@ TEST(unicodeStringHandlerTest, unicodeNumericConversion)
     {
         MemoryStreamInput readStream(streamMemory);
         StreamReader reader(readStream);
-        std::unique_ptr<DataSet> testDataSet(CodecFactory::load(reader));
+        DataSet testDataSet = CodecFactory::load(reader);
 
-        ASSERT_DOUBLE_EQ(std::stod(L"1000"), std::stod(testDataSet->getUnicodeString(TagId(0x0010, 0x0010), 0)));
-        EXPECT_EQ(1000, testDataSet->getSignedLong(TagId(0x0010, 0x0010), 0));
-        EXPECT_EQ(1000u, testDataSet->getUnsignedLong(TagId(0x0010, 0x0010), 0));
-        ASSERT_DOUBLE_EQ(1000.0, testDataSet->getDouble(TagId(0x0010, 0x0010), 0));
-        EXPECT_EQ(2000, testDataSet->getSignedLong(TagId(0x0010, 0x0010), 1));
-        EXPECT_EQ(2000u, testDataSet->getUnsignedLong(TagId(0x0010, 0x0010), 1));
-        ASSERT_DOUBLE_EQ(2000.0, testDataSet->getDouble(TagId(0x0010, 0x0010), 1));
-        EXPECT_EQ(3000, testDataSet->getSignedLong(TagId(0x0010, 0x0010), 2));
-        EXPECT_EQ(3000u, testDataSet->getUnsignedLong(TagId(0x0010, 0x0010), 2));
-        ASSERT_DOUBLE_EQ(3000.0, testDataSet->getDouble(TagId(0x0010, 0x0010), 2));
-        EXPECT_THROW(testDataSet->getDate(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
-        EXPECT_THROW(testDataSet->getAge(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
+        ASSERT_DOUBLE_EQ(std::stod(L"1000"), std::stod(testDataSet.getUnicodeString(TagId(0x0010, 0x0010), 0)));
+        EXPECT_EQ(1000, testDataSet.getSignedLong(TagId(0x0010, 0x0010), 0));
+        EXPECT_EQ(1000u, testDataSet.getUnsignedLong(TagId(0x0010, 0x0010), 0));
+        ASSERT_DOUBLE_EQ(1000.0, testDataSet.getDouble(TagId(0x0010, 0x0010), 0));
+        EXPECT_EQ(2000, testDataSet.getSignedLong(TagId(0x0010, 0x0010), 1));
+        EXPECT_EQ(2000u, testDataSet.getUnsignedLong(TagId(0x0010, 0x0010), 1));
+        ASSERT_DOUBLE_EQ(2000.0, testDataSet.getDouble(TagId(0x0010, 0x0010), 1));
+        EXPECT_EQ(3000, testDataSet.getSignedLong(TagId(0x0010, 0x0010), 2));
+        EXPECT_EQ(3000u, testDataSet.getUnsignedLong(TagId(0x0010, 0x0010), 2));
+        ASSERT_DOUBLE_EQ(3000.0, testDataSet.getDouble(TagId(0x0010, 0x0010), 2));
+        EXPECT_THROW(testDataSet.getDate(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
+        EXPECT_THROW(testDataSet.getAge(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
     }
 }
 

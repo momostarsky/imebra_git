@@ -19,14 +19,9 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #if !defined(imebraTagId__INCLUDED_)
 #define imebraTagId__INCLUDED_
 
-#ifndef SWIG
-
 #include <cstdint>
 #include <vector>
 #include "tagsEnumeration.h"
-
-#endif
-
 #include "definitions.h"
 
 namespace imebra
@@ -113,7 +108,7 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     std::uint16_t getTagId() const;
 
-private:
+protected:
     std::uint16_t m_groupId;
     std::uint32_t m_groupOrder;
     std::uint16_t m_tagId;

@@ -32,9 +32,9 @@ int findArgument(const char* argument, int argc, char* argv[])
 	return -1;
 }
 
-void CopyGroups(DataSet* source, DataSet* destination)
+void CopyGroups(const DataSet& source, MutableDataSet& destination)
 {
-    tagsIds_t tags(source->getTags());
+    tagsIds_t tags(source.getTags());
 
     for(tagsIds_t::const_iterator scanTags(tags.begin()), endTags(tags.end()); scanTags != endTags; ++scanTags)
     {
@@ -44,12 +44,12 @@ void CopyGroups(DataSet* source, DataSet* destination)
         }
         try
         {
-            destination->getTag(*scanTags);
+            destination.getTag(*scanTags);
         }
         catch(const MissingDataElementError&)
         {
-            std::unique_ptr<Tag> sourceTag(source->getTag(*scanTags));
-            std::unique_ptr<Tag> destTag(destination->getTagCreate(*scanTags, sourceTag->getDataType()));
+            Tag sourceTag = source.getTag(*scanTags);
+            MutableTag destTag = destination.getTagCreate(*scanTags, sourceTag.getDataType());
 
             try
             {
@@ -57,19 +57,19 @@ void CopyGroups(DataSet* source, DataSet* destination)
                 {
                     try
                     {
-                        std::unique_ptr<DataSet> sequence(sourceTag->getSequenceItem(buffer));
-                        DataSet destSequence;
-                        CopyGroups(sequence.get(), &destSequence);
-                        destination->setSequenceItem(*scanTags, buffer, destSequence);
+                        DataSet sequence = sourceTag.getSequenceItem(buffer);
+                        MutableDataSet destSequence;
+                        CopyGroups(sequence, destSequence);
+                        destination.setSequenceItem(*scanTags, buffer, destSequence);
                     }
                     catch(const MissingDataElementError&)
                     {
-                        std::unique_ptr<ReadingDataHandler> sourceHandler(sourceTag->getReadingDataHandler(buffer));
-                        std::unique_ptr<WritingDataHandler> destHandler(destTag->getWritingDataHandler(buffer));
-                        destHandler->setSize(sourceHandler->getSize());
-                        for(size_t item(0); item != sourceHandler->getSize(); ++item)
+                        ReadingDataHandler sourceHandler = sourceTag.getReadingDataHandler(buffer);
+                        WritingDataHandler destHandler = destTag.getWritingDataHandler(buffer);
+                        destHandler.setSize(sourceHandler.getSize());
+                        for(size_t item(0); item != sourceHandler.getSize(); ++item)
                         {
-                            destHandler->setUnicodeString(item, sourceHandler->getUnicodeString(item));
+                            destHandler.setUnicodeString(item, sourceHandler.getUnicodeString(item));
                         }
                     }
                 }
@@ -141,25 +141,25 @@ int main(int argc, char* argv[])
 					return 1;
 		}
 
-        std::unique_ptr<DataSet> loadedDataSet(CodecFactory::load(inputFileName, 2048));
+        DataSet loadedDataSet = CodecFactory::load(inputFileName, 2048);
 
 
 		// Now we create a new dataset and copy the tags and images from the loaded dataset
-        DataSet newDataSet(transferSyntax);
+        MutableDataSet newDataSet(transferSyntax);
 
 		// Copy the images first
 		try
 		{
             for(size_t scanImages(0);; ++scanImages)
 			{
-                std::unique_ptr<Image> copyImage(loadedDataSet->getImage(scanImages));
-                if(copyImage->getHighBit() > maxHighBit)
+                Image copyImage = loadedDataSet.getImage(scanImages);
+                if(copyImage.getHighBit() > maxHighBit)
                 {
-                    std::cout << "WARNING: image has highBit=" << copyImage->getHighBit() <<
+                    std::cout << "WARNING: image has highBit=" << copyImage.getHighBit() <<
                                  " but the selected transfer syntax support highBit<=" <<
                                  maxHighBit << std::endl;
                 }
-                newDataSet.setImage(scanImages, *copyImage, imageQuality_t::high);
+                newDataSet.setImage(scanImages, copyImage, imageQuality_t::high);
 			}
 		}
         catch(const DataSetImageDoesntExistError&)
@@ -167,7 +167,7 @@ int main(int argc, char* argv[])
 			// Ignore this
 		}
 
-        CopyGroups(loadedDataSet.get(), &newDataSet);
+        CopyGroups(loadedDataSet, newDataSet);
 
         CodecFactory::save(newDataSet, outputFileName, codecType_t::dicom);
 

@@ -15,15 +15,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #define imebraObjcTransform__INCLUDED_
 
 #import <Foundation/Foundation.h>
+#include "imebra_macros.h"
 
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
-namespace imebra
-{
-class Transform;
-}
-#endif
 
 @class ImebraImage;
+@class ImebraMutableImage;
 
 
 ///
@@ -33,16 +29,13 @@ class Transform;
 ///////////////////////////////////////////////////////////////////////////////
 @interface ImebraTransform: NSObject
 
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
 {
     @public
-    imebra::Transform* m_pTransform;
+    define_imebra_object_holder(Transform);
 
 }
 
-    -(id)initWithImebraTransform:(imebra::Transform*)pTransform;
-
-#endif
+    -(id)initWithImebraTransform:define_imebra_parameter(Transform);
 
     -(void)dealloc;
 
@@ -85,7 +78,7 @@ class Transform;
             inputTopLeftY:(unsigned int)inputTopLeftY
             inputWidth:(unsigned int)inputWidth
             inputHeight:(unsigned int)inputHeight
-            outputImage:(ImebraImage*)pOutputImage
+            outputImage:(ImebraMutableImage*)pOutputImage
             outputTopLeftX:(unsigned int)outputTopLeftX
             outputTopLeftY:(unsigned int)outputTopLeftY
             error:(NSError**)pError

@@ -23,12 +23,28 @@ If you do not want to be bound by the GPL terms (such as the requirement
 namespace imebra
 {
 
+ReadingDataHandler::ReadingDataHandler(const std::shared_ptr<implementation::handlers::readingDataHandler>& pDataHandler): m_pDataHandler(pDataHandler)
+{
+}
+
+ReadingDataHandler::ReadingDataHandler(const ReadingDataHandler& source): m_pDataHandler(getReadingDataHandlerImplementation(source))
+{
+}
+
+ReadingDataHandler& ReadingDataHandler::operator=(const ReadingDataHandler& source)
+{
+    m_pDataHandler = getReadingDataHandlerImplementation(source);
+    return *this;
+}
+
 ReadingDataHandler::~ReadingDataHandler()
 {
 }
 
-ReadingDataHandler::ReadingDataHandler(std::shared_ptr<imebra::implementation::handlers::readingDataHandler> pDataHandler): m_pDataHandler(pDataHandler)
-{}
+const std::shared_ptr<implementation::handlers::readingDataHandler>& getReadingDataHandlerImplementation(const ReadingDataHandler& readingDataHandler)
+{
+    return readingDataHandler.m_pDataHandler;
+}
 
 size_t ReadingDataHandler::getSize() const
 {

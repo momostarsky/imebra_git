@@ -11,20 +11,27 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#include "imebra_bridgeStructures.h"
+#import "../include/imebraobjc/imebra_tcpAddress.h"
+
+#include "imebra_implementation_macros.h"
+#include "imebra_strings.h"
+#include "imebra_nserror.h"
+
+#include <imebra/tcpAddress.h>
 
 @implementation ImebraTCPAddress
 
--(id)initWithImebraTCPAddress:(imebra::TCPAddress*)pTcpAddress
+-(id)initWithImebraTCPAddress:define_imebra_parameter(TCPAddress)
 {
+    reset_imebra_object_holder(TCPAddress);
     self = [super init];
     if(self)
     {
-        m_pTcpAddress = pTcpAddress;
+        set_imebra_object_holder(TCPAddress, get_imebra_parameter(TCPAddress));
     }
     else
     {
-        delete pTcpAddress;
+        delete get_imebra_parameter(TCPAddress);
     }
     return self;
 
@@ -33,7 +40,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(void)dealloc
 {
-    delete m_pTcpAddress;
+    delete_imebra_object_holder(TCPAddress);
 #if !__has_feature(objc_arc)
     [super dealloc];
 #endif
@@ -41,12 +48,12 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(NSString*) node
 {
-    return imebra::stringToNSString(m_pTcpAddress->getNode());
+    return imebra::stringToNSString(get_imebra_object_holder(TCPAddress)->getNode());
 }
 
 -(NSString*) service
 {
-    return imebra::stringToNSString(m_pTcpAddress->getService());
+    return imebra::stringToNSString(get_imebra_object_holder(TCPAddress)->getService());
 }
 
 @end
@@ -58,10 +65,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
+    reset_imebra_object_holder(TCPAddress);
     self = [super init];
     if(self)
     {
-        m_pTcpAddress = new imebra::TCPActiveAddress(imebra::NSStringToString(node), imebra::NSStringToString(service));
+        set_imebra_object_holder(TCPAddress, new imebra::TCPActiveAddress(imebra::NSStringToString(node), imebra::NSStringToString(service)));
     }
     return self;
 
@@ -77,10 +85,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
+    reset_imebra_object_holder(TCPAddress);
     self = [super init];
     if(self)
     {
-        m_pTcpAddress = new imebra::TCPPassiveAddress(imebra::NSStringToString(node), imebra::NSStringToString(service));
+        set_imebra_object_holder(TCPAddress, new imebra::TCPPassiveAddress(imebra::NSStringToString(node), imebra::NSStringToString(service)));
     }
     return self;
 

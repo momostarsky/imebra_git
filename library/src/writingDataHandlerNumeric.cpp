@@ -24,37 +24,51 @@ If you do not want to be bound by the GPL terms (such as the requirement
 namespace imebra
 {
 
-WritingDataHandlerNumeric::WritingDataHandlerNumeric(std::shared_ptr<implementation::handlers::writingDataHandlerNumericBase> pDataHandler):
+WritingDataHandlerNumeric::WritingDataHandlerNumeric(const std::shared_ptr<implementation::handlers::writingDataHandlerNumericBase>& pDataHandler):
     WritingDataHandler(pDataHandler)
 {
+}
+
+WritingDataHandlerNumeric::WritingDataHandlerNumeric(const WritingDataHandlerNumeric& source): WritingDataHandler(source)
+{
+}
+
+WritingDataHandlerNumeric& WritingDataHandlerNumeric::operator=(const WritingDataHandlerNumeric& source)
+{
+    WritingDataHandler::operator =(source);
+    return *this;
 }
 
 WritingDataHandlerNumeric::~WritingDataHandlerNumeric()
 {
 }
 
-ReadWriteMemory* WritingDataHandlerNumeric::getMemory() const
+MutableMemory WritingDataHandlerNumeric::getMemory() const
 {
-    std::shared_ptr<imebra::implementation::handlers::writingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<imebra::implementation::handlers::writingDataHandlerNumericBase>(m_pDataHandler);
-    return new ReadWriteMemory(numericDataHandler->getMemory());
+    std::shared_ptr<implementation::handlers::writingDataHandlerNumericBase> numericDataHandler =
+            std::dynamic_pointer_cast<implementation::handlers::writingDataHandlerNumericBase>(getWritingDataHandlerImplementation(*this));
+    return MutableMemory(numericDataHandler->getMemory());
 }
 
 void WritingDataHandlerNumeric::assign(const char* source, size_t sourceSize)
 {
-    std::shared_ptr<imebra::implementation::handlers::writingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<imebra::implementation::handlers::writingDataHandlerNumericBase>(m_pDataHandler);
+    std::shared_ptr<implementation::handlers::writingDataHandlerNumericBase> numericDataHandler =
+            std::dynamic_pointer_cast<implementation::handlers::writingDataHandlerNumericBase>(getWritingDataHandlerImplementation(*this));
     numericDataHandler->getMemory()->assign((std::uint8_t*) source, sourceSize);
 }
 
 char* WritingDataHandlerNumeric::data(size_t* pDataSize) const
 {
-    std::shared_ptr<imebra::implementation::handlers::writingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<imebra::implementation::handlers::writingDataHandlerNumericBase>(m_pDataHandler);
+    std::shared_ptr<implementation::handlers::writingDataHandlerNumericBase> numericDataHandler =
+            std::dynamic_pointer_cast<implementation::handlers::writingDataHandlerNumericBase>(getWritingDataHandlerImplementation(*this));
     *pDataSize = numericDataHandler->getMemorySize();
     return (char*)numericDataHandler->getMemoryBuffer();
 }
 
 size_t WritingDataHandlerNumeric::data(char* destination, size_t destinationSize) const
 {
-    std::shared_ptr<imebra::implementation::handlers::writingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<imebra::implementation::handlers::writingDataHandlerNumericBase>(m_pDataHandler);
+    std::shared_ptr<implementation::handlers::writingDataHandlerNumericBase> numericDataHandler =
+            std::dynamic_pointer_cast<implementation::handlers::writingDataHandlerNumericBase>(getWritingDataHandlerImplementation(*this));
     size_t memorySize = numericDataHandler->getMemorySize();
     if(destination != 0 && destinationSize >= memorySize && memorySize != 0)
     {
@@ -65,26 +79,30 @@ size_t WritingDataHandlerNumeric::data(char* destination, size_t destinationSize
 
 size_t WritingDataHandlerNumeric::getUnitSize() const
 {
-    std::shared_ptr<imebra::implementation::handlers::writingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<imebra::implementation::handlers::writingDataHandlerNumericBase>(m_pDataHandler);
+    std::shared_ptr<implementation::handlers::writingDataHandlerNumericBase> numericDataHandler =
+            std::dynamic_pointer_cast<implementation::handlers::writingDataHandlerNumericBase>(getWritingDataHandlerImplementation(*this));
     return numericDataHandler->getUnitSize();
 }
 
 bool WritingDataHandlerNumeric::isSigned() const
 {
-    std::shared_ptr<imebra::implementation::handlers::writingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<imebra::implementation::handlers::writingDataHandlerNumericBase>(m_pDataHandler);
+    std::shared_ptr<implementation::handlers::writingDataHandlerNumericBase> numericDataHandler =
+            std::dynamic_pointer_cast<implementation::handlers::writingDataHandlerNumericBase>(getWritingDataHandlerImplementation(*this));
     return numericDataHandler->isSigned();
 }
 
 bool WritingDataHandlerNumeric::isFloat() const
 {
-    std::shared_ptr<imebra::implementation::handlers::writingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<imebra::implementation::handlers::writingDataHandlerNumericBase>(m_pDataHandler);
+    std::shared_ptr<implementation::handlers::writingDataHandlerNumericBase> numericDataHandler =
+            std::dynamic_pointer_cast<implementation::handlers::writingDataHandlerNumericBase>(getWritingDataHandlerImplementation(*this));
     return numericDataHandler->isFloat();
 }
 
 void WritingDataHandlerNumeric::copyFrom(const ReadingDataHandlerNumeric& source)
 {
-    std::shared_ptr<imebra::implementation::handlers::writingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<imebra::implementation::handlers::writingDataHandlerNumericBase>(m_pDataHandler);
-    return numericDataHandler->copyFrom(std::dynamic_pointer_cast<imebra::implementation::handlers::readingDataHandlerNumericBase>(source.m_pDataHandler));
+    std::shared_ptr<implementation::handlers::writingDataHandlerNumericBase> numericDataHandler =
+            std::dynamic_pointer_cast<implementation::handlers::writingDataHandlerNumericBase>(getWritingDataHandlerImplementation(*this));
+    return numericDataHandler->copyFrom(std::dynamic_pointer_cast<implementation::handlers::readingDataHandlerNumericBase>(getReadingDataHandlerImplementation(source)));
 }
 
 }

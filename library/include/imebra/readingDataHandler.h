@@ -22,26 +22,19 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <string>
 #include <memory>
 #include "definitions.h"
-#include "readMemory.h"
-
-#ifndef SWIG
+#include "memory.h"
 
 namespace imebra
 {
+
 namespace implementation
 {
 namespace handlers
 {
-class readingDataHandler;
-}
-}
+    class readingDataHandler;
 }
 
-#endif
-
-
-namespace imebra
-{
+}
 
 ///
 /// \brief The ReadingDataHandler class allows reading the content
@@ -62,19 +55,27 @@ namespace imebra
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API ReadingDataHandler
 {
-    ReadingDataHandler(const ReadingDataHandler&) = delete;
-    ReadingDataHandler& operator=(const ReadingDataHandler&) = delete;
 
-#ifndef SWIG
     friend class DataSet;
     friend class Tag;
-    friend class ReadingDataHandlerNumeric;
-
-private:
-    explicit ReadingDataHandler(std::shared_ptr<imebra::implementation::handlers::readingDataHandler> pDataHandler);
-#endif
 
 public:
+    ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source ReadingDataHandler object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    ReadingDataHandler(const ReadingDataHandler& source);
+
+    ///
+    /// \brief Assign operator.
+    ///
+    /// \param source source ReadingDataHandler object
+    /// \return a reference to this ReadingDataHandler object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    ReadingDataHandler& operator=(const ReadingDataHandler& source);
 
     virtual ~ReadingDataHandler();
 
@@ -183,6 +184,10 @@ public:
 
 #ifndef SWIG
 protected:
+    explicit ReadingDataHandler(const std::shared_ptr<implementation::handlers::readingDataHandler>& pDataHandler);
+
+private:
+    friend const std::shared_ptr<implementation::handlers::readingDataHandler>& getReadingDataHandlerImplementation(const ReadingDataHandler& readingDataHandler);
     std::shared_ptr<imebra::implementation::handlers::readingDataHandler> m_pDataHandler;
 #endif
 };

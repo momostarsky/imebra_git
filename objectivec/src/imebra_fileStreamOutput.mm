@@ -11,7 +11,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#include "imebra_bridgeStructures.h"
+#include "../include/imebraobjc/imebra_fileStreamOutput.h"
+#include "imebra_implementation_macros.h"
+#include "imebra_nserror.h"
+#include "imebra_strings.h"
+#include <imebra/fileStreamOutput.h>
 
 @implementation ImebraFileStreamOutput
 
@@ -19,11 +23,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    m_pBaseStreamOutput = 0;
+    reset_imebra_object_holder(BaseStreamOutput);
     self =  [super init];
     if(self)
     {
-        m_pBaseStreamOutput = new imebra::FileStreamOutput(imebra::NSStringToString(fileName));
+        set_imebra_object_holder(BaseStreamOutput, new imebra::FileStreamOutput(imebra::NSStringToString(fileName)));
     }
     return self;
 

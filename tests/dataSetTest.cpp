@@ -17,7 +17,7 @@ using namespace imebra;
 TEST(dataSetTest, testFragmentation)
 {
     // Add two images to a dataset, then fragment the first image
-    std::unique_ptr<Image> testImage0(buildImageForTest(
+    Image testImage0 = buildImageForTest(
         400,
         300,
         imebra::bitDepth_t::depthU8,
@@ -25,9 +25,9 @@ TEST(dataSetTest, testFragmentation)
         400,
         300,
         "RGB",
-        50));
+        50);
 
-    std::unique_ptr<Image> testImage1(buildImageForTest(
+    Image testImage1 = buildImageForTest(
         400,
         300,
         imebra::bitDepth_t::depthU8,
@@ -35,36 +35,36 @@ TEST(dataSetTest, testFragmentation)
         400,
         300,
         "RGB",
-        20));
+        20);
 
-    imebra::DataSet testDataSet("1.2.840.10008.1.2.4.70");
-    testDataSet.setImage(0, *testImage0, imageQuality_t::high);
-    testDataSet.setImage(1, *testImage1, imageQuality_t::high);
+    MutableDataSet testDataSet("1.2.840.10008.1.2.4.70");
+    testDataSet.setImage(0, testImage0, imageQuality_t::high);
+    testDataSet.setImage(1, testImage1, imageQuality_t::high);
 
     // Verify the two images
-    std::unique_ptr<Image> verifyImage0(testDataSet.getImage(0));
-    ASSERT_TRUE(compareImages(*testImage0, *verifyImage0) < 0.000001);
-    std::unique_ptr<Image> verifyImage1(testDataSet.getImage(1));
-    ASSERT_TRUE(compareImages(*testImage1, *verifyImage1) < 0.000001);
+    Image verifyImage0 = testDataSet.getImage(0);
+    ASSERT_TRUE(compareImages(testImage0, verifyImage0) < 0.000001);
+    Image verifyImage1(testDataSet.getImage(1));
+    ASSERT_TRUE(compareImages(testImage1, verifyImage1) < 0.000001);
 
     {
         std::uint32_t offset(0);
-        std::unique_ptr<WritingDataHandlerNumeric> offsetHandler(testDataSet.getWritingDataHandlerNumeric(TagId(imebra::tagId_t::PixelData_7FE0_0010), 0, tagVR_t::OB));
+        WritingDataHandlerNumeric offsetHandler = testDataSet.getWritingDataHandlerNumeric(TagId(imebra::tagId_t::PixelData_7FE0_0010), 0, tagVR_t::OB);
 
-        std::list<std::shared_ptr<WritingDataHandler> > handlers;
+        std::list<WritingDataHandler> handlers;
 
         // Get the images 1 & 2, fragment them
         //////////////////////////////////////
         for(std::uint32_t scanBuffers = 1; scanBuffers != 3; ++scanBuffers)
         {
             size_t dataSize;
-            offsetHandler->setSize(sizeof(std::uint32_t) * scanBuffers);
-            std::uint32_t* pOffsetMemory = (std::uint32_t*)offsetHandler->data(&dataSize);
+            offsetHandler.setSize(sizeof(std::uint32_t) * scanBuffers);
+            std::uint32_t* pOffsetMemory = (std::uint32_t*)offsetHandler.data(&dataSize);
             pOffsetMemory[scanBuffers - 1] = offset;
 
-            std::unique_ptr<ReadingDataHandlerNumeric> wholeHandler(testDataSet.getReadingDataHandlerNumeric(TagId(imebra::tagId_t::PixelData_7FE0_0010), scanBuffers));
+            ReadingDataHandlerNumeric wholeHandler = testDataSet.getReadingDataHandlerNumeric(TagId(imebra::tagId_t::PixelData_7FE0_0010), scanBuffers);
             size_t totalSize;
-            const char* pWholeMemory = wholeHandler->data(&totalSize);
+            const char* pWholeMemory = wholeHandler.data(&totalSize);
             size_t fragmentedSize = totalSize / 3;
             if(fragmentedSize & 0x1)
             {
@@ -77,9 +77,9 @@ TEST(dataSetTest, testFragmentation)
                 {
                     thisSize = fragmentedSize;
                 }
-                std::shared_ptr<WritingDataHandlerNumeric> newHandler(testDataSet.getWritingDataHandlerNumeric(TagId(imebra::tagId_t::PixelData_7FE0_0010), handlers.size() + 1, tagVR_t::OB));
-                newHandler->setSize(thisSize);
-                newHandler->assign(pWholeMemory, thisSize);
+                WritingDataHandlerNumeric newHandler = testDataSet.getWritingDataHandlerNumeric(TagId(imebra::tagId_t::PixelData_7FE0_0010), handlers.size() + 1, tagVR_t::OB);
+                newHandler.setSize(thisSize);
+                newHandler.assign(pWholeMemory, thisSize);
                 handlers.push_back(newHandler);
                 offset += (std::uint32_t)thisSize + 8u;
                 totalSize -= thisSize;
@@ -88,33 +88,34 @@ TEST(dataSetTest, testFragmentation)
         }
     }
 
-    std::unique_ptr<Image> compareImage0(testDataSet.getImage(0));
-        ASSERT_TRUE(compareImages(*testImage0, *compareImage0) < 0.000001);
-    std::unique_ptr<Image> compareImage1(testDataSet.getImage(1));
-        ASSERT_TRUE(compareImages(*testImage1, *compareImage1) < 0.000001);
-        ASSERT_TRUE(compareImages(*testImage0, *compareImage1) > 30);
+    Image compareImage0 = testDataSet.getImage(0);
+    ASSERT_TRUE(compareImages(testImage0, compareImage0) < 0.000001);
+
+    Image compareImage1 = testDataSet.getImage(1);
+    ASSERT_TRUE(compareImages(testImage1, compareImage1) < 0.000001);
+    ASSERT_TRUE(compareImages(testImage0, compareImage1) > 30);
 }
 
 
 TEST(dataSetTest, testVOIs)
 {
-    DataSet testDataSet;
+    MutableDataSet testDataSet;
 
     vois_t vois0 = testDataSet.getVOIs();
     ASSERT_TRUE(vois0.empty());
 
     {
-        std::unique_ptr<WritingDataHandler> centerHandler(testDataSet.getWritingDataHandler(TagId(0x0028, 0x1050), 0));
-        centerHandler->setDouble(0, 10.4);
-        centerHandler->setDouble(1, 20.4);
+        WritingDataHandler centerHandler = testDataSet.getWritingDataHandler(TagId(0x0028, 0x1050), 0);
+        centerHandler.setDouble(0, 10.4);
+        centerHandler.setDouble(1, 20.4);
 
-        std::unique_ptr<WritingDataHandler> widthHandler(testDataSet.getWritingDataHandler(TagId(0x0028, 0x1051), 0));
-        widthHandler->setDouble(0, 12.5);
-        widthHandler->setDouble(1, 22.5);
+        WritingDataHandler widthHandler = testDataSet.getWritingDataHandler(TagId(0x0028, 0x1051), 0);
+        widthHandler.setDouble(0, 12.5);
+        widthHandler.setDouble(1, 22.5);
 
-        std::unique_ptr<WritingDataHandler> descriptionHandler(testDataSet.getWritingDataHandler(TagId(0x0028, 0x1055), 0));
-        descriptionHandler->setUnicodeString(0, L"Test1");
-        descriptionHandler->setUnicodeString(1, L"Test2");
+        WritingDataHandler descriptionHandler = testDataSet.getWritingDataHandler(TagId(0x0028, 0x1055), 0);
+        descriptionHandler.setUnicodeString(0, L"Test1");
+        descriptionHandler.setUnicodeString(1, L"Test2");
     }
 
     vois_t vois1 = testDataSet.getVOIs();
@@ -130,7 +131,7 @@ TEST(dataSetTest, testVOIs)
 
 TEST(dataSetTest, testGetTags)
 {
-    DataSet testDataSet;
+    MutableDataSet testDataSet;
 
     testDataSet.setString(TagId(tagId_t::PatientName_0010_0010), "Test patient");
     testDataSet.setAge(TagId(tagId_t::PatientAge_0010_1010), Age(3, ageUnit_t::years));
@@ -149,25 +150,25 @@ TEST(dataSetTest, testGetTags)
 
 TEST(dataSetTest, testCreateTags)
 {
-    DataSet testDataSet;
+    MutableDataSet testDataSet;
 
     {
-        std::unique_ptr<Tag> patientTag(testDataSet.getTagCreate(TagId(tagId_t::PatientName_0010_0010), tagVR_t::PN));
-        std::unique_ptr<WritingDataHandler> patientHandler(patientTag->getWritingDataHandler(0));
-        patientHandler->setString(0, "test0");
-        patientHandler->setString(1, "test1");
+        MutableTag patientTag = testDataSet.getTagCreate(TagId(tagId_t::PatientName_0010_0010), tagVR_t::PN);
+        WritingDataHandler patientHandler = patientTag.getWritingDataHandler(0);
+        patientHandler.setString(0, "test0");
+        patientHandler.setString(1, "test1");
     }
 
-    std::unique_ptr<Tag> patientTag(testDataSet.getTag(TagId(tagId_t::PatientName_0010_0010)));
-    std::unique_ptr<ReadingDataHandler> patientHandler(patientTag->getReadingDataHandler(0));
-    ASSERT_EQ("test0", patientHandler->getString(0));
-    ASSERT_EQ("test1", patientHandler->getString(1));
+    Tag patientTag = testDataSet.getTag(TagId(tagId_t::PatientName_0010_0010));
+    ReadingDataHandler patientHandler = patientTag.getReadingDataHandler(0);
+    ASSERT_EQ("test0", patientHandler.getString(0));
+    ASSERT_EQ("test1", patientHandler.getString(1));
 }
 
 
 TEST(dataSetTest, testSetGetTags)
 {
-    DataSet testDataSet;
+    MutableDataSet testDataSet;
 
     testDataSet.setAge(TagId(tagId_t::PatientAge_0010_1010), Age(3, ageUnit_t::months));
     testDataSet.setDate(TagId(tagId_t::AcquisitionDateTime_0008_002A), Date(2014, 2, 1, 12, 20, 30, 0, 0, 0));
@@ -177,9 +178,9 @@ TEST(dataSetTest, testSetGetTags)
     testDataSet.setSignedLong(TagId(0x20, 0x21), 50, tagVR_t::SL);
     testDataSet.setUnsignedLong(TagId(0x20, 0x22), 60, tagVR_t::UL);
 
-    std::unique_ptr<Age> age0(testDataSet.getAge(TagId(tagId_t::PatientAge_0010_1010), 0));
-    ASSERT_EQ(3u, age0->age);
-    ASSERT_EQ(ageUnit_t::months, age0->units);
+    Age age0 = testDataSet.getAge(TagId(tagId_t::PatientAge_0010_1010), 0);
+    ASSERT_EQ(3u, age0.age);
+    ASSERT_EQ(ageUnit_t::months, age0.units);
     ASSERT_EQ("003M", testDataSet.getString(TagId(tagId_t::PatientAge_0010_1010), 0));
     ASSERT_THROW(testDataSet.getSignedLong(TagId(tagId_t::PatientAge_0010_1010), 0), DataHandlerConversionError);
     ASSERT_THROW(testDataSet.getUnsignedLong(TagId(tagId_t::PatientAge_0010_1010), 0), DataHandlerConversionError);
@@ -187,19 +188,19 @@ TEST(dataSetTest, testSetGetTags)
     ASSERT_THROW(testDataSet.getDouble(TagId(tagId_t::PatientAge_0010_1010), 0), DataHandlerConversionError);
     ASSERT_THROW(testDataSet.getDate(TagId(tagId_t::PatientAge_0010_1010), 0), DataHandlerConversionError);
 
-    std::unique_ptr<Date> date0(testDataSet.getDate(TagId(tagId_t::AcquisitionDateTime_0008_002A), 0));
-    ASSERT_EQ(2014u, date0->year);
-    ASSERT_EQ(2u, date0->month);
-    ASSERT_EQ(1u, date0->day);
+    Date date0 = testDataSet.getDate(TagId(tagId_t::AcquisitionDateTime_0008_002A), 0);
+    ASSERT_EQ(2014u, date0.year);
+    ASSERT_EQ(2u, date0.month);
+    ASSERT_EQ(1u, date0.day);
     ASSERT_THROW(testDataSet.getSignedLong(TagId(tagId_t::AcquisitionDateTime_0008_002A), 0), DataHandlerConversionError);
     ASSERT_THROW(testDataSet.getUnsignedLong(TagId(tagId_t::AcquisitionDateTime_0008_002A), 0), DataHandlerConversionError);
     ASSERT_THROW(testDataSet.getDouble(TagId(tagId_t::AcquisitionDateTime_0008_002A), 0), DataHandlerConversionError);
     ASSERT_THROW(testDataSet.getAge(TagId(tagId_t::AcquisitionDateTime_0008_002A), 0), DataHandlerConversionError);
 
-    std::unique_ptr<Date> date1(testDataSet.getDate(TagId(tagId_t::PatientBirthDate_0010_0030), 0));
-    ASSERT_EQ(2000u, date1->year);
-    ASSERT_EQ(1u, date1->month);
-    ASSERT_EQ(2u, date1->day);
+    Date date1 = testDataSet.getDate(TagId(tagId_t::PatientBirthDate_0010_0030), 0);
+    ASSERT_EQ(2000u, date1.year);
+    ASSERT_EQ(1u, date1.month);
+    ASSERT_EQ(2u, date1.day);
 
     ASSERT_EQ("Test patient", testDataSet.getString(TagId(tagId_t::PatientName_0010_0010), 0));
     ASSERT_DOUBLE_EQ(45.6, testDataSet.getDouble(TagId(0x20, 0x20), 0));
@@ -218,22 +219,22 @@ TEST(dataSetTest, defaults)
     std::string defaultString("defaultstring");
     std::wstring defaultUnicodeString(L"defaultUnicodeString");
 
-    DataSet testDataSet;
+    MutableDataSet testDataSet;
 
-    std::unique_ptr<Age> getDefaultAge(testDataSet.getAge(TagId(20, 20), 0, defaultAge));
-    ASSERT_EQ(defaultAge.age, getDefaultAge->age);
-    ASSERT_EQ(defaultAge.units, getDefaultAge->units);
+    Age getDefaultAge = testDataSet.getAge(TagId(20, 20), 0, defaultAge);
+    ASSERT_EQ(defaultAge.age, getDefaultAge.age);
+    ASSERT_EQ(defaultAge.units, getDefaultAge.units);
 
-    std::unique_ptr<Date> getDefaultDate(testDataSet.getDate(TagId(20, 20), 0, defaultDate));
-    ASSERT_EQ(defaultDate.year, getDefaultDate->year);
-    ASSERT_EQ(defaultDate.month, getDefaultDate->month);
-    ASSERT_EQ(defaultDate.day, getDefaultDate->day);
-    ASSERT_EQ(defaultDate.hour, getDefaultDate->hour);
-    ASSERT_EQ(defaultDate.minutes, getDefaultDate->minutes);
-    ASSERT_EQ(defaultDate.seconds, getDefaultDate->seconds);
-    ASSERT_EQ(defaultDate.nanoseconds, getDefaultDate->nanoseconds);
-    ASSERT_EQ(defaultDate.offsetHours, getDefaultDate->offsetHours);
-    ASSERT_EQ(defaultDate.offsetMinutes, getDefaultDate->offsetMinutes);
+    Date getDefaultDate = testDataSet.getDate(TagId(20, 20), 0, defaultDate);
+    ASSERT_EQ(defaultDate.year, getDefaultDate.year);
+    ASSERT_EQ(defaultDate.month, getDefaultDate.month);
+    ASSERT_EQ(defaultDate.day, getDefaultDate.day);
+    ASSERT_EQ(defaultDate.hour, getDefaultDate.hour);
+    ASSERT_EQ(defaultDate.minutes, getDefaultDate.minutes);
+    ASSERT_EQ(defaultDate.seconds, getDefaultDate.seconds);
+    ASSERT_EQ(defaultDate.nanoseconds, getDefaultDate.nanoseconds);
+    ASSERT_EQ(defaultDate.offsetHours, getDefaultDate.offsetHours);
+    ASSERT_EQ(defaultDate.offsetMinutes, getDefaultDate.offsetMinutes);
 
     ASSERT_EQ(defaultUnsigned, testDataSet.getUnsignedLong(TagId(20, 20), 0, defaultUnsigned));
     ASSERT_EQ(defaultSigned, testDataSet.getSignedLong(TagId(20, 20), 0, defaultSigned));
@@ -265,11 +266,11 @@ TEST(dataSetTest, testSequence)
 
         std::cout << "Sequence test. Transfer syntax: " << transferSyntax << std::endl;
 
-        DataSet testDataSet(transferSyntax);
+        MutableDataSet testDataSet(transferSyntax);
 
         {
-            DataSet sequence0;
-            DataSet sequence1;
+            MutableDataSet sequence0;
+            MutableDataSet sequence1;
 
             sequence0.setString(TagId(0x10, 0x10), "Test0");
             sequence1.setString(TagId(0x10, 0x10), "Test1");
@@ -279,25 +280,25 @@ TEST(dataSetTest, testSequence)
         }
 
         {
-            std::unique_ptr<DataSet> sequence0(testDataSet.getSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 0));
-            std::unique_ptr<DataSet> sequence1(testDataSet.getSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 1));
-            ASSERT_EQ("Test0", sequence0->getString(TagId(0x10, 0x10), 0));
-            ASSERT_EQ("Test1", sequence1->getString(TagId(0x10, 0x10), 0));
+            DataSet sequence0 = testDataSet.getSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 0);
+            DataSet sequence1 = testDataSet.getSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 1);
+            ASSERT_EQ("Test0", sequence0.getString(TagId(0x10, 0x10), 0));
+            ASSERT_EQ("Test1", sequence1.getString(TagId(0x10, 0x10), 0));
         }
 
-        ReadWriteMemory encodedDataSet;
+        MutableMemory encodedDataSet;
         MemoryStreamOutput outputStream(encodedDataSet);
         StreamWriter outputWriter(outputStream);
         CodecFactory::save(testDataSet, outputWriter, codecType_t::dicom);
 
         MemoryStreamInput inputStream(encodedDataSet);
         StreamReader inputReader(inputStream);
-        std::unique_ptr<DataSet> readDataSet(CodecFactory::load(inputReader));
+        DataSet readDataSet = CodecFactory::load(inputReader);
         {
-            std::unique_ptr<DataSet> sequence0(readDataSet->getSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 0));
-            std::unique_ptr<DataSet> sequence1(readDataSet->getSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 1));
-            ASSERT_EQ("Test0", sequence0->getString(TagId(0x10, 0x10), 0));
-            ASSERT_EQ("Test1", sequence1->getString(TagId(0x10, 0x10), 0));
+            DataSet sequence0 = readDataSet.getSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 0);
+            DataSet sequence1 = readDataSet.getSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 1);
+            ASSERT_EQ("Test0", sequence0.getString(TagId(0x10, 0x10), 0));
+            ASSERT_EQ("Test1", sequence1.getString(TagId(0x10, 0x10), 0));
         }
     }
 }
@@ -305,76 +306,76 @@ TEST(dataSetTest, testSequence)
 TEST(dataSetTest, dataHandler)
 {
     {
-        DataSet testDataSet;
+        MutableDataSet testDataSet;
         {
-            std::unique_ptr<WritingDataHandler> handler(testDataSet.getWritingDataHandler(TagId(tagId_t::PatientName_0010_0010), 0, tagVR_t::UL));
-            handler->setSize(10);
-            ASSERT_EQ(tagVR_t::UL, handler->getDataType());
-            ASSERT_EQ(10u, handler->getSize());
+            WritingDataHandler handler = testDataSet.getWritingDataHandler(TagId(tagId_t::PatientName_0010_0010), 0, tagVR_t::UL);
+            handler.setSize(10);
+            ASSERT_EQ(tagVR_t::UL, handler.getDataType());
+            ASSERT_EQ(10u, handler.getSize());
         }
-        std::unique_ptr<ReadingDataHandler> handler(testDataSet.getReadingDataHandler(TagId(tagId_t::PatientName_0010_0010), 0));
-        std::unique_ptr<ReadingDataHandler> raw(testDataSet.getReadingDataHandlerRaw(TagId(tagId_t::PatientName_0010_0010), 0));
-        ASSERT_EQ(tagVR_t::UL, handler->getDataType());
-        ASSERT_EQ(10u, handler->getSize());
-        ASSERT_EQ(40u, raw->getSize());
+        ReadingDataHandler handler = testDataSet.getReadingDataHandler(TagId(tagId_t::PatientName_0010_0010), 0);
+        ReadingDataHandler raw = testDataSet.getReadingDataHandlerRaw(TagId(tagId_t::PatientName_0010_0010), 0);
+        ASSERT_EQ(tagVR_t::UL, handler.getDataType());
+        ASSERT_EQ(10u, handler.getSize());
+        ASSERT_EQ(40u, raw.getSize());
     }
 
     {
-        DataSet testDataSet;
+        MutableDataSet testDataSet;
         {
-            std::unique_ptr<WritingDataHandlerNumeric> handler(testDataSet.getWritingDataHandlerNumeric(TagId(tagId_t::RegionLocationMinX0_0018_6018), 0));
-            handler->setSignedLong(0, 100);
-            handler->setSize(10);
-            ASSERT_EQ(tagVR_t::UL, handler->getDataType());
-            ASSERT_EQ(10u, handler->getSize());
+            WritingDataHandlerNumeric handler = testDataSet.getWritingDataHandlerNumeric(TagId(tagId_t::RegionLocationMinX0_0018_6018), 0);
+            handler.setSignedLong(0, 100);
+            handler.setSize(10);
+            ASSERT_EQ(tagVR_t::UL, handler.getDataType());
+            ASSERT_EQ(10u, handler.getSize());
         }
-        std::unique_ptr<ReadingDataHandlerNumeric> handler(testDataSet.getReadingDataHandlerNumeric(TagId(tagId_t::RegionLocationMinX0_0018_6018), 0));
-        std::unique_ptr<ReadingDataHandler> raw(testDataSet.getReadingDataHandlerRaw(TagId(tagId_t::RegionLocationMinX0_0018_6018), 0));
-        ASSERT_EQ(100, handler->getSignedLong(0));
-        ASSERT_EQ(tagVR_t::UL, handler->getDataType());
-        ASSERT_EQ(10u, handler->getSize());
-        ASSERT_EQ(40u, raw->getSize());
+        ReadingDataHandlerNumeric handler = testDataSet.getReadingDataHandlerNumeric(TagId(tagId_t::RegionLocationMinX0_0018_6018), 0);
+        ReadingDataHandler raw = testDataSet.getReadingDataHandlerRaw(TagId(tagId_t::RegionLocationMinX0_0018_6018), 0);
+        ASSERT_EQ(100, handler.getSignedLong(0));
+        ASSERT_EQ(tagVR_t::UL, handler.getDataType());
+        ASSERT_EQ(10u, handler.getSize());
+        ASSERT_EQ(40u, raw.getSize());
     }
 
     {
-        DataSet testDataSet;
+        MutableDataSet testDataSet;
         {
-            std::unique_ptr<WritingDataHandlerNumeric> handler(testDataSet.getWritingDataHandlerRaw(TagId(tagId_t::RegionLocationMinX0_0018_6018), 0));
-            handler->setSize(16);
-            ASSERT_EQ(tagVR_t::UL, handler->getDataType());
-            ASSERT_EQ(16u, handler->getSize());
+            WritingDataHandlerNumeric handler = testDataSet.getWritingDataHandlerRaw(TagId(tagId_t::RegionLocationMinX0_0018_6018), 0);
+            handler.setSize(16);
+            ASSERT_EQ(tagVR_t::UL, handler.getDataType());
+            ASSERT_EQ(16u, handler.getSize());
         }
-        std::unique_ptr<ReadingDataHandlerNumeric> handler(testDataSet.getReadingDataHandlerNumeric(TagId(tagId_t::RegionLocationMinX0_0018_6018), 0));
-        std::unique_ptr<ReadingDataHandler> raw(testDataSet.getReadingDataHandlerRaw(TagId(tagId_t::RegionLocationMinX0_0018_6018), 0));
-        ASSERT_EQ(tagVR_t::UL, handler->getDataType());
-        ASSERT_EQ(4u, handler->getSize());
-        ASSERT_EQ(16u, raw->getSize());
+        ReadingDataHandlerNumeric handler = testDataSet.getReadingDataHandlerNumeric(TagId(tagId_t::RegionLocationMinX0_0018_6018), 0);
+        ReadingDataHandler raw = testDataSet.getReadingDataHandlerRaw(TagId(tagId_t::RegionLocationMinX0_0018_6018), 0);
+        ASSERT_EQ(tagVR_t::UL, handler.getDataType());
+        ASSERT_EQ(4u, handler.getSize());
+        ASSERT_EQ(16u, raw.getSize());
     }
 
     {
-        DataSet testDataSet;
+        MutableDataSet testDataSet;
         {
-            std::unique_ptr<WritingDataHandler> handler(testDataSet.getWritingDataHandler(TagId(tagId_t::PatientName_0010_0010), 0));
-            handler->setSize(2);
-            ASSERT_EQ(tagVR_t::PN, handler->getDataType());
-            ASSERT_EQ(2u, handler->getSize());
+            WritingDataHandler handler = testDataSet.getWritingDataHandler(TagId(tagId_t::PatientName_0010_0010), 0);
+            handler.setSize(2);
+            ASSERT_EQ(tagVR_t::PN, handler.getDataType());
+            ASSERT_EQ(2u, handler.getSize());
         }
-        std::unique_ptr<ReadingDataHandler> handler(testDataSet.getReadingDataHandler(TagId(tagId_t::PatientName_0010_0010), 0));
-        ASSERT_EQ(tagVR_t::PN, handler->getDataType());
-        ASSERT_EQ(2u, handler->getSize());
+        ReadingDataHandler handler = testDataSet.getReadingDataHandler(TagId(tagId_t::PatientName_0010_0010), 0);
+        ASSERT_EQ(tagVR_t::PN, handler.getDataType());
+        ASSERT_EQ(2u, handler.getSize());
     }
 
     {
-        DataSet testDataSet;
+        MutableDataSet testDataSet;
         {
-            std::unique_ptr<WritingDataHandlerNumeric> handler(testDataSet.getWritingDataHandlerRaw(TagId(tagId_t::PixelData_7FE0_0010), 0, tagVR_t::OW));
-            handler->setSize(20);
-            ASSERT_EQ(tagVR_t::OW, handler->getDataType());
-            ASSERT_EQ(20u, handler->getSize());
+            WritingDataHandlerNumeric handler = testDataSet.getWritingDataHandlerRaw(TagId(tagId_t::PixelData_7FE0_0010), 0, tagVR_t::OW);
+            handler.setSize(20);
+            ASSERT_EQ(tagVR_t::OW, handler.getDataType());
+            ASSERT_EQ(20u, handler.getSize());
         }
-        std::unique_ptr<ReadingDataHandlerNumeric> handler(testDataSet.getReadingDataHandlerNumeric(TagId(tagId_t::PixelData_7FE0_0010), 0));
-        ASSERT_EQ(tagVR_t::OW, handler->getDataType());
-        ASSERT_EQ(10u, handler->getSize());
+        ReadingDataHandlerNumeric handler = testDataSet.getReadingDataHandlerNumeric(TagId(tagId_t::PixelData_7FE0_0010), 0);
+        ASSERT_EQ(tagVR_t::OW, handler.getDataType());
+        ASSERT_EQ(10u, handler.getSize());
     }
 }
 
@@ -402,36 +403,36 @@ TEST(dataSetTest, testEmptySequence)
 
         std::cout << "Sequence test. Transfer syntax: " << transferSyntax << std::endl;
 
-        DataSet testDataSet(transferSyntax);
+        MutableDataSet testDataSet(transferSyntax);
 
         {
-            DataSet sequence0;
-            DataSet sequence1;
+            MutableDataSet sequence0;
+            MutableDataSet sequence1;
 
             testDataSet.setSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 0, sequence0);
             testDataSet.setSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 1, sequence1);
         }
 
         {
-            std::unique_ptr<DataSet> sequence0(testDataSet.getSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 0));
-            std::unique_ptr<DataSet> sequence1(testDataSet.getSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 1));
+            DataSet sequence0 = testDataSet.getSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 0);
+            DataSet sequence1 = testDataSet.getSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 1);
         }
 
-        ReadWriteMemory encodedDataSet;
+        MutableMemory encodedDataSet;
         MemoryStreamOutput outputStream(encodedDataSet);
         StreamWriter outputWriter(outputStream);
         CodecFactory::save(testDataSet, outputWriter, codecType_t::dicom);
 
         MemoryStreamInput inputStream(encodedDataSet);
         StreamReader inputReader(inputStream);
-        std::unique_ptr<DataSet> readDataSet(CodecFactory::load(inputReader));
+        DataSet readDataSet = CodecFactory::load(inputReader);
         {
-            std::unique_ptr<Tag> sequenceTag(readDataSet->getTag(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111)));
-            ASSERT_EQ(tagVR_t::SQ, sequenceTag->getDataType());
-            ASSERT_THROW(sequenceTag->getSequenceItem(0), MissingItemError);
-            ASSERT_THROW(sequenceTag->getSequenceItem(1), MissingItemError);
-            ASSERT_THROW(readDataSet->getSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 0), MissingItemError);
-            ASSERT_THROW(readDataSet->getSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 1), MissingItemError);
+            Tag sequenceTag = readDataSet.getTag(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111));
+            ASSERT_EQ(tagVR_t::SQ, sequenceTag.getDataType());
+            ASSERT_THROW(sequenceTag.getSequenceItem(0), MissingItemError);
+            ASSERT_THROW(sequenceTag.getSequenceItem(1), MissingItemError);
+            ASSERT_THROW(readDataSet.getSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 0), MissingItemError);
+            ASSERT_THROW(readDataSet.getSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 1), MissingItemError);
         }
     }
 }
@@ -440,11 +441,11 @@ TEST(dataSetTest, testEmptySequence)
 TEST(dataSetTest, charsetNotNecessaryTest)
 {
 
-    ReadWriteMemory streamMemory;
+    MutableMemory streamMemory;
 
     charsetsList_t charsets;
     charsets.push_back("ISO_IR 6");
-    DataSet testDataSet(uidExplicitVRLittleEndian_1_2_840_10008_1_2_1, charsets);
+    MutableDataSet testDataSet(uidExplicitVRLittleEndian_1_2_840_10008_1_2_1, charsets);
     EXPECT_EQ("1.2.840.10008.1.2.1", testDataSet.getString(TagId(tagId_t::TransferSyntaxUID_0002_0010), 0));
 
     testDataSet.setString(TagId(tagId_t::PatientAge_0010_1010), "012Y");
@@ -456,9 +457,9 @@ TEST(dataSetTest, charsetNotNecessaryTest)
 
     MemoryStreamInput readStream(streamMemory);
     StreamReader reader(readStream);
-    std::unique_ptr<DataSet> pLoadedDataSet(CodecFactory::load(reader));
+    DataSet loadedDataSet = CodecFactory::load(reader);
 
-    EXPECT_THROW(pLoadedDataSet->getTag(TagId(tagId_t::SpecificCharacterSet_0008_0005)), MissingDataElementError);
+    EXPECT_THROW(loadedDataSet.getTag(TagId(tagId_t::SpecificCharacterSet_0008_0005)), MissingDataElementError);
 }
 
 
@@ -467,18 +468,18 @@ TEST(dataSetTest, sequenceNoCharsetTest)
     std::wstring patientName0 = L"??\x0628\x062a\x062b\x062f^\0x400\0x410\0x420";
     std::wstring patientName1 = L"\0x420\x062a\x062b^\0x400\0x410\x0628\x062a";
 
-    ReadWriteMemory streamMemory;
+    MutableMemory streamMemory;
 
     charsetsList_t charsets;
     charsets.push_back("ISO_IR 6");
-    DataSet testDataSet("1.2.840.10008.1.2.1", charsets);
+    MutableDataSet testDataSet("1.2.840.10008.1.2.1", charsets);
 
     testDataSet.setString(TagId(tagId_t::PatientAge_0010_1010), "012Y");
     testDataSet.setString(TagId(tagId_t::SOPInstanceUID_0008_0018), "1.2.3.4.5");
 
     {
-        DataSet sequence0;
-        DataSet sequence1;
+        MutableDataSet sequence0;
+        MutableDataSet sequence1;
 
         sequence0.setUnicodeString(TagId(0x10, 0x10), patientName0);
         sequence1.setUnicodeString(TagId(0x10, 0x10), patientName1);
@@ -493,16 +494,16 @@ TEST(dataSetTest, sequenceNoCharsetTest)
 
     MemoryStreamInput readStream(streamMemory);
     StreamReader reader(readStream);
-    std::unique_ptr<DataSet> pLoadedDataSet(CodecFactory::load(reader));
+    DataSet loadedDataSet = CodecFactory::load(reader);
 
-    EXPECT_NO_THROW(pLoadedDataSet->getTag(TagId(tagId_t::SpecificCharacterSet_0008_0005)));
+    EXPECT_NO_THROW(loadedDataSet.getTag(TagId(tagId_t::SpecificCharacterSet_0008_0005)));
 
-    std::unique_ptr<DataSet> sequence0(pLoadedDataSet->getSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 0));
-    std::unique_ptr<DataSet> sequence1(pLoadedDataSet->getSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 1));
-    EXPECT_THROW(sequence0->getTag(TagId(tagId_t::SpecificCharacterSet_0008_0005)), MissingDataElementError);
-    EXPECT_THROW(sequence1->getTag(TagId(tagId_t::SpecificCharacterSet_0008_0005)), MissingDataElementError);
-    ASSERT_EQ(patientName0, sequence0->getUnicodeString(TagId(0x10, 0x10), 0));
-    ASSERT_EQ(patientName1, sequence1->getUnicodeString(TagId(0x10, 0x10), 0));
+    DataSet sequence0 = loadedDataSet.getSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 0);
+    DataSet sequence1 = loadedDataSet.getSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 1);
+    EXPECT_THROW(sequence0.getTag(TagId(tagId_t::SpecificCharacterSet_0008_0005)), MissingDataElementError);
+    EXPECT_THROW(sequence1.getTag(TagId(tagId_t::SpecificCharacterSet_0008_0005)), MissingDataElementError);
+    ASSERT_EQ(patientName0, sequence0.getUnicodeString(TagId(0x10, 0x10), 0));
+    ASSERT_EQ(patientName1, sequence1.getUnicodeString(TagId(0x10, 0x10), 0));
 }
 
 

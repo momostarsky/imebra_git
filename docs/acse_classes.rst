@@ -21,6 +21,9 @@ The following classes are described in this chapter:
 |:cpp:class:`imebra::AssociationMessage`        |:cpp:class:`ImebraAssociationMessage`        |Stores a message sent through  |
 |                                               |                                             |an association                 |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
+|:cpp:class:`imebra::MutableAssociationMessage` |:cpp:class:`ImebraMutableAssociationMessage` |A mutable message (used to     |
+|                                               |                                             |create a message)              |
++-----------------------------------------------+---------------------------------------------+-------------------------------+
 |:cpp:class:`imebra::AssociationBase`           |:cpp:class:`ImebraAssociationBase`           |Base class for the associations|
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
 |:cpp:class:`imebra::AssociationSCU`            |:cpp:class:`ImebraAssociationSCU`            |An SCU association (Service    |
@@ -48,7 +51,8 @@ The association usually transmits and receive data via a :ref:`TCPStream`, there
 connect an SCU to a remote SCP are as follow:
 
 - Create a :ref:`TCPStream` which connects to the remote SCP
-- Allocate a :ref:`StreamReader` and a :ref:`StreamWriter` connected to the :ref:`TCPStream`
+- Allocate a :ref:`StreamReader` and a :ref:`StreamWriter` connected to the :ref:`TCPStream` input and output streams
+  (use :cpp:member:`imebra::DataSet::getStreamInput` and :cpp:member:`imebra::DataSet::getStreamOutput`)
 - Allocate a :ref:`PresentationContexts` and fill it with :ref:`PresentationContext` objects that represent the requested
   presentation contexts (abstract syntaxes and supported transfer syntaxes)
 - Allocate a :ref:`AssociationSCU` which in the constructor will perform the association negotiation through the
@@ -172,5 +176,21 @@ Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
 .. doxygenclass:: ImebraAssociationMessage
+   :members:
+
+
+MutableAssociationMessage
+.........................
+
+C++
+,,,
+
+.. doxygenclass:: imebra::MutableAssociationMessage
+   :members:
+
+Objective-C/Swift
+,,,,,,,,,,,,,,,,,
+
+.. doxygenclass:: ImebraMutableAssociationMessage
    :members:
 

@@ -24,20 +24,13 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "definitions.h"
 #include "memory.h"
 
-#ifndef SWIG
-
 namespace imebra
 {
+
 namespace implementation
 {
 class memory;
 }
-}
-#endif
-
-namespace imebra
-{
-
 
 ///
 /// \brief Manages a writable buffer of memory.
@@ -50,13 +43,9 @@ namespace imebra
 class IMEBRA_API MutableMemory: public Memory
 {
 
-#ifndef SWIG
     friend class MemoryStreamOutput;
     friend class DrawBitmap;
     friend class WritingDataHandlerNumeric;
-protected:
-    explicit MutableMemory(std::shared_ptr<implementation::memory> pMemory);
-#endif
 
 public:
 
@@ -82,6 +71,24 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit MutableMemory(const Memory& sourceMemory);
+
+    ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source MutableMemory object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    MutableMemory(const MutableMemory& source);
+
+    ///
+    /// \brief Assign operator.
+    ///
+    /// \param source source MutableMemory object
+    /// \return a reference to this MutableMemory object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    MutableMemory& operator=(const MutableMemory& source);
+
 
     /// \brief Construct a buffer of memory and copy the specified content into it.
     ///
@@ -186,6 +193,9 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     void assignRegion(const char* source, size_t sourceSize, size_t destinationOffset);
+
+protected:
+    explicit MutableMemory(std::shared_ptr<implementation::memory> pMemory);
 };
 
 }

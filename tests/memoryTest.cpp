@@ -24,7 +24,7 @@ void memoryThread(size_t minSize, size_t maxSize)
     // Small memory chuncks should not go in the memory pool
     ////////////////////////////////////////////////////////
     {
-        ReadWriteMemory memory(1);
+        MutableMemory memory(1);
         size_t dataSize;
         *memory.data(&dataSize) = 2;
         EXPECT_EQ(1u, dataSize);
@@ -35,7 +35,7 @@ void memoryThread(size_t minSize, size_t maxSize)
     // Check that released memory goes into the memory pool
     ///////////////////////////////////////////////////////
     {
-        ReadWriteMemory memory(minSize);
+        MutableMemory memory(minSize);
         size_t dataSize;
         char* pData = memory.data(&dataSize);
         for(size_t writeMemory(0); writeMemory != dataSize; ++writeMemory)
@@ -52,7 +52,7 @@ void memoryThread(size_t minSize, size_t maxSize)
     //  it from the memory pool
     //////////////////////////////////////////////////////////////////
     {
-        ReadWriteMemory memory(minSize);
+        MutableMemory memory(minSize);
         size_t dataSize;
         char* pData = memory.data(&dataSize);
         for(size_t writeMemory(0); writeMemory != dataSize; ++writeMemory)
@@ -64,7 +64,7 @@ void memoryThread(size_t minSize, size_t maxSize)
     std::this_thread::sleep_for(std::chrono::seconds(2));
     EXPECT_EQ(minSize, MemoryPool::getUnusedMemorySize());
     {
-        ReadWriteMemory retrieveMemory(minSize);
+        MutableMemory retrieveMemory(minSize);
         EXPECT_EQ(0u, MemoryPool::getUnusedMemorySize());
     }
     MemoryPool::flush();
@@ -75,7 +75,7 @@ void memoryThread(size_t minSize, size_t maxSize)
     ///////////////////////////////////////////////////////////////
     for(size_t memorySize(minSize), totalAllocated(0); totalAllocated < maxSize + 100; ++memorySize)
     {
-        ReadWriteMemory memory(memorySize);
+        MutableMemory memory(memorySize);
         totalAllocated += memorySize;
     }
     EXPECT_GT(MemoryPool::getUnusedMemorySize(), minSize);
@@ -100,7 +100,7 @@ TEST(memoryTest, testMemoryPool)
 TEST(memoryTest, readMemory)
 {
     std::string testString("Test string");
-    ReadMemory readMemory(testString.c_str(), testString.size());
+    Memory readMemory(testString.c_str(), testString.size());
     ASSERT_EQ(testString.size(), readMemory.size());
     ASSERT_FALSE(readMemory.empty());
 
@@ -118,7 +118,7 @@ TEST(memoryTest, readMemory)
 TEST(memoryTest, readWriteMemory)
 {
     std::string testString("Test string");
-    ReadWriteMemory readWriteMemory(testString.c_str(), testString.size());
+    MutableMemory readWriteMemory(testString.c_str(), testString.size());
 
     ASSERT_EQ(testString.size(), readWriteMemory.size());
     ASSERT_FALSE(readWriteMemory.empty());
@@ -142,9 +142,9 @@ TEST(memoryTest, readWriteMemory)
 TEST(memoryTest, readWriteMemoryCopy)
 {
     std::string testString("Test string");
-    ReadMemory readOnlyMemory(testString.c_str(), testString.size());
+    Memory readOnlyMemory(testString.c_str(), testString.size());
 
-    ReadWriteMemory readWriteMemory(readOnlyMemory);
+    MutableMemory readWriteMemory(readOnlyMemory);
 
     ASSERT_EQ(testString.size(), readWriteMemory.size());
     ASSERT_FALSE(readWriteMemory.empty());

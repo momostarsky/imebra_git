@@ -33,17 +33,15 @@ TEST(multipleImagesTest, testLosslessImages)
 
         const bitDepth_t depth(bitDepth_t::depthU8);
 
-        std::unique_ptr<Image> dicomImage;
-
-        dicomImage.reset(buildImageForTest(
-                1024,
-                1024,
-                depth,
-                highBit,
-                1024,
-                1024,
-                colorSpace,
-                2));
+        Image dicomImage = buildImageForTest(
+                    1024,
+                    1024,
+                    depth,
+                    highBit,
+                    1024,
+                    1024,
+                    colorSpace,
+                    2);
 
         std::string transferSyntax;
         switch(transferSyntaxId)
@@ -72,9 +70,9 @@ TEST(multipleImagesTest, testLosslessImages)
 
         const imageQuality_t quality = imageQuality_t::veryHigh;
 
-        ReadWriteMemory streamMemory;
+        MutableMemory streamMemory;
         {
-            DataSet testDataSet(transferSyntax);
+            MutableDataSet testDataSet(transferSyntax);
             testDataSet.setDouble(TagId(tagId_t::TimeRange_0008_1163), 50.6);
             if(ColorTransformsFactory::getNumberOfChannels(colorSpace) > 1)
             {
@@ -84,7 +82,7 @@ TEST(multipleImagesTest, testLosslessImages)
             for(size_t imageNumber(0); imageNumber != numImages; ++imageNumber)
             {
                 std::cout << "Adding image: " << imageNumber << std::endl;
-                testDataSet.setImage(imageNumber, *dicomImage, quality);
+                testDataSet.setImage(imageNumber, dicomImage, quality);
             }
 
             MemoryStreamOutput writeStream(streamMemory);
@@ -96,12 +94,12 @@ TEST(multipleImagesTest, testLosslessImages)
         {
             MemoryStreamInput readStream(streamMemory);
             StreamReader reader(readStream);
-            std::unique_ptr<DataSet> testDataSet(CodecFactory::load(reader, lazyLoad == 0 ? std::numeric_limits<size_t>::max() : 1));
+            DataSet testDataSet = CodecFactory::load(reader, lazyLoad == 0 ? std::numeric_limits<size_t>::max() : 1);
 
             for(size_t imageNumber(0); imageNumber != numImages; ++imageNumber)
             {
-                std::unique_ptr<Image> checkImage(testDataSet->getImage(imageNumber));
-                ASSERT_TRUE(identicalImages(*checkImage, *dicomImage));
+                Image checkImage = testDataSet.getImage(imageNumber);
+                ASSERT_TRUE(identicalImages(checkImage, dicomImage));
             }
         }
     } // transferSyntaxId

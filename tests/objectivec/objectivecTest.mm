@@ -5,6 +5,8 @@
 #include "../../objectivec/src/imebra_strings.h"
 #include <thread>
 
+
+
 namespace imebra
 {
 
@@ -15,35 +17,47 @@ namespace tests
 // Test NSString conversion functions
 TEST(objectivec, stringToNSStringTest)
 {
-    //NSAutoreleasePool *myPool = [[NSAutoreleasePool alloc] init];
-
     NSString* patient0 = [[NSString alloc] initWithUTF8String:"??\xD0\xA1\xD0\xBC\xD1\x8B\xD1\x81\xD0\xBB\x20\xD0\xB2\xD1\x81\xD0\xB5\xD0\xB9"];
     NSString* patient1 = [[NSString alloc] initWithUTF8String:"\xD0\xA1\xD0\xBC\xD1\x8B\xD1\x81\xD0\xBB\x20\xD0\xB2\xD1\x81\xD0\xB5\xD0\xB9"];
 
-    ImebraReadWriteMemory* pStreamMemory = [[ImebraReadWriteMemory alloc] init];
+    ImebraMutableMemory* pStreamMemory = [[ImebraMutableMemory alloc] init];
     ImebraTagId* pPatientTag = [[ImebraTagId alloc] initWithId:ImebraTagPatientName_0010_0010];
+
     {
+
         NSMutableArray* pCharsets = [[NSMutableArray alloc] init];
         [pCharsets addObject: @"ISO_IR 6"];
-        ImebraDataSet* pDataSet = [[ImebraDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2.1" charsets:pCharsets];
+        ImebraMutableDataSet* pDataSet = [[ImebraMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2.1" charsets:pCharsets];
 
+#if __has_feature(objc_arc)
+        @autoreleasepool
+#endif
         {
+#if !__has_feature(objc_arc)
+            NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+#endif
+
             NSError* pError = 0;
             ImebraWritingDataHandler* pHandler = [pDataSet getWritingDataHandler:pPatientTag bufferId:0 error:&pError];
 
             [pHandler setString:0 newValue:patient0 error:&pError];
             [pHandler setString:1 newValue:patient1 error:&pError];
 
+#if !__has_feature(objc_arc)
             [pHandler release];
+            [pool drain];
+#endif
         }
 
-        ImebraMemoryStreamOutput* pWriteStream = [[ImebraMemoryStreamOutput alloc] initWithReadWriteMemory:pStreamMemory];
+        ImebraMemoryStreamOutput* pWriteStream = [[ImebraMemoryStreamOutput alloc] initWithMutableMemory:pStreamMemory];
         ImebraStreamWriter* pWriter = [[ImebraStreamWriter alloc] initWithOutputStream: pWriteStream];
         NSError* pError = 0;
         [ImebraCodecFactory saveToStream:pWriter dataSet:pDataSet codecType:ImebraCodecTypeDicom error:&pError];
 
+#if !__has_feature(objc_arc)
         [pWriter release];
         [pWriteStream release];
+#endif
 
         NSArray* pTags = [pDataSet getTags];
         size_t numTags = [pTags count];
@@ -74,23 +88,24 @@ TEST(objectivec, stringToNSStringTest)
         EXPECT_TRUE([nsPatientName0 isEqualToString:patient0]);
         EXPECT_TRUE([nsPatientName1 isEqualToString:patient1]);
     }
+
 }
 
 
 // Test NSString conversion functions
 TEST(objectivec, NSStringToStringTest)
 {
-    ReadWriteMemory streamMemory;
+    MutableMemory streamMemory;
     {
         charsetsList_t charsets;
         charsets.push_back("ISO_IR 6");
-        DataSet testDataSet("1.2.840.10008.1.2.1", charsets);
+        MutableDataSet testDataSet("1.2.840.10008.1.2.1", charsets);
 
         {
-            std::unique_ptr<WritingDataHandler> handler(testDataSet.getWritingDataHandler(TagId(0x10, 0x10), 0));
+            WritingDataHandler handler(testDataSet.getWritingDataHandler(TagId(0x10, 0x10), 0));
 
-            handler->setString(0, NSStringToString(@"Test 1"));
-            handler->setString(1, NSStringToString(@"Test 2"));
+            handler.setString(0, NSStringToString(@"Test 1"));
+            handler.setString(1, NSStringToString(@"Test 2"));
         }
 
         MemoryStreamOutput writeStream(streamMemory);
@@ -101,10 +116,10 @@ TEST(objectivec, NSStringToStringTest)
     {
         MemoryStreamInput readStream(streamMemory);
         StreamReader reader(readStream);
-        std::unique_ptr<DataSet> testDataSet(CodecFactory::load(reader));
+        DataSet testDataSet(CodecFactory::load(reader));
 
-        std::string patientName0(testDataSet->getString(TagId(0x0010, 0x0010), 0));
-        std::string patientName1(testDataSet->getString(TagId(0x0010, 0x0010), 1));
+        std::string patientName0(testDataSet.getString(TagId(0x0010, 0x0010), 0));
+        std::string patientName1(testDataSet.getString(TagId(0x0010, 0x0010), 1));
 
         EXPECT_EQ("Test 1", patientName0);
         EXPECT_EQ("Test 2", patientName1);
@@ -116,7 +131,11 @@ TEST(objectivec, NSStringToStringTest)
 // Test the codec factory (save and reload a dataset)
 TEST(objectivec, CodecFactory)
 {
-    DataSet testDataSet("1.2.840.10008.1.2");
+#if !__has_feature(objc_arc)
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+#endif
+
+    MutableDataSet testDataSet("1.2.840.10008.1.2");
     testDataSet.setString(TagId(tagId_t::PatientName_0010_0010), "Test^Patient");
     testDataSet.setString(TagId(tagId_t::PatientID_0010_0020), "TestID");
     CodecFactory::save(testDataSet, "testCodecFactory.dcm", codecType_t::dicom);
@@ -128,29 +147,45 @@ TEST(objectivec, CodecFactory)
 
     EXPECT_EQ(imebra::NSStringToString(checkPatientName), "Test^Patient");
     EXPECT_EQ(imebra::NSStringToString(checkPatientID), "TestID");
+
+#if !__has_feature(objc_arc)
+    [pool drain];
+#endif
 }
 
 
 // Test NSError on non-existent file
 TEST(objectivec, CodecFactoryFailLoad)
 {
+#if !__has_feature(objc_arc)
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+#endif
+
     NSError* error = nil;
     ImebraDataSet* pDataSet = [ImebraCodecFactory loadFromFile:@"fail.dcm" error:&error];
     EXPECT_EQ(pDataSet, nullptr);
     EXPECT_EQ(imebra::NSStringToString([error domain]), "imebra");
+
+#if !__has_feature(objc_arc)
+    [pool drain];
+#endif
 }
 
 
 // Initialize and check an image content
 TEST(objectivec, image)
 {
-    ImebraImage* pImage = [[ImebraImage alloc] initWithWidth:5 height:5 depth:ImebraBitDepthU16 colorSpace:@"MONOCHROME2" highBit:15];
+    ImebraMutableImage* pImage = [[ImebraMutableImage alloc] initWithWidth:5 height:5 depth:ImebraBitDepthU16 colorSpace:@"MONOCHROME2" highBit:15];
 
     NSError* error = nil;
 #if __has_feature(objc_arc)
     @autoreleasepool
 #endif
     {
+#if !__has_feature(objc_arc)
+        NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+#endif
+
         ImebraWritingDataHandler* writingDataHandler = [pImage getWritingDataHandler:&error];
         for(unsigned int pixel(0); pixel != 25; ++pixel)
         {
@@ -158,10 +193,11 @@ TEST(objectivec, image)
         }
 #if !__has_feature(objc_arc)
         [writingDataHandler release];
+        [pool drain];
 #endif
     }
 
-    ImebraDataSet* pDataSet = [[ImebraDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
+    ImebraMutableDataSet* pDataSet = [[ImebraMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
     [pDataSet setImage:0 image:pImage quality:ImebraQualityVeryHigh error:&error];
 
     ImebraImage* pCheckImage = [pDataSet getImage:0 error:&error];
@@ -176,7 +212,7 @@ TEST(objectivec, image)
 // Initialize and check an image content
 TEST(objectivec, imageNSData)
 {
-    ImebraImage* pImage = [[ImebraImage alloc] initWithWidth:5 height:5 depth:ImebraBitDepthU16 colorSpace:@"MONOCHROME2" highBit:15];
+    ImebraMutableImage* pImage = [[ImebraMutableImage alloc] initWithWidth:5 height:5 depth:ImebraBitDepthU16 colorSpace:@"MONOCHROME2" highBit:15];
 
     NSError* error = nil;
 #if __has_feature(objc_arc)
@@ -196,7 +232,7 @@ TEST(objectivec, imageNSData)
 #endif
     }
 
-    ImebraDataSet* pDataSet = [[ImebraDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
+    ImebraMutableDataSet* pDataSet = [[ImebraMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
     [pDataSet setImage:0 image:pImage quality:ImebraQualityVeryHigh error:&error];
 
     ImebraImage* pCheckImage = [pDataSet getImage:0 error:&error];
@@ -215,7 +251,7 @@ TEST(objectivec, datasetValues)
 {
     NSError* error = nil;
 
-    ImebraDataSet* pDataSet = [[ImebraDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
+    ImebraMutableDataSet* pDataSet = [[ImebraMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
 
     [pDataSet setString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"TestPatient" error:&error];
     [pDataSet setAge:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1010] newValue:[[ImebraAge alloc] initWithAge:10 units:ImebraYears] error:&error];
@@ -224,7 +260,7 @@ TEST(objectivec, datasetValues)
     [pDataSet setUnsignedLong:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1012] newValue:11 tagVR:ImebraUL error:&error];
     [pDataSet setDouble:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1013] newValue:12.0f tagVR:ImebraUL error:&error];
 
-    ImebraTag* pTag = [pDataSet getTagCreate:[[ImebraTagId alloc] initWithGroup:0x12 tag:0x12] tagVR:ImebraFD error:&error];
+    ImebraMutableTag* pTag = [pDataSet getTagCreate:[[ImebraTagId alloc] initWithGroup:0x12 tag:0x12] tagVR:ImebraFD error:&error];
     {
         ImebraWritingDataHandlerNumeric* pWriteDouble = [pTag getWritingDataHandlerNumeric:0 error:&error];
         [pWriteDouble setSize:4];
@@ -281,8 +317,10 @@ void listenerThread()
 
     ImebraTCPStream* pStream = [pListener waitForConnection:&pError];
 
-    ImebraStreamReader* pReader = [[ImebraStreamReader alloc] initWithInputStream:pStream];
-    ImebraStreamWriter* pWriter = [[ImebraStreamWriter alloc] initWithInputOutputStream:pStream];
+    ImebraBaseStreamInput* pInput = [pStream getStreamInput];
+    ImebraBaseStreamOutput* pOutput = [pStream getStreamOutput];
+    ImebraStreamReader* pReader = [[ImebraStreamReader alloc] initWithInputStream:pInput];
+    ImebraStreamWriter* pWriter = [[ImebraStreamWriter alloc] initWithOutputStream:pOutput];
 
     ImebraPresentationContexts* pContexts = [[ImebraPresentationContexts alloc] init];
 
@@ -389,6 +427,7 @@ void listenerThread()
 TEST(objectivec, dimse)
 {
     std::thread scp(imebra::tests::listenerThread);
+
     try
     {
 
@@ -399,8 +438,10 @@ TEST(objectivec, dimse)
 
     ImebraTCPStream* pStream = [[ImebraTCPStream alloc] initWithAddress:pAddress error:&pError];
 
-    ImebraStreamReader* pReader = [[ImebraStreamReader alloc] initWithInputStream:pStream];
-    ImebraStreamWriter* pWriter = [[ImebraStreamWriter alloc] initWithInputOutputStream:pStream];
+    ImebraBaseStreamInput* pInput = [pStream getStreamInput];
+    ImebraBaseStreamOutput* pOutput = [pStream getStreamOutput];
+    ImebraStreamReader* pReader = [[ImebraStreamReader alloc] initWithInputStream:pInput];
+    ImebraStreamWriter* pWriter = [[ImebraStreamWriter alloc] initWithOutputStream:pOutput];
 
     ImebraPresentationContexts* pContexts = [[ImebraPresentationContexts alloc] init];
 
@@ -417,7 +458,7 @@ TEST(objectivec, dimse)
 
     // Send C-STORE
     {
-        ImebraDataSet* pDataSet = [[ImebraDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
+        ImebraMutableDataSet* pDataSet = [[ImebraMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
 
         [pDataSet setString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"TestPatient" error:&pError];
         [pDataSet setAge:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1010] newValue:[[ImebraAge alloc] initWithAge:10 units:ImebraYears] error:&pError];
@@ -440,7 +481,7 @@ TEST(objectivec, dimse)
 
     // Send C-GET
     {
-        ImebraDataSet* pDataSet = [[ImebraDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
+        ImebraMutableDataSet* pDataSet = [[ImebraMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
 
         [pDataSet setString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"TestPatient" error:&pError];
 
@@ -459,7 +500,7 @@ TEST(objectivec, dimse)
 
     // Send C-FIND
     {
-        ImebraDataSet* pDataSet = [[ImebraDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
+        ImebraMutableDataSet* pDataSet = [[ImebraMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
 
         [pDataSet setString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"TestPatient" error:&pError];
 
@@ -478,7 +519,7 @@ TEST(objectivec, dimse)
 
     // Send C-MOVE
     {
-        ImebraDataSet* pDataSet = [[ImebraDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
+        ImebraMutableDataSet* pDataSet = [[ImebraMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
 
         [pDataSet setString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"TestPatient" error:&pError];
 
@@ -559,7 +600,7 @@ TEST(objectivec, dimse)
 
     // Send N-SET
     {
-        ImebraDataSet* pDataSet = [[ImebraDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
+        ImebraMutableDataSet* pDataSet = [[ImebraMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
 
         [pDataSet setString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"TestPatient" error:&pError];
 
@@ -579,7 +620,7 @@ TEST(objectivec, dimse)
 
     // Send N-ACTION
     {
-        ImebraDataSet* pDataSet = [[ImebraDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
+        ImebraMutableDataSet* pDataSet = [[ImebraMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
 
         [pDataSet setString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"TestPatient" error:&pError];
 
@@ -602,7 +643,7 @@ TEST(objectivec, dimse)
     // Send N-CREATE
     {
 
-        ImebraDataSet* pDataSet = [[ImebraDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
+        ImebraMutableDataSet* pDataSet = [[ImebraMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
 
         [pDataSet setString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"TestPatient" error:&pError];
 
@@ -622,7 +663,7 @@ TEST(objectivec, dimse)
 
     // Send N-DELETE
     {
-        ImebraDataSet* pDataSet = [[ImebraDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
+        ImebraMutableDataSet* pDataSet = [[ImebraMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
 
         [pDataSet setString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"TestPatient" error:&pError];
 
@@ -665,21 +706,21 @@ TEST(objectivec, dimse)
 // Test interface with dicomdir
 TEST(objectivec, createDicomDir)
 {
-    ImebraDicomDir* newDicomDir = [[ImebraDicomDir alloc] init];
+    ImebraMutableDicomDir* newDicomDir = [[ImebraMutableDicomDir alloc] init];
 
     NSError* pError(0);
-    ImebraDicomDirEntry* rootRecord = [newDicomDir getNewEntry:ImebraDicomDirPatient error:&pError];
+    ImebraMutableDicomDirEntry* rootRecord = [newDicomDir getNewEntry:@"PATIENT" error:&pError];
 
-    ImebraDataSet* rootRecordDataSet = [rootRecord getEntryDataSet];
+    ImebraMutableDataSet* rootRecordDataSet = [rootRecord getEntryDataSet];
     [rootRecordDataSet setString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"Surname" error:&pError];
     [newDicomDir setFirstRootEntry:rootRecord error:&pError];
 
-    ImebraDicomDirEntry* nextRecord = [newDicomDir getNewEntry:ImebraDicomDirPatient error:&pError];
+    ImebraDicomDirEntry* nextRecord = [newDicomDir getNewEntry:@"PATIENT" error:&pError];
     ImebraDataSet* nextRecordDataSet = [nextRecord getEntryDataSet];
     [nextRecordDataSet setString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"Surname 1" error:&pError];
     [rootRecord setNextEntry:nextRecord error:&pError];
 
-    ImebraDicomDirEntry* imageRecord = [newDicomDir getNewEntry:ImebraDicomDirImage error:&pError];
+    ImebraDicomDirEntry* imageRecord = [newDicomDir getNewEntry:@"IMAGE" error:&pError];
     ImebraDataSet* imageRecordDataSet = [imageRecord getEntryDataSet];
     [imageRecordDataSet setString:[[ImebraTagId alloc] initWithGroup:0x8 tag:0x18] newValue:@"1.2.840.34.56.78999654.235" error:&pError];
     [nextRecord setFirstChildEntry:imageRecord error:&pError];
@@ -697,19 +738,18 @@ TEST(objectivec, createDicomDir)
     ImebraDicomDir* testDicomDir = [[ImebraDicomDir alloc] initWithDataSet:dicomDirDataSet error:&pError];
     ImebraDicomDirEntry* testRootRecord = [testDicomDir getFirstRootEntry:&pError];
     ImebraDataSet* testRootRecordDataSet = [testRootRecord getEntryDataSet];
-    EXPECT_EQ(ImebraDicomDirPatient, [testRootRecord getType:&pError]);
     EXPECT_EQ("PATIENT", NSStringToString([testRootRecord getTypeString:&pError]));
     EXPECT_EQ("Surname", NSStringToString([testRootRecordDataSet getString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] elementNumber:0 error:&pError]));
 
     ImebraDicomDirEntry* testNextRecord = [testRootRecord getNextEntry];
     ImebraDataSet* testNextRecordDataSet = [testNextRecord getEntryDataSet];
-    EXPECT_EQ(ImebraDicomDirPatient, [testNextRecord getType:&pError]);
+    EXPECT_EQ("PATIENT", NSStringToString([testNextRecord getTypeString:&pError]));
     EXPECT_EQ("Surname 1", NSStringToString([testNextRecordDataSet getString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] elementNumber:0 error:&pError]));
     EXPECT_EQ(0, [testNextRecord getNextEntry]);
 
     ImebraDicomDirEntry* testImageRecord = [testNextRecord getFirstChildEntry];
     ImebraDataSet* testImageRecordDataSet = [testImageRecord getEntryDataSet];
-    EXPECT_EQ(ImebraDicomDirImage, [testImageRecord getType:&pError]);
+    EXPECT_EQ("IMAGE", NSStringToString([testImageRecord getTypeString:&pError]));
     EXPECT_EQ("1.2.840.34.56.78999654.235", NSStringToString([testImageRecordDataSet getString:[[ImebraTagId alloc] initWithGroup:0x8 tag:0x18] elementNumber:0 error:&pError]));
     EXPECT_EQ("folder", NSStringToString([[testImageRecord getFileParts:&pError] objectAtIndex:0]));
     EXPECT_EQ("file.dcm", NSStringToString([[testImageRecord getFileParts:&pError] objectAtIndex:1]));
@@ -769,7 +809,7 @@ TEST(objectivec, images)
     NSDictionary *pImageProps = [NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:1.0] forKey:NSImageCompressionFactor];
     pImageData = [pImageRep representationUsingType:NSJPEGFileType properties:pImageProps];
 
-    ImebraReadWriteMemory* pDataMemory = [[ImebraReadWriteMemory alloc] initWithData:pImageData];
+    ImebraMutableMemory* pDataMemory = [[ImebraMutableMemory alloc] initWithData:pImageData];
     ImebraMemoryStreamInput* pDataStream = [[ImebraMemoryStreamInput alloc] initWithReadMemory:pDataMemory];
     ImebraStreamReader* pDataReader = [[ImebraStreamReader alloc] initWithInputStream:pDataStream];
 

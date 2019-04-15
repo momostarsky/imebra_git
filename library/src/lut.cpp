@@ -18,8 +18,23 @@ If you do not want to be bound by the GPL terms (such as the requirement
 namespace imebra
 {
 
-LUT::LUT(std::shared_ptr<implementation::lut> pLut): m_pLut(pLut)
+LUT::LUT(const std::shared_ptr<implementation::lut>& pLut): m_pLut(pLut)
 {
+}
+
+LUT::LUT(const LUT& source): m_pLut(getLUTImplementation(source))
+{
+}
+
+LUT& LUT::operator=(const LUT& source)
+{
+    m_pLut = getLUTImplementation(source);
+    return *this;
+}
+
+const std::shared_ptr<imebra::implementation::lut>& getLUTImplementation(const LUT& lut)
+{
+    return lut.m_pLut;
 }
 
 LUT::~LUT()
@@ -31,9 +46,9 @@ std::wstring LUT::getDescription() const
     return m_pLut->getDescription();
 }
 
-ReadingDataHandlerNumeric* LUT::getReadingDataHandler() const
+ReadingDataHandlerNumeric LUT::getReadingDataHandler() const
 {
-    return new ReadingDataHandlerNumeric(m_pLut->getReadingDataHandler());
+    return ReadingDataHandlerNumeric(m_pLut->getReadingDataHandler());
 }
 
 size_t LUT::getBits() const

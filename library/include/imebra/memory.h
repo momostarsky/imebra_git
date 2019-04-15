@@ -23,19 +23,13 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <string>
 #include "definitions.h"
 
-#ifndef SWIG
-
 namespace imebra
 {
+
 namespace implementation
 {
-class memory;
+    class memory;
 }
-}
-#endif
-
-namespace imebra
-{
 
 ///
 /// \brief Manages a read-only buffer of memory.
@@ -47,17 +41,9 @@ namespace imebra
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API Memory
 {
-
-#ifndef SWIG
     friend class DrawBitmap;
-    friend class MemoryStreamInput;
-    friend class MutableMemory;
     friend class ReadingDataHandlerNumeric;
-    friend class MemoryStreamOutput;
-protected:
-    explicit Memory(std::shared_ptr<const implementation::memory> pMemory);
-#endif
-
+    friend class StreamReader;
 
 public:
     /// \brief Construct an empty buffer of memory.
@@ -80,6 +66,23 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit Memory(const char* source, size_t sourceSize);
+
+    ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source Memory object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    Memory(const Memory& source);
+
+    ///
+    /// \brief Assign operator.
+    ///
+    /// \param source source Memory object
+    /// \return a reference to this Memory object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    Memory& operator=(const Memory& source);
 
     virtual ~Memory();
 
@@ -166,6 +169,10 @@ public:
 
 #ifndef SWIG
 protected:
+    explicit Memory(const std::shared_ptr<const implementation::memory>& pMemory);
+
+private:
+    friend const std::shared_ptr<const implementation::memory>& getMemoryImplementation(const Memory& memory);
     std::shared_ptr<const implementation::memory> m_pMemory;
 #endif
 };

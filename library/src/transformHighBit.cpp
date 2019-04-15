@@ -27,6 +27,16 @@ TransformHighBit::TransformHighBit(): Transform(std::make_shared<imebra::impleme
 {
 }
 
+TransformHighBit::TransformHighBit(const TransformHighBit& source): Transform(source)
+{
+}
+
+TransformHighBit& TransformHighBit::operator=(const TransformHighBit& source)
+{
+    Transform::operator =(source);
+    return *this;
+}
+
 TransformHighBit::~TransformHighBit()
 {
 }

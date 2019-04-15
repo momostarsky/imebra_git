@@ -11,22 +11,25 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#include "imebra_bridgeStructures.h"
+#import "../include/imebraobjc/imebra_streamReader.h"
+#include "imebra_implementation_macros.h"
+#include "imebra_nserror.h"
+#include <imebra/streamReader.h>
 
 
 @implementation ImebraStreamReader
 
--(id)initWithImebraStreamReader:(imebra::StreamReader*)pStreamReader
+-(id)initWithImebraStreamReader:define_imebra_parameter(StreamReader)
 {
-    self->m_pReader = 0;
+    reset_imebra_object_holder(StreamReader);
     self = [super init];
     if(self)
     {
-        self->m_pReader = pStreamReader;
+        set_imebra_object_holder(StreamReader, get_imebra_parameter(StreamReader));
     }
     else
     {
-        delete pStreamReader;
+        delete get_imebra_parameter(StreamReader);
     }
     return self;
 
@@ -34,11 +37,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(id)initWithInputStream:(ImebraBaseStreamInput*)pInput
 {
-    self->m_pReader = 0;
+    reset_imebra_object_holder(StreamReader);
     self = [super init];
     if(self)
     {
-        self->m_pReader= new imebra::StreamReader(*(pInput->m_pBaseStreamInput));
+        set_imebra_object_holder(StreamReader, new imebra::StreamReader(*get_other_imebra_object_holder(pInput, BaseStreamInput)));
     }
     return self;
 
@@ -46,11 +49,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(id)initWithInputStream:(ImebraBaseStreamInput*)pInput virtualStart:(unsigned int)virtualStart virtualEnd:(unsigned int)virtualEnd
 {
-    self->m_pReader = 0;
+    reset_imebra_object_holder(StreamReader);
     self = [super init];
     if(self)
     {
-        self->m_pReader= new imebra::StreamReader(*(pInput->m_pBaseStreamInput), virtualStart, virtualEnd);
+        set_imebra_object_holder(StreamReader, new imebra::StreamReader(*get_other_imebra_object_holder(pInput, BaseStreamInput), virtualStart, virtualEnd));
     }
     return self;
 
@@ -58,7 +61,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(void)dealloc
 {
-    delete self->m_pReader;
+    delete_imebra_object_holder(StreamReader);
 #if !__has_feature(objc_arc)
     [super dealloc];
 #endif
@@ -68,14 +71,14 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [ [ImebraStreamReader alloc] initWithImebraStreamReader:self->m_pReader->getVirtualStream(virtualSize)];
+    return [[ImebraStreamReader alloc] initWithImebraStreamReader:new imebra::StreamReader(get_imebra_object_holder(StreamReader)->getVirtualStream(virtualSize))];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
 
 -(void)terminate
 {
-    self->m_pReader->terminate();
+    get_imebra_object_holder(StreamReader)->terminate();
 }
 
 @end

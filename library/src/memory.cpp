@@ -25,12 +25,27 @@ Memory::Memory(): m_pMemory(std::make_shared<const implementation::memory>())
 }
 
 Memory::Memory(const char* buffer, size_t bufferSize):
-    m_pMemory(std::make_shared<const implementation::memory>(new implementation::stringUint8((const std::uint8_t*)buffer, bufferSize)))
+    m_pMemory(std::make_shared<implementation::memory>(new implementation::stringUint8((const std::uint8_t*)buffer, bufferSize)))
 {
 }
 
-Memory::Memory(std::shared_ptr<const implementation::memory> pMemory): m_pMemory(pMemory)
+Memory::Memory(const std::shared_ptr<const implementation::memory>& pMemory): m_pMemory(pMemory)
 {
+}
+
+Memory::Memory(const Memory& source): m_pMemory(getMemoryImplementation(source))
+{
+}
+
+Memory& Memory::operator=(const Memory& source)
+{
+    m_pMemory = getMemoryImplementation(source);
+    return *this;
+}
+
+const std::shared_ptr<const implementation::memory>& getMemoryImplementation(const Memory& memory)
+{
+    return memory.m_pMemory;
 }
 
 Memory::~Memory()

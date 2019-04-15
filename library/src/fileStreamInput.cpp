@@ -34,4 +34,14 @@ FileStreamInput::FileStreamInput(const std::string& name): BaseStreamInput(std::
 {
 }
 
+FileStreamInput::FileStreamInput(const FileStreamInput& source): BaseStreamInput(source)
+{
+}
+
+FileStreamInput& FileStreamInput::operator=(const FileStreamInput& source)
+{
+    BaseStreamInput::operator =(source);
+    return *this;
+}
+
 }

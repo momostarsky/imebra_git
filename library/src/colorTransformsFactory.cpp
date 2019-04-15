@@ -56,11 +56,11 @@ std::uint32_t ColorTransformsFactory::getNumberOfChannels(const std::string& col
     return imebra::implementation::transforms::colorTransforms::colorTransformsFactory::getNumberOfChannels(colorSpace);
 }
 
-Transform* ColorTransformsFactory::getTransform(const std::string& startColorSpace, const std::string& endColorSpace)
+Transform ColorTransformsFactory::getTransform(const std::string& startColorSpace, const std::string& endColorSpace)
 {
     std::shared_ptr<imebra::implementation::transforms::colorTransforms::colorTransformsFactory> factory(imebra::implementation::transforms::colorTransforms::colorTransformsFactory::getColorTransformsFactory());
-    Transform* transform = new Transform(factory->getTransform(startColorSpace, endColorSpace));
-    if(transform->m_pTransform == 0)
+    Transform transform(factory->getTransform(startColorSpace, endColorSpace));
+    if(transform.m_pTransform == 0)
     {
         IMEBRA_THROW(ColorTransformsFactoryNoTransformError, "There is no color transform that can convert between the specified color spaces " << startColorSpace << " and " << endColorSpace);
     }

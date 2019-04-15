@@ -11,15 +11,16 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#include "imebra_bridgeStructures.h"
-
 #import <Foundation/NSString.h>
+#include "imebra_implementation_macros.h"
+#include "../include/imebraobjc/imebra_dateAge.h"
+#include <imebra/dataSet.h>
 
 @implementation ImebraAge
 
 -(void)dealloc
 {
-    delete m_pAge;
+    delete_imebra_object_holder(Age);
 #if !__has_feature(objc_arc)
     [super dealloc];
 #endif
@@ -27,28 +28,28 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(id)initWithAge:(unsigned int)initialAge units:(ImebraAgeUnit_t)initialUnits
 {
-    m_pAge = 0;
+    reset_imebra_object_holder(Age);
     self = [super init];
     if(self)
     {
-        m_pAge = new imebra::Age(initialAge, (imebra::ageUnit_t)initialUnits);
+        set_imebra_object_holder(Age, new imebra::Age(initialAge, (imebra::ageUnit_t)initialUnits));
     }
     return self;
 }
 
 -(double)years
 {
-    return m_pAge->years();
+    return get_imebra_object_holder(Age)->years();
 }
 
 -(unsigned int)age
 {
-    return m_pAge->age;
+    return get_imebra_object_holder(Age)->age;
 }
 
 -(ImebraAgeUnit_t)units
 {
-    return (ImebraAgeUnit_t)m_pAge->units;
+    return (ImebraAgeUnit_t)(get_imebra_object_holder(Age)->units);
 }
 
 @end
@@ -58,7 +59,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(void)dealloc
 {
-    delete m_pDate;
+    delete_imebra_object_holder(Date);
 #if !__has_feature(objc_arc)
     [super dealloc];
 #endif
@@ -74,67 +75,68 @@ If you do not want to be bound by the GPL terms (such as the requirement
                                 offsetHours:(int)initialOffsetHours
                                 offsetMinutes:(int)initialOffsetMinutes
 {
+    reset_imebra_object_holder(Date);
     self = [super init];
     if(self)
     {
-        self->m_pDate =
-                    new imebra::Date(
-                        initialYear,
-                        initialMonth,
-                        initialDay,
-                        initialHour,
-                        initialMinutes,
-                        initialSeconds,
-                        initialNanoseconds,
-                        initialOffsetHours,
-                        initialOffsetMinutes);
+        set_imebra_object_holder(Date,
+                                 new imebra::Date(
+                                     initialYear,
+                                     initialMonth,
+                                     initialDay,
+                                     initialHour,
+                                     initialMinutes,
+                                     initialSeconds,
+                                     initialNanoseconds,
+                                     initialOffsetHours,
+                                     initialOffsetMinutes));
     }
     return self;
 }
 
 -(unsigned int)year
 {
-    return m_pDate->year;
+    return get_imebra_object_holder(Date)->year;
 }
 
 -(unsigned int)month
 {
-    return m_pDate->month;
+    return get_imebra_object_holder(Date)->month;
 }
 
 -(unsigned int)day
 {
-    return m_pDate->day;
+    return get_imebra_object_holder(Date)->day;
 }
 
 -(unsigned int)hour
 {
-    return m_pDate->hour;
+    return get_imebra_object_holder(Date)->hour;
 }
 
 -(unsigned int)minutes
 {
-    return m_pDate->minutes;
+    return get_imebra_object_holder(Date)->minutes;
 }
 
 -(unsigned int)seconds
 {
-    return m_pDate->seconds;
+    return get_imebra_object_holder(Date)->seconds;
 }
 
 -(unsigned int)nanoseconds
 {
-    return m_pDate->nanoseconds;
+    return get_imebra_object_holder(Date)->nanoseconds;
 }
 
 -(int)offsetHours
 {
-    return m_pDate->offsetHours;
+    return get_imebra_object_holder(Date)->offsetHours;
 }
 
 -(int)offsetMinutes
 {
-    return m_pDate->offsetMinutes;
+    return get_imebra_object_holder(Date)->offsetMinutes;
 }
 
 @end

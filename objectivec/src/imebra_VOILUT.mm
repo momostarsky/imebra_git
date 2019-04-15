@@ -11,17 +11,22 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#include "imebra_bridgeStructures.h"
+#import "../include/imebraobjc/imebra_VOILUT.h"
+#import "../include/imebraobjc/imebra_image.h"
+#import "../include/imebraobjc/imebra_lut.h"
+#include "imebra_implementation_macros.h"
+#include "imebra_nserror.h"
+#include <imebra/VOILUT.h>
 
 @implementation ImebraVOILUT
 
 -(id)init
 {
-    m_pTransform = 0;
+    reset_imebra_object_holder(Transform);
     self = [super init];
     if(self)
     {
-        m_pTransform = new imebra::VOILUT();
+        set_imebra_object_holder(Transform, new imebra::VOILUT());
     }
     return self;
 }
@@ -36,8 +41,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    ((imebra::VOILUT*)m_pTransform)->applyOptimalVOI(
-                *(pInputImage->m_pImage),
+    ((imebra::VOILUT*)get_imebra_object_holder(Transform))->applyOptimalVOI(
+                *get_other_imebra_object_holder(pInputImage, Image),
                 (std::uint32_t)inputTopLeftX,
                 (std::uint32_t)inputTopLeftY,
                 (std::uint32_t)inputWidth,
@@ -48,22 +53,22 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(void)setCenter:(double)center width:(double)width
 {
-    ((imebra::VOILUT*)m_pTransform)->setCenterWidth(center, width);
+    ((imebra::VOILUT*)get_imebra_object_holder(Transform))->setCenterWidth(center, width);
 }
 
 -(void)setLUT:(ImebraLUT*)pLUT
 {
-    ((imebra::VOILUT*)m_pTransform)->setLUT(*(pLUT->m_pLUT));
+    ((imebra::VOILUT*)get_imebra_object_holder(Transform))->setLUT(*get_other_imebra_object_holder(pLUT, LUT));
 }
 
 -(double) center
 {
-    return ((imebra::VOILUT*)m_pTransform)->getCenter();
+    return ((imebra::VOILUT*)get_imebra_object_holder(Transform))->getCenter();
 }
 
 -(double) width
 {
-    return ((imebra::VOILUT*)m_pTransform)->getWidth();
+    return ((imebra::VOILUT*)get_imebra_object_holder(Transform))->getWidth();
 }
 
 

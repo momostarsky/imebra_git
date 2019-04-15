@@ -19,23 +19,17 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #if !defined(imebraMemoryPool__INCLUDED_)
 #define imebraMemoryPool__INCLUDED_
 
-#ifndef SWIG
-
 #include <memory>
 #include <string>
 #include "definitions.h"
 
 namespace imebra
 {
+
 namespace implementation
 {
-class memoryPool;
+    class memoryPool;
 }
-}
-#endif
-
-namespace imebra
-{
 
 ///
 /// \brief Used by Imebra to allocate memory.

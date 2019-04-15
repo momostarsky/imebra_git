@@ -23,24 +23,16 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <memory>
 #include "definitions.h"
 
-#ifndef SWIG
-
 namespace imebra
 {
+
 namespace implementation
 {
 namespace handlers
 {
-class writingDataHandler;
+    class writingDataHandler;
 }
 }
-}
-
-#endif
-
-
-namespace imebra
-{
 
 ///
 /// \brief The WritingDataHandler class allows to write the content
@@ -60,19 +52,28 @@ namespace imebra
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API WritingDataHandler
 {
-    WritingDataHandler(const WritingDataHandler&) = delete;
-    WritingDataHandler& operator=(const WritingDataHandler&) = delete;
 
-#ifndef SWIG
-    friend class DataSet;
-    friend class Tag;
-    friend class WritingDataHandlerNumeric;
-
-private:
-    explicit WritingDataHandler(std::shared_ptr<imebra::implementation::handlers::writingDataHandler> pDataHandler);
-#endif
+    friend class MutableDataSet;
+    friend class MutableTag;
 
 public:
+    ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source WritingDataHandler object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    WritingDataHandler(const WritingDataHandler& source);
+
+    ///
+    /// \brief Assign operator.
+    ///
+    /// \param source source WritingDataHandler object
+    /// \return a reference to this WritingDataHandler object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    WritingDataHandler& operator=(const WritingDataHandler& source);
+
     /// \brief Destructor: replaces the tag buffer's memory with the memory created
     ///        by this WritingDataHandler.
     ///
@@ -196,10 +197,13 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     void setAge(size_t index, const Age& age);
 
-
 #ifndef SWIG
 protected:
-    std::shared_ptr<imebra::implementation::handlers::writingDataHandler> m_pDataHandler;
+    explicit WritingDataHandler(const std::shared_ptr<implementation::handlers::writingDataHandler>& pDataHandler);
+
+private:
+    friend const std::shared_ptr<implementation::handlers::writingDataHandler>& getWritingDataHandlerImplementation(const WritingDataHandler& writingHandler);
+    std::shared_ptr<implementation::handlers::writingDataHandler> m_pDataHandler;
 #endif
 };
 

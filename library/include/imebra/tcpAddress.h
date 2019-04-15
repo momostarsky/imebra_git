@@ -28,7 +28,7 @@ namespace imebra
 
 namespace implementation
 {
-class tcpAddress;
+    class tcpAddress;
 }
 
 ///
@@ -41,17 +41,31 @@ class tcpAddress;
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API TCPAddress
 {
-    TCPAddress(const TCPAddress&) = delete;
-    TCPAddress& operator=(const TCPAddress&) = delete;
 
-#ifndef SWIG
     friend class TCPStream;
     friend class TCPListener;
-protected:
-    explicit TCPAddress(std::shared_ptr<imebra::implementation::tcpAddress> pAddress);
-#endif
 
 public:
+
+    ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source TCPAddress object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    TCPAddress(const TCPAddress& source);
+
+    ///
+    /// \brief Assign operator.
+    ///
+    /// \param source source TCPAddress object
+    /// \return a reference to this TCPAddress object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    TCPAddress& operator=(const TCPAddress& source);
+
+    virtual ~TCPAddress();
+
     ///
     /// \brief Returns the node part of the TCP address.
     ///
@@ -75,10 +89,12 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     std::string getService() const;
 
-    virtual ~TCPAddress();
-
 #ifndef SWIG
 protected:
+    explicit TCPAddress(const std::shared_ptr<imebra::implementation::tcpAddress>& pAddress);
+
+private:
+    friend const std::shared_ptr<imebra::implementation::tcpAddress>& getTCPAddressImplementation(const TCPAddress& tcpAddress);
     std::shared_ptr<implementation::tcpAddress> m_pAddress;
 #endif
 };
@@ -109,6 +125,8 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     TCPActiveAddress(const std::string& node, const std::string& service);
+
+    TCPActiveAddress(const TCPActiveAddress& source);
 };
 
 
@@ -137,6 +155,8 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     TCPPassiveAddress(const std::string& node, const std::string& service);
+
+    TCPPassiveAddress(const TCPPassiveAddress& source);
 };
 
 

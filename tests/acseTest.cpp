@@ -18,37 +18,41 @@ void scpThread(const std::string& name, PresentationContexts& presentationContex
 
         for(;;)
         {
-            std::unique_ptr<AssociationMessage> pCommand(scp.getCommand());
+            AssociationMessage command = scp.getCommand();
+            DataSet commandDataSet = command.getCommand();
 
             // First send a response with a wrong ID: it should throw
             {
-                DataSet responseDataSet;
+                MutableDataSet responseDataSet;
                 responseDataSet.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x8001, tagVR_t::US);
                 responseDataSet.setUnsignedLong(TagId(tagId_t::MessageIDBeingRespondedTo_0000_0120), 0xffff, tagVR_t::US);
+                responseDataSet.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), commandDataSet.getString(TagId(tagId_t::StudyInstanceUID_0020_000D), 0, ""));
                 responseDataSet.setString(TagId(tagId_t::SeriesInstanceUID_0020_000E), "1.2.3.4.5");
                 responseDataSet.setUnsignedLong(TagId(tagId_t::Status_0000_0900), 0x0000);
-                AssociationMessage response(pCommand->getAbstractSyntax());
+                MutableAssociationMessage response(command.getAbstractSyntax());
                 response.addDataSet(responseDataSet);
                 EXPECT_THROW(scp.sendMessage(response), AcseWrongResponseIdError);
             }
 
             // Now send the real response
             {
-                std::unique_ptr<DataSet> responseDataSet(pCommand->getCommand());
-                responseDataSet->setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x8001, tagVR_t::US);
-                std::uint32_t messageId(responseDataSet->getUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0));
-                responseDataSet->setUnsignedLong(TagId(tagId_t::MessageIDBeingRespondedTo_0000_0120), messageId, tagVR_t::US);
-                responseDataSet->setString(TagId(tagId_t::SeriesInstanceUID_0020_000E), "1.2.3.4.5");
-                responseDataSet->setUnsignedLong(TagId(tagId_t::CommandDataSetType_0000_0800), pCommand->hasPayload() ? 0 : 0x0101);
-                responseDataSet->setUnsignedLong(TagId(tagId_t::Status_0000_0900), 0x0000);
+                DataSet commandDataSet = command.getCommand();
+                MutableDataSet responseDataSet;
+                responseDataSet.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x8001, tagVR_t::US);
+                std::uint32_t messageId(commandDataSet.getUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0));
+                responseDataSet.setUnsignedLong(TagId(tagId_t::MessageIDBeingRespondedTo_0000_0120), messageId, tagVR_t::US);
+                responseDataSet.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), commandDataSet.getString(TagId(tagId_t::StudyInstanceUID_0020_000D), 0, ""));
+                responseDataSet.setString(TagId(tagId_t::SeriesInstanceUID_0020_000E), "1.2.3.4.5");
+                responseDataSet.setUnsignedLong(TagId(tagId_t::CommandDataSetType_0000_0800), command.hasPayload() ? 0 : 0x0101);
+                responseDataSet.setUnsignedLong(TagId(tagId_t::Status_0000_0900), 0x0000);
 
-                AssociationMessage response(pCommand->getAbstractSyntax());
-                response.addDataSet(*responseDataSet);
+                MutableAssociationMessage response(command.getAbstractSyntax());
+                response.addDataSet(responseDataSet);
 
-                if(pCommand->hasPayload())
+                if(command.hasPayload())
                 {
-                    std::unique_ptr<DataSet> payload(pCommand->getPayload());
-                    response.addDataSet(*payload);
+                    DataSet payload = command.getPayload();
+                    response.addDataSet(payload);
                 }
 
                 scp.sendMessage(response);
@@ -71,25 +75,24 @@ void scpThreadMultipleOperations(const std::string& name, PresentationContexts& 
 
         for(;;)
         {
-            std::unique_ptr<AssociationMessage> pCommand(scp.getCommand());
+            AssociationMessage command = scp.getCommand();
 
-            // Now send the real response
             {
-                std::unique_ptr<DataSet> responseDataSet(pCommand->getCommand());
-                responseDataSet->setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x8001, tagVR_t::US);
-                std::uint32_t messageId(responseDataSet->getUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0));
-                responseDataSet->setUnsignedLong(TagId(tagId_t::MessageIDBeingRespondedTo_0000_0120), messageId, tagVR_t::US);
-                responseDataSet->setString(TagId(tagId_t::SeriesInstanceUID_0020_000E), "1.2.3.4.5");
-                responseDataSet->setUnsignedLong(TagId(tagId_t::CommandDataSetType_0000_0800), pCommand->hasPayload() ? 0 : 0x0101);
-                responseDataSet->setUnsignedLong(TagId(tagId_t::Status_0000_0900), 0x0000);
+                MutableDataSet responseDataSet;
+                responseDataSet.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x8001, tagVR_t::US);
+                std::uint32_t messageId(command.getCommand().getUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0));
+                responseDataSet.setUnsignedLong(TagId(tagId_t::MessageIDBeingRespondedTo_0000_0120), messageId, tagVR_t::US);
+                responseDataSet.setString(TagId(tagId_t::SeriesInstanceUID_0020_000E), "1.2.3.4.5");
+                responseDataSet.setUnsignedLong(TagId(tagId_t::CommandDataSetType_0000_0800), command.hasPayload() ? 0 : 0x0101);
+                responseDataSet.setUnsignedLong(TagId(tagId_t::Status_0000_0900), 0x0000);
 
-                AssociationMessage response(pCommand->getAbstractSyntax());
-                response.addDataSet(*responseDataSet);
+                MutableAssociationMessage response(command.getAbstractSyntax());
+                response.addDataSet(responseDataSet);
 
-                if(pCommand->hasPayload())
+                if(command.hasPayload())
                 {
-                    std::unique_ptr<DataSet> payload(pCommand->getPayload());
-                    response.addDataSet(*payload);
+                    DataSet payload = command.getPayload();
+                    response.addDataSet(payload);
                 }
 
                 scp.sendMessage(response);
@@ -111,8 +114,7 @@ void scpThreadRejectCalledAET(const std::string& name, PresentationContexts& pre
 
         for(;;)
         {
-            std::unique_ptr<AssociationMessage> pCommand(scp.getCommand());
-
+            scp.getCommand();
         }
     }
     catch(const AcseSCUCalledAETNotRecognizedError&)
@@ -129,7 +131,7 @@ void scpThreadDontAnswer(const std::string& name, PresentationContexts& presenta
 
         for(;;)
         {
-            std::unique_ptr<AssociationMessage> pCommand(scp.getCommand());
+            scp.getCommand();
         }
     }
     catch(const StreamClosedError&)
@@ -146,13 +148,13 @@ void scpThreadDontAnswer(const std::string& name, PresentationContexts& presenta
 ///////////////////////////////////////////////////////////
 TEST(acseTest, negotiationOneTransferSyntax)
 {
-    Pipe toSCU(1024), toSCP(1024);
+    PipeStream toSCU(1024), toSCP(1024);
 
-    StreamReader readSCU(toSCU);
-    StreamWriter writeSCU(toSCP);
+    StreamReader readSCU(toSCU.getStreamInput());
+    StreamWriter writeSCU(toSCP.getStreamOutput());
 
-    StreamReader readSCP(toSCP);
-    StreamWriter writeSCP(toSCU);
+    StreamReader readSCP(toSCP.getStreamInput());
+    StreamWriter writeSCP(toSCU.getStreamOutput());
 
     PresentationContext context("1.2.840.10008.1.1");
     context.addTransferSyntax("1.2.840.10008.1.2"); // implicit VR little endian
@@ -165,8 +167,8 @@ TEST(acseTest, negotiationOneTransferSyntax)
 
     AssociationSCU scu("SCU", scpName, 1, 1, presentationContexts, readSCU, writeSCU, 0);
 
-    AssociationMessage command("1.2.840.10008.1.1");
-    DataSet dataset0;
+    MutableAssociationMessage command("1.2.840.10008.1.1");
+    MutableDataSet dataset0;
     dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
     dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
     dataset0.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), "1.2.3.4");
@@ -174,11 +176,11 @@ TEST(acseTest, negotiationOneTransferSyntax)
     command.addDataSet(dataset0);
     scu.sendMessage(command);
 
-    std::unique_ptr<AssociationMessage> pResponse(scu.getResponse(1));
-    std::unique_ptr<DataSet> responseDataSet(pResponse->getCommand());
-    EXPECT_EQ("1.2.3.4", responseDataSet->getString(TagId(tagId_t::StudyInstanceUID_0020_000D), 0));
-    EXPECT_EQ("1.2.3.4.5", responseDataSet->getString(TagId(tagId_t::SeriesInstanceUID_0020_000E), 0));
-    EXPECT_EQ("1.2.840.10008.1.2",responseDataSet->getString(TagId(tagId_t::TransferSyntaxUID_0002_0010), 0));
+    AssociationMessage response = scu.getResponse(1);
+    DataSet responseDataSet = response.getCommand();
+    EXPECT_EQ("1.2.3.4", responseDataSet.getString(TagId(tagId_t::StudyInstanceUID_0020_000D), 0));
+    EXPECT_EQ("1.2.3.4.5", responseDataSet.getString(TagId(tagId_t::SeriesInstanceUID_0020_000E), 0));
+    EXPECT_EQ("1.2.840.10008.1.2",responseDataSet.getString(TagId(tagId_t::TransferSyntaxUID_0002_0010), 0));
 
     scu.release();
 
@@ -188,13 +190,13 @@ TEST(acseTest, negotiationOneTransferSyntax)
 
 TEST(acseTest, scpScuRole)
 {
-    Pipe toSCU(1024), toSCP(1024);
+    PipeStream toSCU(1024), toSCP(1024);
 
-    StreamReader readSCU(toSCU);
-    StreamWriter writeSCU(toSCP);
+    StreamReader readSCU(toSCU.getStreamInput());
+    StreamWriter writeSCU(toSCP.getStreamOutput());
 
-    StreamReader readSCP(toSCP);
-    StreamWriter writeSCP(toSCU);
+    StreamReader readSCP(toSCP.getStreamInput());
+    StreamWriter writeSCP(toSCU.getStreamOutput());
 
     PresentationContext context("1.2.840.10008.1.1", false, true);
     context.addTransferSyntax("1.2.840.10008.1.2"); // implicit VR little endian
@@ -208,8 +210,8 @@ TEST(acseTest, scpScuRole)
     {
         AssociationSCU scu("SCU", scpName, 1, 1, presentationContexts, readSCU, writeSCU, 0);
 
-        AssociationMessage command("1.2.840.10008.1.1");
-        DataSet dataset0;
+        MutableAssociationMessage command("1.2.840.10008.1.1");
+        MutableDataSet dataset0;
         dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
         dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
         dataset0.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), "1.2.3.4");
@@ -226,13 +228,13 @@ TEST(acseTest, scpScuRole)
 
 TEST(acseTest, negotiationMultipleTransferSyntaxes)
 {
-    Pipe toSCU(1024), toSCP(1024);
+    PipeStream toSCU(1024), toSCP(1024);
 
-    StreamReader readSCU(toSCU);
-    StreamWriter writeSCU(toSCP);
+    StreamReader readSCU(toSCU.getStreamInput());
+    StreamWriter writeSCU(toSCP.getStreamOutput());
 
-    StreamReader readSCP(toSCP);
-    StreamWriter writeSCP(toSCU);
+    StreamReader readSCP(toSCP.getStreamInput());
+    StreamWriter writeSCP(toSCU.getStreamOutput());
 
     PresentationContext context("1.2.840.10008.1.1");
     context.addTransferSyntax("1.2.840.10008.1.2"); // implicit VR little endian
@@ -246,8 +248,8 @@ TEST(acseTest, negotiationMultipleTransferSyntaxes)
 
     AssociationSCU scu("SCU", scpName, 1, 1, presentationContexts, readSCU, writeSCU, 0);
 
-    AssociationMessage command("1.2.840.10008.1.1");
-    DataSet dataset0;
+    MutableAssociationMessage command("1.2.840.10008.1.1");
+    MutableDataSet dataset0;
     dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
     dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
     dataset0.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), "1.2.3.4");
@@ -255,11 +257,11 @@ TEST(acseTest, negotiationMultipleTransferSyntaxes)
     command.addDataSet(dataset0);
     scu.sendMessage(command);
 
-    std::unique_ptr<AssociationMessage> pResponse(scu.getResponse(1));
-    std::unique_ptr<DataSet> responseDataSet(pResponse->getCommand());
-    EXPECT_EQ("1.2.3.4", responseDataSet->getString(TagId(tagId_t::StudyInstanceUID_0020_000D), 0));
-    EXPECT_EQ("1.2.3.4.5", responseDataSet->getString(TagId(tagId_t::SeriesInstanceUID_0020_000E), 0));
-    EXPECT_EQ("1.2.840.10008.1.2",responseDataSet->getString(TagId(tagId_t::TransferSyntaxUID_0002_0010), 0));
+    AssociationMessage response = scu.getResponse(1);
+    DataSet responseDataSet = response.getCommand();
+    EXPECT_EQ("1.2.3.4", responseDataSet.getString(TagId(tagId_t::StudyInstanceUID_0020_000D), 0));
+    EXPECT_EQ("1.2.3.4.5", responseDataSet.getString(TagId(tagId_t::SeriesInstanceUID_0020_000E), 0));
+    EXPECT_EQ("1.2.840.10008.1.2",responseDataSet.getString(TagId(tagId_t::TransferSyntaxUID_0002_0010), 0));
 
     scu.release();
 
@@ -269,13 +271,13 @@ TEST(acseTest, negotiationMultipleTransferSyntaxes)
 
 TEST(acseTest, negotiationPartialMatchTransferSyntaxes)
 {
-    Pipe toSCU(1024), toSCP(1024);
+    PipeStream toSCU(1024), toSCP(1024);
 
-    StreamReader readSCU(toSCU);
-    StreamWriter writeSCU(toSCP);
+    StreamReader readSCU(toSCU.getStreamInput());
+    StreamWriter writeSCU(toSCP.getStreamOutput());
 
-    StreamReader readSCP(toSCP);
-    StreamWriter writeSCP(toSCU);
+    StreamReader readSCP(toSCP.getStreamInput());
+    StreamWriter writeSCP(toSCU.getStreamOutput());
 
     PresentationContext scuContext("1.2.840.10008.1.1");
     scuContext.addTransferSyntax("1.2.840.10008.1.2"); // implicit VR little endian
@@ -294,8 +296,8 @@ TEST(acseTest, negotiationPartialMatchTransferSyntaxes)
 
     AssociationSCU scu("SCU", scpName, 1, 1, scuPresentationContexts, readSCU, writeSCU, 0);
 
-    AssociationMessage command("1.2.840.10008.1.1");
-    DataSet dataset0;
+    MutableAssociationMessage command("1.2.840.10008.1.1");
+    MutableDataSet dataset0;
     dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
     dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
     dataset0.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), "1.2.3.4");
@@ -304,12 +306,12 @@ TEST(acseTest, negotiationPartialMatchTransferSyntaxes)
     command.addDataSet(dataset0);
     scu.sendMessage(command);
 
-    std::unique_ptr<AssociationMessage> pResponse(scu.getResponse(1));
-    std::unique_ptr<DataSet> responseDataSet(pResponse->getCommand());
-    EXPECT_EQ("1.2.840.10008.1.1", pResponse->getAbstractSyntax());
-    EXPECT_EQ("1.2.3.4", responseDataSet->getString(TagId(tagId_t::StudyInstanceUID_0020_000D), 0));
-    EXPECT_EQ("1.2.3.4.5", responseDataSet->getString(TagId(tagId_t::SeriesInstanceUID_0020_000E), 0));
-    EXPECT_EQ("1.2.840.10008.1.2.1",responseDataSet->getString(TagId(tagId_t::TransferSyntaxUID_0002_0010), 0));
+    AssociationMessage response = scu.getResponse(1);
+    DataSet responseDataSet = response.getCommand();
+    EXPECT_EQ("1.2.840.10008.1.1", response.getAbstractSyntax());
+    EXPECT_EQ("1.2.3.4", responseDataSet.getString(TagId(tagId_t::StudyInstanceUID_0020_000D), 0));
+    EXPECT_EQ("1.2.3.4.5", responseDataSet.getString(TagId(tagId_t::SeriesInstanceUID_0020_000E), 0));
+    EXPECT_EQ("1.2.840.10008.1.2.1",responseDataSet.getString(TagId(tagId_t::TransferSyntaxUID_0002_0010), 0));
 
     scu.release();
 
@@ -319,13 +321,13 @@ TEST(acseTest, negotiationPartialMatchTransferSyntaxes)
 
 TEST(acseTest, sendPayload)
 {
-    Pipe toSCU(1024), toSCP(1024);
+    PipeStream toSCU(1024), toSCP(1024);
 
-    StreamReader readSCU(toSCU);
-    StreamWriter writeSCU(toSCP);
+    StreamReader readSCU(toSCU.getStreamInput());
+    StreamWriter writeSCU(toSCP.getStreamOutput());
 
-    StreamReader readSCP(toSCP);
-    StreamWriter writeSCP(toSCU);
+    StreamReader readSCP(toSCP.getStreamInput());
+    StreamWriter writeSCP(toSCU.getStreamOutput());
 
     PresentationContext scuContext("1.2.840.10008.1.1");
     scuContext.addTransferSyntax("1.2.840.10008.1.2"); // implicit VR little endian
@@ -349,21 +351,21 @@ TEST(acseTest, sendPayload)
 
         for(size_t payloadSize(1); payloadSize < maxPayloadSize; payloadSize += 128)
         {
-            AssociationMessage command("1.2.840.10008.1.1");
+            MutableAssociationMessage command("1.2.840.10008.1.1");
 
-            DataSet dataset0;
+            MutableDataSet dataset0;
             dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
             dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
             dataset0.setUnsignedLong(TagId(tagId_t::CommandDataSetType_0000_0800), 0);
 
             command.addDataSet(dataset0);
 
-            DataSet payload;
+            MutableDataSet payload;
             {
-                std::unique_ptr<WritingDataHandlerNumeric> writing(payload.getWritingDataHandlerRaw(TagId(tagId_t::PixelData_7FE0_0010), 0, tagVR_t::OB));
-                writing->setSize(payloadSize);
+                WritingDataHandlerNumeric writing = payload.getWritingDataHandlerRaw(TagId(tagId_t::PixelData_7FE0_0010), 0, tagVR_t::OB);
+                writing.setSize(payloadSize);
                 size_t dummy;
-                char* payloadData(writing->data(&dummy));
+                char* payloadData(writing.data(&dummy));
                 for(size_t fillPayload(0); fillPayload != payloadSize; ++fillPayload)
                 {
                     payloadData[fillPayload] = (char)(fillPayload & 0x7f);
@@ -373,20 +375,19 @@ TEST(acseTest, sendPayload)
 
             scu.sendMessage(command);
 
-            std::unique_ptr<AssociationMessage> pResponse(scu.getResponse(1));
-            std::unique_ptr<DataSet> responseCommand(pResponse->getCommand());
-            std::unique_ptr<DataSet> responsePayload(pResponse->getPayload());
+            AssociationMessage response = scu.getResponse(1);
+            DataSet responsePayload = response.getPayload();
 
-            EXPECT_EQ("1.2.840.10008.1.1", pResponse->getAbstractSyntax());
+            EXPECT_EQ("1.2.840.10008.1.1", response.getAbstractSyntax());
             {
-                std::unique_ptr<ReadingDataHandlerNumeric> reading(responsePayload->getReadingDataHandlerRaw(TagId(tagId_t::PixelData_7FE0_0010), 0));
+                ReadingDataHandlerNumeric reading = responsePayload.getReadingDataHandlerRaw(TagId(tagId_t::PixelData_7FE0_0010), 0);
                 size_t dummy;
-                const char* payloadData(reading->data(&dummy));
+                const char* payloadData(reading.data(&dummy));
                 for(size_t fillPayload(0); fillPayload != payloadSize; ++fillPayload)
                 {
                     EXPECT_EQ(payloadData[fillPayload], (char)(fillPayload & 0x7f));
                 }
-                EXPECT_EQ(reading->getSize(), (payloadSize + 1) & 0xfffffffe);
+                EXPECT_EQ(reading.getSize(), (payloadSize + 1) & 0xfffffffe);
             }
         }
 
@@ -403,21 +404,21 @@ void scuThread(AssociationSCU& scu, std::uint16_t firstMessageId, size_t numberO
 
     for(std::uint16_t messageNumber(0); messageNumber != numberOfMessages; ++messageNumber)
     {
-        AssociationMessage command("1.2.840.10008.1.1");
+        MutableAssociationMessage command("1.2.840.10008.1.1");
 
-        DataSet dataset0;
+        MutableDataSet dataset0;
         dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
         dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), (std::uint16_t)(firstMessageId + messageNumber), tagVR_t::US);
         dataset0.setUnsignedLong(TagId(tagId_t::CommandDataSetType_0000_0800), 0);
 
         command.addDataSet(dataset0);
 
-        DataSet payload;
+        MutableDataSet payload;
         {
-            std::unique_ptr<WritingDataHandlerNumeric> writing(payload.getWritingDataHandlerRaw(TagId(tagId_t::PixelData_7FE0_0010), 0, tagVR_t::OB));
-            writing->setSize(payloadSize);
+            WritingDataHandlerNumeric writing(payload.getWritingDataHandlerRaw(TagId(tagId_t::PixelData_7FE0_0010), 0, tagVR_t::OB));
+            writing.setSize(payloadSize);
             size_t dummy;
-            char* payloadData(writing->data(&dummy));
+            char* payloadData(writing.data(&dummy));
             for(size_t fillPayload(0); fillPayload != payloadSize; ++fillPayload)
             {
                 payloadData[fillPayload] = (char)((fillPayload + firstMessageId) & 0x7f);
@@ -427,20 +428,19 @@ void scuThread(AssociationSCU& scu, std::uint16_t firstMessageId, size_t numberO
 
         scu.sendMessage(command);
 
-        std::unique_ptr<AssociationMessage> pResponse(scu.getResponse((std::uint16_t)(firstMessageId + messageNumber)));
-        std::unique_ptr<DataSet> responseCommand(pResponse->getCommand());
-        std::unique_ptr<DataSet> responsePayload(pResponse->getPayload());
+        AssociationMessage response = scu.getResponse((std::uint16_t)(firstMessageId + messageNumber));
+        DataSet responsePayload = response.getPayload();
 
-        EXPECT_EQ("1.2.840.10008.1.1", pResponse->getAbstractSyntax());
+        EXPECT_EQ("1.2.840.10008.1.1", response.getAbstractSyntax());
         {
-            std::unique_ptr<ReadingDataHandlerNumeric> reading(responsePayload->getReadingDataHandlerRaw(TagId(tagId_t::PixelData_7FE0_0010), 0));
+            ReadingDataHandlerNumeric reading(responsePayload.getReadingDataHandlerRaw(TagId(tagId_t::PixelData_7FE0_0010), 0));
             size_t dummy;
-            const char* payloadData(reading->data(&dummy));
+            const char* payloadData(reading.data(&dummy));
             for(size_t fillPayload(0); fillPayload != payloadSize; ++fillPayload)
             {
                 EXPECT_EQ(payloadData[fillPayload], (char)((fillPayload + firstMessageId) & 0x7f));
             }
-            EXPECT_EQ(reading->getSize(), (payloadSize + 1) & 0xfffffffe);
+            EXPECT_EQ(reading.getSize(), (payloadSize + 1) & 0xfffffffe);
         }
     }
 }
@@ -448,13 +448,13 @@ void scuThread(AssociationSCU& scu, std::uint16_t firstMessageId, size_t numberO
 
 TEST(acseTest, overlappingOperations)
 {
-    Pipe toSCU(1024), toSCP(1024);
+    PipeStream toSCU(1024), toSCP(1024);
 
-    StreamReader readSCU(toSCU);
-    StreamWriter writeSCU(toSCP);
+    StreamReader readSCU(toSCU.getStreamInput());
+    StreamWriter writeSCU(toSCP.getStreamOutput());
 
-    StreamReader readSCP(toSCP);
-    StreamWriter writeSCP(toSCU);
+    StreamReader readSCP(toSCP.getStreamInput());
+    StreamWriter writeSCP(toSCU.getStreamOutput());
 
     PresentationContext scuContext("1.2.840.10008.1.1");
     scuContext.addTransferSyntax("1.2.840.10008.1.2"); // implicit VR little endian
@@ -498,13 +498,13 @@ TEST(acseTest, overlappingOperations)
 
 TEST(acseTest, negotiationMultiplePresentationContexts)
 {
-    Pipe toSCU(1024), toSCP(1024);
+    PipeStream toSCU(1024), toSCP(1024);
 
-    StreamReader readSCU(toSCU);
-    StreamWriter writeSCU(toSCP);
+    StreamReader readSCU(toSCU.getStreamInput());
+    StreamWriter writeSCU(toSCP.getStreamOutput());
 
-    StreamReader readSCP(toSCP);
-    StreamWriter writeSCP(toSCU);
+    StreamReader readSCP(toSCP.getStreamInput());
+    StreamWriter writeSCP(toSCU.getStreamOutput());
 
     PresentationContext scuContext0("1.2.840.10008.1.1");
     scuContext0.addTransferSyntax("1.2.840.10008.1.2"); // implicit VR little endian
@@ -533,8 +533,8 @@ TEST(acseTest, negotiationMultiplePresentationContexts)
     AssociationSCU scu("SCU", scpName, 1, 1, scuPresentationContexts, readSCU, writeSCU, 0);
 
     {
-        AssociationMessage command("1.2.840.10008.1.1");
-        DataSet dataset0;
+        MutableAssociationMessage command("1.2.840.10008.1.1");
+        MutableDataSet dataset0;
         dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
         dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
         dataset0.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), "1.2.3.4");
@@ -543,17 +543,17 @@ TEST(acseTest, negotiationMultiplePresentationContexts)
         command.addDataSet(dataset0);
         scu.sendMessage(command);
 
-        std::unique_ptr<AssociationMessage> pResponse(scu.getResponse(1));
-        std::unique_ptr<DataSet> responseDataSet(pResponse->getCommand());
-        EXPECT_EQ("1.2.840.10008.1.1", pResponse->getAbstractSyntax());
-        EXPECT_EQ("1.2.3.4", responseDataSet->getString(TagId(tagId_t::StudyInstanceUID_0020_000D), 0));
-        EXPECT_EQ("1.2.3.4.5", responseDataSet->getString(TagId(tagId_t::SeriesInstanceUID_0020_000E), 0));
-        EXPECT_EQ("1.2.840.10008.1.2.1",responseDataSet->getString(TagId(tagId_t::TransferSyntaxUID_0002_0010), 0));
+        AssociationMessage response = scu.getResponse(1);
+        DataSet responseDataSet(response.getCommand());
+        EXPECT_EQ("1.2.840.10008.1.1", response.getAbstractSyntax());
+        EXPECT_EQ("1.2.3.4", responseDataSet.getString(TagId(tagId_t::StudyInstanceUID_0020_000D), 0));
+        EXPECT_EQ("1.2.3.4.5", responseDataSet.getString(TagId(tagId_t::SeriesInstanceUID_0020_000E), 0));
+        EXPECT_EQ("1.2.840.10008.1.2.1",responseDataSet.getString(TagId(tagId_t::TransferSyntaxUID_0002_0010), 0));
     }
 
     {
-        AssociationMessage command("1.2.840.10008.1.1.2");
-        DataSet dataset0;
+        MutableAssociationMessage command("1.2.840.10008.1.1.2");
+        MutableDataSet dataset0;
         dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
         dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
         dataset0.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), "1.2.3.4");
@@ -562,12 +562,12 @@ TEST(acseTest, negotiationMultiplePresentationContexts)
         command.addDataSet(dataset0);
         scu.sendMessage(command);
 
-        std::unique_ptr<AssociationMessage> pResponse(scu.getResponse(1));
-        std::unique_ptr<DataSet> responseDataSet(pResponse->getCommand());
-        EXPECT_EQ("1.2.840.10008.1.1.2", pResponse->getAbstractSyntax());
-        EXPECT_EQ("1.2.3.4", responseDataSet->getString(TagId(tagId_t::StudyInstanceUID_0020_000D), 0));
-        EXPECT_EQ("1.2.3.4.5", responseDataSet->getString(TagId(tagId_t::SeriesInstanceUID_0020_000E), 0));
-        EXPECT_EQ("1.2.840.10008.1.2",responseDataSet->getString(TagId(tagId_t::TransferSyntaxUID_0002_0010), 0));
+        AssociationMessage response = scu.getResponse(1);
+        DataSet responseDataSet = response.getCommand();
+        EXPECT_EQ("1.2.840.10008.1.1.2", response.getAbstractSyntax());
+        EXPECT_EQ("1.2.3.4", responseDataSet.getString(TagId(tagId_t::StudyInstanceUID_0020_000D), 0));
+        EXPECT_EQ("1.2.3.4.5", responseDataSet.getString(TagId(tagId_t::SeriesInstanceUID_0020_000E), 0));
+        EXPECT_EQ("1.2.840.10008.1.2",responseDataSet.getString(TagId(tagId_t::TransferSyntaxUID_0002_0010), 0));
     }
 
     scu.release();
@@ -578,13 +578,13 @@ TEST(acseTest, negotiationMultiplePresentationContexts)
 
 TEST(acseTest, negotiationNoTransferSyntax)
 {
-    Pipe toSCU(1024), toSCP(1024);
+    PipeStream toSCU(1024), toSCP(1024);
 
-    StreamReader readSCU(toSCU);
-    StreamWriter writeSCU(toSCP);
+    StreamReader readSCU(toSCU.getStreamInput());
+    StreamWriter writeSCU(toSCP.getStreamOutput());
 
-    StreamReader readSCP(toSCP);
-    StreamWriter writeSCP(toSCU);
+    StreamReader readSCP(toSCP.getStreamInput());
+    StreamWriter writeSCP(toSCU.getStreamOutput());
 
     PresentationContext scuContext0("1.2.840.10008.1.1");
     scuContext0.addTransferSyntax("1.2.840.10008.1.2"); // implicit VR little endian
@@ -612,8 +612,8 @@ TEST(acseTest, negotiationNoTransferSyntax)
     AssociationSCU scu("SCU", scpName, 1, 1, scuPresentationContexts, readSCU, writeSCU, 0);
 
     {
-        AssociationMessage command("1.2.840.10008.1.1");
-        DataSet dataset0;
+        MutableAssociationMessage command("1.2.840.10008.1.1");
+        MutableDataSet dataset0;
         dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
         dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
         dataset0.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), "1.2.3.4");
@@ -622,18 +622,18 @@ TEST(acseTest, negotiationNoTransferSyntax)
         command.addDataSet(dataset0);
         scu.sendMessage(command);
 
-        std::unique_ptr<AssociationMessage> pResponse(scu.getResponse(1));
-        std::unique_ptr<DataSet> responseDataSet(pResponse->getCommand());
-        EXPECT_EQ("1.2.840.10008.1.1", pResponse->getAbstractSyntax());
-        EXPECT_EQ("1.2.3.4", responseDataSet->getString(TagId(tagId_t::StudyInstanceUID_0020_000D), 0));
-        EXPECT_EQ("1.2.3.4.5", responseDataSet->getString(TagId(tagId_t::SeriesInstanceUID_0020_000E), 0));
-        EXPECT_EQ("1.2.840.10008.1.2.1",responseDataSet->getString(TagId(tagId_t::TransferSyntaxUID_0002_0010), 0));
+        AssociationMessage response = scu.getResponse(1);
+        DataSet responseDataSet = response.getCommand();
+        EXPECT_EQ("1.2.840.10008.1.1", response.getAbstractSyntax());
+        EXPECT_EQ("1.2.3.4", responseDataSet.getString(TagId(tagId_t::StudyInstanceUID_0020_000D), 0));
+        EXPECT_EQ("1.2.3.4.5", responseDataSet.getString(TagId(tagId_t::SeriesInstanceUID_0020_000E), 0));
+        EXPECT_EQ("1.2.840.10008.1.2.1",responseDataSet.getString(TagId(tagId_t::TransferSyntaxUID_0002_0010), 0));
     }
 
     {
         // This should fail (no transfer syntax)
-        AssociationMessage command("1.2.840.10008.1.1.2");
-        DataSet dataset0;
+        MutableAssociationMessage command("1.2.840.10008.1.1.2");
+        MutableDataSet dataset0;
         dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
         dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
         dataset0.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), "1.2.3.4");
@@ -645,8 +645,8 @@ TEST(acseTest, negotiationNoTransferSyntax)
     }
 
     {
-        AssociationMessage command("1.2.840.10008.1.1");
-        DataSet dataset0;
+        MutableAssociationMessage command("1.2.840.10008.1.1");
+        MutableDataSet dataset0;
         dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
         dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
         dataset0.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), "1.2.3.4.7");
@@ -655,12 +655,12 @@ TEST(acseTest, negotiationNoTransferSyntax)
         command.addDataSet(dataset0);
         scu.sendMessage(command);
 
-        std::unique_ptr<AssociationMessage> pResponse(scu.getResponse(1));
-        std::unique_ptr<DataSet> responseDataSet(pResponse->getCommand());
-        EXPECT_EQ("1.2.840.10008.1.1", pResponse->getAbstractSyntax());
-        EXPECT_EQ("1.2.3.4.7", responseDataSet->getString(TagId(tagId_t::StudyInstanceUID_0020_000D), 0));
-        EXPECT_EQ("1.2.3.4.5", responseDataSet->getString(TagId(tagId_t::SeriesInstanceUID_0020_000E), 0));
-        EXPECT_EQ("1.2.840.10008.1.2.1",responseDataSet->getString(TagId(tagId_t::TransferSyntaxUID_0002_0010), 0));
+        AssociationMessage response = scu.getResponse(1);
+        DataSet responseDataSet = response.getCommand();
+        EXPECT_EQ("1.2.840.10008.1.1", response.getAbstractSyntax());
+        EXPECT_EQ("1.2.3.4.7", responseDataSet.getString(TagId(tagId_t::StudyInstanceUID_0020_000D), 0));
+        EXPECT_EQ("1.2.3.4.5", responseDataSet.getString(TagId(tagId_t::SeriesInstanceUID_0020_000E), 0));
+        EXPECT_EQ("1.2.840.10008.1.2.1",responseDataSet.getString(TagId(tagId_t::TransferSyntaxUID_0002_0010), 0));
     }
 
     scu.release();
@@ -671,13 +671,13 @@ TEST(acseTest, negotiationNoTransferSyntax)
 
 TEST(acseTest, negotiationNoPresentationContext)
 {
-    Pipe toSCU(1024), toSCP(1024);
+    PipeStream toSCU(1024), toSCP(1024);
 
-    StreamReader readSCU(toSCU);
-    StreamWriter writeSCU(toSCP);
+    StreamReader readSCU(toSCU.getStreamInput());
+    StreamWriter writeSCU(toSCP.getStreamOutput());
 
-    StreamReader readSCP(toSCP);
-    StreamWriter writeSCP(toSCU);
+    StreamReader readSCP(toSCP.getStreamInput());
+    StreamWriter writeSCP(toSCU.getStreamOutput());
 
     PresentationContext scuContext0("1.2.840.10008.1.1");
     scuContext0.addTransferSyntax("1.2.840.10008.1.2"); // implicit VR little endian
@@ -702,8 +702,8 @@ TEST(acseTest, negotiationNoPresentationContext)
     AssociationSCU scu("SCU", scpName, 1, 1, scuPresentationContexts, readSCU, writeSCU, 0);
 
     {
-        AssociationMessage command("1.2.840.10008.1.1");
-        DataSet dataset0;
+        MutableAssociationMessage command("1.2.840.10008.1.1");
+        MutableDataSet dataset0;
         dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
         dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
         dataset0.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), "1.2.3.4");
@@ -712,18 +712,18 @@ TEST(acseTest, negotiationNoPresentationContext)
         command.addDataSet(dataset0);
         scu.sendMessage(command);
 
-        std::unique_ptr<AssociationMessage> pResponse(scu.getResponse(1));
-        std::unique_ptr<DataSet> responseDataSet(pResponse->getCommand());
-        EXPECT_EQ("1.2.840.10008.1.1", pResponse->getAbstractSyntax());
-        EXPECT_EQ("1.2.3.4", responseDataSet->getString(TagId(tagId_t::StudyInstanceUID_0020_000D), 0));
-        EXPECT_EQ("1.2.3.4.5", responseDataSet->getString(TagId(tagId_t::SeriesInstanceUID_0020_000E), 0));
-        EXPECT_EQ("1.2.840.10008.1.2.1",responseDataSet->getString(TagId(tagId_t::TransferSyntaxUID_0002_0010), 0));
+        AssociationMessage response = scu.getResponse(1);
+        DataSet responseDataSet = response.getCommand();
+        EXPECT_EQ("1.2.840.10008.1.1", response.getAbstractSyntax());
+        EXPECT_EQ("1.2.3.4", responseDataSet.getString(TagId(tagId_t::StudyInstanceUID_0020_000D), 0));
+        EXPECT_EQ("1.2.3.4.5", responseDataSet.getString(TagId(tagId_t::SeriesInstanceUID_0020_000E), 0));
+        EXPECT_EQ("1.2.840.10008.1.2.1",responseDataSet.getString(TagId(tagId_t::TransferSyntaxUID_0002_0010), 0));
     }
 
     {
         // This should fail (no presentation context in scp)
-        AssociationMessage command("1.2.840.10008.1.1.2");
-        DataSet dataset0;
+        MutableAssociationMessage command("1.2.840.10008.1.1.2");
+        MutableDataSet dataset0;
         dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
         dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
         dataset0.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), "1.2.3.4");
@@ -736,8 +736,8 @@ TEST(acseTest, negotiationNoPresentationContext)
 
     {
         // This should fail (no presentation context in scu)
-        AssociationMessage command("1.2.840.10008.1.1.3");
-        DataSet dataset0;
+        MutableAssociationMessage command("1.2.840.10008.1.1.3");
+        MutableDataSet dataset0;
         dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
         dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
         dataset0.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), "1.2.3.4");
@@ -749,8 +749,8 @@ TEST(acseTest, negotiationNoPresentationContext)
     }
 
     {
-        AssociationMessage command("1.2.840.10008.1.1");
-        DataSet dataset0;
+        MutableAssociationMessage command("1.2.840.10008.1.1");
+        MutableDataSet dataset0;
         dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
         dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
         dataset0.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), "1.2.3.4.7");
@@ -759,12 +759,12 @@ TEST(acseTest, negotiationNoPresentationContext)
         command.addDataSet(dataset0);
         scu.sendMessage(command);
 
-        std::unique_ptr<AssociationMessage> pResponse(scu.getResponse(1));
-        std::unique_ptr<DataSet> responseDataSet(pResponse->getCommand());
-        EXPECT_EQ("1.2.840.10008.1.1", pResponse->getAbstractSyntax());
-        EXPECT_EQ("1.2.3.4.7", responseDataSet->getString(TagId(tagId_t::StudyInstanceUID_0020_000D), 0));
-        EXPECT_EQ("1.2.3.4.5", responseDataSet->getString(TagId(tagId_t::SeriesInstanceUID_0020_000E), 0));
-        EXPECT_EQ("1.2.840.10008.1.2.1",responseDataSet->getString(TagId(tagId_t::TransferSyntaxUID_0002_0010), 0));
+        AssociationMessage response = scu.getResponse(1);
+        DataSet responseDataSet = response.getCommand();
+        EXPECT_EQ("1.2.840.10008.1.1", response.getAbstractSyntax());
+        EXPECT_EQ("1.2.3.4.7", responseDataSet.getString(TagId(tagId_t::StudyInstanceUID_0020_000D), 0));
+        EXPECT_EQ("1.2.3.4.5", responseDataSet.getString(TagId(tagId_t::SeriesInstanceUID_0020_000E), 0));
+        EXPECT_EQ("1.2.840.10008.1.2.1",responseDataSet.getString(TagId(tagId_t::TransferSyntaxUID_0002_0010), 0));
     }
 
     scu.release();
@@ -774,13 +774,13 @@ TEST(acseTest, negotiationNoPresentationContext)
 
 TEST(acseTest, rejectAssociationName)
 {
-    Pipe toSCU(1024), toSCP(1024);
+    PipeStream toSCU(1024), toSCP(1024);
 
-    StreamReader readSCU(toSCU);
-    StreamWriter writeSCU(toSCP);
+    StreamReader readSCU(toSCU.getStreamInput());
+    StreamWriter writeSCU(toSCP.getStreamOutput());
 
-    StreamReader readSCP(toSCP);
-    StreamWriter writeSCP(toSCU);
+    StreamReader readSCP(toSCP.getStreamInput());
+    StreamWriter writeSCP(toSCU.getStreamOutput());
 
     PresentationContext scuContext0("1.2.840.10008.1.1");
     scuContext0.addTransferSyntax("1.2.840.10008.1.2"); // implicit VR little endian
@@ -810,13 +810,13 @@ TEST(acseTest, rejectAssociationName)
 
 TEST(acseTest, invokeTooManyOperations)
 {
-    Pipe toSCU(1024), toSCP(1024);
+    PipeStream toSCU(1024), toSCP(1024);
 
-    StreamReader readSCU(toSCU);
-    StreamWriter writeSCU(toSCP);
+    StreamReader readSCU(toSCU.getStreamInput());
+    StreamWriter writeSCU(toSCP.getStreamOutput());
 
-    StreamReader readSCP(toSCP);
-    StreamWriter writeSCP(toSCU);
+    StreamReader readSCP(toSCP.getStreamInput());
+    StreamWriter writeSCP(toSCU.getStreamOutput());
 
     PresentationContext scuContext0("1.2.840.10008.1.1");
     scuContext0.addTransferSyntax("1.2.840.10008.1.2"); // implicit VR little endian
@@ -842,8 +842,8 @@ TEST(acseTest, invokeTooManyOperations)
         AssociationSCU scu("SCU", scpName, 1, 1, scuPresentationContexts, readSCU, writeSCU, 0);
 
         {
-            AssociationMessage command("1.2.840.10008.1.1");
-            DataSet dataset0;
+            MutableAssociationMessage command("1.2.840.10008.1.1");
+            MutableDataSet dataset0;
             dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
             dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
             dataset0.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), "1.2.3.4.7");
@@ -854,8 +854,8 @@ TEST(acseTest, invokeTooManyOperations)
         }
 
         {
-            AssociationMessage command("1.2.840.10008.1.1");
-            DataSet dataset0;
+            MutableAssociationMessage command("1.2.840.10008.1.1");
+            MutableDataSet dataset0;
             dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
             dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0x2, tagVR_t::US);
             dataset0.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), "1.2.3.4.7");
@@ -866,8 +866,8 @@ TEST(acseTest, invokeTooManyOperations)
         }
 
         {
-            AssociationMessage command("1.2.840.10008.1.1");
-            DataSet dataset0;
+            MutableAssociationMessage command("1.2.840.10008.1.1");
+            MutableDataSet dataset0;
             dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
             dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
             dataset0.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), "1.2.3.4.7");
@@ -886,10 +886,10 @@ TEST(acseTest, invokeTooManyOperations)
 
 TEST(acseTest, artimTest)
 {
-    Pipe toSCU(1024), toSCP(1024);
+    PipeStream toSCU(1024), toSCP(1024);
 
-    StreamReader readSCP(toSCP);
-    StreamWriter writeSCP(toSCU);
+    StreamReader readSCP(toSCP.getStreamInput());
+    StreamWriter writeSCP(toSCU.getStreamOutput());
 
     PresentationContext scuContext("1.2.840.10008.1.1");
     scuContext.addTransferSyntax("1.2.840.10008.1.2"); // implicit VR little endian

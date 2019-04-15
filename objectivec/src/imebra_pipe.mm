@@ -11,50 +11,50 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#include "imebra_bridgeStructures.h"
+#import "../include/imebraobjc/imebra_pipe.h"
+#import "../include/imebraobjc/imebra_baseStreamInput.h"
+#import "../include/imebraobjc/imebra_baseStreamOutput.h"
 
-@implementation ImebraPipe
+#include "imebra_implementation_macros.h"
+#include "imebra_nserror.h"
+
+#include <imebra/pipeStream.h>
+#include <imebra/baseStreamInput.h>
+#include <imebra/baseStreamOutput.h>
+
+@implementation ImebraPipeStream
 
 -(id)initWithBufferSize:(unsigned int)circularBufferSize
 {
+    reset_imebra_object_holder(PipeStream);
     self =  [super init];
     if(self)
     {
-        m_pBaseStreamInput = new imebra::Pipe((size_t)circularBufferSize);
+        set_imebra_object_holder(PipeStream, new imebra::PipeStream((size_t)circularBufferSize));
     }
     return self;
-}
-
--(void) feed:(ImebraReadMemory*)buffer error:(NSError**)pError
-{
-    OBJC_IMEBRA_FUNCTION_START();
-
-    ((imebra::Pipe*)m_pBaseStreamInput)->feed(*(buffer->m_pMemory));
-
-    OBJC_IMEBRA_FUNCTION_END();
-}
-
--(unsigned int) sink:(ImebraReadWriteMemory*)buffer error:(NSError**)pError
-{
-    OBJC_IMEBRA_FUNCTION_START();
-
-    return (unsigned int)((imebra::Pipe*)m_pBaseStreamInput)->sink(*(imebra::ReadWriteMemory*)(buffer->m_pMemory));
-
-    OBJC_IMEBRA_FUNCTION_END_RETURN(0);
 }
 
 -(void) close: (unsigned int) timeoutMilliseconds error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    ((imebra::Pipe*)m_pBaseStreamInput)->close(timeoutMilliseconds);
+    ((imebra::PipeStream*)get_imebra_object_holder(PipeStream))->close(timeoutMilliseconds);
 
     OBJC_IMEBRA_FUNCTION_END();
 }
 
--(void) terminate
+-(ImebraBaseStreamInput*) getStreamInput
 {
-    ((imebra::Pipe*)m_pBaseStreamInput)->terminate();
+    return [[ImebraBaseStreamInput alloc] initWithImebraBaseStreamInput: new imebra::BaseStreamInput(get_imebra_object_holder(PipeStream)->getStreamInput())];
 }
+
+-(ImebraBaseStreamOutput*) getStreamOutput
+{
+    return [[ImebraBaseStreamOutput alloc] initWithImebraBaseStreamOutput: new imebra::BaseStreamOutput(get_imebra_object_holder(PipeStream)->getStreamOutput())];
+}
+
+
+
 
 @end

@@ -15,6 +15,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #define imebraObjcStreamWriter__INCLUDED_
 
 #import <Foundation/Foundation.h>
+#include "imebra_macros.h"
 
 #ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
 namespace imebra
@@ -24,7 +25,6 @@ class StreamWriter;
 #endif
 
 @class ImebraBaseStreamOutput;
-@class ImebraBaseStreamInputOutput;
 
 ///
 /// \brief A ImebraStreamWriter is used to write data into a
@@ -37,9 +37,10 @@ class StreamWriter;
 {
     @public
     imebra::StreamWriter* m_pWriter;
+    define_imebra_object_holder(StreamWriter);
 }
 
-    -(id)initWithImebraStreamWriter:(imebra::StreamWriter*)pStreamWriter;
+    -(id)initWithImebraStreamWriter:define_imebra_parameter(StreamWriter);
 #endif
 
     /// \brief Initializer.
@@ -49,14 +50,6 @@ class StreamWriter;
     ///
     ///////////////////////////////////////////////////////////////////////////////
     -(id)initWithOutputStream:(ImebraBaseStreamOutput*)pOutput;
-
-    /// \brief Initializer.
-    ///
-    /// \param pInputOutput the ImebraBaseStreamInputOutput object on which the
-    ///                     ImebraStreamWriter will write
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    -(id)initWithInputOutputStream:(ImebraBaseStreamInputOutput*)pInputOutput;
 
     -(void)dealloc;
 

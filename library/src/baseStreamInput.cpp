@@ -22,7 +22,23 @@ If you do not want to be bound by the GPL terms (such as the requirement
 namespace imebra
 {
 
-BaseStreamInput::BaseStreamInput(std::shared_ptr<implementation::baseStreamInput> pInputStream): m_pInputStream(pInputStream)
+//
+// BaseStreamInput methods
+//
+///////////////////////////////////////////////////////////////////////////////
+
+BaseStreamInput::BaseStreamInput(const BaseStreamInput& source):
+    m_pInputStream(getBaseStreamInputImplementation(source))
+{
+}
+
+BaseStreamInput& BaseStreamInput::operator=(const BaseStreamInput& source)
+{
+    m_pInputStream = getBaseStreamInputImplementation(source);
+    return *this;
+}
+
+BaseStreamInput::BaseStreamInput(const std::shared_ptr<implementation::baseStreamInput>& pInputStream): m_pInputStream(pInputStream)
 {
 }
 
@@ -30,14 +46,40 @@ BaseStreamInput::~BaseStreamInput()
 {
 }
 
+const std::shared_ptr<implementation::baseStreamInput>& getBaseStreamInputImplementation(const BaseStreamInput& baseStreamInput)
+{
+    return baseStreamInput.m_pInputStream;
+}
+
+
+//
+// StreamTimeout methods
+//
+///////////////////////////////////////////////////////////////////////////////
+
+StreamTimeout::StreamTimeout(const StreamTimeout &source):
+    m_pStreamTimeout(getStreamTimeoutImplementation(source))
+{
+}
 
 StreamTimeout::StreamTimeout(BaseStreamInput& stream, std::uint32_t timeoutSeconds):
-    m_pStreamTimeout(std::make_shared<implementation::streamTimeout>(stream.m_pInputStream, std::chrono::seconds(timeoutSeconds)))
+    m_pStreamTimeout(std::make_shared<implementation::streamTimeout>(getBaseStreamInputImplementation(stream), std::chrono::seconds(timeoutSeconds)))
 {
+}
+
+StreamTimeout& StreamTimeout::operator=(const StreamTimeout& source)
+{
+    m_pStreamTimeout = getStreamTimeoutImplementation(source);
+    return *this;
 }
 
 StreamTimeout::~StreamTimeout()
 {
+}
+
+const std::shared_ptr<implementation::streamTimeout>& getStreamTimeoutImplementation(const StreamTimeout& streamTimeout)
+{
+    return streamTimeout.m_pStreamTimeout;
 }
 
 }

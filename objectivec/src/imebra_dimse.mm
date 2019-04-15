@@ -11,22 +11,30 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#include "imebra_bridgeStructures.h"
+#include "../include/imebraobjc/imebra_dimse.h"
+#include <imebra/dimse.h>
+#include <imebra/dataSet.h>
+#include "imebra_implementation_macros.h"
+#include "imebra_nserror.h"
+#include "imebra_strings.h"
 
+#import "../include/imebraobjc/imebra_dataset.h"
+#import "../include/imebraobjc/imebra_tagId.h"
+#import "../include/imebraobjc/imebra_acse.h"
 
 @implementation ImebraDimseCommandBase
 
--(id)initWithImebraCommand:(imebra::DimseCommandBase*)pCommand
+-(id)initWithImebraCommand:define_imebra_parameter(DimseCommandBase)
 {
-    m_pDimseCommandBase = 0;
+    reset_imebra_object_holder(DimseCommandBase);
     self = [super init];
     if(self)
     {
-        m_pDimseCommandBase = pCommand;
+        set_imebra_object_holder(DimseCommandBase, get_imebra_parameter(DimseCommandBase));
     }
     else
     {
-        delete pCommand;
+        get_imebra_parameter(DimseCommandBase);
     }
     return self;
 
@@ -35,7 +43,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(void)dealloc
 {
-    delete m_pDimseCommandBase;
+    delete_imebra_object_holder(DimseCommandBase);
 #if !__has_feature(objc_arc)
     [super dealloc];
 #endif
@@ -46,7 +54,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraDataSet alloc] initWithImebraDataSet:m_pDimseCommandBase->getCommandDataSet()];
+    return [[ImebraDataSet alloc] initWithImebraDataSet:new imebra::DataSet(get_imebra_object_holder(DimseCommandBase)->getCommandDataSet())];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -55,21 +63,21 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraDataSet alloc] initWithImebraDataSet:m_pDimseCommandBase->getPayloadDataSet()];
+    return [[ImebraDataSet alloc] initWithImebraDataSet:new imebra::DataSet(get_imebra_object_holder(DimseCommandBase)->getPayloadDataSet())];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
 
 -(NSString*)getAbstractSyntax
 {
-    return imebra::stringToNSString(m_pDimseCommandBase->getAbstractSyntax());
+    return imebra::stringToNSString(get_imebra_object_holder(DimseCommandBase)->getAbstractSyntax());
 }
 
 -(NSString*)getAffectedSopInstanceUid:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return imebra::stringToNSString(m_pDimseCommandBase->getAffectedSopInstanceUid());
+    return imebra::stringToNSString(get_imebra_object_holder(DimseCommandBase)->getAffectedSopInstanceUid());
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -78,7 +86,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return imebra::stringToNSString(m_pDimseCommandBase->getAffectedSopClassUid());
+    return imebra::stringToNSString(get_imebra_object_holder(DimseCommandBase)->getAffectedSopClassUid());
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -87,7 +95,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return imebra::stringToNSString(m_pDimseCommandBase->getRequestedSopInstanceUid());
+    return imebra::stringToNSString(get_imebra_object_holder(DimseCommandBase)->getRequestedSopInstanceUid());
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -96,7 +104,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return imebra::stringToNSString(m_pDimseCommandBase->getRequestedSopClassUid());
+    return imebra::stringToNSString(get_imebra_object_holder(DimseCommandBase)->getRequestedSopClassUid());
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -109,12 +117,12 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(unsigned short) ID
 {
-    return (unsigned short)((imebra::DimseCommand*)m_pDimseCommandBase)->getID();
+    return (unsigned short)((imebra::DimseCommand*)get_imebra_object_holder(DimseCommandBase))->getID();
 }
 
 -(ImebraDimseCommandType_t) commandType
 {
-    return (ImebraDimseCommandType_t)((imebra::DimseCommand*)m_pDimseCommandBase)->getCommandType();
+    return (ImebraDimseCommandType_t)((imebra::DimseCommand*)get_imebra_object_holder(DimseCommandBase))->getCommandType();
 }
 
 @end
@@ -124,12 +132,12 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(ImebraDimseStatus_t) status
 {
-    return (ImebraDimseStatus_t)((imebra::DimseResponse*)m_pDimseCommandBase)->getStatus();
+    return (ImebraDimseStatus_t)((imebra::DimseResponse*)get_imebra_object_holder(DimseCommandBase))->getStatus();
 }
 
 -(unsigned short) statusCode
 {
-    return (unsigned short)((imebra::DimseResponse*)m_pDimseCommandBase)->getStatusCode();
+    return (unsigned short)((imebra::DimseResponse*)get_imebra_object_holder(DimseCommandBase))->getStatusCode();
 }
 
 @end
@@ -141,7 +149,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return (unsigned int)((imebra::CPartialResponse*)m_pDimseCommandBase)->getRemainingSubOperations();
+    return (unsigned int)((imebra::CPartialResponse*)get_imebra_object_holder(DimseCommandBase))->getRemainingSubOperations();
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(0);
 }
@@ -150,7 +158,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return (unsigned int)((imebra::CPartialResponse*)m_pDimseCommandBase)->getCompletedSubOperations();
+    return (unsigned int)((imebra::CPartialResponse*)get_imebra_object_holder(DimseCommandBase))->getCompletedSubOperations();
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(0);
 }
@@ -159,7 +167,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return (unsigned int)((imebra::CPartialResponse*)m_pDimseCommandBase)->getFailedSubOperations();
+    return (unsigned int)((imebra::CPartialResponse*)get_imebra_object_holder(DimseCommandBase))->getFailedSubOperations();
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(0);
 }
@@ -169,7 +177,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return (unsigned int)((imebra::CPartialResponse*)m_pDimseCommandBase)->getWarningSubOperations();
+    return (unsigned int)((imebra::CPartialResponse*)get_imebra_object_holder(DimseCommandBase))->getWarningSubOperations();
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(0);
 }
@@ -188,19 +196,19 @@ If you do not want to be bound by the GPL terms (such as the requirement
     originatorMessageID:(unsigned short)originatorMessageID
     payload:(ImebraDataSet*)pPayload
 {
-    m_pDimseCommandBase = 0;
+    reset_imebra_object_holder(DimseCommandBase);
     self = [super init];
     if(self)
     {
-        m_pDimseCommandBase = new imebra::CStoreCommand(
-                    imebra::NSStringToString(abstractSyntax),
-                    (std::uint16_t)messageID,
-                    (imebra::dimseCommandPriority_t)priority,
-                    imebra::NSStringToString(affectedSopClassUid),
-                    imebra::NSStringToString(affectedSopInstanceUid),
-                    imebra::NSStringToString(originatorAET),
-                    (std::uint16_t)originatorMessageID,
-                    *(pPayload->m_pDataSet));
+        set_imebra_object_holder(DimseCommandBase, new imebra::CStoreCommand(
+                                     imebra::NSStringToString(abstractSyntax),
+                                     (std::uint16_t)messageID,
+                                     (imebra::dimseCommandPriority_t)priority,
+                                     imebra::NSStringToString(affectedSopClassUid),
+                                     imebra::NSStringToString(affectedSopInstanceUid),
+                                     imebra::NSStringToString(originatorAET),
+                                     (std::uint16_t)originatorMessageID,
+                                     *get_other_imebra_object_holder(pPayload, DataSet)));
     }
     return self;
 
@@ -209,12 +217,12 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(NSString*) originatorAET
 {
-    return imebra::stringToNSString(((imebra::CStoreCommand*)m_pDimseCommandBase)->getOriginatorAET());
+    return imebra::stringToNSString(((imebra::CStoreCommand*)get_imebra_object_holder(DimseCommandBase))->getOriginatorAET());
 }
 
 -(unsigned short) originatorMessageID
 {
-    return (unsigned short)((imebra::CStoreCommand*)m_pDimseCommandBase)->getOriginatorMessageID();
+    return (unsigned short)((imebra::CStoreCommand*)get_imebra_object_holder(DimseCommandBase))->getOriginatorMessageID();
 }
 
 @end
@@ -222,16 +230,16 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @implementation ImebraCStoreResponse
 
--(id)initWithcommand:(ImebraCStoreCommand*)pCommand
+-(id)initWithcommand:(ImebraCStoreCommand*) pCommand
     responseCode:(ImebraDimseStatusCode_t)responseCode
 {
-    m_pDimseCommandBase = 0;
+    reset_imebra_object_holder(DimseCommandBase);
     self = [super init];
     if(self)
     {
-        m_pDimseCommandBase = new imebra::CStoreResponse(
-                    *(imebra::CStoreCommand*)pCommand->m_pDimseCommandBase,
-                    (imebra::dimseStatusCode_t)responseCode);
+        set_imebra_object_holder(DimseCommandBase, new imebra::CStoreResponse(
+                                     *(imebra::CStoreCommand*)get_other_imebra_object_holder(pCommand, DimseCommandBase),
+                                     (imebra::dimseStatusCode_t)responseCode));
     }
     return self;
 
@@ -248,16 +256,16 @@ If you do not want to be bound by the GPL terms (such as the requirement
     affectedSopClassUid:(NSString*)affectedSopClassUid
     identifier:(ImebraDataSet*)pIdentifier
 {
-    m_pDimseCommandBase = 0;
+    reset_imebra_object_holder(DimseCommandBase);
     self = [super init];
     if(self)
     {
-        m_pDimseCommandBase = new imebra::CGetCommand(
-                    imebra::NSStringToString(abstractSyntax),
-                    (std::uint16_t)messageID,
-                    (imebra::dimseCommandPriority_t)priority,
-                    imebra::NSStringToString(affectedSopClassUid),
-                    *(pIdentifier->m_pDataSet));
+        set_imebra_object_holder(DimseCommandBase, new imebra::CGetCommand(
+                                     imebra::NSStringToString(abstractSyntax),
+                                     (std::uint16_t)messageID,
+                                     (imebra::dimseCommandPriority_t)priority,
+                                     imebra::NSStringToString(affectedSopClassUid),
+                                     *get_other_imebra_object_holder(pIdentifier, DataSet)));
     }
     return self;
 }
@@ -275,18 +283,18 @@ If you do not want to be bound by the GPL terms (such as the requirement
     warningSubOperations:(unsigned int)warningSubOperations
     identifier:(ImebraDataSet*)pIdentifier
 {
-    m_pDimseCommandBase = 0;
+    reset_imebra_object_holder(DimseCommandBase);
     self = [super init];
     if(self)
     {
-        m_pDimseCommandBase = new imebra::CGetResponse(
-                    *(imebra::CGetCommand*)(pReceivedCommand->m_pDimseCommandBase),
-                    (imebra::dimseStatusCode_t)responseCode,
-                    (std::uint32_t)remainingSubOperations,
-                    (std::uint32_t)completedSubOperations,
-                    (std::uint32_t)failedSubOperations,
-                    (std::uint32_t)warningSubOperations,
-                    *(pIdentifier->m_pDataSet));
+        set_imebra_object_holder(DimseCommandBase, new imebra::CGetResponse(
+                                     *(imebra::CGetCommand*)get_other_imebra_object_holder(pReceivedCommand, DimseCommandBase),
+                                     (imebra::dimseStatusCode_t)responseCode,
+                                     (std::uint32_t)remainingSubOperations,
+                                     (std::uint32_t)completedSubOperations,
+                                     (std::uint32_t)failedSubOperations,
+                                     (std::uint32_t)warningSubOperations,
+                                     *get_other_imebra_object_holder(pIdentifier, DataSet)));
     }
     return self;
 }
@@ -298,17 +306,17 @@ If you do not want to be bound by the GPL terms (such as the requirement
     failedSubOperations:(unsigned int)failedSubOperations
     warningSubOperations:(unsigned int)warningSubOperations
 {
-    m_pDimseCommandBase = 0;
+    reset_imebra_object_holder(DimseCommandBase);
     self = [super init];
     if(self)
     {
-        m_pDimseCommandBase = new imebra::CGetResponse(
-                    *(imebra::CGetCommand*)(pReceivedCommand->m_pDimseCommandBase),
-                    (imebra::dimseStatusCode_t)responseCode,
-                    (std::uint32_t)remainingSubOperations,
-                    (std::uint32_t)completedSubOperations,
-                    (std::uint32_t)failedSubOperations,
-                    (std::uint32_t)warningSubOperations);
+        set_imebra_object_holder(DimseCommandBase, new imebra::CGetResponse(
+                                     *(imebra::CGetCommand*)get_other_imebra_object_holder(pReceivedCommand, DimseCommandBase),
+                                     (imebra::dimseStatusCode_t)responseCode,
+                                     (std::uint32_t)remainingSubOperations,
+                                     (std::uint32_t)completedSubOperations,
+                                     (std::uint32_t)failedSubOperations,
+                                     (std::uint32_t)warningSubOperations));
     }
     return self;
 }
@@ -325,16 +333,16 @@ If you do not want to be bound by the GPL terms (such as the requirement
     affectedSopClassUid:(NSString*)affectedSopClassUid
     identifier:(ImebraDataSet*)pIdentifier
 {
-    m_pDimseCommandBase = 0;
+    reset_imebra_object_holder(DimseCommandBase);
     self = [super init];
     if(self)
     {
-        m_pDimseCommandBase = new imebra::CFindCommand(
-                    imebra::NSStringToString(abstractSyntax),
-                    (std::uint16_t)messageID,
-                    (imebra::dimseCommandPriority_t)priority,
-                    imebra::NSStringToString(affectedSopClassUid),
-                    *(pIdentifier->m_pDataSet));
+        set_imebra_object_holder(DimseCommandBase, new imebra::CFindCommand(
+                                     imebra::NSStringToString(abstractSyntax),
+                                     (std::uint16_t)messageID,
+                                     (imebra::dimseCommandPriority_t)priority,
+                                     imebra::NSStringToString(affectedSopClassUid),
+                                     *get_other_imebra_object_holder(pIdentifier, DataSet)));
     }
     return self;
 }
@@ -347,13 +355,13 @@ If you do not want to be bound by the GPL terms (such as the requirement
 -(id)initWithCommand:(ImebraCFindCommand*)pReceivedCommand
     identifier:(ImebraDataSet*)pIdentifier
 {
-    m_pDimseCommandBase = 0;
+    reset_imebra_object_holder(DimseCommandBase);
     self = [super init];
     if(self)
     {
-        m_pDimseCommandBase = new imebra::CFindResponse(
-                    *(imebra::CFindCommand*)(pReceivedCommand->m_pDimseCommandBase),
-                    *(pIdentifier->m_pDataSet));
+        set_imebra_object_holder(DimseCommandBase, new imebra::CFindResponse(
+                                     *(imebra::CFindCommand*)get_other_imebra_object_holder(pReceivedCommand, DimseCommandBase),
+                                     *get_other_imebra_object_holder(pIdentifier, DataSet)));
     }
     return self;
 }
@@ -361,13 +369,13 @@ If you do not want to be bound by the GPL terms (such as the requirement
 -(id)initWithcommand:(ImebraCFindCommand*)pReceivedCommand
     responseCode:(ImebraDimseStatusCode_t)responseCode
 {
-    m_pDimseCommandBase = 0;
+    reset_imebra_object_holder(DimseCommandBase);
     self = [super init];
     if(self)
     {
-        m_pDimseCommandBase = new imebra::CFindResponse(
-                    *(imebra::CFindCommand*)(pReceivedCommand->m_pDimseCommandBase),
-                    (imebra::dimseStatusCode_t)responseCode);
+        set_imebra_object_holder(DimseCommandBase, new imebra::CFindResponse(
+                                     *(imebra::CFindCommand*)get_other_imebra_object_holder(pReceivedCommand, DimseCommandBase),
+                                     (imebra::dimseStatusCode_t)responseCode));
     }
     return self;
 }
@@ -384,17 +392,17 @@ If you do not want to be bound by the GPL terms (such as the requirement
     destinationAET:(NSString*)destinationAET
     identifier:(ImebraDataSet*)pIdentifier
 {
-    m_pDimseCommandBase = 0;
+    reset_imebra_object_holder(DimseCommandBase);
     self = [super init];
     if(self)
     {
-        m_pDimseCommandBase = new imebra::CMoveCommand(
-                    imebra::NSStringToString(abstractSyntax),
-                    (std::uint16_t)messageID,
-                    (imebra::dimseCommandPriority_t)priority,
-                    imebra::NSStringToString(affectedSopClassUid),
-                    imebra::NSStringToString(destinationAET),
-                    *(pIdentifier->m_pDataSet));
+        set_imebra_object_holder(DimseCommandBase, new imebra::CMoveCommand(
+                                     imebra::NSStringToString(abstractSyntax),
+                                     (std::uint16_t)messageID,
+                                     (imebra::dimseCommandPriority_t)priority,
+                                     imebra::NSStringToString(affectedSopClassUid),
+                                     imebra::NSStringToString(destinationAET),
+                                     *get_other_imebra_object_holder(pIdentifier, DataSet)));
     }
     return self;
 }
@@ -403,7 +411,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return imebra::stringToNSString(((imebra::CMoveCommand*)m_pDimseCommandBase)->getDestinationAET());
+    return imebra::stringToNSString(((imebra::CMoveCommand*)get_imebra_object_holder(DimseCommandBase))->getDestinationAET());
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -421,18 +429,18 @@ If you do not want to be bound by the GPL terms (such as the requirement
     warningSubOperations:(unsigned int)warningSubOperations
     identifier:(ImebraDataSet*)pIdentifier
 {
-    m_pDimseCommandBase = 0;
+    reset_imebra_object_holder(DimseCommandBase);
     self = [super init];
     if(self)
     {
-        m_pDimseCommandBase = new imebra::CMoveResponse(
-                    *(imebra::CMoveCommand*)(pReceivedCommand->m_pDimseCommandBase),
-                    (imebra::dimseStatusCode_t)responseCode,
-                    (std::uint32_t)remainingSubOperations,
-                    (std::uint32_t)completedSubOperations,
-                    (std::uint32_t)failedSubOperations,
-                    (std::uint32_t)warningSubOperations,
-                    *(pIdentifier->m_pDataSet));
+        set_imebra_object_holder(DimseCommandBase, new imebra::CMoveResponse(
+                                     *(imebra::CMoveCommand*)get_other_imebra_object_holder(pReceivedCommand, DimseCommandBase),
+                                     (imebra::dimseStatusCode_t)responseCode,
+                                     (std::uint32_t)remainingSubOperations,
+                                     (std::uint32_t)completedSubOperations,
+                                     (std::uint32_t)failedSubOperations,
+                                     (std::uint32_t)warningSubOperations,
+                                     *get_other_imebra_object_holder(pIdentifier, DataSet)));
     }
     return self;
 
@@ -445,17 +453,17 @@ If you do not want to be bound by the GPL terms (such as the requirement
     failedSubOperations:(unsigned int)failedSubOperations
     warningSubOperations:(unsigned int)warningSubOperations
 {
-    m_pDimseCommandBase = 0;
+    reset_imebra_object_holder(DimseCommandBase);
     self = [super init];
     if(self)
     {
-        m_pDimseCommandBase = new imebra::CMoveResponse(
-                    *(imebra::CMoveCommand*)(pReceivedCommand->m_pDimseCommandBase),
-                    (imebra::dimseStatusCode_t)responseCode,
-                    (std::uint32_t)remainingSubOperations,
-                    (std::uint32_t)completedSubOperations,
-                    (std::uint32_t)failedSubOperations,
-                    (std::uint32_t)warningSubOperations);
+        set_imebra_object_holder(DimseCommandBase, new imebra::CMoveResponse(
+                                     *(imebra::CMoveCommand*)get_other_imebra_object_holder(pReceivedCommand, DimseCommandBase),
+                                     (imebra::dimseStatusCode_t)responseCode,
+                                     (std::uint32_t)remainingSubOperations,
+                                     (std::uint32_t)completedSubOperations,
+                                     (std::uint32_t)failedSubOperations,
+                                     (std::uint32_t)warningSubOperations));
     }
     return self;
 
@@ -472,15 +480,15 @@ If you do not want to be bound by the GPL terms (such as the requirement
     priority:(ImebraDimseCommandPriority_t)priority
     affectedSopClassUid:(NSString*)affectedSopClassUid
 {
-    m_pDimseCommandBase = 0;
+    reset_imebra_object_holder(DimseCommandBase);
     self = [super init];
     if(self)
     {
-        m_pDimseCommandBase = new imebra::CEchoCommand(
-                    imebra::NSStringToString(abstractSyntax),
-                    (std::uint16_t)messageID,
-                    (imebra::dimseCommandPriority_t)priority,
-                    imebra::NSStringToString(affectedSopClassUid));
+        set_imebra_object_holder(DimseCommandBase, new imebra::CEchoCommand(
+                                     imebra::NSStringToString(abstractSyntax),
+                                     (std::uint16_t)messageID,
+                                     (imebra::dimseCommandPriority_t)priority,
+                                     imebra::NSStringToString(affectedSopClassUid)));
     }
     return self;
 
@@ -494,13 +502,13 @@ If you do not want to be bound by the GPL terms (such as the requirement
 -(id)initWithcommand:(ImebraCEchoCommand*)pReceivedCommand
     responseCode:(ImebraDimseStatusCode_t)responseCode
 {
-    m_pDimseCommandBase = 0;
+    reset_imebra_object_holder(DimseCommandBase);
     self = [super init];
     if(self)
     {
-        m_pDimseCommandBase = new imebra::CEchoResponse(
-                    *(imebra::CEchoCommand*)(pReceivedCommand->m_pDimseCommandBase),
-                    (imebra::dimseStatusCode_t)responseCode);
+        set_imebra_object_holder(DimseCommandBase, new imebra::CEchoResponse(
+                                     *(imebra::CEchoCommand*)get_other_imebra_object_holder(pReceivedCommand, DimseCommandBase),
+                                     (imebra::dimseStatusCode_t)responseCode));
     }
     return self;
 
@@ -516,22 +524,22 @@ If you do not want to be bound by the GPL terms (such as the requirement
     priority:(ImebraDimseCommandPriority_t)priority
     cancelMessageID:(unsigned short)cancelMessageID
 {
-    m_pDimseCommandBase = 0;
+    reset_imebra_object_holder(DimseCommandBase);
     self = [super init];
     if(self)
     {
-        m_pDimseCommandBase = new imebra::CCancelCommand(
-                    imebra::NSStringToString(abstractSyntax),
-                    (std::uint16_t)messageID,
-                    (imebra::dimseCommandPriority_t)priority,
-                    (std::uint16_t)cancelMessageID);
+        set_imebra_object_holder(DimseCommandBase, new imebra::CCancelCommand(
+                                     imebra::NSStringToString(abstractSyntax),
+                                     (std::uint16_t)messageID,
+                                     (imebra::dimseCommandPriority_t)priority,
+                                     (std::uint16_t)cancelMessageID));
     }
     return self;
 }
 
 -(unsigned short)cancelMessageID
 {
-    return (unsigned short)((imebra::CCancelCommand*)m_pDimseCommandBase)->getCancelMessageID();
+    return (unsigned short)((imebra::CCancelCommand*)get_imebra_object_holder(DimseCommandBase))->getCancelMessageID();
 }
 
 @end
@@ -545,16 +553,16 @@ If you do not want to be bound by the GPL terms (such as the requirement
     affectedSopInstanceUid:(NSString*)affectedSopInstanceUid
     eventID:(unsigned short)eventID
 {
-    m_pDimseCommandBase = 0;
+    reset_imebra_object_holder(DimseCommandBase);
     self = [super init];
     if(self)
     {
-        m_pDimseCommandBase = new imebra::NEventReportCommand(
-                    imebra::NSStringToString(abstractSyntax),
-                    (std::uint16_t)messageID,
-                    imebra::NSStringToString(affectedSopClassUid),
-                    imebra::NSStringToString(affectedSopInstanceUid),
-                    (std::uint16_t)eventID);
+        set_imebra_object_holder(DimseCommandBase, new imebra::NEventReportCommand(
+                                     imebra::NSStringToString(abstractSyntax),
+                                     (std::uint16_t)messageID,
+                                     imebra::NSStringToString(affectedSopClassUid),
+                                     imebra::NSStringToString(affectedSopInstanceUid),
+                                     (std::uint16_t)eventID));
     }
     return self;
 }
@@ -566,24 +574,24 @@ If you do not want to be bound by the GPL terms (such as the requirement
     eventID:(unsigned short)eventID
     eventInformation:(ImebraDataSet*)pEventInformation
 {
-    m_pDimseCommandBase = 0;
+    reset_imebra_object_holder(DimseCommandBase);
     self = [super init];
     if(self)
     {
-        m_pDimseCommandBase = new imebra::NEventReportCommand(
-                    imebra::NSStringToString(abstractSyntax),
-                    (std::uint16_t)messageID,
-                    imebra::NSStringToString(affectedSopClassUid),
-                    imebra::NSStringToString(affectedSopInstanceUid),
-                    (std::uint16_t)eventID,
-                    *(pEventInformation->m_pDataSet));
+        set_imebra_object_holder(DimseCommandBase, new imebra::NEventReportCommand(
+                                     imebra::NSStringToString(abstractSyntax),
+                                     (std::uint16_t)messageID,
+                                     imebra::NSStringToString(affectedSopClassUid),
+                                     imebra::NSStringToString(affectedSopInstanceUid),
+                                     (std::uint16_t)eventID,
+                                     *get_other_imebra_object_holder(pEventInformation, DataSet)));
     }
     return self;
 }
 
 -(unsigned short) eventID
 {
-    return (unsigned short)((imebra::NEventReportCommand*)m_pDimseCommandBase)->getEventID();
+    return (unsigned short)((imebra::NEventReportCommand*)get_imebra_object_holder(DimseCommandBase))->getEventID();
 }
 
 @end
@@ -594,13 +602,13 @@ If you do not want to be bound by the GPL terms (such as the requirement
 -(id)initWithCommand:(ImebraNEventReportCommand*)pReceivedCommand
     eventReply:(ImebraDataSet*)pEventReply
 {
-    m_pDimseCommandBase = 0;
+    reset_imebra_object_holder(DimseCommandBase);
     self = [super init];
     if(self)
     {
-        m_pDimseCommandBase = new imebra::NEventReportResponse(
-                    *(imebra::NEventReportCommand*)(pReceivedCommand->m_pDimseCommandBase),
-                    *(pEventReply->m_pDataSet));
+        set_imebra_object_holder(DimseCommandBase, new imebra::NEventReportResponse(
+                                     *(imebra::NEventReportCommand*)get_other_imebra_object_holder(pReceivedCommand, DimseCommandBase),
+                                     *get_other_imebra_object_holder(pEventReply, DataSet)));
     }
     return self;
 
@@ -609,13 +617,13 @@ If you do not want to be bound by the GPL terms (such as the requirement
 -(id)initWithcommand:(ImebraNEventReportCommand*)pReceivedCommand
     responseCode:(ImebraDimseStatusCode_t)responseCode
 {
-    m_pDimseCommandBase = 0;
+    reset_imebra_object_holder(DimseCommandBase);
     self = [super init];
     if(self)
     {
-        m_pDimseCommandBase = new imebra::NEventReportResponse(
-                    *(imebra::NEventReportCommand*)(pReceivedCommand->m_pDimseCommandBase),
-                    (imebra::dimseStatusCode_t)responseCode);
+        set_imebra_object_holder(DimseCommandBase, new imebra::NEventReportResponse(
+                                     *(imebra::NEventReportCommand*)get_other_imebra_object_holder(pReceivedCommand, DimseCommandBase),
+                                     (imebra::dimseStatusCode_t)responseCode));
     }
     return self;
 
@@ -623,7 +631,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(unsigned short) eventID
 {
-    return (unsigned short)((imebra::NEventReportResponse*)m_pDimseCommandBase)->getEventID();
+    return (unsigned short)((imebra::NEventReportResponse*)get_imebra_object_holder(DimseCommandBase))->getEventID();
 }
 
 @end
@@ -637,7 +645,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     requestedSopInstanceUid:(NSString*)requestedSopInstanceUid
     attributeIdentifierList:(NSArray*)pAttributeIdentifierList
 {
-    m_pDimseCommandBase = 0;
+    reset_imebra_object_holder(DimseCommandBase);
     self = [super init];
     if(self)
     {
@@ -650,12 +658,12 @@ If you do not want to be bound by the GPL terms (such as the requirement
             identifierList.push_back((imebra::tagId_t)((group << 16) | tag));
         }
 
-        m_pDimseCommandBase = new imebra::NGetCommand(
+        set_imebra_object_holder(DimseCommandBase, new imebra::NGetCommand(
                     imebra::NSStringToString(abstractSyntax),
                     (std::uint16_t)messageID,
                     imebra::NSStringToString(requestedSopClassUid),
                     imebra::NSStringToString(requestedSopInstanceUid),
-                    identifierList);
+                    identifierList));
     }
     return self;
 
@@ -663,7 +671,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(NSArray*) attributeList
 {
-    imebra::attributeIdentifierList_t identifiersList(((imebra::NGetCommand*)m_pDimseCommandBase)->getAttributeList());
+    imebra::attributeIdentifierList_t identifiersList(((imebra::NGetCommand*)get_imebra_object_holder(DimseCommandBase))->getAttributeList());
 
     NSMutableArray* pIdentifiers = [[NSMutableArray alloc] init];
 
@@ -684,14 +692,14 @@ If you do not want to be bound by the GPL terms (such as the requirement
     responseCode:(ImebraDimseStatusCode_t)responseCode
     attributeList:(ImebraDataSet*)pAttributeList
 {
-    m_pDimseCommandBase = 0;
+    reset_imebra_object_holder(DimseCommandBase);
     self = [super init];
     if(self)
     {
-        m_pDimseCommandBase = new imebra::NGetResponse(
-                    *(imebra::NGetCommand*)(pReceivedCommand->m_pDimseCommandBase),
-                    (imebra::dimseStatusCode_t)responseCode,
-                    *(pAttributeList->m_pDataSet));
+        set_imebra_object_holder(DimseCommandBase, new imebra::NGetResponse(
+                                     *(imebra::NGetCommand*)get_other_imebra_object_holder(pReceivedCommand, DimseCommandBase),
+                                     (imebra::dimseStatusCode_t)responseCode,
+                                     *get_other_imebra_object_holder(pAttributeList, DataSet)));
     }
     return self;
 
@@ -700,13 +708,13 @@ If you do not want to be bound by the GPL terms (such as the requirement
 -(id)initWithcommand:(ImebraNGetCommand*)pReceivedCommand
     responseCode:(ImebraDimseStatusCode_t)responseCode
 {
-    m_pDimseCommandBase = 0;
+    reset_imebra_object_holder(DimseCommandBase);
     self = [super init];
     if(self)
     {
-        m_pDimseCommandBase = new imebra::NGetResponse(
-                    *(imebra::NGetCommand*)(pReceivedCommand->m_pDimseCommandBase),
-                    (imebra::dimseStatusCode_t)responseCode);
+        set_imebra_object_holder(DimseCommandBase, new imebra::NGetResponse(
+                                     *(imebra::NGetCommand*)get_other_imebra_object_holder(pReceivedCommand, DimseCommandBase),
+                                     (imebra::dimseStatusCode_t)responseCode));
     }
     return self;
 }
@@ -722,16 +730,16 @@ If you do not want to be bound by the GPL terms (such as the requirement
     requestedSopInstanceUid:(NSString*)requestedSopInstanceUid
     modificationList:(ImebraDataSet*)pModificationList
 {
-    m_pDimseCommandBase = 0;
+    reset_imebra_object_holder(DimseCommandBase);
     self = [super init];
     if(self)
     {
-        m_pDimseCommandBase = new imebra::NSetCommand(
-                    imebra::NSStringToString(abstractSyntax),
-                    (std::uint16_t)messageID,
-                    imebra::NSStringToString(requestedSopClassUid),
-                    imebra::NSStringToString(requestedSopInstanceUid),
-                    *(pModificationList->m_pDataSet));
+        set_imebra_object_holder(DimseCommandBase, new imebra::NSetCommand(
+                                     imebra::NSStringToString(abstractSyntax),
+                                     (std::uint16_t)messageID,
+                                     imebra::NSStringToString(requestedSopClassUid),
+                                     imebra::NSStringToString(requestedSopInstanceUid),
+                                     *get_other_imebra_object_holder(pModificationList, DataSet)));
     }
     return self;
 
@@ -745,7 +753,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 -(id)initWithCommand:(ImebraNSetCommand*)pReceivedCommand
     modifiedAttributes:(NSArray*)pModifiedAttributes
 {
-    m_pDimseCommandBase = 0;
+    reset_imebra_object_holder(DimseCommandBase);
     self = [super init];
     if(self)
     {
@@ -758,9 +766,9 @@ If you do not want to be bound by the GPL terms (such as the requirement
             identifierList.push_back((imebra::tagId_t)((group << 16) | tag));
         }
 
-        m_pDimseCommandBase = new imebra::NSetResponse(
-                    *(imebra::NSetCommand*)(pReceivedCommand->m_pDimseCommandBase),
-                    identifierList);
+        set_imebra_object_holder(DimseCommandBase, new imebra::NSetResponse(
+                                     *(imebra::NSetCommand*)get_other_imebra_object_holder(pReceivedCommand, DimseCommandBase),
+                                     identifierList));
     }
     return self;
 }
@@ -768,20 +776,20 @@ If you do not want to be bound by the GPL terms (such as the requirement
 -(id)initWithcommand:(ImebraNSetCommand*)pReceivedCommand
     responseCode:(ImebraDimseStatusCode_t)responseCode
 {
-    m_pDimseCommandBase = 0;
+    reset_imebra_object_holder(DimseCommandBase);
     self = [super init];
     if(self)
     {
-        m_pDimseCommandBase = new imebra::NSetResponse(
-                    *(imebra::NSetCommand*)(pReceivedCommand->m_pDimseCommandBase),
-                    (imebra::dimseStatusCode_t)responseCode);
+        set_imebra_object_holder(DimseCommandBase, new imebra::NSetResponse(
+                                     *(imebra::NSetCommand*)get_other_imebra_object_holder(pReceivedCommand, DimseCommandBase),
+                                     (imebra::dimseStatusCode_t)responseCode));
     }
     return self;
 }
 
 -(NSArray*) modifiedAttributes
 {
-    imebra::attributeIdentifierList_t identifiersList(((imebra::NSetResponse*)m_pDimseCommandBase)->getModifiedAttributes());
+    imebra::attributeIdentifierList_t identifiersList(((imebra::NSetResponse*)get_imebra_object_holder(DimseCommandBase))->getModifiedAttributes());
 
     NSMutableArray* pIdentifiers = [[NSMutableArray alloc] init];
 
@@ -807,17 +815,17 @@ If you do not want to be bound by the GPL terms (such as the requirement
     actionID:(unsigned short)actionID
     actionInformation:(ImebraDataSet*)pActionInformation
 {
-    m_pDimseCommandBase = 0;
+    reset_imebra_object_holder(DimseCommandBase);
     self = [super init];
     if(self)
     {
-        m_pDimseCommandBase = new imebra::NActionCommand(
-                    imebra::NSStringToString(abstractSyntax),
-                    (std::uint16_t)messageID,
-                    imebra::NSStringToString(requestedSopClassUid),
-                    imebra::NSStringToString(requestedSopInstanceUid),
-                    (std::uint16_t)actionID,
-                    *(pActionInformation->m_pDataSet));
+        set_imebra_object_holder(DimseCommandBase, new imebra::NActionCommand(
+                                     imebra::NSStringToString(abstractSyntax),
+                                     (std::uint16_t)messageID,
+                                     imebra::NSStringToString(requestedSopClassUid),
+                                     imebra::NSStringToString(requestedSopInstanceUid),
+                                     (std::uint16_t)actionID,
+                                     *get_other_imebra_object_holder(pActionInformation, DataSet)));
     }
     return self;
 
@@ -829,16 +837,16 @@ If you do not want to be bound by the GPL terms (such as the requirement
     requestedSopInstanceUid:(NSString*)requestedSopInstanceUid
     actionID:(unsigned short)actionID
 {
-    m_pDimseCommandBase = 0;
+    reset_imebra_object_holder(DimseCommandBase);
     self = [super init];
     if(self)
     {
-        m_pDimseCommandBase = new imebra::NActionCommand(
-                    imebra::NSStringToString(abstractSyntax),
-                    (std::uint16_t)messageID,
-                    imebra::NSStringToString(requestedSopClassUid),
-                    imebra::NSStringToString(requestedSopInstanceUid),
-                    (std::uint16_t)actionID);
+        set_imebra_object_holder(DimseCommandBase, new imebra::NActionCommand(
+                                     imebra::NSStringToString(abstractSyntax),
+                                     (std::uint16_t)messageID,
+                                     imebra::NSStringToString(requestedSopClassUid),
+                                     imebra::NSStringToString(requestedSopInstanceUid),
+                                     (std::uint16_t)actionID));
     }
     return self;
 
@@ -846,7 +854,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(unsigned short) actionID
 {
-    return (unsigned short)((imebra::NActionCommand*)m_pDimseCommandBase)->getActionID();
+    return (unsigned short)((imebra::NActionCommand*)get_imebra_object_holder(DimseCommandBase))->getActionID();
 }
 
 @end
@@ -857,13 +865,13 @@ If you do not want to be bound by the GPL terms (such as the requirement
 -(id)initWithCommand:(ImebraNActionCommand*)pReceivedCommand
     actionReply:(ImebraDataSet*)pActionReply
 {
-    m_pDimseCommandBase = 0;
+    reset_imebra_object_holder(DimseCommandBase);
     self = [super init];
     if(self)
     {
-        m_pDimseCommandBase = new imebra::NActionResponse(
-                    *(imebra::NActionCommand*)(pReceivedCommand->m_pDimseCommandBase),
-                    *(pActionReply->m_pDataSet));
+        set_imebra_object_holder(DimseCommandBase, new imebra::NActionResponse(
+                                     *(imebra::NActionCommand*)get_other_imebra_object_holder(pReceivedCommand, DimseCommandBase),
+                                     *get_other_imebra_object_holder(pActionReply, DataSet)));
     }
     return self;
 
@@ -872,13 +880,13 @@ If you do not want to be bound by the GPL terms (such as the requirement
 -(id)initWithcommand:(ImebraNActionCommand*)pReceivedCommand
     responseCode:(ImebraDimseStatusCode_t)responseCode
 {
-    m_pDimseCommandBase = 0;
+    reset_imebra_object_holder(DimseCommandBase);
     self = [super init];
     if(self)
     {
-        m_pDimseCommandBase = new imebra::NActionResponse(
-                    *(imebra::NActionCommand*)(pReceivedCommand->m_pDimseCommandBase),
-                    (imebra::dimseStatusCode_t)responseCode);
+        set_imebra_object_holder(DimseCommandBase, new imebra::NActionResponse(
+                                     *(imebra::NActionCommand*)get_other_imebra_object_holder(pReceivedCommand, DimseCommandBase),
+                                     (imebra::dimseStatusCode_t)responseCode));
     }
     return self;
 
@@ -886,7 +894,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(unsigned short) actionID
 {
-    return (unsigned short)((imebra::NActionResponse*)m_pDimseCommandBase)->getActionID();
+    return (unsigned short)((imebra::NActionResponse*)get_imebra_object_holder(DimseCommandBase))->getActionID();
 }
 
 @end
@@ -900,16 +908,16 @@ If you do not want to be bound by the GPL terms (such as the requirement
     affectedSopInstanceUid:(NSString*)affectedSopInstanceUid
     attributeList:(ImebraDataSet*)pAttributeList
 {
-    m_pDimseCommandBase = 0;
+    reset_imebra_object_holder(DimseCommandBase);
     self = [super init];
     if(self)
     {
-        m_pDimseCommandBase = new imebra::NCreateCommand(
-                    imebra::NSStringToString(abstractSyntax),
-                    (std::uint16_t)messageID,
-                    imebra::NSStringToString(affectedSopClassUid),
-                    imebra::NSStringToString(affectedSopInstanceUid),
-                    *(pAttributeList->m_pDataSet));
+        set_imebra_object_holder(DimseCommandBase, new imebra::NCreateCommand(
+                                     imebra::NSStringToString(abstractSyntax),
+                                     (std::uint16_t)messageID,
+                                     imebra::NSStringToString(affectedSopClassUid),
+                                     imebra::NSStringToString(affectedSopInstanceUid),
+                                     *get_other_imebra_object_holder(pAttributeList, DataSet)));
     }
     return self;
 }
@@ -919,15 +927,15 @@ If you do not want to be bound by the GPL terms (such as the requirement
     affectedSopClassUid:(NSString*)affectedSopClassUid
     affectedSopInstanceUid:(NSString*)affectedSopInstanceUid
 {
-    m_pDimseCommandBase = 0;
+    reset_imebra_object_holder(DimseCommandBase);
     self = [super init];
     if(self)
     {
-        m_pDimseCommandBase = new imebra::NCreateCommand(
-                    imebra::NSStringToString(abstractSyntax),
-                    (std::uint16_t)messageID,
-                    imebra::NSStringToString(affectedSopClassUid),
-                    imebra::NSStringToString(affectedSopInstanceUid));
+        set_imebra_object_holder(DimseCommandBase, new imebra::NCreateCommand(
+                                     imebra::NSStringToString(abstractSyntax),
+                                     (std::uint16_t)messageID,
+                                     imebra::NSStringToString(affectedSopClassUid),
+                                     imebra::NSStringToString(affectedSopInstanceUid)));
     }
     return self;
 }
@@ -940,13 +948,13 @@ If you do not want to be bound by the GPL terms (such as the requirement
 -(id)initWithCommand:(ImebraNCreateCommand*)pReceivedCommand
     attributeList:(ImebraDataSet*)pAttributeList
 {
-    m_pDimseCommandBase = 0;
+    reset_imebra_object_holder(DimseCommandBase);
     self = [super init];
     if(self)
     {
-        m_pDimseCommandBase = new imebra::NCreateResponse(
-                    *(imebra::NCreateCommand*)(pReceivedCommand->m_pDimseCommandBase),
-                    *(pAttributeList->m_pDataSet));
+        set_imebra_object_holder(DimseCommandBase, new imebra::NCreateResponse(
+                                     *(imebra::NCreateCommand*)get_other_imebra_object_holder(pReceivedCommand, DimseCommandBase),
+                                     *get_other_imebra_object_holder(pAttributeList, DataSet)));
     }
     return self;
 
@@ -956,14 +964,14 @@ If you do not want to be bound by the GPL terms (such as the requirement
     affectedSopInstanceUid:(NSString*)affectedSopInstanceUid
     attributeList:(ImebraDataSet*)pAttributeList
 {
-    m_pDimseCommandBase = 0;
+    reset_imebra_object_holder(DimseCommandBase);
     self = [super init];
     if(self)
     {
-        m_pDimseCommandBase = new imebra::NCreateResponse(
-                    *(imebra::NCreateCommand*)(pReceivedCommand->m_pDimseCommandBase),
-                    imebra::NSStringToString(affectedSopInstanceUid),
-                    *(pAttributeList->m_pDataSet));
+        set_imebra_object_holder(DimseCommandBase, new imebra::NCreateResponse(
+                                     *(imebra::NCreateCommand*)get_other_imebra_object_holder(pReceivedCommand, DimseCommandBase),
+                                     imebra::NSStringToString(affectedSopInstanceUid),
+                                     *get_other_imebra_object_holder(pAttributeList, DataSet)));
     }
     return self;
 
@@ -972,13 +980,13 @@ If you do not want to be bound by the GPL terms (such as the requirement
 -(id)initWithCommand:(ImebraNCreateCommand*)pReceivedCommand
     affectedSopInstanceUid:(NSString*)affectedSopInstanceUid
 {
-    m_pDimseCommandBase = 0;
+    reset_imebra_object_holder(DimseCommandBase);
     self = [super init];
     if(self)
     {
-        m_pDimseCommandBase = new imebra::NCreateResponse(
-                    *(imebra::NCreateCommand*)(pReceivedCommand->m_pDimseCommandBase),
-                    imebra::NSStringToString(affectedSopInstanceUid));
+        set_imebra_object_holder(DimseCommandBase, new imebra::NCreateResponse(
+                                     *(imebra::NCreateCommand*)get_other_imebra_object_holder(pReceivedCommand, DimseCommandBase),
+                                     imebra::NSStringToString(affectedSopInstanceUid)));
     }
     return self;
 
@@ -987,13 +995,13 @@ If you do not want to be bound by the GPL terms (such as the requirement
 -(id)initWithcommand:(ImebraNCreateCommand*)pReceivedCommand
     responseCode:(ImebraDimseStatusCode_t)responseCode
 {
-    m_pDimseCommandBase = 0;
+    reset_imebra_object_holder(DimseCommandBase);
     self = [super init];
     if(self)
     {
-        m_pDimseCommandBase = new imebra::NCreateResponse(
-                    *(imebra::NCreateCommand*)(pReceivedCommand->m_pDimseCommandBase),
-                    (imebra::dimseStatusCode_t)responseCode);
+        set_imebra_object_holder(DimseCommandBase, new imebra::NCreateResponse(
+                                     *(imebra::NCreateCommand*)get_other_imebra_object_holder(pReceivedCommand, DimseCommandBase),
+                                     (imebra::dimseStatusCode_t)responseCode));
     }
     return self;
 
@@ -1009,15 +1017,15 @@ If you do not want to be bound by the GPL terms (such as the requirement
     requestedSopClassUid:(NSString*)requestedSopClassUid
     requestedSopInstanceUid:(NSString*)requestedSopInstanceUid
 {
-    m_pDimseCommandBase = 0;
+    reset_imebra_object_holder(DimseCommandBase);
     self = [super init];
     if(self)
     {
-        m_pDimseCommandBase = new imebra::NDeleteCommand(
-                    imebra::NSStringToString(abstractSyntax),
-                    (std::uint16_t)messageID,
-                    imebra::NSStringToString(requestedSopClassUid),
-                    imebra::NSStringToString(requestedSopInstanceUid));
+        set_imebra_object_holder(DimseCommandBase, new imebra::NDeleteCommand(
+                                     imebra::NSStringToString(abstractSyntax),
+                                     (std::uint16_t)messageID,
+                                     imebra::NSStringToString(requestedSopClassUid),
+                                     imebra::NSStringToString(requestedSopInstanceUid)));
     }
     return self;
 
@@ -1031,13 +1039,13 @@ If you do not want to be bound by the GPL terms (such as the requirement
 -(id)initWithcommand:(ImebraNDeleteCommand*)pReceivedCommand
     responseCode:(ImebraDimseStatusCode_t)responseCode
 {
-    m_pDimseCommandBase = 0;
+    reset_imebra_object_holder(DimseCommandBase);
     self = [super init];
     if(self)
     {
-        m_pDimseCommandBase = new imebra::NDeleteResponse(
-                    *(imebra::NDeleteCommand*)(pReceivedCommand->m_pDimseCommandBase),
-                    (imebra::dimseStatusCode_t)responseCode);
+        set_imebra_object_holder(DimseCommandBase, new imebra::NDeleteResponse(
+                                     *(imebra::NDeleteCommand*)get_other_imebra_object_holder(pReceivedCommand, DimseCommandBase),
+                                     (imebra::dimseStatusCode_t)responseCode));
     }
     return self;
 }
@@ -1049,18 +1057,18 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(id)initWithAssociation:(ImebraAssociationBase*)pAssociation
 {
-    m_pDimseService = 0;
+    reset_imebra_object_holder(DimseService);
     self = [super init];
     if(self)
     {
-        m_pDimseService = new imebra::DimseService(*(pAssociation->m_pAssociation));
+        set_imebra_object_holder(DimseService, new imebra::DimseService(*get_other_imebra_object_holder(pAssociation, AssociationBase)));
     }
     return self;
 }
 
 -(void)dealloc
 {
-    delete m_pDimseService;
+    delete_imebra_object_holder(DimseService);
 #if !__has_feature(objc_arc)
     [super dealloc];
 #endif
@@ -1071,21 +1079,21 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return imebra::stringToNSString(m_pDimseService->getTransferSyntax(imebra::NSStringToString(abstractSyntax)));
+    return imebra::stringToNSString(get_imebra_object_holder(DimseService)->getTransferSyntax(imebra::NSStringToString(abstractSyntax)));
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
 
 -(unsigned short)getNextCommandID
 {
-    return (unsigned short)m_pDimseService->getNextCommandID();
+    return (unsigned short)get_imebra_object_holder(DimseService)->getNextCommandID();
 }
 
 -(ImebraDimseCommand*)getCommand:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    std::unique_ptr<imebra::DimseCommand> pCommand(m_pDimseService->getCommand());
+    std::unique_ptr<imebra::DimseCommand> pCommand(new imebra::DimseCommand(get_imebra_object_holder(DimseService)->getCommand()));
 
     switch(pCommand->getCommandType())
     {
@@ -1124,7 +1132,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    m_pDimseService->sendCommandOrResponse(*(pCommand->m_pDimseCommandBase));
+    get_imebra_object_holder(DimseService)->sendCommandOrResponse(*get_other_imebra_object_holder(pCommand, DimseCommandBase));
 
     OBJC_IMEBRA_FUNCTION_END();
 }
@@ -1133,8 +1141,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    std::unique_ptr<imebra::CStoreResponse> pResponse(m_pDimseService->getCStoreResponse(*(imebra::CStoreCommand*)(pCommand->m_pDimseCommandBase)));
-    return [[ImebraCStoreResponse alloc] initWithImebraCommand:pResponse.release()];
+    return [[ImebraCStoreResponse alloc] initWithImebraCommand:
+            new imebra::CStoreResponse(get_imebra_object_holder(DimseService)->getCStoreResponse(*(imebra::CStoreCommand*)get_other_imebra_object_holder(pCommand, DimseCommandBase)))];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -1143,8 +1151,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    std::unique_ptr<imebra::CGetResponse> pResponse(m_pDimseService->getCGetResponse(*(imebra::CGetCommand*)(pCommand->m_pDimseCommandBase)));
-    return [[ImebraCGetResponse alloc] initWithImebraCommand:pResponse.release()];
+    return [[ImebraCGetResponse alloc] initWithImebraCommand:
+            new imebra::CGetResponse(get_imebra_object_holder(DimseService)->getCGetResponse(*(imebra::CGetCommand*)get_other_imebra_object_holder(pCommand, DimseCommandBase)))];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -1153,8 +1161,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    std::unique_ptr<imebra::CFindResponse> pResponse(m_pDimseService->getCFindResponse(*(imebra::CFindCommand*)(pCommand->m_pDimseCommandBase)));
-    return [[ImebraCFindResponse alloc] initWithImebraCommand:pResponse.release()];
+    return [[ImebraCFindResponse alloc] initWithImebraCommand:
+            new imebra::CFindResponse(get_imebra_object_holder(DimseService)->getCFindResponse(*(imebra::CFindCommand*)get_other_imebra_object_holder(pCommand, DimseCommandBase)))];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -1163,8 +1171,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    std::unique_ptr<imebra::CMoveResponse> pResponse(m_pDimseService->getCMoveResponse(*(imebra::CMoveCommand*)(pCommand->m_pDimseCommandBase)));
-    return [[ImebraCMoveResponse alloc] initWithImebraCommand:pResponse.release()];
+    return [[ImebraCMoveResponse alloc] initWithImebraCommand:
+            new imebra::CMoveResponse(get_imebra_object_holder(DimseService)->getCMoveResponse(*(imebra::CMoveCommand*)get_other_imebra_object_holder(pCommand, DimseCommandBase)))];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -1173,8 +1181,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    std::unique_ptr<imebra::CEchoResponse> pResponse(m_pDimseService->getCEchoResponse(*(imebra::CEchoCommand*)(pCommand->m_pDimseCommandBase)));
-    return [[ImebraCEchoResponse alloc] initWithImebraCommand:pResponse.release()];
+    return [[ImebraCEchoResponse alloc] initWithImebraCommand:
+            new imebra::CEchoResponse(get_imebra_object_holder(DimseService)->getCEchoResponse(*(imebra::CEchoCommand*)get_other_imebra_object_holder(pCommand, DimseCommandBase)))];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -1183,8 +1191,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    std::unique_ptr<imebra::NEventReportResponse> pResponse(m_pDimseService->getNEventReportResponse(*(imebra::NEventReportCommand*)(pCommand->m_pDimseCommandBase)));
-    return [[ImebraNEventReportResponse alloc] initWithImebraCommand:pResponse.release()];
+    return [[ImebraNEventReportResponse alloc] initWithImebraCommand:
+            new imebra::NEventReportResponse(get_imebra_object_holder(DimseService)->getNEventReportResponse(*(imebra::NEventReportCommand*)get_other_imebra_object_holder(pCommand, DimseCommandBase)))];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -1193,8 +1201,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    std::unique_ptr<imebra::NGetResponse> pResponse(m_pDimseService->getNGetResponse(*(imebra::NGetCommand*)(pCommand->m_pDimseCommandBase)));
-    return [[ImebraNGetResponse alloc] initWithImebraCommand:pResponse.release()];
+    return [[ImebraNGetResponse alloc] initWithImebraCommand:
+            new imebra::NGetResponse(get_imebra_object_holder(DimseService)->getNGetResponse(*(imebra::NGetCommand*)get_other_imebra_object_holder(pCommand, DimseCommandBase)))];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -1203,8 +1211,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    std::unique_ptr<imebra::NSetResponse> pResponse(m_pDimseService->getNSetResponse(*(imebra::NSetCommand*)(pCommand->m_pDimseCommandBase)));
-    return [[ImebraNSetResponse alloc] initWithImebraCommand:pResponse.release()];
+    return [[ImebraNSetResponse alloc] initWithImebraCommand:
+            new imebra::NSetResponse(get_imebra_object_holder(DimseService)->getNSetResponse(*(imebra::NSetCommand*)get_other_imebra_object_holder(pCommand, DimseCommandBase)))];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -1213,8 +1221,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    std::unique_ptr<imebra::NActionResponse> pResponse(m_pDimseService->getNActionResponse(*(imebra::NActionCommand*)(pCommand->m_pDimseCommandBase)));
-    return [[ImebraNActionResponse alloc] initWithImebraCommand:pResponse.release()];
+    return [[ImebraNActionResponse alloc] initWithImebraCommand:
+            new imebra::NActionResponse(get_imebra_object_holder(DimseService)->getNActionResponse(*(imebra::NActionCommand*)get_other_imebra_object_holder(pCommand, DimseCommandBase)))];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -1223,8 +1231,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    std::unique_ptr<imebra::NCreateResponse> pResponse(m_pDimseService->getNCreateResponse(*(imebra::NCreateCommand*)(pCommand->m_pDimseCommandBase)));
-    return [[ImebraNCreateResponse alloc] initWithImebraCommand:pResponse.release()];
+    return [[ImebraNCreateResponse alloc] initWithImebraCommand:
+            new imebra::NCreateResponse(get_imebra_object_holder(DimseService)->getNCreateResponse(*(imebra::NCreateCommand*)get_other_imebra_object_holder(pCommand, DimseCommandBase)))];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -1233,8 +1241,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    std::unique_ptr<imebra::NDeleteResponse> pResponse(m_pDimseService->getNDeleteResponse(*(imebra::NDeleteCommand*)(pCommand->m_pDimseCommandBase)));
-    return [[ImebraNDeleteResponse alloc] initWithImebraCommand:pResponse.release()];
+    return [[ImebraNDeleteResponse alloc] initWithImebraCommand:
+            new imebra::NDeleteResponse(get_imebra_object_holder(DimseService)->getNDeleteResponse(*(imebra::NDeleteCommand*)get_other_imebra_object_holder(pCommand, DimseCommandBase)))];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }

@@ -15,6 +15,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #define imebraObjcVOILUT__INCLUDED_
 
 #import "imebra_transform.h"
+#include "imebra_macros.h"
 
 @class ImebraImage;
 @class ImebraLUT;

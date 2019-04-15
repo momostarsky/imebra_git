@@ -29,15 +29,29 @@ TCPListener::TCPListener(const TCPPassiveAddress& address):
 {
 }
 
+TCPListener::TCPListener(const TCPListener &source): m_pListener(getTCPListenerImplementation(source))
+{
+}
+
+TCPListener& TCPListener::operator=(const TCPListener& source)
+{
+    m_pListener = getTCPListenerImplementation(source);
+    return *this;
+}
+
+const std::shared_ptr<implementation::tcpListener>& getTCPListenerImplementation(const TCPListener& source)
+{
+    return source.m_pListener;
+}
 
 void TCPListener::terminate()
 {
     m_pListener->terminate();
 }
 
-TCPStream* TCPListener::waitForConnection()
+TCPStream TCPListener::waitForConnection()
 {
-    return new TCPStream(m_pListener->waitForConnection());
+    return TCPStream(m_pListener->waitForConnection());
 }
 
 

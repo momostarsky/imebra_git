@@ -11,13 +11,30 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#include "imebra_bridgeStructures.h"
+#include "../include/imebraobjc/imebra_baseStreamInput.h"
+#include "imebra_implementation_macros.h"
+#include <imebra/baseStreamInput.h>
 
 @implementation ImebraBaseStreamInput
 
+-(id)initWithImebraBaseStreamInput:define_imebra_parameter(BaseStreamInput)
+{
+    reset_imebra_object_holder(BaseStreamInput);
+    self = [super init];
+    if(self)
+    {
+        set_imebra_object_holder(BaseStreamInput, get_imebra_parameter(BaseStreamInput));
+    }
+    else
+    {
+        delete get_imebra_parameter(BaseStreamInput);
+    }
+    return self;
+}
+
 -(void)dealloc
 {
-    delete m_pBaseStreamInput;
+    delete_imebra_object_holder(BaseStreamInput);
 #if !__has_feature(objc_arc)
     [super dealloc];
 #endif
@@ -30,17 +47,18 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(id)initWithInputStream:(ImebraBaseStreamInput*)pStream timeoutSeconds:(unsigned int)timeoutSeconds
 {
+    reset_imebra_object_holder(StreamTimeout);
     self = [super init];
     if(self)
     {
-        m_pStreamTimeout = new imebra::StreamTimeout(*(pStream->m_pBaseStreamInput), (std::uint32_t)timeoutSeconds);
+        set_imebra_object_holder(StreamTimeout, new imebra::StreamTimeout(*get_other_imebra_object_holder(pStream, BaseStreamInput), (std::uint32_t)timeoutSeconds));
     }
     return self;
 }
 
 -(void)dealloc
 {
-    delete m_pStreamTimeout;
+    delete_imebra_object_holder(StreamTimeout);
 #if !__has_feature(objc_arc)
     [super dealloc];
 #endif

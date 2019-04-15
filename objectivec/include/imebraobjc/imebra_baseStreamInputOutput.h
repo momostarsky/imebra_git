@@ -24,6 +24,13 @@ If you do not want to be bound by the GPL terms (such as the requirement
 ///////////////////////////////////////////////////////////////////////////////
 @interface ImebraBaseStreamInputOutput: ImebraBaseStreamInput
 
+{
+    @public
+    define_imebra_object_holder(BaseStreamOutput);
+}
+
+-(void)dealloc;
+
 @end
 
 #endif // !defined(imebraObjcBaseStreamInputOutput__INCLUDED_)

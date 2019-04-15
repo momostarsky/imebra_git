@@ -60,7 +60,7 @@ void outputTag(const DataSet& dataSet, std::uint16_t group, std::uint16_t tag, s
 {
     try
     {
-        std::unique_ptr<ReadingDataHandler> tagHandler(dataSet.getReadingDataHandler(TagId(group, tag), 0));
+        ReadingDataHandler tagHandler = dataSet.getReadingDataHandler(TagId(group, tag), 0);
 
         *pOutputStream << L"<" << tagName;
         if(id != 0)
@@ -69,13 +69,13 @@ void outputTag(const DataSet& dataSet, std::uint16_t group, std::uint16_t tag, s
         }
         *pOutputStream << L">";
 
-        for(size_t scanValues(0); scanValues!= tagHandler->getSize(); ++scanValues)
+        for(size_t scanValues(0); scanValues!= tagHandler.getSize(); ++scanValues)
         {
             if(scanValues != 0)
             {
                 *pOutputStream << L"\\";
             }
-            *pOutputStream << xmlEntities(tagHandler->getUnicodeString(scanValues));
+            *pOutputStream << xmlEntities(tagHandler.getUnicodeString(scanValues));
         }
 
         *pOutputStream << L"</" << tagName << L">\n";
@@ -94,27 +94,26 @@ void outputTag(const DataSet& dataSet, std::uint16_t group, std::uint16_t tag, s
 //  the specified one
 //
 ///////////////////////////////////////////////////////////
-void scanChildren(std::shared_ptr<DicomDirEntry> pRecord, std::wostream* pOutputStream)
+void scanChildren(const DicomDirEntry& record, std::wostream* pOutputStream)
 {
-
-    for(; pRecord != 0; pRecord = std::shared_ptr<DicomDirEntry>(pRecord->getNextEntry()))
+    do
 	{
-        std::unique_ptr<DataSet> pRecordDataSet(pRecord->getEntryDataSet());
+        DataSet recordDataSet = record.getEntryDataSet();
 
 		// Output the file parts
-        outputTag(*pRecordDataSet, 0x4, 0x1500, pOutputStream, L"file");
+        outputTag(recordDataSet, 0x4, 0x1500, pOutputStream, L"file");
 
 		// Output the class UID
-        outputTag(*pRecordDataSet, 0x4, 0x1510, pOutputStream, L"class");
+        outputTag(recordDataSet, 0x4, 0x1510, pOutputStream, L"class");
 
 		// Output the instance UID
-        outputTag(*pRecordDataSet, 0x4, 0x1511, pOutputStream, L"instance");
+        outputTag(recordDataSet, 0x4, 0x1511, pOutputStream, L"instance");
 
 		// Output the transfer syntax
-        outputTag(*pRecordDataSet, 0x4, 0x1512, pOutputStream, L"transfer");
+        outputTag(recordDataSet, 0x4, 0x1512, pOutputStream, L"transfer");
 
 		// Output the groups (everything but group 2 and 4)
-        tagsIds_t tags = pRecordDataSet->getTags();
+        tagsIds_t tags = recordDataSet.getTags();
         std::uint16_t previousGroup = 0;
         for(tagsIds_t::const_iterator scanTags(tags.begin()), endTags(tags.end()); scanTags != endTags; ++scanTags)
         {
@@ -133,7 +132,7 @@ void scanChildren(std::shared_ptr<DicomDirEntry> pRecord, std::wostream* pOutput
                 }
                 *pOutputStream << L"<group groupid=\"" << groupId << L"\">" << std::endl;
             }
-            outputTag(*pRecordDataSet, groupId, tagId, pOutputStream, L"tag", tagId);
+            outputTag(recordDataSet, groupId, tagId, pOutputStream, L"tag", tagId);
         }
         if(previousGroup != 0)
         {
@@ -141,13 +140,16 @@ void scanChildren(std::shared_ptr<DicomDirEntry> pRecord, std::wostream* pOutput
         }
 
 		// Output the child records
-		(*pOutputStream) << L"<children>\n";
-        scanChildren(std::shared_ptr<DicomDirEntry>(pRecord->getFirstChildEntry()), pOutputStream);
-		(*pOutputStream) << L"</children>\n";
-
-
+        if(record.hasChildren())
+        {
+            (*pOutputStream) << L"<children>\n";
+            scanChildren(record.getFirstChildEntry(), pOutputStream);
+            (*pOutputStream) << L"</children>\n";
+        }
 		(*pOutputStream) << L"</record>\n";
+
 	}
+    while(record.hasNextEntry());
 }
 
 
@@ -172,15 +174,18 @@ int main(int argc, char* argv[])
 	}
 
     // Open the file containing the dicom directory
-    std::unique_ptr<DataSet> loadedDataSet(CodecFactory::load(argv[1], 2048));
+    DataSet loadedDataSet = CodecFactory::load(argv[1], 2048);
 
 	// Now create a dicomdir object
-    std::unique_ptr<DicomDir> directory(new DicomDir(*loadedDataSet));
+    DicomDir directory(loadedDataSet);
 
 	try
 	{
 		std::wcout << L"<dicomdir>";
-        scanChildren(std::shared_ptr<DicomDirEntry>(directory->getFirstRootEntry()), &(std::wcout));
+        if(directory.hasRootEntry())
+        {
+            scanChildren(directory.getFirstRootEntry(), &(std::wcout));
+        }
 		std::wcout << L"</dicomdir>";
 		return 0;
 	}

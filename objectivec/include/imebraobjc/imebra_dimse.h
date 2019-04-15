@@ -17,20 +17,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #import <Foundation/Foundation.h>
 #import <Foundation/NSArray.h>
 #import <Foundation/NSString.h>
-
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
-namespace imebra
-{
-class PresentationContext;
-class PresentationContexts;
-class AssociationMessage;
-class AssociationBase;
-class AssociationSCU;
-class AssociationSCP;
-class DimseCommandBase;
-class DimseService;
-}
-#endif
+#include "imebra_macros.h"
 
 /// \brief DIMSE command types.
 ///
@@ -132,13 +119,11 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
 ///
 //////////////////////////////////////////////////////////////////
 @interface ImebraDimseCommandBase: NSObject
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
 {
    @public
-   imebra::DimseCommandBase* m_pDimseCommandBase;
+   define_imebra_object_holder(DimseCommandBase);
 }
-    -(id)initWithImebraCommand:(imebra::DimseCommandBase*)pCommand;
-#endif
+    -(id)initWithImebraCommand:define_imebra_parameter(DimseCommandBase);
 
     -(void)dealloc;
 
@@ -1284,13 +1269,10 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
 ///
 //////////////////////////////////////////////////////////////////
 @interface ImebraDimseService: NSObject
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
 {
    @public
-   imebra::DimseService* m_pDimseService;
+   define_imebra_object_holder(DimseService);
 }
-
-#endif
 
     ///
     /// \brief Initializer.

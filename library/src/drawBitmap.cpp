@@ -34,18 +34,33 @@ DrawBitmap::DrawBitmap(const Transform& transform):
 {
 }
 
+DrawBitmap::DrawBitmap(const DrawBitmap& source): m_pDrawBitmap(getDrawBitmapImplementation(source))
+{
+}
+
+DrawBitmap& DrawBitmap::operator=(const DrawBitmap& source)
+{
+    m_pDrawBitmap = getDrawBitmapImplementation(source);
+    return *this;
+}
+
+const std::shared_ptr<implementation::drawBitmap>& getDrawBitmapImplementation(const DrawBitmap& drawBitmap)
+{
+    return drawBitmap.m_pDrawBitmap;
+}
+
 DrawBitmap::~DrawBitmap()
 {
 }
 
 size_t DrawBitmap::getBitmap(const Image& image, drawBitmapType_t drawBitmapType, std::uint32_t rowAlignBytes, char* buffer, size_t bufferSize)
 {
-    return m_pDrawBitmap->getBitmap(image.m_pImage, drawBitmapType, rowAlignBytes, (std::uint8_t*)buffer, bufferSize);
+    return m_pDrawBitmap->getBitmap(getImageImplementation(image), drawBitmapType, rowAlignBytes, (std::uint8_t*)buffer, bufferSize);
 }
 
-ReadWriteMemory* DrawBitmap::getBitmap(const Image& image, drawBitmapType_t drawBitmapType, std::uint32_t rowAlignBytes)
+const Memory DrawBitmap::getBitmap(const Image& image, drawBitmapType_t drawBitmapType, std::uint32_t rowAlignBytes)
 {
-    return new ReadWriteMemory(m_pDrawBitmap->getBitmap(image.m_pImage, drawBitmapType, rowAlignBytes));
+    return Memory(m_pDrawBitmap->getBitmap(getImageImplementation(image), drawBitmapType, rowAlignBytes));
 }
 
 }

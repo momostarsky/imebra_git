@@ -19,27 +19,20 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #if !defined(imebraTransformHighBit__INCLUDED_)
 #define imebraTransformHighBit__INCLUDED_
 
-#ifndef SWIG
-
 #include <memory>
 #include "definitions.h"
 #include "transform.h"
 
 namespace imebra
 {
+
 namespace implementation
 {
 namespace transforms
 {
-class transformHighBit;
+    class transformHighBit;
 }
 }
-}
-
-#endif
-
-namespace imebra
-{
 
 ///
 /// \brief The TransformHighBit transform shifts the input image's values
@@ -48,14 +41,29 @@ namespace imebra
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API TransformHighBit: public Transform
 {
-    TransformHighBit(const TransformHighBit&) = delete;
-    TransformHighBit& operator=(const TransformHighBit&) = delete;
 
 public:
     /// \brief Constructor.
     ///
     ///////////////////////////////////////////////////////////////////////////////
     TransformHighBit();
+
+    ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source TransformHighBit object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    TransformHighBit(const TransformHighBit& source);
+
+    ///
+    /// \brief Assign operator.
+    ///
+    /// \param source source TransformHighBit object
+    /// \return a reference to this TransformHighBit object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    TransformHighBit& operator=(const TransformHighBit& source);
 
     virtual ~TransformHighBit();
 

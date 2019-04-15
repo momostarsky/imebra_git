@@ -10,7 +10,7 @@ namespace tests
 TEST(stringHandlerTest, DSTest)
 {
     {
-        DataSet testDataSet;
+        MutableDataSet testDataSet;
         testDataSet.setDouble(TagId(0x0028, 0x1051), 0.000001, tagVR_t::DS);
         std::string decimalString = testDataSet.getString(TagId(0x0028, 0x1051), 0);
         ASSERT_TRUE(decimalString == "1e-006" || decimalString == "1e-06" || decimalString == "1e-6");
@@ -27,7 +27,7 @@ TEST(stringHandlerTest, DSTest)
     }
 
     {
-        DataSet testDataSet;
+        MutableDataSet testDataSet;
         testDataSet.setString(TagId(0x0028, 0x1051), "-2e-8", tagVR_t::DS);
         ASSERT_DOUBLE_EQ(-0.00000002, testDataSet.getDouble(TagId(0x0028, 0x1051), 0));
         ASSERT_THROW(testDataSet.getSignedLong(TagId(0x0028, 0x1051), 1), MissingItemError);
@@ -35,7 +35,7 @@ TEST(stringHandlerTest, DSTest)
     }
 
     {
-        DataSet testDataSet;
+        MutableDataSet testDataSet;
         testDataSet.setString(TagId(0x0028, 0x1051), "20", tagVR_t::DS);
         ASSERT_DOUBLE_EQ(20.0, testDataSet.getDouble(TagId(0x0028, 0x1051), 0));
         ASSERT_EQ(20, testDataSet.getSignedLong(TagId(0x0028, 0x1051), 0));
@@ -44,7 +44,7 @@ TEST(stringHandlerTest, DSTest)
     }
 
     {
-        DataSet testDataSet;
+        MutableDataSet testDataSet;
         testDataSet.setSignedLong(TagId(0x0028, 0x1051), 40, tagVR_t::DS);
         ASSERT_EQ("40", testDataSet.getString(TagId(0x0028, 0x1051), 0));
         ASSERT_EQ(40, testDataSet.getSignedLong(TagId(0x0028, 0x1051), 0));
@@ -53,7 +53,7 @@ TEST(stringHandlerTest, DSTest)
     }
 
     {
-        DataSet testDataSet;
+        MutableDataSet testDataSet;
         testDataSet.setUnsignedLong(TagId(0x0028, 0x1051), 50, tagVR_t::DS);
         ASSERT_EQ("50", testDataSet.getString(TagId(0x0028, 0x1051), 0));
         ASSERT_EQ(50, testDataSet.getSignedLong(TagId(0x0028, 0x1051), 0));
@@ -62,7 +62,7 @@ TEST(stringHandlerTest, DSTest)
     }
 
     {
-        DataSet testDataSet;
+        MutableDataSet testDataSet;
         testDataSet.setString(TagId(0x0028, 0x1051), "Hello", tagVR_t::DS);
         ASSERT_THROW(testDataSet.getDouble(TagId(0x0028, 0x1051), 0), DataHandlerConversionError);
     }
@@ -72,7 +72,7 @@ TEST(stringHandlerTest, DSTest)
 TEST(stringHandlerTest, ISTest)
 {
     {
-        DataSet testDataSet;
+        MutableDataSet testDataSet;
         testDataSet.setDouble(TagId(0x0028, 0x1051), 12.004, tagVR_t::IS);
         ASSERT_EQ("12", testDataSet.getString(TagId(0x0028, 0x1051), 0));
         ASSERT_EQ(12, testDataSet.getSignedLong(TagId(0x0028, 0x1051), 0));
@@ -83,7 +83,7 @@ TEST(stringHandlerTest, ISTest)
     }
 
     {
-        DataSet testDataSet;
+        MutableDataSet testDataSet;
         testDataSet.setSignedLong(TagId(0x0028, 0x1051), 20, tagVR_t::IS);
         ASSERT_EQ("20", testDataSet.getString(TagId(0x0028, 0x1051), 0));
         ASSERT_EQ(20, testDataSet.getSignedLong(TagId(0x0028, 0x1051), 0));
@@ -92,7 +92,7 @@ TEST(stringHandlerTest, ISTest)
     }
 
     {
-        DataSet testDataSet;
+        MutableDataSet testDataSet;
         testDataSet.setString(TagId(0x0028, 0x1051), "123456789012", tagVR_t::IS);
         ASSERT_THROW(testDataSet.setString(TagId(0x0028, 0x1051), "1234567890123", tagVR_t::IS), DataHandlerInvalidDataError);
     }
@@ -102,7 +102,7 @@ TEST(stringHandlerTest, ISTest)
 
 TEST(stringHandlerTest, AETest)
 {
-    DataSet testDataSet;
+    MutableDataSet testDataSet;
 
     testDataSet.setString(TagId(0x0010, 0x0010), "0123456789012345", tagVR_t::AE);
     ASSERT_EQ("0123456789012345", testDataSet.getString(TagId(0x0010, 0x0010), 0));
@@ -120,7 +120,7 @@ TEST(stringHandlerTest, AETest)
 
 TEST(stringHandlerTest, zeroPad)
 {
-    DataSet testDataSet;
+    MutableDataSet testDataSet;
 
     testDataSet.setString(TagId(0x0010, 0x0010), "0\000", tagVR_t::AE);
     ASSERT_EQ("0", testDataSet.getString(TagId(0x0010, 0x0010), 0));
@@ -130,7 +130,7 @@ TEST(stringHandlerTest, zeroPad)
 
 TEST(stringHandlerTest, URTest)
 {
-    DataSet testDataSet;
+    MutableDataSet testDataSet;
 
     std::string longString((size_t)40000, 'a');
     testDataSet.setString(TagId(0x0010, 0x0010), longString, tagVR_t::UR);
@@ -145,16 +145,16 @@ TEST(stringHandlerTest, URTest)
     ASSERT_EQ(tagVR_t::UR, testDataSet.getDataType(TagId(0x0010, 0x0010)));
 
     {
-        std::unique_ptr<WritingDataHandler> dataHandler(testDataSet.getWritingDataHandler(TagId(0x0010, 0x0010), 0, tagVR_t::LT));
-        dataHandler->setString(0, "test");
-        ASSERT_THROW(dataHandler->setString(1, "test");, DataHandlerInvalidDataError);
+        WritingDataHandler dataHandler = testDataSet.getWritingDataHandler(TagId(0x0010, 0x0010), 0, tagVR_t::LT);
+        dataHandler.setString(0, "test");
+        ASSERT_THROW(dataHandler.setString(1, "test");, DataHandlerInvalidDataError);
     }
 }
 
 
 TEST(stringHandlerTest, LOTest)
 {
-    DataSet testDataSet;
+    MutableDataSet testDataSet;
 
     testDataSet.setString(TagId(0x0010, 0x0010), "0123456789012345", tagVR_t::LO);
     ASSERT_EQ("0123456789012345", testDataSet.getString(TagId(0x0010, 0x0010), 0));
@@ -184,7 +184,7 @@ TEST(stringHandlerTest, LOTest)
 
 TEST(stringHandlerTest, LTTest)
 {
-    DataSet testDataSet;
+    MutableDataSet testDataSet;
 
     testDataSet.setString(TagId(0x0010, 0x0010), "0123456789012345\\0123", tagVR_t::LT);
     ASSERT_EQ("0123456789012345\\0123", testDataSet.getString(TagId(0x0010, 0x0010), 0));
@@ -192,9 +192,9 @@ TEST(stringHandlerTest, LTTest)
     ASSERT_THROW(testDataSet.getAge(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
 
     {
-        std::unique_ptr<WritingDataHandler> dataHandler(testDataSet.getWritingDataHandler(TagId(0x0010, 0x0010), 0, tagVR_t::LT));
-        dataHandler->setString(0, "test\\test1");
-        ASSERT_THROW(dataHandler->setString(1, "test");, DataHandlerInvalidDataError);
+        WritingDataHandler dataHandler = testDataSet.getWritingDataHandler(TagId(0x0010, 0x0010), 0, tagVR_t::LT);
+        dataHandler.setString(0, "test\\test1");
+        ASSERT_THROW(dataHandler.setString(1, "test");, DataHandlerInvalidDataError);
     }
 
     {
@@ -220,7 +220,7 @@ TEST(stringHandlerTest, LTTest)
 
 TEST(stringHandlerTest, SHTest)
 {
-    DataSet testDataSet;
+    MutableDataSet testDataSet;
 
     testDataSet.setString(TagId(0x0010, 0x0010), "0123456789012345", tagVR_t::SH);
     ASSERT_EQ("0123456789012345", testDataSet.getString(TagId(0x0010, 0x0010), 0));
@@ -228,18 +228,18 @@ TEST(stringHandlerTest, SHTest)
     ASSERT_THROW(testDataSet.getAge(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
 
     {
-        std::unique_ptr<WritingDataHandler> shHandler(testDataSet.getWritingDataHandler(TagId(0x0010, 0x0010), 0, tagVR_t::SH));
-        shHandler->setString(0, "item 0");
-        shHandler->setString(1, "item 1");
-        shHandler->setString(2, "item 2");
-        ASSERT_EQ(tagVR_t::SH, shHandler->getDataType());
+        WritingDataHandler shHandler = testDataSet.getWritingDataHandler(TagId(0x0010, 0x0010), 0, tagVR_t::SH);
+        shHandler.setString(0, "item 0");
+        shHandler.setString(1, "item 1");
+        shHandler.setString(2, "item 2");
+        ASSERT_EQ(tagVR_t::SH, shHandler.getDataType());
     }
     ASSERT_EQ("item 0", testDataSet.getString(TagId(0x0010, 0x0010), 0));
     ASSERT_EQ("item 1", testDataSet.getString(TagId(0x0010, 0x0010), 1));
     ASSERT_EQ("item 2", testDataSet.getString(TagId(0x0010, 0x0010), 2));
-    std::unique_ptr<ReadingDataHandlerNumeric> rawHandler(testDataSet.getReadingDataHandlerRaw(TagId(0x0010, 0x0010), 0));
+    ReadingDataHandlerNumeric rawHandler = testDataSet.getReadingDataHandlerRaw(TagId(0x0010, 0x0010), 0);
     size_t dataSize;
-    const char* data = rawHandler->data(&dataSize);
+    const char* data = rawHandler.data(&dataSize);
     std::string fullString(data, dataSize);
     ASSERT_EQ("item 0\\item 1\\item 2", fullString);
 
@@ -249,7 +249,7 @@ TEST(stringHandlerTest, SHTest)
 
 TEST(stringHandlerTest, STTest)
 {
-    DataSet testDataSet;
+    MutableDataSet testDataSet;
 
     testDataSet.setString(TagId(0x0010, 0x0010), "0123456789012345", tagVR_t::ST);
     ASSERT_EQ("0123456789012345", testDataSet.getString(TagId(0x0010, 0x0010), 0));
@@ -257,9 +257,9 @@ TEST(stringHandlerTest, STTest)
     ASSERT_THROW(testDataSet.getAge(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
 
     {
-        std::unique_ptr<WritingDataHandler> dataHandler(testDataSet.getWritingDataHandler(TagId(0x0010, 0x0010), 0, tagVR_t::ST));
-        dataHandler->setString(0, "test");
-        ASSERT_THROW(dataHandler->setString(1, "test");, DataHandlerInvalidDataError);
+        WritingDataHandler dataHandler = testDataSet.getWritingDataHandler(TagId(0x0010, 0x0010), 0, tagVR_t::ST);
+        dataHandler.setString(0, "test");
+        ASSERT_THROW(dataHandler.setString(1, "test");, DataHandlerInvalidDataError);
     }
 
     {
@@ -279,7 +279,7 @@ TEST(stringHandlerTest, STTest)
 
 TEST(stringHandlerTest, UITest)
 {
-    DataSet testDataSet;
+    MutableDataSet testDataSet;
 
     testDataSet.setString(TagId(0x0010, 0x0010), "0123456789012345", tagVR_t::UI);
     ASSERT_EQ("0123456789012345", testDataSet.getString(TagId(0x0010, 0x0010), 0));
@@ -287,9 +287,9 @@ TEST(stringHandlerTest, UITest)
     ASSERT_THROW(testDataSet.getAge(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
 
     {
-        std::unique_ptr<WritingDataHandler> dataHandler(testDataSet.getWritingDataHandler(TagId(0x0010, 0x0010), 0, tagVR_t::UI));
-        dataHandler->setString(0, "test");
-        ASSERT_THROW(dataHandler->setString(1, "test");, DataHandlerInvalidDataError);
+        WritingDataHandler dataHandler = testDataSet.getWritingDataHandler(TagId(0x0010, 0x0010), 0, tagVR_t::UI);
+        dataHandler.setString(0, "test");
+        ASSERT_THROW(dataHandler.setString(1, "test");, DataHandlerInvalidDataError);
     }
 
     {
@@ -308,7 +308,7 @@ TEST(stringHandlerTest, UITest)
 
 TEST(stringHandlerTest, UCTest)
 {
-    DataSet testDataSet;
+    MutableDataSet testDataSet;
 
     testDataSet.setUnicodeString(TagId(0x0010, 0x0010), L"0123456789012345", tagVR_t::UC);
     ASSERT_EQ("0123456789012345", testDataSet.getString(TagId(0x0010, 0x0010), 0));
@@ -318,9 +318,9 @@ TEST(stringHandlerTest, UCTest)
 
     {
         {
-            std::unique_ptr<WritingDataHandler> dataHandler(testDataSet.getWritingDataHandler(TagId(0x0010, 0x0010), 0, tagVR_t::UC));
-            dataHandler->setUnicodeString(0, L"test0");
-            dataHandler->setUnicodeString(1, L"test1");
+            WritingDataHandler dataHandler = testDataSet.getWritingDataHandler(TagId(0x0010, 0x0010), 0, tagVR_t::UC);
+            dataHandler.setUnicodeString(0, L"test0");
+            dataHandler.setUnicodeString(1, L"test1");
         }
         ASSERT_EQ(L"test0", testDataSet.getUnicodeString(TagId(0x0010, 0x0010), 0));
         ASSERT_EQ(L"test1", testDataSet.getUnicodeString(TagId(0x0010, 0x0010), 1));
@@ -338,7 +338,7 @@ TEST(stringHandlerTest, UCTest)
 
 TEST(stringHandlerTest, UTTest)
 {
-    DataSet testDataSet;
+    MutableDataSet testDataSet;
 
     testDataSet.setString(TagId(0x0010, 0x0010), "0123456789012345", tagVR_t::UT);
     ASSERT_EQ("0123456789012345", testDataSet.getString(TagId(0x0010, 0x0010), 0));
@@ -346,9 +346,9 @@ TEST(stringHandlerTest, UTTest)
     ASSERT_THROW(testDataSet.getAge(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
 
     {
-        std::unique_ptr<WritingDataHandler> dataHandler(testDataSet.getWritingDataHandler(TagId(0x0010, 0x0010), 0, tagVR_t::UT));
-        dataHandler->setString(0, "test");
-        ASSERT_THROW(dataHandler->setString(1, "test");, DataHandlerInvalidDataError);
+        WritingDataHandler dataHandler = testDataSet.getWritingDataHandler(TagId(0x0010, 0x0010), 0, tagVR_t::UT);
+        dataHandler.setString(0, "test");
+        ASSERT_THROW(dataHandler.setString(1, "test");, DataHandlerInvalidDataError);
     }
 
     {
@@ -363,7 +363,7 @@ TEST(stringHandlerTest, UTTest)
 
 TEST(stringHandlerTest, PNTest)
 {
-    DataSet testDataSet;
+    MutableDataSet testDataSet;
 
     testDataSet.setString(TagId(0x0010, 0x0010), "PatientName", tagVR_t::PN);
     ASSERT_EQ("PatientName", testDataSet.getString(TagId(0x0010, 0x0010), 0));
@@ -371,10 +371,10 @@ TEST(stringHandlerTest, PNTest)
     ASSERT_THROW(testDataSet.getAge(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
 
     {
-        std::unique_ptr<WritingDataHandler> pnHandler(testDataSet.getWritingDataHandler(TagId(0x0010, 0x0010), 0, tagVR_t::PN));
-        pnHandler->setString(0, "Patient 0");
-        pnHandler->setString(1, "Patient 1");
-        pnHandler->setString(2, "Patient 2");
+        WritingDataHandler pnHandler = testDataSet.getWritingDataHandler(TagId(0x0010, 0x0010), 0, tagVR_t::PN);
+        pnHandler.setString(0, "Patient 0");
+        pnHandler.setString(1, "Patient 1");
+        pnHandler.setString(2, "Patient 2");
     }
     ASSERT_EQ("Patient 0", testDataSet.getString(TagId(0x0010, 0x0010), 0));
     ASSERT_EQ("Patient 1", testDataSet.getString(TagId(0x0010, 0x0010), 1));
@@ -383,9 +383,9 @@ TEST(stringHandlerTest, PNTest)
     ASSERT_THROW(testDataSet.getSignedLong(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
     ASSERT_THROW(testDataSet.getDouble(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
 
-    std::unique_ptr<ReadingDataHandlerNumeric> rawHandler(testDataSet.getReadingDataHandlerRaw(TagId(0x0010, 0x0010), 0));
+    ReadingDataHandlerNumeric rawHandler = testDataSet.getReadingDataHandlerRaw(TagId(0x0010, 0x0010), 0);
     size_t dataSize;
-    const char* data = rawHandler->data(&dataSize);
+    const char* data = rawHandler.data(&dataSize);
     std::string fullString(data, dataSize);
     ASSERT_EQ("Patient 0=Patient 1=Patient 2 ", fullString);
 
@@ -398,7 +398,7 @@ TEST(stringHandlerTest, PNTest)
 
 TEST(stringHandlerTest, CSTest)
 {
-    DataSet testDataSet;
+    MutableDataSet testDataSet;
 
     testDataSet.setString(TagId(0x0010, 0x0010), "0123456789012345", tagVR_t::CS);
     ASSERT_EQ("0123456789012345", testDataSet.getString(TagId(0x0010, 0x0010), 0));
@@ -415,14 +415,14 @@ TEST(stringHandlerTest, CSTest)
 
 TEST(stringHandlerTest, ASTest)
 {
-    imebra::DataSet dataSet;
+    MutableDataSet dataSet;
 
     dataSet.setAge(TagId(0x0010, 0x1010), Age(3, imebra::ageUnit_t::days));
-    std::unique_ptr<imebra::Age> age(dataSet.getAge(TagId(imebra::tagId_t::PatientAge_0010_1010), 0));
-    EXPECT_EQ(3u, age->age);
-    EXPECT_EQ(imebra::ageUnit_t::days, age->units);
+    imebra::Age age = dataSet.getAge(TagId(imebra::tagId_t::PatientAge_0010_1010), 0);
+    EXPECT_EQ(3u, age.age);
+    EXPECT_EQ(imebra::ageUnit_t::days, age.units);
     EXPECT_EQ("003D", dataSet.getString(TagId(imebra::tagId_t::PatientAge_0010_1010), 0));
-    ASSERT_DOUBLE_EQ(0.00821917808219178, age->years());
+    ASSERT_DOUBLE_EQ(0.00821917808219178, age.years());
 
     ASSERT_THROW(dataSet.setDouble(TagId(imebra::tagId_t::PatientAge_0010_1010), .01), imebra::DataHandlerConversionError);
 
@@ -433,22 +433,22 @@ TEST(stringHandlerTest, ASTest)
     ASSERT_THROW(dataSet.setDate(TagId(imebra::tagId_t::PatientAge_0010_1010), imebra::Date(2000, 1, 1, 0, 0, 0, 0, 0, 0)), imebra::DataHandlerConversionError);
 
     dataSet.setString(TagId(imebra::tagId_t::PatientAge_0010_1010), "005M");
-    age.reset(dataSet.getAge(TagId(imebra::tagId_t::PatientAge_0010_1010), 0));
-    EXPECT_EQ(5u, age->age);
-    EXPECT_EQ(imebra::ageUnit_t::months, age->units);
-    EXPECT_DOUBLE_EQ(0.41666666666666669, age->years());
+    age = dataSet.getAge(TagId(imebra::tagId_t::PatientAge_0010_1010), 0);
+    EXPECT_EQ(5u, age.age);
+    EXPECT_EQ(imebra::ageUnit_t::months, age.units);
+    EXPECT_DOUBLE_EQ(0.41666666666666669, age.years());
 
     dataSet.setString(TagId(imebra::tagId_t::PatientAge_0010_1010), "018W");
-    age.reset(dataSet.getAge(TagId(imebra::tagId_t::PatientAge_0010_1010), 0));
-    EXPECT_EQ(18u, age->age);
-    EXPECT_EQ(imebra::ageUnit_t::weeks, age->units);
-    EXPECT_DOUBLE_EQ(0.34520548039782323, age->years());
+    age = dataSet.getAge(TagId(imebra::tagId_t::PatientAge_0010_1010), 0);
+    EXPECT_EQ(18u, age.age);
+    EXPECT_EQ(imebra::ageUnit_t::weeks, age.units);
+    EXPECT_DOUBLE_EQ(0.34520548039782323, age.years());
 
     dataSet.setString(TagId(imebra::tagId_t::PatientAge_0010_1010), "090Y");
-    age.reset(dataSet.getAge(TagId(imebra::tagId_t::PatientAge_0010_1010), 0));
-    EXPECT_EQ(90u, age->age);
-    EXPECT_EQ(imebra::ageUnit_t::years, age->units);
-    EXPECT_DOUBLE_EQ(90.0, age->years());
+    age = dataSet.getAge(TagId(imebra::tagId_t::PatientAge_0010_1010), 0);
+    EXPECT_EQ(90u, age.age);
+    EXPECT_EQ(imebra::ageUnit_t::years, age.units);
+    EXPECT_DOUBLE_EQ(90.0, age.years());
 }
 
 

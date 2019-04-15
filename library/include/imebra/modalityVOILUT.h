@@ -47,8 +47,6 @@ namespace imebra
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API ModalityVOILUT: public Transform
 {
-    ModalityVOILUT(const ModalityVOILUT&) = delete;
-    ModalityVOILUT& operator=(const ModalityVOILUT&) = delete;
 
 public:
     /// \brief Constructor.
@@ -58,6 +56,23 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit ModalityVOILUT(const DataSet& dataset);
+
+    ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source ModalityVOILUT object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    ModalityVOILUT(const ModalityVOILUT& source);
+
+    ///
+    /// \brief Assign operator.
+    ///
+    /// \param source source ModalityVOILUT object
+    /// \return a reference to this ModalityVOILUT object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    ModalityVOILUT& operator=(const ModalityVOILUT& source);
 
     virtual ~ModalityVOILUT();
 };

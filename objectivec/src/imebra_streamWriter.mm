@@ -11,50 +11,46 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#include "imebra_bridgeStructures.h"
+#import "../include/imebraobjc/imebra_streamWriter.h"
+#import "../include/imebraobjc/imebra_baseStreamOutput.h"
+#import "../include/imebraobjc/imebra_baseStreamInputOutput.h"
+
+#include "imebra_implementation_macros.h"
+#include <imebra/streamWriter.h>
+#include <imebra/baseStreamInput.h>
+#include <imebra/baseStreamOutput.h>
 
 @implementation ImebraStreamWriter: NSObject
 
--(id)initWithImebraStreamWriter:(imebra::StreamWriter*)pStreamWriter
+-(id)initWithImebraStreamWriter:define_imebra_parameter(StreamWriter)
 {
-    self->m_pWriter = 0;
+    reset_imebra_object_holder(StreamWriter);
     self = [super init];
     if(self)
     {
-        self->m_pWriter = pStreamWriter;
+        set_imebra_object_holder(StreamWriter, get_imebra_parameter(StreamWriter));
     }
     else
     {
-        delete pStreamWriter;
+        delete define_imebra_parameter(StreamWriter);
     }
     return self;
 }
 
 -(id)initWithOutputStream:(ImebraBaseStreamOutput*)pOutput
 {
-    self->m_pWriter = 0;
+    reset_imebra_object_holder(StreamWriter);
     self = [super init];
     if(self)
     {
-        self->m_pWriter = new imebra::StreamWriter(*(pOutput->m_pBaseStreamOutput));
-    }
-    return self;
-}
-
--(id)initWithInputOutputStream:(ImebraBaseStreamInputOutput*)pInputOutput
-{
-    self->m_pWriter = 0;
-    self = [super init];
-    if(self)
-    {
-        self->m_pWriter = new imebra::StreamWriter(*(dynamic_cast<imebra::BaseStreamOutput*>(pInputOutput->m_pBaseStreamInput)));
+        set_imebra_object_holder(StreamWriter, new imebra::StreamWriter(*get_other_imebra_object_holder(pOutput, BaseStreamOutput)));
     }
     return self;
 }
 
 -(void)dealloc
 {
-    delete self->m_pWriter;
+    delete_imebra_object_holder(StreamWriter);
 #if !__has_feature(objc_arc)
     [super dealloc];
 #endif

@@ -17,7 +17,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #import <Foundation/Foundation.h>
 #import "imebra_baseStreamInput.h"
 
-@class ImebraReadMemory;
+@class ImebraMemory;
 
 ///
 /// \brief An input stream that reads data from a memory region.
@@ -30,7 +30,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     /// \param pMemory the memory region from which the stream will read the data
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    -(id)initWithReadMemory:(ImebraReadMemory*)pMemory;
+    -(id)initWithReadMemory:(ImebraMemory*)pMemory;
 
 @end
 

@@ -56,7 +56,7 @@ public:
     /// \return a DataSet object representing the input stream's content
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    static DataSet* load(StreamReader& reader, size_t maxSizeBufferLoad = std::numeric_limits<size_t>::max());
+    static const DataSet load(StreamReader& reader, size_t maxSizeBufferLoad = std::numeric_limits<size_t>::max());
 
     /// \brief Parses the content of the input file and returns a DataSet
     ///        representing it.
@@ -74,7 +74,7 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
 #ifndef SWIG // Use Unicode strings only with SWIG
-    static DataSet* load(const std::wstring& fileName, size_t maxSizeBufferLoad = std::numeric_limits<size_t>::max());
+    static const DataSet load(const std::wstring& fileName, size_t maxSizeBufferLoad = std::numeric_limits<size_t>::max());
 #endif
 
     /// \brief Parses the content of the input file and returns a DataSet
@@ -92,7 +92,7 @@ public:
     /// \return a DataSet object representing the input file's content
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    static DataSet* load(const std::string& fileName, size_t maxSizeBufferLoad = std::numeric_limits<size_t>::max());
+    static const DataSet load(const std::string& fileName, size_t maxSizeBufferLoad = std::numeric_limits<size_t>::max());
 
     static void saveImage(
             StreamWriter& destStream,

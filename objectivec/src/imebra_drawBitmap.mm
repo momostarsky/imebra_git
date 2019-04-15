@@ -11,13 +11,21 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#include "imebra_bridgeStructures.h"
+#import "../include/imebraobjc/imebra_drawBitmap.h"
+#import "../include/imebraobjc/imebra_readWriteMemory.h"
+#import "../include/imebraobjc/imebra_transform.h"
+#import "../include/imebraobjc/imebra_image.h"
+
+#include <imebra/drawBitmap.h>
+#include <imebra/mutableMemory.h>
+#include "imebra_implementation_macros.h"
+#include "imebra_nserror.h"
 
 void CGDataProviderCallbackFunc(void *info, const void* /* data */, size_t /* size */)
 {
     // Release the shared pointer holding the memory
     ////////////////////////////////////////////////
-    delete (imebra::ReadWriteMemory*)info;
+    delete (imebra::MutableMemory*)info;
 }
 
 
@@ -25,29 +33,29 @@ void CGDataProviderCallbackFunc(void *info, const void* /* data */, size_t /* si
 
 -(id)init
 {
-    m_pDrawBitmap = 0;
+    reset_imebra_object_holder(DrawBitmap);
     self = [super init];
     if(self)
     {
-        m_pDrawBitmap = new imebra::DrawBitmap();
+        set_imebra_object_holder(DrawBitmap, new imebra::DrawBitmap());
     }
     return self;
 }
 
 -(id)initWithTransform:(ImebraTransform*)pTransform
 {
-    m_pDrawBitmap = 0;
+    reset_imebra_object_holder(DrawBitmap);
     self = [super init];
     if(self)
     {
-        m_pDrawBitmap = new imebra::DrawBitmap(*(pTransform->m_pTransform));
+        set_imebra_object_holder(DrawBitmap, new imebra::DrawBitmap(*get_other_imebra_object_holder(pTransform, Transform)));
     }
     return self;
 }
 
 -(void)dealloc
 {
-    delete m_pDrawBitmap;
+    delete_imebra_object_holder(DrawBitmap);
 #if !__has_feature(objc_arc)
     [super dealloc];
 #endif
@@ -55,11 +63,11 @@ void CGDataProviderCallbackFunc(void *info, const void* /* data */, size_t /* si
 }
 
 
--(ImebraReadWriteMemory*) getBitmap:(ImebraImage*)pImage bitmapType:(ImebraDrawBitmapType_t)drawBitmapType rowAlignBytes:(unsigned int)rowAlignBytes error:(NSError**)pError
+-(ImebraMutableMemory*) getBitmap:(ImebraImage*)pImage bitmapType:(ImebraDrawBitmapType_t)drawBitmapType rowAlignBytes:(unsigned int)rowAlignBytes error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraReadWriteMemory alloc] initWithImebraReadWriteMemory:m_pDrawBitmap->getBitmap(*(pImage->m_pImage), (imebra::drawBitmapType_t)drawBitmapType, (std::uint32_t)rowAlignBytes)];
+    return [[ImebraMutableMemory alloc] initWithImebraMutableMemory:new imebra::MutableMemory(get_imebra_object_holder(DrawBitmap)->getBitmap(*get_other_imebra_object_holder(pImage, Image), (imebra::drawBitmapType_t)drawBitmapType, (std::uint32_t)rowAlignBytes))];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -77,12 +85,12 @@ void CGDataProviderCallbackFunc(void *info, const void* /* data */, size_t /* si
 
     // Get the amount of memory needed for the conversion
     /////////////////////////////////////////////////////
-    std::uint32_t width(pImage->m_pImage->getWidth());
-    std::uint32_t height(pImage->m_pImage->getHeight());
+    std::uint32_t width(get_other_imebra_object_holder(pImage, Image)->getWidth());
+    std::uint32_t height(get_other_imebra_object_holder(pImage, Image)->getHeight());
 
     // Get the result raw data
     //////////////////////////
-    std::unique_ptr<imebra::ReadWriteMemory> pMemory(m_pDrawBitmap->getBitmap(*(pImage->m_pImage), imebra::drawBitmapType_t::drawBitmapRGBA, 4));
+    std::unique_ptr<imebra::ReadWriteMemory> pMemory(get_imebra_object_holder(DrawBitmap)->getBitmap(*get_other_imebra_object_holder(pImage, Image), imebra::drawBitmapType_t::drawBitmapRGBA, 4));
     size_t dataSize;
     char* pData = pMemory->data(&dataSize);
 

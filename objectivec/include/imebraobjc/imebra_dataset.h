@@ -15,13 +15,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #define imebraObjcDataSet__INCLUDED_
 
 #import <Foundation/Foundation.h>
-
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
-namespace imebra
-{
-    class DataSet;
-}
-#endif
+#include "imebra_macros.h"
 
 @class ImebraImage;
 @class ImebraAge;
@@ -32,6 +26,7 @@ namespace imebra
 @class ImebraReadingDataHandlerNumeric;
 @class ImebraWritingDataHandlerNumeric;
 @class ImebraTag;
+@class ImebraMutableTag;
 @class ImebraTagId;
 
 /// \enum ImebraTagVR_t
@@ -94,7 +89,6 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
 
 @interface ImebraVOIDescription: NSObject
 
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
 {
     double m_center;            ///< The VOI center
     double m_width;             ///< The VOI width
@@ -102,7 +96,6 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
 }
 
     -(id)initWithCenter:(double)center width:(double)width description:(NSString*)description;
-#endif
 
     @property (readonly) double center;
     @property (readonly) double width;
@@ -111,7 +104,7 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
 @end
 
 ///
-///  \brief This class represents a DICOM dataset.
+///  \brief This class represents an immutable DICOM dataset.
 ///
 /// The information it contains is organized into groups and each group may
 /// contain several tags.
@@ -123,12 +116,6 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
 /// NSError* error = nil;
 /// ImebraDataSet* pDataSet = [ImebraCodecFactory load:@"dicomFile.dcm" error:&error];
 /// \endcode
-///
-/// You can also create an empty ImebraDataSet that can be filled with data and
-/// images and then saved to a DICOM file via ImebraCodecFactory::save().
-///
-/// When creating an empty ImebraDataSet you should specify the proper transfer
-/// syntax in the init method.
 ///
 /// To retrieve the DataSet's content, use one of the following methods which
 /// give direct access to the tags' values:
@@ -146,86 +133,16 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
 /// In alternative, you can first retrieve a ImebraReadingDataHandler with
 /// getReadingDataHandler() and then access the tag's content via the handler.
 ///
-/// To set the ImebraDataSet's content, use one of the following methods:
-/// - setImage()
-/// - setSequenceItem()
-/// - setSignedLong()
-/// - setUnsignedLong()
-/// - setDouble()
-/// - setString()
-/// - setUnicodeString()
-/// - setAge()
-/// - setDate()
-///
-/// The previous methods allow to write just the first item in the tag's
-/// content and before writing wipe out the old tag's content (all the items).
-/// If you have to write more than one item in a tag, retrieve a
-/// ImebraWritingDataHandler with getWritingDataHandler() and then modify all
-/// the tag's items using the ImebraWritingDataHandler.
-///
 ///////////////////////////////////////////////////////////////////////////////
 @interface ImebraDataSet: NSObject
 
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
 {
     @public
-    imebra::DataSet* m_pDataSet;
+    define_imebra_object_holder(DataSet);
+
 }
 
-    -(id)initWithImebraDataSet:(imebra::DataSet*)pDataSet;
-#endif
-
-
-    /// \brief Construct an empty DICOM dataset with unspecified transfer syntax
-    ///        (e.g. to be used in a sequence) charset "ISO 2022 IR 6".
-    ///
-    /// Use this method when creating a DataSet that will be embedded in a sequence
-    /// item.
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    -(id)init;
-
-    /// \brief Construct an empty DICOM dataset with charset "ISO 2022 IR 6" and
-    ///        the desidered transfer syntax.
-    ///
-    /// \param transferSyntax the dataSet's transfer syntax. The following transfer
-    ///                       syntaxes are supported:
-    ///                       - "1.2.840.10008.1.2" (Implicit VR little endian)
-    ///                       - "1.2.840.10008.1.2.1" (Explicit VR little endian)
-    ///                       - "1.2.840.10008.1.2.2" (Explicit VR big endian)
-    ///                       - "1.2.840.10008.1.2.5" (RLE compression)
-    ///                       - "1.2.840.10008.1.2.4.50" (Jpeg baseline 8 bit
-    ///                         lossy)
-    ///                       - "1.2.840.10008.1.2.4.51" (Jpeg extended 12 bit
-    ///                         lossy)
-    ///                       - "1.2.840.10008.1.2.4.57" (Jpeg lossless NH)
-    ///                       - "1.2.840.10008.1.2.4.70" (Jpeg lossless NH first
-    ///                         order prediction)
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    -(id)initWithTransferSyntax:(NSString*)transferSyntax;
-
-    /// \brief Construct an empty DICOM dataset and specifies the default charsets.
-    ///
-    /// \param transferSyntax the dataSet's transfer syntax. The following transfer
-    ///                       syntaxes are supported:
-    ///                       - "1.2.840.10008.1.2" (Implicit VR little endian)
-    ///                       - "1.2.840.10008.1.2.1" (Explicit VR little endian)
-    ///                       - "1.2.840.10008.1.2.2" (Explicit VR big endian)
-    ///                       - "1.2.840.10008.1.2.5" (RLE compression)
-    ///                       - "1.2.840.10008.1.2.4.50" (Jpeg baseline 8 bit
-    ///                         lossy)
-    ///                       - "1.2.840.10008.1.2.4.51" (Jpeg extended 12 bit
-    ///                         lossy)
-    ///                       - "1.2.840.10008.1.2.4.57" (Jpeg lossless NH)
-    ///                       - "1.2.840.10008.1.2.4.70" (Jpeg lossless NH first
-    ///                         order prediction)
-    ///
-    /// \param pCharsets a NSArray of NSString specifying the charsets supported
-    ///                  by the DataSet
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    -(id)initWithTransferSyntax:(NSString*)transferSyntax charsets:(NSArray*)pCharsets;
+    -(id)initWithImebraDataSet:define_imebra_parameter(DataSet);
 
     -(void)dealloc;
 
@@ -245,27 +162,6 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
     ///
     ///////////////////////////////////////////////////////////////////////////////
     -(ImebraTag*) getTag:(ImebraTagId*)tagId error:(NSError**)pError;
-
-    /// \brief Retrieve the ImebraTag with the specified ID or create it if it
-    ///        doesn't exist.
-    ///
-    /// \param tagId the ID of the tag to retrieve
-    /// \param tagVR the VR to use for the new tag if one doesn't exist already
-    /// \param pError set if an error occurs
-    /// \return the Tag with the specified ID
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    -(ImebraTag*) getTagCreate:(ImebraTagId*)tagId tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError;
-
-    /// \brief Retrieve the ImebraTag with the specified ID or create it if it
-    ///        doesn't exist. Set the proper VR according to the tag ID.
-    ///
-    /// \param tagId the ID of the tag to retrieve
-    /// \param pError set if an error occurs
-    /// \return the Tag with the specified ID
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    -(ImebraTag*) getTagCreate:(ImebraTagId*)tagId error:(NSError**)pError;
 
     /// \brief Retrieve an image from the dataset.
     ///
@@ -309,33 +205,6 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
     ///////////////////////////////////////////////////////////////////////////////
     -(ImebraImage*) getImageApplyModalityTransform:(unsigned int) frameNumber error:(NSError**)pError;
 
-
-    /// \brief Insert an image into the dataset.
-    ///
-    /// In multi-frame datasets the images must be inserted in order: first insert
-    ///  the frame 0, then the frame 1, then the frame 2 and so on.
-    ///
-    /// All the inserted images must have the same transfer syntax and the same
-    ///  properties (size, color space, high bit, bits allocated).
-    ///
-    /// If the images are inserted in the wrong order then the
-    ///  ImebraDataSetWrongFrameError is set in pError.
-    ///
-    /// If the image being inserted has different properties than the ones of the
-    ///  images already in the dataset then the exception
-    ///  ImebraDataSetDifferentFormatError is set in pError.
-    ///
-    /// \param frameNumber the frame number (the first frame is 0)
-    /// \param image       the image
-    /// \param quality     the quality to use for lossy compression. Ignored
-    ///                    if lossless compression is used
-    /// \param pError      a pointer to a NSError pointer which is set when an
-    ///                    error occurs
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    -(void) setImage:(unsigned int)frameNumber image:(ImebraImage*)image quality:(ImebraImageQuality_t)quality error:(NSError**)pError
-        __attribute__((swift_error(nonnull_error)));
-
     /// \brief Return the list of VOI settings stored in the DataSet.
     ///
     /// Each VOI setting includes the center & width values that can be used with
@@ -364,21 +233,6 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
     ///
     ///////////////////////////////////////////////////////////////////////////////
     -(ImebraDataSet*) getSequenceItem:(ImebraTagId*)pTagId item:(unsigned int)itemId error:(NSError**)pError;
-
-    /// \brief Set a sequence item.
-    ///
-    /// If the specified tag does not exist then creates a new one with VR
-    ///  ImebraTagVR_t::SQ.
-    ///
-    /// \param pTagId the tag's id in which the sequence must be stored
-    /// \param itemId the sequence item to set. The first item has an Id = 0
-    /// \param item   the DataSet to store as a sequence item
-    /// \param pError a pointer to a NSError pointer which is set when an
-    ///                error occurs
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    -(void) setSequenceItem:(ImebraTagId*)pTagId item:(unsigned int)itemId dataSet:(ImebraDataSet*)pDataSet error:(NSError**)pError
-        __attribute__((swift_error(nonnull_error)));
 
     /// \brief Retrieve a ImebraLUT stored in a sequence item.
     ///
@@ -416,47 +270,6 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
     ///
     ///////////////////////////////////////////////////////////////////////////////
     -(ImebraReadingDataHandler*) getReadingDataHandler:(ImebraTagId*)tagId bufferId:(unsigned int)bufferId error:(NSError**)pError;
-
-    /// \brief Retrieve an ImebraWritingDataHandler object connected to a specific
-    ///        tag's buffer and sets its data type (VR).
-    ///
-    /// If the specified tag does not exist then it creates a new tag with the VR
-    ///  specified in the tagVR parameter
-    ///
-    /// The returned ImebraWritingDataHandler is connected to a new buffer which
-    /// is updated and stored into the tag when the ImebraWritingDataHandler
-    /// object is destroyed.
-    ///
-    /// \param tagId    the tag's id containing the requested buffer
-    /// \param bufferId the position where the new buffer has to be stored in the
-    ///                 tag. The first buffer position is 0
-    /// \param tagVR    the tag's VR
-    /// \param pError   a pointer to a NSError pointer which is set when an
-    ///                  error occurs
-    /// \return a ImebraWritingDataHandler object connected to a new tag's buffer
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    -(ImebraWritingDataHandler*) getWritingDataHandler:(ImebraTagId*)tagId bufferId:(unsigned int)bufferId tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError;
-
-    /// \brief Retrieve a ImebraWritingDataHandler object connected to a specific
-    ///        tag's buffer.
-    ///
-    /// If the specified tag does not exist then it creates a new tag with a
-    ///  default VR retrieved from the ImebraDicomDictionary.
-    ///
-    /// The returned ImebraWritingDataHandler is connected to a new buffer which
-    /// is updated and stored into the tag when the ImebraWritingDataHandler
-    /// object is destroyed.
-    ///
-    /// \param tagId    the tag's id containing the requested buffer
-    /// \param bufferId the position where the new buffer has to be stored in the
-    ///                 tag. The first buffer position is 0
-    /// \param pError   a pointer to a NSError pointer which is set when an
-    ///                  error occurs
-    /// \return a ImebraWritingDataHandler object connected to a new tag's buffer
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    -(ImebraWritingDataHandler*) getWritingDataHandler:(ImebraTagId*)tagId bufferId:(unsigned int)bufferId error:(NSError**)pError;
 
     /// \brief Retrieve a ImebraReadingDataHandlerNumeric object connected to a
     ///        specific tag's numeric buffer.
@@ -500,53 +313,6 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
     ///////////////////////////////////////////////////////////////////////////////
     -(ImebraReadingDataHandlerNumeric*) getReadingDataHandlerRaw:(ImebraTagId*)tagId bufferId:(unsigned int)bufferId error:(NSError**)pError;
 
-    /// \brief Retrieve a ImebraWritingDataHandlerNumeric object connected to
-    ///        a specific tag's buffer.
-    ///
-    /// If the tag's VR is not a numeric type then throws std::bad_cast.
-    ///
-    /// If the specified tag does not exist then it creates a new tag with the VR
-    ///  specified in the tagVR parameter
-    ///
-    /// The returned ImebraWritingDataHandlerNumeric is connected to a new buffer
-    /// which is updated and stored into the tag when
-    /// ImebraWritingDataHandlerNumeric is destroyed.
-    ///
-    /// \param tagId    the tag's id containing the requested buffer
-    /// \param bufferId the position where the new buffer has to be stored in the
-    ///                 tag. The first buffer position is 0
-    /// \param tagVR    the tag's VR
-    /// \param pError   a pointer to a NSError pointer which is set when an
-    ///                  error occurs
-    /// \return a ImebraWritingDataHandlerNumeric object connected to a new tag's
-    ///         buffer
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    -(ImebraWritingDataHandlerNumeric*) getWritingDataHandlerNumeric:(ImebraTagId*)tagId bufferId:(unsigned long)bufferId tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError;
-
-    /// \brief Retrieve a ImebraWritingDataHandlerNumeric object connected to a
-    ///        specific tag's buffer.
-    ///
-    /// If the tag's VR is not a numeric type then throws std::bad_cast.
-    ///
-    /// If the specified tag does not exist then it creates a new tag with a
-    ///  default VR retrieved from the ImebraDicomDictionary.
-    ///
-    /// The returned ImebraWritingDataHandlerNumeric is connected to a new buffer
-    /// which is updated and stored into the tag when
-    /// ImebraWritingDataHandlerNumeric is destroyed.
-    ///
-    /// \param tagId    the tag's id containing the requested buffer
-    /// \param bufferId the position where the new buffer has to be stored in the
-    ///                 tag. The first buffer position is 0
-    /// \param pError   a pointer to a NSError pointer which is set when an
-    ///                  error occurs
-    /// \return a ImebraWritingDataHandlerNumeric object connected to a new tag's
-    ///         buffer
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    -(ImebraWritingDataHandlerNumeric*) getWritingDataHandlerNumeric:(ImebraTagId*)tagId bufferId:(unsigned long)bufferId error:(NSError**)pError;
-
     /// \brief Retrieve a tag's value as signed long integer (32 bit).
     ///
     /// If the tag's value cannot be converted to a signed long integer
@@ -582,44 +348,6 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
     ///
     ///////////////////////////////////////////////////////////////////////////////
     -(signed int)getSignedLong:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber defaultValue:(signed int)defaultValue error:(NSError**)pError
-        __attribute__((swift_error(nonnull_error)));
-
-    /// \brief Write a new signed 32 bit integer value into the element 0 of the
-    ///        specified tag's buffer 0.
-    ///
-    /// If the specified tag doesn't exist then a new tag is created using
-    /// the specified data type (VR).
-    ///
-    /// If the new value cannot be converted to the specified VR
-    /// then sets pError to ImebraDataHandlerConversionError.
-    ///
-    /// \param tagId    the tag's id
-    /// \param newValue the value to write into the tag
-    /// \param tagVR    the tag's type to use when a new tag is created.
-    /// \param pError   a pointer to a NSError pointer which is set when an
-    ///                  error occurs
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    -(void)setSignedLong:(ImebraTagId*)tagId newValue:(signed int)newValue tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError
-        __attribute__((swift_error(nonnull_error)));
-
-    /// \brief Write a new signed 32 bit integer value into the element 0 of the
-    ///        specified tag's buffer 0.
-    ///
-    /// If the specified tag doesn't exist then a new tag is created using
-    /// the data type (VR) retrieved from the ImebraDicomDictionary.
-    ///
-    /// If the new value cannot be converted to the VR returned by the
-    /// ImebraDicomDictionary then sets pError to
-    /// ImebraDataHandlerConversionError.
-    ///
-    /// \param tagId    the tag's id
-    /// \param newValue the value to write into the tag
-    /// \param pError   a pointer to a NSError pointer which is set when an
-    ///                  error occurs
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    -(void)setSignedLong:(ImebraTagId*)tagId newValue:(signed int)newValue error:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
 
     /// \brief Retrieve a tag's value as unsigned long integer (32 bit).
@@ -659,44 +387,6 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
     -(unsigned int)getUnsignedLong:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber defaultValue:(unsigned int)defaultValue error:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
 
-    /// \brief Write a new unsigned 32 bit integer value into the element 0 of the
-    ///        specified tag's buffer 0.
-    ///
-    /// If the specified tag doesn't exist then a new tag is created using
-    /// the specified data type (VR).
-    ///
-    /// If the new value cannot be converted to the specified VR
-    /// then sets pError to ImebraDataHandlerConversionError.
-    ///
-    /// \param tagId    the tag's id
-    /// \param newValue the value to write into the tag
-    /// \param tagVR    the tag's type to use when a new tag is created.
-    /// \param pError   a pointer to a NSError pointer which is set when an
-    ///                  error occurs
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    -(void)setUnsignedLong:(ImebraTagId*)tagId newValue:(unsigned int)newValue tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError
-        __attribute__((swift_error(nonnull_error)));
-
-    /// \brief Write a new unsigned 32 bit integer value into the element 0 of the
-    ///        specified tag's buffer 0.
-    ///
-    /// If the specified tag doesn't exist then a new tag is created using
-    /// the data type (VR) retrieved from the ImebraDicomDictionary.
-    ///
-    /// If the new value cannot be converted to the VR returned by the
-    /// ImebraDicomDictionary then sets pError to
-    /// ImebraDataHandlerConversionError.
-    ///
-    /// \param tagId    the tag's id
-    /// \param newValue the value to write into the tag
-    /// \param pError   a pointer to a NSError pointer which is set when an
-    ///                  error occurs
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    -(void)setUnsignedLong:(ImebraTagId*)tagId newValue:(unsigned int)newValue error:(NSError**)pError
-        __attribute__((swift_error(nonnull_error)));
-
     /// \brief Retrieve a tag's value as a double floating point.
     ///
     /// If the tag's value cannot be converted to double floating point
@@ -734,44 +424,6 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
     -(double)getDouble:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber defaultValue:(double)defaultValue error:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
 
-    /// \brief Write a new double floating point value into the element 0 of the
-    ///        specified tag's buffer 0.
-    ///
-    /// If the specified tag doesn't exist then a new tag is created using
-    /// the specified data type (VR).
-    ///
-    /// If the new value cannot be converted to the specified VR
-    /// then sets pError to ImebraDataHandlerConversionError.
-    ///
-    /// \param tagId    the tag's id
-    /// \param newValue the value to write into the tag
-    /// \param tagVR    the tag's type to use when a new tag is created.
-    /// \param pError   a pointer to a NSError pointer which is set when an
-    ///                  error occurs
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    -(void)setDouble:(ImebraTagId*)tagId newValue:(double)newValue tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError
-        __attribute__((swift_error(nonnull_error)));
-
-    /// \brief Write a new double floating point value into the element 0 of the
-    ///        specified tag's buffer 0.
-    ///
-    /// If the specified tag doesn't exist then a new tag is created using
-    /// the data type (VR) retrieved from the ImebraDicomDictionary.
-    ///
-    /// If the new value cannot be converted to the VR returned by the
-    /// ImebraDicomDictionary then sets pError to
-    /// ImebraDataHandlerConversionError.
-    ///
-    /// \param tagId    the tag's id
-    /// \param newValue the value to write into the tag
-    /// \param pError   a pointer to a NSError pointer which is set when an
-    ///                  error occurs
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    -(void)setDouble:(ImebraTagId*)tagId newValue:(double)newValue error:(NSError**)pError
-        __attribute__((swift_error(nonnull_error)));
-
     /// \brief Retrieve a tag's value as a string.
     ///
     /// If the tag's value cannot be converted to a string
@@ -806,44 +458,6 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
     ///
     ///////////////////////////////////////////////////////////////////////////////
     -(NSString*)getString:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber defaultValue:(NSString*)defaultValue error:(NSError**)pError;
-
-    /// \brief Write a new string value into the element 0 of the
-    ///        specified tag's buffer 0.
-    ///
-    /// If the specified tag doesn't exist then a new tag is created using
-    /// the specified data type (VR).
-    ///
-    /// If the new value cannot be converted to the specified VR
-    /// then sets pError to ImebraDataHandlerConversionError.
-    ///
-    /// \param tagId    the tag's id
-    /// \param newValue the value to write into the tag
-    /// \param tagVR    the tag's type to use when a new tag is created.
-    /// \param pError   a pointer to a NSError pointer which is set when an
-    ///                  error occurs
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    -(void)setString:(ImebraTagId*)tagId newValue:(NSString*)newValue tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError
-        __attribute__((swift_error(nonnull_error)));
-
-    /// \brief Write a new string value into the element 0 of the
-    ///        specified tag's buffer 0.
-    ///
-    /// If the specified tag doesn't exist then a new tag is created using
-    /// the data type (VR) retrieved from the ImebraDicomDictionary.
-    ///
-    /// If the new value cannot be converted to the VR returned by the
-    /// ImebraDicomDictionary then sets pError to
-    /// ImebraDataHandlerConversionError.
-    ///
-    /// \param tagId    the tag's id
-    /// \param newValue the value to write into the tag
-    /// \param pError   a pointer to a NSError pointer which is set when an
-    ///                  error occurs
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    -(void)setString:(ImebraTagId*)tagId newValue:(NSString*)newValue error:(NSError**)pError
-        __attribute__((swift_error(nonnull_error)));
 
     /// \brief Retrieve a tag's value as an ImebraAge object.
     ///
@@ -880,24 +494,6 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
     ///////////////////////////////////////////////////////////////////////////////
     -(ImebraAge*)getAge:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber defaultValue:(ImebraAge*)defaultValue error:(NSError**)pError;
 
-    /// \brief Write a new ImebraAge value into the element 0 of the
-    ///        specified tag's buffer 0.
-    ///
-    /// If the specified tag doesn't exist then a new tag is created using
-    /// the data type (VR) AS.
-    ///
-    /// If the new value cannot be converted to the VR "AS"
-    /// then sets pError to ImebraDataHandlerConversionError.
-    ///
-    /// \param tagId    the tag's id
-    /// \param newValue the value to write into the tag
-    /// \param pError   a pointer to a NSError pointer which is set when an
-    ///                  error occurs
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    -(void)setAge:(ImebraTagId*)tagId newValue:(ImebraAge*)newValue error:(NSError**)pError
-        __attribute__((swift_error(nonnull_error)));
-
     /// \brief Retrieve a tag's value as an ImebraDate object.
     ///
     /// If the tag's value cannot be converted to an ImebraDate object
@@ -933,44 +529,6 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
     ///////////////////////////////////////////////////////////////////////////////
     -(ImebraDate*)getDate:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber defaultValue:(ImebraDate*)defaultValue error:(NSError**)pError;
 
-    /// \brief Write a new ImebraDate value into the element 0 of the
-    ///        specified tag's buffer 0.
-    ///
-    /// If the specified tag doesn't exist then a new tag is created using
-    /// the specified data type (VR).
-    ///
-    /// If the new value cannot be converted to the specified VR
-    /// then sets pError to ImebraDataHandlerConversionError.
-    ///
-    /// \param tagId    the tag's id
-    /// \param newValue the value to write into the tag
-    /// \param tagVR    the tag's type to use when a new tag is created.
-    /// \param pError   a pointer to a NSError pointer which is set when an
-    ///                  error occurs
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    -(void)setDate:(ImebraTagId*)tagId newValue:(ImebraDate*)newValue tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError
-        __attribute__((swift_error(nonnull_error)));
-
-    /// \brief Write a new ImebraDate value into the element 0 of the
-    ///        specified tag's buffer 0.
-    ///
-    /// If the specified tag doesn't exist then a new tag is created using
-    /// the data type (VR) retrieved from the ImebraDicomDictionary.
-    ///
-    /// If the new value cannot be converted to the VR returned by the
-    /// ImebraDicomDictionary then sets pError to
-    /// ImebraDataHandlerConversionError.
-    ///
-    /// \param tagId    the tag's id
-    /// \param newValue the value to write into the tag
-    /// \param pError   a pointer to a NSError pointer which is set when an
-    ///                  error occurs
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    -(void)setDate:(ImebraTagId*)tagId newValue:(ImebraDate*)newValue error:(NSError**)pError
-        __attribute__((swift_error(nonnull_error)));
-
     /// \brief Return the data type (VR) of the specified tag.
     ///
     /// If the specified tag does not exist then set pError to
@@ -986,6 +544,454 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
         __attribute__((swift_error(nonnull_error)));
 
 @end
+
+
+    ///
+    ///  \brief This class represents a mutableDICOM dataset.
+    ///
+    /// The information it contains is organized into groups and each group may
+    /// contain several tags.
+    ///
+    /// You can create an empty ImebraMutableDataSet that can be filled with data and
+    /// images and then saved to a DICOM file via ImebraCodecFactory::save().
+    ///
+    /// When creating an empty ImebraMutableDataSet you should specify the proper transfer
+    /// syntax in the init method.
+    ///
+    /// To set the ImebraMutableDataSet's content, use one of the following methods:
+    /// - setImage()
+    /// - setSequenceItem()
+    /// - setSignedLong()
+    /// - setUnsignedLong()
+    /// - setDouble()
+    /// - setString()
+    /// - setUnicodeString()
+    /// - setAge()
+    /// - setDate()
+    ///
+    /// The previous methods allow to write just the first item in the tag's
+    /// content and before writing wipe out the old tag's content (all the items).
+    /// If you have to write more than one item in a tag, retrieve a
+    /// ImebraWritingDataHandler with getWritingDataHandler() and then modify all
+    /// the tag's items using the ImebraWritingDataHandler.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    @interface ImebraMutableDataSet: ImebraDataSet
+
+        /// \brief Construct an empty DICOM dataset with unspecified transfer syntax
+        ///        (e.g. to be used in a sequence) charset "ISO 2022 IR 6".
+        ///
+        /// Use this method when creating a DataSet that will be embedded in a sequence
+        /// item.
+        ///
+        ///////////////////////////////////////////////////////////////////////////////
+        -(id)init;
+
+        /// \brief Construct an empty DICOM dataset with charset "ISO 2022 IR 6" and
+        ///        the desidered transfer syntax.
+        ///
+        /// \param transferSyntax the dataSet's transfer syntax. The following transfer
+        ///                       syntaxes are supported:
+        ///                       - "1.2.840.10008.1.2" (Implicit VR little endian)
+        ///                       - "1.2.840.10008.1.2.1" (Explicit VR little endian)
+        ///                       - "1.2.840.10008.1.2.2" (Explicit VR big endian)
+        ///                       - "1.2.840.10008.1.2.5" (RLE compression)
+        ///                       - "1.2.840.10008.1.2.4.50" (Jpeg baseline 8 bit
+        ///                         lossy)
+        ///                       - "1.2.840.10008.1.2.4.51" (Jpeg extended 12 bit
+        ///                         lossy)
+        ///                       - "1.2.840.10008.1.2.4.57" (Jpeg lossless NH)
+        ///                       - "1.2.840.10008.1.2.4.70" (Jpeg lossless NH first
+        ///                         order prediction)
+        ///
+        ///////////////////////////////////////////////////////////////////////////////
+        -(id)initWithTransferSyntax:(NSString*)transferSyntax;
+
+        /// \brief Construct an empty DICOM dataset and specifies the default charsets.
+        ///
+        /// \param transferSyntax the dataSet's transfer syntax. The following transfer
+        ///                       syntaxes are supported:
+        ///                       - "1.2.840.10008.1.2" (Implicit VR little endian)
+        ///                       - "1.2.840.10008.1.2.1" (Explicit VR little endian)
+        ///                       - "1.2.840.10008.1.2.2" (Explicit VR big endian)
+        ///                       - "1.2.840.10008.1.2.5" (RLE compression)
+        ///                       - "1.2.840.10008.1.2.4.50" (Jpeg baseline 8 bit
+        ///                         lossy)
+        ///                       - "1.2.840.10008.1.2.4.51" (Jpeg extended 12 bit
+        ///                         lossy)
+        ///                       - "1.2.840.10008.1.2.4.57" (Jpeg lossless NH)
+        ///                       - "1.2.840.10008.1.2.4.70" (Jpeg lossless NH first
+        ///                         order prediction)
+        ///
+        /// \param pCharsets a NSArray of NSString specifying the charsets supported
+        ///                  by the DataSet
+        ///
+        ///////////////////////////////////////////////////////////////////////////////
+        -(id)initWithTransferSyntax:(NSString*)transferSyntax charsets:(NSArray*)pCharsets;
+
+        /// \brief Retrieve the ImebraTag with the specified ID or create it if it
+        ///        doesn't exist.
+        ///
+        /// \param tagId the ID of the tag to retrieve
+        /// \param tagVR the VR to use for the new tag if one doesn't exist already
+        /// \param pError set if an error occurs
+        /// \return the Tag with the specified ID
+        ///
+        ///////////////////////////////////////////////////////////////////////////////
+        -(ImebraMutableTag*) getTagCreate:(ImebraTagId*)tagId tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError;
+
+        /// \brief Retrieve the ImebraTag with the specified ID or create it if it
+        ///        doesn't exist. Set the proper VR according to the tag ID.
+        ///
+        /// \param tagId the ID of the tag to retrieve
+        /// \param pError set if an error occurs
+        /// \return the Tag with the specified ID
+        ///
+        ///////////////////////////////////////////////////////////////////////////////
+        -(ImebraMutableTag*) getTagCreate:(ImebraTagId*)tagId error:(NSError**)pError;
+
+        /// \brief Insert an image into the dataset.
+        ///
+        /// In multi-frame datasets the images must be inserted in order: first insert
+        ///  the frame 0, then the frame 1, then the frame 2 and so on.
+        ///
+        /// All the inserted images must have the same transfer syntax and the same
+        ///  properties (size, color space, high bit, bits allocated).
+        ///
+        /// If the images are inserted in the wrong order then the
+        ///  ImebraDataSetWrongFrameError is set in pError.
+        ///
+        /// If the image being inserted has different properties than the ones of the
+        ///  images already in the dataset then the exception
+        ///  ImebraDataSetDifferentFormatError is set in pError.
+        ///
+        /// \param frameNumber the frame number (the first frame is 0)
+        /// \param image       the image
+        /// \param quality     the quality to use for lossy compression. Ignored
+        ///                    if lossless compression is used
+        /// \param pError      a pointer to a NSError pointer which is set when an
+        ///                    error occurs
+        ///
+        ///////////////////////////////////////////////////////////////////////////////
+        -(void) setImage:(unsigned int)frameNumber image:(ImebraImage*)image quality:(ImebraImageQuality_t)quality error:(NSError**)pError
+            __attribute__((swift_error(nonnull_error)));
+
+        /// \brief Set a sequence item.
+        ///
+        /// If the specified tag does not exist then creates a new one with VR
+        ///  ImebraTagVR_t::SQ.
+        ///
+        /// \param pTagId the tag's id in which the sequence must be stored
+        /// \param itemId the sequence item to set. The first item has an Id = 0
+        /// \param item   the DataSet to store as a sequence item
+        /// \param pError a pointer to a NSError pointer which is set when an
+        ///                error occurs
+        ///
+        ///////////////////////////////////////////////////////////////////////////////
+        -(void) setSequenceItem:(ImebraTagId*)pTagId item:(unsigned int)itemId dataSet:(ImebraDataSet*)pDataSet error:(NSError**)pError
+            __attribute__((swift_error(nonnull_error)));
+
+        /// \brief Retrieve an ImebraWritingDataHandler object connected to a specific
+        ///        tag's buffer and sets its data type (VR).
+        ///
+        /// If the specified tag does not exist then it creates a new tag with the VR
+        ///  specified in the tagVR parameter
+        ///
+        /// The returned ImebraWritingDataHandler is connected to a new buffer which
+        /// is updated and stored into the tag when the ImebraWritingDataHandler
+        /// object is destroyed.
+        ///
+        /// \param tagId    the tag's id containing the requested buffer
+        /// \param bufferId the position where the new buffer has to be stored in the
+        ///                 tag. The first buffer position is 0
+        /// \param tagVR    the tag's VR
+        /// \param pError   a pointer to a NSError pointer which is set when an
+        ///                  error occurs
+        /// \return a ImebraWritingDataHandler object connected to a new tag's buffer
+        ///
+        ///////////////////////////////////////////////////////////////////////////////
+        -(ImebraWritingDataHandler*) getWritingDataHandler:(ImebraTagId*)tagId bufferId:(unsigned int)bufferId tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError;
+
+        /// \brief Retrieve a ImebraWritingDataHandler object connected to a specific
+        ///        tag's buffer.
+        ///
+        /// If the specified tag does not exist then it creates a new tag with a
+        ///  default VR retrieved from the ImebraDicomDictionary.
+        ///
+        /// The returned ImebraWritingDataHandler is connected to a new buffer which
+        /// is updated and stored into the tag when the ImebraWritingDataHandler
+        /// object is destroyed.
+        ///
+        /// \param tagId    the tag's id containing the requested buffer
+        /// \param bufferId the position where the new buffer has to be stored in the
+        ///                 tag. The first buffer position is 0
+        /// \param pError   a pointer to a NSError pointer which is set when an
+        ///                  error occurs
+        /// \return a ImebraWritingDataHandler object connected to a new tag's buffer
+        ///
+        ///////////////////////////////////////////////////////////////////////////////
+        -(ImebraWritingDataHandler*) getWritingDataHandler:(ImebraTagId*)tagId bufferId:(unsigned int)bufferId error:(NSError**)pError;
+
+        /// \brief Retrieve a ImebraWritingDataHandlerNumeric object connected to
+        ///        a specific tag's buffer.
+        ///
+        /// If the tag's VR is not a numeric type then throws std::bad_cast.
+        ///
+        /// If the specified tag does not exist then it creates a new tag with the VR
+        ///  specified in the tagVR parameter
+        ///
+        /// The returned ImebraWritingDataHandlerNumeric is connected to a new buffer
+        /// which is updated and stored into the tag when
+        /// ImebraWritingDataHandlerNumeric is destroyed.
+        ///
+        /// \param tagId    the tag's id containing the requested buffer
+        /// \param bufferId the position where the new buffer has to be stored in the
+        ///                 tag. The first buffer position is 0
+        /// \param tagVR    the tag's VR
+        /// \param pError   a pointer to a NSError pointer which is set when an
+        ///                  error occurs
+        /// \return a ImebraWritingDataHandlerNumeric object connected to a new tag's
+        ///         buffer
+        ///
+        ///////////////////////////////////////////////////////////////////////////////
+        -(ImebraWritingDataHandlerNumeric*) getWritingDataHandlerNumeric:(ImebraTagId*)tagId bufferId:(unsigned long)bufferId tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError;
+
+        /// \brief Retrieve a ImebraWritingDataHandlerNumeric object connected to a
+        ///        specific tag's buffer.
+        ///
+        /// If the tag's VR is not a numeric type then throws std::bad_cast.
+        ///
+        /// If the specified tag does not exist then it creates a new tag with a
+        ///  default VR retrieved from the ImebraDicomDictionary.
+        ///
+        /// The returned ImebraWritingDataHandlerNumeric is connected to a new buffer
+        /// which is updated and stored into the tag when
+        /// ImebraWritingDataHandlerNumeric is destroyed.
+        ///
+        /// \param tagId    the tag's id containing the requested buffer
+        /// \param bufferId the position where the new buffer has to be stored in the
+        ///                 tag. The first buffer position is 0
+        /// \param pError   a pointer to a NSError pointer which is set when an
+        ///                  error occurs
+        /// \return a ImebraWritingDataHandlerNumeric object connected to a new tag's
+        ///         buffer
+        ///
+        ///////////////////////////////////////////////////////////////////////////////
+        -(ImebraWritingDataHandlerNumeric*) getWritingDataHandlerNumeric:(ImebraTagId*)tagId bufferId:(unsigned long)bufferId error:(NSError**)pError;
+
+        /// \brief Write a new signed 32 bit integer value into the element 0 of the
+        ///        specified tag's buffer 0.
+        ///
+        /// If the specified tag doesn't exist then a new tag is created using
+        /// the specified data type (VR).
+        ///
+        /// If the new value cannot be converted to the specified VR
+        /// then sets pError to ImebraDataHandlerConversionError.
+        ///
+        /// \param tagId    the tag's id
+        /// \param newValue the value to write into the tag
+        /// \param tagVR    the tag's type to use when a new tag is created.
+        /// \param pError   a pointer to a NSError pointer which is set when an
+        ///                  error occurs
+        ///
+        ///////////////////////////////////////////////////////////////////////////////
+        -(void)setSignedLong:(ImebraTagId*)tagId newValue:(signed int)newValue tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError
+            __attribute__((swift_error(nonnull_error)));
+
+        /// \brief Write a new signed 32 bit integer value into the element 0 of the
+        ///        specified tag's buffer 0.
+        ///
+        /// If the specified tag doesn't exist then a new tag is created using
+        /// the data type (VR) retrieved from the ImebraDicomDictionary.
+        ///
+        /// If the new value cannot be converted to the VR returned by the
+        /// ImebraDicomDictionary then sets pError to
+        /// ImebraDataHandlerConversionError.
+        ///
+        /// \param tagId    the tag's id
+        /// \param newValue the value to write into the tag
+        /// \param pError   a pointer to a NSError pointer which is set when an
+        ///                  error occurs
+        ///
+        ///////////////////////////////////////////////////////////////////////////////
+        -(void)setSignedLong:(ImebraTagId*)tagId newValue:(signed int)newValue error:(NSError**)pError
+            __attribute__((swift_error(nonnull_error)));
+
+        /// \brief Write a new unsigned 32 bit integer value into the element 0 of the
+        ///        specified tag's buffer 0.
+        ///
+        /// If the specified tag doesn't exist then a new tag is created using
+        /// the specified data type (VR).
+        ///
+        /// If the new value cannot be converted to the specified VR
+        /// then sets pError to ImebraDataHandlerConversionError.
+        ///
+        /// \param tagId    the tag's id
+        /// \param newValue the value to write into the tag
+        /// \param tagVR    the tag's type to use when a new tag is created.
+        /// \param pError   a pointer to a NSError pointer which is set when an
+        ///                  error occurs
+        ///
+        ///////////////////////////////////////////////////////////////////////////////
+        -(void)setUnsignedLong:(ImebraTagId*)tagId newValue:(unsigned int)newValue tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError
+            __attribute__((swift_error(nonnull_error)));
+
+        /// \brief Write a new unsigned 32 bit integer value into the element 0 of the
+        ///        specified tag's buffer 0.
+        ///
+        /// If the specified tag doesn't exist then a new tag is created using
+        /// the data type (VR) retrieved from the ImebraDicomDictionary.
+        ///
+        /// If the new value cannot be converted to the VR returned by the
+        /// ImebraDicomDictionary then sets pError to
+        /// ImebraDataHandlerConversionError.
+        ///
+        /// \param tagId    the tag's id
+        /// \param newValue the value to write into the tag
+        /// \param pError   a pointer to a NSError pointer which is set when an
+        ///                  error occurs
+        ///
+        ///////////////////////////////////////////////////////////////////////////////
+        -(void)setUnsignedLong:(ImebraTagId*)tagId newValue:(unsigned int)newValue error:(NSError**)pError
+            __attribute__((swift_error(nonnull_error)));
+
+        /// \brief Write a new double floating point value into the element 0 of the
+        ///        specified tag's buffer 0.
+        ///
+        /// If the specified tag doesn't exist then a new tag is created using
+        /// the specified data type (VR).
+        ///
+        /// If the new value cannot be converted to the specified VR
+        /// then sets pError to ImebraDataHandlerConversionError.
+        ///
+        /// \param tagId    the tag's id
+        /// \param newValue the value to write into the tag
+        /// \param tagVR    the tag's type to use when a new tag is created.
+        /// \param pError   a pointer to a NSError pointer which is set when an
+        ///                  error occurs
+        ///
+        ///////////////////////////////////////////////////////////////////////////////
+        -(void)setDouble:(ImebraTagId*)tagId newValue:(double)newValue tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError
+            __attribute__((swift_error(nonnull_error)));
+
+        /// \brief Write a new double floating point value into the element 0 of the
+        ///        specified tag's buffer 0.
+        ///
+        /// If the specified tag doesn't exist then a new tag is created using
+        /// the data type (VR) retrieved from the ImebraDicomDictionary.
+        ///
+        /// If the new value cannot be converted to the VR returned by the
+        /// ImebraDicomDictionary then sets pError to
+        /// ImebraDataHandlerConversionError.
+        ///
+        /// \param tagId    the tag's id
+        /// \param newValue the value to write into the tag
+        /// \param pError   a pointer to a NSError pointer which is set when an
+        ///                  error occurs
+        ///
+        ///////////////////////////////////////////////////////////////////////////////
+        -(void)setDouble:(ImebraTagId*)tagId newValue:(double)newValue error:(NSError**)pError
+            __attribute__((swift_error(nonnull_error)));
+
+        /// \brief Write a new string value into the element 0 of the
+        ///        specified tag's buffer 0.
+        ///
+        /// If the specified tag doesn't exist then a new tag is created using
+        /// the specified data type (VR).
+        ///
+        /// If the new value cannot be converted to the specified VR
+        /// then sets pError to ImebraDataHandlerConversionError.
+        ///
+        /// \param tagId    the tag's id
+        /// \param newValue the value to write into the tag
+        /// \param tagVR    the tag's type to use when a new tag is created.
+        /// \param pError   a pointer to a NSError pointer which is set when an
+        ///                  error occurs
+        ///
+        ///////////////////////////////////////////////////////////////////////////////
+        -(void)setString:(ImebraTagId*)tagId newValue:(NSString*)newValue tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError
+            __attribute__((swift_error(nonnull_error)));
+
+        /// \brief Write a new string value into the element 0 of the
+        ///        specified tag's buffer 0.
+        ///
+        /// If the specified tag doesn't exist then a new tag is created using
+        /// the data type (VR) retrieved from the ImebraDicomDictionary.
+        ///
+        /// If the new value cannot be converted to the VR returned by the
+        /// ImebraDicomDictionary then sets pError to
+        /// ImebraDataHandlerConversionError.
+        ///
+        /// \param tagId    the tag's id
+        /// \param newValue the value to write into the tag
+        /// \param pError   a pointer to a NSError pointer which is set when an
+        ///                  error occurs
+        ///
+        ///////////////////////////////////////////////////////////////////////////////
+        -(void)setString:(ImebraTagId*)tagId newValue:(NSString*)newValue error:(NSError**)pError
+            __attribute__((swift_error(nonnull_error)));
+
+        /// \brief Write a new ImebraAge value into the element 0 of the
+        ///        specified tag's buffer 0.
+        ///
+        /// If the specified tag doesn't exist then a new tag is created using
+        /// the data type (VR) AS.
+        ///
+        /// If the new value cannot be converted to the VR "AS"
+        /// then sets pError to ImebraDataHandlerConversionError.
+        ///
+        /// \param tagId    the tag's id
+        /// \param newValue the value to write into the tag
+        /// \param pError   a pointer to a NSError pointer which is set when an
+        ///                  error occurs
+        ///
+        ///////////////////////////////////////////////////////////////////////////////
+        -(void)setAge:(ImebraTagId*)tagId newValue:(ImebraAge*)newValue error:(NSError**)pError
+            __attribute__((swift_error(nonnull_error)));
+
+        /// \brief Write a new ImebraDate value into the element 0 of the
+        ///        specified tag's buffer 0.
+        ///
+        /// If the specified tag doesn't exist then a new tag is created using
+        /// the specified data type (VR).
+        ///
+        /// If the new value cannot be converted to the specified VR
+        /// then sets pError to ImebraDataHandlerConversionError.
+        ///
+        /// \param tagId    the tag's id
+        /// \param newValue the value to write into the tag
+        /// \param tagVR    the tag's type to use when a new tag is created.
+        /// \param pError   a pointer to a NSError pointer which is set when an
+        ///                  error occurs
+        ///
+        ///////////////////////////////////////////////////////////////////////////////
+        -(void)setDate:(ImebraTagId*)tagId newValue:(ImebraDate*)newValue tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError
+            __attribute__((swift_error(nonnull_error)));
+
+        /// \brief Write a new ImebraDate value into the element 0 of the
+        ///        specified tag's buffer 0.
+        ///
+        /// If the specified tag doesn't exist then a new tag is created using
+        /// the data type (VR) retrieved from the ImebraDicomDictionary.
+        ///
+        /// If the new value cannot be converted to the VR returned by the
+        /// ImebraDicomDictionary then sets pError to
+        /// ImebraDataHandlerConversionError.
+        ///
+        /// \param tagId    the tag's id
+        /// \param newValue the value to write into the tag
+        /// \param pError   a pointer to a NSError pointer which is set when an
+        ///                  error occurs
+        ///
+        ///////////////////////////////////////////////////////////////////////////////
+        -(void)setDate:(ImebraTagId*)tagId newValue:(ImebraDate*)newValue error:(NSError**)pError
+            __attribute__((swift_error(nonnull_error)));
+
+
+    @end
+
+
+
 
 #endif // imebraObjcDataSet__INCLUDED_
 

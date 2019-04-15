@@ -14,6 +14,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #if !defined(imebraObjcDrawBitmap__INCLUDED_)
 #define imebraObjcDrawBitmap__INCLUDED_
 
+#include "imebra_macros.h"
+
 #import <Foundation/Foundation.h>
 #if TARGET_OS_IPHONE
 #import <UIKit/UIImage.h>
@@ -21,16 +23,10 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #import <AppKit/NSImage.h>
 #endif
 
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
-namespace imebra
-{
-    class DrawBitmap;
-}
-#endif
 
 @class ImebraImage;
 @class ImebraTransform;
-@class ImebraReadWriteMemory;
+@class ImebraMutableMemory;
 
 
 /// \enum ImebraDrawBitmapType_t
@@ -60,12 +56,9 @@ typedef NS_ENUM(unsigned int, ImebraDrawBitmapType_t)
 ///////////////////////////////////////////////////////////////////////////////
 @interface ImebraDrawBitmap: NSObject
 
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
 {
-    imebra::DrawBitmap* m_pDrawBitmap;
+    define_imebra_object_holder(DrawBitmap);
 }
-
-#endif
 
     /// \brief Initializes a ImebraDrawBitmap with no transforms.
     ///
@@ -97,11 +90,11 @@ typedef NS_ENUM(unsigned int, ImebraDrawBitmapType_t)
     /// \param rowAlignBytes  the number of bytes on which the bitmap rows are
     ///                       aligned
     /// \param pError         set to a NSError derived class in case of error
-    /// \return a ImebraReadWriteMemory object referencing the buffer containing
+    /// \return a ImebraMutableMemory object referencing the buffer containing
     ///         the generated bitmap
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    -(ImebraReadWriteMemory*) getBitmap:(ImebraImage*)pImage bitmapType:(ImebraDrawBitmapType_t) drawBitmapType rowAlignBytes:(unsigned int)rowAlignBytes error:(NSError**)pError;
+    -(ImebraMutableMemory*) getBitmap:(ImebraImage*)pImage bitmapType:(ImebraDrawBitmapType_t) drawBitmapType rowAlignBytes:(unsigned int)rowAlignBytes error:(NSError**)pError;
 
 
 #if defined(__APPLE__)

@@ -11,17 +11,20 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#include "imebra_bridgeStructures.h"
+#include "../include/imebraobjc/imebra_transformHighBit.h"
 
+#include "imebra_implementation_macros.h"
+
+#include <imebra/transformHighBit.h>
 @implementation ImebraTransformHighBit
 
 -(id)init
 {
-    m_pTransform = 0;
+    reset_imebra_object_holder(Transform);
     self = [super init];
     if(self)
     {
-        m_pTransform = new imebra::TransformHighBit();
+        set_imebra_object_holder(Transform, new imebra::TransformHighBit());
     }
     return self;
 }

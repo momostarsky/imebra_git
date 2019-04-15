@@ -11,7 +11,9 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#include "imebra_bridgeStructures.h"
+#import "../include/imebraobjc/imebra_memoryPool.h"
+
+#include <imebra/memoryPool.h>
 
 @implementation ImebraMemoryPool
 

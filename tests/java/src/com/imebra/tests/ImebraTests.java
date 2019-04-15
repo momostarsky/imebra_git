@@ -63,7 +63,7 @@ public class ImebraTests {
         {
             com.imebra.FileParts charsetsList = new FileParts();
             charsetsList.add("ISO_IR 6");
-            DataSet testDataSet = new com.imebra.DataSet("1.2.840.10008.1.2.1", charsetsList);
+            MutableDataSet testDataSet = new com.imebra.MutableDataSet("1.2.840.10008.1.2.1", charsetsList);
 
             {
                 WritingDataHandler handler = testDataSet.getWritingDataHandler(new TagId(0x10, 0x10), 0);

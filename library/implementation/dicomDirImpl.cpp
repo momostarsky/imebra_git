@@ -212,38 +212,6 @@ void directoryRecord::setFileParts(const fileParts_t& fileParts)
 ///////////////////////////////////////////////////////////
 //
 //
-// Returns the record's type (enum)
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-directoryRecordType_t directoryRecord::getType() const
-{
-    IMEBRA_FUNCTION_START();
-
-    std::string typeString(getTypeString());
-
-    const tDirectoryRecordTypeDef* typesList(getRecordTypeMap());
-    for(size_t scanTypes(0); typesList[scanTypes].m_type != directoryRecordType_t::endOfDirectoryRecordTypes; ++scanTypes)
-	{
-		if(typesList[scanTypes].m_name == typeString)
-		{
-			return typesList[scanTypes].m_type;
-		}
-	}
-
-	// Invalid value found . Throw an exception
-	///////////////////////////////////////////////////////////
-    IMEBRA_THROW(DicomDirUnknownDirectoryRecordTypeError, "Unknown directory record type");
-
-    IMEBRA_FUNCTION_END();
-}
-
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
 // Returns the record's type (string)
 //
 //
@@ -254,37 +222,6 @@ std::string directoryRecord::getTypeString() const
     IMEBRA_FUNCTION_START();
 
     return getRecordDataSet()->getString(0x0004, 0, 0x1430, 0, 0);
-
-    IMEBRA_FUNCTION_END();
-}
-
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Set the item's type
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-void directoryRecord::setType(directoryRecordType_t recordType)
-{
-    IMEBRA_FUNCTION_START();
-
-    const tDirectoryRecordTypeDef* typesList(getRecordTypeMap());
-    for(size_t scanTypes(0); typesList[scanTypes].m_type != directoryRecordType_t::endOfDirectoryRecordTypes; ++scanTypes)
-	{
-		if(typesList[scanTypes].m_type == recordType)
-		{
-            getRecordDataSet()->setString(0x0004, 0, 0x1430, 0, typesList[scanTypes].m_name);
-			return;
-		}
-	}
-
-	// Trying to set an invalid type. Throw an exception
-	///////////////////////////////////////////////////////////
-    IMEBRA_THROW(DicomDirUnknownDirectoryRecordTypeError, "Unknown directory record type");
 
     IMEBRA_FUNCTION_END();
 }
@@ -381,49 +318,6 @@ void directoryRecord::checkCircularReference(directoryRecord* pStartRecord)
 
     IMEBRA_FUNCTION_END();
 }
-
-
-const directoryRecord::tDirectoryRecordTypeDef* directoryRecord::getRecordTypeMap()
-{
-    IMEBRA_FUNCTION_START();
-
-    static const tDirectoryRecordTypeDef typesList[] =
-    {
-        {"PATIENT", directoryRecordType_t::patient},
-        {"STUDY", directoryRecordType_t::study},
-        {"SERIES", directoryRecordType_t::series},
-        {"IMAGE", directoryRecordType_t::image},
-        {"OVERLAY", directoryRecordType_t::overlay},
-        {"MODALITY LUT", directoryRecordType_t::modality_lut},
-        {"VOI LUT", directoryRecordType_t::voi_lut},
-        {"CURVE", directoryRecordType_t::curve},
-        {"TOPIC", directoryRecordType_t::topic},
-        {"VISIT", directoryRecordType_t::visit},
-        {"RESULTS", directoryRecordType_t::results},
-        {"INTERPRETATION", directoryRecordType_t::interpretation},
-        {"STUDY COMPONENT", directoryRecordType_t::study_component},
-        {"STORED PRINT", directoryRecordType_t::stored_print},
-        {"RT DOSE", directoryRecordType_t::rt_dose},
-        {"RT STRUCTURE SET", directoryRecordType_t::rt_structure_set},
-        {"RT PLAN", directoryRecordType_t::rt_plan},
-        {"RT TREAT RECORD", directoryRecordType_t::rt_treat_record},
-        {"PRESENTATION", directoryRecordType_t::presentation},
-        {"WAVEFORM", directoryRecordType_t::waveform},
-        {"SR DOCUMENT", directoryRecordType_t::sr_document},
-        {"KEY OBJECT DOC", directoryRecordType_t::key_object_doc},
-        {"SPECTROSCOPY", directoryRecordType_t::spectroscopy},
-        {"RAW DATA", directoryRecordType_t::raw_data},
-        {"REGISTRATION", directoryRecordType_t::registration},
-        {"FIDUCIAL", directoryRecordType_t::fiducial},
-        {"MRDR", directoryRecordType_t::mrdr},
-        {"", directoryRecordType_t::endOfDirectoryRecordTypes}
-    };
-
-    return typesList;
-
-    IMEBRA_FUNCTION_END();
-}
-
 
 
 ///////////////////////////////////////////////////////////
@@ -603,7 +497,7 @@ std::shared_ptr<dataSet> dicomDir::getDirectoryDataSet() const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<directoryRecord> dicomDir::getNewRecord(directoryRecordType_t recordType)
+std::shared_ptr<directoryRecord> dicomDir::getNewRecord(const std::string& recordType)
 {
     IMEBRA_FUNCTION_START();
 
@@ -612,7 +506,7 @@ std::shared_ptr<directoryRecord> dicomDir::getNewRecord(directoryRecordType_t re
 	recordsTag->appendDataSet(recordDataSet);
 
     std::shared_ptr<directoryRecord> newRecord(std::make_shared<directoryRecord>(recordDataSet));
-    newRecord->setType(recordType);
+    newRecord->setTypeString(recordType);
 	m_recordsList.push_back(newRecord);
 
 	return newRecord;

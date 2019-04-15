@@ -12,34 +12,51 @@ If you do not want to be bound by the GPL terms (such as the requirement
 */
 
 
-#include "imebra_bridgeStructures.h"
+#import "../include/imebraobjc/imebra_tcpStream.h"
+#import "../include/imebraobjc/imebra_tcpAddress.h"
+#import "../include/imebraobjc/imebra_baseStreamInput.h"
+#import "../include/imebraobjc/imebra_baseStreamOutput.h"
+
+#include "imebra_implementation_macros.h"
+#include "imebra_nserror.h"
+
+#include <imebra/tcpStream.h>
+#include <imebra/tcpAddress.h>
 
 @implementation ImebraTCPStream
 
--(id)initWithImebraTcpStream:(imebra::TCPStream*)pTcpStream
+-(id)initWithImebraTcpStream:define_imebra_parameter(TCPStream)
 {
+    reset_imebra_object_holder(TCPStream);
     self = [super init];
     if(self)
     {
-        m_pBaseStreamInput = pTcpStream;
+        set_imebra_object_holder(TCPStream, get_imebra_parameter(TCPStream));
     }
     else
     {
-        delete pTcpStream;
+        delete get_imebra_parameter(TCPStream);
     }
     return self;
-
 }
 
+-(void)dealloc
+{
+    delete_imebra_object_holder(TCPStream);
+#if !__has_feature(objc_arc)
+    [super dealloc];
+#endif
+}
 
 -(id)initWithAddress:(ImebraTCPActiveAddress*)pAddress error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 
+    reset_imebra_object_holder(TCPStream);
     self = [super init];
     if(self)
     {
-        m_pBaseStreamInput = new imebra::TCPStream(*(imebra::TCPActiveAddress*)(pAddress->m_pTcpAddress));
+        set_imebra_object_holder(TCPStream, new imebra::TCPStream(*(imebra::TCPActiveAddress*)get_other_imebra_object_holder(pAddress, TCPAddress)));
     }
     return self;
 
@@ -51,16 +68,22 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraTCPAddress alloc] initWithImebraTCPAddress:((imebra::TCPStream*)m_pBaseStreamInput)->getPeerAddress()];
+    return [[ImebraTCPAddress alloc] initWithImebraTCPAddress:new imebra::TCPAddress(get_imebra_object_holder(TCPStream)->getPeerAddress())];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
 
 
--(void) terminate
+-(ImebraBaseStreamInput*) getStreamInput
 {
-    ((imebra::TCPStream*)m_pBaseStreamInput)->terminate();
+    return [[ImebraBaseStreamInput alloc] initWithImebraBaseStreamInput: new imebra::BaseStreamInput(get_imebra_object_holder(TCPStream)->getStreamInput())];
 }
+
+-(ImebraBaseStreamOutput*) getStreamOutput
+{
+    return [[ImebraBaseStreamOutput alloc] initWithImebraBaseStreamOutput: new imebra::BaseStreamOutput(get_imebra_object_holder(TCPStream)->getStreamOutput())];
+}
+
 
 
 @end

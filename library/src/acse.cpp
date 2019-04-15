@@ -24,6 +24,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
 namespace imebra
 {
 
+//
+// PresentationContext methods
+//
+///////////////////////////////////////////////////////////////////////////////
+
 PresentationContext::PresentationContext(const std::string& abstractSyntax):
     m_pPresentationContext(std::make_shared<implementation::presentationContext>(abstractSyntax))
 {
@@ -34,45 +39,87 @@ PresentationContext::PresentationContext(const std::string& abstractSyntax, bool
 {
 }
 
-void PresentationContext::addTransferSyntax(const std::string& transferSyntax)
+PresentationContext::PresentationContext(const PresentationContext& source):
+    m_pPresentationContext(getPresentationContextImplementation(source))
 {
-    m_pPresentationContext->addTransferSyntax(transferSyntax);
+}
 
+PresentationContext& PresentationContext::operator=(const PresentationContext& source)
+{
+    m_pPresentationContext = getPresentationContextImplementation(source);
+    return *this;
 }
 
 PresentationContext::~PresentationContext()
 {
 }
 
+void PresentationContext::addTransferSyntax(const std::string& transferSyntax)
+{
+    m_pPresentationContext->addTransferSyntax(transferSyntax);
+}
+
+const std::shared_ptr<implementation::presentationContext>& getPresentationContextImplementation(const PresentationContext& message)
+{
+    return message.m_pPresentationContext;
+}
+
+
+//
+// PresentationContexts methods
+//
+///////////////////////////////////////////////////////////////////////////////
+
 PresentationContexts::PresentationContexts():
     m_pPresentationContexts(std::make_shared<implementation::presentationContexts>())
 {
 }
 
+PresentationContexts::PresentationContexts(const PresentationContexts& source):
+    m_pPresentationContexts(getPresentationContextsImplementation(source))
+{
+}
+
+PresentationContexts& PresentationContexts::operator=(const PresentationContexts& source)
+{
+    m_pPresentationContexts = getPresentationContextsImplementation(source);
+    return *this;
+}
+
 PresentationContexts::~PresentationContexts()
 {
-
 }
 
 void PresentationContexts::addPresentationContext(const PresentationContext& presentationContext)
 {
-    m_pPresentationContexts->m_presentationContexts.push_back(presentationContext.m_pPresentationContext);
+    m_pPresentationContexts->m_presentationContexts.push_back(getPresentationContextImplementation(presentationContext));
 }
 
-
-AssociationMessage::AssociationMessage()
+const std::shared_ptr<implementation::presentationContexts>& getPresentationContextsImplementation(const PresentationContexts& message)
 {
+    return message.m_pPresentationContexts;
 }
 
 
-AssociationMessage::AssociationMessage(std::shared_ptr<implementation::associationMessage> pMessage):
+//
+// AssociationMessage methods
+//
+///////////////////////////////////////////////////////////////////////////////
+
+AssociationMessage::AssociationMessage(const std::shared_ptr<implementation::associationMessage>& pMessage):
     m_pMessage(pMessage)
 {
 }
 
-AssociationMessage::AssociationMessage(const std::string& abstractSyntax):
-    m_pMessage(std::make_shared<implementation::associationMessage>(abstractSyntax))
+AssociationMessage::AssociationMessage(const AssociationMessage& source):
+    m_pMessage(getAssociationMessageImplementation(source))
 {
+}
+
+AssociationMessage& AssociationMessage::operator=(const AssociationMessage& source)
+{
+    m_pMessage = getAssociationMessageImplementation(source);
+    return *this;
 }
 
 std::string AssociationMessage::getAbstractSyntax() const
@@ -80,12 +127,12 @@ std::string AssociationMessage::getAbstractSyntax() const
     return m_pMessage->getAbstractSyntax();
 }
 
-DataSet* AssociationMessage::getCommand() const
+const DataSet AssociationMessage::getCommand() const
 {
-    return new DataSet(m_pMessage->getCommandDataSet());
+    return DataSet(m_pMessage->getCommandDataSet());
 }
 
-DataSet* AssociationMessage::getPayload() const
+const DataSet AssociationMessage::getPayload() const
 {
     IMEBRA_FUNCTION_START();
 
@@ -94,7 +141,7 @@ DataSet* AssociationMessage::getPayload() const
     {
         IMEBRA_THROW(AcseNoPayloadError, "Payload not available");
     }
-    return new DataSet(pDataSet);
+    return DataSet(pDataSet);
 
     IMEBRA_FUNCTION_END();
 }
@@ -104,31 +151,67 @@ bool AssociationMessage::hasPayload() const
     return m_pMessage->getPayloadDataSetNoThrow() != nullptr;
 }
 
-void AssociationMessage::addDataSet(const DataSet& dataSet)
+const std::shared_ptr<implementation::associationMessage>& getAssociationMessageImplementation(const AssociationMessage& message)
 {
-    m_pMessage->addDataset(dataSet.m_pDataSet);
+    return message.m_pMessage;
 }
 
 
+//
+// MutableAssociationMessage methods
+//
+///////////////////////////////////////////////////////////////////////////////
 
-AssociationBase::AssociationBase()
+MutableAssociationMessage::MutableAssociationMessage(const std::string& abstractSyntax):
+    AssociationMessage(std::make_shared<implementation::associationMessage>(abstractSyntax))
 {
+}
 
+MutableAssociationMessage::MutableAssociationMessage(const MutableAssociationMessage& source):
+    AssociationMessage(getAssociationMessageImplementation(source))
+{
+}
+
+MutableAssociationMessage& MutableAssociationMessage::operator=(const MutableAssociationMessage& source)
+{
+    AssociationMessage::operator =(source);
+    return *this;
+}
+
+void MutableAssociationMessage::addDataSet(const DataSet& dataSet)
+{
+    getAssociationMessageImplementation(*this)->addDataset(getDataSetImplementation(dataSet));
+}
+
+
+//
+// AssociationBase methods
+//
+///////////////////////////////////////////////////////////////////////////////
+
+AssociationBase::AssociationBase(const std::shared_ptr<implementation::associationBase>& pAssociationBase):
+    m_pAssociation(pAssociationBase)
+{
+}
+
+AssociationBase& AssociationBase::operator=(const AssociationBase& source)
+{
+    m_pAssociation = getAssociationBaseImplementation(source);
+    return *this;
 }
 
 AssociationBase::~AssociationBase()
 {
-
 }
 
-AssociationMessage* AssociationBase::getCommand()
+const AssociationMessage AssociationBase::getCommand()
 {
-    return new AssociationMessage(m_pAssociation->getCommand());
+    return AssociationMessage(m_pAssociation->getCommand());
 }
 
-AssociationMessage* AssociationBase::getResponse(std::uint16_t messageId)
+const AssociationMessage AssociationBase::getResponse(std::uint16_t messageId)
 {
-    return new AssociationMessage(m_pAssociation->getResponse(messageId));
+    return AssociationMessage(m_pAssociation->getResponse(messageId));
 }
 
 void AssociationBase::sendMessage(const AssociationMessage& messageDataSet)
@@ -161,6 +244,16 @@ std::string AssociationBase::getTransferSyntax(const std::string &abstractSyntax
     return m_pAssociation->getPresentationContextTransferSyntax(abstractSyntax);
 }
 
+const std::shared_ptr<implementation::associationBase>& getAssociationBaseImplementation(const AssociationBase& associationBase)
+{
+    return associationBase.m_pAssociation;
+}
+
+
+//
+// AssociationSCU methods
+//
+///////////////////////////////////////////////////////////////////////////////
 
 AssociationSCU::AssociationSCU(
         const std::string& thisAET,
@@ -170,19 +263,34 @@ AssociationSCU::AssociationSCU(
         const PresentationContexts& presentationContexts,
         StreamReader& pInput,
         StreamWriter& pOutput,
-        std::uint32_t dimseTimeoutSeconds)
+        std::uint32_t dimseTimeoutSeconds):
+    AssociationBase(std::make_shared<implementation::associationSCU>(
+                        getPresentationContextsImplementation(presentationContexts),
+                        thisAET,
+                        otherAET,
+                        invokedOperations,
+                        performedOperations,
+                        pInput.m_pReader,
+                        pOutput.m_pWriter,
+                        dimseTimeoutSeconds))
 {
-    m_pAssociation = std::make_shared<implementation::associationSCU>(
-                presentationContexts.m_pPresentationContexts,
-                thisAET,
-                otherAET,
-                invokedOperations,
-                performedOperations,
-                pInput.m_pReader,
-                pOutput.m_pWriter,
-                dimseTimeoutSeconds);
 }
 
+AssociationSCU::AssociationSCU(const AssociationSCU& source):
+    AssociationBase(getAssociationBaseImplementation(source))
+{
+}
+
+AssociationSCU& AssociationSCU::operator=(const AssociationSCU& source)
+{
+    AssociationBase::operator=(source);
+    return *this;
+}
+
+//
+// AssociationSCP methods
+//
+///////////////////////////////////////////////////////////////////////////////
 
 AssociationSCP::AssociationSCP(
         const std::string& thisAET,
@@ -192,20 +300,28 @@ AssociationSCP::AssociationSCP(
         StreamReader& pInput,
         StreamWriter& pOutput,
         std::uint32_t dimseTimeoutSeconds,
-        std::uint32_t artimTimeoutSeconds)
+        std::uint32_t artimTimeoutSeconds):
+    AssociationBase(std::make_shared<implementation::associationSCP>(
+                        getPresentationContextsImplementation(presentationContexts),
+                        thisAET,
+                        invokedOperations,
+                        performedOperations,
+                        pInput.m_pReader,
+                        pOutput.m_pWriter,
+                        dimseTimeoutSeconds,
+                        artimTimeoutSeconds))
 {
-    m_pAssociation = std::make_shared<implementation::associationSCP>(
-                presentationContexts.m_pPresentationContexts,
-                thisAET,
-                invokedOperations,
-                performedOperations,
-                pInput.m_pReader,
-                pOutput.m_pWriter,
-                dimseTimeoutSeconds,
-                artimTimeoutSeconds);
 }
 
+AssociationSCP::AssociationSCP(const AssociationSCP& source):
+    AssociationBase(getAssociationBaseImplementation(source))
+{
+}
 
-
+AssociationSCP& AssociationSCP::operator=(const AssociationSCP& source)
+{
+    AssociationBase::operator=(source);
+    return *this;
+}
 
 }

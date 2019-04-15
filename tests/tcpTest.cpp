@@ -28,12 +28,12 @@ void sendDataThread(unsigned long maxConnections, std::string port)
     {
         TCPStream newStream(connectToAddress);
 
-        DataSet dataSet("1.2.840.10008.1.2.1");
+        MutableDataSet dataSet("1.2.840.10008.1.2.1");
         dataSet.setUnsignedLong(TagId(11, 11), connectionNumber, tagVR_t::UL);
 
         std::this_thread::sleep_for(std::chrono::seconds(5));
 
-        StreamWriter writer(newStream);
+        StreamWriter writer(newStream.getStreamOutput());
         CodecFactory::save(dataSet, writer, codecType_t::dicom);
         }
     }
@@ -61,12 +61,12 @@ TEST(tcpTest, sendReceive)
     {
         for(unsigned int connectionNumber(0); connectionNumber != maxConnections; ++connectionNumber)
     {
-        std::unique_ptr<TCPStream> newStream(listener.waitForConnection());
+        TCPStream newStream = listener.waitForConnection();
 
-        StreamReader reader(*newStream);
-        std::unique_ptr<DataSet> pDataSet(CodecFactory::load(reader));
+        StreamReader reader(newStream.getStreamInput());
+        DataSet dataSet = CodecFactory::load(reader);
 
-        ASSERT_EQ(connectionNumber, pDataSet->getUnsignedLong(TagId(11, 11), 0));
+        ASSERT_EQ(connectionNumber, dataSet.getUnsignedLong(TagId(11, 11), 0));
         }
     }
     catch(const std::exception& e)
@@ -86,7 +86,7 @@ void AcceptConnectionAndCloseThread(std::string port)
 
     TCPListener listener(listeningAddress);
 
-    std::unique_ptr<TCPStream> newStream(listener.waitForConnection());
+    TCPStream newStream = listener.waitForConnection();
 
 }
 
@@ -104,10 +104,10 @@ TEST(tcpTest, prematureClose)
 
     std::this_thread::sleep_for(std::chrono::seconds(5));
 
-    DataSet dataSet("1.2.840.10008.1.2.1");
+    MutableDataSet dataSet("1.2.840.10008.1.2.1");
     dataSet.setUnsignedLong(TagId(11, 11), 1, tagVR_t::UL);
 
-    StreamWriter writer(newStream);
+    StreamWriter writer(newStream.getStreamOutput());
 
     try
     {
@@ -138,10 +138,10 @@ TEST(tcpTest, refusedConnection)
 
     std::this_thread::sleep_for(std::chrono::seconds(5));
 
-    DataSet dataSet("1.2.840.10008.1.2.1");
+    MutableDataSet dataSet("1.2.840.10008.1.2.1");
     dataSet.setUnsignedLong(TagId(11, 11), 1, tagVR_t::UL);
 
-    StreamWriter writer(newStream);
+    StreamWriter writer(newStream.getStreamOutput());
 
     try
     {
@@ -234,10 +234,10 @@ TEST(tcpTest, delayedConnection)
 
     std::this_thread::sleep_for(std::chrono::seconds(5));
 
-    DataSet dataSet("1.2.840.10008.1.2.1");
+    MutableDataSet dataSet("1.2.840.10008.1.2.1");
     dataSet.setUnsignedLong(TagId(11, 11), 1, tagVR_t::UL);
 
-    StreamWriter writer(newStream);
+    StreamWriter writer(newStream.getStreamOutput());
 
     CodecFactory::save(dataSet, writer, codecType_t::dicom);
 

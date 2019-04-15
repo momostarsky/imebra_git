@@ -18,12 +18,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #if !defined(imebraACSE__INCLUDED_)
 #define imebraACSE__INCLUDED_
 
-#ifndef SWIG
-
 #include <memory>
 #include <vector>
 #include <string>
 #include "definitions.h"
+
 
 namespace imebra
 {
@@ -37,13 +36,6 @@ namespace implementation
     class presentationContexts;
 }
 
-}
-
-#endif
-
-namespace imebra
-{
-
 class StreamReader;
 class StreamWriter;
 class DataSet;
@@ -52,17 +44,13 @@ class DataSet;
 /// \brief A presentation context defines which transfer syntaxes are supported
 ///        for a specific abstract syntax.
 ///
+/// Add the PresentationContext to the PresentationContexts list to build
+/// a list of PresentationContext objects that can be managed by the client
+/// application.
+///
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API PresentationContext
 {
-    PresentationContext(const PresentationContext&) = delete;
-    PresentationContext& operator=(const PresentationContext&) = delete;
-
-#ifndef SWIG
-    friend class PresentationContexts;
-
-#endif
-
 public:
     ///
     /// \brief Constructor.
@@ -93,6 +81,25 @@ public:
     explicit PresentationContext(const std::string& abstractSyntax, bool bSCURole, bool bSCPRole);
 
     ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source presentation context
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    PresentationContext(const PresentationContext& source);
+
+    ///
+    /// \brief Assignment operator
+    ///
+    /// \param source source presentation context
+    /// \return reference to this presentation context
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    PresentationContext& operator=(const PresentationContext& source);
+
+    virtual ~PresentationContext();
+
+    ///
     /// \brief Add a supported transfer syntax to the presentation context.
     ///
     /// \param transferSyntax the transfer syntax to add
@@ -100,31 +107,44 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     void addTransferSyntax(const std::string& transferSyntax);
 
-    virtual ~PresentationContext();
-
 #ifndef SWIG
-protected:
+private:
+    friend const std::shared_ptr<implementation::presentationContext>& getPresentationContextImplementation(const PresentationContext& message);
     std::shared_ptr<implementation::presentationContext> m_pPresentationContext;
 #endif
-
 };
 
 
 ///
-/// \brief A collection of presentation contexts.
+/// \brief A collection of PresentationContext objects.
 ///
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API PresentationContexts
 {
-    PresentationContexts(const PresentationContext&) = delete;
-    PresentationContexts& operator=(const PresentationContext&) = delete;
-
-#ifndef SWIG
-    friend class AssociationSCU;
-    friend class AssociationSCP;
-#endif
 public:
-    PresentationContexts();
+    ///
+    /// \brief Default constructor.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    explicit PresentationContexts();
+
+    ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source presentation contexts
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    PresentationContexts(const PresentationContexts& source);
+
+    ///
+    /// \brief Assignment operator.
+    ///
+    /// \param source the source presentation contexts
+    /// \return reference to this presentation contexts object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    PresentationContexts& operator=(const PresentationContexts& source);
+
     virtual ~PresentationContexts();
 
     ///
@@ -137,44 +157,42 @@ public:
     void addPresentationContext(const PresentationContext& presentationContext);
 
 #ifndef SWIG
-protected:
+private:
+    friend const std::shared_ptr<implementation::presentationContexts>& getPresentationContextsImplementation(const PresentationContexts& message);
     std::shared_ptr<implementation::presentationContexts> m_pPresentationContexts;
 #endif
 };
 
 
 ///
-/// \brief A message composed by one or two datasets.
+/// \brief An immutable ACSE message composed by one or two datasets.
 ///
-/// When sending a message through an AssociationBase derived object then
-/// up to two dataset can be included into the message: the first dataset is
-/// be the command dataset, while the optional second one is the
-/// command's payload.
+/// Use getCommand() and getPayload() to retrieve the command and the payload
+/// DataSet objects.
+///
+/// If you need a mutable ACSE message then use MutableAssociationMessage.
 ///
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API AssociationMessage
 {
-    AssociationMessage(const AssociationMessage&) = delete;
-    AssociationMessage& operator=(const AssociationMessage&) = delete;
-
-#ifndef SWIG
-    friend class AssociationBase;
-    friend class DimseService;
-    friend class DimseCommand;
-    friend class DimseResponse;
-protected:
-    AssociationMessage();
-    AssociationMessage(std::shared_ptr<implementation::associationMessage> pMessage);
-#endif
 
 public:
     ///
-    /// \brief Constructor.
+    /// \brief Copy constructor.
     ///
-    /// \param abstractSyntax the abstract syntax of the message.
+    /// \param source source association message
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    AssociationMessage(const std::string& abstractSyntax);
+    AssociationMessage(const AssociationMessage& source);
+
+    ///
+    /// \brief Assignment operator.
+    ///
+    /// \param source the source association message
+    /// \return a reference to this association message
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    AssociationMessage& operator=(const AssociationMessage& source);
 
     ///
     /// \brief Retrieve the message's abstract syntax
@@ -190,7 +208,7 @@ public:
     /// \return the command DataSet
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    DataSet* getCommand() const;
+    const DataSet getCommand() const;
 
     ///
     /// \brief Return the payload stored in the message.
@@ -198,7 +216,7 @@ public:
     /// \return the payload DataSet
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    DataSet* getPayload() const;
+    const DataSet getPayload() const;
 
     ///
     /// \brief Return true if the message has a payload.
@@ -207,6 +225,58 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     bool hasPayload() const;
+
+#ifndef SWIG
+protected:
+    explicit AssociationMessage(const std::shared_ptr<implementation::associationMessage>& pMessage);
+
+private:
+    friend class AssociationBase;
+    friend const std::shared_ptr<implementation::associationMessage>& getAssociationMessageImplementation(const AssociationMessage& message);
+    std::shared_ptr<implementation::associationMessage> m_pMessage;
+#endif
+};
+
+
+///
+/// \brief A mutable ACSE message composed by one or two datasets.
+///
+/// When sending a message through an AssociationBase derived object then
+/// up to two dataset can be included into the message: the first dataset is
+/// be the command dataset, while the optional second one is the
+/// command's payload.
+///
+/// If you need an immutable ACSE message then use AssociationMessage.
+///
+///////////////////////////////////////////////////////////////////////////////
+class IMEBRA_API MutableAssociationMessage: public AssociationMessage
+{
+
+public:
+    ///
+    /// \brief Constructor.
+    ///
+    /// \param abstractSyntax the abstract syntax of the message.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    explicit MutableAssociationMessage(const std::string& abstractSyntax);
+
+    ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source mutable association message
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    MutableAssociationMessage(const MutableAssociationMessage& source);
+
+    ///
+    /// \brief Assignment operator.
+    ///
+    /// \param source the source mutable association message
+    /// \return a refernce to this mutable association message
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    MutableAssociationMessage& operator=(const MutableAssociationMessage& source);
 
     ///
     /// \brief Add a command DataSet to the message.
@@ -219,12 +289,8 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     void addDataSet(const DataSet& dataSet);
 
-#ifndef SWIG
-protected:
-    std::shared_ptr<implementation::associationMessage> m_pMessage;
-#endif
-
 };
+
 
 
 ///
@@ -233,15 +299,6 @@ protected:
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API AssociationBase
 {
-    AssociationBase(const AssociationBase&) = delete;
-    AssociationBase& operator=(const AssociationBase&) = delete;
-
-#ifndef SWIG
-    friend class DimseService;
-#endif
-
-protected:
-    AssociationBase();
 
 public:
     ///
@@ -251,6 +308,15 @@ public:
     virtual ~AssociationBase();
 
     ///
+    /// \brief Assignment operator
+    ///
+    /// \param source source association
+    /// \return reference to this association
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    AssociationBase& operator=(const AssociationBase& source);
+
+    ///
     /// \brief Read a command dataset and its payload (if any).
     ///
     /// Throws StreamClosedError if the association has been released or aborted.
@@ -258,7 +324,7 @@ public:
     /// \return an AssociationDataSet containing a command and its payload.
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    AssociationMessage* getCommand();
+    const AssociationMessage getCommand();
 
     ///
     /// \brief Read a response dataset and its payload (if any).
@@ -268,7 +334,7 @@ public:
     /// \return an AssociationDataSet containing a response and its payload.
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    AssociationMessage* getResponse(std::uint16_t messageId);
+    const AssociationMessage getResponse(std::uint16_t messageId);
 
     ///
     /// \brief Send a DICOM message to the connected peer.
@@ -332,7 +398,14 @@ public:
 
 #ifndef SWIG
 protected:
+
+    explicit AssociationBase(const std::shared_ptr<implementation::associationBase>& pAssociationBase);
+
+private:
+    friend const std::shared_ptr<implementation::associationBase>& getAssociationBaseImplementation(const AssociationBase& associationBase);
     std::shared_ptr<implementation::associationBase> m_pAssociation;
+#else
+    AssociationBase() = delete;
 #endif
 };
 
@@ -347,8 +420,6 @@ protected:
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API AssociationSCU: public AssociationBase
 {
-    AssociationSCU(const AssociationSCU&) = delete;
-    AssociationSCU& operator=(const AssociationSCU&) = delete;
 
 public:
     ///
@@ -393,6 +464,23 @@ public:
             StreamReader& pInput,
             StreamWriter& pOutput,
             std::uint32_t dimseTimeoutSeconds);
+
+    ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source SCU association
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    AssociationSCU(const AssociationSCU& source);
+
+    ///
+    /// \brief Assignment operator
+    ///
+    /// \param source source SCU
+    /// \return reference to SCU
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    AssociationSCU& operator=(const AssociationSCU& source);
 };
 
 
@@ -420,8 +508,6 @@ public:
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API AssociationSCP: public AssociationBase
 {
-    AssociationSCP(const AssociationSCP&) = delete;
-    AssociationSCP& operator=(const AssociationSCP&) = delete;
 
 public:
     ///
@@ -470,6 +556,23 @@ public:
             StreamWriter& pOutput,
             std::uint32_t dimseTimeoutSeconds,
             std::uint32_t artimTimeoutSeconds);
+
+    ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source SCP association
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    AssociationSCP(const AssociationSCP& source);
+
+    ///
+    /// \brief Assignment operator
+    ///
+    /// \param source source SCP
+    /// \return reference to this SCP
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    AssociationSCP& operator=(const AssociationSCP& source);
 };
 
 }

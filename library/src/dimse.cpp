@@ -38,10 +38,28 @@ namespace imebra
 // Constructor
 //
 //////////////////////////////////////////////////////////////////
-DimseCommandBase::DimseCommandBase(std::shared_ptr<implementation::dimseCommandBase> pCommand):
+DimseCommandBase::DimseCommandBase(const std::shared_ptr<implementation::dimseCommandBase>& pCommand):
     m_pCommand(pCommand)
 {
 }
+
+const std::shared_ptr<implementation::dimseCommandBase>& getDimseCommandBaseImplementation(const DimseCommandBase& commandBase)
+{
+    return commandBase.m_pCommand;
+}
+
+
+DimseCommandBase::DimseCommandBase(const DimseCommandBase& source):
+    m_pCommand(getDimseCommandBaseImplementation(source))
+{
+}
+
+DimseCommandBase& DimseCommandBase::operator=(const DimseCommandBase& source)
+{
+    m_pCommand = getDimseCommandBaseImplementation(source);
+    return *this;
+}
+
 
 
 //////////////////////////////////////////////////////////////////
@@ -59,9 +77,9 @@ DimseCommandBase::~DimseCommandBase()
 // Return the command DataSet.
 //
 //////////////////////////////////////////////////////////////////
-DataSet* DimseCommandBase::getCommandDataSet() const
+const DataSet DimseCommandBase::getCommandDataSet() const
 {
-    return new DataSet(m_pCommand->getCommandDataSet());
+    return DataSet(m_pCommand->getCommandDataSet());
 }
 
 
@@ -70,12 +88,17 @@ DataSet* DimseCommandBase::getCommandDataSet() const
 // Return the command payload.
 //
 //////////////////////////////////////////////////////////////////
-DataSet* DimseCommandBase::getPayloadDataSet() const
+const DataSet DimseCommandBase::getPayloadDataSet() const
 {
-    return new DataSet(m_pCommand->getPayloadDataSet());
+    return DataSet(m_pCommand->getPayloadDataSet());
 }
 
 
+//////////////////////////////////////////////////////////////////
+//
+// Return the abstract syntax
+//
+//////////////////////////////////////////////////////////////////
 std::string DimseCommandBase::getAbstractSyntax() const
 {
     return m_pCommand->getAbstractSyntax();
@@ -142,11 +165,21 @@ std::string DimseCommandBase::getRequestedSopClassUid() const
 // Constructor
 //
 //////////////////////////////////////////////////////////////////
-DimseCommand::DimseCommand(std::shared_ptr<implementation::dimseNCommand> pCommand):
+DimseCommand::DimseCommand(const std::shared_ptr<implementation::dimseNCommand>& pCommand):
     DimseCommandBase(pCommand)
 {
 }
 
+
+DimseCommand::DimseCommand(const DimseCommand &source): DimseCommandBase(source)
+{
+}
+
+DimseCommand& DimseCommand::operator=(const DimseCommand& source)
+{
+    DimseCommandBase::operator =(source);
+    return *this;
+}
 
 //////////////////////////////////////////////////////////////////
 //
@@ -155,7 +188,7 @@ DimseCommand::DimseCommand(std::shared_ptr<implementation::dimseNCommand> pComma
 //////////////////////////////////////////////////////////////////
 std::uint16_t DimseCommand::getID() const
 {
-    return (std::static_pointer_cast<implementation::dimseCCommand>(m_pCommand))->getID();
+    return (std::static_pointer_cast<implementation::dimseCCommand>(getDimseCommandBaseImplementation(*this)))->getID();
 }
 
 
@@ -166,7 +199,7 @@ std::uint16_t DimseCommand::getID() const
 //////////////////////////////////////////////////////////////////
 dimseCommandType_t DimseCommand::getCommandType() const
 {
-    return (std::static_pointer_cast<implementation::dimseNCommand>(m_pCommand))->getCommandType();
+    return (std::static_pointer_cast<implementation::dimseNCommand>(getDimseCommandBaseImplementation(*this)))->getCommandType();
 }
 
 
@@ -175,14 +208,14 @@ dimseCommandType_t DimseCommand::getCommandType() const
 // Get the command as a CStoreCommand
 //
 //////////////////////////////////////////////////////////////////
-const CStoreCommand* DimseCommand::getAsCStoreCommand() const
+const CStoreCommand DimseCommand::getAsCStoreCommand() const
 {
-    std::shared_ptr<implementation::cStoreCommand> pCommand(std::dynamic_pointer_cast<implementation::cStoreCommand>(m_pCommand));
+    std::shared_ptr<implementation::cStoreCommand> pCommand(std::dynamic_pointer_cast<implementation::cStoreCommand>(getDimseCommandBaseImplementation(*this)));
     if(pCommand.get() == nullptr)
     {
         throw std::bad_cast();
     }
-    return new const CStoreCommand(pCommand);
+    return CStoreCommand(pCommand);
 }
 
 
@@ -191,14 +224,14 @@ const CStoreCommand* DimseCommand::getAsCStoreCommand() const
 // Get the command as a CMoveCommand
 //
 //////////////////////////////////////////////////////////////////
-const CMoveCommand* DimseCommand::getAsCMoveCommand() const
+const CMoveCommand DimseCommand::getAsCMoveCommand() const
 {
-    std::shared_ptr<implementation::cMoveCommand> pCommand(std::dynamic_pointer_cast<implementation::cMoveCommand>(m_pCommand));
+    std::shared_ptr<implementation::cMoveCommand> pCommand(std::dynamic_pointer_cast<implementation::cMoveCommand>(getDimseCommandBaseImplementation(*this)));
     if(pCommand.get() == nullptr)
     {
         throw std::bad_cast();
     }
-    return new const CMoveCommand(pCommand);
+    return CMoveCommand(pCommand);
 }
 
 
@@ -207,14 +240,14 @@ const CMoveCommand* DimseCommand::getAsCMoveCommand() const
 // Get the command as a CGetCommand
 //
 //////////////////////////////////////////////////////////////////
-const CGetCommand* DimseCommand::getAsCGetCommand() const
+const CGetCommand DimseCommand::getAsCGetCommand() const
 {
-    std::shared_ptr<implementation::cGetCommand> pCommand(std::dynamic_pointer_cast<implementation::cGetCommand>(m_pCommand));
+    std::shared_ptr<implementation::cGetCommand> pCommand(std::dynamic_pointer_cast<implementation::cGetCommand>(getDimseCommandBaseImplementation(*this)));
     if(pCommand.get() == nullptr)
     {
         throw std::bad_cast();
     }
-    return new const CGetCommand(pCommand);
+    return CGetCommand(pCommand);
 }
 
 
@@ -223,14 +256,14 @@ const CGetCommand* DimseCommand::getAsCGetCommand() const
 // Get the command as a CFindCommand
 //
 //////////////////////////////////////////////////////////////////
-const CFindCommand* DimseCommand::getAsCFindCommand() const
+const CFindCommand DimseCommand::getAsCFindCommand() const
 {
-    std::shared_ptr<implementation::cFindCommand> pCommand(std::dynamic_pointer_cast<implementation::cFindCommand>(m_pCommand));
+    std::shared_ptr<implementation::cFindCommand> pCommand(std::dynamic_pointer_cast<implementation::cFindCommand>(getDimseCommandBaseImplementation(*this)));
     if(pCommand.get() == nullptr)
     {
         throw std::bad_cast();
     }
-    return new const CFindCommand(pCommand);
+    return CFindCommand(pCommand);
 }
 
 
@@ -239,14 +272,14 @@ const CFindCommand* DimseCommand::getAsCFindCommand() const
 // Get the command as a CEchoCommand
 //
 //////////////////////////////////////////////////////////////////
-const CEchoCommand* DimseCommand::getAsCEchoCommand() const
+const CEchoCommand DimseCommand::getAsCEchoCommand() const
 {
-    std::shared_ptr<implementation::cEchoCommand> pCommand(std::dynamic_pointer_cast<implementation::cEchoCommand>(m_pCommand));
+    std::shared_ptr<implementation::cEchoCommand> pCommand(std::dynamic_pointer_cast<implementation::cEchoCommand>(getDimseCommandBaseImplementation(*this)));
     if(pCommand.get() == nullptr)
     {
         throw std::bad_cast();
     }
-    return new const CEchoCommand(pCommand);
+    return CEchoCommand(pCommand);
 }
 
 
@@ -255,14 +288,14 @@ const CEchoCommand* DimseCommand::getAsCEchoCommand() const
 // Get the command as a CCancelCommand
 //
 //////////////////////////////////////////////////////////////////
-const CCancelCommand* DimseCommand::getAsCCancelCommand() const
+const CCancelCommand DimseCommand::getAsCCancelCommand() const
 {
-    std::shared_ptr<implementation::cCancelCommand> pCommand(std::dynamic_pointer_cast<implementation::cCancelCommand>(m_pCommand));
+    std::shared_ptr<implementation::cCancelCommand> pCommand(std::dynamic_pointer_cast<implementation::cCancelCommand>(getDimseCommandBaseImplementation(*this)));
     if(pCommand.get() == nullptr)
     {
         throw std::bad_cast();
     }
-    return new const CCancelCommand(pCommand);
+    return CCancelCommand(pCommand);
 }
 
 
@@ -271,14 +304,14 @@ const CCancelCommand* DimseCommand::getAsCCancelCommand() const
 // Get the command as a NActionCommand
 //
 //////////////////////////////////////////////////////////////////
-const NActionCommand* DimseCommand::getAsNActionCommand() const
+const NActionCommand DimseCommand::getAsNActionCommand() const
 {
-    std::shared_ptr<implementation::nActionCommand> pCommand(std::dynamic_pointer_cast<implementation::nActionCommand>(m_pCommand));
+    std::shared_ptr<implementation::nActionCommand> pCommand(std::dynamic_pointer_cast<implementation::nActionCommand>(getDimseCommandBaseImplementation(*this)));
     if(pCommand.get() == nullptr)
     {
         throw std::bad_cast();
     }
-    return new const NActionCommand(pCommand);
+    return NActionCommand(pCommand);
 }
 
 
@@ -287,14 +320,14 @@ const NActionCommand* DimseCommand::getAsNActionCommand() const
 // Get the command as a NEventReportCommand
 //
 //////////////////////////////////////////////////////////////////
-const NEventReportCommand* DimseCommand::getAsNEventReportCommand() const
+const NEventReportCommand DimseCommand::getAsNEventReportCommand() const
 {
-    std::shared_ptr<implementation::nEventReportCommand> pCommand(std::dynamic_pointer_cast<implementation::nEventReportCommand>(m_pCommand));
+    std::shared_ptr<implementation::nEventReportCommand> pCommand(std::dynamic_pointer_cast<implementation::nEventReportCommand>(getDimseCommandBaseImplementation(*this)));
     if(pCommand.get() == nullptr)
     {
         throw std::bad_cast();
     }
-    return new const NEventReportCommand(pCommand);
+    return NEventReportCommand(pCommand);
 }
 
 
@@ -303,14 +336,14 @@ const NEventReportCommand* DimseCommand::getAsNEventReportCommand() const
 // Get the command as a NCreate
 //
 //////////////////////////////////////////////////////////////////
-const NCreateCommand* DimseCommand::getAsNCreateCommand() const
+const NCreateCommand DimseCommand::getAsNCreateCommand() const
 {
-    std::shared_ptr<implementation::nCreateCommand> pCommand(std::dynamic_pointer_cast<implementation::nCreateCommand>(m_pCommand));
+    std::shared_ptr<implementation::nCreateCommand> pCommand(std::dynamic_pointer_cast<implementation::nCreateCommand>(getDimseCommandBaseImplementation(*this)));
     if(pCommand.get() == nullptr)
     {
         throw std::bad_cast();
     }
-    return new const NCreateCommand(pCommand);
+    return NCreateCommand(pCommand);
 }
 
 
@@ -319,14 +352,14 @@ const NCreateCommand* DimseCommand::getAsNCreateCommand() const
 // Get the command as a NDeleteCommand
 //
 //////////////////////////////////////////////////////////////////
-const NDeleteCommand* DimseCommand::getAsNDeleteCommand() const
+const NDeleteCommand DimseCommand::getAsNDeleteCommand() const
 {
-    std::shared_ptr<implementation::nDeleteCommand> pCommand(std::dynamic_pointer_cast<implementation::nDeleteCommand>(m_pCommand));
+    std::shared_ptr<implementation::nDeleteCommand> pCommand(std::dynamic_pointer_cast<implementation::nDeleteCommand>(getDimseCommandBaseImplementation(*this)));
     if(pCommand.get() == nullptr)
     {
         throw std::bad_cast();
     }
-    return new const NDeleteCommand(pCommand);
+    return NDeleteCommand(pCommand);
 }
 
 
@@ -335,14 +368,14 @@ const NDeleteCommand* DimseCommand::getAsNDeleteCommand() const
 // Get the command as a NSetCommand
 //
 //////////////////////////////////////////////////////////////////
-const NSetCommand* DimseCommand::getAsNSetCommand() const
+const NSetCommand DimseCommand::getAsNSetCommand() const
 {
-    std::shared_ptr<implementation::nSetCommand> pCommand(std::dynamic_pointer_cast<implementation::nSetCommand>(m_pCommand));
+    std::shared_ptr<implementation::nSetCommand> pCommand(std::dynamic_pointer_cast<implementation::nSetCommand>(getDimseCommandBaseImplementation(*this)));
     if(pCommand.get() == nullptr)
     {
         throw std::bad_cast();
     }
-    return new const NSetCommand(pCommand);
+    return NSetCommand(pCommand);
 }
 
 
@@ -351,14 +384,14 @@ const NSetCommand* DimseCommand::getAsNSetCommand() const
 // Get the command as a NGetCommand
 //
 //////////////////////////////////////////////////////////////////
-const NGetCommand* DimseCommand::getAsNGetCommand() const
+const NGetCommand DimseCommand::getAsNGetCommand() const
 {
-    std::shared_ptr<implementation::nGetCommand> pCommand(std::dynamic_pointer_cast<implementation::nGetCommand>(m_pCommand));
+    std::shared_ptr<implementation::nGetCommand> pCommand(std::dynamic_pointer_cast<implementation::nGetCommand>(getDimseCommandBaseImplementation(*this)));
     if(pCommand.get() == nullptr)
     {
         throw std::bad_cast();
     }
-    return new const NGetCommand(pCommand);
+    return NGetCommand(pCommand);
 }
 
 
@@ -378,9 +411,21 @@ const NGetCommand* DimseCommand::getAsNGetCommand() const
 // Constructor
 //
 //////////////////////////////////////////////////////////////////
-DimseResponse::DimseResponse(std::shared_ptr<implementation::dimseResponse> pResponse):
+DimseResponse::DimseResponse(const std::shared_ptr<implementation::dimseResponse>& pResponse):
     DimseCommandBase(pResponse)
 {
+}
+
+
+DimseResponse::DimseResponse(const DimseResponse &source): DimseCommandBase(getDimseCommandBaseImplementation(source))
+{
+}
+
+
+DimseResponse& DimseResponse::operator=(const DimseResponse& source)
+{
+    DimseCommandBase::operator =(source);
+    return *this;
 }
 
 
@@ -391,7 +436,7 @@ DimseResponse::DimseResponse(std::shared_ptr<implementation::dimseResponse> pRes
 //////////////////////////////////////////////////////////////////
 dimseStatus_t DimseResponse::getStatus() const
 {
-    return std::static_pointer_cast<implementation::dimseResponse>(m_pCommand)->getStatus();
+    return std::static_pointer_cast<implementation::dimseResponse>(getDimseCommandBaseImplementation(*this))->getStatus();
 }
 
 
@@ -402,7 +447,7 @@ dimseStatus_t DimseResponse::getStatus() const
 //////////////////////////////////////////////////////////////////
 std::uint16_t DimseResponse::getStatusCode() const
 {
-    return std::static_pointer_cast<implementation::dimseResponse>(m_pCommand)->getStatusCode();
+    return std::static_pointer_cast<implementation::dimseResponse>(getDimseCommandBaseImplementation(*this))->getStatusCode();
 }
 
 
@@ -423,7 +468,7 @@ std::uint16_t DimseResponse::getStatusCode() const
 // Constructor
 //
 //////////////////////////////////////////////////////////////////
-CStoreCommand::CStoreCommand(std::shared_ptr<implementation::cStoreCommand> pCommand):
+CStoreCommand::CStoreCommand(const std::shared_ptr<implementation::cStoreCommand>& pCommand):
     DimseCommand(pCommand)
 {
 }
@@ -451,8 +496,20 @@ CStoreCommand::CStoreCommand(
                      affectedSopInstanceUid,
                      originatorAET,
                      originatorMessageID,
-                     payload.m_pDataSet))
+                     getDataSetImplementation(payload)))
 {
+}
+
+
+CStoreCommand::CStoreCommand(const CStoreCommand &source): DimseCommand(std::static_pointer_cast<implementation::dimseCCommand>(getDimseCommandBaseImplementation(source)))
+{
+}
+
+
+CStoreCommand& CStoreCommand::operator=(const CStoreCommand& source)
+{
+    DimseCommand::operator =(source);
+    return *this;
 }
 
 
@@ -463,7 +520,7 @@ CStoreCommand::CStoreCommand(
 //////////////////////////////////////////////////////////////////
 std::string CStoreCommand::getOriginatorAET() const
 {
-    return (std::static_pointer_cast<implementation::cStoreCommand>(m_pCommand))->getOriginatorAET();
+    return (std::static_pointer_cast<implementation::cStoreCommand>(getDimseCommandBaseImplementation(*this)))->getOriginatorAET();
 }
 
 
@@ -474,7 +531,7 @@ std::string CStoreCommand::getOriginatorAET() const
 //////////////////////////////////////////////////////////////////
 std::uint16_t CStoreCommand::getOriginatorMessageID() const
 {
-    return (std::static_pointer_cast<implementation::cStoreCommand>(m_pCommand))->getOriginatorMessageID();
+    return (std::static_pointer_cast<implementation::cStoreCommand>(getDimseCommandBaseImplementation(*this)))->getOriginatorMessageID();
 }
 
 
@@ -494,18 +551,28 @@ std::uint16_t CStoreCommand::getOriginatorMessageID() const
 // Constructors
 //
 //////////////////////////////////////////////////////////////////
-CStoreResponse::CStoreResponse(std::shared_ptr<implementation::cStoreResponse> pResponse):
+CStoreResponse::CStoreResponse(const std::shared_ptr<implementation::cStoreResponse>& pResponse):
     DimseResponse(pResponse)
 {
 }
 
 CStoreResponse::CStoreResponse(const CStoreCommand& command, dimseStatusCode_t responseCode):
     DimseResponse(std::make_shared<implementation::cStoreResponse>(
-                      std::static_pointer_cast<implementation::cStoreCommand>(command.m_pCommand), responseCode))
+                      std::static_pointer_cast<implementation::cStoreCommand>(getDimseCommandBaseImplementation(command)), responseCode))
 {
 }
 
 
+CStoreResponse::CStoreResponse(const CStoreResponse &source): DimseResponse(source)
+{
+}
+
+
+CStoreResponse& CStoreResponse::operator=(const CStoreResponse& source)
+{
+    DimseCommandBase::operator =(source);
+    return *this;
+}
 
 
 //////////////////////////////////////////////////////////////////
@@ -523,7 +590,7 @@ CStoreResponse::CStoreResponse(const CStoreCommand& command, dimseStatusCode_t r
 // Constructor
 //
 //////////////////////////////////////////////////////////////////
-CGetCommand::CGetCommand(std::shared_ptr<implementation::cGetCommand> pCommand):
+CGetCommand::CGetCommand(const std::shared_ptr<implementation::cGetCommand>& pCommand):
     DimseCommand(pCommand)
 {
 }
@@ -545,10 +612,21 @@ CGetCommand::CGetCommand(
                      messageID,
                      priority,
                      affectedSopClassUid,
-                     identifier.m_pDataSet))
+                     getDataSetImplementation(identifier)))
 {
 }
 
+
+CGetCommand::CGetCommand(const CGetCommand &source): DimseCommand(std::static_pointer_cast<implementation::dimseCCommand>(getDimseCommandBaseImplementation(source)))
+{
+}
+
+
+CGetCommand& CGetCommand::operator=(const CGetCommand& source)
+{
+    DimseCommand::operator =(source);
+    return *this;
+}
 
 
 
@@ -567,9 +645,20 @@ CGetCommand::CGetCommand(
 // Constructor
 //
 //////////////////////////////////////////////////////////////////
-CPartialResponse::CPartialResponse(std::shared_ptr<implementation::cPartialResponse> pResponse):
+CPartialResponse::CPartialResponse(const std::shared_ptr<implementation::cPartialResponse>& pResponse):
     DimseResponse(pResponse)
 {
+}
+
+
+CPartialResponse::CPartialResponse(const CPartialResponse &source): DimseResponse(std::static_pointer_cast<implementation::dimseResponse>(getDimseCommandBaseImplementation(source)))
+{
+}
+
+CPartialResponse& CPartialResponse::operator=(const CPartialResponse& source)
+{
+    DimseResponse::operator =(source);
+    return *this;
 }
 
 
@@ -580,7 +669,7 @@ CPartialResponse::CPartialResponse(std::shared_ptr<implementation::cPartialRespo
 //////////////////////////////////////////////////////////////////
 std::uint32_t CPartialResponse::getRemainingSubOperations() const
 {
-    return (std::static_pointer_cast<implementation::cPartialResponse>(m_pCommand))->getRemainingSubOperations();
+    return (std::static_pointer_cast<implementation::cPartialResponse>(getDimseCommandBaseImplementation(*this)))->getRemainingSubOperations();
 }
 
 
@@ -591,7 +680,7 @@ std::uint32_t CPartialResponse::getRemainingSubOperations() const
 //////////////////////////////////////////////////////////////////
 std::uint32_t CPartialResponse::getCompletedSubOperations() const
 {
-    return (std::static_pointer_cast<implementation::cPartialResponse>(m_pCommand))->getCompletedSubOperations();
+    return (std::static_pointer_cast<implementation::cPartialResponse>(getDimseCommandBaseImplementation(*this)))->getCompletedSubOperations();
 }
 
 
@@ -602,7 +691,7 @@ std::uint32_t CPartialResponse::getCompletedSubOperations() const
 //////////////////////////////////////////////////////////////////
 std::uint32_t CPartialResponse::getFailedSubOperations() const
 {
-    return (std::static_pointer_cast<implementation::cPartialResponse>(m_pCommand))->getFailedSubOperations();
+    return (std::static_pointer_cast<implementation::cPartialResponse>(getDimseCommandBaseImplementation(*this)))->getFailedSubOperations();
 }
 
 
@@ -613,7 +702,7 @@ std::uint32_t CPartialResponse::getFailedSubOperations() const
 //////////////////////////////////////////////////////////////////
 std::uint32_t CPartialResponse::getWarningSubOperations() const
 {
-    return (std::static_pointer_cast<implementation::cPartialResponse>(m_pCommand))->getWarningSubOperations();
+    return (std::static_pointer_cast<implementation::cPartialResponse>(getDimseCommandBaseImplementation(*this)))->getWarningSubOperations();
 }
 
 
@@ -634,7 +723,7 @@ std::uint32_t CPartialResponse::getWarningSubOperations() const
 // Constructors
 //
 //////////////////////////////////////////////////////////////////
-CGetResponse::CGetResponse(std::shared_ptr<implementation::cGetResponse> pResponse):
+CGetResponse::CGetResponse(const std::shared_ptr<implementation::cGetResponse>& pResponse):
     CPartialResponse(pResponse)
 {
 }
@@ -649,13 +738,13 @@ CGetResponse::CGetResponse(
         const DataSet& identifier):
     CGetResponse(
         std::make_shared<implementation::cGetResponse>(
-            std::static_pointer_cast<implementation::cGetCommand>(receivedCommand.m_pCommand),
+            std::static_pointer_cast<implementation::cGetCommand>(getDimseCommandBaseImplementation(receivedCommand)),
             responseCode,
             remainingSubOperations,
             completedSubOperations,
             failedSubOperations,
             warningSubOperations,
-            identifier.m_pDataSet
+            getDataSetImplementation(identifier)
             ))
 {
 }
@@ -669,7 +758,7 @@ CGetResponse::CGetResponse(
         std::uint32_t warningSubOperations):
     CGetResponse(
         std::make_shared<implementation::cGetResponse>(
-            std::static_pointer_cast<implementation::cGetCommand>(receivedCommand.m_pCommand),
+            std::static_pointer_cast<implementation::cGetCommand>(getDimseCommandBaseImplementation(receivedCommand)),
             responseCode,
             remainingSubOperations,
             completedSubOperations,
@@ -681,6 +770,16 @@ CGetResponse::CGetResponse(
 }
 
 
+CGetResponse::CGetResponse(const CGetResponse &source): CPartialResponse(source)
+{
+}
+
+
+CGetResponse& CGetResponse::operator=(const CGetResponse& source)
+{
+    CPartialResponse::operator =(source);
+    return *this;
+}
 
 
 //////////////////////////////////////////////////////////////////
@@ -698,7 +797,7 @@ CGetResponse::CGetResponse(
 // Constructor
 //
 //////////////////////////////////////////////////////////////////
-CFindCommand::CFindCommand(std::shared_ptr<implementation::cFindCommand> pCommand):
+CFindCommand::CFindCommand(const std::shared_ptr<implementation::cFindCommand>& pCommand):
     DimseCommand(pCommand)
 {
 }
@@ -720,11 +819,21 @@ CFindCommand::CFindCommand(
                      messageID,
                      priority,
                      affectedSopClassUid,
-                     identifier.m_pDataSet))
+                     getDataSetImplementation(identifier)))
 {
 }
 
 
+CFindCommand::CFindCommand(const CFindCommand &source): DimseCommand(source)
+{
+}
+
+
+CFindCommand& CFindCommand::operator=(const CFindCommand& source)
+{
+    DimseCommand::operator =(source);
+    return *this;
+}
 
 
 //////////////////////////////////////////////////////////////////
@@ -742,7 +851,7 @@ CFindCommand::CFindCommand(
 // Constructors
 //
 //////////////////////////////////////////////////////////////////
-CFindResponse::CFindResponse(std::shared_ptr<implementation::cFindResponse> pResponse):
+CFindResponse::CFindResponse(const std::shared_ptr<implementation::cFindResponse>& pResponse):
     DimseResponse(pResponse)
 {
 }
@@ -752,8 +861,8 @@ CFindResponse::CFindResponse(
         const DataSet& identifier):
     CFindResponse(
         std::make_shared<implementation::cFindResponse>(
-            std::static_pointer_cast<implementation::cFindCommand>(receivedCommand.m_pCommand),
-            identifier.m_pDataSet
+            std::static_pointer_cast<implementation::cFindCommand>(getDimseCommandBaseImplementation(receivedCommand)),
+            getDataSetImplementation(identifier)
             ))
 {
 }
@@ -764,13 +873,23 @@ CFindResponse::CFindResponse(
         dimseStatusCode_t responseCode):
     CFindResponse(
         std::make_shared<implementation::cFindResponse>(
-            std::static_pointer_cast<implementation::cFindCommand>(receivedCommand.m_pCommand),
+            std::static_pointer_cast<implementation::cFindCommand>(getDimseCommandBaseImplementation(receivedCommand)),
             responseCode
             ))
 {
 }
 
 
+CFindResponse::CFindResponse(const CFindResponse &source): DimseResponse(source)
+{
+}
+
+
+CFindResponse& CFindResponse::operator=(const CFindResponse& source)
+{
+    DimseResponse::operator =(source);
+    return *this;
+}
 
 
 //////////////////////////////////////////////////////////////////
@@ -788,30 +907,8 @@ CFindResponse::CFindResponse(
 // Constructor
 //
 //////////////////////////////////////////////////////////////////
-CMoveCommand::CMoveCommand(std::shared_ptr<implementation::cMoveCommand> pCommand):
+CMoveCommand::CMoveCommand(const std::shared_ptr<implementation::cMoveCommand>& pCommand):
     DimseCommand(pCommand)
-{
-}
-
-
-//////////////////////////////////////////////////////////////////
-//
-// Constructor (deprecated)
-//
-//////////////////////////////////////////////////////////////////
-CMoveCommand::CMoveCommand(
-        const std::string& abstractSyntax,
-        std::uint16_t messageID,
-        dimseCommandPriority_t priority,
-        const std::string& affectedSopClassUid,
-        const DataSet& identifier):
-    DimseCommand(std::make_shared<implementation::cMoveCommand>(
-                     abstractSyntax,
-                     messageID,
-                     priority,
-                     affectedSopClassUid,
-                     "",
-                     identifier.m_pDataSet))
 {
 }
 
@@ -834,8 +931,20 @@ CMoveCommand::CMoveCommand(
                      priority,
                      affectedSopClassUid,
                      destinationAET,
-                     identifier.m_pDataSet))
+                     getDataSetImplementation(identifier)))
 {
+}
+
+
+CMoveCommand::CMoveCommand(const CMoveCommand &source): DimseCommand(std::static_pointer_cast<implementation::dimseCCommand>(getDimseCommandBaseImplementation(source)))
+{
+}
+
+
+CMoveCommand& CMoveCommand::operator=(const CMoveCommand& source)
+{
+    DimseCommand::operator =(source);
+    return *this;
 }
 
 
@@ -846,7 +955,7 @@ CMoveCommand::CMoveCommand(
 //////////////////////////////////////////////////////////////////
 std::string CMoveCommand::getDestinationAET() const
 {
-    return (std::static_pointer_cast<implementation::cMoveCommand>(m_pCommand))->getDestinationAET();
+    return (std::static_pointer_cast<implementation::cMoveCommand>(getDimseCommandBaseImplementation(*this)))->getDestinationAET();
 }
 
 
@@ -865,7 +974,7 @@ std::string CMoveCommand::getDestinationAET() const
 // Constructors
 //
 //////////////////////////////////////////////////////////////////
-CMoveResponse::CMoveResponse(std::shared_ptr<implementation::cMoveResponse> pResponse):
+CMoveResponse::CMoveResponse(const std::shared_ptr<implementation::cMoveResponse>& pResponse):
     CPartialResponse(pResponse)
 {
 }
@@ -880,13 +989,13 @@ CMoveResponse::CMoveResponse(
         const DataSet& identifier):
     CMoveResponse(
         std::make_shared<implementation::cMoveResponse>(
-            std::static_pointer_cast<implementation::cMoveCommand>(receivedCommand.m_pCommand),
+            std::static_pointer_cast<implementation::cMoveCommand>(getDimseCommandBaseImplementation(receivedCommand)),
             responseCode,
             remainingSubOperations,
             completedSubOperations,
             failedSubOperations,
             warningSubOperations,
-            identifier.m_pDataSet
+            getDataSetImplementation(identifier)
             ))
 {
 }
@@ -901,7 +1010,7 @@ CMoveResponse::CMoveResponse(
         std::uint32_t warningSubOperations):
     CMoveResponse(
         std::make_shared<implementation::cMoveResponse>(
-            std::static_pointer_cast<implementation::cMoveCommand>(receivedCommand.m_pCommand),
+            std::static_pointer_cast<implementation::cMoveCommand>(getDimseCommandBaseImplementation(receivedCommand)),
             responseCode,
             remainingSubOperations,
             completedSubOperations,
@@ -910,6 +1019,18 @@ CMoveResponse::CMoveResponse(
             nullptr
             ))
 {
+}
+
+
+CMoveResponse::CMoveResponse(const CMoveResponse& source): CPartialResponse(source)
+{
+}
+
+
+CMoveResponse& CMoveResponse::operator=(const CMoveResponse& source)
+{
+    CPartialResponse::operator =(source);
+    return *this;
 }
 
 
@@ -930,7 +1051,7 @@ CMoveResponse::CMoveResponse(
 // Constructor
 //
 //////////////////////////////////////////////////////////////////
-CEchoCommand::CEchoCommand(std::shared_ptr<implementation::cEchoCommand> pCommand):
+CEchoCommand::CEchoCommand(const std::shared_ptr<implementation::cEchoCommand>& pCommand):
     DimseCommand(pCommand)
 {
 }
@@ -955,6 +1076,18 @@ CEchoCommand::CEchoCommand(
 }
 
 
+CEchoCommand::CEchoCommand(const CEchoCommand& source): DimseCommand(source)
+{
+}
+
+
+CEchoCommand& CEchoCommand::operator=(const CEchoCommand& source)
+{
+    DimseCommand::operator =(source);
+    return *this;
+}
+
+
 
 
 //////////////////////////////////////////////////////////////////
@@ -972,7 +1105,7 @@ CEchoCommand::CEchoCommand(
 // Constructors
 //
 //////////////////////////////////////////////////////////////////
-CEchoResponse::CEchoResponse(std::shared_ptr<implementation::cEchoResponse> pResponse):
+CEchoResponse::CEchoResponse(const std::shared_ptr<implementation::cEchoResponse>& pResponse):
     DimseResponse(pResponse)
 {
 }
@@ -982,10 +1115,22 @@ CEchoResponse::CEchoResponse(
         dimseStatusCode_t responseCode):
     DimseResponse(
         std::make_shared<implementation::cEchoResponse>(
-            std::static_pointer_cast<implementation::cEchoCommand>(receivedCommand.m_pCommand),
+            std::static_pointer_cast<implementation::cEchoCommand>(getDimseCommandBaseImplementation(receivedCommand)),
             responseCode
             ))
 {
+}
+
+
+CEchoResponse::CEchoResponse(const CEchoResponse& source): DimseResponse(source)
+{
+}
+
+
+CEchoResponse& CEchoResponse::operator=(const CEchoResponse& source)
+{
+    DimseResponse::operator =(source);
+    return *this;
 }
 
 
@@ -1006,7 +1151,7 @@ CEchoResponse::CEchoResponse(
 // Constructor
 //
 //////////////////////////////////////////////////////////////////
-CCancelCommand::CCancelCommand(std::shared_ptr<implementation::cCancelCommand> pCommand):
+CCancelCommand::CCancelCommand(const std::shared_ptr<implementation::cCancelCommand>& pCommand):
     DimseCommand(pCommand)
 {
 }
@@ -1031,6 +1176,18 @@ CCancelCommand::CCancelCommand(
 }
 
 
+CCancelCommand::CCancelCommand(const CCancelCommand& source): DimseCommand(source)
+{
+}
+
+
+CCancelCommand& CCancelCommand::operator=(const CCancelCommand& source)
+{
+    DimseCommand::operator =(source);
+    return *this;
+}
+
+
 //////////////////////////////////////////////////////////////////
 //
 // Return the ID of the command to cancel
@@ -1038,16 +1195,32 @@ CCancelCommand::CCancelCommand(
 //////////////////////////////////////////////////////////////////
 std::uint16_t CCancelCommand::getCancelMessageID() const
 {
-    return (std::static_pointer_cast<implementation::cCancelCommand>(m_pCommand))->getCancelMessageID();
+    return (std::static_pointer_cast<implementation::cCancelCommand>(getDimseCommandBaseImplementation(*this)))->getCancelMessageID();
 }
 
 
 DimseService::DimseService(AssociationBase& association):
-    m_pDimseService(std::make_shared<implementation::dimseService>(association.m_pAssociation))
+    m_pDimseService(std::make_shared<implementation::dimseService>(getAssociationBaseImplementation(association)))
 {
 }
 
 
+DimseService::DimseService(const DimseService& source): m_pDimseService(getDimseServiceImplementation(source))
+{
+}
+
+
+DimseService& DimseService::operator=(const DimseService& source)
+{
+    m_pDimseService = getDimseServiceImplementation(source);
+    return *this;
+}
+
+
+const std::shared_ptr<implementation::dimseService>& getDimseServiceImplementation(const DimseService& service)
+{
+    return service.m_pDimseService;
+}
 
 
 //////////////////////////////////////////////////////////////////
@@ -1065,7 +1238,7 @@ DimseService::DimseService(AssociationBase& association):
 // Constructor
 //
 //////////////////////////////////////////////////////////////////
-NEventReportCommand::NEventReportCommand(std::shared_ptr<implementation::nEventReportCommand> pCommand):
+NEventReportCommand::NEventReportCommand(const std::shared_ptr<implementation::nEventReportCommand>& pCommand):
     DimseCommand(pCommand)
 {
 }
@@ -1112,8 +1285,20 @@ NEventReportCommand::NEventReportCommand(
                      affectedSopClassUid,
                      affectedSopInstanceUid,
                      eventID,
-                     eventInformation.m_pDataSet))
+                     getDataSetImplementation(eventInformation)))
 {
+}
+
+
+NEventReportCommand::NEventReportCommand(const NEventReportCommand& source): DimseCommand(source)
+{
+}
+
+
+NEventReportCommand& NEventReportCommand::operator=(const NEventReportCommand& source)
+{
+    DimseCommand::operator =(source);
+    return *this;
 }
 
 
@@ -1124,7 +1309,7 @@ NEventReportCommand::NEventReportCommand(
 //////////////////////////////////////////////////////////////////
 std::uint16_t NEventReportCommand::getEventID() const
 {
-    return (std::static_pointer_cast<implementation::nEventReportCommand>(m_pCommand))->getEventID();
+    return (std::static_pointer_cast<implementation::nEventReportCommand>(getDimseCommandBaseImplementation(*this)))->getEventID();
 }
 
 
@@ -1145,7 +1330,7 @@ std::uint16_t NEventReportCommand::getEventID() const
 // Constructors
 //
 //////////////////////////////////////////////////////////////////
-NEventReportResponse::NEventReportResponse(std::shared_ptr<implementation::nEventReportResponse> pResponse):
+NEventReportResponse::NEventReportResponse(const std::shared_ptr<implementation::nEventReportResponse>& pResponse):
     DimseResponse(pResponse)
 {
 }
@@ -1157,8 +1342,8 @@ NEventReportResponse::NEventReportResponse(
         ):
     DimseResponse(
         std::make_shared<implementation::nEventReportResponse>(
-            std::static_pointer_cast<implementation::nEventReportCommand>(receivedCommand.m_pCommand),
-            eventReply.m_pDataSet) )
+            std::static_pointer_cast<implementation::nEventReportCommand>(getDimseCommandBaseImplementation(receivedCommand)),
+            getDataSetImplementation(eventReply)) )
 {
 }
 
@@ -1169,9 +1354,21 @@ NEventReportResponse::NEventReportResponse(
         ):
     DimseResponse(
         std::make_shared<implementation::nEventReportResponse>(
-            std::static_pointer_cast<implementation::nEventReportCommand>(receivedCommand.m_pCommand),
+            std::static_pointer_cast<implementation::nEventReportCommand>(getDimseCommandBaseImplementation(receivedCommand)),
             responseCode) )
 {
+}
+
+
+NEventReportResponse::NEventReportResponse(const NEventReportResponse& source): DimseResponse(source)
+{
+}
+
+
+NEventReportResponse& NEventReportResponse::operator=(const NEventReportResponse& source)
+{
+    DimseResponse::operator =(source);
+    return *this;
 }
 
 
@@ -1182,7 +1379,7 @@ NEventReportResponse::NEventReportResponse(
 //////////////////////////////////////////////////////////////////
 std::uint16_t NEventReportResponse::getEventID() const
 {
-    return (std::static_pointer_cast<implementation::nEventReportResponse>(m_pCommand))->getEventID();
+    return (std::static_pointer_cast<implementation::nEventReportResponse>(getDimseCommandBaseImplementation(*this)))->getEventID();
 }
 
 
@@ -1203,7 +1400,7 @@ std::uint16_t NEventReportResponse::getEventID() const
 // Constructor
 //
 //////////////////////////////////////////////////////////////////
-NGetCommand::NGetCommand(std::shared_ptr<implementation::nGetCommand> pCommand):
+NGetCommand::NGetCommand(const std::shared_ptr<implementation::nGetCommand>& pCommand):
     DimseCommand(pCommand)
 {
 }
@@ -1231,6 +1428,18 @@ NGetCommand::NGetCommand(
 }
 
 
+NGetCommand::NGetCommand(const NGetCommand& source): DimseCommand(source)
+{
+}
+
+
+NGetCommand& NGetCommand::operator=(const NGetCommand& source)
+{
+    DimseCommand::operator =(source);
+    return *this;
+}
+
+
 //////////////////////////////////////////////////////////////////
 //
 // Return the attribute list
@@ -1238,7 +1447,7 @@ NGetCommand::NGetCommand(
 //////////////////////////////////////////////////////////////////
 attributeIdentifierList_t NGetCommand::getAttributeList() const
 {
-    return (std::static_pointer_cast<implementation::nGetCommand>(m_pCommand))->getAttributeList();
+    return (std::static_pointer_cast<implementation::nGetCommand>(getDimseCommandBaseImplementation(*this)))->getAttributeList();
 }
 
 
@@ -1259,7 +1468,7 @@ attributeIdentifierList_t NGetCommand::getAttributeList() const
 // Constructors
 //
 //////////////////////////////////////////////////////////////////
-NGetResponse::NGetResponse(std::shared_ptr<implementation::nGetResponse> pResponse):
+NGetResponse::NGetResponse(const std::shared_ptr<implementation::nGetResponse>& pResponse):
     DimseResponse(pResponse)
 {
 }
@@ -1272,9 +1481,9 @@ NGetResponse::NGetResponse(
         ):
     DimseResponse(
         std::make_shared<implementation::nGetResponse>(
-            std::static_pointer_cast<implementation::nGetCommand>(receivedCommand.m_pCommand),
+            std::static_pointer_cast<implementation::nGetCommand>(getDimseCommandBaseImplementation(receivedCommand)),
             responseCode,
-            attributeList.m_pDataSet) )
+            getDataSetImplementation(attributeList)) )
 {
 }
 
@@ -1285,11 +1494,22 @@ NGetResponse::NGetResponse(
         ):
     DimseResponse(
         std::make_shared<implementation::nGetResponse>(
-            std::static_pointer_cast<implementation::nGetCommand>(receivedCommand.m_pCommand),
+            std::static_pointer_cast<implementation::nGetCommand>(getDimseCommandBaseImplementation(receivedCommand)),
             responseCode) )
 {
 }
 
+
+NGetResponse::NGetResponse(const NGetResponse& source): DimseResponse(source)
+{
+}
+
+
+NGetResponse& NGetResponse::operator=(const NGetResponse& source)
+{
+    DimseResponse::operator =(source);
+    return *this;
+}
 
 
 
@@ -1308,7 +1528,7 @@ NGetResponse::NGetResponse(
 // Constructor
 //
 //////////////////////////////////////////////////////////////////
-NSetCommand::NSetCommand(std::shared_ptr<implementation::nSetCommand> pCommand):
+NSetCommand::NSetCommand(const std::shared_ptr<implementation::nSetCommand>& pCommand):
     DimseCommand(pCommand)
 {
 }
@@ -1331,10 +1551,21 @@ NSetCommand::NSetCommand(
                      messageID,
                      requestedSopClassUid,
                      requestedSopInstanceUid,
-                     modificationList.m_pDataSet))
+                     getDataSetImplementation(modificationList)))
 {
 }
 
+
+NSetCommand::NSetCommand(const NSetCommand& source): DimseCommand(source)
+{
+}
+
+
+NSetCommand& NSetCommand::operator=(const NSetCommand& source)
+{
+    DimseCommand::operator =(source);
+    return *this;
+}
 
 
 
@@ -1353,7 +1584,7 @@ NSetCommand::NSetCommand(
 // Constructors
 //
 //////////////////////////////////////////////////////////////////
-NSetResponse::NSetResponse(std::shared_ptr<implementation::nSetResponse> pResponse):
+NSetResponse::NSetResponse(const std::shared_ptr<implementation::nSetResponse>& pResponse):
     DimseResponse(pResponse)
 {
 }
@@ -1365,7 +1596,7 @@ NSetResponse::NSetResponse(
         ):
     DimseResponse(
         std::make_shared<implementation::nSetResponse>(
-            std::static_pointer_cast<implementation::nSetCommand>(receivedCommand.m_pCommand),
+            std::static_pointer_cast<implementation::nSetCommand>(getDimseCommandBaseImplementation(receivedCommand)),
             modifiedAttributes) )
 {
 }
@@ -1377,9 +1608,21 @@ NSetResponse::NSetResponse(
         ):
     DimseResponse(
         std::make_shared<implementation::nSetResponse>(
-            std::static_pointer_cast<implementation::nSetCommand>(receivedCommand.m_pCommand),
+            std::static_pointer_cast<implementation::nSetCommand>(getDimseCommandBaseImplementation(receivedCommand)),
             responseCode) )
 {
+}
+
+
+NSetResponse::NSetResponse(const NSetResponse& source): DimseResponse(source)
+{
+}
+
+
+NSetResponse& NSetResponse::operator=(const NSetResponse& source)
+{
+    DimseResponse::operator =(source);
+    return *this;
 }
 
 
@@ -1390,7 +1633,7 @@ NSetResponse::NSetResponse(
 //////////////////////////////////////////////////////////////////
 attributeIdentifierList_t NSetResponse::getModifiedAttributes() const
 {
-    return (std::static_pointer_cast<implementation::nSetResponse>(m_pCommand))->getModifiedAttributes();
+    return (std::static_pointer_cast<implementation::nSetResponse>(getDimseCommandBaseImplementation(*this)))->getModifiedAttributes();
 }
 
 
@@ -1411,7 +1654,7 @@ attributeIdentifierList_t NSetResponse::getModifiedAttributes() const
 // Constructor
 //
 //////////////////////////////////////////////////////////////////
-NActionCommand::NActionCommand(std::shared_ptr<implementation::nActionCommand> pCommand):
+NActionCommand::NActionCommand(const std::shared_ptr<implementation::nActionCommand>& pCommand):
     DimseCommand(pCommand)
 {
 }
@@ -1436,7 +1679,7 @@ NActionCommand::NActionCommand(
                      requestedSopClassUid,
                      requestedSopInstanceUid,
                      actionID,
-                     actionInformation.m_pDataSet))
+                     getDataSetImplementation(actionInformation)))
 {
 }
 
@@ -1463,6 +1706,18 @@ NActionCommand::NActionCommand(
 }
 
 
+NActionCommand::NActionCommand(const NActionCommand& source): DimseCommand(source)
+{
+}
+
+
+NActionCommand& NActionCommand::operator=(const NActionCommand& source)
+{
+    DimseCommand::operator =(source);
+    return *this;
+}
+
+
 
 //////////////////////////////////////////////////////////////////
 //
@@ -1471,7 +1726,7 @@ NActionCommand::NActionCommand(
 //////////////////////////////////////////////////////////////////
 std::uint16_t NActionCommand::getActionID() const
 {
-    return (std::static_pointer_cast<implementation::nActionCommand>(m_pCommand))->getActionID();
+    return (std::static_pointer_cast<implementation::nActionCommand>(getDimseCommandBaseImplementation(*this)))->getActionID();
 }
 
 
@@ -1492,7 +1747,7 @@ std::uint16_t NActionCommand::getActionID() const
 // Constructors
 //
 //////////////////////////////////////////////////////////////////
-NActionResponse::NActionResponse(std::shared_ptr<implementation::nActionResponse> pResponse):
+NActionResponse::NActionResponse(const std::shared_ptr<implementation::nActionResponse>& pResponse):
     DimseResponse(pResponse)
 {
 }
@@ -1504,8 +1759,8 @@ NActionResponse::NActionResponse(
         ):
     DimseResponse(
         std::make_shared<implementation::nActionResponse>(
-            std::static_pointer_cast<implementation::nActionCommand>(receivedCommand.m_pCommand),
-            actionReply.m_pDataSet) )
+            std::static_pointer_cast<implementation::nActionCommand>(getDimseCommandBaseImplementation(receivedCommand)),
+            getDataSetImplementation(actionReply)) )
 {
 }
 
@@ -1516,15 +1771,27 @@ NActionResponse::NActionResponse(
         ):
     DimseResponse(
         std::make_shared<implementation::nActionResponse>(
-            std::static_pointer_cast<implementation::nActionCommand>(receivedCommand.m_pCommand),
+            std::static_pointer_cast<implementation::nActionCommand>(getDimseCommandBaseImplementation(receivedCommand)),
             responseCode) )
 {
 }
 
 
+NActionResponse::NActionResponse(const NActionResponse& source): DimseResponse(source)
+{
+}
+
+
+NActionResponse& NActionResponse::operator=(const NActionResponse& source)
+{
+    DimseResponse::operator =(source);
+    return *this;
+}
+
+
 std::uint16_t NActionResponse::getActionID() const
 {
-    return (std::static_pointer_cast<implementation::nActionResponse>(m_pCommand))->getActionID();
+    return (std::static_pointer_cast<implementation::nActionResponse>(getDimseCommandBaseImplementation(*this)))->getActionID();
 }
 
 
@@ -1545,7 +1812,7 @@ std::uint16_t NActionResponse::getActionID() const
 // Constructor
 //
 //////////////////////////////////////////////////////////////////
-NCreateCommand::NCreateCommand(std::shared_ptr<implementation::nCreateCommand> pCommand):
+NCreateCommand::NCreateCommand(const std::shared_ptr<implementation::nCreateCommand>& pCommand):
     DimseCommand(pCommand)
 {
 }
@@ -1568,7 +1835,7 @@ NCreateCommand::NCreateCommand(
                      messageID,
                      affectedSopClassUid,
                      affectedSopInstanceUid,
-                     attributeList.m_pDataSet))
+                     getDataSetImplementation(attributeList)))
 {
 }
 
@@ -1593,6 +1860,18 @@ NCreateCommand::NCreateCommand(
 }
 
 
+NCreateCommand::NCreateCommand(const NCreateCommand& source): DimseCommand(source)
+{
+}
+
+
+NCreateCommand& NCreateCommand::operator=(const NCreateCommand& source)
+{
+    DimseCommand::operator =(source);
+    return *this;
+}
+
+
 
 
 //////////////////////////////////////////////////////////////////
@@ -1610,7 +1889,7 @@ NCreateCommand::NCreateCommand(
 // Constructors
 //
 //////////////////////////////////////////////////////////////////
-NCreateResponse::NCreateResponse(std::shared_ptr<implementation::nCreateResponse> pResponse):
+NCreateResponse::NCreateResponse(const std::shared_ptr<implementation::nCreateResponse>& pResponse):
     DimseResponse(pResponse)
 {
 }
@@ -1622,8 +1901,8 @@ NCreateResponse::NCreateResponse(
         ):
     DimseResponse(
         std::make_shared<implementation::nCreateResponse>(
-            std::static_pointer_cast<implementation::nCreateCommand>(receivedCommand.m_pCommand),
-            attributeList.m_pDataSet) )
+            std::static_pointer_cast<implementation::nCreateCommand>(getDimseCommandBaseImplementation(receivedCommand)),
+            getDataSetImplementation(attributeList)) )
 {
 }
 
@@ -1635,9 +1914,9 @@ NCreateResponse::NCreateResponse(
         ):
     DimseResponse(
         std::make_shared<implementation::nCreateResponse>(
-            std::static_pointer_cast<implementation::nCreateCommand>(receivedCommand.m_pCommand),
+            std::static_pointer_cast<implementation::nCreateCommand>(getDimseCommandBaseImplementation(receivedCommand)),
             affectedSopInstanceUid,
-            attributeList.m_pDataSet) )
+            getDataSetImplementation(attributeList)) )
 {
 }
 
@@ -1648,7 +1927,7 @@ NCreateResponse::NCreateResponse(
         ):
     DimseResponse(
         std::make_shared<implementation::nCreateResponse>(
-            std::static_pointer_cast<implementation::nCreateCommand>(receivedCommand.m_pCommand),
+            std::static_pointer_cast<implementation::nCreateCommand>(getDimseCommandBaseImplementation(receivedCommand)),
             responseCode) )
 {
 }
@@ -1660,9 +1939,21 @@ NCreateResponse::NCreateResponse(
         ):
     DimseResponse(
         std::make_shared<implementation::nCreateResponse>(
-            std::static_pointer_cast<implementation::nCreateCommand>(receivedCommand.m_pCommand),
+            std::static_pointer_cast<implementation::nCreateCommand>(getDimseCommandBaseImplementation(receivedCommand)),
             affectedSopInstanceUid) )
 {
+}
+
+
+NCreateResponse::NCreateResponse(const NCreateResponse& source): DimseResponse(source)
+{
+}
+
+
+NCreateResponse& NCreateResponse::operator=(const NCreateResponse& source)
+{
+    DimseResponse::operator =(source);
+    return *this;
 }
 
 
@@ -1683,7 +1974,7 @@ NCreateResponse::NCreateResponse(
 // Constructor
 //
 //////////////////////////////////////////////////////////////////
-NDeleteCommand::NDeleteCommand(std::shared_ptr<implementation::nDeleteCommand> pCommand):
+NDeleteCommand::NDeleteCommand(const std::shared_ptr<implementation::nDeleteCommand>& pCommand):
     DimseCommand(pCommand)
 {
 }
@@ -1709,6 +2000,16 @@ NDeleteCommand::NDeleteCommand(
 }
 
 
+NDeleteCommand::NDeleteCommand(const NDeleteCommand& source): DimseCommand(source)
+{
+}
+
+
+NDeleteCommand& NDeleteCommand::operator=(const NDeleteCommand& source)
+{
+    DimseCommand::operator =(source);
+    return *this;
+}
 
 
 //////////////////////////////////////////////////////////////////
@@ -1726,7 +2027,7 @@ NDeleteCommand::NDeleteCommand(
 // Constructors
 //
 //////////////////////////////////////////////////////////////////
-NDeleteResponse::NDeleteResponse(std::shared_ptr<implementation::nDeleteResponse> pResponse):
+NDeleteResponse::NDeleteResponse(const std::shared_ptr<implementation::nDeleteResponse>& pResponse):
     DimseResponse(pResponse)
 {
 }
@@ -1738,9 +2039,21 @@ NDeleteResponse::NDeleteResponse(
         ):
     DimseResponse(
         std::make_shared<implementation::nDeleteResponse>(
-            std::static_pointer_cast<implementation::nDeleteCommand>(receivedCommand.m_pCommand),
+            std::static_pointer_cast<implementation::nDeleteCommand>(getDimseCommandBaseImplementation(receivedCommand)),
             responseCode) )
 {
+}
+
+
+NDeleteResponse::NDeleteResponse(const NDeleteResponse& source): DimseResponse(source)
+{
+}
+
+
+NDeleteResponse& NDeleteResponse::operator=(const NDeleteResponse& source)
+{
+    DimseResponse::operator =(source);
+    return *this;
 }
 
 
@@ -1772,7 +2085,7 @@ std::uint16_t DimseService::getNextCommandID()
 // Get the next command
 //
 //////////////////////////////////////////////////////////////////
-DimseCommand* DimseService::getCommand()
+const DimseCommand DimseService::getCommand()
 {
     IMEBRA_FUNCTION_START();
 
@@ -1781,29 +2094,29 @@ DimseCommand* DimseService::getCommand()
     switch(pCommand->getCommandType())
     {
     case dimseCommandType_t::cStore:
-        return new CStoreCommand(std::dynamic_pointer_cast<implementation::cStoreCommand>(pCommand));
+        return CStoreCommand(std::dynamic_pointer_cast<implementation::cStoreCommand>(pCommand));
     case dimseCommandType_t::cGet:
-        return new CGetCommand(std::dynamic_pointer_cast<implementation::cGetCommand>(pCommand));
+        return CGetCommand(std::dynamic_pointer_cast<implementation::cGetCommand>(pCommand));
     case dimseCommandType_t::cMove:
-        return new CMoveCommand(std::dynamic_pointer_cast<implementation::cMoveCommand>(pCommand));
+        return CMoveCommand(std::dynamic_pointer_cast<implementation::cMoveCommand>(pCommand));
     case dimseCommandType_t::cFind:
-        return new CFindCommand(std::dynamic_pointer_cast<implementation::cFindCommand>(pCommand));
+        return CFindCommand(std::dynamic_pointer_cast<implementation::cFindCommand>(pCommand));
     case dimseCommandType_t::cEcho:
-        return new CEchoCommand(std::dynamic_pointer_cast<implementation::cEchoCommand>(pCommand));
+        return CEchoCommand(std::dynamic_pointer_cast<implementation::cEchoCommand>(pCommand));
     case dimseCommandType_t::cCancel:
-        return new CCancelCommand(std::dynamic_pointer_cast<implementation::cCancelCommand>(pCommand));
+        return CCancelCommand(std::dynamic_pointer_cast<implementation::cCancelCommand>(pCommand));
     case dimseCommandType_t::nEventReport:
-        return new NEventReportCommand(std::dynamic_pointer_cast<implementation::nEventReportCommand>(pCommand));
+        return NEventReportCommand(std::dynamic_pointer_cast<implementation::nEventReportCommand>(pCommand));
     case dimseCommandType_t::nGet:
-        return new NGetCommand(std::dynamic_pointer_cast<implementation::nGetCommand>(pCommand));
+        return NGetCommand(std::dynamic_pointer_cast<implementation::nGetCommand>(pCommand));
     case dimseCommandType_t::nSet:
-        return new NSetCommand(std::dynamic_pointer_cast<implementation::nSetCommand>(pCommand));
+        return NSetCommand(std::dynamic_pointer_cast<implementation::nSetCommand>(pCommand));
     case dimseCommandType_t::nAction:
-        return new NActionCommand(std::dynamic_pointer_cast<implementation::nActionCommand>(pCommand));
+        return NActionCommand(std::dynamic_pointer_cast<implementation::nActionCommand>(pCommand));
     case dimseCommandType_t::nCreate:
-        return new NCreateCommand(std::dynamic_pointer_cast<implementation::nCreateCommand>(pCommand));
+        return NCreateCommand(std::dynamic_pointer_cast<implementation::nCreateCommand>(pCommand));
     case dimseCommandType_t::nDelete:
-        return new NDeleteCommand(std::dynamic_pointer_cast<implementation::nDeleteCommand>(pCommand));
+        return NDeleteCommand(std::dynamic_pointer_cast<implementation::nDeleteCommand>(pCommand));
     default:
         {}
     }
@@ -1832,7 +2145,7 @@ std::string DimseService::getTransferSyntax(const std::string &abstractSyntax) c
 //////////////////////////////////////////////////////////////////
 void DimseService::sendCommandOrResponse(const DimseCommandBase &command)
 {
-    m_pDimseService->sendCommandOrResponse(command.m_pCommand);
+    m_pDimseService->sendCommandOrResponse(getDimseCommandBaseImplementation(command));
 }
 
 
@@ -1841,9 +2154,9 @@ void DimseService::sendCommandOrResponse(const DimseCommandBase &command)
 // Wait for a C-STORE response
 //
 //////////////////////////////////////////////////////////////////
-CStoreResponse* DimseService::getCStoreResponse(const CStoreCommand& command)
+const CStoreResponse DimseService::getCStoreResponse(const CStoreCommand& command)
 {
-    return new CStoreResponse(m_pDimseService->getResponse<implementation::cStoreResponse>(command.getID()));
+    return CStoreResponse(m_pDimseService->getResponse<implementation::cStoreResponse>(command.getID()));
 }
 
 
@@ -1852,9 +2165,9 @@ CStoreResponse* DimseService::getCStoreResponse(const CStoreCommand& command)
 // Wait for a C-GET response
 //
 //////////////////////////////////////////////////////////////////
-CGetResponse* DimseService::getCGetResponse(const CGetCommand& command)
+const CGetResponse DimseService::getCGetResponse(const CGetCommand& command)
 {
-    return new CGetResponse(m_pDimseService->getResponse<implementation::cGetResponse>(command.getID()));
+    return CGetResponse(m_pDimseService->getResponse<implementation::cGetResponse>(command.getID()));
 }
 
 
@@ -1863,9 +2176,9 @@ CGetResponse* DimseService::getCGetResponse(const CGetCommand& command)
 // Wait for a C-FIND response
 //
 //////////////////////////////////////////////////////////////////
-CFindResponse* DimseService::getCFindResponse(const CFindCommand& command)
+const CFindResponse DimseService::getCFindResponse(const CFindCommand& command)
 {
-    return new CFindResponse(m_pDimseService->getResponse<implementation::cFindResponse>(command.getID()));
+    return CFindResponse(m_pDimseService->getResponse<implementation::cFindResponse>(command.getID()));
 }
 
 
@@ -1874,9 +2187,9 @@ CFindResponse* DimseService::getCFindResponse(const CFindCommand& command)
 // Wait for a C-MOVE response
 //
 //////////////////////////////////////////////////////////////////
-CMoveResponse* DimseService::getCMoveResponse(const CMoveCommand& command)
+const CMoveResponse DimseService::getCMoveResponse(const CMoveCommand& command)
 {
-    return new CMoveResponse(m_pDimseService->getResponse<implementation::cMoveResponse>(command.getID()));
+    return CMoveResponse(m_pDimseService->getResponse<implementation::cMoveResponse>(command.getID()));
 }
 
 
@@ -1885,9 +2198,9 @@ CMoveResponse* DimseService::getCMoveResponse(const CMoveCommand& command)
 // Wait for a C-ECHO response
 //
 //////////////////////////////////////////////////////////////////
-CEchoResponse* DimseService::getCEchoResponse(const CEchoCommand& command)
+const CEchoResponse DimseService::getCEchoResponse(const CEchoCommand& command)
 {
-    return new CEchoResponse(m_pDimseService->getResponse<implementation::cEchoResponse>(command.getID()));
+    return CEchoResponse(m_pDimseService->getResponse<implementation::cEchoResponse>(command.getID()));
 }
 
 
@@ -1896,9 +2209,9 @@ CEchoResponse* DimseService::getCEchoResponse(const CEchoCommand& command)
 // Wait for a N-EVENT-REPORT response
 //
 //////////////////////////////////////////////////////////////////
-NEventReportResponse* DimseService::getNEventReportResponse(const NEventReportCommand& command)
+const NEventReportResponse DimseService::getNEventReportResponse(const NEventReportCommand& command)
 {
-    return new NEventReportResponse(m_pDimseService->getResponse<implementation::nEventReportResponse>(command.getID()));
+    return NEventReportResponse(m_pDimseService->getResponse<implementation::nEventReportResponse>(command.getID()));
 }
 
 
@@ -1907,9 +2220,9 @@ NEventReportResponse* DimseService::getNEventReportResponse(const NEventReportCo
 // Wait for a N-GET response
 //
 //////////////////////////////////////////////////////////////////
-NGetResponse* DimseService::getNGetResponse(const NGetCommand& command)
+const NGetResponse DimseService::getNGetResponse(const NGetCommand& command)
 {
-    return new NGetResponse(m_pDimseService->getResponse<implementation::nGetResponse>(command.getID()));
+    return NGetResponse(m_pDimseService->getResponse<implementation::nGetResponse>(command.getID()));
 }
 
 
@@ -1918,9 +2231,9 @@ NGetResponse* DimseService::getNGetResponse(const NGetCommand& command)
 // Wait for a N-SET response
 //
 //////////////////////////////////////////////////////////////////
-NSetResponse* DimseService::getNSetResponse(const NSetCommand& command)
+const NSetResponse DimseService::getNSetResponse(const NSetCommand& command)
 {
-    return new NSetResponse(m_pDimseService->getResponse<implementation::nSetResponse>(command.getID()));
+    return NSetResponse(m_pDimseService->getResponse<implementation::nSetResponse>(command.getID()));
 }
 
 
@@ -1929,9 +2242,9 @@ NSetResponse* DimseService::getNSetResponse(const NSetCommand& command)
 // Wait for a N-ACTION response
 //
 //////////////////////////////////////////////////////////////////
-NActionResponse* DimseService::getNActionResponse(const NActionCommand& command)
+const NActionResponse DimseService::getNActionResponse(const NActionCommand& command)
 {
-    return new NActionResponse(m_pDimseService->getResponse<implementation::nActionResponse>(command.getID()));
+    return NActionResponse(m_pDimseService->getResponse<implementation::nActionResponse>(command.getID()));
 }
 
 
@@ -1940,9 +2253,9 @@ NActionResponse* DimseService::getNActionResponse(const NActionCommand& command)
 // Wait for a N-CREATE response
 //
 //////////////////////////////////////////////////////////////////
-NCreateResponse* DimseService::getNCreateResponse(const NCreateCommand& command)
+const NCreateResponse DimseService::getNCreateResponse(const NCreateCommand& command)
 {
-    return new NCreateResponse(m_pDimseService->getResponse<implementation::nCreateResponse>(command.getID()));
+    return NCreateResponse(m_pDimseService->getResponse<implementation::nCreateResponse>(command.getID()));
 }
 
 
@@ -1951,9 +2264,9 @@ NCreateResponse* DimseService::getNCreateResponse(const NCreateCommand& command)
 // Wait for a N-DELETE response
 //
 //////////////////////////////////////////////////////////////////
-NDeleteResponse* DimseService::getNDeleteResponse(const NDeleteCommand& command)
+const NDeleteResponse DimseService::getNDeleteResponse(const NDeleteCommand& command)
 {
-    return new NDeleteResponse(m_pDimseService->getResponse<implementation::nDeleteResponse>(command.getID()));
+    return NDeleteResponse(m_pDimseService->getResponse<implementation::nDeleteResponse>(command.getID()));
 }
 
 

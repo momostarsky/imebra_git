@@ -17,15 +17,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #if !defined(imebraObjcReadingDataHandlerNumeric__INCLUDED_)
 #define imebraObjcReadingDataHandlerNumeric__INCLUDED_
 
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
-namespace imebra
-{
-class ReadingDataHandlerNumeric;
-}
-#endif
-
 @class ImebraWritingDataHandlerNumeric;
-@class ImebraReadMemory;
+@class ImebraMemory;
 
 ///
 /// \brief Specialized ImebraReadingDataHandler for numeric data types.
@@ -42,7 +35,7 @@ class ReadingDataHandlerNumeric;
     /// \return a ReadMemory object referencing the raw buffer's data
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    -(ImebraReadMemory*)getMemory: (NSError**)pError
+    -(ImebraMemory*)getMemory: (NSError**)pError
         __attribute__((swift_error(nonnull_error)));
 
     /// \brief Copies the content of the data handler into another data handler,

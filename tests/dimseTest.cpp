@@ -27,7 +27,7 @@ void storeScpThread(
         PresentationContexts& presentationContexts,
         StreamReader& readSCP,
         StreamWriter& writeSCP,
-        std::list<std::shared_ptr<CStoreCommand> >& receivedCommands)
+        std::list<CStoreCommand>& receivedCommands)
 {
     try
     {
@@ -35,10 +35,10 @@ void storeScpThread(
 
         DimseService dimseService(scp);
 
-        std::shared_ptr<CStoreCommand> command(dynamic_cast<CStoreCommand*>(dimseService.getCommand()));
+        CStoreCommand command = dimseService.getCommand().getAsCStoreCommand();
         receivedCommands.push_back(command);
 
-        dimseService.sendCommandOrResponse(CStoreResponse(*command, dimseStatusCode_t::success));
+        dimseService.sendCommandOrResponse(CStoreResponse(command, dimseStatusCode_t::success));
 
     }
     catch(const StreamClosedError&)
@@ -59,13 +59,13 @@ void storeScpThread(
 ///////////////////////////////////////////////////////////
 TEST(dimseTest, storeSCUSCP)
 {
-    Pipe toSCU(1024), toSCP(1024);
+    PipeStream toSCU(1024), toSCP(1024);
 
-    StreamReader readSCU(toSCU);
-    StreamWriter writeSCU(toSCP);
+    StreamReader readSCU(toSCU.getStreamInput());
+    StreamWriter writeSCU(toSCP.getStreamOutput());
 
-    StreamReader readSCP(toSCP);
-    StreamWriter writeSCP(toSCU);
+    StreamReader readSCP(toSCP.getStreamInput());
+    StreamWriter writeSCP(toSCU.getStreamOutput());
 
     PresentationContext context("1.2.840.10008.1.1");
     context.addTransferSyntax("1.2.840.10008.1.2"); // implicit VR little endian
@@ -74,7 +74,7 @@ TEST(dimseTest, storeSCUSCP)
 
     const std::string scpName("SCP");
 
-    std::list<std::shared_ptr<CStoreCommand> > receivedCommands;
+    std::list<CStoreCommand> receivedCommands;
 
     std::thread thread(
                 imebra::tests::storeScpThread,
@@ -88,7 +88,7 @@ TEST(dimseTest, storeSCUSCP)
 
     DimseService dimse(scu);
 
-    DataSet payload("1.2.840.10008.1.2");
+    MutableDataSet payload("1.2.840.10008.1.2");
     payload.setString(TagId(tagId_t::SOPClassUID_0008_0016), "1.1.1.1.1");
     payload.setString(TagId(tagId_t::SOPInstanceUID_0008_0018), "1.1.1.1.2");
     payload.setString(TagId(tagId_t::PatientName_0010_0010), "Test^Patient");
@@ -102,14 +102,14 @@ TEST(dimseTest, storeSCUSCP)
                 0,
                 payload);
     dimse.sendCommandOrResponse(storeCommand);
-    std::unique_ptr<CStoreResponse> response(dimse.getCStoreResponse(storeCommand));
+    CStoreResponse response = dimse.getCStoreResponse(storeCommand);
 
     EXPECT_EQ(1u, receivedCommands.size());
-    EXPECT_EQ("Origin", receivedCommands.front()->getOriginatorAET());
-    EXPECT_EQ("1.1.1.1.2", receivedCommands.front()->getAffectedSopInstanceUid());
-    EXPECT_EQ("1.1.1.1.1", receivedCommands.front()->getAffectedSopClassUid());
-    std::unique_ptr<imebra::DataSet> pPayload(receivedCommands.front()->getPayloadDataSet());
-    EXPECT_EQ("Test^Patient", pPayload->getString(TagId(tagId_t::PatientName_0010_0010), 0));
+    EXPECT_EQ("Origin", receivedCommands.front().getOriginatorAET());
+    EXPECT_EQ("1.1.1.1.2", receivedCommands.front().getAffectedSopInstanceUid());
+    EXPECT_EQ("1.1.1.1.1", receivedCommands.front().getAffectedSopClassUid());
+    DataSet receivedPayload = receivedCommands.front().getPayloadDataSet();
+    EXPECT_EQ("Test^Patient", receivedPayload.getString(TagId(tagId_t::PatientName_0010_0010), 0));
 
     thread.join();
 }
@@ -138,45 +138,45 @@ void getScpThread(
 
         for(;;)
         {
-            std::unique_ptr<CGetCommand> command(dynamic_cast<CGetCommand*>(dimseService.getCommand()));
-            std::unique_ptr<DataSet> pIdentifier(command->getPayloadDataSet());
+            CGetCommand command = dimseService.getCommand().getAsCGetCommand();
+            DataSet identifier(command.getPayloadDataSet());
 
-            if(pIdentifier->getString(TagId(tagId_t::QueryRetrieveLevel_0008_0052), 0) != "PATIENT" ||
-                    pIdentifier->getString(TagId(tagId_t::PatientID_0010_0020), 0) != "100")
+            if(identifier.getString(TagId(tagId_t::QueryRetrieveLevel_0008_0052), 0) != "PATIENT" ||
+                    identifier.getString(TagId(tagId_t::PatientID_0010_0020), 0) != "100")
             {
-                dimseService.sendCommandOrResponse(CGetResponse(*command, dimseStatusCode_t::success, 0, 0, 0, 0));
+                dimseService.sendCommandOrResponse(CGetResponse(command, dimseStatusCode_t::success, 0, 0, 0, 0));
                 return;
             }
 
             // Return a partial response
-            dimseService.sendCommandOrResponse(CGetResponse(*command, dimseStatusCode_t::pending, 1, 0, 0, 0));
+            dimseService.sendCommandOrResponse(CGetResponse(command, dimseStatusCode_t::pending, 1, 0, 0, 0));
 
             // Perform a C-STORE on the AE that requested the C-GET
-            std::string abstractSyntax(command->getAbstractSyntax());
-            DataSet storePayload(dimseService.getTransferSyntax(abstractSyntax));
+            std::string abstractSyntax(command.getAbstractSyntax());
+            MutableDataSet storePayload(dimseService.getTransferSyntax(abstractSyntax));
             storePayload.setString(TagId(tagId_t::PatientID_0010_0020), "100");
             storePayload.setString(TagId(tagId_t::PatientName_0010_0010), "TEST^PATIENT");
             CStoreCommand storeCommand(
                         abstractSyntax,
                         dimseService.getNextCommandID(),
                         dimseCommandPriority_t::medium,
-                        command->getAffectedSopClassUid(),
+                        command.getAffectedSopClassUid(),
                         "1.2.3.4.5.6",
                         scp.getOtherAET(),
-                        command->getID(),
+                        command.getID(),
                         storePayload);
 
             dimseService.sendCommandOrResponse(storeCommand);
-            std::unique_ptr<CStoreResponse> pStoreResponse(dimseService.getCStoreResponse(storeCommand));
+            CStoreResponse storeResponse = dimseService.getCStoreResponse(storeCommand);
 
             // Send the C-GET final response
-            if(pStoreResponse->getStatus() == dimseStatus_t::success)
+            if(storeResponse.getStatus() == dimseStatus_t::success)
             {
-                dimseService.sendCommandOrResponse(CGetResponse(*command, dimseStatusCode_t::success, 0, 1, 0, 0));
+                dimseService.sendCommandOrResponse(CGetResponse(command, dimseStatusCode_t::success, 0, 1, 0, 0));
             }
             else
             {
-                dimseService.sendCommandOrResponse(CGetResponse(*command, dimseStatusCode_t::subOperationCompletedWithErrors, 0, 0, 1, 0));
+                dimseService.sendCommandOrResponse(CGetResponse(command, dimseStatusCode_t::subOperationCompletedWithErrors, 0, 0, 1, 0));
             }
         }
     }
@@ -197,13 +197,13 @@ void getScpThread(
 ///////////////////////////////////////////////////////////
 TEST(dimseTest, getSCUSCP)
 {
-    Pipe toSCU(1024), toSCP(1024);
+    PipeStream toSCU(1024), toSCP(1024);
 
-    StreamReader readSCU(toSCU);
-    StreamWriter writeSCU(toSCP);
+    StreamReader readSCU(toSCU.getStreamInput());
+    StreamWriter writeSCU(toSCP.getStreamOutput());
 
-    StreamReader readSCP(toSCP);
-    StreamWriter writeSCP(toSCU);
+    StreamReader readSCP(toSCP.getStreamInput());
+    StreamWriter writeSCP(toSCU.getStreamOutput());
 
     PresentationContext context("1.2.840.10008.5.1.4.1.2.1.3", true, true);
     context.addTransferSyntax("1.2.840.10008.1.2"); // implicit VR little endian
@@ -222,7 +222,7 @@ TEST(dimseTest, getSCUSCP)
     AssociationSCU scu("SCU", scpName, 1, 1, presentationContexts, readSCU, writeSCU, 0);
     DimseService dimse(scu);
 
-    DataSet keys(dimse.getTransferSyntax("1.2.840.10008.5.1.4.1.2.1.3"));
+    MutableDataSet keys(dimse.getTransferSyntax("1.2.840.10008.5.1.4.1.2.1.3"));
     keys.setString(TagId(tagId_t::QueryRetrieveLevel_0008_0052), "PATIENT");
     keys.setString(TagId(tagId_t::PatientID_0010_0020), "100");
     CGetCommand getCommand(
@@ -235,25 +235,25 @@ TEST(dimseTest, getSCUSCP)
     dimse.sendCommandOrResponse(getCommand);
 
     // Wait for incoming c-store
-    std::unique_ptr<CStoreCommand> pStoreCommand(dynamic_cast<CStoreCommand*>(dimse.getCommand()));
+    CStoreCommand storeCommand = dimse.getCommand().getAsCStoreCommand();
 
-    std::unique_ptr<DataSet> pStoreDataSet(pStoreCommand->getPayloadDataSet());
+    DataSet storeDataSet = storeCommand.getPayloadDataSet();
 
-    std::string patientId(pStoreDataSet->getString(TagId(tagId_t::PatientID_0010_0020), 0));
-    std::string patientName(pStoreDataSet->getString(TagId(tagId_t::PatientName_0010_0010), 0));
+    std::string patientId(storeDataSet.getString(TagId(tagId_t::PatientID_0010_0020), 0));
+    std::string patientName(storeDataSet.getString(TagId(tagId_t::PatientName_0010_0010), 0));
 
     EXPECT_EQ("100", patientId);
     EXPECT_EQ("TEST^PATIENT", patientName);
 
-    dimse.sendCommandOrResponse(CStoreResponse(*pStoreCommand, dimseStatusCode_t::success));
+    dimse.sendCommandOrResponse(CStoreResponse(storeCommand, dimseStatusCode_t::success));
 
-    std::unique_ptr<CGetResponse> response0(dimse.getCGetResponse(getCommand));
-    EXPECT_EQ(dimseStatus_t::pending, response0->getStatus());
-    std::unique_ptr<CGetResponse> response1(dimse.getCGetResponse(getCommand));
-    EXPECT_EQ(dimseStatus_t::success, response1->getStatus());
+    CGetResponse response0 = dimse.getCGetResponse(getCommand);
+    EXPECT_EQ(dimseStatus_t::pending, response0.getStatus());
+    CGetResponse response1 = dimse.getCGetResponse(getCommand);
+    EXPECT_EQ(dimseStatus_t::success, response1.getStatus());
 
-    toSCU.terminate();
-    toSCP.terminate();
+    readSCU.terminate();
+    readSCP.terminate();
     thread.join();
 }
 
@@ -280,22 +280,22 @@ void moveScpThread(
 
         for(;;)
         {
-            std::unique_ptr<CMoveCommand> command(dynamic_cast<CMoveCommand*>(dimseService.getCommand()));
-            std::unique_ptr<DataSet> pIdentifier(command->getPayloadDataSet());
+            CMoveCommand command = dimseService.getCommand().getAsCMoveCommand();
+            DataSet identifier = command.getPayloadDataSet();
 
-            if(pIdentifier->getString(TagId(tagId_t::QueryRetrieveLevel_0008_0052), 0) != "PATIENT" ||
-                    pIdentifier->getString(TagId(tagId_t::PatientID_0010_0020), 0) != "100")
+            if(identifier.getString(TagId(tagId_t::QueryRetrieveLevel_0008_0052), 0) != "PATIENT" ||
+                    identifier.getString(TagId(tagId_t::PatientID_0010_0020), 0) != "100")
             {
-                dimseService.sendCommandOrResponse(CMoveResponse(*command, dimseStatusCode_t::success, 0, 0, 0, 0));
+                dimseService.sendCommandOrResponse(CMoveResponse(command, dimseStatusCode_t::success, 0, 0, 0, 0));
                 return;
             }
 
             (*pReceivedRequests)++;
 
             // Return a partial response
-            dimseService.sendCommandOrResponse(CMoveResponse(*command, dimseStatusCode_t::pending, 1, 0, 0, 0));
+            dimseService.sendCommandOrResponse(CMoveResponse(command, dimseStatusCode_t::pending, 1, 0, 0, 0));
 
-            dimseService.sendCommandOrResponse(CMoveResponse(*command, dimseStatusCode_t::success, 0, 1, 0, 0));
+            dimseService.sendCommandOrResponse(CMoveResponse(command, dimseStatusCode_t::success, 0, 1, 0, 0));
         }
     }
     catch(const StreamClosedError&)
@@ -315,13 +315,13 @@ void moveScpThread(
 ///////////////////////////////////////////////////////////
 TEST(dimseTest, moveSCUSCP)
 {
-    Pipe toSCU(1024), toSCP(1024);
+    PipeStream toSCU(1024), toSCP(1024);
 
-    StreamReader readSCU(toSCU);
-    StreamWriter writeSCU(toSCP);
+    StreamReader readSCU(toSCU.getStreamInput());
+    StreamWriter writeSCU(toSCP.getStreamOutput());
 
-    StreamReader readSCP(toSCP);
-    StreamWriter writeSCP(toSCU);
+    StreamReader readSCP(toSCP.getStreamInput());
+    StreamWriter writeSCP(toSCU.getStreamOutput());
 
     PresentationContext context("1.2.840.10008.5.1.4.1.2.1.2");
     context.addTransferSyntax("1.2.840.10008.1.2"); // implicit VR little endian
@@ -344,7 +344,7 @@ TEST(dimseTest, moveSCUSCP)
 
 
 
-    DataSet keys(dimse.getTransferSyntax("1.2.840.10008.5.1.4.1.2.1.2"));
+    MutableDataSet keys(dimse.getTransferSyntax("1.2.840.10008.5.1.4.1.2.1.2"));
     keys.setString(TagId(tagId_t::QueryRetrieveLevel_0008_0052), "PATIENT");
     keys.setString(TagId(tagId_t::PatientID_0010_0020), "100");
     CMoveCommand getCommand(
@@ -357,13 +357,13 @@ TEST(dimseTest, moveSCUSCP)
 
     dimse.sendCommandOrResponse(getCommand);
 
-    std::unique_ptr<CMoveResponse> response0(dimse.getCMoveResponse(getCommand));
-    EXPECT_EQ(dimseStatus_t::pending, response0->getStatus());
-    std::unique_ptr<CMoveResponse> response1(dimse.getCMoveResponse(getCommand));
-    EXPECT_EQ(dimseStatus_t::success, response1->getStatus());
+    CMoveResponse response0 = dimse.getCMoveResponse(getCommand);
+    EXPECT_EQ(dimseStatus_t::pending, response0.getStatus());
+    CMoveResponse response1 = dimse.getCMoveResponse(getCommand);
+    EXPECT_EQ(dimseStatus_t::success, response1.getStatus());
 
-    toSCU.terminate();
-    toSCP.terminate();
+    readSCU.terminate();
+    readSCP.terminate();
     thread.join();
 
     EXPECT_EQ(1u, receivedRequests);
@@ -390,27 +390,27 @@ void findScpThread(
 
         for(;;)
         {
-            std::unique_ptr<CFindCommand> command(dynamic_cast<CFindCommand*>(dimseService.getCommand()));
-            std::unique_ptr<DataSet> pIdentifier(command->getPayloadDataSet());
+            CFindCommand command = dimseService.getCommand().getAsCFindCommand();
+            DataSet identifier = command.getPayloadDataSet();
 
-            if(pIdentifier->getString(TagId(tagId_t::QueryRetrieveLevel_0008_0052), 0) != "STUDY" ||
-                    pIdentifier->getString(TagId(tagId_t::PatientID_0010_0020), 0) != "100")
+            if(identifier.getString(TagId(tagId_t::QueryRetrieveLevel_0008_0052), 0) != "STUDY" ||
+                    identifier.getString(TagId(tagId_t::PatientID_0010_0020), 0) != "100")
             {
-                dimseService.sendCommandOrResponse(CFindResponse(*command, dimseStatusCode_t::success));
+                dimseService.sendCommandOrResponse(CFindResponse(command, dimseStatusCode_t::success));
                 return;
             }
 
-            DataSet study0(dimseService.getTransferSyntax(command->getAbstractSyntax()));
+            MutableDataSet study0(dimseService.getTransferSyntax(command.getAbstractSyntax()));
             study0.setString(TagId(tagId_t::PatientID_0010_0020), "100");
             study0.setString(TagId(tagId_t::StudyID_0020_0010), "110");
-            dimseService.sendCommandOrResponse(CFindResponse(*command, study0));
+            dimseService.sendCommandOrResponse(CFindResponse(command, study0));
 
-            DataSet study1(dimseService.getTransferSyntax(command->getAbstractSyntax()));
+            MutableDataSet study1(dimseService.getTransferSyntax(command.getAbstractSyntax()));
             study1.setString(TagId(tagId_t::PatientID_0010_0020), "100");
             study1.setString(TagId(tagId_t::StudyID_0020_0010), "120");
-            dimseService.sendCommandOrResponse(CFindResponse(*command, study1));
+            dimseService.sendCommandOrResponse(CFindResponse(command, study1));
 
-            dimseService.sendCommandOrResponse(CFindResponse(*command, dimseStatusCode_t::success));
+            dimseService.sendCommandOrResponse(CFindResponse(command, dimseStatusCode_t::success));
         }
     }
     catch(const StreamClosedError&)
@@ -430,13 +430,13 @@ void findScpThread(
 ///////////////////////////////////////////////////////////
 TEST(dimseTest, findSCUSCP)
 {
-    Pipe toSCU(1024), toSCP(1024);
+    PipeStream toSCU(1024), toSCP(1024);
 
-    StreamReader readSCU(toSCU);
-    StreamWriter writeSCU(toSCP);
+    StreamReader readSCU(toSCU.getStreamInput());
+    StreamWriter writeSCU(toSCP.getStreamOutput());
 
-    StreamReader readSCP(toSCP);
-    StreamWriter writeSCP(toSCU);
+    StreamReader readSCP(toSCP.getStreamInput());
+    StreamWriter writeSCP(toSCU.getStreamOutput());
 
     PresentationContext context("1.2.840.10008.5.1.4.1.2.1.1");
     context.addTransferSyntax("1.2.840.10008.1.2.1"); // explicit VR little endian
@@ -455,7 +455,7 @@ TEST(dimseTest, findSCUSCP)
     AssociationSCU scu("SCU", scpName, 1, 1, presentationContexts, readSCU, writeSCU, 0);
     DimseService dimse(scu);
 
-    DataSet keys(dimse.getTransferSyntax("1.2.840.10008.5.1.4.1.2.1.1"));
+    MutableDataSet keys(dimse.getTransferSyntax("1.2.840.10008.5.1.4.1.2.1.1"));
     keys.setString(TagId(tagId_t::QueryRetrieveLevel_0008_0052), "STUDY");
     keys.setString(TagId(tagId_t::PatientID_0010_0020), "100");
     CFindCommand findCommand(
@@ -467,21 +467,21 @@ TEST(dimseTest, findSCUSCP)
 
     dimse.sendCommandOrResponse(findCommand);
 
-    std::unique_ptr<CFindResponse> response0(dimse.getCFindResponse(findCommand));
-    EXPECT_EQ(dimseStatus_t::pending, response0->getStatus());
-    std::unique_ptr<DataSet> dataset0(response0->getPayloadDataSet());
-    EXPECT_EQ("110", dataset0->getString(TagId(tagId_t::StudyID_0020_0010), 0));
+    CFindResponse response0 = dimse.getCFindResponse(findCommand);
+    EXPECT_EQ(dimseStatus_t::pending, response0.getStatus());
+    DataSet dataset0 = response0.getPayloadDataSet();
+    EXPECT_EQ("110", dataset0.getString(TagId(tagId_t::StudyID_0020_0010), 0));
 
-    std::unique_ptr<CFindResponse> response1(dimse.getCFindResponse(findCommand));
-    EXPECT_EQ(dimseStatus_t::pending, response1->getStatus());
-    std::unique_ptr<DataSet> dataset1(response1->getPayloadDataSet());
-    EXPECT_EQ("120", dataset1->getString(TagId(tagId_t::StudyID_0020_0010), 0));
+    CFindResponse response1 = dimse.getCFindResponse(findCommand);
+    EXPECT_EQ(dimseStatus_t::pending, response1.getStatus());
+    DataSet dataset1 = response1.getPayloadDataSet();
+    EXPECT_EQ("120", dataset1.getString(TagId(tagId_t::StudyID_0020_0010), 0));
 
-    std::unique_ptr<CFindResponse> response2(dimse.getCFindResponse(findCommand));
-    EXPECT_EQ(dimseStatus_t::success, response2->getStatus());
+    CFindResponse response2 = dimse.getCFindResponse(findCommand);
+    EXPECT_EQ(dimseStatus_t::success, response2.getStatus());
 
-    toSCU.terminate();
-    toSCP.terminate();
+    readSCU.terminate();
+    readSCP.terminate();
     thread.join();
 }
 
@@ -508,8 +508,8 @@ void echoScpThread(
 
         for(;;)
         {
-            std::unique_ptr<CEchoCommand> command(dynamic_cast<CEchoCommand*>(dimseService.getCommand()));
-            dimseService.sendCommandOrResponse(CEchoResponse(*command, dimseStatusCode_t::success));
+            CEchoCommand command = dimseService.getCommand().getAsCEchoCommand();
+            dimseService.sendCommandOrResponse(CEchoResponse(command, dimseStatusCode_t::success));
         }
     }
     catch(const StreamClosedError&)
@@ -529,13 +529,13 @@ void echoScpThread(
 ///////////////////////////////////////////////////////////
 TEST(dimseTest, echoSCUSCP)
 {
-    Pipe toSCU(1024), toSCP(1024);
+    PipeStream toSCU(1024), toSCP(1024);
 
-    StreamReader readSCU(toSCU);
-    StreamWriter writeSCU(toSCP);
+    StreamReader readSCU(toSCU.getStreamInput());
+    StreamWriter writeSCU(toSCP.getStreamOutput());
 
-    StreamReader readSCP(toSCP);
-    StreamWriter writeSCP(toSCU);
+    StreamReader readSCP(toSCP.getStreamInput());
+    StreamWriter writeSCP(toSCU.getStreamOutput());
 
     PresentationContext context("1.2.840.10008.1.1");
     context.addTransferSyntax("1.2.840.10008.1.2.1"); // explicit VR little endian
@@ -562,12 +562,12 @@ TEST(dimseTest, echoSCUSCP)
 
     dimse.sendCommandOrResponse(echoCommand);
 
-    std::unique_ptr<CEchoResponse> response(dimse.getCEchoResponse(echoCommand));
-    EXPECT_EQ(dimseStatus_t::success, response->getStatus());
-    EXPECT_EQ("1.1.1.1.1", response->getAffectedSopClassUid());
+    CEchoResponse response = dimse.getCEchoResponse(echoCommand);
+    EXPECT_EQ(dimseStatus_t::success, response.getStatus());
+    EXPECT_EQ("1.1.1.1.1", response.getAffectedSopClassUid());
 
-    toSCU.terminate();
-    toSCP.terminate();
+    readSCU.terminate();
+    readSCP.terminate();
 
     thread.join();
 }
@@ -592,18 +592,22 @@ void cancelScpThread(
 
         for(;;)
         {
-            std::unique_ptr<CMoveCommand> command(dynamic_cast<CMoveCommand*>(dimseService.getCommand()));
-            std::unique_ptr<CCancelCommand> cancel(dynamic_cast<CCancelCommand*>(dimseService.getCommand()));
-            std::unique_ptr<CCancelCommand> cancel1(dynamic_cast<CCancelCommand*>(dimseService.getCommand()));
+            DimseCommand command = dimseService.getCommand();
+            ASSERT_EQ(dimseCommandType_t::cMove, command.getCommandType());
+            CMoveCommand moveCommand = command.getAsCMoveCommand();
+            CCancelCommand cancel = dimseService.getCommand().getAsCCancelCommand();
+            dimseService.getCommand().getAsCCancelCommand();
 
-            if(cancel->getCancelMessageID() == command->getID())
+            if(cancel.getCancelMessageID() == moveCommand.getID())
             {
-                dimseService.sendCommandOrResponse(CMoveResponse(*command, dimseStatusCode_t::canceled, 0, 0, 0, 0));
+                dimseService.sendCommandOrResponse(CMoveResponse(moveCommand, dimseStatusCode_t::canceled, 0, 0, 0, 0));
             }
             else
             {
-                dimseService.sendCommandOrResponse(CMoveResponse(*command, dimseStatusCode_t::success, 0, 0, 0, 0));
+                dimseService.sendCommandOrResponse(CMoveResponse(moveCommand, dimseStatusCode_t::success, 0, 0, 0, 0));
             }
+            dimseService.getCommand().getAsCCancelCommand();
+
         }
     }
     catch(const StreamClosedError&)
@@ -622,13 +626,13 @@ void cancelScpThread(
 ///////////////////////////////////////////////////////////
 TEST(dimseTest, cancelSCUSCP)
 {
-    Pipe toSCU(1024), toSCP(1024);
+    PipeStream toSCU(1024), toSCP(1024);
 
-    StreamReader readSCU(toSCU);
-    StreamWriter writeSCU(toSCP);
+    StreamReader readSCU(toSCU.getStreamInput());
+    StreamWriter writeSCU(toSCP.getStreamOutput());
 
-    StreamReader readSCP(toSCP);
-    StreamWriter writeSCP(toSCU);
+    StreamReader readSCP(toSCP.getStreamInput());
+    StreamWriter writeSCP(toSCU.getStreamOutput());
 
     PresentationContext context("1.2.840.10008.5.1.4.1.2.1.2");
     context.addTransferSyntax("1.2.840.10008.1.2"); // implicit VR little endian
@@ -647,7 +651,7 @@ TEST(dimseTest, cancelSCUSCP)
     AssociationSCU scu("SCU", scpName, 1, 1, presentationContexts, readSCU, writeSCU, 0);
     DimseService dimse(scu);
 
-    DataSet keys(dimse.getTransferSyntax("1.2.840.10008.5.1.4.1.2.1.2"));
+    MutableDataSet keys(dimse.getTransferSyntax("1.2.840.10008.5.1.4.1.2.1.2"));
     keys.setString(TagId(tagId_t::QueryRetrieveLevel_0008_0052), "PATIENT");
     keys.setString(TagId(tagId_t::PatientID_0010_0020), "100");
     CMoveCommand moveCommand(
@@ -666,14 +670,14 @@ TEST(dimseTest, cancelSCUSCP)
 
     std::this_thread::sleep_for(std::chrono::seconds(5));
 
-    std::unique_ptr<CMoveResponse> response(dimse.getCMoveResponse(moveCommand));
+    CMoveResponse response = dimse.getCMoveResponse(moveCommand);
 
-    EXPECT_EQ(dimseStatus_t::cancel, response->getStatus());
+    EXPECT_EQ(dimseStatus_t::cancel, response.getStatus());
 
     EXPECT_NO_THROW(dimse.sendCommandOrResponse(cancel));
 
-    toSCU.terminate();
-    toSCP.terminate();
+    readSCU.terminate();
+    readSCP.terminate();
 
     thread.join();
 }
@@ -698,13 +702,13 @@ void neventReportScpThread(
 
         for(;;)
         {
-            std::unique_ptr<NEventReportCommand> command(dynamic_cast<NEventReportCommand*>(dimseService.getCommand()));
+            NEventReportCommand command = dimseService.getCommand().getAsNEventReportCommand();
 
-            DataSet eventReply(dimseService.getTransferSyntax(command->getAbstractSyntax()));
-            std::unique_ptr<DataSet> pEventData(command->getPayloadDataSet());
+            MutableDataSet eventReply(dimseService.getTransferSyntax(command.getAbstractSyntax()));
+            DataSet eventData = command.getPayloadDataSet();
             eventReply.setString(TagId(tagId_t::PatientName_0010_0010),
-                                 pEventData->getString(TagId(tagId_t::PatientName_0010_0010), 0));
-            dimseService.sendCommandOrResponse(NEventReportResponse(*command, eventReply));
+                                 eventData.getString(TagId(tagId_t::PatientName_0010_0010), 0));
+            dimseService.sendCommandOrResponse(NEventReportResponse(command, eventReply));
         }
     }
     catch(const StreamClosedError&)
@@ -723,13 +727,13 @@ void neventReportScpThread(
 ///////////////////////////////////////////////////////////
 TEST(dimseTest, neventReportSCUSCP)
 {
-    Pipe toSCU(1024), toSCP(1024);
+    PipeStream toSCU(1024), toSCP(1024);
 
-    StreamReader readSCU(toSCU);
-    StreamWriter writeSCU(toSCP);
+    StreamReader readSCU(toSCU.getStreamInput());
+    StreamWriter writeSCU(toSCP.getStreamOutput());
 
-    StreamReader readSCP(toSCP);
-    StreamWriter writeSCP(toSCU);
+    StreamReader readSCP(toSCP.getStreamInput());
+    StreamWriter writeSCP(toSCU.getStreamOutput());
 
     PresentationContext context("1.2.840.10008.5.1.4.34.6.4");
     context.addTransferSyntax("1.2.840.10008.1.2.1"); // explicit VR little endian
@@ -748,7 +752,7 @@ TEST(dimseTest, neventReportSCUSCP)
     AssociationSCU scu("SCU", scpName, 1, 1, presentationContexts, readSCU, writeSCU, 0);
     DimseService dimse(scu);
 
-    DataSet nevent(dimse.getTransferSyntax("1.2.840.10008.5.1.4.34.6.4"));
+    MutableDataSet nevent(dimse.getTransferSyntax("1.2.840.10008.5.1.4.34.6.4"));
     nevent.setString(TagId(tagId_t::PatientName_0010_0010), "EVENT^PATIENT");
     NEventReportCommand eventCommand(
                 "1.2.840.10008.5.1.4.34.6.4",
@@ -759,14 +763,14 @@ TEST(dimseTest, neventReportSCUSCP)
                 nevent);
     dimse.sendCommandOrResponse(eventCommand);
 
-    std::unique_ptr<NEventReportResponse> pResponse(dimse.getNEventReportResponse(eventCommand));
-    std::unique_ptr<DataSet> pEventInformation(pResponse->getPayloadDataSet());
+    NEventReportResponse response = dimse.getNEventReportResponse(eventCommand);
+    DataSet eventInformation = response.getPayloadDataSet();
 
-    EXPECT_EQ("EVENT^PATIENT", pEventInformation->getString(TagId(tagId_t::PatientName_0010_0010), 0));
-    EXPECT_EQ(1, pResponse->getEventID());
+    EXPECT_EQ("EVENT^PATIENT", eventInformation.getString(TagId(tagId_t::PatientName_0010_0010), 0));
+    EXPECT_EQ(1, response.getEventID());
 
-    toSCU.terminate();
-    toSCP.terminate();
+    readSCU.terminate();
+    readSCP.terminate();
 
     thread.join();
 }
@@ -791,10 +795,10 @@ void ngetScpThread(
 
         for(;;)
         {
-            std::unique_ptr<NGetCommand> command(dynamic_cast<NGetCommand*>(dimseService.getCommand()));
-            DataSet getReply(dimseService.getTransferSyntax(command->getAbstractSyntax()));
+            NGetCommand command = dimseService.getCommand().getAsNGetCommand();
+            MutableDataSet getReply(dimseService.getTransferSyntax(command.getAbstractSyntax()));
 
-            attributeIdentifierList_t identifierList(command->getAttributeList());
+            attributeIdentifierList_t identifierList(command.getAttributeList());
             if(identifierList.size() == 2 &&
                     identifierList[0] == tagId_t::PatientName_0010_0010 &&
                     identifierList[1] == tagId_t::PatientID_0010_0020)
@@ -802,7 +806,7 @@ void ngetScpThread(
                 getReply.setString(TagId(tagId_t::PatientName_0010_0010), "GET^PATIENT");
                 getReply.setString(TagId(tagId_t::PatientID_0010_0020), "100");
             }
-            dimseService.sendCommandOrResponse(NGetResponse(*command, dimseStatusCode_t::success, getReply));
+            dimseService.sendCommandOrResponse(NGetResponse(command, dimseStatusCode_t::success, getReply));
         }
     }
     catch(const StreamClosedError&)
@@ -821,13 +825,13 @@ void ngetScpThread(
 ///////////////////////////////////////////////////////////
 TEST(dimseTest, ngetSCUSCP)
 {
-    Pipe toSCU(1024), toSCP(1024);
+    PipeStream toSCU(1024), toSCP(1024);
 
-    StreamReader readSCU(toSCU);
-    StreamWriter writeSCU(toSCP);
+    StreamReader readSCU(toSCU.getStreamInput());
+    StreamWriter writeSCU(toSCP.getStreamOutput());
 
-    StreamReader readSCP(toSCP);
-    StreamWriter writeSCP(toSCU);
+    StreamReader readSCP(toSCP.getStreamInput());
+    StreamWriter writeSCP(toSCU.getStreamOutput());
 
     PresentationContext context("1.2.840.10008.5.1.4.34.6.4");
     context.addTransferSyntax("1.2.840.10008.1.2.1"); // explicit VR little endian
@@ -857,14 +861,14 @@ TEST(dimseTest, ngetSCUSCP)
                 identifierList);
     dimse.sendCommandOrResponse(getCommand);
 
-    std::unique_ptr<NGetResponse> pResponse(dimse.getNGetResponse(getCommand));
-    std::unique_ptr<DataSet> pGetIdentifier(pResponse->getPayloadDataSet());
+    NGetResponse response = dimse.getNGetResponse(getCommand);
+    DataSet getIdentifier = response.getPayloadDataSet();
 
-    EXPECT_EQ("GET^PATIENT", pGetIdentifier->getString(TagId(tagId_t::PatientName_0010_0010), 0));
-    EXPECT_EQ("100", pGetIdentifier->getString(TagId(tagId_t::PatientID_0010_0020), 0));
+    EXPECT_EQ("GET^PATIENT", getIdentifier.getString(TagId(tagId_t::PatientName_0010_0010), 0));
+    EXPECT_EQ("100", getIdentifier.getString(TagId(tagId_t::PatientID_0010_0020), 0));
 
-    toSCU.terminate();
-    toSCP.terminate();
+    readSCU.terminate();
+    readSCP.terminate();
 
     thread.join();
 }
@@ -891,19 +895,19 @@ void nsetScpThread(
 
         for(;;)
         {
-            std::unique_ptr<NSetCommand> command(dynamic_cast<NSetCommand*>(dimseService.getCommand()));
-            std::unique_ptr<DataSet> pSetDataSet(command->getPayloadDataSet());
+            NSetCommand command = dimseService.getCommand().getAsNSetCommand();
+            DataSet setDataSet = command.getPayloadDataSet();
 
             attributeIdentifierList_t identifierList;
 
-            if(pSetDataSet->getString(TagId(tagId_t::PatientName_0010_0010), 0) == "SET^PATIENT")
+            if(setDataSet.getString(TagId(tagId_t::PatientName_0010_0010), 0) == "SET^PATIENT")
             {
                 identifierList.push_back(tagId_t::PatientName_0010_0010);
-                dimseService.sendCommandOrResponse(NSetResponse(*command, identifierList));
+                dimseService.sendCommandOrResponse(NSetResponse(command, identifierList));
             }
             else
             {
-                dimseService.sendCommandOrResponse(NSetResponse(*command, dimseStatusCode_t::unableToProcess));
+                dimseService.sendCommandOrResponse(NSetResponse(command, dimseStatusCode_t::unableToProcess));
             }
         }
     }
@@ -923,13 +927,13 @@ void nsetScpThread(
 ///////////////////////////////////////////////////////////
 TEST(dimseTest, nsetSCUSCP)
 {
-    Pipe toSCU(1024), toSCP(1024);
+    PipeStream toSCU(1024), toSCP(1024);
 
-    StreamReader readSCU(toSCU);
-    StreamWriter writeSCU(toSCP);
+    StreamReader readSCU(toSCU.getStreamInput());
+    StreamWriter writeSCU(toSCP.getStreamOutput());
 
-    StreamReader readSCP(toSCP);
-    StreamWriter writeSCP(toSCU);
+    StreamReader readSCP(toSCP.getStreamInput());
+    StreamWriter writeSCP(toSCU.getStreamOutput());
 
     PresentationContext context("1.2.840.10008.5.1.4.34.6.4");
     context.addTransferSyntax("1.2.840.10008.1.2.1"); // explicit VR little endian
@@ -948,7 +952,7 @@ TEST(dimseTest, nsetSCUSCP)
     AssociationSCU scu("SCU", scpName, 1, 1, presentationContexts, readSCU, writeSCU, 0);
     DimseService dimse(scu);
 
-    DataSet setDataset(dimse.getTransferSyntax("1.2.840.10008.5.1.4.34.6.4"));
+    MutableDataSet setDataset(dimse.getTransferSyntax("1.2.840.10008.5.1.4.34.6.4"));
     setDataset.setString(TagId(tagId_t::PatientName_0010_0010), "SET^PATIENT");
 
     NSetCommand setCommand(
@@ -959,15 +963,15 @@ TEST(dimseTest, nsetSCUSCP)
                 setDataset);
     dimse.sendCommandOrResponse(setCommand);
 
-    std::unique_ptr<NSetResponse> pResponse(dimse.getNSetResponse(setCommand));
+    NSetResponse response = dimse.getNSetResponse(setCommand);
 
-    attributeIdentifierList_t identifier(pResponse->getModifiedAttributes());
+    attributeIdentifierList_t identifier(response.getModifiedAttributes());
 
     ASSERT_EQ(1u, identifier.size());
     EXPECT_EQ(tagId_t::PatientName_0010_0010, identifier[0]);
 
-    toSCU.terminate();
-    toSCP.terminate();
+    readSCU.terminate();
+    readSCP.terminate();
 
     thread.join();
 }
@@ -993,16 +997,16 @@ void nActionScpThread(
 
         for(;;)
         {
-            std::unique_ptr<NActionCommand> command(dynamic_cast<NActionCommand*>(dimseService.getCommand()));
-            std::unique_ptr<DataSet> pSetDataSet(command->getPayloadDataSet());
+            NActionCommand command = dimseService.getCommand().getAsNActionCommand();
+            DataSet setDataSet = command.getPayloadDataSet();
 
-            if(pSetDataSet->getString(TagId(tagId_t::PatientName_0010_0010), 0) == "ACTION^PATIENT")
+            if(setDataSet.getString(TagId(tagId_t::PatientName_0010_0010), 0) == "ACTION^PATIENT")
             {
-                dimseService.sendCommandOrResponse(NActionResponse(*command, *pSetDataSet));
+                dimseService.sendCommandOrResponse(NActionResponse(command, setDataSet));
             }
             else
             {
-                dimseService.sendCommandOrResponse(NActionResponse(*command, dimseStatusCode_t::unableToProcess));
+                dimseService.sendCommandOrResponse(NActionResponse(command, dimseStatusCode_t::unableToProcess));
             }
         }
     }
@@ -1022,13 +1026,13 @@ void nActionScpThread(
 ///////////////////////////////////////////////////////////
 TEST(dimseTest, nActionSCUSCP)
 {
-    Pipe toSCU(1024), toSCP(1024);
+    PipeStream toSCU(1024), toSCP(1024);
 
-    StreamReader readSCU(toSCU);
-    StreamWriter writeSCU(toSCP);
+    StreamReader readSCU(toSCU.getStreamInput());
+    StreamWriter writeSCU(toSCP.getStreamOutput());
 
-    StreamReader readSCP(toSCP);
-    StreamWriter writeSCP(toSCU);
+    StreamReader readSCP(toSCP.getStreamInput());
+    StreamWriter writeSCP(toSCU.getStreamOutput());
 
     PresentationContext context("1.2.840.10008.5.1.4.34.6.4");
     context.addTransferSyntax("1.2.840.10008.1.2.1"); // explicit VR little endian
@@ -1047,7 +1051,7 @@ TEST(dimseTest, nActionSCUSCP)
     AssociationSCU scu("SCU", scpName, 1, 1, presentationContexts, readSCU, writeSCU, 0);
     DimseService dimse(scu);
 
-    DataSet actionDataset(dimse.getTransferSyntax("1.2.840.10008.5.1.4.34.6.4"));
+    MutableDataSet actionDataset(dimse.getTransferSyntax("1.2.840.10008.5.1.4.34.6.4"));
     actionDataset.setString(TagId(tagId_t::PatientName_0010_0010), "ACTION^PATIENT");
 
     std::uint16_t actionID(101);
@@ -1061,15 +1065,15 @@ TEST(dimseTest, nActionSCUSCP)
                 actionDataset);
     dimse.sendCommandOrResponse(actionCommand);
 
-    std::unique_ptr<NActionResponse> pResponse(dimse.getNActionResponse(actionCommand));
-    ASSERT_EQ((std::uint16_t)dimseStatusCode_t::success, pResponse->getStatusCode());
-    ASSERT_EQ(actionID, pResponse->getActionID());
+    NActionResponse response = dimse.getNActionResponse(actionCommand);
+    ASSERT_EQ((std::uint16_t)dimseStatusCode_t::success, response.getStatusCode());
+    ASSERT_EQ(actionID, response.getActionID());
 
-    std::unique_ptr<DataSet> pResponseDataSet(pResponse->getPayloadDataSet());
-    EXPECT_EQ("ACTION^PATIENT", pResponseDataSet->getString(TagId(tagId_t::PatientName_0010_0010), 0));
+    DataSet responseDataSet(response.getPayloadDataSet());
+    EXPECT_EQ("ACTION^PATIENT", responseDataSet.getString(TagId(tagId_t::PatientName_0010_0010), 0));
 
-    toSCU.terminate();
-    toSCP.terminate();
+    readSCU.terminate();
+    readSCP.terminate();
 
     thread.join();
 }
@@ -1095,16 +1099,16 @@ void nCreateScpThread(
 
         for(;;)
         {
-            std::unique_ptr<NCreateCommand> command(dynamic_cast<NCreateCommand*>(dimseService.getCommand()));
-            std::unique_ptr<DataSet> pCreateDataSet(command->getPayloadDataSet());
+            NCreateCommand command = dimseService.getCommand().getAsNCreateCommand();
+            DataSet createDataSet = command.getPayloadDataSet();
 
-            if(pCreateDataSet->getString(TagId(tagId_t::PatientName_0010_0010), 0) == "CREATE^PATIENT")
+            if(createDataSet.getString(TagId(tagId_t::PatientName_0010_0010), 0) == "CREATE^PATIENT")
             {
-                dimseService.sendCommandOrResponse(NCreateResponse(*command, *pCreateDataSet));
+                dimseService.sendCommandOrResponse(NCreateResponse(command, createDataSet));
             }
             else
             {
-                dimseService.sendCommandOrResponse(NCreateResponse(*command, dimseStatusCode_t::outOfResources));
+                dimseService.sendCommandOrResponse(NCreateResponse(command, dimseStatusCode_t::outOfResources));
             }
         }
     }
@@ -1124,13 +1128,13 @@ void nCreateScpThread(
 ///////////////////////////////////////////////////////////
 TEST(dimseTest, nCreateSCUSCP)
 {
-    Pipe toSCU(1024), toSCP(1024);
+    PipeStream toSCU(1024), toSCP(1024);
 
-    StreamReader readSCU(toSCU);
-    StreamWriter writeSCU(toSCP);
+    StreamReader readSCU(toSCU.getStreamInput());
+    StreamWriter writeSCU(toSCP.getStreamOutput());
 
-    StreamReader readSCP(toSCP);
-    StreamWriter writeSCP(toSCU);
+    StreamReader readSCP(toSCP.getStreamInput());
+    StreamWriter writeSCP(toSCU.getStreamOutput());
 
     PresentationContext context("1.2.840.10008.5.1.4.34.6.4");
     context.addTransferSyntax("1.2.840.10008.1.2.1"); // explicit VR little endian
@@ -1149,7 +1153,7 @@ TEST(dimseTest, nCreateSCUSCP)
     AssociationSCU scu("SCU", scpName, 1, 1, presentationContexts, readSCU, writeSCU, 0);
     DimseService dimse(scu);
 
-    DataSet createDataset(dimse.getTransferSyntax("1.2.840.10008.5.1.4.34.6.4"));
+    MutableDataSet createDataset(dimse.getTransferSyntax("1.2.840.10008.5.1.4.34.6.4"));
     createDataset.setString(TagId(tagId_t::PatientName_0010_0010), "CREATE^PATIENT");
 
     NCreateCommand createCommand(
@@ -1160,14 +1164,14 @@ TEST(dimseTest, nCreateSCUSCP)
                 createDataset);
     dimse.sendCommandOrResponse(createCommand);
 
-    std::unique_ptr<NCreateResponse> pResponse(dimse.getNCreateResponse(createCommand));
-    ASSERT_EQ((std::uint16_t)dimseStatusCode_t::success, pResponse->getStatusCode());
+    NCreateResponse response = dimse.getNCreateResponse(createCommand);
+    ASSERT_EQ((std::uint16_t)dimseStatusCode_t::success, response.getStatusCode());
 
-    std::unique_ptr<DataSet> pResponseDataSet(pResponse->getPayloadDataSet());
-    EXPECT_EQ("CREATE^PATIENT", pResponseDataSet->getString(TagId(tagId_t::PatientName_0010_0010), 0));
+    DataSet responseDataSet = response.getPayloadDataSet();
+    EXPECT_EQ("CREATE^PATIENT", responseDataSet.getString(TagId(tagId_t::PatientName_0010_0010), 0));
 
-    toSCU.terminate();
-    toSCP.terminate();
+    readSCU.terminate();
+    readSCP.terminate();
 
     thread.join();
 }
@@ -1193,8 +1197,8 @@ void nDeleteScpThread(
 
         for(;;)
         {
-            std::unique_ptr<NDeleteCommand> command(dynamic_cast<NDeleteCommand*>(dimseService.getCommand()));
-            dimseService.sendCommandOrResponse(NDeleteResponse(*command, dimseStatusCode_t::success));
+            NDeleteCommand command = dimseService.getCommand().getAsNDeleteCommand();
+            dimseService.sendCommandOrResponse(NDeleteResponse(command, dimseStatusCode_t::success));
         }
     }
     catch(const StreamClosedError&)
@@ -1213,13 +1217,13 @@ void nDeleteScpThread(
 ///////////////////////////////////////////////////////////
 TEST(dimseTest, nDeleteSCUSCP)
 {
-    Pipe toSCU(1024), toSCP(1024);
+    PipeStream toSCU(1024), toSCP(1024);
 
-    StreamReader readSCU(toSCU);
-    StreamWriter writeSCU(toSCP);
+    StreamReader readSCU(toSCU.getStreamInput());
+    StreamWriter writeSCU(toSCP.getStreamOutput());
 
-    StreamReader readSCP(toSCP);
-    StreamWriter writeSCP(toSCU);
+    StreamReader readSCP(toSCP.getStreamInput());
+    StreamWriter writeSCP(toSCU.getStreamOutput());
 
     PresentationContext context("1.2.840.10008.5.1.4.34.6.4");
     context.addTransferSyntax("1.2.840.10008.1.2.1"); // explicit VR little endian
@@ -1245,11 +1249,11 @@ TEST(dimseTest, nDeleteSCUSCP)
                 "1.1.1.1.1.1.1");
     dimse.sendCommandOrResponse(deleteCommand);
 
-    std::unique_ptr<NDeleteResponse> pResponse(dimse.getNDeleteResponse(deleteCommand));
-    ASSERT_EQ("1.1.1.1.1.1.1", pResponse->getAffectedSopInstanceUid());
+    NDeleteResponse response = dimse.getNDeleteResponse(deleteCommand);
+    ASSERT_EQ("1.1.1.1.1.1.1", response.getAffectedSopInstanceUid());
 
-    toSCU.terminate();
-    toSCP.terminate();
+    readSCU.terminate();
+    readSCP.terminate();
 
     thread.join();
 }
@@ -1286,13 +1290,13 @@ void timeoutScpThread(
 
 TEST(dimseTest, dimseTimeoutTest)
 {
-    Pipe toSCU(1024), toSCP(1024);
+    PipeStream toSCU(1024), toSCP(1024);
 
-    StreamReader readSCU(toSCU);
-    StreamWriter writeSCU(toSCP);
+    StreamReader readSCU(toSCU.getStreamInput());
+    StreamWriter writeSCU(toSCP.getStreamOutput());
 
-    StreamReader readSCP(toSCP);
-    StreamWriter writeSCP(toSCU);
+    StreamReader readSCP(toSCP.getStreamInput());
+    StreamWriter writeSCP(toSCU.getStreamOutput());
 
     PresentationContext context("1.2.840.10008.5.1.4.34.6.4");
     context.addTransferSyntax("1.2.840.10008.1.2.1"); // explicit VR little endian
@@ -1401,8 +1405,8 @@ TEST(dimseTest, storeSCUInteroperabilityTest)
 
         TCPStream tcpStream(TCPActiveAddress("127.0.0.1", "30003"));
 
-        StreamReader readSCU(tcpStream);
-        StreamWriter writeSCU(tcpStream);
+        StreamReader readSCU(tcpStream.getStreamInput());
+        StreamWriter writeSCU(tcpStream.getStreamOutput());
 
         std::string transferSyntax("1.2.840.10008.1.2.1");
         PresentationContext context("1.2.840.10008.1.1");
@@ -1414,7 +1418,7 @@ TEST(dimseTest, storeSCUInteroperabilityTest)
 
         DimseService dimse(scu);
 
-        DataSet payload(transferSyntax);
+        MutableDataSet payload(transferSyntax);
         payload.setString(TagId(tagId_t::SOPInstanceUID_0008_0018), "1.1.1.1");
         payload.setString(TagId(tagId_t::SOPClassUID_0008_0016), "1.1.1.1");
         payload.setString(TagId(tagId_t::PatientName_0010_0010),"Patient^Test");
@@ -1428,17 +1432,17 @@ TEST(dimseTest, storeSCUInteroperabilityTest)
                     0,
                     payload);
         dimse.sendCommandOrResponse(command);
-        std::unique_ptr<DimseResponse> response(dimse.getCStoreResponse(command));
+        DimseResponse response = dimse.getCStoreResponse(command);
 
-        ASSERT_EQ(response->getStatus(), dimseStatus_t::success);
+        ASSERT_EQ(response.getStatus(), dimseStatus_t::success);
 
         std::list<std::string> files(getFilesInDirectory(dirName));
 
         ASSERT_EQ(files.size(), 1u);
 
-        std::unique_ptr<DataSet> readDataSet(CodecFactory::load(files.front()));
+        DataSet readDataSet = CodecFactory::load(files.front());
 
-        ASSERT_EQ(readDataSet->getString(TagId(tagId_t::PatientName_0010_0010), 0), "Patient^Test");
+        ASSERT_EQ(readDataSet.getString(TagId(tagId_t::PatientName_0010_0010), 0), "Patient^Test");
     }
     catch(...)
     {
@@ -1463,7 +1467,7 @@ void storeScuThread(std::string transferSyntax, std::string sopClassUid, std::st
     std::string fileName(tempFileName);
     free(tempFileName);
 
-    DataSet dataSet(transferSyntax);
+    MutableDataSet dataSet(transferSyntax);
     dataSet.setString(TagId(tagId_t::SOPClassUID_0008_0016), sopClassUid);
     dataSet.setString(TagId(tagId_t::SOPInstanceUID_0008_0018), sopInstanceUid);
     dataSet.setString(TagId(tagId_t::PatientName_0010_0010), "Test^Patient");
@@ -1489,10 +1493,10 @@ TEST(dimseTest, storeSCPInteroperabilityTest)
                 sopInstanceUid);
 
     TCPListener tcpListener(TCPPassiveAddress("", "30004"));
-    std::unique_ptr<TCPStream> tcpStream(tcpListener.waitForConnection());
+    TCPStream tcpStream(tcpListener.waitForConnection());
 
-    StreamReader readSCU(*tcpStream);
-    StreamWriter writeSCU(*tcpStream);
+    StreamReader readSCU(tcpStream.getStreamInput());
+    StreamWriter writeSCU(tcpStream.getStreamOutput());
 
     PresentationContext context(sopClassUid);
     context.addTransferSyntax(transferSyntax);
@@ -1503,12 +1507,12 @@ TEST(dimseTest, storeSCPInteroperabilityTest)
 
     DimseService dimse(scp);
 
-    std::unique_ptr<CStoreCommand> command(dynamic_cast<CStoreCommand*>(dimse.getCommand()));
-    std::unique_ptr<DataSet> pPayload(command->getPayloadDataSet());
+    CStoreCommand command = dimse.getCommand().getAsCStoreCommand();
+    DataSet payload = command.getPayloadDataSet();
 
-    ASSERT_EQ("Test^Patient", pPayload->getString(TagId(tagId_t::PatientName_0010_0010), 0));
+    ASSERT_EQ("Test^Patient", payload.getString(TagId(tagId_t::PatientName_0010_0010), 0));
 
-    dimse.sendCommandOrResponse(CStoreResponse(*command, dimseStatusCode_t::success));
+    dimse.sendCommandOrResponse(CStoreResponse(command, dimseStatusCode_t::success));
 
     std::this_thread::sleep_for(std::chrono::seconds(5));
 
@@ -1539,10 +1543,10 @@ TEST(dimseTest, moveSCPInteroperabilityTest)
 
     {
         TCPListener tcpListener(TCPPassiveAddress("", "30005"));
-        std::unique_ptr<TCPStream> tcpStream(tcpListener.waitForConnection());
+        TCPStream tcpStream(tcpListener.waitForConnection());
 
-        StreamReader readSCP(*tcpStream);
-        StreamWriter writeSCP(*tcpStream);
+        StreamReader readSCP(tcpStream.getStreamInput());
+        StreamWriter writeSCP(tcpStream.getStreamOutput());
 
         PresentationContext context("1.2.840.10008.5.1.4.1.2.1.2");
         context.addTransferSyntax("1.2.840.10008.1.2.1"); // explicit VR little endian
@@ -1552,16 +1556,16 @@ TEST(dimseTest, moveSCPInteroperabilityTest)
         AssociationSCP scp("SCP", 1, 1, presentationContexts, readSCP, writeSCP, 0, 10);
         DimseService dimse(scp);
 
-        std::unique_ptr<CMoveCommand> pMove(dynamic_cast<CMoveCommand*>(dimse.getCommand()));
+        CMoveCommand move = dimse.getCommand().getAsCMoveCommand();
 
-        EXPECT_EQ("SCP1", pMove->getDestinationAET());
+        EXPECT_EQ("SCP1", move.getDestinationAET());
 
-        std::unique_ptr<DataSet> pIdentifier(pMove->getPayloadDataSet());
+        DataSet identifier = move.getPayloadDataSet();
 
-        EXPECT_EQ("100", pIdentifier->getString(TagId(tagId_t::PatientID_0010_0020), 0));
+        EXPECT_EQ("100", identifier.getString(TagId(tagId_t::PatientID_0010_0020), 0));
 
-        dimse.sendCommandOrResponse(CMoveResponse(*pMove, dimseStatusCode_t::pending, 1, 0, 0, 0));
-        dimse.sendCommandOrResponse(CMoveResponse(*pMove, dimseStatusCode_t::success, 0, 1, 0, 0));
+        dimse.sendCommandOrResponse(CMoveResponse(move, dimseStatusCode_t::pending, 1, 0, 0, 0));
+        dimse.sendCommandOrResponse(CMoveResponse(move, dimseStatusCode_t::success, 0, 1, 0, 0));
 
         std::this_thread::sleep_for(std::chrono::seconds(5));
     }
@@ -1612,10 +1616,10 @@ TEST(dimseTest, findSCPInteroperabilityTest)
 
     {
         TCPListener tcpListener(TCPPassiveAddress("", "30005"));
-        std::unique_ptr<TCPStream> tcpStream(tcpListener.waitForConnection());
+        TCPStream tcpStream(tcpListener.waitForConnection());
 
-        StreamReader readSCP(*tcpStream);
-        StreamWriter writeSCP(*tcpStream);
+        StreamReader readSCP(tcpStream.getStreamInput());
+        StreamWriter writeSCP(tcpStream.getStreamOutput());
 
         PresentationContext context("1.2.840.10008.5.1.4.1.2.1.1");
         context.addTransferSyntax("1.2.840.10008.1.2.1"); // explicit VR little endian
@@ -1625,23 +1629,23 @@ TEST(dimseTest, findSCPInteroperabilityTest)
         AssociationSCP scp("SCP", 1, 1, presentationContexts, readSCP, writeSCP, 0, 10);
         DimseService dimse(scp);
 
-        std::unique_ptr<CFindCommand> pFind(dynamic_cast<CFindCommand*>(dimse.getCommand()));
+        CFindCommand find = dimse.getCommand().getAsCFindCommand();
 
-        std::unique_ptr<DataSet> pIdentifier(pFind->getPayloadDataSet());
+        DataSet identifier = find.getPayloadDataSet();
 
-        EXPECT_EQ("100", pIdentifier->getString(TagId(tagId_t::PatientID_0010_0020), 0));
+        EXPECT_EQ("100", identifier.getString(TagId(tagId_t::PatientID_0010_0020), 0));
 
-        DataSet study0(dimse.getTransferSyntax(pFind->getAbstractSyntax()));
+        MutableDataSet study0(dimse.getTransferSyntax(find.getAbstractSyntax()));
         study0.setString(TagId(tagId_t::PatientID_0010_0020), "100");
         study0.setString(TagId(tagId_t::StudyID_0020_0010), "110");
-        dimse.sendCommandOrResponse(CFindResponse(*pFind, study0));
+        dimse.sendCommandOrResponse(CFindResponse(find, study0));
 
-        DataSet study1(dimse.getTransferSyntax(pFind->getAbstractSyntax()));
+        MutableDataSet study1(dimse.getTransferSyntax(find.getAbstractSyntax()));
         study1.setString(TagId(tagId_t::PatientID_0010_0020), "100");
         study1.setString(TagId(tagId_t::StudyID_0020_0010), "120");
-        dimse.sendCommandOrResponse(CFindResponse(*pFind, study1));
+        dimse.sendCommandOrResponse(CFindResponse(find, study1));
 
-        dimse.sendCommandOrResponse(CFindResponse(*pFind, dimseStatusCode_t::success));
+        dimse.sendCommandOrResponse(CFindResponse(find, dimseStatusCode_t::success));
 
         std::this_thread::sleep_for(std::chrono::seconds(5));
     }

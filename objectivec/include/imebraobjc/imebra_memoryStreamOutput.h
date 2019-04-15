@@ -17,7 +17,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #import <Foundation/Foundation.h>
 #import "imebra_baseStreamOutput.h"
 
-@class ImebraReadWriteMemory;
+@class ImebraMutableMemory;
 
 ///
 /// \brief An output stream that writes data into a memory region.
@@ -32,7 +32,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     /// \param pMemory the memory region into which the stream will write the data
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    -(id)initWithReadWriteMemory:(ImebraReadWriteMemory*)pMemory;
+    -(id)initWithMutableMemory:(ImebraMutableMemory*)pMemory;
 
 @end
 

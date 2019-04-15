@@ -43,13 +43,10 @@ In Golang, import the package "imebra":
 Loading files
 -------------
 
-Imebra can read 2 kinds of files:
+Imebra can read DICOM files and Jpeg files.
 
-- DICOM files (via the Imebra DICOM codec)
-- Jpeg files (via the Imebra Jpeg codec)
-
-When parsing a DICOM or a Jpeg file both the DICOM and the Jpeg codes generate an in-memory DICOM structure represented by the :cpp:class:`imebra::DataSet` class
-(yes, also the Jpeg codec produces a DICOM structure containing an embedded JPEG file).
+Both the DICOM and the Jpeg codes generate an in-memory DICOM structure represented by the :cpp:class:`imebra::DataSet` class
+(also the Jpeg codec produces a DICOM structure containing an embedded JPEG file).
 
 Imebra chooses the correct codec automatically according to the stream's content.
 
@@ -59,7 +56,7 @@ In C++:
 
 .. code-block:: c++
 
-    std::unique_ptr<imebra::DataSet> loadedDataSet(imebra::CodecFactory::load("DicomFile.dcm"));
+    imebra::DataSet loadedDataSet(imebra::CodecFactory::load("DicomFile.dcm"));
 
 
 In Java:
@@ -100,7 +97,7 @@ Lazy loading in C++:
 .. code-block:: c++
 
     // Load tags in memory only if their size is equal or smaller than 2048 bytes
-    std::unique_ptr<imebra::DataSet> loadedDataSet(imebra::CodecFactory::load("DicomFile.dcm", 2048));
+    imebra::DataSet loadedDataSet(imebra::CodecFactory::load("DicomFile.dcm", 2048));
 
 
 in Java
@@ -163,8 +160,8 @@ This is how you retrieve the patient's name from the DataSet in C++:
     // A patient's name can contain up to 5 values, representing different interpretations of the same name
     // (e.g. alphabetic representation, ideographic representation and phonetic representation)
     // Here we retrieve the first interpretations (index 0 and 1)
-    std::wstring patientNameCharacter = loadedDataSet->getUnicodeString(imebra::TagId(imebra::tagId_t::PatientName_0010_0010), 0);
-    std::wstring patientNameIdeographic = loadedDataSet->getUnicodeString(imebra::TagId(imebra::tagId_t::PatientName_0010_0010), 1);
+    std::wstring patientNameCharacter = loadedDataSet.getUnicodeString(imebra::TagId(imebra::tagId_t::PatientName_0010_0010), 0);
+    std::wstring patientNameIdeographic = loadedDataSet.getUnicodeString(imebra::TagId(imebra::tagId_t::PatientName_0010_0010), 1);
 
 or
 
@@ -219,16 +216,16 @@ a tag's value cannot be found in the DataSet :
 .. code-block:: c++
 
     // Return an empty name if the tag is not present
-    std::wstring patientNameCharacter = loadedDataSet->getUnicodeString(imebra::TagId(imebra::tagId_t::PatientName_0010_0010), 0, L"");
-    std::wstring patientNameIdeographic = loadedDataSet->getUnicodeString(imebra::TagId(imebra::tagId_t::PatientName_0010_0010), 1, L"");
+    std::wstring patientNameCharacter = loadedDataSet.getUnicodeString(imebra::TagId(imebra::tagId_t::PatientName_0010_0010), 0, L"");
+    std::wstring patientNameIdeographic = loadedDataSet.getUnicodeString(imebra::TagId(imebra::tagId_t::PatientName_0010_0010), 1, L"");
 
 or
 
 .. code-block:: c++
 
     // Return an empty name if the tag is not present
-    std::wstring patientNameCharacter = loadedDataSet->getUnicodeString(imebra::TagId(0x10, 0x10), 0, L"");
-    std::wstring patientNameIdeographic = loadedDataSet->getUnicodeString(imebra::TagId(0x10, 0x10), 1, L"");
+    std::wstring patientNameCharacter = loadedDataSet.getUnicodeString(imebra::TagId(0x10, 0x10), 0, L"");
+    std::wstring patientNameIdeographic = loadedDataSet.getUnicodeString(imebra::TagId(0x10, 0x10), 1, L"");
 
 
 in Java:
@@ -276,14 +273,14 @@ To retrieve an image in C++:
 .. code-block:: c++
 
     // Retrieve the first image (index = 0)
-    std::unique_ptr<imebra::Image> image(loadedDataSet->getImageApplyModalityTransform(0));
+    imebra::Image image(loadedDataSet->getImageApplyModalityTransform(0));
 
     // Get the color space
-    std::string colorSpace = image->getColorSpace();
+    std::string colorSpace = image.getColorSpace();
 
     // Get the size in pixels
-    std::uint32_t width = image->getWidth();
-    std::uint32_t height = image->getHeight();
+    std::uint32_t width = image.etWidth();
+    std::uint32_t height = image.getHeight();
 
 
 To retrieve an image in Java:
@@ -344,19 +341,19 @@ This is how you scan all the pixels in C++, the slow way
     // (see previous code snippet)
 
     // Retrieve the data handler
-    std::unique_ptr<imebra::ReadingDataHandlerNumeric> dataHandler(image->getReadingDataHandler());
+    imebra::ReadingDataHandlerNumeric dataHandler(image.getReadingDataHandler());
 
     for(std::uint32 scanY(0); scanY != height; ++scanY)
     {
         for(std::uint32 scanX(0); scanX != width; ++scanX)
         {
             // For monochrome images
-            std::int32_t luminance = dataHandler->getSignedLong(scanY * width + scanX);
+            std::int32_t luminance = dataHandler.etSignedLong(scanY * width + scanX);
 
             // For RGB images
-            std::int32_t r = dataHandler->getSignedLong((scanY * width + scanX) * 3);
-            std::int32_t g = dataHandler->getSignedLong((scanY * width + scanX) * 3 + 1);
-            std::int32_t b = dataHandler->getSignedLong((scanY * width + scanX) * 3 + 2);
+            std::int32_t r = dataHandler.getSignedLong((scanY * width + scanX) * 3);
+            std::int32_t g = dataHandler.getSignedLong((scanY * width + scanX) * 3 + 1);
+            std::int32_t b = dataHandler.getSignedLong((scanY * width + scanX) * 3 + 2);
         }
     }
 
@@ -437,17 +434,17 @@ object:
 .. code-block:: c++
 
     // Retrieve the data handler
-    std::unique_ptr<imebra::ReadingDataHandlerNumeric> dataHandler(image->getReadingDataHandler());
+    imebra::ReadingDataHandlerNumeric dataHandler(image.getReadingDataHandler());
 
     // Get the memory pointer and the size (in bytes)
     size_t dataLength;
-    const char* data = dataHandler->data(&dataLength);
+    const char* data = dataHandler.data(&dataLength);
 
     // Get the number of bytes per each value (1, 2, or 4 for images)
-    size_t bytesPerValue = dataHandler->getUnitSize(); 
+    size_t bytesPerValue = dataHandler.getUnitSize(); 
 
     // Are the values signed?
-    bool bIsSigned = dataHandler->isSigned();
+    bool bIsSigned = dataHandler.isSigned();
 
     // Do something with the pixels...A template function would come handy
 
@@ -754,10 +751,10 @@ in C++:
 .. code-block:: c++
     
     {
-        std::unique_ptr<WritingDataHandler> dataHandler(dataSet.getWritingDataHandler(0));
-        dataHandler->setUnicodeString(0, L"AlphabeticName");
-        dataHandler->setUnicodeString(1, L"IdeographicName");
-        dataHandler->setUnicodeString(2, L"PhoneticName");
+        WritingDataHandler dataHandler(dataSet.getWritingDataHandler(0));
+        dataHandler.setUnicodeString(0, L"AlphabeticName");
+        dataHandler.setUnicodeString(1, L"IdeographicName");
+        dataHandler.setUnicodeString(2, L"PhoneticName");
 
         // dataHandler will go out of scope and will commit the data into the dataSet
     }
@@ -799,19 +796,19 @@ in C++
 .. code-block:: c++
 
     // Create a 300 by 200 pixel image, 15 bits per color channel, RGB
-    imebra::Image image(300, 200, imebra::bitDepth_t::depthU16, "RGB", 15);
+    imebra::MutableImage image(300, 200, imebra::bitDepth_t::depthU16, "RGB", 15);
     
     {
-        std::unique_ptr<WritingDataHandlerNumeric> dataHandler(image.getWritingDataHandler());
+        WritingDataHandlerNumeric dataHandler(image.getWritingDataHandler());
 
         // Set all the pixels to red
         for(std::uint32_t scanY(0); scanY != 200; ++scanY)
         {
             for(std::uint32_t scanX(0); scanX != 300; ++scanX)
             {
-                dataHandler->setUnsignedLong((scanY * 300 + scanX) * 3, 65535);
-                dataHandler->setUnsignedLong((scanY * 300 + scanX) * 3 + 1, 0);
-                dataHandler->setUnsignedLong((scanY * 300 + scanX) * 3 + 2, 0);
+                dataHandler.setUnsignedLong((scanY * 300 + scanX) * 3, 65535);
+                dataHandler.setUnsignedLong((scanY * 300 + scanX) * 3 + 1, 0);
+                dataHandler.setUnsignedLong((scanY * 300 + scanX) * 3 + 2, 0);
             }
         }
 
@@ -942,7 +939,7 @@ We then send the command and wait for a response:
     imebra::DimseService dimse(scu);
 
     // Let's prepare a dataset to store on the SCP
-    imebra::DataSet payload(dimse.getTransferSyntax("1.2.840.10008.5.1.4.1.1.4.1")); // We will use the negotiated transfer syntax
+    imebra::MutableDataSet payload(dimse.getTransferSyntax("1.2.840.10008.5.1.4.1.1.4.1")); // We will use the negotiated transfer syntax
     payload.setString(TagId(tagId_t::SOPInstanceUID_0008_0018), "1.1.1.1");
     payload.setString(TagId(tagId_t::SOPClassUID_0008_0016), "1.2.840.10008.5.1.4.1.1.4.1");
     payload.setString(TagId(tagId_t::PatientName_0010_0010),"Patient^Test");
@@ -961,9 +958,9 @@ We then send the command and wait for a response:
                 0,
                 payload);
     dimse.sendCommandOrResponse(command);
-    std::unique_ptr<imebra::DimseResponse> response(dimse.getCStoreResponse(command));
+    imebra::DimseResponse response(dimse.getCStoreResponse(command));
 
-    if(response->getStatus() == imebra::dimseStatus_t::success)
+    if(response.getStatus() == imebra::dimseStatus_t::success)
     {
         // SUCCESS!
     }
@@ -987,7 +984,7 @@ receive commands and send the responses.
     imebra::TCPListener tcpListener(TCPPassiveAddress("", "104"));
     
     // Wait until a connection arrives or terminate() is called on the tcpListener
-    std::unique_ptr<imebra::TCPStream> tcpStream(tcpListener.waitForConnection());
+    imebra::TCPStream tcpStream(tcpListener.waitForConnection());
 
     // tcpStream now represents the connected socket. Allocate a stream reader and a writer
     // to read and write on the connected socket

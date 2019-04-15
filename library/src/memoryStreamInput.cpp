@@ -12,20 +12,26 @@ If you do not want to be bound by the GPL terms (such as the requirement
 */
 
 #include "../include/imebra/memoryStreamInput.h"
-#include "../include/imebra/readMemory.h"
-#include "../include/imebra/readWriteMemory.h"
+#include "../include/imebra/memory.h"
+#include "../include/imebra/mutableMemory.h"
 #include "../implementation/memoryStreamImpl.h"
 #include <memory>
 
 namespace imebra
 {
 
-MemoryStreamInput::MemoryStreamInput(const ReadMemory& memory): BaseStreamInput(std::make_shared<implementation::memoryStreamInput>(memory.m_pMemory))
+MemoryStreamInput::MemoryStreamInput(const Memory& memory): BaseStreamInput(std::make_shared<implementation::memoryStreamInput>(getMemoryImplementation(memory)))
 {
 }
 
-MemoryStreamInput::MemoryStreamInput(const ReadWriteMemory& memory): BaseStreamInput(std::make_shared<implementation::memoryStreamInput>(memory.m_pMemory))
+MemoryStreamInput::MemoryStreamInput(const MemoryStreamInput& source): BaseStreamInput(source)
 {
+}
+
+MemoryStreamInput& MemoryStreamInput::operator=(const MemoryStreamInput& source)
+{
+    BaseStreamInput::operator =(source);
+    return *this;
 }
 
 MemoryStreamInput::~MemoryStreamInput()

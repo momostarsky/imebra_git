@@ -29,17 +29,17 @@ If you do not want to be bound by the GPL terms (such as the requirement
 namespace imebra
 {
 
-DataSet* CodecFactory::load(StreamReader& reader, size_t maxSizeBufferLoad /*  = std::numeric_limits<size_t>::max()) */)
+const DataSet CodecFactory::load(StreamReader& reader, size_t maxSizeBufferLoad /*  = std::numeric_limits<size_t>::max()) */)
 {
     IMEBRA_FUNCTION_START();
 
     std::shared_ptr<imebra::implementation::codecs::codecFactory> factory(imebra::implementation::codecs::codecFactory::getCodecFactory());
-    return new DataSet(factory->load(reader.m_pReader, (std::uint32_t)maxSizeBufferLoad));
+    return DataSet(factory->load(reader.m_pReader, (std::uint32_t)maxSizeBufferLoad));
 
     IMEBRA_FUNCTION_END();
 }
 
-DataSet* CodecFactory::load(const std::wstring& fileName, size_t maxSizeBufferLoad)
+const DataSet CodecFactory::load(const std::wstring& fileName, size_t maxSizeBufferLoad)
 {
     IMEBRA_FUNCTION_START();
 
@@ -51,7 +51,7 @@ DataSet* CodecFactory::load(const std::wstring& fileName, size_t maxSizeBufferLo
     IMEBRA_FUNCTION_END();
 }
 
-DataSet* CodecFactory::load(const std::string& fileName, size_t maxSizeBufferLoad)
+const DataSet CodecFactory::load(const std::string& fileName, size_t maxSizeBufferLoad)
 {
     IMEBRA_FUNCTION_START();
 
@@ -79,7 +79,7 @@ void CodecFactory::saveImage(
 
     std::shared_ptr<imebra::implementation::codecs::codecFactory> factory(imebra::implementation::codecs::codecFactory::getCodecFactory());
     std::shared_ptr<const implementation::codecs::imageCodec> pCodec = factory->getImageCodec(transferSyntax);
-    pCodec->setImage(destStream.m_pWriter, sourceImage.m_pImage, transferSyntax, imageQuality, dataType, allocatedBits, bSubSampledX, bSubSampledY, bInterleaved, b2Complement);
+    pCodec->setImage(destStream.m_pWriter, getImageImplementation(sourceImage), transferSyntax, imageQuality, dataType, allocatedBits, bSubSampledX, bSubSampledY, bInterleaved, b2Complement);
 
     IMEBRA_FUNCTION_END();
 }

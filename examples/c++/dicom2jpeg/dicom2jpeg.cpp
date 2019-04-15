@@ -52,15 +52,15 @@ void outputDatasetTags(const DataSet& dataset, const std::wstring& prefix)
             std::wcout << prefix << L"Tag " << (*scanTags).getGroupId() << L"," << (*scanTags).getTagId() << L" (Unknown tag)" << std::endl;
         }
 
-        std::unique_ptr<Tag> tag(dataset.getTag(*scanTags));
+        Tag tag(dataset.getTag(*scanTags));
 
         for(size_t itemId(0); ; ++itemId)
         {
             try
             {
-                std::unique_ptr<DataSet> sequence(tag->getSequenceItem(itemId));
+                DataSet sequence = tag.getSequenceItem(itemId);
                 std::wcout << prefix << L"  SEQUENCE " << itemId << std::endl;
-                outputDatasetTags(*sequence, prefix + L"    ");
+                outputDatasetTags(sequence, prefix + L"    ");
             }
             catch(const MissingDataElementError&)
             {
@@ -68,19 +68,19 @@ void outputDatasetTags(const DataSet& dataset, const std::wstring& prefix)
             }
         }
 
-        for(size_t bufferId(0); bufferId != tag->getBuffersCount(); ++bufferId)
+        for(size_t bufferId(0); bufferId != tag.getBuffersCount(); ++bufferId)
         {
-            std::unique_ptr<ReadingDataHandler> handler(tag->getReadingDataHandler(bufferId));
-            if(handler->getDataType() != imebra::tagVR_t::OW && handler->getDataType() != imebra::tagVR_t::OB)
+            ReadingDataHandler handler = tag.getReadingDataHandler(bufferId);
+            if(handler.getDataType() != imebra::tagVR_t::OW && handler.getDataType() != imebra::tagVR_t::OB)
             {
-                for(size_t scanHandler(0); scanHandler != handler->getSize(); ++scanHandler)
+                for(size_t scanHandler(0); scanHandler != handler.getSize(); ++scanHandler)
                 {
-                    std::wcout << prefix << L"  buffer " << bufferId << L", position "<< scanHandler << ":" << handler->getUnicodeString(scanHandler) << std::endl;
+                    std::wcout << prefix << L"  buffer " << bufferId << L", position "<< scanHandler << ":" << handler.getUnicodeString(scanHandler) << std::endl;
                 }
             }
             else
             {
-                std::wcout << prefix << L"  Not shown: size " << handler->getSize() << " elements" << std::endl;
+                std::wcout << prefix << L"  Not shown: size " << handler.getSize() << " elements" << std::endl;
             }
 
         }
@@ -115,9 +115,9 @@ int main(int argc, char* argv[])
         int ffmpegFlag(findArgument("-ffmpeg", argc, argv));
         size_t framesCount(0);
 
-        std::unique_ptr<DataSet> loadedDataSet(CodecFactory::load(argv[1], 2048));
+        DataSet loadedDataSet = CodecFactory::load(argv[1], 2048);
 
-        outputDatasetTags(*loadedDataSet, L"");
+        outputDatasetTags(loadedDataSet, L"");
 
         if(argc < 3)
         {
@@ -143,18 +143,18 @@ int main(int argc, char* argv[])
             // Get the first image. We use it in case there isn't any presentation VOI/LUT
             //  and we have to calculate the optimal one
             //////////////////////////////////////////////////////////////////////////////
-            std::unique_ptr<Image> dataSetImage(loadedDataSet->getImageApplyModalityTransform(0));
-            std::uint32_t width = dataSetImage->getWidth();
-            std::uint32_t height = dataSetImage->getHeight();
+            Image dataSetImage = loadedDataSet.getImageApplyModalityTransform(0);
+            std::uint32_t width = dataSetImage.getWidth();
+            std::uint32_t height = dataSetImage.getHeight();
 
             // Build the transforms chain
             /////////////////////////////
             TransformsChain chain;
 
-            if(ColorTransformsFactory::isMonochrome(dataSetImage->getColorSpace()))
+            if(ColorTransformsFactory::isMonochrome(dataSetImage.getColorSpace()))
             {
                 VOILUT presentationVOILUT;
-                vois_t vois = loadedDataSet->getVOIs();
+                vois_t vois = loadedDataSet.getVOIs();
                 if(!vois.empty())
                 {
                     presentationVOILUT.setCenterWidth(vois.front().center, vois.front().width);
@@ -163,7 +163,7 @@ int main(int argc, char* argv[])
                 {
                     // Now find the optimal VOILUT
                     //////////////////////////////
-                    presentationVOILUT.applyOptimalVOI(*dataSetImage, 0, 0, width, height);
+                    presentationVOILUT.applyOptimalVOI(dataSetImage, 0, 0, width, height);
                 }
                 chain.addTransform(presentationVOILUT);
             }
@@ -173,22 +173,22 @@ int main(int argc, char* argv[])
             std::string initialColorSpace;
             if(chain.isEmpty())
             {
-                initialColorSpace = dataSetImage->getColorSpace();
+                initialColorSpace = dataSetImage.getColorSpace();
             }
             else
             {
-                std::unique_ptr<Image> startImage(chain.allocateOutputImage(*dataSetImage, 1, 1));
-                initialColorSpace = startImage->getColorSpace();
+                Image startImage = chain.allocateOutputImage(dataSetImage, 1, 1);
+                initialColorSpace = startImage.getColorSpace();
             }
 
             // Color transform to YCrCb
             ///////////////////////////
             if(initialColorSpace != "YBR_FULL")
             {
-                std::unique_ptr<Transform> colorTransform(ColorTransformsFactory::getTransform(initialColorSpace, "YBR_FULL"));
-                if(!colorTransform->isEmpty())
+                Transform colorTransform = ColorTransformsFactory::getTransform(initialColorSpace, "YBR_FULL");
+                if(!colorTransform.isEmpty())
                 {
-                    chain.addTransform(*colorTransform);
+                    chain.addTransform(colorTransform);
                 }
             }
 
@@ -196,16 +196,16 @@ int main(int argc, char* argv[])
             // if it has an high-bit different from 7 then we need to add
             //  a TransformHighBit.
             /////////////////////////////////////////////////////////////
-            std::unique_ptr<Image> testImage(chain.allocateOutputImage(*dataSetImage, 1, 1));
-            if(testImage->getHighBit() != 7)
+            MutableImage testImage = chain.allocateOutputImage(dataSetImage, 1, 1);
+            if(testImage.getHighBit() != 7)
             {
                 chain.addTransform(TransformHighBit());
             }
 
             // Allocate the image used to build the jpeg file
             /////////////////////////////////////////////////
-            Image rgb8Image(width, height, bitDepth_t::depthU8, "YBR_FULL", 7);
-            Image* finalImage = &rgb8Image;
+            MutableImage rgb8Image(width, height, bitDepth_t::depthU8, "YBR_FULL", 7);
+            Image finalImage = rgb8Image;
 
             // Scan through the frames
             //////////////////////////
@@ -213,16 +213,16 @@ int main(int argc, char* argv[])
             {
                 if(frameNumber != 0)
                 {
-                    dataSetImage.reset(loadedDataSet->getImageApplyModalityTransform(frameNumber));
+                    dataSetImage = loadedDataSet.getImageApplyModalityTransform(frameNumber);
                 }
 
                 if(!chain.isEmpty())
                 {
-                    chain.runTransform(*dataSetImage, 0, 0, width, height, rgb8Image, 0, 0);
+                    chain.runTransform(dataSetImage, 0, 0, width, height, rgb8Image, 0, 0);
                 }
                 else
                 {
-                    finalImage = dataSetImage.get();
+                    finalImage = dataSetImage;
                 }
 
                 // Open a stream for the jpeg
@@ -239,7 +239,7 @@ int main(int argc, char* argv[])
                 StreamWriter writer(writeJpeg);
 
                 const std::string jpegTransferSyntax("1.2.840.10008.1.2.4.50");
-                CodecFactory::saveImage(writer, *finalImage, jpegTransferSyntax, imageQuality_t::veryHigh, tagVR_t::OB, 8, false, false, true, false);
+                CodecFactory::saveImage(writer, finalImage, jpegTransferSyntax, imageQuality_t::veryHigh, tagVR_t::OB, 8, false, false, true, false);
 
                 ++framesCount;
             }
@@ -267,18 +267,18 @@ int main(int argc, char* argv[])
 
             // Calculate the frames per second from the available tags
             double framesPerSecond(0);
-            double frameTime(loadedDataSet->getDouble(TagId(tagId_t::FrameTime_0018_1063), 0, 0));
+            double frameTime(loadedDataSet.getDouble(TagId(tagId_t::FrameTime_0018_1063), 0, 0));
             if(frameTime > 0.1)
             {
                 framesPerSecond = 1000 / frameTime;
             }
             if(framesPerSecond < 0.1)
             {
-                framesPerSecond = loadedDataSet->getUnsignedLong(TagId(tagId_t::CineRate_0018_0040), 0, 0);
+                framesPerSecond = loadedDataSet.getUnsignedLong(TagId(tagId_t::CineRate_0018_0040), 0, 0);
             }
             if(framesPerSecond < 0.1)
             {
-                framesPerSecond = loadedDataSet->getUnsignedLong(TagId(tagId_t::RecommendedDisplayFrameRate_0008_2144), 0, 0);
+                framesPerSecond = loadedDataSet.getUnsignedLong(TagId(tagId_t::RecommendedDisplayFrameRate_0008_2144), 0, 0);
             }
 
             // Add the ffmpeg argument for the frames per second
@@ -334,7 +334,7 @@ int main(int argc, char* argv[])
     }
     catch(const std::exception& e)
     {
-        imebra::DataSet convertMessage;
+        MutableDataSet convertMessage;
         convertMessage.setString(TagId(10, 10), imebra::ExceptionsManager::getExceptionTrace(), imebra::tagVR_t::LT);
         std::wcout << std::endl << "Error: " << std::endl << convertMessage.getUnicodeString(TagId(10, 10), 0) << std::endl;
         return 1;

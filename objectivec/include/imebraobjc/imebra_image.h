@@ -15,13 +15,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #define imebraObjcImage__INCLUDED_
 
 #import <Foundation/Foundation.h>
-
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
-namespace imebra
-{
-    class Image;
-}
-#endif
+#include "imebra_macros.h"
 
 /// \enum ImebraBitDepth_t
 /// \brief Defines the size of the memory allocated for each
@@ -64,28 +58,12 @@ typedef NS_ENUM(unsigned int, ImebraBitDepth_t)
 ///////////////////////////////////////////////////////////////////////////////
 @interface ImebraImage: NSObject
 
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
 {
     @public
-    imebra::Image* m_pImage;
+    define_imebra_object_holder(Image);
 }
 
-    -(id)initWithImebraImage:(imebra::Image*)pImage;
-#endif
-
-    /// \brief Initializer.
-    ///
-    /// The memory for the image is not allocated by the constructor but only when
-    /// a WritingDataHandler is requested with getWritingDataHandler().
-    ///
-    /// \param width      the image width, in pixels
-    /// \param height     the image height, in pixels
-    /// \param depth      the channel values data types
-    /// \param colorSpace the Image's color space
-    /// \param highBit    the highest bit occupied by the channels' values
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    -(id)initWithWidth:(unsigned int)width height:(unsigned int)height depth:(ImebraBitDepth_t)depth colorSpace:(NSString*)colorSpace highBit:(unsigned int)highBit;
+    -(id)initWithImebraImage:define_imebra_parameter(Image);
 
     -(void)dealloc;
 
@@ -100,32 +78,6 @@ typedef NS_ENUM(unsigned int, ImebraBitDepth_t)
     ///
     ///////////////////////////////////////////////////////////////////////////////
     -(ImebraReadingDataHandlerNumeric*) getReadingDataHandler:(NSError**)pError;
-
-    /// \brief Retrieve a ImebraWritingDataHandlerNumeric object referencing the
-    ///        image's memory (mutable).
-    ///
-    /// The memory referenced by the ImebraWritingDataHandlerNumeric object is
-    /// uninitialized.
-    ///
-    /// When the ImebraWritingDataHandlerNumeric object is destroyed then the
-    /// memory managed by the handler replaces the old image's memory.
-    ///
-    /// \return a ImebraWritingDataHandlerNumeric object referencing an
-    ///         uninitialized memory buffer that the client has to fill the the
-    ///         image's data
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    -(ImebraWritingDataHandlerNumeric*) getWritingDataHandler:(NSError**)pError;
-
-    /// \brief Image's width, in millimiters
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    @property double widthMm;
-
-    /// \brief Image's height, in millimiters
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    @property double heightMm;
 
     /// \brief Retrieve the image's width, in pixels.
     ///
@@ -158,6 +110,42 @@ typedef NS_ENUM(unsigned int, ImebraBitDepth_t)
     @property (readonly) unsigned int getHighBit;
 
 @end
+
+
+@interface ImebraMutableImage: ImebraImage
+
+    /// \brief Initializer.
+    ///
+    /// The memory for the image is not allocated by the constructor but only when
+    /// a WritingDataHandler is requested with getWritingDataHandler().
+    ///
+    /// \param width      the image width, in pixels
+    /// \param height     the image height, in pixels
+    /// \param depth      the channel values data types
+    /// \param colorSpace the Image's color space
+    /// \param highBit    the highest bit occupied by the channels' values
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(id)initWithWidth:(unsigned int)width height:(unsigned int)height depth:(ImebraBitDepth_t)depth colorSpace:(NSString*)colorSpace highBit:(unsigned int)highBit;
+
+    /// \brief Retrieve a ImebraWritingDataHandlerNumeric object referencing the
+    ///        image's memory (mutable).
+    ///
+    /// The memory referenced by the ImebraWritingDataHandlerNumeric object is
+    /// uninitialized.
+    ///
+    /// When the ImebraWritingDataHandlerNumeric object is destroyed then the
+    /// memory managed by the handler replaces the old image's memory.
+    ///
+    /// \return a ImebraWritingDataHandlerNumeric object referencing an
+    ///         uninitialized memory buffer that the client has to fill the the
+    ///         image's data
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(ImebraWritingDataHandlerNumeric*) getWritingDataHandler:(NSError**)pError;
+
+@end
+
 
 #endif // imebraObjcImage__INCLUDED_
 

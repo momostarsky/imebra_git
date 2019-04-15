@@ -22,24 +22,19 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <memory>
 #include "definitions.h"
 
-#ifndef SWIG
-
 namespace imebra
 {
+
 namespace implementation
 {
 namespace transforms
 {
-class transform;
+    class transform;
 }
 }
-}
-#endif
-
-namespace imebra
-{
 
 class Image;
+class MutableImage;
 
 ///
 /// \brief Represents a transform: a transform takes one Image as input,
@@ -48,10 +43,7 @@ class Image;
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API Transform
 {
-    Transform(const Transform&) = delete;
-    Transform& operator=(const Transform&) = delete;
 
-#ifndef SWIG
     friend class TransformsChain;
     friend class DrawBitmap;
     friend class ColorTransformsFactory;
@@ -59,12 +51,24 @@ class IMEBRA_API Transform
     friend class ModalityVOILUT;
     friend class VOILUT;
 
-private:
-    explicit Transform(std::shared_ptr<imebra::implementation::transforms::transform> pTransform);
-#endif
-
-
 public:
+
+    ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source Transform object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    Transform(const Transform& source);
+
+    ///
+    /// \brief Assign operator.
+    ///
+    /// \param source source Transform object
+    /// \return a reference to this Transform object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    Transform& operator=(const Transform& source);
 
     virtual ~Transform();
 
@@ -86,7 +90,7 @@ public:
     /// \return an image ready to be passed as outputImage to runTransform()
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    Image* allocateOutputImage(const Image& inputImage, std::uint32_t width, std::uint32_t height) const;
+    MutableImage allocateOutputImage(const Image& inputImage, std::uint32_t width, std::uint32_t height) const;
 
     /// \brief Run the processing function of the Transform.
     ///
@@ -95,11 +99,15 @@ public:
 	void runTransform(
             const Image& inputImage,
             std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight,
-            Image& outputImage,
+            MutableImage& outputImage,
             std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY) const;
 
 #ifndef SWIG
 protected:
+    explicit Transform(const std::shared_ptr<imebra::implementation::transforms::transform>& pTransform);
+
+private:
+    friend const std::shared_ptr<imebra::implementation::transforms::transform>& getTransformImplementation(const Transform& transform);
     std::shared_ptr<imebra::implementation::transforms::transform> m_pTransform;
 #endif
 };

@@ -24,24 +24,36 @@ If you do not want to be bound by the GPL terms (such as the requirement
 namespace imebra
 {
 
-ReadingDataHandlerNumeric::ReadingDataHandlerNumeric(std::shared_ptr<implementation::handlers::readingDataHandlerNumericBase> pDataHandler):
+ReadingDataHandlerNumeric::ReadingDataHandlerNumeric(const std::shared_ptr<implementation::handlers::readingDataHandlerNumericBase>& pDataHandler):
     ReadingDataHandler(pDataHandler)
 {
+}
+
+ReadingDataHandlerNumeric::ReadingDataHandlerNumeric(const ReadingDataHandlerNumeric& source): ReadingDataHandler(source)
+{
+}
+
+ReadingDataHandlerNumeric& ReadingDataHandlerNumeric::operator=(const ReadingDataHandlerNumeric& source)
+{
+    ReadingDataHandler::operator =(source);
+    return *this;
 }
 
 ReadingDataHandlerNumeric::~ReadingDataHandlerNumeric()
 {
 }
 
-ReadMemory* ReadingDataHandlerNumeric::getMemory() const
+const Memory ReadingDataHandlerNumeric::getMemory() const
 {
-    std::shared_ptr<imebra::implementation::handlers::readingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<imebra::implementation::handlers::readingDataHandlerNumericBase>(m_pDataHandler);
-    return new ReadMemory(numericDataHandler->getMemory());
+    std::shared_ptr<implementation::handlers::readingDataHandlerNumericBase> numericDataHandler =
+            std::dynamic_pointer_cast<implementation::handlers::readingDataHandlerNumericBase>(getReadingDataHandlerImplementation(*this));
+    return Memory(numericDataHandler->getMemory());
 }
 
 size_t ReadingDataHandlerNumeric::data(char* destination, size_t destinationSize) const
 {
-    std::shared_ptr<imebra::implementation::handlers::readingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<imebra::implementation::handlers::readingDataHandlerNumericBase>(m_pDataHandler);
+    std::shared_ptr<implementation::handlers::readingDataHandlerNumericBase> numericDataHandler =
+            std::dynamic_pointer_cast<implementation::handlers::readingDataHandlerNumericBase>(getReadingDataHandlerImplementation(*this));
     size_t memorySize = numericDataHandler->getMemorySize();
     if(destination != 0 && destinationSize >= memorySize && memorySize != 0)
     {
@@ -52,33 +64,38 @@ size_t ReadingDataHandlerNumeric::data(char* destination, size_t destinationSize
 
 const char* ReadingDataHandlerNumeric::data(size_t* pDataSize) const
 {
-    std::shared_ptr<imebra::implementation::handlers::readingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<imebra::implementation::handlers::readingDataHandlerNumericBase>(m_pDataHandler);
+    std::shared_ptr<implementation::handlers::readingDataHandlerNumericBase> numericDataHandler =
+            std::dynamic_pointer_cast<implementation::handlers::readingDataHandlerNumericBase>(getReadingDataHandlerImplementation(*this));
     *pDataSize = numericDataHandler->getMemorySize();
     return (const char*)numericDataHandler->getMemoryBuffer();
 }
 
 size_t ReadingDataHandlerNumeric::getUnitSize() const
 {
-    std::shared_ptr<imebra::implementation::handlers::readingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<imebra::implementation::handlers::readingDataHandlerNumericBase>(m_pDataHandler);
+    std::shared_ptr<implementation::handlers::readingDataHandlerNumericBase> numericDataHandler =
+            std::dynamic_pointer_cast<implementation::handlers::readingDataHandlerNumericBase>(getReadingDataHandlerImplementation(*this));
     return numericDataHandler->getUnitSize();
 }
 
 bool ReadingDataHandlerNumeric::isSigned() const
 {
-    std::shared_ptr<imebra::implementation::handlers::readingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<imebra::implementation::handlers::readingDataHandlerNumericBase>(m_pDataHandler);
+    std::shared_ptr<implementation::handlers::readingDataHandlerNumericBase> numericDataHandler =
+            std::dynamic_pointer_cast<implementation::handlers::readingDataHandlerNumericBase>(getReadingDataHandlerImplementation(*this));
     return numericDataHandler->isSigned();
 }
 
 bool ReadingDataHandlerNumeric::isFloat() const
 {
-    std::shared_ptr<imebra::implementation::handlers::readingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<imebra::implementation::handlers::readingDataHandlerNumericBase>(m_pDataHandler);
+    std::shared_ptr<implementation::handlers::readingDataHandlerNumericBase> numericDataHandler =
+            std::dynamic_pointer_cast<implementation::handlers::readingDataHandlerNumericBase>(getReadingDataHandlerImplementation(*this));
     return numericDataHandler->isFloat();
 }
 
 void ReadingDataHandlerNumeric::copyTo(const WritingDataHandlerNumeric& destination)
 {
-    std::shared_ptr<imebra::implementation::handlers::readingDataHandlerNumericBase> numericDataHandler = std::dynamic_pointer_cast<imebra::implementation::handlers::readingDataHandlerNumericBase>(m_pDataHandler);
-    return numericDataHandler->copyTo(std::dynamic_pointer_cast<imebra::implementation::handlers::writingDataHandlerNumericBase>(destination.m_pDataHandler));
+    std::shared_ptr<implementation::handlers::readingDataHandlerNumericBase> numericDataHandler =
+            std::dynamic_pointer_cast<implementation::handlers::readingDataHandlerNumericBase>(getReadingDataHandlerImplementation(*this));
+    return numericDataHandler->copyTo(std::dynamic_pointer_cast<implementation::handlers::writingDataHandlerNumericBase>(getWritingDataHandlerImplementation(destination)));
 }
 
 }

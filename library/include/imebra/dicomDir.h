@@ -23,47 +23,30 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <string>
 #include "definitions.h"
 
-#ifndef SWIG
-
 namespace imebra
 {
 
 namespace implementation
 {
-class dicomDir;
+    class dicomDir;
 }
-}
-
-#endif
-
-namespace imebra
-{
 
 class DataSet;
+class MutableDataSet;
 class DicomDirEntry;
+class MutableDicomDirEntry;
 
 ///
-/// \brief Represents a DICOMDIR structure.
+/// \brief Represents an immutable DICOMDIR structure.
 ///
 /// In order to work DicomDir needs a DataSet, which embeds the DicomDir's
 /// entries.
 ///
-/// If the DicomDir's content is modified then the method updateDataSet()
-/// has to be called before the managed DataSet can be stored as a DICOMDIR
-/// file.
-///
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API DicomDir
 {
-    DicomDir(const DicomDir&) = delete;
-    DicomDir& operator=(const DicomDir&) = delete;
 
 public:
-    /// \brief Construct an empty DicomDir.
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    DicomDir();
-
     /// \brief Construct a DicomDir from a DataSet object.
     ///
     /// \param fromDataSet the DataSet created from reading a DICOMDIR file
@@ -71,20 +54,35 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     explicit DicomDir(const DataSet& fromDataSet);
 
+    ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source DICOMDIR
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    DicomDir(const DicomDir& source);
+
+    ///
+    /// \brief Assignment operator
+    ///
+    /// \param source source DicomDir
+    /// \return reference to this DicomDir
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    DicomDir& operator=(const DicomDir& source);
+
     /// \brief Destructor.
     ///
     ///////////////////////////////////////////////////////////////////////////////
     virtual ~DicomDir();
 
-    /// \brief Return a new DicomDirEntry record and insert it into the DicomDir's
-    ///        DataSet.
     ///
-    /// \param recordType the type of the new entry
-    /// \return a new DicomDirEntry object that can be inserted into the DicomDir
-    ///         object or one of its children DicomDirEntry entries.
+    /// \brief Returns true if the DICOMDIR has a root entry.
+    ///
+    /// \return true if the DICOMDIR has a root entry, false otherwise
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    DicomDirEntry* getNewEntry(directoryRecordType_t recordType);
+    bool hasRootEntry() const;
 
     /// \brief Retrieve the first DicomDir's root entry.
     ///
@@ -94,7 +92,72 @@ public:
     ///         DicomDirEntry does noot exist
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    DicomDirEntry* getFirstRootEntry() const;
+    DicomDirEntry getFirstRootEntry() const;
+
+#ifndef SWIG
+protected:
+    explicit DicomDir(const std::shared_ptr<implementation::dicomDir>& pDicomDir);
+
+private:
+    friend const std::shared_ptr<implementation::dicomDir>& getDicomDirImplementation(const DicomDir& dicomDir);
+    std::shared_ptr<imebra::implementation::dicomDir> m_pDicomDir;
+#endif
+};
+
+
+///
+/// \brief Represents a mutable DICOMDIR structure.
+///
+/// In order to work DicomDir needs a DataSet, which embeds the DicomDir's
+/// entries.
+///
+/// If the DicomDir's content is modified then the method updateDataSet()
+/// has to be called before the managed DataSet can be stored as a DICOMDIR
+/// file.
+///
+///////////////////////////////////////////////////////////////////////////////
+class IMEBRA_API MutableDicomDir: public DicomDir
+{
+
+public:
+    /// \brief Construct an empty DicomDir.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    MutableDicomDir();
+
+    /// \brief Construct a DicomDir from a DataSet object.
+    ///
+    /// \param fromDataSet the DataSet created from reading a DICOMDIR file
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    explicit MutableDicomDir(MutableDataSet& fromDataSet);
+
+    ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source Mutable DicomDir
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    MutableDicomDir(const MutableDicomDir& source);
+
+    ///
+    /// \brief Assignment operator
+    ///
+    /// \param source source MutableDicomDir
+    /// \return reference to this MutableDicomDir
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    MutableDicomDir& operator=(const MutableDicomDir& source);
+
+    /// \brief Return a new DicomDirEntry record and insert it into the DicomDir's
+    ///        DataSet.
+    ///
+    /// \param recordType the type of the new entry
+    /// \return a new DicomDirEntry object that can be inserted into the DicomDir
+    ///         object or one of its children DicomDirEntry entries.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    MutableDicomDirEntry getNewEntry(const std::string& recordType);
 
     /// \brief Set the specified entry as the first DicomDir's root record.
     ///
@@ -116,12 +179,8 @@ public:
     /// \return the updated managed DataSet object
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    DataSet* updateDataSet();
+    DataSet updateDataSet();
 
-#ifndef SWIG
-protected:
-    std::shared_ptr<imebra::implementation::dicomDir> m_pDicomDir;
-#endif
 };
 
 }

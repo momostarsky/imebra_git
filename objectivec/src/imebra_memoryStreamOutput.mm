@@ -11,17 +11,21 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#include "imebra_bridgeStructures.h"
+#import "../include/imebraobjc/imebra_memoryStreamOutput.h"
+#import "../include/imebraobjc/imebra_readWriteMemory.h".h"
+#include "imebra_implementation_macros.h"
+#include <imebra/memoryStreamOutput.h>
+#include <imebra/mutableMemory.h>
 
 @implementation ImebraMemoryStreamOutput
 
--(id)initWithReadWriteMemory:(ImebraReadWriteMemory*)pMemory
+-(id)initWithMutableMemory:(ImebraMutableMemory*)pMemory
 {
-    m_pBaseStreamOutput = 0;
+    reset_imebra_object_holder(BaseStreamOutput);
     self =  [super init];
     if(self)
     {
-        m_pBaseStreamOutput = new imebra::MemoryStreamOutput(*(imebra::ReadWriteMemory*)(pMemory->m_pMemory));
+        set_imebra_object_holder(BaseStreamOutput, new imebra::MemoryStreamOutput(*(imebra::MutableMemory*)get_other_imebra_object_holder(pMemory, Memory)));
     }
     return self;
 }

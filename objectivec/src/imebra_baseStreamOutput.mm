@@ -11,13 +11,30 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#include "imebra_bridgeStructures.h"
+#import "../include/imebraobjc/imebra_baseStreamOutput.h"
+#include <imebra/baseStreamOutput.h>
+#include "imebra_implementation_macros.h"
 
 @implementation ImebraBaseStreamOutput
 
+-(id)initWithImebraBaseStreamOutput:define_imebra_parameter(BaseStreamOutput)
+{
+    reset_imebra_object_holder(BaseStreamOutput);
+    self = [super init];
+    if(self)
+    {
+        set_imebra_object_holder(BaseStreamOutput, get_imebra_parameter(BaseStreamOutput));
+    }
+    else
+    {
+        delete get_imebra_parameter(BaseStreamOutput);
+    }
+    return self;
+}
+
 -(void)dealloc
 {
-    delete m_pBaseStreamOutput;
+    delete_imebra_object_holder(BaseStreamOutput);
 #if !__has_feature(objc_arc)
     [super dealloc];
 #endif

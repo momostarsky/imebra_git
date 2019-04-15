@@ -769,6 +769,22 @@ public:
 };
 
 
+/// \brief This exception is thrown when trying to retrieve a missing
+///        DicomDir entry.
+///
+///////////////////////////////////////////////////////////////////////////////
+class IMEBRA_API DicomDirNoEntryError: public DicomDirError
+{
+public:
+    /// \brief Constructor.
+    ///
+    /// \param message the message to store into the exception
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    explicit DicomDirNoEntryError(const std::string& message);
+};
+
+
 /// \brief Exception thrown when an unknown record type
 ///        is detected in a DicomDirEntry.
 ///
@@ -1175,7 +1191,7 @@ class IMEBRA_API ImebraBadAlloc: public std::bad_alloc
 };
 
 
-/// \brief Base exception for errors in ReadMemory and ReadWriteMemory.
+/// \brief Base exception for errors in Memory and MutableMemory.
 ///
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API MemoryError: public std::runtime_error
@@ -1341,7 +1357,7 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     bool isTemporary() const;
 
-private:
+protected:
     const bool m_bPermanent;
 };
 

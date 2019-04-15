@@ -15,13 +15,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #define imebraObjcBaseStreamOutput__INCLUDED_
 
 #import <Foundation/Foundation.h>
-
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
-namespace imebra
-{
-class BaseStreamOutput;
-}
-#endif
+#include "imebra_macros.h"
 
 ///
 /// \brief This class represents a generic output stream.
@@ -36,12 +30,12 @@ class BaseStreamOutput;
 ///////////////////////////////////////////////////////////////////////////////
 @interface ImebraBaseStreamOutput: NSObject
 
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
 {
     @public
-    imebra::BaseStreamOutput* m_pBaseStreamOutput;
+    define_imebra_object_holder(BaseStreamOutput);
 }
-#endif
+
+    -(id)initWithImebraBaseStreamOutput:define_imebra_parameter(BaseStreamOutput);
 
     -(void)dealloc;
 

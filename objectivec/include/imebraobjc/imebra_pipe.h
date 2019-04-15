@@ -14,18 +14,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #if !defined(imebraObjcPipe__INCLUDED_)
 #define imebraObjcPipe__INCLUDED_
 
-#import "imebra_baseStreamInputOutput.h"
 #import <Foundation/Foundation.h>
+#include "imebra_macros.h"
 
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
-namespace imebra
-{
-class Pipe;
-}
-#endif
-
-@class ImebraReadMemory;
-@class ImebraReadWriteMemory;
+@class ImebraBaseStreamInput;
+@class ImebraBaseStreamOutput;
 
 ///
 /// \brief A pipe can be used to push and pull data to/from an Imebra codec.
@@ -36,17 +29,20 @@ class Pipe;
 /// In order to allow Imebra to read data from a custom data source:
 /// - allocate a ImebraPipe class and use it as parameter for the
 ///   ImebraStreamReader needed by the codec
-/// - from a secondary thread feed the data to the data source by calling
-///   feed()
+/// - from a secondary thread feed the data to the data source by using an
+///   ImebraStreamWriter
 ///
 /// In order to allow Imebra to write data to a custom data source:
 /// - allocate a ImebraPipe class and use it as parameter for the
 ///   ImebraStreamWriter needed by the codec
-/// - from a secondary thread read the data to feed to the data sink by
-///   calling sink()
+/// - from a secondary thread read the data by using an ImebraStreamReader
 ///
 ///////////////////////////////////////////////////////////////////////////////
-@interface ImebraPipe: ImebraBaseStreamInputOutput
+@interface ImebraPipeStream: NSObject
+{
+    @public
+    define_imebra_object_holder(PipeStream);
+}
 
     /// \brief Initializer.
     ///
@@ -55,30 +51,6 @@ class Pipe;
     ///
     ///////////////////////////////////////////////////////////////////////////////
     -(id)initWithBufferSize:(unsigned int)circularBufferSize;
-
-    ///
-    /// \brief Copy data into the Pipe so it can be retrieved by a
-    ///        codec via a StreamReader.
-    ///
-    /// \param buffer the data to copy into the Pipe's buffer
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    -(void) feed:(ImebraReadMemory*)buffer error:(NSError**)pError
-        __attribute__((swift_error(nonnull_error)));
-
-
-    ///
-    /// \brief Read data from the Pipe. The data can be pushed into the pipe via
-    ///        a StreamWriter.
-    ///
-    /// \param buffer   a buffer that will contain the read data. The method will
-    ///                 try to read as many bytes as the buffer size
-    /// \return the number of bytes read from the pipe, which may be less than the
-    ///         buffer's size
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    -(unsigned int) sink:(ImebraReadWriteMemory*)buffer error:(NSError**)pError
-        __attribute__((swift_error(nonnull_error)));
 
     ///
     /// \brief Wait for the specified amount of time or until the internal buffer
@@ -95,14 +67,9 @@ class Pipe;
     -(void) close: (unsigned int) timeoutMilliseconds error:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
 
-    ///
-    /// \brief Instruct any pending operation to terminate.
-    ///
-    /// Current and subsequent read and write operations will fail by
-    /// setting pError to ImebraStreamClosedError.
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    -(void) terminate;
+    -(ImebraBaseStreamInput*) getStreamInput;
+
+    -(ImebraBaseStreamOutput*) getStreamOutput;
 
 @end
 

@@ -22,7 +22,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 namespace imebra
 {
 
-class ReadWriteMemory;
+class MutableMemory;
 
 ///
 /// \brief An output stream that writes data into a memory region.
@@ -32,16 +32,32 @@ class ReadWriteMemory;
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API MemoryStreamOutput : public BaseStreamOutput
 {
-    MemoryStreamOutput(const MemoryStreamOutput&) = delete;
-    MemoryStreamOutput& operator=(const MemoryStreamOutput&) = delete;
 
 public:
+
     /// \brief Constructor.
     ///
     /// \param memory the memory region into which the stream will write the data
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    explicit MemoryStreamOutput(const ReadWriteMemory& memory);
+    explicit MemoryStreamOutput(const MutableMemory& memory);
+
+    ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source MemoryStreamOutput object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    MemoryStreamOutput(const MemoryStreamOutput& source);
+
+    ///
+    /// \brief Assign operator.
+    ///
+    /// \param source source MemoryStreamOutput object
+    /// \return a reference to this MemoryStreamOutput object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    MemoryStreamOutput& operator=(const MemoryStreamOutput& source);
 
     virtual ~MemoryStreamOutput();
 };

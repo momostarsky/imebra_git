@@ -11,35 +11,50 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#include "imebra_bridgeStructures.h"
+#include "imebra_implementation_macros.h"
+
+#import <Foundation/Foundation.h>
+#import "../include/imebraobjc/imebra_acse.h"
+#include "imebra_nserror.h"
+#include <imebra/acse.h>
+#include <imebra/dataSet.h>
+#include <imebra/streamReader.h>
+#include <imebra/streamWriter.h>
+#include "imebra_strings.h"
+
+////////////////////////////////////////////////////////
+//
+// ImebraPresentationContext
+//
+////////////////////////////////////////////////////////
 
 @implementation ImebraPresentationContext
 
 -(id)initWithAbstractSyntax:(NSString*)abstractSyntax
 {
-    m_pPresentationContext = 0;
+    reset_imebra_object_holder(PresentationContext);
     self = [super init];
     if(self)
     {
-        m_pPresentationContext = new imebra::PresentationContext(imebra::NSStringToString(abstractSyntax));
+        set_imebra_object_holder(PresentationContext, new imebra::PresentationContext(imebra::NSStringToString(abstractSyntax)));
     }
     return self;
 }
 
 -(id)initWithAbstractSyntax:(NSString*)abstractSyntax scuRole:(BOOL)bSCURole scpRole:(BOOL)bSCPRole
 {
-    m_pPresentationContext = 0;
+    reset_imebra_object_holder(PresentationContext);
     self = [super init];
     if(self)
     {
-        m_pPresentationContext = new imebra::PresentationContext(imebra::NSStringToString(abstractSyntax), bSCURole != 0, bSCPRole != 0);
+        set_imebra_object_holder(PresentationContext, new imebra::PresentationContext(imebra::NSStringToString(abstractSyntax), bSCURole != 0, bSCPRole != 0));
     }
     return self;
 }
 
 -(void)dealloc
 {
-    delete m_pPresentationContext;
+    delete_imebra_object_holder(PresentationContext);
 #if !__has_feature(objc_arc)
     [super dealloc];
 #endif
@@ -47,7 +62,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(void)addTransferSyntax:(NSString*)transferSyntax
 {
-    m_pPresentationContext->addTransferSyntax(imebra::NSStringToString(transferSyntax));
+    get_imebra_object_holder(PresentationContext)->addTransferSyntax(imebra::NSStringToString(transferSyntax));
 }
 
 @end
@@ -57,11 +72,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(id)init
 {
-    m_pPresentationContexts = 0;
+    reset_imebra_object_holder(PresentationContexts);
     self = [super init];
     if(self)
     {
-        m_pPresentationContexts = new imebra::PresentationContexts();
+        set_imebra_object_holder(PresentationContexts, new imebra::PresentationContexts());
     }
     return self;
 
@@ -69,7 +84,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(void)dealloc
 {
-    delete m_pPresentationContexts;
+    delete_imebra_object_holder(PresentationContexts);
 #if !__has_feature(objc_arc)
     [super dealloc];
 #endif
@@ -77,7 +92,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(void)addPresentationContext:(ImebraPresentationContext*)pPresentationContext
 {
-    m_pPresentationContexts->addPresentationContext(*(pPresentationContext->m_pPresentationContext));
+    get_imebra_object_holder(PresentationContexts)->addPresentationContext(*get_other_imebra_object_holder(pPresentationContext, PresentationContext));
 }
 
 @end
@@ -85,36 +100,25 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @implementation ImebraAssociationMessage: NSObject
 
--(id)initWithImebraAssociationMessage:(imebra::AssociationMessage*)pAssociationMessage
+-(id)initWithImebraAssociationMessage:define_imebra_parameter(AssociationMessage)
 {
-    m_pAssociationMessage = 0;
+    reset_imebra_object_holder(AssociationMessage);
     self = [super init];
     if(self)
     {
-        m_pAssociationMessage = pAssociationMessage;
+        set_imebra_object_holder(AssociationMessage, new imebra::AssociationMessage(*get_imebra_parameter(AssociationMessage)));
     }
     else
     {
-        delete pAssociationMessage;
+        delete get_imebra_parameter(AssociationMessage);
     }
     return self;
 }
 
-
--(id)initWithAbstractSyntax:(NSString*)abstractSyntax
-{
-    m_pAssociationMessage = 0;
-    self = [super init];
-    if(self)
-    {
-        m_pAssociationMessage = new imebra::AssociationMessage(imebra::NSStringToString(abstractSyntax));
-    }
-    return self;
-}
 
 -(void)dealloc
 {
-    delete m_pAssociationMessage;
+    delete_imebra_object_holder(AssociationMessage);
 #if !__has_feature(objc_arc)
     [super dealloc];
 #endif
@@ -123,14 +127,14 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(NSString*)abstractSyntax
 {
-    return imebra::stringToNSString(m_pAssociationMessage->getAbstractSyntax());
+    return imebra::stringToNSString(get_imebra_object_holder(AssociationMessage)->getAbstractSyntax());
 }
 
 -(ImebraDataSet*)getCommand:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraDataSet alloc] initWithImebraDataSet:(m_pAssociationMessage->getCommand())];
+    return [[ImebraDataSet alloc] initWithImebraDataSet:(new imebra::DataSet(get_imebra_object_holder(AssociationMessage)->getCommand()))];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -139,21 +143,36 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraDataSet alloc] initWithImebraDataSet:(m_pAssociationMessage->getPayload())];
+    return [[ImebraDataSet alloc] initWithImebraDataSet:(new imebra::DataSet(get_imebra_object_holder(AssociationMessage)->getPayload()))];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
 
 -(BOOL)hasPayload
 {
-    return m_pAssociationMessage->hasPayload();
+    return get_imebra_object_holder(AssociationMessage)->hasPayload();
+}
+
+@end
+
+
+@implementation ImebraMutableAssociationMessage
+
+-(id)initWithAbstractSyntax:(NSString*)abstractSyntax
+{
+    self = [super init];
+    if(self)
+    {
+        set_imebra_object_holder(AssociationMessage, new imebra::MutableAssociationMessage(imebra::NSStringToString(abstractSyntax)));
+    }
+    return self;
 }
 
 -(void)addDataSet:(ImebraDataSet*)pDataSet error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    m_pAssociationMessage->addDataSet(*(pDataSet->m_pDataSet));
+    ((imebra::MutableAssociationMessage*)get_imebra_object_holder(AssociationMessage))->addDataSet(*get_other_imebra_object_holder(pDataSet, DataSet));
 
     OBJC_IMEBRA_FUNCTION_END();
 }
@@ -165,7 +184,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(void)dealloc
 {
-    delete m_pAssociation;
+    delete_imebra_object_holder(AssociationBase);
 #if !__has_feature(objc_arc)
     [super dealloc];
 #endif
@@ -175,7 +194,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraAssociationMessage alloc] initWithImebraAssociationMessage:m_pAssociation->getCommand()];
+    return [[ImebraAssociationMessage alloc] initWithImebraAssociationMessage:(new imebra::AssociationMessage(get_imebra_object_holder( AssociationBase)->getCommand()))];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -183,7 +202,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 -(ImebraAssociationMessage*)getResponse:(unsigned int) messageId error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
-    return [[ImebraAssociationMessage alloc] initWithImebraAssociationMessage:m_pAssociation->getResponse((std::uint16_t)messageId)];
+    return [[ImebraAssociationMessage alloc] initWithImebraAssociationMessage:(new imebra::AssociationMessage(get_imebra_object_holder(AssociationBase)->getResponse((std::uint16_t)messageId)))];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -192,7 +211,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    m_pAssociation->sendMessage(*(pMessage->m_pAssociationMessage));
+    get_imebra_object_holder(AssociationBase)->sendMessage(*(get_other_imebra_object_holder(pMessage, AssociationMessage)));
 
     OBJC_IMEBRA_FUNCTION_END();
 }
@@ -201,7 +220,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    m_pAssociation->release();
+    get_imebra_object_holder(AssociationBase)->release();
 
     OBJC_IMEBRA_FUNCTION_END();
 }
@@ -210,7 +229,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    m_pAssociation->abort();
+    get_imebra_object_holder(AssociationBase)->abort();
 
     OBJC_IMEBRA_FUNCTION_END();
 }
@@ -219,19 +238,19 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return imebra::stringToNSString(m_pAssociation->getTransferSyntax(imebra::NSStringToString(abstractSyntax)));
+    return imebra::stringToNSString(get_imebra_object_holder(AssociationBase)->getTransferSyntax(imebra::NSStringToString(abstractSyntax)));
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
 
 -(NSString*)thisAET
 {
-    return imebra::stringToNSString(m_pAssociation->getThisAET());
+    return imebra::stringToNSString(get_imebra_object_holder(AssociationBase)->getThisAET());
 }
 
 -(NSString*)otherAET
 {
-    return imebra::stringToNSString(m_pAssociation->getOtherAET());
+    return imebra::stringToNSString(get_imebra_object_holder(AssociationBase)->getOtherAET());
 }
 
 @end
@@ -249,19 +268,21 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    m_pAssociation = 0;
+    reset_imebra_object_holder(AssociationBase);
+
     self = [super init];
     if(self)
     {
-        m_pAssociation = new imebra::AssociationSCU(
-                    imebra::NSStringToString(thisAET),
-                    imebra::NSStringToString(otherAET),
-                    invokedOperations,
-                    performedOperations,
-                    *(presentationContexts->m_pPresentationContexts),
-                    *(pInput->m_pReader),
-                    *(pOutput->m_pWriter),
-                    dimseTimeoutSeconds);
+        set_imebra_object_holder(AssociationBase,
+                    new imebra::AssociationSCU(
+                                     imebra::NSStringToString(thisAET),
+                                     imebra::NSStringToString(otherAET),
+                                     invokedOperations,
+                                     performedOperations,
+                                     *get_other_imebra_object_holder(presentationContexts, PresentationContexts),
+                                     *get_other_imebra_object_holder(pInput, StreamReader),
+                                     *get_other_imebra_object_holder(pOutput, StreamWriter),
+                                     dimseTimeoutSeconds));
     }
     return self;
 
@@ -284,19 +305,21 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    m_pAssociation = 0;
+    reset_imebra_object_holder(AssociationBase);
+
     self = [super init];
     if(self)
     {
-        m_pAssociation = new imebra::AssociationSCP(
-                    imebra::NSStringToString(thisAET),
-                    invokedOperations,
-                    performedOperations,
-                    *(presentationContexts->m_pPresentationContexts),
-                    *(pInput->m_pReader),
-                    *(pOutput->m_pWriter),
-                    dimseTimeoutSeconds,
-                    artimTimeoutSeconds);
+        set_imebra_object_holder(AssociationBase,
+                    new imebra::AssociationSCP(
+                                     imebra::NSStringToString(thisAET),
+                                     invokedOperations,
+                                     performedOperations,
+                                     *get_other_imebra_object_holder(presentationContexts, PresentationContexts),
+                                     *get_other_imebra_object_holder(pInput, StreamReader),
+                                     *get_other_imebra_object_holder(pOutput, StreamWriter),
+                                     dimseTimeoutSeconds,
+                                     artimTimeoutSeconds));
     }
     return self;
 

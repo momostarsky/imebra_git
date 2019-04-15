@@ -18,23 +18,16 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #if !defined(imebraBaseStreamOutput__INCLUDED_)
 #define imebraBaseStreamOutput__INCLUDED_
 
-#ifndef SWIG
-
 #include <memory>
 #include "definitions.h"
 
 namespace imebra
 {
+
 namespace implementation
 {
     class baseStreamOutput;
 }
-}
-
-#endif
-
-namespace imebra
-{
 
 ///
 /// \brief This class represents a generic output stream.
@@ -53,26 +46,28 @@ namespace imebra
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API BaseStreamOutput
 {
-    BaseStreamOutput(const BaseStreamOutput&) = delete;
-    BaseStreamOutput& operator=(const BaseStreamOutput&) = delete;
-
-#ifndef SWIG
     friend class TCPStream;
-    friend class StreamWriter;
-    friend class FileStreamOutput;
-    friend class MemoryStreamOutput;
-    friend class Pipe;
-
-private:
-    /// \brief Construct a BaseStreamOutput object from an implementation object.
-    ///
-    /// \param pStream the implementation of BaseStreamOutput
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    explicit BaseStreamOutput(std::shared_ptr<implementation::baseStreamOutput> pOutputStream);
-#endif
+    friend class PipeStream;
 
 public:
+    ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source base output stream
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    BaseStreamOutput(const BaseStreamOutput& source);
+
+    ///
+    /// \brief Assignment operator
+    ///
+    /// \param source source stream output
+    /// \return reference to this stream output
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    BaseStreamOutput& operator=(const BaseStreamOutput& source);
+
+
     /// \brief Destructor.
     ///
     ///////////////////////////////////////////////////////////////////////////////
@@ -80,6 +75,10 @@ public:
 
 #ifndef SWIG
 protected:
+    explicit BaseStreamOutput(const std::shared_ptr<implementation::baseStreamOutput>& pOutputStream);
+
+private:
+    friend const std::shared_ptr<implementation::baseStreamOutput>& getBaseStreamOutputImplementation(const BaseStreamOutput& baseStreamOutput);
     std::shared_ptr<implementation::baseStreamOutput> m_pOutputStream;
 #endif
 };

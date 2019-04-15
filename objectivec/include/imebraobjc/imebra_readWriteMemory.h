@@ -17,27 +17,18 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #import "imebra_readMemory.h"
 #import <Foundation/Foundation.h>
 
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
-namespace imebra
-{
-class ReadWriteMemory;
-}
-#endif
-
 ///
 /// \brief Manages a writable buffer of memory.
 ///
 /// The buffer of memory is usually associated with a tag buffer content.
 ///
-/// The memory used by ImebraReadMemory and ImebraReadWriteMemory is managed
+/// The memory used by ImebraReadMemory and ImebraMutableMemory is managed
 /// by ImebraMemoryPool.
 ///
 ///////////////////////////////////////////////////////////////////////////////
-@interface ImebraReadWriteMemory: ImebraReadMemory
+@interface ImebraMutableMemory: ImebraMemory
 
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
-    -(id)initWithImebraReadWriteMemory:(imebra::ReadWriteMemory*)pReadWriteMemory;
-#endif
+    -(id)initWithImebraMutableMemory:define_imebra_parameter(MutableMemory);
 
     /// \brief Construct an empty buffer of memory.
     ///
@@ -60,7 +51,7 @@ class ReadWriteMemory;
     /// \param source the object containing the initial memory's content
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    -(id)initWithMemory:(ImebraReadMemory*)source;
+    -(id)initWithMemory:(ImebraMemory*)source;
 
     /// \brief Construct a buffer of memory and copy the specified content into it.
     ///
@@ -77,7 +68,7 @@ class ReadWriteMemory;
     /// \param pError set to a NSError derived class in case of error
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    -(void)copyFrom:(ImebraReadMemory*)source error:(NSError**)pError
+    -(void)copyFrom:(ImebraMemory*)source error:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
 
     /// \brief Resize the memory to zero bytes.

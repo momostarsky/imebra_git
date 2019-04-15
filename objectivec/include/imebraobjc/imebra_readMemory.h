@@ -15,33 +15,24 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #define imebraObjcReadMemory__INCLUDED_
 
 #import <Foundation/Foundation.h>
-
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
-namespace imebra
-{
-class ReadMemory;
-}
-#endif
+#include "imebra_macros.h"
 
 ///
 /// \brief Manages a read-only buffer of memory.
 ///
 /// The buffer of memory is usually associated with a ImebraTag buffer content.
 ///
-/// The memory used by ImebraReadMemory and ImebraReadWriteMemory is managed
+/// The memory used by ImebraReadMemory and ImebraMutableMemory is managed
 /// by ImebraMemoryPool.
 ///
 ///////////////////////////////////////////////////////////////////////////////
-@interface ImebraReadMemory: NSObject
+@interface ImebraMemory: NSObject
 
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
 {
     @public
-    imebra::ReadMemory* m_pMemory;
+    define_imebra_object_holder(Memory);
 }
-
-    -(id)initWithImebraReadMemory:(imebra::ReadMemory*)pReadMemory;
-#endif
+    -(id)initWithImebraMemory:define_imebra_parameter(Memory);
 
     -(id)init;
 

@@ -11,21 +11,25 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#include "imebra_bridgeStructures.h"
+#include "../include/imebraobjc/imebra_lut.h"
+#include "imebra_implementation_macros.h"
+#include "imebra_strings.h"
+#include <imebra/lut.h>
+#include <imebra/readingDataHandlerNumeric.h>
 
 @implementation ImebraLUT
 
--(id)initWithImebraLut:(imebra::LUT*)pLUT
+-(id)initWithImebraLut:define_imebra_parameter(LUT)
 {
-    m_pLUT = 0;
+    reset_imebra_object_holder(LUT);
     self =  [super init];
     if(self)
     {
-        m_pLUT = pLUT;
+        set_imebra_object_holder(LUT, get_imebra_parameter(LUT));
     }
     else
     {
-        delete pLUT;
+        delete get_imebra_parameter(LUT);
     }
     return self;
 
@@ -33,7 +37,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(void)dealloc
 {
-    delete m_pLUT;
+    delete_imebra_object_holder(LUT);
 #if !__has_feature(objc_arc)
     [super dealloc];
 #endif
@@ -41,32 +45,32 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(ImebraReadingDataHandlerNumeric*) getReadingDataHandler
 {
-    return [[ImebraReadingDataHandlerNumeric alloc] initWithImebraReadingDataHandler:m_pLUT->getReadingDataHandler()];
+    return [[ImebraReadingDataHandlerNumeric alloc] initWithImebraReadingDataHandler:new imebra::ReadingDataHandlerNumeric(get_imebra_object_holder(LUT)->getReadingDataHandler())];
 }
 
 -(unsigned int)getMappedValue:(int)index
 {
-    return (unsigned int)m_pLUT->getMappedValue((std::int32_t)index);
+    return (unsigned int)get_imebra_object_holder(LUT)->getMappedValue((std::int32_t)index);
 }
 
 -(NSString*)description
 {
-    return imebra::stringToNSString(m_pLUT->getDescription());
+    return imebra::stringToNSString(get_imebra_object_holder(LUT)->getDescription());
 }
 
 -(unsigned int) bits
 {
-    return (unsigned int)m_pLUT->getBits();
+    return (unsigned int)get_imebra_object_holder(LUT)->getBits();
 }
 
 -(unsigned int) size
 {
-    return (unsigned int)m_pLUT->getSize();
+    return (unsigned int)get_imebra_object_holder(LUT)->getSize();
 }
 
 -(int) firstMappedValue
 {
-    return (int)m_pLUT->getFirstMapped();
+    return (int)get_imebra_object_holder(LUT)->getFirstMapped();
 }
 
 @end

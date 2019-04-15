@@ -176,29 +176,12 @@ public:
 	///////////////////////////////////////////////////////////
     void setFileParts(const fileParts_t& fileParts);
 
-	/// \brief Returns the record's type.
-	///
-	/// This function calls getTypeString() and convert the
-	///  result to an enumerated value.
-	///
-	/// @return the record's type
-	///
-	///////////////////////////////////////////////////////////
-    directoryRecordType_t getType() const;
-
 	/// \brief Returns a string representing the record's type.
 	///
 	/// @return the record's type
 	///
 	///////////////////////////////////////////////////////////
     std::string getTypeString() const;
-
-	/// \brief Sets the record's type.
-	///
-	/// @param recordType  the record's type
-	///
-	///////////////////////////////////////////////////////////
-    void setType(directoryRecordType_t recordType);
 
 	/// \brief Sets the record's type.
 	///
@@ -212,14 +195,6 @@ private:
     void checkCircularReference(directoryRecord* pStartRecord);
 
 	void updateOffsets();
-
-    struct tDirectoryRecordTypeDef
-    {
-        std::string m_name;
-        directoryRecordType_t m_type;
-    };
-
-    static const tDirectoryRecordTypeDef* getRecordTypeMap();
 
 	std::shared_ptr<directoryRecord> m_pNextRecord;
 	std::shared_ptr<directoryRecord> m_pFirstChildRecord;
@@ -305,7 +280,7 @@ public:
 	///         DICOMDIR
 	///
 	///////////////////////////////////////////////////////////
-    std::shared_ptr<directoryRecord> getNewRecord(directoryRecordType_t recordType);
+    std::shared_ptr<directoryRecord> getNewRecord(const std::string& recordType);
 
 	/// \brief Returns the first root record in the DICOMDIR.
 	///

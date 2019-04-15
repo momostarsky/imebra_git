@@ -16,13 +16,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #import <Foundation/Foundation.h>
 #import "tagsEnumeration.h"
+#include "imebra_macros.h"
 
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
-namespace imebra
-{
-class TagId;
-}
-#endif
 
 ///
 /// \brief Represents a Dicom tag's identification.
@@ -30,12 +25,10 @@ class TagId;
 ///////////////////////////////////////////////////////////////////////////////
 @interface ImebraTagId: NSObject
 
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
 {
     @public
-    imebra::TagId* m_pTagId;
+    define_imebra_object_holder(TagId);
 }
-#endif
 
     -(id)init;
 

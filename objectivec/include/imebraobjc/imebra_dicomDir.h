@@ -17,54 +17,10 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #import <Foundation/Foundation.h>
 #import <Foundation/NSArray.h>
 #import <Foundation/NSString.h>
-
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
-namespace imebra
-{
-    class DataSet;
-    class DicomDirEntry;
-    class DicomDir;
-}
-#endif
-
-/// \enum ImebraDirectoryRecordType_t
-/// \brief Specifies the directory item's type.
-///
-///////////////////////////////////////////////////////////////////////////////
-typedef NS_ENUM(unsigned int, ImebraDirectoryRecordType_t)
-{
-    ImebraDicomDirPatient,
-    ImebraDicomDirStudy,
-    ImebraDicomDirSeries,
-    ImebraDicomDirImage,
-    ImebraDicomDirOverlay,
-    ImebraDicomDirModality_lut,
-    ImebraDicomDirVoi_lut,
-    ImebraDicomDirCurve,
-    ImebraDicomDirTopic,
-    ImebraDicomDirVisit,
-    ImebraDicomDirResults,
-    ImebraDicomDirInterpretation,
-    ImebraDicomDirStudy_component,
-    ImebraDicomDirStored_print,
-    ImebraDicomDirRt_dose,
-    ImebraDicomDirRt_structure_set,
-    ImebraDicomDirRt_plan,
-    ImebraDicomDirRt_treat_record,
-    ImebraDicomDirPresentation,
-    ImebraDicomDirWaveform,
-    ImebraDicomDirSr_document,
-    ImebraDicomDirKey_object_doc,
-    ImebraDicomDirSpectroscopy,
-    ImebraDicomDirRaw_data,
-    ImebraDicomDirRegistration,
-    ImebraDicomDirFiducial,
-    ImebraDicomDirMrdr,
-    ImebraDicomDirEndOfDirectoryRecordTypes
-};
-
+#include "imebra_macros.h"
 
 @class ImebraDataSet;
+@class ImebraMutableDataSet;
 
 
 ///
@@ -81,15 +37,13 @@ typedef NS_ENUM(unsigned int, ImebraDirectoryRecordType_t)
 ///////////////////////////////////////////////////////////////////////////////
 @interface ImebraDicomDirEntry: NSObject
 
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
 {
     @public
-    imebra::DicomDirEntry* m_pDicomDirEntry;
+    define_imebra_object_holder(DicomDirEntry);
 }
 
-    -(id)initWithImebraDicomDirEntry:(imebra::DicomDirEntry*)pDicomDirEntry;
+    -(id)initWithImebraDicomDirEntry:define_imebra_parameter(DicomDirEntry);
 
-#endif
     -(void)dealloc;
 
     /// \brief Return the ImebraDataSet managed by the ImebraDicomDirEntry object.
@@ -121,7 +75,48 @@ typedef NS_ENUM(unsigned int, ImebraDirectoryRecordType_t)
     ///////////////////////////////////////////////////////////////////////////////
     -(ImebraDicomDirEntry*)getFirstChildEntry;
 
-    /// \brief Set the next sibling entry (one the same depth level).
+    /// \brief Returns the parts that form the name of the file referenced by the
+    ///        ImebraDicomDirEntry object.
+    ///
+    /// \return a NSArray of NSString objects that form the name of the file
+    ///         referenced by the ImebraDicomDirEntry object. The last item in the
+    ///         array is the file name, while the preceding items contain the
+    ///         folders names.
+    ///         For instance, the parts "folder0", "folder1", "fileName"
+    ///         represent the path "folder0/folder1/fileName"
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(NSArray*)getFileParts:(NSError**)pError;
+
+    -(NSString*)getTypeString:(NSError**)pError;
+
+@end
+
+
+///
+/// \brief Represents a single DICOMDIR entry.
+///
+/// Each entry can be followed by a sibling entry (on the same depth level)
+/// and/or can point to its first child entry (one level deeper).
+///
+/// Each ImebraDicomDirEntry object manages a ImebraDataSet which is used to
+/// store the entry's data. The ImebraDataSet objects managed by
+/// ImebraDicomDirEntry objects are inserted as sequence items into the
+/// ImebraDicomDir's dataSet.
+///
+///////////////////////////////////////////////////////////////////////////////
+@interface ImebraMutableDicomDirEntry: ImebraDicomDirEntry
+
+   /// \brief Return the ImebraMutableDataSet managed by the
+   ///        ImebraMutableDicomDirEntry object.
+   ///
+   /// \return the ImebraMutableDataSet managed by the
+   ///         ImebraMutableDicomDirEntry object
+   ///
+   ///////////////////////////////////////////////////////////////////////////////
+   -(ImebraMutableDataSet*)getEntryDataSet;
+
+/// \brief Set the next sibling entry (one the same depth level).
     ///
     /// \param nextEntry the next sibling ImebraDicomDirEntry object
     /// \param pError    set to a NSError derived class in case of error
@@ -139,19 +134,6 @@ typedef NS_ENUM(unsigned int, ImebraDirectoryRecordType_t)
     -(void)setFirstChildEntry:(ImebraDicomDirEntry*)pFirstChildEntry error:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
 
-    /// \brief Returns the parts that form the name of the file referenced by the
-    ///        ImebraDicomDirEntry object.
-    ///
-    /// \return a NSArray of NSString objects that form the name of the file
-    ///         referenced by the ImebraDicomDirEntry object. The last item in the
-    ///         array is the file name, while the preceding items contain the
-    ///         folders names.
-    ///         For instance, the parts "folder0", "folder1", "fileName"
-    ///         represent the path "folder0/folder1/fileName"
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    -(NSArray*)getFileParts:(NSError**)pError;
-
     /// \brief Set the parts that form the name of the file referenced by the
     ///        DicomDirEntry object.
     ///
@@ -166,12 +148,8 @@ typedef NS_ENUM(unsigned int, ImebraDirectoryRecordType_t)
     -(void)setFileParts:(NSArray*)pFileParts error:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
 
-    -(ImebraDirectoryRecordType_t)getType:(NSError**)pError
-        __attribute__((swift_error(nonnull_error)));
-
-    -(NSString*)getTypeString:(NSError**)pError;
-
 @end
+
 
 
 ///
@@ -187,19 +165,12 @@ typedef NS_ENUM(unsigned int, ImebraDirectoryRecordType_t)
 ///////////////////////////////////////////////////////////////////////////////
 @interface ImebraDicomDir: NSObject
 
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
 {
     @public
-    imebra::DicomDir* m_pDicomDir;
+    define_imebra_object_holder(DicomDir);
 }
 
-    -(id)initWithImebraDicomDir:(imebra::DicomDir*)pDicomDir;
-#endif
-
-    /// \brief Construct an empty DicomDir.
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    -(id)init;
+    -(id)initWithImebraDicomDir:define_imebra_parameter(DicomDir);
 
     /// \brief Construct an ImebraDicomDir from an ImebraDataSet object.
     ///
@@ -211,17 +182,6 @@ typedef NS_ENUM(unsigned int, ImebraDirectoryRecordType_t)
 
     -(void)dealloc;
 
-    /// \brief Return a new ImebraDicomDirEntry record for the DICOMDIR.
-    ///
-    /// \param recordType the type of the new entry
-    /// \param pError     set to a NSError derived class in case of error
-    /// \return a new ImebraDicomDirEntry object that can be inserted into the
-    ///         ImebraDicomDir object or one of its children ImebraDicomDirEntry
-    ///         entries.
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    -(ImebraDicomDirEntry*)getNewEntry:(ImebraDirectoryRecordType_t)recordType error:(NSError**)pError;
-
     /// \brief Retrieve the first ImebraDicomDir's root entry.
     ///
     /// If the root entry is missing then return a null pointer.
@@ -232,6 +192,38 @@ typedef NS_ENUM(unsigned int, ImebraDirectoryRecordType_t)
     ///
     ///////////////////////////////////////////////////////////////////////////////
     -(ImebraDicomDirEntry*)getFirstRootEntry:(NSError**)pError;
+
+@end
+
+
+///
+/// \brief Represents a DICOMDIR structure.
+///
+/// In order to work ImebraDicomDir needs a ImebraDataSet, which embeds
+/// the DICOMDIR's entries.
+///
+/// If the ImebraDicomDir's content is modified then the method updateDataSet()
+/// has to be called to obtain a dataset that can be stored as a DICOMDIR
+/// file.
+///
+///////////////////////////////////////////////////////////////////////////////
+@interface ImebraMutableDicomDir: ImebraDicomDir
+
+    /// \brief Construct an empty DicomDir.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(id)init;
+
+    /// \brief Return a new ImebraDicomDirEntry record for the DICOMDIR.
+    ///
+    /// \param recordType the type of the new entry
+    /// \param pError     set to a NSError derived class in case of error
+    /// \return a new ImebraDicomDirEntry object that can be inserted into the
+    ///         ImebraDicomDir object or one of its children ImebraDicomDirEntry
+    ///         entries.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(ImebraMutableDicomDirEntry*)getNewEntry:(NSString*)recordType error:(NSError**)pError;
 
     /// \brief Set the specified entry as the first ImebraDicomDir's root record.
     ///

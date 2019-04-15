@@ -43,8 +43,10 @@ class memory;
 /// \brief A PIPE to communicate between threads
 ///
 ///////////////////////////////////////////////////////////
-class pipeSequenceStream: public baseSequenceStreamInput, public baseSequenceStreamOutput
+class pipeSequenceStream
 {
+    friend class pipeSequenceStreamInput;
+    friend class pipeSequenceStreamOutput;
 public:
 
     ///
@@ -64,9 +66,6 @@ public:
     ///////////////////////////////////////////////////////////
     ~pipeSequenceStream();
 
-    virtual size_t read(std::uint8_t* pBuffer, size_t bufferLength) override;
-    virtual void write(const std::uint8_t* pBuffer, size_t bufferLength) override;
-
     ///
     /// \brief Waits for the circular buffer to become empty
     ///        and then call terminate()
@@ -84,9 +83,12 @@ public:
     ///        operations.
     ///
     ///////////////////////////////////////////////////////////
-    virtual void terminate() override;
+    virtual void terminate();
 
 private:
+
+    virtual size_t read(std::uint8_t* pBuffer, size_t bufferLength);
+    virtual void write(const std::uint8_t* pBuffer, size_t bufferLength);
 
     std::shared_ptr<memory> m_pMemory;
 
@@ -97,6 +99,34 @@ private:
     std::mutex m_positionMutex;
     std::condition_variable m_positionConditionVariable;
 };
+
+
+class pipeSequenceStreamInput: public baseSequenceStreamInput
+{
+public:
+    pipeSequenceStreamInput(std::shared_ptr<pipeSequenceStream> pPipeStream);
+
+    virtual size_t read(std::uint8_t* pBuffer, size_t bufferLength) override;
+
+    virtual void terminate() override;
+
+private:
+    std::shared_ptr<pipeSequenceStream> m_pPipeStream;
+};
+
+
+class pipeSequenceStreamOutput: public baseSequenceStreamOutput
+{
+public:
+    pipeSequenceStreamOutput(std::shared_ptr<pipeSequenceStream> pPipeStream);
+
+    void write(const std::uint8_t* pBuffer, size_t bufferLength) override;
+
+private:
+    std::shared_ptr<pipeSequenceStream> m_pPipeStream;
+};
+
+
 
 } // namespace implementation
 

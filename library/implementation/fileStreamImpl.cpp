@@ -124,8 +124,6 @@ void fileStream::openFile(const std::wstring& fileName, std::ios_base::openmode 
 #endif
     if(m_openFile == 0)
     {
-        std::ostringstream errorMessage;
-        errorMessage << "stream::openFile failure - error code: " << errorCode;
         IMEBRA_THROW(StreamOpenError, "stream::openFile failure - error code: " << errorCode);
     }
 

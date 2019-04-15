@@ -15,14 +15,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #define imebraObjcTcpAddress__INCLUDED_
 
 #import <Foundation/Foundation.h>
-
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
-namespace imebra
-{
-class TCPAddress;
-}
-#endif
-
+#include "imebra_macros.h"
 
 ///
 /// \brief Represents a TCP address.
@@ -34,16 +27,12 @@ class TCPAddress;
 ///////////////////////////////////////////////////////////////////////////////
 @interface ImebraTCPAddress: NSObject
 
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
 {
     @public
-    imebra::TCPAddress* m_pTcpAddress;
-
+    define_imebra_object_holder(TCPAddress);
 }
 
-    -(id)initWithImebraTCPAddress:(imebra::TCPAddress*)pTcpAddress;
-
-#endif
+    -(id)initWithImebraTCPAddress:define_imebra_parameter(TCPAddress);
 
     -(void)dealloc;
 

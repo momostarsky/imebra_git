@@ -11,7 +11,15 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#include "imebra_bridgeStructures.h"
+#import "../include/imebraobjc/imebra_tcpListener.h"
+#import "../include/imebraobjc/imebra_tcpStream.h"
+#import "../include/imebraobjc/imebra_tcpAddress.h"
+
+#include "imebra_implementation_macros.h"
+#include "imebra_nserror.h"
+
+#include <imebra/tcpListener.h>
+#include <imebra/tcpStream.h>
 
 @implementation ImebraTCPListener
 
@@ -19,10 +27,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
+    reset_imebra_object_holder(TCPListener);
     self = [super init];
     if(self)
     {
-        m_pTcpListener = new imebra::TCPListener(*(imebra::TCPPassiveAddress*)(pAddress->m_pTcpAddress));
+        set_imebra_object_holder(TCPListener, new imebra::TCPListener(*(imebra::TCPPassiveAddress*)get_other_imebra_object_holder(pAddress, TCPAddress)));
     }
     return self;
 
@@ -31,7 +40,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(void)dealloc
 {
-    delete m_pTcpListener;
+    delete_imebra_object_holder(TCPListener);
 #if !__has_feature(objc_arc)
     [super dealloc];
 #endif
@@ -41,14 +50,14 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraTCPStream alloc] initWithImebraTcpStream:m_pTcpListener->waitForConnection()];
+    return [[ImebraTCPStream alloc] initWithImebraTcpStream:new imebra::TCPStream(get_imebra_object_holder(TCPListener)->waitForConnection())];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
 
 -(void)terminate
 {
-    m_pTcpListener->terminate();
+    get_imebra_object_holder(TCPListener)->terminate();
 }
 
 @end

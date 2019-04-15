@@ -18,8 +18,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #if !defined(imebraDIMSE__INCLUDED_)
 #define imebraDIMSE__INCLUDED_
 
-#ifndef SWIG
-
 #include <memory>
 #include <vector>
 #include <string>
@@ -29,8 +27,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 namespace imebra
 {
 
-// Forward declarations
-//////////////////////////////////////////////////////////////////
 namespace implementation
 {
     class dimseCommandBase;
@@ -64,13 +60,6 @@ namespace implementation
     class nDeleteResponse;
 }
 
-}
-
-#endif
-
-namespace imebra
-{
-
 class DataSet;
 class CStoreCommand;
 class CMoveCommand;
@@ -92,34 +81,49 @@ class NGetCommand;
 //////////////////////////////////////////////////////////////////
 class IMEBRA_API DimseCommandBase
 {
-    DimseCommandBase(const DimseCommandBase&) = delete;
-    DimseCommandBase& operator=(const DimseCommandBase&) = delete;
 
 public:
     virtual ~DimseCommandBase();
 
-#ifndef SWIG
-    friend class CStoreResponse;
-    friend class CGetResponse;
-    friend class CFindResponse;
-    friend class CMoveResponse;
-    friend class CEchoResponse;
-    friend class NEventReportResponse;
-    friend class NGetResponse;
-    friend class NSetResponse;
-    friend class NActionResponse;
-    friend class NCreateResponse;
-    friend class NDeleteResponse;
-    friend class DimseService;
+    ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source DimseCommandBase object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    DimseCommandBase(const DimseCommandBase& source);
 
-protected:
-    explicit DimseCommandBase(std::shared_ptr<implementation::dimseCommandBase> pCommand);
-#endif
+    ///
+    /// \brief Assignment operator
+    ///
+    /// \param source source DimseCommandBase object
+    /// \return reference to this DimseCommandBase
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    DimseCommandBase& operator=(const DimseCommandBase& source);
 
-public:
-    DataSet* getCommandDataSet() const;
-    DataSet* getPayloadDataSet() const;
+    ///
+    /// \brief Returns the data set containing the command (tags in group 0)
+    ///
+    /// \return the DataSet containing the command tags (tags in group 0)
+    ///
+    //////////////////////////////////////////////////////////////////
+    const DataSet getCommandDataSet() const;
 
+    ///
+    /// \brief Returns the data set containing the command's payload.
+    ///
+    /// \return the DataSet containing the command's payload
+    ///
+    //////////////////////////////////////////////////////////////////
+    const DataSet getPayloadDataSet() const;
+
+    ///
+    /// \brief Returns the command's abstract syntax.
+    ///
+    /// \return the command's abstract syntax
+    ///
+    //////////////////////////////////////////////////////////////////
     std::string getAbstractSyntax() const;
 
     ///
@@ -156,6 +160,10 @@ public:
 
 #ifndef SWIG
 protected:
+    explicit DimseCommandBase(const std::shared_ptr<implementation::dimseCommandBase>& pCommand);
+
+private:
+    friend const std::shared_ptr<implementation::dimseCommandBase>& getDimseCommandBaseImplementation(const DimseCommandBase& dimseCommandBase);
     std::shared_ptr<implementation::dimseCommandBase> m_pCommand;
 #endif
 };
@@ -167,17 +175,25 @@ protected:
 //////////////////////////////////////////////////////////////////
 class IMEBRA_API DimseCommand: public DimseCommandBase
 {
-    DimseCommand(const DimseCommand&) = delete;
-    DimseCommand& operator=(const DimseCommand&) = delete;
-
-#ifndef SWIG
-    friend class DimseService;
-    friend class DimseResponse;
-protected:
-    explicit DimseCommand(std::shared_ptr<implementation::dimseNCommand> pCommand);
-#endif
 
 public:
+    ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source DimseCommand object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    DimseCommand(const DimseCommand& source);
+
+    ///
+    /// \brief Assignment operator
+    ///
+    /// \param source source DimseCommand object
+    /// \return a reference to this DimseCommand object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    DimseCommand& operator=(const DimseCommand& source);
+
     ///
     /// \brief Returns the command ID.
     ///
@@ -207,7 +223,7 @@ public:
     /// \return the DimseCommand downcasted to a CStoreCommand
     ///
     //////////////////////////////////////////////////////////////////
-    const CStoreCommand* getAsCStoreCommand() const;
+    const CStoreCommand getAsCStoreCommand() const;
 
     ///
     /// \brief Downcast the DimseCommand to a CMoveCommand,
@@ -222,7 +238,7 @@ public:
     /// \return the DimseCommand downcasted to a CMoveCommand
     ///
     //////////////////////////////////////////////////////////////////
-    const CMoveCommand* getAsCMoveCommand() const;
+    const CMoveCommand getAsCMoveCommand() const;
 
     ///
     /// \brief Downcast the DimseCommand to a CGetCommand,
@@ -237,7 +253,7 @@ public:
     /// \return the DimseCommand downcasted to a CGetCommand
     ///
     //////////////////////////////////////////////////////////////////
-    const CGetCommand* getAsCGetCommand() const;
+    const CGetCommand getAsCGetCommand() const;
 
     ///
     /// \brief Downcast the DimseCommand to a CFindCommand,
@@ -252,7 +268,7 @@ public:
     /// \return the DimseCommand downcasted to a CFindCommand
     ///
     //////////////////////////////////////////////////////////////////
-    const CFindCommand* getAsCFindCommand() const;
+    const CFindCommand getAsCFindCommand() const;
 
     ///
     /// \brief Downcast the DimseCommand to a CEchoCommand,
@@ -267,7 +283,7 @@ public:
     /// \return the DimseCommand downcasted to a CEchoCommand
     ///
     //////////////////////////////////////////////////////////////////
-    const CEchoCommand* getAsCEchoCommand() const;
+    const CEchoCommand getAsCEchoCommand() const;
 
     ///
     /// \brief Downcast the DimseCommand to a CCancelCommand,
@@ -282,7 +298,7 @@ public:
     /// \return the DimseCommand downcasted to a CCancelCommand
     ///
     //////////////////////////////////////////////////////////////////
-    const CCancelCommand* getAsCCancelCommand() const;
+    const CCancelCommand getAsCCancelCommand() const;
 
     ///
     /// \brief Downcast the DimseCommand to a NActionCommand,
@@ -297,7 +313,7 @@ public:
     /// \return the DimseCommand downcasted to a NActionCommand
     ///
     //////////////////////////////////////////////////////////////////
-    const NActionCommand* getAsNActionCommand() const;
+    const NActionCommand getAsNActionCommand() const;
 
     ///
     /// \brief Downcast the DimseCommand to a NEventReportCommand,
@@ -312,7 +328,7 @@ public:
     /// \return the DimseCommand downcasted to a NEventReportCommand
     ///
     //////////////////////////////////////////////////////////////////
-    const NEventReportCommand* getAsNEventReportCommand() const;
+    const NEventReportCommand getAsNEventReportCommand() const;
 
     ///
     /// \brief Downcast the DimseCommand to a NCreateCommand,
@@ -327,7 +343,7 @@ public:
     /// \return the DimseCommand downcasted to a NCreateCommand
     ///
     //////////////////////////////////////////////////////////////////
-    const NCreateCommand* getAsNCreateCommand() const;
+    const NCreateCommand getAsNCreateCommand() const;
 
     ///
     /// \brief Downcast the DimseCommand to a NDeleteCommand,
@@ -342,7 +358,7 @@ public:
     /// \return the DimseCommand downcasted to a NDeleteCommand
     ///
     //////////////////////////////////////////////////////////////////
-    const NDeleteCommand* getAsNDeleteCommand() const;
+    const NDeleteCommand getAsNDeleteCommand() const;
 
     ///
     /// \brief Downcast the DimseCommand to a NSetCommand,
@@ -357,7 +373,7 @@ public:
     /// \return the DimseCommand downcasted to a NSetCommand
     ///
     //////////////////////////////////////////////////////////////////
-    const NSetCommand* getAsNSetCommand() const;
+    const NSetCommand getAsNSetCommand() const;
 
     ///
     /// \brief Downcast the DimseCommand to a NGetCommand,
@@ -372,7 +388,10 @@ public:
     /// \return the DimseCommand downcasted to a NGetCommand
     ///
     //////////////////////////////////////////////////////////////////
-    const NGetCommand* getAsNGetCommand() const;
+    const NGetCommand getAsNGetCommand() const;
+
+protected:
+    explicit DimseCommand(const std::shared_ptr<implementation::dimseNCommand>& pCommand);
 
 };
 
@@ -383,19 +402,43 @@ public:
 //////////////////////////////////////////////////////////////////
 class IMEBRA_API DimseResponse: public DimseCommandBase
 {
-    DimseResponse(const DimseResponse&) = delete;
-    DimseResponse& operator=(const DimseResponse&) = delete;
-
-#ifndef SWIG
-    friend class DimseService;
-protected:
-    explicit DimseResponse(std::shared_ptr<implementation::dimseResponse> pResponse);
-#endif
 
 public:
+    ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source DimseResponse object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    DimseResponse(const DimseResponse& source);
+
+    ///
+    /// \brief Assignment operator.
+    ///
+    /// \param source source DimseResponse object
+    /// \return a reference to this DimseResponse object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    DimseResponse& operator=(const DimseResponse& source);
+
+    ///
+    /// \brief Return the status reported by the DIMSE response.
+    ///
+    /// \return an enumerated status reported by the DIMSE response
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     dimseStatus_t getStatus() const;
+
+    ///
+    /// \brief Return the status code as reported by the DIMSE response.
+    ///
+    /// \return a status code reported by the DIMSE response
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     std::uint16_t getStatusCode() const;
 
+protected:
+    explicit DimseResponse(const std::shared_ptr<implementation::dimseResponse>& pResponse);
 };
 
 
@@ -406,15 +449,25 @@ public:
 //////////////////////////////////////////////////////////////////
 class IMEBRA_API CPartialResponse: public DimseResponse
 {
-    CPartialResponse(const CPartialResponse&) = delete;
-    CPartialResponse& operator=(const CPartialResponse&) = delete;
-
-#ifndef SWIG
-protected:
-    explicit CPartialResponse(std::shared_ptr<implementation::cPartialResponse> pResponse);
-#endif
 
 public:
+    ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source CPartialResponse object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    CPartialResponse(const CPartialResponse& source);
+
+    ///
+    /// \brief Assignment operator.
+    ///
+    /// \param source source CPartialResponse object
+    /// \return a reference to this CPartialResponse object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    CPartialResponse& operator=(const CPartialResponse& source);
+
     ///
     /// \brief Returns the number of remaining C-STORE sub operations.
     ///
@@ -448,6 +501,10 @@ public:
     ///
     //////////////////////////////////////////////////////////////////
     std::uint32_t getWarningSubOperations() const;
+
+protected:
+    explicit CPartialResponse(const std::shared_ptr<implementation::cPartialResponse>& pResponse);
+
 };
 
 
@@ -457,15 +514,8 @@ public:
 //////////////////////////////////////////////////////////////////
 class IMEBRA_API CStoreCommand: public DimseCommand
 {
-    CStoreCommand(const CStoreCommand&) = delete;
-    CStoreCommand& operator=(const CStoreCommand&) = delete;
-
-#ifndef SWIG
-    friend class DimseService;
     friend class DimseCommand;
-protected:
-    explicit CStoreCommand(std::shared_ptr<implementation::cStoreCommand> pCommand);
-#endif
+    friend class DimseService;
 
 public:
     ///
@@ -500,6 +550,23 @@ public:
             const DataSet& payload);
 
     ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source CStoreCommand object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    CStoreCommand(const CStoreCommand& source);
+
+    ///
+    /// \brief Assignment operator.
+    ///
+    /// \param source source CStoreCommand object
+    /// \return a reference to this CStoreCommand object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    CStoreCommand& operator=(const CStoreCommand& source);
+
+    ///
     /// \brief Returns the AET of the entity that triggered this
     ///        C-STORE request either via a C-MOVE or a C-GET
     ///        request.
@@ -520,6 +587,9 @@ public:
     ///
     //////////////////////////////////////////////////////////////////
     std::uint16_t getOriginatorMessageID() const;
+
+protected:
+    explicit CStoreCommand(const std::shared_ptr<implementation::cStoreCommand>& pCommand);
 };
 
 
@@ -529,14 +599,7 @@ public:
 //////////////////////////////////////////////////////////////////
 class IMEBRA_API CStoreResponse: public DimseResponse
 {
-    CStoreResponse(const CStoreResponse&) = delete;
-    CStoreResponse& operator=(const CStoreResponse&) = delete;
-
-#ifndef SWIG
     friend class DimseService;
-protected:
-    explicit CStoreResponse(std::shared_ptr<implementation::cStoreResponse> pResponse);
-#endif
 
 public:
     ///
@@ -548,6 +611,26 @@ public:
     ///
     //////////////////////////////////////////////////////////////////
     explicit CStoreResponse(const CStoreCommand& command, dimseStatusCode_t responseCode);
+
+    ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source CStoreResponse object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    CStoreResponse(const CStoreResponse& source);
+
+    ///
+    /// \brief Assignment operator.
+    ///
+    /// \param source source CStoreResponse object
+    /// \return reference to this CStoreResponse
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    CStoreResponse& operator=(const CStoreResponse& source);
+
+protected:
+    explicit CStoreResponse(const std::shared_ptr<implementation::cStoreResponse>& pResponse);
 };
 
 
@@ -562,15 +645,9 @@ public:
 //////////////////////////////////////////////////////////////////
 class IMEBRA_API CGetCommand: public DimseCommand
 {
-    CGetCommand(const CGetCommand&) = delete;
-    CGetCommand& operator=(const CGetCommand&) = delete;
 
-#ifndef SWIG
     friend class DimseService;
     friend class DimseCommand;
-protected:
-    explicit CGetCommand(std::shared_ptr<implementation::cGetCommand> pCommand);
-#endif
 
 public:
     ///
@@ -596,6 +673,26 @@ public:
             dimseCommandPriority_t priority,
             const std::string& affectedSopClassUid,
             const DataSet& identifier);
+
+    ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source CGetCommand object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    CGetCommand(const CGetCommand& source);
+
+    ///
+    /// \brief Assign operator.
+    ///
+    /// \param source source CGetCommand object
+    /// \return a reference to this CGetCommand object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    CGetCommand& operator=(const CGetCommand& source);
+
+protected:
+    explicit CGetCommand(const std::shared_ptr<implementation::cGetCommand>& pCommand);
 };
 
 
@@ -605,14 +702,8 @@ public:
 //////////////////////////////////////////////////////////////////
 class IMEBRA_API CGetResponse: public CPartialResponse
 {
-    CGetResponse(const CGetResponse&) = delete;
-    CGetResponse& operator=(const CGetResponse&) = delete;
 
-#ifndef SWIG
     friend class DimseService;
-protected:
-    explicit CGetResponse(std::shared_ptr<implementation::cGetResponse> pResponse);
-#endif
 
 public:
 
@@ -677,6 +768,25 @@ public:
             std::uint32_t failedSubOperations,
             std::uint32_t warningSubOperations);
 
+    ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source CGetResponse object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    CGetResponse(const CGetResponse& source);
+
+    ///
+    /// \brief Assign operator.
+    ///
+    /// \param source source CGetResponse object
+    /// \return a reference to this CGetResponse object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    CGetResponse& operator=(const CGetResponse& source);
+
+protected:
+    explicit CGetResponse(const std::shared_ptr<implementation::cGetResponse>& pResponse);
 };
 
 
@@ -686,15 +796,9 @@ public:
 //////////////////////////////////////////////////////////////////
 class IMEBRA_API CFindCommand: public DimseCommand
 {
-    CFindCommand(const CFindCommand&) = delete;
-    CFindCommand& operator=(const CFindCommand&) = delete;
 
-#ifndef SWIG
     friend class DimseService;
     friend class DimseCommand;
-protected:
-    explicit CFindCommand(std::shared_ptr<implementation::cFindCommand> pCommand);
-#endif
 
 public:
     ///
@@ -721,6 +825,26 @@ public:
             dimseCommandPriority_t priority,
             const std::string& affectedSopClassUid,
             const DataSet& identifier);
+
+    ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source CFindCommand object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    CFindCommand(const CFindCommand& source);
+
+    ///
+    /// \brief Assign operator.
+    ///
+    /// \param source source CFindCommand object
+    /// \return a reference to this CFindCommand object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    CFindCommand& operator=(const CFindCommand& source);
+
+protected:
+    explicit CFindCommand(const std::shared_ptr<implementation::cFindCommand>& pCommand);
 };
 
 
@@ -730,14 +854,8 @@ public:
 //////////////////////////////////////////////////////////////////
 class IMEBRA_API CFindResponse: public DimseResponse
 {
-    CFindResponse(const CFindResponse&) = delete;
-    CFindResponse& operator=(const CFindResponse&) = delete;
 
-#ifndef SWIG
     friend class DimseService;
-protected:
-    explicit CFindResponse(std::shared_ptr<implementation::cFindResponse> pResponse);
-#endif
 
 public:
     ///
@@ -767,6 +885,26 @@ public:
     explicit CFindResponse(
             const CFindCommand& receivedCommand,
             dimseStatusCode_t responseCode);
+
+    ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source CFindResponse object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    CFindResponse(const CFindResponse& source);
+
+    ///
+    /// \brief Assign operator.
+    ///
+    /// \param source source CFindResponse object
+    /// \return a reference to this CFindResponse object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    CFindResponse& operator=(const CFindResponse& source);
+
+protected:
+    explicit CFindResponse(const std::shared_ptr<implementation::cFindResponse>& pResponse);
 };
 
 
@@ -776,46 +914,11 @@ public:
 //////////////////////////////////////////////////////////////////
 class IMEBRA_API CMoveCommand: public DimseCommand
 {
-    CMoveCommand(const CMoveCommand&) = delete;
-    CMoveCommand& operator=(const CMoveCommand&) = delete;
 
-#ifndef SWIG
     friend class DimseService;
     friend class DimseCommand;
-protected:
-    explicit CMoveCommand(std::shared_ptr<implementation::cMoveCommand> pCommand);
-#endif
 
 public:
-    //
-    // \brief Constructor (deprecated).
-    //
-    // \deprecated This method has a major bug (it does not take
-    //             the destination AET). Use the new constructor
-    //             instead.
-    //
-    // \param abstractSyntax      the message's abstract syntax
-    //                            (previously negotiated via the
-    //                            PresentationContexts parameter
-    //                            of the AssociationSCP or
-    //                            AssociationSCU constructors)
-    // \param messageID           message ID (can be retrieved
-    //                            with
-    //                            DimseService::getNextCommandID()
-    // \param priority            the message priority
-    // \param affectedSopClassUid affected SOP class UID
-    // \param identifier          the dataset with the identifier
-    //                            (list of tags to match and their
-    //                            requested values)
-    //
-    //////////////////////////////////////////////////////////////////
-    explicit CMoveCommand(
-            const std::string& abstractSyntax,
-            std::uint16_t messageID,
-            dimseCommandPriority_t priority,
-            const std::string& affectedSopClassUid,
-            const DataSet& identifier);
-
     ///
     /// \brief Constructor.
     ///
@@ -844,6 +947,23 @@ public:
             const DataSet& identifier);
 
     ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source CMoveCommand object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    CMoveCommand(const CMoveCommand& source);
+
+    ///
+    /// \brief Assign operator.
+    ///
+    /// \param source source CMoveCommand object
+    /// \return a reference to this CMoveCommand object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    CMoveCommand& operator=(const CMoveCommand& source);
+
+    ///
     /// \brief Returns the destination AET.
     ///
     /// \return the destination AET
@@ -851,6 +971,8 @@ public:
     //////////////////////////////////////////////////////////////////
     std::string getDestinationAET() const;
 
+protected:
+    explicit CMoveCommand(const std::shared_ptr<implementation::cMoveCommand>& pCommand);
 };
 
 
@@ -860,14 +982,8 @@ public:
 //////////////////////////////////////////////////////////////////
 class IMEBRA_API CMoveResponse: public CPartialResponse
 {
-    CMoveResponse(const CMoveResponse&) = delete;
-    CMoveResponse& operator=(const CMoveResponse&) = delete;
 
-#ifndef SWIG
     friend class DimseService;
-protected:
-    explicit CMoveResponse(std::shared_ptr<implementation::cMoveResponse> pResponse);
-#endif
 
 public:
     ///
@@ -930,6 +1046,26 @@ public:
             std::uint32_t completedSubOperations,
             std::uint32_t failedSubOperations,
             std::uint32_t warningSubOperations);
+
+    ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source CMoveResponse object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    CMoveResponse(const CMoveResponse& source);
+
+    ///
+    /// \brief Assign operator.
+    ///
+    /// \param source source CMoveResponse object
+    /// \return a reference to this CMoveResponse object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    CMoveResponse& operator=(const CMoveResponse& source);
+
+protected:
+    explicit CMoveResponse(const std::shared_ptr<implementation::cMoveResponse>& pResponse);
 };
 
 
@@ -939,15 +1075,9 @@ public:
 //////////////////////////////////////////////////////////////////
 class IMEBRA_API CEchoCommand: public DimseCommand
 {
-    CEchoCommand(const CEchoCommand&) = delete;
-    CEchoCommand& operator=(const CEchoCommand&) = delete;
 
-#ifndef SWIG
     friend class DimseService;
     friend class DimseCommand;
-protected:
-    explicit CEchoCommand(std::shared_ptr<implementation::cEchoCommand> pCommand);
-#endif
 
 public:
     ///
@@ -971,6 +1101,25 @@ public:
             dimseCommandPriority_t priority,
             const std::string& affectedSopClassUid);
 
+    ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source CEchoCommand object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    CEchoCommand(const CEchoCommand& source);
+
+    ///
+    /// \brief Assign operator.
+    ///
+    /// \param source source CEchoCommand object
+    /// \return a reference to this CEchoCommand object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    CEchoCommand& operator=(const CEchoCommand& source);
+
+protected:
+    explicit CEchoCommand(const std::shared_ptr<implementation::cEchoCommand>& pCommand);
 };
 
 
@@ -980,14 +1129,8 @@ public:
 //////////////////////////////////////////////////////////////////
 class IMEBRA_API CEchoResponse: public DimseResponse
 {
-    CEchoResponse(const CEchoResponse&) = delete;
-    CEchoResponse& operator=(const CEchoResponse&) = delete;
 
-#ifndef SWIG
     friend class DimseService;
-protected:
-    explicit CEchoResponse(std::shared_ptr<implementation::cEchoResponse> pResponse);
-#endif
 
 public:
     ///
@@ -1001,6 +1144,26 @@ public:
     explicit CEchoResponse(
             const CEchoCommand& receivedCommand,
             dimseStatusCode_t responseCode);
+
+    ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source CEchoResponse object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    CEchoResponse(const CEchoResponse& source);
+
+    ///
+    /// \brief Assign operator.
+    ///
+    /// \param source source CEchoResponse object
+    /// \return a reference to this CEchoResponse object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    CEchoResponse& operator=(const CEchoResponse& source);
+
+protected:
+    explicit CEchoResponse(const std::shared_ptr<implementation::cEchoResponse>& pResponse);
 };
 
 
@@ -1010,15 +1173,9 @@ public:
 //////////////////////////////////////////////////////////////////
 class IMEBRA_API CCancelCommand: public DimseCommand
 {
-    CCancelCommand(const CCancelCommand&) = delete;
-    CCancelCommand& operator=(const CCancelCommand&) = delete;
 
-#ifndef SWIG
     friend class DimseService;
     friend class DimseCommand;
-protected:
-    explicit CCancelCommand(std::shared_ptr<implementation::cCancelCommand> pCommand);
-#endif
 
 public:
     ///
@@ -1043,6 +1200,23 @@ public:
             std::uint16_t cancelMessageID);
 
     ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source CCancelCommand object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    CCancelCommand(const CCancelCommand& source);
+
+    ///
+    /// \brief Assign operator.
+    ///
+    /// \param source source CCancelCommand object
+    /// \return a reference to this CCancelCommand object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    CCancelCommand& operator=(const CCancelCommand& source);
+
+    ///
     /// \brief Returns the ID of the message to cancel.
     ///
     /// \return the ID of the message to cancel
@@ -1050,6 +1224,8 @@ public:
     //////////////////////////////////////////////////////////////////
     std::uint16_t getCancelMessageID() const;
 
+protected:
+    explicit CCancelCommand(const std::shared_ptr<implementation::cCancelCommand>& pCommand);
 
 };
 
@@ -1060,15 +1236,9 @@ public:
 //////////////////////////////////////////////////////////////////
 class IMEBRA_API NEventReportCommand: public DimseCommand
 {
-    NEventReportCommand(const NEventReportCommand&) = delete;
-    NEventReportCommand& operator=(const NEventReportCommand&) = delete;
 
-#ifndef SWIG
     friend class DimseService;
     friend class DimseCommand;
-protected:
-    explicit NEventReportCommand(std::shared_ptr<implementation::nEventReportCommand> pCommand);
-#endif
 
 public:
     ///
@@ -1123,6 +1293,23 @@ public:
             );
 
     ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source NEventReportCommand object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    NEventReportCommand(const NEventReportCommand& source);
+
+    ///
+    /// \brief Assign operator.
+    ///
+    /// \param source source NEventReportCommand object
+    /// \return a reference to this NEventReportCommand object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    NEventReportCommand& operator=(const NEventReportCommand& source);
+
+    ///
     /// \brief Returns the event ID.
     ///
     /// \return the event ID
@@ -1130,6 +1317,8 @@ public:
     //////////////////////////////////////////////////////////////////
     std::uint16_t getEventID() const;
 
+protected:
+    explicit NEventReportCommand(const std::shared_ptr<implementation::nEventReportCommand>& pCommand);
 };
 
 
@@ -1139,14 +1328,8 @@ public:
 //////////////////////////////////////////////////////////////////
 class IMEBRA_API NEventReportResponse: public DimseResponse
 {
-    NEventReportResponse(const NEventReportResponse&) = delete;
-    NEventReportResponse& operator=(const NEventReportResponse&) = delete;
 
-#ifndef SWIG
     friend class DimseService;
-protected:
-    explicit NEventReportResponse(std::shared_ptr<implementation::nEventReportResponse> pResponse);
-#endif
 
 public:
     ///
@@ -1177,6 +1360,23 @@ public:
             );
 
     ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source NEventReportResponse object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    NEventReportResponse(const NEventReportResponse& source);
+
+    ///
+    /// \brief Assign operator.
+    ///
+    /// \param source source NEventReportResponse object
+    /// \return a reference to this NEventReportResponse object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    NEventReportResponse& operator=(const NEventReportResponse& source);
+
+    ///
     /// \brief Get the event ID. The response may omit this
     ///        information.
     ///
@@ -1185,6 +1385,8 @@ public:
     //////////////////////////////////////////////////////////////////
     std::uint16_t getEventID() const;
 
+protected:
+    explicit NEventReportResponse(const std::shared_ptr<implementation::nEventReportResponse>& pResponse);
 };
 
 
@@ -1194,15 +1396,9 @@ public:
 //////////////////////////////////////////////////////////////////
 class IMEBRA_API NGetCommand: public DimseCommand
 {
-    NGetCommand(const NGetCommand&) = delete;
-    NGetCommand& operator=(const NGetCommand&) = delete;
 
-#ifndef SWIG
     friend class DimseService;
     friend class DimseCommand;
-protected:
-    explicit NGetCommand(std::shared_ptr<implementation::nGetCommand> pCommand);
-#endif
 
 public:
     ///
@@ -1233,6 +1429,23 @@ public:
             );
 
     ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source NGetCommand object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    NGetCommand(const NGetCommand& source);
+
+    ///
+    /// \brief Assign operator.
+    ///
+    /// \param source source NGetCommand object
+    /// \return a reference to this NGetCommand object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    NGetCommand& operator=(const NGetCommand& source);
+
+    ///
     /// \brief Return the list of attributes to retrieve. an empty
     ///        list means all.
     ///
@@ -1241,6 +1454,9 @@ public:
     ///
     //////////////////////////////////////////////////////////////////
     attributeIdentifierList_t getAttributeList() const;
+
+protected:
+    explicit NGetCommand(const std::shared_ptr<implementation::nGetCommand>& pCommand);
 };
 
 
@@ -1250,14 +1466,8 @@ public:
 //////////////////////////////////////////////////////////////////
 class IMEBRA_API NGetResponse: public DimseResponse
 {
-    NGetResponse(const NGetResponse&) = delete;
-    NGetResponse& operator=(const NGetResponse&) = delete;
 
-#ifndef SWIG
     friend class DimseService;
-protected:
-    explicit NGetResponse(std::shared_ptr<implementation::nGetResponse> pResponse);
-#endif
 
 public:
     ///
@@ -1289,6 +1499,25 @@ public:
             dimseStatusCode_t responseCode
             );
 
+    ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source NGetResponse object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    NGetResponse(const NGetResponse& source);
+
+    ///
+    /// \brief Assign operator.
+    ///
+    /// \param source source NGetResponse object
+    /// \return a reference to this NGetResponse object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    NGetResponse& operator=(const NGetResponse& source);
+
+protected:
+    explicit NGetResponse(const std::shared_ptr<implementation::nGetResponse>& pResponse);
 };
 
 
@@ -1298,15 +1527,9 @@ public:
 //////////////////////////////////////////////////////////////////
 class IMEBRA_API NSetCommand: public DimseCommand
 {
-    NSetCommand(const NSetCommand&) = delete;
-    NSetCommand& operator=(const NSetCommand&) = delete;
 
-#ifndef SWIG
     friend class DimseService;
     friend class DimseCommand;
-protected:
-    explicit NSetCommand(std::shared_ptr<implementation::nSetCommand> pCommand);
-#endif
 
 public:
     ///
@@ -1335,6 +1558,25 @@ public:
             const DataSet& modificationList
             );
 
+    ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source NSetCommand object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    NSetCommand(const NSetCommand& source);
+
+    ///
+    /// \brief Assign operator.
+    ///
+    /// \param source source NSetCommand object
+    /// \return a reference to this NSetCommand object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    NSetCommand& operator=(const NSetCommand& source);
+
+protected:
+    explicit NSetCommand(const std::shared_ptr<implementation::nSetCommand>& pCommand);
 };
 
 
@@ -1344,14 +1586,8 @@ public:
 //////////////////////////////////////////////////////////////////
 class IMEBRA_API NSetResponse: public DimseResponse
 {
-    NSetResponse(const NSetResponse&) = delete;
-    NSetResponse& operator=(const NSetResponse&) = delete;
 
-#ifndef SWIG
     friend class DimseService;
-protected:
-    explicit NSetResponse(std::shared_ptr<implementation::nSetResponse> pResponse);
-#endif
 
 public:
     ///
@@ -1381,12 +1617,32 @@ public:
             );
 
     ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source NSetResponse object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    NSetResponse(const NSetResponse& source);
+
+    ///
+    /// \brief Assign operator.
+    ///
+    /// \param source source NSetResponse object
+    /// \return a reference to this NSetResponse object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    NSetResponse& operator=(const NSetResponse& source);
+
+    ///
     /// \brief Returns the list of modified attributes.
     ///
     /// \return list of modified attributes
     ///
     //////////////////////////////////////////////////////////////////
     attributeIdentifierList_t getModifiedAttributes() const;
+
+protected:
+    explicit NSetResponse(const std::shared_ptr<implementation::nSetResponse>& pResponse);
 };
 
 
@@ -1396,15 +1652,9 @@ public:
 //////////////////////////////////////////////////////////////////
 class IMEBRA_API NActionCommand: public DimseCommand
 {
-    NActionCommand(const NActionCommand&) = delete;
-    NActionCommand& operator=(const NActionCommand&) = delete;
 
-#ifndef SWIG
     friend class DimseService;
     friend class DimseCommand;
-protected:
-    explicit NActionCommand(std::shared_ptr<implementation::nActionCommand> pCommand);
-#endif
 
 public:
     ///
@@ -1461,12 +1711,32 @@ public:
             );
 
     ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source NActionCommand object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    NActionCommand(const NActionCommand& source);
+
+    ///
+    /// \brief Assign operator.
+    ///
+    /// \param source source NActionCommand object
+    /// \return a reference to this NActionCommand object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    NActionCommand& operator=(const NActionCommand& source);
+
+    ///
     /// \brief Returns the action's ID.
     ///
     /// \return the action's ID
     ///
     //////////////////////////////////////////////////////////////////
     std::uint16_t getActionID() const;
+
+protected:
+    explicit NActionCommand(const std::shared_ptr<implementation::nActionCommand>& pCommand);
 };
 
 
@@ -1476,14 +1746,8 @@ public:
 //////////////////////////////////////////////////////////////////
 class IMEBRA_API NActionResponse: public DimseResponse
 {
-    NActionResponse(const NActionResponse&) = delete;
-    NActionResponse& operator=(const NActionResponse&) = delete;
 
-#ifndef SWIG
     friend class DimseService;
-protected:
-    explicit NActionResponse(std::shared_ptr<implementation::nActionResponse> pResponse);
-#endif
 
 public:
     ///
@@ -1514,12 +1778,32 @@ public:
             );
 
     ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source NActionResponse object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    NActionResponse(const NActionResponse& source);
+
+    ///
+    /// \brief Assign operator.
+    ///
+    /// \param source source NActionResponse object
+    /// \return a reference to this NActionResponse object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    NActionResponse& operator=(const NActionResponse& source);
+
+    ///
     /// \brief Returns the action's ID.
     ///
     /// \return the action's ID
     ///
     //////////////////////////////////////////////////////////////////
     std::uint16_t getActionID() const;
+
+protected:
+    explicit NActionResponse(const std::shared_ptr<implementation::nActionResponse>& pResponse);
 };
 
 
@@ -1529,15 +1813,9 @@ public:
 //////////////////////////////////////////////////////////////////
 class IMEBRA_API NCreateCommand: public DimseCommand
 {
-    NCreateCommand(const NCreateCommand&) = delete;
-    NCreateCommand& operator=(const NCreateCommand&) = delete;
 
-#ifndef SWIG
     friend class DimseService;
     friend class DimseCommand;
-protected:
-    explicit NCreateCommand(std::shared_ptr<implementation::nCreateCommand> pCommand);
-#endif
 
 public:
     ///
@@ -1587,6 +1865,25 @@ public:
             const std::string& affectedSopInstanceUid
             );
 
+    ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source NCreateCommand object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    NCreateCommand(const NCreateCommand& source);
+
+    ///
+    /// \brief Assign operator.
+    ///
+    /// \param source source NCreateCommand object
+    /// \return a reference to this NCreateCommand object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    NCreateCommand& operator=(const NCreateCommand& source);
+
+protected:
+    explicit NCreateCommand(const std::shared_ptr<implementation::nCreateCommand>& pCommand);
 };
 
 
@@ -1596,14 +1893,8 @@ public:
 //////////////////////////////////////////////////////////////////
 class IMEBRA_API NCreateResponse: public DimseResponse
 {
-    NCreateResponse(const NCreateResponse&) = delete;
-    NCreateResponse& operator=(const NCreateResponse&) = delete;
 
-#ifndef SWIG
     friend class DimseService;
-protected:
-    explicit NCreateResponse(std::shared_ptr<implementation::nCreateResponse> pResponse);
-#endif
 
 public:
     ///
@@ -1660,6 +1951,25 @@ public:
             const std::string& affectedSopInstanceUid
             );
 
+    ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source NCreateResponse object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    NCreateResponse(const NCreateResponse& source);
+
+    ///
+    /// \brief Assign operator.
+    ///
+    /// \param source source NCreateResponse object
+    /// \return a reference to this NCreateResponse object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    NCreateResponse& operator=(const NCreateResponse& source);
+
+protected:
+    explicit NCreateResponse(const std::shared_ptr<implementation::nCreateResponse>& pResponse);
 };
 
 
@@ -1669,15 +1979,9 @@ public:
 //////////////////////////////////////////////////////////////////
 class IMEBRA_API NDeleteCommand: public DimseCommand
 {
-    NDeleteCommand(const NDeleteCommand&) = delete;
-    NDeleteCommand& operator=(const NDeleteCommand&) = delete;
 
-#ifndef SWIG
     friend class DimseService;
     friend class DimseCommand;
-protected:
-    explicit NDeleteCommand(std::shared_ptr<implementation::nDeleteCommand> pCommand);
-#endif
 
 public:
     ///
@@ -1701,6 +2005,26 @@ public:
             const std::string& requestedSopClassUid,
             const std::string& requestedSopInstanceUid
             );
+
+    ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source NDeleteCommand object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    NDeleteCommand(const NDeleteCommand& source);
+
+    ///
+    /// \brief Assign operator.
+    ///
+    /// \param source source NDeleteCommand object
+    /// \return a reference to this NDeleteCommand object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    NDeleteCommand& operator=(const NDeleteCommand& source);
+
+protected:
+    explicit NDeleteCommand(const std::shared_ptr<implementation::nDeleteCommand>& pCommand);
 };
 
 
@@ -1710,14 +2034,8 @@ public:
 //////////////////////////////////////////////////////////////////
 class IMEBRA_API NDeleteResponse: public DimseResponse
 {
-    NDeleteResponse(const NDeleteResponse&) = delete;
-    NDeleteResponse& operator=(const NDeleteResponse&) = delete;
 
-#ifndef SWIG
     friend class DimseService;
-protected:
-    explicit NDeleteResponse(std::shared_ptr<implementation::nDeleteResponse> pResponse);
-#endif
 
 public:
     ///
@@ -1732,6 +2050,26 @@ public:
             NDeleteCommand& receivedCommand,
             dimseStatusCode_t responseCode
             );
+
+    ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source NDeleteResponse object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    NDeleteResponse(const NDeleteResponse& source);
+
+    ///
+    /// \brief Assign operator.
+    ///
+    /// \param source source NDeleteResponse object
+    /// \return a reference to this NDeleteResponse object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    NDeleteResponse& operator=(const NDeleteResponse& source);
+
+protected:
+    explicit NDeleteResponse(const std::shared_ptr<implementation::nDeleteResponse>& pResponse);
 };
 
 
@@ -1750,8 +2088,6 @@ public:
 //////////////////////////////////////////////////////////////////
 class IMEBRA_API DimseService
 {
-    DimseService(const DimseService&) = delete;
-    DimseService& operator=(const DimseService&) = delete;
 
 public:
     ///
@@ -1763,6 +2099,23 @@ public:
     ///
     //////////////////////////////////////////////////////////////////
     explicit DimseService(AssociationBase& association);
+
+    ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source DimseService object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    DimseService(const DimseService& source);
+
+    ///
+    /// \brief Assign operator.
+    ///
+    /// \param source source DimseService object
+    /// \return a reference to this DimseService object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    DimseService& operator=(const DimseService& source);
 
     ///
     /// \brief Returns the negotiated transfer syntax for a specific
@@ -1818,7 +2171,7 @@ public:
     /// \return the next incoming DICOM command
     ///
     //////////////////////////////////////////////////////////////////
-    DimseCommand* getCommand();
+    const DimseCommand getCommand();
 
     ///
     /// \brief Sends a DICOM command or response through the
@@ -1845,7 +2198,7 @@ public:
     /// \return the response for the specified command
     ///
     //////////////////////////////////////////////////////////////////
-    CStoreResponse* getCStoreResponse(const CStoreCommand& command);
+    const CStoreResponse getCStoreResponse(const CStoreCommand& command);
 
     ///
     /// \brief Wait for the response for the specified C-GET
@@ -1861,7 +2214,7 @@ public:
     /// \return the response for the specified command
     ///
     //////////////////////////////////////////////////////////////////
-    CGetResponse* getCGetResponse(const CGetCommand& command);
+    const CGetResponse getCGetResponse(const CGetCommand& command);
 
     ///
     /// \brief Wait for the response for the specified C-FIND
@@ -1877,7 +2230,7 @@ public:
     /// \return the response for the specified command
     ///
     //////////////////////////////////////////////////////////////////
-    CFindResponse* getCFindResponse(const CFindCommand& command);
+    const CFindResponse getCFindResponse(const CFindCommand& command);
 
     ///
     /// \brief Wait for the response for the specified C-MOVE
@@ -1893,7 +2246,7 @@ public:
     /// \return the response for the specified command
     ///
     //////////////////////////////////////////////////////////////////
-    CMoveResponse* getCMoveResponse(const CMoveCommand& command);
+    const CMoveResponse getCMoveResponse(const CMoveCommand& command);
 
     ///
     /// \brief Wait for the response for the specified C-ECHO
@@ -1909,7 +2262,7 @@ public:
     /// \return the response for the specified command
     ///
     //////////////////////////////////////////////////////////////////
-    CEchoResponse* getCEchoResponse(const CEchoCommand& command);
+    const CEchoResponse getCEchoResponse(const CEchoCommand& command);
 
     ///
     /// \brief Wait for the response for the specified N-EVENT-REPORT
@@ -1925,7 +2278,7 @@ public:
     /// \return the response for the specified command
     ///
     //////////////////////////////////////////////////////////////////
-    NEventReportResponse* getNEventReportResponse(const NEventReportCommand& command);
+    const NEventReportResponse getNEventReportResponse(const NEventReportCommand& command);
 
     ///
     /// \brief Wait for the response for the specified N-GET
@@ -1941,7 +2294,7 @@ public:
     /// \return the response for the specified command
     ///
     //////////////////////////////////////////////////////////////////
-    NGetResponse* getNGetResponse(const NGetCommand& command);
+    const NGetResponse getNGetResponse(const NGetCommand& command);
 
     ///
     /// \brief Wait for the response for the specified N-SET
@@ -1957,7 +2310,7 @@ public:
     /// \return the response for the specified command
     ///
     //////////////////////////////////////////////////////////////////
-    NSetResponse* getNSetResponse(const NSetCommand& command);
+    const NSetResponse getNSetResponse(const NSetCommand& command);
 
     ///
     /// \brief Wait for the response for the specified N-ACTION
@@ -1973,7 +2326,7 @@ public:
     /// \return the response for the specified command
     ///
     //////////////////////////////////////////////////////////////////
-    NActionResponse* getNActionResponse(const NActionCommand& command);
+    const NActionResponse getNActionResponse(const NActionCommand& command);
 
     ///
     /// \brief Wait for the response for the specified N-CREATE
@@ -1989,7 +2342,7 @@ public:
     /// \return the response for the specified command
     ///
     //////////////////////////////////////////////////////////////////
-    NCreateResponse* getNCreateResponse(const NCreateCommand& command);
+    const NCreateResponse getNCreateResponse(const NCreateCommand& command);
 
     ///
     /// \brief Wait for the response for the specified N-DELETE
@@ -2005,13 +2358,13 @@ public:
     /// \return the response for the specified command
     ///
     //////////////////////////////////////////////////////////////////
-    NDeleteResponse* getNDeleteResponse(const NDeleteCommand& command);
+    const NDeleteResponse getNDeleteResponse(const NDeleteCommand& command);
 
 #ifndef SWIG
-protected:
+private:
+    friend const std::shared_ptr<implementation::dimseService>& getDimseServiceImplementation(const DimseService& service);
     std::shared_ptr<implementation::dimseService> m_pDimseService;
 #endif
-
 };
 
 

@@ -24,18 +24,23 @@ If you do not want to be bound by the GPL terms (such as the requirement
 namespace imebra
 {
 
-Image::Image(
-        std::uint32_t width,
-        std::uint32_t height,
-        bitDepth_t depth,
-        const std::string& colorSpace,
-        std::uint32_t highBit):
-    m_pImage(std::make_shared<implementation::image>(width, height, depth, colorSpace, highBit))
+Image::Image(const std::shared_ptr<implementation::image>& pImage): m_pImage(pImage)
 {
 }
 
-Image::Image(std::shared_ptr<implementation::image> pImage): m_pImage(pImage)
+Image::Image(const Image &source): m_pImage(getImageImplementation(source))
 {
+}
+
+Image& Image::operator=(const Image& source)
+{
+    m_pImage = getImageImplementation(source);
+    return *this;
+}
+
+const std::shared_ptr<implementation::image>& getImageImplementation(const Image& source)
+{
+    return source.m_pImage;
 }
 
 Image::~Image()
@@ -56,11 +61,6 @@ double Image::getHeightMm() const
     return height;
 }
 
-void Image::setSizeMm(double width, double height)
-{
-    m_pImage->setSizeMm(width, height);
-}
-
 std::uint32_t Image::getWidth() const
 {
     std::uint32_t width, height;
@@ -75,14 +75,9 @@ std::uint32_t Image::getHeight() const
     return height;
 }
 
-ReadingDataHandlerNumeric* Image::getReadingDataHandler() const
+ReadingDataHandlerNumeric Image::getReadingDataHandler() const
 {
-    return new ReadingDataHandlerNumeric(m_pImage->getReadingDataHandler());
-}
-
-WritingDataHandlerNumeric* Image::getWritingDataHandler()
-{
-    return new WritingDataHandlerNumeric(m_pImage->getWritingDataHandler());
+    return ReadingDataHandlerNumeric(m_pImage->getReadingDataHandler());
 }
 
 std::string Image::getColorSpace() const
@@ -103,6 +98,42 @@ bitDepth_t Image::getDepth() const
 std::uint32_t Image::getHighBit() const
 {
     return m_pImage->getHighBit();
+}
+
+MutableImage::MutableImage(
+        std::uint32_t width,
+        std::uint32_t height,
+        bitDepth_t depth,
+        const std::string& colorSpace,
+        std::uint32_t highBit):
+    Image(std::make_shared<implementation::image>(width, height, depth, colorSpace, highBit))
+{
+}
+
+MutableImage::MutableImage(std::shared_ptr<imebra::implementation::image> pImage):
+    Image(pImage)
+{
+}
+
+MutableImage::MutableImage(const MutableImage& source): Image(source)
+{
+}
+
+MutableImage& MutableImage::operator=(const MutableImage& source)
+{
+    Image::operator =(source);
+    return *this;
+}
+
+
+void MutableImage::setSizeMm(double width, double height)
+{
+    getImageImplementation(*this)->setSizeMm(width, height);
+}
+
+WritingDataHandlerNumeric MutableImage::getWritingDataHandler()
+{
+    return WritingDataHandlerNumeric(getImageImplementation(*this)->getWritingDataHandler());
 }
 
 }

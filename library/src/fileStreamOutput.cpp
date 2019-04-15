@@ -30,6 +30,16 @@ FileStreamOutput::FileStreamOutput(const std::string& name): BaseStreamOutput(st
 {
 }
 
+FileStreamOutput::FileStreamOutput(const FileStreamOutput& source): BaseStreamOutput(source)
+{
+}
+
+FileStreamOutput& FileStreamOutput::operator=(const FileStreamOutput& source)
+{
+    BaseStreamOutput::operator =(source);
+    return *this;
+}
+
 FileStreamOutput::~FileStreamOutput()
 {
 }

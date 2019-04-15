@@ -414,8 +414,8 @@ tcpBaseSocket::tcpBaseSocket(int socket):
 
 #else
     timeval timeout;
-    timeout.tv_sec = 0;
-    timeout.tv_usec = IMEBRA_TCP_TIMEOUT_MS * 1000;
+    timeout.tv_sec = IMEBRA_TCP_TIMEOUT_MS / 1000;
+    timeout.tv_usec = IMEBRA_TCP_TIMEOUT_MS * 1000 - (timeout.tv_sec * 1000000);
     setsockopt(m_socket, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
     setsockopt(m_socket, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout));
 #endif
@@ -505,13 +505,13 @@ void tcpBaseSocket::poll(pollType_t pollType)
     short flags = pollType == pollType_t::read ? POLLIN : POLLOUT;
     pollfd fds[1];
     fds[0].fd = m_socket;
-    fds[0].events = flags;
+    fds[0].events = flags | POLLHUP | POLLERR;
     fds[0].revents = 0;
     long pollResult = throwTcpException(::poll(fds, 1, IMEBRA_TCP_TIMEOUT_MS));
 
-    if(pollResult == 0 || (fds[0].revents & flags) != 0)
+    if(pollResult == 0 || (fds[0].revents & flags) == 0)
     {
-        return;
+        throw SocketTimeout("Timeout during poll");
     }
 
     if((fds[0].revents & POLLHUP) != 0)
@@ -696,10 +696,38 @@ std::shared_ptr<tcpAddress> tcpSequenceStream::getPeerAddress() const
     return m_pAddress;
 }
 
+
 void tcpSequenceStream::terminate()
 {
     tcpBaseSocket::terminate();
 }
+
+
+tcpSequenceStreamInput::tcpSequenceStreamInput(std::shared_ptr<tcpSequenceStream> pTcpStream):
+    m_pTcpStream(pTcpStream)
+{
+}
+
+size_t tcpSequenceStreamInput::read(std::uint8_t* pBuffer, size_t bufferLength)
+{
+    return m_pTcpStream->read(pBuffer, bufferLength);
+}
+
+void tcpSequenceStreamInput::terminate()
+{
+    m_pTcpStream->terminate();
+}
+
+tcpSequenceStreamOutput::tcpSequenceStreamOutput(std::shared_ptr<tcpSequenceStream> pTcpStream):
+    m_pTcpStream(pTcpStream)
+{
+}
+
+void tcpSequenceStreamOutput::write(const std::uint8_t* pBuffer, size_t bufferLength)
+{
+    m_pTcpStream->write(pBuffer, bufferLength);
+}
+
 
 
 ///////////////////////////////////////////////////////////

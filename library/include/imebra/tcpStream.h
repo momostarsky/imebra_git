@@ -29,7 +29,7 @@ namespace imebra
 
 namespace implementation
 {
-class tcpSequenceStream;
+    class tcpSequenceStream;
 }
 
 class TCPActiveAddress;
@@ -39,16 +39,10 @@ class TCPAddress;
 /// \brief Represents a TCP stream.
 ///
 ///////////////////////////////////////////////////////////////////////////////
-class IMEBRA_API TCPStream: public BaseStreamInput, public BaseStreamOutput
+class IMEBRA_API TCPStream
 {
-    TCPStream(const TCPStream&) = delete;
-    TCPStream& operator=(const TCPStream&) = delete;
 
-#ifndef SWIG
     friend class TCPListener;
-private:
-    explicit TCPStream(std::shared_ptr<imebra::implementation::tcpSequenceStream> pTcpStream);
-#endif
 
 public:
     ///
@@ -64,22 +58,58 @@ public:
     explicit TCPStream(const TCPActiveAddress& address);
 
     ///
+    /// \brief Copy constructor.
+    ///
+    /// \param source source TCPStream object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    TCPStream(const TCPStream& source);
+
+    ///
+    /// \brief Assign operator.
+    ///
+    /// \param source source TCPStream object
+    /// \return a reference to this TCPStream object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    TCPStream& operator=(const TCPStream& source);
+
+    ///
     /// \brief Returns the address of the connected peer.
     ///
     /// \return the address of the connected peer
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    TCPAddress* getPeerAddress() const;
+    const TCPAddress getPeerAddress() const;
 
     ///
-    /// \brief Instruct any pending operation to terminate.
+    /// \brief Return a BaseStreamInput object able to read from the TCPStream.
     ///
-    /// Current and subsequent read and write operations will fail by throwing
-    /// the exception StreamClosedError.
+    /// \return a BaseStreamInput object able to read from the TCPStream.
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    void terminate();
+    BaseStreamInput getStreamInput();
+
+    ///
+    /// \brief Return a BaseStreamOutput object able to write into the TCPStream.
+    ///
+    /// \return a BaseStreamOutput object able to write into the TCPStream
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    BaseStreamOutput getStreamOutput();
+
+#ifndef SWIG
+protected:
+
+    explicit TCPStream(const std::shared_ptr<implementation::tcpSequenceStream>& pTcpStream);
+
+private:
+    friend const std::shared_ptr<implementation::tcpSequenceStream>& getTCPStreamImplementation(const TCPStream& stream);
+    std::shared_ptr<implementation::tcpSequenceStream> m_pStream;
+#endif
 };
+
+
 
 }
 #endif // !defined(tcpStream__INCLUDED_)

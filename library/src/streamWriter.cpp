@@ -18,22 +18,55 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #include "../include/imebra/streamWriter.h"
 #include "../include/imebra/baseStreamOutput.h"
-
+#include "../include/imebra/memory.h"
 #include "../implementation/streamWriterImpl.h"
+#include "../implementation/memoryImpl.h"
 
 namespace imebra
 {
 
-StreamWriter::StreamWriter(std::shared_ptr<implementation::streamWriter> pWriter): m_pWriter(pWriter)
+StreamWriter::StreamWriter(const std::shared_ptr<implementation::streamWriter>& pWriter): m_pWriter(pWriter)
 {
 }
 
-StreamWriter::StreamWriter(const BaseStreamOutput& stream): m_pWriter(std::make_shared<implementation::streamWriter>(stream.m_pOutputStream))
+StreamWriter::StreamWriter(const BaseStreamOutput& stream): m_pWriter(std::make_shared<implementation::streamWriter>(getBaseStreamOutputImplementation(stream)))
 {
 }
 
-StreamWriter::StreamWriter(const BaseStreamOutput& stream, size_t virtualStart, size_t virtualLength): m_pWriter(std::make_shared<implementation::streamWriter>(stream.m_pOutputStream, virtualStart, virtualLength))
+StreamWriter::StreamWriter(const BaseStreamOutput& stream, size_t virtualStart, size_t virtualLength): m_pWriter(std::make_shared<implementation::streamWriter>(getBaseStreamOutputImplementation(stream), virtualStart, virtualLength))
 {
+}
+
+StreamWriter::StreamWriter(const StreamWriter& source): m_pWriter(getStreamWriterImplementation(source))
+{
+}
+
+StreamWriter& StreamWriter::operator=(const StreamWriter& source)
+{
+    m_pWriter = getStreamWriterImplementation(source);
+    return *this;
+}
+
+void StreamWriter::write(char* data, size_t dataSize)
+{
+    m_pWriter->write((const std::uint8_t*)data, dataSize);
+}
+
+void StreamWriter::write(const Memory& memory)
+{
+    const std::uint8_t* data(getMemoryImplementation(memory)->data());
+    const size_t dataSize(getMemoryImplementation(memory)->size());
+    m_pWriter->write(data, dataSize);
+}
+
+void StreamWriter::flush()
+{
+    m_pWriter->flushDataBuffer();
+}
+
+const std::shared_ptr<implementation::streamWriter>& getStreamWriterImplementation(const StreamWriter& streamWriter)
+{
+    return streamWriter.m_pWriter;
 }
 
 StreamWriter::~StreamWriter()

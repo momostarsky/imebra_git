@@ -11,31 +11,35 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#include "imebra_bridgeStructures.h"
+#import "../include/imebraobjc/imebra_readMemory.h"
 
-@implementation ImebraReadMemory
+#include "imebra_implementation_macros.h"
+#include <imebra/memory.h>
 
--(id)initWithImebraReadMemory:(imebra::ReadMemory*)pReadMemory
+@implementation ImebraMemory
+
+-(id)initWithImebraMemory:define_imebra_parameter(Memory)
 {
-    self->m_pMemory = 0;
+    reset_imebra_object_holder(Memory);
     self = [super init];
     if(self)
     {
-        self->m_pMemory = pReadMemory;
+        set_imebra_object_holder(Memory, get_imebra_parameter(Memory));
     }
     else
     {
-        delete pReadMemory;
+        delete get_imebra_parameter(Memory);
     }
     return self;
 }
 
 -(id)init
 {
+    reset_imebra_object_holder(Memory);
     self = [super init];
     if(self)
     {
-        self->m_pMemory = new imebra::ReadMemory();
+        set_imebra_object_holder(Memory, new imebra::Memory());
     }
     return self;
 }
@@ -43,17 +47,18 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(id)initWithData:(NSData*)pSource
 {
+    reset_imebra_object_holder(Memory);
     self = [super init];
     if(self)
     {
-        self->m_pMemory = new imebra::ReadMemory((char*)pSource.bytes, (size_t)pSource.length);
+        set_imebra_object_holder(Memory, new imebra::Memory((char*)pSource.bytes, (size_t)pSource.length));
     }
     return self;
 }
 
 -(void)dealloc
 {
-    delete self->m_pMemory;
+    delete_imebra_object_holder(Memory);
 #if !__has_feature(objc_arc)
     [super dealloc];
 #endif
@@ -62,14 +67,14 @@ If you do not want to be bound by the GPL terms (such as the requirement
 -(NSData*)data
 {
     size_t dataSize;
-    const char* pMemory(m_pMemory->data(&dataSize));
+    const char* pMemory(get_imebra_object_holder(Memory)->data(&dataSize));
     NSData* pData = [NSData dataWithBytes:pMemory length:dataSize];
     return pData;
 }
 
 -(bool)empty
 {
-    return m_pMemory->empty();
+    return get_imebra_object_holder(Memory)->empty();
 
 }
 
