@@ -93,7 +93,7 @@ void CGDataProviderCallbackFunc(void *info, const void* /* data */, size_t /* si
     //////////////////////////
     std::unique_ptr<imebra::Memory> pMemory(new imebra::Memory(get_imebra_object_holder(DrawBitmap)->getBitmap(*get_other_imebra_object_holder(pImage, Image), imebra::drawBitmapType_t::drawBitmapRGBA, 4)));
     size_t dataSize;
-    char* pData = pMemory->data(&dataSize);
+    const char* pData = pMemory->data(&dataSize);
 
     // Create a CGImage, then convert it to NSImage or UIImage
     //////////////////////////////////////////////////////////
