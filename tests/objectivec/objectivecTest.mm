@@ -715,13 +715,13 @@ TEST(objectivec, createDicomDir)
     [rootRecordDataSet setString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"Surname" error:&pError];
     [newDicomDir setFirstRootEntry:rootRecord error:&pError];
 
-    ImebraDicomDirEntry* nextRecord = [newDicomDir getNewEntry:@"PATIENT" error:&pError];
-    ImebraDataSet* nextRecordDataSet = [nextRecord getEntryDataSet];
+    ImebraMutableDicomDirEntry* nextRecord = [newDicomDir getNewEntry:@"PATIENT" error:&pError];
+    ImebraMutableDataSet* nextRecordDataSet = [nextRecord getEntryDataSet];
     [nextRecordDataSet setString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"Surname 1" error:&pError];
     [rootRecord setNextEntry:nextRecord error:&pError];
 
-    ImebraDicomDirEntry* imageRecord = [newDicomDir getNewEntry:@"IMAGE" error:&pError];
-    ImebraDataSet* imageRecordDataSet = [imageRecord getEntryDataSet];
+    ImebraMutableDicomDirEntry* imageRecord = [newDicomDir getNewEntry:@"IMAGE" error:&pError];
+    ImebraMutableDataSet* imageRecordDataSet = [imageRecord getEntryDataSet];
     [imageRecordDataSet setString:[[ImebraTagId alloc] initWithGroup:0x8 tag:0x18] newValue:@"1.2.840.34.56.78999654.235" error:&pError];
     [nextRecord setFirstChildEntry:imageRecord error:&pError];
 
@@ -768,7 +768,7 @@ TEST(objectivec, images)
     unsigned int width = 600;
     unsigned int height = 400;
 
-    ImebraImage* pBaselineImage = [[ImebraImage alloc] initWithWidth:width height:height depth:ImebraBitDepthU8 colorSpace:@"RGB" highBit:7];
+    ImebraMutableImage* pBaselineImage = [[ImebraImage alloc] initWithWidth:width height:height depth:ImebraBitDepthU8 colorSpace:@"RGB" highBit:7];
 
     {
         ImebraWritingDataHandler* pWritingDataHandler = [pBaselineImage getWritingDataHandler:&pError];
@@ -796,7 +796,7 @@ TEST(objectivec, images)
 
     ImebraTransform* pColorTransform = [ImebraColorTransformsFactory getTransform:@"RGB" finalColorSpace:@"YBR_FULL" error:&pError];
 
-    ImebraImage* pYbrImage = [pColorTransform allocateOutputImage:pBaselineImage width:width height:height error:&pError];
+    ImebraMutableImage* pYbrImage = [pColorTransform allocateOutputImage:pBaselineImage width:width height:height error:&pError];
 
     [pColorTransform runTransform:pBaselineImage inputTopLeftX:0 inputTopLeftY:0 inputWidth:width inputHeight:height outputImage:pYbrImage outputTopLeftX:0 outputTopLeftY:0 error:&pError];
 
@@ -817,7 +817,7 @@ TEST(objectivec, images)
     ImebraImage* pLoadedImage = [pLoadedDataSet getImage:0 error:&pError];
 
     // Compare the buffers. A little difference is allowed
-    double differenceYBR = compareImages(*(pYbrImage->m_pImage), *(pLoadedImage->m_pImage));
+    double differenceYBR = compareImages(*(imebra::Image*)(pYbrImage->m_Image), *(imebra::Image*)(pLoadedImage->m_Image));
     ASSERT_LE(differenceYBR, 1);
 }
 
