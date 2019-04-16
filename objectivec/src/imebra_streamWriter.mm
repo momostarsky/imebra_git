@@ -32,7 +32,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     }
     else
     {
-        delete define_imebra_parameter(StreamWriter);
+        delete get_imebra_parameter(StreamWriter);
     }
     return self;
 }
