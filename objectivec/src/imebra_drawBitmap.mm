@@ -26,7 +26,7 @@ void CGDataProviderCallbackFunc(void *info, const void* /* data */, size_t /* si
 {
     // Release the shared pointer holding the memory
     ////////////////////////////////////////////////
-    delete (imebra::MutableMemory*)info;
+    delete (imebra::Memory*)info;
 }
 
 
@@ -91,7 +91,7 @@ void CGDataProviderCallbackFunc(void *info, const void* /* data */, size_t /* si
 
     // Get the result raw data
     //////////////////////////
-    std::unique_ptr<imebra::Memory> pMemory(get_imebra_object_holder(DrawBitmap)->getBitmap(*get_other_imebra_object_holder(pImage, Image), imebra::drawBitmapType_t::drawBitmapRGBA, 4));
+    std::unique_ptr<imebra::Memory> pMemory(new imebra::Memory(get_imebra_object_holder(DrawBitmap)->getBitmap(*get_other_imebra_object_holder(pImage, Image), imebra::drawBitmapType_t::drawBitmapRGBA, 4)));
     size_t dataSize;
     char* pData = pMemory->data(&dataSize);
 
