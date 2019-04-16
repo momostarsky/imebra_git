@@ -83,7 +83,7 @@ public:
     ///        operations.
     ///
     ///////////////////////////////////////////////////////////
-    virtual void terminate();
+    void terminate();
 
 private:
 
