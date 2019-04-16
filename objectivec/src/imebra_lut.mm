@@ -11,7 +11,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#include "../include/imebraobjc/imebra_lut.h"
+#import "../include/imebraobjc/imebra_lut.h"
+#import "../include/imebraobjc/imebra_readingDataHandlerNumeric.h"
 #include "imebra_implementation_macros.h"
 #include "imebra_strings.h"
 #include <imebra/lut.h>

@@ -12,7 +12,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 */
 
 #import "../include/imebraobjc/imebra_memoryStreamOutput.h"
-#import "../include/imebraobjc/imebra_readWriteMemory.h".h"
+#import "../include/imebraobjc/imebra_readWriteMemory.h"
 #include "imebra_implementation_macros.h"
 #include <imebra/memoryStreamOutput.h>
 #include <imebra/mutableMemory.h>
