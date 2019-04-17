@@ -414,8 +414,8 @@ tcpBaseSocket::tcpBaseSocket(int socket):
 
 #else
     timeval timeout;
-    timeout.tv_sec = IMEBRA_TCP_TIMEOUT_MS / 1000;
-    timeout.tv_usec = IMEBRA_TCP_TIMEOUT_MS * 1000 - (timeout.tv_sec * 1000000);
+    timeout.tv_sec = (time_t)IMEBRA_TCP_TIMEOUT_MS / (time_t)1000;
+    timeout.tv_usec = (suseconds_t)IMEBRA_TCP_TIMEOUT_MS * (suseconds_t)1000 - (timeout.tv_sec * (suseconds_t)1000000);
     setsockopt(m_socket, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
     setsockopt(m_socket, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout));
 #endif
@@ -509,9 +509,14 @@ void tcpBaseSocket::poll(pollType_t pollType)
     fds[0].revents = 0;
     long pollResult = throwTcpException(::poll(fds, 1, IMEBRA_TCP_TIMEOUT_MS));
 
-    if(pollResult == 0 || (fds[0].revents & flags) == 0)
+    if(pollResult == 0)
     {
         throw SocketTimeout("Timeout during poll");
+    }
+
+    if((fds[0].revents & flags) != 0)
+    {
+        return;
     }
 
     if((fds[0].revents & POLLHUP) != 0)

@@ -87,8 +87,8 @@ public:
 
 private:
 
-    virtual size_t read(std::uint8_t* pBuffer, size_t bufferLength);
-    virtual void write(const std::uint8_t* pBuffer, size_t bufferLength);
+    size_t read(std::uint8_t* pBuffer, size_t bufferLength);
+    void write(const std::uint8_t* pBuffer, size_t bufferLength);
 
     std::shared_ptr<memory> m_pMemory;
 
