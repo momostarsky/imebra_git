@@ -777,7 +777,7 @@ TEST(objectivec, images)
     unsigned int width = 600;
     unsigned int height = 400;
 
-    ImebraMutableImage* pBaselineImage = [[ImebraImage alloc] initWithWidth:width height:height depth:ImebraBitDepthU8 colorSpace:@"RGB" highBit:7];
+    ImebraMutableImage* pBaselineImage = [[ImebraMutableImage alloc] initWithWidth:width height:height depth:ImebraBitDepthU8 colorSpace:@"RGB" highBit:7];
 
 #if __has_feature(objc_arc)
     @autoreleasepool
