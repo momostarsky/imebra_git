@@ -59,7 +59,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[[ImebraReadingDataHandlerNumeric alloc] initWithImebraReadingDataHandler:new imebra::ReadingDataHandler(get_imebra_object_holder(Image)->getReadingDataHandler())] autorelease];
+    return [[ImebraReadingDataHandlerNumeric alloc] initWithImebraReadingDataHandler:new imebra::ReadingDataHandler(get_imebra_object_holder(Image)->getReadingDataHandler())];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -119,7 +119,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[[ImebraWritingDataHandlerNumeric alloc] initWithImebraWritingDataHandler:new imebra::WritingDataHandler(((imebra::MutableImage*)get_imebra_object_holder(Image))->getWritingDataHandler())] autorelease];
+    return [[ImebraWritingDataHandlerNumeric alloc] initWithImebraWritingDataHandler:new imebra::WritingDataHandler(((imebra::MutableImage*)get_imebra_object_holder(Image))->getWritingDataHandler())];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }

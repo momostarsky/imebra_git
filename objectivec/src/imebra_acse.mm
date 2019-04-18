@@ -134,7 +134,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[[ImebraDataSet alloc] initWithImebraDataSet:(new imebra::DataSet(get_imebra_object_holder(AssociationMessage)->getCommand()))] autorelease];
+    return [[ImebraDataSet alloc] initWithImebraDataSet:(new imebra::DataSet(get_imebra_object_holder(AssociationMessage)->getCommand()))];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -143,7 +143,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[[ImebraDataSet alloc] initWithImebraDataSet:(new imebra::DataSet(get_imebra_object_holder(AssociationMessage)->getPayload()))] autorelease];
+    return [[ImebraDataSet alloc] initWithImebraDataSet:(new imebra::DataSet(get_imebra_object_holder(AssociationMessage)->getPayload()))];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -194,7 +194,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[[ImebraAssociationMessage alloc] initWithImebraAssociationMessage:(new imebra::AssociationMessage(get_imebra_object_holder( AssociationBase)->getCommand()))] autorelease];
+    return [[ImebraAssociationMessage alloc] initWithImebraAssociationMessage:(new imebra::AssociationMessage(get_imebra_object_holder( AssociationBase)->getCommand()))];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -202,7 +202,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 -(ImebraAssociationMessage*)getResponse:(unsigned int) messageId error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
-    return [[[ImebraAssociationMessage alloc] initWithImebraAssociationMessage:(new imebra::AssociationMessage(get_imebra_object_holder(AssociationBase)->getResponse((std::uint16_t)messageId)))] autorelease];
+    return [[ImebraAssociationMessage alloc] initWithImebraAssociationMessage:(new imebra::AssociationMessage(get_imebra_object_holder(AssociationBase)->getResponse((std::uint16_t)messageId)))];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }

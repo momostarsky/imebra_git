@@ -46,7 +46,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(ImebraReadingDataHandlerNumeric*) getReadingDataHandler
 {
-    return [[[ImebraReadingDataHandlerNumeric alloc] initWithImebraReadingDataHandler:new imebra::ReadingDataHandlerNumeric(get_imebra_object_holder(LUT)->getReadingDataHandler())] autorelease];
+    return [[ImebraReadingDataHandlerNumeric alloc] initWithImebraReadingDataHandler:new imebra::ReadingDataHandlerNumeric(get_imebra_object_holder(LUT)->getReadingDataHandler())];
 }
 
 -(unsigned int)getMappedValue:(int)index

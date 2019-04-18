@@ -27,7 +27,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[[ImebraMemory alloc] initWithImebraMemory:new imebra::Memory(((imebra::ReadingDataHandlerNumeric*)get_imebra_object_holder(ReadingDataHandler))->getMemory())] autorelease];
+    return [[ImebraMemory alloc] initWithImebraMemory:new imebra::Memory(((imebra::ReadingDataHandlerNumeric*)get_imebra_object_holder(ReadingDataHandler))->getMemory())];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }

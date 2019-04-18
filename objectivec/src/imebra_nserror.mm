@@ -33,7 +33,7 @@ void setNSError(const std::runtime_error& error, NSError** pError, Class errorCl
         {
             errorCode = 1;
         }
-        NSMutableDictionary* details = [[[NSMutableDictionary alloc] init] autorelease];
+        NSMutableDictionary* details = [NSMutableDictionary dictionary];
         [details setValue:imebra::stringToNSString(stackTrace) forKey:NSUnderlyingErrorKey];
         *pError = [errorClass errorWithDomain:@"imebra" code:errorCode userInfo: details];
     }

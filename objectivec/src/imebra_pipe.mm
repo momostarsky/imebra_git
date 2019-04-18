@@ -46,12 +46,12 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(ImebraBaseStreamInput*) getStreamInput
 {
-    return [[[ImebraBaseStreamInput alloc] initWithImebraBaseStreamInput: new imebra::BaseStreamInput(get_imebra_object_holder(PipeStream)->getStreamInput())] autorelease];
+    return [[ImebraBaseStreamInput alloc] initWithImebraBaseStreamInput: new imebra::BaseStreamInput(get_imebra_object_holder(PipeStream)->getStreamInput())];
 }
 
 -(ImebraBaseStreamOutput*) getStreamOutput
 {
-    return [[[ImebraBaseStreamOutput alloc] initWithImebraBaseStreamOutput: new imebra::BaseStreamOutput(get_imebra_object_holder(PipeStream)->getStreamOutput())] autorelease];
+    return [[ImebraBaseStreamOutput alloc] initWithImebraBaseStreamOutput: new imebra::BaseStreamOutput(get_imebra_object_holder(PipeStream)->getStreamOutput())];
 }
 
 
