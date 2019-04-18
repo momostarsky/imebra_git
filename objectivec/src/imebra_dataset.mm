@@ -97,11 +97,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(NSArray*)getTags
 {
-    NSMutableArray* pIds = [[NSMutableArray alloc] init];
+    NSMutableArray* pIds = [[[NSMutableArray alloc] init] autorelease];
     imebra::tagsIds_t ids = get_imebra_object_holder(DataSet)->getTags();
     for(const imebra::TagId& tagId: ids)
     {
-        [pIds addObject: [[ImebraTagId alloc] initWithGroup:tagId.getGroupId() groupOrder:tagId.getGroupOrder() tag:tagId.getTagId()] ];
+        [pIds addObject: [[[ImebraTagId alloc] initWithGroup:tagId.getGroupId() groupOrder:tagId.getGroupOrder() tag:tagId.getTagId()] autorelease] ];
     }
 
     return pIds;
@@ -111,7 +111,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraTag alloc] initWithImebraTag:new imebra::Tag(get_imebra_object_holder(DataSet)->getTag(*get_other_imebra_object_holder(tagId, TagId)))];
+    return [[[ImebraTag alloc] initWithImebraTag:new imebra::Tag(get_imebra_object_holder(DataSet)->getTag(*get_other_imebra_object_holder(tagId, TagId)))] autorelease];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -120,7 +120,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraImage alloc] initWithImebraImage:new imebra::Image(get_imebra_object_holder(DataSet)->getImage(frameNumber))];
+    return [[[ImebraImage alloc] initWithImebraImage:new imebra::Image(get_imebra_object_holder(DataSet)->getImage(frameNumber))] autorelease];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -129,7 +129,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraImage alloc] initWithImebraImage:new imebra::Image(get_imebra_object_holder(DataSet)->getImageApplyModalityTransform(frameNumber))];
+    return [[[ImebraImage alloc] initWithImebraImage:new imebra::Image(get_imebra_object_holder(DataSet)->getImageApplyModalityTransform(frameNumber))] autorelease];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -138,12 +138,12 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    NSMutableArray* pVOIs = [[NSMutableArray alloc] init];
+    NSMutableArray* pVOIs = [[[NSMutableArray alloc] init] autorelease];
     imebra::vois_t vois = get_imebra_object_holder(DataSet)->getVOIs();
     for(const imebra::VOIDescription& description: vois)
     {
         [pVOIs addObject:
-            [[ImebraVOIDescription alloc] initWithCenter:description.center width:description.width description:imebra::stringToNSString(description.description)] ];
+            [[[ImebraVOIDescription alloc] initWithCenter:description.center width:description.width description:imebra::stringToNSString(description.description)] autorelease] ];
     }
 
     return pVOIs;
@@ -155,8 +155,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraDataSet alloc] initWithImebraDataSet:
-            new imebra::DataSet(get_imebra_object_holder(DataSet)->getSequenceItem(imebra::TagId((std::uint16_t)pTagId.groupId, (std::uint32_t)pTagId.groupOrder, (std::uint16_t)pTagId.tagId), (size_t)itemId))];
+    return [[[ImebraDataSet alloc] initWithImebraDataSet:
+            new imebra::DataSet(get_imebra_object_holder(DataSet)->getSequenceItem(imebra::TagId((std::uint16_t)pTagId.groupId, (std::uint32_t)pTagId.groupOrder, (std::uint16_t)pTagId.tagId), (size_t)itemId))] autorelease];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -165,8 +165,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraLUT alloc] initWithImebraLut:
-            new imebra::LUT(get_imebra_object_holder(DataSet)->getLUT(imebra::TagId((std::uint16_t)pTagId.groupId, (std::uint32_t)pTagId.groupOrder, (std::uint16_t)pTagId.tagId), (size_t)itemId))];
+    return [[[ImebraLUT alloc] initWithImebraLut:
+            new imebra::LUT(get_imebra_object_holder(DataSet)->getLUT(imebra::TagId((std::uint16_t)pTagId.groupId, (std::uint32_t)pTagId.groupOrder, (std::uint16_t)pTagId.tagId), (size_t)itemId))] autorelease];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -175,8 +175,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraReadingDataHandler alloc] initWithImebraReadingDataHandler:
-            new imebra::ReadingDataHandler(get_imebra_object_holder(DataSet)->getReadingDataHandler(*get_other_imebra_object_holder(tagId, TagId), bufferId))];
+    return [[[ImebraReadingDataHandler alloc] initWithImebraReadingDataHandler:
+            new imebra::ReadingDataHandler(get_imebra_object_holder(DataSet)->getReadingDataHandler(*get_other_imebra_object_holder(tagId, TagId), bufferId))] autorelease];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -185,8 +185,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraReadingDataHandlerNumeric alloc] initWithImebraReadingDataHandler:
-            new imebra::ReadingDataHandlerNumeric(get_imebra_object_holder(DataSet)->getReadingDataHandlerNumeric(*get_other_imebra_object_holder(tagId, TagId), bufferId))];
+    return [[[ImebraReadingDataHandlerNumeric alloc] initWithImebraReadingDataHandler:
+            new imebra::ReadingDataHandlerNumeric(get_imebra_object_holder(DataSet)->getReadingDataHandlerNumeric(*get_other_imebra_object_holder(tagId, TagId), bufferId))] autorelease];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -195,8 +195,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraReadingDataHandlerNumeric alloc] initWithImebraReadingDataHandler:
-            new imebra::ReadingDataHandlerNumeric(get_imebra_object_holder(DataSet)->getReadingDataHandlerRaw(*get_other_imebra_object_holder(tagId, TagId), bufferId))];
+    return [[[ImebraReadingDataHandlerNumeric alloc] initWithImebraReadingDataHandler:
+            new imebra::ReadingDataHandlerNumeric(get_imebra_object_holder(DataSet)->getReadingDataHandlerRaw(*get_other_imebra_object_holder(tagId, TagId), bufferId))] autorelease];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -278,7 +278,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_START();
 
     imebra::Age age = get_imebra_object_holder(DataSet)->getAge(*get_other_imebra_object_holder(tagId, TagId), elementNumber);
-    return [[ImebraAge alloc] initWithAge:age.age units:(ImebraAgeUnit_t)age.units];
+    return [[[ImebraAge alloc] initWithAge:age.age units:(ImebraAgeUnit_t)age.units] autorelease];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -288,7 +288,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_START();
 
     imebra::Age age = get_imebra_object_holder(DataSet)->getAge(*get_other_imebra_object_holder(tagId, TagId), elementNumber, *get_other_imebra_object_holder(defaultValue,Age));
-    return [[ImebraAge alloc] initWithAge:age.age units:(ImebraAgeUnit_t)age.units];
+    return [[[ImebraAge alloc] initWithAge:age.age units:(ImebraAgeUnit_t)age.units] autorelease];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -298,7 +298,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_START();
 
     imebra::Date date = get_imebra_object_holder(DataSet)->getDate(*get_other_imebra_object_holder(tagId, TagId), elementNumber);
-    return [[ImebraDate alloc] initWithYear:date.year
+    return [[[ImebraDate alloc] initWithYear:date.year
             month:date.month
             day:date.day
             hour:date.hour
@@ -306,7 +306,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
             seconds:date.seconds
             nanoseconds:date.nanoseconds
             offsetHours:date.offsetHours
-            offsetMinutes:date.offsetMinutes];
+            offsetMinutes:date.offsetMinutes] autorelease];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -316,7 +316,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_START();
 
     imebra::Date date = get_imebra_object_holder(DataSet)->getDate(*get_other_imebra_object_holder(tagId, TagId), elementNumber, *get_other_imebra_object_holder(defaultValue, Date));
-    return [[ImebraDate alloc] initWithYear:date.year
+    return [[[ImebraDate alloc] initWithYear:date.year
             month:date.month
             day:date.day
             hour:date.hour
@@ -324,7 +324,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
             seconds:date.seconds
             nanoseconds:date.nanoseconds
             offsetHours:date.offsetHours
-            offsetMinutes:date.offsetMinutes];
+            offsetMinutes:date.offsetMinutes] autorelease];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -388,8 +388,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraMutableTag alloc] initWithImebraMutableTag:
-            new imebra::MutableTag(((imebra::MutableDataSet*)get_imebra_object_holder(DataSet))->getTagCreate(*get_other_imebra_object_holder(tagId, TagId), (imebra::tagVR_t)tagVR))];
+    return [[[ImebraMutableTag alloc] initWithImebraMutableTag:
+            new imebra::MutableTag(((imebra::MutableDataSet*)get_imebra_object_holder(DataSet))->getTagCreate(*get_other_imebra_object_holder(tagId, TagId), (imebra::tagVR_t)tagVR))] autorelease];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -398,8 +398,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraMutableTag alloc] initWithImebraMutableTag:
-            new imebra::MutableTag(((imebra::MutableDataSet*)get_imebra_object_holder(DataSet))->getTagCreate(*get_other_imebra_object_holder(tagId, TagId)))];
+    return [[[ImebraMutableTag alloc] initWithImebraMutableTag:
+            new imebra::MutableTag(((imebra::MutableDataSet*)get_imebra_object_holder(DataSet))->getTagCreate(*get_other_imebra_object_holder(tagId, TagId)))] autorelease];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -426,8 +426,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraWritingDataHandler alloc] initWithImebraWritingDataHandler:
-            new imebra::WritingDataHandler(((imebra::MutableDataSet*)get_imebra_object_holder(DataSet))->getWritingDataHandler(*get_other_imebra_object_holder(tagId, TagId), bufferId, (imebra::tagVR_t)tagVR))];
+    return [[[ImebraWritingDataHandler alloc] initWithImebraWritingDataHandler:
+            new imebra::WritingDataHandler(((imebra::MutableDataSet*)get_imebra_object_holder(DataSet))->getWritingDataHandler(*get_other_imebra_object_holder(tagId, TagId), bufferId, (imebra::tagVR_t)tagVR))] autorelease];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -436,8 +436,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraWritingDataHandler alloc] initWithImebraWritingDataHandler:
-            new imebra::WritingDataHandler(((imebra::MutableDataSet*)get_imebra_object_holder(DataSet))->getWritingDataHandler(*get_other_imebra_object_holder(tagId, TagId), bufferId))];
+    return [[[ImebraWritingDataHandler alloc] initWithImebraWritingDataHandler:
+            new imebra::WritingDataHandler(((imebra::MutableDataSet*)get_imebra_object_holder(DataSet))->getWritingDataHandler(*get_other_imebra_object_holder(tagId, TagId), bufferId))] autorelease];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -446,8 +446,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraWritingDataHandlerNumeric alloc] initWithImebraWritingDataHandler:
-            new imebra::WritingDataHandlerNumeric(((imebra::MutableDataSet*)get_imebra_object_holder(DataSet))->getWritingDataHandlerNumeric(*get_other_imebra_object_holder(tagId, TagId), bufferId, (imebra::tagVR_t)tagVR))];
+    return [[[ImebraWritingDataHandlerNumeric alloc] initWithImebraWritingDataHandler:
+            new imebra::WritingDataHandlerNumeric(((imebra::MutableDataSet*)get_imebra_object_holder(DataSet))->getWritingDataHandlerNumeric(*get_other_imebra_object_holder(tagId, TagId), bufferId, (imebra::tagVR_t)tagVR))] autorelease];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -456,8 +456,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraWritingDataHandlerNumeric alloc] initWithImebraWritingDataHandler:
-            new imebra::WritingDataHandlerNumeric(((imebra::MutableDataSet*)get_imebra_object_holder(DataSet))->getWritingDataHandlerNumeric(*get_other_imebra_object_holder(tagId, TagId), bufferId))];
+    return [[[ImebraWritingDataHandlerNumeric alloc] initWithImebraWritingDataHandler:
+            new imebra::WritingDataHandlerNumeric(((imebra::MutableDataSet*)get_imebra_object_holder(DataSet))->getWritingDataHandlerNumeric(*get_other_imebra_object_holder(tagId, TagId), bufferId))] autorelease];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }

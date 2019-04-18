@@ -30,7 +30,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
     if(get_imebra_object_holder(WritingDataHandler) != nullptr)
     {
-        return [[ImebraMutableMemory alloc] initWithImebraMutableMemory:new imebra::MutableMemory(((imebra::WritingDataHandlerNumeric*)get_imebra_object_holder(WritingDataHandler))->getMemory())];
+        return [[[ImebraMutableMemory alloc] initWithImebraMutableMemory:new imebra::MutableMemory(((imebra::WritingDataHandlerNumeric*)get_imebra_object_holder(WritingDataHandler))->getMemory())] autorelease];
     }
     else
     {

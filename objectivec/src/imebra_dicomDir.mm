@@ -47,7 +47,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(ImebraDataSet*)getEntryDataSet
 {
-    return [[ImebraDataSet alloc] initWithImebraDataSet:new imebra::DataSet(get_imebra_object_holder(DicomDirEntry)->getEntryDataSet())];
+    return [[[ImebraDataSet alloc] initWithImebraDataSet:new imebra::DataSet(get_imebra_object_holder(DicomDirEntry)->getEntryDataSet())] autorelease];
 }
 
 -(ImebraDicomDirEntry*)getNextEntry
@@ -56,7 +56,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     {
         return nil;
     }
-    return [[ImebraDicomDirEntry alloc] initWithImebraDicomDirEntry:new imebra::DicomDirEntry(get_imebra_object_holder(DicomDirEntry)->getNextEntry())];
+    return [[[ImebraDicomDirEntry alloc] initWithImebraDicomDirEntry:new imebra::DicomDirEntry(get_imebra_object_holder(DicomDirEntry)->getNextEntry())] autorelease];
 }
 
 -(ImebraDicomDirEntry*)getFirstChildEntry
@@ -65,14 +65,14 @@ If you do not want to be bound by the GPL terms (such as the requirement
     {
         return nil;
     }
-    return [[ImebraDicomDirEntry alloc] initWithImebraDicomDirEntry:new imebra::DicomDirEntry(get_imebra_object_holder(DicomDirEntry)->getFirstChildEntry())];
+    return [[[ImebraDicomDirEntry alloc] initWithImebraDicomDirEntry:new imebra::DicomDirEntry(get_imebra_object_holder(DicomDirEntry)->getFirstChildEntry())] autorelease];
 }
 
 -(NSArray*)getFileParts:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    NSMutableArray* pFileParts = [[NSMutableArray alloc] init];
+    NSMutableArray* pFileParts = [[[NSMutableArray alloc] init] autorelease];
 
     imebra::fileParts_t fileParts = get_imebra_object_holder(DicomDirEntry)->getFileParts();
     for(const std::string& part: fileParts)
@@ -101,7 +101,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(ImebraMutableDataSet*)getEntryDataSet
 {
-    return [[ImebraMutableDataSet alloc] initWithImebraDataSet:new imebra::MutableDataSet(((imebra::MutableDicomDirEntry*)get_imebra_object_holder(DicomDirEntry))->getEntryDataSet())];
+    return [[[ImebraMutableDataSet alloc] initWithImebraDataSet:new imebra::MutableDataSet(((imebra::MutableDicomDirEntry*)get_imebra_object_holder(DicomDirEntry))->getEntryDataSet())] autorelease];
 }
 
 -(void)setNextEntry:(ImebraDicomDirEntry*)pNextEntry error:(NSError**)pError
@@ -184,7 +184,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraDicomDirEntry alloc] initWithImebraDicomDirEntry:new imebra::DicomDirEntry(get_imebra_object_holder(DicomDir)->getFirstRootEntry())];
+    return [[[ImebraDicomDirEntry alloc] initWithImebraDicomDirEntry:new imebra::DicomDirEntry(get_imebra_object_holder(DicomDir)->getFirstRootEntry())] autorelease];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -210,7 +210,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraMutableDicomDirEntry alloc] initWithImebraDicomDirEntry:new imebra::MutableDicomDirEntry(((imebra::MutableDicomDir*)get_imebra_object_holder(DicomDir))->getNewEntry(imebra::NSStringToString(recordType)))];
+    return [[[ImebraMutableDicomDirEntry alloc] initWithImebraDicomDirEntry:new imebra::MutableDicomDirEntry(((imebra::MutableDicomDir*)get_imebra_object_holder(DicomDir))->getNewEntry(imebra::NSStringToString(recordType)))] autorelease];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -228,7 +228,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraDataSet alloc] initWithImebraDataSet:new imebra::DataSet(((imebra::MutableDicomDir*)get_imebra_object_holder(DicomDir))->updateDataSet())];
+    return [[[ImebraDataSet alloc] initWithImebraDataSet:new imebra::DataSet(((imebra::MutableDicomDir*)get_imebra_object_holder(DicomDir))->updateDataSet())] autorelease];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }

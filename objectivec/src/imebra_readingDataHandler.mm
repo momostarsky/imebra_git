@@ -91,7 +91,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_START();
 
     imebra::Date date(get_imebra_object_holder(ReadingDataHandler)->getDate(index));
-    return [[ImebraDate alloc] initWithYear:date.year
+    return [[[ImebraDate alloc] initWithYear:date.year
             month:date.month
             day:date.day
             hour:date.hour
@@ -99,7 +99,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
             seconds:date.seconds
             nanoseconds:date.nanoseconds
             offsetHours:date.offsetHours
-            offsetMinutes:date.offsetMinutes];
+            offsetMinutes:date.offsetMinutes] autorelease];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -109,8 +109,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_START();
 
     imebra::Age age(get_imebra_object_holder(ReadingDataHandler)->getAge(index));
-    return [[ImebraAge alloc] initWithAge:age.age
-            units:(ImebraAgeUnit_t)age.units];
+    return [[[ImebraAge alloc] initWithAge:age.age
+            units:(ImebraAgeUnit_t)age.units] autorelease];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }

@@ -54,7 +54,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraDataSet alloc] initWithImebraDataSet:new imebra::DataSet(get_imebra_object_holder(DimseCommandBase)->getCommandDataSet())];
+    return [[[ImebraDataSet alloc] initWithImebraDataSet:new imebra::DataSet(get_imebra_object_holder(DimseCommandBase)->getCommandDataSet())] autorelease];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -63,7 +63,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraDataSet alloc] initWithImebraDataSet:new imebra::DataSet(get_imebra_object_holder(DimseCommandBase)->getPayloadDataSet())];
+    return [[[ImebraDataSet alloc] initWithImebraDataSet:new imebra::DataSet(get_imebra_object_holder(DimseCommandBase)->getPayloadDataSet())] autorelease];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -673,11 +673,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     imebra::attributeIdentifierList_t identifiersList(((imebra::NGetCommand*)get_imebra_object_holder(DimseCommandBase))->getAttributeList());
 
-    NSMutableArray* pIdentifiers = [[NSMutableArray alloc] init];
+    NSMutableArray* pIdentifiers = [[[NSMutableArray alloc] init] autorelease];
 
     for(const imebra::tagId_t tagId: identifiersList)
     {
-        [pIdentifiers addObject: [[ImebraTagId alloc] initWithGroup:(unsigned short)((std::uint32_t)tagId >> 16) tag:(unsigned short)((std::uint32_t)tagId & 0xffff)]];
+        [pIdentifiers addObject: [[[ImebraTagId alloc] initWithGroup:(unsigned short)((std::uint32_t)tagId >> 16) tag:(unsigned short)((std::uint32_t)tagId & 0xffff)] autorelease] ];
     }
 
     return pIdentifiers;
@@ -791,11 +791,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     imebra::attributeIdentifierList_t identifiersList(((imebra::NSetResponse*)get_imebra_object_holder(DimseCommandBase))->getModifiedAttributes());
 
-    NSMutableArray* pIdentifiers = [[NSMutableArray alloc] init];
+    NSMutableArray* pIdentifiers = [[[NSMutableArray alloc] init] autorelease];
 
     for(const imebra::tagId_t tagId: identifiersList)
     {
-        [pIdentifiers addObject: [[ImebraTagId alloc] initWithGroup:(unsigned short)((std::uint32_t)tagId >> 16) tag:(unsigned short)((std::uint32_t)tagId & 0xffff)]];
+        [pIdentifiers addObject: [[[ImebraTagId alloc] initWithGroup:(unsigned short)((std::uint32_t)tagId >> 16) tag:(unsigned short)((std::uint32_t)tagId & 0xffff)] autorelease]];
     }
 
     return pIdentifiers;
@@ -1098,29 +1098,29 @@ If you do not want to be bound by the GPL terms (such as the requirement
     switch(pCommand->getCommandType())
     {
     case imebra::dimseCommandType_t::cStore:
-        return [[ImebraCStoreCommand alloc] initWithImebraCommand:pCommand.release()];
+        return [[[ImebraCStoreCommand alloc] initWithImebraCommand:pCommand.release()] autorelease];
     case imebra::dimseCommandType_t::cGet:
-        return [[ImebraCGetCommand alloc] initWithImebraCommand:pCommand.release()];
+        return [[[ImebraCGetCommand alloc] initWithImebraCommand:pCommand.release()] autorelease];
     case imebra::dimseCommandType_t::cMove:
-        return [[ImebraCMoveCommand alloc] initWithImebraCommand:pCommand.release()];
+        return [[[ImebraCMoveCommand alloc] initWithImebraCommand:pCommand.release()] autorelease];
     case imebra::dimseCommandType_t::cFind:
-        return [[ImebraCFindCommand alloc] initWithImebraCommand:pCommand.release()];
+        return [[[ImebraCFindCommand alloc] initWithImebraCommand:pCommand.release()] autorelease];
     case imebra::dimseCommandType_t::cEcho:
-        return [[ImebraCEchoCommand alloc] initWithImebraCommand:pCommand.release()];
+        return [[[ImebraCEchoCommand alloc] initWithImebraCommand:pCommand.release()] autorelease];
     case imebra::dimseCommandType_t::cCancel:
-        return [[ImebraCCancelCommand alloc] initWithImebraCommand:pCommand.release()];
+        return [[[ImebraCCancelCommand alloc] initWithImebraCommand:pCommand.release()] autorelease];
     case imebra::dimseCommandType_t::nEventReport:
-        return [[ImebraNEventReportCommand alloc] initWithImebraCommand:pCommand.release()];
+        return [[[ImebraNEventReportCommand alloc] initWithImebraCommand:pCommand.release()] autorelease];
     case imebra::dimseCommandType_t::nGet:
-        return [[ImebraNGetCommand alloc] initWithImebraCommand:pCommand.release()];
+        return [[[ImebraNGetCommand alloc] initWithImebraCommand:pCommand.release()] autorelease];
     case imebra::dimseCommandType_t::nSet:
-        return [[ImebraNSetCommand alloc] initWithImebraCommand:pCommand.release()];
+        return [[[ImebraNSetCommand alloc] initWithImebraCommand:pCommand.release()] autorelease];
     case imebra::dimseCommandType_t::nAction:
-        return [[ImebraNActionCommand alloc] initWithImebraCommand:pCommand.release()];
+        return [[[ImebraNActionCommand alloc] initWithImebraCommand:pCommand.release()] autorelease];
     case imebra::dimseCommandType_t::nCreate:
-        return [[ImebraNCreateCommand alloc] initWithImebraCommand:pCommand.release()];
+        return [[[ImebraNCreateCommand alloc] initWithImebraCommand:pCommand.release()] autorelease];
     case imebra::dimseCommandType_t::nDelete:
-        return [[ImebraNDeleteCommand alloc] initWithImebraCommand:pCommand.release()];
+        return [[[ImebraNDeleteCommand alloc] initWithImebraCommand:pCommand.release()] autorelease];
     default:
         break;
     }
@@ -1141,8 +1141,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraCStoreResponse alloc] initWithImebraCommand:
-            new imebra::CStoreResponse(get_imebra_object_holder(DimseService)->getCStoreResponse(*(imebra::CStoreCommand*)get_other_imebra_object_holder(pCommand, DimseCommandBase)))];
+    return [[[ImebraCStoreResponse alloc] initWithImebraCommand:
+            new imebra::CStoreResponse(get_imebra_object_holder(DimseService)->getCStoreResponse(*(imebra::CStoreCommand*)get_other_imebra_object_holder(pCommand, DimseCommandBase)))] autorelease];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -1151,8 +1151,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraCGetResponse alloc] initWithImebraCommand:
-            new imebra::CGetResponse(get_imebra_object_holder(DimseService)->getCGetResponse(*(imebra::CGetCommand*)get_other_imebra_object_holder(pCommand, DimseCommandBase)))];
+    return [[[ImebraCGetResponse alloc] initWithImebraCommand:
+            new imebra::CGetResponse(get_imebra_object_holder(DimseService)->getCGetResponse(*(imebra::CGetCommand*)get_other_imebra_object_holder(pCommand, DimseCommandBase)))] autorelease];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -1161,8 +1161,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraCFindResponse alloc] initWithImebraCommand:
-            new imebra::CFindResponse(get_imebra_object_holder(DimseService)->getCFindResponse(*(imebra::CFindCommand*)get_other_imebra_object_holder(pCommand, DimseCommandBase)))];
+    return [[[ImebraCFindResponse alloc] initWithImebraCommand:
+            new imebra::CFindResponse(get_imebra_object_holder(DimseService)->getCFindResponse(*(imebra::CFindCommand*)get_other_imebra_object_holder(pCommand, DimseCommandBase)))] autorelease];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -1171,8 +1171,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraCMoveResponse alloc] initWithImebraCommand:
-            new imebra::CMoveResponse(get_imebra_object_holder(DimseService)->getCMoveResponse(*(imebra::CMoveCommand*)get_other_imebra_object_holder(pCommand, DimseCommandBase)))];
+    return [[[ImebraCMoveResponse alloc] initWithImebraCommand:
+            new imebra::CMoveResponse(get_imebra_object_holder(DimseService)->getCMoveResponse(*(imebra::CMoveCommand*)get_other_imebra_object_holder(pCommand, DimseCommandBase)))] autorelease];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -1181,8 +1181,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraCEchoResponse alloc] initWithImebraCommand:
-            new imebra::CEchoResponse(get_imebra_object_holder(DimseService)->getCEchoResponse(*(imebra::CEchoCommand*)get_other_imebra_object_holder(pCommand, DimseCommandBase)))];
+    return [[[ImebraCEchoResponse alloc] initWithImebraCommand:
+            new imebra::CEchoResponse(get_imebra_object_holder(DimseService)->getCEchoResponse(*(imebra::CEchoCommand*)get_other_imebra_object_holder(pCommand, DimseCommandBase)))] autorelease];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -1191,8 +1191,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraNEventReportResponse alloc] initWithImebraCommand:
-            new imebra::NEventReportResponse(get_imebra_object_holder(DimseService)->getNEventReportResponse(*(imebra::NEventReportCommand*)get_other_imebra_object_holder(pCommand, DimseCommandBase)))];
+    return [[[ImebraNEventReportResponse alloc] initWithImebraCommand:
+            new imebra::NEventReportResponse(get_imebra_object_holder(DimseService)->getNEventReportResponse(*(imebra::NEventReportCommand*)get_other_imebra_object_holder(pCommand, DimseCommandBase)))] autorelease];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -1201,8 +1201,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraNGetResponse alloc] initWithImebraCommand:
-            new imebra::NGetResponse(get_imebra_object_holder(DimseService)->getNGetResponse(*(imebra::NGetCommand*)get_other_imebra_object_holder(pCommand, DimseCommandBase)))];
+    return [[[ImebraNGetResponse alloc] initWithImebraCommand:
+            new imebra::NGetResponse(get_imebra_object_holder(DimseService)->getNGetResponse(*(imebra::NGetCommand*)get_other_imebra_object_holder(pCommand, DimseCommandBase)))] autorelease];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -1211,8 +1211,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraNSetResponse alloc] initWithImebraCommand:
-            new imebra::NSetResponse(get_imebra_object_holder(DimseService)->getNSetResponse(*(imebra::NSetCommand*)get_other_imebra_object_holder(pCommand, DimseCommandBase)))];
+    return [[[ImebraNSetResponse alloc] initWithImebraCommand:
+            new imebra::NSetResponse(get_imebra_object_holder(DimseService)->getNSetResponse(*(imebra::NSetCommand*)get_other_imebra_object_holder(pCommand, DimseCommandBase)))] autorelease];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -1221,8 +1221,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraNActionResponse alloc] initWithImebraCommand:
-            new imebra::NActionResponse(get_imebra_object_holder(DimseService)->getNActionResponse(*(imebra::NActionCommand*)get_other_imebra_object_holder(pCommand, DimseCommandBase)))];
+    return [[[ImebraNActionResponse alloc] initWithImebraCommand:
+            new imebra::NActionResponse(get_imebra_object_holder(DimseService)->getNActionResponse(*(imebra::NActionCommand*)get_other_imebra_object_holder(pCommand, DimseCommandBase)))] autorelease];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -1231,8 +1231,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraNCreateResponse alloc] initWithImebraCommand:
-            new imebra::NCreateResponse(get_imebra_object_holder(DimseService)->getNCreateResponse(*(imebra::NCreateCommand*)get_other_imebra_object_holder(pCommand, DimseCommandBase)))];
+    return [[[ImebraNCreateResponse alloc] initWithImebraCommand:
+            new imebra::NCreateResponse(get_imebra_object_holder(DimseService)->getNCreateResponse(*(imebra::NCreateCommand*)get_other_imebra_object_holder(pCommand, DimseCommandBase)))] autorelease];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -1241,8 +1241,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraNDeleteResponse alloc] initWithImebraCommand:
-            new imebra::NDeleteResponse(get_imebra_object_holder(DimseService)->getNDeleteResponse(*(imebra::NDeleteCommand*)get_other_imebra_object_holder(pCommand, DimseCommandBase)))];
+    return [[[ImebraNDeleteResponse alloc] initWithImebraCommand:
+            new imebra::NDeleteResponse(get_imebra_object_holder(DimseService)->getNDeleteResponse(*(imebra::NDeleteCommand*)get_other_imebra_object_holder(pCommand, DimseCommandBase)))] autorelease];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }

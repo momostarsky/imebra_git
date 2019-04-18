@@ -50,7 +50,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraTCPStream alloc] initWithImebraTcpStream:new imebra::TCPStream(get_imebra_object_holder(TCPListener)->waitForConnection())];
+    return [[[ImebraTCPStream alloc] initWithImebraTcpStream:new imebra::TCPStream(get_imebra_object_holder(TCPListener)->waitForConnection())] autorelease];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }

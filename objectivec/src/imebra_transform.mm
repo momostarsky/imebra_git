@@ -56,7 +56,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraImage alloc] initWithImebraImage:new imebra::Image(get_imebra_object_holder(Transform)->allocateOutputImage(*get_other_imebra_object_holder(pInputImage, Image), (std::uint32_t)width, (std::uint32_t)height))];
+    return [[[ImebraImage alloc] initWithImebraImage:new imebra::Image(get_imebra_object_holder(Transform)->allocateOutputImage(*get_other_imebra_object_holder(pInputImage, Image), (std::uint32_t)width, (std::uint32_t)height))] autorelease];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }

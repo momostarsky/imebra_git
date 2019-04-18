@@ -80,7 +80,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraReadingDataHandler alloc] initWithImebraReadingDataHandler:new imebra::ReadingDataHandler(get_imebra_object_holder(Tag)->getReadingDataHandler((size_t)bufferId))];
+    return [[[ImebraReadingDataHandler alloc] initWithImebraReadingDataHandler:new imebra::ReadingDataHandler(get_imebra_object_holder(Tag)->getReadingDataHandler((size_t)bufferId))] autorelease];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -90,7 +90,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraReadingDataHandlerNumeric alloc] initWithImebraReadingDataHandler:new imebra::ReadingDataHandlerNumeric(get_imebra_object_holder(Tag)->getReadingDataHandlerNumeric((size_t)bufferId))];
+    return [[[ImebraReadingDataHandlerNumeric alloc] initWithImebraReadingDataHandler:new imebra::ReadingDataHandlerNumeric(get_imebra_object_holder(Tag)->getReadingDataHandlerNumeric((size_t)bufferId))] autorelease];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -100,7 +100,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraReadingDataHandlerNumeric alloc] initWithImebraReadingDataHandler:new imebra::ReadingDataHandlerNumeric(get_imebra_object_holder(Tag)->getReadingDataHandlerRaw((size_t)bufferId))];
+    return [[[ImebraReadingDataHandlerNumeric alloc] initWithImebraReadingDataHandler:new imebra::ReadingDataHandlerNumeric(get_imebra_object_holder(Tag)->getReadingDataHandlerRaw((size_t)bufferId))] autorelease];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -110,7 +110,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraStreamReader alloc] initWithImebraStreamReader:new imebra::StreamReader(get_imebra_object_holder(Tag)->getStreamReader((size_t)bufferId))];
+    return [[[ImebraStreamReader alloc] initWithImebraStreamReader:new imebra::StreamReader(get_imebra_object_holder(Tag)->getStreamReader((size_t)bufferId))] autorelease];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -120,7 +120,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraDataSet alloc] initWithImebraDataSet:new imebra::DataSet(get_imebra_object_holder(Tag)->getSequenceItem((size_t)dataSetId))];
+    return [[[ImebraDataSet alloc] initWithImebraDataSet:new imebra::DataSet(get_imebra_object_holder(Tag)->getSequenceItem((size_t)dataSetId))] autorelease];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -151,7 +151,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraWritingDataHandler alloc] initWithImebraWritingDataHandler:new imebra::WritingDataHandler(((imebra::MutableTag*)get_imebra_object_holder(Tag))->getWritingDataHandler((size_t)bufferId))];
+    return [[[ImebraWritingDataHandler alloc] initWithImebraWritingDataHandler:new imebra::WritingDataHandler(((imebra::MutableTag*)get_imebra_object_holder(Tag))->getWritingDataHandler((size_t)bufferId))] autorelease];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -160,7 +160,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraWritingDataHandlerNumeric alloc] initWithImebraWritingDataHandler:new imebra::WritingDataHandlerNumeric(((imebra::MutableTag*)get_imebra_object_holder(Tag))->getWritingDataHandlerNumeric((size_t)bufferId))];
+    return [[[ImebraWritingDataHandlerNumeric alloc] initWithImebraWritingDataHandler:new imebra::WritingDataHandlerNumeric(((imebra::MutableTag*)get_imebra_object_holder(Tag))->getWritingDataHandlerNumeric((size_t)bufferId))] autorelease];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -169,7 +169,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraWritingDataHandlerNumeric alloc] initWithImebraWritingDataHandler:new imebra::WritingDataHandlerNumeric(((imebra::MutableTag*)get_imebra_object_holder(Tag))->getWritingDataHandlerRaw((size_t)bufferId))];
+    return [[[ImebraWritingDataHandlerNumeric alloc] initWithImebraWritingDataHandler:new imebra::WritingDataHandlerNumeric(((imebra::MutableTag*)get_imebra_object_holder(Tag))->getWritingDataHandlerRaw((size_t)bufferId))] autorelease];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -178,7 +178,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraStreamWriter alloc] initWithImebraStreamWriter:new imebra::StreamWriter(((imebra::MutableTag*)get_imebra_object_holder(Tag))->getStreamWriter((size_t)bufferId))];
+    return [[[ImebraStreamWriter alloc] initWithImebraStreamWriter:new imebra::StreamWriter(((imebra::MutableTag*)get_imebra_object_holder(Tag))->getStreamWriter((size_t)bufferId))] autorelease];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }

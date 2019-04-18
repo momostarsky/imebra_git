@@ -29,7 +29,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_START()
 
     std::unique_ptr<imebra::DataSet> pDataSet(new imebra::DataSet(imebra::CodecFactory::load(imebra::NSStringToString(fileName))));
-    return [[ImebraDataSet alloc] initWithImebraDataSet:pDataSet.release()];
+    return [[[ImebraDataSet alloc] initWithImebraDataSet:pDataSet.release()] autorelease];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil)
 }
@@ -39,7 +39,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_START()
 
     std::unique_ptr<imebra::DataSet> pDataSet(new imebra::DataSet(imebra::CodecFactory::load(imebra::NSStringToString(fileName), maxBufferSize)));
-    return [[ImebraDataSet alloc] initWithImebraDataSet:pDataSet.release()];
+    return [[[ImebraDataSet alloc] initWithImebraDataSet:pDataSet.release()] autorelease];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil)
 }
@@ -49,7 +49,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_START();
 
     std::unique_ptr<imebra::DataSet> pDataSet(new imebra::DataSet(imebra::CodecFactory::load(*get_other_imebra_object_holder(pReader, StreamReader))));
-    return [[ImebraDataSet alloc] initWithImebraDataSet:pDataSet.release()];
+    return [[[ImebraDataSet alloc] initWithImebraDataSet:pDataSet.release()] autorelease];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -59,7 +59,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_START();
 
     std::unique_ptr<imebra::DataSet> pDataSet(new imebra::DataSet(imebra::CodecFactory::load(*get_other_imebra_object_holder(pReader, StreamReader), maxBufferSize)));
-    return [[ImebraDataSet alloc] initWithImebraDataSet:pDataSet.release()];
+    return [[[ImebraDataSet alloc] initWithImebraDataSet:pDataSet.release()] autorelease];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }

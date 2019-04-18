@@ -68,7 +68,7 @@ void CGDataProviderCallbackFunc(void *info, const void* /* data */, size_t /* si
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraMemory alloc] initWithImebraMemory:new imebra::Memory(get_imebra_object_holder(DrawBitmap)->getBitmap(*get_other_imebra_object_holder(pImage, Image), (imebra::drawBitmapType_t)drawBitmapType, (std::uint32_t)rowAlignBytes))];
+    return [[[ImebraMemory alloc] initWithImebraMemory:new imebra::Memory(get_imebra_object_holder(DrawBitmap)->getBitmap(*get_other_imebra_object_holder(pImage, Image), (imebra::drawBitmapType_t)drawBitmapType, (std::uint32_t)rowAlignBytes))] autorelease];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -114,9 +114,9 @@ void CGDataProviderCallbackFunc(void *info, const void* /* data */, size_t /* si
 
 
 #if TARGET_OS_IPHONE
-    UIImage* returnImage = [[UIImage alloc] initWithCGImage:imageRef];
+    UIImage* returnImage = [[[UIImage alloc] initWithCGImage:imageRef] autorelease];
 #else
-    NSImage* returnImage = [[NSImage alloc] initWithCGImage:imageRef size:NSZeroSize];
+    NSImage* returnImage = [[[NSImage alloc] initWithCGImage:imageRef size:NSZeroSize] autorelease];
 #endif
     CGDataProviderRelease(dataProviderRef);
     CGImageRelease(imageRef);
