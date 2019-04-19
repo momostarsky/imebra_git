@@ -50,7 +50,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     /// \return an image ready to be passed as outputImage to runTransform()
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    -(ImebraImage*) allocateOutputImage:
+    -(ImebraMutableImage*) allocateOutputImage:
             (ImebraImage*)pInputImage
             width:(unsigned int)width
             height:(unsigned int)height
