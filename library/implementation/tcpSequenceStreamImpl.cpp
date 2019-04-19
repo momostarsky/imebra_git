@@ -415,7 +415,7 @@ tcpBaseSocket::tcpBaseSocket(int socket):
 #else
     timeval timeout;
     timeout.tv_sec = (time_t)IMEBRA_TCP_TIMEOUT_MS / (time_t)1000;
-    timeout.tv_usec = (suseconds_t)IMEBRA_TCP_TIMEOUT_MS * (suseconds_t)1000 - (timeout.tv_sec * (suseconds_t)1000000);
+    timeout.tv_usec = (suseconds_t)IMEBRA_TCP_TIMEOUT_MS * (suseconds_t)1000 - (suseconds_t)(timeout.tv_sec * (suseconds_t)1000000);
     setsockopt(m_socket, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
     setsockopt(m_socket, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout));
 #endif
