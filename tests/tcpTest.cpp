@@ -88,6 +88,10 @@ void AcceptConnectionAndCloseThread(std::string port)
 
     TCPStream newStream = listener.waitForConnection();
 
+    StreamReader reader(newStream.getStreamInput());
+    char buffer[5];
+    reader.readSome(buffer, sizeof(buffer));
+
 }
 
 TEST(tcpTest, prematureClose)
@@ -238,8 +242,6 @@ TEST(tcpTest, delayedConnection)
     dataSet.setUnsignedLong(TagId(11, 11), 1, tagVR_t::UL);
 
     StreamWriter writer(newStream.getStreamOutput());
-
-    CodecFactory::save(dataSet, writer, codecType_t::dicom);
 
     try
     {
