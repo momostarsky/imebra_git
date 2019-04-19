@@ -43,9 +43,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
     {
         delete_imebra_object_holder(WritingDataHandler);
     }
-#if !__has_feature(objc_arc)
-    [super dealloc];
-#endif
 }
 
 -(unsigned int)size

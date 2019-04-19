@@ -13,7 +13,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #import "../include/imebraobjc/imebra_streamWriter.h"
 #import "../include/imebraobjc/imebra_baseStreamOutput.h"
-#import "../include/imebraobjc/imebra_baseStreamInputOutput.h"
 
 #include "imebra_implementation_macros.h"
 #include <imebra/streamWriter.h>
@@ -51,10 +50,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 -(void)dealloc
 {
     delete_imebra_object_holder(StreamWriter);
-#if !__has_feature(objc_arc)
-    [super dealloc];
-#endif
-
 }
 
 @end

@@ -60,8 +60,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
     ///////////////////////////////////////////////////////////////////////////////
     -(id)initWithData:(NSData*)pSource;
 
-    -(void)dealloc;
-
     /// \brief Copy the content from another memory object.
     ///
     /// \param source the source memory object

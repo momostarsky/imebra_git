@@ -57,10 +57,6 @@ void CGDataProviderCallbackFunc(void *info, const void* /* data */, size_t /* si
 -(void)dealloc
 {
     delete_imebra_object_holder(DrawBitmap);
-#if !__has_feature(objc_arc)
-    [super dealloc];
-#endif
-
 }
 
 

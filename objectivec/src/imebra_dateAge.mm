@@ -21,9 +21,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 -(void)dealloc
 {
     delete_imebra_object_holder(Age);
-#if !__has_feature(objc_arc)
-    [super dealloc];
-#endif
 }
 
 -(id)initWithAge:(unsigned int)initialAge units:(ImebraAgeUnit_t)initialUnits
@@ -60,9 +57,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 -(void)dealloc
 {
     delete_imebra_object_holder(Date);
-#if !__has_feature(objc_arc)
-    [super dealloc];
-#endif
 }
 
 -(id)initWithYear:(unsigned int)initialYear

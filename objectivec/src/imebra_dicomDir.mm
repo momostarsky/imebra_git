@@ -40,9 +40,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 -(void)dealloc
 {
     delete_imebra_object_holder(DicomDirEntry);
-#if !__has_feature(objc_arc)
-    [super dealloc];
-#endif
 }
 
 -(ImebraDataSet*)getEntryDataSet
@@ -174,10 +171,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 -(void)dealloc
 {
     delete_imebra_object_holder(DicomDir);
-#if !__has_feature(objc_arc)
-    [super dealloc];
-#endif
-
 }
 
 -(ImebraDicomDirEntry*)getFirstRootEntry:(NSError**)pError

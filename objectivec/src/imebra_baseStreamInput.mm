@@ -35,9 +35,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 -(void)dealloc
 {
     delete_imebra_object_holder(BaseStreamInput);
-#if !__has_feature(objc_arc)
-    [super dealloc];
-#endif
 }
 
 @end
@@ -59,11 +56,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 -(void)dealloc
 {
     delete_imebra_object_holder(StreamTimeout);
-#if !__has_feature(objc_arc)
-    [super dealloc];
-#endif
 }
 
 @end
-
-

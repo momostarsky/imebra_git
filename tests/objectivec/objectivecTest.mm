@@ -29,39 +29,22 @@ TEST(objectivec, stringToNSStringTest)
         [pCharsets addObject: @"ISO_IR 6"];
         ImebraMutableDataSet* pDataSet = [[ImebraMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2.1" charsets:pCharsets];
 
-#if __has_feature(objc_arc)
         @autoreleasepool
-#endif
         {
-#if !__has_feature(objc_arc)
-            NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-#endif
-
             NSError* pError = 0;
             ImebraWritingDataHandler* pHandler = [pDataSet getWritingDataHandler:pPatientTag bufferId:0 error:&pError];
 
             [pHandler setString:0 newValue:patient0 error:&pError];
             [pHandler setString:1 newValue:patient1 error:&pError];
-
-#if !__has_feature(objc_arc)
-            [pHandler release];
-            [pool drain];
-#endif
         }
 
-#if __has_feature(objc_arc)
         @autoreleasepool
-#endif
         {
-        ImebraMemoryStreamOutput* pWriteStream = [[ImebraMemoryStreamOutput alloc] initWithMutableMemory:pStreamMemory];
+            ImebraMemoryStreamOutput* pWriteStream = [[ImebraMemoryStreamOutput alloc] initWithMutableMemory:pStreamMemory];
             ImebraStreamWriter* pWriter = [[ImebraStreamWriter alloc] initWithOutputStream: pWriteStream];
             NSError* pError = 0;
             [ImebraCodecFactory saveToStream:pWriter dataSet:pDataSet codecType:ImebraCodecTypeDicom error:&pError];
 
-#if !__has_feature(objc_arc)
-            [pWriter release];
-            [pWriteStream release];
-#endif
         }
 
         NSArray* pTags = [pDataSet getTags];
@@ -136,10 +119,6 @@ TEST(objectivec, NSStringToStringTest)
 // Test the codec factory (save and reload a dataset)
 TEST(objectivec, CodecFactory)
 {
-#if !__has_feature(objc_arc)
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-#endif
-
     MutableDataSet testDataSet("1.2.840.10008.1.2");
     testDataSet.setString(TagId(tagId_t::PatientName_0010_0010), "Test^Patient");
     testDataSet.setString(TagId(tagId_t::PatientID_0010_0020), "TestID");
@@ -152,28 +131,16 @@ TEST(objectivec, CodecFactory)
 
     EXPECT_EQ(imebra::NSStringToString(checkPatientName), "Test^Patient");
     EXPECT_EQ(imebra::NSStringToString(checkPatientID), "TestID");
-
-#if !__has_feature(objc_arc)
-    [pool drain];
-#endif
 }
 
 
 // Test NSError on non-existent file
 TEST(objectivec, CodecFactoryFailLoad)
 {
-#if !__has_feature(objc_arc)
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-#endif
-
     NSError* error = nil;
     ImebraDataSet* pDataSet = [ImebraCodecFactory loadFromFile:@"fail.dcm" error:&error];
     EXPECT_EQ(pDataSet, nullptr);
     EXPECT_EQ(imebra::NSStringToString([error domain]), "imebra");
-
-#if !__has_feature(objc_arc)
-    [pool drain];
-#endif
 }
 
 
@@ -183,23 +150,14 @@ TEST(objectivec, image)
     ImebraMutableImage* pImage = [[ImebraMutableImage alloc] initWithWidth:5 height:5 depth:ImebraBitDepthU16 colorSpace:@"MONOCHROME2" highBit:15];
 
     NSError* error = nil;
-#if __has_feature(objc_arc)
-    @autoreleasepool
-#endif
-    {
-#if !__has_feature(objc_arc)
-        NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-#endif
 
+    @autoreleasepool
+    {
         ImebraWritingDataHandler* writingDataHandler = [pImage getWritingDataHandler:&error];
         for(unsigned int pixel(0); pixel != 25; ++pixel)
         {
             [writingDataHandler setUnsignedLong:pixel newValue:pixel error:&error];
         }
-#if !__has_feature(objc_arc)
-        [writingDataHandler release];
-        [pool drain];
-#endif
     }
 
     ImebraMutableDataSet* pDataSet = [[ImebraMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
@@ -220,9 +178,8 @@ TEST(objectivec, imageNSData)
     ImebraMutableImage* pImage = [[ImebraMutableImage alloc] initWithWidth:5 height:5 depth:ImebraBitDepthU16 colorSpace:@"MONOCHROME2" highBit:15];
 
     NSError* error = nil;
-#if __has_feature(objc_arc)
+
     @autoreleasepool
-#endif
     {
         std::uint16_t buffer[25];
         for(std::uint16_t pixel(0); pixel != 25; ++pixel)
@@ -232,9 +189,6 @@ TEST(objectivec, imageNSData)
         NSData* pSource = [[NSData alloc] initWithBytes:buffer length:sizeof(buffer)];
         ImebraWritingDataHandlerNumeric* writingDataHandler = [pImage getWritingDataHandler:&error];
         [writingDataHandler assign:pSource error:&error];
-#if !__has_feature(objc_arc)
-        [writingDataHandler release];
-#endif
     }
 
     ImebraMutableDataSet* pDataSet = [[ImebraMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
@@ -267,9 +221,7 @@ TEST(objectivec, datasetValues)
 
     ImebraMutableTag* pTag = [pDataSet getTagCreate:[[ImebraTagId alloc] initWithGroup:0x12 tag:0x12] tagVR:ImebraFD error:&error];
 
-#if __has_feature(objc_arc)
     @autoreleasepool
-#endif
     {
         ImebraWritingDataHandlerNumeric* pWriteDouble = [pTag getWritingDataHandlerNumeric:0 error:&error];
         [pWriteDouble setSize:4];
@@ -278,9 +230,6 @@ TEST(objectivec, datasetValues)
         [pWriteDouble setDouble:1 newValue:1 error:&error];
         [pWriteDouble setDouble:2 newValue:2 error:&error];
         [pWriteDouble setDouble:3 newValue:3 error:&error];
-#if !__has_feature(objc_arc)
-        [pWriteDouble release];
-#endif
     }
 
     NSString* checkPatient0 = [pDataSet getString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] elementNumber:0 error:&error];
@@ -314,111 +263,101 @@ TEST(objectivec, datasetValues)
 
 void listenerThread()
 {
-#if !__has_feature(objc_arc)
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-#endif
-
     try
     {
-    NSError* pError(0);
-    ImebraTCPPassiveAddress* pAddress = [[ImebraTCPPassiveAddress alloc] initWithNode:@"localhost" service:@"20000" error:&pError];
-    ImebraTCPListener* pListener = [[ImebraTCPListener alloc] initWithAddress:pAddress error:&pError];
+        NSError* pError(0);
+        ImebraTCPPassiveAddress* pAddress = [[ImebraTCPPassiveAddress alloc] initWithNode:@"localhost" service:@"20000" error:&pError];
+        ImebraTCPListener* pListener = [[ImebraTCPListener alloc] initWithAddress:pAddress error:&pError];
 
-    ImebraTCPStream* pStream = [pListener waitForConnection:&pError];
-
-    ImebraBaseStreamInput* pInput = [pStream getStreamInput];
-    ImebraBaseStreamOutput* pOutput = [pStream getStreamOutput];
-    ImebraStreamReader* pReader = [[ImebraStreamReader alloc] initWithInputStream:pInput];
-    ImebraStreamWriter* pWriter = [[ImebraStreamWriter alloc] initWithOutputStream:pOutput];
-
-    ImebraPresentationContexts* pContexts = [[ImebraPresentationContexts alloc] init];
-
-    ImebraPresentationContext* pContext = [[ImebraPresentationContext alloc] initWithAbstractSyntax:@"1.2.840.10008.1.1"];
-    [pContext addTransferSyntax:@"1.2.840.10008.1.2"];
-
-    [pContexts addPresentationContext:pContext];
-
-    ImebraAssociationSCP* pSCP = [[ImebraAssociationSCP alloc]
-            initWithThisAET:@"SCP" maxInvokedOperations:1 maxPerformedOperations:1 presentationContexts:pContexts
-                 reader:pReader writer:pWriter dimseTimeoutSeconds:30 artimTimeoutSeconds:30 error:&pError];
-
-    ImebraDimseService* pDimse = [[ImebraDimseService alloc]initWithAssociation:pSCP];
-
-    for(;;)
-    {
-        ImebraDimseCommand* pCommand = (ImebraDimseCommand*)[pDimse getCommand:&pError];
-
-        if(pError != 0)
+        @autoreleasepool
         {
-            break;
-        }
+            ImebraTCPStream* pStream = [pListener waitForConnection:&pError];
 
-        ImebraDimseResponse* pResponse = nil;
-        switch([pCommand commandType])
-        {
-        case ImebraDimseCStore:
-            pResponse = [[ImebraCStoreResponse alloc]initWithcommand:(ImebraCStoreCommand*)pCommand responseCode:ImebraDimseSuccess];
-            break;
-        case ImebraDimseCGet:
-            pResponse = [[ImebraCGetResponse alloc]initWithcommand:(ImebraCGetCommand*)pCommand responseCode:ImebraDimseSuccess
-                                                                   remainingSubOperations:0
-                                                                   completedSubOperations:1
-                                                                   failedSubOperations:0
-                                                                   warningSubOperations:0];
-            break;
-        case ImebraDimseCFind:
-            pResponse = [[ImebraCFindResponse alloc]initWithcommand:(ImebraCFindCommand*)pCommand responseCode:ImebraDimseSuccess];
-            break;
-        case ImebraDimseCMove:
-            pResponse = [[ImebraCMoveResponse alloc]initWithcommand:(ImebraCMoveCommand*)pCommand responseCode:ImebraDimseSuccess
-                                                                   remainingSubOperations:0
-                                                                   completedSubOperations:1
-                                                                   failedSubOperations:0
-                                                                   warningSubOperations:0];
-            EXPECT_EQ("DEST", imebra::NSStringToString([(ImebraCMoveCommand*)pCommand getDestinationAET:&pError]));
-            break;
-        case ImebraDimseCEcho:
-            pResponse = [[ImebraCEchoResponse alloc]initWithcommand:(ImebraCEchoCommand*)pCommand responseCode:ImebraDimseSuccess];
-            break;
-        case ImebraDimseCCancel:
-            break;
-        case ImebraDimseNEventReport:
-            pResponse = [[ImebraNEventReportResponse alloc]initWithcommand:(ImebraNEventReportCommand*)pCommand responseCode:ImebraDimseSuccess];
-            break;
-        case ImebraDimseNGet:
-            pResponse = [[ImebraNGetResponse alloc]initWithcommand:(ImebraNGetCommand*)pCommand responseCode:ImebraDimseSuccess];
-            break;
-        case ImebraDimseNSet:
-            pResponse = [[ImebraNSetResponse alloc]initWithcommand:(ImebraNSetCommand*)pCommand responseCode:ImebraDimseSuccess];
-            break;
-        case ImebraDimseNAction:
-            pResponse = [[ImebraNActionResponse alloc]initWithcommand:(ImebraNActionCommand*)pCommand responseCode:ImebraDimseSuccess];
-            break;
-        case ImebraDimseNCreate:
-            pResponse = [[ImebraNCreateResponse alloc]initWithcommand:(ImebraNCreateCommand*)pCommand responseCode:ImebraDimseSuccess];
-            break;
-        case ImebraDimseNDelete:
-            pResponse = [[ImebraNDeleteResponse alloc]initWithcommand:(ImebraNDeleteCommand*)pCommand responseCode:ImebraDimseSuccess];
-            break;
-        }
+            ImebraBaseStreamInput* pInput = [pStream getStreamInput];
+            ImebraBaseStreamOutput* pOutput = [pStream getStreamOutput];
+            ImebraStreamReader* pReader = [[ImebraStreamReader alloc] initWithInputStream:pInput];
+            ImebraStreamWriter* pWriter = [[ImebraStreamWriter alloc] initWithOutputStream:pOutput];
 
-        if(pResponse != nil)
-        {
-            [pDimse sendCommandOrResponse:pResponse error:&pError];
-        }
-    }
+            ImebraPresentationContexts* pContexts = [[ImebraPresentationContexts alloc] init];
 
+            ImebraPresentationContext* pContext = [[ImebraPresentationContext alloc] initWithAbstractSyntax:@"1.2.840.10008.1.1"];
+            [pContext addTransferSyntax:@"1.2.840.10008.1.2"];
 
+            [pContexts addPresentationContext:pContext];
 
-#if !__has_feature(objc_arc)
+            ImebraAssociationSCP* pSCP = [[ImebraAssociationSCP alloc]
+                    initWithThisAET:@"SCP" maxInvokedOperations:1 maxPerformedOperations:1 presentationContexts:pContexts
+                         reader:pReader writer:pWriter dimseTimeoutSeconds:30 artimTimeoutSeconds:30 error:&pError];
 
-    [pDimse release];
-    [pSCP release];
-    [pReader release];
-    [pWriter release];
-    [pStream release];
-    [pListener release];
-#endif
+            ImebraDimseService* pDimse = [[ImebraDimseService alloc]initWithAssociation:pSCP];
+
+            for(;;)
+            {
+                ImebraDimseCommand* pCommand = (ImebraDimseCommand*)[pDimse getCommand:&pError];
+
+                if(pError != 0)
+                {
+                    break;
+                }
+
+                ImebraDimseResponse* pResponse = nil;
+                switch([pCommand commandType])
+                {
+                case ImebraDimseCStore:
+                    pResponse = [[ImebraCStoreResponse alloc]initWithcommand:(ImebraCStoreCommand*)pCommand responseCode:ImebraDimseSuccess];
+                    break;
+                case ImebraDimseCGet:
+                    pResponse = [[ImebraCGetResponse alloc]initWithcommand:(ImebraCGetCommand*)pCommand responseCode:ImebraDimseSuccess
+                                                                           remainingSubOperations:0
+                                                                           completedSubOperations:1
+                                                                           failedSubOperations:0
+                                                                           warningSubOperations:0];
+                    break;
+                case ImebraDimseCFind:
+                    pResponse = [[ImebraCFindResponse alloc]initWithcommand:(ImebraCFindCommand*)pCommand responseCode:ImebraDimseSuccess];
+                    break;
+                case ImebraDimseCMove:
+                    pResponse = [[ImebraCMoveResponse alloc]initWithcommand:(ImebraCMoveCommand*)pCommand responseCode:ImebraDimseSuccess
+                                                                           remainingSubOperations:0
+                                                                           completedSubOperations:1
+                                                                           failedSubOperations:0
+                                                                           warningSubOperations:0];
+                    EXPECT_EQ("DEST", imebra::NSStringToString([(ImebraCMoveCommand*)pCommand getDestinationAET:&pError]));
+                    break;
+                case ImebraDimseCEcho:
+                    pResponse = [[ImebraCEchoResponse alloc]initWithcommand:(ImebraCEchoCommand*)pCommand responseCode:ImebraDimseSuccess];
+                    break;
+                case ImebraDimseCCancel:
+                    break;
+                case ImebraDimseNEventReport:
+                    pResponse = [[ImebraNEventReportResponse alloc]initWithcommand:(ImebraNEventReportCommand*)pCommand responseCode:ImebraDimseSuccess];
+                    break;
+                case ImebraDimseNGet:
+                    pResponse = [[ImebraNGetResponse alloc]initWithcommand:(ImebraNGetCommand*)pCommand responseCode:ImebraDimseSuccess];
+                    break;
+                case ImebraDimseNSet:
+                    pResponse = [[ImebraNSetResponse alloc]initWithcommand:(ImebraNSetCommand*)pCommand responseCode:ImebraDimseSuccess];
+                    break;
+                case ImebraDimseNAction:
+                    pResponse = [[ImebraNActionResponse alloc]initWithcommand:(ImebraNActionCommand*)pCommand responseCode:ImebraDimseSuccess];
+                    break;
+                case ImebraDimseNCreate:
+                    pResponse = [[ImebraNCreateResponse alloc]initWithcommand:(ImebraNCreateCommand*)pCommand responseCode:ImebraDimseSuccess];
+                    break;
+                case ImebraDimseNDelete:
+                    pResponse = [[ImebraNDeleteResponse alloc]initWithcommand:(ImebraNDeleteCommand*)pCommand responseCode:ImebraDimseSuccess];
+                    break;
+                }
+
+                if(pResponse != nil)
+                {
+                    [pDimse sendCommandOrResponse:pResponse error:&pError];
+                }
+
+            } // for loop
+
+        } // autoreleasepool
+
     }
     catch(const std::runtime_error&e)
     {
@@ -426,9 +365,6 @@ void listenerThread()
 
     }
 
-#if !__has_feature(objc_arc)
-    [pool drain];
-#endif
 }
 
 
@@ -440,267 +376,260 @@ TEST(objectivec, dimse)
     try
     {
 
-    std::this_thread::sleep_for(std::chrono::seconds(5));
+        std::this_thread::sleep_for(std::chrono::seconds(5));
 
-    NSError* pError(0);
-    ImebraTCPActiveAddress* pAddress = [[ImebraTCPActiveAddress alloc] initWithNode:@"localhost" service:@"20000" error:&pError];
+        NSError* pError(0);
+        ImebraTCPActiveAddress* pAddress = [[ImebraTCPActiveAddress alloc] initWithNode:@"localhost" service:@"20000" error:&pError];
 
-    ImebraTCPStream* pStream = [[ImebraTCPStream alloc] initWithAddress:pAddress error:&pError];
+        @autoreleasepool
+        {
+            ImebraTCPStream* pStream = [[ImebraTCPStream alloc] initWithAddress:pAddress error:&pError];
 
-    ImebraBaseStreamInput* pInput = [pStream getStreamInput];
-    ImebraBaseStreamOutput* pOutput = [pStream getStreamOutput];
-    ImebraStreamReader* pReader = [[ImebraStreamReader alloc] initWithInputStream:pInput];
-    ImebraStreamWriter* pWriter = [[ImebraStreamWriter alloc] initWithOutputStream:pOutput];
+            ImebraBaseStreamInput* pInput = [pStream getStreamInput];
+            ImebraBaseStreamOutput* pOutput = [pStream getStreamOutput];
+            ImebraStreamReader* pReader = [[ImebraStreamReader alloc] initWithInputStream:pInput];
+            ImebraStreamWriter* pWriter = [[ImebraStreamWriter alloc] initWithOutputStream:pOutput];
 
-    ImebraPresentationContexts* pContexts = [[ImebraPresentationContexts alloc] init];
+            ImebraPresentationContexts* pContexts = [[ImebraPresentationContexts alloc] init];
 
-    ImebraPresentationContext* pContext = [[ImebraPresentationContext alloc] initWithAbstractSyntax:@"1.2.840.10008.1.1"];
-    [pContext addTransferSyntax:@"1.2.840.10008.1.2"];
+            ImebraPresentationContext* pContext = [[ImebraPresentationContext alloc] initWithAbstractSyntax:@"1.2.840.10008.1.1"];
+            [pContext addTransferSyntax:@"1.2.840.10008.1.2"];
 
-    [pContexts addPresentationContext:pContext];
+            [pContexts addPresentationContext:pContext];
 
-    ImebraAssociationSCU* pSCU = [[ImebraAssociationSCU alloc]
-            initWithThisAET:@"SCU" otherAET:@"SCP" maxInvokedOperations:1 maxPerformedOperations:1 presentationContexts:pContexts
-                 reader:pReader writer:pWriter dimseTimeoutSeconds:30 error:&pError];
+            ImebraAssociationSCU* pSCU = [[ImebraAssociationSCU alloc]
+                    initWithThisAET:@"SCU" otherAET:@"SCP" maxInvokedOperations:1 maxPerformedOperations:1 presentationContexts:pContexts
+                         reader:pReader writer:pWriter dimseTimeoutSeconds:30 error:&pError];
 
-    ImebraDimseService* pDimse = [[ImebraDimseService alloc]initWithAssociation:pSCU];
+            ImebraDimseService* pDimse = [[ImebraDimseService alloc]initWithAssociation:pSCU];
 
-    // Send C-STORE
-    {
-        ImebraMutableDataSet* pDataSet = [[ImebraMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
+            // Send C-STORE
+            {
+                ImebraMutableDataSet* pDataSet = [[ImebraMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
 
-        [pDataSet setString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"TestPatient" error:&pError];
-        [pDataSet setAge:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1010] newValue:[[ImebraAge alloc] initWithAge:10 units:ImebraYears] error:&pError];
+                [pDataSet setString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"TestPatient" error:&pError];
+                [pDataSet setAge:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1010] newValue:[[ImebraAge alloc] initWithAge:10 units:ImebraYears] error:&pError];
 
-        ImebraCStoreCommand* pCommand = [[ImebraCStoreCommand alloc]initWithAbstractSyntax:
-            @"1.2.840.10008.1.1"
-            messageID:[pDimse getNextCommandID]
-            priority:ImebraPriorityMedium
-            affectedSopClassUid:@"1.2.840.10008.1.1"
-            affectedSopInstanceUid:@"1.2.3.4.5"
-            originatorAET:@"SCU"
-            originatorMessageID:0
-            payload:pDataSet];
-
-        [pDimse sendCommandOrResponse:pCommand error:&pError];
-        ImebraCStoreResponse* pResponse = [pDimse getCStoreResponse:pCommand error:&pError];
+                ImebraCStoreCommand* pCommand = [[ImebraCStoreCommand alloc]initWithAbstractSyntax:
+                    @"1.2.840.10008.1.1"
+                    messageID:[pDimse getNextCommandID]
+                    priority:ImebraPriorityMedium
+                    affectedSopClassUid:@"1.2.840.10008.1.1"
+                    affectedSopInstanceUid:@"1.2.3.4.5"
+                    originatorAET:@"SCU"
+                    originatorMessageID:0
+                    payload:pDataSet];
+
+                [pDimse sendCommandOrResponse:pCommand error:&pError];
+                ImebraCStoreResponse* pResponse = [pDimse getCStoreResponse:pCommand error:&pError];
 
-        EXPECT_EQ(ImebraDimseStatusSuccess, pResponse.status);
-    }
+                EXPECT_EQ(ImebraDimseStatusSuccess, pResponse.status);
+            }
 
-    // Send C-GET
-    {
-        ImebraMutableDataSet* pDataSet = [[ImebraMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
+            // Send C-GET
+            {
+                ImebraMutableDataSet* pDataSet = [[ImebraMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
+
+                [pDataSet setString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"TestPatient" error:&pError];
 
-        [pDataSet setString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"TestPatient" error:&pError];
+                ImebraCGetCommand* pCommand = [[ImebraCGetCommand alloc]initWithAbstractSyntax:
+                    @"1.2.840.10008.1.1"
+                    messageID:[pDimse getNextCommandID]
+                    priority:ImebraPriorityMedium
+                    affectedSopClassUid:@"1.2.840.10008.1.1"
+                    identifier:pDataSet];
+
+                [pDimse sendCommandOrResponse:pCommand error:&pError];
+                ImebraCGetResponse* pResponse = [pDimse getCGetResponse:pCommand error:&pError];
+
+                EXPECT_EQ(ImebraDimseStatusSuccess, pResponse.status);
+            }
 
-        ImebraCGetCommand* pCommand = [[ImebraCGetCommand alloc]initWithAbstractSyntax:
-            @"1.2.840.10008.1.1"
-            messageID:[pDimse getNextCommandID]
-            priority:ImebraPriorityMedium
-            affectedSopClassUid:@"1.2.840.10008.1.1"
-            identifier:pDataSet];
+            // Send C-FIND
+            {
+                ImebraMutableDataSet* pDataSet = [[ImebraMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
 
-        [pDimse sendCommandOrResponse:pCommand error:&pError];
-        ImebraCGetResponse* pResponse = [pDimse getCGetResponse:pCommand error:&pError];
+                [pDataSet setString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"TestPatient" error:&pError];
 
-        EXPECT_EQ(ImebraDimseStatusSuccess, pResponse.status);
-    }
+                ImebraCFindCommand* pCommand = [[ImebraCFindCommand alloc]initWithAbstractSyntax:
+                    @"1.2.840.10008.1.1"
+                    messageID:[pDimse getNextCommandID]
+                    priority:ImebraPriorityMedium
+                    affectedSopClassUid:@"1.2.840.10008.1.1"
+                    identifier:pDataSet];
+
+                [pDimse sendCommandOrResponse:pCommand error:&pError];
+                ImebraCFindResponse* pResponse = [pDimse getCFindResponse:pCommand error:&pError];
 
-    // Send C-FIND
-    {
-        ImebraMutableDataSet* pDataSet = [[ImebraMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
+                EXPECT_EQ(ImebraDimseStatusSuccess, pResponse.status);
+            }
 
-        [pDataSet setString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"TestPatient" error:&pError];
+            // Send C-MOVE
+            {
+                ImebraMutableDataSet* pDataSet = [[ImebraMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
 
-        ImebraCFindCommand* pCommand = [[ImebraCFindCommand alloc]initWithAbstractSyntax:
-            @"1.2.840.10008.1.1"
-            messageID:[pDimse getNextCommandID]
-            priority:ImebraPriorityMedium
-            affectedSopClassUid:@"1.2.840.10008.1.1"
-            identifier:pDataSet];
+                [pDataSet setString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"TestPatient" error:&pError];
 
-        [pDimse sendCommandOrResponse:pCommand error:&pError];
-        ImebraCFindResponse* pResponse = [pDimse getCFindResponse:pCommand error:&pError];
+                ImebraCMoveCommand* pCommand = [[ImebraCMoveCommand alloc]initWithAbstractSyntax:
+                    @"1.2.840.10008.1.1"
+                    messageID:[pDimse getNextCommandID]
+                    priority:ImebraPriorityMedium
+                    affectedSopClassUid:@"1.2.840.10008.1.1"
+                    destinationAET:@"DEST"
+                    identifier:pDataSet];
+
+                [pDimse sendCommandOrResponse:pCommand error:&pError];
+                ImebraCMoveResponse* pResponse = [pDimse getCMoveResponse:pCommand error:&pError];
 
-        EXPECT_EQ(ImebraDimseStatusSuccess, pResponse.status);
-    }
+                EXPECT_EQ(ImebraDimseStatusSuccess, pResponse.status);
+            }
 
-    // Send C-MOVE
-    {
-        ImebraMutableDataSet* pDataSet = [[ImebraMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
+            // Send C-ECHO
+            {
+                ImebraCEchoCommand* pCommand = [[ImebraCEchoCommand alloc]initWithAbstractSyntax:
+                    @"1.2.840.10008.1.1"
+                    messageID:[pDimse getNextCommandID]
+                    priority:ImebraPriorityMedium
+                    affectedSopClassUid:@"1.2.840.10008.1.1"];
 
-        [pDataSet setString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"TestPatient" error:&pError];
+                [pDimse sendCommandOrResponse:pCommand error:&pError];
+                ImebraCEchoResponse* pResponse = [pDimse getCEchoResponse:pCommand error:&pError];
 
-        ImebraCMoveCommand* pCommand = [[ImebraCMoveCommand alloc]initWithAbstractSyntax:
-            @"1.2.840.10008.1.1"
-            messageID:[pDimse getNextCommandID]
-            priority:ImebraPriorityMedium
-            affectedSopClassUid:@"1.2.840.10008.1.1"
-            destinationAET:@"DEST"
-            identifier:pDataSet];
+                EXPECT_EQ(ImebraDimseStatusSuccess, pResponse.status);
+            }
 
-        [pDimse sendCommandOrResponse:pCommand error:&pError];
-        ImebraCMoveResponse* pResponse = [pDimse getCMoveResponse:pCommand error:&pError];
-
-        EXPECT_EQ(ImebraDimseStatusSuccess, pResponse.status);
-    }
+            // Send C-CANCEL
+            {
+                ImebraCCancelCommand* pCommand = [[ImebraCCancelCommand alloc]initWithAbstractSyntax:
+                    @"1.2.840.10008.1.1"
+                    messageID:[pDimse getNextCommandID]
+                    priority:ImebraPriorityMedium
+                    cancelMessageID:1];
 
-    // Send C-ECHO
-    {
-        ImebraCEchoCommand* pCommand = [[ImebraCEchoCommand alloc]initWithAbstractSyntax:
-            @"1.2.840.10008.1.1"
-            messageID:[pDimse getNextCommandID]
-            priority:ImebraPriorityMedium
-            affectedSopClassUid:@"1.2.840.10008.1.1"];
+                [pDimse sendCommandOrResponse:pCommand error:&pError];
+            }
 
-        [pDimse sendCommandOrResponse:pCommand error:&pError];
-        ImebraCEchoResponse* pResponse = [pDimse getCEchoResponse:pCommand error:&pError];
+            // Send N-EVENTREPORT
+            {
+                ImebraNEventReportCommand* pCommand = [[ImebraNEventReportCommand alloc]initWithAbstractSyntax:
+                    @"1.2.840.10008.1.1"
+                    messageID:[pDimse getNextCommandID]
+                    affectedSopClassUid:@"1.2.840.10008.1.1"
+                    affectedSopInstanceUid:@"1.1.1"
+                    eventID:1];
 
-        EXPECT_EQ(ImebraDimseStatusSuccess, pResponse.status);
-    }
+                [pDimse sendCommandOrResponse:pCommand error:&pError];
 
-    // Send C-CANCEL
-    {
-        ImebraCCancelCommand* pCommand = [[ImebraCCancelCommand alloc]initWithAbstractSyntax:
-            @"1.2.840.10008.1.1"
-            messageID:[pDimse getNextCommandID]
-            priority:ImebraPriorityMedium
-            cancelMessageID:1];
+                ImebraNEventReportResponse* pResponse = [pDimse getNEventReportResponse:pCommand error:&pError];
 
-        [pDimse sendCommandOrResponse:pCommand error:&pError];
-    }
+                EXPECT_EQ(ImebraDimseStatusSuccess, pResponse.status);
+            }
 
-    // Send N-EVENTREPORT
-    {
-        ImebraNEventReportCommand* pCommand = [[ImebraNEventReportCommand alloc]initWithAbstractSyntax:
-            @"1.2.840.10008.1.1"
-            messageID:[pDimse getNextCommandID]
-            affectedSopClassUid:@"1.2.840.10008.1.1"
-            affectedSopInstanceUid:@"1.1.1"
-            eventID:1];
+            // Send N-GET
+            {
+                NSMutableArray* identifierList = [[NSMutableArray alloc] init];
+                [identifierList addObject: [[ImebraTagId alloc] initWithGroup:0x10 tag:0x10]];
+                [identifierList addObject: [[ImebraTagId alloc] initWithGroup:0x20 tag:0x10]];
 
-        [pDimse sendCommandOrResponse:pCommand error:&pError];
+                ImebraNGetCommand* pCommand = [[ImebraNGetCommand alloc]initWithAbstractSyntax:
+                    @"1.2.840.10008.1.1"
+                    messageID:[pDimse getNextCommandID]
+                    requestedSopClassUid:@"1.2.840.10008.1.1"
+                    requestedSopInstanceUid:@"1.1.1"
+                    attributeIdentifierList:identifierList];
 
-        ImebraNEventReportResponse* pResponse = [pDimse getNEventReportResponse:pCommand error:&pError];
+                [pDimse sendCommandOrResponse:pCommand error:&pError];
 
-        EXPECT_EQ(ImebraDimseStatusSuccess, pResponse.status);
-    }
+                ImebraNGetResponse* pResponse = [pDimse getNGetResponse:pCommand error:&pError];
 
-    // Send N-GET
-    {
-        NSMutableArray* identifierList = [[NSMutableArray alloc] init];
-        [identifierList addObject: [[ImebraTagId alloc] initWithGroup:0x10 tag:0x10]];
-        [identifierList addObject: [[ImebraTagId alloc] initWithGroup:0x20 tag:0x10]];
+                EXPECT_EQ(ImebraDimseStatusSuccess, pResponse.status);
+            }
 
-        ImebraNGetCommand* pCommand = [[ImebraNGetCommand alloc]initWithAbstractSyntax:
-            @"1.2.840.10008.1.1"
-            messageID:[pDimse getNextCommandID]
-            requestedSopClassUid:@"1.2.840.10008.1.1"
-            requestedSopInstanceUid:@"1.1.1"
-            attributeIdentifierList:identifierList];
+            // Send N-SET
+            {
+                ImebraMutableDataSet* pDataSet = [[ImebraMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
 
-        [pDimse sendCommandOrResponse:pCommand error:&pError];
+                [pDataSet setString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"TestPatient" error:&pError];
 
-        ImebraNGetResponse* pResponse = [pDimse getNGetResponse:pCommand error:&pError];
+                ImebraNSetCommand* pCommand = [[ImebraNSetCommand alloc]initWithAbstractSyntax:
+                    @"1.2.840.10008.1.1"
+                    messageID:[pDimse getNextCommandID]
+                    requestedSopClassUid:@"1.2.840.10008.1.1"
+                    requestedSopInstanceUid:@"1.1.1"
+                    modificationList:pDataSet];
 
-        EXPECT_EQ(ImebraDimseStatusSuccess, pResponse.status);
-    }
+                [pDimse sendCommandOrResponse:pCommand error:&pError];
 
-    // Send N-SET
-    {
-        ImebraMutableDataSet* pDataSet = [[ImebraMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
+                ImebraNSetResponse* pResponse = [pDimse getNSetResponse:pCommand error:&pError];
 
-        [pDataSet setString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"TestPatient" error:&pError];
+                EXPECT_EQ(ImebraDimseStatusSuccess, pResponse.status);
+            }
 
-        ImebraNSetCommand* pCommand = [[ImebraNSetCommand alloc]initWithAbstractSyntax:
-            @"1.2.840.10008.1.1"
-            messageID:[pDimse getNextCommandID]
-            requestedSopClassUid:@"1.2.840.10008.1.1"
-            requestedSopInstanceUid:@"1.1.1"
-            modificationList:pDataSet];
+            // Send N-ACTION
+            {
+                ImebraMutableDataSet* pDataSet = [[ImebraMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
 
-        [pDimse sendCommandOrResponse:pCommand error:&pError];
+                [pDataSet setString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"TestPatient" error:&pError];
 
-        ImebraNSetResponse* pResponse = [pDimse getNSetResponse:pCommand error:&pError];
+                ImebraNActionCommand* pCommand = [[ImebraNActionCommand alloc]initWithAbstractSyntax:
+                    @"1.2.840.10008.1.1"
+                    messageID:[pDimse getNextCommandID]
+                    requestedSopClassUid:@"1.2.840.10008.1.1"
+                    requestedSopInstanceUid:@"1.1.1"
+                    actionID:10
+                    actionInformation:pDataSet];
 
-        EXPECT_EQ(ImebraDimseStatusSuccess, pResponse.status);
-    }
+                [pDimse sendCommandOrResponse:pCommand error:&pError];
 
-    // Send N-ACTION
-    {
-        ImebraMutableDataSet* pDataSet = [[ImebraMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
+                ImebraNActionResponse* pResponse = [pDimse getNActionResponse:pCommand error:&pError];
 
-        [pDataSet setString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"TestPatient" error:&pError];
+                EXPECT_EQ(ImebraDimseStatusSuccess, pResponse.status);
+                EXPECT_EQ(10, pResponse.actionID);
+            }
 
-        ImebraNActionCommand* pCommand = [[ImebraNActionCommand alloc]initWithAbstractSyntax:
-            @"1.2.840.10008.1.1"
-            messageID:[pDimse getNextCommandID]
-            requestedSopClassUid:@"1.2.840.10008.1.1"
-            requestedSopInstanceUid:@"1.1.1"
-            actionID:10
-            actionInformation:pDataSet];
+            // Send N-CREATE
+            {
 
-        [pDimse sendCommandOrResponse:pCommand error:&pError];
+                ImebraMutableDataSet* pDataSet = [[ImebraMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
 
-        ImebraNActionResponse* pResponse = [pDimse getNActionResponse:pCommand error:&pError];
+                [pDataSet setString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"TestPatient" error:&pError];
 
-        EXPECT_EQ(ImebraDimseStatusSuccess, pResponse.status);
-        EXPECT_EQ(10, pResponse.actionID);
-    }
+                ImebraNCreateCommand* pCommand = [[ImebraNCreateCommand alloc]initWithAbstractSyntax:
+                    @"1.2.840.10008.1.1"
+                    messageID:[pDimse getNextCommandID]
+                    affectedSopClassUid:@"1.2.840.10008.1.1"
+                    affectedSopInstanceUid:@"1.1.1"
+                    attributeList:pDataSet];
 
-    // Send N-CREATE
-    {
+                [pDimse sendCommandOrResponse:pCommand error:&pError];
 
-        ImebraMutableDataSet* pDataSet = [[ImebraMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
+                ImebraNCreateResponse* pResponse = [pDimse getNCreateResponse:pCommand error:&pError];
 
-        [pDataSet setString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"TestPatient" error:&pError];
+                EXPECT_EQ(ImebraDimseStatusSuccess, pResponse.status);
+            }
 
-        ImebraNCreateCommand* pCommand = [[ImebraNCreateCommand alloc]initWithAbstractSyntax:
-            @"1.2.840.10008.1.1"
-            messageID:[pDimse getNextCommandID]
-            affectedSopClassUid:@"1.2.840.10008.1.1"
-            affectedSopInstanceUid:@"1.1.1"
-            attributeList:pDataSet];
+            // Send N-DELETE
+            {
+                ImebraMutableDataSet* pDataSet = [[ImebraMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
 
-        [pDimse sendCommandOrResponse:pCommand error:&pError];
+                [pDataSet setString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"TestPatient" error:&pError];
 
-        ImebraNCreateResponse* pResponse = [pDimse getNCreateResponse:pCommand error:&pError];
+                ImebraNDeleteCommand* pCommand = [[ImebraNDeleteCommand alloc]initWithAbstractSyntax:
+                    @"1.2.840.10008.1.1"
+                    messageID:[pDimse getNextCommandID]
+                    requestedSopClassUid:@"1.2.840.10008.1.1"
+                    requestedSopInstanceUid:@"1.1.1"];
 
-        EXPECT_EQ(ImebraDimseStatusSuccess, pResponse.status);
-    }
+                [pDimse sendCommandOrResponse:pCommand error:&pError];
 
-    // Send N-DELETE
-    {
-        ImebraMutableDataSet* pDataSet = [[ImebraMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
+                ImebraNDeleteResponse* pResponse = [pDimse getNDeleteResponse:pCommand error:&pError];
 
-        [pDataSet setString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"TestPatient" error:&pError];
+                EXPECT_EQ(ImebraDimseStatusSuccess, pResponse.status);
+            }
 
-        ImebraNDeleteCommand* pCommand = [[ImebraNDeleteCommand alloc]initWithAbstractSyntax:
-            @"1.2.840.10008.1.1"
-            messageID:[pDimse getNextCommandID]
-            requestedSopClassUid:@"1.2.840.10008.1.1"
-            requestedSopInstanceUid:@"1.1.1"];
+            [pSCU release:&pError];
 
-        [pDimse sendCommandOrResponse:pCommand error:&pError];
-
-        ImebraNDeleteResponse* pResponse = [pDimse getNDeleteResponse:pCommand error:&pError];
-
-        EXPECT_EQ(ImebraDimseStatusSuccess, pResponse.status);
-    }
-
-    [pSCU release:&pError];
-
-
-#if !__has_feature(objc_arc)
-
-    [pDimse release];
-    [pSCU release];
-    [pReader release];
-    [pWriter release];
-    [pStream release];
-#endif
-
+        } // autoreleasepool
     }
     catch(...)
     {
@@ -779,9 +708,7 @@ TEST(objectivec, images)
 
     ImebraMutableImage* pBaselineImage = [[ImebraMutableImage alloc] initWithWidth:width height:height depth:ImebraBitDepthU8 colorSpace:@"RGB" highBit:7];
 
-#if __has_feature(objc_arc)
     @autoreleasepool
-#endif
     {
         ImebraWritingDataHandler* pWritingDataHandler = [pBaselineImage getWritingDataHandler:&pError];
 
@@ -799,9 +726,6 @@ TEST(objectivec, images)
 
             }
         }
-        #if !__has_feature(objc_arc)
-            [pWritingDataHandler release];
-        #endif
     }
 
 

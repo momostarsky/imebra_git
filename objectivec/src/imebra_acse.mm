@@ -55,9 +55,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 -(void)dealloc
 {
     delete_imebra_object_holder(PresentationContext);
-#if !__has_feature(objc_arc)
-    [super dealloc];
-#endif
 }
 
 -(void)addTransferSyntax:(NSString*)transferSyntax
@@ -85,9 +82,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 -(void)dealloc
 {
     delete_imebra_object_holder(PresentationContexts);
-#if !__has_feature(objc_arc)
-    [super dealloc];
-#endif
 }
 
 -(void)addPresentationContext:(ImebraPresentationContext*)pPresentationContext
@@ -119,10 +113,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 -(void)dealloc
 {
     delete_imebra_object_holder(AssociationMessage);
-#if !__has_feature(objc_arc)
-    [super dealloc];
-#endif
-
 }
 
 -(NSString*)abstractSyntax
@@ -185,9 +175,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 -(void)dealloc
 {
     delete_imebra_object_holder(AssociationBase);
-#if !__has_feature(objc_arc)
-    [super dealloc];
-#endif
 }
 
 -(ImebraAssociationMessage*)getCommand:(NSError**)pError

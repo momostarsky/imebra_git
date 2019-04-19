@@ -17,9 +17,12 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #endif
 #endif
 
+#if !__has_feature(objc_arc)
+    static_assert(false, "The library can be compiled only with ARC enabled");
+#endif
+
 #import "imebra_acse.h"
 #import "imebra_baseStreamInput.h"
-#import "imebra_baseStreamInputOutput.h"
 #import "imebra_baseStreamOutput.h"
 #import "imebra_colorTransformsFactory.h"
 #import "imebra_codecFactory.h"

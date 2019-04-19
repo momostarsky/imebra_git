@@ -44,10 +44,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 -(void)dealloc
 {
     delete_imebra_object_holder(DimseCommandBase);
-#if !__has_feature(objc_arc)
-    [super dealloc];
-#endif
-
 }
 
 -(ImebraDataSet*)getCommandDataSet:(NSError**)pError
@@ -1069,10 +1065,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 -(void)dealloc
 {
     delete_imebra_object_holder(DimseService);
-#if !__has_feature(objc_arc)
-    [super dealloc];
-#endif
-
 }
 
 -(NSString*)getTransferSyntax:(NSString*)abstractSyntax error:(NSError**)pError
