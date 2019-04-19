@@ -742,7 +742,7 @@ TEST(objectivec, images)
     NSData* pImageData = [pNsImage TIFFRepresentation];
     NSBitmapImageRep* pImageRep = [NSBitmapImageRep imageRepWithData:pImageData];
     NSDictionary *pImageProps = [NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:1.0] forKey:NSImageCompressionFactor];
-    pImageData = [pImageRep representationUsingType:NSJPEGFileType properties:pImageProps];
+    pImageData = [pImageRep representationUsingType:NSBitmapImageFileTypeJPEG properties:pImageProps];
 
     ImebraMutableMemory* pDataMemory = [[ImebraMutableMemory alloc] initWithData:pImageData];
     ImebraMemoryStreamInput* pDataStream = [[ImebraMemoryStreamInput alloc] initWithReadMemory:pDataMemory];

@@ -171,38 +171,20 @@ TEST(tcpTest, refusedConnection)
 
 void DelayConnectionThread(std::string port)
 {
-    TCPPassiveAddress listeningAddress("", port); // Force initialization of Winsock
+    TCPPassiveAddress listeningAddress("", port);
 
-    addrinfo hints;
-    ::memset(&hints, 0, sizeof(hints));
-    hints.ai_socktype = SOCK_STREAM;
-    hints.ai_family = AF_INET;
-    hints.ai_protocol = IPPROTO_TCP;
-    hints.ai_flags = AI_PASSIVE;
-
-    addrinfo* address(0);
-    getaddrinfo(0, port.c_str(), &hints, &address);
-
-    std::vector<std::uint8_t> sockAddr;
-    sockAddr.resize(address->ai_addrlen);
-    ::memcpy(&(sockAddr[0]), address->ai_addr, address->ai_addrlen);
-    freeaddrinfo(address);
-
-    int listeningSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-
-    bind(listeningSocket, (sockaddr*)sockAddr.data(), (socklen_t)sockAddr.size());
-    listen(listeningSocket, SOMAXCONN);
+    TCPListener listener(listeningAddress);
 
     std::this_thread::sleep_for(std::chrono::seconds(10));
 
-    sockaddr_in peeraddr;
-    socklen_t peersockaddrLen(sizeof(peeraddr));
-    int acceptedSocket = accept(listeningSocket, (sockaddr*)&peeraddr, &peersockaddrLen);
+    TCPStream stream(listener.waitForConnection());
+
+    StreamReader reader(stream.getStreamInput());
 
     char buffer[5];
     for(size_t totalReceivedBytes(0); totalReceivedBytes < 100; )
     {
-        long receivedBytes((long)recv(listeningSocket, buffer, sizeof(buffer), 0));
+        size_t receivedBytes(reader.readSome(buffer, sizeof(buffer)));
         if(receivedBytes > 0)
         {
             totalReceivedBytes += (size_t)receivedBytes;
@@ -212,14 +194,6 @@ void DelayConnectionThread(std::string port)
             break;
         }
     }
-
-    #ifdef _WIN32
-            ::closesocket(acceptedSocket);
-            ::closesocket(listeningSocket);
-    #else
-            ::close(acceptedSocket);
-            ::close(listeningSocket);
-    #endif
 
 }
 
