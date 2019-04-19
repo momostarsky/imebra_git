@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -71,34 +71,34 @@ void fileStream::openFile(const std::wstring& fileName, std::ios_base::openmode 
 
     std::wstring strMode;
 
-    int tempMode = mode & (~std::ios::binary);
+    std::ios_base::openmode tempMode = mode & (~std::ios::binary);
 
-    if(tempMode == (int)(std::ios::in | std::ios::out))
+    if(tempMode == (std::ios::in | std::ios::out))
     {
         strMode = L"r+";
     }
 
-    if(tempMode == (int)(std::ios::in | std::ios::out | std::ios::app))
+    if(tempMode == (std::ios::in | std::ios::out | std::ios::app))
     {
         strMode = L"a+";
     }
 
-    if(tempMode == (int)(std::ios::in | std::ios::out | std::ios::trunc))
+    if(tempMode == (std::ios::in | std::ios::out | std::ios::trunc))
     {
         strMode = L"w+";
     }
 
-    if(tempMode == (int)(std::ios::out) || tempMode == (int)(std::ios::out | std::ios::trunc))
+    if(tempMode == (std::ios::out) || tempMode == (int)(std::ios::out | std::ios::trunc))
     {
         strMode = L"w";
     }
 
-    if(tempMode == (int)(std::ios::out | std::ios::app))
+    if(tempMode == (std::ios::out | std::ios::app))
     {
         strMode = L"a";
     }
 
-    if(tempMode == (int)(std::ios::in))
+    if(tempMode == (std::ios::in))
     {
         strMode = L"r";
     }
@@ -185,16 +185,16 @@ fileStreamInput::fileStreamInput(const std::string& fileName)
 {
     IMEBRA_FUNCTION_START();
 
-	std::wstring wFileName;
-	size_t fileNameSize(fileName.size());
-	wFileName.resize(fileNameSize);
-	for(size_t copyChars = 0; copyChars != fileNameSize; ++copyChars)
-	{
-		wFileName[copyChars] = (wchar_t)fileName[copyChars];
-	}
+    std::wstring wFileName;
+    size_t fileNameSize(fileName.size());
+    wFileName.resize(fileNameSize);
+    for(size_t copyChars = 0; copyChars != fileNameSize; ++copyChars)
+    {
+        wFileName[copyChars] = (wchar_t)fileName[copyChars];
+    }
     openFile(wFileName, std::ios::in);
 
-	IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 fileStreamInput::fileStreamInput(const std::wstring& fileName)
@@ -248,17 +248,17 @@ void fileStreamOutput::write(size_t startPosition, const std::uint8_t* pBuffer, 
     std::lock_guard<std::mutex> lock(m_mutex);
 
     ::fseek(m_openFile, (long)startPosition, SEEK_SET);
-	if(ferror(m_openFile) != 0)
-	{
+    if(ferror(m_openFile) != 0)
+    {
         IMEBRA_THROW(StreamWriteError, "stream::seek failure");
-	}
+    }
 
-	if(::fwrite(pBuffer, 1, bufferLength, m_openFile) != bufferLength)
-	{
+    if(::fwrite(pBuffer, 1, bufferLength, m_openFile) != bufferLength)
+    {
         IMEBRA_THROW(StreamWriteError, "stream::write failure");
-	}
+    }
 
-	IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -278,19 +278,19 @@ size_t fileStreamInput::read(size_t startPosition, std::uint8_t* pBuffer, size_t
     std::lock_guard<std::mutex> lock(m_mutex);
 
     ::fseek(m_openFile, (long)startPosition, SEEK_SET);
-	if(ferror(m_openFile) != 0)
-	{
-		return 0;
-	}
+    if(ferror(m_openFile) != 0)
+    {
+        return 0;
+    }
 
     size_t readBytes = (size_t)::fread(pBuffer, 1, bufferLength, m_openFile);
-	if(ferror(m_openFile) != 0)
-	{
+    if(ferror(m_openFile) != 0)
+    {
         IMEBRA_THROW(StreamReadError, "stream::read failure");
-	}
-	return readBytes;
+    }
+    return readBytes;
 
-	IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 
