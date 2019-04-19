@@ -111,8 +111,8 @@ long throwTcpException(long socketOperationResult)
     int error(WSAGetLastError());
     switch(error)
     {
-	case WSAETIMEDOUT:
-		IMEBRA_THROW(SocketTimeout, "Timed out");
+    case WSAETIMEDOUT:
+        IMEBRA_THROW(SocketTimeout, "Timed out");
     case WSAEHOSTDOWN:
         IMEBRA_THROW(SocketTimeout, "Host is down");
     case WSAECONNREFUSED:
@@ -131,11 +131,11 @@ long throwTcpException(long socketOperationResult)
     case WSAENOTSOCK:
         IMEBRA_THROW(std::logic_error, "Operation on invalid socket");
     case WSAEWOULDBLOCK:
-		IMEBRA_THROW(SocketTimeout, "Timed out");
+        IMEBRA_THROW(SocketTimeout, "Timed out");
     case EPIPE:
     case WSAECONNRESET:
     case WSAENOTCONN:
-	case WSAECONNABORTED:
+    case WSAECONNABORTED:
     case WSAENETRESET:
         IMEBRA_THROW(StreamClosedError, "Socket closed");
     case WSAEADDRINUSE:
@@ -562,13 +562,15 @@ tcpSequenceStream::tcpSequenceStream(std::shared_ptr<tcpAddress> pAddress):
 
 #ifdef IMEBRA_WINDOWS
     int connectReturn(connect(m_socket, pAddress->getSockAddr(), pAddress->getSockAddrLen()));
-	if (connectReturn < 0 && WSAGetLastError() != WSAEWOULDBLOCK)
-	{
-		throwTcpException(connectReturn);
-	}
+    if (connectReturn < 0 && WSAGetLastError() != WSAEWOULDBLOCK)
+    {
+        throwTcpException(connectReturn);
+    }
 #else
     throwTcpException(connect(m_socket, pAddress->getSockAddr(), pAddress->getSockAddrLen()));
 #endif
+
+    setBlockingMode(true);
 
     IMEBRA_FUNCTION_END();
 }
