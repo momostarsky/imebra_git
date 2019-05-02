@@ -76,17 +76,17 @@ If you do not want to be bound by the GPL terms (such as the requirement
     return imebra::stringToNSString(get_imebra_object_holder(Image)->getColorSpace());
 }
 
--(unsigned int) getChannelsNumber
+-(unsigned int) channelsNumber
 {
     return get_imebra_object_holder(Image)->getChannelsNumber();
 }
 
--(ImebraBitDepth_t) getDepth
+-(ImebraBitDepth_t) depth
 {
     return (ImebraBitDepth_t)get_imebra_object_holder(Image)->getDepth();
 }
 
--(unsigned int) getHighBit
+-(unsigned int) highBit
 {
     return get_imebra_object_holder(Image)->getHighBit();
 }

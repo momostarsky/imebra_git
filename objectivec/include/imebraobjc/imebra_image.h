@@ -22,7 +22,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 ///        pixel's color component and its representation (signed/unsigned).
 ///
 /// This enumeration does not specify the highest bit used:
-/// in order to retrieve the highest used bit call Image::getHighBit().
+/// in order to retrieve the highest used bit call ImebraImage.highBit.
 ///
 /// The lower bit of the enumerations is 1 if it represents a signed depth,
 /// 0 if it represents an unsigned depth,
@@ -97,17 +97,17 @@ typedef NS_ENUM(unsigned int, ImebraBitDepth_t)
     /// \brief Return the number of color channels contained by the image
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    @property (readonly) unsigned int getChannelsNumber;
+    @property (readonly) unsigned int channelsNumber;
 
     /// \brief Return the type of the channels' values.
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    @property (readonly) ImebraBitDepth_t getDepth;
+    @property (readonly) ImebraBitDepth_t depth;
 
     /// \brief Return the highest bit occupied by the channels' values.
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    @property (readonly) unsigned int getHighBit;
+    @property (readonly) unsigned int highBit;
 
 @end
 
