@@ -19,6 +19,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "memoryImpl.h"
 #include "configurationImpl.h"
 #include "dicomStreamCodecImpl.h"
+#include "dataHandlerStringUIImpl.h"
 #include <memory.h>
 #include <cctype>
 #include <cassert>
@@ -212,7 +213,7 @@ void acseItemName::encodeItemPayload(std::shared_ptr<streamWriter> writer) const
 {
     IMEBRA_FUNCTION_START();
 
-    std::string name(normalizeName(m_name));
+    std::string name(handlers::normalizeUid(m_name));
     writer->write((const std::uint8_t*)name.c_str(), name.size());
 
     IMEBRA_FUNCTION_END();
@@ -237,62 +238,7 @@ void acseItemName::decodeItemPayload(std::shared_ptr<streamReader> reader)
         name.append(std::string((char*)buffer, readSize));
     }
 
-    m_name = normalizeName(name);
-
-    IMEBRA_FUNCTION_END();
-}
-
-
-///////////////////////////////////////////////////////////
-//
-// Normalize an UID
-//
-///////////////////////////////////////////////////////////
-std::string acseItem::normalizeName(const std::string& name)
-{
-    IMEBRA_FUNCTION_START();
-
-    std::istringstream stringstream(name);
-    std::ostringstream value;
-
-    bool bAddDot(false);
-    for(;;)
-    {
-        const char nextChar((const char)stringstream.get());
-        if(stringstream.eof())
-        {
-            break;
-        }
-        if(std::isdigit(nextChar))
-        {
-            if(bAddDot)
-            {
-                if(value.str().empty())
-                {
-                    value << "0";
-                }
-                value << ".";
-                bAddDot = false;
-            }
-            value.put(nextChar);
-        }
-        else if(nextChar == '.')
-        {
-            if(bAddDot)
-            {
-                value << ".0";
-            }
-            bAddDot = true;
-        }
-    }
-
-    if(bAddDot)
-    {
-        value << ".0";
-    }
-
-    std::string returnValue(value.str());
-    return returnValue;
+    m_name = handlers::normalizeUid(name);
 
     IMEBRA_FUNCTION_END();
 }
@@ -798,12 +744,66 @@ acseItem::itemType_t acseItemImplementationClassUID::getItemType() const
 
 ///////////////////////////////////////////////////////////
 //
+// Implementation Version Item constructor
+//
+///////////////////////////////////////////////////////////
+acseItemImplementationVersionName::acseItemImplementationVersionName()
+{
+}
+
+acseItemImplementationVersionName::acseItemImplementationVersionName(const std::string& name):
+    m_name(name)
+{
+}
+
+
+///////////////////////////////////////////////////////////
+//
 // Implementation Version Item
 //
 ///////////////////////////////////////////////////////////
 acseItem::itemType_t acseItemImplementationVersionName::getItemType() const
 {
     return itemType_t::implementationVersionName;
+}
+
+
+///////////////////////////////////////////////////////////
+//
+// Encode the string
+//
+///////////////////////////////////////////////////////////
+void acseItemImplementationVersionName::encodeItemPayload(std::shared_ptr<streamWriter> writer) const
+{
+    IMEBRA_FUNCTION_START();
+
+    writer->write((const std::uint8_t*)m_name.c_str(), m_name.size());
+
+    IMEBRA_FUNCTION_END();
+}
+
+
+///////////////////////////////////////////////////////////
+//
+// Decode the string
+//
+///////////////////////////////////////////////////////////
+void acseItemImplementationVersionName::decodeItemPayload(std::shared_ptr<streamReader> reader)
+{
+    IMEBRA_FUNCTION_START();
+
+    std::uint8_t buffer[128];
+
+    std::string name;
+    while(!reader->endReached())
+    {
+        size_t readSize(reader->readSome(buffer, sizeof(buffer)));
+        name.append(std::string((char*)buffer, readSize));
+    }
+
+    m_name = name;
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -920,7 +920,7 @@ void acseItemSCPSCURoleSelection::encodeItemPayload(std::shared_ptr<streamWriter
 {
     IMEBRA_FUNCTION_START();
 
-    std::string sopClassUID(normalizeName(m_sopClassUID));
+    std::string sopClassUID(handlers::normalizeUid(m_sopClassUID));
 
     std::uint16_t sopClassLength((std::uint16_t)sopClassUID.size());
     pWriter->adjustEndian((std::uint8_t*)&sopClassLength, sizeof(sopClassLength), streamController::highByteEndian);
@@ -945,7 +945,7 @@ void acseItemSCPSCURoleSelection::decodeItemPayload(std::shared_ptr<streamReader
 
     std::string sopClassUID((size_t)pReader->adjustEndian(sopClassLength, streamController::highByteEndian), ' ');
     pReader->read((std::uint8_t*)&(sopClassUID[0]), sopClassUID.size());
-    m_sopClassUID = normalizeName(sopClassUID);
+    m_sopClassUID = handlers::normalizeUid(sopClassUID);
 
     std::uint8_t scu, scp;
 

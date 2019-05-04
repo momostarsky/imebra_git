@@ -282,25 +282,48 @@ TEST(stringHandlerTest, UITest)
     MutableDataSet testDataSet;
 
     testDataSet.setString(TagId(0x0010, 0x0010), "0123456789012345", tagVR_t::UI);
-    ASSERT_EQ("0123456789012345", testDataSet.getString(TagId(0x0010, 0x0010), 0));
+    ASSERT_EQ("123456789012345", testDataSet.getString(TagId(0x0010, 0x0010), 0));
+
+    testDataSet.setString(TagId(0x0010, 0x0010), "012345.6789.012345", tagVR_t::UI);
+    ASSERT_EQ("12345.6789.12345", testDataSet.getString(TagId(0x0010, 0x0010), 0));
+
+    testDataSet.setString(TagId(0x0010, 0x0010), "12345.6789.012345", tagVR_t::UI);
+    ASSERT_EQ("12345.6789.12345", testDataSet.getString(TagId(0x0010, 0x0010), 0));
+
+    testDataSet.setString(TagId(0x0010, 0x0010), "12345.6789..00012345", tagVR_t::UI);
+    ASSERT_EQ("12345.6789.0.12345", testDataSet.getString(TagId(0x0010, 0x0010), 0));
+
+    testDataSet.setString(TagId(0x0010, 0x0010), "12345.6789.0.00012345", tagVR_t::UI);
+    ASSERT_EQ("12345.6789.0.12345", testDataSet.getString(TagId(0x0010, 0x0010), 0));
+
+    testDataSet.setString(TagId(0x0010, 0x0010), "12345.6789.0.00012345.", tagVR_t::UI);
+    ASSERT_EQ("12345.6789.0.12345.0", testDataSet.getString(TagId(0x0010, 0x0010), 0));
+
+    testDataSet.setString(TagId(0x0010, 0x0010), ".12345.6789.0.00012345.", tagVR_t::UI);
+    ASSERT_EQ("0.12345.6789.0.12345.0", testDataSet.getString(TagId(0x0010, 0x0010), 0));
+
+    ASSERT_THROW(testDataSet.setString(TagId(0x0010, 0x0010), "1.3.r"), DataHandlerInvalidDataError);
     ASSERT_THROW(testDataSet.getDate(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
     ASSERT_THROW(testDataSet.getAge(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
+    ASSERT_THROW(testDataSet.getUnsignedLong(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
+    ASSERT_THROW(testDataSet.getSignedLong(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
 
     {
         WritingDataHandler dataHandler = testDataSet.getWritingDataHandler(TagId(0x0010, 0x0010), 0, tagVR_t::UI);
-        dataHandler.setString(0, "test");
-        ASSERT_THROW(dataHandler.setString(1, "test");, DataHandlerInvalidDataError);
+        dataHandler.setString(0, "1");
+        ASSERT_THROW(dataHandler.setString(1, "1");, DataHandlerInvalidDataError);
     }
+    ASSERT_EQ("1", testDataSet.getString(TagId(0x0010, 0x0010), 0));
 
     {
-        std::string longString((size_t)64, 'a');
+        std::string longString((size_t)64, '1');
         testDataSet.setString(TagId(0x0010, 0x0010), longString, tagVR_t::UI);
         ASSERT_EQ(longString, testDataSet.getString(TagId(0x0010, 0x0010), 0));
         ASSERT_EQ(tagVR_t::UI, testDataSet.getDataType(TagId(0x0010, 0x0010)));
     }
 
     {
-        std::string longString((size_t)65, 'a');
+        std::string longString((size_t)65, '1');
         ASSERT_THROW(testDataSet.setString(TagId(0x0010, 0x0010), longString, tagVR_t::UI), DataHandlerInvalidDataError);
     }
 }
