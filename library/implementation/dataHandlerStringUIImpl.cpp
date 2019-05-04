@@ -16,6 +16,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 */
 
+#include <cctype>
 #include "dataHandlerStringUIImpl.h"
 
 namespace imebra

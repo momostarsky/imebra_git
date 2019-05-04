@@ -21,7 +21,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "dicomStreamCodecImpl.h"
 #include "dataHandlerStringUIImpl.h"
 #include <memory.h>
-#include <cctype>
 #include <cassert>
 
 namespace imebra
