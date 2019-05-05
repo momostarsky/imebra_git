@@ -137,6 +137,37 @@ TEST(pipeTest, sendReceiveCloseNoWait)
     feedData.join();
 }
 
+
+void feedDatasetThread(Pipe& source, DataSet& dataSet, unsigned int closeWait)
+{
+    StreamWriter writer(source);
+
+    CodecFactory::save(dataSet, writer, codecType_t::dicom);
+
+    source.close(closeWait);
+}
+
+
+TEST(pipeTest, sendReceiveDataSet)
+{
+    Pipe source(1024);
+
+    DataSet testDataSet;
+
+    testDataSet.setString(TagId(tagId_t::PatientName_0010_0010), "TEST PATIENT");
+
+    std::thread feedData(imebra::tests::feedDatasetThread, std::ref(source), std::ref(testDataSet), 5000);
+
+
+    StreamReader reader(source);
+
+    std::unique_ptr<DataSet> receivedDataSet(CodecFactory::load(reader));
+
+    ASSERT_EQ(testDataSet.getString(TagId(tagId_t::PatientName_0010_0010), 0), receivedDataSet->getString(TagId(tagId_t::PatientName_0010_0010), 0));
+
+    feedData.join();
+}
+
 } // namespace tests
 
 } // namespace imebra
