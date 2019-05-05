@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -41,8 +41,8 @@ streamReader::streamReader(std::shared_ptr<baseStreamInput> pControlledStream):
 streamReader::streamReader(std::shared_ptr<baseStreamInput> pControlledStream, size_t virtualStart, size_t virtualLength):
     streamController(virtualStart, virtualLength),
     m_pControlledStream(pControlledStream),
-	m_inBitsBuffer(0),
-	m_inBitsNum(0)
+    m_inBitsBuffer(0),
+    m_inBitsNum(0)
 {
     IMEBRA_FUNCTION_START();
 
@@ -129,7 +129,18 @@ bool streamReader::endReached()
 {
     IMEBRA_FUNCTION_START();
 
-    return (m_dataBufferCurrent == m_dataBufferEnd && fillDataBuffer() == 0);
+    try
+    {
+        return (m_dataBufferCurrent == m_dataBufferEnd && fillDataBuffer() == 0);
+    }
+    catch(StreamClosedError&)
+    {
+        return true;
+    }
+    catch(StreamEOFError&)
+    {
+        return true;
+    }
 
     IMEBRA_FUNCTION_END();
 }
@@ -145,16 +156,16 @@ size_t streamReader::fillDataBuffer()
     IMEBRA_FUNCTION_START();
 
     size_t readBytes = fillDataBuffer(&(m_dataBuffer[0]), m_dataBuffer.size());
-	if(readBytes == 0)
-	{
+    if(readBytes == 0)
+    {
         m_dataBufferCurrent = m_dataBufferEnd = 0;
-		return 0;
-	}
+        return 0;
+    }
     m_dataBufferEnd = readBytes;
     m_dataBufferCurrent = 0;
-	return readBytes;
+    return readBytes;
 
-	IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -168,18 +179,18 @@ size_t streamReader::fillDataBuffer(std::uint8_t* pDestinationBuffer, size_t rea
     IMEBRA_FUNCTION_START();
 
     m_dataBufferStreamPosition = position();
-	if(m_virtualLength != 0)
-	{
+    if(m_virtualLength != 0)
+    {
         if(m_dataBufferStreamPosition >= m_virtualLength)
-		{
-			m_dataBufferStreamPosition = m_virtualLength;
-			return 0;
-		}
+        {
+            m_dataBufferStreamPosition = m_virtualLength;
+            return 0;
+        }
         if(m_dataBufferStreamPosition + readLength > m_virtualLength)
-		{
+        {
             readLength = m_virtualLength - m_dataBufferStreamPosition;
-		}
-	}
+        }
+    }
     return m_pControlledStream->read(m_dataBufferStreamPosition + m_virtualStart, pDestinationBuffer, readLength);
 
     IMEBRA_FUNCTION_END();
@@ -294,16 +305,16 @@ void streamReader::seek(size_t newPosition)
     IMEBRA_FUNCTION_START();
 
     // The requested position is already in the data buffer?
-	///////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////
     size_t bufferEndPosition = m_dataBufferStreamPosition + m_dataBufferEnd;
     if(newPosition >= m_dataBufferStreamPosition && newPosition < bufferEndPosition)
-	{
+    {
         m_dataBufferCurrent = newPosition - m_dataBufferStreamPosition;
-		return;
-	}
+        return;
+    }
 
-	// The requested position is not in the data buffer
-	///////////////////////////////////////////////////////////
+    // The requested position is not in the data buffer
+    ///////////////////////////////////////////////////////////
     m_dataBufferCurrent = m_dataBufferEnd = 0;
     m_dataBufferStreamPosition = newPosition;
 
