@@ -6,6 +6,11 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Fixed bug #275 (streamReader::endReached fails if the controlled stream is closed) as per SOP :ref:`FIXBUG_2`
+
+Version 4.5.2.3
+---------------
+
 - Fixed bug #274 (ARC compilation on Apple is enabled only for OX-X, not for iOS) as per SOP :ref:`FIXBUG_2`
 
 Version 4.5.2.2
