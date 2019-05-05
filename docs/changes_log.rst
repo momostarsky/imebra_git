@@ -6,7 +6,7 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
-- Fixed bug #275 (streamReader::endReached fails if the controlled stream is closed)
+- Fixed bug #275 (streamReader::endReached fails if the controlled stream is closed) as per SOP :ref:`FIXBUG_2`
 
 Version 4.5.2.3
 ---------------
