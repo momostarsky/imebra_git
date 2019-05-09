@@ -17,7 +17,9 @@ If you do not want to be bound by the GPL terms (such as the requirement
 */
 
 #include "streamReaderImpl.h"
+#include "streamWriterImpl.h"
 #include <string.h>
+#include <vector>
 
 namespace imebra
 {
@@ -32,17 +34,13 @@ namespace implementation
 ///////////////////////////////////////////////////////////
 streamReader::streamReader(std::shared_ptr<baseStreamInput> pControlledStream):
     streamController(0, 0),
-    m_pControlledStream(pControlledStream),
-    m_inBitsBuffer(0),
-    m_inBitsNum(0)
+    m_pControlledStream(pControlledStream)
 {
 }
 
 streamReader::streamReader(std::shared_ptr<baseStreamInput> pControlledStream, size_t virtualStart, size_t virtualLength):
     streamController(virtualStart, virtualLength),
-    m_pControlledStream(pControlledStream),
-    m_inBitsBuffer(0),
-    m_inBitsNum(0)
+    m_pControlledStream(pControlledStream)
 {
     IMEBRA_FUNCTION_START();
 
@@ -57,9 +55,7 @@ streamReader::streamReader(std::shared_ptr<baseStreamInput> pControlledStream, s
 
 streamReader::streamReader(std::shared_ptr<baseStreamInput> pControlledStream, size_t virtualStart, size_t virtualLength, std::uint8_t* pBuffer, size_t bufferLength):
     streamController(virtualStart, virtualLength, pBuffer, bufferLength),
-    m_pControlledStream(pControlledStream),
-    m_inBitsBuffer(0),
-    m_inBitsNum(0)
+    m_pControlledStream(pControlledStream)
 {
     IMEBRA_FUNCTION_START();
 
@@ -74,12 +70,20 @@ streamReader::streamReader(std::shared_ptr<baseStreamInput> pControlledStream, s
 
 streamReader::streamReader(std::shared_ptr<baseStreamInput> pControlledStream, size_t virtualStart, std::uint8_t* pBuffer, size_t bufferLength):
     streamController(virtualStart, 0, pBuffer, bufferLength),
-    m_pControlledStream(pControlledStream),
-    m_inBitsBuffer(0),
-    m_inBitsNum(0)
+    m_pControlledStream(pControlledStream)
 {
 }
 
+
+streamReader::~streamReader()
+{
+    // If this is a virtual stream then read the remaining bytes
+    if(m_virtualLength != 0 && position() != m_virtualLength)
+    {
+        std::vector<std::uint8_t> buffer(m_virtualLength - position());
+        read(buffer.data(), buffer.size());
+    }
+}
 
 std::shared_ptr<baseStreamInput> streamReader::getControlledStream()
 {
@@ -110,12 +114,19 @@ std::shared_ptr<streamReader> streamReader::getReader(size_t virtualLength)
 
     seekForward((std::uint32_t)virtualLength);
 
-    return std::make_shared<streamReader>(
+    std::shared_ptr<streamReader> reader = std::make_shared<streamReader>(
                 m_pControlledStream,
                 currentPosition + m_virtualStart,
                 virtualLength,
                 pReaderBuffer,
                 readerBufferSize);
+
+    for(std::shared_ptr<streamWriter>& pWriter: m_forwardStream)
+    {
+        reader->addForwardWriter(pWriter);
+    }
+
+    return reader;
 
     IMEBRA_FUNCTION_END();
 }
@@ -205,6 +216,19 @@ size_t streamReader::fillDataBuffer(std::uint8_t* pDestinationBuffer, size_t rea
 ///////////////////////////////////////////////////////////
 void streamReader::read(std::uint8_t* pBuffer, size_t bufferLength)
 {
+    // Special case with length == 1 (read just one byte)
+    if(bufferLength == 1 && m_dataBufferCurrent != m_dataBufferEnd)
+    {
+        *pBuffer = m_dataBuffer[m_dataBufferCurrent++];
+
+        for(std::shared_ptr<streamWriter>& pWriter: m_forwardStream)
+        {
+            pWriter->write(pBuffer, bufferLength);
+        }
+
+        return;
+    }
+
     IMEBRA_FUNCTION_START();
 
     std::uint8_t* pReadBuffer(pBuffer);
@@ -230,6 +254,8 @@ size_t streamReader::readSome(std::uint8_t* pBuffer, size_t bufferLength)
 
     size_t originalSize(bufferLength);
 
+    std::uint8_t* const pOriginalBuffer(pBuffer);
+
     while(bufferLength != 0)
     {
         // Update the data buffer if it is empty
@@ -238,6 +264,10 @@ size_t streamReader::readSome(std::uint8_t* pBuffer, size_t bufferLength)
         {
             if(bufferLength != originalSize)
             {
+                for(std::shared_ptr<streamWriter>& pWriter: m_forwardStream)
+                {
+                    pWriter->write(pOriginalBuffer, originalSize - bufferLength);
+                }
                 return originalSize - bufferLength;
             }
             if(bufferLength >= m_dataBuffer.size())
@@ -275,6 +305,11 @@ size_t streamReader::readSome(std::uint8_t* pBuffer, size_t bufferLength)
         bufferLength -= copySize;
         pBuffer += copySize;
         m_dataBufferCurrent += copySize;
+    }
+
+    for(std::shared_ptr<streamWriter>& pWriter: m_forwardStream)
+    {
+        pWriter->write(pOriginalBuffer, originalSize);
     }
 
     return originalSize;
@@ -341,6 +376,36 @@ size_t streamReader::getVirtualLength() const
 {
     return m_virtualLength;
 }
+
+void streamReader::addForwardWriter(const std::shared_ptr<streamWriter>& pWriter)
+{
+    m_forwardStream.push_back(pWriter);
+}
+
+void streamReader::removeForwardWriter(const std::shared_ptr<streamWriter>& pWriter)
+{
+    for(forwardList_t::iterator scan(m_forwardStream.begin()); scan != m_forwardStream.end(); ++scan)
+    {
+        if((*scan).get() == pWriter.get())
+        {
+            m_forwardStream.erase(scan);
+            return;
+        }
+    }
+}
+
+
+forwardStream::forwardStream(const std::shared_ptr<streamReader>& pSource, const std::shared_ptr<streamWriter>& pDestination):
+    m_pSource(pSource), m_pDestination(pDestination)
+{
+    m_pSource->addForwardWriter(pDestination);
+}
+
+forwardStream::~forwardStream()
+{
+    m_pSource->removeForwardWriter(m_pDestination);
+}
+
 
 } // namespace implementation
 

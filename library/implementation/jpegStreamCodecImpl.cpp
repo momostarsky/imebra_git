@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -24,6 +24,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "jpegImageCodecImpl.h"
 #include "dataSetImpl.h"
 #include "codecFactoryImpl.h"
+#include "memoryStreamImpl.h"
 #include "../include/imebra/exceptions.h"
 #include <vector>
 #include <stdlib.h>
@@ -133,17 +134,17 @@ void jpegStreamCodec::writeStream(std::shared_ptr<streamWriter> pStream, std::sh
 //
 /////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
-void jpegStreamCodec::readStream(std::shared_ptr<streamReader> pSourceStream, std::shared_ptr<dataSet> pDataSet, std::uint32_t /* maxSizeBufferLoad = 0xffffffff */) const
+void jpegStreamCodec::readStream(std::shared_ptr<streamReader> pStream, std::shared_ptr<dataSet> pDataSet, std::uint32_t /* maxSizeBufferLoad = 0xffffffff */) const
 {
     IMEBRA_FUNCTION_START();
 
-    streamReader* pStream = pSourceStream.get();
+    std::shared_ptr<memory> jpegData = std::make_shared<memory>();
 
-    // Store the stream's position.
-    // This will be used later, in order to reread all the
-    //  stream's content and store it into the dataset
-    ///////////////////////////////////////////////////////////
-    size_t startPosition = pStream->position();
+    std::shared_ptr<memoryStreamOutput> streamOutput = std::make_shared<memoryStreamOutput>(jpegData);
+
+    std::shared_ptr<streamWriter> memoryStreamWriter = std::make_shared<streamWriter>(streamOutput);
+
+    forwardStream forward(pStream, memoryStreamWriter);
 
     try
     {
@@ -209,7 +210,7 @@ void jpegStreamCodec::readStream(std::shared_ptr<streamReader> pSourceStream, st
 
             // Parse the tag
             ///////////////////////////////////////////////////////////
-            pTag->readTag(pStream, &information, entryByte);
+            pTag->readTag(*pStream, &information, entryByte);
         }
     }
 
@@ -284,18 +285,9 @@ void jpegStreamCodec::readStream(std::shared_ptr<streamReader> pSourceStream, st
     offsetHandler->setSize(4);
     ::memset(offsetHandler->getMemoryBuffer(), 0, offsetHandler->getSize());
 
-    // Reread all the stream's content and write it into the dataset
-    ////////////////////////////////////////////////////////////////
-    size_t finalPosition = pStream->position();
-    size_t streamLength = (std::uint32_t)(finalPosition - startPosition);
-    pStream->seek(startPosition);
-
     std::shared_ptr<handlers::writingDataHandlerRaw> imageHandler = pDataSet->getWritingDataHandlerRaw(0x7fe0, 0, 0x0010, 1, tagVR_t::OB);
-    if(imageHandler != 0 && streamLength != 0)
-    {
-        imageHandler->setSize(streamLength);
-        pStream->read(imageHandler->getMemoryBuffer(), streamLength);
-    }
+    memoryStreamWriter->flushDataBuffer();
+    imageHandler->getMemory()->copyFrom(jpegData);
 
     IMEBRA_FUNCTION_END();
 }

@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -179,15 +179,15 @@ void tagDQT::writeTag(streamWriter* pStream, jpegInformation& information) const
 //
 /////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
-void tagDQT::readTag(streamReader* pStream, jpegInformation* pInformation, std::uint8_t /* tagEntry */) const
+void tagDQT::readTag(streamReader& stream, jpegInformation* pInformation, std::uint8_t /* tagEntry */) const
 {
     IMEBRA_FUNCTION_START();
 
     // tag dedicated stream (throws if we attempt to read past
     //  the tag bytes)
     //////////////////////////////////////////////////////////
-    const std::uint32_t tagLength = readLength(pStream);
-    std::shared_ptr<streamReader> tagReader(pStream->getReader(tagLength));
+    const std::uint32_t tagLength = readLength(stream);
+    std::shared_ptr<streamReader> tagReader(stream.getReader(tagLength));
 
     std::uint8_t  tablePrecision;
     std::uint8_t  tableValue8;
@@ -331,11 +331,7 @@ std::shared_ptr<image> jpegImageCodec::getImage(const dataSet& sourceDataSet, st
 {
     IMEBRA_FUNCTION_START();
 
-    streamReader* pSourceStream = pStream.get();
-
-    // Activate the tags in the stream
-    ///////////////////////////////////////////////////////////
-    pSourceStream->m_bJpegTags = true;
+    jpegStreamReader jpegStream(pStream);
 
     // Read the Jpeg signature
     ///////////////////////////////////////////////////////////
@@ -343,7 +339,7 @@ std::shared_ptr<image> jpegImageCodec::getImage(const dataSet& sourceDataSet, st
 
     try
     {
-        pSourceStream->read(jpegSignature, 2);
+        pStream->read(jpegSignature, 2);
     }
     catch(StreamEOFError&)
     {
@@ -362,7 +358,7 @@ std::shared_ptr<image> jpegImageCodec::getImage(const dataSet& sourceDataSet, st
     // Read until the end of the image is reached
     ///////////////////////////////////////////////////////////
     jpeg::jpegInformation information;
-    for(; !information.m_bEndOfImage; pSourceStream->resetInBitsBuffer())
+    for(; !information.m_bEndOfImage; jpegStream.resetInBitsBuffer())
     {
         std::uint32_t nextMcuStop = information.m_mcuNumberTotal;
         if(information.m_mcuPerRestartInterval != 0)
@@ -381,7 +377,7 @@ std::shared_ptr<image> jpegImageCodec::getImage(const dataSet& sourceDataSet, st
 
             try
             {
-                pSourceStream->read(&tagId, 1);
+                pStream->read(&tagId, 1);
                 if(tagId != 0xff)
                 {
                     continue;
@@ -389,7 +385,7 @@ std::shared_ptr<image> jpegImageCodec::getImage(const dataSet& sourceDataSet, st
 
                 while(tagId == 0xff)
                 {
-                    pSourceStream->read(&tagId, 1);
+                    pStream->read(&tagId, 1);
                 }
 
 
@@ -402,7 +398,7 @@ std::shared_ptr<image> jpegImageCodec::getImage(const dataSet& sourceDataSet, st
                 else
                     pTag = m_tagsMap.find(0xff)->second;
 
-                pTag->readTag(pSourceStream, &information, tagId);
+                pTag->readTag(*pStream, &information, tagId);
             }
             catch(const StreamEOFError& e)
             {
@@ -419,87 +415,80 @@ std::shared_ptr<image> jpegImageCodec::getImage(const dataSet& sourceDataSet, st
 
         }
 
-        try
+        jpeg::jpegChannel* pChannel; // Used in the loops
+        while(information.m_mcuProcessed < nextMcuStop && !pStream->endReached())
         {
-            jpeg::jpegChannel* pChannel; // Used in the loops
-            while(information.m_mcuProcessed < nextMcuStop && !pSourceStream->endReached())
+            // Read an MCU
+            ///////////////////////////////////////////////////////////
+
+            // Scan all components
+            ///////////////////////////////////////////////////////////
+            for(jpeg::jpegChannel** channelsIterator = information.m_channelsList; *channelsIterator != 0; ++channelsIterator)
             {
-                // Read an MCU
-                ///////////////////////////////////////////////////////////
+                pChannel = *channelsIterator;
 
-                // Scan all components
+                // Read a lossless pixel
                 ///////////////////////////////////////////////////////////
-                for(jpeg::jpegChannel** channelsIterator = information.m_channelsList; *channelsIterator != 0; ++channelsIterator)
+                if(information.m_bLossless)
                 {
-                    pChannel = *channelsIterator;
-
-                    // Read a lossless pixel
-                    ///////////////////////////////////////////////////////////
-                    if(information.m_bLossless)
+                    for(std::uint32_t
+                        scanBlock = 0;
+                        scanBlock != pChannel->m_blockMcuXY;
+                        ++scanBlock)
                     {
-                        for(std::uint32_t
-                            scanBlock = 0;
-                            scanBlock != pChannel->m_blockMcuXY;
-                            ++scanBlock)
+                        std::uint32_t amplitudeLength = pChannel->m_pActiveHuffmanTableDC->readHuffmanCode(jpegStream);
+                        std::int32_t amplitude;
+                        if(amplitudeLength == 16) // logically we should compare with information.m_precision, but DICOM says otherwise
                         {
-                            std::uint32_t amplitudeLength = pChannel->m_pActiveHuffmanTableDC->readHuffmanCode(pSourceStream);
-                            std::int32_t amplitude;
-                            if(amplitudeLength == 16) // logically we should compare with information.m_precision, but DICOM says otherwise
+                            amplitude = (std::int32_t)1 << 15;
+                        }
+                        else if(amplitudeLength != 0)
+                        {
+                            amplitude = (std::int32_t)jpegStream.readBits(amplitudeLength);
+                            if(amplitude < ((std::int32_t)1<<(amplitudeLength-1)))
                             {
-                                amplitude = (std::int32_t)1 << 15;
+                                amplitude -= ((std::int32_t)1<<amplitudeLength)-1;
                             }
-                            else if(amplitudeLength != 0)
-                            {
-                                amplitude = (std::int32_t)pSourceStream->readBits(amplitudeLength);
-                                if(amplitude < ((std::int32_t)1<<(amplitudeLength-1)))
-                                {
-                                    amplitude -= ((std::int32_t)1<<amplitudeLength)-1;
-                                }
-                            }
-                            else
-                            {
-                                amplitude = 0;
-                            }
-
-                            pChannel->addUnprocessedAmplitude(amplitude, information.m_spectralIndexStart, information.m_mcuLastRestart == information.m_mcuProcessed && scanBlock == 0);
+                        }
+                        else
+                        {
+                            amplitude = 0;
                         }
 
-                        continue;
+                        pChannel->addUnprocessedAmplitude(amplitude, information.m_spectralIndexStart, information.m_mcuLastRestart == information.m_mcuProcessed && scanBlock == 0);
                     }
 
-                    // Read a lossy MCU
-                    ///////////////////////////////////////////////////////////
-                    std::uint32_t bufferPointer = (information.m_mcuProcessedY * pChannel->m_blockMcuY * ((information.m_jpegImageWidth * pChannel->m_samplingFactorX / information.m_maxSamplingFactorX) >> 3) + information.m_mcuProcessedX * pChannel->m_blockMcuX) * 64;
-                    for(std::uint32_t scanBlockY = pChannel->m_blockMcuY; (scanBlockY != 0); --scanBlockY)
-                    {
-                        for(std::uint32_t scanBlockX = pChannel->m_blockMcuX; scanBlockX != 0; --scanBlockX)
-                        {
-                            readBlock(pSourceStream, information, &(pChannel->m_pBuffer[bufferPointer]), pChannel);
-
-                            if(information.m_spectralIndexEnd >= 63)
-                            {
-                                IDCT(
-                                            &(pChannel->m_pBuffer[bufferPointer]),
-                                            information.m_decompressionQuantizationTable[pChannel->m_quantTable]
-                                        );
-                            }
-                            bufferPointer += 64;
-                        }
-                        bufferPointer += (information.m_mcuNumberX -1) * pChannel->m_blockMcuX * 64;
-                    }
+                    continue;
                 }
 
-                ++information.m_mcuProcessed;
-                if(++information.m_mcuProcessedX == information.m_mcuNumberX)
+                // Read a lossy MCU
+                ///////////////////////////////////////////////////////////
+                std::uint32_t bufferPointer = (information.m_mcuProcessedY * pChannel->m_blockMcuY * ((information.m_jpegImageWidth * pChannel->m_samplingFactorX / information.m_maxSamplingFactorX) >> 3) + information.m_mcuProcessedX * pChannel->m_blockMcuX) * 64;
+                for(std::uint32_t scanBlockY = pChannel->m_blockMcuY; (scanBlockY != 0); --scanBlockY)
                 {
-                    information.m_mcuProcessedX = 0;
-                    ++information.m_mcuProcessedY;
+                    for(std::uint32_t scanBlockX = pChannel->m_blockMcuX; scanBlockX != 0; --scanBlockX)
+                    {
+                        readBlock(jpegStream, information, &(pChannel->m_pBuffer[bufferPointer]), pChannel);
+
+                        if(information.m_spectralIndexEnd >= 63)
+                        {
+                            IDCT(
+                                        &(pChannel->m_pBuffer[bufferPointer]),
+                                        information.m_decompressionQuantizationTable[pChannel->m_quantTable]
+                                    );
+                        }
+                        bufferPointer += 64;
+                    }
+                    bufferPointer += (information.m_mcuNumberX -1) * pChannel->m_blockMcuX * 64;
                 }
             }
-        }
-        catch(const JpegEoiFound&)
-        {
-            break; // The end of the image has been prematurely found
+
+            ++information.m_mcuProcessed;
+            if(++information.m_mcuProcessedX == information.m_mcuNumberX)
+            {
+                information.m_mcuProcessedX = 0;
+                ++information.m_mcuProcessedY;
+            }
         }
     }
 
@@ -1113,7 +1102,7 @@ void jpegImageCodec::writeScan(streamWriter* pDestinationStream, jpeg::jpegInfor
 //
 /////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
-inline void jpegImageCodec::readBlock(streamReader* pStream, jpeg::jpegInformation& information, std::int32_t* pBuffer, jpeg::jpegChannel* pChannel) const
+inline void jpegImageCodec::readBlock(jpegStreamReader& stream, jpeg::jpegInformation& information, std::int32_t* pBuffer, jpeg::jpegChannel* pChannel) const
 {
     IMEBRA_FUNCTION_START();
 
@@ -1149,7 +1138,7 @@ inline void jpegImageCodec::readBlock(streamReader* pStream, jpeg::jpegInformati
         std::uint32_t hufCode;
         if(spectralIndex != 0)
         {
-            hufCode = pChannel->m_pActiveHuffmanTableAC->readHuffmanCode(pStream);
+            hufCode = pChannel->m_pActiveHuffmanTableAC->readHuffmanCode(stream);
 
             // End of block reached
             /////////////////////////////////////////////////////////////////
@@ -1162,7 +1151,7 @@ inline void jpegImageCodec::readBlock(streamReader* pStream, jpeg::jpegInformati
         }
         else
         {
-            hufCode = pChannel->m_pActiveHuffmanTableDC->readHuffmanCode(pStream);
+            hufCode = pChannel->m_pActiveHuffmanTableDC->readHuffmanCode(stream);
         }
 
 
@@ -1187,7 +1176,7 @@ inline void jpegImageCodec::readBlock(streamReader* pStream, jpeg::jpegInformati
             /////////////////////////////////////////////////////////////////
             if(amplitudeLength != 0)
             {
-                value = (std::int32_t)(pStream->readBits(amplitudeLength));
+                value = (std::int32_t)(stream.readBits(amplitudeLength));
                 if(value < ((std::int32_t)1 << (amplitudeLength-1)) )
                 {
                     value -= ((std::int32_t)1 << amplitudeLength) - 1;
@@ -1222,7 +1211,7 @@ inline void jpegImageCodec::readBlock(streamReader* pStream, jpeg::jpegInformati
         else
         {
             information.m_eobRun += (std::uint32_t)1 << runLength;
-            information.m_eobRun += pStream->readBits(runLength);
+            information.m_eobRun += stream.readBits(runLength);
             --spectralIndex;
         }
     }

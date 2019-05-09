@@ -776,13 +776,13 @@ void tag::writeLength(streamWriter* pStream, std::uint16_t length) const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::uint32_t tag::readLength(streamReader* pStream) const
+std::uint32_t tag::readLength(streamReader& stream) const
 {
     IMEBRA_FUNCTION_START();
 
     std::uint16_t length = 0;
-    pStream->read((std::uint8_t*)&length, sizeof(length));
-    pStream->adjustEndian((std::uint8_t*)&length, sizeof(length), streamController::highByteEndian);
+    stream.read((std::uint8_t*)&length, sizeof(length));
+    stream.adjustEndian((std::uint8_t*)&length, sizeof(length), streamController::highByteEndian);
     if(length > 1)
         length = (std::uint16_t)(length - 2);
     return (std::uint32_t)length;
@@ -834,12 +834,12 @@ void tagUnknown::writeTag(streamWriter* pStream, jpegInformation& /* information
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void tagUnknown::readTag(streamReader* pStream, jpegInformation* /* pInformation */, std::uint8_t /* tagEntry */) const
+void tagUnknown::readTag(streamReader& stream, jpegInformation* /* pInformation */, std::uint8_t /* tagEntry */) const
 {
     IMEBRA_FUNCTION_START();
 
-    std::uint32_t tagLength = readLength(pStream);
-    pStream->seekForward(tagLength);
+    std::uint32_t tagLength = readLength(stream);
+    stream.seekForward(tagLength);
 
     IMEBRA_FUNCTION_END();
 }
@@ -930,15 +930,15 @@ void tagSOF::writeTag(streamWriter* pStream, jpegInformation& information) const
 //
 /////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
-void tagSOF::readTag(streamReader* pStream, jpegInformation* pInformation, std::uint8_t tagEntry) const
+void tagSOF::readTag(streamReader& stream, jpegInformation* pInformation, std::uint8_t tagEntry) const
 {
     IMEBRA_FUNCTION_START();
 
     // tag dedicated stream (throws if we attempt to read past
     //  the tag bytes
     //////////////////////////////////////////////////////////
-    const std::uint32_t tagLength = readLength(pStream);
-    std::shared_ptr<streamReader> tagReader(pStream->getReader(tagLength));
+    const std::uint32_t tagLength = readLength(stream);
+    std::shared_ptr<streamReader> tagReader(stream.getReader(tagLength));
 
     pInformation->m_bLossless = (tagEntry==0xc3) || (tagEntry==0xc7);
     pInformation->m_process = (std::uint8_t)(tagEntry - 0xc0);
@@ -1156,15 +1156,15 @@ void tagDHT::writeTag(streamWriter* pStream, jpegInformation& information) const
 //
 /////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
-void tagDHT::readTag(streamReader* pStream, jpegInformation* pInformation, std::uint8_t /* tagEntry */) const
+void tagDHT::readTag(streamReader& stream, jpegInformation* pInformation, std::uint8_t /* tagEntry */) const
 {
     IMEBRA_FUNCTION_START();
 
     // tag dedicated stream (throws if we attempt to read past
     //  the tag bytes)
     //////////////////////////////////////////////////////////
-    const std::uint32_t tagLength = readLength(pStream);
-    std::shared_ptr<streamReader> tagReader(pStream->getReader(tagLength));
+    const std::uint32_t tagLength = readLength(stream);
+    std::shared_ptr<streamReader> tagReader(stream.getReader(tagLength));
 
     // Used to read bytes from the stream
     /////////////////////////////////////////////////////////////////
@@ -1338,15 +1338,15 @@ void tagSOS::writeTag(streamWriter* pStream, jpegInformation& information) const
 //
 /////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
-void tagSOS::readTag(streamReader* pStream, jpegInformation* pInformation, std::uint8_t /* tagEntry */) const
+void tagSOS::readTag(streamReader& stream, jpegInformation* pInformation, std::uint8_t /* tagEntry */) const
 {
     IMEBRA_FUNCTION_START();
 
     // tag dedicated stream (throws if we attempt to read past
     //  the tag bytes)
     //////////////////////////////////////////////////////////
-    const std::uint32_t tagLength = readLength(pStream);
-    std::shared_ptr<streamReader> tagReader(pStream->getReader(tagLength));
+    const std::uint32_t tagLength = readLength(stream);
+    std::shared_ptr<streamReader> tagReader(stream.getReader(tagLength));
 
     pInformation->m_eobRun = 0;
     memset(pInformation->m_channelsList, 0, sizeof(pInformation->m_channelsList));
@@ -1451,15 +1451,15 @@ void tagDRI::writeTag(streamWriter* pStream, jpegInformation& information) const
 //
 /////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
-void tagDRI::readTag(streamReader* pStream, jpegInformation* pInformation, std::uint8_t /* tagEntry */) const
+void tagDRI::readTag(streamReader& stream, jpegInformation* pInformation, std::uint8_t /* tagEntry */) const
 {
     IMEBRA_FUNCTION_START();
 
     // tag dedicated stream (throws if we attempt to read past
     //  the tag bytes)
     //////////////////////////////////////////////////////////
-    const std::uint32_t tagLength = readLength(pStream);
-    std::shared_ptr<streamReader> tagReader(pStream->getReader(tagLength));
+    const std::uint32_t tagLength = readLength(stream);
+    std::shared_ptr<streamReader> tagReader(stream.getReader(tagLength));
 
     std::uint16_t unitsPerRestartInterval;
     tagReader->read((std::uint8_t*)&unitsPerRestartInterval, 2);
@@ -1510,7 +1510,7 @@ void tagRST::writeTag(streamWriter* /* pStream */, jpegInformation& /* informati
 //
 /////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
-void tagRST::readTag(streamReader* /* pStream */, jpegInformation* pInformation, std::uint8_t tagEntry) const
+void tagRST::readTag(streamReader&, jpegInformation* pInformation, std::uint8_t tagEntry) const
 {
     IMEBRA_FUNCTION_START();
 
@@ -1597,12 +1597,27 @@ void tagEOI::writeTag(streamWriter* pStream, jpegInformation& /* information */)
 //
 /////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
-void tagEOI::readTag(streamReader* /* pStream */, jpegInformation* pInformation, std::uint8_t /* tagEntry */) const
+void tagEOI::readTag(streamReader&, jpegInformation* pInformation, std::uint8_t /* tagEntry */) const
 {
     pInformation->m_bEndOfImage=true;
 }
 
 } // namespace jpeg
+
+
+
+///////////////////////////////////////////////////////////
+//
+// Constructor
+//
+///////////////////////////////////////////////////////////
+jpegStreamReader::jpegStreamReader(std::shared_ptr<streamReader> pStreamReader):
+    m_pStreamReader(pStreamReader),
+    m_inBitsBuffer(0),
+    m_inBitsNum(0)
+{
+}
+
 
 } // namespace codecs
 

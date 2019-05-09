@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -49,50 +49,50 @@ namespace codecs
 class jpegImageCodec : public imageCodec, public jpegCodecBase
 {
 public:
-	// Retrieve the image from a dataset
-	///////////////////////////////////////////////////////////
+    // Retrieve the image from a dataset
+    ///////////////////////////////////////////////////////////
     virtual std::shared_ptr<image> getImage(const dataSet& sourceDataSet, std::shared_ptr<streamReader> pStream, tagVR_t dataType) const override;
 
-	// Insert a jpeg compressed image into a dataset
-	///////////////////////////////////////////////////////////
-	virtual void setImage(
-		std::shared_ptr<streamWriter> pDestStream,
-		std::shared_ptr<image> pImage,
+    // Insert a jpeg compressed image into a dataset
+    ///////////////////////////////////////////////////////////
+    virtual void setImage(
+        std::shared_ptr<streamWriter> pDestStream,
+        std::shared_ptr<image> pImage,
         const std::string& transferSyntax,
         imageQuality_t imageQuality,
         tagVR_t dataType,
         std::uint32_t allocatedBits,
-		bool bSubSampledX,
-		bool bSubSampledY,
-		bool bInterleaved,
+        bool bSubSampledX,
+        bool bSubSampledY,
+        bool bInterleaved,
         bool b2Complement) const override;
 
-	// Return true if the codec can handle the transfer
-	///////////////////////////////////////////////////////////
+    // Return true if the codec can handle the transfer
+    ///////////////////////////////////////////////////////////
     virtual bool canHandleTransferSyntax(const std::string& transferSyntax) const override;
 
-	// Returns true if the transfer syntax has to be
-	//  encapsulated
-	//
-	///////////////////////////////////////////////////////////
+    // Returns true if the transfer syntax has to be
+    //  encapsulated
+    //
+    ///////////////////////////////////////////////////////////
     virtual bool encapsulated(const std::string& transferSyntax) const override;
 
-	// Return the suggested allocated bits
-	///////////////////////////////////////////////////////////
+    // Return the suggested allocated bits
+    ///////////////////////////////////////////////////////////
     virtual std::uint32_t suggestAllocatedBits(const std::string& transferSyntax, std::uint32_t highBit) const override;
 
-	// FDCT/IDCT
-	///////////////////////////////////////////////////////////
+    // FDCT/IDCT
+    ///////////////////////////////////////////////////////////
     void FDCT(std::int32_t* pIOMatrix, float* pDescaleFactors) const;
     void IDCT(std::int32_t* pIOMatrix, long long* pScaleFactors) const;
 
 private:
-	// Read a lossy block of pixels
-	///////////////////////////////////////////////////////////
-    inline void readBlock(streamReader* pStream, jpeg::jpegInformation& information, std::int32_t* pBuffer, jpeg::jpegChannel* pChannel) const;
+    // Read a lossy block of pixels
+    ///////////////////////////////////////////////////////////
+    inline void readBlock(jpegStreamReader& stream, jpeg::jpegInformation& information, std::int32_t* pBuffer, jpeg::jpegChannel* pChannel) const;
 
-	// Write a lossy block of pixels
-	///////////////////////////////////////////////////////////
+    // Write a lossy block of pixels
+    ///////////////////////////////////////////////////////////
     inline void writeBlock(streamWriter* pStream, jpeg::jpegInformation& information, std::int32_t* pBuffer, jpeg::jpegChannel* pChannel, bool bCalcHuffman) const;
 
     std::shared_ptr<image> copyJpegChannelsToImage(jpeg::jpegInformation& information, bool b2complement, const std::string& colorSpace) const;

@@ -3,6 +3,7 @@
 #include "testsSettings.h"
 #include <gtest/gtest.h>
 #include <limits>
+#include <thread>
 
 namespace imebra
 {
@@ -22,13 +23,13 @@ TEST(dicomCodecTest, testDicom)
     std::uint32_t sizeY(151);
 
     for(int transferSyntaxId(0); transferSyntaxId != 4; ++transferSyntaxId)
-	{
+    {
         for(std::uint32_t interleaved(interleavedStart); interleaved != 2; ++interleaved)
-		{
+        {
             for(std::uint32_t sign=0; sign != 2; sign += signStep)
-			{
+            {
                 for(std::uint32_t highBit(0); highBit != 32; highBit += highBitStep)
-				{
+                {
                     for(unsigned int colorSpaceIndex(0); colorSpaceIndex != sizeof(colorSpaces)/sizeof(colorSpaces[0]); ++colorSpaceIndex)
                     {
                         std::string colorSpace(colorSpaces[colorSpaceIndex]);
@@ -219,10 +220,10 @@ TEST(dicomCodecTest, testDicom)
 
                         }
                     }
-				}
-			}
-		}
-	} // transferSyntaxId
+                }
+            }
+        }
+    } // transferSyntaxId
 }
 
 
@@ -310,9 +311,44 @@ TEST(dicomCodecTest, testImplicitPrivateTags)
     size_t length;
     std::string privateString(privateHandler.data(&length));
     EXPECT_EQ("Private tag ", privateString); // Even length
-
-
 }
+
+
+void feedDataThread(Pipe& source, DataSet& dataSet)
+{
+    StreamWriter writer(source);
+
+    CodecFactory::save(dataSet, writer, codecType_t::dicom);
+
+    source.close(5000);
+}
+
+
+TEST(dicomCodecTest, codecFactoryPipe)
+{
+    DataSet testDataSet("1.2.840.10008.1.2");
+    testDataSet.setString(TagId(tagId_t::PatientName_0010_0010), "Patient name");
+    testDataSet.setString(TagId(std::uint16_t(11), std::uint16_t(2)), "Private tag", tagVR_t::ST);
+
+    Pipe source(1024);
+
+    std::thread feedData(imebra::tests::feedDataThread, std::ref(source), std::ref(testDataSet));
+
+    StreamReader reader(source);
+    std::unique_ptr<DataSet> loadedDataSet(CodecFactory::load(reader));
+
+    feedData.join();
+
+    EXPECT_EQ("Patient name", loadedDataSet->getString(TagId(tagId_t::PatientName_0010_0010), 0));
+
+    std::unique_ptr<ReadingDataHandlerNumeric> privateHandler(loadedDataSet->getReadingDataHandlerNumeric(TagId(std::uint16_t(11), std::uint16_t(2)), 0));
+    EXPECT_EQ(tagVR_t::UN, privateHandler->getDataType());
+
+    size_t length;
+    std::string privateString(privateHandler->data(&length));
+    EXPECT_EQ("Private tag ", privateString); // Even length
+}
+
 
 } // namespace tests
 

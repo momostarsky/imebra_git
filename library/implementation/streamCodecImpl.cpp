@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -53,25 +53,21 @@ std::shared_ptr<dataSet> streamCodec::read(std::shared_ptr<streamReader> pSource
 {
     IMEBRA_FUNCTION_START();
 
-	// Reset the codec's bits buffer
-	///////////////////////////////////////////////////////////
-	pSourceStream->resetInBitsBuffer();
-
-	// Create a new dataset
-	///////////////////////////////////////////////////////////
+    // Create a new dataset
+    ///////////////////////////////////////////////////////////
     std::shared_ptr<dataSet> pDestDataSet(std::make_shared<dataSet>());
 
-	// Read the stream
-	///////////////////////////////////////////////////////////
+    // Read the stream
+    ///////////////////////////////////////////////////////////
     readStream(pSourceStream, pDestDataSet, maxSizeBufferLoad);
 
-	// Update the charsets in the tags
-	///////////////////////////////////////////////////////////
-	pDestDataSet->updateTagsCharset();
+    // Update the charsets in the tags
+    ///////////////////////////////////////////////////////////
+    pDestDataSet->updateTagsCharset();
 
-	return pDestDataSet;
+    return pDestDataSet;
 
-	IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -88,15 +84,15 @@ void streamCodec::write(std::shared_ptr<streamWriter> pDestStream, std::shared_p
 {
     IMEBRA_FUNCTION_START();
 
-	// Update charsets tag
-	///////////////////////////////////////////////////////////
-	pSourceDataSet->updateCharsetTag();
+    // Update charsets tag
+    ///////////////////////////////////////////////////////////
+    pSourceDataSet->updateCharsetTag();
 
-	pDestStream->resetOutBitsBuffer();
-	writeStream(pDestStream, pSourceDataSet);
-	pDestStream->flushDataBuffer();
+    pDestStream->resetOutBitsBuffer();
+    writeStream(pDestStream, pSourceDataSet);
+    pDestStream->flushDataBuffer();
 
-	IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 } // namespace codecs
