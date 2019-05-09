@@ -522,7 +522,7 @@ std::shared_ptr<image> jpegImageCodec::getImage(const dataSet& sourceDataSet, st
 
     return copyJpegChannelsToImage(information, b2complement, colorSpace);
 
-    IMEBRA_FUNCTION_END_MODIFY(HuffmanReadError, CodecCorruptedFileError);
+    IMEBRA_FUNCTION_END_MODIFY(StreamEOFError, CodecCorruptedFileError);
 }
 
 

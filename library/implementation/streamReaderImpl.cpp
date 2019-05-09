@@ -78,10 +78,17 @@ streamReader::streamReader(std::shared_ptr<baseStreamInput> pControlledStream, s
 streamReader::~streamReader()
 {
     // If this is a virtual stream then read the remaining bytes
-    if(m_virtualLength != 0 && position() != m_virtualLength)
+    try
     {
-        std::vector<std::uint8_t> buffer(m_virtualLength - position());
-        read(buffer.data(), buffer.size());
+        if(m_virtualLength != 0 && position() != m_virtualLength)
+        {
+            std::vector<std::uint8_t> buffer(m_virtualLength - position());
+            read(buffer.data(), buffer.size());
+        }
+    }
+    catch(const StreamEOFError&)
+    {
+        // Avoid rethrowing
     }
 }
 

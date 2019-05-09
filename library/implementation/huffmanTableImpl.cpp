@@ -434,7 +434,7 @@ std::uint32_t huffmanTable::readHuffmanCode(codecs::jpegStreamReader& stream)
 
     }
 
-    IMEBRA_THROW(HuffmanReadError, "Invalid huffman code found while reading from a stream");
+    IMEBRA_THROW(CodecCorruptedFileError, "Invalid huffman code found while reading from a stream");
 
     IMEBRA_FUNCTION_END();
 }
