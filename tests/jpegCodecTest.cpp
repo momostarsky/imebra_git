@@ -1,6 +1,7 @@
 #include <imebra/imebra.h>
 #include <gtest/gtest.h>
 #include "buildImageForTest.h"
+#include <thread>
 
 namespace imebra
 {
@@ -11,8 +12,8 @@ namespace tests
 // A buffer initialized to a default data type should use the data type OB
 TEST(jpegCodecTest, testBaseline)
 {
-	for(int precision=0; precision != 2; ++precision)
-	{
+    for(int precision=0; precision != 2; ++precision)
+    {
         std::uint32_t bits = precision == 0 ? 7 : 11;
         std::cout << "Testing baseline jpeg (" << (bits + 1) << " bits)"<< std::endl;
 
@@ -28,15 +29,15 @@ TEST(jpegCodecTest, testBaseline)
         std::unique_ptr<Image> ybrImage(colorTransform->allocateOutputImage(*baselineImage, width, height));
         colorTransform->runTransform(*baselineImage, 0, 0, width, height, *ybrImage, 0, 0);
 
-		std::wstring fileName;
-		if(precision == 0)
-		{
+        std::wstring fileName;
+        if(precision == 0)
+        {
             fileName = L"testDicomLossyJpeg8bit.dcm";
-		}
-		else
-		{
-			fileName = L"testDicomLossyJpeg12bit.dcm";
-		}
+        }
+        else
+        {
+            fileName = L"testDicomLossyJpeg12bit.dcm";
+        }
         dataset.setImage(0, *ybrImage, imageQuality_t::veryHigh);
 
         CodecFactory::save(dataset, fileName, codecType_t::dicom);
@@ -48,12 +49,12 @@ TEST(jpegCodecTest, testBaseline)
         std::unique_ptr<Image> rgbImage(colorTransform->allocateOutputImage(*checkImage, checkWidth, checkHeight));
         colorTransform->runTransform(*checkImage, 0, 0, checkWidth, checkHeight, *rgbImage, 0, 0);
 
-		// Compare the buffers. A little difference is allowed
+        // Compare the buffers. A little difference is allowed
         double differenceRGB = compareImages(*baselineImage, *rgbImage);
         double differenceYBR = compareImages(*ybrImage, *checkImage);
         ASSERT_LE(differenceRGB, 5);
         ASSERT_LE(differenceYBR, 1);
-	}
+    }
 }
 
 
@@ -97,18 +98,27 @@ TEST(jpegCodecTest, testBaselineSubsampled)
 
                     std::unique_ptr<DataSet> readDataSet(CodecFactory::load(reader, 0xffff));
 
-                    std::unique_ptr<Image> checkImage(readDataSet->getImage(0));
+                    try
+                    {
+                        std::unique_ptr<Image> checkImage(readDataSet->getImage(0));
+                        EXPECT_TRUE(prematureEoi == 0);
 
-                    std::uint32_t checkWidth(checkImage->getWidth()), checkHeight(checkImage->getHeight());
-                    colorTransform.reset(ColorTransformsFactory::getTransform("YBR_FULL", "RGB"));
-                    std::unique_ptr<Image> rgbImage(colorTransform->allocateOutputImage(*checkImage, checkWidth, checkHeight));
-                    colorTransform->runTransform(*checkImage, 0, 0, checkWidth, checkHeight, *rgbImage, 0, 0);
+                        std::uint32_t checkWidth(checkImage->getWidth()), checkHeight(checkImage->getHeight());
+                        colorTransform.reset(ColorTransformsFactory::getTransform("YBR_FULL", "RGB"));
+                        std::unique_ptr<Image> rgbImage(colorTransform->allocateOutputImage(*checkImage, checkWidth, checkHeight));
+                        colorTransform->runTransform(*checkImage, 0, 0, checkWidth, checkHeight, *rgbImage, 0, 0);
 
-                    // Compare the buffers. A little difference is allowed
-                    double differenceRGB = compareImages(*baselineImage, *rgbImage);
-                    double differenceYBR = compareImages(*ybrImage, *checkImage);
-                    ASSERT_LE(differenceRGB, 20);
-                    ASSERT_LE(differenceYBR, prematureEoi ? 2.0 : 1.0);
+                        // Compare the buffers. A little difference is allowed
+                        double differenceRGB = compareImages(*baselineImage, *rgbImage);
+                        double differenceYBR = compareImages(*ybrImage, *checkImage);
+                        ASSERT_LE(differenceRGB, 20);
+                        ASSERT_LE(differenceYBR, prematureEoi ? 2.0 : 1.0);
+                    }
+                    catch(const StreamJpegTagInStreamError&)
+                    {
+                        EXPECT_TRUE(prematureEoi == 1);
+                    }
+
                 }
             }
         }
@@ -179,6 +189,54 @@ TEST(jpegCodecTest, testLossless)
             }
         }
     }
+}
+
+
+void feedJpegDataThread(Pipe& source, DataSet& dataSet)
+{
+    StreamWriter writer(source);
+
+    CodecFactory::save(dataSet, writer, codecType_t::jpeg);
+
+    source.close(5000);
+}
+
+
+TEST(jpegCodecTest, codecFactoryPipe)
+{
+    DataSet testDataSet("1.2.840.10008.1.2.4.50");
+
+    const std::uint32_t width = 600;
+    const std::uint32_t height = 400;
+
+    std::unique_ptr<Image> baselineImage(buildImageForTest(width, height, bitDepth_t::depthU8, 7, 30, 20, "RGB", 50));
+
+    std::unique_ptr<Transform> colorTransform(ColorTransformsFactory::getTransform("RGB", "YBR_FULL"));
+    std::unique_ptr<Image> ybrImage(colorTransform->allocateOutputImage(*baselineImage, width, height));
+    colorTransform->runTransform(*baselineImage, 0, 0, width, height, *ybrImage, 0, 0);
+    testDataSet.setImage(0, *ybrImage, imageQuality_t::veryHigh);
+
+    Pipe source(1024);
+
+    std::thread feedData(imebra::tests::feedJpegDataThread, std::ref(source), std::ref(testDataSet));
+
+    StreamReader reader(source);
+    std::unique_ptr<DataSet> loadedDataSet(CodecFactory::load(reader));
+
+    feedData.join();
+
+    std::unique_ptr<Image> checkImage(loadedDataSet->getImage(0));
+
+    std::uint32_t checkWidth(checkImage->getWidth()), checkHeight(checkImage->getHeight());
+    colorTransform.reset(ColorTransformsFactory::getTransform("YBR_FULL", "RGB"));
+    std::unique_ptr<Image> rgbImage(colorTransform->allocateOutputImage(*checkImage, checkWidth, checkHeight));
+    colorTransform->runTransform(*checkImage, 0, 0, checkWidth, checkHeight, *rgbImage, 0, 0);
+
+    // Compare the buffers. A little difference is allowed
+    double differenceRGB = compareImages(*baselineImage, *rgbImage);
+    double differenceYBR = compareImages(*ybrImage, *checkImage);
+    ASSERT_LE(differenceRGB, 5);
+    ASSERT_LE(differenceYBR, 1);
 }
 
 } // namespace tests
