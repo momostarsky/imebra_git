@@ -408,7 +408,7 @@ std::shared_ptr<image> jpegImageCodec::getImage(const dataSet& sourceDataSet, st
                 }
                 else
                 {
-                    throw;
+                    IMEBRA_THROW(CodecCorruptedFileError, "End of the jpeg stream found while reading jpeg data");
                 }
             }
             continue;

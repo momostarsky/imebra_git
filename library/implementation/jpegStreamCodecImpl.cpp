@@ -190,10 +190,10 @@ void jpegStreamCodec::readStream(std::shared_ptr<streamReader> pStream, std::sha
         {
             continue;
         }
-        do
+        while(entryByte == 0xff)
         {
             pStream->read(&entryByte, 1);
-        } while(entryByte == 0xff);
+        }
 
         if(entryByte != 0)
         {

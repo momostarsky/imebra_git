@@ -201,6 +201,8 @@ TEST(dicomCodecTest, testDicom)
                             EXPECT_EQ("test test1", sequenceItem1.getString(TagId(tagId_t::PatientName_0010_0010), 0));
                             EXPECT_THROW(sequenceItem1.getUnsignedLong(TagId(tagId_t::FileMetaInformationVersion_0002_0001), 0), MissingGroupError);
 
+                            for(unsigned int repeatLazyLoad(0); repeatLazyLoad != lazyLoad + 1; ++ repeatLazyLoad)
+                            {
                             Image checkImage0 = testDataSet.getImage(0);
                             Image checkImage1 = testDataSet.getImage(1);
                             Image checkImage2 = testDataSet.getImage(2);
@@ -217,6 +219,7 @@ TEST(dicomCodecTest, testDicom)
                             ASSERT_TRUE(identicalImages(checkImage0, images[0]));
                             ASSERT_TRUE(identicalImages(checkImage1, images[1]));
                             ASSERT_TRUE(identicalImages(checkImage2, images[2]));
+                            }
 
                         }
                     }
