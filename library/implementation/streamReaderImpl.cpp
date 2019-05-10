@@ -119,7 +119,8 @@ std::shared_ptr<streamReader> streamReader::getReader(size_t virtualLength)
     }
     std::uint8_t* pReaderBuffer = &(m_dataBuffer[m_dataBufferCurrent]);
 
-    seekForward((std::uint32_t)virtualLength);
+    // Use seek instead of seekforward to avoid copying data into the forwarded writers
+    seek(position() + virtualLength);
 
     std::shared_ptr<streamReader> reader = std::make_shared<streamReader>(
                 m_pControlledStream,
@@ -367,9 +368,26 @@ void streamReader::seekForward(std::uint32_t newPosition)
 {
     IMEBRA_FUNCTION_START();
 
-    size_t finalPosition = position() + newPosition;
+    if(m_forwardStream.empty())
+    {
+        seek(position() + (size_t)newPosition);
+    }
+    else
+    {
+        // Use read to forward the data to the write streams
+        std::uint8_t buffer[IMEBRA_STREAM_CONTROLLER_MEMORY_SIZE];
+        size_t readSize(sizeof(buffer));
+        while(newPosition != 0)
+        {
+            if(readSize > newPosition)
+            {
+                readSize = newPosition;
+            }
+            read(buffer, readSize);
+            newPosition -= (size_t)readSize;
 
-    seek(finalPosition);
+        }
+    }
 
     IMEBRA_FUNCTION_END();
 }

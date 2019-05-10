@@ -199,22 +199,25 @@ TEST(dicomCodecTest, testDicom)
                             EXPECT_EQ("test test1", sequenceItem1->getString(TagId(tagId_t::PatientName_0010_0010), 0));
                             EXPECT_THROW(sequenceItem1->getUnsignedLong(TagId(tagId_t::FileMetaInformationVersion_0002_0001), 0), MissingGroupError);
 
-                            std::unique_ptr<Image> checkImage0(testDataSet->getImage(0));
-                            std::unique_ptr<Image> checkImage1(testDataSet->getImage(1));
-                            std::unique_ptr<Image> checkImage2(testDataSet->getImage(2));
-
-                            if(checkImage0->getChannelsNumber() == 1)
+                            for(unsigned int repeatLazyLoad(0); repeatLazyLoad != lazyLoad + 1; ++ repeatLazyLoad)
                             {
-                                ASSERT_THROW(testDataSet->getTag(TagId(tagId_t::PlanarConfiguration_0028_0006)), MissingDataElementError);
-                            }
-                            else
-                            {
-                                EXPECT_EQ((std::int32_t)(1 - interleaved), testDataSet->getSignedLong(TagId(imebra::tagId_t::PlanarConfiguration_0028_0006), 0));
-                            }
+                                std::unique_ptr<Image> checkImage0(testDataSet->getImage(0));
+                                std::unique_ptr<Image> checkImage1(testDataSet->getImage(1));
+                                std::unique_ptr<Image> checkImage2(testDataSet->getImage(2));
 
-                            ASSERT_TRUE(identicalImages(*checkImage0, *dicomImage0));
-                            ASSERT_TRUE(identicalImages(*checkImage1, *dicomImage1));
-                            ASSERT_TRUE(identicalImages(*checkImage2, *dicomImage2));
+                                if(checkImage0->getChannelsNumber() == 1)
+                                {
+                                    ASSERT_THROW(testDataSet->getTag(TagId(tagId_t::PlanarConfiguration_0028_0006)), MissingDataElementError);
+                                }
+                                else
+                                {
+                                    EXPECT_EQ((std::int32_t)(1 - interleaved), testDataSet->getSignedLong(TagId(imebra::tagId_t::PlanarConfiguration_0028_0006), 0));
+                                }
+
+                                ASSERT_TRUE(identicalImages(*checkImage0, *dicomImage0));
+                                ASSERT_TRUE(identicalImages(*checkImage1, *dicomImage1));
+                                ASSERT_TRUE(identicalImages(*checkImage2, *dicomImage2));
+                            }
 
                         }
                     }

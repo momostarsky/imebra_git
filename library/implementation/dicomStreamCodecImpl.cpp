@@ -524,7 +524,7 @@ void dicomStreamCodec::readStream(std::shared_ptr<streamReader> pStream, std::sh
 
     // Skip the first 128 bytes (8 already skipped)
     ///////////////////////////////////////////////////////////
-    pStream->seekForward(120);
+    pStream->seekForward(120u);
 
     // Read the DICOM signature (DICM)
     ///////////////////////////////////////////////////////////
