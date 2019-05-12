@@ -6,6 +6,11 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Fixed bug #277 (The jpeg stream codec cannot decode files from sequence streams) as per SOP :ref:`FIXBUG_2`
+
+Version 4.5.3.1
+---------------
+
 - Fixed bug #275 (streamReader::endReached fails if the controlled stream is closed) as per SOP :ref:`FIXBUG_2`
 
 Version 4.5.2.3
