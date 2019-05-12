@@ -92,7 +92,17 @@ TEST(jpegCodecTest, testBaselineSubsampled)
                         pData[dataSize - 9] = 0xd9;
                     }
 
-                    MemoryStreamInput loadStream(savedJpeg);
+                    // Insert an unknown tag immediately after the jpeg signature
+                    ReadWriteMemory savedJpegUnknownTag(savedJpeg.size() + 128);
+                    size_t dummy;
+                    ::memcpy(savedJpegUnknownTag.data(&dummy), savedJpeg.data(&dummy), 2);
+                    ::memcpy(savedJpegUnknownTag.data(&dummy) + 130, savedJpeg.data(&dummy) + 2, savedJpeg.size() - 2);
+                    savedJpegUnknownTag.data(&dummy)[2] = (char)0xff;
+                    savedJpegUnknownTag.data(&dummy)[3] = (char)0x10;
+                    savedJpegUnknownTag.data(&dummy)[4] = 0;
+                    savedJpegUnknownTag.data(&dummy)[5] = 124;
+
+                    MemoryStreamInput loadStream(savedJpegUnknownTag);
                     StreamReader reader(loadStream);
 
                     DataSet readDataSet = CodecFactory::load(reader, 0xffff);
