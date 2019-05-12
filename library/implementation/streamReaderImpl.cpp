@@ -384,7 +384,7 @@ void streamReader::seekForward(std::uint32_t newPosition)
                 readSize = newPosition;
             }
             read(buffer, readSize);
-            newPosition -= (size_t)readSize;
+            newPosition -= (std::uint32_t)readSize;
 
         }
     }
