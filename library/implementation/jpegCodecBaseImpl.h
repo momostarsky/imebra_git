@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -22,7 +22,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <map>
 #include <list>
 #include "imageCodecImpl.h"
-
+#include "streamReaderImpl.h"
 
 // Bits used to left shift the values before they are passed to the
 // DCT
@@ -49,7 +49,7 @@ namespace codecs
 ///////////////////////////////////////////////////////////
 namespace jpeg
 {
-	class tag;
+    class tag;
 
     ///////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////
@@ -249,60 +249,60 @@ public:
     jpegCodecBase();
     virtual ~jpegCodecBase();
 
-	/// \internal
-	/// \brief This enumeration contains the tags used by
-	///         the jpeg codec
-	///////////////////////////////////////////////////////////
-	enum tTagId
-	{
-		unknown = 0xff,
+    /// \internal
+    /// \brief This enumeration contains the tags used by
+    ///         the jpeg codec
+    ///////////////////////////////////////////////////////////
+    enum tTagId
+    {
+        unknown = 0xff,
 
-		sof0 = 0xc0,
-		sof1 = 0xc1,
-		sof2 = 0xc2,
-		sof3 = 0xc3,
+        sof0 = 0xc0,
+        sof1 = 0xc1,
+        sof2 = 0xc2,
+        sof3 = 0xc3,
 
-		dht = 0xc4,
+        dht = 0xc4,
 
-		sof5 = 0xc5,
-		sof6 = 0xc6,
-		sof7 = 0xc7,
+        sof5 = 0xc5,
+        sof6 = 0xc6,
+        sof7 = 0xc7,
 
-		sof9 = 0xc9,
-		sofA = 0xca,
-		sofB = 0xcb,
+        sof9 = 0xc9,
+        sofA = 0xca,
+        sofB = 0xcb,
 
-		sofD = 0xcd,
-		sofE = 0xce,
-		sofF = 0xcf,
+        sofD = 0xcd,
+        sofE = 0xce,
+        sofF = 0xcf,
 
-		rst0 = 0xd0,
-		rst1 = 0xd1,
-		rst2 = 0xd2,
-		rst3 = 0xd3,
-		rst4 = 0xd4,
-		rst5 = 0xd5,
-		rst6 = 0xd6,
-		rst7 = 0xd7,
+        rst0 = 0xd0,
+        rst1 = 0xd1,
+        rst2 = 0xd2,
+        rst3 = 0xd3,
+        rst4 = 0xd4,
+        rst5 = 0xd5,
+        rst6 = 0xd6,
+        rst7 = 0xd7,
 
-		eoi = 0xd9,
-		sos = 0xda,
-		dqt = 0xdb,
+        eoi = 0xd9,
+        sos = 0xda,
+        dqt = 0xdb,
 
-		dri = 0xdd
-	};
+        dri = 0xdd
+    };
 
-	// Register a tag in the jpeg codec
-	///////////////////////////////////////////////////////////
-	void registerTag(tTagId tagId, std::shared_ptr<jpeg::tag> pTag);
+    // Register a tag in the jpeg codec
+    ///////////////////////////////////////////////////////////
+    void registerTag(tTagId tagId, std::shared_ptr<jpeg::tag> pTag);
 
     void writeTag(streamWriter* pDestinationStream, tTagId tagId, jpeg::jpegInformation& information) const;
 
-	// Map of the available Jpeg tags
-	///////////////////////////////////////////////////////////
-	typedef std::shared_ptr<jpeg::tag> ptrTag;
-	typedef std::map<std::uint8_t, ptrTag> tTagsMap;
-	tTagsMap m_tagsMap;
+    // Map of the available Jpeg tags
+    ///////////////////////////////////////////////////////////
+    typedef std::shared_ptr<jpeg::tag> ptrTag;
+    typedef std::map<std::uint8_t, ptrTag> tTagsMap;
+    tTagsMap m_tagsMap;
 
 };
 
@@ -326,29 +326,29 @@ namespace jpeg
 class tag
 {
 public:
-	typedef std::shared_ptr<jpeg::jpegChannel> ptrChannel;
+    typedef std::shared_ptr<jpeg::jpegChannel> ptrChannel;
 
 public:
     virtual ~tag();
 
-	// Write the tag's content.
-	// The function should call WriteLength first.
-	///////////////////////////////////////////////////////////
+    // Write the tag's content.
+    // The function should call WriteLength first.
+    ///////////////////////////////////////////////////////////
     virtual void writeTag(streamWriter* pStream, jpegInformation& information) const = 0;
 
-	// Read the tag's content. The function should call
-	//  ReadLength first.
-	///////////////////////////////////////////////////////////
-    virtual void readTag(streamReader* pStream, jpegInformation* pInformation, std::uint8_t tagEntry) const = 0;
+    // Read the tag's content. The function should call
+    //  ReadLength first.
+    ///////////////////////////////////////////////////////////
+    virtual void readTag(streamReader& stream, jpegInformation* pInformation, std::uint8_t tagEntry) const = 0;
 
 protected:
-	// Write the tag's length
-	///////////////////////////////////////////////////////////
+    // Write the tag's length
+    ///////////////////////////////////////////////////////////
     void writeLength(streamWriter* pStream, std::uint16_t length) const;
 
-	// Read the tag's length
-	///////////////////////////////////////////////////////////
-    std::uint32_t readLength(streamReader* pStream) const;
+    // Read the tag's length
+    ///////////////////////////////////////////////////////////
+    std::uint32_t readLength(streamReader& stream) const;
 };
 
 
@@ -366,13 +366,13 @@ protected:
 class tagUnknown: public tag
 {
 public:
-	// Write the tag's content.
-	///////////////////////////////////////////////////////////
+    // Write the tag's content.
+    ///////////////////////////////////////////////////////////
     virtual void writeTag(streamWriter* pStream, jpegInformation& information) const override;
 
-	// Read the tag's content.
-	///////////////////////////////////////////////////////////
-    virtual void readTag(streamReader* pStream, jpegInformation* pInformation, std::uint8_t tagEntry) const override;
+    // Read the tag's content.
+    ///////////////////////////////////////////////////////////
+    virtual void readTag(streamReader& stream, jpegInformation* pInformation, std::uint8_t tagEntry) const override;
 
 };
 
@@ -391,13 +391,13 @@ public:
 class tagSOF: public tag
 {
 public:
-	// Write the tag's content.
-	///////////////////////////////////////////////////////////
+    // Write the tag's content.
+    ///////////////////////////////////////////////////////////
     virtual void writeTag(streamWriter* pStream, jpegInformation& information) const override;
 
-	// Read the tag's content.
-	///////////////////////////////////////////////////////////
-    virtual void readTag(streamReader* pStream, jpegInformation* pInformation, std::uint8_t tagEntry) const override;
+    // Read the tag's content.
+    ///////////////////////////////////////////////////////////
+    virtual void readTag(streamReader& stream, jpegInformation* pInformation, std::uint8_t tagEntry) const override;
 
 };
 
@@ -414,13 +414,13 @@ public:
 class tagDHT: public tag
 {
 public:
-	// Write the tag's content.
-	///////////////////////////////////////////////////////////
+    // Write the tag's content.
+    ///////////////////////////////////////////////////////////
     virtual void writeTag(streamWriter* pStream, jpegInformation& information) const override;
 
-	// Read the tag's content.
-	///////////////////////////////////////////////////////////
-    virtual void readTag(streamReader* pStream, jpegInformation* pInformation, std::uint8_t tagEntry) const override;
+    // Read the tag's content.
+    ///////////////////////////////////////////////////////////
+    virtual void readTag(streamReader& stream, jpegInformation* pInformation, std::uint8_t tagEntry) const override;
 
 };
 
@@ -437,13 +437,13 @@ public:
 class tagSOS: public tag
 {
 public:
-	// Write the tag's content.
-	///////////////////////////////////////////////////////////
+    // Write the tag's content.
+    ///////////////////////////////////////////////////////////
     virtual void writeTag(streamWriter* pStream, jpegInformation& information) const override;
 
-	// Read the tag's content.
-	///////////////////////////////////////////////////////////
-    virtual void readTag(streamReader* pStream, jpegInformation* pInformation, std::uint8_t tagEntry) const override;
+    // Read the tag's content.
+    ///////////////////////////////////////////////////////////
+    virtual void readTag(streamReader& stream, jpegInformation* pInformation, std::uint8_t tagEntry) const override;
 
 };
 
@@ -460,13 +460,13 @@ public:
 class tagDQT: public tag
 {
 public:
-	// Write the tag's content.
-	///////////////////////////////////////////////////////////
+    // Write the tag's content.
+    ///////////////////////////////////////////////////////////
     virtual void writeTag(streamWriter* pStream, jpegInformation& information) const override;
 
-	// Read the tag's content.
-	///////////////////////////////////////////////////////////
-    virtual void readTag(streamReader* pStream, jpegInformation* pInformation, std::uint8_t tagEntry) const override;
+    // Read the tag's content.
+    ///////////////////////////////////////////////////////////
+    virtual void readTag(streamReader& stream, jpegInformation* pInformation, std::uint8_t tagEntry) const override;
 
 };
 
@@ -483,13 +483,13 @@ public:
 class tagDRI: public tag
 {
 public:
-	// Write the tag's content.
-	///////////////////////////////////////////////////////////
+    // Write the tag's content.
+    ///////////////////////////////////////////////////////////
     virtual void writeTag(streamWriter* pStream, jpegInformation& information) const override;
 
-	// Read the tag's content.
-	///////////////////////////////////////////////////////////
-    virtual void readTag(streamReader* pStream, jpegInformation* pInformation, std::uint8_t tagEntry) const override;
+    // Read the tag's content.
+    ///////////////////////////////////////////////////////////
+    virtual void readTag(streamReader& stream, jpegInformation* pInformation, std::uint8_t tagEntry) const override;
 
 };
 
@@ -506,13 +506,13 @@ public:
 class tagRST: public tag
 {
 public:
-	// Write the tag's content.
-	///////////////////////////////////////////////////////////
+    // Write the tag's content.
+    ///////////////////////////////////////////////////////////
     virtual void writeTag(streamWriter* pStream, jpegInformation& information) const override;
 
-	// Read the tag's content.
-	///////////////////////////////////////////////////////////
-    virtual void readTag(streamReader* pStream, jpegInformation* pInformation, std::uint8_t tagEntry) const override;
+    // Read the tag's content.
+    ///////////////////////////////////////////////////////////
+    virtual void readTag(streamReader& stream, jpegInformation* pInformation, std::uint8_t tagEntry) const override;
 
 };
 
@@ -529,17 +529,230 @@ public:
 class tagEOI: public tag
 {
 public:
-	// Write the tag's content.
-	///////////////////////////////////////////////////////////
+    // Write the tag's content.
+    ///////////////////////////////////////////////////////////
     virtual void writeTag(streamWriter* pStream, jpegInformation& information) const override;
 
-	// Read the tag's content.
-	///////////////////////////////////////////////////////////
-    virtual void readTag(streamReader* pStream, jpegInformation* pInformation, std::uint8_t tagEntry) const override;
+    // Read the tag's content.
+    ///////////////////////////////////////////////////////////
+    virtual void readTag(streamReader& stream, jpegInformation* pInformation, std::uint8_t tagEntry) const override;
 
 };
 
 } // namespace jpegCodec
+
+
+class jpegStreamReader
+{
+public:
+    /// \brief Build a streamReader and connect it to an
+    ///         existing stream.
+    ///
+    ///////////////////////////////////////////////////////////
+    jpegStreamReader(std::shared_ptr<streamReader> pStreamReader);
+
+    /// \brief Read the specified amount of bits from the
+    ///         stream.
+    ///
+    /// The functions uses a special bit pointer to keep track
+    ///  of the bytes that haven't been completly read.
+    ///
+    /// The function throws a streamExceptionRead exception if
+    ///  an error occurs.
+    ///
+    /// @param bitsNum   the number of bits to read.
+    ///                  The function can read 32 bits maximum
+    /// @return an integer containing the fetched bits, right
+    ///                   aligned
+    ///
+    ///////////////////////////////////////////////////////////
+    inline std::uint32_t readBits(size_t bitsNum)
+    {
+        IMEBRA_FUNCTION_START();
+
+        const size_t bufferSize(8);
+
+        // All the requested bits are already in the buffer.
+        // Just return them.
+        ///////////////////////////////////////////////////////////
+        if(bitsNum <= m_inBitsNum)
+        {
+            std::uint32_t returnValue((m_inBitsBuffer & 0x00ff) >> (bufferSize - bitsNum));
+            m_inBitsBuffer <<= bitsNum;
+            m_inBitsNum -= bitsNum;
+            return returnValue;
+        }
+
+        // Fill a local variable with the read bits
+        ///////////////////////////////////////////////////////////
+        std::uint32_t returnValue(0);
+
+        // Some bits are in the bits buffer, copy them and reset
+        //  the bits buffer
+        ///////////////////////////////////////////////////////////
+        if(m_inBitsNum != 0)
+        {
+            bitsNum -= m_inBitsNum;
+            returnValue = ((std::uint32_t)((m_inBitsBuffer & 0xff) >> (bufferSize - m_inBitsNum))) << bitsNum;
+        }
+
+        // Read the requested number of bits
+        ///////////////////////////////////////////////////////////
+        for(;;)
+        {
+            if(bitsNum <= 8)
+            {
+                m_inBitsBuffer = readByte();
+                returnValue |= (m_inBitsBuffer >> (bufferSize - bitsNum));
+                m_inBitsBuffer <<= bitsNum;
+                m_inBitsNum = 8 - bitsNum;
+                return returnValue;
+            }
+
+            bitsNum -= 8;
+            returnValue |= ((std::uint32_t)readByte()) << bitsNum;
+        }
+
+        IMEBRA_FUNCTION_END();
+    }
+
+    /// \brief Read one bit from the stream.
+    ///
+    /// The returned buffer will store the value 0 or 1,
+    ///  depending on the value of the read bit.
+    ///
+    /// The function throws a streamExceptionRead if an error
+    ///  occurs.
+    ///
+    /// @return the value of the read bit (1 or 0)
+    ///
+    ///////////////////////////////////////////////////////////
+    inline std::uint32_t readBit()
+    {
+        IMEBRA_FUNCTION_START();
+
+        if(m_inBitsNum == 0)
+        {
+            m_inBitsBuffer = readByte();
+            m_inBitsNum = 8;
+        }
+        --m_inBitsNum;
+        m_inBitsBuffer <<= 1;
+        return (m_inBitsBuffer >> 8) & 1;
+
+        IMEBRA_FUNCTION_END();
+    }
+
+
+    /// \brief Read one bit from the stream and add its value
+    ///         to the specified buffer.
+    ///
+    /// The buffer pointed by the pBuffer parameter is
+    ///  left-shifted before the read bit is inserted in the
+    ///  least significant bit of the buffer.
+    ///
+    /// The function throws a streamExceptionRead if an error
+    ///  occurs.
+    ///
+    /// @param pBuffer   a pointer to a std::uint32_t value that
+    ///                   will be left shifted and filled
+    ///                   with the read bit.
+    ///
+    ///////////////////////////////////////////////////////////
+    inline void addBit(std::uint32_t* const pBuffer)
+    {
+        IMEBRA_FUNCTION_START();
+
+        (*pBuffer) <<= 1;
+
+        if(m_inBitsNum == 0)
+        {
+            m_inBitsBuffer = readByte();
+            m_inBitsNum = 8;
+        }
+        m_inBitsBuffer <<= 1;
+        --m_inBitsNum;
+        *pBuffer |= (m_inBitsBuffer >> 8) & 1;
+
+        IMEBRA_FUNCTION_END();
+    }
+
+    /// \brief Reset the bit pointer used by readBits(),
+    ///         readBit() and addBit().
+    ///
+    /// A subsequent call to readBits(), readBit and
+    ///  addBit() will read data from a byte-aligned boundary.
+    ///
+    ///////////////////////////////////////////////////////////
+    inline void resetInBitsBuffer()
+    {
+        m_inBitsNum = 0;
+    }
+
+    /// \brief Read a single byte from the stream, parsing it
+    ///         if m_pTagByte is not zero.
+    ///
+    /// The read byte is stored in the buffer pointed by the
+    ///  parameter pBuffer.
+    ///
+    /// If m_pTagByte is zero, then the function reads a byte
+    ///  and returns true.
+    ///
+    /// If m_pTagByte is not zero, then the function skips
+    ///  all the bytes in the stream that have the value 0xFF.
+    /// If the function doesn't have to skip any 0xFF bytes,
+    ///  then the function just read a byte and returns true.
+    ///
+    /// If one or more 0xFF bytes have been skipped, then
+    ///  the function returns a value depending on the byte
+    ///  that follows the 0xFF run:
+    /// - if the byte is 0, then the function fill the pBuffer
+    ///    parameter with a value 0xFF and returns true
+    /// - if the byte is not 0, then that value is stored in
+    ///    the location pointed by m_pTagByte and the function
+    ///    returns false.
+    ///
+    /// This mechanism is used to parse the jpeg tags in a
+    ///  stream.
+    ///
+    /// @return          the read byte
+    ///
+    ///////////////////////////////////////////////////////////
+    inline std::uint8_t readByte()
+    {
+        IMEBRA_FUNCTION_START();
+
+        // Read one byte. Return immediatly if the tags are not
+        //  activated
+        ///////////////////////////////////////////////////////////
+        std::uint8_t byte;
+        m_pStreamReader->read(&byte, 1);
+        if(byte != 0xff)
+        {
+            return byte;
+        }
+        while(byte == 0xff)
+        {
+            m_pStreamReader->read(&byte, 1);
+        }
+
+        if(byte == 0)
+        {
+            return 0xff;
+        }
+
+        IMEBRA_THROW(StreamJpegTagInStreamError, "Corrupted jpeg stream");
+
+        IMEBRA_FUNCTION_END();
+    }
+
+private:
+    std::shared_ptr<streamReader> m_pStreamReader;
+
+    unsigned int m_inBitsBuffer;
+    size_t m_inBitsNum;
+
+};
 
 } // namespace codecs
 

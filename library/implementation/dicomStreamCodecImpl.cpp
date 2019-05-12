@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -524,7 +524,7 @@ void dicomStreamCodec::readStream(std::shared_ptr<streamReader> pStream, std::sh
 
     // Skip the first 128 bytes (8 already skipped)
     ///////////////////////////////////////////////////////////
-    pStream->seekForward(120);
+    pStream->seekForward(120u);
 
     // Read the DICOM signature (DICM)
     ///////////////////////////////////////////////////////////
@@ -550,7 +550,7 @@ void dicomStreamCodec::readStream(std::shared_ptr<streamReader> pStream, std::sh
                 oldDicomSignature[1]!=0x0 ||
                 oldDicomSignature[3]!=0x0)
         {
-            IMEBRA_THROW(CodecWrongFormatError, "detected a wrong format (checked old NEMA signature)");
+            IMEBRA_THROW(CodecWrongFormatError, "Not a DICOM file");
         }
 
         // Go back to the beginning of the file
