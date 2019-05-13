@@ -93,9 +93,6 @@
     } catch(const imebra::DicomDirError& e) {
         std::string error(imebra::ExceptionsManager::getExceptionTrace());
         SWIG_exception(SWIG_RuntimeError, error.c_str());
-    } catch(const imebra::HuffmanError& e) {
-        std::string error(imebra::ExceptionsManager::getExceptionTrace());
-        SWIG_exception(SWIG_IOError, error.c_str());
     } catch(const imebra::ImageError& e) {
         std::string error(imebra::ExceptionsManager::getExceptionTrace());
         SWIG_exception(SWIG_ValueError, error.c_str());
