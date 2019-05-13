@@ -141,9 +141,9 @@ TEST(pipeTest, sendReceiveCloseNoWait)
 }
 
 
-void feedDatasetThread(Pipe& source, DataSet& dataSet, unsigned int closeWait)
+void feedDatasetThread(PipeStream& source, DataSet& dataSet, unsigned int closeWait)
 {
-    StreamWriter writer(source);
+    StreamWriter writer(source.getStreamOutput());
 
     CodecFactory::save(dataSet, writer, codecType_t::dicom);
 
@@ -153,20 +153,20 @@ void feedDatasetThread(Pipe& source, DataSet& dataSet, unsigned int closeWait)
 
 TEST(pipeTest, sendReceiveDataSet)
 {
-    Pipe source(1024);
+    PipeStream source(1024);
 
-    DataSet testDataSet;
+    MutableDataSet testDataSet;
 
     testDataSet.setString(TagId(tagId_t::PatientName_0010_0010), "TEST PATIENT");
 
     std::thread feedData(imebra::tests::feedDatasetThread, std::ref(source), std::ref(testDataSet), 5000);
 
 
-    StreamReader reader(source);
+    StreamReader reader(source.getStreamInput());
 
-    std::unique_ptr<DataSet> receivedDataSet(CodecFactory::load(reader));
+    DataSet receivedDataSet(CodecFactory::load(reader));
 
-    ASSERT_EQ(testDataSet.getString(TagId(tagId_t::PatientName_0010_0010), 0), receivedDataSet->getString(TagId(tagId_t::PatientName_0010_0010), 0));
+    ASSERT_EQ(testDataSet.getString(TagId(tagId_t::PatientName_0010_0010), 0), receivedDataSet.getString(TagId(tagId_t::PatientName_0010_0010), 0));
 
     feedData.join();
 }
