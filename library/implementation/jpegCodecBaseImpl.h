@@ -741,7 +741,7 @@ public:
             return 0xff;
         }
 
-        IMEBRA_THROW(StreamJpegTagInStreamError, "Corrupted jpeg stream");
+        IMEBRA_THROW(CodecCorruptedFileError, "Corrupted jpeg stream (tag in data stream)");
 
         IMEBRA_FUNCTION_END();
     }

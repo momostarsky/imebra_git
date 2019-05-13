@@ -158,18 +158,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 @interface ImebraDicomDirUnknownDirectoryRecordTypeError: ImebraDicomDirError
 @end
 
-@interface ImebraHuffmanError: NSError
-@end
-
-@interface ImebraHuffmanCreateTableError: ImebraHuffmanError
-@end
-
-@interface ImebraHuffmanReadError : ImebraHuffmanError
-@end
-
-@interface ImebraHuffmanWriteError : ImebraHuffmanError
-@end
-
 @interface ImebraImageError: NSError
 @end
 
@@ -213,9 +201,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 @end
 
 @interface ImebraStreamClosedError: ImebraStreamEOFError
-@end
-
-@interface ImebraStreamJpegTagInStreamError : ImebraStreamError
 @end
 
 @interface ImebraModalityVOILUTError: ImebraTransformError

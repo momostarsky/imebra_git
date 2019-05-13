@@ -147,18 +147,6 @@ DicomDirNoEntryError::DicomDirNoEntryError(const std::string& message): DicomDir
 DicomDirUnknownDirectoryRecordTypeError::DicomDirUnknownDirectoryRecordTypeError(const std::string& message): DicomDirError(message)
 {}
 
-HuffmanError::HuffmanError(const std::string& message): std::runtime_error(message)
-{}
-
-HuffmanCreateTableError::HuffmanCreateTableError(const std::string& message): HuffmanError(message)
-{}
-
-HuffmanReadError::HuffmanReadError(const std::string& message): HuffmanError(message)
-{}
-
-HuffmanWriteError::HuffmanWriteError(const std::string& message): HuffmanError(message)
-{}
-
 ImageError::ImageError(const std::string& message): std::runtime_error(message)
 {}
 
@@ -212,9 +200,6 @@ TCPAddressAlreadyInUse::TCPAddressAlreadyInUse(const std::string& message): Stre
 {}
 
 PermissionDeniedError::PermissionDeniedError(const std::string& message): std::runtime_error(message)
-{}
-
-StreamJpegTagInStreamError::StreamJpegTagInStreamError(const std::string& message): StreamError(message)
 {}
 
 AddressError::AddressError(const std::string &message): std::runtime_error(message)

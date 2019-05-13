@@ -317,9 +317,9 @@ TEST(dicomCodecTest, testImplicitPrivateTags)
 }
 
 
-void feedDataThread(Pipe& source, DataSet& dataSet)
+void feedDataThread(PipeStream& source, DataSet& dataSet)
 {
-    StreamWriter writer(source);
+    StreamWriter writer(source.getStreamOutput());
 
     CodecFactory::save(dataSet, writer, codecType_t::dicom);
 
@@ -329,26 +329,26 @@ void feedDataThread(Pipe& source, DataSet& dataSet)
 
 TEST(dicomCodecTest, codecFactoryPipe)
 {
-    DataSet testDataSet("1.2.840.10008.1.2");
+    MutableDataSet testDataSet("1.2.840.10008.1.2");
     testDataSet.setString(TagId(tagId_t::PatientName_0010_0010), "Patient name");
     testDataSet.setString(TagId(std::uint16_t(11), std::uint16_t(2)), "Private tag", tagVR_t::ST);
 
-    Pipe source(1024);
+    PipeStream source(1024);
 
     std::thread feedData(imebra::tests::feedDataThread, std::ref(source), std::ref(testDataSet));
 
-    StreamReader reader(source);
-    std::unique_ptr<DataSet> loadedDataSet(CodecFactory::load(reader));
+    StreamReader reader(source.getStreamInput());
+    DataSet loadedDataSet(CodecFactory::load(reader));
 
     feedData.join();
 
-    EXPECT_EQ("Patient name", loadedDataSet->getString(TagId(tagId_t::PatientName_0010_0010), 0));
+    EXPECT_EQ("Patient name", loadedDataSet.getString(TagId(tagId_t::PatientName_0010_0010), 0));
 
-    std::unique_ptr<ReadingDataHandlerNumeric> privateHandler(loadedDataSet->getReadingDataHandlerNumeric(TagId(std::uint16_t(11), std::uint16_t(2)), 0));
-    EXPECT_EQ(tagVR_t::UN, privateHandler->getDataType());
+    ReadingDataHandlerNumeric privateHandler(loadedDataSet.getReadingDataHandlerNumeric(TagId(std::uint16_t(11), std::uint16_t(2)), 0));
+    EXPECT_EQ(tagVR_t::UN, privateHandler.getDataType());
 
     size_t length;
-    std::string privateString(privateHandler->data(&length));
+    std::string privateString(privateHandler.data(&length));
     EXPECT_EQ("Private tag ", privateString); // Even length
 }
 

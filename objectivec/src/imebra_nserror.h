@@ -208,22 +208,6 @@ namespace imebra
     {\
         imebra::setNSError(e, pError, [ImebraDicomDirError class]);\
     }\
-    catch(imebra::HuffmanCreateTableError& e)\
-    {\
-        imebra::setNSError(e, pError, [ImebraHuffmanCreateTableError class]);\
-    }\
-    catch(imebra::HuffmanReadError& e)\
-    {\
-        imebra::setNSError(e, pError, [ImebraHuffmanReadError class]);\
-    }\
-    catch(imebra::HuffmanWriteError& e)\
-    {\
-        imebra::setNSError(e, pError, [ImebraHuffmanWriteError class]);\
-    }\
-    catch(imebra::HuffmanError& e)\
-    {\
-        imebra::setNSError(e, pError, [ImebraHuffmanError class]);\
-    }\
     catch(imebra::ImageUnknownDepthError& e)\
     {\
         imebra::setNSError(e, pError, [ImebraImageUnknownDepthError class]);\
@@ -287,10 +271,6 @@ namespace imebra
     catch(imebra::StreamEOFError& e)\
     {\
         imebra::setNSError(e, pError, [ImebraStreamEOFError class]);\
-    }\
-    catch(imebra::StreamJpegTagInStreamError& e)\
-    {\
-        imebra::setNSError(e, pError, [ImebraStreamJpegTagInStreamError class]);\
     }\
     catch(imebra::DicomCodecDepthLimitReachedError& e)\
     {\

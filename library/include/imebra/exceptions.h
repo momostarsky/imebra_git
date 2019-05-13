@@ -801,69 +801,6 @@ public:
 };
 
 
-/// \brief Base class for the exceptions thrown by the Huffman codec.
-///
-///////////////////////////////////////////////////////////////////////////////
-class IMEBRA_API HuffmanError: public std::runtime_error
-{
-public:
-    /// \brief Constructor.
-    ///
-    /// \param message the message to store into the exception
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    explicit HuffmanError(const std::string& message);
-};
-
-
-/// \brief Exception thrown when the Huffman codec cannot create the Huffman
-///        codes.
-///
-///////////////////////////////////////////////////////////////////////////////
-class IMEBRA_API HuffmanCreateTableError: public HuffmanError
-{
-public:
-    /// \brief Constructor.
-    ///
-    /// \param message the message to store into the exception
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    explicit HuffmanCreateTableError(const std::string& message);
-};
-
-
-/// \brief Exception thrown when the Huffman codec tries to read an invalid
-///        code.
-///
-///////////////////////////////////////////////////////////////////////////////
-class IMEBRA_API HuffmanReadError : public HuffmanError
-{
-public:
-    /// \brief Constructor.
-    ///
-    /// \param message the message to store into the exception
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    explicit HuffmanReadError(const std::string& message);
-};
-
-
-/// \brief Exception thrown when the Huffman codec tries to write an invalid
-///        code.
-///
-///////////////////////////////////////////////////////////////////////////////
-class IMEBRA_API HuffmanWriteError : public HuffmanError
-{
-public:
-    /// \brief Constructor.
-    ///
-    /// \param message the message to store into the exception
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    explicit HuffmanWriteError(const std::string& message);
-};
-
-
 /// \brief This is the base class for the exceptions thrown by the Image class.
 ///
 ///////////////////////////////////////////////////////////////////////////////
@@ -1089,21 +1026,6 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit StreamClosedError(const std::string& message);
-};
-
-
-/// \brief Exception thrown when a jpeg tag is found but wasn't expected.
-///
-///////////////////////////////////////////////////////////////////////////////
-class IMEBRA_API StreamJpegTagInStreamError : public StreamError
-{
-public:
-    /// \brief Constructor.
-    ///
-    /// \param message the message to store into the exception
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    explicit StreamJpegTagInStreamError(const std::string& message);
 };
 
 

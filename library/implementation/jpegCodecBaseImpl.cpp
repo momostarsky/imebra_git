@@ -1170,59 +1170,52 @@ void tagDHT::readTag(streamReader& stream, jpegInformation* pInformation, std::u
     /////////////////////////////////////////////////////////////////
     std::uint8_t byte;
 
-    try
+    // Read all the defined tables
+    /////////////////////////////////////////////////////////////////
+    while(!tagReader->endReached())
     {
-        // Read all the defined tables
+        // Read the table's ID
         /////////////////////////////////////////////////////////////////
-        while(!tagReader->endReached())
+        tagReader->read(&byte, 1);
+
+        // Get a pointer to the right table
+        /////////////////////////////////////////////////////////////////
+        std::shared_ptr<huffmanTable> pHuffman;
+        if((byte & 0xf0) == 0)
+            pHuffman = pInformation->m_pHuffmanTableDC[byte & 0xf];
+        else
+            pHuffman = pInformation->m_pHuffmanTableAC[byte & 0xf];
+
+        // Reset the table
+        /////////////////////////////////////////////////////////////////
+        pHuffman->reset();
+
+        // Read the number of codes per length
+        /////////////////////////////////////////////////////////////////
+        for(std::uint32_t scanLength=0; scanLength != 16; )
         {
-            // Read the table's ID
-            /////////////////////////////////////////////////////////////////
             tagReader->read(&byte, 1);
+            pHuffman->setValuesPerLength(++scanLength, (std::uint32_t)byte);
+        }
 
-            // Get a pointer to the right table
-            /////////////////////////////////////////////////////////////////
-            std::shared_ptr<huffmanTable> pHuffman;
-            if((byte & 0xf0) == 0)
-                pHuffman = pInformation->m_pHuffmanTableDC[byte & 0xf];
-            else
-                pHuffman = pInformation->m_pHuffmanTableAC[byte & 0xf];
+        // Used to store the values into the table
+        /////////////////////////////////////////////////////////////////
+        std::uint32_t valueIndex = 0;
 
-            // Reset the table
-            /////////////////////////////////////////////////////////////////
-            pHuffman->reset();
-
-            // Read the number of codes per length
-            /////////////////////////////////////////////////////////////////
-            for(std::uint32_t scanLength=0; scanLength != 16; )
+        // Read all the values and store them into the huffman table
+        /////////////////////////////////////////////////////////////////
+        for(std::uint32_t scanLength = 0; scanLength != 16; ++scanLength)
+        {
+            for(std::uint32_t scanValues = 0; scanValues != pHuffman->getValuesPerLength(scanLength + 1); ++scanValues)
             {
                 tagReader->read(&byte, 1);
-                pHuffman->setValuesPerLength(++scanLength, (std::uint32_t)byte);
+                pHuffman->addOrderedValue(valueIndex++, (std::uint32_t)byte);
             }
-
-            // Used to store the values into the table
-            /////////////////////////////////////////////////////////////////
-            std::uint32_t valueIndex = 0;
-
-            // Read all the values and store them into the huffman table
-            /////////////////////////////////////////////////////////////////
-            for(std::uint32_t scanLength = 0; scanLength != 16; ++scanLength)
-            {
-                for(std::uint32_t scanValues = 0; scanValues != pHuffman->getValuesPerLength(scanLength + 1); ++scanValues)
-                {
-                    tagReader->read(&byte, 1);
-                    pHuffman->addOrderedValue(valueIndex++, (std::uint32_t)byte);
-                }
-            }
-
-            // Calculate the huffman tables
-            /////////////////////////////////////////////////////////////////
-            pHuffman->calcHuffmanTables();
         }
-    }
-    catch(const HuffmanCreateTableError& e)
-    {
-        IMEBRA_THROW(CodecCorruptedFileError, e.what());
+
+        // Calculate the huffman tables
+        /////////////////////////////////////////////////////////////////
+        pHuffman->calcHuffmanTables();
     }
 
     IMEBRA_FUNCTION_END_MODIFY(StreamEOFError, CodecCorruptedFileError);

@@ -11,8 +11,8 @@ namespace tests
 // A buffer initialized to a default data type should use the data type OB
 TEST(jpegCodecTest, testBaseline)
 {
-	for(int precision=0; precision != 2; ++precision)
-	{
+    for(int precision=0; precision != 2; ++precision)
+    {
         std::uint32_t bits = precision == 0 ? 7 : 11;
         std::cout << "Testing baseline jpeg (" << (bits + 1) << " bits)"<< std::endl;
 
@@ -28,15 +28,15 @@ TEST(jpegCodecTest, testBaseline)
         MutableImage ybrImage = colorTransform.allocateOutputImage(baselineImage, width, height);
         colorTransform.runTransform(baselineImage, 0, 0, width, height, ybrImage, 0, 0);
 
-		std::wstring fileName;
-		if(precision == 0)
-		{
+        std::wstring fileName;
+        if(precision == 0)
+        {
             fileName = L"testDicomLossyJpeg8bit.dcm";
-		}
-		else
-		{
-			fileName = L"testDicomLossyJpeg12bit.dcm";
-		}
+        }
+        else
+        {
+            fileName = L"testDicomLossyJpeg12bit.dcm";
+        }
         dataset.setImage(0, ybrImage, imageQuality_t::veryHigh);
 
         CodecFactory::save(dataset, fileName, codecType_t::dicom);
@@ -48,12 +48,12 @@ TEST(jpegCodecTest, testBaseline)
         MutableImage rgbImage = colorTransform.allocateOutputImage(checkImage, checkWidth, checkHeight);
         colorTransform.runTransform(checkImage, 0, 0, checkWidth, checkHeight, rgbImage, 0, 0);
 
-		// Compare the buffers. A little difference is allowed
+        // Compare the buffers. A little difference is allowed
         double differenceRGB = compareImages(baselineImage, rgbImage);
         double differenceYBR = compareImages(ybrImage, checkImage);
         ASSERT_LE(differenceRGB, 5);
         ASSERT_LE(differenceYBR, 1);
-	}
+    }
 }
 
 
@@ -93,7 +93,7 @@ TEST(jpegCodecTest, testBaselineSubsampled)
                     }
 
                     // Insert an unknown tag immediately after the jpeg signature
-                    ReadWriteMemory savedJpegUnknownTag(savedJpeg.size() + 128);
+                    MutableMemory savedJpegUnknownTag(savedJpeg.size() + 128);
                     size_t dummy;
                     ::memcpy(savedJpegUnknownTag.data(&dummy), savedJpeg.data(&dummy), 2);
                     ::memcpy(savedJpegUnknownTag.data(&dummy) + 130, savedJpeg.data(&dummy) + 2, savedJpeg.size() - 2);
@@ -107,18 +107,27 @@ TEST(jpegCodecTest, testBaselineSubsampled)
 
                     DataSet readDataSet = CodecFactory::load(reader, 0xffff);
 
-                    Image checkImage = readDataSet.getImage(0);
+                    try
+                    {
+                        Image checkImage = readDataSet.getImage(0);
+                        ASSERT_TRUE(prematureEoi == 0);
 
-                    std::uint32_t checkWidth(checkImage.getWidth()), checkHeight(checkImage.getHeight());
-                    colorTransform = ColorTransformsFactory::getTransform("YBR_FULL", "RGB");
-                    MutableImage rgbImage = colorTransform.allocateOutputImage(checkImage, checkWidth, checkHeight);
-                    colorTransform.runTransform(checkImage, 0, 0, checkWidth, checkHeight, rgbImage, 0, 0);
+                        std::uint32_t checkWidth(checkImage.getWidth()), checkHeight(checkImage.getHeight());
+                        colorTransform = ColorTransformsFactory::getTransform("YBR_FULL", "RGB");
+                        MutableImage rgbImage = colorTransform.allocateOutputImage(checkImage, checkWidth, checkHeight);
+                        colorTransform.runTransform(checkImage, 0, 0, checkWidth, checkHeight, rgbImage, 0, 0);
 
-                    // Compare the buffers. A little difference is allowed
-                    double differenceRGB = compareImages(baselineImage, rgbImage);
-                    double differenceYBR = compareImages(ybrImage, checkImage);
-                    ASSERT_LE(differenceRGB, 20);
-                    ASSERT_LE(differenceYBR, prematureEoi ? 2.0 : 1.0);
+                        // Compare the buffers. A little difference is allowed
+                        double differenceRGB = compareImages(baselineImage, rgbImage);
+                        double differenceYBR = compareImages(ybrImage, checkImage);
+                        ASSERT_LE(differenceRGB, 20);
+                        ASSERT_LE(differenceYBR, prematureEoi ? 2.0 : 1.0);
+                    }
+                    catch(const CodecCorruptedFileError&)
+                    {
+                        ASSERT_TRUE(prematureEoi == 1);
+                    }
+
                 }
             }
         }

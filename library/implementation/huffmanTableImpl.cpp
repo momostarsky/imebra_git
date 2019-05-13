@@ -25,6 +25,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #include <list>
 #include <string.h>
+#include <stdexcept>
 
 namespace imebra
 {
@@ -171,7 +172,7 @@ void huffmanTable::setValuesPerLength(std::uint32_t length, std::uint32_t numVal
 
     if(length >= m_valuesPerLength.size())
     {
-        IMEBRA_THROW(HuffmanCreateTableError, "Huffman code length too big");
+        IMEBRA_THROW(CodecCorruptedFileError, "Huffman code length too big");
     }
     m_valuesPerLength[length] = numValues;
 
@@ -184,7 +185,7 @@ void huffmanTable::addOrderedValue(size_t index, std::uint32_t value)
 
     if(index >= m_orderedValues.size())
     {
-        IMEBRA_THROW(HuffmanCreateTableError, "Too many values in the huffman table");
+        IMEBRA_THROW(CodecCorruptedFileError, "Too many values in the huffman table");
     }
     m_orderedValues[index] = value;
 
@@ -455,7 +456,7 @@ void huffmanTable::writeHuffmanCode(const std::uint32_t code, streamWriter* pStr
 
     if(m_valuesToHuffmanLength[code] == 0)
     {
-        IMEBRA_THROW(HuffmanWriteError, "Trying to write an invalid huffman code");
+        IMEBRA_THROW(std::logic_error, "Trying to write an invalid huffman code");
     }
     pStream->writeBits(m_valuesToHuffman[code], m_valuesToHuffmanLength[code]);
 
