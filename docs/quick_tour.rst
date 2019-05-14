@@ -943,8 +943,8 @@ We then send the command and wait for a response:
 
     // Let's prepare a dataset to store on the SCP
     imebra::DataSet payload(dimse.getTransferSyntax("1.2.840.10008.5.1.4.1.1.4.1")); // We will use the negotiated transfer syntax
-    payload.setString(TagId(tagId_t::SOPInstanceUID_0008_0018), "1.1.1.1");
-    payload.setString(TagId(tagId_t::SOPClassUID_0008_0016), "1.2.840.10008.5.1.4.1.1.4.1");
+    payload.setString(TagId(tagId_t::MediaStorageSOPInstanceUID_0002_0003), "1.1.1.1");
+    payload.setString(TagId(tagId_t::MediaStorageSOPClassUID_0002_0002), "1.2.840.10008.5.1.4.1.1.4.1");
     payload.setString(TagId(tagId_t::PatientName_0010_0010),"Patient^Test");
     
     //
@@ -955,8 +955,8 @@ We then send the command and wait for a response:
                 "1.2.840.10008.5.1.4.1.1.4.1", //< one of the negotiated abstract syntaxes
                 dimse.getNextCommandID(),
                 dimseCommandPriority_t::medium,
-                payload.getString(TagId(tagId_t::SOPClassUID_0008_0016), 0),
-                payload.getString(TagId(tagId_t::SOPInstanceUID_0008_0018), 0),
+                payload.getString(TagId(tagId_t::MediaStorageSOPClassUID_0002_0002), 0),
+                payload.getString(TagId(tagId_t::MediaStorageSOPInstanceUID_0002_0003), 0),
                 "",
                 0,
                 payload);
