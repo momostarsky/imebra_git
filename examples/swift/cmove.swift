@@ -109,7 +109,6 @@ do
     // Tell that we want to use C-MOVE
     let context = ImebraPresentationContext(abstractSyntax: ImebraUidPatientRootQueryRetrieveInformationModelMOVE_1_2_840_10008_5_1_4_1_2_1_2)
     context?.addTransferSyntax(ImebraUidImplicitVRLittleEndian_1_2_840_10008_1_2)
-    context?.addTransferSyntax(ImebraUidExplicitVRLittleEndian_1_2_840_10008_1_2_1)
     let presentationContexts = ImebraPresentationContexts()
     presentationContexts?.add(context)
 
@@ -131,10 +130,10 @@ do
     try identifierDataset!.setString(ImebraTagId(id: ImebraTagId_t.tagSOPInstanceUID_0008_0018), newValue: instanceUID)
 
     // Prepare a C-MOVE command and send it to the SCP
-    let moveCommand = ImebraCMoveCommand(abstractSyntax: classUID, 
+    let moveCommand = ImebraCMoveCommand(abstractSyntax: ImebraUidPatientRootQueryRetrieveInformationModelMOVE_1_2_840_10008_5_1_4_1_2_1_2, 
                                          messageID: scuDimseService!.getNextCommandID(),
                                          priority: ImebraDimseCommandPriority_t.priorityMedium,
-                                         affectedSopClassUid: ImebraUidEnhancedMRImageStorage_1_2_840_10008_5_1_4_1_1_4_1,
+                                         affectedSopClassUid: classUID,
                                          destinationAET:destinationAET, 
                                          identifier: identifierDataset)
 
