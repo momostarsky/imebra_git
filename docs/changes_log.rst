@@ -7,6 +7,7 @@ Version |release| (this version)
 --------------------------------
 
 - Fixed bug #244 (The C-STORE example uses the wrong tags to retrieve the SOP class and instance UIDs) as per SOP :ref:`FIXBUG_2`
+- Fixed bug #279 (The swift example for cmove uses the wrong abstract syntax/transfer syntax in the cmove command) as per SOP :ref:`FIXBUG_2`
 
 Version 4.5.4.1
 ---------------
