@@ -501,10 +501,6 @@ void dicomStreamCodec::readStream(std::shared_ptr<streamReader> pStream, std::sh
 {
     IMEBRA_FUNCTION_START();
 
-    // Save the starting position
-    ///////////////////////////////////////////////////////////
-    size_t position = pStream->position();
-
     // This flag signals a failure
     ///////////////////////////////////////////////////////////
     bool bFailed=false;
@@ -552,10 +548,6 @@ void dicomStreamCodec::readStream(std::shared_ptr<streamReader> pStream, std::sh
         {
             IMEBRA_THROW(CodecWrongFormatError, "Not a DICOM file");
         }
-
-        // Go back to the beginning of the file
-        ///////////////////////////////////////////////////////////
-        pStream->seek(position);
 
         // Set "explicit data type" to true if a valid data type
         //  is found
