@@ -276,7 +276,7 @@ void jpegStreamCodec::readStream(std::shared_ptr<streamReader> pStream, std::sha
     /////////////////////////////////////////////////////////////////
     if(information.m_channelsMap.size() != 1)
     {
-        pDataSet->setUnsignedLong(0x0028, 0x0, 0x0006, 0, (information.m_channelsList[0] != 0 && information.m_channelsList[1]) != 0 ? 1 : 0);
+        pDataSet->setUnsignedLong(0x0028, 0x0, 0x0006, 0, information.m_channelsList.size() > 1 ? 1 : 0);
     }
 
     // Insert the basic offset table

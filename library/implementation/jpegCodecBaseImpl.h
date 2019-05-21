@@ -176,10 +176,9 @@ namespace jpeg
         typedef std::map<std::uint8_t, ptrChannel> tChannelsMap;
         tChannelsMap m_channelsMap;
 
-        // The list of the channels in the active scan, zero
-        //  terminated
+        // The list of the channels in the active scan
         ///////////////////////////////////////////////////////////
-        jpeg::jpegChannel* m_channelsList[257]; // 256 channels + terminator
+        std::list<ptrChannel> m_channelsList;
 
         // Huffman tables
         ///////////////////////////////////////////////////////////

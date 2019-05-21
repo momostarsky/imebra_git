@@ -313,7 +313,7 @@ void jpegInformation::reset(imageQuality_t compQuality)
 
     // Resets the channels list
     ///////////////////////////////////////////////////////////
-    memset(m_channelsList, 0, sizeof(m_channelsList));
+    m_channelsList.clear();
 
     // Allocate the huffman tables
     ///////////////////////////////////////////////////////////
@@ -415,7 +415,7 @@ void jpegInformation::eraseChannels()
     IMEBRA_FUNCTION_START();
 
     m_channelsMap.clear();
-    memset(m_channelsList, 0, sizeof(m_channelsList));
+    m_channelsList.clear();
 
     IMEBRA_FUNCTION_END();
 }
@@ -521,11 +521,8 @@ void jpegInformation::findMcuSize()
     std::uint32_t minSamplingFactorX=256;
     std::uint32_t minSamplingFactorY=256;
 
-    jpeg::jpegChannel* pChannel; // Used in the lòops
-    for(jpeg::jpegChannel** channelsIterator = m_channelsList; *channelsIterator != 0; ++channelsIterator)
+    for(const std::shared_ptr<jpeg::jpegChannel>& pChannel: m_channelsList)
     {
-        pChannel = *channelsIterator;
-
         if(pChannel->m_samplingFactorX > maxSamplingFactorX)
             maxSamplingFactorX = pChannel->m_samplingFactorX;
         if(pChannel->m_samplingFactorY > maxSamplingFactorY)
@@ -538,10 +535,8 @@ void jpegInformation::findMcuSize()
 
     // Find the number of blocks per MCU per channel
     ///////////////////////////////////////////////////////////
-    for(jpeg::jpegChannel** channelsIterator = m_channelsList; *channelsIterator != 0; ++channelsIterator)
+    for(const std::shared_ptr<jpeg::jpegChannel>& pChannel: m_channelsList)
     {
-        pChannel=*channelsIterator;
-
         pChannel->m_blockMcuX = pChannel->m_samplingFactorX / minSamplingFactorX;
         pChannel->m_blockMcuY = pChannel->m_samplingFactorY / minSamplingFactorY;
         pChannel->m_blockMcuXY = pChannel->m_blockMcuX * pChannel->m_blockMcuY;
@@ -1254,11 +1249,7 @@ void tagSOS::writeTag(streamWriter* pStream, jpegInformation& information) const
 
     // Calculate the components number
     /////////////////////////////////////////////////////////////////
-    std::uint8_t componentsNumber(0);
-    while(information.m_channelsList[componentsNumber] != 0)
-    {
-        ++componentsNumber;
-    }
+    std::uint8_t componentsNumber((std::uint8_t)information.m_channelsList.size());
 
     // Write the tag's length
     /////////////////////////////////////////////////////////////////
@@ -1270,11 +1261,8 @@ void tagSOS::writeTag(streamWriter* pStream, jpegInformation& information) const
 
     // Scan all the channels in the current scan
     /////////////////////////////////////////////////////////////////
-    jpeg::jpegChannel* pChannel; // used in the loop
-    for(jpeg::jpegChannel** listIterator = information.m_channelsList; *listIterator != 0; ++listIterator)
+    for(const std::shared_ptr<jpeg::jpegChannel>& pChannel: information.m_channelsList)
     {
-        pChannel = *listIterator;
-
         std::uint8_t channelId(0);
 
         pChannel->m_lastDCValue = pChannel->m_defaultDCValue;
@@ -1283,9 +1271,9 @@ void tagSOS::writeTag(streamWriter* pStream, jpegInformation& information) const
         /////////////////////////////////////////////////////////////////
         for(jpeg::jpegInformation::tChannelsMap::const_iterator mapIterator = information.m_channelsMap.begin(); mapIterator != information.m_channelsMap.end(); ++mapIterator)
         {
-            if(mapIterator->second.get() == pChannel)
+            if(mapIterator->second == pChannel)
             {
-                channelId=mapIterator->first;
+                channelId = mapIterator->first;
                 break;
             }
         }
@@ -1342,10 +1330,15 @@ void tagSOS::readTag(streamReader& stream, jpegInformation* pInformation, std::u
     std::shared_ptr<streamReader> tagReader(stream.getReader(tagLength));
 
     pInformation->m_eobRun = 0;
-    memset(pInformation->m_channelsList, 0, sizeof(pInformation->m_channelsList));
+    pInformation->m_channelsList.clear();
 
     std::uint8_t componentsNumber;
     tagReader->read(&componentsNumber, 1);
+
+    if(componentsNumber == 0)
+    {
+        IMEBRA_THROW(CodecCorruptedFileError, "Jpeg image with zero color components");
+    }
 
     std::uint8_t byte;
     for(std::uint8_t scanComponents = 0; scanComponents != componentsNumber; ++scanComponents)
@@ -1355,7 +1348,7 @@ void tagSOS::readTag(streamReader& stream, jpegInformation* pInformation, std::u
         jpeg::jpegInformation::tChannelsMap::const_iterator findChannel = pInformation->m_channelsMap.find(byte);
         if(findChannel == pInformation->m_channelsMap.end())
         {
-            IMEBRA_THROW(CodecCorruptedFileError, "Corrupted SOS tag found");
+            IMEBRA_THROW(CodecCorruptedFileError, "Corrupted SOS tag found (scan component not specified by the SOF tag)");
         }
         ptrChannel pChannel = findChannel->second;
 
@@ -1370,7 +1363,7 @@ void tagSOS::readTag(streamReader& stream, jpegInformation* pInformation, std::u
 
         pChannel->m_lastDCValue = pChannel->m_defaultDCValue;
 
-        pInformation->m_channelsList[scanComponents] = pChannel.get();
+        pInformation->m_channelsList.push_back(pChannel);
 
     }
 
@@ -1509,10 +1502,10 @@ void tagRST::readTag(streamReader&, jpegInformation* pInformation, std::uint8_t 
 
     // Reset the channels last dc value
     /////////////////////////////////////////////////////////////////
-    for(jpeg::jpegChannel** channelsIterator = pInformation->m_channelsList; *channelsIterator != 0; ++channelsIterator)
+    for(const std::shared_ptr<jpeg::jpegChannel>& pChannel: pInformation->m_channelsList)
     {
-        (*channelsIterator)->processUnprocessedAmplitudes();
-        (*channelsIterator)->m_lastDCValue = (*channelsIterator)->m_defaultDCValue;
+        pChannel->processUnprocessedAmplitudes();
+        pChannel->m_lastDCValue = pChannel->m_defaultDCValue;
     }
 
     // Calculate the mcu processed counter
@@ -1533,9 +1526,8 @@ void tagRST::readTag(streamReader&, jpegInformation* pInformation, std::uint8_t 
 
         // Update the lossless pixel's counter in the channels
         /////////////////////////////////////////////////////////////////
-        for(jpeg::jpegChannel** channelsIterator = pInformation->m_channelsList; *channelsIterator != 0; ++channelsIterator)
+        for(const std::shared_ptr<jpeg::jpegChannel>& pChannel: pInformation->m_channelsList)
         {
-            jpeg::jpegChannel* pChannel(*channelsIterator);
             pChannel->m_losslessPositionX = pInformation->m_mcuProcessedX / pChannel->m_blockMcuX;
             pChannel->m_losslessPositionY = pInformation->m_mcuProcessedY / pChannel->m_blockMcuY;
         }

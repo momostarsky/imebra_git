@@ -415,7 +415,6 @@ std::shared_ptr<image> jpegImageCodec::getImage(const dataSet& sourceDataSet, st
 
         }
 
-        jpeg::jpegChannel* pChannel; // Used in the loops
         while(information.m_mcuProcessed < nextMcuStop && !pStream->endReached())
         {
             // Read an MCU
@@ -423,10 +422,8 @@ std::shared_ptr<image> jpegImageCodec::getImage(const dataSet& sourceDataSet, st
 
             // Scan all components
             ///////////////////////////////////////////////////////////
-            for(jpeg::jpegChannel** channelsIterator = information.m_channelsList; *channelsIterator != 0; ++channelsIterator)
+            for(const std::shared_ptr<jpeg::jpegChannel>& pChannel: information.m_channelsList)
             {
-                pChannel = *channelsIterator;
-
                 // Read a lossless pixel
                 ///////////////////////////////////////////////////////////
                 if(information.m_bLossless)
@@ -927,15 +924,15 @@ void jpegImageCodec::setImage(
 
         // Write the scans
         ////////////////////////////////////////////////////////////////
-        memset(information.m_channelsList, 0, sizeof(information.m_channelsList));
+        information.m_channelsList.clear();
+
         if(bInterleaved)
         {
-            size_t scanChannels(0);
             for(jpeg::jpegInformation::tChannelsMap::iterator channelsIterator = information.m_channelsMap.begin();
                 channelsIterator != information.m_channelsMap.end();
                 ++channelsIterator)
             {
-                information.m_channelsList[scanChannels++] = channelsIterator->second.get();
+                information.m_channelsList.push_back(channelsIterator->second);
             }
             writeScan(pDestinationStream, information, phase == 0);
         }
@@ -945,7 +942,8 @@ void jpegImageCodec::setImage(
                 channelsIterator != information.m_channelsMap.end();
                 ++channelsIterator)
             {
-                information.m_channelsList[0] = channelsIterator->second.get();
+                information.m_channelsList.clear();
+                information.m_channelsList.push_back(channelsIterator->second);
                 writeScan(pDestinationStream, information, phase == 0);
             }
         }
@@ -982,7 +980,6 @@ void jpegImageCodec::writeScan(streamWriter* pDestinationStream, jpeg::jpegInfor
         writeTag(pDestinationStream, sos, information);
     }
 
-    jpeg::jpegChannel* pChannel; // Used in the loops
     while(information.m_mcuProcessed < information.m_mcuNumberTotal)
     {
         // Write an MCU
@@ -990,10 +987,8 @@ void jpegImageCodec::writeScan(streamWriter* pDestinationStream, jpeg::jpegInfor
 
         // Scan all components
         ///////////////////////////////////////////////////////////
-        for(jpeg::jpegChannel** channelsIterator = information.m_channelsList; *channelsIterator != 0; ++channelsIterator)
+        for(const std::shared_ptr<jpeg::jpegChannel>& pChannel: information.m_channelsList)
         {
-            pChannel = *channelsIterator;
-
             // Write a lossless pixel
             ///////////////////////////////////////////////////////////
             if(information.m_bLossless)
@@ -1102,7 +1097,7 @@ void jpegImageCodec::writeScan(streamWriter* pDestinationStream, jpeg::jpegInfor
 //
 /////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
-inline void jpegImageCodec::readBlock(jpegStreamReader& stream, jpeg::jpegInformation& information, std::int32_t* pBuffer, jpeg::jpegChannel* pChannel) const
+inline void jpegImageCodec::readBlock(jpegStreamReader& stream, jpeg::jpegInformation& information, std::int32_t* pBuffer, const std::shared_ptr<jpeg::jpegChannel>& pChannel) const
 {
     IMEBRA_FUNCTION_START();
 
@@ -1236,7 +1231,7 @@ inline void jpegImageCodec::readBlock(jpegStreamReader& stream, jpeg::jpegInform
 //
 /////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
-inline void jpegImageCodec::writeBlock(streamWriter* pStream, jpeg::jpegInformation& information, std::int32_t* pBuffer, jpeg::jpegChannel* pChannel, bool bCalcHuffman) const
+inline void jpegImageCodec::writeBlock(streamWriter* pStream, jpeg::jpegInformation& information, std::int32_t* pBuffer, const std::shared_ptr<jpeg::jpegChannel>& pChannel, bool bCalcHuffman) const
 {
     IMEBRA_FUNCTION_START();
 

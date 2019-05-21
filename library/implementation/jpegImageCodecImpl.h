@@ -89,11 +89,11 @@ public:
 private:
     // Read a lossy block of pixels
     ///////////////////////////////////////////////////////////
-    inline void readBlock(jpegStreamReader& stream, jpeg::jpegInformation& information, std::int32_t* pBuffer, jpeg::jpegChannel* pChannel) const;
+    inline void readBlock(jpegStreamReader& stream, jpeg::jpegInformation& information, std::int32_t* pBuffer, const std::shared_ptr<jpeg::jpegChannel>& pChannel) const;
 
     // Write a lossy block of pixels
     ///////////////////////////////////////////////////////////
-    inline void writeBlock(streamWriter* pStream, jpeg::jpegInformation& information, std::int32_t* pBuffer, jpeg::jpegChannel* pChannel, bool bCalcHuffman) const;
+    inline void writeBlock(streamWriter* pStream, jpeg::jpegInformation& information, std::int32_t* pBuffer, const std::shared_ptr<jpeg::jpegChannel>& pChannel, bool bCalcHuffman) const;
 
     std::shared_ptr<image> copyJpegChannelsToImage(jpeg::jpegInformation& information, bool b2complement, const std::string& colorSpace) const;
     void copyImageToJpegChannels(jpeg::jpegInformation& information, std::shared_ptr<image> sourceImage, bool b2complement, std::uint32_t allocatedBits, bool bSubSampledX, bool bSubSampledY) const;
