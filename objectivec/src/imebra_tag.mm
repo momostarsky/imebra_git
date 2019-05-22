@@ -180,20 +180,12 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
 
--(void) setSequenceItem:(unsigned int) dataSetId dataSet:(ImebraDataSet*)pDataSet error:(NSError**)pError
+-(ImebraMutableDataSet*) appendSequenceItem:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    ((imebra::MutableTag*)get_imebra_object_holder(Tag))->setSequenceItem((size_t)dataSetId, *get_other_imebra_object_holder(pDataSet, DataSet));
-
-    OBJC_IMEBRA_FUNCTION_END();
-}
-
--(void) appendSequenceItem:(ImebraDataSet*)pDataSet error:(NSError**)pError
-{
-    OBJC_IMEBRA_FUNCTION_START();
-
-    return ((imebra::MutableTag*)get_imebra_object_holder(Tag))->appendSequenceItem(*get_other_imebra_object_holder(pDataSet, DataSet));
+    return [[ImebraMutableDataSet alloc] initWithImebraDataSet:new imebra::MutableDataSet(
+            ((imebra::MutableTag*)get_imebra_object_holder(Tag))->appendSequenceItem(*get_other_imebra_object_holder(pDataSet)))];
 
     OBJC_IMEBRA_FUNCTION_END();
 }

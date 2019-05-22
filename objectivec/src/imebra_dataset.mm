@@ -410,11 +410,13 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_END();
 }
 
--(void) setSequenceItem:(ImebraTagId*)pTagId item:(unsigned int)itemId dataSet:(ImebraDataSet*)pDataSet error:(NSError**)pError
+-(ImebraMutableDataSet*) appendSequenceItem:(ImebraTagId*)pTagId error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    ((imebra::MutableDataSet*)get_imebra_object_holder(DataSet))->setSequenceItem(imebra::TagId((std::uint16_t)pTagId.groupId, (std::uint32_t)pTagId.groupOrder, (std::uint16_t)pTagId.tagId), (size_t)itemId, *get_other_imebra_object_holder(pDataSet, DataSet));
+    return [[ImebraMutableDataSet alloc] initWithImebraDataSetHandler:
+        new imebra::MutableDataSet(
+            ((imebra::MutableDataSet*)get_imebra_object_holder(DataSet))->appendSequenceItem(imebra::TagId((std::uint16_t)pTagId.groupId, (std::uint32_t)pTagId.groupOrder, (std::uint16_t)pTagId.tagId))) ];
 
     OBJC_IMEBRA_FUNCTION_END();
 }
