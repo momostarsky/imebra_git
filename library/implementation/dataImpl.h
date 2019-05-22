@@ -31,12 +31,12 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 namespace imebra
 {
-    class streamReader;
-    class streamWriter;
 
 namespace implementation
 {
 
+class streamReader;
+class streamWriter;
 class buffer;
 class dataSet;
 

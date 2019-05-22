@@ -23,13 +23,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <cstdint>
 #include <memory>
 #include <map>
-#include "image.h"
-#include "readingDataHandlerNumeric.h"
-#include "writingDataHandlerNumeric.h"
 #include "definitions.h"
-#include "streamReader.h"
-#include "streamWriter.h"
-#include "dataSet.h"
 
 namespace imebra
 {
@@ -38,6 +32,17 @@ namespace implementation
 {
     class data;
 }
+
+class DataSet;
+class ReadingDataHandler;
+class ReadingDataHandlerNumeric;
+class StreamReader;
+class MutableDataSet;
+class WritingDataHandler;
+class WritingDataHandlerNumeric;
+class StreamWriter;
+
+
 
 ///
 /// \brief This class represents an immutable DICOM tag.

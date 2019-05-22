@@ -11,10 +11,16 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#include "../include/imebra/tag.h"
-#include "../include/imebra/dataSet.h"
 #include "../implementation/dataImpl.h"
 #include "../implementation/dataHandlerNumericImpl.h"
+
+#include "../include/imebra/tag.h"
+#include "../include/imebra/readingDataHandlerNumeric.h"
+#include "../include/imebra/writingDataHandlerNumeric.h"
+#include "../include/imebra/definitions.h"
+#include "../include/imebra/streamReader.h"
+#include "../include/imebra/streamWriter.h"
+#include "../include/imebra/dataSet.h"
 
 namespace imebra
 {
