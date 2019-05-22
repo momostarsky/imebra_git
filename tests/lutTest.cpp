@@ -12,7 +12,7 @@ TEST(lut, simpleLut)
 {
     MutableDataSet testDataSet;
     MutableTag sequenceTag = testDataSet.getTagCreate(TagId(tagId_t::ModalityLUTSequence_0028_3000));
-    MutableDataSet lutItem;
+    MutableDataSet lutItem = sequenceTag.appendSequenceItem();
     {
         WritingDataHandlerNumeric descriptor = lutItem.getWritingDataHandlerNumeric(TagId(tagId_t::LUTDescriptor_0028_3002), 0, tagVR_t::US);
         WritingDataHandlerNumeric data = lutItem.getWritingDataHandlerNumeric(TagId(tagId_t::LUTData_0028_3006), 0, tagVR_t::US);
@@ -26,7 +26,6 @@ TEST(lut, simpleLut)
         data.setUnsignedLong(1, 200u);
         data.setUnsignedLong(2, 300u);
     }
-    sequenceTag.setSequenceItem(0, lutItem);
 
     {
         LUT lut = testDataSet.getLUT(TagId(tagId_t::ModalityLUTSequence_0028_3000), 0);
@@ -47,7 +46,7 @@ TEST(lut, simpleLutNegative)
 {
     MutableDataSet testDataSet;
     MutableTag sequenceTag = testDataSet.getTagCreate(TagId(tagId_t::ModalityLUTSequence_0028_3000));
-    MutableDataSet lutItem;
+    MutableDataSet lutItem = sequenceTag.appendSequenceItem();
     testDataSet.setUnsignedLong(TagId(tagId_t::PixelRepresentation_0028_0103), 1);
     {
         WritingDataHandlerNumeric descriptor = lutItem.getWritingDataHandlerNumeric(TagId(tagId_t::LUTDescriptor_0028_3002), 0, tagVR_t::US);
@@ -62,7 +61,6 @@ TEST(lut, simpleLutNegative)
         data.setUnsignedLong(1, 200);
         data.setUnsignedLong(2, 300);
     }
-    sequenceTag.setSequenceItem(0, lutItem);
 
     {
         LUT lut = testDataSet.getLUT(TagId(tagId_t::ModalityLUTSequence_0028_3000), 0);
@@ -83,7 +81,7 @@ TEST(lut, simpleLutCorruptedDescriptor)
 {
     MutableDataSet testDataSet;
     MutableTag sequenceTag = testDataSet.getTagCreate(TagId(tagId_t::ModalityLUTSequence_0028_3000));
-    MutableDataSet lutItem;
+    MutableDataSet lutItem = sequenceTag.appendSequenceItem();
     testDataSet.setUnsignedLong(TagId(tagId_t::PixelRepresentation_0028_0103), 1);
     {
         WritingDataHandlerNumeric descriptor = lutItem.getWritingDataHandlerNumeric(TagId(tagId_t::LUTDescriptor_0028_3002), 0, tagVR_t::US);
@@ -99,7 +97,6 @@ TEST(lut, simpleLutCorruptedDescriptor)
         data.setUnsignedLong(1, 200u);
         data.setUnsignedLong(2, 300u);
     }
-    sequenceTag.setSequenceItem(0, lutItem);
 
     ASSERT_THROW(testDataSet.getLUT(TagId(tagId_t::ModalityLUTSequence_0028_3000), 0), LutCorruptedError);
 }
@@ -108,7 +105,8 @@ TEST(lut, simpleLutCorruptedDescriptor1)
 {
     MutableDataSet testDataSet;
     MutableTag sequenceTag = testDataSet.getTagCreate(TagId(tagId_t::ModalityLUTSequence_0028_3000));
-    MutableDataSet lutItem;
+    MutableDataSet lutItem =  sequenceTag.appendSequenceItem();
+
     testDataSet.setUnsignedLong(TagId(tagId_t::PixelRepresentation_0028_0103), 1);
     {
         WritingDataHandlerNumeric descriptor = lutItem.getWritingDataHandlerNumeric(TagId(tagId_t::LUTDescriptor_0028_3002), 0, tagVR_t::US);
@@ -122,7 +120,6 @@ TEST(lut, simpleLutCorruptedDescriptor1)
         data.setUnsignedLong(1, 200u);
         data.setUnsignedLong(2, 300u);
     }
-    sequenceTag.setSequenceItem(0, lutItem);
 
     ASSERT_THROW(testDataSet.getLUT(TagId(tagId_t::ModalityLUTSequence_0028_3000), 0), LutCorruptedError);
 }
@@ -131,7 +128,7 @@ TEST(lut, simpleLutCorruptedDescriptor2)
 {
     MutableDataSet testDataSet;
     MutableTag sequenceTag = testDataSet.getTagCreate(TagId(tagId_t::ModalityLUTSequence_0028_3000));
-    MutableDataSet lutItem;
+    MutableDataSet lutItem = sequenceTag.appendSequenceItem();
     testDataSet.setUnsignedLong(TagId(tagId_t::PixelRepresentation_0028_0103), 1);
     {
         WritingDataHandlerNumeric descriptor = lutItem.getWritingDataHandlerNumeric(TagId(tagId_t::LUTDescriptor_0028_3002), 0, tagVR_t::US);
@@ -146,7 +143,6 @@ TEST(lut, simpleLutCorruptedDescriptor2)
         data.setUnsignedLong(1, 200u);
         data.setUnsignedLong(2, 300u);
     }
-    sequenceTag.setSequenceItem(0, lutItem);
 
     ASSERT_THROW(testDataSet.getLUT(TagId(tagId_t::ModalityLUTSequence_0028_3000), 0), LutCorruptedError);
 }
@@ -155,7 +151,7 @@ TEST(lut, simpleLutCorruptedDescriptor3)
 {
     MutableDataSet testDataSet;
     MutableTag sequenceTag = testDataSet.getTagCreate(TagId(tagId_t::ModalityLUTSequence_0028_3000));
-    MutableDataSet lutItem;
+    MutableDataSet lutItem = sequenceTag.appendSequenceItem();
     testDataSet.setUnsignedLong(TagId(tagId_t::PixelRepresentation_0028_0103), 1);
     {
         WritingDataHandlerNumeric descriptor = lutItem.getWritingDataHandlerNumeric(TagId(tagId_t::LUTDescriptor_0028_3002), 0, tagVR_t::US);
@@ -170,7 +166,6 @@ TEST(lut, simpleLutCorruptedDescriptor3)
         data.setUnsignedLong(1, 200u);
         data.setUnsignedLong(2, 300u);
     }
-    sequenceTag.setSequenceItem(0, lutItem);
 
     ASSERT_THROW(testDataSet.getLUT(TagId(tagId_t::ModalityLUTSequence_0028_3000), 0), LutCorruptedError);
 }
@@ -179,7 +174,7 @@ TEST(lut, simpleLut16bitFull)
 {
     MutableDataSet testDataSet;
     MutableTag sequenceTag = testDataSet.getTagCreate(TagId(tagId_t::ModalityLUTSequence_0028_3000));
-    MutableDataSet lutItem;
+    MutableDataSet lutItem = sequenceTag.appendSequenceItem();
     {
         WritingDataHandlerNumeric descriptor = lutItem.getWritingDataHandlerNumeric(TagId(tagId_t::LUTDescriptor_0028_3002), 0, tagVR_t::US);
         WritingDataHandlerNumeric data = lutItem.getWritingDataHandlerNumeric(TagId(tagId_t::LUTData_0028_3006), 0, tagVR_t::US);
@@ -194,7 +189,6 @@ TEST(lut, simpleLut16bitFull)
             data.setUnsignedLong(fillLut, fillLut);
         }
     }
-    sequenceTag.setSequenceItem(0, lutItem);
 
     {
         LUT lut = testDataSet.getLUT(TagId(tagId_t::ModalityLUTSequence_0028_3000), 0);

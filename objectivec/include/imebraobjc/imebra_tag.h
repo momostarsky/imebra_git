@@ -227,31 +227,17 @@ If you do not want to be bound by the GPL terms (such as the requirement
     ///////////////////////////////////////////////////////////////////////////////
     -(ImebraStreamWriter*) getStreamWriter:(unsigned int) bufferId error:(NSError**)pError;
 
-    /// \brief Insert a sequence item into the Tag.
-    ///
-    /// Several sequence items can be nested one inside each other.
-    /// When a sequence item is embedded into a Tag, then the tag will have a
-    /// sequence VR (VR = SQ).
-    ///
-    /// \param dataSetId  the ID of the sequence item
-    /// \param pError     set to a NSError derived class in case of error
-    /// \param dataSet    the DataSet containing the sequence item data
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    -(void) setSequenceItem:(unsigned int) dataSetId dataSet:(ImebraDataSet*)pDataSet error:(NSError**)pError
-        __attribute__((swift_error(nonnull_error)));
-
     /// \brief Append a sequence item into the Tag.
     ///
     /// Several sequence items can be nested one inside each other.
     /// When a sequence item is embedded into a Tag, then the tag will have a
     /// sequence VR (VR = SQ).
     ///
-    /// \param dataSet    the DataSet containing the sequence item data
     /// \param pError     set to a NSError derived class in case of error
+    /// \return a MutableDataSet representing the added sequence item
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    -(void) appendSequenceItem:(ImebraDataSet*)pDataSet error:(NSError**)pError
+    -(ImebraMutableDataSet*) appendSequenceItem:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
 
 @end

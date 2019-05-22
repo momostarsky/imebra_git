@@ -22,14 +22,14 @@ using namespace imebra;
 
 int findArgument(const char* argument, int argc, char* argv[])
 {
-	for(int scanArg(0); scanArg != argc; ++scanArg)
-	{
-		if(std::string(argv[scanArg]) == argument)
-		{
-			return scanArg;
-		}
-	}
-	return -1;
+    for(int scanArg(0); scanArg != argc; ++scanArg)
+    {
+        if(std::string(argv[scanArg]) == argument)
+        {
+            return scanArg;
+        }
+    }
+    return -1;
 }
 
 void CopyGroups(const DataSet& source, MutableDataSet& destination)
@@ -58,9 +58,8 @@ void CopyGroups(const DataSet& source, MutableDataSet& destination)
                     try
                     {
                         DataSet sequence = sourceTag.getSequenceItem(buffer);
-                        MutableDataSet destSequence;
+                        MutableDataSet destSequence = destination.appendSequenceItem(*scanTags);
                         CopyGroups(sequence, destSequence);
-                        destination.setSequenceItem(*scanTags, buffer, destSequence);
                     }
                     catch(const MissingDataElementError&)
                     {
@@ -87,17 +86,17 @@ int main(int argc, char* argv[])
     std::string version("1.0.0.1");
     std::cout << "changeTransferSyntax version " << version << std::endl;
 
-	try
-	{
-		std::string inputFileName;
-		std::string outputFileName;
+    try
+    {
+        std::string inputFileName;
+        std::string outputFileName;
         std::string transferSyntax;
         std::uint32_t maxHighBit;
 
         if(argc == 4)
-		{
-			inputFileName = argv[1];
-			outputFileName = argv[2];
+        {
+            inputFileName = argv[1];
+            outputFileName = argv[2];
 
             const char* transferSyntaxAllowedValues[]=
             {
@@ -120,17 +119,17 @@ int main(int argc, char* argv[])
             };
 
             std::istringstream convertTransferSyntax(argv[3]);
-			int transferSyntaxValue(-1);
-			convertTransferSyntax >> transferSyntaxValue;
+            int transferSyntaxValue(-1);
+            convertTransferSyntax >> transferSyntaxValue;
             if(transferSyntaxValue >= 0 && (size_t)transferSyntaxValue < sizeof(transferSyntaxAllowedValues)/sizeof(char*))
-			{
-				transferSyntax = transferSyntaxAllowedValues[transferSyntaxValue];
+            {
+                transferSyntax = transferSyntaxAllowedValues[transferSyntaxValue];
                 maxHighBit = maxHighBitValues[transferSyntaxValue];
-			}
-		}
+            }
+        }
 
         if(inputFileName.empty() || outputFileName.empty() || transferSyntax.empty())
-		{
+        {
                     std::cout << "Usage: changeTransferSyntax inputFileName outputFileName newTransferSyntax" << std::endl;
                     std::cout << "newTransferSyntax values: 0 = Explicit VR little endian" << std::endl;
                     std::cout << "                          1 = Explicit VR big endian" << std::endl;
@@ -138,20 +137,20 @@ int main(int argc, char* argv[])
                     std::cout << "                          3 = Jpeg baseline (8 bits lossy)" << std::endl;
                     std::cout << "                          4 = Jpeg extended (12 bits lossy)" << std::endl;
                     std::cout << "                          5 = Jpeg lossless NH" << std::endl;
-					return 1;
-		}
+                    return 1;
+        }
 
         DataSet loadedDataSet = CodecFactory::load(inputFileName, 2048);
 
 
-		// Now we create a new dataset and copy the tags and images from the loaded dataset
+        // Now we create a new dataset and copy the tags and images from the loaded dataset
         MutableDataSet newDataSet(transferSyntax);
 
-		// Copy the images first
-		try
-		{
+        // Copy the images first
+        try
+        {
             for(size_t scanImages(0);; ++scanImages)
-			{
+            {
                 Image copyImage = loadedDataSet.getImage(scanImages);
                 if(copyImage.getHighBit() > maxHighBit)
                 {
@@ -160,22 +159,22 @@ int main(int argc, char* argv[])
                                  maxHighBit << std::endl;
                 }
                 newDataSet.setImage(scanImages, copyImage, imageQuality_t::high);
-			}
-		}
+            }
+        }
         catch(const DataSetImageDoesntExistError&)
-		{
-			// Ignore this
-		}
+        {
+            // Ignore this
+        }
 
         CopyGroups(loadedDataSet, newDataSet);
 
         CodecFactory::save(newDataSet, outputFileName, codecType_t::dicom);
 
-	}
-	catch(...)
-	{
+    }
+    catch(...)
+    {
         std::cout << ExceptionsManager::getExceptionTrace();
-		return 1;
-	}
+        return 1;
+    }
 }
 

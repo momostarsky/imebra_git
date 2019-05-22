@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -547,6 +547,7 @@ private:
 class IMEBRA_API MutableDataSet: public DataSet
 {
     friend class MutableDicomDirEntry;
+    friend class MutableTag;
 
 public:
 
@@ -561,9 +562,6 @@ public:
     /// \brief Construct an empty DICOM dataset with unspecified transfer syntax
     ///        (which represents the default value "1.2.840.10008.1.2" or
     ///        "Implicit VR little endian") and charset "ISO 2022 IR 6".
-    ///
-    /// Use this method when creating a DataSet that will be embedded as a sequence
-    /// item.
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit MutableDataSet();
@@ -660,17 +658,16 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     void setImage(size_t frameNumber, const Image& image, imageQuality_t quality);
 
-    /// \brief Set a sequence item.
+    /// \brief Append a sequence item.
     ///
     /// If the specified Tag does not exist then creates a new one with VR
     ///  tagVR_t::SQ.
     ///
     /// \param tagId  the tag's id in which the sequence must be stored
-    /// \param itemId the sequence item to set. The first item has an Id = 0
-    /// \param item   the DataSet to store as a sequence item
+    /// \return       the MutableDataSet representing the added sequence item
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    void setSequenceItem(const TagId& tagId, size_t itemId, const DataSet& item);
+    MutableDataSet appendSequenceItem(const TagId& tagId);
 
     /// \brief Retrieve a WritingDataHandler object connected to a specific
     ///        tag's buffer.

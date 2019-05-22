@@ -890,15 +890,13 @@ void dicomStreamCodec::parseStream(std::shared_ptr<streamReader> pStream,
             ///////////////////////////////////////////////////////////
             if((sequenceItemLength == 0xffffffff) || tagType == tagVR_t::SQ)
             {
-                std::shared_ptr<dataSet> sequenceDataSet(std::make_shared<dataSet>());
+                std::shared_ptr<dataSet> sequenceDataSet(sequenceTag->appendSequenceItem());
                 sequenceDataSet->setItemOffset(itemOffset);
                 std::uint32_t effectiveLength(0);
                 parseStream(pStream, sequenceDataSet, bExplicitDataType, endianType, maxSizeBufferLoad, sequenceItemLength, &effectiveLength, depth + 1);
                 (*pReadSubItemLength) += effectiveLength;
                 if(tagLengthDWord!=0xffffffff)
                     tagLengthDWord-=effectiveLength;
-                sequenceTag->setSequenceItem(bufferId, sequenceDataSet);
-                ++bufferId;
 
                 continue;
             }
@@ -906,7 +904,7 @@ void dicomStreamCodec::parseStream(std::shared_ptr<streamReader> pStream,
             ///////////////////////////////////////////////////////////
             // Read a buffer's element
             ///////////////////////////////////////////////////////////
-            sequenceItemLength=readTag(pStream, pDataSet, sequenceItemLength, tagId, order, tagSubId, tagType, endianType, wordSize, bufferId++, maxSizeBufferLoad);
+            sequenceItemLength = readTag(pStream, pDataSet, sequenceItemLength, tagId, order, tagSubId, tagType, endianType, wordSize, bufferId++, maxSizeBufferLoad);
             (*pReadSubItemLength) += sequenceItemLength;
             if(tagLengthDWord!=0xffffffff)
             {

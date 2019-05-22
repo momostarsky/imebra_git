@@ -163,14 +163,11 @@ TEST(dicomCodecTest, testDicom)
                             testDataSet.setImage(1, images[1], quality);
                             testDataSet.setImage(2, images[2], quality);
 
-                            MutableDataSet sequenceItem;
+                            MutableDataSet sequenceItem = testDataSet.appendSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111));
                             sequenceItem.setString(TagId(tagId_t::PatientName_0010_0010), "test test");
 
-                            MutableDataSet sequenceItem1;
+                            MutableDataSet sequenceItem1 = sequenceItem.appendSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111));
                             sequenceItem1.setString(TagId(tagId_t::PatientName_0010_0010), "test test1");
-                            sequenceItem.setSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 0, sequenceItem1);
-
-                            testDataSet.setSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 0, sequenceItem);
 
                             MemoryStreamOutput writeStream(streamMemory);
                             StreamWriter writer(writeStream);

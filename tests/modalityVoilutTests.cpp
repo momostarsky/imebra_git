@@ -127,7 +127,7 @@ TEST(modalityVoilut, voilutUnsigned8LUT)
     MutableDataSet testDataSet("1.2.840.10008.1.2.1");
     testDataSet.setImage(0, unsigned8, imageQuality_t::veryHigh);
     MutableTag sequenceTag = testDataSet.getTagCreate(TagId(tagId_t::ModalityLUTSequence_0028_3000));
-    MutableDataSet lutItem;
+    MutableDataSet lutItem = sequenceTag.appendSequenceItem();
     {
         WritingDataHandlerNumeric descriptor = lutItem.getWritingDataHandlerNumeric(TagId(tagId_t::LUTDescriptor_0028_3002), 0, tagVR_t::US);
         WritingDataHandlerNumeric data = lutItem.getWritingDataHandlerNumeric(TagId(tagId_t::LUTData_0028_3006), 0, tagVR_t::US);
@@ -139,7 +139,6 @@ TEST(modalityVoilut, voilutUnsigned8LUT)
         data.setUnsignedLong(1, 200u);
         data.setUnsignedLong(2, 300u);
     }
-    sequenceTag.setSequenceItem(0, lutItem);
 
     {
         ModalityVOILUT voilut(testDataSet);

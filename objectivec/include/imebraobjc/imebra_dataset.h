@@ -560,7 +560,7 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
     ///
     /// To set the ImebraMutableDataSet's content, use one of the following methods:
     /// - setImage()
-    /// - setSequenceItem()
+    /// - appendSequenceItem()
     /// - setSignedLong()
     /// - setUnsignedLong()
     /// - setDouble()
@@ -676,19 +676,18 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
         -(void) setImage:(unsigned int)frameNumber image:(ImebraImage*)image quality:(ImebraImageQuality_t)quality error:(NSError**)pError
             __attribute__((swift_error(nonnull_error)));
 
-        /// \brief Set a sequence item.
+        /// \brief Append a sequence item.
         ///
         /// If the specified tag does not exist then creates a new one with VR
         ///  ImebraTagVR_t::SQ.
         ///
         /// \param pTagId the tag's id in which the sequence must be stored
-        /// \param itemId the sequence item to set. The first item has an Id = 0
-        /// \param item   the DataSet to store as a sequence item
         /// \param pError a pointer to a NSError pointer which is set when an
         ///                error occurs
+        /// \return the dataset representing the appended sequence item
         ///
         ///////////////////////////////////////////////////////////////////////////////
-        -(void) setSequenceItem:(ImebraTagId*)pTagId item:(unsigned int)itemId dataSet:(ImebraDataSet*)pDataSet error:(NSError**)pError
+        -(ImebraMutableDataSet*) appendSequenceItem:(ImebraTagId*)pTagId error:(NSError**)pError
             __attribute__((swift_error(nonnull_error)));
 
         /// \brief Retrieve an ImebraWritingDataHandler object connected to a specific

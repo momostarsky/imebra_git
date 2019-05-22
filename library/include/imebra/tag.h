@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -269,28 +269,16 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     StreamWriter getStreamWriter(size_t bufferId);
 
-    /// \brief Insert a sequence item into the Tag.
-    ///
-    /// Several sequence items can be nested one inside each other.
-    /// When a sequence item is embedded into a Tag, then the tag will have a
-    /// sequence VR (VR = SQ).
-    ///
-    /// \param dataSetId  the ID of the sequence item
-    /// \param dataSet    the DataSet containing the sequence item data
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    void setSequenceItem(size_t dataSetId, const DataSet& dataSet);
-
     /// \brief Append a sequence item into the Tag.
     ///
     /// Several sequence items can be nested one inside each other.
     /// When a sequence item is embedded into a Tag, then the tag will have a
     /// sequence VR (VR = SQ).
     ///
-    /// \param dataSet    the DataSet containing the sequence item data
+    /// \return the MutableDataSet representing the added sequence item
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    void appendSequenceItem(const DataSet& dataSet);
+    MutableDataSet appendSequenceItem();
 
 protected:
     explicit MutableTag(const std::shared_ptr<imebra::implementation::data>& pData);

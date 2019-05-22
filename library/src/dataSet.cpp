@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -322,9 +322,9 @@ void MutableDataSet::setImage(size_t frameNumber, const Image& image, imageQuali
     getDataSetImplementation(*this)->setImage((std::uint32_t)frameNumber, getImageImplementation(image), quality);
 }
 
-void MutableDataSet::setSequenceItem(const TagId &tagId, size_t itemId, const DataSet &item)
+MutableDataSet MutableDataSet::appendSequenceItem(const TagId &tagId)
 {
-    getDataSetImplementation(*this)->setSequenceItem(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), itemId, getDataSetImplementation(item));
+    return MutableDataSet(getDataSetImplementation(*this)->appendSequenceItem(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId()));
 }
 
 void MutableDataSet::setSignedLong(const TagId& tagId, std::int32_t newValue, tagVR_t tagVR)

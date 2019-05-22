@@ -269,14 +269,11 @@ TEST(dataSetTest, testSequence)
         MutableDataSet testDataSet(transferSyntax);
 
         {
-            MutableDataSet sequence0;
-            MutableDataSet sequence1;
+            MutableDataSet sequence0 = testDataSet.appendSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111));
+            MutableDataSet sequence1 = testDataSet.appendSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111));
 
             sequence0.setString(TagId(0x10, 0x10), "Test0");
             sequence1.setString(TagId(0x10, 0x10), "Test1");
-
-            testDataSet.setSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 0, sequence0);
-            testDataSet.setSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 1, sequence1);
         }
 
         {
@@ -406,11 +403,8 @@ TEST(dataSetTest, testEmptySequence)
         MutableDataSet testDataSet(transferSyntax);
 
         {
-            MutableDataSet sequence0;
-            MutableDataSet sequence1;
-
-            testDataSet.setSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 0, sequence0);
-            testDataSet.setSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 1, sequence1);
+            testDataSet.appendSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111));
+            testDataSet.appendSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111));
         }
 
         {
@@ -478,14 +472,11 @@ TEST(dataSetTest, sequenceNoCharsetTest)
     testDataSet.setString(TagId(tagId_t::SOPInstanceUID_0008_0018), "1.2.3.4.5");
 
     {
-        MutableDataSet sequence0;
-        MutableDataSet sequence1;
+        MutableDataSet sequence0 = testDataSet.appendSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111));
+        MutableDataSet sequence1 = testDataSet.appendSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111));
 
         sequence0.setUnicodeString(TagId(0x10, 0x10), patientName0);
         sequence1.setUnicodeString(TagId(0x10, 0x10), patientName1);
-
-        testDataSet.setSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 0, sequence0);
-        testDataSet.setSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 1, sequence1);
     }
 
     MemoryStreamOutput writeStream(streamMemory);
