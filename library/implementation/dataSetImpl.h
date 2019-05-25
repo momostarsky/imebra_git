@@ -41,7 +41,7 @@ namespace implementation
 //The following classes are used in this declaration file
 class image;
 class lut;
-class waveform;
+class date;
 
 /// \addtogroup group_dataset Dicom data
 /// \brief The Dicom dataset is represented by the
@@ -652,58 +652,13 @@ public:
                                   size_t elementNumber, ageUnit_t* pUnits,
                                   std::uint32_t defaultAge, ageUnit_t defaultUnits) const;
 
-    void setDate(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId,
-        std::uint32_t year,
-        std::uint32_t month,
-        std::uint32_t day,
-        std::uint32_t hour,
-        std::uint32_t minutes,
-        std::uint32_t seconds,
-        std::uint32_t nanoseconds,
-        std::int32_t offsetHours,
-        std::int32_t offsetMinutes, tagVR_t tagVR);
+    void setDate(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::shared_ptr<const date>& pDate, tagVR_t tagVR);
 
-    void setDate(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId,
-        std::uint32_t year,
-        std::uint32_t month,
-        std::uint32_t day,
-        std::uint32_t hour,
-        std::uint32_t minutes,
-        std::uint32_t seconds,
-        std::uint32_t nanoseconds,
-        std::int32_t offsetHours,
-        std::int32_t offsetMinutes);
+    void setDate(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::shared_ptr<const date>& pDate);
 
-    void getDate(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber,
-        std::uint32_t* pYear,
-        std::uint32_t* pMonth,
-        std::uint32_t* pDay,
-        std::uint32_t* pHour,
-        std::uint32_t* pMinutes,
-        std::uint32_t* pSeconds,
-        std::uint32_t* pNanoseconds,
-        std::int32_t* pOffsetHours,
-        std::int32_t* pOffsetMinutes) const;
+    std::shared_ptr<date> getDate(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
 
-    void getDate(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber,
-        std::uint32_t* pYear,
-        std::uint32_t* pMonth,
-        std::uint32_t* pDay,
-        std::uint32_t* pHour,
-        std::uint32_t* pMinutes,
-        std::uint32_t* pSeconds,
-        std::uint32_t* pNanoseconds,
-        std::int32_t* pOffsetHours,
-        std::int32_t* pOffsetMinutes,
-        std::uint32_t defaultYear,
-        std::uint32_t defaultMonth,
-        std::uint32_t defaultDay,
-        std::uint32_t defaultHour,
-        std::uint32_t defaultMinutes,
-        std::uint32_t defaultSeconds,
-        std::uint32_t defaultNanoseconds,
-        std::int32_t defaultOffsetHours,
-        std::int32_t defaultOffsetMinutes) const;
+    std::shared_ptr<date> getDate(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::shared_ptr<date> defautlDate) const;
 
     //@}
 

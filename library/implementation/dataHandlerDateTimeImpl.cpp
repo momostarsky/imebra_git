@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -22,6 +22,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #include "exceptionImpl.h"
 #include "dataHandlerDateTimeImpl.h"
+#include "dateImpl.h"
 
 namespace imebra
 {
@@ -62,33 +63,29 @@ readingDataHandlerDateTime::readingDataHandlerDateTime(const memory& parseMemory
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void readingDataHandlerDateTime::getDate(const size_t index,
-        std::uint32_t* pYear,
-        std::uint32_t* pMonth,
-        std::uint32_t* pDay,
-        std::uint32_t* pHour,
-        std::uint32_t* pMinutes,
-        std::uint32_t* pSeconds,
-        std::uint32_t* pNanoseconds,
-		std::int32_t* pOffsetHours,
-		std::int32_t* pOffsetMinutes) const
+std::shared_ptr<date> readingDataHandlerDateTime::getDate(const size_t index) const
 {
     IMEBRA_FUNCTION_START();
 
     std::string dateTimeString = getString(index);
 
-    parseDate(dateTimeString.substr(0, 8), pYear, pMonth, pDay);
+    std::uint32_t year(0), month(0), day(0);
+    parseDate(dateTimeString.substr(0, 8), &year, &month, &day);
 
+    std::uint32_t hour(0), minutes(0), seconds(0), nanoseconds(0);
+    std::int32_t offsetHours(0), offsetMinutes(0);
     if(dateTimeString.size() <= 8)
     {
-        parseTime("", pHour, pMinutes, pSeconds, pNanoseconds, pOffsetHours, pOffsetMinutes);
+        parseTime("", &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
     }
     else
     {
-        parseTime(dateTimeString.substr(8), pHour, pMinutes, pSeconds, pNanoseconds, pOffsetHours, pOffsetMinutes);
+        parseTime(dateTimeString.substr(8), &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
     }
 
-	IMEBRA_FUNCTION_END();
+    return std::make_shared<date>(year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes);
+
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -107,25 +104,16 @@ writingDataHandlerDateTime::writingDataHandlerDateTime(const std::shared_ptr<buf
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void writingDataHandlerDateTime::setDate(const size_t index,
-        std::uint32_t year,
-        std::uint32_t month,
-        std::uint32_t day,
-        std::uint32_t hour,
-        std::uint32_t minutes,
-        std::uint32_t seconds,
-        std::uint32_t nanoseconds,
-		std::int32_t offsetHours,
-		std::int32_t offsetMinutes)
+void writingDataHandlerDateTime::setDate(const size_t index, const std::shared_ptr<const date>& pDate)
 {
     IMEBRA_FUNCTION_START();
 
     std::string dateTimeString;
-	dateTimeString = buildDate(year, month, day);
-	dateTimeString += buildTime(hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes);
+    dateTimeString = buildDate(pDate->getYear(), pDate->getMonth(), pDate->getDay());
+    dateTimeString += buildTime(pDate->getHour(), pDate->getMinutes(), pDate->getSeconds(), pDate->getNanoseconds(), pDate->getOffsetHours(), pDate->getOffsetMinutes());
     setString(index, dateTimeString);
 
-	IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 

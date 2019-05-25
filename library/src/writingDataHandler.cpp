@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -16,6 +16,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 */
 
 #include "../include/imebra/writingDataHandler.h"
+#include "../include/imebra/date.h"
 #include "../implementation/dataHandlerImpl.h"
 #include "../implementation/dataHandlerNumericImpl.h"
 #include <cstring>
@@ -63,17 +64,7 @@ tagVR_t WritingDataHandler::getDataType() const
 
 void WritingDataHandler::setDate(size_t index, const Date& date)
 {
-    m_pDataHandler->setDate(
-        (std::uint32_t)index,
-        (std::uint32_t)date.year,
-        (std::uint32_t)date.month,
-        (std::uint32_t)date.day,
-        (std::uint32_t)date.hour,
-        (std::uint32_t)date.minutes,
-        (std::uint32_t)date.seconds,
-        (std::uint32_t)date.nanoseconds,
-        (std::int32_t)date.offsetHours,
-        (std::int32_t)date.offsetMinutes);
+    m_pDataHandler->setDate((std::uint32_t)index, getDateImplementation(date));
 }
 
 void WritingDataHandler::setAge(size_t index, const Age& age)

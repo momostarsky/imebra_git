@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -21,7 +21,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #include "exceptionImpl.h"
 #include "dataHandlerDateImpl.h"
-
+#include "dateImpl.h"
 
 namespace imebra
 {
@@ -60,33 +60,16 @@ readingDataHandlerDate::readingDataHandlerDate(const memory& parseMemory): readi
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void readingDataHandlerDate::getDate(const size_t index,
-        std::uint32_t* pYear,
-        std::uint32_t* pMonth,
-        std::uint32_t* pDay,
-        std::uint32_t* pHour,
-        std::uint32_t* pMinutes,
-        std::uint32_t* pSeconds,
-        std::uint32_t* pNanoseconds,
-		std::int32_t* pOffsetHours,
-		std::int32_t* pOffsetMinutes) const
+std::shared_ptr<date> readingDataHandlerDate::getDate(const size_t index) const
 {
     IMEBRA_FUNCTION_START();
 
-	*pYear = 0;
-	*pMonth = 0;
-	*pDay = 0;
-	*pHour = 0;
-	*pMinutes = 0;
-	*pSeconds = 0;
-	*pNanoseconds = 0;
-	*pOffsetHours = 0;
-	*pOffsetMinutes = 0;
-
+    std::uint32_t year(0), month(0), day(0);
     std::string dateString = getString(index);
-	parseDate(dateString, pYear, pMonth, pDay);
+    parseDate(dateString, &year, &month, &day);
+    return std::make_shared<date>(year, month, day, 0, 0, 0, 0, 0, 0);
 
-	IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -104,22 +87,13 @@ writingDataHandlerDate::writingDataHandlerDate(const std::shared_ptr<buffer> &pB
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void writingDataHandlerDate::setDate(const size_t index,
-        std::uint32_t year,
-        std::uint32_t month,
-        std::uint32_t day,
-        std::uint32_t /* hour */,
-        std::uint32_t /* minutes */,
-        std::uint32_t /* seconds */,
-        std::uint32_t /* nanoseconds */,
-		std::int32_t /* offsetHours */,
-		std::int32_t /* offsetMinutes */)
+void writingDataHandlerDate::setDate(const size_t index, const std::shared_ptr<const date>& pDate)
 {
     IMEBRA_FUNCTION_START();
 
-    setString(index, buildDate(year, month, day));
+    setString(index, buildDate(pDate->getYear(), pDate->getMonth(), pDate->getDay()));
 
-	IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 } // namespace handlers

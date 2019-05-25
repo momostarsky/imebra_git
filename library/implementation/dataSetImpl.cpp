@@ -33,6 +33,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "transformHighBitImpl.h"
 #include "modalityVOILUTImpl.h"
 #include "bufferImpl.h"
+#include "dateImpl.h"
 #include <iostream>
 #include <string.h>
 
@@ -1290,7 +1291,7 @@ std::uint32_t dataSet::getAge(std::uint16_t groupId, std::uint32_t order, std::u
 }
 
 
-void dataSet::setDate(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::uint32_t year, std::uint32_t month, std::uint32_t day, std::uint32_t hour, std::uint32_t minutes, std::uint32_t seconds, std::uint32_t nanoseconds, std::int32_t offsetHours, std::int32_t offsetMinutes, tagVR_t tagVR)
+void dataSet::setDate(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::shared_ptr<const date>& pDate, tagVR_t tagVR)
 {
     IMEBRA_FUNCTION_START();
 
@@ -1298,67 +1299,40 @@ void dataSet::setDate(std::uint16_t groupId, std::uint32_t order, std::uint16_t 
 
     std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, bufferId, tagVR);
     dataHandler->setSize(1);
-    dataHandler->setDate(0, year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes);
+    dataHandler->setDate(0, pDate);
 
     IMEBRA_FUNCTION_END();
 }
 
-void dataSet::setDate(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::uint32_t year, std::uint32_t month, std::uint32_t day, std::uint32_t hour, std::uint32_t minutes, std::uint32_t seconds, std::uint32_t nanoseconds, std::int32_t offsetHours, std::int32_t offsetMinutes)
+void dataSet::setDate(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::shared_ptr<const date>& pDate)
 {
     IMEBRA_FUNCTION_START();
 
-    setDate(groupId, order, tagId, bufferId, year, month, day, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes, dicomDictionary::getDicomDictionary()->getTagType(groupId, tagId));
+    setDate(groupId, order, tagId, bufferId, pDate, dicomDictionary::getDicomDictionary()->getTagType(groupId, tagId));
 
     IMEBRA_FUNCTION_END();
 }
 
-void dataSet::getDate(uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::uint32_t *pYear, std::uint32_t *pMonth, std::uint32_t *pDay, std::uint32_t *pHour, std::uint32_t *pMinutes, std::uint32_t *pSeconds, std::uint32_t *pNanoseconds, std::int32_t *pOffsetHours, std::int32_t *pOffsetMinutes) const
+std::shared_ptr<date> dataSet::getDate(uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
 {
     IMEBRA_FUNCTION_START();
 
-    return getReadingDataHandler(groupId, order, tagId, bufferId)->getDate(elementNumber, pYear, pMonth, pDay, pHour, pMinutes, pSeconds, pNanoseconds, pOffsetHours, pOffsetMinutes);
+    return getReadingDataHandler(groupId, order, tagId, bufferId)->getDate(elementNumber);
 
     IMEBRA_FUNCTION_END();
 }
 
-void dataSet::getDate(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber,
-    std::uint32_t* pYear,
-    std::uint32_t* pMonth,
-    std::uint32_t* pDay,
-    std::uint32_t* pHour,
-    std::uint32_t* pMinutes,
-    std::uint32_t* pSeconds,
-    std::uint32_t* pNanoseconds,
-    std::int32_t* pOffsetHours,
-    std::int32_t* pOffsetMinutes,
-    std::uint32_t defaultYear,
-    std::uint32_t defaultMonth,
-    std::uint32_t defaultDay,
-    std::uint32_t defaultHour,
-    std::uint32_t defaultMinutes,
-    std::uint32_t defaultSeconds,
-    std::uint32_t defaultNanoseconds,
-    std::int32_t defaultOffsetHours,
-    std::int32_t defaultOffsetMinutes) const
+std::shared_ptr<date> dataSet::getDate(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::shared_ptr<date> defautlDate) const
 {
     IMEBRA_FUNCTION_START();
 
     try
     {
-        return getDate(groupId, order, tagId, bufferId, elementNumber,
-                            pYear, pMonth, pDay, pHour, pMinutes, pSeconds, pNanoseconds, pOffsetHours, pOffsetMinutes);
+        return getDate(groupId, order, tagId, bufferId, elementNumber);
     }
     catch(const MissingDataElementError&)
     {
-        *pYear = defaultYear;
-        *pMonth = defaultMonth;
-        *pDay = defaultDay;
-        *pHour = defaultHour;
-        *pMinutes = defaultMinutes;
-        *pSeconds = defaultSeconds;
-        *pNanoseconds = defaultNanoseconds;
-        *pOffsetHours = defaultOffsetHours;
-        *pOffsetMinutes = defaultOffsetMinutes;
+        return defautlDate;
     }
 
     IMEBRA_FUNCTION_END();

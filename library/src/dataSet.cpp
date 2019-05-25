@@ -14,6 +14,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "../include/imebra/dataSet.h"
 #include "../include/imebra/tag.h"
 #include "../include/imebra/lut.h"
+#include "../include/imebra/date.h"
 #include "../implementation/dataSetImpl.h"
 #include "../implementation/dataHandlerNumericImpl.h"
 #include "../implementation/charsetConversionBaseImpl.h"
@@ -192,43 +193,12 @@ const Age DataSet::getAge(const TagId& tagId, size_t elementNumber, const Age& d
 
 const Date DataSet::getDate(const TagId& tagId, size_t elementNumber) const
 {
-    std::uint32_t year, month, day, hour, minutes, seconds, nanoseconds;
-    std::int32_t offsetHours, offsetMinutes;
-    m_pDataSet->getDate(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, elementNumber,
-                        &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
-
-    return Date(
-                (unsigned int)year,
-                (unsigned int)month,
-                (unsigned int)day,
-                (unsigned int)hour,
-                (unsigned int)minutes,
-                (unsigned int)seconds,
-                (unsigned int)nanoseconds,
-                (int)offsetHours,
-                (int)offsetMinutes);
+    return Date(m_pDataSet->getDate(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, elementNumber));
 }
 
 const Date DataSet::getDate(const TagId& tagId, size_t elementNumber, const Date& defaultValue) const
 {
-    std::uint32_t year, month, day, hour, minutes, seconds, nanoseconds;
-    std::int32_t offsetHours, offsetMinutes;
-    m_pDataSet->getDate(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, elementNumber,
-                        &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes,
-                        defaultValue.year, defaultValue.month, defaultValue.day,
-                        defaultValue.hour, defaultValue.minutes, defaultValue.seconds, defaultValue.nanoseconds,
-                        defaultValue.offsetHours, defaultValue.offsetMinutes);
-
-    return Date(
-                (unsigned int)year,
-                (unsigned int)month,
-                (unsigned int)day,
-                (unsigned int)hour,
-                (unsigned int)minutes,
-                (unsigned int)seconds,
-                (unsigned int)nanoseconds,
-                (int)offsetHours,
-                (int)offsetMinutes);
+    return Date(m_pDataSet->getDate(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, elementNumber, getDateImplementation(defaultValue)));
 }
 
 
@@ -384,30 +354,12 @@ void MutableDataSet::setAge(const TagId& tagId, const Age& age)
 
 void MutableDataSet::setDate(const TagId& tagId, const Date& date, tagVR_t tagVR)
 {
-    getDataSetImplementation(*this)->setDate(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0,
-                                             (std::uint32_t) date.year,
-                                             (std::uint32_t) date.month,
-                                             (std::uint32_t) date.day,
-                                             (std::uint32_t) date.hour,
-                                             (std::uint32_t) date.minutes,
-                                             (std::uint32_t) date.seconds,
-                                             (std::uint32_t) date.nanoseconds,
-                                             (std::int32_t) date.offsetHours,
-                                             (std::int32_t) date.offsetMinutes, tagVR);
+    getDataSetImplementation(*this)->setDate(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, getDateImplementation(date), tagVR);
 }
 
 void MutableDataSet::setDate(const TagId& tagId, const Date& date)
 {
-    getDataSetImplementation(*this)->setDate(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0,
-                                             (std::uint32_t) date.year,
-                                             (std::uint32_t) date.month,
-                                             (std::uint32_t) date.day,
-                                             (std::uint32_t) date.hour,
-                                             (std::uint32_t) date.minutes,
-                                             (std::uint32_t) date.seconds,
-                                             (std::uint32_t) date.nanoseconds,
-                                             (std::int32_t) date.offsetHours,
-                                             (std::int32_t) date.offsetMinutes);
+    getDataSetImplementation(*this)->setDate(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, getDateImplementation(date));
 }
 
 }

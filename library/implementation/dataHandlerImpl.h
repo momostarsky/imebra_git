@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -34,6 +34,7 @@ namespace implementation
 
 class memory;
 class buffer;
+class date;
 
 /// \namespace handlers
 /// \brief All the implementations of the data handlers
@@ -143,38 +144,10 @@ public:
     ///
     /// @param index   the zero base index of the buffer's
     ///                 element to retrieve
-    /// @param pYear   a pointer to a value that will be filled
-    ///                 with the UTC date's year
-    /// @param pMonth  a pointer to a value that will be filled
-    ///                 with the UTC date's month
-    /// @param pDay    a pointer to a value that will be filled
-    ///                 with the UTC date's day of the month
-    /// @param pHour   a pointer to a value that will be filled
-    ///                 with the UTC hour
-    /// @param pMinutes a pointer to a value that will be
-    ///                 filled with the UTC minutes
-    /// @param pSeconds a pointer to a value that will be
-    ///                 filled with the UTC seconds
-    /// @param pNanoseconds a pointer to a value that will be
-    ///                 filled with the UTC nanosecods
-    /// @param pOffsetHours a pointer to a value that will be
-    ///                 filled with the difference between the
-    ///                 date time zone and the UTC time zone
-    /// @param pOffsetMinutes a pointer to a value that will be
-    ///                 filled with the difference between the
-    ///                 date time zone and the UTC time zone
+    /// \return the tag's content as a date
     ///
     ///////////////////////////////////////////////////////////
-    virtual void getDate(const size_t index,
-        std::uint32_t* pYear,
-        std::uint32_t* pMonth,
-        std::uint32_t* pDay,
-        std::uint32_t* pHour,
-        std::uint32_t* pMinutes,
-        std::uint32_t* pSeconds,
-        std::uint32_t* pNanoseconds,
-        std::int32_t* pOffsetHours,
-        std::int32_t* pOffsetMinutes) const;
+    virtual std::shared_ptr<date> getDate(const size_t index) const;
 
     /// \brief Retrieve the age value and its unit from the
     ///         buffer handled by this handler.
@@ -223,29 +196,10 @@ public:
     ///
     /// @param index   the zero base index of the buffer's
     ///                 element to be set
-    /// @param year   the UTC date's year
-    /// @param month  the UTC date's month
-    /// @param day    the UTC date's day of the month
-    /// @param hour   the UTC hour
-    /// @param minutes the UTC minutes
-    /// @param seconds the UTC seconds
-    /// @param nanoseconds the UTC nanosecods
-    /// @param offsetHours the difference between the date time
-    ///                zone and the UTC time zone
-    /// @param offsetMinutes the difference between the date
-    ///                time zone and the UTC time zone
+    /// @param pDate   the date to set
     ///
     ///////////////////////////////////////////////////////////
-    virtual void setDate(const size_t index,
-        std::uint32_t year,
-        std::uint32_t month,
-        std::uint32_t day,
-        std::uint32_t hour,
-        std::uint32_t minutes,
-        std::uint32_t seconds,
-        std::uint32_t nanoseconds,
-        std::int32_t offsetHours,
-        std::int32_t offsetMinutes);
+    virtual void setDate(const size_t index, const std::shared_ptr<const date>& pDate);
 
     /// \brief Set the value of the age string and specify
     ///         its unit.

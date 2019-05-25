@@ -189,18 +189,18 @@ TEST(dataSetTest, testSetGetTags)
     ASSERT_THROW(testDataSet.getDate(TagId(tagId_t::PatientAge_0010_1010), 0), DataHandlerConversionError);
 
     Date date0 = testDataSet.getDate(TagId(tagId_t::AcquisitionDateTime_0008_002A), 0);
-    ASSERT_EQ(2014u, date0.year);
-    ASSERT_EQ(2u, date0.month);
-    ASSERT_EQ(1u, date0.day);
+    ASSERT_EQ(2014u, date0.getYear());
+    ASSERT_EQ(2u, date0.getMonth());
+    ASSERT_EQ(1u, date0.getDay());
     ASSERT_THROW(testDataSet.getSignedLong(TagId(tagId_t::AcquisitionDateTime_0008_002A), 0), DataHandlerConversionError);
     ASSERT_THROW(testDataSet.getUnsignedLong(TagId(tagId_t::AcquisitionDateTime_0008_002A), 0), DataHandlerConversionError);
     ASSERT_THROW(testDataSet.getDouble(TagId(tagId_t::AcquisitionDateTime_0008_002A), 0), DataHandlerConversionError);
     ASSERT_THROW(testDataSet.getAge(TagId(tagId_t::AcquisitionDateTime_0008_002A), 0), DataHandlerConversionError);
 
     Date date1 = testDataSet.getDate(TagId(tagId_t::PatientBirthDate_0010_0030), 0);
-    ASSERT_EQ(2000u, date1.year);
-    ASSERT_EQ(1u, date1.month);
-    ASSERT_EQ(2u, date1.day);
+    ASSERT_EQ(2000u, date1.getYear());
+    ASSERT_EQ(1u, date1.getMonth());
+    ASSERT_EQ(2u, date1.getDay());
 
     ASSERT_EQ("Test patient", testDataSet.getString(TagId(tagId_t::PatientName_0010_0010), 0));
     ASSERT_DOUBLE_EQ(45.6, testDataSet.getDouble(TagId(0x20, 0x20), 0));
@@ -226,15 +226,15 @@ TEST(dataSetTest, defaults)
     ASSERT_EQ(defaultAge.units, getDefaultAge.units);
 
     Date getDefaultDate = testDataSet.getDate(TagId(20, 20), 0, defaultDate);
-    ASSERT_EQ(defaultDate.year, getDefaultDate.year);
-    ASSERT_EQ(defaultDate.month, getDefaultDate.month);
-    ASSERT_EQ(defaultDate.day, getDefaultDate.day);
-    ASSERT_EQ(defaultDate.hour, getDefaultDate.hour);
-    ASSERT_EQ(defaultDate.minutes, getDefaultDate.minutes);
-    ASSERT_EQ(defaultDate.seconds, getDefaultDate.seconds);
-    ASSERT_EQ(defaultDate.nanoseconds, getDefaultDate.nanoseconds);
-    ASSERT_EQ(defaultDate.offsetHours, getDefaultDate.offsetHours);
-    ASSERT_EQ(defaultDate.offsetMinutes, getDefaultDate.offsetMinutes);
+    ASSERT_EQ(defaultDate.getYear(), getDefaultDate.getYear());
+    ASSERT_EQ(defaultDate.getMonth(), getDefaultDate.getMonth());
+    ASSERT_EQ(defaultDate.getDay(), getDefaultDate.getDay());
+    ASSERT_EQ(defaultDate.getHour(), getDefaultDate.getHour());
+    ASSERT_EQ(defaultDate.getMinutes(), getDefaultDate.getMinutes());
+    ASSERT_EQ(defaultDate.getSeconds(), getDefaultDate.getSeconds());
+    ASSERT_EQ(defaultDate.getNanoseconds(), getDefaultDate.getNanoseconds());
+    ASSERT_EQ(defaultDate.getOffsetHours(), getDefaultDate.getOffsetHours());
+    ASSERT_EQ(defaultDate.getOffsetMinutes(), getDefaultDate.getOffsetMinutes());
 
     ASSERT_EQ(defaultUnsigned, testDataSet.getUnsignedLong(TagId(20, 20), 0, defaultUnsigned));
     ASSERT_EQ(defaultSigned, testDataSet.getSignedLong(TagId(20, 20), 0, defaultSigned));

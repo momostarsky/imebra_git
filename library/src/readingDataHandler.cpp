@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -83,20 +83,7 @@ std::wstring ReadingDataHandler::getUnicodeString(size_t index) const
 
 Date ReadingDataHandler::getDate(size_t index) const
 {
-    std::uint32_t year, month, day, hour, minutes, seconds, nanoseconds;
-    std::int32_t offsetHours, offsetMinutes;
-    m_pDataHandler->getDate(index, &year, &month, &day, &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
-
-    return Date(
-                (unsigned int)year,
-                (unsigned int)month,
-                (unsigned int)day,
-                (unsigned int)hour,
-                (unsigned int)minutes,
-                (unsigned int)seconds,
-                (unsigned int)nanoseconds,
-                (int)offsetHours,
-                (int)offsetMinutes);
+    return Date(m_pDataHandler->getDate(index));
 }
 
 Age ReadingDataHandler::getAge(size_t index) const

@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -243,48 +243,6 @@ struct IMEBRA_API Age
 
 };
 
-
-///
-/// \brief Stores a Date, Time or Date/Time value.
-///
-///////////////////////////////////////////////////////////////////////////////
-struct IMEBRA_API Date
-{
-    /// \brief Constructor.
-    ///
-    /// Initialize the Date structure with the specified values.
-    ///
-    /// \param initialYear    year (0 = unused)
-    /// \param initialMonth   month (1...12, 0 = unused)
-    /// \param initialDay     day of the month (1...31, 0 = unused)
-    /// \param initialHour    hour (0...23)
-    /// \param initialMinutes minutes (0...59)
-    /// \param initialSeconds seconds (0...59)
-    /// \param initialNanoseconds nanoseconds
-    /// \param initialOffsetHours   hours offset from UTC
-    /// \param initialOffsetMinutes minutes offset from UTC
-    ///////////////////////////////////////////////////////////////////////////////
-    Date(const std::uint32_t initialYear,
-         const std::uint32_t initialMonth,
-         const std::uint32_t initialDay,
-         const std::uint32_t initialHour,
-         const std::uint32_t initialMinutes,
-         const std::uint32_t initialSeconds,
-         const std::uint32_t initialNanoseconds,
-         const std::int32_t initialOffsetHours,
-         const std::int32_t initialOffsetMinutes);
-
-    std::uint32_t year;         ///< Year (0 = unused)
-    std::uint32_t month;        ///< Month (1...12, 0 = unused)
-    std::uint32_t day;          ///< Day (1...12, 0 = unused)
-    std::uint32_t hour;         ///< Hours
-    std::uint32_t minutes;      ///< Minutes
-    std::uint32_t seconds;      ///< Seconds
-    std::uint32_t nanoseconds;  ///< Nanoseconds
-    std::int32_t offsetHours;   ///< Offset hours from UTC
-    std::int32_t offsetMinutes; ///< Offset minutes from UTC
-
-};
 
 ///
 /// \brief Stores a VOI Description and Settings

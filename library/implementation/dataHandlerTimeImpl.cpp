@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -22,6 +22,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #include "exceptionImpl.h"
 #include "dataHandlerTimeImpl.h"
+#include "dateImpl.h"
 
 namespace imebra
 {
@@ -59,30 +60,16 @@ readingDataHandlerTime::readingDataHandlerTime(const memory& parseMemory): readi
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void readingDataHandlerTime::getDate(const size_t index,
-         std::uint32_t* pYear,
-         std::uint32_t* pMonth,
-         std::uint32_t* pDay,
-         std::uint32_t* pHour,
-         std::uint32_t* pMinutes,
-         std::uint32_t* pSeconds,
-         std::uint32_t* pNanoseconds,
-         std::int32_t* pOffsetHours,
-         std::int32_t* pOffsetMinutes) const
+std::shared_ptr<date> readingDataHandlerTime::getDate(const size_t index) const
 {
     IMEBRA_FUNCTION_START();
 
-    *pYear = 0;
-    *pMonth = 0;
-    *pDay = 0;
-    *pHour = 0;
-    *pMinutes = 0;
-    *pSeconds = 0;
-    *pNanoseconds = 0;
-    *pOffsetHours = 0;
-    *pOffsetMinutes = 0;
+    std::uint32_t hour(0), minutes(0), seconds(0), nanoseconds(0);
+    std::int32_t offsetHours(0), offsetMinutes(0);
 
-    parseTime(getString(index), pHour, pMinutes, pSeconds, pNanoseconds, pOffsetHours, pOffsetMinutes);
+    parseTime(getString(index), &hour, &minutes, &seconds, &nanoseconds, &offsetHours, &offsetMinutes);
+
+    return std::make_shared<date>(0, 0, 0, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes);
 
     IMEBRA_FUNCTION_END();
 
@@ -104,23 +91,14 @@ writingDataHandlerTime::writingDataHandlerTime(const std::shared_ptr<buffer> &pB
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void writingDataHandlerTime::setDate(const size_t index,
-         std::uint32_t /* year */,
-         std::uint32_t /* month */,
-         std::uint32_t /* day */,
-         std::uint32_t hour,
-         std::uint32_t minutes,
-         std::uint32_t seconds,
-         std::uint32_t nanoseconds,
-         std::int32_t /* offsetHours */,
-         std::int32_t /* offsetMinutes */)
+void writingDataHandlerTime::setDate(const size_t index, const std::shared_ptr<const date>& pDate)
 {
     IMEBRA_FUNCTION_START();
 
-    std::string timeString = buildTimeSimple(hour, minutes, seconds, nanoseconds);
+    std::string timeString = buildTimeSimple(pDate->getHour(), pDate->getMinutes(), pDate->getSeconds(), pDate->getNanoseconds());
     setString(index, timeString);
 
-	IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 

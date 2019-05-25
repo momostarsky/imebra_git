@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -40,27 +40,5 @@ double Age::years() const
     }
 }
 
-Date::Date(
-        const unsigned int initialYear,
-        const unsigned int initialMonth,
-        const unsigned int initialDay,
-        const unsigned int initialHour,
-        const unsigned int initialMinutes,
-        const unsigned int initialSeconds,
-        const unsigned int initialNanoseconds,
-        const signed int initialOffsetHours,
-        const signed int initialOffsetMinutes):
-    year(initialYear),
-    month(initialMonth),
-    day(initialDay),
-    hour(initialHour),
-    minutes(initialMinutes),
-    seconds(initialSeconds),
-    nanoseconds(initialNanoseconds),
-    offsetHours(initialOffsetHours),
-    offsetMinutes(initialOffsetMinutes)
-{
-
-}
 
 }

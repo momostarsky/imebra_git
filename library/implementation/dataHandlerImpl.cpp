@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -21,6 +21,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "dataHandlerImpl.h"
 #include "memoryImpl.h"
 #include "dicomDictImpl.h"
+#include "dateImpl.h"
 
 namespace imebra
 {
@@ -60,16 +61,7 @@ tagVR_t readingDataHandler::getDataType() const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void readingDataHandler::getDate(const size_t /* index */,
-        std::uint32_t* /* pYear */,
-        std::uint32_t* /* pMonth */,
-        std::uint32_t* /* pDay */,
-        std::uint32_t* /* pHour */,
-        std::uint32_t* /* pMinutes */,
-        std::uint32_t* /* pSeconds */,
-        std::uint32_t* /* pNanoseconds */,
-        std::int32_t* /* pOffsetHours */,
-        std::int32_t* /* pOffsetMinutes */) const
+std::shared_ptr<date> readingDataHandler::getDate(const size_t /* index */) const
 {
     IMEBRA_FUNCTION_START();
 
@@ -121,16 +113,7 @@ tagVR_t writingDataHandler::getDataType() const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void writingDataHandler::setDate(const size_t /* index */,
-        std::uint32_t /* year */,
-        std::uint32_t /* month */,
-        std::uint32_t /* day */,
-        std::uint32_t /* hour */,
-        std::uint32_t /*minutes */,
-        std::uint32_t /*seconds */,
-        std::uint32_t /*nanoseconds */,
-		std::int32_t /*offsetHours */,
-		std::int32_t /*offsetMinutes */)
+void writingDataHandler::setDate(const size_t /* index */, const std::shared_ptr<const date>& /* pDate */)
 {
     IMEBRA_FUNCTION_START();
 
