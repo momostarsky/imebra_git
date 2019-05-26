@@ -11,34 +11,53 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#include "../include/imebra/definitions.h"
-#include "../implementation/exceptionImpl.h"
+/*! \file ageImpl.cpp
+    \brief Implementation of the class age.
+
+*/
+
+#include "ageImpl.h"
 
 namespace imebra
 {
 
-Age::Age(uint32_t initialAge, ageUnit_t initialUnits):
-    age(initialAge), units(initialUnits)
+namespace implementation
 {
 
+age::age(std::uint32_t initialAge, ageUnit_t initialUnits):
+    m_age(initialAge), m_units(initialUnits)
+{
 }
 
-double Age::years() const
+double age::getYears() const
 {
-    switch(units)
+    switch(m_units)
     {
     case ageUnit_t::years:
-        return (double)age;
+        return (double)m_age;
     case ageUnit_t::months:
-        return age / (double)12;
+        return m_age / (double)12;
     case ageUnit_t::weeks:
-        return age / 52.142857;
+        return m_age / 52.142857;
     case ageUnit_t::days:
-        return age / (double)365;
+        return m_age / (double)365;
     default:
         throw;
     }
-}
-
 
 }
+
+std::uint32_t age::getAgeValue() const
+{
+    return m_age;
+}
+
+ageUnit_t age::getAgeUnits() const
+{
+    return m_units;
+}
+
+} // namespace implementation
+
+} // namespace imebra
+

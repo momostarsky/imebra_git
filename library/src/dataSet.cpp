@@ -15,6 +15,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "../include/imebra/tag.h"
 #include "../include/imebra/lut.h"
 #include "../include/imebra/date.h"
+#include "../include/imebra/age.h"
 #include "../implementation/dataSetImpl.h"
 #include "../implementation/dataHandlerNumericImpl.h"
 #include "../implementation/charsetConversionBaseImpl.h"
@@ -179,16 +180,12 @@ std::wstring DataSet::getUnicodeString(const TagId& tagId, size_t elementNumber,
 
 const Age DataSet::getAge(const TagId& tagId, size_t elementNumber) const
 {
-    imebra::ageUnit_t units;
-    std::uint32_t age = m_pDataSet->getAge(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, elementNumber, &units);
-    return Age(age, units);
+    return Age(m_pDataSet->getAge(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, elementNumber));
 }
 
 const Age DataSet::getAge(const TagId& tagId, size_t elementNumber, const Age& defaultValue) const
 {
-    imebra::ageUnit_t units;
-    std::uint32_t age = m_pDataSet->getAge(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, elementNumber, &units, defaultValue.age, defaultValue.units);
-    return Age(age, units);
+    return Age(m_pDataSet->getAge(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, elementNumber, getAgeImplementation(defaultValue)));
 }
 
 const Date DataSet::getDate(const TagId& tagId, size_t elementNumber) const
@@ -349,7 +346,7 @@ void MutableDataSet::setUnicodeString(const TagId& tagId, const std::wstring& ne
 
 void MutableDataSet::setAge(const TagId& tagId, const Age& age)
 {
-    getDataSetImplementation(*this)->setAge(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, age.age, age.units);
+    getDataSetImplementation(*this)->setAge(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, getAgeImplementation(age));
 }
 
 void MutableDataSet::setDate(const TagId& tagId, const Date& date, tagVR_t tagVR)

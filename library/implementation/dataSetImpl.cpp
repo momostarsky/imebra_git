@@ -34,6 +34,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "modalityVOILUTImpl.h"
 #include "bufferImpl.h"
 #include "dateImpl.h"
+#include "ageImpl.h"
 #include <iostream>
 #include <string.h>
 
@@ -1248,7 +1249,7 @@ void dataSet::setUnicodeString(std::uint16_t groupId, std::uint32_t order, std::
 }
 
 
-void dataSet::setAge(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::uint32_t age, ageUnit_t units)
+void dataSet::setAge(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::shared_ptr<const age>& pAge)
 {
     IMEBRA_FUNCTION_START();
 
@@ -1256,34 +1257,32 @@ void dataSet::setAge(std::uint16_t groupId, std::uint32_t order, std::uint16_t t
 
     std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, bufferId, tagVR_t::AS);
     dataHandler->setSize(1);
-    dataHandler->setAge(0, age, units);
+    dataHandler->setAge(0, pAge);
 
     IMEBRA_FUNCTION_END();
 }
 
-std::uint32_t dataSet::getAge(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, ageUnit_t* pUnits) const
+std::shared_ptr<age> dataSet::getAge(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
 {
     IMEBRA_FUNCTION_START();
 
-    return getReadingDataHandler(groupId, order, tagId, bufferId)->getAge(elementNumber, pUnits);
+    return getReadingDataHandler(groupId, order, tagId, bufferId)->getAge(elementNumber);
 
     IMEBRA_FUNCTION_END();
 }
 
-std::uint32_t dataSet::getAge(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId,
-                              size_t elementNumber, ageUnit_t* pUnits,
-                              std::uint32_t defaultAge, ageUnit_t defaultUnits) const
+std::shared_ptr<age> dataSet::getAge(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId,
+                              size_t elementNumber, const std::shared_ptr<age>& pDefaultAge) const
 {
     IMEBRA_FUNCTION_START();
 
     try
     {
-        return getAge(groupId, order, tagId, bufferId, elementNumber, pUnits);
+        return getAge(groupId, order, tagId, bufferId, elementNumber);
     }
     catch(const MissingDataElementError&)
     {
-        *pUnits = defaultUnits;
-        return defaultAge;
+        return pDefaultAge;
     }
 
     IMEBRA_FUNCTION_END();

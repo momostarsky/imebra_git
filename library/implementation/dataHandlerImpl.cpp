@@ -22,6 +22,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "memoryImpl.h"
 #include "dicomDictImpl.h"
 #include "dateImpl.h"
+#include "ageImpl.h"
 
 namespace imebra
 {
@@ -70,7 +71,7 @@ std::shared_ptr<date> readingDataHandler::getDate(const size_t /* index */) cons
     IMEBRA_FUNCTION_END();
 }
 
-std::uint32_t readingDataHandler::getAge(const size_t /* index */, ageUnit_t * /* pUnit */) const
+std::shared_ptr<age> readingDataHandler::getAge(const size_t /* index */) const
 {
     IMEBRA_FUNCTION_START();
 
@@ -122,7 +123,7 @@ void writingDataHandler::setDate(const size_t /* index */, const std::shared_ptr
     IMEBRA_FUNCTION_END();
 }
 
-void writingDataHandler::setAge(const size_t /* index */, const std::uint32_t /* age */, const ageUnit_t /* unit */)
+void writingDataHandler::setAge(const size_t /* index */, const std::shared_ptr<const age>& /* pAge */)
 {
     IMEBRA_FUNCTION_START();
 

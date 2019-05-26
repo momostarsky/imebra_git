@@ -17,6 +17,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #include "../include/imebra/writingDataHandler.h"
 #include "../include/imebra/date.h"
+#include "../include/imebra/age.h"
 #include "../implementation/dataHandlerImpl.h"
 #include "../implementation/dataHandlerNumericImpl.h"
 #include <cstring>
@@ -69,7 +70,7 @@ void WritingDataHandler::setDate(size_t index, const Date& date)
 
 void WritingDataHandler::setAge(size_t index, const Age& age)
 {
-    m_pDataHandler->setAge(index, age.age, age.units);
+    m_pDataHandler->setAge(index, getAgeImplementation(age));
 }
 
 void WritingDataHandler::setSignedLong(size_t index, std::int32_t value)

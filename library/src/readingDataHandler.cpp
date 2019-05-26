@@ -18,6 +18,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "../include/imebra/readingDataHandler.h"
 #include "../implementation/dataHandlerImpl.h"
 #include "../implementation/dataHandlerNumericImpl.h"
+#include "../include/imebra/age.h"
 #include <cstring>
 
 namespace imebra
@@ -88,9 +89,7 @@ Date ReadingDataHandler::getDate(size_t index) const
 
 Age ReadingDataHandler::getAge(size_t index) const
 {
-    imebra::ageUnit_t ageUnits;
-    std::uint32_t age = m_pDataHandler->getAge(index, &ageUnits);
-    return Age(age, ageUnits);
+    return Age(m_pDataHandler->getAge(index));
 }
 
 }

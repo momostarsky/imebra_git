@@ -59,7 +59,7 @@ namespace imebra
 {
 
 ///
-/// \brief Used by setAge() and getAge() to specify the unit of the age value.
+/// \brief Used by the Age class to specify the unit of the age value.
 ///
 ///////////////////////////////////////////////////////////////////////////////
 enum class ageUnit_t: char
@@ -213,34 +213,6 @@ enum class drawBitmapType_t: std::uint32_t
     drawBitmapBGR  = 1, ///< Generates a BMP image where each pixel contains 3 bytes (B, G and R)
     drawBitmapRGBA = 2, ///< Generates a BMP image where each pixel contains 4 bytes (R, G, B and A)
     drawBitmapBGRA = 3  ///< Generates a BMP image where each pixel contains 4 bytes (B, G, R and A)
-};
-
-
-///
-/// \brief Specifies an age, in days, weeks, months or years.
-///
-///////////////////////////////////////////////////////////////////////////////
-struct IMEBRA_API Age
-{
-    /// \brief Constructor.
-    ///
-    /// \param initialAge the initial age to assign to the object, in days, weeks,
-    ///                   months or years, depending on the parameter initialUnits
-    /// \param initialUnits the units of the value in initialAge
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    Age(std::uint32_t initialAge, ageUnit_t initialUnits);
-
-    /// \brief Return the age in years.
-    ///
-    /// \return the stored age converted to years.
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    double years() const;
-
-    std::uint32_t age;   ///< The age, in days, weeks, months or years according to units
-    ageUnit_t     units; ///< The units of the value in age
-
 };
 
 

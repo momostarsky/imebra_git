@@ -35,6 +35,7 @@ namespace implementation
 class memory;
 class buffer;
 class date;
+class age;
 
 /// \namespace handlers
 /// \brief All the implementations of the data handlers
@@ -154,15 +155,10 @@ public:
     ///
     /// @param index the zero based index of the age value to
     ///               modify
-    /// @param pUnit a pointer to a ageUnit_t that will be
-    ///               filled with the unit information related
-    ///               to the returned value
-    /// @return the age, expressed in the unit written in the
-    ///               location referenced by the parameter
-    ///               pUnit
+    /// @return the age
     ///
     ///////////////////////////////////////////////////////////
-    virtual std::uint32_t getAge(const size_t index, ageUnit_t* pUnit) const;
+    virtual std::shared_ptr<age> getAge(const size_t index) const;
 
 private:
     const tagVR_t m_dataType;
@@ -206,11 +202,10 @@ public:
     ///
     /// @param index the zero based index of the age value to
     ///               read
-    /// @param age   the age to be written in the buffer
-    /// @param unit  the units used for the parameter age
+    /// @param pAge  the age to be written in the buffer
     ///
     ///////////////////////////////////////////////////////////
-    virtual void setAge(const size_t index, const std::uint32_t age, const ageUnit_t unit);
+    virtual void setAge(const size_t index, const std::shared_ptr<const age>& pAge);
 
     /// \brief Set the buffer's element referenced by the
     ///         zero-based index specified in the parameter

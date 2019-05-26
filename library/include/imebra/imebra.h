@@ -24,6 +24,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "writingDataHandlerNumeric.h"
 #include "dataSet.h"
 #include "date.h"
+#include "age.h"
 #include "definitions.h"
 #include "dicomDir.h"
 #include "dicomDirEntry.h"

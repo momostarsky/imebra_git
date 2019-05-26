@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -20,6 +20,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <string>
 #include <iomanip>
 #include "../include/imebra/exceptions.h"
+#include "ageImpl.h"
 #include "exceptionImpl.h"
 #include "dataHandlerStringASImpl.h"
 #include "memoryImpl.h"
@@ -71,7 +72,7 @@ readingDataHandlerStringAS::readingDataHandlerStringAS(const memory& parseMemory
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::uint32_t readingDataHandlerStringAS::getAge(const size_t index, ageUnit_t* pUnit) const
+std::shared_ptr<age> readingDataHandlerStringAS::getAge(const size_t index) const
 {
     IMEBRA_FUNCTION_START();
 
@@ -81,8 +82,8 @@ std::uint32_t readingDataHandlerStringAS::getAge(const size_t index, ageUnit_t* 
         IMEBRA_THROW(DataHandlerCorruptedBufferError, "The AGE string should be 4 bytes long but it is "<< ageString.size() << " bytes long");
     }
     std::istringstream ageStream(ageString);
-	std::uint32_t age;
-    if(!(ageStream >> age))
+    std::uint32_t ageValue;
+    if(!(ageStream >> ageValue))
     {
         IMEBRA_THROW(DataHandlerCorruptedBufferError, "The AGE is not a number");
     }
@@ -95,10 +96,9 @@ std::uint32_t readingDataHandlerStringAS::getAge(const size_t index, ageUnit_t* 
     {
         IMEBRA_THROW(DataHandlerCorruptedBufferError, "The AGE unit should be D, W, M or Y but is ascii code "<< (int)unit);
     }
-    *pUnit = (ageUnit_t)unit;
-    return age;
+    return std::make_shared<age>(ageValue, (ageUnit_t)unit);
 
-	IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -115,9 +115,9 @@ std::int32_t readingDataHandlerStringAS::getSignedLong(const size_t index) const
 {
     IMEBRA_FUNCTION_START();
 
-	return (std::int32_t)getDouble(index);
+    return (std::int32_t)getDouble(index);
 
-	IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -136,7 +136,7 @@ std::uint32_t readingDataHandlerStringAS::getUnsignedLong(const size_t index) co
 
     return (std::uint32_t)getDouble(index);
 
-	IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -155,7 +155,7 @@ double readingDataHandlerStringAS::getDouble(const size_t /* index */) const
 
     IMEBRA_THROW(DataHandlerConversionError, "Cannot convert an Age to a number")
 
-	IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -173,7 +173,7 @@ writingDataHandlerStringAS::writingDataHandlerStringAS(const std::shared_ptr<buf
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void writingDataHandlerStringAS::setAge(const size_t index, const std::uint32_t age, const ageUnit_t unit)
+void writingDataHandlerStringAS::setAge(const size_t index, const std::shared_ptr<const age>& pAge)
 {
     IMEBRA_FUNCTION_START();
 
@@ -184,8 +184,8 @@ void writingDataHandlerStringAS::setAge(const size_t index, const std::uint32_t 
 
     std::ostringstream ageStream;
     ageStream << std::setfill('0');
-    ageStream << std::setw(3) << age;
-    ageStream << std::setw(1) << (char)unit;
+    ageStream << std::setw(3) << pAge->getAgeValue();
+    ageStream << std::setw(1) << (char)pAge->getAgeUnits();
 
     setString(index, ageStream.str());
 
@@ -206,9 +206,9 @@ void writingDataHandlerStringAS::setSignedLong(const size_t index, const std::in
 {
     IMEBRA_FUNCTION_START();
 
-	setDouble(index, (double)value);
+    setDouble(index, (double)value);
 
-	IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -225,9 +225,9 @@ void writingDataHandlerStringAS::setUnsignedLong(const size_t index, const std::
 {
     IMEBRA_FUNCTION_START();
 
-	setDouble(index, (double)value);
+    setDouble(index, (double)value);
 
-	IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -246,7 +246,7 @@ void writingDataHandlerStringAS::setDouble(const size_t /* index */, const doubl
 
     IMEBRA_THROW(DataHandlerConversionError, "Cannot convert to VR AS from double");
 
-	IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 void writingDataHandlerStringAS::validate() const

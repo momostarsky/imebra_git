@@ -179,8 +179,8 @@ TEST(dataSetTest, testSetGetTags)
     testDataSet.setUnsignedLong(TagId(0x20, 0x22), 60, tagVR_t::UL);
 
     Age age0 = testDataSet.getAge(TagId(tagId_t::PatientAge_0010_1010), 0);
-    ASSERT_EQ(3u, age0.age);
-    ASSERT_EQ(ageUnit_t::months, age0.units);
+    ASSERT_EQ(3u, age0.getAgeValue());
+    ASSERT_EQ(ageUnit_t::months, age0.getAgeUnits());
     ASSERT_EQ("003M", testDataSet.getString(TagId(tagId_t::PatientAge_0010_1010), 0));
     ASSERT_THROW(testDataSet.getSignedLong(TagId(tagId_t::PatientAge_0010_1010), 0), DataHandlerConversionError);
     ASSERT_THROW(testDataSet.getUnsignedLong(TagId(tagId_t::PatientAge_0010_1010), 0), DataHandlerConversionError);
@@ -222,8 +222,8 @@ TEST(dataSetTest, defaults)
     MutableDataSet testDataSet;
 
     Age getDefaultAge = testDataSet.getAge(TagId(20, 20), 0, defaultAge);
-    ASSERT_EQ(defaultAge.age, getDefaultAge.age);
-    ASSERT_EQ(defaultAge.units, getDefaultAge.units);
+    ASSERT_EQ(defaultAge.getAgeValue(), getDefaultAge.getAgeValue());
+    ASSERT_EQ(defaultAge.getAgeUnits(), getDefaultAge.getAgeUnits());
 
     Date getDefaultDate = testDataSet.getDate(TagId(20, 20), 0, defaultDate);
     ASSERT_EQ(defaultDate.getYear(), getDefaultDate.getYear());

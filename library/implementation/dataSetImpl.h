@@ -42,6 +42,7 @@ namespace implementation
 class image;
 class lut;
 class date;
+class age;
 
 /// \addtogroup group_dataset Dicom data
 /// \brief The Dicom dataset is represented by the
@@ -644,13 +645,12 @@ public:
 
     void setUnicodeString(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::wstring& newString);
 
-    void setAge(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::uint32_t age, ageUnit_t units);
+    void setAge(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::shared_ptr<const age>& pAge);
 
-    std::uint32_t getAge(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, ageUnit_t* pUnits) const;
+    std::shared_ptr<age> getAge(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
 
-    std::uint32_t getAge(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId,
-                                  size_t elementNumber, ageUnit_t* pUnits,
-                                  std::uint32_t defaultAge, ageUnit_t defaultUnits) const;
+    std::shared_ptr<age> getAge(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId,
+                                  size_t elementNumber, const std::shared_ptr<age>& pDefaultAge) const;
 
     void setDate(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::shared_ptr<const date>& pDate, tagVR_t tagVR);
 
