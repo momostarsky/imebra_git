@@ -29,6 +29,7 @@ namespace imebra
 {
 
 class Age;
+class Date;
 
 namespace implementation
 {
