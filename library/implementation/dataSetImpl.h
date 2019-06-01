@@ -577,6 +577,15 @@ public:
 
     std::wstring getUnicodeString(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, const std::wstring& defaultValue) const;
 
+    std::shared_ptr<patientName> getPatientName(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
+    std::shared_ptr<patientName> getPatientName(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, const std::shared_ptr<patientName>& defaultValue) const;
+    std::shared_ptr<unicodePatientName> getUnicodePatientName(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
+    std::shared_ptr<unicodePatientName> getUnicodePatientName(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, const std::shared_ptr<unicodePatientName>& defaultValue) const;
+
+    void setPatientName(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::shared_ptr<const patientName>& pPatientName);
+    void setUnicodePatientName(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::shared_ptr<const unicodePatientName>& pPatientName);
+
+
     /// \brief Set a tag's value as a string.
     ///        setUnicodeString() is preferred over this
     ///         method.

@@ -16,6 +16,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "../include/imebra/lut.h"
 #include "../include/imebra/date.h"
 #include "../include/imebra/age.h"
+#include "../include/imebra/patientName.h"
 #include "../implementation/dataSetImpl.h"
 #include "../implementation/dataHandlerNumericImpl.h"
 #include "../implementation/charsetConversionBaseImpl.h"
@@ -198,6 +199,27 @@ const Date DataSet::getDate(const TagId& tagId, size_t elementNumber, const Date
     return Date(m_pDataSet->getDate(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, elementNumber, getDateImplementation(defaultValue)));
 }
 
+const PatientName DataSet::getPatientName(const TagId& tagId, size_t elementNumber) const
+{
+    return PatientName(m_pDataSet->getPatientName(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, elementNumber));
+}
+
+const PatientName DataSet::getPatientName(const TagId& tagId, size_t elementNumber, const PatientName& defaultValue) const
+{
+    return PatientName(m_pDataSet->getPatientName(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, elementNumber, getPatientNameImplementation(defaultValue)));
+}
+
+const UnicodePatientName DataSet::getUnicodePatientName(const TagId& tagId, size_t elementNumber) const
+{
+    return UnicodePatientName(m_pDataSet->getUnicodePatientName(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, elementNumber));
+}
+
+const UnicodePatientName DataSet::getUnicodePatientName(const TagId& tagId, size_t elementNumber, const UnicodePatientName& defaultValue) const
+{
+    return UnicodePatientName(m_pDataSet->getUnicodePatientName(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, elementNumber, getUnicodePatientNameImplementation(defaultValue)));
+}
+
+
 
 tagVR_t DataSet::getDataType(const TagId& tagId) const
 {
@@ -358,5 +380,16 @@ void MutableDataSet::setDate(const TagId& tagId, const Date& date)
 {
     getDataSetImplementation(*this)->setDate(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, getDateImplementation(date));
 }
+
+void MutableDataSet::setPatientName(const TagId& tagId, const PatientName& patientName)
+{
+    getDataSetImplementation(*this)->setPatientName(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, getPatientNameImplementation(patientName));
+}
+
+void MutableDataSet::setUnicodePatientName(const TagId& tagId, const UnicodePatientName& patientName)
+{
+    getDataSetImplementation(*this)->setUnicodePatientName(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, getUnicodePatientNameImplementation(patientName));
+}
+
 
 }

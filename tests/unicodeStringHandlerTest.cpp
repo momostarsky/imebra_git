@@ -10,9 +10,9 @@ namespace tests
 TEST(unicodeStringHandlerTest, unicodeTest)
 {
 
-	// Try a cyrillic/arabic patient name
+    // Try a cyrillic/arabic patient name
     std::wstring patientName0 = L"??\x0628\x062a\x062b\x062f^\0x400\0x410\0x420";
-	std::wstring patientName1 = L"\0x420\x062a\x062b^\0x400\0x410\x0628\x062a";
+    std::wstring patientName1 = L"\0x420\x062a\x062b^\0x400\0x410\x0628\x062a";
 
     MutableMemory streamMemory;
     {
@@ -30,9 +30,9 @@ TEST(unicodeStringHandlerTest, unicodeTest)
         MemoryStreamOutput writeStream(streamMemory);
         StreamWriter writer(writeStream);
         CodecFactory::save(testDataSet, writer, codecType_t::dicom);
-	}
+    }
 
-	{
+    {
         MemoryStreamInput readStream(streamMemory);
         StreamReader reader(readStream);
         DataSet testDataSet = CodecFactory::load(reader);
@@ -49,10 +49,10 @@ TEST(unicodeStringHandlerTest, unicodeTest)
 
 TEST(unicodeStringHandlerTest, iso2022Test)
 {
-	// Try a cyrillic /greek/latin patient name
+    // Try a cyrillic /greek/latin patient name
 
     std::wstring patientName0 = L"???\x0430\x0402\x0403\x00c9^\x00d0\x0410\x00d5";
-	std::wstring patientName1 = L"\x0420\x00df\x0062^\x0394\x0410\x00d7\x0072";
+    std::wstring patientName1 = L"\x0420\x00df\x0062^\x0394\x0410\x00d7\x0072";
     std::wstring patientName2 = L"??\x0628\x062a\x062b\x062f^\0x400\0x410\0x420\0x00c6\0x0104\0x00c6";
 
     MutableMemory streamMemory;
@@ -74,7 +74,7 @@ TEST(unicodeStringHandlerTest, iso2022Test)
         CodecFactory::save(testDataSet, writer, codecType_t::dicom);
     }
 
-	{
+    {
         MemoryStreamInput readStream(streamMemory);
         StreamReader reader(readStream);
         DataSet testDataSet = CodecFactory::load(reader);
@@ -163,6 +163,143 @@ TEST(unicodeStringHandlerTest, unicodeNumericConversion)
     }
 }
 
+
+TEST(unicodeStringHandlerTest, PNTest)
+{
+    charsetsList_t charsets;
+    charsets.push_back("ISO_IR 192");
+    MutableDataSet testDataSet("1.2.840.10008.1.2.1", charsets);
+
+    {
+        testDataSet.setUnicodeString(TagId(0x0010, 0x0010), L"\x2070e\x20731\x20779\x20c53^\x00d0\x0410\x00d5", tagVR_t::PN);
+        ASSERT_EQ(L"\x2070e\x20731\x20779\x20c53^\x00d0\x0410\x00d5", testDataSet.getUnicodeString(TagId(0x0010, 0x0010), 0));
+        ASSERT_THROW(testDataSet.getDate(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.getAge(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
+
+        {
+            WritingDataHandler pnHandler = testDataSet.getWritingDataHandler(TagId(0x0010, 0x0010), 0, tagVR_t::PN);
+            pnHandler.setUnicodeString(0, L"\x2070e\x20731\x20779\x20c53^\x00d0\x0410\x00d5^0=Patient^1=Patient^2");
+            pnHandler.setUnicodeString(1, L"\x2070e\x20731\x20779\x20c53^\x00d0\x0410\x00d5^3=Patient^4");
+        }
+
+        {
+            ASSERT_EQ(L"\x2070e\x20731\x20779\x20c53^\x00d0\x0410\x00d5^0=Patient^1=Patient^2", testDataSet.getUnicodeString(TagId(0x0010, 0x0010), 0));
+            ASSERT_EQ(L"\x2070e\x20731\x20779\x20c53^\x00d0\x0410\x00d5^3=Patient^4", testDataSet.getUnicodeString(TagId(0x0010, 0x0010), 1));
+
+            UnicodePatientName patientName0 = testDataSet.getUnicodePatientName(TagId(0x0010, 0x0010), 0);
+            ASSERT_EQ(L"\x2070e\x20731\x20779\x20c53^\x00d0\x0410\x00d5^0", patientName0.getAlphabeticRepresentation());
+            ASSERT_EQ(L"Patient^1", patientName0.getIdeographicRepresentation());
+            ASSERT_EQ(L"Patient^2", patientName0.getPhoneticRepresentation());
+            UnicodePatientName patientName1 = testDataSet.getUnicodePatientName(TagId(0x0010, 0x0010), 1);
+            ASSERT_EQ(L"\x2070e\x20731\x20779\x20c53^\x00d0\x0410\x00d5^3", patientName1.getAlphabeticRepresentation());
+            ASSERT_EQ(L"Patient^4", patientName1.getIdeographicRepresentation());
+            ASSERT_EQ(L"", patientName1.getPhoneticRepresentation());
+        }
+
+        {
+            ReadingDataHandler patientDataHandler = testDataSet.getReadingDataHandler(TagId(0x0010, 0x0010), 0);
+            UnicodePatientName patientName0 = patientDataHandler.getUnicodePatientName(0);
+            ASSERT_EQ(L"\x2070e\x20731\x20779\x20c53^\x00d0\x0410\x00d5^0", patientName0.getAlphabeticRepresentation());
+            ASSERT_EQ(L"Patient^1", patientName0.getIdeographicRepresentation());
+            ASSERT_EQ(L"Patient^2", patientName0.getPhoneticRepresentation());
+            UnicodePatientName patientName1 = patientDataHandler.getUnicodePatientName(1);
+            ASSERT_EQ(L"\x2070e\x20731\x20779\x20c53^\x00d0\x0410\x00d5^3", patientName1.getAlphabeticRepresentation());
+            ASSERT_EQ(L"Patient^4", patientName1.getIdeographicRepresentation());
+            ASSERT_EQ(L"", patientName1.getPhoneticRepresentation());
+        }
+
+    }
+
+    {
+        UnicodePatientName writePatient(L"\x2070e\x20731\x20779\x20c53^\x00d0\x0410\x00d5^representation", L"", L"");
+        testDataSet.setUnicodePatientName(TagId(0x0010, 0x0010), writePatient);
+
+        UnicodePatientName checkPatient(testDataSet.getUnicodePatientName(TagId(0x0010, 0x0010), 0));
+        ASSERT_EQ(writePatient.getAlphabeticRepresentation(), checkPatient.getAlphabeticRepresentation());
+        ASSERT_EQ(writePatient.getIdeographicRepresentation(), checkPatient.getIdeographicRepresentation());
+        ASSERT_EQ(writePatient.getPhoneticRepresentation(), checkPatient.getPhoneticRepresentation());
+        ASSERT_EQ(L"\x2070e\x20731\x20779\x20c53^\x00d0\x0410\x00d5^representation", testDataSet.getUnicodeString(TagId(0x0010, 0x0010), 0));
+
+        ReadingDataHandler handler = testDataSet.getReadingDataHandler(TagId(0x0010, 010010), 0);
+        ASSERT_EQ(L"\x2070e\x20731\x20779\x20c53^\x00d0\x0410\x00d5^representation", handler.getUnicodeString(0));
+    }
+
+    {
+        UnicodePatientName writePatient(L"\x2070e\x20731\x20779\x20c53^\x00d0\x0410\x00d5^representation", L"ideographic^representation", L"phonetic^representation");
+        testDataSet.setUnicodePatientName(TagId(0x0010, 0x0010), writePatient);
+
+        UnicodePatientName checkPatient(testDataSet.getUnicodePatientName(TagId(0x0010, 0x0010), 0));
+        ASSERT_EQ(writePatient.getAlphabeticRepresentation(), checkPatient.getAlphabeticRepresentation());
+        ASSERT_EQ(writePatient.getIdeographicRepresentation(), checkPatient.getIdeographicRepresentation());
+        ASSERT_EQ(writePatient.getPhoneticRepresentation(), checkPatient.getPhoneticRepresentation());
+        ASSERT_EQ(L"\x2070e\x20731\x20779\x20c53^\x00d0\x0410\x00d5^representation=ideographic^representation=phonetic^representation", testDataSet.getUnicodeString(TagId(0x0010, 0x0010), 0));
+    }
+
+    {
+        UnicodePatientName writePatient(L"", L"ideographic^representation", L"\x2070e\x20731\x20779\x20c53^\x00d0\x0410\x00d5^representation");
+        testDataSet.setUnicodePatientName(TagId(0x0010, 0x0010), writePatient);
+
+        UnicodePatientName checkPatient(testDataSet.getUnicodePatientName(TagId(0x0010, 0x0010), 0));
+        ASSERT_EQ(writePatient.getAlphabeticRepresentation(), checkPatient.getAlphabeticRepresentation());
+        ASSERT_EQ(writePatient.getIdeographicRepresentation(), checkPatient.getIdeographicRepresentation());
+        ASSERT_EQ(writePatient.getPhoneticRepresentation(), checkPatient.getPhoneticRepresentation());
+        ASSERT_EQ(L"=ideographic^representation=\x2070e\x20731\x20779\x20c53^\x00d0\x0410\x00d5^representation", testDataSet.getUnicodeString(TagId(0x0010, 0x0010), 0));
+    }
+
+    {
+        UnicodePatientName writePatient(L"", L"", L"\x2070e\x20731\x20779\x20c53^\x00d0\x0410\x00d5^representation");
+        testDataSet.setUnicodePatientName(TagId(0x0010, 0x0010), writePatient);
+
+        UnicodePatientName checkPatient(testDataSet.getUnicodePatientName(TagId(0x0010, 0x0010), 0));
+        ASSERT_EQ(writePatient.getAlphabeticRepresentation(), checkPatient.getAlphabeticRepresentation());
+        ASSERT_EQ(writePatient.getIdeographicRepresentation(), checkPatient.getIdeographicRepresentation());
+        ASSERT_EQ(writePatient.getPhoneticRepresentation(), checkPatient.getPhoneticRepresentation());
+        ASSERT_EQ(L"==\x2070e\x20731\x20779\x20c53^\x00d0\x0410\x00d5^representation", testDataSet.getUnicodeString(TagId(0x0010, 0x0010), 0));
+    }
+
+    {
+        UnicodePatientName writePatient(L"", L"", L"");
+        testDataSet.setUnicodePatientName(TagId(0x0010, 0x0010), writePatient);
+
+        UnicodePatientName checkPatient(testDataSet.getUnicodePatientName(TagId(0x0010, 0x0010), 0));
+        ASSERT_EQ(writePatient.getAlphabeticRepresentation(), checkPatient.getAlphabeticRepresentation());
+        ASSERT_EQ(writePatient.getIdeographicRepresentation(), checkPatient.getIdeographicRepresentation());
+        ASSERT_EQ(writePatient.getPhoneticRepresentation(), checkPatient.getPhoneticRepresentation());
+        ASSERT_EQ("", testDataSet.getString(TagId(0x0010, 0x0010), 0));
+    }
+
+    {
+        UnicodePatientName writePatient(L"\x2070e\x20731\x20779\x20c53^\x00d0\x0410\x00d5^representation", L"", L"phonetic^representation");
+        testDataSet.setUnicodePatientName(TagId(0x0010, 0x0010), writePatient);
+
+        UnicodePatientName checkPatient(testDataSet.getUnicodePatientName(TagId(0x0010, 0x0010), 0));
+        ASSERT_EQ(writePatient.getAlphabeticRepresentation(), checkPatient.getAlphabeticRepresentation());
+        ASSERT_EQ(writePatient.getIdeographicRepresentation(), checkPatient.getIdeographicRepresentation());
+        ASSERT_EQ(writePatient.getPhoneticRepresentation(), checkPatient.getPhoneticRepresentation());
+        ASSERT_EQ(L"\x2070e\x20731\x20779\x20c53^\x00d0\x0410\x00d5^representation==phonetic^representation", testDataSet.getUnicodeString(TagId(0x0010, 0x0010), 0));
+    }
+
+    {
+        UnicodePatientName writePatient0(L"", L"", L"\x2070e\x20731\x20779\x20c53^\x00d0\x0410\x00d5^representation");
+        UnicodePatientName writePatient1(L"alphabetic^representation", L"", L"\x2070e\x20731\x20779\x20c53^\x00d0\x0410\x00d5^representation");
+
+        {
+            WritingDataHandler handler = testDataSet.getWritingDataHandler(TagId(0x0010, 0x0010), 0, tagVR_t::PN);
+            handler.setUnicodePatientName(0, writePatient0);
+            handler.setUnicodePatientName(1, writePatient1);
+        }
+
+        UnicodePatientName checkPatient0(testDataSet.getUnicodePatientName(TagId(0x0010, 0x0010), 0));
+        UnicodePatientName checkPatient1(testDataSet.getUnicodePatientName(TagId(0x0010, 0x0010), 1));
+        ASSERT_EQ(writePatient0.getAlphabeticRepresentation(), checkPatient0.getAlphabeticRepresentation());
+        ASSERT_EQ(writePatient0.getIdeographicRepresentation(), checkPatient0.getIdeographicRepresentation());
+        ASSERT_EQ(writePatient0.getPhoneticRepresentation(), checkPatient0.getPhoneticRepresentation());
+
+        ASSERT_EQ(writePatient1.getAlphabeticRepresentation(), checkPatient1.getAlphabeticRepresentation());
+        ASSERT_EQ(writePatient1.getIdeographicRepresentation(), checkPatient1.getIdeographicRepresentation());
+        ASSERT_EQ(writePatient1.getPhoneticRepresentation(), checkPatient1.getPhoneticRepresentation());
+    }
+}
 
 
 } // namespace tests

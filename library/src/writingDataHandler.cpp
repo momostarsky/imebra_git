@@ -18,6 +18,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "../include/imebra/writingDataHandler.h"
 #include "../include/imebra/date.h"
 #include "../include/imebra/age.h"
+#include "../include/imebra/patientName.h"
 #include "../implementation/dataHandlerImpl.h"
 #include "../implementation/dataHandlerNumericImpl.h"
 #include <cstring>
@@ -97,5 +98,16 @@ void WritingDataHandler::setUnicodeString(size_t index, const std::wstring& valu
 {
     m_pDataHandler->setUnicodeString(index, value);
 }
+
+void WritingDataHandler::setPatientName(size_t index, const PatientName& patientName)
+{
+    m_pDataHandler->setPatientName(index, getPatientNameImplementation(patientName));
+}
+
+void WritingDataHandler::setUnicodePatientName(size_t index, const UnicodePatientName& patientName)
+{
+    m_pDataHandler->setUnicodePatientName(index, getUnicodePatientNameImplementation(patientName));
+}
+
 
 }

@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -20,7 +20,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #define imebraDataHandlerStringPN_367AAE47_6FD7_4107_AB5B_25A355C5CB6E__INCLUDED_
 
 #include "dataHandlerStringUnicodeImpl.h"
-
+#include "patientNameImpl.h"
 
 namespace imebra
 {
@@ -74,6 +74,36 @@ class readingDataHandlerStringPN : public readingDataHandlerStringUnicode
 {
 public:
     readingDataHandlerStringPN(const memory& parseMemory, const charsetsList::tCharsetsList& charsets);
+
+    virtual std::shared_ptr<patientName> getPatientName(const size_t index) const;
+
+    virtual std::shared_ptr<unicodePatientName> getUnicodePatientName(const size_t index) const;
+
+
+private:
+
+    template<class stringType_t, class patientNameType_t, typename separatorType_t> std::shared_ptr<patientNameType_t> returnPatientName(const stringType_t& string, separatorType_t separator) const
+    {
+        std::vector<stringType_t> groups;
+
+        stringType_t group;
+
+        std::basic_istringstream<separatorType_t> stream(string);
+        while (std::getline(stream, group, separator))
+        {
+            groups.push_back(group);
+        }
+
+        if(groups.size() > 3) // Maximum 3 groups (alphabetic, ideographic, phonetic)
+        {
+            IMEBRA_THROW(DataHandlerCorruptedBufferError, "The Patient Name contains more than 3 groups")
+        }
+
+        groups.resize(3);
+
+        return std::make_shared<patientNameType_t>(groups[0], groups[1], groups[2]);
+    }
+
 };
 
 class writingDataHandlerStringPN: public writingDataHandlerStringUnicode
@@ -81,7 +111,31 @@ class writingDataHandlerStringPN: public writingDataHandlerStringUnicode
 public:
     writingDataHandlerStringPN(const std::shared_ptr<buffer>& pBuffer, const charsetsList::tCharsetsList& charsets);
 
+    virtual void setPatientName(const size_t index, const std::shared_ptr<const patientName>& pPatientName) override;
+
+    virtual void setUnicodePatientName(const size_t index, const std::shared_ptr<const unicodePatientName>& pPatientName) override;
+
     virtual void validate() const;
+
+private:
+
+    template<class stringType_t, class patientNameType_t, typename separatorType_t> stringType_t returnPatientName(const std::shared_ptr<const patientNameType_t>& patient, separatorType_t separator)
+    {
+        stringType_t patientString;
+        patientString.append(patient->getAlphabeticRepresentation());
+        if(!patient->getIdeographicRepresentation().empty() || !patient->getPhoneticRepresentation().empty())
+        {
+            patientString.push_back(separator);
+            patientString.append(patient->getIdeographicRepresentation());
+        }
+        if(!patient->getPhoneticRepresentation().empty())
+        {
+            patientString.push_back(separator);
+            patientString.append(patient->getPhoneticRepresentation());
+        }
+        return patientString;
+    }
+
 };
 
 } // namespace handlers

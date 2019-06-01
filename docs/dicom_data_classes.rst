@@ -27,6 +27,14 @@ The following classes are described in this chapter:
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
 |:cpp:class:`imebra::WritingDataHandlerNumeric` |:cpp:class:`ImebraWritingDataHandlerNumeric` |Write into a numeric tag       |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
+|:cpp:class:`imebra::Date`                      |:cpp:class:`ImebraDate`                      |Stores a DICOM date/time       |
++-----------------------------------------------+---------------------------------------------+-------------------------------+
+|:cpp:class:`imebra::Age`                       |:cpp:class:`ImebraAge`                       |Stores a DICOM Age             |
++-----------------------------------------------+---------------------------------------------+-------------------------------+
+|:cpp:class:`imebra::PatientName`               |:cpp:class:`ImebraPatientName`               |Stores a patient name          |
++-----------------------------------------------+---------------------------------------------+-------------------------------+
+|:cpp:class:`imebra::UnicodePatientName`        |                                             |Stores a patient name (unicode)|
++-----------------------------------------------+---------------------------------------------+-------------------------------+
 
 .. figure:: images/data.jpg
    :target: _images/data.jpg
@@ -197,3 +205,65 @@ Objective-C/Swift
 
 .. doxygenclass:: ImebraWritingDataHandlerNumeric
    :members:
+
+Date
+....
+
+C++
+,,,
+
+.. doxygenclass:: imebra::Date
+   :members:
+
+Objective-C/Swift
+,,,,,,,,,,,,,,,,,
+
+.. doxygenclass:: ImebraDate
+   :members:
+
+Age
+...
+
+C++
+,,,
+
+.. doxygenclass:: imebra::Age
+   :members:
+
+Objective-C/Swift
+,,,,,,,,,,,,,,,,,
+
+.. doxygenclass:: ImebraAge
+   :members:
+
+PatientName
+...........
+
+C++
+,,,
+
+.. doxygenclass:: imebra::PatientName
+   :members:
+
+Objective-C/Swift
+,,,,,,,,,,,,,,,,,
+
+.. doxygenclass:: ImebraPatientName
+   :members:
+
+UnicodePatientName
+..................
+
+C++
+,,,
+
+.. doxygenclass:: imebra::UnicodePatientName
+   :members:
+
+Objective-C/Swift
+,,,,,,,,,,,,,,,,,
+
+Not available (:cpp:class:`ImebraPatientName` uses Unicode on Objective-C/Swift)
+
+
+

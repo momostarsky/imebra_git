@@ -40,6 +40,8 @@ namespace implementation
 class Tag;
 class MutableTag;
 class LUT;
+class PatientName;
+class UnicodePatientName;
 
 ///
 ///  \brief This class represents a DICOM dataset.
@@ -495,6 +497,70 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     const Date getDate(const TagId& tagId, size_t elementNumber, const Date& defaultValue) const;
 
+    /// \brief Retrieve a tag's value as a Patient Name.
+    ///
+    /// If the tag's value cannot be converted to a patient name then throws
+    ///  DataHandlerConversionError.
+    ///
+    /// If the specified Tag does not exist then throws MissingItemError.
+    ///
+    /// \param tagId         the tag's id
+    /// \param elementNumber the element number within the buffer
+    /// \param defaultValue  the value to return if the tag doesn't exist
+    /// \return the tag's value as a Patient Name
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    const PatientName getPatientName(const TagId& tagId, size_t elementNumber) const;
+
+    /// \brief Retrieve a tag's value as a Patient Name.
+    ///
+    /// If the tag's value cannot be converted to a patient name then throws
+    ///  DataHandlerConversionError.
+    ///
+    /// If the specified Tag does not exist then returns the default value
+    /// specified in the parameter.
+    ///
+    /// \param tagId         the tag's id
+    /// \param elementNumber the element number within the buffer
+    /// \param defaultValue  the value to return if the tag doesn't exist
+    /// \return the tag's value as a Patient Name, or defaultValue if the tag
+    ///                      doesn't exist
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    const PatientName getPatientName(const TagId& tagId, size_t elementNumber, const PatientName& defaultValue) const;
+
+    /// \brief Retrieve a tag's value as a Unicode Patient Name.
+    ///
+    /// If the tag's value cannot be converted to a patient name then throws
+    ///  DataHandlerConversionError.
+    ///
+    /// If the specified Tag does not exist then throws MissingItemError.
+    ///
+    /// \param tagId         the tag's id
+    /// \param elementNumber the element number within the buffer
+    /// \param defaultValue  the value to return if the tag doesn't exist
+    /// \return the tag's value as a Unicode Patient Name
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    const UnicodePatientName getUnicodePatientName(const TagId& tagId, size_t elementNumber) const;
+
+    /// \brief Retrieve a tag's value as a Unicode Patient Name.
+    ///
+    /// If the tag's value cannot be converted to a patient name then throws
+    ///  DataHandlerConversionError.
+    ///
+    /// If the specified Tag does not exist then returns the default value
+    /// specified in the parameter.
+    ///
+    /// \param tagId         the tag's id
+    /// \param elementNumber the element number within the buffer
+    /// \param defaultValue  the value to return if the tag doesn't exist
+    /// \return the tag's value as a Unicode Patient Name, or defaultValue if the
+    ///                      tag doesn't exist
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    const UnicodePatientName getUnicodePatientName(const TagId& tagId, size_t elementNumber, const UnicodePatientName& defaultValue) const;
+
     /// \brief Return the 2 chars data type (VR) of the specified tag.
     ///
     /// \param tagId the id of the tag
@@ -947,6 +1013,31 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     void setDate(const TagId& tagId, const Date& date);
+
+    /// \brief Write a Patient Name into the element 0 of the specified
+    ///        Tag's buffer 0.
+    ///
+    /// If the specified Tag does not exist then it creates a new tag with a
+    ///  VR PN.
+    ///
+    /// \param tagId    the tag's id
+    /// \param date     the Patient Name to write into the tag
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    void setPatientName(const TagId& tagId, const PatientName& patientName);
+
+    /// \brief Write a Unicode Patient Name into the element 0 of the specified
+    ///        Tag's buffer 0.
+    ///
+    /// If the specified Tag does not exist then it creates a new tag with a
+    ///  VR PN.
+    ///
+    /// \param tagId    the tag's id
+    /// \param date     the Unicode Patient Name to write into the tag
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    void setUnicodePatientName(const TagId& tagId, const UnicodePatientName& patientName);
+
 
 protected:
     explicit MutableDataSet(const std::shared_ptr<imebra::implementation::dataSet>& pDataSet);

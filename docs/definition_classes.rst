@@ -19,10 +19,6 @@ The following classes are described in this chapter:
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
 |:cpp:class:`imebra::tagVR_t`                   |:cpp:class:`ImebraTagVR_t`                   |Enumerates the DICOM VRs       |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::Age`                       |:cpp:class:`ImebraAge`                       |Age class                      |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::Date`                      |:cpp:class:`ImebraDate`                      |Date class                     |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
 |:cpp:class:`imebra::imageQuality_t`            |:cpp:class:`ImebraImageQuality_t`            |Enumerates the image quality   |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
 |:cpp:class:`imebra::bitDepth_t`                |:cpp:class:`ImebraBitDepth_t`                |Enumerates the image bit depths|
@@ -96,38 +92,6 @@ Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
 .. doxygenenum:: ImebraTagVR_t
-
-
-Age
-...
-
-C++
-,,,
-
-.. doxygenstruct:: imebra::Age
-   :members:
-
-Objective-C/Swift
-,,,,,,,,,,,,,,,,,
-
-.. doxygenstruct:: ImebraAge
-   :members:
-
-
-Date
-....
-
-C++
-,,,
-
-.. doxygenstruct:: imebra::Date
-   :members:
-
-Objective-C/Swift
-,,,,,,,,,,,,,,,,,
-
-.. doxygenstruct:: ImebraDate
-   :members:
 
 
 Image related definitions

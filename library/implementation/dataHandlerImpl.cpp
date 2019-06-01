@@ -80,6 +80,26 @@ std::shared_ptr<age> readingDataHandler::getAge(const size_t /* index */) const
     IMEBRA_FUNCTION_END();
 }
 
+std::shared_ptr<patientName> readingDataHandler::getPatientName(const size_t /* index */) const
+{
+    IMEBRA_FUNCTION_START();
+
+    IMEBRA_THROW(DataHandlerConversionError, "Cannot convert VR "<< dicomDictionary::getDicomDictionary()->enumDataTypeToString(getDataType()) << " to Patient Name");
+
+    IMEBRA_FUNCTION_END();
+}
+
+std::shared_ptr<unicodePatientName> readingDataHandler::getUnicodePatientName(const size_t /* index */) const
+{
+    IMEBRA_FUNCTION_START();
+
+    IMEBRA_THROW(DataHandlerConversionError, "Cannot convert VR "<< dicomDictionary::getDicomDictionary()->enumDataTypeToString(getDataType()) << " to Patient Name");
+
+    IMEBRA_FUNCTION_END();
+}
+
+
+
 
 writingDataHandler::writingDataHandler(const std::shared_ptr<buffer> &pBuffer, tagVR_t dataType, const uint8_t paddingByte):
     m_dataType(dataType), m_buffer(pBuffer), m_paddingByte(paddingByte)
@@ -128,6 +148,24 @@ void writingDataHandler::setAge(const size_t /* index */, const std::shared_ptr<
     IMEBRA_FUNCTION_START();
 
     IMEBRA_THROW(DataHandlerConversionError, "Cannot convert Age to VR "<< dicomDictionary::getDicomDictionary()->enumDataTypeToString(getDataType()));
+
+    IMEBRA_FUNCTION_END();
+}
+
+void writingDataHandler::setPatientName(const size_t /* index */, const std::shared_ptr<const patientName>& /* pPatientName */)
+{
+    IMEBRA_FUNCTION_START();
+
+    IMEBRA_THROW(DataHandlerConversionError, "Cannot convert Patient Name to VR "<< dicomDictionary::getDicomDictionary()->enumDataTypeToString(getDataType()));
+
+    IMEBRA_FUNCTION_END();
+}
+
+void writingDataHandler::setUnicodePatientName(const size_t /* index */, const std::shared_ptr<const unicodePatientName>& /* pPatientName */)
+{
+    IMEBRA_FUNCTION_START();
+
+    IMEBRA_THROW(DataHandlerConversionError, "Cannot convert Patient Name to VR "<< dicomDictionary::getDicomDictionary()->enumDataTypeToString(getDataType()));
 
     IMEBRA_FUNCTION_END();
 }

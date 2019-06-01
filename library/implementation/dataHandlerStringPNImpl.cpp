@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -17,6 +17,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 */
 
 #include "dataHandlerStringPNImpl.h"
+#include "patientNameImpl.h"
+#include "../include/imebra/exceptions.h"
 
 namespace imebra
 {
@@ -42,30 +44,41 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 
 readingDataHandlerStringPN::readingDataHandlerStringPN(const memory& parseMemory, const charsetsList::tCharsetsList& charsets):
-    readingDataHandlerStringUnicode(parseMemory, charsets, tagVR_t::PN, L'=', 0x20)
+    readingDataHandlerStringUnicode(parseMemory, charsets, tagVR_t::PN, L'\\', 0x20)
 {
 }
 
-writingDataHandlerStringPN::writingDataHandlerStringPN(const std::shared_ptr<buffer>& pBuffer, const charsetsList::tCharsetsList& charsets):
-    writingDataHandlerStringUnicode(pBuffer, charsets, tagVR_t::PN, L'=', 0, 0, 0x20)
+
+std::shared_ptr<patientName> readingDataHandlerStringPN::getPatientName(const size_t index) const
 {
+    return returnPatientName<std::string, patientName, char>(getString(index), '=');
+}
+
+std::shared_ptr<unicodePatientName> readingDataHandlerStringPN::getUnicodePatientName(const size_t index) const
+{
+    return returnPatientName<std::wstring, unicodePatientName, wchar_t>(getUnicodeString(index), L'=');
+}
+
+
+
+writingDataHandlerStringPN::writingDataHandlerStringPN(const std::shared_ptr<buffer>& pBuffer, const charsetsList::tCharsetsList& charsets):
+    writingDataHandlerStringUnicode(pBuffer, charsets, tagVR_t::PN, L'\\', 0, 0, 0x20)
+{
+}
+
+void writingDataHandlerStringPN::setPatientName(const size_t index, const std::shared_ptr<const patientName>& pPatientName)
+{
+    setString(index, returnPatientName<std::string, patientName, char>(pPatientName, '='));
+}
+
+void writingDataHandlerStringPN::setUnicodePatientName(const size_t index, const std::shared_ptr<const unicodePatientName>& pPatientName)
+{
+    setUnicodeString(index, returnPatientName<std::wstring, unicodePatientName, wchar_t>(pPatientName, L'='));
 }
 
 void writingDataHandlerStringPN::validate() const
 {
     IMEBRA_FUNCTION_START();
-
-    if(m_strings.size() > 3)
-    {
-        IMEBRA_THROW(DataHandlerInvalidDataError, "A patient name can contain maximum 3 groups");
-    }
-    for(size_t scanGroups(0); scanGroups != m_strings.size(); ++scanGroups)
-    {
-        if(m_strings[scanGroups].size() > 64)
-        {
-            IMEBRA_THROW(DataHandlerInvalidDataError, "A patient name group can contain maximum 64 chars");
-        }
-    }
 
     writingDataHandlerStringUnicode::validate();
 

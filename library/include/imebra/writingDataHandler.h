@@ -28,6 +28,8 @@ namespace imebra
 
 class Date;
 class Age;
+class PatientName;
+class UnicodePatientName;
 
 namespace implementation
 {
@@ -201,6 +203,30 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     void setAge(size_t index, const Age& age);
+
+    /// \brief Write a PatientName value.
+    ///
+    /// If the value cannot be converted from a PatientName value
+    /// then throws DataHandlerConversionError.
+    ///
+    /// \param index the element number within the buffer. Must be smaller than
+    ///        getSize()
+    /// \param age   the value to write
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    void setPatientName(size_t index, const PatientName& patientName);
+
+    /// \brief Write a UnicodePatientName value.
+    ///
+    /// If the value cannot be converted from a PatientName value
+    /// then throws DataHandlerConversionError.
+    ///
+    /// \param index the element number within the buffer. Must be smaller than
+    ///        getSize()
+    /// \param age   the value to write
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    void setUnicodePatientName(size_t index, const UnicodePatientName& patientName);
 
 #ifndef SWIG
 protected:

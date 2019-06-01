@@ -1183,6 +1183,85 @@ std::wstring dataSet::getUnicodeString(std::uint16_t groupId, std::uint32_t orde
 }
 
 
+std::shared_ptr<patientName> dataSet::getPatientName(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
+{
+    IMEBRA_FUNCTION_START();
+
+    return getReadingDataHandler(groupId, order, tagId, bufferId)->getPatientName(elementNumber);
+
+    IMEBRA_FUNCTION_END();
+}
+
+std::shared_ptr<patientName> dataSet::getPatientName(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, const std::shared_ptr<patientName>& defaultValue) const
+{
+    IMEBRA_FUNCTION_START();
+
+    try
+    {
+        return getPatientName(groupId, order, tagId, bufferId, elementNumber);
+    }
+    catch(const MissingDataElementError&)
+    {
+        return defaultValue;
+    }
+
+    IMEBRA_FUNCTION_END();
+}
+
+std::shared_ptr<unicodePatientName> dataSet::getUnicodePatientName(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
+{
+    IMEBRA_FUNCTION_START();
+
+    return getReadingDataHandler(groupId, order, tagId, bufferId)->getUnicodePatientName(elementNumber);
+
+    IMEBRA_FUNCTION_END();
+}
+
+std::shared_ptr<unicodePatientName> dataSet::getUnicodePatientName(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, const std::shared_ptr<unicodePatientName>& defaultValue) const
+{
+    IMEBRA_FUNCTION_START();
+
+    try
+    {
+        return getUnicodePatientName(groupId, order, tagId, bufferId, elementNumber);
+    }
+    catch(const MissingDataElementError&)
+    {
+        return defaultValue;
+    }
+
+    IMEBRA_FUNCTION_END();
+}
+
+void dataSet::setPatientName(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::shared_ptr<const patientName>& pPatientName)
+{
+    IMEBRA_FUNCTION_START();
+
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
+
+    std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, bufferId, tagVR_t::PN);
+    dataHandler->setSize(1);
+    dataHandler->setPatientName(0, pPatientName);
+
+    IMEBRA_FUNCTION_END();
+}
+
+void dataSet::setUnicodePatientName(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, const std::shared_ptr<const unicodePatientName>& pPatientName)
+{
+    IMEBRA_FUNCTION_START();
+
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
+
+    std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, bufferId, tagVR_t::PN);
+    dataHandler->setSize(1);
+    dataHandler->setUnicodePatientName(0, pPatientName);
+
+    IMEBRA_FUNCTION_END();
+}
+
+
+
+
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 //

@@ -388,33 +388,139 @@ TEST(stringHandlerTest, PNTest)
 {
     MutableDataSet testDataSet;
 
-    testDataSet.setString(TagId(0x0010, 0x0010), "PatientName", tagVR_t::PN);
-    ASSERT_EQ("PatientName", testDataSet.getString(TagId(0x0010, 0x0010), 0));
-    ASSERT_THROW(testDataSet.getDate(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
-    ASSERT_THROW(testDataSet.getAge(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
-
     {
-        WritingDataHandler pnHandler = testDataSet.getWritingDataHandler(TagId(0x0010, 0x0010), 0, tagVR_t::PN);
-        pnHandler.setString(0, "Patient 0");
-        pnHandler.setString(1, "Patient 1");
-        pnHandler.setString(2, "Patient 2");
+        testDataSet.setString(TagId(0x0010, 0x0010), "PatientName", tagVR_t::PN);
+        ASSERT_EQ("PatientName", testDataSet.getString(TagId(0x0010, 0x0010), 0));
+        ASSERT_THROW(testDataSet.getDate(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.getAge(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
+
+        {
+            WritingDataHandler pnHandler = testDataSet.getWritingDataHandler(TagId(0x0010, 0x0010), 0, tagVR_t::PN);
+            pnHandler.setString(0, "Patient^0=Patient^1=Patient^2");
+            pnHandler.setString(1, "Patient^3=Patient^4");
+        }
+
+        {
+            ASSERT_EQ("Patient^0=Patient^1=Patient^2", testDataSet.getString(TagId(0x0010, 0x0010), 0));
+            ASSERT_EQ("Patient^3=Patient^4", testDataSet.getString(TagId(0x0010, 0x0010), 1));
+            PatientName patientName0 = testDataSet.getPatientName(TagId(0x0010, 0x0010), 0);
+            ASSERT_EQ("Patient^0", patientName0.getAlphabeticRepresentation());
+            ASSERT_EQ("Patient^1", patientName0.getIdeographicRepresentation());
+            ASSERT_EQ("Patient^2", patientName0.getPhoneticRepresentation());
+            PatientName patientName1 = testDataSet.getPatientName(TagId(0x0010, 0x0010), 1);
+            ASSERT_EQ("Patient^3", patientName1.getAlphabeticRepresentation());
+            ASSERT_EQ("Patient^4", patientName1.getIdeographicRepresentation());
+            ASSERT_EQ("", patientName1.getPhoneticRepresentation());
+        }
+
+        {
+            ReadingDataHandler patientDataHandler = testDataSet.getReadingDataHandler(TagId(0x0010, 0x0010), 0);
+            PatientName patientName0 = patientDataHandler.getPatientName(0);
+            ASSERT_EQ("Patient^0", patientName0.getAlphabeticRepresentation());
+            ASSERT_EQ("Patient^1", patientName0.getIdeographicRepresentation());
+            ASSERT_EQ("Patient^2", patientName0.getPhoneticRepresentation());
+            PatientName patientName1 = patientDataHandler.getPatientName(1);
+            ASSERT_EQ("Patient^3", patientName1.getAlphabeticRepresentation());
+            ASSERT_EQ("Patient^4", patientName1.getIdeographicRepresentation());
+            ASSERT_EQ("", patientName1.getPhoneticRepresentation());
+        }
+
+        ASSERT_THROW(testDataSet.getUnsignedLong(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.getSignedLong(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.getDouble(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
+
+        ReadingDataHandlerNumeric rawHandler = testDataSet.getReadingDataHandlerRaw(TagId(0x0010, 0x0010), 0);
+        size_t dataSize;
+        const char* data = rawHandler.data(&dataSize);
+        std::string fullString(data, dataSize);
+        ASSERT_EQ("Patient^0=Patient^1=Patient^2\\Patient^3=Patient^4 ", fullString);
     }
-    ASSERT_EQ("Patient 0", testDataSet.getString(TagId(0x0010, 0x0010), 0));
-    ASSERT_EQ("Patient 1", testDataSet.getString(TagId(0x0010, 0x0010), 1));
-    ASSERT_EQ("Patient 2", testDataSet.getString(TagId(0x0010, 0x0010), 2));
-    ASSERT_THROW(testDataSet.getUnsignedLong(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
-    ASSERT_THROW(testDataSet.getSignedLong(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
-    ASSERT_THROW(testDataSet.getDouble(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
-
-    ReadingDataHandlerNumeric rawHandler = testDataSet.getReadingDataHandlerRaw(TagId(0x0010, 0x0010), 0);
-    size_t dataSize;
-    const char* data = rawHandler.data(&dataSize);
-    std::string fullString(data, dataSize);
-    ASSERT_EQ("Patient 0=Patient 1=Patient 2 ", fullString);
 
     {
-        std::string longString((size_t)65, 'a');
-        ASSERT_THROW(testDataSet.setString(TagId(0x0010, 0x0010), longString, tagVR_t::PN), DataHandlerInvalidDataError);
+        PatientName writePatient("alphabetic^representation", "", "");
+        testDataSet.setPatientName(TagId(0x0010, 0x0010), writePatient);
+
+        PatientName checkPatient(testDataSet.getPatientName(TagId(0x0010, 0x0010), 0));
+        ASSERT_EQ(writePatient.getAlphabeticRepresentation(), checkPatient.getAlphabeticRepresentation());
+        ASSERT_EQ(writePatient.getIdeographicRepresentation(), checkPatient.getIdeographicRepresentation());
+        ASSERT_EQ(writePatient.getPhoneticRepresentation(), checkPatient.getPhoneticRepresentation());
+        ASSERT_EQ("alphabetic^representation", testDataSet.getString(TagId(0x0010, 0x0010), 0));
+    }
+
+    {
+        PatientName writePatient("alphabetic^representation", "ideographic^representation", "phonetic^representation");
+        testDataSet.setPatientName(TagId(0x0010, 0x0010), writePatient);
+
+        PatientName checkPatient(testDataSet.getPatientName(TagId(0x0010, 0x0010), 0));
+        ASSERT_EQ(writePatient.getAlphabeticRepresentation(), checkPatient.getAlphabeticRepresentation());
+        ASSERT_EQ(writePatient.getIdeographicRepresentation(), checkPatient.getIdeographicRepresentation());
+        ASSERT_EQ(writePatient.getPhoneticRepresentation(), checkPatient.getPhoneticRepresentation());
+        ASSERT_EQ("alphabetic^representation=ideographic^representation=phonetic^representation", testDataSet.getString(TagId(0x0010, 0x0010), 0));
+    }
+
+    {
+        PatientName writePatient("", "ideographic^representation", "phonetic^representation");
+        testDataSet.setPatientName(TagId(0x0010, 0x0010), writePatient);
+
+        PatientName checkPatient(testDataSet.getPatientName(TagId(0x0010, 0x0010), 0));
+        ASSERT_EQ(writePatient.getAlphabeticRepresentation(), checkPatient.getAlphabeticRepresentation());
+        ASSERT_EQ(writePatient.getIdeographicRepresentation(), checkPatient.getIdeographicRepresentation());
+        ASSERT_EQ(writePatient.getPhoneticRepresentation(), checkPatient.getPhoneticRepresentation());
+        ASSERT_EQ("=ideographic^representation=phonetic^representation", testDataSet.getString(TagId(0x0010, 0x0010), 0));
+    }
+
+    {
+        PatientName writePatient("", "", "phonetic^representation");
+        testDataSet.setPatientName(TagId(0x0010, 0x0010), writePatient);
+
+        PatientName checkPatient(testDataSet.getPatientName(TagId(0x0010, 0x0010), 0));
+        ASSERT_EQ(writePatient.getAlphabeticRepresentation(), checkPatient.getAlphabeticRepresentation());
+        ASSERT_EQ(writePatient.getIdeographicRepresentation(), checkPatient.getIdeographicRepresentation());
+        ASSERT_EQ(writePatient.getPhoneticRepresentation(), checkPatient.getPhoneticRepresentation());
+        ASSERT_EQ("==phonetic^representation", testDataSet.getString(TagId(0x0010, 0x0010), 0));
+    }
+
+    {
+        PatientName writePatient("", "", "");
+        testDataSet.setPatientName(TagId(0x0010, 0x0010), writePatient);
+
+        PatientName checkPatient(testDataSet.getPatientName(TagId(0x0010, 0x0010), 0));
+        ASSERT_EQ(writePatient.getAlphabeticRepresentation(), checkPatient.getAlphabeticRepresentation());
+        ASSERT_EQ(writePatient.getIdeographicRepresentation(), checkPatient.getIdeographicRepresentation());
+        ASSERT_EQ(writePatient.getPhoneticRepresentation(), checkPatient.getPhoneticRepresentation());
+        ASSERT_EQ("", testDataSet.getString(TagId(0x0010, 0x0010), 0));
+    }
+
+    {
+        PatientName writePatient("alphabetic^representation", "", "phonetic^representation");
+        testDataSet.setPatientName(TagId(0x0010, 0x0010), writePatient);
+
+        PatientName checkPatient(testDataSet.getPatientName(TagId(0x0010, 0x0010), 0));
+        ASSERT_EQ(writePatient.getAlphabeticRepresentation(), checkPatient.getAlphabeticRepresentation());
+        ASSERT_EQ(writePatient.getIdeographicRepresentation(), checkPatient.getIdeographicRepresentation());
+        ASSERT_EQ(writePatient.getPhoneticRepresentation(), checkPatient.getPhoneticRepresentation());
+        ASSERT_EQ("alphabetic^representation==phonetic^representation", testDataSet.getString(TagId(0x0010, 0x0010), 0));
+    }
+
+    {
+        PatientName writePatient0("", "", "phonetic^representation");
+        PatientName writePatient1("alphabetic^representation", "", "phonetic^representation");
+
+        {
+            WritingDataHandler handler = testDataSet.getWritingDataHandler(TagId(0x0010, 0x0010), 0, tagVR_t::PN);
+            handler.setPatientName(0, writePatient0);
+            handler.setPatientName(1, writePatient1);
+        }
+
+        PatientName checkPatient0(testDataSet.getPatientName(TagId(0x0010, 0x0010), 0));
+        PatientName checkPatient1(testDataSet.getPatientName(TagId(0x0010, 0x0010), 1));
+        ASSERT_EQ(writePatient0.getAlphabeticRepresentation(), checkPatient0.getAlphabeticRepresentation());
+        ASSERT_EQ(writePatient0.getIdeographicRepresentation(), checkPatient0.getIdeographicRepresentation());
+        ASSERT_EQ(writePatient0.getPhoneticRepresentation(), checkPatient0.getPhoneticRepresentation());
+
+        ASSERT_EQ(writePatient1.getAlphabeticRepresentation(), checkPatient1.getAlphabeticRepresentation());
+        ASSERT_EQ(writePatient1.getIdeographicRepresentation(), checkPatient1.getIdeographicRepresentation());
+        ASSERT_EQ(writePatient1.getPhoneticRepresentation(), checkPatient1.getPhoneticRepresentation());
     }
 }
 

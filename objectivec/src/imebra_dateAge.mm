@@ -36,17 +36,17 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(double)years
 {
-    return get_imebra_object_holder(Age)->years();
+    return get_imebra_object_holder(Age)->getYears();
 }
 
 -(unsigned int)age
 {
-    return get_imebra_object_holder(Age)->age;
+    return get_imebra_object_holder(Age)->getAgeValue();
 }
 
 -(ImebraAgeUnit_t)units
 {
-    return (ImebraAgeUnit_t)(get_imebra_object_holder(Age)->units);
+    return (ImebraAgeUnit_t)(get_imebra_object_holder(Age)->getAgeUnits());
 }
 
 @end
@@ -90,47 +90,47 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(unsigned int)year
 {
-    return get_imebra_object_holder(Date)->year;
+    return get_imebra_object_holder(Date)->getYear();
 }
 
 -(unsigned int)month
 {
-    return get_imebra_object_holder(Date)->month;
+    return get_imebra_object_holder(Date)->getMonth();
 }
 
 -(unsigned int)day
 {
-    return get_imebra_object_holder(Date)->day;
+    return get_imebra_object_holder(Date)->getDay();
 }
 
 -(unsigned int)hour
 {
-    return get_imebra_object_holder(Date)->hour;
+    return get_imebra_object_holder(Date)->getHour();
 }
 
 -(unsigned int)minutes
 {
-    return get_imebra_object_holder(Date)->minutes;
+    return get_imebra_object_holder(Date)->getMinutes();
 }
 
 -(unsigned int)seconds
 {
-    return get_imebra_object_holder(Date)->seconds;
+    return get_imebra_object_holder(Date)->getSeconds();
 }
 
 -(unsigned int)nanoseconds
 {
-    return get_imebra_object_holder(Date)->nanoseconds;
+    return get_imebra_object_holder(Date)->getNanoseconds();
 }
 
 -(int)offsetHours
 {
-    return get_imebra_object_holder(Date)->offsetHours;
+    return get_imebra_object_holder(Date)->getOffsetHours();
 }
 
 -(int)offsetMinutes
 {
-    return get_imebra_object_holder(Date)->offsetMinutes;
+    return get_imebra_object_holder(Date)->getOffsetMinutes();
 }
 
 @end

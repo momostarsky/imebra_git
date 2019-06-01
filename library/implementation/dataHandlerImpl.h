@@ -36,6 +36,8 @@ class memory;
 class buffer;
 class date;
 class age;
+class patientName;
+class unicodePatientName;
 
 /// \namespace handlers
 /// \brief All the implementations of the data handlers
@@ -139,6 +141,30 @@ public:
     ///////////////////////////////////////////////////////////
     virtual std::wstring getUnicodeString(const size_t index) const = 0;
 
+    /// \brief Return the patient name stored in the buffer
+    ///         specified by the zero-based index specified 
+    ///         in the parameter.
+    ///
+    /// @param index   the zero base index of the buffer's
+    ///                 element to retrieve
+    /// @return the value of the data element as a patient 
+    ///          name
+    ///
+    ///////////////////////////////////////////////////////////
+    virtual std::shared_ptr<patientName> getPatientName(const size_t index) const;
+
+    /// \brief Return the patient name stored in the buffer
+    ///         specified by the zero-based index specified 
+    ///         in the parameter.
+    ///
+    /// @param index   the zero base index of the buffer's
+    ///                 element to retrieve
+    /// @return the value of the data element as a patient 
+    ///          name
+    ///
+    ///////////////////////////////////////////////////////////
+    virtual std::shared_ptr<unicodePatientName> getUnicodePatientName(const size_t index) const;
+
     /// \brief Retrieve the buffer's element referenced by the
     ///         zero-based index specified in the parameter and
     ///         returns it as a date/time value.
@@ -217,7 +243,7 @@ public:
     ///				  %data element.
     ///
     ///////////////////////////////////////////////////////////
-    virtual void setSignedLong(const size_t index, const std::int32_t value) =0;
+    virtual void setSignedLong(const size_t index, const std::int32_t value) = 0;
 
     /// \brief Set the buffer's element referenced by the
     ///         zero-based index specified in the parameter
@@ -229,7 +255,7 @@ public:
     ///				  %data element.
     ///
     ///////////////////////////////////////////////////////////
-    virtual void setUnsignedLong(const size_t index, const std::uint32_t value) =0;
+    virtual void setUnsignedLong(const size_t index, const std::uint32_t value) = 0;
 
     /// \brief Set the buffer's element referenced by the
     ///         zero-based index specified in the parameter
@@ -241,7 +267,7 @@ public:
     ///				  %data element.
     ///
     ///////////////////////////////////////////////////////////
-    virtual void setDouble(const size_t index, const double value) =0;
+    virtual void setDouble(const size_t index, const double value) = 0;
 
     /// \brief Set the buffer's element referenced by the
     ///         zero-based index specified in the parameter
@@ -252,7 +278,7 @@ public:
     /// @param value the value to write into the
     ///				  %data element.
     ///////////////////////////////////////////////////////////
-    virtual void setString(const size_t index, const std::string& value) =0;
+    virtual void setString(const size_t index, const std::string& value) = 0;
 
     /// \brief Set the buffer's element referenced by the
     ///         zero-based index specified in the parameter
@@ -263,7 +289,26 @@ public:
     /// @param value the value to write into the %data
     ///				  element.
     ///////////////////////////////////////////////////////////
-    virtual void setUnicodeString(const size_t index, const std::wstring& value) =0;
+    virtual void setUnicodeString(const size_t index, const std::wstring& value) = 0;
+
+    /// \brief Write a patient name into a tag's buffer.
+    ///
+    /// @param index   the zero base index of the buffer's
+    ///                 element to be set
+    /// @param value the value to write into the data
+    ///				  element.
+    ///////////////////////////////////////////////////////////
+    virtual void setPatientName(const size_t index, const std::shared_ptr<const patientName>& pPatientName);
+
+    /// \brief Write a unicode patient name into a tag's 
+    ///        buffer.
+    ///
+    /// @param index   the zero base index of the buffer's
+    ///                 element to be set
+    /// @param value the value to write into the data
+    ///				  element.
+    ///////////////////////////////////////////////////////////
+    virtual void setUnicodePatientName(const size_t index, const std::shared_ptr<const unicodePatientName>& pPatientName);
 
 protected:
     const tagVR_t m_dataType;

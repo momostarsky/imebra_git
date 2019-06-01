@@ -156,6 +156,7 @@
 %include "../library/include/imebra/dimse.h"
 %include "../library/include/imebra/date.h"
 %include "../library/include/imebra/age.h"
+%include "../library/include/imebra/patientName.h"
 
 
 

@@ -30,6 +30,8 @@ namespace imebra
 
 class Age;
 class Date;
+class PatientName;
+class UnicodePatientName;
 
 namespace implementation
 {
@@ -172,7 +174,7 @@ public:
     /// \return the tag's value as a date or time
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    Date getDate(size_t index) const;
+    const Date getDate(size_t index) const;
 
     /// \brief Retrieve a buffer's value as an Age.
     ///
@@ -184,7 +186,31 @@ public:
     /// \return the tag's value as an Age
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    Age getAge(size_t index) const;
+    const Age getAge(size_t index) const;
+
+    /// \brief Retrieve a tag's value as a Patient Name.
+    ///
+    /// If the tag's value cannot be converted to a patient name then throws
+    ///  DataHandlerConversionError.
+    ///
+    /// \param index the element number within the buffer. Must be smaller than
+    ///        getSize()
+    /// \return the tag's value as a Patient Name
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    const PatientName getPatientName(size_t index) const;
+
+    /// \brief Retrieve a tag's value as a Unicode Patient Name.
+    ///
+    /// If the tag's value cannot be converted to a patient name then throws
+    ///  DataHandlerConversionError.
+    ///
+    /// \param index the element number within the buffer. Must be smaller than
+    ///        getSize()
+    /// \return the tag's value as a Unicode Patient Name
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    const UnicodePatientName getUnicodePatientName(size_t index) const;
 
 #ifndef SWIG
 protected:
