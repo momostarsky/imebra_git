@@ -220,7 +220,7 @@ TEST(unicodeStringHandlerTest, PNTest)
         ASSERT_EQ(writePatient.getPhoneticRepresentation(), checkPatient.getPhoneticRepresentation());
         ASSERT_EQ(L"\x2070e\x20731\x20779\x20c53^\x00d0\x0410\x00d5^representation", testDataSet.getUnicodeString(TagId(0x0010, 0x0010), 0));
 
-        ReadingDataHandler handler = testDataSet.getReadingDataHandler(TagId(0x0010, 010010), 0);
+        ReadingDataHandler handler = testDataSet.getReadingDataHandler(TagId(0x0010, 0x0010), 0);
         ASSERT_EQ(L"\x2070e\x20731\x20779\x20c53^\x00d0\x0410\x00d5^representation", handler.getUnicodeString(0));
     }
 
