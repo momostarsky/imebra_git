@@ -308,7 +308,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_START();
 
     const imebra::Date date = get_imebra_object_holder(DataSet)->getDate(*get_other_imebra_object_holder(tagId, TagId), elementNumber, *get_other_imebra_object_holder(defaultValue, Date));
-    return [[ImebraDate alloc] initWithImebraDater:new imebra::Date(date)];
+    return [[ImebraDate alloc] initWithImebraDate: new imebra::Date(date)];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }

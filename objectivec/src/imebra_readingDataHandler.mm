@@ -19,6 +19,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "imebra_strings.h"
 
 #include <imebra/readingDataHandler.h>
+#include <imebra/date.h>
+#include <imebra/age.h>
 
 @implementation ImebraReadingDataHandler
 
@@ -87,16 +89,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    imebra::Date date(get_imebra_object_holder(ReadingDataHandler)->getDate(index));
-    return [[ImebraDate alloc] initWithYear:date.year
-            month:date.month
-            day:date.day
-            hour:date.hour
-            minutes:date.minutes
-            seconds:date.seconds
-            nanoseconds:date.nanoseconds
-            offsetHours:date.offsetHours
-            offsetMinutes:date.offsetMinutes];
+    const imebra::Date date(get_imebra_object_holder(ReadingDataHandler)->getDate(index));
+    return [[ImebraDate alloc] initWithImebraDate: new imebra::Date(date)];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -105,9 +99,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    imebra::Age age(get_imebra_object_holder(ReadingDataHandler)->getAge(index));
-    return [[ImebraAge alloc] initWithAge:age.age
-            units:(ImebraAgeUnit_t)age.units];
+    const imebra::Age age(get_imebra_object_holder(ReadingDataHandler)->getAge(index));
+    return [[ImebraAge alloc] initWithImebraAge: new imebra::Age(age)];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }

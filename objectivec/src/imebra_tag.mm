@@ -28,6 +28,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <imebra/readingDataHandlerNumeric.h>
 #include <imebra/streamReader.h>
 #include <imebra/streamWriter.h>
+#include <imebra/dataSet.h>
 
 @implementation ImebraTag
 
@@ -185,7 +186,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_START();
 
     return [[ImebraMutableDataSet alloc] initWithImebraDataSet:new imebra::MutableDataSet(
-            ((imebra::MutableTag*)get_imebra_object_holder(Tag))->appendSequenceItem(*get_other_imebra_object_holder(pDataSet)))];
+            ((imebra::MutableTag*)get_imebra_object_holder(Tag))->appendSequenceItem())];
 
     OBJC_IMEBRA_FUNCTION_END();
 }
