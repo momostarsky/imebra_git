@@ -401,7 +401,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return [[ImebraMutableDataSet alloc] initWithImebraDataSetHandler:
+    return [[ImebraMutableDataSet alloc] initWithImebraDataSet:
         new imebra::MutableDataSet(
             ((imebra::MutableDataSet*)get_imebra_object_holder(DataSet))->appendSequenceItem(imebra::TagId((std::uint16_t)pTagId.groupId, (std::uint32_t)pTagId.groupOrder, (std::uint16_t)pTagId.tagId))) ];
 
