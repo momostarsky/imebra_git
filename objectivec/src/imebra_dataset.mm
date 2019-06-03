@@ -34,6 +34,9 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <imebra/writingDataHandler.h>
 #include <imebra/writingDataHandlerNumeric.h>
 #include <imebra/definitions.h>
+#include <imebra/age.h>
+#include <imebra/date.h>
+#include <imebra/patientName.h>
 
 #import <Foundation/NSString.h>
 
@@ -274,8 +277,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    imebra::Age age = get_imebra_object_holder(DataSet)->getAge(*get_other_imebra_object_holder(tagId, TagId), elementNumber);
-    return [[ImebraAge alloc] initWithAge:age.age units:(ImebraAgeUnit_t)age.units];
+    const imebra::Age age = get_imebra_object_holder(DataSet)->getAge(*get_other_imebra_object_holder(tagId, TagId), elementNumber);
+    return [[ImebraAge alloc] initWithImebraAge: new imebra::Age(age)];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -284,8 +287,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    imebra::Age age = get_imebra_object_holder(DataSet)->getAge(*get_other_imebra_object_holder(tagId, TagId), elementNumber, *get_other_imebra_object_holder(defaultValue,Age));
-    return [[ImebraAge alloc] initWithAge:age.age units:(ImebraAgeUnit_t)age.units];
+    const imebra::Age age = get_imebra_object_holder(DataSet)->getAge(*get_other_imebra_object_holder(tagId, TagId), elementNumber, *get_other_imebra_object_holder(defaultValue,Age));
+    return [[ImebraAge alloc] initWithImebraAge: new imebra::Age(age)];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -294,16 +297,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    imebra::Date date = get_imebra_object_holder(DataSet)->getDate(*get_other_imebra_object_holder(tagId, TagId), elementNumber);
-    return [[ImebraDate alloc] initWithYear:date.year
-            month:date.month
-            day:date.day
-            hour:date.hour
-            minutes:date.minutes
-            seconds:date.seconds
-            nanoseconds:date.nanoseconds
-            offsetHours:date.offsetHours
-            offsetMinutes:date.offsetMinutes];
+    const imebra::Date date = get_imebra_object_holder(DataSet)->getDate(*get_other_imebra_object_holder(tagId, TagId), elementNumber);
+    return [[ImebraDate alloc] initWithImebraDate: new imebra::Date(date)];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -312,16 +307,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    imebra::Date date = get_imebra_object_holder(DataSet)->getDate(*get_other_imebra_object_holder(tagId, TagId), elementNumber, *get_other_imebra_object_holder(defaultValue, Date));
-    return [[ImebraDate alloc] initWithYear:date.year
-            month:date.month
-            day:date.day
-            hour:date.hour
-            minutes:date.minutes
-            seconds:date.seconds
-            nanoseconds:date.nanoseconds
-            offsetHours:date.offsetHours
-            offsetMinutes:date.offsetMinutes];
+    const imebra::Date date = get_imebra_object_holder(DataSet)->getDate(*get_other_imebra_object_holder(tagId, TagId), elementNumber, *get_other_imebra_object_holder(defaultValue, Date));
+    return [[ImebraDate alloc] initWithImebraDater:new imebra::Date(date)];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }

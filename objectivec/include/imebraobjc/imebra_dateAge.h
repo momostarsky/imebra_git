@@ -41,7 +41,10 @@ typedef NS_ENUM(char, ImebraAgeUnit_t)
     define_imebra_object_holder(Age);
 }
 
+    -(id)initWithImebraAge:define_imebra_parameter(Age);
+
     -(void)dealloc;
+
 
     /// \brief Constructor.
     ///
@@ -84,6 +87,8 @@ typedef NS_ENUM(char, ImebraAgeUnit_t)
 }
 
     -(void)dealloc;
+
+    -(id)initWithImebraDate:define_imebra_parameter(Date);
 
     /// \brief Constructor.
     ///

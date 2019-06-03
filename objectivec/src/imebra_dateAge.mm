@@ -14,13 +14,29 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #import <Foundation/NSString.h>
 #include "imebra_implementation_macros.h"
 #include "../include/imebraobjc/imebra_dateAge.h"
-#include <imebra/dataSet.h>
+#include <imebra/age.h>
+#include <imebra/date.h>
 
 @implementation ImebraAge
 
 -(void)dealloc
 {
     delete_imebra_object_holder(Age);
+}
+
+-(id)initWithImebraAge:define_imebra_parameter(Age)
+{
+    reset_imebra_object_holder(Age);
+    self = [super init];
+    if(self)
+    {
+        set_imebra_object_holder(Age, get_imebra_parameter(Age));
+    }
+    else
+    {
+        delete get_imebra_parameter(Age);
+    }
+    return self;
 }
 
 -(id)initWithAge:(unsigned int)initialAge units:(ImebraAgeUnit_t)initialUnits
@@ -57,6 +73,21 @@ If you do not want to be bound by the GPL terms (such as the requirement
 -(void)dealloc
 {
     delete_imebra_object_holder(Date);
+}
+
+-(id)initWithImebraDate:define_imebra_parameter(Date)
+{
+    reset_imebra_object_holder(Date);
+    self = [super init];
+    if(self)
+    {
+        set_imebra_object_holder(Date, get_imebra_parameter(Date));
+    }
+    else
+    {
+        delete get_imebra_parameter(Date);
+    }
+    return self;
 }
 
 -(id)initWithYear:(unsigned int)initialYear
