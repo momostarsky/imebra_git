@@ -17,12 +17,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #import <Foundation/Foundation.h>
 #include "imebra_macros.h"
 
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
-namespace imebra
-{
-class StreamWriter;
-}
-#endif
 
 @class ImebraBaseStreamOutput;
 
@@ -36,7 +30,6 @@ class StreamWriter;
 #ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
 {
     @public
-    imebra::StreamWriter* m_pWriter;
     define_imebra_object_holder(StreamWriter);
 }
 

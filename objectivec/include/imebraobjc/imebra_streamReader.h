@@ -18,12 +18,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #import <Foundation/Foundation.h>
 #include "imebra_macros.h"
 
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
-namespace imebra
-{
-class StreamReader;
-}
-#endif
 
 ///
 /// \brief ImebraStreamReader is used to read data from a
