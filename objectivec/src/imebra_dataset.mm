@@ -21,6 +21,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #import "../include/imebraobjc/imebra_writingDataHandler.h"
 #import "../include/imebraobjc/imebra_writingDataHandlerNumeric.h"
 #import "../include/imebraobjc/imebra_dateAge.h"
+#import "../include/imebraobjc/imebra_patientName.h"
 
 #include "imebra_implementation_macros.h"
 #include "imebra_nserror.h"
@@ -313,6 +314,26 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
 
+-(ImebraPatientName*)getPatientName:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber error:(NSError**)pError
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    const imebra::PatientName patientName = get_imebra_object_holder(DataSet)->getPatientName(*get_other_imebra_object_holder(tagId, TagId), elementNumber);
+    return [[ImebraPatientName alloc] initWithImebraPatientName: new imebra::PatientName(patientName)];
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+}
+
+-(ImebraPatientName*)getPatientName:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber defaultValue:(ImebraPatientName*)defaultValue error:(NSError**)pError
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    const imebra::PatientName patientName = get_imebra_object_holder(DataSet)->getPatientName(*get_other_imebra_object_holder(tagId, TagId), elementNumber, *get_other_imebra_object_holder(defaultValue, PatientName));
+    return [[ImebraPatientName alloc] initWithImebraPatientName: new imebra::PatientName(patientName)];
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+}
+
 -(ImebraTagVR_t)getDataType:(ImebraTagId*)tagId error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
@@ -405,7 +426,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
         new imebra::MutableDataSet(
             ((imebra::MutableDataSet*)get_imebra_object_holder(DataSet))->appendSequenceItem(imebra::TagId((std::uint16_t)pTagId.groupId, (std::uint32_t)pTagId.groupOrder, (std::uint16_t)pTagId.tagId))) ];
 
-    OBJC_IMEBRA_FUNCTION_END();
+    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
 
 -(ImebraWritingDataHandler*) getWritingDataHandler:(ImebraTagId*)tagId bufferId:(unsigned int)bufferId tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError
@@ -543,6 +564,15 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_START();
 
     ((imebra::MutableDataSet*)get_imebra_object_holder(DataSet))->setDate(*get_other_imebra_object_holder(tagId, TagId), *get_other_imebra_object_holder(newValue, Date));
+
+    OBJC_IMEBRA_FUNCTION_END();
+}
+
+-(void)setPatientName:(ImebraTagId*)tagId newValue:(ImebraPatientName*)newValue error:(NSError**)pError
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    ((imebra::MutableDataSet*)get_imebra_object_holder(DataSet))->setPatientName(*get_other_imebra_object_holder(tagId, TagId), *get_other_imebra_object_holder(newValue, PatientName));
 
     OBJC_IMEBRA_FUNCTION_END();
 }

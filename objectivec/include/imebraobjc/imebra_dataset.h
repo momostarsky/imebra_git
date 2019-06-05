@@ -20,6 +20,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 @class ImebraImage;
 @class ImebraAge;
 @class ImebraDate;
+@class ImebraPatientName;
 @class ImebraLUT;
 @class ImebraReadingDataHandler;
 @class ImebraWritingDataHandler;
@@ -129,6 +130,7 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
 /// - getUnicodeString()
 /// - getAge()
 /// - getDate()
+/// - getPatient()
 ///
 /// In alternative, you can first retrieve a ImebraReadingDataHandler with
 /// getReadingDataHandler() and then access the tag's content via the handler.
@@ -529,6 +531,41 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
     ///////////////////////////////////////////////////////////////////////////////
     -(ImebraDate*)getDate:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber defaultValue:(ImebraDate*)defaultValue error:(NSError**)pError;
 
+    /// \brief Retrieve a tag's value as an ImebraPatientName object.
+    ///
+    /// If the tag's value cannot be converted to an ImebraPatientName object
+    /// then sets pError to ImebraDataHandlerConversionError.
+    ///
+    /// If the specified tag does not exist then set pError to
+    /// ImebraMissingTagError or ImebraMissingGroupError.
+    ///
+    /// \param tagId    the tag's id
+    /// \param elementNumber the element number within the buffer
+    /// \param pError   a pointer to a NSError pointer which is set when an
+    ///                  error occurs
+    /// \return the tag's value as an ImebraDate object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(ImebraPatientName*)getPatientName:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber error:(NSError**)pError;
+
+    /// \brief Retrieve a tag's value as an ImebraPatientName object.
+    ///
+    /// If the tag's value cannot be converted to an ImebraPatientName object
+    /// then sets pError to ImebraDataHandlerConversionError.
+    ///
+    /// If the specified tag does not exist then returns the default value
+    /// set in the defaultValue parameter.
+    ///
+    /// \param tagId    the tag's id
+    /// \param elementNumber the element number within the buffer
+    /// \param defaultValue  the value to return if the tag doesn't exist
+    /// \param pError   a pointer to a NSError pointer which is set when an
+    ///                  error occurs
+    /// \return the tag's value as an ImebraDate object
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(ImebraPatientName*)getPatientName:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber defaultValue:(ImebraPatientName*)defaultValue error:(NSError**)pError;
+
     /// \brief Return the data type (VR) of the specified tag.
     ///
     /// If the specified tag does not exist then set pError to
@@ -568,6 +605,7 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
     /// - setUnicodeString()
     /// - setAge()
     /// - setDate()
+    /// - setPatientName()
     ///
     /// The previous methods allow to write just the first item in the tag's
     /// content and before writing wipe out the old tag's content (all the items).
@@ -986,6 +1024,23 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
         -(void)setDate:(ImebraTagId*)tagId newValue:(ImebraDate*)newValue error:(NSError**)pError
             __attribute__((swift_error(nonnull_error)));
 
+        /// \brief Write a new ImebraPatientName value into the element 0 of the
+        ///        specified tag's buffer 0.
+        ///
+        /// If the specified tag doesn't exist then a new tag is created using
+        /// the data type (VR) PN.
+        ///
+        /// If the new value cannot be converted to a patient name then sets pError to
+        /// ImebraDataHandlerConversionError.
+        ///
+        /// \param tagId    the tag's id
+        /// \param newValue the value to write into the tag
+        /// \param pError   a pointer to a NSError pointer which is set when an
+        ///                  error occurs
+        ///
+        ///////////////////////////////////////////////////////////////////////////////
+        -(void)setPatientName:(ImebraTagId*)tagId newValue:(ImebraPatientName*)newValue error:(NSError**)pError
+            __attribute__((swift_error(nonnull_error)));
 
     @end
 

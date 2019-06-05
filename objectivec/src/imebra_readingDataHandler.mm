@@ -13,6 +13,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #import "../include/imebraobjc/imebra_readingDataHandler.h"
 #import "../include/imebraobjc/imebra_dateAge.h"
+#import "../include/imebraobjc/imebra_patientName.h"
 
 #include "imebra_implementation_macros.h"
 #include "imebra_nserror.h"
@@ -21,6 +22,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <imebra/readingDataHandler.h>
 #include <imebra/date.h>
 #include <imebra/age.h>
+#include <imebra/patientName.h>
 
 @implementation ImebraReadingDataHandler
 
@@ -101,6 +103,16 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
     const imebra::Age age(get_imebra_object_holder(ReadingDataHandler)->getAge(index));
     return [[ImebraAge alloc] initWithImebraAge: new imebra::Age(age)];
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+}
+
+-(ImebraPatientName*) getPatientName:(unsigned int)index error:(NSError**)pError
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    const imebra::PatientName patientName(get_imebra_object_holder(ReadingDataHandler)->getPatientName(index));
+    return [[ImebraPatientName alloc] initWithImebraPatientName: new imebra::PatientName(patientName)];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }

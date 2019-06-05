@@ -19,6 +19,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @class ImebraDate;
 @class ImebraAge;
+@class ImebraPatientName;
 
 
 ///
@@ -143,6 +144,20 @@ If you do not want to be bound by the GPL terms (such as the requirement
     ///
     ///////////////////////////////////////////////////////////////////////////////
     -(void) setAge:(unsigned int)index newValue:(ImebraAge*)value error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
+
+    /// \brief Write a patient name.
+    ///
+    /// If the value cannot be converted to a patient name
+    /// then set pError to ImebraDataHandlerConversionError.
+    ///
+    /// \param index the element number within the buffer. Must be smaller than
+    ///        size()
+    /// \param value the value to write
+    /// \param pError set to a NSError derived class in case of error
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(void) setPatientName:(unsigned int)index newValue:(ImebraPatientName*)value error:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
 
     /// \brief Commit the changes to the handler's memory.

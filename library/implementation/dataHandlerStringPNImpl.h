@@ -115,8 +115,6 @@ public:
 
     virtual void setUnicodePatientName(const size_t index, const std::shared_ptr<const unicodePatientName>& pPatientName) override;
 
-    virtual void validate() const;
-
 private:
 
     template<class stringType_t, class patientNameType_t, typename separatorType_t> stringType_t returnPatientName(const std::shared_ptr<const patientNameType_t>& patient, separatorType_t separator)

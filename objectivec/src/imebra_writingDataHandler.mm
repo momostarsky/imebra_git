@@ -13,6 +13,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #import "../include/imebraobjc/imebra_writingDataHandler.h"
 #import "../include/imebraobjc/imebra_dateAge.h"
+#import "../include/imebraobjc/imebra_patientName.h"
 
 #include "imebra_implementation_macros.h"
 #include "imebra_nserror.h"
@@ -125,6 +126,18 @@ If you do not want to be bound by the GPL terms (such as the requirement
     if(get_imebra_object_holder(WritingDataHandler) != nullptr)
     {
         get_imebra_object_holder(WritingDataHandler)->setAge(index, *get_other_imebra_object_holder(value, Age));
+    }
+
+    OBJC_IMEBRA_FUNCTION_END();
+}
+
+-(void) setPatientName:(unsigned int)index newValue:(ImebraPatientName*)value error:(NSError**)pError
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    if(get_imebra_object_holder(WritingDataHandler) != nullptr)
+    {
+        get_imebra_object_holder(WritingDataHandler)->setPatientName(index, *get_other_imebra_object_holder(value, PatientName));
     }
 
     OBJC_IMEBRA_FUNCTION_END();

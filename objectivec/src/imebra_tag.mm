@@ -188,7 +188,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     return [[ImebraMutableDataSet alloc] initWithImebraDataSet:new imebra::MutableDataSet(
             ((imebra::MutableTag*)get_imebra_object_holder(Tag))->appendSequenceItem())];
 
-    OBJC_IMEBRA_FUNCTION_END();
+    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
 
 @end

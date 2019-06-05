@@ -76,14 +76,6 @@ void writingDataHandlerStringPN::setUnicodePatientName(const size_t index, const
     setUnicodeString(index, returnPatientName<std::wstring, unicodePatientName, wchar_t>(pPatientName, L'='));
 }
 
-void writingDataHandlerStringPN::validate() const
-{
-    IMEBRA_FUNCTION_START();
-
-    writingDataHandlerStringUnicode::validate();
-
-    IMEBRA_FUNCTION_END();
-}
 
 } // namespace handlers
 

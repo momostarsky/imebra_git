@@ -19,6 +19,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @class ImebraDate;
 @class ImebraAge;
+@class ImebraPatientName;
 
 ///
 /// \brief ImebraReadingDataHandler allows reading the content of a Dicom
@@ -126,6 +127,19 @@ If you do not want to be bound by the GPL terms (such as the requirement
     ///
     ///////////////////////////////////////////////////////////////////////////////
     -(ImebraDate*) getDate:(unsigned int)index error:(NSError**)pError;
+
+    /// \brief Retrieve a buffer's value as patient name.
+    ///
+    /// If the buffer's value cannot be converted to a patient name
+    /// then set pError to ImebraDataHandlerConversionError.
+    ///
+    /// \param index the element number within the buffer. Must be smaller than
+    ///        getSize()
+    /// \param pError set to a NSError derived class in case of error
+    /// \return the tag's value as a date or time
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(ImebraPatientName*) getPatientName:(unsigned int)index error:(NSError**)pError;
 
     /// \brief Retrieve a buffer's value as an age.
     ///

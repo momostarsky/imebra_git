@@ -142,18 +142,6 @@
 @implementation ImebraDicomDirUnknownDirectoryRecordTypeError: ImebraDicomDirError
 @end
 
-@implementation ImebraHuffmanError: NSError
-@end
-
-@implementation ImebraHuffmanCreateTableError: ImebraHuffmanError
-@end
-
-@implementation ImebraHuffmanReadError : ImebraHuffmanError
-@end
-
-@implementation ImebraHuffmanWriteError : ImebraHuffmanError
-@end
-
 @implementation ImebraImageError: NSError
 @end
 
@@ -197,9 +185,6 @@
 @end
 
 @implementation ImebraStreamClosedError: ImebraStreamEOFError
-@end
-
-@implementation ImebraStreamJpegTagInStreamError : ImebraStreamError
 @end
 
 @implementation ImebraModalityVOILUTError: ImebraTransformError
