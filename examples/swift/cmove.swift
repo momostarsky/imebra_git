@@ -39,8 +39,8 @@ do
             let tcpStream = try tcpListener.waitForConnection()
 
             // Allocate a reader and a writer that read and write into the TCP stream
-            let readScp = ImebraStreamReader(inputStream: tcpStream.getStreamInput())
-            let writeScp = ImebraStreamWriter(inputOutputStream: tcpStream.getStreamOutput())
+            let readScp = ImebraStreamReader(inputStream: tcpStream.getInput())
+            let writeScp = ImebraStreamWriter(outputStream: tcpStream.getOutput())
 
             // Tell that we accept the class UID specified in the command line, and which
             // transfer syntaxes we can handle for that class
@@ -103,8 +103,8 @@ do
     let tcpStream = try ImebraTCPStream(address: ImebraTCPActiveAddress(node: serverAddress, service: serverPort))
 
     // Allocate a reader and a writer that read and write into the TCP stream
-    let readScu = ImebraStreamReader(inputStream: tcpStream.getStreamInput())
-    let writeScu = ImebraStreamWriter(inputOutputStream: tcpStream.getStreamOutput())
+    let readScu = ImebraStreamReader(inputStream: tcpStream.getInput())
+    let writeScu = ImebraStreamWriter(outputStream: tcpStream.getOutput())
 
     // Tell that we want to use C-MOVE
     let context = ImebraPresentationContext(abstractSyntax: ImebraUidPatientRootQueryRetrieveInformationModelMOVE_1_2_840_10008_5_1_4_1_2_1_2)
