@@ -105,6 +105,7 @@ private:
 
 };
 
+#ifndef SWIG // Use UTF8 strings only with SWIG
 
 ///
 /// \brief Stores a patient name with Unicode chars (in alphabetic,
@@ -169,17 +170,16 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     std::wstring getPhoneticRepresentation() const;
 
-#ifndef SWIG
 protected:
     explicit UnicodePatientName(const std::shared_ptr<implementation::unicodePatientName>& pPatientName);
 
 private:
     friend const std::shared_ptr<implementation::unicodePatientName>& getUnicodePatientNameImplementation(const UnicodePatientName& patientName);
     std::shared_ptr<implementation::unicodePatientName> m_pPatientName;
-#endif
 
 };
 
+#endif
 
 } // namespace imebra
 

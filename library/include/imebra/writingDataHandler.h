@@ -216,6 +216,8 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     void setPatientName(size_t index, const PatientName& patientName);
 
+#ifndef SWIG // Use UTF8 strings only with SWIG
+
     /// \brief Write a UnicodePatientName value.
     ///
     /// If the value cannot be converted from a PatientName value
@@ -228,7 +230,6 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     void setUnicodePatientName(size_t index, const UnicodePatientName& patientName);
 
-#ifndef SWIG
 protected:
     explicit WritingDataHandler(const std::shared_ptr<implementation::handlers::writingDataHandler>& pDataHandler);
 

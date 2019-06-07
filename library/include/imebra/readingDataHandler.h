@@ -200,6 +200,8 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     const PatientName getPatientName(size_t index) const;
 
+#ifndef SWIG // Use UTF8 strings only with SWIG
+
     /// \brief Retrieve a tag's value as a Unicode Patient Name.
     ///
     /// If the tag's value cannot be converted to a patient name then throws
@@ -212,7 +214,6 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     const UnicodePatientName getUnicodePatientName(size_t index) const;
 
-#ifndef SWIG
 protected:
     explicit ReadingDataHandler(const std::shared_ptr<implementation::handlers::readingDataHandler>& pDataHandler);
 

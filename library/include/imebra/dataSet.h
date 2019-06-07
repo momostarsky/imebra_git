@@ -529,6 +529,7 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     const PatientName getPatientName(const TagId& tagId, size_t elementNumber, const PatientName& defaultValue) const;
 
+#ifndef SWIG // Use UTF8 strings only with SWIG
     /// \brief Retrieve a tag's value as a Unicode Patient Name.
     ///
     /// If the tag's value cannot be converted to a patient name then throws
@@ -560,6 +561,7 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     const UnicodePatientName getUnicodePatientName(const TagId& tagId, size_t elementNumber, const UnicodePatientName& defaultValue) const;
+#endif
 
     /// \brief Return the 2 chars data type (VR) of the specified tag.
     ///
@@ -1026,6 +1028,8 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     void setPatientName(const TagId& tagId, const PatientName& patientName);
 
+#ifndef SWIG // Use UTF8 strings only with SWIG
+
     /// \brief Write a Unicode Patient Name into the element 0 of the specified
     ///        Tag's buffer 0.
     ///
@@ -1038,6 +1042,7 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     void setUnicodePatientName(const TagId& tagId, const UnicodePatientName& patientName);
 
+#endif
 
 protected:
     explicit MutableDataSet(const std::shared_ptr<imebra::implementation::dataSet>& pDataSet);
