@@ -399,7 +399,7 @@ Replaces :ref:`DEVFEAT_2`
 
 The scope of this SOP is to explain how the developer should act to implement an announced feature.
 
-This SOP can be executed only after the feature has been announced using :ref:`NEWFEAT_2`.
+This SOP can be executed only after the feature has been announced using :ref:`NEWFEAT_1`.
 
 - Switch to the default branch for the version in which the feature will be available 
 - start implementing the feature on the development machine
