@@ -385,6 +385,41 @@ To open the new enhancement issue:
 - Click on "Create issue" to submit the enhancement.
 
 
+.. _DEVFEAT_3:
+
+SOP DEVFEAT/3 Implementing a new feature
+----------------------------------------
+
+Replaces :ref:`DEVFEAT_2`
+
+- Date: 2019-06-10
+- Version: 3
+- Author: Paolo Brandoli
+- Intended audience: developers
+
+The scope of this SOP is to explain how the developer should act to implement an announced feature.
+
+This SOP can be executed only after the feature has been announced using :ref:`NEWFEAT_2`.
+
+- Switch to the default branch for the version in which the feature will be available 
+- start implementing the feature on the development machine
+- all the commits relative to the feature must:
+  
+  - be in a branch named "feature_XXX_DDD" where XXX is the issue number in the issue tracker and DDD is a short
+    feature description with underscores instead of spaces OR
+
+  - the commit messages must contain the text "Addresses #XXX_ZZZ" where XXX is the issue number in the issue tracker
+    and ZZZ is a description of the changes in the commit
+    
+- in the docs/imebra_requirements.xml file, find the requirement related to the implemented feature and add the tag
+  "implementedIn", in which you must describe which class/methods implement the new feature
+- when the feature is resolved then merge the feature branch into the default branch for the version that will include the feature.
+  THE FEATURE IS IMPLEMENTED WHEN THE SOURCE CODE IS CLEAN, ALL THE TEST UNITS PASS, THE DOCUMENTATION IS UPDATED AND
+  THE CHANGES LOG has been updated as per :ref:`CHGLOG_1`.
+  The merge commit message must contain the text "Resolves #XXX (DDD)" and "As per SOP DEVFEAT_3" where XXX is the issue 
+  number in the issue tracker and DDD is a short feature description
+- when the feature has been released then close the feature branch
+
 .. _DEVFEAT_2:
 
 SOP DEVFEAT/2 Implementing a new feature
@@ -706,5 +741,42 @@ After the builds succeed:
 - upload the build from Dropbox to the Imebra Download Files on Bitbucket (https://bitbucket.org/binarno/imebra/downloads).
 - on the local repository, switch the branch back to default
 - from the default branch, tag the commit used for the build with the actual build number (e.g. 4.5.2.1)
+- push the repository to Bitbucket (hg push)
+
+
+.. _MAJORVERSION_1:
+
+SOP MAJORVERSION/1 Development of a new major version
+-----------------------------------------------------
+
+- Date: 2019-06-11
+- Version: 1
+- Author: Paolo Brandoli
+- Intended audience: developers
+
+The scope of this SOP is to explain how to start the development of a new major version of Imebra (e.g. version 5.x.x or version 6.x.x).
+
+- from the master branch create a new version branch, named "imebra_vX" where X is the major version number
+
+Each modification in the new version must be developed following the :ref:`DEVFEAT_3`
+
+When the new version is ready to be released, then it will become the new default branch:
+
+- rename the default branch to "imebra_legacy_vY" where Y is the major version which is being replaced:
+
+  - hg update default
+  - hg branch "imebra_legacy_vY"
+  - hg commit -m "Move Imebra vY to legacy"
+  - hg update default
+  - hg commit --close-branch -m"Imebra vY moved to legacy branch"
+
+- rename the "imebra_vX" branch to default
+
+  - hg update "imebra_vX"
+  - hg branch default
+  - hg commit -m "Move Imebra vX to default"
+  - hg update "imebra_vX"
+  - hg commit --close-branch -m"Imebra vX moved to default branch"
+
 - push the repository to Bitbucket (hg push)
 
