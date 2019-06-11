@@ -1448,6 +1448,28 @@ public:
     explicit DimseInvalidCommand(const std::string& message);
 };
 
+
+///
+/// \brief Base class for the exceptions thrown by the UID generation classes.
+///
+///////////////////////////////////////////////////////////////////////////////
+class IMEBRA_API UIDGeneratorError: public std::runtime_error
+{
+public:
+    explicit UIDGeneratorError(const std::string& message);
+};
+
+///
+/// \brief Exception thrown when the UIDGeneratorFactory class is trying to
+///        retrieve a non registered UID generator.
+///
+///////////////////////////////////////////////////////////////////////////////
+class IMEBRA_API NonRegisteredUIDGenerator: public UIDGeneratorError
+{
+public:
+    explicit NonRegisteredUIDGenerator(const std::string& message);
+};
+
 }
 
 #endif // !defined(imebraExceptions__INCLUDED_)

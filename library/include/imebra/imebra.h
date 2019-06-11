@@ -57,6 +57,9 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "pipeStream.h"
 #include "acse.h"
 #include "dimse.h"
+#include "uidGeneratorFactory.h"
+#include "randomUidGenerator.h"
+#include "serialNumberUidGenerator.h"
 #include "uidsEnumeration.h"
 
 #endif // IMEBRA_INCLUDED
