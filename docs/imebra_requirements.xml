@@ -690,6 +690,18 @@
       <priority>100</priority>
     </requirement>
 
+    <requirement categoryIdref="REQ_FUNC" id="REQ_UID_GEN">
+      <mitigates/>
+
+      <introducedBy/>
+
+      <title>Supply a mechanism to generate unique DICOM UIDs</title>
+
+      <description>The library must be able to generate unique UIDs to be used in DICOM datasets as SOP instance UID.
+      </description>
+      <priority>100</priority>
+    </requirement>
+
     <requirement categoryIdref="REQ_IMPL" id="REQ_NO_CALLBACK">
       <mitigates/>
 
