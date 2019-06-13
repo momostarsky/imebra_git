@@ -696,6 +696,42 @@ TEST(objectivec, createDicomDir)
 }
 
 
+// Test the UID generators
+TEST(objectivec, uidGenerators)
+{
+    ImebraBaseUIDGenerator* random = [[ImebraRandomUIDGenerator alloc] initWithRoot:@"1.2.3" departmentId:2 modelId:3];
+    ImebraBaseUIDGenerator* serial = [[ImebraSerialNumberUIDGenerator alloc] initWithRoot:@"1.2.3" departmentId:4 modelId:3 serialNumber:4];
+
+    NSError* pError(0);
+    [ImebraUIDGeneratorFactory registerUIDGenerator:@"random" generator:random error:&pError];
+    [ImebraUIDGeneratorFactory registerUIDGenerator:@"serial" generator:serial error:&pError];
+
+    std::set<std::string> generatedUids;
+
+    size_t numberOfUIDs(100000);
+
+    for(size_t index(0); index != numberOfUIDs; ++index)
+    {
+        @autoreleasepool
+        {
+            std::string uid0 = imebra::NSStringToString([random getUID]);
+            std::string uid1 = imebra::NSStringToString([serial getUID]);
+
+            ASSERT_TRUE(uid0.find("1.2.3.2.3.") == 0);
+            ASSERT_TRUE(uid1.find("1.2.3.4.3.4.") == 0);
+
+            ASSERT_TRUE(generatedUids.find(uid0) == generatedUids.end());
+            ASSERT_TRUE(generatedUids.find(uid1) == generatedUids.end());
+
+            generatedUids.insert(uid0);
+            generatedUids.insert(uid1);
+        }
+    }
+
+    ASSERT_EQ(numberOfUIDs * 2, generatedUids.size());
+}
+
+
 // Test DrawBitmap generating a NSImage
 #if defined(__APPLE__)
 

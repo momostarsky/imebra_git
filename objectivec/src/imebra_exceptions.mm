@@ -279,3 +279,9 @@
 
 @implementation ImebraDimseInvalidCommand: ImebraDimseError
 @end
+
+@implementation ImebraUIDGeneratorError: NSError
+@end
+
+@implementation ImebraNonRegisteredUIDGenerator: ImebraUIDGeneratorError
+@end

@@ -36,6 +36,11 @@ class baseUidGenerator;
 
 }
 
+
+///
+/// \brief Base class for the DICOM UID generators.
+///
+///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API BaseUIDGenerator
 {
     friend class UIDGeneratorFactory;
