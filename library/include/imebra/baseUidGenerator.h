@@ -60,7 +60,13 @@ public:
 
     virtual ~BaseUIDGenerator();
 
-    std::string getUid();
+    ///
+    /// \brief Generates a new UID.
+    ///
+    /// \return a new UID.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    std::string getUID();
 
 #ifndef SWIG
 protected:

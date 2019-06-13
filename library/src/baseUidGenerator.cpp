@@ -43,7 +43,7 @@ BaseUIDGenerator::~BaseUIDGenerator()
 {
 }
 
-std::string BaseUIDGenerator::getUid()
+std::string BaseUIDGenerator::getUID()
 {
     return m_pUidGenerator->getUid();
 }

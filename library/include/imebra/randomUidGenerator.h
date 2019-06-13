@@ -22,7 +22,12 @@ namespace imebra
 {
 
 ///
-/// \brief An input stream that reads data from a memory region.
+/// \brief An UID generator that uses a random number to generate unique
+///        UIDs.
+///
+/// The uniqueness of the generated UIDs is guaranteed by the fact that
+/// the machine generates a long random number during the UID generator
+/// initialization.
 ///
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API RandomUIDGenerator : public BaseUIDGenerator
@@ -31,7 +36,9 @@ class IMEBRA_API RandomUIDGenerator : public BaseUIDGenerator
 public:
     /// \brief Constructor.
     ///
-    /// \param memory the memory region from which the stream will read the data
+    /// \param root the     root UID assigned to the company
+    /// \param departmentId department ID (assigned by the company)
+    /// \param modelId      model ID (assigned by the department)
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit RandomUIDGenerator(const std::string& root, std::uint32_t departmentId, std::uint32_t modelId);
@@ -39,7 +46,7 @@ public:
     ///
     /// \brief Copy constructor.
     ///
-    /// \param source source MemoryStreamInput object
+    /// \param source source RandomUIDGenerator object
     ///
     ///////////////////////////////////////////////////////////////////////////////
     RandomUIDGenerator(const RandomUIDGenerator& source);

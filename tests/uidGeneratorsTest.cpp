@@ -25,13 +25,13 @@ TEST(uidGenerators, uidGeneratorsFactory)
 
     {
         BaseUIDGenerator firstGenerator = UIDGeneratorFactory::getUIDGenerator("zzz");
-        EXPECT_TRUE(firstGenerator.getUid().find("1.2.3.") == 0);
+        EXPECT_TRUE(firstGenerator.getUID().find("1.2.3.") == 0);
 
         BaseUIDGenerator secondGenerator = UIDGeneratorFactory::getUIDGenerator("aaa");
-        EXPECT_TRUE(secondGenerator.getUid().find("1.2.4.") == 0);
+        EXPECT_TRUE(secondGenerator.getUID().find("1.2.4.") == 0);
 
         BaseUIDGenerator defaultGenerator = UIDGeneratorFactory::getDefaultUIDGenerator();
-        EXPECT_TRUE(defaultGenerator.getUid().find("1.2.3.") == 0);
+        EXPECT_TRUE(defaultGenerator.getUID().find("1.2.3.") == 0);
 
     }
 
@@ -50,8 +50,8 @@ TEST(uidGenerators, randomUIDGenerator)
 
     for(size_t index(0); index != numberOfUIDs; ++index)
     {
-        std::string uid0 = randomGenerator0.getUid();
-        std::string uid1 = randomGenerator1.getUid();
+        std::string uid0 = randomGenerator0.getUID();
+        std::string uid1 = randomGenerator1.getUID();
 
         ASSERT_TRUE(uid0.find("1.2.3.4.5.") == 0);
         ASSERT_TRUE(uid1.find("1.2.3.4.5.") == 0);
@@ -77,7 +77,7 @@ TEST(uidGenerators, serialNumberUIDGenerator)
 
     for(size_t index(0); index != numberOfUIDs; ++index)
     {
-        std::string uid = serialNumberGenerator.getUid();
+        std::string uid = serialNumberGenerator.getUID();
 
         ASSERT_TRUE(uid.find("1.2.3.4.5.5000.") == 0);
 

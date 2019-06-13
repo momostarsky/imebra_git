@@ -22,7 +22,11 @@ namespace imebra
 {
 
 ///
-/// \brief An input stream that reads data from a memory region.
+/// \brief An UID generator that uses the model serial number to create unique
+///        UIDs.
+///
+/// The uniqueness of the generated UIDs is guaranteed by the fact that
+/// the machine serial number is correctly set.
 ///
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API SerialNumberUIDGenerator : public BaseUIDGenerator
@@ -31,7 +35,10 @@ class IMEBRA_API SerialNumberUIDGenerator : public BaseUIDGenerator
 public:
     /// \brief Constructor.
     ///
-    /// \param memory the memory region from which the stream will read the data
+    /// \param root the     root UID assigned to the company
+    /// \param departmentId department ID (assigned by the company)
+    /// \param modelId      model ID (assigned by the department)
+    /// \param serialNumber the model serial number (assigned by the department)
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit SerialNumberUIDGenerator(const std::string& root, std::uint32_t departmentId, std::uint32_t modelId, std::uint32_t serialNumber);
@@ -39,19 +46,11 @@ public:
     ///
     /// \brief Copy constructor.
     ///
-    /// \param source source MemoryStreamInput object
+    /// \param source source SerialNumberUIDGenerator object
     ///
     ///////////////////////////////////////////////////////////////////////////////
     SerialNumberUIDGenerator(const SerialNumberUIDGenerator& source);
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source MemoryStreamInput object
-    /// \return a reference to this MemoryStreamInput object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    SerialNumberUIDGenerator& operator=(const SerialNumberUIDGenerator& source);
 };
 
 }
