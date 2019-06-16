@@ -6,6 +6,11 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Implemented enhancement #280 (Add a UID generator (requirement :ref:`REQ_UID_GEN`)
+
+Version 4.5.1.1
+---------------
+
 - Implemented enhancement #245 (Modify the Swig IDL to generate Golang bindings)
 - Implemented enhancement #259 (Add a starter html page in the documentation folder) as per SOP :ref:`DEVENH_2`
 - Fixed bug #260 (Remove warning "enumeration response not handled in switch") as per SOP :ref:`FIXBUG_2`
