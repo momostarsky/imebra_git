@@ -159,6 +159,18 @@ Children requirements:
 
 
 
+.. _REQ_UID_GEN:
+
+[REQ_UID_GEN] Supply a mechanism to generate unique DICOM UIDs
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+The library must be able to generate unique UIDs to be used in DICOM datasets as SOP instance UID.
+
+
+
+
+
+
 .. _REQ_ENDIANESS_PLATFORM:
 
 [REQ_ENDIANESS_PLATFORM] Exposed memory with raw numerical data must use the platform endianess to represent numbers
@@ -451,6 +463,38 @@ The library should throw specific C++ exceptions to report errors.
 
 
 
+.. _REQ_IMMUTABLE_CLASSES:
+
+[REQ_IMMUTABLE_CLASSES] Data classes should be immutable, with mutable subclasses
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+The data classes should be immutable. Mutable subclasses should be used for objects that need to be modified.
+
+Mitigates:
+
+- :ref:`RISK_COPY_CONST_OBJECTS` by 100% By having separate mutable and immutable classes, the compiler will not allow copying an immutable object into a mutable one.
+
+
+
+
+
+.. _REQ_DONT_RETURN_POINTER:
+
+[REQ_DONT_RETURN_POINTER] The API should not return pointers to allocated objects
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+Instead of returning pointers to the allocated objects, the library should return the object instead.
+Because the API allocated objects hold just pointer to the implementation classes, copying them around
+should not impact the performances.
+
+
+
+
+Introduced risks: 
+
+- :ref:`RISK_COPY_CONST_OBJECTS`
+
+
 .. _REQ_IMPL:
 
 Implementation requirements
@@ -471,6 +515,18 @@ between the Imebra's interface and its implementation.
 Parent requirements:
 
 - :ref:`REQ_USER_PROTOCOL`
+
+
+
+
+.. _REQ_NO_MULTIPLE_INHERITANCE:
+
+[REQ_NO_MULTIPLE_INHERITANCE] Multiple inheritance is not allowed
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+Some language for which bindings are required don't support multiple inheritance, therefore it should not be used.
+
+
 
 
 
@@ -1048,6 +1104,32 @@ Mitigated total risk (0 = no risk, 10000 = maximum risk): 0
 Mitigated by: 
 
 - :ref:`REQ_TAGID_SEPARATE_CLASS` (by 100%)
+
+.. _RISK_COPY_CONST_OBJECTS:
+
+[RISK_COPY_CONST_OBJECTS] A const object may be copied into a non-const object
+..............................................................................
+
+Because the objects returned by the API are just handlers to implementation objects, the user
+may copy a const object into a non-const one, introducing the possibility that the implementation object
+pointed by the const object may be changed through the non-const object.
+
+Likelihood: 100% 
+
+Severity: 100 (0 = no impact, 100 = deadly) 
+
+Total risk (Likelyhood by Severity, 0 = no risk, 10000 = maximum risk): 10000
+
+Mitigated total risk (0 = no risk, 10000 = maximum risk): 0
+
+Caused by:
+
+- :ref:`REQ_DONT_RETURN_POINTER`
+
+
+Mitigated by: 
+
+- :ref:`REQ_IMMUTABLE_CLASSES` (by 100%)
 
 .. _RISK_TAGS_DONT_EXIST:
 
