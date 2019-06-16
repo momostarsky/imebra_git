@@ -6,7 +6,7 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
-- Implemented enhancement #280 (Add a UID generator (requirement :ref:`REQ_UID_GEN`)
+- Implemented enhancement #280 (Add a UID generator (requirement :ref:`REQ_UID_GEN`) as per SOP :ref:`DEVENH_2`
 
 Version 4.5.1.1
 ---------------
