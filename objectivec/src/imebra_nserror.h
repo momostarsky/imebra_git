@@ -392,6 +392,14 @@ namespace imebra
     {\
         imebra::setNSError(e, pError, [ImebraDimseError class]);\
     }\
+    catch(imebra::NonRegisteredUIDGenerator& e)\
+    {\
+        imebra::setNSError(e, pError, [ImebraNonRegisteredUIDGenerator class]);\
+    }\
+    catch(imebra::UIDGeneratorError& e)\
+    {\
+        imebra::setNSError(e, pError, [ImebraUIDGeneratorError class]);\
+    }\
     catch(const imebra::StreamError& e)\
     {\
         imebra::setNSError(e, pError, [ImebraStreamError class]);\

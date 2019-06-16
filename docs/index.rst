@@ -54,6 +54,7 @@ Imebra
 
    objects_lifecycle
    dicom_data_classes
+   dicom_uid_generation_classes
    stream_classes
    imaging_classes
    transforms_classes
