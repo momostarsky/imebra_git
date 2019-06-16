@@ -157,6 +157,11 @@
 %include "../library/include/imebra/date.h"
 %include "../library/include/imebra/age.h"
 %include "../library/include/imebra/patientName.h"
+%include "../library/include/imebra/uidGeneratorFactory.h"
+%include "../library/include/imebra/baseUidGenerator.h"
+%include "../library/include/imebra/randomUidGenerator.h"
+%include "../library/include/imebra/serialNumberUidGenerator.h"
+
 
 
 

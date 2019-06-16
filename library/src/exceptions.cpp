@@ -329,6 +329,12 @@ DimseInvalidCommand::DimseInvalidCommand(const std::string &message):
     DimseError(message)
 {}
 
+UIDGeneratorError::UIDGeneratorError(const std::string& message):
+    std::runtime_error(message)
+{}
 
+NonRegisteredUIDGenerator::NonRegisteredUIDGenerator(const std::string& message):
+    UIDGeneratorError(message)
+{}
 
 }
