@@ -166,34 +166,7 @@ void dicomStreamCodec::writeGroup(std::shared_ptr<streamWriter> pDestStream, con
         endianType = streamController::lowByteEndian;
     }
 
-    // Calculate the group's length
-    ///////////////////////////////////////////////////////////
-    std::uint32_t groupLength = getGroupLength(tags, bExplicitDataType);
-
-    // Write the group's length
-    ///////////////////////////////////////////////////////////
-    const char lengthDataType[] = "UL";
-
     std::uint16_t adjustedGroupId = pDestStream->adjustEndian(groupId, endianType);;
-
-    std::uint16_t tagId = 0;
-    pDestStream->write((std::uint8_t*)&adjustedGroupId, 2);
-    pDestStream->write((std::uint8_t*)&tagId, 2);
-
-    if(bExplicitDataType)
-    {
-        pDestStream->write((std::uint8_t*)&lengthDataType, 2);
-        std::uint16_t tagLengthWord = pDestStream->adjustEndian((std::uint16_t)4, endianType);;
-        pDestStream->write((std::uint8_t*)&tagLengthWord, 2);
-    }
-    else
-    {
-        std::uint32_t tagLengthDword = pDestStream->adjustEndian((std::uint32_t)4, endianType);
-        pDestStream->write((std::uint8_t*)&tagLengthDword, 4);
-    }
-
-    pDestStream->adjustEndian((std::uint8_t*)&groupLength, 4, endianType);
-    pDestStream->write((std::uint8_t*)&groupLength, 4);
 
     // Write all the tags
     ///////////////////////////////////////////////////////////
@@ -421,40 +394,6 @@ std::uint32_t dicomStreamCodec::getTagLength(const std::shared_ptr<data>& pData,
     if(*pbSequence)
     {
         totalLength += (numberOfElements+1) * 8;
-    }
-
-    return totalLength;
-
-    IMEBRA_FUNCTION_END();
-}
-
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Calculate the group's length
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-std::uint32_t dicomStreamCodec::getGroupLength(const dataSet::tTags tags, bool bExplicitDataType)
-{
-    IMEBRA_FUNCTION_START();
-
-    std::uint32_t totalLength(0);
-
-    for(dataSet::tTags::const_iterator scanTags(tags.begin()), endTags(tags.end()); scanTags != endTags; ++scanTags)
-    {
-        if(scanTags->first == 0)
-        {
-            continue;
-        }
-
-        std::uint32_t tagHeaderLength;
-        bool bSequence;
-        totalLength += getTagLength(scanTags->second, bExplicitDataType, &tagHeaderLength, &bSequence);
-        totalLength += tagHeaderLength;
     }
 
     return totalLength;
