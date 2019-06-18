@@ -84,7 +84,7 @@
       <description>All the functions must be wrapped by special macros that capture
             the information about the exception being thrown or that cause a stack unwind.</description>
 
-      <priority>5</priority>
+      <priority>40</priority>
     </requirement>
 
     <requirement categoryIdref="REQ_FUNC" id="REQ_EXCEPTIONS">
@@ -92,7 +92,7 @@
 
       <description>The library should throw specific C++ exceptions to report errors.</description>
 
-      <priority>6</priority>
+      <priority>90</priority>
     </requirement>
 
     <requirement categoryIdref="REQ_FUNC" id="REQ_IMMUTABLE_CLASSES">
@@ -117,7 +117,16 @@
       	           Because the API allocated objects hold just pointer to the implementation classes, copying them around
       	           should not impact the performances.</description>
 
-      <priority>6</priority>
+      <priority>50</priority>
+    </requirement>
+
+    <requirement categoryIdref="REQ_FUNC" id="REQ_INSERT_FILES_IN_TAGS">
+      <title>Allow to insert reference to files into DICOM tags</title>
+
+      <description>The API client should be able to specify a file as content of a DICOM tag: when the DICOM stream is encoded then
+      	           the specific tag content should be fetched directly from the file.</description>
+
+      <priority>10</priority>
     </requirement>
 
 
@@ -698,6 +707,18 @@
       <title>Supply a mechanism to generate unique DICOM UIDs</title>
 
       <description>The library must be able to generate unique UIDs to be used in DICOM datasets as SOP instance UID.
+      </description>
+      <priority>80</priority>
+    </requirement>
+
+    <requirement categoryIdref="REQ_FUNC" id="REQ_FUNCTIONAL_MACROS">
+      <mitigates/>
+
+      <introducedBy/>
+
+      <title>The operations that get image specific parameters should be aware of Functional Macros</title>
+
+      <description>Function that retrieve image related information should use also the Functional Macros (global or frame specific).
       </description>
       <priority>100</priority>
     </requirement>
