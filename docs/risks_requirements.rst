@@ -159,12 +159,12 @@ Children requirements:
 
 
 
-.. _REQ_UID_GEN:
+.. _REQ_FUNCTIONAL_MACROS:
 
-[REQ_UID_GEN] Supply a mechanism to generate unique DICOM UIDs
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+[REQ_FUNCTIONAL_MACROS] The operations that get image specific parameters should be aware of Functional Macros
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
-The library must be able to generate unique UIDs to be used in DICOM datasets as SOP instance UID.
+Function that retrieve image related information should use also the Functional Macros (global or frame specific).
 
 
 
@@ -290,6 +290,18 @@ Imebra must be able to build DICOMDIR structures and the records they contain.
 
 
 
+.. _REQ_EXCEPTIONS:
+
+[REQ_EXCEPTIONS] All the error should be reported via C++ exceptions
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+The library should throw specific C++ exceptions to report errors.
+
+
+
+
+
+
 .. _REQ_RAW_MEMORY:
 
 [REQ_RAW_MEMORY] The library must be able to expose the raw memory of numeric DICOM tags
@@ -331,6 +343,18 @@ In order to minimize the memory footprint of the loaded datasets, the library mu
 the tags data only when necessary.
 
 It should also release the loaded memory when the data is no longer necessary
+
+
+
+
+
+
+.. _REQ_UID_GEN:
+
+[REQ_UID_GEN] Supply a mechanism to generate unique DICOM UIDs
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+The library must be able to generate unique UIDs to be used in DICOM datasets as SOP instance UID.
 
 
 
@@ -451,12 +475,30 @@ Mitigates:
 
 
 
-.. _REQ_EXCEPTIONS:
+.. _REQ_DONT_RETURN_POINTER:
 
-[REQ_EXCEPTIONS] All the error should be reported via C++ exceptions
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+[REQ_DONT_RETURN_POINTER] The API should not return pointers to allocated objects
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
-The library should throw specific C++ exceptions to report errors.
+Instead of returning pointers to the allocated objects, the library should return the object instead.
+Because the API allocated objects hold just pointer to the implementation classes, copying them around
+should not impact the performances.
+
+
+
+
+Introduced risks: 
+
+- :ref:`RISK_COPY_CONST_OBJECTS`
+
+
+.. _REQ_INSERT_FILES_IN_TAGS:
+
+[REQ_INSERT_FILES_IN_TAGS] Allow to insert reference to files into DICOM tags
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+The API client should be able to specify a file as content of a DICOM tag: when the DICOM stream is encoded then
+the specific tag content should be fetched directly from the file.
 
 
 
@@ -476,23 +518,6 @@ Mitigates:
 
 
 
-
-
-.. _REQ_DONT_RETURN_POINTER:
-
-[REQ_DONT_RETURN_POINTER] The API should not return pointers to allocated objects
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-
-Instead of returning pointers to the allocated objects, the library should return the object instead.
-Because the API allocated objects hold just pointer to the implementation classes, copying them around
-should not impact the performances.
-
-
-
-
-Introduced risks: 
-
-- :ref:`RISK_COPY_CONST_OBJECTS`
 
 
 .. _REQ_IMPL:
@@ -699,6 +724,19 @@ Performances
 
 
 
+.. _REQ_WRAP_FUNCTIONS_EXCEPTIONS_INFO:
+
+[REQ_WRAP_FUNCTIONS_EXCEPTIONS_INFO] All the functions must be wrapped by macros that report the exception info
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+All the functions must be wrapped by special macros that capture
+the information about the exception being thrown or that cause a stack unwind.
+
+
+
+
+
+
 .. _REQ_MEMORY_POOL:
 
 [REQ_MEMORY_POOL] The library should reuse unused memory instead of allocating new blocks.
@@ -761,19 +799,6 @@ allocation fails, giving the memory pool an opportunity to clear the unused memo
 Mitigates:
 
 - :ref:`RISK_FULL_MEMORY` by 50% The std::new_handler is able to clear the memory pool when a memory allocation fails. Because there is a memory pool per thread, only the memory in the memory pool of the current thread is cleared when a memory allocation fails.
-
-
-
-
-
-.. _REQ_WRAP_FUNCTIONS_EXCEPTIONS_INFO:
-
-[REQ_WRAP_FUNCTIONS_EXCEPTIONS_INFO] All the functions must be wrapped by macros that report the exception info
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-
-All the functions must be wrapped by special macros that capture
-the information about the exception being thrown or that cause a stack unwind.
-
 
 
 
