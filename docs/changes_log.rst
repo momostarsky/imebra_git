@@ -6,6 +6,7 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Implemented enhancement #220 (The group length is deprecated: don't write it anymore) as per SOP :ref:`DEVENH_2`
 - Implemented enhancement #280 (Supply a mechanism to generate unique DICOM UIDs (requirement :ref:`REQ_UID_GEN`) as per SOP :ref:`DEVFEAT_3`
 
 
