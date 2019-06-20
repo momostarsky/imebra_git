@@ -158,6 +158,10 @@ protected:
     ///////////////////////////////////////////////////////////
     static std::uint32_t getTagLength(const std::shared_ptr<data>& pData, bool bExplicitDataType, std::uint32_t* pHeaderLength, bool *pbSequence);
 
+    // Calculate the group's length
+    ///////////////////////////////////////////////////////////
+    static std::uint32_t getGroupLength(const dataSet::tTags& tags, bool bExplicitDataType);
+
     // Calculate the dataset's length
     ///////////////////////////////////////////////////////////
     static std::uint32_t getDataSetLength(std::shared_ptr<dataSet>, bool bExplicitDataType);

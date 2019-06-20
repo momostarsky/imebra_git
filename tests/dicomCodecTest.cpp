@@ -200,22 +200,22 @@ TEST(dicomCodecTest, testDicom)
 
                             for(unsigned int repeatLazyLoad(0); repeatLazyLoad != lazyLoad + 1; ++ repeatLazyLoad)
                             {
-                            Image checkImage0 = testDataSet.getImage(0);
-                            Image checkImage1 = testDataSet.getImage(1);
-                            Image checkImage2 = testDataSet.getImage(2);
+                                Image checkImage0 = testDataSet.getImage(0);
+                                Image checkImage1 = testDataSet.getImage(1);
+                                Image checkImage2 = testDataSet.getImage(2);
 
-                            if(checkImage0.getChannelsNumber() == 1)
-                            {
-                                ASSERT_THROW(testDataSet.getTag(TagId(tagId_t::PlanarConfiguration_0028_0006)), MissingDataElementError);
-                            }
-                            else
-                            {
-                                EXPECT_EQ((std::int32_t)(1 - interleaved), testDataSet.getSignedLong(TagId(imebra::tagId_t::PlanarConfiguration_0028_0006), 0));
-                            }
+                                if(checkImage0.getChannelsNumber() == 1)
+                                {
+                                    ASSERT_THROW(testDataSet.getTag(TagId(tagId_t::PlanarConfiguration_0028_0006)), MissingDataElementError);
+                                }
+                                else
+                                {
+                                    EXPECT_EQ((std::int32_t)(1 - interleaved), testDataSet.getSignedLong(TagId(imebra::tagId_t::PlanarConfiguration_0028_0006), 0));
+                                }
 
-                            ASSERT_TRUE(identicalImages(checkImage0, images[0]));
-                            ASSERT_TRUE(identicalImages(checkImage1, images[1]));
-                            ASSERT_TRUE(identicalImages(checkImage2, images[2]));
+                                ASSERT_TRUE(identicalImages(checkImage0, images[0]));
+                                ASSERT_TRUE(identicalImages(checkImage1, images[1]));
+                                ASSERT_TRUE(identicalImages(checkImage2, images[2]));
                             }
 
                         }
