@@ -286,7 +286,7 @@ void dicomStreamCodec::writeTag(std::shared_ptr<streamWriter> pDestStream, std::
             // endianess)
             ///////////////////////////////////////////////////////////
             std::uint32_t wordSize = dicomDictionary::getDicomDictionary()->getWordSize(dataType);
-            if(wordSize < 2u || endianType == streamController::getPlatformEndian())
+            if(pData->hasExternalStream(scanBuffers) && wordSize < 2u || endianType == streamController::getPlatformEndian())
             {
                 std::shared_ptr<streamReader> pReader = pData->getStreamReader(scanBuffers);
 

@@ -209,6 +209,17 @@ public:
 
     std::shared_ptr<handlers::writingDataHandlerNumericBase> getWritingDataHandlerNumeric(size_t bufferId);
 
+    /// \brief Return true if the buffer is referencing
+    ///         the content in an external stream
+    ///
+    /// \param bufferId  the id of the buffer for which the
+    ///                    information is required
+    /// @return          true if the buffer content is stored
+    ///                  in an external stream, false otherwise
+    ///
+    ///////////////////////////////////////////////////////////
+    bool hasExternalStream(size_t bufferId) const;
+
     /// \brief Get a streamReader connected to a buffer's data.
     ///
     /// @param bufferId   the id of the buffer for which the

@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -99,11 +99,11 @@ buffer::buffer(
         size_t bufferPosition,
         size_t bufferLength,
         size_t wordLength,
-		streamController::tByteOrdering endianType):
-		m_originalStream(originalStream),
-		m_originalBufferPosition(bufferPosition),
-		m_originalBufferLength(bufferLength),
-		m_originalWordLength(wordLength),
+        streamController::tByteOrdering endianType):
+        m_originalStream(originalStream),
+        m_originalBufferPosition(bufferPosition),
+        m_originalBufferLength(bufferLength),
+        m_originalWordLength(wordLength),
         m_originalEndianType(endianType)
 {
 }
@@ -321,7 +321,7 @@ std::shared_ptr<handlers::readingDataHandler> buffer::getReadingDataHandler(tagV
         IMEBRA_THROW(std::logic_error, "The buffer was created with an invalid buffer type");
     }
 
-	IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 std::shared_ptr<handlers::writingDataHandler> buffer::getWritingDataHandler(tagVR_t tagVR, std::uint32_t size)
@@ -444,6 +444,23 @@ std::shared_ptr<handlers::writingDataHandler> buffer::getWritingDataHandler(tagV
 ///////////////////////////////////////////////////////////
 //
 //
+// Check if the buffer has an external stream
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+bool buffer::hasExternalStream() const
+{
+    std::lock_guard<std::mutex> lock(m_mutex);
+
+    return m_originalStream != nullptr;
+}
+
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
 // Get a reading stream for the buffer
 //
 //
@@ -455,24 +472,24 @@ std::shared_ptr<streamReader> buffer::getStreamReader()
 
     std::lock_guard<std::mutex> lock(m_mutex);
 
-	// If the object must be loaded from the original stream,
-	//  then return the original stream
-	///////////////////////////////////////////////////////////
+    // If the object must be loaded from the original stream,
+    //  then return the original stream
+    ///////////////////////////////////////////////////////////
     if(m_originalStream != 0 && (m_originalWordLength <= 1 && m_originalEndianType != streamReader::getPlatformEndian()))
-	{
+    {
         std::shared_ptr<streamReader> reader(std::make_shared<streamReader>(m_originalStream, m_originalBufferPosition, m_originalBufferLength));
-		return reader;
-	}
+        return reader;
+    }
 
-	// Build a stream from the buffer's memory
-	///////////////////////////////////////////////////////////
+    // Build a stream from the buffer's memory
+    ///////////////////////////////////////////////////////////
     std::shared_ptr<streamReader> reader;
     std::shared_ptr<memoryStreamInput> memoryStream = std::make_shared<memoryStreamInput>(getLocalMemory());
     reader = std::shared_ptr<streamReader>(std::make_shared<streamReader>(memoryStream));
 
-	return reader;
+    return reader;
 
-	IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -492,7 +509,7 @@ std::shared_ptr<streamWriter> buffer::getStreamWriter(tagVR_t tagVR)
     std::shared_ptr<handlers::writingDataHandlerRaw> tempHandlerRaw = getWritingDataHandlerRaw(tagVR);
     return std::make_shared<streamWriter>(std::make_shared<bufferStreamOutput>(tempHandlerRaw));
 
-	IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -514,7 +531,7 @@ std::shared_ptr<handlers::readingDataHandlerRaw> buffer::getReadingDataHandlerRa
 
     return std::make_shared<handlers::readingDataHandlerRaw>(getLocalMemory(), tagVR);
 
-	IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -597,11 +614,11 @@ size_t buffer::getBufferSizeBytes() const
     std::lock_guard<std::mutex> lock(m_mutex);
 
     // The buffer has not been loaded yet
-	///////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////
     if(m_originalStream != 0)
-	{
-		return m_originalBufferLength;
-	}
+    {
+        return m_originalBufferLength;
+    }
 
     size_t totalSize(0);
     for(std::list<std::shared_ptr<const memory> >::const_iterator scanMemory(m_memory.begin()), endMemory(m_memory.end()); scanMemory != endMemory; ++scanMemory)
@@ -638,7 +655,7 @@ void buffer::commit(std::shared_ptr<memory> newMemory, const charsetsList::tChar
     m_originalStream.reset();
     m_charsetsList = newCharsetsList;
 
-	IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -680,7 +697,7 @@ void buffer::setCharsetsList(const charsetsList::tCharsetsList& charsets)
     std::lock_guard<std::mutex> lock(m_mutex);
     m_charsetsList = charsets;
 
-	IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -700,7 +717,7 @@ void buffer::getCharsetsList(charsetsList::tCharsetsList* pCharsetsList) const
     std::lock_guard<std::mutex> lock(m_mutex);
     pCharsetsList->insert(pCharsetsList->end(), m_charsetsList.begin(), m_charsetsList.end());
 
-	IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 
