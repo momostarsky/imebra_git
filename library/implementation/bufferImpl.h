@@ -347,8 +347,8 @@ private:
     mutable std::mutex m_mutex;
 
 protected:
-    // The following variables are used to reread the buffer
-    //  from the stream.
+    // The following variables are used to read the buffer
+    //  from an external stream.
     ///////////////////////////////////////////////////////////
     std::shared_ptr<baseStreamInput> m_originalStream;    // < Original stream
     size_t m_originalBufferPosition; // < Original buffer's position

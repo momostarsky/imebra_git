@@ -19,6 +19,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "exceptionImpl.h"
 #include "streamReaderImpl.h"
 #include "streamWriterImpl.h"
+#include "fileStreamImpl.h"
 #include "dataImpl.h"
 #include "dataSetImpl.h"
 #include "dicomDictImpl.h"
@@ -95,6 +96,10 @@ void data::setBuffer(size_t bufferId, const std::shared_ptr<buffer>& newBuffer)
 
     // Assign the new buffer
     ///////////////////////////////////////////////////////////
+    if(bufferId >= m_buffers.size())
+    {
+        m_buffers.resize(bufferId + 1);
+    }
     m_buffers[bufferId] = newBuffer;
 
     IMEBRA_FUNCTION_END();
@@ -155,16 +160,9 @@ size_t data::getBuffersCount() const
 ///////////////////////////////////////////////////////////
 bool data::bufferExists(size_t bufferId) const
 {
-    IMEBRA_FUNCTION_START();
-
     std::lock_guard<std::mutex> lock(m_mutex);
 
-    // Retrieve the buffer
-    ///////////////////////////////////////////////////////////
-    tBuffersMap::const_iterator findBuffer = m_buffers.find(bufferId);
-    return (findBuffer != m_buffers.end());
-
-    IMEBRA_FUNCTION_END();
+    return bufferId < m_buffers.size() && m_buffers.at(bufferId) != nullptr;
 }
 
 
@@ -195,12 +193,11 @@ std::shared_ptr<buffer> data::getBuffer(size_t bufferId) const
 
     // Retrieve the buffer
     ///////////////////////////////////////////////////////////
-    tBuffersMap::const_iterator findBuffer = m_buffers.find(bufferId);
-    if(findBuffer == m_buffers.end())
+    if(bufferId >= m_buffers.size() || m_buffers.at(bufferId) == nullptr)
     {
         IMEBRA_THROW(MissingBufferError, "The buffer with ID " << bufferId << " is missing");
     }
-    return findBuffer->second;
+    return m_buffers.at(bufferId);
 
     IMEBRA_FUNCTION_END();
 
@@ -215,15 +212,19 @@ std::shared_ptr<buffer> data::getBufferCreate(size_t bufferId)
 
     // Retrieve the buffer
     ///////////////////////////////////////////////////////////
-    tBuffersMap::const_iterator findBuffer = m_buffers.find(bufferId);
-    if(findBuffer != m_buffers.end())
+    if(bufferId < m_buffers.size() && m_buffers.at(bufferId) != nullptr)
     {
-        return findBuffer->second;
+        return m_buffers.at(bufferId);
     }
 
     std::shared_ptr<buffer> pNewBuffer(std::make_shared<buffer>());
     pNewBuffer->setCharsetsList(m_charsetsList);
+    if(bufferId >= m_buffers.size())
+    {
+        m_buffers.resize(bufferId + 1);
+    }
     m_buffers[bufferId] = pNewBuffer;
+
     return pNewBuffer;
 
     IMEBRA_FUNCTION_END();
@@ -366,6 +367,29 @@ std::shared_ptr<streamWriter> data::getStreamWriter(size_t bufferId)
 ///////////////////////////////////////////////////////////
 //
 //
+// Set a stream content as tag's content
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+void data::setExternalStream(size_t bufferId, std::shared_ptr<fileStreamInput> pExternalStream)
+{
+    IMEBRA_FUNCTION_START();
+
+    setBuffer(bufferId, std::make_shared<buffer>(pExternalStream,
+                                                 0,
+                                                 pExternalStream->getSize(),
+                                                 dicomDictionary::getDicomDictionary()->getWordSize(getDataType()),
+                                                 streamController::getPlatformEndian()));
+
+    IMEBRA_FUNCTION_END();
+}
+
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
 // Retrieve an embedded data set.
 //
 //
@@ -442,14 +466,14 @@ void data::setCharsetsList(const charsetsList::tCharsetsList& charsetsList)
 
     m_charsetsList = charsetsList;
 
-    for(tEmbeddedDatasetsMap::iterator scanEmbeddedDataSets = m_embeddedDataSets.begin(); scanEmbeddedDataSets != m_embeddedDataSets.end(); ++scanEmbeddedDataSets)
+    for(tEmbeddedDatasetsVector::iterator scanEmbeddedDataSets = m_embeddedDataSets.begin(); scanEmbeddedDataSets != m_embeddedDataSets.end(); ++scanEmbeddedDataSets)
     {
         (*scanEmbeddedDataSets)->setChildrenCharsetsList(charsetsList);
     }
 
-    for(tBuffersMap::iterator scanBuffers = m_buffers.begin(); scanBuffers != m_buffers.end(); ++scanBuffers)
+    for(const std::shared_ptr<buffer>& pBuffer: m_buffers)
     {
-        scanBuffers->second->setCharsetsList(charsetsList);
+        pBuffer->setCharsetsList(charsetsList);
     }
 
     IMEBRA_FUNCTION_END();
@@ -472,17 +496,17 @@ void data::getCharsetsList(charsetsList::tCharsetsList* pCharsetsList) const
 
     std::lock_guard<std::mutex> lock(m_mutex);
 
-    for(tEmbeddedDatasetsMap::const_iterator scanEmbeddedDataSets = m_embeddedDataSets.begin(); scanEmbeddedDataSets != m_embeddedDataSets.end(); ++scanEmbeddedDataSets)
+    for(tEmbeddedDatasetsVector::const_iterator scanEmbeddedDataSets = m_embeddedDataSets.begin(); scanEmbeddedDataSets != m_embeddedDataSets.end(); ++scanEmbeddedDataSets)
     {
         charsetsList::tCharsetsList charsets;
         (*scanEmbeddedDataSets)->getCharsetsList(&charsets);
         charsetsList::updateCharsets(&charsets, pCharsetsList);
     }
 
-    for(tBuffersMap::const_iterator scanBuffers = m_buffers.begin(); scanBuffers != m_buffers.end(); ++scanBuffers)
+    for(const std::shared_ptr<buffer>& pBuffer: m_buffers)
     {
         charsetsList::tCharsetsList charsets;
-        scanBuffers->second->getCharsetsList(&charsets);
+        pBuffer->getCharsetsList(&charsets);
         charsetsList::updateCharsets(&charsets, pCharsetsList);
     }
 

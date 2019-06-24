@@ -350,6 +350,169 @@ TEST(dicomCodecTest, codecFactoryPipe)
 }
 
 
+TEST(dicomCodecTest, testExternalStream)
+{
+    // Save a big file
+    char* tempFileName = ::tempnam(0, "dcmimebra");
+    std::string fileName(tempFileName);
+    free(tempFileName);
+
+    {
+        FileStreamOutput writeFile(fileName);
+        char buffer[1024];
+        for(size_t resetBuffer(0); resetBuffer != sizeof(buffer); ++resetBuffer)
+        {
+            buffer[resetBuffer] = (char)(resetBuffer & 0xffu);
+        }
+
+        StreamWriter writer(writeFile);
+
+        for(size_t writeKb(0); writeKb != 1024; ++writeKb)
+        {
+            writer.write(buffer, sizeof(buffer));
+        }
+    }
+
+    for(int transferSyntaxId(0); transferSyntaxId != 4; ++transferSyntaxId)
+    {
+        std::string transferSyntax;
+
+        switch(transferSyntaxId)
+        {
+        case 0:
+            transferSyntax = "1.2.840.10008.1.2";
+            break;
+        case 1:
+            transferSyntax = "1.2.840.10008.1.2.1";
+            break;
+        case 2:
+            transferSyntax = "1.2.840.10008.1.2.2";
+            break;
+        case 3:
+            transferSyntax = "1.2.840.10008.1.2.5";
+            break;
+        }
+
+        std::cout << "Dicom test. Transfer syntax: " << transferSyntax << std::endl;
+
+        char* dataSetTempFileName = ::tempnam(0, "dcmimebradataset");
+        std::string dataSetFileName(dataSetTempFileName);
+        free(dataSetTempFileName);
+
+        {
+
+            MutableDataSet testDataSet(transferSyntax);
+            MutableTag streamTag = testDataSet.getTagCreate(TagId(0x20, 0x20), tagVR_t::OB);
+            FileStreamInput input(fileName);
+            streamTag.setStream(0, input);
+
+            CodecFactory::save(testDataSet, dataSetFileName, codecType_t::dicom);
+        }
+
+        DataSet testDataSet = CodecFactory::load(dataSetFileName);
+
+        EXPECT_EQ(1024u * 1024u, testDataSet.getTag(TagId(0x20, 0x20)).getBufferSize(0));
+
+        StreamReader reader = testDataSet.getTag(TagId(0x20, 0x20)).getStreamReader(0);
+        size_t totalSize = 0;
+        char buffer[1024];
+        try
+        {
+            for(size_t readBytes = reader.readSome(buffer, sizeof(buffer)); readBytes != 0; readBytes = reader.readSome(buffer, sizeof(buffer)))
+            {
+                for(size_t scanBuffer(0); scanBuffer != readBytes; ++scanBuffer)
+                {
+                    EXPECT_EQ((char)(totalSize & 0xffu), buffer[scanBuffer]);
+                    ++totalSize;
+                }
+            }
+        }
+        catch(StreamEOFError)
+        {
+        }
+        EXPECT_EQ(1024 * 1024, totalSize);
+    }
+}
+
+
+TEST(dicomCodecTest, testExternalStreamOddSize)
+{
+    // Save a big file
+    char* tempFileName = ::tempnam(0, "dcmimebra");
+    std::string fileName(tempFileName);
+    free(tempFileName);
+
+    {
+        FileStreamOutput writeFile(fileName);
+        char buffer[1024];
+        for(size_t resetBuffer(0); resetBuffer != sizeof(buffer); ++resetBuffer)
+        {
+            buffer[resetBuffer] = (char)(resetBuffer & 0xffu);
+        }
+
+        StreamWriter writer(writeFile);
+
+        writer.write(buffer, sizeof(buffer));
+
+        static char oddByte(30);
+        writer.write(&oddByte, 1);
+    }
+
+    for(int transferSyntaxId(0); transferSyntaxId != 4; ++transferSyntaxId)
+    {
+        std::string transferSyntax;
+
+        switch(transferSyntaxId)
+        {
+        case 0:
+            transferSyntax = "1.2.840.10008.1.2";
+            break;
+        case 1:
+            transferSyntax = "1.2.840.10008.1.2.1";
+            break;
+        case 2:
+            transferSyntax = "1.2.840.10008.1.2.2";
+            break;
+        case 3:
+            transferSyntax = "1.2.840.10008.1.2.5";
+            break;
+        }
+
+        std::cout << "Dicom test. Transfer syntax: " << transferSyntax << std::endl;
+
+        char* dataSetTempFileName = ::tempnam(0, "dcmimebradataset");
+        std::string dataSetFileName(dataSetTempFileName);
+        free(dataSetTempFileName);
+
+        {
+
+            MutableDataSet testDataSet(transferSyntax);
+            MutableTag streamTag = testDataSet.getTagCreate(TagId(0x20, 0x20), tagVR_t::OB);
+            FileStreamInput input(fileName);
+            streamTag.setStream(0, input);
+
+            CodecFactory::save(testDataSet, dataSetFileName, codecType_t::dicom);
+        }
+
+        DataSet testDataSet = CodecFactory::load(dataSetFileName);
+
+        EXPECT_EQ(1026u, testDataSet.getTag(TagId(0x20, 0x20)).getBufferSize(0));
+
+        StreamReader reader = testDataSet.getTag(TagId(0x20, 0x20)).getStreamReader(0);
+        char buffer[1026];
+
+        reader.read(buffer, sizeof(buffer));
+
+        for(size_t scanBuffer(0); scanBuffer != 1024; ++scanBuffer)
+        {
+            EXPECT_EQ((char)(scanBuffer & 0xffu), buffer[scanBuffer]);
+        }
+        EXPECT_EQ(30, buffer[1024]);
+        EXPECT_EQ(0, buffer[1025]);
+    }
+}
+
+
 } // namespace tests
 
 } // namespace imebra

@@ -13,6 +13,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #include "../implementation/dataImpl.h"
 #include "../implementation/dataHandlerNumericImpl.h"
+#include "../implementation/fileStreamImpl.h"
 
 #include "../include/imebra/tag.h"
 #include "../include/imebra/readingDataHandlerNumeric.h"
@@ -21,6 +22,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "../include/imebra/streamReader.h"
 #include "../include/imebra/streamWriter.h"
 #include "../include/imebra/dataSet.h"
+#include "../include/imebra/baseStreamInput.h"
+#include "../include/imebra/fileStreamInput.h"
 
 namespace imebra
 {
@@ -150,6 +153,11 @@ StreamWriter MutableTag::getStreamWriter(size_t bufferId)
 MutableDataSet MutableTag::appendSequenceItem()
 {
     return MutableDataSet(getTagImplementation(*this)->appendSequenceItem());
+}
+
+void MutableTag::setStream(size_t bufferId, FileStreamInput& streamInput)
+{
+    getTagImplementation(*this)->setExternalStream(bufferId, std::dynamic_pointer_cast<implementation::fileStreamInput>(getBaseStreamInputImplementation(streamInput)));
 }
 
 }

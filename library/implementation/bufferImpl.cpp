@@ -132,7 +132,7 @@ std::shared_ptr<const memory> buffer::getLocalMemory() const
     ///////////////////////////////////////////////////////////
     if(m_originalStream != 0)
     {
-        std::shared_ptr<memory> localMemory(std::make_shared<memory>(m_originalBufferLength));
+        std::shared_ptr<memory> localMemory(std::make_shared<memory>( (m_originalBufferLength + 1) & ~(size_t(1u)) ) );
         if(m_originalBufferLength != 0)
         {
             std::shared_ptr<streamReader> reader(std::make_shared<streamReader>(m_originalStream, m_originalBufferPosition, m_originalBufferLength));
@@ -475,7 +475,7 @@ std::shared_ptr<streamReader> buffer::getStreamReader()
     // If the object must be loaded from the original stream,
     //  then return the original stream
     ///////////////////////////////////////////////////////////
-    if(m_originalStream != 0 && (m_originalWordLength <= 1 && m_originalEndianType != streamReader::getPlatformEndian()))
+    if(m_originalStream != 0 && (m_originalWordLength <= 1 || m_originalEndianType == streamReader::getPlatformEndian()))
     {
         std::shared_ptr<streamReader> reader(std::make_shared<streamReader>(m_originalStream, m_originalBufferPosition, m_originalBufferLength));
         return reader;
@@ -617,7 +617,7 @@ size_t buffer::getBufferSizeBytes() const
     ///////////////////////////////////////////////////////////
     if(m_originalStream != 0)
     {
-        return m_originalBufferLength;
+        return( (m_originalBufferLength + 1) & ~(size_t(1u)) );
     }
 
     size_t totalSize(0);

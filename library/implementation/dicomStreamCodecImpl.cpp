@@ -292,26 +292,29 @@ void dicomStreamCodec::writeTag(std::shared_ptr<streamWriter> pDestStream, std::
 
                 size_t writtenSize(0);
                 std::uint8_t buffer[32768];
-                while(writtenSize != bufferSize)
-                {
-                    size_t readSize(std::min(sizeof(buffer), bufferSize - writtenSize));
-                    size_t readBytes = pReader->readSome(buffer, readSize);
-                    if(readBytes == 0)
-                    {
-                        break;
-                    }
-                    pDestStream->write(buffer, readBytes);
-                    writtenSize += readBytes;
-                }
 
-                if(writtenSize == bufferSize - 1)
+                try
                 {
+                    while(writtenSize != bufferSize)
+                    {
+                        size_t readSize(std::min(sizeof(buffer), bufferSize - writtenSize));
+                        size_t readBytes = pReader->readSome(buffer, readSize);
+                        if(readBytes == 0)
+                        {
+                            break;
+                        }
+                        pDestStream->write(buffer, readBytes);
+                        writtenSize += readBytes;
+                    }
+                }
+                catch(const StreamEOFError&)
+                {
+                    if(writtenSize != bufferSize - 1)
+                    {
+                        throw;
+                    }
                     static const std::uint8_t zerobyte(0);
                     pDestStream->write(&zerobyte, 1);
-                }
-                else if(writtenSize < bufferSize)
-                {
-                    throw;
                 }
             }
             else
