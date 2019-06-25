@@ -761,7 +761,7 @@ TEST(objectivec, testExternalStream)
     NSError* pError(0);
     ImebraMutableDataSet* testDataSet = [[ImebraMutableDataSet alloc] initWithTransferSyntax:imebra::stringToNSString(transferSyntax)];
     ImebraMutableTag* streamTag = [testDataSet getTagCreate:[[ImebraTagId alloc] initWithGroup:0x20 tag:0x20] tagVR:ImebraOB error:&pError];
-    [streamTag setStream:0 stream:[[ImebraFileStreamInput alloc] initWithName:imebra::stringToNSString(fileName)]];
+    [streamTag setStream:0 stream:[[ImebraFileStreamInput alloc] initWithName:imebra::stringToNSString(fileName) error:&pError]];
 
     ImebraMutableMemory* pStreamMemory = [[ImebraMutableMemory alloc] init];
     @autoreleasepool
