@@ -26,7 +26,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 @class ImebraStreamWriter;
 @class ImebraStreamReader;
 @class ImebraDataSet;
-
+@class ImebraFileStreamInput;
 
 ///
 /// \brief This class represents a DICOM tag.
@@ -239,6 +239,21 @@ If you do not want to be bound by the GPL terms (such as the requirement
     ///////////////////////////////////////////////////////////////////////////////
     -(ImebraMutableDataSet*) appendSequenceItem:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
+
+    /// \brief Set the tag's content to the content of a file.
+    ///
+    /// The tag will just keep a reference to the file content.
+    ///
+    /// This is useful when embedding large objects into a dataset (e.g. a MPEG
+    /// file acquired by the device).
+    ///
+    /// \param bufferId    the id of the buffer to which the content is added
+    /// \param streamInput the file into which the tag's content is stored
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(void) setStream:(unsigned int) bufferId stream:(ImebraFileStreamInput*)pStream error:(NSError**)pError;
+
+
 
 @end
 

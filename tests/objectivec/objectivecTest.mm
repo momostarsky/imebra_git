@@ -732,6 +732,60 @@ TEST(objectivec, uidGenerators)
 }
 
 
+TEST(objectivec, testExternalStream)
+{
+    // Save a file
+    char* tempFileName = ::tempnam(0, "dcmimebra");
+    std::string fileName(tempFileName);
+    free(tempFileName);
+
+    @autoreleasepool
+    {
+        FileStreamOutput writeFile(fileName);
+        char buffer[1024];
+        for(size_t resetBuffer(0); resetBuffer != sizeof(buffer); ++resetBuffer)
+        {
+            buffer[resetBuffer] = (char)(resetBuffer & 0xffu);
+        }
+
+        StreamWriter writer(writeFile);
+
+        for(size_t writeKb(0); writeKb != 1024; ++writeKb)
+        {
+            writer.write(buffer, sizeof(buffer));
+        }
+    }
+
+    std::string transferSyntax("1.2.840.10008.1.2.1");
+
+    NSError* pError(0);
+    ImebraMutableDataSet* testDataSet = [[ImebraMutableDataSet alloc] initWithTransferSyntax:imebra::stringToNSString(transferSyntax)];
+    ImebraMutableTag* streamTag = [testDataSet getTagCreate:[[ImebraTagId alloc] initWithGroup:0x20 tag:0x20] tagVR:ImebraOB error:&pError];
+    [streamTag setStream:0 stream:[[ImebraFileStreamInput alloc] initWithName:imebra::stringToNSString(fileName)]];
+
+    ImebraMutableMemory* pStreamMemory = [[ImebraMutableMemory alloc] init];
+    @autoreleasepool
+    {
+        ImebraMemoryStreamOutput* pWriteStream = [[ImebraMemoryStreamOutput alloc] initWithMutableMemory:pStreamMemory];
+        ImebraStreamWriter* pWriter = [[ImebraStreamWriter alloc] initWithOutputStream: pWriteStream];
+        NSError* pError = 0;
+        [ImebraCodecFactory saveToStream:pWriter dataSet:pDataSet codecType:ImebraCodecTypeDicom error:&pError];
+
+    }
+
+    ImebraMemoryStreamInput* pReadStream = [[ImebraMemoryStreamInput alloc] initWithReadMemory:pStreamMemory];
+
+    ImebraStreamReader* pReader = [[ImebraStreamReader alloc] initWithInputStream:pReadStream];
+
+    ImebraDataSet* pTestDataSet = [ImebraCodecFactory loadFromStream:pReader error:&pError];
+
+    unsigned int bufferSize = [[pTestDataSet getTag:[[ImebraTagId alloc] initWithGroup:0x20 tag:0x20]] getBufferSize:0 error:&pError];
+    EXPECT_EQ(1024, bufferSize);
+
+}
+
+
+
 // Test DrawBitmap generating a NSImage
 #if defined(__APPLE__)
 
