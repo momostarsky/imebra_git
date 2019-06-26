@@ -780,7 +780,7 @@ TEST(objectivec, testExternalStream)
     ImebraDataSet* pTestDataSet = [ImebraCodecFactory loadFromStream:pReader error:&pError];
 
     unsigned int bufferSize = [[pTestDataSet getTag:[[ImebraTagId alloc] initWithGroup:0x20 tag:0x20] error:&pError] getBufferSize:0 error:&pError];
-    EXPECT_EQ(1024, bufferSize);
+    EXPECT_EQ(1024u * 1024u, bufferSize);
 
 }
 
