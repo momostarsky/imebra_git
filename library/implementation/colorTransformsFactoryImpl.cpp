@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -114,9 +114,9 @@ void colorTransformsFactory::registerTransform(std::shared_ptr<colorTransform> n
 {
     IMEBRA_FUNCTION_START();
 
-	m_transformsList.push_back(newColorTransform);
+    m_transformsList.push_back(newColorTransform);
 
-	IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -135,7 +135,7 @@ std::shared_ptr<colorTransformsFactory> colorTransformsFactory::getColorTransfor
 
     // Violation to requirement REQ_MAKE_SHARED due to protected constructor
     static std::shared_ptr<colorTransformsFactory> m_transformFactory(new colorTransformsFactory());
-	return m_transformFactory;
+    return m_transformFactory;
 
     IMEBRA_FUNCTION_END();
 }
@@ -157,21 +157,21 @@ std::string colorTransformsFactory::normalizeColorSpace(const std::string& color
     std::string normalizedColorSpace;
 
     size_t c42position = colorSpace.find("_42");
-	if(c42position != colorSpace.npos)
-		normalizedColorSpace=colorSpace.substr(0, c42position);
-	else
-		normalizedColorSpace=colorSpace;
+    if(c42position != colorSpace.npos)
+        normalizedColorSpace=colorSpace.substr(0, c42position);
+    else
+        normalizedColorSpace=colorSpace;
 
     // Colorspace transformed to uppercase
-	///////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////
     for(size_t adjustColorSpace = 0; adjustColorSpace != normalizedColorSpace.size(); ++adjustColorSpace)
-	{
+    {
         normalizedColorSpace[adjustColorSpace] = std::toupper<char>(normalizedColorSpace[adjustColorSpace], std::locale());
-	}
+    }
 
-	return normalizedColorSpace;
+    return normalizedColorSpace;
 
-	IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -192,7 +192,7 @@ bool colorTransformsFactory::isMonochrome(const std::string& colorSpace)
     std::string normalizedColorSpace = normalizeColorSpace(colorSpace);
     return (normalizedColorSpace == "MONOCHROME1" || normalizedColorSpace == "MONOCHROME2");
 
-	IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -212,7 +212,7 @@ bool colorTransformsFactory::isSubsampledX(const std::string& colorSpace)
 
     return (colorSpace.find("_42") != colorSpace.npos);
 
-	IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -232,7 +232,7 @@ bool colorTransformsFactory::isSubsampledY(const std::string& colorSpace)
 
     return (colorSpace.find("_420")!=colorSpace.npos);
 
-	IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -253,7 +253,7 @@ bool colorTransformsFactory::canSubsample(const std::string& colorSpace)
     std::string normalizedColorSpace = normalizeColorSpace(colorSpace);
     return normalizedColorSpace.find("YBR_") == 0;
 
-	IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -271,21 +271,21 @@ std::string colorTransformsFactory::makeSubsampled(const std::string& colorSpace
     IMEBRA_FUNCTION_START();
 
     std::string normalizedColorSpace = normalizeColorSpace(colorSpace);
-	if(!canSubsample(normalizedColorSpace))
-	{
-		return normalizedColorSpace;
-	}
-	if(bSubsampleY)
-	{
+    if(!canSubsample(normalizedColorSpace))
+    {
+        return normalizedColorSpace;
+    }
+    if(bSubsampleY)
+    {
         return normalizedColorSpace + "_420";
-	}
-	if(bSubsampleX)
-	{
+    }
+    if(bSubsampleX)
+    {
         return normalizedColorSpace + "_422";
-	}
-	return normalizedColorSpace;
+    }
+    return normalizedColorSpace;
 
-	IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -305,15 +305,15 @@ std::uint32_t colorTransformsFactory::getNumberOfChannels(const std::string& col
 
     std::string normalizedColorSpace = normalizeColorSpace(colorSpace);
 
-	struct sColorSpace
-	{
+    struct sColorSpace
+    {
         sColorSpace(const char* colorSpace, std::uint8_t channelsNumber): m_colorSpace(colorSpace), m_channelsNumber(channelsNumber){}
         std::string m_colorSpace;
-		std::uint8_t m_channelsNumber;
-	};
+        std::uint8_t m_channelsNumber;
+    };
 
-	static sColorSpace imbxColorSpaces[]=
-	{
+    static const sColorSpace imbxColorSpaces[]=
+    {
         sColorSpace("RGB", 0x3),
         sColorSpace("YBR_FULL", 0x3),
         sColorSpace("YBR_PARTIAL", 0x3),
@@ -325,19 +325,19 @@ std::uint32_t colorTransformsFactory::getNumberOfChannels(const std::string& col
         sColorSpace("MONOCHROME2", 0x1),
         sColorSpace("MONOCHROME1", 0x1),
         sColorSpace("", 0x0)
-	};
+    };
 
-	for(std::uint8_t findColorSpace = 0; imbxColorSpaces[findColorSpace].m_channelsNumber != 0x0; ++findColorSpace)
-	{
-		if(imbxColorSpaces[findColorSpace].m_colorSpace == normalizedColorSpace)
-		{
-			return imbxColorSpaces[findColorSpace].m_channelsNumber;
-		}
-	}
+    for(std::uint8_t findColorSpace = 0; imbxColorSpaces[findColorSpace].m_channelsNumber != 0x0; ++findColorSpace)
+    {
+        if(imbxColorSpaces[findColorSpace].m_colorSpace == normalizedColorSpace)
+        {
+            return imbxColorSpaces[findColorSpace].m_channelsNumber;
+        }
+    }
 
-	return 0;
+    return 0;
 
-	IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -358,50 +358,50 @@ std::shared_ptr<transform> colorTransformsFactory::getTransform(const std::strin
     std::string normalizedStartColorSpace = normalizeColorSpace(startColorSpace);
     std::string normalizedEndColorSpace = normalizeColorSpace(endColorSpace);
 
-	if(normalizedStartColorSpace == normalizedEndColorSpace)
-	{
-		return std::shared_ptr<colorTransform>(0);
-	}
+    if(normalizedStartColorSpace == normalizedEndColorSpace)
+    {
+        return std::shared_ptr<colorTransform>(0);
+    }
 
-	for(tTransformsList::iterator scanSingleTransform = m_transformsList.begin(); scanSingleTransform != m_transformsList.end(); ++scanSingleTransform)
-	{
-		if( (*scanSingleTransform)->getInitialColorSpace() == normalizedStartColorSpace && 
-			(*scanSingleTransform)->getFinalColorSpace() == normalizedEndColorSpace)
-		{
+    for(tTransformsList::iterator scanSingleTransform = m_transformsList.begin(); scanSingleTransform != m_transformsList.end(); ++scanSingleTransform)
+    {
+        if( (*scanSingleTransform)->getInitialColorSpace() == normalizedStartColorSpace &&
+            (*scanSingleTransform)->getFinalColorSpace() == normalizedEndColorSpace)
+        {
             std::shared_ptr<colorTransform> newTransform = *scanSingleTransform;
-			return newTransform;
-		}
-	}
+            return newTransform;
+        }
+    }
 
-	for(tTransformsList::iterator scanMultipleTransforms = m_transformsList.begin(); scanMultipleTransforms != m_transformsList.end(); ++scanMultipleTransforms)
-	{
-		if( (*scanMultipleTransforms)->getInitialColorSpace() != normalizedStartColorSpace)
-		{
-			continue;
-		}
+    for(tTransformsList::iterator scanMultipleTransforms = m_transformsList.begin(); scanMultipleTransforms != m_transformsList.end(); ++scanMultipleTransforms)
+    {
+        if( (*scanMultipleTransforms)->getInitialColorSpace() != normalizedStartColorSpace)
+        {
+            continue;
+        }
 
-		for(tTransformsList::iterator secondTransform = m_transformsList.begin(); secondTransform != m_transformsList.end(); ++secondTransform)
-		{
-			if( (*secondTransform)->getFinalColorSpace() != normalizedEndColorSpace ||
-				(*secondTransform)->getInitialColorSpace() != (*scanMultipleTransforms)->getFinalColorSpace())
-			{
-				continue;
-			}
+        for(tTransformsList::iterator secondTransform = m_transformsList.begin(); secondTransform != m_transformsList.end(); ++secondTransform)
+        {
+            if( (*secondTransform)->getFinalColorSpace() != normalizedEndColorSpace ||
+                (*secondTransform)->getInitialColorSpace() != (*scanMultipleTransforms)->getFinalColorSpace())
+            {
+                continue;
+            }
 
             std::shared_ptr<colorTransform> newTransform0 = *scanMultipleTransforms;
             std::shared_ptr<colorTransform> newTransform1 = *secondTransform;
 
             std::shared_ptr<transformsChain> chain = std::make_shared<transformsChain>();
-			chain->addTransform(newTransform0);
-			chain->addTransform(newTransform1);
+            chain->addTransform(newTransform0);
+            chain->addTransform(newTransform1);
 
-			return chain;
-		}
-	}
+            return chain;
+        }
+    }
 
     IMEBRA_THROW(ColorTransformsFactoryNoTransformError, "There isn't any transform that can convert between the color space " << startColorSpace << " and " << endColorSpace);
 
-	IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 } // namespace colorTransforms
