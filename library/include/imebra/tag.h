@@ -41,6 +41,7 @@ class MutableDataSet;
 class WritingDataHandler;
 class WritingDataHandlerNumeric;
 class StreamWriter;
+class FileStreamInput;
 
 
 
@@ -284,6 +285,19 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     MutableDataSet appendSequenceItem();
+
+    /// \brief Set the tag's content to the content of a file.
+    ///
+    /// The tag will just keep a reference to the file content.
+    ///
+    /// This is useful when embedding large objects into a dataset (e.g. a MPEG
+    /// file acquired by the device).
+    ///
+    /// \param bufferId    the id of the buffer to which the content is added
+    /// \param streamInput the file into which the tag's content is stored
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    void setStream(size_t bufferId, FileStreamInput& streamInput);
 
 protected:
     explicit MutableTag(const std::shared_ptr<imebra::implementation::data>& pData);

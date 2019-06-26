@@ -280,7 +280,7 @@ size_t fileStreamInput::read(size_t startPosition, std::uint8_t* pBuffer, size_t
     ::fseek(m_openFile, (long)startPosition, SEEK_SET);
     if(ferror(m_openFile) != 0)
     {
-        return 0;
+        IMEBRA_THROW(StreamReadError, "stream::fseek failure");
     }
 
     size_t readBytes = (size_t)::fread(pBuffer, 1, bufferLength, m_openFile);
@@ -301,6 +301,30 @@ void fileStreamInput::terminate()
 bool fileStreamInput::seekable() const
 {
     return true;
+}
+
+size_t fileStreamInput::getSize() const
+{
+    IMEBRA_FUNCTION_START();
+
+    std::lock_guard<std::mutex> lock(m_mutex);
+
+    ::fseek(m_openFile, 0, SEEK_END);
+    if(ferror(m_openFile) != 0)
+    {
+        IMEBRA_THROW(StreamReadError, "stream::fseek failure");
+    }
+
+    long int position = ::ftell(m_openFile);
+    if(position < 0)
+    {
+        IMEBRA_THROW(StreamReadError, "stream::ftell failure");
+    }
+
+    return (size_t)position;
+
+    IMEBRA_FUNCTION_END();
+
 }
 
 } // namespace implementation

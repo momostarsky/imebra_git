@@ -207,18 +207,16 @@ void dicomStreamCodec::writeTag(std::shared_ptr<streamWriter> pDestStream, std::
     // Prepare the identifiers for the sequence (adjust the
     //  endian)
     ///////////////////////////////////////////////////////////
-    std::uint16_t sequenceItemGroup = 0xfffe;
-    std::uint16_t sequenceItemDelimiter = 0xe000;
-    std::uint16_t sequenceItemEnd = 0xe0dd;
-    pDestStream->adjustEndian((std::uint8_t*)&sequenceItemGroup, 2, endianType);
-    pDestStream->adjustEndian((std::uint8_t*)&sequenceItemDelimiter, 2, endianType);
-    pDestStream->adjustEndian((std::uint8_t*)&sequenceItemEnd, 2, endianType);
+    const std::uint16_t sequenceItemGroup = streamController::adjustEndian(std::uint16_t(0xfffe), endianType);
+    const std::uint16_t sequenceItemDelimiter = streamController::adjustEndian(std::uint16_t(0xe000), endianType);
+    const std::uint16_t sequenceTagEnd = streamController::adjustEndian(std::uint16_t(0xe0dd), endianType);
+    const std::uint32_t zeroLength = 0;
 
     // Check the data type
     ///////////////////////////////////////////////////////////
     tagVR_t dataType = pData->getDataType();
 
-    // Adjust the tag id endian and write it
+    // Adjust the tag id endianess and write it
     ///////////////////////////////////////////////////////////
     std::uint16_t adjustedTagId = tagId;
     pDestStream->adjustEndian((std::uint8_t*)&adjustedTagId, 2, endianType);
@@ -264,10 +262,7 @@ void dicomStreamCodec::writeTag(std::shared_ptr<streamWriter> pDestStream, std::
     {
         if(pData->bufferExists(scanBuffers))
         {
-            std::shared_ptr<handlers::readingDataHandlerRaw> pDataHandlerRaw = pData->getReadingDataHandlerRaw(scanBuffers);
-
-            std::uint32_t wordSize = dicomDictionary::getDicomDictionary()->getWordSize(dataType);
-            size_t bufferSize = pDataHandlerRaw->getSize();
+            size_t bufferSize = pData->getBufferSize(scanBuffers);
 
             // write the sequence item header
             ///////////////////////////////////////////////////////////
@@ -285,19 +280,62 @@ void dicomStreamCodec::writeTag(std::shared_ptr<streamWriter> pDestStream, std::
                 continue;
             }
 
-            // Adjust the buffer's endian
+            // If the word size is one or the machine endianess matches
+            // the transfer syntax endianess then copy the data from a
+            // stream, otherwise use the raw memory (adjusted for
+            // endianess)
             ///////////////////////////////////////////////////////////
-            if(wordSize > 1)
+            std::uint32_t wordSize = dicomDictionary::getDicomDictionary()->getWordSize(dataType);
+            if(pData->hasExternalStream(scanBuffers) && (wordSize < 2u || endianType == streamController::getPlatformEndian()))
             {
-                std::vector<std::uint8_t> tempBuffer(bufferSize);
-                ::memcpy(tempBuffer.data(), pDataHandlerRaw->getMemoryBuffer(), pDataHandlerRaw->getSize());
-                streamController::adjustEndian(tempBuffer.data(), wordSize, endianType, bufferSize / wordSize);
-                pDestStream->write(tempBuffer.data(), bufferSize);
-                continue;
+                std::shared_ptr<streamReader> pReader = pData->getStreamReader(scanBuffers);
+
+                size_t writtenSize(0);
+                std::uint8_t buffer[32768];
+
+                try
+                {
+                    while(writtenSize != bufferSize)
+                    {
+                        size_t readSize(std::min(sizeof(buffer), bufferSize - writtenSize));
+                        size_t readBytes = pReader->readSome(buffer, readSize);
+                        if(readBytes == 0)
+                        {
+                            break;
+                        }
+                        pDestStream->write(buffer, readBytes);
+                        writtenSize += readBytes;
+                    }
+                }
+                catch(const StreamEOFError&)
+                {
+                    if(writtenSize != bufferSize - 1)
+                    {
+                        throw;
+                    }
+                    static const std::uint8_t zerobyte(0);
+                    pDestStream->write(&zerobyte, 1);
+                }
+            }
+            else
+            {
+                std::shared_ptr<handlers::readingDataHandlerRaw> pDataHandlerRaw = pData->getReadingDataHandlerRaw(scanBuffers);
+
+                if(wordSize > 1)
+                {
+                    std::vector<std::uint8_t> tempBuffer(bufferSize);
+                    ::memcpy(tempBuffer.data(), pDataHandlerRaw->getMemoryBuffer(), pDataHandlerRaw->getSize());
+                    streamController::adjustEndian(tempBuffer.data(), wordSize, endianType, bufferSize / wordSize);
+                    pDestStream->write(tempBuffer.data(), bufferSize);
+                }
+                else
+                {
+                    pDestStream->write((std::uint8_t*)pDataHandlerRaw->getMemoryBuffer(), bufferSize);
+                }
             }
 
-            pDestStream->write((std::uint8_t*)pDataHandlerRaw->getMemoryBuffer(), bufferSize);
             continue;
+
         }
 
         // Write a nested dataset
@@ -337,9 +375,8 @@ void dicomStreamCodec::writeTag(std::shared_ptr<streamWriter> pDestStream, std::
     if(bSequence)
     {
         pDestStream->write((std::uint8_t*)&sequenceItemGroup, 2);
-        pDestStream->write((std::uint8_t*)&sequenceItemEnd, 2);
-        std::uint32_t sequenceItemLength = 0;
-        pDestStream->write((std::uint8_t*)&sequenceItemLength, 4);
+        pDestStream->write((std::uint8_t*)&sequenceTagEnd, 2);
+        pDestStream->write((std::uint8_t*)&zeroLength, 4);
     }
 
     IMEBRA_FUNCTION_END();

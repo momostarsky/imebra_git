@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -51,13 +51,13 @@ public:
 protected:
     FILE* m_openFile;
 
-    std::mutex m_mutex;
+    mutable std::mutex m_mutex;
 
 };
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-/// \brief This class derives from the baseStream 
+/// \brief This class derives from the baseStream
 ///         class and implements a file stream.
 ///
 /// This class can be used to read/write on physical files
@@ -71,16 +71,23 @@ public:
     fileStreamInput(const std::string& fileName);
     fileStreamInput(const std::wstring& fileName);
 
-	///////////////////////////////////////////////////////////
-	//
-	// Virtual stream's functions
-	//
-	///////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////
+    //
+    // Virtual stream's functions
+    //
+    ///////////////////////////////////////////////////////////
     virtual size_t read(size_t startPosition, std::uint8_t* pBuffer, size_t bufferLength) override;
 
     virtual void terminate() override;
 
     virtual bool seekable() const override;
+
+    ///////////////////////////////////////////////////////////
+    //
+    // Returns the file size
+    //
+    ///////////////////////////////////////////////////////////
+    size_t getSize() const;
 };
 
 class fileStreamOutput : public baseStreamOutput, public fileStream

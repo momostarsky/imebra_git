@@ -19,6 +19,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #import "../include/imebraobjc/imebra_writingDataHandlerNumeric.h"
 #import "../include/imebraobjc/imebra_streamReader.h"
 #import "../include/imebraobjc/imebra_streamWriter.h"
+#import "../include/imebraobjc/imebra_fileStreamInput.h"
 
 #include "imebra_implementation_macros.h"
 #include "imebra_nserror.h"
@@ -29,6 +30,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <imebra/streamReader.h>
 #include <imebra/streamWriter.h>
 #include <imebra/dataSet.h>
+#include <imebra/fileStreamInput.h>
 
 @implementation ImebraTag
 
@@ -189,6 +191,16 @@ If you do not want to be bound by the GPL terms (such as the requirement
             ((imebra::MutableTag*)get_imebra_object_holder(Tag))->appendSequenceItem())];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+}
+
+-(void) setStream:(unsigned int) bufferId stream:(ImebraFileStreamInput*)pStream error:(NSError**)pError
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    ((imebra::MutableTag*)get_imebra_object_holder(Tag))->setStream((size_t)bufferId, *(imebra::FileStreamInput*)(get_other_imebra_object_holder(pStream, BaseStreamInput)));
+
+    OBJC_IMEBRA_FUNCTION_END();
+
 }
 
 @end

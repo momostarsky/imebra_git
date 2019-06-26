@@ -39,6 +39,7 @@ class streamReader;
 class streamWriter;
 class buffer;
 class dataSet;
+class fileStreamInput;
 
 
 /// \addtogroup group_dataset
@@ -209,6 +210,17 @@ public:
 
     std::shared_ptr<handlers::writingDataHandlerNumericBase> getWritingDataHandlerNumeric(size_t bufferId);
 
+    /// \brief Return true if the buffer is referencing
+    ///         the content in an external stream
+    ///
+    /// \param bufferId  the id of the buffer for which the
+    ///                    information is required
+    /// @return          true if the buffer content is stored
+    ///                  in an external stream, false otherwise
+    ///
+    ///////////////////////////////////////////////////////////
+    bool hasExternalStream(size_t bufferId) const;
+
     /// \brief Get a streamReader connected to a buffer's data.
     ///
     /// @param bufferId   the id of the buffer for which the
@@ -232,6 +244,22 @@ public:
     ///
     ///////////////////////////////////////////////////////////
     std::shared_ptr<streamWriter> getStreamWriter(size_t bufferId);
+
+    /// \brief Set the content of a file as tag's content.
+    ///
+    /// The file will be kept open until the tag is discarded.
+    ///
+    /// If the VR of the tag requires byte swapping, then
+    /// the file endianess will be set to the HW default
+    /// endianess.
+    ///
+    /// \param bufferId        the buffer on which the content
+    ///                        is set
+    /// \param pExternalStream the file with the content to
+    ///                        set
+    ///
+    ///////////////////////////////////////////////////////////
+    void setExternalStream(size_t bufferId, std::shared_ptr<fileStreamInput> pExternalStream);
 
     //@}
 
@@ -311,14 +339,14 @@ protected:
 
     // Pointers to the internal buffers
     ///////////////////////////////////////////////////////////
-    typedef std::map<size_t, std::shared_ptr<buffer> > tBuffersMap;
-    tBuffersMap m_buffers;
+    typedef std::vector<std::shared_ptr<buffer>> tBuffersVector;
+    tBuffersVector m_buffers;
 
     // Pointers to the embedded datasets
     ///////////////////////////////////////////////////////////
     typedef std::shared_ptr<dataSet> ptrDataSet;
-    typedef std::vector<ptrDataSet> tEmbeddedDatasetsMap;
-    tEmbeddedDatasetsMap m_embeddedDataSets;
+    typedef std::vector<ptrDataSet> tEmbeddedDatasetsVector;
+    tEmbeddedDatasetsVector m_embeddedDataSets;
 
     mutable std::mutex m_mutex;
 };
