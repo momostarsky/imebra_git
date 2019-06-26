@@ -200,7 +200,7 @@ void DelayConnectionThread(std::string port)
 
 TEST(tcpTest, delayedConnection)
 {
-    const std::string listeningPort("20000");
+    const std::string listeningPort("20001");
 
     std::thread delayConnection(imebra::tests::DelayConnectionThread, listeningPort);
 
