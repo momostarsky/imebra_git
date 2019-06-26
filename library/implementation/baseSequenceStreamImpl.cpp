@@ -42,7 +42,7 @@ size_t baseSequenceStreamInput::read(size_t startPosition, std::uint8_t* pBuffer
     }
     if(startPosition > m_currentPosition)
     {
-        static std::uint8_t buffer[4096];
+        std::uint8_t buffer[32768];
         while(m_currentPosition < startPosition)
         {
             size_t readSize(startPosition - m_currentPosition);
@@ -85,7 +85,7 @@ void baseSequenceStreamOutput::write(size_t startPosition, const std::uint8_t* p
     }
     if(startPosition > m_currentPosition)
     {
-        static std::uint8_t buffer[4096] = {0};
+        std::uint8_t buffer[32768] = {0};
         while(m_currentPosition < startPosition)
         {
             size_t writeSize(startPosition - m_currentPosition);
