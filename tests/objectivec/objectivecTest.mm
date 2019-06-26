@@ -761,7 +761,7 @@ TEST(objectivec, testExternalStream)
     NSError* pError(0);
     ImebraMutableDataSet* testDataSet = [[ImebraMutableDataSet alloc] initWithTransferSyntax:imebra::stringToNSString(transferSyntax)];
     ImebraMutableTag* streamTag = [testDataSet getTagCreate:[[ImebraTagId alloc] initWithGroup:0x20 tag:0x20] tagVR:ImebraOB error:&pError];
-    [streamTag setStream:0 stream:[[ImebraFileStreamInput alloc] initWithName:imebra::stringToNSString(fileName) error:&pError]];
+    [streamTag setStream:0 stream:[[ImebraFileStreamInput alloc] initWithName:imebra::stringToNSString(fileName) error:&pError] error:&pError];
 
     ImebraMutableMemory* pStreamMemory = [[ImebraMutableMemory alloc] init];
     @autoreleasepool
@@ -769,7 +769,7 @@ TEST(objectivec, testExternalStream)
         ImebraMemoryStreamOutput* pWriteStream = [[ImebraMemoryStreamOutput alloc] initWithMutableMemory:pStreamMemory];
         ImebraStreamWriter* pWriter = [[ImebraStreamWriter alloc] initWithOutputStream: pWriteStream];
         NSError* pError = 0;
-        [ImebraCodecFactory saveToStream:pWriter dataSet:pDataSet codecType:ImebraCodecTypeDicom error:&pError];
+        [ImebraCodecFactory saveToStream:pWriter dataSet:testDataSet codecType:ImebraCodecTypeDicom error:&pError];
 
     }
 
@@ -779,7 +779,7 @@ TEST(objectivec, testExternalStream)
 
     ImebraDataSet* pTestDataSet = [ImebraCodecFactory loadFromStream:pReader error:&pError];
 
-    unsigned int bufferSize = [[pTestDataSet getTag:[[ImebraTagId alloc] initWithGroup:0x20 tag:0x20]] getBufferSize:0 error:&pError];
+    unsigned int bufferSize = [[pTestDataSet getTag:[[ImebraTagId alloc] initWithGroup:0x20 tag:0x20] error:&pError] getBufferSize:0 error:&pError];
     EXPECT_EQ(1024, bufferSize);
 
 }

@@ -251,7 +251,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     /// \param streamInput the file into which the tag's content is stored
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    -(void) setStream:(unsigned int) bufferId stream:(ImebraFileStreamInput*)pStream error:(NSError**)pError;
+    -(void) setStream:(unsigned int)bufferId stream:(ImebraFileStreamInput*)pStream error:(NSError**)pError;
 
 
 
