@@ -381,6 +381,18 @@ Introduced risks:
 - :ref:`RISK_VR_CONVERSION`
 
 
+.. _REQ_LOGGING:
+
+[REQ_LOGGING] The library must log the most important tasks execution
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+The library must log to the device standard logging the most important steps.
+
+
+
+
+
+
 .. _REQ_APPLY_MODALITY_VOILUT:
 
 [REQ_APPLY_MODALITY_VOILUT] The library must be able to apply the modality VOI or LUT to extracted images

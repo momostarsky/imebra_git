@@ -262,6 +262,14 @@
       <priority>70</priority>
     </requirement>
 
+    <requirement categoryIdref="REQ_FUNC" id="REQ_LOGGING">
+      <title>The library must log the most important tasks execution</title>
+
+      <description>The library must log to the device standard logging the most important steps.</description>
+
+      <priority>70</priority>
+    </requirement>
+
     <requirement categoryIdref="REQ_IMPL" id="REQ_MEMORY_ALLOCATION">
       <mitigates>
         <mitigatedRisk idref="RISK_MEMORY_ALLOC">
