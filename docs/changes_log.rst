@@ -6,6 +6,7 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Implemented enhancement #286 (Revert issue #282 but explain why the buffers can be static) as per SOP :ref:`DEVENH_2`
 - Fixed bug #288 (Datasets created from jpeg files have an empty charset list) as per SOP :ref:`FIXBUG_2`
 
 Version 4.5.5.1
