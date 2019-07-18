@@ -247,6 +247,9 @@ TEST(jpegCodecTest, codecFactoryPipe)
     double differenceYBR = compareImages(*ybrImage, *checkImage);
     ASSERT_LE(differenceRGB, 5);
     ASSERT_LE(differenceYBR, 1);
+
+    // Test if the charset has been set correctly
+    ASSERT_NO_THROW(loadedDataSet->setUnicodeString(TagId(tagId_t::PatientName_0010_0010), L"Test"));
 }
 
 } // namespace tests

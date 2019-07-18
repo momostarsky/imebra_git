@@ -138,6 +138,10 @@ void jpegStreamCodec::readStream(std::shared_ptr<streamReader> pStream, std::sha
 {
     IMEBRA_FUNCTION_START();
 
+    charsetsList::tCharsetsList list;
+    list.push_back("ISO 2022 IR 6");
+    pDataSet->setCharsetsList(list);
+
     std::shared_ptr<memory> jpegData = std::make_shared<memory>();
 
     std::shared_ptr<memoryStreamOutput> streamOutput = std::make_shared<memoryStreamOutput>(jpegData);
