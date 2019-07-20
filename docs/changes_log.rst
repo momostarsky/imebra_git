@@ -8,6 +8,8 @@ Version |release| (this version)
 
 - Implemented enhancement #286 (Revert issue #282 but explain why the buffers can be static) as per SOP :ref:`DEVENH_2`
 - Fixed bug #288 (Datasets created from jpeg files have an empty charset list) as per SOP :ref:`FIXBUG_2`
+- Fixed bug #291 (The ACSE Implementation name field now derives from acseItem used for UIDs, but it isn't an UID) as per SOP :ref:`FIXBUG_2`.
+  Checked with visual inspection of interoperability logs
 
 Version 4.5.5.1
 ---------------

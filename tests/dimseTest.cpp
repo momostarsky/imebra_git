@@ -1388,7 +1388,7 @@ TEST(dimseTest, storeSCUInteroperabilityTest)
     pid_t pID = fork();
     if (pID == 0)                // child
     {
-        execlp("storescp", "storescp", "-od", dirName.c_str(), "30003", 0);
+        execlp("storescp", "storescp", "-od", dirName.c_str(), "30003", "-ll", "trace", 0);
     }
     else if (pID < 0)            // failed to fork
     {
