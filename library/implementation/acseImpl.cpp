@@ -798,12 +798,66 @@ acseItem::itemType_t acseItemImplementationClassUID::getItemType() const
 
 ///////////////////////////////////////////////////////////
 //
+// Implementation Version Item constructor
+//
+///////////////////////////////////////////////////////////
+acseItemImplementationVersionName::acseItemImplementationVersionName()
+{
+}
+
+acseItemImplementationVersionName::acseItemImplementationVersionName(const std::string& name):
+    m_name(name)
+{
+}
+
+
+///////////////////////////////////////////////////////////
+//
 // Implementation Version Item
 //
 ///////////////////////////////////////////////////////////
 acseItem::itemType_t acseItemImplementationVersionName::getItemType() const
 {
     return itemType_t::implementationVersionName;
+}
+
+
+///////////////////////////////////////////////////////////
+//
+// Encode the string
+//
+///////////////////////////////////////////////////////////
+void acseItemImplementationVersionName::encodeItemPayload(std::shared_ptr<streamWriter> writer) const
+{
+    IMEBRA_FUNCTION_START();
+
+    writer->write((const std::uint8_t*)m_name.c_str(), m_name.size());
+
+    IMEBRA_FUNCTION_END();
+}
+
+
+///////////////////////////////////////////////////////////
+//
+// Decode the string
+//
+///////////////////////////////////////////////////////////
+void acseItemImplementationVersionName::decodeItemPayload(std::shared_ptr<streamReader> reader)
+{
+    IMEBRA_FUNCTION_START();
+
+    std::uint8_t buffer[128];
+
+    std::string name;
+    while(!reader->endReached())
+    {
+        size_t readSize(reader->readSome(buffer, sizeof(buffer)));
+        name.append(std::string((char*)buffer, readSize));
+    }
+
+    m_name = name;
+
+    IMEBRA_FUNCTION_END();
 }
 
 

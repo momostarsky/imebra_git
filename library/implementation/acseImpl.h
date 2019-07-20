@@ -226,14 +226,21 @@ public:
 /// \brief Acse item for transferring the version name
 ///
 //////////////////////////////////////////////////////////////////
-class acseItemImplementationVersionName: public acseItemName
+class acseItemImplementationVersionName: public acseItem
 {
 public:
-    using acseItemName::acseItemName;
+    acseItemImplementationVersionName();
+    acseItemImplementationVersionName(const std::string& name);
 
     virtual itemType_t getItemType() const override;
-};
 
+protected:
+
+    virtual void encodeItemPayload(std::shared_ptr<streamWriter> pWriter) const override;
+    virtual void decodeItemPayload(std::shared_ptr<streamReader> pReader) override;
+
+    std::string m_name;
+};
 
 ///
 /// \brief Acse item for the PDU max length.
