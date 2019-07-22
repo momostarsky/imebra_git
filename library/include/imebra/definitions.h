@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -52,6 +52,14 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #else // IMEBRA_DLL is not defined: this means Imebra is a static lib.
   #define IMEBRA_API
 #endif // IMEBRA_DLL
+
+#ifndef IMEBRA_IMPLEMENTATION_CLASS_UID
+#define IMEBRA_IMPLEMENTATION_CLASS_UID "1.3.6.1.4.1.54308.2.1.1.4"
+#endif
+
+#ifndef IMEBRA_IMPLEMENTATION_NAME
+#define IMEBRA_IMPLEMENTATION_NAME "Imebra 4"
+#endif
 
 #endif // SWIG
 

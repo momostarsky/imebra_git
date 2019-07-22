@@ -2402,11 +2402,13 @@ associationSCU::associationSCU(
         }
     }
 
+    const std::string implementationUid(IMEBRA_IMPLEMENTATION_CLASS_UID);
+    const std::string implementationName(IMEBRA_IMPLEMENTATION_NAME);
     std::shared_ptr<acseItemUserInformation> pUserInformation(
                 std::make_shared<acseItemUserInformation>(
                     m_maxPDULength,
-                    "1.1",
-                    "Imebra 1.0",
+                    implementationUid,
+                    implementationName,
                     m_maxOperationsInvoked,
                     m_maxOperationsPerformed,
                     scpScuRoles));
