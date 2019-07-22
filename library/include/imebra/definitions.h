@@ -53,6 +53,14 @@ If you do not want to be bound by the GPL terms (such as the requirement
   #define IMEBRA_API
 #endif // IMEBRA_DLL
 
+#ifndef IMEBRA_IMPLEMENTATION_CLASS_UID
+#define IMEBRA_IMPLEMENTATION_CLASS_UID "1.3.6.1.4.1.54308.2.1.1.4"
+#endif
+
+#ifndef IMEBRA_IMPLEMENTATION_NAME
+#define IMEBRA_IMPLEMENTATION_NAME "Imebra 4"
+#endif
+
 #endif // SWIG
 
 namespace imebra
