@@ -126,6 +126,7 @@ void dicomStreamCodec::buildStream(std::shared_ptr<streamWriter> pStream, std::s
                 {
                     dataSet::tTags temporaryTags(tags);
                     charsetsList::tCharsetsList charsets;
+                    pDataSet->getCharsetsList(&charsets);
                     std::shared_ptr<data> metaInformationTag(std::make_shared<data>(tagVR_t::OB, charsets));
                     {
                         std::shared_ptr<handlers::writingDataHandler> handler(metaInformationTag->getWritingDataHandler(0));
@@ -133,6 +134,23 @@ void dicomStreamCodec::buildStream(std::shared_ptr<streamWriter> pStream, std::s
                         handler->setUnsignedLong(1, 1);
                     }
                     temporaryTags[1] = metaInformationTag;
+
+                    // Set the implementation tags
+                    std::shared_ptr<data> implementationClassUidTag(std::make_shared<data>(tagVR_t::UI, charsets));
+                    {
+                        std::shared_ptr<handlers::writingDataHandler> handler(implementationClassUidTag->getWritingDataHandler(0));
+                        handler->setString(0, IMEBRA_IMPLEMENTATION_CLASS_UID);
+                    }
+                    temporaryTags[0x12] = implementationClassUidTag;
+
+                    // Set the implementation name
+                    std::shared_ptr<data> implementationNameTag(std::make_shared<data>(tagVR_t::SH, charsets));
+                    {
+                        std::shared_ptr<handlers::writingDataHandler> handler(implementationNameTag->getWritingDataHandler(0));
+                        handler->setString(0, IMEBRA_IMPLEMENTATION_NAME);
+                    }
+                    temporaryTags[0x13] = implementationNameTag;
+
                     writeGroup(pStream, temporaryTags, *scanGroups, bExplicitDataType, endianType);
                 }
             }
