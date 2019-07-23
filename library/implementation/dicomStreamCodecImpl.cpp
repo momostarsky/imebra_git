@@ -125,8 +125,7 @@ void dicomStreamCodec::buildStream(std::shared_ptr<streamWriter> pStream, std::s
                 if(streamType == streamType_t::mediaStorage)
                 {
                     dataSet::tTags temporaryTags(tags);
-                    charsetsList::tCharsetsList charsets;
-                    pDataSet->getCharsetsList(&charsets);
+                    const charsetsList::tCharsetsList& charsets(pDataSet->getCurrentCharsetsList());
                     std::shared_ptr<data> metaInformationTag(std::make_shared<data>(tagVR_t::OB, charsets));
                     {
                         std::shared_ptr<handlers::writingDataHandler> handler(metaInformationTag->getWritingDataHandler(0));
