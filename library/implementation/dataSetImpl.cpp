@@ -1715,6 +1715,12 @@ void dataSet::getCharsetsList(charsetsList::tCharsetsList* pCharsetsList) const
     IMEBRA_FUNCTION_END();
 }
 
+
+const charsetsList::tCharsetsList& dataSet::getCurrentCharsetsList() const
+{
+    return m_charsetsList;
+}
+
 dataSet::tGroupsIds dataSet::getGroups() const
 {
     IMEBRA_FUNCTION_START();
