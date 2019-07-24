@@ -180,8 +180,8 @@ TEST(dicomCodecTest, testDicom)
                             StreamReader reader(readStream);
                             DataSet testDataSet = CodecFactory::load(reader, lazyLoad == 0 ? std::numeric_limits<size_t>::max() : 1);
 
-                            EXPECT_EQ(std::string(IMEBRA_IMPLEMENTATION_CLASS_UID), testDataSet->getString(TagId(tagId_t::ImplementationClassUID_0002_0012), 0));
-                            EXPECT_EQ(std::string(IMEBRA_IMPLEMENTATION_NAME), testDataSet->getString(TagId(tagId_t::ImplementationVersionName_0002_0013), 0));
+                            EXPECT_EQ(std::string(IMEBRA_IMPLEMENTATION_CLASS_UID), testDataSet.getString(TagId(tagId_t::ImplementationClassUID_0002_0012), 0));
+                            EXPECT_EQ(std::string(IMEBRA_IMPLEMENTATION_NAME), testDataSet.getString(TagId(tagId_t::ImplementationVersionName_0002_0013), 0));
 
                             EXPECT_EQ(0u, testDataSet.getUnsignedLong(TagId(tagId_t::FileMetaInformationVersion_0002_0001), 0));
                             EXPECT_EQ(1u, testDataSet.getUnsignedLong(TagId(tagId_t::FileMetaInformationVersion_0002_0001), 1));
