@@ -11,6 +11,7 @@ Version |release| (this version)
 - Implemented enhancement #289 (Set the Imebra implementation OID in the ACSE implementation UID field) as per SOP :ref:`DEVENH_2`
 - Fixed bug #291 (The ACSE Implementation name field now derives from acseItem used for UIDs, but it isn't an UID) as per SOP :ref:`FIXBUG_2`.
   Checked with visual inspection of interoperability logs
+- Implemented enhancement #292 (Output the implementation UID name and name in the DICOM files) as per SOP :ref:`DEVENH_2`
 
 Version 4.5.5.1
 ---------------
