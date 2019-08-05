@@ -63,6 +63,19 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #endif // SWIG
 
+// Logging macros
+#define IMEBRA_LOG_LEVEL_DISABLED 0
+#define IMEBRA_LOG_LEVEL_FATAL    1
+#define IMEBRA_LOG_LEVEL_ERROR    2
+#define IMEBRA_LOG_LEVEL_WARNING  3
+#define IMEBRA_LOG_LEVEL_INFO     4
+#define IMEBRA_LOG_LEVEL_DEBUG    5
+#define IMEBRA_LOG_LEVEL_TRACE    6
+
+// Define IMEBRA_LOG_LEVEL to one of the previous values
+// to enable logging
+
+#define IMEBRA_LOG_LEVEL IMEBRA_LOG_LEVEL_WARNING
 namespace imebra
 {
 
