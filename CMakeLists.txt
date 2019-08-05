@@ -86,6 +86,7 @@ file(GLOB imebra_interface "${CMAKE_CURRENT_SOURCE_DIR}/library/include/imebra/*
 file(GLOB imebra_include "${CMAKE_CURRENT_SOURCE_DIR}/library/src/*.h")
 file(GLOB imebra_src "${CMAKE_CURRENT_SOURCE_DIR}/library/src/*.cpp")
 file(GLOB imebra_implementation_src "${CMAKE_CURRENT_SOURCE_DIR}/library/implementation/*.cpp")
+file(GLOB imebra_implementation_src_objc "${CMAKE_CURRENT_SOURCE_DIR}/library/implementation/*.mm")
 file(GLOB imebra_implementation_include "${CMAKE_CURRENT_SOURCE_DIR}/library/implementation/*.h")
 set(imebra_objc_src "")
 set(imebra_objc_include "")
@@ -150,6 +151,7 @@ endif("${JPEG2000}" STREQUAL "2")
 
 add_library(imebra ${IMEBRA_SHARED_STATIC}
     ${imebra_implementation_src}
+    ${imebra_implementation_src_objc}
     ${imebra_implementation_include}
     ${imebra_objc_src}
     ${imebra_objc_include}
