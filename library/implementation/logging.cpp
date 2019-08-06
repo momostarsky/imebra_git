@@ -2,6 +2,9 @@
 #include <array>
 #include <ctime>
 
+#ifdef IMEBRA_WINDOWS
+#include <time.h>
+#endif
 namespace imebra
 {
 
@@ -16,9 +19,9 @@ std::string getCurrentTime()
     struct tm timeInfo;
 
 #ifdef IMEBRA_WINDOWS
-    localtime_s(&timeInfo, &rawTime);
+    ::localtime_s(&timeInfo, &rawTime);
 #else
-    localtime_r (&rawTime, &timeInfo);
+    ::localtime_r (&rawTime, &timeInfo);
 #endif
 
     std::array<char, 128> buffer;

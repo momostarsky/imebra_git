@@ -292,6 +292,38 @@ private:
         throw;\
     }
 
+/// \def IMEBRA_FUNCTION_END_LOG()
+///
+/// \brief Insert a catch block that rethrows the catched
+///         exception and log the function's name and
+///         the position in the source file in which the
+///         exception has been catched and rethrown.
+///
+/// The exception is also sent to the system log as
+/// error.
+///
+/// This function must be placed at the end of a function
+///  if the IMEBRA_FUNCTION_START() has been used in
+///  the function.
+///
+///////////////////////////////////////////////////////////
+#define IMEBRA_FUNCTION_END_LOG() \
+    }\
+    catch(std::exception& e)\
+    {\
+        imebra::implementation::exceptionInfo info(IMEBRA_METHOD_NAME(), __FILE__, __LINE__, typeid(e).name(), e.what());\
+        imebra::implementation::exceptionsManagerGetter::getExceptionsManagerGetter().getExceptionsManager().addExceptionInfo(info);\
+        IMEBRA_LOG_ERROR("Throwing exception " << typeid(e).name() << " with message \"" << e.what() << "\" in function " << IMEBRA_METHOD_NAME() << " line " << __LINE__ << " file " << __FILE__);\
+        throw;\
+    }\
+    catch(...)\
+    {\
+        imebra::implementation::exceptionInfo info(IMEBRA_METHOD_NAME(), __FILE__, __LINE__, "unknown", "");\
+        imebra::implementation::exceptionsManagerGetter::getExceptionsManagerGetter().getExceptionsManager().addExceptionInfo(info);\
+        IMEBRA_LOG_ERROR("Throwing unknown exception in function " << IMEBRA_METHOD_NAME() << " line " << __LINE__ << " file " << __FILE__);\
+        throw;\
+    }
+
 /// \def IMEBRA_FUNCTION_END_MODIFY()
 ///
 /// \brief Insert a catch block that rethrows the catched

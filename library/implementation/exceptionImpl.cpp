@@ -102,7 +102,6 @@ exceptionInfo::exceptionInfo(const std::string& functionName, const std::string&
     m_exceptionType(exceptionType),
     m_exceptionMessage(exceptionMessage)
 {
-    IMEBRA_LOG_WARNING("Throwing exception " << m_exceptionType << " with message \"" << m_exceptionMessage << "\" in function " << m_functionName << " line " << m_lineNumber << " file " << m_fileName)
 }
 
 ///////////////////////////////////////////////////////////
