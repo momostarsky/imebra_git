@@ -30,6 +30,8 @@ namespace imebra
 namespace implementation
 {
 
+#if !defined(IMEBRA_LOG_FATAL_IMPLEMENTATION)
+
 #if defined(IMEBRA_ANDROID)
 #include <android/log.h>
 
@@ -80,7 +82,6 @@ void appleLog(const std::string& format, const std::string& message);
 
 #else
 
-
 ///
 /// \brief Returns a string with the current time.
 ///
@@ -98,7 +99,7 @@ std::string getCurrentTime();
 
 #endif
 
-
+#endif // !defined(IMEBRA_LOG_FATAL_IMPLEMENTATION)
 
 } // namespace implementation
 

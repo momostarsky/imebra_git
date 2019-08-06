@@ -1,7 +1,7 @@
+#if defined(__APPLE__)
+
 #include <imebra/logging.h>
-#include <array>
-#include <ctime>
-#include "imebra_strings.h"
+#import <Foundation/Foundation.h>
 
 namespace imebra
 {
@@ -16,5 +16,6 @@ void appleLog(const std::string& format, const std::string& message)
 
 }
 
-
 }
+
+#endif
