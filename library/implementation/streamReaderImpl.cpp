@@ -345,8 +345,6 @@ void streamReader::terminate()
 ///////////////////////////////////////////////////////////
 void streamReader::seek(size_t newPosition)
 {
-    IMEBRA_FUNCTION_START();
-
     // The requested position is already in the data buffer?
     ///////////////////////////////////////////////////////////
     size_t bufferEndPosition = m_dataBufferStreamPosition + m_dataBufferEnd;
@@ -360,8 +358,6 @@ void streamReader::seek(size_t newPosition)
     ///////////////////////////////////////////////////////////
     m_dataBufferCurrent = m_dataBufferEnd = 0;
     m_dataBufferStreamPosition = newPosition;
-
-    IMEBRA_FUNCTION_END();
 }
 
 void streamReader::seekForward(std::uint32_t newPosition)

@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -54,11 +54,7 @@ size_t readingDataHandlerNumericBase::getMemorySize() const
 
 std::shared_ptr<const memory> readingDataHandlerNumericBase::getMemory() const
 {
-    IMEBRA_FUNCTION_START();
-
     return m_pMemory;
-
-    IMEBRA_FUNCTION_END();
 }
 
 void readingDataHandlerNumericBase::copyTo(std::shared_ptr<writingDataHandlerNumericBase> pDestination)

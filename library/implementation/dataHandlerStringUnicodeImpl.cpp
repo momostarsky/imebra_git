@@ -6,14 +6,14 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
 /*! \file dataHandlerStringUnicode.cpp
     \brief Implementation of the base class used by the string handlers that need
-	        to handle several charsets.
+            to handle several charsets.
 
 */
 
@@ -163,11 +163,7 @@ std::wstring readingDataHandlerStringUnicode::getUnicodeString(const size_t inde
 ///////////////////////////////////////////////////////////
 size_t readingDataHandlerStringUnicode::getSize() const
 {
-    IMEBRA_FUNCTION_START();
-
     return m_strings.size();
-
-    IMEBRA_FUNCTION_END();
 }
 
 writingDataHandlerStringUnicode::writingDataHandlerStringUnicode(const std::shared_ptr<buffer> &pBuffer, const charsetsList::tCharsetsList& charsets, tagVR_t dataType, const wchar_t separator, const size_t unitSize, const size_t maxSize, const uint8_t paddingByte):
@@ -236,11 +232,7 @@ void writingDataHandlerStringUnicode::setSize(const size_t elementsNumber)
 
 size_t writingDataHandlerStringUnicode::getSize() const
 {
-    IMEBRA_FUNCTION_START();
-
     return m_strings.size();
-
-    IMEBRA_FUNCTION_END();
 }
 
 void writingDataHandlerStringUnicode::setString(const size_t index, const std::string& value)

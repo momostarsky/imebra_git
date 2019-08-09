@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement
- that your application must also be GPL), you may purchase a commercial
+If you do not want to be bound by the GPL terms (such as the requirement 
+ that your application must also be GPL), you may purchase a commercial 
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -118,11 +118,7 @@ void data::setBuffer(size_t bufferId, const std::shared_ptr<buffer>& newBuffer)
 ///////////////////////////////////////////////////////////
 tagVR_t data::getDataType() const
 {
-    IMEBRA_FUNCTION_START();
-
     return m_tagVR;
-
-    IMEBRA_FUNCTION_END();
 }
 
 
@@ -141,11 +137,11 @@ size_t data::getBuffersCount() const
 
     std::lock_guard<std::mutex> lock(m_mutex);
 
-    // Returns the number of buffers
-    ///////////////////////////////////////////////////////////
-    return m_buffers.size();
+	// Returns the number of buffers
+	///////////////////////////////////////////////////////////
+	return m_buffers.size();
 
-    IMEBRA_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -181,7 +177,7 @@ size_t data::getBufferSize(size_t bufferId) const
 
     return getBuffer(bufferId)->getBufferSizeBytes();
 
-    IMEBRA_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -247,7 +243,7 @@ std::shared_ptr<handlers::readingDataHandler> data::getReadingDataHandler(size_t
 
     return getBuffer(bufferId)->getReadingDataHandler(m_tagVR);
 
-    IMEBRA_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -276,7 +272,7 @@ std::shared_ptr<handlers::readingDataHandlerRaw> data::getReadingDataHandlerRaw(
 
     return getBuffer(bufferId)->getReadingDataHandlerRaw(m_tagVR);
 
-    IMEBRA_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -340,7 +336,7 @@ std::shared_ptr<streamReader> data::getStreamReader(size_t bufferId)
 
     return getBuffer(bufferId)->getStreamReader();
 
-    IMEBRA_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -359,7 +355,7 @@ std::shared_ptr<streamWriter> data::getStreamWriter(size_t bufferId)
 
     return getBufferCreate(bufferId)->getStreamWriter(m_tagVR);
 
-    IMEBRA_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -402,13 +398,13 @@ std::shared_ptr<dataSet> data::getSequenceItem(size_t dataSetId) const
     std::lock_guard<std::mutex> lock(m_mutex);
 
     if(m_embeddedDataSets.size() <= dataSetId)
-    {
+	{
         IMEBRA_THROW(MissingItemError, "The requested sequence item does not exist");
-    }
+	}
 
-    return m_embeddedDataSets[dataSetId];
+	return m_embeddedDataSets[dataSetId];
 
-    IMEBRA_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 bool data::dataSetExists(size_t dataSetId) const
@@ -444,7 +440,7 @@ std::shared_ptr<dataSet> data::appendSequenceItem()
 
     return pDataSet;
 
-    IMEBRA_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -467,16 +463,16 @@ void data::setCharsetsList(const charsetsList::tCharsetsList& charsetsList)
     m_charsetsList = charsetsList;
 
     for(tEmbeddedDatasetsVector::iterator scanEmbeddedDataSets = m_embeddedDataSets.begin(); scanEmbeddedDataSets != m_embeddedDataSets.end(); ++scanEmbeddedDataSets)
-    {
+	{
         (*scanEmbeddedDataSets)->setChildrenCharsetsList(charsetsList);
-    }
+	}
 
     for(const std::shared_ptr<buffer>& pBuffer: m_buffers)
-    {
+	{
         pBuffer->setCharsetsList(charsetsList);
-    }
+	}
 
-    IMEBRA_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 
@@ -497,20 +493,20 @@ void data::getCharsetsList(charsetsList::tCharsetsList* pCharsetsList) const
     std::lock_guard<std::mutex> lock(m_mutex);
 
     for(tEmbeddedDatasetsVector::const_iterator scanEmbeddedDataSets = m_embeddedDataSets.begin(); scanEmbeddedDataSets != m_embeddedDataSets.end(); ++scanEmbeddedDataSets)
-    {
-        charsetsList::tCharsetsList charsets;
-        (*scanEmbeddedDataSets)->getCharsetsList(&charsets);
+	{
+		charsetsList::tCharsetsList charsets;
+		(*scanEmbeddedDataSets)->getCharsetsList(&charsets);
         charsetsList::updateCharsets(&charsets, pCharsetsList);
-    }
+	}
 
     for(const std::shared_ptr<buffer>& pBuffer: m_buffers)
-    {
-        charsetsList::tCharsetsList charsets;
+	{
+		charsetsList::tCharsetsList charsets;
         pBuffer->getCharsetsList(&charsets);
         charsetsList::updateCharsets(&charsets, pCharsetsList);
-    }
+	}
 
-    IMEBRA_FUNCTION_END();
+	IMEBRA_FUNCTION_END();
 }
 
 

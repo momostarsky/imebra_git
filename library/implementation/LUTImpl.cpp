@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -141,8 +141,6 @@ lut::~lut()
 ///////////////////////////////////////////////////////////
 std::uint32_t lut::descriptorSignedToUnsigned(std::int32_t signedValue)
 {
-    IMEBRA_FUNCTION_START();
-
     if(signedValue == 0)
     {
         return 0x010000;
@@ -155,8 +153,6 @@ std::uint32_t lut::descriptorSignedToUnsigned(std::int32_t signedValue)
     {
         return (std::uint32_t)signedValue;
     }
-
-    IMEBRA_FUNCTION_END();
 }
 
 
@@ -171,7 +167,7 @@ std::uint32_t lut::descriptorSignedToUnsigned(std::int32_t signedValue)
 ///////////////////////////////////////////////////////////
 std::uint32_t lut::getSize() const
 {
-	return m_size;
+    return m_size;
 }
 
 
@@ -186,7 +182,7 @@ std::uint32_t lut::getSize() const
 ///////////////////////////////////////////////////////////
 std::int32_t lut::getFirstMapped() const
 {
-	return m_firstMapped;
+    return m_firstMapped;
 }
 
 
@@ -222,7 +218,7 @@ std::uint32_t lut::getMappedValue(std::int32_t index) const
 ///////////////////////////////////////////////////////////
 std::wstring lut::getDescription() const
 {
-	return m_description;
+    return m_description;
 }
 
 
@@ -237,7 +233,7 @@ std::wstring lut::getDescription() const
 ///////////////////////////////////////////////////////////
 std::uint8_t lut::getBits() const
 {
-	return m_bits;
+    return m_bits;
 }
 
 
@@ -247,28 +243,24 @@ m_redLut(red), m_greenLut(green), m_blueLut(blue)
 
 void palette::setLuts(std::shared_ptr<lut> red, std::shared_ptr<lut> green, std::shared_ptr<lut> blue)
 {
-    IMEBRA_FUNCTION_START();
-
     m_redLut = red;
-	m_greenLut = green;
-	m_blueLut = blue;
-
-    IMEBRA_FUNCTION_END();
+    m_greenLut = green;
+    m_blueLut = blue;
 }
 
 std::shared_ptr<lut> palette::getRed() const
 {
-	return m_redLut;
+    return m_redLut;
 }
 
 std::shared_ptr<lut> palette::getGreen() const
 {
-	return m_greenLut;
+    return m_greenLut;
 }
 
 std::shared_ptr<lut> palette::getBlue() const
 {
-	return m_blueLut;
+    return m_blueLut;
 }
 
 } // namespace implementation

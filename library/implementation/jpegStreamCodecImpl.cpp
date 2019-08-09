@@ -69,9 +69,6 @@ imageCodec::~imageCodec()
 ///////////////////////////////////////////////////////////
 jpegStreamCodec::jpegStreamCodec()
 {
-    IMEBRA_FUNCTION_START();
-
-    IMEBRA_FUNCTION_END();
 }
 
 
