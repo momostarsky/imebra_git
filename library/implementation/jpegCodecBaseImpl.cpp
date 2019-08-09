@@ -413,12 +413,8 @@ void jpegInformation::reset(imageQuality_t compQuality)
 ///////////////////////////////////////////////////////////
 void jpegInformation::eraseChannels()
 {
-    IMEBRA_FUNCTION_START();
-
     m_channelsMap.clear();
     memset(m_channelsList, 0, sizeof(m_channelsList));
-
-    IMEBRA_FUNCTION_END();
 }
 
 
@@ -498,8 +494,6 @@ void jpegInformation::allocChannels()
 ///////////////////////////////////////////////////////////
 void jpegInformation::findMcuSize()
 {
-    IMEBRA_FUNCTION_START();
-
     // Find the maximum sampling factor for all the channels
     ///////////////////////////////////////////////////////////
     std::uint32_t maxSamplingFactorChannelsX=1;
@@ -572,9 +566,6 @@ void jpegInformation::findMcuSize()
     m_mcuProcessed = 0;
     m_mcuProcessedX = 0;
     m_mcuProcessedY = 0;
-
-
-    IMEBRA_FUNCTION_END();
 }
 
 
@@ -590,8 +581,6 @@ void jpegInformation::findMcuSize()
 ///////////////////////////////////////////////////////////
 void jpegInformation::recalculateQuantizationTables(int table)
 {
-    IMEBRA_FUNCTION_START();
-
     // Adjust the tables for compression/decompression
     ///////////////////////////////////////////////////////////
     std::uint8_t tableIndex = 0;
@@ -604,8 +593,6 @@ void jpegInformation::recalculateQuantizationTables(int table)
             ++tableIndex;
         }
     }
-
-    IMEBRA_FUNCTION_END();
 }
 
 

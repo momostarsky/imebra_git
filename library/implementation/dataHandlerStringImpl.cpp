@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -186,11 +186,7 @@ std::wstring readingDataHandlerString::getUnicodeString(const size_t index) cons
 ///////////////////////////////////////////////////////////
 size_t readingDataHandlerString::getSize() const
 {
-    IMEBRA_FUNCTION_START();
-
     return m_strings.size();
-
-    IMEBRA_FUNCTION_END();
 }
 
 writingDataHandlerString::writingDataHandlerString(const std::shared_ptr<buffer> &pBuffer, tagVR_t dataType, const char separator, const size_t unitSize, const size_t maxSize, const uint8_t paddingByte):
@@ -277,11 +273,7 @@ void writingDataHandlerString::setSize(const size_t elementsNumber)
 
 size_t writingDataHandlerString::getSize() const
 {
-    IMEBRA_FUNCTION_START();
-
     return m_strings.size();
-
-    IMEBRA_FUNCTION_END();
 }
 
 void writingDataHandlerString::setString(const size_t index, const std::string& value)

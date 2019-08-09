@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -95,10 +95,10 @@ void memory::copyFrom(const std::shared_ptr<const memory>& sourceMemory)
     IMEBRA_FUNCTION_START();
 
     if(m_pMemoryBuffer.get() == 0)
-	{
-		m_pMemoryBuffer.reset(new stringUint8);
-	}
-	m_pMemoryBuffer->assign(sourceMemory->data(), sourceMemory->size());
+    {
+        m_pMemoryBuffer.reset(new stringUint8);
+    }
+    m_pMemoryBuffer->assign(sourceMemory->data(), sourceMemory->size());
 
     IMEBRA_FUNCTION_END();
 }
@@ -115,14 +115,10 @@ void memory::copyFrom(const std::shared_ptr<const memory>& sourceMemory)
 ///////////////////////////////////////////////////////////
 void memory::clear()
 {
-    IMEBRA_FUNCTION_START();
-
     if(m_pMemoryBuffer.get() != 0)
-	{
-		m_pMemoryBuffer->clear();
-	}
-
-    IMEBRA_FUNCTION_END();
+    {
+        m_pMemoryBuffer->clear();
+    }
 }
 
 
@@ -140,13 +136,13 @@ void memory::resize(size_t newSize)
     IMEBRA_FUNCTION_START();
 
     if(m_pMemoryBuffer.get() == 0)
-	{
-		m_pMemoryBuffer.reset(new stringUint8((size_t)newSize, (std::uint8_t)0));
-	}
-	else
-	{
-	    m_pMemoryBuffer->resize((size_t)newSize, (std::uint8_t)0);
-	}
+    {
+        m_pMemoryBuffer.reset(new stringUint8((size_t)newSize, (std::uint8_t)0));
+    }
+    else
+    {
+        m_pMemoryBuffer->resize((size_t)newSize, (std::uint8_t)0);
+    }
 
     IMEBRA_FUNCTION_END();
 }
@@ -166,10 +162,10 @@ void memory::reserve(size_t reserveSize)
     IMEBRA_FUNCTION_START();
 
     if(m_pMemoryBuffer.get() == 0)
-	{
+    {
         m_pMemoryBuffer.reset(new stringUint8());
-	}
-	m_pMemoryBuffer->reserve(reserveSize);
+    }
+    m_pMemoryBuffer->reserve(reserveSize);
 
     IMEBRA_FUNCTION_END();
 }
@@ -186,15 +182,11 @@ void memory::reserve(size_t reserveSize)
 ///////////////////////////////////////////////////////////
 size_t memory::size() const
 {
-    IMEBRA_FUNCTION_START();
-
     if(m_pMemoryBuffer.get() == 0)
-	{
-		return 0;
-	}
+    {
+        return 0;
+    }
     return m_pMemoryBuffer->size();
-
-    IMEBRA_FUNCTION_END();
 }
 
 
@@ -209,28 +201,20 @@ size_t memory::size() const
 ///////////////////////////////////////////////////////////
 std::uint8_t* memory::data()
 {
-    IMEBRA_FUNCTION_START();
-
     if(m_pMemoryBuffer.get() == 0 || m_pMemoryBuffer->empty())
-	{
-		return 0;
-	}
+    {
+        return 0;
+    }
     return &( (*(m_pMemoryBuffer.get()))[0]);
-
-    IMEBRA_FUNCTION_END();
 }
 
 const std::uint8_t* memory::data() const
 {
-    IMEBRA_FUNCTION_START();
-
     if(m_pMemoryBuffer.get() == 0 || m_pMemoryBuffer->empty())
     {
         return 0;
     }
     return &( ( (*m_pMemoryBuffer.get()))[0]);
-
-    IMEBRA_FUNCTION_END();
 }
 
 ///////////////////////////////////////////////////////////
@@ -244,11 +228,7 @@ const std::uint8_t* memory::data() const
 ///////////////////////////////////////////////////////////
 bool memory::empty() const
 {
-    IMEBRA_FUNCTION_START();
-
     return m_pMemoryBuffer.get() == 0 || m_pMemoryBuffer->empty();
-
-    IMEBRA_FUNCTION_END();
 }
 
 
@@ -266,10 +246,10 @@ void memory::assign(const std::uint8_t* pSource, const size_t sourceLength)
     IMEBRA_FUNCTION_START();
 
     if(m_pMemoryBuffer.get() == 0)
-	{
-		m_pMemoryBuffer.reset(new stringUint8);
-	}
-	m_pMemoryBuffer->assign(pSource, sourceLength);
+    {
+        m_pMemoryBuffer.reset(new stringUint8);
+    }
+    m_pMemoryBuffer->assign(pSource, sourceLength);
 
     IMEBRA_FUNCTION_END();
 }
@@ -363,49 +343,49 @@ void memoryPool::reuseMemory(stringUint8* pString)
     }
     std::unique_ptr<stringUint8> pBuffer(pString);
 
-	// Check for the memory size. Don't reuse it if the memory
-	//  doesn't match the requested parameters
-	///////////////////////////////////////////////////////////
+    // Check for the memory size. Don't reuse it if the memory
+    //  doesn't match the requested parameters
+    ///////////////////////////////////////////////////////////
     size_t memorySize = pBuffer->size();
     if(memorySize == 0 || memorySize < m_minMemoryBlockSize || memorySize > m_maxMemoryUsageSize)
-	{
+    {
         return;
-	}
+    }
 
-	// Store the memory object in the pool
-	///////////////////////////////////////////////////////////
-	m_memorySize[m_firstFreeCell] = memorySize;
+    // Store the memory object in the pool
+    ///////////////////////////////////////////////////////////
+    m_memorySize[m_firstFreeCell] = memorySize;
     m_memoryPointer[m_firstFreeCell] = pBuffer.release();
-	m_actualSize += memorySize;
+    m_actualSize += memorySize;
     if(++m_firstFreeCell >= m_memorySize.size())
-	{
-		m_firstFreeCell = 0;
-	}
+    {
+        m_firstFreeCell = 0;
+    }
 
-	// Remove old unused memory objects
-	///////////////////////////////////////////////////////////
-	if(m_firstFreeCell == m_firstUsedCell)
-	{
-		m_actualSize -= m_memorySize[m_firstUsedCell];
-		delete m_memoryPointer[m_firstUsedCell];
+    // Remove old unused memory objects
+    ///////////////////////////////////////////////////////////
+    if(m_firstFreeCell == m_firstUsedCell)
+    {
+        m_actualSize -= m_memorySize[m_firstUsedCell];
+        delete m_memoryPointer[m_firstUsedCell];
         if(++m_firstUsedCell >= m_memorySize.size())
-		{
-			m_firstUsedCell = 0;
-		}
-	}
+        {
+            m_firstUsedCell = 0;
+        }
+    }
 
-	// Remove old unused memory objects if the total unused
-	//  memory is bigger than the specified parameters
-	///////////////////////////////////////////////////////////
+    // Remove old unused memory objects if the total unused
+    //  memory is bigger than the specified parameters
+    ///////////////////////////////////////////////////////////
     while(m_actualSize != 0 && m_actualSize > m_maxMemoryUsageSize)
-	{
-		m_actualSize -= m_memorySize[m_firstUsedCell];
-		delete m_memoryPointer[m_firstUsedCell];
-		if(++m_firstUsedCell >= IMEBRA_MEMORY_POOL_SLOTS)
-		{
-			m_firstUsedCell = 0;
-		}
-	}
+    {
+        m_actualSize -= m_memorySize[m_firstUsedCell];
+        delete m_memoryPointer[m_firstUsedCell];
+        if(++m_firstUsedCell >= IMEBRA_MEMORY_POOL_SLOTS)
+        {
+            m_firstUsedCell = 0;
+        }
+    }
 
     IMEBRA_FUNCTION_END();
 }
@@ -440,16 +420,16 @@ bool memoryPool::flush()
     IMEBRA_FUNCTION_START();
 
     bool bCleared(m_firstUsedCell != m_firstFreeCell);
-	while(m_firstUsedCell != m_firstFreeCell)
-	{
-		delete m_memoryPointer[m_firstUsedCell];
+    while(m_firstUsedCell != m_firstFreeCell)
+    {
+        delete m_memoryPointer[m_firstUsedCell];
 
-		m_actualSize -= m_memorySize[m_firstUsedCell];
+        m_actualSize -= m_memorySize[m_firstUsedCell];
         if(++m_firstUsedCell >= m_memorySize.size())
-		{
-			m_firstUsedCell = 0;
-		}
-	}
+        {
+            m_firstUsedCell = 0;
+        }
+    }
     return bCleared;
 
     IMEBRA_FUNCTION_END();
@@ -474,47 +454,47 @@ stringUint8* memoryPool::getMemory(size_t requestedSize)
         return new stringUint8(requestedSize, 0);
     }
 
-	// Look for an object to reuse
-	///////////////////////////////////////////////////////////
+    // Look for an object to reuse
+    ///////////////////////////////////////////////////////////
     for(size_t findCell = m_firstUsedCell; findCell != m_firstFreeCell;)
-	{
-		if(m_memorySize[findCell] != requestedSize)
-		{
+    {
+        if(m_memorySize[findCell] != requestedSize)
+        {
             if(++findCell >= m_memorySize.size())
-			{
-				findCell = 0;
-			}
-			continue;
-		}
+            {
+                findCell = 0;
+            }
+            continue;
+        }
 
-		// Memory found
-		///////////////////////////////////////////////////////////
+        // Memory found
+        ///////////////////////////////////////////////////////////
         std::unique_ptr<stringUint8> pMemory(m_memoryPointer[findCell]);
-		m_actualSize -= m_memorySize[findCell];
-		if(findCell == m_firstUsedCell)
-		{
-			if(++m_firstUsedCell >= IMEBRA_MEMORY_POOL_SLOTS)
-			{
-				m_firstUsedCell = 0;
-			}
+        m_actualSize -= m_memorySize[findCell];
+        if(findCell == m_firstUsedCell)
+        {
+            if(++m_firstUsedCell >= IMEBRA_MEMORY_POOL_SLOTS)
+            {
+                m_firstUsedCell = 0;
+            }
             return pMemory.release();
-		}
+        }
 
         size_t lastUsedCell = m_firstFreeCell == 0 ? (IMEBRA_MEMORY_POOL_SLOTS - 1) : (m_firstFreeCell - 1);
-		if(findCell == lastUsedCell)
-		{
-			m_firstFreeCell = lastUsedCell;
+        if(findCell == lastUsedCell)
+        {
+            m_firstFreeCell = lastUsedCell;
             return pMemory.release();
-		}
+        }
 
-		m_memorySize[findCell] = m_memorySize[m_firstUsedCell];
-		m_memoryPointer[findCell] = m_memoryPointer[m_firstUsedCell];
-		if(++m_firstUsedCell >= IMEBRA_MEMORY_POOL_SLOTS)
-		{
-			m_firstUsedCell = 0;
-		}
+        m_memorySize[findCell] = m_memorySize[m_firstUsedCell];
+        m_memoryPointer[findCell] = m_memoryPointer[m_firstUsedCell];
+        if(++m_firstUsedCell >= IMEBRA_MEMORY_POOL_SLOTS)
+        {
+            m_firstUsedCell = 0;
+        }
         return pMemory.release();
-	}
+    }
 
     return new stringUint8(requestedSize, 0);
 
@@ -524,14 +504,10 @@ stringUint8* memoryPool::getMemory(size_t requestedSize)
 
 memoryPoolGetter::memoryPoolGetter()
 {
-    IMEBRA_FUNCTION_START();
-
     m_oldNewHandler = std::set_new_handler(memoryPoolGetter::newHandler);
 #ifdef __APPLE__
     ::pthread_key_create(&m_key, &memoryPoolGetter::deleteMemoryPool);
 #endif
-
-    IMEBRA_FUNCTION_END();
 }
 
 memoryPoolGetter::~memoryPoolGetter()

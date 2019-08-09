@@ -112,11 +112,7 @@ void huffmanTable::reset()
 ///////////////////////////////////////////////////////////
 void huffmanTable::incValueFreq(const std::uint32_t value)
 {
-    IMEBRA_FUNCTION_START();
-
     ++(m_valuesFreq[value].m_freq);
-
-    IMEBRA_FUNCTION_END();
 }
 
 
@@ -202,11 +198,7 @@ std::uint32_t huffmanTable::getValuesPerLength(std::uint32_t length)
 
 std::uint32_t huffmanTable::getOrderedValue(size_t index)
 {
-    IMEBRA_FUNCTION_START();
-
     return m_orderedValues[index];
-
-    IMEBRA_FUNCTION_END();
 }
 
 

@@ -208,11 +208,7 @@ bool colorTransformsFactory::isMonochrome(const std::string& colorSpace)
 ///////////////////////////////////////////////////////////
 bool colorTransformsFactory::isSubsampledX(const std::string& colorSpace)
 {
-    IMEBRA_FUNCTION_START();
-
     return (colorSpace.find("_42") != colorSpace.npos);
-
-    IMEBRA_FUNCTION_END();
 }
 
 
@@ -228,11 +224,7 @@ bool colorTransformsFactory::isSubsampledX(const std::string& colorSpace)
 ///////////////////////////////////////////////////////////
 bool colorTransformsFactory::isSubsampledY(const std::string& colorSpace)
 {
-    IMEBRA_FUNCTION_START();
-
     return (colorSpace.find("_420")!=colorSpace.npos);
-
-    IMEBRA_FUNCTION_END();
 }
 
 
