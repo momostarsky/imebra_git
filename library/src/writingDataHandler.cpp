@@ -50,64 +50,111 @@ const std::shared_ptr<implementation::handlers::writingDataHandler>& getWritingD
 
 void WritingDataHandler::setSize(size_t elementsNumber)
 {
+    IMEBRA_FUNCTION_START();
+
     m_pDataHandler->setSize(elementsNumber);
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 size_t WritingDataHandler::getSize() const
 {
+    IMEBRA_FUNCTION_START();
+
     return m_pDataHandler->getSize();
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 tagVR_t WritingDataHandler::getDataType() const
 {
+    IMEBRA_FUNCTION_START();
+
     return m_pDataHandler->getDataType();
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 
 void WritingDataHandler::setDate(size_t index, const Date& date)
 {
+    IMEBRA_FUNCTION_START();
+
     m_pDataHandler->setDate((std::uint32_t)index, getDateImplementation(date));
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 void WritingDataHandler::setAge(size_t index, const Age& age)
 {
+    IMEBRA_FUNCTION_START();
+
     m_pDataHandler->setAge(index, getAgeImplementation(age));
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 void WritingDataHandler::setSignedLong(size_t index, std::int32_t value)
 {
+    IMEBRA_FUNCTION_START();
+
     m_pDataHandler->setSignedLong(index, value);
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 void WritingDataHandler::setUnsignedLong(size_t index, std::uint32_t value)
 {
+    IMEBRA_FUNCTION_START();
+
     m_pDataHandler->setUnsignedLong(index, value);
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 void WritingDataHandler::setDouble(size_t index, double value)
 {
+    IMEBRA_FUNCTION_START();
+
     m_pDataHandler->setDouble(index, value);
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 void WritingDataHandler::setString(size_t index, const std::string& value)
 {
+    IMEBRA_FUNCTION_START();
+
     m_pDataHandler->setString(index, value);
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 void WritingDataHandler::setUnicodeString(size_t index, const std::wstring& value)
 {
+    IMEBRA_FUNCTION_START();
+
     m_pDataHandler->setUnicodeString(index, value);
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 void WritingDataHandler::setPatientName(size_t index, const PatientName& patientName)
 {
+    IMEBRA_FUNCTION_START();
+
     m_pDataHandler->setPatientName(index, getPatientNameImplementation(patientName));
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 void WritingDataHandler::setUnicodePatientName(size_t index, const UnicodePatientName& patientName)
 {
-    m_pDataHandler->setUnicodePatientName(index, getUnicodePatientNameImplementation(patientName));
-}
+    IMEBRA_FUNCTION_START();
 
+    m_pDataHandler->setUnicodePatientName(index, getUnicodePatientNameImplementation(patientName));
+
+    IMEBRA_FUNCTION_END_LOG();
+}
 
 }

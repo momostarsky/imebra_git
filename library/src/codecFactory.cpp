@@ -6,13 +6,13 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
 /*! \file codecFactory.cpp
-	\brief Implementation of the class used to retrieve the codec able to
+    \brief Implementation of the class used to retrieve the codec able to
         handle the requested transfer syntax.
 
 */
@@ -36,7 +36,7 @@ const DataSet CodecFactory::load(StreamReader& reader, size_t maxSizeBufferLoad 
     std::shared_ptr<imebra::implementation::codecs::codecFactory> factory(imebra::implementation::codecs::codecFactory::getCodecFactory());
     return DataSet(factory->load(reader.m_pReader, (std::uint32_t)maxSizeBufferLoad));
 
-    IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 const DataSet CodecFactory::load(const std::wstring& fileName, size_t maxSizeBufferLoad)
@@ -48,7 +48,7 @@ const DataSet CodecFactory::load(const std::wstring& fileName, size_t maxSizeBuf
     StreamReader reader(file);
     return load(reader, maxSizeBufferLoad);
 
-    IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 const DataSet CodecFactory::load(const std::string& fileName, size_t maxSizeBufferLoad)
@@ -60,7 +60,7 @@ const DataSet CodecFactory::load(const std::string& fileName, size_t maxSizeBuff
     StreamReader reader(file);
     return load(reader, maxSizeBufferLoad);
 
-    IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 void CodecFactory::saveImage(
@@ -81,7 +81,7 @@ void CodecFactory::saveImage(
     std::shared_ptr<const implementation::codecs::imageCodec> pCodec = factory->getImageCodec(transferSyntax);
     pCodec->setImage(destStream.m_pWriter, getImageImplementation(sourceImage), transferSyntax, imageQuality, dataType, allocatedBits, bSubSampledX, bSubSampledY, bInterleaved, b2Complement);
 
-    IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 void CodecFactory::setMaximumImageSize(const std::uint32_t maximumWidth, const std::uint32_t maximumHeight)
@@ -91,7 +91,7 @@ void CodecFactory::setMaximumImageSize(const std::uint32_t maximumWidth, const s
     std::shared_ptr<imebra::implementation::codecs::codecFactory> factory(imebra::implementation::codecs::codecFactory::getCodecFactory());
     factory->setMaximumImageSize(maximumWidth, maximumHeight);
 
-    IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END_LOG();
 
 }
 
@@ -105,7 +105,7 @@ void CodecFactory::save(const DataSet& dataSet, StreamWriter& writer, codecType_
 
     pCodec->write(writer.m_pWriter, dataSet.m_pDataSet);
 
-    IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 void CodecFactory::save(const DataSet &dataSet, const std::wstring& fileName, codecType_t codecType)
@@ -117,7 +117,7 @@ void CodecFactory::save(const DataSet &dataSet, const std::wstring& fileName, co
     StreamWriter writer(file);
     CodecFactory::save(dataSet, writer, codecType);
 
-    IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 void CodecFactory::save(const DataSet &dataSet, const std::string& fileName, codecType_t codecType)
@@ -129,7 +129,7 @@ void CodecFactory::save(const DataSet &dataSet, const std::string& fileName, cod
     StreamWriter writer(file);
     CodecFactory::save(dataSet, writer, codecType);
 
-    IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 

@@ -253,7 +253,7 @@ tcpAddress::tcpAddress(const std::string& node, const std::string& service, pass
     ::memcpy(&(m_sockAddr[0]), address->ai_addr, address->ai_addrlen);
     freeaddrinfo(address);
 
-    IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 tcpAddress::tcpAddress(const sockaddr& address, socklen_t addressLength)

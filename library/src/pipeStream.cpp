@@ -21,6 +21,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "../include/imebra/baseStreamOutput.h"
 #include "../implementation/pipeImpl.h"
 #include "../implementation/baseStreamImpl.h"
+#include "../implementation/exceptionImpl.h"
 
 namespace imebra
 {
@@ -43,7 +44,11 @@ PipeStream& PipeStream::operator=(const PipeStream& source)
 
 void PipeStream::close(unsigned int timeoutMilliseconds)
 {
-     m_pStream->close(timeoutMilliseconds);
+    IMEBRA_FUNCTION_START();
+
+    m_pStream->close(timeoutMilliseconds);
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 const std::shared_ptr<implementation::pipeSequenceStream>& getPipeStreamImplementation(const PipeStream& stream)
@@ -53,12 +58,20 @@ const std::shared_ptr<implementation::pipeSequenceStream>& getPipeStreamImplemen
 
 BaseStreamInput PipeStream::getStreamInput()
 {
+    IMEBRA_FUNCTION_START();
+
     return BaseStreamInput(std::make_shared<implementation::pipeSequenceStreamInput>(m_pStream));
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 BaseStreamOutput PipeStream::getStreamOutput()
 {
+    IMEBRA_FUNCTION_START();
+
     return BaseStreamOutput(std::make_shared<implementation::pipeSequenceStreamOutput>(m_pStream));
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 }

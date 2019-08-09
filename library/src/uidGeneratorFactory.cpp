@@ -37,7 +37,7 @@ BaseUIDGenerator UIDGeneratorFactory::getUIDGenerator(const std::string& name)
 
     return BaseUIDGenerator(implementation::uidGenerators::uidGeneratorFactory::getUidGeneratorFactory().getUidGenerator(name));
 
-    IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 BaseUIDGenerator UIDGeneratorFactory::getDefaultUIDGenerator()
@@ -46,7 +46,7 @@ BaseUIDGenerator UIDGeneratorFactory::getDefaultUIDGenerator()
 
     return BaseUIDGenerator(implementation::uidGenerators::uidGeneratorFactory::getUidGeneratorFactory().getDefaultUidGenerator());
 
-    IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 }

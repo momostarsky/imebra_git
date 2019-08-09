@@ -45,12 +45,20 @@ const std::shared_ptr<imebra::implementation::tcpAddress>& getTCPAddressImplemen
 
 std::string TCPAddress::getNode() const
 {
+    IMEBRA_FUNCTION_START();
+
     return m_pAddress->getNode();
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 std::string TCPAddress::getService() const
 {
+    IMEBRA_FUNCTION_START();
+
     return m_pAddress->getService();
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 TCPAddress::~TCPAddress()

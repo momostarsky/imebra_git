@@ -13,6 +13,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #include "../include/imebra/mutableMemory.h"
 #include "../implementation/memoryImpl.h"
+#include "../implementation/exceptionImpl.h"
 
 namespace imebra
 {
@@ -54,39 +55,67 @@ MutableMemory::~MutableMemory()
 
 void MutableMemory::copyFrom(const Memory& sourceMemory)
 {
+    IMEBRA_FUNCTION_START();
+
     std::const_pointer_cast<implementation::memory>(getMemoryImplementation(*this))->copyFrom(getMemoryImplementation(sourceMemory));
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 void MutableMemory::clear()
 {
+    IMEBRA_FUNCTION_START();
+
     std::const_pointer_cast<implementation::memory>(getMemoryImplementation(*this))->clear();
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 void MutableMemory::resize(size_t newSize)
 {
+    IMEBRA_FUNCTION_START();
+
     std::const_pointer_cast<implementation::memory>(getMemoryImplementation(*this))->resize(newSize);
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 void MutableMemory::reserve(size_t reserveSize)
 {
+    IMEBRA_FUNCTION_START();
+
     std::const_pointer_cast<implementation::memory>(getMemoryImplementation(*this))->reserve(reserveSize);
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 char* MutableMemory::data(size_t* pDataSize) const
 {
+    IMEBRA_FUNCTION_START();
+
     std::shared_ptr<implementation::memory> pMemory = std::const_pointer_cast<implementation::memory>(getMemoryImplementation(*this));
     *pDataSize = pMemory->size();
     return (char*)pMemory->data();
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 void MutableMemory::assign(const char* source, size_t sourceSize)
 {
+    IMEBRA_FUNCTION_START();
+
     std::const_pointer_cast<implementation::memory>(getMemoryImplementation(*this))->assign((const std::uint8_t*)source, sourceSize);
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 void MutableMemory::assignRegion(const char* source, size_t sourceSize, size_t destinationOffset)
 {
+    IMEBRA_FUNCTION_START();
+
     std::const_pointer_cast<implementation::memory>(getMemoryImplementation(*this))->assignRegion((const std::uint8_t*)source, sourceSize, destinationOffset);
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 }

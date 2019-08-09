@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -21,6 +21,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "../include/imebra/tagId.h"
 #include "../implementation/dicomDictImpl.h"
 #include "../implementation/charsetConversionImpl.h"
+#include "../implementation/exceptionImpl.h"
 #include <memory>
 
 namespace imebra
@@ -28,31 +29,51 @@ namespace imebra
 
 std::wstring DicomDictionary::getUnicodeTagName(const TagId& id)
 {
+    IMEBRA_FUNCTION_START();
+
     return implementation::dicomDictionary::getDicomDictionary()->getTagName(id.getGroupId(), id.getTagId());
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 std::string DicomDictionary::getTagName(const TagId& id)
 {
+    IMEBRA_FUNCTION_START();
+
     std::wstring name = implementation::dicomDictionary::getDicomDictionary()->getTagName(id.getGroupId(), id.getTagId());
     implementation::charsetsList::tCharsetsList charsets;
     charsets.push_back("ISO 2022 IR 6");
     return implementation::dicomConversion::convertFromUnicode(name, &charsets);
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 tagVR_t DicomDictionary::getTagType(const TagId& id)
 {
+    IMEBRA_FUNCTION_START();
+
     return implementation::dicomDictionary::getDicomDictionary()->getTagType(id.getGroupId(), id.getTagId());
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 
 std::uint32_t DicomDictionary::getWordSize(tagVR_t dataType)
 {
+    IMEBRA_FUNCTION_START();
+
     return implementation::dicomDictionary::getDicomDictionary()->getWordSize(dataType);
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 std::uint32_t DicomDictionary::getMaxSize(tagVR_t dataType)
 {
+    IMEBRA_FUNCTION_START();
+
     return implementation::dicomDictionary::getDicomDictionary()->getMaxSize(dataType);
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 }

@@ -124,12 +124,20 @@ AssociationMessage& AssociationMessage::operator=(const AssociationMessage& sour
 
 std::string AssociationMessage::getAbstractSyntax() const
 {
+    IMEBRA_FUNCTION_START();
+
     return m_pMessage->getAbstractSyntax();
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 const DataSet AssociationMessage::getCommand() const
 {
+    IMEBRA_FUNCTION_START();
+
     return DataSet(m_pMessage->getCommandDataSet());
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 const DataSet AssociationMessage::getPayload() const
@@ -143,7 +151,7 @@ const DataSet AssociationMessage::getPayload() const
     }
     return DataSet(pDataSet);
 
-    IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 bool AssociationMessage::hasPayload() const
@@ -180,7 +188,11 @@ MutableAssociationMessage& MutableAssociationMessage::operator=(const MutableAss
 
 void MutableAssociationMessage::addDataSet(const DataSet& dataSet)
 {
+    IMEBRA_FUNCTION_START();
+
     getAssociationMessageImplementation(*this)->addDataset(getDataSetImplementation(dataSet));
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 
@@ -206,42 +218,74 @@ AssociationBase::~AssociationBase()
 
 const AssociationMessage AssociationBase::getCommand()
 {
+    IMEBRA_FUNCTION_START();
+
     return AssociationMessage(m_pAssociation->getCommand());
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 const AssociationMessage AssociationBase::getResponse(std::uint16_t messageId)
 {
+    IMEBRA_FUNCTION_START();
+
     return AssociationMessage(m_pAssociation->getResponse(messageId));
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 void AssociationBase::sendMessage(const AssociationMessage& messageDataSet)
 {
+    IMEBRA_FUNCTION_START();
+
     m_pAssociation->sendMessage(messageDataSet.m_pMessage);
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 void AssociationBase::release()
 {
+    IMEBRA_FUNCTION_START();
+
     m_pAssociation->release();
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 void AssociationBase::abort()
 {
+    IMEBRA_FUNCTION_START();
+
     m_pAssociation->abort(implementation::acsePDUAAbort::reason_t::serviceUser);
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 std::string AssociationBase::getThisAET() const
 {
+    IMEBRA_FUNCTION_START();
+
     return m_pAssociation->getThisAET();
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 std::string AssociationBase::getOtherAET() const
 {
+    IMEBRA_FUNCTION_START();
+
     return m_pAssociation->getOtherAET();
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 std::string AssociationBase::getTransferSyntax(const std::string &abstractSyntax) const
 {
+    IMEBRA_FUNCTION_START();
+
     return m_pAssociation->getPresentationContextTransferSyntax(abstractSyntax);
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 const std::shared_ptr<implementation::associationBase>& getAssociationBaseImplementation(const AssociationBase& associationBase)
