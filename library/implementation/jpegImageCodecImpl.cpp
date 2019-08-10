@@ -255,15 +255,11 @@ void tagDQT::readTag(streamReader& stream, jpegInformation* pInformation, std::u
 /////////////////////////////////////////////////////////////////
 bool jpegImageCodec::canHandleTransferSyntax(const std::string& transferSyntax) const
 {
-    IMEBRA_FUNCTION_START();
-
     return (
                 transferSyntax == "1.2.840.10008.1.2.4.50" ||  // baseline (8 bits lossy)
                 transferSyntax == "1.2.840.10008.1.2.4.51" ||  // extended (12 bits lossy)
                 transferSyntax == "1.2.840.10008.1.2.4.57" ||  // lossless NH
                 transferSyntax == "1.2.840.10008.1.2.4.70");   // lossless NH first order prediction
-
-    IMEBRA_FUNCTION_END();
 }
 
 
@@ -302,8 +298,6 @@ bool jpegImageCodec::encapsulated(const std::string& transferSyntax) const
 ///////////////////////////////////////////////////////////
 std::uint32_t jpegImageCodec::suggestAllocatedBits(const std::string& transferSyntax, std::uint32_t highBit) const
 {
-    IMEBRA_FUNCTION_START();
-
     if(transferSyntax == "1.2.840.10008.1.2.4.50")
     {
         return 8;
@@ -313,8 +307,6 @@ std::uint32_t jpegImageCodec::suggestAllocatedBits(const std::string& transferSy
         return 12;
     }
     return (highBit + 8) & 0xfffffff8;
-
-    IMEBRA_FUNCTION_END();
 }
 
 
@@ -1356,8 +1348,6 @@ inline void jpegImageCodec::writeBlock(streamWriter* pStream, jpeg::jpegInformat
 /////////////////////////////////////////////////////////////////
 void jpegImageCodec::FDCT(std::int32_t* pIOMatrix, float* pDescaleFactors) const
 {
-    IMEBRA_FUNCTION_START();
-
     // Temporary values
     /////////////////////////////////////////////////////////////////
     float tmp0, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7;
@@ -1495,8 +1485,6 @@ void jpegImageCodec::FDCT(std::int32_t* pIOMatrix, float* pDescaleFactors) const
     /////////////////////////////////////////////////////////////////
     for(int descale = 0; descale < 64; ++descale)
         pIOMatrix[descale]=(std::int32_t)(fdctTempMatrix[descale]*pDescaleFactors[descale]+.5f);
-
-    IMEBRA_FUNCTION_END();
 }
 
 
@@ -1514,8 +1502,6 @@ void jpegImageCodec::FDCT(std::int32_t* pIOMatrix, float* pDescaleFactors) const
 /////////////////////////////////////////////////////////////////
 void jpegImageCodec::IDCT(std::int32_t* pIOMatrix, long long* pScaleFactors) const
 {
-    IMEBRA_FUNCTION_START();
-
     const double multiplier((float)((long long)1 << JPEG_DECOMPRESSION_BITS_PRECISION));
     const long long multiplier_1_414213562f((long long)(multiplier * 1.414213562f + .5f));
     const long long multiplier_1_847759065f((long long)(multiplier * 1.847759065f + .5f));
@@ -1699,8 +1685,6 @@ void jpegImageCodec::IDCT(std::int32_t* pIOMatrix, long long* pScaleFactors) con
         *pMatrix = (std::int32_t)((tmp0 - tmp7 + zero_point_five_by_8)>>(JPEG_DECOMPRESSION_BITS_PRECISION + 3));
         pMatrix -= 55;
     }
-
-    IMEBRA_FUNCTION_END();
 }
 
 } // namespace codecs

@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -34,10 +34,10 @@ static const streamController::tByteOrdering m_platformByteOrder((*pBytePointer)
 //
 ///////////////////////////////////////////////////////////
 streamController::streamController(size_t virtualStart /* =0 */, size_t virtualLength /* =0 */):
-	m_bJpegTags(false),
+    m_bJpegTags(false),
         m_dataBuffer(size_t(IMEBRA_STREAM_CONTROLLER_MEMORY_SIZE), 0),
-		m_virtualStart(virtualStart),
-		m_virtualLength(virtualLength),
+        m_virtualStart(virtualStart),
+        m_virtualLength(virtualLength),
         m_dataBufferStreamPosition(0),
         m_dataBufferCurrent(0), m_dataBufferEnd(0)
 {
@@ -99,35 +99,33 @@ size_t streamController::getControlledStreamPosition()
 ///////////////////////////////////////////////////////////
 void streamController::adjustEndian(std::uint8_t* pBuffer, const size_t wordLength, const tByteOrdering endianType, const size_t words /* =1 */)
 {
-    IMEBRA_FUNCTION_START();
-
     if(endianType == m_platformByteOrder || wordLength<2L)
-	{
-		return;
-	}
+    {
+        return;
+    }
 
-	switch(wordLength)
-	{
-	case 2:
+    switch(wordLength)
+    {
+    case 2:
         {
             std::uint16_t* pWord((std::uint16_t*)pBuffer);
             for(size_t scanWords = words; scanWords != 0; --scanWords)
             {
                 *pWord = (std::uint16_t)(((*pWord & 0x00ff) << 8) | ((*pWord & 0xff00) >> 8));
                 ++pWord;
-			}
-		}
-		return;
-	case 4:
+            }
+        }
+        return;
+    case 4:
         {
             std::uint32_t* pDWord((std::uint32_t*)pBuffer);
             for(size_t scanWords = words; scanWords != 0; --scanWords)
             {
                 *pDWord = ((*pDWord & 0xff000000) >> 24) | ((*pDWord & 0x00ff0000) >> 8) | ((*pDWord & 0x0000ff00) << 8) | ((*pDWord & 0x000000ff) << 24);
                 ++pDWord;
-			}
-		}
-		return;
+            }
+        }
+        return;
     case 8:
         {
             std::uint64_t* pQWord((std::uint64_t*)pBuffer);
@@ -146,9 +144,7 @@ void streamController::adjustEndian(std::uint8_t* pBuffer, const size_t wordLeng
             }
         }
         return;
-	}
-
-    IMEBRA_FUNCTION_END();
+    }
 }
 
 std::uint16_t streamController::adjustEndian(std::uint16_t buffer, const tByteOrdering endianType)

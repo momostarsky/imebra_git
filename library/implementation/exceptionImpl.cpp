@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -31,19 +31,19 @@ namespace implementation
 ///////////////////////////////////////////////////////////
 std::string exceptionsManager::getMessage()
 {
-	tExceptionInfoList infoList;
-	exceptionsManager::getExceptionInfo(&infoList);
+    tExceptionInfoList infoList;
+    exceptionsManager::getExceptionInfo(&infoList);
 
     std::string message;
-	for(tExceptionInfoList::iterator scanInfo = infoList.begin(); 
-		scanInfo != infoList.end(); 
-		++scanInfo)
-	{
-		message += scanInfo->getMessage();
+    for(tExceptionInfoList::iterator scanInfo = infoList.begin();
+        scanInfo != infoList.end();
+        ++scanInfo)
+    {
+        message += scanInfo->getMessage();
         message += "\n\n";
-	}
+    }
 
-	return message;
+    return message;
 }
 
 
@@ -54,10 +54,10 @@ void exceptionsManager::getExceptionInfo(tExceptionInfoList* pList)
 {
     for(tExceptionInfoList::iterator scanInformation = m_information.begin();
         scanInformation != m_information.end();
-		++scanInformation)
-	{
-		pList->push_back(*scanInformation);
-	}
+        ++scanInformation)
+    {
+        pList->push_back(*scanInformation);
+    }
     m_information.clear();
 }
 
@@ -85,22 +85,22 @@ void exceptionsManager::addExceptionInfo(const exceptionInfo& info)
 // Construct the exceptionInfo object
 ///////////////////////////////////////////////////////////
 exceptionInfo::exceptionInfo(const std::string& functionName, const std::string& fileName, const long lineNumber, const std::string& exceptionType, const std::string& exceptionMessage):
-	m_functionName(functionName), 
-	m_fileName(fileName),
-	m_lineNumber(lineNumber),
-	m_exceptionType(exceptionType),
-	m_exceptionMessage(exceptionMessage)
+    m_functionName(functionName),
+    m_fileName(fileName),
+    m_lineNumber(lineNumber),
+    m_exceptionType(exceptionType),
+    m_exceptionMessage(exceptionMessage)
 {}
 
 ///////////////////////////////////////////////////////////
 // Copy constructor
 ///////////////////////////////////////////////////////////
 exceptionInfo::exceptionInfo(const exceptionInfo& right):
-			m_functionName(right.m_functionName), 
-			m_fileName(right.m_fileName),
-			m_lineNumber(right.m_lineNumber),
-			m_exceptionType(right.m_exceptionType),
-			m_exceptionMessage(right.m_exceptionMessage)
+            m_functionName(right.m_functionName),
+            m_fileName(right.m_fileName),
+            m_lineNumber(right.m_lineNumber),
+            m_exceptionType(right.m_exceptionType),
+            m_exceptionMessage(right.m_exceptionMessage)
 {}
 
 ///////////////////////////////////////////////////////////
@@ -109,24 +109,20 @@ exceptionInfo::exceptionInfo(const exceptionInfo& right):
 std::string exceptionInfo::getMessage()
 {
     std::ostringstream message;
-	message << "[" << m_functionName << "]" << "\n";
+    message << "[" << m_functionName << "]" << "\n";
     message << " file: " << m_fileName << "  line: " << m_lineNumber << "\n";
     message << " exception type: " << m_exceptionType << "\n";
     message << " exception message: " << m_exceptionMessage << "\n";
-	return message.str();
+    return message.str();
 }
 
 
 
 exceptionsManagerGetter::exceptionsManagerGetter()
 {
-    IMEBRA_FUNCTION_START();
-
 #ifdef __APPLE__
     ::pthread_key_create(&m_key, &exceptionsManagerGetter::deleteExceptionsManager);
 #endif
-
-    IMEBRA_FUNCTION_END();
 }
 
 exceptionsManagerGetter::~exceptionsManagerGetter()

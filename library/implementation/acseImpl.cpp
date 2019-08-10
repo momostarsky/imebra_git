@@ -398,8 +398,6 @@ acseItemPresentationContextBase::acseItemPresentationContextBase(std::uint8_t id
 
 const std::string& acseItemPresentationContextBase::getAbstractSyntax() const
 {
-    IMEBRA_FUNCTION_START();
-
     if(m_pAbstractSyntax.get() == 0)
     {
         static const std::string empty;
@@ -407,8 +405,6 @@ const std::string& acseItemPresentationContextBase::getAbstractSyntax() const
     }
 
     return m_pAbstractSyntax->getName();
-
-    IMEBRA_FUNCTION_END();
 }
 
 std::uint8_t acseItemPresentationContextBase::getId() const
@@ -609,43 +605,31 @@ acseItem::itemType_t acseItemUserInformation::getItemType() const
 
 std::uint32_t acseItemUserInformation::getMaximumPDULength() const
 {
-    IMEBRA_FUNCTION_START();
-
     if(m_maximumLength.get() == 0)
     {
         return 0;
     }
     return m_maximumLength->getMaxLength();
-
-    IMEBRA_FUNCTION_END();
 }
 
 
 std::uint16_t acseItemUserInformation::getMaxOperationsInvoked() const
 {
-    IMEBRA_FUNCTION_START();
-
     if(m_asyncOperationsWindow.get() == 0)
     {
         return 1;
     }
     return m_asyncOperationsWindow->getMaxOperationsInvoked();
-
-    IMEBRA_FUNCTION_END();
 }
 
 
 std::uint16_t acseItemUserInformation::getMaxOperationsPerformed() const
 {
-    IMEBRA_FUNCTION_START();
-
     if(m_asyncOperationsWindow.get() == 0)
     {
         return 1;
     }
     return m_asyncOperationsWindow->getMaxOperationsPerformed();
-
-    IMEBRA_FUNCTION_END();
 }
 
 

@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -125,11 +125,7 @@ image::~image()
 
 void image::setPalette(std::shared_ptr<palette> imagePalette)
 {
-    IMEBRA_FUNCTION_START();
-
     m_palette = imagePalette;
-
-    IMEBRA_FUNCTION_END();
 }
 
 
@@ -162,7 +158,7 @@ std::shared_ptr<handlers::readingDataHandlerNumericBase> image::getReadingDataHa
 
     return std::dynamic_pointer_cast<handlers::readingDataHandlerNumericBase>(m_buffer->getReadingDataHandler(m_bufferDataType));
 
-	IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 std::shared_ptr<handlers::writingDataHandlerNumericBase> image::getWritingDataHandler()
@@ -196,7 +192,7 @@ std::shared_ptr<handlers::writingDataHandlerNumericBase> image::getWritingDataHa
 ///////////////////////////////////////////////////////////
 bitDepth_t image::getDepth() const
 {
-	return m_imageDepth;
+    return m_imageDepth;
 }
 
 
@@ -219,12 +215,12 @@ bool image::isSigned() const
 ///////////////////////////////////////////////////////////
 std::uint32_t image::getHighBit() const
 {
-	return m_highBit;
+    return m_highBit;
 }
 
 std::shared_ptr<palette> image::getPalette() const
 {
-	return m_palette;
+    return m_palette;
 }
 
 
@@ -239,7 +235,7 @@ std::shared_ptr<palette> image::getPalette() const
 ///////////////////////////////////////////////////////////
 std::string image::getColorSpace() const
 {
-	return m_colorSpace;
+    return m_colorSpace;
 }
 
 
@@ -254,7 +250,7 @@ std::string image::getColorSpace() const
 ///////////////////////////////////////////////////////////
 std::uint32_t image::getChannelsNumber() const
 {
-	return m_channelsNumber;
+    return m_channelsNumber;
 }
 
 
@@ -269,19 +265,15 @@ std::uint32_t image::getChannelsNumber() const
 ///////////////////////////////////////////////////////////
 void image::getSize(std::uint32_t* pWidth, std::uint32_t* pHeight) const
 {
-    IMEBRA_FUNCTION_START();
-
     if(pWidth)
     {
         *pWidth = m_width;
     }
 
-	if(pHeight)
+    if(pHeight)
     {
         *pHeight = m_height;
     }
-
-    IMEBRA_FUNCTION_END();
 }
 
 
@@ -296,19 +288,15 @@ void image::getSize(std::uint32_t* pWidth, std::uint32_t* pHeight) const
 ///////////////////////////////////////////////////////////
 void image::getSizeMm(double* pSizeMmX, double* pSizeMmY) const
 {
-    IMEBRA_FUNCTION_START();
-
-	if(pSizeMmX)
+    if(pSizeMmX)
     {
         *pSizeMmX = m_sizeMmX;
     }
 
-	if(pSizeMmY)
+    if(pSizeMmY)
     {
         *pSizeMmY = m_sizeMmY;
     }
-
-	IMEBRA_FUNCTION_END();
 }
 
 
@@ -323,12 +311,8 @@ void image::getSizeMm(double* pSizeMmX, double* pSizeMmY) const
 ///////////////////////////////////////////////////////////
 void image::setSizeMm(const double sizeMmX, const double sizeMmY)
 {
-    IMEBRA_FUNCTION_START();
-
     m_sizeMmX = sizeMmX;
     m_sizeMmY = sizeMmY;
-
-	IMEBRA_FUNCTION_END();
 }
 
 } // namespace implementation
