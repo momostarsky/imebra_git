@@ -382,7 +382,8 @@ public:
     /// \brief Returns the transfer syntax negotiated for a specific
     ///        abstract syntax.
     ///
-    /// \deprecated Use getTransferSyntaxes instead.
+    /// This method has been deprecated: use getTransferSyntaxes()
+    /// instead.
     ///
     /// Throws:
     /// - AcseNoTransferSyntaxError if no transfer syntax
