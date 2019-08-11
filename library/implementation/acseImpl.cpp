@@ -1768,17 +1768,25 @@ void associationBase::sendMessage(std::shared_ptr<const associationMessage> mess
 {
     IMEBRA_FUNCTION_START();
 
+    // Find the payload's transfer syntax
+    std::string transferSyntax;
+    const std::shared_ptr<const dataSet> pPayload(message->getPayloadDataSetNoThrow());
+    if(pPayload != nullptr)
+    {
+        transferSyntax = pPayload->getString(0x2, 0, 0x10, 0, 0, "");
+    }
+
     // Find the transfer syntax negotiated for the requested
     // presentation context
     ///////////////////////////////////////////////////////////
-    std::string transferSyntax;
     std::uint8_t presentationContextId(0);
     std::shared_ptr<const presentationContext> pPresentationContext;
     for(presentationContextsIds_t::const_iterator scanPresentationContexts(m_presentationContextsIds.begin()), endPresentationContexts(m_presentationContextsIds.end());
         scanPresentationContexts != endPresentationContexts;
         ++scanPresentationContexts)
     {
-        if(message->getAbstractSyntax() == scanPresentationContexts->second.first->m_abstractSyntax)
+        if(message->getAbstractSyntax() == scanPresentationContexts->second.first->m_abstractSyntax &&
+                (transferSyntax.empty() || transferSyntax == scanPresentationContexts->second.second))
         {
             transferSyntax = scanPresentationContexts->second.second;
             presentationContextId = scanPresentationContexts->first;
@@ -2221,6 +2229,42 @@ std::string associationBase::getPresentationContextTransferSyntax(const std::str
     }
 
     IMEBRA_THROW(AcsePresentationContextNotRequestedError, "The abstract syntax " << abstractSyntax << " was not negotiated");
+
+    IMEBRA_FUNCTION_END();
+}
+
+std::vector<std::string> associationBase::getPresentationContextTransferSyntaxes(const std::string& abstractSyntax) const
+{
+    IMEBRA_FUNCTION_START();
+
+    std::vector<std::string> transferSyntaxes;
+
+    bool bAbstractSyntaxFound(false);
+    for(const presentationContextsIds_t::value_type& scanContexts: m_presentationContextsIds)
+    {
+        if(scanContexts.second.first->m_abstractSyntax == abstractSyntax)
+        {
+            bAbstractSyntaxFound = true;
+            if(!scanContexts.second.second.empty())
+            {
+                transferSyntaxes.push_back(scanContexts.second.second);
+            }
+        }
+    }
+
+    if(!transferSyntaxes.empty())
+    {
+        return transferSyntaxes;
+    }
+
+    if(bAbstractSyntaxFound)
+    {
+        IMEBRA_THROW(AcseNoTransferSyntaxError, "None of the proposed transfer syntax was accepted during the negotiation for the abstract syntax " << abstractSyntax);
+    }
+    else
+    {
+        IMEBRA_THROW(AcsePresentationContextNotRequestedError, "The abstract syntax " << abstractSyntax << " was not negotiated");
+    }
 
     IMEBRA_FUNCTION_END();
 }

@@ -161,6 +161,10 @@ std::string AssociationBase::getTransferSyntax(const std::string &abstractSyntax
     return m_pAssociation->getPresentationContextTransferSyntax(abstractSyntax);
 }
 
+std::vector<std::string> AssociationBase::getTransferSyntaxes(const std::string& abstractSyntax) const
+{
+    return m_pAssociation->getPresentationContextTransferSyntaxes(abstractSyntax);
+}
 
 AssociationSCU::AssociationSCU(
         const std::string& thisAET,
