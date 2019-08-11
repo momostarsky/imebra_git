@@ -328,6 +328,11 @@ TEST(acseTest, negotiationPartialMatchTransferSyntaxes)
 }
 
 
+/**
+ * @brief Test that the SCP can accept all the transfer syntax even
+ *        if the SCU spread them on different presentation contexts
+ *        with the same abstract syntax.
+ */
 TEST(acseTest, negotiationPartialMatchSameAbstractSyntax)
 {
     Pipe toSCU(1024), toSCP(1024);
