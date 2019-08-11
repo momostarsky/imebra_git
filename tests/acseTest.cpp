@@ -330,6 +330,97 @@ TEST(acseTest, negotiationPartialMatchTransferSyntaxes)
 }
 
 
+TEST(acseTest, negotiationPartialMatchSameAbstractSyntax)
+{
+    Pipe toSCU(1024), toSCP(1024);
+
+    StreamReader readSCU(toSCU);
+    StreamWriter writeSCU(toSCP);
+
+    StreamReader readSCP(toSCP);
+    StreamWriter writeSCP(toSCU);
+
+    PresentationContext scuContext0("1.2.840.10008.1.1");
+    scuContext0.addTransferSyntax("1.2.840.10008.1.2"); // implicit VR little endian
+    scuContext0.addTransferSyntax("1.2.840.10008.1.2.1"); // explicit VR little endian
+
+    PresentationContext scuContext1("1.2.840.10008.1.1");
+    scuContext1.addTransferSyntax("1.2.840.10008.1.2.4.50"); // jpeg baseline
+
+    PresentationContext scuContext2("1.2.840.10008.1.1.1.1.1.1.1.1"); // This will be rejected
+    scuContext2.addTransferSyntax("1.2.840.10008.1.2"); // implicit VR little endian
+    scuContext2.addTransferSyntax("1.2.840.10008.1.2.1"); // explicit VR little endian
+
+    PresentationContexts scuPresentationContexts;
+    scuPresentationContexts.addPresentationContext(scuContext0);
+    scuPresentationContexts.addPresentationContext(scuContext1);
+    scuPresentationContexts.addPresentationContext(scuContext2);
+
+    PresentationContext scpContext("1.2.840.10008.1.1");
+    scpContext.addTransferSyntax("1.2.840.10008.1.2.1"); // explicit VR little endian
+    scpContext.addTransferSyntax("1.2.840.10008.1.2.4.50"); // jpeg baseline
+
+    PresentationContexts scpPresentationContexts;
+    scpPresentationContexts.addPresentationContext(scpContext);
+
+    const std::string scpName("SCP");
+
+    std::thread scp(imebra::tests::scpThread, std::ref(scpName), std::ref(scpPresentationContexts), std::ref(readSCP), std::ref(writeSCP));
+
+    AssociationSCU scu("SCU", scpName, 1, 1, scuPresentationContexts, readSCU, writeSCU, 0);
+
+    std::vector<std::string> acceptedTransferSyntaxes(scu.getTransferSyntaxes("1.2.840.10008.1.1"));
+    EXPECT_EQ(2u, acceptedTransferSyntaxes.size());
+
+    EXPECT_EQ("1.2.840.10008.1.2.1", scu.getTransferSyntax("1.2.840.10008.1.1"));
+    EXPECT_THROW(scu.getTransferSyntax("1.2.840.10008.1.1.1.1.1.1.1.1"), AcseNoTransferSyntaxError);
+    EXPECT_THROW(scu.getTransferSyntax("1"), AcsePresentationContextNotRequestedError);
+
+    {
+        AssociationMessage command("1.2.840.10008.1.1");
+        DataSet dataset0;
+        dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
+        dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
+        dataset0.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), "1.2.3.4");
+        dataset0.setUnsignedLong(TagId(tagId_t::CommandDataSetType_0000_0800), 0x101);
+
+        command.addDataSet(dataset0);
+        scu.sendMessage(command);
+
+        std::unique_ptr<AssociationMessage> pResponse(scu.getResponse(1));
+        std::unique_ptr<DataSet> responseDataSet(pResponse->getCommand());
+        EXPECT_EQ("1.2.840.10008.1.1", pResponse->getAbstractSyntax());
+        EXPECT_EQ("1.2.3.4", responseDataSet->getString(TagId(tagId_t::StudyInstanceUID_0020_000D), 0));
+        EXPECT_EQ("1.2.3.4.5", responseDataSet->getString(TagId(tagId_t::SeriesInstanceUID_0020_000E), 0));
+        EXPECT_EQ("1.2.840.10008.1.2.1",responseDataSet->getString(TagId(tagId_t::TransferSyntaxUID_0002_0010), 0));
+    }
+
+    {
+        AssociationMessage command("1.2.840.10008.1.1");
+        DataSet dataset0("1.2.840.10008.1.2.4.50");
+        dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
+        dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
+        dataset0.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), "1.2.3.4");
+        dataset0.setUnsignedLong(TagId(tagId_t::CommandDataSetType_0000_0800), 0x101);
+
+        command.addDataSet(dataset0);
+        scu.sendMessage(command);
+
+        std::unique_ptr<AssociationMessage> pResponse(scu.getResponse(1));
+        std::unique_ptr<DataSet> responseDataSet(pResponse->getCommand());
+        EXPECT_EQ("1.2.840.10008.1.1", pResponse->getAbstractSyntax());
+        EXPECT_EQ("1.2.3.4", responseDataSet->getString(TagId(tagId_t::StudyInstanceUID_0020_000D), 0));
+        EXPECT_EQ("1.2.3.4.5", responseDataSet->getString(TagId(tagId_t::SeriesInstanceUID_0020_000E), 0));
+        EXPECT_EQ("1.2.840.10008.1.2.1",responseDataSet->getString(TagId(tagId_t::TransferSyntaxUID_0002_0010), 0));
+    }
+
+    scu.release();
+
+    scp.join();
+}
+
+
+
 TEST(acseTest, sendPayload)
 {
     PipeStream toSCU(1024), toSCP(1024);
