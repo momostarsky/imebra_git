@@ -24,6 +24,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <string>
 #include <memory>
 #include <list>
+#include <vector>
 #include <set>
 #include <atomic>
 #include <mutex>
@@ -1229,6 +1230,8 @@ public:
     std::string getOtherAET() const;
 
     std::string getPresentationContextTransferSyntax(const std::string& abstractSyntax) const;
+
+    std::vector<std::string> getPresentationContextTransferSyntaxes(const std::string& abstractSyntax) const;
 
     void getMessagesThread();
 
