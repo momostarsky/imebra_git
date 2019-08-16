@@ -1840,18 +1840,14 @@ void associationBase::sendMessage(std::shared_ptr<const associationMessage> mess
             const bool bResponse( (pDataSet->getUnsignedLong(0x0, 0, 0x100, 0, 0, 0) & 0x00008000) != 0);
             if(m_role == role_t::scu)
             {
-                if(
-                        (bResponse && !pPresentationContext->m_bRequestorIsSCP) ||
-                        (!bResponse && !pPresentationContext->m_bRequestorIsSCU) )
+                if(!bResponse && !pPresentationContext->m_bRequestorIsSCU)
                 {
                     IMEBRA_THROW(AcseWrongRoleError, "Wrong role for the selected presentation context");
                 }
             }
             else
             {
-                if(
-                        (!bResponse && !pPresentationContext->m_bRequestorIsSCP) ||
-                        (bResponse && !pPresentationContext->m_bRequestorIsSCU) )
+                if(!bResponse && !pPresentationContext->m_bRequestorIsSCP)
                 {
                     IMEBRA_THROW(AcseWrongRoleError, "Wrong role for the selected presentation context");
                 }
@@ -2405,6 +2401,8 @@ associationSCU::associationSCU(
 
     acsePDUAssociateRQ::presentationContexts_t contextsPDUs;
     acseItemUserInformation::scpScuSelectionList_t scpScuRoles;
+    typedef std::map<std::string, std::shared_ptr<acseItemSCPSCURoleSelection> > scpScuRolesMap_t;
+    scpScuRolesMap_t scpScuRolesMap;
 
     // Assign an ID to the presentation contexts
     // (ID starts from 1, only odd numbers)
@@ -2420,13 +2418,29 @@ associationSCU::associationSCU(
         // If the role is not the default one (only SCU) then
         // send also a SCP/SCU role selection item
         ///////////////////////////////////////////////////////////
-        if(!context->m_bRequestorIsSCU || context->m_bRequestorIsSCP)
+        scpScuRolesMap_t::iterator findScpScuRole = scpScuRolesMap.find(context->m_abstractSyntax);
+        if(findScpScuRole == scpScuRolesMap.end())
         {
             std::shared_ptr<acseItemSCPSCURoleSelection> role(std::make_shared<acseItemSCPSCURoleSelection>(
                                                                   context->m_abstractSyntax,
                                                                   context->m_bRequestorIsSCU,
                                                                   context->m_bRequestorIsSCP));
-            scpScuRoles.push_back(role);
+            scpScuRolesMap[context->m_abstractSyntax] = role;
+        }
+        else
+        {
+            std::shared_ptr<acseItemSCPSCURoleSelection> role(std::make_shared<acseItemSCPSCURoleSelection>(
+                                                                  context->m_abstractSyntax,
+                                                                  findScpScuRole->second->getSCU() || context->m_bRequestorIsSCU,
+                                                                  findScpScuRole->second->getSCP() || context->m_bRequestorIsSCP));
+            findScpScuRole->second = role;
+        }
+    }
+    for(const auto& requestedRole: scpScuRolesMap)
+    {
+        if(!requestedRole.second->getSCU() || requestedRole.second->getSCP())
+        {
+            scpScuRoles.push_back(requestedRole.second);
         }
     }
 
@@ -2506,7 +2520,7 @@ associationSCU::associationSCU(
             // Check supported transfer syntaxes
             ///////////////////////////////////////////////////////////
             acseItemPresentationContextBase::transferSyntaxes_t syntaxes(context->getTransferSyntaxes());
-            if(syntaxes.size() == 1)
+            if(syntaxes.size() != 0)
             {
                 if(std::find(
                             findContext->second.first->m_proposedTransferSyntaxes.begin(),
@@ -2516,18 +2530,15 @@ associationSCU::associationSCU(
                     findContext->second.second = syntaxes.front();
 
                     // Check the scp/scu role
-                    if(!findContext->second.first->m_bRequestorIsSCU || findContext->second.first->m_bRequestorIsSCP)
+                    scpScuRolesMap_t::const_iterator findRole(acceptedScpScuRoles.find(findContext->second.first->m_abstractSyntax));
+                    if(findRole == acceptedScpScuRoles.end())
                     {
-                        scpScuRolesMap_t::const_iterator findRole(acceptedScpScuRoles.find(findContext->second.first->m_abstractSyntax));
-                        if(findRole == acceptedScpScuRoles.end())
-                        {
-                            findContext->second.first->m_bRequestorIsSCP = false;
-                        }
-                        else
-                        {
-                            findContext->second.first->m_bRequestorIsSCU &= findRole->second->getSCU();
-                            findContext->second.first->m_bRequestorIsSCP &= findRole->second->getSCP();
-                        }
+                        findContext->second.first->m_bRequestorIsSCP = false;
+                    }
+                    else
+                    {
+                        findContext->second.first->m_bRequestorIsSCU &= findRole->second->getSCU();
+                        findContext->second.first->m_bRequestorIsSCP &= findRole->second->getSCP();
                     }
                 }
                 else
@@ -2719,7 +2730,7 @@ associationSCP::associationSCP(
                         m_presentationContextsIds[id].second = scpTransferSyntax;
 
                         scpScuRolesMap_t::const_iterator findRole(requestedScpScuRoles.find(pPresentationContext->m_abstractSyntax));
-                        if(findRole != requestedScpScuRoles.end() && (!findRole->second->getSCU()  || findRole->second->getSCP()) )
+                        if(findRole != requestedScpScuRoles.end())
                         {
                             pPresentationContext->m_bRequestorIsSCU = pFindContext->m_bRequestorIsSCU && findRole->second->getSCU();
                             pPresentationContext->m_bRequestorIsSCP = pFindContext->m_bRequestorIsSCP && findRole->second->getSCP();
@@ -2776,7 +2787,10 @@ associationSCP::associationSCP(
     acseItemUserInformation::scpScuSelectionList_t scpScuRolesList;
     for(const auto& scpScuRole: scpScuRoles)
     {
-        scpScuRolesList.push_back(scpScuRole.second);
+        if(!scpScuRole.second->getSCU() || scpScuRole.second->getSCP())
+        {
+            scpScuRolesList.push_back(scpScuRole.second);
+        }
     }
     std::shared_ptr<acseItemUserInformation> pUserInformationAC(std::make_shared<acseItemUserInformation>(
                                                                     m_maxPDULength,
