@@ -1388,7 +1388,7 @@ TEST(dimseTest, storeSCUInteroperabilityTest)
     pid_t pID = fork();
     if (pID == 0)                // child
     {
-        execlp("storescp", "storescp", "-od", dirName.c_str(), "30003", "-ll", "trace", 0);
+        execlp("storescp", "storescp", "-v", "+v", "-d", "-od", dirName.c_str(), "30003", 0);
     }
     else if (pID < 0)            // failed to fork
     {
@@ -1488,7 +1488,7 @@ void storeScuThread(std::string transferSyntax, std::string sopClassUid, std::st
     dataSet.setString(TagId(tagId_t::PatientName_0010_0010), "Test^Patient");
     CodecFactory::save(dataSet, fileName, codecType_t::dicom);
 
-    std::string command("storescu -v -aet scu -aec SCP 127.0.0.1 30004 ");
+    std::string command("storescu -v +v -d -aet scu -aec SCP 127.0.0.1 30004 ");
     command += fileName;
 
     system(command.c_str());
