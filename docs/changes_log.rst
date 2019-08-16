@@ -7,6 +7,7 @@ Version |release| (this version)
 --------------------------------
 
 - Fixed bug #190 (Visual Studio emits "unreachable code" warnings) as per SOP :ref:`FIXBUG_2`
+- Fixed bug #294 (When more than one presentation contexts have the same abstract syntax then Imebra always accepts only one transfer syntax) as per SOP :ref:`FIXBUG_2`
 
 Version 4.5.6.1
 ---------------

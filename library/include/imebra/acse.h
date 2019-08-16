@@ -316,6 +316,9 @@ public:
     /// \brief Returns the transfer syntax negotiated for a specific
     ///        abstract syntax.
     ///
+    /// This method has been deprecated: use getTransferSyntaxes()
+    /// instead.
+    ///
     /// Throws:
     /// - AcseNoTransferSyntaxError if no transfer syntax
     ///   is available for the requested abstract syntax or
@@ -329,6 +332,26 @@ public:
     ///
     //////////////////////////////////////////////////////////////////
     std::string getTransferSyntax(const std::string& abstractSyntax) const;
+
+    ///
+    /// \brief Returns the transfer syntaxes negotiated for a
+    ///        specific abstract syntax.
+    ///
+    /// Throws:
+    /// - AcseNoTransferSyntaxError if no transfer syntax
+    ///   is available for the requested abstract syntax or
+    /// - AcsePresentationContextNotRequestedError if the abstract
+    ///   syntax was not negotiated at all.
+    ///
+    /// \param abstractSyntax the abstract syntax for which the
+    ///                       transfer syntax is requested
+    /// \return the negotiated transfer syntaxes for the specified
+    ///         abstract syntax
+    ///
+    //////////////////////////////////////////////////////////////////
+    std::vector<std::string> getTransferSyntaxes(const std::string& abstractSyntax) const;
+
+
 
 #ifndef SWIG
 protected:
@@ -438,7 +461,13 @@ public:
     ///                             intend to invoke when acting as a SCU
     /// \param performedOperations  maximum number of parallel operations we can
     ///                             perform when acting as a SCP
-    /// \param presentationContexts list of accepted presentation contexts
+    /// \param presentationContexts list of accepted presentation contexts.
+    ///                             If several transfer syntaxes are associated
+    ///                             to an abstract syntax in a single presentation
+    ///                             context then the SCP will accept each transfer
+    ///                             syntax even when the SCU spreads them on
+    ///                             different presentation contexts
+    ///                             (for the same abstract syntax)
     /// \param pInput               input stream from which the SCP receives
     ///                             data. When using a TCPStream the same object
     ///                             can act as both input and output

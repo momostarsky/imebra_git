@@ -1768,17 +1768,25 @@ void associationBase::sendMessage(std::shared_ptr<const associationMessage> mess
 {
     IMEBRA_FUNCTION_START();
 
+    // Find the payload's transfer syntax
+    std::string transferSyntax;
+    const std::shared_ptr<const dataSet> pPayload(message->getPayloadDataSetNoThrow());
+    if(pPayload != nullptr)
+    {
+        transferSyntax = pPayload->getString(0x2, 0, 0x10, 0, 0, "");
+    }
+
     // Find the transfer syntax negotiated for the requested
     // presentation context
     ///////////////////////////////////////////////////////////
-    std::string transferSyntax;
     std::uint8_t presentationContextId(0);
     std::shared_ptr<const presentationContext> pPresentationContext;
     for(presentationContextsIds_t::const_iterator scanPresentationContexts(m_presentationContextsIds.begin()), endPresentationContexts(m_presentationContextsIds.end());
         scanPresentationContexts != endPresentationContexts;
         ++scanPresentationContexts)
     {
-        if(message->getAbstractSyntax() == scanPresentationContexts->second.first->m_abstractSyntax)
+        if(message->getAbstractSyntax() == scanPresentationContexts->second.first->m_abstractSyntax &&
+                (transferSyntax.empty() || transferSyntax == scanPresentationContexts->second.second))
         {
             transferSyntax = scanPresentationContexts->second.second;
             presentationContextId = scanPresentationContexts->first;
@@ -1832,18 +1840,14 @@ void associationBase::sendMessage(std::shared_ptr<const associationMessage> mess
             const bool bResponse( (pDataSet->getUnsignedLong(0x0, 0, 0x100, 0, 0, 0) & 0x00008000) != 0);
             if(m_role == role_t::scu)
             {
-                if(
-                        (bResponse && !pPresentationContext->m_bRequestorIsSCP) ||
-                        (!bResponse && !pPresentationContext->m_bRequestorIsSCU) )
+                if(!bResponse && !pPresentationContext->m_bRequestorIsSCU)
                 {
                     IMEBRA_THROW(AcseWrongRoleError, "Wrong role for the selected presentation context");
                 }
             }
             else
             {
-                if(
-                        (!bResponse && !pPresentationContext->m_bRequestorIsSCP) ||
-                        (bResponse && !pPresentationContext->m_bRequestorIsSCU) )
+                if(!bResponse && !pPresentationContext->m_bRequestorIsSCP)
                 {
                     IMEBRA_THROW(AcseWrongRoleError, "Wrong role for the selected presentation context");
                 }
@@ -2225,6 +2229,42 @@ std::string associationBase::getPresentationContextTransferSyntax(const std::str
     IMEBRA_FUNCTION_END();
 }
 
+std::vector<std::string> associationBase::getPresentationContextTransferSyntaxes(const std::string& abstractSyntax) const
+{
+    IMEBRA_FUNCTION_START();
+
+    std::vector<std::string> transferSyntaxes;
+
+    bool bAbstractSyntaxFound(false);
+    for(const presentationContextsIds_t::value_type& scanContexts: m_presentationContextsIds)
+    {
+        if(scanContexts.second.first->m_abstractSyntax == abstractSyntax)
+        {
+            bAbstractSyntaxFound = true;
+            if(!scanContexts.second.second.empty())
+            {
+                transferSyntaxes.push_back(scanContexts.second.second);
+            }
+        }
+    }
+
+    if(!transferSyntaxes.empty())
+    {
+        return transferSyntaxes;
+    }
+
+    if(bAbstractSyntaxFound)
+    {
+        IMEBRA_THROW(AcseNoTransferSyntaxError, "None of the proposed transfer syntax was accepted during the negotiation for the abstract syntax " << abstractSyntax);
+    }
+    else
+    {
+        IMEBRA_THROW(AcsePresentationContextNotRequestedError, "The abstract syntax " << abstractSyntax << " was not negotiated");
+    }
+
+    IMEBRA_FUNCTION_END();
+}
+
 
 void associationBase::getMessagesThread()
 {
@@ -2361,6 +2401,8 @@ associationSCU::associationSCU(
 
     acsePDUAssociateRQ::presentationContexts_t contextsPDUs;
     acseItemUserInformation::scpScuSelectionList_t scpScuRoles;
+    typedef std::map<std::string, std::shared_ptr<acseItemSCPSCURoleSelection> > scpScuRolesMap_t;
+    scpScuRolesMap_t scpScuRolesMap;
 
     // Assign an ID to the presentation contexts
     // (ID starts from 1, only odd numbers)
@@ -2376,13 +2418,29 @@ associationSCU::associationSCU(
         // If the role is not the default one (only SCU) then
         // send also a SCP/SCU role selection item
         ///////////////////////////////////////////////////////////
-        if(!context->m_bRequestorIsSCU || context->m_bRequestorIsSCP)
+        scpScuRolesMap_t::iterator findScpScuRole = scpScuRolesMap.find(context->m_abstractSyntax);
+        if(findScpScuRole == scpScuRolesMap.end())
         {
             std::shared_ptr<acseItemSCPSCURoleSelection> role(std::make_shared<acseItemSCPSCURoleSelection>(
                                                                   context->m_abstractSyntax,
                                                                   context->m_bRequestorIsSCU,
                                                                   context->m_bRequestorIsSCP));
-            scpScuRoles.push_back(role);
+            scpScuRolesMap[context->m_abstractSyntax] = role;
+        }
+        else
+        {
+            std::shared_ptr<acseItemSCPSCURoleSelection> role(std::make_shared<acseItemSCPSCURoleSelection>(
+                                                                  context->m_abstractSyntax,
+                                                                  findScpScuRole->second->getSCU() || context->m_bRequestorIsSCU,
+                                                                  findScpScuRole->second->getSCP() || context->m_bRequestorIsSCP));
+            findScpScuRole->second = role;
+        }
+    }
+    for(const auto& requestedRole: scpScuRolesMap)
+    {
+        if(!requestedRole.second->getSCU() || requestedRole.second->getSCP())
+        {
+            scpScuRoles.push_back(requestedRole.second);
         }
     }
 
@@ -2462,7 +2520,7 @@ associationSCU::associationSCU(
             // Check supported transfer syntaxes
             ///////////////////////////////////////////////////////////
             acseItemPresentationContextBase::transferSyntaxes_t syntaxes(context->getTransferSyntaxes());
-            if(syntaxes.size() == 1)
+            if(syntaxes.size() != 0)
             {
                 if(std::find(
                             findContext->second.first->m_proposedTransferSyntaxes.begin(),
@@ -2472,18 +2530,15 @@ associationSCU::associationSCU(
                     findContext->second.second = syntaxes.front();
 
                     // Check the scp/scu role
-                    if(!findContext->second.first->m_bRequestorIsSCU || findContext->second.first->m_bRequestorIsSCP)
+                    scpScuRolesMap_t::const_iterator findRole(acceptedScpScuRoles.find(findContext->second.first->m_abstractSyntax));
+                    if(findRole == acceptedScpScuRoles.end())
                     {
-                        scpScuRolesMap_t::const_iterator findRole(acceptedScpScuRoles.find(findContext->second.first->m_abstractSyntax));
-                        if(findRole == acceptedScpScuRoles.end())
-                        {
-                            findContext->second.first->m_bRequestorIsSCP = false;
-                        }
-                        else
-                        {
-                            findContext->second.first->m_bRequestorIsSCU &= findRole->second->getSCU();
-                            findContext->second.first->m_bRequestorIsSCP &= findRole->second->getSCP();
-                        }
+                        findContext->second.first->m_bRequestorIsSCP = false;
+                    }
+                    else
+                    {
+                        findContext->second.first->m_bRequestorIsSCU &= findRole->second->getSCU();
+                        findContext->second.first->m_bRequestorIsSCP &= findRole->second->getSCP();
                     }
                 }
                 else
@@ -2625,14 +2680,6 @@ associationSCP::associationSCP(
         m_maxOperationsInvoked = requestedMaxPerformed;
     }
 
-    // Put the supported contexts in a map
-    ///////////////////////////////////////////////////////////
-    std::map<std::string, std::shared_ptr<const presentationContext> > supportedContexts;
-    for(const std::shared_ptr<const presentationContext>& context: contexts->m_presentationContexts)
-    {
-        supportedContexts[context->m_abstractSyntax] = context;
-    }
-
     // Put the requested scp/scu roles in a map
     ///////////////////////////////////////////////////////////
     typedef std::map<std::string, std::shared_ptr<acseItemSCPSCURoleSelection> > scpScuRolesMap_t;
@@ -2646,17 +2693,21 @@ associationSCP::associationSCP(
     // we support
     ///////////////////////////////////////////////////////////
     acsePDUAssociateAC::presentationContexts_t acceptedContexts;
-    acseItemUserInformation::scpScuSelectionList_t scpScuRoles;
+    scpScuRolesMap_t scpScuRoles;
+
+    // Scan all the requested presentation contexts
     for(const std::shared_ptr<acseItemPresentationContextBase>& context: associationRQ->getPresentationContexts())
     {
         std::uint8_t id(context->getId());
 
+        // Build a presentationContext object for the requested presentation context
         std::shared_ptr<presentationContext> pPresentationContext(std::make_shared<presentationContext>(context->getAbstractSyntax()));
         for(const std::string& transferSyntax: context->getTransferSyntaxes())
         {
             pPresentationContext->addTransferSyntax(transferSyntax);
         }
 
+        // Store the created presentation context with its ID
         m_presentationContextsIds[id] =
                 std::pair<std::shared_ptr<presentationContext>, std::string>
                 (pPresentationContext, "");
@@ -2664,45 +2715,64 @@ associationSCP::associationSCP(
         // Check if we support the context and one of the transfer
         //  syntaxes
         ///////////////////////////////////////////////////////////
-        std::map<std::string, std::shared_ptr<const presentationContext> >::const_iterator findContext(supportedContexts.find(context->getAbstractSyntax()));
-        if(findContext != supportedContexts.end())
+        bool bAbstractSyntaxSupported(false);
+        for(const std::shared_ptr<const presentationContext> pFindContext: contexts->m_presentationContexts)
         {
-            for(const std::string& scpTransferSyntax: m_presentationContextsIds[id].first->m_proposedTransferSyntaxes)
+            if(pFindContext->m_abstractSyntax == pPresentationContext->m_abstractSyntax)
             {
-                if(std::find((*findContext).second->m_proposedTransferSyntaxes.begin(), (*findContext).second->m_proposedTransferSyntaxes.end(), scpTransferSyntax) != (*findContext).second->m_proposedTransferSyntaxes.end())
+                bAbstractSyntaxSupported = true;
+
+                // We support the abstract syntax, now look for the transfer syntaxes
+                for(const std::string& scpTransferSyntax: m_presentationContextsIds[id].first->m_proposedTransferSyntaxes)
                 {
-                    m_presentationContextsIds[id].second = scpTransferSyntax;
-                    break;
+                    if(std::find(pFindContext->m_proposedTransferSyntaxes.begin(), pFindContext->m_proposedTransferSyntaxes.end(), scpTransferSyntax) != pFindContext->m_proposedTransferSyntaxes.end())
+                    {
+                        m_presentationContextsIds[id].second = scpTransferSyntax;
+
+                        scpScuRolesMap_t::const_iterator findRole(requestedScpScuRoles.find(pPresentationContext->m_abstractSyntax));
+                        if(findRole != requestedScpScuRoles.end())
+                        {
+                            pPresentationContext->m_bRequestorIsSCU = pFindContext->m_bRequestorIsSCU && findRole->second->getSCU();
+                            pPresentationContext->m_bRequestorIsSCP = pFindContext->m_bRequestorIsSCP && findRole->second->getSCP();
+                            scpScuRolesMap_t::iterator declaredScpScuRole = scpScuRoles.find(pPresentationContext->m_abstractSyntax);
+                            if(declaredScpScuRole != scpScuRoles.end())
+                            {
+                                std::shared_ptr<acseItemSCPSCURoleSelection> updateScpScuRole = std::make_shared<acseItemSCPSCURoleSelection>(
+                                                pPresentationContext->m_abstractSyntax,
+                                                pPresentationContext->m_bRequestorIsSCU || declaredScpScuRole->second->getSCU(),
+                                                pPresentationContext->m_bRequestorIsSCP || declaredScpScuRole->second->getSCP());
+                                scpScuRoles[pPresentationContext->m_abstractSyntax] = updateScpScuRole;
+                            }
+                            else
+                            {
+                                scpScuRoles[pPresentationContext->m_abstractSyntax] = std::make_shared<acseItemSCPSCURoleSelection>(
+                                                pPresentationContext->m_abstractSyntax,
+                                                pPresentationContext->m_bRequestorIsSCU,
+                                                pPresentationContext->m_bRequestorIsSCP);
+
+                            }
+                        }
+                        break;
+                    }
                 }
             }
+        }
 
-            scpScuRolesMap_t::const_iterator findRole(requestedScpScuRoles.find(context->getAbstractSyntax()));
-            if(findRole != requestedScpScuRoles.end() && (!findRole->second->getSCU()  || findRole->second->getSCP()) )
-            {
-                pPresentationContext->m_bRequestorIsSCU = findContext->second->m_bRequestorIsSCU && findRole->second->getSCU();
-                pPresentationContext->m_bRequestorIsSCP = findContext->second->m_bRequestorIsSCP && findRole->second->getSCP();
-                scpScuRoles.push_back(std::make_shared<acseItemSCPSCURoleSelection>(
-                                          pPresentationContext->m_abstractSyntax,
-                                          pPresentationContext->m_bRequestorIsSCU,
-                                          pPresentationContext->m_bRequestorIsSCP));
-            }
-
-            if(m_presentationContextsIds[id].second.empty())
-            {
-                acceptedContexts.push_back(
-                            std::make_shared<acseItemPresentationContextAC>(
-                                id,
-                                acseItemPresentationContextAC::result_t::transferSyntaxesNotSupported,
-                                ""));
-            }
-            else
-            {
-                acceptedContexts.push_back(
-                            std::make_shared<acseItemPresentationContextAC>(
-                                id,
-                                acseItemPresentationContextAC::result_t::acceptance,
-                                m_presentationContextsIds[id].second));
-            }
+        if(!m_presentationContextsIds[id].second.empty())
+        {
+            acceptedContexts.push_back(
+                        std::make_shared<acseItemPresentationContextAC>(
+                            id,
+                            acseItemPresentationContextAC::result_t::acceptance,
+                            m_presentationContextsIds[id].second));
+        }
+        else if(bAbstractSyntaxSupported)
+        {
+            acceptedContexts.push_back(
+                        std::make_shared<acseItemPresentationContextAC>(
+                            id,
+                            acseItemPresentationContextAC::result_t::transferSyntaxesNotSupported,
+                            ""));
         }
         else
         {
@@ -2714,14 +2784,21 @@ associationSCP::associationSCP(
         }
     }
 
-
+    acseItemUserInformation::scpScuSelectionList_t scpScuRolesList;
+    for(const auto& scpScuRole: scpScuRoles)
+    {
+        if(!scpScuRole.second->getSCU() || scpScuRole.second->getSCP())
+        {
+            scpScuRolesList.push_back(scpScuRole.second);
+        }
+    }
     std::shared_ptr<acseItemUserInformation> pUserInformationAC(std::make_shared<acseItemUserInformation>(
                                                                     m_maxPDULength,
                                                                     "1.1",
                                                                     "Imebra 1.0",
                                                                     m_maxOperationsPerformed,
                                                                     m_maxOperationsInvoked,
-                                                                    scpScuRoles));
+                                                                    scpScuRolesList));
     std::shared_ptr<acsePDUAssociateAC> responseAC(std::make_shared<acsePDUAssociateAC>(
                                                        associationRQ->getCalledAETitle(),
                                                        associationRQ->getCallingAETitle(),
