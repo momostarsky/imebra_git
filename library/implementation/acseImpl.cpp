@@ -2678,8 +2678,8 @@ associationSCP::associationSCP(
 
     std::shared_ptr<acseItemUserInformation> pUserInformationAC(std::make_shared<acseItemUserInformation>(
                                                                     m_maxPDULength,
-                                                                    "1.1",
-                                                                    "Imebra 1.0",
+                                                                    IMEBRA_IMPLEMENTATION_CLASS_UID,
+                                                                    IMEBRA_IMPLEMENTATION_NAME,
                                                                     m_maxOperationsPerformed,
                                                                     m_maxOperationsInvoked,
                                                                     scpScuRoles));
