@@ -223,6 +223,13 @@ public:
 
     virtual itemType_t getItemType() const override;
 
+    ///
+    /// \brief Return the version name stored in the item
+    /// \return the version name stored in the item
+    ///
+    //////////////////////////////////////////////////////////////////
+    const std::string& getName() const;
+
 protected:
 
     virtual void encodeItemPayload(std::shared_ptr<streamWriter> pWriter) const override;
