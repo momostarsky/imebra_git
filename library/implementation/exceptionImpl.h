@@ -256,7 +256,7 @@ private:
     const std::string m_functionName;
 };
 
-#if IMEBRA_LOG_LEVEL >= IMEBRA_LOG_LEVEL_TRACE
+#if IMEBRA_LOG_LEVEL >= IMEBRA_LOG_LEVEL_TRACE_VALUE
 #define IMEBRA_FUNCTION_START() \
     try{ \
        const ::imebra::implementation::logTrace trace(IMEBRA_METHOD_NAME());

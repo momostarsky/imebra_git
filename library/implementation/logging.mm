@@ -1,6 +1,6 @@
-#if defined(__APPLE__)
-
 #include "logging.h"
+#if defined(IMEBRA_LOGGING_APPLE)
+
 #import <Foundation/Foundation.h>
 
 namespace imebra
