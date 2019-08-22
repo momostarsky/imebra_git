@@ -49,6 +49,26 @@ else(IMEBRA_CHARSET_CONVERSION MATCHES ICONV)
     endif(WIN32)
 endif(IMEBRA_CHARSET_CONVERSION MATCHES ICONV)
 
+# Set the proper logging preprocessor macros
+#-------------------------------------------
+if(IMEBRA_LOG_FRAMEWORK MATCHES LOG4CXX)
+    add_definitions(-DIMEBRA_LOGGING_LOG4CXX)
+    set(imebra_libraries ${imebra_libraries} log4cxx) # Log4cxx needs additional libraries
+elseif(IMEBRA_LOG_FRAMEWORK MATCHES SYSLOG)
+    add_definitions(-DIMEBRA_LOGGING_SYSLOG)
+elseif(IMEBRA_LOG_FRAMEWORK MATCHES COUT)
+    add_definitions(-DIMEBRA_LOGGING_COUT)
+elseif(IMEBRA_LOG_FRAMEWORK MATCHES APPLE)
+    add_definitions(-DIMEBRA_LOGGING_APPLE)
+elseif(IMEBRA_LOG_FRAMEWORK MATCHES ANDROID)
+    add_definitions(-DIMEBRA_LOGGING_ANDROID)
+endif(IMEBRA_LOG_FRAMEWORK MATCHES LOG4CXX)
+
+if(IMEBRA_LOG_LEVEL)
+    add_definitions(-DIMEBRA_LOG_LEVEL_${IMEBRA_LOG_LEVEL})
+endif(IMEBRA_LOG_LEVEL)
+
+
 # For IPhone build a static library, otherwise build a dynamic library
 #---------------------------------------------------------------------
 if(NOT DEFINED IMEBRA_SHARED_STATIC)
@@ -301,6 +321,7 @@ if(NOT IOS)
             message(STATUS "DCMTK found. Interoperability tests enabled")
     else(${DCMTK_FOUND})
             add_definitions(-DDISABLE_DIMSE_INTEROPERABILITY_TEST)
+            add_definitions(-DIMEBRA_LOG_LEVEL IMEBRA_LOG_LEVEL_DISABLED_VALUE)
             message(WARNING "WARNING: DCMTK not found. Disabling interoperability tests")
     endif(${DCMTK_FOUND})
 
@@ -338,7 +359,11 @@ if(NOT IOS)
     ##############################################
     enable_testing()
 
+if(IMEBRA_LOG_FRAMEWORK MATCHES LOG4CXX)
+    add_test(RunImebraTests ImebraTests --corruptedFilesFolder=${CMAKE_CURRENT_SOURCE_DIR}/tests/corruptedfiles --testLogFile=${CMAKE_CURRENT_BINARY_DIR}/imebraTestLogFile.txt)
+else()
     add_test(RunImebraTests ImebraTests --corruptedFilesFolder=${CMAKE_CURRENT_SOURCE_DIR}/tests/corruptedfiles)
+endif()
 
 
     ##############################################

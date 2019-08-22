@@ -261,6 +261,8 @@ Slovenia
         <exec executable="cmake" failonerror="true" dir="${build_library_for_tests}">
             <arg value="--verbose"/>
             <arg value="-DCMAKE_BUILD_TYPE=DEBUG" />
+            <arg value="-DIMEBRA_LOG_FRAMEWORK=LOG4CXX" />
+            <arg value="-DIMEBRA_LOG_LEVEL=INFO" />
             <arg path="${build_release}"/>
         </exec>
         <exec executable="make" failonerror="true" dir="${build_library_for_tests}" />
