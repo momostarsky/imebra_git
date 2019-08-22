@@ -321,7 +321,6 @@ if(NOT IOS)
             message(STATUS "DCMTK found. Interoperability tests enabled")
     else(${DCMTK_FOUND})
             add_definitions(-DDISABLE_DIMSE_INTEROPERABILITY_TEST)
-            add_definitions(-DIMEBRA_LOG_LEVEL IMEBRA_LOG_LEVEL_DISABLED_VALUE)
             message(WARNING "WARNING: DCMTK not found. Disabling interoperability tests")
     endif(${DCMTK_FOUND})
 
