@@ -10,7 +10,7 @@ import subprocess
 #----------------
 hgbranch = 'hg branch'
 hgprocess = subprocess.Popen(hgbranch.split(), stdout=subprocess.PIPE)
-branch = hgprocess.stdout.readlines()[0].rstrip()
+branch = hgprocess.stdout.readlines()[0].decode("utf-8").rstrip()
 
 version = branch
 if version == "default":
@@ -23,7 +23,7 @@ if version.count('.') == 1:
 
 hgrelease = 'hg log -b ' + branch + ' --template . --rev ancestors(.)'
 hgprocess = subprocess.Popen(hgrelease.split(), stdout=subprocess.PIPE)
-release = version + '.' + str(hgprocess.stdout.readlines()[0].count('.'))
+release = version + '.' + str(hgprocess.stdout.readlines()[0].decode("utf-8").count('.'))
 
 file_name = "/imebra_" + release.replace('.', '_') + '.zip'
 
