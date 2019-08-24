@@ -288,6 +288,12 @@ std::string AssociationBase::getTransferSyntax(const std::string &abstractSyntax
     IMEBRA_FUNCTION_END_LOG();
 }
 
+std::vector<std::string> AssociationBase::getTransferSyntaxes(const std::string& abstractSyntax) const
+{
+    return m_pAssociation->getPresentationContextTransferSyntaxes(abstractSyntax);
+}
+
+
 const std::shared_ptr<implementation::associationBase>& getAssociationBaseImplementation(const AssociationBase& associationBase)
 {
     return associationBase.m_pAssociation;
@@ -310,12 +316,12 @@ AssociationSCU::AssociationSCU(
         std::uint32_t dimseTimeoutSeconds):
     AssociationBase(std::make_shared<implementation::associationSCU>(
                         getPresentationContextsImplementation(presentationContexts),
-                        thisAET,
-                        otherAET,
-                        invokedOperations,
-                        performedOperations,
-                        pInput.m_pReader,
-                        pOutput.m_pWriter,
+                thisAET,
+                otherAET,
+                invokedOperations,
+                performedOperations,
+                pInput.m_pReader,
+                pOutput.m_pWriter,
                         dimseTimeoutSeconds))
 {
 }
@@ -347,12 +353,12 @@ AssociationSCP::AssociationSCP(
         std::uint32_t artimTimeoutSeconds):
     AssociationBase(std::make_shared<implementation::associationSCP>(
                         getPresentationContextsImplementation(presentationContexts),
-                        thisAET,
-                        invokedOperations,
-                        performedOperations,
-                        pInput.m_pReader,
-                        pOutput.m_pWriter,
-                        dimseTimeoutSeconds,
+                thisAET,
+                invokedOperations,
+                performedOperations,
+                pInput.m_pReader,
+                pOutput.m_pWriter,
+                dimseTimeoutSeconds,
                         artimTimeoutSeconds))
 {
 }

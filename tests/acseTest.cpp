@@ -13,11 +13,57 @@ namespace imebra
 namespace tests
 {
 
-void scpThread(const std::string& name, PresentationContexts& presentationContexts, StreamReader& readSCP, StreamWriter& writeSCP)
+void scpThread(
+        const std::string& name,
+        PresentationContexts& presentationContexts,
+        StreamReader& readSCP, StreamWriter& writeSCP,
+        const std::vector<std::string>& scpAbstractSyntaxes,
+        const std::vector<std::string>& scpThrowAbstractSyntaxes)
 {
     try
     {
         AssociationSCP scp(name, 1, 1, presentationContexts, readSCP, writeSCP, 0, 10);
+
+        // First send commands for the presentation contexts in which
+        // the SCU can act also as SCP
+        std::uint16_t messageId(0);
+        for(const std::string& abstractSyntax: scpAbstractSyntaxes)
+        {
+            std::vector<std::string> transferSyntaxes = scp.getTransferSyntaxes(abstractSyntax);
+            for(const std::string& transferSyntax: transferSyntaxes)
+            {
+                // Send a C-Store command
+                MutableAssociationMessage command(abstractSyntax);
+                MutableDataSet dataset0(transferSyntax);
+                dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
+                dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), messageId, tagVR_t::US);
+                dataset0.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), "1.2.3.4.5");
+                dataset0.setUnsignedLong(TagId(tagId_t::CommandDataSetType_0000_0800), 0x101);
+                command.addDataSet(dataset0);
+                scp.sendMessage(command);
+                scp.getResponse(messageId);
+                messageId++;
+            }
+        }
+
+        // First send commands for the presentation contexts in which
+        // the SCU can act also as SCP
+        for(const std::string& abstractSyntax: scpThrowAbstractSyntaxes)
+        {
+            std::vector<std::string> transferSyntaxes = scp.getTransferSyntaxes(abstractSyntax);
+            for(const std::string& transferSyntax: transferSyntaxes)
+            {
+                // Send a C-Store command
+                MutableAssociationMessage command(abstractSyntax);
+                MutableDataSet dataset0(transferSyntax);
+                dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
+                dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), messageId++, tagVR_t::US);
+                dataset0.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), "1.2.3.4.5");
+                dataset0.setUnsignedLong(TagId(tagId_t::CommandDataSetType_0000_0800), 0x101);
+                command.addDataSet(dataset0);
+                EXPECT_THROW(scp.sendMessage(command), AcseWrongRoleError);
+            }
+        }
 
         for(;;)
         {
@@ -166,7 +212,8 @@ TEST(acseTest, negotiationOneTransferSyntax)
 
     const std::string scpName("SCP");
 
-    std::thread scp(imebra::tests::scpThread, std::ref(scpName), std::ref(presentationContexts), std::ref(readSCP), std::ref(writeSCP));
+    std::vector<std::string> scpAbstractSyntaxes;
+    std::thread scp(imebra::tests::scpThread, std::ref(scpName), std::ref(presentationContexts), std::ref(readSCP), std::ref(writeSCP), std::ref(scpAbstractSyntaxes), std::ref(scpAbstractSyntaxes));
 
     AssociationSCU scu("SCU", scpName, 1, 1, presentationContexts, readSCU, writeSCU, 0);
 
@@ -201,27 +248,88 @@ TEST(acseTest, scpScuRole)
     StreamReader readSCP(toSCP.getStreamInput());
     StreamWriter writeSCP(toSCU.getStreamOutput());
 
-    PresentationContext context("1.2.840.10008.1.1", false, true);
-    context.addTransferSyntax("1.2.840.10008.1.2"); // implicit VR little endian
+    PresentationContext context0(uidVerificationSOPClass_1_2_840_10008_1_1, false, true);
+    context0.addTransferSyntax(uidImplicitVRLittleEndian_1_2_840_10008_1_2);
+    context0.addTransferSyntax(uidExplicitVRBigEndian_1_2_840_10008_1_2_2);
+
+    PresentationContext context1(uidVerificationSOPClass_1_2_840_10008_1_1);
+    context1.addTransferSyntax(uidExplicitVRLittleEndian_1_2_840_10008_1_2_1);
+
+    PresentationContext context2(uidHardcopyGrayscaleImageStorageSOPClass_1_2_840_10008_5_1_1_29);
+    context2.addTransferSyntax(uidExplicitVRLittleEndian_1_2_840_10008_1_2_1);
+
+    PresentationContext context3(uidHardcopyColorImageStorageSOPClass_1_2_840_10008_5_1_1_30, false, true);
+    context3.addTransferSyntax(uidExplicitVRLittleEndian_1_2_840_10008_1_2_1);
+
     PresentationContexts presentationContexts;
-    presentationContexts.addPresentationContext(context);
+    presentationContexts.addPresentationContext(context0);
+    presentationContexts.addPresentationContext(context1);
+    presentationContexts.addPresentationContext(context2);
+    presentationContexts.addPresentationContext(context3);
+
+
+    std::vector<std::string> scpAbstractSyntaxes;
+    scpAbstractSyntaxes.push_back(uidVerificationSOPClass_1_2_840_10008_1_1);
+    scpAbstractSyntaxes.push_back(uidHardcopyColorImageStorageSOPClass_1_2_840_10008_5_1_1_30);
+
+    std::vector<std::string> scpThrowAbstractSyntaxes;
+    scpThrowAbstractSyntaxes.push_back(uidHardcopyGrayscaleImageStorageSOPClass_1_2_840_10008_5_1_1_29);
 
     const std::string scpName("SCP");
-
-    std::thread scp(imebra::tests::scpThread, std::ref(scpName), std::ref(presentationContexts), std::ref(readSCP), std::ref(writeSCP));
+    std::thread scp(imebra::tests::scpThread, std::ref(scpName), std::ref(presentationContexts), std::ref(readSCP), std::ref(writeSCP), std::ref(scpAbstractSyntaxes), std::ref(scpThrowAbstractSyntaxes));
 
     {
         AssociationSCU scu("SCU", scpName, 1, 1, presentationContexts, readSCU, writeSCU, 0);
 
-        MutableAssociationMessage command("1.2.840.10008.1.1");
-        MutableDataSet dataset0;
-        dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
-        dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
-        dataset0.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), "1.2.3.4");
-        dataset0.setUnsignedLong(TagId(tagId_t::CommandDataSetType_0000_0800), 0x101);
+        // Reply to the 2 commands sent by the SCU
+        for(const std::string& abstractSyntax: scpAbstractSyntaxes)
+        {
+            for(const std::string& transferSyntax: scu.getTransferSyntaxes(abstractSyntax))
+            {
+                AssociationMessage command = scu.getCommand();
+                MutableDataSet responseDataSet;
+                responseDataSet.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x8001, tagVR_t::US);
+                std::uint32_t messageId(command.getCommand().getUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0));
+                responseDataSet.setUnsignedLong(TagId(tagId_t::MessageIDBeingRespondedTo_0000_0120), messageId, tagVR_t::US);
+                responseDataSet.setString(TagId(tagId_t::SeriesInstanceUID_0020_000E), "1.2.3.4.5");
+                responseDataSet.setUnsignedLong(TagId(tagId_t::CommandDataSetType_0000_0800), 0x0101);
+                responseDataSet.setUnsignedLong(TagId(tagId_t::Status_0000_0900), 0x0000);
+                MutableAssociationMessage response(abstractSyntax);
+                response.addDataSet(responseDataSet);
+                scu.sendMessage(response);
+            }
+        }
 
-        command.addDataSet(dataset0);
-        EXPECT_THROW(scu.sendMessage(command), AcseWrongRoleError);
+        // We can only receive uidHardcopyColorImageStorageSOPClass
+        {
+            MutableAssociationMessage command(uidHardcopyColorImageStorageSOPClass_1_2_840_10008_5_1_1_30);
+            MutableDataSet dataset0;
+            dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
+            dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
+            dataset0.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), "1.2.3.4");
+            dataset0.setUnsignedLong(TagId(tagId_t::CommandDataSetType_0000_0800), 0x101);
+            command.addDataSet(dataset0);
+            EXPECT_THROW(scu.sendMessage(command), AcseWrongRoleError);
+        }
+
+        // We can transmit uidVerificationSOPClass_1_2_840_10008_1_1
+        // because one of the presentation contexts declared it as SCU
+        {
+            MutableAssociationMessage command(uidVerificationSOPClass_1_2_840_10008_1_1);
+            MutableDataSet dataset0;
+            dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
+            dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0x2, tagVR_t::US);
+            dataset0.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), "1.2.3.4");
+            dataset0.setUnsignedLong(TagId(tagId_t::CommandDataSetType_0000_0800), 0);
+            command.addDataSet(dataset0);
+            MutableDataSet dataset1(uidExplicitVRLittleEndian_1_2_840_10008_1_2_1);
+            dataset1.setString(TagId(tagId_t::PatientName_0010_0010), "Test");
+            command.addDataSet(dataset1);
+            scu.sendMessage(command);
+
+            AssociationMessage response = scu.getResponse(0x2);
+
+        }
 
         scu.release();
     }
@@ -247,7 +355,8 @@ TEST(acseTest, negotiationMultipleTransferSyntaxes)
 
     const std::string scpName("SCP");
 
-    std::thread scp(imebra::tests::scpThread, std::ref(scpName), std::ref(presentationContexts), std::ref(readSCP), std::ref(writeSCP));
+    std::vector<std::string> scpAbstractSyntaxes;
+    std::thread scp(imebra::tests::scpThread, std::ref(scpName), std::ref(presentationContexts), std::ref(readSCP), std::ref(writeSCP), std::ref(scpAbstractSyntaxes), std::ref(scpAbstractSyntaxes));
 
     AssociationSCU scu("SCU", scpName, 1, 1, presentationContexts, readSCU, writeSCU, 0);
 
@@ -302,7 +411,8 @@ TEST(acseTest, negotiationPartialMatchTransferSyntaxes)
 
     const std::string scpName("SCP");
 
-    std::thread scp(imebra::tests::scpThread, std::ref(scpName), std::ref(scpPresentationContexts), std::ref(readSCP), std::ref(writeSCP));
+    std::vector<std::string> scpAbstractSyntaxes;
+    std::thread scp(imebra::tests::scpThread, std::ref(scpName), std::ref(scpPresentationContexts), std::ref(readSCP), std::ref(writeSCP), std::ref(scpAbstractSyntaxes), std::ref(scpAbstractSyntaxes));
 
     AssociationSCU scu("SCU", scpName, 1, 1, scuPresentationContexts, readSCU, writeSCU, 0);
 
@@ -333,6 +443,103 @@ TEST(acseTest, negotiationPartialMatchTransferSyntaxes)
 }
 
 
+/**
+ * @brief Test that the SCP can accept all the transfer syntax even
+ *        if the SCU spread them on different presentation contexts
+ *        with the same abstract syntax.
+ */
+TEST(acseTest, negotiationPartialMatchSameAbstractSyntax)
+{
+    PipeStream toSCU(1024), toSCP(1024);
+
+    StreamReader readSCU(toSCU.getStreamInput());
+    StreamWriter writeSCU(toSCP.getStreamOutput());
+
+    StreamReader readSCP(toSCP.getStreamInput());
+    StreamWriter writeSCP(toSCU.getStreamOutput());
+
+    PresentationContext scuContext0("1.2.840.10008.1.1");
+    scuContext0.addTransferSyntax("1.2.840.10008.1.2"); // implicit VR little endian
+    scuContext0.addTransferSyntax("1.2.840.10008.1.2.1"); // explicit VR little endian
+
+    PresentationContext scuContext1("1.2.840.10008.1.1");
+    scuContext1.addTransferSyntax("1.2.840.10008.1.2.4.50"); // jpeg baseline
+
+    PresentationContext scuContext2("1.2.840.10008.1.1.1.1.1.1.1.1"); // This will be rejected
+    scuContext2.addTransferSyntax("1.2.840.10008.1.2"); // implicit VR little endian
+    scuContext2.addTransferSyntax("1.2.840.10008.1.2.1"); // explicit VR little endian
+
+    PresentationContexts scuPresentationContexts;
+    scuPresentationContexts.addPresentationContext(scuContext0);
+    scuPresentationContexts.addPresentationContext(scuContext1);
+    scuPresentationContexts.addPresentationContext(scuContext2);
+
+    PresentationContext scpContext("1.2.840.10008.1.1");
+    scpContext.addTransferSyntax("1.2.840.10008.1.2.1"); // explicit VR little endian
+    scpContext.addTransferSyntax("1.2.840.10008.1.2.4.50"); // jpeg baseline
+
+    PresentationContexts scpPresentationContexts;
+    scpPresentationContexts.addPresentationContext(scpContext);
+
+    const std::string scpName("SCP");
+
+    std::vector<std::string> scpAbstractSyntaxes;
+    std::thread scp(imebra::tests::scpThread, std::ref(scpName), std::ref(scpPresentationContexts), std::ref(readSCP), std::ref(writeSCP), std::ref(scpAbstractSyntaxes), std::ref(scpAbstractSyntaxes));
+
+    AssociationSCU scu("SCU", scpName, 1, 1, scuPresentationContexts, readSCU, writeSCU, 0);
+
+    std::vector<std::string> acceptedTransferSyntaxes(scu.getTransferSyntaxes("1.2.840.10008.1.1"));
+    EXPECT_EQ(2u, acceptedTransferSyntaxes.size());
+
+    EXPECT_EQ("1.2.840.10008.1.2.1", scu.getTransferSyntax("1.2.840.10008.1.1"));
+    EXPECT_THROW(scu.getTransferSyntax("1.2.840.10008.1.1.1.1.1.1.1.1"), AcseNoTransferSyntaxError);
+    EXPECT_THROW(scu.getTransferSyntax("1"), AcsePresentationContextNotRequestedError);
+
+    {
+        MutableAssociationMessage command("1.2.840.10008.1.1");
+        MutableDataSet dataset0;
+        dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
+        dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
+        dataset0.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), "1.2.3.4");
+        dataset0.setUnsignedLong(TagId(tagId_t::CommandDataSetType_0000_0800), 0x101);
+
+        command.addDataSet(dataset0);
+        scu.sendMessage(command);
+
+        AssociationMessage response = scu.getResponse(1);
+        DataSet responseDataSet = response.getCommand();
+        EXPECT_EQ("1.2.840.10008.1.1", response.getAbstractSyntax());
+        EXPECT_EQ("1.2.3.4", responseDataSet.getString(TagId(tagId_t::StudyInstanceUID_0020_000D), 0));
+        EXPECT_EQ("1.2.3.4.5", responseDataSet.getString(TagId(tagId_t::SeriesInstanceUID_0020_000E), 0));
+        EXPECT_EQ("1.2.840.10008.1.2.1",responseDataSet.getString(TagId(tagId_t::TransferSyntaxUID_0002_0010), 0));
+    }
+
+    {
+        MutableAssociationMessage command("1.2.840.10008.1.1");
+        MutableDataSet dataset0("1.2.840.10008.1.2.4.50");
+        dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
+        dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
+        dataset0.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), "1.2.3.4");
+        dataset0.setUnsignedLong(TagId(tagId_t::CommandDataSetType_0000_0800), 0x101);
+
+        command.addDataSet(dataset0);
+        scu.sendMessage(command);
+
+        AssociationMessage response = scu.getResponse(1);
+        DataSet responseDataSet = response.getCommand();
+        EXPECT_EQ("1.2.840.10008.1.1", response.getAbstractSyntax());
+        EXPECT_EQ("1.2.3.4", responseDataSet.getString(TagId(tagId_t::StudyInstanceUID_0020_000D), 0));
+        EXPECT_EQ("1.2.3.4.5", responseDataSet.getString(TagId(tagId_t::SeriesInstanceUID_0020_000E), 0));
+        EXPECT_EQ("1.2.840.10008.1.2.1",responseDataSet.getString(TagId(tagId_t::TransferSyntaxUID_0002_0010), 0));
+    }
+
+    scu.release();
+
+    scp.join();
+}
+
+
+
 TEST(acseTest, sendPayload)
 {
     PipeStream toSCU(1024), toSCP(1024);
@@ -358,7 +565,8 @@ TEST(acseTest, sendPayload)
 
     const size_t maxPayloadSize(128000);
 
-    std::thread scp(imebra::tests::scpThread, std::ref(scpName), std::ref(scpPresentationContexts), std::ref(readSCP), std::ref(writeSCP));
+    std::vector<std::string> scpAbstractSyntaxes;
+    std::thread scp(imebra::tests::scpThread, std::ref(scpName), std::ref(scpPresentationContexts), std::ref(readSCP), std::ref(writeSCP), std::ref(scpAbstractSyntaxes), std::ref(scpAbstractSyntaxes));
 
     {
         AssociationSCU scu("SCU", scpName, 1, 1, scuPresentationContexts, readSCU, writeSCU, 0);
@@ -542,7 +750,8 @@ TEST(acseTest, negotiationMultiplePresentationContexts)
 
     const std::string scpName("SCP");
 
-    std::thread scp(imebra::tests::scpThread, std::ref(scpName), std::ref(scpPresentationContexts), std::ref(readSCP), std::ref(writeSCP));
+    std::vector<std::string> scpAbstractSyntaxes;
+    std::thread scp(imebra::tests::scpThread, std::ref(scpName), std::ref(scpPresentationContexts), std::ref(readSCP), std::ref(writeSCP), std::ref(scpAbstractSyntaxes), std::ref(scpAbstractSyntaxes));
 
     AssociationSCU scu("SCU", scpName, 1, 1, scuPresentationContexts, readSCU, writeSCU, 0);
 
@@ -636,7 +845,8 @@ TEST(acseTest, negotiationNoTransferSyntax)
 
     const std::string scpName("SCP");
 
-    std::thread scp(imebra::tests::scpThread, std::ref(scpName), std::ref(scpPresentationContexts), std::ref(readSCP), std::ref(writeSCP));
+    std::vector<std::string> scpAbstractSyntaxes;
+    std::thread scp(imebra::tests::scpThread, std::ref(scpName), std::ref(scpPresentationContexts), std::ref(readSCP), std::ref(writeSCP), std::ref(scpAbstractSyntaxes), std::ref(scpAbstractSyntaxes));
 
     AssociationSCU scu("SCU", scpName, 1, 1, scuPresentationContexts, readSCU, writeSCU, 0);
 
@@ -726,7 +936,8 @@ TEST(acseTest, negotiationNoPresentationContext)
 
     const std::string scpName("SCP");
 
-    std::thread scp(imebra::tests::scpThread, std::ref(scpName), std::ref(scpPresentationContexts), std::ref(readSCP), std::ref(writeSCP));
+    std::vector<std::string> scpAbstractSyntaxes;
+    std::thread scp(imebra::tests::scpThread, std::ref(scpName), std::ref(scpPresentationContexts), std::ref(readSCP), std::ref(writeSCP), std::ref(scpAbstractSyntaxes), std::ref(scpAbstractSyntaxes));
 
     AssociationSCU scu("SCU", scpName, 1, 1, scuPresentationContexts, readSCU, writeSCU, 0);
 
