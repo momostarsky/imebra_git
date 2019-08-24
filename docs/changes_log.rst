@@ -6,6 +6,10 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Fixed bug #297 (Builds fail on new build VM) as per SOP :ref:`FIXBUG_2`
+
+Version 4.5.6.1
+---------------
 - Implemented enhancement #286 (Revert issue #282 but explain why the buffers can be static) as per SOP :ref:`DEVENH_2`
 - Fixed bug #288 (Datasets created from jpeg files have an empty charset list) as per SOP :ref:`FIXBUG_2`
 - Implemented enhancement #289 (Set the Imebra implementation OID in the ACSE implementation UID field) as per SOP :ref:`DEVENH_2`
