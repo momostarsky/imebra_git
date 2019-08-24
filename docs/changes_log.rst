@@ -6,6 +6,11 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Fixed bug #297 (Builds fail on new build VM) as per SOP :ref:`FIXBUG_2`
+
+Version 4.6.0.1
+---------------
+
 - Fixed bug #190 (Visual Studio emits "unreachable code" warnings) as per SOP :ref:`FIXBUG_2`
 - Fixed bug #294 (When more than one presentation contexts have the same abstract syntax then Imebra always accepts only one transfer syntax) as per SOP :ref:`FIXBUG_2`
 - Fixed bug #295 (The AssociationSCP constructor sets the DICOM implementation to the wrong values) as per SOP :ref:`FIXBUG_2`

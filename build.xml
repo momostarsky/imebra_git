@@ -272,7 +272,6 @@ Slovenia
         <exec executable="cmake" failonerror="true" dir="${build_library_for_tests}">
             <arg value="--verbose"/>
             <arg value="-DCMAKE_BUILD_TYPE=DEBUG" />
-            <arg value="-DIMEBRA_OBJC=1" />
             <arg path="${build_release}"/>
         </exec>
         <exec executable="make" failonerror="true" dir="${build_library_for_tests}" />
@@ -338,12 +337,12 @@ Slovenia
         <copy todir="${python_test}">
             <fileset dir="${source_distribution}" />
         </copy>
-        <exec executable="python" dir="${python_test}" resolveexecutable="true" failonerror="true">
+        <exec executable="python3" dir="${python_test}" resolveexecutable="true" failonerror="true">
             <arg value="setup.py" />
             <arg value="install" />
             <arg value="--user" />
         </exec>
-        <exec executable="python" dir="${python_test}/tests/python" resolveexecutable="true" failonerror="true">
+        <exec executable="python3" dir="${python_test}/tests/python" resolveexecutable="true" failonerror="true">
             <arg value="tests.py" />
         </exec>
     </target>

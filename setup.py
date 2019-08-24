@@ -26,6 +26,7 @@
 #-----------------------------------------------------------------
 
 from distutils.core import setup, Extension
+from distutils.sysconfig import get_python_inc
 import sys
 import os
 
@@ -44,16 +45,21 @@ def get_sources(root_folder):
 
 # Set proper libraries and flags according to the OS
 #---------------------------------------------------
+include_directories = []
+include_directories.append(get_python_inc(plat_specific=1))
+include_directories.append("./library/include")
 librariesArray = []
 compileFlags = []
 
+print(include_directories)
+
 if sys.platform.startswith('linux'):
     librariesArray.append('pthread')
-    compileFlags = ["-std=c++0x", "-Wall", "-Wextra", "-Wpedantic", "-Wconversion", "-Wfloat-equal"]
+    compileFlags = ["-std=c++11", "-Wall", "-Wextra", "-Wpedantic", "-Wconversion", "-Wfloat-equal"]
 
 if sys.platform.startswith('darwin'):
     librariesArray.append('iconv')
-    compileFlags = ["-std=c++0x", "-Wall", "-Wextra", "-Wpedantic", "-Wconversion", "-Wfloat-equal"]
+    compileFlags = ["-std=c++11", "-Wall", "-Wextra", "-Wpedantic", "-Wconversion", "-Wfloat-equal"]
 
 if sys.platform.startswith('win'):
     librariesArray.append('kernel32')
@@ -69,7 +75,7 @@ imebraModule = Extension('_imebra',
                     libraries = librariesArray,
                     sources = imebra_sources,
                     extra_compile_args = compileFlags,
-                    include_dirs= ["./library/include"])
+                    include_dirs= include_directories)
 
 # Define the package
 #-------------------
