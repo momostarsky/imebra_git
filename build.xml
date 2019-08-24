@@ -337,12 +337,12 @@ Slovenia
         <copy todir="${python_test}">
             <fileset dir="${source_distribution}" />
         </copy>
-        <exec executable="python" dir="${python_test}" resolveexecutable="true" failonerror="true">
+        <exec executable="python3" dir="${python_test}" resolveexecutable="true" failonerror="true">
             <arg value="setup.py" />
             <arg value="install" />
             <arg value="--user" />
         </exec>
-        <exec executable="python" dir="${python_test}/tests/python" resolveexecutable="true" failonerror="true">
+        <exec executable="python3" dir="${python_test}/tests/python" resolveexecutable="true" failonerror="true">
             <arg value="tests.py" />
         </exec>
     </target>
