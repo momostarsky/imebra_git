@@ -30,8 +30,8 @@ void scpThread(
             for(const std::string& transferSyntax: transferSyntaxes)
             {
                 // Send a C-Store command
-                AssociationMessage command(abstractSyntax);
-                DataSet dataset0(transferSyntax);
+                MutableAssociationMessage command(abstractSyntax);
+                MutableDataSet dataset0(transferSyntax);
                 dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
                 dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), messageId, tagVR_t::US);
                 dataset0.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), "1.2.3.4.5");
@@ -51,8 +51,8 @@ void scpThread(
             for(const std::string& transferSyntax: transferSyntaxes)
             {
                 // Send a C-Store command
-                AssociationMessage command(abstractSyntax);
-                DataSet dataset0(transferSyntax);
+                MutableAssociationMessage command(abstractSyntax);
+                MutableDataSet dataset0(transferSyntax);
                 dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
                 dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), messageId++, tagVR_t::US);
                 dataset0.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), "1.2.3.4.5");
@@ -284,14 +284,14 @@ TEST(acseTest, scpScuRole)
             for(const std::string& transferSyntax: scu.getTransferSyntaxes(abstractSyntax))
             {
                 AssociationMessage command = scu.getCommand();
-                DataSet responseDataSet;
+                MutableDataSet responseDataSet;
                 responseDataSet.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x8001, tagVR_t::US);
                 std::uint32_t messageId(command.getCommand().getUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0));
                 responseDataSet.setUnsignedLong(TagId(tagId_t::MessageIDBeingRespondedTo_0000_0120), messageId, tagVR_t::US);
                 responseDataSet.setString(TagId(tagId_t::SeriesInstanceUID_0020_000E), "1.2.3.4.5");
                 responseDataSet.setUnsignedLong(TagId(tagId_t::CommandDataSetType_0000_0800), 0x0101);
                 responseDataSet.setUnsignedLong(TagId(tagId_t::Status_0000_0900), 0x0000);
-                AssociationMessage response(abstractSyntax);
+                MutableAssociationMessage response(abstractSyntax);
                 response.addDataSet(responseDataSet);
                 scu.sendMessage(response);
             }
@@ -299,8 +299,8 @@ TEST(acseTest, scpScuRole)
 
         // We can only receive uidHardcopyColorImageStorageSOPClass
         {
-            AssociationMessage command(uidHardcopyColorImageStorageSOPClass_1_2_840_10008_5_1_1_30);
-            DataSet dataset0;
+            MutableAssociationMessage command(uidHardcopyColorImageStorageSOPClass_1_2_840_10008_5_1_1_30);
+            MutableDataSet dataset0;
             dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
             dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
             dataset0.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), "1.2.3.4");
@@ -312,19 +312,19 @@ TEST(acseTest, scpScuRole)
         // We can transmit uidVerificationSOPClass_1_2_840_10008_1_1
         // because one of the presentation contexts declared it as SCU
         {
-            AssociationMessage command(uidVerificationSOPClass_1_2_840_10008_1_1);
-            DataSet dataset0;
+            MutableAssociationMessage command(uidVerificationSOPClass_1_2_840_10008_1_1);
+            MutableDataSet dataset0;
             dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
             dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0x2, tagVR_t::US);
             dataset0.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), "1.2.3.4");
             dataset0.setUnsignedLong(TagId(tagId_t::CommandDataSetType_0000_0800), 0);
             command.addDataSet(dataset0);
-            DataSet dataset1(uidExplicitVRLittleEndian_1_2_840_10008_1_2_1);
+            MutableDataSet dataset1(uidExplicitVRLittleEndian_1_2_840_10008_1_2_1);
             dataset1.setString(TagId(tagId_t::PatientName_0010_0010), "Test");
             command.addDataSet(dataset1);
             scu.sendMessage(command);
 
-            std::unique_ptr<AssociationMessage> response(scu.getResponse(0x2));
+            AssociationMessage response = scu.getResponse(0x2);
 
         }
 
@@ -447,13 +447,13 @@ TEST(acseTest, negotiationPartialMatchTransferSyntaxes)
  */
 TEST(acseTest, negotiationPartialMatchSameAbstractSyntax)
 {
-    Pipe toSCU(1024), toSCP(1024);
+    PipeStream toSCU(1024), toSCP(1024);
 
-    StreamReader readSCU(toSCU);
-    StreamWriter writeSCU(toSCP);
+    StreamReader readSCU(toSCU.getStreamInput());
+    StreamWriter writeSCU(toSCP.getStreamOutput());
 
-    StreamReader readSCP(toSCP);
-    StreamWriter writeSCP(toSCU);
+    StreamReader readSCP(toSCP.getStreamInput());
+    StreamWriter writeSCP(toSCU.getStreamOutput());
 
     PresentationContext scuContext0("1.2.840.10008.1.1");
     scuContext0.addTransferSyntax("1.2.840.10008.1.2"); // implicit VR little endian
@@ -493,8 +493,8 @@ TEST(acseTest, negotiationPartialMatchSameAbstractSyntax)
     EXPECT_THROW(scu.getTransferSyntax("1"), AcsePresentationContextNotRequestedError);
 
     {
-        AssociationMessage command("1.2.840.10008.1.1");
-        DataSet dataset0;
+        MutableAssociationMessage command("1.2.840.10008.1.1");
+        MutableDataSet dataset0;
         dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
         dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
         dataset0.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), "1.2.3.4");
@@ -503,17 +503,17 @@ TEST(acseTest, negotiationPartialMatchSameAbstractSyntax)
         command.addDataSet(dataset0);
         scu.sendMessage(command);
 
-        std::unique_ptr<AssociationMessage> pResponse(scu.getResponse(1));
-        std::unique_ptr<DataSet> responseDataSet(pResponse->getCommand());
-        EXPECT_EQ("1.2.840.10008.1.1", pResponse->getAbstractSyntax());
-        EXPECT_EQ("1.2.3.4", responseDataSet->getString(TagId(tagId_t::StudyInstanceUID_0020_000D), 0));
-        EXPECT_EQ("1.2.3.4.5", responseDataSet->getString(TagId(tagId_t::SeriesInstanceUID_0020_000E), 0));
-        EXPECT_EQ("1.2.840.10008.1.2.1",responseDataSet->getString(TagId(tagId_t::TransferSyntaxUID_0002_0010), 0));
+        AssociationMessage response = scu.getResponse(1);
+        DataSet responseDataSet = response.getCommand();
+        EXPECT_EQ("1.2.840.10008.1.1", response.getAbstractSyntax());
+        EXPECT_EQ("1.2.3.4", responseDataSet.getString(TagId(tagId_t::StudyInstanceUID_0020_000D), 0));
+        EXPECT_EQ("1.2.3.4.5", responseDataSet.getString(TagId(tagId_t::SeriesInstanceUID_0020_000E), 0));
+        EXPECT_EQ("1.2.840.10008.1.2.1",responseDataSet.getString(TagId(tagId_t::TransferSyntaxUID_0002_0010), 0));
     }
 
     {
-        AssociationMessage command("1.2.840.10008.1.1");
-        DataSet dataset0("1.2.840.10008.1.2.4.50");
+        MutableAssociationMessage command("1.2.840.10008.1.1");
+        MutableDataSet dataset0("1.2.840.10008.1.2.4.50");
         dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
         dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
         dataset0.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), "1.2.3.4");
@@ -522,12 +522,12 @@ TEST(acseTest, negotiationPartialMatchSameAbstractSyntax)
         command.addDataSet(dataset0);
         scu.sendMessage(command);
 
-        std::unique_ptr<AssociationMessage> pResponse(scu.getResponse(1));
-        std::unique_ptr<DataSet> responseDataSet(pResponse->getCommand());
-        EXPECT_EQ("1.2.840.10008.1.1", pResponse->getAbstractSyntax());
-        EXPECT_EQ("1.2.3.4", responseDataSet->getString(TagId(tagId_t::StudyInstanceUID_0020_000D), 0));
-        EXPECT_EQ("1.2.3.4.5", responseDataSet->getString(TagId(tagId_t::SeriesInstanceUID_0020_000E), 0));
-        EXPECT_EQ("1.2.840.10008.1.2.1",responseDataSet->getString(TagId(tagId_t::TransferSyntaxUID_0002_0010), 0));
+        AssociationMessage response = scu.getResponse(1);
+        DataSet responseDataSet = response.getCommand();
+        EXPECT_EQ("1.2.840.10008.1.1", response.getAbstractSyntax());
+        EXPECT_EQ("1.2.3.4", responseDataSet.getString(TagId(tagId_t::StudyInstanceUID_0020_000D), 0));
+        EXPECT_EQ("1.2.3.4.5", responseDataSet.getString(TagId(tagId_t::SeriesInstanceUID_0020_000E), 0));
+        EXPECT_EQ("1.2.840.10008.1.2.1",responseDataSet.getString(TagId(tagId_t::TransferSyntaxUID_0002_0010), 0));
     }
 
     scu.release();
