@@ -46,12 +46,20 @@ const std::shared_ptr<implementation::tcpListener>& getTCPListenerImplementation
 
 void TCPListener::terminate()
 {
+    IMEBRA_FUNCTION_START();
+
     m_pListener->terminate();
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 TCPStream TCPListener::waitForConnection()
 {
+    IMEBRA_FUNCTION_START();
+
     return TCPStream(m_pListener->waitForConnection());
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 

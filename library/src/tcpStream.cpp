@@ -52,17 +52,29 @@ TCPStream& TCPStream::operator=(const TCPStream& source)
 
 const TCPAddress TCPStream::getPeerAddress() const
 {
+    IMEBRA_FUNCTION_START();
+
     return TCPAddress(m_pStream->getPeerAddress());
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 BaseStreamInput TCPStream::getStreamInput()
 {
+    IMEBRA_FUNCTION_START();
+
     return BaseStreamInput(std::make_shared<implementation::tcpSequenceStreamInput>(m_pStream));
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 BaseStreamOutput TCPStream::getStreamOutput()
 {
+    IMEBRA_FUNCTION_START();
+
     return BaseStreamOutput(std::make_shared<implementation::tcpSequenceStreamOutput>(m_pStream));
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 

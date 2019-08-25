@@ -18,6 +18,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "../include/imebra/readingDataHandler.h"
 #include "../implementation/dataHandlerImpl.h"
 #include "../implementation/dataHandlerNumericImpl.h"
+#include "../implementation/exceptionImpl.h"
 #include "../include/imebra/age.h"
 #include "../include/imebra/patientName.h"
 #include <cstring>
@@ -50,57 +51,101 @@ const std::shared_ptr<implementation::handlers::readingDataHandler>& getReadingD
 
 size_t ReadingDataHandler::getSize() const
 {
+    IMEBRA_FUNCTION_START();
+
     return m_pDataHandler->getSize();
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 tagVR_t ReadingDataHandler::getDataType() const
 {
+    IMEBRA_FUNCTION_START();
+
     return m_pDataHandler->getDataType();
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 std::int32_t ReadingDataHandler::getSignedLong(size_t index) const
 {
+    IMEBRA_FUNCTION_START();
+
     return m_pDataHandler->getSignedLong(index);
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 std::uint32_t ReadingDataHandler::getUnsignedLong(size_t index) const
 {
+    IMEBRA_FUNCTION_START();
+
     return m_pDataHandler->getUnsignedLong(index);
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 double ReadingDataHandler::getDouble(size_t index) const
 {
+    IMEBRA_FUNCTION_START();
+
     return m_pDataHandler->getDouble(index);
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 std::string ReadingDataHandler::getString(size_t index) const
 {
+    IMEBRA_FUNCTION_START();
+
     return m_pDataHandler->getString(index);
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 std::wstring ReadingDataHandler::getUnicodeString(size_t index) const
 {
+    IMEBRA_FUNCTION_START();
+
     return m_pDataHandler->getUnicodeString(index);
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 const Date ReadingDataHandler::getDate(size_t index) const
 {
+    IMEBRA_FUNCTION_START();
+
     return Date(m_pDataHandler->getDate(index));
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 const Age ReadingDataHandler::getAge(size_t index) const
 {
+    IMEBRA_FUNCTION_START();
+
     return Age(m_pDataHandler->getAge(index));
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 const PatientName ReadingDataHandler::getPatientName(size_t index) const
 {
+    IMEBRA_FUNCTION_START();
+
     return PatientName(m_pDataHandler->getPatientName(index));
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 const UnicodePatientName ReadingDataHandler::getUnicodePatientName(size_t index) const
 {
+    IMEBRA_FUNCTION_START();
+
     return UnicodePatientName(m_pDataHandler->getUnicodePatientName(index));
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 

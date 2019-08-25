@@ -5,6 +5,9 @@
 #include <array>
 #include <list>
 #include <stdio.h>
+#include <fstream>
+#include <sstream>
+#include "testsSettings.h"
 
 #ifndef DISABLE_DIMSE_INTEROPERABILITY_TEST
     #include <dirent.h>
@@ -1323,6 +1326,19 @@ TEST(dimseTest, dimseTimeoutTest)
     {
 
     }
+
+#if defined(IMEBRA_LOGGING_LOG4CXX)
+    ::tests::settings& settings = ::tests::settings::getSettings();
+    if(!settings.get("--testLogFile").empty())
+    {
+        std::ifstream logFile(settings.get("--testLogFile"));
+        std::ostringstream readLog;
+        readLog <<  logFile.rdbuf();
+        std::string logContent(readLog.str());
+        EXPECT_TRUE(logContent.find("StreamClosedError") != std::string::npos);
+        EXPECT_TRUE(logContent.find("DIMSE Timeout") != std::string::npos);
+    }
+#endif
 
     thread.join();
 

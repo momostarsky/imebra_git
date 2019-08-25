@@ -53,26 +53,44 @@ Tag::Tag(const std::shared_ptr<imebra::implementation::data>& pData): m_pData(pD
 
 size_t Tag::getBuffersCount() const
 {
+    IMEBRA_FUNCTION_START();
+
     return m_pData->getBuffersCount();
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 bool Tag::bufferExists(size_t bufferId) const
 {
+    IMEBRA_FUNCTION_START();
+
     return m_pData->bufferExists(bufferId);
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 size_t Tag::getBufferSize(size_t bufferId) const
 {
+    IMEBRA_FUNCTION_START();
+
     return m_pData->getBufferSize(bufferId);
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 ReadingDataHandler Tag::getReadingDataHandler(size_t bufferId) const
 {
+    IMEBRA_FUNCTION_START();
+
     return ReadingDataHandler(m_pData->getReadingDataHandler(bufferId));
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 ReadingDataHandlerNumeric Tag::getReadingDataHandlerNumeric(size_t bufferId) const
 {
+    IMEBRA_FUNCTION_START();
+
     std::shared_ptr<implementation::handlers::readingDataHandlerNumericBase> numericHandler =
             std::dynamic_pointer_cast<implementation::handlers::readingDataHandlerNumericBase>(m_pData->getReadingDataHandler(bufferId));
     if(numericHandler.get() == 0)
@@ -80,32 +98,54 @@ ReadingDataHandlerNumeric Tag::getReadingDataHandlerNumeric(size_t bufferId) con
         throw std::bad_cast();
     }
     return ReadingDataHandlerNumeric(numericHandler);
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 ReadingDataHandlerNumeric Tag::getReadingDataHandlerRaw(size_t bufferId) const
 {
+    IMEBRA_FUNCTION_START();
+
     std::shared_ptr<implementation::handlers::readingDataHandlerNumericBase> numericHandler = m_pData->getReadingDataHandlerRaw(bufferId);
     return ReadingDataHandlerNumeric(numericHandler);
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 StreamReader Tag::getStreamReader(size_t bufferId) const
 {
+    IMEBRA_FUNCTION_START();
+
     return StreamReader(m_pData->getStreamReader(bufferId));
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 const DataSet Tag::getSequenceItem(size_t dataSetId) const
 {
+    IMEBRA_FUNCTION_START();
+
     return DataSet(m_pData->getSequenceItem(dataSetId));
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 bool Tag::sequenceItemExists(size_t dataSetId) const
 {
+    IMEBRA_FUNCTION_START();
+
     return m_pData->dataSetExists(dataSetId);
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 tagVR_t Tag::getDataType() const
 {
+    IMEBRA_FUNCTION_START();
+
     return m_pData->getDataType();
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 MutableTag::MutableTag(const std::shared_ptr<imebra::implementation::data>& pData): Tag(pData)
@@ -125,11 +165,17 @@ MutableTag& MutableTag::operator=(const MutableTag& source)
 
 WritingDataHandler MutableTag::getWritingDataHandler(size_t bufferId)
 {
+    IMEBRA_FUNCTION_START();
+
     return WritingDataHandler(getTagImplementation(*this)->getWritingDataHandler(bufferId));
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 WritingDataHandlerNumeric MutableTag::getWritingDataHandlerNumeric(size_t bufferId)
 {
+    IMEBRA_FUNCTION_START();
+
     std::shared_ptr<implementation::handlers::writingDataHandlerNumericBase> numericHandler =
             std::dynamic_pointer_cast<implementation::handlers::writingDataHandlerNumericBase>(getTagImplementation(*this)->getWritingDataHandler(bufferId));
     if(numericHandler.get() == 0)
@@ -137,27 +183,45 @@ WritingDataHandlerNumeric MutableTag::getWritingDataHandlerNumeric(size_t buffer
         throw std::bad_cast();
     }
     return WritingDataHandlerNumeric(numericHandler);
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 WritingDataHandlerNumeric MutableTag::getWritingDataHandlerRaw(size_t bufferId)
 {
+    IMEBRA_FUNCTION_START();
+
     std::shared_ptr<implementation::handlers::writingDataHandlerNumericBase> numericHandler = getTagImplementation(*this)->getWritingDataHandlerRaw(bufferId);
     return WritingDataHandlerNumeric(numericHandler);
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 StreamWriter MutableTag::getStreamWriter(size_t bufferId)
 {
+    IMEBRA_FUNCTION_START();
+
     return StreamWriter(getTagImplementation(*this)->getStreamWriter(bufferId));
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 MutableDataSet MutableTag::appendSequenceItem()
 {
+    IMEBRA_FUNCTION_START();
+
     return MutableDataSet(getTagImplementation(*this)->appendSequenceItem());
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 void MutableTag::setStream(size_t bufferId, FileStreamInput& streamInput)
 {
+    IMEBRA_FUNCTION_START();
+
     getTagImplementation(*this)->setExternalStream(bufferId, std::dynamic_pointer_cast<implementation::fileStreamInput>(getBaseStreamInputImplementation(streamInput)));
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 }

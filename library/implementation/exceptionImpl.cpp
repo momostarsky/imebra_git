@@ -25,6 +25,17 @@ namespace imebra
 namespace implementation
 {
 
+logTrace::logTrace(const std::string& functionName):
+    m_functionName(functionName)
+{
+    IMEBRA_LOG_TRACE("Entering " << m_functionName);
+}
+
+logTrace::~logTrace()
+{
+    IMEBRA_LOG_TRACE("Exiting " << m_functionName);
+}
+
 
 ///////////////////////////////////////////////////////////
 // Return the message info for the current thread
@@ -90,7 +101,8 @@ exceptionInfo::exceptionInfo(const std::string& functionName, const std::string&
 	m_lineNumber(lineNumber),
 	m_exceptionType(exceptionType),
 	m_exceptionMessage(exceptionMessage)
-{}
+{
+}
 
 ///////////////////////////////////////////////////////////
 // Copy constructor
@@ -120,13 +132,9 @@ std::string exceptionInfo::getMessage()
 
 exceptionsManagerGetter::exceptionsManagerGetter()
 {
-    IMEBRA_FUNCTION_START();
-
 #ifdef __APPLE__
     ::pthread_key_create(&m_key, &exceptionsManagerGetter::deleteExceptionsManager);
 #endif
-
-    IMEBRA_FUNCTION_END();
 }
 
 exceptionsManagerGetter::~exceptionsManagerGetter()

@@ -18,6 +18,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #include "../include/imebra/patientName.h"
 #include "../implementation/patientNameImpl.h"
+#include "../implementation/exceptionImpl.h"
 
 namespace imebra
 {
@@ -55,17 +56,29 @@ const std::shared_ptr<implementation::patientName>& getPatientNameImplementation
 
 std::string PatientName::getAlphabeticRepresentation() const
 {
+    IMEBRA_FUNCTION_START();
+
     return m_pPatientName->getAlphabeticRepresentation();
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 std::string PatientName::getIdeographicRepresentation() const
 {
+    IMEBRA_FUNCTION_START();
+
     return m_pPatientName->getIdeographicRepresentation();
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 std::string PatientName::getPhoneticRepresentation() const
 {
+    IMEBRA_FUNCTION_START();
+
     return m_pPatientName->getPhoneticRepresentation();
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 UnicodePatientName::UnicodePatientName(const UnicodePatientName& source):
@@ -100,17 +113,29 @@ const std::shared_ptr<implementation::unicodePatientName>& getUnicodePatientName
 
 std::wstring UnicodePatientName::getAlphabeticRepresentation() const
 {
+    IMEBRA_FUNCTION_START();
+
     return m_pPatientName->getAlphabeticRepresentation();
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 std::wstring UnicodePatientName::getIdeographicRepresentation() const
 {
+    IMEBRA_FUNCTION_START();
+
     return m_pPatientName->getIdeographicRepresentation();
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 std::wstring UnicodePatientName::getPhoneticRepresentation() const
 {
+    IMEBRA_FUNCTION_START();
+
     return m_pPatientName->getPhoneticRepresentation();
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 

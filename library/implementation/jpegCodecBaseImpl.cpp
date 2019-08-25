@@ -412,12 +412,8 @@ void jpegInformation::reset(imageQuality_t compQuality)
 ///////////////////////////////////////////////////////////
 void jpegInformation::eraseChannels()
 {
-    IMEBRA_FUNCTION_START();
-
     m_channelsMap.clear();
     m_channelsList.clear();
-
-    IMEBRA_FUNCTION_END();
 }
 
 
@@ -497,8 +493,6 @@ void jpegInformation::allocChannels()
 ///////////////////////////////////////////////////////////
 void jpegInformation::findMcuSize()
 {
-    IMEBRA_FUNCTION_START();
-
     // Find the maximum sampling factor for all the channels
     ///////////////////////////////////////////////////////////
     std::uint32_t maxSamplingFactorChannelsX=1;
@@ -566,9 +560,6 @@ void jpegInformation::findMcuSize()
     m_mcuProcessed = 0;
     m_mcuProcessedX = 0;
     m_mcuProcessedY = 0;
-
-
-    IMEBRA_FUNCTION_END();
 }
 
 
@@ -584,8 +575,6 @@ void jpegInformation::findMcuSize()
 ///////////////////////////////////////////////////////////
 void jpegInformation::recalculateQuantizationTables(int table)
 {
-    IMEBRA_FUNCTION_START();
-
     // Adjust the tables for compression/decompression
     ///////////////////////////////////////////////////////////
     std::uint8_t tableIndex = 0;
@@ -598,8 +587,6 @@ void jpegInformation::recalculateQuantizationTables(int table)
             ++tableIndex;
         }
     }
-
-    IMEBRA_FUNCTION_END();
 }
 
 
@@ -1165,53 +1152,53 @@ void tagDHT::readTag(streamReader& stream, jpegInformation* pInformation, std::u
     /////////////////////////////////////////////////////////////////
     std::uint8_t byte;
 
-    // Read all the defined tables
-    /////////////////////////////////////////////////////////////////
-    while(!tagReader->endReached())
-    {
-        // Read the table's ID
+        // Read all the defined tables
         /////////////////////////////////////////////////////////////////
-        tagReader->read(&byte, 1);
-
-        // Get a pointer to the right table
-        /////////////////////////////////////////////////////////////////
-        std::shared_ptr<huffmanTable> pHuffman;
-        if((byte & 0xf0) == 0)
-            pHuffman = pInformation->m_pHuffmanTableDC[byte & 0xf];
-        else
-            pHuffman = pInformation->m_pHuffmanTableAC[byte & 0xf];
-
-        // Reset the table
-        /////////////////////////////////////////////////////////////////
-        pHuffman->reset();
-
-        // Read the number of codes per length
-        /////////////////////////////////////////////////////////////////
-        for(std::uint32_t scanLength=0; scanLength != 16; )
+        while(!tagReader->endReached())
         {
+            // Read the table's ID
+            /////////////////////////////////////////////////////////////////
             tagReader->read(&byte, 1);
-            pHuffman->setValuesPerLength(++scanLength, (std::uint32_t)byte);
-        }
 
-        // Used to store the values into the table
-        /////////////////////////////////////////////////////////////////
-        std::uint32_t valueIndex = 0;
+            // Get a pointer to the right table
+            /////////////////////////////////////////////////////////////////
+            std::shared_ptr<huffmanTable> pHuffman;
+            if((byte & 0xf0) == 0)
+                pHuffman = pInformation->m_pHuffmanTableDC[byte & 0xf];
+            else
+                pHuffman = pInformation->m_pHuffmanTableAC[byte & 0xf];
 
-        // Read all the values and store them into the huffman table
-        /////////////////////////////////////////////////////////////////
-        for(std::uint32_t scanLength = 0; scanLength != 16; ++scanLength)
-        {
-            for(std::uint32_t scanValues = 0; scanValues != pHuffman->getValuesPerLength(scanLength + 1); ++scanValues)
+            // Reset the table
+            /////////////////////////////////////////////////////////////////
+            pHuffman->reset();
+
+            // Read the number of codes per length
+            /////////////////////////////////////////////////////////////////
+            for(std::uint32_t scanLength=0; scanLength != 16; )
             {
                 tagReader->read(&byte, 1);
-                pHuffman->addOrderedValue(valueIndex++, (std::uint32_t)byte);
+                pHuffman->setValuesPerLength(++scanLength, (std::uint32_t)byte);
             }
-        }
 
-        // Calculate the huffman tables
-        /////////////////////////////////////////////////////////////////
-        pHuffman->calcHuffmanTables();
-    }
+            // Used to store the values into the table
+            /////////////////////////////////////////////////////////////////
+            std::uint32_t valueIndex = 0;
+
+            // Read all the values and store them into the huffman table
+            /////////////////////////////////////////////////////////////////
+            for(std::uint32_t scanLength = 0; scanLength != 16; ++scanLength)
+            {
+                for(std::uint32_t scanValues = 0; scanValues != pHuffman->getValuesPerLength(scanLength + 1); ++scanValues)
+                {
+                    tagReader->read(&byte, 1);
+                    pHuffman->addOrderedValue(valueIndex++, (std::uint32_t)byte);
+                }
+            }
+
+            // Calculate the huffman tables
+            /////////////////////////////////////////////////////////////////
+            pHuffman->calcHuffmanTables();
+        }
 
     IMEBRA_FUNCTION_END_MODIFY(StreamEOFError, CodecCorruptedFileError);
 
@@ -1273,7 +1260,7 @@ void tagSOS::writeTag(streamWriter* pStream, jpegInformation& information) const
         {
             if(mapIterator->second == pChannel)
             {
-                channelId = mapIterator->first;
+                channelId=mapIterator->first;
                 break;
             }
         }

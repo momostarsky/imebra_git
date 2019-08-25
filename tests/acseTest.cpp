@@ -3,6 +3,9 @@
 #include <thread>
 #include <memory>
 #include <vector>
+#include <fstream>
+#include <sstream>
+#include "testsSettings.h"
 
 namespace imebra
 {
@@ -793,6 +796,21 @@ TEST(acseTest, negotiationMultiplePresentationContexts)
     scu.release();
 
     scp.join();
+
+#if defined(IMEBRA_LOGGING_LOG4CXX)
+    ::tests::settings& settings = ::tests::settings::getSettings();
+    if(!settings.get("--testLogFile").empty())
+    {
+        std::ifstream logFile(settings.get("--testLogFile"));
+        std::ostringstream readLog;
+        readLog <<  logFile.rdbuf();
+        std::string logContent(readLog.str());
+        EXPECT_TRUE(logContent.find("Presentation context ID = 1") != std::string::npos);
+        EXPECT_TRUE(logContent.find("Presentation context ID = 3") != std::string::npos);
+        EXPECT_TRUE(logContent.find("Presentation context ID = 2") == std::string::npos);
+    }
+#endif
+
 }
 
 

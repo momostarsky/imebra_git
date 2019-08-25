@@ -54,23 +54,35 @@ Memory::~Memory()
 
 size_t Memory::size() const
 {
+    IMEBRA_FUNCTION_START();
+
     return m_pMemory->size();
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 const char* Memory::data(size_t* pDataSize) const
 {
+    IMEBRA_FUNCTION_START();
+
     *pDataSize = m_pMemory->size();
     return (char*)m_pMemory->data();
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 size_t Memory::data(char* destination, size_t destinationSize) const
 {
+    IMEBRA_FUNCTION_START();
+
     size_t memorySize = m_pMemory->size();
     if(destination != 0 && destinationSize >= memorySize && memorySize != 0)
     {
         ::memcpy(destination, m_pMemory->data(), memorySize);
     }
     return memorySize;
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 void Memory::regionData(char* destination, size_t destinationSize, size_t sourceOffset) const
@@ -84,13 +96,17 @@ void Memory::regionData(char* destination, size_t destinationSize, size_t source
     }
     ::memcpy(destination, m_pMemory->data() + sourceOffset, memorySize);
 
-    IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 
 bool Memory::empty() const
 {
+    IMEBRA_FUNCTION_START();
+
     return m_pMemory->empty();
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 }

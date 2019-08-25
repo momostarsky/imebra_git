@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -98,7 +98,7 @@ void codecFactory::registerStreamCodec(codecType_t codecType, std::shared_ptr<st
 
     m_streamCodecs[codecType] = pCodec;
 
-	IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 void codecFactory::registerImageCodec(std::shared_ptr<imageCodec> pCodec)
@@ -126,16 +126,16 @@ std::shared_ptr<const imageCodec> codecFactory::getImageCodec(const std::string&
     IMEBRA_FUNCTION_START();
 
     for(std::list<std::shared_ptr<const imageCodec> >::iterator scanCodecs(m_imageCodecs.begin()); scanCodecs != m_imageCodecs.end(); ++scanCodecs)
-	{
-		if((*scanCodecs)->canHandleTransferSyntax(transferSyntax))
-		{
+    {
+        if((*scanCodecs)->canHandleTransferSyntax(transferSyntax))
+        {
             return *scanCodecs;
-		}
-	}
+        }
+    }
 
     IMEBRA_THROW(DataSetUnknownTransferSyntaxError, "None of the codecs support the specified transfer syntax");
 
-	IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -174,7 +174,7 @@ std::shared_ptr<codecFactory> codecFactory::getCodecFactory()
     // Violation to requirement REQ_MAKE_SHARED due to protected constructor
     static std::shared_ptr<codecFactory> m_codecFactory(new codecFactory());
 
-	return m_codecFactory;
+    return m_codecFactory;
 
     IMEBRA_FUNCTION_END();
 }
@@ -209,9 +209,9 @@ std::shared_ptr<dataSet> codecFactory::load(std::shared_ptr<streamReader> pStrea
     size_t startPosition = pStream->position();
     size_t bufferSize(pStream->readSome(buffer, sizeof(buffer)));
 
-	// Copy the list of codecs in a local list so we don't have
-	//  to lock the object for a long time
-	///////////////////////////////////////////////////////////
+    // Copy the list of codecs in a local list so we don't have
+    //  to lock the object for a long time
+    ///////////////////////////////////////////////////////////
     for(std::map<codecType_t, std::shared_ptr<const streamCodec> >::const_iterator scanCodecs(m_streamCodecs.begin()); scanCodecs != m_streamCodecs.end(); ++scanCodecs)
     {
         std::shared_ptr<streamReader> pTempReader;
@@ -245,18 +245,14 @@ std::shared_ptr<dataSet> codecFactory::load(std::shared_ptr<streamReader> pStrea
 
     IMEBRA_THROW(CodecWrongFormatError, "none of the codecs recognized the file format");
 
-	IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 
 void codecFactory::setMaximumImageSize(const uint32_t maximumWidth, const uint32_t maximumHeight)
 {
-    IMEBRA_FUNCTION_START();
-
     m_maximumImageWidth = maximumWidth;
     m_maximumImageHeight = maximumHeight;
-
-    IMEBRA_FUNCTION_END();
 }
 
 

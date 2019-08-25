@@ -49,6 +49,26 @@ else(IMEBRA_CHARSET_CONVERSION MATCHES ICONV)
     endif(WIN32)
 endif(IMEBRA_CHARSET_CONVERSION MATCHES ICONV)
 
+# Set the proper logging preprocessor macros
+#-------------------------------------------
+if(IMEBRA_LOG_FRAMEWORK MATCHES LOG4CXX)
+    add_definitions(-DIMEBRA_LOGGING_LOG4CXX)
+    set(imebra_libraries ${imebra_libraries} log4cxx) # Log4cxx needs additional libraries
+elseif(IMEBRA_LOG_FRAMEWORK MATCHES SYSLOG)
+    add_definitions(-DIMEBRA_LOGGING_SYSLOG)
+elseif(IMEBRA_LOG_FRAMEWORK MATCHES COUT)
+    add_definitions(-DIMEBRA_LOGGING_COUT)
+elseif(IMEBRA_LOG_FRAMEWORK MATCHES APPLE)
+    add_definitions(-DIMEBRA_LOGGING_APPLE)
+elseif(IMEBRA_LOG_FRAMEWORK MATCHES ANDROID)
+    add_definitions(-DIMEBRA_LOGGING_ANDROID)
+endif(IMEBRA_LOG_FRAMEWORK MATCHES LOG4CXX)
+
+if(IMEBRA_LOG_LEVEL)
+    add_definitions(-DIMEBRA_LOG_LEVEL_${IMEBRA_LOG_LEVEL})
+endif(IMEBRA_LOG_LEVEL)
+
+
 # For IPhone build a static library, otherwise build a dynamic library
 #---------------------------------------------------------------------
 if(NOT DEFINED IMEBRA_SHARED_STATIC)
@@ -86,6 +106,7 @@ file(GLOB imebra_interface "${CMAKE_CURRENT_SOURCE_DIR}/library/include/imebra/*
 file(GLOB imebra_include "${CMAKE_CURRENT_SOURCE_DIR}/library/src/*.h")
 file(GLOB imebra_src "${CMAKE_CURRENT_SOURCE_DIR}/library/src/*.cpp")
 file(GLOB imebra_implementation_src "${CMAKE_CURRENT_SOURCE_DIR}/library/implementation/*.cpp")
+file(GLOB imebra_implementation_src_objc "${CMAKE_CURRENT_SOURCE_DIR}/library/implementation/*.mm")
 file(GLOB imebra_implementation_include "${CMAKE_CURRENT_SOURCE_DIR}/library/implementation/*.h")
 set(imebra_objc_src "")
 set(imebra_objc_include "")
@@ -150,6 +171,7 @@ endif("${JPEG2000}" STREQUAL "2")
 
 add_library(imebra ${IMEBRA_SHARED_STATIC}
     ${imebra_implementation_src}
+    ${imebra_implementation_src_objc}
     ${imebra_implementation_include}
     ${imebra_objc_src}
     ${imebra_objc_include}
@@ -336,7 +358,11 @@ if(NOT IOS)
     ##############################################
     enable_testing()
 
+if(IMEBRA_LOG_FRAMEWORK MATCHES LOG4CXX)
+    add_test(RunImebraTests ImebraTests --corruptedFilesFolder=${CMAKE_CURRENT_SOURCE_DIR}/tests/corruptedfiles --testLogFile=${CMAKE_CURRENT_BINARY_DIR}/imebraTestLogFile.txt)
+else()
     add_test(RunImebraTests ImebraTests --corruptedFilesFolder=${CMAKE_CURRENT_SOURCE_DIR}/tests/corruptedfiles)
+endif()
 
 
     ##############################################

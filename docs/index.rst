@@ -36,6 +36,7 @@ Imebra
    :caption: User documentation
    
    compiling_imebra
+   logging
    getting_started
    add_to_project
    design_concepts

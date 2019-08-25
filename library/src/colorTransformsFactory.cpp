@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -58,6 +58,8 @@ std::uint32_t ColorTransformsFactory::getNumberOfChannels(const std::string& col
 
 Transform ColorTransformsFactory::getTransform(const std::string& startColorSpace, const std::string& endColorSpace)
 {
+    IMEBRA_FUNCTION_START();
+
     std::shared_ptr<imebra::implementation::transforms::colorTransforms::colorTransformsFactory> factory(imebra::implementation::transforms::colorTransforms::colorTransformsFactory::getColorTransformsFactory());
     Transform transform(factory->getTransform(startColorSpace, endColorSpace));
     if(transform.m_pTransform == 0)
@@ -65,6 +67,8 @@ Transform ColorTransformsFactory::getTransform(const std::string& startColorSpac
         IMEBRA_THROW(ColorTransformsFactoryNoTransformError, "There is no color transform that can convert between the specified color spaces " << startColorSpace << " and " << endColorSpace);
     }
     return transform;
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 }

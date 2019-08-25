@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -58,37 +58,57 @@ StreamReader StreamReader::getVirtualStream(size_t virtualStreamLength)
 
     return StreamReader(m_pReader->getReader(virtualStreamLength));
 
-    IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 void StreamReader::read(char* destination, size_t destinationSize)
 {
+    IMEBRA_FUNCTION_START();
+
     m_pReader->read((std::uint8_t*)destination, destinationSize);
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 size_t StreamReader::readSome(char* destination, size_t destinationSize)
 {
+    IMEBRA_FUNCTION_START();
+
     return m_pReader->readSome((std::uint8_t*)destination, destinationSize);
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 Memory StreamReader::read(size_t readSize)
 {
+    IMEBRA_FUNCTION_START();
+
     std::shared_ptr<implementation::memory> readMemory(std::make_shared<implementation::memory> (readSize));
     m_pReader->read(readMemory->data(), readSize);
     return Memory(readMemory);
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 Memory StreamReader::readSome(size_t readSize)
 {
+    IMEBRA_FUNCTION_START();
+
     std::shared_ptr<implementation::memory> readMemory(std::make_shared<implementation::memory> (readSize));
     size_t actuallyRead = m_pReader->readSome(readMemory->data(), readSize);
     readMemory->resize(actuallyRead);
     return Memory(readMemory);
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 void StreamReader::terminate()
 {
+    IMEBRA_FUNCTION_START();
+
     m_pReader->terminate();
+
+    IMEBRA_FUNCTION_END_LOG();
 }
 
 StreamReader::~StreamReader()
