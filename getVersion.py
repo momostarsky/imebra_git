@@ -8,7 +8,7 @@ branch = hgprocess.stdout.readlines()[0].decode("utf-8").rstrip()
 
 version = branch
 if version == "default":
-  version = "4"
+  version = "5"
 
 if version.count('.') == 0:
   version += ".999"  
@@ -17,7 +17,7 @@ if version.count('.') == 1:
 
 hgrelease = 'hg log -b ' + branch + ' --template . --rev ancestors(.)'
 hgprocess = subprocess.Popen(hgrelease.split(), stdout=subprocess.PIPE)
-release = version + '.' + str(hgprocess.stdout.readlines()[0].decode("utf-8").count('.'))
+release = version + '.' + str(hgprocess.stdout.readlines()[0].decode("utf-8").count('.') - 1)
 
 hgid = 'hg id -i'
 hgprocess = subprocess.Popen(hgid.split(), stdout=subprocess.PIPE)
