@@ -13,6 +13,8 @@ The following classes are described in this chapter:
 +========================================+======================================+===============================+
 |:cpp:class:`imebra::Image`              |:cpp:class:`ImebraImage`              |Stores a decompressed image    |
 +----------------------------------------+--------------------------------------+-------------------------------+
+|:cpp:class:`imebra::MutableImage`       |:cpp:class:`ImebraMutableImage`       |A mutable decompressed image   |
++----------------------------------------+--------------------------------------+-------------------------------+
 |:cpp:class:`imebra::DrawBitmap`         |:cpp:class:`ImebraDrawBitmap`         |Render an image into a bitmap  |
 +----------------------------------------+--------------------------------------+-------------------------------+
 
@@ -37,6 +39,22 @@ Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
 .. doxygenclass:: ImebraImage
+   :members:
+
+
+MutableImage
+............
+
+C++
+,,,
+
+.. doxygenclass:: imebra::MutableImage
+   :members:
+
+Objective-C/Swift
+,,,,,,,,,,,,,,,,,
+
+.. doxygenclass:: ImebraMutableImage
    :members:
 
 

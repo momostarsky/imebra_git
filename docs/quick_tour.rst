@@ -31,15 +31,6 @@ In Python, import the package imebra:
     from imebra.imebra import *
 
 
-In Golang, import the package "imebra":
-
-.. code-block:: go
-
-    import (
-        "imebra"
-    )
-
-
 Loading files
 -------------
 
@@ -71,13 +62,6 @@ In Python:
 .. code-block:: python
 
     loadedDataSet = CodecFactory.load("DicomFile.dcm")
-
-
-In Golang:
-
-.. code-block:: go
-
-    var loadedDataSet = imebra.CodecFactoryLoad("DicomFile.dcm")
 
 
 The previous code loads the file DicomFile.dcm.
@@ -116,14 +100,6 @@ in Python
     loadedDataSet = CodecFactory.load("DicomFile.dcm", 2048)
 
 
-in Golang
-
-.. code-block:: go
-
-    // Load tags in memory only if their size is equal or smaller than 2048 bytes
-    var loadedDataSet = imebra.CodecFactoryLoad("DicomFile.dcm", int64(2048))
-
-    
 Reading the tag's values
 ------------------------
 
@@ -138,8 +114,10 @@ In order to retrieve a tag's value, use one of the following methods
 - :cpp:member:`imebra::DataSet::getSignedLong`
 - :cpp:member:`imebra::DataSet::getUnsignedLong`
 - :cpp:member:`imebra::DataSet::getDouble`
-- :cpp:member:`imebra::DataSet::getString` (In Python all the strings are Unicode)
+- :cpp:member:`imebra::DataSet::getString`
 - :cpp:member:`imebra::DataSet::getUnicodeString` (C++ only)
+- :cpp:member:`imebra::DataSet::getPatientName`
+- :cpp:member:`imebra::DataSet::getUnicodePatientName` (C++ only)
 - :cpp:member:`imebra::DataSet::getAge`
 - :cpp:member:`imebra::DataSet::getDate`
 
@@ -157,54 +135,37 @@ This is how you retrieve the patient's name from the DataSet in C++:
 
 .. code-block:: c++
 
-    // A patient's name can contain up to 5 values, representing different interpretations of the same name
-    // (e.g. alphabetic representation, ideographic representation and phonetic representation)
-    // Here we retrieve the first interpretations (index 0 and 1)
-    std::wstring patientNameCharacter = loadedDataSet.getUnicodeString(imebra::TagId(imebra::tagId_t::PatientName_0010_0010), 0);
-    std::wstring patientNameIdeographic = loadedDataSet.getUnicodeString(imebra::TagId(imebra::tagId_t::PatientName_0010_0010), 1);
-
-or
-
-.. code-block:: c++
+    imebra::UnicodePatientName patientName = loadedDataSet.getUnicodePatientName(imebra::TagId(imebra::tagId_t::PatientName_0010_0010), 0);
 
     // A patient's name can contain up to 5 values, representing different interpretations of the same name
     // (e.g. alphabetic representation, ideographic representation and phonetic representation)
-    // Here we retrieve the first 2 interpretations (index 0 and 1)
-    std::wstring patientNameCharacter = loadedDataSet->getUnicodeString(imebra::TagId(0x10, 0x10), 0);
-    std::wstring patientNameIdeographic = loadedDataSet->getUnicode(imebra::TagId(0x10, 0x10), 1);
-
+    std::wstring patientNameCharacter = patientName.getAlphabeticRepresentation();
+    std::wstring patientNameIdeographic = patientName.getIdeographicRepresentation();
 
 and in Java:
 
 .. code-block:: java
 
+    com.imebra.PatientName patientName = loadedDataSet.getPatientName(new com.imebra.TagId(0x10, 0x10), 0);
+
     // A patient's name can contain up to 5 values, representing different interpretations of the same name
     // (e.g. alphabetic representation, ideographic representation and phonetic representation)
     // Here we retrieve the first 2 interpretations (index 0 and 1)
-    String patientNameCharacter = loadedDataSet.getString(new com.imebra.TagId(0x10, 0x10), 0);
-    String patientNameIdeographic = loadedDataSet.getString(new com.imebra.TagId(0x10, 0x10), 1);
+    String patientNameCharacter = patientName.getAlphabeticRepresentation();
+    String patientNameIdeographic = patientName.getIdeographicRepresentation();
 
 
 In python, you do it like this:
 
 .. code-block:: python
 
+    PatientName patientName = loadedDataSet.getPatientName(TagId(tagId_t_PatientName_0010_0010), 0);
+
     # A patient's name can contain up to 5 values, representing different interpretations of the same name
     # (e.g. alphabetic representation, ideographic representation and phonetic representation)
     # Here we retrieve the first 2 interpretations (index 0 and 1)
-    patientNameCharacter = loadedDataSet.GetString(TagId(tagId_t_PatientName_0010_0010), 0)
-    patientNameIdeographic = loadedDataSet.getString(TagId(tagId_t_PatientName_0010_0010), 1)
-
-
-In Golang, you do it like this:
-
-.. code-block:: go
-
-    // A patient's name can contain up to 5 values, representing different interpretations of the same name
-    // (e.g. alphabetic representation, ideographic representation and phonetic representation)
-    // Here we retrieve the first 2 interpretations (index 0 and 1)
-    var patientNameCharacter = loadedDataSet.GetString(imebra.NewTagId(imebra.TagId_t_PatientName_0010_0010), int64(0))
-    var patientNameIdeographic = loadedDataSet.GetString(imebra.NewTagId(imebra.TagId_t_PatientName_0010_0010), int64(1))
+    patientNameCharacter = patientName.getAlphabeticRepresentation();
+    patientNameIdeographic = patientName.getIdeographicRepresentation();
 
 
 Note that the previous code will throw one of the exceptions derived from :cpp:class:`imebra::MissingDataElementError`
@@ -215,44 +176,19 @@ a tag's value cannot be found in the DataSet :
 
 .. code-block:: c++
 
-    // Return an empty name if the tag is not present
-    std::wstring patientNameCharacter = loadedDataSet.getUnicodeString(imebra::TagId(imebra::tagId_t::PatientName_0010_0010), 0, L"");
-    std::wstring patientNameIdeographic = loadedDataSet.getUnicodeString(imebra::TagId(imebra::tagId_t::PatientName_0010_0010), 1, L"");
-
-or
-
-.. code-block:: c++
-
-    // Return an empty name if the tag is not present
-    std::wstring patientNameCharacter = loadedDataSet.getUnicodeString(imebra::TagId(0x10, 0x10), 0, L"");
-    std::wstring patientNameIdeographic = loadedDataSet.getUnicodeString(imebra::TagId(0x10, 0x10), 1, L"");
-
+    imebra::UnicodePatientName patientName = loadedDataSet.getUnicodePatientName(imebra::TagId(imebra::tagId_t::PatientName_0010_0010), 0, imebra::UnicodePatientName(L"", L"", L""));
 
 in Java:
 
 .. code-block:: java
 
-    // Return an empty name if the tag is not present
-    String patientNameCharacter = loadedDataSet.getString(new com.imebra.TagId(0x10, 0x10), 0, "");
-    String patientNameIdeographic = loadedDataSet.getString(new com.imebra.TagId(0x10, 0x10), 1, "");
-
+    com.imebra.PatientName patientName = loadedDataSet.getPatientName(new com.imebra.TagId(0x10, 0x10), 0, new com.imebra.PatientName("", "", ""));
 
 in Python:
 
 .. code-block:: python
 
-    # Return an empty name if the tag is not present
-    patientNameCharacter = loadedDataSet.getString(TagId(tagId_t_PatientName_0010_0010), 0, "")
-    patientNameIdeographic = loadedDataSet.getString(TagId(tagId_t_PatientName_0010_0010), 1, "")
-
-
-In Golang:
-
-.. code-block:: go
-
-    // Return an empty name if the tag is not present
-    var patientNameCharacter = loadedDataSet.GetString(imebra.NewTagId(imebra.TagId_t_PatientName_0010_0010), int64(0), "")
-    var patientNameIdeographic = loadedDataSet.GetString(imebra.NewTagId(imebra.TagId_t_PatientName_0010_0010), int64(1), "")
+    PatientName patientName = loadedDataSet.getPatientName(TagId(tagId_t_PatientName_0010_0010), 0, PatientName("", "", ""));
 
 
 Retrieving an image
@@ -273,7 +209,7 @@ To retrieve an image in C++:
 .. code-block:: c++
 
     // Retrieve the first image (index = 0)
-    imebra::Image image(loadedDataSet->getImageApplyModalityTransform(0));
+    imebra::Image image(loadedDataSet.getImageApplyModalityTransform(0));
 
     // Get the color space
     std::string colorSpace = image.getColorSpace();
@@ -311,21 +247,6 @@ To retrieve an image in Python:
     # Get the size in pixels
     width = image.getWidth()
     height = image.getHeight()
-
-
-To retrieve an image in Golang:
-
-.. code-block:: go
-
-    // Retrieve the first image (index = 0)
-    var image = loadedDataSet.GetImageApplyModalityTransform(0)
-
-    // Get the color space
-    var colorSpace = image.GetColorSpace()
-
-    // Get the size in pixels
-    var width = image.GetWidth()
-    var height = image.GetHeight()
 
 
 In order to access the image's pixels you can obtain a :cpp:class:`imebra::ReadingDataHandlerNumeric` and then
@@ -511,22 +432,22 @@ in C++
     // apply to the image before displaying it
     imebra::TransformsChain chain;
 
-    if(imebra::ColorTransformsFactory::isMonochrome(image->getColorSpace())
+    if(imebra::ColorTransformsFactory::isMonochrome(image.getColorSpace())
     {
         // Allocate a VOILUT transform. If the DataSet does not contain any pre-defined
         //  settings then we will find the optimal ones.
         VOILUT voilutTransform;
 
         // Retrieve the VOIs (center/width pairs)
-        imebra::vois_t vois = loadedDataSet->getVOIs();
+        imebra::vois_t vois = loadedDataSet.getVOIs();
 
         // Retrieve the LUTs
-        std::list<std::shared_ptr<imebra::LUT> > luts;
+        std::list<imebra::LUT> luts;
         for(size_t scanLUTs(0); ; ++scanLUTs)
         {
             try
             {
-                luts.push_back(loadedDataSet->getLUT(imebra::TagId(imebra::tagId_t::VOILUTSequence_0028_3010), scanLUTs));
+                luts.push_back(loadedDataSet.getLUT(imebra::TagId(imebra::tagId_t::VOILUTSequence_0028_3010), scanLUTs));
             }
             catch(const imebra::MissingDataElementError&)
             {
@@ -540,7 +461,7 @@ in C++
         }
         else if(!luts.empty())
         {
-            voilutTransform.setLUT(*(luts.front().get()));
+            voilutTransform.setLUT(*(luts.front()));
         }
         else
         {
@@ -675,7 +596,7 @@ To create an empty DataSet in C++:
 .. code-block:: c++
 
     // We specify the transfer syntax and the charset
-    imebra::DataSet dataSet("1.2.840.10008.1.2.1", "ISO 2022 IR 6");
+    imebra::MutableDataSet dataSet("1.2.840.10008.1.2.1", "ISO 2022 IR 6");
 
 
 In Java:
@@ -683,7 +604,7 @@ In Java:
 .. code-block:: java
 
     // We specify the transfer syntax and the charset
-    com.imebra.DataSet dataSet = new com.imebra.DataSet("1.2.840.10008.1.2.1", "ISO 2022 IR 6");
+    com.imebra.MutableDataSet dataSet = new com.imebra.MutableDataSet("1.2.840.10008.1.2.1", "ISO 2022 IR 6");
 
 
 
@@ -692,7 +613,7 @@ In Python:
 .. code-block:: python
 
     # We specify the transfer syntax and the charset
-    dataSet = DataSet("1.2.840.10008.1.2.1", "ISO 2022 IR 6")
+    dataSet = MutableDataSet("1.2.840.10008.1.2.1", "ISO 2022 IR 6")
 
 
 
@@ -711,13 +632,15 @@ Once the DataSet has been loaded your application can retrieve the tags stored i
 
 In order to write a tag's value, use one of the following methods
 
-- :cpp:member:`imebra::DataSet::setSignedLong`
-- :cpp:member:`imebra::DataSet::setUnsignedLong`
-- :cpp:member:`imebra::DataSet::setDouble`
-- :cpp:member:`imebra::DataSet::setString` (In Python all the strings are Unicode)
-- :cpp:member:`imebra::DataSet::setUnicodeString` (C++ only)
-- :cpp:member:`imebra::DataSet::setAge`
-- :cpp:member:`imebra::DataSet::setDate`
+- :cpp:member:`imebra::MutableDataSet::setSignedLong`
+- :cpp:member:`imebra::MutableDataSet::setUnsignedLong`
+- :cpp:member:`imebra::MutableDataSet::setDouble`
+- :cpp:member:`imebra::MutableDataSet::setString`
+- :cpp:member:`imebra::MutableDataSet::setUnicodeString` (C++ only)
+- :cpp:member:`imebra::MutableDataSet::setpatientName`
+- :cpp:member:`imebra::MutableDataSet::setUnicodePatientName` (C++ only)
+- :cpp:member:`imebra::MutableDataSet::setAge`
+- :cpp:member:`imebra::MutableDataSet::setDate`
 
 The WritingDataHandler and WritingDataHandlerNumeric contain the same setters but allow to access all the tags' elements, not just
 the first one.
@@ -728,62 +651,19 @@ In C++:
 
 .. code-block:: c++
 
-    dataSet.setUnicodeString(TagId(imebra::tagId_t::PatientName_0010_0010), L"Patient^Name");
+    dataSet.setUnicodePatientName(TagId(imebra::tagId_t::PatientName_0010_0010), UnicodePatientName(L"Patient^Name", "", ""));
 
 In Java:
 
 .. code-block:: java
 
-    dataSet.setString(new com.imebra.TagId(0x10, 0x10), "Patient^Name");
+    dataSet.setString(new com.imebra.TagId(0x10, 0x10), new PatientName("Patient^Name", "", ""));
 
 In Python:
 
 .. code-block:: python
 
-    dataSet.setString(TagId(tagId_t_PatientName_0010_0010), "Patient^Name")
-
-
-You can also set tags values by retrieving a WritingDataHandler and populating it: the WritingDataHandler will commit the data
-into the DataSet when it is destroyed:
-
-in C++:
-
-.. code-block:: c++
-    
-    {
-        WritingDataHandler dataHandler(dataSet.getWritingDataHandler(0));
-        dataHandler.setUnicodeString(0, L"AlphabeticName");
-        dataHandler.setUnicodeString(1, L"IdeographicName");
-        dataHandler.setUnicodeString(2, L"PhoneticName");
-
-        // dataHandler will go out of scope and will commit the data into the dataSet
-    }
-
-in Java:
-
-.. code-block:: java
-    
-    {
-        com.imebra.WritingDataHandler dataHandler = dataSet.getWritingDataHandler(0);
-        dataHandler.setString(0, "AlphabeticName");
-        dataHandler.setString(1, "IdeographicName");
-        dataHandler.setString(2, "PhoneticName");
-
-        // Force the commit, don't wait for the garbage collector
-        dataHandler.delete();
-    }
-
-in Python:
-
-.. code-block:: python
-    
-    dataHandler = dataSet.getWritingDataHandler(0)
-    dataHandler.setString(0, "AlphabeticName")
-    dataHandler.setString(1, "IdeographicName")
-    dataHandler.setString(2, "PhoneticName")
-
-    # Force the commit
-    dataHandler = None
+    dataSet.setString(TagId(tagId_t_PatientName_0010_0010), PatientName("Patient^Name", "", ""))
 
 
 Embedding images into the dataSet
@@ -822,7 +702,7 @@ in Java
 .. code-block:: java
 
     // Create a 300 by 200 pixel image, 15 bits per color channel, RGB
-    com.imebra.Image image = new com.imebra.Image(300, 200, com.imebra.bitDepth_t.depthU16, "RGB", 15);
+    com.imebra.MutableImage image = new com.imebra.MutableImage(300, 200, com.imebra.bitDepth_t.depthU16, "RGB", 15);
     
     {
         WritingDataHandlerNumeric dataHandler = image.getWritingDataHandler();
@@ -849,7 +729,7 @@ in Python
 .. code-block:: python
 
     # Create a 300 by 200 pixel image, 15 bits per color channel, RGB
-    image = Image(300, 200, bitDepth_t_depthU16, "RGB", 15)
+    image = MutableImage(300, 200, bitDepth_t_depthU16, "RGB", 15)
     
     WritingDataHandlerNumeric dataHandler = image.getWritingDataHandler();
 
@@ -919,8 +799,8 @@ We then send the command and wait for a response:
     // Allocate a stream reader and a writer that use the TCP stream.
     // If you need a more complex stream (e.g. a stream that uses your
     // own services to send and receive data) then use a Pipe
-    imebra::StreamReader readSCU(tcpStream);
-    imebra::StreamWriter writeSCU(tcpStream);
+    imebra::StreamReader readSCU(tcpStream.getInputStream());
+    imebra::StreamWriter writeSCU(tcpStream.getOutputStream());
 
     // Add all the abstract syntaxes and the supported transfer
     // syntaxes for each abstract syntax (the pair abstract/transfer syntax is
@@ -988,8 +868,8 @@ receive commands and send the responses.
 
     // tcpStream now represents the connected socket. Allocate a stream reader and a writer
     // to read and write on the connected socket
-    imebra::StreamReader readSCU(*tcpStream);
-    imebra::StreamWriter writeSCU(*tcpStream);
+    imebra::StreamReader readSCU(tcpStream.getInputStream());
+    imebra::StreamWriter writeSCU(tcpStream.getOutputStream());
 
     // Specify which presentation contexts we accept
     imebra::PresentationContext context(sopClassUid);
@@ -1010,16 +890,16 @@ receive commands and send the responses.
         {
             // We assume we are going to receive a C-Store. Normally you should check the command type
             // (using DimseCommand::getCommandType()) and then cast to the proper class.
-            std::unique_ptr<imebra::CStoreCommand> command(dynamic_cast<imebra::CStoreCommand*>(dimse.getCommand()));
+            imebra::CStoreCommand command(dimse.getCommand().getAsCStoreCommand());
 
             // The store command has a payload. We can do something with it, or we can
             // use the methods in CStoreCommand to get other data sent by the peer
-            std::unique_ptr<imebra::DataSet> pPayload(command->getPayloadDataSet());
+            imebra::DataSet payload = command.getPayloadDataSet();
 
             // Do something with the payload
 
             // Send a response
-            dimse.sendCommandOrResponse(CStoreResponse(*command, dimseStatusCode_t::success));
+            dimse.sendCommandOrResponse(CStoreResponse(command, dimseStatusCode_t::success));
         }
     }
     catch(const StreamEOFError&)

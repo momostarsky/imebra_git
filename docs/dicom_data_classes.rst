@@ -12,10 +12,13 @@ The following classes are described in this chapter:
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
 |C++ class                                      |Objective-C/Swift class                      |Description                    |
 +===============================================+=============================================+===============================+
-|:cpp:class:`imebra::DataSet`                   |:cpp:class:`ImebraDataSet`                   |Stored a complete DICOM        |
-|                                               |                                             |structure                      |
+|:cpp:class:`imebra::DataSet`                   |:cpp:class:`ImebraDataSet`                   |An immutable DICOM structure   |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::Tag`                       |:cpp:class:`ImebraTag`                       |Stores a single DICOM tag      |
+|:cpp:class:`imebra::MutableDataSet`            |:cpp:class:`ImebraMutableDataSet`            |Mutable DICOM structure        |
++-----------------------------------------------+---------------------------------------------+-------------------------------+
+|:cpp:class:`imebra::Tag`                       |:cpp:class:`ImebraTag`                       |A single immutable DICOM tag   |
++-----------------------------------------------+---------------------------------------------+-------------------------------+
+|:cpp:class:`imebra::MutableTag`                |:cpp:class:`ImebraMutableTag`                |A single mutable DICOM tag     |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
 |:cpp:class:`imebra::TagId`                     |:cpp:class:`ImebraTagId`                     |Identifies a tag               |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
@@ -75,6 +78,24 @@ Objective-C/Swift
    :members:
 
 
+.. _MutableDataSet:
+
+MutableDataSet
+..............
+
+C++
+,,,
+
+.. doxygenclass:: imebra::MutableDataSet
+   :members:
+
+Objective-C/Swift
+,,,,,,,,,,,,,,,,,
+
+.. doxygenclass:: ImebraMutableDataSet
+   :members:
+
+
 .. _Tag:
 
 Tag
@@ -90,6 +111,24 @@ Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
 .. doxygenclass:: ImebraTag
+   :members:
+
+
+.. _MutableTag:
+
+MutableTag
+..........
+
+C++
+,,,
+
+.. doxygenclass:: imebra::MutableTag
+   :members:
+
+Objective-C/Swift
+,,,,,,,,,,,,,,,,,
+
+.. doxygenclass:: ImebraMutableTag
    :members:
 
 

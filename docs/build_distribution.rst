@@ -64,7 +64,7 @@ Finally, cd into the imebra folder and execute ant to build the source distribut
 Versioning
 ==========
 
-Public releases of Imebra V4 are versioned according to the rules defined in `Semantic versioning <http://semver.org/>`_.
+Public releases of Imebra V5 are versioned according to the rules defined in `Semantic versioning <http://semver.org/>`_.
 
 Additionally, Imebra distributions contain a 4th number that indicates the branch revision number and is used to identify
 builds that don't contain any change in the library's source code and interface but contains changes in the auxiliary files (e.g.
@@ -75,7 +75,7 @@ or the major version branches have a minor version set to 999, the minor version
 
 For instance:
 
-- version 4.1.2.23 indicates a stable build, built from the revision 23of the branch "4.1.2"
-- version 4.1.999.45 indicates a nightly build of version 4.1, build from the commit number 45 in the branch.
-- version 4.999.999.678 indicates a nightly build of version 4 (master branch), build from the commit number 678 in the branch.
+- version 5.1.2.23 indicates a stable build, built from the revision 23of the branch "5.1.2"
+- version 5.1.999.45 indicates a nightly build of version 5.1, build from the commit number 45 in the branch.
+- version 5.999.999.678 indicates a nightly build of version 5 (master branch), build from the commit number 678 in the branch.
 

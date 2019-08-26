@@ -11,10 +11,10 @@ The following classes are described in this chapter:
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
 |C++ class                                      |Objective-C/Swift class                      |Description                    |
 +===============================================+=============================================+===============================+
-|:cpp:class:`imebra::ReadMemory`                |:cpp:class:`ImebraReadMemory`                |Allows to read the memory      |
+|:cpp:class:`imebra::Memory`                    |:cpp:class:`ImebraMemory`                    |Allows to read the memory      |
 |                                               |                                             |content                        |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::ReadWriteMemory`           |:cpp:class:`ImebraReadWriteMemory`           |Allows to read and write the   |
+|:cpp:class:`imebra::MutableMemory`             |:cpp:class:`ImebraMutableMemory`             |Allows to read and write the   |
 |                                               |                                             |memory content                 |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
 |:cpp:class:`imebra::MemoryPool`                |:cpp:class:`ImebraMemoryPool`                |Allocatess or reuse a memory   |
@@ -37,35 +37,35 @@ a while so it can be reused by classes than need a similar amount of memory.
 Memory access
 -------------
 
-ReadMemory
-..........
+Memory
+......
 
 C++
 ,,,
 
-.. doxygenclass:: imebra::ReadMemory
+.. doxygenclass:: imebra::Memory
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraReadMemory
+.. doxygenclass:: ImebraMemory
    :members:
 
 
-ReadWriteMemory
-...............
+MutableMemory
+.............
 
 C++
 ,,,
 
-.. doxygenclass:: imebra::ReadWriteMemory
+.. doxygenclass:: imebra::MutableMemory
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraReadWriteMemory
+.. doxygenclass:: ImebraMutableMemory
    :members:
 
 
