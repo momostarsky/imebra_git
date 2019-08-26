@@ -38,8 +38,6 @@ TEST(multipleImagesTest, testLosslessImages)
                     1024,
                     depth,
                     highBit,
-                    1024,
-                    1024,
                     colorSpace,
                     2);
 

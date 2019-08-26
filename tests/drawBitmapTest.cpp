@@ -10,17 +10,15 @@ namespace tests
 
 TEST(drawBitmapTest, testDrawBitmapRGB)
 {
-	for(int monochrome(0); monochrome != 2; ++monochrome)
-	{
+    for(int monochrome(0); monochrome != 2; ++monochrome)
+    {
         for(std::uint32_t highBit = 15; highBit != 2; --highBit)
-		{
+        {
             Image testImage = buildImageForTest(
                     401,
                     301,
                     bitDepth_t::depthU32,
                     highBit,
-                    401,
-                    301,
                     monochrome == 1 ? "MONOCHROME2" :
                                       "RGB",
                     50);
@@ -38,9 +36,9 @@ TEST(drawBitmapTest, testDrawBitmapRGB)
             std::uint32_t red, green, blue;
             size_t index(0);
             for(std::uint32_t scanY = 0; scanY != testImage.getHeight(); ++scanY)
-			{
+            {
                 for(std::uint32_t scanX = 0; scanX != testImage.getWidth(); ++scanX)
-				{
+                {
                     std::uint32_t displayRed(*pBuffer++);
                     std::uint32_t displayGreen(*pBuffer++);
                     std::uint32_t displayBlue(*pBuffer++);
@@ -76,11 +74,11 @@ TEST(drawBitmapTest, testDrawBitmapRGB)
                     EXPECT_EQ(red, displayRed);
                     EXPECT_EQ(green, displayGreen);
                     EXPECT_EQ(blue, displayBlue);
-				}
+                }
 
-			}
-		}
-	}
+            }
+        }
+    }
 }
 
 
@@ -95,8 +93,6 @@ TEST(drawBitmapTest, testDrawBitmapBGR)
                     301,
                     bitDepth_t::depthU32,
                     highBit,
-                    401,
-                    301,
                     monochrome == 1 ? "MONOCHROME2" :
                                       "RGB",
                     50);
@@ -171,8 +167,6 @@ TEST(drawBitmapTest, testDrawBitmapRGBA)
                     301,
                     bitDepth_t::depthU32,
                     highBit,
-                    401,
-                    301,
                     monochrome == 1 ? "MONOCHROME2" :
                                       "RGB",
                     50);
@@ -247,8 +241,6 @@ TEST(drawBitmapTest, testDrawBitmapBGRA)
                     301,
                     bitDepth_t::depthU32,
                     highBit,
-                    401,
-                    301,
                     monochrome == 1 ? "MONOCHROME2" :
                                       "RGB",
                     50);

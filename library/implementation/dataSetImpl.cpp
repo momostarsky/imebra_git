@@ -296,9 +296,6 @@ std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
             }
         }
 
-        double pixelDistanceX = getDouble(0x0028, 0x0, 0x0030, 0, 0, 1);
-        double pixelDistanceY = getDouble(0x0028, 0x0, 0x0030, 0, 1, 1);
-
         std::shared_ptr<image> pImage;
         pImage = pCodec->getImage(*this, imageStream, imageStreamDataType);
 
@@ -314,7 +311,6 @@ std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
         {
             std::uint32_t width, height;
             pImage->getSize(&width, &height);
-            pImage->setSizeMm(pixelDistanceX*(double)width, pixelDistanceY*(double)height);
         }
 
         if(pImage->getColorSpace() == "PALETTE COLOR")
@@ -586,10 +582,6 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
         {
             IMEBRA_THROW(DataSetImagePaletteColorIsReadOnly, "Cannot set images with color space PALETTE COLOR");
         }
-
-        double imageSizeMmX, imageSizeMmY;
-        pImage->getSizeMm(&imageSizeMmX, &imageSizeMmY);
-
     }
 
     // Update the number of frames

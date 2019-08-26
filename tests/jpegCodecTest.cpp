@@ -22,7 +22,7 @@ TEST(jpegCodecTest, testBaseline)
         std::uint32_t width = 600;
         std::uint32_t height = 400;
 
-        Image baselineImage = buildImageForTest(width, height, precision == 0 ? bitDepth_t::depthU8 : bitDepth_t::depthU16, bits, 30, 20, "RGB", 50);
+        Image baselineImage = buildImageForTest(width, height, precision == 0 ? bitDepth_t::depthU8 : bitDepth_t::depthU16, bits, "RGB", 50);
 
         Transform colorTransform = ColorTransformsFactory::getTransform("RGB", "YBR_FULL");
         MutableImage ybrImage = colorTransform.allocateOutputImage(baselineImage, width, height);
@@ -69,7 +69,7 @@ TEST(jpegCodecTest, testBaselineSubsampled)
                 {
                     std::uint32_t width = 300;
                     std::uint32_t height = 200;
-                    Image baselineImage = buildSubsampledImage(width, height, bitDepth_t::depthU8, 7, 30, 20, "RGB");
+                    Image baselineImage = buildSubsampledImage(width, height, bitDepth_t::depthU8, 7, "RGB");
 
                     Transform colorTransform = ColorTransformsFactory::getTransform("RGB", "YBR_FULL");
                     MutableImage ybrImage = colorTransform.allocateOutputImage(baselineImage, width, height);
@@ -170,7 +170,7 @@ TEST(jpegCodecTest, testLossless)
                             depth = (b2Complement == 1) ? bitDepth_t::depthS16 : bitDepth_t::depthU16;
                         }
 
-                        Image image = buildImageForTest(width, height, depth, bits, 30, 20, colorSpace == 0 ? "RGB" : "MONOCHROME2", 50);
+                        Image image = buildImageForTest(width, height, depth, bits, colorSpace == 0 ? "RGB" : "MONOCHROME2", 50);
 
 
                         MutableMemory savedJpeg;

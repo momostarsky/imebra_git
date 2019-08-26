@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -86,8 +86,8 @@ class image
 {
 public:
 
-	// Constructor
-	///////////////////////////////////////////////////////////
+    // Constructor
+    ///////////////////////////////////////////////////////////
     image(
             std::uint32_t width,
             std::uint32_t height,
@@ -98,138 +98,117 @@ public:
     ~image();
 
 
-	/// \brief Create the image.
-	///
-	/// An image with the specified size (in pixels), bit depth
-	///  and color space is allocated.
-	/// The number of channels to allocate is automatically
-	///  calculated using the colorSpace parameter.
-	///
-	/// @param width    the image's width, in pixels.
-	/// @param height    the image's height, in pixels.
-	/// @param depth    the size of a single color's component.
-	/// @param colorSpace The color space as defined by the
-	///                 DICOM standard.
-	///                 Valid colorspace are:
-	///                 - "RGB"
-	///                 - "YBR_FULL"
-	///                 - "YBR_PARTIAL"
-	///                 - "YBR_RCT" (Not yet supported)
-	///                 - "YBR_ICT" (Not yet supported)
-	///                 - "PALETTE COLOR"
-	///                 - "MONOCHROME2"
-	///                 - "MONOCHROME1"
-	/// @param highBit  the highest bit used for integer
-	///                  values.
-	/// @return         the data handler containing the image's
-	///                  data
-	///
-	///////////////////////////////////////////////////////////
+    /// \brief Create the image.
+    ///
+    /// An image with the specified size (in pixels), bit depth
+    ///  and color space is allocated.
+    /// The number of channels to allocate is automatically
+    ///  calculated using the colorSpace parameter.
+    ///
+    /// @param width    the image's width, in pixels.
+    /// @param height    the image's height, in pixels.
+    /// @param depth    the size of a single color's component.
+    /// @param colorSpace The color space as defined by the
+    ///                 DICOM standard.
+    ///                 Valid colorspace are:
+    ///                 - "RGB"
+    ///                 - "YBR_FULL"
+    ///                 - "YBR_PARTIAL"
+    ///                 - "YBR_RCT" (Not yet supported)
+    ///                 - "YBR_ICT" (Not yet supported)
+    ///                 - "PALETTE COLOR"
+    ///                 - "MONOCHROME2"
+    ///                 - "MONOCHROME1"
+    /// @param highBit  the highest bit used for integer
+    ///                  values.
+    /// @return         the data handler containing the image's
+    ///                  data
+    ///
+    ///////////////////////////////////////////////////////////
     std::shared_ptr<handlers::writingDataHandlerNumericBase> create(
-		const std::uint32_t width,
-		const std::uint32_t height,
-		const bitDepth_t depth,
+        const std::uint32_t width,
+        const std::uint32_t height,
+        const bitDepth_t depth,
         const std::string& colorSpace,
         const std::uint32_t  highBit);
 
-	/// \brief Set the palette for the image
-	///
-	/// @param imagePalette  the palette used in the image
-	///
-	///////////////////////////////////////////////////////////
-	void setPalette(std::shared_ptr<palette> imagePalette);
+    /// \brief Set the palette for the image
+    ///
+    /// @param imagePalette  the palette used in the image
+    ///
+    ///////////////////////////////////////////////////////////
+    void setPalette(std::shared_ptr<palette> imagePalette);
 
-	/// \brief Retrieve the image's size, in millimeters.
-	///
-	/// The image's size in millimeters is automatically read
-	///  from the dicom structure or can be set using
-	///  setSizeMm().
-	///
-	/// @param pWidth a pointer to the variable to fill with
-	///               the image's width (in millimeters).
-	/// @param pHeight a pointer to the variable to fill with
-	///               the image's height (in millimeters).
-	///////////////////////////////////////////////////////////
-    void getSizeMm(double* pWidth, double* pHeight) const;
-
-	/// \brief Set the image's size, in millimeters.
-	///
-	/// @param width the new image's width, in millimeters.
-	/// @param height the new image's height, in millimeters.
-	///
-	///////////////////////////////////////////////////////////
-	void setSizeMm(const double width, const double height);
-
-	/// \brief Get the image's size, in pixels.
-	///
-	/// @param pWidth a pointer to the variable to fill with
-	///               the image's width (in pixels).
-	/// @param pHeight a pointer to the variable to fill with
-	///               the image's height (in pixels).
-	///
-	///////////////////////////////////////////////////////////
+    /// \brief Get the image's size, in pixels.
+    ///
+    /// @param pWidth a pointer to the variable to fill with
+    ///               the image's width (in pixels).
+    /// @param pHeight a pointer to the variable to fill with
+    ///               the image's height (in pixels).
+    ///
+    ///////////////////////////////////////////////////////////
     void getSize(std::uint32_t* pWidth, std::uint32_t* pHeight) const;
 
-	/// \brief Retrieve a data handler for managing the
-	///        image's buffer
-	///
-	/// The retrieved data handler gives access to the image's
-	///  buffer.
-	/// The image's buffer stores the data in the following
-	///  format:
-	/// - when multiple channels are present, then the channels
-	///   are ALWAYS interleaved
-	/// - the channels are NEVER subsampled or oversampled.
-	///   The subsampling/oversampling is done by the codecs
-	///   when the image is stored or loaded from the dicom
-	///   structure.
-	/// - the first stored value represent the first channel of
-	///   the top/left pixel.
-	/// - each row is stored countiguously, from the top to the
-	///   bottom.
-	///
-	/// @param bWrite   true if the application wants to write
-	///                 into the buffer, false otherwise.
-	/// @param pRowSize the function will fill the variable
-	///                 pointed by this parameter with
-	///                 the size of a single row, in bytes.
-	/// @param pChannelPixelSize the function will fill the
-	///                 variable pointed by this parameter with
-	///                 the size of a single pixel,
-	///                 in bytes.
-	/// @param pChannelsNumber  the function will fill the
-	///                 variable pointed by this parameter with
-	///                 the number of channels per pixel.
-	/// @return a pointer to the data handler for the image's
-	///         buffer.
-	///
-	///////////////////////////////////////////////////////////
+    /// \brief Retrieve a data handler for managing the
+    ///        image's buffer
+    ///
+    /// The retrieved data handler gives access to the image's
+    ///  buffer.
+    /// The image's buffer stores the data in the following
+    ///  format:
+    /// - when multiple channels are present, then the channels
+    ///   are ALWAYS interleaved
+    /// - the channels are NEVER subsampled or oversampled.
+    ///   The subsampling/oversampling is done by the codecs
+    ///   when the image is stored or loaded from the dicom
+    ///   structure.
+    /// - the first stored value represent the first channel of
+    ///   the top/left pixel.
+    /// - each row is stored countiguously, from the top to the
+    ///   bottom.
+    ///
+    /// @param bWrite   true if the application wants to write
+    ///                 into the buffer, false otherwise.
+    /// @param pRowSize the function will fill the variable
+    ///                 pointed by this parameter with
+    ///                 the size of a single row, in bytes.
+    /// @param pChannelPixelSize the function will fill the
+    ///                 variable pointed by this parameter with
+    ///                 the size of a single pixel,
+    ///                 in bytes.
+    /// @param pChannelsNumber  the function will fill the
+    ///                 variable pointed by this parameter with
+    ///                 the number of channels per pixel.
+    /// @return a pointer to the data handler for the image's
+    ///         buffer.
+    ///
+    ///////////////////////////////////////////////////////////
     std::shared_ptr<handlers::readingDataHandlerNumericBase> getReadingDataHandler() const;
 
     std::shared_ptr<handlers::writingDataHandlerNumericBase> getWritingDataHandler();
 
     /// \brief Get the image's color space (DICOM standard)
-	///
-	/// @return a string with the image's color space
-	///
-	///////////////////////////////////////////////////////////
+    ///
+    /// @return a string with the image's color space
+    ///
+    ///////////////////////////////////////////////////////////
     std::string getColorSpace() const;
 
-	/// \brief Get the number of allocated channels.
-	///
-	/// @return the number of color channels in the image
-	///
-	///////////////////////////////////////////////////////////
+    /// \brief Get the number of allocated channels.
+    ///
+    /// @return the number of color channels in the image
+    ///
+    ///////////////////////////////////////////////////////////
     std::uint32_t getChannelsNumber() const;
 
-	/// \brief Get the image's bit depth.
-	///
-	/// The bit depth indicates the number of bits used to
-	///  store every single value.
-	///
-	/// @return the bit depth.
+    /// \brief Get the image's bit depth.
     ///
-	///////////////////////////////////////////////////////////
+    /// The bit depth indicates the number of bits used to
+    ///  store every single value.
+    ///
+    /// @return the bit depth.
+    ///
+    ///////////////////////////////////////////////////////////
     bitDepth_t getDepth() const;
 
     /// \brief Return true if the image's pixels contain signed
@@ -241,50 +220,45 @@ public:
     ///////////////////////////////////////////////////////////
     bool isSigned() const;
 
-	/// \brief Get the high bit.
-	///
-	/// @return the image's high bit
-	///
-	///////////////////////////////////////////////////////////
+    /// \brief Get the high bit.
+    ///
+    /// @return the image's high bit
+    ///
+    ///////////////////////////////////////////////////////////
     std::uint32_t getHighBit() const;
 
     std::shared_ptr<palette> getPalette() const;
 
 protected:
-	// Image's buffer
-	///////////////////////////////////////////////////////////
+    // Image's buffer
+    ///////////////////////////////////////////////////////////
     std::shared_ptr<buffer> m_buffer;
 
     tagVR_t m_bufferDataType;
 
-	// Number of channels
-	///////////////////////////////////////////////////////////
-	std::uint32_t  m_channelsNumber;
+    // Number of channels
+    ///////////////////////////////////////////////////////////
+    std::uint32_t  m_channelsNumber;
 
-	// Color space
-	///////////////////////////////////////////////////////////
+    // Color space
+    ///////////////////////////////////////////////////////////
     std::string m_colorSpace;
 
-	// Depth (enum)
-	///////////////////////////////////////////////////////////
-	bitDepth_t  m_imageDepth;
+    // Depth (enum)
+    ///////////////////////////////////////////////////////////
+    bitDepth_t  m_imageDepth;
 
-	// High bit (not valid in float mode)
-	///////////////////////////////////////////////////////////
-	std::uint32_t m_highBit;
+    // High bit (not valid in float mode)
+    ///////////////////////////////////////////////////////////
+    std::uint32_t m_highBit;
 
-	// Image's size in pixels
-	///////////////////////////////////////////////////////////
-	std::uint32_t m_width;
-	std::uint32_t m_height;
+    // Image's size in pixels
+    ///////////////////////////////////////////////////////////
+    std::uint32_t m_width;
+    std::uint32_t m_height;
 
-	// Image's size in millimeters
-	///////////////////////////////////////////////////////////
-	double m_sizeMmX;
-	double m_sizeMmY;
-
-	// Image's lut (only if the colorspace is PALETTECOLOR
-	///////////////////////////////////////////////////////////
+    // Image's lut (only if the colorspace is PALETTECOLOR
+    ///////////////////////////////////////////////////////////
     std::shared_ptr<palette> m_palette;
 
 };

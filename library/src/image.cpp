@@ -47,20 +47,6 @@ Image::~Image()
 {
 }
 
-double Image::getWidthMm() const
-{
-    double width, height;
-    m_pImage->getSizeMm(&width, &height);
-    return width;
-}
-
-double Image::getHeightMm() const
-{
-    double width, height;
-    m_pImage->getSizeMm(&width, &height);
-    return height;
-}
-
 std::uint32_t Image::getWidth() const
 {
     std::uint32_t width, height;
@@ -123,12 +109,6 @@ MutableImage& MutableImage::operator=(const MutableImage& source)
 {
     Image::operator =(source);
     return *this;
-}
-
-
-void MutableImage::setSizeMm(double width, double height)
-{
-    getImageImplementation(*this)->setSizeMm(width, height);
 }
 
 WritingDataHandlerNumeric MutableImage::getWritingDataHandler()

@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -79,20 +79,6 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     virtual ~Image();
-
-    /// \brief Retrieve the image's width, in millimiters
-    ///
-    /// \return the image's width, in millimiters
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    double getWidthMm() const;
-
-    /// \brief Retrieve the image's height, in millimiters
-    ///
-    /// \return the image's height, in millimiters
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    double getHeightMm() const;
 
     /// \brief Retrieve the image's width, in pixels.
     ///
@@ -214,14 +200,6 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     MutableImage& operator=(const MutableImage& source);
-
-    /// \brief Set the image's size, in millimiters.
-    ///
-    /// \param width   the image's width, in millimiters
-    /// \param height  the image's height, in millimiters
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    void setSizeMm(double width, double height);
 
     /// \brief Retrieve a WritingDataHandlerNumeric object referencing the Image's
     ///        memory (mutable).

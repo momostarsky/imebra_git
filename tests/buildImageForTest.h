@@ -14,8 +14,6 @@ namespace tests
         std::uint32_t pixelsY,
         imebra::bitDepth_t depth,
         std::uint32_t highBit,
-		double width, 
-		double height, 
         const std::string& colorSpace,
         std::uint32_t continuity);
 
@@ -24,8 +22,6 @@ namespace tests
         std::uint32_t pixelsY,
         imebra::bitDepth_t depth,
         std::uint32_t highBit,
-        double width,
-        double height,
         const std::string& colorSpace);
 
     double compareImages(const Image& image0, const Image& image1);

@@ -22,8 +22,6 @@ TEST(dataSetTest, testFragmentation)
         300,
         imebra::bitDepth_t::depthU8,
         7,
-        400,
-        300,
         "RGB",
         50);
 
@@ -32,8 +30,6 @@ TEST(dataSetTest, testFragmentation)
         300,
         imebra::bitDepth_t::depthU8,
         7,
-        400,
-        300,
         "RGB",
         20);
 

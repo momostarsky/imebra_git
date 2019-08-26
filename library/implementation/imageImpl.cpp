@@ -47,9 +47,7 @@ image::image(uint32_t width, uint32_t height, bitDepth_t depth, const std::strin
     m_imageDepth(depth),
     m_highBit(highBit),
     m_width(width),
-    m_height(height),
-    m_sizeMmX(0),
-    m_sizeMmY(0)
+    m_height(height)
 {
     IMEBRA_FUNCTION_START();
 
@@ -274,45 +272,6 @@ void image::getSize(std::uint32_t* pWidth, std::uint32_t* pHeight) const
     {
         *pHeight = m_height;
     }
-}
-
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Returns the image's size in millimeters
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-void image::getSizeMm(double* pSizeMmX, double* pSizeMmY) const
-{
-    if(pSizeMmX)
-    {
-        *pSizeMmX = m_sizeMmX;
-    }
-
-    if(pSizeMmY)
-    {
-        *pSizeMmY = m_sizeMmY;
-    }
-}
-
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Set the image's size in millimeters
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-void image::setSizeMm(const double sizeMmX, const double sizeMmY)
-{
-    m_sizeMmX = sizeMmX;
-    m_sizeMmY = sizeMmY;
 }
 
 } // namespace implementation

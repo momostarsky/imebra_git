@@ -59,24 +59,18 @@ TEST(dicomCodecTest, testDicom)
                                     sizeY,
                                     depth,
                                     highBit,
-                                    30,
-                                    20,
                                     colorSpace));
                             images.push_back(buildSubsampledImage(
                                     sizeX,
                                     sizeY,
                                     depth,
                                     highBit,
-                                    30,
-                                    20,
                                     colorSpace));
                             images.push_back(buildSubsampledImage(
                                     sizeX,
                                     sizeY,
                                     depth,
                                     highBit,
-                                    30,
-                                    20,
                                     colorSpace));
                         }
                         else
@@ -86,8 +80,6 @@ TEST(dicomCodecTest, testDicom)
                                     sizeY,
                                     depth,
                                     highBit,
-                                    30,
-                                    20,
                                     colorSpace,
                                     2));
                             images.push_back(buildImageForTest(
@@ -95,8 +87,6 @@ TEST(dicomCodecTest, testDicom)
                                     sizeY,
                                     depth,
                                     highBit,
-                                    30,
-                                    20,
                                     colorSpace,
                                     100));
                             images.push_back(buildImageForTest(
@@ -104,8 +94,6 @@ TEST(dicomCodecTest, testDicom)
                                     sizeY,
                                     depth,
                                     highBit,
-                                    30,
-                                    20,
                                     colorSpace,
                                     150));
 
