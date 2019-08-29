@@ -127,6 +127,7 @@ const LUT DataSet::getLUT(const TagId &tagId, size_t itemId) const
     IMEBRA_FUNCTION_END_LOG();
 }
 
+
 vois_t DataSet::getVOIs() const
 {
     IMEBRA_FUNCTION_START();
@@ -135,6 +136,17 @@ vois_t DataSet::getVOIs() const
 
     IMEBRA_FUNCTION_END_LOG();
 }
+
+
+const DataSet DataSet::getFunctionalGroupDataSet(size_t frameNumber) const
+{
+    IMEBRA_FUNCTION_START();
+
+    return DataSet(m_pDataSet->getFunctionalGroupDataSet(frameNumber));
+
+    IMEBRA_FUNCTION_END_LOG();
+}
+
 
 ReadingDataHandler DataSet::getReadingDataHandler(const TagId& tagId, size_t bufferId) const
 {
@@ -375,6 +387,8 @@ MutableDataSet::MutableDataSet(const std::string &transferSyntax, const charsets
     }
     getDataSetImplementation(*this)->setCharsetsList(list);
 }
+
+
 
 MutableDataSet& MutableDataSet::operator=(const MutableDataSet& source)
 {
