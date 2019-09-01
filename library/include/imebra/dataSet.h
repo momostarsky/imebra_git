@@ -174,10 +174,32 @@ public:
     /// Each VOI setting includes the center & width values that can be used with
     /// the VOILUT transform to highlight different parts of an Image.
     ///
+    /// If the VOI/LUT information is stored in a functional group, then first use
+    /// getFunctionalGroupDataSet() to retrieve the sequence item containing the
+    /// VOI/LUT information, then call getVOIs() on the returned dataset.
+    ///
     /// \return a list of VOIDescription objects defined in the DataSet
     ///
     ///////////////////////////////////////////////////////////////////////////////
     vois_t getVOIs() const;
+
+    /// \brief In case the dataset uses functional groups to store imaging
+    ///        information, then this method returns the sequence item containing
+    ///        imaging information for a specific frame.
+    ///
+    /// The method looks first for a frame specific functional group sequence item,
+    /// then for a common functional group sequence item if the specific one is
+    /// missing.
+    ///
+    /// Throws MissingTagError is the dataset does not contain a functional
+    /// group sequence.
+    ///
+    /// \param frameNumber the frame number for which the functional group sequence
+    ///                    item is required
+    /// \return the functional group sequence item for the requested frame.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    const DataSet getFunctionalGroupDataSet(size_t frameNumber) const;
 
     /// \brief Retrieve a sequence item stored in a tag.
     ///
@@ -1046,6 +1068,8 @@ public:
 
 protected:
     explicit MutableDataSet(const std::shared_ptr<imebra::implementation::dataSet>& pDataSet);
+
+
 };
 
 }

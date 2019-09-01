@@ -40,8 +40,13 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
     /// \brief Initializer.
     ///
-    /// \param pDataset the ImebraDataSet from which the modality VOI or LUT data
-    ///                 is retrieved
+    /// \param dataset the ImebraDataSet from which the modality VOI or LUT data
+    ///                is retrieved. If the modality VOI/LUT information is
+    ///                stored in a functional group, then first
+    ///                use ImebraDataSet::getFunctionalGroupDataSet() to retrieve 
+    ///                the sequence item containing the modality VOI/LUT 
+    ///                information and pass that item as parameter to this 
+    ///                constructor
     ///
     ///////////////////////////////////////////////////////////////////////////////
     -(id)initWithDataSet:(ImebraDataSet*)pDataSet;

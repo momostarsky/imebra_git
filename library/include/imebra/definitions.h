@@ -238,6 +238,7 @@ struct IMEBRA_API VOIDescription
 {
     double center;            ///< The VOI center
     double width;             ///< The VOI width
+    std::string function;     ///< The VOI function
     std::wstring description; ///< The VOI's description
 };
 

@@ -494,6 +494,61 @@ TEST(dataSetTest, sequenceNoCharsetTest)
 }
 
 
+TEST(dataSetTest, functionalGroupPerFrame)
+{
+    MutableDataSet testDataSet;
+
+    MutableDataSet frame0 = testDataSet.appendSequenceItem(TagId(tagId_t::PerFrameFunctionalGroupsSequence_5200_9230));
+    frame0.setDouble(TagId(tagId_t::WindowCenter_0028_1050), 100);
+    frame0.setDouble(TagId(tagId_t::WindowWidth_0028_1051), 150);
+
+    MutableDataSet frame1 = testDataSet.appendSequenceItem(TagId(tagId_t::PerFrameFunctionalGroupsSequence_5200_9230));
+    frame1.setDouble(TagId(tagId_t::WindowCenter_0028_1050), 200);
+    frame1.setDouble(TagId(tagId_t::WindowWidth_0028_1051), 250);
+
+    MutableDataSet frame2 = testDataSet.appendSequenceItem(TagId(tagId_t::PerFrameFunctionalGroupsSequence_5200_9230));
+    frame2.setDouble(TagId(tagId_t::WindowCenter_0028_1050), 300);
+    frame2.setDouble(TagId(tagId_t::WindowWidth_0028_1051), 350);
+
+    DataSet checkFrame0 = testDataSet.getFunctionalGroupDataSet(0);
+    EXPECT_DOUBLE_EQ(100, checkFrame0.getDouble(TagId(tagId_t::WindowCenter_0028_1050), 0));
+    EXPECT_DOUBLE_EQ(150, checkFrame0.getDouble(TagId(tagId_t::WindowWidth_0028_1051), 0));
+
+    DataSet checkFrame1 = testDataSet.getFunctionalGroupDataSet(1);
+    EXPECT_DOUBLE_EQ(200, checkFrame1.getDouble(TagId(tagId_t::WindowCenter_0028_1050), 0));
+    EXPECT_DOUBLE_EQ(250, checkFrame1.getDouble(TagId(tagId_t::WindowWidth_0028_1051), 0));
+
+    DataSet checkFrame2 = testDataSet.getFunctionalGroupDataSet(2);
+    EXPECT_DOUBLE_EQ(300, checkFrame2.getDouble(TagId(tagId_t::WindowCenter_0028_1050), 0));
+    EXPECT_DOUBLE_EQ(350, checkFrame2.getDouble(TagId(tagId_t::WindowWidth_0028_1051), 0));
+
+    EXPECT_THROW(testDataSet.getFunctionalGroupDataSet(3), MissingTagError);
+
+}
+
+
+TEST(dataSetTest, functionalGroupCommon)
+{
+    MutableDataSet testDataSet;
+
+    MutableDataSet frame = testDataSet.appendSequenceItem(TagId(tagId_t::SharedFunctionalGroupsSequence_5200_9229));
+    frame.setDouble(TagId(tagId_t::WindowCenter_0028_1050), 100);
+    frame.setDouble(TagId(tagId_t::WindowWidth_0028_1051), 150);
+
+    DataSet checkFrame0 = testDataSet.getFunctionalGroupDataSet(0);
+    EXPECT_DOUBLE_EQ(100, checkFrame0.getDouble(TagId(tagId_t::WindowCenter_0028_1050), 0));
+    EXPECT_DOUBLE_EQ(150, checkFrame0.getDouble(TagId(tagId_t::WindowWidth_0028_1051), 0));
+
+    DataSet checkFrame1 = testDataSet.getFunctionalGroupDataSet(1);
+    EXPECT_DOUBLE_EQ(100, checkFrame1.getDouble(TagId(tagId_t::WindowCenter_0028_1050), 0));
+    EXPECT_DOUBLE_EQ(150, checkFrame1.getDouble(TagId(tagId_t::WindowWidth_0028_1051), 0));
+
+    DataSet checkFrame2 = testDataSet.getFunctionalGroupDataSet(2);
+    EXPECT_DOUBLE_EQ(100, checkFrame2.getDouble(TagId(tagId_t::WindowCenter_0028_1050), 0));
+    EXPECT_DOUBLE_EQ(150, checkFrame2.getDouble(TagId(tagId_t::WindowWidth_0028_1051), 0));
+
+}
+
 } // namespace tests
 
 } // namespace imebra

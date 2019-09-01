@@ -152,6 +152,18 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
 
+
+-(ImebraDataSet*) getFunctionalGroupDataSet:(unsigned int)frameNumber error:(NSError**)pError
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    return [[ImebraDataSet alloc] initWithImebraDataSet:
+            new imebra::DataSet(get_imebra_object_holder(DataSet)->getFunctionalGroupDataSet((size_t)frameNumber))];
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+}
+
+
 -(ImebraDataSet*) getSequenceItem:(ImebraTagId*)pTagId item:(unsigned int)itemId error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();

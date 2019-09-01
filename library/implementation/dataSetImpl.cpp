@@ -875,7 +875,7 @@ std::shared_ptr<lut> dataSet::getLut(std::uint16_t groupId, std::uint16_t tagId,
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-vois_t dataSet::getVOIs()
+vois_t dataSet::getVOIs() const
 {
     IMEBRA_FUNCTION_START();
 
@@ -888,6 +888,7 @@ vois_t dataSet::getVOIs()
             VOIDescription voi;
             voi.center = getDouble(0x0028, 0, 0x1050, 0, voiIndex);
             voi.width = getDouble(0x0028, 0, 0x1051, 0, voiIndex);
+            voi.function = getString(0x0028, 0, 0x1056, 0, 0, "LINEAR");
             voi.description = getUnicodeString(0x0028, 0, 0x1055, 0, voiIndex, L"");
             vois.push_back(voi);
         }
@@ -898,6 +899,25 @@ vois_t dataSet::getVOIs()
     }
 
     return vois;
+
+    IMEBRA_FUNCTION_END();
+}
+
+
+std::shared_ptr<dataSet> dataSet::getFunctionalGroupDataSet(size_t frameNumber) const
+{
+    IMEBRA_FUNCTION_START();
+
+    try
+    {
+        return getSequenceItem(0x5200, 0, 0x9230, frameNumber);
+    }
+    catch(const MissingDataElementError&)
+    {
+        // Nothing to do, try the common sequence item below
+    }
+
+    return getSequenceItem(0x5200, 0, 0x9229, 0);
 
     IMEBRA_FUNCTION_END();
 }

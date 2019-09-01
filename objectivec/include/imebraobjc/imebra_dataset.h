@@ -212,12 +212,36 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
     /// Each VOI setting includes the center & width values that can be used with
     /// the VOILUT transform to highlight different parts of an Image.
     ///
+    /// If the VOI/LUT information is stored in a functional group, then first use
+    /// getFunctionalGroupDataSet() to retrieve the sequence item containing the
+    /// VOI/LUT information, then call getVOIs() on the returned dataset.
+    ///
     /// \param pError      a pointer to a NSError pointer which is set when an
     ///                    error occurs
     /// \return an NSArray containing a list of ImebraVOIDescription objects
     ///
     ///////////////////////////////////////////////////////////////////////////////
     -(NSArray*) getVOIs:(NSError**)pError;
+
+    /// \brief In case the dataset uses functional groups to store imaging
+    ///        information, then this method returns the sequence item containing
+    ///        imaging information for a specific frame.
+    ///
+    /// The method looks first for a frame specific functional group sequence item,
+    /// then for a common functional group sequence item if the specific one is
+    /// missing.
+    ///
+    /// Throws MissingTagError is the dataset does not contain a functional
+    /// group sequence.
+    ///
+    /// \param frameNumber the frame number for which the functional group sequence
+    ///                    item is required
+    /// \param pError a pointer to a NSError pointer which is set when an
+    ///                error occurs
+    /// \return the functional group sequence item for the requested frame.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(ImebraDataSet*) getFunctionalGroupDataSet:(unsigned int)frameNumber error:(NSError**)pError;
 
     /// \brief Retrieve a sequence item stored in a tag.
     ///
