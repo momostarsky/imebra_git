@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -59,43 +59,43 @@ public:
     virtual ~lut();
 
 
-	/// \brief Initializes the lut with the values stored in
-	///         three data handlers, usually retrieved from
-	///         a dataset.
-	///
-	/// @param pDescriptor   the handler that manages the
-	///                       lut descriptor (size, first
-	///                       mapped value and number of bits)
-	/// @param pData         the handler that manages the
-	///                       lut data
-	/// @param description   a string that describes the
-	///                       lut
-	///
-	///////////////////////////////////////////////////////////
+    /// \brief Initializes the lut with the values stored in
+    ///         three data handlers, usually retrieved from
+    ///         a dataset.
+    ///
+    /// @param pDescriptor   the handler that manages the
+    ///                       lut descriptor (size, first
+    ///                       mapped value and number of bits)
+    /// @param pData         the handler that manages the
+    ///                       lut data
+    /// @param description   a string that describes the
+    ///                       lut
+    ///
+    ///////////////////////////////////////////////////////////
     lut(std::shared_ptr<handlers::readingDataHandlerNumericBase> pDescriptor, std::shared_ptr<handlers::readingDataHandlerNumericBase> pData, const std::wstring& description, bool signedData);
 
     std::shared_ptr<handlers::readingDataHandlerNumericBase> getReadingDataHandler() const;
 
-	/// \brief Return the lut's description.
-	///
-	/// @return the lut description
-	///
-	///////////////////////////////////////////////////////////
+    /// \brief Return the lut's description.
+    ///
+    /// @return the lut description
+    ///
+    ///////////////////////////////////////////////////////////
     std::wstring getDescription() const;
 
-	/// \brief Return the number of bits used to store a mapped
-	///         value.
-	///
-	/// @return the number of bits used to store a mapped value
-	///
-	///////////////////////////////////////////////////////////
+    /// \brief Return the number of bits used to store a mapped
+    ///         value.
+    ///
+    /// @return the number of bits used to store a mapped value
+    ///
+    ///////////////////////////////////////////////////////////
     std::uint8_t getBits() const;
 
-	/// \brief Return the lut's size.
-	///
-	/// @return the number of mapped value stored in the lut
-	///
-	///////////////////////////////////////////////////////////
+    /// \brief Return the lut's size.
+    ///
+    /// @return the number of mapped value stored in the lut
+    ///
+    ///////////////////////////////////////////////////////////
     std::uint32_t getSize() const;
 
     std::int32_t getFirstMapped() const;
@@ -110,9 +110,9 @@ protected:
 
     std::uint32_t m_size;
     std::int32_t m_firstMapped;
-	std::uint8_t m_bits;
+    std::uint8_t m_bits;
 
-	std::wstring m_description;
+    std::wstring m_description;
 
     std::shared_ptr<handlers::readingDataHandlerNumericBase> m_pDataHandler;
 };
@@ -135,15 +135,6 @@ public:
     ///
     ///////////////////////////////////////////////////////////
     palette(std::shared_ptr<lut> red, std::shared_ptr<lut> green, std::shared_ptr<lut> blue);
-
-    /// \brief Set the luts that form the color palette.
-    ///
-    /// @param red   the lut containing the red components
-    /// @param green the lut containing the green components
-    /// @param blue  the lut containing the blue components
-    ///
-    ///////////////////////////////////////////////////////////
-    void setLuts(std::shared_ptr<lut> red, std::shared_ptr<lut> green, std::shared_ptr<lut> blue);
 
     /// \brief Retrieve the lut containing the red components.
     ///

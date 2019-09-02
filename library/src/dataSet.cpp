@@ -17,6 +17,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "../include/imebra/date.h"
 #include "../include/imebra/age.h"
 #include "../include/imebra/patientName.h"
+#include "../include/imebra/VOIDescription.h"
 #include "../implementation/dataSetImpl.h"
 #include "../implementation/dataHandlerNumericImpl.h"
 #include "../implementation/charsetConversionBaseImpl.h"
@@ -132,7 +133,13 @@ vois_t DataSet::getVOIs() const
 {
     IMEBRA_FUNCTION_START();
 
-    return m_pDataSet->getVOIs();
+    vois_t vois;
+    for(const std::shared_ptr<const implementation::VOIDescription>& voi: m_pDataSet->getVOIs())
+    {
+        vois.push_back(VOIDescription(voi));
+    }
+
+    return vois;
 
     IMEBRA_FUNCTION_END_LOG();
 }

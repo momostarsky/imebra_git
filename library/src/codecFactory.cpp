@@ -103,7 +103,7 @@ void CodecFactory::save(const DataSet& dataSet, StreamWriter& writer, codecType_
     std::shared_ptr<imebra::implementation::codecs::codecFactory> factory(imebra::implementation::codecs::codecFactory::getCodecFactory());
     std::shared_ptr<const implementation::codecs::streamCodec> pCodec = factory->getStreamCodec(codecType);
 
-    pCodec->write(writer.m_pWriter, dataSet.m_pDataSet);
+    pCodec->write(writer.m_pWriter, getDataSetImplementation(dataSet));
 
     IMEBRA_FUNCTION_END_LOG();
 }

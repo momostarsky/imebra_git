@@ -241,13 +241,6 @@ palette::palette(std::shared_ptr<lut> red, std::shared_ptr<lut> green, std::shar
 m_redLut(red), m_greenLut(green), m_blueLut(blue)
 {}
 
-void palette::setLuts(std::shared_ptr<lut> red, std::shared_ptr<lut> green, std::shared_ptr<lut> blue)
-{
-    m_redLut = red;
-    m_greenLut = green;
-    m_blueLut = blue;
-}
-
 std::shared_ptr<lut> palette::getRed() const
 {
     return m_redLut;

@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -22,6 +22,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "imageImpl.h"
 #include "LUTImpl.h"
 #include "transformImpl.h"
+#include <string>
+#include <cmath>
 
 
 namespace imebra
@@ -31,6 +33,7 @@ namespace implementation
 {
 
 class lut;
+class VOIDescription;
 
 namespace transforms
 {
@@ -64,35 +67,12 @@ public:
     ///        comes from
     ///
     ///////////////////////////////////////////////////////////
-    VOILUT(): m_windowCenter(0), m_windowWidth(0){}
+    VOILUT(): m_windowCenter(0), m_windowWidth(0), m_function(dicomVOIFunction_t::linear)
+    {}
 
-	/// \brief Define the LUT to use for the transformation.
-	///
-	/// @param pLut the lut that will be used for the
-	///              transformation
-	///
-	///////////////////////////////////////////////////////////
-    void setLUT(const std::shared_ptr<lut>& pLut);
+    VOILUT(double center, double width, dicomVOIFunction_t function);
 
-	/// \brief Define the VOI width/center to use for the
-	///         transformation.
-	///
-	/// @param center   the center value of the VOI
-	/// @param width    the width value of the VOI
-	///
-	///////////////////////////////////////////////////////////
-    void setCenterWidth(double center, double width);
-
-	/// \brief Returns the VOI width/center used for the
-	///         transformation.
-	///
-	/// @param pCenter  pointer to the recipient for the VOI
-	///                  center
-	/// @param pWidth    pointer to the recipient for the VOI
-	///                  width
-	///
-	///////////////////////////////////////////////////////////
-    void getCenterWidth(double* pCenter, double* pWidth);
+    VOILUT(const std::shared_ptr<lut>& pLut);
 
     /// \brief Finds and apply the optimal VOI values.
     ///
@@ -112,45 +92,43 @@ public:
     ///                       the optimal VOI must be found
     ///
     ///////////////////////////////////////////////////////////
-    void applyOptimalVOI(const std::shared_ptr<imebra::implementation::image>& inputImage, std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight);
+    static std::shared_ptr<VOIDescription> getOptimalVOI(const std::shared_ptr<imebra::implementation::image>& inputImage, std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight);
 
-
-	DEFINE_RUN_TEMPLATE_TRANSFORM;
+    DEFINE_RUN_TEMPLATE_TRANSFORM;
 
     // The actual transformation is done here
     //
     ///////////////////////////////////////////////////////////
-	template <class inputType, class outputType>
-			void templateTransform(
+    template <class inputType, class outputType>
+            void templateTransform(
                     const inputType* inputHandlerData,
                     outputType* outputHandlerData,
                     bitDepth_t /* inputDepth */, std::uint32_t inputHandlerWidth, const std::string& /* inputHandlerColorSpace */,
-					std::shared_ptr<palette> /* inputPalette */,
-                    std::uint32_t inputHighBit,
+                    std::shared_ptr<palette> /* inputPalette */,
+                    std::uint32_t /* inputHighBit */,
                     std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight,
                     bitDepth_t /* outputDepth */, std::uint32_t outputHandlerWidth, const std::string& /* outputHandlerColorSpace */,
-					std::shared_ptr<palette> /* outputPalette */,
+                    std::shared_ptr<palette> /* outputPalette */,
                     std::uint32_t outputHighBit,
                     std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY) const
 
-	{
+    {
         IMEBRA_FUNCTION_START();
 
         const inputType* pInputMemory(inputHandlerData);
-		outputType* pOutputMemory(outputHandlerData);
+        outputType* pOutputMemory(outputHandlerData);
 
-		pInputMemory += inputTopLeftY * inputHandlerWidth + inputTopLeftX;
-		pOutputMemory += outputTopLeftY * outputHandlerWidth + outputTopLeftX;
+        pInputMemory += inputTopLeftY * inputHandlerWidth + inputTopLeftX;
+        pOutputMemory += outputTopLeftY * outputHandlerWidth + outputTopLeftX;
 
-        std::int64_t inputHandlerMinValue = getMinValue<inputType>(inputHighBit);
         std::int64_t outputHandlerMinValue = getMinValue<outputType>(outputHighBit);
 
-		//
-		// LUT found
-		//
-		///////////////////////////////////////////////////////////
-		if(m_pLUT != 0 && m_pLUT->getSize() != 0)
-		{
+        //
+        // LUT found
+        //
+        ///////////////////////////////////////////////////////////
+        if(m_pLUT != 0 && m_pLUT->getSize() != 0)
+        {
             for(; inputHeight != 0; --inputHeight)
             {
                 for(std::uint32_t scanPixels(inputWidth); scanPixels != 0; --scanPixels)
@@ -160,59 +138,131 @@ public:
                 pInputMemory += (inputHandlerWidth - inputWidth);
                 pOutputMemory += (outputHandlerWidth - inputWidth);
             }
-			return;
-		}
+            return;
+        }
 
-		//
-		// LUT not found.
-		// Use the window's center/width
-		//
+        //
+        // LUT not found.
+        // Use the window's center/width
+        //
         ///////////////////////////////////////////////////////////
-        std::int64_t inputHandlerNumValues = (std::int64_t)1 << (inputHighBit + 1);
         std::int64_t outputHandlerNumValues = (std::int64_t)1 << (outputHighBit + 1);
-        std::int64_t minValue = (std::int64_t)(m_windowCenter - m_windowWidth/2);
-        std::int64_t maxValue = (std::int64_t)(m_windowCenter + m_windowWidth/2);
-		if(m_windowWidth <= 1)
-		{
-			minValue = inputHandlerMinValue ;
-			maxValue = inputHandlerMinValue + inputHandlerNumValues;
-		}
-		else
-		{
-			inputHandlerNumValues = maxValue - minValue;
-		}
+        std::int64_t outputMin(outputHandlerMinValue);
+        std::int64_t outputMax(outputHandlerMinValue + outputHandlerNumValues - 1);
+        double outputMaxMinusOutputMin = (double)(outputMax - outputMin);
+        double inputValue;
+        std::int64_t outputValue;
 
-        double ratio = (double)outputHandlerNumValues / (double)inputHandlerNumValues;
-        double outputValue;
-        double outputMin((double)outputHandlerMinValue);
-        double outputMax((double)(outputHandlerMinValue + outputHandlerNumValues - 1));
-        for(; inputHeight != 0; --inputHeight)
+        switch(m_function)
         {
-
-            for(std::uint32_t scanPixels(inputWidth); scanPixels != 0; --scanPixels)
+        case dicomVOIFunction_t::linearExact:
             {
-                outputValue = 0.5f + (double)((std::int64_t)*(pInputMemory++) - minValue) * ratio + (double)outputHandlerMinValue ;
-                if(outputValue <= outputMin)
+                for(; inputHeight != 0; --inputHeight)
                 {
-                    *pOutputMemory++ = (outputType)outputHandlerMinValue;
+                    for(std::uint32_t scanPixels(inputWidth); scanPixels != 0; --scanPixels)
+                    {
+                        inputValue = ((double)*(pInputMemory++));
+                        outputValue = (std::int64_t)(((inputValue - m_windowCenter) / m_windowWidth) * outputMaxMinusOutputMin + (double)outputMin);
+                        if(outputValue < outputMin)
+                        {
+                            *pOutputMemory++ = (outputType)outputMin;
+                        }
+                        else if(outputValue > outputMax)
+                        {
+                            *pOutputMemory++ = (outputType)outputMax;
+                        }
+                        else
+                        {
+                            *pOutputMemory++ = (outputType)outputValue;
+                        }
+                    }
+
+                    pInputMemory += (inputHandlerWidth - inputWidth);
+                    pOutputMemory += (outputHandlerWidth - inputWidth);
                 }
-                else if(outputValue >= outputMax)
+            }
+            break;
+        case dicomVOIFunction_t::sigmoid:
+            {
+                for(; inputHeight != 0; --inputHeight)
                 {
-                    *pOutputMemory++ = (outputType)( outputHandlerMinValue + outputHandlerNumValues - 1 );
+                    for(std::uint32_t scanPixels(inputWidth); scanPixels != 0; --scanPixels)
+                    {
+                        inputValue = ((double)*(pInputMemory++));
+                        outputValue = (std::int64_t)(outputMaxMinusOutputMin/(1.0 + std::exp(-4.0 * (inputValue - m_windowCenter)/ m_windowWidth)));
+                        if(outputValue < outputMin)
+                        {
+                            *pOutputMemory++ = (outputType)outputMin;
+                        }
+                        else if(outputValue > outputMax)
+                        {
+                            *pOutputMemory++ = (outputType)outputMax;
+                        }
+                        else
+                        {
+                            *pOutputMemory++ = (outputType)outputValue;
+                        }
+                    }
+
+                    pInputMemory += (inputHandlerWidth - inputWidth);
+                    pOutputMemory += (outputHandlerWidth - inputWidth);
+                }
+            }
+            break;
+        case dicomVOIFunction_t::linear:
+            {
+                if(m_windowWidth <= 1)
+                {
+                    for(; inputHeight != 0; --inputHeight)
+                    {
+                        for(std::uint32_t scanPixels(inputWidth); scanPixels != 0; --scanPixels)
+                        {
+                            inputValue = ((double)*(pInputMemory++));
+                            if(inputValue <= m_windowCenter - 0.5)
+                            {
+                                *pOutputMemory++ = (outputType)outputMin;
+                            }
+                            else
+                            {
+                                *pOutputMemory++ = (outputType)outputMax;
+                            }
+                        }
+                        pInputMemory += (inputHandlerWidth - inputWidth);
+                        pOutputMemory += (outputHandlerWidth - inputWidth);
+                    }
                 }
                 else
                 {
-                    *pOutputMemory++ = (outputType)outputValue;
+                    for(; inputHeight != 0; --inputHeight)
+                    {
+                        for(std::uint32_t scanPixels(inputWidth); scanPixels != 0; --scanPixels)
+                        {
+                            inputValue = ((double)*(pInputMemory++));
+                            outputValue = (std::int64_t)(((inputValue - (m_windowCenter - 0.5)) / (m_windowWidth - 1.0) + 0.5) * outputMaxMinusOutputMin + (double)outputMin);
+                            if(outputValue < outputMin)
+                            {
+                                *pOutputMemory++ = (outputType)outputMin;
+                            }
+                            else if(outputValue > outputMax)
+                            {
+                                *pOutputMemory++ = (outputType)outputMax;
+                            }
+                            else
+                            {
+                                *pOutputMemory++ = (outputType)outputValue;
+                            }
+                        }
+
+                        pInputMemory += (inputHandlerWidth - inputWidth);
+                        pOutputMemory += (outputHandlerWidth - inputWidth);
+                    }
                 }
             }
-
-            pInputMemory += (inputHandlerWidth - inputWidth);
-            pOutputMemory += (outputHandlerWidth - inputWidth);
+            break;
         }
 
         IMEBRA_FUNCTION_END();
     }
-
 
     virtual bool isEmpty() const override;
 
@@ -228,10 +278,11 @@ protected:
     // Find the optimal VOI
     //
     ///////////////////////////////////////////////////////////
-    template <class inputType>
+    template <class inputType> static
             void templateFindOptimalVOI(
                     inputType* inputHandlerData, size_t /* inputHandlerSize */, std::uint32_t inputHandlerWidth,
-                    std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight)
+                    std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight,
+                    std::shared_ptr<VOIDescription>& voiDescription)
     {
         IMEBRA_FUNCTION_START();
 
@@ -255,9 +306,14 @@ protected:
             }
             pInputMemory += inputHandlerWidth - inputWidth;
         }
-        double center = (double)(((std::int64_t)maxValue - (std::int64_t)minValue) / 2 + (std::int64_t)minValue);
-        double width = (double)((std::int64_t)maxValue - (std::int64_t)minValue);
-        setCenterWidth(center, width);
+
+        double center = (double)((std::int64_t)maxValue + (std::int64_t)minValue + 1) / 2;
+        double width = 2.0 * (center - (double)minValue);
+        voiDescription = std::make_shared<VOIDescription>(
+                    center,
+                    width,
+                    dicomVOIFunction_t::linear,
+                    "");
 
         IMEBRA_FUNCTION_END();
 
@@ -266,6 +322,7 @@ protected:
     std::shared_ptr<const lut> m_pLUT;
     double m_windowCenter;
     double m_windowWidth;
+    dicomVOIFunction_t m_function;
 };
 
 /// @}

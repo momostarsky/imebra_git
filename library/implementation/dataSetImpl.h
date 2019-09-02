@@ -43,6 +43,7 @@ class image;
 class lut;
 class date;
 class age;
+class VOIDescription;
 
 /// \addtogroup group_dataset Dicom data
 /// \brief The Dicom dataset is represented by the
@@ -331,7 +332,7 @@ public:
     ///         the VOILUT transform
     ///
     ///////////////////////////////////////////////////////////
-    vois_t getVOIs() const;
+    std::list<std::shared_ptr<const VOIDescription>> getVOIs() const;
 
     ///
     /// \brief Return a functional group item for the requested

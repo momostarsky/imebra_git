@@ -139,23 +139,8 @@ Objective-C/Swift
 .. doxygenenum:: ImebraDrawBitmapType_t
 
 
-
 DICOMDIR related definitions
 ----------------------------
-
-directoryRecordType_t
-.....................
-
-C++
-,,,
-
-.. doxygenenum:: imebra::directoryRecordType_t
-
-Objective-C/Swift
-,,,,,,,,,,,,,,,,,
-
-.. doxygenenum:: ImebraDirectoryRecordType_t
-
 
 fileParts_t
 ...........
@@ -186,20 +171,18 @@ Objective-C/Swift
 VOI related definitions
 -----------------------
 
-VOIDescription
-..............
+dicomVOIFunction_t
+..................
 
 C++
 ,,,
 
-.. doxygenstruct:: imebra::VOIDescription
-   :members:
+.. doxygenenum:: imebra::dicomVOIFunction_t
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenstruct:: ImebraVOIDescription
-   :members:
+.. doxygenenum:: ImebraDicomVOIFunction_t
 
 
 vois_t

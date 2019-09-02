@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -55,7 +55,8 @@ class IMEBRA_API VOILUT: public Transform
 {
 
 public:
-    /// \brief Constructor.
+    ///
+    /// \brief Default constructor.
     ///
     ///////////////////////////////////////////////////////////////////////////////
     VOILUT();
@@ -77,6 +78,25 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     VOILUT& operator=(const VOILUT& source);
 
+    ///
+    /// \brief Construct a VOILUT transform and specifies the LUT (lookup table)
+    ///        to use in the transform.
+    ///
+    /// \param lut the lookup table to use during the transform
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    VOILUT (const LUT& lut);
+
+    ///
+    /// \brief Construct a VOILUT transform and specifies the window center, width
+    ///        and function to use during the transform
+    ///
+    /// \param voiDescription a VOIDescription object specifying the center,
+    ///                       width and function
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    VOILUT (const VOIDescription& voiDescription);
+
     virtual ~VOILUT();
 
     /// \brief Find the optimal VOI settings for a specific image's area and apply
@@ -91,44 +111,7 @@ public:
     /// \param height       the height of the area to analyze
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    void applyOptimalVOI(const Image& inputImage, std::uint32_t topLeftX, std::uint32_t topLeftY, std::uint32_t width, std::uint32_t height);
-
-    /// \brief Set the VOI settings applied by the transform.
-    ///
-    /// \param center the VOI center
-    /// \param width  the VOI width
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    void setCenterWidth(double center, double width);
-
-    /// \brief Set the LUT that will be used by the transform to enhance the
-    ///        contrast.
-    ///
-    /// The LUTs to be used for the VOILUT transform are stored in the DataSet's
-    /// sequence tagId_t::VOILUTSequence_0028_3010 (group 0x0028, tag 0x3010).
-    /// Each item in the sequence stores a single LUT.
-    ///
-    /// Use DataSet::getLUT() to retrieve the LUT from the DataSet.
-    ///
-    /// \param lut  the LUT to apply
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    void setLUT(const LUT& lut);
-
-    /// \brief Retrieve the VOI center applied by the transform.
-    ///
-    /// \return the VOI center applied by the transform
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    double getCenter() const;
-
-    /// \brief Retrieve the VOI width applied by the transform.
-    ///
-    /// \return the VOI width applied by the transform
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    double getWidth() const;
-
+    static VOIDescription getOptimalVOI(const Image& inputImage, std::uint32_t topLeftX, std::uint32_t topLeftY, std::uint32_t width, std::uint32_t height);
 
 };
 

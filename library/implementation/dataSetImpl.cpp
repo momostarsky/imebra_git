@@ -35,6 +35,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "bufferImpl.h"
 #include "dateImpl.h"
 #include "ageImpl.h"
+#include "VOIDescriptionImpl.h"
 #include <iostream>
 #include <string.h>
 
@@ -875,21 +876,31 @@ std::shared_ptr<lut> dataSet::getLut(std::uint16_t groupId, std::uint16_t tagId,
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-vois_t dataSet::getVOIs() const
+std::list<std::shared_ptr<const VOIDescription>> dataSet::getVOIs() const
 {
     IMEBRA_FUNCTION_START();
 
-    vois_t vois;
+    std::list<std::shared_ptr<const VOIDescription>> vois;
 
     try
     {
         for(size_t voiIndex(0); ; ++voiIndex)
         {
-            VOIDescription voi;
-            voi.center = getDouble(0x0028, 0, 0x1050, 0, voiIndex);
-            voi.width = getDouble(0x0028, 0, 0x1051, 0, voiIndex);
-            voi.function = getString(0x0028, 0, 0x1056, 0, 0, "LINEAR");
-            voi.description = getUnicodeString(0x0028, 0, 0x1055, 0, voiIndex, L"");
+            std::string functionName = getString(0x0028, 0, 0x1056, 0, 0, "LINEAR");
+            dicomVOIFunction_t function = dicomVOIFunction_t::linear;
+            if(functionName == "LINEAR_EXACT")
+            {
+                function = dicomVOIFunction_t::linearExact;
+            }
+            else if(functionName == "SIGMOID")
+            {
+                function = dicomVOIFunction_t::sigmoid;
+            }
+            std::shared_ptr<const VOIDescription> voi = std::make_shared<VOIDescription>(
+                getDouble(0x0028, 0, 0x1050, 0, voiIndex),
+                getDouble(0x0028, 0, 0x1051, 0, voiIndex),
+                function,
+                getUnicodeString(0x0028, 0, 0x1055, 0, voiIndex, L""));
             vois.push_back(voi);
         }
     }

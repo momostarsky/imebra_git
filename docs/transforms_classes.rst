@@ -22,6 +22,9 @@ The following classes are described in this chapter:
 |:cpp:class:`imebra::VOILUT`                    |:cpp:class:`ImebraVOILUT`                    |Apply a presentation VOI or    |
 |                                               |                                             |LUT                            |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
+|:cpp:class:`imebra::VOIDescription`            |:cpp:class:`ImebraDescription`               |Describes the VOI's parameters |
+|                                               |                                             |(center, width, function)      |
++-----------------------------------------------+---------------------------------------------+-------------------------------+
 |:cpp:class:`imebra::ModalityVOILUT`            |:cpp:class:`ImebraModalityVOILUT`            |Apply the modality VOI or      |
 |                                               |                                             |LUT                            |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+

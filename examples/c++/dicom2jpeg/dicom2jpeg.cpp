@@ -157,13 +157,14 @@ int main(int argc, char* argv[])
                 vois_t vois = loadedDataSet.getVOIs();
                 if(!vois.empty())
                 {
-                    presentationVOILUT.setCenterWidth(vois.front().center, vois.front().width);
+                    presentationVOILUT = VOILUT(vois.front());
                 }
                 else
                 {
                     // Now find the optimal VOILUT
                     //////////////////////////////
-                    presentationVOILUT.applyOptimalVOI(dataSetImage, 0, 0, width, height);
+                    VOIDescription voiDescription = VOILUT::getOptimalVOI(dataSetImage, 0, 0, width, height);
+                    presentationVOILUT = VOILUT(voiDescription);
                 }
                 chain.addTransform(presentationVOILUT);
             }

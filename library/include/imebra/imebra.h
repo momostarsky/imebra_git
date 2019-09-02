@@ -61,5 +61,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "randomUidGenerator.h"
 #include "serialNumberUidGenerator.h"
 #include "uidsEnumeration.h"
+#include "VOIDescription.h"
 
 #endif // IMEBRA_INCLUDED

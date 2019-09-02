@@ -225,22 +225,16 @@ enum class drawBitmapType_t: std::uint32_t
 
 
 ///
-/// \brief Stores a VOI Description and Settings
-///
-/// The VOI settings can be retrieved from a DataSet with DataSet::getVOIs(),
-/// which returns all the VOI settings registered in the DataSet.
-///
-/// Once retrieved, the VOI center and width can be passed to the VOILUT
-/// transform that apply the VOI settings to an Image.
+/// \brief The function to use when applying the VOI window center/width.
 ///
 ///////////////////////////////////////////////////////////////////////////////
-struct IMEBRA_API VOIDescription
+enum class dicomVOIFunction_t: std::uint16_t
 {
-    double center;            ///< The VOI center
-    double width;             ///< The VOI width
-    std::string function;     ///< The VOI function
-    std::wstring description; ///< The VOI's description
+    linear = 0u,      ///< Correspond to the DICOM VOI function "LINEAR"
+    linearExact = 1u, ///< Correspond to the DICOM VOI function "LINEAR_EXACT"
+    sigmoid = 2u      ///< Correspond to the DICOM VOI function "SIGMOID"
 };
+
 
 /// \brief A collection of VOI settings.
 ///
@@ -248,6 +242,7 @@ struct IMEBRA_API VOIDescription
 /// DataSet::getVOIs().
 ///
 ///////////////////////////////////////////////////////////////////////////////
+class VOIDescription;
 typedef std::vector<VOIDescription> vois_t;
 
 

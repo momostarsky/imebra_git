@@ -22,37 +22,37 @@ TEST(voilut, voilutUnsigned8)
         unsigned8Handler.setUnsignedLong(5, 50);
     }
 
-    VOILUT voilut;
-    voilut.setCenterWidth(0, 50);
-    ASSERT_DOUBLE_EQ(0.0, voilut.getCenter());
-    ASSERT_DOUBLE_EQ(50.0, voilut.getWidth());
+    {
+        VOILUT voilut(VOIDescription(0, 50, dicomVOIFunction_t::linear, ""));
 
-    MutableImage unsigned8Out = voilut.allocateOutputImage(unsigned8, 6, 1);
-    voilut.runTransform(unsigned8, 0, 0, 6, 1, unsigned8Out, 0, 0);
+        MutableImage unsigned8Out = voilut.allocateOutputImage(unsigned8, 6, 1);
+        voilut.runTransform(unsigned8, 0, 0, 6, 1, unsigned8Out, 0, 0);
 
-    ReadingDataHandler unsigned8Handler = unsigned8Out.getReadingDataHandler();
+        ReadingDataHandler unsigned8Handler = unsigned8Out.getReadingDataHandler();
 
-    ASSERT_EQ(128u, unsigned8Handler.getUnsignedLong(0));
-    ASSERT_EQ(179u, unsigned8Handler.getUnsignedLong(1));
-    ASSERT_EQ(230u, unsigned8Handler.getUnsignedLong(2));
-    ASSERT_EQ(255u, unsigned8Handler.getUnsignedLong(3));
-    ASSERT_EQ(255u, unsigned8Handler.getUnsignedLong(4));
-    ASSERT_EQ(255u, unsigned8Handler.getUnsignedLong(5));
+        ASSERT_EQ(130u, unsigned8Handler.getUnsignedLong(0));
+        ASSERT_EQ(182u, unsigned8Handler.getUnsignedLong(1));
+        ASSERT_EQ(234u, unsigned8Handler.getUnsignedLong(2));
+        ASSERT_EQ(255u, unsigned8Handler.getUnsignedLong(3));
+        ASSERT_EQ(255u, unsigned8Handler.getUnsignedLong(4));
+        ASSERT_EQ(255u, unsigned8Handler.getUnsignedLong(5));
+    }
 
-    voilut.setCenterWidth(70, 50);
+    {
+        VOILUT voilut(VOIDescription(70, 50, dicomVOIFunction_t::linear, ""));
 
-    MutableImage signed16Out(6, 1, bitDepth_t::depthS16, "MONOCHROME2", 15);
-    voilut.runTransform(unsigned8, 0, 0, 6, 1, signed16Out, 0, 0);
+        MutableImage signed16Out(6, 1, bitDepth_t::depthS16, "MONOCHROME2", 15);
+        voilut.runTransform(unsigned8, 0, 0, 6, 1, signed16Out, 0, 0);
 
-    ReadingDataHandler signed16Handler = signed16Out.getReadingDataHandler();
+        ReadingDataHandler signed16Handler = signed16Out.getReadingDataHandler();
 
-    ASSERT_EQ(-32768, signed16Handler.getSignedLong(0));
-    ASSERT_EQ(-32768, signed16Handler.getSignedLong(1));
-    ASSERT_EQ(-32768, signed16Handler.getSignedLong(2));
-    ASSERT_EQ(-32768, signed16Handler.getSignedLong(3));
-    ASSERT_EQ(-32768, signed16Handler.getSignedLong(4));
-    ASSERT_EQ(-26213, signed16Handler.getSignedLong(5));
-
+        ASSERT_EQ(-32768, signed16Handler.getSignedLong(0));
+        ASSERT_EQ(-32768, signed16Handler.getSignedLong(1));
+        ASSERT_EQ(-32768, signed16Handler.getSignedLong(2));
+        ASSERT_EQ(-32768, signed16Handler.getSignedLong(3));
+        ASSERT_EQ(-32768, signed16Handler.getSignedLong(4));
+        ASSERT_EQ(-26080, signed16Handler.getSignedLong(5));
+    }
 }
 
 
@@ -69,10 +69,8 @@ TEST(voilut, voilutUnsigned8OptimalVOI)
         unsigned8Handler.setUnsignedLong(5, 50);
     }
 
-    VOILUT voilut;
-    voilut.applyOptimalVOI(unsigned8, 0, 0, 6, 1);
-    ASSERT_DOUBLE_EQ(25.0, voilut.getCenter());
-    ASSERT_DOUBLE_EQ(50.0, voilut.getWidth());
+    VOIDescription voiDescription = VOILUT::getOptimalVOI(unsigned8, 0, 0, 6, 1);
+    VOILUT voilut(voiDescription);
 
     MutableImage unsigned8Out = voilut.allocateOutputImage(unsigned8, 6, 1);
     voilut.runTransform(unsigned8, 0, 0, 6, 1, unsigned8Out, 0, 0);
@@ -82,8 +80,8 @@ TEST(voilut, voilutUnsigned8OptimalVOI)
     ASSERT_EQ(0u, unsigned8Handler.getUnsignedLong(0));
     ASSERT_EQ(51u, unsigned8Handler.getUnsignedLong(1));
     ASSERT_EQ(102u, unsigned8Handler.getUnsignedLong(2));
-    ASSERT_EQ(154u, unsigned8Handler.getUnsignedLong(3));
-    ASSERT_EQ(205u, unsigned8Handler.getUnsignedLong(4));
+    ASSERT_EQ(153u, unsigned8Handler.getUnsignedLong(3));
+    ASSERT_EQ(204u, unsigned8Handler.getUnsignedLong(4));
     ASSERT_EQ(255u, unsigned8Handler.getUnsignedLong(5));
 
     MutableImage signed16Out(6, 1, bitDepth_t::depthS16, "MONOCHROME2", 15);
@@ -91,11 +89,11 @@ TEST(voilut, voilutUnsigned8OptimalVOI)
 
     ReadingDataHandler signed16Handler = signed16Out.getReadingDataHandler();
 
-    ASSERT_EQ(-32767, signed16Handler.getSignedLong(0));
-    ASSERT_EQ(-19660, signed16Handler.getSignedLong(1));
-    ASSERT_EQ(-6553, signed16Handler.getSignedLong(2));
-    ASSERT_EQ(6554, signed16Handler.getSignedLong(3));
-    ASSERT_EQ(19661, signed16Handler.getSignedLong(4));
+    ASSERT_EQ(-32768, signed16Handler.getSignedLong(0));
+    ASSERT_EQ(-19661, signed16Handler.getSignedLong(1));
+    ASSERT_EQ(-6554, signed16Handler.getSignedLong(2));
+    ASSERT_EQ(6553, signed16Handler.getSignedLong(3));
+    ASSERT_EQ(19660, signed16Handler.getSignedLong(4));
     ASSERT_EQ(32767, signed16Handler.getSignedLong(5));
 
 }
@@ -131,8 +129,7 @@ TEST(voilut, voilutUnsigned8LUT)
     LUT lut = testDataSet.getLUT(TagId(tagId_t::VOILUTSequence_0028_3010), 0);
 
 
-    VOILUT voilut;
-    voilut.setLUT(lut);
+    VOILUT voilut(lut);
 
     MutableImage paletteOut = voilut.allocateOutputImage(unsigned8, 6, 1);
     voilut.runTransform(unsigned8, 0, 0, 6, 1, paletteOut, 0, 0);

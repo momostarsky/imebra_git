@@ -116,13 +116,15 @@ TEST(dataSetTest, testVOIs)
 
     vois_t vois1 = testDataSet.getVOIs();
     ASSERT_EQ(2u, vois1.size());
-    ASSERT_DOUBLE_EQ(10.4, vois1.at(0).center);
-    ASSERT_DOUBLE_EQ(12.5, vois1.at(0).width);
-    ASSERT_EQ(L"Test1", vois1.at(0).description);
+    ASSERT_DOUBLE_EQ(10.4, vois1.at(0).getCenter());
+    ASSERT_DOUBLE_EQ(12.5, vois1.at(0).getWidth());
+    ASSERT_EQ(L"Test1", vois1.at(0).getUnicodeDescription());
+    ASSERT_EQ("Test1", vois1.at(0).getDescription());
 
-    ASSERT_DOUBLE_EQ(20.4, vois1.at(1).center);
-    ASSERT_DOUBLE_EQ(22.5, vois1.at(1).width);
-    ASSERT_EQ(L"Test2", vois1.at(1).description);
+    ASSERT_DOUBLE_EQ(20.4, vois1.at(1).getCenter());
+    ASSERT_DOUBLE_EQ(22.5, vois1.at(1).getWidth());
+    ASSERT_EQ(L"Test2", vois1.at(1).getUnicodeDescription());
+    ASSERT_EQ("Test2", vois1.at(1).getDescription());
 }
 
 TEST(dataSetTest, testGetTags)
