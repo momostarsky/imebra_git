@@ -50,6 +50,12 @@
       <priority>10</priority>
     </requirement>
 
+    <requirement id="REQ_VOI_FUNCTION" categoryIdref="REQ_FUNC">
+      <title>Allow the calculation of the VOI transform using different defined DICOM functions</title>
+      <description>Allow the calculation of the VOI transform using the functions LINEAR, LINEAR_EXACT and SIGMOID as defined by DICOM</description>
+      <priority>90</priority>
+    </requirement>
+
     <requirement categoryIdref="REQ_IMPL" id="REQ_DONT_EXPOSE_INDEXED_WRITING">
       <mitigates>
         <mitigatedRisk idref="RISK_BUFFER_RESET">

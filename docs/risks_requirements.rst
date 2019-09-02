@@ -290,6 +290,18 @@ Imebra must be able to build DICOMDIR structures and the records they contain.
 
 
 
+.. _REQ_VOI_FUNCTION:
+
+[REQ_VOI_FUNCTION] Allow the calculation of the VOI transform using different defined DICOM functions
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+Allow the calculation of the VOI transform using the functions LINEAR, LINEAR_EXACT and SIGMOID as defined by DICOM
+
+
+
+
+
+
 .. _REQ_EXCEPTIONS:
 
 [REQ_EXCEPTIONS] All the error should be reported via C++ exceptions
