@@ -63,6 +63,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #import "imebra_uidGeneratorFactory.h"
 #import "imebra_randomUidGenerator.h"
 #import "imebra_serialNumberUidGenerator.h"
+#import "imebra_VOIDescription.h"
 #import "tagsEnumeration.h"
 #import "uidsEnumeration.h"
 

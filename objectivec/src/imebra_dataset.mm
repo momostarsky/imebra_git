@@ -22,6 +22,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #import "../include/imebraobjc/imebra_writingDataHandlerNumeric.h"
 #import "../include/imebraobjc/imebra_dateAge.h"
 #import "../include/imebraobjc/imebra_patientName.h"
+#import "../include/imebraobjc/imebra_VOIDescription.h"
 
 #include "imebra_implementation_macros.h"
 #include "imebra_nserror.h"
@@ -38,6 +39,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <imebra/age.h>
 #include <imebra/date.h>
 #include <imebra/patientName.h>
+#include <imebra/VOIDescription.h>
 
 #import <Foundation/NSString.h>
 
