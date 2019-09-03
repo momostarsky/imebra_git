@@ -60,7 +60,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
                 (std::uint32_t)inputTopLeftX,
                 (std::uint32_t)inputTopLeftY,
                 (std::uint32_t)inputWidth,
-                (std::uint32_t)inputHeight));
+                (std::uint32_t)inputHeight)) ];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
