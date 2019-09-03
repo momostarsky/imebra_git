@@ -41,38 +41,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #import <Foundation/NSString.h>
 
-@implementation ImebraVOIDescription
-
--(id)initWithCenter:(double)center width:(double)width description:(NSString*)description
-{
-    self = [super init];
-    if(self)
-    {
-        m_center = center;
-        m_width = width;
-        m_description = description;
-    }
-    return self;
-
-}
-
--(double) center
-{
-    return m_center;
-}
-
--(double) width
-{
-    return m_width;
-}
-
--(NSString*) description
-{
-    return m_description;
-}
-
-@end
-
 
 @implementation ImebraDataSet
 
@@ -144,7 +112,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     for(const imebra::VOIDescription& description: vois)
     {
         [pVOIs addObject:
-            [[ImebraVOIDescription alloc] initWithCenter:description.center width:description.width description:imebra::stringToNSString(description.description)] ];
+            [[ImebraVOIDescription alloc] initWithImebraVOIDescription:new imebra::VOIDescription(description)] ];
     }
 
     return pVOIs;

@@ -29,6 +29,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 @class ImebraTag;
 @class ImebraMutableTag;
 @class ImebraTagId;
+@class ImebraVOIDescription;
 
 /// \enum ImebraTagVR_t
 /// \brief Enumerates the DICOM VRs (data types).
@@ -87,22 +88,6 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
     ImebraQualityVeryLow = 600      ///< the image is saved in low quality. Horizontal and vertical subsampling are applied. Quantization ratios are high
 };
 
-
-@interface ImebraVOIDescription: NSObject
-
-{
-    double m_center;            ///< The VOI center
-    double m_width;             ///< The VOI width
-    NSString* m_description;    ///< The VOI's description
-}
-
-    -(id)initWithCenter:(double)center width:(double)width description:(NSString*)description;
-
-    @property (readonly) double center;
-    @property (readonly) double width;
-    @property (readonly) NSString* description;
-
-@end
 
 ///
 ///  \brief This class represents an immutable DICOM dataset.
