@@ -32,7 +32,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     return self;
 }
 
--(id)initWithVOIDescription:(VOIDescription*)voiDescription
+-(id)initWithVOIDescription:(ImebraVOIDescription*)voiDescription
 {
     reset_imebra_object_holder(Transform);
     self = [super init];

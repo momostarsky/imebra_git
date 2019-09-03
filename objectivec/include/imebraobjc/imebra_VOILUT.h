@@ -53,7 +53,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     ///////////////////////////////////////////////////////////////////////////////
     -(id)initWithLUT:(ImebraLUT*)lut;
 
-    -(id)initWithVOIDescription:(VOIDescription*)voiDescription;
+    -(id)initWithVOIDescription:(ImebraVOIDescription*)voiDescription;
 
     /// \brief Find the optimal VOI settings for a specific image's area and apply
     ///        it with setCenterWidth().
