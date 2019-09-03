@@ -18,6 +18,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "imebra_implementation_macros.h"
 #include "imebra_nserror.h"
 #include <imebra/VOILUT.h>
+#include <imebra/VOIDescription.h>
 
 @implementation ImebraVOILUT
 
