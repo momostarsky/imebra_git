@@ -45,7 +45,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     self = [super init];
     if(self)
     {
-        set_imebra_object_holder(VOIDescription, new imebra::VOIDescription(center, width, (ImebraDicomVOIFunction_t)function, imebra::NSStringToString(description)));
+        set_imebra_object_holder(VOIDescription, new imebra::VOIDescription(center, width, (imebra::dicomVOIFunction_t)function, imebra::NSStringToString(description)));
     }
     return self;
 }
