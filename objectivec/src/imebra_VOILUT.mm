@@ -14,6 +14,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #import "../include/imebraobjc/imebra_VOILUT.h"
 #import "../include/imebraobjc/imebra_image.h"
 #import "../include/imebraobjc/imebra_lut.h"
+#import "../include/imebraobjc/imebra_VOIDescription.h"
 #include "imebra_implementation_macros.h"
 #include "imebra_nserror.h"
 #include <imebra/VOILUT.h>
