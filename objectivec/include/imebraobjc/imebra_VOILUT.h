@@ -19,6 +19,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @class ImebraImage;
 @class ImebraLUT;
+@class ImebraVOIDescription;
 
 
 ///
@@ -50,7 +51,9 @@ If you do not want to be bound by the GPL terms (such as the requirement
     /// \brief Initializer.
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    -(id)init;
+    -(id)initWithLUT:(ImebraLUT*)lut;
+
+    -(id)initWithVOIDescription:(VOIDescription*)voiDescription;
 
     /// \brief Find the optimal VOI settings for a specific image's area and apply
     ///        it with setCenterWidth().
@@ -63,9 +66,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
     /// \param width        the width of the area to analyze
     /// \param height       the height of the area to analyze
     /// \param pError       set to a NSError derived class in case of error
+    /// \return an ImebraVOIDescription object describing the optimal VOI 
+    ///         parameters
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    -(void)applyOptimalVOI:
+    -(ImebraVOIDescription*)getOptimalVOI:
         (ImebraImage*)pInputImage
         inputTopLeftX:(unsigned int)inputTopLeftX
         inputTopLeftY:(unsigned int)inputTopLeftY
@@ -75,38 +80,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
         __attribute__((swift_error(nonnull_error)));
 
-    /// \brief Set the VOI settings applied by the transform.
-    ///
-    /// \param center the VOI center
-    /// \param width  the VOI width
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    -(void)setCenter:(double)center width:(double)width;
-
-    /// \brief Set the LUT that will be used by the transform to enhance the
-    ///        contrast.
-    ///
-    /// The LUTs to be used for the VOILUT transform are stored in the dataset's
-    /// sequence ImebraTagId_t::ImebraVOILUTSequence_0028_3010
-    /// (group 0x0028, tag 0x3010).
-    /// Each item in the sequence stores a single LUT.
-    ///
-    /// Use ImebraDataSet::getLUT() to retrieve the LUT from the DataSet.
-    ///
-    /// \param pLut  the LUT to apply
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    -(void)setLUT:(ImebraLUT*)pLUT;
-
-    /// \brief Retrieve the VOI center applied by the transform.
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    @property (readonly) double center;
-
-    /// \brief Retrieve the VOI width applied by the transform.
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    @property (readonly) double width;
 
 @end
 

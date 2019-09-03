@@ -20,18 +20,29 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @implementation ImebraVOILUT
 
--(id)init
+-(id)initWithLUT:(ImebraLUT*)lut
 {
     reset_imebra_object_holder(Transform);
     self = [super init];
     if(self)
     {
-        set_imebra_object_holder(Transform, new imebra::VOILUT());
+        set_imebra_object_holder(Transform, new imebra::VOILUT(*get_other_imebra_object_holder(lut, LUT)));
     }
     return self;
 }
 
--(void)applyOptimalVOI:
+-(id)initWithVOIDescription:(VOIDescription*)voiDescription
+{
+    reset_imebra_object_holder(Transform);
+    self = [super init];
+    if(self)
+    {
+        set_imebra_object_holder(Transform, new imebra::VOILUT(*get_other_imebra_object_holder(voiDescription, VOIDescription)));
+    }
+    return self;
+}
+
+-(ImebraVOIDescription*)getOptimalVOI:
     (ImebraImage*)pInputImage
     inputTopLeftX:(unsigned int)inputTopLeftX
     inputTopLeftY:(unsigned int)inputTopLeftY
@@ -41,36 +52,16 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    ((imebra::VOILUT*)get_imebra_object_holder(Transform))->applyOptimalVOI(
+    return [[ImebraVOIDescription alloc] initWithImebraVOIDescription:new imebra::VOIDescription(
+        ((imebra::VOILUT*)get_imebra_object_holder(Transform))->getOptimalVOI(
                 *get_other_imebra_object_holder(pInputImage, Image),
                 (std::uint32_t)inputTopLeftX,
                 (std::uint32_t)inputTopLeftY,
                 (std::uint32_t)inputWidth,
-                (std::uint32_t)inputHeight);
+                (std::uint32_t)inputHeight));
 
-    OBJC_IMEBRA_FUNCTION_END();
+    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
-
--(void)setCenter:(double)center width:(double)width
-{
-    ((imebra::VOILUT*)get_imebra_object_holder(Transform))->setCenterWidth(center, width);
-}
-
--(void)setLUT:(ImebraLUT*)pLUT
-{
-    ((imebra::VOILUT*)get_imebra_object_holder(Transform))->setLUT(*get_other_imebra_object_holder(pLUT, LUT));
-}
-
--(double) center
-{
-    return ((imebra::VOILUT*)get_imebra_object_holder(Transform))->getCenter();
-}
-
--(double) width
-{
-    return ((imebra::VOILUT*)get_imebra_object_holder(Transform))->getWidth();
-}
-
 
 @end
 
