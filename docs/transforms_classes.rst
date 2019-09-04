@@ -22,7 +22,7 @@ The following classes are described in this chapter:
 |:cpp:class:`imebra::VOILUT`                    |:cpp:class:`ImebraVOILUT`                    |Apply a presentation VOI or    |
 |                                               |                                             |LUT                            |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::VOIDescription`            |:cpp:class:`ImebraDescription`               |Describes the VOI's parameters |
+|:cpp:class:`imebra::VOIDescription`            |:cpp:class:`ImebraVOIDescription`            |Describes the VOI's parameters |
 |                                               |                                             |(center, width, function)      |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
 |:cpp:class:`imebra::ModalityVOILUT`            |:cpp:class:`ImebraModalityVOILUT`            |Apply the modality VOI or      |
@@ -92,6 +92,38 @@ Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
 .. doxygenclass:: ImebraVOILUT
+   :members:
+
+
+VOIDescription
+..............
+
+C++
+,,,
+
+.. doxygenclass:: imebra::VOIDescription
+   :members:
+
+Objective-C/Swift
+,,,,,,,,,,,,,,,,,
+
+.. doxygenclass:: ImebraVOIDescription
+   :members:
+
+
+LUT
+...
+
+C++
+,,,
+
+.. doxygenclass:: imebra::LUT
+   :members:
+
+Objective-C/Swift
+,,,,,,,,,,,,,,,,,
+
+.. doxygenclass:: ImebraLUT
    :members:
 
 

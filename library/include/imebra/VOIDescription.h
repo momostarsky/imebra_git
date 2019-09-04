@@ -84,7 +84,7 @@ public:
 
 #ifndef SWIG
     ///
-    /// \brief Construct and initializes the VOIDesciption
+    /// \brief Construct and initializes the VOIDesciption.
     ///
     /// \param center       the VOI window's center
     /// \param width        the VOI windoe's width

@@ -32,8 +32,6 @@ The following classes are described in this chapter:
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
 |:cpp:class:`imebra::codecType_t`               |:cpp:class:`ImebraCodecType_t`               |Enumerates the codec types     |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::VOIDescription`            |:cpp:class:`ImebraVOIDescription`            |Hold the VOI description       |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
 |:cpp:class:`imebra::vois_t`                    |NSArray                                      |List of VOIs descriptions      |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
 |:cpp:class:`imebra::dimseCommandType_t`        |:cpp:class:`ImebraDimseCommandType_t`        |Enumerates the DIMSE commands  |
