@@ -45,6 +45,13 @@ class IMEBRA_API VOIDescription
     friend class VOILUT;
     friend class DataSet;
 public:
+    //
+    // Default constructor. Needed because the object is inserted into
+    //        vectors in the Python wrapper and the SWIG generated code need the
+    //        default constructor.
+    //
+    ///////////////////////////////////////////////////////////////////////////////
+    VOIDescription();
 
     ///
     /// \brief Copy constructor.
