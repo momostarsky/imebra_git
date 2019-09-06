@@ -9,8 +9,9 @@ Version |release| (this version)
 - Implemented enhancement #220 (The group length is deprecated: don't write it anymore) as per SOP :ref:`DEVENH_2`
 - Implemented enhancement #280 (requirement :ref:`REQ_UID_GEN`, Supply a mechanism to generate unique DICOM UIDs) as per SOP :ref:`DEVFEAT_3`
 - Implemented enhancement #283 (requirement :ref:`REQ_INSERT_FILES_IN_TAGS`, Add the possibility to reference file content into tags) as per SOP :ref:`DEVFEAT_3`
-- Implemented enhancement #293 (requirement :ref:`REQ_LOGGING`,  The library must log the most important tasks execution) as per SOP :ref:`DEVFEAT_3`
-- Implemented enhancement #298 (requirement :ref:`REQ_FUNCTIONAL_MACROS`,  The library must be able to retrieve imaging data from functional group sequence items) as per SOP :ref:`DEVFEAT_3`
+- Implemented enhancement #293 (requirement :ref:`REQ_LOGGING`, The library must log the most important tasks execution) as per SOP :ref:`DEVFEAT_3`
+- Implemented enhancement #298 (requirement :ref:`REQ_FUNCTIONAL_MACROS`, The library must be able to retrieve imaging data from functional group sequence items) as per SOP :ref:`DEVFEAT_3`
+- Implemented enhancement #299 (requirement :ref:`REQ_VOI_FUNCTION`, Imebra must be able to calculate the VOI using one of the 3 defined DICOM functions) as per SOP :ref:`DEVFEAT_3`
 
 
 Version 4.5.1.1
