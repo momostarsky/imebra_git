@@ -785,6 +785,39 @@ TEST(objectivec, testExternalStream)
 }
 
 
+TEST(objectivec, voilutUnsigned8OptimalVOI)
+{
+    ImebraMutableImage* unsigned8 = [[ImebraMutableImage alloc] initWithWidth:6 height:1 depth:ImebraBitDepthU8 colorSpace:@"MONOCHROME2" highBit:7];
+
+    NSError* pError(0);
+
+    @autoreleasepool
+    {
+        ImebraWritingDataHandler* unsigned8Handler = [unsigned8 getWritingDataHandler:&pError];
+        [unsigned8Handler setUnsignedLong:0 newValue:10 error:&pError];
+        [unsigned8Handler setUnsignedLong:1 newValue:0 error:&pError];
+        [unsigned8Handler setUnsignedLong:2 newValue:20 error:&pError];
+        [unsigned8Handler setUnsignedLong:3 newValue:30 error:&pError];
+        [unsigned8Handler setUnsignedLong:4 newValue:40 error:&pError];
+        [unsigned8Handler setUnsignedLong:5 newValue:50 error:&pError];
+    }
+
+    ImebraVOIDescription* voiDescription = [ImebraVOILUT getOptimalVOI:unsigned8 inputTopLeftX:0 inputTopLeftY:0 inputWidth:6 inputHeight:1 error:&pError];
+    ImebraVOILUT* voilut = [ImebraVOILUT initWithVOIDescription:voiDescription];
+
+    ImebraMutableImage* unsigned8Out = [voilut allocateOutputImage:unsigned8 width:6 height:1 error:&pError];
+    [voilut runTransform:unsigned8 inputTopLeftX:0 inputTopLeftY:0 inputWidth:6 inputHeight:1 outputImage:unsigned8Out outputTopLeftX:0 outputTopLeftY:0 error:&pError];
+
+    ImebraReadingDataHandler* unsigned8Handler = [unsigned8Out getReadingDataHandler:&pError];
+
+    ASSERT_EQ(51u, [unsigned8Handler getUnsignedLong:0 error:&pError]);
+    ASSERT_EQ(0u, [unsigned8Handler getUnsignedLong:1 error:&pError]);
+    ASSERT_EQ(102u, [unsigned8Handler getUnsignedLong:2 error:&pError]);
+    ASSERT_EQ(153u, [unsigned8Handler getUnsignedLong:3 error:&pError]);
+    ASSERT_EQ(204u, [unsigned8Handler getUnsignedLong:4 error:&pError]);
+    ASSERT_EQ(255u, [unsigned8Handler getUnsignedLong:5 error:&pError]);
+}
+
 
 // Test DrawBitmap generating a NSImage
 #if defined(__APPLE__)
