@@ -55,7 +55,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_START();
 
     return [[ImebraVOIDescription alloc] initWithImebraVOIDescription:new imebra::VOIDescription(
-        ((imebra::VOILUT*)get_imebra_object_holder(Transform))->getOptimalVOI(
+        imebra::VOILUT::getOptimalVOI(
                 *get_other_imebra_object_holder(pInputImage, Image),
                 (std::uint32_t)inputTopLeftX,
                 (std::uint32_t)inputTopLeftY,
