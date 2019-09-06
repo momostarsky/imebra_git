@@ -803,7 +803,7 @@ TEST(objectivec, voilutUnsigned8OptimalVOI)
     }
 
     ImebraVOIDescription* voiDescription = [ImebraVOILUT getOptimalVOI:unsigned8 inputTopLeftX:0 inputTopLeftY:0 inputWidth:6 inputHeight:1 error:&pError];
-    ImebraVOILUT* voilut = [ImebraVOILUT initWithVOIDescription:voiDescription error:&pError];
+    ImebraVOILUT* voilut = [ImebraVOILUT initWithVOIDescription:voiDescription];
 
     ImebraMutableImage* unsigned8Out = [voilut allocateOutputImage:unsigned8 width:6 height:1 error:&pError];
     [voilut runTransform:unsigned8 inputTopLeftX:0 inputTopLeftY:0 inputWidth:6 inputHeight:1 outputImage:unsigned8Out outputTopLeftX:0 outputTopLeftY:0 error:&pError];
