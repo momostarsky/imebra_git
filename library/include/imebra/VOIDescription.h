@@ -47,12 +47,6 @@ class IMEBRA_API VOIDescription
 public:
 
     ///
-    /// \brief Default constructor.
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    VOIDescription();
-
-    ///
     /// \brief Copy constructor.
     ///
     /// \param source source Date object
@@ -80,7 +74,7 @@ public:
     /// \param description  the VOI description (UTF8 encoded)
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    VOIDescription(double center, double width, dicomVOIFunction_t function, const std::string& description);
+    explicit VOIDescription(double center, double width, dicomVOIFunction_t function, const std::string& description);
 
 #ifndef SWIG
     ///

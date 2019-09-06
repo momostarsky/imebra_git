@@ -153,20 +153,18 @@ int main(int argc, char* argv[])
 
             if(ColorTransformsFactory::isMonochrome(dataSetImage.getColorSpace()))
             {
-                VOILUT presentationVOILUT;
                 vois_t vois = loadedDataSet.getVOIs();
                 if(!vois.empty())
                 {
-                    presentationVOILUT = VOILUT(vois.front());
+                    chain.addTransform(VOILUT(vois.front()));
                 }
                 else
                 {
                     // Now find the optimal VOILUT
                     //////////////////////////////
                     VOIDescription voiDescription = VOILUT::getOptimalVOI(dataSetImage, 0, 0, width, height);
-                    presentationVOILUT = VOILUT(voiDescription);
+                    chain.addTransform(VOILUT(voiDescription));
                 }
-                chain.addTransform(presentationVOILUT);
             }
 
             // Get the colorspace of the transformation output

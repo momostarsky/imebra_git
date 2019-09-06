@@ -55,11 +55,6 @@ class IMEBRA_API VOILUT: public Transform
 {
 
 public:
-    ///
-    /// \brief Default constructor.
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    VOILUT();
 
     ///
     /// \brief Copy constructor.
@@ -85,7 +80,7 @@ public:
     /// \param lut the lookup table to use during the transform
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    VOILUT (const LUT& lut);
+    explicit VOILUT (const LUT& lut);
 
     ///
     /// \brief Construct a VOILUT transform and specifies the window center, width
@@ -95,7 +90,7 @@ public:
     ///                       width and function
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    VOILUT (const VOIDescription& voiDescription);
+    explicit VOILUT (const VOIDescription& voiDescription);
 
     virtual ~VOILUT();
 

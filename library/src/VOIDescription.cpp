@@ -22,11 +22,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 namespace imebra
 {
 
-VOIDescription::VOIDescription():
-    m_pVOIDescription(std::make_shared<implementation::VOIDescription>(0, 1, dicomVOIFunction_t::linear, ""))
-{
-}
-
 VOIDescription::VOIDescription(const VOIDescription& source):
     m_pVOIDescription(getVOIDescriptionImplementation(source))
 {

@@ -26,11 +26,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 namespace imebra
 {
 
-VOILUT::VOILUT():
-    Transform(std::make_shared<imebra::implementation::transforms::VOILUT>(0, 1, dicomVOIFunction_t::linear))
-{
-}
-
 VOILUT::VOILUT(const VOILUT& source): Transform(source)
 {
 }
