@@ -32,7 +32,6 @@ void exceptionsThread(size_t exceptionType)
         case 0:
             {
                 std::string trace = ExceptionsManager::getExceptionTrace();
-                EXPECT_TRUE(trace.find("fileStreamInput") != std::string::npos);
                 EXPECT_TRUE(trace.find("StreamOpenError") != std::string::npos);
                 EXPECT_TRUE(trace.find("CodecFactory") != std::string::npos);
                 EXPECT_TRUE(trace.find("MissingBufferError") == std::string::npos);
@@ -42,7 +41,6 @@ void exceptionsThread(size_t exceptionType)
         case 1:
             {
                 std::string trace = ExceptionsManager::getExceptionTrace();
-                EXPECT_TRUE(trace.find("fileStreamInput") == std::string::npos);
                 EXPECT_TRUE(trace.find("StreamOpenError") == std::string::npos);
                 EXPECT_TRUE(trace.find("CodecFactory") == std::string::npos);
                 EXPECT_TRUE(trace.find("MissingGroupError") != std::string::npos);
@@ -60,7 +58,6 @@ void exceptionsThread(size_t exceptionType)
     catch(...)
     {
         std::string trace = ExceptionsManager::getExceptionTrace();
-        EXPECT_TRUE(trace.find("fileStreamInput") != std::string::npos);
         EXPECT_TRUE(trace.find("StreamOpenError") != std::string::npos);
         EXPECT_TRUE(trace.find("CodecFactory") != std::string::npos);
     }
@@ -101,7 +98,6 @@ TEST(exceptionsTest, testAutomaticClear)
     catch(...)
     {
         std::string trace = ExceptionsManager::getExceptionTrace();
-        EXPECT_TRUE(trace.find("fileStreamInput") == std::string::npos);
         EXPECT_TRUE(trace.find("StreamOpenError") == std::string::npos);
         EXPECT_TRUE(trace.find("CodecFactory") == std::string::npos);
         EXPECT_TRUE(trace.find("MissingGroupError") != std::string::npos);

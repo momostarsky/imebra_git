@@ -18,11 +18,13 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #include "exceptionImpl.h"
 #include "fileStreamImpl.h"
-#include "charsetConversionImpl.h"
 #include "../include/imebra/exceptions.h"
 
 #include <sstream>
 #include <errno.h>
+#include <locale>
+#include <codecvt>
+
 
 namespace imebra
 {
@@ -54,72 +56,43 @@ namespace implementation
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void fileStream::openFile(const std::wstring& fileName, std::ios_base::openmode mode)
+fileStream::fileStream(const std::wstring& fileName, openMode mode)
 {
     IMEBRA_FUNCTION_START();
 
-    std::lock_guard<std::mutex> lock(m_mutex);
-
-    if(m_openFile != 0)
-    {
-        if(::fclose(m_openFile) != 0)
-        {
-            IMEBRA_THROW(StreamCloseError, "Error while closing the file");
-        }
-        m_openFile = 0;
-    }
-
-    std::wstring strMode;
-
-    std::ios_base::openmode tempMode = mode & (~std::ios::binary);
-
-    if(tempMode == (std::ios::in | std::ios::out))
-    {
-        strMode = L"r+";
-    }
-
-    if(tempMode == (std::ios::in | std::ios::out | std::ios::app))
-    {
-        strMode = L"a+";
-    }
-
-    if(tempMode == (std::ios::in | std::ios::out | std::ios::trunc))
-    {
-        strMode = L"w+";
-    }
-
-    if(tempMode == (std::ios::out) || tempMode == (int)(std::ios::out | std::ios::trunc))
-    {
-        strMode = L"w";
-    }
-
-    if(tempMode == (std::ios::out | std::ios::app))
-    {
-        strMode = L"a";
-    }
-
-    if(tempMode == (std::ios::in))
-    {
-        strMode = L"r";
-    }
-
-    strMode += L"b";
-
 #if defined(IMEBRA_WINDOWS)
-     errno_t errorCode = ::_wfopen_s(&m_openFile, fileName.c_str(), strMode.c_str());
+    std::wstring strMode;
+    switch(mode)
+    {
+    case openMode::read:
+        strMode = L"rb";
+        break;
+    case openMode::write:
+        strMode = L"wb";
+        break;
+    }
+
+    errno_t errorCode = ::_wfopen_s(&m_openFile, fileName.c_str(), strMode.c_str());
      if (errorCode != 0)
      {
          m_openFile = 0;
      }
 #else
     // Convert the filename to UTF8
-    defaultCharsetConversion toUtf8("ISO-IR 192");
-    std::string utf8FileName(toUtf8.fromUnicode(fileName));
+    std::string utf8FileName(std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t>{}.to_bytes(fileName));
 
-    // Convert the filemode to UTF8
-    std::string utf8Mode(toUtf8.fromUnicode(strMode));
+    std::string strMode;
+    switch(mode)
+    {
+    case openMode::read:
+        strMode = "rb";
+        break;
+    case openMode::write:
+        strMode = "wb";
+        break;
+    }
 
-    m_openFile = ::fopen(utf8FileName.c_str(), utf8Mode.c_str());
+    m_openFile = ::fopen(utf8FileName.c_str(), strMode.c_str());
     int errorCode = errno;
 #endif
     if(m_openFile == 0)
@@ -130,25 +103,50 @@ void fileStream::openFile(const std::wstring& fileName, std::ios_base::openmode 
     IMEBRA_FUNCTION_END();
 }
 
-void fileStream::close()
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
+// Open a file
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+fileStream::fileStream(const std::string& fileName, openMode mode)
 {
     IMEBRA_FUNCTION_START();
 
-    std::lock_guard<std::mutex> lock(m_mutex);
-
-    if(m_openFile != 0)
+    std::string strMode;
+    switch(mode)
     {
-        if(::fclose(m_openFile) != 0)
-        {
-            IMEBRA_THROW(StreamCloseError, "Error while closing the file");
-        }
-        m_openFile = 0;
+    case openMode::read:
+        strMode = "rb";
+        break;
+    case openMode::write:
+        strMode = "wb";
+        break;
+    }
+
+#if defined(IMEBRA_WINDOWS)
+
+    errno_t errorCode = ::fopen_s(&m_openFile, fileName.c_str(), strMode.c_str());
+     if (errorCode != 0)
+     {
+         m_openFile = 0;
+     }
+#else
+
+    m_openFile = ::fopen(fileName.c_str(), strMode.c_str());
+    int errorCode = errno;
+#endif
+    if(m_openFile == 0)
+    {
+        IMEBRA_THROW(StreamOpenError, "stream::openFile failure - error code: " << errorCode);
     }
 
     IMEBRA_FUNCTION_END();
 }
-
-
 
 
 ///////////////////////////////////////////////////////////
@@ -162,13 +160,7 @@ void fileStream::close()
 ///////////////////////////////////////////////////////////
 fileStream::~fileStream()
 {
-    std::lock_guard<std::mutex> lock(m_mutex);
-
-    if(m_openFile != 0)
-    {
-        ::fclose(m_openFile);
-        m_openFile = 0;
-    }
+    ::fclose(m_openFile);
 }
 
 
@@ -181,54 +173,20 @@ fileStream::~fileStream()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-fileStreamInput::fileStreamInput(const std::string& fileName)
+fileStreamInput::fileStreamInput(const std::string& fileName): fileStream(fileName, openMode::read)
 {
-    IMEBRA_FUNCTION_START();
-
-    std::wstring wFileName;
-    size_t fileNameSize(fileName.size());
-    wFileName.resize(fileNameSize);
-    for(size_t copyChars = 0; copyChars != fileNameSize; ++copyChars)
-    {
-        wFileName[copyChars] = (wchar_t)fileName[copyChars];
-    }
-    openFile(wFileName, std::ios::in);
-
-    IMEBRA_FUNCTION_END();
 }
 
-fileStreamInput::fileStreamInput(const std::wstring& fileName)
+fileStreamInput::fileStreamInput(const std::wstring& fileName): fileStream(fileName, openMode::read)
 {
-    IMEBRA_FUNCTION_START();
-
-    openFile(fileName, std::ios::in);
-
-    IMEBRA_FUNCTION_END();
 }
 
-fileStreamOutput::fileStreamOutput(const std::string& fileName)
+fileStreamOutput::fileStreamOutput(const std::string& fileName): fileStream(fileName, openMode::write)
 {
-    IMEBRA_FUNCTION_START();
-
-    std::wstring wFileName;
-    size_t fileNameSize(fileName.size());
-    wFileName.resize(fileNameSize);
-    for(size_t copyChars = 0; copyChars != fileNameSize; ++copyChars)
-    {
-        wFileName[copyChars] = (wchar_t)fileName[copyChars];
-    }
-    openFile(wFileName, std::ios::out);
-
-    IMEBRA_FUNCTION_END();
 }
 
-fileStreamOutput::fileStreamOutput(const std::wstring &fileName)
+fileStreamOutput::fileStreamOutput(const std::wstring &fileName): fileStream(fileName, openMode::write)
 {
-    IMEBRA_FUNCTION_START();
-
-    openFile(fileName, std::ios::out);
-
-    IMEBRA_FUNCTION_END();
 }
 
 

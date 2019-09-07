@@ -35,24 +35,20 @@ namespace implementation
 class fileStream
 {
 public:
-    fileStream(): m_openFile(0){}
+    enum class openMode: std::uint8_t
+    {
+        read = 0,
+        write = 1
+    };
+
+    fileStream(const std::wstring& fileName, openMode mode);
+    fileStream(const std::string& fileName, openMode mode);
 
     virtual ~fileStream();
 
-    /// \brief Closes the stream.
-    ///
-    /// This method is called automatically by the destructor.
-    ///
-    ///////////////////////////////////////////////////////////
-    void close();
-
-    void openFile(const std::wstring& fileName, std::ios_base::openmode mode);
-
 protected:
     FILE* m_openFile;
-
     mutable std::mutex m_mutex;
-
 };
 
 ///////////////////////////////////////////////////////////
