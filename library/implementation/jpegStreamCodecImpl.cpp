@@ -148,14 +148,7 @@ void jpegStreamCodec::readStream(std::shared_ptr<streamReader> pStream, std::sha
         // Read the Jpeg signature
         ///////////////////////////////////////////////////////////
         std::uint8_t jpegSignature[2];
-        try
-        {
-            pStream->read(jpegSignature, 2);
-        }
-        catch(StreamEOFError&)
-        {
-            IMEBRA_THROW(CodecWrongFormatError, "readStream detected a wrong format");
-        }
+        pStream->read(jpegSignature, 2);
 
         // If the jpeg signature is wrong, then return an error
         //  condition
