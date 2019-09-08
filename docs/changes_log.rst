@@ -7,6 +7,7 @@ Version |release| (this version)
 --------------------------------
 
 - Fixed bug #297 (Builds fail on new build VM) as per SOP :ref:`FIXBUG_2`
+- Implemented enhancement #300 (Not needed try/catch in jpegStreamCodecImpl.cpp) as per SOP :ref:`DEVENH_2`
 
 Version 4.6.0.1
 ---------------
