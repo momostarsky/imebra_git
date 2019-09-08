@@ -44,12 +44,15 @@ TEST(jpegCodecTest, testBaseline)
         ASSERT_LE(differenceYBR, 1);
 
         // Save jpeg, reload jpeg and check
-        char* tempFileName = ::tempnam(0, "jpg");
-        std::string jpgFileName(tempFileName);
-        free(tempFileName);
-
-        CodecFactory::save(dataset, jpgFileName, codecType_t::jpeg);
-        std::unique_ptr<DataSet> checkDataSet(CodecFactory::load(jpgFileName));
+        ReadWriteMemory memory;
+        {
+            MemoryStreamOutput streamOutput(memory);
+            StreamWriter writer(streamOutput);
+            CodecFactory::save(dataset, writer, codecType_t::jpeg);
+        }
+        MemoryStreamInput streamInput(memory);
+        StreamReader reader(streamInput);
+        std::unique_ptr<DataSet> checkDataSet(CodecFactory::load(reader));
         std::unique_ptr<Image> checkJpegImage(checkDataSet->getImage(0));
         double differenceJPG = compareImages(*ybrImage, *checkJpegImage);
         ASSERT_LE(differenceJPG, 1);
