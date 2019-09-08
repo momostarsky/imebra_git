@@ -29,18 +29,7 @@ TEST(jpegCodecTest, testBaseline)
         std::unique_ptr<Image> ybrImage(colorTransform->allocateOutputImage(*baselineImage, width, height));
         colorTransform->runTransform(*baselineImage, 0, 0, width, height, *ybrImage, 0, 0);
 
-        std::wstring fileName;
-        if(precision == 0)
-        {
-            fileName = L"testDicomLossyJpeg8bit.dcm";
-        }
-        else
-        {
-            fileName = L"testDicomLossyJpeg12bit.dcm";
-        }
         dataset.setImage(0, *ybrImage, imageQuality_t::veryHigh);
-
-        CodecFactory::save(dataset, fileName, codecType_t::dicom);
 
         std::unique_ptr<Image> checkImage(dataset.getImage(0));
 
@@ -54,6 +43,18 @@ TEST(jpegCodecTest, testBaseline)
         double differenceYBR = compareImages(*ybrImage, *checkImage);
         ASSERT_LE(differenceRGB, 5);
         ASSERT_LE(differenceYBR, 1);
+
+        // Save jpeg, reload jpeg and check
+        char* tempFileName = ::tempnam(0, "jpg");
+        std::string jpgFileName(tempFileName);
+        free(tempFileName);
+
+        CodecFactory::save(dataset, jpgFileName, codecType_t::jpeg);
+        std::unique_ptr<DataSet> checkDataSet(CodecFactory::load(jpgFileName));
+        std::unique_ptr<Image> checkJpegImage(checkDataSet->getImage(0));
+        double differenceJPG = compareImages(*ybrImage, *checkJpegImage);
+        ASSERT_LE(differenceJPG, 1);
+
     }
 }
 
