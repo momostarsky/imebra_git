@@ -28,18 +28,7 @@ TEST(jpegCodecTest, testBaseline)
         MutableImage ybrImage = colorTransform.allocateOutputImage(baselineImage, width, height);
         colorTransform.runTransform(baselineImage, 0, 0, width, height, ybrImage, 0, 0);
 
-        std::wstring fileName;
-        if(precision == 0)
-        {
-            fileName = L"testDicomLossyJpeg8bit.dcm";
-        }
-        else
-        {
-            fileName = L"testDicomLossyJpeg12bit.dcm";
-        }
         dataset.setImage(0, ybrImage, imageQuality_t::veryHigh);
-
-        CodecFactory::save(dataset, fileName, codecType_t::dicom);
 
         Image checkImage = dataset.getImage(0);
 
@@ -53,6 +42,18 @@ TEST(jpegCodecTest, testBaseline)
         double differenceYBR = compareImages(ybrImage, checkImage);
         ASSERT_LE(differenceRGB, 5);
         ASSERT_LE(differenceYBR, 1);
+
+        // Save jpeg, reload jpeg and check
+        char* tempFileName = ::tempnam(0, "jpg");
+        std::string jpgFileName(tempFileName);
+        free(tempFileName);
+
+        CodecFactory::save(dataset, jpgFileName, codecType_t::jpeg);
+        std::unique_ptr<DataSet> checkDataSet(CodecFactory::load(jpgFileName));
+        std::unique_ptr<Image> checkJpegImage(checkDataSet->getImage(0));
+        double differenceJPG = compareImages(*ybrImage, *checkJpegImage);
+        ASSERT_LE(differenceJPG, 1);
+
     }
 }
 
@@ -198,6 +199,57 @@ TEST(jpegCodecTest, testLossless)
             }
         }
     }
+}
+
+
+void feedJpegDataThread(Pipe& source, DataSet& dataSet)
+{
+    StreamWriter writer(source);
+
+    CodecFactory::save(dataSet, writer, codecType_t::jpeg);
+
+    source.close(5000);
+}
+
+
+TEST(jpegCodecTest, codecFactoryPipe)
+{
+    DataSet testDataSet("1.2.840.10008.1.2.4.50");
+
+    const std::uint32_t width = 600;
+    const std::uint32_t height = 400;
+
+    std::unique_ptr<Image> baselineImage(buildImageForTest(width, height, bitDepth_t::depthU8, 7, 30, 20, "RGB", 50));
+
+    std::unique_ptr<Transform> colorTransform(ColorTransformsFactory::getTransform("RGB", "YBR_FULL"));
+    std::unique_ptr<Image> ybrImage(colorTransform->allocateOutputImage(*baselineImage, width, height));
+    colorTransform->runTransform(*baselineImage, 0, 0, width, height, *ybrImage, 0, 0);
+    testDataSet.setImage(0, *ybrImage, imageQuality_t::veryHigh);
+
+    Pipe source(1024);
+
+    std::thread feedData(imebra::tests::feedJpegDataThread, std::ref(source), std::ref(testDataSet));
+
+    StreamReader reader(source);
+    std::unique_ptr<DataSet> loadedDataSet(CodecFactory::load(reader));
+
+    feedData.join();
+
+    std::unique_ptr<Image> checkImage(loadedDataSet->getImage(0));
+
+    std::uint32_t checkWidth(checkImage->getWidth()), checkHeight(checkImage->getHeight());
+    colorTransform.reset(ColorTransformsFactory::getTransform("YBR_FULL", "RGB"));
+    std::unique_ptr<Image> rgbImage(colorTransform->allocateOutputImage(*checkImage, checkWidth, checkHeight));
+    colorTransform->runTransform(*checkImage, 0, 0, checkWidth, checkHeight, *rgbImage, 0, 0);
+
+    // Compare the buffers. A little difference is allowed
+    double differenceRGB = compareImages(*baselineImage, *rgbImage);
+    double differenceYBR = compareImages(*ybrImage, *checkImage);
+    ASSERT_LE(differenceRGB, 5);
+    ASSERT_LE(differenceYBR, 1);
+
+    // Test if the charset has been set correctly
+    ASSERT_NO_THROW(loadedDataSet->setUnicodeString(TagId(tagId_t::PatientName_0010_0010), L"Test"));
 }
 
 } // namespace tests
