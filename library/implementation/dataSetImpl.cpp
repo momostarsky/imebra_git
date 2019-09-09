@@ -358,7 +358,26 @@ std::shared_ptr<image> dataSet::getModalityImage(std::uint32_t frameNumber) cons
         return originalImage;
     }
 
-    std::shared_ptr<transforms::modalityVOILUT> modalityVOILUT(std::make_shared<transforms::modalityVOILUT>(std::static_pointer_cast<const dataSet>(shared_from_this())));
+    // Get the functional group dataset if available
+    std::shared_ptr<const dataSet> functionalGroupDataSet;
+    try
+    {
+        functionalGroupDataSet = getFunctionalGroupDataSet(frameNumber);
+        try
+        {
+            functionalGroupDataSet->getDouble(0x0028, 0, 0x1052, 0, 0); // Get intercept
+            functionalGroupDataSet->getDouble(0x0028, 0, 0x1053, 0, 0); // Get slope
+        }
+        catch(const MissingDataElementError&)
+        {
+            functionalGroupDataSet->getLut(0x0028, 0x3000, 0); // Try to get the modality lut
+        }
+    }
+    catch(const MissingDataElementError&)
+    {
+        functionalGroupDataSet = shared_from_this();
+    }
+    std::shared_ptr<transforms::modalityVOILUT> modalityVOILUT(std::make_shared<transforms::modalityVOILUT>(functionalGroupDataSet));
 
     // Convert to MONOCHROME2 if a modality transform is not present
     ////////////////////////////////////////////////////////////////
