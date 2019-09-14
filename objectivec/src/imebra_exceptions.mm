@@ -175,10 +175,7 @@
 @implementation ImebraColorTransformsFactoryNoTransformError: ImebraColorTransformsFactoryError
 @end
 
-@implementation ImebraTransformHighBitError: ImebraTransformError
-@end
-
-@implementation ImebraTransformHighBitDifferentColorSpacesError: ImebraTransformHighBitError
+@implementation ImebraTransformDifferentColorSpacesError: ImebraTransformError
 @end
 
 @implementation ImebraStreamEOFError : ImebraStreamError

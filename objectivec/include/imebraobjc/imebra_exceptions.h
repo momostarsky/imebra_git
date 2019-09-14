@@ -170,6 +170,9 @@ If you do not want to be bound by the GPL terms (such as the requirement
 @interface ImebraTransformDifferentHighBitError: ImebraTransformError
 @end
 
+@interface ImebraTransformDifferentColorSpacesError: ImebraTransformError
+@end
+
 @interface ImebraColorTransformError: ImebraTransformError
 @end
 
@@ -180,9 +183,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 @end
 
 @interface ImebraColorTransformsFactoryNoTransformError: ImebraColorTransformsFactoryError
-@end
-
-@interface ImebraTransformDifferentColorSpacesError: ImebraTransformHighBitError
 @end
 
 @interface ImebraStreamEOFError : ImebraStreamError
