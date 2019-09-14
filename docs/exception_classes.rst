@@ -402,22 +402,6 @@ Objective-C/Swift
    :members:
 
 
-StreamCloseError
-................
-
-C++
-,,,
-
-.. doxygenclass:: imebra::StreamCloseError
-   :members:
-
-Objective-C/Swift
-,,,,,,,,,,,,,,,,,
-
-.. doxygenclass:: ImebraStreamCloseError
-   :members:
-
-
 StreamClosedError
 .................
 
@@ -782,22 +766,6 @@ Objective-C/Swift
    :members:
 
 
-StreamJpegTagInStreamError
-..........................
-
-C++
-,,,
-
-.. doxygenclass:: imebra::StreamJpegTagInStreamError
-   :members:
-
-Objective-C/Swift
-,,,,,,,,,,,,,,,,,
-
-.. doxygenclass:: ImebraStreamJpegTagInStreamError
-   :members:
-
-
 DicomCodecError
 ...............
 
@@ -996,22 +964,6 @@ Objective-C/Swift
    :members:
 
 
-DataSetOldFormatError
-.....................
-
-C++
-,,,
-
-.. doxygenclass:: imebra::DataSetOldFormatError
-   :members:
-
-Objective-C/Swift
-,,,,,,,,,,,,,,,,,
-
-.. doxygenclass:: ImebraDataSetOldFormatError
-   :members:
-
-
 DataSetImageDoesntExistError
 ............................
 
@@ -1092,89 +1044,6 @@ Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
 .. doxygenclass:: ImebraDicomDirCircularReferenceError
-   :members:
-
-
-DicomDirUnknownDirectoryRecordTypeError
-.......................................
-
-C++
-,,,
-
-.. doxygenclass:: imebra::DicomDirUnknownDirectoryRecordTypeError
-   :members:
-
-Objective-C/Swift
-,,,,,,,,,,,,,,,,,
-
-.. doxygenclass:: ImebraDicomDirUnknownDirectoryRecordTypeError
-   :members:
-
-
-Huffman errors (used internally)
---------------------------------
-
-HuffmanError
-............
-
-C++
-,,,
-
-.. doxygenclass:: imebra::HuffmanError
-   :members:
-
-Objective-C/Swift
-,,,,,,,,,,,,,,,,,
-
-.. doxygenclass:: ImebraHuffmanError
-   :members:
-
-
-HuffmanCreateTableError
-.......................
-
-C++
-,,,
-
-.. doxygenclass:: imebra::HuffmanCreateTableError
-   :members:
-
-Objective-C/Swift
-,,,,,,,,,,,,,,,,,
-
-.. doxygenclass:: ImebraHuffmanCreateTableError
-   :members:
-
-
-HuffmanReadError
-................
-
-C++
-,,,
-
-.. doxygenclass:: imebra::HuffmanReadError
-   :members:
-
-Objective-C/Swift
-,,,,,,,,,,,,,,,,,
-
-.. doxygenclass:: ImebraHuffmanReadError
-   :members:
-
-
-HuffmanWriteError
-.................
-
-C++
-,,,
-
-.. doxygenclass:: imebra::HuffmanWriteError
-   :members:
-
-Objective-C/Swift
-,,,,,,,,,,,,,,,,,
-
-.. doxygenclass:: ImebraHuffmanWriteError
    :members:
 
 
@@ -1354,22 +1223,6 @@ Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
 .. doxygenclass:: ImebraColorTransformsFactoryNoTransformError
-   :members:
-
-
-TransformHighBitError
-.....................
-
-C++
-,,,
-
-.. doxygenclass:: imebra::TransformHighBitError
-   :members:
-
-Objective-C/Swift
-,,,,,,,,,,,,,,,,,
-
-.. doxygenclass:: ImebraTransformHighBitError
    :members:
 
 
