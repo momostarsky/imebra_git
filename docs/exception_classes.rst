@@ -32,8 +32,6 @@ The following classes are described in this chapter:
 +---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
 |:cpp:class:`imebra::StreamWriteError`                                |:cpp:class:`ImebraStreamWriteError`                                |Thrown when the stream cannot be written        |
 +---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`imebra::StreamCloseError`                                |:cpp:class:`ImebraStreamCloseError`                                |Thrown when the stream cannot be closed         |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
 |:cpp:class:`imebra::StreamClosedError`                               |:cpp:class:`ImebraStreamClosedError`                               |Thrown when accessing a closed stream           |
 +---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
 |:cpp:class:`imebra::StreamEOFError`                                  |:cpp:class:`ImebraStreamEOFError`                                  |Thrown when the end of the stream has been      |
@@ -111,8 +109,6 @@ The following classes are described in this chapter:
 +---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
 |:cpp:class:`imebra::DataSetWrongFrameError`                          |:cpp:class:`ImebraDataSetWrongFrameError`                          |Thrown when storing the wrong frame             |
 +---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`imebra::DataSetOldFormatError`                           |:cpp:class:`ImebraDataSetOldFormatError`                           |Thrown when the dataset is in NEMA format       |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
 |:cpp:class:`imebra::DataSetImageDoesntExistError`                    |:cpp:class:`ImebraDataSetImageDoesntExistError`                    |Thrown when attempting to retrieve a frame that |
 |                                                                     |                                                                   |does not exist                                  |
 +---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
@@ -125,8 +121,6 @@ The following classes are described in this chapter:
 +---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
 |:cpp:class:`imebra::DicomDirCircularReferenceError`                  |:cpp:class:`ImebraDicomDirCircularReferenceError`                  |Thrown when a dicomentry references a           |
 |                                                                     |                                                                   |parent entry as a child                         |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`imebra::DicomDirUnknownDirectoryRecordTypeError`         |:cpp:class:`ImebraADicomDirUnknownDirectoryRecordTypeError`        |Thrown when a entry type is unknown             |
 +---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
 |:cpp:class:`imebra::HuffmanError`                                    |:cpp:class:`ImebraHuffmanError`                                    |Base class for huffman related exceptions       |
 +---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
@@ -164,10 +158,7 @@ The following classes are described in this chapter:
 |:cpp:class:`imebra::ColorTransformsFactoryNoTransformError`          |:cpp:class:`ImebraColorTransformsFactoryNoTransformError`          |Thrown when a conversion between the specified  |
 |                                                                     |                                                                   |color spaces does not exist                     |
 +---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`imebra::TransformHighBitError`                           |:cpp:class:`ImebraTransformHighBitError`                           |Base class for High Bit Transform related       |
-|                                                                     |                                                                   |exceptions                                      |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`imebra::TransformHighBitDifferentColorSpacesError`       |:cpp:class:`ImebraTransformHighBitDifferentColorSpacesError`       |Thrown when the input and output images of a    |
+|:cpp:class:`imebra::TransformDifferentColorSpacesError`              |:cpp:class:`ImebraTransformDifferentColorSpacesError`              |Thrown when the input and output images of a    |
 |                                                                     |                                                                   |High Bit Transform have different color spaces  |
 +---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
 |:cpp:class:`imebra::ModalityVOILUTError`                             |:cpp:class:`ImebraModalityVOILUTError`                             |Thrown when the input or output images of a     |
@@ -1382,19 +1373,19 @@ Objective-C/Swift
    :members:
 
 
-TransformHighBitDifferentColorSpacesError
+TransformDifferentColorSpacesError
 .........................................
 
 C++
 ,,,
 
-.. doxygenclass:: imebra::TransformHighBitDifferentColorSpacesError
+.. doxygenclass:: imebra::TransformDifferentColorSpacesError
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraTransformHighBitDifferentColorSpacesError
+.. doxygenclass:: ImebraTransformDifferentColorSpacesError
    :members:
 
 

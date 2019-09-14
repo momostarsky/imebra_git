@@ -64,10 +64,6 @@ namespace imebra
     {\
         imebra::setNSError(e, pError, [ImebraStreamWriteError class]);\
     }\
-    catch(imebra::StreamCloseError& e)\
-    {\
-        imebra::setNSError(e, pError, [ImebraStreamCloseError class]);\
-    }\
     catch(imebra::TCPConnectionRefused& e)\
     {\
         imebra::setNSError(e, pError, [ImebraTCPConnectionRefused class]);\
@@ -176,10 +172,6 @@ namespace imebra
     {\
         imebra::setNSError(e, pError, [ImebraDataSetWrongFrameError class]);\
     }\
-    catch(imebra::DataSetOldFormatError& e)\
-    {\
-        imebra::setNSError(e, pError, [ImebraDataSetOldFormatError class]);\
-    }\
     catch(imebra::DataSetImageDoesntExistError& e)\
     {\
         imebra::setNSError(e, pError, [ImebraDataSetImageDoesntExistError class]);\
@@ -199,10 +191,6 @@ namespace imebra
     catch(imebra::DicomDirCircularReferenceError& e)\
     {\
         imebra::setNSError(e, pError, [ImebraDicomDirCircularReferenceError class]);\
-    }\
-    catch(imebra::DicomDirUnknownDirectoryRecordTypeError& e)\
-    {\
-        imebra::setNSError(e, pError, [ImebraDicomDirUnknownDirectoryRecordTypeError class]);\
     }\
     catch(imebra::DicomDirError& e)\
     {\
@@ -244,13 +232,9 @@ namespace imebra
     {\
         imebra::setNSError(e, pError, [ImebraColorTransformsFactoryError class]);\
     }\
-    catch(imebra::TransformHighBitDifferentColorSpacesError& e)\
+    catch(imebra::TransformDifferentColorSpacesError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraTransformHighBitDifferentColorSpacesError class]);\
-    }\
-    catch(imebra::TransformHighBitError& e)\
-    {\
-        imebra::setNSError(e, pError, [ImebraTransformHighBitError class]);\
+        imebra::setNSError(e, pError, [ImebraTransformDifferentColorSpacesError class]);\
     }\
     catch(imebra::ColorTransformError& e)\
     {\

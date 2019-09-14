@@ -52,6 +52,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit LutError(const std::string& message);
+
+    LutError(const LutError& source);
+
+    LutError& operator=(const LutError&) = delete;
+
+    virtual ~LutError();
 };
 
 
@@ -69,6 +75,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit LutCorruptedError(const std::string& message);
+
+    LutCorruptedError(const LutCorruptedError& source);
+
+    LutCorruptedError& operator=(const LutCorruptedError&) = delete;
+
+    virtual ~LutCorruptedError();
 };
 
 
@@ -85,6 +97,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit MissingDataElementError(const std::string& message);
+
+    MissingDataElementError(const MissingDataElementError& source);
+
+    MissingDataElementError& operator=(const MissingDataElementError&) = delete;
+
+    virtual ~MissingDataElementError();
 };
 
 
@@ -101,6 +119,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit MissingGroupError(const std::string& message);
+
+    MissingGroupError(const MissingGroupError& source);
+
+    MissingGroupError& operator=(const MissingGroupError&) = delete;
+
+    virtual ~MissingGroupError();
 };
 
 
@@ -117,6 +141,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit MissingTagError(const std::string& message);
+
+    MissingTagError(const MissingTagError& source);
+
+    MissingTagError& operator=(const MissingTagError&) = delete;
+
+    virtual ~MissingTagError();
 };
 
 
@@ -133,6 +163,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit MissingBufferError(const std::string& message);
+
+    MissingBufferError(const MissingBufferError& source);
+
+    MissingBufferError& operator=(const MissingBufferError&) = delete;
+
+    virtual ~MissingBufferError();
 };
 
 
@@ -149,6 +185,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit MissingItemError(const std::string& message);
+
+    MissingItemError(const MissingItemError& source);
+
+    MissingItemError& operator=(const MissingItemError&) = delete;
+
+    virtual ~MissingItemError();
 };
 
 
@@ -165,6 +207,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit StreamError(const std::string& message);
+
+    StreamError(const StreamError& source);
+
+    StreamError& operator=(const StreamError&) = delete;
+
+    virtual ~StreamError();
 };
 
 
@@ -181,6 +229,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit StreamOpenError(const std::string& message);
+
+    StreamOpenError(const StreamOpenError& source);
+
+    StreamOpenError& operator=(const StreamOpenError&) = delete;
+
+    virtual ~StreamOpenError();
 };
 
 
@@ -197,6 +251,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit StreamReadError(const std::string& message);
+
+    StreamReadError(const StreamReadError& source);
+
+    StreamReadError& operator=(const StreamReadError&) = delete;
+
+    virtual ~StreamReadError();
 };
 
 
@@ -213,22 +273,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit StreamWriteError(const std::string& message);
-};
 
+    StreamWriteError(const StreamWriteError& source);
 
-/// \brief Exception thrown when there are problems while closing of the
-///        stream.
-///
-///////////////////////////////////////////////////////////////////////////////
-class IMEBRA_API StreamCloseError : public StreamError
-{
-public:
-    /// \brief Constructor.
-    ///
-    /// \param message the message to store into the exception
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    explicit StreamCloseError(const std::string& message);
+    StreamWriteError& operator=(const StreamWriteError&) = delete;
+
+    virtual ~StreamWriteError();
 };
 
 
@@ -240,6 +290,12 @@ class IMEBRA_API TCPConnectionRefused: public StreamOpenError
 {
 public:
     explicit TCPConnectionRefused(const std::string& message);
+
+    TCPConnectionRefused(const TCPConnectionRefused& source);
+
+    TCPConnectionRefused& operator=(const TCPConnectionRefused&) = delete;
+
+    virtual ~TCPConnectionRefused();
 };
 
 
@@ -251,6 +307,12 @@ class IMEBRA_API TCPAddressAlreadyInUse: public StreamOpenError
 {
 public:
     explicit TCPAddressAlreadyInUse(const std::string& message);
+
+    TCPAddressAlreadyInUse(const TCPAddressAlreadyInUse& source);
+
+    TCPAddressAlreadyInUse& operator=(const TCPAddressAlreadyInUse&) = delete;
+
+    virtual ~TCPAddressAlreadyInUse();
 };
 
 
@@ -263,6 +325,12 @@ class IMEBRA_API PermissionDeniedError: public std::runtime_error
 {
 public:
     explicit PermissionDeniedError(const std::string& message);
+
+    PermissionDeniedError(const PermissionDeniedError& source);
+
+    PermissionDeniedError& operator=(const PermissionDeniedError&) = delete;
+
+    virtual ~PermissionDeniedError();
 };
 
 
@@ -279,6 +347,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit AddressError(const std::string& message);
+
+    AddressError(const AddressError& source);
+
+    AddressError& operator=(const AddressError&) = delete;
+
+    virtual ~AddressError();
 };
 
 
@@ -296,6 +370,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit AddressTryAgainError(const std::string& message);
+
+    AddressTryAgainError(const AddressTryAgainError& source);
+
+    AddressTryAgainError& operator=(const AddressTryAgainError&) = delete;
+
+    virtual ~AddressTryAgainError();
 };
 
 
@@ -311,6 +391,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit AddressNoNameError(const std::string& message);
+
+    AddressNoNameError(const AddressNoNameError& source);
+
+    AddressNoNameError& operator=(const AddressNoNameError&) = delete;
+
+    virtual ~AddressNoNameError();
 };
 
 
@@ -327,6 +413,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit AddressServiceNotSupportedError(const std::string& message);
+
+    AddressServiceNotSupportedError(const AddressServiceNotSupportedError& source);
+
+    AddressServiceNotSupportedError& operator=(const AddressServiceNotSupportedError&) = delete;
+
+    virtual ~AddressServiceNotSupportedError();
 };
 
 
@@ -342,6 +434,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit DictionaryError(const std::string& message);
+
+    DictionaryError(const DictionaryError& source);
+
+    DictionaryError& operator=(const DictionaryError&) = delete;
+
+    virtual ~DictionaryError();
 };
 
 
@@ -358,6 +456,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit DictionaryUnknownTagError(const std::string& message);
+
+    DictionaryUnknownTagError(const DictionaryUnknownTagError& source);
+
+    DictionaryUnknownTagError& operator=(const DictionaryUnknownTagError&) = delete;
+
+    virtual ~DictionaryUnknownTagError();
 };
 
 
@@ -375,6 +479,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit DictionaryUnknownDataTypeError(const std::string& message);
+
+    DictionaryUnknownDataTypeError(const DictionaryUnknownDataTypeError& source);
+
+    DictionaryUnknownDataTypeError& operator=(const DictionaryUnknownDataTypeError&) = delete;
+
+    virtual ~DictionaryUnknownDataTypeError();
 };
 
 
@@ -390,6 +500,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit CharsetConversionError(const std::string& message);
+
+    CharsetConversionError(const CharsetConversionError& source);
+
+    CharsetConversionError& operator=(const CharsetConversionError&) = delete;
+
+    virtual ~CharsetConversionError();
 };
 
 
@@ -406,6 +522,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit CharsetConversionNoTableError(const std::string& message);
+
+    CharsetConversionNoTableError(const CharsetConversionNoTableError& source);
+
+    CharsetConversionNoTableError& operator=(const CharsetConversionNoTableError&) = delete;
+
+    virtual ~CharsetConversionNoTableError();
 };
 
 
@@ -422,6 +544,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit CharsetConversionNoSupportedTableError(const std::string& message);
+
+    CharsetConversionNoSupportedTableError(const CharsetConversionNoSupportedTableError& source);
+
+    CharsetConversionNoSupportedTableError& operator=(const CharsetConversionNoSupportedTableError&) = delete;
+
+    virtual ~CharsetConversionNoSupportedTableError();
 };
 
 
@@ -442,6 +570,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit CharsetListDiffDefaultError(const std::string& message);
+
+    CharsetListDiffDefaultError(const CharsetListDiffDefaultError& source);
+
+    CharsetListDiffDefaultError& operator=(const CharsetListDiffDefaultError&) = delete;
+
+    virtual ~CharsetListDiffDefaultError();
 };
 
 
@@ -457,6 +591,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit CodecError(const std::string& message);
+
+    CodecError(const CodecError& source);
+
+    CodecError& operator=(const CodecError&) = delete;
+
+    virtual ~CodecError();
 };
 
 
@@ -473,6 +613,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit CodecWrongFormatError(const std::string& message);
+
+    CodecWrongFormatError(const CodecWrongFormatError& source);
+
+    CodecWrongFormatError& operator=(const CodecWrongFormatError&) = delete;
+
+    virtual ~CodecWrongFormatError();
 };
 
 
@@ -488,6 +634,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit CodecCorruptedFileError(const std::string& message);
+
+    CodecCorruptedFileError(const CodecCorruptedFileError& source);
+
+    CodecCorruptedFileError& operator=(const CodecCorruptedFileError&) = delete;
+
+    virtual ~CodecCorruptedFileError();
 };
 
 
@@ -504,6 +656,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit CodecWrongTransferSyntaxError(const std::string& message);
+
+    CodecWrongTransferSyntaxError(const CodecWrongTransferSyntaxError& source);
+
+    CodecWrongTransferSyntaxError& operator=(const CodecWrongTransferSyntaxError&) = delete;
+
+    virtual ~CodecWrongTransferSyntaxError();
 };
 
 
@@ -523,6 +681,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit CodecImageTooBigError(const std::string& message);
+
+    CodecImageTooBigError(const CodecImageTooBigError& source);
+
+    CodecImageTooBigError& operator=(const CodecImageTooBigError&) = delete;
+
+    virtual ~CodecImageTooBigError();
 };
 
 
@@ -540,6 +704,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit InvalidSequenceItemError(const std::string& message);
+
+    InvalidSequenceItemError(const InvalidSequenceItemError& source);
+
+    InvalidSequenceItemError& operator=(const InvalidSequenceItemError&) = delete;
+
+    virtual ~InvalidSequenceItemError();
 };
 
 
@@ -555,6 +725,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit DataHandlerError(const std::string& message);
+
+    DataHandlerError(const DataHandlerError& source);
+
+    DataHandlerError& operator=(const DataHandlerError&) = delete;
+
+    virtual ~DataHandlerError();
 };
 
 
@@ -571,6 +747,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit DataHandlerConversionError(const std::string& message);
+
+    DataHandlerConversionError(const DataHandlerConversionError& source);
+
+    DataHandlerConversionError& operator=(const DataHandlerConversionError&) = delete;
+
+    virtual ~DataHandlerConversionError();
 };
 
 
@@ -586,6 +768,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit DataHandlerCorruptedBufferError(const std::string& message);
+
+    DataHandlerCorruptedBufferError(const DataHandlerCorruptedBufferError& source);
+
+    DataHandlerCorruptedBufferError& operator=(const DataHandlerCorruptedBufferError&) = delete;
+
+    virtual ~DataHandlerCorruptedBufferError();
 };
 
 
@@ -602,6 +790,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit DataHandlerInvalidDataError(const std::string& message);
+
+    DataHandlerInvalidDataError(const DataHandlerInvalidDataError& source);
+
+    DataHandlerInvalidDataError& operator=(const DataHandlerInvalidDataError&) = delete;
+
+    virtual ~DataHandlerInvalidDataError();
 };
 
 /// \brief This is the base class for the exceptions thrown by the dataSet.
@@ -616,6 +810,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit DataSetError(const std::string& message);
+
+    DataSetError(const DataSetError& source);
+
+    DataSetError& operator=(const DataSetError&) = delete;
+
+    virtual ~DataSetError();
 };
 
 
@@ -633,6 +833,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit DataSetDifferentFormatError(const std::string& message);
+
+    DataSetDifferentFormatError(const DataSetDifferentFormatError& source);
+
+    DataSetDifferentFormatError& operator=(const DataSetDifferentFormatError&) = delete;
+
+    virtual ~DataSetDifferentFormatError();
 };
 
 
@@ -649,6 +855,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit DataSetUnknownTransferSyntaxError(const std::string& message);
+
+    DataSetUnknownTransferSyntaxError(const DataSetUnknownTransferSyntaxError& source);
+
+    DataSetUnknownTransferSyntaxError& operator=(const DataSetUnknownTransferSyntaxError&) = delete;
+
+    virtual ~DataSetUnknownTransferSyntaxError();
 };
 
 
@@ -668,24 +880,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit DataSetWrongFrameError(const std::string& message);
-};
 
+    DataSetWrongFrameError(const DataSetWrongFrameError& source);
 
-/// \brief This exception is thrown when the application is trying to store
-///        an image in an old Dicom format.
-///
-/// The application cannot store images in old Dicom formats (before Dicom3).
-///
-///////////////////////////////////////////////////////////////////////////////
-class IMEBRA_API DataSetOldFormatError: public DataSetError
-{
-public:
-    /// \brief Constructor.
-    ///
-    /// \param message the message to store into the exception
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    explicit DataSetOldFormatError(const std::string& message);
+    DataSetWrongFrameError& operator=(const DataSetWrongFrameError&) = delete;
+
+    virtual ~DataSetWrongFrameError();
 };
 
 
@@ -702,6 +902,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit DataSetImageDoesntExistError(const std::string& message);
+
+    DataSetImageDoesntExistError(const DataSetImageDoesntExistError& source);
+
+    DataSetImageDoesntExistError& operator=(const DataSetImageDoesntExistError&) = delete;
+
+    virtual ~DataSetImageDoesntExistError();
 };
 
 /// \brief This exception is thrown when the the client tries to store a
@@ -717,6 +923,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit DataSetImagePaletteColorIsReadOnly(const std::string& message);
+
+    DataSetImagePaletteColorIsReadOnly(const DataSetImagePaletteColorIsReadOnly& source);
+
+    DataSetImagePaletteColorIsReadOnly& operator=(const DataSetImagePaletteColorIsReadOnly&) = delete;
+
+    virtual ~DataSetImagePaletteColorIsReadOnly();
 };
 
 /// \brief This exception is thrown when the basic offset table is corrupted.
@@ -731,6 +943,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit DataSetCorruptedOffsetTableError(const std::string& message);
+
+    DataSetCorruptedOffsetTableError(const DataSetCorruptedOffsetTableError& source);
+
+    DataSetCorruptedOffsetTableError& operator=(const DataSetCorruptedOffsetTableError&) = delete;
+
+    virtual ~DataSetCorruptedOffsetTableError();
 };
 
 
@@ -748,6 +966,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit DicomDirError(const std::string& message);
+
+    DicomDirError(const DicomDirError& source);
+
+    DicomDirError& operator=(const DicomDirError&) = delete;
+
+    virtual ~DicomDirError();
 };
 
 
@@ -766,6 +990,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit DicomDirCircularReferenceError(const std::string& message);
+
+    DicomDirCircularReferenceError(const DicomDirCircularReferenceError& source);
+
+    DicomDirCircularReferenceError& operator=(const DicomDirCircularReferenceError&) = delete;
+
+    virtual ~DicomDirCircularReferenceError();
 };
 
 
@@ -782,22 +1012,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit DicomDirNoEntryError(const std::string& message);
-};
 
+    DicomDirNoEntryError(const DicomDirNoEntryError& source);
 
-/// \brief Exception thrown when an unknown record type
-///        is detected in a DicomDirEntry.
-///
-///////////////////////////////////////////////////////////////////////////////
-class IMEBRA_API DicomDirUnknownDirectoryRecordTypeError: public DicomDirError
-{
-public:
-    /// \brief Constructor.
-    ///
-    /// \param message the message to store into the exception
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    explicit DicomDirUnknownDirectoryRecordTypeError(const std::string& message);
+    DicomDirNoEntryError& operator=(const DicomDirNoEntryError&) = delete;
+
+    virtual ~DicomDirNoEntryError();
 };
 
 
@@ -813,6 +1033,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit ImageError(const std::string& message);
+
+    ImageError(const ImageError& source);
+
+    ImageError& operator=(const ImageError&) = delete;
+
+    virtual ~ImageError();
 };
 
 /// \brief This exception is thrown when an unknown depth is specified as a
@@ -828,6 +1054,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit ImageUnknownDepthError(const std::string& message);
+
+    ImageUnknownDepthError(const ImageUnknownDepthError& source);
+
+    ImageUnknownDepthError& operator=(const ImageUnknownDepthError&) = delete;
+
+    virtual ~ImageUnknownDepthError();
 };
 
 
@@ -844,6 +1076,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit ImageUnknownColorSpaceError(const std::string& message);
+
+    ImageUnknownColorSpaceError(const ImageUnknownColorSpaceError& source);
+
+    ImageUnknownColorSpaceError& operator=(const ImageUnknownColorSpaceError&) = delete;
+
+    virtual ~ImageUnknownColorSpaceError();
 };
 
 
@@ -860,6 +1098,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit ImageInvalidSizeError(const std::string& message);
+
+    ImageInvalidSizeError(const ImageInvalidSizeError& source);
+
+    ImageInvalidSizeError& operator=(const ImageInvalidSizeError&) = delete;
+
+    virtual ~ImageInvalidSizeError();
 };
 
 
@@ -875,6 +1119,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit TransformError(const std::string& message);
+
+    TransformError(const TransformError& source);
+
+    TransformError& operator=(const TransformError&) = delete;
+
+    virtual ~TransformError();
 };
 
 /// \brief Exception thrown when the image areas to be processed are out
@@ -890,6 +1140,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit TransformInvalidAreaError(const std::string& message);
+
+    TransformInvalidAreaError(const TransformInvalidAreaError& source);
+
+    TransformInvalidAreaError& operator=(const TransformInvalidAreaError&) = delete;
+
+    virtual ~TransformInvalidAreaError();
 };
 
 
@@ -906,6 +1162,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit TransformDifferentHighBitError(const std::string& message);
+
+    TransformDifferentHighBitError(const TransformDifferentHighBitError& source);
+
+    TransformDifferentHighBitError& operator=(const TransformDifferentHighBitError&) = delete;
+
+    virtual ~TransformDifferentHighBitError();
 };
 
 
@@ -922,6 +1184,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit ColorTransformError(const std::string& message);
+
+    ColorTransformError(const ColorTransformError& source);
+
+    ColorTransformError& operator=(const ColorTransformError&) = delete;
+
+    virtual ~ColorTransformError();
 };
 
 
@@ -938,6 +1206,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit ColorTransformWrongColorSpaceError(const std::string& message);
+
+    ColorTransformWrongColorSpaceError(const ColorTransformWrongColorSpaceError& source);
+
+    ColorTransformWrongColorSpaceError& operator=(const ColorTransformWrongColorSpaceError&) = delete;
+
+    virtual ~ColorTransformWrongColorSpaceError();
 };
 
 
@@ -954,6 +1228,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit ColorTransformsFactoryError(const std::string& message);
+
+    ColorTransformsFactoryError(const ColorTransformsFactoryError& source);
+
+    ColorTransformsFactoryError& operator=(const ColorTransformsFactoryError&) = delete;
+
+    virtual ~ColorTransformsFactoryError();
 };
 
 
@@ -971,10 +1251,16 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit ColorTransformsFactoryNoTransformError(const std::string& message);
+
+    ColorTransformsFactoryNoTransformError(const ColorTransformsFactoryNoTransformError& source);
+
+    ColorTransformsFactoryNoTransformError& operator=(const ColorTransformsFactoryNoTransformError&) = delete;
+
+    virtual ~ColorTransformsFactoryNoTransformError();
 };
 
 
-class IMEBRA_API TransformHighBitError: public TransformError
+class IMEBRA_API TransformDifferentColorSpacesError: public TransformError
 {
 public:
     /// \brief Constructor.
@@ -982,19 +1268,13 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    explicit TransformHighBitError(const std::string& message);
-};
+    explicit TransformDifferentColorSpacesError(const std::string& message);
 
+    TransformDifferentColorSpacesError(const TransformDifferentColorSpacesError& source);
 
-class IMEBRA_API TransformHighBitDifferentColorSpacesError: public TransformHighBitError
-{
-public:
-    /// \brief Constructor.
-    ///
-    /// \param message the message to store into the exception
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    explicit TransformHighBitDifferentColorSpacesError(const std::string& message);
+    TransformDifferentColorSpacesError& operator=(const TransformDifferentColorSpacesError&) = delete;
+
+    virtual ~ TransformDifferentColorSpacesError();
 };
 
 
@@ -1011,6 +1291,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit StreamEOFError(const std::string& message);
+
+    StreamEOFError(const StreamEOFError& source);
+
+    StreamEOFError& operator=(const StreamEOFError&) = delete;
+
+    virtual ~StreamEOFError();
 };
 
 
@@ -1026,6 +1312,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit StreamClosedError(const std::string& message);
+
+    StreamClosedError(const StreamClosedError& source);
+
+    StreamClosedError& operator=(const StreamClosedError&) = delete;
+
+    virtual ~StreamClosedError();
 };
 
 
@@ -1042,6 +1334,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit ModalityVOILUTError(const std::string& message);
+
+    ModalityVOILUTError(const ModalityVOILUTError& source);
+
+    ModalityVOILUTError& operator=(const ModalityVOILUTError&) = delete;
+
+    virtual ~ModalityVOILUTError();
 };
 
 
@@ -1058,6 +1356,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit DicomCodecError(const std::string& message);
+
+    DicomCodecError(const DicomCodecError& source);
+
+    DicomCodecError& operator=(const DicomCodecError&) = delete;
+
+    virtual ~DicomCodecError();
 };
 
 
@@ -1075,6 +1379,12 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     explicit DicomCodecDepthLimitReachedError(const std::string&message);
 
+    DicomCodecDepthLimitReachedError(const DicomCodecDepthLimitReachedError& source);
+
+    DicomCodecDepthLimitReachedError& operator=(const DicomCodecDepthLimitReachedError&) = delete;
+
+    virtual ~DicomCodecDepthLimitReachedError();
+
 };
 
 
@@ -1090,6 +1400,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit JpegCodecError(const std::string& message);
+
+    JpegCodecError(const JpegCodecError& source);
+
+    JpegCodecError& operator=(const JpegCodecError&) = delete;
+
+    virtual ~JpegCodecError();
 };
 
 
@@ -1105,11 +1421,25 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit JpegCodecCannotHandleSyntaxError(const std::string& message);
+
+    JpegCodecCannotHandleSyntaxError(const JpegCodecCannotHandleSyntaxError& source);
+
+    JpegCodecCannotHandleSyntaxError& operator=(const JpegCodecCannotHandleSyntaxError&) = delete;
+
+    virtual ~JpegCodecCannotHandleSyntaxError();
 };
 
 
 class IMEBRA_API ImebraBadAlloc: public std::bad_alloc
 {
+public:
+    ImebraBadAlloc();
+
+    ImebraBadAlloc(const ImebraBadAlloc& source);
+
+    ImebraBadAlloc& operator=(const ImebraBadAlloc&) = delete;
+
+    virtual ~ImebraBadAlloc();
 };
 
 
@@ -1125,6 +1455,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit MemoryError(const std::string& message);
+
+    MemoryError(const MemoryError& source);
+
+    MemoryError& operator=(const MemoryError&) = delete;
+
+    virtual ~MemoryError();
 };
 
 
@@ -1141,6 +1477,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit MemorySizeError(const std::string& message);
+
+    MemorySizeError(const MemorySizeError& source);
+
+    MemorySizeError& operator=(const MemorySizeError&) = delete;
+
+    virtual ~MemorySizeError();
 };
 
 
@@ -1156,6 +1498,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit AcseError(const std::string& message);
+
+    AcseError(const AcseError& source);
+
+    AcseError& operator=(const AcseError&) = delete;
+
+    virtual ~AcseError();
 };
 
 
@@ -1172,6 +1520,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit AcseCorruptedMessageError(const std::string& message);
+
+    AcseCorruptedMessageError(const AcseCorruptedMessageError& source);
+
+    AcseCorruptedMessageError& operator=(const AcseCorruptedMessageError&) = delete;
+
+    virtual ~AcseCorruptedMessageError();
 };
 
 
@@ -1184,6 +1538,12 @@ class IMEBRA_API AcseNoTransferSyntaxError: public AcseError
 {
 public:
     explicit AcseNoTransferSyntaxError(const std::string& message);
+
+    AcseNoTransferSyntaxError(const AcseNoTransferSyntaxError& source);
+
+    AcseNoTransferSyntaxError& operator=(const AcseNoTransferSyntaxError&) = delete;
+
+    virtual ~AcseNoTransferSyntaxError();
 };
 
 
@@ -1201,6 +1561,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit AcsePresentationContextNotRequestedError(const std::string& message);
+
+    AcsePresentationContextNotRequestedError(const AcsePresentationContextNotRequestedError& source);
+
+    AcsePresentationContextNotRequestedError& operator=(const AcsePresentationContextNotRequestedError&) = delete;
+
+    virtual ~AcsePresentationContextNotRequestedError();
 };
 
 
@@ -1217,6 +1583,12 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit AcseWrongRoleError(const std::string& message);
+
+    AcseWrongRoleError(const AcseWrongRoleError& source);
+
+    AcseWrongRoleError& operator=(const AcseWrongRoleError&) = delete;
+
+    virtual ~AcseWrongRoleError();
 };
 
 
@@ -1228,6 +1600,12 @@ class IMEBRA_API AcseWrongIdError: public AcseError
 {
 public:
     explicit AcseWrongIdError(const std::string& message);
+
+    AcseWrongIdError(const AcseWrongIdError& source);
+
+    AcseWrongIdError& operator=(const AcseWrongIdError&) = delete;
+
+    virtual ~AcseWrongIdError();
 };
 
 
@@ -1240,6 +1618,12 @@ class IMEBRA_API AcseWrongResponseIdError: public AcseWrongIdError
 {
 public:
     explicit AcseWrongResponseIdError(const std::string& message);
+
+    AcseWrongResponseIdError(const AcseWrongResponseIdError& source);
+
+    AcseWrongResponseIdError& operator=(const AcseWrongResponseIdError&) = delete;
+
+    virtual ~AcseWrongResponseIdError();
 };
 
 
@@ -1251,6 +1635,12 @@ class IMEBRA_API AcseWrongCommandIdError: public AcseWrongIdError
 {
 public:
     explicit AcseWrongCommandIdError(const std::string& message);
+
+    AcseWrongCommandIdError(const AcseWrongCommandIdError& source);
+
+    AcseWrongCommandIdError& operator=(const AcseWrongCommandIdError&) = delete;
+
+    virtual ~AcseWrongCommandIdError();
 };
 
 
@@ -1262,6 +1652,12 @@ class IMEBRA_API AcseRejectedAssociationError: public AcseError
 {
 public:
     explicit AcseRejectedAssociationError(const std::string& message, bool bPermanent);
+
+    AcseRejectedAssociationError(const AcseRejectedAssociationError& source);
+
+    AcseRejectedAssociationError& operator=(const AcseRejectedAssociationError&) = delete;
+
+    virtual ~AcseRejectedAssociationError();
 
     ///
     /// \brief Returns true if the rejection is permanent.
@@ -1292,6 +1688,12 @@ class IMEBRA_API AcseSCUNoReasonGivenError: public AcseRejectedAssociationError
 {
 public:
     explicit AcseSCUNoReasonGivenError(const std::string& message, bool bPermanent);
+
+    AcseSCUNoReasonGivenError(const AcseSCUNoReasonGivenError& source);
+
+    AcseSCUNoReasonGivenError& operator=(const AcseSCUNoReasonGivenError&) = delete;
+
+    virtual ~AcseSCUNoReasonGivenError();
 };
 
 
@@ -1304,6 +1706,12 @@ class IMEBRA_API AcseSCUApplicationContextNameNotSupportedError: public AcseReje
 {
 public:
     explicit AcseSCUApplicationContextNameNotSupportedError(const std::string& message, bool bPermanent);
+
+    AcseSCUApplicationContextNameNotSupportedError(const AcseSCUApplicationContextNameNotSupportedError& source);
+
+    AcseSCUApplicationContextNameNotSupportedError& operator=(const AcseSCUApplicationContextNameNotSupportedError&) = delete;
+
+    virtual ~AcseSCUApplicationContextNameNotSupportedError();
 };
 
 
@@ -1316,6 +1724,12 @@ class IMEBRA_API AcseSCUCallingAETNotRecognizedError: public AcseRejectedAssocia
 {
 public:
     explicit AcseSCUCallingAETNotRecognizedError(const std::string& message, bool bPermanent);
+
+    AcseSCUCallingAETNotRecognizedError(const AcseSCUCallingAETNotRecognizedError& source);
+
+    AcseSCUCallingAETNotRecognizedError& operator=(const AcseSCUCallingAETNotRecognizedError&) = delete;
+
+    virtual ~AcseSCUCallingAETNotRecognizedError();
 };
 
 
@@ -1328,6 +1742,12 @@ class IMEBRA_API AcseSCUCalledAETNotRecognizedError: public AcseRejectedAssociat
 {
 public:
     explicit AcseSCUCalledAETNotRecognizedError(const std::string& message, bool bPermanent);
+
+    AcseSCUCalledAETNotRecognizedError(const AcseSCUCalledAETNotRecognizedError& source);
+
+    AcseSCUCalledAETNotRecognizedError& operator=(const AcseSCUCalledAETNotRecognizedError&) = delete;
+
+    virtual ~AcseSCUCalledAETNotRecognizedError();
 };
 
 
@@ -1340,6 +1760,12 @@ class IMEBRA_API AcseSCPNoReasonGivenError: public AcseRejectedAssociationError
 {
 public:
     explicit AcseSCPNoReasonGivenError(const std::string& message, bool bPermanent);
+
+    AcseSCPNoReasonGivenError(const AcseSCPNoReasonGivenError& source);
+
+    AcseSCPNoReasonGivenError& operator=(const AcseSCPNoReasonGivenError&) = delete;
+
+    virtual ~AcseSCPNoReasonGivenError();
 };
 
 
@@ -1352,6 +1778,12 @@ class IMEBRA_API AcseSCPAcseProtocolVersionNotSupportedError: public AcseRejecte
 {
 public:
     explicit AcseSCPAcseProtocolVersionNotSupportedError(const std::string& message, bool bPermanent);
+
+    AcseSCPAcseProtocolVersionNotSupportedError(const AcseSCPAcseProtocolVersionNotSupportedError& source);
+
+    AcseSCPAcseProtocolVersionNotSupportedError& operator=(const AcseSCPAcseProtocolVersionNotSupportedError&) = delete;
+
+    virtual ~AcseSCPAcseProtocolVersionNotSupportedError();
 };
 
 
@@ -1364,6 +1796,12 @@ class IMEBRA_API AcseSCPPresentationReservedError: public AcseRejectedAssociatio
 {
 public:
     explicit AcseSCPPresentationReservedError(const std::string& message, bool bPermanent);
+
+    AcseSCPPresentationReservedError(const AcseSCPPresentationReservedError& source);
+
+    AcseSCPPresentationReservedError& operator=(const AcseSCPPresentationReservedError&) = delete;
+
+    virtual ~AcseSCPPresentationReservedError();
 };
 
 
@@ -1376,6 +1814,12 @@ class IMEBRA_API AcseSCPPresentationTemporaryCongestionError: public AcseRejecte
 {
 public:
     explicit AcseSCPPresentationTemporaryCongestionError(const std::string& message, bool bPermanent);
+
+    AcseSCPPresentationTemporaryCongestionError(const AcseSCPPresentationTemporaryCongestionError& source);
+
+    AcseSCPPresentationTemporaryCongestionError& operator=(const AcseSCPPresentationTemporaryCongestionError&) = delete;
+
+    virtual ~AcseSCPPresentationTemporaryCongestionError();
 };
 
 
@@ -1388,6 +1832,12 @@ class IMEBRA_API AcseSCPPresentationLocalLimitExcededError: public AcseRejectedA
 {
 public:
     explicit AcseSCPPresentationLocalLimitExcededError(const std::string& message, bool bPermanent);
+
+    AcseSCPPresentationLocalLimitExcededError(const AcseSCPPresentationLocalLimitExcededError& source);
+
+    AcseSCPPresentationLocalLimitExcededError& operator=(const AcseSCPPresentationLocalLimitExcededError&) = delete;
+
+    virtual ~AcseSCPPresentationLocalLimitExcededError();
 };
 
 
@@ -1400,6 +1850,12 @@ class IMEBRA_API AcseTooManyOperationsPerformedError: public AcseError
 {
 public:
     explicit AcseTooManyOperationsPerformedError(const std::string& message);
+
+    AcseTooManyOperationsPerformedError(const AcseTooManyOperationsPerformedError& source);
+
+    AcseTooManyOperationsPerformedError& operator=(const AcseTooManyOperationsPerformedError&) = delete;
+
+    virtual ~AcseTooManyOperationsPerformedError();
 };
 
 
@@ -1412,6 +1868,12 @@ class IMEBRA_API AcseTooManyOperationsInvokedError: public AcseError
 {
 public:
     explicit AcseTooManyOperationsInvokedError(const std::string& message);
+
+    AcseTooManyOperationsInvokedError(const AcseTooManyOperationsInvokedError& source);
+
+    AcseTooManyOperationsInvokedError& operator=(const AcseTooManyOperationsInvokedError&) = delete;
+
+    virtual ~AcseTooManyOperationsInvokedError();
 };
 
 
@@ -1424,6 +1886,12 @@ class IMEBRA_API AcseNoPayloadError: public AcseError
 {
 public:
     explicit AcseNoPayloadError(const std::string& message);
+
+    AcseNoPayloadError(const AcseNoPayloadError& source);
+
+    AcseNoPayloadError& operator=(const AcseNoPayloadError&) = delete;
+
+    virtual ~AcseNoPayloadError();
 };
 
 
@@ -1435,6 +1903,12 @@ class IMEBRA_API DimseError: public std::runtime_error
 {
 public:
     explicit DimseError(const std::string& message);
+
+    DimseError(const DimseError& source);
+
+    DimseError& operator=(const DimseError&) = delete;
+
+    virtual ~DimseError();
 };
 
 
@@ -1446,6 +1920,12 @@ class IMEBRA_API DimseInvalidCommand: public DimseError
 {
 public:
     explicit DimseInvalidCommand(const std::string& message);
+
+    DimseInvalidCommand(const DimseInvalidCommand& source);
+
+    DimseInvalidCommand& operator=(const DimseInvalidCommand&) = delete;
+
+    virtual ~DimseInvalidCommand();
 };
 
 
@@ -1457,6 +1937,12 @@ class IMEBRA_API UIDGeneratorError: public std::runtime_error
 {
 public:
     explicit UIDGeneratorError(const std::string& message);
+
+    UIDGeneratorError(const UIDGeneratorError& source);
+
+    UIDGeneratorError& operator=(const UIDGeneratorError&) = delete;
+
+    virtual ~UIDGeneratorError();
 };
 
 ///
@@ -1468,6 +1954,12 @@ class IMEBRA_API NonRegisteredUIDGenerator: public UIDGeneratorError
 {
 public:
     explicit NonRegisteredUIDGenerator(const std::string& message);
+
+    NonRegisteredUIDGenerator(const NonRegisteredUIDGenerator& source);
+
+    NonRegisteredUIDGenerator& operator=(const NonRegisteredUIDGenerator&) = delete;
+
+    virtual ~NonRegisteredUIDGenerator();
 };
 
 }

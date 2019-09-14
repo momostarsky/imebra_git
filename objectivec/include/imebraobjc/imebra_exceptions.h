@@ -50,9 +50,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 @interface ImebraStreamWriteError : ImebraStreamError
 @end
 
-@interface ImebraStreamCloseError : ImebraStreamError
-@end
-
 @interface ImebraTCPConnectionRefused: ImebraStreamOpenError
 @end
 
@@ -137,9 +134,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 @interface ImebraDataSetWrongFrameError: ImebraDataSetError
 @end
 
-@interface ImebraDataSetOldFormatError: ImebraDataSetError
-@end
-
 @interface ImebraDataSetImageDoesntExistError: ImebraDataSetError
 @end
 
@@ -153,9 +147,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 @end
 
 @interface ImebraDicomDirCircularReferenceError: ImebraDicomDirError
-@end
-
-@interface ImebraDicomDirUnknownDirectoryRecordTypeError: ImebraDicomDirError
 @end
 
 @interface ImebraImageError: NSError
@@ -191,10 +182,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 @interface ImebraColorTransformsFactoryNoTransformError: ImebraColorTransformsFactoryError
 @end
 
-@interface ImebraTransformHighBitError: ImebraTransformError
-@end
-
-@interface ImebraTransformHighBitDifferentColorSpacesError: ImebraTransformHighBitError
+@interface ImebraTransformDifferentColorSpacesError: ImebraTransformHighBitError
 @end
 
 @interface ImebraStreamEOFError : ImebraStreamError
