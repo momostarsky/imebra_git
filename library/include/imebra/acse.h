@@ -194,6 +194,8 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     AssociationMessage& operator=(const AssociationMessage& source);
 
+    virtual ~AssociationMessage();
+
     ///
     /// \brief Retrieve the message's abstract syntax
     ///
@@ -268,6 +270,8 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     MutableAssociationMessage(const MutableAssociationMessage& source);
+
+    virtual ~MutableAssociationMessage();
 
     ///
     /// \brief Assignment operator.
@@ -496,6 +500,8 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     AssociationSCU(const AssociationSCU& source);
 
+    virtual ~AssociationSCU();
+
     ///
     /// \brief Assignment operator
     ///
@@ -593,6 +599,8 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     AssociationSCP(const AssociationSCP& source);
+
+    virtual ~AssociationSCP();
 
     ///
     /// \brief Assignment operator

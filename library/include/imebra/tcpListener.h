@@ -67,6 +67,8 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     TCPListener(const TCPListener& source);
 
+    virtual ~TCPListener();
+
     ///
     /// \brief Assign operator.
     ///

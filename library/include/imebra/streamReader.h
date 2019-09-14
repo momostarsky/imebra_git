@@ -55,6 +55,7 @@ class IMEBRA_API StreamReader
     friend class Tag;
     friend class AssociationSCU;
     friend class AssociationSCP;
+    friend class DataSet;
 
 public:
     /// \brief Constructor.

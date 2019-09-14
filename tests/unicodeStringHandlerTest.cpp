@@ -171,6 +171,14 @@ TEST(unicodeStringHandlerTest, PNTest)
     MutableDataSet testDataSet("1.2.840.10008.1.2.1", charsets);
 
     {
+        UnicodePatientName patientName(L"\x0420\x00df\x0062^\x0394\x0410\x00d7\x0072^representation", L"", L"");
+        UnicodePatientName checkPatientName= testDataSet.getUnicodePatientName(TagId(tagId_t::PatientName_0010_0010), 0, patientName);
+        ASSERT_EQ(L"\x0420\x00df\x0062^\x0394\x0410\x00d7\x0072^representation", checkPatientName.getAlphabeticRepresentation());
+        ASSERT_EQ(L"", checkPatientName.getIdeographicRepresentation());
+        ASSERT_EQ(L"", checkPatientName.getPhoneticRepresentation());
+    }
+
+    {
         testDataSet.setUnicodeString(TagId(0x0010, 0x0010), L"\x0420\x00df\x0062^\x0394\x0410\x00d7\x0072", tagVR_t::PN);
         ASSERT_EQ(L"\x0420\x00df\x0062^\x0394\x0410\x00d7\x0072", testDataSet.getUnicodeString(TagId(0x0010, 0x0010), 0));
         ASSERT_THROW(testDataSet.getDate(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);

@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -53,6 +53,7 @@ class IMEBRA_API StreamWriter
     friend class MutableTag;
     friend class AssociationSCU;
     friend class AssociationSCP;
+    friend class MutableDataSet;
 
 public:
     /// \brief Constructor.
@@ -101,7 +102,7 @@ public:
     /// \param bufferLength the number of bytes that must be written to the stream
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    void write(char* data, size_t dataSize);
+    void write(const char* data, size_t dataSize);
 
     ///
     /// \brief Write raw data into the stream.

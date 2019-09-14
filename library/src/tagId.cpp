@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -48,6 +48,21 @@ TagId::TagId(tagId_t id, std::uint32_t groupOrder):
     m_tagId((std::uint16_t)((std::uint32_t)id & (std::uint32_t)0x0000ffff))
 {
 }
+
+TagId::TagId(const TagId& source):
+    m_groupId(source.m_groupId), m_groupOrder(source.m_groupOrder), m_tagId(source.m_tagId)
+{
+}
+
+TagId& TagId::operator=(const TagId& source)
+{
+    m_groupId = source.m_groupId;
+    m_groupOrder = source.m_groupOrder;
+    m_tagId = source.m_tagId;
+
+    return *this;
+}
+
 
 TagId::~TagId()
 {

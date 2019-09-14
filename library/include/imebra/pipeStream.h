@@ -75,6 +75,8 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     PipeStream(const PipeStream& source);
 
+    virtual ~PipeStream();
+
     ///
     /// \brief Assign operator.
     ///

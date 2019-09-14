@@ -116,6 +116,10 @@ AssociationMessage::AssociationMessage(const AssociationMessage& source):
 {
 }
 
+AssociationMessage::~AssociationMessage()
+{
+}
+
 AssociationMessage& AssociationMessage::operator=(const AssociationMessage& source)
 {
     m_pMessage = getAssociationMessageImplementation(source);
@@ -177,6 +181,10 @@ MutableAssociationMessage::MutableAssociationMessage(const std::string& abstract
 
 MutableAssociationMessage::MutableAssociationMessage(const MutableAssociationMessage& source):
     AssociationMessage(getAssociationMessageImplementation(source))
+{
+}
+
+MutableAssociationMessage::~MutableAssociationMessage()
 {
 }
 
@@ -331,6 +339,10 @@ AssociationSCU::AssociationSCU(const AssociationSCU& source):
 {
 }
 
+AssociationSCU::~AssociationSCU()
+{
+}
+
 AssociationSCU& AssociationSCU::operator=(const AssociationSCU& source)
 {
     AssociationBase::operator=(source);
@@ -365,6 +377,10 @@ AssociationSCP::AssociationSCP(
 
 AssociationSCP::AssociationSCP(const AssociationSCP& source):
     AssociationBase(getAssociationBaseImplementation(source))
+{
+}
+
+AssociationSCP::~AssociationSCP()
 {
 }
 

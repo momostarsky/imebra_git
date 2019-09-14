@@ -86,6 +86,10 @@ MutableDicomDir::MutableDicomDir(const MutableDicomDir &source): DicomDir(source
 {
 }
 
+MutableDicomDir::~MutableDicomDir()
+{
+}
+
 MutableDicomDir& MutableDicomDir::operator=(const MutableDicomDir& source)
 {
     DicomDir::operator =(source);

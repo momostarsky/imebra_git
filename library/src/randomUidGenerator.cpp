@@ -28,6 +28,10 @@ RandomUIDGenerator::RandomUIDGenerator(const RandomUIDGenerator& source):
 {
 }
 
+RandomUIDGenerator::~RandomUIDGenerator()
+{
+}
+
 
 }
 

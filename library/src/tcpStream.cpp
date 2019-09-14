@@ -38,6 +38,10 @@ TCPStream::TCPStream(const TCPStream &source):
 {
 }
 
+TCPStream::~TCPStream()
+{
+}
+
 const std::shared_ptr<implementation::tcpSequenceStream>& getTCPStreamImplementation(const TCPStream& stream)
 {
     return stream.m_pStream;

@@ -38,6 +38,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "VOIDescriptionImpl.h"
 #include <iostream>
 #include <string.h>
+#include <limits>
 
 
 namespace imebra
@@ -679,7 +680,7 @@ std::uint32_t dataSet::getFrameOffset(std::uint32_t frameNumber) const
     }
     catch(const MissingDataElementError&)
     {
-        return 0xffffffff;
+        return std::numeric_limits<std::uint32_t>::max();
     }
 
     IMEBRA_FUNCTION_END();

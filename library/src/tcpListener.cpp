@@ -33,6 +33,10 @@ TCPListener::TCPListener(const TCPListener &source): m_pListener(getTCPListenerI
 {
 }
 
+TCPListener::~TCPListener()
+{
+}
+
 TCPListener& TCPListener::operator=(const TCPListener& source)
 {
     m_pListener = getTCPListenerImplementation(source);

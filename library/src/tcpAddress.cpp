@@ -75,12 +75,20 @@ TCPActiveAddress::TCPActiveAddress(const TCPActiveAddress &source): TCPAddress(g
 {
 }
 
+TCPActiveAddress::~TCPActiveAddress()
+{
+}
+
 TCPPassiveAddress::TCPPassiveAddress(const std::string& node, const std::string& service):
     TCPAddress(std::make_shared<implementation::tcpAddress>(node, service, implementation::tcpAddress::passiveSocket_t::passive))
 {
 }
 
 TCPPassiveAddress::TCPPassiveAddress(const TCPPassiveAddress &source): TCPAddress(getTCPAddressImplementation(source))
+{
+}
+
+TCPPassiveAddress::~TCPPassiveAddress()
 {
 }
 

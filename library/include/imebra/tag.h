@@ -149,7 +149,7 @@ public:
     ///
     /// \param bufferId   the id of the buffer for which the StreamReader is
     ///                    required. This parameter is usually 0
-    /// \return           the streamReader connected to the buffer's data.
+    /// \return           the StreamReader connected to the buffer's data.
     ///
     ///////////////////////////////////////////////////////////////////////////////
     StreamReader getStreamReader(size_t bufferId) const;
@@ -207,6 +207,8 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     MutableTag(const MutableTag& source);
+
+    virtual ~MutableTag();
 
     ///
     /// \brief Assign operator.

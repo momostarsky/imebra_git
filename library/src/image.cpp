@@ -32,6 +32,10 @@ Image::Image(const Image &source): m_pImage(getImageImplementation(source))
 {
 }
 
+Image::~Image()
+{
+}
+
 Image& Image::operator=(const Image& source)
 {
     m_pImage = getImageImplementation(source);
@@ -41,10 +45,6 @@ Image& Image::operator=(const Image& source)
 const std::shared_ptr<implementation::image>& getImageImplementation(const Image& source)
 {
     return source.m_pImage;
-}
-
-Image::~Image()
-{
 }
 
 std::uint32_t Image::getWidth() const
@@ -102,6 +102,10 @@ MutableImage::MutableImage(std::shared_ptr<imebra::implementation::image> pImage
 }
 
 MutableImage::MutableImage(const MutableImage& source): Image(source)
+{
+}
+
+MutableImage::~MutableImage()
 {
 }
 

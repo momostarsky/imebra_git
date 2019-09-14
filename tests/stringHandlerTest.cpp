@@ -389,6 +389,14 @@ TEST(stringHandlerTest, PNTest)
     MutableDataSet testDataSet;
 
     {
+        PatientName defaultValue("alphabetic", "ideographic", "phonetic");
+        PatientName checkPatientName0 = testDataSet.getPatientName(TagId(0x0010, 0x0010), 0, defaultValue);
+        ASSERT_EQ("alphabetic", checkPatientName0.getAlphabeticRepresentation());
+        ASSERT_EQ("ideographic", checkPatientName0.getIdeographicRepresentation());
+        ASSERT_EQ("phonetic", checkPatientName0.getPhoneticRepresentation());
+    }
+
+    {
         testDataSet.setString(TagId(0x0010, 0x0010), "PatientName", tagVR_t::PN);
         ASSERT_EQ("PatientName", testDataSet.getString(TagId(0x0010, 0x0010), 0));
         ASSERT_THROW(testDataSet.getDate(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);

@@ -66,6 +66,8 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     Image(const Image& source);
 
+    virtual ~Image();
+
     ///
     /// \brief Assign operator.
     ///
@@ -74,11 +76,6 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     Image& operator=(const Image& source);
-
-    /// \brief Destructor.
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    virtual ~Image();
 
     /// \brief Retrieve the image's width, in pixels.
     ///
@@ -191,6 +188,8 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     MutableImage(const MutableImage& source);
+
+    virtual ~MutableImage();
 
     ///
     /// \brief Assign operator.

@@ -127,6 +127,8 @@ public:
     TCPActiveAddress(const std::string& node, const std::string& service);
 
     TCPActiveAddress(const TCPActiveAddress& source);
+
+    virtual ~TCPActiveAddress();
 };
 
 
@@ -157,6 +159,8 @@ public:
     TCPPassiveAddress(const std::string& node, const std::string& service);
 
     TCPPassiveAddress(const TCPPassiveAddress& source);
+
+    virtual ~TCPPassiveAddress();
 };
 
 

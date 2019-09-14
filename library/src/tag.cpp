@@ -156,6 +156,10 @@ MutableTag::MutableTag(const MutableTag& source): Tag(source)
 {
 }
 
+MutableTag::~MutableTag()
+{
+}
+
 MutableTag& MutableTag::operator=(const MutableTag& source)
 {
     Tag::operator =(source);

@@ -51,6 +51,8 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     RandomUIDGenerator(const RandomUIDGenerator& source);
 
+    virtual ~RandomUIDGenerator();
+
 };
 
 }

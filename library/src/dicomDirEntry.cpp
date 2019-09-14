@@ -128,6 +128,10 @@ MutableDicomDirEntry::MutableDicomDirEntry(const MutableDicomDirEntry &source): 
 {
 }
 
+MutableDicomDirEntry::~MutableDicomDirEntry()
+{
+}
+
 MutableDicomDirEntry::MutableDicomDirEntry(const std::shared_ptr<imebra::implementation::directoryRecord>& pDirectoryRecord): DicomDirEntry(pDirectoryRecord)
 {
 }

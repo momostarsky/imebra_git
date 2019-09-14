@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -61,6 +61,10 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     explicit TagId(std::uint16_t groupId, std::uint32_t groupOrder, std::uint16_t tagId);
 
+    TagId(const TagId& source);
+
+    TagId& operator=(const TagId& source);
+
 #ifndef SWIGJAVA
     /// \brief Constructor.
     ///
@@ -108,7 +112,7 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     std::uint16_t getTagId() const;
 
-protected:
+private:
     std::uint16_t m_groupId;
     std::uint32_t m_groupOrder;
     std::uint16_t m_tagId;

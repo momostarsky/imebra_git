@@ -29,5 +29,9 @@ SerialNumberUIDGenerator::SerialNumberUIDGenerator(const SerialNumberUIDGenerato
 {
 }
 
+SerialNumberUIDGenerator::~SerialNumberUIDGenerator()
+{
+}
+
 
 }

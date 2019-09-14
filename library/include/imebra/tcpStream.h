@@ -65,6 +65,8 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     TCPStream(const TCPStream& source);
 
+    virtual ~TCPStream();
+
     ///
     /// \brief Assign operator.
     ///

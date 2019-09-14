@@ -185,6 +185,8 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     DimseCommand(const DimseCommand& source);
 
+    virtual ~DimseCommand();
+
     ///
     /// \brief Assignment operator
     ///
@@ -412,6 +414,8 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     DimseResponse(const DimseResponse& source);
 
+    virtual ~DimseResponse();
+
     ///
     /// \brief Assignment operator.
     ///
@@ -458,6 +462,8 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     CPartialResponse(const CPartialResponse& source);
+
+    virtual ~CPartialResponse();
 
     ///
     /// \brief Assignment operator.
@@ -557,6 +563,8 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     CStoreCommand(const CStoreCommand& source);
 
+    virtual ~CStoreCommand();
+
     ///
     /// \brief Assignment operator.
     ///
@@ -620,6 +628,8 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     CStoreResponse(const CStoreResponse& source);
 
+    virtual ~CStoreResponse();
+
     ///
     /// \brief Assignment operator.
     ///
@@ -681,6 +691,8 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     CGetCommand(const CGetCommand& source);
+
+    virtual ~CGetCommand();
 
     ///
     /// \brief Assign operator.
@@ -776,6 +788,8 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     CGetResponse(const CGetResponse& source);
 
+    virtual ~CGetResponse();
+
     ///
     /// \brief Assign operator.
     ///
@@ -833,6 +847,8 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     CFindCommand(const CFindCommand& source);
+
+    virtual ~CFindCommand();
 
     ///
     /// \brief Assign operator.
@@ -894,6 +910,8 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     CFindResponse(const CFindResponse& source);
 
+    virtual ~CFindResponse();
+
     ///
     /// \brief Assign operator.
     ///
@@ -953,6 +971,8 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     CMoveCommand(const CMoveCommand& source);
+
+    virtual ~CMoveCommand();
 
     ///
     /// \brief Assign operator.
@@ -1055,6 +1075,8 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     CMoveResponse(const CMoveResponse& source);
 
+    virtual ~CMoveResponse();
+
     ///
     /// \brief Assign operator.
     ///
@@ -1109,6 +1131,8 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     CEchoCommand(const CEchoCommand& source);
 
+    virtual ~CEchoCommand();
+
     ///
     /// \brief Assign operator.
     ///
@@ -1152,6 +1176,8 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     CEchoResponse(const CEchoResponse& source);
+
+    virtual ~CEchoResponse();
 
     ///
     /// \brief Assign operator.
@@ -1206,6 +1232,8 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     CCancelCommand(const CCancelCommand& source);
+
+    virtual ~CCancelCommand();
 
     ///
     /// \brief Assign operator.
@@ -1300,6 +1328,8 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     NEventReportCommand(const NEventReportCommand& source);
 
+    virtual ~NEventReportCommand();
+
     ///
     /// \brief Assign operator.
     ///
@@ -1366,6 +1396,8 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     NEventReportResponse(const NEventReportResponse& source);
+
+    virtual ~NEventReportResponse();
 
     ///
     /// \brief Assign operator.
@@ -1435,6 +1467,8 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     NGetCommand(const NGetCommand& source);
+
+    virtual ~NGetCommand();
 
     ///
     /// \brief Assign operator.
@@ -1507,6 +1541,8 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     NGetResponse(const NGetResponse& source);
 
+    virtual ~NGetResponse();
+
     ///
     /// \brief Assign operator.
     ///
@@ -1566,6 +1602,8 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     NSetCommand(const NSetCommand& source);
 
+    virtual ~NSetCommand();
+
     ///
     /// \brief Assign operator.
     ///
@@ -1623,6 +1661,8 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     NSetResponse(const NSetResponse& source);
+
+    virtual ~NSetResponse();
 
     ///
     /// \brief Assign operator.
@@ -1718,6 +1758,8 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     NActionCommand(const NActionCommand& source);
 
+    virtual ~NActionCommand();
+
     ///
     /// \brief Assign operator.
     ///
@@ -1784,6 +1826,8 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     NActionResponse(const NActionResponse& source);
+
+    virtual ~NActionResponse();
 
     ///
     /// \brief Assign operator.
@@ -1873,6 +1917,8 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     NCreateCommand(const NCreateCommand& source);
 
+    virtual ~NCreateCommand();
+
     ///
     /// \brief Assign operator.
     ///
@@ -1959,6 +2005,8 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     NCreateResponse(const NCreateResponse& source);
 
+    virtual ~NCreateResponse();
+
     ///
     /// \brief Assign operator.
     ///
@@ -2014,6 +2062,8 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     NDeleteCommand(const NDeleteCommand& source);
 
+    virtual ~NDeleteCommand();
+
     ///
     /// \brief Assign operator.
     ///
@@ -2058,6 +2108,8 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     NDeleteResponse(const NDeleteResponse& source);
+
+    virtual ~NDeleteResponse();
 
     ///
     /// \brief Assign operator.
@@ -2107,6 +2159,8 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     DimseService(const DimseService& source);
+
+    virtual ~DimseService();
 
     ///
     /// \brief Assign operator.

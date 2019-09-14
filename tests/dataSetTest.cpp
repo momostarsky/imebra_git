@@ -548,7 +548,38 @@ TEST(dataSetTest, functionalGroupCommon)
     DataSet checkFrame2 = testDataSet.getFunctionalGroupDataSet(2);
     EXPECT_DOUBLE_EQ(100, checkFrame2.getDouble(TagId(tagId_t::WindowCenter_0028_1050), 0));
     EXPECT_DOUBLE_EQ(150, checkFrame2.getDouble(TagId(tagId_t::WindowWidth_0028_1051), 0));
+}
 
+
+TEST(dataSetTest, streamWriterAndReader)
+{
+    {
+        MutableDataSet testDataSet;
+
+        {
+            StreamWriter writer = testDataSet.getStreamWriter(TagId(tagId_t::PatientName_0010_0010), 0);
+            writer.write("TEST", 4);
+        }
+        StreamReader reader = testDataSet.getStreamReader(TagId(tagId_t::PatientName_0010_0010), 0);
+        char destination[10];
+        size_t readSize = reader.readSome(destination, sizeof(destination));
+        ASSERT_EQ(4u, readSize);
+        ASSERT_EQ(std::string("TEST"), std::string(destination, 4));
+
+        PatientName patientName = testDataSet.getPatientName(TagId(tagId_t::PatientName_0010_0010), 0);
+        ASSERT_EQ("TEST", patientName.getAlphabeticRepresentation());
+    }
+
+    {
+        MutableDataSet testDataSet;
+        {
+            StreamWriter writer = testDataSet.getStreamWriter(TagId(tagId_t::PatientName_0010_0010), 0, tagVR_t::UI);
+            writer.write("10.0.1", 6);
+        }
+
+        ASSERT_EQ(tagVR_t::UI, testDataSet.getDataType(TagId(tagId_t::PatientName_0010_0010)));
+        ASSERT_EQ("10.0.1", testDataSet.getString(TagId(tagId_t::PatientName_0010_0010), 0));
+    }
 }
 
 } // namespace tests

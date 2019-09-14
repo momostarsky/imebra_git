@@ -48,7 +48,7 @@ StreamWriter& StreamWriter::operator=(const StreamWriter& source)
     return *this;
 }
 
-void StreamWriter::write(char* data, size_t dataSize)
+void StreamWriter::write(const char* data, size_t dataSize)
 {
     IMEBRA_FUNCTION_START();
 

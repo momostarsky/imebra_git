@@ -51,6 +51,8 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     SerialNumberUIDGenerator(const SerialNumberUIDGenerator& source);
 
+    virtual ~SerialNumberUIDGenerator();
+
 };
 
 }

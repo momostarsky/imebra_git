@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -75,44 +75,44 @@ public:
     /// \brief Return the DataSet managed by the DicomDirEntry object.
     ///
     /// \return the DataSet managed by the DicomDirEntry object
-    /// 
+    ///
     ///////////////////////////////////////////////////////////////////////////////
     DataSet getEntryDataSet() const;
 
     bool hasNextEntry() const;
 
     /// \brief Return the next sibling entry (on the same depth level).
-    /// 
+    ///
     /// If the next DicomDirEntry is missing (this is the last entry) then
     /// return a null pointer.
     ///
     /// \return the next sibling DicomDirEntry object, or a null pointer if the
     ///         next sibling DicomDirEntry does not exist
-    /// 
+    ///
     ///////////////////////////////////////////////////////////////////////////////
     DicomDirEntry getNextEntry() const;
 
     bool hasChildren() const;
 
     /// \brief Return the first child entry (one level deeper).
-    /// 
+    ///
     /// If the first child DicomDirEntry is missing then return a null pointer.
     ///
     /// \return the first child DicomDirEntry object, or a null pointer if there
     ///         aren't any children
-    /// 
+    ///
     ///////////////////////////////////////////////////////////////////////////////
     DicomDirEntry getFirstChildEntry() const;
-	
+
     /// \brief Returns the parts that form the name of the file referenced by the
     ///        DicomDirEntry object.
-    /// 
+    ///
     /// \return a list of strings that form the name of the file referenced by the
     ///         DicomDirEntry object. The last item in the list is the file name,
     ///         while the preceding items contain the folders names.
     ///         For instance, on Linux the parts "folder0", "folder1", "fileName"
     ///         represent the path "folder0/folder1/fileName"
-    /// 
+    ///
     ///////////////////////////////////////////////////////////////////////////////
     fileParts_t getFileParts() const;
 
@@ -152,6 +152,8 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     MutableDicomDirEntry(const MutableDicomDirEntry& source);
+
+    ~MutableDicomDirEntry();
 
     ///
     /// \brief Assignent operator.

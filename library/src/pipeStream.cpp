@@ -36,6 +36,10 @@ PipeStream::PipeStream(const PipeStream& source):
 {
 }
 
+PipeStream::~PipeStream()
+{
+}
+
 PipeStream& PipeStream::operator=(const PipeStream& source)
 {
     m_pStream = getPipeStreamImplementation(source);
