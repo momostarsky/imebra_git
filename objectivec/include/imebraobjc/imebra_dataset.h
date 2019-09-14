@@ -30,6 +30,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 @class ImebraMutableTag;
 @class ImebraTagId;
 @class ImebraVOIDescription;
+@class ImebraStreamReader;
 
 /// \enum ImebraTagVR_t
 /// \brief Enumerates the DICOM VRs (data types).
@@ -227,6 +228,17 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
     ///
     ///////////////////////////////////////////////////////////////////////////////
     -(ImebraDataSet*) getFunctionalGroupDataSet:(unsigned int)frameNumber error:(NSError**)pError;
+
+    /// \brief Get a StreamReader connected to a buffer's data.
+    ///
+    /// \param pTagId     the tag's id for which the StreamReader is required
+    /// \param bufferId   the id of the buffer for which the StreamReader is
+    ///                    required. This parameter is usually 0
+    /// \param pError   set to a NSError derived class in case of error
+    /// \return           the streamReader connected to the buffer's data.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(ImebraStreamReader*) getStreamReader:(ImebraTagId*)tagId bufferId:(unsigned int)bufferId error:(NSError**)pError;
 
     /// \brief Retrieve a sequence item stored in a tag.
     ///

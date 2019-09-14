@@ -18,9 +18,13 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "../include/imebra/age.h"
 #include "../include/imebra/patientName.h"
 #include "../include/imebra/VOIDescription.h"
+#include "../include/imebra/streamReader.h"
 #include "../implementation/dataSetImpl.h"
+#include "../include/imebra/streamWriter.h"
 #include "../implementation/dataHandlerNumericImpl.h"
 #include "../implementation/charsetConversionBaseImpl.h"
+#include "../implementation/streamWriterImpl.h"
+#include "../implementation/streamReaderImpl.h"
 #include <typeinfo>
 #include <memory>
 
@@ -110,6 +114,15 @@ const Image DataSet::getImageApplyModalityTransform(size_t frameNumber) const
     IMEBRA_FUNCTION_END_LOG();
 }
 
+StreamReader DataSet::getStreamReader(const TagId& tagId, size_t bufferId) const
+{
+    IMEBRA_FUNCTION_START();
+
+    return StreamReader(m_pDataSet->getStreamReader(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), bufferId));
+
+    IMEBRA_FUNCTION_END_LOG();
+}
+
 const DataSet DataSet::getSequenceItem(const TagId& tagId, size_t itemId) const
 {
     IMEBRA_FUNCTION_START();
@@ -127,7 +140,6 @@ const LUT DataSet::getLUT(const TagId &tagId, size_t itemId) const
 
     IMEBRA_FUNCTION_END_LOG();
 }
-
 
 vois_t DataSet::getVOIs() const
 {
@@ -395,7 +407,9 @@ MutableDataSet::MutableDataSet(const std::string &transferSyntax, const charsets
     getDataSetImplementation(*this)->setCharsetsList(list);
 }
 
-
+MutableDataSet::~MutableDataSet()
+{
+}
 
 MutableDataSet& MutableDataSet::operator=(const MutableDataSet& source)
 {
@@ -482,6 +496,24 @@ void MutableDataSet::setImage(size_t frameNumber, const Image& image, imageQuali
     IMEBRA_FUNCTION_START();
 
     getDataSetImplementation(*this)->setImage((std::uint32_t)frameNumber, getImageImplementation(image), quality);
+
+    IMEBRA_FUNCTION_END_LOG();
+}
+
+StreamWriter MutableDataSet::getStreamWriter(const TagId& tagId, size_t bufferId, tagVR_t tagVR)
+{
+    IMEBRA_FUNCTION_START();
+
+    return StreamWriter(getDataSetImplementation(*this)->getStreamWriter(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), bufferId, tagVR));
+
+    IMEBRA_FUNCTION_END_LOG();
+}
+
+StreamWriter MutableDataSet::getStreamWriter(const TagId& tagId, size_t bufferId)
+{
+    IMEBRA_FUNCTION_START();
+
+    return StreamWriter(getDataSetImplementation(*this)->getStreamWriter(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), bufferId));
 
     IMEBRA_FUNCTION_END_LOG();
 }

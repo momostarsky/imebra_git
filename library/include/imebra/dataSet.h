@@ -42,6 +42,9 @@ class MutableTag;
 class LUT;
 class PatientName;
 class UnicodePatientName;
+class StreamWriter;
+class StreamReader;
+class FileStreamInput;
 
 ///
 ///  \brief This class represents a DICOM dataset.
@@ -200,6 +203,16 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     const DataSet getFunctionalGroupDataSet(size_t frameNumber) const;
+
+    /// \brief Get a StreamReader connected to a tag buffer's data.
+    ///
+    /// \param tagId      the tag's id for which the StreamReader is requested
+    /// \param bufferId   the id of the buffer for which the StreamReader is
+    ///                    required. This parameter is usually 0
+    /// \return           the StreamReader connected to the buffer's data.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    StreamReader getStreamReader(const TagId& tagId, size_t bufferId) const;
 
     /// \brief Retrieve a sequence item stored in a tag.
     ///
@@ -697,6 +710,8 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     explicit MutableDataSet(const std::string& transferSyntax, const charsetsList_t& charsets);
 
+    virtual ~MutableDataSet();
+
     ///
     /// \brief Assignment operator
     ///
@@ -747,6 +762,33 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     void setImage(size_t frameNumber, const Image& image, imageQuality_t quality);
+
+    /// \brief Get a StreamWriter connected to a tag buffer's data.
+    ///
+    /// If the specified Tag does not exist then it creates a new tag with the VR
+    ///  specified in the tagVR parameter
+    ///
+    /// \param tagId      the tag's id for which the StreamWriter is required
+    /// @param bufferId   the id of the buffer for which the StreamWriter is
+    ///                    required. This parameter is usually 0
+    /// \param tagVR      the tag's VR
+    /// @return           the StreamWriter connected to the buffer's data.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    StreamWriter getStreamWriter(const TagId& tagId, size_t bufferId, tagVR_t tagVR);
+
+    /// \brief Get a StreamWriter connected to a tag buffer's data.
+    ///
+    /// If the specified Tag does not exist then it creates a new tag with a
+    ///  default VR retrieved from the DicomDictionary.
+    ///
+    /// \param tagId      the tag's id for which the StreamWriter is required
+    /// @param bufferId   the id of the buffer for which the StreamWriter is
+    ///                    required. This parameter is usually 0
+    /// @return           the StreamWriter connected to the buffer's data.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    StreamWriter getStreamWriter(const TagId& tagId, size_t bufferId);
 
     /// \brief Append a sequence item.
     ///
