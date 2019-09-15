@@ -55,14 +55,7 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     TCPAddress(const TCPAddress& source);
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source TCPAddress object
-    /// \return a reference to this TCPAddress object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    TCPAddress& operator=(const TCPAddress& source);
+    TCPAddress& operator=(const TCPAddress& source) = delete;
 
     virtual ~TCPAddress();
 
@@ -128,6 +121,8 @@ public:
 
     TCPActiveAddress(const TCPActiveAddress& source);
 
+    TCPActiveAddress& operator=(const TCPActiveAddress&) = delete;
+
     virtual ~TCPActiveAddress();
 };
 
@@ -159,6 +154,8 @@ public:
     TCPPassiveAddress(const std::string& node, const std::string& service);
 
     TCPPassiveAddress(const TCPPassiveAddress& source);
+
+    TCPPassiveAddress& operator=(const TCPPassiveAddress&) = delete;
 
     virtual ~TCPPassiveAddress();
 };

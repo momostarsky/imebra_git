@@ -31,13 +31,6 @@ TCPAddress::TCPAddress(const TCPAddress& source): m_pAddress(getTCPAddressImplem
 {
 }
 
-TCPAddress& TCPAddress::operator=(const TCPAddress& source)
-{
-    m_pAddress = getTCPAddressImplementation(source);
-    return *this;
-}
-
-
 const std::shared_ptr<imebra::implementation::tcpAddress>& getTCPAddressImplementation(const TCPAddress& tcpAddress)
 {
     return tcpAddress.m_pAddress;
