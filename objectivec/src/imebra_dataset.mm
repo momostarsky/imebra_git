@@ -413,7 +413,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_END();
 }
 
--(ImebraStreamWriter*) getStreamWriter:(ImebraTagId*)tagId bufferId:(unsigned int)bufferId error:(NSError**)pError
+-(ImebraStreamWriter*) getStreamWriter:(ImebraTagId*)pTagId bufferId:(unsigned int)bufferId error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 
@@ -424,7 +424,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
 
--(ImebraStreamWriter*) getStreamWriter:(ImebraTagId*)tagId bufferId:(unsigned int)bufferId tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError
+-(ImebraStreamWriter*) getStreamWriter:(ImebraTagId*)pTagId bufferId:(unsigned int)bufferId tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 

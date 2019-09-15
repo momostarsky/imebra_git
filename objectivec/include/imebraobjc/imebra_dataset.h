@@ -748,7 +748,7 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
         /// \return           the StreamWriter connected to the buffer's data.
         ///
         ///////////////////////////////////////////////////////////////////////////////
-        -(ImebraStreamWriter*) getStreamWriter:(ImebraTagId*)tagId bufferId:(unsigned int)bufferId error:(NSError**)pError;
+        -(ImebraStreamWriter*) getStreamWriter:(ImebraTagId*)pTagId bufferId:(unsigned int)bufferId error:(NSError**)pError;
 
         /// \brief Get a StreamWriter connected to a buffer's data.
         ///
@@ -762,7 +762,7 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
         /// \return           the StreamWriter connected to the buffer's data.
         ///
         ///////////////////////////////////////////////////////////////////////////////
-        -(ImebraStreamWriter*) getStreamWriter:(ImebraTagId*)tagId bufferId:(unsigned int)bufferId tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError;
+        -(ImebraStreamWriter*) getStreamWriter:(ImebraTagId*)pTagId bufferId:(unsigned int)bufferId tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError;
 
         /// \brief Append a sequence item.
         ///
