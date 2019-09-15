@@ -41,7 +41,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <imebra/date.h>
 #include <imebra/patientName.h>
 #include <imebra/VOIDescription.h>
-#include <imebra/StreamReader.h>
+#include <imebra/streamReader.h>
 
 #import <Foundation/NSString.h>
 
@@ -136,7 +136,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 }
 
 
--(ImebraStreamReader*) getStreamReader:(ImebraTagId*)tagId bufferId:(unsigned int)bufferId error:(NSError**)pError
+-(ImebraStreamReader*) getStreamReader:(ImebraTagId*)pTagId bufferId:(unsigned int)bufferId error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 
@@ -409,6 +409,28 @@ If you do not want to be bound by the GPL terms (such as the requirement
     ((imebra::MutableDataSet*)get_imebra_object_holder(DataSet))->setImage(frameNumber, *get_other_imebra_object_holder(image, Image), (imebra::imageQuality_t)quality);
 
     OBJC_IMEBRA_FUNCTION_END();
+}
+
+-(ImebraStreamWriter*) getStreamWriter:(ImebraTagId*)tagId bufferId:(unsigned int)bufferId error:(NSError**)pError
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    return [[ImebraStreamWriter alloc] initWithImebraStreamWriter:
+        new imebra::StreamWriter(
+            ((imebra::MutableDataSet*)get_imebra_object_holder(DataSet))->getStreamWriter(imebra::TagId((std::uint16_t)pTagId.groupId, (std::uint32_t)pTagId.groupOrder, (std::uint16_t)pTagId.tagId, bufferId))) ];
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+}
+
+-(ImebraStreamWriter*) getStreamWriter:(ImebraTagId*)tagId bufferId:(unsigned int)bufferId tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    return [[ImebraStreamWriter alloc] initWithImebraStreamWriter:
+        new imebra::StreamWriter(
+            ((imebra::MutableDataSet*)get_imebra_object_holder(DataSet))->getStreamWriter(imebra::TagId((std::uint16_t)pTagId.groupId, (std::uint32_t)pTagId.groupOrder, (std::uint16_t)pTagId.tagId, bufferId, (imebra::tagVR_t)tagVR))) ];
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
 
 -(ImebraMutableDataSet*) appendSequenceItem:(ImebraTagId*)pTagId error:(NSError**)pError

@@ -735,6 +735,34 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
         -(void) setImage:(unsigned int)frameNumber image:(ImebraImage*)image quality:(ImebraImageQuality_t)quality error:(NSError**)pError
             __attribute__((swift_error(nonnull_error)));
 
+        /// \brief Get a StreamWriter connected to a buffer's data.
+        ///
+        /// If the specified tag does not exist then it creates a new tag with the VR
+        ///  specified in DICOM dictionary
+        ///
+        /// \param pTagId     the tag's id for which the StreamWriter is required
+        /// \param bufferId   the id of the buffer for which the StreamWriter is
+        ///                    required. This parameter is usually 0
+        /// \param pError   set to a NSError derived class in case of error
+        /// \return           the StreamWriter connected to the buffer's data.
+        ///
+        ///////////////////////////////////////////////////////////////////////////////
+        -(ImebraStreamWriter*) getStreamWriter:(ImebraTagId*)tagId bufferId:(unsigned int)bufferId error:(NSError**)pError;
+
+        /// \brief Get a StreamWriter connected to a buffer's data.
+        ///
+        /// If the specified tag does not exist then it creates a new tag with the VR
+        ///  specified in the tagVR parameter
+        ///
+        /// \param pTagId     the tag's id for which the StreamWriter is required
+        /// \param bufferId   the id of the buffer for which the StreamWriter is
+        ///                    required. This parameter is usually 0
+        /// \param pError   set to a NSError derived class in case of error
+        /// \return           the StreamWriter connected to the buffer's data.
+        ///
+        ///////////////////////////////////////////////////////////////////////////////
+        -(ImebraStreamWriter*) getStreamWriter:(ImebraTagId*)tagId bufferId:(unsigned int)bufferId tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError;
+
         /// \brief Append a sequence item.
         ///
         /// If the specified tag does not exist then creates a new one with VR
@@ -746,8 +774,7 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
         /// \return the dataset representing the appended sequence item
         ///
         ///////////////////////////////////////////////////////////////////////////////
-        -(ImebraMutableDataSet*) appendSequenceItem:(ImebraTagId*)pTagId error:(NSError**)pError
-            __attribute__((swift_error(nonnull_error)));
+        -(ImebraMutableDataSet*) appendSequenceItem:(ImebraTagId*)pTagId error:(NSError**)pError;
 
         /// \brief Retrieve an ImebraWritingDataHandler object connected to a specific
         ///        tag's buffer and sets its data type (VR).
