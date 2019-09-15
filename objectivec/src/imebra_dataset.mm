@@ -24,6 +24,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #import "../include/imebraobjc/imebra_patientName.h"
 #import "../include/imebraobjc/imebra_VOIDescription.h"
 #import "../include/imebraobjc/imebra_streamReader.h"
+#import "../include/imebraobjc/imebra_streamWriter.h"
 
 #include "imebra_implementation_macros.h"
 #include "imebra_nserror.h"
@@ -42,6 +43,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <imebra/patientName.h>
 #include <imebra/VOIDescription.h>
 #include <imebra/streamReader.h>
+#include <imebra/streamWriter.h>
 
 #import <Foundation/NSString.h>
 
