@@ -28,12 +28,6 @@ Date::Date(const Date& source):
 {
 }
 
-Date& Date::operator=(const Date& source)
-{
-    m_pDate = getDateImplementation(source);
-    return *this;
-}
-
 Date::Date(const std::shared_ptr<implementation::date>& pDate):
     m_pDate(pDate)
 {

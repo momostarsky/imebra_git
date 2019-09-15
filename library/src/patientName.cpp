@@ -29,12 +29,6 @@ PatientName::PatientName(const PatientName& source):
 {
 }
 
-PatientName& PatientName::operator=(const PatientName& source)
-{
-    m_pPatientName = getPatientNameImplementation(source);
-    return *this;
-}
-
 PatientName::~PatientName()
 {
 }
@@ -84,12 +78,6 @@ std::string PatientName::getPhoneticRepresentation() const
 UnicodePatientName::UnicodePatientName(const UnicodePatientName& source):
     m_pPatientName(source.m_pPatientName)
 {
-}
-
-UnicodePatientName& UnicodePatientName::operator=(const UnicodePatientName& source)
-{
-    m_pPatientName = getUnicodePatientNameImplementation(source);
-    return *this;
 }
 
 UnicodePatientName::~UnicodePatientName()

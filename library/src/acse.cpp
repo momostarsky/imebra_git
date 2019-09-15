@@ -44,12 +44,6 @@ PresentationContext::PresentationContext(const PresentationContext& source):
 {
 }
 
-PresentationContext& PresentationContext::operator=(const PresentationContext& source)
-{
-    m_pPresentationContext = getPresentationContextImplementation(source);
-    return *this;
-}
-
 PresentationContext::~PresentationContext()
 {
 }
@@ -78,12 +72,6 @@ PresentationContexts::PresentationContexts():
 PresentationContexts::PresentationContexts(const PresentationContexts& source):
     m_pPresentationContexts(getPresentationContextsImplementation(source))
 {
-}
-
-PresentationContexts& PresentationContexts::operator=(const PresentationContexts& source)
-{
-    m_pPresentationContexts = getPresentationContextsImplementation(source);
-    return *this;
 }
 
 PresentationContexts::~PresentationContexts()
@@ -118,12 +106,6 @@ AssociationMessage::AssociationMessage(const AssociationMessage& source):
 
 AssociationMessage::~AssociationMessage()
 {
-}
-
-AssociationMessage& AssociationMessage::operator=(const AssociationMessage& source)
-{
-    m_pMessage = getAssociationMessageImplementation(source);
-    return *this;
 }
 
 std::string AssociationMessage::getAbstractSyntax() const
@@ -188,12 +170,6 @@ MutableAssociationMessage::~MutableAssociationMessage()
 {
 }
 
-MutableAssociationMessage& MutableAssociationMessage::operator=(const MutableAssociationMessage& source)
-{
-    AssociationMessage::operator =(source);
-    return *this;
-}
-
 void MutableAssociationMessage::addDataSet(const DataSet& dataSet)
 {
     IMEBRA_FUNCTION_START();
@@ -212,12 +188,6 @@ void MutableAssociationMessage::addDataSet(const DataSet& dataSet)
 AssociationBase::AssociationBase(const std::shared_ptr<implementation::associationBase>& pAssociationBase):
     m_pAssociation(pAssociationBase)
 {
-}
-
-AssociationBase& AssociationBase::operator=(const AssociationBase& source)
-{
-    m_pAssociation = getAssociationBaseImplementation(source);
-    return *this;
 }
 
 AssociationBase::~AssociationBase()
@@ -343,12 +313,6 @@ AssociationSCU::~AssociationSCU()
 {
 }
 
-AssociationSCU& AssociationSCU::operator=(const AssociationSCU& source)
-{
-    AssociationBase::operator=(source);
-    return *this;
-}
-
 //
 // AssociationSCP methods
 //
@@ -382,12 +346,6 @@ AssociationSCP::AssociationSCP(const AssociationSCP& source):
 
 AssociationSCP::~AssociationSCP()
 {
-}
-
-AssociationSCP& AssociationSCP::operator=(const AssociationSCP& source)
-{
-    AssociationBase::operator=(source);
-    return *this;
 }
 
 }

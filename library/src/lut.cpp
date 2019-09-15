@@ -26,12 +26,6 @@ LUT::LUT(const LUT& source): m_pLut(getLUTImplementation(source))
 {
 }
 
-LUT& LUT::operator=(const LUT& source)
-{
-    m_pLut = getLUTImplementation(source);
-    return *this;
-}
-
 const std::shared_ptr<imebra::implementation::lut>& getLUTImplementation(const LUT& lut)
 {
     return lut.m_pLut;

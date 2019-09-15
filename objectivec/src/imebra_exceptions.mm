@@ -34,9 +34,6 @@
 @implementation ImebraStreamWriteError : ImebraStreamError
 @end
 
-@implementation ImebraStreamCloseError : ImebraStreamError
-@end
-
 @implementation ImebraTCPConnectionRefused: ImebraStreamOpenError
 @end
 
@@ -121,9 +118,6 @@
 @implementation ImebraDataSetWrongFrameError: ImebraDataSetError
 @end
 
-@implementation ImebraDataSetOldFormatError: ImebraDataSetError
-@end
-
 @implementation ImebraDataSetImageDoesntExistError: ImebraDataSetError
 @end
 
@@ -137,9 +131,6 @@
 @end
 
 @implementation ImebraDicomDirCircularReferenceError: ImebraDicomDirError
-@end
-
-@implementation ImebraDicomDirUnknownDirectoryRecordTypeError: ImebraDicomDirError
 @end
 
 @implementation ImebraImageError: NSError

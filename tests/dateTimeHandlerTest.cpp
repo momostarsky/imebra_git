@@ -118,30 +118,34 @@ TEST(dateTimeHandlerTest, incompleteDateTimeTest)
     MutableDataSet testDataSet;
 
     testDataSet.setString(TagId(0x0008, 0x002A), "19990120");
-    Date checkDate = testDataSet.getDate(TagId(0x0008, 0x002A), 0);
+    {
+        Date checkDate = testDataSet.getDate(TagId(0x0008, 0x002A), 0);
 
-    EXPECT_EQ(1999u, checkDate.getYear());
-    EXPECT_EQ(1u, checkDate.getMonth());
-    EXPECT_EQ(20u, checkDate.getDay());
-    EXPECT_EQ(0u, checkDate.getHour());
-    EXPECT_EQ(0u, checkDate.getMinutes());
-    EXPECT_EQ(0u, checkDate.getSeconds());
-    EXPECT_EQ(0u, checkDate.getNanoseconds());
-    EXPECT_EQ(0, checkDate.getOffsetHours());
-    EXPECT_EQ(0, checkDate.getOffsetMinutes());
+        EXPECT_EQ(1999u, checkDate.getYear());
+        EXPECT_EQ(1u, checkDate.getMonth());
+        EXPECT_EQ(20u, checkDate.getDay());
+        EXPECT_EQ(0u, checkDate.getHour());
+        EXPECT_EQ(0u, checkDate.getMinutes());
+        EXPECT_EQ(0u, checkDate.getSeconds());
+        EXPECT_EQ(0u, checkDate.getNanoseconds());
+        EXPECT_EQ(0, checkDate.getOffsetHours());
+        EXPECT_EQ(0, checkDate.getOffsetMinutes());
+    }
 
     testDataSet.setString(TagId(0x0008, 0x002A), "1999012012");
-    checkDate = testDataSet.getDate(TagId(0x0008, 0x002A), 0);
+    {
+        Date checkDate = testDataSet.getDate(TagId(0x0008, 0x002A), 0);
 
-    EXPECT_EQ(1999u, checkDate.getYear());
-    EXPECT_EQ(1u, checkDate.getMonth());
-    EXPECT_EQ(20u, checkDate.getDay());
-    EXPECT_EQ(12u, checkDate.getHour());
-    EXPECT_EQ(0u, checkDate.getMinutes());
-    EXPECT_EQ(0u, checkDate.getSeconds());
-    EXPECT_EQ(0u, checkDate.getNanoseconds());
-    EXPECT_EQ(0, checkDate.getOffsetHours());
-    EXPECT_EQ(0, checkDate.getOffsetMinutes());
+        EXPECT_EQ(1999u, checkDate.getYear());
+        EXPECT_EQ(1u, checkDate.getMonth());
+        EXPECT_EQ(20u, checkDate.getDay());
+        EXPECT_EQ(12u, checkDate.getHour());
+        EXPECT_EQ(0u, checkDate.getMinutes());
+        EXPECT_EQ(0u, checkDate.getSeconds());
+        EXPECT_EQ(0u, checkDate.getNanoseconds());
+        EXPECT_EQ(0, checkDate.getOffsetHours());
+        EXPECT_EQ(0, checkDate.getOffsetMinutes());
+    }
 }
 
 } // namespace tests

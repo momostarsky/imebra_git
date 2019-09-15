@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -30,12 +30,6 @@ namespace imebra
 BaseStreamInput::BaseStreamInput(const BaseStreamInput& source):
     m_pInputStream(getBaseStreamInputImplementation(source))
 {
-}
-
-BaseStreamInput& BaseStreamInput::operator=(const BaseStreamInput& source)
-{
-    m_pInputStream = getBaseStreamInputImplementation(source);
-    return *this;
 }
 
 BaseStreamInput::BaseStreamInput(const std::shared_ptr<implementation::baseStreamInput>& pInputStream): m_pInputStream(pInputStream)
@@ -65,12 +59,6 @@ StreamTimeout::StreamTimeout(const StreamTimeout &source):
 StreamTimeout::StreamTimeout(BaseStreamInput& stream, std::uint32_t timeoutSeconds):
     m_pStreamTimeout(std::make_shared<implementation::streamTimeout>(getBaseStreamInputImplementation(stream), std::chrono::seconds(timeoutSeconds)))
 {
-}
-
-StreamTimeout& StreamTimeout::operator=(const StreamTimeout& source)
-{
-    m_pStreamTimeout = getStreamTimeoutImplementation(source);
-    return *this;
 }
 
 StreamTimeout::~StreamTimeout()

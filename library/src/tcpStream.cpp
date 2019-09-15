@@ -47,13 +47,6 @@ const std::shared_ptr<implementation::tcpSequenceStream>& getTCPStreamImplementa
     return stream.m_pStream;
 }
 
-
-TCPStream& TCPStream::operator=(const TCPStream& source)
-{
-    m_pStream = getTCPStreamImplementation(source);
-    return *this;
-}
-
 const TCPAddress TCPStream::getPeerAddress() const
 {
     IMEBRA_FUNCTION_START();

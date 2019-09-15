@@ -33,12 +33,6 @@ WritingDataHandlerNumeric::WritingDataHandlerNumeric(const WritingDataHandlerNum
 {
 }
 
-WritingDataHandlerNumeric& WritingDataHandlerNumeric::operator=(const WritingDataHandlerNumeric& source)
-{
-    WritingDataHandler::operator =(source);
-    return *this;
-}
-
 WritingDataHandlerNumeric::~WritingDataHandlerNumeric()
 {
 }

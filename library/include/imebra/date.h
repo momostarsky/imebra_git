@@ -48,14 +48,7 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     Date(const Date& source);
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source Date object
-    /// \return a reference to this Date object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    Date& operator=(const Date& source);
+    Date& operator=(const Date& source) = delete;
 
     virtual ~Date();
 

@@ -49,14 +49,7 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     Age(const Age& source);
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source Date object
-    /// \return a reference to this Date object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    Age& operator=(const Age& source);
+    Age& operator=(const Age& source) = delete;
 
     virtual ~Age();
 

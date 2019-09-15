@@ -37,12 +37,6 @@ Memory::Memory(const Memory& source): m_pMemory(getMemoryImplementation(source))
 {
 }
 
-Memory& Memory::operator=(const Memory& source)
-{
-    m_pMemory = getMemoryImplementation(source);
-    return *this;
-}
-
 const std::shared_ptr<const implementation::memory>& getMemoryImplementation(const Memory& memory)
 {
     return memory.m_pMemory;

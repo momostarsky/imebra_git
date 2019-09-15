@@ -64,14 +64,7 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     VOILUT(const VOILUT& source);
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source VOILUT object
-    /// \return a reference to this VOILUT object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    VOILUT& operator=(const VOILUT& source);
+    VOILUT& operator=(const VOILUT& source) = delete;
 
     ///
     /// \brief Construct a VOILUT transform and specifies the LUT (lookup table)

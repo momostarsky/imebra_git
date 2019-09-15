@@ -69,14 +69,7 @@ public:
 
     virtual ~TCPListener();
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source TCPListener object
-    /// \return a reference to this TCPListener object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    TCPListener& operator=(const TCPListener& source);
+    TCPListener& operator=(const TCPListener& source) = delete;
 
     /// \brief Waits for an incoming connection on the listening socket.
     ///

@@ -85,14 +85,7 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     StreamWriter(const StreamWriter& source);
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source StreamWriter object
-    /// \return a reference to this StreamWriter object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    StreamWriter& operator=(const StreamWriter& source);
+    StreamWriter& operator=(const StreamWriter& source) = delete;
 
     ///
     /// \brief Write raw data into the stream.

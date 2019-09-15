@@ -25,18 +25,18 @@ TEST(jpegCodecTest, testBaseline)
 
         Image baselineImage = buildImageForTest(width, height, precision == 0 ? bitDepth_t::depthU8 : bitDepth_t::depthU16, bits, "RGB", 50);
 
-        Transform colorTransform = ColorTransformsFactory::getTransform("RGB", "YBR_FULL");
-        MutableImage ybrImage = colorTransform.allocateOutputImage(baselineImage, width, height);
-        colorTransform.runTransform(baselineImage, 0, 0, width, height, ybrImage, 0, 0);
+        Transform transformToYBR = ColorTransformsFactory::getTransform("RGB", "YBR_FULL");
+        MutableImage ybrImage = transformToYBR.allocateOutputImage(baselineImage, width, height);
+        transformToYBR.runTransform(baselineImage, 0, 0, width, height, ybrImage, 0, 0);
 
         dataset.setImage(0, ybrImage, imageQuality_t::veryHigh);
 
         Image checkImage = dataset.getImage(0);
 
         std::uint32_t checkWidth(checkImage.getWidth()), checkHeight(checkImage.getHeight());
-        colorTransform = ColorTransformsFactory::getTransform("YBR_FULL", "RGB");
-        MutableImage rgbImage = colorTransform.allocateOutputImage(checkImage, checkWidth, checkHeight);
-        colorTransform.runTransform(checkImage, 0, 0, checkWidth, checkHeight, rgbImage, 0, 0);
+        Transform transformToRGB = ColorTransformsFactory::getTransform("YBR_FULL", "RGB");
+        MutableImage rgbImage = transformToRGB.allocateOutputImage(checkImage, checkWidth, checkHeight);
+        transformToRGB.runTransform(checkImage, 0, 0, checkWidth, checkHeight, rgbImage, 0, 0);
 
         // Compare the buffers. A little difference is allowed
         double differenceRGB = compareImages(baselineImage, rgbImage);
@@ -118,9 +118,9 @@ TEST(jpegCodecTest, testBaselineSubsampled)
                         ASSERT_TRUE(prematureEoi == 0);
 
                         std::uint32_t checkWidth(checkImage.getWidth()), checkHeight(checkImage.getHeight());
-                        colorTransform = ColorTransformsFactory::getTransform("YBR_FULL", "RGB");
-                        MutableImage rgbImage = colorTransform.allocateOutputImage(checkImage, checkWidth, checkHeight);
-                        colorTransform.runTransform(checkImage, 0, 0, checkWidth, checkHeight, rgbImage, 0, 0);
+                        Transform transformToRGB = ColorTransformsFactory::getTransform("YBR_FULL", "RGB");
+                        MutableImage rgbImage = transformToRGB.allocateOutputImage(checkImage, checkWidth, checkHeight);
+                        transformToRGB.runTransform(checkImage, 0, 0, checkWidth, checkHeight, rgbImage, 0, 0);
 
                         // Compare the buffers. A little difference is allowed
                         double differenceRGB = compareImages(baselineImage, rgbImage);
@@ -225,9 +225,9 @@ TEST(jpegCodecTest, codecFactoryPipe)
 
     Image baselineImage(buildImageForTest(width, height, bitDepth_t::depthU8, 7, "RGB", 50));
 
-    Transform colorTransform(ColorTransformsFactory::getTransform("RGB", "YBR_FULL"));
-    MutableImage ybrImage(colorTransform.allocateOutputImage(baselineImage, width, height));
-    colorTransform.runTransform(baselineImage, 0, 0, width, height, ybrImage, 0, 0);
+    Transform transformToYBR(ColorTransformsFactory::getTransform("RGB", "YBR_FULL"));
+    MutableImage ybrImage(transformToYBR.allocateOutputImage(baselineImage, width, height));
+    transformToYBR.runTransform(baselineImage, 0, 0, width, height, ybrImage, 0, 0);
     testDataSet.setImage(0, ybrImage, imageQuality_t::veryHigh);
 
     PipeStream source(1024);
@@ -242,9 +242,9 @@ TEST(jpegCodecTest, codecFactoryPipe)
     Image checkImage(loadedDataSet.getImage(0));
 
     std::uint32_t checkWidth(checkImage.getWidth()), checkHeight(checkImage.getHeight());
-    colorTransform = ColorTransformsFactory::getTransform("YBR_FULL", "RGB");
-    MutableImage rgbImage(colorTransform.allocateOutputImage(checkImage, checkWidth, checkHeight));
-    colorTransform.runTransform(checkImage, 0, 0, checkWidth, checkHeight, rgbImage, 0, 0);
+    Transform transformToRGB(ColorTransformsFactory::getTransform("YBR_FULL", "RGB"));
+    MutableImage rgbImage(transformToRGB.allocateOutputImage(checkImage, checkWidth, checkHeight));
+    transformToRGB.runTransform(checkImage, 0, 0, checkWidth, checkHeight, rgbImage, 0, 0);
 
     // Compare the buffers. A little difference is allowed
     double differenceRGB = compareImages(baselineImage, rgbImage);

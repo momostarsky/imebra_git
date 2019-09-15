@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -37,23 +37,23 @@ class Image;
 ///
 /// \brief DrawBitmap takes care of converting an Image object into an array
 ///        of bytes that can be displayed by the operating system facilities.
-/// 
+///
 /// DrawBitmap can apply several transformations to the Image before generating
 /// the bitmap.
 ///
 /// DrawBitmap applies automatically the necessary color transform and high
 /// bit shift in order to obtain a 8 bits per channel RGB image.
-/// 
+///
 ///////////////////////////////////////////////////////////////////////////////
 class IMEBRA_API DrawBitmap
 {
 
 public:
     /// \brief Construct a DrawBitmap with no transforms.
-    /// 
+    ///
     /// The getBitmap() method will not apply any Transform to the Image before
     /// generating the bitmap.
-    /// 
+    ///
     ///////////////////////////////////////////////////////////////////////////////
     DrawBitmap();
 
@@ -75,14 +75,7 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     DrawBitmap(const DrawBitmap& source);
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source DrawBitmap object
-    /// \return a reference to this DrawBitmap object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    DrawBitmap& operator=(const DrawBitmap& source);
+    DrawBitmap& operator=(const DrawBitmap& source) = delete;
 
     /// \brief Destructor
     ///

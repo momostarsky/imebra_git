@@ -33,12 +33,6 @@ BaseUIDGenerator::BaseUIDGenerator(const std::shared_ptr<implementation::uidGene
 {
 }
 
-BaseUIDGenerator& BaseUIDGenerator::operator=(const BaseUIDGenerator& source)
-{
-    m_pUidGenerator = source.m_pUidGenerator;
-    return *this;
-}
-
 BaseUIDGenerator::~BaseUIDGenerator()
 {
 }

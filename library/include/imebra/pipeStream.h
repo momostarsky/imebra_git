@@ -77,14 +77,7 @@ public:
 
     virtual ~PipeStream();
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source Pipe object
-    /// \return a reference to this Pipe object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    PipeStream& operator=(const PipeStream& source);
+    PipeStream& operator=(const PipeStream& source) = delete;
 
     ///
     /// \brief Wait for the specified amount of time or until the internal buffer

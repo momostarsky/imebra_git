@@ -35,12 +35,6 @@ DicomDir::DicomDir(const DicomDir& source): m_pDicomDir(getDicomDirImplementatio
 {
 }
 
-DicomDir& DicomDir::operator=(const DicomDir& source)
-{
-    m_pDicomDir = getDicomDirImplementation(source);
-    return *this;
-}
-
 const std::shared_ptr<implementation::dicomDir>& getDicomDirImplementation(const DicomDir& dicomDir)
 {
     return dicomDir.m_pDicomDir;
@@ -88,12 +82,6 @@ MutableDicomDir::MutableDicomDir(const MutableDicomDir &source): DicomDir(source
 
 MutableDicomDir::~MutableDicomDir()
 {
-}
-
-MutableDicomDir& MutableDicomDir::operator=(const MutableDicomDir& source)
-{
-    DicomDir::operator =(source);
-    return *this;
 }
 
 MutableDicomDirEntry MutableDicomDir::getNewEntry(const std::string& recordType)

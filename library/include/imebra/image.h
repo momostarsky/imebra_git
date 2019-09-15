@@ -68,14 +68,7 @@ public:
 
     virtual ~Image();
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source Image object
-    /// \return a reference to this Image object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    Image& operator=(const Image& source);
+    Image& operator=(const Image& source) = delete;
 
     /// \brief Retrieve the image's width, in pixels.
     ///
@@ -191,14 +184,7 @@ public:
 
     virtual ~MutableImage();
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source MutableImage object
-    /// \return a reference to this MutableImage object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    MutableImage& operator=(const MutableImage& source);
+    MutableImage& operator=(const MutableImage& source) = delete;
 
     /// \brief Retrieve a WritingDataHandlerNumeric object referencing the Image's
     ///        memory (mutable).

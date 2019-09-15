@@ -38,12 +38,6 @@ DrawBitmap::DrawBitmap(const DrawBitmap& source): m_pDrawBitmap(getDrawBitmapImp
 {
 }
 
-DrawBitmap& DrawBitmap::operator=(const DrawBitmap& source)
-{
-    m_pDrawBitmap = getDrawBitmapImplementation(source);
-    return *this;
-}
-
 const std::shared_ptr<implementation::drawBitmap>& getDrawBitmapImplementation(const DrawBitmap& drawBitmap)
 {
     return drawBitmap.m_pDrawBitmap;

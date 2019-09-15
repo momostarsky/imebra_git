@@ -67,14 +67,7 @@ public:
 
     virtual ~TCPStream();
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source TCPStream object
-    /// \return a reference to this TCPStream object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    TCPStream& operator=(const TCPStream& source);
+    TCPStream& operator=(const TCPStream& source) = delete;
 
     ///
     /// \brief Returns the address of the connected peer.

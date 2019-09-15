@@ -34,12 +34,6 @@ Transform::Transform(const Transform &source): m_pTransform(getTransformImplemen
 {
 }
 
-Transform& Transform::operator=(const Transform& source)
-{
-    m_pTransform = getTransformImplementation(source);
-    return *this;
-}
-
 const std::shared_ptr<imebra::implementation::transforms::transform>& getTransformImplementation(const Transform& transform)
 {
     return transform.m_pTransform;

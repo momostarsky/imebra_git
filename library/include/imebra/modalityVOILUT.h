@@ -69,14 +69,7 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     ModalityVOILUT(const ModalityVOILUT& source);
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source ModalityVOILUT object
-    /// \return a reference to this ModalityVOILUT object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    ModalityVOILUT& operator=(const ModalityVOILUT& source);
+    ModalityVOILUT& operator=(const ModalityVOILUT& source) = delete;
 
     virtual ~ModalityVOILUT();
 };

@@ -43,12 +43,6 @@ MutableMemory::MutableMemory(const MutableMemory& source): Memory(source)
 {
 }
 
-MutableMemory& MutableMemory::operator=(const MutableMemory& source)
-{
-    Memory::operator =(source);
-    return *this;
-}
-
 MutableMemory::~MutableMemory()
 {
 }

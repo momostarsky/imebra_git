@@ -34,12 +34,6 @@ DicomDirEntry::DicomDirEntry(const std::shared_ptr<imebra::implementation::direc
 {
 }
 
-DicomDirEntry& DicomDirEntry::operator=(const DicomDirEntry& source)
-{
-    m_pDirectoryRecord = getDicomDirEntryImplementation(source);
-    return *this;
-}
-
 const std::shared_ptr<implementation::directoryRecord>& getDicomDirEntryImplementation(const DicomDirEntry& dicomDirEntry)
 {
     return dicomDirEntry.m_pDirectoryRecord;
@@ -134,12 +128,6 @@ MutableDicomDirEntry::~MutableDicomDirEntry()
 
 MutableDicomDirEntry::MutableDicomDirEntry(const std::shared_ptr<imebra::implementation::directoryRecord>& pDirectoryRecord): DicomDirEntry(pDirectoryRecord)
 {
-}
-
-MutableDicomDirEntry& MutableDicomDirEntry::operator=(const MutableDicomDirEntry& source)
-{
-    DicomDirEntry::operator =(source);
-    return *this;
 }
 
 MutableDataSet MutableDicomDirEntry::getEntryDataSet()
