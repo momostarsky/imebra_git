@@ -31,6 +31,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 @class ImebraTagId;
 @class ImebraVOIDescription;
 @class ImebraStreamReader;
+@class ImebraStreamWriter;
 
 /// \enum ImebraTagVR_t
 /// \brief Enumerates the DICOM VRs (data types).
