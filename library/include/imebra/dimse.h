@@ -93,13 +93,6 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     DimseCommandBase(const DimseCommandBase& source);
 
-    ///
-    /// \brief Assignment operator
-    ///
-    /// \param source source DimseCommandBase object
-    /// \return reference to this DimseCommandBase
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
     DimseCommandBase& operator=(const DimseCommandBase& source) = delete;
 
     ///
@@ -187,13 +180,6 @@ public:
 
     virtual ~DimseCommand();
 
-    ///
-    /// \brief Assignment operator
-    ///
-    /// \param source source DimseCommand object
-    /// \return a reference to this DimseCommand object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
     DimseCommand& operator=(const DimseCommand& source) = delete;
 
     ///
@@ -416,13 +402,6 @@ public:
 
     virtual ~DimseResponse();
 
-    ///
-    /// \brief Assignment operator.
-    ///
-    /// \param source source DimseResponse object
-    /// \return a reference to this DimseResponse object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
     DimseResponse& operator=(const DimseResponse& source) = delete;
 
     ///
@@ -465,13 +444,6 @@ public:
 
     virtual ~CPartialResponse();
 
-    ///
-    /// \brief Assignment operator.
-    ///
-    /// \param source source CPartialResponse object
-    /// \return a reference to this CPartialResponse object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
     CPartialResponse& operator=(const CPartialResponse& source) = delete;
 
     ///
@@ -565,13 +537,6 @@ public:
 
     virtual ~CStoreCommand();
 
-    ///
-    /// \brief Assignment operator.
-    ///
-    /// \param source source CStoreCommand object
-    /// \return a reference to this CStoreCommand object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
     CStoreCommand& operator=(const CStoreCommand& source) = delete;
 
     ///
@@ -630,13 +595,6 @@ public:
 
     virtual ~CStoreResponse();
 
-    ///
-    /// \brief Assignment operator.
-    ///
-    /// \param source source CStoreResponse object
-    /// \return reference to this CStoreResponse
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
     CStoreResponse& operator=(const CStoreResponse& source) = delete;
 
 protected:
@@ -694,13 +652,6 @@ public:
 
     virtual ~CGetCommand();
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source CGetCommand object
-    /// \return a reference to this CGetCommand object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
     CGetCommand& operator=(const CGetCommand& source) = delete;
 
 protected:
@@ -790,13 +741,6 @@ public:
 
     virtual ~CGetResponse();
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source CGetResponse object
-    /// \return a reference to this CGetResponse object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
     CGetResponse& operator=(const CGetResponse& source) = delete;
 
 protected:
@@ -850,13 +794,6 @@ public:
 
     virtual ~CFindCommand();
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source CFindCommand object
-    /// \return a reference to this CFindCommand object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
     CFindCommand& operator=(const CFindCommand& source) = delete;
 
 protected:
@@ -912,13 +849,6 @@ public:
 
     virtual ~CFindResponse();
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source CFindResponse object
-    /// \return a reference to this CFindResponse object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
     CFindResponse& operator=(const CFindResponse& source) = delete;
 
 protected:
@@ -974,13 +904,6 @@ public:
 
     virtual ~CMoveCommand();
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source CMoveCommand object
-    /// \return a reference to this CMoveCommand object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
     CMoveCommand& operator=(const CMoveCommand& source) = delete;
 
     ///
@@ -1077,13 +1000,6 @@ public:
 
     virtual ~CMoveResponse();
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source CMoveResponse object
-    /// \return a reference to this CMoveResponse object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
     CMoveResponse& operator=(const CMoveResponse& source) = delete;
 
 protected:
@@ -1133,13 +1049,6 @@ public:
 
     virtual ~CEchoCommand();
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source CEchoCommand object
-    /// \return a reference to this CEchoCommand object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
     CEchoCommand& operator=(const CEchoCommand& source) = delete;
 
 protected:
@@ -1179,13 +1088,6 @@ public:
 
     virtual ~CEchoResponse();
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source CEchoResponse object
-    /// \return a reference to this CEchoResponse object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
     CEchoResponse& operator=(const CEchoResponse& source) = delete;
 
 protected:
@@ -1235,13 +1137,6 @@ public:
 
     virtual ~CCancelCommand();
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source CCancelCommand object
-    /// \return a reference to this CCancelCommand object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
     CCancelCommand& operator=(const CCancelCommand& source) = delete;
 
     ///
@@ -1330,13 +1225,6 @@ public:
 
     virtual ~NEventReportCommand();
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source NEventReportCommand object
-    /// \return a reference to this NEventReportCommand object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
     NEventReportCommand& operator=(const NEventReportCommand& source) = delete;
 
     ///
@@ -1399,13 +1287,6 @@ public:
 
     virtual ~NEventReportResponse();
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source NEventReportResponse object
-    /// \return a reference to this NEventReportResponse object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
     NEventReportResponse& operator=(const NEventReportResponse& source) = delete;
 
     ///
@@ -1470,13 +1351,6 @@ public:
 
     virtual ~NGetCommand();
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source NGetCommand object
-    /// \return a reference to this NGetCommand object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
     NGetCommand& operator=(const NGetCommand& source) = delete;
 
     ///
@@ -1543,13 +1417,6 @@ public:
 
     virtual ~NGetResponse();
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source NGetResponse object
-    /// \return a reference to this NGetResponse object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
     NGetResponse& operator=(const NGetResponse& source) = delete;
 
 protected:
@@ -1604,13 +1471,6 @@ public:
 
     virtual ~NSetCommand();
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source NSetCommand object
-    /// \return a reference to this NSetCommand object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
     NSetCommand& operator=(const NSetCommand& source) = delete;
 
 protected:
@@ -1664,13 +1524,6 @@ public:
 
     virtual ~NSetResponse();
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source NSetResponse object
-    /// \return a reference to this NSetResponse object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
     NSetResponse& operator=(const NSetResponse& source) = delete;
 
     ///
@@ -1760,13 +1613,6 @@ public:
 
     virtual ~NActionCommand();
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source NActionCommand object
-    /// \return a reference to this NActionCommand object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
     NActionCommand& operator=(const NActionCommand& source) = delete;
 
     ///
@@ -1829,13 +1675,6 @@ public:
 
     virtual ~NActionResponse();
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source NActionResponse object
-    /// \return a reference to this NActionResponse object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
     NActionResponse& operator=(const NActionResponse& source) = delete;
 
     ///
@@ -1919,13 +1758,6 @@ public:
 
     virtual ~NCreateCommand();
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source NCreateCommand object
-    /// \return a reference to this NCreateCommand object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
     NCreateCommand& operator=(const NCreateCommand& source) = delete;
 
 protected:
@@ -2007,13 +1839,6 @@ public:
 
     virtual ~NCreateResponse();
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source NCreateResponse object
-    /// \return a reference to this NCreateResponse object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
     NCreateResponse& operator=(const NCreateResponse& source) = delete;
 
 protected:
@@ -2064,13 +1889,6 @@ public:
 
     virtual ~NDeleteCommand();
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source NDeleteCommand object
-    /// \return a reference to this NDeleteCommand object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
     NDeleteCommand& operator=(const NDeleteCommand& source) = delete;
 
 protected:
@@ -2111,13 +1929,6 @@ public:
 
     virtual ~NDeleteResponse();
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source NDeleteResponse object
-    /// \return a reference to this NDeleteResponse object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
     NDeleteResponse& operator=(const NDeleteResponse& source) = delete;
 
 protected:
@@ -2162,13 +1973,6 @@ public:
 
     virtual ~DimseService();
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source DimseService object
-    /// \return a reference to this DimseService object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
     DimseService& operator=(const DimseService& source) = delete;
 
     ///
