@@ -34,12 +34,6 @@ ReadingDataHandlerNumeric::ReadingDataHandlerNumeric(const ReadingDataHandlerNum
 {
 }
 
-ReadingDataHandlerNumeric& ReadingDataHandlerNumeric::operator=(const ReadingDataHandlerNumeric& source)
-{
-    ReadingDataHandler::operator =(source);
-    return *this;
-}
-
 ReadingDataHandlerNumeric::~ReadingDataHandlerNumeric()
 {
 }

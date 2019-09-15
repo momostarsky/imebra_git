@@ -40,12 +40,6 @@ PipeStream::~PipeStream()
 {
 }
 
-PipeStream& PipeStream::operator=(const PipeStream& source)
-{
-    m_pStream = getPipeStreamImplementation(source);
-    return *this;
-}
-
 void PipeStream::close(unsigned int timeoutMilliseconds)
 {
     IMEBRA_FUNCTION_START();

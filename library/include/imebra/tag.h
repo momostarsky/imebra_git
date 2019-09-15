@@ -63,14 +63,7 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     Tag(const Tag& source);
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source Tag object
-    /// \return a reference to this Tag object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    Tag& operator=(const Tag& source);
+    Tag& operator=(const Tag& source) = delete;
 
     virtual ~Tag();
 
@@ -210,14 +203,7 @@ public:
 
     virtual ~MutableTag();
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source MutableTag object
-    /// \return a reference to this MutableTag object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    MutableTag& operator=(const MutableTag& source);
+    MutableTag& operator=(const MutableTag& source) = delete;
 
     /// \brief Retrieve a WritingDataHandler object connected to a specific
     ///        tag's buffer.

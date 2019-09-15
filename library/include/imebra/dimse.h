@@ -93,14 +93,7 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     DimseCommandBase(const DimseCommandBase& source);
 
-    ///
-    /// \brief Assignment operator
-    ///
-    /// \param source source DimseCommandBase object
-    /// \return reference to this DimseCommandBase
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    DimseCommandBase& operator=(const DimseCommandBase& source);
+    DimseCommandBase& operator=(const DimseCommandBase& source) = delete;
 
     ///
     /// \brief Returns the data set containing the command (tags in group 0)
@@ -187,14 +180,7 @@ public:
 
     virtual ~DimseCommand();
 
-    ///
-    /// \brief Assignment operator
-    ///
-    /// \param source source DimseCommand object
-    /// \return a reference to this DimseCommand object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    DimseCommand& operator=(const DimseCommand& source);
+    DimseCommand& operator=(const DimseCommand& source) = delete;
 
     ///
     /// \brief Returns the command ID.
@@ -416,14 +402,7 @@ public:
 
     virtual ~DimseResponse();
 
-    ///
-    /// \brief Assignment operator.
-    ///
-    /// \param source source DimseResponse object
-    /// \return a reference to this DimseResponse object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    DimseResponse& operator=(const DimseResponse& source);
+    DimseResponse& operator=(const DimseResponse& source) = delete;
 
     ///
     /// \brief Return the status reported by the DIMSE response.
@@ -465,14 +444,7 @@ public:
 
     virtual ~CPartialResponse();
 
-    ///
-    /// \brief Assignment operator.
-    ///
-    /// \param source source CPartialResponse object
-    /// \return a reference to this CPartialResponse object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    CPartialResponse& operator=(const CPartialResponse& source);
+    CPartialResponse& operator=(const CPartialResponse& source) = delete;
 
     ///
     /// \brief Returns the number of remaining C-STORE sub operations.
@@ -565,14 +537,7 @@ public:
 
     virtual ~CStoreCommand();
 
-    ///
-    /// \brief Assignment operator.
-    ///
-    /// \param source source CStoreCommand object
-    /// \return a reference to this CStoreCommand object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    CStoreCommand& operator=(const CStoreCommand& source);
+    CStoreCommand& operator=(const CStoreCommand& source) = delete;
 
     ///
     /// \brief Returns the AET of the entity that triggered this
@@ -630,14 +595,7 @@ public:
 
     virtual ~CStoreResponse();
 
-    ///
-    /// \brief Assignment operator.
-    ///
-    /// \param source source CStoreResponse object
-    /// \return reference to this CStoreResponse
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    CStoreResponse& operator=(const CStoreResponse& source);
+    CStoreResponse& operator=(const CStoreResponse& source) = delete;
 
 protected:
     explicit CStoreResponse(const std::shared_ptr<implementation::cStoreResponse>& pResponse);
@@ -694,14 +652,7 @@ public:
 
     virtual ~CGetCommand();
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source CGetCommand object
-    /// \return a reference to this CGetCommand object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    CGetCommand& operator=(const CGetCommand& source);
+    CGetCommand& operator=(const CGetCommand& source) = delete;
 
 protected:
     explicit CGetCommand(const std::shared_ptr<implementation::cGetCommand>& pCommand);
@@ -790,14 +741,7 @@ public:
 
     virtual ~CGetResponse();
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source CGetResponse object
-    /// \return a reference to this CGetResponse object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    CGetResponse& operator=(const CGetResponse& source);
+    CGetResponse& operator=(const CGetResponse& source) = delete;
 
 protected:
     explicit CGetResponse(const std::shared_ptr<implementation::cGetResponse>& pResponse);
@@ -850,14 +794,7 @@ public:
 
     virtual ~CFindCommand();
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source CFindCommand object
-    /// \return a reference to this CFindCommand object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    CFindCommand& operator=(const CFindCommand& source);
+    CFindCommand& operator=(const CFindCommand& source) = delete;
 
 protected:
     explicit CFindCommand(const std::shared_ptr<implementation::cFindCommand>& pCommand);
@@ -912,14 +849,7 @@ public:
 
     virtual ~CFindResponse();
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source CFindResponse object
-    /// \return a reference to this CFindResponse object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    CFindResponse& operator=(const CFindResponse& source);
+    CFindResponse& operator=(const CFindResponse& source) = delete;
 
 protected:
     explicit CFindResponse(const std::shared_ptr<implementation::cFindResponse>& pResponse);
@@ -974,14 +904,7 @@ public:
 
     virtual ~CMoveCommand();
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source CMoveCommand object
-    /// \return a reference to this CMoveCommand object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    CMoveCommand& operator=(const CMoveCommand& source);
+    CMoveCommand& operator=(const CMoveCommand& source) = delete;
 
     ///
     /// \brief Returns the destination AET.
@@ -1077,14 +1000,7 @@ public:
 
     virtual ~CMoveResponse();
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source CMoveResponse object
-    /// \return a reference to this CMoveResponse object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    CMoveResponse& operator=(const CMoveResponse& source);
+    CMoveResponse& operator=(const CMoveResponse& source) = delete;
 
 protected:
     explicit CMoveResponse(const std::shared_ptr<implementation::cMoveResponse>& pResponse);
@@ -1133,14 +1049,7 @@ public:
 
     virtual ~CEchoCommand();
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source CEchoCommand object
-    /// \return a reference to this CEchoCommand object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    CEchoCommand& operator=(const CEchoCommand& source);
+    CEchoCommand& operator=(const CEchoCommand& source) = delete;
 
 protected:
     explicit CEchoCommand(const std::shared_ptr<implementation::cEchoCommand>& pCommand);
@@ -1179,14 +1088,7 @@ public:
 
     virtual ~CEchoResponse();
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source CEchoResponse object
-    /// \return a reference to this CEchoResponse object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    CEchoResponse& operator=(const CEchoResponse& source);
+    CEchoResponse& operator=(const CEchoResponse& source) = delete;
 
 protected:
     explicit CEchoResponse(const std::shared_ptr<implementation::cEchoResponse>& pResponse);
@@ -1235,14 +1137,7 @@ public:
 
     virtual ~CCancelCommand();
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source CCancelCommand object
-    /// \return a reference to this CCancelCommand object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    CCancelCommand& operator=(const CCancelCommand& source);
+    CCancelCommand& operator=(const CCancelCommand& source) = delete;
 
     ///
     /// \brief Returns the ID of the message to cancel.
@@ -1330,14 +1225,7 @@ public:
 
     virtual ~NEventReportCommand();
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source NEventReportCommand object
-    /// \return a reference to this NEventReportCommand object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    NEventReportCommand& operator=(const NEventReportCommand& source);
+    NEventReportCommand& operator=(const NEventReportCommand& source) = delete;
 
     ///
     /// \brief Returns the event ID.
@@ -1399,14 +1287,7 @@ public:
 
     virtual ~NEventReportResponse();
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source NEventReportResponse object
-    /// \return a reference to this NEventReportResponse object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    NEventReportResponse& operator=(const NEventReportResponse& source);
+    NEventReportResponse& operator=(const NEventReportResponse& source) = delete;
 
     ///
     /// \brief Get the event ID. The response may omit this
@@ -1470,14 +1351,7 @@ public:
 
     virtual ~NGetCommand();
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source NGetCommand object
-    /// \return a reference to this NGetCommand object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    NGetCommand& operator=(const NGetCommand& source);
+    NGetCommand& operator=(const NGetCommand& source) = delete;
 
     ///
     /// \brief Return the list of attributes to retrieve. an empty
@@ -1543,14 +1417,7 @@ public:
 
     virtual ~NGetResponse();
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source NGetResponse object
-    /// \return a reference to this NGetResponse object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    NGetResponse& operator=(const NGetResponse& source);
+    NGetResponse& operator=(const NGetResponse& source) = delete;
 
 protected:
     explicit NGetResponse(const std::shared_ptr<implementation::nGetResponse>& pResponse);
@@ -1604,14 +1471,7 @@ public:
 
     virtual ~NSetCommand();
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source NSetCommand object
-    /// \return a reference to this NSetCommand object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    NSetCommand& operator=(const NSetCommand& source);
+    NSetCommand& operator=(const NSetCommand& source) = delete;
 
 protected:
     explicit NSetCommand(const std::shared_ptr<implementation::nSetCommand>& pCommand);
@@ -1664,14 +1524,7 @@ public:
 
     virtual ~NSetResponse();
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source NSetResponse object
-    /// \return a reference to this NSetResponse object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    NSetResponse& operator=(const NSetResponse& source);
+    NSetResponse& operator=(const NSetResponse& source) = delete;
 
     ///
     /// \brief Returns the list of modified attributes.
@@ -1760,14 +1613,7 @@ public:
 
     virtual ~NActionCommand();
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source NActionCommand object
-    /// \return a reference to this NActionCommand object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    NActionCommand& operator=(const NActionCommand& source);
+    NActionCommand& operator=(const NActionCommand& source) = delete;
 
     ///
     /// \brief Returns the action's ID.
@@ -1829,14 +1675,7 @@ public:
 
     virtual ~NActionResponse();
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source NActionResponse object
-    /// \return a reference to this NActionResponse object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    NActionResponse& operator=(const NActionResponse& source);
+    NActionResponse& operator=(const NActionResponse& source) = delete;
 
     ///
     /// \brief Returns the action's ID.
@@ -1919,14 +1758,7 @@ public:
 
     virtual ~NCreateCommand();
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source NCreateCommand object
-    /// \return a reference to this NCreateCommand object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    NCreateCommand& operator=(const NCreateCommand& source);
+    NCreateCommand& operator=(const NCreateCommand& source) = delete;
 
 protected:
     explicit NCreateCommand(const std::shared_ptr<implementation::nCreateCommand>& pCommand);
@@ -2007,14 +1839,7 @@ public:
 
     virtual ~NCreateResponse();
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source NCreateResponse object
-    /// \return a reference to this NCreateResponse object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    NCreateResponse& operator=(const NCreateResponse& source);
+    NCreateResponse& operator=(const NCreateResponse& source) = delete;
 
 protected:
     explicit NCreateResponse(const std::shared_ptr<implementation::nCreateResponse>& pResponse);
@@ -2064,14 +1889,7 @@ public:
 
     virtual ~NDeleteCommand();
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source NDeleteCommand object
-    /// \return a reference to this NDeleteCommand object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    NDeleteCommand& operator=(const NDeleteCommand& source);
+    NDeleteCommand& operator=(const NDeleteCommand& source) = delete;
 
 protected:
     explicit NDeleteCommand(const std::shared_ptr<implementation::nDeleteCommand>& pCommand);
@@ -2111,14 +1929,7 @@ public:
 
     virtual ~NDeleteResponse();
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source NDeleteResponse object
-    /// \return a reference to this NDeleteResponse object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    NDeleteResponse& operator=(const NDeleteResponse& source);
+    NDeleteResponse& operator=(const NDeleteResponse& source) = delete;
 
 protected:
     explicit NDeleteResponse(const std::shared_ptr<implementation::nDeleteResponse>& pResponse);
@@ -2162,14 +1973,7 @@ public:
 
     virtual ~DimseService();
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source DimseService object
-    /// \return a reference to this DimseService object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    DimseService& operator=(const DimseService& source);
+    DimseService& operator=(const DimseService& source) = delete;
 
     ///
     /// \brief Returns the negotiated transfer syntax for a specific

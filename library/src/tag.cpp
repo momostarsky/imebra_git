@@ -32,12 +32,6 @@ Tag::Tag(const Tag& source): m_pData(getTagImplementation(source))
 {
 }
 
-Tag& Tag::operator=(const Tag& source)
-{
-    m_pData = getTagImplementation(source);
-    return *this;
-}
-
 const std::shared_ptr<imebra::implementation::data>& getTagImplementation(const Tag& tag)
 {
     return tag.m_pData;
@@ -159,13 +153,6 @@ MutableTag::MutableTag(const MutableTag& source): Tag(source)
 MutableTag::~MutableTag()
 {
 }
-
-MutableTag& MutableTag::operator=(const MutableTag& source)
-{
-    Tag::operator =(source);
-    return *this;
-}
-
 
 WritingDataHandler MutableTag::getWritingDataHandler(size_t bufferId)
 {

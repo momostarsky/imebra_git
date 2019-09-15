@@ -34,12 +34,6 @@ ReadingDataHandler::ReadingDataHandler(const ReadingDataHandler& source): m_pDat
 {
 }
 
-ReadingDataHandler& ReadingDataHandler::operator=(const ReadingDataHandler& source)
-{
-    m_pDataHandler = getReadingDataHandlerImplementation(source);
-    return *this;
-}
-
 ReadingDataHandler::~ReadingDataHandler()
 {
 }

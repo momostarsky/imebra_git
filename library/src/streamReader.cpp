@@ -41,12 +41,6 @@ StreamReader::StreamReader(const StreamReader& source): m_pReader(getStreamReade
 {
 }
 
-StreamReader& StreamReader::operator=(const StreamReader& source)
-{
-    m_pReader = getStreamReaderImplementation(source);
-    return *this;
-}
-
 const std::shared_ptr<implementation::streamReader>& getStreamReaderImplementation(const StreamReader& streamReader)
 {
     return streamReader.m_pReader;

@@ -42,12 +42,6 @@ StreamWriter::StreamWriter(const StreamWriter& source): m_pWriter(getStreamWrite
 {
 }
 
-StreamWriter& StreamWriter::operator=(const StreamWriter& source)
-{
-    m_pWriter = getStreamWriterImplementation(source);
-    return *this;
-}
-
 void StreamWriter::write(const char* data, size_t dataSize)
 {
     IMEBRA_FUNCTION_START();

@@ -50,14 +50,7 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     PatientName(const PatientName& source);
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source PatientName object
-    /// \return a reference to this PatientName object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    PatientName& operator=(const PatientName& source);
+    PatientName& operator=(const PatientName& source) = delete;
 
     virtual ~PatientName();
 
@@ -126,14 +119,7 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     UnicodePatientName(const UnicodePatientName& source);
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source PatientName object
-    /// \return a reference to this PatientName object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    UnicodePatientName& operator=(const UnicodePatientName& source);
+    UnicodePatientName& operator=(const UnicodePatientName& source) = delete;
 
     virtual ~UnicodePatientName();
 

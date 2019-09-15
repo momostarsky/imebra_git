@@ -30,12 +30,6 @@ TransformsChain::TransformsChain(const TransformsChain& source): Transform(sourc
 {
 }
 
-TransformsChain& TransformsChain::operator=(const TransformsChain& source)
-{
-    Transform::operator =(source);
-    return *this;
-}
-
 TransformsChain::~TransformsChain()
 {
 }

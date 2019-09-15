@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -56,14 +56,7 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     TransformHighBit(const TransformHighBit& source);
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source TransformHighBit object
-    /// \return a reference to this TransformHighBit object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    TransformHighBit& operator=(const TransformHighBit& source);
+    TransformHighBit& operator=(const TransformHighBit& source) = delete;
 
     virtual ~TransformHighBit();
 

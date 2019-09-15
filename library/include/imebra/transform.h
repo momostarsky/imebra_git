@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -61,14 +61,7 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     Transform(const Transform& source);
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source Transform object
-    /// \return a reference to this Transform object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    Transform& operator=(const Transform& source);
+    Transform& operator=(const Transform& source) = delete;
 
     virtual ~Transform();
 
@@ -96,7 +89,7 @@ public:
     ///
     /// \param inputImage the image to use as input
     ///
-	void runTransform(
+    void runTransform(
             const Image& inputImage,
             std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight,
             MutableImage& outputImage,

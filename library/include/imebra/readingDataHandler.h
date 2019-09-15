@@ -74,14 +74,7 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     ReadingDataHandler(const ReadingDataHandler& source);
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source ReadingDataHandler object
-    /// \return a reference to this ReadingDataHandler object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    ReadingDataHandler& operator=(const ReadingDataHandler& source);
+    ReadingDataHandler& operator=(const ReadingDataHandler& source) = delete;
 
     virtual ~ReadingDataHandler();
 

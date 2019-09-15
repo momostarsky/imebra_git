@@ -54,13 +54,6 @@ DimseCommandBase::DimseCommandBase(const DimseCommandBase& source):
 {
 }
 
-DimseCommandBase& DimseCommandBase::operator=(const DimseCommandBase& source)
-{
-    m_pCommand = getDimseCommandBaseImplementation(source);
-    return *this;
-}
-
-
 
 //////////////////////////////////////////////////////////////////
 //
@@ -208,12 +201,6 @@ DimseCommand::~DimseCommand()
 {
 }
 
-
-DimseCommand& DimseCommand::operator=(const DimseCommand& source)
-{
-    DimseCommandBase::operator =(source);
-    return *this;
-}
 
 //////////////////////////////////////////////////////////////////
 //
@@ -517,13 +504,6 @@ DimseResponse::~DimseResponse()
 }
 
 
-DimseResponse& DimseResponse::operator=(const DimseResponse& source)
-{
-    DimseCommandBase::operator =(source);
-    return *this;
-}
-
-
 //////////////////////////////////////////////////////////////////
 //
 // Get the response status
@@ -614,13 +594,6 @@ CStoreCommand::~CStoreCommand()
 }
 
 
-CStoreCommand& CStoreCommand::operator=(const CStoreCommand& source)
-{
-    DimseCommand::operator =(source);
-    return *this;
-}
-
-
 //////////////////////////////////////////////////////////////////
 //
 // Get the originator AET
@@ -689,13 +662,6 @@ CStoreResponse::~CStoreResponse()
 }
 
 
-CStoreResponse& CStoreResponse::operator=(const CStoreResponse& source)
-{
-    DimseCommandBase::operator =(source);
-    return *this;
-}
-
-
 //////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////
@@ -748,14 +714,6 @@ CGetCommand::~CGetCommand()
 }
 
 
-CGetCommand& CGetCommand::operator=(const CGetCommand& source)
-{
-    DimseCommand::operator =(source);
-    return *this;
-}
-
-
-
 //////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////
@@ -784,13 +742,6 @@ CPartialResponse::CPartialResponse(const CPartialResponse &source): DimseRespons
 
 CPartialResponse::~CPartialResponse()
 {
-}
-
-
-CPartialResponse& CPartialResponse::operator=(const CPartialResponse& source)
-{
-    DimseResponse::operator =(source);
-    return *this;
 }
 
 
@@ -928,13 +879,6 @@ CGetResponse::~CGetResponse()
 }
 
 
-CGetResponse& CGetResponse::operator=(const CGetResponse& source)
-{
-    CPartialResponse::operator =(source);
-    return *this;
-}
-
-
 //////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////
@@ -984,13 +928,6 @@ CFindCommand::CFindCommand(const CFindCommand &source): DimseCommand(source)
 
 CFindCommand::~CFindCommand()
 {
-}
-
-
-CFindCommand& CFindCommand::operator=(const CFindCommand& source)
-{
-    DimseCommand::operator =(source);
-    return *this;
 }
 
 
@@ -1048,13 +985,6 @@ CFindResponse::~CFindResponse()
 }
 
 
-CFindResponse& CFindResponse::operator=(const CFindResponse& source)
-{
-    DimseResponse::operator =(source);
-    return *this;
-}
-
-
 //////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////
@@ -1106,13 +1036,6 @@ CMoveCommand::CMoveCommand(const CMoveCommand &source): DimseCommand(std::static
 
 CMoveCommand::~CMoveCommand()
 {
-}
-
-
-CMoveCommand& CMoveCommand::operator=(const CMoveCommand& source)
-{
-    DimseCommand::operator =(source);
-    return *this;
 }
 
 
@@ -1204,13 +1127,6 @@ CMoveResponse::~CMoveResponse()
 }
 
 
-CMoveResponse& CMoveResponse::operator=(const CMoveResponse& source)
-{
-    CPartialResponse::operator =(source);
-    return *this;
-}
-
-
 
 
 //////////////////////////////////////////////////////////////////
@@ -1263,15 +1179,6 @@ CEchoCommand::~CEchoCommand()
 }
 
 
-CEchoCommand& CEchoCommand::operator=(const CEchoCommand& source)
-{
-    DimseCommand::operator =(source);
-    return *this;
-}
-
-
-
-
 //////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////
@@ -1311,13 +1218,6 @@ CEchoResponse::CEchoResponse(const CEchoResponse& source): DimseResponse(source)
 
 CEchoResponse::~CEchoResponse()
 {
-}
-
-
-CEchoResponse& CEchoResponse::operator=(const CEchoResponse& source)
-{
-    DimseResponse::operator =(source);
-    return *this;
 }
 
 
@@ -1373,13 +1273,6 @@ CCancelCommand::~CCancelCommand()
 }
 
 
-CCancelCommand& CCancelCommand::operator=(const CCancelCommand& source)
-{
-    DimseCommand::operator =(source);
-    return *this;
-}
-
-
 //////////////////////////////////////////////////////////////////
 //
 // Return the ID of the command to cancel
@@ -1408,13 +1301,6 @@ DimseService::DimseService(const DimseService& source): m_pDimseService(getDimse
 
 DimseService::~DimseService()
 {
-}
-
-
-DimseService& DimseService::operator=(const DimseService& source)
-{
-    m_pDimseService = getDimseServiceImplementation(source);
-    return *this;
 }
 
 
@@ -1501,13 +1387,6 @@ NEventReportCommand::~NEventReportCommand()
 }
 
 
-NEventReportCommand& NEventReportCommand::operator=(const NEventReportCommand& source)
-{
-    DimseCommand::operator =(source);
-    return *this;
-}
-
-
 //////////////////////////////////////////////////////////////////
 //
 // Return the event ID
@@ -1580,13 +1459,6 @@ NEventReportResponse::~NEventReportResponse()
 }
 
 
-NEventReportResponse& NEventReportResponse::operator=(const NEventReportResponse& source)
-{
-    DimseResponse::operator =(source);
-    return *this;
-}
-
-
 //////////////////////////////////////////////////////////////////
 //
 // Return the event ID
@@ -1654,13 +1526,6 @@ NGetCommand::NGetCommand(const NGetCommand& source): DimseCommand(source)
 
 NGetCommand::~NGetCommand()
 {
-}
-
-
-NGetCommand& NGetCommand::operator=(const NGetCommand& source)
-{
-    DimseCommand::operator =(source);
-    return *this;
 }
 
 
@@ -1738,13 +1603,6 @@ NGetResponse::~NGetResponse()
 }
 
 
-NGetResponse& NGetResponse::operator=(const NGetResponse& source)
-{
-    DimseResponse::operator =(source);
-    return *this;
-}
-
-
 
 //////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////
@@ -1796,13 +1654,6 @@ NSetCommand::NSetCommand(const NSetCommand& source): DimseCommand(source)
 
 NSetCommand::~NSetCommand()
 {
-}
-
-
-NSetCommand& NSetCommand::operator=(const NSetCommand& source)
-{
-    DimseCommand::operator =(source);
-    return *this;
 }
 
 
@@ -1859,13 +1710,6 @@ NSetResponse::NSetResponse(const NSetResponse& source): DimseResponse(source)
 
 NSetResponse::~NSetResponse()
 {
-}
-
-
-NSetResponse& NSetResponse::operator=(const NSetResponse& source)
-{
-    DimseResponse::operator =(source);
-    return *this;
 }
 
 
@@ -1963,13 +1807,6 @@ NActionCommand::~NActionCommand()
 }
 
 
-NActionCommand& NActionCommand::operator=(const NActionCommand& source)
-{
-    DimseCommand::operator =(source);
-    return *this;
-}
-
-
 
 //////////////////////////////////////////////////////////////////
 //
@@ -2040,13 +1877,6 @@ NActionResponse::NActionResponse(const NActionResponse& source): DimseResponse(s
 
 NActionResponse::~NActionResponse()
 {
-}
-
-
-NActionResponse& NActionResponse::operator=(const NActionResponse& source)
-{
-    DimseResponse::operator =(source);
-    return *this;
 }
 
 
@@ -2128,13 +1958,6 @@ NCreateCommand::NCreateCommand(const NCreateCommand& source): DimseCommand(sourc
 
 NCreateCommand::~NCreateCommand()
 {
-}
-
-
-NCreateCommand& NCreateCommand::operator=(const NCreateCommand& source)
-{
-    DimseCommand::operator =(source);
-    return *this;
 }
 
 
@@ -2221,13 +2044,6 @@ NCreateResponse::~NCreateResponse()
 }
 
 
-NCreateResponse& NCreateResponse::operator=(const NCreateResponse& source)
-{
-    DimseResponse::operator =(source);
-    return *this;
-}
-
-
 
 
 //////////////////////////////////////////////////////////////////
@@ -2281,13 +2097,6 @@ NDeleteCommand::~NDeleteCommand()
 }
 
 
-NDeleteCommand& NDeleteCommand::operator=(const NDeleteCommand& source)
-{
-    DimseCommand::operator =(source);
-    return *this;
-}
-
-
 //////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////
@@ -2328,13 +2137,6 @@ NDeleteResponse::NDeleteResponse(const NDeleteResponse& source): DimseResponse(s
 
 NDeleteResponse::~NDeleteResponse()
 {
-}
-
-
-NDeleteResponse& NDeleteResponse::operator=(const NDeleteResponse& source)
-{
-    DimseResponse::operator =(source);
-    return *this;
 }
 
 

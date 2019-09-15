@@ -37,12 +37,6 @@ TCPListener::~TCPListener()
 {
 }
 
-TCPListener& TCPListener::operator=(const TCPListener& source)
-{
-    m_pListener = getTCPListenerImplementation(source);
-    return *this;
-}
-
 const std::shared_ptr<implementation::tcpListener>& getTCPListenerImplementation(const TCPListener& source)
 {
     return source.m_pListener;

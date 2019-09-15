@@ -103,14 +103,7 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     DataSet(const DataSet& source);
 
-    ///
-    /// \brief Assignment operator
-    ///
-    /// \param source source data set
-    /// \return reference to this data set
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    DataSet& operator=(const DataSet& source);
+    DataSet& operator=(const DataSet& source) = delete;
 
     ///
     /// \brief Destructor.
@@ -712,14 +705,7 @@ public:
 
     virtual ~MutableDataSet();
 
-    ///
-    /// \brief Assignment operator
-    ///
-    /// \param source source mutable data set
-    /// \return reference to this mutable data set
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    MutableDataSet& operator=(const MutableDataSet& source);
+    MutableDataSet& operator=(const MutableDataSet& source) = delete;
 
     /// \brief Retrieve the Tag with the specified ID or create it if it doesn't
     ///        exist.

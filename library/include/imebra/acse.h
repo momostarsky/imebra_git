@@ -88,14 +88,7 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     PresentationContext(const PresentationContext& source);
 
-    ///
-    /// \brief Assignment operator
-    ///
-    /// \param source source presentation context
-    /// \return reference to this presentation context
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    PresentationContext& operator=(const PresentationContext& source);
+    PresentationContext& operator=(const PresentationContext& source) = delete;
 
     virtual ~PresentationContext();
 
@@ -136,14 +129,7 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     PresentationContexts(const PresentationContexts& source);
 
-    ///
-    /// \brief Assignment operator.
-    ///
-    /// \param source the source presentation contexts
-    /// \return reference to this presentation contexts object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    PresentationContexts& operator=(const PresentationContexts& source);
+    PresentationContexts& operator=(const PresentationContexts& source) = delete;
 
     virtual ~PresentationContexts();
 
@@ -185,14 +171,7 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     AssociationMessage(const AssociationMessage& source);
 
-    ///
-    /// \brief Assignment operator.
-    ///
-    /// \param source the source association message
-    /// \return a reference to this association message
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    AssociationMessage& operator=(const AssociationMessage& source);
+    AssociationMessage& operator=(const AssociationMessage& source) = delete;
 
     virtual ~AssociationMessage();
 
@@ -273,14 +252,7 @@ public:
 
     virtual ~MutableAssociationMessage();
 
-    ///
-    /// \brief Assignment operator.
-    ///
-    /// \param source the source mutable association message
-    /// \return a refernce to this mutable association message
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    MutableAssociationMessage& operator=(const MutableAssociationMessage& source);
+    MutableAssociationMessage& operator=(const MutableAssociationMessage& source) = delete;
 
     ///
     /// \brief Add a command DataSet to the message.
@@ -311,14 +283,7 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     virtual ~AssociationBase();
 
-    ///
-    /// \brief Assignment operator
-    ///
-    /// \param source source association
-    /// \return reference to this association
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    AssociationBase& operator=(const AssociationBase& source);
+    AssociationBase& operator=(const AssociationBase& source) = delete;
 
     ///
     /// \brief Read a command dataset and its payload (if any).
@@ -502,14 +467,7 @@ public:
 
     virtual ~AssociationSCU();
 
-    ///
-    /// \brief Assignment operator
-    ///
-    /// \param source source SCU
-    /// \return reference to SCU
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    AssociationSCU& operator=(const AssociationSCU& source);
+    AssociationSCU& operator=(const AssociationSCU& source) = delete;
 };
 
 
@@ -602,14 +560,7 @@ public:
 
     virtual ~AssociationSCP();
 
-    ///
-    /// \brief Assignment operator
-    ///
-    /// \param source source SCP
-    /// \return reference to this SCP
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    AssociationSCP& operator=(const AssociationSCP& source);
+    AssociationSCP& operator=(const AssociationSCP& source) = delete;
 };
 
 }

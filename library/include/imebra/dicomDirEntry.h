@@ -61,14 +61,7 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     DicomDirEntry(const DicomDirEntry& source);
 
-    ///
-    /// \brief Assignent operator.
-    ///
-    /// \param source source DICOMDIR entry
-    /// \return a reference to this DICOMDIR entry
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    DicomDirEntry& operator=(const DicomDirEntry& source);
+    DicomDirEntry& operator=(const DicomDirEntry& source) = delete;
 
     virtual ~DicomDirEntry();
 
@@ -155,14 +148,7 @@ public:
 
     ~MutableDicomDirEntry();
 
-    ///
-    /// \brief Assignent operator.
-    ///
-    /// \param source source mutable DICOMDIR entry
-    /// \return a reference to this mutable DICOMDIR entry
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    MutableDicomDirEntry& operator=(const MutableDicomDirEntry& source);
+    MutableDicomDirEntry& operator=(const MutableDicomDirEntry& source) = delete;
 
     /// \brief Return the MutableDataSet managed by the MutableDicomDirEntry
     ///        object.

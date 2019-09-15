@@ -204,24 +204,19 @@ int main(int argc, char* argv[])
             // Allocate the image used to build the jpeg file
             /////////////////////////////////////////////////
             MutableImage rgb8Image(width, height, bitDepth_t::depthU8, "YBR_FULL", 7);
-            Image finalImage = rgb8Image;
 
             // Scan through the frames
             //////////////////////////
             for(std::uint32_t frameNumber(0); ; ++frameNumber)
             {
-                if(frameNumber != 0)
-                {
-                    dataSetImage = loadedDataSet.getImageApplyModalityTransform(frameNumber);
-                }
+                Image dataSetImage = loadedDataSet.getImageApplyModalityTransform(frameNumber);
+
+                Image* pFinalImage = &dataSetImage;
 
                 if(!chain.isEmpty())
                 {
                     chain.runTransform(dataSetImage, 0, 0, width, height, rgb8Image, 0, 0);
-                }
-                else
-                {
-                    finalImage = dataSetImage;
+                    pFinalImage = &rgb8Image;
                 }
 
                 // Open a stream for the jpeg
@@ -238,7 +233,7 @@ int main(int argc, char* argv[])
                 StreamWriter writer(writeJpeg);
 
                 const std::string jpegTransferSyntax("1.2.840.10008.1.2.4.50");
-                CodecFactory::saveImage(writer, finalImage, jpegTransferSyntax, imageQuality_t::veryHigh, tagVR_t::OB, 8, false, false, true, false);
+                CodecFactory::saveImage(writer, *pFinalImage, jpegTransferSyntax, imageQuality_t::veryHigh, tagVR_t::OB, 8, false, false, true, false);
 
                 ++framesCount;
             }

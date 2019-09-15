@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -59,14 +59,7 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     BaseStreamInput(const BaseStreamInput& source);
 
-    ///
-    /// \brief Assignment operator
-    ///
-    /// \param source source base stream input
-    /// \return reference to this stream input
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    BaseStreamInput& operator=(const BaseStreamInput& source);
+    BaseStreamInput& operator=(const BaseStreamInput& source) = delete;
 
     ///
     /// \brief Destructor.
@@ -114,14 +107,7 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     StreamTimeout(const StreamTimeout& source);
 
-    ///
-    /// \brief Assignment operator
-    ///
-    /// \param source source stream timeout
-    /// \return reference to this stream timeout
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    StreamTimeout& operator=(const StreamTimeout& source);
+    StreamTimeout& operator=(const StreamTimeout& source) = delete;
 
     ///
     /// \brief Destructor. If the timeout has not yet expired then terminates the

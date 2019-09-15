@@ -555,11 +555,13 @@ TEST(stringHandlerTest, ASTest)
     MutableDataSet dataSet;
 
     dataSet.setAge(TagId(0x0010, 0x1010), Age(3, imebra::ageUnit_t::days));
-    imebra::Age age = dataSet.getAge(TagId(imebra::tagId_t::PatientAge_0010_1010), 0);
-    EXPECT_EQ(3u, age.getAgeValue());
-    EXPECT_EQ(imebra::ageUnit_t::days, age.getAgeUnits());
-    EXPECT_EQ("003D", dataSet.getString(TagId(imebra::tagId_t::PatientAge_0010_1010), 0));
-    ASSERT_DOUBLE_EQ(0.00821917808219178, age.getYears());
+    {
+        imebra::Age age = dataSet.getAge(TagId(imebra::tagId_t::PatientAge_0010_1010), 0);
+        EXPECT_EQ(3u, age.getAgeValue());
+        EXPECT_EQ(imebra::ageUnit_t::days, age.getAgeUnits());
+        EXPECT_EQ("003D", dataSet.getString(TagId(imebra::tagId_t::PatientAge_0010_1010), 0));
+        ASSERT_DOUBLE_EQ(0.00821917808219178, age.getYears());
+    }
 
     ASSERT_THROW(dataSet.setDouble(TagId(imebra::tagId_t::PatientAge_0010_1010), .01), imebra::DataHandlerConversionError);
 
@@ -570,22 +572,28 @@ TEST(stringHandlerTest, ASTest)
     ASSERT_THROW(dataSet.setDate(TagId(imebra::tagId_t::PatientAge_0010_1010), imebra::Date(2000, 1, 1, 0, 0, 0, 0, 0, 0)), imebra::DataHandlerConversionError);
 
     dataSet.setString(TagId(imebra::tagId_t::PatientAge_0010_1010), "005M");
-    age = dataSet.getAge(TagId(imebra::tagId_t::PatientAge_0010_1010), 0);
-    EXPECT_EQ(5u, age.getAgeValue());
-    EXPECT_EQ(imebra::ageUnit_t::months, age.getAgeUnits());
-    EXPECT_DOUBLE_EQ(0.41666666666666669, age.getYears());
+    {
+        imebra::Age age = dataSet.getAge(TagId(imebra::tagId_t::PatientAge_0010_1010), 0);
+        EXPECT_EQ(5u, age.getAgeValue());
+        EXPECT_EQ(imebra::ageUnit_t::months, age.getAgeUnits());
+        EXPECT_DOUBLE_EQ(0.41666666666666669, age.getYears());
+    }
 
     dataSet.setString(TagId(imebra::tagId_t::PatientAge_0010_1010), "018W");
-    age = dataSet.getAge(TagId(imebra::tagId_t::PatientAge_0010_1010), 0);
-    EXPECT_EQ(18u, age.getAgeValue());
-    EXPECT_EQ(imebra::ageUnit_t::weeks, age.getAgeUnits());
-    EXPECT_DOUBLE_EQ(0.34520548039782323, age.getYears());
+    {
+        imebra::Age age = dataSet.getAge(TagId(imebra::tagId_t::PatientAge_0010_1010), 0);
+        EXPECT_EQ(18u, age.getAgeValue());
+        EXPECT_EQ(imebra::ageUnit_t::weeks, age.getAgeUnits());
+        EXPECT_DOUBLE_EQ(0.34520548039782323, age.getYears());
+    }
 
     dataSet.setString(TagId(imebra::tagId_t::PatientAge_0010_1010), "090Y");
-    age = dataSet.getAge(TagId(imebra::tagId_t::PatientAge_0010_1010), 0);
-    EXPECT_EQ(90u, age.getAgeValue());
-    EXPECT_EQ(imebra::ageUnit_t::years, age.getAgeUnits());
-    EXPECT_DOUBLE_EQ(90.0, age.getYears());
+    {
+        imebra::Age age = dataSet.getAge(TagId(imebra::tagId_t::PatientAge_0010_1010), 0);
+        EXPECT_EQ(90u, age.getAgeValue());
+        EXPECT_EQ(imebra::ageUnit_t::years, age.getAgeUnits());
+        EXPECT_DOUBLE_EQ(90.0, age.getYears());
+    }
 }
 
 

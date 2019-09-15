@@ -72,14 +72,7 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     WritingDataHandler(const WritingDataHandler& source);
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source WritingDataHandler object
-    /// \return a reference to this WritingDataHandler object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    WritingDataHandler& operator=(const WritingDataHandler& source);
+    WritingDataHandler& operator=(const WritingDataHandler& source) = delete;
 
     /// \brief Destructor: replaces the tag buffer's memory with the memory created
     ///        by this WritingDataHandler.

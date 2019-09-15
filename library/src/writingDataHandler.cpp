@@ -37,12 +37,6 @@ WritingDataHandler::WritingDataHandler(const WritingDataHandler& source): m_pDat
 {
 }
 
-WritingDataHandler& WritingDataHandler::operator=(const WritingDataHandler& source)
-{
-    m_pDataHandler = getWritingDataHandlerImplementation(source);
-    return *this;
-}
-
 const std::shared_ptr<implementation::handlers::writingDataHandler>& getWritingDataHandlerImplementation(const WritingDataHandler& writingHandler)
 {
     return writingHandler.m_pDataHandler;

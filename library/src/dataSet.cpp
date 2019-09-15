@@ -43,12 +43,6 @@ DataSet::DataSet(const std::shared_ptr<imebra::implementation::dataSet>& pDataSe
     }
 }
 
-DataSet& DataSet::operator=(const DataSet& source)
-{
-    m_pDataSet = getDataSetImplementation(source);
-    return *this;
-}
-
 DataSet::~DataSet()
 {
 }
@@ -409,12 +403,6 @@ MutableDataSet::MutableDataSet(const std::string &transferSyntax, const charsets
 
 MutableDataSet::~MutableDataSet()
 {
-}
-
-MutableDataSet& MutableDataSet::operator=(const MutableDataSet& source)
-{
-    DataSet::operator =(source);
-    return *this;
 }
 
 MutableTag MutableDataSet::getTagCreate(const TagId& tagId, tagVR_t tagVR)

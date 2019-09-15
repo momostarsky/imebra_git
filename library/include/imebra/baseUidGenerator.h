@@ -54,14 +54,7 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     BaseUIDGenerator(const BaseUIDGenerator& source);
 
-    ///
-    /// \brief Assignment operator
-    ///
-    /// \param source source UID generator
-    /// \return reference to this UID generator
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    BaseUIDGenerator& operator=(const BaseUIDGenerator& source);
+    BaseUIDGenerator& operator=(const BaseUIDGenerator& source) = delete;
 
     virtual ~BaseUIDGenerator();
 

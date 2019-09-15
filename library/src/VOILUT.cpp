@@ -30,12 +30,6 @@ VOILUT::VOILUT(const VOILUT& source): Transform(source)
 {
 }
 
-VOILUT& VOILUT::operator=(const VOILUT& source)
-{
-    m_pTransform = getTransformImplementation(source);
-    return *this;
-}
-
 VOILUT::VOILUT(const VOIDescription &voiDescription):
     Transform(std::make_shared<imebra::implementation::transforms::VOILUT>(voiDescription.getCenter(), voiDescription.getWidth(), voiDescription.getFunction()))
 {

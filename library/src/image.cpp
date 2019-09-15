@@ -36,12 +36,6 @@ Image::~Image()
 {
 }
 
-Image& Image::operator=(const Image& source)
-{
-    m_pImage = getImageImplementation(source);
-    return *this;
-}
-
 const std::shared_ptr<implementation::image>& getImageImplementation(const Image& source)
 {
     return source.m_pImage;
@@ -107,12 +101,6 @@ MutableImage::MutableImage(const MutableImage& source): Image(source)
 
 MutableImage::~MutableImage()
 {
-}
-
-MutableImage& MutableImage::operator=(const MutableImage& source)
-{
-    Image::operator =(source);
-    return *this;
 }
 
 WritingDataHandlerNumeric MutableImage::getWritingDataHandler()

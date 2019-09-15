@@ -27,12 +27,6 @@ Age::Age(const Age& source):
 {
 }
 
-Age& Age::operator=(const Age& source)
-{
-    m_pAge = getAgeImplementation(source);
-    return *this;
-}
-
 Age::Age(const std::shared_ptr<implementation::age>& pAge):
     m_pAge(pAge)
 {

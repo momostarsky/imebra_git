@@ -87,14 +87,7 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     StreamReader(const StreamReader& source);
 
-    ///
-    /// \brief Assign operator.
-    ///
-    /// \param source source StreamReader object
-    /// \return a reference to this StreamReader object
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    StreamReader& operator=(const StreamReader& source);
+    StreamReader& operator=(const StreamReader& source) = delete;
 
     ///
     /// \brief Returns a virtual stream that has a restricted view into the
