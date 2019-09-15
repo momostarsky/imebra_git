@@ -419,7 +419,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
     return [[ImebraStreamWriter alloc] initWithImebraStreamWriter:
         new imebra::StreamWriter(
-            ((imebra::MutableDataSet*)get_imebra_object_holder(DataSet))->getStreamWriter(imebra::TagId((std::uint16_t)pTagId.groupId, (std::uint32_t)pTagId.groupOrder, (std::uint16_t)pTagId.tagId, bufferId))) ];
+            ((imebra::MutableDataSet*)get_imebra_object_holder(DataSet))->getStreamWriter(imebra::TagId((std::uint16_t)pTagId.groupId, (std::uint32_t)pTagId.groupOrder, (std::uint16_t)pTagId.tagId), bufferId)) ];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -430,7 +430,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
     return [[ImebraStreamWriter alloc] initWithImebraStreamWriter:
         new imebra::StreamWriter(
-            ((imebra::MutableDataSet*)get_imebra_object_holder(DataSet))->getStreamWriter(imebra::TagId((std::uint16_t)pTagId.groupId, (std::uint32_t)pTagId.groupOrder, (std::uint16_t)pTagId.tagId, bufferId, (imebra::tagVR_t)tagVR))) ];
+            ((imebra::MutableDataSet*)get_imebra_object_holder(DataSet))->getStreamWriter(imebra::TagId((std::uint16_t)pTagId.groupId, (std::uint32_t)pTagId.groupOrder, (std::uint16_t)pTagId.tagId), bufferId, (imebra::tagVR_t)tagVR)) ];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
