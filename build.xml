@@ -204,6 +204,8 @@ Slovenia
         <exec executable="cmake" failonerror="true" dir="${build_jni}">
             <arg value="--verbose"/>
             <arg value="-DCMAKE_BUILD_TYPE=DEBUG" />
+            <arg value="-DIMEBRA_LOG_LEVEL=INFO" />
+            <arg value="-DIMEBRA_LOG_FRAMEWORK=LOG4CXX" />
             <arg path="${build_release}/wrappers/javaWrapper"/>
         </exec>
         <exec executable="make" failonerror="true" dir="${build_jni}" />
@@ -276,6 +278,8 @@ Slovenia
             <arg value="--zerocounters" />
             <arg value="--directory" />
             <arg path="${build_library_for_tests}" />
+            <arg value="--rc" />
+            <arg value="lcov_branch_coverage=1" />
         </exec>
         <exec executable="lcov" dir="${build_tests}" resolveexecutable="true" failonerror="true">
             <arg value="--capture" />
@@ -284,6 +288,8 @@ Slovenia
             <arg path="${build_library_for_tests}" />
             <arg value="--output-file" />
             <arg path="${build_library_for_tests}/test.info" />
+            <arg value="--rc" />
+            <arg value="lcov_branch_coverage=1" />
         </exec>
 
         <!-- Run tests -->
@@ -300,6 +306,8 @@ Slovenia
             <arg path="${build_library_for_tests}" />
             <arg value="--output-file" />
             <arg path="${build_library_for_tests}/test.info" />
+            <arg value="--rc" />
+            <arg value="lcov_branch_coverage=1" />
         </exec>
         <exec executable="lcov" dir="${build_tests}" resolveexecutable="true" failonerror="true">
             <arg value="--extract" />
@@ -310,9 +318,13 @@ Slovenia
             <arg path="${build_release}/objectivec/*/*/*.*" />
             <arg value="--output-file" />
             <arg path="${build_library_for_tests}/extracted.info" />
+            <arg value="--rc" />
+            <arg value="lcov_branch_coverage=1" />
         </exec>
         <mkdir dir="${source_distribution}/docs/coverage" />
         <exec executable="genhtml" dir="${build_tests}" resolveexecutable="true" failonerror="true">
+            <arg value="--rc" />
+            <arg value="lcov_branch_coverage=1" />
             <arg value="--output-directory" />
             <arg path="${source_distribution}/docs/coverage" />
             <arg path="${build_library_for_tests}/extracted.info" />
