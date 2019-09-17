@@ -23,7 +23,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "../include/imebra/exceptions.h"
 #include "exceptionImpl.h"
 #include <memory>
-#include "charsetsListImpl.h"
 
 
 namespace imebra
@@ -142,24 +141,24 @@ public:
     virtual std::wstring getUnicodeString(const size_t index) const = 0;
 
     /// \brief Return the patient name stored in the buffer
-    ///         specified by the zero-based index specified 
+    ///         specified by the zero-based index specified
     ///         in the parameter.
     ///
     /// @param index   the zero base index of the buffer's
     ///                 element to retrieve
-    /// @return the value of the data element as a patient 
+    /// @return the value of the data element as a patient
     ///          name
     ///
     ///////////////////////////////////////////////////////////
     virtual std::shared_ptr<patientName> getPatientName(const size_t index) const;
 
     /// \brief Return the patient name stored in the buffer
-    ///         specified by the zero-based index specified 
+    ///         specified by the zero-based index specified
     ///         in the parameter.
     ///
     /// @param index   the zero base index of the buffer's
     ///                 element to retrieve
-    /// @return the value of the data element as a patient 
+    /// @return the value of the data element as a patient
     ///          name
     ///
     ///////////////////////////////////////////////////////////
@@ -300,7 +299,7 @@ public:
     ///////////////////////////////////////////////////////////
     virtual void setPatientName(const size_t index, const std::shared_ptr<const patientName>& pPatientName);
 
-    /// \brief Write a unicode patient name into a tag's 
+    /// \brief Write a unicode patient name into a tag's
     ///        buffer.
     ///
     /// @param index   the zero base index of the buffer's

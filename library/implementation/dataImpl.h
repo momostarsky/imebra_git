@@ -21,8 +21,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #include <memory>
 
-#include "charsetsListImpl.h"
 #include "dataHandlerNumericImpl.h"
+#include "streamControllerImpl.h"
 #include "../include/imebra/definitions.h"
 
 #include <map>
@@ -40,6 +40,7 @@ class streamWriter;
 class buffer;
 class dataSet;
 class fileStreamInput;
+class baseStreamInput;
 
 
 /// \addtogroup group_dataset
@@ -69,7 +70,7 @@ class data
 {
 public:
 
-    data(tagVR_t tagVR, const charsetsList::tCharsetsList& defaultCharsets);
+    data(tagVR_t tagVR, const std::shared_ptr<charsetsList_t> pCharsets);
 
     virtual ~data();
 
@@ -118,6 +119,13 @@ public:
     std::shared_ptr<buffer> getBuffer(size_t bufferId) const;
 
     std::shared_ptr<buffer> getBufferCreate(size_t bufferId);
+
+    std::shared_ptr<buffer> getBufferCreate(size_t bufferId,
+                                            const std::shared_ptr<baseStreamInput>& originalStream,
+                                            size_t bufferPosition,
+                                            size_t bufferLength,
+                                            size_t wordLength,
+                                            streamController::tByteOrdering endianType);
 
     /// \brief Get a data handler for the specified buffer.
     ///
@@ -324,16 +332,13 @@ public:
 
     //@}
 
-    virtual void setCharsetsList(const charsetsList::tCharsetsList& charsetsList);
-    virtual void getCharsetsList(charsetsList::tCharsetsList* pCharsetsList) const;
-
     // Set a buffer
     ///////////////////////////////////////////////////////////
     void setBuffer(size_t bufferId, const std::shared_ptr<buffer>& newBuffer);
 
 protected:
 
-    charsetsList::tCharsetsList m_charsetsList;
+    const std::shared_ptr<charsetsList_t> m_pCharsetsList;
 
     const tagVR_t m_tagVR;
 

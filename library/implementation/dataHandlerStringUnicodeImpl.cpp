@@ -45,13 +45,13 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 
-readingDataHandlerStringUnicode::readingDataHandlerStringUnicode(const memory& parseMemory, const charsetsList::tCharsetsList& charsets, tagVR_t dataType, const wchar_t separator, const std::uint8_t paddingByte):
+readingDataHandlerStringUnicode::readingDataHandlerStringUnicode(const memory& parseMemory, const std::shared_ptr<const charsetsList_t>& pCharsets, tagVR_t dataType, const wchar_t separator, const std::uint8_t paddingByte):
     readingDataHandler(dataType)
 {
     IMEBRA_FUNCTION_START();
 
     std::string asciiString((const char*)parseMemory.data(), parseMemory.size());
-    std::wstring parseString(dicomConversion::convertToUnicode(asciiString, charsets));
+    std::wstring parseString(dicomConversion::convertToUnicode(asciiString, *pCharsets));
 
     while(!parseString.empty() && parseString.back() == (wchar_t)paddingByte)
     {
@@ -137,9 +137,9 @@ std::string readingDataHandlerStringUnicode::getString(const size_t index) const
 {
     IMEBRA_FUNCTION_START();
 
-    charsetsList::tCharsetsList charsets;
+    charsetsList_t charsets;
     charsets.push_back("ISO_IR 192");
-    return dicomConversion::convertFromUnicode(getUnicodeString(index), &charsets);
+    return dicomConversion::convertFromUnicode(getUnicodeString(index), charsets);
 
     IMEBRA_FUNCTION_END();
 }
@@ -166,16 +166,16 @@ size_t readingDataHandlerStringUnicode::getSize() const
     return m_strings.size();
 }
 
-writingDataHandlerStringUnicode::writingDataHandlerStringUnicode(const std::shared_ptr<buffer> &pBuffer, const charsetsList::tCharsetsList& charsets, tagVR_t dataType, const wchar_t separator, const size_t unitSize, const size_t maxSize, const uint8_t paddingByte):
+writingDataHandlerStringUnicode::writingDataHandlerStringUnicode(const std::shared_ptr<buffer> &pBuffer, const std::shared_ptr<const charsetsList_t>& pCharsets, tagVR_t dataType, const wchar_t separator, const size_t unitSize, const size_t maxSize, const uint8_t paddingByte):
     writingDataHandler(pBuffer, dataType, paddingByte),
     m_commitMemory(std::make_shared<memory>()),
-    m_charsets(charsets), m_separator(separator), m_unitSize(unitSize), m_maxSize(maxSize)
+    m_pCharsets(pCharsets), m_separator(separator), m_unitSize(unitSize), m_maxSize(maxSize)
 {
 }
 
 writingDataHandlerStringUnicode::~writingDataHandlerStringUnicode()
 {
-    m_buffer->commit(m_commitMemory, m_charsets);
+    m_buffer->commit(m_commitMemory);
 }
 
 // Set the data element as a signed long
@@ -239,7 +239,7 @@ void writingDataHandlerStringUnicode::setString(const size_t index, const std::s
 {
     IMEBRA_FUNCTION_START();
 
-    charsetsList::tCharsetsList charsets;
+    charsetsList_t charsets;
     charsets.push_back("ISO_IR 192");
     setUnicodeString(index, dicomConversion::convertToUnicode(value, charsets));
 
@@ -292,7 +292,7 @@ void writingDataHandlerStringUnicode::buildCommitMemory()
         completeString += m_strings.at(stringsIterator);
     }
 
-    std::string asciiString = dicomConversion::convertFromUnicode(completeString, &m_charsets);
+    std::string asciiString = dicomConversion::convertFromUnicode(completeString, *m_pCharsets);
 
     m_commitMemory = std::make_shared<memory>(asciiString.size());
     m_commitMemory->assign((std::uint8_t*)asciiString.data(), asciiString.size());

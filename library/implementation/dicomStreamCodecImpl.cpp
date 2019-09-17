@@ -29,6 +29,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "bufferImpl.h"
 #include "nullStreamImpl.h"
 #include "../include/imebra/exceptions.h"
+#include "../include/imebra/definitions.h"
 
 namespace imebra
 {
@@ -125,7 +126,7 @@ void dicomStreamCodec::buildStream(std::shared_ptr<streamWriter> pStream, std::s
                 if(streamType == streamType_t::mediaStorage)
                 {
                     dataSet::tTags temporaryTags(tags);
-                    const charsetsList::tCharsetsList& charsets(pDataSet->getCurrentCharsetsList());
+                    const std::shared_ptr<charsetsList_t> charsets(std::make_shared<charsetsList_t>());
                     std::shared_ptr<data> metaInformationTag(std::make_shared<data>(tagVR_t::OB, charsets));
                     {
                         std::shared_ptr<handlers::writingDataHandler> handler(metaInformationTag->getWritingDataHandler(0));
@@ -822,6 +823,22 @@ void dicomStreamCodec::parseStream(std::shared_ptr<streamReader> pStream,
         if(tagLengthDWord != 0xffffffff && tagType != tagVR_t::SQ)
         {
             (*pReadSubItemLength) += readTag(pStream, pDataSet, tagLengthDWord, tagId, order, tagSubId, tagType, endianType, wordSize, 0, maxSizeBufferLoad);
+
+            // We found the charsets list
+            if(tagId == 0x0008 && tagSubId == 0x0005)
+            {
+                std::shared_ptr<handlers::readingDataHandler> charsetsHandler(pDataSet->getReadingDataHandler(0x0008, 0, 0x0005, 0));
+                charsetsList_t charsets;
+                for(size_t componentId(0); componentId != charsetsHandler->getSize(); ++componentId)
+                {
+                    const std::string charset(charsetsHandler->getString(componentId));
+                    if(!charset.empty())
+                    {
+                        charsets.push_back(charset);
+                    }
+                }
+                pDataSet->setCharsetsList(charsets);
+            }
             continue;
         }
 
@@ -953,15 +970,12 @@ std::uint32_t dicomStreamCodec::readTag(
         }
 
         std::shared_ptr<data> writeData (pDataSet->getTagCreate(tagId, order, tagSubId, tagType));
-        std::shared_ptr<buffer> newBuffer(
-                    std::make_shared<buffer>(
-                        pStream->getControlledStream(),
-                        streamPosition,
-                        bufferLength,
-                        wordSize,
-                        endianType));
-
-        writeData->setBuffer(bufferId, newBuffer);
+        writeData->getBufferCreate(bufferId,
+                                   pStream->getControlledStream(),
+                                   streamPosition,
+                                   bufferLength,
+                                   wordSize,
+                                   endianType);
 
         return (std::uint32_t)bufferLength;
     }

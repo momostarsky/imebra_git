@@ -568,6 +568,8 @@ TEST(acseTest, sendPayload)
     std::vector<std::string> scpAbstractSyntaxes;
     std::thread scp(imebra::tests::scpThread, std::ref(scpName), std::ref(scpPresentationContexts), std::ref(readSCP), std::ref(writeSCP), std::ref(scpAbstractSyntaxes), std::ref(scpAbstractSyntaxes));
 
+    try{
+
     {
         AssociationSCU scu("SCU", scpName, 1, 1, scuPresentationContexts, readSCU, writeSCU, 0);
 
@@ -582,7 +584,7 @@ TEST(acseTest, sendPayload)
 
             command.addDataSet(dataset0);
 
-            MutableDataSet payload;
+            MutableDataSet payload(scu.getTransferSyntax("1.2.840.10008.1.1"));
             {
                 WritingDataHandlerNumeric writing = payload.getWritingDataHandlerRaw(TagId(tagId_t::PixelData_7FE0_0010), 0, tagVR_t::OB);
                 writing.setSize(payloadSize);
@@ -612,9 +614,15 @@ TEST(acseTest, sendPayload)
                 EXPECT_EQ(reading.getSize(), (payloadSize + 1) & 0xfffffffe);
             }
         }
-
         scu.release();
     }
+
+    }
+    catch(std::runtime_error& e)
+    {
+        std::cout << e.what() << std::endl;
+    }
+
 
     scp.join();
 }
@@ -635,7 +643,7 @@ void scuThread(AssociationSCU& scu, std::uint16_t firstMessageId, size_t numberO
 
         command.addDataSet(dataset0);
 
-        MutableDataSet payload;
+        MutableDataSet payload("1.2.840.10008.1.2.1");
         {
             WritingDataHandlerNumeric writing(payload.getWritingDataHandlerRaw(TagId(tagId_t::PixelData_7FE0_0010), 0, tagVR_t::OB));
             writing.setSize(payloadSize);

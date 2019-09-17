@@ -55,15 +55,11 @@ std::shared_ptr<dataSet> streamCodec::read(std::shared_ptr<streamReader> pSource
 
     // Create a new dataset
     ///////////////////////////////////////////////////////////
-    std::shared_ptr<dataSet> pDestDataSet(std::make_shared<dataSet>());
+    std::shared_ptr<dataSet> pDestDataSet(std::make_shared<dataSet>("", charsetsList_t()));
 
     // Read the stream
     ///////////////////////////////////////////////////////////
     readStream(pSourceStream, pDestDataSet, maxSizeBufferLoad);
-
-    // Update the charsets in the tags
-    ///////////////////////////////////////////////////////////
-    pDestDataSet->updateTagsCharset();
 
     return pDestDataSet;
 
@@ -83,10 +79,6 @@ std::shared_ptr<dataSet> streamCodec::read(std::shared_ptr<streamReader> pSource
 void streamCodec::write(std::shared_ptr<streamWriter> pDestStream, std::shared_ptr<dataSet> pSourceDataSet) const
 {
     IMEBRA_FUNCTION_START();
-
-    // Update charsets tag
-    ///////////////////////////////////////////////////////////
-    pSourceDataSet->updateCharsetTag();
 
     pDestStream->resetOutBitsBuffer();
     writeStream(pDestStream, pSourceDataSet);

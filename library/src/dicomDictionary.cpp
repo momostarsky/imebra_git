@@ -41,9 +41,9 @@ std::string DicomDictionary::getTagName(const TagId& id)
     IMEBRA_FUNCTION_START();
 
     std::wstring name = implementation::dicomDictionary::getDicomDictionary()->getTagName(id.getGroupId(), id.getTagId());
-    implementation::charsetsList::tCharsetsList charsets;
+    charsetsList_t charsets;
     charsets.push_back("ISO 2022 IR 6");
-    return implementation::dicomConversion::convertFromUnicode(name, &charsets);
+    return implementation::dicomConversion::convertFromUnicode(name, charsets);
 
     IMEBRA_FUNCTION_END_LOG();
 }

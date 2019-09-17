@@ -84,7 +84,8 @@ lut::lut(std::shared_ptr<handlers::readingDataHandlerNumericBase> pDescriptor, s
     /////////////////////////////////////////////////////////////
     if(m_bits <= 8 && pData->getUnitSize() == 2)
     {
-        std::shared_ptr<buffer> temporaryBuffer(std::make_shared<buffer>());
+        std::shared_ptr<const charsetsList_t> pCharsets(std::make_shared<const charsetsList_t>());
+        std::shared_ptr<buffer> temporaryBuffer(std::make_shared<buffer>(pCharsets));
         std::shared_ptr<handlers::writingDataHandlerNumericBase> writingHandler(temporaryBuffer->getWritingDataHandlerNumeric(tagVR_t::OB, m_size));
         for(size_t scanData(0); scanData != pData->getSize(); ++scanData)
         {

@@ -657,7 +657,7 @@ public:
 
     /// \brief Construct an empty DICOM dataset with unspecified transfer syntax
     ///        (which represents the default value "1.2.840.10008.1.2" or
-    ///        "Implicit VR little endian") and charset "ISO 2022 IR 6".
+    ///        "Implicit VR little endian") and default charset ("ISO 2022 IR 6").
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit MutableDataSet();

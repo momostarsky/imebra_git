@@ -6,14 +6,14 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
 /*! \file dataHandlerStringUnicode.h
     \brief Declaration of the base class used by the string handlers that need to work
-	        with different charsets.
+            with different charsets.
 
 */
 
@@ -22,7 +22,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #include "charsetConversionImpl.h"
 #include "dataHandlerImpl.h"
-#include "charsetsListImpl.h"
 #include <memory>
 #include <vector>
 #include <string>
@@ -47,7 +46,7 @@ namespace handlers
 class readingDataHandlerStringUnicode : public readingDataHandler
 {
 public:
-    readingDataHandlerStringUnicode(const memory& parseMemory, const charsetsList::tCharsetsList& charsets, tagVR_t dataType, const wchar_t separator, const std::uint8_t paddingByte);
+    readingDataHandlerStringUnicode(const memory& parseMemory, const std::shared_ptr<const charsetsList_t>& pCharsets, tagVR_t dataType, const wchar_t separator, const std::uint8_t paddingByte);
 
     // Get the data element as a signed long
     ///////////////////////////////////////////////////////////
@@ -82,7 +81,7 @@ protected:
 class writingDataHandlerStringUnicode : public writingDataHandler
 {
 public:
-    writingDataHandlerStringUnicode(const std::shared_ptr<buffer>& pBuffer, const charsetsList::tCharsetsList& charsets, tagVR_t dataType, const wchar_t separator, const size_t unitSize, const size_t maxSize, const std::uint8_t paddingByte);
+    writingDataHandlerStringUnicode(const std::shared_ptr<buffer>& pBuffer, const std::shared_ptr<const charsetsList_t>& pCharsets, tagVR_t dataType, const wchar_t separator, const size_t unitSize, const size_t maxSize, const std::uint8_t paddingByte);
 
     ~writingDataHandlerStringUnicode();
 
@@ -118,7 +117,7 @@ protected:
 
     std::vector<std::wstring> m_strings;
 
-    charsetsList::tCharsetsList m_charsets;
+    const std::shared_ptr<const charsetsList_t> m_pCharsets;
 
     wchar_t m_separator;
     size_t m_unitSize;

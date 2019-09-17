@@ -21,20 +21,31 @@ namespace imebra
 namespace implementation
 {
 
-std::string dicomConversion::convertFromUnicode(const std::wstring& unicodeString, charsetsList::tCharsetsList* pCharsets)
+std::string dicomConversion::convertFromUnicode(const std::wstring& unicodeString, const charsetsList_t& charsets)
 {
     IMEBRA_FUNCTION_START();
 
+    if(unicodeString.empty())
+    {
+        return "";
+    }
+
     // Check for the dicom charset's name
     ///////////////////////////////////////////////////////////
-    if(pCharsets->empty())
+    if(charsets.empty())
     {
-        IMEBRA_THROW(std::logic_error, "The charsets list must be set before converting from unicode");
+        std::unique_ptr<defaultCharsetConversion> localCharsetConversion(new defaultCharsetConversion("ISO_IR 6"));
+        std::string returnString =  localCharsetConversion->fromUnicode(unicodeString);
+        if(returnString.empty())
+        {
+            throw;
+        }
+        return returnString;
     }
 
     // Setup the conversion objects
     ///////////////////////////////////////////////////////////
-    std::unique_ptr<defaultCharsetConversion> localCharsetConversion(new defaultCharsetConversion(pCharsets->front()));
+    std::unique_ptr<defaultCharsetConversion> localCharsetConversion(new defaultCharsetConversion(charsets.front()));
 
     // Get the escape sequences from the unicode conversion
     //  engine
@@ -87,38 +98,22 @@ std::string dicomConversion::convertFromUnicode(const std::wstring& unicodeStrin
             continue;
         }
 
-        // Find the escape sequence
-        ///////////////////////////////////////////////////////////
-        for(const std::string& sequence: orderedEscapes)
+        for(const std::string& dicomCharset: charsets)
         {
             try
             {
-                const std::string& dicomCharset = escapes.find(sequence)->second;
                 std::unique_ptr<defaultCharsetConversion> testEscapeSequence(new defaultCharsetConversion(dicomCharset));
                 std::string convertedChar(testEscapeSequence->fromUnicode(code));
                 if(!convertedChar.empty())
                 {
-                    rawString += sequence;
+                    rawString += testEscapeSequence->getDictionary().getCharsetInformation(dicomCharset).m_escapeSequence;
                     rawString += convertedChar;
 
                     localCharsetConversion.reset(testEscapeSequence.release());
-
-                    // Add the dicom charset to the charsets
-                    ///////////////////////////////////////////////////////////
-                    bool bAlreadyUsed = false;
-                    for(charsetsList::tCharsetsList::const_iterator scanUsedCharsets = pCharsets->begin(); scanUsedCharsets != pCharsets->end(); ++scanUsedCharsets)
-                    {
-                        if(*scanUsedCharsets == dicomCharset)
-                        {
-                            bAlreadyUsed = true;
-                            break;
-                        }
-                    }
-                    if(!bAlreadyUsed)
-                    {
-                        pCharsets->push_back(dicomCharset);
-                    }
-                    break;
+                }
+                else
+                {
+                    throw;
                 }
             }
             catch(CharsetConversionNoSupportedTableError)
@@ -134,7 +129,7 @@ std::string dicomConversion::convertFromUnicode(const std::wstring& unicodeStrin
 
 }
 
-std::wstring dicomConversion::convertToUnicode(const std::string& value, const charsetsList::tCharsetsList& charsets)
+std::wstring dicomConversion::convertToUnicode(const std::string& value, const charsetsList_t& charsets)
 {
     IMEBRA_FUNCTION_START();
 

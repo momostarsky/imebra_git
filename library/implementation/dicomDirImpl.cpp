@@ -334,12 +334,8 @@ void directoryRecord::checkCircularReference(directoryRecord* pStartRecord)
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 
-dicomDir::dicomDir(): m_pDataSet(std::make_shared<dataSet>())
+dicomDir::dicomDir(): m_pDataSet(std::make_shared<dataSet>("1.2.840.10008.1.2.1", charsetsList_t()))
 {
-    // Adjust the transfer syntax
-    /////////////////////////////
-    m_pDataSet->setString(0x2, 0, 0x10, 0, "1.2.840.10008.1.2.1");
-
     // Adjust the version
     /////////////////////
     {
@@ -353,7 +349,7 @@ dicomDir::dicomDir(): m_pDataSet(std::make_shared<dataSet>())
     ///////////////////////////
     m_pDataSet->setString(0x2, 0, 0x2, 0, "1.2.840.10008.1.3.10");
 
-    implementation::charsetsList::tCharsetsList list;
+    charsetsList_t list;
     list.push_back("ISO 2022 IR 6");
     m_pDataSet->setCharsetsList(list);
 }
@@ -375,7 +371,7 @@ dicomDir::dicomDir(std::shared_ptr<dataSet> pDataSet):
 
     if(m_pDataSet.get() == 0)
     {
-        m_pDataSet = std::make_shared<dataSet>();
+        m_pDataSet = std::make_shared<dataSet>("1.2.840.10008.1.2.1", charsetsList_t());
     }
 
     // Get the DICOMDIR sequence

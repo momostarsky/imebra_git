@@ -73,7 +73,7 @@ myDataSet->setUnicodeString(L"<-"); // :-)
 class readingDataHandlerStringPN : public readingDataHandlerStringUnicode
 {
 public:
-    readingDataHandlerStringPN(const memory& parseMemory, const charsetsList::tCharsetsList& charsets);
+    readingDataHandlerStringPN(const memory& parseMemory, const std::shared_ptr<const charsetsList_t>& pCharsets);
 
     virtual std::shared_ptr<patientName> getPatientName(const size_t index) const;
 
@@ -109,7 +109,7 @@ private:
 class writingDataHandlerStringPN: public writingDataHandlerStringUnicode
 {
 public:
-    writingDataHandlerStringPN(const std::shared_ptr<buffer>& pBuffer, const charsetsList::tCharsetsList& charsets);
+    writingDataHandlerStringPN(const std::shared_ptr<buffer>& pBuffer, const std::shared_ptr<const charsetsList_t>& pCharsets);
 
     virtual void setPatientName(const size_t index, const std::shared_ptr<const patientName>& pPatientName) override;
 

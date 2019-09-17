@@ -147,7 +147,8 @@ std::shared_ptr<handlers::readingDataHandlerNumericBase> image::getReadingDataHa
     ///////////////////////////////////////////////////////////
     if(m_buffer.get() == 0)
     {
-        buffer temporaryBuffer;
+        const std::shared_ptr<const charsetsList_t> pCharsets(std::make_shared<const charsetsList_t>());
+        buffer temporaryBuffer(pCharsets);
         {
             std::shared_ptr<handlers::writingDataHandler> imageHandler(temporaryBuffer.getWritingDataHandler(m_bufferDataType, m_width * m_height * m_channelsNumber));
         }
@@ -168,7 +169,8 @@ std::shared_ptr<handlers::writingDataHandlerNumericBase> image::getWritingDataHa
     ///////////////////////////////////////////////////////////
     if(m_buffer == 0)
     {
-        m_buffer = std::make_shared<buffer>();
+        const std::shared_ptr<const charsetsList_t> pCharsets(std::make_shared<const charsetsList_t>());
+        m_buffer = std::make_shared<buffer>(pCharsets);
     }
 
     std::shared_ptr<handlers::writingDataHandler> imageHandler(m_buffer->getWritingDataHandler(m_bufferDataType, m_width * m_height * m_channelsNumber));

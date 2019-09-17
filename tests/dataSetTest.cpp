@@ -436,7 +436,6 @@ TEST(dataSetTest, charsetNotNecessaryTest)
     MutableMemory streamMemory;
 
     charsetsList_t charsets;
-    charsets.push_back("ISO_IR 6");
     MutableDataSet testDataSet(uidExplicitVRLittleEndian_1_2_840_10008_1_2_1, charsets);
     EXPECT_EQ("1.2.840.10008.1.2.1", testDataSet.getString(TagId(tagId_t::TransferSyntaxUID_0002_0010), 0));
 
@@ -463,7 +462,7 @@ TEST(dataSetTest, sequenceNoCharsetTest)
     MutableMemory streamMemory;
 
     charsetsList_t charsets;
-    charsets.push_back("ISO_IR 6");
+    charsets.push_back("ISO_IR 192");
     MutableDataSet testDataSet("1.2.840.10008.1.2.1", charsets);
 
     testDataSet.setString(TagId(tagId_t::PatientAge_0010_1010), "012Y");

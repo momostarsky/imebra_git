@@ -27,7 +27,7 @@ namespace  implementation
 //////////////////////////////////////////////////////////////////
 dimseCommandBase::dimseCommandBase(const std::string& abstractSyntax,
                                    std::shared_ptr<dataSet> pPayload):
-    associationMessage(abstractSyntax, std::make_shared<dataSet>("1.2.840.10008.1.2"), pPayload)
+    associationMessage(abstractSyntax, std::make_shared<dataSet>("1.2.840.10008.1.2", charsetsList_t()), pPayload)
 {
     // Set the "payload present" flag
     m_pCommand->setUnsignedLong(0x0, 0, 0x0800, 0, m_pPayload == nullptr ? 0x101 : 0x0);

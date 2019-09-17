@@ -24,7 +24,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "dataHandlerNumericImpl.h"
 #include "../include/imebra/definitions.h"
 
-#include "charsetsListImpl.h"
 #include <mutex>
 
 namespace imebra
@@ -78,7 +77,7 @@ public:
     /// \brief Constructor.
     ///
     ///////////////////////////////////////////////////////////
-    buffer();
+    buffer(const std::shared_ptr<const charsetsList_t>& pCharsets);
 
     /// \brief Constructor. Initialize the buffer object and
     ///         declare the buffer's content on demand.
@@ -103,7 +102,8 @@ public:
         size_t bufferPosition,
         size_t bufferLength,
         size_t wordLength,
-        streamController::tByteOrdering endianType);
+        streamController::tByteOrdering endianType,
+        const std::shared_ptr<const charsetsList_t>& pCharsets);
 
 
     //@}
@@ -243,74 +243,7 @@ public:
 
     //@}
 
-    void commit(std::shared_ptr<memory> newMemory, const charsetsList::tCharsetsList& newCharsetsList);
-
     void commit(std::shared_ptr<memory> newMemory);
-
-    ///////////////////////////////////////////////////////////
-    /// \name Charsets
-    ///
-    ///////////////////////////////////////////////////////////
-    //@{
-
-    /// \brief Defines the charsets that should be used by
-    ///         the object.
-    ///
-    /// The valid charsets are:
-    /// - ""
-    /// - "ISO_IR 6"
-    /// - "ISO_IR 100"
-    /// - "ISO_IR 101"
-    /// - "ISO_IR 109"
-    /// - "ISO_IR 110"
-    /// - "ISO_IR 144"
-    /// - "ISO_IR 127"
-    /// - "ISO_IR 126"
-    /// - "ISO_IR 138"
-    /// - "ISO_IR 148"
-    /// - "ISO_IR 13"
-    /// - "ISO_IR 166"
-    /// - "ISO 2022 IR 6"
-    /// - "ISO 2022 IR 100"
-    /// - "ISO 2022 IR 101"
-    /// - "ISO 2022 IR 109"
-    /// - "ISO 2022 IR 110"
-    /// - "ISO 2022 IR 144"
-    /// - "ISO 2022 IR 127"
-    /// - "ISO 2022 IR 126"
-    /// - "ISO 2022 IR 138"
-    /// - "ISO 2022 IR 148"
-    /// - "ISO 2022 IR 13"
-    /// - "ISO 2022 IR 166"
-    /// - "ISO 2022 IR 87"
-    /// - "ISO 2022 IR 159"
-    /// - "ISO 2022 IR 149"
-    /// - "ISO_IR 192" (UTF-8)
-    /// - "GB18030"
-    ///
-    /// @param pCharsetsList  a list of charsets that can be
-    ///                        used by the dicom object.
-    ///                       The default charsets must be
-    ///                        the first item in the list
-    ///
-    ///////////////////////////////////////////////////////////
-    virtual void setCharsetsList(const charsetsList::tCharsetsList& charsets);
-
-    /// \brief Retrieve the charsets used by the dicom object.
-    ///
-    /// If during the operation an error is detected (diffetent
-    ///  objects use different default charsets) then
-    ///  the exception charsetListExceptionDiffDefault is
-    ///  thrown.
-    ///
-    /// @param pCharsetsList  a pointer to a list that will
-    ///                        be filled with the used
-    ///                        charsets
-    ///
-    ///////////////////////////////////////////////////////////
-    virtual void getCharsetsList(charsetsList::tCharsetsList* pCharsetsList) const;
-
-    //@}
 
 protected:
 
@@ -359,7 +292,7 @@ protected:
 private:
     // Charset list
     ///////////////////////////////////////////////////////////
-    charsetsList::tCharsetsList m_charsetsList;
+    std::shared_ptr<const charsetsList_t> m_pCharsetsList;
 
 };
 

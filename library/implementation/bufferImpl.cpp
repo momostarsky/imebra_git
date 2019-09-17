@@ -42,6 +42,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "dataHandlerTimeImpl.h"
 #include "dicomDictImpl.h"
 #include "../include/imebra/exceptions.h"
+#include "../include/imebra/definitions.h"
 
 #include <vector>
 #include <string.h>
@@ -76,11 +77,12 @@ namespace implementation
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-buffer::buffer():
+buffer::buffer(const std::shared_ptr<const charsetsList_t>& pCharsets):
     m_originalBufferPosition(0),
     m_originalBufferLength(0),
     m_originalWordLength(1),
-    m_originalEndianType(streamController::lowByteEndian)
+    m_originalEndianType(streamController::lowByteEndian),
+    m_pCharsetsList(pCharsets)
 {
 }
 
@@ -99,12 +101,14 @@ buffer::buffer(
         size_t bufferPosition,
         size_t bufferLength,
         size_t wordLength,
-        streamController::tByteOrdering endianType):
+        streamController::tByteOrdering endianType,
+        const std::shared_ptr<const charsetsList_t>& pCharsets):
         m_originalStream(originalStream),
         m_originalBufferPosition(bufferPosition),
         m_originalBufferLength(bufferLength),
         m_originalWordLength(wordLength),
-        m_originalEndianType(endianType)
+        m_originalEndianType(endianType),
+        m_pCharsetsList(pCharsets)
 {
 }
 
@@ -237,22 +241,22 @@ std::shared_ptr<handlers::readingDataHandler> buffer::getReadingDataHandler(tagV
         return std::make_shared<handlers::readingDataHandlerStringIS>(*localMemory);
 
     case tagVR_t::LO:
-        return std::make_shared<handlers::readingDataHandlerStringLO>(*localMemory, m_charsetsList);
+        return std::make_shared<handlers::readingDataHandlerStringLO>(*localMemory, m_pCharsetsList);
 
     case tagVR_t::LT:
-        return std::make_shared<handlers::readingDataHandlerStringLT>(*localMemory, m_charsetsList);
+        return std::make_shared<handlers::readingDataHandlerStringLT>(*localMemory, m_pCharsetsList);
 
     case tagVR_t::PN:
-        return std::make_shared<handlers::readingDataHandlerStringPN>(*localMemory, m_charsetsList);
+        return std::make_shared<handlers::readingDataHandlerStringPN>(*localMemory, m_pCharsetsList);
 
     case tagVR_t::SH:
-        return std::make_shared<handlers::readingDataHandlerStringSH>(*localMemory, m_charsetsList);
+        return std::make_shared<handlers::readingDataHandlerStringSH>(*localMemory, m_pCharsetsList);
 
     case tagVR_t::ST:
-        return std::make_shared<handlers::readingDataHandlerStringST>(*localMemory, m_charsetsList);
+        return std::make_shared<handlers::readingDataHandlerStringST>(*localMemory, m_pCharsetsList);
 
     case tagVR_t::UC:
-        return std::make_shared<handlers::readingDataHandlerStringUC>(*localMemory, m_charsetsList);
+        return std::make_shared<handlers::readingDataHandlerStringUC>(*localMemory, m_pCharsetsList);
 
     case tagVR_t::UI:
         return std::make_shared<handlers::readingDataHandlerStringUI>(*localMemory);
@@ -261,7 +265,7 @@ std::shared_ptr<handlers::readingDataHandler> buffer::getReadingDataHandler(tagV
         return std::make_shared<handlers::readingDataHandlerStringUR>(*localMemory);
 
     case tagVR_t::UT:
-        return std::make_shared< handlers::readingDataHandlerStringUT>(*localMemory, m_charsetsList);
+        return std::make_shared< handlers::readingDataHandlerStringUT>(*localMemory, m_pCharsetsList);
 
     case tagVR_t::OB:
         return std::make_shared<handlers::readingDataHandlerNumeric<std::uint8_t> >(localMemory, tagVR);
@@ -355,28 +359,28 @@ std::shared_ptr<handlers::writingDataHandler> buffer::getWritingDataHandler(tagV
         return std::make_shared<handlers::writingDataHandlerStringUR>(shared_from_this());
 
     case tagVR_t::LO:
-        return std::make_shared<handlers::writingDataHandlerStringLO>(shared_from_this(), m_charsetsList);
+        return std::make_shared<handlers::writingDataHandlerStringLO>(shared_from_this(), m_pCharsetsList);
 
     case tagVR_t::LT:
-        return std::make_shared<handlers::writingDataHandlerStringLT>(shared_from_this(), m_charsetsList);
+        return std::make_shared<handlers::writingDataHandlerStringLT>(shared_from_this(), m_pCharsetsList);
 
     case tagVR_t::PN:
-        return std::make_shared<handlers::writingDataHandlerStringPN>(shared_from_this(), m_charsetsList);
+        return std::make_shared<handlers::writingDataHandlerStringPN>(shared_from_this(), m_pCharsetsList);
 
     case tagVR_t::SH:
-        return std::make_shared<handlers::writingDataHandlerStringSH>(shared_from_this(), m_charsetsList);
+        return std::make_shared<handlers::writingDataHandlerStringSH>(shared_from_this(), m_pCharsetsList);
 
     case tagVR_t::ST:
-        return std::make_shared<handlers::writingDataHandlerStringST>(shared_from_this(), m_charsetsList);
+        return std::make_shared<handlers::writingDataHandlerStringST>(shared_from_this(), m_pCharsetsList);
 
     case tagVR_t::UC:
-        return std::make_shared<handlers::writingDataHandlerStringUC>(shared_from_this(), m_charsetsList);
+        return std::make_shared<handlers::writingDataHandlerStringUC>(shared_from_this(), m_pCharsetsList);
 
     case tagVR_t::UI:
         return std::make_shared<handlers::writingDataHandlerStringUI>(shared_from_this());
 
     case tagVR_t::UT:
-        return std::make_shared< handlers::writingDataHandlerStringUT>(shared_from_this(), m_charsetsList);
+        return std::make_shared< handlers::writingDataHandlerStringUT>(shared_from_this(), m_pCharsetsList);
 
     case tagVR_t::OB:
         return std::make_shared<handlers::writingDataHandlerNumeric<std::uint8_t> >(shared_from_this(), size, tagVR);
@@ -644,28 +648,6 @@ size_t buffer::getBufferSizeBytes() const
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void buffer::commit(std::shared_ptr<memory> newMemory, const charsetsList::tCharsetsList& newCharsetsList)
-{
-    IMEBRA_FUNCTION_START();
-
-    std::lock_guard<std::mutex> lock(m_mutex);
-
-    m_memory.clear();
-    m_memory.push_back(newMemory);
-    m_originalStream.reset();
-    m_charsetsList = newCharsetsList;
-
-    IMEBRA_FUNCTION_END();
-}
-
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-// Commit the changes made by copyBack
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
 void buffer::commit(std::shared_ptr<memory> newMemory)
 {
     IMEBRA_FUNCTION_START();
@@ -675,47 +657,6 @@ void buffer::commit(std::shared_ptr<memory> newMemory)
     m_memory.clear();
     m_memory.push_back(newMemory);
     m_originalStream.reset();
-    m_charsetsList.clear();
-
-    IMEBRA_FUNCTION_END();
-}
-
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Set the charsets used by the buffer
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-void buffer::setCharsetsList(const charsetsList::tCharsetsList& charsets)
-{
-    IMEBRA_FUNCTION_START();
-
-    std::lock_guard<std::mutex> lock(m_mutex);
-    m_charsetsList = charsets;
-
-    IMEBRA_FUNCTION_END();
-}
-
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Retrieve the charsets used by the buffer
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-void buffer::getCharsetsList(charsetsList::tCharsetsList* pCharsetsList) const
-{
-    IMEBRA_FUNCTION_START();
-
-    std::lock_guard<std::mutex> lock(m_mutex);
-    pCharsetsList->insert(pCharsetsList->end(), m_charsetsList.begin(), m_charsetsList.end());
 
     IMEBRA_FUNCTION_END();
 }

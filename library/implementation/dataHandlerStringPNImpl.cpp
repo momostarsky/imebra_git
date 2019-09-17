@@ -43,8 +43,8 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 
-readingDataHandlerStringPN::readingDataHandlerStringPN(const memory& parseMemory, const charsetsList::tCharsetsList& charsets):
-    readingDataHandlerStringUnicode(parseMemory, charsets, tagVR_t::PN, L'\\', 0x20)
+readingDataHandlerStringPN::readingDataHandlerStringPN(const memory& parseMemory, const std::shared_ptr<const charsetsList_t>& pCharsets):
+    readingDataHandlerStringUnicode(parseMemory, pCharsets, tagVR_t::PN, L'\\', 0x20)
 {
 }
 
@@ -61,8 +61,8 @@ std::shared_ptr<unicodePatientName> readingDataHandlerStringPN::getUnicodePatien
 
 
 
-writingDataHandlerStringPN::writingDataHandlerStringPN(const std::shared_ptr<buffer>& pBuffer, const charsetsList::tCharsetsList& charsets):
-    writingDataHandlerStringUnicode(pBuffer, charsets, tagVR_t::PN, L'\\', 0, 0, 0x20)
+writingDataHandlerStringPN::writingDataHandlerStringPN(const std::shared_ptr<buffer>& pBuffer, const std::shared_ptr<const charsetsList_t>& pCharsets):
+    writingDataHandlerStringUnicode(pBuffer, pCharsets, tagVR_t::PN, L'\\', 0, 0, 0x20)
 {
 }
 

@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -66,34 +66,34 @@ public:
     virtual void copyTo(float* pMemory, size_t memorySize) const = 0;
     virtual void copyTo(double* pMemory, size_t memorySize) const = 0;
 
-	virtual void copyToInt32Interleaved(std::int32_t* pDest,
-										std::uint32_t destSubSampleX,
-										std::uint32_t destSubSampleY,
-										std::uint32_t sourceStartCol,
-										std::uint32_t sourceStartRow,
-										std::uint32_t sourceEndCol,
-										std::uint32_t sourceEndRow,
-										std::uint32_t sourceStartChannel,
-										std::uint32_t sourceWidth,
-										std::uint32_t sourceHeight,
-										std::uint32_t sourceNumChannels) const = 0;
+    virtual void copyToInt32Interleaved(std::int32_t* pDest,
+                                        std::uint32_t destSubSampleX,
+                                        std::uint32_t destSubSampleY,
+                                        std::uint32_t sourceStartCol,
+                                        std::uint32_t sourceStartRow,
+                                        std::uint32_t sourceEndCol,
+                                        std::uint32_t sourceEndRow,
+                                        std::uint32_t sourceStartChannel,
+                                        std::uint32_t sourceWidth,
+                                        std::uint32_t sourceHeight,
+                                        std::uint32_t sourceNumChannels) const = 0;
 
-	/// \brief Returns truen if the buffer's elements are
-	///         signed, false otherwise.
-	///
-	/// @return true if the buffer's elements are signed,
-	///          or false otherwise
-	///
-	///////////////////////////////////////////////////////////
-	virtual bool isSigned() const = 0;
+    /// \brief Returns truen if the buffer's elements are
+    ///         signed, false otherwise.
+    ///
+    /// @return true if the buffer's elements are signed,
+    ///          or false otherwise
+    ///
+    ///////////////////////////////////////////////////////////
+    virtual bool isSigned() const = 0;
 
     virtual bool isFloat() const = 0;
 
     virtual size_t getUnitSize() const = 0;
 
 protected:
-	// Memory buffer
-	///////////////////////////////////////////////////////////
+    // Memory buffer
+    ///////////////////////////////////////////////////////////
     std::shared_ptr<const memory> m_pMemory;
 };
 
@@ -172,13 +172,13 @@ public:
 
     }
 
-	virtual bool isSigned() const
-	{
+    virtual bool isSigned() const
+    {
         IMEBRA_FUNCTION_START();
 
-		dataHandlerType firstValue((dataHandlerType) -1);
-		dataHandlerType secondValue((dataHandlerType) 0);
-		return firstValue < secondValue;
+        dataHandlerType firstValue((dataHandlerType) -1);
+        dataHandlerType secondValue((dataHandlerType) 0);
+        return firstValue < secondValue;
 
         IMEBRA_FUNCTION_END();
     }
@@ -201,10 +201,10 @@ public:
         IMEBRA_FUNCTION_END();
     }
 
-	// Retrieve the data element as a signed long
-	///////////////////////////////////////////////////////////
+    // Retrieve the data element as a signed long
+    ///////////////////////////////////////////////////////////
     virtual std::int32_t getSignedLong(const size_t index) const
-	{
+    {
         IMEBRA_FUNCTION_START();
 
         if(index >= getSize())
@@ -216,10 +216,10 @@ public:
         IMEBRA_FUNCTION_END();
     }
 
-	// Retrieve the data element an unsigned long
-	///////////////////////////////////////////////////////////
+    // Retrieve the data element an unsigned long
+    ///////////////////////////////////////////////////////////
     virtual std::uint32_t getUnsignedLong(const size_t index) const
-	{
+    {
         IMEBRA_FUNCTION_START();
 
         if(index >= getSize())
@@ -231,10 +231,10 @@ public:
         IMEBRA_FUNCTION_END();
     }
 
-	// Retrieve the data element as a double
-	///////////////////////////////////////////////////////////
+    // Retrieve the data element as a double
+    ///////////////////////////////////////////////////////////
     virtual double getDouble(const size_t index) const
-	{
+    {
         IMEBRA_FUNCTION_START();
 
         if(index >= getSize())
@@ -246,10 +246,10 @@ public:
         IMEBRA_FUNCTION_END();
     }
 
-	// Retrieve the data element as a string
-	///////////////////////////////////////////////////////////
+    // Retrieve the data element as a string
+    ///////////////////////////////////////////////////////////
     virtual std::string getString(const size_t index) const
-	{
+    {
         IMEBRA_FUNCTION_START();
 
         if(index >= getSize())
@@ -269,31 +269,31 @@ public:
         {
             convStream << (((const dataHandlerType*)m_pMemory->data())[index]);
         }
-		return convStream.str();
+        return convStream.str();
 
-		IMEBRA_FUNCTION_END();
-	}
+        IMEBRA_FUNCTION_END();
+    }
 
-	// Retrieve the data element as a unicode string
-	///////////////////////////////////////////////////////////
+    // Retrieve the data element as a unicode string
+    ///////////////////////////////////////////////////////////
     virtual std::wstring getUnicodeString(const size_t index) const
-	{
+    {
         IMEBRA_FUNCTION_START();
 
         std::string ansiString = getString(index);
 
-        charsetsList::tCharsetsList charsets;
+        charsetsList_t charsets;
         charsets.push_back("ISO_IR 6");
 
         return dicomConversion::convertToUnicode(ansiString, charsets);
 
-		IMEBRA_FUNCTION_END();
-	}
+        IMEBRA_FUNCTION_END();
+    }
 
-	// Retrieve the buffer's size in elements
-	///////////////////////////////////////////////////////////
+    // Retrieve the buffer's size in elements
+    ///////////////////////////////////////////////////////////
     virtual size_t getSize() const
-	{
+    {
         IMEBRA_FUNCTION_START();
 
         if(m_pMemory.get() == 0)
@@ -302,20 +302,20 @@ public:
         }
         return m_pMemory->size() / sizeof(dataHandlerType);
 
-		IMEBRA_FUNCTION_END();
-	}
+        IMEBRA_FUNCTION_END();
+    }
 
     virtual void copyTo(std::uint8_t* pMemory, size_t memorySize) const
-	{
+    {
         IMEBRA_FUNCTION_START();
 
-		copyToMemory(pMemory, memorySize);
+        copyToMemory(pMemory, memorySize);
 
         IMEBRA_FUNCTION_END();
     }
 
     virtual void copyTo(std::int8_t* pMemory, size_t memorySize) const
-	{
+    {
         IMEBRA_FUNCTION_START();
 
         copyToMemory(pMemory, memorySize);
@@ -324,7 +324,7 @@ public:
     }
 
     virtual void copyTo(std::uint16_t* pMemory, size_t memorySize) const
-	{
+    {
         IMEBRA_FUNCTION_START();
 
         copyToMemory(pMemory, memorySize);
@@ -333,7 +333,7 @@ public:
     }
 
     virtual void copyTo(std::int16_t* pMemory, size_t memorySize) const
-	{
+    {
         IMEBRA_FUNCTION_START();
 
         copyToMemory(pMemory, memorySize);
@@ -342,16 +342,16 @@ public:
     }
 
     virtual void copyTo(std::uint32_t* pMemory, size_t memorySize) const
-	{
+    {
         IMEBRA_FUNCTION_START();
 
-		copyToMemory(pMemory, memorySize);
+        copyToMemory(pMemory, memorySize);
 
         IMEBRA_FUNCTION_END();
     }
 
     virtual void copyTo(std::int32_t* pMemory, size_t memorySize) const
-	{
+    {
         IMEBRA_FUNCTION_START();
 
         copyToMemory(pMemory, memorySize);
@@ -360,7 +360,7 @@ public:
     }
 
     virtual void copyTo(float* pMemory, size_t memorySize) const
-	{
+    {
         IMEBRA_FUNCTION_START();
 
         copyToMemory(pMemory, memorySize);
@@ -369,7 +369,7 @@ public:
     }
 
     virtual void copyTo(double* pMemory, size_t memorySize) const
-	{
+    {
         IMEBRA_FUNCTION_START();
 
         copyToMemory(pMemory, memorySize);
@@ -378,60 +378,60 @@ public:
     }
 
 
-	/// \brief Copy the buffer controlled by the handler into
-	///         an array of std::int32_t values, considering that
-	///         the destination buffer could be subsampled
-	///
-	/// The destination buffer is supposed to have the
-	///  information related to a single channel.
-	/// @param pDest        a pointer to the destination array
-	///                      of std::int32_t values
-	/// @param destSubSampleX the horizontal subsamplig
-	///                      factor of the destination buffer
-	///                      (1=not subsampled, 2=subsampled)
-	/// @param destSubSampleY the vertical subsamplig
-	///                      factor of the destination buffer
-	///                      (1=not subsampled, 2=subsampled)
-	/// @param sourceStartCol the horizontal coordinate of the
-	///                      top left corner of the source
-	///                      rectangle
-	/// @param sourceStartRow the vertical coordinate of the
-	///                      top left corner of the source
-	///                      rectangle
-	/// @param sourceEndCol   the horizontal coordinate of the
-	///                      bottom right corner of the
-	///                      source rectangle
-	/// @param sourceEndRow   the vertical coordinate of the
-	///                      bottom right corner of the
-	///                      source rectangle
-	/// @param sourceStartChannel the source channel to be
-	///                      copied
-	/// @param sourceWidth  the source buffer's width in
-	///                      pixels
-	/// @param sourceHeight the source buffer's height in
-	///                      pixels
-	/// @param sourceNumChannels the number of channels in the
-	///                      source buffer
-	///
-	///////////////////////////////////////////////////////////
-	virtual void copyToInt32Interleaved(std::int32_t* pDest,
-										std::uint32_t destSubSampleX,
-										std::uint32_t destSubSampleY,
-										std::uint32_t sourceStartCol,
-										std::uint32_t sourceStartRow,
-										std::uint32_t sourceEndCol,
-										std::uint32_t sourceEndRow,
-										std::uint32_t sourceStartChannel,
-										std::uint32_t sourceWidth,
-										std::uint32_t sourceHeight,
-										std::uint32_t sourceNumChannels) const
-	{
+    /// \brief Copy the buffer controlled by the handler into
+    ///         an array of std::int32_t values, considering that
+    ///         the destination buffer could be subsampled
+    ///
+    /// The destination buffer is supposed to have the
+    ///  information related to a single channel.
+    /// @param pDest        a pointer to the destination array
+    ///                      of std::int32_t values
+    /// @param destSubSampleX the horizontal subsamplig
+    ///                      factor of the destination buffer
+    ///                      (1=not subsampled, 2=subsampled)
+    /// @param destSubSampleY the vertical subsamplig
+    ///                      factor of the destination buffer
+    ///                      (1=not subsampled, 2=subsampled)
+    /// @param sourceStartCol the horizontal coordinate of the
+    ///                      top left corner of the source
+    ///                      rectangle
+    /// @param sourceStartRow the vertical coordinate of the
+    ///                      top left corner of the source
+    ///                      rectangle
+    /// @param sourceEndCol   the horizontal coordinate of the
+    ///                      bottom right corner of the
+    ///                      source rectangle
+    /// @param sourceEndRow   the vertical coordinate of the
+    ///                      bottom right corner of the
+    ///                      source rectangle
+    /// @param sourceStartChannel the source channel to be
+    ///                      copied
+    /// @param sourceWidth  the source buffer's width in
+    ///                      pixels
+    /// @param sourceHeight the source buffer's height in
+    ///                      pixels
+    /// @param sourceNumChannels the number of channels in the
+    ///                      source buffer
+    ///
+    ///////////////////////////////////////////////////////////
+    virtual void copyToInt32Interleaved(std::int32_t* pDest,
+                                        std::uint32_t destSubSampleX,
+                                        std::uint32_t destSubSampleY,
+                                        std::uint32_t sourceStartCol,
+                                        std::uint32_t sourceStartRow,
+                                        std::uint32_t sourceEndCol,
+                                        std::uint32_t sourceEndRow,
+                                        std::uint32_t sourceStartChannel,
+                                        std::uint32_t sourceWidth,
+                                        std::uint32_t sourceHeight,
+                                        std::uint32_t sourceNumChannels) const
+    {
         IMEBRA_FUNCTION_START();
 
         if(sourceStartCol >= sourceWidth || sourceStartRow >= sourceHeight)
-		{
-			return;
-		}
+        {
+            return;
+        }
 
         if(destSubSampleX == 1 && destSubSampleY == 1)
         {
@@ -453,7 +453,7 @@ public:
         }
 
         for(std::uint32_t scanRow = sourceStartRow; scanRow != sourceEndRow; ++scanRow)
-		{
+        {
             const dataHandlerType *pSourceRowScan = &(((const dataHandlerType*)m_pMemory->data())[(scanRow * sourceWidth + sourceStartCol) * sourceNumChannels + sourceStartChannel]);
             std::int32_t* pDestRowAddress = &pDest[(sourceEndCol - sourceStartCol) * (scanRow - sourceStartRow) / (destSubSampleY * destSubSampleX)];
 
@@ -640,10 +640,10 @@ public:
     {
         IMEBRA_FUNCTION_START();
 
-        charsetsList::tCharsetsList charsets;
+        charsetsList_t charsets;
         charsets.push_back("ISO_IR 6");
 
-        setString(index, dicomConversion::convertFromUnicode(value, &charsets));
+        setString(index, dicomConversion::convertFromUnicode(value, charsets));
 
         IMEBRA_FUNCTION_END();
     }

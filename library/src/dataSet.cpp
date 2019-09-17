@@ -21,6 +21,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "../include/imebra/streamReader.h"
 #include "../implementation/dataSetImpl.h"
 #include "../include/imebra/streamWriter.h"
+#include "../include/imebra/uidsEnumeration.h"
 #include "../implementation/dataHandlerNumericImpl.h"
 #include "../implementation/charsetConversionBaseImpl.h"
 #include "../implementation/streamWriterImpl.h"
@@ -37,10 +38,6 @@ DataSet::DataSet(const DataSet& source): m_pDataSet(getDataSetImplementation(sou
 
 DataSet::DataSet(const std::shared_ptr<imebra::implementation::dataSet>& pDataSet): m_pDataSet(pDataSet)
 {
-    if(pDataSet == 0)
-    {
-        m_pDataSet = std::make_shared<imebra::implementation::dataSet>();
-    }
 }
 
 DataSet::~DataSet()
@@ -373,32 +370,21 @@ MutableDataSet::MutableDataSet(const MutableDataSet &source): DataSet(source)
 {
 }
 
-MutableDataSet::MutableDataSet(): DataSet(std::make_shared<imebra::implementation::dataSet>())
+MutableDataSet::MutableDataSet(): DataSet(std::make_shared<imebra::implementation::dataSet>(uidImplicitVRLittleEndian_1_2_840_10008_1_2, charsetsList_t()))
 {
-    implementation::charsetsList::tCharsetsList list;
-    list.push_back("ISO 2022 IR 6");
-    getDataSetImplementation(*this)->setCharsetsList(list);
 }
 
 MutableDataSet::MutableDataSet(const std::shared_ptr<implementation::dataSet>& pDataSet): DataSet(pDataSet)
 {
 }
 
-MutableDataSet::MutableDataSet(const std::string &transferSyntax): DataSet(std::make_shared<imebra::implementation::dataSet>(transferSyntax))
+MutableDataSet::MutableDataSet(const std::string &transferSyntax): DataSet(std::make_shared<imebra::implementation::dataSet>(transferSyntax, charsetsList_t()))
 {
-    implementation::charsetsList::tCharsetsList list;
-    list.push_back("ISO 2022 IR 6");
-    getDataSetImplementation(*this)->setCharsetsList(list);
 }
 
-MutableDataSet::MutableDataSet(const std::string &transferSyntax, const charsetsList_t &charsets): DataSet(std::make_shared<imebra::implementation::dataSet>(transferSyntax))
+MutableDataSet::MutableDataSet(const std::string &transferSyntax, const charsetsList_t &charsets):
+    DataSet(std::make_shared<imebra::implementation::dataSet>(transferSyntax, charsets))
 {
-    implementation::charsetsList::tCharsetsList list;
-    for(charsetsList_t::const_iterator scanCharsets(charsets.begin()), endCharsets(charsets.end()); scanCharsets != endCharsets; ++scanCharsets)
-    {
-        list.push_back(*scanCharsets);
-    }
-    getDataSetImplementation(*this)->setCharsetsList(list);
 }
 
 MutableDataSet::~MutableDataSet()

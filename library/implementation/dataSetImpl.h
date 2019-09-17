@@ -87,10 +87,15 @@ class dataSet : public std::enable_shared_from_this<dataSet>
 public:
     // Costructor
     ///////////////////////////////////////////////////////////
-    dataSet();
+    dataSet(const std::shared_ptr<charsetsList_t>& pCharsetsList);
 
-    dataSet(const std::string& transferSyntax);
+    // Create a sequence item dataset
+    ///////////////////////////////////////////////////////////
+    dataSet(const std::string& transferSyntax, const std::shared_ptr<charsetsList_t>& pCharsetsList);
 
+    // Create a root dataset (not a sequence item)
+    ///////////////////////////////////////////////////////////
+    dataSet(const std::string& transferSyntax, const charsetsList_t& charsetsList);
 
     ///////////////////////////////////////////////////////////
     /// \name Get/set groups/tags
@@ -850,37 +855,6 @@ public:
 
 
     ///////////////////////////////////////////////////////////
-    /// \name Syncronize the charset tag (0008,0005)
-    ///
-    ///////////////////////////////////////////////////////////
-    //@{
-
-    /// \brief Collect all the charsets used in the dataSet's
-    ///         tags and then update the content of the tag
-    ///         0008,0005.
-    ///
-    /// This function is called by the codecs before the dicom
-    ///  stream is saved, therefore the application doesn't
-    ///  need to call the function before saving the stream.
-    ///
-    ///////////////////////////////////////////////////////////
-    void updateCharsetTag();
-
-    /// \brief Update all the dataSet's tags with the charsets
-    ///         specified in the tag 0008,0005.
-    ///
-    /// This function is called by the codecs after the stream
-    ///  has been loaded, therefore the application doesn't
-    ///  need to call the function after the stream has been
-    ///  loaded.
-    ///
-    ///////////////////////////////////////////////////////////
-    void updateTagsCharset();
-
-    //@}
-
-
-    ///////////////////////////////////////////////////////////
     /// \name Set/get the item offset.
     ///
     ///////////////////////////////////////////////////////////
@@ -920,42 +894,7 @@ public:
 
     const tTags& getGroupTags(std::uint16_t groupId, size_t groupOrder) const;
 
-    ///
-    /// \brief Update the charsets list in the parameter with
-    ///        the list of used charsets.
-    ///
-    /// \param pCharsetsList list to which the used charsets
-    ///                      are added
-    ///
-    ///////////////////////////////////////////////////////////
-    void getCharsetsList(charsetsList::tCharsetsList* pCharsetsList) const;
-
-    ///
-    /// \brief Get the charset list currently set in the
-    ///        dataset.
-    ///
-    /// \param pCharsetsList list to which the used charsets
-    ///                      are added
-    ///
-    ///////////////////////////////////////////////////////////
-    const charsetsList::tCharsetsList& getCurrentCharsetsList() const;
-
-    ///
-    /// \brief Set the dataset's list of charsets to use.
-    ///
-    /// \param charsetsList list of charsets
-    ///
-    ///////////////////////////////////////////////////////////
-    void setCharsetsList(const charsetsList::tCharsetsList& charsetsList);
-
-    ///
-    /// \brief Set the dataset's and its children list of
-    ///        charsets to use.
-    ///
-    /// \param charsetsList list of charsets
-    ///
-    ///////////////////////////////////////////////////////////
-    void setChildrenCharsetsList(const charsetsList::tCharsetsList& charsetsList);
+    void setCharsetsList(const charsetsList_t& charsets);
 
 private:
     /// \brief Get a frame's offset from the offset table.
@@ -996,7 +935,7 @@ private:
 
     tGroups m_groups;
 
-    charsetsList::tCharsetsList m_charsetsList;
+    std::shared_ptr<charsetsList_t> m_pCharsetsList;
 
     mutable std::recursive_mutex m_mutex;
 };

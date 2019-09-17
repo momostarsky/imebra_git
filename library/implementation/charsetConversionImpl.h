@@ -19,8 +19,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "charsetConversionICUImpl.h"
 #include "charsetConversionWindowsImpl.h"
 #include "charsetConversionJavaImpl.h"
-#include "charsetsListImpl.h"
-
+#include "../include/imebra/definitions.h"
 #include <string>
 
 namespace imebra
@@ -32,8 +31,8 @@ namespace implementation
 class dicomConversion
 {
 public:
-    static std::string convertFromUnicode(const std::wstring& unicodeString, charsetsList::tCharsetsList* pCharsets);
-    static std::wstring convertToUnicode(const std::string& value, const charsetsList::tCharsetsList& charsets);
+    static std::string convertFromUnicode(const std::wstring& unicodeString, const charsetsList_t& charsets);
+    static std::wstring convertToUnicode(const std::string& value, const charsetsList_t& charsets);
 };
 
 }

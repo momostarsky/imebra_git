@@ -2086,7 +2086,7 @@ std::shared_ptr<associationBase::receivedDataset> associationBase::decodePDU(boo
 
             std::shared_ptr<memoryStreamInput> dataSetStream(std::make_shared<memoryStreamInput>(datasetMemory));
             std::shared_ptr<streamReader> dataSetStreamReader(std::make_shared<streamReader>(dataSetStream));
-            std::shared_ptr<dataSet> pDataset(std::make_shared<dataSet>(transferSyntax));
+            std::shared_ptr<dataSet> pDataset(std::make_shared<dataSet>(transferSyntax, charsetsList_t()));
             codecs::dicomStreamCodec::parseStream(dataSetStreamReader, pDataset, bExplicitDataType, endianType);
 
             // Return the dataset
