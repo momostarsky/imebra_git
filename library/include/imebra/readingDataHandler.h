@@ -133,7 +133,7 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     double getDouble(size_t index) const;
 
-    /// \brief Retrieve a buffer's value as an ASCII string.
+    /// \brief Retrieve a buffer's value as a UTF8 string.
     ///
     /// If the buffer's value cannot be converted to a string then throws
     /// DataHandlerConversionError.

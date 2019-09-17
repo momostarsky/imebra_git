@@ -397,7 +397,7 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     double getDouble(const TagId& tagId, size_t elementNumber, double defaultValue) const;
 
-    /// \brief Retrieve a tag's value as a string.
+    /// \brief Retrieve a tag's value as a UTF8 string.
     ///
     /// If the tag's value cannot be converted to a string then throws
     ///  DataHandlerConversionError.
@@ -415,7 +415,7 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     std::string getString(const TagId& tagId, size_t elementNumber) const;
 
-    /// \brief Retrieve a tag's value as a string.
+    /// \brief Retrieve a tag's value as a UTF8 string.
     ///
     /// If the tag's value cannot be converted to a string then throws
     ///  DataHandlerConversionError.
@@ -982,7 +982,7 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     void setDouble(const TagId& tagId, double newValue);
 
-    /// \brief Write a string value into the element 0 of the specified Tag's
+    /// \brief Write a UTF8 string value into the element 0 of the specified Tag's
     ///        buffer 0.
     ///
     /// If the specified Tag does not exist then it creates a new tag with a
@@ -995,7 +995,7 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     void setString(const TagId& tagId, const std::string& newString, tagVR_t tagVR);
 
-    /// \brief Write a string value into the element 0 of the specified Tag's
+    /// \brief Write a UTF8 string value into the element 0 of the specified Tag's
     ///        buffer 0.
     ///
     /// If the specified Tag does not exist then it creates a new tag with a

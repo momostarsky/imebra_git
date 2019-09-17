@@ -57,30 +57,30 @@ public:
     /// \brief Constructor.
     ///
     /// \param alphabeticRepresentation  the alphabetic representation of the
-    ///                                  patient name
+    ///                                  patient name (UTF8 encoded)
     /// \param ideographicRepresentation the ideographic representation of the
-    ///                                  patient name
+    ///                                  patient name (UTF8 encoded)
     /// \param phoneticRepresentation    the phonetic representation of the
-    ///                                  patient name
+    ///                                  patient name (UTF8 encoded)
     ///
     ///////////////////////////////////////////////////////////////////////////////
     PatientName(const std::string& alphabeticRepresentation, const std::string& ideographicRepresentation, const std::string& phoneticRepresentation);
 
-    /// \brief Returns the alphabetic form of the patient name.
+    /// \brief Returns the alphabetic form of the patient name (UTF8 encoded).
     ///
     /// \return alphabetic representation of the patient name
     ///
     ///////////////////////////////////////////////////////////////////////////////
     std::string getAlphabeticRepresentation() const;
 
-    /// \brief Returns the ideographic form of the patient name.
+    /// \brief Returns the ideographic form of the patient name (UTF8 encoded).
     ///
     /// \return ideographic representation of the patient name
     ///
     ///////////////////////////////////////////////////////////////////////////////
     std::string getIdeographicRepresentation() const;
 
-    /// \brief Returns the phonetic form of the patient name.
+    /// \brief Returns the phonetic form of the patient name (UTF8 encoded).
     ///
     /// \return phonetic representation of the patient name
     ///

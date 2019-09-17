@@ -149,7 +149,7 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     void setDouble(size_t index, double value);
 
-    /// \brief Write a string.
+    /// \brief Write a UTF8 string.
     ///
     /// If the value cannot be converted from a string
     /// then throws DataHandlerConversionError.
