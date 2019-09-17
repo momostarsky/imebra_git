@@ -1649,7 +1649,7 @@ public:
 
         if(pResponse == nullptr)
         {
-            throw;
+            throw std::bad_cast();
         }
         return pResponse;
     }

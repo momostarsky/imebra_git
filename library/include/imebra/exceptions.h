@@ -553,15 +553,11 @@ public:
 };
 
 
-/// \brief This exception is thrown when a conversion from an unicode string
-///        causes the dicom dataSet to change its default charset.
-///
-/// For instace, the default charset is ISO IR 6 but a value written by the
-/// application in one tag causes the default charset to switch to
-/// ISO 2022 IR 100.
+/// \brief Exception thrown when none of the charsets declared in the DataSet
+///        are able to convert a string to/from unicode.
 ///
 ///////////////////////////////////////////////////////////////////////////////
-class IMEBRA_API CharsetListDiffDefaultError: public CharsetConversionError
+class IMEBRA_API CharsetConversionCannotConvert: public CharsetConversionError
 {
 public:
     /// \brief Constructor.
@@ -569,13 +565,13 @@ public:
     /// \param message the message to store into the exception
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    explicit CharsetListDiffDefaultError(const std::string& message);
+    explicit CharsetConversionCannotConvert(const std::string& message);
 
-    CharsetListDiffDefaultError(const CharsetListDiffDefaultError& source);
+    CharsetConversionCannotConvert(const CharsetConversionCannotConvert& source);
 
-    CharsetListDiffDefaultError& operator=(const CharsetListDiffDefaultError&) = delete;
+    CharsetConversionCannotConvert& operator=(const CharsetConversionCannotConvert&) = delete;
 
-    virtual ~CharsetListDiffDefaultError();
+    virtual ~CharsetConversionCannotConvert();
 };
 
 

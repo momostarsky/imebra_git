@@ -89,7 +89,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 @interface ImebraCharsetConversionNoSupportedTableError: ImebraCharsetConversionError
 @end
 
-@interface ImebraCharsetListDiffDefaultError: ImebraCharsetConversionError
+@interface ImebraCharsetConversionCannotConvert: ImebraCharsetConversionError
 @end
 
 @interface ImebraCodecError: NSError

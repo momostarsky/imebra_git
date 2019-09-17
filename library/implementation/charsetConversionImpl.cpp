@@ -14,6 +14,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "charsetConversionImpl.h"
 #include "exceptionImpl.h"
 #include "../include/imebra/exceptions.h"
+#include <sstream>
 
 namespace imebra
 {
@@ -38,7 +39,7 @@ std::string dicomConversion::convertFromUnicode(const std::wstring& unicodeStrin
         std::string returnString =  localCharsetConversion->fromUnicode(unicodeString);
         if(returnString.empty())
         {
-            throw;
+            IMEBRA_THROW(CharsetConversionCannotConvert, "Cannot convert from unicode using only the charset 'ISO_IR 6'");
         }
         return returnString;
     }
@@ -46,12 +47,6 @@ std::string dicomConversion::convertFromUnicode(const std::wstring& unicodeStrin
     // Setup the conversion objects
     ///////////////////////////////////////////////////////////
     std::unique_ptr<defaultCharsetConversion> localCharsetConversion(new defaultCharsetConversion(charsets.front()));
-
-    // Get the escape sequences from the unicode conversion
-    //  engine
-    ///////////////////////////////////////////////////////////
-    const charsetDictionary::orderedEscapeSequences_t& orderedEscapes(localCharsetConversion->getDictionary().getOrderedEscapeSequences());
-    const charsetDictionary::escapeSequences_t& escapes(localCharsetConversion->getDictionary().getEscapeSequences());
 
     // Returned string
     ///////////////////////////////////////////////////////////
@@ -98,6 +93,7 @@ std::string dicomConversion::convertFromUnicode(const std::wstring& unicodeStrin
             continue;
         }
 
+        std::string convertedSequence;
         for(const std::string& dicomCharset: charsets)
         {
             try
@@ -106,14 +102,10 @@ std::string dicomConversion::convertFromUnicode(const std::wstring& unicodeStrin
                 std::string convertedChar(testEscapeSequence->fromUnicode(code));
                 if(!convertedChar.empty())
                 {
-                    rawString += testEscapeSequence->getDictionary().getCharsetInformation(dicomCharset).m_escapeSequence;
-                    rawString += convertedChar;
-
+                    convertedSequence = testEscapeSequence->getDictionary().getCharsetInformation(dicomCharset).m_escapeSequence;
+                    convertedSequence += convertedChar;
                     localCharsetConversion.reset(testEscapeSequence.release());
-                }
-                else
-                {
-                    throw;
+                    break;
                 }
             }
             catch(CharsetConversionNoSupportedTableError)
@@ -121,6 +113,16 @@ std::string dicomConversion::convertFromUnicode(const std::wstring& unicodeStrin
                 continue;
             }
         }
+        if(convertedSequence.empty())
+        {
+            std::ostringstream charsetsList;
+            for(const std::string& charset: charsets)
+            {
+                charsetsList << " '" << charset << "'";
+            }
+            IMEBRA_THROW(CharsetConversionCannotConvert, "Cannot convert from unicode using the following charsets:" << charsetsList.str());
+        }
+        rawString += convertedSequence;
     }
 
     return rawString;
@@ -132,6 +134,11 @@ std::string dicomConversion::convertFromUnicode(const std::wstring& unicodeStrin
 std::wstring dicomConversion::convertToUnicode(const std::string& value, const charsetsList_t& charsets)
 {
     IMEBRA_FUNCTION_START();
+
+    if(value.empty())
+    {
+        return L"";
+    }
 
     // Should we take care of the escape sequences...?
     ///////////////////////////////////////////////////////////
@@ -199,7 +206,12 @@ std::wstring dicomConversion::convertToUnicode(const std::string& value, const c
         ///////////////////////////////////////////////////////////
         if(escapePosition == value.size())
         {
-            return returnString + localCharsetConversion->toUnicode(value.substr(scanString));
+            std::wstring conversion = localCharsetConversion->toUnicode(value.substr(scanString));
+            if(conversion.empty())
+            {
+                IMEBRA_THROW(CharsetConversionCannotConvert, "Cannot convert to unicode");
+            }
+            return returnString + conversion;
         }
 
         // The escape sequence can wait, now we are still in the
@@ -207,7 +219,12 @@ std::wstring dicomConversion::convertToUnicode(const std::string& value, const c
         ///////////////////////////////////////////////////////////
         if(escapePosition > scanString)
         {
-            returnString += localCharsetConversion->toUnicode(value.substr(scanString, escapePosition - scanString));
+            std::wstring conversion = localCharsetConversion->toUnicode(value.substr(scanString, escapePosition - scanString));
+            if(conversion.empty())
+            {
+                IMEBRA_THROW(CharsetConversionCannotConvert, "Cannot convert to unicode");
+            }
+            returnString += conversion;
             scanString = escapePosition;
             continue;
         }

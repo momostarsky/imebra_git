@@ -73,7 +73,7 @@
 @implementation ImebraCharsetConversionNoSupportedTableError: ImebraCharsetConversionError
 @end
 
-@implementation ImebraCharsetListDiffDefaultError: ImebraCharsetConversionError
+@implementation ImebraCharsetConversionCannotConvert: ImebraCharsetConversionError
 @end
 
 @implementation ImebraCodecError: NSError

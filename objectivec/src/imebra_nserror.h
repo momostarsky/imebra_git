@@ -116,9 +116,9 @@ namespace imebra
     {\
         imebra::setNSError(e, pError, [ImebraCharsetConversionNoSupportedTableError class]);\
     }\
-    catch(imebra::CharsetListDiffDefaultError& e)\
+    catch(imebra::CharsetConversionCannotConvert& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraCharsetListDiffDefaultError class]);\
+        imebra::setNSError(e, pError, [ImebraCharsetConversionCannotConvert class]);\
     }\
     catch(imebra::CharsetConversionError& e)\
     {\

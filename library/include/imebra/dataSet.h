@@ -404,6 +404,9 @@ public:
     ///
     /// If the specified Tag does not exist then throws MissingTagError or
     ///  MissingGroupError.
+    /// If the conversion to UTF8 fails then throws
+    /// CharsetConversionCannotConvert, CharsetConversionNoSupportedTableError,
+    /// CharsetConversionNoTableError.
     ///
     /// \param tagId    the tag's id
     /// \param elementNumber the element number within the buffer

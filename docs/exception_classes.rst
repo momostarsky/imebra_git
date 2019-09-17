@@ -65,8 +65,8 @@ The following classes are described in this chapter:
 +---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
 |:cpp:class:`imebra::CharsetConversionNoSupportedTableError`          |:cpp:class:`ImebraCharsetConversionNoSupportedTableError`          |The charset table is not installed on the system|
 +---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`imebra::CharsetListDiffDefaultError`                     |:cpp:class:`ImebraCharsetListDiffDefaultError`                     |Thrown when two tags use different default      |
-|                                                                     |                                                                   |charsets                                        |
+|:cpp:class:`imebra::CharsetConversionCannotConvert`                  |:cpp:class:`CharsetConversionCannotConvert`                        |Thrown when a string cannot be converted using  |
+|                                                                     |                                                                   |the charsets declared in the dataset            |
 +---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
 |:cpp:class:`imebra::CodecError`                                      |:cpp:class:`ImebraCodecError`                                      |Base class for codec related exceptions         |
 +---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
@@ -651,19 +651,19 @@ Objective-C/Swift
    :members:
 
 
-CharsetListDiffDefaultError
-...........................
+CharsetConversionCannotConvert
+..............................
 
 C++
 ,,,
 
-.. doxygenclass:: imebra::CharsetListDiffDefaultError
+.. doxygenclass:: imebra::CharsetConversionCannotConvert
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraCharsetListDiffDefaultError
+.. doxygenclass:: CharsetConversionCannotConvert
    :members:
 
 

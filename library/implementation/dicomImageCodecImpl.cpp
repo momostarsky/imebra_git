@@ -128,7 +128,7 @@ std::shared_ptr<image> dicomImageCodec::getImage(const dataSet& dataset, std::sh
     std::uint8_t storedBits=(std::uint8_t)dataset.getUnsignedLong(0x0028, 0x0, 0x0101, 0, 0);
     std::uint8_t highBit=(std::uint8_t)dataset.getUnsignedLong(0x0028, 0x0, 0x0102, 0, 0);
     if(highBit < storedBits - 1)
-        throw;
+        IMEBRA_THROW(CodecCorruptedFileError, "The tag 0028,0102 (high bit) cannot be less than (tag 0028,0101 (stored bit) - 1)");
 
 
     // If the chrominance channels are subsampled, then find

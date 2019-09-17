@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -88,11 +88,6 @@ const charsetDictionary::escapeSequences_t& charsetDictionary::getEscapeSequence
     return m_escapeSequences;
 }
 
-const charsetDictionary::orderedEscapeSequences_t& charsetDictionary::getOrderedEscapeSequences() const
-{
-    return m_orderedEscapeSequences;
-}
-
 void charsetDictionary::registerCharset(const std::string& dicomName, const std::string& escapeSequence, const std::string& isoName, const std::string& javaName, const unsigned long windowsPage, const bool bZeroFlag)
 {
     IMEBRA_FUNCTION_START();
@@ -104,7 +99,6 @@ void charsetDictionary::registerCharset(const std::string& dicomName, const std:
     if(!escapeSequence.empty())
     {
         m_escapeSequences[escapeSequence] = dicomName;
-        m_orderedEscapeSequences.push_back(escapeSequence);
     }
 
     IMEBRA_FUNCTION_END();
@@ -130,18 +124,6 @@ charsetInformation::charsetInformation(const charsetInformation &right):
     m_bZeroFlag(right.m_bZeroFlag)
 {
 
-}
-
-charsetInformation& charsetInformation::operator =(const charsetInformation& right)
-{
-    m_dicomName = right.m_dicomName;
-    m_escapeSequence = right.m_escapeSequence;
-    m_isoRegistration = right.m_isoRegistration;
-    m_javaRegistration = right.m_javaRegistration;
-    m_codePage = right.m_codePage;
-    m_bZeroFlag = right.m_bZeroFlag;
-
-    return *this;
 }
 
 

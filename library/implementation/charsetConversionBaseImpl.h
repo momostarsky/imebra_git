@@ -56,8 +56,6 @@ struct charsetInformation
 
     charsetInformation(const charsetInformation& right);
 
-    charsetInformation& operator=(const charsetInformation& right);
-
     std::string m_dicomName;       ///< DICOM name for the charset
     std::string m_escapeSequence;  ///< Escape sequence for ISO 2022
     std::string m_isoRegistration; ///< ISO registration string
@@ -82,16 +80,11 @@ public:
     typedef std::map<std::string, std::string> escapeSequences_t;
     const escapeSequences_t& getEscapeSequences() const;
 
-    typedef std::list<std::string> orderedEscapeSequences_t;
-    const orderedEscapeSequences_t& getOrderedEscapeSequences() const;
-
 private:
     void registerCharset(const std::string& dicomName, const std::string& escapeSequence, const std::string& isoName, const std::string& javaName, const unsigned long windowsPage, const bool bZeroFlag);
 
     typedef std::map<std::string, charsetInformation> dictionary_t;
     dictionary_t m_dictionary;
-
-    orderedEscapeSequences_t m_orderedEscapeSequences;
 
     escapeSequences_t m_escapeSequences;
 };

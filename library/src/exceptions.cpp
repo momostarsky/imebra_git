@@ -193,13 +193,13 @@ CharsetConversionNoSupportedTableError::~CharsetConversionNoSupportedTableError(
 {}
 
 
-CharsetListDiffDefaultError::CharsetListDiffDefaultError(const std::string& message): CharsetConversionError(message)
+CharsetConversionCannotConvert::CharsetConversionCannotConvert(const std::string& message): CharsetConversionError(message)
 {}
 
-CharsetListDiffDefaultError::CharsetListDiffDefaultError(const CharsetListDiffDefaultError &source): CharsetConversionError(source)
+CharsetConversionCannotConvert::CharsetConversionCannotConvert(const CharsetConversionCannotConvert &source): CharsetConversionError(source)
 {}
 
-CharsetListDiffDefaultError::~CharsetListDiffDefaultError()
+CharsetConversionCannotConvert::~CharsetConversionCannotConvert()
 {}
 
 

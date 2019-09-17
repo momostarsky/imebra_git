@@ -18,6 +18,7 @@ TEST(unicodeStringHandlerTest, unicodeTest)
     {
         charsetsList_t charsets;
         charsets.push_back("ISO_IR 6");
+        charsets.push_back("ISO 2022 IR 127");
         MutableDataSet testDataSet("1.2.840.10008.1.2.1", charsets);
 
         {
@@ -58,7 +59,12 @@ TEST(unicodeStringHandlerTest, iso2022Test)
     MutableMemory streamMemory;
     {
         charsetsList_t charsets;
-        charsets.push_back("ISO IR 6");
+        charsets.push_back("ISO_IR 6");
+        charsets.push_back("ISO 2022 IR 144");
+        charsets.push_back("ISO 2022 IR 100");
+        charsets.push_back("ISO 2022 IR 126");
+        charsets.push_back("ISO 2022 IR 127");
+
         MutableDataSet testDataSet("1.2.840.10008.1.2.1", charsets);
 
         {
@@ -307,6 +313,29 @@ TEST(unicodeStringHandlerTest, PNTest)
         ASSERT_EQ(writePatient1.getIdeographicRepresentation(), checkPatient1.getIdeographicRepresentation());
         ASSERT_EQ(writePatient1.getPhoneticRepresentation(), checkPatient1.getPhoneticRepresentation());
     }
+}
+
+
+TEST(unicodeStringHandlerTest, unknownDICOMCharset)
+{
+    charsetsList_t charsets;
+    charsets.push_back("UNKNOWN CHARSET");
+    MutableDataSet testDataSet("1.2.840.10008.1.2.1", charsets);
+
+    ASSERT_THROW(testDataSet.setUnicodeString(TagId(tagId_t::PatientName_0010_0010), L"Test patient"), CharsetConversionNoTableError);
+
+}
+
+
+TEST(unicodeStringHandlerTest, normalizeCharset)
+{
+    charsetsList_t charsets;
+    charsets.push_back("iso_ir 192");
+    MutableDataSet testDataSet("1.2.840.10008.1.2.1", charsets);
+
+    testDataSet.setUnicodeString(TagId(tagId_t::PatientName_0010_0010), L"Test patient");
+    EXPECT_EQ(L"Test patient", testDataSet.getUnicodeString(TagId(tagId_t::PatientName_0010_0010), 0));
+
 }
 
 
