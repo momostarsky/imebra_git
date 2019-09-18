@@ -29,8 +29,8 @@ charsetDictionary::charsetDictionary()
 {
     IMEBRA_FUNCTION_START();
 
-    registerCharset("ISO_IR 6", "", "ISO-IR-6", "US-ASCII", 1252, false);
-    registerCharset("ISO_IR 100", "", "ISO-IR-100", "ISO-8859-1", 1252, false);
+    registerCharset("ISO_IR 6", "", "ISO-IR-6", "US-ASCII", 20127, false);
+    registerCharset("ISO_IR 100", "", "ISO-IR-100", "ISO-8859-1", 28591, false);
     registerCharset("ISO_IR 101", "", "ISO-IR-101", "ISO-8859-2", 28592, false);
     registerCharset("ISO_IR 109", "", "ISO-IR-109", "ISO-8859-3", 28593, false);
     registerCharset("ISO_IR 110", "", "ISO-IR-110", "ISO-8859-4", 28594, false);
@@ -46,8 +46,8 @@ charsetDictionary::charsetDictionary()
     registerCharset("ISO_IR 87",  "", "ISO-IR-87", "EUC-JP", 20932, false);
     registerCharset("ISO_IR 159", "", "ISO-IR-159", "JIS_X0212-1990", 20932, false);
 
-    registerCharset("ISO 2022 IR 6",   "\x1b\x28\x42", "ISO-IR-6", "US-ASCII", 1252, false);
-    registerCharset("ISO 2022 IR 100", "\x1b\x2d\x41", "ISO-IR-100", "ISO-8859-1", 1252, false);
+    registerCharset("ISO 2022 IR 6",   "\x1b\x28\x42", "ISO-IR-6", "US-ASCII", 20127, false);
+    registerCharset("ISO 2022 IR 100", "\x1b\x2d\x41", "ISO-IR-100", "ISO-8859-1", 28591, false);
     registerCharset("ISO 2022 IR 101", "\x1b\x2d\x42", "ISO-IR-101", "ISO-8859-2", 28592, false);
     registerCharset("ISO 2022 IR 109", "\x1b\x2d\x43", "ISO-IR-109", "ISO-8859-3", 28593, false);
     registerCharset("ISO 2022 IR 110", "\x1b\x2d\x44", "ISO-IR-110", "ISO-8859-4", 28594, false);
