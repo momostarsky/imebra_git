@@ -38,7 +38,7 @@ size_t baseSequenceStreamInput::read(size_t startPosition, std::uint8_t* pBuffer
 
     if(startPosition < m_currentPosition)
     {
-        throw;
+        throw std::logic_error("Cannot seek backward while reading from a sequence stream");
     }
     if(startPosition > m_currentPosition)
     {
@@ -84,7 +84,7 @@ void baseSequenceStreamOutput::write(size_t startPosition, const std::uint8_t* p
 
     if(startPosition < m_currentPosition)
     {
-        throw;
+        throw std::logic_error("Cannot seek backward while writing to a sequence stream");
     }
     if(startPosition > m_currentPosition)
     {
