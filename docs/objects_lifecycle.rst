@@ -25,18 +25,6 @@ be deleted only when all the methods and classes using it have finished with it.
    Example of Imebra public class and implementation class
 
 
-
-Pointer to objects are owned by the client application
-------------------------------------------------------
-
-When an Imebra method returns a pointer to an object, then it is the responsibility of the client application to delete it.
-
-Since the objects returned by Imebra are just handles for the real implementation objects, the client application can safely delete
-the received object as soon as it has finished using it while resting assured that the underlying implementation object will be
-deallocated only when all the classes and methods using it have finished using it.
-
-
-
 .. figure:: images/sequence_objectsLifecycle.jpg
    :target: _images/sequence_objectsLifecycle.jpg
    :figwidth: 100%

@@ -21,8 +21,8 @@ The following classes are described in this chapter:
 |:cpp:class:`imebra::RandomUIDGenerator`        |:cpp:class:`ImebraRandomUIDGenerator`        |Read data from a tag           |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
 
-.. figure:: images/uid.jpg
-   :target: _images/uid.jpg
+.. figure:: images/uidgenerators.jpg
+   :target: _images/uidgenerators.jpg
    :figwidth: 100%
    :alt: UID generators related classes
 
