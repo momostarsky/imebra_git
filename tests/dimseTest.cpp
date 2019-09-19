@@ -102,7 +102,7 @@ TEST(dimseTest, storeSCUSCP)
                 payload.getString(TagId(tagId_t::SOPClassUID_0008_0016), 0),
                 payload.getString(TagId(tagId_t::SOPInstanceUID_0008_0018), 0),
                 "Origin",
-                0,
+                15,
                 payload);
     dimse.sendCommandOrResponse(storeCommand);
     CStoreResponse response = dimse.getCStoreResponse(storeCommand);
@@ -111,8 +111,14 @@ TEST(dimseTest, storeSCUSCP)
     EXPECT_EQ("Origin", receivedCommands.front().getOriginatorAET());
     EXPECT_EQ("1.1.1.1.2", receivedCommands.front().getAffectedSopInstanceUid());
     EXPECT_EQ("1.1.1.1.1", receivedCommands.front().getAffectedSopClassUid());
+
+    DataSet receivedCommand = receivedCommands.front().getCommandDataSet();
+    EXPECT_EQ("Origin", receivedCommand.getString(TagId(tagId_t::MoveOriginatorApplicationEntityTitle_0000_1030), 0));
+
     DataSet receivedPayload = receivedCommands.front().getPayloadDataSet();
     EXPECT_EQ("Test^Patient", receivedPayload.getString(TagId(tagId_t::PatientName_0010_0010), 0));
+
+    EXPECT_EQ(15, receivedCommands.front().getOriginatorMessageID());
 
     thread.join();
 }
