@@ -1,6 +1,6 @@
 #include "dimseImpl.h"
 #include "dataSetImpl.h"
-#include "../include/imebra/tagsEnumeration.h"
+#include "../include/imebra/definitions.h"
 #include "../include/imebra/exceptions.h"
 #include "dataHandlerImpl.h"
 

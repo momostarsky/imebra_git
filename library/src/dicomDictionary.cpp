@@ -27,20 +27,20 @@ If you do not want to be bound by the GPL terms (such as the requirement
 namespace imebra
 {
 
-std::wstring DicomDictionary::getUnicodeTagName(const TagId& id)
+std::wstring DicomDictionary::getUnicodeTagDescription(const TagId& id)
 {
     IMEBRA_FUNCTION_START();
 
-    return implementation::dicomDictionary::getDicomDictionary()->getTagName(id.getGroupId(), id.getTagId());
+    return implementation::dicomDictionary::getDicomDictionary()->getTagDescription(id.getGroupId(), id.getTagId());
 
     IMEBRA_FUNCTION_END_LOG();
 }
 
-std::string DicomDictionary::getTagName(const TagId& id)
+std::string DicomDictionary::getTagDescription(const TagId& id)
 {
     IMEBRA_FUNCTION_START();
 
-    std::wstring name = implementation::dicomDictionary::getDicomDictionary()->getTagName(id.getGroupId(), id.getTagId());
+    std::wstring name = implementation::dicomDictionary::getDicomDictionary()->getTagDescription(id.getGroupId(), id.getTagId());
     charsetsList_t charsets;
     charsets.push_back("ISO 2022 IR 6");
     return implementation::dicomConversion::convertFromUnicode(name, charsets);
@@ -57,6 +57,32 @@ tagVR_t DicomDictionary::getTagType(const TagId& id)
     IMEBRA_FUNCTION_END_LOG();
 }
 
+std::uint32_t DicomDictionary::getMultiplicityMin(const TagId& id)
+{
+    IMEBRA_FUNCTION_START();
+
+    return implementation::dicomDictionary::getDicomDictionary()->getTagMultiplicityMin(id.getGroupId(), id.getTagId());
+
+    IMEBRA_FUNCTION_END_LOG();
+}
+
+std::uint32_t DicomDictionary::getMultiplicityMax(const TagId& id)
+{
+    IMEBRA_FUNCTION_START();
+
+    return implementation::dicomDictionary::getDicomDictionary()->getTagMultiplicityMax(id.getGroupId(), id.getTagId());
+
+    IMEBRA_FUNCTION_END_LOG();
+}
+
+std::uint32_t DicomDictionary::getMultiplicityStep(const TagId& id)
+{
+    IMEBRA_FUNCTION_START();
+
+    return implementation::dicomDictionary::getDicomDictionary()->getTagMultiplicityStep(id.getGroupId(), id.getTagId());
+
+    IMEBRA_FUNCTION_END_LOG();
+}
 
 std::uint32_t DicomDictionary::getWordSize(tagVR_t dataType)
 {

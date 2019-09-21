@@ -61,8 +61,8 @@ This file was automatically generated
     static NSString* ImebraUidHEVCH265MainProfileLevel51_1_2_840_10008_1_2_4_107 = @"1.2.840.10008.1.2.4.107"; ///< HEVC/H.265 Main Profile / Level 5.1
     static NSString* ImebraUidHEVCH265Main10ProfileLevel51_1_2_840_10008_1_2_4_108 = @"1.2.840.10008.1.2.4.108"; ///< HEVC/H.265 Main 10 Profile / Level 5.1
     static NSString* ImebraUidRLELossless_1_2_840_10008_1_2_5 = @"1.2.840.10008.1.2.5"; ///< RLE Lossless
-    static NSString* ImebraUidRFC2557MIMEencapsulation_1_2_840_10008_1_2_6_1 = @"1.2.840.10008.1.2.6.1"; ///< RFC 2557 MIME encapsulation
-    static NSString* ImebraUidXMLEncoding_1_2_840_10008_1_2_6_2 = @"1.2.840.10008.1.2.6.2"; ///< XML Encoding
+    static NSString* ImebraUidRFC2557MIMEencapsulation_1_2_840_10008_1_2_6_1 = @"1.2.840.10008.1.2.6.1"; ///< RFC 2557 MIME encapsulation (Retired)
+    static NSString* ImebraUidXMLEncoding_1_2_840_10008_1_2_6_2 = @"1.2.840.10008.1.2.6.2"; ///< XML Encoding (Retired)
     static NSString* ImebraUidMediaStorageDirectoryStorage_1_2_840_10008_1_3_10 = @"1.2.840.10008.1.3.10"; ///< Media Storage Directory Storage
     static NSString* ImebraUidTalairachBrainAtlasFrameofReference_1_2_840_10008_1_4_1_1 = @"1.2.840.10008.1.4.1.1"; ///< Talairach Brain Atlas Frame of Reference
     static NSString* ImebraUidSPM2T1FrameofReference_1_2_840_10008_1_4_1_2 = @"1.2.840.10008.1.4.1.2"; ///< SPM2 T1 Frame of Reference
@@ -162,16 +162,14 @@ This file was automatically generated
     static NSString* ImebraUidCTImageStorage_1_2_840_10008_5_1_4_1_1_2 = @"1.2.840.10008.5.1.4.1.1.2"; ///< CT Image Storage
     static NSString* ImebraUidEnhancedCTImageStorage_1_2_840_10008_5_1_4_1_1_2_1 = @"1.2.840.10008.5.1.4.1.1.2.1"; ///< Enhanced CT Image Storage
     static NSString* ImebraUidLegacyConvertedEnhancedCTImageStorage_1_2_840_10008_5_1_4_1_1_2_2 = @"1.2.840.10008.5.1.4.1.1.2.2"; ///< Legacy Converted Enhanced CT Image Storage
-    static NSString* ImebraUidUltrasoundMultiframeImageStorage_1_2_840_10008_5_1_4_1_1_3 = @"1.2.840.10008.5.1.4.1.1.3"; ///< Ultrasound Multi-frame Image Storage (Retired) \deprecated
+    static NSString* ImebraUidUltrasoundMultiframeImageStorageRetired_1_2_840_10008_5_1_4_1_1_3 = @"1.2.840.10008.5.1.4.1.1.3"; ///< Ultrasound Multi-frame Image Storage (Retired)
     static NSString* ImebraUidUltrasoundMultiframeImageStorage_1_2_840_10008_5_1_4_1_1_3_1 = @"1.2.840.10008.5.1.4.1.1.3.1"; ///< Ultrasound Multi-frame Image Storage
     static NSString* ImebraUidMRImageStorage_1_2_840_10008_5_1_4_1_1_4 = @"1.2.840.10008.5.1.4.1.1.4"; ///< MR Image Storage
     static NSString* ImebraUidEnhancedMRImageStorage_1_2_840_10008_5_1_4_1_1_4_1 = @"1.2.840.10008.5.1.4.1.1.4.1"; ///< Enhanced MR Image Storage
     static NSString* ImebraUidMRSpectroscopyStorage_1_2_840_10008_5_1_4_1_1_4_2 = @"1.2.840.10008.5.1.4.1.1.4.2"; ///< MR Spectroscopy Storage
     static NSString* ImebraUidEnhancedMRColorImageStorage_1_2_840_10008_5_1_4_1_1_4_3 = @"1.2.840.10008.5.1.4.1.1.4.3"; ///< Enhanced MR Color Image Storage
     static NSString* ImebraUidLegacyConvertedEnhancedMRImageStorage_1_2_840_10008_5_1_4_1_1_4_4 = @"1.2.840.10008.5.1.4.1.1.4.4"; ///< Legacy Converted Enhanced MR Image Storage
-    static NSString* ImebraUidNuclearMedicineImageStorage_1_2_840_10008_5_1_4_1_1_5 = @"1.2.840.10008.5.1.4.1.1.5"; ///< Nuclear Medicine Image Storage (Retired) \deprecated
-    static NSString* ImebraUidUltrasoundImageStorage_1_2_840_10008_5_1_4_1_1_6 = @"1.2.840.10008.5.1.4.1.1.6"; ///< Ultrasound Image Storage (Retired) \deprecated
-    static NSString* ImebraUidNuclearMedicineImageStorage_1_2_840_10008_5_1_4_1_1_20 = @"1.2.840.10008.5.1.4.1.1.20"; ///< Nuclear Medicine Image Storage
+    static NSString* ImebraUidUltrasoundImageStorageRetired_1_2_840_10008_5_1_4_1_1_6 = @"1.2.840.10008.5.1.4.1.1.6"; ///< Ultrasound Image Storage (Retired)
     static NSString* ImebraUidUltrasoundImageStorage_1_2_840_10008_5_1_4_1_1_6_1 = @"1.2.840.10008.5.1.4.1.1.6.1"; ///< Ultrasound Image Storage
     static NSString* ImebraUidEnhancedUSVolumeStorage_1_2_840_10008_5_1_4_1_1_6_2 = @"1.2.840.10008.5.1.4.1.1.6.2"; ///< Enhanced US Volume Storage
     static NSString* ImebraUidSecondaryCaptureImageStorage_1_2_840_10008_5_1_4_1_1_7 = @"1.2.840.10008.5.1.4.1.1.7"; ///< Secondary Capture Image Storage
@@ -216,6 +214,8 @@ This file was automatically generated
     static NSString* ImebraUidBreastProjectionXRayImageStorageForProcessing_1_2_840_10008_5_1_4_1_1_13_1_5 = @"1.2.840.10008.5.1.4.1.1.13.1.5"; ///< Breast Projection X-Ray Image Storage - For Processing
     static NSString* ImebraUidIntravascularOpticalCoherenceTomographyImageStorageForPresentation_1_2_840_10008_5_1_4_1_1_14_1 = @"1.2.840.10008.5.1.4.1.1.14.1"; ///< Intravascular Optical Coherence Tomography Image Storage - For Presentation
     static NSString* ImebraUidIntravascularOpticalCoherenceTomographyImageStorageForProcessing_1_2_840_10008_5_1_4_1_1_14_2 = @"1.2.840.10008.5.1.4.1.1.14.2"; ///< Intravascular Optical Coherence Tomography Image Storage - For Processing
+    static NSString* ImebraUidNuclearMedicineImageStorageRetired_1_2_840_10008_5_1_4_1_1_5 = @"1.2.840.10008.5.1.4.1.1.5"; ///< Nuclear Medicine Image Storage (Retired)
+    static NSString* ImebraUidNuclearMedicineImageStorage_1_2_840_10008_5_1_4_1_1_20 = @"1.2.840.10008.5.1.4.1.1.20"; ///< Nuclear Medicine Image Storage
     static NSString* ImebraUidParametricMapStorage_1_2_840_10008_5_1_4_1_1_30 = @"1.2.840.10008.5.1.4.1.1.30"; ///< Parametric Map Storage
     static NSString* ImebraUidRawDataStorage_1_2_840_10008_5_1_4_1_1_66 = @"1.2.840.10008.5.1.4.1.1.66"; ///< Raw Data Storage
     static NSString* ImebraUidSpatialRegistrationStorage_1_2_840_10008_5_1_4_1_1_66_1 = @"1.2.840.10008.5.1.4.1.1.66.1"; ///< Spatial Registration Storage
@@ -277,6 +277,8 @@ This file was automatically generated
     static NSString* ImebraUidAcquisitionContextSRStorage_1_2_840_10008_5_1_4_1_1_88_71 = @"1.2.840.10008.5.1.4.1.1.88.71"; ///< Acquisition Context SR Storage
     static NSString* ImebraUidSimplifiedAdultEchoSRStorage_1_2_840_10008_5_1_4_1_1_88_72 = @"1.2.840.10008.5.1.4.1.1.88.72"; ///< Simplified Adult Echo SR Storage
     static NSString* ImebraUidPatientRadiationDoseSRStorage_1_2_840_10008_5_1_4_1_1_88_73 = @"1.2.840.10008.5.1.4.1.1.88.73"; ///< Patient Radiation Dose SR Storage
+    static NSString* ImebraUidPlannedImagingAgentAdministrationSRStorage_1_2_840_10008_5_1_4_1_1_88_74 = @"1.2.840.10008.5.1.4.1.1.88.74"; ///< Planned Imaging Agent Administration SR Storage
+    static NSString* ImebraUidPerformedImagingAgentAdministrationSRStorage_1_2_840_10008_5_1_4_1_1_88_75 = @"1.2.840.10008.5.1.4.1.1.88.75"; ///< Performed Imaging Agent Administration SR Storage
     static NSString* ImebraUidContentAssessmentResultsStorage_1_2_840_10008_5_1_4_1_1_90_1 = @"1.2.840.10008.5.1.4.1.1.90.1"; ///< Content Assessment Results Storage
     static NSString* ImebraUidEncapsulatedPDFStorage_1_2_840_10008_5_1_4_1_1_104_1 = @"1.2.840.10008.5.1.4.1.1.104.1"; ///< Encapsulated PDF Storage
     static NSString* ImebraUidEncapsulatedCDAStorage_1_2_840_10008_5_1_4_1_1_104_2 = @"1.2.840.10008.5.1.4.1.1.104.2"; ///< Encapsulated CDA Storage
@@ -301,6 +303,8 @@ This file was automatically generated
     static NSString* ImebraUidRTTreatmentSummaryRecordStorage_1_2_840_10008_5_1_4_1_1_481_7 = @"1.2.840.10008.5.1.4.1.1.481.7"; ///< RT Treatment Summary Record Storage
     static NSString* ImebraUidRTIonPlanStorage_1_2_840_10008_5_1_4_1_1_481_8 = @"1.2.840.10008.5.1.4.1.1.481.8"; ///< RT Ion Plan Storage
     static NSString* ImebraUidRTIonBeamsTreatmentRecordStorage_1_2_840_10008_5_1_4_1_1_481_9 = @"1.2.840.10008.5.1.4.1.1.481.9"; ///< RT Ion Beams Treatment Record Storage
+    static NSString* ImebraUidRTPhysicianIntentStorage_1_2_840_10008_5_1_4_1_1_481_10 = @"1.2.840.10008.5.1.4.1.1.481.10"; ///< RT Physician Intent Storage
+    static NSString* ImebraUidRTSegmentAnnotationStorage_1_2_840_10008_5_1_4_1_1_481_11 = @"1.2.840.10008.5.1.4.1.1.481.11"; ///< RT Segment Annotation Storage
     static NSString* ImebraUidDICOSCTImageStorage_1_2_840_10008_5_1_4_1_1_501_1 = @"1.2.840.10008.5.1.4.1.1.501.1"; ///< DICOS CT Image Storage
     static NSString* ImebraUidDICOSDigitalXRayImageStorageForPresentation_1_2_840_10008_5_1_4_1_1_501_2_1 = @"1.2.840.10008.5.1.4.1.1.501.2.1"; ///< DICOS Digital X-Ray Image Storage - For Presentation
     static NSString* ImebraUidDICOSDigitalXRayImageStorageForProcessing_1_2_840_10008_5_1_4_1_1_501_2_2 = @"1.2.840.10008.5.1.4.1.1.501.2.2"; ///< DICOS Digital X-Ray Image Storage - For Processing
@@ -419,5 +423,5 @@ This file was automatically generated
     static NSString* ImebraUiddicomTransferCapability_1_2_840_10008_15_0_4_8 = @"1.2.840.10008.15.0.4.8"; ///< dicomTransferCapability
     static NSString* ImebraUidUniversalCoordinatedTime_1_2_840_10008_15_1_1 = @"1.2.840.10008.15.1.1"; ///< Universal Coordinated Time
 
-#endif // objcImebraUidsEnumeration__INCLUDED_
 
+#endif // objcImebraUidsEnumeration__INCLUDED_

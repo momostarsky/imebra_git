@@ -2,28 +2,28 @@
 
 
 #ifdef SWIGJAVA
-	%include <arrays_java.i>
-	%include <enums.swg>
+    %include <arrays_java.i>
+    %include <enums.swg>
 
-	%apply(char *STRING, size_t LENGTH) { (const char *source, size_t sourceSize) };
-	%apply(char *STRING, size_t LENGTH) { (char* destination, size_t destinationSize) };
+    %apply(char *STRING, size_t LENGTH) { (const char *source, size_t sourceSize) };
+    %apply(char *STRING, size_t LENGTH) { (char* destination, size_t destinationSize) };
 
         %rename(assign) operator=;
 #endif
 #ifdef SWIGPYTHON
-	%include <cdata.i>
-	%include <pybuffer.i>
-	%pybuffer_mutable_binary(void *STRING, size_t LENGTH)
-	%apply(void *STRING, size_t LENGTH) { (const char *source, size_t sourceSize) };
-	%apply(void *STRING, size_t LENGTH) { (char* destination, size_t destinationSize) };
+    %include <cdata.i>
+    %include <pybuffer.i>
+    %pybuffer_mutable_binary(void *STRING, size_t LENGTH)
+    %apply(void *STRING, size_t LENGTH) { (const char *source, size_t sourceSize) };
+    %apply(void *STRING, size_t LENGTH) { (char* destination, size_t destinationSize) };
 
         %rename(assign) operator=;
 
 #endif
 
 #ifdef SWIGGO
-	%include <cdata.i>
-	%include <gostring.swg>
+    %include <cdata.i>
+    %include <gostring.swg>
 
         %typemap(gotype) (char* destination, size_t destinationSize) %{[]byte%}
 
@@ -31,7 +31,7 @@
          $1 = ($1_ltype)$input.array;
          $2 = $input.len;
         }
-	%apply(void *STRING, size_t LENGTH) { (const char *source, size_t sourceSize) };
+    %apply(void *STRING, size_t LENGTH) { (const char *source, size_t sourceSize) };
 
 %insert(cgo_comment_typedefs) %{
 #cgo LDFLAGS: -limebra
@@ -58,7 +58,7 @@
 %include <std_map.i>
 
 
-%template(FileParts) std::vector<std::string>;
+%template(StringsList) std::vector<std::string>;
 %template(Groups) std::vector<std::uint16_t>;
 %template(TagsIds) std::vector<imebra::TagId>;
 %template(VOIs) std::vector<imebra::VOIDescription>;
@@ -115,7 +115,7 @@
 }
 
 
-%include "../library/include/imebra/tagsEnumeration.h"
+%include "../library/include/imebra/dicomDefinitions.h"
 %include "../library/include/imebra/tagId.h"
 %include "../library/include/imebra/definitions.h"
 %include "../library/include/imebra/memory.h"

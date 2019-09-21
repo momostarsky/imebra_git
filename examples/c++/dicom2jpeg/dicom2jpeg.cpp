@@ -44,7 +44,7 @@ void outputDatasetTags(const DataSet& dataset, const std::wstring& prefix)
     {
         try
         {
-            std::wstring tagName = DicomDictionary::getUnicodeTagName(*scanTags);
+            std::wstring tagName = DicomDictionary::getUnicodeTagDescription(*scanTags);
             std::wcout << prefix << L"Tag " << (*scanTags).getGroupId() << L"," << (*scanTags).getTagId() << L" (" << tagName << L")" << std::endl;
         }
         catch(const DictionaryUnknownTagError&)

@@ -45,7 +45,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "streamReader.h"
 #include "streamWriter.h"
 #include "tag.h"
-#include "tagsEnumeration.h"
+#include "dicomDefinitions.h"
 #include "transform.h"
 #include "transformHighBit.h"
 #include "transformsChain.h"

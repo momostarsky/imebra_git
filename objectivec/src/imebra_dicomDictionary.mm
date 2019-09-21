@@ -20,11 +20,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @implementation ImebraDicomDictionary
 
-+(NSString*)getTagName:(ImebraTagId*)tagId error:(NSError**)pError
++(NSString*)getTagDescription:(ImebraTagId*)tagId error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return imebra::stringToNSString(imebra::DicomDictionary::getTagName(*get_other_imebra_object_holder(tagId, TagId)));
+    return imebra::stringToNSString(imebra::DicomDictionary::getTagDescription(*get_other_imebra_object_holder(tagId, TagId)));
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -36,6 +36,33 @@ If you do not want to be bound by the GPL terms (such as the requirement
     return (ImebraTagVR_t)(imebra::DicomDictionary::getTagType(*get_other_imebra_object_holder(tagId, TagId)));
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(ImebraAE);
+}
+
++(unsigned int)getMultiplicityMin:(ImebraTagId*)tagId error:(NSError**)pError;
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    return (unsigned int)(imebra::DicomDictionary::getMultiplicityMin(*get_other_imebra_object_holder(tagId, TagId)));
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(0);
+}
+
++(unsigned int)getMultiplicityMax:(ImebraTagId*)tagId error:(NSError**)pError;
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    return (unsigned int)(imebra::DicomDictionary::getMultiplicityMax(*get_other_imebra_object_holder(tagId, TagId)));
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(0);
+}
+
++(unsigned int)getMultiplicityStep:(ImebraTagId*)tagId error:(NSError**)pError;
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    return (unsigned int)(imebra::DicomDictionary::getMultiplicityStep(*get_other_imebra_object_holder(tagId, TagId)));
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(0);
 }
 
 +(unsigned int)getWordSize:(ImebraTagVR_t)dataType

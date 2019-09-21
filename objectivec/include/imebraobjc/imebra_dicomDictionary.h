@@ -34,7 +34,36 @@ If you do not want to be bound by the GPL terms (such as the requirement
     /// @return          the tag's description
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    +(NSString*)getTagName:(ImebraTagId*)tagId error:(NSError**)pError;
+    +(NSString*)getTagDescription:(ImebraTagId*)tagId error:(NSError**)pError;
+
+    /// \brief Retrieve a tag's minimum multiplicity value (the minimum number of
+    ///        values that should be stored in the tag).
+    ///
+    /// @param tagId     the tag's id
+    /// @param pError    set to NSError derived class in case of error
+    /// @return          the minimum multiplicity value
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    +(unsigned int)getMultiplicityMin:(ImebraTagId*)tagId error:(NSError**)pError;
+
+    /// \brief Retrieve a tag's maximum multiplicity value (the maximum number of
+    ///        values that should be stored in the tag, 0=unlimited).
+    ///
+    /// @param tagId     the tag's id
+    /// @param pError    set to NSError derived class in case of error
+    /// @return          the maximum multiplicity value (0=unlimited)
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    +(unsigned int)getMultiplicityMax:(ImebraTagId*)tagId error:(NSError**)pError;
+
+    /// \brief Retrieve a tag's step multiplicity value.
+    ///
+    /// @param tagId     the tag's id
+    /// @param pError    set to NSError derived class in case of error
+    /// @return          the step multiplicity value
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    +(unsigned int)getMultiplicityStep:(ImebraTagId*)tagId error:(NSError**)pError;
 
     /// \brief Retrieve a tag's default data type.
     ///
