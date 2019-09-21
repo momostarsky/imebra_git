@@ -20,11 +20,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @implementation ImebraDicomDictionary
 
-+(NSString*)getTagName:(ImebraTagId*)tagId error:(NSError**)pError
++(NSString*)getTagDescription:(ImebraTagId*)tagId error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return imebra::stringToNSString(imebra::DicomDictionary::getTagName(*get_other_imebra_object_holder(tagId, TagId)));
+    return imebra::stringToNSString(imebra::DicomDictionary::getTagDescription(*get_other_imebra_object_holder(tagId, TagId)));
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }

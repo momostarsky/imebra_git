@@ -93,7 +93,11 @@ dicomDictionary::dicomDictionary()
         registerTag(m_tagsDescription[scanDescriptions].m_tagId,
                     m_tagsDescription[scanDescriptions].m_tagMask,
                     m_tagsDescription[scanDescriptions].m_tagDescription,
-                    m_tagsDescription[scanDescriptions].m_vr0, m_tagsDescription[scanDescriptions].m_vr1);
+                    m_tagsDescription[scanDescriptions].m_tagKeyword,
+                    m_tagsDescription[scanDescriptions].m_vr0, m_tagsDescription[scanDescriptions].m_vr1,
+                    m_tagsDescription[scanDescriptions].m_multiplicityMin,
+                    m_tagsDescription[scanDescriptions].m_multiplicityMax,
+                    m_tagsDescription[scanDescriptions].m_multiplicityStep);
 
     }
 
@@ -110,7 +114,12 @@ dicomDictionary::dicomDictionary()
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dicomDictionary::registerTag(std::uint32_t tagId, std::uint32_t tagMask, const wchar_t* tagName, tagVR_t vr0, tagVR_t vr1)
+void dicomDictionary::registerTag(std::uint32_t tagId,
+                                  std::uint32_t tagMask,
+                                  const wchar_t* tagName,
+                                  const char* tagKeyword,
+                                  tagVR_t vr0, tagVR_t vr1,
+                                  std::uint32_t multiplicityMin, std::uint32_t multiplicityMax, std::uint32_t multiplicityStep)
 {
     IMEBRA_FUNCTION_START();
 
@@ -123,9 +132,13 @@ void dicomDictionary::registerTag(std::uint32_t tagId, std::uint32_t tagMask, co
     for(std::uint32_t registerTagId(tagId); (registerTagId & tagMask) == tagId; registerTagId += increaseValue)
     {
         imageDataDictionaryElement newElement;
-        newElement.m_tagName = tagName;
+        newElement.m_tagDescription = tagName;
+        newElement.m_tagKeyword = tagKeyword;
         newElement.m_vr0 = vr0;
         newElement.m_vr1 = vr1;
+        newElement.m_multiplicityMin = multiplicityMin;
+        newElement.m_multiplicityMax = multiplicityMax;
+        newElement.m_multiplicityStep = multiplicityStep;
         m_dicomDict[registerTagId] = newElement;
     }
 
@@ -165,12 +178,12 @@ void dicomDictionary::registerVR(tagVR_t vr, bool bLongLength, std::uint32_t wor
 ///////////////////////////////////////////////////////////
 //
 //
-// Return an human readable name for the tag
+// Return an human readable description for the tag
 //
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::wstring dicomDictionary::getTagName(std::uint16_t groupId, std::uint16_t tagId) const
+std::wstring dicomDictionary::getTagDescription(std::uint16_t groupId, std::uint16_t tagId) const
 {
     IMEBRA_FUNCTION_START();
 
@@ -182,7 +195,61 @@ std::wstring dicomDictionary::getTagName(std::uint16_t groupId, std::uint16_t ta
         IMEBRA_THROW(DictionaryUnknownTagError, "Unknown tag " << std::hex << groupId << ", " << std::hex << tagId);
     }
 
-    return findIterator->second.m_tagName;
+    return findIterator->second.m_tagDescription;
+
+    IMEBRA_FUNCTION_END();
+}
+
+
+std::uint32_t dicomDictionary::getTagMultiplicityMin(std::uint16_t groupId, std::uint16_t tagId) const
+{
+    IMEBRA_FUNCTION_START();
+
+    std::uint32_t tagDWordId=(((std::uint32_t)groupId)<<16) | (std::uint32_t)tagId;
+
+    tDicomDictionary::const_iterator findIterator = m_dicomDict.find(tagDWordId);
+    if(findIterator == m_dicomDict.end())
+    {
+        IMEBRA_THROW(DictionaryUnknownTagError, "Unknown tag " << std::hex << groupId << ", " << std::hex << tagId);
+    }
+
+    return findIterator->second.m_multiplicityMin;
+
+    IMEBRA_FUNCTION_END();
+}
+
+
+std::uint32_t dicomDictionary::getTagMultiplicityMax(std::uint16_t groupId, std::uint16_t tagId) const
+{
+    IMEBRA_FUNCTION_START();
+
+    std::uint32_t tagDWordId=(((std::uint32_t)groupId)<<16) | (std::uint32_t)tagId;
+
+    tDicomDictionary::const_iterator findIterator = m_dicomDict.find(tagDWordId);
+    if(findIterator == m_dicomDict.end())
+    {
+        IMEBRA_THROW(DictionaryUnknownTagError, "Unknown tag " << std::hex << groupId << ", " << std::hex << tagId);
+    }
+
+    return findIterator->second.m_multiplicityMax;
+
+    IMEBRA_FUNCTION_END();
+}
+
+
+std::uint32_t dicomDictionary::getTagMultiplicityStep(std::uint16_t groupId, std::uint16_t tagId) const
+{
+    IMEBRA_FUNCTION_START();
+
+    std::uint32_t tagDWordId=(((std::uint32_t)groupId)<<16) | (std::uint32_t)tagId;
+
+    tDicomDictionary::const_iterator findIterator = m_dicomDict.find(tagDWordId);
+    if(findIterator == m_dicomDict.end())
+    {
+        IMEBRA_THROW(DictionaryUnknownTagError, "Unknown tag " << std::hex << groupId << ", " << std::hex << tagId);
+    }
+
+    return findIterator->second.m_multiplicityStep;
 
     IMEBRA_FUNCTION_END();
 }
