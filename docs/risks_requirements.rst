@@ -544,6 +544,18 @@ Mitigates:
 
 
 
+.. _REQ_OVERLAYS:
+
+[REQ_OVERLAYS] The API must supply methods to retrieve and set overlay bitmaps
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+The DataSet class must supply methods to retrieve and set overlay bitmaps.
+
+
+
+
+
+
 .. _REQ_IMPL:
 
 Implementation requirements

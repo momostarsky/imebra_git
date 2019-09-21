@@ -116,6 +116,15 @@
       <priority>6</priority>
     </requirement>
 
+    <requirement categoryIdref="REQ_FUNC" id="REQ_OVERLAYS">
+
+      <title>The API must supply methods to retrieve and set overlay bitmaps</title>
+
+      <description>The DataSet class must supply methods to retrieve and set overlay bitmaps.</description>
+
+      <priority>6</priority>
+    </requirement>
+
     <requirement categoryIdref="REQ_FUNC" id="REQ_DONT_RETURN_POINTER">
       <title>The API should not return pointers to allocated objects</title>
 
