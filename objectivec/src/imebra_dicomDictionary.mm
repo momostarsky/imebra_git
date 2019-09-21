@@ -38,6 +38,33 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_END_RETURN(ImebraAE);
 }
 
++(unsigned int)getMultiplicityMin:(ImebraTagId*)tagId error:(NSError**)pError;
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    return (unsigned int)(imebra::DicomDictionary::getMultiplicityMin(*get_other_imebra_object_holder(tagId, TagId)));
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(0);
+}
+
++(unsigned int)getMultiplicityMax:(ImebraTagId*)tagId error:(NSError**)pError;
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    return (unsigned int)(imebra::DicomDictionary::getMultiplicityMax(*get_other_imebra_object_holder(tagId, TagId)));
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(0);
+}
+
++(unsigned int)getMultiplicityStep:(ImebraTagId*)tagId error:(NSError**)pError;
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    return (unsigned int)(imebra::DicomDictionary::getMultiplicityStep(*get_other_imebra_object_holder(tagId, TagId)));
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(0);
+}
+
 +(unsigned int)getWordSize:(ImebraTagVR_t)dataType
 {
     return (unsigned int)imebra::DicomDictionary::getWordSize((imebra::tagVR_t)dataType);
