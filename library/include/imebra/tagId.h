@@ -21,7 +21,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #include <cstdint>
 #include <vector>
-#include "tagsEnumeration.h"
 #include "definitions.h"
 
 namespace imebra

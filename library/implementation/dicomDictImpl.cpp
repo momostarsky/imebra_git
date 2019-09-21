@@ -19,7 +19,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #include "exceptionImpl.h"
 #include "dicomDictImpl.h"
-#include "tagsDescription.h"
+#include "dicomDescriptions.h"
 #include "../include/imebra/exceptions.h"
 
 namespace imebra
