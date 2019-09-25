@@ -99,6 +99,10 @@ TEST(dicomCodecTest, testDicom)
 
                         }
 
+                        EXPECT_EQ(highBit, dicomImage0->getHighBit());
+                        EXPECT_EQ(highBit, dicomImage1->getHighBit());
+                        EXPECT_EQ(highBit, dicomImage2->getHighBit());
+
                         std::string transferSyntax;
 
                         switch(transferSyntaxId)
