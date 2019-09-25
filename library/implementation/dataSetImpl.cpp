@@ -482,7 +482,7 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
 
     bool b2complement = pImage->isSigned();
     std::uint32_t channelsNumber = pImage->getChannelsNumber();
-    std::uint8_t allocatedBits = (std::uint8_t)(saveCodec->suggestAllocatedBits(transferSyntax, pImage->getHighBit()));
+    std::uint32_t highBit = pImage->getHighBit();
     bool bInterleaved = (getUnsignedLong(0x0028, 0x0, 0x0006, 0, 0, channelsNumber > 1 ? 0 : 1) == 0x0);
 
     // If the attributes cannot be changed, then check the
@@ -497,7 +497,7 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
                 bSubSampledX != transforms::colorTransforms::colorTransformsFactory::isSubsampledX(currentColorSpace) ||
                 bSubSampledY != transforms::colorTransforms::colorTransformsFactory::isSubsampledY(currentColorSpace) ||
                 b2complement != (getUnsignedLong(0x0028, 0, 0x0103, 0, 0) != 0) ||
-                allocatedBits != (std::uint8_t)getUnsignedLong(0x0028, 0x0, 0x0100, 0, 0) ||
+                highBit != (std::uint8_t)getUnsignedLong(0x0028, 0x0, 0x0102, 0, 0) ||
                 channelsNumber != getUnsignedLong(0x0028, 0x0, 0x0002, 0, 0))
         {
             IMEBRA_THROW(DataSetDifferentFormatError, "An image already exists in the dataset and has different attributes");
@@ -514,8 +514,10 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
     }
     else
     {
-        dataHandlerType = (bEncapsulated || allocatedBits <= 8) ? tagVR_t::OB : tagVR_t::OW;
+        dataHandlerType = (bEncapsulated || highBit <= 7 || highBit >= 16) ? tagVR_t::OB : tagVR_t::OW;
     }
+
+    std::uint8_t allocatedBits = (std::uint8_t)(saveCodec->suggestAllocatedBits(transferSyntax, pImage->getHighBit()));
 
     // Encapsulated mode. Check if we have the offsets table
     ///////////////////////////////////////////////////////////

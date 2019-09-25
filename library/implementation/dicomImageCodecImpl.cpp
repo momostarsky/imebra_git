@@ -1327,7 +1327,12 @@ std::uint32_t dicomImageCodec::suggestAllocatedBits(const std::string& transferS
         return (highBit + 8) & 0xfffffff8;
     }
 
-    return highBit + 1;
+    if(highBit == 0)
+    {
+        return 1;
+    }
+
+    return (highBit + 8) & 0xfffffff8;
 }
 
 } // namespace codecs
