@@ -232,23 +232,23 @@ TEST(dicomCodecTest, testDicom)
                                 std::uint32_t checkAllocatedBits(testDataSet->getUnsignedLong(TagId(tagId_t::BitsAllocated_0028_0100), 0));
                                 if(checkHighBit == 0)
                                 {
-                                    EXPECT_EQ(1, checkAllocatedBits);
+                                    EXPECT_EQ(1u, checkAllocatedBits);
                                 }
                                 else if(checkHighBit < 8)
                                 {
-                                    EXPECT_EQ(8, checkAllocatedBits);
+                                    EXPECT_EQ(8u, checkAllocatedBits);
                                 }
                                 else if(checkHighBit < 16)
                                 {
-                                    EXPECT_EQ(16, checkAllocatedBits);
+                                    EXPECT_EQ(16u, checkAllocatedBits);
                                 }
                                 else if(checkHighBit < 24)
                                 {
-                                    EXPECT_EQ(24, checkAllocatedBits);
+                                    EXPECT_EQ(24u, checkAllocatedBits);
                                 }
                                 else
                                 {
-                                    EXPECT_EQ(32, checkAllocatedBits);
+                                    EXPECT_EQ(32u, checkAllocatedBits);
                                 }
                             }
                         }
