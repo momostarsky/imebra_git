@@ -221,7 +221,6 @@ TEST(dicomCodecTest, testDicom)
                                 ASSERT_TRUE(identicalImages(*checkImage1, *dicomImage1));
                                 ASSERT_TRUE(identicalImages(*checkImage2, *dicomImage2));
                             }
-
                         }
                     }
                 }

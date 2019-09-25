@@ -7,6 +7,7 @@ Version |release| (this version)
 --------------------------------
 
 - Fixed bug #297 (Builds fail on new build VM) as per SOP :ref:`FIXBUG_2`
+- Fixed bug #302 (The Windows codepage for the charsets "ISO_IR 6", "ISO_IR 100", "ISO 2022 IR 6", "ISO 2022 IR 100" is wrong) as per SOP :ref:`FIXBUG_2`
 
 Version 4.5.6.1
 ---------------
