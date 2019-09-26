@@ -110,6 +110,10 @@ TEST(dicomCodecTest, testDicom)
 
                         }
 
+                        EXPECT_EQ(highBit, dicomImage0->getHighBit());
+                        EXPECT_EQ(highBit, dicomImage1->getHighBit());
+                        EXPECT_EQ(highBit, dicomImage2->getHighBit());
+
                         std::string transferSyntax;
 
                         switch(transferSyntaxId)
@@ -222,6 +226,31 @@ TEST(dicomCodecTest, testDicom)
                                 ASSERT_TRUE(identicalImages(*checkImage2, *dicomImage2));
                             }
 
+                            if(transferSyntax != "1.2.840.10008.1.2.5")
+                            {
+                                std::uint32_t checkHighBit(testDataSet->getUnsignedLong(TagId(tagId_t::HighBit_0028_0102), 0));
+                                std::uint32_t checkAllocatedBits(testDataSet->getUnsignedLong(TagId(tagId_t::BitsAllocated_0028_0100), 0));
+                                if(checkHighBit == 0)
+                                {
+                                    EXPECT_EQ(1u, checkAllocatedBits);
+                                }
+                                else if(checkHighBit < 8)
+                                {
+                                    EXPECT_EQ(8u, checkAllocatedBits);
+                                }
+                                else if(checkHighBit < 16)
+                                {
+                                    EXPECT_EQ(16u, checkAllocatedBits);
+                                }
+                                else if(checkHighBit < 24)
+                                {
+                                    EXPECT_EQ(24u, checkAllocatedBits);
+                                }
+                                else
+                                {
+                                    EXPECT_EQ(32u, checkAllocatedBits);
+                                }
+                            }
                         }
                     }
                 }

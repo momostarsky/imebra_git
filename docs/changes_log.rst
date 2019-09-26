@@ -6,6 +6,16 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Fixed bug #297 (Builds fail on new build VM) as per SOP :ref:`FIXBUG_2`
+- Implemented enhancement #300 (Not needed try/catch in jpegStreamCodecImpl.cpp) as per SOP :ref:`DEVENH_2`
+- Implemented enhancement #301 (Improve jpegStream tests) as per SOP :ref:`DEVENH_2`
+- Fixed bug #302 (The Windows codepage for the charsets "ISO_IR 6", "ISO_IR 100", "ISO 2022 IR 6", "ISO 2022 IR 100" is wrong) as per SOP :ref:`FIXBUG_2`
+- Fixed bug #303 (For DICOM encoded images force bits allocated to 1, 8, 16, 24 or 32, aligned with word or byte boundary) as per SOP :ref:`FIXBUG_2`
+- Fixed bug #304 (When specifying highBit=0 on images, the images are created with high bit = 7) as per SOP :ref:`FIXBUG_2`
+
+Version 4.6.0.1
+---------------
+
 - Fixed bug #190 (Visual Studio emits "unreachable code" warnings) as per SOP :ref:`FIXBUG_2`
 - Fixed bug #294 (When more than one presentation contexts have the same abstract syntax then Imebra always accepts only one transfer syntax) as per SOP :ref:`FIXBUG_2`
 - Fixed bug #295 (The AssociationSCP constructor sets the DICOM implementation to the wrong values) as per SOP :ref:`FIXBUG_2`

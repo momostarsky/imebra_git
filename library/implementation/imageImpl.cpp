@@ -109,7 +109,7 @@ image::image(uint32_t width, uint32_t height, bitDepth_t depth, const std::strin
 
     // Adjust the high bit value
     ///////////////////////////////////////////////////////////
-    if(highBit == 0 || highBit>defaultHighBit)
+    if(highBit>defaultHighBit)
         m_highBit=defaultHighBit;
     else
         m_highBit=highBit;
