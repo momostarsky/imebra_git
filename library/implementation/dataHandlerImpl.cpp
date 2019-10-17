@@ -101,8 +101,8 @@ std::shared_ptr<unicodePatientName> readingDataHandler::getUnicodePatientName(co
 
 
 
-writingDataHandler::writingDataHandler(const std::shared_ptr<buffer> &pBuffer, tagVR_t dataType, const uint8_t paddingByte):
-    m_dataType(dataType), m_buffer(pBuffer), m_paddingByte(paddingByte)
+writingDataHandler::writingDataHandler(const std::shared_ptr<buffer> &pBuffer, tagVR_t dataType):
+    m_dataType(dataType), m_buffer(pBuffer)
 {
 }
 

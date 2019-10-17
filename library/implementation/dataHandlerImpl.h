@@ -192,7 +192,7 @@ private:
 class writingDataHandler
 {
 public:
-    writingDataHandler(const std::shared_ptr<buffer>& pBuffer, tagVR_t dataType, const std::uint8_t paddingByte);
+    writingDataHandler(const std::shared_ptr<buffer>& pBuffer, tagVR_t dataType);
 
     virtual ~writingDataHandler();
 
@@ -315,8 +315,6 @@ protected:
     // Pointer to the connected buffer
     ///////////////////////////////////////////////////////////
     std::shared_ptr<buffer> m_buffer;
-
-    const std::uint8_t m_paddingByte;
 };
 
 ///

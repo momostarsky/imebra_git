@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -61,13 +61,13 @@ double readingDataHandlerStringIS::getDouble(const size_t index) const
 {
     IMEBRA_FUNCTION_START();
 
-	return (double)getSignedLong(index);
+    return (double)getSignedLong(index);
 
-	IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 writingDataHandlerStringIS::writingDataHandlerStringIS(const std::shared_ptr<buffer> pBuffer):
-    writingDataHandlerString(pBuffer, tagVR_t::IS, '\\', 0, 12, 0x20)
+    writingDataHandlerString(pBuffer, tagVR_t::IS, '\\', 0, 12)
 {
 
 }
@@ -86,9 +86,9 @@ void writingDataHandlerStringIS::setDouble(const size_t index, const double valu
 {
     IMEBRA_FUNCTION_START();
 
-	setSignedLong(index, (std::int32_t)value);
+    setSignedLong(index, (std::int32_t)value);
 
-	IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 } // namespace handlers

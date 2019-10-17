@@ -81,7 +81,7 @@ protected:
 class writingDataHandlerStringUnicode : public writingDataHandler
 {
 public:
-    writingDataHandlerStringUnicode(const std::shared_ptr<buffer>& pBuffer, const std::shared_ptr<const charsetsList_t>& pCharsets, tagVR_t dataType, const wchar_t separator, const size_t unitSize, const size_t maxSize, const std::uint8_t paddingByte);
+    writingDataHandlerStringUnicode(const std::shared_ptr<buffer>& pBuffer, const std::shared_ptr<const charsetsList_t>& pCharsets, tagVR_t dataType, const wchar_t separator, const size_t unitSize, const size_t maxSize);
 
     ~writingDataHandlerStringUnicode();
 

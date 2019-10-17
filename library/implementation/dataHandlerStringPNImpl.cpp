@@ -62,7 +62,7 @@ std::shared_ptr<unicodePatientName> readingDataHandlerStringPN::getUnicodePatien
 
 
 writingDataHandlerStringPN::writingDataHandlerStringPN(const std::shared_ptr<buffer>& pBuffer, const std::shared_ptr<const charsetsList_t>& pCharsets):
-    writingDataHandlerStringUnicode(pBuffer, pCharsets, tagVR_t::PN, L'\\', 0, 0, 0x20)
+    writingDataHandlerStringUnicode(pBuffer, pCharsets, tagVR_t::PN, L'\\', 0, 0)
 {
 }
 

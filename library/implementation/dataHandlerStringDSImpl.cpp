@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -64,9 +64,9 @@ std::int32_t readingDataHandlerStringDS::getSignedLong(const size_t index) const
 {
     IMEBRA_FUNCTION_START();
 
-	return (std::int32_t)getDouble(index);
+    return (std::int32_t)getDouble(index);
 
-	IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -86,12 +86,12 @@ std::uint32_t readingDataHandlerStringDS::getUnsignedLong(const size_t index) co
 
     return (std::uint32_t)getDouble(index);
 
-	IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 
 writingDataHandlerStringDS::writingDataHandlerStringDS(const std::shared_ptr<buffer> pBuffer):
-    writingDataHandlerString(pBuffer, tagVR_t::DS, '\\', 0, 16, 0x20)
+    writingDataHandlerString(pBuffer, tagVR_t::DS, '\\', 0, 16)
 {
 
 }
@@ -110,9 +110,9 @@ void writingDataHandlerStringDS::setSignedLong(const size_t index, const std::in
 {
     IMEBRA_FUNCTION_START();
 
-	setDouble(index, (double)value);
+    setDouble(index, (double)value);
 
-	IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -130,9 +130,9 @@ void writingDataHandlerStringDS::setUnsignedLong(const size_t index, const std::
 {
     IMEBRA_FUNCTION_START();
 
-	setDouble(index, (double)value);
+    setDouble(index, (double)value);
 
-	IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 } // namespace handlers

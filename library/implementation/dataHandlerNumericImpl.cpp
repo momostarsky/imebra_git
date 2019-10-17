@@ -105,7 +105,7 @@ void readingDataHandlerNumericBase::copyTo(std::shared_ptr<writingDataHandlerNum
 
 
 writingDataHandlerNumericBase::writingDataHandlerNumericBase(const std::shared_ptr<buffer> &pBuffer, const size_t initialSize, tagVR_t dataType, size_t unitSize):
-    writingDataHandler(pBuffer, dataType, 0), m_pMemory(std::make_shared<memory>(initialSize * unitSize))
+    writingDataHandler(pBuffer, dataType), m_pMemory(std::make_shared<memory>(initialSize * unitSize))
 {
 }
 
@@ -139,15 +139,6 @@ writingDataHandlerNumericBase::~writingDataHandlerNumericBase()
 {
     if(m_buffer != 0)
     {
-        // The buffer's size must be an even number
-        ///////////////////////////////////////////////////////////
-        size_t memorySize = m_pMemory->size();
-        if((memorySize & 0x1) != 0)
-        {
-            m_pMemory->resize(++memorySize);
-            *(m_pMemory->data() + (memorySize - 1)) = m_paddingByte;
-        }
-
         m_buffer->commit(m_pMemory);
     }
 }

@@ -120,6 +120,8 @@ public:
 
     std::shared_ptr<buffer> getBufferCreate(size_t bufferId);
 
+    std::shared_ptr<buffer> getBufferCreate(size_t bufferId, streamController::tByteOrdering endianType);
+
     std::shared_ptr<buffer> getBufferCreate(size_t bufferId,
                                             const std::shared_ptr<baseStreamInput>& originalStream,
                                             size_t bufferPosition,
@@ -217,6 +219,8 @@ public:
     std::shared_ptr<handlers::readingDataHandlerNumericBase> getReadingDataHandlerNumeric(size_t bufferId) const;
 
     std::shared_ptr<handlers::writingDataHandlerNumericBase> getWritingDataHandlerNumeric(size_t bufferId);
+
+    std::uint8_t getPaddingByte() const;
 
     /// \brief Return true if the buffer is referencing
     ///         the content in an external stream

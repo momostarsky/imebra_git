@@ -47,7 +47,7 @@ readingDataHandlerStringUC::readingDataHandlerStringUC(const memory &parseMemory
 }
 
 writingDataHandlerStringUC::writingDataHandlerStringUC(const std::shared_ptr<buffer> &pBuffer, const std::shared_ptr<const charsetsList_t>& pCharsets):
-    writingDataHandlerStringUnicode(pBuffer, pCharsets, tagVR_t::UC, L'\\', 0, 4294967294, 0x20)
+    writingDataHandlerStringUnicode(pBuffer, pCharsets, tagVR_t::UC, L'\\', 0, 4294967294)
 {
 }
 

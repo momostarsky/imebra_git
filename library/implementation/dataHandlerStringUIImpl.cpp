@@ -150,7 +150,7 @@ double readingDataHandlerStringUI::getDouble(const size_t index) const
 
 
 writingDataHandlerStringUI::writingDataHandlerStringUI(const std::shared_ptr<buffer> &pBuffer):
-    writingDataHandlerString(pBuffer, tagVR_t::UI, 0x0, 0, 64, 0x0)
+    writingDataHandlerString(pBuffer, tagVR_t::UI, 0x0, 0, 64)
 {
 }
 

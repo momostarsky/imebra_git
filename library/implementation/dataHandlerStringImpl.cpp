@@ -189,8 +189,8 @@ size_t readingDataHandlerString::getSize() const
     return m_strings.size();
 }
 
-writingDataHandlerString::writingDataHandlerString(const std::shared_ptr<buffer> &pBuffer, tagVR_t dataType, const char separator, const size_t unitSize, const size_t maxSize, const uint8_t paddingByte):
-    writingDataHandler(pBuffer, dataType, paddingByte), m_separator(separator), m_unitSize(unitSize), m_maxSize(maxSize)
+writingDataHandlerString::writingDataHandlerString(const std::shared_ptr<buffer> &pBuffer, tagVR_t dataType, const char separator, const size_t unitSize, const size_t maxSize):
+    writingDataHandler(pBuffer, dataType), m_separator(separator), m_unitSize(unitSize), m_maxSize(maxSize)
 {
 }
 
@@ -208,15 +208,6 @@ writingDataHandlerString::~writingDataHandlerString()
 
     std::shared_ptr<memory> commitMemory = std::make_shared<memory>(completeString.size());
     commitMemory->assign((std::uint8_t*)completeString.data(), completeString.size());
-
-    // The buffer's size must be an even number
-    ///////////////////////////////////////////////////////////
-    size_t memorySize = commitMemory->size();
-    if((memorySize & 0x1) != 0)
-    {
-        commitMemory->resize(++memorySize);
-        *(commitMemory->data() + (memorySize - 1)) = m_paddingByte;
-    }
 
     m_buffer->commit(commitMemory);
 }

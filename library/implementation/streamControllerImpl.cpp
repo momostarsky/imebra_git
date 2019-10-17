@@ -92,18 +92,8 @@ size_t streamController::getControlledStreamPosition()
 }
 
 
-///////////////////////////////////////////////////////////
-//
-// Adjust the byte ordering of pBuffer
-//
-///////////////////////////////////////////////////////////
-void streamController::adjustEndian(std::uint8_t* pBuffer, const size_t wordLength, const tByteOrdering endianType, const size_t words /* =1 */)
+void streamController::reverseEndian(std::uint8_t* pBuffer, const size_t wordLength, const size_t words)
 {
-    if(endianType == m_platformByteOrder || wordLength<2L)
-    {
-        return;
-    }
-
     switch(wordLength)
     {
     case 2:
@@ -144,6 +134,20 @@ void streamController::adjustEndian(std::uint8_t* pBuffer, const size_t wordLeng
             }
         }
         return;
+    }
+
+}
+
+///////////////////////////////////////////////////////////
+//
+// Adjust the byte ordering of pBuffer
+//
+///////////////////////////////////////////////////////////
+void streamController::adjustEndian(std::uint8_t* pBuffer, const size_t wordLength, const tByteOrdering endianType, const size_t words /* =1 */)
+{
+    if(endianType != m_platformByteOrder && wordLength >= 2u)
+    {
+        reverseEndian(pBuffer, wordLength, words);
     }
 }
 

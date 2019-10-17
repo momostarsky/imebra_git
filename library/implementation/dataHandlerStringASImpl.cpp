@@ -160,7 +160,7 @@ double readingDataHandlerStringAS::getDouble(const size_t /* index */) const
 
 
 writingDataHandlerStringAS::writingDataHandlerStringAS(const std::shared_ptr<buffer> &pBuffer):
-    writingDataHandlerString(pBuffer, tagVR_t::AS, '\\', 4, 4, 0x20)
+    writingDataHandlerString(pBuffer, tagVR_t::AS, '\\', 4, 4)
 {
 }
 

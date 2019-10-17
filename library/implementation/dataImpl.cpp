@@ -226,6 +226,32 @@ std::shared_ptr<buffer> data::getBufferCreate(size_t bufferId)
 }
 
 
+std::shared_ptr<buffer> data::getBufferCreate(size_t bufferId, streamController::tByteOrdering endianType)
+{
+    IMEBRA_FUNCTION_START();
+
+    std::lock_guard<std::mutex> lock(m_mutex);
+
+    // Retrieve the buffer
+    ///////////////////////////////////////////////////////////
+    if(bufferId < m_buffers.size() && m_buffers.at(bufferId) != nullptr)
+    {
+        return m_buffers.at(bufferId);
+    }
+
+    std::shared_ptr<buffer> pNewBuffer(std::make_shared<buffer>(m_pCharsetsList, endianType));
+    if(bufferId >= m_buffers.size())
+    {
+        m_buffers.resize(bufferId + 1);
+    }
+    m_buffers[bufferId] = pNewBuffer;
+
+    return pNewBuffer;
+
+    IMEBRA_FUNCTION_END();
+}
+
+
 std::shared_ptr<buffer> data::getBufferCreate(size_t bufferId,
                                         const std::shared_ptr<baseStreamInput>& originalStream,
                                         size_t bufferPosition,
@@ -329,6 +355,114 @@ std::shared_ptr<handlers::writingDataHandlerNumericBase> data::getWritingDataHan
     IMEBRA_FUNCTION_START();
 
     return getBufferCreate(bufferId)->getWritingDataHandlerNumeric(m_tagVR);
+
+    IMEBRA_FUNCTION_END();
+}
+
+std::uint8_t data::getPaddingByte() const
+{
+    IMEBRA_FUNCTION_START();
+
+    switch(m_tagVR)
+    {
+    case tagVR_t::AE:
+        return 0x20u;
+
+    case tagVR_t::AS:
+        return 0x20u;
+
+    case tagVR_t::CS:
+        return 0x20u;
+
+    case tagVR_t::DS:
+        return 0x20u;
+
+    case tagVR_t::IS:
+        return 0x20u;
+
+    case tagVR_t::UR:
+        return 0x20u;
+
+    case tagVR_t::LO:
+        return 0x20u;
+
+    case tagVR_t::LT:
+        return 0x20u;
+
+    case tagVR_t::PN:
+        return 0x20u;
+
+    case tagVR_t::SH:
+        return 0x20u;
+
+    case tagVR_t::ST:
+        return 0x20;
+
+    case tagVR_t::UC:
+        return 0x20;
+
+    case tagVR_t::UI:
+        return 0x0;
+
+    case tagVR_t::UT:
+        return 0x20;
+
+    case tagVR_t::OB:
+        return 0x0;
+
+    case tagVR_t::OL:
+        return 0x0;
+
+    case tagVR_t::SB:
+        return 0x0;
+
+    case tagVR_t::UN:
+        return 0x0;
+
+    case tagVR_t::OW:
+        return 0x0;
+
+    case tagVR_t::AT:
+        return 0x0;
+
+    case tagVR_t::FL:
+        return 0x0;
+
+    case tagVR_t::OF:
+        return 0x0;
+
+    case tagVR_t::FD:
+        return 0x0;
+
+    case tagVR_t::OD:
+        return 0x0;
+
+    case tagVR_t::SL:
+        return 0x0;
+
+    case tagVR_t::SS:
+        return 0x0;
+
+    case tagVR_t::UL:
+        return 0x0;
+
+    case tagVR_t::US:
+        return 0x0;
+
+    case tagVR_t::DA:
+        return 0x20u;
+
+    case tagVR_t::DT:
+        return 0x20u;
+
+    case tagVR_t::TM:
+        return 0x20u;
+
+    case tagVR_t::SQ:
+        return 0x20u;
+    }
+
+    IMEBRA_THROW(std::logic_error, "The tag was created with an invalid buffer type");
 
     IMEBRA_FUNCTION_END();
 }

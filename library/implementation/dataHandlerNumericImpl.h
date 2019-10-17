@@ -455,13 +455,13 @@ public:
         for(std::uint32_t scanRow = sourceStartRow; scanRow != sourceEndRow; ++scanRow)
         {
             const dataHandlerType *pSourceRowScan = &(((const dataHandlerType*)m_pMemory->data())[(scanRow * sourceWidth + sourceStartCol) * sourceNumChannels + sourceStartChannel]);
-            std::int32_t* pDestRowAddress = &pDest[(sourceEndCol - sourceStartCol) * (scanRow - sourceStartRow) / (destSubSampleY * destSubSampleX)];
+            std::int32_t* pDestRowAddress = &pDest[((sourceEndCol - sourceStartCol) / destSubSampleX) * ((scanRow - sourceStartRow) / destSubSampleY)];
 
             for(std::uint32_t scanCol(sourceStartCol); scanCol != sourceEndCol; ++scanCol)
             {
                 if(scanCol < sourceWidth && scanRow < sourceHeight)
                 {
-                    pDestRowAddress[(scanCol - sourceStartCol) / destSubSampleX] += (std::int32_t)((*pSourceRowScan) * 8 + 1);
+                    pDestRowAddress[(scanCol - sourceStartCol) / destSubSampleX] += static_cast<std::int32_t>(*pSourceRowScan) * 8 + 1;
                     pSourceRowScan += sourceNumChannels;
                 }
             }
@@ -479,7 +479,7 @@ public:
                 {
                     divisor = 8;
                 }
-                pDestRowAddress[(scanCol - sourceStartCol) / destSubSampleX] = cellValue / divisor;
+                pDestRowAddress[(scanCol - sourceStartCol) / destSubSampleX] = (cellValue & -8) / divisor;
             }
         }
 

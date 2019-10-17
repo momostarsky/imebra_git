@@ -112,7 +112,7 @@ double readingDataHandlerDateTimeBase::getDouble(const size_t /* index */) const
 
 
 writingDataHandlerDateTimeBase::writingDataHandlerDateTimeBase(const std::shared_ptr<buffer> &pBuffer, tagVR_t dataType, const size_t unitSize, const size_t maxSize):
-    writingDataHandlerString(pBuffer, dataType, '-', unitSize, maxSize, 0x20)
+    writingDataHandlerString(pBuffer, dataType, '-', unitSize, maxSize)
 {
 }
 

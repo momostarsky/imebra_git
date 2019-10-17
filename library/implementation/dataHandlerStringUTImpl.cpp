@@ -47,7 +47,7 @@ readingDataHandlerStringUT::readingDataHandlerStringUT(const memory& parseMemory
 }
 
 writingDataHandlerStringUT::writingDataHandlerStringUT(const std::shared_ptr<buffer> &pBuffer, const std::shared_ptr<const charsetsList_t>& pCharsets):
-    writingDataHandlerStringUnicode(pBuffer, pCharsets, tagVR_t::UT, 0x0, 0, 0, 0x20)
+    writingDataHandlerStringUnicode(pBuffer, pCharsets, tagVR_t::UT, 0x0, 0, 0)
 {
 }
 
