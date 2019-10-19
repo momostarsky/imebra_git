@@ -77,7 +77,7 @@ public:
     /// \brief Constructor.
     ///
     ///////////////////////////////////////////////////////////
-    buffer(const std::shared_ptr<const charsetsList_t>& pCharsets);
+    buffer(const std::shared_ptr<const charsetsList_t>& pCharsets, streamController::tByteOrdering endianType = streamController::getPlatformEndian());
 
     /// \brief Constructor. Initialize the buffer object and
     ///         declare the buffer's content on demand.
@@ -203,6 +203,8 @@ public:
     ///////////////////////////////////////////////////////////
     size_t getBufferSizeBytes() const;
 
+    streamController::tByteOrdering getEndianType() const;
+
     //@}
 
 
@@ -279,6 +281,8 @@ private:
 
     mutable std::mutex m_mutex;
 
+    streamController::tByteOrdering m_byteOrdering; // < Byte ordering in the stream or memory
+
 protected:
     // The following variables are used to read the buffer
     //  from an external stream.
@@ -287,7 +291,6 @@ protected:
     size_t m_originalBufferPosition; // < Original buffer's position
     size_t m_originalBufferLength;   // < Original buffer's length
     size_t m_originalWordLength;     // < Original word's length (for low/high endian adjustment)
-    streamController::tByteOrdering m_originalEndianType; // < Original endian type
 
 private:
     // Charset list

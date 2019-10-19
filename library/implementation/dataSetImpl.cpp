@@ -36,6 +36,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "dateImpl.h"
 #include "ageImpl.h"
 #include "VOIDescriptionImpl.h"
+#include "dicomNativeImageCodecImpl.h"
 #include <iostream>
 #include <string.h>
 #include <limits>
@@ -200,8 +201,6 @@ std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
     {
         std::shared_ptr<implementation::data> imageTag = getTag(0x7fe0, 0x0, 0x0010);
 
-        const tagVR_t imageStreamDataType(imageTag->getDataType());
-
         // Get the number of frames
         ///////////////////////////////////////////////////////////
         std::uint32_t numberOfFrames = getUnsignedLong(0x0028, 0, 0x0008, 0, 0, 1);
@@ -215,11 +214,7 @@ std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
         ///////////////////////////////////////////////////////////
         std::shared_ptr<streamReader> imageStream;
 
-        // Retrieve the second item in the image's tag.
-        // If the second item is present, then a multiframe
-        //  image is present.
-        ///////////////////////////////////////////////////////////
-        bool bDontNeedImagesPositions = false;
+        if(pCodec->encapsulated(transferSyntax))
         {
             if(imageTag->bufferExists(1))
             {
@@ -253,8 +248,27 @@ std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
                     std::shared_ptr<baseStreamInput> compositeStream(std::make_shared<memoryStreamInput>(temporaryMemory));
                     imageStream = std::make_shared<streamReader>(compositeStream);
                 }
-                bDontNeedImagesPositions = true;
             }
+        }
+        else
+        {
+            std::uint32_t allocatedBits = getUnsignedLong(0x0028, 0x0, 0x0100, 0, 0);
+            std::uint32_t width = getUnsignedLong(0x0028, 0x0, 0x0011, 0, 0);
+            std::uint32_t height = getUnsignedLong(0x0028, 0x0, 0x0010, 0, 0);
+            std::uint32_t channels = getUnsignedLong(0x0028, 0x0, 0x0002, 0, 0, 1);
+            std::string colorSpace = getString(0x0028, 0x0, 0x0004, 0, 0);
+            bool isSubsampledX = transforms::colorTransforms::colorTransformsFactory::isSubsampledX(colorSpace);
+            bool isSubsampledY = transforms::colorTransforms::colorTransformsFactory::isSubsampledY(colorSpace);
+
+            size_t imageSizeBytes = codecs::dicomNativeImageCodec::getNativeImageSizeBits(allocatedBits,
+                                                                                          width,
+                                                                                          height,
+                                                                                          channels,
+                                                                                          isSubsampledX,
+                                                                                          isSubsampledY) / 8;
+            std::shared_ptr<streamReader> pTagStream = imageTag->getStreamReader(0);
+            pTagStream->seek(imageSizeBytes * frameNumber);
+            imageStream = pTagStream->getReader(imageSizeBytes);
         }
 
         // If the image cannot be found, then probably we are
@@ -262,12 +276,11 @@ std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
         // Then try to read the image from the next group with
         //  id=0x7fe
         ///////////////////////////////////////////////////////////
-        if(imageStream == 0)
+        if(imageStream == nullptr)
         {
             try
             {
                 imageStream = getStreamReader(0x7fe0, (std::uint16_t)frameNumber, 0x0010, 0x0);
-                bDontNeedImagesPositions = true;
             }
             catch(const MissingDataElementError&)
             {
@@ -279,59 +292,13 @@ std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
         //  include the image offsets and stores all the images
         //  in one buffer
         ///////////////////////////////////////////////////////////
-        if(imageStream == 0)
+        if(imageStream == nullptr)
         {
             imageStream = imageTag->getStreamReader(0x0);
-
-            // Reset an internal array that keeps track of the
-            //  images position
-            ///////////////////////////////////////////////////////////
-            if(m_imagesPositions.size() != numberOfFrames)
-            {
-                m_imagesPositions.resize(numberOfFrames);
-
-                for(std::uint32_t resetImagesPositions = 0; resetImagesPositions != numberOfFrames; ++resetImagesPositions)
-                {
-                    m_imagesPositions[resetImagesPositions] = 0;
-                }
-
-            }
-
-            // Read all the images before the desidered one so we set
-            //  reading position in the stream
-            ///////////////////////////////////////////////////////////
-            for(std::uint32_t readImages = 0; readImages < frameNumber; readImages++)
-            {
-                size_t offsetPosition = m_imagesPositions[readImages];
-                if(offsetPosition == 0)
-                {
-                    pCodec->getImage(*this, imageStream, imageStreamDataType);
-                    m_imagesPositions[readImages] = imageStream->position();
-                    continue;
-                }
-                if((m_imagesPositions[readImages + 1] == 0) || (readImages == (frameNumber - 1)))
-                {
-                    imageStream->seek(offsetPosition);
-                }
-            }
         }
 
         std::shared_ptr<image> pImage;
-        pImage = pCodec->getImage(*this, imageStream, imageStreamDataType);
-
-        if(!bDontNeedImagesPositions && m_imagesPositions.size() > frameNumber)
-        {
-            m_imagesPositions[frameNumber] = imageStream->position();
-        }
-
-        // If the image has been returned correctly, then set
-        //  the image's size
-        ///////////////////////////////////////////////////////////
-        if(pImage != 0)
-        {
-            std::uint32_t width, height;
-            pImage->getSize(&width, &height);
-        }
+        pImage = pCodec->getImage(*this, imageStream);
 
         if(pImage->getColorSpace() == "PALETTE COLOR")
         {
@@ -459,8 +426,8 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
     {
         IMEBRA_THROW(DataSetWrongFrameError, "The frames must be inserted in sequence");
     }
-    bool bDontChangeAttributes = (numberOfFrames != 0);
-    std::string transferSyntax = getString(0x0002, 0x0, 0x0010, 0, 0, "1.2.840.10008.1.2");
+    const bool bDontChangeAttributes = (numberOfFrames != 0);
+    const std::string transferSyntax = getString(0x0002, 0x0, 0x0010, 0, 0, "1.2.840.10008.1.2");
 
     // Select the right codec
     ///////////////////////////////////////////////////////////
@@ -468,36 +435,36 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
 
     // Do we have to save the basic offset table?
     ///////////////////////////////////////////////////////////
-    std::uint16_t groupId(0x7fe0), tagId(0x0010); // The tag where the image must be stored
-    bool bEncapsulated = saveCodec->encapsulated(transferSyntax) || bufferExists(groupId, 0x0, tagId, 0x1);
+    const std::uint16_t groupId(0x7fe0), tagId(0x0010); // The tag where the image must be stored
+    const bool bEncapsulated = saveCodec->encapsulated(transferSyntax) || bufferExists(groupId, 0x0, tagId, 0x1);
 
     // Set the subsampling flags
     ///////////////////////////////////////////////////////////
-    bool bSubSampledX = (std::uint32_t)quality > (std::uint32_t)imageQuality_t::high;
-    bool bSubSampledY = (std::uint32_t)quality > (std::uint32_t)imageQuality_t::medium;
+    bool bSubSampledX = static_cast<std::uint32_t>(quality) > static_cast<std::uint32_t>(imageQuality_t::high);
+    bool bSubSampledY = static_cast<std::uint32_t>(quality) > static_cast<std::uint32_t>(imageQuality_t::medium);
     if( !transforms::colorTransforms::colorTransformsFactory::canSubsample(pImage->getColorSpace()) )
     {
         bSubSampledX = bSubSampledY = false;
     }
 
-    bool b2complement = pImage->isSigned();
-    std::uint32_t channelsNumber = pImage->getChannelsNumber();
-    std::uint32_t highBit = pImage->getHighBit();
-    bool bInterleaved = (getUnsignedLong(0x0028, 0x0, 0x0006, 0, 0, channelsNumber > 1 ? 0 : 1) == 0x0);
+    const bool b2complement = pImage->isSigned();
+    const std::uint32_t channelsNumber = pImage->getChannelsNumber();
+    const std::uint32_t highBit = pImage->getHighBit();
+    const bool bInterleaved = (getUnsignedLong(0x0028, 0x0, 0x0006, 0, 0, channelsNumber > 1 ? 0 : 1) == 0x0);
 
     // If the attributes cannot be changed, then check the
     //  attributes already stored in the dataset
     ///////////////////////////////////////////////////////////
     if(bDontChangeAttributes)
     {
-        std::string currentColorSpace = getString(0x0028, 0x0, 0x0004, 0, 0);
+        const std::string currentColorSpace = getString(0x0028, 0x0, 0x0004, 0, 0);
         if(
                 transforms::colorTransforms::colorTransformsFactory::normalizeColorSpace(pImage->getColorSpace()) !=
                     transforms::colorTransforms::colorTransformsFactory::normalizeColorSpace(currentColorSpace) ||
                 bSubSampledX != transforms::colorTransforms::colorTransformsFactory::isSubsampledX(currentColorSpace) ||
                 bSubSampledY != transforms::colorTransforms::colorTransformsFactory::isSubsampledY(currentColorSpace) ||
                 b2complement != (getUnsignedLong(0x0028, 0, 0x0103, 0, 0) != 0) ||
-                highBit != (std::uint8_t)getUnsignedLong(0x0028, 0x0, 0x0102, 0, 0) ||
+                highBit != getUnsignedLong(0x0028, 0x0, 0x0102, 0, 0) ||
                 channelsNumber != getUnsignedLong(0x0028, 0x0, 0x0002, 0, 0))
         {
             IMEBRA_THROW(DataSetDifferentFormatError, "An image already exists in the dataset and has different attributes");
@@ -514,10 +481,10 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
     }
     else
     {
-        dataHandlerType = (bEncapsulated || highBit <= 7 || highBit >= 16) ? tagVR_t::OB : tagVR_t::OW;
+        dataHandlerType = (bEncapsulated || highBit <= 7) ? tagVR_t::OB : tagVR_t::OW;
     }
 
-    std::uint8_t allocatedBits = (std::uint8_t)(saveCodec->suggestAllocatedBits(transferSyntax, pImage->getHighBit()));
+    const std::uint32_t allocatedBits = saveCodec->suggestAllocatedBits(transferSyntax, pImage->getHighBit());
 
     // Encapsulated mode. Check if we have the offsets table
     ///////////////////////////////////////////////////////////
@@ -526,24 +493,24 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
     {
         try
         {
-            if(bufferExists(groupId, 0x0, tagId, 0))
+            if(bufferExists(groupId, 0, tagId, 0))
             {
                 dataHandlerType = getDataType(groupId, 0x0, tagId);
             }
             else
             {
-                std::shared_ptr<handlers::readingDataHandlerRaw> imageHandler0 = getReadingDataHandlerRaw(groupId, 0x0, tagId, 0x0);
-                size_t bufferSize(imageHandler0->getSize());
+                std::shared_ptr<handlers::readingDataHandlerRaw> imageHandler = getReadingDataHandlerRaw(groupId, 0, tagId, 0);
+                size_t bufferSize(imageHandler->getSize());
 
                 if(bufferSize != 0 && !bufferExists(groupId, 0x0, tagId, 0x1))
                 {
                     // The first image must be moved forward, in order to
                     //  make some room for the offset table
                     ///////////////////////////////////////////////////////////
-                    dataHandlerType = imageHandler0->getDataType();
+                    dataHandlerType = imageHandler->getDataType();
                     std::shared_ptr<handlers::writingDataHandlerRaw> moveFirstImage = getWritingDataHandlerRaw(groupId, 0x0, tagId, 0x1, dataHandlerType);
                     moveFirstImage->setSize(bufferSize);
-                    ::memcpy(moveFirstImage->getMemoryBuffer(), imageHandler0->getMemoryBuffer(), bufferSize);
+                    ::memcpy(moveFirstImage->getMemoryBuffer(), imageHandler->getMemoryBuffer(), bufferSize);
                 }
             }
         }
@@ -577,7 +544,6 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
             pImage,
             transferSyntax,
             quality,
-            dataHandlerType,
             allocatedBits,
             bSubSampledX, bSubSampledY,
             bInterleaved,
@@ -587,14 +553,17 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
 
         if(!bEncapsulated)
         {
-            getTagCreate(groupId, 0, tagId, dataHandlerType)->getBufferCreate(firstBufferId)->appendMemory(uncompressedImage);
+            // Images with allocatedBits == 1 need special treatment
+            if(allocatedBits == 1)
+            {
+
+            }
+            else
+            {
+                getTagCreate(groupId, 0, tagId, dataHandlerType)->getBufferCreate(firstBufferId, streamController::tByteOrdering::lowByteEndian)->appendMemory(uncompressedImage);
+            }
         }
     }
-
-    // The images' positions calculated by getImage are not
-    //  valid now. They must be recalculated.
-    ///////////////////////////////////////////////////////////
-    m_imagesPositions.clear();
 
     // Write the attributes in the dataset
     ///////////////////////////////////////////////////////////
@@ -632,26 +601,28 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
 
     // Update the offsets tag with the image's offsets
     ///////////////////////////////////////////////////////////
-    if(!bEncapsulated)
+    if(bEncapsulated)
     {
-        return;
+        std::uint32_t calculatePosition(0);
+        std::shared_ptr<const data> tag(getTag(groupId, 0, tagId));
+        for(std::uint32_t scanBuffers = 1; scanBuffers < firstBufferId; ++scanBuffers)
+        {
+            size_t bufferSize = tag->getBufferSize(scanBuffers);
+            if((bufferSize & 1u) == 1u)
+            {
+                ++bufferSize;
+            }
+            calculatePosition += static_cast<std::uint32_t>(bufferSize);
+            calculatePosition += 8;
+        }
+        std::shared_ptr<handlers::writingDataHandlerRaw> offsetHandler(getWritingDataHandlerRaw(groupId, 0, tagId, 0, dataHandlerType));
+        offsetHandler->setSize(4 * (frameNumber + 1));
+        std::shared_ptr<handlers::readingDataHandlerRaw> originalOffsetHandler(getReadingDataHandlerRaw(groupId, 0, tagId, 0));
+        originalOffsetHandler->copyTo(offsetHandler->getMemoryBuffer(), offsetHandler->getSize());
+        std::uint8_t* pOffsetFrame(offsetHandler->getMemoryBuffer() + (frameNumber * 4));
+        *( reinterpret_cast<std::uint32_t*>(pOffsetFrame) ) = calculatePosition;
+        streamController::adjustEndian(pOffsetFrame, 4, streamController::lowByteEndian, 1);
     }
-
-    std::uint32_t calculatePosition(0);
-    std::shared_ptr<data> tag(getTag(groupId, 0, tagId));
-    for(std::uint32_t scanBuffers = 1; scanBuffers < firstBufferId; ++scanBuffers)
-    {
-        calculatePosition += (std::uint32_t)tag->getBufferSize(scanBuffers);
-        calculatePosition += 8;
-    }
-    std::shared_ptr<handlers::writingDataHandlerRaw> offsetHandler(getWritingDataHandlerRaw(groupId, 0, tagId, 0, dataHandlerType));
-    offsetHandler->setSize(4 * (frameNumber + 1));
-    std::shared_ptr<handlers::readingDataHandlerRaw> originalOffsetHandler(getReadingDataHandlerRaw(groupId, 0, tagId, 0));
-    originalOffsetHandler->copyTo(offsetHandler->getMemoryBuffer(), offsetHandler->getSize());
-    std::uint8_t* pOffsetFrame(offsetHandler->getMemoryBuffer() + (frameNumber * 4));
-    *( (std::uint32_t*)pOffsetFrame  ) = calculatePosition;
-    streamController::adjustEndian(pOffsetFrame, 4, streamController::lowByteEndian, 1);
-
     IMEBRA_FUNCTION_END();
 }
 

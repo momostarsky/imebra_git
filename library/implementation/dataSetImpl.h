@@ -915,8 +915,6 @@ private:
     ///////////////////////////////////////////////////////////
     std::uint32_t getFirstAvailFrameBufferId() const;
 
-    mutable std::vector<size_t> m_imagesPositions;
-
     // Position of the sequence item in the stream. Used to
     //  parse DICOMDIR items
     ///////////////////////////////////////////////////////////

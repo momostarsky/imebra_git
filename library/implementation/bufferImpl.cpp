@@ -77,11 +77,11 @@ namespace implementation
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-buffer::buffer(const std::shared_ptr<const charsetsList_t>& pCharsets):
+buffer::buffer(const std::shared_ptr<const charsetsList_t>& pCharsets, streamController::tByteOrdering endianType):
+    m_byteOrdering(endianType),
     m_originalBufferPosition(0),
     m_originalBufferLength(0),
     m_originalWordLength(1),
-    m_originalEndianType(streamController::lowByteEndian),
     m_pCharsetsList(pCharsets)
 {
 }
@@ -103,11 +103,11 @@ buffer::buffer(
         size_t wordLength,
         streamController::tByteOrdering endianType,
         const std::shared_ptr<const charsetsList_t>& pCharsets):
+        m_byteOrdering(endianType),
         m_originalStream(originalStream),
         m_originalBufferPosition(bufferPosition),
         m_originalBufferLength(bufferLength),
         m_originalWordLength(wordLength),
-        m_originalEndianType(endianType),
         m_pCharsetsList(pCharsets)
 {
 }
@@ -134,9 +134,9 @@ std::shared_ptr<const memory> buffer::getLocalMemory() const
     // If the object must be loaded from the original stream,
     //  then load it...
     ///////////////////////////////////////////////////////////
-    if(m_originalStream != 0)
+    if(m_originalStream != nullptr)
     {
-        std::shared_ptr<memory> localMemory(std::make_shared<memory>( (m_originalBufferLength + 1) & ~(size_t(1u)) ) );
+        std::shared_ptr<memory> localMemory(std::make_shared<memory>(m_originalBufferLength));
         if(m_originalBufferLength != 0)
         {
             std::shared_ptr<streamReader> reader(std::make_shared<streamReader>(m_originalStream, m_originalBufferPosition, m_originalBufferLength));
@@ -145,7 +145,7 @@ std::shared_ptr<const memory> buffer::getLocalMemory() const
             reader->read(&localBuffer[0], m_originalBufferLength);
             if(m_originalWordLength != 0)
             {
-                reader->adjustEndian(&localBuffer[0], m_originalWordLength, m_originalEndianType, m_originalBufferLength/m_originalWordLength);
+                reader->adjustEndian(&localBuffer[0], m_originalWordLength, m_byteOrdering, m_originalBufferLength/m_originalWordLength);
             }
             localMemory->assign(&localBuffer[0], m_originalBufferLength);
         }
@@ -166,7 +166,7 @@ std::shared_ptr<const memory> buffer::joinMemory() const
         return std::make_shared<memory>();
     }
 
-    if(m_memory.size() == 1 && (m_memory.front()->size() & 1) == 0)
+    if(m_memory.size() == 1)
     {
         return m_memory.front();
     }
@@ -178,25 +178,14 @@ std::shared_ptr<const memory> buffer::joinMemory() const
     {
         totalSize += (*scanMemory)->size();
     }
-    if((totalSize & 1) == 1)
-    {
-        totalSize++;
-    }
 
     std::shared_ptr<memory> newMemory(std::make_shared<memory>(totalSize));
 
     size_t copyIndex(0);
-    for(std::list<std::shared_ptr<const memory> >::const_iterator scanMemory(m_memory.begin()), endMemory(m_memory.end());
-        scanMemory != endMemory;
-        ++scanMemory)
+    for(const std::shared_ptr<const memory>& scanMemory: m_memory)
     {
-        ::memcpy(newMemory->data() + copyIndex, (*scanMemory)->data(), (*scanMemory)->size());
-        copyIndex += (*scanMemory)->size();
-    }
-
-    if((copyIndex & 1) == 1)
-    {
-        newMemory->data()[copyIndex] = 0;
+        ::memcpy(newMemory->data() + copyIndex, scanMemory->data(), scanMemory->size());
+        copyIndex += scanMemory->size();
     }
 
     return newMemory;
@@ -479,7 +468,7 @@ std::shared_ptr<streamReader> buffer::getStreamReader()
     // If the object must be loaded from the original stream,
     //  then return the original stream
     ///////////////////////////////////////////////////////////
-    if(m_originalStream != 0 && (m_originalWordLength <= 1 || m_originalEndianType == streamReader::getPlatformEndian()))
+    if(m_originalStream != nullptr && (m_originalWordLength <= 1u || m_byteOrdering == streamReader::getPlatformEndian()))
     {
         std::shared_ptr<streamReader> reader(std::make_shared<streamReader>(m_originalStream, m_originalBufferPosition, m_originalBufferLength));
         return reader;
@@ -557,7 +546,7 @@ std::shared_ptr<handlers::readingDataHandlerNumericBase> buffer::getReadingDataH
 
     std::shared_ptr<handlers::readingDataHandler> handler = getReadingDataHandler(tagVR);
     std::shared_ptr<handlers::readingDataHandlerNumericBase> numericHandler = std::dynamic_pointer_cast<handlers::readingDataHandlerNumericBase>(handler);
-    if(numericHandler == 0)
+    if(numericHandler == nullptr)
     {
         IMEBRA_THROW(DataHandlerConversionError, "The data handler does not handle numeric data");
     }
@@ -574,7 +563,7 @@ std::shared_ptr<handlers::writingDataHandlerNumericBase> buffer::getWritingDataH
 
     std::shared_ptr<handlers::writingDataHandler> handler = getWritingDataHandler(tagVR, size);
     std::shared_ptr<handlers::writingDataHandlerNumericBase> numericHandler = std::dynamic_pointer_cast<handlers::writingDataHandlerNumericBase>(handler);
-    if(numericHandler == 0)
+    if(numericHandler == nullptr)
     {
         IMEBRA_THROW(DataHandlerConversionError, "The data handler does not handle numeric data");
     }
@@ -619,9 +608,9 @@ size_t buffer::getBufferSizeBytes() const
 
     // The buffer has not been loaded yet
     ///////////////////////////////////////////////////////////
-    if(m_originalStream != 0)
+    if(m_originalStream != nullptr)
     {
-        return( (m_originalBufferLength + 1) & ~(size_t(1u)) );
+        return m_originalBufferLength;
     }
 
     size_t totalSize(0);
@@ -630,14 +619,15 @@ size_t buffer::getBufferSizeBytes() const
         totalSize += (*scanMemory)->size();
     }
 
-    if((totalSize & 1) == 1)
-    {
-        ++totalSize;
-    }
-
     return totalSize;
 
     IMEBRA_FUNCTION_END();
+}
+
+
+streamController::tByteOrdering buffer::getEndianType() const
+{
+    return m_byteOrdering;
 }
 
 
