@@ -26,7 +26,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "dicomStreamCodecImpl.h"
 
 #include "jpegImageCodecImpl.h"
-#include "dicomImageCodecImpl.h"
+#include "dicomNativeImageCodecImpl.h"
+#include "dicomRLEImageCodecImpl.h"
 
 #ifdef JPEG2000
 #include "jpeg2000ImageCodecImpl.h"
@@ -73,7 +74,8 @@ codecFactory::codecFactory(): m_maximumImageWidth(MAXIMUM_IMAGE_WIDTH), m_maximu
     registerStreamCodec(codecType_t::jpeg, std::make_shared<jpegStreamCodec>());
 
     registerImageCodec(std::make_shared<jpegImageCodec>());
-    registerImageCodec(std::make_shared<dicomImageCodec>());
+    registerImageCodec(std::make_shared<dicomNativeImageCodec>());
+    registerImageCodec(std::make_shared<dicomRLEImageCodec>());
 
 #ifdef JPEG2000
     registerImageCodec(std::make_shared<jpeg2000ImageCodec>());

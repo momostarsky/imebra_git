@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -40,13 +40,13 @@ class IMEBRA_API CodecFactory
 public:
     /// \brief Parses the content of the input stream and returns a DataSet
     ///        representing it.
-    /// 
+    ///
     /// If none of the codecs supplied by Imebra is able to decode the stream's
     /// content then it throws a CodecWrongFormatError exception.
     ///
     /// The read position of the StreamReader is undefined when this method
     /// returns.
-    /// 
+    ///
     /// \param reader            a StreamReader connected to the input stream
     /// \param maxSizeBufferLoad the maximum size of the tags that are loaded
     ///                          immediately. Tags larger than maxSizeBufferLoad
@@ -99,7 +99,6 @@ public:
             const Image& sourceImage,
             const std::string& transferSyntax,
             imageQuality_t imageQuality_t,
-            tagVR_t dataType,
             std::uint32_t allocatedBits,
             bool bSubSampledX,
             bool bSubSampledY,

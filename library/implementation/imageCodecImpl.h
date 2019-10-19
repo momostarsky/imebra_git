@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -46,6 +46,8 @@ class image;
 namespace codecs
 {
 
+class channel;
+
 /// \addtogroup group_codecs Codecs
 /// \brief The codecs can generate a dataSet structure
 ///         or an image from a stream or can write the
@@ -73,184 +75,204 @@ public:
 
     virtual ~imageCodec();
 
-	///////////////////////////////////////////////////////////
-	/// \name Set/get the image in the dicom structure
-	///
-	///////////////////////////////////////////////////////////
-	//@{
+    ///////////////////////////////////////////////////////////
+    /// \name Set/get the image in the dicom structure
+    ///
+    ///////////////////////////////////////////////////////////
+    //@{
 
-	/// \brief Get a decompressed image from a dicom structure.
-	///
-	/// This function is usually called by 
-	///  dataSet::getImage(), which also manages the 
+    /// \brief Get a decompressed image from a dicom structure.
+    ///
+    /// This function is usually called by
+    ///  dataSet::getImage(), which also manages the
     ///  codec and the frame selection.
-	///
-	/// The decompressed image will be stored in a image
-	///  object.
+    ///
+    /// The decompressed image will be stored in a image
+    ///  object.
     /// Your application can choose the frame to decompress if
-	///  a multiframe Dicom structure is available.
-	///
-	/// We suggest to use the dataSet::getImage()
-	///  function instead of calling this function directly.
-	/// dataSet::getImage() takes care of selecting
-	///  the right tag's group and buffer's id. Infact,
-	///  some dicom file formats span images in several groups,
-	///  while others use sequence when saving multiple frames.
-	///
-	/// @param pSourceDataSet a pointer to the Dicom structure 
-	///              where the requested image is embedded into
-	/// @param pSourceStream a pointer to a stream containing
-	///              the data to be parsed
-	/// @param dataType the data type of the buffer from which
-	///               the stream pSourceStream has been 
-	///               obtained. The data type must be in DICOM
-	///               format
-	/// @return a pointer to the loaded image
-	///
-	///////////////////////////////////////////////////////////
-    virtual std::shared_ptr<image> getImage(const dataSet& sourceDataSet, std::shared_ptr<streamReader> pSourceStream, tagVR_t dataType) const = 0;
-	
-	/// \brief Stores an image into stream.
-	///
-	/// The image is compressed using the specified transfer
-	///  syntax and quality.
-	///
-	/// The application should call dataSet::setImage()
-	///  instead of calling this function directly.
-	///
-	/// @param pDestStream the stream where the compressed 
-	///                     image must be saved
-	/// @param pSourceImage the image to be saved into the
-	///                     stream
-	/// @param transferSyntax the transfer syntax to use for
-	///                     the compression
-	/// @param imageQuality the quality to use for the 
-	///                     compression. Please note that the
-	///                     parameters bSubSampledX and
-	///                     bSubSampledY override the settings
-	///                     specified by this parameter
-	/// @param dataType    the data type of the tag that will
-	///                     contain the generated stream
-	/// @param allocatedBits the number of bits per color
-	///                     channel
-	/// @param bSubSampledX true if the chrominance channels
-	///                     must be subsampled horizontally,
-	///                     false otherwise
-	/// @param bSubSampledY true if the chrominance channels
-	///                     must be subsampled vertically,
-	///                     false otherwise
-	/// @param bInterleaved true if the channels' information
-	///                      must be interleaved, false if the
-	///                      channels' information must be
-	///                      flat (not interleaved)
-	/// @param b2Complement true if the image contains 
-	///                     2-complement data, false otherwise
-	///
-	///////////////////////////////////////////////////////////
-	virtual void setImage(
-		std::shared_ptr<streamWriter> pDestStream,
-		std::shared_ptr<image> pSourceImage, 
+    ///  a multiframe Dicom structure is available.
+    ///
+    /// We suggest to use the dataSet::getImage()
+    ///  function instead of calling this function directly.
+    /// dataSet::getImage() takes care of selecting
+    ///  the right tag's group and buffer's id. Infact,
+    ///  some dicom file formats span images in several groups,
+    ///  while others use sequence when saving multiple frames.
+    ///
+    /// @param pSourceDataSet a pointer to the Dicom structure
+    ///              where the requested image is embedded into
+    /// @param pSourceStream a pointer to a stream containing
+    ///              the data to be parsed
+    /// @return a pointer to the loaded image
+    ///
+    ///////////////////////////////////////////////////////////
+    virtual std::shared_ptr<image> getImage(const dataSet& sourceDataSet, std::shared_ptr<streamReader> pSourceStream) const = 0;
+
+    /// \brief Stores an image into stream.
+    ///
+    /// The image is compressed using the specified transfer
+    ///  syntax and quality.
+    ///
+    /// The application should call dataSet::setImage()
+    ///  instead of calling this function directly.
+    ///
+    /// @param pDestStream the stream where the compressed
+    ///                     image must be saved
+    /// @param pSourceImage the image to be saved into the
+    ///                     stream
+    /// @param transferSyntax the transfer syntax to use for
+    ///                     the compression
+    /// @param imageQuality the quality to use for the
+    ///                     compression. Please note that the
+    ///                     parameters bSubSampledX and
+    ///                     bSubSampledY override the settings
+    ///                     specified by this parameter
+    /// @param allocatedBits the number of bits per color
+    ///                     channel
+    /// @param bSubSampledX true if the chrominance channels
+    ///                     must be subsampled horizontally,
+    ///                     false otherwise
+    /// @param bSubSampledY true if the chrominance channels
+    ///                     must be subsampled vertically,
+    ///                     false otherwise
+    /// @param bInterleaved true if the channels' information
+    ///                      must be interleaved, false if the
+    ///                      channels' information must be
+    ///                      flat (not interleaved)
+    /// @param b2Complement true if the image contains
+    ///                     2-complement data, false otherwise
+    ///
+    ///////////////////////////////////////////////////////////
+    virtual void setImage(
+        std::shared_ptr<streamWriter> pDestStream,
+        std::shared_ptr<image> pSourceImage,
         const std::string& transferSyntax,
         imageQuality_t imageQuality,
-        tagVR_t dataType,
         std::uint32_t allocatedBits,
-		bool bSubSampledX,
-		bool bSubSampledY,
-		bool bInterleaved,
+        bool bSubSampledX,
+        bool bSubSampledY,
+        bool bInterleaved,
         bool b2Complement) const = 0;
 
-	//@}
+    //@}
 
 
-	///////////////////////////////////////////////////////////
-	/// \name Selection of the codec from a transfer syntax
-	///
-	///////////////////////////////////////////////////////////
-	//@{
+    ///////////////////////////////////////////////////////////
+    /// \name Selection of the codec from a transfer syntax
+    ///
+    ///////////////////////////////////////////////////////////
+    //@{
 
-	/// \brief This function returns true if the codec can
-	///        handle the requested DICOM transfer syntax.
-	///
-	/// @param transferSyntax the transfer syntax to check
-	///                         for
-	/// @return true if the transfer syntax specified in
-	///         transferSyntax can be handled by the
-	///         codec, false otherwise.
-	///
-	///////////////////////////////////////////////////////////
+    /// \brief This function returns true if the codec can
+    ///        handle the requested DICOM transfer syntax.
+    ///
+    /// @param transferSyntax the transfer syntax to check
+    ///                         for
+    /// @return true if the transfer syntax specified in
+    ///         transferSyntax can be handled by the
+    ///         codec, false otherwise.
+    ///
+    ///////////////////////////////////////////////////////////
     virtual bool canHandleTransferSyntax(const std::string& transferSyntax) const = 0;
 
-	/// \brief This function returns true if the codec 
-	///         transfer syntax handled by the code has to be
-	///         encapsulated
-	///
-	/// @param transferSyntax the transfer syntax to check
-	///                         for
-	/// @return true if the transfer syntax specified in
-	///         transferSyntax has to be encapsulated
-	///
-	///////////////////////////////////////////////////////////
+    /// \brief This function returns true if the codec
+    ///         transfer syntax handled by the code has to be
+    ///         encapsulated
+    ///
+    /// @param transferSyntax the transfer syntax to check
+    ///                         for
+    /// @return true if the transfer syntax specified in
+    ///         transferSyntax has to be encapsulated
+    ///
+    ///////////////////////////////////////////////////////////
     virtual bool encapsulated(const std::string& transferSyntax) const = 0;
 
-	//@}
+    //@}
 
 
-	///////////////////////////////////////////////////////////
-	/// \name Image's attributes from the transfer syntax.
-	///
-	///////////////////////////////////////////////////////////
-	//@{
+    ///////////////////////////////////////////////////////////
+    /// \name Image's attributes from the transfer syntax.
+    ///
+    ///////////////////////////////////////////////////////////
+    //@{
 
-	/// \brief Suggest an optimal number of allocated bits for
-	///        the specified transfer syntax and high bit.
-	///
-	/// @param transferSyntax the transfer syntax to use
-	/// @param highBit        the high bit to use for the
-	///                        suggestion
-	/// @return the suggested number of allocated bits for the
-	///          specified transfer syntax and high bit.
-	///
-	///////////////////////////////////////////////////////////
+    /// \brief Suggest an optimal number of allocated bits for
+    ///        the specified transfer syntax and high bit.
+    ///
+    /// @param transferSyntax the transfer syntax to use
+    /// @param highBit        the high bit to use for the
+    ///                        suggestion
+    /// @return the suggested number of allocated bits for the
+    ///          specified transfer syntax and high bit.
+    ///
+    ///////////////////////////////////////////////////////////
     virtual std::uint32_t suggestAllocatedBits(const std::string& transferSyntax, std::uint32_t highBit) const = 0;
 
-	//@}
+    //@}
+
+    static std::vector<std::shared_ptr<channel>> splitImageIntoChannels(const std::shared_ptr<const image>& image, bool bSubSampledX, bool bSubSampledY);
+
+    static std::vector<std::shared_ptr<channel>> allocChannels(std::uint32_t channelsNumber, std::uint32_t width, std::uint32_t height, bool bSubSampledX, bool bSubSampledY);
+
+    template<typename samplesType_t> static void adjustB2Complement(
+            samplesType_t* pImageSamples,
+            std::uint32_t highBit,
+            size_t numSamples)
+    {
+        const samplesType_t checkSign = static_cast<samplesType_t>(samplesType_t(1) << highBit);
+        const samplesType_t orMask = samplesType_t(-1 * (1 << highBit));
+
+        while(numSamples-- != 0)
+        {
+            if(*pImageSamples & checkSign)
+            {
+                *pImageSamples |= orMask;
+            }
+            ++pImageSamples;
+        }
+    }
+
+    static void adjustB2Complement(
+            std::uint8_t* pImageSamples,
+            std::uint32_t highBit,
+            bitDepth_t samplesDepth,
+            size_t numSamples);
 
 };
-
 
 class channel
 {
 public:
-	// Constructor
-	///////////////////////////////////////////////////////////
+    // Constructor
+    ///////////////////////////////////////////////////////////
     channel():
         m_samplingFactorX(1),
         m_samplingFactorY(1),
         m_width(0),
         m_height(0),
-        m_pBuffer(0),
+        m_pBuffer(nullptr),
         m_bufferSize(0){}
 
     // Allocate the channel
     ///////////////////////////////////////////////////////////
     void allocate(std::uint32_t width, std::uint32_t height);
 
-	// Sampling factor
-	///////////////////////////////////////////////////////////
-	std::uint32_t m_samplingFactorX;
-	std::uint32_t m_samplingFactorY;
+    // Sampling factor
+    ///////////////////////////////////////////////////////////
+    std::uint32_t m_samplingFactorX;
+    std::uint32_t m_samplingFactorY;
 
-	// Channel's size in pixels
-	///////////////////////////////////////////////////////////
-	std::uint32_t m_width;
-	std::uint32_t m_height;
+    // Channel's size in pixels
+    ///////////////////////////////////////////////////////////
+    std::uint32_t m_width;
+    std::uint32_t m_height;
 
-	// Channel's buffer & size
-	///////////////////////////////////////////////////////////
-	std::int32_t* m_pBuffer;
-	std::uint32_t m_bufferSize;
+    // Channel's buffer & size
+    ///////////////////////////////////////////////////////////
+    std::int32_t* m_pBuffer;
+    std::uint32_t m_bufferSize;
 
-	std::shared_ptr<memory> m_memory;
+    std::shared_ptr<memory> m_memory;
 };
 
 

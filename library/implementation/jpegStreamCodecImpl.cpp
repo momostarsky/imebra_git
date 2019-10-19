@@ -115,7 +115,7 @@ void jpegStreamCodec::writeStream(std::shared_ptr<streamWriter> pStream, std::sh
     // Get the image then write it
     ///////////////////////////////////////////////////////////
     std::shared_ptr<image> decodedImage = pDataSet->getImage(0);
-    imageCodec.setImage(pStream, decodedImage, "1.2.840.10008.1.2.4.50", imageQuality_t::high, tagVR_t::OB, 8, true, true, false, false);
+    imageCodec.setImage(pStream, decodedImage, "1.2.840.10008.1.2.4.50", imageQuality_t::high, 8, true, true, false, false);
 
     IMEBRA_FUNCTION_END();
 

@@ -51,7 +51,7 @@ class jpegImageCodec : public imageCodec, public jpegCodecBase
 public:
     // Retrieve the image from a dataset
     ///////////////////////////////////////////////////////////
-    virtual std::shared_ptr<image> getImage(const dataSet& sourceDataSet, std::shared_ptr<streamReader> pStream, tagVR_t dataType) const override;
+    virtual std::shared_ptr<image> getImage(const dataSet& sourceDataSet, std::shared_ptr<streamReader> pStream) const override;
 
     // Insert a jpeg compressed image into a dataset
     ///////////////////////////////////////////////////////////
@@ -60,7 +60,6 @@ public:
         std::shared_ptr<image> pImage,
         const std::string& transferSyntax,
         imageQuality_t imageQuality,
-        tagVR_t dataType,
         std::uint32_t allocatedBits,
         bool bSubSampledX,
         bool bSubSampledY,

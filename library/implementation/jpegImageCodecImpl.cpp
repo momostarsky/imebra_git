@@ -319,7 +319,7 @@ std::uint32_t jpegImageCodec::suggestAllocatedBits(const std::string& transferSy
 //
 /////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
-std::shared_ptr<image> jpegImageCodec::getImage(const dataSet& sourceDataSet, std::shared_ptr<streamReader> pStream, tagVR_t /* dataType not used */) const
+std::shared_ptr<image> jpegImageCodec::getImage(const dataSet& sourceDataSet, std::shared_ptr<streamReader> pStream) const
 {
     IMEBRA_FUNCTION_START();
 
@@ -867,7 +867,6 @@ void jpegImageCodec::setImage(
         std::shared_ptr<image> pImage,
         const std::string& transferSyntax,
         imageQuality_t imageQuality,
-        tagVR_t /* dataType */,
         std::uint32_t allocatedBits,
         bool bSubSampledX,
         bool bSubSampledY,

@@ -68,7 +68,6 @@ void CodecFactory::saveImage(
         const Image& sourceImage,
         const std::string& transferSyntax,
         imageQuality_t imageQuality,
-        tagVR_t dataType,
         std::uint32_t allocatedBits,
         bool bSubSampledX,
         bool bSubSampledY,
@@ -79,7 +78,7 @@ void CodecFactory::saveImage(
 
     std::shared_ptr<imebra::implementation::codecs::codecFactory> factory(imebra::implementation::codecs::codecFactory::getCodecFactory());
     std::shared_ptr<const implementation::codecs::imageCodec> pCodec = factory->getImageCodec(transferSyntax);
-    pCodec->setImage(destStream.m_pWriter, getImageImplementation(sourceImage), transferSyntax, imageQuality, dataType, allocatedBits, bSubSampledX, bSubSampledY, bInterleaved, b2Complement);
+    pCodec->setImage(destStream.m_pWriter, getImageImplementation(sourceImage), transferSyntax, imageQuality, allocatedBits, bSubSampledX, bSubSampledY, bInterleaved, b2Complement);
 
     IMEBRA_FUNCTION_END_LOG();
 }
