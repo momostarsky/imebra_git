@@ -5,6 +5,12 @@
 #include <limits>
 #include <thread>
 
+#include <dcmtk/dcmdata/dcdatset.h>
+#include <dcmtk/dcmdata/dcfilefo.h>
+#include <dcmtk/dcmdata/dcistrmb.h>
+#include <dcmtk/dcmdata/dcrledrg.h>
+#include <dcmtk/dcmimgle/dcmimage.h>
+#include <dcmtk/dcmimage/diregist.h>
 namespace imebra
 {
 
@@ -19,237 +25,251 @@ TEST(dicomCodecTest, testDicom)
     std::uint32_t interleavedStart = 0;
     std::uint32_t signStep = 1;
 
-    std::uint32_t sizeX(201);
-    std::uint32_t sizeY(151);
-
-    for(int transferSyntaxId(0); transferSyntaxId != 4; ++transferSyntaxId)
+    for(std::uint32_t sizeX(201); sizeX != 203; ++sizeX)
     {
-        for(std::uint32_t interleaved(interleavedStart); interleaved != 2; ++interleaved)
+        for(std::uint32_t sizeY(151); sizeY != 153; ++sizeY)
         {
-            for(std::uint32_t sign=0; sign != 2; sign += signStep)
+            for(int transferSyntaxId(0); transferSyntaxId != 4; ++transferSyntaxId)
             {
-                for(std::uint32_t highBit(0); highBit != 32; highBit += highBitStep)
+                for(std::uint32_t interleaved(interleavedStart); interleaved != 2; ++interleaved)
                 {
-                    for(unsigned int colorSpaceIndex(0); colorSpaceIndex != sizeof(colorSpaces)/sizeof(colorSpaces[0]); ++colorSpaceIndex)
+                    for(std::uint32_t sign=0; sign != 2; sign += signStep)
                     {
-                        std::string colorSpace(colorSpaces[colorSpaceIndex]);
-                        if((highBit > 24 || transferSyntaxId == 3 || interleaved == 0) &&
-                                (ColorTransformsFactory::isSubsampledX(colorSpace) || ColorTransformsFactory::isSubsampledX(colorSpace)))
+                        for(std::uint32_t highBit(7); highBit != 32; highBit += highBitStep)
                         {
-                            continue;
-                        }
-
-                        bitDepth_t depth(sign == 0 ? bitDepth_t::depthU8 : bitDepth_t::depthS8);
-                        if(highBit > 7)
-                        {
-                            depth = (sign == 0 ? bitDepth_t::depthU16 : bitDepth_t::depthS16);
-                        }
-                        if(highBit > 15)
-                        {
-                            depth = (sign == 0 ? bitDepth_t::depthU32 : bitDepth_t::depthS32);
-                        }
-
-                        std::vector<Image> images;
-
-
-                        if(ColorTransformsFactory::isSubsampledY(colorSpace) || ColorTransformsFactory::isSubsampledX(colorSpace))
-                        {
-                            images.push_back(buildSubsampledImage(
-                                    sizeX,
-                                    sizeY,
-                                    depth,
-                                    highBit,
-                                    colorSpace));
-                            images.push_back(buildSubsampledImage(
-                                    sizeX,
-                                    sizeY,
-                                    depth,
-                                    highBit,
-                                    colorSpace));
-                            images.push_back(buildSubsampledImage(
-                                    sizeX,
-                                    sizeY,
-                                    depth,
-                                    highBit,
-                                    colorSpace));
-                        }
-                        else
-                        {
-                            images.push_back(buildImageForTest(
-                                    sizeX,
-                                    sizeY,
-                                    depth,
-                                    highBit,
-                                    colorSpace,
-                                    2));
-                            images.push_back(buildImageForTest(
-                                    sizeX,
-                                    sizeY,
-                                    depth,
-                                    highBit,
-                                    colorSpace,
-                                    100));
-                            images.push_back(buildImageForTest(
-                                    sizeX,
-                                    sizeY,
-                                    depth,
-                                    highBit,
-                                    colorSpace,
-                                    150));
-
-                        }
-
-                        EXPECT_EQ(highBit, dicomImage0->getHighBit());
-                        EXPECT_EQ(highBit, dicomImage1->getHighBit());
-                        EXPECT_EQ(highBit, dicomImage2->getHighBit());
-
-                        std::string transferSyntax;
-
-                        switch(transferSyntaxId)
-                        {
-                        case 0:
-                            transferSyntax = "1.2.840.10008.1.2";
-                            break;
-                        case 1:
-                            transferSyntax = "1.2.840.10008.1.2.1";
-                            break;
-                        case 2:
-                            transferSyntax = "1.2.840.10008.1.2.2";
-                            break;
-                        case 3:
-                            transferSyntax = "1.2.840.10008.1.2.5";
-                            break;
-                        }
-
-                        std::cout << "Dicom test. Transfer syntax: " << transferSyntax;
-                        std::cout << " interleaved: " << interleaved;
-                        std::cout << " sign: " << sign;
-                        std::cout << " highBit: " << highBit << std::endl;
-                        std::cout << " colorSpace: " << colorSpace << std::endl;
-
-                        imageQuality_t quality = imageQuality_t::veryHigh;
-                        if(ColorTransformsFactory::isSubsampledY(colorSpace))
-                        {
-                            quality = imageQuality_t::belowMedium;
-                        }
-                        else if(ColorTransformsFactory::isSubsampledX(colorSpace))
-                        {
-                            quality = imageQuality_t::medium;
-                        }
-
-                        MutableMemory streamMemory;
-                        {
-                            MutableDataSet testDataSet(transferSyntax);
+                            for(unsigned int colorSpaceIndex(0); colorSpaceIndex != sizeof(colorSpaces)/sizeof(colorSpaces[0]); ++colorSpaceIndex)
                             {
-                                WritingDataHandler writingDataHandler = testDataSet.getWritingDataHandler(TagId(0x0010, 0x0010), 0);
-                                writingDataHandler.setString(0, "AAAaa");
-                                writingDataHandler.setString(1, "BBBbbb");
-                                writingDataHandler.setString(2, "");
-                            }
-                            testDataSet.setDouble(TagId(tagId_t::TimeRange_0008_1163), 50.6);
-                            if(ColorTransformsFactory::getNumberOfChannels(colorSpace) > 1)
-                            {
-                                testDataSet.setUnsignedLong(TagId(imebra::tagId_t::PlanarConfiguration_0028_0006), 1 - interleaved);
-                            }
-                            testDataSet.setImage(0, images[0], quality);
-                            testDataSet.setImage(1, images[1], quality);
-                            testDataSet.setImage(2, images[2], quality);
-
-                            MutableDataSet sequenceItem = testDataSet.appendSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111));
-                            sequenceItem.setString(TagId(tagId_t::PatientName_0010_0010), "test test");
-
-                            MutableDataSet sequenceItem1 = sequenceItem.appendSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111));
-                            sequenceItem1.setString(TagId(tagId_t::PatientName_0010_0010), "test test1");
-
-                            MemoryStreamOutput writeStream(streamMemory);
-                            StreamWriter writer(writeStream);
-                            CodecFactory::save(testDataSet, writer, codecType_t::dicom);
-                        }
-
-                        for(unsigned int lazyLoad(0); lazyLoad != 2; ++lazyLoad)
-                        {
-                            MemoryStreamInput readStream(streamMemory);
-                            StreamReader reader(readStream);
-                            DataSet testDataSet = CodecFactory::load(reader, lazyLoad == 0 ? std::numeric_limits<size_t>::max() : 1);
-
-                            EXPECT_EQ(std::string(IMEBRA_IMPLEMENTATION_CLASS_UID), testDataSet.getString(TagId(tagId_t::ImplementationClassUID_0002_0012), 0));
-                            EXPECT_EQ(std::string(IMEBRA_IMPLEMENTATION_NAME), testDataSet.getString(TagId(tagId_t::ImplementationVersionName_0002_0013), 0));
-
-                            EXPECT_EQ(0u, testDataSet.getUnsignedLong(TagId(tagId_t::FileMetaInformationVersion_0002_0001), 0));
-                            EXPECT_EQ(1u, testDataSet.getUnsignedLong(TagId(tagId_t::FileMetaInformationVersion_0002_0001), 1));
-                            EXPECT_THROW(testDataSet.getUnsignedLong(TagId(tagId_t::FileMetaInformationVersion_0002_0001), 2), MissingItemError);
-                            EXPECT_EQ(tagVR_t::OB, testDataSet.getDataType(TagId(tagId_t::FileMetaInformationVersion_0002_0001)));
-
-                            EXPECT_EQ(std::string("AAAaa"), testDataSet.getString(TagId(imebra::tagId_t::PatientName_0010_0010), 0));
-                            EXPECT_EQ(std::string("BBBbbb"), testDataSet.getString(TagId(imebra::tagId_t::PatientName_0010_0010), 1));
-                            EXPECT_EQ(std::string(""), testDataSet.getString(TagId(imebra::tagId_t::PatientName_0010_0010), 2));
-                            EXPECT_DOUBLE_EQ(50.6, testDataSet.getDouble(TagId(tagId_t::TimeRange_0008_1163), 0));
-
-                            DataSet sequenceItem = testDataSet.getSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 0);
-                            EXPECT_EQ("test test", sequenceItem.getString(TagId(tagId_t::PatientName_0010_0010), 0));
-                            EXPECT_THROW(sequenceItem.getUnsignedLong(TagId(tagId_t::FileMetaInformationVersion_0002_0001), 0), MissingGroupError);
-
-                            DataSet sequenceItem1 = sequenceItem.getSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 0);
-                            EXPECT_EQ("test test1", sequenceItem1.getString(TagId(tagId_t::PatientName_0010_0010), 0));
-                            EXPECT_THROW(sequenceItem1.getUnsignedLong(TagId(tagId_t::FileMetaInformationVersion_0002_0001), 0), MissingGroupError);
-
-                            for(unsigned int repeatLazyLoad(0); repeatLazyLoad != lazyLoad + 1; ++ repeatLazyLoad)
-                            {
-                                Image checkImage0 = testDataSet.getImage(0);
-                                Image checkImage1 = testDataSet.getImage(1);
-                                Image checkImage2 = testDataSet.getImage(2);
-
-                                if(checkImage0.getChannelsNumber() == 1)
+                                std::string transferSyntax;
+                                switch(transferSyntaxId)
                                 {
-                                    ASSERT_THROW(testDataSet.getTag(TagId(tagId_t::PlanarConfiguration_0028_0006)), MissingDataElementError);
+                                case 0:
+                                    transferSyntax = "1.2.840.10008.1.2";
+                                    break;
+                                case 1:
+                                    transferSyntax = "1.2.840.10008.1.2.1";
+                                    break;
+                                case 2:
+                                    transferSyntax = "1.2.840.10008.1.2.2";
+                                    break;
+                                case 3:
+                                    transferSyntax = "1.2.840.10008.1.2.5";
+                                    break;
+                                }
+
+                                const std::string colorSpace(colorSpaces[colorSpaceIndex]);
+                                const bool bSubsampledX(ColorTransformsFactory::isSubsampledY(colorSpace));
+                                const bool bSubsampledY(ColorTransformsFactory::isSubsampledX(colorSpace));
+
+                                if((highBit > 24 || transferSyntax == "1.2.840.10008.1.2.5" || interleaved == 0) &&
+                                        (bSubsampledX || bSubsampledY))
+                                {
+                                    continue;
+                                }
+
+                                if(transferSyntax == "1.2.840.10008.1.2.5" && interleaved == 1)
+                                {
+                                    continue;
+                                }
+
+                                bitDepth_t depth(sign == 0 ? bitDepth_t::depthU8 : bitDepth_t::depthS8);
+                                if(highBit > 7)
+                                {
+                                    depth = (sign == 0 ? bitDepth_t::depthU16 : bitDepth_t::depthS16);
+                                }
+                                if(highBit > 15)
+                                {
+                                    depth = (sign == 0 ? bitDepth_t::depthU32 : bitDepth_t::depthS32);
+                                }
+
+                                std::vector<Image> images;
+
+                                if(bSubsampledX || bSubsampledY)
+                                {
+                                    images.push_back(buildSubsampledImage(
+                                            sizeX,
+                                            sizeY,
+                                            depth,
+                                            highBit,
+                                            colorSpace));
+                                    images.push_back(buildSubsampledImage(
+                                            sizeX,
+                                            sizeY,
+                                            depth,
+                                            highBit,
+                                            colorSpace));
+                                    images.push_back(buildSubsampledImage(
+                                            sizeX,
+                                            sizeY,
+                                            depth,
+                                            highBit,
+                                            colorSpace));
                                 }
                                 else
                                 {
-                                    EXPECT_EQ((std::int32_t)(1 - interleaved), testDataSet.getSignedLong(TagId(imebra::tagId_t::PlanarConfiguration_0028_0006), 0));
+                                    images.push_back(buildImageForTest(
+                                            sizeX,
+                                            sizeY,
+                                            depth,
+                                            highBit,
+                                            colorSpace,
+                                            2));
+                                    images.push_back(buildImageForTest(
+                                            sizeX,
+                                            sizeY,
+                                            depth,
+                                            highBit,
+                                            colorSpace,
+                                            100));
+                                    images.push_back(buildImageForTest(
+                                            sizeX,
+                                            sizeY,
+                                            depth,
+                                            highBit,
+                                            colorSpace,
+                                            150));
+
                                 }
 
-                                ASSERT_TRUE(identicalImages(checkImage0, images[0]));
-                                ASSERT_TRUE(identicalImages(checkImage1, images[1]));
-                                ASSERT_TRUE(identicalImages(checkImage2, images[2]));
-                            }
+                                EXPECT_EQ(highBit, images[0].getHighBit());
+                                EXPECT_EQ(highBit, images[1].getHighBit());
+                                EXPECT_EQ(highBit, images[2].getHighBit());
 
-                            if(transferSyntax != "1.2.840.10008.1.2.5")
-                            {
-                                std::uint32_t checkHighBit(testDataSet->getUnsignedLong(TagId(tagId_t::HighBit_0028_0102), 0));
-                                std::uint32_t checkAllocatedBits(testDataSet->getUnsignedLong(TagId(tagId_t::BitsAllocated_0028_0100), 0));
-                                if(checkHighBit == 0)
+                                std::cout << "Dicom test. Transfer syntax: " << transferSyntax;
+                                std::cout << " interleaved: " << interleaved;
+                                std::cout << " sign: " << sign;
+                                std::cout << " highBit: " << highBit << std::endl;
+                                std::cout << " colorSpace: " << colorSpace << std::endl;
+                                std::cout << " size: " << sizeX << " X " << sizeY << std::endl;
+
+                                imageQuality_t quality = imageQuality_t::veryHigh;
+                                if(bSubsampledY)
                                 {
-                                    EXPECT_EQ(1, checkAllocatedBits);
+                                    quality = imageQuality_t::belowMedium;
                                 }
-                                else if(checkHighBit < 8)
+                                else if(bSubsampledX)
                                 {
-                                    EXPECT_EQ(8, checkAllocatedBits);
+                                    quality = imageQuality_t::medium;
                                 }
-                                else if(checkHighBit < 16)
+
+                                MutableMemory streamMemory;
                                 {
-                                    EXPECT_EQ(16, checkAllocatedBits);
+                                    MutableDataSet testDataSet(transferSyntax);
+                                    {
+                                        WritingDataHandler writingDataHandler = testDataSet.getWritingDataHandler(TagId(0x0010, 0x0010), 0);
+                                        writingDataHandler.setString(0, "AAAaa");
+                                        writingDataHandler.setString(1, "BBBbbb");
+                                        writingDataHandler.setString(2, "");
+                                    }
+                                    testDataSet.setDouble(TagId(tagId_t::TimeRange_0008_1163), 50.6);
+                                    if(ColorTransformsFactory::getNumberOfChannels(colorSpace) > 1)
+                                    {
+                                        testDataSet.setUnsignedLong(TagId(imebra::tagId_t::PlanarConfiguration_0028_0006), 1 - interleaved);
+                                    }
+                                    testDataSet.setImage(0, images[0], quality);
+                                    testDataSet.setImage(1, images[1], quality);
+                                    testDataSet.setImage(2, images[2], quality);
+
+                                    MutableDataSet sequenceItem = testDataSet.appendSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111));
+                                    sequenceItem.setString(TagId(tagId_t::PatientName_0010_0010), "test test");
+
+                                    MutableDataSet sequenceItem1 = sequenceItem.appendSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111));
+                                    sequenceItem1.setString(TagId(tagId_t::PatientName_0010_0010), "test test1");
+
+                                    MemoryStreamOutput writeStream(streamMemory);
+                                    StreamWriter writer(writeStream);
+                                    CodecFactory::save(testDataSet, writer, codecType_t::dicom);
+
+                                    CodecFactory::save(testDataSet, "/home/paolo/testdicom.dcm", codecType_t::dicom);
                                 }
-                                else if(checkHighBit < 24)
+
+                                for(unsigned int lazyLoad(0); lazyLoad != 2; ++lazyLoad)
                                 {
-                                    EXPECT_EQ(24, checkAllocatedBits);
-                                }
-                                else
-                                {
-                                    EXPECT_EQ(32, checkAllocatedBits);
+                                    MemoryStreamInput readStream(streamMemory);
+                                    StreamReader reader(readStream);
+                                    DataSet testDataSet = CodecFactory::load(reader, lazyLoad == 0 ? std::numeric_limits<size_t>::max() : 1);
+
+                                    EXPECT_EQ(std::string(IMEBRA_IMPLEMENTATION_CLASS_UID), testDataSet.getString(TagId(tagId_t::ImplementationClassUID_0002_0012), 0));
+                                    EXPECT_EQ(std::string(IMEBRA_IMPLEMENTATION_NAME), testDataSet.getString(TagId(tagId_t::ImplementationVersionName_0002_0013), 0));
+
+                                    EXPECT_EQ(0u, testDataSet.getUnsignedLong(TagId(tagId_t::FileMetaInformationVersion_0002_0001), 0));
+                                    EXPECT_EQ(1u, testDataSet.getUnsignedLong(TagId(tagId_t::FileMetaInformationVersion_0002_0001), 1));
+                                    EXPECT_THROW(testDataSet.getUnsignedLong(TagId(tagId_t::FileMetaInformationVersion_0002_0001), 2), MissingItemError);
+                                    EXPECT_EQ(tagVR_t::OB, testDataSet.getDataType(TagId(tagId_t::FileMetaInformationVersion_0002_0001)));
+
+                                    EXPECT_EQ(std::string("AAAaa"), testDataSet.getString(TagId(imebra::tagId_t::PatientName_0010_0010), 0));
+                                    EXPECT_EQ(std::string("BBBbbb"), testDataSet.getString(TagId(imebra::tagId_t::PatientName_0010_0010), 1));
+                                    EXPECT_EQ(std::string(""), testDataSet.getString(TagId(imebra::tagId_t::PatientName_0010_0010), 2));
+                                    EXPECT_DOUBLE_EQ(50.6, testDataSet.getDouble(TagId(tagId_t::TimeRange_0008_1163), 0));
+
+                                    DataSet sequenceItem = testDataSet.getSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 0);
+                                    EXPECT_EQ("test test", sequenceItem.getString(TagId(tagId_t::PatientName_0010_0010), 0));
+                                    EXPECT_THROW(sequenceItem.getUnsignedLong(TagId(tagId_t::FileMetaInformationVersion_0002_0001), 0), MissingGroupError);
+
+                                    DataSet sequenceItem1 = sequenceItem.getSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 0);
+                                    EXPECT_EQ("test test1", sequenceItem1.getString(TagId(tagId_t::PatientName_0010_0010), 0));
+                                    EXPECT_THROW(sequenceItem1.getUnsignedLong(TagId(tagId_t::FileMetaInformationVersion_0002_0001), 0), MissingGroupError);
+
+                                    for(unsigned int repeatLazyLoad(0); repeatLazyLoad != lazyLoad + 1; ++ repeatLazyLoad)
+                                    {
+                                        Image checkImage0 = testDataSet.getImage(0);
+                                        ASSERT_TRUE(identicalImages(checkImage0, images[0]));
+
+                                        Image checkImage1 = testDataSet.getImage(1);
+                                        ASSERT_TRUE(identicalImages(checkImage1, images[1]));
+
+                                        Image checkImage2 = testDataSet.getImage(2);
+                                        ASSERT_TRUE(identicalImages(checkImage2, images[2]));
+
+                                        if(checkImage0.getChannelsNumber() == 1)
+                                        {
+                                            ASSERT_THROW(testDataSet.getTag(TagId(tagId_t::PlanarConfiguration_0028_0006)), MissingDataElementError);
+                                        }
+                                        else
+                                        {
+                                            EXPECT_EQ((std::int32_t)(1 - interleaved), testDataSet.getSignedLong(TagId(imebra::tagId_t::PlanarConfiguration_0028_0006), 0));
+                                        }
+
+                                    }
+
+                                    if(transferSyntax != "1.2.840.10008.1.2.5")
+                                    {
+                                        std::uint32_t checkHighBit(testDataSet.getUnsignedLong(TagId(tagId_t::HighBit_0028_0102), 0));
+                                        std::uint32_t checkAllocatedBits(testDataSet.getUnsignedLong(TagId(tagId_t::BitsAllocated_0028_0100), 0));
+                                        if(checkHighBit == 0)
+                                        {
+                                            EXPECT_EQ(1u, checkAllocatedBits);
+                                        }
+                                        else if(checkHighBit < 8)
+                                        {
+                                            EXPECT_EQ(8u, checkAllocatedBits);
+                                        }
+                                        else if(checkHighBit < 16)
+                                        {
+                                            EXPECT_EQ(16u, checkAllocatedBits);
+                                        }
+                                        else if(checkHighBit < 24)
+                                        {
+                                            EXPECT_EQ(24u, checkAllocatedBits);
+                                        }
+                                        else
+                                        {
+                                            EXPECT_EQ(32u, checkAllocatedBits);
+                                        }
+                                    }
                                 }
                             }
                         }
                     }
                 }
-            }
+            } // transferSyntaxId
         }
-    } // transferSyntaxId
+    }
 }
 
 
 TEST(dicomCodecTest, testDicom32bit)
 {
-    for(int transferSyntaxId(0); transferSyntaxId != 4; ++transferSyntaxId)
+    for(int transferSyntaxId(3); transferSyntaxId != 4; ++transferSyntaxId)
     {
         std::string colorSpace("MONOCHROME2");
 
@@ -280,7 +300,6 @@ TEST(dicomCodecTest, testDicom32bit)
         }
 
         std::cout << "Dicom test. Transfer syntax: " << transferSyntax;
-        std::cout << " maxValue: " << std::numeric_limits<std::uint32_t>::max() << std::endl;
 
         MutableMemory streamMemory;
         {
@@ -531,6 +550,225 @@ TEST(dicomCodecTest, testExternalStreamOddSize)
         EXPECT_EQ(0, buffer[1025]);
     }
 }
+
+
+TEST(dicomCodecTest, dcmtkInteroperability)
+{
+    DcmRLEDecoderRegistration::registerCodecs();
+
+    const char* const colorSpaces[] = {"MONOCHROME2", "RGB", "YBR_FULL", "YBR_FULL_422"};
+
+
+    for(int transferSyntaxId(0); transferSyntaxId != 4; ++transferSyntaxId)
+    {
+        for(std::uint32_t interleaved(0); interleaved != 2; ++interleaved)
+        {
+            for(std::uint32_t highBit(7); highBit != 32; ++highBit)
+            {
+                for(unsigned int colorSpaceIndex(0); colorSpaceIndex != sizeof(colorSpaces)/sizeof(colorSpaces[0]); ++colorSpaceIndex)
+                {
+                    const std::string colorSpace(colorSpaces[colorSpaceIndex]);
+
+                    const bool bSubsampledX(ColorTransformsFactory::isSubsampledX(colorSpace));
+                    const bool bSubsampledY(ColorTransformsFactory::isSubsampledY(colorSpace));
+                    if((highBit > 24 || interleaved == 0) &&
+                            (bSubsampledX || bSubsampledY))
+                    {
+                        continue;
+                    }
+
+                    std::string transferSyntax;
+                    switch(transferSyntaxId)
+                    {
+                    case 0:
+                        transferSyntax = "1.2.840.10008.1.2";
+                        break;
+                    case 1:
+                        transferSyntax = "1.2.840.10008.1.2.1";
+                        break;
+                    case 2:
+                        transferSyntax = "1.2.840.10008.1.2.2";
+                        break;
+                    case 3:
+                        transferSyntax = "1.2.840.10008.1.2.5";
+                        break;
+                    }
+
+                    if(transferSyntax == "1.2.840.10008.1.2.5" && (interleaved == 1 || bSubsampledX || bSubsampledY))
+                    {
+                        continue;
+                    }
+
+                    const std::uint32_t sizeX(bSubsampledX ? 202 : 201);
+                    const std::uint32_t sizeY(bSubsampledY ? 152 : 151);
+
+                    bitDepth_t depth(bitDepth_t::depthU8);
+                    if(highBit > 7)
+                    {
+                        depth = bitDepth_t::depthU16;
+                    }
+                    if(highBit > 15)
+                    {
+                        depth = bitDepth_t::depthU32;
+                    }
+
+                    std::vector<Image> images;
+
+                    if(bSubsampledY || bSubsampledX)
+                    {
+                        images.push_back(buildSubsampledImage(
+                                sizeX,
+                                sizeY,
+                                depth,
+                                highBit,
+                                colorSpace));
+                        images.push_back(buildSubsampledImage(
+                                sizeX,
+                                sizeY,
+                                depth,
+                                highBit,
+                                colorSpace));
+                        images.push_back(buildSubsampledImage(
+                                sizeX,
+                                sizeY,
+                                depth,
+                                highBit,
+                                colorSpace));
+                    }
+                    else
+                    {
+                        images.push_back(buildImageForTest(
+                                sizeX,
+                                sizeY,
+                                depth,
+                                highBit,
+                                colorSpace,
+                                2));
+                        images.push_back(buildImageForTest(
+                                sizeX,
+                                sizeY,
+                                depth,
+                                highBit,
+                                colorSpace,
+                                100));
+                        images.push_back(buildImageForTest(
+                                sizeX,
+                                sizeY,
+                                depth,
+                                highBit,
+                                colorSpace,
+                                150));
+                    }
+
+                    EXPECT_EQ(highBit, images[0].getHighBit());
+                    EXPECT_EQ(highBit, images[1].getHighBit());
+                    EXPECT_EQ(highBit, images[2].getHighBit());
+
+                    std::cout << "Transfer syntax: " << transferSyntax << std::endl;
+                    std::cout << " size: " << sizeX << " by " << sizeY << std::endl;
+                    std::cout << " interleaved: " << interleaved;
+                    std::cout << " highBit: " << highBit << std::endl;
+                    std::cout << " colorSpace: " << colorSpace << std::endl;
+
+                    imageQuality_t quality = imageQuality_t::veryHigh;
+                    if(bSubsampledY)
+                    {
+                        quality = imageQuality_t::belowMedium;
+                    }
+                    else if(bSubsampledX)
+                    {
+                        quality = imageQuality_t::medium;
+                    }
+
+                    MutableMemory streamMemory;
+                    {
+                        MutableDataSet testDataSet(transferSyntax);
+                        {
+                            WritingDataHandler writingDataHandler = testDataSet.getWritingDataHandler(TagId(0x0010, 0x0010), 0);
+                            writingDataHandler.setString(0, "AAAaa");
+                            writingDataHandler.setString(1, "BBBbbb");
+                            writingDataHandler.setString(2, "");
+                        }
+                        testDataSet.setDouble(TagId(tagId_t::TimeRange_0008_1163), 50.6);
+                        if(ColorTransformsFactory::getNumberOfChannels(colorSpace) > 1)
+                        {
+                            testDataSet.setUnsignedLong(TagId(imebra::tagId_t::PlanarConfiguration_0028_0006), 1 - interleaved);
+                        }
+                        testDataSet.setImage(0, images[0], quality);
+                        testDataSet.setImage(1, images[1], quality);
+                        testDataSet.setImage(2, images[2], quality);
+
+                        tagVR_t vr = testDataSet.getDataType(TagId(tagId_t::PixelData_7FE0_0010));
+                        ASSERT_TRUE(vr == tagVR_t::OB || vr == tagVR_t::OW);
+
+                        MutableDataSet sequenceItem = testDataSet.appendSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111));
+                        sequenceItem.setString(TagId(tagId_t::PatientName_0010_0010), "test test");
+
+                        MutableDataSet sequenceItem1 = sequenceItem.appendSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111));
+                        sequenceItem1.setString(TagId(tagId_t::PatientName_0010_0010), "test test1");
+
+                        if(highBit == 0)
+                        {
+                            ASSERT_EQ(1u, testDataSet.getUnsignedLong(TagId(tagId_t::BitsAllocated_0028_0100), 0));
+                        }
+
+                        MemoryStreamOutput writeStream(streamMemory);
+                        StreamWriter writer(writeStream);
+                        CodecFactory::save(testDataSet, writer, codecType_t::dicom);
+
+                        std::cout << " bits allocated: " << testDataSet.getUnsignedLong(TagId(tagId_t::BitsAllocated_0028_0100), 0) << std::endl;
+
+                    }
+
+                    // Read with DCMTK
+                    DcmInputBufferStream dcmtkStream;
+                    size_t dataSize(0);
+                    char* data = streamMemory.data(&dataSize);
+                    dcmtkStream.setBuffer(data, (offile_off_t)dataSize);
+                    dcmtkStream.setEos();
+
+                    DcmFileFormat dcmtkDataSet;
+                    dcmtkDataSet.transferInit();
+                    const OFCondition cond = dcmtkDataSet.read(dcmtkStream, EXS_Unknown);
+                    dcmtkDataSet.transferEnd();
+
+                    DicomImage dcmtkImages(&dcmtkDataSet, EXS_Unknown, CIF_KeepYCbCrColorModel);
+                    ASSERT_EQ(3u, dcmtkImages.getFrameCount());
+
+                    MutableImage checkImage0(sizeX, sizeY, depth, colorSpace, highBit);
+                    {
+                        size_t checkImageSize(0);
+                        WritingDataHandlerNumeric writingHandler(checkImage0.getWritingDataHandler());
+                        char* checkImageData(writingHandler.data(&checkImageSize));
+                        dcmtkImages.getOutputData(checkImageData, checkImageSize, 0, 0, 0);
+
+                    }
+                    EXPECT_TRUE(identicalImages(checkImage0, images[0]));
+
+                    MutableImage checkImage1(sizeX, sizeY, depth, colorSpace, highBit);
+                    {
+                        size_t checkImageSize(0);
+                        WritingDataHandlerNumeric writingHandler(checkImage1.getWritingDataHandler());
+                        char* checkImageData(writingHandler.data(&checkImageSize));
+                        dcmtkImages.getOutputData(checkImageData, checkImageSize, 0, 1, 0);
+                    }
+                    EXPECT_TRUE(identicalImages(checkImage1, images[1]));
+
+                    MutableImage checkImage2(sizeX, sizeY, depth, colorSpace, highBit);
+                    {
+                        size_t checkImageSize(0);
+                        WritingDataHandlerNumeric writingHandler(checkImage2.getWritingDataHandler());
+                        char* checkImageData(writingHandler.data(&checkImageSize));
+                        dcmtkImages.getOutputData(checkImageData, checkImageSize, 0, 2, 0);
+
+                    }
+                    EXPECT_TRUE(identicalImages(checkImage2, images[2]));
+                }
+            }
+        }
+    } // transferSyntaxId
+}
+
 
 
 } // namespace tests
