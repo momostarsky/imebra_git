@@ -29,7 +29,7 @@ namespace imebra
 namespace implementation
 {
 
-static const std::string applicationContext("1.2.840.10008.3.1.1.1");
+static const std::string m_applicationContext("1.2.840.10008.3.1.1.1");
 
 
 acseItem::~acseItem()
@@ -146,8 +146,8 @@ void acseItem::encodeItem(std::shared_ptr<streamWriter> pWriter) const
     std::shared_ptr<memory> pMemory(std::make_shared<memory>());
     {
         std::shared_ptr<memoryStreamOutput> pMemoryStream(std::make_shared<memoryStreamOutput>(pMemory));
-        std::shared_ptr<streamWriter> pWriter(std::make_shared<streamWriter>(pMemoryStream));
-        encodeItemPayload(pWriter);
+        std::shared_ptr<streamWriter> pMemoryWriter(std::make_shared<streamWriter>(pMemoryStream));
+        encodeItemPayload(pMemoryWriter);
     }
 
     // Check the memory size
@@ -1018,7 +1018,7 @@ std::shared_ptr<acsePDU> acsePDU::decodePDU(std::shared_ptr<streamReader> pReade
 
         return pPDU;
     }
-    catch(const StreamEOFError& e)
+    catch(const StreamEOFError&)
     {
         IMEBRA_THROW(AcseCorruptedMessageError, "Corrupted ACSE PDU");
     }
@@ -1040,8 +1040,8 @@ void acsePDU::encodePDU(std::shared_ptr<streamWriter> pWriter) const
     std::shared_ptr<memory> pMemory(std::make_shared<memory>());
     {
         std::shared_ptr<memoryStreamOutput> pMemoryStream(std::make_shared<memoryStreamOutput>(pMemory));
-        std::shared_ptr<streamWriter> pWriter(std::make_shared<streamWriter>(pMemoryStream));
-        encodePDUPayload(pWriter);
+        std::shared_ptr<streamWriter> pMemoryWriter(std::make_shared<streamWriter>(pMemoryStream));
+        encodePDUPayload(pMemoryWriter);
     }
 
     if(pMemory->size() > std::numeric_limits<std::uint32_t>::max())
@@ -2370,7 +2370,7 @@ void associationBase::getMessagesThread()
 
         }
     }
-    catch(const StreamEOFError& e)
+    catch(const StreamEOFError&)
     {
         // Set the terminated flag, release current getMessage()
         // operations
@@ -2453,7 +2453,7 @@ associationSCU::associationSCU(
                     m_maxOperationsPerformed,
                     scpScuRoles));
 
-    acsePDUAssociateRQ associationRequest(m_thisAET, m_otherAET, applicationContext, contextsPDUs, pUserInformation);
+    acsePDUAssociateRQ associationRequest(m_thisAET, m_otherAET, m_applicationContext, contextsPDUs, pUserInformation);
 
     // Send the association request PDU
     ///////////////////////////////////////////////////////////
@@ -2476,17 +2476,17 @@ associationSCU::associationSCU(
 
         // Get the max PDU length accepted by the SCP
         ///////////////////////////////////////////////////////////
-        std::shared_ptr<acseItemUserInformation> pUserInformation(responseAC->getItemUserInformation());
-        m_maxPDULength = pUserInformation->getMaximumPDULength();
+        std::shared_ptr<acseItemUserInformation> pResponseUserInformation(responseAC->getItemUserInformation());
+        m_maxPDULength = pResponseUserInformation->getMaximumPDULength();
 
         // Fix the maximum number of operations invoked/performed
         ///////////////////////////////////////////////////////////
-        std::uint16_t responseMaxInvoked(pUserInformation->getMaxOperationsInvoked());
+        std::uint16_t responseMaxInvoked(pResponseUserInformation->getMaxOperationsInvoked());
         if(responseMaxInvoked != 0 && responseMaxInvoked < m_maxOperationsInvoked)
         {
             m_maxOperationsInvoked = responseMaxInvoked;
         }
-        std::uint16_t responseMaxPerformed(pUserInformation->getMaxOperationsPerformed());
+        std::uint16_t responseMaxPerformed(pResponseUserInformation->getMaxOperationsPerformed());
         if(responseMaxPerformed != 0 && responseMaxPerformed < m_maxOperationsPerformed)
         {
             m_maxOperationsPerformed = responseMaxPerformed;
@@ -2496,7 +2496,7 @@ associationSCU::associationSCU(
         ///////////////////////////////////////////////////////////
         typedef std::map<std::string, std::shared_ptr<acseItemSCPSCURoleSelection> > scpScuRolesMap_t;
         scpScuRolesMap_t acceptedScpScuRoles;
-        for(const std::shared_ptr<acseItemSCPSCURoleSelection> acceptedRole: pUserInformation->getScpScuRoles())
+        for(const std::shared_ptr<acseItemSCPSCURoleSelection> acceptedRole: pResponseUserInformation->getScpScuRoles())
         {
             acceptedScpScuRoles[acceptedRole->getSopClassUID()] = acceptedRole;
         }
@@ -2569,7 +2569,7 @@ associationSCU::associationSCU(
         case acsePDUAssociateRJ::reason_t::serviceUserNoReasonGiven:
             IMEBRA_THROW_ADDITIONAL_PARAM(AcseSCUNoReasonGivenError, "Service user no reason given", bPermanent);
         case acsePDUAssociateRJ::reason_t::serviceUserApplicationContextNameNotSupported:
-            IMEBRA_THROW_ADDITIONAL_PARAM(AcseSCUApplicationContextNameNotSupportedError, "Application context " << applicationContext << " name not supported", bPermanent);
+            IMEBRA_THROW_ADDITIONAL_PARAM(AcseSCUApplicationContextNameNotSupportedError, "Application context " << m_applicationContext << " name not supported", bPermanent);
         case acsePDUAssociateRJ::reason_t::serviceUserCallingAETitleNotRecognized:
             IMEBRA_THROW_ADDITIONAL_PARAM(AcseSCUCallingAETNotRecognizedError, "Calling AET " << thisAET << " not recognized", bPermanent);
         case acsePDUAssociateRJ::reason_t::serviceUserCalledAETitleNotRecognized:
@@ -2636,14 +2636,14 @@ associationSCP::associationSCP(
     // Only the DICOM syntax is supported: reject if
     // different
     ///////////////////////////////////////////////////////////
-    if(associationRQ->getApplicationContext()->getName() != applicationContext)
+    if(associationRQ->getApplicationContext()->getName() != m_applicationContext)
     {
         std::shared_ptr<acsePDUAssociateRJ> reject(
                     std::make_shared<acsePDUAssociateRJ>(
                         acsePDUAssociateRJ::result_t::rejectedPermanent,
                         acsePDUAssociateRJ::reason_t::serviceUserApplicationContextNameNotSupported));
         reject->encodePDU(m_pWriter);
-        IMEBRA_THROW_ADDITIONAL_PARAM(AcseSCUApplicationContextNameNotSupportedError, "Application context " << applicationContext << " not supported", true);
+        IMEBRA_THROW_ADDITIONAL_PARAM(AcseSCUApplicationContextNameNotSupportedError, "Application context " << m_applicationContext << " not supported", true);
     }
 
     // Check the requested AET. Reject if different from
@@ -2804,7 +2804,7 @@ associationSCP::associationSCP(
     std::shared_ptr<acsePDUAssociateAC> responseAC(std::make_shared<acsePDUAssociateAC>(
                                                        associationRQ->getCalledAETitle(),
                                                        associationRQ->getCallingAETitle(),
-                                                       applicationContext,
+                                                       m_applicationContext,
                                                        acceptedContexts,
                                                        pUserInformationAC));
     responseAC->encodePDU(m_pWriter);

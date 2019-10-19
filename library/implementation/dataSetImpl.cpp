@@ -748,7 +748,7 @@ size_t dataSet::getFrameBufferIds(std::uint32_t frameNumber, std::uint32_t* pFir
         std::uint32_t startOffset = getFrameOffset(frameNumber);
         std::uint32_t endOffset = getFrameOffset(frameNumber + 1);
 
-        if(startOffset == std::numeric_limits<std::int32_t>::max())
+        if(startOffset == std::numeric_limits<std::uint32_t>::max())
         {
             IMEBRA_THROW(DataSetImageDoesntExistError, "Image not in the table offset");
         }

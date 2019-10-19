@@ -463,7 +463,7 @@ std::uint32_t dicomStreamCodec::getTagLength(const std::shared_ptr<data>& pData,
         {
             ++bufferSize;
         }
-        totalLength += bufferSize;
+        totalLength += static_cast<std::uint32_t>(bufferSize);
     }
 
     (*pbSequence) |= (numberOfElements > 1);

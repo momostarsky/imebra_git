@@ -133,7 +133,7 @@ protected:
             samplesType_t value(0);
             for(std::uint32_t shiftLeft(0); shiftLeft != allocatedBytes; ++shiftLeft)
             {
-                value |= static_cast<samplesType_t>(*(pLittleEndianTagData++)) << (shiftLeft * 8);
+                value = static_cast<samplesType_t>(value | static_cast<samplesType_t>(*(pLittleEndianTagData++)) << (shiftLeft * 8));
             }
             *(pImageSamples++) = value;
         }
