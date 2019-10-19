@@ -5,12 +5,17 @@
 #include <limits>
 #include <thread>
 
-#include <dcmtk/dcmdata/dcdatset.h>
-#include <dcmtk/dcmdata/dcfilefo.h>
-#include <dcmtk/dcmdata/dcistrmb.h>
-#include <dcmtk/dcmdata/dcrledrg.h>
-#include <dcmtk/dcmimgle/dcmimage.h>
-#include <dcmtk/dcmimage/diregist.h>
+#ifndef DISABLE_DCMTK_INTEROPERABILITY_TEST
+
+    #include <dcmtk/dcmdata/dcdatset.h>
+    #include <dcmtk/dcmdata/dcfilefo.h>
+    #include <dcmtk/dcmdata/dcistrmb.h>
+    #include <dcmtk/dcmdata/dcrledrg.h>
+    #include <dcmtk/dcmimgle/dcmimage.h>
+    #include <dcmtk/dcmimage/diregist.h>
+
+#endif
+
 namespace imebra
 {
 
@@ -178,8 +183,6 @@ TEST(dicomCodecTest, testDicom)
                                     MemoryStreamOutput writeStream(streamMemory);
                                     StreamWriter writer(writeStream);
                                     CodecFactory::save(testDataSet, writer, codecType_t::dicom);
-
-                                    CodecFactory::save(testDataSet, "/home/paolo/testdicom.dcm", codecType_t::dicom);
                                 }
 
                                 for(unsigned int lazyLoad(0); lazyLoad != 2; ++lazyLoad)
@@ -552,6 +555,8 @@ TEST(dicomCodecTest, testExternalStreamOddSize)
 }
 
 
+#ifndef DISABLE_DCMTK_INTEROPERABILITY_TEST
+
 TEST(dicomCodecTest, dcmtkInteroperability)
 {
     DcmRLEDecoderRegistration::registerCodecs();
@@ -769,6 +774,7 @@ TEST(dicomCodecTest, dcmtkInteroperability)
     } // transferSyntaxId
 }
 
+#endif // DISABLE_DCMTK_INTEROPERABILITY_TEST
 
 
 } // namespace tests
