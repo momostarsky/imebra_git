@@ -286,6 +286,7 @@ TEST(acseTest, scpScuRole)
         {
             for(const std::string& transferSyntax: scu.getTransferSyntaxes(abstractSyntax))
             {
+                std::cout << "Waiting for command with abstract syntax " << abstractSyntax << " and transfer syntax " << transferSyntax << std::endl;
                 AssociationMessage command = scu.getCommand();
                 MutableDataSet responseDataSet;
                 responseDataSet.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x8001, tagVR_t::US);

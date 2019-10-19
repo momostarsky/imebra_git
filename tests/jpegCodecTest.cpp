@@ -85,14 +85,14 @@ TEST(jpegCodecTest, testBaselineSubsampled)
                         MemoryStreamOutput saveStream(savedJpeg);
                         StreamWriter writer(saveStream);
 
-                        CodecFactory::saveImage(writer, ybrImage, "1.2.840.10008.1.2.4.50", imageQuality_t::veryHigh, tagVR_t::OB, 8, subsampledX != 0, subsampledY != 0, interleaved != 0, false);
+                        CodecFactory::saveImage(writer, ybrImage, "1.2.840.10008.1.2.4.50", imageQuality_t::veryHigh, 8, subsampledX != 0, subsampledY != 0, interleaved != 0, false);
                     }
                     if(prematureEoi == 1)
                     {
                         // Insert a premature EOI tag
                         /////////////////////////////
                         size_t dataSize;
-                        std::uint8_t* pData = (std::uint8_t*)(savedJpeg.data(&dataSize));
+                        std::uint8_t* pData = reinterpret_cast<std::uint8_t*>(savedJpeg.data(&dataSize));
                         pData[dataSize - 10] = 0xff;
                         pData[dataSize - 9] = 0xd9;
                     }
@@ -125,8 +125,8 @@ TEST(jpegCodecTest, testBaselineSubsampled)
                         // Compare the buffers. A little difference is allowed
                         double differenceRGB = compareImages(baselineImage, rgbImage);
                         double differenceYBR = compareImages(ybrImage, checkImage);
-                        ASSERT_LE(differenceRGB, 20);
-                        ASSERT_LE(differenceYBR, prematureEoi ? 2.0 : 1.0);
+                        ASSERT_LE(differenceRGB, (1 + subsampledX) * (1 + subsampledY) * 50);
+                        ASSERT_LE(differenceYBR, (1 + subsampledX) * (1 + subsampledY) * 25);
                     }
                     catch(const CodecCorruptedFileError&)
                     {

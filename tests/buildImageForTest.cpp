@@ -141,6 +141,7 @@ TEST(buildImage, testCompareImage)
 
 }
 
+
 imebra::Image buildSubsampledImage(
     std::uint32_t pixelsX,
     std::uint32_t pixelsY,
@@ -149,37 +150,72 @@ imebra::Image buildSubsampledImage(
     const std::string& colorSpace)
 {
     MutableImage newImage(pixelsX, pixelsY, depth, colorSpace, highBit);
-    WritingDataHandler handler = newImage.getWritingDataHandler();
-    std::uint32_t channelsNumber = newImage.getChannelsNumber();
 
-
-    std::uint32_t index(0);
-    for(std::uint32_t scanY(0); scanY != pixelsY; ++scanY)
     {
-        for(std::uint32_t scanX(0); scanX != pixelsX; ++scanX)
+        WritingDataHandler handler = newImage.getWritingDataHandler();
+        std::uint32_t channelsNumber = newImage.getChannelsNumber();
+
+
+        std::uint32_t index(0);
+
+        std::vector<std::int32_t> previousRow(channelsNumber * pixelsX);
+
+        std::int32_t highValue ((1 << highBit) - 1);
+        std::int32_t lowValue (0);
+        if(depth == imebra::bitDepth_t::depthS16 || depth == imebra::bitDepth_t::depthS8 || depth == imebra::bitDepth_t::depthS32)
         {
-            for(std::uint32_t scanChannels = 0; scanChannels != channelsNumber; ++scanChannels)
+            highValue = ((1 << (highBit - 1)) - 1);
+            lowValue = -highValue - 1;
+        }
+        std::vector<std::int32_t> values(channelsNumber);
+        values[0] = lowValue;
+        for(std::uint32_t subsampledChannels(1); subsampledChannels < channelsNumber; ++subsampledChannels)
+        {
+            values[subsampledChannels] = lowValue + 4 * static_cast<std::int32_t>(subsampledChannels);
+        }
+        for(std::uint32_t scanY(0); scanY != pixelsY; ++scanY)
+        {
+            for(std::uint32_t scanX(0); scanX != pixelsX; ++scanX)
             {
-                std::int32_t value = std::int32_t(1) << highBit;
-                value /= 4;
-                if(scanX >= ((pixelsX / 2) & 0xfffffffe) || scanY >= ((pixelsY / 2) & 0xfffffffe))
+                for(std::uint32_t scanChannels = 0; scanChannels != channelsNumber; ++scanChannels)
                 {
-                    if(highBit >= 2)
+                    if(scanChannels == 0)
                     {
-                        value = std::int32_t(1) << (highBit - 2);;
+                        handler.setSignedLong(index++, values[scanChannels]);
+                        if(++values[scanChannels] > highValue)
+                        {
+                            values[scanChannels] = lowValue;
+                        }
                     }
                     else
                     {
-                        value = 0;
+                        if((scanY & 1u) == 1u)
+                        {
+                            handler.setSignedLong(index++, previousRow[scanX * channelsNumber + scanChannels]);
+                        }
+                        else if((scanX & 1u) == 1u)
+                        {
+                            previousRow[scanX * channelsNumber + scanChannels] = previousRow[scanX * channelsNumber + scanChannels - channelsNumber];
+                            handler.setSignedLong(index++, previousRow[scanX * channelsNumber + scanChannels]);
+                        }
+                        else
+                        {
+                            previousRow[scanX * channelsNumber + scanChannels] = values[scanChannels];
+                            handler.setSignedLong(index++, values[scanChannels]);
+                            if(++values[scanChannels] > highValue)
+                            {
+                                values[scanChannels] = lowValue;
+                            }
+                        }
                     }
+
                 }
-                handler.setSignedLong(index++, value);
             }
         }
     }
-
     return newImage;
 }
+
 
 double compareImages(const imebra::Image& image0, const imebra::Image& image1)
 {
@@ -313,6 +349,7 @@ bool identicalImages(const imebra::Image& image0, const imebra::Image& image1)
     size_t dataSize0, dataSize1;
     const char* pData0(memory0.data(&dataSize0));
     const char* pData1(memory1.data(&dataSize1));
+
     return ::memcmp(pData0, pData1, dataSize0) == 0;
 }
 

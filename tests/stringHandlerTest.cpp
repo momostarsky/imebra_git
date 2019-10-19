@@ -132,7 +132,7 @@ TEST(stringHandlerTest, URTest)
 {
     MutableDataSet testDataSet;
 
-    std::string longString((size_t)40000, 'a');
+    std::string longString(size_t(40000u), 'a');
     testDataSet.setString(TagId(0x0010, 0x0010), longString, tagVR_t::UR);
     ASSERT_EQ(longString, testDataSet.getString(TagId(0x0010, 0x0010), 0));
 
@@ -162,21 +162,21 @@ TEST(stringHandlerTest, LOTest)
     ASSERT_THROW(testDataSet.getAge(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
 
     {
-        std::string longString((size_t)63, 'a');
+        std::string longString(size_t(63u), 'a');
         testDataSet.setString(TagId(0x0010, 0x0010), longString, tagVR_t::LO);
         ASSERT_EQ(longString, testDataSet.getString(TagId(0x0010, 0x0010), 0));
         ASSERT_EQ(tagVR_t::LO, testDataSet.getDataType(TagId(0x0010, 0x0010)));
     }
 
     {
-        std::string longString((size_t)64, 'a');
+        std::string longString(size_t(64u), 'a');
         testDataSet.setString(TagId(0x0010, 0x0010), longString, tagVR_t::LO);
         ASSERT_EQ(longString, testDataSet.getString(TagId(0x0010, 0x0010), 0));
         ASSERT_EQ(tagVR_t::LO, testDataSet.getDataType(TagId(0x0010, 0x0010)));
     }
 
     {
-        std::string longString((size_t)65, 'a');
+        std::string longString(size_t(65u), 'a');
         ASSERT_THROW(testDataSet.setString(TagId(0x0010, 0x0010), longString, tagVR_t::LO), DataHandlerInvalidDataError);
     }
 }
@@ -198,21 +198,21 @@ TEST(stringHandlerTest, LTTest)
     }
 
     {
-        std::string longString((size_t)63, 'a');
+        std::string longString(size_t(63u), 'a');
         testDataSet.setString(TagId(0x0010, 0x0010), longString, tagVR_t::LT);
         ASSERT_EQ(longString, testDataSet.getString(TagId(0x0010, 0x0010), 0));
         ASSERT_EQ(tagVR_t::LT, testDataSet.getDataType(TagId(0x0010, 0x0010)));
     }
 
     {
-        std::string longString((size_t)10240, 'a');
+        std::string longString(size_t(10240u), 'a');
         testDataSet.setString(TagId(0x0010, 0x0010), longString, tagVR_t::LT);
         ASSERT_EQ(longString, testDataSet.getString(TagId(0x0010, 0x0010), 0));
         ASSERT_EQ(tagVR_t::LT, testDataSet.getDataType(TagId(0x0010, 0x0010)));
     }
 
     {
-        std::string longString((size_t)10241, 'a');
+        std::string longString(size_t(10241u), 'a');
         ASSERT_THROW(testDataSet.setString(TagId(0x0010, 0x0010), longString, tagVR_t::LT), DataHandlerInvalidDataError);
     }
 }
@@ -263,7 +263,7 @@ TEST(stringHandlerTest, STTest)
     }
 
     {
-        std::string longString((size_t)1024, 'a');
+        std::string longString(size_t(1024u), 'a');
         testDataSet.setString(TagId(0x0010, 0x0010), longString, tagVR_t::ST);
         ASSERT_EQ(longString, testDataSet.getString(TagId(0x0010, 0x0010), 0));
         ASSERT_EQ(tagVR_t::ST, testDataSet.getDataType(TagId(0x0010, 0x0010)));
@@ -271,7 +271,7 @@ TEST(stringHandlerTest, STTest)
     }
 
     {
-        std::string longString((size_t)1025, 'a');
+        std::string longString(size_t(1025u), 'a');
         ASSERT_THROW(testDataSet.setString(TagId(0x0010, 0x0010), longString, tagVR_t::ST), DataHandlerInvalidDataError);
     }
 }
@@ -316,14 +316,14 @@ TEST(stringHandlerTest, UITest)
     ASSERT_EQ("1", testDataSet.getString(TagId(0x0010, 0x0010), 0));
 
     {
-        std::string longString((size_t)64, '1');
+        std::string longString(size_t(64u), '1');
         testDataSet.setString(TagId(0x0010, 0x0010), longString, tagVR_t::UI);
         ASSERT_EQ(longString, testDataSet.getString(TagId(0x0010, 0x0010), 0));
         ASSERT_EQ(tagVR_t::UI, testDataSet.getDataType(TagId(0x0010, 0x0010)));
     }
 
     {
-        std::string longString((size_t)65, '1');
+        std::string longString(size_t(65u), '1');
         ASSERT_THROW(testDataSet.setString(TagId(0x0010, 0x0010), longString, tagVR_t::UI), DataHandlerInvalidDataError);
     }
 }
@@ -350,7 +350,7 @@ TEST(stringHandlerTest, UCTest)
     }
 
     {
-        std::string longString((size_t)100000, 'a');
+        std::string longString(size_t(100000u), 'a');
         testDataSet.setString(TagId(0x0010, 0x0010), longString, tagVR_t::UC);
         ASSERT_EQ(longString, testDataSet.getString(TagId(0x0010, 0x0010), 0));
         ASSERT_EQ(tagVR_t::UC, testDataSet.getDataType(TagId(0x0010, 0x0010)));
@@ -375,7 +375,7 @@ TEST(stringHandlerTest, UTTest)
     }
 
     {
-        std::string longString((size_t)100000, 'a');
+        std::string longString(size_t(100000u), 'a');
         testDataSet.setString(TagId(0x0010, 0x0010), longString, tagVR_t::UT);
         ASSERT_EQ(longString, testDataSet.getString(TagId(0x0010, 0x0010), 0));
         ASSERT_EQ(tagVR_t::UT, testDataSet.getDataType(TagId(0x0010, 0x0010)));
@@ -437,11 +437,29 @@ TEST(stringHandlerTest, PNTest)
         ASSERT_THROW(testDataSet.getSignedLong(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
         ASSERT_THROW(testDataSet.getDouble(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
 
-        ReadingDataHandlerNumeric rawHandler = testDataSet.getReadingDataHandlerRaw(TagId(0x0010, 0x0010), 0);
+        MutableMemory savedDicom;
+        MemoryStreamOutput writeDicom(savedDicom);
+        StreamWriter writer(writeDicom);
+        CodecFactory::save(testDataSet, writer, codecType_t::dicom);
+
+        MemoryStreamInput readDicom(savedDicom);
+        StreamReader reader(readDicom);
+        DataSet checkDataSet = CodecFactory::load(reader);
+
+        ReadingDataHandlerNumeric rawHandler = checkDataSet.getReadingDataHandlerRaw(TagId(0x0010, 0x0010), 0);
         size_t dataSize;
         const char* data = rawHandler.data(&dataSize);
         std::string fullString(data, dataSize);
         ASSERT_EQ("Patient^0=Patient^1=Patient^2\\Patient^3=Patient^4 ", fullString);
+        ASSERT_EQ("Patient^0=Patient^1=Patient^2", checkDataSet.getString(TagId(0x0010, 0x0010), 0));
+        ASSERT_EQ("Patient^3=Patient^4", checkDataSet.getString(TagId(0x0010, 0x0010), 1));
+        PatientName patientName0(checkDataSet.getPatientName(TagId(0x0010, 0x0010), 0));
+        ASSERT_EQ("Patient^0", patientName0.getAlphabeticRepresentation());
+        ASSERT_EQ("Patient^1", patientName0.getIdeographicRepresentation());
+        ASSERT_EQ("Patient^2", patientName0.getPhoneticRepresentation());
+        PatientName patientName1(checkDataSet.getPatientName(TagId(0x0010, 0x0010), 1));
+        ASSERT_EQ("Patient^3", patientName1.getAlphabeticRepresentation());
+        ASSERT_EQ("Patient^4", patientName1.getIdeographicRepresentation());
     }
 
     {
@@ -595,10 +613,6 @@ TEST(stringHandlerTest, ASTest)
         EXPECT_DOUBLE_EQ(90.0, age.getYears());
     }
 }
-
-
-
-
 
 } // namespace tests
 

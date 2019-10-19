@@ -37,59 +37,73 @@ TEST(dataSetTest, testFragmentation)
     testDataSet.setImage(0, testImage0, imageQuality_t::high);
     testDataSet.setImage(1, testImage1, imageQuality_t::high);
 
-    // Verify the two images
-    Image verifyImage0 = testDataSet.getImage(0);
-    ASSERT_TRUE(compareImages(testImage0, verifyImage0) < 0.000001);
-    Image verifyImage1(testDataSet.getImage(1));
-    ASSERT_TRUE(compareImages(testImage1, verifyImage1) < 0.000001);
-
+    // Verify the two images (must save first to adjust offsets)
     {
-        std::uint32_t offset(0);
-        WritingDataHandlerNumeric offsetHandler = testDataSet.getWritingDataHandlerNumeric(TagId(imebra::tagId_t::PixelData_7FE0_0010), 0, tagVR_t::OB);
+        MutableMemory saveDataSet;
+        MemoryStreamOutput memoryStreamOutput(saveDataSet);
+        StreamWriter streamWriter(memoryStreamOutput);
+        CodecFactory::save(testDataSet, streamWriter, codecType_t::dicom);
 
-        std::list<WritingDataHandler> handlers;
-
-        // Get the images 1 & 2, fragment them
-        //////////////////////////////////////
-        for(std::uint32_t scanBuffers = 1; scanBuffers != 3; ++scanBuffers)
-        {
-            size_t dataSize;
-            offsetHandler.setSize(sizeof(std::uint32_t) * scanBuffers);
-            std::uint32_t* pOffsetMemory = (std::uint32_t*)offsetHandler.data(&dataSize);
-            pOffsetMemory[scanBuffers - 1] = offset;
-
-            ReadingDataHandlerNumeric wholeHandler = testDataSet.getReadingDataHandlerNumeric(TagId(imebra::tagId_t::PixelData_7FE0_0010), scanBuffers);
-            size_t totalSize;
-            const char* pWholeMemory = wholeHandler.data(&totalSize);
-            size_t fragmentedSize = totalSize / 3;
-            if(fragmentedSize & 0x1)
-            {
-                ++fragmentedSize;
-            }
-            while(totalSize != 0)
-            {
-                size_t thisSize = totalSize;
-                if(thisSize > fragmentedSize)
-                {
-                    thisSize = fragmentedSize;
-                }
-                WritingDataHandlerNumeric newHandler = testDataSet.getWritingDataHandlerNumeric(TagId(imebra::tagId_t::PixelData_7FE0_0010), handlers.size() + 1, tagVR_t::OB);
-                newHandler.setSize(thisSize);
-                newHandler.assign(pWholeMemory, thisSize);
-                handlers.push_back(newHandler);
-                offset += (std::uint32_t)thisSize + 8u;
-                totalSize -= thisSize;
-                pWholeMemory += thisSize;
-            }
-        }
+        MemoryStreamInput memoryStreamInput(saveDataSet);
+        StreamReader streamReader(memoryStreamInput);
+        DataSet checkDataSet = CodecFactory::load(streamReader);
+        Image verifyImage0 = checkDataSet.getImage(0);
+        ASSERT_TRUE(compareImages(testImage0, verifyImage0) < 0.000001);
+        Image verifyImage1(checkDataSet.getImage(1));
+        ASSERT_TRUE(compareImages(testImage1, verifyImage1) < 0.000001);
     }
 
-    Image compareImage0 = testDataSet.getImage(0);
-    ASSERT_TRUE(compareImages(testImage0, compareImage0) < 0.000001);
+    // We are going to divide the 1st buffer into 2 buffers
+    // The second offset increases by 8 (header for additional buffer).
+    {
+        ReadingDataHandlerNumeric handler0 = testDataSet.getReadingDataHandlerRaw(TagId(imebra::tagId_t::PixelData_7FE0_0010), 0);
+        ReadingDataHandlerNumeric handler1 = testDataSet.getReadingDataHandlerRaw(TagId(imebra::tagId_t::PixelData_7FE0_0010), 1);
+        ReadingDataHandlerNumeric handler2 = testDataSet.getReadingDataHandlerRaw(TagId(imebra::tagId_t::PixelData_7FE0_0010), 2);
+        Memory memory0 = handler0.getMemory();
+        Memory memory1 = handler1.getMemory();
+        Memory memory2 = handler2.getMemory();
 
-    Image compareImage1 = testDataSet.getImage(1);
-    ASSERT_TRUE(compareImages(testImage1, compareImage1) < 0.000001);
-    ASSERT_TRUE(compareImages(testImage0, compareImage1) > 30);
+        size_t dummy(0);
+        WritingDataHandlerNumeric write0 = testDataSet.getWritingDataHandlerRaw(TagId(imebra::tagId_t::PixelData_7FE0_0010), 0);
+        WritingDataHandlerNumeric write1 = testDataSet.getWritingDataHandlerRaw(TagId(imebra::tagId_t::PixelData_7FE0_0010), 1);
+        WritingDataHandlerNumeric write2 = testDataSet.getWritingDataHandlerRaw(TagId(imebra::tagId_t::PixelData_7FE0_0010), 2);
+        WritingDataHandlerNumeric write3 = testDataSet.getWritingDataHandlerRaw(TagId(imebra::tagId_t::PixelData_7FE0_0010), 3);
+
+        write0.setSize(8); // 8 bytes (offset for 2 images)
+        write1.setSize(((memory1.size() / 2) + 1) & 0xfffffffc);
+        write2.setSize(memory1.size() - write1.getSize());
+        write3.setSize(memory2.size());
+
+        memcpy(write0.data(&dummy), memory0.data(&dummy), write0.getSize());
+        std::uint32_t* pOffsets = reinterpret_cast<std::uint32_t*>(write0.data(&dummy));
+        pOffsets[1] += 8;
+
+        // Copy first image into fragmented buffers
+        memcpy(write1.data(&dummy), memory1.data(&dummy), write1.getSize());
+        memcpy(write2.data(&dummy), memory1.data(&dummy) + write1.getSize(), memory1.size() - write1.getSize());
+
+        // Copy second image into the last buffer
+        memcpy(write3.data(&dummy), memory2.data(&dummy), memory2.size());
+    }
+
+    // Verify the two images (must save first to adjust offsets)
+    {
+        MutableMemory saveDataSet;
+        MemoryStreamOutput memoryStreamOutput(saveDataSet);
+        StreamWriter streamWriter(memoryStreamOutput);
+        CodecFactory::save(testDataSet, streamWriter, codecType_t::dicom);
+
+        MemoryStreamInput memoryStreamInput(saveDataSet);
+        StreamReader streamReader(memoryStreamInput);
+        DataSet checkDataSet = CodecFactory::load(streamReader);
+
+        Image compareImage0 = checkDataSet.getImage(0);
+        ASSERT_TRUE(compareImages(testImage0, compareImage0) < 0.000001);
+
+        Image compareImage1 = checkDataSet.getImage(1);
+        ASSERT_TRUE(compareImages(testImage1, compareImage1) < 0.000001);
+        ASSERT_TRUE(compareImages(testImage0, compareImage1) > 30);
+    }
 }
 
 

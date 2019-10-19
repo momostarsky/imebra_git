@@ -233,7 +233,7 @@ int main(int argc, char* argv[])
                 StreamWriter writer(writeJpeg);
 
                 const std::string jpegTransferSyntax("1.2.840.10008.1.2.4.50");
-                CodecFactory::saveImage(writer, *pFinalImage, jpegTransferSyntax, imageQuality_t::veryHigh, tagVR_t::OB, 8, false, false, true, false);
+                CodecFactory::saveImage(writer, *pFinalImage, jpegTransferSyntax, imageQuality_t::veryHigh, 8, false, false, true, false);
 
                 ++framesCount;
             }
