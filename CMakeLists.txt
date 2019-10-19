@@ -320,7 +320,7 @@ if(NOT IOS)
     if(${DCMTK_FOUND})
             message(STATUS "DCMTK found. Interoperability tests enabled")
     else(${DCMTK_FOUND})
-            add_definitions(-DDISABLE_DIMSE_INTEROPERABILITY_TEST)
+            add_definitions(-DDISABLE_DCMTK_INTEROPERABILITY_TEST)
             message(WARNING "WARNING: DCMTK not found. Disabling interoperability tests")
     endif(${DCMTK_FOUND})
 
@@ -349,8 +349,9 @@ if(NOT IOS)
     )
     target_include_directories(ImebraTests PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/gtest/src/gtest/include)
     target_link_libraries(ImebraTests imebra libgtest)
-
-
+if(${DCMTK_FOUND})
+    target_link_libraries(ImebraTests dcmdata dcmimage)
+endif()
     ##############################################
     #
     # RUN TESTS

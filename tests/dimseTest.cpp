@@ -9,7 +9,7 @@
 #include <sstream>
 #include "testsSettings.h"
 
-#ifndef DISABLE_DIMSE_INTEROPERABILITY_TEST
+#ifndef DISABLE_DCMTK_INTEROPERABILITY_TEST
     #include <dirent.h>
     #include <sys/stat.h>
 #endif
@@ -1357,7 +1357,7 @@ TEST(dimseTest, dimseTimeoutTest)
 
 
 
-#ifndef DISABLE_DIMSE_INTEROPERABILITY_TEST
+#ifndef DISABLE_DCMTK_INTEROPERABILITY_TEST
 
 ///////////////////////////////////////////////////////////
 //
@@ -1697,7 +1697,7 @@ TEST(dimseTest, findSCPInteroperabilityTest)
 }
 
 
-#endif // DISABLE_DIMSE_INTEROPERABILITY_TEST
+#endif // DISABLE_DCMTK_INTEROPERABILITY_TEST
 
 
 
