@@ -61,8 +61,8 @@ readingDataHandlerString::readingDataHandlerString(const memory &parseMemory, ta
 {
     IMEBRA_FUNCTION_START();
 
-    std::string parseString((const char*)parseMemory.data(), parseMemory.size());
-    while(!parseString.empty() && (parseString.back() == (char)paddingByte || parseString.back() == 0))
+    std::string parseString(reinterpret_cast<const char*>(parseMemory.data()), parseMemory.size());
+    while(!parseString.empty() && (parseString.back() == static_cast<const char>(paddingByte) || parseString.back() == 0))
     {
         parseString.pop_back();
     }
@@ -207,7 +207,7 @@ writingDataHandlerString::~writingDataHandlerString()
     }
 
     std::shared_ptr<memory> commitMemory = std::make_shared<memory>(completeString.size());
-    commitMemory->assign((std::uint8_t*)completeString.data(), completeString.size());
+    commitMemory->assign(reinterpret_cast<const std::uint8_t*>(completeString.data()), completeString.size());
 
     m_buffer->commit(commitMemory);
 }
