@@ -31,8 +31,8 @@
         <copy todir="${build_release}/library">
             <fileset dir="library" />
         </copy>
-        <copy todir="${build_release}/objectivec">
-            <fileset dir="objectivec" />
+        <copy todir="${build_release}/wrappers/objectivec">
+            <fileset dir="wrappers/objectivec" />
         </copy>
         <copy todir="${build_release}/examples">
             <fileset dir="examples" />
@@ -159,28 +159,6 @@ Slovenia
 
     </target>
 
-    <!-- GO SWIG -->
-    <target name="go_swig" depends="replace_version">
-        <delete dir="${build_release}/wrappers/goWrapper/imebra" failonerror="false" />
-        <mkdir dir="${build_release}/wrappers/goWrapper/imebra" />
-        <exec executable="swig" failonerror="true" dir="${build_release}/wrappers/">
-            <arg value="-go" />
-            <arg value="-c++" />
-            <arg value="-cgo" />
-            <arg value="-I${build_release}/library/include" />
-            <arg value="-module" />
-            <arg value="imebra" />
-            <arg value="-intgosize" />
-            <arg value="64" />
-            <arg value="-outdir" />
-            <arg path="${build_release}/wrappers/goWrapper/imebra" />
-            <arg value="-o" />
-            <arg value="${build_release}/wrappers/goWrapper/imebra/go_wrapper.cxx" />
-            <arg path="${build_release}/wrappers/swig.i" />
-        </exec>
-
-    </target>
-
     <!-- PYTHON SWIG -->
     <target name="python_swig" depends="replace_version">
         <exec executable="swig" failonerror="true" dir="${build_release}/wrappers/">
@@ -198,7 +176,7 @@ Slovenia
 
     </target>
 
-    <target name="swig" depends="java_swig, python_swig, go_swig" />
+    <target name="swig" depends="java_swig, python_swig" />
 
     <target name="imebrajar" depends="java_swig, create_test_dir" >
         <exec executable="cmake" failonerror="true" dir="${build_jni}">
@@ -233,8 +211,8 @@ Slovenia
         <copy todir="${source_distribution}/library">
                 <fileset dir="${build_release}/library" />
         </copy>
-        <copy todir="${source_distribution}/objectivec">
-                <fileset dir="${build_release}/objectivec" />
+        <copy todir="${source_distribution}/wrappers/objectivec">
+                <fileset dir="${build_release}/wrappers/objectivec" />
         </copy>
         <copy todir="${source_distribution}/examples">
                 <fileset dir="${build_release}/examples" />
@@ -314,8 +292,8 @@ Slovenia
             <arg path="${build_library_for_tests}/test.info" />
             <arg path="${build_release}/library/*/*.*" />
             <arg path="${build_release}/library/*/*/*.*" />
-            <arg path="${build_release}/objectivec/*/*.*" />
-            <arg path="${build_release}/objectivec/*/*/*.*" />
+            <arg path="${build_release}/wrappers/objectivec/*/*.*" />
+            <arg path="${build_release}/wrappers/objectivec/*/*/*.*" />
             <arg value="--output-file" />
             <arg path="${build_library_for_tests}/extracted.info" />
             <arg value="--rc" />

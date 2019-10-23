@@ -115,11 +115,11 @@ set(imebra_objc_gnustep_dir "")
 
 if("${IMEBRA_OBJC}" STREQUAL "1")
 
-    file(GLOB imebra_objc_src "${CMAKE_CURRENT_SOURCE_DIR}/objectivec/src/*.*")
-    file(GLOB imebra_objc_include "${CMAKE_CURRENT_SOURCE_DIR}/objectivec/include/imebraobjc/*.h")
+    file(GLOB imebra_objc_src "${CMAKE_CURRENT_SOURCE_DIR}/wrappers/objectivec/src/*.*")
+    file(GLOB imebra_objc_include "${CMAKE_CURRENT_SOURCE_DIR}/wrappers/objectivec/include/imebraobjc/*.h")
     add_definitions(-DIMEBRA_OBJC)
 
-    set(imebra_objc_include_dirs ${CMAKE_CURRENT_SOURCE_DIR}/objectivec/include)
+    set(imebra_objc_include_dirs ${CMAKE_CURRENT_SOURCE_DIR}/wrappers/objectivec/include)
 
     set(objc_compiler_flags "")
     if(APPLE)
