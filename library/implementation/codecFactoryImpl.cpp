@@ -203,7 +203,7 @@ std::shared_ptr<dataSet> codecFactory::load(std::shared_ptr<streamReader> pStrea
     ///////////////////////////////////////////////////////////
     if(maxSizeBufferLoad != 0xffffffff && !pStream->seekable())
     {
-        IMEBRA_THROW(std::logic_error, "Codec factory supports only file and memory streams")
+        IMEBRA_THROW(std::logic_error, "The codec factory supports only file and memory streams")
     }
 
     std::uint8_t buffer[IMEBRA_STREAM_CONTROLLER_MEMORY_SIZE];

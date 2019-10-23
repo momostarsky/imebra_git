@@ -1676,7 +1676,7 @@ void associationMessage::addDataset(const std::shared_ptr<dataSet> pDataset)
         return;
     }
 
-    IMEBRA_THROW(std::logic_error, "Too many dataset being added to the message");
+    IMEBRA_THROW(std::logic_error, "Too many datasets being added to the message");
 
     IMEBRA_FUNCTION_END();
 }
