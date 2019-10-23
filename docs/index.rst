@@ -37,7 +37,7 @@ Imebra
    
    compiling_imebra
    logging
-   getting_started
+   tutorial
    add_to_project
    design_concepts
    quick_tour

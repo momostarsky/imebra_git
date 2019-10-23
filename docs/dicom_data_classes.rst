@@ -48,7 +48,7 @@ The following classes are described in this chapter:
 
 :ref:`DataSet` is a collection of :ref:`Tag` objects. Each :ref:`Tag` is identified by a :ref:`TagId`.
 
-:ref:`DataSet` supplies several functions that allow to easily read and write the value of the tags however, when advanced
+:ref:`DataSet` and :ref:`MutableDataSet` supply several functions that allow to easily read and write the value of the tags. However when advanced
 functionalities are needed (e.g. when writing several items in one tag that accepts more than one value) then the classes
 :ref:`ReadingDataHandler`, :ref:`ReadingDataHandlerNumeric`, :ref:`WritingDataHandler` and :ref:`WritingDataHandlerNumeric` should be used.
 

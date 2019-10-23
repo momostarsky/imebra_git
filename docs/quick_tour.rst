@@ -1,5 +1,5 @@
-Getting started
-===============
+Tutorial
+========
 
 Include files
 -------------
@@ -9,7 +9,6 @@ In C++ you have to include the file imebra/imebra.h:
 .. code-block:: c++
 
     include <imebra/imebra.h>
-
 
 In Java, everything is in the package imebra:
 
@@ -137,8 +136,8 @@ This is how you retrieve the patient's name from the DataSet in C++:
 
     imebra::UnicodePatientName patientName = loadedDataSet.getUnicodePatientName(imebra::TagId(imebra::tagId_t::PatientName_0010_0010), 0);
 
-    // A patient's name can contain up to 5 values, representing different interpretations of the same name
-    // (e.g. alphabetic representation, ideographic representation and phonetic representation)
+    // A patient's name contains 3 values, representing different interpretations of the same name
+    // (alphabetic representation, ideographic representation and phonetic representation).
     std::wstring patientNameCharacter = patientName.getAlphabeticRepresentation();
     std::wstring patientNameIdeographic = patientName.getIdeographicRepresentation();
 
@@ -148,9 +147,8 @@ and in Java:
 
     com.imebra.PatientName patientName = loadedDataSet.getPatientName(new com.imebra.TagId(0x10, 0x10), 0);
 
-    // A patient's name can contain up to 5 values, representing different interpretations of the same name
-    // (e.g. alphabetic representation, ideographic representation and phonetic representation)
-    // Here we retrieve the first 2 interpretations (index 0 and 1)
+    // A patient's name contains 3 values, representing different interpretations of the same name
+    // (alphabetic representation, ideographic representation and phonetic representation).
     String patientNameCharacter = patientName.getAlphabeticRepresentation();
     String patientNameIdeographic = patientName.getIdeographicRepresentation();
 
@@ -161,9 +159,8 @@ In python, you do it like this:
 
     PatientName patientName = loadedDataSet.getPatientName(TagId(tagId_t_PatientName_0010_0010), 0);
 
-    # A patient's name can contain up to 5 values, representing different interpretations of the same name
-    # (e.g. alphabetic representation, ideographic representation and phonetic representation)
-    # Here we retrieve the first 2 interpretations (index 0 and 1)
+    # A patient's name contains 3 values, representing different interpretations of the same name
+    # (alphabetic representation, ideographic representation and phonetic representation).
     patientNameCharacter = patientName.getAlphabeticRepresentation();
     patientNameIdeographic = patientName.getIdeographicRepresentation();
 
@@ -215,7 +212,7 @@ To retrieve an image in C++:
     std::string colorSpace = image.getColorSpace();
 
     // Get the size in pixels
-    std::uint32_t width = image.etWidth();
+    std::uint32_t width = image.getWidth();
     std::uint32_t height = image.getHeight();
 
 
@@ -239,7 +236,7 @@ To retrieve an image in Python:
 .. code-block:: python
 
     # Retrieve the first image (index = 0)
-    image = loadedDataSet.GetImageApplyModalityTransform(0)
+    image = loadedDataSet.getImageApplyModalityTransform(0)
 
     # Get the color space
     colorSpace = image.getColorSpace()
@@ -269,7 +266,7 @@ This is how you scan all the pixels in C++, the slow way
         for(std::uint32 scanX(0); scanX != width; ++scanX)
         {
             // For monochrome images
-            std::int32_t luminance = dataHandler.etSignedLong(scanY * width + scanX);
+            std::int32_t luminance = dataHandler.getSignedLong(scanY * width + scanX);
 
             // For RGB images
             std::int32_t r = dataHandler.getSignedLong((scanY * width + scanX) * 3);
@@ -325,30 +322,6 @@ How to access the pixels in Python:
             b = dataHandler.getSignedLong((scanY * width + scanX) * 3 + 2)
 
 
-How to access the pixels in Golang:
-
-.. code-block:: go
-
-    // let's assume that we already have the image's size in the variables width and height
-    // (see previous code snippet)
-
-    // Retrieve the data handler
-    var dataHandler = image.GetReadingDataHandler()
-
-    for scanY := uint(0); scanY != height; scanY++ {
-        for scanX := uint(0); scanX != width; scanX++ {
-            // For monochrome images
-            var luminance = dataHandler.GetSignedLong(int64(scanY * width + scanX));
-
-            // For RGB images
-            var r = dataHandler.GetSignedLong(int64((scanY * width + scanX) * 3));
-            var g = dataHandler.GetSignedLong(int64((scanY * width + scanX) * 3 + 1));
-            var b = dataHandler.GetSignedLong(int64((scanY * width + scanX) * 3 + 2));
-
-        }
-    }
-
-
 In order to make things faster you can retrieve the memory containing the data in raw format from the :cpp:class:`imebra::ReadingDataHandlerNumeric`
 object:
 
@@ -368,30 +341,6 @@ object:
     bool bIsSigned = dataHandler.isSigned();
 
     // Do something with the pixels...A template function would come handy
-
-
-Faster pixel access in Golang:
-
-.. code-block:: go
-
-    // Retrieve the data handler
-    var dataHandler = image.GetReadingDataHandler()
-
-    // Get the mem
-    var memory = dataHandler.GetMemory();
-    var dataSize = memory.Size();
-    var byteArray = make([]byte, dataSize);
-    memory.Data(byteArray); // Fill the array with raw data from the first image
-
-    // Get the number of bytes per each value (1, 2, or 4 for images)
-    var bytesPerValue = dataHandler.GetUnitSize();
-
-    // Are the values signed?
-    var isSigned = dataHandler.IsSigned();
-
-    // Do something with the pixels...they are in byteArray, bytesPerValue
-    // specifies how many bytes form one pixel, while isSigned says if
-    // the pixel values are signed or unsigned...
 
 
 Displaying an image
@@ -642,7 +591,7 @@ In order to write a tag's value, use one of the following methods
 - :cpp:member:`imebra::MutableDataSet::setAge`
 - :cpp:member:`imebra::MutableDataSet::setDate`
 
-The WritingDataHandler and WritingDataHandlerNumeric contain the same setters but allow to access all the tags' elements, not just
+The WritingDataHandler and WritingDataHandlerNumeric classes contain the same setters but allow to access all the tags' elements, not just
 the first one.
 
 This is how you set the patient's name using the DataSet setter:

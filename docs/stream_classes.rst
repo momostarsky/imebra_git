@@ -33,7 +33,7 @@ The following classes are described in this chapter:
 |:cpp:class:`imebra::StreamTimeout`      |:cpp:class:`ImebraStreamTimeout`      |Causes a stream to fail after  |
 |                                        |                                      |a timeout has expired          |
 +----------------------------------------+--------------------------------------+-------------------------------+
-|:cpp:class:`imebra::Pipe`               |:cpp:class:`ImebraPipe`               |Allow to implement custom      |
+|:cpp:class:`imebra::PipeStream`         |:cpp:class:`ImebraPipeStream`         |Allow to implement custom      |
 |                                        |                                      |input and output streams       |
 +----------------------------------------+--------------------------------------+-------------------------------+
 |:cpp:class:`imebra::TCPStream`          |:cpp:class:`ImebraTCPStream`          |Implement an input and output  |
@@ -264,13 +264,13 @@ Pipe
 C++
 ,,,
 
-.. doxygenclass:: imebra::Pipe
+.. doxygenclass:: imebra::PipeStream
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraPipe
+.. doxygenclass:: ImebraPipeStream
    :members:
 
 
