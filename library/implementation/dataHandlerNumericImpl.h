@@ -129,14 +129,14 @@ public:
 
     void copyFrom(std::shared_ptr<readingDataHandlerNumericBase> pSource);
 
-    virtual void copyFrom(std::uint8_t* pMemory, size_t memorySize) = 0;
-    virtual void copyFrom(std::int8_t* pMemory, size_t memorySize) = 0;
-    virtual void copyFrom(std::uint16_t* pMemory, size_t memorySize) = 0;
-    virtual void copyFrom(std::int16_t* pMemory, size_t memorySize) = 0;
-    virtual void copyFrom(std::uint32_t* pMemory, size_t memorySize) = 0;
-    virtual void copyFrom(std::int32_t* pMemory, size_t memorySize) = 0;
-    virtual void copyFrom(float* pMemory, size_t memorySize) = 0;
-    virtual void copyFrom(double* pMemory, size_t memorySize) = 0;
+    virtual void copyFrom(const std::uint8_t* pMemory, size_t memorySize) = 0;
+    virtual void copyFrom(const std::int8_t* pMemory, size_t memorySize) = 0;
+    virtual void copyFrom(const std::uint16_t* pMemory, size_t memorySize) = 0;
+    virtual void copyFrom(const std::int16_t* pMemory, size_t memorySize) = 0;
+    virtual void copyFrom(const std::uint32_t* pMemory, size_t memorySize) = 0;
+    virtual void copyFrom(const std::int32_t* pMemory, size_t memorySize) = 0;
+    virtual void copyFrom(const float* pMemory, size_t memorySize) = 0;
+    virtual void copyFrom(const double* pMemory, size_t memorySize) = 0;
 
     virtual bool isSigned() const = 0;
 
@@ -525,7 +525,7 @@ public:
     {
     }
 
-    virtual bool isSigned() const
+    virtual bool isSigned() const override
     {
         IMEBRA_FUNCTION_START();
 
@@ -536,7 +536,7 @@ public:
         IMEBRA_FUNCTION_END();
     }
 
-    virtual bool isFloat() const
+    virtual bool isFloat() const override
     {
         IMEBRA_FUNCTION_START();
 
@@ -545,7 +545,7 @@ public:
         IMEBRA_FUNCTION_END();
     }
 
-    virtual size_t getUnitSize() const
+    virtual size_t getUnitSize() const override
     {
         IMEBRA_FUNCTION_START();
 
@@ -556,7 +556,7 @@ public:
 
     // Set the data element as a signed long
     ///////////////////////////////////////////////////////////
-    virtual void setSignedLong(const size_t index, const std::int32_t value)
+    virtual void setSignedLong(const size_t index, const std::int32_t value) override
     {
         IMEBRA_FUNCTION_START();
 
@@ -571,7 +571,7 @@ public:
 
     // Set the data element as an unsigned long
     ///////////////////////////////////////////////////////////
-    virtual void setUnsignedLong(const size_t index, const std::uint32_t value)
+    virtual void setUnsignedLong(const size_t index, const std::uint32_t value) override
     {
         IMEBRA_FUNCTION_START();
 
@@ -586,7 +586,7 @@ public:
 
     // Set the data element as a double
     ///////////////////////////////////////////////////////////
-    virtual void setDouble(const size_t index, const double value)
+    virtual void setDouble(const size_t index, const double value) override
     {
         IMEBRA_FUNCTION_START();
 
@@ -601,7 +601,7 @@ public:
 
     // Set the data element as a string
     ///////////////////////////////////////////////////////////
-    virtual void setString(const size_t index, const std::string& value)
+    virtual void setString(const size_t index, const std::string& value) override
     {
         IMEBRA_FUNCTION_START();
 
@@ -636,7 +636,7 @@ public:
 
     // Set the data element as an unicode string
     ///////////////////////////////////////////////////////////
-    virtual void setUnicodeString(const size_t index, const std::wstring& value)
+    virtual void setUnicodeString(const size_t index, const std::wstring& value) override
     {
         IMEBRA_FUNCTION_START();
 
@@ -648,7 +648,7 @@ public:
         IMEBRA_FUNCTION_END();
     }
 
-    virtual void copyFrom(std::uint8_t* pMemory, size_t memorySize)
+    virtual void copyFrom(const std::uint8_t* pMemory, size_t memorySize) override
     {
         IMEBRA_FUNCTION_START();
 
@@ -657,7 +657,7 @@ public:
         IMEBRA_FUNCTION_END();
     }
 
-    virtual void copyFrom(std::int8_t* pMemory, size_t memorySize)
+    virtual void copyFrom(const std::int8_t* pMemory, size_t memorySize) override
     {
         IMEBRA_FUNCTION_START();
 
@@ -666,7 +666,7 @@ public:
         IMEBRA_FUNCTION_END();
     }
 
-    virtual void copyFrom(std::uint16_t* pMemory, size_t memorySize)
+    virtual void copyFrom(const std::uint16_t* pMemory, size_t memorySize) override
     {
         IMEBRA_FUNCTION_START();
 
@@ -675,7 +675,7 @@ public:
         IMEBRA_FUNCTION_END();
     }
 
-    virtual void copyFrom(std::int16_t* pMemory, size_t memorySize)
+    virtual void copyFrom(const std::int16_t* pMemory, size_t memorySize) override
     {
         IMEBRA_FUNCTION_START();
 
@@ -684,7 +684,7 @@ public:
         IMEBRA_FUNCTION_END();
     }
 
-    virtual void copyFrom(std::uint32_t* pMemory, size_t memorySize)
+    virtual void copyFrom(const std::uint32_t* pMemory, size_t memorySize) override
     {
         IMEBRA_FUNCTION_START();
 
@@ -693,7 +693,7 @@ public:
         IMEBRA_FUNCTION_END();
     }
 
-    virtual void copyFrom(std::int32_t* pMemory, size_t memorySize)
+    virtual void copyFrom(const std::int32_t* pMemory, size_t memorySize) override
     {
         IMEBRA_FUNCTION_START();
 
@@ -702,7 +702,7 @@ public:
         IMEBRA_FUNCTION_END();
     }
 
-    virtual void copyFrom(float* pMemory, size_t memorySize)
+    virtual void copyFrom(const float* pMemory, size_t memorySize) override
     {
         IMEBRA_FUNCTION_START();
 
@@ -711,7 +711,7 @@ public:
         IMEBRA_FUNCTION_END();
     }
 
-    virtual void copyFrom(double* pMemory, size_t memorySize)
+    virtual void copyFrom(const double* pMemory, size_t memorySize) override
     {
         IMEBRA_FUNCTION_START();
 
@@ -859,7 +859,7 @@ public:
                                           std::uint32_t destStartChannel,
                                           std::uint32_t destWidth,
                                           std::uint32_t destHeight,
-                                          std::uint32_t destNumChannels)
+                                          std::uint32_t destNumChannels) override
     {
         IMEBRA_FUNCTION_START();
 
@@ -926,7 +926,7 @@ protected:
     ///
     ///////////////////////////////////////////////////////////
     template<class sourceHandlerType>
-    void copyFromMemory(sourceHandlerType* pSource, size_t sourceSize)
+    void copyFromMemory(const sourceHandlerType* pSource, size_t sourceSize)
     {
         IMEBRA_FUNCTION_START();
 

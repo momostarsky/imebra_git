@@ -19,7 +19,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "memoryImpl.h"
 #include "exceptionImpl.h"
 #include "../include/imebra/exceptions.h"
-#include <string.h>
+#include <cstring>
 
 namespace imebra
 {
@@ -477,6 +477,7 @@ stringUint8* memoryPool::getMemory(size_t requestedSize)
             {
                 m_firstUsedCell = 0;
             }
+            ::memset(&(pMemory->at(0)), 0, pMemory->size());
             return pMemory.release();
         }
 
@@ -484,6 +485,7 @@ stringUint8* memoryPool::getMemory(size_t requestedSize)
         if(findCell == lastUsedCell)
         {
             m_firstFreeCell = lastUsedCell;
+            ::memset(&(pMemory->at(0)), 0, pMemory->size());
             return pMemory.release();
         }
 
@@ -493,6 +495,7 @@ stringUint8* memoryPool::getMemory(size_t requestedSize)
         {
             m_firstUsedCell = 0;
         }
+        ::memset(&(pMemory->at(0)), 0, pMemory->size());
         return pMemory.release();
     }
 

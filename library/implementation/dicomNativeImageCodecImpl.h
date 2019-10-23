@@ -180,7 +180,6 @@ protected:
             size_t numPixels,
             size_t numChannels);
 
-
     template<typename samplesType_t> static void readNotInterleavedNotSubsampled(
             samplesType_t* pImageSamples,
             std::uint32_t allocatedBits,
@@ -321,6 +320,118 @@ protected:
             }
         }
     }
+
+
+    template<typename samplesType_t> static void write1bitInterleaved(
+            const samplesType_t* pImageSamples,
+            std::uint8_t* pLittleEndianTagData,
+            size_t numPixels,
+            size_t numChannels)
+    {
+        size_t leftShift(0);
+        for(size_t numSamples(numPixels * numChannels); numSamples != 0; --numSamples)
+        {
+            *pLittleEndianTagData = *pLittleEndianTagData | static_cast<std::uint8_t>((*pImageSamples++ & 1) << leftShift);
+            if(++leftShift == 8)
+            {
+                leftShift = 0;
+                ++pLittleEndianTagData;
+            }
+        }
+    }
+
+    static void write1bitInterleaved(
+            const std::uint8_t* pImageSamples,
+            bitDepth_t samplesDepth,
+            std::uint8_t* pLittleEndianTagData,
+            size_t numPixels,
+            size_t numChannels);
+
+    template<typename samplesType_t> static void write1bitNotInterleaved(
+            const samplesType_t* pImageSamples,
+            std::uint8_t* pLittleEndianTagData,
+            size_t numPixels,
+            size_t numChannels)
+    {
+        size_t leftShift(0);
+        for(size_t channel(0); channel != numChannels; ++channel)
+        {
+            const samplesType_t* pScanImageSamples(pImageSamples + channel);
+            for(size_t numSamples(numPixels); numSamples != 0; --numSamples)
+            {
+                *pLittleEndianTagData = *pLittleEndianTagData | static_cast<std::uint8_t>((*pScanImageSamples & 1) << leftShift);
+                pScanImageSamples += numChannels;
+                if(++leftShift == 8)
+                {
+                    leftShift = 0;
+                    ++pLittleEndianTagData;
+                }
+            }
+        }
+    }
+
+    static void write1bitNotInterleaved(
+            const std::uint8_t* pImageSamples,
+            bitDepth_t samplesDepth,
+            std::uint8_t* pLittleEndianTagData,
+            size_t numPixels,
+            size_t numChannels);
+
+    template<typename samplesType_t> static void read1bitInterleaved(
+            samplesType_t* pImageSamples,
+            const std::uint8_t* pLittleEndianTagData,
+            size_t numPixels,
+            size_t numChannels)
+    {
+        size_t rightShift(0);
+        for(size_t numSamples(numPixels * numChannels); numSamples != 0; --numSamples)
+        {
+            *pImageSamples++ = (*pLittleEndianTagData >> rightShift) & 1;
+            if(++rightShift == 8)
+            {
+                rightShift = 0;
+                ++pLittleEndianTagData;
+            }
+        }
+    }
+
+    static void read1bitInterleaved(
+            std::uint8_t* pImageSamples,
+            bitDepth_t samplesDepth,
+            const std::uint8_t* pLittleEndianTagData,
+            size_t numPixels,
+            size_t numChannels);
+
+    template<typename samplesType_t> static void read1bitNotInterleaved(
+            samplesType_t* pImageSamples,
+            const std::uint8_t* pLittleEndianTagData,
+            size_t numPixels,
+            size_t numChannels)
+    {
+        size_t rightShift(0);
+        for(size_t channel(0); channel != numChannels; ++channel)
+        {
+            samplesType_t* pScanImageSamples(pImageSamples + channel);
+            for(size_t numSamples(numPixels); numSamples != 0; --numSamples)
+            {
+                *pScanImageSamples = (*pLittleEndianTagData >> rightShift) & 1;
+                pScanImageSamples += numChannels;
+                if(++rightShift == 8)
+                {
+                    rightShift = 0;
+                    ++pLittleEndianTagData;
+                }
+            }
+        }
+    }
+
+    static void read1bitNotInterleaved(
+            std::uint8_t* pImageSamples,
+            bitDepth_t samplesDepth,
+            const std::uint8_t* pLittleEndianTagData,
+            size_t numPixels,
+            size_t numChannels);
+
 };
 
 

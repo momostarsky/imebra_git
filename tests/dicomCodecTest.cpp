@@ -40,7 +40,7 @@ TEST(dicomCodecTest, testDicom)
                 {
                     for(std::uint32_t sign=0; sign != 2; sign += signStep)
                     {
-                        for(std::uint32_t highBit(7); highBit != 32; highBit += highBitStep)
+                        for(std::uint32_t highBit(0); highBit != 32; highBit += highBitStep)
                         {
                             for(unsigned int colorSpaceIndex(0); colorSpaceIndex != sizeof(colorSpaces)/sizeof(colorSpaces[0]); ++colorSpaceIndex)
                             {
@@ -65,13 +65,13 @@ TEST(dicomCodecTest, testDicom)
                                 const bool bSubsampledX(ColorTransformsFactory::isSubsampledY(colorSpace));
                                 const bool bSubsampledY(ColorTransformsFactory::isSubsampledX(colorSpace));
 
-                                if((highBit > 24 || transferSyntax == "1.2.840.10008.1.2.5" || interleaved == 0) &&
+                                if((highBit < 7 || highBit > 24 || transferSyntax == "1.2.840.10008.1.2.5") &&
                                         (bSubsampledX || bSubsampledY))
                                 {
                                     continue;
                                 }
 
-                                if(transferSyntax == "1.2.840.10008.1.2.5" && interleaved == 1)
+                                if(transferSyntax == "1.2.840.10008.1.2.5" && (interleaved == 1 || highBit == 0))
                                 {
                                     continue;
                                 }
@@ -568,7 +568,7 @@ TEST(dicomCodecTest, dcmtkInteroperability)
     {
         for(std::uint32_t interleaved(0); interleaved != 2; ++interleaved)
         {
-            for(std::uint32_t highBit(7); highBit != 32; ++highBit)
+            for(std::uint32_t highBit(0); highBit != 32; ++highBit)
             {
                 for(unsigned int colorSpaceIndex(0); colorSpaceIndex != sizeof(colorSpaces)/sizeof(colorSpaces[0]); ++colorSpaceIndex)
                 {
@@ -576,7 +576,7 @@ TEST(dicomCodecTest, dcmtkInteroperability)
 
                     const bool bSubsampledX(ColorTransformsFactory::isSubsampledX(colorSpace));
                     const bool bSubsampledY(ColorTransformsFactory::isSubsampledY(colorSpace));
-                    if((highBit > 24 || interleaved == 0) &&
+                    if((highBit < 7 || highBit > 24 || interleaved == 0) &&
                             (bSubsampledX || bSubsampledY))
                     {
                         continue;
@@ -599,7 +599,7 @@ TEST(dicomCodecTest, dcmtkInteroperability)
                         break;
                     }
 
-                    if(transferSyntax == "1.2.840.10008.1.2.5" && (interleaved == 1 || bSubsampledX || bSubsampledY))
+                    if(transferSyntax == "1.2.840.10008.1.2.5" && (interleaved == 1 || bSubsampledX || bSubsampledY || highBit < 7))
                     {
                         continue;
                     }

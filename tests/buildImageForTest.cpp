@@ -350,6 +350,14 @@ bool identicalImages(const imebra::Image& image0, const imebra::Image& image1)
     const char* pData0(memory0.data(&dataSize0));
     const char* pData1(memory1.data(&dataSize1));
 
+    for(size_t scan(0); scan != dataSize0; ++scan)
+    {
+        if(pData0[scan] != pData1[scan])
+        {
+            return false;
+        }
+    }
+
     return ::memcmp(pData0, pData1, dataSize0) == 0;
 }
 

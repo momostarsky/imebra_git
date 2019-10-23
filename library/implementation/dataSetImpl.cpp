@@ -237,12 +237,12 @@ std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
                 else
                 {
                     std::shared_ptr<memory> temporaryMemory(std::make_shared<memory>(totalLength));
-                    const std::uint8_t* pDest = temporaryMemory->data();
+                    std::uint8_t* pDest = temporaryMemory->data();
                     for(std::uint32_t scanBuffers = firstBufferId; scanBuffers != endBufferId; ++scanBuffers)
                     {
                         std::shared_ptr<handlers::readingDataHandlerRaw> bufferHandler = imageTag->getReadingDataHandlerRaw(scanBuffers);
                         const std::uint8_t* pSource = bufferHandler->getMemoryBuffer();
-                        ::memcpy((void*)pDest, (void*)pSource, bufferHandler->getSize());
+                        ::memcpy(pDest, pSource, bufferHandler->getSize());
                         pDest += bufferHandler->getSize();
                     }
                     std::shared_ptr<baseStreamInput> compositeStream(std::make_shared<memoryStreamInput>(temporaryMemory));
@@ -260,15 +260,44 @@ std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
             bool isSubsampledX = transforms::colorTransforms::colorTransformsFactory::isSubsampledX(colorSpace);
             bool isSubsampledY = transforms::colorTransforms::colorTransformsFactory::isSubsampledY(colorSpace);
 
-            size_t imageSizeBytes = codecs::dicomNativeImageCodec::getNativeImageSizeBits(allocatedBits,
+            size_t imageSizeBits = codecs::dicomNativeImageCodec::getNativeImageSizeBits(allocatedBits,
                                                                                           width,
                                                                                           height,
                                                                                           channels,
                                                                                           isSubsampledX,
-                                                                                          isSubsampledY) / 8;
-            std::shared_ptr<streamReader> pTagStream = imageTag->getStreamReader(0);
-            pTagStream->seek(imageSizeBytes * frameNumber);
-            imageStream = pTagStream->getReader(imageSizeBytes);
+                                                                                          isSubsampledY);
+
+            if(((imageSizeBits * frameNumber) & 7) != 0)
+            {
+                size_t startPosition = (imageSizeBits * frameNumber) / 8;
+                size_t endPosition = ((imageSizeBits * (frameNumber + 1)) + 7) / 8;
+
+                std::shared_ptr<streamReader> pTagStream = imageTag->getStreamReader(0);
+                pTagStream->seek(startPosition);
+
+                memory originalData(endPosition - startPosition);
+                pTagStream->read(originalData.data(), originalData.size());
+
+                std::shared_ptr<memory> pTemporaryMemory(std::make_shared<memory>((imageSizeBits + 7) / 8));
+
+                const std::uint8_t* scanData = originalData.data();
+                std::uint8_t* destination = pTemporaryMemory->data();
+                const size_t offsetBit = (imageSizeBits * frameNumber) & 7;
+                for(size_t copyBits(0); copyBits < imageSizeBits; copyBits += 8)
+                {
+                    std::uint8_t value = *scanData++ >> offsetBit;
+                    value |= *scanData << (8 - offsetBit);
+                    *destination++ = value;
+                }
+                std::shared_ptr<memoryStreamInput> pTemporaryMemoryStream = std::make_shared<memoryStreamInput>(pTemporaryMemory);
+                imageStream = std::make_shared<streamReader>(pTemporaryMemoryStream);
+            }
+            else
+            {
+                std::shared_ptr<streamReader> pTagStream = imageTag->getStreamReader(0);
+                pTagStream->seek(imageSizeBits * frameNumber / 8);
+                imageStream = pTagStream->getReader((imageSizeBits + 7) / 8);
+            }
         }
 
         // If the image cannot be found, then probably we are
@@ -278,23 +307,7 @@ std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
         ///////////////////////////////////////////////////////////
         if(imageStream == nullptr)
         {
-            try
-            {
-                imageStream = getStreamReader(0x7fe0, (std::uint16_t)frameNumber, 0x0010, 0x0);
-            }
-            catch(const MissingDataElementError&)
-            {
-                // Nothing to do
-            }
-        }
-
-        // We are dealing with an old dicom format that doesn't
-        //  include the image offsets and stores all the images
-        //  in one buffer
-        ///////////////////////////////////////////////////////////
-        if(imageStream == nullptr)
-        {
-            imageStream = imageTag->getStreamReader(0x0);
+            imageStream = getStreamReader(0x7fe0, (std::uint16_t)frameNumber, 0x0010, 0x0);
         }
 
         std::shared_ptr<image> pImage;
@@ -370,7 +383,7 @@ std::shared_ptr<image> dataSet::getModalityImage(std::uint32_t frameNumber) cons
     if(modalityVOILUT->isEmpty())
     {
         std::shared_ptr<transforms::transform> monochromeColorTransform(colorFactory->getTransform(originalImage->getColorSpace(), "MONOCHROME2"));
-        if(monochromeColorTransform != 0)
+        if(monochromeColorTransform != nullptr)
         {
             std::uint32_t width, height;
             originalImage->getSize(&width, &height);
@@ -447,6 +460,8 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
         bSubSampledX = bSubSampledY = false;
     }
 
+    std::uint32_t width, height;
+    pImage->getSize(&width, &height);
     const bool b2complement = pImage->isSigned();
     const std::uint32_t channelsNumber = pImage->getChannelsNumber();
     const std::uint32_t highBit = pImage->getHighBit();
@@ -465,7 +480,9 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
                 bSubSampledY != transforms::colorTransforms::colorTransformsFactory::isSubsampledY(currentColorSpace) ||
                 b2complement != (getUnsignedLong(0x0028, 0, 0x0103, 0, 0) != 0) ||
                 highBit != getUnsignedLong(0x0028, 0x0, 0x0102, 0, 0) ||
-                channelsNumber != getUnsignedLong(0x0028, 0x0, 0x0002, 0, 0))
+                channelsNumber != getUnsignedLong(0x0028, 0x0, 0x0002, 0, 0) ||
+                width != getUnsignedLong(0x0028, 0, 0x0011, 0, 0) ||
+                height != getUnsignedLong(0x0028, 0, 0x0010, 0, 0))
         {
             IMEBRA_THROW(DataSetDifferentFormatError, "An image already exists in the dataset and has different attributes");
         }
@@ -525,8 +542,8 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
     // Get a stream to save the image
     ///////////////////////////////////////////////////////////
     {
-        std::shared_ptr<streamWriter> outputStream;
         std::shared_ptr<memory> uncompressedImage(std::make_shared<memory>());
+        std::shared_ptr<streamWriter> outputStream;
         if(bEncapsulated)
         {
             outputStream = getStreamWriter(groupId, 0, tagId, firstBufferId, dataHandlerType);
@@ -553,10 +570,30 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
 
         if(!bEncapsulated)
         {
-            // Images with allocatedBits == 1 need special treatment
-            if(allocatedBits == 1)
-            {
+            size_t imageSizeBits = codecs::dicomNativeImageCodec::getNativeImageSizeBits(allocatedBits,
+                                                                                          width,
+                                                                                          height,
+                                                                                          channelsNumber,
+                                                                                          bSubSampledX,
+                                                                                          bSubSampledY);
 
+            // Images with allocatedBits == 1 need special treatment (if not byte aligned)
+            if(allocatedBits == 1 && ((frameNumber * imageSizeBits) & 0x7) != 0)
+            {
+                std::shared_ptr<data> imageTag = getTag(groupId, 0, tagId);
+                std::shared_ptr<handlers::readingDataHandlerRaw> dataHandler = imageTag->getBuffer(firstBufferId)->getReadingDataHandlerRaw(dataHandlerType);
+                size_t newSize = ((frameNumber + 1) * imageSizeBits + 7) / 8;
+                std::shared_ptr<handlers::writingDataHandlerRaw> writeDataHandler = imageTag->getBuffer(firstBufferId)->getWritingDataHandlerRaw(dataHandlerType, static_cast<std::uint32_t>(newSize));
+                memcpy(writeDataHandler->getMemoryBuffer(), dataHandler->getMemoryBuffer(), (frameNumber * imageSizeBits + 7) / 8);
+                std::uint8_t* pDestination = writeDataHandler->getMemoryBuffer() + (frameNumber * imageSizeBits) / 8;
+                const std::uint8_t* pSource = uncompressedImage->data();
+                const size_t offsetBit = (imageSizeBits * frameNumber) & 7;
+                for(size_t copyBits(0); copyBits < imageSizeBits; copyBits += 8)
+                {
+                    *pDestination = *pDestination | static_cast<std::uint8_t>(*pSource << offsetBit);
+                    ++pDestination;
+                    *pDestination = *pSource++ >> (8 - offsetBit);
+                }
             }
             else
             {
@@ -583,10 +620,9 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
         setUnsignedLong(0x0028, 0x0, 0x0102, 0, pImage->getHighBit());     // high bit
         setUnsignedLong(0x0028, 0x0, 0x0103, 0, b2complement ? 1 : 0);
         setUnsignedLong(0x0028, 0x0, 0x0002, 0, channelsNumber);
-        std::uint32_t imageWidth, imageHeight;
-        pImage->getSize(&imageWidth, &imageHeight);
-        setUnsignedLong(0x0028, 0x0, 0x0011, 0, imageWidth);
-        setUnsignedLong(0x0028, 0x0, 0x0010, 0, imageHeight);
+        pImage->getSize(&width, &height);
+        setUnsignedLong(0x0028, 0x0, 0x0011, 0, width);
+        setUnsignedLong(0x0028, 0x0, 0x0010, 0, height);
 
         if(colorSpace == "PALETTE COLOR")
         {

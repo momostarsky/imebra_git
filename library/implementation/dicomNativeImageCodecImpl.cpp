@@ -188,12 +188,12 @@ std::shared_ptr<image> dicomNativeImageCodec::getImage(const dataSet& dataset, s
         std::shared_ptr<handlers::writingDataHandlerNumericBase> imageHandler = pImage->getWritingDataHandler();
         if(!bSubSampledX && !bSubSampledY)
         {
-            size_t imageSizeBytes = nativeImageSizeBits / 8;
+            size_t imageSizeBytes = (nativeImageSizeBits + 7) / 8;
             std::shared_ptr<memory> pMemory = std::make_shared<memory>(imageSizeBytes);
+            pStream->read(pMemory->data(), pMemory->size());
 
             if(allocatedBits != 1)
             {
-                pStream->read(pMemory->data(), pMemory->size());
                 if(bInterleaved || channelsNumber == 1)
                 {
                     readInterleavedNotSubsampled(
@@ -210,6 +210,29 @@ std::shared_ptr<image> dicomNativeImageCodec::getImage(const dataSet& dataset, s
                     readNotInterleavedNotSubsampled(
                                 imageHandler->getMemoryBuffer(),
                                 allocatedBits,
+                                pImage->getDepth(),
+                                pMemory->data(),
+                                imageWidth * imageHeight,
+                                channelsNumber
+                                );
+                }
+            }
+            else
+            {
+                if(bInterleaved || channelsNumber == 1)
+                {
+                    read1bitInterleaved(
+                                imageHandler->getMemoryBuffer(),
+                                pImage->getDepth(),
+                                pMemory->data(),
+                                imageWidth * imageHeight,
+                                channelsNumber
+                                );
+                }
+                else
+                {
+                    read1bitNotInterleaved(
+                                imageHandler->getMemoryBuffer(),
                                 pImage->getDepth(),
                                 pMemory->data(),
                                 imageWidth * imageHeight,
@@ -264,6 +287,10 @@ std::shared_ptr<image> dicomNativeImageCodec::getImage(const dataSet& dataset, s
                                 channelsNumber);
                 }
             }
+            else
+            {
+                IMEBRA_THROW(std::logic_error, "Cannot load subsampled 1 bpp images");
+            }
         }
     }
 
@@ -315,10 +342,10 @@ void dicomNativeImageCodec::setImage(
 
     if(!bSubSampledX && !bSubSampledY)
     {
+        size_t imageSizeBytes = (nativeImageSizeBits + 7) / 8;
+        std::shared_ptr<memory> pStreamMemory = std::make_shared<memory>(imageSizeBytes);
         if(allocatedBits != 1)
         {
-            size_t imageSizeBytes = nativeImageSizeBits / 8;
-            std::shared_ptr<memory> pStreamMemory = std::make_shared<memory>(imageSizeBytes);
             if(bInterleaved || channelsNumber == 1)
             {
                 writeInterleavedNotSubsampled(
@@ -341,9 +368,37 @@ void dicomNativeImageCodec::setImage(
                             channelsNumber
                             );
             }
-
-            pDestStream->write(pStreamMemory->data(), imageSizeBytes);
         }
+        else
+        {
+            if(bSubSampledX || bSubSampledY)
+            {
+                IMEBRA_THROW(std::logic_error, "Cannot save subsampled 1 bpp images");
+            }
+            if(bInterleaved || channelsNumber == 1)
+            {
+                write1bitInterleaved(
+                            imageHandler->getMemoryBuffer(),
+                            pImage->getDepth(),
+                            pStreamMemory->data(),
+                            imageWidth * imageHeight,
+                            channelsNumber
+                            );
+            }
+            else
+            {
+                write1bitNotInterleaved(
+                            imageHandler->getMemoryBuffer(),
+                            pImage->getDepth(),
+                            pStreamMemory->data(),
+                            imageWidth * imageHeight,
+                            channelsNumber
+                            );
+            }
+        }
+
+        pDestStream->write(pStreamMemory->data(), imageSizeBytes);
+
     }
     else
     {
@@ -356,6 +411,10 @@ void dicomNativeImageCodec::setImage(
             writeInterleavedSubsampled<std::int32_t>(subsampledChannels, allocatedBits, pStreamMemory->data());
 
             pDestStream->write(pStreamMemory->data(), imageSizeBytes);
+        }
+        else
+        {
+            IMEBRA_THROW(std::logic_error, "Subsampled images with 1 bit per channel are not supported")
         }
     }
 
@@ -490,6 +549,132 @@ void dicomNativeImageCodec::readNotInterleavedNotSubsampled(
         break;
     }
 }
+
+
+void dicomNativeImageCodec::write1bitInterleaved(
+        const std::uint8_t* pImageSamples,
+        bitDepth_t samplesDepth,
+        std::uint8_t* pLittleEndianTagData,
+        size_t numPixels,
+        size_t numChannels)
+{
+    switch(samplesDepth)
+    {
+    case bitDepth_t::depthU8:
+        write1bitInterleaved(pImageSamples, pLittleEndianTagData, numPixels, numChannels);
+        break;
+    case bitDepth_t::depthS8:
+        write1bitInterleaved(reinterpret_cast<const std::int8_t*>(pImageSamples), pLittleEndianTagData, numPixels, numChannels);
+        break;
+    case bitDepth_t::depthU16:
+        write1bitInterleaved(reinterpret_cast<const std::uint16_t*>(pImageSamples), pLittleEndianTagData, numPixels, numChannels);
+        break;
+    case bitDepth_t::depthS16:
+        write1bitInterleaved(reinterpret_cast<const std::int16_t*>(pImageSamples), pLittleEndianTagData, numPixels, numChannels);
+        break;
+    case bitDepth_t::depthU32:
+        write1bitInterleaved(reinterpret_cast<const std::uint32_t*>(pImageSamples), pLittleEndianTagData, numPixels, numChannels);
+        break;
+    case bitDepth_t::depthS32:
+        write1bitInterleaved(reinterpret_cast<const std::int32_t*>(pImageSamples), pLittleEndianTagData, numPixels, numChannels);
+        break;
+    }
+}
+
+
+void dicomNativeImageCodec::write1bitNotInterleaved(
+        const std::uint8_t* pImageSamples,
+        bitDepth_t samplesDepth,
+        std::uint8_t* pLittleEndianTagData,
+        size_t numPixels,
+        size_t numChannels)
+{
+    switch(samplesDepth)
+    {
+    case bitDepth_t::depthU8:
+        write1bitNotInterleaved(pImageSamples, pLittleEndianTagData, numPixels, numChannels);
+        break;
+    case bitDepth_t::depthS8:
+        write1bitNotInterleaved(reinterpret_cast<const std::int8_t*>(pImageSamples), pLittleEndianTagData, numPixels, numChannels);
+        break;
+    case bitDepth_t::depthU16:
+        write1bitNotInterleaved(reinterpret_cast<const std::uint16_t*>(pImageSamples), pLittleEndianTagData, numPixels, numChannels);
+        break;
+    case bitDepth_t::depthS16:
+        write1bitNotInterleaved(reinterpret_cast<const std::int16_t*>(pImageSamples), pLittleEndianTagData, numPixels, numChannels);
+        break;
+    case bitDepth_t::depthU32:
+        write1bitNotInterleaved(reinterpret_cast<const std::uint32_t*>(pImageSamples), pLittleEndianTagData, numPixels, numChannels);
+        break;
+    case bitDepth_t::depthS32:
+        write1bitNotInterleaved(reinterpret_cast<const std::int32_t*>(pImageSamples), pLittleEndianTagData, numPixels, numChannels);
+        break;
+    }
+}
+
+
+void dicomNativeImageCodec::read1bitInterleaved(
+        std::uint8_t* pImageSamples,
+        bitDepth_t samplesDepth,
+        const std::uint8_t* pLittleEndianTagData,
+        size_t numPixels,
+        size_t numChannels)
+{
+    switch(samplesDepth)
+    {
+    case bitDepth_t::depthU8:
+        read1bitInterleaved(pImageSamples, pLittleEndianTagData, numPixels, numChannels);
+        break;
+    case bitDepth_t::depthS8:
+        read1bitInterleaved(reinterpret_cast<std::int8_t*>(pImageSamples), pLittleEndianTagData, numPixels, numChannels);
+        break;
+    case bitDepth_t::depthU16:
+        read1bitInterleaved(reinterpret_cast<std::uint16_t*>(pImageSamples), pLittleEndianTagData, numPixels, numChannels);
+        break;
+    case bitDepth_t::depthS16:
+        read1bitInterleaved(reinterpret_cast<std::int16_t*>(pImageSamples), pLittleEndianTagData, numPixels, numChannels);
+        break;
+    case bitDepth_t::depthU32:
+        read1bitInterleaved(reinterpret_cast<std::uint32_t*>(pImageSamples), pLittleEndianTagData, numPixels, numChannels);
+        break;
+    case bitDepth_t::depthS32:
+        read1bitInterleaved(reinterpret_cast<std::int32_t*>(pImageSamples), pLittleEndianTagData, numPixels, numChannels);
+        break;
+    }
+}
+
+
+void dicomNativeImageCodec::read1bitNotInterleaved(
+        std::uint8_t* pImageSamples,
+        bitDepth_t samplesDepth,
+        const std::uint8_t* pLittleEndianTagData,
+        size_t numPixels,
+        size_t numChannels)
+{
+    switch(samplesDepth)
+    {
+    case bitDepth_t::depthU8:
+        read1bitNotInterleaved(pImageSamples, pLittleEndianTagData, numPixels, numChannels);
+        break;
+    case bitDepth_t::depthS8:
+        read1bitNotInterleaved(reinterpret_cast<std::int8_t*>(pImageSamples), pLittleEndianTagData, numPixels, numChannels);
+        break;
+    case bitDepth_t::depthU16:
+        read1bitNotInterleaved(reinterpret_cast<std::uint16_t*>(pImageSamples), pLittleEndianTagData, numPixels, numChannels);
+        break;
+    case bitDepth_t::depthS16:
+        read1bitNotInterleaved(reinterpret_cast<std::int16_t*>(pImageSamples), pLittleEndianTagData, numPixels, numChannels);
+        break;
+    case bitDepth_t::depthU32:
+        read1bitNotInterleaved(reinterpret_cast<std::uint32_t*>(pImageSamples), pLittleEndianTagData, numPixels, numChannels);
+        break;
+    case bitDepth_t::depthS32:
+        read1bitNotInterleaved(reinterpret_cast<std::int32_t*>(pImageSamples), pLittleEndianTagData, numPixels, numChannels);
+        break;
+    }
+}
+
+
 
 
 ///////////////////////////////////////////////////////////
