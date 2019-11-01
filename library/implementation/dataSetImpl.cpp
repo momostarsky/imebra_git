@@ -36,7 +36,9 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "dateImpl.h"
 #include "ageImpl.h"
 #include "VOIDescriptionImpl.h"
+#include "overlayImpl.h"
 #include "dicomNativeImageCodecImpl.h"
+#include "codecFactoryImpl.h"
 #include <iostream>
 #include <string.h>
 #include <limits>
@@ -138,7 +140,7 @@ std::shared_ptr<data> dataSet::getTagCreate(std::uint16_t groupId, std::uint32_t
         m_groups[groupId].resize(order + 1);
     }
 
-    if(m_groups[groupId][order][tagId] == 0)
+    if(m_groups[groupId][order][tagId] == nullptr)
     {
         m_groups[groupId][order][tagId] = std::make_shared<data>(tagVR, m_pCharsetsList);
     }
@@ -199,6 +201,50 @@ std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
 
     try
     {
+        std::string colorSpace = getString(0x0028, 0x0, 0x0004, 0, 0);
+        std::uint32_t channelsNumber = getUnsignedLong(0x0028, 0x0, 0x0002, 0, 0, 1);
+        if(colorSpace.empty() && (channelsNumber == 0 || channelsNumber == 1))
+        {
+            colorSpace = "MONOCHROME2";
+            channelsNumber = 1;
+        }
+        else if(colorSpace.empty() && channelsNumber == 3)
+        {
+            colorSpace = "RGB";
+        }
+        std::uint32_t requiredChannels = transforms::colorTransforms::colorTransformsFactory::getNumberOfChannels(colorSpace);
+        if(requiredChannels == 0)
+        {
+            IMEBRA_THROW(CodecCorruptedFileError, "Unrecognized color space " << colorSpace);
+        }
+        if(requiredChannels != channelsNumber)
+        {
+            IMEBRA_THROW(CodecCorruptedFileError, "The color space " << colorSpace << " requires " << requiredChannels << " but the dataset declares " << channelsNumber << " channels");
+        }
+        std::uint32_t imageWidth = getUnsignedLong(0x0028, 0x0, 0x0011, 0, 0);
+        std::uint32_t imageHeight = getUnsignedLong(0x0028, 0x0, 0x0010, 0, 0);
+        if(
+                imageWidth > codecs::codecFactory::getCodecFactory()->getMaximumImageWidth() ||
+                imageHeight > codecs::codecFactory::getCodecFactory()->getMaximumImageHeight())
+        {
+            IMEBRA_THROW(CodecImageTooBigError, "The factory settings prevented the loading of this image. Consider using codecFactory::setMaximumImageSize() to modify the settings");
+        }
+        if((imageWidth == 0) || (imageHeight == 0))
+        {
+            IMEBRA_THROW(CodecCorruptedFileError, "The size tags are not available");
+        }
+        bool bInterleaved(getUnsignedLong(0x0028, 0x0, 0x0006, 0, 0, pCodec->defaultInterleaved() ? 0 : 1u) == 0);
+        bool b2Complement(getUnsignedLong(0x0028, 0x0, 0x0103, 0, 0, 0) != 0);
+        std::uint8_t allocatedBits = static_cast<std::uint8_t>(getUnsignedLong(0x0028, 0x0, 0x0100, 0, 0));
+        std::uint8_t storedBits = static_cast<std::uint8_t>(getUnsignedLong(0x0028, 0x0, 0x0101, 0, 0));
+        std::uint8_t highBit = static_cast<std::uint8_t>(getUnsignedLong(0x0028, 0x0, 0x0102, 0, 0));
+        if(highBit < storedBits - 1)
+        {
+            IMEBRA_THROW(CodecCorruptedFileError, "The tag 0028,0102 (high bit) cannot be less than (tag 0028,0101 (stored bit) - 1)");
+        }
+        bool bSubSampledY = transforms::colorTransforms::colorTransformsFactory::isSubsampledY(colorSpace);
+        bool bSubSampledX = transforms::colorTransforms::colorTransformsFactory::isSubsampledX(colorSpace);
+
         std::shared_ptr<implementation::data> imageTag = getTag(0x7fe0, 0x0, 0x0010);
 
         // Get the number of frames
@@ -252,20 +298,13 @@ std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
         }
         else
         {
-            std::uint32_t allocatedBits = getUnsignedLong(0x0028, 0x0, 0x0100, 0, 0);
-            std::uint32_t width = getUnsignedLong(0x0028, 0x0, 0x0011, 0, 0);
-            std::uint32_t height = getUnsignedLong(0x0028, 0x0, 0x0010, 0, 0);
-            std::uint32_t channels = getUnsignedLong(0x0028, 0x0, 0x0002, 0, 0, 1);
-            std::string colorSpace = getString(0x0028, 0x0, 0x0004, 0, 0);
-            bool isSubsampledX = transforms::colorTransforms::colorTransformsFactory::isSubsampledX(colorSpace);
-            bool isSubsampledY = transforms::colorTransforms::colorTransformsFactory::isSubsampledY(colorSpace);
 
             size_t imageSizeBits = codecs::dicomNativeImageCodec::getNativeImageSizeBits(allocatedBits,
-                                                                                          width,
-                                                                                          height,
-                                                                                          channels,
-                                                                                          isSubsampledX,
-                                                                                          isSubsampledY);
+                                                                                          imageWidth,
+                                                                                          imageHeight,
+                                                                                          channelsNumber,
+                                                                                          bSubSampledX,
+                                                                                          bSubSampledY);
 
             if(((imageSizeBits * frameNumber) & 7) != 0)
             {
@@ -285,8 +324,8 @@ std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
                 const size_t offsetBit = (imageSizeBits * frameNumber) & 7;
                 for(size_t copyBits(0); copyBits < imageSizeBits; copyBits += 8)
                 {
-                    std::uint8_t value = *scanData++ >> offsetBit;
-                    value |= *scanData << (8 - offsetBit);
+                    std::uint8_t value = static_cast<std::uint8_t>(*scanData++ >> offsetBit);
+                    value = value | static_cast<std::uint8_t>(*scanData << (8 - offsetBit));
                     *destination++ = value;
                 }
                 std::shared_ptr<memoryStreamInput> pTemporaryMemoryStream = std::make_shared<memoryStreamInput>(pTemporaryMemory);
@@ -307,11 +346,23 @@ std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
         ///////////////////////////////////////////////////////////
         if(imageStream == nullptr)
         {
-            imageStream = getStreamReader(0x7fe0, (std::uint16_t)frameNumber, 0x0010, 0x0);
+            imageStream = getStreamReader(0x7fe0, static_cast<std::uint16_t>(frameNumber), 0x0010, 0x0);
         }
 
         std::shared_ptr<image> pImage;
-        pImage = pCodec->getImage(*this, imageStream);
+        pImage = pCodec->getImage(transferSyntax,
+                                  colorSpace,
+                                  channelsNumber,
+                                  imageWidth,
+                                  imageHeight,
+                                  bSubSampledX,
+                                  bSubSampledY,
+                                  bInterleaved,
+                                  b2Complement,
+                                  allocatedBits,
+                                  storedBits,
+                                  highBit,
+                                  imageStream);
 
         if(pImage->getColorSpace() == "PALETTE COLOR")
         {
@@ -352,7 +403,7 @@ std::shared_ptr<image> dataSet::getModalityImage(std::uint32_t frameNumber) cons
     std::shared_ptr<image> originalImage = getImage(frameNumber);
 
     std::shared_ptr<transforms::colorTransforms::colorTransformsFactory> colorFactory(transforms::colorTransforms::colorTransformsFactory::getColorTransformsFactory());
-    if(originalImage == 0 || !colorFactory->isMonochrome(originalImage->getColorSpace()))
+    if(!colorFactory->isMonochrome(originalImage->getColorSpace()))
     {
         return originalImage;
     }
@@ -592,7 +643,7 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
                 {
                     *pDestination = *pDestination | static_cast<std::uint8_t>(*pSource << offsetBit);
                     ++pDestination;
-                    *pDestination = *pSource++ >> (8 - offsetBit);
+                    *pDestination = static_cast<std::uint8_t>(*pSource++ >> (8 - offsetBit));
                 }
             }
             else
@@ -663,6 +714,151 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
 }
 
 
+std::shared_ptr<overlay> dataSet::getOverlay(std::uint32_t overlayNumber) const
+{
+    IMEBRA_FUNCTION_START();
+
+    std::uint16_t groupId(static_cast<std::uint16_t>(0x6000 + overlayNumber * 2));
+    if(groupId >= 0x6100u)
+    {
+        IMEBRA_THROW(MissingGroupError, "Cannot store more than 127 overlays");
+    }
+    try
+    {
+        std::uint32_t height = getUnsignedLong(groupId, 0, 0x0010, 0, 0);
+        std::uint32_t width = getUnsignedLong(groupId, 0, 0x0011, 0, 0);
+        std::uint32_t firstFrame = getUnsignedLong(groupId, 0, 0x0051, 0, 0, 1) - 1;
+        std::uint32_t framesCount = getUnsignedLong(groupId, 0, 0x0015, 0, 0, 1);
+
+        // Construct the overlay and return it
+        overlayType_t overlayType = getString(groupId, 0, 0x0040, 0, 0) == "R" ? overlayType_t::ROI : overlayType_t::graphic;
+        std::int32_t originY = getSignedLong(groupId, 0, 0x0050, 0, 0);
+        std::int32_t originX = getSignedLong(groupId, 0, 0x0050, 0, 1);
+        std::uint32_t allocatedBits = getUnsignedLong(groupId, 0, 0x0100, 0, 0); // Fail if different than 1
+        if(allocatedBits != 1)
+        {
+            IMEBRA_THROW(CodecCorruptedFileError, "Cannot handle overlays with allocatedBits greater than one");
+        }
+        std::uint32_t bitPosition = getUnsignedLong(groupId, 0, 0x0102, 0, 0); // Fail if different than 0
+        if(bitPosition != 0)
+        {
+            IMEBRA_THROW(CodecCorruptedFileError, "Cannot handle overlays with bitPosition different than one");
+        }
+        std::shared_ptr<const memory> pData = getReadingDataHandlerNumeric(groupId, 0, 0x3000, 0)->getMemory();
+        std::wstring description = getUnicodeString(groupId, 0, 0x0022, 0, 0, L"");
+        std::string subType = getString(groupId, 0, 0x0045, 0, 0, "");
+        std::wstring label = getUnicodeString(groupId, 0, 0x1500, 0, 0, L"");
+
+        bool roiAreaPixelsPresent = true;
+        std::uint32_t roiAreaPixels = 0;
+        try
+        {
+            roiAreaPixels = getUnsignedLong(groupId, 0, 0x1301, 0, 0);
+        }
+        catch(const MissingDataElementError&)
+        {
+            roiAreaPixelsPresent = false;
+        }
+
+        bool roiMeanPresent = true;
+        double roiMean = 0.0;
+        try
+        {
+            roiMean = getDouble(groupId, 0, 0x1302, 0, 0);
+        }
+        catch(const MissingDataElementError&)
+        {
+            roiMeanPresent = false;
+        }
+
+        bool roiStandardDeviationPresent = true;
+        double roiStandardDeviation = 0.0;
+        try
+        {
+            roiStandardDeviation = getDouble(groupId, 0, 0x1303, 0, 0);
+        }
+        catch(const MissingDataElementError&)
+        {
+            roiStandardDeviationPresent = false;
+        }
+
+        return std::make_shared<overlay>(
+                    width,
+                    height,
+                    firstFrame,
+                    framesCount,
+                    originX - 1,
+                    originY - 1,
+                    overlayType,
+                    subType,
+                    label,
+                    description,
+                    roiAreaPixels,
+                    roiAreaPixelsPresent,
+                    roiMean,
+                    roiMeanPresent,
+                    roiStandardDeviation,
+                    roiStandardDeviationPresent,
+                    getTag(groupId, 0, 0x3000)->getBuffer(0));
+    }
+    catch(MissingDataElementError)
+    {
+            IMEBRA_THROW(MissingGroupError, "None of the 60XX groups contain the overlay data");
+    }
+
+    IMEBRA_FUNCTION_END();
+}
+
+
+void dataSet::setOverlay(std::uint32_t overlayNumber, std::shared_ptr<overlay> pOverlay)
+{
+    IMEBRA_FUNCTION_START();
+
+    std::uint16_t groupId(static_cast<std::uint16_t>(0x6000 + overlayNumber * 2));
+    if(groupId >= 0x6100u)
+    {
+        IMEBRA_THROW(std::logic_error, "Cannot store more than 127 overlays");
+    }
+
+    std::uint32_t height, width;
+    pOverlay->getImage(0)->getSize(&width, &height);
+    setUnsignedLong(groupId, 0, 0x0010, 0, height);
+    setUnsignedLong(groupId, 0, 0x0011, 0, width);
+    setUnsignedLong(groupId, 0, 0x0051, 0, pOverlay->getFirstFrame() + 1);
+    setUnsignedLong(groupId, 0, 0x0015, 0, pOverlay->getFramesCount());
+    setString(groupId, 0, 0x0040, 0, pOverlay->getType() == overlayType_t::ROI ? "R" : "G");
+    setString(groupId, 0, 0x0045, 0, pOverlay->getSubType());
+    std::shared_ptr<handlers::writingDataHandler> originHandler(getWritingDataHandler(groupId, 0, 0x0050, 0));
+    originHandler->setSize(2);
+    originHandler->setSignedLong(0, pOverlay->getOneBasedOriginY());
+    originHandler->setSignedLong(1, pOverlay->getOneBasedOriginX());
+    setUnsignedLong(groupId, 0, 0x0100, 0, 1); // bits allocated
+    setUnsignedLong(groupId, 0, 0x0102, 0, 0); // bit position
+    setUnicodeString(groupId, 0, 0x1500, 0, pOverlay->getUnicodeLabel());
+    setUnicodeString(groupId, 0, 0x0022, 0, pOverlay->getUnicodeDescription());
+
+    if(pOverlay->getROIAreaPresent())
+    {
+        setUnsignedLong(groupId, 0, 0x1301, 0, pOverlay->getROIArea());
+    }
+
+    if(pOverlay->getROIMeanPresent())
+    {
+        setDouble(groupId, 0, 0x1302, 0, pOverlay->getROIMean());
+    }
+
+    if(pOverlay->getROIStandardDeviationPresent())
+    {
+        setDouble(groupId, 0, 0x1303, 0, pOverlay->getROIStandardDeviation());
+    }
+
+    std::shared_ptr<data> pTag = getTagCreate(groupId, 0, 0x3000);
+    pTag->setBuffer(0, pOverlay->getBuffer());
+
+    IMEBRA_FUNCTION_END();
+}
+
+
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 //
@@ -682,7 +878,7 @@ std::uint32_t dataSet::getFrameOffset(std::uint32_t frameNumber) const
 
         // Get the offset table's size, in number of offsets
         ///////////////////////////////////////////////////////////
-        std::uint32_t offsetsCount = (std::uint32_t)(framesPointer->getSize() / sizeof(std::uint32_t));
+        std::uint32_t offsetsCount = static_cast<std::uint32_t>(framesPointer->getSize() / sizeof(std::uint32_t));
 
         // If the requested frame doesn't exist then return
         //  0xffffffff (the maximum value)
@@ -698,7 +894,7 @@ std::uint32_t dataSet::getFrameOffset(std::uint32_t frameNumber) const
         ///////////////////////////////////////////////////////////
         if(frameNumber < offsetsCount)
         {
-            std::uint32_t* pOffsets = (std::uint32_t*)(framesPointer->getMemoryBuffer());
+            const std::uint32_t* pOffsets = reinterpret_cast<const std::uint32_t*>(framesPointer->getMemoryBuffer());
             std::uint32_t returnOffset(pOffsets[frameNumber]);
             streamController::adjustEndian((std::uint8_t*)&returnOffset, 4, streamController::lowByteEndian);
             return returnOffset;
@@ -746,7 +942,7 @@ std::uint32_t dataSet::getFrameBufferId(std::uint32_t offset) const
         // Calculate the total size of the buffer, including
         //  its descriptor (tag group and id and length)
         ///////////////////////////////////////////////////////////
-        std::uint32_t bufferSize = (std::uint32_t)imageTag->getBufferSize(scanBuffers);;
+        std::uint32_t bufferSize = static_cast<std::uint32_t>(imageTag->getBufferSize(scanBuffers));
         bufferSize += 4; // one WORD for the group id, one WORD for the tag id
         bufferSize += 4; // one DWORD for the tag length
         if(bufferSize > offset)
@@ -797,7 +993,7 @@ size_t dataSet::getFrameBufferIds(std::uint32_t frameNumber, std::uint32_t* pFir
         {
             imageTag = getTag(0x7fe0, 0, 0x0010);
         }
-        catch(MissingDataElementError& e)
+        catch(MissingDataElementError&)
         {
             return 0;
         }
@@ -1726,7 +1922,7 @@ std::uint32_t dataSet::getGroupsNumber(uint16_t groupId) const
         return 0;
     }
 
-    return (std::uint32_t)(findGroup->second.size());
+    return static_cast<std::uint32_t>(findGroup->second.size());
 
     IMEBRA_FUNCTION_END();
 }

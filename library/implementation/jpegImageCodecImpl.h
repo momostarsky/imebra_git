@@ -51,13 +51,29 @@ class jpegImageCodec : public imageCodec, public jpegCodecBase
 public:
     // Retrieve the image from a dataset
     ///////////////////////////////////////////////////////////
-    virtual std::shared_ptr<image> getImage(const dataSet& sourceDataSet, std::shared_ptr<streamReader> pStream) const override;
+    virtual std::shared_ptr<image> getImage(const std::string& transferSyntax,
+                                            const std::string& colorSpace,
+                                            std::uint32_t channelsNumber,
+                                            std::uint32_t imageWidth,
+                                            std::uint32_t imageHeight,
+                                            bool bSubSampledX,
+                                            bool bSubSampledY,
+                                            bool bInterleaved,
+                                            bool b2Complement,
+                                            std::uint8_t allocatedBits,
+                                            std::uint8_t storedBits,
+                                            std::uint8_t highBit,
+                                            std::shared_ptr<streamReader> pSourceStream) const override;
+
+    // Return the default planar configuration
+    ///////////////////////////////////////////////////////////
+    virtual bool defaultInterleaved() const override;
 
     // Insert a jpeg compressed image into a dataset
     ///////////////////////////////////////////////////////////
     virtual void setImage(
         std::shared_ptr<streamWriter> pDestStream,
-        std::shared_ptr<image> pImage,
+        std::shared_ptr<const image> pImage,
         const std::string& transferSyntax,
         imageQuality_t imageQuality,
         std::uint32_t allocatedBits,
@@ -95,7 +111,7 @@ private:
     inline void writeBlock(streamWriter* pStream, jpeg::jpegInformation& information, std::int32_t* pBuffer, const std::shared_ptr<jpeg::jpegChannel>& pChannel, bool bCalcHuffman) const;
 
     std::shared_ptr<image> copyJpegChannelsToImage(jpeg::jpegInformation& information, bool b2complement, const std::string& colorSpace) const;
-    void copyImageToJpegChannels(jpeg::jpegInformation& information, std::shared_ptr<image> sourceImage, bool b2complement, std::uint32_t allocatedBits, bool bSubSampledX, bool bSubSampledY) const;
+    void copyImageToJpegChannels(jpeg::jpegInformation& information, std::shared_ptr<const image> sourceImage, bool b2complement, std::uint32_t allocatedBits, bool bSubSampledX, bool bSubSampledY) const;
 
     void writeScan(streamWriter* pDestinationStream, jpeg::jpegInformation& information, bool bCalcHuffman) const;
 

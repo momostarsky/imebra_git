@@ -56,6 +56,7 @@ class DrawBitmap;
 class IMEBRA_API Image
 {
     friend class DataSet;
+    friend class Overlay;
 
 public:
     ///

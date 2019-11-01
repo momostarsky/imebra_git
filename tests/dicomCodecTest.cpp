@@ -13,6 +13,7 @@
     #include <dcmtk/dcmdata/dcrledrg.h>
     #include <dcmtk/dcmimgle/dcmimage.h>
     #include <dcmtk/dcmimage/diregist.h>
+    #include <dcmtk/dcmdata/dcovlay.h>
 
 #endif
 
@@ -555,9 +556,159 @@ TEST(dicomCodecTest, testExternalStreamOddSize)
 }
 
 
+TEST(dicomCodecTest, testOverlay)
+{
+    for(std::uint32_t sizeX(201); sizeX != 203; ++sizeX)
+    {
+        for(std::uint32_t sizeY(151); sizeY != 153; ++sizeY)
+        {
+            for(int transferSyntaxId(3); transferSyntaxId != 4; ++transferSyntaxId)
+            {
+                std::string transferSyntax;
+                switch(transferSyntaxId)
+                {
+                case 0:
+                    transferSyntax = "1.2.840.10008.1.2";
+                    break;
+                case 1:
+                    transferSyntax = "1.2.840.10008.1.2.1";
+                    break;
+                case 2:
+                    transferSyntax = "1.2.840.10008.1.2.2";
+                    break;
+                case 3:
+                    transferSyntax = "1.2.840.10008.1.2.5";
+                    break;
+                }
+
+                std::vector<Image> images;
+
+                images.push_back(buildImageForTest(
+                        sizeX,
+                        sizeY,
+                        bitDepth_t::depthU8,
+                        0,
+                        "MONOCHROME2", 2));
+                images.push_back(buildImageForTest(
+                        sizeX,
+                        sizeY,
+                        bitDepth_t::depthU8,
+                        0,
+                        "MONOCHROME2", 100));
+                images.push_back(buildImageForTest(
+                        sizeX,
+                        sizeY,
+                        bitDepth_t::depthU8,
+                        0,
+                        "MONOCHROME2", 150));
+
+                MutableOverlay overlay0(overlayType_t::graphic, "SUBTYPE0");
+                overlay0.setImage(0, images[0]);
+                overlay0.setImage(1, images[1]);
+                overlay0.setFirstFrame(2);
+                overlay0.setROIArea(120);
+                overlay0.setLabel("LABEL0");
+                overlay0.setDescription("Description0");
+                overlay0.setZeroBasedOrigin(5, 6);
+
+                MutableOverlay overlay1(overlayType_t::ROI, "SUBTYPE1");
+                overlay1.setImage(0, images[2]);
+                overlay1.setROIMean(3.0);
+                overlay1.setROIStandardDeviation(1.0);
+                overlay1.setUnicodeLabel(L"LABEL1");
+                overlay1.setUnicodeDescription(L"Description1");
+                overlay1.setOneBasedOrigin(6, 7);
+
+                std::cout << "Dicom test. Transfer syntax: " << transferSyntax;
+                std::cout << " size: " << sizeX << " X " << sizeY << std::endl;
+
+                MutableMemory streamMemory;
+                {
+                    MutableDataSet testDataSet(transferSyntax);
+                    {
+                        WritingDataHandler writingDataHandler = testDataSet.getWritingDataHandler(TagId(0x0010, 0x0010), 0);
+                        writingDataHandler.setString(0, "AAAaa");
+                        writingDataHandler.setString(1, "BBBbbb");
+                        writingDataHandler.setString(2, "");
+                    }
+                    testDataSet.setOverlay(0, overlay0);
+                    testDataSet.setOverlay(1, overlay1);
+
+                    MemoryStreamOutput memoryOutput(streamMemory);
+                    StreamWriter writer(memoryOutput);
+                    CodecFactory::save(testDataSet, writer, codecType_t::dicom);
+                }
+
+                for(unsigned int lazyLoad(0); lazyLoad != 2; ++lazyLoad)
+                {
+                    MemoryStreamInput readStream(streamMemory);
+                    StreamReader reader(readStream);
+                    DataSet testDataSet = CodecFactory::load(reader, lazyLoad == 0 ? std::numeric_limits<size_t>::max() : 1);
+
+                    EXPECT_EQ(std::string(IMEBRA_IMPLEMENTATION_CLASS_UID), testDataSet.getString(TagId(tagId_t::ImplementationClassUID_0002_0012), 0));
+                    EXPECT_EQ(std::string(IMEBRA_IMPLEMENTATION_NAME), testDataSet.getString(TagId(tagId_t::ImplementationVersionName_0002_0013), 0));
+
+                    EXPECT_EQ(0u, testDataSet.getUnsignedLong(TagId(tagId_t::FileMetaInformationVersion_0002_0001), 0));
+                    EXPECT_EQ(1u, testDataSet.getUnsignedLong(TagId(tagId_t::FileMetaInformationVersion_0002_0001), 1));
+                    EXPECT_THROW(testDataSet.getUnsignedLong(TagId(tagId_t::FileMetaInformationVersion_0002_0001), 2), MissingItemError);
+                    EXPECT_EQ(tagVR_t::OB, testDataSet.getDataType(TagId(tagId_t::FileMetaInformationVersion_0002_0001)));
+
+                    EXPECT_EQ(std::string("AAAaa"), testDataSet.getString(TagId(imebra::tagId_t::PatientName_0010_0010), 0));
+                    EXPECT_EQ(std::string("BBBbbb"), testDataSet.getString(TagId(imebra::tagId_t::PatientName_0010_0010), 1));
+                    EXPECT_EQ(std::string(""), testDataSet.getString(TagId(imebra::tagId_t::PatientName_0010_0010), 2));
+
+                    for(unsigned int repeatLazyLoad(0); repeatLazyLoad != lazyLoad + 1; ++ repeatLazyLoad)
+                    {
+                        Overlay checkOverlay0 = testDataSet.getOverlay(0);
+                        ASSERT_TRUE(identicalImages(images[0], checkOverlay0.getImage(0)));
+                        ASSERT_TRUE(identicalImages(images[1], checkOverlay0.getImage(1)));
+                        ASSERT_EQ(overlayType_t::graphic, checkOverlay0.getType());
+                        ASSERT_EQ("SUBTYPE0", checkOverlay0.getSubType());
+                        ASSERT_EQ(2u, checkOverlay0.getFirstFrame());
+                        ASSERT_EQ(120u, checkOverlay0.getROIArea());
+                        ASSERT_THROW(checkOverlay0.getROIMean(), MissingTagError);
+                        ASSERT_THROW(checkOverlay0.getROIStandardDeviation(), MissingTagError);
+                        ASSERT_EQ("LABEL0", overlay0.getLabel());
+                        ASSERT_EQ(L"LABEL0", overlay0.getUnicodeLabel());
+                        ASSERT_EQ("Description0", overlay0.getDescription());
+                        ASSERT_EQ(L"Description0", overlay0.getUnicodeDescription());
+                        ASSERT_EQ(5, overlay0.getZeroBasedOriginX());
+                        ASSERT_EQ(6, overlay0.getZeroBasedOriginY());
+                        ASSERT_EQ(6, overlay0.getOneBasedOriginX());
+                        ASSERT_EQ(7, overlay0.getOneBasedOriginY());
+
+                        Overlay checkOverlay1 = testDataSet.getOverlay(1);
+                        ASSERT_TRUE(identicalImages(images[2], checkOverlay1.getImage(0)));
+                        ASSERT_EQ(overlayType_t::ROI, checkOverlay1.getType());
+                        ASSERT_EQ("SUBTYPE1", checkOverlay1.getSubType());
+                        ASSERT_THROW(checkOverlay1.getROIArea(), MissingTagError);
+                        ASSERT_DOUBLE_EQ(3.0, checkOverlay1.getROIMean());
+                        ASSERT_DOUBLE_EQ(1.0, checkOverlay1.getROIStandardDeviation());
+                        ASSERT_EQ("LABEL1", overlay1.getLabel());
+                        ASSERT_EQ(L"LABEL1", overlay1.getUnicodeLabel());
+                        ASSERT_EQ("Description1", overlay1.getDescription());
+                        ASSERT_EQ(L"Description1", overlay1.getUnicodeDescription());
+                        ASSERT_EQ(5, overlay1.getZeroBasedOriginX());
+                        ASSERT_EQ(6, overlay1.getZeroBasedOriginY());
+                        ASSERT_EQ(6, overlay1.getOneBasedOriginX());
+                        ASSERT_EQ(7, overlay1.getOneBasedOriginY());
+
+                        ASSERT_THROW(testDataSet.getOverlay(2), MissingGroupError);
+
+                    }
+                }
+            } // transferSyntaxId
+        }
+    }
+}
+
+
+
+
+
 #ifndef DISABLE_DCMTK_INTEROPERABILITY_TEST
 
-TEST(dicomCodecTest, dcmtkInteroperability)
+TEST(dicomCodecTest, dcmtkInteroperabilityDicomImage)
 {
     DcmRLEDecoderRegistration::registerCodecs();
 
@@ -738,7 +889,6 @@ TEST(dicomCodecTest, dcmtkInteroperability)
                     dcmtkDataSet.transferEnd();
 
                     DicomImage dcmtkImages(&dcmtkDataSet, EXS_Unknown, CIF_KeepYCbCrColorModel);
-                    ASSERT_EQ(3u, dcmtkImages.getFrameCount());
 
                     MutableImage checkImage0(sizeX, sizeY, depth, colorSpace, highBit);
                     {
@@ -765,12 +915,154 @@ TEST(dicomCodecTest, dcmtkInteroperability)
                         WritingDataHandlerNumeric writingHandler(checkImage2.getWritingDataHandler());
                         char* checkImageData(writingHandler.data(&checkImageSize));
                         dcmtkImages.getOutputData(checkImageData, checkImageSize, 0, 2, 0);
-
                     }
                     EXPECT_TRUE(identicalImages(checkImage2, images[2]));
                 }
             }
         }
+    } // transferSyntaxId
+}
+
+
+TEST(dicomCodecTest, dcmtkInteroperabilityDicomOverlay)
+{
+    DcmRLEDecoderRegistration::registerCodecs();
+
+    std::uint32_t sizeX(151);
+    std::uint32_t sizeY(101);
+    for(int transferSyntaxId(0); transferSyntaxId != 4; ++transferSyntaxId)
+    {
+        std::uint32_t highBit(7);
+        const std::string colorSpace("MONOCHROME2");
+
+        std::string transferSyntax;
+        switch(transferSyntaxId)
+        {
+        case 0:
+            transferSyntax = "1.2.840.10008.1.2";
+            break;
+        case 1:
+            transferSyntax = "1.2.840.10008.1.2.1";
+            break;
+        case 2:
+            transferSyntax = "1.2.840.10008.1.2.2";
+            break;
+        case 3:
+            transferSyntax = "1.2.840.10008.1.2.5";
+            break;
+        }
+
+        MutableImage image(sizeX, sizeY, bitDepth_t::depthU8, colorSpace, 7);
+        {
+            // The writing handler allocates the memory
+            image.getWritingDataHandler();
+        }
+
+        Image overlayImage0 = buildImageForTest(
+                sizeX,
+                sizeY,
+                bitDepth_t::depthU8,
+                0,
+                "MONOCHROME2", 100);
+        Image overlayImage1 = buildImageForTest(
+                    sizeX,
+                    sizeY,
+                bitDepth_t::depthU8,
+                0,
+                "MONOCHROME2", 150);
+
+        std::cout << "Transfer syntax: " << transferSyntax << std::endl;
+        std::cout << " size: " << sizeX << " by " << sizeY << std::endl;
+
+        imageQuality_t quality = imageQuality_t::veryHigh;
+
+        MutableMemory streamMemory;
+        {
+            MutableDataSet testDataSet(transferSyntax);
+            {
+                WritingDataHandler writingDataHandler = testDataSet.getWritingDataHandler(TagId(0x0010, 0x0010), 0);
+                writingDataHandler.setString(0, "AAAaa");
+                writingDataHandler.setString(1, "BBBbbb");
+                writingDataHandler.setString(2, "");
+            }
+            testDataSet.setDouble(TagId(tagId_t::TimeRange_0008_1163), 50.6);
+            if(ColorTransformsFactory::getNumberOfChannels(colorSpace) > 1)
+            {
+                testDataSet.setUnsignedLong(TagId(imebra::tagId_t::PlanarConfiguration_0028_0006), 1);
+            }
+            testDataSet.setImage(0, image, quality);
+
+            tagVR_t vr = testDataSet.getDataType(TagId(tagId_t::PixelData_7FE0_0010));
+            ASSERT_TRUE(vr == tagVR_t::OB || vr == tagVR_t::OW);
+
+            MutableDataSet sequenceItem = testDataSet.appendSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111));
+            sequenceItem.setString(TagId(tagId_t::PatientName_0010_0010), "test test");
+
+            MutableDataSet sequenceItem1 = sequenceItem.appendSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111));
+            sequenceItem1.setString(TagId(tagId_t::PatientName_0010_0010), "test test1");
+
+            if(highBit == 0)
+            {
+                ASSERT_EQ(1u, testDataSet.getUnsignedLong(TagId(tagId_t::BitsAllocated_0028_0100), 0));
+            }
+
+            MutableOverlay overlay(overlayType_t::graphic, "SUBTYPE0");
+            overlay.setImage(0, overlayImage0);
+            overlay.setImage(1, overlayImage1);
+            overlay.setFirstFrame(0);
+            overlay.setROIArea(120);
+            overlay.setLabel("LABEL0");
+            overlay.setDescription("Description0");
+            overlay.setZeroBasedOrigin(0, 0);
+            testDataSet.setOverlay(0, overlay);
+
+            MemoryStreamOutput writeStream(streamMemory);
+            StreamWriter writer(writeStream);
+            CodecFactory::save(testDataSet, writer, codecType_t::dicom);
+
+            std::cout << " bits allocated: " << testDataSet.getUnsignedLong(TagId(tagId_t::BitsAllocated_0028_0100), 0) << std::endl;
+
+        }
+
+        // Read with DCMTK
+        DcmInputBufferStream dcmtkStream;
+        size_t dataSize(0);
+        char* data = streamMemory.data(&dataSize);
+        dcmtkStream.setBuffer(data, (offile_off_t)dataSize);
+        dcmtkStream.setEos();
+
+        DcmFileFormat dcmtkDataSet;
+        dcmtkDataSet.transferInit();
+        const OFCondition cond = dcmtkDataSet.read(dcmtkStream, EXS_Unknown);
+        dcmtkDataSet.transferEnd();
+
+        DicomImage dcmtkImages(&dcmtkDataSet, EXS_Unknown, CIF_KeepYCbCrColorModel);
+
+        unsigned int posX, posY;
+        unsigned int overlayWidth, overlayHeight;
+        EM_Overlay overlayMode;
+        const void* checkOverlay0Data = dcmtkImages.getOverlayData(0, posX, posY, overlayWidth, overlayHeight, overlayMode, 0, 8u, 1u, 0);
+        EXPECT_EQ(sizeX, overlayWidth);
+        EXPECT_EQ(sizeY, overlayHeight);
+        MutableImage checkOverlayImage0(overlayWidth, overlayHeight, bitDepth_t::depthU8, "MONOCHROME2", 0);
+        {
+            WritingDataHandlerNumeric writingHandler(checkOverlayImage0.getWritingDataHandler());
+            size_t dataSize(0);
+            char* imageData = writingHandler.data(&dataSize);
+            ::memcpy(imageData, checkOverlay0Data, writingHandler.getSize());
+        }
+        EXPECT_TRUE(identicalImages(overlayImage0, checkOverlayImage0));
+
+        const void* checkOverlay1Data = dcmtkImages.getOverlayData(0, posX, posY, overlayWidth, overlayHeight, overlayMode, 1, 8u, 1u, 0);
+        MutableImage checkOverlayImage1(overlayWidth, overlayHeight, bitDepth_t::depthU8, "MONOCHROME2", 0);
+        {
+            WritingDataHandlerNumeric writingHandler(checkOverlayImage1.getWritingDataHandler());
+            size_t dataSize(0);
+            char* imageData = writingHandler.data(&dataSize);
+            ::memcpy(imageData, checkOverlay1Data, writingHandler.getSize());
+        }
+        EXPECT_TRUE(identicalImages(overlayImage1, checkOverlayImage1));
+
     } // transferSyntaxId
 }
 

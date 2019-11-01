@@ -32,9 +32,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 namespace imebra
 {
 
-    class streamReader;
-    class streamWriter;
-
 namespace implementation
 {
 
@@ -44,6 +41,9 @@ class lut;
 class date;
 class age;
 class VOIDescription;
+class streamReader;
+class streamWriter;
+class overlay;
 
 /// \addtogroup group_dataset Dicom data
 /// \brief The Dicom dataset is represented by the
@@ -223,6 +223,27 @@ public:
     ///
     ///////////////////////////////////////////////////////////
     void setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage, imageQuality_t quality);
+
+    /// \brief Retrieve an overlay from the dataset.
+    ///
+    /// If the dataSet does not contain the requested overlay
+    ///  then throws MissingDataElementError.
+    ///
+    /// @param overlayNumber The number of the overlay to
+    ///                      retrieve (0...127)
+    /// @return              the requested overlay
+    ///
+    ///////////////////////////////////////////////////////////
+    std::shared_ptr<overlay> getOverlay(std::uint32_t overlayNumber) const;
+
+    /// \brief Stores an overlay into the dataset.
+    ///
+    /// @param overlayNumber The number of the overlay to
+    ///                      retrieve (0...127)
+    /// @param pOverlay      the overlay to store
+    ///
+    ///////////////////////////////////////////////////////////
+    void setOverlay(std::uint32_t overlayNumber, std::shared_ptr<overlay> pOverlay);
 
     /// \brief Retrieve the first and the last buffers used
     ///         to store the image.

@@ -99,14 +99,49 @@ public:
     ///  some dicom file formats span images in several groups,
     ///  while others use sequence when saving multiple frames.
     ///
-    /// @param pSourceDataSet a pointer to the Dicom structure
-    ///              where the requested image is embedded into
-    /// @param pSourceStream a pointer to a stream containing
+    /// @param transferSyntax the dataset transfer syntax
+    /// @param colorSpace     the color space
+    /// @param channelsNumber the number of channels
+    /// @param imageWidth     the image width in pixels
+    /// @param imageHeight    the image height in pixels
+    /// @param bSubsampledX   true if the image is subsampled
+    ///                        horizontally
+    /// @param bSubsampledY   true if the image is subsampled
+    ///                        vertically
+    /// @param bInterleaved   true if the color channels are
+    ///                        interleaved
+    /// @param b2Complement   true if the values can be
+    ///                        negative
+    /// @param allocatedBits  the number of allocated bits
+    /// @param storedBits     the number of stored bits
+    /// @param highBit        the high bit
+    /// @param pSourceStream  a pointer to a stream containing
     ///              the data to be parsed
     /// @return a pointer to the loaded image
     ///
     ///////////////////////////////////////////////////////////
-    virtual std::shared_ptr<image> getImage(const dataSet& sourceDataSet, std::shared_ptr<streamReader> pSourceStream) const = 0;
+    virtual std::shared_ptr<image> getImage(const std::string& transferSyntax,
+                                            const std::string& colorSpace,
+                                            std::uint32_t channelsNumber,
+                                            std::uint32_t imageWidth,
+                                            std::uint32_t imageHeight,
+                                            bool bSubsampledX,
+                                            bool bSubsampledY,
+                                            bool bInterleaved,
+                                            bool b2Complement,
+                                            std::uint8_t allocatedBits,
+                                            std::uint8_t storedBits,
+                                            std::uint8_t highBit,
+                                            std::shared_ptr<streamReader> pSourceStream) const = 0;
+
+    ///
+    /// \brief Return the default planar configuration.
+    ///
+    /// \return true if the channels are interleaved by
+    ///         default, false otherwise
+    ///
+    ///////////////////////////////////////////////////////////
+    virtual bool defaultInterleaved() const = 0;
 
     /// \brief Stores an image into stream.
     ///
@@ -145,7 +180,7 @@ public:
     ///////////////////////////////////////////////////////////
     virtual void setImage(
         std::shared_ptr<streamWriter> pDestStream,
-        std::shared_ptr<image> pSourceImage,
+        std::shared_ptr<const image> pSourceImage,
         const std::string& transferSyntax,
         imageQuality_t imageQuality,
         std::uint32_t allocatedBits,

@@ -45,6 +45,7 @@ class UnicodePatientName;
 class StreamWriter;
 class StreamReader;
 class FileStreamInput;
+class Overlay;
 
 ///
 ///  \brief This class represents a DICOM dataset.
@@ -147,6 +148,16 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     const Image getImage(size_t frameNumber) const;
+
+    /// \brief Retrieve one of the DICOM overlays.
+    ///
+    /// Throws MissingGroupError if the requested overlay does not exist.
+    ///
+    /// \param overlayNumber the number of the overlay to retrieve (0...127)
+    /// \return the requested overlay
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    const Overlay getOverlay(size_t overlayNumber) const;
 
     /// \brief Retrieve an image from the dataset and if necessary process it with
     ///        ModalityVOILUT before returning it.
@@ -432,6 +443,7 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     std::string getString(const TagId& tagId, size_t elementNumber, const std::string& defaultValue) const;
 
+#ifndef SWIG // Use UTF8 strings only with SWIG
     /// \brief Retrieve a tag's value as an Unicode string.
     ///
     /// If the tag's value cannot be converted to a Unicode string
@@ -463,6 +475,7 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     std::wstring getUnicodeString(const TagId& tagId, size_t elementNumber, const std::wstring& defaultValue) const;
+#endif
 
     /// \brief Retrieve a tag's value as Age.
     ///
@@ -752,6 +765,8 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     void setImage(size_t frameNumber, const Image& image, imageQuality_t quality);
 
+    void setOverlay(size_t overlayNumber, const Overlay& overlay);
+
     /// \brief Get a StreamWriter connected to a tag buffer's data.
     ///
     /// If the specified Tag does not exist then it creates a new tag with the VR
@@ -1007,6 +1022,7 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     void setString(const TagId& tagId, const std::string& newString);
 
+#ifndef SWIG // Use UTF8 strings only with SWIG
     /// \brief Write an unicode string value into the element 0 of the specified
     ///        Tag's buffer 0.
     ///
@@ -1031,6 +1047,7 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     void setUnicodeString(const TagId& tagId, const std::wstring& newString);
+#endif
 
     /// \brief Write an Age string into the element 0 of the specified
     ///        Tag's buffer 0.
