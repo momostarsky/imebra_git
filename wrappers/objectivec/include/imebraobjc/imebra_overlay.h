@@ -140,7 +140,7 @@ typedef NS_ENUM(unsigned int, ImebraOverlayType_t)
     /// \return the requested overlay image
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    -(ImebraImage*) getImage:(unsigned int)frameNumber error:(NSError**)pError
+    -(ImebraImage*) getImage:(unsigned int)frameNumber error:(NSError**)pError;
 
 @end
 
