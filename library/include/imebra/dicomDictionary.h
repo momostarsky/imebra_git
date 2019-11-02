@@ -38,6 +38,7 @@ class TagId;
 class IMEBRA_API DicomDictionary
 {
 public:
+#ifndef SWIG // Use UTF8 strings only with SWIG
     /// \brief Retrieve a tag's description.
     ///
     /// @param id        the tag's id
@@ -45,6 +46,7 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     static std::wstring getUnicodeTagDescription(const TagId& id);
+#endif
 
     /// \brief Retrieve a tag's description.
     ///
