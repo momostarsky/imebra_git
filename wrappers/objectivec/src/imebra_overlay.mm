@@ -14,6 +14,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #import "../include/imebraobjc/imebra_overlay.h"
 #import "../include/imebraobjc/imebra_image.h"
 
+#include "imebra_implementation_macros.h"
+#include "imebra_nserror.h"
+#include "imebra_strings.h"
+#include <imebra/image.h>
+#include <imebra/overlay.h>
 
 @implementation ImebraOverlay
 
