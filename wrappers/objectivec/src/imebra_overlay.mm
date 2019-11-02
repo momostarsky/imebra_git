@@ -44,7 +44,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(ImebraOverlayType_t) type
 {
-    return get_imebra_object_holder(Overlay)->getType();
+    return (ImebraOverlayType_t)get_imebra_object_holder(Overlay)->getType();
 }
 
 -(NSString*) subType
@@ -158,7 +158,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(void) setImage:(unsigned int)frameNumber image:(ImebraImage*)image error:(NSError**)pError
 {
-    ((imebra::MutableOverlay*)get_imebra_object_holder(Overlay))->setImage(frameNumber, get_other_imebra_object_holder(image, Image));
+    ((imebra::MutableOverlay*)get_imebra_object_holder(Overlay))->setImage(frameNumber, *get_other_imebra_object_holder(image, Image));
 }
 
 @end
