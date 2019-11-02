@@ -827,7 +827,7 @@ TEST(objectivec, testOverlay)
 
     @autoreleasepool
     {
-        ImebraWritingDataHandler* unsigned8Handler = [unsigned8 getWritingDataHandler:&pError];
+        ImebraWritingDataHandler* unsigned8Handler = [overlayBitmap getWritingDataHandler:&pError];
         [unsigned8Handler setUnsignedLong:0 newValue:1 error:&pError];
         [unsigned8Handler setUnsignedLong:1 newValue:0 error:&pError];
         [unsigned8Handler setUnsignedLong:2 newValue:1 error:&pError];
