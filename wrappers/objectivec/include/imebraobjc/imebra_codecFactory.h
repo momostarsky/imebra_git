@@ -21,11 +21,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
 @class ImebraStreamWriter;
 
 
-/// \enum ImebraCodecType_t
+/// \enum ImebraCodecType
 /// \brief Defines the data stream & images codec.
 ///
 ///////////////////////////////////////////////////////////////////////////////
-typedef NS_ENUM(unsigned short, ImebraCodecType_t)
+typedef NS_ENUM(unsigned short, ImebraCodecType)
 {
     ImebraCodecTypeDicom = 0, ///< DICOM codec
     ImebraCodecTypeJpeg  = 1  ///< JPEG codec
@@ -122,7 +122,7 @@ typedef NS_ENUM(unsigned short, ImebraCodecType_t)
     ///                          in case of error
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    +(void)saveToFile:(NSString*)fileName dataSet:(ImebraDataSet*) pDataSet codecType:(ImebraCodecType_t) codecType error:(NSError**)pError
+    +(void)saveToFile:(NSString*)fileName dataSet:(ImebraDataSet*) pDataSet codecType:(ImebraCodecType) codecType error:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
 
     /// \brief Saves the content of a ImebraDataSet object to an output stream
@@ -135,7 +135,7 @@ typedef NS_ENUM(unsigned short, ImebraCodecType_t)
     ///                          in case of error
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    +(void)saveToStream:(ImebraStreamWriter*)pWriter dataSet:(ImebraDataSet*)pDataSet codecType:(ImebraCodecType_t) codecType error:(NSError**)pError
+    +(void)saveToStream:(ImebraStreamWriter*)pWriter dataSet:(ImebraDataSet*)pDataSet codecType:(ImebraCodecType) codecType error:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
 
     /// \brief Set the maximum image's width & height accepted by Imebra.

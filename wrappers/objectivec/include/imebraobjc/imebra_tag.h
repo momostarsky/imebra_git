@@ -155,7 +155,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     /// @return the tag's data type
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    @property (readonly) ImebraTagVR_t dataType;
+    @property (readonly) ImebraTagType dataType;
 
 @end
 

@@ -29,11 +29,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
 
-+(ImebraTagVR_t)getTagType:(ImebraTagId*)tagId error:(NSError**)pError
++(ImebraTagType)getTagType:(ImebraTagId*)tagId error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return (ImebraTagVR_t)(imebra::DicomDictionary::getTagType(*get_other_imebra_object_holder(tagId, TagId)));
+    return (ImebraTagType)(imebra::DicomDictionary::getTagType(*get_other_imebra_object_holder(tagId, TagId)));
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(ImebraAE);
 }
@@ -65,12 +65,12 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_END_RETURN(0);
 }
 
-+(unsigned int)getWordSize:(ImebraTagVR_t)dataType
++(unsigned int)getWordSize:(ImebraTagType)dataType
 {
     return (unsigned int)imebra::DicomDictionary::getWordSize((imebra::tagVR_t)dataType);
 }
 
-+(unsigned int)getMaxSize:(ImebraTagVR_t)dataType
++(unsigned int)getMaxSize:(ImebraTagType)dataType
 {
     return (unsigned int)imebra::DicomDictionary::getMaxSize((imebra::tagVR_t)dataType);
 }

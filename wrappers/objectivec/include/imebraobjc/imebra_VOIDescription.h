@@ -17,15 +17,15 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #import <Foundation/Foundation.h>
 #include "imebra_macros.h"
 
-/// \enum ImebraImebraDicomVOIFunction_t
+/// \enum ImebraDicomVOIFunction
 /// \brief Specifies the function applied by the ImebraVOILUT transform.
 ///
 ///////////////////////////////////////////////////////////////////////////////
-typedef NS_ENUM(int, ImebraDicomVOIFunction_t)
+typedef NS_ENUM(int, ImebraDicomVOIFunction)
 {
-    linear = 0,      ///< Correspond to the DICOM VOI function "LINEAR"
-    linearExact = 1, ///< Correspond to the DICOM VOI function "LINEAR_EXACT"
-    sigmoid = 2      ///< Correspond to the DICOM VOI function "SIGMOID"
+    ImebraDicomVOIFunctionLinear = 0,      ///< Correspond to the DICOM VOI function "LINEAR"
+    ImebraDicomVOIFunctionLinearExact = 1, ///< Correspond to the DICOM VOI function "LINEAR_EXACT"
+    ImebraDicomVOIFunctionSigmoid = 2      ///< Correspond to the DICOM VOI function "SIGMOID"
 };
 
 ///
@@ -52,11 +52,11 @@ typedef NS_ENUM(int, ImebraDicomVOIFunction_t)
     /// \param description  the VOI description (unicode)
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    -(id)initWithCenter:(double)center width:(double)width function:(ImebraDicomVOIFunction_t)function description:(NSString*)description;
+    -(id)initWithCenter:(double)center width:(double)width function:(ImebraDicomVOIFunction)function description:(NSString*)description;
 
     @property (readonly) double center;                      ///< The VOI window center.
     @property (readonly) double width;                       ///< The VOI window width.
-    @property (readonly) ImebraDicomVOIFunction_t function;  ///< The VOI function.
+    @property (readonly) ImebraDicomVOIFunction function;    ///< The VOI function.
     @property (readonly) NSString* description;              ///< The VOI description.
 
 

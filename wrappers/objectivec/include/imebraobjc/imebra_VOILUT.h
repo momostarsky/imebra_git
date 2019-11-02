@@ -41,7 +41,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 ///
 /// To get from the dataset a list of LUTs that can be used with the VOILUT
 /// transform use
-/// ImebraDataSet::getLUT(TagId(ImebraTagId_t::ImebraVOILUTSequence_0028_3010), X)
+/// ImebraDataSet::getLUT(TagId(ImebraTagIdVOILUTSequence_0028_3010), X)
 /// where X is a 0 base index (the dataset may provide more than one LUT for
 /// the VOILUT transform).
 ///
@@ -66,7 +66,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     /// \param width        the width of the area to analyze
     /// \param height       the height of the area to analyze
     /// \param pError       set to a NSError derived class in case of error
-    /// \return an ImebraVOIDescription object describing the optimal VOI 
+    /// \return an ImebraVOIDescription object describing the optimal VOI
     ///         parameters
     ///
     ///////////////////////////////////////////////////////////////////////////////

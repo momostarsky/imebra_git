@@ -116,9 +116,9 @@ If you do not want to be bound by the GPL terms (such as the requirement
     return (unsigned short)((imebra::DimseCommand*)get_imebra_object_holder(DimseCommandBase))->getID();
 }
 
--(ImebraDimseCommandType_t) commandType
+-(ImebraDimseCommandType) commandType
 {
-    return (ImebraDimseCommandType_t)((imebra::DimseCommand*)get_imebra_object_holder(DimseCommandBase))->getCommandType();
+    return (ImebraDimseCommandType)((imebra::DimseCommand*)get_imebra_object_holder(DimseCommandBase))->getCommandType();
 }
 
 @end
@@ -126,9 +126,9 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @implementation ImebraDimseResponse
 
--(ImebraDimseStatus_t) status
+-(ImebraDimseStatus) status
 {
-    return (ImebraDimseStatus_t)((imebra::DimseResponse*)get_imebra_object_holder(DimseCommandBase))->getStatus();
+    return (ImebraDimseStatus)((imebra::DimseResponse*)get_imebra_object_holder(DimseCommandBase))->getStatus();
 }
 
 -(unsigned short) statusCode
@@ -185,7 +185,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(id)initWithAbstractSyntax:(NSString*)abstractSyntax
     messageID:(unsigned short)messageID
-    priority:(ImebraDimseCommandPriority_t)priority
+    priority:(ImebraDimseCommandPriority)priority
     affectedSopClassUid:(NSString*)affectedSopClassUid
     affectedSopInstanceUid:(NSString*)affectedSopInstanceUid
     originatorAET:(NSString*)originatorAET
@@ -227,7 +227,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 @implementation ImebraCStoreResponse
 
 -(id)initWithcommand:(ImebraCStoreCommand*) pCommand
-    responseCode:(ImebraDimseStatusCode_t)responseCode
+    responseCode:(ImebraDimseStatusCode)responseCode
 {
     reset_imebra_object_holder(DimseCommandBase);
     self = [super init];
@@ -248,7 +248,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(id)initWithAbstractSyntax:(NSString*)abstractSyntax
     messageID:(unsigned short)messageID
-    priority:(ImebraDimseCommandPriority_t)priority
+    priority:(ImebraDimseCommandPriority)priority
     affectedSopClassUid:(NSString*)affectedSopClassUid
     identifier:(ImebraDataSet*)pIdentifier
 {
@@ -272,7 +272,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 @implementation ImebraCGetResponse
 
 -(id)initWithCommand:(ImebraCGetCommand*)pReceivedCommand
-    responseCode:(ImebraDimseStatusCode_t)responseCode
+    responseCode:(ImebraDimseStatusCode)responseCode
     remainingSubOperations:(unsigned int)remainingSubOperations
     completedSubOperations:(unsigned int)completedSubOperations
     failedSubOperations:(unsigned int)failedSubOperations
@@ -296,7 +296,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 }
 
 -(id)initWithcommand:(ImebraCGetCommand*)pReceivedCommand
-    responseCode:(ImebraDimseStatusCode_t)responseCode
+    responseCode:(ImebraDimseStatusCode)responseCode
     remainingSubOperations:(unsigned int)remainingSubOperations
     completedSubOperations:(unsigned int)completedSubOperations
     failedSubOperations:(unsigned int)failedSubOperations
@@ -325,7 +325,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(id)initWithAbstractSyntax:(NSString*)abstractSyntax
     messageID:(unsigned short)messageID
-    priority:(ImebraDimseCommandPriority_t)priority
+    priority:(ImebraDimseCommandPriority)priority
     affectedSopClassUid:(NSString*)affectedSopClassUid
     identifier:(ImebraDataSet*)pIdentifier
 {
@@ -363,7 +363,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 }
 
 -(id)initWithcommand:(ImebraCFindCommand*)pReceivedCommand
-    responseCode:(ImebraDimseStatusCode_t)responseCode
+    responseCode:(ImebraDimseStatusCode)responseCode
 {
     reset_imebra_object_holder(DimseCommandBase);
     self = [super init];
@@ -383,7 +383,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(id)initWithAbstractSyntax:(NSString*)abstractSyntax
     messageID:(unsigned short)messageID
-    priority:(ImebraDimseCommandPriority_t)priority
+    priority:(ImebraDimseCommandPriority)priority
     affectedSopClassUid:(NSString*)affectedSopClassUid
     destinationAET:(NSString*)destinationAET
     identifier:(ImebraDataSet*)pIdentifier
@@ -418,7 +418,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 @implementation ImebraCMoveResponse
 
 -(id)initWithCommand:(ImebraCMoveCommand*)pReceivedCommand
-    responseCode:(ImebraDimseStatusCode_t)responseCode
+    responseCode:(ImebraDimseStatusCode)responseCode
     remainingSubOperations:(unsigned int)remainingSubOperations
     completedSubOperations:(unsigned int)completedSubOperations
     failedSubOperations:(unsigned int)failedSubOperations
@@ -443,7 +443,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 }
 
 -(id)initWithcommand:(ImebraCMoveCommand*)pReceivedCommand
-    responseCode:(ImebraDimseStatusCode_t)responseCode
+    responseCode:(ImebraDimseStatusCode)responseCode
     remainingSubOperations:(unsigned int)remainingSubOperations
     completedSubOperations:(unsigned int)completedSubOperations
     failedSubOperations:(unsigned int)failedSubOperations
@@ -473,7 +473,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(id)initWithAbstractSyntax:(NSString*)abstractSyntax
     messageID:(unsigned short)messageID
-    priority:(ImebraDimseCommandPriority_t)priority
+    priority:(ImebraDimseCommandPriority)priority
     affectedSopClassUid:(NSString*)affectedSopClassUid
 {
     reset_imebra_object_holder(DimseCommandBase);
@@ -496,7 +496,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 @implementation ImebraCEchoResponse
 
 -(id)initWithcommand:(ImebraCEchoCommand*)pReceivedCommand
-    responseCode:(ImebraDimseStatusCode_t)responseCode
+    responseCode:(ImebraDimseStatusCode)responseCode
 {
     reset_imebra_object_holder(DimseCommandBase);
     self = [super init];
@@ -517,7 +517,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(id)initWithAbstractSyntax:(NSString*)abstractSyntax
     messageID:(unsigned short)messageID
-    priority:(ImebraDimseCommandPriority_t)priority
+    priority:(ImebraDimseCommandPriority)priority
     cancelMessageID:(unsigned short)cancelMessageID
 {
     reset_imebra_object_holder(DimseCommandBase);
@@ -611,7 +611,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 }
 
 -(id)initWithcommand:(ImebraNEventReportCommand*)pReceivedCommand
-    responseCode:(ImebraDimseStatusCode_t)responseCode
+    responseCode:(ImebraDimseStatusCode)responseCode
 {
     reset_imebra_object_holder(DimseCommandBase);
     self = [super init];
@@ -685,7 +685,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 @implementation ImebraNGetResponse
 
 -(id)initWithCommand:(ImebraNGetCommand*)pReceivedCommand
-    responseCode:(ImebraDimseStatusCode_t)responseCode
+    responseCode:(ImebraDimseStatusCode)responseCode
     attributeList:(ImebraDataSet*)pAttributeList
 {
     reset_imebra_object_holder(DimseCommandBase);
@@ -702,7 +702,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 }
 
 -(id)initWithcommand:(ImebraNGetCommand*)pReceivedCommand
-    responseCode:(ImebraDimseStatusCode_t)responseCode
+    responseCode:(ImebraDimseStatusCode)responseCode
 {
     reset_imebra_object_holder(DimseCommandBase);
     self = [super init];
@@ -770,7 +770,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 }
 
 -(id)initWithcommand:(ImebraNSetCommand*)pReceivedCommand
-    responseCode:(ImebraDimseStatusCode_t)responseCode
+    responseCode:(ImebraDimseStatusCode)responseCode
 {
     reset_imebra_object_holder(DimseCommandBase);
     self = [super init];
@@ -874,7 +874,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 }
 
 -(id)initWithcommand:(ImebraNActionCommand*)pReceivedCommand
-    responseCode:(ImebraDimseStatusCode_t)responseCode
+    responseCode:(ImebraDimseStatusCode)responseCode
 {
     reset_imebra_object_holder(DimseCommandBase);
     self = [super init];
@@ -989,7 +989,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 }
 
 -(id)initWithcommand:(ImebraNCreateCommand*)pReceivedCommand
-    responseCode:(ImebraDimseStatusCode_t)responseCode
+    responseCode:(ImebraDimseStatusCode)responseCode
 {
     reset_imebra_object_holder(DimseCommandBase);
     self = [super init];
@@ -1033,7 +1033,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 @implementation ImebraNDeleteResponse
 
 -(id)initWithcommand:(ImebraNDeleteCommand*)pReceivedCommand
-    responseCode:(ImebraDimseStatusCode_t)responseCode
+    responseCode:(ImebraDimseStatusCode)responseCode
 {
     reset_imebra_object_holder(DimseCommandBase);
     self = [super init];

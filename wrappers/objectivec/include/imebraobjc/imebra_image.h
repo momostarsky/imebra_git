@@ -17,7 +17,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #import <Foundation/Foundation.h>
 #include "imebra_macros.h"
 
-/// \enum ImebraBitDepth_t
+/// \enum ImebraBitDepth
 /// \brief Defines the size of the memory allocated for each
 ///        pixel's color component and its representation (signed/unsigned).
 ///
@@ -28,7 +28,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 /// 0 if it represents an unsigned depth,
 ///
 ///////////////////////////////////////////////////////////////////////////////
-typedef NS_ENUM(unsigned int, ImebraBitDepth_t)
+typedef NS_ENUM(unsigned int, ImebraBitDepth)
 {
     ImebraBitDepthU8 = 0,  ///< 8 bit integer, unsigned
     ImebraBitDepthS8 = 1,  ///< 8 bit integer, signed
@@ -102,7 +102,7 @@ typedef NS_ENUM(unsigned int, ImebraBitDepth_t)
     /// \brief Return the type of the channels' values.
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    @property (readonly) ImebraBitDepth_t depth;
+    @property (readonly) ImebraBitDepth depth;
 
     /// \brief Return the highest bit occupied by the channels' values.
     ///
@@ -126,7 +126,7 @@ typedef NS_ENUM(unsigned int, ImebraBitDepth_t)
     /// \param highBit    the highest bit occupied by the channels' values
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    -(id)initWithWidth:(unsigned int)width height:(unsigned int)height depth:(ImebraBitDepth_t)depth colorSpace:(NSString*)colorSpace highBit:(unsigned int)highBit;
+    -(id)initWithWidth:(unsigned int)width height:(unsigned int)height depth:(ImebraBitDepth)depth colorSpace:(NSString*)colorSpace highBit:(unsigned int)highBit;
 
     /// \brief Retrieve a ImebraWritingDataHandlerNumeric object referencing the
     ///        image's memory (mutable).

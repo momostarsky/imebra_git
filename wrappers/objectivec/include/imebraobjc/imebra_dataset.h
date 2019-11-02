@@ -34,61 +34,61 @@ If you do not want to be bound by the GPL terms (such as the requirement
 @class ImebraStreamWriter;
 @class ImebraOverlay;
 
-/// \enum ImebraTagVR_t
+/// \enum ImebraTagType
 /// \brief Enumerates the DICOM VRs (data types).
 ///
 ///////////////////////////////////////////////////////////////////////////////
-typedef NS_ENUM(unsigned short, ImebraTagVR_t)
+typedef NS_ENUM(unsigned short, ImebraTagType)
 {
-    ImebraAE = 0x4145, ///< Application Entity
-    ImebraAS = 0x4153, ///< Age String
-    ImebraAT = 0x4154, ///< Attribute Tag
-    ImebraCS = 0x4353, ///< Code String
-    ImebraDA = 0x4441, ///< Date
-    ImebraDS = 0x4453, ///< Decimal String
-    ImebraDT = 0x4454, ///< Date Time
-    ImebraFL = 0x464c, ///< Floating Point Single
-    ImebraFD = 0x4644, ///< Floating Point Double
-    ImebraIS = 0x4953, ///< Integer String
-    ImebraLO = 0x4c4f, ///< Long String
-    ImebraLT = 0x4c54, ///< Long Text
-    ImebraOB = 0x4f42, ///< Other Byte String
-    ImebraSB = 0x5342, ///< Non standard. Used internally for signed bytes
-    ImebraOD = 0x4f44, ///< Other Double String
-    ImebraOF = 0x4f46, ///< Other Float String
-    ImebraOL = 0x4f4c, ///< Other Long String
-    ImebraOW = 0x4f57, ///< Other Word String
-    ImebraPN = 0x504e, ///< Person Name
-    ImebraSH = 0x5348, ///< Short String
-    ImebraSL = 0x534c, ///< Signed Long
-    ImebraSQ = 0x5351, ///< Sequence of Items
-    ImebraSS = 0x5353, ///< Signed Short
-    ImebraST = 0x5354, ///< Short Text
-    ImebraTM = 0x544d, ///< Time
-    ImebraUC = 0x5543, ///< Unlimited characters
-    ImebraUI = 0x5549, ///< Unique Identifier
-    ImebraUL = 0x554c, ///< Unsigned Long
-    ImebraUN = 0x554e, ///< Unknown
-    ImebraUR = 0x5552, ///< Unified Resource Identifier
-    ImebraUS = 0x5553, ///< Unsigned Short
-    ImebraUT = 0x5554  ///< Unlimited Text
+    ImebraTagTypeAE = 0x4145, ///< Application Entity
+    ImebraTagTypeAS = 0x4153, ///< Age String
+    ImebraTagTypeAT = 0x4154, ///< Attribute Tag
+    ImebraTagTypeCS = 0x4353, ///< Code String
+    ImebraTagTypeDA = 0x4441, ///< Date
+    ImebraTagTypeDS = 0x4453, ///< Decimal String
+    ImebraTagTypeDT = 0x4454, ///< Date Time
+    ImebraTagTypeFL = 0x464c, ///< Floating Point Single
+    ImebraTagTypeFD = 0x4644, ///< Floating Point Double
+    ImebraTagTypeIS = 0x4953, ///< Integer String
+    ImebraTagTypeLO = 0x4c4f, ///< Long String
+    ImebraTagTypeLT = 0x4c54, ///< Long Text
+    ImebraTagTypeOB = 0x4f42, ///< Other Byte String
+    ImebraTagTypeSB = 0x5342, ///< Non standard. Used internally for signed bytes
+    ImebraTagTypeOD = 0x4f44, ///< Other Double String
+    ImebraTagTypeOF = 0x4f46, ///< Other Float String
+    ImebraTagTypeOL = 0x4f4c, ///< Other Long String
+    ImebraTagTypeOW = 0x4f57, ///< Other Word String
+    ImebraTagTypePN = 0x504e, ///< Person Name
+    ImebraTagTypeSH = 0x5348, ///< Short String
+    ImebraTagTypeSL = 0x534c, ///< Signed Long
+    ImebraTagTypeSQ = 0x5351, ///< Sequence of Items
+    ImebraTagTypeSS = 0x5353, ///< Signed Short
+    ImebraTagTypeST = 0x5354, ///< Short Text
+    ImebraTagTypeTM = 0x544d, ///< Time
+    ImebraTagTypeUC = 0x5543, ///< Unlimited characters
+    ImebraTagTypeUI = 0x5549, ///< Unique Identifier
+    ImebraTagTypeUL = 0x554c, ///< Unsigned Long
+    ImebraTagTypeUN = 0x554e, ///< Unknown
+    ImebraTagTypeUR = 0x5552, ///< Unified Resource Identifier
+    ImebraTagTypeUS = 0x5553, ///< Unsigned Short
+    ImebraTagTypeUT = 0x5554  ///< Unlimited Text
 };
 
 ///
-/// \enum ImebraImageQuality_t
+/// \enum ImebraImageQuality
 /// \brief This enumeration specifies the quality of the compressed image
 ///        when a lossy compression format is used.
 ///
 ///////////////////////////////////////////////////////////////////////////////
-typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
+typedef NS_ENUM(unsigned int, ImebraImageQuality)
 {
-    ImebraQualityVeryHigh = 0,      ///< the image is saved with very high quality. No subsampling is performed and no quantization
-    ImebraQualityHigh = 100,        ///< the image is saved with high quality. No subsampling is performed. Quantization ratios are low
-    ImebraQualityAboveMedium = 200, ///< the image is saved in medium quality. Horizontal subsampling is applied. Quantization ratios are low
-    ImebraQualityMedium = 300,      ///< the image is saved in medium quality. Horizontal subsampling is applied. Quantization ratios are medium
-    ImebraQualityBelowMedium = 400, ///< the image is saved in medium quality. Horizontal and vertical subsampling are applied. Quantization ratios are medium
-    ImebraQualityLow = 500,         ///< the image is saved in low quality. Horizontal and vertical subsampling are applied. Quantization ratios are higher than the ratios used in the belowMedium quality
-    ImebraQualityVeryLow = 600      ///< the image is saved in low quality. Horizontal and vertical subsampling are applied. Quantization ratios are high
+    ImebraImageQualityVeryHigh = 0,      ///< the image is saved with very high quality. No subsampling is performed and no quantization
+    ImebraImageQualityHigh = 100,        ///< the image is saved with high quality. No subsampling is performed. Quantization ratios are low
+    ImebraImageQualityAboveMedium = 200, ///< the image is saved in medium quality. Horizontal subsampling is applied. Quantization ratios are low
+    ImebraImageQualityMedium = 300,      ///< the image is saved in medium quality. Horizontal subsampling is applied. Quantization ratios are medium
+    ImebraImageQualityBelowMedium = 400, ///< the image is saved in medium quality. Horizontal and vertical subsampling are applied. Quantization ratios are medium
+    ImebraImageQualityLow = 500,         ///< the image is saved in low quality. Horizontal and vertical subsampling are applied. Quantization ratios are higher than the ratios used in the belowMedium quality
+    ImebraImageQualityVeryLow = 600      ///< the image is saved in low quality. Horizontal and vertical subsampling are applied. Quantization ratios are high
 };
 
 
@@ -178,7 +178,7 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
 
     /// \brief Retrieve one of the DICOM overlays.
     ///
-    /// Set pError to ImebraMissingGroupError if the requested overlay does not 
+    /// Set pError to ImebraMissingGroupError if the requested overlay does not
     ///  exist.
     ///
     /// \param overlayNumber the number of the overlay to retrieve (0...127)
@@ -611,7 +611,7 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
     /// \return the tag's data type (VR)
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    -(ImebraTagVR_t)getDataType:(ImebraTagId*)tagId error:(NSError**)pError
+    -(ImebraTagType)getDataType:(ImebraTagId*)tagId error:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
 
 @end
@@ -710,7 +710,7 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
         /// \return the Tag with the specified ID
         ///
         ///////////////////////////////////////////////////////////////////////////////
-        -(ImebraMutableTag*) getTagCreate:(ImebraTagId*)tagId tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError;
+        -(ImebraMutableTag*) getTagCreate:(ImebraTagId*)tagId tagVR:(ImebraTagType)tagVR error:(NSError**)pError;
 
         /// \brief Retrieve the ImebraTag with the specified ID or create it if it
         ///        doesn't exist. Set the proper VR according to the tag ID.
@@ -745,7 +745,7 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
         ///                    error occurs
         ///
         ///////////////////////////////////////////////////////////////////////////////
-        -(void) setImage:(unsigned int)frameNumber image:(ImebraImage*)image quality:(ImebraImageQuality_t)quality error:(NSError**)pError
+        -(void) setImage:(unsigned int)frameNumber image:(ImebraImage*)image quality:(ImebraImageQuality)quality error:(NSError**)pError
             __attribute__((swift_error(nonnull_error)));
 
         /// \brief Insert an overlay into the dataset.
@@ -785,12 +785,12 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
         /// \return           the StreamWriter connected to the buffer's data.
         ///
         ///////////////////////////////////////////////////////////////////////////////
-        -(ImebraStreamWriter*) getStreamWriter:(ImebraTagId*)pTagId bufferId:(unsigned int)bufferId tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError;
+        -(ImebraStreamWriter*) getStreamWriter:(ImebraTagId*)pTagId bufferId:(unsigned int)bufferId tagVR:(ImebraTagType)tagVR error:(NSError**)pError;
 
         /// \brief Append a sequence item.
         ///
         /// If the specified tag does not exist then creates a new one with VR
-        ///  ImebraTagVR_t::SQ.
+        ///  ImebraTagTypeSQ.
         ///
         /// \param pTagId the tag's id in which the sequence must be stored
         /// \param pError a pointer to a NSError pointer which is set when an
@@ -819,7 +819,7 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
         /// \return a ImebraWritingDataHandler object connected to a new tag's buffer
         ///
         ///////////////////////////////////////////////////////////////////////////////
-        -(ImebraWritingDataHandler*) getWritingDataHandler:(ImebraTagId*)tagId bufferId:(unsigned int)bufferId tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError;
+        -(ImebraWritingDataHandler*) getWritingDataHandler:(ImebraTagId*)tagId bufferId:(unsigned int)bufferId tagVR:(ImebraTagType)tagVR error:(NSError**)pError;
 
         /// \brief Retrieve a ImebraWritingDataHandler object connected to a specific
         ///        tag's buffer.
@@ -863,7 +863,7 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
         ///         buffer
         ///
         ///////////////////////////////////////////////////////////////////////////////
-        -(ImebraWritingDataHandlerNumeric*) getWritingDataHandlerNumeric:(ImebraTagId*)tagId bufferId:(unsigned long)bufferId tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError;
+        -(ImebraWritingDataHandlerNumeric*) getWritingDataHandlerNumeric:(ImebraTagId*)tagId bufferId:(unsigned long)bufferId tagVR:(ImebraTagType)tagVR error:(NSError**)pError;
 
         /// \brief Retrieve a ImebraWritingDataHandlerNumeric object connected to a
         ///        specific tag's buffer.
@@ -904,7 +904,7 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
         ///                  error occurs
         ///
         ///////////////////////////////////////////////////////////////////////////////
-        -(void)setSignedLong:(ImebraTagId*)tagId newValue:(signed int)newValue tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError
+        -(void)setSignedLong:(ImebraTagId*)tagId newValue:(signed int)newValue tagVR:(ImebraTagType)tagVR error:(NSError**)pError
             __attribute__((swift_error(nonnull_error)));
 
         /// \brief Write a new signed 32 bit integer value into the element 0 of the
@@ -942,7 +942,7 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
         ///                  error occurs
         ///
         ///////////////////////////////////////////////////////////////////////////////
-        -(void)setUnsignedLong:(ImebraTagId*)tagId newValue:(unsigned int)newValue tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError
+        -(void)setUnsignedLong:(ImebraTagId*)tagId newValue:(unsigned int)newValue tagVR:(ImebraTagType)tagVR error:(NSError**)pError
             __attribute__((swift_error(nonnull_error)));
 
         /// \brief Write a new unsigned 32 bit integer value into the element 0 of the
@@ -980,7 +980,7 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
         ///                  error occurs
         ///
         ///////////////////////////////////////////////////////////////////////////////
-        -(void)setDouble:(ImebraTagId*)tagId newValue:(double)newValue tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError
+        -(void)setDouble:(ImebraTagId*)tagId newValue:(double)newValue tagVR:(ImebraTagType)tagVR error:(NSError**)pError
             __attribute__((swift_error(nonnull_error)));
 
         /// \brief Write a new double floating point value into the element 0 of the
@@ -1018,7 +1018,7 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
         ///                  error occurs
         ///
         ///////////////////////////////////////////////////////////////////////////////
-        -(void)setString:(ImebraTagId*)tagId newValue:(NSString*)newValue tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError
+        -(void)setString:(ImebraTagId*)tagId newValue:(NSString*)newValue tagVR:(ImebraTagType)tagVR error:(NSError**)pError
             __attribute__((swift_error(nonnull_error)));
 
         /// \brief Write a new string value into the element 0 of the
@@ -1074,7 +1074,7 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
         ///                  error occurs
         ///
         ///////////////////////////////////////////////////////////////////////////////
-        -(void)setDate:(ImebraTagId*)tagId newValue:(ImebraDate*)newValue tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError
+        -(void)setDate:(ImebraTagId*)tagId newValue:(ImebraDate*)newValue tagVR:(ImebraTagType)tagVR error:(NSError**)pError
             __attribute__((swift_error(nonnull_error)));
 
         /// \brief Write a new ImebraDate value into the element 0 of the

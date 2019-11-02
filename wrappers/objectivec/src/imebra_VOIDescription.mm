@@ -39,7 +39,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     return self;
 }
 
--(id)initWithCenter:(double)center width:(double)width function:(ImebraDicomVOIFunction_t)function description:(NSString*)description
+-(id)initWithCenter:(double)center width:(double)width function:(ImebraDicomVOIFunction)function description:(NSString*)description
 {
     reset_imebra_object_holder(VOIDescription);
     self = [super init];
@@ -60,9 +60,9 @@ If you do not want to be bound by the GPL terms (such as the requirement
     return get_imebra_object_holder(VOIDescription)->getWidth();
 }
 
--(ImebraDicomVOIFunction_t)function
+-(ImebraDicomVOIFunction)function
 {
-    return (ImebraDicomVOIFunction_t)(get_imebra_object_holder(VOIDescription)->getFunction());
+    return (ImebraDicomVOIFunction)(get_imebra_object_holder(VOIDescription)->getFunction());
 }
 
 -(NSString*)description

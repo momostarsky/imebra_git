@@ -132,9 +132,9 @@ If you do not want to be bound by the GPL terms (such as the requirement
 }
 
 
--(ImebraTagVR_t) dataType
+-(ImebraTagType) dataType
 {
-    return (ImebraTagVR_t)get_imebra_object_holder(Tag)->getDataType();
+    return (ImebraTagType)get_imebra_object_holder(Tag)->getDataType();
 }
 
 @end

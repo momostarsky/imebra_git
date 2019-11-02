@@ -35,7 +35,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 }
 
 
--(id)initWithId:(ImebraTagId_t)tagId
+-(id)initWithId:(ImebraTagEnum)tagId
 {
     reset_imebra_object_holder(TagId);
     self = [super init];

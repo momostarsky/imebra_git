@@ -45,7 +45,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     /// \param id an enumeration representing a tag group and id
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    -(id)initWithId:(ImebraTagId_t)tagId;
+    -(id)initWithId:(ImebraTagEnum)tagId;
 
     /// \brief Initializer.
     ///

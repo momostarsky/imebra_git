@@ -60,7 +60,7 @@ void CGDataProviderCallbackFunc(void *info, const void* /* data */, size_t /* si
 }
 
 
--(ImebraMemory*) getBitmap:(ImebraImage*)pImage bitmapType:(ImebraDrawBitmapType_t)drawBitmapType rowAlignBytes:(unsigned int)rowAlignBytes error:(NSError**)pError
+-(ImebraMemory*) getBitmap:(ImebraImage*)pImage bitmapType:(ImebraDrawBitmapType)drawBitmapType rowAlignBytes:(unsigned int)rowAlignBytes error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 

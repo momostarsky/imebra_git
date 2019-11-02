@@ -12,38 +12,37 @@ The following classes are described in this chapter:
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
 |C++ class                                      |Objective-C/Swift class                      |Description                    |
 +===============================================+=============================================+===============================+
-|:cpp:class:`imebra::tagId_t`                   |:cpp:class:`ImebraTagId_t`                   |Enumerates the known DICOM     |
+|:cpp:class:`imebra::tagId_t`                   |:cpp:class:`ImebraTagEnum`                   |Enumerates the known DICOM     |
 |                                               |                                             |tags                           |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::ageUnit_t`                 |:cpp:class:`ImebraAgeUnit_t`                 |Enumerates the Age units       |
+|:cpp:class:`imebra::ageUnit_t`                 |:cpp:class:`ImebraAgeUnit`                   |Enumerates the Age units       |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::tagVR_t`                   |:cpp:class:`ImebraTagVR_t`                   |Enumerates the DICOM VRs       |
+|:cpp:class:`imebra::tagVR_t`                   |:cpp:class:`ImebraTagType`                   |Enumerates the DICOM VRs       |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::imageQuality_t`            |:cpp:class:`ImebraImageQuality_t`            |Enumerates the image quality   |
+|:cpp:class:`imebra::imageQuality_t`            |:cpp:class:`ImebraImageQuality`              |Enumerates the image quality   |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::bitDepth_t`                |:cpp:class:`ImebraBitDepth_t`                |Enumerates the image bit depths|
+|:cpp:class:`imebra::bitDepth_t`                |:cpp:class:`ImebraBitDepth`                  |Enumerates the image bit depths|
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::drawBitmapType_t`          |:cpp:class:`ImebraDrawBitmapType_t`          |Enumerates the bitmap types    |
+|:cpp:class:`imebra::drawBitmapType_t`          |:cpp:class:`ImebraDrawBitmapType`            |Enumerates the bitmap types    |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
 |:cpp:class:`imebra::OverlayType_t`             |:cpp:class:`ImebraOverlayType`               |Enumerates the overlay types   |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::directoryRecordType_t`     |:cpp:class:`ImebraDirectoryRecordType_t`     |Enumerates the DICOMDIR record |
-|                                               |                                             |types                          |
+|:cpp:class:`imebra::dicomVOIFunction_t`        |:cpp:class:`ImebraDicomVOIFunction`          |Enumerates VOI functions       |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
 |:cpp:class:`imebra::fileParts_t`               |NSArray                                      |List of file path parts        |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::codecType_t`               |:cpp:class:`ImebraCodecType_t`               |Enumerates the codec types     |
+|:cpp:class:`imebra::codecType_t`               |:cpp:class:`ImebraCodecType`                 |Enumerates the codec types     |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
 |:cpp:class:`imebra::vois_t`                    |NSArray                                      |List of VOIs descriptions      |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::dimseCommandType_t`        |:cpp:class:`ImebraDimseCommandType_t`        |Enumerates the DIMSE commands  |
+|:cpp:class:`imebra::dimseCommandType_t`        |:cpp:class:`ImebraDimseCommandType`          |Enumerates the DIMSE commands  |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::dimseCommandPriority_t`    |:cpp:class:`ImebraDimseCommandPriority_t`    |Enumerates the DIMSE priorities|
+|:cpp:class:`imebra::dimseCommandPriority_t`    |:cpp:class:`ImebraDimseCommandPriority`      |Enumerates the DIMSE priorities|
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::dimseStatusCode_t`         |:cpp:class:`ImebraDimseStatusCode_t`         |Enumerates the DIMSE status    |
+|:cpp:class:`imebra::dimseStatusCode_t`         |:cpp:class:`ImebraDimseStatusCode`           |Enumerates the DIMSE status    |
 |                                               |                                             |codes                          |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::dimseStatus_t`             |:cpp:class:`ImebraDimseStatus_t`             |Enumerates the DIMSE statuses  |
+|:cpp:class:`imebra::dimseStatus_t`             |:cpp:class:`ImebraDimseStatus`               |Enumerates the DIMSE statuses  |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
 |:cpp:class:`imebra::attributeIdentifierList_t` |NSArray                                      |List of attribute identifiers  |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
@@ -63,7 +62,7 @@ C++
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenenum:: ImebraTagId_t
+.. doxygenenum:: ImebraTagEnum
 
 
 ageUnit_t
@@ -77,7 +76,7 @@ C++
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenenum:: ImebraAgeUnit_t
+.. doxygenenum:: ImebraAgeUnit
 
 
 tagVR_t
@@ -91,7 +90,7 @@ C++
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenenum:: ImebraTagVR_t
+.. doxygenenum:: ImebraTagType
 
 
 Image related definitions
@@ -108,7 +107,7 @@ C++
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenenum:: ImebraImageQuality_t
+.. doxygenenum:: ImebraImageQuality
 
 
 bitDepth_t
@@ -122,7 +121,7 @@ C++
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenenum:: ImebraBitDepth_t
+.. doxygenenum:: ImebraBitDepth
 
 
 drawBitmapType_t
@@ -136,7 +135,7 @@ C++
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenenum:: ImebraDrawBitmapType_t
+.. doxygenenum:: ImebraDrawBitmapType
 
 
 overlayType_t
@@ -151,6 +150,20 @@ Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
 .. doxygenenum:: ImebraOverlayType_t
+
+
+dicomVOIFunction_t
+..................
+
+C++
+,,,
+
+.. doxygenenum:: imebra::dicomVOIFunction_t
+
+Objective-C/Swift
+,,,,,,,,,,,,,,,,,
+
+.. doxygenenum:: ImebraDicomVOIFunction
 
 
 DICOMDIR related definitions
@@ -179,7 +192,7 @@ C++
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenenum:: ImebraCodecType_t
+.. doxygenenum:: ImebraCodecType
 
 
 VOI related definitions
@@ -223,7 +236,7 @@ C++
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenenum:: ImebraDimseCommandType_t
+.. doxygenenum:: ImebraDimseCommandType
 
 
 dimseCommandPriority_t
@@ -237,7 +250,7 @@ C++
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenenum:: ImebraDimseCommandPriority_t
+.. doxygenenum:: ImebraDimseCommandPriority
 
 
 dimseStatusCode_t
@@ -251,7 +264,7 @@ C++
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenenum:: ImebraDimseStatusCode_t
+.. doxygenenum:: ImebraDimseStatusCode
 
 
 dimseStatus_t
@@ -265,7 +278,7 @@ C++
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenenum:: ImebraDimseStatus_t
+.. doxygenenum:: ImebraDimseStatus
 
 
 attributeIdentifierList_t

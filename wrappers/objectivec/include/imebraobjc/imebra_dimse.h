@@ -19,86 +19,87 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #import <Foundation/NSString.h>
 #include "imebra_macros.h"
 
+/// \enum ImebraDimseCommandType
 /// \brief DIMSE command types.
 ///
 ///////////////////////////////////////////////////////////////////////////////
-typedef NS_ENUM(unsigned short, ImebraDimseCommandType_t)
+typedef NS_ENUM(unsigned short, ImebraDimseCommandType)
 {
-    ImebraDimseCStore = 0x1,         ///< C-STORE
-    ImebraDimseCGet = 0x10,          ///< C-GET
-    ImebraDimseCFind = 0x20,         ///< C-FIND
-    ImebraDimseCMove = 0x21,         ///< C-MOVE
-    ImebraDimseCCancel = 0xfff,      ///< C-CANCEL
-    ImebraDimseCEcho = 0x30,         ///< C-ECHO
-    ImebraDimseNEventReport = 0x100, ///< N-EVENT_REPORT
-    ImebraDimseNGet = 0x110,         ///< N-GET
-    ImebraDimseNSet = 0x120,         ///< N-SET
-    ImebraDimseNAction = 0x130,      ///< N-ACTION
-    ImebraDimseNCreate = 0x140,      ///< N-CREATE
-    ImebraDimseNDelete = 0x150       ///< N-DELETE
+    ImebraDimseCommandTypeCStore = 0x1,         ///< C-STORE
+    ImebraDimseCommandTypeCGet = 0x10,          ///< C-GET
+    ImebraDimseCommandTypeCFind = 0x20,         ///< C-FIND
+    ImebraDimseCommandTypeCMove = 0x21,         ///< C-MOVE
+    ImebraDimseCommandTypeCCancel = 0xfff,      ///< C-CANCEL
+    ImebraDimseCommandTypeCEcho = 0x30,         ///< C-ECHO
+    ImebraDimseCommandTypeNEventReport = 0x100, ///< N-EVENT_REPORT
+    ImebraDimseCommandTypeNGet = 0x110,         ///< N-GET
+    ImebraDimseCommandTypeNSet = 0x120,         ///< N-SET
+    ImebraDimseCommandTypeNAction = 0x130,      ///< N-ACTION
+    ImebraDimseCommandTypeNCreate = 0x140,      ///< N-CREATE
+    ImebraDimseCommandTypeNDelete = 0x150       ///< N-DELETE
 };
 
 
-typedef NS_ENUM(unsigned short, ImebraDimseCommandPriority_t)
+typedef NS_ENUM(unsigned short, ImebraDimseCommandPriority)
 {
-    ImebraPriorityLow = 0x2,  ///< Low priority
-    ImebraPriorityMedium = 0, ///< Medium priority
-    ImebraPriorityHigh = 0x1  ///< High priority
+    ImebraDimseCommandPriorityLow = 0x2,  ///< Low priority
+    ImebraDimseCommandPriorityMedium = 0, ///< Medium priority
+    ImebraDimseCommandPriorityHigh = 0x1  ///< High priority
 
 };
 
 
 
-///
+/// \enum ImebraDimseStatusCode
 /// \brief The DICOM response status code.
 ///
 //////////////////////////////////////////////////////////////////
-typedef NS_ENUM(unsigned short, ImebraDimseStatusCode_t)
+typedef NS_ENUM(unsigned short, ImebraDimseStatusCode)
 {
-    ImebraDimseSuccess = 0,                                           ///< Success
-    ImebraDimseUnsupportedOptionalAttributes = 0x0001,                ///< Requested optional Attributes are not supported
-    ImebraDimseCannotUpdateperformedProcedureStepObject = 0x0110,     ///< Performed Procedure Step Object may no longer be updated
-    ImebraDimseUnsupportedSOPClass = 0x0122,                          ///< SOP Class not Supported
-    ImebraDimseOutOfResources = 0xa700,                               ///< Refused: Out of resources
-    ImebraDimseOutOfResourcesCannotCalculateNumberOfMatches = 0xa701, ///< Refused: Out of Resources - Unable to calculate number of matches
-    ImebraDimseOutOfResourcesCannotPerformSubOperations = 0xa702,     ///< Refused: Out of Resources - Unable to perform sub-operations
-    ImebraDimseMoveDestinationUnknown = 0xa801,                       ///< Refused: Move Destination unknown
-    ImebraDimseIdentifierDoesNotMatchSOPClass = 0xa900,               ///< Identifier does not match SOP Class
-    ImebraDimseSubOperationCompletedWithErrors = 0xb000,              ///< Sub-operations Complete - One or more Failures
-    ImebraDimseElementDiscarded = 0xb006,                             ///< Element discarded
-    ImebraDimseDatasetDoesNotMatchSOPClass = 0xb007,                  ///< Data Set does not match SOP Class
-    ImebraDimseUPSAlreadyCanceled = 0xb304,                           ///< The UPS is already in the requested state of CANCELED
-    ImebraDimseCoercedInvalidValuesToValidValues = 0xb305,            ///< Coerced invalid values to valid values
-    ImebraDimseUPSStateAlreadyCompleted = 0xb306,                     ///< The UPS is already in the requested state of COMPLETED
-    ImebraDimseUnableToProcess = 0xc000,                              ///< Unable to process
-    ImebraDimseMoreThanOneMatchFound = 0xc100,                        ///< More than one match found,
-    ImebraDimseCannotSupportRequestedTemplate = 0xc200,               ///< Unable to support requested template
-    ImebraDimseUPSNotUpdated = 0xc300,                                ///< Refused: The UPS may no longer be updated
-    ImebraDimseTransactionUIDNotProvided = 0xc301,                    ///< Refused: The correct Transaction UID was not provided
-    ImebraDimseUPSAlreadyInProgress = 0xc302,                         ///< Refused: The UPS is already IN PROGRESS
-    ImebraDimseCanScheduleOnlyWithNCreate = 0xc303,                   ///< Refused: The UPS may only become SCHEDULED via N-CREATE, not N-SET or N-ACTION
-    ImebraDimseUPSCannotChangeState = 0xc304,                         ///< Refused: The UPS has not met final state requirements for the requested state change
-    ImebraDimseInstanceUIDDoesNotExist = 0xc307,                      ///< Specified SOP Instance UID does not exist or is not a UPS Instance managed by this SCP
-    ImebraDimseUnknownAETitle = 0xc308,                               ///< Receiving AE-TITLE is Unknown to this SCP
-    ImebraDimseUPSNotSchedule = 0xc309,                               ///< Refused: The provided value of UPS State was not SCHEDULED
-    ImebraDimseUPSNotInProgress = 0xc310,                             ///< Refused: The UPS is not yet in the "IN PROGRESS" state
-    ImebraDimseUPSAlreadyCompleted = 0xc311,                          ///< Refused: The UPS is already COMPLETED
-    ImebraDimsePerformerCannotBeContacted = 0xc312,                   ///< Refused: The performer cannot be contacted
-    ImebraDimsePerformerDoesNotCancel = 0xc313,                       ///< Refused: Performer chooses not to cancel
-    ImebraDimseUnappropriateActionForInstance = 0xc314,               ///< Refused: Specified action not appropriate for specified instance
-    ImebraDimseSCPDoesNotSupportEventReports = 0xc315,                ///< Refused: SCP does not support Event Reports
-    ImebraDimseCanceled = 0xfe00,                                     ///< Terminated due to Cancel request
-    ImebraDimsePending = 0xff00,                                      ///< Pending
-    ImebraDimsePendingWithWarnings = 0xff01                           ///< Pending with warnings
+    ImebraDimseStatusCodeSuccess = 0,                                           ///< Success
+    ImebraDimseStatusCodeUnsupportedOptionalAttributes = 0x0001,                ///< Requested optional Attributes are not supported
+    ImebraDimseStatusCodeCannotUpdateperformedProcedureStepObject = 0x0110,     ///< Performed Procedure Step Object may no longer be updated
+    ImebraDimseStatusCodeUnsupportedSOPClass = 0x0122,                          ///< SOP Class not Supported
+    ImebraDimseStatusCodeOutOfResources = 0xa700,                               ///< Refused: Out of resources
+    ImebraDimseStatusCodeOutOfResourcesCannotCalculateNumberOfMatches = 0xa701, ///< Refused: Out of Resources - Unable to calculate number of matches
+    ImebraDimseStatusCodeOutOfResourcesCannotPerformSubOperations = 0xa702,     ///< Refused: Out of Resources - Unable to perform sub-operations
+    ImebraDimseStatusCodeMoveDestinationUnknown = 0xa801,                       ///< Refused: Move Destination unknown
+    ImebraDimseStatusCodeIdentifierDoesNotMatchSOPClass = 0xa900,               ///< Identifier does not match SOP Class
+    ImebraDimseStatusCodeSubOperationCompletedWithErrors = 0xb000,              ///< Sub-operations Complete - One or more Failures
+    ImebraDimseStatusCodeElementDiscarded = 0xb006,                             ///< Element discarded
+    ImebraDimseStatusCodeDatasetDoesNotMatchSOPClass = 0xb007,                  ///< Data Set does not match SOP Class
+    ImebraDimseStatusCodeUPSAlreadyCanceled = 0xb304,                           ///< The UPS is already in the requested state of CANCELED
+    ImebraDimseStatusCodeCoercedInvalidValuesToValidValues = 0xb305,            ///< Coerced invalid values to valid values
+    ImebraDimseStatusCodeUPSStateAlreadyCompleted = 0xb306,                     ///< The UPS is already in the requested state of COMPLETED
+    ImebraDimseStatusCodeUnableToProcess = 0xc000,                              ///< Unable to process
+    ImebraDimseStatusCodeMoreThanOneMatchFound = 0xc100,                        ///< More than one match found,
+    ImebraDimseStatusCodeCannotSupportRequestedTemplate = 0xc200,               ///< Unable to support requested template
+    ImebraDimseStatusCodeUPSNotUpdated = 0xc300,                                ///< Refused: The UPS may no longer be updated
+    ImebraDimseStatusCodeTransactionUIDNotProvided = 0xc301,                    ///< Refused: The correct Transaction UID was not provided
+    ImebraDimseStatusCodeUPSAlreadyInProgress = 0xc302,                         ///< Refused: The UPS is already IN PROGRESS
+    ImebraDimseStatusCodeCanScheduleOnlyWithNCreate = 0xc303,                   ///< Refused: The UPS may only become SCHEDULED via N-CREATE, not N-SET or N-ACTION
+    ImebraDimseStatusCodeUPSCannotChangeState = 0xc304,                         ///< Refused: The UPS has not met final state requirements for the requested state change
+    ImebraDimseStatusCodeInstanceUIDDoesNotExist = 0xc307,                      ///< Specified SOP Instance UID does not exist or is not a UPS Instance managed by this SCP
+    ImebraDimseStatusCodeUnknownAETitle = 0xc308,                               ///< Receiving AE-TITLE is Unknown to this SCP
+    ImebraDimseStatusCodeUPSNotSchedule = 0xc309,                               ///< Refused: The provided value of UPS State was not SCHEDULED
+    ImebraDimseStatusCodeUPSNotInProgress = 0xc310,                             ///< Refused: The UPS is not yet in the "IN PROGRESS" state
+    ImebraDimseStatusCodeUPSAlreadyCompleted = 0xc311,                          ///< Refused: The UPS is already COMPLETED
+    ImebraDimseStatusCodePerformerCannotBeContacted = 0xc312,                   ///< Refused: The performer cannot be contacted
+    ImebraDimseStatusCodePerformerDoesNotCancel = 0xc313,                       ///< Refused: Performer chooses not to cancel
+    ImebraDimseStatusCodeUnappropriateActionForInstance = 0xc314,               ///< Refused: Specified action not appropriate for specified instance
+    ImebraDimseStatusCodeSCPDoesNotSupportEventReports = 0xc315,                ///< Refused: SCP does not support Event Reports
+    ImebraDimseStatusCodeCanceled = 0xfe00,                                     ///< Terminated due to Cancel request
+    ImebraDimseStatusCodePending = 0xff00,                                      ///< Pending
+    ImebraDimseStatusCodePendingWithWarnings = 0xff01                           ///< Pending with warnings
 };
 
 
-///
+/// \enum ImebraDimseStatus
 /// \brief Simplified DIMSE response status code, derived from
 ///        dimseStatusCode_t.
 ///
 //////////////////////////////////////////////////////////////////
-typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
+typedef NS_ENUM(unsigned short, ImebraDimseStatus)
 {
     ImebraDimseStatusSuccess = 0, ///< The operation was completed succesfully
     ImebraDimseStatusWarning = 1, ///< The operation was completed with warnings
@@ -208,7 +209,7 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
     /// \brief Returns the command type.
     ///
     //////////////////////////////////////////////////////////////////
-    @property (readonly) ImebraDimseCommandType_t commandType;
+    @property (readonly) ImebraDimseCommandType commandType;
 
 @end
 
@@ -223,7 +224,7 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
     /// \brief Returns the response status.
     ///
     //////////////////////////////////////////////////////////////////
-    @property (readonly) ImebraDimseStatus_t status;
+    @property (readonly) ImebraDimseStatus status;
 
     ///
     /// \brief Returns the response status code.
@@ -320,7 +321,7 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
     //////////////////////////////////////////////////////////////////
     -(id)initWithAbstractSyntax:(NSString*)abstractSyntax
         messageID:(unsigned short)messageID
-        priority:(ImebraDimseCommandPriority_t)priority
+        priority:(ImebraDimseCommandPriority)priority
         affectedSopClassUid:(NSString*)affectedSopClassUid
         affectedSopInstanceUid:(NSString*)affectedSopInstanceUid
         originatorAET:(NSString*)originatorAET
@@ -360,7 +361,7 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
     ///
     //////////////////////////////////////////////////////////////////
     -(id)initWithcommand:(ImebraCStoreCommand*)pReceivedCommand
-        responseCode:(ImebraDimseStatusCode_t)responseCode;
+        responseCode:(ImebraDimseStatusCode)responseCode;
 
 @end
 
@@ -397,7 +398,7 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
     //////////////////////////////////////////////////////////////////
     -(id)initWithAbstractSyntax:(NSString*)abstractSyntax
         messageID:(unsigned short)messageID
-        priority:(ImebraDimseCommandPriority_t)priority
+        priority:(ImebraDimseCommandPriority)priority
         affectedSopClassUid:(NSString*)affectedSopClassUid
         identifier:(ImebraDataSet*)pIdentifier;
 
@@ -437,7 +438,7 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
     ///
     //////////////////////////////////////////////////////////////////
     -(id)initWithCommand:(ImebraCGetCommand*)pReceivedCommand
-        responseCode:(ImebraDimseStatusCode_t)responseCode
+        responseCode:(ImebraDimseStatusCode)responseCode
         remainingSubOperations:(unsigned int)remainingSubOperations
         completedSubOperations:(unsigned int)completedSubOperations
         failedSubOperations:(unsigned int)failedSubOperations
@@ -462,7 +463,7 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
     ///
     //////////////////////////////////////////////////////////////////
     -(id)initWithcommand:(ImebraCGetCommand*)pReceivedCommand
-        responseCode:(ImebraDimseStatusCode_t)responseCode
+        responseCode:(ImebraDimseStatusCode)responseCode
         remainingSubOperations:(unsigned int)remainingSubOperations
         completedSubOperations:(unsigned int)completedSubOperations
         failedSubOperations:(unsigned int)failedSubOperations
@@ -498,7 +499,7 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
     //////////////////////////////////////////////////////////////////
     -(id)initWithAbstractSyntax:(NSString*)abstractSyntax
         messageID:(unsigned short)messageID
-        priority:(ImebraDimseCommandPriority_t)priority
+        priority:(ImebraDimseCommandPriority)priority
         affectedSopClassUid:(NSString*)affectedSopClassUid
         identifier:(ImebraDataSet*)pIdentifier;
 
@@ -535,7 +536,7 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
     ///
     //////////////////////////////////////////////////////////////////
     -(id)initWithcommand:(ImebraCFindCommand*)pReceivedCommand
-        responseCode:(ImebraDimseStatusCode_t)responseCode;
+        responseCode:(ImebraDimseStatusCode)responseCode;
 @end
 
 
@@ -567,7 +568,7 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
     //////////////////////////////////////////////////////////////////
     -(id)initWithAbstractSyntax:(NSString*)abstractSyntax
         messageID:(unsigned short)messageID
-        priority:(ImebraDimseCommandPriority_t)priority
+        priority:(ImebraDimseCommandPriority)priority
         affectedSopClassUid:(NSString*)affectedSopClassUid
         destinationAET:(NSString*)destinationAET
         identifier:(ImebraDataSet*)pIdentifier;
@@ -618,7 +619,7 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
     ///
     //////////////////////////////////////////////////////////////////
     -(id)initWithCommand:(ImebraCMoveCommand*)pReceivedCommand
-        responseCode:(ImebraDimseStatusCode_t)responseCode
+        responseCode:(ImebraDimseStatusCode)responseCode
         remainingSubOperations:(unsigned int)remainingSubOperations
         completedSubOperations:(unsigned int)completedSubOperations
         failedSubOperations:(unsigned int)failedSubOperations
@@ -643,7 +644,7 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
     ///
     //////////////////////////////////////////////////////////////////
     -(id)initWithcommand:(ImebraCMoveCommand*)pReceivedCommand
-        responseCode:(ImebraDimseStatusCode_t)responseCode
+        responseCode:(ImebraDimseStatusCode)responseCode
         remainingSubOperations:(unsigned int)remainingSubOperations
         completedSubOperations:(unsigned int)completedSubOperations
         failedSubOperations:(unsigned int)failedSubOperations
@@ -676,7 +677,7 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
     //////////////////////////////////////////////////////////////////
     -(id)initWithAbstractSyntax:(NSString*)abstractSyntax
         messageID:(unsigned short)messageID
-        priority:(ImebraDimseCommandPriority_t)priority
+        priority:(ImebraDimseCommandPriority)priority
         affectedSopClassUid:(NSString*)affectedSopClassUid;
 
 @end
@@ -697,7 +698,7 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
     ///
     //////////////////////////////////////////////////////////////////
     -(id)initWithcommand:(ImebraCEchoCommand*)pReceivedCommand
-        responseCode:(ImebraDimseStatusCode_t)responseCode;
+        responseCode:(ImebraDimseStatusCode)responseCode;
 
 @end
 
@@ -726,7 +727,7 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
     //////////////////////////////////////////////////////////////////
     -(id)initWithAbstractSyntax:(NSString*)abstractSyntax
         messageID:(unsigned short)messageID
-        priority:(ImebraDimseCommandPriority_t)priority
+        priority:(ImebraDimseCommandPriority)priority
         cancelMessageID:(unsigned short)cancelMessageID;
 
 
@@ -830,7 +831,7 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
     ///
     //////////////////////////////////////////////////////////////////
     -(id)initWithcommand:(ImebraNEventReportCommand*)pReceivedCommand
-        responseCode:(ImebraDimseStatusCode_t)responseCode;
+        responseCode:(ImebraDimseStatusCode)responseCode;
 
     ///
     /// \brief Get the event ID. The response may omit this
@@ -906,7 +907,7 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
     ///
     //////////////////////////////////////////////////////////////////
     -(id)initWithCommand:(ImebraNGetCommand*)pReceivedCommand
-        responseCode:(ImebraDimseStatusCode_t)responseCode
+        responseCode:(ImebraDimseStatusCode)responseCode
         attributeList:(ImebraDataSet*)pAttributeList;
 
     ///
@@ -918,7 +919,7 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
     ///
     //////////////////////////////////////////////////////////////////
     -(id)initWithcommand:(ImebraNGetCommand*)pReceivedCommand
-        responseCode:(ImebraDimseStatusCode_t)responseCode;
+        responseCode:(ImebraDimseStatusCode)responseCode;
 
 @end
 
@@ -984,7 +985,7 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
     ///
     //////////////////////////////////////////////////////////////////
     -(id)initWithcommand:(ImebraNSetCommand*)pReceivedCommand
-        responseCode:(ImebraDimseStatusCode_t)responseCode;
+        responseCode:(ImebraDimseStatusCode)responseCode;
 
     ///
     /// \brief Returns the list of modified attributes.
@@ -1089,7 +1090,7 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
     ///
     //////////////////////////////////////////////////////////////////
     -(id)initWithcommand:(ImebraNActionCommand*)pReceivedCommand
-        responseCode:(ImebraDimseStatusCode_t)responseCode;
+        responseCode:(ImebraDimseStatusCode)responseCode;
 
     ///
     /// \brief Returns the action's ID.
@@ -1204,7 +1205,7 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
     ///
     //////////////////////////////////////////////////////////////////
     -(id)initWithcommand:(ImebraNCreateCommand*)pReceivedCommand
-        responseCode:(ImebraDimseStatusCode_t)responseCode;
+        responseCode:(ImebraDimseStatusCode)responseCode;
 
 @end
 
@@ -1254,7 +1255,7 @@ typedef NS_ENUM(unsigned short, ImebraDimseStatus_t)
     ///
     //////////////////////////////////////////////////////////////////
     -(id)initWithcommand:(ImebraNDeleteCommand*)pReceivedCommand
-        responseCode:(ImebraDimseStatusCode_t)responseCode;
+        responseCode:(ImebraDimseStatusCode)responseCode;
 
 @end
 

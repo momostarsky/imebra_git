@@ -17,17 +17,17 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #import <Foundation/Foundation.h>
 #include "imebra_macros.h"
 
-/// \enum ImebraAgeUnit_t
+/// \enum ImebraAgeUnit
 /// \brief Used by ImebraAge::setAge() and ImebraAge::getAge() to specify the
 ///        unit of the age value.
 ///
 ///////////////////////////////////////////////////////////////////////////////
-typedef NS_ENUM(char, ImebraAgeUnit_t)
+typedef NS_ENUM(char, ImebraAgeUnit)
 {
-    ImebraDays = (char)'D',   ///< Days
-    ImebraWeeks = (char)'W',  ///< Weeks
-    ImebraMonths = (char)'M', ///< Months
-    ImebraYears = (char)'Y'   ///< Years
+    ImebraAgeUnitDays = (char)'D',   ///< Days
+    ImebraAgeUnitWeeks = (char)'W',  ///< Weeks
+    ImebraAgeUnitMonths = (char)'M', ///< Months
+    ImebraAgeUnitYears = (char)'Y'   ///< Years
 };
 
 ///
@@ -53,7 +53,7 @@ typedef NS_ENUM(char, ImebraAgeUnit_t)
     /// \param initialUnits the units of the value in initialAge
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    -(id)initWithAge:(unsigned int)initialAge units:(ImebraAgeUnit_t)initialUnits;
+    -(id)initWithAge:(unsigned int)initialAge units:(ImebraAgeUnit)initialUnits;
 
     /// \brief Return the age in years.
     ///
@@ -74,7 +74,7 @@ typedef NS_ENUM(char, ImebraAgeUnit_t)
     /// \return the age's units
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    @property (readonly) ImebraAgeUnit_t units;
+    @property (readonly) ImebraAgeUnit units;
 
 @end
 

@@ -64,7 +64,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
 
-+(void)saveToFile:(NSString*)fileName dataSet:(ImebraDataSet*)pDataSet codecType:(ImebraCodecType_t)codecType error:(NSError**)pError
++(void)saveToFile:(NSString*)fileName dataSet:(ImebraDataSet*)pDataSet codecType:(ImebraCodecType)codecType error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 
@@ -73,7 +73,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_END();
 }
 
-+(void)saveToStream:(ImebraStreamWriter*)pWriter dataSet:(ImebraDataSet*)pDataSet codecType:(ImebraCodecType_t) codecType error:(NSError**)pError
++(void)saveToStream:(ImebraStreamWriter*)pWriter dataSet:(ImebraDataSet*)pDataSet codecType:(ImebraCodecType) codecType error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 

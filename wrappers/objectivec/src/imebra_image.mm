@@ -81,9 +81,9 @@ If you do not want to be bound by the GPL terms (such as the requirement
     return get_imebra_object_holder(Image)->getChannelsNumber();
 }
 
--(ImebraBitDepth_t) depth
+-(ImebraBitDepth) depth
 {
-    return (ImebraBitDepth_t)get_imebra_object_holder(Image)->getDepth();
+    return (ImebraBitDepth)get_imebra_object_holder(Image)->getDepth();
 }
 
 -(unsigned int) highBit
@@ -97,7 +97,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 @implementation ImebraMutableImage
 
 
--(id)initWithWidth:(unsigned int)width height:(unsigned int)height depth:(ImebraBitDepth_t)depth colorSpace:(NSString*)colorSpace highBit:(unsigned int)highBit
+-(id)initWithWidth:(unsigned int)width height:(unsigned int)height depth:(ImebraBitDepth)depth colorSpace:(NSString*)colorSpace highBit:(unsigned int)highBit
 {
     self =  [super init];
     if(self)

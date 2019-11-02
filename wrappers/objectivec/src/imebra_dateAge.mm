@@ -39,7 +39,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     return self;
 }
 
--(id)initWithAge:(unsigned int)initialAge units:(ImebraAgeUnit_t)initialUnits
+-(id)initWithAge:(unsigned int)initialAge units:(ImebraAgeUnit)initialUnits
 {
     reset_imebra_object_holder(Age);
     self = [super init];
@@ -60,9 +60,9 @@ If you do not want to be bound by the GPL terms (such as the requirement
     return get_imebra_object_holder(Age)->getAgeValue();
 }
 
--(ImebraAgeUnit_t)units
+-(ImebraAgeUnit)units
 {
-    return (ImebraAgeUnit_t)(get_imebra_object_holder(Age)->getAgeUnits());
+    return (ImebraAgeUnit)(get_imebra_object_holder(Age)->getAgeUnits());
 }
 
 @end

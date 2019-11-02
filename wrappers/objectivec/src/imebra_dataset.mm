@@ -340,11 +340,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
 
--(ImebraTagVR_t)getDataType:(ImebraTagId*)tagId error:(NSError**)pError
+-(ImebraTagType)getDataType:(ImebraTagId*)tagId error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return (ImebraTagVR_t)(get_imebra_object_holder(DataSet)->getDataType(*get_other_imebra_object_holder(tagId, TagId)));
+    return (ImebraTagType)(get_imebra_object_holder(DataSet)->getDataType(*get_other_imebra_object_holder(tagId, TagId)));
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(ImebraAE);
 }
@@ -395,7 +395,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     return self;
 }
 
--(ImebraMutableTag*) getTagCreate:(ImebraTagId*)tagId tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError
+-(ImebraMutableTag*) getTagCreate:(ImebraTagId*)tagId tagVR:(ImebraTagType)tagVR error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 
@@ -415,7 +415,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
 
--(void) setImage:(unsigned int)frameNumber image:(ImebraImage*)image quality:(ImebraImageQuality_t)quality error:(NSError**)pError
+-(void) setImage:(unsigned int)frameNumber image:(ImebraImage*)image quality:(ImebraImageQuality)quality error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 
@@ -444,7 +444,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
 
--(ImebraStreamWriter*) getStreamWriter:(ImebraTagId*)pTagId bufferId:(unsigned int)bufferId tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError
+-(ImebraStreamWriter*) getStreamWriter:(ImebraTagId*)pTagId bufferId:(unsigned int)bufferId tagVR:(ImebraTagType)tagVR error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 
@@ -466,7 +466,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
 
--(ImebraWritingDataHandler*) getWritingDataHandler:(ImebraTagId*)tagId bufferId:(unsigned int)bufferId tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError
+-(ImebraWritingDataHandler*) getWritingDataHandler:(ImebraTagId*)tagId bufferId:(unsigned int)bufferId tagVR:(ImebraTagType)tagVR error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 
@@ -486,7 +486,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
 
--(ImebraWritingDataHandlerNumeric*) getWritingDataHandlerNumeric:(ImebraTagId*)tagId bufferId:(unsigned long)bufferId tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError
+-(ImebraWritingDataHandlerNumeric*) getWritingDataHandlerNumeric:(ImebraTagId*)tagId bufferId:(unsigned long)bufferId tagVR:(ImebraTagType)tagVR error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 
@@ -506,7 +506,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
 
--(void)setSignedLong:(ImebraTagId*)tagId newValue:(signed int)newValue tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError
+-(void)setSignedLong:(ImebraTagId*)tagId newValue:(signed int)newValue tagVR:(ImebraTagType)tagVR error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 
@@ -524,7 +524,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_END();
 }
 
--(void)setUnsignedLong:(ImebraTagId*)tagId newValue:(unsigned int)newValue tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError
+-(void)setUnsignedLong:(ImebraTagId*)tagId newValue:(unsigned int)newValue tagVR:(ImebraTagType)tagVR error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 
@@ -542,7 +542,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_END();
 }
 
--(void)setDouble:(ImebraTagId*)tagId newValue:(double)newValue tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError
+-(void)setDouble:(ImebraTagId*)tagId newValue:(double)newValue tagVR:(ImebraTagType)tagVR error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 
@@ -560,7 +560,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_END();
 }
 
--(void)setString:(ImebraTagId*)tagId newValue:(NSString*)newValue tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError
+-(void)setString:(ImebraTagId*)tagId newValue:(NSString*)newValue tagVR:(ImebraTagType)tagVR error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 
@@ -587,7 +587,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_END();
 }
 
--(void)setDate:(ImebraTagId*)tagId newValue:(ImebraDate*)newValue tagVR:(ImebraTagVR_t)tagVR error:(NSError**)pError
+-(void)setDate:(ImebraTagId*)tagId newValue:(ImebraDate*)newValue tagVR:(ImebraTagType)tagVR error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 

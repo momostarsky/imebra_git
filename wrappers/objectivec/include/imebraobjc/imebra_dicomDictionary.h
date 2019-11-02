@@ -72,7 +72,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     /// @return          The tag's data type
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    +(ImebraTagVR_t)getTagType:(ImebraTagId*)tagId error:(NSError**)pError
+    +(ImebraTagType)getTagType:(ImebraTagId*)tagId error:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
 
     /// \brief Return the size (in bytes) of the data type's elements
@@ -82,7 +82,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     ///         a fixed size for the element
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    +(unsigned int)getWordSize:(ImebraTagVR_t)dataType;
+    +(unsigned int)getWordSize:(ImebraTagType)dataType;
 
     /// \brief Return the maximum size of the tags with the specified data type.
     ///
@@ -90,7 +90,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     /// @return         the maximum tag's size in bytes
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    +(unsigned int)getMaxSize:(ImebraTagVR_t)dataType;
+    +(unsigned int)getMaxSize:(ImebraTagType)dataType;
 
 @end
 
