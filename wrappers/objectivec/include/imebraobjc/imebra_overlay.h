@@ -17,7 +17,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #import <Foundation/Foundation.h>
 #include "imebra_macros.h"
 
-/// \enum ImebraOverlayType_t
+/// \enum ImebraOverlayType
 ///
 /// \brief Defines the Overlay type.
 ///
@@ -51,7 +51,7 @@ typedef NS_ENUM(unsigned int, ImebraOverlayType)
     /// The overlay type.
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    @property (readonly) ImebraOverlayType_t type;
+    @property (readonly) ImebraOverlayType type;
 
     ///
     /// The overlay subtype.
@@ -163,7 +163,7 @@ typedef NS_ENUM(unsigned int, ImebraOverlayType)
     /// \param description    overlay description
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    -(id)initWithType:(ImebraOverlayType_t)type subType:(NSString*)subType firstFrame:(unsigned int)firstFrame zeroBasedOriginX:(int)zeroBasedOriginX zeroBasedOriginY:(int)zeroBasedOriginY label:(NSString*)label description:(NSString*)description;
+    -(id)initWithType:(ImebraOverlayType)type subType:(NSString*)subType firstFrame:(unsigned int)firstFrame zeroBasedOriginX:(int)zeroBasedOriginX zeroBasedOriginY:(int)zeroBasedOriginY label:(NSString*)label description:(NSString*)description;
 
     ///
     /// \brief Set the number of pixels in the ROI area.

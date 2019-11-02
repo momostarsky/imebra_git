@@ -42,9 +42,9 @@ If you do not want to be bound by the GPL terms (such as the requirement
     delete_imebra_object_holder(Overlay);
 }
 
--(ImebraOverlayType_t) type
+-(ImebraOverlayType) type
 {
-    return (ImebraOverlayType_t)get_imebra_object_holder(Overlay)->getType();
+    return (ImebraOverlayType)get_imebra_object_holder(Overlay)->getType();
 }
 
 -(NSString*) subType
@@ -123,7 +123,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @implementation ImebraMutableOverlay
 
--(id)initWithType:(ImebraOverlayType_t)type subType:(NSString*)subType firstFrame:(unsigned int)firstFrame zeroBasedOriginX:(int)zeroBasedOriginX zeroBasedOriginY:(int)zeroBasedOriginY label:(NSString*)label description:(NSString*)description
+-(id)initWithType:(ImebraOverlayType)type subType:(NSString*)subType firstFrame:(unsigned int)firstFrame zeroBasedOriginX:(int)zeroBasedOriginX zeroBasedOriginY:(int)zeroBasedOriginY label:(NSString*)label description:(NSString*)description
 {
     reset_imebra_object_holder(Overlay);
     self = [super init];
