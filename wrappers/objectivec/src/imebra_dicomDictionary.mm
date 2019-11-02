@@ -35,7 +35,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
     return (ImebraTagType)(imebra::DicomDictionary::getTagType(*get_other_imebra_object_holder(tagId, TagId)));
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(ImebraAE);
+    OBJC_IMEBRA_FUNCTION_END_RETURN(ImebraTagTypeAE);
 }
 
 +(unsigned int)getMultiplicityMin:(ImebraTagId*)tagId error:(NSError**)pError
