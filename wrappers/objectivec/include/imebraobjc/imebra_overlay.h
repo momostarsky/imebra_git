@@ -108,7 +108,8 @@ typedef NS_ENUM(unsigned int, ImebraOverlayType_t)
     /// \return the ROI area in pixels
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    -(unsigned int) getROIArea:(NSError**)pError;
+    -(unsigned int) getROIArea:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
 
     ///
     /// \brief Return the ROI mean if present, otherwise set pError to 
@@ -117,7 +118,8 @@ typedef NS_ENUM(unsigned int, ImebraOverlayType_t)
     /// \return the ROI mean value
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    -(double) getROIMean:(NSError**)pError;
+    -(double) getROIMean:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
 
     ///
     /// \brief Return the ROI standard deviation if present, otherwise set pError
@@ -126,7 +128,8 @@ typedef NS_ENUM(unsigned int, ImebraOverlayType_t)
     /// \return the ROI standard deviation
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    -(double) getROIStandardDeviation:(NSError**)pError;
+    -(double) getROIStandardDeviation:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
 
     ///
     /// \brief Return one of the overlay bitmaps if present, otherwise set pError
@@ -137,7 +140,7 @@ typedef NS_ENUM(unsigned int, ImebraOverlayType_t)
     /// \return the requested overlay image
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    -(ImebraImage*) getImage:(unsigned int)frameNumber error:(NSError**)pError;
+    -(ImebraImage*) getImage:(unsigned int)frameNumber error:(NSError**)pError
 
 @end
 
@@ -196,7 +199,9 @@ typedef NS_ENUM(unsigned int, ImebraOverlayType_t)
     /// \param pError      set to an error object if an error occurs
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    -(void) setImage:(unsigned int)frameNumber image:(ImebraImage*)image error:(NSError**)pError;
+    -(void) setImage:(unsigned int)frameNumber image:(ImebraImage*)image error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
+
 
 @end
 

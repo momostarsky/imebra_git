@@ -39,7 +39,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(void)dealloc
 {
-    delete_imebra_object_holder(Image);
+    delete_imebra_object_holder(Overlay);
 }
 
 -(ImebraOverlayType_t) type
@@ -115,7 +115,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
     return [[ImebraImage alloc] initWithImebraImage:new imebra::Image(get_imebra_object_holder(Overlay)->getImage(frameNumber))];
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(0.0);
+    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
 
 @end
@@ -139,7 +139,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
             imebra::NSStringToString(description)));
     }
     return self;
-
 }
 
 -(void) setROIArea:(unsigned int)roiArea

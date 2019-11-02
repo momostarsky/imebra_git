@@ -100,6 +100,15 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
 
+-(ImebraOverlay*) getOverlay:(unsigned int) overlayNumber error:(NSError**)pError
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    return [[ImebraOverlay alloc] initWithImebraOverlay:new imebra::Overlay(get_imebra_object_holder(DataSet)->getOverlay(overlayNumber))];
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+}
+
 -(ImebraImage*) getImageApplyModalityTransform:(unsigned int) frameNumber error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
@@ -409,6 +418,15 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_START();
 
     ((imebra::MutableDataSet*)get_imebra_object_holder(DataSet))->setImage(frameNumber, *get_other_imebra_object_holder(image, Image), (imebra::imageQuality_t)quality);
+
+    OBJC_IMEBRA_FUNCTION_END();
+}
+
+-(void) setOverlay:(unsigned int)overlayNumber overlay:(ImebraOverlay*)overlay error:(NSError**)pError
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    ((imebra::MutableDataSet*)get_imebra_object_holder(DataSet))->setOverlay(overlayNumber, *get_other_imebra_object_holder(overlay, Overlay));
 
     OBJC_IMEBRA_FUNCTION_END();
 }
