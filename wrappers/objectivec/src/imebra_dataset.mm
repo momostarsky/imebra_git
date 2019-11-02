@@ -15,6 +15,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #import "../include/imebraobjc/imebra_tag.h"
 #import "../include/imebraobjc/imebra_tagId.h"
 #import "../include/imebraobjc/imebra_image.h"
+#import "../include/imebraobjc/imebra_overlay.h"
 #import "../include/imebraobjc/imebra_lut.h"
 #import "../include/imebraobjc/imebra_readingDataHandler.h"
 #import "../include/imebraobjc/imebra_readingDataHandlerNumeric.h"
@@ -32,6 +33,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <imebra/dataSet.h>
 #include <imebra/tag.h>
 #include <imebra/image.h>
+#include <imebra/overlay.h>
 #include <imebra/lut.h>
 #include <imebra/readingDataHandler.h>
 #include <imebra/readingDataHandlerNumeric.h>
