@@ -68,17 +68,44 @@ overlay::overlay(
 
 overlay::overlay(
         overlayType_t type,
-        const std::string& subType):
+        const std::string& subType,
+        std::uint32_t firstFrame,
+        std::int32_t zeroBasedOriginX, std::int32_t zeroBasedOriginY,
+        const std::wstring& label,
+        const std::wstring& description):
     m_width(0), m_height(0),
-    m_firstFrame(0), m_framesCount(0),
-    m_originX(0), m_originY(),
+    m_firstFrame(firstFrame), m_framesCount(0),
+    m_originX(zeroBasedOriginX), m_originY(zeroBasedOriginY),
     m_type(type), m_subType(subType),
+    m_label(label), m_description(description),
     m_roiArea(0), m_roiAreaPresent(false),
     m_roiMean(0.0), m_roiMeanPresent(false),
     m_roiStandardDeviation(0.0), m_roiStandardDeviationPresent(false),
     m_pBuffer(std::make_shared<buffer>(std::shared_ptr<charsetsList_t>(), streamController::lowByteEndian))
 {
 }
+
+
+overlay::overlay(
+        overlayType_t type,
+        const std::string& subType,
+        std::uint32_t firstFrame,
+        std::int32_t zeroBasedOriginX, std::int32_t zeroBasedOriginY,
+        const std::string& label,
+        const std::string& description):
+    m_width(0), m_height(0),
+    m_firstFrame(firstFrame), m_framesCount(0),
+    m_originX(zeroBasedOriginX), m_originY(zeroBasedOriginY),
+    m_type(type), m_subType(subType),
+    m_label(std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t>{}.from_bytes(label)),
+    m_description(std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t>{}.from_bytes(description)),
+    m_roiArea(0), m_roiAreaPresent(false),
+    m_roiMean(0.0), m_roiMeanPresent(false),
+    m_roiStandardDeviation(0.0), m_roiStandardDeviationPresent(false),
+    m_pBuffer(std::make_shared<buffer>(std::shared_ptr<charsetsList_t>(), streamController::lowByteEndian))
+{
+}
+
 
 void overlay::setFirstFrame(std::uint32_t firstFrame)
 {
@@ -304,6 +331,11 @@ bool overlay::getROIStandardDeviationPresent() const
 std::shared_ptr<image> overlay::getImage(std::uint32_t frameNumber) const
 {
     IMEBRA_FUNCTION_START();
+
+    if(frameNumber >= m_framesCount)
+    {
+        IMEBRA_THROW(DataSetImageDoesntExistError, "The requested overlay bitmap does not exist");
+    }
 
     size_t imageSizeBits = codecs::dicomNativeImageCodec::getNativeImageSizeBits(1,
                                                                                   m_width,

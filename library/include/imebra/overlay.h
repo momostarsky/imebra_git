@@ -31,11 +31,6 @@ namespace implementation
     class overlay;
 }
 
-class CodecFactory;
-class Transform;
-class VOILUT;
-class DataSet;
-class DrawBitmap;
 class Image;
 
 ///
@@ -226,17 +221,53 @@ class IMEBRA_API MutableOverlay: public Overlay
 
 public:
 
+#ifndef SWIG // Use UTF8 strings only with SWIG
     /// \brief Constructor.
     ///
     /// \param overlayType    the overlay type
     /// \param overlaySubType the overlay sub-type (defined Term that identifies
     ///                        the intended purpose of the Overlay Type. See
     ///                        Section C.9.2.1.3 for further explanation).
+    /// \param firstFrame     the first DICOM image frame related to the overlay
+    /// \param zeroBasedOriginX the overlay zero-based horizontal position within
+    ///                        the DICOM image
+    /// \param zeroBasedOriginY the overlay zero-based vertical position within
+    ///                        the DICOM image
+    /// \param label           the unicode overlay label
+    /// \param description     the unicode overlay description
     ///
     ///////////////////////////////////////////////////////////////////////////////
     explicit MutableOverlay(
-        overlayType_t overlayType,
-        const std::string& overlaySubType);
+            overlayType_t overlayType,
+            const std::string& overlaySubType,
+            std::uint32_t firstFrame,
+            std::int32_t zeroBasedOriginX, std::int32_t zeroBasedOriginY,
+            const std::wstring& label,
+            const std::wstring& description);
+#endif
+
+    /// \brief Constructor.
+    ///
+    /// \param overlayType    the overlay type
+    /// \param overlaySubType the overlay sub-type (defined Term that identifies
+    ///                        the intended purpose of the Overlay Type. See
+    ///                        Section C.9.2.1.3 for further explanation).
+    /// \param firstFrame     the first DICOM image frame related to the overlay
+    /// \param zeroBasedOriginX the overlay zero-based horizontal position within
+    ///                        the DICOM image
+    /// \param zeroBasedOriginY the overlay zero-based vertical position within
+    ///                        the DICOM image
+    /// \param label           the UTF-8 encoded overlay label
+    /// \param description     the UTF-8 encoded overlay description
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    explicit MutableOverlay(
+            overlayType_t overlayType,
+            const std::string& overlaySubType,
+            std::uint32_t firstFrame,
+            std::int32_t zeroBasedOriginX, std::int32_t zeroBasedOriginY,
+            const std::string& label,
+            const std::string& description);
 
     ///
     /// \brief Copy constructor.
@@ -251,72 +282,29 @@ public:
     MutableOverlay& operator=(const MutableOverlay& source) = delete;
 
     ///
-    /// \brief Set the first frame image related to this overlay
+    /// \brief Set the number of pixels in the ROI area.
     ///
-    /// \param firsFrame the zero-based first frame image related to this
-    ///                  overlay
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    void setFirstFrame(std::uint32_t firstFrame);
-
-    ///
-    /// \brief Set the overlay position whithin the DICOM frame related to the
-    ///        overlay.
-    ///
-    /// \param x zero-based horizontal position
-    /// \param y zero-based vertical position
+    /// \param pixels number of pixels in the ROI area
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    void setZeroBasedOrigin(std::int32_t x, std::int32_t y);
-
-    ///
-    /// \brief Set the overlay position whithin the DICOM frame related to the
-    ///        overlay.
-    ///
-    /// \param x one-based horizontal position
-    /// \param y one-based vertical position
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    void setOneBasedOrigin(std::int32_t x, std::int32_t y);
-
-#ifndef SWIG // Use UTF8 strings only with SWIG
-    ///
-    /// \brief Set the overlay's label as a unicode string.
-    ///
-    /// \param label overlay's label
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    void setUnicodeLabel(const std::wstring& label);
-
-    ///
-    /// \brief Set the overlay's description as a unicode string.
-    ///
-    /// \param description overlay's description
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    void setUnicodeDescription(const std::wstring& description);
-#endif
-
-    ///
-    /// \brief Set the overlay's label as a UTF-8 encoded string.
-    ///
-    /// \param label UTF-8 encoded overlay's label
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    void setLabel(const std::string& label);
-
-    ///
-    /// \brief Set the overlay's label as a UTF-8 encoded description.
-    ///
-    /// \param label UTF-8 encoded overlay's description
-    ///
-    ///////////////////////////////////////////////////////////////////////////////
-    void setDescription(const std::string& description);
-
     void setROIArea(std::uint32_t pixels);
 
+    ///
+    /// \brief Set the mean value of the pixels in the ROI area.
+    ///
+    /// \param mean mean value of the pixels in the ROI area
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     void setROIMean(double mean);
 
+    ///
+    /// \brief Set the standard deviation of the value of the pixels in the ROI
+    ///        area.
+    ///
+    /// \param standardDeviation standard deviation of the value of the pixels in
+    ///                          the ROI area
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     void setROIStandardDeviation(double standardDeviation);
 
     ///

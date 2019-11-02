@@ -104,7 +104,19 @@ public:
     ///////////////////////////////////////////////////////////
     overlay(
             overlayType_t type,
-            const std::string& subType);
+            const std::string& subType,
+            std::uint32_t firstFrame,
+            std::int32_t zeroBasedOriginX, std::int32_t zeroBasedOriginY,
+            const std::wstring& label,
+            const std::wstring& description);
+
+    overlay(
+            overlayType_t type,
+            const std::string& subType,
+            std::uint32_t firstFrame,
+            std::int32_t zeroBasedOriginX, std::int32_t zeroBasedOriginY,
+            const std::string& label,
+            const std::string& description);
 
     ///
     /// \brief Set the first frame related to the overlay

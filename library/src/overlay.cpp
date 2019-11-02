@@ -146,7 +146,11 @@ double Overlay::getROIStandardDeviation()
 
 const Image Overlay::getImage(std::uint32_t frame) const
 {
+    IMEBRA_FUNCTION_START();
+
     return Image(m_pOverlay->getImage(frame));
+
+    IMEBRA_FUNCTION_END();
 }
 
 Overlay::Overlay(const std::shared_ptr<imebra::implementation::overlay>& pOverlay): m_pOverlay(pOverlay)
@@ -161,8 +165,36 @@ const std::shared_ptr<implementation::overlay>& getOverlayImplementation(const O
 
 MutableOverlay::MutableOverlay(
         overlayType_t overlayType,
-        const std::string& overlaySubType):
-    Overlay(std::make_shared<implementation::overlay>(overlayType, overlaySubType))
+        const std::string& overlaySubType,
+        std::uint32_t firstFrame,
+        std::int32_t zeroBasedOriginX, std::int32_t zeroBasedOriginY,
+        const std::wstring& label,
+        const std::wstring& description):
+    Overlay(std::make_shared<implementation::overlay>(
+                overlayType, overlaySubType,
+                firstFrame,
+                zeroBasedOriginX,
+                zeroBasedOriginY,
+                label,
+                description))
+{
+}
+
+
+MutableOverlay::MutableOverlay(
+        overlayType_t overlayType,
+        const std::string& overlaySubType,
+        std::uint32_t firstFrame,
+        std::int32_t zeroBasedOriginX, std::int32_t zeroBasedOriginY,
+        const std::string& label,
+        const std::string& description):
+    Overlay(std::make_shared<implementation::overlay>(
+                overlayType, overlaySubType,
+                firstFrame,
+                zeroBasedOriginX,
+                zeroBasedOriginY,
+                label,
+                description))
 {
 }
 
@@ -173,41 +205,6 @@ MutableOverlay::MutableOverlay(const MutableOverlay& source):
 
 MutableOverlay::~MutableOverlay()
 {
-}
-
-void MutableOverlay::setFirstFrame(std::uint32_t firstFrame)
-{
-    return getOverlayImplementation(*this)->setFirstFrame(firstFrame);
-}
-
-void MutableOverlay::setZeroBasedOrigin(std::int32_t x, std::int32_t y)
-{
-    getOverlayImplementation(*this)->setZeroBasedOrigin(x, y);
-}
-
-void MutableOverlay::setOneBasedOrigin(std::int32_t x, std::int32_t y)
-{
-    getOverlayImplementation(*this)->setOneBasedOrigin(x, y);
-}
-
-void MutableOverlay::setUnicodeLabel(const std::wstring& label)
-{
-    getOverlayImplementation(*this)->setUnicodeLabel(label);
-}
-
-void MutableOverlay::setLabel(const std::string& label)
-{
-    getOverlayImplementation(*this)->setLabel(label);
-}
-
-void MutableOverlay::setUnicodeDescription(const std::wstring& description)
-{
-    getOverlayImplementation(*this)->setUnicodeDescription(description);
-}
-
-void MutableOverlay::setDescription(const std::string& description)
-{
-    getOverlayImplementation(*this)->setDescription(description);
 }
 
 void MutableOverlay::setROIArea(std::uint32_t pixels)

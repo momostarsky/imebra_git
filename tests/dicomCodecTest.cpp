@@ -602,22 +602,15 @@ TEST(dicomCodecTest, testOverlay)
                         0,
                         "MONOCHROME2", 150));
 
-                MutableOverlay overlay0(overlayType_t::graphic, "SUBTYPE0");
+                MutableOverlay overlay0(overlayType_t::graphic, "SUBTYPE0", 2, 5, 6, "LABEL0", "Description0");
                 overlay0.setImage(0, images[0]);
                 overlay0.setImage(1, images[1]);
-                overlay0.setFirstFrame(2);
                 overlay0.setROIArea(120);
-                overlay0.setLabel("LABEL0");
-                overlay0.setDescription("Description0");
-                overlay0.setZeroBasedOrigin(5, 6);
 
-                MutableOverlay overlay1(overlayType_t::ROI, "SUBTYPE1");
+                MutableOverlay overlay1(overlayType_t::ROI, "SUBTYPE1", 0, 5, 6, L"LABEL1", L"Description1");
                 overlay1.setImage(0, images[2]);
                 overlay1.setROIMean(3.0);
                 overlay1.setROIStandardDeviation(1.0);
-                overlay1.setUnicodeLabel(L"LABEL1");
-                overlay1.setUnicodeDescription(L"Description1");
-                overlay1.setOneBasedOrigin(6, 7);
 
                 std::cout << "Dicom test. Transfer syntax: " << transferSyntax;
                 std::cout << " size: " << sizeX << " X " << sizeY << std::endl;
@@ -1006,14 +999,10 @@ TEST(dicomCodecTest, dcmtkInteroperabilityDicomOverlay)
                 ASSERT_EQ(1u, testDataSet.getUnsignedLong(TagId(tagId_t::BitsAllocated_0028_0100), 0));
             }
 
-            MutableOverlay overlay(overlayType_t::graphic, "SUBTYPE0");
+            MutableOverlay overlay(overlayType_t::graphic, "SUBTYPE0", 0, 0, 0, "LABEL0", "Description0");
             overlay.setImage(0, overlayImage0);
             overlay.setImage(1, overlayImage1);
-            overlay.setFirstFrame(0);
             overlay.setROIArea(120);
-            overlay.setLabel("LABEL0");
-            overlay.setDescription("Description0");
-            overlay.setZeroBasedOrigin(0, 0);
             testDataSet.setOverlay(0, overlay);
 
             MemoryStreamOutput writeStream(streamMemory);

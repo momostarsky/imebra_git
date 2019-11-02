@@ -25,6 +25,8 @@ The following classes are described in this chapter:
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
 |:cpp:class:`imebra::drawBitmapType_t`          |:cpp:class:`ImebraDrawBitmapType_t`          |Enumerates the bitmap types    |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
+|:cpp:class:`imebra::OverlayType_t`             |:cpp:class:`ImebraOverlayType_t`             |Enumerates the overlay types   |
++-----------------------------------------------+---------------------------------------------+-------------------------------+
 |:cpp:class:`imebra::directoryRecordType_t`     |:cpp:class:`ImebraDirectoryRecordType_t`     |Enumerates the DICOMDIR record |
 |                                               |                                             |types                          |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
@@ -135,6 +137,20 @@ Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
 .. doxygenenum:: ImebraDrawBitmapType_t
+
+
+overlayType_t
+................
+
+C++
+,,,
+
+.. doxygenenum:: imebra::overlayType_t
+
+Objective-C/Swift
+,,,,,,,,,,,,,,,,,
+
+.. doxygenenum:: ImebraOverlayType_t
 
 
 DICOMDIR related definitions
