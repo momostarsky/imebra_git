@@ -41,6 +41,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "memoryStreamInput.h"
 #include "memoryStreamOutput.h"
 #include "modalityVOILUT.h"
+#include "overlay.h"
 #include "patientName.h"
 #include "streamReader.h"
 #include "streamWriter.h"

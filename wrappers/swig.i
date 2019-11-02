@@ -131,6 +131,7 @@
 %include "../library/include/imebra/writingDataHandlerNumeric.h"
 %include "../library/include/imebra/lut.h"
 %include "../library/include/imebra/image.h"
+%include "../library/include/imebra/overlay.h"
 %include "../library/include/imebra/tag.h"
 %include "../library/include/imebra/dataSet.h"
 %include "../library/include/imebra/codecFactory.h"

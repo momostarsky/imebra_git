@@ -32,6 +32,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 @class ImebraVOIDescription;
 @class ImebraStreamReader;
 @class ImebraStreamWriter;
+@class ImebraOverlay;
 
 /// \enum ImebraTagVR_t
 /// \brief Enumerates the DICOM VRs (data types).
@@ -174,6 +175,17 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
     ///
     ///////////////////////////////////////////////////////////////////////////////
     -(ImebraImage*) getImage:(unsigned int) frameNumber error:(NSError**)pError;
+
+    /// \brief Retrieve one of the DICOM overlays.
+    ///
+    /// Set pError to ImebraMissingGroupError if the requested overlay does not 
+    ///  exist.
+    ///
+    /// \param overlayNumber the number of the overlay to retrieve (0...127)
+    /// \return the requested overlay
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(ImebraOverlay*) getOverlay:(unsigned int) overlayNumber error:(NSError**)pError;
 
     /// \brief Retrieve an image from the dataset and if necessary process it with
     ///        ImebraModalityVOILUT before returning it.
@@ -734,6 +746,17 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality_t)
         ///
         ///////////////////////////////////////////////////////////////////////////////
         -(void) setImage:(unsigned int)frameNumber image:(ImebraImage*)image quality:(ImebraImageQuality_t)quality error:(NSError**)pError
+            __attribute__((swift_error(nonnull_error)));
+
+        /// \brief Insert an overlay into the dataset.
+        ///
+        /// \param overlayNumber   the overlay number (0...127)
+        /// \param overlay         the overlay to insert into the dataset
+        /// \param pError          a pointer to a NSError pointer which is set when an
+        ///                         error occurs
+        ///
+        ///////////////////////////////////////////////////////////////////////////////
+        -(void) setOverlay:(unsigned int)overlayNumber overlay:(ImebraOverlay*)overlay error:(NSError**)pError
             __attribute__((swift_error(nonnull_error)));
 
         /// \brief Get a StreamWriter connected to a buffer's data.

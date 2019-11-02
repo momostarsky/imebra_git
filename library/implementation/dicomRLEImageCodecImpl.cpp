@@ -64,77 +64,27 @@ namespace codecs
 //
 /////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
-std::shared_ptr<image> dicomRLEImageCodec::getImage(const dataSet& dataset, std::shared_ptr<streamReader> pStream) const
+std::shared_ptr<image> dicomRLEImageCodec::getImage(const std::string& /* transferSyntax */,
+                                                    const std::string& colorSpace,
+                                                    std::uint32_t channelsNumber,
+                                                    std::uint32_t imageWidth,
+                                                    std::uint32_t imageHeight,
+                                                    bool bSubSampledX,
+                                                    bool bSubSampledY,
+                                                    bool bInterleaved,
+                                                    bool b2Complement,
+                                                    std::uint8_t allocatedBits,
+                                                    std::uint8_t storedBits,
+                                                    std::uint8_t highBit,
+                                                    std::shared_ptr<streamReader> pSourceStream) const
+
 {
     IMEBRA_FUNCTION_START();
 
-    streamReader* pSourceStream = pStream.get();
-
-    // Check for color space and subsampled channels
-    ///////////////////////////////////////////////////////////
-    std::string colorSpace = dataset.getString(0x0028, 0x0, 0x0004, 0, 0);
-
-    // Retrieve the number of planes
-    ///////////////////////////////////////////////////////////
-    std::uint8_t channelsNumber=(std::uint8_t)dataset.getUnsignedLong(0x0028, 0x0, 0x0002, 0, 0);
-
-    // Adjust the colorspace and the channels number for old
-    //  NEMA files that don't specify those data
-    ///////////////////////////////////////////////////////////
-    if(colorSpace.empty() && (channelsNumber == 0 || channelsNumber == 1))
-    {
-        colorSpace = "MONOCHROME2";
-        channelsNumber = 1;
-    }
-
-    if(colorSpace.empty() && channelsNumber == 3)
-    {
-        colorSpace = "RGB";
-    }
-
-    // Retrieve the image's size
-    ///////////////////////////////////////////////////////////
-    std::uint32_t imageWidth = dataset.getUnsignedLong(0x0028, 0x0, 0x0011, 0, 0);
-    std::uint32_t imageHeight = dataset.getUnsignedLong(0x0028, 0x0, 0x0010, 0, 0);
-
-    if(
-            imageWidth > codecFactory::getCodecFactory()->getMaximumImageWidth() ||
-            imageHeight > codecFactory::getCodecFactory()->getMaximumImageHeight())
-    {
-        IMEBRA_THROW(CodecImageTooBigError, "The factory settings prevented the loading of this image. Consider using codecFactory::setMaximumImageSize() to modify the settings");
-    }
-
-    if((imageWidth == 0) || (imageHeight == 0))
-    {
-        IMEBRA_THROW(CodecCorruptedFileError, "The size tags are not available");
-    }
-
-    // Check for interleaved planes.
-    ///////////////////////////////////////////////////////////
-    bool bInterleaved(dataset.getUnsignedLong(0x0028, 0x0, 0x0006, 0, 0, 1u) == 0);
     if(bInterleaved)
     {
         IMEBRA_THROW(CodecCorruptedFileError, "RLE encoding does not allow planar configuration = 0");
     }
-
-    // Check for 2's complement
-    ///////////////////////////////////////////////////////////
-    bool b2Complement = dataset.getUnsignedLong(0x0028, 0x0, 0x0103, 0, 0, 0) != 0x0;
-
-    // Retrieve the allocated/stored/high bits
-    ///////////////////////////////////////////////////////////
-    std::uint8_t allocatedBits=(std::uint8_t)dataset.getUnsignedLong(0x0028, 0x0, 0x0100, 0, 0);
-    std::uint8_t storedBits=(std::uint8_t)dataset.getUnsignedLong(0x0028, 0x0, 0x0101, 0, 0);
-    std::uint8_t highBit=(std::uint8_t)dataset.getUnsignedLong(0x0028, 0x0, 0x0102, 0, 0);
-    if(highBit < storedBits - 1)
-        IMEBRA_THROW(CodecCorruptedFileError, "The tag 0028,0102 (high bit) cannot be less than (tag 0028,0101 (stored bit) - 1)");
-
-
-    // If the chrominance channels are subsampled, then find
-    //  the right image's size
-    ///////////////////////////////////////////////////////////
-    bool bSubSampledY = transforms::colorTransforms::colorTransformsFactory::isSubsampledY(colorSpace);
-    bool bSubSampledX = transforms::colorTransforms::colorTransformsFactory::isSubsampledX(colorSpace);
 
     if(bSubSampledX || bSubSampledY)
     {
@@ -191,7 +141,7 @@ std::shared_ptr<image> dicomRLEImageCodec::getImage(const dataSet& dataset, std:
     std::uint32_t mask = (std::uint32_t)( ((std::uint64_t)1 << (highBit + 1)) - 1);
     mask -= (std::uint32_t)(((std::uint64_t)1 << (highBit + 1 - storedBits)) - 1);
 
-    readRLECompressed(channels, imageWidth, imageHeight, channelsNumber, pSourceStream, allocatedBits, mask);
+    readRLECompressed(channels, imageWidth, imageHeight, channelsNumber, pSourceStream.get(), allocatedBits, mask);
 
     if(b2Complement)
     {
@@ -230,6 +180,21 @@ std::shared_ptr<image> dicomRLEImageCodec::getImage(const dataSet& dataset, std:
 
     IMEBRA_FUNCTION_END();
 
+}
+
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
+// Return the default planar configuration
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+bool dicomRLEImageCodec::defaultInterleaved() const
+{
+    return false;
 }
 
 
@@ -545,7 +510,7 @@ void dicomRLEImageCodec::readRLECompressed(
 ///////////////////////////////////////////////////////////
 void dicomRLEImageCodec::setImage(
         std::shared_ptr<streamWriter> pDestStream,
-        std::shared_ptr<image> pImage,
+        std::shared_ptr<const image> pImage,
         const std::string& /* transferSyntax */,
         imageQuality_t /*imageQuality*/,
         std::uint32_t allocatedBits,

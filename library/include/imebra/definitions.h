@@ -129,6 +129,16 @@ enum class codecType_t: std::uint32_t
     jpeg   ///< JPEG codec
 };
 
+///
+/// \brief Defines the Overlay type.
+///
+///////////////////////////////////////////////////////////////////////////////
+enum class overlayType_t: std::uint32_t
+{
+    graphic = 0, ///< The overlay is a superimposed graphic
+    ROI = 1      ///< The overlay specifies a region of interest
+};
+
 #define MAKE_VR_ENUM(string) ((std::uint16_t)((((std::uint16_t)string[0]) << 8) | (std::uint16_t)string[1]))
 
 /// \brief Enumerates the DICOM VRs (data types).

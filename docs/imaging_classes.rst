@@ -15,6 +15,10 @@ The following classes are described in this chapter:
 +----------------------------------------+--------------------------------------+-------------------------------+
 |:cpp:class:`imebra::MutableImage`       |:cpp:class:`ImebraMutableImage`       |A mutable decompressed image   |
 +----------------------------------------+--------------------------------------+-------------------------------+
+|:cpp:class:`imebra::Overlay`            |:cpp:class:`ImebraOverlay`            |Stores overlay data            |
++----------------------------------------+--------------------------------------+-------------------------------+
+|:cpp:class:`imebra::MutableOverlay`     |:cpp:class:`ImebraMutableOverlay`     |A mutable overlay data         |
++----------------------------------------+--------------------------------------+-------------------------------+
 |:cpp:class:`imebra::DrawBitmap`         |:cpp:class:`ImebraDrawBitmap`         |Render an image into a bitmap  |
 +----------------------------------------+--------------------------------------+-------------------------------+
 
@@ -55,6 +59,38 @@ Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
 .. doxygenclass:: ImebraMutableImage
+   :members:
+
+
+Overlay
+.......
+
+C++
+,,,
+
+.. doxygenclass:: imebra::Overlay
+   :members:
+
+Objective-C/Swift
+,,,,,,,,,,,,,,,,,
+
+.. doxygenclass:: ImebraOverlay
+   :members:
+
+
+MutableOverlay
+..............
+
+C++
+,,,
+
+.. doxygenclass:: imebra::MutableOverlay
+   :members:
+
+Objective-C/Swift
+,,,,,,,,,,,,,,,,,
+
+.. doxygenclass:: ImebraMutableOverlay
    :members:
 
 

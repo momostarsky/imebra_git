@@ -19,6 +19,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "../include/imebra/patientName.h"
 #include "../include/imebra/VOIDescription.h"
 #include "../include/imebra/streamReader.h"
+#include "../include/imebra/overlay.h"
 #include "../implementation/dataSetImpl.h"
 #include "../include/imebra/streamWriter.h"
 #include "../include/imebra/uidsEnumeration.h"
@@ -91,9 +92,18 @@ const Image DataSet::getImage(size_t frameNumber) const
 {
     IMEBRA_FUNCTION_START();
 
-    return Image(m_pDataSet->getImage((std::uint32_t)frameNumber));
+    return Image(m_pDataSet->getImage(static_cast<std::uint32_t>(frameNumber)));
 
     IMEBRA_FUNCTION_END_LOG();
+}
+
+const Overlay DataSet::getOverlay(size_t overlayNumber) const
+{
+    IMEBRA_FUNCTION_START();
+
+    return Overlay(m_pDataSet->getOverlay(static_cast<std::uint32_t>(overlayNumber)));
+
+    IMEBRA_FUNCTION_END();
 }
 
 const Image DataSet::getImageApplyModalityTransform(size_t frameNumber) const
@@ -469,9 +479,18 @@ void MutableDataSet::setImage(size_t frameNumber, const Image& image, imageQuali
 {
     IMEBRA_FUNCTION_START();
 
-    getDataSetImplementation(*this)->setImage((std::uint32_t)frameNumber, getImageImplementation(image), quality);
+    getDataSetImplementation(*this)->setImage(static_cast<std::uint32_t>(frameNumber), getImageImplementation(image), quality);
 
     IMEBRA_FUNCTION_END_LOG();
+}
+
+void MutableDataSet::setOverlay(size_t overlayNumber, const Overlay& overlay)
+{
+    IMEBRA_FUNCTION_START();
+
+    getDataSetImplementation(*this)->setOverlay(static_cast<std::uint32_t>(overlayNumber), getOverlayImplementation(overlay));
+
+    IMEBRA_FUNCTION_END();
 }
 
 StreamWriter MutableDataSet::getStreamWriter(const TagId& tagId, size_t bufferId, tagVR_t tagVR)

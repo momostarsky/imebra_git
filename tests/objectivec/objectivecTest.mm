@@ -819,6 +819,38 @@ TEST(objectivec, voilutUnsigned8OptimalVOI)
 }
 
 
+TEST(objectivec, testOverlay)
+{
+    ImebraMutableImage* overlayBitmap = [[ImebraMutableImage alloc] initWithWidth:6 height:1 depth:ImebraBitDepthU8 colorSpace:@"MONOCHROME2" highBit:1];
+
+    NSError* pError(0);
+
+    @autoreleasepool
+    {
+        ImebraWritingDataHandler* unsigned8Handler = [overlayBitmap getWritingDataHandler:&pError];
+        [unsigned8Handler setUnsignedLong:0 newValue:1 error:&pError];
+        [unsigned8Handler setUnsignedLong:1 newValue:0 error:&pError];
+        [unsigned8Handler setUnsignedLong:2 newValue:1 error:&pError];
+        [unsigned8Handler setUnsignedLong:3 newValue:0 error:&pError];
+        [unsigned8Handler setUnsignedLong:4 newValue:1 error:&pError];
+        [unsigned8Handler setUnsignedLong:5 newValue:0 error:&pError];
+    }
+
+    ImebraMutableOverlay* overlay = [[ImebraMutableOverlay alloc] initWithType:ImebraOverlayTypeGraphic subType:@"" firstFrame:0 zeroBasedOriginX:0 zeroBasedOriginY:0 label:@"LABEL" description:@"Description"];
+    [overlay setImage:0 image:overlayBitmap error:&pError];
+
+    ImebraMutableDataSet* testDataSet = [[ImebraMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2.1"];
+
+    [testDataSet setOverlay:0 overlay: overlay error:&pError];
+
+    ImebraOverlay* checkOverlay = [testDataSet getOverlay:0 error:&pError];
+
+    ASSERT_EQ([checkOverlay getImage:0 error:&pError].width, 6);
+
+}
+
+
+
 // Test DrawBitmap generating a NSImage
 #if defined(__APPLE__)
 

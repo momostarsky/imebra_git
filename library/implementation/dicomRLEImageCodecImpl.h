@@ -62,7 +62,23 @@ class dicomRLEImageCodec : public imageCodec
 public:
     // Get an image from a dicom structure
     ///////////////////////////////////////////////////////////
-    virtual std::shared_ptr<image> getImage(const dataSet& dataset, std::shared_ptr<streamReader> pSourceStream) const override;
+    virtual std::shared_ptr<image> getImage(const std::string& transferSyntax,
+                                            const std::string& colorSpace,
+                                            std::uint32_t channelsNumber,
+                                            std::uint32_t imageWidth,
+                                            std::uint32_t imageHeight,
+                                            bool bSubSampledX,
+                                            bool bSubSampledY,
+                                            bool bInterleaved,
+                                            bool b2Complement,
+                                            std::uint8_t allocatedBits,
+                                            std::uint8_t storedBits,
+                                            std::uint8_t highBit,
+                                            std::shared_ptr<streamReader> pSourceStream) const override;
+
+    // Return the default planar configuration
+    ///////////////////////////////////////////////////////////
+    virtual bool defaultInterleaved() const override;
 
     std::shared_ptr<image> getRLEImage(const dataSet& dataset, std::shared_ptr<streamReader> pStream, tagVR_t dataType) const;
 
@@ -70,7 +86,7 @@ public:
     ///////////////////////////////////////////////////////////
     virtual void setImage(
         std::shared_ptr<streamWriter> pDestStream,
-        std::shared_ptr<image> pImage,
+        std::shared_ptr<const image> pImage,
         const std::string& transferSyntax,
         imageQuality_t imageQuality,
         std::uint32_t allocatedBits,

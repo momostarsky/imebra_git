@@ -334,7 +334,7 @@ void dicomStreamCodec::writeTag(std::shared_ptr<streamWriter> pDestStream, std::
                 {
                     if(writtenSize != writeSize - 1)
                     {
-                        throw;
+                        IMEBRA_THROW(StreamEOFError, "An external stream containing a tag value cannot be read");
                     }
                     if(writeSize != bufferSize)
                     {

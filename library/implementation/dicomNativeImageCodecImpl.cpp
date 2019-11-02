@@ -64,82 +64,21 @@ namespace codecs
 //
 /////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
-std::shared_ptr<image> dicomNativeImageCodec::getImage(const dataSet& dataset, std::shared_ptr<streamReader> pStream) const
+std::shared_ptr<image> dicomNativeImageCodec::getImage(const std::string& /* transferSyntax */,
+                                                       const std::string& colorSpace,
+                                                       std::uint32_t channelsNumber,
+                                                       std::uint32_t imageWidth,
+                                                       std::uint32_t imageHeight,
+                                                       bool bSubSampledX,
+                                                       bool bSubSampledY,
+                                                       bool bInterleaved,
+                                                       bool b2Complement,
+                                                       std::uint8_t allocatedBits,
+                                                       std::uint8_t /* storedBits */,
+                                                       std::uint8_t highBit,
+                                                       std::shared_ptr<streamReader> pSourceStream) const
 {
     IMEBRA_FUNCTION_START();
-
-    streamReader* pSourceStream = pStream.get();
-
-    // Check for color space and subsampled channels
-    ///////////////////////////////////////////////////////////
-    std::string colorSpace = dataset.getString(0x0028, 0x0, 0x0004, 0, 0);
-
-    // Retrieve the number of planes
-    ///////////////////////////////////////////////////////////
-    std::uint32_t channelsNumber = dataset.getUnsignedLong(0x0028, 0x0, 0x0002, 0, 0);
-
-    // Adjust the colorspace and the channels number for old
-    //  NEMA files that don't specify those data
-    ///////////////////////////////////////////////////////////
-    if(colorSpace.empty() && (channelsNumber == 0 || channelsNumber == 1))
-    {
-        colorSpace = "MONOCHROME2";
-        channelsNumber = 1;
-    }
-    else if(colorSpace.empty() && channelsNumber == 3)
-    {
-        colorSpace = "RGB";
-    }
-
-    std::uint32_t requiredChannels = transforms::colorTransforms::colorTransformsFactory::getNumberOfChannels(colorSpace);
-    if(requiredChannels == 0)
-    {
-        IMEBRA_THROW(CodecCorruptedFileError, "Unrecognized color space " << colorSpace);
-    }
-    if(requiredChannels != channelsNumber)
-    {
-        IMEBRA_THROW(CodecCorruptedFileError, "The color space " << colorSpace << " requires " << requiredChannels << " but the dataset declares " << channelsNumber << " channels");
-    }
-
-    // Retrieve the image's size
-    ///////////////////////////////////////////////////////////
-    std::uint32_t imageWidth = dataset.getUnsignedLong(0x0028, 0x0, 0x0011, 0, 0);
-    std::uint32_t imageHeight = dataset.getUnsignedLong(0x0028, 0x0, 0x0010, 0, 0);
-
-    if(
-            imageWidth > codecFactory::getCodecFactory()->getMaximumImageWidth() ||
-            imageHeight > codecFactory::getCodecFactory()->getMaximumImageHeight())
-    {
-        IMEBRA_THROW(CodecImageTooBigError, "The factory settings prevented the loading of this image. Consider using codecFactory::setMaximumImageSize() to modify the settings");
-    }
-
-    if((imageWidth == 0) || (imageHeight == 0))
-    {
-        IMEBRA_THROW(CodecCorruptedFileError, "The size tags are not available");
-    }
-
-    // Check for interleaved planes.
-    ///////////////////////////////////////////////////////////
-    bool bInterleaved(dataset.getUnsignedLong(0x0028, 0x0, 0x0006, 0, 0, 0) == 0);
-
-    // Check for 2's complement
-    ///////////////////////////////////////////////////////////
-    bool b2Complement(dataset.getUnsignedLong(0x0028, 0x0, 0x0103, 0, 0, 0) != 0);
-
-    // Retrieve the allocated/stored/high bits
-    ///////////////////////////////////////////////////////////
-    std::uint8_t allocatedBits=(std::uint8_t)dataset.getUnsignedLong(0x0028, 0x0, 0x0100, 0, 0);
-    std::uint8_t storedBits=(std::uint8_t)dataset.getUnsignedLong(0x0028, 0x0, 0x0101, 0, 0);
-    std::uint8_t highBit=(std::uint8_t)dataset.getUnsignedLong(0x0028, 0x0, 0x0102, 0, 0);
-    if(highBit < storedBits - 1)
-    {
-        IMEBRA_THROW(CodecCorruptedFileError, "The tag 0028,0102 (high bit) cannot be less than (tag 0028,0101 (stored bit) - 1)");
-    }
-
-    // Check for subsampling
-    ///////////////////////////////////////////////////////////
-    bool bSubSampledY = transforms::colorTransforms::colorTransformsFactory::isSubsampledY(colorSpace);
-    bool bSubSampledX = transforms::colorTransforms::colorTransformsFactory::isSubsampledX(colorSpace);
 
     // Create an image
     ///////////////////////////////////////////////////////////
@@ -190,7 +129,7 @@ std::shared_ptr<image> dicomNativeImageCodec::getImage(const dataSet& dataset, s
         {
             size_t imageSizeBytes = (nativeImageSizeBits + 7) / 8;
             std::shared_ptr<memory> pMemory = std::make_shared<memory>(imageSizeBytes);
-            pStream->read(pMemory->data(), pMemory->size());
+            pSourceStream->read(pMemory->data(), pMemory->size());
 
             if(allocatedBits != 1)
             {
@@ -303,6 +242,20 @@ std::shared_ptr<image> dicomNativeImageCodec::getImage(const dataSet& dataset, s
 }
 
 
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
+// Return the default planar configuration
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+bool dicomNativeImageCodec::defaultInterleaved() const
+{
+    return true;
+}
+
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -315,7 +268,7 @@ std::shared_ptr<image> dicomNativeImageCodec::getImage(const dataSet& dataset, s
 ///////////////////////////////////////////////////////////
 void dicomNativeImageCodec::setImage(
         std::shared_ptr<streamWriter> pDestStream,
-        std::shared_ptr<image> pImage,
+        std::shared_ptr<const image> pImage,
         const std::string& /* transferSyntax */,
         imageQuality_t /*imageQuality*/,
         std::uint32_t allocatedBits,

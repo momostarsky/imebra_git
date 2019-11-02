@@ -15,6 +15,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #import "../include/imebraobjc/imebra_tag.h"
 #import "../include/imebraobjc/imebra_tagId.h"
 #import "../include/imebraobjc/imebra_image.h"
+#import "../include/imebraobjc/imebra_overlay.h"
 #import "../include/imebraobjc/imebra_lut.h"
 #import "../include/imebraobjc/imebra_readingDataHandler.h"
 #import "../include/imebraobjc/imebra_readingDataHandlerNumeric.h"
@@ -32,6 +33,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <imebra/dataSet.h>
 #include <imebra/tag.h>
 #include <imebra/image.h>
+#include <imebra/overlay.h>
 #include <imebra/lut.h>
 #include <imebra/readingDataHandler.h>
 #include <imebra/readingDataHandlerNumeric.h>
@@ -96,6 +98,15 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_START();
 
     return [[ImebraImage alloc] initWithImebraImage:new imebra::Image(get_imebra_object_holder(DataSet)->getImage(frameNumber))];
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+}
+
+-(ImebraOverlay*) getOverlay:(unsigned int) overlayNumber error:(NSError**)pError
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    return [[ImebraOverlay alloc] initWithImebraOverlay:new imebra::Overlay(get_imebra_object_holder(DataSet)->getOverlay(overlayNumber))];
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
@@ -409,6 +420,15 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_START();
 
     ((imebra::MutableDataSet*)get_imebra_object_holder(DataSet))->setImage(frameNumber, *get_other_imebra_object_holder(image, Image), (imebra::imageQuality_t)quality);
+
+    OBJC_IMEBRA_FUNCTION_END();
+}
+
+-(void) setOverlay:(unsigned int)overlayNumber overlay:(ImebraOverlay*)overlay error:(NSError**)pError
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    ((imebra::MutableDataSet*)get_imebra_object_holder(DataSet))->setOverlay(overlayNumber, *get_other_imebra_object_holder(overlay, Overlay));
 
     OBJC_IMEBRA_FUNCTION_END();
 }

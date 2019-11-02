@@ -319,11 +319,23 @@ std::uint32_t jpegImageCodec::suggestAllocatedBits(const std::string& transferSy
 //
 /////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
-std::shared_ptr<image> jpegImageCodec::getImage(const dataSet& sourceDataSet, std::shared_ptr<streamReader> pStream) const
+std::shared_ptr<image> jpegImageCodec::getImage(const std::string& transferSyntax,
+                                                const std::string& colorSpace,
+                                                std::uint32_t /* channelsNumber */,
+                                                std::uint32_t /* imageWidth */,
+                                                std::uint32_t /* imageHeight */,
+                                                bool /* bSubSampledX */,
+                                                bool /* bSubSampledY */,
+                                                bool /* bInterleaved */,
+                                                bool b2Complement,
+                                                std::uint8_t /* allocatedBits */,
+                                                std::uint8_t /* storedBits */,
+                                                std::uint8_t /* highBit */,
+                                                std::shared_ptr<streamReader> pSourceStream) const
 {
     IMEBRA_FUNCTION_START();
 
-    jpegStreamReader jpegStream(pStream);
+    jpegStreamReader jpegStream(pSourceStream);
 
     // Read the Jpeg signature
     ///////////////////////////////////////////////////////////
@@ -331,7 +343,7 @@ std::shared_ptr<image> jpegImageCodec::getImage(const dataSet& sourceDataSet, st
 
     try
     {
-        pStream->read(jpegSignature, 2);
+        pSourceStream->read(jpegSignature, 2);
     }
     catch(StreamEOFError&)
     {
@@ -369,7 +381,7 @@ std::shared_ptr<image> jpegImageCodec::getImage(const dataSet& sourceDataSet, st
 
             try
             {
-                pStream->read(&tagId, 1);
+                pSourceStream->read(&tagId, 1);
                 if(tagId != 0xff)
                 {
                     continue;
@@ -377,7 +389,7 @@ std::shared_ptr<image> jpegImageCodec::getImage(const dataSet& sourceDataSet, st
 
                 while(tagId == 0xff)
                 {
-                    pStream->read(&tagId, 1);
+                    pSourceStream->read(&tagId, 1);
                 }
 
 
@@ -390,7 +402,7 @@ std::shared_ptr<image> jpegImageCodec::getImage(const dataSet& sourceDataSet, st
                 else
                     pTag = m_tagsMap.find(0xff)->second;
 
-                pTag->readTag(*pStream, &information, tagId);
+                pTag->readTag(*pSourceStream, &information, tagId);
             }
             catch(const StreamEOFError& e)
             {
@@ -407,7 +419,7 @@ std::shared_ptr<image> jpegImageCodec::getImage(const dataSet& sourceDataSet, st
 
         }
 
-        while(information.m_mcuProcessed < nextMcuStop && !pStream->endReached())
+        while(information.m_mcuProcessed < nextMcuStop && !pSourceStream->endReached())
         {
             // Read an MCU
             ///////////////////////////////////////////////////////////
@@ -491,27 +503,33 @@ std::shared_ptr<image> jpegImageCodec::getImage(const dataSet& sourceDataSet, st
     }
 
 
-    // Check for 2's complement
-    ///////////////////////////////////////////////////////////
-    bool b2complement = sourceDataSet.getUnsignedLong(0x0028, 0, 0x0103, 0, 0, 0) != 0;
-    std::string colorSpace = sourceDataSet.getString(0x0028, 0, 0x0004, 0, 0);
-
     // If the compression is jpeg baseline or jpeg extended
     //  then the color space cannot be "RGB"
     ///////////////////////////////////////////////////////////
-    if(colorSpace == "RGB")
+    if(colorSpace == "RGB" && (transferSyntax == "1.2.840.10008.1.2.4.50" ||  // baseline (8 bits lossy)
+                transferSyntax == "1.2.840.10008.1.2.4.51"))    // extended (12 bits lossy)
     {
-        std::string transferSyntax(sourceDataSet.getString(0x0002, 0, 0x0010, 0, 0));
-        if(transferSyntax == "1.2.840.10008.1.2.4.50" ||  // baseline (8 bits lossy)
-                transferSyntax == "1.2.840.10008.1.2.4.51")    // extended (12 bits lossy)
-        {
-            colorSpace = "YBR_FULL";
-        }
+        return copyJpegChannelsToImage(information, b2Complement, "YBR_FULL");
     }
 
-    return copyJpegChannelsToImage(information, b2complement, colorSpace);
+    return copyJpegChannelsToImage(information, b2Complement, colorSpace);
 
     IMEBRA_FUNCTION_END_MODIFY(StreamEOFError, CodecCorruptedFileError);
+}
+
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
+// Return the default planar configuration
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+bool jpegImageCodec::defaultInterleaved() const
+{
+    return true;
 }
 
 
@@ -674,7 +692,7 @@ std::shared_ptr<image> jpegImageCodec::copyJpegChannelsToImage(
 ////////////////////////////////////////////////////////////////
 void jpegImageCodec::copyImageToJpegChannels(
         jpeg::jpegInformation& information,
-        std::shared_ptr<image> sourceImage,
+        std::shared_ptr<const image> sourceImage,
         bool b2complement,
         std::uint32_t allocatedBits,
         bool bSubSampledX,
@@ -864,7 +882,7 @@ void jpegImageCodec::copyImageToJpegChannels(
 /////////////////////////////////////////////////////////////////
 void jpegImageCodec::setImage(
         std::shared_ptr<streamWriter> pDestStream,
-        std::shared_ptr<image> pImage,
+        std::shared_ptr<const image> pImage,
         const std::string& transferSyntax,
         imageQuality_t imageQuality,
         std::uint32_t allocatedBits,
