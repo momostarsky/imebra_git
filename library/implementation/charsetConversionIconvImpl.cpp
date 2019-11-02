@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -25,6 +25,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "../include/imebra/exceptions.h"
 
 #include <memory>
+#include <array>
 
 namespace imebra
 {
@@ -88,14 +89,14 @@ std::string charsetConversionIconv::fromUnicode(const std::wstring& unicodeStrin
 {
     IMEBRA_FUNCTION_START();
 
-	if(unicodeString.empty())
-	{
-		return std::string();
-	}
+    if(unicodeString.empty())
+    {
+        return std::string();
+    }
 
-	return myIconv(m_iconvFromUnicode, (char*)unicodeString.c_str(), unicodeString.length() * sizeof(wchar_t));
+    return myIconv(m_iconvFromUnicode, (char*)unicodeString.c_str(), unicodeString.length() * sizeof(wchar_t));
 
-	IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -108,17 +109,17 @@ std::wstring charsetConversionIconv::toUnicode(const std::string& asciiString) c
 {
     IMEBRA_FUNCTION_START();
 
-	if(asciiString.empty())
-	{
-		return std::wstring();
-	}
+    if(asciiString.empty())
+    {
+        return std::wstring();
+    }
 
-	std::string convertedString(myIconv(m_iconvToUnicode, (char*)asciiString.c_str(), asciiString.length()));
-	std::wstring returnString((wchar_t*)convertedString.c_str(), convertedString.size() / sizeof(wchar_t));
+    std::string convertedString(myIconv(m_iconvToUnicode, (char*)asciiString.c_str(), asciiString.length()));
+    std::wstring returnString((wchar_t*)convertedString.c_str(), convertedString.size() / sizeof(wchar_t));
 
     return returnString;
 
-	IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 
@@ -135,43 +136,44 @@ std::string charsetConversionIconv::myIconv(iconv_t context, char* inputString, 
 {
     IMEBRA_FUNCTION_START();
 
-	std::string finalString;
+    std::string finalString;
 
-	// Reset the state
-	///////////////////////////////////////////////////////////
-	iconv(context, 0, 0, 0, 0);
+    // Reset the state
+    ///////////////////////////////////////////////////////////
+    iconv(context, 0, 0, 0, 0);
 
-	// Buffer for the conversion
-	///////////////////////////////////////////////////////////
-	char conversionBuffer[1024];
+    // Buffer for the conversion
+    ///////////////////////////////////////////////////////////
+    //char conversionBuffer[1024];
+    std::array<char, 1024> conversionBuffer;
 
-	// Convert the string
-	///////////////////////////////////////////////////////////
-	for(size_t iconvReturn = (size_t)-1; iconvReturn == (size_t)-1;)
-	{
-		// Executes the conversion
-		///////////////////////////////////////////////////////////
-		size_t progressiveOutputBufferSize = sizeof(conversionBuffer);
-		char* progressiveOutputBuffer(conversionBuffer);
-		iconvReturn = iconv(context, &inputString, &inputStringLengthBytes, &progressiveOutputBuffer, &progressiveOutputBufferSize);
+    // Convert the string
+    ///////////////////////////////////////////////////////////
+    for(size_t iconvReturn = (size_t)-1; iconvReturn == (size_t)-1;)
+    {
+        // Executes the conversion
+        ///////////////////////////////////////////////////////////
+        size_t progressiveOutputBufferSize = conversionBuffer.size();
+        char* progressiveOutputBuffer(conversionBuffer.data());
+        iconvReturn = iconv(context, &inputString, &inputStringLengthBytes, &progressiveOutputBuffer, &progressiveOutputBufferSize);
 
-		// Update buffer's size
-		///////////////////////////////////////////////////////////
-		size_t outputLengthBytes = sizeof(conversionBuffer) - progressiveOutputBufferSize;
+        // Update buffer's size
+        ///////////////////////////////////////////////////////////
+        size_t outputLengthBytes = conversionBuffer.size() - progressiveOutputBufferSize;
 
-		finalString.append(conversionBuffer, outputLengthBytes);
+        finalString.append(conversionBuffer.data(), outputLengthBytes);
 
-		// Throw if an invalid sequence is found
-		///////////////////////////////////////////////////////////
-		if(iconvReturn == (size_t)-1 && errno != E2BIG)
-		{
-		    return std::string();
-		}
-	}
+        // Throw if an invalid sequence is found
+        ///////////////////////////////////////////////////////////
+        if(iconvReturn == (size_t)-1 && errno != E2BIG)
+        {
+            return std::string();
+        }
+    }
 
-	return finalString;
+    return finalString;
 
-	IMEBRA_FUNCTION_END();
+    IMEBRA_FUNCTION_END();
 }
 
 } // namespace imebra
