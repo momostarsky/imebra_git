@@ -38,7 +38,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_END_RETURN(ImebraAE);
 }
 
-+(unsigned int)getMultiplicityMin:(ImebraTagId*)tagId error:(NSError**)pError;
++(unsigned int)getMultiplicityMin:(ImebraTagId*)tagId error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 
@@ -47,7 +47,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_END_RETURN(0);
 }
 
-+(unsigned int)getMultiplicityMax:(ImebraTagId*)tagId error:(NSError**)pError;
++(unsigned int)getMultiplicityMax:(ImebraTagId*)tagId error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 
@@ -56,7 +56,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_END_RETURN(0);
 }
 
-+(unsigned int)getMultiplicityStep:(ImebraTagId*)tagId error:(NSError**)pError;
++(unsigned int)getMultiplicityStep:(ImebraTagId*)tagId error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 
