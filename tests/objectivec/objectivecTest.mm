@@ -821,7 +821,6 @@ TEST(objectivec, voilutUnsigned8OptimalVOI)
 
 TEST(objectivec, testOverlay)
 {
-    NSError* pError;
     ImebraMutableImage* overlayBitmap = [[ImebraMutableImage alloc] initWithWidth:6 height:1 depth:ImebraBitDepthU8 colorSpace:@"MONOCHROME2" highBit:1];
 
     NSError* pError(0);
