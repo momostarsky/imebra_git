@@ -12,6 +12,7 @@ Version |release| (this version)
 - Implemented enhancement #293 (requirement :ref:`REQ_LOGGING`, The library must log the most important tasks execution) as per SOP :ref:`DEVFEAT_3`
 - Implemented enhancement #298 (requirement :ref:`REQ_FUNCTIONAL_MACROS`, The library must be able to retrieve imaging data from functional group sequence items) as per SOP :ref:`DEVFEAT_3`
 - Implemented enhancement #299 (requirement :ref:`REQ_VOI_FUNCTION`, Imebra must be able to calculate the VOI using one of the 3 defined DICOM functions) as per SOP :ref:`DEVFEAT_3`
+- Implemented enhancement #305 (requirement :ref:`REQ_OVERLAYS`, Imebra must be able to store/retrieve overlay images) as per SOP :ref:`DEVFEAT_3`
 
 
 Version 4.5.1.1
