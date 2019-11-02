@@ -158,7 +158,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(void) setImage:(unsigned int)frameNumber image:(ImebraImage*)image error:(NSError**)pError
 {
+    OBJC_IMEBRA_FUNCTION_START();
+
     ((imebra::MutableOverlay*)get_imebra_object_holder(Overlay))->setImage(frameNumber, *get_other_imebra_object_holder(image, Image));
+
+    OBJC_IMEBRA_FUNCTION_END();
 }
 
 @end
