@@ -41,6 +41,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #import "imebra_memoryStreamInput.h"
 #import "imebra_memoryStreamOutput.h"
 #import "imebra_modalityVOILUT.h"
+#import "imebra_overlay.h"
 #import "imebra_pipe.h"
 #import "imebra_readingDataHandler.h"
 #import "imebra_readingDataHandlerNumeric.h"
