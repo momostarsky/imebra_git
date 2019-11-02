@@ -22,10 +22,10 @@ If you do not want to be bound by the GPL terms (such as the requirement
 /// \brief Defines the Overlay type.
 ///
 ///////////////////////////////////////////////////////////////////////////////
-typedef NS_ENUM(unsigned int, ImebraOverlayType_t)
+typedef NS_ENUM(unsigned int, ImebraOverlayType)
 {
-    graphic = 0,  ///< The overlay is a superimposed graphic
-    ROI = 1,      ///< 8The overlay specifies a region of interest
+    ImebraOverlayTypeGraphic = 0,  ///< The overlay is a superimposed graphic
+    ImebraOverlayTypeROI = 1,      ///< 8The overlay specifies a region of interest
 };
 
 @class ImebraImage;
