@@ -83,7 +83,7 @@ android {
     libraryVariants.all { variant ->
         variant.outputs.all { output ->
             if (outputFile != null && outputFileName.endsWith('.aar')) {
-                outputFileName = "imebrajni-${variant.buildType.name}.aar"
+                outputFileName = "imebrajni5-${variant.buildType.name}.aar"
             }
         }
     }
