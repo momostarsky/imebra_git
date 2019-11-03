@@ -26,38 +26,52 @@ information.
 
 The Imebra image is built on Ubuntu 18.04 with the following apt packages:
 
-- mercurial
-- doxygen
-- g++
-- lcov
-- python
-- python-pip
-- libgtest-dev
-- ant
-- cmake
-- swig
+- *mercurial* to clone the repository
+- *doxygen* to generate documentation
+- *g++* for the compilation of the library
+- *gobjc++* for objective-c compilation
+- *gnustep-devel* for objective-c compilation
+- *lcov* for code coverage
+- *python3* for some tools (get version, generate documentation)
+- *python3-dev* 
+- *python3-pip*
+- *ant* to generate the source distribution
+- *cmake* to build the c++ and objective-c versions of the library
+- *swig* to produce java and python bridges
+- *liblog4cxx-dev* to test logging features
+- *libdcmtk-dev* for interoperability testing
+- *dcmtk* for interoperability testing
 
-Additionally, two Python packages must be present (installable with pip):
+Additionally, 3 Python packages must be present (installable with pip):
 
-- breathe
-- sphinx_rtd_theme
+- *breathe* to generate the documentation
+- *sphinx_rtd_theme* the documentation theme
+- *dropbox* to store the artifacts to dropbox
 
 In order to install the packages, type the following commands as root or prepend them with sudo:
 ::
 
-    apt-get install mercurial
-    apt-get install doxygen
-    apt-get install g++
-    apt-get install lcov
-    apt-get install python
-    apt-get install python-pip
-    apt-get install python-sphinx
-    pip install breathe
-    pip install sphinx_rtd_theme
-    apt-get install libgtest-dev
-    apt-get install ant
-    apt-get install cmake
-    apt-get install swig
+  apt-get update && \
+  apt-get install -y \
+    tzdata \
+    mercurial \
+    doxygen \
+    g++ \
+    gobjc++ \
+    gnustep-devel \
+    lcov \
+    python3 \
+    python3-dev \
+    python3-pip \
+    ant \
+    cmake \
+    swig \
+    liblog4cxx-dev \
+    libdcmtk-dev \
+    dcmtk && \
+  pip3 install breathe && \
+  pip3 install sphinx_rtd_theme && \
+  pip3 install dropbox
 
 Then clone the Imebra mercurial repository:
 ::
@@ -81,15 +95,15 @@ Finally, cd into the imebra folder and execute ant to build the source distribut
 Versioning
 ==========
 
-Public releases of Imebra V4 are versioned according to the rules defined in `Semantic versioning <http://semver.org/>`_.
+Public releases of Imebra V5 are versioned according to the rules defined in `Semantic versioning <http://semver.org/>`_.
 
 Nightly releases are versioned as public releases but their minor version or patch number are set to 999 (the master branch
 or the major version branches have a minor version set to 999, the minor version branches have a patch number set to 999).
 
 For instance:
 
-- version 4.1.999.45 indicates a nightly build of version 4.1, build from the commit number 45 in the branch.
-- version 4.999.999.678 indicates a nightly build of version 4 (master branch), build from the commit number 678 in the branch.
+- version 5.1.999.45 indicates a nightly build of version 5.1, build from the commit number 45 in the branch.
+- version 5.999.999.678 indicates a nightly build of version 5 (master branch), build from the commit number 678 in the branch.
 
 
 Compiling Imebra
@@ -183,16 +197,10 @@ and the C++ source code (located in the library folder)
 
 To generate the Imebra Jar library:
 
-1. cd into the Imebra wrappers/javaWrapper folder
-2. run ant and define the properties sdk.dir and ndk.dir so they point to the home folders of the Android SDK and NDK respectively
-3. the produced JAR will be located in the folder wrappers/javaWrapper/out/artifacts
+- Launch Android Studio
+- Open the gradle project in the wrappers/javaWrapper folder
+- Build the project
 
-For instance:
-
-::
-
-    cd wrappers/javaWrapper
-    ant -Dsdk.dir=path/to/Android/SDK -Dndk.dir=path/to/Android/NDK
     
 
 
