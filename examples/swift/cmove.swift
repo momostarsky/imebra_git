@@ -128,7 +128,7 @@ do
 
     // Create a datase where we set the matching tags used to find the instances to move
     let identifierDataset = ImebraMutableDataSet(transferSyntax: ImebraUidImplicitVRLittleEndian_1_2_840_10008_1_2)
-    try identifierDataset!.setString(ImebraTagId(id: ImebraTagEnum.SOPInstanceUID_0008_0018), newValue: instanceUID)
+    try identifierDataset!.setString(ImebraTagId(id: ImebraTagEnum.enumSOPInstanceUID_0008_0018), newValue: instanceUID)
 
     // Prepare a C-MOVE command and send it to the SCP
     let moveCommand = ImebraCMoveCommand(abstractSyntax: classUID, 
