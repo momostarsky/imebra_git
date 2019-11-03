@@ -70,10 +70,10 @@ do
             // We wait for just one command
             let command = try scpDimseService!.getCommand()
     
-            if command.commandType == ImebraDimseCommandType_t.cStore
+            if command.commandType == ImebraDimseCommandType.cStore
             {
                 let dataSet = try command.getPayloadDataSet()
-                try ImebraCodecFactory.save(toFile: instanceUID, dataSet: dataSet, codecType: ImebraCodecType_t.dicom)
+                try ImebraCodecFactory.save(toFile: instanceUID, dataSet: dataSet, codecType: ImebraCodecType.dicom)
             }
 
             try scp.release()
@@ -128,12 +128,12 @@ do
 
     // Create a datase where we set the matching tags used to find the instances to move
     let identifierDataset = ImebraMutableDataSet(transferSyntax: ImebraUidImplicitVRLittleEndian_1_2_840_10008_1_2)
-    try identifierDataset!.setString(ImebraTagId(id: ImebraTagId_t.tagSOPInstanceUID_0008_0018), newValue: instanceUID)
+    try identifierDataset!.setString(ImebraTagId(id: ImebraTagEnum.SOPInstanceUID_0008_0018), newValue: instanceUID)
 
     // Prepare a C-MOVE command and send it to the SCP
     let moveCommand = ImebraCMoveCommand(abstractSyntax: classUID, 
                                          messageID: scuDimseService!.getNextCommandID(),
-                                         priority: ImebraDimseCommandPriority_t.priorityMedium,
+                                         priority: ImebraDimseCommandPriority.priorityMedium,
                                          affectedSopClassUid: ImebraUidEnhancedMRImageStorage_1_2_840_10008_5_1_4_1_1_4_1,
                                          destinationAET:destinationAET, 
                                          identifier: identifierDataset)
@@ -142,7 +142,7 @@ do
 
     // Wait for a response to the C-MOVE command
     let moveResponse = try scuDimseService!.getCMoveResponse(moveCommand)
-    if moveResponse.status == ImebraDimseStatus_t.success
+    if moveResponse.status == ImebraDimseStatus.success
     {
         print("OK")
     }
