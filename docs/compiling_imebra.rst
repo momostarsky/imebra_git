@@ -177,12 +177,12 @@ Using Imebra with Swift
 '''''''''''''''''''''''
 Imebra can be imported into a Swift project.
 
-After compiling the library for OS-X or iOS, import the library's Objective-C header into your Swift project (import /objectivec/include/imebraobjc/imebra_swift.h)
+After compiling the library for OS-X or iOS, import the library's Objective-C header into your Swift project (import /wrappers/objectivec/include/imebraobjc/imebra_swift.h)
 and link with imebra and iconv.
 
 For instance, the following command line instruction launches the swift compiler and instructs it to load the imebra header and link with Imebra and iconv::
 
-    swiftc -import-objc-header imebra_location/objectivec/include/imebraobjc/imebra_swift.h myCode.swift -Lbuild_imebra_location -liconv -lc++ -limebra -o myCodeApp
+    swiftc -import-objc-header imebra_location/wrappers/objectivec/include/imebraobjc/imebra_swift.h myCode.swift -Lbuild_imebra_location -liconv -lc++ -limebra -o myCodeApp
 
 
 Compiling the Android version of Imebra
