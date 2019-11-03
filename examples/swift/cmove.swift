@@ -133,7 +133,7 @@ do
     // Prepare a C-MOVE command and send it to the SCP
     let moveCommand = ImebraCMoveCommand(abstractSyntax: classUID, 
                                          messageID: scuDimseService!.getNextCommandID(),
-                                         priority: ImebraDimseCommandPriority.priorityMedium,
+                                         priority: ImebraDimseCommandPriority.medium,
                                          affectedSopClassUid: ImebraUidEnhancedMRImageStorage_1_2_840_10008_5_1_4_1_1_4_1,
                                          destinationAET:destinationAET, 
                                          identifier: identifierDataset)

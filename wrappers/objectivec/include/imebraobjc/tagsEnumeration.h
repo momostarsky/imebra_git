@@ -4535,7 +4535,7 @@ typedef NS_ENUM(unsigned int, ImebraTagEnum)
     ImebraTagEnumSequenceDelimitationItem_FFFE_E0DD = 0xFFFEE0DD, ///< Sequence Delimitation Item (FFFE,E0DD)
 
 
-    ImebraTagIdEndOfEnumerations = 0
+    ImebraTagEnumEndOfEnumerations = 0
 };
 
 #endif // objcImebraTagsEnumeration__INCLUDED_
