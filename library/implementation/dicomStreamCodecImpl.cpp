@@ -184,7 +184,47 @@ void dicomStreamCodec::writeGroup(std::shared_ptr<streamWriter> pDestStream, con
         endianType = streamController::lowByteEndian;
     }
 
-    std::uint16_t adjustedGroupId = pDestStream->adjustEndian(groupId, endianType);;
+    // Group id adjusted for byte endianess
+    ///////////////////////////////////////////////////////////
+    const std::uint16_t adjustedGroupId = pDestStream->adjustEndian(groupId, endianType);;
+
+    // The group length is mandatory for groups 0 and 2
+    ///////////////////////////////////////////////////////////
+    if(groupId == 0 || groupId == 2)
+    {
+        // Calculate the group's length
+        ///////////////////////////////////////////////////////////
+        std::uint32_t groupLength = getGroupLength(tags, bExplicitDataType);
+
+        // Write the group length VR
+        ///////////////////////////////////////////////////////////
+        const char lengthDataType[] = "UL";
+
+        // Write the group length ID
+        ///////////////////////////////////////////////////////////
+        const std::uint16_t tagId = 0;
+        pDestStream->write(reinterpret_cast<const std::uint8_t*>(&adjustedGroupId), 2u);
+        pDestStream->write(reinterpret_cast<const std::uint8_t*>(&tagId), 2u);
+
+        // Write the length of the group length tag
+        ///////////////////////////////////////////////////////////
+        if(bExplicitDataType)
+        {
+            pDestStream->write(reinterpret_cast<const std::uint8_t*>(&lengthDataType), 2u);
+            const std::uint16_t tagLengthWord = pDestStream->adjustEndian(std::uint16_t(4u), endianType);;
+            pDestStream->write(reinterpret_cast<const std::uint8_t*>(&tagLengthWord), 2u);
+        }
+        else
+        {
+            const std::uint32_t tagLengthDword = pDestStream->adjustEndian(std::uint32_t(4u), endianType);
+            pDestStream->write(reinterpret_cast<const std::uint8_t*>(&tagLengthDword), 4u);
+        }
+
+        // Write the length
+        ///////////////////////////////////////////////////////////
+        std::uint32_t adjustedGroupLength = pDestStream->adjustEndian(groupLength, endianType);
+        pDestStream->write(reinterpret_cast<std::uint8_t*>(&adjustedGroupLength), 4u);
+    }
 
     // Write all the tags
     ///////////////////////////////////////////////////////////
@@ -195,7 +235,7 @@ void dicomStreamCodec::writeGroup(std::shared_ptr<streamWriter> pDestStream, con
         {
             continue;
         }
-        pDestStream->write((std::uint8_t*)&adjustedGroupId, 2);
+        pDestStream->write(reinterpret_cast<const std::uint8_t*>(&adjustedGroupId), 2u);
         writeTag(pDestStream, scanTags->second, tagId, bExplicitDataType, endianType);
     }
 
@@ -480,6 +520,40 @@ std::uint32_t dicomStreamCodec::getTagLength(const std::shared_ptr<data>& pData,
     if(*pbSequence)
     {
         totalLength += (numberOfElements+1) * 8;
+    }
+
+    return totalLength;
+
+    IMEBRA_FUNCTION_END();
+}
+
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
+// Calculate the group's length
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+std::uint32_t dicomStreamCodec::getGroupLength(const dataSet::tTags& tags, bool bExplicitDataType)
+{
+    IMEBRA_FUNCTION_START();
+
+    std::uint32_t totalLength(0);
+
+    for(dataSet::tTags::const_iterator scanTags(tags.begin()), endTags(tags.end()); scanTags != endTags; ++scanTags)
+    {
+        if(scanTags->first == 0)
+        {
+            continue;
+        }
+
+        std::uint32_t tagHeaderLength;
+        bool bSequence;
+        totalLength += getTagLength(scanTags->second, bExplicitDataType, &tagHeaderLength, &bSequence);
+        totalLength += tagHeaderLength;
     }
 
     return totalLength;
