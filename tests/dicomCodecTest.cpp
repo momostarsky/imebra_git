@@ -23,6 +23,27 @@ namespace imebra
 namespace tests
 {
 
+
+TEST(dicomCodecTest, testGroupLength)
+{
+    MutableDataSet dataset(uidExplicitVRLittleEndian_1_2_840_10008_1_2_1);
+
+    MutableMemory memory;
+    MemoryStreamOutput outputMemory(memory);
+    StreamWriter memoryWriter(outputMemory);
+    CodecFactory::save(dataset, memoryWriter, codecType_t::dicom);
+
+    MemoryStreamInput inputMemory(memory);
+    StreamReader memoryReader(inputMemory);
+    DataSet readDataset(CodecFactory::load(memoryReader));
+
+    size_t groupSize = readDataset.getUnsignedLong(TagId(tagId_t::FileMetaInformationGroupLength_0002_0000), 0);
+
+    // size - preamble(128), signature(4), groupId(2), tagId(2), vr(2), length(2), value length (4)
+    ASSERT_EQ(memory.size() - 128 - 4 - 2 - 2 - 2 - 2 - 4, groupSize);
+}
+
+
 TEST(dicomCodecTest, testDicom)
 {
     const char* const colorSpaces[] = {"MONOCHROME2", "RGB", "YBR_FULL", "YBR_FULL_422", "YBR_FULL_420"};
