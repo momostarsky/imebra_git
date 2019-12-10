@@ -2,26 +2,28 @@ import subprocess
 
 f = open('version.property', 'w')
 
-hgbranch = 'hg branch'
-hgprocess = subprocess.Popen(hgbranch.split(), stdout=subprocess.PIPE)
-branch = hgprocess.stdout.readlines()[0].decode("utf-8").rstrip()
+gitbranch = 'git rev-parse --abbrev-ref HEAD'
+gitprocess = subprocess.Popen(gitbranch.split(), stdout=subprocess.PIPE)
+branch = gitprocess.stdout.readlines()[0].decode("utf-8").rstrip()
+
+gitid = 'git rev-parse HEAD'
+gitprocess = subprocess.Popen(gitid.split(), stdout=subprocess.PIPE)
+hash = gitprocess.stdout.readlines()[0].decode("utf-8").rstrip()[0:8]
 
 version = branch
-if version == "default":
+if version == "master":
   version = "5"
 
 if version.count('.') == 0:
   version += ".999"  
 if version.count('.') == 1:
   version += ".999"
+if version.count('.') == 2:
+  version += "." + hash
 
-hgrelease = 'hg log -b ' + branch + ' --template . --rev ancestors(.)'
-hgprocess = subprocess.Popen(hgrelease.split(), stdout=subprocess.PIPE)
-release = version + '.' + str(hgprocess.stdout.readlines()[0].decode("utf-8").count('.') - 1)
-
-hgid = 'hg id -i'
-hgprocess = subprocess.Popen(hgid.split(), stdout=subprocess.PIPE)
-release += ' changeset ' + hgprocess.stdout.readlines()[0].decode("utf-8").rstrip()
+gitid = 'git rev-parse HEAD'
+gitprocess = subprocess.Popen(gitid.split(), stdout=subprocess.PIPE)
+release = version + " changeset " + hash
 
 
 
@@ -32,6 +34,7 @@ f.write("version = " + release + "\n")
 f.write("version_major = " + version_components[0] + "\n")
 f.write("version_minor = " + version_components[1] + "\n")
 f.write("version_patch = " + version_components[2] + "\n")
+f.write("version_build = " + version_components[3] + "\n")
 
 f.close()
 
