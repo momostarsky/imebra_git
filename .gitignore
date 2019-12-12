@@ -1,4 +1,5 @@
 ant-*/
 version.property
 imebra_*.zip
+*.user
 
