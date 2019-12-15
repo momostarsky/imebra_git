@@ -9,7 +9,7 @@
 # -DEMBED_BITCODE=1|0 (default = 0)
 # -DCMAKE_OSX_SYSROOT
 
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.0)
 
 project("imebra")
 
@@ -119,7 +119,7 @@ if("${IMEBRA_OBJC}" STREQUAL "1")
     file(GLOB imebra_objc_include "${CMAKE_CURRENT_SOURCE_DIR}/wrappers/objectivec/include/imebraobjc/*.h")
     add_definitions(-DIMEBRA_OBJC)
 
-    set(imebra_objc_include_dirs ${CMAKE_CURRENT_SOURCE_DIR}/wrappers/objectivec/include)
+    set(imebra_objc_include_dir ${CMAKE_CURRENT_SOURCE_DIR}/wrappers/objectivec/include)
 
     set(objc_compiler_flags "")
     if(APPLE)
@@ -219,24 +219,25 @@ else()
 
 endif()
 
+target_include_directories(imebra PRIVATE ${imebra_objc_gnustep_dir})
+
 # Define dependency libraries
 #----------------------------
 target_link_libraries(imebra ${imebra_libraries})
 
-message (STATUS "OBJC INCLUDE:${imebra_objc_include_dirs}")
+message (STATUS "OBJC INCLUDE:${imebra_objc_include_dir}")
 message (STATUS "GNU INCLUDE:${imebra_objc_gnustep_dir}")
 
 # Define Imebra public folder
 #----------------------------
-target_include_directories(imebra PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/library/include
-                                  PUBLIC ${imebra_objc_include_dirs}
-                                  PUBLIC ${imebra_objc_gnustep_dir})
+target_include_directories(imebra PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/library/include> $<INSTALL_INTERFACE:include>)
+target_include_directories(imebra PUBLIC $<BUILD_INTERFACE:${imebra_objc_include_dir}> $<INSTALL_INTERFACE:include>)
 
 # Set the library version from IMEBRA_MAJOR_VERSION, IMEBRA_MINOR_VERSION,
 #  & IMEBRA_REVISION
 #---------------------------------------------------------------------------------
 if ("$ENV{IMEBRA_MAJOR_VERSION}" STREQUAL "")
-    set(IMEBRA_MAJOR_VERSION "1")
+    set(IMEBRA_MAJOR_VERSION "5")
 else("$ENV{IMEBRA_MAJOR_VERSION}" STREQUAL "")
     set(IMEBRA_MAJOR_VERSION "$ENV{IMEBRA_MAJOR_VERSION}")
 endif("$ENV{IMEBRA_MAJOR_VERSION}" STREQUAL "")
@@ -420,7 +421,7 @@ endif(NOT IOS)
 
 # Set packaging variables
 #------------------------
-set(CPACK_PACKAGE_NAME "libimebra${IMEBRA_MAJOR_VERSION}")
+set(CPACK_PACKAGE_NAME "libimebra")
 set(CPACK_PACKAGE_CONTACT "paolo@binarno.com")
 set(CPACK_PACKAGE_VERSION ${IMEBRA_VERSION})
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Imebra library for DICOM medical files")
@@ -464,7 +465,7 @@ set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${SHLIBS_FILE};${POSTINST_SCRIPT};${PRER
 
 # Write license file
 file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/copyright"
-     "Copyright (C) 2015 ${CPACK_DEBIAN_PACKAGE_MAINTAINER}")
+     "Copyright (C) 2019 ${CPACK_DEBIAN_PACKAGE_MAINTAINER}")
 
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/copyright"
         DESTINATION "share/doc/${CPACK_PACKAGE_NAME}/"
@@ -473,12 +474,18 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/copyright"
         GROUP_READ
         WORLD_READ)
 
-install(TARGETS imebra LIBRARY DESTINATION lib
+install(TARGETS imebra EXPORT imebraConfig      LIBRARY DESTINATION lib
                                                 ARCHIVE DESTINATION lib
-                                                LIBRARY DESTINATION lib
                                                 RUNTIME DESTINATION bin
-                                                COMPONENT "Shared library")
+                                                PUBLIC_HEADER DESTINATION include
+                                                COMPONENT "Imebra Shared library")
 
-install(FILES ${imebra_interface} DESTINATION include/imebra COMPONENT "Include files")
+install(FILES ${imebra_interface} DESTINATION include/imebra COMPONENT "Imebra include files")
+
+if("${IMEBRA_OBJC}" STREQUAL "1")
+    install(FILES ${imebra_objc_include} DESTINATION include/imebraobjc COMPONENT "Imebra objc include files")
+endif("${IMEBRA_OBJC}" STREQUAL "1")
+
+install(EXPORT imebraConfig DESTINATION share/imebra/cmake)
 
 include(CPack)
