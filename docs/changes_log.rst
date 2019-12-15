@@ -12,6 +12,7 @@ Version |release| (this version)
 - Implemented enhancement #310 (Migration from Mercurial to Git: change the SOPs & scripts to reflect the usage of Git instead of Mercurial) as per SOP :ref:`DEVENH_2`
 - Implemented enhancement #311 (Use the bitbucket pipeline artifacts instead of uploading the generated file to dropbox) as per SOP :ref:`DEVENH_2`
 - Implemented enhancement #312 (Add QtCreator .user files to gitignore) as per SOP :ref:`DEVENH_2`
+- Fixed bug #313 (Fix the CMake install commands so the Cmake configuration is properly exported and reusable by other modules) as per SOP :ref:`FIXBUG_2`
 - Fixed bug #314 (The identifier for the Apple compiler changed from clang to AppleClang, causing the compilation to fail) as per SOP :ref:`FIXBUG_2`
 
 
