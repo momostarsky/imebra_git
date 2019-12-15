@@ -12,7 +12,7 @@
 
     -->
     <target name="version" description="Initialize the build number">
-        <exec executable="python" dir=".">
+        <exec executable="python3" dir=".">
             <arg path="./getVersion.py" />
         </exec>
         <loadproperties srcFile="version.property" />
@@ -330,7 +330,7 @@ Slovenia
 
     <!-- Build -->
     <target name="make_distribution" depends="create_source_distribution, run_test_cases, test_python">
-        <zip destfile="imebra_source_distribution.zip" basedir="${source_distribution}" />
+        <zip destfile="imebra_${version_major}_${version_minor}_${version_patch}_${version_build}.zip" basedir="${source_distribution}" />
     </target>
 
 </project>

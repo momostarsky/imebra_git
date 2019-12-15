@@ -21,6 +21,7 @@ Imebra
    
    copyright
    gplv2
+   commercial
 
 .. toctree::
    :maxdepth: 3

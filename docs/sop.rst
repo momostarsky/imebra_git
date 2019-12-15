@@ -645,6 +645,60 @@ Step 3
 
 Save the changes log.
 
+.. _RELEASE_3:
+
+SOP RELEASE/3 Preparation of a new release
+------------------------------------------
+
+Replaces :ref:`RELEASE_2`
+
+- Date: 2019-12-07
+- Version: 3
+- Author: Paolo Brandoli
+- Intended audience: developers
+
+The scope of this SOP is to explain how to produce a new public release of Imebra.
+
+A new release can be prepared after features or bugs have been addressed by following :ref:`DEVENH_2`, :ref:`DEVFEAT_3` or :ref:`FIXBUG_2`.
+
+Push the repository to the remote repo (git push --all), then check the Bitbucket Pipelines (https://bitbucket.org/binarno/imebra_git/addon/pipelines/home/)
+to see if the build succeeds. If the build fails then fix the code and repeat this SOP.
+
+If the modifications to the library included back-compatible changes to the library's API then:
+
+- from the master branch create a new minor version branch, where the minor version is the current minor version+1 (e.g. 4.5 to 4.6) using `git checkout -b XX.YY`
+- perform an empty commit with the message "Opening XX.YY" where XX is the major version and YY is the minor version, using `git commit --allow-empty -m "Opening XX.YY"`
+- from the new minor version branch, create a new patch branch XX.YY.0 (e.g. 4.6.0) using `git checkout -b XX.YY.0`
+- perform an empty commit with the message "Opening XX.YY.0" using `git commit --allow-empty -m "Opening XX.YY.0"`
+- from the new patch branch, create a new build branch XX.YY.0.0 (e.g. 4.6.0.0) using `git checkout -b XX.YY.0.0`
+- perform an empty commit with the message "Opening XX.YY.0.0" using `git commit --allow-empty -m "Opening XX.YY.0.0"`
+- push the repository to the remote repo using `git push -u --all` and check if the builds succeed (check https://bitbucket.org/binarno/imebra_git/addon/pipelines/home/)
+
+If the modifications to the library didn't modify the library's API but included changes in the library's source code then:
+
+- merge or cherry pick the modifications to the proper minor-version branch
+- from the minor version branch, create a new branch with an increased patch number (e.g. 4.5.3 to 4.5.4) using `git checkout -b XX.YY.ZZ` (XX=major, YY=minor, ZZ=patch)
+- perform an empty commit with the message "Opening XX.YY.ZZ" using `git commit --allow-empty -m "Opening XX.YY.ZZ"`
+- from the new patch branch, create a new build branch XX.YY.0.0 (e.g. 4.6.0.0) using `git checkout -b XX.YY.0.0`
+- perform an empty commit with the message "Opening XX.YY.0.0" using `git commit --allow-empty -m "Opening XX.YY.0.0"`
+- push the repository to the remote repo using `git push -u --all` and check if the builds succeed (check https://bitbucket.org/binarno/imebra_git/addon/pipelines/home/)
+
+If the modifications to the library didn't involve any source code but only changes to auxiliary files (e.g. documentation, tests, make files, etc) then:
+
+- merge or cherry pick the modifications to the proper minor-version branch and patch branch
+  branches (e.g. 4.5 and 4.5.1)
+- from the patch branch, create a new build branch XX.YY.ZZ.UU (e.g. 4.6.5.1) using `git checkout -b XX.YY.ZZ.UU` (XX=major, YY=minor, ZZ=patch, UU=build)
+- perform an empty commit with the message "Opening XX.YY.ZZ.UU" using `git commit --allow-empty -m "Opening XX.YY.ZZ.UU"`
+- push the repository to the remote repo using `git push -u --all` and check if the builds succeed (check https://bitbucket.org/binarno/imebra_git/addon/pipelines/home/)
+
+If the build fails, then fix the code in the proper branch (the branch that where the first modifications were made) and then repeat this SOP.
+
+After the builds succeed:
+
+- upload the build from Dropbox to the Imebra Download Files on Bitbucket (https://bitbucket.org/binarno/imebra_git/downloads).
+- on the local repository, switch the branch back to master
+- from the master branch, tag the commit used for the build with the actual build number (e.g. 4.5.2.1)
+- push the repository to Bitbucket (`git push --tags`)
 
 .. _RELEASE_2:
 
@@ -652,6 +706,7 @@ SOP RELEASE/2 Preparation of a new release
 ------------------------------------------
 
 Replaces :ref:`RELEASE_1`
+Superseeded by :ref:`RELEASE_3`
 
 - Date: 2016-10-23
 - Version: 2
@@ -662,28 +717,28 @@ The scope of this SOP is to explain how to produce a new public release of Imebr
 
 A new release can be prepared after features or bugs have been addressed by following :ref:`DEVENH_2`, :ref:`DEVFEAT_2` or :ref:`FIXBUG_2`.
 
-Push the repository to the remote repo (hg push), then check Bitbucket Pipelines (https://bitbucket.org/binarno/imebra/addon/pipelines/home/)
+Push the repository to the remote repo (hg push), then check Bitbucket Pipelines (https://bitbucket.org/binarno/imebra_git/addon/pipelines/home/)
 to see if the build succeeds. If the build fails then fix the code and repeat this SOP.
 
 If the modifications to the library included back-compatible changes to the library's API then:
 
 - from the master branch create a new minor version branch, where the minor version is the current minor version+1 (e.g. 4.5 to 4.6)
 - from the new minor version branch, create a new patch branch (e.g. 4.6.0)
-- push the repository to the remote repo (hg push) and check if the builds succeed (check https://bitbucket.org/binarno/imebra/addon/pipelines/home/)
+- push the repository to the remote repo (hg push) and check if the builds succeed (check https://bitbucket.org/binarno/imebra_git/addon/pipelines/home/)
 
 If the modifications to the library didn't modify the library's API but included changes in the library's source code then:
 
 - if the modifications were done in the master branch then cherry pick all the modifications and bring them to the proper minor-version
   branches (e.g. 4.5 and/or 4.6)
 - from the minor version branch, create a new branch with an increased patch number (e.g. 4.5.3 to 4.5.4)
-- push the repository to the remote repo (hg push) and check if the builds succeed (check https://bitbucket.org/binarno/imebra/addon/pipelines/home/)
+- push the repository to the remote repo (hg push) and check if the builds succeed (check https://bitbucket.org/binarno/imebra_git/addon/pipelines/home/)
 
 If the modifications to the library didn't involve any source code but only changes to auxiliary files (e.g. documentation, tests, make files, etc) then:
 
 - if the modifications were done in the master branch then cherry pick all the modifications and bring them to the proper minor-version
   branches (e.g. 4.5 and/or 4.6)
 - cherry pick the new modifications from the minor version branch (e.g. 4.5 or 4.6) and bring them to the patch branch (e.g. 4.5.4)
-- push the repository to the remote repo (hg push) and check if the builds succeed (check https://bitbucket.org/binarno/imebra/addon/pipelines/home/)
+- push the repository to the remote repo (hg push) and check if the builds succeed (check https://bitbucket.org/binarno/imebra_git/addon/pipelines/home/)
 
 If the build fails, then fix the code in the proper branch (the branch that where the first modifications were made) and then repeat this SOP.
 
@@ -709,30 +764,30 @@ Superseeded by :ref:`RELEASE_2`
 
 The scope of this SOP is to explain how to produce a new public release of Imebra.
 
-A new release can be prepared after features or bugs have been addressed by following :ref:`DEVENH_1`, :ref:`DEVFEAT_1` or :ref:`FIXBUG_1`.
+A new release can be prepared after features or bugs have been addressed by following :ref:`DEVENH_2`, :ref:`DEVFEAT_2` or :ref:`FIXBUG_2`.
 
-Push the repository to the remote repo (hg push), then check Bitbucket Pipelines (https://bitbucket.org/binarno/imebra/addon/pipelines/home/)
+Push the repository to the remote repo (hg push), then check Bitbucket Pipelines (https://bitbucket.org/binarno/imebra_git/addon/pipelines/home/)
 to see if the build succeeds. If the build fails then fix the code and repeat this SOP.
 
 If the modifications to the library included back-compatible changes to the library's API then:
 
 - from the master branch create a new minor version branch, where the minor version is the current minor version+1 (e.g. 4.5 to 4.6)
 - from the new minor version branch, create a new patch branch (e.g. 4.6.0)
-- push the repository to the remote repo (hg push) and check if the builds succeed (check https://bitbucket.org/binarno/imebra/addon/pipelines/home/)
+- push the repository to the remote repo (hg push) and check if the builds succeed (check https://bitbucket.org/binarno/imebra_git/addon/pipelines/home/)
 
 If the modifications to the library didn't modify the library's API but included changes in the library's source code then:
 
 - if the modifications were done in the master branch then cherry pick all the modifications and bring them to the proper minor-version
   branches (e.g. 4.5 and/or 4.6)
 - from the minor version branch, create a new branch with an increased patch number (e.g. 4.5.3 to 4.5.4)
-- push the repository to the remote repo (hg push) and check if the builds succeed (check https://bitbucket.org/binarno/imebra/addon/pipelines/home/)
+- push the repository to the remote repo (hg push) and check if the builds succeed (check https://bitbucket.org/binarno/imebra_git/addon/pipelines/home/)
 
 If the modifications to the library didn't involve any source code but only changes to auxiliary files (e.g. documentation, tests, make files, etc) then:
 
 - if the modifications were done in the master branch then cherry pick all the modifications and bring them to the proper minor-version
   branches (e.g. 4.5 and/or 4.6)
 - cherry pick the new modifications from the minor version branch (e.g. 4.5 or 4.6) and bring them to the patch branch (e.g. 4.5.4)
-- push the repository to the remote repo (hg push) and check if the builds succeed (check https://bitbucket.org/binarno/imebra/addon/pipelines/home/)
+- push the repository to the remote repo (hg push) and check if the builds succeed (check https://bitbucket.org/binarno/imebra_git/addon/pipelines/home/)
 
 If the build fails, then fix the code in the proper branch (the branch that where the first modifications were made) and then repeat this SOP.
 
@@ -742,12 +797,49 @@ After the builds succeed:
 - on the local repository, switch the branch back to default
 - from the default branch, tag the commit used for the build with the actual build number (e.g. 4.5.2.1)
 - push the repository to Bitbucket (hg push)
+.. _MAJORVERSION_2:
+
+SOP MAJORVERSION/2 Development of a new major version
+-----------------------------------------------------
+
+Replaces :ref:`MAJORVERSION_1`
+
+- Date: 2019-12-07
+- Version: 2
+- Author: Paolo Brandoli
+- Intended audience: developers
+
+The scope of this SOP is to explain how to start the development of a new major version of Imebra (e.g. version 5.x.x or version 6.x.x).
+
+- from the master branch create a new version branch, named "imebra_vX" where X is the major version number
+
+Each modification in the new version must be developed following the :ref:`DEVFEAT_3`
+
+When the new version is ready to be released, then it will become the new master branch:
+
+- create a new branch where the development for the old version will continue, named "imebra_legacy_vY" where Y is the major version which is being replaced:
+
+  - git checkout master
+  - git checkout -b imebra_legacy_vY
+  - git commit --allow-empty -m "Imebra vY moved to legacy branch"
+
+- move "imebra_vX" to master
+
+  - git checkout imebra_vX
+  - git merge --no-ff -s ours master
+  - git checkout master
+  - git merge --no-ff imebra_vX
+
+- push the repository to Bitbucket
+
+  - git push -u --all
 
 
 .. _MAJORVERSION_1:
 
 SOP MAJORVERSION/1 Development of a new major version
 -----------------------------------------------------
+Superseeded by :ref:`MAJORVERSION_2`
 
 - Date: 2019-06-11
 - Version: 1

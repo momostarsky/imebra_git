@@ -6,4 +6,6 @@ pipelines:
         script:
           - alias python=python3
           - ant 
-          - python uploadDropbox.py ./imebra_source_distribution.zip
+        artifacts:
+          - imebra_*.zip
+
