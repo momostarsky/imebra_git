@@ -193,34 +193,31 @@ endif("${IMEBRA_OBJC}" STREQUAL "1")
 
 # Add flags specific to the compiler
 #-----------------------------------
-if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-
-    message(STATUS "GCC detected, adding compile flags")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Wpedantic -Wconversion -Wfloat-equal ${HIDDEN_FLAGS}")
-    set(imebra_libraries ${imebra_libraries} pthread)
-
-    if(CMAKE_BUILD_TYPE MATCHES DEBUG)
-        message("debug mode")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
-        set(imebra_libraries ${imebra_libraries} gcov)
-    endif(CMAKE_BUILD_TYPE MATCHES DEBUG)
-
-elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-
-    message(STATUS "CLANG detected, adding compile flags")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Wpedantic -Wconversion -Wfloat-equal ${HIDDEN_FLAGS}")
-    if("${EMBED_BITCODE}" STREQUAL "1")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fembed-bitcode")
-    endif("${EMBED_BITCODE}" STREQUAL "1")
-    set(imebra_libraries ${imebra_libraries} pthread)
-
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 
     message(STATUS "MSVC detected, adding compile flags")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /Wp64")
     set(imebra_libraries ${imebra_libraries} Kernel32)
 
-endif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+else()
+
+    message(STATUS "GNU or Clang detected, adding compile flags")
+
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Wpedantic -Wconversion -Wfloat-equal ${HIDDEN_FLAGS}")
+    set(imebra_libraries ${imebra_libraries} pthread)
+    if("${EMBED_BITCODE}" STREQUAL "1")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fembed-bitcode")
+    endif("${EMBED_BITCODE}" STREQUAL "1")
+
+    if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+        if(CMAKE_BUILD_TYPE MATCHES DEBUG)
+            message("Debug mode, enabling coverage")
+            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
+            set(imebra_libraries ${imebra_libraries} gcov)
+        endif()
+    endif()
+
+endif()
 
 target_include_directories(imebra PRIVATE ${imebra_objc_gnustep_dir})
 
