@@ -119,7 +119,7 @@ if("${IMEBRA_OBJC}" STREQUAL "1")
     file(GLOB imebra_objc_include "${CMAKE_CURRENT_SOURCE_DIR}/wrappers/objectivec/include/imebraobjc/*.h")
     add_definitions(-DIMEBRA_OBJC)
 
-    set(imebra_objc_include_dirs ${CMAKE_CURRENT_SOURCE_DIR}/wrappers/objectivec/include)
+    set(imebra_objc_include_dir ${CMAKE_CURRENT_SOURCE_DIR}/wrappers/objectivec/include)
 
     set(objc_compiler_flags "")
     if(APPLE)
@@ -225,13 +225,13 @@ target_include_directories(imebra PRIVATE ${imebra_objc_gnustep_dir})
 #----------------------------
 target_link_libraries(imebra ${imebra_libraries})
 
-message (STATUS "OBJC INCLUDE:${imebra_objc_include_dirs}")
+message (STATUS "OBJC INCLUDE:${imebra_objc_include_dir}")
 message (STATUS "GNU INCLUDE:${imebra_objc_gnustep_dir}")
 
 # Define Imebra public folder
 #----------------------------
 target_include_directories(imebra PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/library/include> $<INSTALL_INTERFACE:include>)
-target_include_directories(imebra PUBLIC $<BUILD_INTERFACE:${imebra_objc_include_dirs}> $<INSTALL_INTERFACE:include>)
+target_include_directories(imebra PUBLIC $<BUILD_INTERFACE:${imebra_objc_include_dir}> $<INSTALL_INTERFACE:include>)
 
 # Set the library version from IMEBRA_MAJOR_VERSION, IMEBRA_MINOR_VERSION,
 #  & IMEBRA_REVISION
