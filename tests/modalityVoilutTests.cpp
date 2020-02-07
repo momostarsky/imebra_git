@@ -172,12 +172,12 @@ TEST(modalityVoilut, voilutSigned8)
     MutableImage unsigned8(6, 1, bitDepth_t::depthS8, "MONOCHROME2", 7);
     {
         WritingDataHandler unsigned8Handler = unsigned8.getWritingDataHandler();
-        unsigned8Handler.setUnsignedLong(0, static_cast<std::uint32_t>(-30));
-        unsigned8Handler.setUnsignedLong(1, static_cast<std::uint32_t>(-20));
-        unsigned8Handler.setUnsignedLong(2, static_cast<std::uint32_t>(-10));
-        unsigned8Handler.setUnsignedLong(3, 0u);
-        unsigned8Handler.setUnsignedLong(4, 10u);
-        unsigned8Handler.setUnsignedLong(5, 20u);
+        unsigned8Handler.setSignedLong(0, - 30);
+        unsigned8Handler.setSignedLong(1, - 20);
+        unsigned8Handler.setSignedLong(2, - 10);
+        unsigned8Handler.setSignedLong(3, 0);
+        unsigned8Handler.setSignedLong(4, 10);
+        unsigned8Handler.setSignedLong(5, 20);
     }
 
     MutableDataSet testDataSet("1.2.840.10008.1.2.1");

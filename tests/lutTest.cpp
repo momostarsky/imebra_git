@@ -54,6 +54,42 @@ TEST(lut, simpleLutNegative)
         lutItem.setString(TagId(tagId_t::LUTExplanation_0028_3003), "Test LUT");
 
         descriptor.setUnsignedLong(0, 3);
+        descriptor.setUnsignedLong(1, 65536 - 2);
+        descriptor.setUnsignedLong(2, 16);
+
+        data.setUnsignedLong(0, 100);
+        data.setUnsignedLong(1, 200);
+        data.setUnsignedLong(2, 300);
+    }
+
+    {
+        LUT lut = testDataSet.getLUT(TagId(tagId_t::ModalityLUTSequence_0028_3000), 0);
+        ASSERT_EQ(L"Test LUT", lut.getDescription());
+        ASSERT_EQ(3u, lut.getSize());
+        ASSERT_EQ(16u, lut.getBits());
+        ASSERT_EQ(-2, lut.getFirstMapped());
+        ASSERT_EQ(100u, lut.getMappedValue(-4));
+        ASSERT_EQ(100u, lut.getMappedValue(-3));
+        ASSERT_EQ(100u, lut.getMappedValue(-2));
+        ASSERT_EQ(200u, lut.getMappedValue(-1));
+        ASSERT_EQ(300u, lut.getMappedValue(0));
+        ASSERT_EQ(300u, lut.getMappedValue(1));
+    }
+}
+
+
+TEST(lut, simpleLutNegative2)
+{
+    MutableDataSet testDataSet;
+    MutableTag sequenceTag = testDataSet.getTagCreate(TagId(tagId_t::ModalityLUTSequence_0028_3000));
+    MutableDataSet lutItem = sequenceTag.appendSequenceItem();
+    testDataSet.setUnsignedLong(TagId(tagId_t::PixelRepresentation_0028_0103), 1);
+    {
+        WritingDataHandlerNumeric descriptor = lutItem.getWritingDataHandlerNumeric(TagId(tagId_t::LUTDescriptor_0028_3002), 0, tagVR_t::SS);
+        WritingDataHandlerNumeric data = lutItem.getWritingDataHandlerNumeric(TagId(tagId_t::LUTData_0028_3006), 0, tagVR_t::US);
+        lutItem.setString(TagId(tagId_t::LUTExplanation_0028_3003), "Test LUT");
+
+        descriptor.setUnsignedLong(0, 3);
         descriptor.setSignedLong(1, -2);
         descriptor.setUnsignedLong(2, 16);
 
@@ -77,6 +113,7 @@ TEST(lut, simpleLutNegative)
     }
 }
 
+
 TEST(lut, simpleLutCorruptedDescriptor)
 {
     MutableDataSet testDataSet;
@@ -89,7 +126,7 @@ TEST(lut, simpleLutCorruptedDescriptor)
         lutItem.setString(TagId(tagId_t::LUTExplanation_0028_3003), "Test LUT");
 
         descriptor.setUnsignedLong(0, 3u);
-        descriptor.setSignedLong(1, -2);
+        descriptor.setUnsignedLong(1, 65536 - 2);
         descriptor.setUnsignedLong(2, 16u);
         descriptor.setUnsignedLong(3, 0u);
 
@@ -114,7 +151,7 @@ TEST(lut, simpleLutCorruptedDescriptor1)
         lutItem.setString(TagId(tagId_t::LUTExplanation_0028_3003), "Test LUT");
 
         descriptor.setUnsignedLong(0, 3);
-        descriptor.setSignedLong(1, -2);
+        descriptor.setUnsignedLong(1, 65536 - 2);
 
         data.setUnsignedLong(0, 100u);
         data.setUnsignedLong(1, 200u);
@@ -136,7 +173,7 @@ TEST(lut, simpleLutCorruptedDescriptor2)
         lutItem.setString(TagId(tagId_t::LUTExplanation_0028_3003), "Test LUT");
 
         descriptor.setUnsignedLong(0, 3u);
-        descriptor.setSignedLong(1, -2);
+        descriptor.setSignedLong(1, 65536 - 2);
         descriptor.setUnsignedLong(2, 17u);
 
         data.setUnsignedLong(0, 100u);
@@ -159,7 +196,7 @@ TEST(lut, simpleLutCorruptedDescriptor3)
         lutItem.setString(TagId(tagId_t::LUTExplanation_0028_3003), "Test LUT");
 
         descriptor.setUnsignedLong(0, 4u);
-        descriptor.setSignedLong(1, -2);
+        descriptor.setSignedLong(1, 65536 - 2);
         descriptor.setUnsignedLong(2, 16u);
 
         data.setUnsignedLong(0, 100u);
